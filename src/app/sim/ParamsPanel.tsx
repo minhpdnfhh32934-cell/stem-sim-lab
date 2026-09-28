@@ -1,7 +1,6 @@
 import { useShallow } from 'zustand/react/shallow';
-import { formatNumber, useT } from '@/app/i18n';
+import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
-import { useSettingsStore } from '@/app/settings/settingsStore';
 import { fromSI, toSI, unitLabel } from '@/core/units';
 import type { ParamDef } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
@@ -41,7 +40,6 @@ function ParamRow({
 }) {
   const t = useT();
   const L = useLocalized();
-  const locale = useSettingsStore((s) => s.locale);
   const unit = def.unit ?? '1';
   const shown = def.kind === 'number' ? fromSI(valueSI, unit) : valueSI;
   const id = `param-${def.key}`;
@@ -54,9 +52,15 @@ function ParamRow({
   return (
     <div className="param" data-source={source}>
       <div className="param__head">
-        <label htmlFor={id} className="param__label">
-          {L(def.label)} <Equation tex={def.symbol} display={false} />
-        </label>
+        {def.kind === 'toggle' ? (
+          <span className="param__label" id={id}>
+            &nbsp;
+          </span>
+        ) : (
+          <label htmlFor={id} className="param__label" id={`${id}-label`}>
+            {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
+          </label>
+        )}
         <span
           className={`param__source param__source--${source}`}
           data-tip={t(`params.sourceHint.${source}`)}
@@ -94,7 +98,7 @@ function ParamRow({
         </div>
       )}
       {def.kind === 'choice' && (
-        <div className="segmented param__choice" role="radiogroup" aria-labelledby={id}>
+        <div className="segmented param__choice" role="radiogroup" aria-labelledby={`${id}-label`}>
           {def.choices?.map((c) => (
             <button
               key={c.value}
@@ -114,14 +118,13 @@ function ParamRow({
       {def.kind === 'toggle' && (
         <label className="param__toggle">
           <input
-            id={id}
             type="checkbox"
             checked={valueSI > 0.5}
             onChange={(e) => {
               set(e.target.checked ? 1 : 0);
             }}
           />
-          <span>{formatNumber(locale, valueSI > 0.5 ? 1 : 0)}</span>
+          <span>{L(def.label)}</span>
         </label>
       )}
       {def.live && <p className="param__hint">{t('params.liveHint')}</p>}

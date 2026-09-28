@@ -54,6 +54,24 @@ với một phương pháp độc lập khác.
   nhãn "Định lượng chính xác" tự chuyển thành "Định lượng gần đúng", và app bỏ mốc năng lượng
   ban đầu.
 
-## 4. Mô hình từng chủ đề
+## 4. Vật lý: mô hình từng chủ đề (Giai đoạn 2)
 
-_Sẽ bổ sung từ Giai đoạn 2._
+Mỗi chủ đề có ba lớp kiểm chứng. (1) Đáp số tính bằng công thức giải tích. (2) Kiểm chứng độc
+lập bằng tích phân số Dormand–Prince, hoặc một cách tính khác. (3) Test tự động so sánh engine
+thời gian thực với lời giải chính xác.
+
+| Chủ đề                                | Engine (cách cập nhật)                                                                                             | Mức tin cậy                                             | Kiểm chứng tự động                                                                                                                                                   |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Chuyển động thẳng đều / biến đổi đều  | Công thức chính xác cho gia tốc không đổi. Thời điểm dừng khi hãm phanh được tìm đúng trong bước                   | Chính xác                                               | Hai xe gặp nhau (t = 4 s, x = 40 m); xe hãm phanh (dừng sau 10 s, đi được 100 m); v² − v₀² = 2as; so với DOPRI5                                                      |
+| Rơi tự do, ném ngang, ném xiên        | Công thức chính xác. Thời điểm chạm đất giải đúng bằng phương trình bậc hai                                        | Chính xác                                               | h = 45 m, v₀ = 10 → t = 3 s, L = 30 m; ném từ mặt đất: 45° cho tầm xa lớn nhất; so với DOPRI5 ở sai số 10⁻⁹                                                          |
+| Định luật Newton, mặt phẳng nghiêng   | Gia tốc không đổi từng đoạn. Chuyển từ ma sát nghỉ sang trượt được giải chính xác                                  | Chính xác                                               | a = g(sin θ − μ cos θ); vật đứng yên khi tan θ ≤ μₙ; vật trượt ngược lại trên dốc dốc; so với DOPRI5                                                                 |
+| Ròng rọc – dây nối                    | Quy về một bậc tự do với ma sát Coulomb                                                                            | Chính xác                                               | Máy Atwood a = (m₂ − m₁)g/(m₁+m₂), T = 2m₁m₂g/(m₁+m₂); vật trên bàn; vật trên dốc; thời gian dịch chuyển so với DOPRI5                                               |
+| Lò xo, con lắc lò xo                  | Dùng **nghiệm giải tích chính xác** để cập nhật, kể cả khi có lực cản (tắt dần dưới tới hạn, tới hạn, quá tới hạn) | Chính xác                                               | Cả 4 chế độ so với DOPRI5 (10⁻⁹); T = 2π√(m/k); cơ năng bảo toàn đến 10⁻¹²                                                                                           |
+| Con lắc đơn                           | RK4 với 8 bước con mỗi Δt (h ≈ 0,52 ms). Mô hình góc nhỏ chạy song song bằng nghiệm chính xác                      | Chính xác khi không có lực cản; gần đúng khi có lực cản | Chu kì đo trong mô phỏng khớp công thức T = 4√(l/g)K(sin(α₀/2)); ở 60° sai lệch so với công thức góc nhỏ là 7,32 %; cơ năng trôi < 10⁻¹⁰                             |
+| Bảo toàn cơ năng (vật trên đường ray) | RK4 với 8 bước con cho phương trình có ràng buộc                                                                   | Chính xác (tốc độ tính từ bảo toàn cơ năng)             | v(đáy) = √(2gH) so với DOPRI5; cơ năng trôi < 10⁻⁹ trong 20 s                                                                                                        |
+| Va chạm 1D/2D                         | Chuyển động thẳng đều giữa hai va chạm. Thời điểm va chạm giải chính xác, xung lực tính theo hệ số phục hồi e      | Chính xác                                               | Hai vật cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc; va chạm xiên hai vật cùng khối lượng thì hai hướng vuông góc; kết quả khớp cách tính trong hệ khối tâm |
+
+**Kéo và ném bằng chuột:** app nối vật với con trỏ bằng một lò xo có giảm chấn tới hạn
+(ω = 28 rad/s), nên vật không bị dịch chuyển tức thời. Khi thả chuột, vật giữ nguyên vận tốc lúc
+đó. Ngay khi có can thiệp, Thẻ Khoa học chuyển sang mức **Định lượng gần đúng**, và lời giải giải
+tích được ghi rõ là chỉ áp dụng cho điều kiện ban đầu.

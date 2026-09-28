@@ -13,6 +13,8 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   hookeSpring: () => import('./spring/scenes').then((m) => m.hookeSpring),
   springPendulum: () => import('./spring/scenes').then((m) => m.springPendulum),
   simplePendulum: () => import('./pendulum/scenes').then((m) => m.simplePendulum),
+  energyConservation: () => import('./track/scenes').then((m) => m.energyConservation),
+  collisions: () => import('./collision/scenes').then((m) => m.collisions),
   freeFall: () => import('./projectile/scenes').then((m) => m.freeFall),
   horizontalProjectile: () => import('./projectile/scenes').then((m) => m.horizontalProjectile),
   obliqueProjectile: () => import('./projectile/scenes').then((m) => m.obliqueProjectile),

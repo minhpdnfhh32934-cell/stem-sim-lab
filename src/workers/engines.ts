@@ -38,3 +38,13 @@ registerEngine('phys.pendulum', async () => {
   const { PendulumEngine } = await import('@/physics/pendulum/engine');
   return () => new PendulumEngine();
 });
+
+registerEngine('phys.track', async () => {
+  const { TrackEngine } = await import('@/physics/track/engine');
+  return () => new TrackEngine();
+});
+
+registerEngine('phys.collision', async () => {
+  const { CollisionEngine } = await import('@/physics/collision/engine');
+  return () => new CollisionEngine();
+});

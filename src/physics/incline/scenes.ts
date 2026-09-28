@@ -356,8 +356,7 @@ function solve(horizontal: boolean) {
 }
 
 function card(horizontal: boolean) {
-  return (p: Params): ScienceCardData => {
-    void p;
+  return (): ScienceCardData => {
     return {
       title: horizontal
         ? L('Các định luật Newton', "Newton's laws")

@@ -43,6 +43,11 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
     colorsRef.current = readThemeColors();
   }, [theme]);
 
+  // Focus the canvas when a scene opens so Space/R work immediately.
+  useEffect(() => {
+    canvasRef.current?.focus({ preventScroll: true });
+  }, [scene]);
+
   // Frame the scene on open / parameter change / "fit view".
   useEffect(() => {
     const cam = camRef.current;

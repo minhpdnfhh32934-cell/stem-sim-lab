@@ -24,7 +24,7 @@ export interface PulleyInput {
 export function pulleyInput(p: Params): PulleyInput {
   const config = Math.round(p.config ?? 0);
   return {
-    config: (config === 1 || config === 2 ? config : 0) as PulleyConfig,
+    config: config === 1 || config === 2 ? config : 0,
     m1: p.m1 ?? 1,
     m2: p.m2 ?? 1,
     g: p.g ?? 9.81,

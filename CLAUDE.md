@@ -108,11 +108,21 @@ Progress log: `docs/PROGRESS.md`.
 - Science Card: `src/science-card` (`ScienceCard`, `withIntervention`, lazy KaTeX).
 - Scientific text is `LocalizedText {vi, en}` (use `useLocalized()`), UI text goes through `t()`.
 
+## Physics scenes (Phase 2)
+
+- A topic = `PhysicsScene` (`src/physics/types.ts`): params (SI), engine id, `solve()` with
+  numeric cross-checks, `scienceCard()`, graphs, bodies (pick/drag), `view()`, `draw()`.
+- Register the scene in `src/physics/registry.ts` and its engine in `src/workers/engines.ts`.
+- Prefer exact updates (constant acceleration, exact linear propagators, exact event times);
+  otherwise RK4 with substeps and energy monitoring. Every scene needs a test comparing the
+  engine with the closed form and a DOPRI5 cross-check.
+- UI runtime: `src/app/sim/runtime.ts` (`sim` singleton), `StageCanvas`, panels in `src/app/sim`.
+
 ## Phase status
 
 - [x] Phase 0: project scaffold, design system, layout shell, theme, i18n, CI
 - [x] Phase 1: core (units, constants, integrators, fixed timestep, worker, quality tier, Science Card)
-- [ ] Phase 2: Physics 2D MVP
+- [x] Phase 2: Physics 2D MVP (13 topics, canvas stage, tools, graphs, solutions, CSV)
 - [ ] Phase 3: AI layer
 - [ ] Phase 4: Chemistry MVP
 - [ ] Phase 5: Biology MVP
