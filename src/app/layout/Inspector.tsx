@@ -1,0 +1,64 @@
+import { memo } from 'react';
+import { BadgeInfo, MousePointerClick, SlidersHorizontal, X } from 'lucide-react';
+import { useT } from '@/app/i18n';
+import { CONFIDENCE_LEVELS } from '@/science-card/types';
+import { ConfidenceBadge, ReviewBadge } from '@/ui/Badges';
+import { EmptyState } from '@/ui/EmptyState';
+import { IconButton } from '@/ui/IconButton';
+import { Section } from '@/ui/Section';
+import { useLayoutStore } from './layoutStore';
+
+/** Right-hand panel: selected object, parameters, and the Science Card. */
+export const Inspector = memo(function Inspector() {
+  const t = useT();
+  const toggle = useLayoutStore((s) => s.toggle);
+
+  return (
+    <aside className="panel inspector" aria-label={t('inspector.regionLabel')}>
+      <header className="panel__header">
+        <h2 className="panel__title">{t('inspector.title')}</h2>
+        <IconButton
+          icon={X}
+          size="sm"
+          label={t('layout.toggleRight')}
+          tooltipSide="left"
+          onClick={() => {
+            toggle('right');
+          }}
+        />
+      </header>
+
+      <div className="panel__scroll">
+        <Section title={t('inspector.objectSection')}>
+          <EmptyState icon={MousePointerClick} compact>
+            {t('inspector.noSelection')}
+          </EmptyState>
+        </Section>
+
+        <Section title={t('inspector.paramsSection')}>
+          <EmptyState icon={SlidersHorizontal} compact>
+            {t('inspector.noParams')}
+          </EmptyState>
+        </Section>
+
+        <Section
+          title={t('inspector.scienceCard')}
+          trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
+        >
+          <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
+          <ul className="confidence-legend">
+            {CONFIDENCE_LEVELS.map((level) => (
+              <li key={level}>
+                <ConfidenceBadge level={level} />
+                <span>{t(`confidence.${level}Desc`)}</span>
+              </li>
+            ))}
+            <li>
+              <ReviewBadge status="pending" />
+            </li>
+          </ul>
+        </Section>
+      </div>
+    </aside>
+  );
+});
