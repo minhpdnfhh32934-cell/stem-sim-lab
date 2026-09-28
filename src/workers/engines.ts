@@ -13,3 +13,13 @@ registerEngine('phys.projectile', async () => {
   const { ProjectileEngine } = await import('@/physics/projectile/engine');
   return () => new ProjectileEngine();
 });
+
+registerEngine('phys.linear', async () => {
+  const { LinearEngine } = await import('@/physics/linear/engine');
+  return () => new LinearEngine();
+});
+
+registerEngine('phys.incline', async () => {
+  const { InclineEngine } = await import('@/physics/incline/engine');
+  return () => new InclineEngine();
+});

@@ -5,6 +5,10 @@ import type { PhysicsScene } from './types';
  * in the Library; everything else shows "Sắp có".
  */
 const SCENES: Record<string, () => Promise<PhysicsScene>> = {
+  uniformMotion: () => import('./linear/scenes').then((m) => m.uniformMotion),
+  uniformAcceleration: () => import('./linear/scenes').then((m) => m.uniformAcceleration),
+  newtonLaws: () => import('./incline/scenes').then((m) => m.newtonLaws),
+  inclinedPlane: () => import('./incline/scenes').then((m) => m.inclinedPlane),
   freeFall: () => import('./projectile/scenes').then((m) => m.freeFall),
   horizontalProjectile: () => import('./projectile/scenes').then((m) => m.horizontalProjectile),
   obliqueProjectile: () => import('./projectile/scenes').then((m) => m.obliqueProjectile),
