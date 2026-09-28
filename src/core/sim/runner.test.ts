@@ -16,7 +16,7 @@ describe('FixedStepClock', () => {
   it('applies playback speed', () => {
     const c = new FixedStepClock(0.01);
     expect(c.advance(0.1, 0.1).steps).toBe(1);
-    expect(c.advance(0.1, 4).steps).toBe(32);
+    expect(c.advance(0.1, 4).steps).toBe(40);
   });
 
   it('caps substeps and reports dropped time (no spiral of death)', () => {

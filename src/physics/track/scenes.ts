@@ -328,6 +328,7 @@ function card(): ScienceCardData {
 
 export const energyConservation: PhysicsScene = {
   id: 'energyConservation',
+  required: ['H'],
   engineId: 'phys.track',
   title: L('Bảo toàn cơ năng', 'Conservation of mechanical energy'),
   usesGravity: true,

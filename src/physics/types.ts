@@ -139,9 +139,21 @@ export interface PhysicsScene {
   engineId: string;
   title: LocalizedText;
   params: ParamDef[];
+  /**
+   * Parameters a problem must state for the scene to be meaningful. When the AI cannot
+   * find them in the problem, the confirmation table asks the user instead of guessing.
+   */
+  required: string[];
   /** Default parameter values (SI). Gravity is filled from Settings when `usesGravity`. */
   defaults: Params;
   usesGravity: boolean;
+  /**
+   * Recomputes parameters that are still at their default from the ones the problem gave
+   * (e.g. a time span long enough to see the cars meet). Never overrides problem/user values.
+   */
+  autoDefaults?: (p: Params, sources: Record<string, ParamSource>) => Params;
+  /** Playback speed that shows the whole run in a few seconds (e.g. ×100 for hour-long trips). */
+  suggestedSpeed?: (p: Params) => number;
   /** Maps scene parameters to the engine's parameters (identity when omitted). */
   engineParams?: (p: Params) => Params;
   /** Stops/validates parameter combinations; returns localized error messages. */

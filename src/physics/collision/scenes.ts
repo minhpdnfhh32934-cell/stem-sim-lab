@@ -394,6 +394,7 @@ const velP = (key: string, sym: string, name: string): ParamDef => ({
 
 export const collisions: PhysicsScene = {
   id: 'collisions',
+  required: ['m1', 'v1', 'm2', 'v2'],
   engineId: 'phys.collision',
   title: L('Va chạm đàn hồi và va chạm mềm', 'Elastic and inelastic collisions'),
   usesGravity: false,

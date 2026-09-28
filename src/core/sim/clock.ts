@@ -21,7 +21,8 @@ export class FixedStepClock {
 
   constructor(
     public dt = 1 / 240,
-    public maxSubsteps = 32,
+    // The runner's per-frame time budget is the real guard; this only bounds pathological cases.
+    public maxSubsteps = 512,
   ) {
     if (!(dt > 0)) throw new RangeError('dt must be positive');
   }

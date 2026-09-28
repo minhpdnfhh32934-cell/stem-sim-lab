@@ -18,6 +18,10 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tokio = { version = "1.53.1", features = ["sync", "time", "macros"] }
+keyring = { version = "3.6.3", features = ["apple-native", "windows-native", "linux-native"] }
+thiserror = "2.0.21"
+reqwest = { version = "0.13.3", default-features = false, features = ["json", "rustls"] }
 
 [profile.release]
 # Small installer, fast startup (target: installer < 80 MB).

@@ -382,6 +382,32 @@ const twoBodies: ParamDef = {
     { value: 1, label: L('2 vật', '2 bodies') },
   ],
 };
+/**
+ * Time span long enough to show the key event (meeting, stopping) with some margin,
+ * rounded to a friendly number.
+ */
+export function autoTimeSpan(p: Params, accel: boolean): number {
+  const ms = motions(p, accel);
+  const events: number[] = ms.map((m) => stopTime(m)).filter((t) => Number.isFinite(t));
+  const [a, b] = ms;
+  if (a && b) {
+    const tm = meetingTime(a, b, 1e6);
+    if (tm !== null) events.push(tm);
+  }
+  const t = events.length ? Math.max(...events) * 1.25 : 10;
+  const nice = [
+    10, 12, 15, 20, 30, 40, 60, 90, 120, 180, 300, 600, 900, 1200, 1800, 3600, 5400, 7200, 10800,
+    14400, 21600, 36000,
+  ];
+  return nice.find((n) => n >= t) ?? 36000;
+}
+
+/** Playback speed so that the run lasts roughly 5–15 s of real time. */
+export function autoSpeed(tEnd: number): number {
+  const options = [1, 2, 4, 10, 100, 1000];
+  return options.find((s) => tEnd / s <= 15) ?? 1000;
+}
+
 const tEnd: ParamDef = {
   key: 'tEnd',
   label: L('Thời gian xét', 'Time span'),
@@ -390,7 +416,7 @@ const tEnd: ParamDef = {
   dim: DIM.time,
   unit: 's',
   min: 1,
-  max: 120,
+  max: 36000,
   step: 1,
 };
 
@@ -404,11 +430,15 @@ const common = (accel: boolean) => ({
   scienceCard: card(accel),
   solve: solve(accel),
   engineParams: (p: Params): Params => (accel ? p : { ...p, aA: 0, aB: 0, stopAtRest: 0 }),
+  autoDefaults: (p: Params, src: Record<string, 'problem' | 'default' | 'user'>): Params =>
+    src.tEnd === 'default' ? { ...p, tEnd: autoTimeSpan(p, accel) } : p,
+  suggestedSpeed: (p: Params) => autoSpeed(p.tEnd ?? 10),
 });
 
 export const uniformMotion: PhysicsScene = {
   ...common(false),
   id: 'uniformMotion',
+  required: ['vA', 'xB', 'vB'],
   title: L('Chuyển động thẳng đều', 'Uniform linear motion'),
   params: [
     twoBodies,
@@ -425,6 +455,7 @@ export const uniformMotion: PhysicsScene = {
 export const uniformAcceleration: PhysicsScene = {
   ...common(true),
   id: 'uniformAcceleration',
+  required: ['vA', 'aA'],
   title: L('Chuyển động thẳng biến đổi đều', 'Uniformly accelerated motion'),
   params: [
     twoBodies,

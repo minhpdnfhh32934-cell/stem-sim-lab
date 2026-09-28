@@ -369,6 +369,7 @@ const common = {
 export const obliqueProjectile: PhysicsScene = {
   ...common,
   id: 'obliqueProjectile',
+  required: ['v0', 'angle'],
   title: L('Ném xiên', 'Oblique projectile'),
   params: [
     v0Param(),
@@ -386,7 +387,7 @@ export const obliqueProjectile: PhysicsScene = {
     massParam(),
     gravityParam,
   ],
-  defaults: { v0: 15, angle: Math.PI / 6, h0: 20, m: 0.5, g: 9.81 },
+  defaults: { v0: 15, angle: Math.PI / 4, h0: 0, m: 0.5, g: 9.81 },
   scienceCard: (p) => card(p, L('Ném xiên', 'Oblique projectile')),
   solve: (p, locale) => solveGeneral(p, locale, 'oblique'),
 };
@@ -394,6 +395,7 @@ export const obliqueProjectile: PhysicsScene = {
 export const horizontalProjectile: PhysicsScene = {
   ...common,
   id: 'horizontalProjectile',
+  required: ['v0', 'h0'],
   title: L('Ném ngang', 'Horizontal projectile'),
   params: [v0Param(), h0Param(), massParam(), gravityParam],
   defaults: { v0: 10, h0: 45, m: 0.5, g: 9.81 },
@@ -415,6 +417,7 @@ function freeFallLaunch(p: Params): Params {
 export const freeFall: PhysicsScene = {
   ...common,
   id: 'freeFall',
+  required: ['h0'],
   title: L('Rơi tự do và ném thẳng đứng', 'Free fall and vertical throw'),
   params: [
     h0Param(200),

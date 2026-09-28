@@ -480,6 +480,7 @@ const common = {
 export const hookeSpring: PhysicsScene = {
   ...common,
   id: 'hookeSpring',
+  required: ['k', 'm'],
   title: L('Lò xo – định luật Hooke', "Springs – Hooke's law"),
   params: [orientation, massParam('m', 5), kParam, l0Param, x0Param, bParam, gravityParam],
   // 200 g hanging on a 50 N/m spring (Δl₀ ≈ 3.9 cm), released 2 cm below equilibrium.
@@ -491,6 +492,7 @@ export const hookeSpring: PhysicsScene = {
 export const springPendulum: PhysicsScene = {
   ...common,
   id: 'springPendulum',
+  required: ['m', 'k'],
   title: L('Con lắc lò xo', 'Spring–mass oscillator'),
   params: [orientation, massParam('m', 5), kParam, x0Param, v0Param, bParam, l0Param, gravityParam],
   defaults: { vertical: 0, m: 0.25, k: 100, x0: 0.05, v0: 0, b: 0, l0: 0.3, g: 9.81 },

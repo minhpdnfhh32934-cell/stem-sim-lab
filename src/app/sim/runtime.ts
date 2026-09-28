@@ -1,5 +1,5 @@
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/workspaceStore';
 import type { EngineInput } from '@/core/sim/engine';
 import type { Frame } from '@/core/sim/runner';
 import { usePerfStore } from '@/perf/perfStore';
@@ -11,6 +11,28 @@ import { History } from './history';
 import { useSimStore } from './simStore';
 
 const UI_HZ = 10;
+
+/** Applies `scene.autoDefaults` to parameters that are still at their default value. */
+function withAutoDefaults(
+  scene: PhysicsScene,
+  params: Params,
+  sources: Record<string, ParamSource>,
+): Params {
+  const derived = scene.autoDefaults?.(params, sources);
+  if (!derived) return params;
+  const out = { ...params };
+  for (const [k, v] of Object.entries(derived)) {
+    if (sources[k] === 'default' || sources[k] === undefined) out[k] = v;
+  }
+  return out;
+}
+
+function closestSpeed(s: number): PlaybackSpeed {
+  let best: PlaybackSpeed = 1;
+  for (const o of PLAYBACK_SPEEDS)
+    if (Math.abs(Math.log(o / s)) < Math.abs(Math.log(best / s))) best = o;
+  return best;
+}
 
 function lerpState(prev: Float64Array, curr: Float64Array, alpha: number, out: Float64Array) {
   for (let i = 0; i < curr.length; i++) {
@@ -57,6 +79,9 @@ class SimRuntime {
       if (scene.usesGravity) params.g = useSettingsStore.getState().defaultGravity;
       Object.assign(params, opts.params ?? {});
       Object.assign(sources, opts.sources ?? {});
+      Object.assign(params, withAutoDefaults(scene, params, sources));
+      const speed = scene.suggestedSpeed?.(params);
+      if (speed !== undefined) useWorkspaceStore.setState({ speed: closestSpeed(speed) });
       useSimStore.setState({
         scene,
         params,
@@ -239,12 +264,13 @@ class SimRuntime {
     const sim = useSimStore.getState();
     const scene = sim.scene;
     if (!scene) return;
-    const params = { ...sim.params, [key]: value };
+    const sources = { ...sim.sources, [key]: source };
+    const params = withAutoDefaults(scene, { ...sim.params, [key]: value }, sources);
     const def = scene.params.find((d) => d.key === key);
     const running = (this.latest?.t ?? 0) > 0 && !sim.finished;
     useSimStore.setState({
       params,
-      sources: { ...sim.sources, [key]: source },
+      sources,
       validation: scene.validate?.(params) ?? [],
     });
     if (running && def?.live && (scene.validate?.(params) ?? []).length === 0) {

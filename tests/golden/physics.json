@@ -1,0 +1,1092 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "cd-01",
+      "text": "Hai ô tô xuất phát cùng lúc từ hai điểm A và B cách nhau 120 km, chuyển động thẳng đều ngược chiều nhau. Xe đi từ A có vận tốc 50 km/h, xe đi từ B có vận tốc 70 km/h. Hỏi sau bao lâu hai xe gặp nhau và chỗ gặp cách A bao xa?",
+      "topic": "uniformMotion",
+      "quantities": [
+        {
+          "key": "twoBodies",
+          "value": 1,
+          "unit": "1",
+          "quote": "Hai ô tô"
+        },
+        {
+          "key": "xB",
+          "value": 120,
+          "unit": "km",
+          "quote": "cách nhau 120 km"
+        },
+        {
+          "key": "vA",
+          "value": 50,
+          "unit": "km/h",
+          "quote": "vận tốc 50 km/h"
+        },
+        {
+          "key": "vB",
+          "value": -70,
+          "unit": "km/h",
+          "quote": "vận tốc 70 km/h"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "meet_time": 3600.0,
+        "meet_position": 50000.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "cd-02",
+      "text": "Lúc 7 giờ, một xe máy đi từ A với vận tốc 36 km/h. Cùng lúc đó một ô tô xuất phát từ B cách A 18 km, đi cùng chiều với xe máy với vận tốc 18 km/h. Hỏi sau bao lâu xe máy đuổi kịp ô tô và chỗ gặp cách A bao xa?",
+      "topic": "uniformMotion",
+      "quantities": [
+        {
+          "key": "twoBodies",
+          "value": 1,
+          "unit": "1",
+          "quote": "một ô tô"
+        },
+        {
+          "key": "vA",
+          "value": 36,
+          "unit": "km/h",
+          "quote": "vận tốc 36 km/h"
+        },
+        {
+          "key": "xB",
+          "value": 18,
+          "unit": "km",
+          "quote": "cách A 18 km"
+        },
+        {
+          "key": "vB",
+          "value": 18,
+          "unit": "km/h",
+          "quote": "vận tốc 18 km/h"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "meet_time": 3600.0,
+        "meet_position": 36000.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "bd-01",
+      "text": "Một ô tô đang chạy với vận tốc 72 km/h thì hãm phanh, chuyển động chậm dần đều với gia tốc có độ lớn 2 m/s². Tính thời gian từ lúc hãm phanh đến khi xe dừng hẳn và quãng đường xe đi được trong thời gian đó.",
+      "topic": "uniformAcceleration",
+      "quantities": [
+        {
+          "key": "vA",
+          "value": 72,
+          "unit": "km/h",
+          "quote": "vận tốc 72 km/h"
+        },
+        {
+          "key": "aA",
+          "value": -2,
+          "unit": "m/s^2",
+          "quote": "gia tốc có độ lớn 2 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "stop_time_A": 10.0,
+        "stop_distance_A": 100.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "bd-02",
+      "text": "Một vật bắt đầu chuyển động nhanh dần đều từ trạng thái nghỉ với gia tốc 0,5 m/s². Tính vận tốc và quãng đường vật đi được sau 10 s.",
+      "topic": "uniformAcceleration",
+      "quantities": [
+        {
+          "key": "vA",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "từ trạng thái nghỉ"
+        },
+        {
+          "key": "aA",
+          "value": 0.5,
+          "unit": "m/s^2",
+          "quote": "gia tốc 0,5 m/s²"
+        },
+        {
+          "key": "tEnd",
+          "value": 10,
+          "unit": "s",
+          "quote": "sau 10 s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v_end_A": 5.0,
+        "x_end_A": 25.0,
+        "distance_A": 25
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "bd-03",
+      "text": "Một đoàn tàu đang chuyển động với vận tốc 36 km/h thì tăng tốc, chuyển động nhanh dần đều với gia tốc 0,1 m/s². Tính vận tốc của tàu và quãng đường tàu đi được sau 1 phút.",
+      "topic": "uniformAcceleration",
+      "quantities": [
+        {
+          "key": "vA",
+          "value": 36,
+          "unit": "km/h",
+          "quote": "vận tốc 36 km/h"
+        },
+        {
+          "key": "aA",
+          "value": 0.1,
+          "unit": "m/s^2",
+          "quote": "gia tốc 0,1 m/s²"
+        },
+        {
+          "key": "tEnd",
+          "value": 1,
+          "unit": "min",
+          "quote": "sau 1 phút"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v_end_A": 16.0,
+        "x_end_A": 780.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "rt-01",
+      "text": "Thả rơi tự do một vật từ độ cao 80 m so với mặt đất. Lấy g = 10 m/s². Tính thời gian rơi và vận tốc của vật khi chạm đất.",
+      "topic": "freeFall",
+      "quantities": [
+        {
+          "key": "h0",
+          "value": 80,
+          "unit": "m",
+          "quote": "độ cao 80 m"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        },
+        {
+          "key": "v0",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "Thả rơi tự do"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "time_of_flight": 4.0,
+        "impact_speed": 40.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "rt-02",
+      "text": "Từ độ cao 25 m, một vật được ném thẳng đứng lên trên với vận tốc 20 m/s. Bỏ qua sức cản không khí, lấy g = 10 m/s². Tính độ cao cực đại vật đạt được và thời gian từ lúc ném đến khi vật chạm đất.",
+      "topic": "freeFall",
+      "quantities": [
+        {
+          "key": "h0",
+          "value": 25,
+          "unit": "m",
+          "quote": "độ cao 25 m"
+        },
+        {
+          "key": "v0",
+          "value": 20,
+          "unit": "m/s",
+          "quote": "vận tốc 20 m/s"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "max_height": 45.0,
+        "time_of_flight": 5.0,
+        "impact_speed": 30.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "rt-03",
+      "text": "Một hòn đá rơi tự do từ miệng một cái giếng. Sau 2 s thì hòn đá chạm đáy giếng. Lấy g = 10 m/s². Tính độ sâu của giếng.",
+      "topic": "freeFall",
+      "quantities": [
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [
+        "h0"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": true
+    },
+    {
+      "id": "nn-01",
+      "text": "Một vật được ném theo phương ngang từ độ cao 45 m với vận tốc ban đầu 15 m/s. Lấy g = 10 m/s². Tính thời gian chuyển động và tầm xa của vật.",
+      "topic": "horizontalProjectile",
+      "quantities": [
+        {
+          "key": "h0",
+          "value": 45,
+          "unit": "m",
+          "quote": "độ cao 45 m"
+        },
+        {
+          "key": "v0",
+          "value": 15,
+          "unit": "m/s",
+          "quote": "vận tốc ban đầu 15 m/s"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "time_of_flight": 3.0,
+        "range": 45.0,
+        "impact_speed": 33.54101966249684
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "nn-02",
+      "text": "Từ đỉnh một tháp cao 20 m, người ta ném ngang một hòn đá với vận tốc 10 m/s. Lấy g = 9,8 m/s². Hỏi hòn đá chạm đất cách chân tháp bao xa?",
+      "topic": "horizontalProjectile",
+      "quantities": [
+        {
+          "key": "h0",
+          "value": 20,
+          "unit": "m",
+          "quote": "tháp cao 20 m"
+        },
+        {
+          "key": "v0",
+          "value": 10,
+          "unit": "m/s",
+          "quote": "vận tốc 10 m/s"
+        },
+        {
+          "key": "g",
+          "value": 9.8,
+          "unit": "m/s^2",
+          "quote": "g = 9,8 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "time_of_flight": 2.0203050891044216,
+        "range": 20.203050891044217
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "nx-01",
+      "text": "Một quả bóng được đá từ mặt đất với vận tốc 20 m/s theo hướng hợp với phương ngang góc 30°. Lấy g = 10 m/s². Tính tầm xa và độ cao cực đại của quả bóng.",
+      "topic": "obliqueProjectile",
+      "quantities": [
+        {
+          "key": "v0",
+          "value": 20,
+          "unit": "m/s",
+          "quote": "vận tốc 20 m/s"
+        },
+        {
+          "key": "angle",
+          "value": 30,
+          "unit": "deg",
+          "quote": "góc 30°"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "range": 34.64101615137754,
+        "max_height": 4.999999999999998,
+        "time_of_flight": 1.9999999999999996
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "nx-02",
+      "text": "Từ độ cao 10 m, một vật được ném xiên lên với vận tốc 10 m/s, góc ném 45° so với phương ngang. Lấy g = 9,8 m/s². Tính thời gian bay và tầm xa của vật.",
+      "topic": "obliqueProjectile",
+      "quantities": [
+        {
+          "key": "h0",
+          "value": 10,
+          "unit": "m",
+          "quote": "độ cao 10 m"
+        },
+        {
+          "key": "v0",
+          "value": 10,
+          "unit": "m/s",
+          "quote": "vận tốc 10 m/s"
+        },
+        {
+          "key": "angle",
+          "value": 45,
+          "unit": "deg",
+          "quote": "góc ném 45°"
+        },
+        {
+          "key": "g",
+          "value": 9.8,
+          "unit": "m/s^2",
+          "quote": "g = 9,8 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "time_of_flight": 2.3219851993085303,
+        "range": 16.41891480245859
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "nt-01",
+      "text": "Một vật khối lượng 4 kg đặt trên mặt sàn nằm ngang được kéo bằng lực 20 N theo phương ngang. Hệ số ma sát trượt giữa vật và sàn là 0,25. Lấy g = 10 m/s². Tính gia tốc của vật.",
+      "topic": "newtonLaws",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 4,
+          "unit": "kg",
+          "quote": "khối lượng 4 kg"
+        },
+        {
+          "key": "F",
+          "value": 20,
+          "unit": "N",
+          "quote": "lực 20 N"
+        },
+        {
+          "key": "mu",
+          "value": 0.25,
+          "unit": "1",
+          "quote": "0,25"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "acceleration": 2.5,
+        "normal_force": 40.0,
+        "friction": 10.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "nt-02",
+      "text": "Kéo một thùng hàng 10 kg trượt trên sàn ngang bằng lực 50 N hợp với phương ngang góc 30°. Hệ số ma sát trượt là 0,2. Lấy g = 10 m/s². Tính gia tốc của thùng hàng.",
+      "topic": "newtonLaws",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 10,
+          "unit": "kg",
+          "quote": "thùng hàng 10 kg"
+        },
+        {
+          "key": "F",
+          "value": 50,
+          "unit": "N",
+          "quote": "lực 50 N"
+        },
+        {
+          "key": "beta",
+          "value": 30,
+          "unit": "deg",
+          "quote": "góc 30°"
+        },
+        {
+          "key": "mu",
+          "value": 0.2,
+          "unit": "1",
+          "quote": "0,2"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "normal_force": 75.0,
+        "acceleration": 2.8301270189221936
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "mpn-01",
+      "text": "Một vật trượt không vận tốc đầu từ đỉnh một mặt phẳng nghiêng dài 10 m, nghiêng góc 30° so với phương ngang. Hệ số ma sát trượt là 0,1. Lấy g = 10 m/s². Tính gia tốc của vật, thời gian trượt hết dốc và vận tốc của vật ở chân mặt phẳng nghiêng.",
+      "topic": "inclinedPlane",
+      "quantities": [
+        {
+          "key": "length",
+          "value": 10,
+          "unit": "m",
+          "quote": "dài 10 m"
+        },
+        {
+          "key": "theta",
+          "value": 30,
+          "unit": "deg",
+          "quote": "góc 30°"
+        },
+        {
+          "key": "muK",
+          "value": 0.1,
+          "unit": "1",
+          "quote": "0,1"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        },
+        {
+          "key": "v0",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "không vận tốc đầu"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "acceleration": -4.133974596215561,
+        "time_end": 2.199536109252288,
+        "speed_end": 9.092826399107771
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "mpn-02",
+      "text": "Một vật nhỏ trượt không ma sát, không vận tốc đầu từ đỉnh một dốc nghiêng 60° dài 2 m. Lấy g = 9,8 m/s². Tính vận tốc của vật ở chân dốc.",
+      "topic": "inclinedPlane",
+      "quantities": [
+        {
+          "key": "theta",
+          "value": 60,
+          "unit": "deg",
+          "quote": "nghiêng 60°"
+        },
+        {
+          "key": "length",
+          "value": 2,
+          "unit": "m",
+          "quote": "dài 2 m"
+        },
+        {
+          "key": "g",
+          "value": 9.8,
+          "unit": "m/s^2",
+          "quote": "g = 9,8 m/s²"
+        },
+        {
+          "key": "muK",
+          "value": 0,
+          "unit": "1",
+          "quote": "không ma sát"
+        },
+        {
+          "key": "muS",
+          "value": 0,
+          "unit": "1",
+          "quote": "không ma sát"
+        },
+        {
+          "key": "v0",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "không vận tốc đầu"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "speed_end": 5.826508030402944,
+        "time_end": 0.686517546895644
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "rr-01",
+      "text": "Máy Atwood gồm hai vật khối lượng 3 kg và 2 kg treo ở hai đầu một sợi dây vắt qua ròng rọc cố định. Bỏ qua khối lượng của dây, ròng rọc và mọi ma sát. Lấy g = 10 m/s². Tính gia tốc của hệ và lực căng dây.",
+      "topic": "pulley",
+      "quantities": [
+        {
+          "key": "config",
+          "value": 0,
+          "unit": "1",
+          "quote": "Máy Atwood"
+        },
+        {
+          "key": "m1",
+          "value": 3,
+          "unit": "kg",
+          "quote": "3 kg"
+        },
+        {
+          "key": "m2",
+          "value": 2,
+          "unit": "kg",
+          "quote": "2 kg"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "acceleration": -2.0,
+        "tension": 24.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "rr-02",
+      "text": "Vật m1 = 2 kg đặt trên mặt bàn nằm ngang, được nối với vật m2 = 0,5 kg bằng sợi dây nhẹ vắt qua ròng rọc ở mép bàn; vật m2 treo thẳng đứng. Hệ số ma sát giữa m1 và mặt bàn là 0,1. Lấy g = 10 m/s². Tính gia tốc của hệ và lực căng dây.",
+      "topic": "pulley",
+      "quantities": [
+        {
+          "key": "config",
+          "value": 1,
+          "unit": "1",
+          "quote": "đặt trên mặt bàn nằm ngang"
+        },
+        {
+          "key": "m1",
+          "value": 2,
+          "unit": "kg",
+          "quote": "m1 = 2 kg"
+        },
+        {
+          "key": "m2",
+          "value": 0.5,
+          "unit": "kg",
+          "quote": "m2 = 0,5 kg"
+        },
+        {
+          "key": "muK",
+          "value": 0.1,
+          "unit": "1",
+          "quote": "0,1"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "acceleration": 1.2,
+        "tension": 4.4
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "rr-03",
+      "text": "Vật m1 = 1 kg nằm trên mặt phẳng nghiêng góc 30°, được nối qua ròng rọc ở đỉnh dốc với vật m2 = 1 kg treo thẳng đứng. Bỏ qua ma sát. Lấy g = 10 m/s². Tính gia tốc của hệ và lực căng dây.",
+      "topic": "pulley",
+      "quantities": [
+        {
+          "key": "config",
+          "value": 2,
+          "unit": "1",
+          "quote": "nằm trên mặt phẳng nghiêng"
+        },
+        {
+          "key": "m1",
+          "value": 1,
+          "unit": "kg",
+          "quote": "m1 = 1 kg"
+        },
+        {
+          "key": "m2",
+          "value": 1,
+          "unit": "kg",
+          "quote": "m2 = 1 kg"
+        },
+        {
+          "key": "theta",
+          "value": 30,
+          "unit": "deg",
+          "quote": "góc 30°"
+        },
+        {
+          "key": "muS",
+          "value": 0,
+          "unit": "1",
+          "quote": "Bỏ qua ma sát"
+        },
+        {
+          "key": "muK",
+          "value": 0,
+          "unit": "1",
+          "quote": "Bỏ qua ma sát"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "acceleration": 2.5,
+        "tension": 7.5
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "lx-01",
+      "text": "Một lò xo có độ cứng 100 N/m, chiều dài tự nhiên 30 cm, được treo thẳng đứng. Treo vào đầu dưới của lò xo một vật khối lượng 200 g. Lấy g = 10 m/s². Tính độ dãn của lò xo và chiều dài của lò xo khi vật cân bằng.",
+      "topic": "hookeSpring",
+      "quantities": [
+        {
+          "key": "vertical",
+          "value": 1,
+          "unit": "1",
+          "quote": "treo thẳng đứng"
+        },
+        {
+          "key": "k",
+          "value": 100,
+          "unit": "N/m",
+          "quote": "độ cứng 100 N/m"
+        },
+        {
+          "key": "l0",
+          "value": 30,
+          "unit": "cm",
+          "quote": "chiều dài tự nhiên 30 cm"
+        },
+        {
+          "key": "m",
+          "value": 200,
+          "unit": "g",
+          "quote": "khối lượng 200 g"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "static_extension": 0.02,
+        "length_eq": 0.32,
+        "spring_force": 2.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "lx-02",
+      "text": "Treo một vật khối lượng 500 g vào một lò xo thì lò xo dãn ra 5 cm. Lấy g = 10 m/s². Tính độ cứng của lò xo.",
+      "topic": "hookeSpring",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 500,
+          "unit": "g",
+          "quote": "500 g"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [
+        "k"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": true
+    },
+    {
+      "id": "lx-03",
+      "text": "Con lắc lò xo nằm ngang gồm vật nặng 100 g và lò xo có độ cứng 40 N/m. Kéo vật ra khỏi vị trí cân bằng 4 cm rồi thả nhẹ. Tính chu kì, biên độ và tốc độ cực đại của vật.",
+      "topic": "springPendulum",
+      "quantities": [
+        {
+          "key": "vertical",
+          "value": 0,
+          "unit": "1",
+          "quote": "nằm ngang"
+        },
+        {
+          "key": "m",
+          "value": 100,
+          "unit": "g",
+          "quote": "vật nặng 100 g"
+        },
+        {
+          "key": "k",
+          "value": 40,
+          "unit": "N/m",
+          "quote": "độ cứng 40 N/m"
+        },
+        {
+          "key": "x0",
+          "value": 4,
+          "unit": "cm",
+          "quote": "4 cm"
+        },
+        {
+          "key": "v0",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "rồi thả nhẹ"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "period": 0.3141592653589793,
+        "omega": 20.0,
+        "amplitude": 0.04,
+        "v_max": 0.8
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "lx-04",
+      "text": "Một con lắc lò xo gồm vật khối lượng 250 g và lò xo có độ cứng 100 N/m dao động điều hòa. Tính tần số góc và chu kì dao động.",
+      "topic": "springPendulum",
+      "quantities": [
+        {
+          "key": "m",
+          "value": 250,
+          "unit": "g",
+          "quote": "khối lượng 250 g"
+        },
+        {
+          "key": "k",
+          "value": 100,
+          "unit": "N/m",
+          "quote": "độ cứng 100 N/m"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "omega": 20.0,
+        "period": 0.3141592653589793
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "cld-01",
+      "text": "Một con lắc đơn có chiều dài 1 m dao động với biên độ góc 6° tại nơi có g = 9,8 m/s². Tính chu kì dao động theo công thức gần đúng và so sánh với chu kì chính xác.",
+      "topic": "simplePendulum",
+      "quantities": [
+        {
+          "key": "L",
+          "value": 1,
+          "unit": "m",
+          "quote": "chiều dài 1 m"
+        },
+        {
+          "key": "theta0",
+          "value": 6,
+          "unit": "deg",
+          "quote": "biên độ góc 6°"
+        },
+        {
+          "key": "g",
+          "value": 9.8,
+          "unit": "m/s^2",
+          "quote": "g = 9,8 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "period_small": 2.007089923154493,
+        "period": 2.0084664257984866
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "cld-02",
+      "text": "Một con lắc đơn dài 2 m, vật nặng 100 g được kéo lệch khỏi phương thẳng đứng một góc 60° rồi thả nhẹ. Lấy g = 10 m/s². Tính tốc độ của vật khi đi qua vị trí cân bằng và lực căng dây lúc đó.",
+      "topic": "simplePendulum",
+      "quantities": [
+        {
+          "key": "L",
+          "value": 2,
+          "unit": "m",
+          "quote": "dài 2 m"
+        },
+        {
+          "key": "m",
+          "value": 100,
+          "unit": "g",
+          "quote": "vật nặng 100 g"
+        },
+        {
+          "key": "theta0",
+          "value": 60,
+          "unit": "deg",
+          "quote": "góc 60°"
+        },
+        {
+          "key": "omega0",
+          "value": 0,
+          "unit": "rad/s",
+          "quote": "rồi thả nhẹ"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v_max": 4.47213595499958,
+        "tension_max": 2.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "cn-01",
+      "text": "Một vật nhỏ được thả trượt không vận tốc đầu từ độ cao 5 m trên một máng cong nhẵn. Lấy g = 10 m/s². Tính tốc độ của vật tại điểm thấp nhất của máng.",
+      "topic": "energyConservation",
+      "quantities": [
+        {
+          "key": "shape",
+          "value": 0,
+          "unit": "1",
+          "quote": "máng cong nhẵn"
+        },
+        {
+          "key": "H",
+          "value": 5,
+          "unit": "m",
+          "quote": "độ cao 5 m"
+        },
+        {
+          "key": "v0",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "không vận tốc đầu"
+        },
+        {
+          "key": "g",
+          "value": 10,
+          "unit": "m/s^2",
+          "quote": "g = 10 m/s²"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v_low": 10.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "vc-01",
+      "text": "Quả cầu 1 khối lượng 2 kg chuyển động với vận tốc 4 m/s đến va chạm đàn hồi xuyên tâm với quả cầu 2 khối lượng 1 kg đang đứng yên. Tính vận tốc của hai quả cầu sau va chạm.",
+      "topic": "collisions",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 0,
+          "unit": "1",
+          "quote": "xuyên tâm"
+        },
+        {
+          "key": "m1",
+          "value": 2,
+          "unit": "kg",
+          "quote": "khối lượng 2 kg"
+        },
+        {
+          "key": "v1",
+          "value": 4,
+          "unit": "m/s",
+          "quote": "vận tốc 4 m/s"
+        },
+        {
+          "key": "m2",
+          "value": 1,
+          "unit": "kg",
+          "quote": "khối lượng 1 kg"
+        },
+        {
+          "key": "v2",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "đang đứng yên"
+        },
+        {
+          "key": "e",
+          "value": 1,
+          "unit": "1",
+          "quote": "va chạm đàn hồi"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v1x_after": 1.3333333333333333,
+        "v2x_after": 5.333333333333333,
+        "momentum": 8.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "vc-02",
+      "text": "Một viên bi khối lượng 0,5 kg đang chuyển động với vận tốc 6 m/s thì va chạm mềm với viên bi thứ hai khối lượng 1 kg đang đứng yên. Sau va chạm hai viên bi dính vào nhau. Tính vận tốc của chúng sau va chạm.",
+      "topic": "collisions",
+      "quantities": [
+        {
+          "key": "m1",
+          "value": 0.5,
+          "unit": "kg",
+          "quote": "khối lượng 0,5 kg"
+        },
+        {
+          "key": "v1",
+          "value": 6,
+          "unit": "m/s",
+          "quote": "vận tốc 6 m/s"
+        },
+        {
+          "key": "m2",
+          "value": 1,
+          "unit": "kg",
+          "quote": "khối lượng 1 kg"
+        },
+        {
+          "key": "v2",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "đang đứng yên"
+        },
+        {
+          "key": "e",
+          "value": 0,
+          "unit": "1",
+          "quote": "va chạm mềm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v1x_after": 2.0,
+        "v2x_after": 2.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "vc-03",
+      "text": "Hai xe lăn khối lượng 3 kg và 2 kg chuyển động ngược chiều nhau với tốc độ lần lượt là 2 m/s và 3 m/s rồi va chạm mềm. Tính vận tốc của hai xe sau va chạm.",
+      "topic": "collisions",
+      "quantities": [
+        {
+          "key": "m1",
+          "value": 3,
+          "unit": "kg",
+          "quote": "3 kg"
+        },
+        {
+          "key": "m2",
+          "value": 2,
+          "unit": "kg",
+          "quote": "2 kg"
+        },
+        {
+          "key": "v1",
+          "value": 2,
+          "unit": "m/s",
+          "quote": "2 m/s"
+        },
+        {
+          "key": "v2",
+          "value": -3,
+          "unit": "m/s",
+          "quote": "3 m/s"
+        },
+        {
+          "key": "e",
+          "value": 0,
+          "unit": "1",
+          "quote": "va chạm mềm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "v1x_after": 0.0,
+        "v2x_after": 0.0,
+        "momentum": 0.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "ng-01",
+      "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
+      "topic": "unsupported",
+      "quantities": [],
+      "missing": [],
+      "answers": {},
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "ng-02",
+      "text": "Một tia sáng truyền từ không khí vào nước với góc tới 45°. Chiết suất của nước là 1,33. Tính góc khúc xạ.",
+      "topic": "unsupported",
+      "quantities": [],
+      "missing": [],
+      "answers": {},
+      "expectUnsupportedParts": false
+    }
+  ]
+}

@@ -41,6 +41,9 @@ export class LinearEngine implements SimulationEngine<Params> {
     this.bodies = [mk(p.xA ?? 0, p.vA ?? 0, p.aA ?? 0)];
     if ((p.twoBodies ?? 0) > 0.5) this.bodies.push(mk(p.xB ?? 0, p.vB ?? 0, p.aB ?? 0));
     this.tEnd = p.tEnd ?? 10;
+    // Updates are exact, so the step only limits interaction smoothness: long trips
+    // (hours) use a coarser step to keep fast-forward cheap.
+    this.dt = Math.min(0.05, Math.max(1 / 240, this.tEnd / 4800));
     this.t = 0;
     this.drag = null;
   }

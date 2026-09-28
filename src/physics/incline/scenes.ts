@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
-import { L, gravityParam, massParam } from '../common/scene-helpers';
+import { L, gravityParam, massParam, pairFriction } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import { arrow, block, ground, polygon, polyline, text, vectorScale } from '../render/draw';
@@ -458,6 +458,7 @@ const v0Param: ParamDef = {
 
 export const newtonLaws: PhysicsScene = {
   id: 'newtonLaws',
+  required: ['m', 'F'],
   engineId: 'phys.incline',
   title: L('Các định luật Newton', "Newton's laws"),
   usesGravity: true,
@@ -481,7 +482,7 @@ export const newtonLaws: PhysicsScene = {
     gravityParam,
   ],
   // m = 5 kg pulled by 20 N at 30°, μ = 0.2 (classic SGK set-up).
-  defaults: { m: 5, F: 20, beta: Math.PI / 6, mu: 0.2, v0: 0, length: 20, g: 9.81 },
+  defaults: { m: 5, F: 20, beta: 0, mu: 0.2, v0: 0, length: 20, g: 9.81 },
   engineParams: (p) => ({ ...p, theta: 0, muS: p.mu ?? 0, muK: p.mu ?? 0, s0: 0, tEnd: 30 }),
   validate: (p) => validate({ ...p, theta: 0, muS: p.mu ?? 0, muK: p.mu ?? 0 }),
   scienceCard: card(true),
@@ -503,6 +504,7 @@ export const newtonLaws: PhysicsScene = {
 
 export const inclinedPlane: PhysicsScene = {
   id: 'inclinedPlane',
+  required: ['theta'],
   engineId: 'phys.incline',
   title: L('Mặt phẳng nghiêng', 'Inclined plane'),
   usesGravity: true,
@@ -547,6 +549,11 @@ export const inclinedPlane: PhysicsScene = {
     beta: 0,
     g: 9.81,
   },
+  // "Released from the top": when the start position is not given, start at the top.
+  autoDefaults: (p, src) => ({
+    ...pairFriction(p, src),
+    ...(src.s0 === 'default' ? { s0: p.length ?? 5 } : {}),
+  }),
   engineParams: (p) => ({ ...p, tEnd: 60 }),
   validate: (p) => {
     const e = validate(p);

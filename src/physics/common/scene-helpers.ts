@@ -106,3 +106,19 @@ export function relDiff(a: number, b: number): number {
   const scale = Math.max(Math.abs(a), Math.abs(b), 1e-12);
   return Math.abs(a - b) / scale;
 }
+
+/**
+ * When a problem gives only one friction coefficient ("hệ số ma sát là 0,2"), use it for
+ * both static and kinetic friction instead of mixing it with an unrelated default.
+ */
+export function pairFriction(
+  p: Record<string, number>,
+  sources: Record<string, 'problem' | 'default' | 'user'>,
+): Record<string, number> {
+  const out = { ...p };
+  const sDef = sources.muS === 'default';
+  const kDef = sources.muK === 'default';
+  if (sDef && !kDef && p.muK !== undefined) out.muS = p.muK;
+  if (kDef && !sDef && p.muS !== undefined) out.muK = p.muS;
+  return out;
+}

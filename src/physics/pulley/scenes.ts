@@ -5,7 +5,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { accel1D } from '../common/coulomb1d';
-import { L, gravityParam } from '../common/scene-helpers';
+import { L, gravityParam, pairFriction } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
 import { texNum, texQty } from '../common/tex';
 import { arrow, block, circle, ground, line, polygon, vectorScale } from '../render/draw';
@@ -433,6 +433,7 @@ function validate(p: Params): LocalizedText[] {
 
 export const pulley: PhysicsScene = {
   id: 'pulley',
+  required: ['m1', 'm2'],
   engineId: 'phys.pulley',
   title: L('Ròng rọc – dây nối', 'Pulleys and strings'),
   usesGravity: true,
@@ -505,6 +506,7 @@ export const pulley: PhysicsScene = {
     g: 9.81,
   },
   validate,
+  autoDefaults: pairFriction,
   scienceCard: card,
   solve,
   graphs,

@@ -8,7 +8,8 @@ export const SUBJECTS: readonly Subject[] = ['physics', 'chemistry', 'biology'];
 export type StageTool = 'select' | 'drag' | 'ruler' | 'protractor';
 
 /** Allowed playback speeds (§7.1: ×0.1 – ×4). */
-export const PLAYBACK_SPEEDS = [0.1, 0.25, 0.5, 1, 2, 4] as const;
+/** Allowed playback speeds (§7.1: ×0.1 – ×4, plus fast-forward for km/h–hour problems). */
+export const PLAYBACK_SPEEDS = [0.1, 0.25, 0.5, 1, 2, 4, 10, 100, 1000] as const;
 export type PlaybackSpeed = (typeof PLAYBACK_SPEEDS)[number];
 
 export type AiStatus = 'offline' | 'local' | 'cloud';

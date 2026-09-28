@@ -339,6 +339,7 @@ function card(p: Params): ScienceCardData {
 
 export const simplePendulum: PhysicsScene = {
   id: 'simplePendulum',
+  required: ['L', 'theta0'],
   engineId: 'phys.pendulum',
   title: L('Con lắc đơn', 'Simple pendulum'),
   usesGravity: true,
