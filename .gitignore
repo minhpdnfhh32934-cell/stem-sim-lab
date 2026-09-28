@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# Test / tooling output
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# Local environment (API keys live in the OS keychain, never in files)
+.env
+.env.*
+!.env.example
