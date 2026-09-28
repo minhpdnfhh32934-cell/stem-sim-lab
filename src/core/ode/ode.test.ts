@@ -57,6 +57,31 @@ describe('Dormand–Prince 5(4)', () => {
     expect(r.y[0]).toBeCloseTo(v0 * Math.cos(a) * tExact, 9);
   });
 
+  it('finds an event even when the start lies exactly on the event surface', () => {
+    // Launch from the ground (y = 0): large polynomial-exact steps must not skip the landing.
+    const g = 9.81;
+    const f: OdeFn = (_t, s, d) => {
+      d[0] = s[2]!;
+      d[1] = s[3]!;
+      d[2] = 0;
+      d[3] = -g;
+    };
+    const v = 15 / Math.SQRT2;
+    const r = dopri5(f, [0, 0, v, v], 0, 1e4, {
+      rtol: 1e-11,
+      atol: 1e-12,
+      events: [
+        { id: 'ground', g: (_t, s) => s[1]!, direction: -1, terminal: true },
+        // A non-terminal event in the same step must not hide the terminal one.
+        { id: 'apex', g: (_t, s) => s[3]!, direction: -1 },
+      ],
+    });
+    expect(r.stoppedBy).toBe('ground');
+    expect(r.t).toBeCloseTo((2 * v) / g, 10);
+    expect(r.events.map((e) => e.id)).toEqual(['apex', 'ground']);
+    expect(r.events[0]!.t).toBeCloseTo(v / g, 10);
+  });
+
   it('nonlinear pendulum half-period matches the elliptic-integral formula', () => {
     // θ'' = -(g/L) sin θ, released from rest at θ₀ = 60°; θ reaches -θ₀... we time θ = 0 crossings.
     const g = 9.81;

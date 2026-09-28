@@ -206,47 +206,60 @@ export function dopri5(
     const k7Accepted = events.length > 0 ? Float64Array.from(st.k7) : st.k7;
     let stopped: string | undefined;
     const gNew = events.map((e) => e.g(tNew, yNew));
-    let earliest: { index: number; tc: number } | undefined;
+    const crossings: { index: number; tc: number }[] = [];
     for (let i = 0; i < events.length; i++) {
       const ev = events[i];
-      const a = gPrev[i] ?? 0;
       const b = gNew[i] ?? 0;
-      if (!ev || a === 0 || Math.sign(a) === Math.sign(b)) continue;
-      const rising = b > a;
-      if ((ev.direction === 1 && !rising) || (ev.direction === -1 && rising)) continue;
+      if (!ev || (b === 0 && (gPrev[i] ?? 0) === 0)) continue;
       const probe = new Float64Array(n);
       const k1Saved = Float64Array.from(st.k1);
-      const tc = findRoot(
-        (s) => {
-          if (s === 0) return a;
-          st.k1.set(k1Saved);
-          st.step(t, y, s, probe, rtol, atol);
-          return ev.g(t + s, probe);
-        },
-        0,
-        h,
-        1e-14,
-      );
+      const gAt = (s: number) => {
+        st.k1.set(k1Saved);
+        st.step(t, y, s, probe, rtol, atol);
+        return ev.g(t + s, probe);
+      };
+      // Starting exactly on the event surface (e.g. a launch from the ground at y = 0):
+      // judge the crossing from just after the start, otherwise a single long step that
+      // leaves and re-crosses the surface would be missed.
+      let lo = 0;
+      let a = gPrev[i] ?? 0;
+      if (a === 0) {
+        lo = h * 1e-9;
+        a = gAt(lo);
+      }
+      if (a === 0 || Math.sign(a) === Math.sign(b)) {
+        st.k1.set(k1Saved);
+        continue;
+      }
+      const rising = b > a;
+      if ((ev.direction === 1 && !rising) || (ev.direction === -1 && rising)) {
+        st.k1.set(k1Saved);
+        continue;
+      }
+      const aLo = a;
+      const tc = findRoot((s) => (s === lo ? aLo : gAt(s)), lo, h, 1e-14);
       st.k1.set(k1Saved);
-      if (!earliest || tc < earliest.tc) earliest = { index: i, tc };
+      crossings.push({ index: i, tc });
     }
 
-    if (earliest) {
-      const ev = events[earliest.index];
+    // Several events may fall inside one step: record them in time order and stop at the
+    // first terminal one (a non-terminal event must not hide a later terminal event).
+    crossings.sort((p, q) => p.tc - q.tc);
+    for (const c of crossings) {
+      const ev = events[c.index];
+      if (!ev) continue;
       const yc = new Float64Array(n);
       const k1Saved = Float64Array.from(st.k1);
-      st.step(t, y, earliest.tc, yc, rtol, atol);
+      st.step(t, y, c.tc, yc, rtol, atol);
       st.k1.set(k1Saved);
-      if (ev) {
-        hits.push({ id: ev.id, t: t + earliest.tc, y: yc });
-        if (ev.terminal) {
-          stopped = ev.id;
-          t = t + earliest.tc;
-          y = yc;
-          stats.steps++;
-          stats.fEvals = st.fEvals;
-          return { t, y, events: hits, stoppedBy: stopped, stats };
-        }
+      hits.push({ id: ev.id, t: t + c.tc, y: yc });
+      if (ev.terminal) {
+        stopped = ev.id;
+        t = t + c.tc;
+        y = yc;
+        stats.steps++;
+        stats.fEvals = st.fEvals;
+        return { t, y, events: hits, stoppedBy: stopped, stats };
       }
     }
 
