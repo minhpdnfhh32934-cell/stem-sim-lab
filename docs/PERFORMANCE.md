@@ -20,4 +20,17 @@ màn hình 1366×768, Windows 10.
 | 2026-09-28 | 0         | Máy build (Linux) | Bundle giao diện (JS gzip / CSS gzip) | ≈ 90 KB / 5 KB                                   |
 | 2026-09-28 | 0         | Máy build (Linux) | Tránh render thừa khi kéo panel       | Các panel dùng `memo` + selector hẹp của Zustand |
 
-Benchmark tự động với các cảnh chuẩn sẽ được thêm từ Giai đoạn 1.
+## Chọn mức chất lượng tự động (Giai đoạn 1)
+
+Lần đầu mở app, app đo nhanh cấu hình máy trong khoảng 1,2 giây (`src/perf/benchmark.ts`):
+
+- **CPU:** tính lực hấp dẫn giữa 48 vật trong 600 ms. Kết quả là số "nghìn vật-bước mỗi ms".
+- **Vẽ 2D:** vẽ các hình tròn lên canvas 800×600 trong 600 ms, có đọc lại điểm ảnh để tính cả
+  thời gian GPU. Kết quả là số "hình tròn mỗi ms".
+- **WebGL2:** có hỗ trợ hay không. Số luồng CPU lấy từ `navigator.hardwareConcurrency`.
+
+Từ kết quả đo, app xếp máy vào mức **Thấp / Trung bình / Cao**. Mức chất lượng chỉ ảnh hưởng hình
+ảnh (độ nét, khử răng cưa, bóng đổ, số hạt vẽ, độ mịn khối cầu), không ảnh hưởng số liệu. Người
+dùng chỉnh được trong Cài đặt → Chất lượng hiển thị, hoặc bấm "Đo lại". Các ngưỡng phân loại hiện
+là ước lượng. Cần hiệu chỉnh lại trên máy tối thiểu thật (i3, UHD 620), rồi ghi kết quả vào bảng
+bên trên.

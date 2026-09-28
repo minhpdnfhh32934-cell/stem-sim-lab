@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { ScienceCardData } from '@/science-card/types';
 
 export type Subject = 'physics' | 'chemistry' | 'biology';
 export const SUBJECTS: readonly Subject[] = ['physics', 'chemistry', 'biology'];
@@ -28,6 +29,8 @@ export interface WorkspaceState {
   /** Simulation time in seconds (SI). */
   simTime: number;
   aiStatus: AiStatus;
+  /** Science Card of the open simulation (null when none). */
+  scienceCard: ScienceCardData | null;
 
   setSubject: (subject: Subject) => void;
   setProblemText: (text: string) => void;
@@ -46,6 +49,7 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
   speed: 1,
   simTime: 0,
   aiStatus: 'offline',
+  scienceCard: null,
 
   setSubject: (subject) => {
     set({ subject });

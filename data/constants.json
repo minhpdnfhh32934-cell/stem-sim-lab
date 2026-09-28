@@ -1,0 +1,349 @@
+{
+  "dataset": "physical_constants",
+  "version": 1,
+  "source": {
+    "id": "codata",
+    "citation": "CODATA 2022 recommended values of the fundamental physical constants (NIST), via SciPy 1.17.1 scipy.constants",
+    "url": "https://physics.nist.gov/cuu/Constants/"
+  },
+  "generated_by": "scripts/data/gen_constants.py",
+  "items": [
+    {
+      "id": "c",
+      "symbol": "c",
+      "name": {
+        "vi": "Tốc độ ánh sáng trong chân không",
+        "en": "Speed of light in vacuum"
+      },
+      "value": 299792458.0,
+      "unit": "m/s",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "speed of light in vacuum",
+      "review_status": "pending"
+    },
+    {
+      "id": "h",
+      "symbol": "h",
+      "name": {
+        "vi": "Hằng số Planck",
+        "en": "Planck constant"
+      },
+      "value": 6.62607015e-34,
+      "unit": "J/Hz",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "Planck constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "hbar",
+      "symbol": "\\hbar",
+      "name": {
+        "vi": "Hằng số Planck rút gọn",
+        "en": "Reduced Planck constant"
+      },
+      "value": 1.0545718176461565e-34,
+      "unit": "J*s",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "reduced Planck constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "e",
+      "symbol": "e",
+      "name": {
+        "vi": "Điện tích nguyên tố",
+        "en": "Elementary charge"
+      },
+      "value": 1.602176634e-19,
+      "unit": "C",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "elementary charge",
+      "review_status": "pending"
+    },
+    {
+      "id": "kB",
+      "symbol": "k_B",
+      "name": {
+        "vi": "Hằng số Boltzmann",
+        "en": "Boltzmann constant"
+      },
+      "value": 1.380649e-23,
+      "unit": "J/K",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "Boltzmann constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "NA",
+      "symbol": "N_A",
+      "name": {
+        "vi": "Hằng số Avogadro",
+        "en": "Avogadro constant"
+      },
+      "value": 6.02214076e+23,
+      "unit": "1/mol",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "Avogadro constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "R",
+      "symbol": "R",
+      "name": {
+        "vi": "Hằng số khí lý tưởng",
+        "en": "Molar gas constant"
+      },
+      "value": 8.31446261815324,
+      "unit": "J/(mol*K)",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "molar gas constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "F",
+      "symbol": "F",
+      "name": {
+        "vi": "Hằng số Faraday",
+        "en": "Faraday constant"
+      },
+      "value": 96485.33212331001,
+      "unit": "C/mol",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "Faraday constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "G",
+      "symbol": "G",
+      "name": {
+        "vi": "Hằng số hấp dẫn",
+        "en": "Newtonian constant of gravitation"
+      },
+      "value": 6.6743e-11,
+      "unit": "m^3/(kg*s^2)",
+      "uncertainty": 1.5e-15,
+      "exact": false,
+      "codata_key": "Newtonian constant of gravitation",
+      "review_status": "pending"
+    },
+    {
+      "id": "eps0",
+      "symbol": "\\varepsilon_0",
+      "name": {
+        "vi": "Hằng số điện môi chân không",
+        "en": "Vacuum electric permittivity"
+      },
+      "value": 8.8541878188e-12,
+      "unit": "F/m",
+      "uncertainty": 1.4e-21,
+      "exact": false,
+      "codata_key": "vacuum electric permittivity",
+      "review_status": "pending"
+    },
+    {
+      "id": "mu0",
+      "symbol": "\\mu_0",
+      "name": {
+        "vi": "Độ từ thẩm chân không",
+        "en": "Vacuum magnetic permeability"
+      },
+      "value": 1.25663706127e-06,
+      "unit": "N/A^2",
+      "uncertainty": 2e-16,
+      "exact": false,
+      "codata_key": "vacuum mag. permeability",
+      "review_status": "pending"
+    },
+    {
+      "id": "me",
+      "symbol": "m_e",
+      "name": {
+        "vi": "Khối lượng electron",
+        "en": "Electron mass"
+      },
+      "value": 9.1093837139e-31,
+      "unit": "kg",
+      "uncertainty": 2.8e-40,
+      "exact": false,
+      "codata_key": "electron mass",
+      "review_status": "pending"
+    },
+    {
+      "id": "mp",
+      "symbol": "m_p",
+      "name": {
+        "vi": "Khối lượng proton",
+        "en": "Proton mass"
+      },
+      "value": 1.67262192595e-27,
+      "unit": "kg",
+      "uncertainty": 5.2e-37,
+      "exact": false,
+      "codata_key": "proton mass",
+      "review_status": "pending"
+    },
+    {
+      "id": "mn",
+      "symbol": "m_n",
+      "name": {
+        "vi": "Khối lượng neutron",
+        "en": "Neutron mass"
+      },
+      "value": 1.67492750056e-27,
+      "unit": "kg",
+      "uncertainty": 8.5e-37,
+      "exact": false,
+      "codata_key": "neutron mass",
+      "review_status": "pending"
+    },
+    {
+      "id": "mu",
+      "symbol": "m_u",
+      "name": {
+        "vi": "Hằng số khối lượng nguyên tử (1 u)",
+        "en": "Atomic mass constant (1 u)"
+      },
+      "value": 1.66053906892e-27,
+      "unit": "kg",
+      "uncertainty": 5.2e-37,
+      "exact": false,
+      "codata_key": "atomic mass constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "a0",
+      "symbol": "a_0",
+      "name": {
+        "vi": "Bán kính Bohr",
+        "en": "Bohr radius"
+      },
+      "value": 5.29177210544e-11,
+      "unit": "m",
+      "uncertainty": 8.2e-21,
+      "exact": false,
+      "codata_key": "Bohr radius",
+      "review_status": "pending"
+    },
+    {
+      "id": "Rinf",
+      "symbol": "R_\\infty",
+      "name": {
+        "vi": "Hằng số Rydberg",
+        "en": "Rydberg constant"
+      },
+      "value": 10973731.568157,
+      "unit": "1/m",
+      "uncertainty": 1.2e-05,
+      "exact": false,
+      "codata_key": "Rydberg constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "RinfhcEv",
+      "symbol": "R_\\infty hc",
+      "name": {
+        "vi": "Năng lượng Rydberg",
+        "en": "Rydberg energy"
+      },
+      "value": 13.60569312299,
+      "unit": "eV",
+      "uncertainty": 1.5e-11,
+      "exact": false,
+      "codata_key": "Rydberg constant times hc in eV",
+      "review_status": "pending"
+    },
+    {
+      "id": "sigma",
+      "symbol": "\\sigma",
+      "name": {
+        "vi": "Hằng số Stefan–Boltzmann",
+        "en": "Stefan–Boltzmann constant"
+      },
+      "value": 5.6703744191844314e-08,
+      "unit": "W/(m^2*K^4)",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "Stefan-Boltzmann constant",
+      "review_status": "pending"
+    },
+    {
+      "id": "eV",
+      "symbol": "\\text{eV}",
+      "name": {
+        "vi": "Electron-volt",
+        "en": "Electron volt"
+      },
+      "value": 1.602176634e-19,
+      "unit": "J",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "electron volt",
+      "review_status": "pending"
+    },
+    {
+      "id": "gn",
+      "symbol": "g_n",
+      "name": {
+        "vi": "Gia tốc trọng trường chuẩn",
+        "en": "Standard acceleration of gravity"
+      },
+      "value": 9.80665,
+      "unit": "m/s^2",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "standard acceleration of gravity",
+      "review_status": "pending"
+    },
+    {
+      "id": "atm",
+      "symbol": "\\text{atm}",
+      "name": {
+        "vi": "Áp suất khí quyển chuẩn",
+        "en": "Standard atmosphere"
+      },
+      "value": 101325.0,
+      "unit": "Pa",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "standard atmosphere",
+      "review_status": "pending"
+    },
+    {
+      "id": "Vm",
+      "symbol": "V_m",
+      "name": {
+        "vi": "Thể tích mol khí lý tưởng (0 °C, 1 atm)",
+        "en": "Molar volume of ideal gas (0 °C, 1 atm)"
+      },
+      "value": 0.022413969545014137,
+      "unit": "m^3/mol",
+      "uncertainty": 0.0,
+      "exact": true,
+      "codata_key": "molar volume of ideal gas (273.15 K, 101.325 kPa)",
+      "review_status": "pending"
+    },
+    {
+      "id": "kC",
+      "symbol": "k",
+      "name": {
+        "vi": "Hằng số Coulomb (tính từ ε₀)",
+        "en": "Coulomb constant (derived from ε₀)"
+      },
+      "value": 8987551786.170797,
+      "unit": "N*m^2/C^2",
+      "uncertainty": 1.421087146347029,
+      "exact": false,
+      "codata_key": null,
+      "derived_from": "k = 1/(4π ε₀)",
+      "review_status": "pending"
+    }
+  ]
+}

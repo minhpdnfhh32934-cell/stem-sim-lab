@@ -601,3 +601,8 @@ body[data-resizing] .splitter {
     padding: 5px 8px;
   }
 }
+
+.statusbar__item--warn {
+  color: var(--warning);
+  font-weight: 600;
+}

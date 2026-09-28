@@ -1,0 +1,10 @@
+import { registerEngine } from '@/core/sim/engine';
+
+/**
+ * Every simulation engine is registered here with a lazy import, so each domain's code
+ * is only loaded when one of its scenes opens (MASTER_PROMPT §4.2 lazy loading).
+ */
+registerEngine('demo.oscillator', async () => {
+  const { OscillatorEngine } = await import('@/core/sim/demoEngine');
+  return () => new OscillatorEngine();
+});

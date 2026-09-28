@@ -1,10 +1,16 @@
-import { Bot, Keyboard, LayoutPanelLeft, Palette, X } from 'lucide-react';
+import { Bot, Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { SHORTCUTS, formatChord, type ShortcutAction } from '@/app/shortcuts/shortcuts';
+import { GRAVITY_PRESETS } from '@/core/constants';
+import { usePerfStore } from '@/perf/perfStore';
+import type { QualityPreference } from '@/perf/tiers';
+import { remeasure } from '@/perf/useStartupBenchmark';
 import { IconButton } from '@/ui/IconButton';
 import { FONT_SCALES, useSettingsStore, type ThemePreference } from './settingsStore';
+
+const QUALITY: QualityPreference[] = ['auto', 'low', 'medium', 'high'];
 
 const THEMES: {
   id: ThemePreference;
@@ -40,6 +46,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const settings = useSettingsStore();
   const resetLayout = useLayoutStore((s) => s.resetLayout);
+  const perf = usePerfStore();
 
   useEffect(() => {
     const dialog = ref.current;
@@ -140,6 +147,87 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           <button type="button" className="btn" onClick={resetLayout}>
             {t('settings.resetLayout')}
           </button>
+        </fieldset>
+
+        <fieldset className="settings-group">
+          <legend>
+            <Gauge size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('settings.quality')}
+          </legend>
+          <div className="settings-row">
+            <span id="quality-label">{t('settings.quality')}</span>
+            <div className="segmented" role="radiogroup" aria-labelledby="quality-label">
+              {QUALITY.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  role="radio"
+                  aria-checked={perf.preference === q}
+                  className="segmented__item"
+                  onClick={() => {
+                    perf.setPreference(q);
+                  }}
+                >
+                  {q === 'auto' && perf.benchmark
+                    ? t('quality.autoWith', { tier: t(`quality.${perf.benchmark.tier}`) })
+                    : t(`quality.${q}`)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="muted">{t('settings.qualityHint')}</p>
+          <div className="settings-row">
+            <span className="muted mono">
+              {perf.benchmarking
+                ? t('quality.measuring')
+                : perf.benchmark
+                  ? t('quality.benchmarkSummary', {
+                      cpu: perf.benchmark.cpuScore,
+                      draw: perf.benchmark.drawScore,
+                      webgl: perf.benchmark.webgl2 ? t('quality.yes') : t('quality.no'),
+                      cores: perf.benchmark.cores,
+                    })
+                  : ''}
+            </span>
+            <button
+              type="button"
+              className="btn"
+              disabled={perf.benchmarking}
+              onClick={() => {
+                void remeasure();
+              }}
+            >
+              {t('quality.remeasure')}
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset className="settings-group">
+          <legend>
+            <Orbit size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('physicsSettings.title')}
+          </legend>
+          <div className="settings-row">
+            <span id="gravity-label">{t('physicsSettings.defaultGravity')}</span>
+            <div className="segmented" role="radiogroup" aria-labelledby="gravity-label">
+              {GRAVITY_PRESETS.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  role="radio"
+                  aria-checked={settings.defaultGravity === g}
+                  className="segmented__item mono"
+                  onClick={() => {
+                    settings.setDefaultGravity(g);
+                  }}
+                >
+                  {formatNumber(settings.locale, g)}
+                  {g === 9.80665 ? ` (${t('physicsSettings.standard')})` : ''}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="muted">{t('physicsSettings.defaultGravityHint')}</p>
         </fieldset>
 
         <fieldset className="settings-group">

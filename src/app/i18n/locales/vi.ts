@@ -187,6 +187,9 @@ const vi = {
     ai: 'AI đọc đề',
     aiLater: 'Cấu hình LM Studio và API đám mây sẽ có ở Giai đoạn 3.',
     shortcuts: 'Phím tắt',
+    quality: 'Chất lượng hiển thị',
+    qualityHint:
+      'Chỉ ảnh hưởng hình ảnh (độ nét, bóng đổ, số hạt vẽ), không bao giờ ảnh hưởng số liệu.',
   },
   shortcuts: {
     playPause: 'Chạy / tạm dừng',
@@ -201,6 +204,37 @@ const vi = {
     fontLarger: 'Tăng cỡ chữ',
     fontSmaller: 'Giảm cỡ chữ',
     analyze: 'Phân tích đề (trong ô đề bài)',
+  },
+  science: {
+    cardLabel: 'Thẻ Khoa học của mô phỏng',
+    model: 'Mô hình',
+    equations: 'Phương trình',
+    assumptions: 'Giả định',
+    validity: 'Phạm vi hợp lệ',
+    method: 'Phương pháp tính',
+    sources: 'Nguồn',
+    intervened: 'Đã có can thiệp — kết quả là mô phỏng số.',
+    estimatedError: 'Sai số ước lượng: {value}',
+  },
+  quality: {
+    low: 'Thấp',
+    medium: 'Trung bình',
+    high: 'Cao',
+    auto: 'Tự động',
+    autoWith: 'Tự động ({tier})',
+    measuring: 'Đang đo hiệu năng máy…',
+    remeasure: 'Đo lại',
+    benchmarkSummary: 'CPU {cpu} · Vẽ 2D {draw} · WebGL2: {webgl} · {cores} luồng',
+    yes: 'có',
+    no: 'không',
+    slowMotion: 'Chuyển động chậm ×{factor} để giữ độ chính xác',
+  },
+  physicsSettings: {
+    title: 'Vật lý',
+    defaultGravity: 'Gia tốc trọng trường mặc định',
+    defaultGravityHint:
+      'Chỉ dùng khi đề bài không cho g. Giá trị do đề bài cho luôn được ưu tiên và mặc định luôn được đánh dấu "mặc định".',
+    standard: 'chuẩn',
   },
   languages: {
     vi: 'Tiếng Việt',

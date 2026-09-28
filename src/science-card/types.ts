@@ -1,7 +1,10 @@
 /**
- * Science Card types (MASTER_PROMPT §2.3). The full card UI is built in Phase 1;
- * these types are shared already so badges and data files use the same vocabulary.
+ * Science Card types (MASTER_PROMPT §2.3). Every simulation publishes one of these;
+ * the card is shown in the Inspector and in presentation mode.
  */
+import type { LocalizedText, Source } from '@/core/data/dataset';
+
+export type { LocalizedText, Source } from '@/core/data/dataset';
 
 /**
  * - `exact`: matches the analytic solution within a stated tolerance (green).
@@ -15,27 +18,43 @@ export const CONFIDENCE_LEVELS: readonly ConfidenceLevel[] = ['exact', 'approx',
 /** Every scientific data item carries a review status; `pending` shows a warning badge. */
 export type ReviewStatus = 'pending' | 'verified';
 
-/** A bibliographic source for a model, constant or data table. */
-export interface SourceRef {
-  id: string;
-  /** Full human-readable citation, e.g. "CODATA 2022, NIST". */
-  citation: string;
-  url?: string;
+export interface EquationSpec {
+  /** KaTeX source. */
+  tex: string;
+  label?: LocalizedText;
 }
 
-/** Draft shape of a Science Card; finalized in Phase 1. */
 export interface ScienceCardData {
-  /** Model used, e.g. "point mass, no air resistance". */
-  model: string;
-  /** Equations as KaTeX source strings. */
-  equations: string[];
-  assumptions: string[];
+  title: LocalizedText;
+  /** Model used, e.g. "chất điểm, bỏ qua lực cản không khí". */
+  model: LocalizedText;
+  equations: EquationSpec[];
+  assumptions: LocalizedText[];
   /** Range where the model is valid, e.g. "θ₀ ≲ 10°". */
-  validity?: string;
+  validity?: LocalizedText;
   confidence: ConfidenceLevel;
+  /** How the confidence was established (tolerance, method). */
+  confidenceNote?: LocalizedText;
   /** Estimated relative error when `confidence === 'approx'`. */
   estimatedError?: number;
   /** Set when the user intervened (dragged/threw an object) — §2.5. */
   userIntervened: boolean;
-  sources: SourceRef[];
+  /** Numerical method, e.g. "Velocity Verlet, Δt = 1/240 s". */
+  method?: LocalizedText;
+  sources: Source[];
+  /** Review status of the data the scene depends on, when applicable. */
+  reviewStatus?: ReviewStatus;
+}
+
+/**
+ * Applies the intervention rule (§2.5): once the user drags or throws an object the
+ * analytic solution no longer applies, so an `exact` card becomes `approx`.
+ */
+export function withIntervention(card: ScienceCardData, intervened: boolean): ScienceCardData {
+  if (!intervened) return card;
+  return {
+    ...card,
+    userIntervened: true,
+    confidence: card.confidence === 'exact' ? 'approx' : card.confidence,
+  };
 }

@@ -15,7 +15,10 @@ export default defineConfig({
   plugins: [react()],
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   resolve: {
-    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@data': fileURLToPath(new URL('./data', import.meta.url)),
+    },
   },
 
   // Tauri expects a fixed port and must be able to see Rust errors in the terminal.

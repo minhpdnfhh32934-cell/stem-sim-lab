@@ -6,12 +6,15 @@ import { ConfidenceBadge, ReviewBadge } from '@/ui/Badges';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 import { Section } from '@/ui/Section';
+import { useWorkspaceStore } from '@/app/workspaceStore';
+import { ScienceCard } from '@/science-card/ScienceCard';
 import { useLayoutStore } from './layoutStore';
 
 /** Right-hand panel: selected object, parameters, and the Science Card. */
 export const Inspector = memo(function Inspector() {
   const t = useT();
   const toggle = useLayoutStore((s) => s.toggle);
+  const card = useWorkspaceStore((s) => s.scienceCard);
 
   return (
     <aside className="panel inspector" aria-label={t('inspector.regionLabel')}>
@@ -45,18 +48,24 @@ export const Inspector = memo(function Inspector() {
           title={t('inspector.scienceCard')}
           trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
         >
-          <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
-          <ul className="confidence-legend">
-            {CONFIDENCE_LEVELS.map((level) => (
-              <li key={level}>
-                <ConfidenceBadge level={level} />
-                <span>{t(`confidence.${level}Desc`)}</span>
-              </li>
-            ))}
-            <li>
-              <ReviewBadge status="pending" />
-            </li>
-          </ul>
+          {card ? (
+            <ScienceCard card={card} />
+          ) : (
+            <>
+              <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
+              <ul className="confidence-legend">
+                {CONFIDENCE_LEVELS.map((level) => (
+                  <li key={level}>
+                    <ConfidenceBadge level={level} />
+                    <span>{t(`confidence.${level}Desc`)}</span>
+                  </li>
+                ))}
+                <li>
+                  <ReviewBadge status="pending" />
+                </li>
+              </ul>
+            </>
+          )}
         </Section>
       </div>
     </aside>

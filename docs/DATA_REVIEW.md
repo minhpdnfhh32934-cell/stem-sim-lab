@@ -18,5 +18,11 @@ trường `review_status`. Mục `pending` hiển thị huy hiệu **"Đang ch�
 
 ## Điểm khoa học chưa chắc chắn (TODO)
 
-_Chưa có._ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc chắn, Claude sẽ ghi vào đây
-thay vì tự đoán.
+Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc chắn, Claude ghi vào đây thay vì tự
+đoán.
+
+1. **Giá trị g mặc định.** MASTER_PROMPT dùng 9,81 m/s² trong ví dụ, nên app đang để mặc định là
+   9,81. Trong khi đó SGK Việt Nam thường dùng 9,8 hoặc 10 m/s². Giá trị chuẩn quốc tế là
+   gₙ = 9,80665 m/s², chính xác theo định nghĩa của CGPM năm 1901. Người dùng đổi được trong
+   Cài đặt → Vật lý. **Nhờ giáo viên chọn giá trị mặc định phù hợp.** Dù chọn giá trị nào, g lấy
+   theo mặc định luôn được gắn nhãn "mặc định". Khi đề bài cho g, app luôn dùng giá trị của đề.

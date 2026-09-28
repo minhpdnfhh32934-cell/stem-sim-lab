@@ -26,7 +26,8 @@
     "useUnknownInCatchVariables": true,
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@data/*": ["./data/*"]
     }
   },
   "include": ["src", "tests"]
