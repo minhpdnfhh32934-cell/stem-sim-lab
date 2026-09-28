@@ -1,0 +1,149 @@
+/*
+ * Design tokens — the single source of truth for colors, spacing, radii and motion.
+ * Components must use these variables, never hard-coded colors.
+ *
+ * Theme is selected by `data-theme="light" | "dark"` on <html> (set by themeStore).
+ */
+
+:root {
+  /* Typography — system fonts with full Vietnamese support; no font download needed. */
+  --font-sans:
+    'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Noto Sans', 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-mono: 'Cascadia Mono', 'Cascadia Code', Consolas, ui-monospace, 'SF Mono', monospace;
+  --font-scale: 1;
+  --text-xs: 0.75rem;
+  --text-sm: 0.857rem;
+  --text-md: 1rem;
+  --text-lg: 1.143rem;
+  --text-xl: 1.429rem;
+
+  /* Spacing (4px grid at 100% font scale) */
+  --space-1: 0.286rem;
+  --space-2: 0.571rem;
+  --space-3: 0.857rem;
+  --space-4: 1.143rem;
+  --space-5: 1.714rem;
+  --space-6: 2.286rem;
+
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  /* Layout sizes */
+  --topbar-h: 3.715rem;
+  --timeline-h: 3.143rem;
+  --statusbar-h: 1.715rem;
+  --splitter: 6px;
+
+  /* Motion — subtle; disabled entirely under prefers-reduced-motion. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur-med: 220ms;
+
+  /*
+   * Chart palette: Okabe & Ito (2008) color-universal-design palette,
+   * distinguishable under common forms of color-vision deficiency.
+   */
+  --chart-1: #0072b2;
+  --chart-2: #e69f00;
+  --chart-3: #009e73;
+  --chart-4: #d55e00;
+  --chart-5: #cc79a7;
+  --chart-6: #56b4e9;
+  --chart-7: #f0e442;
+}
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg-app: #eef1f6;
+  --bg-panel: #ffffff;
+  --bg-panel-2: #f6f8fb;
+  --bg-sunken: #e7ebf2;
+  --bg-hover: #edf1f8;
+  --bg-active: #e1e8f7;
+  --bg-stage: #fbfcfe;
+  --stage-grid: rgba(40, 60, 100, 0.07);
+  --stage-grid-major: rgba(40, 60, 100, 0.13);
+
+  --border: #dde2eb;
+  --border-strong: #c6cedb;
+
+  --text: #172033;
+  --text-muted: #5a6477;
+  --text-faint: #8a93a5;
+  --text-on-accent: #ffffff;
+
+  --accent: #2f62d8;
+  --accent-hover: #2653bd;
+  --accent-soft: #e3ebfd;
+  --focus-ring: rgba(47, 98, 216, 0.45);
+
+  --danger: #c93a3a;
+  --warning: #b77900;
+
+  /* Science Card confidence levels (§2.3 of MASTER_PROMPT) */
+  --conf-exact: #16804a;
+  --conf-exact-soft: #dcf3e6;
+  --conf-approx: #9a6b00;
+  --conf-approx-soft: #fbefcc;
+  --conf-qual: #2166b5;
+  --conf-qual-soft: #dfeafa;
+  --pending: #8a5a00;
+  --pending-soft: #fff1d6;
+
+  --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
+  --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg-app: #0d1117;
+  --bg-panel: #151b24;
+  --bg-panel-2: #19202b;
+  --bg-sunken: #0f141c;
+  --bg-hover: #1e2632;
+  --bg-active: #22304a;
+  --bg-stage: #10151d;
+  --stage-grid: rgba(160, 180, 220, 0.06);
+  --stage-grid-major: rgba(160, 180, 220, 0.11);
+
+  --border: #252e3b;
+  --border-strong: #334052;
+
+  --text: #e4e9f1;
+  --text-muted: #9aa5b8;
+  --text-faint: #6b7688;
+  --text-on-accent: #0b1020;
+
+  --accent: #7aa2ff;
+  --accent-hover: #93b4ff;
+  --accent-soft: #1d2a47;
+  --focus-ring: rgba(122, 162, 255, 0.5);
+
+  --danger: #ff7b7b;
+  --warning: #f2b642;
+
+  --conf-exact: #4cc38a;
+  --conf-exact-soft: #13301f;
+  --conf-approx: #f2c14e;
+  --conf-approx-soft: #332a10;
+  --conf-qual: #6cb0ff;
+  --conf-qual-soft: #142a45;
+  --pending: #f2b642;
+  --pending-soft: #33260c;
+
+  --chart-7: #f5ea6a;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-med: 0ms;
+  }
+}
