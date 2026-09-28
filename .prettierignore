@@ -6,3 +6,4 @@ coverage
 package-lock.json
 MASTER_PROMPT.md
 docs/images
+data/*.json
