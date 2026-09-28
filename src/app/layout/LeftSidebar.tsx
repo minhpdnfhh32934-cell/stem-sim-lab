@@ -3,6 +3,7 @@ import { memo, useMemo, useState } from 'react';
 import { CATALOG, normalizeForSearch, type ChapterEntry } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
+import { openTopic, useActiveTopic } from '@/app/topics';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
@@ -102,6 +103,7 @@ function ChapterNode({
   t: TFunction;
   forceOpen: boolean;
 }) {
+  const activeTopic = useActiveTopic();
   const [open, setOpen] = useState(true);
   const expanded = open || forceOpen;
   return (
@@ -120,20 +122,33 @@ function ChapterNode({
       </button>
       {expanded && (
         <ul className="tree__topics">
-          {chapter.topics.map((topic) => (
-            <li
-              key={topic.id}
-              data-status={topic.status}
-              className="tree__topic"
-              data-tip={topic.status === 'planned' ? t('sidebar.comingSoonHint') : undefined}
-              data-tip-side="right"
-            >
-              <span className="tree__topic-title">{t(topic.titleKey)}</span>
-              {topic.status === 'planned' && (
+          {chapter.topics.map((topic) =>
+            topic.status === 'available' ? (
+              <li key={topic.id} data-status={topic.status} className="tree__topic-item">
+                <button
+                  type="button"
+                  className="tree__topic tree__topic--button"
+                  aria-current={activeTopic === topic.id ? 'true' : undefined}
+                  onClick={() => {
+                    void openTopic(topic.id);
+                  }}
+                >
+                  <span className="tree__topic-title">{t(topic.titleKey)}</span>
+                </button>
+              </li>
+            ) : (
+              <li
+                key={topic.id}
+                data-status={topic.status}
+                className="tree__topic"
+                data-tip={t('sidebar.comingSoonHint')}
+                data-tip-side="right"
+              >
+                <span className="tree__topic-title">{t(topic.titleKey)}</span>
                 <span className="tree__soon">{t('sidebar.comingSoon')}</span>
-              )}
-            </li>
-          ))}
+              </li>
+            ),
+          )}
         </ul>
       )}
     </li>

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { sim } from '@/app/sim/runtime';
+import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
 import {
   isActivationTarget,
@@ -14,8 +16,6 @@ const TOOL_FOR_ACTION: Partial<Record<ShortcutAction, StageTool>> = {
   toolDrag: 'drag',
   toolRuler: 'ruler',
   toolProtractor: 'protractor',
-  toolStopwatch: 'stopwatch',
-  toolFitView: 'fitView',
 };
 
 /**
@@ -30,16 +30,19 @@ function runAction(action: ShortcutAction): boolean {
   switch (action) {
     case 'playPause':
       if (!workspace.hasSimulation) return false;
-      workspace.togglePlaying();
+      sim.togglePlay();
       return true;
     case 'reset':
       if (!workspace.hasSimulation) return false;
-      workspace.resetSimulation();
+      sim.reset();
       return true;
     case 'step':
+      if (!workspace.hasSimulation) return false;
+      sim.step();
+      return true;
     case 'undo':
     case 'redo':
-      // Stepping and the undo history arrive with the engine in Phase 1–2.
+      // Undo history arrives with the project file support (Phase 6).
       return false;
     case 'toggleLeft':
       layout.toggle('left');
@@ -62,6 +65,14 @@ function runAction(action: ShortcutAction): boolean {
       return true;
     case 'fontSmaller':
       settings.stepFontScale(-1);
+      return true;
+    case 'toolStopwatch':
+      if (!workspace.hasSimulation) return false;
+      useSimStore.setState((s) => ({ stopwatch: !s.stopwatch }));
+      return true;
+    case 'toolFitView':
+      if (!workspace.hasSimulation) return false;
+      useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));
       return true;
     default: {
       const tool = TOOL_FOR_ACTION[action];

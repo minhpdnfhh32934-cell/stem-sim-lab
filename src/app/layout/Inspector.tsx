@@ -6,6 +6,9 @@ import { ConfidenceBadge, ReviewBadge } from '@/ui/Badges';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 import { Section } from '@/ui/Section';
+import { ObjectPanel } from '@/app/sim/ObjectPanel';
+import { ParamsPanel } from '@/app/sim/ParamsPanel';
+import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { ScienceCard } from '@/science-card/ScienceCard';
 import { useLayoutStore } from './layoutStore';
@@ -15,6 +18,7 @@ export const Inspector = memo(function Inspector() {
   const t = useT();
   const toggle = useLayoutStore((s) => s.toggle);
   const card = useWorkspaceStore((s) => s.scienceCard);
+  const hasScene = useSimStore((s) => s.scene !== null);
 
   return (
     <aside className="panel inspector" aria-label={t('inspector.regionLabel')}>
@@ -33,15 +37,23 @@ export const Inspector = memo(function Inspector() {
 
       <div className="panel__scroll">
         <Section title={t('inspector.objectSection')}>
-          <EmptyState icon={MousePointerClick} compact>
-            {t('inspector.noSelection')}
-          </EmptyState>
+          {hasScene ? (
+            <ObjectPanel />
+          ) : (
+            <EmptyState icon={MousePointerClick} compact>
+              {t('inspector.noSelection')}
+            </EmptyState>
+          )}
         </Section>
 
         <Section title={t('inspector.paramsSection')}>
-          <EmptyState icon={SlidersHorizontal} compact>
-            {t('inspector.noParams')}
-          </EmptyState>
+          {hasScene ? (
+            <ParamsPanel />
+          ) : (
+            <EmptyState icon={SlidersHorizontal} compact>
+              {t('inspector.noParams')}
+            </EmptyState>
+          )}
         </Section>
 
         <Section

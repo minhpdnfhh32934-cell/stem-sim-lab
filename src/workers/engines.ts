@@ -8,3 +8,8 @@ registerEngine('demo.oscillator', async () => {
   const { OscillatorEngine } = await import('@/core/sim/demoEngine');
   return () => new OscillatorEngine();
 });
+
+registerEngine('phys.projectile', async () => {
+  const { ProjectileEngine } = await import('@/physics/projectile/engine');
+  return () => new ProjectileEngine();
+});

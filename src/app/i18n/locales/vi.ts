@@ -101,6 +101,14 @@ const vi = {
     emptyNote: 'Đây là khung giao diện của Giai đoạn 0. Mô phỏng đầu tiên sẽ có từ Giai đoạn 2.',
     toolbarLabel: 'Công cụ mô phỏng',
     toolUnavailable: 'chưa khả dụng',
+    finished: 'Kết thúc',
+    replay: 'Xem lại',
+    nonFinite:
+      'Mô phỏng gặp giá trị không hợp lệ (NaN/vô cực) nên đã dừng và quay về trạng thái hợp lệ gần nhất.',
+    engineError: 'Lỗi mô phỏng',
+    loading: 'Đang tải mô phỏng…',
+    canvasLabel:
+      'Khung vẽ mô phỏng. Kéo vật bằng chuột, lăn chuột để phóng to, kéo nền để di chuyển.',
     tools: {
       select: 'Chọn (V)',
       drag: 'Kéo / ném vật (H)',
@@ -235,6 +243,51 @@ const vi = {
     defaultGravityHint:
       'Chỉ dùng khi đề bài không cho g. Giá trị do đề bài cho luôn được ưu tiên và mặc định luôn được đánh dấu "mặc định".',
     standard: 'chuẩn',
+  },
+  stopwatch: {
+    start: 'Bắt đầu bấm giờ',
+    stop: 'Dừng bấm giờ',
+    lap: 'Ghi mốc',
+    reset: 'Đặt lại đồng hồ',
+    simTimeHint: 'Đo theo thời gian mô phỏng',
+  },
+  params: {
+    source: {
+      problem: 'đề bài',
+      default: 'mặc định',
+      user: 'đã chỉnh',
+    },
+    sourceHint: {
+      problem: 'Giá trị lấy từ đề bài',
+      default: 'Giá trị mặc định do chương trình điền (đề bài không cho)',
+      user: 'Giá trị do bạn chỉnh',
+    },
+    liveHint: 'Có thể chỉnh khi đang chạy (tính là can thiệp)',
+    resetHint: 'Đổi giá trị sẽ chạy lại từ đầu',
+  },
+  solution: {
+    answers: 'Đáp số',
+    steps: 'Lời giải từng bước',
+    check: 'Kiểm chứng số',
+    agree: 'khớp, sai lệch {value}',
+    engineNote:
+      'Mọi con số ở đây do engine tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
+    intervenedNote:
+      'Lời giải áp dụng cho điều kiện ban đầu. Sau khi can thiệp, hãy dùng số liệu mô phỏng (tab Số liệu).',
+    invalid: 'Chưa có lời giải vì thông số chưa hợp lệ.',
+  },
+  graphs: {
+    choose: 'Chọn đồ thị',
+    time: 'Thời gian t (s)',
+    noData: 'Nhấn Chạy để ghi dữ liệu cho đồ thị.',
+  },
+  data: {
+    exportCsv: 'Xuất CSV',
+    rows: '{shown} / {total} dòng',
+    noData: 'Chưa có dữ liệu. Nhấn Chạy để ghi.',
+  },
+  object: {
+    none: 'Nhấp vào một vật trên khung mô phỏng để xem thuộc tính.',
   },
   languages: {
     vi: 'Tiếng Việt',

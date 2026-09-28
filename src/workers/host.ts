@@ -23,6 +23,7 @@ export interface SimulationHost {
   onError(cb: (error: HostError) => void): () => void;
   reset(params: unknown): void;
   input(msg: EngineInput): void;
+  seek(state: Float64Array, t: number): void;
   dispose(): void;
 }
 
@@ -70,6 +71,9 @@ export class InProcessHost implements SimulationHost {
   input(msg: EngineInput): void {
     this.runner?.input(msg);
   }
+  seek(state: Float64Array, t: number): void {
+    this.runner?.seek(state, t);
+  }
   dispose(): void {
     this.runner = undefined;
   }
@@ -83,6 +87,7 @@ export class WorkerHost implements SimulationHost {
   private nextRequest = 1;
   private seq = 0;
   private inFlight = false;
+  private loaded = false;
   private queued: { frameSeconds: number; speed: number; paused: boolean } | undefined;
 
   constructor() {
@@ -102,6 +107,7 @@ export class WorkerHost implements SimulationHost {
   private handle(msg: FromWorker) {
     switch (msg.type) {
       case 'loaded': {
+        this.loaded = true;
         this.pending.get(msg.requestId)?.({ stateSize: msg.stateSize, dt: msg.dt });
         this.pending.delete(msg.requestId);
         return;
@@ -132,6 +138,8 @@ export class WorkerHost implements SimulationHost {
   }
 
   requestFrame(frameSeconds: number, speed: number, paused: boolean): void {
+    // Frames requested before the engine has loaded would be dropped by the worker.
+    if (!this.loaded) return;
     if (this.inFlight) {
       // Backpressure: merge elapsed time instead of queueing many frames.
       const prev = this.queued?.frameSeconds ?? 0;
@@ -154,6 +162,10 @@ export class WorkerHost implements SimulationHost {
   }
   input(msg: EngineInput): void {
     this.send({ type: 'input', msg });
+  }
+  seek(state: Float64Array, t: number): void {
+    this.queued = undefined;
+    this.send({ type: 'seek', t, state });
   }
   dispose(): void {
     this.worker.terminate();

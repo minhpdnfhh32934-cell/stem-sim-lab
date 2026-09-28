@@ -7,6 +7,7 @@ export type ToWorker =
   | { type: 'frame'; seq: number; frameSeconds: number; speed: number; paused: boolean }
   | { type: 'reset'; params: unknown }
   | { type: 'input'; msg: EngineInput }
+  | { type: 'seek'; t: number; state: Float64Array }
   | { type: 'budget'; ms: number };
 
 /** Messages from the simulation worker to the UI thread. */

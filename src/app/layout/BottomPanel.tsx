@@ -1,16 +1,12 @@
 import { memo } from 'react';
 import { ChartSpline, ListOrdered, Table2, X } from 'lucide-react';
 import { useT } from '@/app/i18n';
-import { EmptyState } from '@/ui/EmptyState';
+import { DataPanel } from '@/app/sim/DataPanel';
+import { GraphPanel } from '@/app/sim/GraphPanel';
+import { SolutionPanel } from '@/app/sim/SolutionPanel';
 import { IconButton } from '@/ui/IconButton';
 import { Tabs } from '@/ui/Tabs';
 import { useLayoutStore, type BottomTab } from './layoutStore';
-
-const EMPTY = {
-  graphs: { icon: ChartSpline, text: 'bottom.graphsEmpty' },
-  solution: { icon: ListOrdered, text: 'bottom.solutionEmpty' },
-  data: { icon: Table2, text: 'bottom.dataEmpty' },
-} as const;
 
 /** Graphs (uPlot, Phase 1–2), step-by-step solution, and data table. */
 export const BottomPanel = memo(function BottomPanel() {
@@ -18,7 +14,6 @@ export const BottomPanel = memo(function BottomPanel() {
   const tab = useLayoutStore((s) => s.bottomTab);
   const setTab = useLayoutStore((s) => s.setBottomTab);
   const toggle = useLayoutStore((s) => s.toggle);
-  const empty = EMPTY[tab];
 
   return (
     <section className="panel bottom-panel" aria-label={t('bottom.regionLabel')}>
@@ -44,9 +39,9 @@ export const BottomPanel = memo(function BottomPanel() {
         }
       />
       <div className="panel__scroll" role="tabpanel" aria-label={t(`bottom.${tab}`)}>
-        <EmptyState icon={empty.icon} compact>
-          {t(empty.text)}
-        </EmptyState>
+        {tab === 'graphs' && <GraphPanel />}
+        {tab === 'solution' && <SolutionPanel />}
+        {tab === 'data' && <DataPanel />}
       </div>
     </section>
   );

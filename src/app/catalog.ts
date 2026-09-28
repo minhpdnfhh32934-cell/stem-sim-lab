@@ -1,5 +1,6 @@
 import type { MessageKey } from '@/app/i18n';
 import type { Subject } from '@/app/workspaceStore';
+import { hasScene } from '@/physics/registry';
 
 /**
  * Topic catalog shown in the Library (MASTER_PROMPT §6, MVP scope).
@@ -23,7 +24,7 @@ export interface ChapterEntry {
 const planned = (id: string): TopicEntry => ({
   id,
   titleKey: `topics.${id}` as MessageKey,
-  status: 'planned',
+  status: hasScene(id) ? 'available' : 'planned',
 });
 
 const chapter = (id: string, topicIds: string[]): ChapterEntry => ({

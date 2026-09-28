@@ -4,8 +4,8 @@ import type { ScienceCardData } from '@/science-card/types';
 export type Subject = 'physics' | 'chemistry' | 'biology';
 export const SUBJECTS: readonly Subject[] = ['physics', 'chemistry', 'biology'];
 
-export type StageTool =
-  'select' | 'drag' | 'ruler' | 'protractor' | 'stopwatch' | 'vectors' | 'trail' | 'fitView';
+/** Pointer modes of the stage (toggles like vectors/trail live in the sim store). */
+export type StageTool = 'select' | 'drag' | 'ruler' | 'protractor';
 
 /** Allowed playback speeds (§7.1: ×0.1 – ×4). */
 export const PLAYBACK_SPEEDS = [0.1, 0.25, 0.5, 1, 2, 4] as const;

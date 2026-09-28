@@ -48,6 +48,9 @@ self.onmessage = async (ev: MessageEvent<ToWorker>) => {
     case 'input':
       runner?.input(msg.msg);
       return;
+    case 'seek':
+      runner?.seek(msg.state, msg.t);
+      return;
     case 'budget':
       if (runner) runner.budgetMs = msg.ms;
       return;

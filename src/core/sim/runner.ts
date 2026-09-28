@@ -73,6 +73,16 @@ export class EngineRunner {
     this.captureInitial();
   }
 
+  /** Jumps to a recorded state (scrubbing). Not an intervention: the state is on the path. */
+  seek(state: Float64Array, t: number): void {
+    this.engine.writeState(state, t);
+    this.engine.readState(this.curr);
+    this.prev.set(this.curr);
+    this.lastGood.set(this.curr);
+    this.lastGoodT = t;
+    this.clock.reset();
+  }
+
   input(msg: EngineInput): void {
     if (this.engine.input?.(msg)) {
       this.intervened = true;

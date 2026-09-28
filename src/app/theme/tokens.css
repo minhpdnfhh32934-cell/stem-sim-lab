@@ -135,6 +135,13 @@
   --pending: #f2b642;
   --pending-soft: #33260c;
 
+  /* Dark-mode chart steps: same hue order, re-stepped into the OKLCH L 0.48–0.67 band
+     (validated with the dataviz palette validator against --bg-panel #151b24). */
+  --chart-1: #3d8fd1;
+  --chart-2: #c48400;
+  --chart-3: #009e73;
+  --chart-4: #d55e00;
+  --chart-5: #b8689a;
   --chart-7: #f5ea6a;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);

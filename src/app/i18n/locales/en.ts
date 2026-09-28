@@ -99,6 +99,14 @@ const en: Messages = {
     emptyNote: 'This is the Phase 0 interface shell. The first simulations arrive in Phase 2.',
     toolbarLabel: 'Simulation tools',
     toolUnavailable: 'not available yet',
+    finished: 'Finished',
+    replay: 'Replay',
+    nonFinite:
+      'The simulation hit an invalid value (NaN/infinity), stopped and restored the last valid state.',
+    engineError: 'Simulation error',
+    loading: 'Loading simulation…',
+    canvasLabel:
+      'Simulation canvas. Drag objects with the mouse, scroll to zoom, drag the background to pan.',
     tools: {
       select: 'Select (V)',
       drag: 'Drag / throw object (H)',
@@ -233,6 +241,51 @@ const en: Messages = {
     defaultGravityHint:
       'Used only when the problem does not give g. Values from the problem always win, and defaults are always marked "default".',
     standard: 'standard',
+  },
+  stopwatch: {
+    start: 'Start stopwatch',
+    stop: 'Stop stopwatch',
+    lap: 'Lap',
+    reset: 'Reset stopwatch',
+    simTimeHint: 'Measures simulated time',
+  },
+  params: {
+    source: {
+      problem: 'problem',
+      default: 'default',
+      user: 'edited',
+    },
+    sourceHint: {
+      problem: 'Value taken from the problem',
+      default: 'Default value filled in by the app (not given in the problem)',
+      user: 'Value you changed',
+    },
+    liveHint: 'Can be changed while running (counts as an intervention)',
+    resetHint: 'Changing it restarts the simulation',
+  },
+  solution: {
+    answers: 'Answers',
+    steps: 'Step-by-step solution',
+    check: 'Numerical check',
+    agree: 'agrees, deviation {value}',
+    engineNote:
+      'Every number here is computed by the engine from formulas and cross-checked by numerical integration. AI produces no numbers.',
+    intervenedNote:
+      'The solution applies to the initial conditions. After an intervention use the simulation data (Data tab).',
+    invalid: 'No solution: the parameters are not valid yet.',
+  },
+  graphs: {
+    choose: 'Choose graph',
+    time: 'Time t (s)',
+    noData: 'Press Play to record data for the graphs.',
+  },
+  data: {
+    exportCsv: 'Export CSV',
+    rows: '{shown} / {total} rows',
+    noData: 'No data yet. Press Play to record.',
+  },
+  object: {
+    none: 'Click an object on the stage to see its properties.',
   },
   languages: {
     vi: 'Tiếng Việt',
