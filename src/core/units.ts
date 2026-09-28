@@ -43,6 +43,7 @@ export const DIM = {
   voltage: D(2, 1, -3, -1),
   resistance: D(2, 1, -3, -2),
   molarMass: D(0, 1, 0, 0, 0, -1),
+  damping: D(0, 1, -1),
 } as const;
 
 export interface UnitDef {
@@ -110,6 +111,7 @@ const UNITS: readonly UnitDef[] = [
   { symbol: 'kN', dim: DIM.force, factor: 1e3 },
   { symbol: 'N/m', dim: DIM.springConstant, factor: 1 },
   { symbol: 'N/cm', dim: DIM.springConstant, factor: 100 },
+  { symbol: 'kg/s', dim: DIM.damping, factor: 1, aliases: ['N*s/m', 'N.s/m', 'N·s/m'] },
   { symbol: 'kg*m/s', dim: DIM.momentum, factor: 1, aliases: ['kg.m/s', 'kg·m/s', 'N*s', 'N.s'] },
   // energy / power / pressure
   { symbol: 'J', dim: DIM.energy, factor: 1 },

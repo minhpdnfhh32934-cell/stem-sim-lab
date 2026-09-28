@@ -23,3 +23,18 @@ registerEngine('phys.incline', async () => {
   const { InclineEngine } = await import('@/physics/incline/engine');
   return () => new InclineEngine();
 });
+
+registerEngine('phys.pulley', async () => {
+  const { PulleyEngine } = await import('@/physics/pulley/engine');
+  return () => new PulleyEngine();
+});
+
+registerEngine('phys.spring', async () => {
+  const { SpringEngine } = await import('@/physics/spring/engine');
+  return () => new SpringEngine();
+});
+
+registerEngine('phys.pendulum', async () => {
+  const { PendulumEngine } = await import('@/physics/pendulum/engine');
+  return () => new PendulumEngine();
+});
