@@ -182,8 +182,12 @@ class SimRuntime {
       });
       useWorkspaceStore.setState({ simTime: f.t });
       const speed = useWorkspaceStore.getState().speed;
+      const perf = usePerfStore.getState();
       if (useWorkspaceStore.getState().playing && f.stats.steps > 0) {
-        usePerfStore.getState().setTimeScale(Math.min(1, f.stats.effectiveSpeed / speed));
+        perf.setTimeScale(Math.min(1, f.stats.effectiveSpeed / speed));
+      } else if (!useWorkspaceStore.getState().playing && perf.timeScale !== 1) {
+        // Slow motion only describes a running simulation.
+        perf.setTimeScale(1);
       }
       if (intervenedChanged) this.updateCard();
     }
