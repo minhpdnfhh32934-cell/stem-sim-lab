@@ -24,8 +24,11 @@ chép qua USB và cài trước.
 ### Tạo bộ cài
 
 - **Cách 1 — GitHub (không cần cài gì trên máy):** đưa mã nguồn lên một kho GitHub, vào tab
-  **Actions → Release (Windows installer) → Run workflow**. Khoảng 15 phút sau, tải tệp ở mục
-  **Artifacts** của lần chạy đó. Nếu tạo tag `v0.1.0`, GitHub tự tạo bản Release nháp kèm bộ cài.
+  **Actions → Release (Windows installer) → Run workflow**. Khoảng 15–25 phút sau, mở lần chạy có
+  tên **Release (Windows installer)** (không phải lần chạy "CI" — CI chỉ kiểm tra lỗi, không tạo bộ
+  cài), kéo xuống cuối trang **Summary** để thấy mục **Artifacts → stem-sim-lab-windows**. Tệp zip
+  tải về chứa `…x64-setup.exe` (bộ cài khuyên dùng), `.msi` và `installer-sizes.txt`. Nếu tạo tag
+  `v0.1.0`, GitHub tự tạo bản Release nháp kèm bộ cài.
 - **Cách 2 — trên máy Windows của bạn:** cài công cụ theo `docs/SETUP_WINDOWS.md`, rồi chạy
   `npm install` và `npm run tauri build`. Bộ cài nằm trong `src-tauri\target\release\bundle\nsis\`.
 
