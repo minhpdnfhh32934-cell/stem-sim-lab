@@ -62,7 +62,7 @@ export function parseFormula(input: string): ParsedFormula {
   const raw = input
     .trim()
     // Superscript charges are unambiguous: "Fe³⁺" → "Fe^3+".
-    .replace(/([⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻])$/, (c) => `^${[...c].map((x) => SUP[x] ?? x).join('')}`)
+    .replace(/([⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻])$/, (c) => `^${c.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]/g, (x) => SUP[x] ?? x)}`)
     .replace(/[₀-₉]/g, (c) => SUB[c] ?? c)
     .replace(/\s+/g, '');
   if (!raw) throw new FormulaError('empty formula');
