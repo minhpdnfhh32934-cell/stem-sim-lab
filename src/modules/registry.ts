@@ -8,6 +8,9 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
     import('@/chemistry/atom/modules').then((m) => m.electronConfiguration),
   bohrModel: () => import('@/chemistry/atom/modules').then((m) => m.bohrModel),
   orbitals: () => import('@/chemistry/atom/modules').then((m) => m.orbitals),
+  molecule3d: () => import('@/chemistry/molecule/modules').then((m) => m.molecule3d),
+  vsepr: () => import('@/chemistry/molecule/modules').then((m) => m.vsepr),
+  bondPolarity: () => import('@/chemistry/molecule/modules').then((m) => m.bondPolarity),
   // Biology modules (Phase 5) are added here.
 };
 
