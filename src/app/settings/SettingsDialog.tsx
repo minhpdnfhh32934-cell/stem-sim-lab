@@ -1,5 +1,6 @@
-import { Bot, Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, X } from 'lucide-react';
+import { Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { AiSettings } from '@/app/ai/AiSettings';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { SHORTCUTS, formatChord, type ShortcutAction } from '@/app/shortcuts/shortcuts';
@@ -230,13 +231,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           <p className="muted">{t('physicsSettings.defaultGravityHint')}</p>
         </fieldset>
 
-        <fieldset className="settings-group">
-          <legend>
-            <Bot size={15} strokeWidth={1.75} aria-hidden="true" />
-            {t('settings.ai')}
-          </legend>
-          <p className="muted">{t('settings.aiLater')}</p>
-        </fieldset>
+        <AiSettings />
 
         <fieldset className="settings-group">
           <legend>

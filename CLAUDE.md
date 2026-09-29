@@ -34,6 +34,8 @@ before starting a new phase.
 | All checks                | `npm run check` (+ `npm run format:check`)                                                     |
 | Rust                      | `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test` |
 | Production build          | `npm run build` (web) / `npm run tauri build` (installer)                                      |
+| E2E (mocked LM Studio)    | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)       |
+| Golden set vs real model  | `npm run golden:llm` (LM Studio running; `LMSTUDIO_URL`, `LMSTUDIO_MODEL` optional)            |
 
 CI (`.github/workflows/ci.yml`) runs all of the above on every push.
 
@@ -82,6 +84,10 @@ tests/            app-level tests, golden set, e2e
 - Lucide is 1.x (`lucide-react`). Check that an icon name exists before using it.
 - `tauri.conf.json` has a separate, looser `devCsp` (Vite's inline React-refresh preamble and the
   HMR websocket). The production `csp` stays strict. Never loosen the production CSP.
+- `dangerousDisableAssetCspModification: ["style-src"]` is required: otherwise Tauri adds hashes
+  to `style-src`, browsers then ignore `'unsafe-inline'`, and KaTeX's inline `style="top:…"` is
+  blocked (every subscript drops below the line in the packaged app). Test:
+  `tests/tauri-config.test.ts`. Always check formulas in the native build, not only the browser.
 - `public/theme-boot.js` applies the saved theme before React loads (no white flash in dark mode).
   Keep its storage key and shape in sync with `settingsStore.ts` (`stemsim.settings`).
 - In this repo's cloud sandbox, npm/crates/apt must go **through** the HTTPS proxy:
@@ -118,12 +124,26 @@ Progress log: `docs/PROGRESS.md`.
   engine with the closed form and a DOPRI5 cross-check.
 - UI runtime: `src/app/sim/runtime.ts` (`sim` singleton), `StageCanvas`, panels in `src/app/sim`.
 
+## AI layer (Phase 3)
+
+- Rust `src-tauri/src/ai.rs`: `ai_chat` (LM Studio/OpenAI json_schema strict, Anthropic forced tool
+  call), `ai_cancel`, `ai_models`, keychain `ai_set_key/ai_has_key/ai_delete_key`. Keys never
+  reach the web page. Browser dev mode uses `FetchTransport` (LM Studio only).
+- `src/ai/pipeline.ts` classify → extract → `buildDraft` (`src/ai/draft.ts`): numbers must appear
+  in the text (`src/ai/numbers.ts`) or be implied by a phrase in `IMPLIED` with a real quote.
+  Defaults are filled in code. `explain.ts` hides explanations containing foreign numbers.
+- UI in `src/app/ai/`: `analyze.ts` (controller store), `ProblemDialog` ("Tôi hiểu đề như sau",
+  manual "Tự dựng cảnh", unsupported/error views), `AiSettings`, `useAiStatus` (polls LM Studio
+  only), `ExplainBox`. Tests: `tests/golden`, `src/app/ai/analyze.test.ts`, `tests/e2e`.
+- When a new physics scene is added, its params become extractable automatically; add golden
+  problems for it in `scripts/golden/make_physics_golden.py` and regenerate `physics.json`.
+
 ## Phase status
 
 - [x] Phase 0: project scaffold, design system, layout shell, theme, i18n, CI
 - [x] Phase 1: core (units, constants, integrators, fixed timestep, worker, quality tier, Science Card)
 - [x] Phase 2: Physics 2D MVP (13 topics, canvas stage, tools, graphs, solutions, CSV)
-- [ ] Phase 3: AI layer
+- [x] Phase 3: AI layer (LM Studio/cloud via Rust, SceneSpec checks, confirmation table, golden set, E2E)
 - [ ] Phase 4: Chemistry MVP
 - [ ] Phase 5: Biology MVP
 - [ ] Phase 6: overload ladder, watchdog, presentation mode, tour

@@ -1,6 +1,8 @@
 import { Minimize2 } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { ProblemDialog } from '@/app/ai/ProblemDialog';
+import { useAiStatusPolling } from '@/app/ai/useAiStatus';
 import { useT } from '@/app/i18n';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
 import { IconButton } from '@/ui/IconButton';
@@ -25,6 +27,7 @@ import { TopBar } from './TopBar';
  */
 export function AppShell() {
   useGlobalShortcuts();
+  useAiStatusPolling();
   const t = useT();
   const layout = useLayoutStore(
     useShallow((s) => ({
@@ -54,6 +57,7 @@ export function AppShell() {
   return (
     <div className="shell" data-presentation={presentation || undefined} style={style}>
       {!presentation && <TopBar />}
+      <ProblemDialog />
 
       <div className="shell__body">
         {showLeft && (

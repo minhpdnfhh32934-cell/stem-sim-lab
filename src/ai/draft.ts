@@ -1,5 +1,6 @@
 import type { LocalizedText } from '@/core/data/dataset';
 import { toSI, unitLabel } from '@/core/units';
+import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { mentions, quoteInText } from './numbers';
 import { allowedUnits, type Extraction } from './spec';
@@ -220,12 +221,7 @@ export function buildDraft(
   }
 
   // Code-side defaults derived from the stated values (never from the AI).
-  const derived = scene.autoDefaults?.(params, sources);
-  if (derived) {
-    for (const [k, v] of Object.entries(derived)) {
-      if (sources[k] === 'default' || sources[k] === undefined) params[k] = v;
-    }
-  }
+  Object.assign(params, applyAutoDefaults(scene, params, sources));
 
   const missing = scene.required.filter((k) => {
     const def = scene.params.find((d) => d.key === k);
@@ -252,12 +248,17 @@ export function buildDraft(
   };
 }
 
-/** Manual mode ("Tự dựng cảnh"): a draft from the scene's defaults, nothing from AI. */
+/**
+ * Manual mode ("Tự dựng cảnh"): a draft from the scene's defaults, nothing from AI.
+ * There is no problem text, so nothing is "missing": every value is visibly a default
+ * until the user changes it.
+ */
 export function manualDraft(scene: PhysicsScene, defaultGravity: number): Draft {
-  return buildDraft(
+  const draft = buildDraft(
     scene,
     { quantities: [], questions: [], assumptions: [], unsupported_parts: [], clarifications: [] },
     '',
     defaultGravity,
   );
+  return { ...draft, missing: [] };
 }

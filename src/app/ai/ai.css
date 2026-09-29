@@ -1,0 +1,293 @@
+/* AI: confirmation table, explanation box, AI settings. */
+
+.dialog.dialog--wide {
+  width: min(50rem, calc(100vw - 2rem));
+}
+.dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--border);
+}
+.dialog__footer-note {
+  margin-right: auto;
+  color: var(--pending);
+  font-size: var(--text-sm);
+}
+.dialog__footer .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.problem-review > p {
+  margin: var(--space-2) 0;
+}
+.problem-review__topic {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+  font-size: var(--text-sm);
+}
+.problem-review__topic > span:first-child {
+  color: var(--text-muted);
+}
+.problem-review__topic select {
+  min-width: 16rem;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+  color: var(--text);
+  font: inherit;
+}
+.problem-review__text {
+  margin: var(--space-2) 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--bg-sunken);
+  font-size: var(--text-sm);
+  white-space: pre-wrap;
+  max-height: 8rem;
+  overflow-y: auto;
+}
+
+.problem-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.problem-table th,
+.problem-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.problem-table thead th {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.problem-table tbody th {
+  font-weight: 500;
+  width: 38%;
+}
+.problem-table td:last-child {
+  width: 6.5rem;
+}
+.problem-table tr.is-missing {
+  background: var(--pending-soft);
+}
+.problem-table .param__number {
+  width: 7rem;
+  margin-right: 6px;
+}
+.problem-table__quote,
+.problem-table__missing {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.problem-table__quote svg,
+.problem-table__missing svg {
+  flex: none;
+  transform: translateY(1px);
+}
+.problem-table__missing {
+  display: block;
+  color: var(--pending);
+}
+.param__source--missing {
+  background: var(--pending);
+  color: var(--text-on-accent);
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.problem-review__section {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+.problem-review__section h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px;
+  font-size: var(--text-sm);
+}
+.problem-review__section ul {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+.problem-review__section--warn,
+.problem-review__section--info {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+.problem-review__section--warn {
+  background: var(--conf-approx-soft);
+}
+.problem-review__section--warn h3 {
+  color: var(--conf-approx);
+}
+.problem-review__section--info {
+  background: var(--conf-qual-soft);
+}
+.problem-review__section--info h3 {
+  color: var(--conf-qual);
+}
+.problem-review__error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+/* Analyze button while running */
+.problem-input__submit .spin {
+  animation: ai-spin 0.9s linear infinite;
+}
+@keyframes ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .problem-input__submit .spin {
+    animation: none;
+  }
+}
+
+/* AI settings */
+.ai-settings__field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 6px 0;
+  font-size: var(--text-sm);
+}
+.ai-settings__field input,
+.ai-settings__field select {
+  flex: 1;
+  max-width: 20rem;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+  color: var(--text);
+  font: inherit;
+}
+.ai-settings__field input[type='number'] {
+  max-width: 6rem;
+}
+.ai-settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 0;
+}
+.ai-settings__status {
+  font-size: var(--text-xs);
+}
+.ai-settings__status[data-ok='true'] {
+  color: var(--conf-exact);
+}
+.ai-settings__status[data-ok='false'] {
+  color: var(--text-muted);
+}
+
+/* AI explanation under the solution */
+.explain {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+  font-size: var(--text-sm);
+}
+.explain__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.explain__text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+.explain__note {
+  margin: 6px 0 0;
+  color: var(--conf-exact);
+  font-size: var(--text-xs);
+}
+.explain--hidden {
+  background: var(--conf-approx-soft);
+  color: var(--text);
+}
+.asked-chip {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.solution__answers tr.is-asked {
+  background: var(--accent-soft);
+}
+.explain-wrap {
+  margin-top: var(--space-3);
+}
+.ai-settings__error {
+  color: var(--danger);
+}
+/* Inline KaTeX inside a table cell: keep the formula on the text baseline (WebKitGTK). */
+.problem-table__name {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3em;
+}

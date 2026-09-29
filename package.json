@@ -18,7 +18,9 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test"
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test",
+    "test:e2e": "playwright test",
+    "golden:llm": "vitest run --config vitest.llm.config.ts"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.0",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.63",
     "@tauri-apps/cli": "^2.12.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",

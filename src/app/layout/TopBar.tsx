@@ -1,5 +1,11 @@
 import {
+  Cloud,
+  CloudOff,
+  Cpu,
+  KeyRound,
+  LoaderCircle,
   Maximize2,
+  PencilRuler,
   Moon,
   PanelBottom,
   PanelLeft,
@@ -9,11 +15,13 @@ import {
   Sparkles,
   Sun,
   Undo2,
-  WifiOff,
+  X,
 } from 'lucide-react';
-import { memo, useState, type KeyboardEvent } from 'react';
+import { memo, type KeyboardEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { analyze, cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
 import { useT } from '@/app/i18n';
+import { useAiStore } from '@/ai/aiStore';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
@@ -46,12 +54,18 @@ export const TopBar = memo(function TopBar() {
       setProblemText: s.setProblemText,
     })),
   );
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsOpen = useWorkspaceStore((s) => s.settingsOpen);
+  const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
+  const provider = useAiStore((s) => s.provider);
+  const running = useAnalyzeStore((s) => s.phase === 'running');
+  const stage = useAnalyzeStore((s) => s.stage);
+  const aiOff = provider === 'off';
+  const canAnalyze = !aiOff && problemText.trim().length > 0 && !running;
 
   const onProblemKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      // Phase 3: send to the AI extraction pipeline.
+      if (canAnalyze) void analyze(problemText);
     }
   };
 
@@ -103,29 +117,60 @@ export const TopBar = memo(function TopBar() {
           }}
           onKeyDown={onProblemKeyDown}
         />
-        <button
-          type="button"
-          className="btn btn--accent problem-input__submit"
-          disabled
-          data-tip={t('topbar.analyzeUnavailable')}
-        >
-          <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
-          <span>{t('topbar.analyze')}</span>
-        </button>
+        {running ? (
+          <>
+            <span
+              className="btn btn--accent problem-input__submit"
+              role="status"
+              aria-live="polite"
+            >
+              <LoaderCircle className="spin" size={15} strokeWidth={1.75} aria-hidden="true" />
+              <span>{stage ? t(`analyze.stage.${stage}`) : t('topbar.analyze')}</span>
+            </span>
+            <IconButton
+              icon={X}
+              label={t('topbar.cancelAnalyze')}
+              onClick={() => {
+                cancelAnalyze();
+              }}
+            />
+          </>
+        ) : (
+          <button
+            type="button"
+            className="btn btn--accent problem-input__submit"
+            aria-label={t('topbar.analyze')}
+            disabled={!canAnalyze}
+            data-tip={
+              aiOff
+                ? t('topbar.analyzeAiOff')
+                : !problemText.trim()
+                  ? t('topbar.analyzeNeedsText')
+                  : undefined
+            }
+            onClick={() => {
+              void analyze(problemText);
+            }}
+          >
+            <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
+            <span>{t('topbar.analyze')}</span>
+          </button>
+        )}
+        <IconButton
+          icon={PencilRuler}
+          label={t('topbar.manual')}
+          onClick={() => {
+            void openManual();
+          }}
+        />
       </div>
 
       <div className="topbar__actions">
-        <span
-          className="ai-status"
-          data-status="offline"
-          role="status"
-          aria-label={`${t('ai.offline')}. ${t('ai.offlineHint')}`}
-          data-tip={t('ai.offlineHint')}
-          tabIndex={0}
-        >
-          <WifiOff size={14} strokeWidth={1.75} aria-hidden="true" />
-          <span className="ai-status__label">{t('ai.offline')}</span>
-        </span>
+        <AiStatusPill
+          onClick={() => {
+            setSettingsOpen(true);
+          }}
+        />
         <span className="topbar__divider" aria-hidden="true" />
         <IconButton
           icon={PanelLeft}
@@ -188,3 +233,61 @@ export const TopBar = memo(function TopBar() {
     </header>
   );
 });
+
+const PROVIDER_NAME = { lmstudio: 'LM Studio', openai: 'OpenAI', anthropic: 'Anthropic' } as const;
+
+/** Connection state of the AI (click → AI settings). */
+function AiStatusPill({ onClick }: { onClick: () => void }) {
+  const t = useT();
+  const ai = useAiStore(
+    useShallow((s) => ({
+      provider: s.provider,
+      status: s.status,
+      baseUrl: s.baseUrl,
+      models: s.models,
+      available: s.availableModels,
+    })),
+  );
+  let kind: 'offline' | 'local' | 'cloud' = 'offline';
+  let label = t('ai.offline');
+  let hint = t('ai.offHint');
+  let Icon = CloudOff;
+  if (ai.provider === 'off') {
+    label = t('ai.off');
+  } else if (ai.provider === 'lmstudio') {
+    if (ai.status === 'ok') {
+      kind = 'local';
+      label = t('ai.local');
+      Icon = Cpu;
+      const model = ai.models.lmstudio || ai.available.find((m) => !/embed/i.test(m)) || '—';
+      hint = t('ai.localHint', { model });
+    } else {
+      hint = t('ai.lmstudioDown', { url: ai.baseUrl });
+    }
+  } else if (ai.status === 'noKey') {
+    label = t('ai.noKey');
+    Icon = KeyRound;
+    hint = t('ai.noKeyHint', { provider: PROVIDER_NAME[ai.provider] });
+  } else if (ai.status === 'ok') {
+    kind = 'cloud';
+    label = t('ai.cloud');
+    Icon = Cloud;
+    hint = t('ai.cloudHint', {
+      provider: PROVIDER_NAME[ai.provider],
+      model: ai.models[ai.provider] || '—',
+    });
+  }
+  return (
+    <button
+      type="button"
+      className="ai-status"
+      data-status={kind}
+      aria-label={`${label}. ${hint}`}
+      data-tip={hint}
+      onClick={onClick}
+    >
+      <Icon size={14} strokeWidth={1.75} aria-hidden="true" />
+      <span className="ai-status__label">{label}</span>
+    </button>
+  );
+}

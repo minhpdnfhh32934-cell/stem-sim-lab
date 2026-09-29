@@ -32,7 +32,9 @@ export interface WorkspaceState {
   aiStatus: AiStatus;
   /** Science Card of the open simulation (null when none). */
   scienceCard: ScienceCardData | null;
+  settingsOpen: boolean;
 
+  setSettingsOpen: (open: boolean) => void;
   setSubject: (subject: Subject) => void;
   setProblemText: (text: string) => void;
   setActiveTool: (tool: StageTool) => void;
@@ -51,7 +53,11 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
   simTime: 0,
   aiStatus: 'offline',
   scienceCard: null,
+  settingsOpen: false,
 
+  setSettingsOpen: (settingsOpen) => {
+    set({ settingsOpen });
+  },
   setSubject: (subject) => {
     set({ subject });
   },

@@ -3,6 +3,7 @@ import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/wo
 import type { EngineInput } from '@/core/sim/engine';
 import type { Frame } from '@/core/sim/runner';
 import { usePerfStore } from '@/perf/perfStore';
+import { applyAutoDefaults } from '@/physics/autoDefaults';
 import { loadScene } from '@/physics/registry';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { withIntervention, type ScienceCardData } from '@/science-card/types';
@@ -11,21 +12,6 @@ import { History } from './history';
 import { useSimStore } from './simStore';
 
 const UI_HZ = 10;
-
-/** Applies `scene.autoDefaults` to parameters that are still at their default value. */
-function withAutoDefaults(
-  scene: PhysicsScene,
-  params: Params,
-  sources: Record<string, ParamSource>,
-): Params {
-  const derived = scene.autoDefaults?.(params, sources);
-  if (!derived) return params;
-  const out = { ...params };
-  for (const [k, v] of Object.entries(derived)) {
-    if (sources[k] === 'default' || sources[k] === undefined) out[k] = v;
-  }
-  return out;
-}
 
 function closestSpeed(s: number): PlaybackSpeed {
   let best: PlaybackSpeed = 1;
@@ -44,6 +30,7 @@ function lerpState(prev: Float64Array, curr: Float64Array, alpha: number, out: F
 export interface OpenOptions {
   params?: Params;
   sources?: Record<string, ParamSource>;
+  problem?: { text: string; questions: string[] };
 }
 
 /**
@@ -79,7 +66,7 @@ class SimRuntime {
       if (scene.usesGravity) params.g = useSettingsStore.getState().defaultGravity;
       Object.assign(params, opts.params ?? {});
       Object.assign(sources, opts.sources ?? {});
-      Object.assign(params, withAutoDefaults(scene, params, sources));
+      Object.assign(params, applyAutoDefaults(scene, params, sources));
       const speed = scene.suggestedSpeed?.(params);
       if (speed !== undefined) useWorkspaceStore.setState({ speed: closestSpeed(speed) });
       useSimStore.setState({
@@ -92,6 +79,7 @@ class SimRuntime {
         duration: 0,
         scrubTime: null,
         selected: null,
+        problem: opts.problem ?? null,
         validation: scene.validate?.(params) ?? [],
         fitRequest: useSimStore.getState().fitRequest + 1,
       });
@@ -265,7 +253,7 @@ class SimRuntime {
     const scene = sim.scene;
     if (!scene) return;
     const sources = { ...sim.sources, [key]: source };
-    const params = withAutoDefaults(scene, { ...sim.params, [key]: value }, sources);
+    const params = applyAutoDefaults(scene, { ...sim.params, [key]: value }, sources);
     const def = scene.params.find((d) => d.key === key);
     const running = (this.latest?.t ?? 0) > 0 && !sim.finished;
     useSimStore.setState({

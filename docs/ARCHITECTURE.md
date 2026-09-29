@@ -73,6 +73,24 @@ Principles:
   `blob:` workers. `devCsp` also allows Vite's inline dev preamble and the HMR websocket.
 - Release profile tuned for size (`lto`, `opt-level = "s"`, `strip`).
 
+## 3b. AI gateway (Phase 3)
+
+```
+Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust ai_chat ──► LM Studio / OpenAI / Anthropic
+                   │  classify (enum of topic ids, JSON schema)
+                   │  extract  (enum of param keys + units, quotes)
+                   ▼
+            Zod + buildDraft (code): numbers present in text, units, ranges, defaults, missing
+                   ▼
+    ProblemDialog "Tôi hiểu đề như sau" ──(user confirms)──► sim.open(topic, params, sources)
+```
+
+- Rust owns every network call and the API keys (OS keychain via `keyring`). Requests have an id;
+  `ai_cancel` aborts them; `tokio::select!` enforces the timeout.
+- The web page never sees a cloud key. In the browser (dev/E2E) only LM Studio is reachable.
+- The explanation step (`explain.ts`) runs after the engine; its numbers are checked against the
+  engine's answers and the explanation is hidden when it contains any other number.
+
 ## 4. Planned modules
 
 | Phase | Module                                                                           | Key decisions                                                                                                                       |

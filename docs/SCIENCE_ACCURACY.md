@@ -1,7 +1,7 @@
 # Độ chính xác khoa học — STEM Sim Lab
 
 > Tài liệu này sẽ được nộp kèm hồ sơ dự thi. Mỗi giai đoạn sẽ bổ sung các mô hình mới.
-> Trạng thái: **khung (Giai đoạn 0)**.
+> Trạng thái: đã có Giai đoạn 1 (bộ giải), 2 (Vật lý) và 3 (AI đọc đề).
 
 ## 1. Nguyên tắc
 
@@ -43,8 +43,8 @@ với một phương pháp độc lập khác.
 
 ### An toàn số học khi chạy thời gian thực
 
-- **Bước cố định** Δt = 1/240 s cùng bộ tích lũy thời gian. Mỗi khung hình chạy tối đa 32 bước
-  con, và mỗi khung hình có ngân sách thời gian tính 8 ms. Khi quá tải, app **chạy chậm lại** và
+- **Bước cố định** Δt = 1/240 s cùng bộ tích lũy thời gian. Mỗi khung hình có ngân sách thời
+  gian tính 8 ms (và giới hạn an toàn 512 bước con). Khi quá tải, app **chạy chậm lại** và
   hiển thị rõ tỉ lệ (ví dụ "×0,25"). App không tăng Δt nên độ chính xác không bị giảm.
 - **NaN / vô cực:** nếu trạng thái có giá trị không hữu hạn, app dừng, khôi phục trạng thái hợp lệ
   gần nhất và báo lỗi.
@@ -75,3 +75,37 @@ thời gian thực với lời giải chính xác.
 (ω = 28 rad/s), nên vật không bị dịch chuyển tức thời. Khi thả chuột, vật giữ nguyên vận tốc lúc
 đó. Ngay khi có can thiệp, Thẻ Khoa học chuyển sang mức **Định lượng gần đúng**, và lời giải giải
 tích được ghi rõ là chỉ áp dụng cho điều kiện ban đầu.
+
+**Sự kiện trong DOPRI5 (sửa lỗi ngày 2026-09-29):** khi vật xuất phát đúng tại mặt đất (y = 0) hoặc
+khi hai sự kiện (đỉnh quỹ đạo và chạm đất) rơi vào cùng một bước tích phân dài, bộ bắt sự kiện cũ
+có thể bỏ sót lần chạm đất. Nay mọi sự kiện trong một bước được xử lý theo thứ tự thời gian, và
+trường hợp xuất phát trên mặt sự kiện được xét từ ngay sau thời điểm đầu. Có test hồi quy.
+
+## 5. AI đọc đề (Giai đoạn 3)
+
+AI chỉ làm hai việc: (a) **trích xuất** đề bài thành bảng dữ kiện (SceneSpec) và (b) **diễn giải
+bằng lời** kết quả engine đã tính. Mọi bước kiểm tra dưới đây do code tất định thực hiện, không phụ
+thuộc AI.
+
+| Bước                          | Ai làm           | Quy tắc                                                                                                                                                                                                           |
+| ----------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Phân loại chủ đề           | AI (JSON schema) | Chỉ được chọn trong danh sách chủ đề có sẵn, hoặc `unsupported`. Đề không hỗ trợ → báo rõ, không dựng mô phỏng.                                                                                                   |
+| 2. Trích xuất dữ kiện         | AI (JSON schema) | Mỗi đại lượng phải kèm **trích dẫn nguyên văn** (quote) và đơn vị như đề viết. Tên đại lượng và đơn vị bị giới hạn bằng `enum` trong schema.                                                                      |
+| 3. Kiểm tra định dạng         | Code (Zod)       | JSON sai → gửi lỗi lại cho AI sửa, **tối đa 2 lần**; vẫn sai → báo lỗi `invalidJson`.                                                                                                                             |
+| 4. Số phải có trong đề        | Code             | Mỗi giá trị phải xuất hiện trong đề (hiểu dấu phẩy thập phân, "1.200", "3.10⁸"…). AI tự đổi đơn vị (72 km/h → 20 m/s) hay tự tính → **bị loại** và đại lượng chuyển thành "Cần nhập".                             |
+| 5. Giá trị nói bằng lời       | Code             | Chỉ chấp nhận khi trích dẫn thật sự có trong đề **và** chứa cụm từ trong bảng cố định (ví dụ "thả nhẹ" → v₀ = 0; "không ma sát" → μ = 0; "va chạm mềm" → e = 0). Bảng này chờ duyệt.                              |
+| 6. Đơn vị, phạm vi            | Code             | Đơn vị phải hợp thứ nguyên; ngoài phạm vi mô phỏng → cảnh báo.                                                                                                                                                    |
+| 7. Giá trị mặc định           | Code             | Đại lượng đề không cho được điền bằng code và gắn nhãn **"mặc định"** (ví dụ g lấy theo Cài đặt). Đại lượng bắt buộc mà đề không cho → **"Cần nhập"**: không mô phỏng khi chưa nhập hoặc chưa bấm "Giữ mặc định". |
+| 8. Bảng "Tôi hiểu đề như sau" | Người dùng       | Người dùng xem, sửa mọi giá trị trước khi mô phỏng. Giá trị sửa tay được gắn nhãn "đã chỉnh".                                                                                                                     |
+| 9. Diễn giải bằng lời         | AI + Code        | Code liệt kê mọi con số AI viết ra; con số nào không trùng (sai lệch ≤ 1 %) với số engine tính, số trong lời giải hoặc số trong đề → **ẩn toàn bộ đoạn diễn giải** và báo cho người dùng.                         |
+
+**Bộ đề chuẩn (golden set):** `tests/golden/physics.json` có 31 đề (29 đề mô phỏng được và 2 đề
+ngoài phạm vi). Đáp số được tính **độc lập bằng Python** (`scripts/golden/make_physics_golden.py`),
+rồi so với đáp số của engine ở sai số 10⁻⁶ (`npm test`). Để đo độ chính xác của một mô hình AI
+thật: mở LM Studio, rồi chạy `npm run golden:llm` (báo cáo tỉ lệ chọn đúng chủ đề, trích đúng số
+liệu, ra đúng đáp số).
+
+**Kiểm thử đầu-cuối:** `npm run test:e2e` (Playwright) chạy app thật trong trình duyệt với LM
+Studio giả lập. Các tình huống: đề → bảng xác nhận → mô phỏng → lời giải → diễn giải; AI bịa số bị
+loại; diễn giải chứa số lạ bị ẩn; đề ngoài phạm vi; LM Studio chưa bật; chế độ Tự dựng cảnh không
+gọi AI.

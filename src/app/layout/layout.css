@@ -224,6 +224,9 @@ body[data-resizing] .splitter {
 
 .ai-status {
   display: inline-flex;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
   align-items: center;
   gap: 5px;
   padding: 3px 9px;

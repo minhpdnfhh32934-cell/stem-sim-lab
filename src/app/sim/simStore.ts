@@ -20,6 +20,8 @@ export interface SimStoreState {
   /** Time shown while scrubbing a recorded run; null when live. */
   scrubTime: number | null;
   selected: string | null;
+  /** Problem the simulation came from (AI mode): text and the answer ids it asks for. */
+  problem: { text: string; questions: string[] } | null;
   vectors: boolean;
   trail: boolean;
   stopwatch: boolean;
@@ -43,6 +45,7 @@ export const useSimStore = create<SimStoreState>()(() => ({
   duration: 0,
   scrubTime: null,
   selected: null,
+  problem: null,
   vectors: true,
   trail: true,
   stopwatch: false,
