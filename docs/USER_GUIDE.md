@@ -8,10 +8,29 @@ con số do chương trình tính; mỗi mô phỏng có **Thẻ Khoa học** gh
 
 **Yêu cầu:** Windows 10 hoặc 11 (64-bit), RAM từ 8 GB, màn hình từ 1366×768.
 
-1. Tải tệp `STEM Sim Lab_…_x64-setup.exe` (bộ cài) — xem mục "Tạo bộ cài" bên dưới nếu chưa có.
+1. Tải tệp `STEM Sim Lab_…_x64-setup.exe` ở trang **Releases** của dự án trên GitHub (mục
+   _Assets_).
 2. Nhấp đúp để chạy. Windows có thể hiện "Windows protected your PC" vì bộ cài chưa được ký số: bấm
    **More info → Run anyway**.
 3. Bộ cài không cần quyền quản trị (cài cho người dùng hiện tại). Xong, mở app từ menu Start.
+
+Chỉ cần cài **một lần**. Các bản sau cập nhật ngay trong app (mục "Cập nhật phần mềm").
+
+### Windows chặn bộ cài ("Smart App Control blocked an app")
+
+Smart App Control (Windows 11) chặn mọi chương trình **chưa có chữ ký số** mà Microsoft chưa biết;
+hộp thoại này không có nút "Run anyway". Bộ cài STEM Sim Lab chưa được ký số (chứng chỉ ký số tốn
+phí, và dịch vụ Azure Artifact Signing chưa nhận người dùng ở Việt Nam). Cách xử lý:
+
+1. Có thể thử bộ cài `.msi` trong cùng thư mục tải về (không chắc được cho qua).
+2. Nếu vẫn bị chặn: **Windows Security → App & browser control → Smart App Control settings** →
+   chọn **Off**, cài app, rồi bật lại **On**. (Từ bản cập nhật Windows KB5083769, tháng 4/2026, có
+   thể bật lại mà không phải cài lại Windows. Máy cũ hơn thì tắt là tắt hẳn — hãy cân nhắc.)
+3. Gửi tệp cho Microsoft xét duyệt: <https://www.microsoft.com/wdsi/filesubmission> (chọn
+   "Software developer"); sau khi được duyệt, Windows ngừng chặn tệp đó.
+
+Sau lần cài này, các bản cập nhật trong app **không cài thêm tệp .exe nào**, nên Smart App Control
+không chặn nữa.
 
 **WebView2:** app dùng WebView2 của Microsoft Edge để hiển thị. Windows 11 và hầu hết máy Windows 10
 đã có sẵn. Nếu máy chưa có, bộ cài sẽ tự tải (cần mạng một lần). Máy không có mạng: tải trước
@@ -27,8 +46,9 @@ chép qua USB và cài trước.
   **Actions → Release (Windows installer) → Run workflow**. Khoảng 15–25 phút sau, mở lần chạy có
   tên **Release (Windows installer)** (không phải lần chạy "CI" — CI chỉ kiểm tra lỗi, không tạo bộ
   cài), kéo xuống cuối trang **Summary** để thấy mục **Artifacts → stem-sim-lab-windows**. Tệp zip
-  tải về chứa `…x64-setup.exe` (bộ cài khuyên dùng), `.msi` và `installer-sizes.txt`. Nếu tạo tag
-  `v0.1.0`, GitHub tự tạo bản Release nháp kèm bộ cài.
+  tải về chứa `…x64-setup.exe` (bộ cài khuyên dùng), `.msi` và `installer-sizes.txt`. Khi chọn
+  `publish` = true, GitHub còn tạo bản Release để mọi máy đã cài tự nhận cập nhật (xem
+  `docs/RELEASE.md`).
 - **Cách 2 — trên máy Windows của bạn:** cài công cụ theo `docs/SETUP_WINDOWS.md`, rồi chạy
   `npm install` và `npm run tauri build`. Bộ cài nằm trong `src-tauri\target\release\bundle\nsis\`.
 
@@ -154,6 +174,15 @@ chủ đề và nhập thông số bằng tay.
   chờ giáo viên duyệt), tài liệu tham khảo và giả định của chủ đề đang mở — dùng khi trình bày với
   giám khảo.
 - **Chế độ trình chiếu (F5):** toàn màn hình, chữ to hơn, ẩn các bảng phụ. Esc để thoát.
+
+## Cập nhật phần mềm
+
+- Khi mở app (có mạng), app tự kiểm tra bản mới. Nếu có, thanh trạng thái hiện **"Có bản cập nhật
+  …"** — bấm vào đó, hoặc vào menu ☰ → **Kiểm tra cập nhật**.
+- Bấm **Cập nhật ngay** → app tải gói cập nhật (vài MB), kiểm tra chữ ký số và mã SHA-256, rồi
+  **Khởi động lại**. Lịch sử, tệp .stemsim và cài đặt của bạn giữ nguyên.
+- Nếu bản mới thay đổi phần lõi của app, hộp thoại báo cần tải bộ cài mới và có nút mở trang tải.
+- Bản cập nhật có lỗi? Nút **Quay về bản gốc** trả app về bản đã cài từ bộ cài.
 
 ## Khi máy yếu
 
