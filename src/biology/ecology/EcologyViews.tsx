@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { create } from 'zustand';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -8,18 +7,10 @@ import { BSRC, L, usePublishCard } from '../common';
 import { niceStep, useFmt } from '../fmt';
 import { Range } from '../ui';
 import { exponential, logistic, lotkaVolterra, lvEquilibrium, lvInvariant } from './ecology';
+import { useLogistic, useLv, type LogisticState, type LvState } from './store';
 import '../bio.css';
 
 /* ───────────────────────────── Logistic growth ───────────────────────────── */
-
-interface LogisticState {
-  N0: number;
-  r: number;
-  K: number;
-  tEnd: number;
-}
-
-const useLogistic = create<LogisticState>()(() => ({ N0: 10, r: 0.5, K: 1000, tEnd: 30 }));
 
 const LOGISTIC_CARD: ScienceCardData = {
   title: L('Tăng trưởng quần thể (logistic)', 'Population growth (logistic)'),
@@ -206,26 +197,6 @@ export function LogisticBottom() {
 }
 
 /* ───────────────────────────── Lotka–Volterra ───────────────────────────── */
-
-interface LvState {
-  alpha: number;
-  beta: number;
-  delta: number;
-  gamma: number;
-  x0: number;
-  y0: number;
-  tEnd: number;
-}
-
-const useLv = create<LvState>()(() => ({
-  alpha: 1,
-  beta: 0.1,
-  delta: 0.075,
-  gamma: 1.5,
-  x0: 10,
-  y0: 5,
-  tEnd: 30,
-}));
 
 const LV_CARD: ScienceCardData = {
   title: L('Con mồi – vật ăn thịt (Lotka–Volterra)', 'Predator–prey (Lotka–Volterra)'),

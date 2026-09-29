@@ -5,6 +5,7 @@ import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { EmptyState } from '@/ui/EmptyState';
+import { exportCsv } from '@/app/project/actions';
 import { columnsFor, toCsv } from './data';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
@@ -42,19 +43,12 @@ export function DataPanel() {
     );
   }
 
-  const exportCsv = () => {
+  const onExport = () => {
     const cols = columnsFor(scene, L);
     const h = sim.history;
     const rows = h.states.map((s, i) => [h.times[i] ?? 0, ...cols.map((c) => c.value(s, params))]);
     const csv = toCsv(['t (s)', ...cols.map((c) => c.header)], rows);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${scene.id}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.csv`;
-    a.click();
-    setTimeout(() => {
-      URL.revokeObjectURL(a.href);
-    }, 1000);
+    void exportCsv(scene.id, csv);
   };
 
   const nf = (v: number) => formatNumber(locale, v, { maximumSignificantDigits: 5 });
@@ -64,7 +58,7 @@ export function DataPanel() {
         <span className="muted small">
           {t('data.rows', { shown: table.rows.length, total: table.total })}
         </span>
-        <button type="button" className="btn" onClick={exportCsv}>
+        <button type="button" className="btn" onClick={onExport}>
           <Download size={14} strokeWidth={1.75} aria-hidden="true" />
           {t('data.exportCsv')}
         </button>

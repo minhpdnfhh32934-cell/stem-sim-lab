@@ -1,6 +1,10 @@
+import { bindStore, combineBindings } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { L } from '../common';
 import { ElementDetails } from '../periodic/ElementDetails';
+import { usePeriodicStore } from '../periodic/store';
+import { useBohrStore } from './bohrStore';
+import { useOrbitalStore } from './orbitalStore';
 import { BohrPanel } from './BohrPanel';
 import { BohrStage } from './BohrStage';
 import { ConfigStage } from './ConfigStage';
@@ -13,6 +17,7 @@ export const electronConfiguration: ModuleView = {
   title: L('Cấu hình electron', 'Electron configuration'),
   Stage: ConfigStage,
   Panel: ElementDetails,
+  state: bindStore(usePeriodicStore, ['selected']),
 };
 
 export const bohrModel: ModuleView = {
@@ -21,6 +26,10 @@ export const bohrModel: ModuleView = {
   Panel: BohrPanel,
   Bottom: SpectrumBottom,
   bottomTitle: L('Phổ vạch của hydro', 'Hydrogen line spectrum'),
+  state: combineBindings({
+    element: bindStore(usePeriodicStore, ['selected']),
+    levels: bindStore(useBohrStore, ['nLower', 'nUpper']),
+  }),
 };
 
 export const orbitals: ModuleView = {
@@ -29,4 +38,5 @@ export const orbitals: ModuleView = {
   Panel: OrbitalPanel,
   Bottom: RadialBottom,
   bottomTitle: L('Mật độ xác suất theo bán kính P(r)', 'Radial probability density P(r)'),
+  state: bindStore(useOrbitalStore, ['n', 'orbital', 'mode']),
 };

@@ -1,4 +1,8 @@
+import { Download } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useT } from '@/app/i18n';
+import { exportCsv } from '@/app/project/actions';
+import { toCsv } from './csv';
 import type uPlotType from 'uplot';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
@@ -32,6 +36,8 @@ export interface XYChartProps {
   height?: number;
   /** Bumps when data changes without a new array identity. */
   version?: number;
+  /** Base of the exported CSV file name (default: the y label). */
+  csvName?: string;
 }
 
 /**
@@ -39,7 +45,9 @@ export interface XYChartProps {
  * dual axis), fixed-order palette, crosshair with a live legend.
  */
 export function XYChart(props: XYChartProps) {
-  const { x, series, xLabel, yLabel, marker, xUnit, yUnit, yMin, yMax, height, version } = props;
+  const { x, series, xLabel, yLabel, marker, xUnit, yUnit, yMin, yMax, height, version, csvName } =
+    props;
+  const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const theme = useResolvedTheme();
   const hostRef = useRef<HTMLDivElement>(null);
@@ -168,6 +176,26 @@ export function XYChart(props: XYChartProps) {
   return (
     <div className="chart">
       <div ref={hostRef} className="chart__plot" />
+      {x.length > 0 && (
+        <button
+          type="button"
+          className="chart__csv"
+          aria-label={t('project.exportCsv')}
+          data-tip={t('project.exportCsv')}
+          data-tip-side="left"
+          onClick={() => {
+            const unit = (u?: string) => (u ? ` (${u})` : '');
+            const header = [
+              `${xLabel}${unit(xUnit)}`,
+              ...series.map((s) => `${s.label}${unit(yUnit)}`),
+            ];
+            const rows = x.map((xv, i) => [xv, ...series.map((s) => s.y[i] ?? null)]);
+            void exportCsv(csvName ?? yLabel, toCsv(header, rows));
+          }}
+        >
+          <Download size={14} aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 }

@@ -1,7 +1,13 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { BenchmarkResult } from './benchmark';
-import { TIERS, type QualityPreference, type QualityTier, type TierConfig } from './tiers';
+import {
+  TIERS,
+  lowerTier,
+  type QualityPreference,
+  type QualityTier,
+  type TierConfig,
+} from './tiers';
 
 export interface PerfState {
   preference: QualityPreference;
@@ -11,6 +17,13 @@ export interface PerfState {
   fps: number | null;
   /** Actual simulated-time speed ratio vs requested (1 = on time, <1 = slow motion). */
   timeScale: number;
+  /**
+   * Degradation ladder, rung 1 (MASTER_PROMPT §5): drawing is one tier lower after sustained
+   * overload. Visual only — the numbers never change. Cleared when another topic opens.
+   */
+  degraded: boolean;
+  /** Last JS heap reading (MB) from the memory watchdog; null when not available. */
+  memoryMB: number | null;
   setPreference: (p: QualityPreference) => void;
   setBenchmark: (b: BenchmarkResult) => void;
   setBenchmarking: (on: boolean) => void;
@@ -26,6 +39,8 @@ export const usePerfStore = create<PerfState>()(
       benchmarking: false,
       fps: null,
       timeScale: 1,
+      degraded: false,
+      memoryMB: null,
       setPreference: (preference) => {
         set({ preference });
       },
@@ -51,10 +66,24 @@ export const usePerfStore = create<PerfState>()(
   ),
 );
 
-/** Tier actually in effect: the user's choice, else the benchmark's, else "medium". */
-export function effectiveTier(s: Pick<PerfState, 'preference' | 'benchmark'>): QualityTier {
+/** Tier chosen by the user, else by the benchmark, else "medium" (before degradation). */
+export function chosenTier(s: Pick<PerfState, 'preference' | 'benchmark'>): QualityTier {
   if (s.preference !== 'auto') return s.preference;
   return s.benchmark?.tier ?? 'medium';
+}
+
+/** Tier actually in effect: the chosen tier, one step lower while degraded. */
+export function effectiveTier(
+  s: Pick<PerfState, 'preference' | 'benchmark'> & Partial<Pick<PerfState, 'degraded'>>,
+): QualityTier {
+  const tier = chosenTier(s);
+  return s.degraded ? lowerTier(tier) : tier;
+}
+
+/** Called by render loops when a FrameMonitor reports sustained overload. */
+export function reportOverload(): void {
+  const s = usePerfStore.getState();
+  if (!s.degraded && effectiveTier(s) !== 'low') usePerfStore.setState({ degraded: true });
 }
 
 export function useTierConfig(): TierConfig {

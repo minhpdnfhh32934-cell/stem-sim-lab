@@ -18,6 +18,8 @@ export default defineConfig({
     locale: 'vi-VN',
     viewport: { width: 1366, height: 768 },
     trace: 'retain-on-failure',
+    // The first-run tour is tested separately (tests/e2e/project.spec.ts).
+    storageState: 'tests/e2e/storage-state.json',
     ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },
   projects: [

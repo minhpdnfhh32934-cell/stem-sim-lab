@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { openProject, saveProject } from '@/app/project/actions';
+import { redo, undo } from '@/app/project/undo';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
@@ -41,9 +43,15 @@ function runAction(action: ShortcutAction): boolean {
       sim.step();
       return true;
     case 'undo':
+      return undo();
     case 'redo':
-      // Undo history arrives with the project file support (Phase 6).
-      return false;
+      return redo();
+    case 'save':
+      void saveProject();
+      return true;
+    case 'open':
+      void openProject();
+      return true;
     case 'toggleLeft':
       layout.toggle('left');
       return true;

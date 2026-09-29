@@ -1,6 +1,8 @@
+import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { L } from '../common';
 import { BondTable } from './BondTable';
+import { useMoleculeStore } from './store';
 import {
   Molecule3dPanel,
   Molecule3dStage,
@@ -11,6 +13,7 @@ import {
 } from './views';
 
 const bottomTitle = L('Bảng liên kết', 'Bonds');
+const state = bindStore(useMoleculeStore, ['id', 'lonePairs', 'labels', 'dipole']);
 
 export const molecule3d: ModuleView = {
   title: L('Phân tử 3D', '3D molecules'),
@@ -18,6 +21,7 @@ export const molecule3d: ModuleView = {
   Panel: Molecule3dPanel,
   Bottom: BondTable,
   bottomTitle,
+  state,
 };
 export const vsepr: ModuleView = {
   title: L('Hình học phân tử (VSEPR)', 'Molecular geometry (VSEPR)'),
@@ -25,6 +29,7 @@ export const vsepr: ModuleView = {
   Panel: VseprPanel,
   Bottom: BondTable,
   bottomTitle,
+  state,
 };
 export const bondPolarity: ModuleView = {
   title: L('Độ phân cực liên kết', 'Bond polarity'),
@@ -32,4 +37,5 @@ export const bondPolarity: ModuleView = {
   Panel: PolarityPanel,
   Bottom: BondTable,
   bottomTitle,
+  state,
 };

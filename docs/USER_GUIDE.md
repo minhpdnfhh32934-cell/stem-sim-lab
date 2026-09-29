@@ -74,6 +74,29 @@ chủ đề và nhập thông số bằng tay.
 - **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
   ρgΔh = iCRT.
 
+## Lưu, mở, xuất và lịch sử
+
+- **Menu Tệp** (nút ☰ ở thanh trên): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Nguồn & Giả
+  định, Hướng dẫn nhanh.
+- **Lưu (Ctrl+S) / Mở (Ctrl+O):** tệp `.stemsim` lưu chủ đề và các thông số bạn đã chỉnh (không lưu
+  kết quả — app tính lại khi mở, nên kết quả luôn đúng với phiên bản app).
+- **Hoàn tác / Làm lại (Ctrl+Z / Ctrl+Y):** áp dụng cho thông số của chủ đề đang mở. Kéo thanh trượt
+  liên tục được tính là một bước.
+- **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
+  CSV. Rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải.
+- **Lịch sử** (tab ở cột trái): mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm
+  thùng rác để xóa.
+- **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục
+  chờ giáo viên duyệt), tài liệu tham khảo và giả định của chủ đề đang mở — dùng khi trình bày với
+  giám khảo.
+- **Chế độ trình chiếu (F5):** toàn màn hình, chữ to hơn, ẩn các bảng phụ. Esc để thoát.
+
+## Khi máy yếu
+
+App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng thái báo "Đã hạ chất lượng hiển thị"
+(số liệu không đổi). Nếu không kịp tính, mô phỏng chạy chậm hơn thời gian thực và ghi rõ tỉ lệ (ví dụ
+×0,5). Khi bộ nhớ cao, app giải phóng bộ nhớ đệm và nhắc bạn đóng bớt chủ đề 3D.
+
 ## Phím tắt
 
 | Phím                     | Tác dụng                                    |
@@ -82,6 +105,7 @@ chủ đề và nhập thông số bằng tay.
 | R                        | Đặt lại                                     |
 | .                        | Bước tiếp theo                              |
 | Ctrl+Z / Ctrl+Y          | Hoàn tác / Làm lại                          |
+| Ctrl+S / Ctrl+O          | Lưu / mở tệp .stemsim                       |
 | Ctrl+B / Ctrl+I / Ctrl+J | Ẩn/hiện Thư viện / Thuộc tính / bảng Đồ thị |
 | F5 / Esc                 | Vào / thoát chế độ trình chiếu              |
 | Ctrl+= / Ctrl+-          | Tăng / giảm cỡ chữ                          |

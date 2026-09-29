@@ -51,7 +51,12 @@ export function MechanismViewer({ mechanism, t, showArrows, labels, ariaLabel }:
     const token = (n: string, f: string) => css.getPropertyValue(n).trim() || f;
     const frames = mechanism.frames;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: tier.antialias, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: tier.antialias,
+      alpha: true,
+      // Keeps the last frame readable for "Xuất ảnh PNG" (views render on demand only).
+      preserveDrawingBuffer: true,
+    });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier.pixelRatioCap));
     renderer.setSize(host.clientWidth, host.clientHeight);
     renderer.domElement.className = 'mol-viewer__canvas';

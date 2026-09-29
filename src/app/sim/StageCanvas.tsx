@@ -5,7 +5,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { FrameMonitor } from '@/perf/frameMonitor';
-import { usePerfStore, useTierConfig } from '@/perf/perfStore';
+import { reportOverload, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import { Camera } from '@/physics/render/camera';
 import { drawGrid, line, polyline, text } from '@/physics/render/draw';
 import type { PhysicsScene, ThemeColors } from '@/physics/types';
@@ -87,7 +87,13 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       const dt = (now - last) / 1000;
       last = now;
       const playing = useWorkspaceStore.getState().playing;
-      if (playing) monitor.record(dt);
+      if (playing) {
+        monitor.record(dt);
+        if (monitor.overloaded) {
+          reportOverload();
+          monitor.resetOverload();
+        }
+      }
       sim.tick(dt);
       render(ctx, dpr);
       if (now - lastFpsPush > 400) {

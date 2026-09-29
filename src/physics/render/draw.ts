@@ -4,6 +4,15 @@ import type { Camera } from './camera';
 import { niceStep } from './camera';
 import type { ThemeColors } from '../types';
 
+/**
+ * Canvas label size following the UI font scale (Settings → font size, and the larger
+ * text of presentation mode). `--font-scale` is set inline on <html> by useApplyTheme.
+ */
+export function fontPx(base: number): string {
+  const scale = Number(document.documentElement.style.getPropertyValue('--font-scale')) || 1;
+  return `${String(Math.round(base * scale * 10) / 10)}px`;
+}
+
 type Ctx = CanvasRenderingContext2D;
 export interface Pt {
   x: number;
@@ -36,7 +45,7 @@ export function drawGrid(ctx: Ctx, cam: Camera, colors: ThemeColors, locale: Loc
 
   // Axis labels (metres) along the bottom and left edges.
   ctx.fillStyle = colors.faint;
-  ctx.font = '11px ui-monospace, Consolas, monospace';
+  ctx.font = `${fontPx(11)} ui-monospace, Consolas, monospace`;
   const digits = Math.max(0, -Math.floor(Math.log10(major) + 1e-9));
   const fmt = (n: number) =>
     formatNumber(locale, Math.abs(n) < major / 1e6 ? 0 : n, { maximumFractionDigits: digits });
@@ -89,7 +98,7 @@ export function arrow(
   ctx.closePath();
   ctx.fill();
   if (text) {
-    ctx.font = 'italic 600 13px "Cambria Math", "Times New Roman", serif';
+    ctx.font = `italic 600 ${fontPx(13)} "Cambria Math", "Times New Roman", serif`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'bottom';
     ctx.fillText(text, b.sx + 4, b.sy - 2);
@@ -244,7 +253,7 @@ export function block(
   ctx.stroke();
   if (text) {
     ctx.fillStyle = '#fff';
-    ctx.font = '600 12px system-ui, sans-serif';
+    ctx.font = `600 ${fontPx(12)} system-ui, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, 0, 0);
@@ -265,7 +274,7 @@ export function text(
   const { sx, sy } = cam.toScreen(x, y);
   ctx.save();
   ctx.fillStyle = color;
-  ctx.font = '12px system-ui, "Segoe UI", sans-serif';
+  ctx.font = `${fontPx(12)} system-ui, "Segoe UI", sans-serif`;
   ctx.textAlign = align;
   ctx.textBaseline = 'bottom';
   ctx.fillText(value, sx + offset.x, sy + offset.y);

@@ -26,7 +26,11 @@ export const Inspector = memo(function Inspector() {
   const ModulePanel = mod?.view.Panel;
 
   return (
-    <aside className="panel inspector" aria-label={t('inspector.regionLabel')}>
+    <aside
+      className="panel inspector"
+      aria-label={t('inspector.regionLabel')}
+      data-tour="inspector"
+    >
       <header className="panel__header">
         <h2 className="panel__title">{t('inspector.title')}</h2>
         <IconButton

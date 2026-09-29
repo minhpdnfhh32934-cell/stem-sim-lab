@@ -42,7 +42,8 @@ export class History {
     if (this.times.length > this.maxSamples) this.decimate();
   }
 
-  private decimate(): void {
+  /** Keeps every other sample (also used by the memory watchdog to free memory). */
+  decimate(): void {
     const keepT: number[] = [];
     const keepS: Float64Array[] = [];
     for (let i = 0; i < this.times.length; i += 2) {

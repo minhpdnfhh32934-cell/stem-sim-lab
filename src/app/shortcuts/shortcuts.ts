@@ -9,6 +9,8 @@ export type ShortcutAction =
   | 'step'
   | 'undo'
   | 'redo'
+  | 'save'
+  | 'open'
   | 'toggleLeft'
   | 'toggleRight'
   | 'toggleBottom'
@@ -50,6 +52,8 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
       { key: 'z', ctrl: true, shift: true },
     ],
   },
+  { action: 'save', chords: [{ key: 's', ctrl: true }], worksInInputs: true },
+  { action: 'open', chords: [{ key: 'o', ctrl: true }], worksInInputs: true },
   { action: 'toggleLeft', chords: [{ key: 'b', ctrl: true }], worksInInputs: true },
   { action: 'toggleRight', chords: [{ key: 'i', ctrl: true }], worksInInputs: true },
   { action: 'toggleBottom', chords: [{ key: 'j', ctrl: true }], worksInInputs: true },

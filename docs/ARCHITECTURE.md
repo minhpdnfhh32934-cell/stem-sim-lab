@@ -68,7 +68,13 @@ Principles:
 ## 3. Rust backend (Phase 0: minimal)
 
 - `src-tauri/src/lib.rs`: builder with the `app_info` command (version, OS, debug flag).
-- `capabilities/default.json`: only `core:default`. New permissions must be added explicitly.
+- `capabilities/default.json`: `core:default` plus `core:window:allow-set-fullscreen` /
+  `allow-is-fullscreen` (presentation mode). New permissions must be added explicitly.
+- `files.rs` (Phase 6): `save_file` / `open_text_file` show the native dialog (tauri-plugin-dialog,
+  called from Rust only — no JS permission) and read/write only the file the user picked.
+- `history.rs` (Phase 6): SQLite (`rusqlite`, bundled) in the app data folder; table `history`
+  (topic, subject, title, `.stemsim` snapshot), newest 500 kept. Commands `history_add/update/
+list/delete/clear`; the browser build falls back to localStorage.
 - CSP in `tauri.conf.json`: `'self'` only, plus `wasm-unsafe-eval` for Rapier/RDKit WASM and
   `blob:` workers. `devCsp` also allows Vite's inline dev preamble and the HMR websocket.
 - Release profile tuned for size (`lto`, `opt-level = "s"`, `strip`).
@@ -90,6 +96,18 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
 - The web page never sees a cloud key. In the browser (dev/E2E) only LM Studio is reachable.
 - The explanation step (`explain.ts`) runs after the engine; its numbers are checked against the
   engine's answers and the explanation is hidden when it contains any other number.
+
+## 3c. Projects, undo, history (Phase 6)
+
+- `.stemsim` = JSON `{format, version, app, savedAt, topicId, physics?{params, sources, problem},
+module?{state}}` (Zod schema in `src/app/project/snapshot.ts`). Only **inputs** are stored; results
+  are recomputed by the engine. Unknown topics, parameters and wrongly typed fields are ignored.
+- Module inputs are exposed through `ModuleView.state` (`bindStore(store, keys, apply?)` in
+  `src/modules/binding.ts`): the same binding serves files, history and undo/redo.
+- Undo/redo (`src/app/project/undo.ts`): snapshots of the open topic's inputs, changes within
+  500 ms grouped (slider drags), 100 steps, reset when another topic opens.
+- Overload: `FrameMonitor` → `reportOverload()` lowers the drawing tier one step (`perfStore.degraded`);
+  memory watchdog in `src/perf/memory.ts`. See docs/PERFORMANCE.md.
 
 ## 4. Planned modules
 

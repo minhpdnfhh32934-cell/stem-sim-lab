@@ -239,6 +239,8 @@ const en: Messages = {
     step: 'Step forward',
     undo: 'Undo',
     redo: 'Redo',
+    save: 'Save simulation (.stemsim)',
+    open: 'Open .stemsim file',
     toggleLeft: 'Show / hide Library',
     toggleRight: 'Show / hide Properties',
     toggleBottom: 'Show / hide Graphs panel',
@@ -398,6 +400,83 @@ const en: Messages = {
       noModel: 'Load a model in LM Studio, then retry.',
       other: 'You can still build the scene manually or use the sample library.',
     },
+  },
+  project: {
+    file: 'File',
+    save: 'Save simulation (.stemsim) — Ctrl+S',
+    open: 'Open .stemsim file — Ctrl+O',
+    exportPng: 'Export PNG image',
+    sources: 'Sources & assumptions',
+    tour: 'Quick tour',
+    dismiss: 'Dismiss',
+    nothingToSave: 'No topic is open.',
+    saved: 'Saved: {name}',
+    saveFailed: 'Could not save the file.',
+    openFailed: 'Could not open the file.',
+    opened: 'Opened: {name}',
+    invalid: {
+      json: '{name} is not valid JSON.',
+      format: '{name} is not a .stemsim file.',
+      topic: '{name} uses a topic that this version does not have.',
+    },
+    noCanvas:
+      'This topic is shown as tables and text, so there is no image to export. Use Export CSV or a screenshot.',
+    exportCsv: 'Export CSV',
+  },
+  history: {
+    reopen: 'Reopen',
+    delete: 'Delete this entry',
+    clearAll: 'Clear all history',
+    confirmClear: 'Click again to clear everything',
+    fromProblem: 'From a problem',
+  },
+  perf: {
+    degraded: 'Display quality lowered to keep things smooth (numbers unchanged)',
+    memoryHigh:
+      'Memory use is high ({mb} MB). Caches were released. Close some 3D topics or use fewer particles.',
+    memory: 'RAM {mb} MB',
+  },
+  tour: {
+    label: 'Quick tour',
+    next: 'Next',
+    back: 'Back',
+    skip: 'Skip',
+    done: 'Get started',
+    counter: '{i}/{n}',
+    welcomeTitle: 'Welcome to STEM Sim Lab',
+    welcomeBody:
+      'Physics, chemistry and biology simulations that run fully on this computer. Every number is computed by the program, with a Science Card stating the model and sources.',
+    subjectTitle: 'Pick a subject',
+    subjectBody: 'Switch between Physics, Chemistry and Biology.',
+    libraryTitle: 'Topic library',
+    libraryBody:
+      'Pick a topic to open its simulation. The History tab keeps the simulations you opened.',
+    problemTitle: 'Type a problem',
+    problemBody:
+      'Paste a physics problem and click Analyze: the AI reads it and you check the "I understood the problem as" table before running. Without AI, use Build manually.',
+    stageTitle: 'Simulation stage',
+    stageBody:
+      'Space to run/pause, R to reset. Drag objects to intervene (the Science Card then switches to "approximate").',
+    inspectorTitle: 'Properties & Science Card',
+    inspectorBody:
+      'Adjust parameters here. The Science Card shows the model, equations, assumptions, confidence and sources.',
+    fileTitle: 'Save, open, export',
+    fileBody:
+      'Save a simulation as a .stemsim file, export PNG images, and open Sources & assumptions for the judges. F5: presentation mode.',
+  },
+  sourcesPage: {
+    title: 'Sources & assumptions',
+    intro:
+      'Every data source, model and assumption used by the app. Items marked "pending" need a teacher\'s review (see docs/DATA_REVIEW.md).',
+    principles: 'Principles',
+    datasets: 'Datasets',
+    references: 'References',
+    current: 'Open topic',
+    noCurrent: 'No topic is open.',
+    pending: 'pending',
+    verified: 'verified',
+    items: '{n} items',
+    close: 'Close',
   },
   languages: {
     vi: 'Tiếng Việt',

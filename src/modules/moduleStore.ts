@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { usePerfStore } from '@/perf/perfStore';
 import { loadModule } from './registry';
 import type { ModuleView } from './types';
 
@@ -20,6 +21,7 @@ let seq = 0;
 export async function openModule(id: string): Promise<void> {
   const mine = ++seq;
   useModuleStore.setState({ loading: true, error: null });
+  usePerfStore.setState({ degraded: false });
   try {
     const view = await loadModule(id);
     if (mine !== seq) return;

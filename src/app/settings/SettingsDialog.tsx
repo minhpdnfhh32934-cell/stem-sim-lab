@@ -29,6 +29,8 @@ const LISTED = [
   'step',
   'undo',
   'redo',
+  'save',
+  'open',
   'toggleLeft',
   'toggleRight',
   'toggleBottom',

@@ -43,9 +43,4 @@ export function columnsFor(scene: PhysicsScene, label: (t: { vi: string; en: str
 }
 
 /** CSV (RFC 4180, dot decimal, UTF-8 BOM so Excel opens Vietnamese headers correctly). */
-export function toCsv(header: string[], rows: number[][]): string {
-  const esc = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
-  const lines = [header.map(esc).join(',')];
-  for (const r of rows) lines.push(r.map((v) => (Number.isFinite(v) ? String(v) : '')).join(','));
-  return '﻿' + lines.join('\r\n') + '\r\n';
-}
+export { toCsv } from '@/ui/charts/csv';

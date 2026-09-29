@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { create } from 'zustand';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
@@ -7,27 +6,8 @@ import { BSRC, L, usePublishCard } from '../common';
 import { useFmt } from '../fmt';
 import { Range, Segmented } from '../ui';
 import { apparent, rate, substrateAt, substrateNumeric, type Inhibition } from './enzyme';
+import { useEnzyme, type EnzymeState } from './store';
 import '../bio.css';
-
-interface EnzymeState {
-  vmax: number;
-  km: number;
-  kind: Inhibition;
-  inhibitor: number;
-  ki: number;
-  s0: number;
-  view: 'rate' | 'time';
-}
-
-const useEnzyme = create<EnzymeState>()(() => ({
-  vmax: 10,
-  km: 2,
-  kind: 'competitive',
-  inhibitor: 2,
-  ki: 1,
-  s0: 10,
-  view: 'rate',
-}));
 
 const KIND_NAME: Record<Inhibition, ReturnType<typeof L>> = {
   none: L('Không có chất ức chế', 'No inhibitor'),

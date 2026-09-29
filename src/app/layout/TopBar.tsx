@@ -22,6 +22,8 @@ import { useShallow } from 'zustand/react/shallow';
 import { analyze, cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
 import { useT } from '@/app/i18n';
 import { useAiStore } from '@/ai/aiStore';
+import { FileMenu } from '@/app/project/FileMenu';
+import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
@@ -58,6 +60,8 @@ export const TopBar = memo(function TopBar() {
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
   const provider = useAiStore((s) => s.provider);
   const running = useAnalyzeStore((s) => s.phase === 'running');
+  const canUndo = useUndoStore((s) => s.canUndo);
+  const canRedo = useUndoStore((s) => s.canRedo);
   const stage = useAnalyzeStore((s) => s.stage);
   const aiOff = provider === 'off';
   const canAnalyze = !aiOff && problemText.trim().length > 0 && !running;
@@ -79,7 +83,12 @@ export const TopBar = memo(function TopBar() {
         </div>
       </div>
 
-      <div className="subject-switch" role="radiogroup" aria-label={t('subjects.label')}>
+      <div
+        className="subject-switch"
+        role="radiogroup"
+        aria-label={t('subjects.label')}
+        data-tour="subjects"
+      >
         {SUBJECTS.map((s) => {
           const Icon = SUBJECT_ICON[s];
           const checked = s === subject;
@@ -101,7 +110,7 @@ export const TopBar = memo(function TopBar() {
         })}
       </div>
 
-      <div className="problem-input">
+      <div className="problem-input" data-tour="problem">
         <label htmlFor="problem-text" className="sr-only">
           {t('topbar.problemLabel')}
         </label>
@@ -197,8 +206,22 @@ export const TopBar = memo(function TopBar() {
           }}
         />
         <span className="topbar__divider" aria-hidden="true" />
-        <IconButton icon={Undo2} label={t('topbar.undo')} disabled />
-        <IconButton icon={Redo2} label={t('topbar.redo')} disabled />
+        <IconButton
+          icon={Undo2}
+          label={t('topbar.undo')}
+          disabled={!canUndo}
+          onClick={() => {
+            undo();
+          }}
+        />
+        <IconButton
+          icon={Redo2}
+          label={t('topbar.redo')}
+          disabled={!canRedo}
+          onClick={() => {
+            redo();
+          }}
+        />
         <IconButton
           icon={theme === 'dark' ? Sun : Moon}
           label={t('topbar.toggleTheme')}
@@ -214,6 +237,7 @@ export const TopBar = memo(function TopBar() {
             setPresentation(true);
           }}
         />
+        <FileMenu />
         <IconButton
           icon={Settings}
           label={t('topbar.settings')}

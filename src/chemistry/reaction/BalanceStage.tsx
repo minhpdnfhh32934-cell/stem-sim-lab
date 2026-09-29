@@ -1,5 +1,5 @@
 import { BookCheck, CircleAlert, TriangleAlert } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { openTopic } from '@/app/topics';
 import type { ScienceCardData } from '@/science-card/types';
@@ -14,7 +14,7 @@ import {
 } from '../balance';
 import { matchLibrary } from '../data/reactions';
 import { formatFormula } from '../formula';
-import { selectReaction } from './store';
+import { selectReaction, useReactionStore } from './store';
 import '../chem.css';
 
 const CARD: ScienceCardData = {
@@ -62,7 +62,10 @@ type Outcome =
 export function BalanceStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
-  const [text, setText] = useState('Fe + O2 -> Fe2O3');
+  const text = useReactionStore((s) => s.equation);
+  const setText = (equation: string) => {
+    useReactionStore.setState({ equation });
+  };
   const outcome = useMemo<Outcome>(() => {
     if (!text.trim()) return { kind: 'empty' };
     try {

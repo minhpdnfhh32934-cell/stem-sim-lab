@@ -2,6 +2,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/workspaceStore';
 import type { EngineInput } from '@/core/sim/engine';
 import type { Frame } from '@/core/sim/runner';
+import { registerCacheRelease } from '@/perf/memory';
 import { usePerfStore } from '@/perf/perfStore';
 import { closeModule } from '@/modules/moduleStore';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
@@ -59,6 +60,7 @@ class SimRuntime {
     closeModule();
     this.close();
     useSimStore.setState({ loading: true, error: null });
+    usePerfStore.setState({ degraded: false });
     try {
       const scene = await loadScene(topicId);
       if (seq !== this.openSeq) return;
@@ -66,8 +68,14 @@ class SimRuntime {
       const sources: Record<string, ParamSource> = {};
       for (const k of Object.keys(params)) sources[k] = 'default';
       if (scene.usesGravity) params.g = useSettingsStore.getState().defaultGravity;
-      Object.assign(params, opts.params ?? {});
-      Object.assign(sources, opts.sources ?? {});
+      // Only parameters the scene knows (a project file or problem cannot add others).
+      const known = new Set([...Object.keys(params), ...scene.params.map((d) => d.key)]);
+      for (const [k, v] of Object.entries(opts.params ?? {})) {
+        if (known.has(k) && Number.isFinite(v)) params[k] = v;
+      }
+      for (const [k, v] of Object.entries(opts.sources ?? {})) {
+        if (known.has(k)) sources[k] = v;
+      }
       Object.assign(params, applyAutoDefaults(scene, params, sources));
       const speed = scene.suggestedSpeed?.(params);
       if (speed !== undefined) useWorkspaceStore.setState({ speed: closestSpeed(speed) });
@@ -280,6 +288,15 @@ class SimRuntime {
     }
   }
 
+  /** Replaces all parameters at once (undo/redo) and restarts from t = 0. */
+  applyParams(params: Params, sources: Record<string, ParamSource>): void {
+    const scene = this.scene;
+    if (!scene) return;
+    useSimStore.setState({ params, sources, validation: scene.validate?.(params) ?? [] });
+    this.reset();
+    useSimStore.setState({ fitRequest: useSimStore.getState().fitRequest + 1 });
+  }
+
   input(msg: EngineInput): void {
     if (useSimStore.getState().scrubTime !== null) this.resumeFromScrub();
     this.host?.input(msg);
@@ -310,3 +327,9 @@ class SimRuntime {
 }
 
 export const sim = new SimRuntime();
+
+// Under memory pressure the recorded run keeps every other sample (graph resolution only;
+// the simulation itself is not affected).
+registerCacheRelease(() => {
+  sim.history.decimate();
+});

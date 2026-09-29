@@ -5,6 +5,7 @@ import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { openTopic, useActiveTopic } from '@/app/topics';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { HistoryList } from '@/app/project/HistoryList';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
 import { useLayoutStore, type LeftTab } from './layoutStore';
@@ -15,7 +16,7 @@ export const LeftSidebar = memo(function LeftSidebar() {
   const setTab = useLayoutStore((s) => s.setLeftTab);
 
   return (
-    <aside className="panel sidebar" aria-label={t('sidebar.regionLabel')}>
+    <aside className="panel sidebar" aria-label={t('sidebar.regionLabel')} data-tour="library">
       <Tabs<LeftTab>
         label={t('sidebar.regionLabel')}
         value={tab}
@@ -25,15 +26,7 @@ export const LeftSidebar = memo(function LeftSidebar() {
           { id: 'history', label: t('sidebar.history'), icon: History },
         ]}
       />
-      {tab === 'library' ? (
-        <Library t={t} />
-      ) : (
-        <div className="panel__scroll">
-          <EmptyState icon={History} compact>
-            {t('sidebar.historyEmpty')}
-          </EmptyState>
-        </div>
-      )}
+      {tab === 'library' ? <Library t={t} /> : <HistoryList />}
     </aside>
   );
 });

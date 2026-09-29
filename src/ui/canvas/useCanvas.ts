@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
-import { useTierConfig } from '@/perf/perfStore';
+import { FrameMonitor } from '@/perf/frameMonitor';
+import { reportOverload, useTierConfig } from '@/perf/perfStore';
 
 export interface DrawContext {
   ctx: CanvasRenderingContext2D;
@@ -56,8 +57,18 @@ export function useCanvas(draw: (d: DrawContext) => void, animate: boolean, deps
         css,
       });
     };
-    const loop = () => {
-      if (document.visibilityState === 'visible') render();
+    const monitor = new FrameMonitor(1 / 60);
+    let last = performance.now();
+    const loop = (now: number) => {
+      if (document.visibilityState === 'visible') {
+        monitor.record((now - last) / 1000);
+        if (monitor.overloaded) {
+          reportOverload();
+          monitor.resetOverload();
+        }
+        render();
+      }
+      last = now;
       raf = requestAnimationFrame(loop);
     };
     if (animate && !reduce) raf = requestAnimationFrame(loop);

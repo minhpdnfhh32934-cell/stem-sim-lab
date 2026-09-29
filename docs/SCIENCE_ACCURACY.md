@@ -187,3 +187,12 @@ test tự động bảo đảm.
   bằng không phụ thuộc Lp.
 - Π = iCRT chỉ đúng cho dung dịch loãng; i = 2 (NaCl), 3 (CaCl₂) là giả thiết phân li hoàn toàn.
 - Lotka–Volterra là mô hình định tính kinh điển (thẻ khoa học ghi "gần đúng" vì giải số).
+
+## 8. Lưu tệp, lịch sử và quá tải (Giai đoạn 6)
+
+- Tệp `.stemsim` và Lịch sử chỉ lưu **đầu vào** (chủ đề, thông số và nguồn của từng thông số: đề
+  bài / mặc định / người dùng). Kết quả luôn được tính lại khi mở, nên không thể có kết quả "cũ" hay
+  bị sửa tay. Tệp lạ được kiểm tra bằng Zod; thông số không thuộc chủ đề hoặc sai kiểu bị bỏ qua.
+- Khi quá tải, app giảm chất lượng hiển thị hoặc chạy chậm có ghi tỉ lệ; bước tích phân và mô hình
+  không đổi (chi tiết: docs/PERFORMANCE.md).
+- Watchdog bộ nhớ chỉ giảm số mẫu lưu cho đồ thị (độ phân giải đồ thị), không đụng tới mô phỏng.

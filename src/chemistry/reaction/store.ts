@@ -12,6 +12,8 @@ export interface ReactionState {
   labels: boolean;
   query: string;
   category: ReactionCategory | 'all' | 'mechanism';
+  /** Equation typed in the balancer. */
+  equation: string;
 }
 
 export const useReactionStore = create<ReactionState>()(() => ({
@@ -23,6 +25,7 @@ export const useReactionStore = create<ReactionState>()(() => ({
   labels: true,
   query: '',
   category: 'all',
+  equation: 'Fe + O2 -> Fe2O3',
 }));
 
 export function selectReaction(id: string): void {

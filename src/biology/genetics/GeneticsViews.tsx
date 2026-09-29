@@ -1,6 +1,5 @@
 import { Dices } from 'lucide-react';
 import { useMemo } from 'react';
-import { create } from 'zustand';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -19,31 +18,10 @@ import {
   wrightFisher,
 } from './population';
 import { chiSquare, rng } from './stats';
+import { LETTERS, useDrift, useHw, useMendel, type DriftState, type MendelState } from './store';
 import '../bio.css';
 
 /* ───────────────────────────── Mendel ───────────────────────────── */
-
-interface MendelState {
-  loci: 1 | 2;
-  dominance: [Dominance, Dominance];
-  p1: string;
-  p2: string;
-  n: number;
-  seed: number;
-  ran: boolean;
-}
-
-const useMendel = create<MendelState>()(() => ({
-  loci: 2,
-  dominance: ['complete', 'complete'],
-  p1: 'AaBb',
-  p2: 'AaBb',
-  n: 1000,
-  seed: 1,
-  ran: false,
-}));
-
-const LETTERS = ['A', 'B'];
 
 function lociOf(st: MendelState): Locus[] {
   return LETTERS.slice(0, st.loci).map((letter, i) => ({
@@ -368,23 +346,6 @@ export function MendelPanel() {
 
 /* ─────────────────────────── Hardy–Weinberg ─────────────────────────── */
 
-interface HwState {
-  AA: number;
-  Aa: number;
-  aa: number;
-  N: number;
-  seed: number;
-  sample: { AA: number; Aa: number; aa: number } | null;
-}
-const useHw = create<HwState>()(() => ({
-  AA: 360,
-  Aa: 480,
-  aa: 160,
-  N: 1000,
-  seed: 1,
-  sample: null,
-}));
-
 const HW_CARD: ScienceCardData = {
   title: L('Định luật Hardy–Weinberg', 'Hardy–Weinberg principle'),
   model: L(
@@ -575,21 +536,6 @@ export function HardyWeinbergPanel() {
 }
 
 /* ───────────────────────────── Genetic drift ───────────────────────────── */
-
-interface DriftState {
-  N: number;
-  p0: number;
-  generations: number;
-  runs: number;
-  seed: number;
-}
-const useDrift = create<DriftState>()(() => ({
-  N: 50,
-  p0: 0.5,
-  generations: 150,
-  runs: 20,
-  seed: 1,
-}));
 
 const DRIFT_CARD: ScienceCardData = {
   title: L('Phiêu bạt di truyền (Wright–Fisher)', 'Genetic drift (Wright–Fisher)'),

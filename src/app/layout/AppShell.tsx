@@ -1,10 +1,17 @@
 import { Minimize2 } from 'lucide-react';
-import type { CSSProperties } from 'react';
+import { lazy, Suspense, useEffect, type CSSProperties } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { ProblemDialog } from '@/app/ai/ProblemDialog';
 import { useAiStatusPolling } from '@/app/ai/useAiStatus';
 import { useT } from '@/app/i18n';
+import { initHistory } from '@/app/project/history';
+import { Tour } from '@/app/project/Tour';
+import { useProjectUi } from '@/app/project/uiStore';
+import { initUndo } from '@/app/project/undo';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
+import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
+import { Toaster } from '@/ui/Toaster';
+import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
@@ -16,6 +23,7 @@ import { Stage } from './Stage';
 import { StatusBar } from './StatusBar';
 import { Timeline } from './Timeline';
 import { TopBar } from './TopBar';
+import { usePresentationFullscreen } from './usePresentationFullscreen';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -26,9 +34,22 @@ import { TopBar } from './TopBar';
  *   │ bar  │──── Bottom panel (graphs/solution) │   Card     │
  *   └──────────────────────── StatusBar ─────────────────────┘
  */
+const SourcesDialog = lazy(() => import('@/app/project/SourcesDialog'));
+
 export function AppShell() {
   useGlobalShortcuts();
   useAiStatusPolling();
+  useMemoryWatchdog();
+  usePresentationFullscreen();
+  useEffect(() => {
+    const offUndo = initUndo();
+    const offHistory = initHistory();
+    return () => {
+      offUndo();
+      offHistory();
+    };
+  }, []);
+  const sourcesOpen = useProjectUi((s) => s.sourcesOpen);
   const t = useT();
   const layout = useLayoutStore(
     useShallow((s) => ({
@@ -60,6 +81,13 @@ export function AppShell() {
     <div className="shell" data-presentation={presentation || undefined} style={style}>
       {!presentation && <TopBar />}
       <ProblemDialog />
+      {sourcesOpen && (
+        <Suspense fallback={null}>
+          <SourcesDialog />
+        </Suspense>
+      )}
+      <Tour />
+      <Toaster />
 
       <div className="shell__body">
         {showLeft && (

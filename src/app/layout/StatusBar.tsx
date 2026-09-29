@@ -1,4 +1,4 @@
-import { CircleCheck, Gauge, MonitorCog, Turtle } from 'lucide-react';
+import { CircleCheck, Gauge, MemoryStick, MonitorCog, MonitorDown, Turtle } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -15,6 +15,8 @@ export const StatusBar = memo(function StatusBar() {
   const hasBenchmark = usePerfStore((s) => s.benchmark !== null);
   const fps = usePerfStore((s) => s.fps);
   const timeScale = usePerfStore((s) => s.timeScale);
+  const degraded = usePerfStore((s) => s.degraded);
+  const memoryMB = usePerfStore((s) => s.memoryMB);
   const tierText = benchmarking
     ? t('quality.measuring')
     : preference === 'auto'
@@ -55,7 +57,19 @@ export const StatusBar = memo(function StatusBar() {
           })}
         </span>
       )}
+      {degraded && (
+        <span className="statusbar__item statusbar__item--warn" role="status">
+          <MonitorDown size={12} strokeWidth={2} aria-hidden="true" />
+          {t('perf.degraded')}
+        </span>
+      )}
       <span className="statusbar__spacer" />
+      {memoryMB !== null && (
+        <span className="statusbar__item mono">
+          <MemoryStick size={12} strokeWidth={2} aria-hidden="true" />
+          {t('perf.memory', { mb: memoryMB })}
+        </span>
+      )}
       <span className="statusbar__item">
         {t('status.version')} {info ? info.version : '…'}
         {info && !info.native && ` (${t('status.browserMode')})`}

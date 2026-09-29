@@ -378,3 +378,29 @@
   font-family: var(--font-sans);
   font-weight: 600;
 }
+.chart__csv {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity var(--dur-fast, 120ms);
+}
+.chart:hover .chart__csv,
+.chart__csv:focus-visible {
+  opacity: 1;
+}
+
+/* Presentation: keep the HUD clear of the exit button. */
+.shell[data-presentation] .stage__hud {
+  right: calc(var(--space-3) + 56px);
+}
