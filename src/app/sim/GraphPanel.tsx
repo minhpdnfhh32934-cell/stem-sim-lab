@@ -8,21 +8,10 @@ import { useTierConfig } from '@/perf/perfStore';
 import type { GraphDef } from '@/physics/types';
 import { EmptyState } from '@/ui/EmptyState';
 import { ChartSpline } from 'lucide-react';
+import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
 import { graphData } from './data';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
-
-type UPlotCtor = typeof uPlotType;
-let uplotPromise: Promise<UPlotCtor> | undefined;
-function loadUPlot(): Promise<UPlotCtor> {
-  uplotPromise ??= Promise.all([import('uplot'), import('uplot/dist/uPlot.min.css')]).then(
-    ([m]) => m.default,
-  );
-  return uplotPromise;
-}
-
-/** Categorical series colors in fixed order (validated palette, see tokens.css). */
-const SERIES_VARS = ['--chart-1', '--chart-2', '--chart-3', '--chart-4', '--chart-5'];
 
 /** Time-series graphs of the running simulation (uPlot, crosshair + live legend). */
 export function GraphPanel() {

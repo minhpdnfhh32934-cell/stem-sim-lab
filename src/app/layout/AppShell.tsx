@@ -5,6 +5,7 @@ import { ProblemDialog } from '@/app/ai/ProblemDialog';
 import { useAiStatusPolling } from '@/app/ai/useAiStatus';
 import { useT } from '@/app/i18n';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
+import { useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
 import { Inspector } from './Inspector';
@@ -43,6 +44,7 @@ export function AppShell() {
     })),
   );
   const { presentation } = layout;
+  const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
 
   const showLeft = layout.leftOpen && !presentation;
   const showRight = layout.rightOpen && !presentation;
@@ -82,7 +84,7 @@ export function AppShell() {
 
         <main className="shell__center">
           <Stage />
-          <Timeline />
+          {!moduleActive && <Timeline />}
           {showBottom && (
             <>
               <Splitter

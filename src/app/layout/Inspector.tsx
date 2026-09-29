@@ -10,6 +10,8 @@ import { ObjectPanel } from '@/app/sim/ObjectPanel';
 import { ParamsPanel } from '@/app/sim/ParamsPanel';
 import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useLocalized } from '@/app/i18n/localized';
+import { useModuleStore } from '@/modules/moduleStore';
 import { ScienceCard } from '@/science-card/ScienceCard';
 import { useLayoutStore } from './layoutStore';
 
@@ -19,6 +21,9 @@ export const Inspector = memo(function Inspector() {
   const toggle = useLayoutStore((s) => s.toggle);
   const card = useWorkspaceStore((s) => s.scienceCard);
   const hasScene = useSimStore((s) => s.scene !== null);
+  const mod = useModuleStore((s) => s.active);
+  const L = useLocalized();
+  const ModulePanel = mod?.view.Panel;
 
   return (
     <aside className="panel inspector" aria-label={t('inspector.regionLabel')}>
@@ -36,25 +41,39 @@ export const Inspector = memo(function Inspector() {
       </header>
 
       <div className="panel__scroll">
-        <Section title={t('inspector.objectSection')}>
-          {hasScene ? (
-            <ObjectPanel />
-          ) : (
-            <EmptyState icon={MousePointerClick} compact>
-              {t('inspector.noSelection')}
-            </EmptyState>
-          )}
-        </Section>
+        {mod ? (
+          <Section title={L(mod.view.title)}>
+            {ModulePanel ? (
+              <ModulePanel />
+            ) : (
+              <EmptyState icon={SlidersHorizontal} compact>
+                {t('inspector.noParams')}
+              </EmptyState>
+            )}
+          </Section>
+        ) : (
+          <>
+            <Section title={t('inspector.objectSection')}>
+              {hasScene ? (
+                <ObjectPanel />
+              ) : (
+                <EmptyState icon={MousePointerClick} compact>
+                  {t('inspector.noSelection')}
+                </EmptyState>
+              )}
+            </Section>
 
-        <Section title={t('inspector.paramsSection')}>
-          {hasScene ? (
-            <ParamsPanel />
-          ) : (
-            <EmptyState icon={SlidersHorizontal} compact>
-              {t('inspector.noParams')}
-            </EmptyState>
-          )}
-        </Section>
+            <Section title={t('inspector.paramsSection')}>
+              {hasScene ? (
+                <ParamsPanel />
+              ) : (
+                <EmptyState icon={SlidersHorizontal} compact>
+                  {t('inspector.noParams')}
+                </EmptyState>
+              )}
+            </Section>
+          </>
+        )}
 
         <Section
           title={t('inspector.scienceCard')}

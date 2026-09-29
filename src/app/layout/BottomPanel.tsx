@@ -4,6 +4,9 @@ import { useT } from '@/app/i18n';
 import { DataPanel } from '@/app/sim/DataPanel';
 import { GraphPanel } from '@/app/sim/GraphPanel';
 import { SolutionPanel } from '@/app/sim/SolutionPanel';
+import { useLocalized } from '@/app/i18n/localized';
+import { useModuleStore } from '@/modules/moduleStore';
+import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 import { Tabs } from '@/ui/Tabs';
 import { useLayoutStore, type BottomTab } from './layoutStore';
@@ -14,6 +17,37 @@ export const BottomPanel = memo(function BottomPanel() {
   const tab = useLayoutStore((s) => s.bottomTab);
   const setTab = useLayoutStore((s) => s.setBottomTab);
   const toggle = useLayoutStore((s) => s.toggle);
+  const mod = useModuleStore((s) => s.active);
+  const L = useLocalized();
+
+  if (mod) {
+    const Bottom = mod.view.Bottom;
+    return (
+      <section className="panel bottom-panel" aria-label={t('bottom.regionLabel')}>
+        <header className="panel__header">
+          <h2 className="panel__title">{L(mod.view.bottomTitle ?? mod.view.title)}</h2>
+          <IconButton
+            icon={X}
+            size="sm"
+            label={t('layout.toggleBottom')}
+            tooltipSide="left"
+            onClick={() => {
+              toggle('bottom');
+            }}
+          />
+        </header>
+        <div className="panel__scroll">
+          {Bottom ? (
+            <Bottom />
+          ) : (
+            <EmptyState icon={ChartSpline} compact>
+              {t('bottom.moduleEmpty')}
+            </EmptyState>
+          )}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="panel bottom-panel" aria-label={t('bottom.regionLabel')}>

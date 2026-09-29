@@ -151,6 +151,7 @@ const en: Messages = {
     verified: 'Reviewed',
   },
   bottom: {
+    moduleEmpty: 'This topic has no extra panel.',
     regionLabel: 'Graphs and solution panel',
     graphs: 'Graphs',
     solution: 'Solution',

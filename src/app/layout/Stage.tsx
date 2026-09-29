@@ -21,6 +21,7 @@ import { Stopwatch } from '@/app/sim/Stopwatch';
 import { useSimStore } from '@/app/sim/simStore';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
+import { useModuleStore } from '@/modules/moduleStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 
@@ -69,8 +70,31 @@ export const Stage = memo(function Stage() {
       scrubTime: s.scrubTime,
     })),
   );
+  const mod = useModuleStore(
+    useShallow((s) => ({ active: s.active, loading: s.loading, error: s.error })),
+  );
   const SubjectIcon = SUBJECT_ICON[subject];
   const disabled = !hasSimulation;
+
+  if (mod.active || mod.loading || mod.error) {
+    const View = mod.active?.view.Stage;
+    return (
+      <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
+        {View && <View />}
+        {mod.loading && (
+          <div className="stage__empty">
+            <Loader2 className="spin" size={28} strokeWidth={1.5} aria-label={t('stage.loading')} />
+          </div>
+        )}
+        {mod.error && (
+          <div className="stage__message" role="alert">
+            <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
+            <p>{`${t('stage.engineError')}: ${mod.error}`}</p>
+          </div>
+        )}
+      </section>
+    );
+  }
 
   return (
     <section className="stage" aria-label={t('stage.regionLabel')}>

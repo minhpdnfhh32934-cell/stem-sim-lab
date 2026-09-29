@@ -153,6 +153,7 @@ const vi = {
     verified: 'Đã được duyệt',
   },
   bottom: {
+    moduleEmpty: 'Chủ đề này không có bảng phụ.',
     regionLabel: 'Bảng đồ thị và lời giải',
     graphs: 'Đồ thị',
     solution: 'Lời giải',

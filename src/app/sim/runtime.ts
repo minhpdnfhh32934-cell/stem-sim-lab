@@ -3,6 +3,7 @@ import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/wo
 import type { EngineInput } from '@/core/sim/engine';
 import type { Frame } from '@/core/sim/runner';
 import { usePerfStore } from '@/perf/perfStore';
+import { closeModule } from '@/modules/moduleStore';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import { loadScene } from '@/physics/registry';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
@@ -55,6 +56,7 @@ class SimRuntime {
   /** Opens a topic with its defaults (optionally overridden by a problem / the user). */
   async open(topicId: string, opts: OpenOptions = {}): Promise<void> {
     const seq = ++this.openSeq;
+    closeModule();
     this.close();
     useSimStore.setState({ loading: true, error: null });
     try {
@@ -118,6 +120,13 @@ class SimRuntime {
     this.renderState = new Float64Array(info.stateSize);
     // Prime the first frame so the scene is drawn before playing.
     host.requestFrame(0, 1, true);
+  }
+
+  /** Closes the simulation and cancels an `open` still in progress. */
+  shutdown(): void {
+    this.openSeq++;
+    useSimStore.setState({ loading: false, error: null });
+    this.close();
   }
 
   close(): void {

@@ -1,3 +1,5 @@
+import { closeModule, openModule, useModuleStore } from '@/modules/moduleStore';
+import { hasModule } from '@/modules/registry';
 import { hasScene } from '@/physics/registry';
 import { sim } from './sim/runtime';
 import { useSimStore } from './sim/simStore';
@@ -19,9 +21,17 @@ export function subjectOf(topicId: string): Subject | undefined {
 export async function openTopic(topicId: string): Promise<void> {
   const subject = subjectOf(topicId);
   if (subject) useWorkspaceStore.setState({ subject });
-  if (hasScene(topicId)) await sim.open(topicId);
+  if (hasModule(topicId)) {
+    sim.shutdown();
+    await openModule(topicId);
+  } else if (hasScene(topicId)) {
+    closeModule();
+    await sim.open(topicId);
+  }
 }
 
 export function useActiveTopic(): string | null {
-  return useSimStore((s) => s.scene?.id ?? null);
+  const scene = useSimStore((s) => s.scene?.id ?? null);
+  const mod = useModuleStore((s) => s.active?.id ?? null);
+  return mod ?? scene;
 }

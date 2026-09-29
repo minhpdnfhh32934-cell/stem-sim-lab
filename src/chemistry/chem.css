@@ -1,0 +1,511 @@
+/* Chemistry modules. Colours derive from theme tokens so dark mode is its own palette. */
+
+:root {
+  --cat-s: 62%;
+  --cat-l: 86%;
+  --seq-lo: #e8f0fb;
+  --seq-hi: #0b4f8a;
+}
+:root[data-theme='dark'] {
+  --cat-s: 32%;
+  --cat-l: 27%;
+  --seq-lo: #1d2a3b;
+  --seq-hi: #7db8ee;
+}
+
+.chem-view {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.chem-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.chem-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: var(--space-2) 0;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  background: var(--conf-qual-soft);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+.chem-note--warn {
+  background: var(--conf-approx-soft);
+}
+.chem-note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* ───── Periodic table ───── */
+.pt {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.pt__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.pt__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+}
+.pt__search input {
+  width: 13rem;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--text-sm);
+}
+.pt__grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(2.1rem, 1fr));
+  grid-template-rows: auto repeat(7, minmax(2.4rem, auto)) 8px repeat(2, minmax(2.4rem, auto));
+  gap: 3px;
+  max-width: 64rem;
+}
+.pt__group {
+  align-self: end;
+  color: var(--text-faint);
+  font-size: 0.65rem;
+  text-align: center;
+}
+.pt__f-gap {
+  height: 6px;
+}
+.pt-cell {
+  --h: 220;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 2px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text);
+  line-height: 1.05;
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast),
+    box-shadow var(--dur-fast);
+}
+.pt-cell:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.pt-cell:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+.pt-cell.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+  z-index: 1;
+}
+.pt-cell.is-match {
+  border-color: var(--accent);
+}
+.pt-cell__z {
+  color: var(--text-muted);
+  font-size: 0.6rem;
+}
+.pt-cell__symbol {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.pt-cell--cat,
+.pt-cell--block {
+  background: hsl(var(--h) var(--cat-s) var(--cat-l));
+}
+[data-cat='alkaliMetal'] {
+  --h: 4;
+}
+[data-cat='alkalineEarthMetal'] {
+  --h: 30;
+}
+[data-cat='transitionMetal'] {
+  --h: 48;
+}
+[data-cat='postTransitionMetal'] {
+  --h: 90;
+}
+[data-cat='metalloid'] {
+  --h: 150;
+}
+[data-cat='nonmetal'] {
+  --h: 190;
+}
+[data-cat='halogen'] {
+  --h: 215;
+}
+[data-cat='nobleGas'] {
+  --h: 262;
+}
+[data-cat='lanthanide'] {
+  --h: 300;
+}
+[data-cat='actinide'] {
+  --h: 330;
+}
+.pt-cell--block[data-block='s'] {
+  --h: 4;
+}
+.pt-cell--block[data-block='p'] {
+  --h: 48;
+}
+.pt-cell--block[data-block='d'] {
+  --h: 200;
+}
+.pt-cell--block[data-block='f'] {
+  --h: 290;
+}
+.pt-cell--seq {
+  background: color-mix(in oklab, var(--seq-hi) calc(var(--t) * 100%), var(--seq-lo));
+}
+.pt-cell--seq.is-dark {
+  color: #fff;
+}
+.pt-cell--seq.is-dark .pt-cell__z {
+  color: rgba(255, 255, 255, 0.8);
+}
+.pt-cell--missing {
+  background: repeating-linear-gradient(135deg, var(--bg-sunken) 0 4px, var(--bg-panel) 4px 8px);
+  color: var(--text-muted);
+}
+.pt__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.pt__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pt-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.pt__legend--seq {
+  gap: 8px;
+}
+.pt__ramp {
+  width: 9rem;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg in oklab, var(--seq-lo), var(--seq-hi));
+}
+
+/* ───── Element details (Inspector) ───── */
+.el-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.el-card__tile {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.el-card__name {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+.el-card dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.el-card dt {
+  color: var(--text-muted);
+}
+.el-card dd {
+  margin: 0;
+  text-align: right;
+}
+.el-card__source {
+  margin-top: var(--space-2);
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+
+.el-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+}
+.el-picker select {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font: inherit;
+}
+
+/* ───── Electron configuration ───── */
+.econf__big {
+  margin: var(--space-2) 0;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  word-spacing: 0.15em;
+}
+.econf__label {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.econf__boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  margin-top: var(--space-2);
+}
+.econf__sub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.econf__sub-row {
+  display: flex;
+}
+.econf__box {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 2.2rem;
+  border: 1.5px solid var(--text-muted);
+  margin-left: -1.5px;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: -0.1em;
+}
+.econf__box:first-child {
+  margin-left: 0;
+}
+.econf__sub-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.econf__sub.is-exception .econf__box {
+  border-color: var(--conf-approx);
+}
+
+/* ───── Canvas-based views (Bohr, orbitals) ───── */
+.chem-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.chem-overlay {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-4);
+  right: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.chem-overlay > * {
+  pointer-events: auto;
+}
+.chem-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--bg-panel);
+  font-size: var(--text-xs);
+  box-shadow: var(--shadow-sm);
+}
+.chem-chip--qual {
+  background: var(--conf-qual-soft);
+  color: var(--conf-qual);
+  border-color: transparent;
+  font-weight: 600;
+}
+.chem-chip--approx {
+  background: var(--conf-approx-soft);
+  color: var(--conf-approx);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.chem-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+.chem-form label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.chem-form select,
+.chem-form input[type='number'],
+.chem-form input[type='text'] {
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font: inherit;
+}
+.chem-form input[type='number'] {
+  width: 5.5rem;
+}
+.chem-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.chem-table th,
+.chem-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.chem-table td.num {
+  text-align: right;
+  font-family: var(--font-mono);
+}
+.chem-table tr.is-active {
+  background: var(--accent-soft);
+}
+.chem-view--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Hydrogen spectrum strip */
+.spectrum {
+  position: relative;
+  height: 44px;
+  margin: var(--space-2) 0 var(--space-4);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    rgb(97, 0, 97) 0%,
+    rgb(0, 0, 255) 16%,
+    rgb(0, 255, 255) 30%,
+    rgb(0, 255, 0) 36%,
+    rgb(255, 255, 0) 57%,
+    rgb(255, 128, 0) 69%,
+    rgb(255, 0, 0) 84%,
+    rgb(97, 0, 0) 100%
+  );
+  opacity: 0.35;
+}
+.spectrum-wrap {
+  position: relative;
+}
+.spectrum-line {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  height: 44px;
+  transform: translateX(-1px);
+  border-radius: 1px;
+}
+.spectrum-label {
+  position: absolute;
+  top: 48px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+.spectrum-axis {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.chem-block {
+  padding: var(--space-2) var(--space-3);
+}
+.spectrum-axis {
+  margin-top: 18px;
+}
+.chem-table--spaced {
+  margin-top: var(--space-2);
+}
+.orbital-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.orbital-picker__item {
+  min-width: 3.2rem;
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+}
+.orbital-picker__item[aria-checked='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.chem-table th {
+  font-weight: 500;
+}
+.chem-table td.num {
+  white-space: nowrap;
+}

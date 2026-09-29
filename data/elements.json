@@ -1,0 +1,9497 @@
+{
+ "dataset": "elements",
+ "version": 1,
+ "source": {
+  "id": "mendeleev",
+  "citation": "mendeleev 1.3.0 (L. M. Mentel): IUPAC/CIAAW atomic weights, Pauling electronegativity, Cordero et al. 2008 covalent radii, NIST ASD ground-state configurations and ionisation energies, CPK/Jmol colours",
+  "url": "https://mendeleev.readthedocs.io/en/stable/data.html"
+ },
+ "generated_by": "scripts/data/gen_elements.py",
+ "items": [
+  {
+   "z": 1,
+   "symbol": "H",
+   "name": "Hydrogen",
+   "aliases_vi": [
+    "hiđro",
+    "hidro"
+   ],
+   "period": 1,
+   "group": 1,
+   "block": "s",
+   "category": "nonmetal",
+   "atomic_weight": 1.008,
+   "mass_number_only": false,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 31.0,
+   "ionization_energy_ev": 13.5984,
+   "configuration": [
+    [
+     1,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": null,
+   "cpk_color": "#ffffff",
+   "jmol_color": "#ffffff",
+   "review_status": "pending"
+  },
+  {
+   "z": 2,
+   "symbol": "He",
+   "name": "Helium",
+   "aliases_vi": [
+    "heli"
+   ],
+   "period": 1,
+   "group": 18,
+   "block": "s",
+   "category": "nobleGas",
+   "atomic_weight": 4.002602,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 28.0,
+   "ionization_energy_ev": 24.5874,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#ffc0cb",
+   "jmol_color": "#d9ffff",
+   "review_status": "pending"
+  },
+  {
+   "z": 3,
+   "symbol": "Li",
+   "name": "Lithium",
+   "aliases_vi": [
+    "liti"
+   ],
+   "period": 2,
+   "group": 1,
+   "block": "s",
+   "category": "alkaliMetal",
+   "atomic_weight": 6.94,
+   "mass_number_only": false,
+   "en_pauling": 0.98,
+   "covalent_radius_pm": 128.0,
+   "ionization_energy_ev": 5.3917,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#b22222",
+   "jmol_color": "#cc80ff",
+   "review_status": "pending"
+  },
+  {
+   "z": 4,
+   "symbol": "Be",
+   "name": "Beryllium",
+   "aliases_vi": [
+    "beri"
+   ],
+   "period": 2,
+   "group": 2,
+   "block": "s",
+   "category": "alkalineEarthMetal",
+   "atomic_weight": 9.0121831,
+   "mass_number_only": false,
+   "en_pauling": 1.57,
+   "covalent_radius_pm": 96.0,
+   "ionization_energy_ev": 9.3227,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#c2ff00",
+   "review_status": "pending"
+  },
+  {
+   "z": 5,
+   "symbol": "B",
+   "name": "Boron",
+   "aliases_vi": [
+    "bo"
+   ],
+   "period": 2,
+   "group": 13,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 10.81,
+   "mass_number_only": false,
+   "en_pauling": 2.04,
+   "covalent_radius_pm": 84.0,
+   "ionization_energy_ev": 8.298,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#00ff00",
+   "jmol_color": "#ffb5b5",
+   "review_status": "pending"
+  },
+  {
+   "z": 6,
+   "symbol": "C",
+   "name": "Carbon",
+   "aliases_vi": [
+    "cacbon"
+   ],
+   "period": 2,
+   "group": 14,
+   "block": "p",
+   "category": "nonmetal",
+   "atomic_weight": 12.011,
+   "mass_number_only": false,
+   "en_pauling": 2.55,
+   "covalent_radius_pm": 73.0,
+   "ionization_energy_ev": 11.2603,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     2
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#c8c8c8",
+   "jmol_color": "#909090",
+   "review_status": "pending"
+  },
+  {
+   "z": 7,
+   "symbol": "N",
+   "name": "Nitrogen",
+   "aliases_vi": [
+    "nitơ"
+   ],
+   "period": 2,
+   "group": 15,
+   "block": "p",
+   "category": "nonmetal",
+   "atomic_weight": 14.007,
+   "mass_number_only": false,
+   "en_pauling": 3.04,
+   "covalent_radius_pm": 71.0,
+   "ionization_energy_ev": 14.5341,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     3
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#8f8fff",
+   "jmol_color": "#3050f8",
+   "review_status": "pending"
+  },
+  {
+   "z": 8,
+   "symbol": "O",
+   "name": "Oxygen",
+   "aliases_vi": [
+    "oxi"
+   ],
+   "period": 2,
+   "group": 16,
+   "block": "p",
+   "category": "nonmetal",
+   "atomic_weight": 15.999,
+   "mass_number_only": false,
+   "en_pauling": 3.44,
+   "covalent_radius_pm": 66.0,
+   "ionization_energy_ev": 13.6181,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     4
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#f00000",
+   "jmol_color": "#ff0d0d",
+   "review_status": "pending"
+  },
+  {
+   "z": 9,
+   "symbol": "F",
+   "name": "Fluorine",
+   "aliases_vi": [
+    "flo"
+   ],
+   "period": 2,
+   "group": 17,
+   "block": "p",
+   "category": "halogen",
+   "atomic_weight": 18.998403163,
+   "mass_number_only": false,
+   "en_pauling": 3.98,
+   "covalent_radius_pm": 57.0,
+   "ionization_energy_ev": 17.4228,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     5
+    ]
+   ],
+   "noble_core": "He",
+   "cpk_color": "#daa520",
+   "jmol_color": "#90e050",
+   "review_status": "pending"
+  },
+  {
+   "z": 10,
+   "symbol": "Ne",
+   "name": "Neon",
+   "aliases_vi": [
+    "neon"
+   ],
+   "period": 2,
+   "group": 18,
+   "block": "p",
+   "category": "nobleGas",
+   "atomic_weight": 20.1797,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 58.0,
+   "ionization_energy_ev": 21.5645,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#b3e3f5",
+   "review_status": "pending"
+  },
+  {
+   "z": 11,
+   "symbol": "Na",
+   "name": "Sodium",
+   "aliases_vi": [
+    "natri"
+   ],
+   "period": 3,
+   "group": 1,
+   "block": "s",
+   "category": "alkaliMetal",
+   "atomic_weight": 22.98976928,
+   "mass_number_only": false,
+   "en_pauling": 0.93,
+   "covalent_radius_pm": 166.0,
+   "ionization_energy_ev": 5.1391,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#0000ff",
+   "jmol_color": "#ab5cf2",
+   "review_status": "pending"
+  },
+  {
+   "z": 12,
+   "symbol": "Mg",
+   "name": "Magnesium",
+   "aliases_vi": [
+    "magie"
+   ],
+   "period": 3,
+   "group": 2,
+   "block": "s",
+   "category": "alkalineEarthMetal",
+   "atomic_weight": 24.305,
+   "mass_number_only": false,
+   "en_pauling": 1.31,
+   "covalent_radius_pm": 141.0,
+   "ionization_energy_ev": 7.6462,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#228b22",
+   "jmol_color": "#8aff00",
+   "review_status": "pending"
+  },
+  {
+   "z": 13,
+   "symbol": "Al",
+   "name": "Aluminum",
+   "aliases_vi": [
+    "nhôm"
+   ],
+   "period": 3,
+   "group": 13,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 26.9815385,
+   "mass_number_only": false,
+   "en_pauling": 1.61,
+   "covalent_radius_pm": 121.0,
+   "ionization_energy_ev": 5.9858,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#808090",
+   "jmol_color": "#bfa6a6",
+   "review_status": "pending"
+  },
+  {
+   "z": 14,
+   "symbol": "Si",
+   "name": "Silicon",
+   "aliases_vi": [
+    "silic"
+   ],
+   "period": 3,
+   "group": 14,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 28.085,
+   "mass_number_only": false,
+   "en_pauling": 1.9,
+   "covalent_radius_pm": 111.0,
+   "ionization_energy_ev": 8.1517,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     2
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#daa520",
+   "jmol_color": "#f0c8a0",
+   "review_status": "pending"
+  },
+  {
+   "z": 15,
+   "symbol": "P",
+   "name": "Phosphorus",
+   "aliases_vi": [
+    "photpho"
+   ],
+   "period": 3,
+   "group": 15,
+   "block": "p",
+   "category": "nonmetal",
+   "atomic_weight": 30.973761998,
+   "mass_number_only": false,
+   "en_pauling": 2.19,
+   "covalent_radius_pm": 107.0,
+   "ionization_energy_ev": 10.4867,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     3
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#ffa500",
+   "jmol_color": "#ff8000",
+   "review_status": "pending"
+  },
+  {
+   "z": 16,
+   "symbol": "S",
+   "name": "Sulfur",
+   "aliases_vi": [
+    "lưu huỳnh"
+   ],
+   "period": 3,
+   "group": 16,
+   "block": "p",
+   "category": "nonmetal",
+   "atomic_weight": 32.06,
+   "mass_number_only": false,
+   "en_pauling": 2.58,
+   "covalent_radius_pm": 105.0,
+   "ionization_energy_ev": 10.36,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     4
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#ffc832",
+   "jmol_color": "#ffff30",
+   "review_status": "pending"
+  },
+  {
+   "z": 17,
+   "symbol": "Cl",
+   "name": "Chlorine",
+   "aliases_vi": [
+    "clo"
+   ],
+   "period": 3,
+   "group": 17,
+   "block": "p",
+   "category": "halogen",
+   "atomic_weight": 35.45,
+   "mass_number_only": false,
+   "en_pauling": 3.16,
+   "covalent_radius_pm": 102.0,
+   "ionization_energy_ev": 12.9676,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     5
+    ]
+   ],
+   "noble_core": "Ne",
+   "cpk_color": "#00ff00",
+   "jmol_color": "#1ff01f",
+   "review_status": "pending"
+  },
+  {
+   "z": 18,
+   "symbol": "Ar",
+   "name": "Argon",
+   "aliases_vi": [
+    "agon"
+   ],
+   "period": 3,
+   "group": 18,
+   "block": "p",
+   "category": "nobleGas",
+   "atomic_weight": 39.948,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 106.0,
+   "ionization_energy_ev": 15.7596,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#80d1e3",
+   "review_status": "pending"
+  },
+  {
+   "z": 19,
+   "symbol": "K",
+   "name": "Potassium",
+   "aliases_vi": [
+    "kali"
+   ],
+   "period": 4,
+   "group": 1,
+   "block": "s",
+   "category": "alkaliMetal",
+   "atomic_weight": 39.0983,
+   "mass_number_only": false,
+   "en_pauling": 0.82,
+   "covalent_radius_pm": 203.0,
+   "ionization_energy_ev": 4.3407,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#8f40d4",
+   "review_status": "pending"
+  },
+  {
+   "z": 20,
+   "symbol": "Ca",
+   "name": "Calcium",
+   "aliases_vi": [
+    "canxi"
+   ],
+   "period": 4,
+   "group": 2,
+   "block": "s",
+   "category": "alkalineEarthMetal",
+   "atomic_weight": 40.078,
+   "mass_number_only": false,
+   "en_pauling": 1.0,
+   "covalent_radius_pm": 176.0,
+   "ionization_energy_ev": 6.1132,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#808090",
+   "jmol_color": "#3dff00",
+   "review_status": "pending"
+  },
+  {
+   "z": 21,
+   "symbol": "Sc",
+   "name": "Scandium",
+   "aliases_vi": [],
+   "period": 4,
+   "group": 3,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 44.955908,
+   "mass_number_only": false,
+   "en_pauling": 1.36,
+   "covalent_radius_pm": 170.0,
+   "ionization_energy_ev": 6.5615,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     1
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#e6e6e6",
+   "review_status": "pending"
+  },
+  {
+   "z": 22,
+   "symbol": "Ti",
+   "name": "Titanium",
+   "aliases_vi": [
+    "titan"
+   ],
+   "period": 4,
+   "group": 4,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 47.867,
+   "mass_number_only": false,
+   "en_pauling": 1.54,
+   "covalent_radius_pm": 160.0,
+   "ionization_energy_ev": 6.8281,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     2
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#808090",
+   "jmol_color": "#bfc2c7",
+   "review_status": "pending"
+  },
+  {
+   "z": 23,
+   "symbol": "V",
+   "name": "Vanadium",
+   "aliases_vi": [
+    "vanađi"
+   ],
+   "period": 4,
+   "group": 5,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 50.9415,
+   "mass_number_only": false,
+   "en_pauling": 1.63,
+   "covalent_radius_pm": 153.0,
+   "ionization_energy_ev": 6.7462,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     3
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#a6a6ab",
+   "review_status": "pending"
+  },
+  {
+   "z": 24,
+   "symbol": "Cr",
+   "name": "Chromium",
+   "aliases_vi": [
+    "crom"
+   ],
+   "period": 4,
+   "group": 6,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 51.9961,
+   "mass_number_only": false,
+   "en_pauling": 1.66,
+   "covalent_radius_pm": 139.0,
+   "ionization_energy_ev": 6.7665,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     5
+    ],
+    [
+     4,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#808090",
+   "jmol_color": "#8a99c7",
+   "review_status": "pending"
+  },
+  {
+   "z": 25,
+   "symbol": "Mn",
+   "name": "Manganese",
+   "aliases_vi": [
+    "mangan"
+   ],
+   "period": 4,
+   "group": 7,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 54.938044,
+   "mass_number_only": false,
+   "en_pauling": 1.55,
+   "covalent_radius_pm": 150.0,
+   "ionization_energy_ev": 7.434,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     5
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#808090",
+   "jmol_color": "#9c7ac7",
+   "review_status": "pending"
+  },
+  {
+   "z": 26,
+   "symbol": "Fe",
+   "name": "Iron",
+   "aliases_vi": [
+    "sắt"
+   ],
+   "period": 4,
+   "group": 8,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 55.845,
+   "mass_number_only": false,
+   "en_pauling": 1.83,
+   "covalent_radius_pm": 142.0,
+   "ionization_energy_ev": 7.9025,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ffa500",
+   "jmol_color": "#e06633",
+   "review_status": "pending"
+  },
+  {
+   "z": 27,
+   "symbol": "Co",
+   "name": "Cobalt",
+   "aliases_vi": [
+    "coban"
+   ],
+   "period": 4,
+   "group": 9,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 58.933194,
+   "mass_number_only": false,
+   "en_pauling": 1.88,
+   "covalent_radius_pm": 138.0,
+   "ionization_energy_ev": 7.881,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     7
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#f090a0",
+   "review_status": "pending"
+  },
+  {
+   "z": 28,
+   "symbol": "Ni",
+   "name": "Nickel",
+   "aliases_vi": [
+    "niken"
+   ],
+   "period": 4,
+   "group": 10,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 58.6934,
+   "mass_number_only": false,
+   "en_pauling": 1.91,
+   "covalent_radius_pm": 124.0,
+   "ionization_energy_ev": 7.6399,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     8
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#a52a2a",
+   "jmol_color": "#50d050",
+   "review_status": "pending"
+  },
+  {
+   "z": 29,
+   "symbol": "Cu",
+   "name": "Copper",
+   "aliases_vi": [
+    "đồng"
+   ],
+   "period": 4,
+   "group": 11,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 63.546,
+   "mass_number_only": false,
+   "en_pauling": 1.9,
+   "covalent_radius_pm": 132.0,
+   "ionization_energy_ev": 7.7264,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#a52a2a",
+   "jmol_color": "#c88033",
+   "review_status": "pending"
+  },
+  {
+   "z": 30,
+   "symbol": "Zn",
+   "name": "Zinc",
+   "aliases_vi": [
+    "kẽm"
+   ],
+   "period": 4,
+   "group": 12,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 65.38,
+   "mass_number_only": false,
+   "en_pauling": 1.65,
+   "covalent_radius_pm": 122.0,
+   "ionization_energy_ev": 9.3942,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#a52a2a",
+   "jmol_color": "#7d80b0",
+   "review_status": "pending"
+  },
+  {
+   "z": 31,
+   "symbol": "Ga",
+   "name": "Gallium",
+   "aliases_vi": [],
+   "period": 4,
+   "group": 13,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 69.723,
+   "mass_number_only": false,
+   "en_pauling": 1.81,
+   "covalent_radius_pm": 122.0,
+   "ionization_energy_ev": 5.9993,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     4,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#c28f8f",
+   "review_status": "pending"
+  },
+  {
+   "z": 32,
+   "symbol": "Ge",
+   "name": "Germanium",
+   "aliases_vi": [],
+   "period": 4,
+   "group": 14,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 72.63,
+   "mass_number_only": false,
+   "en_pauling": 2.01,
+   "covalent_radius_pm": 120.0,
+   "ionization_energy_ev": 7.8994,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     4,
+     "p",
+     2
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#668f8f",
+   "review_status": "pending"
+  },
+  {
+   "z": 33,
+   "symbol": "As",
+   "name": "Arsenic",
+   "aliases_vi": [
+    "asen"
+   ],
+   "period": 4,
+   "group": 15,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 74.921595,
+   "mass_number_only": false,
+   "en_pauling": 2.18,
+   "covalent_radius_pm": 119.0,
+   "ionization_energy_ev": 9.7886,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     4,
+     "p",
+     3
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#bd80e3",
+   "review_status": "pending"
+  },
+  {
+   "z": 34,
+   "symbol": "Se",
+   "name": "Selenium",
+   "aliases_vi": [
+    "selen"
+   ],
+   "period": 4,
+   "group": 16,
+   "block": "p",
+   "category": "nonmetal",
+   "atomic_weight": 78.971,
+   "mass_number_only": false,
+   "en_pauling": 2.55,
+   "covalent_radius_pm": 120.0,
+   "ionization_energy_ev": 9.7524,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     4,
+     "p",
+     4
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#ffa100",
+   "review_status": "pending"
+  },
+  {
+   "z": 35,
+   "symbol": "Br",
+   "name": "Bromine",
+   "aliases_vi": [
+    "brom"
+   ],
+   "period": 4,
+   "group": 17,
+   "block": "p",
+   "category": "halogen",
+   "atomic_weight": 79.904,
+   "mass_number_only": false,
+   "en_pauling": 2.96,
+   "covalent_radius_pm": 120.0,
+   "ionization_energy_ev": 11.8138,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     4,
+     "p",
+     5
+    ]
+   ],
+   "noble_core": "Ar",
+   "cpk_color": "#a52a2a",
+   "jmol_color": "#a62929",
+   "review_status": "pending"
+  },
+  {
+   "z": 36,
+   "symbol": "Kr",
+   "name": "Krypton",
+   "aliases_vi": [
+    "kripton"
+   ],
+   "period": 4,
+   "group": 18,
+   "block": "p",
+   "category": "nobleGas",
+   "atomic_weight": 83.798,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 116.0,
+   "ionization_energy_ev": 13.9996,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     4,
+     "p",
+     6
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#5cb8d1",
+   "review_status": "pending"
+  },
+  {
+   "z": 37,
+   "symbol": "Rb",
+   "name": "Rubidium",
+   "aliases_vi": [
+    "rubiđi"
+   ],
+   "period": 5,
+   "group": 1,
+   "block": "s",
+   "category": "alkaliMetal",
+   "atomic_weight": 85.4678,
+   "mass_number_only": false,
+   "en_pauling": 0.82,
+   "covalent_radius_pm": 220.0,
+   "ionization_energy_ev": 4.1771,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#702eb0",
+   "review_status": "pending"
+  },
+  {
+   "z": 38,
+   "symbol": "Sr",
+   "name": "Strontium",
+   "aliases_vi": [
+    "stronti"
+   ],
+   "period": 5,
+   "group": 2,
+   "block": "s",
+   "category": "alkalineEarthMetal",
+   "atomic_weight": 87.62,
+   "mass_number_only": false,
+   "en_pauling": 0.95,
+   "covalent_radius_pm": 195.0,
+   "ionization_energy_ev": 5.6949,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00ff00",
+   "review_status": "pending"
+  },
+  {
+   "z": 39,
+   "symbol": "Y",
+   "name": "Yttrium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 3,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 88.90584,
+   "mass_number_only": false,
+   "en_pauling": 1.22,
+   "covalent_radius_pm": 190.0,
+   "ionization_energy_ev": 6.2173,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     1
+    ],
+    [
+     5,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#94ffff",
+   "review_status": "pending"
+  },
+  {
+   "z": 40,
+   "symbol": "Zr",
+   "name": "Zirconium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 4,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 91.224,
+   "mass_number_only": false,
+   "en_pauling": 1.33,
+   "covalent_radius_pm": 175.0,
+   "ionization_energy_ev": 6.6341,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     2
+    ],
+    [
+     5,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#94e0e0",
+   "review_status": "pending"
+  },
+  {
+   "z": 41,
+   "symbol": "Nb",
+   "name": "Niobium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 5,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 92.90637,
+   "mass_number_only": false,
+   "en_pauling": 1.6,
+   "covalent_radius_pm": 164.0,
+   "ionization_energy_ev": 6.7588,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     4
+    ],
+    [
+     5,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#73c2c9",
+   "review_status": "pending"
+  },
+  {
+   "z": 42,
+   "symbol": "Mo",
+   "name": "Molybdenum",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 6,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 95.95,
+   "mass_number_only": false,
+   "en_pauling": 2.16,
+   "covalent_radius_pm": 154.0,
+   "ionization_energy_ev": 7.0924,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     5
+    ],
+    [
+     5,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#54b5b5",
+   "review_status": "pending"
+  },
+  {
+   "z": 43,
+   "symbol": "Tc",
+   "name": "Technetium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 7,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 97.90721,
+   "mass_number_only": true,
+   "en_pauling": 2.1,
+   "covalent_radius_pm": 147.0,
+   "ionization_energy_ev": 7.1194,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     5
+    ],
+    [
+     5,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#3b9e9e",
+   "review_status": "pending"
+  },
+  {
+   "z": 44,
+   "symbol": "Ru",
+   "name": "Ruthenium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 8,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 101.07,
+   "mass_number_only": false,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 146.0,
+   "ionization_energy_ev": 7.3605,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     7
+    ],
+    [
+     5,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#248f8f",
+   "review_status": "pending"
+  },
+  {
+   "z": 45,
+   "symbol": "Rh",
+   "name": "Rhodium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 9,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 102.9055,
+   "mass_number_only": false,
+   "en_pauling": 2.28,
+   "covalent_radius_pm": 142.0,
+   "ionization_energy_ev": 7.4589,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     8
+    ],
+    [
+     5,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#0a7d8c",
+   "review_status": "pending"
+  },
+  {
+   "z": 46,
+   "symbol": "Pd",
+   "name": "Palladium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 10,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 106.42,
+   "mass_number_only": false,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 139.0,
+   "ionization_energy_ev": 8.3368,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#006985",
+   "review_status": "pending"
+  },
+  {
+   "z": 47,
+   "symbol": "Ag",
+   "name": "Silver",
+   "aliases_vi": [
+    "bạc"
+   ],
+   "period": 5,
+   "group": 11,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 107.8682,
+   "mass_number_only": false,
+   "en_pauling": 1.93,
+   "covalent_radius_pm": 145.0,
+   "ionization_energy_ev": 7.5762,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#808090",
+   "jmol_color": "#c0c0c0",
+   "review_status": "pending"
+  },
+  {
+   "z": 48,
+   "symbol": "Cd",
+   "name": "Cadmium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 12,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 112.414,
+   "mass_number_only": false,
+   "en_pauling": 1.69,
+   "covalent_radius_pm": 144.0,
+   "ionization_energy_ev": 8.9938,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#ffd98f",
+   "review_status": "pending"
+  },
+  {
+   "z": 49,
+   "symbol": "In",
+   "name": "Indium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 13,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 114.818,
+   "mass_number_only": false,
+   "en_pauling": 1.78,
+   "covalent_radius_pm": 142.0,
+   "ionization_energy_ev": 5.7864,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     5,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#a67573",
+   "review_status": "pending"
+  },
+  {
+   "z": 50,
+   "symbol": "Sn",
+   "name": "Tin",
+   "aliases_vi": [
+    "thiếc"
+   ],
+   "period": 5,
+   "group": 14,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 118.71,
+   "mass_number_only": false,
+   "en_pauling": 1.96,
+   "covalent_radius_pm": 139.0,
+   "ionization_energy_ev": 7.3439,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     5,
+     "p",
+     2
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#668080",
+   "review_status": "pending"
+  },
+  {
+   "z": 51,
+   "symbol": "Sb",
+   "name": "Antimony",
+   "aliases_vi": [
+    "antimon"
+   ],
+   "period": 5,
+   "group": 15,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 121.76,
+   "mass_number_only": false,
+   "en_pauling": 2.05,
+   "covalent_radius_pm": 139.0,
+   "ionization_energy_ev": 8.6084,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     5,
+     "p",
+     3
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#9e63b5",
+   "review_status": "pending"
+  },
+  {
+   "z": 52,
+   "symbol": "Te",
+   "name": "Tellurium",
+   "aliases_vi": [],
+   "period": 5,
+   "group": 16,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 127.6,
+   "mass_number_only": false,
+   "en_pauling": 2.1,
+   "covalent_radius_pm": 138.0,
+   "ionization_energy_ev": 9.0098,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     5,
+     "p",
+     4
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#d47a00",
+   "review_status": "pending"
+  },
+  {
+   "z": 53,
+   "symbol": "I",
+   "name": "Iodine",
+   "aliases_vi": [
+    "iot"
+   ],
+   "period": 5,
+   "group": 17,
+   "block": "p",
+   "category": "halogen",
+   "atomic_weight": 126.90447,
+   "mass_number_only": false,
+   "en_pauling": 2.66,
+   "covalent_radius_pm": 139.0,
+   "ionization_energy_ev": 10.4512,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     5,
+     "p",
+     5
+    ]
+   ],
+   "noble_core": "Kr",
+   "cpk_color": "#a020f0",
+   "jmol_color": "#940094",
+   "review_status": "pending"
+  },
+  {
+   "z": 54,
+   "symbol": "Xe",
+   "name": "Xenon",
+   "aliases_vi": [
+    "xenon"
+   ],
+   "period": 5,
+   "group": 18,
+   "block": "p",
+   "category": "nobleGas",
+   "atomic_weight": 131.293,
+   "mass_number_only": false,
+   "en_pauling": 2.6,
+   "covalent_radius_pm": 140.0,
+   "ionization_energy_ev": 12.1298,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     5,
+     "p",
+     6
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#429eb0",
+   "review_status": "pending"
+  },
+  {
+   "z": 55,
+   "symbol": "Cs",
+   "name": "Cesium",
+   "aliases_vi": [
+    "xesi"
+   ],
+   "period": 6,
+   "group": 1,
+   "block": "s",
+   "category": "alkaliMetal",
+   "atomic_weight": 132.90545196,
+   "mass_number_only": false,
+   "en_pauling": 0.79,
+   "covalent_radius_pm": 244.0,
+   "ionization_energy_ev": 3.8939,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#57178f",
+   "review_status": "pending"
+  },
+  {
+   "z": 56,
+   "symbol": "Ba",
+   "name": "Barium",
+   "aliases_vi": [
+    "bari"
+   ],
+   "period": 6,
+   "group": 2,
+   "block": "s",
+   "category": "alkalineEarthMetal",
+   "atomic_weight": 137.327,
+   "mass_number_only": false,
+   "en_pauling": 0.89,
+   "covalent_radius_pm": 215.0,
+   "ionization_energy_ev": 5.2117,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ffa500",
+   "jmol_color": "#00c900",
+   "review_status": "pending"
+  },
+  {
+   "z": 57,
+   "symbol": "La",
+   "name": "Lanthanum",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 3,
+   "block": "d",
+   "category": "lanthanide",
+   "atomic_weight": 138.90547,
+   "mass_number_only": false,
+   "en_pauling": 1.1,
+   "covalent_radius_pm": 207.0,
+   "ionization_energy_ev": 5.5769,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     5,
+     "d",
+     1
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#70d4ff",
+   "review_status": "pending"
+  },
+  {
+   "z": 58,
+   "symbol": "Ce",
+   "name": "Cerium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 140.116,
+   "mass_number_only": false,
+   "en_pauling": 1.12,
+   "covalent_radius_pm": 204.0,
+   "ionization_energy_ev": 5.5386,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     1
+    ],
+    [
+     5,
+     "d",
+     1
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#ffffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 59,
+   "symbol": "Pr",
+   "name": "Praseodymium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 140.90766,
+   "mass_number_only": false,
+   "en_pauling": 1.13,
+   "covalent_radius_pm": 203.0,
+   "ionization_energy_ev": 5.4702,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     3
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#d9ffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 60,
+   "symbol": "Nd",
+   "name": "Neodymium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 144.242,
+   "mass_number_only": false,
+   "en_pauling": 1.14,
+   "covalent_radius_pm": 201.0,
+   "ionization_energy_ev": 5.525,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     4
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#c7ffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 61,
+   "symbol": "Pm",
+   "name": "Promethium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 144.91276,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": 199.0,
+   "ionization_energy_ev": 5.5819,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     5
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#a3ffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 62,
+   "symbol": "Sm",
+   "name": "Samarium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 150.36,
+   "mass_number_only": false,
+   "en_pauling": 1.17,
+   "covalent_radius_pm": 198.0,
+   "ionization_energy_ev": 5.6437,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#8fffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 63,
+   "symbol": "Eu",
+   "name": "Europium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 151.964,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 198.0,
+   "ionization_energy_ev": 5.6704,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     7
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#61ffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 64,
+   "symbol": "Gd",
+   "name": "Gadolinium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 157.25,
+   "mass_number_only": false,
+   "en_pauling": 1.2,
+   "covalent_radius_pm": 196.0,
+   "ionization_energy_ev": 6.1498,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     7
+    ],
+    [
+     5,
+     "d",
+     1
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#45ffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 65,
+   "symbol": "Tb",
+   "name": "Terbium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 158.92535,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 194.0,
+   "ionization_energy_ev": 5.8638,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     9
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#30ffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 66,
+   "symbol": "Dy",
+   "name": "Dysprosium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 162.5,
+   "mass_number_only": false,
+   "en_pauling": 1.22,
+   "covalent_radius_pm": 192.0,
+   "ionization_energy_ev": 5.9391,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#1fffc7",
+   "review_status": "pending"
+  },
+  {
+   "z": 67,
+   "symbol": "Ho",
+   "name": "Holmium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 164.93033,
+   "mass_number_only": false,
+   "en_pauling": 1.23,
+   "covalent_radius_pm": 192.0,
+   "ionization_energy_ev": 6.0215,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     11
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00ff9c",
+   "review_status": "pending"
+  },
+  {
+   "z": 68,
+   "symbol": "Er",
+   "name": "Erbium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 167.259,
+   "mass_number_only": false,
+   "en_pauling": 1.24,
+   "covalent_radius_pm": 189.0,
+   "ionization_energy_ev": 6.1077,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     12
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00e675",
+   "review_status": "pending"
+  },
+  {
+   "z": 69,
+   "symbol": "Tm",
+   "name": "Thulium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 168.93422,
+   "mass_number_only": false,
+   "en_pauling": 1.25,
+   "covalent_radius_pm": 190.0,
+   "ionization_energy_ev": 6.1844,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     13
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00d452",
+   "review_status": "pending"
+  },
+  {
+   "z": 70,
+   "symbol": "Yb",
+   "name": "Ytterbium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "lanthanide",
+   "atomic_weight": 173.045,
+   "mass_number_only": false,
+   "en_pauling": null,
+   "covalent_radius_pm": 187.0,
+   "ionization_energy_ev": 6.2542,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00bf38",
+   "review_status": "pending"
+  },
+  {
+   "z": 71,
+   "symbol": "Lu",
+   "name": "Lutetium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": null,
+   "block": "f",
+   "category": "transitionMetal",
+   "atomic_weight": 174.9668,
+   "mass_number_only": false,
+   "en_pauling": 1.0,
+   "covalent_radius_pm": 187.0,
+   "ionization_energy_ev": 5.4259,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     1
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00ab24",
+   "review_status": "pending"
+  },
+  {
+   "z": 72,
+   "symbol": "Hf",
+   "name": "Hafnium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 4,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 178.49,
+   "mass_number_only": false,
+   "en_pauling": 1.3,
+   "covalent_radius_pm": 175.0,
+   "ionization_energy_ev": 6.8251,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     2
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#4dc2ff",
+   "review_status": "pending"
+  },
+  {
+   "z": 73,
+   "symbol": "Ta",
+   "name": "Tantalum",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 5,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 180.94788,
+   "mass_number_only": false,
+   "en_pauling": 1.5,
+   "covalent_radius_pm": 170.0,
+   "ionization_energy_ev": 7.5496,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     3
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#4da6ff",
+   "review_status": "pending"
+  },
+  {
+   "z": 74,
+   "symbol": "W",
+   "name": "Tungsten",
+   "aliases_vi": [
+    "vonfram"
+   ],
+   "period": 6,
+   "group": 6,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 183.84,
+   "mass_number_only": false,
+   "en_pauling": 1.7,
+   "covalent_radius_pm": 162.0,
+   "ionization_energy_ev": 7.864,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     4
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#2194d6",
+   "review_status": "pending"
+  },
+  {
+   "z": 75,
+   "symbol": "Re",
+   "name": "Rhenium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 7,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 186.207,
+   "mass_number_only": false,
+   "en_pauling": 1.9,
+   "covalent_radius_pm": 151.0,
+   "ionization_energy_ev": 7.8335,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     5
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#267dab",
+   "review_status": "pending"
+  },
+  {
+   "z": 76,
+   "symbol": "Os",
+   "name": "Osmium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 8,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 190.23,
+   "mass_number_only": false,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 144.0,
+   "ionization_energy_ev": 8.4382,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#266696",
+   "review_status": "pending"
+  },
+  {
+   "z": 77,
+   "symbol": "Ir",
+   "name": "Iridium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 9,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 192.217,
+   "mass_number_only": false,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 141.0,
+   "ionization_energy_ev": 8.967,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     7
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#175487",
+   "review_status": "pending"
+  },
+  {
+   "z": 78,
+   "symbol": "Pt",
+   "name": "Platinum",
+   "aliases_vi": [
+    "platin",
+    "bạch kim"
+   ],
+   "period": 6,
+   "group": 10,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 195.084,
+   "mass_number_only": false,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 136.0,
+   "ionization_energy_ev": 8.9588,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     9
+    ],
+    [
+     6,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#d0d0e0",
+   "review_status": "pending"
+  },
+  {
+   "z": 79,
+   "symbol": "Au",
+   "name": "Gold",
+   "aliases_vi": [
+    "vàng"
+   ],
+   "period": 6,
+   "group": 11,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 196.966569,
+   "mass_number_only": false,
+   "en_pauling": 2.4,
+   "covalent_radius_pm": 136.0,
+   "ionization_energy_ev": 9.2256,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#daa520",
+   "jmol_color": "#ffd123",
+   "review_status": "pending"
+  },
+  {
+   "z": 80,
+   "symbol": "Hg",
+   "name": "Mercury",
+   "aliases_vi": [
+    "thủy ngân"
+   ],
+   "period": 6,
+   "group": 12,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 200.592,
+   "mass_number_only": false,
+   "en_pauling": 1.9,
+   "covalent_radius_pm": 132.0,
+   "ionization_energy_ev": 10.4375,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#b8b8d0",
+   "review_status": "pending"
+  },
+  {
+   "z": 81,
+   "symbol": "Tl",
+   "name": "Thallium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 13,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 204.38,
+   "mass_number_only": false,
+   "en_pauling": 1.8,
+   "covalent_radius_pm": 145.0,
+   "ionization_energy_ev": 6.1083,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     6,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#a6544d",
+   "review_status": "pending"
+  },
+  {
+   "z": 82,
+   "symbol": "Pb",
+   "name": "Lead",
+   "aliases_vi": [
+    "chì"
+   ],
+   "period": 6,
+   "group": 14,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 207.2,
+   "mass_number_only": false,
+   "en_pauling": 1.8,
+   "covalent_radius_pm": 146.0,
+   "ionization_energy_ev": 7.4167,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     6,
+     "p",
+     2
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#575961",
+   "review_status": "pending"
+  },
+  {
+   "z": 83,
+   "symbol": "Bi",
+   "name": "Bismuth",
+   "aliases_vi": [
+    "bitmut"
+   ],
+   "period": 6,
+   "group": 15,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 208.9804,
+   "mass_number_only": false,
+   "en_pauling": 1.9,
+   "covalent_radius_pm": 148.0,
+   "ionization_energy_ev": 7.2855,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     6,
+     "p",
+     3
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#9e4fb5",
+   "review_status": "pending"
+  },
+  {
+   "z": 84,
+   "symbol": "Po",
+   "name": "Polonium",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 16,
+   "block": "p",
+   "category": "metalloid",
+   "atomic_weight": 209.0,
+   "mass_number_only": true,
+   "en_pauling": 2.0,
+   "covalent_radius_pm": 140.0,
+   "ionization_energy_ev": 8.4181,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     6,
+     "p",
+     4
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#ab5c00",
+   "review_status": "pending"
+  },
+  {
+   "z": 85,
+   "symbol": "At",
+   "name": "Astatine",
+   "aliases_vi": [],
+   "period": 6,
+   "group": 17,
+   "block": "p",
+   "category": "halogen",
+   "atomic_weight": 210.0,
+   "mass_number_only": true,
+   "en_pauling": 2.2,
+   "covalent_radius_pm": 150.0,
+   "ionization_energy_ev": 9.3175,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     6,
+     "p",
+     5
+    ]
+   ],
+   "noble_core": "Xe",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#754f45",
+   "review_status": "pending"
+  },
+  {
+   "z": 86,
+   "symbol": "Rn",
+   "name": "Radon",
+   "aliases_vi": [
+    "rađon"
+   ],
+   "period": 6,
+   "group": 18,
+   "block": "p",
+   "category": "nobleGas",
+   "atomic_weight": 222.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": 150.0,
+   "ionization_energy_ev": 10.7485,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     6,
+     "p",
+     6
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#428296",
+   "review_status": "pending"
+  },
+  {
+   "z": 87,
+   "symbol": "Fr",
+   "name": "Francium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 1,
+   "block": "s",
+   "category": "alkaliMetal",
+   "atomic_weight": 223.0,
+   "mass_number_only": true,
+   "en_pauling": 0.7,
+   "covalent_radius_pm": 260.0,
+   "ionization_energy_ev": 4.0727,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     7,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#420066",
+   "review_status": "pending"
+  },
+  {
+   "z": 88,
+   "symbol": "Ra",
+   "name": "Radium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 2,
+   "block": "s",
+   "category": "alkalineEarthMetal",
+   "atomic_weight": 226.0,
+   "mass_number_only": true,
+   "en_pauling": 0.9,
+   "covalent_radius_pm": 221.0,
+   "ionization_energy_ev": 5.2784,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#007d00",
+   "review_status": "pending"
+  },
+  {
+   "z": 89,
+   "symbol": "Ac",
+   "name": "Actinium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 3,
+   "block": "d",
+   "category": "actinide",
+   "atomic_weight": 227.0,
+   "mass_number_only": true,
+   "en_pauling": 1.1,
+   "covalent_radius_pm": 215.0,
+   "ionization_energy_ev": 5.3802,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     6,
+     "d",
+     1
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#70abfa",
+   "review_status": "pending"
+  },
+  {
+   "z": 90,
+   "symbol": "Th",
+   "name": "Thorium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 232.0377,
+   "mass_number_only": false,
+   "en_pauling": 1.3,
+   "covalent_radius_pm": 206.0,
+   "ionization_energy_ev": 6.3067,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     6,
+     "d",
+     2
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#00baff",
+   "review_status": "pending"
+  },
+  {
+   "z": 91,
+   "symbol": "Pa",
+   "name": "Protactinium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 231.03588,
+   "mass_number_only": false,
+   "en_pauling": 1.5,
+   "covalent_radius_pm": 200.0,
+   "ionization_energy_ev": 5.89,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     2
+    ],
+    [
+     6,
+     "d",
+     1
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#00a1ff",
+   "review_status": "pending"
+  },
+  {
+   "z": 92,
+   "symbol": "U",
+   "name": "Uranium",
+   "aliases_vi": [
+    "urani"
+   ],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 238.02891,
+   "mass_number_only": false,
+   "en_pauling": 1.7,
+   "covalent_radius_pm": 196.0,
+   "ionization_energy_ev": 6.194,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     3
+    ],
+    [
+     6,
+     "d",
+     1
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ff1493",
+   "jmol_color": "#008fff",
+   "review_status": "pending"
+  },
+  {
+   "z": 93,
+   "symbol": "Np",
+   "name": "Neptunium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 237.0,
+   "mass_number_only": true,
+   "en_pauling": 1.3,
+   "covalent_radius_pm": 190.0,
+   "ionization_energy_ev": 6.2655,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     4
+    ],
+    [
+     6,
+     "d",
+     1
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#0080ff",
+   "review_status": "pending"
+  },
+  {
+   "z": 94,
+   "symbol": "Pu",
+   "name": "Plutonium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 244.0,
+   "mass_number_only": true,
+   "en_pauling": 1.3,
+   "covalent_radius_pm": 187.0,
+   "ionization_energy_ev": 6.0258,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     6
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#006bff",
+   "review_status": "pending"
+  },
+  {
+   "z": 95,
+   "symbol": "Am",
+   "name": "Americium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 243.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": 180.0,
+   "ionization_energy_ev": 5.9738,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     7
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#545cf2",
+   "review_status": "pending"
+  },
+  {
+   "z": 96,
+   "symbol": "Cm",
+   "name": "Curium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 247.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": 169.0,
+   "ionization_energy_ev": 5.9922,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     7
+    ],
+    [
+     6,
+     "d",
+     1
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#785ce3",
+   "review_status": "pending"
+  },
+  {
+   "z": 97,
+   "symbol": "Bk",
+   "name": "Berkelium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 247.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.1978,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     9
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#8a4fe3",
+   "review_status": "pending"
+  },
+  {
+   "z": 98,
+   "symbol": "Cf",
+   "name": "Californium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 251.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.2819,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#a136d4",
+   "review_status": "pending"
+  },
+  {
+   "z": 99,
+   "symbol": "Es",
+   "name": "Einsteinium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 252.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.3684,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     11
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#b31fd4",
+   "review_status": "pending"
+  },
+  {
+   "z": 100,
+   "symbol": "Fm",
+   "name": "Fermium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 257.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.5,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     12
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#b31fba",
+   "review_status": "pending"
+  },
+  {
+   "z": 101,
+   "symbol": "Md",
+   "name": "Mendelevium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 258.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.58,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     13
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#b30da6",
+   "review_status": "pending"
+  },
+  {
+   "z": 102,
+   "symbol": "No",
+   "name": "Nobelium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "actinide",
+   "atomic_weight": 259.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.6262,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#bd0d87",
+   "review_status": "pending"
+  },
+  {
+   "z": 103,
+   "symbol": "Lr",
+   "name": "Lawrencium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": null,
+   "block": "f",
+   "category": "transitionMetal",
+   "atomic_weight": 262.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 4.96,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": "#ffffff",
+   "jmol_color": "#c70066",
+   "review_status": "pending"
+  },
+  {
+   "z": 104,
+   "symbol": "Rf",
+   "name": "Rutherfordium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 4,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 267.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.02,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     2
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": "#cc0059",
+   "review_status": "pending"
+  },
+  {
+   "z": 105,
+   "symbol": "Db",
+   "name": "Dubnium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 5,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 268.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 6.8,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     3
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": "#d1004f",
+   "review_status": "pending"
+  },
+  {
+   "z": 106,
+   "symbol": "Sg",
+   "name": "Seaborgium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 6,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 271.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 7.8,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     4
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": "#d90045",
+   "review_status": "pending"
+  },
+  {
+   "z": 107,
+   "symbol": "Bh",
+   "name": "Bohrium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 7,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 274.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 7.7,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     5
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": "#e00038",
+   "review_status": "pending"
+  },
+  {
+   "z": 108,
+   "symbol": "Hs",
+   "name": "Hassium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 8,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 269.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": 7.6,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     6
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": "#e6002e",
+   "review_status": "pending"
+  },
+  {
+   "z": 109,
+   "symbol": "Mt",
+   "name": "Meitnerium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 9,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 276.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     7
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": "#eb0026",
+   "review_status": "pending"
+  },
+  {
+   "z": 110,
+   "symbol": "Ds",
+   "name": "Darmstadtium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 10,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 281.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     9
+    ],
+    [
+     7,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 111,
+   "symbol": "Rg",
+   "name": "Roentgenium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 11,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 281.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     1
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 112,
+   "symbol": "Cn",
+   "name": "Copernicium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 12,
+   "block": "d",
+   "category": "transitionMetal",
+   "atomic_weight": 285.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 113,
+   "symbol": "Nh",
+   "name": "Nihonium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 13,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 286.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     1
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 114,
+   "symbol": "Fl",
+   "name": "Flerovium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 14,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 289.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     2
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 115,
+   "symbol": "Mc",
+   "name": "Moscovium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 15,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 288.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     3
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 116,
+   "symbol": "Lv",
+   "name": "Livermorium",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 16,
+   "block": "p",
+   "category": "postTransitionMetal",
+   "atomic_weight": 293.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     4
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 117,
+   "symbol": "Ts",
+   "name": "Tennessine",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 17,
+   "block": "p",
+   "category": "halogen",
+   "atomic_weight": 294.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     5
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  },
+  {
+   "z": 118,
+   "symbol": "Og",
+   "name": "Oganesson",
+   "aliases_vi": [],
+   "period": 7,
+   "group": 18,
+   "block": "p",
+   "category": "nobleGas",
+   "atomic_weight": 294.0,
+   "mass_number_only": true,
+   "en_pauling": null,
+   "covalent_radius_pm": null,
+   "ionization_energy_ev": null,
+   "configuration": [
+    [
+     1,
+     "s",
+     2
+    ],
+    [
+     2,
+     "s",
+     2
+    ],
+    [
+     2,
+     "p",
+     6
+    ],
+    [
+     3,
+     "s",
+     2
+    ],
+    [
+     3,
+     "p",
+     6
+    ],
+    [
+     4,
+     "s",
+     2
+    ],
+    [
+     3,
+     "d",
+     10
+    ],
+    [
+     4,
+     "p",
+     6
+    ],
+    [
+     5,
+     "s",
+     2
+    ],
+    [
+     4,
+     "d",
+     10
+    ],
+    [
+     5,
+     "p",
+     6
+    ],
+    [
+     6,
+     "s",
+     2
+    ],
+    [
+     4,
+     "f",
+     14
+    ],
+    [
+     5,
+     "d",
+     10
+    ],
+    [
+     6,
+     "p",
+     6
+    ],
+    [
+     5,
+     "f",
+     14
+    ],
+    [
+     6,
+     "d",
+     10
+    ],
+    [
+     7,
+     "s",
+     2
+    ],
+    [
+     7,
+     "p",
+     6
+    ]
+   ],
+   "noble_core": "Rn",
+   "cpk_color": null,
+   "jmol_color": null,
+   "review_status": "pending"
+  }
+ ]
+}

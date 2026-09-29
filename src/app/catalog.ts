@@ -1,5 +1,6 @@
 import type { MessageKey } from '@/app/i18n';
 import type { Subject } from '@/app/workspaceStore';
+import { hasModule } from '@/modules/registry';
 import { hasScene } from '@/physics/registry';
 
 /**
@@ -24,7 +25,7 @@ export interface ChapterEntry {
 const planned = (id: string): TopicEntry => ({
   id,
   titleKey: `topics.${id}` as MessageKey,
-  status: hasScene(id) ? 'available' : 'planned',
+  status: hasScene(id) || hasModule(id) ? 'available' : 'planned',
 });
 
 const chapter = (id: string, topicIds: string[]): ChapterEntry => ({
