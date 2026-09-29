@@ -11,6 +11,12 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   molecule3d: () => import('@/chemistry/molecule/modules').then((m) => m.molecule3d),
   vsepr: () => import('@/chemistry/molecule/modules').then((m) => m.vsepr),
   bondPolarity: () => import('@/chemistry/molecule/modules').then((m) => m.bondPolarity),
+  reactionLibrary: () => import('@/chemistry/reaction/modules').then((m) => m.reactionLibrary),
+  equationBalancing: () => import('@/chemistry/reaction/modules').then((m) => m.equationBalancing),
+  maxwellBoltzmann: () => import('@/chemistry/particles/modules').then((m) => m.maxwellBoltzmann),
+  collisionTheory: () => import('@/chemistry/particles/modules').then((m) => m.collisionTheory),
+  chemicalEquilibrium: () =>
+    import('@/chemistry/particles/modules').then((m) => m.chemicalEquilibrium),
   // Biology modules (Phase 5) are added here.
 };
 

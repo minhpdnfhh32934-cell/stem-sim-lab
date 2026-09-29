@@ -1,7 +1,7 @@
 # Độ chính xác khoa học — STEM Sim Lab
 
 > Tài liệu này sẽ được nộp kèm hồ sơ dự thi. Mỗi giai đoạn sẽ bổ sung các mô hình mới.
-> Trạng thái: đã có Giai đoạn 1 (bộ giải), 2 (Vật lý) và 3 (AI đọc đề).
+> Trạng thái: đã có Giai đoạn 1 (bộ giải), 2 (Vật lý), 3 (AI đọc đề) và 4 (Hóa học).
 
 ## 1. Nguyên tắc
 
@@ -109,3 +109,43 @@ liệu, ra đúng đáp số).
 Studio giả lập. Các tình huống: đề → bảng xác nhận → mô phỏng → lời giải → diễn giải; AI bịa số bị
 loại; diễn giải chứa số lạ bị ẩn; đề ngoài phạm vi; LM Studio chưa bật; chế độ Tự dựng cảnh không
 gọi AI.
+
+## 6. Hóa học (Giai đoạn 4)
+
+### Dữ liệu
+
+| Dữ liệu                                                                                                                       | Nguồn                                                                                                                                 | Tạo bằng                        | Trạng thái |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ---------- |
+| 118 nguyên tố: nguyên tử khối, độ âm điện Pauling, bán kính cộng hóa trị, năng lượng ion hóa, cấu hình electron, màu CPK/Jmol | IUPAC/CIAAW, Pauling, Cordero et al. 2008, NIST ASD (qua thư viện `mendeleev` 1.3.0)                                                  | `scripts/data/gen_elements.py`  | chờ duyệt  |
+| 63 phân tử (tọa độ 3D)                                                                                                        | RDKit ETKDG + MMFF94; hình học thực nghiệm (NIST CCCBDB) cho 14 phân tử vô cơ nhỏ; hình học VSEPR lý tưởng cho 7 phân tử siêu hóa trị | `scripts/data/gen_molecules.py` | chờ duyệt  |
+| 39 phản ứng, 10 cơ chế                                                                                                        | SGK Hóa 10–12 (GDPT 2018); Clayden, _Organic Chemistry_ (2nd ed.)                                                                     | `scripts/data/gen_reactions.py` | chờ duyệt  |
+
+PubChem không truy cập được từ môi trường xây dựng, nên cấu trúc 3D được sinh bằng RDKit (ghi rõ
+phương pháp cho từng phân tử trong app và trong Thẻ Khoa học).
+
+### Kiểm chứng tự động
+
+| Nội dung                      | Kiểm tra                                                                                                                                                                           | Kết quả              |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| Cấu hình electron             | Lấy từ bảng dữ liệu; test xác nhận Cr, Cu, Mo, Ag, Au, Pd là ngoại lệ Aufbau và Fe, Zn… không phải; tổng electron = Z cho cả 118 nguyên tố                                         | đạt                  |
+| Nguyên tử hydro               | ∫R²r²dr = 1; ⟨r⟩ = (3n² − l(l+1))a₀/2; số nút xuyên tâm n − l − 1; hàm điều hòa cầu thực trực chuẩn; Hα = 656,47 nm (chân không, khối lượng rút gọn)                               | đạt                  |
+| Hình học phân tử (trường lực) | So với thực nghiệm: độ dài liên kết lệch < 0,03 Å, góc lệch < 3° (H₂O, NH₃, CH₄, C₂H₄, C₂H₂, C₆H₆, HCN, C₂H₆)                                                                      | đạt                  |
+| VSEPR                         | 16 phân tử/ion: nhãn AXₙEₘ và hình dạng đúng (CO₂, BF₃, SO₂, CH₄, NH₃, H₂O, PCl₅, SF₄, ClF₃, XeF₂, SF₆, XeF₄, NH₄⁺, NO₃⁻, O₃, SO₄²⁻)                                               | đạt                  |
+| Độ phân cực                   | Tổng vectơ momen liên kết (∝ Δχ) + điện tích hình thức trung bình theo cộng hưởng; 27 phân tử khớp SGK. Hạn chế đã biết: PH₃ (Δχ ≈ 0 nhưng thực tế phân cực nhẹ)                   | đạt (có ghi hạn chế) |
+| Công thức phân tử             | Công thức viết kiểu SGK của mỗi phân tử có cùng số nguyên tử và điện tích với công thức Hill                                                                                       | đạt                  |
+| Thư viện phản ứng             | Mọi phương trình bảo toàn nguyên tố và điện tích; bộ cân bằng tìm lại đúng hệ số (trừ phản ứng tráng bạc: có nhiều cách cân bằng độc lập, app báo rõ)                              | đạt                  |
+| Cơ chế                        | Mọi khung của một cơ chế có cùng tập nguyên tử (atom mapping) và cùng tổng điện tích; SN2: C–Br đứt, C–O tạo; ester hóa: O của nước đến từ nhóm OH của axit (kết quả đánh dấu ¹⁸O) | đạt                  |
+| Cân bằng phương trình         | Không gian nghiệm tính bằng số hữu tỉ chính xác (BigInt); báo "không thể cân bằng" hoặc "vô số cách cân bằng" thay vì đoán                                                         | đạt                  |
+| Khí 2D (Maxwell–Boltzmann)    | Va chạm đàn hồi: năng lượng bảo toàn đến 10⁻⁹; tốc độ trung bình khớp √(πkT/2m) trong 2 %; histogram lệch lý thuyết 2D < 5 %                                                       | đạt                  |
+| Thuyết va chạm                | Tỉ lệ va chạm đủ năng lượng khớp e^(−Eₐ/k_BT) trong ±0,03 (Eₐ = 0,5 và 1,5 k_BT)                                                                                                   | đạt                  |
+| Cân bằng hóa học              | A ⇌ B khớp nghiệm giải tích; A + B ⇌ C khớp nghiệm phương trình bậc hai; Q = K khi cân bằng; định luật van ’t Hoff; 2A ⇌ B bảo toàn khối lượng                                     | đạt                  |
+
+### Nguyên tắc hiển thị
+
+- Cơ chế chỉ có cho phản ứng trong thư viện. Phản ứng khác: chỉ kiểm tra cân bằng, kèm câu
+  "Phản ứng này chưa có trong cơ sở dữ liệu đã kiểm chứng — không hiển thị cơ chế".
+- Chuyển động giữa các khung cơ chế là nội suy, luôn gắn nhãn "Chuyển tiếp minh họa — không phải
+  quỹ đạo nguyên tử thực". Trạng thái chuyển tiếp là hình minh họa (không tính bằng hóa lượng tử).
+- SMILES không có trong thư viện: RDKit kiểm tra hóa trị và vẽ 2D; không dựng 3D.
+- Phân bố Maxwell–Boltzmann trong app là của khí **hai chiều**; công thức 3D của SGK chỉ hiển thị
+  để so sánh.

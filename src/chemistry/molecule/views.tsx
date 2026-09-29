@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { MoleculePanel } from './MoleculePanel';
 import { MoleculeStage } from './MoleculeStage';
-import { configureFor, selectMolecule, type MoleculeTopic } from './store';
+import { configureFor, consumePendingMolecule, selectMolecule, type MoleculeTopic } from './store';
 
 const START: Record<MoleculeTopic, string> = {
   molecule3d: 'c2h5oh',
@@ -12,7 +12,7 @@ const START: Record<MoleculeTopic, string> = {
 function useTopic(topic: MoleculeTopic) {
   useEffect(() => {
     configureFor(topic);
-    selectMolecule(START[topic]);
+    selectMolecule(consumePendingMolecule() ?? START[topic]);
   }, [topic]);
 }
 

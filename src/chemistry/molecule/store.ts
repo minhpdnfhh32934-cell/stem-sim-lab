@@ -53,3 +53,14 @@ export function pickAtom(i: number, additive: boolean): void {
 export function pickBond(b: number): void {
   useMoleculeStore.setState({ bond: b, atoms: [] });
 }
+
+/** Molecule to show when a molecule topic opens next (e.g. from the reaction library). */
+let pending: string | null = null;
+export function requestMolecule(id: string): void {
+  pending = id;
+}
+export function consumePendingMolecule(): string | null {
+  const p = pending;
+  pending = null;
+  return p;
+}

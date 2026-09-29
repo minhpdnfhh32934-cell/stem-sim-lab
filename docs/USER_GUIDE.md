@@ -40,6 +40,21 @@ chủ đề và nhập thông số bằng tay.
   được lưu trong kho khóa của Windows, không lưu trong tệp. Đề bài sẽ được gửi lên máy chủ của nhà
   cung cấp.
 
+## Hóa học
+
+- **Bảng tuần hoàn:** nhấp một ô để xem dữ liệu; tô màu theo nhóm, khối, độ âm điện, bán kính,
+  năng lượng ion hóa. Bảng dưới vẽ xu hướng theo Z.
+- **Cấu hình electron / Mô hình Bohr / Orbital:** chọn nguyên tố (hoặc n, l cho orbital hydro).
+  Các ngoại lệ như Cr, Cu được ghi chú rõ.
+- **Phân tử 3D, VSEPR, độ phân cực:** tìm theo tên (Việt/Anh), công thức hoặc SMILES. Kéo chuột
+  để xoay, lăn để phóng to. Nhấp nguyên tử/liên kết để xem chi tiết; Shift+nhấp 2 hoặc 3 nguyên tử
+  để đo khoảng cách hoặc góc.
+- **Thư viện phản ứng:** chọn phản ứng ở cột phải. Phản ứng có cơ chế có thanh phát: tua từng bước,
+  xoay 3D; liên kết đứt màu cam, liên kết tạo màu xanh lá.
+- **Cân bằng phương trình:** gõ ví dụ `Fe + O2 -> Fe2O3`. Điện tích: `Fe^3+`, `SO4^2-`.
+- **Mức hạt:** Maxwell–Boltzmann (khí 2D), thuyết va chạm, cân bằng hóa học (nhấn các nút thêm
+  chất, đổi nhiệt độ, nén để thấy nguyên lí Le Chatelier).
+
 ## Phím tắt
 
 | Phím                     | Tác dụng                                    |

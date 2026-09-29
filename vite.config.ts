@@ -37,6 +37,8 @@ export default defineConfig({
     target: 'es2022',
     minify: !isDebugBuild,
     sourcemap: isDebugBuild,
+    // three.js (~620 kB) is one lazily loaded chunk, fetched only by the 3D chemistry topics.
+    chunkSizeWarningLimit: 700,
   },
 
   worker: { format: 'es' },

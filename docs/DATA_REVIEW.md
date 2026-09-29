@@ -32,3 +32,21 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
    "va chạm mềm", "dính vào nhau" → e = 0; "ném ngang" → góc = 0. Đây là quy ước ngôn ngữ trong đề
    Vật lí THPT, cần giáo viên xác nhận. Lưu ý: "va chạm đàn hồi" trong SGK THPT hiểu là hoàn toàn
    đàn hồi (e = 1). `review_status: "pending"`.
+
+3. **Dữ liệu 118 nguyên tố** (`data/elements.json`, sinh từ `mendeleev`): nguyên tử khối,
+   độ âm điện, bán kính, cấu hình electron, năng lượng ion hóa. Nhờ giáo viên đối chiếu các nguyên
+   tố thường gặp trong đề thi (Z = 1–30, Br, Ag, I, Ba, Au, Hg, Pb). Tên tiếng Việt cũ (natri,
+   kali, sắt…) là bí danh để tìm kiếm.
+4. **Hình học thực nghiệm dùng làm tọa độ** (`scripts/data/gen_molecules.py`, `EXPERIMENTAL`):
+   H₂ 0,741; N₂ 1,098; O₂ 1,208; F₂ 1,412; Cl₂ 1,988; HF 0,917; HCl 1,275; HBr 1,414; CO 1,128;
+   CO₂ 1,160 Å; SO₂ 1,431 Å/119,3°; O₃ 1,278 Å/116,8°; SO₃ 1,418 Å; BF₃ 1,307 Å. Cần đối chiếu
+   với NIST CCCBDB (đặc biệt O₃ và SO₃).
+5. **Giá trị tham chiếu dùng để kiểm tra trường lực** (`REFERENCE`): H₂O 0,958 Å/104,5°;
+   NH₃ 1,012 Å/106,7°; CH₄ 1,087 Å; C₂H₄ C=C 1,339 Å, C–H 1,086 Å, H–C–H 117,4°;
+   C₂H₂ 1,203 Å; C₆H₆ 1,397 Å; HCN C≡N 1,153 Å; C₂H₆ C–C 1,535 Å.
+6. **Ngưỡng Δχ phân loại liên kết** (0,4 và 1,7) theo quy ước SGK Hóa 10 — cần xác nhận với bộ
+   sách đang dùng.
+7. **Thư viện 39 phản ứng** (`scripts/data/gen_reactions.py`): điều kiện, hiện tượng, nguồn
+   (chưa ghi số trang). Đặc biệt nhờ kiểm tra: điều kiện Haber (400–450 °C, 200 bar), phương pháp
+   tiếp xúc (V₂O₅, 450 °C), Ostwald (Pt, ~850 °C), lên men (30–35 °C), và 10 cơ chế (các bước,
+   mũi tên electron).
