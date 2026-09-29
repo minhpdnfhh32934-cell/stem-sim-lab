@@ -338,6 +338,9 @@ const en: Messages = {
     intro: 'Check every row before simulating. You can edit any value.',
     manualIntro:
       'Pick a topic and enter the parameters. No AI: every value is a default or typed by you.',
+    manualModuleIntro:
+      'The topic is open behind this dialog. Adjust its inputs below (also in the Properties panel); every result is computed by the program.',
+    manualNoInputs: 'This topic has no inputs to enter — work directly on the stage.',
     topic: 'Topic',
     problem: 'Problem',
     quantity: 'Quantity',

@@ -340,6 +340,10 @@ const vi = {
     intro: 'Hãy kiểm tra từng dòng trước khi mô phỏng. Bạn có thể sửa mọi giá trị.',
     manualIntro:
       'Chọn chủ đề và nhập thông số. Không dùng AI: mọi giá trị là mặc định hoặc do bạn nhập.',
+    manualModuleIntro:
+      'Chủ đề đã mở phía sau. Chỉnh thông số ngay bên dưới (cũng có ở cột Thuộc tính); mọi kết quả do chương trình tính.',
+    manualNoInputs:
+      'Chủ đề này không có thông số để nhập — thao tác trực tiếp trên khung mô phỏng.',
     topic: 'Chủ đề',
     problem: 'Đề bài',
     quantity: 'Đại lượng',
