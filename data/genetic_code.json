@@ -1,0 +1,588 @@
+{
+ "dataset": "genetic_code",
+ "version": 1,
+ "source": {
+  "id": "ncbi-table-1",
+  "citation": "NCBI Genetic Codes — Translation table 1 (Standard), via Biopython 1.88",
+  "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
+ },
+ "generated_by": "scripts/data/gen_genetic_code.py",
+ "items": [
+  {
+   "codon": "UUU",
+   "aa": "F",
+   "three": "Phe",
+   "name": "Phenylalanine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UUC",
+   "aa": "F",
+   "three": "Phe",
+   "name": "Phenylalanine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UUA",
+   "aa": "L",
+   "three": "Leu",
+   "name": "Leucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UUG",
+   "aa": "L",
+   "three": "Leu",
+   "name": "Leucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UCU",
+   "aa": "S",
+   "three": "Ser",
+   "name": "Serine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UCC",
+   "aa": "S",
+   "three": "Ser",
+   "name": "Serine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UCA",
+   "aa": "S",
+   "three": "Ser",
+   "name": "Serine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UCG",
+   "aa": "S",
+   "three": "Ser",
+   "name": "Serine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UAU",
+   "aa": "Y",
+   "three": "Tyr",
+   "name": "Tyrosine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UAC",
+   "aa": "Y",
+   "three": "Tyr",
+   "name": "Tyrosine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UAA",
+   "aa": "*",
+   "three": "Stop",
+   "name": "Stop",
+   "start": false,
+   "stop": true,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UAG",
+   "aa": "*",
+   "three": "Stop",
+   "name": "Stop",
+   "start": false,
+   "stop": true,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UGU",
+   "aa": "C",
+   "three": "Cys",
+   "name": "Cysteine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UGC",
+   "aa": "C",
+   "three": "Cys",
+   "name": "Cysteine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UGA",
+   "aa": "*",
+   "three": "Stop",
+   "name": "Stop",
+   "start": false,
+   "stop": true,
+   "review_status": "pending"
+  },
+  {
+   "codon": "UGG",
+   "aa": "W",
+   "three": "Trp",
+   "name": "Tryptophan",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CUU",
+   "aa": "L",
+   "three": "Leu",
+   "name": "Leucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CUC",
+   "aa": "L",
+   "three": "Leu",
+   "name": "Leucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CUA",
+   "aa": "L",
+   "three": "Leu",
+   "name": "Leucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CUG",
+   "aa": "L",
+   "three": "Leu",
+   "name": "Leucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CCU",
+   "aa": "P",
+   "three": "Pro",
+   "name": "Proline",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CCC",
+   "aa": "P",
+   "three": "Pro",
+   "name": "Proline",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CCA",
+   "aa": "P",
+   "three": "Pro",
+   "name": "Proline",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CCG",
+   "aa": "P",
+   "three": "Pro",
+   "name": "Proline",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CAU",
+   "aa": "H",
+   "three": "His",
+   "name": "Histidine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CAC",
+   "aa": "H",
+   "three": "His",
+   "name": "Histidine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CAA",
+   "aa": "Q",
+   "three": "Gln",
+   "name": "Glutamine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CAG",
+   "aa": "Q",
+   "three": "Gln",
+   "name": "Glutamine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CGU",
+   "aa": "R",
+   "three": "Arg",
+   "name": "Arginine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CGC",
+   "aa": "R",
+   "three": "Arg",
+   "name": "Arginine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CGA",
+   "aa": "R",
+   "three": "Arg",
+   "name": "Arginine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "CGG",
+   "aa": "R",
+   "three": "Arg",
+   "name": "Arginine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AUU",
+   "aa": "I",
+   "three": "Ile",
+   "name": "Isoleucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AUC",
+   "aa": "I",
+   "three": "Ile",
+   "name": "Isoleucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AUA",
+   "aa": "I",
+   "three": "Ile",
+   "name": "Isoleucine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AUG",
+   "aa": "M",
+   "three": "Met",
+   "name": "Methionine",
+   "start": true,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "ACU",
+   "aa": "T",
+   "three": "Thr",
+   "name": "Threonine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "ACC",
+   "aa": "T",
+   "three": "Thr",
+   "name": "Threonine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "ACA",
+   "aa": "T",
+   "three": "Thr",
+   "name": "Threonine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "ACG",
+   "aa": "T",
+   "three": "Thr",
+   "name": "Threonine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AAU",
+   "aa": "N",
+   "three": "Asn",
+   "name": "Asparagine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AAC",
+   "aa": "N",
+   "three": "Asn",
+   "name": "Asparagine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AAA",
+   "aa": "K",
+   "three": "Lys",
+   "name": "Lysine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AAG",
+   "aa": "K",
+   "three": "Lys",
+   "name": "Lysine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AGU",
+   "aa": "S",
+   "three": "Ser",
+   "name": "Serine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AGC",
+   "aa": "S",
+   "three": "Ser",
+   "name": "Serine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AGA",
+   "aa": "R",
+   "three": "Arg",
+   "name": "Arginine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "AGG",
+   "aa": "R",
+   "three": "Arg",
+   "name": "Arginine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GUU",
+   "aa": "V",
+   "three": "Val",
+   "name": "Valine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GUC",
+   "aa": "V",
+   "three": "Val",
+   "name": "Valine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GUA",
+   "aa": "V",
+   "three": "Val",
+   "name": "Valine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GUG",
+   "aa": "V",
+   "three": "Val",
+   "name": "Valine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GCU",
+   "aa": "A",
+   "three": "Ala",
+   "name": "Alanine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GCC",
+   "aa": "A",
+   "three": "Ala",
+   "name": "Alanine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GCA",
+   "aa": "A",
+   "three": "Ala",
+   "name": "Alanine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GCG",
+   "aa": "A",
+   "three": "Ala",
+   "name": "Alanine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GAU",
+   "aa": "D",
+   "three": "Asp",
+   "name": "Aspartic acid",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GAC",
+   "aa": "D",
+   "three": "Asp",
+   "name": "Aspartic acid",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GAA",
+   "aa": "E",
+   "three": "Glu",
+   "name": "Glutamic acid",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GAG",
+   "aa": "E",
+   "three": "Glu",
+   "name": "Glutamic acid",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GGU",
+   "aa": "G",
+   "three": "Gly",
+   "name": "Glycine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GGC",
+   "aa": "G",
+   "three": "Gly",
+   "name": "Glycine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GGA",
+   "aa": "G",
+   "three": "Gly",
+   "name": "Glycine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  },
+  {
+   "codon": "GGG",
+   "aa": "G",
+   "three": "Gly",
+   "name": "Glycine",
+   "start": false,
+   "stop": false,
+   "review_status": "pending"
+  }
+ ]
+}
