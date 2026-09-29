@@ -111,9 +111,12 @@ export function ScienceCard({ card }: { card: ScienceCardData }) {
             </dt>
             <dd>
               <ul className="science-card__sources">
-                {card.sources.map((s) => (
-                  <li key={s.id}>{s.citation}</li>
-                ))}
+                {/* The same source can arrive twice (dataset + module); show it once. */}
+                {card.sources
+                  .filter((s, i, all) => all.findIndex((o) => o.id === s.id) === i)
+                  .map((s) => (
+                    <li key={s.id}>{s.citation}</li>
+                  ))}
               </ul>
             </dd>
           </>
