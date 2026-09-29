@@ -1,6 +1,41 @@
 # Hướng dẫn sử dụng STEM Sim Lab
 
-_Bản nháp. Tài liệu sẽ được hoàn thiện ở Giai đoạn 7._
+STEM Sim Lab mô phỏng Vật lý, Hóa học và Sinh học THPT ngay trên máy tính, **không cần mạng**. Mọi
+con số do chương trình tính; mỗi mô phỏng có **Thẻ Khoa học** ghi rõ mô hình, phương trình, giả định,
+độ tin cậy và nguồn.
+
+## Cài đặt
+
+**Yêu cầu:** Windows 10 hoặc 11 (64-bit), RAM từ 8 GB, màn hình từ 1366×768.
+
+1. Tải tệp `STEM Sim Lab_…_x64-setup.exe` (bộ cài) — xem mục "Tạo bộ cài" bên dưới nếu chưa có.
+2. Nhấp đúp để chạy. Windows có thể hiện "Windows protected your PC" vì bộ cài chưa được ký số: bấm
+   **More info → Run anyway**.
+3. Bộ cài không cần quyền quản trị (cài cho người dùng hiện tại). Xong, mở app từ menu Start.
+
+**WebView2:** app dùng WebView2 của Microsoft Edge để hiển thị. Windows 11 và hầu hết máy Windows 10
+đã có sẵn. Nếu máy chưa có, bộ cài sẽ tự tải (cần mạng một lần). Máy không có mạng: tải trước
+**"Evergreen Standalone Installer"** tại <https://developer.microsoft.com/microsoft-edge/webview2/>,
+chép qua USB và cài trước.
+
+**Gỡ cài đặt:** Settings → Apps → STEM Sim Lab → Uninstall. Lịch sử mô phỏng nằm trong
+`%APPDATA%\vn.stemsimlab.desktop\history.sqlite`.
+
+### Tạo bộ cài
+
+- **Cách 1 — GitHub (không cần cài gì trên máy):** đưa mã nguồn lên một kho GitHub, vào tab
+  **Actions → Release (Windows installer) → Run workflow**. Khoảng 15 phút sau, tải tệp ở mục
+  **Artifacts** của lần chạy đó. Nếu tạo tag `v0.1.0`, GitHub tự tạo bản Release nháp kèm bộ cài.
+- **Cách 2 — trên máy Windows của bạn:** cài công cụ theo `docs/SETUP_WINDOWS.md`, rồi chạy
+  `npm install` và `npm run tauri build`. Bộ cài nằm trong `src-tauri\target\release\bundle\nsis\`.
+
+## Bắt đầu nhanh
+
+1. Lần đầu mở app, một **hướng dẫn nhanh** 7 bước giới thiệu các vùng màn hình (mở lại bằng menu
+   ☰ → Hướng dẫn nhanh). App cũng đo nhanh sức mạnh máy (khoảng 1 giây) để chọn chất lượng hiển thị.
+2. Chọn môn ở thanh trên, chọn một chủ đề trong **Thư viện** bên trái.
+3. Chỉnh thông số ở cột phải, bấm ▶ (hoặc Space) để chạy.
+4. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
 
 ## Bố cục màn hình
 
@@ -14,6 +49,32 @@ _Bản nháp. Tài liệu sẽ được hoàn thiện ở Giai đoạn 7._
 
 Các cột và bảng đều kéo giãn được bằng cách kéo đường viền. Nhấp đúp vào đường viền để trả về kích
 thước mặc định. App tự nhớ bố cục cho lần mở sau.
+
+## Thẻ Khoa học và mức tin cậy
+
+| Nhãn                            | Ý nghĩa                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------- |
+| **Định lượng chính xác** (xanh) | Khớp lời giải giải tích (công thức) trong sai số ghi trên thẻ                               |
+| **Định lượng gần đúng** (vàng)  | Tích phân số, có kiểm soát sai số                                                           |
+| **Định tính / minh họa** (lam)  | Chỉ minh họa khái niệm, không đọc số liệu từ hình                                           |
+| **Đang chờ giáo viên duyệt**    | Dữ liệu chưa được giáo viên đối chiếu nguồn (xem `docs/DATA_REVIEW.md`)                     |
+| **Đã có can thiệp**             | Bạn đã kéo/ném vật bằng chuột: lời giải công thức không còn áp dụng, kết quả là mô phỏng số |
+
+## Vật lý
+
+13 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
+xo, con lắc đơn.
+
+- **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
+  giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
+- **Thanh công cụ nổi** trên khung mô phỏng: Chọn (V), Kéo/ném vật (H), Thước đo (M), Thước đo góc
+  (A), Đồng hồ bấm giờ (T), hiện vectơ, vết quỹ đạo, căn vừa khung nhìn (F). Lăn chuột để phóng to,
+  kéo nền để di chuyển.
+- **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
+  (và tua nhanh cho bài toán tính bằng giờ).
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
+  đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
 
 ## Đọc đề bằng AI
 
@@ -96,6 +157,25 @@ chủ đề và nhập thông số bằng tay.
 App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng thái báo "Đã hạ chất lượng hiển thị"
 (số liệu không đổi). Nếu không kịp tính, mô phỏng chạy chậm hơn thời gian thực và ghi rõ tỉ lệ (ví dụ
 ×0,5). Khi bộ nhớ cao, app giải phóng bộ nhớ đệm và nhắc bạn đóng bớt chủ đề 3D.
+
+## Cài đặt (nút bánh răng)
+
+- **Giao diện:** sáng / tối / theo hệ thống; cỡ chữ 90–140 %; ngôn ngữ Tiếng Việt / English.
+- **Vật lý:** giá trị g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s²) — chỉ dùng khi đề không cho g.
+- **Chất lượng hiển thị:** Tự động / Thấp / Trung bình / Cao, nút Đo lại. Chỉ ảnh hưởng hình ảnh,
+  không ảnh hưởng số liệu.
+- **AI đọc đề:** chọn LM Studio, OpenAI, Anthropic hoặc tắt AI.
+- **Phím tắt:** danh sách đầy đủ.
+
+## Lỗi thường gặp
+
+- **App mở ra màn hình trắng:** máy thiếu WebView2 — xem mục Cài đặt.
+- **"AI: ngoại tuyến":** LM Studio chưa bật server (tab Developer → Start Server, cổng 1234), hoặc
+  chưa nạp mô hình. Vẫn dùng được **Tự dựng cảnh**.
+- **Mô phỏng chạy chậm, thanh trạng thái hiện "Chuyển động chậm ×…":** máy không kịp tính theo thời
+  gian thực; kết quả vẫn đúng. Có thể giảm tốc độ phát hoặc đóng bớt chương trình khác.
+- **Không mở được tệp .stemsim:** tệp hỏng hoặc từ phiên bản mới hơn; app báo lỗi và không thay đổi
+  mô phỏng đang mở.
 
 ## Phím tắt
 

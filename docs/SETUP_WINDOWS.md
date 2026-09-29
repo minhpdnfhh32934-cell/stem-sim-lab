@@ -74,16 +74,16 @@ mất vài giây.
 
 ### Các lệnh hay dùng
 
-| Lệnh                  | Tác dụng                                                     |
-| --------------------- | ------------------------------------------------------------ |
-| `npm run tauri dev`   | Chạy app desktop, tự tải lại khi sửa code                    |
-| `npm run dev`         | Chỉ chạy giao diện trong trình duyệt (http://localhost:1420) |
-| `npm test`            | Chạy toàn bộ unit test                                       |
-| `npm run lint`        | Kiểm tra lỗi và phong cách code                              |
-| `npm run typecheck`   | Kiểm tra kiểu TypeScript                                     |
-| `npm run check`       | Chạy cả lint, typecheck và test                              |
-| `npm run tauri build` | Đóng gói bộ cài `.msi` / `.exe` (Giai đoạn 7)                |
-| `cargo test`          | Test phần Rust (chạy trong thư mục `src-tauri`)              |
+| Lệnh                  | Tác dụng                                                                   |
+| --------------------- | -------------------------------------------------------------------------- |
+| `npm run tauri dev`   | Chạy app desktop, tự tải lại khi sửa code                                  |
+| `npm run dev`         | Chỉ chạy giao diện trong trình duyệt (http://localhost:1420)               |
+| `npm test`            | Chạy toàn bộ unit test                                                     |
+| `npm run lint`        | Kiểm tra lỗi và phong cách code                                            |
+| `npm run typecheck`   | Kiểm tra kiểu TypeScript                                                   |
+| `npm run check`       | Chạy cả lint, typecheck và test                                            |
+| `npm run tauri build` | Đóng gói bộ cài `.exe` / `.msi` (trong `src-tauri\target\release\bundle\`) |
+| `cargo test`          | Test phần Rust (chạy trong thư mục `src-tauri`)                            |
 
 ## Lỗi thường gặp
 

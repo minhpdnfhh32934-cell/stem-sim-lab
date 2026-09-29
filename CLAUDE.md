@@ -170,4 +170,14 @@ Progress log: `docs/PROGRESS.md`.
 - [x] Phase 4: Chemistry MVP (atoms, 3D molecules, VSEPR, 39 reactions/10 mechanisms, balancer, particles)
 - [x] Phase 5: Biology MVP (11 topics: cell division, central dogma, genetics, ecology, enzymes, transport)
 - [x] Phase 6: overload ladder, watchdog, presentation mode, tour, .stemsim files, undo/redo, history, sources page
-- [ ] Phase 7: Windows installer, user guide, SCIENCE_ACCURACY.md
+- [x] Phase 7: Windows installer workflow (`.github/workflows/release.yml`: tag `v*` or manual run →
+      NSIS `.exe` + `.msi`), final USER_GUIDE and SCIENCE_ACCURACY (§9 limitations, §10 how to verify)
+- [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
+
+## Release
+
+- Windows installers are built by GitHub Actions on `windows-latest` (no cross-compiling from Linux).
+  Bump the version in `package.json`, `src-tauri/Cargo.toml` and `src-tauri/tauri.conf.json`, then
+  push a tag `vX.Y.Z` → draft GitHub Release with the installers.
+- WebView2: `downloadBootstrapper` (small installer). Offline machines without WebView2 need the
+  Evergreen Standalone Installer first (documented in USER_GUIDE). Installers are not code-signed.

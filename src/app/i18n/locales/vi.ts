@@ -107,7 +107,6 @@ const vi = {
     regionLabel: 'Khung mô phỏng',
     emptyTitle: 'Chưa có mô phỏng',
     emptyBody: 'Nhập đề bài ở thanh phía trên, hoặc chọn một chủ đề trong Thư viện.',
-    emptyNote: 'Đây là khung giao diện của Giai đoạn 0. Mô phỏng đầu tiên sẽ có từ Giai đoạn 2.',
     toolbarLabel: 'Công cụ mô phỏng',
     toolUnavailable: 'chưa khả dụng',
     finished: 'Kết thúc',

@@ -15,15 +15,16 @@ màn hình 1366×768, Windows 10.
 
 ## Kết quả đo
 
-| Ngày       | Giai đoạn | Máy                                               | Chỉ số                                                                            | Kết quả                                                                    |
-| ---------- | --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 2026-09-28 | 0         | Máy build (Linux)                                 | Bundle giao diện (JS gzip / CSS gzip)                                             | ≈ 90 KB / 5 KB                                                             |
-| 2026-09-28 | 0         | Máy build (Linux)                                 | Tránh render thừa khi kéo panel                                                   | Các panel dùng `memo` + selector hẹp của Zustand                           |
-| 2026-09-29 | 6         | Máy build (Linux, Chromium headless, vẽ bằng CPU) | Khởi động lạnh (bản build, tới khi giao diện sẵn sàng)                            | 0,28 s (DOMContentLoaded 0,14 s)                                           |
-| 2026-09-29 | 6         | như trên                                          | JS tải lúc khởi động (gzip)                                                       | 168 KB (JS 161 KB + CSS 7 KB); các môn, three.js, RDKit, KaTeX tải khi cần |
-| 2026-09-29 | 6         | như trên                                          | Bộ nhớ JS (heap): lúc chờ / ném xiên đang chạy / phân tử 3D / cơ chế / cuối phiên | 6 / 11 / 15 / 14 / 19 MB                                                   |
-| 2026-09-29 | 6         | như trên                                          | FPS: ném xiên, thuyết va chạm (hạt), khuếch tán (hạt)                             | 60 / 60 / 60 (không kích hoạt hạ cấp)                                      |
-| 2026-09-29 | 6         | như trên                                          | Thư mục `dist` (gồm RDKit WASM)                                                   | 10,1 MB                                                                    |
+| Ngày       | Giai đoạn | Máy                                               | Chỉ số                                                                            | Kết quả                                                                                              |
+| ---------- | --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 2026-09-28 | 0         | Máy build (Linux)                                 | Bundle giao diện (JS gzip / CSS gzip)                                             | ≈ 90 KB / 5 KB                                                                                       |
+| 2026-09-28 | 0         | Máy build (Linux)                                 | Tránh render thừa khi kéo panel                                                   | Các panel dùng `memo` + selector hẹp của Zustand                                                     |
+| 2026-09-29 | 6         | Máy build (Linux, Chromium headless, vẽ bằng CPU) | Khởi động lạnh (bản build, tới khi giao diện sẵn sàng)                            | 0,28 s (DOMContentLoaded 0,14 s)                                                                     |
+| 2026-09-29 | 6         | như trên                                          | JS tải lúc khởi động (gzip)                                                       | 168 KB (JS 161 KB + CSS 7 KB); các môn, three.js, RDKit, KaTeX tải khi cần                           |
+| 2026-09-29 | 6         | như trên                                          | Bộ nhớ JS (heap): lúc chờ / ném xiên đang chạy / phân tử 3D / cơ chế / cuối phiên | 6 / 11 / 15 / 14 / 19 MB                                                                             |
+| 2026-09-29 | 6         | như trên                                          | FPS: ném xiên, thuyết va chạm (hạt), khuếch tán (hạt)                             | 60 / 60 / 60 (không kích hoạt hạ cấp)                                                                |
+| 2026-09-29 | 6         | như trên                                          | Thư mục `dist` (gồm RDKit WASM)                                                   | 10,1 MB                                                                                              |
+| 2026-09-29 | 7         | như trên                                          | Gói cài bản release (Linux `.deb`; cùng binary và dữ liệu như bản Windows)        | 6,35 MB (mục tiêu < 80 MB). Bộ cài Windows: xem `installer-sizes.txt` trong kết quả workflow Release |
 
 ## Chọn mức chất lượng tự động (Giai đoạn 1)
 

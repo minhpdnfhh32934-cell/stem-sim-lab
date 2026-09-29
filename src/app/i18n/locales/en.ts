@@ -105,7 +105,6 @@ const en: Messages = {
     regionLabel: 'Simulation stage',
     emptyTitle: 'No simulation yet',
     emptyBody: 'Type a problem in the bar above, or pick a topic from the Library.',
-    emptyNote: 'This is the Phase 0 interface shell. The first simulations arrive in Phase 2.',
     toolbarLabel: 'Simulation tools',
     toolUnavailable: 'not available yet',
     finished: 'Finished',

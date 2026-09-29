@@ -1,7 +1,11 @@
 # Độ chính xác khoa học — STEM Sim Lab
 
-> Tài liệu này sẽ được nộp kèm hồ sơ dự thi. Mỗi giai đoạn sẽ bổ sung các mô hình mới.
-> Trạng thái: đã có Giai đoạn 1 (bộ giải), 2 (Vật lý), 3 (AI đọc đề) và 4 (Hóa học).
+> Tài liệu nộp kèm hồ sơ dự thi: mô hình, sai số, nguồn và cách kiểm chứng của mọi mô phỏng.
+> Phiên bản app 0.1.0 — gồm bộ giải (§3), Vật lý (§4), AI đọc đề (§5), Hóa học (§6), Sinh học (§7),
+> lưu tệp và quá tải (§8), giới hạn đã biết (§9) và cách tự kiểm chứng (§10).
+>
+> **Lưu ý:** mọi bộ dữ liệu đang ở trạng thái **chờ giáo viên duyệt** (`review_status: "pending"`).
+> Danh sách cần duyệt: `docs/DATA_REVIEW.md`. Trong app: menu ☰ → Nguồn & Giả định.
 
 ## 1. Nguyên tắc
 
@@ -18,15 +22,19 @@
 
 ## 2. Nguồn dữ liệu chuẩn
 
-| Loại                  | Nguồn                                |
-| --------------------- | ------------------------------------ |
-| Hằng số vật lý        | CODATA (NIST), bản mới nhất          |
-| Khối lượng nguyên tử  | IUPAC                                |
-| Độ âm điện            | Thang Pauling                        |
-| Bán kính cộng hóa trị | Cordero et al., _Dalton Trans._ 2008 |
-| Màu nguyên tố         | CPK / Jmol                           |
-| Cấu trúc 3D phân tử   | PubChem (public domain)              |
-| Mã di truyền          | NCBI translation table 1             |
+| Loại                  | Nguồn                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Hằng số vật lý        | CODATA 2022 (NIST), qua SciPy                                                                                             |
+| Khối lượng nguyên tử  | IUPAC / CIAAW (qua `mendeleev`)                                                                                           |
+| Độ âm điện            | Thang Pauling                                                                                                             |
+| Bán kính cộng hóa trị | Cordero et al., _Dalton Trans._ 2008                                                                                      |
+| Cấu hình electron     | NIST ASD (trạng thái cơ bản)                                                                                              |
+| Màu nguyên tố         | CPK / Jmol                                                                                                                |
+| Cấu trúc 3D phân tử   | RDKit (ETKDG + MMFF94); hình học thực nghiệm NIST CCCBDB cho phân tử vô cơ nhỏ (PubChem không truy cập được khi xây dựng) |
+| Mã di truyền          | NCBI translation table 1 (Biopython)                                                                                      |
+
+Mọi tệp dữ liệu trong `data/` được sinh bằng script trong `scripts/data/` (không sửa tay), kiểm tra
+bằng Zod khi nạp, và mỗi mục có `review_status`.
 
 ## 3. Bộ giải số và kiểm chứng (Giai đoạn 1)
 
@@ -196,3 +204,38 @@ test tự động bảo đảm.
 - Khi quá tải, app giảm chất lượng hiển thị hoặc chạy chậm có ghi tỉ lệ; bước tích phân và mô hình
   không đổi (chi tiết: docs/PERFORMANCE.md).
 - Watchdog bộ nhớ chỉ giảm số mẫu lưu cho đồ thị (độ phân giải đồ thị), không đụng tới mô phỏng.
+
+## 9. Giới hạn đã biết
+
+Những điểm dưới đây là giới hạn **có chủ ý** của phiên bản 0.1.0; app ghi rõ trong Thẻ Khoa học
+tương ứng, không che giấu.
+
+- **Vật lý:** chỉ 2D; bỏ qua lực cản không khí (trừ lực cản của con lắc/lò xo khi người dùng bật);
+  con lắc đơn có lực cản là nghiệm số (gần đúng). AI chỉ đọc đề Vật lý; đề Hóa/Sinh dùng thư viện
+  chủ đề.
+- **Hóa học:** orbital chỉ của nguyên tử hydro (nghiệm giải tích); không tính hóa lượng tử cho nguyên
+  tử nhiều electron hay trạng thái chuyển tiếp — các khung trạng thái chuyển tiếp là hình minh họa.
+  Tọa độ 3D của phân tử hữu cơ từ trường lực MMFF94 (lệch thực nghiệm < 0,03 Å, < 3°). Độ phân cực
+  suy từ Δχ nên PH₃ bị xếp gần như không phân cực. Khí trong mô phỏng hạt là khí **2 chiều**. Phản
+  ứng tráng bạc có nhiều cách cân bằng độc lập (app báo "vô số cách cân bằng").
+- **Sinh học:** gen không có intron, dịch mã từ AUG đầu tiên, chỉ bảng mã chuẩn; Mendel chỉ xét gen
+  phân li độc lập (chưa có liên kết gen/hoán vị gen theo khoảng cách); Hardy–Weinberg 2 alen;
+  phiêu bạt theo Wright–Fisher với N không đổi; Lotka–Volterra cổ điển; Michaelis–Menten một cơ
+  chất, không thuận nghịch; thẩm thấu theo van 't Hoff cho dung dịch loãng lí tưởng, tốc độ dâng
+  cột nước là minh họa.
+- **Dữ liệu:** toàn bộ đang chờ giáo viên duyệt (xem `docs/DATA_REVIEW.md`); nguồn SGK chưa ghi số
+  trang.
+- **Hiệu năng:** số đo trong `docs/PERFORMANCE.md` làm trên máy build (Linux). Chưa đo trên máy tối
+  thiểu thật (i3, Intel UHD 620, Windows 10); RAM thật của WebView2 cần đo bằng Task Manager.
+- **Bộ cài:** chưa ký số (Windows hiện cảnh báo SmartScreen lần đầu).
+
+## 10. Cách tự kiểm chứng
+
+| Lệnh                                  | Kiểm tra                                                                          | Kết quả (29/09/2026)        |
+| ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------- |
+| `npm test`                            | Unit test: bộ giải, 13 chủ đề Vật lý, AI (quy tắc kiểm tra), Hóa, Sinh, tệp dự án | 42 tệp, 310 test đạt        |
+| `npm run test:e2e`                    | Chạy app thật trong Chromium: AI (giả lập), mọi chủ đề Hóa/Sinh, lưu/mở, lịch sử  | 23 test đạt                 |
+| `cargo test` (trong `src-tauri`)      | Rust: gọi AI, lịch sử SQLite, lưu tệp                                             | 10 test đạt                 |
+| `npm run golden:llm`                  | 31 đề chuẩn với mô hình AI thật trong LM Studio                                   | tùy mô hình (chạy trên máy) |
+| `node scripts/perf/measure.mjs`       | Khởi động, bộ nhớ, FPS của bản build                                              | xem `docs/PERFORMANCE.md`   |
+| Trong app: menu ☰ → Nguồn & Giả định | Nguồn của mọi bộ dữ liệu, số mục chờ duyệt, giả định của chủ đề đang mở           | —                           |
