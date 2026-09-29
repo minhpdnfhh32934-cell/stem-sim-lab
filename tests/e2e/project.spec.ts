@@ -127,3 +127,27 @@ test('undo works for physics parameters too', async ({ page }) => {
   await page.getByRole('button', { name: /Làm lại/ }).click();
   await expect(field).toHaveValue('20');
 });
+
+test('manual mode offers chemistry and biology topics too', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Tự dựng cảnh' });
+  const select = dialog.getByRole('combobox', { name: 'Chủ đề' });
+  await expect(select.locator('optgroup')).toHaveCount(3);
+  await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(12);
+  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(11);
+  await select.selectOption('logisticGrowth');
+  await expect(dialog.locator('.problem-review__module input[type="range"]').first()).toBeVisible();
+  await dialog
+    .locator('.problem-review__module label', { hasText: 'Sức chứa K' })
+    .locator('input')
+    .fill('1500');
+  await dialog.getByRole('button', { name: 'Mô phỏng' }).click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
+  // Back to a physics topic from the same picker.
+  await page.getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' }).click();
+  await select.selectOption('freeFall');
+  await expect(dialog.locator('.problem-table')).toBeVisible();
+});
