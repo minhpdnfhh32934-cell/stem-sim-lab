@@ -144,7 +144,16 @@ export class EngineRunner {
       curr: Float64Array.from(this.curr),
       stats: {
         steps,
-        effectiveSpeed: frameSeconds > 0 ? simulated / Math.min(frameSeconds, 0.25) : 0,
+        // Without throttling no simulated time is lost: the accumulator carries the remainder
+        // to the next frame, so per-frame step counts (1, 2, 1, … on a 144 Hz screen) must not
+        // be read as slow motion. Only dropped time slows the simulation down.
+        effectiveSpeed: paused
+          ? 0
+          : !throttled
+            ? speed
+            : frameSeconds > 0
+              ? simulated / Math.min(frameSeconds, 0.25)
+              : 0,
         throttled,
         maxRelDrift: this.maxRelDrift,
         intervened: this.intervened,

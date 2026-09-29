@@ -83,6 +83,20 @@ describe('EngineRunner', () => {
     expect(f.stats.effectiveSpeed).toBeLessThan(1);
   });
 
+  it('reports real-time speed on high-refresh screens (no false slow motion)', () => {
+    const runner = new EngineRunner(new OscillatorEngine(params));
+    let steps = 0;
+    for (let i = 0; i < 144; i++) {
+      const f = runner.frame(1 / 144, 1);
+      if (isRunnerError(f)) throw new Error('unexpected');
+      expect(f.stats.throttled).toBe(false);
+      expect(f.stats.effectiveSpeed).toBe(1);
+      steps += f.stats.steps;
+    }
+    // One second of frames still simulates one second (240 steps of 1/240 s), give or take one.
+    expect(Math.abs(steps - 240)).toBeLessThanOrEqual(1);
+  });
+
   it('marks user intervention and drops the energy reference', () => {
     const engine: SimulationEngine = new OscillatorEngine(params);
     engine.input = () => true;
