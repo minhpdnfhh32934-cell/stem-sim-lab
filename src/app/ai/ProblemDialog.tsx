@@ -11,7 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getDictionary, useT } from '@/app/i18n';
+import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
@@ -19,7 +19,11 @@ import type { Draft } from '@/ai/draft';
 import { MAX_PROBLEM_CHARS } from '@/ai/pipeline';
 import { fromSI, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
-import { sceneIds } from '@/physics/registry';
+import { CATALOG } from '@/app/catalog';
+import { SUBJECTS } from '@/app/workspaceStore';
+import { useModuleStore } from '@/modules/moduleStore';
+import { hasModule } from '@/modules/registry';
+import { hasScene } from '@/physics/registry';
 import type { ParamDef, ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { IconButton } from '@/ui/IconButton';
@@ -41,7 +45,7 @@ import './ai.css';
 export function ProblemDialog() {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
-  const { phase, mode, draft, scene } = useAnalyzeStore();
+  const { phase, mode, draft, scene, moduleId } = useAnalyzeStore();
   const open = phase === 'review' || phase === 'unsupported' || phase === 'error';
 
   useEffect(() => {
@@ -75,9 +79,78 @@ export function ProblemDialog() {
         // Keyed by the draft: a new analysis or topic starts from a fresh table.
         <DraftReview key={`${draft.topic}:${draft.problemText}`} draft={draft} scene={scene} />
       )}
+      {phase === 'review' && mode === 'manual' && moduleId && <ModuleManual id={moduleId} />}
       {phase === 'unsupported' && <UnsupportedView />}
       {phase === 'error' && <ErrorView />}
     </dialog>
+  );
+}
+
+/** Topic picker of the manual mode: every available topic, grouped by subject. */
+function TopicSelect({ value }: { value: string }) {
+  const t = useT();
+  return (
+    <label className="problem-review__topic">
+      <span>{t('analyze.topic')}</span>
+      <select
+        value={value}
+        onChange={(e) => {
+          void openManual(e.target.value);
+        }}
+      >
+        {SUBJECTS.map((subject) => (
+          <optgroup key={subject} label={t(`subjects.${subject}`)}>
+            {CATALOG[subject].flatMap((chapter) =>
+              chapter.topics
+                .filter((topic) => hasScene(topic.id) || hasModule(topic.id))
+                .map((topic) => (
+                  <option key={topic.id} value={topic.id}>
+                    {t(topic.titleKey)}
+                  </option>
+                )),
+            )}
+          </optgroup>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+/**
+ * Manual mode for a chemistry/biology topic: the module is already open behind the dialog;
+ * its own input panel is shown here (the same inputs as in the Inspector).
+ */
+function ModuleManual({ id }: { id: string }) {
+  const t = useT();
+  const active = useModuleStore((s) => s.active);
+  const Panel = active?.id === id ? active.view.Panel : undefined;
+  return (
+    <>
+      <div className="dialog__body problem-review">
+        <p className="muted">{t('analyze.manualModuleIntro')}</p>
+        <TopicSelect value={id} />
+        <div className="problem-review__module">
+          {active?.id !== id ? (
+            <p className="muted small" role="status">
+              {t('stage.loading')}
+            </p>
+          ) : Panel ? (
+            <Panel />
+          ) : (
+            <p className="muted small">{t('analyze.manualNoInputs')}</p>
+          )}
+        </div>
+      </div>
+      <footer className="dialog__footer">
+        <button type="button" className="btn" onClick={closeAnalyze}>
+          {t('analyze.close')}
+        </button>
+        <button type="button" className="btn btn--accent" onClick={closeAnalyze}>
+          <Play size={15} strokeWidth={1.75} aria-hidden="true" />
+          {t('analyze.confirm')}
+        </button>
+      </footer>
+    </>
   );
 }
 
@@ -96,7 +169,6 @@ function SourceBadge({ source }: { source: ParamSource }) {
 function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   const t = useT();
   const L = useLocalized();
-  const locale = useSettingsStore((s) => s.locale);
   const { mode, model } = useAnalyzeStore();
   const [params, setParams] = useState<Params>(draft.params);
   const [sources, setSources] = useState<Record<string, ParamSource>>(draft.sources);
@@ -122,7 +194,6 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
     setParams(applyAutoDefaults(scene, { ...params, [key]: si }, nextSources));
   };
 
-  const topicNames = getDictionary(locale).topics as Record<string, string>;
   const blocking = draft.issues.filter((i) => i.blocking);
   const warnings = draft.issues.filter((i) => !i.blocking);
 
@@ -132,21 +203,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
         <p className="muted">{mode === 'manual' ? t('analyze.manualIntro') : t('analyze.intro')}</p>
 
         {mode === 'manual' ? (
-          <label className="problem-review__topic">
-            <span>{t('analyze.topic')}</span>
-            <select
-              value={scene.id}
-              onChange={(e) => {
-                void openManual(e.target.value);
-              }}
-            >
-              {sceneIds().map((id) => (
-                <option key={id} value={id}>
-                  {topicNames[id] ?? id}
-                </option>
-              ))}
-            </select>
-          </label>
+          <TopicSelect value={scene.id} />
         ) : (
           <>
             <p className="problem-review__topic">

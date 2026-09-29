@@ -8,7 +8,11 @@ import { manualDraft, type Draft } from '@/ai/draft';
 import { analyzeProblem, type Stage } from '@/ai/pipeline';
 import { getTransport } from '@/ai/transport';
 import { AiError, toAiError, type AiErrorCode, type Provider } from '@/ai/types';
-import { loadScene } from '@/physics/registry';
+import { CATALOG } from '@/app/catalog';
+import { openTopic } from '@/app/topics';
+import { useModuleStore } from '@/modules/moduleStore';
+import { hasModule } from '@/modules/registry';
+import { hasScene, loadScene } from '@/physics/registry';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 
 export type AnalyzePhase = 'idle' | 'running' | 'review' | 'unsupported' | 'error';
@@ -21,6 +25,8 @@ export interface AnalyzeState {
   stage: Stage | null;
   draft: Draft | null;
   scene: PhysicsScene | null;
+  /** Manual mode on a chemistry/biology topic: its inputs are the module's own panel. */
+  moduleId: string | null;
   model: string | null;
   unsupported: { reason: string; parts: string[] } | null;
   error: { code: AnalyzeErrorCode; detail: string } | null;
@@ -32,6 +38,7 @@ export const useAnalyzeStore = create<AnalyzeState>()(() => ({
   stage: null,
   draft: null,
   scene: null,
+  moduleId: null,
   model: null,
   unsupported: null,
   error: null,
@@ -153,19 +160,44 @@ export function cancelAnalyze(): void {
 }
 
 /** "Tự dựng cảnh": opens the confirmation dialog with defaults only, no AI involved. */
+/** First available topic of the current subject (manual mode with nothing open). */
+function defaultTopic(): string {
+  const subject = useWorkspaceStore.getState().subject;
+  for (const chapter of CATALOG[subject]) {
+    for (const topic of chapter.topics) {
+      if (hasScene(topic.id) || hasModule(topic.id)) return topic.id;
+    }
+  }
+  return 'uniformAcceleration';
+}
+
+/**
+ * Manual mode ("Tự dựng cảnh"): any topic of the three subjects. Physics topics get the
+ * parameter table; chemistry/biology topics open right away and show their own inputs.
+ */
 export async function openManual(topicId?: string): Promise<void> {
   cancelAnalyze();
-  const id = topicId ?? sim.scene?.id ?? 'uniformAcceleration';
-  const scene = await loadScene(id);
-  useAnalyzeStore.setState({
+  const id = topicId ?? useModuleStore.getState().active?.id ?? sim.scene?.id ?? defaultTopic();
+  const base = {
     phase: 'review',
     mode: 'manual',
     stage: null,
-    draft: manualDraft(scene, useSettingsStore.getState().defaultGravity),
-    scene,
     model: null,
     unsupported: null,
     error: null,
+  } as const;
+  if (hasModule(id)) {
+    // Show the choice at once; the panel appears when the module has loaded.
+    useAnalyzeStore.setState({ ...base, draft: null, scene: null, moduleId: id });
+    await openTopic(id);
+    return;
+  }
+  const scene = await loadScene(id);
+  useAnalyzeStore.setState({
+    ...base,
+    draft: manualDraft(scene, useSettingsStore.getState().defaultGravity),
+    scene,
+    moduleId: null,
   });
 }
 
@@ -175,6 +207,7 @@ export function closeAnalyze(): void {
     phase: 'idle',
     draft: null,
     scene: null,
+    moduleId: null,
     unsupported: null,
     error: null,
   });
