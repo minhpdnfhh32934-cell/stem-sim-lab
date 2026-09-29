@@ -12,7 +12,16 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 };
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      // Version of the web part; the desktop app compares it with downloaded updates.
+      name: 'stemsim-web-version',
+      generateBundle() {
+        this.emitFile({ type: 'asset', fileName: 'web-version.txt', source: `${pkg.version}\n` });
+      },
+    },
+  ],
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   resolve: {
     alias: {

@@ -176,8 +176,16 @@ Progress log: `docs/PROGRESS.md`.
 
 ## Release
 
-- Windows installers are built by GitHub Actions on `windows-latest` (no cross-compiling from Linux).
-  Bump the version in `package.json`, `src-tauri/Cargo.toml` and `src-tauri/tauri.conf.json`, then
-  push a tag `vX.Y.Z` → draft GitHub Release with the installers.
+- Full procedure: `docs/RELEASE.md`. Windows installers are built by GitHub Actions on
+  `windows-latest` (no cross-compiling from Linux). Actions → Release → Run workflow (publish=true)
+  or a tag `v<package.json version>` → published GitHub Release (installers + signed web update).
+- **Two version numbers:** `package.json` = web part (in-app update, `src-tauri/src/webupdate.rs`
+  serves a downloaded, Ed25519-signed `web-bundle.zip` instead of the embedded assets);
+  `tauri.conf.json` + `Cargo.toml` = native part. Frontend-only change → bump `package.json` only.
+  Rust change → bump both (same number); the web update then carries `minNative` and older apps are
+  told to reinstall. Never break Rust command signatures without bumping the native version.
+- The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
+  `webupdate.rs`. The repo must be public for the app to download releases.
+- Smart App Control blocks unsigned installers; in-app web updates avoid new executables.
 - WebView2: `downloadBootstrapper` (small installer). Offline machines without WebView2 need the
   Evergreen Standalone Installer first (documented in USER_GUIDE). Installers are not code-signed.
