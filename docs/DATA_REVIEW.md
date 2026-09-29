@@ -50,3 +50,12 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
    (chưa ghi số trang). Đặc biệt nhờ kiểm tra: điều kiện Haber (400–450 °C, 200 bar), phương pháp
    tiếp xúc (V₂O₅, 450 °C), Ostwald (Pt, ~850 °C), lên men (30–35 °C), và 10 cơ chế (các bước,
    mũi tên electron).
+8. **Bảng mã di truyền** (`data/genetic_code.json`, NCBI bảng 1 qua Biopython): 64 bộ ba, kí
+   hiệu 3 chữ (Met, Phe…) và tên tiếng Anh. Chưa có tên axit amin tiếng Việt — cần giáo viên cung
+   cấp cách viết theo SGK nếu muốn hiển thị. Bảng này không áp dụng cho ti thể.
+9. **Bảng số lượng ở các kì phân bào** (được đếm từ mô hình, không nhập tay): quy ước "NST đơn có
+   0 cromatit" và "ở kì sau nguyên phân mỗi tế bào có 4n NST đơn" theo SGK Sinh học 10 — nhờ giáo
+   viên xác nhận quy ước đếm (một số tài liệu đếm theo "mỗi cực").
+10. **Tên các kiểu ức chế enzyme**: "không cạnh tranh" (noncompetitive) và "phi cạnh tranh"
+    (uncompetitive) — thuật ngữ tiếng Việt chưa thống nhất giữa các tài liệu.
+11. **Nguồn sinh học** (`src/biology/common.ts`, `BSRC`): chưa ghi số trang, lần xuất bản.

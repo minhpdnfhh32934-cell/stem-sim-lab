@@ -1,7 +1,4 @@
 import type { LocalizedText, Source } from '@/core/data/dataset';
-import type { ScienceCardData } from '@/science-card/types';
-import { useWorkspaceStore } from '@/app/workspaceStore';
-import { useEffect } from 'react';
 
 export const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 
@@ -62,9 +59,4 @@ export const CSRC = {
   codata: { id: 'codata', citation: 'CODATA 2022 (NIST) — hằng số vật lý' },
 } satisfies Record<string, Source>;
 
-/** Publishes a module's Science Card to the Inspector while the module is open. */
-export function usePublishCard(card: ScienceCardData | null): void {
-  useEffect(() => {
-    useWorkspaceStore.setState({ scienceCard: card });
-  }, [card]);
-}
+export { usePublishCard } from '@/modules/usePublishCard';

@@ -31,7 +31,11 @@ const RNA_OF_TEMPLATE: Record<string, string> = { A: 'U', T: 'A', G: 'C', C: 'G'
 
 /** Keeps A, T, G, C (case-insensitive); spaces, digits and "5'…3'" marks are ignored. */
 export function cleanDna(input: string): string {
-  const s = input.toUpperCase().replace(/5'|3'|[-\s\d,.]/g, '');
+  const s = input
+    .toUpperCase()
+    .replace(/5['′]|3['′]|[-\s\d,.]/g, '')
+    .replace(/X/g, 'C') // Vietnamese texts write cytosine as X (xitôzin)
+    .replace(/U/g, 'T');
   const bad = /[^ATGC]/.exec(s);
   if (bad) throw new SequenceError(`invalid base "${bad[0]}"`);
   return s;
@@ -75,7 +79,11 @@ export interface Translation {
 
 /** Translation from the first AUG to the first in-frame stop codon (standard code). */
 export function translate(mrna: string, fromStart = true): Translation {
-  const start = fromStart ? mrna.indexOf('AUG') : 0;
+  return translateFrom(mrna, fromStart ? mrna.indexOf('AUG') : 0);
+}
+
+/** Translation in the reading frame that starts at `start` (positions are absolute). */
+export function translateFrom(mrna: string, start: number): Translation {
   if (start < 0) return { start: -1, codons: [], protein: '', stopIndex: -1 };
   const codons: Codon[] = [];
   let protein = '';
@@ -155,7 +163,7 @@ export function analyzeMutation(coding: string, m: Mutation): MutationAnalysis {
   if (m.pos < before.start + 3)
     return { effect: 'startLoss', before, after: afterFull, firstChange };
   // Keep the original reading frame for the mutated sequence.
-  const after = translate(codingToMrna(mutated).slice(before.start), false);
+  const after = translateFrom(codingToMrna(mutated), before.start);
   const shifted = m.kind === 'insertion' ? m.bases.length : m.kind === 'deletion' ? m.count : 0;
   let effect: MutationEffect;
   if (shifted % 3 !== 0) effect = 'frameshift';
@@ -173,11 +181,24 @@ export function analyzeMutation(coding: string, m: Mutation): MutationAnalysis {
   return {
     effect,
     before,
-    after: { ...after, start: before.start },
+    after,
     firstChange: (() => {
       for (let i = 0; i < Math.max(before.protein.length, after.protein.length); i++)
         if (before.protein[i] !== after.protein[i]) return i;
       return -1;
     })(),
   };
+}
+
+/** The mutated sequence and its translation in the original reading frame. */
+export function mutatedTranslation(
+  coding: string,
+  m: Mutation,
+): { coding: string; mrna: string; t: Translation } {
+  const mc = mutate(coding, m);
+  const mrna = codingToMrna(mc);
+  const start = translate(codingToMrna(coding)).start;
+  const a = analyzeMutation(coding, m);
+  const inFrame = a.effect !== 'outsideCds' && a.effect !== 'startLoss' && a.effect !== 'none';
+  return { coding: mc, mrna, t: inFrame ? translateFrom(mrna, start) : translate(mrna) };
 }

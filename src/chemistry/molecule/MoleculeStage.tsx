@@ -98,7 +98,15 @@ function cardFor(topic: MoleculeTopic, m: Molecule): ScienceCardData {
             { tex: '\\vec{\\mu} \\propto \\sum \\Delta\\chi_i\\,\\hat{e}_i' },
           ]
         : topic === 'vsepr'
-          ? [{ tex: '\\text{AX}_n\\text{E}_m:\\ n + m = \\text{số hướng electron}' }]
+          ? [
+              {
+                tex: '\\text{AX}_n\\text{E}_m:\\ n + m = \\text{SN}',
+                label: L(
+                  'SN = số hướng electron (steric number)',
+                  'SN = number of electron domains (steric number)',
+                ),
+              },
+            ]
           : [],
     assumptions,
     confidence:

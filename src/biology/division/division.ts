@@ -64,6 +64,8 @@ export interface StageState {
   poles?: [Chromosome[], Chromosome[]][];
   /** Pairs (by index) that crossed over in prophase I, with the break point. */
   crossovers?: { pair: number; point: number }[];
+  /** Metaphase I: for each pair, true = maternal homologue faces the first pole. */
+  orientation?: boolean[];
 }
 
 const whole = (origin: Origin): Chromatid => [{ from: 0, to: 1, origin }];
@@ -151,9 +153,10 @@ export function runDivision(kind: Division, n: number, opts: MeiosisOptions = {}
     m.chromatids[1] = a;
     p.chromatids[0] = b;
   }
+  const orientation = Array.from({ length: n }, (_, pair) => opts.orientation?.[pair] ?? true);
   out.push(
     { stage: 'prophase1', cells: [p1], crossovers },
-    { stage: 'metaphase1', cells: [p1], crossovers },
+    { stage: 'metaphase1', cells: [p1], crossovers, orientation },
   );
   // Anaphase I: homologues (still double) go to opposite poles.
   const pole1: Chromosome[] = [];
@@ -162,7 +165,7 @@ export function runDivision(kind: Division, n: number, opts: MeiosisOptions = {}
     const m = p1.chromosomes.find((c) => c.pair === pair && c.origin === 'M');
     const p = p1.chromosomes.find((c) => c.pair === pair && c.origin === 'P');
     if (!m || !p) continue;
-    const mFirst = opts.orientation?.[pair] ?? true;
+    const mFirst = orientation[pair] ?? true;
     pole1.push(mFirst ? m : p);
     pole2.push(mFirst ? p : m);
   }

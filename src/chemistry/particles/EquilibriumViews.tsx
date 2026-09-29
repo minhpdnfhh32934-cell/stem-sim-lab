@@ -34,7 +34,8 @@ const CARD: ScienceCardData = {
   equations: [
     { tex: 'v_t = k_t \\prod [R]^{\\nu},\\quad v_n = k_n \\prod [P]^{\\nu}' },
     {
-      tex: 'K_C = \\dfrac{k_t}{k_n} = \\dfrac{\\prod [P]^{\\nu}}{\\prod [R]^{\\nu}}\\ \\text{(khi cân bằng)}',
+      tex: 'K_C = \\dfrac{k_t}{k_n} = \\dfrac{\\prod [P]^{\\nu}}{\\prod [R]^{\\nu}}',
+      label: L('Khi cân bằng', 'At equilibrium'),
     },
     {
       tex: '\\ln\\dfrac{K_2}{K_1} = -\\dfrac{\\Delta H}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right),\\ \\Delta H = E_{a,t}-E_{a,n}',

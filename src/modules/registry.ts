@@ -17,7 +17,18 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   collisionTheory: () => import('@/chemistry/particles/modules').then((m) => m.collisionTheory),
   chemicalEquilibrium: () =>
     import('@/chemistry/particles/modules').then((m) => m.chemicalEquilibrium),
-  // Biology modules (Phase 5) are added here.
+  // Biology (Phase 5)
+  mitosis: () => import('@/biology/modules').then((m) => m.mitosis),
+  meiosis: () => import('@/biology/modules').then((m) => m.meiosis),
+  centralDogma: () => import('@/biology/modules').then((m) => m.centralDogma),
+  pointMutation: () => import('@/biology/modules').then((m) => m.pointMutation),
+  mendel: () => import('@/biology/modules').then((m) => m.mendel),
+  hardyWeinberg: () => import('@/biology/modules').then((m) => m.hardyWeinberg),
+  geneticDrift: () => import('@/biology/modules').then((m) => m.geneticDrift),
+  logisticGrowth: () => import('@/biology/modules').then((m) => m.logisticGrowth),
+  lotkaVolterra: () => import('@/biology/modules').then((m) => m.lotkaVolterra),
+  michaelisMenten: () => import('@/biology/modules').then((m) => m.michaelisMenten),
+  diffusionOsmosis: () => import('@/biology/modules').then((m) => m.diffusionOsmosis),
 };
 
 export function hasModule(id: string): boolean {

@@ -72,7 +72,13 @@ function cardFor(mode: GasMode): ScienceCardData {
       'A + B → C + D happens only when the collision energy along the line of centres is ≥ Eₐ (line-of-centres model). The reaction is taken as thermoneutral (ΔH = 0) so the gas keeps its temperature.',
     ),
     equations: [
-      { tex: '\\dfrac{\\text{số va chạm hiệu quả}}{\\text{tổng số va chạm}} = e^{-E_a/RT}' },
+      {
+        tex: 'f = e^{-E_a/RT}',
+        label: L(
+          'Tỉ lệ va chạm hiệu quả (va chạm đủ năng lượng / tổng số va chạm)',
+          'Fraction of effective collisions (energetic enough / all collisions)',
+        ),
+      },
       { tex: 'k = A\\,e^{-E_a/RT}', label: L('Phương trình Arrhenius', 'Arrhenius equation') },
     ],
     assumptions: [

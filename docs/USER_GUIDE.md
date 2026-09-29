@@ -55,6 +55,25 @@ chủ đề và nhập thông số bằng tay.
 - **Mức hạt:** Maxwell–Boltzmann (khí 2D), thuyết va chạm, cân bằng hóa học (nhấn các nút thêm
   chất, đổi nhiệt độ, nén để thấy nguyên lí Le Chatelier).
 
+## Sinh học
+
+- **Nguyên phân / Giảm phân:** nhấn ▶ hoặc mũi tên để đi qua từng kì. Chọn bộ NST 2n; ở giảm phân
+  bật/tắt trao đổi chéo và bấm "Sắp xếp ngẫu nhiên lại" để thấy phân li độc lập. Bảng dưới liệt kê
+  số NST, cromatit, tâm động, ADN ở mọi kì.
+- **ADN → mARN → Protein / Đột biến điểm:** dán trình tự ADN (có thể có khoảng trắng, 5′/3′), chọn
+  mạch bổ sung hay mạch gốc. Ở Đột biến điểm, chọn dạng đột biến, vị trí và nuclêôtit mới — app so
+  sánh protein trước/sau và gọi tên kiểu đột biến.
+- **Di truyền Mendel:** chọn lai 1 hoặc 2 cặp tính trạng, kiểu gen P, trội hoàn toàn / không hoàn
+  toàn. Bấm "Tạo ngẫu nhiên" để so sánh kết quả ngẫu nhiên với lí thuyết (kiểm định χ²).
+- **Hardy–Weinberg:** nhập số cá thể AA, Aa, aa; app tính p, q và kiểm định χ².
+- **Phiêu bạt di truyền:** đổi kích thước quần thể N để thấy quần thể nhỏ mất/cố định alen nhanh.
+- **Tăng trưởng logistic, Con mồi – vật ăn thịt:** kéo thanh trượt các hệ số. Ở Lotka–Volterra,
+  bấm vào mặt phẳng pha để chọn điểm bắt đầu.
+- **Động học enzyme:** chọn kiểu chất ức chế; xem đồ thị v–[S], [S] theo thời gian và
+  Lineweaver–Burk.
+- **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
+  ρgΔh = iCRT.
+
 ## Phím tắt
 
 | Phím                     | Tác dụng                                    |

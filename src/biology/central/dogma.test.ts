@@ -48,7 +48,8 @@ describe('transcription and translation', () => {
 
   it('cleans user input and rejects invalid bases', () => {
     expect(cleanDna("5'-atg ttt-3'")).toBe('ATGTTT');
-    expect(() => cleanDna('ATGX')).toThrow();
+    expect(() => cleanDna('ATGB')).toThrow();
+    expect(cleanDna('ATGX')).toBe('ATGC'); // Vietnamese X = cytosine
   });
 });
 

@@ -149,3 +149,41 @@ phương pháp cho từng phân tử trong app và trong Thẻ Khoa học).
 - SMILES không có trong thư viện: RDKit kiểm tra hóa trị và vẽ 2D; không dựng 3D.
 - Phân bố Maxwell–Boltzmann trong app là của khí **hai chiều**; công thức 3D của SGK chỉ hiển thị
   để so sánh.
+
+## 7. Sinh học (Giai đoạn 5)
+
+### Dữ liệu
+
+| Dữ liệu                             | Nguồn                                                  | Tạo bằng                           | Trạng thái |
+| ----------------------------------- | ------------------------------------------------------ | ---------------------------------- | ---------- |
+| Bảng mã di truyền chuẩn (64 bộ ba)  | NCBI Genetic Code, bảng số 1 (qua Biopython 1.88)      | `scripts/data/gen_genetic_code.py` | chờ duyệt  |
+| Bảng số lượng NST ở các kì phân bào | Không nhập tay: **đếm** từ mô hình NST (`division.ts`) | code + test so với bảng SGK        | chờ duyệt  |
+
+Mọi chủ đề sinh học khác dùng **công thức** (không có bảng số liệu nhập tay), nên độ tin cậy do
+test tự động bảo đảm.
+
+### Kiểm chứng tự động
+
+| Chủ đề                         | Kiểm tra                                                                                                                                                         | Kết quả |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Nguyên phân / giảm phân        | Với 2n = 4, 8, 46: số NST, trạng thái đơn/kép, cromatit, tâm động, phân tử ADN ở mọi kì khớp bảng SGK; 1 → 2 tế bào (nguyên phân), 1 → 2 → 4 (giảm phân)         | đạt     |
+| Phân li độc lập, trao đổi chéo | Mỗi giao tử có đúng 1 NST của mỗi cặp; không trao đổi chéo: 2ⁿ loại giao tử qua mọi cách sắp xếp; có trao đổi chéo (n = 1): 4 loại giao tử khác nhau             | đạt     |
+| ADN → mARN → protein           | 64 bộ ba (61 mã hóa, 3 kết thúc, AUG = Met); mạch bổ sung, mạch gốc → mARN; dịch mã từ AUG đầu tiên tới bộ ba kết thúc                                           | đạt     |
+| Đột biến điểm                  | Im lặng (GGC → GGA), sai nghĩa (TTT → TCT), vô nghĩa (AAA → TAA), dịch khung (thêm/mất 1 nu), mất trọn bộ ba, mất bộ ba mở đầu                                   | đạt     |
+| Di truyền Mendel               | 3 : 1, 1 : 2 : 1, 1 : 1, 9 : 3 : 3 : 1, trội không hoàn toàn 1 : 2 : 1; Monte Carlo khớp lí thuyết (χ²); χ² tới hạn 3,841 / 5,991 / 7,815 ở α = 0,05             | đạt     |
+| Hardy–Weinberg                 | p² + 2pq + q² = 1; kiểm định χ² với df = 1; một thế hệ ngẫu phối đưa về tỉ lệ cân bằng                                                                           | đạt     |
+| Phiêu bạt di truyền            | Wright–Fisher, 3000 lần chạy: tỉ lệ cố định ≈ p₀ (±0,03); dị hợp trung bình giảm theo (1 − 1/2N)ᵗ                                                                | đạt     |
+| Tăng trưởng logistic           | Nghiệm chính xác khớp DOPRI5; tiến tới K; điểm uốn tại N = K/2                                                                                                   | đạt     |
+| Lotka–Volterra                 | Đại lượng bảo toàn V lệch < 10⁻⁷ (DOPRI5, rtol 10⁻¹⁰); điểm cân bằng đứng yên; chu kì dao động nhỏ ≈ 2π/√(αγ). App hiển thị sai lệch của V để người dùng tự kiểm | đạt     |
+| Động học enzyme                | v = Vmax/2 tại [S] = Km; Km, Vmax biểu kiến của 3 kiểu ức chế; [S](t) chính xác (hàm Lambert W) khớp DOPRI5 (app cũng hiển thị sai lệch)                         | đạt     |
+| Khuếch tán (Fick hai ngăn)     | Bảo toàn lượng chất; cân bằng tại nồng độ trung bình theo thể tích; chuyển động Brown: ⟨r²⟩ = 4Dt (2D)                                                           | đạt     |
+| Thẩm thấu (ống chữ U)          | Tại cân bằng ρgΔh = iCRT (van ’t Hoff, có tính pha loãng); nước luôn đi vào nhánh dung dịch                                                                      | đạt     |
+
+### Nguyên tắc hiển thị
+
+- Hình NST, ribosome, ARN pôlimeraza, các hạt chuyển động Brown là **minh họa**; số liệu đọc từ
+  bảng và đồ thị, không đếm trên hình.
+- Tốc độ dâng cột nước trong ống chữ U phụ thuộc hệ số thấm Lp (chọn để minh họa); độ cao cân
+  bằng không phụ thuộc Lp.
+- Π = iCRT chỉ đúng cho dung dịch loãng; i = 2 (NaCl), 3 (CaCl₂) là giả thiết phân li hoàn toàn.
+- Lotka–Volterra là mô hình định tính kinh điển (thẻ khoa học ghi "gần đúng" vì giải số).

@@ -20,6 +20,9 @@ export function Equation({ tex, display = true }: EquationProps) {
             displayMode: display,
             throwOnError: true,
             output: 'html',
+            // Vietnamese letters inside \text{…} (e.g. "số va chạm") have no KaTeX font
+            // metrics; the browser draws them with the UI font, which is what we want.
+            strict: (code: string) => (code === 'unknownSymbol' ? 'ignore' : 'warn'),
           }),
         );
       } catch (e) {

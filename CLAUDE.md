@@ -148,6 +148,11 @@ Progress log: `docs/PROGRESS.md`.
 - Code: `src/chemistry/{data,atom,periodic,molecule,reaction,particles}`, `formula.ts` (parser),
   `balance.ts` (exact null-space balancer). three.js viewers render on demand; RDKit.js is lazy.
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
+- Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport}` — pure model files
+  (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 11 ModuleViews. Small shared controls in
+  `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
+  `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
+- KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead.
 
 ## Phase status
 
@@ -156,6 +161,6 @@ Progress log: `docs/PROGRESS.md`.
 - [x] Phase 2: Physics 2D MVP (13 topics, canvas stage, tools, graphs, solutions, CSV)
 - [x] Phase 3: AI layer (LM Studio/cloud via Rust, SceneSpec checks, confirmation table, golden set, E2E)
 - [x] Phase 4: Chemistry MVP (atoms, 3D molecules, VSEPR, 39 reactions/10 mechanisms, balancer, particles)
-- [ ] Phase 5: Biology MVP
+- [x] Phase 5: Biology MVP (11 topics: cell division, central dogma, genetics, ecology, enzymes, transport)
 - [ ] Phase 6: overload ladder, watchdog, presentation mode, tour
 - [ ] Phase 7: Windows installer, user guide, SCIENCE_ACCURACY.md

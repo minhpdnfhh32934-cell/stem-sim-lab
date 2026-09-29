@@ -71,7 +71,17 @@ export function XYChart(props: XYChartProps) {
         height: height ?? Math.max(140, host.clientHeight || 200),
         scales: {
           x: { time: false },
-          y: yMin !== undefined || yMax !== undefined ? { range: [yMin ?? 0, yMax ?? 1] } : {},
+          // A fixed bound where given; the other side follows the data (with 5 % headroom).
+          y:
+            yMin !== undefined || yMax !== undefined
+              ? {
+                  range: (_u, dMin, dMax): uPlotType.Range.MinMax => {
+                    const lo = yMin ?? dMin;
+                    const span = Math.max(1e-12, dMax - lo);
+                    return [lo, yMax ?? dMax + 0.05 * span];
+                  },
+                }
+              : {},
         },
         legend: { live: true },
         cursor: { drag: { x: false, y: false }, points: { size: 8 } },
@@ -128,17 +138,16 @@ export function XYChart(props: XYChartProps) {
           ],
         },
       };
-      plotRef.current = new UPlot(
-        opts,
-        [x, ...series.map((s) => s.y)] as uPlotType.AlignedData,
-        host,
-      );
-      ro = new ResizeObserver(() => {
-        plotRef.current?.setSize({
-          width: host.clientWidth,
-          height: height ?? Math.max(140, host.clientHeight),
-        });
-      });
+      const plot = new UPlot(opts, [x, ...series.map((s) => s.y)] as uPlotType.AlignedData, host);
+      plotRef.current = plot;
+      // uPlot's height excludes the legend, so subtract it to keep the chart inside its box.
+      const fit = () => {
+        const legend = plot.root.querySelector<HTMLElement>('.u-legend');
+        const avail = host.clientHeight - (legend?.offsetHeight ?? 0);
+        plot.setSize({ width: host.clientWidth, height: height ?? Math.max(120, avail) });
+      };
+      fit();
+      ro = new ResizeObserver(fit);
       ro.observe(host);
     });
     return () => {
