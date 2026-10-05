@@ -3,7 +3,16 @@
   "origins": [
     {
       "origin": "http://localhost:1420",
-      "localStorage": [{ "name": "stemsim.tourDone", "value": "1" }]
+      "localStorage": [
+        {
+          "name": "stemsim.tourDone",
+          "value": "1"
+        },
+        {
+          "name": "stemsim.safety",
+          "value": "{\"adultTerms\": 1}"
+        }
+      ]
     }
   ]
 }

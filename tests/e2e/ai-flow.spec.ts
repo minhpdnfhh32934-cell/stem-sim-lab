@@ -115,6 +115,11 @@ test('problem → confirmation table → simulation → solution → AI explanat
   await expect(dialog.getByText('Trích đề: “g = 10 m/s²”')).toBeVisible();
   await expect(dialog.getByText('Thời gian chuyển động', { exact: false }).first()).toBeVisible();
 
+  // AI content is labelled, with a report button (PROMPT_PHAN_2 A3).
+  await expect(dialog.getByText('Nội dung do AI hỗ trợ')).toBeVisible();
+  await dialog.getByRole('button', { name: 'Báo cáo nội dung không phù hợp' }).click();
+  await expect(dialog.getByText('Đã ghi nhận báo cáo')).toBeVisible();
+
   await dialog.getByRole('button', { name: 'Mô phỏng' }).click();
   await expect(dialog).toBeHidden();
 
@@ -290,4 +295,78 @@ test('manual mode builds a scene without any AI call', async ({ page }) => {
   await dialog.getByRole('button', { name: 'Mô phỏng' }).click();
   await expect(page.locator('.stage canvas')).toBeVisible();
   expect(calls).toBe(0);
+});
+
+test('a problem with a phone number is not sent to the AI', async ({ page }) => {
+  const stats = await mockGemini(page);
+  await typeProblem(page, `${item.text} Liên hệ em: 0912 345 678.`);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
+  await expect(dialog).toContainText('thông tin cá nhân (số điện thoại)');
+  await expect(dialog.getByRole('button', { name: 'Thử lại' })).toHaveCount(0);
+  expect(stats.generate).toBe(0);
+  // The incident log has the kind and the time only.
+  const log = await page.evaluate(() => localStorage.getItem('stemsim.incidents') ?? '');
+  expect(log).toContain('inputPersonalData');
+  expect(log).not.toContain('0912');
+});
+
+test.describe('first run (age question not answered yet)', () => {
+  test.use({
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: 'http://localhost:1420',
+          localStorage: [{ name: 'stemsim.tourDone', value: '1' }],
+        },
+      ],
+    },
+  });
+
+  test('the 18+ question comes first; "under 18" keeps simulations and turns AI off', async ({
+    page,
+  }) => {
+    const stats = await mockGemini(page);
+    await page.goto('/');
+    const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
+    await expect(gate).toBeVisible();
+    await expect(gate.getByRole('button', { name: 'Tôi đủ 18 tuổi — bật AI' })).toBeDisabled();
+    await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
+    await expect(gate).toBeHidden();
+    await expect(page.locator('.ai-status')).toContainText('AI: chưa mở');
+    await page.getByLabel('Đề bài', { exact: true }).fill(item.text);
+    await page.getByRole('button', { name: 'Phân tích đề' }).click();
+    await expect(page.getByRole('dialog', { name: 'Không phân tích được đề' })).toContainText(
+      'AI chưa được mở',
+    );
+    expect(stats.generate).toBe(0);
+    // Simulations still work without AI.
+    await page.reload();
+    await expect(gate).toBeHidden();
+  });
+
+  test('"18+" with the terms turns AI on', async ({ page }) => {
+    await mockGemini(page);
+    await page.goto('/');
+    const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
+    await gate.getByRole('button', { name: 'Đọc quyền riêng tư & điều khoản' }).click();
+    const privacy = page.getByRole('dialog', { name: 'Quyền riêng tư & dùng AI an toàn' });
+    await expect(privacy).toContainText('Dùng AI để học hiệu quả và an toàn');
+    await privacy.getByRole('button', { name: 'Đóng' }).last().click();
+    await gate.getByRole('checkbox').check();
+    await gate.getByRole('button', { name: 'Tôi đủ 18 tuổi — bật AI' }).click();
+    await expect(gate).toBeHidden();
+    await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'cloud');
+  });
+});
+
+test('signs of a crisis show support lines at once, even without an API key', async ({ page }) => {
+  const stats = await mockGemini(page, { noKey: true });
+  await typeProblem(page, 'Em mệt quá, em không muốn sống nữa');
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Mình muốn hỏi thăm bạn' });
+  await expect(dialog).toContainText('096 306 1414');
+  await expect(dialog).toContainText('115');
+  expect(stats.generate).toBe(0);
 });

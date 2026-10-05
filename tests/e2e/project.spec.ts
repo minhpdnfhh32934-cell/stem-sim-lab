@@ -105,10 +105,15 @@ test('in-app updates are explained as desktop-only in the browser build', async 
   await expect(page.getByText('Cập nhật trong app chỉ có ở bản cài trên máy.')).toBeVisible();
 });
 
-test('first-run tour shows once and can be skipped', async ({ browser }) => {
+test('first run: the age question, then the tour (once, can be skipped)', async ({ browser }) => {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   const page = await context.newPage();
   await page.goto('/');
+  // The safety question comes first; the tour waits behind it.
+  const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
+  await expect(gate).toBeVisible();
+  await expect(page.locator('.tour')).toHaveCount(0);
+  await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
   const tour = page.getByRole('dialog', { name: 'Chào mừng đến STEM Sim Lab' });
   await expect(tour).toBeVisible();
   await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();
