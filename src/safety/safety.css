@@ -37,6 +37,9 @@
   color: var(--accent);
   font-weight: 600;
 }
+.ai-label__model {
+  color: var(--text-muted);
+}
 .ai-label__report {
   display: inline-flex;
   align-items: center;

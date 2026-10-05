@@ -9,7 +9,7 @@ import './safety.css';
  * Art. 11: users must be able to tell that content comes from an AI). A report records only
  * the kind and the time in the incident log, never the content.
  */
-export function AiContentBar() {
+export function AiContentBar({ model, fallback = false }: { model?: string; fallback?: boolean }) {
   const t = useT();
   const [reported, setReported] = useState(false);
   return (
@@ -18,6 +18,12 @@ export function AiContentBar() {
         <Sparkles size={12} strokeWidth={2} aria-hidden="true" />
         {t('safety.aiLabel')}
       </span>
+      {model && (
+        <span className="ai-label__model">
+          {t('safety.aiModel', { model })}
+          {fallback && ` · ${t('safety.aiFallback')}`}
+        </span>
+      )}
       {reported ? (
         <span className="ai-label__done" role="status">
           {t('safety.reported')}

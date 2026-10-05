@@ -23,10 +23,11 @@ const SECTIONS: Section[] = [
     title: 'safety.privacy.providerTitle',
     items:
       __EDITION__ === 'pilot'
-        ? ['safety.privacy.providerClaude', 'safety.privacy.checked']
+        ? ['safety.privacy.providerClaude', 'safety.privacy.providerGroq', 'safety.privacy.checked']
         : [
             'safety.privacy.providerGemini',
             'safety.privacy.providerClaude',
+            'safety.privacy.providerGroq',
             'safety.privacy.checked',
           ],
   },
