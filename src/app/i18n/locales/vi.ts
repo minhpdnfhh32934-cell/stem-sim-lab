@@ -198,6 +198,24 @@ const vi = {
     browserMode: 'chế độ trình duyệt',
   },
   settings: {
+    aiFallback: 'Dự phòng khi hết lượt',
+    aiFallbackHint:
+      'Khi nhà cung cấp chính hết lượt miễn phí hoặc hết tiền, app tự chuyển sang nhà cung cấp này (nếu đã có khóa). Nhãn "Nội dung do AI hỗ trợ" ghi rõ mô hình nào đã trả lời.',
+    aiFallbackKey: 'Khóa API cho dự phòng',
+    aiFallbackModel: 'Mô hình dự phòng',
+    groqGuide: {
+      title: 'Hướng dẫn lấy khóa API Groq (miễn phí)',
+      age: 'Theo điều khoản của Groq, người tạo tài khoản phải từ 18 tuổi trở lên. Ở bản thử nghiệm THPT, phụ huynh hoặc thầy cô tạo khóa và người giám sát nhập vào máy.',
+      step1:
+        'Bấm "Mở trang tạo khóa" bên dưới (hoặc gõ console.groq.com/keys vào trình duyệt) và đăng nhập.',
+      step2: 'Bấm "Create API Key", đặt tên bất kỳ (ví dụ "STEM Sim Lab") rồi xác nhận.',
+      step3: 'Sao chép khóa vừa hiện ra (khóa chỉ hiện một lần).',
+      step4: 'Quay lại đây: dán khóa vào ô khóa API (Ctrl+V), bấm "Lưu khóa" rồi "Kiểm tra key".',
+      open: 'Mở trang tạo khóa',
+      free: 'Gói miễn phí có giới hạn (khoảng 1 000 lượt mỗi ngày và giới hạn số chữ mỗi phút). Khi báo hết lượt, đợi một lúc rồi thử lại.',
+      privacy:
+        'Theo điều khoản của Groq, nội dung gửi lên không được dùng để huấn luyện AI. Nếu tài khoản có tùy chọn "Zero Data Retention", nên bật để Groq không lưu lại đề bài.',
+    },
     aiStatusNotAllowed:
       'AI chưa được mở: cần xác nhận độ tuổi (hoặc đồng ý của người giám sát) trong Cài đặt → An toàn.',
     aiPilotLocked:
@@ -218,6 +236,7 @@ const vi = {
     aiProviders: {
       gemini: 'Gemini (khuyên dùng)',
       claude: 'Claude',
+      groq: 'Groq (miễn phí)',
       off: 'Tắt',
     },
     aiModel: 'Mô hình',
@@ -227,7 +246,7 @@ const vi = {
     aiKeyHide: 'Ẩn khóa',
     aiKeyStoredHint: 'Đã lưu khóa: {hint}',
     aiPilotKey:
-      'Bản thử nghiệm: khóa API Claude do người lớn giám sát nhập. Học sinh không cần (và không nên) tự nhập khóa.',
+      'Bản thử nghiệm: khóa API (Claude, hoặc Groq miễn phí) do người lớn giám sát nhập. Học sinh không cần (và không nên) tự nhập khóa.',
     aiTimeout: 'Thời gian chờ (giây)',
     aiDailyCap: 'Số lượt AI tối đa mỗi ngày',
     aiDailyCapHint:
@@ -422,6 +441,12 @@ const vi = {
     issues: 'Cảnh báo khi kiểm tra',
     validation: 'Thông số chưa hợp lệ',
     model: 'Mô hình AI: {model}',
+    modelFallback: 'Mô hình AI: {model} (dự phòng — nhà cung cấp chính đã hết lượt)',
+    hintGroq: {
+      missingKey:
+        'Chưa có khóa API Groq. Mở Cài đặt → Kết nối AI, làm theo "Hướng dẫn lấy khóa API Groq".',
+      badKey: 'Khóa API Groq bị từ chối. Tạo khóa mới trên console.groq.com/keys rồi dán lại.',
+    },
     confirm: 'Mô phỏng',
     cancel: 'Hủy',
     close: 'Đóng',
@@ -598,6 +623,8 @@ const vi = {
     aiLabel: 'Nội dung do AI hỗ trợ',
     aiLabelHint: 'Phần này do AI đọc hoặc viết. AI có thể sai: hãy kiểm tra lại.',
     report: 'Báo cáo nội dung không phù hợp',
+    aiModel: 'mô hình {model}',
+    aiFallback: 'dự phòng',
     reported: 'Đã ghi nhận báo cáo (chỉ ghi loại và thời gian). Cảm ơn bạn!',
     gate: {
       title: 'Trước khi bắt đầu',
@@ -699,6 +726,8 @@ const vi = {
       providerTitle: 'Nhà cung cấp AI làm gì với đề bài?',
       providerGemini:
         'Gemini, gói miễn phí: theo điều khoản của Google, nội dung gửi lên có thể được dùng để cải thiện sản phẩm và có thể được người thật đọc; gói trả phí thì không. Người dùng phải từ 18 tuổi.',
+      providerGroq:
+        'Groq (dự phòng miễn phí): theo điều khoản của Groq, nội dung gửi lên không được dùng để huấn luyện AI; Groq có thể lưu tối đa 30 ngày để vận hành và chống lạm dụng (có tùy chọn Zero Data Retention). Người tạo khóa phải từ 18 tuổi.',
       providerClaude:
         'Claude (API trả phí): theo chính sách Anthropic công bố, dữ liệu gửi qua API mặc định không dùng để huấn luyện và được xóa sau 30 ngày (nội dung bị gắn cờ vi phạm có thể được giữ lâu hơn).',
       checked:
@@ -720,7 +749,7 @@ const vi = {
       tip6: 'Nghỉ giải lao sau mỗi 45–60 phút học trên máy.',
       pilotTitle: 'Bản thử nghiệm có giám sát',
       pilot1:
-        'Khóa API Claude thuộc về người lớn trả phí (sinh viên từ 18 tuổi hoặc phụ huynh). Người đó là khách hàng của Anthropic và chịu trách nhiệm tuân theo điều khoản của Anthropic.',
+        'Khóa API Claude (và khóa Groq nếu dùng dự phòng miễn phí) thuộc về người lớn tạo tài khoản (sinh viên từ 18 tuổi hoặc phụ huynh). Người đó là khách hàng của Anthropic/Groq và chịu trách nhiệm tuân theo điều khoản của họ.',
       pilot2:
         'Học sinh dưới 18 tuổi chỉ dùng AI khi phụ huynh đã ký phiếu đồng ý và người giám sát đã ghi nhận trong ứng dụng. Có thể rút lại bất cứ lúc nào.',
       close: 'Đóng',

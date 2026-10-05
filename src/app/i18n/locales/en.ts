@@ -196,6 +196,25 @@ const en: Messages = {
     browserMode: 'browser mode',
   },
   settings: {
+    aiFallback: 'Fallback when quota runs out',
+    aiFallbackHint:
+      'When the main provider runs out of free quota or credit, the app switches to this provider (if it has a key). The "AI-assisted content" label shows which model answered.',
+    aiFallbackKey: 'API key for the fallback',
+    aiFallbackModel: 'Fallback model',
+    groqGuide: {
+      title: 'How to get a Groq API key (free)',
+      age: 'Under Groq terms, the account holder must be 18 or older. In the high-school pilot, a parent or teacher creates the key and the supervisor enters it.',
+      step1:
+        'Press "Open the key page" below (or type console.groq.com/keys in a browser) and sign in.',
+      step2: 'Press "Create API Key", give it any name (e.g. "STEM Sim Lab") and confirm.',
+      step3: 'Copy the new key (it is shown only once).',
+      step4:
+        'Back here: paste it into the API key field (Ctrl+V), press "Save key", then "Test key".',
+      open: 'Open the key page',
+      free: 'The free tier has limits (about 1,000 calls a day and a per-minute token limit). When it says the quota is used up, wait a while and try again.',
+      privacy:
+        'Under Groq terms, submitted content is not used to train AI. If the account offers "Zero Data Retention", turn it on so Groq keeps no copy of the problems.',
+    },
     aiStatusNotAllowed:
       'AI is not enabled: confirm your age (or the supervisor consent) in Settings → Safety.',
     aiPilotLocked:
@@ -216,6 +235,7 @@ const en: Messages = {
     aiProviders: {
       gemini: 'Gemini (recommended)',
       claude: 'Claude',
+      groq: 'Groq (free)',
       off: 'Off',
     },
     aiModel: 'Model',
@@ -225,7 +245,7 @@ const en: Messages = {
     aiKeyHide: 'Hide key',
     aiKeyStoredHint: 'Saved key: {hint}',
     aiPilotKey:
-      'Pilot edition: the Claude API key is entered by the supervising adult. Students do not need to (and should not) enter a key.',
+      'Pilot edition: the API key (Claude, or the free Groq) is entered by the supervising adult. Students do not need to (and should not) enter a key.',
     aiTimeout: 'Timeout (seconds)',
     aiDailyCap: 'Maximum AI calls per day',
     aiDailyCapHint:
@@ -421,6 +441,13 @@ const en: Messages = {
     issues: 'Warnings from the checks',
     validation: 'Parameters are not valid',
     model: 'AI model: {model}',
+    modelFallback: 'AI model: {model} (fallback — the main provider ran out of quota)',
+    hintGroq: {
+      missingKey:
+        'No Groq API key yet. Open Settings → Connect AI and follow "How to get a Groq API key".',
+      badKey:
+        'The Groq API key was refused. Create a new key at console.groq.com/keys and paste it again.',
+    },
     confirm: 'Simulate',
     cancel: 'Cancel',
     close: 'Close',
@@ -598,6 +625,8 @@ const en: Messages = {
     aiLabel: 'AI-assisted content',
     aiLabelHint: 'This part was read or written by an AI. AI can be wrong: check it.',
     report: 'Report unsuitable content',
+    aiModel: 'model {model}',
+    aiFallback: 'fallback',
     reported: 'Report recorded (kind and time only). Thank you!',
     gate: {
       title: 'Before you start',
@@ -699,6 +728,8 @@ const en: Messages = {
       providerTitle: 'What does the AI provider do with the problem?',
       providerGemini:
         'Gemini free tier: under Google terms, content may be used to improve products and may be read by human reviewers; not on the paid tier. Users must be 18+.',
+      providerGroq:
+        'Groq (free fallback): under Groq terms, submitted content is not used to train AI; Groq may keep it up to 30 days for operations and abuse checks (Zero Data Retention available). The key holder must be 18+.',
       providerClaude:
         'Claude (paid API): under Anthropic published policy, API data is not used for training by default and is deleted after 30 days (flagged content may be kept longer).',
       checked:
@@ -720,7 +751,7 @@ const en: Messages = {
       tip6: 'Take a break every 45–60 minutes at the computer.',
       pilotTitle: 'Supervised pilot',
       pilot1:
-        'The Claude API key belongs to the paying adult (a student aged 18+ or a parent). That person is the Anthropic customer and is responsible for following Anthropic terms.',
+        'The Claude API key (and the Groq key if the free fallback is used) belongs to the adult who created the account (a student aged 18+ or a parent). That person is the Anthropic/Groq customer and is responsible for following their terms.',
       pilot2:
         'Students under 18 use AI only after the parents signed the consent form and the supervisor recorded it in the app. It can be withdrawn at any time.',
       close: 'Close',
