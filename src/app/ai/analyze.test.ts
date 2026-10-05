@@ -20,7 +20,7 @@ describe('AI controller', () => {
   beforeEach(() => {
     useAiStore.setState({
       provider: 'gemini',
-      models: { gemini: '', claude: 'm' },
+      models: { gemini: '', claude: 'm', groq: '' },
     });
     useAnalyzeStore.setState({ phase: 'idle', error: null, draft: null });
   });
@@ -31,7 +31,7 @@ describe('AI controller', () => {
   it('uses the default Gemini model when the model field is empty', async () => {
     const r = await resolveAi();
     expect(r).toMatchObject({ provider: 'gemini', model: DEFAULT_MODELS.gemini });
-    useAiStore.setState({ models: { gemini: ' gemini-x ', claude: 'm' } });
+    useAiStore.setState({ models: { gemini: ' gemini-x ', claude: 'm', groq: '' } });
     expect((await resolveAi()).model).toBe('gemini-x');
   });
 

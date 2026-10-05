@@ -105,7 +105,7 @@ export function ExplainBox({
             <Sparkles size={14} strokeWidth={1.75} aria-hidden="true" />
             {t('solution.explainTitle')}
           </p>
-          <AiContentBar />
+          <AiContentBar model={state.result.model} fallback={state.result.fallback} />
           <p className="explain__text">{state.result.text}</p>
           <p className="explain__note">
             <CircleCheck size={12} strokeWidth={2} aria-hidden="true" /> {t('solution.explainNote')}

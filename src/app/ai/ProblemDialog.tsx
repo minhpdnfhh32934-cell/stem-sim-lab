@@ -183,7 +183,7 @@ function SourceBadge({ source }: { source: ParamSource }) {
 function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   const t = useT();
   const L = useLocalized();
-  const { mode, model, cached } = useAnalyzeStore();
+  const { mode, model, cached, fallback } = useAnalyzeStore();
   const [params, setParams] = useState<Params>(draft.params);
   const [sources, setSources] = useState<Record<string, ParamSource>>(draft.sources);
   const [kept, setKept] = useState<Set<string>>(new Set());
@@ -223,7 +223,11 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
             <p className="problem-review__topic">
               <span>{t('analyze.topic')}</span>
               <strong>{L(scene.title)}</strong>
-              {model && <span className="muted small">{t('analyze.model', { model })}</span>}
+              {model && (
+                <span className="muted small">
+                  {t(fallback ? 'analyze.modelFallback' : 'analyze.model', { model })}
+                </span>
+              )}
             </p>
             {cached && (
               <p className="problem-review__cached small">
@@ -240,7 +244,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
                 </button>
               </p>
             )}
-            {!cached && <AiContentBar />}
+            {!cached && <AiContentBar {...(model ? { model } : {})} fallback={fallback} />}
             <blockquote className="problem-review__text" aria-label={t('analyze.problem')}>
               {draft.problemText}
             </blockquote>
@@ -635,12 +639,15 @@ function ErrorView() {
           .join(', ')
       : error.detail;
   // Key problems are explained per provider (Gemini: AI Studio; Claude: the supervisor).
+  const keyCode = code === 'missingKey' || code === 'badKey' ? code : null;
   const hintKey =
-    provider === 'claude' && (code === 'missingKey' || code === 'badKey')
-      ? (`analyze.hintClaude.${code}` as const)
-      : isHinted(code)
-        ? (`analyze.hint.${code}` as const)
-        : ('analyze.hint.other' as const);
+    provider === 'claude' && keyCode
+      ? (`analyze.hintClaude.${keyCode}` as const)
+      : provider === 'groq' && keyCode
+        ? (`analyze.hintGroq.${keyCode}` as const)
+        : isHinted(code)
+          ? (`analyze.hint.${code}` as const)
+          : ('analyze.hint.other' as const);
   const settingsFix =
     code === 'network' ||
     code === 'missingKey' ||

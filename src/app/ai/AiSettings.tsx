@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useT } from '@/app/i18n';
-import { DEFAULT_MODELS, PROVIDERS, useAiStore, type ProviderChoice } from '@/ai/aiStore';
+import { DEFAULT_MODELS, PROVIDERS, modelFor, useAiStore, type ProviderChoice } from '@/ai/aiStore';
 import { clearReadings, readingCount } from '@/ai/cache';
 import type { KeyStatus } from '@/ai/keyTest';
 import { getTransport } from '@/ai/transport';
@@ -30,11 +30,18 @@ import './ai.css';
 
 const CHOICES: readonly ProviderChoice[] = [...PROVIDERS, 'off'];
 const GEMINI_KEY_PAGE = 'https://aistudio.google.com/apikey';
+const GROQ_KEY_PAGE = 'https://console.groq.com/keys';
 
 /** Opens Google AI Studio's key page in the system browser (fixed address, set in Rust). */
 function openGeminiKeyPage() {
   if (isTauri()) void invoke('open_gemini_key_page');
   else window.open(GEMINI_KEY_PAGE, '_blank', 'noopener,noreferrer');
+}
+
+/** Opens GroqCloud's key page in the system browser (fixed address, set in Rust). */
+function openGroqKeyPage() {
+  if (isTauri()) void invoke('open_groq_key_page');
+  else window.open(GROQ_KEY_PAGE, '_blank', 'noopener,noreferrer');
 }
 
 /** Settings → "Kết nối AI" (PROMPT_PHAN_2 A2): provider, key guide, model, key, test, limits. */
@@ -77,12 +84,21 @@ export function AiSettings() {
         <GeminiGuide openByDefault={ai.status === 'noKey'} />
       )}
 
+      {ai.provider === 'groq' && <GroqGuide openByDefault={ai.status === 'noKey'} />}
+
       {__EDITION__ === 'pilot' && <p className="ai-guide__note">{t('settings.aiPilotKey')}</p>}
 
       {on && <ModelField provider={ai.provider as Provider} />}
 
       {on && !desktop && <p className="muted">{t('settings.aiCloudDesktopOnly')}</p>}
-      {on && <KeyArea provider={ai.provider as Provider} desktop={desktop} />}
+      {on && (
+        <KeyArea
+          provider={ai.provider as Provider}
+          desktop={desktop}
+          inputId="ai-key-input"
+          label={t('settings.aiKey')}
+        />
+      )}
       {on && <p className="muted small">{t('settings.aiPrivacy')}</p>}
 
       {on && (
@@ -117,6 +133,7 @@ export function AiSettings() {
           </label>
           <UsageLine cap={ai.dailyCap} />
           <ReadingCacheLine />
+          <FallbackSection primary={ai.provider as Provider} desktop={desktop} />
         </>
       )}
     </fieldset>
@@ -124,10 +141,94 @@ export function AiSettings() {
 }
 
 /**
+ * "Dự phòng khi hết lượt" (user decision 2026-10-05): the provider that answers when the main
+ * one is out of free quota or credit. The Rust gateway switches only on quota/credit errors.
+ */
+function FallbackSection({ primary, desktop }: { primary: Provider; desktop: boolean }) {
+  const t = useT();
+  const fallback = useAiStore((s) => s.fallback);
+  const setFallback = useAiStore((s) => s.setFallback);
+  const choices: readonly ProviderChoice[] = [...PROVIDERS.filter((p) => p !== primary), 'off'];
+  const active = fallback !== 'off' && fallback !== primary ? fallback : null;
+  return (
+    <div className="ai-fallback">
+      <div className="settings-row">
+        <span id="ai-fallback-label">{t('settings.aiFallback')}</span>
+        <div className="segmented" role="radiogroup" aria-labelledby="ai-fallback-label">
+          {choices.map((p) => (
+            <button
+              key={p}
+              type="button"
+              role="radio"
+              aria-checked={(active ?? 'off') === p}
+              className="segmented__item"
+              onClick={() => {
+                setFallback(p);
+              }}
+            >
+              {t(`settings.aiProviders.${p}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="muted small">{t('settings.aiFallbackHint')}</p>
+      {active === 'groq' && <GroqGuide openByDefault={false} />}
+      {active && (
+        <>
+          <ModelField provider={active} label={t('settings.aiFallbackModel')} />
+          <KeyArea
+            key={active}
+            provider={active}
+            desktop={desktop}
+            inputId="ai-fallback-key-input"
+            label={t('settings.aiFallbackKey')}
+            fallback
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+/** Step-by-step guide: how to create a free Groq API key (adult account holder). */
+function GroqGuide({ openByDefault }: { openByDefault: boolean }) {
+  const t = useT();
+  const steps = ['step1', 'step2', 'step3', 'step4'] as const;
+  return (
+    <details className="ai-guide" open={openByDefault}>
+      <summary>{t('settings.groqGuide.title')}</summary>
+      <p className="ai-guide__note">{t('settings.groqGuide.age')}</p>
+      <ol className="ai-guide__steps">
+        {steps.map((s) => (
+          <li key={s}>{t(`settings.groqGuide.${s}`)}</li>
+        ))}
+      </ol>
+      <div className="ai-settings__actions">
+        <button type="button" className="btn" onClick={openGroqKeyPage}>
+          <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
+          {t('settings.groqGuide.open')}
+        </button>
+      </div>
+      <p className="muted small">{t('settings.groqGuide.free')}</p>
+      <p className="muted small">{t('settings.groqGuide.privacy')}</p>
+    </details>
+  );
+}
+
+/**
  * Pilot edition: only the supervisor (open session, src/safety) may enter or delete the key;
  * Rust checks it again. The main edition shows the key field to the adult user.
  */
-function KeyArea({ provider, desktop }: { provider: Provider; desktop: boolean }) {
+interface KeyAreaProps {
+  provider: Provider;
+  desktop: boolean;
+  inputId: string;
+  label: string;
+  /** The fallback provider's key (its test does not change the main AI status). */
+  fallback?: boolean;
+}
+
+function KeyArea({ provider, desktop, inputId, label, fallback = false }: KeyAreaProps) {
   const t = useT();
   const unlockedUntil = useSafetyStore((s) => s.unlockedUntil);
   // The countdown is shown in the safety section; here a stale "unlocked" only means Rust
@@ -137,11 +238,20 @@ function KeyArea({ provider, desktop }: { provider: Provider; desktop: boolean }
     return (
       <>
         <p className="ai-guide__note">{t('settings.aiPilotLocked')}</p>
-        <KeyTestRow />
+        <KeyTestRow {...(fallback ? { provider } : {})} />
       </>
     );
   }
-  return <KeyField key={provider} provider={provider} desktop={desktop} />;
+  return (
+    <KeyField
+      key={provider}
+      provider={provider}
+      desktop={desktop}
+      inputId={inputId}
+      label={label}
+      fallback={fallback}
+    />
+  );
 }
 
 const RESULT_TEXT = {
@@ -170,14 +280,27 @@ const RESULT_ICON = {
  * "Kiểm tra key" (PROMPT_PHAN_2 A2): one tiny request, then a clear result — thành công / key
  * không hợp lệ / hết hạn mức / không có mạng (and no key / unknown model / server error).
  */
-function KeyTestRow() {
+function KeyTestRow({ provider }: { provider?: Provider }) {
   const t = useT();
-  const detail = useAiStore((s) => s.statusDetail);
+  const mainDetail = useAiStore((s) => s.statusDetail);
   const [checking, setChecking] = useState(false);
   const [result, setResult] = useState<KeyStatus | null>(null);
+  const [ownDetail, setOwnDetail] = useState('');
+  const detail = provider ? ownDetail : mainDetail;
   const run = async () => {
     setChecking(true);
     setResult(null);
+    if (provider) {
+      // The fallback's key: test it directly, without touching the main AI status.
+      const transport = getTransport();
+      const r = transport.testKey
+        ? await transport.testKey(provider, modelFor(useAiStore.getState().models, provider))
+        : { status: 'error' as const, detail: '' };
+      setChecking(false);
+      setOwnDetail(r.detail);
+      setResult(r.status);
+      return;
+    }
     const status = await checkAiStatus(true);
     setChecking(false);
     setResult(status === 'unknown' ? null : status);
@@ -293,13 +416,13 @@ function GeminiGuide({ openByDefault }: { openByDefault: boolean }) {
   );
 }
 
-function ModelField({ provider }: { provider: Provider }) {
+function ModelField({ provider, label }: { provider: Provider; label?: string }) {
   const t = useT();
   const model = useAiStore((s) => s.models[provider]);
   const setModel = useAiStore((s) => s.setModel);
   return (
     <label className="ai-settings__field" data-tip={t('settings.aiModelHint')}>
-      <span>{t('settings.aiModel')}</span>
+      <span>{label ?? t('settings.aiModel')}</span>
       <input
         type="text"
         spellCheck={false}
@@ -317,7 +440,13 @@ function ModelField({ provider }: { provider: Provider }) {
  * API key field: password input with a show/hide button (Ctrl+V works), save and delete. After
  * saving only "••••••••abcd" is shown; the key itself stays in the OS keychain (Rust).
  */
-function KeyField({ provider, desktop }: { provider: Provider; desktop: boolean }) {
+function KeyField({
+  provider,
+  desktop,
+  inputId,
+  label,
+  fallback,
+}: Omit<KeyAreaProps, 'fallback'> & { fallback: boolean }) {
   const t = useT();
   const [key, setKey] = useState('');
   const [show, setShow] = useState(false);
@@ -361,7 +490,7 @@ function KeyField({ provider, desktop }: { provider: Provider; desktop: boolean 
       setKey('');
       setShow(false);
       await refreshHint();
-      void checkAiStatus();
+      if (!fallback) void checkAiStatus();
     } catch (e) {
       setError(toAiError(e).message);
     }
@@ -371,7 +500,7 @@ function KeyField({ provider, desktop }: { provider: Provider; desktop: boolean 
     try {
       await getTransport().deleteKey(provider);
       setHint(null);
-      void checkAiStatus();
+      if (!fallback) void checkAiStatus();
     } catch (e) {
       setError(toAiError(e).message);
     }
@@ -381,10 +510,10 @@ function KeyField({ provider, desktop }: { provider: Provider; desktop: boolean 
     <>
       {desktop && (
         <div className="ai-settings__field">
-          <label htmlFor="ai-key-input">{t('settings.aiKey')}</label>
+          <label htmlFor={inputId}>{label}</label>
           <div className="ai-key">
             <input
-              id="ai-key-input"
+              id={inputId}
               type={show ? 'text' : 'password'}
               autoComplete="off"
               spellCheck={false}
@@ -438,7 +567,7 @@ function KeyField({ provider, desktop }: { provider: Provider; desktop: boolean 
               : t('settings.aiKeyNone')}
         </span>
       </div>
-      <KeyTestRow />
+      <KeyTestRow {...(fallback ? { provider } : {})} />
       {error && (
         <p className="small ai-settings__error" role="alert">
           {error}

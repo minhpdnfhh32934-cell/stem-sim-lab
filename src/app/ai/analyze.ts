@@ -73,6 +73,8 @@ export interface AnalyzeState {
   reading: Reading | null;
   /** The reading came from the cache of confirmed readings (no AI call was made). */
   cached: boolean;
+  /** The fallback provider answered (the chosen one was out of quota/credit). */
+  fallback: boolean;
   unsupported: { reason: string; parts: string[] } | null;
   error: { code: AnalyzeErrorCode; detail: string } | null;
 }
@@ -87,6 +89,7 @@ export const useAnalyzeStore = create<AnalyzeState>()(() => ({
   model: null,
   reading: null,
   cached: false,
+  fallback: false,
   unsupported: null,
   error: null,
 }));
@@ -150,6 +153,7 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
     model: null,
     reading: null,
     cached: false,
+    fallback: false,
     unsupported: null,
     error: null,
   });
@@ -203,6 +207,7 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
         model: result.model,
         reading: result.reading,
         cached: result.cached,
+        fallback: result.fallback,
       });
     }
   } catch (e) {
@@ -274,6 +279,7 @@ export async function openManual(topicId?: string): Promise<void> {
     model: null,
     reading: null,
     cached: false,
+    fallback: false,
     unsupported: null,
     error: null,
   } as const;
