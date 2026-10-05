@@ -30,6 +30,9 @@ const vi = {
     presentation: 'Chế độ trình chiếu (F5)',
   },
   ai: {
+    notAllowed: 'AI: chưa mở',
+    notAllowedHint:
+      'AI chưa được mở cho máy này (chưa xác nhận độ tuổi hoặc chưa có đồng ý của người giám sát). Mô phỏng vẫn dùng bình thường.',
     offline: 'AI: ngoại tuyến',
     cloud: 'AI: đám mây',
     off: 'AI: tắt',
@@ -195,6 +198,10 @@ const vi = {
     browserMode: 'chế độ trình duyệt',
   },
   settings: {
+    aiStatusNotAllowed:
+      'AI chưa được mở: cần xác nhận độ tuổi (hoặc đồng ý của người giám sát) trong Cài đặt → An toàn.',
+    aiPilotLocked:
+      'Chỉ người giám sát mới nhập hoặc xóa được khóa API. Mở khóa ở mục "An toàn & quyền riêng tư" bên dưới.',
     title: 'Cài đặt',
     close: 'Đóng',
     appearance: 'Giao diện',
@@ -346,6 +353,8 @@ const vi = {
     resetHint: 'Đổi giá trị sẽ chạy lại từ đầu',
   },
   solution: {
+    explainUnsafe:
+      'Đoạn diễn giải đã bị ẩn vì có nội dung không phù hợp. Các kết quả do engine tính vẫn đúng.',
     answers: 'Đáp số',
     steps: 'Lời giải từng bước',
     check: 'Kiểm chứng số',
@@ -378,6 +387,12 @@ const vi = {
     none: 'Nhấp vào một vật trên khung mô phỏng để xem thuộc tính.',
   },
   analyze: {
+    personal: {
+      phone: 'số điện thoại',
+      email: 'email',
+      idNumber: 'số căn cước',
+      nameOrAddress: 'họ tên hoặc địa chỉ',
+    },
     title: 'Tôi hiểu đề như sau',
     manualTitle: 'Tự dựng cảnh',
     intro: 'Hãy kiểm tra từng dòng trước khi mô phỏng. Bạn có thể sửa mọi giá trị.',
@@ -423,7 +438,13 @@ const vi = {
       'Đề bài không thuộc các chủ đề hiện có. Chương trình không tự dựng mô phỏng mà nó chưa kiểm chứng.',
     reason: 'Lý do: {reason}',
     errorTitle: 'Không phân tích được đề',
+    crisisTitle: 'Mình muốn hỏi thăm bạn',
     error: {
+      notAllowed: 'AI chưa được mở trên máy này.',
+      personalData: 'Đề bài có vẻ chứa thông tin cá nhân ({detail}) nên chưa được gửi cho AI.',
+      unsafe: 'Nội dung này không phù hợp với ứng dụng học tập nên không được gửi cho AI.',
+      crisis: 'Đề bài chưa được gửi cho AI.',
+      outputUnsafe: 'Câu trả lời của AI đã bị ẩn vì có nội dung không phù hợp.',
       timeout: 'AI trả lời quá lâu (hết thời gian chờ).',
       cancelled: 'Đã hủy.',
       http: 'Máy chủ AI báo lỗi ({detail}).',
@@ -441,6 +462,14 @@ const vi = {
       tooLong: 'Đề bài quá dài (tối đa {max} ký tự).',
     },
     hint: {
+      notAllowed:
+        'Phần AI cần xác nhận độ tuổi (bản thường) hoặc đồng ý của người giám sát (bản thử nghiệm). Mở Cài đặt → An toàn & quyền riêng tư.',
+      personalData:
+        'Hãy xóa họ tên, số điện thoại, email, địa chỉ hoặc số căn cước khỏi đề bài rồi bấm Phân tích lại.',
+      unsafe:
+        'Ứng dụng chỉ dùng AI cho bài học. Bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
+      outputUnsafe:
+        'Sự việc đã được ghi vào nhật ký sự cố (chỉ loại và thời gian). Hãy dùng Tự dựng cảnh hoặc hỏi thầy cô.',
       timeout: 'Tăng thời gian chờ trong Cài đặt rồi thử lại, hoặc dùng Tự dựng cảnh.',
       network:
         'Kiểm tra kết nối Internet rồi thử lại. Không có mạng thì vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
@@ -465,6 +494,7 @@ const vi = {
     readAgain: 'Đọc lại bằng AI',
   },
   project: {
+    privacy: 'Quyền riêng tư & dùng AI an toàn',
     file: 'Tệp',
     save: 'Lưu mô phỏng (.stemsim) — Ctrl+S',
     open: 'Mở tệp .stemsim — Ctrl+O',
@@ -563,6 +593,138 @@ const vi = {
     checkAgain: 'Kiểm tra lại',
     available: 'Có bản cập nhật {version}',
     browserOnly: 'Cập nhật trong app chỉ có ở bản cài trên máy.',
+  },
+  safety: {
+    aiLabel: 'Nội dung do AI hỗ trợ',
+    aiLabelHint: 'Phần này do AI đọc hoặc viết. AI có thể sai: hãy kiểm tra lại.',
+    report: 'Báo cáo nội dung không phù hợp',
+    reported: 'Đã ghi nhận báo cáo (chỉ ghi loại và thời gian). Cảm ơn bạn!',
+    gate: {
+      title: 'Trước khi bắt đầu',
+      mainIntro:
+        'Phần mô phỏng dùng được cho mọi người. Riêng các chức năng AI (đọc đề, diễn giải) dành cho người từ 18 tuổi trở lên, vì nhà cung cấp AI chỉ cho phép người dùng từ 18 tuổi.',
+      readTerms: 'Tôi đã đọc "Quyền riêng tư & dùng AI an toàn" và đồng ý với điều khoản sử dụng.',
+      openTerms: 'Đọc quyền riêng tư & điều khoản',
+      adult: 'Tôi đủ 18 tuổi — bật AI',
+      minor: 'Tôi chưa đủ 18 tuổi',
+      minorNote:
+        'Chưa đủ 18 tuổi: bạn vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu và Tự dựng cảnh; phần AI tắt. Có thể trả lời lại trong Cài đặt → An toàn & quyền riêng tư.',
+      pilotIntro:
+        'Đây là bản thử nghiệm có người lớn giám sát. Phần AI chỉ mở khi phụ huynh hoặc thầy cô đã thiết lập xong.',
+      birthYear: 'Em sinh năm nào?',
+      yearInvalid: 'Năm sinh không hợp lệ.',
+      next: 'Tiếp tục',
+      supervisorTitle: 'Phần dành cho người giám sát',
+      supervisorIntro:
+        'Phụ huynh hoặc thầy cô đặt mã PIN (4–8 chữ số). Mã này dùng để nhập khóa API, ghi nhận đồng ý và xem nhật ký sự cố. Đừng cho học sinh biết mã.',
+      pin: 'Mã PIN mới',
+      pinAgain: 'Nhập lại mã PIN',
+      pinMismatch: 'Hai lần nhập không giống nhau.',
+      pinInvalid: 'Mã PIN gồm 4–8 chữ số.',
+      setPin: 'Đặt mã PIN',
+      pinDone: 'Đã đặt mã PIN.',
+      consentTitle: 'Ghi nhận đồng ý của phụ huynh',
+      consentText:
+        'Tôi là cha mẹ/người giám hộ của học sinh, hoặc thầy cô được phụ huynh ủy quyền. Phụ huynh và học sinh đã đọc và ký Phiếu đồng ý tham gia thử nghiệm.',
+      consentPin: 'Mã PIN người giám sát',
+      recordConsent: 'Ghi nhận đồng ý và bật AI',
+      adultTester:
+        'Người dùng từ 18 tuổi không cần phiếu đồng ý của phụ huynh; chỉ cần mã PIN để quản lý khóa API.',
+      later: 'Để sau — chỉ dùng mô phỏng',
+      done: 'Xong',
+    },
+    settings: {
+      title: 'An toàn & quyền riêng tư',
+      mainAdult: 'Đã xác nhận: từ 18 tuổi, đồng ý điều khoản (phiên bản {version}).',
+      mainMinor: 'Đã chọn: chưa đủ 18 tuổi — phần AI đang tắt.',
+      unanswered: 'Chưa trả lời câu hỏi độ tuổi — phần AI đang tắt.',
+      answerAgain: 'Trả lời lại câu hỏi độ tuổi',
+      privacy: 'Quyền riêng tư & dùng AI an toàn',
+      locked: 'Khu vực người giám sát đang khóa.',
+      noPin: 'Chưa có mã PIN người giám sát.',
+      setup: 'Thiết lập người giám sát',
+      pin: 'Mã PIN',
+      unlock: 'Mở khóa',
+      lock: 'Khóa lại',
+      unlocked: 'Đang mở khóa (tự khóa sau {min} phút).',
+      wrongPin: 'Sai mã PIN (còn {left} lần thử).',
+      tooMany: 'Nhập sai nhiều lần. Đợi {secs} giây rồi thử lại.',
+      studentMinor: 'Học sinh: dưới 18 tuổi.',
+      studentAdult: 'Người dùng: từ 18 tuổi.',
+      consentOn: 'Đã ghi nhận đồng ý ngày {day}.',
+      consentOff: 'Chưa ghi nhận đồng ý — phần AI đang tắt.',
+      recordConsent: 'Ghi nhận đồng ý (đã có phiếu ký)',
+      withdraw: 'Rút lại đồng ý (tắt AI)',
+      changePin: 'Đổi mã PIN',
+      newPin: 'Mã PIN mới',
+      changeYear: 'Sửa năm sinh',
+      year: 'Năm sinh',
+      save: 'Lưu',
+      saved: 'Đã lưu.',
+      incidents: 'Nhật ký sự cố',
+      incidentsHint: 'Chỉ ghi loại sự cố và thời gian, không ghi nội dung đề bài hay câu trả lời.',
+      incidentsShow: 'Xem nhật ký sự cố',
+      incidentsEmpty: 'Chưa có sự cố nào.',
+      incidentsClear: 'Xóa nhật ký',
+      incidentKinds: {
+        inputPersonalData: 'Đề có thông tin cá nhân — đã chặn, không gửi',
+        inputUnsafe: 'Nội dung không phù hợp — đã chặn, không gửi',
+        inputCrisis: 'Dấu hiệu cần hỗ trợ — đã hiện thông tin đường dây hỗ trợ',
+        outputUnsafe: 'Câu trả lời của AI bị bộ lọc ẩn',
+        userReport: 'Người dùng báo cáo nội dung không phù hợp',
+        pinFailed: 'Nhập sai mã PIN người giám sát',
+      },
+    },
+    crisis: {
+      title: 'Bạn không một mình',
+      body: 'Có vẻ bạn đang gặp chuyện rất khó khăn. Hãy nói chuyện ngay với một người lớn bạn tin tưởng (bố mẹ, thầy cô, người thân), hoặc gọi:',
+      line111: 'Tổng đài quốc gia bảo vệ trẻ em 111 — miễn phí, 24/7.',
+      ngayMai: 'Đường dây hỗ trợ tâm lý Ngày Mai: 096 306 1414 (13:00–20:30, thứ Tư đến Chủ nhật).',
+      emergency: 'Nếu bạn hoặc ai đó đang gặp nguy hiểm ngay lúc này: gọi cấp cứu 115.',
+      note: 'Số điện thoại được kiểm tra tháng 10/2026. Ứng dụng không gửi nội dung này đi đâu cả.',
+    },
+    privacy: {
+      title: 'Quyền riêng tư & dùng AI an toàn',
+      sendTitle: 'Ứng dụng gửi gì ra ngoài?',
+      send1:
+        'Chỉ khi bạn bấm "Phân tích đề" hoặc "AI diễn giải": nội dung đề bài và các kết quả đã tính được gửi đến nhà cung cấp AI đang chọn. Không gửi tên, tài khoản hay tệp của bạn.',
+      send2:
+        'Kiểm tra cập nhật: ứng dụng hỏi trang phát hành của dự án trên GitHub xem có bản mới không (không gửi dữ liệu học tập).',
+      send3: 'Ứng dụng không có quảng cáo, không có tài khoản, không gửi thống kê sử dụng.',
+      storeTitle: 'Lưu gì trên máy này?',
+      store1: 'Khóa API: trong kho khóa của hệ điều hành; màn hình chỉ hiện 4 ký tự cuối.',
+      store2:
+        'Đề đã xác nhận, lịch sử mô phỏng và cài đặt: trong thư mục dữ liệu của ứng dụng; xóa được trong Cài đặt.',
+      store3: 'Nhật ký sự cố: chỉ loại sự cố và thời gian, không lưu nội dung.',
+      providerTitle: 'Nhà cung cấp AI làm gì với đề bài?',
+      providerGemini:
+        'Gemini, gói miễn phí: theo điều khoản của Google, nội dung gửi lên có thể được dùng để cải thiện sản phẩm và có thể được người thật đọc; gói trả phí thì không. Người dùng phải từ 18 tuổi.',
+      providerClaude:
+        'Claude (API trả phí): theo chính sách Anthropic công bố, dữ liệu gửi qua API mặc định không dùng để huấn luyện và được xóa sau 30 ngày (nội dung bị gắn cờ vi phạm có thể được giữ lâu hơn).',
+      checked:
+        'Thông tin về nhà cung cấp được kiểm tra tháng 10/2026 và có thể thay đổi; chi tiết và nguồn trong docs/LEGAL_COMPLIANCE.md.',
+      rulesTitle: 'Điều khoản sử dụng (tóm tắt)',
+      rule1:
+        'Ứng dụng là công cụ hỗ trợ học tập. Mọi con số do chương trình tính; AI chỉ đọc đề và diễn giải bằng lời, và có thể sai.',
+      rule2:
+        'Không nhập thông tin cá nhân (họ tên, số điện thoại, địa chỉ, email, số căn cước) vào đề bài. Ứng dụng chặn khi phát hiện.',
+      rule3:
+        'Chỉ dùng AI cho bài học. Nội dung không phù hợp bị chặn và được ghi vào nhật ký sự cố (chỉ loại và thời gian).',
+      rule4: 'Khi dùng AI, bạn cũng phải tuân theo điều khoản của nhà cung cấp AI.',
+      tipsTitle: 'Dùng AI để học hiệu quả và an toàn',
+      tip1: 'Tự đọc đề và thử giải trước. Dùng AI để kiểm tra cách hiểu đề, không phải để chép đáp án.',
+      tip2: 'Luôn kiểm tra bảng "Tôi hiểu đề như sau": số nào AI đọc sai thì sửa lại.',
+      tip3: 'Đọc phần diễn giải rồi tự giải thích lại bằng lời của mình.',
+      tip4: 'Thấy câu trả lời lạ, sai hoặc làm bạn khó chịu: bấm "Báo cáo nội dung không phù hợp" và hỏi thầy cô.',
+      tip5: 'Không chia sẻ khóa API và không nhập thông tin cá nhân.',
+      tip6: 'Nghỉ giải lao sau mỗi 45–60 phút học trên máy.',
+      pilotTitle: 'Bản thử nghiệm có giám sát',
+      pilot1:
+        'Khóa API Claude thuộc về người lớn trả phí (sinh viên từ 18 tuổi hoặc phụ huynh). Người đó là khách hàng của Anthropic và chịu trách nhiệm tuân theo điều khoản của Anthropic.',
+      pilot2:
+        'Học sinh dưới 18 tuổi chỉ dùng AI khi phụ huynh đã ký phiếu đồng ý và người giám sát đã ghi nhận trong ứng dụng. Có thể rút lại bất cứ lúc nào.',
+      close: 'Đóng',
+    },
   },
   languages: {
     vi: 'Tiếng Việt',
