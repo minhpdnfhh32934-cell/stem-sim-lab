@@ -12,13 +12,53 @@ import { AiError, toAiError, type AiErrorCode, type Provider } from '@/ai/types'
 import { CATALOG } from '@/app/catalog';
 import { openTopic } from '@/app/topics';
 import { useModuleStore } from '@/modules/moduleStore';
+import { checkInput, outputIsSafe, type InputCheck } from '@/safety/moderation';
+import { currentSafety, logIncident } from '@/safety/safetyStore';
+import type { IncidentKind } from '@/safety/safety';
 import { hasModule } from '@/modules/registry';
 import { hasScene, loadScene } from '@/physics/registry';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 
 export type AnalyzePhase = 'idle' | 'running' | 'review' | 'unsupported' | 'error';
 /** Error codes shown to the user: the transport's plus UI-side ones. */
-export type AnalyzeErrorCode = AiErrorCode | 'quota' | 'badKey' | 'badModel' | 'empty' | 'tooLong';
+export type AnalyzeErrorCode =
+  | AiErrorCode
+  | 'quota'
+  | 'badKey'
+  | 'badModel'
+  | 'empty'
+  | 'tooLong'
+  /** Safety checks (src/safety/moderation.ts): the problem was not sent to the AI. */
+  | 'personalData'
+  | 'unsafe'
+  | 'crisis'
+  /** The AI answer was hidden by the output filter. */
+  | 'outputUnsafe';
+
+const BLOCK_INCIDENT: Record<Exclude<InputCheck, { ok: true }>['reason'], IncidentKind> = {
+  personalData: 'inputPersonalData',
+  unsafe: 'inputUnsafe',
+  crisis: 'inputCrisis',
+};
+
+/**
+ * Safety before the AI (PROMPT_PHAN_2 A3): the gates must be open, and the problem must not
+ * contain personal data, unsuitable content or signs of a crisis. Returns the error to show, or
+ * null. A blocked problem is logged as kind + time only and is never sent.
+ */
+export async function safetyBlock(
+  text: string,
+): Promise<{ code: AnalyzeErrorCode; detail: string } | null> {
+  const status = await currentSafety().catch(() => null);
+  if (!status?.aiAllowed) return { code: 'notAllowed', detail: '' };
+  const check = checkInput(text);
+  if (check.ok) return null;
+  logIncident(BLOCK_INCIDENT[check.reason]);
+  return {
+    code: check.reason,
+    detail: check.reason === 'personalData' ? check.found.join(',') : '',
+  };
+}
 
 export interface AnalyzeState {
   phase: AnalyzePhase;
@@ -114,6 +154,12 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
     error: null,
   });
   try {
+    const blocked = await safetyBlock(text);
+    if (seq !== runSeq) return;
+    if (blocked) {
+      useAnalyzeStore.setState({ phase: 'error', stage: null, error: blocked });
+      return;
+    }
     const ai = await resolveAi();
     const topics = getDictionary('vi').topics as Record<string, string>;
     const result = await analyzeProblem(text, {
@@ -128,6 +174,20 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
       },
     });
     if (seq !== runSeq) return;
+    // Output filter: text written by the AI is shown only when it passes.
+    const aiText =
+      result.kind === 'unsupported'
+        ? [result.reason, ...result.parts].join('\n')
+        : JSON.stringify(result.reading);
+    if (!outputIsSafe(aiText)) {
+      logIncident('outputUnsafe');
+      useAnalyzeStore.setState({
+        phase: 'error',
+        stage: null,
+        error: { code: 'outputUnsafe', detail: '' },
+      });
+      return;
+    }
     if (result.kind === 'unsupported') {
       useAnalyzeStore.setState({
         phase: 'unsupported',
@@ -156,6 +216,24 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
   } finally {
     if (controller === ctrl) controller = null;
   }
+}
+
+/**
+ * A problem showing signs of a crisis gets the support card at once, even when no key is set
+ * (the "Phân tích đề" button would otherwise open Settings). Returns true when it was shown.
+ */
+export function showCrisisIfNeeded(text: string): boolean {
+  const check = checkInput(text);
+  if (check.ok || check.reason !== 'crisis') return false;
+  cancelAnalyze();
+  logIncident('inputCrisis');
+  useAnalyzeStore.setState({
+    phase: 'error',
+    mode: 'ai',
+    stage: null,
+    error: { code: 'crisis', detail: '' },
+  });
+  return true;
 }
 
 /** Cancels a running analysis (the Rust side aborts the HTTP request). */

@@ -3,6 +3,7 @@ import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import type { KeyStatus } from '@/ai/keyTest';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { setSafetyBackendForTests, BrowserSafety } from '@/safety/safety';
 import { checkAiStatus } from './useAiStatus';
 
 function transport(hasKey: boolean, result: KeyStatus, seen: string[] = []): LlmTransport {
@@ -47,4 +48,14 @@ describe('AI status / "Kiểm tra key"', () => {
       expect(useAiStore.getState().statusDetail).toBe(result === 'error' ? '500' : '');
     },
   );
+
+  it('stays "notAllowed" without the age confirmation, before any key check', async () => {
+    const seen: string[] = [];
+    useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '' } });
+    setSafetyBackendForTests(new BrowserSafety(false));
+    setTransportForTests(transport(true, 'ok', seen));
+    expect(await checkAiStatus(true)).toBe('notAllowed');
+    expect(seen).toEqual([]);
+    expect(useWorkspaceStore.getState().aiStatus).toBe('offline');
+  });
 });

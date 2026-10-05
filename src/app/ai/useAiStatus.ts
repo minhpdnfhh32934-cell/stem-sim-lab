@@ -3,6 +3,7 @@ import { useWorkspaceStore } from '@/app/workspaceStore';
 import { DEFAULT_MODELS, useAiStore, type AiStatus } from '@/ai/aiStore';
 import { getTransport } from '@/ai/transport';
 import { toAiError } from '@/ai/types';
+import { currentSafety } from '@/safety/safetyStore';
 
 /**
  * Updates the AI status. By default only checks that a key is stored (no network call:
@@ -21,6 +22,10 @@ export async function checkAiStatus(probe = false): Promise<AiStatus> {
   const transport = getTransport();
   const stillCurrent = () => useAiStore.getState().provider === provider;
   try {
+    // Safety gates first (the Rust gateway refuses too): no age confirmation, no AI.
+    const safety = await currentSafety();
+    if (!stillCurrent()) return useAiStore.getState().status;
+    if (!safety.aiAllowed) return set('notAllowed');
     const has = await transport.hasKey(provider);
     if (!stillCurrent()) return useAiStore.getState().status;
     if (!has) return set('noKey');
@@ -37,6 +42,7 @@ export async function checkAiStatus(probe = false): Promise<AiStatus> {
   } catch (e) {
     if (!stillCurrent()) return useAiStore.getState().status;
     const err = toAiError(e);
+    if (err.code === 'notAllowed') return set('notAllowed');
     // 400/401/403: the provider refused the key (wrong, disabled or not allowed).
     const refused = err.code === 'http' && /\b(400|401|403)\b/.test(err.message);
     return set(refused ? 'badKey' : 'offline');
