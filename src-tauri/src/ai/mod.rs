@@ -139,6 +139,53 @@ pub enum AiError {
     Keychain(String),
     #[error("daily limit reached: {0}")]
     DailyLimit(String),
+    /// Blocked by the safety gates (age confirmation / consent / supervisor PIN), see `safety`.
+    #[error("not allowed: {0}")]
+    NotAllowed(String),
+}
+
+/// AI calls need the safety gates open (main: 18+ confirmed; pilot: consent for a minor).
+fn require_ai_allowed(app: &tauri::AppHandle) -> Result<(), AiError> {
+    if crate::safety::ai_allowed(app) {
+        Ok(())
+    } else {
+        Err(AiError::NotAllowed("ageGate".into()))
+    }
+}
+
+/// Who may store or delete a key. Main edition: only after the 18+ confirmation (Gemini API
+/// terms). Pilot edition: only with the supervisor PIN (the key belongs to the paying adult).
+fn require_key_permission(
+    app: &tauri::AppHandle,
+    safety: &crate::safety::SafetyState,
+    pin: Option<&str>,
+) -> Result<(), AiError> {
+    key_gate(
+        cfg!(feature = "edition-pilot"),
+        || crate::safety::ai_allowed(app),
+        || crate::safety::verify_pin(app, safety, pin),
+    )
+}
+
+/// The rule behind [`require_key_permission`], without the app (tested for both editions).
+/// Pilot: only the PIN decides. Main: only the 18+ confirmation decides.
+pub fn key_gate(
+    pilot: bool,
+    adult_confirmed: impl FnOnce() -> bool,
+    check_pin: impl FnOnce() -> Result<(), crate::safety::SafetyError>,
+) -> Result<(), AiError> {
+    use crate::safety::SafetyError;
+    if pilot {
+        check_pin().map_err(|e| match e {
+            SafetyError::Locked(s) => AiError::NotAllowed(format!("locked:{s}")),
+            SafetyError::WrongPin(s) => AiError::NotAllowed(format!("wrongPin:{s}")),
+            other => AiError::NotAllowed(format!("pin:{other}")),
+        })
+    } else if adult_confirmed() {
+        Ok(())
+    } else {
+        Err(AiError::NotAllowed("ageGate".into()))
+    }
 }
 
 #[derive(Default)]
@@ -264,6 +311,7 @@ pub async fn ai_chat(
     state: tauri::State<'_, AiState>,
     request: ChatRequest,
 ) -> Result<ChatResponse, AiError> {
+    require_ai_allowed(&app)?;
     let key = api_key(request.provider)?;
     count_call(&app, &state, &request)?;
     let (tx, rx) = oneshot::channel::<()>();
@@ -324,7 +372,11 @@ pub struct ModelsResponse {
 /// Lists the provider's models. Only called when the user presses "Kiểm tra kết nối", so it
 /// also tells whether the stored key works.
 #[tauri::command]
-pub async fn ai_models(provider: Provider) -> Result<ModelsResponse, AiError> {
+pub async fn ai_models(
+    app: tauri::AppHandle,
+    provider: Provider,
+) -> Result<ModelsResponse, AiError> {
+    require_ai_allowed(&app)?;
     let p = self::provider(provider);
     let resp = p
         .models_request(&client()?, &api_key(p.id())?)
@@ -362,7 +414,14 @@ pub fn open_gemini_key_page(app: tauri::AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn ai_set_key(provider: Provider, key: String) -> Result<(), AiError> {
+pub fn ai_set_key(
+    app: tauri::AppHandle,
+    safety: tauri::State<'_, crate::safety::SafetyState>,
+    provider: Provider,
+    key: String,
+    pin: Option<String>,
+) -> Result<(), AiError> {
+    require_key_permission(&app, &safety, pin.as_deref())?;
     let key = key.trim();
     if key.is_empty() {
         return Err(AiError::MissingKey(provider.key_name().into()));
@@ -406,6 +465,8 @@ pub enum KeyStatus {
     BadModel,
     Offline,
     Error,
+    /// The safety gates are closed (age confirmation / consent missing).
+    NotAllowed,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -440,8 +501,11 @@ pub fn classify_key_test(status: u16, body: &str) -> KeyStatus {
 /// "Kiểm tra key": one very small request with the chosen model (a few tokens). It checks the
 /// key, the model name and the quota at once. Not counted against the daily cap, not retried.
 #[tauri::command]
-pub async fn ai_test_key(provider: Provider, model: String) -> KeyTest {
+pub async fn ai_test_key(app: tauri::AppHandle, provider: Provider, model: String) -> KeyTest {
     let done = |status, detail: String| KeyTest { status, detail };
+    if require_ai_allowed(&app).is_err() {
+        return done(KeyStatus::NotAllowed, String::new());
+    }
     let Ok(key) = api_key(provider) else {
         return done(KeyStatus::NoKey, String::new());
     };
@@ -490,7 +554,18 @@ pub async fn ai_test_key(provider: Provider, model: String) -> KeyTest {
 }
 
 #[tauri::command]
-pub fn ai_delete_key(provider: Provider) -> Result<(), AiError> {
+pub fn ai_delete_key(
+    app: tauri::AppHandle,
+    safety: tauri::State<'_, crate::safety::SafetyState>,
+    provider: Provider,
+    pin: Option<String>,
+) -> Result<(), AiError> {
+    // Main edition: deleting is always allowed (also after "I am under 18").
+    if cfg!(feature = "edition-pilot") {
+        require_key_permission(&app, &safety, pin.as_deref())?;
+    } else {
+        let _ = (&app, &safety, &pin);
+    }
     match keyring_entry(provider)?.delete_credential() {
         Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
         Err(e) => Err(AiError::Keychain(e.to_string())),
@@ -648,5 +723,20 @@ pub(crate) mod tests {
         .unwrap();
         assert_eq!(r.daily_cap, Some(50));
         assert_eq!(r.day.as_deref(), Some("2026-10-05"));
+    }
+
+    #[test]
+    fn keys_need_the_age_confirmation_or_the_supervisor_pin() {
+        use crate::safety::SafetyError;
+        // Main edition: no key (Gemini or Claude) before "I am 18+"; the PIN is not consulted.
+        let r = key_gate(false, || false, || panic!("no PIN in the main edition"));
+        assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "ageGate"));
+        assert!(key_gate(false, || true, || panic!()).is_ok());
+        // Pilot edition: only the supervisor PIN counts.
+        let r = key_gate(true, || true, || Err(SafetyError::WrongPin("4".into())));
+        assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "wrongPin:4"));
+        let r = key_gate(true, || true, || Err(SafetyError::Locked("60".into())));
+        assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "locked:60"));
+        assert!(key_gate(true, || false, || Ok(())).is_ok());
     }
 }
