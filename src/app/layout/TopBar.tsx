@@ -12,6 +12,7 @@ import {
   PanelRight,
   Redo2,
   Settings,
+  ShieldAlert,
   Sparkles,
   Sun,
   Undo2,
@@ -19,7 +20,13 @@ import {
 } from 'lucide-react';
 import { memo, type KeyboardEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { analyze, cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
+import {
+  analyze,
+  cancelAnalyze,
+  openManual,
+  showCrisisIfNeeded,
+  useAnalyzeStore,
+} from '@/app/ai/analyze';
 import { useT } from '@/app/i18n';
 import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { FileMenu } from '@/app/project/FileMenu';
@@ -71,6 +78,7 @@ export const TopBar = memo(function TopBar() {
   const onProblemKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
+      if (showCrisisIfNeeded(problemText)) return;
       if (needsKey) setSettingsOpen(true);
       else if (canAnalyze) void analyze(problemText);
     }
@@ -163,6 +171,7 @@ export const TopBar = memo(function TopBar() {
                     : undefined
             }
             onClick={() => {
+              if (showCrisisIfNeeded(problemText)) return;
               if (needsKey) setSettingsOpen(true);
               else void analyze(problemText);
             }}
@@ -278,6 +287,10 @@ function AiStatusPill({ onClick }: { onClick: () => void }) {
   let Icon = CloudOff;
   if (ai.provider === 'off') {
     label = t('ai.off');
+  } else if (ai.status === 'notAllowed') {
+    label = t('ai.notAllowed');
+    Icon = ShieldAlert;
+    hint = t('ai.notAllowedHint');
   } else if (ai.status === 'noKey' || ai.status === 'badKey') {
     label = t('ai.noKey');
     Icon = KeyRound;
