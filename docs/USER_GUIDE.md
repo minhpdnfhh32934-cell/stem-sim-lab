@@ -160,6 +160,36 @@ Cần biết:
   gọi AI (bảng xác nhận vẫn hiện để bạn kiểm tra). Muốn AI đọc lại, bấm **Đọc lại bằng AI**. Xóa danh
   sách này trong Cài đặt → Kết nối AI.
 
+## An toàn và quyền riêng tư
+
+**Lần đầu mở app** sẽ có câu hỏi **"Trước khi bắt đầu"**:
+
+- **Bản chính (sinh viên):** đánh dấu "Tôi đã đọc… và đồng ý", bấm **Tôi đủ 18 tuổi — bật AI**. Nếu
+  bấm **Tôi chưa đủ 18 tuổi**, app vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu, Tự dựng cảnh;
+  chỉ phần AI tắt (nhà cung cấp AI chỉ cho người từ 18 tuổi). Chưa xác nhận 18+ thì app **không cho
+  lưu khóa API**. Trả lời lại: Cài đặt → **An toàn & quyền riêng tư**.
+- **Bản thử nghiệm THPT (có giám sát):** học sinh nhập năm sinh → **người giám sát** (phụ huynh hoặc
+  thầy cô) đặt **mã PIN** 4–8 chữ số → nếu học sinh dưới 18 tuổi, người giám sát đánh dấu đã có
+  **Phiếu đồng ý** (mẫu: `docs/PILOT_CONSENT.md`) và bấm **Ghi nhận đồng ý và bật AI**. Bấm "Để sau"
+  thì app chỉ dùng mô phỏng. Khóa API Claude do người lớn trả phí (sinh viên 18+ hoặc phụ huynh) tạo;
+  chỉ người giám sát nhập/xóa được khóa (mở khóa bằng PIN trong Cài đặt → An toàn & quyền riêng tư,
+  tự khóa lại sau 10 phút). Sai PIN 5 lần thì phải đợi 60 giây.
+
+Khi dùng AI:
+
+- Phần do AI đọc hoặc viết có nhãn **Nội dung do AI hỗ trợ**. Thấy nội dung sai, lạ hoặc khó chịu:
+  bấm **Báo cáo nội dung không phù hợp**.
+- Đề bài có **số điện thoại, email, số căn cước, họ tên/địa chỉ** sẽ **không được gửi** cho AI — xóa
+  phần đó rồi phân tích lại. Nội dung không phù hợp với việc học cũng bị chặn; câu trả lời của AI
+  có nội dung không phù hợp sẽ bị ẩn.
+- Nếu đề bài cho thấy bạn đang gặp chuyện rất khó khăn, app **không gửi cho AI** mà hiện các số
+  điện thoại hỗ trợ (bản thử nghiệm: Tổng đài bảo vệ trẻ em **111**; cả hai bản: đường dây Ngày Mai
+  096 306 1414; nguy hiểm ngay: **115**). Hãy nói chuyện với người lớn bạn tin tưởng.
+- **Nhật ký sự cố** (Cài đặt → An toàn & quyền riêng tư) chỉ ghi **loại sự cố và thời gian**, không
+  ghi nội dung. Bản thử nghiệm: chỉ người giám sát xem được.
+- Đọc thêm: menu ☰ → **Quyền riêng tư & dùng AI an toàn** (ứng dụng gửi gì, lưu gì, nhà cung cấp AI
+  làm gì với đề bài, điều khoản tóm tắt, mẹo học với AI). Nguồn pháp lý: `docs/LEGAL_COMPLIANCE.md`.
+
 ## Hóa học
 
 - **Bảng tuần hoàn:** nhấp một ô để xem dữ liệu; tô màu theo nhóm, khối, độ âm điện, bán kính,
