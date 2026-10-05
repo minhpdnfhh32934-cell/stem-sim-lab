@@ -1,7 +1,6 @@
 import {
   Cloud,
   CloudOff,
-  Cpu,
   KeyRound,
   LoaderCircle,
   Maximize2,
@@ -21,7 +20,7 @@ import { memo, type KeyboardEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { analyze, cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
 import { useT } from '@/app/i18n';
-import { useAiStore } from '@/ai/aiStore';
+import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
@@ -258,47 +257,33 @@ export const TopBar = memo(function TopBar() {
   );
 });
 
-const PROVIDER_NAME = { lmstudio: 'LM Studio', openai: 'OpenAI', anthropic: 'Anthropic' } as const;
+const PROVIDER_NAME = { gemini: 'Gemini', openai: 'OpenAI', anthropic: 'Anthropic' } as const;
 
 /** Connection state of the AI (click → AI settings). */
 function AiStatusPill({ onClick }: { onClick: () => void }) {
   const t = useT();
   const ai = useAiStore(
-    useShallow((s) => ({
-      provider: s.provider,
-      status: s.status,
-      baseUrl: s.baseUrl,
-      models: s.models,
-      available: s.availableModels,
-    })),
+    useShallow((s) => ({ provider: s.provider, status: s.status, models: s.models })),
   );
-  let kind: 'offline' | 'local' | 'cloud' = 'offline';
+  let kind: 'offline' | 'cloud' = 'offline';
   let label = t('ai.offline');
   let hint = t('ai.offHint');
   let Icon = CloudOff;
   if (ai.provider === 'off') {
     label = t('ai.off');
-  } else if (ai.provider === 'lmstudio') {
-    if (ai.status === 'ok') {
-      kind = 'local';
-      label = t('ai.local');
-      Icon = Cpu;
-      const model = ai.models.lmstudio || ai.available.find((m) => !/embed/i.test(m)) || '—';
-      hint = t('ai.localHint', { model });
-    } else {
-      hint = t('ai.lmstudioDown', { url: ai.baseUrl });
-    }
-  } else if (ai.status === 'noKey') {
+  } else if (ai.status === 'noKey' || ai.status === 'badKey') {
     label = t('ai.noKey');
     Icon = KeyRound;
-    hint = t('ai.noKeyHint', { provider: PROVIDER_NAME[ai.provider] });
+    hint = t(ai.status === 'noKey' ? 'ai.noKeyHint' : 'ai.badKeyHint', {
+      provider: PROVIDER_NAME[ai.provider],
+    });
   } else if (ai.status === 'ok') {
     kind = 'cloud';
     label = t('ai.cloud');
     Icon = Cloud;
     hint = t('ai.cloudHint', {
       provider: PROVIDER_NAME[ai.provider],
-      model: ai.models[ai.provider] || '—',
+      model: ai.models[ai.provider] || DEFAULT_MODELS[ai.provider],
     });
   }
   return (

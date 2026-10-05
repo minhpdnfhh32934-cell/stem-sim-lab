@@ -1,9 +1,18 @@
-import { CircleCheck, Gauge, MemoryStick, MonitorCog, MonitorDown, Turtle } from 'lucide-react';
+import {
+  CircleCheck,
+  CloudDownload,
+  Gauge,
+  MemoryStick,
+  MonitorCog,
+  MonitorDown,
+  Turtle,
+} from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { effectiveTier, usePerfStore } from '@/perf/perfStore';
 import { getAppInfo, type AppInfo } from '@/app/tauri';
+import { useUpdateStore } from '@/app/update/updater';
 
 export const StatusBar = memo(function StatusBar() {
   const t = useT();
@@ -17,6 +26,9 @@ export const StatusBar = memo(function StatusBar() {
   const timeScale = usePerfStore((s) => s.timeScale);
   const degraded = usePerfStore((s) => s.degraded);
   const memoryMB = usePerfStore((s) => s.memoryMB);
+  const update = useUpdateStore((s) => (s.phase === 'available' ? s.manifest : null));
+  // The web part can be newer than the executable after an in-app update.
+  const running = useUpdateStore((s) => s.status?.running ?? null);
   const tierText = benchmarking
     ? t('quality.measuring')
     : preference === 'auto'
@@ -64,6 +76,18 @@ export const StatusBar = memo(function StatusBar() {
         </span>
       )}
       <span className="statusbar__spacer" />
+      {update && (
+        <button
+          type="button"
+          className="statusbar__item statusbar__update"
+          onClick={() => {
+            useUpdateStore.setState({ dialogOpen: true });
+          }}
+        >
+          <CloudDownload size={12} strokeWidth={2} aria-hidden="true" />
+          {t('update.available', { version: update.webVersion })}
+        </button>
+      )}
       {memoryMB !== null && (
         <span className="statusbar__item mono">
           <MemoryStick size={12} strokeWidth={2} aria-hidden="true" />
@@ -71,7 +95,7 @@ export const StatusBar = memo(function StatusBar() {
         </span>
       )}
       <span className="statusbar__item">
-        {t('status.version')} {info ? info.version : '…'}
+        {t('status.version')} {running ?? (info ? info.version : '…')}
         {info && !info.native && ` (${t('status.browserMode')})`}
       </span>
     </footer>

@@ -237,7 +237,6 @@ body[data-resizing] .splitter {
   font-weight: 500;
   white-space: nowrap;
 }
-.ai-status[data-status='local'],
 .ai-status[data-status='cloud'] {
   color: var(--conf-exact);
   border-color: color-mix(in srgb, var(--conf-exact) 40%, transparent);

@@ -9,6 +9,8 @@ import { Tour } from '@/app/project/Tour';
 import { useProjectUi } from '@/app/project/uiStore';
 import { initUndo } from '@/app/project/undo';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
+import { UpdateDialog } from '@/app/update/UpdateDialog';
+import { scheduleAutoCheck } from '@/app/update/updater';
 import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
 import { Toaster } from '@/ui/Toaster';
 import '@/app/project/project.css';
@@ -44,9 +46,11 @@ export function AppShell() {
   useEffect(() => {
     const offUndo = initUndo();
     const offHistory = initHistory();
+    const offUpdate = scheduleAutoCheck();
     return () => {
       offUndo();
       offHistory();
+      offUpdate();
     };
   }, []);
   const sourcesOpen = useProjectUi((s) => s.sourcesOpen);
@@ -87,6 +91,7 @@ export function AppShell() {
         </Suspense>
       )}
       <Tour />
+      <UpdateDialog />
       <Toaster />
 
       <div className="shell__body">
