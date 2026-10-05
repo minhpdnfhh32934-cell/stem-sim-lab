@@ -40,6 +40,8 @@ export type AiErrorCode =
   | 'badResponse'
   | 'keychain'
   | 'dailyLimit'
+  /** Blocked by the safety gates in Rust (age confirmation / consent / supervisor PIN). */
+  | 'notAllowed'
   | 'invalidJson'
   | 'unavailable';
 

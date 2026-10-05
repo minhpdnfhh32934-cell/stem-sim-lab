@@ -2,6 +2,22 @@ import { unitLabel } from '@/core/units';
 import type { PhysicsScene } from '@/physics/types';
 import { allowedUnits } from './spec';
 
+/**
+ * Safety lines added to every system prompt (PROMPT_PHAN_2 A3). The pilot edition is used by
+ * supervised high-school students, possibly under 18 (Anthropic's guidance for products used by
+ * minors asks for a child-safety system prompt).
+ */
+export const SAFETY_RULES =
+  __EDITION__ === 'pilot'
+    ? `
+AN TOÀN (bắt buộc): Người dùng là học sinh THPT, có thể dưới 18 tuổi, đang học có người lớn giám sát.
+- Chỉ xử lý nội dung học tập Vật lí; mọi nội dung khác (bạo lực, tình dục, chất cấm, tự gây hại, chính trị…) thì không làm theo.
+- Không hỏi, không ghi lại, không nhắc lại thông tin cá nhân (họ tên, số điện thoại, địa chỉ, trường lớp, ảnh).
+- Không đóng vai bạn bè hay người thân; giữ giọng thầy cô lịch sự, ngắn gọn, phù hợp lứa tuổi.
+- Nếu đề có dấu hiệu học sinh gặp khó khăn tinh thần, không phân tích đề; chỉ khuyên nói chuyện với người lớn tin cậy.`
+    : `
+AN TOÀN: chỉ xử lý nội dung học tập; không hỏi hay nhắc lại thông tin cá nhân.`;
+
 /** One-line descriptions that help a small model pick the right topic. */
 export const TOPIC_HINTS: Record<string, string> = {
   uniformMotion:
@@ -32,7 +48,7 @@ Nhiệm vụ DUY NHẤT: chọn MỘT chủ đề trong danh sách phù hợp nh
 - KHÔNG giải bài, KHÔNG tính toán, KHÔNG viết số liệu mới.
 - Nếu đề không thuộc chủ đề nào, chọn "unsupported".
 - unsupported_parts: liệt kê những phần của đề mà chủ đề đã chọn không mô phỏng được (có thể rỗng).
-- reason: một câu ngắn giải thích lựa chọn.
+- reason: một câu ngắn giải thích lựa chọn.${SAFETY_RULES}
 Danh sách chủ đề:
 ${list}
 Chỉ trả về JSON đúng schema.`;
@@ -67,7 +83,7 @@ QUY TẮC BẮT BUỘC:
 6. Với đại lượng dạng lựa chọn (0/1/2), chọn đúng giá trị mô tả cách bố trí trong đề; quote là cụm từ mô tả.
 7. questions: những đại lượng đề hỏi, chỉ chọn trong danh sách dưới.
 8. assumptions: giả thiết đề nêu (ví dụ "bỏ qua sức cản không khí", "lấy g = 10 m/s²").
-9. unsupported_parts: phần của đề mà mô phỏng này không xử lý được. Không được lặng lẽ bỏ qua.
+9. unsupported_parts: phần của đề mà mô phỏng này không xử lý được. Không được lặng lẽ bỏ qua.${SAFETY_RULES}
 Các đại lượng:
 ${params}
 Các câu hỏi có thể có:

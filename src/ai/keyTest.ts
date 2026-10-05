@@ -2,7 +2,16 @@
  * "Kiểm tra key" (PROMPT_PHAN_2 A2). Mirrors `KeyStatus`/`classify_key_test` in
  * src-tauri/src/ai/mod.rs; the browser transport (tests) uses the same rules.
  */
-export type KeyStatus = 'ok' | 'noKey' | 'badKey' | 'quota' | 'badModel' | 'offline' | 'error';
+export type KeyStatus =
+  | 'ok'
+  | 'noKey'
+  | 'badKey'
+  | 'quota'
+  | 'badModel'
+  | 'offline'
+  | 'error'
+  /** The safety gates are closed (age confirmation / consent missing). */
+  | 'notAllowed';
 
 export interface KeyTest {
   status: KeyStatus;

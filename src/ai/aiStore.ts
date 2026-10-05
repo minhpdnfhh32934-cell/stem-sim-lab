@@ -4,7 +4,16 @@ import type { Provider } from './types';
 
 export type ProviderChoice = Provider | 'off';
 export type AiStatus =
-  'unknown' | 'ok' | 'offline' | 'noKey' | 'badKey' | 'quota' | 'badModel' | 'error';
+  | 'unknown'
+  | 'ok'
+  | 'offline'
+  | 'noKey'
+  | 'badKey'
+  | 'quota'
+  | 'badModel'
+  | 'error'
+  /** The safety gates are closed (src/safety): no AI call is made. */
+  | 'notAllowed';
 
 /**
  * Providers of this edition (PROMPT_PHAN_2 A2): the main edition has Gemini (default) and

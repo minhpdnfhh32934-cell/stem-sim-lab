@@ -1,6 +1,8 @@
 import { fromSI, unitLabel } from '@/core/units';
 import type { Solution } from '@/physics/types';
+import { outputIsSafe } from '@/safety/moderation';
 import { numbersIn } from './numbers';
+import { SAFETY_RULES } from './prompts';
 import { newRequestId, type LlmTransport } from './transport';
 import type { Provider } from './types';
 
@@ -17,6 +19,8 @@ export interface Explanation {
   /** False when the AI wrote a number that the engine did not produce. */
   verified: boolean;
   unknownNumbers: number[];
+  /** False when the output filter found unsuitable content (the text is then not shown). */
+  safe: boolean;
 }
 
 /** Numbers the explanation may mention: engine answers, numbers in the steps and the problem. */
@@ -58,7 +62,7 @@ export async function explainSolution(
   const steps = solution.steps.map((s, i) => `${i + 1}. ${s.text.vi}${s.tex ? ` [${s.tex}]` : ''}`);
   const system = `Bạn là trợ giảng Vật lí. Chương trình mô phỏng ĐÃ TÍNH xong các kết quả dưới đây.
 Hãy DIỄN GIẢI bằng lời, ngắn gọn (tối đa 150 từ), dễ hiểu cho học sinh THPT: vì sao ra kết quả đó, ý nghĩa vật lí.
-QUY TẮC: chỉ dùng đúng các con số có trong kết quả; KHÔNG tính thêm, KHÔNG đưa ra con số mới, KHÔNG sửa kết quả.`;
+QUY TẮC: chỉ dùng đúng các con số có trong kết quả; KHÔNG tính thêm, KHÔNG đưa ra con số mới, KHÔNG sửa kết quả.${SAFETY_RULES}`;
   const user = `Chủ đề: ${title}
 ${problemText ? `Đề bài: """${problemText}"""\n` : ''}Kết quả do chương trình tính:
 ${lines.join('\n')}
@@ -78,5 +82,11 @@ ${steps.join('\n')}`;
     cfg.signal,
   );
   const unknown = unknownNumbers(resp.content, allowedNumbers(solution, problemText));
-  return { text: resp.content.trim(), verified: unknown.length === 0, unknownNumbers: unknown };
+  const text = resp.content.trim();
+  return {
+    text,
+    verified: unknown.length === 0,
+    unknownNumbers: unknown,
+    safe: outputIsSafe(text),
+  };
 }
