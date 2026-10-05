@@ -2,8 +2,10 @@
 //! not an issue, and requests have a timeout, can be cancelled, are retried with backoff on
 //! 429/5xx and are counted against a daily cap.
 //!
-//! Providers implement [`provider::AIProvider`]: [`claude::ClaudeProvider`] (both editions)
-//! and `gemini::GeminiProvider` (main edition only — not compiled into the pilot edition).
+//! Providers implement [`provider::AIProvider`]: [`claude::ClaudeProvider`] and
+//! [`groq::GroqProvider`] (both editions) and `gemini::GeminiProvider` (main edition only — not
+//! compiled into the pilot edition). When the chosen provider runs out of quota or credit, a
+//! configured fallback provider answers instead (see [`is_quota_error`]).
 //!
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
 //! (b) explain results already computed by the engine. It never computes numbers.
@@ -11,6 +13,7 @@
 pub mod claude;
 #[cfg(feature = "edition-main")]
 pub mod gemini;
+pub mod groq;
 pub mod provider;
 pub mod usage;
 
@@ -52,7 +55,7 @@ pub const MAX_RETRIES: u32 = 3;
 /// Longest wait between two attempts, even if the server asks for more.
 const MAX_BACKOFF: Duration = Duration::from_secs(8);
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Provider {
     #[cfg(feature = "edition-main")]
@@ -60,6 +63,8 @@ pub enum Provider {
     /// "anthropic" was the id before PROMPT_PHAN_2.
     #[serde(alias = "anthropic")]
     Claude,
+    /// Free fallback (GroqCloud, OpenAI-compatible).
+    Groq,
 }
 
 impl Provider {
@@ -68,6 +73,7 @@ impl Provider {
             #[cfg(feature = "edition-main")]
             Provider::Gemini => "gemini",
             Provider::Claude => "claude",
+            Provider::Groq => "groq",
         }
     }
 }
@@ -78,6 +84,7 @@ pub fn provider(p: Provider) -> &'static dyn AIProvider {
         #[cfg(feature = "edition-main")]
         Provider::Gemini => &gemini::GeminiProvider,
         Provider::Claude => &claude::ClaudeProvider,
+        Provider::Groq => &groq::GroqProvider,
     }
 }
 
@@ -97,8 +104,7 @@ pub struct ChatRequest {
     pub messages: Vec<Message>,
     pub json_schema: Option<Value>,
     pub schema_name: Option<String>,
-    /// Used by Gemini; Claude ignores it (see `claude_body`).
-    #[cfg_attr(not(feature = "edition-main"), allow(dead_code))]
+    /// Used by Gemini and Groq; Claude ignores it (see `claude_body`).
     pub temperature: Option<f64>,
     pub max_tokens: Option<u32>,
     pub timeout_secs: Option<u64>,
@@ -108,6 +114,15 @@ pub struct ChatRequest {
     /// Maximum calls per day (0 = no limit).
     #[serde(default)]
     pub daily_cap: Option<u32>,
+    /// Provider that answers when `provider` is out of quota or credit.
+    #[serde(default)]
+    pub fallback: Option<Fallback>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+pub struct Fallback {
+    pub provider: Provider,
+    pub model: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -118,6 +133,10 @@ pub struct ChatResponse {
     pub duration_ms: u64,
     /// Attempts that were retried (429/5xx).
     pub retries: u32,
+    /// Provider that answered.
+    pub provider: Provider,
+    /// True when the fallback provider answered (the chosen one was out of quota/credit).
+    pub fallback: bool,
 }
 
 #[derive(Debug, Clone, Serialize, thiserror::Error)]
@@ -193,6 +212,47 @@ pub struct AiState {
     inflight: Mutex<HashMap<String, oneshot::Sender<()>>>,
     /// Serializes reads/writes of the usage file.
     usage: Mutex<()>,
+    /// Providers found out of quota/credit, until when calls go straight to the fallback (so a
+    /// failing provider is not tried again for every call of the same lesson).
+    exhausted: Mutex<HashMap<Provider, Instant>>,
+}
+
+/// How long calls skip a provider that was out of quota or credit.
+const EXHAUSTED_FOR: Duration = Duration::from_secs(10 * 60);
+
+impl AiState {
+    fn is_exhausted(&self, p: Provider) -> bool {
+        self.exhausted
+            .lock()
+            .ok()
+            .and_then(|m| m.get(&p).copied())
+            .is_some_and(|until| Instant::now() < until)
+    }
+
+    fn mark_exhausted(&self, p: Provider) {
+        if let Ok(mut m) = self.exhausted.lock() {
+            m.insert(p, Instant::now() + EXHAUSTED_FOR);
+        }
+    }
+}
+
+/// Errors after which the fallback provider may answer: the provider is out of quota or credit
+/// (HTTP 429 after the retries, 402, Claude's "credit balance is too low", Gemini's
+/// RESOURCE_EXHAUSTED). Not for a wrong key, an unknown model or a network problem: those need
+/// the user's attention, not a different provider.
+pub fn is_quota_error(e: &AiError) -> bool {
+    let AiError::Http(msg) = e else {
+        return false;
+    };
+    let status: u16 = msg
+        .split(|c: char| !c.is_ascii_digit())
+        .find(|s| !s.is_empty())
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0);
+    let lower = msg.to_ascii_lowercase();
+    matches!(status, 402 | 429)
+        || (status == 400 && lower.contains("credit balance"))
+        || lower.contains("resource_exhausted")
 }
 
 fn client() -> Result<reqwest::Client, AiError> {
@@ -276,6 +336,8 @@ async fn send(req: &ChatRequest, key: &str) -> Result<ChatResponse, AiError> {
             model: p.response_model(&v).unwrap_or_else(|| req.model.clone()),
             duration_ms: started.elapsed().as_millis() as u64,
             retries: attempt,
+            provider: req.provider,
+            fallback: false,
         });
     }
 }
@@ -312,7 +374,10 @@ pub async fn ai_chat(
     request: ChatRequest,
 ) -> Result<ChatResponse, AiError> {
     require_ai_allowed(&app)?;
-    let key = api_key(request.provider)?;
+    // A missing key is reported before the call is counted (unless the fallback can answer).
+    if api_key(request.provider).is_err() && fallback_key(&request).is_none() {
+        return Err(AiError::MissingKey(request.provider.key_name().into()));
+    }
     count_call(&app, &state, &request)?;
     let (tx, rx) = oneshot::channel::<()>();
     state
@@ -327,7 +392,7 @@ pub async fn ai_chat(
             .clamp(5, 600),
     );
     let result = tokio::select! {
-        r = send(&request, &key) => r,
+        r = send_with_fallback(&state, &request) => r,
         _ = tokio::time::sleep(timeout) => Err(AiError::Timeout(format!("{}s", timeout.as_secs()))),
         _ = rx => Err(AiError::Cancelled(request.request_id.clone())),
     };
@@ -335,6 +400,54 @@ pub async fn ai_chat(
         map.remove(&request.request_id);
     }
     result
+}
+
+/// The fallback and its key, when one is configured, differs from the chosen provider and has
+/// a key.
+fn fallback_key(req: &ChatRequest) -> Option<(&Fallback, String)> {
+    let f = req
+        .fallback
+        .as_ref()
+        .filter(|f| f.provider != req.provider)?;
+    api_key(f.provider).ok().map(|k| (f, k))
+}
+
+/// The same request for the fallback provider.
+fn as_fallback(req: &ChatRequest, f: &Fallback) -> ChatRequest {
+    ChatRequest {
+        provider: f.provider,
+        model: f.model.clone(),
+        fallback: None,
+        ..req.clone()
+    }
+}
+
+/// Sends to the chosen provider; when it is out of quota/credit (or was a few minutes ago) and
+/// a fallback is configured, the fallback answers and the response says so.
+async fn send_with_fallback(state: &AiState, req: &ChatRequest) -> Result<ChatResponse, AiError> {
+    let fallback = fallback_key(req);
+    let primary_key = api_key(req.provider);
+    if let Some((f, key)) = &fallback {
+        if state.is_exhausted(req.provider) || primary_key.is_err() {
+            return send(&as_fallback(req, f), key).await.map(|r| ChatResponse {
+                fallback: true,
+                ..r
+            });
+        }
+    }
+    let result = send(req, &primary_key?).await;
+    match (result, fallback) {
+        (Err(e), Some((f, key))) if is_quota_error(&e) => {
+            state.mark_exhausted(req.provider);
+            send(&as_fallback(req, f), &key)
+                .await
+                .map(|r| ChatResponse {
+                    fallback: true,
+                    ..r
+                })
+        }
+        (other, _) => other,
+    }
 }
 
 #[tauri::command]
@@ -411,6 +524,15 @@ pub fn open_gemini_key_page(app: tauri::AppHandle) -> Result<(), String> {
         let _ = app;
         Err("not available in this edition".into())
     }
+}
+
+/// Opens the GroqCloud page where an API key is created (both editions; fixed address).
+#[tauri::command]
+pub fn open_groq_key_page(app: tauri::AppHandle) -> Result<(), String> {
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(groq::GROQ_KEY_PAGE, None::<&str>)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -525,6 +647,7 @@ pub async fn ai_test_key(app: tauri::AppHandle, provider: Provider, model: Strin
         timeout_secs: None,
         day: None,
         daily_cap: None,
+        fallback: None,
     };
     let http = match client() {
         Ok(h) => h,
@@ -594,7 +717,62 @@ pub(crate) mod tests {
             timeout_secs: None,
             day: None,
             daily_cap: None,
+            fallback: None,
         }
+    }
+
+    #[test]
+    fn only_quota_and_credit_errors_switch_to_the_fallback() {
+        let http = |m: &str| AiError::Http(m.into());
+        assert!(is_quota_error(&http(
+            "429 Too Many Requests: {\"error\": \"PerDay\"}"
+        )));
+        assert!(is_quota_error(&http("402 Payment Required: …")));
+        assert!(is_quota_error(&http(
+            "400 Bad Request: Your credit balance is too low to access the Anthropic API."
+        )));
+        assert!(is_quota_error(&http("400 Bad Request: RESOURCE_EXHAUSTED")));
+        // A wrong key, an unknown model, a server error or no network: no switch.
+        assert!(!is_quota_error(&http(
+            "401 Unauthorized: invalid x-api-key"
+        )));
+        assert!(!is_quota_error(&http("404 Not Found: model")));
+        assert!(!is_quota_error(&http("500 Internal Server Error")));
+        assert!(!is_quota_error(&AiError::Network("down".into())));
+        assert!(!is_quota_error(&AiError::DailyLimit("100".into())));
+    }
+
+    #[test]
+    fn fallback_request_keeps_the_conversation_and_changes_the_model() {
+        let mut r = req(Provider::Claude, true);
+        r.fallback = Some(Fallback {
+            provider: Provider::Groq,
+            model: "qwen/qwen3.8-27b".into(),
+        });
+        let f = r.fallback.clone().unwrap();
+        let fb = as_fallback(&r, &f);
+        assert_eq!(fb.provider, Provider::Groq);
+        assert_eq!(fb.model, "qwen/qwen3.8-27b");
+        assert_eq!(fb.messages[0].content, "hi");
+        assert_eq!(fb.json_schema, r.json_schema);
+        assert!(fb.fallback.is_none());
+    }
+
+    #[test]
+    fn an_exhausted_provider_is_skipped_for_a_while() {
+        let st = AiState::default();
+        assert!(!st.is_exhausted(Provider::Claude));
+        st.mark_exhausted(Provider::Claude);
+        assert!(st.is_exhausted(Provider::Claude));
+        assert!(!st.is_exhausted(Provider::Groq));
+    }
+
+    #[test]
+    fn groq_is_in_both_editions() {
+        let p: Provider = serde_json::from_str("\"groq\"").unwrap();
+        assert_eq!(p, Provider::Groq);
+        assert_eq!(provider(p).id(), Provider::Groq);
+        assert_eq!(p.key_name(), "groq");
     }
 
     #[test]
