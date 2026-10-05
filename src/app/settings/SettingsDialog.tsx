@@ -1,6 +1,7 @@
 import { Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { AiSettings } from '@/app/ai/AiSettings';
+import { SafetySettings } from '@/safety/SafetySettings';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { SHORTCUTS, formatChord, type ShortcutAction } from '@/app/shortcuts/shortcuts';
@@ -234,6 +235,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         </fieldset>
 
         <AiSettings />
+        <SafetySettings />
 
         <fieldset className="settings-group">
           <legend>
