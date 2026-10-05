@@ -206,3 +206,35 @@
 .history__clear {
   margin: var(--space-2) var(--space-3) var(--space-3);
 }
+
+/* Updates */
+.update__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: var(--space-2) 0;
+}
+.update__notes {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--accent);
+  background: var(--bg-sunken);
+  font-size: var(--text-sm);
+  white-space: pre-line;
+}
+.update__warn {
+  color: var(--conf-approx);
+  font-size: var(--text-sm);
+}
+.update__spacer {
+  flex: 1;
+}
+.statusbar__update {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

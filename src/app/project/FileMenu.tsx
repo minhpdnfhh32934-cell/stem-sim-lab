@@ -1,6 +1,7 @@
 import {
   BookMarked,
   CircleHelp,
+  CloudDownload,
   FolderOpen,
   ImageDown,
   Menu,
@@ -9,7 +10,9 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
+import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { IconButton } from '@/ui/IconButton';
+import { toast } from '@/ui/toast';
 import { exportPng, openProject, saveProject } from './actions';
 import { startTour, useProjectUi } from './uiStore';
 
@@ -52,6 +55,14 @@ export function FileMenu() {
       label: t('project.sources'),
       run: () => {
         useProjectUi.setState({ sourcesOpen: true });
+      },
+    },
+    {
+      icon: CloudDownload,
+      label: t('update.menu'),
+      run: () => {
+        if (updatesSupported()) void checkForUpdate();
+        else toast(t('update.browserOnly'), 'info');
       },
     },
     { icon: CircleHelp, label: t('project.tour'), run: startTour },
