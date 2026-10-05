@@ -14,7 +14,7 @@ Status: **Phase 0** (scaffold). Sections marked _(planned)_ describe the target 
 │        │ invoke()                                                                            │
 └────────┼─────────────────────────────────────────────────────────────────────────────────────┘
          ▼
-  Rust backend (src-tauri): AI gateway (Gemini / OpenAI / Anthropic, keys in OS keychain), SQLite,
+  Rust backend (src-tauri): AI gateway (`AIProvider`: Gemini + Claude, keys in OS keychain), SQLite,
   .stemsim files, heavy numeric kernels (planned)
 ```
 
@@ -82,7 +82,7 @@ list/delete/clear`; the browser build falls back to localStorage.
 ## 3b. AI gateway (Phase 3)
 
 ```
-Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust ai_chat ──► Gemini / OpenAI / Anthropic
+Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust ai_chat ──► AIProvider (Gemini | Claude)
                    │  classify (enum of topic ids, JSON schema)
                    │  extract  (enum of param keys + units, quotes)
                    ▼
@@ -92,9 +92,27 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
 ```
 
 - Rust owns every network call and the API keys (OS keychain via `keyring`). Requests have an id;
-  `ai_cancel` aborts them; `tokio::select!` enforces the timeout.
-- The web page never sees a key. In the browser (dev/E2E) only Gemini is reachable, with a test key
-  injected by the test runner (`__STEMSIM_TEST_GEMINI_KEY__`); E2E mocks the Gemini server.
+  `ai_cancel` aborts them; `tokio::select!` enforces the timeout (default 30 s, retries included).
+- **`AIProvider` trait** (`src-tauri/src/ai/provider.rs`): builds the chat/models requests and reads
+  the answers. Implementations: `ai/gemini.rs` (`responseJsonSchema`, main edition only) and
+  `ai/claude.rs` (forced tool call with `input_schema`, system prompt marked for prompt caching).
+  `ai/mod.rs` sends them: retry on 429/5xx with backoff 1 s → 2 s → 4 s or `Retry-After` (max 8 s,
+  at most 3 retries; a Gemini _per-day_ 429 is not retried), daily cap counted in
+  `ai-usage.json` (`ai/usage.rs`, day = user's local date, cap from Settings, 0 = none).
+- **Editions** (PROMPT_PHAN_2 A2): Cargo features `edition-main` (default) / `edition-pilot`, and
+  `VITE_EDITION` → `__EDITION__` in the web bundle. The pilot edition does not compile
+  `ai/gemini.rs` (the `Provider::Gemini` variant does not exist) and the bundle drops every
+  `__EDITION__ === 'main'` branch. Checks: Rust test `pilot_edition_has_no_gemini` (looks for the
+  Gemini host in the compiled test program) and `npm run build:pilot`
+  (`scripts/edition-bundle.mjs`, fails if `dist/` contains the Gemini host or key header). The
+  pilot uses its own keychain service ("STEM Sim Lab Pilot").
+- **Cache of confirmed readings** (`src/ai/cache.ts`, localStorage, 100 newest): when the user
+  confirms the table, the AI's raw reading (topic + quoted quantities) is stored under the
+  normalized problem text. The same problem is then read without any AI call; the code checks and
+  the confirmation table still run. "Đọc lại bằng AI" bypasses the cache.
+- The web page never sees a key. Without the desktop app (dev/E2E/golden runs) a test key is
+  injected by the test runner (`__STEMSIM_TEST_GEMINI_KEY__`, `__STEMSIM_TEST_CLAUDE_KEY__`; Claude
+  only from Node); E2E mocks the Gemini server.
 - The explanation step (`explain.ts`) runs after the engine; its numbers are checked against the
   engine's answers and the explanation is hidden when it contains any other number.
 
@@ -112,14 +130,14 @@ module?{state}}` (Zod schema in `src/app/project/snapshot.ts`). Only **inputs** 
 
 ## 4. Planned modules
 
-| Phase | Module                                                                           | Key decisions                                                                                                                                              |
-| ----- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | `core/` units, constants, integrators; `workers/`; `perf/` tier; Science Card UI | RK4, Velocity Verlet, RK45 adaptive, implicit (stiff); accumulator with max substeps.                                                                      |
-| 2     | `physics/` 2D scenes                                                             | Own solvers for textbook problems; Rapier for free sandbox; uPlot graphs; KaTeX solutions.                                                                 |
-| 3     | `ai/` + Rust AI gateway                                                          | Gemini `generateContent` with `responseJsonSchema` (OpenAI json_schema, Anthropic forced tool) structured output; Zod; max 2 repair retries → manual form. |
-| 4     | `chemistry/`                                                                     | RDKit.js, PubChem conformers bundled offline, curated reaction library with atom mapping.                                                                  |
-| 5     | `biology/`                                                                       | Data-table-driven (NCBI table 1), Monte Carlo compared with theory.                                                                                        |
-| 6     | degradation ladder, watchdog                                                     | See MASTER_PROMPT §5.                                                                                                                                      |
+| Phase | Module                                                                           | Key decisions                                                                                                                       |
+| ----- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | `core/` units, constants, integrators; `workers/`; `perf/` tier; Science Card UI | RK4, Velocity Verlet, RK45 adaptive, implicit (stiff); accumulator with max substeps.                                               |
+| 2     | `physics/` 2D scenes                                                             | Own solvers for textbook problems; Rapier for free sandbox; uPlot graphs; KaTeX solutions.                                          |
+| 3     | `ai/` + Rust AI gateway                                                          | Gemini `generateContent` with `responseJsonSchema` / Claude forced tool structured output; Zod; max 2 repair retries → manual form. |
+| 4     | `chemistry/`                                                                     | RDKit.js, PubChem conformers bundled offline, curated reaction library with atom mapping.                                           |
+| 5     | `biology/`                                                                       | Data-table-driven (NCBI table 1), Monte Carlo compared with theory.                                                                 |
+| 6     | degradation ladder, watchdog                                                     | See MASTER_PROMPT §5.                                                                                                               |
 
 ## 5. Verified in Phase 0
 
