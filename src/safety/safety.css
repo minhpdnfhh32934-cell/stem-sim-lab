@@ -1,0 +1,187 @@
+/* Safety: age gate, AI label, crisis card, privacy page, supervisor settings. */
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.link-btn:hover {
+  color: var(--accent-hover);
+}
+
+/* "Nội dung do AI hỗ trợ" + report */
+.ai-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-1) 0 var(--space-2);
+  font-size: var(--text-xs);
+}
+.ai-label__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.ai-label__report {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.ai-label__report:hover {
+  background: var(--bg-hover);
+  color: var(--danger);
+}
+.ai-label__done {
+  color: var(--conf-exact);
+}
+
+/* Crisis support card */
+.crisis {
+  margin: var(--space-2) 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+}
+.crisis h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+}
+.crisis ul {
+  margin: var(--space-2) 0;
+  padding: 0;
+  list-style: none;
+}
+.crisis li {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 4px 0;
+  font-weight: 600;
+}
+.crisis li svg {
+  flex: none;
+  align-self: center;
+  color: var(--accent);
+}
+
+/* First-run gate */
+.dialog.age-gate {
+  width: min(36rem, calc(100vw - 2rem));
+}
+.age-gate h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.age-gate__body > p {
+  margin: var(--space-2) 0;
+}
+.age-gate__check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+.age-gate__check input {
+  margin-top: 3px;
+}
+.age-gate__supervisor {
+  margin: var(--space-3) 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+}
+.age-gate__supervisor h3 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-sm);
+}
+.age-gate__step {
+  margin: var(--space-2) 0;
+}
+.age-gate__ok {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--conf-exact);
+}
+
+/* Privacy page */
+.privacy__section h3 {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--text-sm);
+}
+.privacy__section:first-child h3 {
+  margin-top: 0;
+}
+.privacy__section ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: var(--text-sm);
+}
+.privacy__section li {
+  margin: 3px 0;
+}
+
+/* Settings → An toàn & quyền riêng tư */
+.safety-settings__line {
+  margin: var(--space-1) 0;
+  font-size: var(--text-sm);
+}
+.safety-settings__line[data-ok='true'] {
+  color: var(--conf-exact);
+}
+.safety-settings__pin input {
+  max-width: 8rem;
+}
+.safety-settings__more {
+  margin: var(--space-1) 0;
+  font-size: var(--text-sm);
+}
+.safety-settings__more summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+.incident-log__table {
+  width: 100%;
+  margin-top: var(--space-1);
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+.incident-log__table td {
+  padding: 3px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.incident-log__table td:first-child {
+  width: 9rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
