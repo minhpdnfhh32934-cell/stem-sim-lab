@@ -1,4 +1,4 @@
-//! AI gateway: every LLM call goes through Rust so API keys never reach the web view,
+//! AI gateway (Gemini, OpenAI, Anthropic): every LLM call goes through Rust so API keys never reach the web view,
 //! CORS is not an issue, and requests have a timeout and can be cancelled.
 //!
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
@@ -15,12 +15,18 @@ use tokio::sync::oneshot;
 const KEYRING_SERVICE: &str = "STEM Sim Lab";
 const ANTHROPIC_URL: &str = "https://api.anthropic.com/v1";
 const OPENAI_URL: &str = "https://api.openai.com/v1";
+const GEMINI_URL: &str = "https://generativelanguage.googleapis.com/v1beta";
+/// Google AI Studio page where a Gemini API key is created (opened from Settings).
+pub const GEMINI_KEY_PAGE: &str = "https://aistudio.google.com/apikey";
+/// Gemini models think before answering and the thoughts count towards the output limit, so
+/// the limit is raised to leave room for the actual JSON answer.
+const GEMINI_MIN_OUTPUT_TOKENS: u32 = 8192;
 const ANTHROPIC_VERSION: &str = "2023-06-01";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Provider {
-    Lmstudio,
+    Gemini,
     Openai,
     Anthropic,
 }
@@ -28,7 +34,7 @@ pub enum Provider {
 impl Provider {
     fn key_name(self) -> &'static str {
         match self {
-            Provider::Lmstudio => "lmstudio",
+            Provider::Gemini => "gemini",
             Provider::Openai => "openai",
             Provider::Anthropic => "anthropic",
         }
@@ -46,7 +52,6 @@ pub struct Message {
 pub struct ChatRequest {
     pub request_id: String,
     pub provider: Provider,
-    pub base_url: Option<String>,
     pub model: String,
     pub system: String,
     pub messages: Vec<Message>,
@@ -107,15 +112,18 @@ fn api_key(provider: Provider) -> Result<String, AiError> {
         .map_err(|_| AiError::MissingKey(provider.key_name().to_string()))
 }
 
-/// Base URL for OpenAI-compatible providers (LM Studio defaults to localhost:1234).
-pub fn base_url(provider: Provider, custom: Option<&str>) -> String {
-    let url = match (provider, custom) {
-        (Provider::Lmstudio, Some(u)) if !u.trim().is_empty() => u.trim().to_string(),
-        (Provider::Lmstudio, _) => "http://localhost:1234/v1".to_string(),
-        (Provider::Openai, _) => OPENAI_URL.to_string(),
-        (Provider::Anthropic, _) => ANTHROPIC_URL.to_string(),
-    };
-    url.trim_end_matches('/').to_string()
+/// API base URL of each provider.
+pub fn base_url(provider: Provider) -> &'static str {
+    match provider {
+        Provider::Gemini => GEMINI_URL,
+        Provider::Openai => OPENAI_URL,
+        Provider::Anthropic => ANTHROPIC_URL,
+    }
+}
+
+/// Model id as Gemini expects it in the URL (`models/` prefix removed if the user typed it).
+fn gemini_model(model: &str) -> &str {
+    model.trim().trim_start_matches("models/")
 }
 
 /// Builds the JSON body for an OpenAI-compatible `/chat/completions` call.
@@ -142,6 +150,36 @@ pub fn openai_body(req: &ChatRequest) -> Value {
         });
     }
     body
+}
+
+/// Builds the JSON body for Gemini's `generateContent`. Structured output uses
+/// `responseJsonSchema` (standard JSON Schema) with a JSON response type.
+pub fn gemini_body(req: &ChatRequest) -> Value {
+    let contents: Vec<Value> = req
+        .messages
+        .iter()
+        .map(|m| {
+            let role = if m.role == "assistant" {
+                "model"
+            } else {
+                "user"
+            };
+            json!({ "role": role, "parts": [{ "text": m.content }] })
+        })
+        .collect();
+    let mut config = json!({
+        "temperature": req.temperature.unwrap_or(0.0),
+        "maxOutputTokens": req.max_tokens.unwrap_or(2048).max(GEMINI_MIN_OUTPUT_TOKENS),
+    });
+    if let Some(schema) = &req.json_schema {
+        config["responseMimeType"] = json!("application/json");
+        config["responseJsonSchema"] = schema.clone();
+    }
+    json!({
+        "systemInstruction": { "parts": [{ "text": req.system }] },
+        "contents": contents,
+        "generationConfig": config,
+    })
 }
 
 /// Builds the JSON body for Anthropic's Messages API. Structured output is obtained by
@@ -177,6 +215,28 @@ pub fn anthropic_body(req: &ChatRequest) -> Value {
 /// Extracts the text (or tool input serialized as JSON) from a provider response.
 pub fn extract_content(provider: Provider, v: &Value) -> Result<String, AiError> {
     match provider {
+        Provider::Gemini => {
+            let candidate = &v["candidates"][0];
+            let parts = candidate["content"]["parts"].as_array();
+            let text: String = parts
+                .map(|ps| {
+                    ps.iter()
+                        // Thought summaries are not part of the answer.
+                        .filter(|p| p["thought"].as_bool() != Some(true))
+                        .filter_map(|p| p["text"].as_str())
+                        .collect::<Vec<_>>()
+                        .join("")
+                })
+                .unwrap_or_default();
+            if text.trim().is_empty() {
+                let reason = candidate["finishReason"]
+                    .as_str()
+                    .or_else(|| v["promptFeedback"]["blockReason"].as_str())
+                    .unwrap_or("no text");
+                return Err(AiError::BadResponse(format!("empty answer ({reason})")));
+            }
+            Ok(text)
+        }
         Provider::Anthropic => {
             let blocks = v["content"]
                 .as_array()
@@ -201,7 +261,7 @@ pub fn extract_content(provider: Provider, v: &Value) -> Result<String, AiError>
 async fn send(req: &ChatRequest) -> Result<ChatResponse, AiError> {
     let started = Instant::now();
     let http = client()?;
-    let base = base_url(req.provider, req.base_url.as_deref());
+    let base = base_url(req.provider);
     let resp = match req.provider {
         Provider::Anthropic => {
             let key = api_key(Provider::Anthropic)?;
@@ -220,11 +280,16 @@ async fn send(req: &ChatRequest) -> Result<ChatResponse, AiError> {
                 .send()
                 .await
         }
-        Provider::Lmstudio => {
-            http.post(format!("{base}/chat/completions"))
-                .json(&openai_body(req))
-                .send()
-                .await
+        Provider::Gemini => {
+            let key = api_key(Provider::Gemini)?;
+            http.post(format!(
+                "{base}/models/{}:generateContent",
+                gemini_model(&req.model)
+            ))
+            .header("x-goog-api-key", key)
+            .json(&gemini_body(req))
+            .send()
+            .await
         }
     }
     .map_err(|e| AiError::Network(e.to_string()))?;
@@ -286,17 +351,21 @@ pub struct ModelsResponse {
     pub models: Vec<String>,
 }
 
-/// Lists models (also used as a health check for LM Studio).
+/// Lists the provider's models. Only called when the user presses "Kiểm tra kết nối", so it
+/// also tells whether the stored key works.
 #[tauri::command]
-pub async fn ai_models(
-    provider: Provider,
-    base_url_override: Option<String>,
-) -> Result<ModelsResponse, AiError> {
+pub async fn ai_models(provider: Provider) -> Result<ModelsResponse, AiError> {
     let http = client()?;
-    let base = base_url(provider, base_url_override.as_deref());
+    let base = base_url(provider);
+    // Gemini lists 50 models per page by default; one page of 1000 holds them all.
+    let query = if provider == Provider::Gemini {
+        "?pageSize=1000"
+    } else {
+        ""
+    };
     let mut rb = http
-        .get(format!("{base}/models"))
-        .timeout(Duration::from_secs(4));
+        .get(format!("{base}/models{query}"))
+        .timeout(Duration::from_secs(10));
     match provider {
         Provider::Anthropic => {
             rb = rb
@@ -304,7 +373,7 @@ pub async fn ai_models(
                 .header("anthropic-version", ANTHROPIC_VERSION)
         }
         Provider::Openai => rb = rb.bearer_auth(api_key(provider)?),
-        Provider::Lmstudio => {}
+        Provider::Gemini => rb = rb.header("x-goog-api-key", api_key(provider)?),
     }
     let resp = rb
         .send()
@@ -317,15 +386,40 @@ pub async fn ai_models(
         .json()
         .await
         .map_err(|e| AiError::BadResponse(e.to_string()))?;
-    let models = v["data"]
-        .as_array()
+    Ok(ModelsResponse {
+        models: model_ids(provider, &v),
+    })
+}
+
+/// Model ids from a `/models` answer (Gemini: only models that can generate text).
+pub fn model_ids(provider: Provider, v: &Value) -> Vec<String> {
+    let (list, id) = match provider {
+        Provider::Gemini => (&v["models"], "name"),
+        _ => (&v["data"], "id"),
+    };
+    list.as_array()
         .map(|a| {
             a.iter()
-                .filter_map(|m| m["id"].as_str().map(|s| s.to_string()))
+                .filter(|m| {
+                    provider != Provider::Gemini
+                        || m["supportedGenerationMethods"]
+                            .as_array()
+                            .is_some_and(|g| g.iter().any(|x| x == "generateContent"))
+                })
+                .filter_map(|m| m[id].as_str())
+                .map(|s| s.trim_start_matches("models/").to_string())
                 .collect()
         })
-        .unwrap_or_default();
-    Ok(ModelsResponse { models })
+        .unwrap_or_default()
+}
+
+/// Opens the Google AI Studio page where students create a Gemini API key.
+#[tauri::command]
+pub fn open_gemini_key_page(app: tauri::AppHandle) -> Result<(), String> {
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(GEMINI_KEY_PAGE, None::<&str>)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -360,7 +454,6 @@ mod tests {
         ChatRequest {
             request_id: "r1".into(),
             provider,
-            base_url: None,
             model: "m".into(),
             system: "sys".into(),
             messages: vec![Message {
@@ -377,7 +470,7 @@ mod tests {
 
     #[test]
     fn openai_body_uses_strict_json_schema() {
-        let b = openai_body(&req(Provider::Lmstudio, true));
+        let b = openai_body(&req(Provider::Openai, true));
         assert_eq!(b["response_format"]["type"], "json_schema");
         assert_eq!(b["response_format"]["json_schema"]["name"], "scene_spec");
         assert_eq!(b["response_format"]["json_schema"]["strict"], true);
@@ -406,16 +499,68 @@ mod tests {
     }
 
     #[test]
-    fn base_urls() {
+    fn gemini_body_requests_json_with_the_schema() {
+        let mut r = req(Provider::Gemini, true);
+        r.messages.push(Message {
+            role: "assistant".into(),
+            content: "{}".into(),
+        });
+        let b = gemini_body(&r);
+        assert_eq!(b["systemInstruction"]["parts"][0]["text"], "sys");
+        assert_eq!(b["contents"][0]["role"], "user");
+        assert_eq!(b["contents"][0]["parts"][0]["text"], "hi");
+        assert_eq!(b["contents"][1]["role"], "model");
+        let c = &b["generationConfig"];
+        assert_eq!(c["responseMimeType"], "application/json");
+        assert_eq!(c["responseJsonSchema"]["type"], "object");
+        assert_eq!(c["temperature"], 0.0);
+        assert!(c["maxOutputTokens"].as_u64().unwrap() >= 8192);
+        // Explanations (no schema) are plain text.
+        let plain = gemini_body(&req(Provider::Gemini, false));
+        assert!(plain["generationConfig"].get("responseMimeType").is_none());
+    }
+
+    #[test]
+    fn extracts_gemini_text_without_thoughts() {
+        let v = json!({"candidates": [{"content": {"parts": [
+            {"text": "thinking…", "thought": true},
+            {"text": "{\"a\":"},
+            {"text": "1}"}
+        ]}, "finishReason": "STOP"}]});
+        assert_eq!(extract_content(Provider::Gemini, &v).unwrap(), "{\"a\":1}");
+        let cut = json!({"candidates": [{"content": {"parts": []}, "finishReason": "MAX_TOKENS"}]});
+        let err = extract_content(Provider::Gemini, &cut).unwrap_err();
+        assert!(err.to_string().contains("MAX_TOKENS"));
+    }
+
+    #[test]
+    fn lists_gemini_text_models_only() {
+        let v = json!({"models": [
+            {"name": "models/gemini-3.8-flash", "supportedGenerationMethods": ["generateContent"]},
+            {"name": "models/text-embedding-004", "supportedGenerationMethods": ["embedContent"]}
+        ]});
+        assert_eq!(model_ids(Provider::Gemini, &v), vec!["gemini-3.8-flash"]);
+        let oa = json!({"data": [{"id": "gpt-x"}]});
+        assert_eq!(model_ids(Provider::Openai, &oa), vec!["gpt-x"]);
+    }
+
+    #[test]
+    fn base_urls_and_model_names() {
+        assert_eq!(base_url(Provider::Openai), OPENAI_URL);
+        assert_eq!(base_url(Provider::Gemini), GEMINI_URL);
         assert_eq!(
-            base_url(Provider::Lmstudio, None),
-            "http://localhost:1234/v1"
+            gemini_model(" models/gemini-3.8-flash "),
+            "gemini-3.8-flash"
         );
+    }
+
+    #[test]
+    fn old_lmstudio_setting_is_rejected() {
+        assert!(serde_json::from_value::<Provider>(json!("lmstudio")).is_err());
         assert_eq!(
-            base_url(Provider::Lmstudio, Some("http://192.168.1.5:1234/v1/")),
-            "http://192.168.1.5:1234/v1"
+            serde_json::from_value::<Provider>(json!("gemini")).unwrap(),
+            Provider::Gemini
         );
-        assert_eq!(base_url(Provider::Openai, Some("x")), OPENAI_URL);
     }
 
     #[test]
