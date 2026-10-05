@@ -7,6 +7,10 @@ import react from '@vitejs/plugin-react';
 // Tauri sets TAURI_ENV_* variables while running `tauri dev` / `tauri build`.
 const host = process.env.TAURI_DEV_HOST;
 const isDebugBuild = Boolean(process.env.TAURI_ENV_DEBUG);
+// Edition (PROMPT_PHAN_2 A2): `VITE_EDITION=pilot` builds the supervised high-school pilot
+// (Claude only). `__EDITION__` is replaced in every module, so code behind
+// `__EDITION__ === 'main'` is removed from the pilot bundle (checked by scripts/edition-bundle.mjs).
+const edition = process.env.VITE_EDITION === 'pilot' ? 'pilot' : 'main';
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as {
   version: string;
 };
@@ -19,10 +23,12 @@ export default defineConfig({
       name: 'stemsim-web-version',
       generateBundle() {
         this.emitFile({ type: 'asset', fileName: 'web-version.txt', source: `${pkg.version}\n` });
+        // Edition of the bundle ("main" / "pilot"); updates must never cross editions.
+        this.emitFile({ type: 'asset', fileName: 'web-edition.txt', source: `${edition}\n` });
       },
     },
   ],
-  define: { __APP_VERSION__: JSON.stringify(pkg.version) },
+  define: { __APP_VERSION__: JSON.stringify(pkg.version), __EDITION__: JSON.stringify(edition) },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
