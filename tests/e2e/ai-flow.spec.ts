@@ -9,27 +9,45 @@ interface Item {
 const item = (golden as { items: Item[] }).items.find((i) => i.id === 'nn-01')!;
 
 interface MockOptions {
-  /** What the fake model answers for each JSON schema name / explanation. */
+  /** What the fake model answers for each JSON schema / explanation. */
   classification?: unknown;
   extraction?: unknown;
   explanation?: string;
   down?: boolean;
+  /** HTTP status to answer every call with (e.g. 429 quota). */
+  status?: number;
+  /** No test key in the page (as if the student has not entered one). */
+  noKey?: boolean;
 }
 
-/** Fake LM Studio server (OpenAI-compatible) on localhost:1234. */
-async function mockLmStudio(page: Page, o: MockOptions = {}) {
-  await page.route('http://localhost:1234/v1/**', async (route) => {
-    if (o.down) return route.abort('connectionrefused');
+/**
+ * Fake Gemini server. The browser build only talks to Gemini with a key injected by the
+ * test runner (real keys live in the desktop app's keychain, never in the web page).
+ */
+async function mockGemini(page: Page, o: MockOptions = {}) {
+  if (!o.noKey) {
+    await page.addInitScript(() => {
+      globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
+    });
+  }
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', async (route) => {
+    if (o.down) return route.abort('internetdisconnected');
+    if (o.status) return route.fulfill({ status: o.status, json: { error: { code: o.status } } });
+    expect(route.request().headers()['x-goog-api-key']).toBe('test-key');
     const url = route.request().url();
-    if (url.endsWith('/models')) {
-      return route.fulfill({ json: { data: [{ id: 'qwen-test' }] } });
+    if (url.includes('/models?')) {
+      return route.fulfill({
+        json: {
+          models: [{ name: 'models/gemini-test', supportedGenerationMethods: ['generateContent'] }],
+        },
+      });
     }
     const body = route.request().postDataJSON() as {
-      response_format?: { json_schema?: { name?: string } };
+      generationConfig?: { responseJsonSchema?: { properties?: Record<string, unknown> } };
     };
-    const name = body.response_format?.json_schema?.name;
+    const props = body.generationConfig?.responseJsonSchema?.properties ?? {};
     const content =
-      name === 'topic_classification'
+      'topic' in props
         ? JSON.stringify(
             o.classification ?? {
               topic: 'horizontalProjectile',
@@ -37,7 +55,7 @@ async function mockLmStudio(page: Page, o: MockOptions = {}) {
               unsupported_parts: [],
             },
           )
-        : name === 'scene_spec'
+        : 'quantities' in props
           ? JSON.stringify(
               o.extraction ?? {
                 quantities: item.quantities,
@@ -49,7 +67,14 @@ async function mockLmStudio(page: Page, o: MockOptions = {}) {
             )
           : (o.explanation ?? 'Vật rơi mất 3 s nên đi được tầm xa 45 m.');
     return route.fulfill({
-      json: { model: 'qwen-test', choices: [{ message: { role: 'assistant', content } }] },
+      json: {
+        candidates: [
+          {
+            content: { role: 'model', parts: [{ text: content }] },
+            finishReason: 'STOP',
+          },
+        ],
+      },
     });
   });
 }
@@ -60,9 +85,9 @@ async function typeProblem(page: Page, text: string) {
 }
 
 test('problem → confirmation table → simulation → solution → AI explanation', async ({ page }) => {
-  await mockLmStudio(page);
+  await mockGemini(page);
   await typeProblem(page, item.text);
-  await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'local');
+  await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'cloud');
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
 
   const dialog = page.getByRole('dialog', { name: 'Tôi hiểu đề như sau' });
@@ -88,7 +113,7 @@ test('problem → confirmation table → simulation → solution → AI explanat
 });
 
 test('an explanation with a number the engine did not compute is hidden', async ({ page }) => {
-  await mockLmStudio(page, { explanation: 'Vật bay 3 s, tầm xa khoảng 47,5 m.' });
+  await mockGemini(page, { explanation: 'Vật bay 3 s, tầm xa khoảng 47,5 m.' });
   await typeProblem(page, item.text);
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Mô phỏng' }).click();
@@ -101,7 +126,7 @@ test('an explanation with a number the engine did not compute is hidden', async 
 });
 
 test('an invented number is dropped and the value must be entered', async ({ page }) => {
-  await mockLmStudio(page, {
+  await mockGemini(page, {
     extraction: {
       // 20 m/s is 72 km/h converted by the AI: not in the problem → rejected.
       quantities: [
@@ -125,7 +150,7 @@ test('an invented number is dropped and the value must be entered', async ({ pag
 });
 
 test('unsupported problems are reported, with the manual builder offered', async ({ page }) => {
-  await mockLmStudio(page, {
+  await mockGemini(page, {
     classification: {
       topic: 'unsupported',
       reason: 'Bài về mạch điện',
@@ -140,19 +165,46 @@ test('unsupported problems are reported, with the manual builder offered', async
   await expect(page.getByRole('dialog', { name: 'Tự dựng cảnh' })).toBeVisible();
 });
 
-test('LM Studio not running → clear error with next steps', async ({ page }) => {
-  await mockLmStudio(page, { down: true });
+test('no Internet → clear error with next steps', async ({ page }) => {
+  await mockGemini(page, { down: true });
   await typeProblem(page, item.text);
-  await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'offline');
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
   const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
-  await expect(dialog).toContainText('Start Server');
-  await expect(dialog.getByRole('button', { name: 'Mở Cài đặt AI' })).toBeVisible();
+  await expect(dialog).toContainText('Kiểm tra kết nối Internet');
+  await expect(dialog.getByRole('button', { name: 'Tự dựng cảnh' })).toBeVisible();
+});
+
+test('free quota used up (HTTP 429) is explained in simple words', async ({ page }) => {
+  await mockGemini(page, { status: 429 });
+  await typeProblem(page, item.text);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
+  await expect(dialog).toContainText('hết lượt dùng AI miễn phí');
+  await expect(dialog).toContainText('Đợi khoảng 1 phút');
+});
+
+test('no API key → the settings show the Gemini key guide', async ({ page }) => {
+  await mockGemini(page, { noKey: true });
+  await typeProblem(page, item.text);
+  await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'offline');
+  await expect(page.locator('.ai-status')).toContainText('thiếu key');
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
+  await expect(dialog).toContainText('Hướng dẫn lấy khóa API Gemini');
+  await dialog.getByRole('button', { name: 'Mở Cài đặt AI' }).click();
+  const guide = page.locator('details.ai-guide');
+  await expect(guide).toHaveAttribute('open', '');
+  await expect(guide).toContainText('từ 18 tuổi trở lên');
+  await expect(guide).toContainText('Create API key');
+  await expect(guide.getByRole('button', { name: 'Mở trang tạo khóa' })).toBeVisible();
+  // The removed local provider is no longer offered.
+  await expect(page.getByRole('radio', { name: /LM Studio/ })).toHaveCount(0);
+  await expect(page.getByRole('radio', { name: 'Gemini (khuyên dùng)' })).toBeChecked();
 });
 
 test('manual mode builds a scene without any AI call', async ({ page }) => {
   let calls = 0;
-  await page.route('http://localhost:1234/v1/chat/**', (route) => {
+  await page.route('https://generativelanguage.googleapis.com/**', (route) => {
     calls++;
     return route.abort();
   });

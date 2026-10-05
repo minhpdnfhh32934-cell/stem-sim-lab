@@ -98,6 +98,13 @@ test('sources & assumptions page lists datasets and review status', async ({ pag
   await expect(dialog).toBeHidden();
 });
 
+test('in-app updates are explained as desktop-only in the browser build', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Tệp' }).click();
+  await page.getByRole('menuitem', { name: 'Kiểm tra cập nhật' }).click();
+  await expect(page.getByText('Cập nhật trong app chỉ có ở bản cài trên máy.')).toBeVisible();
+});
+
 test('first-run tour shows once and can be skipped', async ({ browser }) => {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   const page = await context.newPage();
