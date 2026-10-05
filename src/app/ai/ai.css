@@ -338,3 +338,121 @@
 .ai-guide p.small {
   margin: var(--space-1) 0;
 }
+
+/* "Kết nối AI": key field with show/hide, test result */
+.ai-key {
+  display: flex;
+  flex: 1;
+  max-width: 20rem;
+  gap: 4px;
+  align-items: center;
+}
+.ai-key input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+  color: var(--text);
+  font: inherit;
+}
+.ai-settings__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+}
+.ai-test {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+}
+.ai-test[data-result='ok'] {
+  color: var(--conf-exact);
+}
+.ai-test[data-result='badKey'],
+.ai-test[data-result='error'],
+.ai-test[data-result='badModel'] {
+  color: var(--danger);
+}
+.ai-test[data-result='quota'],
+.ai-test[data-result='offline'],
+.ai-test[data-result='noKey'] {
+  color: var(--warning);
+}
+.ai-test[data-result='checking'] {
+  color: var(--text-muted);
+}
+
+/* Drawings in the Gemini key guide (GuideArt.tsx) */
+.guide-art {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: var(--space-1) 0 var(--space-2);
+}
+.guide-art__window {
+  fill: var(--bg-panel);
+  stroke: var(--border-strong);
+}
+.guide-art__bar {
+  fill: var(--bg-sunken);
+}
+.guide-art__dot {
+  fill: var(--border);
+}
+.guide-art__url,
+.guide-art__field {
+  fill: var(--bg-panel-2);
+  stroke: var(--border);
+}
+.guide-art__line {
+  fill: var(--border);
+}
+.guide-art__button {
+  fill: var(--accent);
+}
+.guide-art__chip {
+  fill: var(--bg-panel-2);
+  stroke: var(--border);
+}
+.guide-art__ring {
+  fill: none;
+  stroke: var(--warning);
+  stroke-width: 2.5;
+  stroke-dasharray: 5 3;
+}
+.guide-art__icon rect {
+  fill: var(--bg-panel);
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+.guide-art__ok {
+  fill: var(--conf-exact);
+}
+.guide-art__check {
+  fill: none;
+  stroke: var(--bg-panel);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.guide-art__text {
+  fill: var(--text);
+  font-size: 11px;
+  font-family: inherit;
+}
+.guide-art__text--small {
+  font-size: 9px;
+  fill: var(--text-muted);
+}
+.guide-art__text--on-accent {
+  fill: var(--text-on-accent);
+  font-weight: 600;
+}
+.guide-art__mono {
+  font-family: var(--font-mono);
+}
