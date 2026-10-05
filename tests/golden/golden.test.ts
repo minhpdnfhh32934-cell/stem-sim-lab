@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildDraft } from '@/ai/draft';
 import { analyzeProblem } from '@/ai/pipeline';
+import { normalizeProblem } from '@/ai/cache';
 import type { LlmTransport } from '@/ai/transport';
 import type { ChatRequest } from '@/ai/types';
 import { loadScene } from '@/physics/registry';
@@ -143,7 +144,7 @@ function fakeTransport(replies: Record<string, string[]>): LlmTransport & { call
 }
 
 const baseCfg = {
-  provider: 'gemini' as const,
+  provider: 'gemini' as 'gemini' | 'claude',
   model: 'fake',
   timeoutSecs: 5,
   defaultGravity: 9.81,
@@ -180,6 +181,46 @@ describe('AI pipeline with a fake LLM', () => {
     expect(r.draft.questions).toEqual(['time_of_flight', 'range']);
     // Structured output was requested with a JSON schema.
     expect(t.calls[1]!.jsonSchema).toBeDefined();
+    expect(r.cached).toBe(false);
+
+    // A confirmed reading is reused without calling the AI, and the code checks run again.
+    const again = fakeTransport({});
+    const r2 = await analyzeProblem(`  ${item.text}\n`, {
+      ...baseCfg,
+      transport: again,
+      cachedReading: (p) =>
+        normalizeProblem(p) === normalizeProblem(item.text) ? r.reading : null,
+    });
+    expect(again.calls).toHaveLength(0);
+    expect(r2.kind === 'draft' && r2.cached).toBe(true);
+    if (r2.kind !== 'draft') return;
+    expect(r2.draft.params).toEqual(r.draft.params);
+    expect(r2.draft.sources).toEqual(r.draft.sources);
+  });
+
+  it('works the same with the Claude provider', async () => {
+    const t = fakeTransport({
+      topic_classification: [
+        JSON.stringify({ topic: 'horizontalProjectile', reason: '', unsupported_parts: [] }),
+      ],
+      scene_spec: [
+        JSON.stringify({
+          quantities: item.quantities,
+          questions: [],
+          assumptions: [],
+          unsupported_parts: [],
+          clarifications: [],
+        }),
+      ],
+    });
+    const r = await analyzeProblem(item.text, {
+      ...baseCfg,
+      provider: 'claude',
+      model: 'claude-test',
+      transport: t,
+    });
+    expect(r.kind).toBe('draft');
+    expect(t.calls.every((c) => c.provider === 'claude' && c.model === 'claude-test')).toBe(true);
   });
 
   it('repairs invalid JSON by sending the error back (≤ 2 retries)', async () => {

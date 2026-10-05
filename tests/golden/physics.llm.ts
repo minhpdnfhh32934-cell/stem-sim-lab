@@ -17,16 +17,28 @@ interface GoldenItem {
 }
 
 /**
- * Measures how well a real Gemini model reads the golden problems. Code-side guarantees
- * (no invented numbers, defaults marked) hold whatever the model does; this report shows
- * how often the model picks the right topic and extracts the right values.
+ * Measures how well a real model reads the golden problems (PROMPT_PHAN_2 A6: Gemini and
+ * Claude). Code-side guarantees (no invented numbers, defaults marked) hold whatever the model
+ * does; this report shows how often the model picks the right topic and extracts the right
+ * values.
+ *
+ *   GEMINI_API_KEY=… npm run golden:llm                         (Gemini, default)
+ *   LLM_PROVIDER=claude ANTHROPIC_API_KEY=… npm run golden:llm   (Claude; paid API)
  */
-it('golden set with a real Gemini model', async () => {
+it('golden set with a real model', async () => {
+  const provider = process.env.LLM_PROVIDER === 'claude' ? 'claude' : 'gemini';
   // The key stays in this Node process (it is never part of the app's web page).
-  globalThis.__STEMSIM_TEST_GEMINI_KEY__ = process.env.GEMINI_API_KEY;
-  expect(process.env.GEMINI_API_KEY, 'set GEMINI_API_KEY').toBeTruthy();
+  if (provider === 'claude') {
+    globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = process.env.ANTHROPIC_API_KEY;
+    expect(process.env.ANTHROPIC_API_KEY, 'set ANTHROPIC_API_KEY').toBeTruthy();
+  } else {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = process.env.GEMINI_API_KEY;
+    expect(process.env.GEMINI_API_KEY, 'set GEMINI_API_KEY').toBeTruthy();
+  }
   const transport = getTransport();
-  const model = process.env.GEMINI_MODEL ?? DEFAULT_MODELS.gemini;
+  const model =
+    (provider === 'claude' ? process.env.CLAUDE_MODEL : process.env.GEMINI_MODEL) ??
+    DEFAULT_MODELS[provider];
   const items = (golden as { items: GoldenItem[] }).items;
   const rows: Record<string, unknown>[] = [];
   for (const item of items) {
@@ -35,7 +47,7 @@ it('golden set with a real Gemini model', async () => {
     try {
       const r = await analyzeProblem(item.text, {
         transport,
-        provider: 'gemini',
+        provider,
         model,
         timeoutSecs: 180,
         defaultGravity: 9.81,
