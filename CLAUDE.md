@@ -12,6 +12,11 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
   high-school students (mostly under 18) in supervised sessions with parental/school consent.
 - **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model). All AI
   goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
+  **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
+  as a free fallback when paid tokens run out, in both editions, but only after their terms (age,
+  data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §1b. First candidate:
+  Groq (no training on data, 18+ account holder, minors allowed under the customer's
+  responsibility). Plan: `docs/PLAN_PHAN_2.md` §6 (step 3b.3b, awaiting approval).
 - **Two builds** (Cargo feature + `VITE_EDITION`): `main` (Gemini default, Claude optional, 18+
   confirmation on first run, no Gemini key may be saved before it) and `pilot` (**Claude only —
   Gemini code must never be compiled into or shipped with the pilot build**, key entered by a
@@ -180,6 +185,20 @@ Progress log: `docs/PROGRESS.md`.
 - When a new physics scene is added, its params become extractable automatically; add golden
   problems for it in `scripts/golden/make_physics_golden.py` and regenerate `physics.json`.
 
+## Safety (3b.3, PROMPT_PHAN_2 A3)
+
+- Gates live in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
+  `incidents.json`); `ai_chat`/`ai_models`/`ai_test_key` return `notAllowed` while closed, and
+  `ai_set_key` needs the 18+ confirmation (main) or the supervisor PIN/session (pilot). Never move
+  a gate into the web page only. Bump `TERMS_VERSION` (Rust **and** `src/safety/safety.ts`) when the
+  terms change.
+- Web side `src/safety/`: AgeGate, SafetySettings, AiContentBar (label + report — put it on every
+  new AI output), CrisisCard, PrivacyDialog, `moderation.ts` (`checkInput` before every AI call,
+  `outputIsSafe` on every AI text). The incident log stores **kind + time only**.
+- Pilot pay-for key: an 18+ student or a parent owns the Anthropic account (`docs/PILOT_CONSENT.md`).
+  Legal sources and open questions: `docs/LEGAL_COMPLIANCE.md` (list, never conclude).
+- Unit tests run with an open gate (`tests/setup.ts`); E2E storage state pre-answers it.
+
 ## Modules (chemistry, biology — Phase 4+)
 
 - A non-physics topic is a `ModuleView` (`src/modules/types.ts`): `Stage`, optional `Panel`
@@ -217,7 +236,8 @@ Progress log: `docs/PROGRESS.md`.
 - [ ] Phase 3b (PROMPT_PHAN_2 A7) — plan `docs/PLAN_PHAN_2.md` (approved 2026-10-05):
   - [x] 3b.1 AIProvider (Gemini + Claude), OpenAI removed, two editions, retry/daily cap/cache
   - [x] 3b.2 AI connection screen (PIN lock for the pilot comes with 3b.3)
-  - [ ] 3b.3 safety & compliance · [ ] 3b.4 learner UI ·
+  - [x] 3b.3 safety & compliance (age gate, PIN, consent, moderation, incident log, privacy page)
+  - [ ] 3b.4 learner UI ·
         [ ] 3b.5 learn/ · [ ] 3b.6 two installers + update channels
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
