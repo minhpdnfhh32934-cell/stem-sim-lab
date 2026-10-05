@@ -24,21 +24,29 @@ interface GoldenItem {
  *
  *   GEMINI_API_KEY=… npm run golden:llm                         (Gemini, default)
  *   LLM_PROVIDER=claude ANTHROPIC_API_KEY=… npm run golden:llm   (Claude; paid API)
+ *   LLM_PROVIDER=groq GROQ_API_KEY=… npm run golden:llm          (Groq free tier; GROQ_MODEL=…)
  */
 it('golden set with a real model', async () => {
-  const provider = process.env.LLM_PROVIDER === 'claude' ? 'claude' : 'gemini';
+  const env = process.env.LLM_PROVIDER;
+  const provider = env === 'claude' ? 'claude' : env === 'groq' ? 'groq' : 'gemini';
   // The key stays in this Node process (it is never part of the app's web page).
   if (provider === 'claude') {
     globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = process.env.ANTHROPIC_API_KEY;
     expect(process.env.ANTHROPIC_API_KEY, 'set ANTHROPIC_API_KEY').toBeTruthy();
+  } else if (provider === 'groq') {
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = process.env.GROQ_API_KEY;
+    expect(process.env.GROQ_API_KEY, 'set GROQ_API_KEY').toBeTruthy();
   } else {
     globalThis.__STEMSIM_TEST_GEMINI_KEY__ = process.env.GEMINI_API_KEY;
     expect(process.env.GEMINI_API_KEY, 'set GEMINI_API_KEY').toBeTruthy();
   }
   const transport = getTransport();
   const model =
-    (provider === 'claude' ? process.env.CLAUDE_MODEL : process.env.GEMINI_MODEL) ??
-    DEFAULT_MODELS[provider];
+    (provider === 'claude'
+      ? process.env.CLAUDE_MODEL
+      : provider === 'groq'
+        ? process.env.GROQ_MODEL
+        : process.env.GEMINI_MODEL) ?? DEFAULT_MODELS[provider];
   const items = (golden as { items: GoldenItem[] }).items;
   const rows: Record<string, unknown>[] = [];
   for (const item of items) {
