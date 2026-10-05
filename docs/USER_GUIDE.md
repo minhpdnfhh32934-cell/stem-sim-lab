@@ -146,8 +146,13 @@ Cần biết:
   xóa khóa đó, tạo khóa mới và dán lại.
 - Ô **Mô hình** để trống là dùng mô hình mặc định (`gemini-3.8-flash`, thuộc gói miễn phí lúc viết
   hướng dẫn này — tháng 10/2026). Chỉ đổi khi thầy cô hướng dẫn.
-- Có thể chọn **OpenAI** hoặc **Anthropic** thay cho Gemini (cần khóa API trả phí của nhà cung cấp
-  đó), hoặc **Tắt** AI.
+- Có thể chọn **Claude** thay cho Gemini (cần khóa API trả phí của Anthropic), hoặc **Tắt** AI.
+- **Số lượt AI tối đa mỗi ngày** (mặc định 100; mỗi lần đọc đề dùng khoảng 2–4 lượt; 0 = không
+  giới hạn). Hết lượt thì app báo và bạn vẫn dùng được Tự dựng cảnh, bài mẫu. Khi máy chủ AI đang
+  bận (lỗi 429 hoặc 5xx), app tự thử lại tối đa 3 lần, mỗi lần đợi lâu hơn.
+- **Đề đã xác nhận được nhớ trên máy:** phân tích lại đúng đề đó thì app dùng lại kết quả cũ, không
+  gọi AI (bảng xác nhận vẫn hiện để bạn kiểm tra). Muốn AI đọc lại, bấm **Đọc lại bằng AI**. Xóa danh
+  sách này trong Cài đặt → AI đọc đề.
 
 ## Hóa học
 
@@ -221,8 +226,9 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 - **Vật lý:** giá trị g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s²) — chỉ dùng khi đề không cho g.
 - **Chất lượng hiển thị:** Tự động / Thấp / Trung bình / Cao, nút Đo lại. Chỉ ảnh hưởng hình ảnh,
   không ảnh hưởng số liệu.
-- **AI đọc đề:** chọn Gemini (khuyên dùng), OpenAI, Anthropic hoặc tắt AI; hướng dẫn lấy khóa API
-  Gemini; khóa API; mô hình; thời gian chờ; nút Kiểm tra kết nối.
+- **AI đọc đề:** chọn Gemini (khuyên dùng), Claude hoặc tắt AI; hướng dẫn lấy khóa API Gemini;
+  khóa API; mô hình; thời gian chờ (mặc định 30 giây); số lượt tối đa mỗi ngày; xóa các đề đã lưu;
+  nút Kiểm tra kết nối.
 - **Phím tắt:** danh sách đầy đủ.
 
 ## Lỗi thường gặp
