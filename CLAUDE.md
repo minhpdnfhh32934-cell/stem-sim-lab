@@ -156,7 +156,9 @@ Progress log: `docs/PROGRESS.md`.
 - Rust `src-tauri/src/ai/`: trait `AIProvider` (`provider.rs`), `gemini.rs` (`generateContent` +
   `responseJsonSchema`; **main edition only**), `claude.rs` (forced tool call, prompt caching, no
   `temperature`), `usage.rs` (daily cap); `mod.rs`: `ai_chat` (retry 429/5xx ≤ 3, timeout 30 s
-  default, daily cap), `ai_cancel`, `ai_models`, `ai_usage`, `ai_edition`, keychain
+  default, daily cap), `ai_cancel`, `ai_models`, `ai_usage`, `ai_edition`, `ai_test_key` (one tiny
+  request → `KeyStatus` ok/noKey/badKey/quota/badModel/offline/error, same rules as
+  `src/ai/keyTest.ts`), `ai_key_hint` ("••••••••abcd", the key never leaves Rust), keychain
   `ai_set_key/ai_has_key/ai_delete_key`, `open_gemini_key_page`. Keys never reach the web page.
   Without the desktop app, `FetchTransport` is used (Gemini; Claude from Node only) with test keys
   `__STEMSIM_TEST_GEMINI_KEY__` / `__STEMSIM_TEST_CLAUDE_KEY__` injected by tests — never typed in
@@ -171,8 +173,10 @@ Progress log: `docs/PROGRESS.md`.
   in the text (`src/ai/numbers.ts`) or be implied by a phrase in `IMPLIED` with a real quote.
   Defaults are filled in code. `explain.ts` hides explanations containing foreign numbers.
 - UI in `src/app/ai/`: `analyze.ts` (controller store), `ProblemDialog` ("Tôi hiểu đề như sau",
-  manual "Tự dựng cảnh", unsupported/error views), `AiSettings`, `useAiStatus` (no background calls;
-  "Kiểm tra kết nối" probes the key), `ExplainBox`. Tests: `tests/golden`, `src/app/ai/analyze.test.ts`, `tests/e2e`.
+  manual "Tự dựng cảnh", unsupported/error views), `AiSettings` (Settings → "Kết nối AI": show/hide
+  key, masked hint, "Kiểm tra key", guide drawings in `GuideArt.tsx`), `useAiStatus` (no background
+  calls; "Kiểm tra key" probes key + model + quota), `ExplainBox`. No key → the "Phân tích đề"
+  button opens Kết nối AI. Tests: `tests/golden`, `src/app/ai/analyze.test.ts`, `tests/e2e`.
 - When a new physics scene is added, its params become extractable automatically; add golden
   problems for it in `scripts/golden/make_physics_golden.py` and regenerate `physics.json`.
 
@@ -212,7 +216,8 @@ Progress log: `docs/PROGRESS.md`.
       NSIS `.exe` + `.msi`), final USER_GUIDE and SCIENCE_ACCURACY (§9 limitations, §10 how to verify)
 - [ ] Phase 3b (PROMPT_PHAN_2 A7) — plan `docs/PLAN_PHAN_2.md` (approved 2026-10-05):
   - [x] 3b.1 AIProvider (Gemini + Claude), OpenAI removed, two editions, retry/daily cap/cache
-  - [ ] 3b.2 AI connection screen · [ ] 3b.3 safety & compliance · [ ] 3b.4 learner UI ·
+  - [x] 3b.2 AI connection screen (PIN lock for the pilot comes with 3b.3)
+  - [ ] 3b.3 safety & compliance · [ ] 3b.4 learner UI ·
         [ ] 3b.5 learn/ · [ ] 3b.6 two installers + update channels
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
