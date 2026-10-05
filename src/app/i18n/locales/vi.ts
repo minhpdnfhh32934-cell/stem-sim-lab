@@ -204,14 +204,20 @@ const vi = {
     aiProvider: 'Nhà cung cấp',
     aiProviders: {
       gemini: 'Gemini (khuyên dùng)',
-      openai: 'OpenAI',
-      anthropic: 'Anthropic',
+      claude: 'Claude',
       off: 'Tắt',
     },
     aiModel: 'Mô hình',
     aiModelHint: 'Để trống để dùng mô hình mặc định. Chỉ đổi khi thầy cô hướng dẫn.',
     aiTest: 'Kiểm tra kết nối',
     aiTimeout: 'Thời gian chờ (giây)',
+    aiDailyCap: 'Số lượt AI tối đa mỗi ngày',
+    aiDailyCapHint:
+      'Mỗi lần đọc đề dùng khoảng 2–4 lượt. Đặt 0 để không giới hạn. Giới hạn giúp không dùng hết lượt miễn phí hoặc tốn tiền ngoài ý muốn.',
+    aiUsageToday: 'Hôm nay đã dùng {count}/{cap} lượt.',
+    aiUsageTodayNoCap: 'Hôm nay đã dùng {count} lượt.',
+    aiClearCache: 'Xóa các đề đã lưu ({count})',
+    aiClearCacheHint: 'Đề đã xác nhận được lưu trên máy này để lần sau không phải gọi AI lại.',
     aiKey: 'Khóa API (API key)',
     aiKeySave: 'Lưu khóa',
     aiKeyDelete: 'Xóa khóa',
@@ -408,6 +414,7 @@ const vi = {
       quota: 'Đã hết lượt dùng AI miễn phí trong lúc này (giới hạn của nhà cung cấp).',
       badKey: 'Nhà cung cấp AI từ chối khóa API (khóa sai, đã bị xóa hoặc bị tắt).',
       badModel: 'Không tìm thấy mô hình AI đã chọn.',
+      dailyLimit: 'Đã dùng hết số lượt AI cho hôm nay ({detail}).',
       empty: 'Hãy nhập đề bài trước.',
       tooLong: 'Đề bài quá dài (tối đa {max} ký tự).',
     },
@@ -422,8 +429,18 @@ const vi = {
       badKey: 'Tạo khóa mới trong Google AI Studio, rồi dán lại trong Cài đặt → AI đọc đề.',
       badModel: 'Trong Cài đặt → AI đọc đề, xóa ô "Mô hình" để dùng mô hình mặc định.',
       invalidJson: 'Thử phân tích lại, hoặc dùng Tự dựng cảnh để nhập thông số.',
+      dailyLimit:
+        'Giới hạn này đặt trong Cài đặt → AI đọc đề ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       other: 'Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
     },
+    hintClaude: {
+      missingKey:
+        'Chưa có khóa API Claude. Nhờ người giám sát nhập khóa trong Cài đặt → AI đọc đề.',
+      badKey: 'Khóa API Claude bị từ chối. Nhờ người giám sát kiểm tra lại khóa trong Cài đặt.',
+    },
+    cached:
+      'Đề này đã được đọc và xác nhận trước đây nên không cần gọi AI lại. Hãy kiểm tra bảng số liệu như thường lệ.',
+    readAgain: 'Đọc lại bằng AI',
   },
   project: {
     file: 'Tệp',

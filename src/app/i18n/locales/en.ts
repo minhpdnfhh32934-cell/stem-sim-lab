@@ -202,14 +202,21 @@ const en: Messages = {
     aiProvider: 'Provider',
     aiProviders: {
       gemini: 'Gemini (recommended)',
-      openai: 'OpenAI',
-      anthropic: 'Anthropic',
+      claude: 'Claude',
       off: 'Off',
     },
     aiModel: 'Model',
     aiModelHint: 'Leave empty to use the default model. Change it only if your teacher says so.',
     aiTest: 'Test connection',
     aiTimeout: 'Timeout (seconds)',
+    aiDailyCap: 'Maximum AI calls per day',
+    aiDailyCapHint:
+      'Reading one problem uses about 2–4 calls. Set 0 for no limit. The limit avoids using up the free quota or spending money by accident.',
+    aiUsageToday: 'Used today: {count}/{cap} calls.',
+    aiUsageTodayNoCap: 'Used today: {count} calls.',
+    aiClearCache: 'Clear saved problems ({count})',
+    aiClearCacheHint:
+      'Confirmed problems are saved on this computer so the AI is not called again next time.',
     aiKey: 'API key',
     aiKeySave: 'Save key',
     aiKeyDelete: 'Delete key',
@@ -406,6 +413,7 @@ const en: Messages = {
       quota: 'The free AI quota is used up for now (provider limit).',
       badKey: 'The AI provider refused the API key (wrong, deleted or disabled).',
       badModel: 'The selected AI model was not found.',
+      dailyLimit: 'Today’s AI calls are used up ({detail}).',
       empty: 'Enter a problem first.',
       tooLong: 'The problem is too long (at most {max} characters).',
     },
@@ -422,8 +430,18 @@ const en: Messages = {
       badModel:
         'In Settings → AI problem reading, clear the "Model" field to use the default model.',
       invalidJson: 'Analyze again, or build the scene manually.',
+      dailyLimit:
+        'This limit is set in Settings → AI problem reading ("Maximum AI calls per day") to avoid wasting calls. Today you can still build scenes manually and use the sample library.',
       other: 'You can still build the scene manually or use the sample library.',
     },
+    hintClaude: {
+      missingKey:
+        'No Claude API key yet. Ask the supervisor to enter it in Settings → AI problem reading.',
+      badKey: 'The Claude API key was refused. Ask the supervisor to check it in Settings.',
+    },
+    cached:
+      'This problem was read and confirmed before, so the AI is not called again. Check the table as usual.',
+    readAgain: 'Read again with AI',
   },
   project: {
     file: 'File',
