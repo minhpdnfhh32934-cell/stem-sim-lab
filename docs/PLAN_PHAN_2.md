@@ -79,3 +79,40 @@ Xếp lịch: đặc tả ở T0, làm phần máy trạng thái + điểm quay 
 3. **Timeout mặc định:** yêu cầu 30 s; model Gemini hiện hành có bước suy nghĩ có thể lâu hơn với đề dài. Đề xuất 30 s cho lời gọi ngắn, đo lại khi có key thật rồi chốt.
 4. **Thứ tự:** làm 3b.1 → 3b.6 tuần tự rồi mới tới Phần B, hay xen kẽ như mục 4?
 5. Các điểm pháp lý (điều khoản Google/Anthropic về người dưới 18, quy định bảo vệ dữ liệu và trẻ em của Việt Nam, số đường dây hỗ trợ) sẽ được tra cứu ở 3b.3 và T0, có trích dẫn, để người dùng/giáo viên xác nhận — không tự kết luận.
+
+**Đã quyết (2026-10-05):** gỡ OpenAI; timeout 30 s; xen kẽ Phần B như mục 4; người tạo và trả phí
+khóa Claude cho bản pilot là **sinh viên từ 18 tuổi hoặc phụ huynh** sẵn sàng đầu tư cho con học
+(ghi trong `PILOT_CONSENT.md`; điểm cần xác nhận ở `LEGAL_COMPLIANCE.md` mục 6). Kết quả tra cứu
+pháp lý của 3b.3: `docs/LEGAL_COMPLIANCE.md`.
+
+## 6. Mô hình AI miễn phí dự phòng — ĐÃ QUYẾT: nới quy tắc (2026-10-05)
+
+Người dùng đề xuất: khi mô hình trả phí hết token, chuyển sang một mô hình AI **miễn phí nhưng đủ
+tốt** để tiếp tục bài giảng — **cho cả học sinh THPT** ("việc không có AI thì rất thiếu sót").
+Người dùng đã đồng ý **nới quy tắc "chỉ Gemini + Claude"** của PROMPT_PHAN_2 A1/A2. Vẫn giữ: không
+AI chạy cục bộ; mọi lời gọi đi qua Rust `AIProvider`; mọi lớp an toàn của 3b.3; mỗi nhà cung cấp
+phải được tra điều khoản (độ tuổi, dữ liệu, Việt Nam) và ghi vào `LEGAL_COMPLIANCE.md` mục 2b
+trước khi thêm.
+
+Kết quả tra cứu (2026-10-05, chi tiết và nguồn: `LEGAL_COMPLIANCE.md` mục 2b):
+
+| Nhà cung cấp                                      | Bản chính (18+) | Bản pilot (dưới 18, có giám sát) | Lý do chính                                                                                                                                                                                                                              |
+| ------------------------------------------------- | --------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Groq** (gói miễn phí)                           | ✔ ứng viên số 1 | ✔ ứng viên số 1                  | Chủ tài khoản 18+ (người lớn trả phí/giám sát); điều khoản cho phép ứng dụng có người dưới tuổi trưởng thành dùng, khách hàng tự chịu trách nhiệm tuân thủ luật; **không dùng dữ liệu để huấn luyện**; JSON schema chặt; 1 000 lượt/ngày |
+| **Cloudflare Workers AI**                         | ✔ dự phòng 2    | ✔ dự phòng 2 (cần xác nhận thêm) | Không dùng dữ liệu để huấn luyện; 10 000 "Neurons"/ngày; điều khoản không nói về độ tuổi (im lặng, không phải cho phép rõ)                                                                                                               |
+| **Mistral** (gói Experiment)                      | có thể          | chỉ khi tắt huấn luyện           | Cho phép trẻ vị thành niên khi có đồng ý của cha mẹ, nhưng gói miễn phí **mặc định dùng dữ liệu để huấn luyện**                                                                                                                          |
+| Gemini API, Alibaba                               | Gemini đã có    | ✘                                | Điều khoản cấm người dưới 18                                                                                                                                                                                                             |
+| GitHub Models, Cerebras, Together, NVIDIA, Cohere | ✘               | ✘                                | Đã đóng, chỉ dùng thử, hoặc không có gói miễn phí                                                                                                                                                                                        |
+
+Kế hoạch đề xuất (bước **3b.3b**, chờ duyệt trước khi làm):
+
+1. Rust: thêm `OpenAiCompatibleProvider` (một mã cho Groq, Cloudflare, …: `chat/completions` +
+   `response_format: json_schema`), khóa trong keychain như hiện nay; bản pilot cần PIN.
+2. **Chuỗi dự phòng:** nhà cung cấp chính báo hết lượt/hết credit (429 theo ngày, 402, "credit
+   balance") → tự chuyển sang nhà cung cấp dự phòng đã cấu hình; nhãn "Nội dung do AI hỗ trợ" ghi
+   rõ mô hình nào đã trả lời. Không tự chuyển khi lỗi khóa hoặc lỗi mạng.
+3. Mô hình mặc định: `qwen/qwen3.8-27b` hoặc `openai/gpt-oss-120b` trên Groq — chọn sau khi chạy bộ
+   đề chuẩn (golden set) tiếng Việt với cả hai.
+4. Cài đặt → Kết nối AI: thêm mục "Dự phòng khi hết lượt", hướng dẫn lấy khóa Groq (người tạo khóa
+   phải từ 18 tuổi), khuyên bật Zero Data Retention.
+5. Cập nhật trang Quyền riêng tư, `PILOT_CONSENT.md` (thêm Groq vào danh sách nơi nhận đề bài).
