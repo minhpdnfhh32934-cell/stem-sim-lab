@@ -28,6 +28,9 @@ const en: Messages = {
     presentation: 'Presentation mode (F5)',
   },
   ai: {
+    notAllowed: 'AI: not enabled',
+    notAllowedHint:
+      'AI is not enabled on this computer yet (age not confirmed or no supervisor consent). Simulations work as usual.',
     offline: 'AI: offline',
     cloud: 'AI: cloud',
     off: 'AI: off',
@@ -193,6 +196,10 @@ const en: Messages = {
     browserMode: 'browser mode',
   },
   settings: {
+    aiStatusNotAllowed:
+      'AI is not enabled: confirm your age (or the supervisor consent) in Settings → Safety.',
+    aiPilotLocked:
+      'Only the supervisor can enter or delete the API key. Unlock under "Safety & privacy" below.',
     title: 'Settings',
     close: 'Close',
     appearance: 'Appearance',
@@ -345,6 +352,8 @@ const en: Messages = {
     resetHint: 'Changing it restarts the simulation',
   },
   solution: {
+    explainUnsafe:
+      'The explanation was hidden because it contained unsuitable content. The engine results are still correct.',
     answers: 'Answers',
     steps: 'Step-by-step solution',
     check: 'Numerical check',
@@ -377,6 +386,12 @@ const en: Messages = {
     none: 'Click an object on the stage to see its properties.',
   },
   analyze: {
+    personal: {
+      phone: 'phone number',
+      email: 'e-mail',
+      idNumber: 'ID number',
+      nameOrAddress: 'name or address',
+    },
     title: 'Here is how I read the problem',
     manualTitle: 'Build a scene',
     intro: 'Check every row before simulating. You can edit any value.',
@@ -422,7 +437,14 @@ const en: Messages = {
       'The problem is outside the available topics. The program never builds a simulation it has not verified.',
     reason: 'Reason: {reason}',
     errorTitle: 'Could not analyze the problem',
+    crisisTitle: 'We want to check on you',
     error: {
+      notAllowed: 'AI is not enabled on this computer.',
+      personalData:
+        'The problem seems to contain personal data ({detail}), so it was not sent to the AI.',
+      unsafe: 'This content is not suitable for a learning app, so it was not sent to the AI.',
+      crisis: 'The problem was not sent to the AI.',
+      outputUnsafe: 'The AI answer was hidden because it contained unsuitable content.',
       timeout: 'The AI took too long (timed out).',
       cancelled: 'Cancelled.',
       http: 'The AI server returned an error ({detail}).',
@@ -440,6 +462,14 @@ const en: Messages = {
       tooLong: 'The problem is too long (at most {max} characters).',
     },
     hint: {
+      notAllowed:
+        'AI needs an age confirmation (main edition) or supervisor consent (pilot edition). Open Settings → Safety & privacy.',
+      personalData:
+        'Remove names, phone numbers, e-mails, addresses or ID numbers from the problem, then analyse again.',
+      unsafe:
+        'The app uses AI for lessons only. You can still build the scene yourself or use the library.',
+      outputUnsafe:
+        'This was recorded in the incident log (kind and time only). Build the scene yourself or ask your teacher.',
       timeout: 'Increase the timeout in Settings and retry, or build the scene manually.',
       network:
         'Check the Internet connection and retry. Without a network the manual builder and sample library still work.',
@@ -463,6 +493,7 @@ const en: Messages = {
     readAgain: 'Read again with AI',
   },
   project: {
+    privacy: 'Privacy & safe AI use',
     file: 'File',
     save: 'Save simulation (.stemsim) — Ctrl+S',
     open: 'Open .stemsim file — Ctrl+O',
@@ -562,6 +593,138 @@ const en: Messages = {
     checkAgain: 'Check again',
     available: 'Update {version} available',
     browserOnly: 'In-app updates are only available in the installed app.',
+  },
+  safety: {
+    aiLabel: 'AI-assisted content',
+    aiLabelHint: 'This part was read or written by an AI. AI can be wrong: check it.',
+    report: 'Report unsuitable content',
+    reported: 'Report recorded (kind and time only). Thank you!',
+    gate: {
+      title: 'Before you start',
+      mainIntro:
+        'The simulations are for everyone. The AI features (reading problems, explanations) are for people aged 18 or older, because the AI providers only allow users aged 18+.',
+      readTerms: 'I have read "Privacy & safe AI use" and accept the terms of use.',
+      openTerms: 'Read privacy & terms',
+      adult: 'I am 18 or older — turn on AI',
+      minor: 'I am under 18',
+      minorNote:
+        'Under 18: you can still use every simulation, the library and manual scenes; AI stays off. You can answer again in Settings → Safety & privacy.',
+      pilotIntro:
+        'This is a supervised pilot. AI is only enabled after a parent or teacher has finished the setup.',
+      birthYear: 'What year were you born?',
+      yearInvalid: 'Invalid birth year.',
+      next: 'Continue',
+      supervisorTitle: 'For the supervisor',
+      supervisorIntro:
+        'A parent or teacher sets a PIN (4–8 digits). It is needed to enter the API key, record consent and view the incident log. Do not tell the student.',
+      pin: 'New PIN',
+      pinAgain: 'Repeat the PIN',
+      pinMismatch: 'The two entries differ.',
+      pinInvalid: 'The PIN has 4–8 digits.',
+      setPin: 'Set PIN',
+      pinDone: 'PIN set.',
+      consentTitle: 'Record parental consent',
+      consentText:
+        'I am the parent/guardian of the student, or a teacher authorised by the parents. The parents and the student have read and signed the pilot consent form.',
+      consentPin: 'Supervisor PIN',
+      recordConsent: 'Record consent and turn on AI',
+      adultTester: 'Users aged 18+ need no parental consent; only the PIN to manage the API key.',
+      later: 'Later — simulations only',
+      done: 'Done',
+    },
+    settings: {
+      title: 'Safety & privacy',
+      mainAdult: 'Confirmed: 18 or older, terms accepted (version {version}).',
+      mainMinor: 'Answered: under 18 — AI is off.',
+      unanswered: 'Age question not answered — AI is off.',
+      answerAgain: 'Answer the age question again',
+      privacy: 'Privacy & safe AI use',
+      locked: 'The supervisor area is locked.',
+      noPin: 'No supervisor PIN yet.',
+      setup: 'Supervisor setup',
+      pin: 'PIN',
+      unlock: 'Unlock',
+      lock: 'Lock',
+      unlocked: 'Unlocked (locks again in {min} min).',
+      wrongPin: 'Wrong PIN ({left} tries left).',
+      tooMany: 'Too many wrong PINs. Wait {secs} s and try again.',
+      studentMinor: 'Student: under 18.',
+      studentAdult: 'User: 18 or older.',
+      consentOn: 'Consent recorded on {day}.',
+      consentOff: 'No consent recorded — AI is off.',
+      recordConsent: 'Record consent (signed form)',
+      withdraw: 'Withdraw consent (AI off)',
+      changePin: 'Change PIN',
+      newPin: 'New PIN',
+      changeYear: 'Change birth year',
+      year: 'Birth year',
+      save: 'Save',
+      saved: 'Saved.',
+      incidents: 'Incident log',
+      incidentsHint:
+        'Only the kind of incident and the time, never the problem text or the answer.',
+      incidentsShow: 'Show incident log',
+      incidentsEmpty: 'No incidents.',
+      incidentsClear: 'Clear log',
+      incidentKinds: {
+        inputPersonalData: 'Problem with personal data — blocked, not sent',
+        inputUnsafe: 'Unsuitable content — blocked, not sent',
+        inputCrisis: 'Signs of distress — support lines shown',
+        outputUnsafe: 'AI answer hidden by the filter',
+        userReport: 'User reported unsuitable content',
+        pinFailed: 'Wrong supervisor PIN',
+      },
+    },
+    crisis: {
+      title: 'You are not alone',
+      body: 'It sounds like you are going through something very hard. Please talk to an adult you trust (parents, teachers, relatives) now, or call:',
+      line111: 'National child protection hotline 111 — free, 24/7.',
+      ngayMai: 'Ngày Mai support line: 096 306 1414 (13:00–20:30, Wednesday to Sunday).',
+      emergency: 'If you or someone else is in danger right now: call emergency 115.',
+      note: 'Numbers checked in October 2026. The app does not send this text anywhere.',
+    },
+    privacy: {
+      title: 'Privacy & safe AI use',
+      sendTitle: 'What does the app send?',
+      send1:
+        'Only when you press "Analyse" or "AI explanation": the problem text and the computed results go to the selected AI provider. No name, account or files are sent.',
+      send2:
+        'Update check: the app asks the project release page on GitHub whether a new version exists (no learning data is sent).',
+      send3: 'No ads, no accounts, no usage statistics.',
+      storeTitle: 'What is stored on this computer?',
+      store1: 'API key: in the operating system keychain; only the last 4 characters are shown.',
+      store2:
+        'Confirmed problems, simulation history and settings: in the app data folder; can be cleared in Settings.',
+      store3: 'Incident log: only the kind and the time, never the content.',
+      providerTitle: 'What does the AI provider do with the problem?',
+      providerGemini:
+        'Gemini free tier: under Google terms, content may be used to improve products and may be read by human reviewers; not on the paid tier. Users must be 18+.',
+      providerClaude:
+        'Claude (paid API): under Anthropic published policy, API data is not used for training by default and is deleted after 30 days (flagged content may be kept longer).',
+      checked:
+        'Provider information checked in October 2026 and may change; details and sources in docs/LEGAL_COMPLIANCE.md.',
+      rulesTitle: 'Terms of use (summary)',
+      rule1:
+        'The app is a learning aid. Every number is computed by the program; the AI only reads problems and explains in words, and can be wrong.',
+      rule2:
+        'Do not put personal data (names, phone numbers, addresses, e-mails, ID numbers) in a problem. The app blocks it when detected.',
+      rule3:
+        'Use the AI for lessons only. Unsuitable content is blocked and recorded in the incident log (kind and time only).',
+      rule4: 'When using AI you must also follow the AI provider terms.',
+      tipsTitle: 'Using AI to learn well and safely',
+      tip1: 'Read the problem and try it yourself first. Use the AI to check your reading, not to copy answers.',
+      tip2: 'Always check the "This is how I read the problem" table and fix any value read wrongly.',
+      tip3: 'Read the explanation, then explain it again in your own words.',
+      tip4: 'If an answer is strange, wrong or upsetting: press "Report unsuitable content" and ask your teacher.',
+      tip5: 'Do not share the API key and do not enter personal data.',
+      tip6: 'Take a break every 45–60 minutes at the computer.',
+      pilotTitle: 'Supervised pilot',
+      pilot1:
+        'The Claude API key belongs to the paying adult (a student aged 18+ or a parent). That person is the Anthropic customer and is responsible for following Anthropic terms.',
+      pilot2:
+        'Students under 18 use AI only after the parents signed the consent form and the supervisor recorded it in the app. It can be withdrawn at any time.',
+      close: 'Close',
+    },
   },
   languages: {
     vi: 'Tiếng Việt',
