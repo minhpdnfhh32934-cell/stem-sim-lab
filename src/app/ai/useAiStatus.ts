@@ -2,56 +2,51 @@ import { useEffect } from 'react';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
 import { getTransport } from '@/ai/transport';
+import { toAiError } from '@/ai/types';
 
-const POLL_MS = 20_000;
-
-/** Checks the AI connection once: LM Studio is asked for its models, cloud needs a stored key. */
-export async function checkAiStatus(): Promise<void> {
-  const { provider, baseUrl } = useAiStore.getState();
-  const setWs = (aiStatus: 'offline' | 'local' | 'cloud') => {
+/**
+ * Updates the AI status. By default only checks that a key is stored (no network call:
+ * the cloud is never contacted in the background). With `probe` (the "Kiểm tra kết nối"
+ * button) it also asks the provider for its models, which tells whether the key works.
+ */
+export async function checkAiStatus(probe = false): Promise<void> {
+  const { provider } = useAiStore.getState();
+  const setWs = (aiStatus: 'offline' | 'cloud') => {
     useWorkspaceStore.setState({ aiStatus });
   };
   if (provider === 'off') {
-    useAiStore.setState({ status: 'offline', availableModels: [] });
+    useAiStore.setState({ status: 'offline' });
     setWs('offline');
     return;
   }
   const transport = getTransport();
+  const stillCurrent = () => useAiStore.getState().provider === provider;
   try {
-    if (provider === 'lmstudio') {
-      const models = await transport.models('lmstudio', baseUrl);
-      // Settings may have changed while waiting.
-      if (useAiStore.getState().provider !== provider) return;
-      useAiStore.setState({ status: 'ok', availableModels: models });
-      setWs('local');
-    } else {
-      const has = await transport.hasKey(provider);
-      if (useAiStore.getState().provider !== provider) return;
-      useAiStore.setState({ status: has ? 'ok' : 'noKey' });
-      setWs(has ? 'cloud' : 'offline');
+    const has = await transport.hasKey(provider);
+    if (!stillCurrent()) return;
+    if (!has) {
+      useAiStore.setState({ status: 'noKey' });
+      setWs('offline');
+      return;
     }
-  } catch {
-    if (useAiStore.getState().provider !== provider) return;
-    useAiStore.setState({ status: 'offline', availableModels: [] });
+    if (probe) await transport.models(provider);
+    if (!stillCurrent()) return;
+    useAiStore.setState({ status: 'ok' });
+    setWs('cloud');
+  } catch (e) {
+    if (!stillCurrent()) return;
+    const err = toAiError(e);
+    // 400/401/403: the provider refused the key (wrong, disabled or not allowed).
+    const refused = err.code === 'http' && /\b(400|401|403)\b/.test(err.message);
+    useAiStore.setState({ status: refused ? 'badKey' : 'offline' });
     setWs('offline');
   }
 }
 
-/**
- * Keeps the AI status pill current. Only LM Studio is polled (a local HTTP call);
- * cloud providers are never contacted in the background.
- */
+/** Keeps the AI status pill current when the provider changes (no polling, no network). */
 export function useAiStatusPolling(): void {
   const provider = useAiStore((s) => s.provider);
-  const baseUrl = useAiStore((s) => s.baseUrl);
   useEffect(() => {
     void checkAiStatus();
-    if (provider !== 'lmstudio') return;
-    const id = window.setInterval(() => {
-      if (document.visibilityState === 'visible') void checkAiStatus();
-    }, POLL_MS);
-    return () => {
-      window.clearInterval(id);
-    };
-  }, [provider, baseUrl]);
+  }, [provider]);
 }

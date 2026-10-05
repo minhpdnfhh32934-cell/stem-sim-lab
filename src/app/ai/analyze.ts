@@ -3,7 +3,7 @@ import { getDictionary } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
 import { useWorkspaceStore } from '@/app/workspaceStore';
-import { useAiStore } from '@/ai/aiStore';
+import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { manualDraft, type Draft } from '@/ai/draft';
 import { analyzeProblem, type Stage } from '@/ai/pipeline';
 import { getTransport } from '@/ai/transport';
@@ -17,7 +17,7 @@ import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 
 export type AnalyzePhase = 'idle' | 'running' | 'review' | 'unsupported' | 'error';
 /** Error codes shown to the user: the transport's plus UI-side ones. */
-export type AnalyzeErrorCode = AiErrorCode | 'noModel' | 'empty' | 'tooLong';
+export type AnalyzeErrorCode = AiErrorCode | 'quota' | 'badKey' | 'badModel' | 'empty' | 'tooLong';
 
 export interface AnalyzeState {
   phase: AnalyzePhase;
@@ -47,33 +47,29 @@ export const useAnalyzeStore = create<AnalyzeState>()(() => ({
 export interface ResolvedAi {
   provider: Provider;
   model: string;
-  baseUrl?: string;
   timeoutSecs: number;
 }
 
-/**
- * The provider and model to use now. For LM Studio without a chosen model, the model
- * currently loaded in LM Studio is used (asked from the server when not known yet).
- */
-export async function resolveAi(): Promise<ResolvedAi> {
+/** The provider and model to use now (an empty model field means the default model). */
+export function resolveAi(): Promise<ResolvedAi> {
   const ai = useAiStore.getState();
-  if (ai.provider === 'off') throw new AiError('unavailable', 'off');
+  if (ai.provider === 'off') return Promise.reject(new AiError('unavailable', 'off'));
   const provider = ai.provider;
-  let model = ai.models[provider].trim();
-  if (provider === 'lmstudio' && !model) {
-    const available = ai.availableModels.length
-      ? ai.availableModels
-      : await getTransport().models('lmstudio', ai.baseUrl);
-    if (available.length) useAiStore.setState({ availableModels: available, status: 'ok' });
-    model = available.find((m) => !/embed/i.test(m)) ?? '';
-    if (!model) throw new AiError('unavailable', 'noModel');
-  }
-  return {
-    provider,
-    model,
-    ...(provider === 'lmstudio' ? { baseUrl: ai.baseUrl } : {}),
-    timeoutSecs: ai.timeoutSecs,
-  };
+  const model = ai.models[provider].trim() || DEFAULT_MODELS[provider];
+  return Promise.resolve({ provider, model, timeoutSecs: ai.timeoutSecs });
+}
+
+/**
+ * Turns an HTTP error from the provider into a code the dialog can explain in simple words
+ * (the Rust gateway reports "429 Too Many Requests: …", the browser transport "429").
+ */
+export function httpErrorCode(message: string): AnalyzeErrorCode {
+  const status = /^\s*(\d{3})\b/.exec(message)?.[1];
+  if (status === '429' || /RESOURCE_EXHAUSTED|quota/i.test(message)) return 'quota';
+  if (status === '401' || status === '403' || /API_KEY_INVALID|API key not valid/i.test(message))
+    return 'badKey';
+  if (status === '404') return 'badModel';
+  return 'http';
 }
 
 let controller: AbortController | null = null;
@@ -81,8 +77,7 @@ let runSeq = 0;
 
 function errorOf(e: unknown): { code: AnalyzeErrorCode; detail: string } {
   const err = toAiError(e);
-  if (err.code === 'unavailable' && err.message === 'noModel')
-    return { code: 'noModel', detail: '' };
+  if (err.code === 'http') return { code: httpErrorCode(err.message), detail: err.message };
   if (err.code === 'badResponse' && (err.message === 'empty' || err.message === 'tooLong')) {
     return { code: err.message, detail: '' };
   }
