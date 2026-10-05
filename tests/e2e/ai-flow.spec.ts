@@ -25,6 +25,7 @@ interface MockOptions {
  * test runner (real keys live in the desktop app's keychain, never in the web page).
  */
 async function mockGemini(page: Page, o: MockOptions = {}) {
+  const stats = { generate: 0 };
   if (!o.noKey) {
     await page.addInitScript(() => {
       globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
@@ -42,6 +43,7 @@ async function mockGemini(page: Page, o: MockOptions = {}) {
         },
       });
     }
+    stats.generate++;
     const body = route.request().postDataJSON() as {
       generationConfig?: { responseJsonSchema?: { properties?: Record<string, unknown> } };
     };
@@ -77,6 +79,7 @@ async function mockGemini(page: Page, o: MockOptions = {}) {
       },
     });
   });
+  return stats;
 }
 
 async function typeProblem(page: Page, text: string) {
@@ -110,6 +113,28 @@ test('problem → confirmation table → simulation → solution → AI explanat
   await page.getByRole('button', { name: 'AI diễn giải' }).click();
   await expect(page.getByText('Vật rơi mất 3 s nên đi được tầm xa 45 m.')).toBeVisible();
   await expect(page.getByText('Đã kiểm tra: mọi con số')).toBeVisible();
+});
+
+test('a confirmed problem is not sent to the AI again', async ({ page }) => {
+  const stats = await mockGemini(page);
+  await typeProblem(page, item.text);
+  const analyze = page.getByRole('button', { name: 'Phân tích đề' });
+  const dialog = page.getByRole('dialog', { name: 'Tôi hiểu đề như sau' });
+  await analyze.click();
+  await dialog.getByRole('button', { name: 'Mô phỏng' }).click();
+  await expect(dialog).toBeHidden();
+  const afterFirst = stats.generate;
+  expect(afterFirst).toBeGreaterThanOrEqual(2);
+
+  await analyze.click();
+  await expect(dialog.getByText('đã được đọc và xác nhận trước đây')).toBeVisible();
+  await expect(dialog.getByRole('textbox', { name: 'Vận tốc ban đầu' })).toHaveValue('15');
+  expect(stats.generate).toBe(afterFirst);
+
+  await dialog.getByRole('button', { name: 'Đọc lại bằng AI' }).click();
+  await expect(dialog.getByText('đã được đọc và xác nhận trước đây')).toBeHidden();
+  await expect(dialog.getByRole('textbox', { name: 'Vận tốc ban đầu' })).toHaveValue('15');
+  expect(stats.generate).toBeGreaterThan(afterFirst);
 });
 
 test('an explanation with a number the engine did not compute is hidden', async ({ page }) => {
