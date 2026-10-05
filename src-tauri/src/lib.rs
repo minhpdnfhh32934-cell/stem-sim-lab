@@ -41,6 +41,8 @@ pub fn run() {
             ai::ai_has_key,
             ai::ai_delete_key,
             ai::ai_usage,
+            ai::ai_key_hint,
+            ai::ai_test_key,
             ai::ai_edition,
             ai::open_gemini_key_page,
             files::save_file,
