@@ -28,15 +28,13 @@ const en: Messages = {
   },
   ai: {
     offline: 'AI: offline',
-    local: 'AI: LM Studio',
     cloud: 'AI: cloud',
     off: 'AI: off',
     noKey: 'AI: no key',
-    localHint: 'LM Studio connected · model: {model}',
     cloudHint: 'Using {provider} · model: {model}. The problem is sent to their servers.',
     offHint: 'AI is off. The sample library and the manual scene builder still work.',
-    lmstudioDown: 'Cannot reach LM Studio at {url}. Open LM Studio and start the local server.',
-    noKeyHint: 'No API key for {provider}. Enter it in Settings.',
+    noKeyHint: 'No API key for {provider}. Open Settings → AI problem reading to enter it.',
+    badKeyHint: '{provider} refused the API key (wrong or disabled). Check it in Settings.',
   },
   sidebar: {
     regionLabel: 'Topic library',
@@ -203,15 +201,13 @@ const en: Messages = {
     ai: 'AI problem reading',
     aiProvider: 'Provider',
     aiProviders: {
-      lmstudio: 'LM Studio (this computer)',
+      gemini: 'Gemini (recommended)',
       openai: 'OpenAI',
       anthropic: 'Anthropic',
       off: 'Off',
     },
-    aiBaseUrl: 'LM Studio address',
     aiModel: 'Model',
-    aiModelAuto: 'Model loaded in LM Studio',
-    aiModelHint: "The provider's model name (see their documentation).",
+    aiModelHint: 'Leave empty to use the default model. Change it only if your teacher says so.',
     aiTest: 'Test connection',
     aiTimeout: 'Timeout (seconds)',
     aiKey: 'API key',
@@ -221,13 +217,32 @@ const en: Messages = {
     aiKeyNone: 'No key stored.',
     aiKeyHint:
       "The key is kept in the operating system's keychain (Windows Credential Manager), never in the app's files.",
-    aiCloudDesktopOnly: 'Cloud AI is only available in the desktop app.',
+    aiCloudDesktopOnly:
+      'AI only works in the installed app (the browser version is for development).',
     aiPrivacy:
-      "With a cloud AI the problem text is sent to the provider's servers. LM Studio runs entirely on this computer.",
+      "The problem text is sent to the AI provider's servers. On Gemini's free tier Google may use what you send to improve its products, so never put personal information (names, phone numbers, addresses…) in a problem.",
     aiRule:
       'The AI only reads the problem and explains in words. Every number comes from the engine; numbers the AI adds that are not in the problem are rejected.',
-    aiStatusOk: 'Connected · {count} models',
-    aiStatusOffline: 'Not connected.',
+    aiStatusOk: 'Connected — the key works.',
+    aiStatusOffline: 'Not connected (check the Internet connection).',
+    aiStatusBadKey: 'The key was refused — check it or create a new one.',
+    geminiGuide: {
+      title: 'How to get a Gemini API key (free)',
+      age: "Google's terms require the person creating the API key to be 18 or older. Students under 18: ask a teacher or parent to create the key and enter it for you.",
+      step1:
+        'Press "Open the key page" below (or type aistudio.google.com/apikey in a browser) and sign in with a Google account.',
+      step2: 'First time in Google AI Studio: read and accept the terms of use.',
+      step3:
+        'Press "Create API key". If asked to choose a project, pick an existing one or let Google create one.',
+      step4: 'Press the copy icon next to the new key.',
+      step5:
+        'Come back here: paste the key into the "API key" field below (Ctrl+V) and press "Save key".',
+      step6: 'Press "Test connection". "Connected — the key works" means you are done.',
+      open: 'Open the key page',
+      free: 'The free tier needs no bank card but limits requests per minute and per day. When it says the quota is used up, wait a little or try again the next day.',
+      safety:
+        'Treat the key like a password: do not send it to friends or post it online. The app keeps it in the Windows keychain. If the key leaks, delete it in Google AI Studio and create a new one.',
+    },
     shortcuts: 'Keyboard shortcuts',
     quality: 'Render quality',
     qualityHint: 'Affects visuals only (sharpness, shadows, particles drawn), never the numbers.',
@@ -388,18 +403,25 @@ const en: Messages = {
       keychain: 'Could not read the system keychain.',
       invalidJson: 'The AI returned malformed JSON, still wrong after 2 repair attempts.',
       unavailable: 'This AI feature is not available here.',
-      noModel: 'LM Studio has no model loaded.',
+      quota: 'The free AI quota is used up for now (provider limit).',
+      badKey: 'The AI provider refused the API key (wrong, deleted or disabled).',
+      badModel: 'The selected AI model was not found.',
       empty: 'Enter a problem first.',
       tooLong: 'The problem is too long (at most {max} characters).',
     },
     hint: {
-      timeout:
-        'Increase the timeout in Settings, use a smaller model, or build the scene manually.',
+      timeout: 'Increase the timeout in Settings and retry, or build the scene manually.',
       network:
-        'Open LM Studio → Developer tab → "Start Server" (port 1234), or choose a cloud AI in Settings.',
-      missingKey: 'Enter the API key in Settings → AI problem reading.',
-      invalidJson: 'Try another model (e.g. Qwen 7B or larger), or build the scene manually.',
-      noModel: 'Load a model in LM Studio, then retry.',
+        'Check the Internet connection and retry. Without a network the manual builder and sample library still work.',
+      missingKey:
+        'Open Settings → AI problem reading, follow "How to get a Gemini API key" and paste the key.',
+      quota:
+        'Wait about a minute and retry. If it persists, the daily quota is used up: try again tomorrow or build the scene manually.',
+      badKey:
+        'Create a new key in Google AI Studio and paste it again in Settings → AI problem reading.',
+      badModel:
+        'In Settings → AI problem reading, clear the "Model" field to use the default model.',
+      invalidJson: 'Analyze again, or build the scene manually.',
       other: 'You can still build the scene manually or use the sample library.',
     },
   },
@@ -479,6 +501,30 @@ const en: Messages = {
     verified: 'verified',
     items: '{n} items',
     close: 'Close',
+  },
+  update: {
+    title: 'Software update',
+    menu: 'Check for updates',
+    close: 'Close',
+    current: 'Running version {version} (core {native})',
+    downloaded: 'updated in the app',
+    checking: 'Checking for a new version…',
+    downloading: 'Downloading and checking the signature…',
+    upToDate: 'You have the latest version.',
+    newVersion: 'Version {version} is available',
+    needsInstaller:
+      'This version changes the core of the app (needs core {native}), so the new installer is needed once.',
+    ready: 'Downloaded and verified. Restart to use the new version.',
+    error: 'Update failed:',
+    safety:
+      'Updates are signed and verified before use; no new .exe is installed, so Windows does not block them.',
+    install: 'Update now',
+    openReleases: 'Open the download page',
+    restart: 'Restart',
+    reset: 'Back to the built-in version',
+    checkAgain: 'Check again',
+    available: 'Update {version} available',
+    browserOnly: 'In-app updates are only available in the installed app.',
   },
   languages: {
     vi: 'Tiếng Việt',
