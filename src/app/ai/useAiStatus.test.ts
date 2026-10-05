@@ -27,7 +27,7 @@ describe('AI status / "Kiểm tra key"', () => {
 
   it('without probing only checks that a key is stored (no network)', async () => {
     const seen: string[] = [];
-    useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '' } });
+    useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '', groq: '' } });
     setTransportForTests(transport(true, 'badKey', seen));
     expect(await checkAiStatus()).toBe('ok');
     expect(seen).toEqual([]);
@@ -39,7 +39,7 @@ describe('AI status / "Kiểm tra key"', () => {
     'probe result %s becomes the status',
     async (result) => {
       const seen: string[] = [];
-      useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '' } });
+      useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '', groq: '' } });
       setTransportForTests(transport(true, result, seen));
       expect(await checkAiStatus(true)).toBe(result);
       // The empty model field means the default model is tested.
@@ -51,7 +51,7 @@ describe('AI status / "Kiểm tra key"', () => {
 
   it('stays "notAllowed" without the age confirmation, before any key check', async () => {
     const seen: string[] = [];
-    useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '' } });
+    useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '', groq: '' } });
     setSafetyBackendForTests(new BrowserSafety(false));
     setTransportForTests(transport(true, 'ok', seen));
     expect(await checkAiStatus(true)).toBe('notAllowed');
