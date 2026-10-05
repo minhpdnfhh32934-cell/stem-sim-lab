@@ -2,7 +2,7 @@
 
 Trạng thái: **đã duyệt theo đề xuất** (2026-10-05): gỡ OpenAI, timeout 30 s, làm xen kẽ như mục 4, ngắt lời theo mục 4b. Còn chờ: ai giữ khóa Claude cho bản thử nghiệm (điểm 2).
 
-Tiến độ: 3b.1 xong (2026-10-05).
+Tiến độ: 3b.1 xong, 3b.2 xong (2026-10-05). Lưu ý phát hành: 3b.1–3b.2 đổi phần Rust (lệnh mới, tên nhà cung cấp `claude`), nên lần phát hành tới phải tăng **cả** phiên bản native (bộ cài mới); bản cập nhật web không đủ.
 
 ## 1. Trạng thái hiện tại
 

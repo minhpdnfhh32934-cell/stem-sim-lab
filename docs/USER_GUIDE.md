@@ -122,16 +122,22 @@ AI đọc đề dùng **Gemini** của Google (mặc định). Cần một **kh�
 > **Lưu ý tuổi:** theo điều khoản của Google, người tạo khóa API phải **từ 18 tuổi trở lên**. Học
 > sinh dưới 18 tuổi hãy nhờ thầy cô hoặc phụ huynh tạo khóa và nhập giúp vào máy.
 
-1. Trong app: bấm ⚙ **Cài đặt** → mục **AI đọc đề** → chọn **Gemini (khuyên dùng)** → mở
+1. Trong app: bấm ⚙ **Cài đặt** → mục **Kết nối AI** → chọn **Gemini (khuyên dùng)** → mở
    **Hướng dẫn lấy khóa API Gemini** → bấm **Mở trang tạo khóa**. (Hoặc tự gõ
    `aistudio.google.com/apikey` vào trình duyệt.)
 2. Đăng nhập tài khoản Google. Lần đầu vào **Google AI Studio**: đọc và đồng ý điều khoản.
 3. Bấm **Create API key** (Tạo khóa API). Nếu được hỏi chọn dự án (project), chọn dự án có sẵn hoặc
    để Google tự tạo.
 4. Bấm biểu tượng **sao chép** cạnh khóa vừa tạo.
-5. Quay lại app: dán khóa vào ô **Khóa API** (Ctrl+V) → bấm **Lưu khóa**.
-6. Bấm **Kiểm tra kết nối**. Thấy "Kết nối được — khóa hoạt động" là xong; nhãn trên thanh công cụ
-   đổi thành "AI: đám mây".
+5. Quay lại app: dán khóa vào ô **Khóa API** (Ctrl+V; bấm biểu tượng con mắt để xem lại khóa vừa
+   dán) → bấm **Lưu khóa**. Sau khi lưu, app chỉ hiện 4 ký tự cuối của khóa (`••••••••abcd`).
+6. Bấm **Kiểm tra key**. Thấy "Kết nối thành công — khóa hoạt động" là xong; nhãn trên thanh công
+   cụ đổi thành "AI: đám mây". Các kết quả khác: **Key không hợp lệ** (dán sai hoặc khóa đã bị xóa —
+   tạo khóa mới), **Hết hạn mức** (đợi một lúc hoặc thử lại ngày mai), **Không có mạng** (kiểm tra
+   Internet), **không tìm thấy mô hình** (xóa ô Mô hình).
+
+Chưa có khóa thì nút **Phân tích đề** mở thẳng mục Kết nối AI. Trong Hướng dẫn có hình minh họa
+từng bước.
 
 Cần biết:
 
@@ -152,7 +158,7 @@ Cần biết:
   bận (lỗi 429 hoặc 5xx), app tự thử lại tối đa 3 lần, mỗi lần đợi lâu hơn.
 - **Đề đã xác nhận được nhớ trên máy:** phân tích lại đúng đề đó thì app dùng lại kết quả cũ, không
   gọi AI (bảng xác nhận vẫn hiện để bạn kiểm tra). Muốn AI đọc lại, bấm **Đọc lại bằng AI**. Xóa danh
-  sách này trong Cài đặt → AI đọc đề.
+  sách này trong Cài đặt → Kết nối AI.
 
 ## Hóa học
 
@@ -226,9 +232,9 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 - **Vật lý:** giá trị g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s²) — chỉ dùng khi đề không cho g.
 - **Chất lượng hiển thị:** Tự động / Thấp / Trung bình / Cao, nút Đo lại. Chỉ ảnh hưởng hình ảnh,
   không ảnh hưởng số liệu.
-- **AI đọc đề:** chọn Gemini (khuyên dùng), Claude hoặc tắt AI; hướng dẫn lấy khóa API Gemini;
+- **Kết nối AI:** chọn Gemini (khuyên dùng), Claude hoặc tắt AI; hướng dẫn lấy khóa API Gemini;
   khóa API; mô hình; thời gian chờ (mặc định 30 giây); số lượt tối đa mỗi ngày; xóa các đề đã lưu;
-  nút Kiểm tra kết nối.
+  nút Kiểm tra key (kết quả: thành công / key không hợp lệ / hết hạn mức / không có mạng).
 - **Phím tắt:** danh sách đầy đủ.
 
 ## Lỗi thường gặp

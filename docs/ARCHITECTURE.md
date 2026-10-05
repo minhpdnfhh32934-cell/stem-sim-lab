@@ -106,6 +106,10 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
   Gemini host in the compiled test program) and `npm run build:pilot`
   (`scripts/edition-bundle.mjs`, fails if `dist/` contains the Gemini host or key header). The
   pilot uses its own keychain service ("STEM Sim Lab Pilot").
+- **Kết nối AI** (`AiSettings.tsx`): `ai_test_key` sends one tiny request with the chosen model
+  and classifies the answer (`classify_key_test` / `src/ai/keyTest.ts`: 2xx ok, 401/403 or
+  `API_KEY_INVALID` bad key, 404 bad model, 429/402/"credit balance" quota, network error offline).
+  `ai_key_hint` returns only "••••••••" + the last 4 characters.
 - **Cache of confirmed readings** (`src/ai/cache.ts`, localStorage, 100 newest): when the user
   confirms the table, the AI's raw reading (topic + quoted quantities) is stored under the
   normalized problem text. The same problem is then read without any AI call; the code checks and
