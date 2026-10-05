@@ -28,6 +28,9 @@ import { hasScene } from '@/physics/registry';
 import type { ParamDef, ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { IconButton } from '@/ui/IconButton';
+import { AiContentBar } from '@/safety/AiContentBar';
+import { CrisisCard } from '@/safety/CrisisCard';
+import { openGate } from '@/safety/safetyStore';
 import {
   analyze,
   closeAnalyze,
@@ -50,6 +53,7 @@ export function ProblemDialog() {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
   const { phase, mode, draft, scene, moduleId } = useAnalyzeStore();
+  const crisis = useAnalyzeStore((s) => s.error?.code === 'crisis');
   const open = isDialogPhase(phase);
 
   useEffect(() => {
@@ -66,7 +70,9 @@ export function ProblemDialog() {
         : t('analyze.title')
       : phase === 'unsupported'
         ? t('analyze.unsupportedTitle')
-        : t('analyze.errorTitle');
+        : crisis
+          ? t('analyze.crisisTitle')
+          : t('analyze.errorTitle');
 
   return (
     <dialog
@@ -234,6 +240,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
                 </button>
               </p>
             )}
+            {!cached && <AiContentBar />}
             <blockquote className="problem-review__text" aria-label={t('analyze.problem')}>
               {draft.problemText}
             </blockquote>
@@ -576,7 +583,20 @@ const HINTED = [
   'badKey',
   'badModel',
   'dailyLimit',
+  'notAllowed',
+  'personalData',
+  'unsafe',
+  'outputUnsafe',
 ] as const satisfies readonly AnalyzeErrorCode[];
+/** Retrying the same text would give the same answer: the student has to change something. */
+const NO_RETRY: readonly AnalyzeErrorCode[] = [
+  'empty',
+  'tooLong',
+  'notAllowed',
+  'personalData',
+  'unsafe',
+  'crisis',
+];
 type HintedCode = (typeof HINTED)[number];
 const isHinted = (c: AnalyzeErrorCode): c is HintedCode =>
   (HINTED as readonly AnalyzeErrorCode[]).includes(c);
@@ -589,6 +609,31 @@ function ErrorView() {
   const provider = useAiStore((s) => s.provider);
   if (!error) return null;
   const code = error.code;
+  if (code === 'crisis') {
+    return (
+      <>
+        <div className="dialog__body problem-review">
+          <p className="muted">{t('analyze.error.crisis')}</p>
+          <CrisisCard />
+        </div>
+        <footer className="dialog__footer">
+          <button type="button" className="btn btn--accent" onClick={closeAnalyze}>
+            {t('analyze.close')}
+          </button>
+        </footer>
+      </>
+    );
+  }
+  const detail =
+    code === 'personalData'
+      ? error.detail
+          .split(',')
+          .filter((k): k is 'phone' | 'email' | 'idNumber' | 'nameOrAddress' =>
+            ['phone', 'email', 'idNumber', 'nameOrAddress'].includes(k),
+          )
+          .map((k) => t(`analyze.personal.${k}`))
+          .join(', ')
+      : error.detail;
   // Key problems are explained per provider (Gemini: AI Studio; Claude: the supervisor).
   const hintKey =
     provider === 'claude' && (code === 'missingKey' || code === 'badKey')
@@ -611,11 +656,24 @@ function ErrorView() {
       <div className="dialog__body problem-review">
         <p className="problem-review__error" role="alert">
           <CircleAlert size={16} strokeWidth={1.75} aria-hidden="true" />
-          {t(`analyze.error.${code}`, { detail: error.detail, max: MAX_PROBLEM_CHARS })}
+          {t(`analyze.error.${code}`, { detail, max: MAX_PROBLEM_CHARS })}
         </p>
         <p className="muted">{t(hintKey)}</p>
       </div>
       <footer className="dialog__footer">
+        {code === 'notAllowed' && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              closeAnalyze();
+              openGate();
+            }}
+          >
+            <Settings size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('safety.settings.title')}
+          </button>
+        )}
         {settingsFix && (
           <button
             type="button"
@@ -639,7 +697,7 @@ function ErrorView() {
           <PencilRuler size={15} strokeWidth={1.75} aria-hidden="true" />
           {t('analyze.manual')}
         </button>
-        {code !== 'empty' && code !== 'tooLong' && (
+        {!NO_RETRY.includes(code) && (
           <button
             type="button"
             className="btn btn--accent"

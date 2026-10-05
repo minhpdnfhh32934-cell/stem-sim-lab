@@ -11,6 +11,7 @@ import {
   KeyRound,
   LoaderCircle,
   PlugZap,
+  ShieldAlert,
   Trash2,
   WifiOff,
 } from 'lucide-react';
@@ -24,6 +25,7 @@ import { toAiError, type Provider } from '@/ai/types';
 import { IconButton } from '@/ui/IconButton';
 import { ArtCopyKey, ArtCreateKey, ArtPasteKey } from './GuideArt';
 import { checkAiStatus } from './useAiStatus';
+import { useSafetyStore } from '@/safety/safetyStore';
 import './ai.css';
 
 const CHOICES: readonly ProviderChoice[] = [...PROVIDERS, 'off'];
@@ -80,7 +82,7 @@ export function AiSettings() {
       {on && <ModelField provider={ai.provider as Provider} />}
 
       {on && !desktop && <p className="muted">{t('settings.aiCloudDesktopOnly')}</p>}
-      {on && <KeyField key={ai.provider} provider={ai.provider as Provider} desktop={desktop} />}
+      {on && <KeyArea provider={ai.provider as Provider} desktop={desktop} />}
       {on && <p className="muted small">{t('settings.aiPrivacy')}</p>}
 
       {on && (
@@ -121,6 +123,27 @@ export function AiSettings() {
   );
 }
 
+/**
+ * Pilot edition: only the supervisor (open session, src/safety) may enter or delete the key;
+ * Rust checks it again. The main edition shows the key field to the adult user.
+ */
+function KeyArea({ provider, desktop }: { provider: Provider; desktop: boolean }) {
+  const t = useT();
+  const unlockedUntil = useSafetyStore((s) => s.unlockedUntil);
+  // The countdown is shown in the safety section; here a stale "unlocked" only means Rust
+  // refuses the save and the error is shown.
+  const locked = __EDITION__ === 'pilot' && unlockedUntil === 0;
+  if (locked) {
+    return (
+      <>
+        <p className="ai-guide__note">{t('settings.aiPilotLocked')}</p>
+        <KeyTestRow />
+      </>
+    );
+  }
+  return <KeyField key={provider} provider={provider} desktop={desktop} />;
+}
+
 const RESULT_TEXT = {
   ok: 'settings.aiStatusOk',
   noKey: 'settings.aiKeyNone',
@@ -129,6 +152,7 @@ const RESULT_TEXT = {
   badModel: 'settings.aiStatusBadModel',
   offline: 'settings.aiStatusOffline',
   error: 'settings.aiStatusError',
+  notAllowed: 'settings.aiStatusNotAllowed',
 } as const satisfies Record<KeyStatus, string>;
 
 const RESULT_ICON = {
@@ -139,6 +163,7 @@ const RESULT_ICON = {
   badModel: CircleAlert,
   offline: WifiOff,
   error: CircleAlert,
+  notAllowed: ShieldAlert,
 } as const;
 
 /**

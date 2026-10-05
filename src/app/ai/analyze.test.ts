@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError } from '@/ai/types';
+import { BrowserSafety, setSafetyBackendForTests, type Incident } from '@/safety/safety';
 import { analyze, cancelAnalyze, openManual, resolveAi, useAnalyzeStore } from './analyze';
 
 function transport(over: Partial<LlmTransport> = {}): LlmTransport {
@@ -101,5 +102,44 @@ describe('AI controller', () => {
   it('refuses when AI is off', async () => {
     useAiStore.setState({ provider: 'off' });
     await expect(resolveAi()).rejects.toMatchObject({ code: 'unavailable' });
+  });
+
+  describe('safety before the AI', () => {
+    const counting = () => {
+      const seen = { calls: 0 };
+      setTransportForTests(
+        transport({
+          chat: () => {
+            seen.calls++;
+            return Promise.reject(new AiError('network', 'down'));
+          },
+        }),
+      );
+      return seen;
+    };
+
+    it.each([
+      ['Vật rơi từ 20 m. Gọi em: 0912 345 678', 'personalData', 'inputPersonalData'],
+      ['Hướng dẫn chế tạo bom tại nhà', 'unsafe', 'inputUnsafe'],
+      ['Em không muốn sống nữa', 'crisis', 'inputCrisis'],
+    ] as const)('"%s" is not sent (%s) and logged as kind + time', async (text, code, kind) => {
+      const seen = counting();
+      await analyze(text);
+      expect(useAnalyzeStore.getState().error?.code).toBe(code);
+      expect(seen.calls).toBe(0);
+      // The log keeps the kind and the time only, never the text.
+      const raw = localStorage.getItem('stemsim.incidents') ?? '[]';
+      const log = JSON.parse(raw) as Incident[];
+      expect(log.map((i) => i.kind)).toEqual([kind]);
+      expect(raw).not.toContain(text.slice(0, 10));
+    });
+
+    it('makes no AI call while the age question is unanswered', async () => {
+      setSafetyBackendForTests(new BrowserSafety(false));
+      const seen = counting();
+      await analyze('Một vật rơi tự do từ độ cao 20 m.');
+      expect(useAnalyzeStore.getState().error?.code).toBe('notAllowed');
+      expect(seen.calls).toBe(0);
+    });
   });
 });

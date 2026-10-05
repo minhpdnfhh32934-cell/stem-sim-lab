@@ -8,6 +8,8 @@ import { explainSolution, type Explanation } from '@/ai/explain';
 import { getTransport } from '@/ai/transport';
 import { toAiError } from '@/ai/types';
 import type { PhysicsScene, Solution } from '@/physics/types';
+import { AiContentBar } from '@/safety/AiContentBar';
+import { logIncident, useSafetyStore } from '@/safety/safetyStore';
 import { resolveAi } from './analyze';
 import './ai.css';
 
@@ -34,6 +36,7 @@ export function ExplainBox({
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const provider = useAiStore((s) => s.provider);
+  const aiAllowed = useSafetyStore((s) => s.status?.aiAllowed ?? false);
   // The explanation belongs to one solution: a new solution shows the button again.
   const [entry, setEntry] = useState<{ solution: Solution; state: State } | null>(null);
   const state: State = entry?.solution === solution ? entry.state : { kind: 'idle' };
@@ -49,7 +52,8 @@ export function ExplainBox({
     [solution],
   );
 
-  if (provider === 'off') return null;
+  // AI off, or the safety gates closed (age / consent): no AI button at all.
+  if (provider === 'off' || !aiAllowed) return null;
 
   const run = async () => {
     abort.current?.abort();
@@ -63,7 +67,9 @@ export function ExplainBox({
         ...ai,
         signal: ctrl.signal,
       });
-      if (!ctrl.signal.aborted) setState({ kind: 'done', result });
+      if (ctrl.signal.aborted) return;
+      if (!result.safe) logIncident('outputUnsafe');
+      setState({ kind: 'done', result });
     } catch (e) {
       if (!ctrl.signal.aborted)
         setState({ kind: 'error', message: toAiError(e).message || toAiError(e).code });
@@ -87,19 +93,26 @@ export function ExplainBox({
         )}{' '}
         {state.kind === 'loading' ? t('solution.explaining') : t('solution.explain')}
       </button>
-      {state.kind === 'done' && state.result.verified && (
+      {state.kind === 'done' && !state.result.safe && (
+        <p className="explain explain--hidden" role="alert">
+          <TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />{' '}
+          {t('solution.explainUnsafe')}
+        </p>
+      )}
+      {state.kind === 'done' && state.result.safe && state.result.verified && (
         <section className="explain" aria-label={t('solution.explainTitle')}>
           <p className="explain__head">
             <Sparkles size={14} strokeWidth={1.75} aria-hidden="true" />
             {t('solution.explainTitle')}
           </p>
+          <AiContentBar />
           <p className="explain__text">{state.result.text}</p>
           <p className="explain__note">
             <CircleCheck size={12} strokeWidth={2} aria-hidden="true" /> {t('solution.explainNote')}
           </p>
         </section>
       )}
-      {state.kind === 'done' && !state.result.verified && (
+      {state.kind === 'done' && state.result.safe && !state.result.verified && (
         <p className="explain explain--hidden" role="alert">
           <TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />{' '}
           {t('solution.explainHidden', {
