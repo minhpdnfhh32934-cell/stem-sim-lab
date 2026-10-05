@@ -1,11 +1,28 @@
 import { invoke, isTauri } from '@tauri-apps/api/core';
-import { Bot, ExternalLink, KeyRound, RefreshCw, Trash2 } from 'lucide-react';
+import {
+  Bot,
+  CircleAlert,
+  CircleCheck,
+  CircleX,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  Hourglass,
+  KeyRound,
+  LoaderCircle,
+  PlugZap,
+  Trash2,
+  WifiOff,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useT } from '@/app/i18n';
 import { DEFAULT_MODELS, PROVIDERS, useAiStore, type ProviderChoice } from '@/ai/aiStore';
 import { clearReadings, readingCount } from '@/ai/cache';
+import type { KeyStatus } from '@/ai/keyTest';
 import { getTransport } from '@/ai/transport';
 import { toAiError, type Provider } from '@/ai/types';
+import { IconButton } from '@/ui/IconButton';
+import { ArtCopyKey, ArtCreateKey, ArtPasteKey } from './GuideArt';
 import { checkAiStatus } from './useAiStatus';
 import './ai.css';
 
@@ -18,7 +35,7 @@ function openGeminiKeyPage() {
   else window.open(GEMINI_KEY_PAGE, '_blank', 'noopener,noreferrer');
 }
 
-/** Settings → "AI đọc đề": provider, Gemini key guide, model, API key, timeout, daily cap. */
+/** Settings → "Kết nối AI" (PROMPT_PHAN_2 A2): provider, key guide, model, key, test, limits. */
 export function AiSettings() {
   const t = useT();
   const ai = useAiStore();
@@ -58,10 +75,12 @@ export function AiSettings() {
         <GeminiGuide openByDefault={ai.status === 'noKey'} />
       )}
 
+      {__EDITION__ === 'pilot' && <p className="ai-guide__note">{t('settings.aiPilotKey')}</p>}
+
       {on && <ModelField provider={ai.provider as Provider} />}
 
       {on && !desktop && <p className="muted">{t('settings.aiCloudDesktopOnly')}</p>}
-      {on && desktop && <KeyField provider={ai.provider as Provider} />}
+      {on && <KeyField key={ai.provider} provider={ai.provider as Provider} desktop={desktop} />}
       {on && <p className="muted small">{t('settings.aiPrivacy')}</p>}
 
       {on && (
@@ -96,35 +115,76 @@ export function AiSettings() {
           </label>
           <UsageLine cap={ai.dailyCap} />
           <ReadingCacheLine />
-          <div className="ai-settings__actions">
-            <button
-              type="button"
-              className="btn"
-              onClick={() => {
-                void checkAiStatus(true);
-              }}
-            >
-              <RefreshCw size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiTest')}
-            </button>
-            <span
-              className="ai-settings__status"
-              role="status"
-              data-ok={ai.status === 'ok' ? 'true' : 'false'}
-            >
-              {ai.status === 'ok'
-                ? t('settings.aiStatusOk')
-                : ai.status === 'noKey'
-                  ? t('settings.aiKeyNone')
-                  : ai.status === 'badKey'
-                    ? t('settings.aiStatusBadKey')
-                    : ai.status === 'offline'
-                      ? t('settings.aiStatusOffline')
-                      : ''}
-            </span>
-          </div>
         </>
       )}
     </fieldset>
+  );
+}
+
+const RESULT_TEXT = {
+  ok: 'settings.aiStatusOk',
+  noKey: 'settings.aiKeyNone',
+  badKey: 'settings.aiStatusBadKey',
+  quota: 'settings.aiStatusQuota',
+  badModel: 'settings.aiStatusBadModel',
+  offline: 'settings.aiStatusOffline',
+  error: 'settings.aiStatusError',
+} as const satisfies Record<KeyStatus, string>;
+
+const RESULT_ICON = {
+  ok: CircleCheck,
+  noKey: KeyRound,
+  badKey: CircleX,
+  quota: Hourglass,
+  badModel: CircleAlert,
+  offline: WifiOff,
+  error: CircleAlert,
+} as const;
+
+/**
+ * "Kiểm tra key" (PROMPT_PHAN_2 A2): one tiny request, then a clear result — thành công / key
+ * không hợp lệ / hết hạn mức / không có mạng (and no key / unknown model / server error).
+ */
+function KeyTestRow() {
+  const t = useT();
+  const detail = useAiStore((s) => s.statusDetail);
+  const [checking, setChecking] = useState(false);
+  const [result, setResult] = useState<KeyStatus | null>(null);
+  const run = async () => {
+    setChecking(true);
+    setResult(null);
+    const status = await checkAiStatus(true);
+    setChecking(false);
+    setResult(status === 'unknown' ? null : status);
+  };
+  const Icon = result ? RESULT_ICON[result] : null;
+  return (
+    <div className="ai-settings__actions">
+      <button
+        type="button"
+        className="btn"
+        disabled={checking}
+        onClick={() => {
+          void run();
+        }}
+      >
+        {checking ? (
+          <LoaderCircle className="spin" size={14} strokeWidth={1.75} aria-hidden="true" />
+        ) : (
+          <PlugZap size={14} strokeWidth={1.75} aria-hidden="true" />
+        )}
+        {t('settings.aiTest')}
+      </button>
+      <span className="ai-test" role="status" data-result={result ?? (checking ? 'checking' : '')}>
+        {checking && t('settings.aiStatusChecking')}
+        {result && Icon && (
+          <>
+            <Icon size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t(RESULT_TEXT[result], { detail })}
+          </>
+        )}
+      </span>
+    </div>
   );
 }
 
@@ -188,7 +248,12 @@ function GeminiGuide({ openByDefault }: { openByDefault: boolean }) {
       <p className="ai-guide__note">{t('settings.geminiGuide.age')}</p>
       <ol className="ai-guide__steps">
         {steps.map((s) => (
-          <li key={s}>{t(`settings.geminiGuide.${s}`)}</li>
+          <li key={s}>
+            {t(`settings.geminiGuide.${s}`)}
+            {s === 'step3' && <ArtCreateKey />}
+            {s === 'step4' && <ArtCopyKey />}
+            {s === 'step5' && <ArtPasteKey />}
+          </li>
         ))}
       </ol>
       <div className="ai-settings__actions">
@@ -223,21 +288,41 @@ function ModelField({ provider }: { provider: Provider }) {
   );
 }
 
-function KeyField({ provider }: { provider: Provider }) {
+/**
+ * API key field: password input with a show/hide button (Ctrl+V works), save and delete. After
+ * saving only "••••••••abcd" is shown; the key itself stays in the OS keychain (Rust).
+ */
+function KeyField({ provider, desktop }: { provider: Provider; desktop: boolean }) {
   const t = useT();
   const [key, setKey] = useState('');
-  const [has, setHas] = useState<boolean | null>(null);
+  const [show, setShow] = useState(false);
+  const [hint, setHint] = useState<string | null | undefined>(undefined);
   const [error, setError] = useState('');
+
+  const refreshHint = async () => {
+    const transport = getTransport();
+    try {
+      const h = transport.keyHint
+        ? await transport.keyHint(provider)
+        : (await transport.hasKey(provider))
+          ? '••••••••'
+          : null;
+      setHint(h);
+    } catch {
+      setHint(null);
+    }
+  };
 
   useEffect(() => {
     let alive = true;
-    getTransport()
-      .hasKey(provider)
-      .then((v) => {
-        if (alive) setHas(v);
+    const transport = getTransport();
+    (transport.keyHint ? transport.keyHint(provider) : Promise.resolve(null))
+      .then(async (h) => h ?? ((await transport.hasKey(provider)) ? '••••••••' : null))
+      .then((h) => {
+        if (alive) setHint(h);
       })
       .catch(() => {
-        if (alive) setHas(false);
+        if (alive) setHint(null);
       });
     return () => {
       alive = false;
@@ -249,8 +334,9 @@ function KeyField({ provider }: { provider: Provider }) {
     try {
       await getTransport().setKey(provider, key.trim());
       setKey('');
-      setHas(true);
-      void checkAiStatus(true);
+      setShow(false);
+      await refreshHint();
+      void checkAiStatus();
     } catch (e) {
       setError(toAiError(e).message);
     }
@@ -259,7 +345,7 @@ function KeyField({ provider }: { provider: Provider }) {
     setError('');
     try {
       await getTransport().deleteKey(provider);
-      setHas(false);
+      setHint(null);
       void checkAiStatus();
     } catch (e) {
       setError(toAiError(e).message);
@@ -268,31 +354,47 @@ function KeyField({ provider }: { provider: Provider }) {
 
   return (
     <>
-      <label className="ai-settings__field">
-        <span>{t('settings.aiKey')}</span>
-        <input
-          type="password"
-          autoComplete="off"
-          spellCheck={false}
-          value={key}
-          placeholder={has ? '••••••••' : ''}
-          onChange={(e) => {
-            setKey(e.target.value);
-          }}
-        />
-      </label>
+      {desktop && (
+        <div className="ai-settings__field">
+          <label htmlFor="ai-key-input">{t('settings.aiKey')}</label>
+          <div className="ai-key">
+            <input
+              id="ai-key-input"
+              type={show ? 'text' : 'password'}
+              autoComplete="off"
+              spellCheck={false}
+              value={key}
+              placeholder={hint ?? ''}
+              onChange={(e) => {
+                setKey(e.target.value);
+              }}
+            />
+            <IconButton
+              icon={show ? EyeOff : Eye}
+              label={show ? t('settings.aiKeyHide') : t('settings.aiKeyShow')}
+              active={show}
+              onClick={() => {
+                setShow((v) => !v);
+              }}
+              tooltipSide="left"
+            />
+          </div>
+        </div>
+      )}
       <div className="ai-settings__actions">
-        <button
-          type="button"
-          className="btn"
-          disabled={!key.trim()}
-          onClick={() => {
-            void save();
-          }}
-        >
-          <KeyRound size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiKeySave')}
-        </button>
-        {has && (
+        {desktop && (
+          <button
+            type="button"
+            className="btn"
+            disabled={!key.trim()}
+            onClick={() => {
+              void save();
+            }}
+          >
+            <KeyRound size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiKeySave')}
+          </button>
+        )}
+        {desktop && hint && (
           <button
             type="button"
             className="btn"
@@ -303,16 +405,21 @@ function KeyField({ provider }: { provider: Provider }) {
             <Trash2 size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiKeyDelete')}
           </button>
         )}
-        <span className="ai-settings__status" data-ok={has ? 'true' : 'false'}>
-          {has === null ? '' : has ? t('settings.aiKeyStored') : t('settings.aiKeyNone')}
+        <span className="ai-settings__status" data-ok={hint ? 'true' : 'false'}>
+          {hint === undefined
+            ? ''
+            : hint
+              ? t('settings.aiKeyStoredHint', { hint })
+              : t('settings.aiKeyNone')}
         </span>
       </div>
+      <KeyTestRow />
       {error && (
         <p className="small ai-settings__error" role="alert">
           {error}
         </p>
       )}
-      <p className="muted small">{t('settings.aiKeyHint')}</p>
+      {desktop && <p className="muted small">{t('settings.aiKeyHint')}</p>}
     </>
   );
 }
