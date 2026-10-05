@@ -16,6 +16,8 @@ interface MockOptions {
   down?: boolean;
   /** HTTP status to answer every call with (e.g. 429 quota). */
   status?: number;
+  /** Answer like Gemini does for a wrong key (HTTP 400 API_KEY_INVALID). */
+  badKey?: boolean;
   /** No test key in the page (as if the student has not entered one). */
   noKey?: boolean;
 }
@@ -34,6 +36,18 @@ async function mockGemini(page: Page, o: MockOptions = {}) {
   await page.route('https://generativelanguage.googleapis.com/v1beta/**', async (route) => {
     if (o.down) return route.abort('internetdisconnected');
     if (o.status) return route.fulfill({ status: o.status, json: { error: { code: o.status } } });
+    if (o.badKey) {
+      return route.fulfill({
+        status: 400,
+        json: {
+          error: {
+            code: 400,
+            message: 'API key not valid. Please pass a valid API key.',
+            details: [{ reason: 'API_KEY_INVALID' }],
+          },
+        },
+      });
+    }
     expect(route.request().headers()['x-goog-api-key']).toBe('test-key');
     const url = route.request().url();
     if (url.includes('/models?')) {
@@ -208,24 +222,59 @@ test('free quota used up (HTTP 429) is explained in simple words', async ({ page
   await expect(dialog).toContainText('Đợi khoảng 1 phút');
 });
 
-test('no API key → the settings show the Gemini key guide', async ({ page }) => {
+test('no API key → the AI button opens "Kết nối AI" with the Gemini key guide', async ({
+  page,
+}) => {
   await mockGemini(page, { noKey: true });
   await typeProblem(page, item.text);
   await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'offline');
   await expect(page.locator('.ai-status')).toContainText('thiếu key');
-  await page.getByRole('button', { name: 'Phân tích đề' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
-  await expect(dialog).toContainText('Hướng dẫn lấy khóa API Gemini');
-  await dialog.getByRole('button', { name: 'Mở Cài đặt AI' }).click();
+  const analyze = page.getByRole('button', { name: 'Phân tích đề' });
+  await expect(analyze).toHaveAttribute('data-tip', /Kết nối AI để dùng tính năng này/);
+  await analyze.click();
+  const settings = page.getByRole('dialog', { name: 'Cài đặt' });
+  await expect(settings.getByText('Kết nối AI', { exact: true })).toBeVisible();
   const guide = page.locator('details.ai-guide');
   await expect(guide).toHaveAttribute('open', '');
   await expect(guide).toContainText('từ 18 tuổi trở lên');
   await expect(guide).toContainText('Create API key');
+  // Step-by-step drawings.
+  await expect(guide.getByRole('img')).toHaveCount(3);
   await expect(guide.getByRole('button', { name: 'Mở trang tạo khóa' })).toBeVisible();
+  await expect(settings.getByText('Chưa có khóa.')).toBeVisible();
   // The removed local provider is no longer offered.
   await expect(page.getByRole('radio', { name: /LM Studio/ })).toHaveCount(0);
   await expect(page.getByRole('radio', { name: 'Gemini (khuyên dùng)' })).toBeChecked();
+  await settings.getByRole('button', { name: 'Kiểm tra key' }).click();
+  await expect(settings.getByRole('status').filter({ hasText: 'Chưa có khóa.' })).toBeVisible();
 });
+
+for (const [name, opts, expected] of [
+  ['valid key', {}, 'Kết nối thành công'],
+  ['wrong key', { badKey: true }, 'Key không hợp lệ'],
+  ['quota used up', { status: 429 }, 'Hết hạn mức'],
+  ['no Internet', { down: true }, 'Không có mạng'],
+] as const) {
+  test(`"Kiểm tra key" explains: ${name}`, async ({ page }) => {
+    await mockGemini(page, opts);
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Cài đặt' }).click();
+    const settings = page.getByRole('dialog', { name: 'Cài đặt' });
+    // Only the last characters of a stored key are ever shown.
+    await expect(settings.getByText('Đã lưu khóa: ••••••••')).toBeVisible();
+    await expect(settings.getByRole('textbox', { name: 'Mô hình' })).toHaveCount(1);
+    await settings.getByRole('button', { name: 'Kiểm tra key' }).click();
+    await expect(settings.locator('.ai-test')).toContainText(expected);
+    // The key never ends up in the page's storage.
+    const stored = await page.evaluate(() =>
+      Array.from({ length: localStorage.length }, (_, i) => {
+        const k = localStorage.key(i) ?? '';
+        return `${k}=${localStorage.getItem(k) ?? ''}`;
+      }).join('\n'),
+    );
+    expect(stored).not.toContain('test-key');
+  });
+}
 
 test('manual mode builds a scene without any AI call', async ({ page }) => {
   let calls = 0;
