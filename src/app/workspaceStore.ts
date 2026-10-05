@@ -12,7 +12,7 @@ export type StageTool = 'select' | 'drag' | 'ruler' | 'protractor';
 export const PLAYBACK_SPEEDS = [0.1, 0.25, 0.5, 1, 2, 4, 10, 100, 1000] as const;
 export type PlaybackSpeed = (typeof PLAYBACK_SPEEDS)[number];
 
-export type AiStatus = 'offline' | 'local' | 'cloud';
+export type AiStatus = 'offline' | 'cloud';
 
 /**
  * Session state of the workspace (not persisted).
