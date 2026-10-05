@@ -48,6 +48,7 @@ pub fn run() {
             ai::ai_test_key,
             ai::ai_edition,
             ai::open_gemini_key_page,
+            ai::open_groq_key_page,
             safety::safety_status,
             safety::safety_answer_adult,
             safety::safety_set_birth_year,
