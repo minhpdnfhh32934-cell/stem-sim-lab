@@ -17,5 +17,6 @@ if (typeof HTMLDialogElement !== 'undefined' && !('showModal' in HTMLDialogEleme
 
 afterEach(() => {
   cleanup();
-  localStorage.clear();
+  // Node-environment tests (`@vitest-environment node`) have no localStorage.
+  if (typeof localStorage !== 'undefined') localStorage.clear();
 });
