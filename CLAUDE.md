@@ -14,7 +14,7 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
   goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
   **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
   as a free fallback when paid tokens run out, in both editions, but only after their terms (age,
-  data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §1b. First candidate:
+  data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §2b. First candidate:
   Groq (no training on data, 18+ account holder, minors allowed under the customer's
   responsibility). Plan: `docs/PLAN_PHAN_2.md` §6 (step 3b.3b, awaiting approval).
 - **Two builds** (Cargo feature + `VITE_EDITION`): `main` (Gemini default, Claude optional, 18+
