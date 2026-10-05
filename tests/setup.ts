@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import { afterEach, beforeEach } from 'vitest';
+import { setSafetyBackendForTests, statusOf, TERMS_VERSION, BrowserSafety } from '@/safety/safety';
+import { useSafetyStore } from '@/safety/safetyStore';
 
 // jsdom does not implement <dialog>.showModal()/close().
 if (typeof HTMLDialogElement !== 'undefined' && !('showModal' in HTMLDialogElement.prototype)) {
@@ -19,4 +21,28 @@ afterEach(() => {
   cleanup();
   // Node-environment tests (`@vitest-environment node`) have no localStorage.
   if (typeof localStorage !== 'undefined') localStorage.clear();
+});
+
+// Unit tests run as an adult who accepted the terms (main) or with recorded consent (pilot), so
+// the AI code paths can be tested. The gates themselves are tested in src/safety and in Rust.
+class OpenSafety extends BrowserSafety {
+  override status() {
+    return Promise.resolve(
+      statusOf(
+        { adultTerms: TERMS_VERSION, birthYear: 2000, pinHash: 'x', pinSalt: 'x' },
+        __EDITION__ === 'pilot',
+        2026,
+      ),
+    );
+  }
+}
+
+beforeEach(() => {
+  setSafetyBackendForTests(new OpenSafety());
+  useSafetyStore.setState({
+    status: null,
+    deferred: false,
+    gateRequested: false,
+    unlockedUntil: 0,
+  });
 });
