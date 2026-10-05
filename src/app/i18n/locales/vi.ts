@@ -20,6 +20,7 @@ const vi = {
     analyze: 'Phân tích đề',
     analyzeNeedsText: 'Nhập đề bài để phân tích',
     analyzeAiOff: 'AI đang tắt — bật trong Cài đặt, hoặc dùng Tự dựng cảnh',
+    analyzeNeedsKey: 'Kết nối AI để dùng tính năng này (bấm để mở Kết nối AI)',
     cancelAnalyze: 'Hủy phân tích',
     manual: 'Tự dựng cảnh (không dùng AI)',
     undo: 'Hoàn tác (Ctrl+Z)',
@@ -35,7 +36,12 @@ const vi = {
     noKey: 'AI: thiếu key',
     cloudHint: 'Dùng {provider} · mô hình: {model}. Đề bài sẽ được gửi lên máy chủ.',
     offHint: 'AI đang tắt. Bạn vẫn dùng được thư viện bài mẫu và Tự dựng cảnh.',
-    noKeyHint: 'Chưa có khóa API cho {provider}. Mở Cài đặt → AI đọc đề để nhập.',
+    noKeyHint: 'Chưa có khóa API cho {provider}. Mở Cài đặt → Kết nối AI để nhập.',
+    problem: 'AI: cần kiểm tra',
+    quotaHint:
+      '{provider} báo hết hạn mức. Đợi một lúc hoặc thử lại ngày mai; vẫn dùng được Tự dựng cảnh.',
+    badModelHint: 'Không tìm thấy mô hình đã chọn. Mở Cài đặt → Kết nối AI để sửa.',
+    errorHint: 'Máy chủ AI báo lỗi. Mở Cài đặt → Kết nối AI để kiểm tra lại.',
     badKeyHint:
       '{provider} từ chối khóa API (khóa sai hoặc đã bị tắt). Kiểm tra lại trong Cài đặt.',
   },
@@ -200,7 +206,7 @@ const vi = {
     language: 'Ngôn ngữ',
     layout: 'Bố cục',
     resetLayout: 'Khôi phục bố cục mặc định',
-    ai: 'AI đọc đề',
+    ai: 'Kết nối AI',
     aiProvider: 'Nhà cung cấp',
     aiProviders: {
       gemini: 'Gemini (khuyên dùng)',
@@ -209,7 +215,12 @@ const vi = {
     },
     aiModel: 'Mô hình',
     aiModelHint: 'Để trống để dùng mô hình mặc định. Chỉ đổi khi thầy cô hướng dẫn.',
-    aiTest: 'Kiểm tra kết nối',
+    aiTest: 'Kiểm tra key',
+    aiKeyShow: 'Hiện khóa',
+    aiKeyHide: 'Ẩn khóa',
+    aiKeyStoredHint: 'Đã lưu khóa: {hint}',
+    aiPilotKey:
+      'Bản thử nghiệm: khóa API Claude do người lớn giám sát nhập. Học sinh không cần (và không nên) tự nhập khóa.',
     aiTimeout: 'Thời gian chờ (giây)',
     aiDailyCap: 'Số lượt AI tối đa mỗi ngày',
     aiDailyCapHint:
@@ -231,12 +242,23 @@ const vi = {
       'Đề bài được gửi đến máy chủ của nhà cung cấp AI để đọc. Với gói miễn phí của Gemini, Google có thể dùng nội dung gửi lên để cải thiện sản phẩm, nên đừng nhập thông tin cá nhân (họ tên, số điện thoại, địa chỉ…) vào đề bài.',
     aiRule:
       'AI chỉ đọc đề và diễn giải bằng lời. Mọi con số do engine tính; số AI đưa ra mà không có trong đề sẽ bị loại.',
-    aiStatusOk: 'Kết nối được — khóa hoạt động.',
-    aiStatusOffline: 'Chưa kết nối được (kiểm tra mạng Internet).',
-    aiStatusBadKey: 'Khóa bị từ chối — kiểm tra lại hoặc tạo khóa mới.',
+    aiStatusOk: 'Kết nối thành công — khóa hoạt động.',
+    aiStatusQuota:
+      'Hết hạn mức — nhà cung cấp tạm thời không nhận thêm yêu cầu. Đợi khoảng 1 phút; nếu vẫn báo thì lượt trong ngày đã hết.',
+    aiStatusBadModel:
+      'Khóa hoạt động nhưng không tìm thấy mô hình đã chọn — xóa ô "Mô hình" để dùng mô hình mặc định.',
+    aiStatusError: 'Máy chủ AI báo lỗi ({detail}). Thử lại sau ít phút.',
+    aiStatusChecking: 'Đang kiểm tra…',
+    aiStatusOffline: 'Không có mạng — kiểm tra kết nối Internet rồi thử lại.',
+    aiStatusBadKey: 'Key không hợp lệ — kiểm tra lại hoặc tạo khóa mới.',
     geminiGuide: {
       title: 'Hướng dẫn lấy khóa API Gemini (miễn phí)',
       age: 'Theo điều khoản của Google, người tạo khóa API phải từ 18 tuổi trở lên. Học sinh dưới 18 tuổi hãy nhờ thầy cô hoặc phụ huynh tạo khóa và nhập giúp vào máy.',
+      art: {
+        create: 'Hình minh họa: trang tạo khóa, nút "Create API key" ở góc dưới bên phải.',
+        copy: 'Hình minh họa: khóa vừa tạo và nút sao chép bên cạnh.',
+        paste: 'Hình minh họa: dán khóa vào ô Khóa API, bấm Lưu khóa rồi Kiểm tra key.',
+      },
       step1:
         'Bấm nút "Mở trang tạo khóa" bên dưới (hoặc gõ aistudio.google.com/apikey vào trình duyệt) và đăng nhập tài khoản Google.',
       step2: 'Lần đầu vào Google AI Studio: đọc và đồng ý điều khoản sử dụng.',
@@ -244,7 +266,7 @@ const vi = {
         'Bấm "Create API key" (Tạo khóa API). Nếu được hỏi chọn dự án (project), chọn dự án có sẵn hoặc để Google tự tạo.',
       step4: 'Bấm biểu tượng sao chép (Copy) cạnh khóa vừa tạo.',
       step5: 'Quay lại đây: dán khóa vào ô "Khóa API" bên dưới (Ctrl+V) rồi bấm "Lưu khóa".',
-      step6: 'Bấm "Kiểm tra kết nối". Thấy "Kết nối được — khóa hoạt động" là xong.',
+      step6: 'Bấm "Kiểm tra key". Thấy "Kết nối thành công — khóa hoạt động" là xong.',
       open: 'Mở trang tạo khóa',
       free: 'Gói miễn phí không cần thẻ ngân hàng nhưng có giới hạn số lượt mỗi phút và mỗi ngày. Khi báo "hết lượt", đợi một lúc hoặc thử lại vào ngày hôm sau.',
       safety:
@@ -390,7 +412,7 @@ const vi = {
     close: 'Đóng',
     retry: 'Thử lại',
     manual: 'Tự dựng cảnh',
-    openSettings: 'Mở Cài đặt AI',
+    openSettings: 'Mở Kết nối AI',
     stage: {
       classify: 'Đang xác định chủ đề…',
       extract: 'Đang trích xuất dữ kiện…',
@@ -423,19 +445,19 @@ const vi = {
       network:
         'Kiểm tra kết nối Internet rồi thử lại. Không có mạng thì vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       missingKey:
-        'Mở Cài đặt → AI đọc đề, làm theo "Hướng dẫn lấy khóa API Gemini" rồi dán khóa vào.',
+        'Mở Cài đặt → Kết nối AI, làm theo "Hướng dẫn lấy khóa API Gemini" rồi dán khóa vào.',
       quota:
         'Đợi khoảng 1 phút rồi thử lại. Nếu vẫn báo, lượt trong ngày đã hết: thử lại vào ngày mai hoặc dùng Tự dựng cảnh.',
-      badKey: 'Tạo khóa mới trong Google AI Studio, rồi dán lại trong Cài đặt → AI đọc đề.',
-      badModel: 'Trong Cài đặt → AI đọc đề, xóa ô "Mô hình" để dùng mô hình mặc định.',
+      badKey: 'Tạo khóa mới trong Google AI Studio, rồi dán lại trong Cài đặt → Kết nối AI.',
+      badModel: 'Trong Cài đặt → Kết nối AI, xóa ô "Mô hình" để dùng mô hình mặc định.',
       invalidJson: 'Thử phân tích lại, hoặc dùng Tự dựng cảnh để nhập thông số.',
       dailyLimit:
-        'Giới hạn này đặt trong Cài đặt → AI đọc đề ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
+        'Giới hạn này đặt trong Cài đặt → Kết nối AI ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       other: 'Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
     },
     hintClaude: {
       missingKey:
-        'Chưa có khóa API Claude. Nhờ người giám sát nhập khóa trong Cài đặt → AI đọc đề.',
+        'Chưa có khóa API Claude. Nhờ người giám sát nhập khóa trong Cài đặt → Kết nối AI.',
       badKey: 'Khóa API Claude bị từ chối. Nhờ người giám sát kiểm tra lại khóa trong Cài đặt.',
     },
     cached:

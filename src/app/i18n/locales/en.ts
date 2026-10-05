@@ -18,6 +18,7 @@ const en: Messages = {
     analyze: 'Analyze',
     analyzeNeedsText: 'Enter a problem to analyze',
     analyzeAiOff: 'AI is off — enable it in Settings, or build the scene manually',
+    analyzeNeedsKey: 'Connect AI to use this feature (click to open Connect AI)',
     cancelAnalyze: 'Cancel analysis',
     manual: 'Build a scene (no AI)',
     undo: 'Undo (Ctrl+Z)',
@@ -33,7 +34,12 @@ const en: Messages = {
     noKey: 'AI: no key',
     cloudHint: 'Using {provider} · model: {model}. The problem is sent to their servers.',
     offHint: 'AI is off. The sample library and the manual scene builder still work.',
-    noKeyHint: 'No API key for {provider}. Open Settings → AI problem reading to enter it.',
+    noKeyHint: 'No API key for {provider}. Open Settings → Connect AI to enter it.',
+    problem: 'AI: needs checking',
+    quotaHint:
+      '{provider} reports its quota is used up. Wait a while or try tomorrow; manual building still works.',
+    badModelHint: 'The chosen model was not found. Open Settings → Connect AI to fix it.',
+    errorHint: 'The AI server reported an error. Open Settings → Connect AI to test again.',
     badKeyHint: '{provider} refused the API key (wrong or disabled). Check it in Settings.',
   },
   sidebar: {
@@ -198,7 +204,7 @@ const en: Messages = {
     language: 'Language',
     layout: 'Layout',
     resetLayout: 'Restore default layout',
-    ai: 'AI problem reading',
+    ai: 'Connect AI',
     aiProvider: 'Provider',
     aiProviders: {
       gemini: 'Gemini (recommended)',
@@ -207,7 +213,12 @@ const en: Messages = {
     },
     aiModel: 'Model',
     aiModelHint: 'Leave empty to use the default model. Change it only if your teacher says so.',
-    aiTest: 'Test connection',
+    aiTest: 'Test key',
+    aiKeyShow: 'Show key',
+    aiKeyHide: 'Hide key',
+    aiKeyStoredHint: 'Saved key: {hint}',
+    aiPilotKey:
+      'Pilot edition: the Claude API key is entered by the supervising adult. Students do not need to (and should not) enter a key.',
     aiTimeout: 'Timeout (seconds)',
     aiDailyCap: 'Maximum AI calls per day',
     aiDailyCapHint:
@@ -231,11 +242,22 @@ const en: Messages = {
     aiRule:
       'The AI only reads the problem and explains in words. Every number comes from the engine; numbers the AI adds that are not in the problem are rejected.',
     aiStatusOk: 'Connected — the key works.',
-    aiStatusOffline: 'Not connected (check the Internet connection).',
-    aiStatusBadKey: 'The key was refused — check it or create a new one.',
+    aiStatusQuota:
+      'Quota used up — the provider is not accepting more requests for now. Wait about a minute; if it persists, today’s quota is used up.',
+    aiStatusBadModel:
+      'The key works but the chosen model was not found — clear the "Model" field to use the default model.',
+    aiStatusError: 'The AI server reported an error ({detail}). Try again in a few minutes.',
+    aiStatusChecking: 'Checking…',
+    aiStatusOffline: 'No Internet — check the connection and try again.',
+    aiStatusBadKey: 'Invalid key — check it or create a new one.',
     geminiGuide: {
       title: 'How to get a Gemini API key (free)',
       age: "Google's terms require the person creating the API key to be 18 or older. Students under 18: ask a teacher or parent to create the key and enter it for you.",
+      art: {
+        create: 'Drawing: the key page, "Create API key" button at the bottom right.',
+        copy: 'Drawing: the new key with the copy button next to it.',
+        paste: 'Drawing: paste the key into API key, press Save key, then Test key.',
+      },
       step1:
         'Press "Open the key page" below (or type aistudio.google.com/apikey in a browser) and sign in with a Google account.',
       step2: 'First time in Google AI Studio: read and accept the terms of use.',
@@ -244,7 +266,7 @@ const en: Messages = {
       step4: 'Press the copy icon next to the new key.',
       step5:
         'Come back here: paste the key into the "API key" field below (Ctrl+V) and press "Save key".',
-      step6: 'Press "Test connection". "Connected — the key works" means you are done.',
+      step6: 'Press "Test key". "Connected — the key works" means you are done.',
       open: 'Open the key page',
       free: 'The free tier needs no bank card but limits requests per minute and per day. When it says the quota is used up, wait a little or try again the next day.',
       safety:
@@ -389,7 +411,7 @@ const en: Messages = {
     close: 'Close',
     retry: 'Retry',
     manual: 'Build a scene',
-    openSettings: 'Open AI settings',
+    openSettings: 'Open Connect AI',
     stage: {
       classify: 'Identifying the topic…',
       extract: 'Extracting the data…',
@@ -422,21 +444,18 @@ const en: Messages = {
       network:
         'Check the Internet connection and retry. Without a network the manual builder and sample library still work.',
       missingKey:
-        'Open Settings → AI problem reading, follow "How to get a Gemini API key" and paste the key.',
+        'Open Settings → Connect AI, follow "How to get a Gemini API key" and paste the key.',
       quota:
         'Wait about a minute and retry. If it persists, the daily quota is used up: try again tomorrow or build the scene manually.',
-      badKey:
-        'Create a new key in Google AI Studio and paste it again in Settings → AI problem reading.',
-      badModel:
-        'In Settings → AI problem reading, clear the "Model" field to use the default model.',
+      badKey: 'Create a new key in Google AI Studio and paste it again in Settings → Connect AI.',
+      badModel: 'In Settings → Connect AI, clear the "Model" field to use the default model.',
       invalidJson: 'Analyze again, or build the scene manually.',
       dailyLimit:
-        'This limit is set in Settings → AI problem reading ("Maximum AI calls per day") to avoid wasting calls. Today you can still build scenes manually and use the sample library.',
+        'This limit is set in Settings → Connect AI ("Maximum AI calls per day") to avoid wasting calls. Today you can still build scenes manually and use the sample library.',
       other: 'You can still build the scene manually or use the sample library.',
     },
     hintClaude: {
-      missingKey:
-        'No Claude API key yet. Ask the supervisor to enter it in Settings → AI problem reading.',
+      missingKey: 'No Claude API key yet. Ask the supervisor to enter it in Settings → Connect AI.',
       badKey: 'The Claude API key was refused. Ask the supervisor to check it in Settings.',
     },
     cached:
