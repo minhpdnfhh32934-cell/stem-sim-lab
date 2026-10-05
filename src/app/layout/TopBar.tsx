@@ -1,4 +1,5 @@
 import {
+  CircleAlert,
   Cloud,
   CloudOff,
   KeyRound,
@@ -63,12 +64,15 @@ export const TopBar = memo(function TopBar() {
   const canRedo = useUndoStore((s) => s.canRedo);
   const stage = useAnalyzeStore((s) => s.stage);
   const aiOff = provider === 'off';
+  // No key yet: the AI button leads to "Kết nối AI" instead (PROMPT_PHAN_2 A2).
+  const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff;
   const canAnalyze = !aiOff && problemText.trim().length > 0 && !running;
 
   const onProblemKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      if (canAnalyze) void analyze(problemText);
+      if (needsKey) setSettingsOpen(true);
+      else if (canAnalyze) void analyze(problemText);
     }
   };
 
@@ -148,16 +152,19 @@ export const TopBar = memo(function TopBar() {
             type="button"
             className="btn btn--accent problem-input__submit"
             aria-label={t('topbar.analyze')}
-            disabled={!canAnalyze}
+            disabled={!canAnalyze && !needsKey}
             data-tip={
               aiOff
                 ? t('topbar.analyzeAiOff')
-                : !problemText.trim()
-                  ? t('topbar.analyzeNeedsText')
-                  : undefined
+                : needsKey
+                  ? t('topbar.analyzeNeedsKey')
+                  : !problemText.trim()
+                    ? t('topbar.analyzeNeedsText')
+                    : undefined
             }
             onClick={() => {
-              void analyze(problemText);
+              if (needsKey) setSettingsOpen(true);
+              else void analyze(problemText);
             }}
           >
             <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
@@ -277,6 +284,10 @@ function AiStatusPill({ onClick }: { onClick: () => void }) {
     hint = t(ai.status === 'noKey' ? 'ai.noKeyHint' : 'ai.badKeyHint', {
       provider: PROVIDER_NAME[ai.provider],
     });
+  } else if (ai.status === 'quota' || ai.status === 'badModel' || ai.status === 'error') {
+    label = t('ai.problem');
+    Icon = CircleAlert;
+    hint = t(`ai.${ai.status}Hint`, { provider: PROVIDER_NAME[ai.provider] });
   } else if (ai.status === 'ok') {
     kind = 'cloud';
     label = t('ai.cloud');
