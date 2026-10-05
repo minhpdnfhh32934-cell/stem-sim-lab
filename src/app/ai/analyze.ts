@@ -4,6 +4,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
+import { getReading, putReading, type Reading } from '@/ai/cache';
 import { manualDraft, type Draft } from '@/ai/draft';
 import { analyzeProblem, type Stage } from '@/ai/pipeline';
 import { getTransport } from '@/ai/transport';
@@ -28,6 +29,10 @@ export interface AnalyzeState {
   /** Manual mode on a chemistry/biology topic: its inputs are the module's own panel. */
   moduleId: string | null;
   model: string | null;
+  /** The AI's reading of the problem (stored in the cache when the user confirms). */
+  reading: Reading | null;
+  /** The reading came from the cache of confirmed readings (no AI call was made). */
+  cached: boolean;
   unsupported: { reason: string; parts: string[] } | null;
   error: { code: AnalyzeErrorCode; detail: string } | null;
 }
@@ -40,6 +45,8 @@ export const useAnalyzeStore = create<AnalyzeState>()(() => ({
   scene: null,
   moduleId: null,
   model: null,
+  reading: null,
+  cached: false,
   unsupported: null,
   error: null,
 }));
@@ -84,8 +91,12 @@ function errorOf(e: unknown): { code: AnalyzeErrorCode; detail: string } {
   return { code: err.code, detail: err.message };
 }
 
-/** Runs the AI pipeline on the problem text and opens the confirmation dialog. */
-export async function analyze(text: string): Promise<void> {
+/**
+ * Runs the AI pipeline on the problem text and opens the confirmation dialog. A problem
+ * whose reading the user already confirmed is read from the cache (no AI call) unless
+ * `fresh` is set ("Đọc lại bằng AI").
+ */
+export async function analyze(text: string, opts: { fresh?: boolean } = {}): Promise<void> {
   cancelAnalyze();
   const seq = ++runSeq;
   const ctrl = new AbortController();
@@ -97,6 +108,8 @@ export async function analyze(text: string): Promise<void> {
     draft: null,
     scene: null,
     model: null,
+    reading: null,
+    cached: false,
     unsupported: null,
     error: null,
   });
@@ -109,6 +122,7 @@ export async function analyze(text: string): Promise<void> {
       defaultGravity: useSettingsStore.getState().defaultGravity,
       topicTitles: topics,
       signal: ctrl.signal,
+      ...(opts.fresh ? {} : { cachedReading: getReading }),
       onStage: (stage) => {
         if (seq === runSeq) useAnalyzeStore.setState({ stage });
       },
@@ -127,6 +141,8 @@ export async function analyze(text: string): Promise<void> {
         draft: result.draft,
         scene: result.scene,
         model: result.model,
+        reading: result.reading,
+        cached: result.cached,
       });
     }
   } catch (e) {
@@ -178,6 +194,8 @@ export async function openManual(topicId?: string): Promise<void> {
     mode: 'manual',
     stage: null,
     model: null,
+    reading: null,
+    cached: false,
     unsupported: null,
     error: null,
   } as const;
@@ -214,7 +232,9 @@ export async function confirmDraft(
   params: Params,
   sources: Record<string, ParamSource>,
 ): Promise<void> {
-  const mode = useAnalyzeStore.getState().mode;
+  const { mode, reading } = useAnalyzeStore.getState();
+  // Confirmed: the same problem will not need the AI again (PROMPT_PHAN_2 A2).
+  if (mode === 'ai' && reading) putReading(draft.problemText, reading);
   closeAnalyze();
   useWorkspaceStore.setState({ subject: 'physics' });
   await sim.open(draft.topic, {

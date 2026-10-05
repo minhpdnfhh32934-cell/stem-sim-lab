@@ -3,6 +3,7 @@ import { Bot, ExternalLink, KeyRound, RefreshCw, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useT } from '@/app/i18n';
 import { DEFAULT_MODELS, PROVIDERS, useAiStore, type ProviderChoice } from '@/ai/aiStore';
+import { clearReadings, readingCount } from '@/ai/cache';
 import { getTransport } from '@/ai/transport';
 import { toAiError, type Provider } from '@/ai/types';
 import { checkAiStatus } from './useAiStatus';
@@ -17,7 +18,7 @@ function openGeminiKeyPage() {
   else window.open(GEMINI_KEY_PAGE, '_blank', 'noopener,noreferrer');
 }
 
-/** Settings → "AI đọc đề": provider, Gemini key guide, model, API key, timeout. */
+/** Settings → "AI đọc đề": provider, Gemini key guide, model, API key, timeout, daily cap. */
 export function AiSettings() {
   const t = useT();
   const ai = useAiStore();
@@ -52,7 +53,10 @@ export function AiSettings() {
         </div>
       </div>
 
-      {ai.provider === 'gemini' && <GeminiGuide openByDefault={ai.status === 'noKey'} />}
+      {/* Gemini exists only in the main edition (the pilot bundle drops this branch). */}
+      {__EDITION__ === 'main' && ai.provider === 'gemini' && (
+        <GeminiGuide openByDefault={ai.status === 'noKey'} />
+      )}
 
       {on && <ModelField provider={ai.provider as Provider} />}
 
@@ -76,6 +80,22 @@ export function AiSettings() {
               }}
             />
           </label>
+          <label className="ai-settings__field" data-tip={t('settings.aiDailyCapHint')}>
+            <span>{t('settings.aiDailyCap')}</span>
+            <input
+              type="number"
+              min={0}
+              max={10000}
+              step={10}
+              value={ai.dailyCap}
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                if (Number.isFinite(v) && v >= 0) ai.setDailyCap(v);
+              }}
+            />
+          </label>
+          <UsageLine cap={ai.dailyCap} />
+          <ReadingCacheLine />
           <div className="ai-settings__actions">
             <button
               type="button"
@@ -105,6 +125,56 @@ export function AiSettings() {
         </>
       )}
     </fieldset>
+  );
+}
+
+/** "Hôm nay đã dùng x/y lượt" (counted by the Rust gateway; desktop app only). */
+function UsageLine({ cap }: { cap: number }) {
+  const t = useT();
+  const [count, setCount] = useState<number | null>(null);
+  useEffect(() => {
+    let alive = true;
+    const transport = getTransport();
+    if (!transport.usageToday) return;
+    transport
+      .usageToday()
+      .then((n) => {
+        if (alive) setCount(n);
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+  if (count === null) return null;
+  return (
+    <p className="muted small">
+      {cap > 0
+        ? t('settings.aiUsageToday', { count, cap })
+        : t('settings.aiUsageTodayNoCap', { count })}
+    </p>
+  );
+}
+
+/** Saved confirmed readings (src/ai/cache.ts), with a button to clear them. */
+function ReadingCacheLine() {
+  const t = useT();
+  const [count, setCount] = useState(() => readingCount());
+  if (count === 0) return null;
+  return (
+    <div className="ai-settings__actions" data-tip={t('settings.aiClearCacheHint')}>
+      <button
+        type="button"
+        className="btn"
+        onClick={() => {
+          clearReadings();
+          setCount(0);
+        }}
+      >
+        <Trash2 size={14} strokeWidth={1.75} aria-hidden="true" />
+        {t('settings.aiClearCache', { count })}
+      </button>
+    </div>
   );
 }
 

@@ -15,6 +15,7 @@ import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useAiStore } from '@/ai/aiStore';
 import type { Draft } from '@/ai/draft';
 import { MAX_PROBLEM_CHARS } from '@/ai/pipeline';
 import { fromSI, toSI, unitLabel } from '@/core/units';
@@ -34,8 +35,11 @@ import {
   openManual,
   useAnalyzeStore,
   type AnalyzeErrorCode,
+  type AnalyzePhase,
 } from './analyze';
 import './ai.css';
+
+const isDialogPhase = (p: AnalyzePhase) => p === 'review' || p === 'unsupported' || p === 'error';
 
 /**
  * "Tôi hiểu đề như sau" (MASTER_PROMPT §3.1): nothing is simulated before the user has
@@ -46,7 +50,7 @@ export function ProblemDialog() {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
   const { phase, mode, draft, scene, moduleId } = useAnalyzeStore();
-  const open = phase === 'review' || phase === 'unsupported' || phase === 'error';
+  const open = isDialogPhase(phase);
 
   useEffect(() => {
     const d = ref.current;
@@ -69,7 +73,11 @@ export function ProblemDialog() {
       ref={ref}
       className="dialog dialog--wide"
       aria-labelledby="problem-dialog-title"
-      onClose={closeAnalyze}
+      onClose={() => {
+        // Esc closes the dialog. When it closes because a new analysis started ("Đọc lại
+        // bằng AI", "Thử lại"), the store is already 'running': do not cancel that run.
+        if (isDialogPhase(useAnalyzeStore.getState().phase)) closeAnalyze();
+      }}
     >
       <header className="dialog__header">
         <h2 id="problem-dialog-title">{title}</h2>
@@ -169,7 +177,7 @@ function SourceBadge({ source }: { source: ParamSource }) {
 function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   const t = useT();
   const L = useLocalized();
-  const { mode, model } = useAnalyzeStore();
+  const { mode, model, cached } = useAnalyzeStore();
   const [params, setParams] = useState<Params>(draft.params);
   const [sources, setSources] = useState<Record<string, ParamSource>>(draft.sources);
   const [kept, setKept] = useState<Set<string>>(new Set());
@@ -211,6 +219,21 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
               <strong>{L(scene.title)}</strong>
               {model && <span className="muted small">{t('analyze.model', { model })}</span>}
             </p>
+            {cached && (
+              <p className="problem-review__cached small">
+                <span>{t('analyze.cached')}</span>
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    void analyze(draft.problemText, { fresh: true });
+                  }}
+                >
+                  <RefreshCw size={14} strokeWidth={1.75} aria-hidden="true" />
+                  {t('analyze.readAgain')}
+                </button>
+              </p>
+            )}
             <blockquote className="problem-review__text" aria-label={t('analyze.problem')}>
               {draft.problemText}
             </blockquote>
@@ -552,6 +575,7 @@ const HINTED = [
   'quota',
   'badKey',
   'badModel',
+  'dailyLimit',
 ] as const satisfies readonly AnalyzeErrorCode[];
 type HintedCode = (typeof HINTED)[number];
 const isHinted = (c: AnalyzeErrorCode): c is HintedCode =>
@@ -562,17 +586,23 @@ function ErrorView() {
   const error = useAnalyzeStore((s) => s.error);
   const problemText = useWorkspaceStore((s) => s.problemText);
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
+  const provider = useAiStore((s) => s.provider);
   if (!error) return null;
   const code = error.code;
-  const hintKey = isHinted(code)
-    ? (`analyze.hint.${code}` as const)
-    : ('analyze.hint.other' as const);
+  // Key problems are explained per provider (Gemini: AI Studio; Claude: the supervisor).
+  const hintKey =
+    provider === 'claude' && (code === 'missingKey' || code === 'badKey')
+      ? (`analyze.hintClaude.${code}` as const)
+      : isHinted(code)
+        ? (`analyze.hint.${code}` as const)
+        : ('analyze.hint.other' as const);
   const settingsFix =
     code === 'network' ||
     code === 'missingKey' ||
     code === 'badKey' ||
     code === 'badModel' ||
     code === 'quota' ||
+    code === 'dailyLimit' ||
     code === 'timeout' ||
     code === 'unavailable' ||
     code === 'http';
