@@ -470,16 +470,17 @@ pub(crate) mod tests {
     /// PROMPT_PHAN_2 A2: the pilot edition must not contain any Gemini code. Checked twice:
     /// the provider id is refused, and the compiled test program (which links the same
     /// library code) does not contain the Gemini API host. The host is assembled at run time
-    /// so that this test does not put it into the program itself. (The embedded web assets
-    /// are compressed, so the web bundle is checked separately by
-    /// `scripts/edition-bundle.mjs`.)
+    /// so that this test does not put it into the program itself: it is stored reversed,
+    /// because the compiler may place separate string pieces next to each other (it did on
+    /// Windows), which would recreate the host in the program. (The embedded web assets are
+    /// compressed, so the web bundle is checked separately by `scripts/edition-bundle.mjs`.)
     #[cfg(feature = "edition-pilot")]
     #[test]
     fn pilot_edition_has_no_gemini() {
         assert_eq!(EDITION, "pilot");
         assert_eq!(KEYRING_SERVICE, "STEM Sim Lab Pilot");
         assert!(serde_json::from_value::<Provider>(json!("gemini")).is_err());
-        let host = ["generative", "language", ".googleapis", ".com"].concat();
+        let host: String = "moc.sipaelgoog.egaugnalevitareneg".chars().rev().collect();
         let exe = std::fs::read(std::env::current_exe().unwrap()).unwrap();
         let found = exe.windows(host.len()).any(|w| w == host.as_bytes());
         assert!(!found, "the pilot program contains the Gemini API host");
