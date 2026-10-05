@@ -96,6 +96,40 @@ async function mockGemini(page: Page, o: MockOptions = {}) {
   return stats;
 }
 
+/** Fake Groq server (OpenAI-compatible), used as the free fallback. */
+async function mockGroq(page: Page) {
+  const stats = { calls: 0 };
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'groq-test-key';
+  });
+  await page.route('https://api.groq.com/openai/v1/**', async (route) => {
+    expect(route.request().headers().authorization).toBe('Bearer groq-test-key');
+    stats.calls++;
+    const body = route.request().postDataJSON() as {
+      response_format?: { json_schema?: { schema?: { properties?: Record<string, unknown> } } };
+    };
+    const props = body.response_format?.json_schema?.schema?.properties ?? {};
+    const content =
+      'topic' in props
+        ? JSON.stringify({
+            topic: 'horizontalProjectile',
+            reason: 'ném ngang',
+            unsupported_parts: [],
+          })
+        : JSON.stringify({
+            quantities: item.quantities,
+            questions: ['time_of_flight', 'range'],
+            assumptions: [],
+            unsupported_parts: [],
+            clarifications: [],
+          });
+    return route.fulfill({
+      json: { choices: [{ message: { content } }], model: 'qwen/qwen3.8-27b' },
+    });
+  });
+  return stats;
+}
+
 async function typeProblem(page: Page, text: string) {
   await page.goto('/');
   await page.getByLabel('Đề bài', { exact: true }).fill(text);
@@ -239,19 +273,25 @@ test('no API key → the AI button opens "Kết nối AI" with the Gemini key gu
   await analyze.click();
   const settings = page.getByRole('dialog', { name: 'Cài đặt' });
   await expect(settings.getByText('Kết nối AI', { exact: true })).toBeVisible();
-  const guide = page.locator('details.ai-guide');
+  const guide = page.locator('details.ai-guide').filter({ hasText: 'khóa API Gemini' });
   await expect(guide).toHaveAttribute('open', '');
+  // The free Groq fallback has its own (closed) guide below.
+  const groqGuide = page.locator('details.ai-guide').filter({ hasText: 'khóa API Groq' });
+  await expect(groqGuide).not.toHaveAttribute('open', '');
+  await expect(settings.getByRole('radio', { name: 'Groq (miễn phí)' }).last()).toBeChecked();
   await expect(guide).toContainText('từ 18 tuổi trở lên');
   await expect(guide).toContainText('Create API key');
   // Step-by-step drawings.
   await expect(guide.getByRole('img')).toHaveCount(3);
   await expect(guide.getByRole('button', { name: 'Mở trang tạo khóa' })).toBeVisible();
-  await expect(settings.getByText('Chưa có khóa.')).toBeVisible();
+  await expect(settings.getByText('Chưa có khóa.').first()).toBeVisible();
   // The removed local provider is no longer offered.
   await expect(page.getByRole('radio', { name: /LM Studio/ })).toHaveCount(0);
   await expect(page.getByRole('radio', { name: 'Gemini (khuyên dùng)' })).toBeChecked();
-  await settings.getByRole('button', { name: 'Kiểm tra key' }).click();
-  await expect(settings.getByRole('status').filter({ hasText: 'Chưa có khóa.' })).toBeVisible();
+  await settings.getByRole('button', { name: 'Kiểm tra key' }).first().click();
+  await expect(
+    settings.getByRole('status').filter({ hasText: 'Chưa có khóa.' }).first(),
+  ).toBeVisible();
 });
 
 for (const [name, opts, expected] of [
@@ -267,9 +307,9 @@ for (const [name, opts, expected] of [
     const settings = page.getByRole('dialog', { name: 'Cài đặt' });
     // Only the last characters of a stored key are ever shown.
     await expect(settings.getByText('Đã lưu khóa: ••••••••')).toBeVisible();
-    await expect(settings.getByRole('textbox', { name: 'Mô hình' })).toHaveCount(1);
-    await settings.getByRole('button', { name: 'Kiểm tra key' }).click();
-    await expect(settings.locator('.ai-test')).toContainText(expected);
+    await expect(settings.getByRole('textbox', { name: 'Mô hình', exact: true })).toHaveCount(1);
+    await settings.getByRole('button', { name: 'Kiểm tra key' }).first().click();
+    await expect(settings.locator('.ai-test').first()).toContainText(expected);
     // The key never ends up in the page's storage.
     const stored = await page.evaluate(() =>
       Array.from({ length: localStorage.length }, (_, i) => {
@@ -369,4 +409,19 @@ test('signs of a crisis show support lines at once, even without an API key', as
   await expect(dialog).toContainText('096 306 1414');
   await expect(dialog).toContainText('115');
   expect(stats.generate).toBe(0);
+});
+
+test('Gemini out of free quota → the free Groq fallback answers, and the label says so', async ({
+  page,
+}) => {
+  await mockGemini(page, { status: 429 });
+  const groq = await mockGroq(page);
+  await typeProblem(page, item.text);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Tôi hiểu đề như sau' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('qwen/qwen3.8-27b (dự phòng', { exact: false })).toBeVisible();
+  await expect(dialog.locator('.ai-label__model')).toContainText('dự phòng');
+  await expect(dialog.getByRole('textbox', { name: 'Vận tốc ban đầu' })).toHaveValue('15');
+  expect(groq.calls).toBe(2);
 });
