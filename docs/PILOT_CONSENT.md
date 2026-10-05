@@ -13,7 +13,9 @@
 
 STEM Sim Lab mô phỏng Vật lí, Hóa học, Sinh học. Phần mô phỏng chạy hoàn toàn trên máy. Phần AI
 (đọc đề bài, diễn giải kết quả bằng lời) gửi **nội dung đề bài** đến dịch vụ Claude của công ty
-Anthropic (Mỹ). Mọi con số do chương trình tính, không do AI tính.
+Anthropic (Mỹ). Khi Claude hết lượt hoặc hết tiền, ứng dụng có thể chuyển sang dịch vụ **Groq**
+(Mỹ, gói miễn phí) nếu người giám sát đã nhập khóa Groq. Mọi con số do chương trình tính, không do
+AI tính.
 
 ## 2. Khóa AI và người trả phí
 
@@ -22,6 +24,8 @@ Anthropic (Mỹ). Mọi con số do chương trình tính, không do AI tính.
 - Người trả phí là khách hàng của Anthropic và **chấp nhận điều khoản của Anthropic** (Commercial
   Terms, Usage Policy). _(Điểm cần xác nhận — xem LEGAL_COMPLIANCE.md mục 6.2.)_
 - Khóa được người giám sát nhập vào máy, cất trong kho khóa của Windows, bảo vệ bằng mã PIN.
+- Khóa Groq (dự phòng miễn phí, không bắt buộc) cũng do người lớn từ 18 tuổi tạo; người đó chấp
+  nhận điều khoản của Groq. _(Điểm cần xác nhận — xem LEGAL_COMPLIANCE.md mục 6.8.)_
 - Người trả phí tự đặt giới hạn chi tiêu trên tài khoản Anthropic; ứng dụng có thêm giới hạn số
   lượt AI mỗi ngày.
 
@@ -31,6 +35,8 @@ Anthropic (Mỹ). Mọi con số do chương trình tính, không do AI tính.
 - Ứng dụng **chặn** đề bài có số điện thoại, email, số căn cước, họ tên/địa chỉ.
 - Anthropic (theo chính sách công bố khi tra cứu): không dùng dữ liệu API để huấn luyện theo mặc
   định, xóa sau 30 ngày; nội dung bị gắn cờ vi phạm có thể giữ lâu hơn.
+- Groq (theo điều khoản khi tra cứu): không được dùng nội dung để huấn luyện AI; có thể lưu tối đa
+  30 ngày để vận hành và chống lạm dụng (có tùy chọn Zero Data Retention).
 - Nhật ký sự cố trên máy chỉ ghi **loại sự cố và thời gian**, không ghi nội dung. Chỉ người giám
   sát xem được.
 
@@ -53,12 +59,12 @@ Anthropic (Mỹ). Mọi con số do chương trình tính, không do AI tính.
 
 Chúng tôi đã đọc phiếu này và trang "Quyền riêng tư & dùng AI an toàn" trong ứng dụng.
 
-|                                                | Họ tên | Chữ ký | Ngày |
-| ---------------------------------------------- | ------ | ------ | ---- |
-| Học sinh                                       |        |        |      |
-| Phụ huynh / người giám hộ                      |        |        |      |
-| Người trả phí khóa Claude (nếu khác phụ huynh) |        |        |      |
-| Người giám sát                                 |        |        |      |
+|                                                 | Họ tên | Chữ ký | Ngày |
+| ----------------------------------------------- | ------ | ------ | ---- |
+| Học sinh                                        |        |        |      |
+| Phụ huynh / người giám hộ                       |        |        |      |
+| Người tạo khóa Claude/Groq (nếu khác phụ huynh) |        |        |      |
+| Người giám sát                                  |        |        |      |
 
 Sau khi ký, người giám sát mở ứng dụng → bấm "Ghi nhận đồng ý và bật AI" (cần mã PIN). Ứng dụng
 chỉ lưu **ngày** ghi nhận, không lưu phiếu hay chữ ký.

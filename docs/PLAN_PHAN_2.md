@@ -104,7 +104,9 @@ Kết quả tra cứu (2026-10-05, chi tiết và nguồn: `LEGAL_COMPLIANCE.md`
 | Gemini API, Alibaba                               | Gemini đã có    | ✘                                | Điều khoản cấm người dưới 18                                                                                                                                                                                                             |
 | GitHub Models, Cerebras, Together, NVIDIA, Cohere | ✘               | ✘                                | Đã đóng, chỉ dùng thử, hoặc không có gói miễn phí                                                                                                                                                                                        |
 
-Kế hoạch đề xuất (bước **3b.3b**, chờ duyệt trước khi làm):
+Bước **3b.3b** — đã duyệt và **đã làm** (2026-10-05); riêng mục 3 (chọn mô hình bằng bộ đề chuẩn)
+cần khóa Groq thật: `LLM_PROVIDER=groq GROQ_API_KEY=… npm run golden:llm`. Mặc định hiện tại
+`qwen/qwen3.8-27b` (chọn theo bảng xếp hạng tiếng Việt SEA-HELM của các mô hình Qwen cùng dòng).
 
 1. Rust: thêm `OpenAiCompatibleProvider` (một mã cho Groq, Cloudflare, …: `chat/completions` +
    `response_format: json_schema`), khóa trong keychain như hiện nay; bản pilot cần PIN.

@@ -120,6 +120,20 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
 - The explanation step (`explain.ts`) runs after the engine; its numbers are checked against the
   engine's answers and the explanation is hidden when it contains any other number.
 
+## 3e. Free fallback provider (step 3b.3b)
+
+- `GroqProvider` (`src-tauri/src/ai/groq.rs`, both editions): OpenAI-compatible `chat/completions`,
+  `response_format: json_schema` (strict for gpt-oss / Qwen 3.8), reasoning kept out of the answer
+  (`include_reasoning: false` / `reasoning_format: hidden`, `reasoning_effort: low`), `<think>` blocks
+  stripped. Same body in `groqBody` (`src/ai/transport.ts`).
+- `ChatRequest.fallback {provider, model}` (filled by the transport from Settings → "Dự phòng khi
+  hết lượt", `fallbackFor` in `src/ai/fallback.ts`). `send_with_fallback` in `ai/mod.rs`: the chosen
+  provider first; on `is_quota_error` (429 after retries, 402, "credit balance", RESOURCE_EXHAUSTED)
+  the fallback answers and the provider is skipped for 10 min (`AiState.exhausted`). Never on a
+  wrong key, unknown model or network error. `ChatResponse.provider/fallback` reach the UI: the
+  AI label and "Mô hình AI" line say "dự phòng". The browser transport follows the same rule
+  (`isQuotaError`), so E2E covers it with a mocked Groq server.
+
 ## 3d. Safety gates (PROMPT_PHAN_2 A3, step 3b.3)
 
 ```

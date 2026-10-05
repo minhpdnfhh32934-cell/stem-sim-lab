@@ -160,6 +160,27 @@ Cần biết:
   gọi AI (bảng xác nhận vẫn hiện để bạn kiểm tra). Muốn AI đọc lại, bấm **Đọc lại bằng AI**. Xóa danh
   sách này trong Cài đặt → Kết nối AI.
 
+### Dự phòng miễn phí khi hết lượt: Groq
+
+Khi nhà cung cấp chính (Gemini, Claude) **hết lượt miễn phí hoặc hết tiền**, app tự chuyển sang
+**Groq** (miễn phí) nếu đã có khóa Groq. Nhãn **Nội dung do AI hỗ trợ** và dòng "Mô hình AI" ghi
+rõ mô hình nào đã trả lời, kèm chữ **dự phòng**. App chỉ chuyển khi hết lượt/hết tiền — không
+chuyển khi khóa sai hay mất mạng (những lỗi đó cần bạn sửa). Groq cũng có thể chọn làm nhà cung cấp
+chính (ví dụ lớp học không có khóa trả phí).
+
+Cài đặt → **Kết nối AI** → mục **Dự phòng khi hết lượt** → chọn **Groq (miễn phí)** → mở
+**Hướng dẫn lấy khóa API Groq**:
+
+1. Bấm **Mở trang tạo khóa** (hoặc gõ `console.groq.com/keys`) và đăng nhập.
+2. Bấm **Create API Key**, đặt tên bất kỳ rồi xác nhận.
+3. Sao chép khóa (chỉ hiện một lần).
+4. Dán vào ô **Khóa API cho dự phòng** → **Lưu khóa** → **Kiểm tra key**.
+
+Cần biết: người tạo tài khoản Groq phải **từ 18 tuổi** (bản thử nghiệm THPT: phụ huynh hoặc thầy cô
+tạo, người giám sát nhập bằng PIN). Theo điều khoản của Groq, nội dung gửi lên **không được dùng để
+huấn luyện AI**; nếu tài khoản có tùy chọn "Zero Data Retention", nên bật. Gói miễn phí có giới hạn
+(khoảng 1 000 lượt/ngày). Mô hình mặc định: `qwen/qwen3.8-27b` (đổi được ở ô **Mô hình dự phòng**).
+
 ## An toàn và quyền riêng tư
 
 **Lần đầu mở app** sẽ có câu hỏi **"Trước khi bắt đầu"**:
