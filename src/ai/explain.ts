@@ -8,7 +8,6 @@ export interface ExplainConfig {
   transport: LlmTransport;
   provider: Provider;
   model: string;
-  baseUrl?: string;
   timeoutSecs: number;
   signal?: AbortSignal;
 }
@@ -69,7 +68,6 @@ ${steps.join('\n')}`;
     {
       requestId: newRequestId(),
       provider: cfg.provider,
-      ...(cfg.baseUrl ? { baseUrl: cfg.baseUrl } : {}),
       model: cfg.model,
       system,
       messages: [{ role: 'user', content: user }],

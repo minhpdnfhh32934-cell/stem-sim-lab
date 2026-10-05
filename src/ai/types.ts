@@ -1,5 +1,5 @@
 /** Mirrors `ChatRequest`/`ChatResponse`/`AiError` in `src-tauri/src/ai.rs`. */
-export type Provider = 'lmstudio' | 'openai' | 'anthropic';
+export type Provider = 'gemini' | 'openai' | 'anthropic';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -9,7 +9,6 @@ export interface ChatMessage {
 export interface ChatRequest {
   requestId: string;
   provider: Provider;
-  baseUrl?: string;
   model: string;
   system: string;
   messages: ChatMessage[];

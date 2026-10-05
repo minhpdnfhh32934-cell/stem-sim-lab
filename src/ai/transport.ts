@@ -4,7 +4,8 @@ import { AiError, toAiError, type ChatRequest, type ChatResponse, type Provider 
 /** How the app talks to an LLM. The desktop app always goes through Rust. */
 export interface LlmTransport {
   chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse>;
-  models(provider: Provider, baseUrl?: string): Promise<string[]>;
+  /** The provider's models; also tells whether the stored key works. */
+  models(provider: Provider): Promise<string[]>;
   setKey(provider: Provider, key: string): Promise<void>;
   hasKey(provider: Provider): Promise<boolean>;
   deleteKey(provider: Provider): Promise<void>;
@@ -24,12 +25,9 @@ class TauriTransport implements LlmTransport {
       signal?.removeEventListener('abort', onAbort);
     }
   }
-  async models(provider: Provider, baseUrl?: string): Promise<string[]> {
+  async models(provider: Provider): Promise<string[]> {
     try {
-      const r = await invoke<{ models: string[] }>('ai_models', {
-        provider,
-        baseUrlOverride: baseUrl ?? null,
-      });
+      const r = await invoke<{ models: string[] }>('ai_models', { provider });
       return r.models;
     } catch (e) {
       throw toAiError(e);
@@ -50,38 +48,55 @@ class TauriTransport implements LlmTransport {
   }
 }
 
+/** Key used by the browser-only transport (set by end-to-end tests, never typed in the UI). */
+declare global {
+  var __STEMSIM_TEST_GEMINI_KEY__: string | undefined;
+}
+
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta';
+
 /**
- * Browser-only transport for UI development and end-to-end tests: talks to LM Studio's
- * OpenAI-compatible server directly. Cloud providers are not available here (keys must
- * never live in the web page).
+ * Browser-only transport for UI development and end-to-end tests (which mock the Gemini
+ * server). Keys must never live in the web page, so it only works with a test key injected
+ * by the test runner; the desktop app always goes through Rust (`TauriTransport`).
  */
 class FetchTransport implements LlmTransport {
+  private key(): string {
+    const k = globalThis.__STEMSIM_TEST_GEMINI_KEY__;
+    if (!k) throw new AiError('missingKey', 'gemini');
+    return k;
+  }
   async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
-    if (req.provider !== 'lmstudio') {
-      throw new AiError('unavailable', 'Cloud providers need the desktop app');
+    if (req.provider !== 'gemini') {
+      throw new AiError('unavailable', 'desktop app only');
     }
+    const key = this.key();
     const started = performance.now();
-    const base = (req.baseUrl ?? 'http://localhost:1234/v1').replace(/\/+$/, '');
     const timeout = AbortSignal.timeout((req.timeoutSecs ?? 60) * 1000);
     const combined = signal ? AbortSignal.any([signal, timeout]) : timeout;
-    const body: Record<string, unknown> = {
-      model: req.model,
-      messages: [{ role: 'system', content: req.system }, ...req.messages],
+    // Same body as `gemini_body` in src-tauri/src/ai.rs.
+    const generationConfig: Record<string, unknown> = {
       temperature: req.temperature ?? 0,
-      max_tokens: req.maxTokens ?? 2048,
-      stream: false,
+      maxOutputTokens: Math.max(req.maxTokens ?? 2048, 8192),
     };
     if (req.jsonSchema) {
-      body.response_format = {
-        type: 'json_schema',
-        json_schema: { name: req.schemaName ?? 'result', strict: true, schema: req.jsonSchema },
-      };
+      generationConfig.responseMimeType = 'application/json';
+      generationConfig.responseJsonSchema = req.jsonSchema;
     }
+    const body = {
+      systemInstruction: { parts: [{ text: req.system }] },
+      contents: req.messages.map((m) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }],
+      })),
+      generationConfig,
+    };
+    const model = req.model.trim().replace(/^models\//, '');
     let resp: Response;
     try {
-      resp = await fetch(`${base}/chat/completions`, {
+      resp = await fetch(`${GEMINI_URL}/models/${model}:generateContent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify(body),
         signal: combined,
       });
@@ -91,21 +106,26 @@ class FetchTransport implements LlmTransport {
     }
     if (!resp.ok) throw new AiError('http', `${resp.status}`);
     const json = (await resp.json()) as {
-      model?: string;
-      choices?: { message?: { content?: string } }[];
+      candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[];
     };
-    const content = json.choices?.[0]?.message?.content;
-    if (typeof content !== 'string') throw new AiError('badResponse', 'missing content');
-    return { content, model: json.model ?? req.model, durationMs: performance.now() - started };
+    const content = (json.candidates?.[0]?.content?.parts ?? [])
+      .filter((p) => !p.thought)
+      .map((p) => p.text ?? '')
+      .join('');
+    if (!content.trim()) throw new AiError('badResponse', 'missing content');
+    return { content, model, durationMs: performance.now() - started };
   }
-  async models(provider: Provider, baseUrl?: string): Promise<string[]> {
-    if (provider !== 'lmstudio') throw new AiError('unavailable', 'desktop app only');
-    const base = (baseUrl ?? 'http://localhost:1234/v1').replace(/\/+$/, '');
+  async models(provider: Provider): Promise<string[]> {
+    if (provider !== 'gemini') throw new AiError('unavailable', 'desktop app only');
+    const key = this.key();
     try {
-      const r = await fetch(`${base}/models`, { signal: AbortSignal.timeout(4000) });
+      const r = await fetch(`${GEMINI_URL}/models?pageSize=1000`, {
+        headers: { 'x-goog-api-key': key },
+        signal: AbortSignal.timeout(10_000),
+      });
       if (!r.ok) throw new AiError('http', String(r.status));
-      const j = (await r.json()) as { data?: { id: string }[] };
-      return (j.data ?? []).map((m) => m.id);
+      const j = (await r.json()) as { models?: { name: string }[] };
+      return (j.models ?? []).map((m) => m.name.replace(/^models\//, ''));
     } catch (e) {
       throw toAiError(e);
     }
@@ -113,8 +133,8 @@ class FetchTransport implements LlmTransport {
   setKey(): Promise<void> {
     return Promise.reject(new AiError('unavailable', 'desktop app only'));
   }
-  hasKey(): Promise<boolean> {
-    return Promise.resolve(false);
+  hasKey(provider: Provider): Promise<boolean> {
+    return Promise.resolve(provider === 'gemini' && !!globalThis.__STEMSIM_TEST_GEMINI_KEY__);
   }
   deleteKey(): Promise<void> {
     return Promise.resolve();

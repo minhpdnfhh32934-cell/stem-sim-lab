@@ -23,7 +23,6 @@ export interface PipelineConfig {
   transport: LlmTransport;
   provider: Provider;
   model: string;
-  baseUrl?: string;
   timeoutSecs: number;
   defaultGravity: number;
   /** Topic titles for the classifier prompt (id → Vietnamese title). */
@@ -54,7 +53,6 @@ async function structured<T>(
       {
         requestId: newRequestId(),
         provider: cfg.provider,
-        ...(cfg.baseUrl ? { baseUrl: cfg.baseUrl } : {}),
         model: cfg.model,
         system,
         messages,
