@@ -44,6 +44,8 @@ export type PipelineResult =
       reading: Reading;
       /** True when the reading came from the cache (no AI call). */
       cached: boolean;
+      /** True when the fallback provider answered (the chosen one was out of quota/credit). */
+      fallback: boolean;
     }
   | { kind: 'unsupported'; reason: string; parts: string[] };
 
@@ -56,7 +58,7 @@ async function structured<T>(
   schemaName: string,
   schema: z.ZodType<T>,
   check?: (v: T) => string | null,
-): Promise<{ value: T; model: string }> {
+): Promise<{ value: T; model: string; fallback: boolean }> {
   const messages: ChatMessage[] = [{ role: 'user', content: user }];
   let lastError = '';
   for (let attempt = 0; attempt <= MAX_REPAIRS; attempt++) {
@@ -78,7 +80,9 @@ async function structured<T>(
     );
     const parsed = parseJson(schema, resp.content);
     const extra = parsed.ok ? (check?.(parsed.value) ?? null) : null;
-    if (parsed.ok && !extra) return { value: parsed.value, model: resp.model };
+    if (parsed.ok && !extra) {
+      return { value: parsed.value, model: resp.model, fallback: resp.fallback ?? false };
+    }
     lastError = parsed.ok ? (extra ?? '') : parsed.error;
     messages.push(
       { role: 'assistant', content: resp.content },
@@ -108,7 +112,15 @@ export async function analyzeProblem(text: string, cfg: PipelineConfig): Promise
     const scene = await loadScene(hit.topic);
     const draft = buildDraft(scene, hit.extraction, problem, cfg.defaultGravity);
     draft.unsupported = [...new Set([...hit.unsupported_parts, ...draft.unsupported])];
-    return { kind: 'draft', draft, scene, model: hit.model, reading: hit, cached: true };
+    return {
+      kind: 'draft',
+      draft,
+      scene,
+      model: hit.model,
+      reading: hit,
+      cached: true,
+      fallback: false,
+    };
   }
 
   cfg.onStage?.('classify');
@@ -160,5 +172,13 @@ export async function analyzeProblem(text: string, cfg: PipelineConfig): Promise
     extraction: ext.value,
     model: ext.model,
   };
-  return { kind: 'draft', draft, scene, model: ext.model, reading, cached: false };
+  return {
+    kind: 'draft',
+    draft,
+    scene,
+    model: ext.model,
+    reading,
+    cached: false,
+    fallback: cls.fallback || ext.fallback,
+  };
 }

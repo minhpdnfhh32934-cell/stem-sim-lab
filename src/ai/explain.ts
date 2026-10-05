@@ -21,6 +21,9 @@ export interface Explanation {
   unknownNumbers: number[];
   /** False when the output filter found unsuitable content (the text is then not shown). */
   safe: boolean;
+  /** Model that wrote it, and whether it was the fallback provider. */
+  model: string;
+  fallback: boolean;
 }
 
 /** Numbers the explanation may mention: engine answers, numbers in the steps and the problem. */
@@ -88,5 +91,7 @@ ${steps.join('\n')}`;
     verified: unknown.length === 0,
     unknownNumbers: unknown,
     safe: outputIsSafe(text),
+    model: resp.model,
+    fallback: resp.fallback ?? false,
   };
 }

@@ -21,6 +21,7 @@ describe('AI settings migration', () => {
       models: DEFAULT_MODELS,
       timeoutSecs: 60,
       dailyCap: DEFAULT_DAILY_CAP,
+      fallback: 'groq',
     });
   });
 
@@ -46,11 +47,20 @@ describe('AI settings migration', () => {
       models: DEFAULT_MODELS,
       timeoutSecs: 30,
       dailyCap: DEFAULT_DAILY_CAP,
+      fallback: 'groq',
     });
   });
 
-  it('main edition offers Gemini first, then Claude', () => {
-    expect(PROVIDERS).toEqual(['gemini', 'claude']);
+  it('main edition offers Gemini first, then Claude and the free Groq', () => {
+    expect(PROVIDERS).toEqual(['gemini', 'claude', 'groq']);
+  });
+
+  it('keeps a valid fallback choice and its typed model', () => {
+    expect(migrateAiSettings({ fallback: 'off' }).fallback).toBe('off');
+    expect(migrateAiSettings({ fallback: 'openai' }).fallback).toBe('groq');
+    expect(migrateAiSettings({ models: { groq: 'openai/gpt-oss-120b' } }).models.groq).toBe(
+      'openai/gpt-oss-120b',
+    );
   });
 
   it('formats the local day for the daily cap', () => {

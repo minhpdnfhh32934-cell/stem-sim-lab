@@ -46,7 +46,7 @@ describe('transport without the desktop app (golden runs from Node)', () => {
     vi.stubGlobal('fetch', () => Promise.resolve(new Response('{}', { status: 429 })));
     await expect(getTransport().chat({ ...req, provider: 'claude' })).rejects.toMatchObject({
       code: 'http',
-      message: '429',
+      message: expect.stringMatching(/^429\b/) as string,
     });
     globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = undefined;
     await expect(getTransport().chat({ ...req, provider: 'claude' })).rejects.toMatchObject({

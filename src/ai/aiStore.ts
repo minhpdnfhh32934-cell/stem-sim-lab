@@ -16,12 +16,15 @@ export type AiStatus =
   | 'notAllowed';
 
 /**
- * Providers of this edition (PROMPT_PHAN_2 A2): the main edition has Gemini (default) and
- * Claude; the supervised pilot edition has Claude only.
+ * Providers of this edition (PROMPT_PHAN_2 A2 + user decision 2026-10-05): the main edition has
+ * Gemini (default), Claude and Groq; the supervised pilot edition has Claude and Groq (no Gemini:
+ * its terms exclude users under 18).
  */
 export const PROVIDERS: readonly Provider[] =
-  __EDITION__ === 'pilot' ? ['claude'] : ['gemini', 'claude'];
+  __EDITION__ === 'pilot' ? ['claude', 'groq'] : ['gemini', 'claude', 'groq'];
 export const DEFAULT_PROVIDER: Provider = __EDITION__ === 'pilot' ? 'claude' : 'gemini';
+/** Free fallback when the chosen provider is out of quota/credit (used only if it has a key). */
+export const DEFAULT_FALLBACK: ProviderChoice = 'groq';
 
 /** Default timeout of one AI call in seconds, retries included (PROMPT_PHAN_2 A2). */
 export const DEFAULT_TIMEOUT_SECS = 30;
@@ -34,6 +37,8 @@ export interface AiSettingsState {
   timeoutSecs: number;
   /** Maximum AI calls per day, counted by the Rust gateway (0 = no limit). */
   dailyCap: number;
+  /** "Dự phòng khi hết lượt": provider used when the chosen one is out of quota/credit. */
+  fallback: ProviderChoice;
   /**
    * Live connection status (not persisted). `badKey`: the provider refused the key; `quota`:
    * rate or quota limit; `badModel`: the model name is unknown; `error`: other server error.
@@ -45,6 +50,7 @@ export interface AiSettingsState {
   setModel: (p: Provider, m: string) => void;
   setTimeoutSecs: (s: number) => void;
   setDailyCap: (n: number) => void;
+  setFallback: (p: ProviderChoice) => void;
 }
 
 /**
@@ -56,13 +62,22 @@ export interface AiSettingsState {
 export const DEFAULT_MODELS: Record<Provider, string> = {
   gemini: 'gemini-3.8-flash',
   claude: 'claude-sonnet-5-5',
+  // Groq free tier, strict JSON schema; Qwen models rank high on the SEA-HELM Vietnamese
+  // leaderboard (checked 2026-10-05). Re-check with the golden set (LLM_PROVIDER=groq).
+  groq: 'qwen/qwen3.8-27b',
 };
+
+/** The model to use for a provider (an empty field means the default model). */
+export function modelFor(models: Record<Provider, string>, p: Provider): string {
+  return models[p].trim() || DEFAULT_MODELS[p];
+}
 
 interface Persisted {
   provider: ProviderChoice;
   models: Record<Provider, string>;
   timeoutSecs: number;
   dailyCap: number;
+  fallback: ProviderChoice;
 }
 
 /**
@@ -78,6 +93,7 @@ export function migrateAiSettings(old: unknown): Persisted {
     models?: Record<string, unknown>;
     timeoutSecs?: unknown;
     dailyCap?: unknown;
+    fallback?: unknown;
   };
   const models = { ...DEFAULT_MODELS };
   const typed = (k: string) => {
@@ -86,6 +102,7 @@ export function migrateAiSettings(old: unknown): Persisted {
   };
   models.gemini = typed('gemini') ?? models.gemini;
   models.claude = typed('claude') ?? typed('anthropic') ?? models.claude;
+  models.groq = typed('groq') ?? models.groq;
   const provider = o.provider === 'anthropic' ? 'claude' : o.provider;
   const choices: readonly unknown[] = [...PROVIDERS, 'off'];
   const timeout =
@@ -100,6 +117,7 @@ export function migrateAiSettings(old: unknown): Persisted {
       typeof o.dailyCap === 'number' && o.dailyCap >= 0
         ? Math.round(o.dailyCap)
         : DEFAULT_DAILY_CAP,
+    fallback: choices.includes(o.fallback) ? (o.fallback as ProviderChoice) : DEFAULT_FALLBACK,
   };
 }
 
@@ -110,6 +128,7 @@ export const useAiStore = create<AiSettingsState>()(
       models: { ...DEFAULT_MODELS },
       timeoutSecs: DEFAULT_TIMEOUT_SECS,
       dailyCap: DEFAULT_DAILY_CAP,
+      fallback: DEFAULT_FALLBACK,
       status: 'unknown',
       statusDetail: '',
       setProvider: (provider) => {
@@ -124,17 +143,21 @@ export const useAiStore = create<AiSettingsState>()(
       setDailyCap: (n) => {
         set({ dailyCap: Math.min(10_000, Math.max(0, Math.round(n))) });
       },
+      setFallback: (fallback) => {
+        set({ fallback });
+      },
     }),
     {
       name: 'stemsim.ai',
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => localStorage),
       migrate: migrateAiSettings,
-      partialize: ({ provider, models, timeoutSecs, dailyCap }) => ({
+      partialize: ({ provider, models, timeoutSecs, dailyCap, fallback }) => ({
         provider,
         models,
         timeoutSecs,
         dailyCap,
+        fallback,
       }),
     },
   ),
