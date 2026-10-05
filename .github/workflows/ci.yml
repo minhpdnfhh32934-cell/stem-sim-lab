@@ -27,7 +27,7 @@ jobs:
       - run: npm run build
 
   e2e:
-    name: End-to-end (Playwright, mocked LM Studio)
+    name: End-to-end (Playwright, mocked Gemini)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
