@@ -16,7 +16,7 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
   as a free fallback when paid tokens run out, in both editions, but only after their terms (age,
   data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §2b. First candidate:
   Groq (no training on data, 18+ account holder, minors allowed under the customer's
-  responsibility). Plan: `docs/PLAN_PHAN_2.md` §6 (step 3b.3b, awaiting approval).
+  responsibility). Plan: `docs/PLAN_PHAN_2.md` §6 (step 3b.3b, approved 2026-10-05).
 - **Two builds** (Cargo feature + `VITE_EDITION`): `main` (Gemini default, Claude optional, 18+
   confirmation on first run, no Gemini key may be saved before it) and `pilot` (**Claude only —
   Gemini code must never be compiled into or shipped with the pilot build**, key entered by a
@@ -55,18 +55,18 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 
 ## Commands
 
-| Task                      | Command                                                                                        |
-| ------------------------- | ---------------------------------------------------------------------------------------------- |
-| Install                   | `npm install`                                                                                  |
-| Desktop app (dev)         | `npm run tauri dev`                                                                            |
-| UI in browser only        | `npm run dev` → http://localhost:1420                                                          |
-| Lint / types / unit tests | `npm run lint`, `npm run typecheck`, `npm test`                                                |
-| All checks                | `npm run check` (+ `npm run format:check`)                                                     |
-| Rust                      | `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test` |
-| Production build          | `npm run build` (web) / `npm run tauri build` (installer)                                      |
-| Pilot edition             | `npm run build:pilot`; Rust: `cargo test --no-default-features --features edition-pilot`       |
-| E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)       |
-| Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm`; Claude: `LLM_PROVIDER=claude ANTHROPIC_API_KEY=…`       |
+| Task                      | Command                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Install                   | `npm install`                                                                                             |
+| Desktop app (dev)         | `npm run tauri dev`                                                                                       |
+| UI in browser only        | `npm run dev` → http://localhost:1420                                                                     |
+| Lint / types / unit tests | `npm run lint`, `npm run typecheck`, `npm test`                                                           |
+| All checks                | `npm run check` (+ `npm run format:check`)                                                                |
+| Rust                      | `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test`            |
+| Production build          | `npm run build` (web) / `npm run tauri build` (installer)                                                 |
+| Pilot edition             | `npm run build:pilot`; Rust: `cargo test --no-default-features --features edition-pilot`                  |
+| E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)                  |
+| Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm`; `LLM_PROVIDER=claude ANTHROPIC_API_KEY=…` / `=groq GROQ_API_KEY=…` |
 
 CI (`.github/workflows/ci.yml`) runs all of the above on every push.
 
@@ -86,7 +86,7 @@ CI (`.github/workflows/ci.yml`) runs all of the above on every push.
 - **Never skip or disable a failing test** to get green. Fix the code, or report the problem.
 - Small commits, one feature each, clear messages.
 - The user is a beginner (knows some Python, learning Java). Explain reports simply, in Vietnamese.
-- End each phase with: all tests passing, docs updated, a short report. Then **wait for approval**.
+- End each phase with: all tests passing, docs updated, a short report — then continue (see Autonomy note).
 
 ## Project map
 
@@ -128,8 +128,11 @@ tests/            app-level tests, golden set, e2e
 ## Autonomy note
 
 The user asked (2026-09-28) to continue through all phases without stopping for approval
-between phases. **Superseded for PROMPT_PHAN_2 work:** stop and report at the end of each 3b step
-and each T-phase, and wait for approval (PROMPT_PHAN_2 Bước 0 and B12).
+between phases. For PROMPT_PHAN_2 work this was first replaced by "stop after each 3b step and
+T-phase and wait"; **since 2026-10-05 the user wants the opposite again: after each step, send a
+short report of what was done (simple Vietnamese) and continue straight to the next step — every
+step is pre-approved.** Still stop and ask for: decisions only the user can make (legal points,
+money, accounts, publishing a release), anything the security rules forbid, and real blockers.
 Progress log: `docs/PROGRESS.md`.
 
 ## Core APIs (Phase 1)
@@ -170,6 +173,11 @@ Progress log: `docs/PROGRESS.md`.
   the UI. Two editions: `__EDITION__` (web) and Cargo features `edition-main`/`edition-pilot`;
   Gemini code only behind `__EDITION__ === 'main'` / `#[cfg(feature = "edition-main")]`.
   Confirmed readings are cached in `src/ai/cache.ts` (not the AI's numbers: the checks rerun).
+- **Free fallback (3b.3b):** `groq.rs` (`GroqProvider`, both editions, default model
+  `qwen/qwen3.8-27b`); `ChatRequest.fallback` + `send_with_fallback` switch only on quota/credit
+  errors (`is_quota_error` ↔ `src/ai/fallback.ts`); the response's `provider`/`fallback` are shown
+  in the AI label. Settings → "Dự phòng khi hết lượt" (default Groq; used only if it has a key).
+  Test key `__STEMSIM_TEST_GROQ_KEY__`; `open_groq_key_page`.
 - Default provider is **Gemini** (free tier, key from Google AI Studio; the key's creator must be
   18+, which the in-app guide says). Default model `DEFAULT_MODELS.gemini` in `src/ai/aiStore.ts`
   (checked 2026-10; update when Google retires it). LM Studio was removed on request (2026-10):
