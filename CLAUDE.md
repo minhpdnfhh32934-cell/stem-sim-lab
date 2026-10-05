@@ -1,8 +1,33 @@
 # CLAUDE.md — STEM Sim Lab
 
-Offline desktop app (Tauri 2 + React + TypeScript) simulating Physics, Chemistry and Biology for
-Vietnamese high-school science competitions. The full brief is in `MASTER_PROMPT.md`. Read it
-before starting a new phase.
+Desktop app (Tauri 2 + React + TypeScript) simulating Physics, Chemistry and Biology. The full
+brief is `MASTER_PROMPT.md` plus its continuation **`PROMPT_PHAN_2.md`** — read both before starting
+a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMPT_PHAN_2.md` wins**
+(MASTER_PROMPT §2, scientific integrity, is unchanged). Migration plan and its approval status:
+`docs/PLAN_PHAN_2.md`.
+
+## PROMPT_PHAN_2 rules (summary — A1–A8, B1, B13)
+
+- **Users:** primary = university students **18+** (bring their own Gemini key); pilot testers =
+  high-school students (mostly under 18) in supervised sessions with parental/school consent.
+- **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model). All AI
+  goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
+- **Two builds** (Cargo feature + `VITE_EDITION`): `main` (Gemini default, Claude optional, 18+
+  confirmation on first run, no Gemini key may be saved before it) and `pilot` (**Claude only —
+  Gemini code must never be compiled into or shipped with the pilot build**, key entered by a
+  supervisor behind a PIN, full under-18 safeguards: age gate + parental consent, "AI-assisted"
+  labels, two-way moderation, incident log without private content, report button, minimal data).
+- Never commit API keys (`.env` is git-ignored); never embed a project key in an installer.
+- AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
+  problem readings; app fully usable without a key and offline (simulations, samples, manual mode).
+- UI for learners (A4): one main action per screen, Basic/Advanced modes, Level → Subject → Topic →
+  Lesson, predict–observe–explain, challenges, step hints, no streaks/leaderboards, 1366×768,
+  targets ≥ 40 px, touch. Ask: "would a first-year student — or a high-school pilot tester — get it?"
+- AI Teacher (Part B): numbers only from deterministic tools; honest that it is an AI; warm but
+  bounded; crisis protocol with verified hotlines; mic/camera opt-in, no audio stored; "perform
+  before brain"; third-party licences in `docs/THIRD_PARTY.md`; no cloned real voices/faces.
+- Legal points are researched with citations in `docs/LEGAL_COMPLIANCE.md`; never conclude legally
+  on the user's behalf — list what the user/teacher must confirm.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
@@ -34,8 +59,9 @@ before starting a new phase.
 | All checks                | `npm run check` (+ `npm run format:check`)                                                     |
 | Rust                      | `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test` |
 | Production build          | `npm run build` (web) / `npm run tauri build` (installer)                                      |
+| Pilot edition             | `npm run build:pilot`; Rust: `cargo test --no-default-features --features edition-pilot`       |
 | E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)       |
-| Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm` (`GEMINI_MODEL` optional; uses free-tier quota)          |
+| Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm`; Claude: `LLM_PROVIDER=claude ANTHROPIC_API_KEY=…`       |
 
 CI (`.github/workflows/ci.yml`) runs all of the above on every push.
 
@@ -97,7 +123,8 @@ tests/            app-level tests, golden set, e2e
 ## Autonomy note
 
 The user asked (2026-09-28) to continue through all phases without stopping for approval
-between phases, while still testing, documenting and committing at the end of each phase.
+between phases. **Superseded for PROMPT_PHAN_2 work:** stop and report at the end of each 3b step
+and each T-phase, and wait for approval (PROMPT_PHAN_2 Bước 0 and B12).
 Progress log: `docs/PROGRESS.md`.
 
 ## Core APIs (Phase 1)
@@ -126,11 +153,16 @@ Progress log: `docs/PROGRESS.md`.
 
 ## AI layer (Phase 3)
 
-- Rust `src-tauri/src/ai.rs`: `ai_chat` (Gemini `generateContent` + `responseJsonSchema`, OpenAI
-  json_schema strict, Anthropic forced tool call), `ai_cancel`, `ai_models`, keychain
+- Rust `src-tauri/src/ai/`: trait `AIProvider` (`provider.rs`), `gemini.rs` (`generateContent` +
+  `responseJsonSchema`; **main edition only**), `claude.rs` (forced tool call, prompt caching, no
+  `temperature`), `usage.rs` (daily cap); `mod.rs`: `ai_chat` (retry 429/5xx ≤ 3, timeout 30 s
+  default, daily cap), `ai_cancel`, `ai_models`, `ai_usage`, `ai_edition`, keychain
   `ai_set_key/ai_has_key/ai_delete_key`, `open_gemini_key_page`. Keys never reach the web page.
-  Browser dev mode uses `FetchTransport` (Gemini only, with a test key
-  `__STEMSIM_TEST_GEMINI_KEY__` injected by tests — never typed in the UI).
+  Without the desktop app, `FetchTransport` is used (Gemini; Claude from Node only) with test keys
+  `__STEMSIM_TEST_GEMINI_KEY__` / `__STEMSIM_TEST_CLAUDE_KEY__` injected by tests — never typed in
+  the UI. Two editions: `__EDITION__` (web) and Cargo features `edition-main`/`edition-pilot`;
+  Gemini code only behind `__EDITION__ === 'main'` / `#[cfg(feature = "edition-main")]`.
+  Confirmed readings are cached in `src/ai/cache.ts` (not the AI's numbers: the checks rerun).
 - Default provider is **Gemini** (free tier, key from Google AI Studio; the key's creator must be
   18+, which the in-app guide says). Default model `DEFAULT_MODELS.gemini` in `src/ai/aiStore.ts`
   (checked 2026-10; update when Google retires it). LM Studio was removed on request (2026-10):
@@ -172,12 +204,17 @@ Progress log: `docs/PROGRESS.md`.
 - [x] Phase 0: project scaffold, design system, layout shell, theme, i18n, CI
 - [x] Phase 1: core (units, constants, integrators, fixed timestep, worker, quality tier, Science Card)
 - [x] Phase 2: Physics 2D MVP (13 topics, canvas stage, tools, graphs, solutions, CSV)
-- [x] Phase 3: AI layer (Gemini/OpenAI/Anthropic via Rust, SceneSpec checks, confirmation table, golden set, E2E)
+- [x] Phase 3: AI layer (Gemini/Claude via Rust, SceneSpec checks, confirmation table, golden set, E2E)
 - [x] Phase 4: Chemistry MVP (atoms, 3D molecules, VSEPR, 39 reactions/10 mechanisms, balancer, particles)
 - [x] Phase 5: Biology MVP (11 topics: cell division, central dogma, genetics, ecology, enzymes, transport)
 - [x] Phase 6: overload ladder, watchdog, presentation mode, tour, .stemsim files, undo/redo, history, sources page
 - [x] Phase 7: Windows installer workflow (`.github/workflows/release.yml`: tag `v*` or manual run →
       NSIS `.exe` + `.msi`), final USER_GUIDE and SCIENCE_ACCURACY (§9 limitations, §10 how to verify)
+- [ ] Phase 3b (PROMPT_PHAN_2 A7) — plan `docs/PLAN_PHAN_2.md` (approved 2026-10-05):
+  - [x] 3b.1 AIProvider (Gemini + Claude), OpenAI removed, two editions, retry/daily cap/cache
+  - [ ] 3b.2 AI connection screen · [ ] 3b.3 safety & compliance · [ ] 3b.4 learner UI ·
+        [ ] 3b.5 learn/ · [ ] 3b.6 two installers + update channels
+- [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
