@@ -1,6 +1,15 @@
 /** Mirrors `ChatRequest`/`ChatResponse`/`AiError` in `src-tauri/src/ai/mod.rs`. */
-/** `gemini`: main edition only; `claude`: both editions (PROMPT_PHAN_2 A2). */
-export type Provider = 'gemini' | 'claude';
+/**
+ * `gemini`: main edition only; `claude`: both editions (PROMPT_PHAN_2 A2); `groq`: free
+ * fallback, both editions (user decision 2026-10-05, docs/LEGAL_COMPLIANCE.md §2b).
+ */
+export type Provider = 'gemini' | 'claude' | 'groq';
+
+/** Provider that answers when the chosen one is out of quota or credit. */
+export interface Fallback {
+  provider: Provider;
+  model: string;
+}
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -21,6 +30,8 @@ export interface ChatRequest {
   /** The user's local date ("YYYY-MM-DD") and the daily cap (0 = none), filled in by the transport. */
   day?: string;
   dailyCap?: number;
+  /** Filled in by the transport from Settings ("Dự phòng khi hết lượt"). */
+  fallback?: Fallback;
 }
 
 export interface ChatResponse {
@@ -29,6 +40,10 @@ export interface ChatResponse {
   durationMs: number;
   /** Attempts retried after 429/5xx (Rust gateway only). */
   retries?: number;
+  /** Provider that answered. */
+  provider?: Provider;
+  /** True when the fallback provider answered (the chosen one was out of quota/credit). */
+  fallback?: boolean;
 }
 
 export type AiErrorCode =

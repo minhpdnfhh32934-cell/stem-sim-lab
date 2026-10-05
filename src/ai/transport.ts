@@ -1,5 +1,6 @@
 import { invoke, isTauri } from '@tauri-apps/api/core';
 import { localDay, useAiStore } from './aiStore';
+import { fallbackFor, isQuotaError } from './fallback';
 import { classifyKeyTest, maskKey, type KeyTest } from './keyTest';
 import { AiError, toAiError, type ChatRequest, type ChatResponse, type Provider } from './types';
 
@@ -25,8 +26,15 @@ class TauriTransport implements LlmTransport {
       void invoke('ai_cancel', { requestId: req.requestId });
     };
     signal?.addEventListener('abort', onAbort, { once: true });
-    // The Rust gateway counts the call against the user's daily cap.
-    const request = { day: localDay(), dailyCap: useAiStore.getState().dailyCap, ...req };
+    // The Rust gateway counts the call against the user's daily cap and switches to the
+    // fallback provider when the chosen one is out of quota/credit.
+    const fallback = fallbackFor(req.provider);
+    const request = {
+      day: localDay(),
+      dailyCap: useAiStore.getState().dailyCap,
+      ...(fallback ? { fallback } : {}),
+      ...req,
+    };
     try {
       return await invoke<ChatResponse>('ai_chat', { request });
     } catch (e) {
@@ -72,11 +80,19 @@ class TauriTransport implements LlmTransport {
 declare global {
   var __STEMSIM_TEST_GEMINI_KEY__: string | undefined;
   var __STEMSIM_TEST_CLAUDE_KEY__: string | undefined;
+  var __STEMSIM_TEST_GROQ_KEY__: string | undefined;
 }
 
 function injectedKey(provider: Provider): string | undefined {
   if (provider === 'claude') return globalThis.__STEMSIM_TEST_CLAUDE_KEY__;
+  if (provider === 'groq') return globalThis.__STEMSIM_TEST_GROQ_KEY__;
   return __EDITION__ === 'main' ? globalThis.__STEMSIM_TEST_GEMINI_KEY__ : undefined;
+}
+
+/** "429: {…}" — status plus the start of the body, like the Rust gateway reports it. */
+async function httpError(resp: Response): Promise<AiError> {
+  const body = await resp.text().catch(() => '');
+  return new AiError('http', `${resp.status}: ${body.slice(0, 400)}`);
 }
 
 type Http = (url: string, init: RequestInit) => Promise<Response>;
@@ -111,7 +127,7 @@ async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<st
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
     body: JSON.stringify(body),
   });
-  if (!resp.ok) throw new AiError('http', `${resp.status}`);
+  if (!resp.ok) throw await httpError(resp);
   const json = (await resp.json()) as {
     candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[];
   };
@@ -154,7 +170,7 @@ async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<st
     },
     body: JSON.stringify(body),
   });
-  if (!resp.ok) throw new AiError('http', `${resp.status}`);
+  if (!resp.ok) throw await httpError(resp);
   const json = (await resp.json()) as {
     content?: { type: string; text?: string; input?: unknown }[];
   };
@@ -162,6 +178,47 @@ async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<st
   const tool = blocks.find((b) => b.type === 'tool_use');
   if (tool) return JSON.stringify(tool.input);
   return blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join('');
+}
+
+/** Same request as `groq_body` in src-tauri/src/ai/groq.rs (OpenAI-compatible). */
+export function groqBody(req: ChatRequest): Record<string, unknown> {
+  const model = req.model.trim();
+  const body: Record<string, unknown> = {
+    model,
+    messages: [{ role: 'system', content: req.system }, ...req.messages],
+    max_completion_tokens: req.maxTokens ?? 2048,
+    temperature: req.temperature ?? 0,
+  };
+  if (model.startsWith('openai/gpt-oss')) {
+    body.include_reasoning = false;
+    body.reasoning_effort = 'low';
+  } else if (model.startsWith('qwen/')) {
+    body.reasoning_effort = 'low';
+    if (!req.jsonSchema) body.reasoning_format = 'hidden';
+  }
+  if (req.jsonSchema) {
+    body.response_format = {
+      type: 'json_schema',
+      json_schema: {
+        name: req.schemaName ?? 'result',
+        strict: model.startsWith('openai/gpt-oss') || model.startsWith('qwen/qwen3.8'),
+        schema: req.jsonSchema,
+      },
+    };
+  }
+  return body;
+}
+
+async function groqChat(req: ChatRequest, key: string, http: Http): Promise<string> {
+  const resp = await http('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+    body: JSON.stringify(groqBody(req)),
+  });
+  if (!resp.ok) throw await httpError(resp);
+  const json = (await resp.json()) as { choices?: { message?: { content?: string } }[] };
+  const text = json.choices?.[0]?.message?.content ?? '';
+  return text.replace(/^\s*<think>[\s\S]*?<\/think>\s*/, '');
 }
 
 /**
@@ -178,9 +235,25 @@ class FetchTransport implements LlmTransport {
   }
   private supported(provider: Provider): boolean {
     if (provider === 'claude') return nodeOnly;
+    if (provider === 'groq') return true;
     return __EDITION__ === 'main';
   }
+  /** Same fallback rule as the Rust gateway (`send_with_fallback`). */
   async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
+    const fb = fallbackFor(req.provider);
+    const fbUsable = fb && this.supported(fb.provider) && !!injectedKey(fb.provider);
+    try {
+      return { ...(await this.chatOnce(req, signal)), provider: req.provider, fallback: false };
+    } catch (e) {
+      if (!fbUsable || !isQuotaError(e)) throw e;
+      const answer = await this.chatOnce(
+        { ...req, provider: fb.provider, model: fb.model },
+        signal,
+      );
+      return { ...answer, provider: fb.provider, fallback: true };
+    }
+  }
+  private async chatOnce(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
     if (!this.supported(req.provider)) throw new AiError('unavailable', 'desktop app only');
     const key = this.key(req.provider);
     const started = performance.now();
@@ -191,6 +264,7 @@ class FetchTransport implements LlmTransport {
     let content: string;
     try {
       if (req.provider === 'claude') content = await claudeChat(req, key, http);
+      else if (req.provider === 'groq') content = await groqChat(req, key, http);
       else if (__EDITION__ === 'main') content = await geminiChat(req, key, http);
       else throw new AiError('unavailable', req.provider);
     } catch (e) {
