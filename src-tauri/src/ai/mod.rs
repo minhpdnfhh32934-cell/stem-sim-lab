@@ -377,6 +377,118 @@ pub fn ai_has_key(provider: Provider) -> bool {
     api_key(provider).is_ok()
 }
 
+/// "••••••••abcd": only the last 4 characters of a stored key are ever shown (PROMPT_PHAN_2 A2).
+pub fn mask_key(key: &str) -> String {
+    let chars: Vec<char> = key.trim().chars().collect();
+    if chars.len() <= 8 {
+        return "••••••••".into();
+    }
+    let tail: String = chars[chars.len() - 4..].iter().collect();
+    format!("••••••••{tail}")
+}
+
+/// The masked form of the stored key, or `None` when there is none. The key itself never
+/// leaves Rust.
+#[tauri::command]
+pub fn ai_key_hint(provider: Provider) -> Option<String> {
+    api_key(provider).ok().map(|k| mask_key(&k))
+}
+
+/// Result of "Kiểm tra key" (PROMPT_PHAN_2 A2: thành công / key không hợp lệ / hết hạn mức /
+/// không có mạng), plus "no key" and "model not found".
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum KeyStatus {
+    Ok,
+    NoKey,
+    BadKey,
+    Quota,
+    BadModel,
+    Offline,
+    Error,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KeyTest {
+    pub status: KeyStatus,
+    /// Short server message for the "error" case (never contains the key).
+    pub detail: String,
+}
+
+/// Turns the answer to the test call into a status. Gemini: a wrong key is HTTP 400
+/// `API_KEY_INVALID`; Claude: 401. Both: unknown model 404, rate/quota 429. Claude reports an
+/// empty prepaid balance as 400 "credit balance is too low", which is a quota problem too.
+pub fn classify_key_test(status: u16, body: &str) -> KeyStatus {
+    let b = body.to_ascii_lowercase();
+    match status {
+        200..=299 => KeyStatus::Ok,
+        401 | 403 => KeyStatus::BadKey,
+        404 => KeyStatus::BadModel,
+        402 | 429 => KeyStatus::Quota,
+        400 if b.contains("api_key_invalid") || b.contains("api key not valid") => {
+            KeyStatus::BadKey
+        }
+        400 if b.contains("credit balance") => KeyStatus::Quota,
+        400 if b.contains("model") && (b.contains("not found") || b.contains("not_found")) => {
+            KeyStatus::BadModel
+        }
+        _ => KeyStatus::Error,
+    }
+}
+
+/// "Kiểm tra key": one very small request with the chosen model (a few tokens). It checks the
+/// key, the model name and the quota at once. Not counted against the daily cap, not retried.
+#[tauri::command]
+pub async fn ai_test_key(provider: Provider, model: String) -> KeyTest {
+    let done = |status, detail: String| KeyTest { status, detail };
+    let Ok(key) = api_key(provider) else {
+        return done(KeyStatus::NoKey, String::new());
+    };
+    let req = ChatRequest {
+        request_id: "key-test".into(),
+        provider,
+        model,
+        system: "Reply with the single word OK.".into(),
+        messages: vec![Message {
+            role: "user".into(),
+            content: "OK?".into(),
+        }],
+        json_schema: None,
+        schema_name: None,
+        temperature: None,
+        max_tokens: Some(16),
+        timeout_secs: None,
+        day: None,
+        daily_cap: None,
+    };
+    let http = match client() {
+        Ok(h) => h,
+        Err(e) => return done(KeyStatus::Error, e.to_string()),
+    };
+    let sent = self::provider(provider)
+        .chat_request(&http, &key, &req)
+        .timeout(Duration::from_secs(20))
+        .send()
+        .await;
+    let resp = match sent {
+        Ok(r) => r,
+        Err(e) if e.is_timeout() || e.is_connect() || e.is_request() => {
+            return done(KeyStatus::Offline, String::new())
+        }
+        Err(e) => return done(KeyStatus::Error, e.to_string()),
+    };
+    let code = resp.status().as_u16();
+    let body = resp.text().await.unwrap_or_default();
+    let status = classify_key_test(code, &body);
+    let detail = if status == KeyStatus::Error {
+        format!("{code}: {}", body.chars().take(200).collect::<String>())
+    } else {
+        String::new()
+    };
+    done(status, detail)
+}
+
 #[tauri::command]
 pub fn ai_delete_key(provider: Provider) -> Result<(), AiError> {
     match keyring_entry(provider)?.delete_credential() {
@@ -484,6 +596,38 @@ pub(crate) mod tests {
         let exe = std::fs::read(std::env::current_exe().unwrap()).unwrap();
         let found = exe.windows(host.len()).any(|w| w == host.as_bytes());
         assert!(!found, "the pilot program contains the Gemini API host");
+    }
+
+    #[test]
+    fn masks_keys_to_the_last_four_characters() {
+        assert_eq!(mask_key("AIzaSyA-1234567890abcd"), "••••••••abcd");
+        assert_eq!(mask_key("  sk-ant-api03-xyzWXYZ \n"), "••••••••WXYZ");
+        // Short strings show nothing at all.
+        assert_eq!(mask_key("abcd"), "••••••••");
+    }
+
+    #[test]
+    fn classifies_key_test_answers() {
+        use KeyStatus::*;
+        assert_eq!(classify_key_test(200, "{}"), Ok);
+        let gemini_bad = r#"{"error":{"code":400,"message":"API key not valid. Please pass a valid API key.","status":"INVALID_ARGUMENT","details":[{"reason":"API_KEY_INVALID"}]}}"#;
+        assert_eq!(classify_key_test(400, gemini_bad), BadKey);
+        let claude_bad = r#"{"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"}}"#;
+        assert_eq!(classify_key_test(401, claude_bad), BadKey);
+        assert_eq!(classify_key_test(403, ""), BadKey);
+        assert_eq!(classify_key_test(404, "models/x is not found"), BadModel);
+        assert_eq!(classify_key_test(429, "RESOURCE_EXHAUSTED"), Quota);
+        let credit = r#"{"error":{"type":"invalid_request_error","message":"Your credit balance is too low"}}"#;
+        assert_eq!(classify_key_test(400, credit), Quota);
+        assert_eq!(classify_key_test(500, "oops"), Error);
+        assert_eq!(
+            serde_json::to_value(KeyTest {
+                status: BadModel,
+                detail: String::new()
+            })
+            .unwrap()["status"],
+            "badModel"
+        );
     }
 
     #[test]
