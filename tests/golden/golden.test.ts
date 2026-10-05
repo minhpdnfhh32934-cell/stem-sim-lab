@@ -143,7 +143,7 @@ function fakeTransport(replies: Record<string, string[]>): LlmTransport & { call
 }
 
 const baseCfg = {
-  provider: 'lmstudio' as const,
+  provider: 'gemini' as const,
   model: 'fake',
   timeoutSecs: 5,
   defaultGravity: 9.81,

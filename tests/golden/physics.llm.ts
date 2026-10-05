@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { DEFAULT_MODELS } from '@/ai/aiStore';
 import { analyzeProblem } from '@/ai/pipeline';
 import { getTransport } from '@/ai/transport';
 import vi from '@/app/i18n/locales/vi';
@@ -16,16 +17,16 @@ interface GoldenItem {
 }
 
 /**
- * Measures how well a local model reads the golden problems. Code-side guarantees
+ * Measures how well a real Gemini model reads the golden problems. Code-side guarantees
  * (no invented numbers, defaults marked) hold whatever the model does; this report shows
  * how often the model picks the right topic and extracts the right values.
  */
-it('golden set with a real LM Studio model', async () => {
-  const baseUrl = process.env.LMSTUDIO_URL ?? 'http://localhost:1234/v1';
+it('golden set with a real Gemini model', async () => {
+  // The key stays in this Node process (it is never part of the app's web page).
+  globalThis.__STEMSIM_TEST_GEMINI_KEY__ = process.env.GEMINI_API_KEY;
+  expect(process.env.GEMINI_API_KEY, 'set GEMINI_API_KEY').toBeTruthy();
   const transport = getTransport();
-  const model =
-    process.env.LMSTUDIO_MODEL ?? (await transport.models('lmstudio', baseUrl))[0] ?? '';
-  expect(model, 'no model loaded in LM Studio').not.toBe('');
+  const model = process.env.GEMINI_MODEL ?? DEFAULT_MODELS.gemini;
   const items = (golden as { items: GoldenItem[] }).items;
   const rows: Record<string, unknown>[] = [];
   for (const item of items) {
@@ -34,9 +35,8 @@ it('golden set with a real LM Studio model', async () => {
     try {
       const r = await analyzeProblem(item.text, {
         transport,
-        provider: 'lmstudio',
+        provider: 'gemini',
         model,
-        baseUrl,
         timeoutSecs: 180,
         defaultGravity: 9.81,
         topicTitles: vi.topics,
