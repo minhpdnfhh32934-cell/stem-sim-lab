@@ -1,5 +1,6 @@
 import { invoke, isTauri } from '@tauri-apps/api/core';
 import { localDay, useAiStore } from './aiStore';
+import { classifyKeyTest, maskKey, type KeyTest } from './keyTest';
 import { AiError, toAiError, type ChatRequest, type ChatResponse, type Provider } from './types';
 
 /** How the app talks to an LLM. The desktop app always goes through Rust (`AIProvider`). */
@@ -12,6 +13,10 @@ export interface LlmTransport {
   deleteKey(provider: Provider): Promise<void>;
   /** AI calls counted today against the daily cap (desktop app only). */
   usageToday?(): Promise<number>;
+  /** "Kiểm tra key": one tiny request with the chosen model. */
+  testKey?(provider: Provider, model: string): Promise<KeyTest>;
+  /** The stored key masked as "••••••••abcd", or null (the key itself never reaches the page). */
+  keyHint?(provider: Provider): Promise<string | null>;
 }
 
 class TauriTransport implements LlmTransport {
@@ -55,6 +60,12 @@ class TauriTransport implements LlmTransport {
     const u = await invoke<{ count: number }>('ai_usage', { day: localDay() });
     return u.count;
   }
+  testKey(provider: Provider, model: string): Promise<KeyTest> {
+    return invoke<KeyTest>('ai_test_key', { provider, model });
+  }
+  keyHint(provider: Provider): Promise<string | null> {
+    return invoke<string | null>('ai_key_hint', { provider });
+  }
 }
 
 /** Keys used by the browser-only transport (set by tests, never typed in the UI). */
@@ -63,7 +74,7 @@ declare global {
   var __STEMSIM_TEST_CLAUDE_KEY__: string | undefined;
 }
 
-function testKey(provider: Provider): string | undefined {
+function injectedKey(provider: Provider): string | undefined {
   if (provider === 'claude') return globalThis.__STEMSIM_TEST_CLAUDE_KEY__;
   return __EDITION__ === 'main' ? globalThis.__STEMSIM_TEST_GEMINI_KEY__ : undefined;
 }
@@ -161,7 +172,7 @@ async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<st
  */
 class FetchTransport implements LlmTransport {
   private key(provider: Provider): string {
-    const k = testKey(provider);
+    const k = injectedKey(provider);
     if (!k) throw new AiError('missingKey', provider);
     return k;
   }
@@ -206,10 +217,40 @@ class FetchTransport implements LlmTransport {
     return Promise.reject(new AiError('unavailable', 'desktop app only'));
   }
   hasKey(provider: Provider): Promise<boolean> {
-    return Promise.resolve(this.supported(provider) && !!testKey(provider));
+    return Promise.resolve(this.supported(provider) && !!injectedKey(provider));
   }
   deleteKey(): Promise<void> {
     return Promise.resolve();
+  }
+  async testKey(provider: Provider, model: string): Promise<KeyTest> {
+    if (!this.supported(provider)) return { status: 'error', detail: 'desktop app only' };
+    const key = injectedKey(provider);
+    if (!key) return { status: 'noKey', detail: '' };
+    if (provider !== 'gemini' || __EDITION__ !== 'main') {
+      return { status: 'error', detail: 'desktop app only' };
+    }
+    const name = model.trim().replace(/^models\//, '');
+    let resp: Response;
+    try {
+      resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${name}:generateContent`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+          body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'OK?' }] }] }),
+          signal: AbortSignal.timeout(20_000),
+        },
+      );
+    } catch {
+      return { status: 'offline', detail: '' };
+    }
+    const body = await resp.text();
+    const status = classifyKeyTest(resp.status, body);
+    return { status, detail: status === 'error' ? `${resp.status}` : '' };
+  }
+  keyHint(provider: Provider): Promise<string | null> {
+    const key = this.supported(provider) ? injectedKey(provider) : undefined;
+    return Promise.resolve(key ? maskKey(key) : null);
   }
 }
 

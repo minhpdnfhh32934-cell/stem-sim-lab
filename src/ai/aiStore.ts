@@ -3,6 +3,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Provider } from './types';
 
 export type ProviderChoice = Provider | 'off';
+export type AiStatus =
+  'unknown' | 'ok' | 'offline' | 'noKey' | 'badKey' | 'quota' | 'badModel' | 'error';
 
 /**
  * Providers of this edition (PROMPT_PHAN_2 A2): the main edition has Gemini (default) and
@@ -23,8 +25,13 @@ export interface AiSettingsState {
   timeoutSecs: number;
   /** Maximum AI calls per day, counted by the Rust gateway (0 = no limit). */
   dailyCap: number;
-  /** Live connection status (not persisted). `badKey`: the provider refused the key. */
-  status: 'unknown' | 'ok' | 'offline' | 'noKey' | 'badKey';
+  /**
+   * Live connection status (not persisted). `badKey`: the provider refused the key; `quota`:
+   * rate or quota limit; `badModel`: the model name is unknown; `error`: other server error.
+   */
+  status: AiStatus;
+  /** Server message when `status` is `error`. */
+  statusDetail: string;
   setProvider: (p: ProviderChoice) => void;
   setModel: (p: Provider, m: string) => void;
   setTimeoutSecs: (s: number) => void;
@@ -95,8 +102,9 @@ export const useAiStore = create<AiSettingsState>()(
       timeoutSecs: DEFAULT_TIMEOUT_SECS,
       dailyCap: DEFAULT_DAILY_CAP,
       status: 'unknown',
+      statusDetail: '',
       setProvider: (provider) => {
-        set({ provider, status: 'unknown' });
+        set({ provider, status: 'unknown', statusDetail: '' });
       },
       setModel: (p, m) => {
         set({ models: { ...get().models, [p]: m } });
