@@ -1,21 +1,28 @@
-import { isTauri } from '@tauri-apps/api/core';
-import { Bot, KeyRound, RefreshCw, Trash2 } from 'lucide-react';
+import { invoke, isTauri } from '@tauri-apps/api/core';
+import { Bot, ExternalLink, KeyRound, RefreshCw, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useT } from '@/app/i18n';
-import { useAiStore, type ProviderChoice } from '@/ai/aiStore';
+import { DEFAULT_MODELS, PROVIDERS, useAiStore, type ProviderChoice } from '@/ai/aiStore';
 import { getTransport } from '@/ai/transport';
 import { toAiError, type Provider } from '@/ai/types';
 import { checkAiStatus } from './useAiStatus';
 import './ai.css';
 
-const PROVIDERS: ProviderChoice[] = ['lmstudio', 'openai', 'anthropic', 'off'];
+const CHOICES: readonly ProviderChoice[] = [...PROVIDERS, 'off'];
+const GEMINI_KEY_PAGE = 'https://aistudio.google.com/apikey';
 
-/** Settings → "AI đọc đề": provider, LM Studio address, model, API key, timeout. */
+/** Opens Google AI Studio's key page in the system browser (fixed address, set in Rust). */
+function openGeminiKeyPage() {
+  if (isTauri()) void invoke('open_gemini_key_page');
+  else window.open(GEMINI_KEY_PAGE, '_blank', 'noopener,noreferrer');
+}
+
+/** Settings → "AI đọc đề": provider, Gemini key guide, model, API key, timeout. */
 export function AiSettings() {
   const t = useT();
   const ai = useAiStore();
   const desktop = isTauri();
-  const cloud = ai.provider === 'openai' || ai.provider === 'anthropic';
+  const on = ai.provider !== 'off';
 
   return (
     <fieldset className="settings-group">
@@ -28,7 +35,7 @@ export function AiSettings() {
       <div className="settings-row">
         <span id="ai-provider-label">{t('settings.aiProvider')}</span>
         <div className="segmented" role="radiogroup" aria-labelledby="ai-provider-label">
-          {PROVIDERS.map((p) => (
+          {CHOICES.map((p) => (
             <button
               key={p}
               type="button"
@@ -45,27 +52,15 @@ export function AiSettings() {
         </div>
       </div>
 
-      {ai.provider === 'lmstudio' && (
-        <label className="ai-settings__field">
-          <span>{t('settings.aiBaseUrl')}</span>
-          <input
-            type="url"
-            spellCheck={false}
-            value={ai.baseUrl}
-            onChange={(e) => {
-              ai.setBaseUrl(e.target.value.trim());
-            }}
-          />
-        </label>
-      )}
+      {ai.provider === 'gemini' && <GeminiGuide openByDefault={ai.status === 'noKey'} />}
 
-      {ai.provider !== 'off' && <ModelField provider={ai.provider} />}
+      {on && <ModelField provider={ai.provider as Provider} />}
 
-      {cloud && !desktop && <p className="muted">{t('settings.aiCloudDesktopOnly')}</p>}
-      {cloud && desktop && <KeyField provider={ai.provider as Provider} />}
-      {cloud && <p className="muted small">{t('settings.aiPrivacy')}</p>}
+      {on && !desktop && <p className="muted">{t('settings.aiCloudDesktopOnly')}</p>}
+      {on && desktop && <KeyField provider={ai.provider as Provider} />}
+      {on && <p className="muted small">{t('settings.aiPrivacy')}</p>}
 
-      {ai.provider !== 'off' && (
+      {on && (
         <>
           <label className="ai-settings__field">
             <span>{t('settings.aiTimeout')}</span>
@@ -86,7 +81,7 @@ export function AiSettings() {
               type="button"
               className="btn"
               onClick={() => {
-                void checkAiStatus();
+                void checkAiStatus(true);
               }}
             >
               <RefreshCw size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiTest')}
@@ -97,14 +92,14 @@ export function AiSettings() {
               data-ok={ai.status === 'ok' ? 'true' : 'false'}
             >
               {ai.status === 'ok'
-                ? ai.provider === 'lmstudio'
-                  ? t('settings.aiStatusOk', { count: ai.availableModels.length })
-                  : t('settings.aiKeyStored')
+                ? t('settings.aiStatusOk')
                 : ai.status === 'noKey'
                   ? t('settings.aiKeyNone')
-                  : ai.status === 'offline'
-                    ? t('settings.aiStatusOffline')
-                    : ''}
+                  : ai.status === 'badKey'
+                    ? t('settings.aiStatusBadKey')
+                    : ai.status === 'offline'
+                      ? t('settings.aiStatusOffline')
+                      : ''}
             </span>
           </div>
         </>
@@ -113,33 +108,35 @@ export function AiSettings() {
   );
 }
 
+/** Step-by-step guide for students: how to create a free Gemini API key. */
+function GeminiGuide({ openByDefault }: { openByDefault: boolean }) {
+  const t = useT();
+  const steps = ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'] as const;
+  return (
+    <details className="ai-guide" open={openByDefault}>
+      <summary>{t('settings.geminiGuide.title')}</summary>
+      <p className="ai-guide__note">{t('settings.geminiGuide.age')}</p>
+      <ol className="ai-guide__steps">
+        {steps.map((s) => (
+          <li key={s}>{t(`settings.geminiGuide.${s}`)}</li>
+        ))}
+      </ol>
+      <div className="ai-settings__actions">
+        <button type="button" className="btn" onClick={openGeminiKeyPage}>
+          <ExternalLink size={14} strokeWidth={1.75} aria-hidden="true" />
+          {t('settings.geminiGuide.open')}
+        </button>
+      </div>
+      <p className="muted small">{t('settings.geminiGuide.free')}</p>
+      <p className="muted small">{t('settings.geminiGuide.safety')}</p>
+    </details>
+  );
+}
+
 function ModelField({ provider }: { provider: Provider }) {
   const t = useT();
   const model = useAiStore((s) => s.models[provider]);
-  const available = useAiStore((s) => s.availableModels);
   const setModel = useAiStore((s) => s.setModel);
-  if (provider === 'lmstudio') {
-    const options = available.filter((m) => !/embed/i.test(m));
-    return (
-      <label className="ai-settings__field">
-        <span>{t('settings.aiModel')}</span>
-        <select
-          value={model}
-          onChange={(e) => {
-            setModel(provider, e.target.value);
-          }}
-        >
-          <option value="">{t('settings.aiModelAuto')}</option>
-          {model && !options.includes(model) && <option value={model}>{model}</option>}
-          {options.map((m) => (
-            <option key={m} value={m}>
-              {m}
-            </option>
-          ))}
-        </select>
-      </label>
-    );
-  }
   return (
     <label className="ai-settings__field" data-tip={t('settings.aiModelHint')}>
       <span>{t('settings.aiModel')}</span>
@@ -147,6 +144,7 @@ function ModelField({ provider }: { provider: Provider }) {
         type="text"
         spellCheck={false}
         value={model}
+        placeholder={DEFAULT_MODELS[provider]}
         onChange={(e) => {
           setModel(provider, e.target.value.trim());
         }}
@@ -182,7 +180,7 @@ function KeyField({ provider }: { provider: Provider }) {
       await getTransport().setKey(provider, key.trim());
       setKey('');
       setHas(true);
-      void checkAiStatus();
+      void checkAiStatus(true);
     } catch (e) {
       setError(toAiError(e).message);
     }

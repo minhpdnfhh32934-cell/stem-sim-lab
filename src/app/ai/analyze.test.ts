@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { useAiStore } from '@/ai/aiStore';
+import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError } from '@/ai/types';
 import { analyze, cancelAnalyze, openManual, resolveAi, useAnalyzeStore } from './analyze';
@@ -7,7 +7,7 @@ import { analyze, cancelAnalyze, openManual, resolveAi, useAnalyzeStore } from '
 function transport(over: Partial<LlmTransport> = {}): LlmTransport {
   return {
     chat: () => Promise.reject(new AiError('network', 'down')),
-    models: () => Promise.resolve(['text-embedding-nomic', 'qwen2.5-7b-instruct']),
+    models: () => Promise.resolve(['gemini-test']),
     setKey: () => Promise.resolve(),
     hasKey: () => Promise.resolve(false),
     deleteKey: () => Promise.resolve(),
@@ -18,9 +18,8 @@ function transport(over: Partial<LlmTransport> = {}): LlmTransport {
 describe('AI controller', () => {
   beforeEach(() => {
     useAiStore.setState({
-      provider: 'lmstudio',
-      models: { lmstudio: '', openai: 'm', anthropic: 'm' },
-      availableModels: [],
+      provider: 'gemini',
+      models: { gemini: '', openai: 'm', anthropic: 'm' },
     });
     useAnalyzeStore.setState({ phase: 'idle', error: null, draft: null });
   });
@@ -28,20 +27,23 @@ describe('AI controller', () => {
     setTransportForTests(null);
   });
 
-  it('uses the chat model loaded in LM Studio, never an embedding model', async () => {
-    setTransportForTests(transport());
+  it('uses the default Gemini model when the model field is empty', async () => {
     const r = await resolveAi();
-    expect(r.model).toBe('qwen2.5-7b-instruct');
-    expect(r.baseUrl).toBe(useAiStore.getState().baseUrl);
+    expect(r).toMatchObject({ provider: 'gemini', model: DEFAULT_MODELS.gemini });
+    useAiStore.setState({ models: { gemini: ' gemini-x ', openai: 'm', anthropic: 'm' } });
+    expect((await resolveAi()).model).toBe('gemini-x');
   });
 
-  it('reports "no model loaded" as its own error', async () => {
-    setTransportForTests(transport({ models: () => Promise.resolve([]) }));
+  it.each([
+    ['429 Too Many Requests: {"error":{"status":"RESOURCE_EXHAUSTED"}}', 'quota'],
+    ['400 Bad Request: API key not valid. Please pass a valid API key.', 'badKey'],
+    ['403', 'badKey'],
+    ['404 Not Found: models/gemini-x is not found', 'badModel'],
+    ['500 Internal Server Error', 'http'],
+  ])('explains provider error "%s" as %s', async (message, code) => {
+    setTransportForTests(transport({ chat: () => Promise.reject(new AiError('http', message)) }));
     await analyze('Một vật rơi tự do từ độ cao 20 m.');
-    expect(useAnalyzeStore.getState()).toMatchObject({
-      phase: 'error',
-      error: { code: 'noModel' },
-    });
+    expect(useAnalyzeStore.getState().error?.code).toBe(code);
   });
 
   it('maps a network failure to an error the dialog can explain', async () => {

@@ -544,13 +544,18 @@ function UnsupportedView() {
   );
 }
 
-const HINTED: readonly AnalyzeErrorCode[] = [
+const HINTED = [
   'timeout',
   'network',
   'missingKey',
   'invalidJson',
-  'noModel',
-];
+  'quota',
+  'badKey',
+  'badModel',
+] as const satisfies readonly AnalyzeErrorCode[];
+type HintedCode = (typeof HINTED)[number];
+const isHinted = (c: AnalyzeErrorCode): c is HintedCode =>
+  (HINTED as readonly AnalyzeErrorCode[]).includes(c);
 
 function ErrorView() {
   const t = useT();
@@ -559,12 +564,15 @@ function ErrorView() {
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
   if (!error) return null;
   const code = error.code;
-  const hintKey = HINTED.includes(code)
-    ? (`analyze.hint.${code as 'timeout' | 'network' | 'missingKey' | 'invalidJson' | 'noModel'}` as const)
+  const hintKey = isHinted(code)
+    ? (`analyze.hint.${code}` as const)
     : ('analyze.hint.other' as const);
   const settingsFix =
     code === 'network' ||
     code === 'missingKey' ||
+    code === 'badKey' ||
+    code === 'badModel' ||
+    code === 'quota' ||
     code === 'timeout' ||
     code === 'unavailable' ||
     code === 'http';
