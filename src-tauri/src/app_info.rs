@@ -8,6 +8,8 @@ pub struct AppInfo {
     pub version: String,
     pub target_os: String,
     pub debug_build: bool,
+    /// "main" or "pilot" (Cargo feature, PROMPT_PHAN_2 A2).
+    pub edition: String,
 }
 
 impl AppInfo {
@@ -17,6 +19,7 @@ impl AppInfo {
             version: env!("CARGO_PKG_VERSION").to_string(),
             target_os: std::env::consts::OS.to_string(),
             debug_build: cfg!(debug_assertions),
+            edition: crate::ai::EDITION.to_string(),
         }
     }
 }

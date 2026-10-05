@@ -1,7 +1,8 @@
 //! Rust backend for STEM Sim Lab.
 //!
 //! - `app_info`: build information
-//! - `ai_*`: AI gateway (Gemini / OpenAI / Anthropic; keys in the OS keychain)
+//! - `ai_*`: AI gateway (`AIProvider`: Gemini in the main edition, Claude in both; keys in
+//!   the OS keychain; retry, timeout, cancel, daily cap)
 //!
 //! - `save_file` / `open_text_file`: native Save/Open dialogs (`.stemsim`, PNG, CSV)
 //! - `history_*`: simulation history in SQLite (app data folder)
@@ -39,6 +40,8 @@ pub fn run() {
             ai::ai_set_key,
             ai::ai_has_key,
             ai::ai_delete_key,
+            ai::ai_usage,
+            ai::ai_edition,
             ai::open_gemini_key_page,
             files::save_file,
             files::open_text_file,
