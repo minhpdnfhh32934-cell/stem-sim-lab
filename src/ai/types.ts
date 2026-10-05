@@ -1,5 +1,6 @@
-/** Mirrors `ChatRequest`/`ChatResponse`/`AiError` in `src-tauri/src/ai.rs`. */
-export type Provider = 'gemini' | 'openai' | 'anthropic';
+/** Mirrors `ChatRequest`/`ChatResponse`/`AiError` in `src-tauri/src/ai/mod.rs`. */
+/** `gemini`: main edition only; `claude`: both editions (PROMPT_PHAN_2 A2). */
+export type Provider = 'gemini' | 'claude';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -17,12 +18,17 @@ export interface ChatRequest {
   temperature?: number;
   maxTokens?: number;
   timeoutSecs?: number;
+  /** The user's local date ("YYYY-MM-DD") and the daily cap (0 = none), filled in by the transport. */
+  day?: string;
+  dailyCap?: number;
 }
 
 export interface ChatResponse {
   content: string;
   model: string;
   durationMs: number;
+  /** Attempts retried after 429/5xx (Rust gateway only). */
+  retries?: number;
 }
 
 export type AiErrorCode =
@@ -33,6 +39,7 @@ export type AiErrorCode =
   | 'missingKey'
   | 'badResponse'
   | 'keychain'
+  | 'dailyLimit'
   | 'invalidJson'
   | 'unavailable';
 

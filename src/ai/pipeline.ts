@@ -1,6 +1,7 @@
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { PhysicsScene } from '@/physics/types';
 import type { z } from 'zod';
+import type { Reading } from './cache';
 import { buildDraft, type Draft } from './draft';
 import { classificationSystem, extractionSystem } from './prompts';
 import {
@@ -29,10 +30,21 @@ export interface PipelineConfig {
   topicTitles: Record<string, string>;
   signal?: AbortSignal;
   onStage?: (s: Stage) => void;
+  /** Confirmed readings: a hit skips both AI calls (the code checks still run). */
+  cachedReading?: (problem: string) => Reading | null;
 }
 
 export type PipelineResult =
-  | { kind: 'draft'; draft: Draft; scene: PhysicsScene; model: string }
+  | {
+      kind: 'draft';
+      draft: Draft;
+      scene: PhysicsScene;
+      model: string;
+      /** The AI's raw reading (cached once the user confirms the table). */
+      reading: Reading;
+      /** True when the reading came from the cache (no AI call). */
+      cached: boolean;
+    }
   | { kind: 'unsupported'; reason: string; parts: string[] };
 
 /** Calls the LLM for structured JSON, feeding validation errors back (≤ MAX_REPAIRS times). */
@@ -90,6 +102,15 @@ export async function analyzeProblem(text: string, cfg: PipelineConfig): Promise
   if (problem.length > MAX_PROBLEM_CHARS) throw new AiError('badResponse', 'tooLong');
   const ids = sceneIds();
 
+  const hit = cfg.cachedReading?.(problem);
+  if (hit && ids.includes(hit.topic)) {
+    cfg.onStage?.('validate');
+    const scene = await loadScene(hit.topic);
+    const draft = buildDraft(scene, hit.extraction, problem, cfg.defaultGravity);
+    draft.unsupported = [...new Set([...hit.unsupported_parts, ...draft.unsupported])];
+    return { kind: 'draft', draft, scene, model: hit.model, reading: hit, cached: true };
+  }
+
   cfg.onStage?.('classify');
   const cls = await structured(
     cfg,
@@ -133,5 +154,11 @@ export async function analyzeProblem(text: string, cfg: PipelineConfig): Promise
   cfg.onStage?.('validate');
   const draft = buildDraft(scene, ext.value, problem, cfg.defaultGravity);
   draft.unsupported = [...new Set([...cls.value.unsupported_parts, ...draft.unsupported])];
-  return { kind: 'draft', draft, scene, model: ext.model };
+  const reading: Reading = {
+    topic: cls.value.topic,
+    unsupported_parts: cls.value.unsupported_parts,
+    extraction: ext.value,
+    model: ext.model,
+  };
+  return { kind: 'draft', draft, scene, model: ext.model, reading, cached: false };
 }
