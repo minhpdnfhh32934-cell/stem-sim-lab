@@ -34,8 +34,8 @@ before starting a new phase.
 | All checks                | `npm run check` (+ `npm run format:check`)                                                     |
 | Rust                      | `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test` |
 | Production build          | `npm run build` (web) / `npm run tauri build` (installer)                                      |
-| E2E (mocked LM Studio)    | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)       |
-| Golden set vs real model  | `npm run golden:llm` (LM Studio running; `LMSTUDIO_URL`, `LMSTUDIO_MODEL` optional)            |
+| E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)       |
+| Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm` (`GEMINI_MODEL` optional; uses free-tier quota)          |
 
 CI (`.github/workflows/ci.yml`) runs all of the above on every push.
 
@@ -126,15 +126,21 @@ Progress log: `docs/PROGRESS.md`.
 
 ## AI layer (Phase 3)
 
-- Rust `src-tauri/src/ai.rs`: `ai_chat` (LM Studio/OpenAI json_schema strict, Anthropic forced tool
-  call), `ai_cancel`, `ai_models`, keychain `ai_set_key/ai_has_key/ai_delete_key`. Keys never
-  reach the web page. Browser dev mode uses `FetchTransport` (LM Studio only).
+- Rust `src-tauri/src/ai.rs`: `ai_chat` (Gemini `generateContent` + `responseJsonSchema`, OpenAI
+  json_schema strict, Anthropic forced tool call), `ai_cancel`, `ai_models`, keychain
+  `ai_set_key/ai_has_key/ai_delete_key`, `open_gemini_key_page`. Keys never reach the web page.
+  Browser dev mode uses `FetchTransport` (Gemini only, with a test key
+  `__STEMSIM_TEST_GEMINI_KEY__` injected by tests — never typed in the UI).
+- Default provider is **Gemini** (free tier, key from Google AI Studio; the key's creator must be
+  18+, which the in-app guide says). Default model `DEFAULT_MODELS.gemini` in `src/ai/aiStore.ts`
+  (checked 2026-10; update when Google retires it). LM Studio was removed on request (2026-10):
+  it is the user's separate local tool, unrelated to this app. Do not add local providers back.
 - `src/ai/pipeline.ts` classify → extract → `buildDraft` (`src/ai/draft.ts`): numbers must appear
   in the text (`src/ai/numbers.ts`) or be implied by a phrase in `IMPLIED` with a real quote.
   Defaults are filled in code. `explain.ts` hides explanations containing foreign numbers.
 - UI in `src/app/ai/`: `analyze.ts` (controller store), `ProblemDialog` ("Tôi hiểu đề như sau",
-  manual "Tự dựng cảnh", unsupported/error views), `AiSettings`, `useAiStatus` (polls LM Studio
-  only), `ExplainBox`. Tests: `tests/golden`, `src/app/ai/analyze.test.ts`, `tests/e2e`.
+  manual "Tự dựng cảnh", unsupported/error views), `AiSettings`, `useAiStatus` (no background calls;
+  "Kiểm tra kết nối" probes the key), `ExplainBox`. Tests: `tests/golden`, `src/app/ai/analyze.test.ts`, `tests/e2e`.
 - When a new physics scene is added, its params become extractable automatically; add golden
   problems for it in `scripts/golden/make_physics_golden.py` and regenerate `physics.json`.
 
@@ -166,7 +172,7 @@ Progress log: `docs/PROGRESS.md`.
 - [x] Phase 0: project scaffold, design system, layout shell, theme, i18n, CI
 - [x] Phase 1: core (units, constants, integrators, fixed timestep, worker, quality tier, Science Card)
 - [x] Phase 2: Physics 2D MVP (13 topics, canvas stage, tools, graphs, solutions, CSV)
-- [x] Phase 3: AI layer (LM Studio/cloud via Rust, SceneSpec checks, confirmation table, golden set, E2E)
+- [x] Phase 3: AI layer (Gemini/OpenAI/Anthropic via Rust, SceneSpec checks, confirmation table, golden set, E2E)
 - [x] Phase 4: Chemistry MVP (atoms, 3D molecules, VSEPR, 39 reactions/10 mechanisms, balancer, particles)
 - [x] Phase 5: Biology MVP (11 topics: cell division, central dogma, genetics, ecology, enzymes, transport)
 - [x] Phase 6: overload ladder, watchdog, presentation mode, tour, .stemsim files, undo/redo, history, sources page

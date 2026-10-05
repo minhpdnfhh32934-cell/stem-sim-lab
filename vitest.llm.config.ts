@@ -2,8 +2,8 @@ import { defineConfig } from 'vitest/config';
 import base from './vite.config.ts';
 
 /**
- * Runs the physics golden set against a REAL LM Studio server (not part of `npm test`):
- *   LMSTUDIO_URL=http://localhost:1234/v1 LMSTUDIO_MODEL=qwen2.5-7b-instruct npm run golden:llm
+ * Runs the physics golden set against the REAL Gemini API (not part of `npm test`; uses quota):
+ *   GEMINI_API_KEY=… [GEMINI_MODEL=gemini-3.8-flash] npm run golden:llm
  */
 export default defineConfig({
   resolve: base.resolve,
