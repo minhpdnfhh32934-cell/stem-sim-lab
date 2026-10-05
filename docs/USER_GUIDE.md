@@ -115,14 +115,39 @@ xo, con lắc đơn.
 Không có AI? Bấm nút **Tự dựng cảnh** (biểu tượng thước và bút chì) cạnh nút Phân tích đề để chọn
 chủ đề và nhập thông số bằng tay.
 
-### Cài AI
+### Cài AI: lấy khóa API Gemini (miễn phí)
 
-- **LM Studio (miễn phí, chạy trên máy, không cần mạng):** tải LM Studio, tải một mô hình (khuyên
-  dùng Qwen2.5 7B Instruct hoặc lớn hơn), nạp mô hình, vào tab Developer và bật **Start Server**
-  (cổng 1234). App tự nhận; nhãn "AI: LM Studio" chuyển màu xanh.
-- **AI đám mây (OpenAI / Anthropic):** Cài đặt → AI đọc đề → chọn nhà cung cấp, nhập API key. Khóa
-  được lưu trong kho khóa của Windows, không lưu trong tệp. Đề bài sẽ được gửi lên máy chủ của nhà
-  cung cấp.
+AI đọc đề dùng **Gemini** của Google (mặc định). Cần một **khóa API** (API key), làm một lần:
+
+> **Lưu ý tuổi:** theo điều khoản của Google, người tạo khóa API phải **từ 18 tuổi trở lên**. Học
+> sinh dưới 18 tuổi hãy nhờ thầy cô hoặc phụ huynh tạo khóa và nhập giúp vào máy.
+
+1. Trong app: bấm ⚙ **Cài đặt** → mục **AI đọc đề** → chọn **Gemini (khuyên dùng)** → mở
+   **Hướng dẫn lấy khóa API Gemini** → bấm **Mở trang tạo khóa**. (Hoặc tự gõ
+   `aistudio.google.com/apikey` vào trình duyệt.)
+2. Đăng nhập tài khoản Google. Lần đầu vào **Google AI Studio**: đọc và đồng ý điều khoản.
+3. Bấm **Create API key** (Tạo khóa API). Nếu được hỏi chọn dự án (project), chọn dự án có sẵn hoặc
+   để Google tự tạo.
+4. Bấm biểu tượng **sao chép** cạnh khóa vừa tạo.
+5. Quay lại app: dán khóa vào ô **Khóa API** (Ctrl+V) → bấm **Lưu khóa**.
+6. Bấm **Kiểm tra kết nối**. Thấy "Kết nối được — khóa hoạt động" là xong; nhãn trên thanh công cụ
+   đổi thành "AI: đám mây".
+
+Cần biết:
+
+- **Miễn phí, không cần thẻ ngân hàng**, nhưng có giới hạn số lượt mỗi phút và mỗi ngày. Khi app báo
+  "hết lượt dùng AI miễn phí", đợi khoảng 1 phút; nếu vẫn báo thì thử lại vào ngày hôm sau. Lúc đó
+  vẫn dùng được **Tự dựng cảnh**.
+- **Riêng tư:** đề bài được gửi lên máy chủ Google để đọc. Với gói miễn phí, Google có thể dùng nội
+  dung gửi lên để cải thiện sản phẩm, nên **đừng nhập thông tin cá nhân** (họ tên, số điện thoại,
+  địa chỉ…) vào đề bài.
+- **Giữ khóa như mật khẩu:** không gửi cho bạn bè, không đăng lên mạng. App cất khóa trong kho khóa
+  của Windows (Windows Credential Manager), không lưu trong tệp. Lỡ để lộ khóa: vào Google AI Studio
+  xóa khóa đó, tạo khóa mới và dán lại.
+- Ô **Mô hình** để trống là dùng mô hình mặc định (`gemini-3.8-flash`, thuộc gói miễn phí lúc viết
+  hướng dẫn này — tháng 10/2026). Chỉ đổi khi thầy cô hướng dẫn.
+- Có thể chọn **OpenAI** hoặc **Anthropic** thay cho Gemini (cần khóa API trả phí của nhà cung cấp
+  đó), hoặc **Tắt** AI.
 
 ## Hóa học
 
@@ -196,14 +221,19 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 - **Vật lý:** giá trị g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s²) — chỉ dùng khi đề không cho g.
 - **Chất lượng hiển thị:** Tự động / Thấp / Trung bình / Cao, nút Đo lại. Chỉ ảnh hưởng hình ảnh,
   không ảnh hưởng số liệu.
-- **AI đọc đề:** chọn LM Studio, OpenAI, Anthropic hoặc tắt AI.
+- **AI đọc đề:** chọn Gemini (khuyên dùng), OpenAI, Anthropic hoặc tắt AI; hướng dẫn lấy khóa API
+  Gemini; khóa API; mô hình; thời gian chờ; nút Kiểm tra kết nối.
 - **Phím tắt:** danh sách đầy đủ.
 
 ## Lỗi thường gặp
 
 - **App mở ra màn hình trắng:** máy thiếu WebView2 — xem mục Cài đặt.
-- **"AI: ngoại tuyến":** LM Studio chưa bật server (tab Developer → Start Server, cổng 1234), hoặc
-  chưa nạp mô hình. Vẫn dùng được **Tự dựng cảnh**.
+- **"AI: thiếu key":** chưa nhập khóa API — làm theo mục "Cài AI: lấy khóa API Gemini" ở trên.
+- **"Khóa bị từ chối":** khóa gõ sai, đã bị xóa hoặc bị tắt. Tạo khóa mới trong Google AI Studio và
+  dán lại.
+- **"Không kết nối được máy chủ AI":** kiểm tra mạng Internet. Không có mạng vẫn dùng được **Tự dựng
+  cảnh** và thư viện bài mẫu.
+- **"Hết lượt dùng AI miễn phí":** đợi khoảng 1 phút, hoặc thử lại vào ngày mai.
 - **Mô phỏng chạy chậm, thanh trạng thái hiện "Chuyển động chậm ×…":** máy không kịp tính theo thời
   gian thực; kết quả vẫn đúng. Có thể giảm tốc độ phát hoặc đóng bớt chương trình khác.
 - **Không mở được tệp .stemsim:** tệp hỏng hoặc từ phiên bản mới hơn; app báo lỗi và không thay đổi

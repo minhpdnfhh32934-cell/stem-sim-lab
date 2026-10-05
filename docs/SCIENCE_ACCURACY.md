@@ -110,12 +110,12 @@ thuộc AI.
 **Bộ đề chuẩn (golden set):** `tests/golden/physics.json` có 31 đề (29 đề mô phỏng được và 2 đề
 ngoài phạm vi). Đáp số được tính **độc lập bằng Python** (`scripts/golden/make_physics_golden.py`),
 rồi so với đáp số của engine ở sai số 10⁻⁶ (`npm test`). Để đo độ chính xác của một mô hình AI
-thật: mở LM Studio, rồi chạy `npm run golden:llm` (báo cáo tỉ lệ chọn đúng chủ đề, trích đúng số
+thật: đặt biến môi trường `GEMINI_API_KEY`, rồi chạy `npm run golden:llm` (dùng lượt miễn phí; báo cáo tỉ lệ chọn đúng chủ đề, trích đúng số
 liệu, ra đúng đáp số).
 
-**Kiểm thử đầu-cuối:** `npm run test:e2e` (Playwright) chạy app thật trong trình duyệt với LM
-Studio giả lập. Các tình huống: đề → bảng xác nhận → mô phỏng → lời giải → diễn giải; AI bịa số bị
-loại; diễn giải chứa số lạ bị ẩn; đề ngoài phạm vi; LM Studio chưa bật; chế độ Tự dựng cảnh không
+**Kiểm thử đầu-cuối:** `npm run test:e2e` (Playwright) chạy app thật trong trình duyệt với máy
+chủ Gemini giả lập. Các tình huống: đề → bảng xác nhận → mô phỏng → lời giải → diễn giải; AI bịa số bị
+loại; diễn giải chứa số lạ bị ẩn; đề ngoài phạm vi; mất mạng; hết lượt miễn phí (HTTP 429); chưa có khóa → hướng dẫn lấy khóa; chế độ Tự dựng cảnh không
 gọi AI.
 
 ## 6. Hóa học (Giai đoạn 4)
@@ -231,11 +231,11 @@ tương ứng, không che giấu.
 
 ## 10. Cách tự kiểm chứng
 
-| Lệnh                                  | Kiểm tra                                                                          | Kết quả (29/09/2026)        |
-| ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------- |
-| `npm test`                            | Unit test: bộ giải, 13 chủ đề Vật lý, AI (quy tắc kiểm tra), Hóa, Sinh, tệp dự án | 42 tệp, 310 test đạt        |
-| `npm run test:e2e`                    | Chạy app thật trong Chromium: AI (giả lập), mọi chủ đề Hóa/Sinh, lưu/mở, lịch sử  | 23 test đạt                 |
-| `cargo test` (trong `src-tauri`)      | Rust: gọi AI, lịch sử SQLite, lưu tệp                                             | 10 test đạt                 |
-| `npm run golden:llm`                  | 31 đề chuẩn với mô hình AI thật trong LM Studio                                   | tùy mô hình (chạy trên máy) |
-| `node scripts/perf/measure.mjs`       | Khởi động, bộ nhớ, FPS của bản build                                              | xem `docs/PERFORMANCE.md`   |
-| Trong app: menu ☰ → Nguồn & Giả định | Nguồn của mọi bộ dữ liệu, số mục chờ duyệt, giả định của chủ đề đang mở           | —                           |
+| Lệnh                                  | Kiểm tra                                                                          | Kết quả (05/10/2026)      |
+| ------------------------------------- | --------------------------------------------------------------------------------- | ------------------------- |
+| `npm test`                            | Unit test: bộ giải, 13 chủ đề Vật lý, AI (quy tắc kiểm tra), Hóa, Sinh, tệp dự án | 43 tệp, 317 test đạt      |
+| `npm run test:e2e`                    | Chạy app thật trong Chromium: AI (giả lập), mọi chủ đề Hóa/Sinh, lưu/mở, lịch sử  | 27 test đạt               |
+| `cargo test` (trong `src-tauri`)      | Rust: gọi AI, lịch sử SQLite, lưu tệp, cập nhật trong app                         | 21 test đạt               |
+| `npm run golden:llm`                  | 31 đề chuẩn với mô hình Gemini thật (`GEMINI_API_KEY`)                            | tùy mô hình (cần mạng)    |
+| `node scripts/perf/measure.mjs`       | Khởi động, bộ nhớ, FPS của bản build                                              | xem `docs/PERFORMANCE.md` |
+| Trong app: menu ☰ → Nguồn & Giả định | Nguồn của mọi bộ dữ liệu, số mục chờ duyệt, giả định của chủ đề đang mở           | —                         |

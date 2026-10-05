@@ -14,7 +14,7 @@ Status: **Phase 0** (scaffold). Sections marked _(planned)_ describe the target 
 │        │ invoke()                                                                            │
 └────────┼─────────────────────────────────────────────────────────────────────────────────────┘
          ▼
-  Rust backend (src-tauri): AI gateway (LM Studio / cloud, keys in OS keychain), SQLite,
+  Rust backend (src-tauri): AI gateway (Gemini / OpenAI / Anthropic, keys in OS keychain), SQLite,
   .stemsim files, heavy numeric kernels (planned)
 ```
 
@@ -82,7 +82,7 @@ list/delete/clear`; the browser build falls back to localStorage.
 ## 3b. AI gateway (Phase 3)
 
 ```
-Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust ai_chat ──► LM Studio / OpenAI / Anthropic
+Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust ai_chat ──► Gemini / OpenAI / Anthropic
                    │  classify (enum of topic ids, JSON schema)
                    │  extract  (enum of param keys + units, quotes)
                    ▼
@@ -93,7 +93,8 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
 
 - Rust owns every network call and the API keys (OS keychain via `keyring`). Requests have an id;
   `ai_cancel` aborts them; `tokio::select!` enforces the timeout.
-- The web page never sees a cloud key. In the browser (dev/E2E) only LM Studio is reachable.
+- The web page never sees a key. In the browser (dev/E2E) only Gemini is reachable, with a test key
+  injected by the test runner (`__STEMSIM_TEST_GEMINI_KEY__`); E2E mocks the Gemini server.
 - The explanation step (`explain.ts`) runs after the engine; its numbers are checked against the
   engine's answers and the explanation is hidden when it contains any other number.
 
@@ -111,14 +112,14 @@ module?{state}}` (Zod schema in `src/app/project/snapshot.ts`). Only **inputs** 
 
 ## 4. Planned modules
 
-| Phase | Module                                                                           | Key decisions                                                                                                                       |
-| ----- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | `core/` units, constants, integrators; `workers/`; `perf/` tier; Science Card UI | RK4, Velocity Verlet, RK45 adaptive, implicit (stiff); accumulator with max substeps.                                               |
-| 2     | `physics/` 2D scenes                                                             | Own solvers for textbook problems; Rapier for free sandbox; uPlot graphs; KaTeX solutions.                                          |
-| 3     | `ai/` + Rust AI gateway                                                          | OpenAI-compatible LM Studio `http://localhost:1234/v1` with JSON-schema structured output; Zod; max 2 repair retries → manual form. |
-| 4     | `chemistry/`                                                                     | RDKit.js, PubChem conformers bundled offline, curated reaction library with atom mapping.                                           |
-| 5     | `biology/`                                                                       | Data-table-driven (NCBI table 1), Monte Carlo compared with theory.                                                                 |
-| 6     | degradation ladder, watchdog                                                     | See MASTER_PROMPT §5.                                                                                                               |
+| Phase | Module                                                                           | Key decisions                                                                                                                                              |
+| ----- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | `core/` units, constants, integrators; `workers/`; `perf/` tier; Science Card UI | RK4, Velocity Verlet, RK45 adaptive, implicit (stiff); accumulator with max substeps.                                                                      |
+| 2     | `physics/` 2D scenes                                                             | Own solvers for textbook problems; Rapier for free sandbox; uPlot graphs; KaTeX solutions.                                                                 |
+| 3     | `ai/` + Rust AI gateway                                                          | Gemini `generateContent` with `responseJsonSchema` (OpenAI json_schema, Anthropic forced tool) structured output; Zod; max 2 repair retries → manual form. |
+| 4     | `chemistry/`                                                                     | RDKit.js, PubChem conformers bundled offline, curated reaction library with atom mapping.                                                                  |
+| 5     | `biology/`                                                                       | Data-table-driven (NCBI table 1), Monte Carlo compared with theory.                                                                                        |
+| 6     | degradation ladder, watchdog                                                     | See MASTER_PROMPT §5.                                                                                                                                      |
 
 ## 5. Verified in Phase 0
 
