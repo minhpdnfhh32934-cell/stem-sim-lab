@@ -273,7 +273,7 @@ export const TopBar = memo(function TopBar() {
   );
 });
 
-const PROVIDER_NAME = { gemini: 'Gemini', claude: 'Claude' } as const;
+const PROVIDER_NAME = { gemini: 'Gemini', claude: 'Claude', groq: 'Groq' } as const;
 
 /** Connection state of the AI (click → AI settings). */
 function AiStatusPill({ onClick }: { onClick: () => void }) {
