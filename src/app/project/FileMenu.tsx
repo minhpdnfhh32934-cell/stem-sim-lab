@@ -1,5 +1,6 @@
 import {
   BookMarked,
+  BookOpenCheck,
   CircleHelp,
   CloudDownload,
   FolderOpen,
@@ -14,6 +15,7 @@ import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { IconButton } from '@/ui/IconButton';
 import { toast } from '@/ui/toast';
 import { exportPng, openProject, saveProject } from './actions';
+import { openPrivacy } from '@/safety/safetyStore';
 import { startTour, useProjectUi } from './uiStore';
 
 interface Item {
@@ -65,6 +67,7 @@ export function FileMenu() {
         else toast(t('update.browserOnly'), 'info');
       },
     },
+    { icon: BookOpenCheck, label: t('project.privacy'), run: openPrivacy },
     { icon: CircleHelp, label: t('project.tour'), run: startTour },
   ];
 

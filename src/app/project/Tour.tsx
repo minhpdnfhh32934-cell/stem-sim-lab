@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useT, type MessageKey } from '@/app/i18n';
+import { useGateVisible } from '@/safety/safetyStore';
 import { endTour, useProjectUi } from './uiStore';
 
 interface Step {
@@ -26,6 +27,8 @@ const GAP = 12;
 export function Tour() {
   const t = useT();
   const step = useProjectUi((s) => s.tourStep);
+  // The first-run safety question comes first; the tour waits behind it.
+  const gate = useGateVisible();
   const [rect, setRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardH, setCardH] = useState(180);
@@ -58,7 +61,7 @@ export function Tour() {
     };
   }, [current]);
 
-  if (step === null || !current) return null;
+  if (step === null || !current || gate) return null;
   const last = step === STEPS.length - 1;
   const go = (d: number) => {
     useProjectUi.setState({ tourStep: step + d });
