@@ -193,6 +193,24 @@ Progress log: `docs/PROGRESS.md`.
 - When a new physics scene is added, its params become extractable automatically; add golden
   problems for it in `scripts/golden/make_physics_golden.py` and regenerate `physics.json`.
 
+## Learner UI (3b.4, PROMPT_PHAN_2 A4)
+
+- `src/app/learner/`: `HomeScreen` ("Hôm nay học gì?", shown by `AppShell` while `useIsHome()`;
+  no stage/timeline/bottom/inspector then, and the top-bar problem box is hidden — the home box is
+  the main action), `Onboarding` + `onboarding.ts` (`useOnboardingPhase`: profile → gate → connect
+  (main, only when status is `noKey`) → tour; `AgeGate hold`, the Tour waits for its phase),
+  `profileStore` (`stemsim.profile`: level, interests, lastTopic; users with `stemsim.tourDone`
+  skip onboarding), `ModeSwitch`.
+- `uiMode` in `settingsStore` (v2; v1 users migrate to `advanced`, new installs `basic`). Basic:
+  `basicSplit` (`src/app/sim/basicParams.ts`, first 5 params + any from the problem/user), no data
+  tab/CSV, no Object section, toolbar without protractor/stopwatch/trail. New panels must respect it.
+- Levels: `src/app/levels.ts` (`foundation` available, `general` planned). Curriculum mapping is
+  empty + `review_status: "pending"` (DATA_REVIEW #12) — never fill it without a teacher.
+- Tokens: `--subject-*` colors, `--text-content` (≥ 15px learning text), `--target` (≥ 40px; `.btn`
+  height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
+  scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
+- Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
+
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
 - Gates live in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
@@ -245,8 +263,8 @@ Progress log: `docs/PROGRESS.md`.
   - [x] 3b.1 AIProvider (Gemini + Claude), OpenAI removed, two editions, retry/daily cap/cache
   - [x] 3b.2 AI connection screen (PIN lock for the pilot comes with 3b.3)
   - [x] 3b.3 safety & compliance (age gate, PIN, consent, moderation, incident log, privacy page)
-  - [ ] 3b.4 learner UI ·
-        [ ] 3b.5 learn/ · [ ] 3b.6 two installers + update channels
+  - [x] 3b.4 learner UI (home, onboarding, Basic/Advanced, levels, quantity cards)
+  - [ ] 3b.5 learn/ · [ ] 3b.6 two installers + update channels
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
