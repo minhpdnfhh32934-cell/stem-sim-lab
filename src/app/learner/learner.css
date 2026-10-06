@@ -252,6 +252,11 @@
   border-radius: var(--radius-lg);
   color: var(--text-muted);
 }
+.home__teacher-open {
+  flex: none;
+  align-self: center;
+  margin-left: auto;
+}
 .home__teacher-title {
   margin: 0 0 2px;
   color: var(--text);

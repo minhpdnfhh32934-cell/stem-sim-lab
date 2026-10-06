@@ -13,8 +13,15 @@ import { openTopic, subjectOf } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
 import { cx } from '@/ui/cx';
+import { openTeacher } from '@/teacher/teacherStore';
 import { useProfileStore } from './profileStore';
 import './learner.css';
+
+/**
+ * The AI teacher interface sketch (T0) is reachable only in development builds until the user
+ * approves it; released installers keep the "Sắp có" card.
+ */
+const TEACHER_PREVIEW = import.meta.env.DEV;
 
 /**
  * Home screen "Hôm nay học gì?" (PROMPT_PHAN_2 A4.2), shown while no topic is open:
@@ -104,7 +111,7 @@ export function HomeScreen() {
 
         <Badges />
 
-        <div className="home__teacher" aria-disabled="true">
+        <div className="home__teacher">
           <GraduationCap size={22} strokeWidth={1.5} aria-hidden="true" />
           <div>
             <p className="home__teacher-title">
@@ -113,6 +120,11 @@ export function HomeScreen() {
             </p>
             <p className="home__note">{t('home.teacherBody')}</p>
           </div>
+          {TEACHER_PREVIEW && (
+            <button type="button" className="btn home__teacher-open" onClick={openTeacher}>
+              {t('home.teacherOpen')}
+            </button>
+          )}
         </div>
 
         <p className="home__note home__footnote">{t('home.noAiNote')}</p>
