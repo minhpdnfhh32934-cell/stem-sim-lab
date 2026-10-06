@@ -279,7 +279,7 @@ Progress log: `docs/PROGRESS.md`.
   - [x] 3b.3 safety & compliance (age gate, PIN, consent, moderation, incident log, privacy page)
   - [x] 3b.4 learner UI (home, onboarding, Basic/Advanced, levels, quantity cards)
   - [x] 3b.5 learn/ (predict–observe–explain, challenges, step hints, progress/badges, break reminder)
-  - [ ] 3b.6 two installers + update channels
+  - [x] 3b.6 two installers + update channels, `docs/USER_TESTING.md`
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
@@ -295,6 +295,13 @@ Progress log: `docs/PROGRESS.md`.
   told to reinstall. Never break Rust command signatures without bumping the native version.
 - The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
   `webupdate.rs`. The repo must be public for the app to download releases.
+- **Two installers / two update channels (3b.6):** main (`tauri.conf.json`, `vn.stemsimlab.desktop`,
+  `web-update.json`) and pilot (`tauri.pilot.conf.json` merged on top: "STEM Sim Lab THPT",
+  `vn.stemsimlab.pilot`, `build:pilot`, `--features edition-pilot -- --no-default-features`,
+  `web-update-pilot.json`). Pilot manifests sign an extra `edition:pilot` line; the app checks the
+  manifest's `edition` and the zip's `web-edition.txt`. `web-bundle.mjs <main|pilot>` packs one
+  edition. Never let the pilot config override security/CSP or the version (tested).
+- User testing protocol and results: `docs/USER_TESTING.md` — record real observations only.
 - Smart App Control blocks unsigned installers; in-app web updates avoid new executables.
 - WebView2: `downloadBootstrapper` (small installer). Offline machines without WebView2 need the
   Evergreen Standalone Installer first (documented in USER_GUIDE). Installers are not code-signed.
