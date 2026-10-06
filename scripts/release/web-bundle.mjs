@@ -12,17 +12,31 @@ import { execFileSync } from 'node:child_process';
 import { createHash, createPrivateKey, sign } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { signedMessage, signedMessageV2 } from './manifest-message.mjs';
 
 const REPO = 'minhpdnfhh32934-cell/stem-sim-lab';
 const edition = process.argv[2] ?? 'main';
 if (!['main', 'pilot'].includes(edition)) throw new Error(`unknown edition ${edition}`);
 const suffix = edition === 'main' ? '' : `-${edition}`;
+// Mandatory-update floor: learners on an older web part must update (empty = none).
+const minRequired = (process.env.MIN_REQUIRED ?? '').trim();
+if (minRequired && !/^\d+\.\d+\.\d+$/.test(minRequired))
+  throw new Error(`MIN_REQUIRED must look like 1.2.3, got "${minRequired}"`);
 
 const root = resolve(import.meta.dirname, '../..');
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
 const conf = JSON.parse(readFileSync(resolve(root, 'src-tauri/tauri.conf.json'), 'utf8'));
 const webVersion = pkg.version;
 const minNative = conf.version;
+const num = (v) => v.split('.').map(Number);
+const older = (a, b) => {
+  const [x, y] = [num(a), num(b)];
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i];
+  return false;
+};
+// The app refuses a floor above the release itself (nobody could ever satisfy it).
+if (minRequired && older(webVersion, minRequired))
+  throw new Error(`MIN_REQUIRED ${minRequired} is newer than this release ${webVersion}`);
 
 const dist = resolve(root, 'dist');
 const inner = readFileSync(resolve(dist, 'web-version.txt'), 'utf8').trim();
@@ -55,18 +69,13 @@ const manifest = {
   notes: process.env.RELEASE_NOTES ?? '',
   date: new Date().toISOString().slice(0, 10),
   edition,
+  minRequired,
 };
-const lines = [
-  'stemsim-web-update',
-  manifest.webVersion,
-  manifest.minNative,
-  manifest.sha256,
-  String(manifest.size),
-  manifest.url,
-];
-if (edition !== 'main') lines.push(`edition:${edition}`);
-manifest.signature = sign(null, Buffer.from(lines.join('\n')), key).toString('base64');
+const sig = (message) => sign(null, Buffer.from(message), key).toString('base64');
+manifest.signature = sig(signedMessage(manifest));
+manifest.signatureV2 = sig(signedMessageV2(manifest));
 writeFileSync(resolve(out, `web-update${suffix}.json`), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(
-  `web update ${webVersion} [${edition}] (needs app ≥ ${minNative}): ${zip.length} bytes`,
+  `web update ${webVersion} [${edition}] (needs app ≥ ${minNative}` +
+    `${minRequired ? `, required from ${minRequired}` : ''}): ${zip.length} bytes`,
 );
