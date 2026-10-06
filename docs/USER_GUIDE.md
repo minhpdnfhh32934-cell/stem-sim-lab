@@ -8,13 +8,20 @@ con số do chương trình tính; mỗi mô phỏng có **Thẻ Khoa học** gh
 
 **Yêu cầu:** Windows 10 hoặc 11 (64-bit), RAM từ 8 GB, màn hình từ 1366×768.
 
-1. Tải tệp `STEM Sim Lab_…_x64-setup.exe` ở trang **Releases** của dự án trên GitHub (mục
-   _Assets_).
+1. Tải bộ cài ở trang **Releases** của dự án trên GitHub (mục _Assets_). Có **hai bản**:
+   - `STEM Sim Lab_…_x64-setup.exe` — **bản chính**, cho sinh viên từ 18 tuổi (AI: Gemini mặc định,
+     Claude tùy chọn).
+   - `STEM Sim Lab THPT_…_x64-setup.exe` — **bản thử nghiệm THPT**, chỉ dùng trong buổi thử nghiệm
+     có người giám sát (Claude, không có Gemini; khóa API do người giám sát nhập bằng mã PIN; có
+     cổng độ tuổi và đồng ý của phụ huynh).
 2. Nhấp đúp để chạy. Windows có thể hiện "Windows protected your PC" vì bộ cài chưa được ký số: bấm
    **More info → Run anyway**.
 3. Bộ cài không cần quyền quản trị (cài cho người dùng hiện tại). Xong, mở app từ menu Start.
 
 Chỉ cần cài **một lần**. Các bản sau cập nhật ngay trong app (mục "Cập nhật phần mềm").
+
+Hai bản **cài song song được** trên cùng một máy (ví dụ máy phòng thực hành): mỗi bản có tên trong
+menu Start, dữ liệu, khóa AI và mã PIN riêng, không ảnh hưởng nhau.
 
 ### Windows chặn bộ cài ("Smart App Control blocked an app")
 
@@ -37,8 +44,9 @@ không chặn nữa.
 **"Evergreen Standalone Installer"** tại <https://developer.microsoft.com/microsoft-edge/webview2/>,
 chép qua USB và cài trước.
 
-**Gỡ cài đặt:** Settings → Apps → STEM Sim Lab → Uninstall. Lịch sử mô phỏng nằm trong
-`%APPDATA%\vn.stemsimlab.desktop\history.sqlite`.
+**Gỡ cài đặt:** Settings → Apps → STEM Sim Lab (hoặc STEM Sim Lab THPT) → Uninstall. Lịch sử mô
+phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT:
+`%APPDATA%\vn.stemsimlab.pilot\`).
 
 ### Tạo bộ cài
 
@@ -46,11 +54,13 @@ chép qua USB và cài trước.
   **Actions → Release (Windows installer) → Run workflow**. Khoảng 15–25 phút sau, mở lần chạy có
   tên **Release (Windows installer)** (không phải lần chạy "CI" — CI chỉ kiểm tra lỗi, không tạo bộ
   cài), kéo xuống cuối trang **Summary** để thấy mục **Artifacts → stem-sim-lab-windows**. Tệp zip
-  tải về chứa `…x64-setup.exe` (bộ cài khuyên dùng), `.msi` và `installer-sizes.txt`. Khi chọn
-  `publish` = true, GitHub còn tạo bản Release để mọi máy đã cài tự nhận cập nhật (xem
-  `docs/RELEASE.md`).
+  tải về chứa bộ cài `…x64-setup.exe` (khuyên dùng) và `.msi` của **cả hai bản**, cùng
+  `installer-sizes.txt`. Khi chọn `publish` = true, GitHub còn tạo bản Release để mọi máy đã cài tự
+  nhận cập nhật (xem `docs/RELEASE.md`).
 - **Cách 2 — trên máy Windows của bạn:** cài công cụ theo `docs/SETUP_WINDOWS.md`, rồi chạy
   `npm install` và `npm run tauri build`. Bộ cài nằm trong `src-tauri\target\release\bundle\nsis\`.
+  Bản THPT:
+  `npx tauri build --config src-tauri/tauri.pilot.conf.json --features edition-pilot -- --no-default-features`.
 
 ## Bắt đầu nhanh
 
@@ -320,6 +330,8 @@ Khi dùng AI:
   **Khởi động lại**. Lịch sử, tệp .stemsim và cài đặt của bạn giữ nguyên.
 - Nếu bản mới thay đổi phần lõi của app, hộp thoại báo cần tải bộ cài mới và có nút mở trang tải.
 - Bản cập nhật có lỗi? Nút **Quay về bản gốc** trả app về bản đã cài từ bộ cài.
+- Mỗi bản chỉ nhận cập nhật **của chính nó**: bản THPT không bao giờ nhận phần có mã Gemini của bản
+  chính (app kiểm tra chữ ký và tên bản trước khi dùng).
 
 ## Khi máy yếu
 
