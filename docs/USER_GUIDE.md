@@ -54,11 +54,43 @@ chép qua USB và cài trước.
 
 ## Bắt đầu nhanh
 
-1. Lần đầu mở app, một **hướng dẫn nhanh** 7 bước giới thiệu các vùng màn hình (mở lại bằng menu
-   ☰ → Hướng dẫn nhanh). App cũng đo nhanh sức mạnh máy (khoảng 1 giây) để chọn chất lượng hiển thị.
-2. Chọn môn ở thanh trên, chọn một chủ đề trong **Thư viện** bên trái.
-3. Chỉnh thông số ở cột phải, bấm ▶ (hoặc Space) để chạy.
+1. Lần đầu mở app có vài bước làm quen (bấm **Bỏ qua** bất cứ lúc nào):
+   - **Bản chính:** chọn trình độ → chọn môn quan tâm → xác nhận đủ 18 tuổi và điều khoản →
+     **Kết nối AI** (nhập khóa Gemini, hoặc **Để sau**) → hướng dẫn nhanh.
+   - **Bản thử nghiệm THPT:** chọn môn → cổng độ tuổi / đồng ý của phụ huynh (người giám sát nhập
+     PIN) → hướng dẫn nhanh. Không có bước nhập khóa.
+     Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
+     (khoảng 1 giây) để chọn chất lượng hiển thị.
+2. **Trang chủ "Hôm nay học gì?"** hiện khi chưa mở chủ đề nào:
+   - nút **Tiếp tục bài đang học** (mở lại chủ đề lần trước);
+   - ô **Nhập đề bài hoặc câu hỏi…** (dán được đề nhiều dòng, Ctrl+Enter để phân tích) và nút
+     **Tự dựng cảnh** (không cần AI);
+   - 3 thẻ môn **Vật lý · Hóa học · Sinh học** (bấm để xem các chủ đề của môn trong Thư viện);
+   - **chủ đề gợi ý** theo trình độ, môn bạn quan tâm được gợi ý trước;
+   - **Dạy học bằng AI** (sắp có).
+     Bấm logo **STEM Sim Lab** ở góc trái để quay về trang chủ.
+3. Chọn một chủ đề (trang chủ hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
+   Space) để chạy.
 4. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
+
+### Trình độ: Nền tảng và Đại cương
+
+Thư viện sắp xếp theo **Trình độ → Môn → Chủ đề**. **Nền tảng** là kiến thức gốc, tương đương
+chương trình THPT — mọi chủ đề hiện có nằm ở đây. **Đại cương** (các môn năm nhất đại học) sẽ có ở
+giai đoạn sau. Việc ghép chủ đề với bài cụ thể trong sách giáo khoa đang chờ giáo viên duyệt
+(`docs/DATA_REVIEW.md`, mục 12).
+
+### Chế độ Cơ bản và Nâng cao
+
+Đổi ở đầu cột **Thuộc tính** hoặc Cài đặt → Giao diện → **Chế độ hiển thị**.
+
+- **Cơ bản** (mặc định): 3–5 thông số quan trọng nhất (nút **Thêm thông số** để xem phần còn lại;
+  giá trị lấy từ đề bài hoặc bạn đã chỉnh thì luôn hiện), thẻ dưới **Đồ thị · Lời giải**, thanh
+  công cụ chỉ có chọn, kéo, thước đo, vectơ và căn khung nhìn.
+- **Nâng cao:** thêm mục Đối tượng, mọi thông số, thước đo góc, đồng hồ bấm giờ, vết quỹ đạo, thẻ
+  **Số liệu** và **Xuất CSV**.
+
+Người đã dùng bản cũ được giữ ở chế độ Nâng cao như trước.
 
 ## Bố cục màn hình
 
