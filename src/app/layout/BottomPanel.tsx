@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { ChartSpline, ListOrdered, Table2, X } from 'lucide-react';
+import { ChartSpline, ListOrdered, Table2, Target, X } from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { DataPanel } from '@/app/sim/DataPanel';
 import { GraphPanel } from '@/app/sim/GraphPanel';
@@ -7,6 +7,7 @@ import { SolutionPanel } from '@/app/sim/SolutionPanel';
 import { useLocalized } from '@/app/i18n/localized';
 import { useModuleStore } from '@/modules/moduleStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { ChallengePanel } from '@/learn/ChallengePanel';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 import { Tabs } from '@/ui/Tabs';
@@ -62,6 +63,7 @@ export const BottomPanel = memo(function BottomPanel() {
         items={[
           { id: 'graphs', label: t('bottom.graphs'), icon: ChartSpline },
           { id: 'solution', label: t('bottom.solution'), icon: ListOrdered },
+          { id: 'challenge', label: t('bottom.challenge'), icon: Target },
           ...(advanced ? [{ id: 'data' as const, label: t('bottom.data'), icon: Table2 }] : []),
         ]}
         trailing={
@@ -79,6 +81,7 @@ export const BottomPanel = memo(function BottomPanel() {
       <div className="panel__scroll" role="tabpanel" aria-label={t(`bottom.${tab}`)}>
         {tab === 'graphs' && <GraphPanel />}
         {tab === 'solution' && <SolutionPanel />}
+        {tab === 'challenge' && <ChallengePanel />}
         {tab === 'data' && <DataPanel />}
       </div>
     </section>

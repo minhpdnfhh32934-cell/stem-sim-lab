@@ -666,3 +666,12 @@ body[data-resizing] .splitter {
 .topbar__spacer {
   flex: 1;
 }
+.tree__count--progress {
+  color: var(--conf-exact);
+  font-weight: 600;
+}
+.tree__done {
+  flex: none;
+  margin-left: auto;
+  color: var(--conf-exact);
+}

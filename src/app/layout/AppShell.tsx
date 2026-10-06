@@ -18,6 +18,7 @@ import { useModuleStore } from '@/modules/moduleStore';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
 import { useIsHome } from '@/app/topics';
+import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
 import { Inspector } from './Inspector';
@@ -46,6 +47,7 @@ export function AppShell() {
   useAiStatusPolling();
   useMemoryWatchdog();
   usePresentationFullscreen();
+  useBreakReminder();
   useEffect(() => {
     const offUndo = initUndo();
     const offHistory = initHistory();

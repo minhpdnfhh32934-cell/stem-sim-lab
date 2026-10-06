@@ -1,4 +1,7 @@
-import { BookOpen, ChevronRight, History, Search, SearchX } from 'lucide-react';
+import { BookOpen, CheckCircle2, ChevronRight, History, Search, SearchX } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
+import { chapterProgress, topicProgress } from '@/learn/progress';
+import { useProgressStore } from '@/learn/progressStore';
 import { memo, useMemo, useState } from 'react';
 import { normalizeForSearch, type ChapterEntry } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
@@ -126,6 +129,14 @@ function ChapterNode({
   forceOpen: boolean;
 }) {
   const activeTopic = useActiveTopic();
+  const progress = useProgressStore(
+    useShallow((s) => ({
+      visited: s.visited,
+      challenges: s.challenges,
+      predictions: s.predictions,
+    })),
+  );
+  const chapterDone = chapterProgress(chapter.topics, progress);
   const [open, setOpen] = useState(true);
   const expanded = open || forceOpen;
   return (
@@ -140,7 +151,16 @@ function ChapterNode({
       >
         <ChevronRight className="tree__chevron" size={14} strokeWidth={2} aria-hidden="true" />
         <span>{t(chapter.titleKey)}</span>
-        <span className="tree__count">{chapter.topics.length}</span>
+        {chapterDone.done > 0 ? (
+          <span
+            className="tree__count tree__count--progress"
+            aria-label={t('learn.progress', chapterDone)}
+          >
+            {chapterDone.done}/{chapterDone.total}
+          </span>
+        ) : (
+          <span className="tree__count">{chapter.topics.length}</span>
+        )}
       </button>
       {expanded && (
         <ul className="tree__topics">
@@ -156,6 +176,14 @@ function ChapterNode({
                   }}
                 >
                   <span className="tree__topic-title">{t(topic.titleKey)}</span>
+                  {topicProgress(topic.id, progress).complete && (
+                    <CheckCircle2
+                      className="tree__done"
+                      size={14}
+                      strokeWidth={2}
+                      aria-label={t('learn.topicDone')}
+                    />
+                  )}
                 </button>
               </li>
             ) : (

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type LeftTab = 'library' | 'history';
-export type BottomTab = 'graphs' | 'solution' | 'data';
+export type BottomTab = 'graphs' | 'solution' | 'challenge' | 'data';
 
 /** Size limits in CSS pixels. Keep the defaults usable on a 1366×768 screen. */
 export const LAYOUT_LIMITS = {
