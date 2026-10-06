@@ -4,7 +4,8 @@
 > tra) và những điểm **người dùng / nhà trường / phụ huynh phải tự xác nhận**. Không có kết luận
 > "đã hợp pháp" nào ở đây. Điều khoản và luật có thể thay đổi: tra lại trước mỗi đợt thử nghiệm.
 >
-> Ngày tra cứu: **2026-10-05**. Mục ghi **CHƯA KIỂM CHỨNG** là chưa tìm được nguồn gốc rõ ràng.
+> Ngày tra cứu: **2026-10-05** (mục 2c: **2026-10-06**). Mục ghi **CHƯA KIỂM CHỨNG** là chưa tìm
+> được nguồn gốc rõ ràng.
 
 ## 1. Điều khoản Google Gemini API (bản chính)
 
@@ -57,6 +58,27 @@ kiểm soát xuất khẩu Mỹ) — **CHƯA KIỂM CHỨNG** Việt Nam có đ�
   sinh dưới 18 tuổi dùng ứng dụng qua khóa đó.
 - Phiếu đồng ý phải liệt kê thêm nhà cung cấp dự phòng (Groq) là nơi nhận nội dung đề bài.
 - Với Cloudflare: điều khoản không nói về độ tuổi — cần xác nhận trước khi dùng cho học sinh.
+
+## 2c. Dịch vụ giọng nói cho "Dạy học bằng AI" (tra 2026-10-06, giai đoạn T0)
+
+So sánh đầy đủ và đề xuất: `docs/VOICE_BENCHMARK.md`. Chỉ ghi điều khoản ở đây.
+
+| Dịch vụ                        | Điều tra được (trích ngắn)                                                                                                                                                                                                                                                                                                                                                                  | Nguồn                                                                                                                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gemini TTS / Live / Transcribe | Cùng điều khoản Gemini API (mục 1): từ 18 tuổi, không dùng cho dịch vụ có khả năng được người dưới 18 dùng. Gói miễn phí: nội dung (kể cả âm thanh) dùng để cải thiện sản phẩm, có thể có người đọc. Nội dung lưu 55 ngày để chống lạm dụng. Âm thanh tạo ra có thủy vân SynthID. Chính sách cấm mạo danh người thật để lừa dối.                                                            | ai.google.dev/gemini-api/terms; …/docs/usage-policies (2026-06-09); policies.google.com/terms/generative-ai/use-policy; blog.google (TTS 3.8, 2026-09-23)                 |
+| Microsoft Azure AI Speech      | Product Terms và trang quyền riêng tư của Speech **không nói** về người dưới 18 (im lặng). Code of Conduct (2026-05-01) yêu cầu cho người dùng biết giọng là giọng tổng hợp; có quy tắc riêng cho "Voice Features" — **chưa rõ** có áp dụng cho giọng có sẵn không. Nhận dạng thời gian thực: không lưu dữ liệu; TTS: không ghi văn bản/âm thanh vào log. Dùng để huấn luyện: **chưa nêu**. | microsoft.com/licensing/terms (Product Terms); learn.microsoft.com/en-us/legal/ai-code-of-conduct; trang "data, privacy and security" của Speech (2026-02-27, 2026-08-26) |
+| Google Cloud TTS / STT         | Bản lưu Service Specific Terms (2026-02-18) §20(d): dịch vụ AI tạo sinh không dùng cho dịch vụ "likely to be accessed by individuals under the age of 18". TTS/STT xếp vào "Pre-Trained APIs"; **chưa rõ** Chirp 3 có bị coi là AI tạo sinh, và §20(d) còn trong bản hiện hành không (**CHƯA KIỂM CHỨNG**). Không dùng dữ liệu khách hàng để huấn luyện.                                    | cloud.google.com/legal/archive/terms/service-terms/index-20260218; cloud.google.com/terms/services (2026-09-30)                                                           |
+| ElevenLabs                     | Điều khoản: người dưới 18 "may not use our Services"; chính sách quyền riêng tư cấm gửi dữ liệu giọng nói của người dưới 18; chính sách sử dụng lại cho phép 13–18 có phụ huynh đồng ý — **mâu thuẫn**.                                                                                                                                                                                     | elevenlabs.io/terms-of-use (2026-03-31); /privacy-policy (2026-05-20); /use-policy (2026-08-17)                                                                           |
+| Vbee                           | Người dùng từ đủ 16 tuổi; dưới 16 cần cha mẹ đồng ý. Dữ liệu vào/ra được dùng để "cải tiến, phát triển sản phẩm".                                                                                                                                                                                                                                                                           | policy.vbee.vn (sửa đổi 2026-07-01)                                                                                                                                       |
+| Viettel AI                     | Chính sách dữ liệu (tiếng Việt): không cung cấp cho cá nhân dưới 16; dữ liệu có thể dùng để huấn luyện AI. Bản tiếng Anh khác bản tiếng Việt.                                                                                                                                                                                                                                               | viettelai.vn/privacy/policy (không ghi ngày)                                                                                                                              |
+
+Điểm cần xác nhận (bổ sung vào mục 6, số 9–12):
+
+- Bản THPT dùng Azure: người lớn chủ tài khoản Azure và nhà trường xác nhận rằng điều khoản Microsoft
+  (im lặng về người dưới 18) phù hợp; có cần thỏa thuận riêng với Microsoft không.
+- Giọng nói học sinh được gửi tới dịch vụ nhận dạng cloud: phiếu đồng ý phải ghi rõ điều này và tên
+  dịch vụ; phụ huynh/người giám sát đồng ý bật micro (B1.5).
+- Google Cloud chỉ dùng cho học sinh khi Google xác nhận bằng văn bản về §20(d).
 
 ## 3. Luật Việt Nam liên quan
 
@@ -112,3 +134,11 @@ Chưa tìm được đường dây khủng hoảng cho người lớn hoạt đ�
    `src/safety/moderation.ts`).
 8. Nhà cung cấp dự phòng miễn phí (mục 2b): người tạo khóa chấp nhận điều khoản của họ; phiếu
    đồng ý ghi rõ nhà cung cấp đó; riêng Cloudflare cần xác nhận về độ tuổi.
+9. Bản THPT dùng Azure AI Speech: điều khoản Microsoft **không nói** về người dưới 18 — người lớn chủ
+   tài khoản và nhà trường xác nhận có phù hợp không (mục 2c).
+10. Phiếu đồng ý ghi rõ: giọng nói của học sinh được gửi tới dịch vụ nhận dạng cloud (tên dịch vụ),
+    app không lưu bản ghi âm; phụ huynh/người giám sát đồng ý bật micro.
+11. Bản chính dùng gói miễn phí Gemini: người dùng biết âm thanh có thể được Google dùng để cải thiện
+    sản phẩm và có người nghe.
+12. Âm thanh Gemini có thủy vân SynthID; giọng Azure phải được công bố là giọng tổng hợp — nhãn
+    "Thầy/cô AI" trên màn hình có đủ không.

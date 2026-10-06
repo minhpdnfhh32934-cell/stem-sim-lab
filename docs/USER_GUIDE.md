@@ -324,8 +324,11 @@ Khi dùng AI:
 
 ## Cập nhật phần mềm
 
-- Khi mở app (có mạng), app tự kiểm tra bản mới. Nếu có, thanh trạng thái hiện **"Có bản cập nhật
-  …"** — bấm vào đó, hoặc vào menu ☰ → **Kiểm tra cập nhật**.
+- Khi mở app (có mạng), app tự kiểm tra bản mới. Nếu có, **hộp thoại cập nhật tự hiện** với hai nút
+  **Cập nhật ngay** / **Để sau**. Chọn "Để sau" thì thanh trạng thái vẫn nhắc **"Có bản cập nhật
+  …"** (bấm vào đó, hoặc menu ☰ → **Kiểm tra cập nhật**) và lần mở app sau sẽ hỏi lại.
+- Một số bản là **bắt buộc** (ví dụ sửa lỗi quan trọng): hộp thoại không có nút "Để sau", cần cập
+  nhật mới dùng tiếp. Không có mạng thì app vẫn dùng bình thường.
 - Bấm **Cập nhật ngay** → app tải gói cập nhật (vài MB), kiểm tra chữ ký số và mã SHA-256, rồi
   **Khởi động lại**. Lịch sử, tệp .stemsim và cài đặt của bạn giữ nguyên.
 - Nếu bản mới thay đổi phần lõi của app, hộp thoại báo cần tải bộ cài mới và có nút mở trang tải.

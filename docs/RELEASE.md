@@ -48,6 +48,23 @@ chặn. Bộ cài (.exe/.msi) chưa được ký số, nên Smart App Control c�
 Điều kiện một lần: kho GitHub để **Public** (app tải bản cập nhật không cần đăng nhập), và secret
 `WEB_UPDATE_SIGNING_KEY` đã được thêm (Settings → Secrets and variables → Actions).
 
+## Hộp thoại cập nhật và cập nhật bắt buộc (từ 0.3.0)
+
+- Mở app (có mạng) → khoảng 8 giây sau app tự kiểm tra. Có bản mới thì **tự hiện hộp thoại** với
+  **Cập nhật ngay** / **Để sau** (cần bộ cài mới thì nút **Mở trang tải bộ cài** / **Để sau**).
+  Chọn "Để sau" thì lần mở app sau hỏi lại; thanh trạng thái vẫn nhắc "Có bản cập nhật".
+- **Bắt buộc cập nhật:** khi chạy Release, tích ô **"Bắt buộc cập nhật"**. Bản đó ghi
+  `minRequired = <phiên bản này>` vào `web-update.json`. Máy đang chạy bản cũ hơn sẽ thấy hộp thoại
+  **không có ✕, không có "Để sau", Esc không đóng** — phải cập nhật mới dùng tiếp (nếu tải lỗi có
+  nút **Thử lại**). Máy không có mạng vẫn dùng bình thường (không kiểm tra được thì không ép).
+- Các bản sau **không tích** vẫn **giữ** mức bắt buộc cũ (workflow đọc `minRequired` của bản phát
+  hành mới nhất), nên không ai "nhảy qua" được một bản bắt buộc.
+- `minRequired` nằm trong **chữ ký thứ hai** (`signatureV2`, `signed_message_v2` trong
+  `webupdate.rs` = `scripts/release/manifest-message.mjs`); không ai sửa được mức bắt buộc mà không
+  có khóa bí mật. Chữ ký cũ (`signature`) vẫn giữ để app trước 0.3.0 đọc được.
+- Không tích "Bắt buộc" ở bản 0.3.0 đầu tiên: app 0.2.0 không hiểu tính năng này (họ chỉ được báo
+  cần bộ cài mới, qua menu ☰ → Kiểm tra cập nhật).
+
 ## An toàn
 
 - `web-update.json` được ký Ed25519 bằng khóa bí mật trong secret `WEB_UPDATE_SIGNING_KEY`

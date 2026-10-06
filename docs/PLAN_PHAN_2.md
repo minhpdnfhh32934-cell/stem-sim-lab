@@ -46,7 +46,8 @@ Vì GĐ 3 đã xong → theo A7 thêm **giai đoạn chuyển đổi 3b**.
 
 Tiến độ (2026-10-06): 3b.1, 3b.2, 3b.3, 3b.3b, 3b.4, 3b.5, **3b.6** đã làm (xem
 `docs/PROGRESS.md`); bản 0.3.0 có hai bộ cài. Chế độ Cơ bản có các thẻ _Đồ thị · Lời giải · Thử
-thách_.
+thách_. **T0** (đặc tả AI Teacher, khảo sát giọng nói, màn hình phác thảo) đã làm, **chờ người dùng
+duyệt** trước khi sang T1.
 
 Ước lượng: 3b.1–3b.3 khoảng 3–4 phiên làm việc; 3b.4–3b.5 là phần lớn nhất (làm lại giao diện), 4–6 phiên.
 
