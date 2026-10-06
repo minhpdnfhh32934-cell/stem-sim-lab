@@ -158,6 +158,11 @@ test('problem → confirmation table → simulation → solution → AI explanat
   await expect(dialog).toBeHidden();
 
   await page.getByRole('tab', { name: 'Lời giải' }).click();
+  // A problem typed in: hints first, the answers stay hidden until asked (A4.1).
+  await expect(page.locator('.solution__answers')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Gợi ý 1' }).click();
+  await expect(page.locator('.solution__steps li')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Xem lời giải ngay' }).click();
   const answers = page.locator('.solution__answers');
   await expect(answers).toContainText('3 s');
   await expect(answers).toContainText('45 m');
@@ -196,6 +201,7 @@ test('an explanation with a number the engine did not compute is hidden', async 
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Mô phỏng' }).click();
   await page.getByRole('tab', { name: 'Lời giải' }).click();
+  await page.getByRole('button', { name: 'Xem lời giải ngay' }).click();
   await page.getByRole('button', { name: 'AI diễn giải' }).click();
   await expect(page.getByRole('alert').filter({ hasText: 'Đã ẩn diễn giải' })).toContainText(
     '47,5',

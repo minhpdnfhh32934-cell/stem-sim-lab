@@ -58,7 +58,7 @@ test('subject cards and the level picker (Level → Subject → Topic)', async (
 });
 
 test.describe('Basic / Advanced', () => {
-  test('Basic is the default: key sliders, Đồ thị · Lời giải; Advanced adds the rest', async ({
+  test('Basic is the default: key sliders, Đồ thị · Lời giải · Thử thách; Advanced adds the rest', async ({
     page,
   }) => {
     await page.goto('/');
@@ -68,7 +68,7 @@ test.describe('Basic / Advanced', () => {
     await expect(mode.getByRole('radio', { name: 'Cơ bản' })).toBeChecked();
 
     const bottom = page.getByRole('tablist', { name: 'Bảng đồ thị và lời giải' });
-    await expect(bottom.getByRole('tab')).toHaveText(['Đồ thị', 'Lời giải']);
+    await expect(bottom.getByRole('tab')).toHaveText(['Đồ thị', 'Lời giải', 'Thử thách']);
     await expect(inspector.getByText('Đối tượng', { exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /Thước đo góc/ })).toHaveCount(0);
     const sliders = inspector.locator('.params input[type="range"]');
@@ -85,7 +85,12 @@ test.describe('Basic / Advanced', () => {
     }
 
     await mode.getByRole('radio', { name: 'Nâng cao' }).click();
-    await expect(bottom.getByRole('tab')).toHaveText(['Đồ thị', 'Lời giải', 'Số liệu']);
+    await expect(bottom.getByRole('tab')).toHaveText([
+      'Đồ thị',
+      'Lời giải',
+      'Thử thách',
+      'Số liệu',
+    ]);
     await expect(inspector.getByText('Đối tượng', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /Thước đo góc/ })).toBeVisible();
     await expectNoHorizontalScroll(page);
@@ -116,4 +121,50 @@ test('touch screens get 40px targets for icon buttons', async ({ browser }) => {
   expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
   await expectNoHorizontalScroll(page);
   await context.close();
+});
+
+test('learn by exploring: predict → observe, a challenge solved, progress and a badge', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Rơi tự do', exact: true }).click();
+  await page.getByRole('tab', { name: 'Thử thách' }).click();
+
+  // Predict – observe – explain: the right answer is computed by the engine (√2 here).
+  const predict = page.getByRole('region', { name: 'Dự đoán trước' });
+  const run = predict.getByRole('button', { name: 'Chạy để kiểm tra' });
+  await expect(run).toBeDisabled();
+  await predict.getByRole('radio', { name: 'Tăng 2 lần' }).click();
+  await run.click();
+  await expect(predict.getByRole('status')).toContainText('Kết quả khác với dự đoán');
+  await expect(predict.getByRole('radio', { name: /√2/ })).toHaveClass(/is-correct/);
+  await expect(predict.getByRole('textbox', { name: 'Bạn giải thích thế nào?' })).toBeVisible();
+
+  // Challenge: fall for 2 s → h ≈ 19,62 m.
+  const challenge = page.getByRole('region', { name: /Thử thách: Rơi đúng 2 giây/ });
+  await challenge.getByRole('button', { name: 'Bắt đầu thử thách' }).click();
+  await expect(challenge).toContainText('Hiện tại');
+  const h0 = page.getByRole('spinbutton', { name: /Độ cao ban đầu/ });
+  await h0.fill('19.62');
+  await h0.press('Enter');
+  await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');
+  await expect(challenge).toContainText('Đã hoàn thành');
+
+  // Topic complete (opened + predicted + challenge) → check in the library; badges on home.
+  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
+  await expect(library.getByLabel('Đã hoàn thành chủ đề')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Về trang chủ' }).click();
+  await expect(page.getByText('Vượt thử thách')).toBeVisible();
+  await expect(page.getByText('Bước đầu tiên')).toBeVisible();
+});
+
+test('a reminder to rest the eyes after ~45 minutes of continuous use', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/');
+  for (let m = 0; m < 45; m++) {
+    await page.mouse.move(200 + (m % 5), 300);
+    await page.clock.fastForward('01:00');
+  }
+  await page.mouse.move(250, 320);
+  await expect(page.getByText('Bạn đã học khoảng 45 phút liên tục')).toBeVisible();
 });
