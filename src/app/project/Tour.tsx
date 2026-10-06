@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useT, type MessageKey } from '@/app/i18n';
-import { useOnboardingPhase } from '@/app/learner/onboarding';
+import { useOnboardingPhase } from '@/app/learner/onboardingPhase';
 import { endTour, useProjectUi } from './uiStore';
 
 interface Step {
