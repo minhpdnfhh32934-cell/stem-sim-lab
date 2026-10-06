@@ -211,6 +211,20 @@ Progress log: `docs/PROGRESS.md`.
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
 
+## Learning (3b.5, `src/learn/`)
+
+- `challenges.ts`: every physics topic has ≥ 1 challenge (`challenges.test.ts` enforces it).
+  Goals are checked with the scene's own `solve()` (`evaluate`, `optimum` grid search for max/min);
+  a `target` value is the only hand-written number and the test proves it reachable within the
+  sliders for g = 9.8 / 9.81 / 10. A challenge starts from defaults (`sim.applyParams` with all
+  sources "default"); a non-control param with a non-default source → "changed".
+- `poe.ts`: one "Dự đoán trước" per physics topic; the right choice is computed from `solve()`
+  before/after (`observe`). The learner writes the explanation (never stored or sent).
+- `progressStore` (`stemsim.progress`, local only), `progress.ts` (topic/chapter progress, badges —
+  no streaks or ranks), `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
+- SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
+- New physics scene → add a challenge and a POE item, or the tests fail.
+
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
 - Gates live in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
@@ -264,7 +278,8 @@ Progress log: `docs/PROGRESS.md`.
   - [x] 3b.2 AI connection screen (PIN lock for the pilot comes with 3b.3)
   - [x] 3b.3 safety & compliance (age gate, PIN, consent, moderation, incident log, privacy page)
   - [x] 3b.4 learner UI (home, onboarding, Basic/Advanced, levels, quantity cards)
-  - [ ] 3b.5 learn/ · [ ] 3b.6 two installers + update channels
+  - [x] 3b.5 learn/ (predict–observe–explain, challenges, step hints, progress/badges, break reminder)
+  - [ ] 3b.6 two installers + update channels
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
