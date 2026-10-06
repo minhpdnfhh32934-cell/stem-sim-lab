@@ -7,6 +7,7 @@ import { useWorkspaceStore, type Subject } from './workspaceStore';
 import { CATALOG } from './catalog';
 import { useProfileStore } from './learner/profileStore';
 import { useProgressStore } from '@/learn/progressStore';
+import { closeTeacher, useTeacherStore } from '@/teacher/teacherStore';
 
 /** Subject that contains a topic id (for switching the subject when opening). */
 export function subjectOf(topicId: string): Subject | undefined {
@@ -21,6 +22,7 @@ export function subjectOf(topicId: string): Subject | undefined {
 
 /** Opens any available topic (physics scenes for now; chemistry/biology modules later). */
 export async function openTopic(topicId: string): Promise<void> {
+  closeTeacher();
   const subject = subjectOf(topicId);
   if (subject) useWorkspaceStore.setState({ subject });
   if (hasModule(topicId)) {
@@ -38,8 +40,14 @@ export async function openTopic(topicId: string): Promise<void> {
 
 /** Closes the open topic and shows the home screen ("Hôm nay học gì?"). */
 export function goHome(): void {
+  closeTeacher();
   sim.shutdown();
   closeModule();
+}
+
+/** True while the "Dạy học bằng AI" screen replaces the workspace. */
+export function useIsTeacher(): boolean {
+  return useTeacherStore((s) => s.open);
 }
 
 /** True when nothing is open or opening: the home screen takes the centre. */
