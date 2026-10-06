@@ -31,10 +31,11 @@ function applied(status: SafetyStatus): SafetyStatus {
  * - Pilot edition: birth year → supervisor PIN → (under 18) recorded parental consent. The
  *   supervisor can choose "Để sau": the app then works without AI.
  */
-export function AgeGate() {
+export function AgeGate({ hold = false }: { hold?: boolean }) {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
-  const visible = useGateVisible();
+  // `hold`: the first-run onboarding (level, subjects) comes before the gate.
+  const visible = useGateVisible() && !hold;
   const status = useSafetyStore((s) => s.status);
 
   useEffect(() => {
