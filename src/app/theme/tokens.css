@@ -26,6 +26,11 @@
   --space-5: 1.714rem;
   --space-6: 2.286rem;
 
+  /* Learning content (lessons, home, dialogs) is at least 15px at 100% (PROMPT_PHAN_2 A4.3). */
+  --text-content: 1.0715rem;
+  /* Minimum size of a click/touch target (PROMPT_PHAN_2 A4.1: >= 40px). */
+  --target: max(40px, 2.86rem);
+
   --radius-sm: 6px;
   --radius-md: 9px;
   --radius-lg: 14px;
@@ -84,6 +89,11 @@
   --danger: #c93a3a;
   --warning: #b77900;
 
+  /* One main color per subject (PROMPT_PHAN_2 A4.3), used on cards, headings and accents. */
+  --subject-physics: #2f62d8;
+  --subject-chemistry: #b4530f;
+  --subject-biology: #16804a;
+
   /* Science Card confidence levels (§2.3 of MASTER_PROMPT) */
   --conf-exact: #16804a;
   --conf-exact-soft: #dcf3e6;
@@ -125,6 +135,10 @@
 
   --danger: #ff7b7b;
   --warning: #f2b642;
+
+  --subject-physics: #7aa2ff;
+  --subject-chemistry: #f2a15a;
+  --subject-biology: #4cc38a;
 
   --conf-exact: #4cc38a;
   --conf-exact-soft: #13301f;
