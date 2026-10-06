@@ -5,7 +5,7 @@ import { LEVELS } from '@/app/levels';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { cx } from '@/ui/cx';
-import { useOnboardingPhase } from './onboarding';
+import { useOnboardingPhase } from './onboardingPhase';
 import { useProfileStore } from './profileStore';
 import './learner.css';
 
