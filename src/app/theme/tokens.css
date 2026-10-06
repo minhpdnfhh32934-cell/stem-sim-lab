@@ -94,6 +94,14 @@
   --subject-chemistry: #b4530f;
   --subject-biology: #16804a;
 
+  /* AI teacher (PROMPT_PHAN_2 B4): warm = speaking, cool = listening; whiteboard. */
+  --teacher-warm: #e0793a;
+  --teacher-cool: #2f8fd8;
+  --teacher-ring-bg: #ffffff;
+  --board-bg: #fdfdfb;
+  --board-ink: #1d2a44;
+  --board-mark: #c93a3a;
+
   /* Science Card confidence levels (§2.3 of MASTER_PROMPT) */
   --conf-exact: #16804a;
   --conf-exact-soft: #dcf3e6;
@@ -139,6 +147,13 @@
   --subject-physics: #7aa2ff;
   --subject-chemistry: #f2a15a;
   --subject-biology: #4cc38a;
+
+  --teacher-warm: #f0a060;
+  --teacher-cool: #6cb6f0;
+  --teacher-ring-bg: #1b2330;
+  --board-bg: #1f2a24;
+  --board-ink: #eef2ea;
+  --board-mark: #ff8a7a;
 
   --conf-exact: #4cc38a;
   --conf-exact-soft: #13301f;
