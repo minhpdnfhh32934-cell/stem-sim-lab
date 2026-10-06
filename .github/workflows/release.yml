@@ -24,6 +24,10 @@ on:
         description: 'Ghi chú thay đổi (hiện trong app, tiếng Việt)'
         type: string
         default: ''
+      required:
+        description: 'Bắt buộc cập nhật: máy dùng bản cũ hơn bản này phải cập nhật mới dùng tiếp'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -63,18 +67,40 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Mandatory-update floor (signed into the manifest): this version when "required" is ticked,
+      # otherwise the floor of the latest release, carried forward so it is never lost.
+      - name: Mandatory-update floor
+        id: floor
+        shell: bash
+        env:
+          REQUIRED: ${{ inputs.required }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          for ch in main pilot; do
+            suffix=""; [ "$ch" = pilot ] && suffix="-pilot"
+            if [ "$REQUIRED" = "true" ]; then
+              v="$VERSION"
+            else
+              v=$(curl -fsSL "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/web-update${suffix}.json" \
+                | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{process.stdout.write(JSON.parse(s).minRequired||'')}catch{}})" || true)
+            fi
+            echo "$ch floor: ${v:-none}"
+            echo "$ch=$v" >> "$GITHUB_OUTPUT"
+          done
       # Two update channels: each edition only ever receives its own web part.
       - run: npm run build
       - name: Pack and sign (main)
         env:
           WEB_UPDATE_SIGNING_KEY: ${{ secrets.WEB_UPDATE_SIGNING_KEY }}
           RELEASE_NOTES: ${{ inputs.notes }}
+          MIN_REQUIRED: ${{ steps.floor.outputs.main }}
         run: node scripts/release/web-bundle.mjs main
       - run: npm run build:pilot
       - name: Pack and sign (pilot — no Gemini code, checked by build:pilot)
         env:
           WEB_UPDATE_SIGNING_KEY: ${{ secrets.WEB_UPDATE_SIGNING_KEY }}
           RELEASE_NOTES: ${{ inputs.notes }}
+          MIN_REQUIRED: ${{ steps.floor.outputs.pilot }}
         run: node scripts/release/web-bundle.mjs pilot
       - uses: actions/upload-artifact@v7
         with:
