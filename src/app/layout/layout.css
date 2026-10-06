@@ -608,3 +608,61 @@ body[data-resizing] .splitter {
   color: var(--warning);
   font-weight: 600;
 }
+
+/* ---------- PROMPT_PHAN_2 A4: content size and targets ---------- */
+
+/* Learning content (science card, solution, AI explanation, problem review) is >= 15px. */
+.shell :is(.science-card, .solution, .explain, .problem-review) {
+  font-size: var(--text-content);
+}
+
+/* Home button = the brand (logo + name). */
+.topbar__brand {
+  padding: 4px 6px;
+  margin-left: -6px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.topbar__brand:hover {
+  background: var(--bg-hover);
+}
+.topbar__home-icon {
+  flex: none;
+  color: var(--text-faint);
+}
+.topbar__brand[aria-current='page'] .topbar__home-icon {
+  display: none;
+}
+
+.ai-status[data-status='warn'] {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 40%, transparent);
+}
+
+/* Touch screens and pens (laptop 2-in-1): every target grows to >= 40px. */
+@media (any-pointer: coarse) {
+  .icon-btn--sm,
+  .icon-btn--md {
+    width: var(--target);
+    height: var(--target);
+  }
+  .segmented__item,
+  .tree__chapter-btn,
+  .tree__topic--button,
+  .tabs__tab,
+  .ai-status {
+    min-height: var(--target);
+  }
+  .stage__toolbar {
+    max-height: calc(100% - 1rem);
+    overflow-y: auto;
+  }
+}
+.topbar__spacer {
+  flex: 1;
+}

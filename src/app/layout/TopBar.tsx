@@ -1,8 +1,5 @@
 import {
-  CircleAlert,
-  Cloud,
-  CloudOff,
-  KeyRound,
+  House,
   LoaderCircle,
   Maximize2,
   PencilRuler,
@@ -12,7 +9,6 @@ import {
   PanelRight,
   Redo2,
   Settings,
-  ShieldAlert,
   Sparkles,
   Sun,
   Undo2,
@@ -20,15 +16,12 @@ import {
 } from 'lucide-react';
 import { memo, type KeyboardEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import {
-  analyze,
-  cancelAnalyze,
-  openManual,
-  showCrisisIfNeeded,
-  useAnalyzeStore,
-} from '@/app/ai/analyze';
+import { AiStatusPill } from '@/app/ai/AiStatusPill';
+import { cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
+import { submitProblem } from '@/app/ai/submit';
 import { useT } from '@/app/i18n';
-import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
+import { goHome, useIsHome } from '@/app/topics';
+import { useAiStore } from '@/ai/aiStore';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
 import { SettingsDialog } from '@/app/settings/SettingsDialog';
@@ -75,24 +68,33 @@ export const TopBar = memo(function TopBar() {
   const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff;
   const canAnalyze = !aiOff && problemText.trim().length > 0 && !running;
 
+  const home = useIsHome();
+
   const onProblemKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      if (showCrisisIfNeeded(problemText)) return;
-      if (needsKey) setSettingsOpen(true);
-      else if (canAnalyze) void analyze(problemText);
+      submitProblem(problemText);
     }
   };
 
   return (
     <header className="topbar">
-      <div className="topbar__brand">
+      <button
+        type="button"
+        className="topbar__brand"
+        aria-label={t('home.goHome')}
+        data-tip={t('home.goHome')}
+        data-tip-side="bottom"
+        aria-current={home ? 'page' : undefined}
+        onClick={goHome}
+      >
         <Logo />
-        <div className="topbar__brand-text">
+        <span className="topbar__brand-text">
           <span className="topbar__name">{t('app.name')}</span>
           <span className="topbar__tagline">{t('app.tagline')}</span>
-        </div>
-      </div>
+        </span>
+        <House className="topbar__home-icon" size={15} strokeWidth={1.75} aria-hidden="true" />
+      </button>
 
       <div
         className="subject-switch"
@@ -121,73 +123,76 @@ export const TopBar = memo(function TopBar() {
         })}
       </div>
 
-      <div className="problem-input" data-tour="problem">
-        <label htmlFor="problem-text" className="sr-only">
-          {t('topbar.problemLabel')}
-        </label>
-        <textarea
-          id="problem-text"
-          className="problem-input__field"
-          rows={1}
-          placeholder={t('topbar.problemPlaceholder')}
-          value={problemText}
-          spellCheck={false}
-          onChange={(e) => {
-            setProblemText(e.target.value);
-          }}
-          onKeyDown={onProblemKeyDown}
-        />
-        {running ? (
-          <>
-            <span
-              className="btn btn--accent problem-input__submit"
-              role="status"
-              aria-live="polite"
-            >
-              <LoaderCircle className="spin" size={15} strokeWidth={1.75} aria-hidden="true" />
-              <span>{stage ? t(`analyze.stage.${stage}`) : t('topbar.analyze')}</span>
-            </span>
-            <IconButton
-              icon={X}
-              label={t('topbar.cancelAnalyze')}
-              onClick={() => {
-                cancelAnalyze();
-              }}
-            />
-          </>
-        ) : (
-          <button
-            type="button"
-            className="btn btn--accent problem-input__submit"
-            aria-label={t('topbar.analyze')}
-            disabled={!canAnalyze && !needsKey}
-            data-tip={
-              aiOff
-                ? t('topbar.analyzeAiOff')
-                : needsKey
-                  ? t('topbar.analyzeNeedsKey')
-                  : !problemText.trim()
-                    ? t('topbar.analyzeNeedsText')
-                    : undefined
-            }
-            onClick={() => {
-              if (showCrisisIfNeeded(problemText)) return;
-              if (needsKey) setSettingsOpen(true);
-              else void analyze(problemText);
+      {/* On the home screen the big problem box is the main action; no second one up here. */}
+      {home ? (
+        <div className="topbar__spacer" />
+      ) : (
+        <div className="problem-input" data-tour="problem">
+          <label htmlFor="problem-text" className="sr-only">
+            {t('topbar.problemLabel')}
+          </label>
+          <textarea
+            id="problem-text"
+            className="problem-input__field"
+            rows={1}
+            placeholder={t('topbar.problemPlaceholder')}
+            value={problemText}
+            spellCheck={false}
+            onChange={(e) => {
+              setProblemText(e.target.value);
             }}
-          >
-            <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
-            <span>{t('topbar.analyze')}</span>
-          </button>
-        )}
-        <IconButton
-          icon={PencilRuler}
-          label={t('topbar.manual')}
-          onClick={() => {
-            void openManual();
-          }}
-        />
-      </div>
+            onKeyDown={onProblemKeyDown}
+          />
+          {running ? (
+            <>
+              <span
+                className="btn btn--accent problem-input__submit"
+                role="status"
+                aria-live="polite"
+              >
+                <LoaderCircle className="spin" size={15} strokeWidth={1.75} aria-hidden="true" />
+                <span>{stage ? t(`analyze.stage.${stage}`) : t('topbar.analyze')}</span>
+              </span>
+              <IconButton
+                icon={X}
+                label={t('topbar.cancelAnalyze')}
+                onClick={() => {
+                  cancelAnalyze();
+                }}
+              />
+            </>
+          ) : (
+            <button
+              type="button"
+              className="btn btn--accent problem-input__submit"
+              aria-label={t('topbar.analyze')}
+              disabled={!canAnalyze && !needsKey}
+              data-tip={
+                aiOff
+                  ? t('topbar.analyzeAiOff')
+                  : needsKey
+                    ? t('topbar.analyzeNeedsKey')
+                    : !problemText.trim()
+                      ? t('topbar.analyzeNeedsText')
+                      : undefined
+              }
+              onClick={() => {
+                submitProblem(problemText);
+              }}
+            >
+              <Sparkles size={15} strokeWidth={1.75} aria-hidden="true" />
+              <span>{t('topbar.analyze')}</span>
+            </button>
+          )}
+          <IconButton
+            icon={PencilRuler}
+            label={t('topbar.manual')}
+            onClick={() => {
+              void openManual();
+            }}
+          />
+        </div>
+      )}
 
       <div className="topbar__actions">
         <AiStatusPill
@@ -272,55 +277,3 @@ export const TopBar = memo(function TopBar() {
     </header>
   );
 });
-
-const PROVIDER_NAME = { gemini: 'Gemini', claude: 'Claude', groq: 'Groq' } as const;
-
-/** Connection state of the AI (click → AI settings). */
-function AiStatusPill({ onClick }: { onClick: () => void }) {
-  const t = useT();
-  const ai = useAiStore(
-    useShallow((s) => ({ provider: s.provider, status: s.status, models: s.models })),
-  );
-  let kind: 'offline' | 'cloud' = 'offline';
-  let label = t('ai.offline');
-  let hint = t('ai.offHint');
-  let Icon = CloudOff;
-  if (ai.provider === 'off') {
-    label = t('ai.off');
-  } else if (ai.status === 'notAllowed') {
-    label = t('ai.notAllowed');
-    Icon = ShieldAlert;
-    hint = t('ai.notAllowedHint');
-  } else if (ai.status === 'noKey' || ai.status === 'badKey') {
-    label = t('ai.noKey');
-    Icon = KeyRound;
-    hint = t(ai.status === 'noKey' ? 'ai.noKeyHint' : 'ai.badKeyHint', {
-      provider: PROVIDER_NAME[ai.provider],
-    });
-  } else if (ai.status === 'quota' || ai.status === 'badModel' || ai.status === 'error') {
-    label = t('ai.problem');
-    Icon = CircleAlert;
-    hint = t(`ai.${ai.status}Hint`, { provider: PROVIDER_NAME[ai.provider] });
-  } else if (ai.status === 'ok') {
-    kind = 'cloud';
-    label = t('ai.cloud');
-    Icon = Cloud;
-    hint = t('ai.cloudHint', {
-      provider: PROVIDER_NAME[ai.provider],
-      model: ai.models[ai.provider] || DEFAULT_MODELS[ai.provider],
-    });
-  }
-  return (
-    <button
-      type="button"
-      className="ai-status"
-      data-status={kind}
-      aria-label={`${label}. ${hint}`}
-      data-tip={hint}
-      onClick={onClick}
-    >
-      <Icon size={14} strokeWidth={1.75} aria-hidden="true" />
-      <span className="ai-status__label">{label}</span>
-    </button>
-  );
-}
