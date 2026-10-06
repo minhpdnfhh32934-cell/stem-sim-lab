@@ -281,6 +281,8 @@ Progress log: `docs/PROGRESS.md`.
   - [x] 3b.5 learn/ (predict–observe–explain, challenges, step hints, progress/badges, break reminder)
   - [x] 3b.6 two installers + update channels, `docs/USER_TESTING.md`
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
+  - [~] T0 specs (`docs/TEACHSCRIPT.md`, `docs/AI_TEACHER_ARCHITECTURE.md`, `docs/VOICE_BENCHMARK.md`),
+    sketch route `src/teacher/` (dev builds only) — **waiting for user approval**
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
@@ -301,6 +303,11 @@ Progress log: `docs/PROGRESS.md`.
   `web-update-pilot.json`). Pilot manifests sign an extra `edition:pilot` line; the app checks the
   manifest's `edition` and the zip's `web-edition.txt`. `web-bundle.mjs <main|pilot>` packs one
   edition. Never let the pilot config override security/CSP or the version (tested).
+- **Update window / mandatory updates (0.3.0+):** the start-up check opens `UpdateDialog` when a
+  version is available ("Cập nhật ngay" / "Để sau"). Release input `required` → signed
+  `minRequired` (v2 signature `signed_message_v2` ≡ `scripts/release/manifest-message.mjs`, tested
+  on both sides); running below it → dialog cannot be dismissed. The workflow carries the latest
+  floor forward. Keep the v1 `signature` for pre-0.3.0 apps.
 - User testing protocol and results: `docs/USER_TESTING.md` — record real observations only.
 - Smart App Control blocks unsigned installers; in-app web updates avoid new executables.
 - WebView2: `downloadBootstrapper` (small installer). Offline machines without WebView2 need the
