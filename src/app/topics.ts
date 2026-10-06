@@ -6,6 +6,7 @@ import { useSimStore } from './sim/simStore';
 import { useWorkspaceStore, type Subject } from './workspaceStore';
 import { CATALOG } from './catalog';
 import { useProfileStore } from './learner/profileStore';
+import { useProgressStore } from '@/learn/progressStore';
 
 /** Subject that contains a topic id (for switching the subject when opening). */
 export function subjectOf(topicId: string): Subject | undefined {
@@ -32,6 +33,7 @@ export async function openTopic(topicId: string): Promise<void> {
     return;
   }
   useProfileStore.getState().setLastTopic(topicId);
+  useProgressStore.getState().markVisited(topicId);
 }
 
 /** Closes the open topic and shows the home screen ("Hôm nay học gì?"). */
