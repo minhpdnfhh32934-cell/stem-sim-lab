@@ -1,4 +1,6 @@
-import { ArrowRight, GraduationCap, PencilRuler, Play, Sparkles } from 'lucide-react';
+import { ArrowRight, Award, GraduationCap, PencilRuler, Play, Sparkles } from 'lucide-react';
+import { earnedBadges } from '@/learn/progress';
+import { useProgressStore } from '@/learn/progressStore';
 import { useId, type KeyboardEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { openManual, useAnalyzeStore } from '@/app/ai/analyze';
@@ -100,6 +102,8 @@ export function HomeScreen() {
           <p className="home__note">{t('home.noSuggestions')}</p>
         )}
 
+        <Badges />
+
         <div className="home__teacher" aria-disabled="true">
           <GraduationCap size={22} strokeWidth={1.5} aria-hidden="true" />
           <div>
@@ -114,6 +118,44 @@ export function HomeScreen() {
         <p className="home__note home__footnote">{t('home.noAiNote')}</p>
       </div>
     </section>
+  );
+}
+
+/** Badges earned (A4.1: healthy motivation — specific, no streaks or rankings). */
+function Badges() {
+  const t = useT();
+  const progress = useProgressStore(
+    useShallow((s) => ({
+      visited: s.visited,
+      challenges: s.challenges,
+      predictions: s.predictions,
+    })),
+  );
+  const badges = earnedBadges(progress);
+  return (
+    <>
+      <h2 className="home__heading">{t('learn.badgesTitle')}</h2>
+      {badges.length === 0 ? (
+        <p className="home__note">{t('learn.noBadges')}</p>
+      ) : (
+        <ul className="home__badges">
+          {badges.map((b) => {
+            const params = { ...b.params };
+            if (typeof params.chapter === 'string')
+              params.chapter = t(params.chapter as MessageKey);
+            return (
+              <li key={b.id} className="home__badge">
+                <Award size={18} strokeWidth={1.75} aria-hidden="true" />
+                <span>
+                  <strong>{t(b.title)}</strong>
+                  <span className="home__badge-desc">{t(b.desc, params)}</span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </>
   );
 }
 
