@@ -1,0 +1,191 @@
+/* "Thử thách" tab: predict–observe–explain and challenges (PROMPT_PHAN_2 A4.1). */
+
+.learn {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  font-size: var(--text-content);
+}
+.learn__empty {
+  padding: var(--space-3);
+}
+.learn-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.learn-card--done {
+  border-color: color-mix(in srgb, var(--conf-exact) 55%, var(--border));
+  animation: learn-pop var(--dur-med) var(--ease-out);
+}
+@keyframes learn-pop {
+  from {
+    transform: scale(0.985);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .learn-card--done {
+    animation: none;
+  }
+}
+.learn-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  color: var(--accent);
+}
+.learn-card__head h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--text-md);
+  font-weight: 650;
+}
+.learn-card__steps {
+  margin-left: auto;
+  color: var(--text-faint);
+  font-size: var(--text-xs);
+}
+.learn-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  background: var(--conf-exact-soft);
+  color: var(--conf-exact);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+.learn-card__task {
+  margin: 0;
+}
+.learn-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.learn-choice {
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font: inherit;
+}
+.learn-choice:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.learn-choice[aria-checked='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.learn-choice.is-correct {
+  border-color: var(--conf-exact);
+  background: var(--conf-exact-soft);
+  box-shadow: inset 0 0 0 1px var(--conf-exact);
+  opacity: 1;
+}
+.learn-choice.is-wrong {
+  border-style: dashed;
+}
+.learn-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  width: 100%;
+}
+.learn-result p {
+  margin: 0;
+}
+.learn-result__verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.learn-result__verdict.is-right {
+  color: var(--conf-exact);
+}
+.learn-result__verdict.is-other {
+  color: var(--conf-qual);
+}
+.learn-result__label {
+  font-weight: 600;
+}
+.learn-note {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+  color: var(--text);
+  font: inherit;
+  resize: vertical;
+}
+.learn-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+}
+.learn-status dt {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.learn-status dd {
+  margin: 0;
+  font-weight: 600;
+}
+.learn-success,
+.learn-hint,
+.learn-warn {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+}
+.learn-success {
+  color: var(--conf-exact);
+  font-weight: 600;
+}
+.learn-success svg,
+.learn-hint svg {
+  flex: none;
+  margin-top: 3px;
+}
+.learn-hint {
+  color: var(--text-muted);
+}
+.learn-warn {
+  display: block;
+  color: var(--pending);
+}
+
+/* Solution: hints first for a problem typed in by the learner. */
+.solution__hidden {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+}
+.solution__hidden p {
+  margin: 0;
+}
