@@ -70,8 +70,16 @@ pub struct Manifest {
     /// "main" (or empty: manifests written before the pilot channel existed) or "pilot".
     #[serde(default)]
     pub edition: String,
-    /// Base64 Ed25519 signature of [`signed_message`].
+    /// Web versions older than this must update before the app can be used (empty = none).
+    /// Only trusted when covered by `signature_v2`.
+    #[serde(default)]
+    pub min_required: String,
+    /// Base64 Ed25519 signature of [`signed_message`] (read by apps older than 0.3.0).
     pub signature: String,
+    /// Base64 Ed25519 signature of [`signed_message_v2`] (0.3.0+: also covers the edition and
+    /// `min_required`). Empty in manifests written before 0.3.0.
+    #[serde(default)]
+    pub signature_v2: String,
 }
 
 /// Edition named by a manifest (empty = "main").
@@ -96,6 +104,21 @@ pub fn signed_message(m: &Manifest) -> String {
     }
 }
 
+/// Signed message of the v2 signature: every field the app acts on, edition and the
+/// mandatory-update floor included (kept in sync with `scripts/release/web-bundle.mjs`).
+pub fn signed_message_v2(m: &Manifest) -> String {
+    format!(
+        "stemsim-web-update-v2\n{}\n{}\n{}\n{}\n{}\nedition:{}\nrequired:{}",
+        m.web_version,
+        m.min_native,
+        m.sha256,
+        m.size,
+        m.url,
+        manifest_edition(m),
+        m.min_required
+    )
+}
+
 pub fn release_key() -> Result<VerifyingKey, String> {
     let raw = base64::engine::general_purpose::STANDARD
         .decode(PUBLIC_KEY_B64)
@@ -104,19 +127,36 @@ pub fn release_key() -> Result<VerifyingKey, String> {
     VerifyingKey::from_bytes(&bytes).map_err(|e| e.to_string())
 }
 
-pub fn verify_manifest(m: &Manifest, key: &VerifyingKey) -> Result<(), String> {
+fn check_signature(sig_b64: &str, message: &str, key: &VerifyingKey) -> Result<(), String> {
     let sig = base64::engine::general_purpose::STANDARD
-        .decode(m.signature.trim())
+        .decode(sig_b64.trim())
         .map_err(|_| "chữ ký không hợp lệ".to_string())?;
     let sig = Signature::from_slice(&sig).map_err(|_| "chữ ký không hợp lệ".to_string())?;
-    key.verify_strict(signed_message(m).as_bytes(), &sig)
-        .map_err(|_| "chữ ký không khớp — bản cập nhật bị từ chối".to_string())?;
+    key.verify_strict(message.as_bytes(), &sig)
+        .map_err(|_| "chữ ký không khớp — bản cập nhật bị từ chối".to_string())
+}
+
+pub fn verify_manifest(m: &Manifest, key: &VerifyingKey) -> Result<(), String> {
+    if m.signature_v2.trim().is_empty() {
+        // Manifest from before 0.3.0: no mandatory floor can be trusted without the v2 signature.
+        if !m.min_required.is_empty() {
+            return Err("mức cập nhật bắt buộc không được ký — bản cập nhật bị từ chối".into());
+        }
+        check_signature(&m.signature, &signed_message(m), key)?;
+    } else {
+        check_signature(&m.signature_v2, &signed_message_v2(m), key)?;
+    }
     let prefix = format!("https://github.com/{REPO}/releases/download/");
     if !m.url.starts_with(&prefix) {
         return Err("địa chỉ tải không thuộc dự án".into());
     }
     if parse_version(&m.web_version).is_none() || parse_version(&m.min_native).is_none() {
         return Err("số phiên bản không hợp lệ".into());
+    }
+    if !m.min_required.is_empty()
+        && (parse_version(&m.min_required).is_none() || newer(&m.min_required, &m.web_version))
+    {
+        return Err("mức cập nhật bắt buộc không hợp lệ".into());
     }
     if manifest_edition(m) != EDITION {
         return Err("bản cập nhật dành cho phiên bản khác của ứng dụng — đã từ chối".into());
@@ -334,6 +374,9 @@ pub struct CheckResult {
     pub available: bool,
     /// The newest release needs a new executable (install it from the releases page).
     pub needs_installer: bool,
+    /// The running web part is older than the signed `min_required`: the learner must update
+    /// (in the app, or with the installer when `needs_installer`) before going on.
+    pub required: bool,
 }
 
 fn status(shared: &Shared) -> Status {
@@ -370,11 +413,13 @@ async fn fetch_manifest() -> Result<Manifest, String> {
     Ok(m)
 }
 
-fn evaluate(shared: &Shared, m: &Manifest) -> (bool, bool) {
+/// (available, needs_installer, required) for a verified manifest.
+fn evaluate(shared: &Shared, m: &Manifest) -> (bool, bool, bool) {
     let running = shared.running();
     let is_newer = newer(&m.web_version, &running);
     let native_ok = !newer(&m.min_native, native_version());
-    (is_newer && native_ok, is_newer && !native_ok)
+    let required = is_newer && !m.min_required.is_empty() && newer(&m.min_required, &running);
+    (is_newer && native_ok, is_newer && !native_ok, required)
 }
 
 #[tauri::command]
@@ -385,12 +430,13 @@ pub fn web_update_status(state: State<'_, WebUpdateState>) -> Status {
 #[tauri::command]
 pub async fn web_update_check(state: State<'_, WebUpdateState>) -> Result<CheckResult, String> {
     let manifest = fetch_manifest().await?;
-    let (available, needs_installer) = evaluate(&state.0, &manifest);
+    let (available, needs_installer, required) = evaluate(&state.0, &manifest);
     Ok(CheckResult {
         status: status(&state.0),
         manifest,
         available,
         needs_installer,
+        required,
     })
 }
 
@@ -399,7 +445,7 @@ pub async fn web_update_check(state: State<'_, WebUpdateState>) -> Result<CheckR
 pub async fn web_update_apply(state: State<'_, WebUpdateState>) -> Result<String, String> {
     let shared = state.0.clone();
     let m = fetch_manifest().await?;
-    let (available, _) = evaluate(&shared, &m);
+    let (available, _, _) = evaluate(&shared, &m);
     if !available {
         return Err("không có bản cập nhật phù hợp".into());
     }
@@ -512,11 +558,106 @@ mod tests {
             notes: String::new(),
             date: String::new(),
             edition: EDITION.into(),
+            min_required: String::new(),
             signature: String::new(),
+            signature_v2: String::new(),
         };
         let sig = key.sign(signed_message(&m).as_bytes());
         m.signature = base64::engine::general_purpose::STANDARD.encode(sig.to_bytes());
         m
+    }
+
+    /// A 0.3.0+ manifest: v1 signature for old apps, v2 covering `min_required`.
+    fn signed_v2(key: &SigningKey, version: &str, min_required: &str) -> Manifest {
+        let mut m = signed(key, version, URL);
+        m.min_required = min_required.into();
+        let sig = key.sign(signed_message_v2(&m).as_bytes());
+        m.signature_v2 = base64::engine::general_purpose::STANDARD.encode(sig.to_bytes());
+        m
+    }
+
+    #[test]
+    fn the_mandatory_floor_is_only_trusted_when_signed() {
+        let key = SigningKey::from_bytes(&[7u8; 32]);
+        let m = signed_v2(&key, "0.3.2", "0.3.1");
+        assert!(verify_manifest(&m, &key.verifying_key()).is_ok());
+        // Changing the floor breaks the v2 signature.
+        let mut raised = m.clone();
+        raised.min_required = "0.3.2".into();
+        assert!(verify_manifest(&raised, &key.verifying_key()).is_err());
+        // Removing the v2 signature but keeping a floor: refused (no unsigned floors).
+        let mut stripped = m.clone();
+        stripped.signature_v2.clear();
+        assert!(verify_manifest(&stripped, &key.verifying_key()).is_err());
+        // Old-style manifest without a floor: still accepted (v1 signature).
+        let old = signed(&key, "0.3.2", URL);
+        assert!(verify_manifest(&old, &key.verifying_key()).is_ok());
+        // A floor above the release itself makes no sense.
+        let silly = signed_v2(&key, "0.3.2", "0.4.0");
+        assert!(verify_manifest(&silly, &key.verifying_key()).is_err());
+        // Pre-0.3.0 apps only check `signature`, which stays valid on the same manifest.
+        assert!(check_signature(&m.signature, &signed_message(&m), &key.verifying_key()).is_ok());
+    }
+
+    #[test]
+    fn signed_messages_match_the_release_script() {
+        // Same literals as tests/web-update-message.test.ts (scripts/release/manifest-message.mjs).
+        let sha = "ab".repeat(32);
+        let url = "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/download/v0.3.2/web-bundle.zip";
+        let mut m = Manifest {
+            web_version: "0.3.2".into(),
+            min_native: "0.3.0".into(),
+            sha256: sha.clone(),
+            size: 1234,
+            url: url.into(),
+            notes: String::new(),
+            date: String::new(),
+            edition: "main".into(),
+            min_required: "0.3.1".into(),
+            signature: String::new(),
+            signature_v2: String::new(),
+        };
+        assert_eq!(
+            signed_message(&m),
+            format!("stemsim-web-update\n0.3.2\n0.3.0\n{sha}\n1234\n{url}")
+        );
+        assert_eq!(
+            signed_message_v2(&m),
+            format!("stemsim-web-update-v2\n0.3.2\n0.3.0\n{sha}\n1234\n{url}\nedition:main\nrequired:0.3.1")
+        );
+        m.edition = "pilot".into();
+        m.min_required = String::new();
+        assert_eq!(
+            signed_message(&m),
+            format!("stemsim-web-update\n0.3.2\n0.3.0\n{sha}\n1234\n{url}\nedition:pilot")
+        );
+        assert_eq!(
+            signed_message_v2(&m),
+            format!(
+                "stemsim-web-update-v2\n0.3.2\n0.3.0\n{sha}\n1234\n{url}\nedition:pilot\nrequired:"
+            )
+        );
+    }
+
+    #[test]
+    fn required_when_running_below_the_floor() {
+        let key = SigningKey::from_bytes(&[7u8; 32]);
+        let s = Shared::default();
+        *s.embedded.write().unwrap() = "0.3.0".into();
+        let mut m = signed_v2(&key, "0.3.2", "0.3.1");
+        m.min_native = native_version().into();
+        assert_eq!(evaluate(&s, &m), (true, false, true));
+        m.min_required = "0.3.0".into();
+        assert_eq!(evaluate(&s, &m), (true, false, false));
+        m.min_required = String::new();
+        assert_eq!(evaluate(&s, &m), (true, false, false));
+        // Needs a new installer and is mandatory.
+        m.min_required = "0.3.2".into();
+        m.min_native = "99.0.0".into();
+        assert_eq!(evaluate(&s, &m), (false, true, true));
+        // Already up to date: nothing required.
+        *s.embedded.write().unwrap() = "0.3.2".into();
+        assert_eq!(evaluate(&s, &m), (false, false, false));
     }
 
     const URL: &str =
