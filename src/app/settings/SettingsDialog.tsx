@@ -4,6 +4,7 @@ import { AiSettings } from '@/app/ai/AiSettings';
 import { SafetySettings } from '@/safety/SafetySettings';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { SHORTCUTS, formatChord, type ShortcutAction } from '@/app/shortcuts/shortcuts';
 import { GRAVITY_PRESETS } from '@/core/constants';
 import { usePerfStore } from '@/perf/perfStore';
@@ -81,6 +82,8 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
             <Palette size={15} strokeWidth={1.75} aria-hidden="true" />
             {t('settings.appearance')}
           </legend>
+
+          <ModeSwitch />
 
           <div className="settings-row">
             <span id="theme-label">{t('settings.theme')}</span>

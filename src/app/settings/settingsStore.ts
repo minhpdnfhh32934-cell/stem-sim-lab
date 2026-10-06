@@ -5,6 +5,8 @@ import { DEFAULT_GRAVITY, GRAVITY_PRESETS, type GravityPreset } from '@/core/con
 
 export type ThemePreference = 'system' | 'light' | 'dark';
 export type ResolvedTheme = 'light' | 'dark';
+/** Basic (default): only what a lesson needs. Advanced: full inspector, data table, CSV. */
+export type UiMode = 'basic' | 'advanced';
 
 /** Font scale steps offered in Settings (1 = 14px base). */
 export const FONT_SCALES = [0.9, 1, 1.1, 1.25, 1.4] as const;
@@ -16,12 +18,14 @@ export interface SettingsState {
   fontScale: FontScale;
   /** g used only when a problem does not state it (always shown as a default). */
   defaultGravity: GravityPreset;
+  uiMode: UiMode;
   setTheme: (theme: ThemePreference) => void;
   toggleTheme: (current: ResolvedTheme) => void;
   setLocale: (locale: Locale) => void;
   setFontScale: (scale: FontScale) => void;
   stepFontScale: (direction: 1 | -1) => void;
   setDefaultGravity: (g: GravityPreset) => void;
+  setUiMode: (mode: UiMode) => void;
 }
 
 export const DEFAULT_SETTINGS = {
@@ -29,7 +33,11 @@ export const DEFAULT_SETTINGS = {
   locale: 'vi',
   fontScale: 1,
   defaultGravity: DEFAULT_GRAVITY,
-} as const satisfies Pick<SettingsState, 'theme' | 'locale' | 'fontScale' | 'defaultGravity'>;
+  uiMode: 'basic',
+} as const satisfies Pick<
+  SettingsState,
+  'theme' | 'locale' | 'fontScale' | 'defaultGravity' | 'uiMode'
+>;
 
 /** Returns the next font scale step in `direction`, clamped to the available steps. */
 export function nextFontScale(current: FontScale, direction: 1 | -1): FontScale {
@@ -61,16 +69,25 @@ export const useSettingsStore = create<SettingsState>()(
         if ((GRAVITY_PRESETS as readonly number[]).includes(defaultGravity))
           set({ defaultGravity });
       },
+      setUiMode: (uiMode) => {
+        set({ uiMode });
+      },
     }),
     {
       name: 'stemsim.settings',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ theme, locale, fontScale, defaultGravity }) => ({
+      // v1 had no uiMode: people who used the app before keep the full (advanced) layout they know.
+      migrate: (persisted, version) => {
+        const p = (persisted ?? {}) as Partial<SettingsState>;
+        return version < 2 ? { ...p, uiMode: 'advanced' } : p;
+      },
+      partialize: ({ theme, locale, fontScale, defaultGravity, uiMode }) => ({
         theme,
         locale,
         fontScale,
         defaultGravity,
+        uiMode,
       }),
     },
   ),
