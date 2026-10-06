@@ -12,7 +12,11 @@
 //! - the zip must come from this project's GitHub releases, its hash must match, paths are
 //!   checked (no `..`), and total size is limited;
 //! - never downgrades; a newer installer wins over an older downloaded web part;
-//! - "Khôi phục bản gốc" removes the downloaded part.
+//! - "Khôi phục bản gốc" removes the downloaded part;
+//! - two update channels, one per edition: the pilot app reads `web-update-pilot.json`, its
+//!   manifest names the edition inside the signed message, and the unpacked bundle must say
+//!   `pilot` in `web-edition.txt` — a main-edition bundle (with Gemini code) can never be
+//!   installed into the pilot app, nor the other way round.
 
 use base64::Engine as _;
 use ed25519_dalek::{Signature, VerifyingKey};
@@ -26,9 +30,19 @@ use tauri::utils::assets::{AssetKey, AssetsIter, CspHash};
 use tauri::{App, AppHandle, Assets, Runtime, State};
 
 const REPO: &str = "minhpdnfhh32934-cell/stem-sim-lab";
+/// Edition of this executable (Cargo feature), also its update channel.
+pub const EDITION: &str = if cfg!(feature = "edition-pilot") {
+    "pilot"
+} else {
+    "main"
+};
 /// Manifest of the newest release (GitHub redirects `latest` to the newest published one).
+#[cfg(not(feature = "edition-pilot"))]
 pub const MANIFEST_URL: &str =
     "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/latest/download/web-update.json";
+#[cfg(feature = "edition-pilot")]
+pub const MANIFEST_URL: &str =
+    "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/latest/download/web-update-pilot.json";
 pub const RELEASES_PAGE: &str =
     "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/latest";
 /// Ed25519 public key of the release signing key (private key: GitHub secret
@@ -37,6 +51,7 @@ const PUBLIC_KEY_B64: &str = "vjX/dG4Nz3ksc+5a7980uLhoZ4OfZ1F7F3lQu5XKJgg=";
 const MAX_ZIP_BYTES: u64 = 64 * 1024 * 1024;
 const MAX_UNPACKED_BYTES: u64 = 256 * 1024 * 1024;
 const VERSION_FILE: &str = "web-version.txt";
+const EDITION_FILE: &str = "web-edition.txt";
 const ACTIVE_FILE: &str = "active.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -52,16 +67,33 @@ pub struct Manifest {
     pub notes: String,
     #[serde(default)]
     pub date: String,
+    /// "main" (or empty: manifests written before the pilot channel existed) or "pilot".
+    #[serde(default)]
+    pub edition: String,
     /// Base64 Ed25519 signature of [`signed_message`].
     pub signature: String,
 }
 
+/// Edition named by a manifest (empty = "main").
+pub fn manifest_edition(m: &Manifest) -> &str {
+    if m.edition.is_empty() {
+        "main"
+    } else {
+        &m.edition
+    }
+}
+
 /// The exact bytes that are signed (kept in sync with `scripts/release/web-bundle.mjs`).
+/// Main manifests keep the original format; other editions add an `edition:` line.
 pub fn signed_message(m: &Manifest) -> String {
-    format!(
+    let base = format!(
         "stemsim-web-update\n{}\n{}\n{}\n{}\n{}",
         m.web_version, m.min_native, m.sha256, m.size, m.url
-    )
+    );
+    match manifest_edition(m) {
+        "main" => base,
+        e => format!("{base}\nedition:{e}"),
+    }
 }
 
 pub fn release_key() -> Result<VerifyingKey, String> {
@@ -85,6 +117,9 @@ pub fn verify_manifest(m: &Manifest, key: &VerifyingKey) -> Result<(), String> {
     }
     if parse_version(&m.web_version).is_none() || parse_version(&m.min_native).is_none() {
         return Err("số phiên bản không hợp lệ".into());
+    }
+    if manifest_edition(m) != EDITION {
+        return Err("bản cập nhật dành cho phiên bản khác của ứng dụng — đã từ chối".into());
     }
     Ok(())
 }
@@ -393,7 +428,11 @@ pub async fn web_update_apply(state: State<'_, WebUpdateState>) -> Result<String
     let _ = std::fs::remove_dir_all(&partial);
     unpack(&bytes, &partial)?;
     let inner = std::fs::read_to_string(partial.join(VERSION_FILE)).unwrap_or_default();
-    if inner.trim() != m.web_version || !partial.join("index.html").is_file() {
+    let edition = std::fs::read_to_string(partial.join(EDITION_FILE)).unwrap_or_default();
+    if inner.trim() != m.web_version
+        || edition.trim() != EDITION
+        || !partial.join("index.html").is_file()
+    {
         let _ = std::fs::remove_dir_all(&partial);
         return Err("gói cập nhật thiếu tệp hoặc sai phiên bản".into());
     }
@@ -472,6 +511,7 @@ mod tests {
             url: url.into(),
             notes: String::new(),
             date: String::new(),
+            edition: EDITION.into(),
             signature: String::new(),
         };
         let sig = key.sign(signed_message(&m).as_bytes());
@@ -504,7 +544,46 @@ mod tests {
         assert!(verify_manifest(&foreign, &key.verifying_key()).is_err());
     }
 
+    fn resign(key: &SigningKey, m: &mut Manifest) {
+        let sig = key.sign(signed_message(m).as_bytes());
+        m.signature = base64::engine::general_purpose::STANDARD.encode(sig.to_bytes());
+    }
+
+    #[test]
+    fn a_manifest_of_the_other_edition_is_rejected() {
+        let key = SigningKey::from_bytes(&[7u8; 32]);
+        let m = signed(&key, "0.3.1", URL);
+        assert!(verify_manifest(&m, &key.verifying_key()).is_ok());
+        // Correctly signed, but for the other edition: refused.
+        let mut other = m.clone();
+        other.edition = if EDITION == "main" { "pilot" } else { "main" }.into();
+        resign(&key, &mut other);
+        assert!(verify_manifest(&other, &key.verifying_key()).is_err());
+        // The edition is part of the signed message: relabelling a pilot manifest breaks it.
+        let mut pilot = m.clone();
+        pilot.edition = "pilot".into();
+        resign(&key, &mut pilot);
+        let mut relabelled = pilot.clone();
+        relabelled.edition = "main".into();
+        assert_ne!(signed_message(&pilot), signed_message(&relabelled));
+        assert!(verify_manifest(&relabelled, &key.verifying_key()).is_err());
+    }
+
+    #[test]
+    fn main_manifests_keep_the_original_signed_format() {
+        let mut m = signed(&SigningKey::from_bytes(&[7u8; 32]), "0.3.1", URL);
+        let old = format!(
+            "stemsim-web-update\n{}\n{}\n{}\n{}\n{}",
+            m.web_version, m.min_native, m.sha256, m.size, m.url
+        );
+        m.edition = String::new();
+        assert_eq!(signed_message(&m), old);
+        m.edition = "main".into();
+        assert_eq!(signed_message(&m), old);
+    }
+
     /// Signed by `scripts/release/web-bundle.mjs` (Node) with the real release key.
+    #[cfg(feature = "edition-main")]
     #[test]
     fn node_signed_manifest_verifies_with_the_built_in_key() {
         let m: Manifest =
