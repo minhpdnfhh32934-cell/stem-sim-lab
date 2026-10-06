@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "STEM Sim Lab THPT",
+  "identifier": "vn.stemsimlab.pilot",
+  "build": {
+    "beforeBuildCommand": "npm run build:pilot"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "STEM Sim Lab — bản thử nghiệm THPT",
+        "width": 1280,
+        "height": 720,
+        "minWidth": 1024,
+        "minHeight": 600,
+        "center": true,
+        "resizable": true
+      }
+    ]
+  },
+  "bundle": {
+    "shortDescription": "Mô phỏng Vật lý · Hóa học · Sinh học — bản thử nghiệm có giám sát cho học sinh THPT"
+  }
+}

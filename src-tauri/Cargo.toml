@@ -1,6 +1,6 @@
 [package]
 name = "stem-sim-lab"
-version = "0.2.0"
+version = "0.3.0"
 description = "STEM Sim Lab — offline STEM simulator (desktop shell)"
 authors = ["STEM Sim Lab team"]
 edition = "2021"
