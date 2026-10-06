@@ -63,12 +63,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Two update channels: each edition only ever receives its own web part.
       - run: npm run build
-      - name: Pack and sign
+      - name: Pack and sign (main)
         env:
           WEB_UPDATE_SIGNING_KEY: ${{ secrets.WEB_UPDATE_SIGNING_KEY }}
           RELEASE_NOTES: ${{ inputs.notes }}
-        run: node scripts/release/web-bundle.mjs
+        run: node scripts/release/web-bundle.mjs main
+      - run: npm run build:pilot
+      - name: Pack and sign (pilot — no Gemini code, checked by build:pilot)
+        env:
+          WEB_UPDATE_SIGNING_KEY: ${{ secrets.WEB_UPDATE_SIGNING_KEY }}
+          RELEASE_NOTES: ${{ inputs.notes }}
+        run: node scripts/release/web-bundle.mjs pilot
       - uses: actions/upload-artifact@v7
         with:
           name: web-update
@@ -90,21 +97,34 @@ jobs:
         with:
           workspaces: src-tauri
       - run: npm ci
-      - name: Rust tests
-        run: cargo test
+      - name: Rust tests (both editions)
+        shell: bash
+        run: |
+          cargo test
+          cargo test --no-default-features --features edition-pilot
         working-directory: src-tauri
-      - name: Build installers
+      - name: Build installers (main edition)
         run: npx tauri build
-      - name: Collect installers into one folder
+      - name: Collect main installers
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force installer | Out-Null
           Copy-Item src-tauri/target/release/bundle/nsis/*.exe installer/
           Copy-Item src-tauri/target/release/bundle/msi/*.msi installer/
+          Remove-Item -Recurse -Force src-tauri/target/release/bundle
+      # Pilot edition: own name and identifier (installs next to the main app, own data and
+      # keys), pilot web part (no Gemini code) and Rust built without the Gemini provider.
+      - name: Build installers (pilot edition for supervised high-school sessions)
+        run: npx tauri build --config src-tauri/tauri.pilot.conf.json --features edition-pilot -- --no-default-features
+      - name: Collect pilot installers and sizes
+        shell: pwsh
+        run: |
+          Copy-Item src-tauri/target/release/bundle/nsis/*.exe installer/
+          Copy-Item src-tauri/target/release/bundle/msi/*.msi installer/
           Get-ChildItem installer |
             ForEach-Object { "{0}  {1:N1} MB" -f $_.Name, ($_.Length / 1MB) } |
             Tee-Object -FilePath installer/installer-sizes.txt
-      # Artifact "stem-sim-lab-windows": a zip with the .exe (recommended), the .msi and the sizes.
+      # Artifact "stem-sim-lab-windows": both editions' .exe (recommended) and .msi, and the sizes.
       - uses: actions/upload-artifact@v7
         with:
           name: stem-sim-lab-windows
@@ -129,10 +149,14 @@ jobs:
             ${{ inputs.notes }}
 
             **Đã cài STEM Sim Lab:** mở menu ☰ → *Kiểm tra cập nhật* (không cần tải tệp nào).
-            **Cài lần đầu:** tải `STEM Sim Lab_…_x64-setup.exe` bên dưới (Windows 10/11, 64-bit).
+            **Cài lần đầu (sinh viên, bản chính):** tải `STEM Sim Lab_…_x64-setup.exe` (Windows 10/11, 64-bit).
+            **Buổi thử nghiệm có giám sát với học sinh THPT:** tải `STEM Sim Lab THPT_…_x64-setup.exe`
+            (Claude, không có mã Gemini; khóa API do người giám sát nhập bằng PIN).
           files: |
             out/stem-sim-lab-windows/*.exe
             out/stem-sim-lab-windows/*.msi
             out/web-update/web-bundle.zip
             out/web-update/web-update.json
+            out/web-update/web-bundle-pilot.zip
+            out/web-update/web-update-pilot.json
           fail_on_unmatched_files: true
