@@ -3,6 +3,7 @@ import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach } from 'vitest';
 import { setSafetyBackendForTests, statusOf, TERMS_VERSION, BrowserSafety } from '@/safety/safety';
 import { useSafetyStore } from '@/safety/safetyStore';
+import { useProfileStore } from '@/app/learner/profileStore';
 
 // jsdom does not implement <dialog>.showModal()/close().
 if (typeof HTMLDialogElement !== 'undefined' && !('showModal' in HTMLDialogElement.prototype)) {
@@ -45,4 +46,6 @@ beforeEach(() => {
     gateRequested: false,
     unlockedUntil: 0,
   });
+  // Unit tests start after the first-run onboarding (tested in src/app/learner and E2E).
+  useProfileStore.setState({ onboarded: true, connectSeen: true, lastTopic: null });
 });

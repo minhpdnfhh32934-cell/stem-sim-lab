@@ -2,7 +2,9 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from '@/app/App';
+import { Inspector } from '@/app/layout/Inspector';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { Timeline } from '@/app/layout/Timeline';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 
@@ -16,19 +18,23 @@ describe('App shell (Phase 0)', () => {
     });
   });
 
-  it('renders every main region of the layout (§7.1)', () => {
+  it('starts on the home screen; the simulation regions appear with a topic (A4.2)', () => {
     render(<App />);
-    expect(screen.getByRole('textbox', { name: 'Đề bài' })).toBeInTheDocument();
     expect(screen.getByRole('radiogroup', { name: 'Môn học' })).toBeInTheDocument();
     expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
-    expect(screen.getByRole('region', { name: 'Khung mô phỏng' })).toBeInTheDocument();
-    expect(screen.getByRole('complementary', { name: 'Bảng thuộc tính' })).toBeInTheDocument();
-    expect(screen.getByRole('group', { name: 'Điều khiển thời gian' })).toBeInTheDocument();
-    expect(screen.getByRole('region', { name: 'Bảng đồ thị và lời giải' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Nhập đề bài hoặc câu hỏi…' })).toBeInTheDocument();
+    expect(screen.getByText('Dạy học bằng AI')).toBeInTheDocument();
+    // Nothing open yet: no stage, timeline, inspector or graphs.
+    expect(screen.queryByRole('region', { name: 'Khung mô phỏng' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Điều khiển thời gian' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows the three Science Card confidence levels', () => {
-    render(<App />);
+    render(<Inspector />);
     const inspector = screen.getByRole('complementary', { name: 'Bảng thuộc tính' });
     expect(within(inspector).getByText('Định lượng chính xác')).toBeInTheDocument();
     expect(within(inspector).getByText('Định lượng gần đúng')).toBeInTheDocument();
@@ -38,10 +44,11 @@ describe('App shell (Phase 0)', () => {
   it('switching subject changes the library', async () => {
     const user = userEvent.setup();
     render(<App />);
-    expect(screen.getByText('Ném xiên')).toBeInTheDocument();
+    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
+    expect(within(library).getByText('Ném xiên')).toBeInTheDocument();
     await user.click(screen.getByRole('radio', { name: 'Hóa học' }));
-    expect(screen.queryByText('Ném xiên')).not.toBeInTheDocument();
-    expect(screen.getByText('Bảng tuần hoàn')).toBeInTheDocument();
+    expect(within(library).queryByText('Ném xiên')).not.toBeInTheDocument();
+    expect(within(library).getByText('Bảng tuần hoàn')).toBeInTheDocument();
   });
 
   it('library search ignores diacritics', async () => {
@@ -76,11 +83,11 @@ describe('App shell (Phase 0)', () => {
     render(<App />);
     await user.keyboard('{F5}');
     expect(
-      screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
+      screen.queryByRole('complementary', { name: 'Thư viện chủ đề' }),
     ).not.toBeInTheDocument();
-    expect(screen.getByRole('region', { name: 'Khung mô phỏng' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
     await user.keyboard('{Escape}');
-    expect(screen.getByRole('complementary', { name: 'Bảng thuộc tính' })).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
   });
 
   it('language can be switched to English in Settings', async () => {
@@ -109,7 +116,16 @@ describe('App shell (Phase 0)', () => {
   });
 
   it('play controls stay disabled until a simulation exists', () => {
-    render(<App />);
+    render(<Timeline />);
     expect(screen.getByRole('button', { name: 'Chạy (Space)' })).toBeDisabled();
+  });
+
+  it('a subject card selects the subject and shows its topics in the library', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /^Sinh học/ }));
+    expect(screen.getByRole('radio', { name: 'Sinh học' })).toHaveAttribute('aria-checked', 'true');
+    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
+    expect(within(library).getByText('Nguyên phân')).toBeInTheDocument();
   });
 });
