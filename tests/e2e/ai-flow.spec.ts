@@ -132,13 +132,13 @@ async function mockGroq(page: Page) {
 
 async function typeProblem(page: Page, text: string) {
   await page.goto('/');
-  await page.getByLabel('Đề bài', { exact: true }).fill(text);
+  await page.getByRole('textbox', { name: /đề bài/i }).fill(text);
 }
 
 test('problem → confirmation table → simulation → solution → AI explanation', async ({ page }) => {
   await mockGemini(page);
   await typeProblem(page, item.text);
-  await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'cloud');
+  await expect(page.locator('.topbar .ai-status')).toHaveAttribute('data-status', 'cloud');
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
 
   const dialog = page.getByRole('dialog', { name: 'Tôi hiểu đề như sau' });
@@ -247,7 +247,7 @@ test('no Internet → clear error with next steps', async ({ page }) => {
   await mockGemini(page, { down: true });
   await typeProblem(page, item.text);
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
+  const dialog = page.getByRole('dialog', { name: 'Mình chưa đọc được đề này' });
   await expect(dialog).toContainText('Kiểm tra kết nối Internet');
   await expect(dialog.getByRole('button', { name: 'Tự dựng cảnh' })).toBeVisible();
 });
@@ -256,8 +256,8 @@ test('free quota used up (HTTP 429) is explained in simple words', async ({ page
   await mockGemini(page, { status: 429 });
   await typeProblem(page, item.text);
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
-  await expect(dialog).toContainText('hết lượt dùng AI miễn phí');
+  const dialog = page.getByRole('dialog', { name: 'Mình chưa đọc được đề này' });
+  await expect(dialog).toContainText('hết lượt dùng miễn phí');
   await expect(dialog).toContainText('Đợi khoảng 1 phút');
 });
 
@@ -266,10 +266,11 @@ test('no API key → the AI button opens "Kết nối AI" with the Gemini key gu
 }) => {
   await mockGemini(page, { noKey: true });
   await typeProblem(page, item.text);
-  await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'offline');
-  await expect(page.locator('.ai-status')).toContainText('thiếu key');
-  const analyze = page.getByRole('button', { name: 'Phân tích đề' });
-  await expect(analyze).toHaveAttribute('data-tip', /Kết nối AI để dùng tính năng này/);
+  await expect(page.locator('.topbar .ai-status')).toHaveAttribute('data-status', 'warn');
+  await expect(page.locator('.topbar .ai-status')).toContainText('Chưa kết nối AI');
+  // On the home screen the button says what it will do.
+  const analyze = page.getByRole('button', { name: 'Kết nối AI để phân tích đề' });
+  await expect(analyze).toBeEnabled();
   await analyze.click();
   const settings = page.getByRole('dialog', { name: 'Cài đặt' });
   await expect(settings.getByText('Kết nối AI', { exact: true })).toBeVisible();
@@ -341,7 +342,7 @@ test('a problem with a phone number is not sent to the AI', async ({ page }) => 
   const stats = await mockGemini(page);
   await typeProblem(page, `${item.text} Liên hệ em: 0912 345 678.`);
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Không phân tích được đề' });
+  const dialog = page.getByRole('dialog', { name: 'Mình chưa đọc được đề này' });
   await expect(dialog).toContainText('thông tin cá nhân (số điện thoại)');
   await expect(dialog.getByRole('button', { name: 'Thử lại' })).toHaveCount(0);
   expect(stats.generate).toBe(0);
@@ -374,10 +375,10 @@ test.describe('first run (age question not answered yet)', () => {
     await expect(gate.getByRole('button', { name: 'Tôi đủ 18 tuổi — bật AI' })).toBeDisabled();
     await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
     await expect(gate).toBeHidden();
-    await expect(page.locator('.ai-status')).toContainText('AI: chưa mở');
-    await page.getByLabel('Đề bài', { exact: true }).fill(item.text);
+    await expect(page.locator('.topbar .ai-status')).toContainText('AI: chưa mở');
+    await page.getByRole('textbox', { name: /đề bài/i }).fill(item.text);
     await page.getByRole('button', { name: 'Phân tích đề' }).click();
-    await expect(page.getByRole('dialog', { name: 'Không phân tích được đề' })).toContainText(
+    await expect(page.getByRole('dialog', { name: 'Mình chưa đọc được đề này' })).toContainText(
       'AI chưa được mở',
     );
     expect(stats.generate).toBe(0);
@@ -397,7 +398,7 @@ test.describe('first run (age question not answered yet)', () => {
     await gate.getByRole('checkbox').check();
     await gate.getByRole('button', { name: 'Tôi đủ 18 tuổi — bật AI' }).click();
     await expect(gate).toBeHidden();
-    await expect(page.locator('.ai-status')).toHaveAttribute('data-status', 'cloud');
+    await expect(page.locator('.topbar .ai-status')).toHaveAttribute('data-status', 'cloud');
   });
 });
 

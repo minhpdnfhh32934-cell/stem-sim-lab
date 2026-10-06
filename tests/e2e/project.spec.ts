@@ -105,15 +105,28 @@ test('in-app updates are explained as desktop-only in the browser build', async 
   await expect(page.getByText('Cập nhật trong app chỉ có ở bản cài trên máy.')).toBeVisible();
 });
 
-test('first run: the age question, then the tour (once, can be skipped)', async ({ browser }) => {
+test('first run: level → subjects → age question → tour (once, can be skipped)', async ({
+  browser,
+}) => {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   const page = await context.newPage();
   await page.goto('/');
-  // The safety question comes first; the tour waits behind it.
+  // Onboarding (A4.2) comes first; the safety question and the tour wait behind it.
+  const onboarding = page.getByRole('dialog', { name: 'Bạn muốn học ở trình độ nào?' });
+  await expect(onboarding).toBeVisible();
+  await expect(onboarding).toContainText('Bước 1/5');
+  await expect(page.getByRole('dialog', { name: 'Trước khi bắt đầu' })).toHaveCount(0);
+  await onboarding.getByRole('button', { name: 'Tiếp' }).click();
+  const subjects = page.getByRole('dialog', { name: 'Bạn quan tâm môn nào?' });
+  await subjects.getByRole('button', { name: /^Sinh học/ }).click();
+  await subjects.getByRole('button', { name: 'Xong' }).click();
+  await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
   const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
   await expect(gate).toBeVisible();
   await expect(page.locator('.tour')).toHaveCount(0);
   await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
+  // Under 18 in the main edition: no AI, so no "Kết nối AI" step.
+  await expect(page.getByRole('dialog', { name: /Kết nối AI/ })).toHaveCount(0);
   const tour = page.getByRole('dialog', { name: 'Chào mừng đến STEM Sim Lab' });
   await expect(tour).toBeVisible();
   await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();
@@ -161,5 +174,5 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   // Back to a physics topic from the same picker.
   await page.getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' }).click();
   await select.selectOption('freeFall');
-  await expect(dialog.locator('.problem-table')).toBeVisible();
+  await expect(dialog.locator('.qty-cards')).toBeVisible();
 });
