@@ -43,6 +43,7 @@ Principles:
 | Shortcuts     | `src/app/shortcuts/`              | Pure table + matcher (unit tested) + one `keydown` listener. IME-safe (Telex/VNI).                 |
 | Design system | `src/ui/`                         | IconButton, Tabs, Section, Badges, EmptyState, TooltipLayer, Logo.                                 |
 | Catalog       | `src/app/catalog.ts`              | MVP topic list (names only, no scientific data).                                                   |
+| Learner UI    | `src/app/learner/`, `levels.ts`   | Home screen, onboarding phases, Basic/Advanced (`uiMode`), Level → Subject → Topic (3b.4).         |
 
 ### Why these choices (Phase 0)
 

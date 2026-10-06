@@ -59,3 +59,8 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
 10. **Tên các kiểu ức chế enzyme**: "không cạnh tranh" (noncompetitive) và "phi cạnh tranh"
     (uncompetitive) — thuật ngữ tiếng Việt chưa thống nhất giữa các tài liệu.
 11. **Nguồn sinh học** (`src/biology/common.ts`, `BSRC`): chưa ghi số trang, lần xuất bản.
+12. **Xếp chủ đề theo trình độ và chương trình học** (`src/app/levels.ts`, `CURRICULUM_MAPPING`):
+    hiện mọi chủ đề đều nằm ở trình độ **Nền tảng** (tương đương THPT); trình độ **Đại cương** chưa
+    có chủ đề. Việc ghép từng chủ đề với lớp/bài cụ thể trong chương trình GDPT 2018 hoặc sách giáo
+    khoa **chưa được điền** — app không tự đoán. `review_status: "pending"`. Nhờ giáo viên điền
+    (ví dụ "Ném xiên → Vật lí 10, …") và xác nhận việc xếp trình độ.
