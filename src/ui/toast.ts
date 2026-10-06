@@ -13,10 +13,10 @@ export const useToastStore = create<{ toasts: Toast[] }>()(() => ({ toasts: [] }
 let nextId = 1;
 
 /** Shows a short message at the bottom of the window (warnings stay longer). */
-export function toast(text: string, kind: ToastKind = 'info'): number {
+export function toast(text: string, kind: ToastKind = 'info', durationMs?: number): number {
   const id = nextId++;
   useToastStore.setState((s) => ({ toasts: [...s.toasts.slice(-3), { id, kind, text }] }));
-  const ms = kind === 'warn' || kind === 'error' ? 9000 : 4000;
+  const ms = durationMs ?? (kind === 'warn' || kind === 'error' ? 9000 : 4000);
   setTimeout(() => {
     dismissToast(id);
   }, ms);
