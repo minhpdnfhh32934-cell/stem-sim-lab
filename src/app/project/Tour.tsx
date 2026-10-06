@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useT, type MessageKey } from '@/app/i18n';
-import { useGateVisible } from '@/safety/safetyStore';
+import { useOnboardingPhase } from '@/app/learner/onboarding';
 import { endTour, useProjectUi } from './uiStore';
 
 interface Step {
@@ -27,8 +27,8 @@ const GAP = 12;
 export function Tour() {
   const t = useT();
   const step = useProjectUi((s) => s.tourStep);
-  // The first-run safety question comes first; the tour waits behind it.
-  const gate = useGateVisible();
+  // Onboarding (level, subjects), the safety question and "Kết nối AI" come first.
+  const waiting = useOnboardingPhase() !== 'tour';
   const [rect, setRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardH, setCardH] = useState(180);
@@ -61,7 +61,7 @@ export function Tour() {
     };
   }, [current]);
 
-  if (step === null || !current || gate) return null;
+  if (step === null || !current || waiting) return null;
   const last = step === STEPS.length - 1;
   const go = (d: number) => {
     useProjectUi.setState({ tourStep: step + d });
