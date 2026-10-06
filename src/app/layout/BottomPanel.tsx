@@ -6,6 +6,7 @@ import { GraphPanel } from '@/app/sim/GraphPanel';
 import { SolutionPanel } from '@/app/sim/SolutionPanel';
 import { useLocalized } from '@/app/i18n/localized';
 import { useModuleStore } from '@/modules/moduleStore';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 import { Tabs } from '@/ui/Tabs';
@@ -14,7 +15,10 @@ import { useLayoutStore, type BottomTab } from './layoutStore';
 /** Graphs (uPlot, Phase 1–2), step-by-step solution, and data table. */
 export const BottomPanel = memo(function BottomPanel() {
   const t = useT();
-  const tab = useLayoutStore((s) => s.bottomTab);
+  const storedTab = useLayoutStore((s) => s.bottomTab);
+  // Basic mode: Đồ thị · Lời giải only; the data table and CSV are in Advanced (A4.2).
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const tab = !advanced && storedTab === 'data' ? 'graphs' : storedTab;
   const setTab = useLayoutStore((s) => s.setBottomTab);
   const toggle = useLayoutStore((s) => s.toggle);
   const mod = useModuleStore((s) => s.active);
@@ -58,7 +62,7 @@ export const BottomPanel = memo(function BottomPanel() {
         items={[
           { id: 'graphs', label: t('bottom.graphs'), icon: ChartSpline },
           { id: 'solution', label: t('bottom.solution'), icon: ListOrdered },
-          { id: 'data', label: t('bottom.data'), icon: Table2 },
+          ...(advanced ? [{ id: 'data' as const, label: t('bottom.data'), icon: Table2 }] : []),
         ]}
         trailing={
           <IconButton

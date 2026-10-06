@@ -25,18 +25,19 @@ import { useModuleStore } from '@/modules/moduleStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { IconButton } from '@/ui/IconButton';
 
-const MODES: { id: StageTool; icon: LucideIcon }[] = [
-  { id: 'select', icon: MousePointer2 },
-  { id: 'drag', icon: Hand },
-  { id: 'ruler', icon: Ruler },
-  { id: 'protractor', icon: DraftingCompass },
+/** `basic`: shown in Basic mode too (drag, measure, vectors, camera — PROMPT_PHAN_2 A4.2). */
+const MODES: { id: StageTool; icon: LucideIcon; basic: boolean }[] = [
+  { id: 'select', icon: MousePointer2, basic: true },
+  { id: 'drag', icon: Hand, basic: true },
+  { id: 'ruler', icon: Ruler, basic: true },
+  { id: 'protractor', icon: DraftingCompass, basic: false },
 ];
 
 type Toggle = 'stopwatch' | 'vectors' | 'trail';
-const TOGGLES: { id: Toggle; icon: LucideIcon }[] = [
-  { id: 'stopwatch', icon: Timer },
-  { id: 'vectors', icon: MoveUpRight },
-  { id: 'trail', icon: Spline },
+const TOGGLES: { id: Toggle; icon: LucideIcon; basic: boolean }[] = [
+  { id: 'stopwatch', icon: Timer, basic: false },
+  { id: 'vectors', icon: MoveUpRight, basic: true },
+  { id: 'trail', icon: Spline, basic: false },
 ];
 
 /**
@@ -47,6 +48,9 @@ export const Stage = memo(function Stage() {
   const t = useT();
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  // A tool switched on in Advanced stays visible, so it can be switched off again.
+  const shown = (basic: boolean, on: boolean) => advanced || basic || on;
   const { subject, activeTool, setActiveTool, hasSimulation, simTime } = useWorkspaceStore(
     useShallow((s) => ({
       subject: s.subject,
@@ -102,7 +106,7 @@ export const Stage = memo(function Stage() {
       {sim.scene && <StageCanvas scene={sim.scene} />}
 
       <div className="stage__toolbar" role="toolbar" aria-label={t('stage.toolbarLabel')}>
-        {MODES.map((m) => {
+        {MODES.filter((m) => shown(m.basic, activeTool === m.id)).map((m) => {
           const label = t(`stage.tools.${m.id}`);
           const off = disabled && m.id !== 'select';
           return (
@@ -120,7 +124,7 @@ export const Stage = memo(function Stage() {
           );
         })}
         <span className="stage__toolbar-sep" aria-hidden="true" />
-        {TOGGLES.map((tg) => {
+        {TOGGLES.filter((tg) => shown(tg.basic, sim[tg.id])).map((tg) => {
           const label = t(`stage.tools.${tg.id}`);
           return (
             <IconButton

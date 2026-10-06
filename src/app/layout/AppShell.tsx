@@ -15,6 +15,9 @@ import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
 import { Toaster } from '@/ui/Toaster';
 import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
+import { HomeScreen } from '@/app/learner/HomeScreen';
+import { Onboarding } from '@/app/learner/Onboarding';
+import { useIsHome } from '@/app/topics';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
 import { Inspector } from './Inspector';
@@ -70,10 +73,12 @@ export function AppShell() {
   );
   const { presentation } = layout;
   const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
+  const home = useIsHome();
 
   const showLeft = layout.leftOpen && !presentation;
-  const showRight = layout.rightOpen && !presentation;
-  const showBottom = layout.bottomOpen && !presentation;
+  // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
+  const showRight = layout.rightOpen && !presentation && !home;
+  const showBottom = layout.bottomOpen && !presentation && !home;
 
   const style = {
     '--left-w': `${layout.leftWidth}px`,
@@ -90,6 +95,7 @@ export function AppShell() {
           <SourcesDialog />
         </Suspense>
       )}
+      <Onboarding />
       <Tour />
       <UpdateDialog />
       <Toaster />
@@ -116,8 +122,8 @@ export function AppShell() {
         )}
 
         <main className="shell__center">
-          <Stage />
-          {!moduleActive && <Timeline />}
+          {home ? <HomeScreen /> : <Stage />}
+          {!moduleActive && !home && <Timeline />}
           {showBottom && (
             <>
               <Splitter

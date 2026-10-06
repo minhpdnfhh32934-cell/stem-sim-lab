@@ -1,11 +1,14 @@
 import { BookOpen, ChevronRight, History, Search, SearchX } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
-import { CATALOG, normalizeForSearch, type ChapterEntry } from '@/app/catalog';
+import { normalizeForSearch, type ChapterEntry } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { openTopic, useActiveTopic } from '@/app/topics';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { HistoryList } from '@/app/project/HistoryList';
+import { useProfileStore } from '@/app/learner/profileStore';
+import { chaptersFor, LEVELS } from '@/app/levels';
+import '@/app/learner/learner.css';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
 import { useLayoutStore, type LeftTab } from './layoutStore';
@@ -33,12 +36,14 @@ export const LeftSidebar = memo(function LeftSidebar() {
 
 function Library({ t }: { t: TFunction }) {
   const subject = useWorkspaceStore((s) => s.subject);
+  const level = useProfileStore((s) => s.level);
+  const setLevel = useProfileStore((s) => s.setLevel);
   const [query, setQuery] = useState('');
   const SubjectIcon = SUBJECT_ICON[subject];
 
   const chapters = useMemo<ChapterEntry[]>(() => {
     const q = normalizeForSearch(query);
-    const all = CATALOG[subject];
+    const all = chaptersFor(level, subject);
     if (!q) return all;
     return all
       .map((c) => ({
@@ -50,10 +55,32 @@ function Library({ t }: { t: TFunction }) {
         ),
       }))
       .filter((c) => c.topics.length > 0);
-  }, [query, subject, t]);
+  }, [query, subject, level, t]);
 
   return (
     <>
+      <div className="level-switch">
+        <div className="segmented" role="radiogroup" aria-label={t('levels.label')}>
+          {LEVELS.map((l) => (
+            <button
+              key={l.id}
+              type="button"
+              role="radio"
+              aria-checked={level === l.id}
+              className="segmented__item"
+              data-tip={t(l.status === 'planned' ? 'levels.plannedHint' : 'levels.foundationDesc')}
+              onClick={() => {
+                setLevel(l.id);
+              }}
+            >
+              {t(`levels.${l.id}`)}
+              {l.status === 'planned' && (
+                <span className="sr-only">{` (${t('levels.soon')})`}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="sidebar__search">
         <Search size={14} strokeWidth={1.75} aria-hidden="true" />
         <input
@@ -71,7 +98,9 @@ function Library({ t }: { t: TFunction }) {
           <SubjectIcon size={14} strokeWidth={1.75} aria-hidden="true" />
           {t(`subjects.${subject}`)}
         </p>
-        {chapters.length === 0 ? (
+        {level === 'general' ? (
+          <p className="level-note">{t('levels.plannedHint')}</p>
+        ) : chapters.length === 0 ? (
           <EmptyState icon={SearchX} compact>
             {t('sidebar.noResults')}
           </EmptyState>

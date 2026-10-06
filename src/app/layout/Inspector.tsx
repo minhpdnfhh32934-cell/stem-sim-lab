@@ -14,6 +14,8 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useModuleStore } from '@/modules/moduleStore';
 import { ScienceCard } from '@/science-card/ScienceCard';
 import { useLayoutStore } from './layoutStore';
+import { ModeSwitch } from '@/app/learner/ModeSwitch';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 
 /** Right-hand panel: selected object, parameters, and the Science Card. */
 export const Inspector = memo(function Inspector() {
@@ -24,6 +26,7 @@ export const Inspector = memo(function Inspector() {
   const mod = useModuleStore((s) => s.active);
   const L = useLocalized();
   const ModulePanel = mod?.view.Panel;
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
 
   return (
     <aside
@@ -33,6 +36,7 @@ export const Inspector = memo(function Inspector() {
     >
       <header className="panel__header">
         <h2 className="panel__title">{t('inspector.title')}</h2>
+        <ModeSwitch compact />
         <IconButton
           icon={X}
           size="sm"
@@ -57,15 +61,17 @@ export const Inspector = memo(function Inspector() {
           </Section>
         ) : (
           <>
-            <Section title={t('inspector.objectSection')}>
-              {hasScene ? (
-                <ObjectPanel />
-              ) : (
-                <EmptyState icon={MousePointerClick} compact>
-                  {t('inspector.noSelection')}
-                </EmptyState>
-              )}
-            </Section>
+            {advanced && (
+              <Section title={t('inspector.objectSection')}>
+                {hasScene ? (
+                  <ObjectPanel />
+                ) : (
+                  <EmptyState icon={MousePointerClick} compact>
+                    {t('inspector.noSelection')}
+                  </EmptyState>
+                )}
+              </Section>
+            )}
 
             <Section title={t('inspector.paramsSection')}>
               {hasScene ? (
