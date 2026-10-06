@@ -92,6 +92,24 @@ giai đoạn sau. Việc ghép chủ đề với bài cụ thể trong sách gi�
 
 Người đã dùng bản cũ được giữ ở chế độ Nâng cao như trước.
 
+### Học bằng khám phá: Dự đoán trước, Thử thách, Gợi ý từng bước
+
+Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dưới:
+
+- **Dự đoán trước** (Dự đoán → Quan sát → Giải thích): chọn điều bạn nghĩ sẽ xảy ra (ví dụ "thả
+  từ độ cao gấp đôi thì thời gian rơi thay đổi thế nào?"), bấm **Chạy để kiểm tra** để xem mô
+  phỏng với giá trị mới và so sánh con số trước/sau, rồi tự viết lời giải thích của bạn (không lưu,
+  không gửi đi). Đáp án đúng do chương trình tính, không ai viết sẵn.
+- **Thử thách nhỏ**: ví dụ "chỉnh góc ném để vật bay xa nhất". Bấm **Bắt đầu thử thách**, chỉ chỉnh
+  thông số được nêu; ô "Hiện tại / Mục tiêu" cập nhật ngay, có nút **Xem gợi ý**.
+- **Gợi ý từng bước**: khi bạn nhập đề bài, thẻ **Lời giải** ẩn đáp số để bạn tự giải trước: bấm
+  **Gợi ý 1**, **Gợi ý 2**… đến **Lời giải đầy đủ**, hoặc **Xem lời giải ngay** để đối chiếu.
+- **Tiến độ và huy hiệu**: chủ đề hoàn thành (đã mở, đã dự đoán, đã làm thử thách) có dấu ✓ trong
+  Thư viện, mỗi chương có số "đã xong/tổng". Huy hiệu hiện ở trang chủ. Không có chuỗi ngày hay
+  bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
+- **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
+  hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
+
 ## Bố cục màn hình
 
 - **Thanh trên:** chọn môn, ô nhập đề bài, trạng thái AI, các nút ẩn/hiện bảng, sáng/tối, trình

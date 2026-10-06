@@ -44,8 +44,8 @@ Vì GĐ 3 đã xong → theo A7 thêm **giai đoạn chuyển đổi 3b**.
 | **3b.5** | `src/learn/`: Dự đoán–Quan sát–Giải thích, thử thách, gợi ý từng bước, tiến độ/huy hiệu, nhắc nghỉ                                                                                                                                                                                                                                                                               | Mỗi chủ đề Vật lý có ít nhất 1 thử thách (đáp án tính bằng engine)                                                                                                 |
 | **3b.6** | Đóng gói hai bộ cài + hai kênh cập nhật; USER_GUIDE (cách lấy key), `USER_TESTING.md` (hướng dẫn thử nghiệm A4.5)                                                                                                                                                                                                                                                                | Release tạo đủ 2 bộ cài; app chạy khi chưa có key và khi mất mạng                                                                                                  |
 
-Tiến độ (2026-10-06): 3b.1, 3b.2, 3b.3, 3b.3b, **3b.4** đã làm (xem `docs/PROGRESS.md`). Trong 3b.4,
-thẻ dưới chế độ Cơ bản mới có _Đồ thị · Lời giải_; thẻ _Thử thách_ đến cùng 3b.5.
+Tiến độ (2026-10-06): 3b.1, 3b.2, 3b.3, 3b.3b, 3b.4, **3b.5** đã làm (xem `docs/PROGRESS.md`). Chế độ
+Cơ bản có các thẻ _Đồ thị · Lời giải · Thử thách_.
 
 Ước lượng: 3b.1–3b.3 khoảng 3–4 phiên làm việc; 3b.4–3b.5 là phần lớn nhất (làm lại giao diện), 4–6 phiên.
 

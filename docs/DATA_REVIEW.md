@@ -64,3 +64,9 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     có chủ đề. Việc ghép từng chủ đề với lớp/bài cụ thể trong chương trình GDPT 2018 hoặc sách giáo
     khoa **chưa được điền** — app không tự đoán. `review_status: "pending"`. Nhờ giáo viên điền
     (ví dụ "Ném xiên → Vật lí 10, …") và xác nhận việc xếp trình độ.
+13. **Thử thách và câu hỏi "Dự đoán trước"** (`src/learn/challenges.ts`, `src/learn/poe.ts`): mục
+    tiêu của thử thách (ví dụ "rơi đúng 2 s", "tầm xa 40 m") do người viết chọn, nhưng **đáp án và
+    việc đúng/sai đều do chương trình tính** bằng `solve()` của từng cảnh; test chứng minh mọi mục
+    tiêu đạt được trong khoảng thanh trượt (với g = 9,8; 9,81; 10). Đáp án đúng của câu dự đoán
+    cũng được tính, không viết tay. Nhờ giáo viên duyệt cách diễn đạt câu hỏi và gợi ý cho hợp với
+    học sinh. `review_status: "pending"`.
