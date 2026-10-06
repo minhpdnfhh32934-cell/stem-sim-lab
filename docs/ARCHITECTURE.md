@@ -30,20 +30,21 @@ Principles:
 
 ## 2. Frontend (Phase 0: done)
 
-| Area          | Where                             | Notes                                                                                              |
-| ------------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Entry         | `src/main.tsx`, `src/app/App.tsx` | Loads CSS tokens, mounts `AppShell` + global `TooltipLayer`.                                       |
-| Layout        | `src/app/layout/`                 | `AppShell` = TopBar · LeftSidebar · Stage + Timeline + BottomPanel · Inspector · StatusBar.        |
-| Resizing      | `Splitter.tsx`                    | Pointer + keyboard (arrows / Home / End / Enter = reset), ARIA `separator`.                        |
-| Layout state  | `layoutStore.ts`                  | Sizes clamped to `LAYOUT_LIMITS`, persisted (`stemsim.layout`). Presentation flag not persisted.   |
-| Settings      | `src/app/settings/`               | Theme (system/light/dark), language, font scale; persisted (`stemsim.settings`).                   |
-| Workspace     | `src/app/workspaceStore.ts`       | Subject, problem text, active tool, playback. From Phase 1 it mirrors the engine worker.           |
-| Theme         | `src/app/theme/`                  | CSS variables; `data-theme` on `<html>`; `--font-scale` drives rem sizes.                          |
-| i18n          | `src/app/i18n/`                   | Tiny typed i18n (no dependency). `MessageKey` is a union of dotted keys, so typos fail to compile. |
-| Shortcuts     | `src/app/shortcuts/`              | Pure table + matcher (unit tested) + one `keydown` listener. IME-safe (Telex/VNI).                 |
-| Design system | `src/ui/`                         | IconButton, Tabs, Section, Badges, EmptyState, TooltipLayer, Logo.                                 |
-| Catalog       | `src/app/catalog.ts`              | MVP topic list (names only, no scientific data).                                                   |
-| Learner UI    | `src/app/learner/`, `levels.ts`   | Home screen, onboarding phases, Basic/Advanced (`uiMode`), Level → Subject → Topic (3b.4).         |
+| Area          | Where                             | Notes                                                                                                |
+| ------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Entry         | `src/main.tsx`, `src/app/App.tsx` | Loads CSS tokens, mounts `AppShell` + global `TooltipLayer`.                                         |
+| Layout        | `src/app/layout/`                 | `AppShell` = TopBar · LeftSidebar · Stage + Timeline + BottomPanel · Inspector · StatusBar.          |
+| Resizing      | `Splitter.tsx`                    | Pointer + keyboard (arrows / Home / End / Enter = reset), ARIA `separator`.                          |
+| Layout state  | `layoutStore.ts`                  | Sizes clamped to `LAYOUT_LIMITS`, persisted (`stemsim.layout`). Presentation flag not persisted.     |
+| Settings      | `src/app/settings/`               | Theme (system/light/dark), language, font scale; persisted (`stemsim.settings`).                     |
+| Workspace     | `src/app/workspaceStore.ts`       | Subject, problem text, active tool, playback. From Phase 1 it mirrors the engine worker.             |
+| Theme         | `src/app/theme/`                  | CSS variables; `data-theme` on `<html>`; `--font-scale` drives rem sizes.                            |
+| i18n          | `src/app/i18n/`                   | Tiny typed i18n (no dependency). `MessageKey` is a union of dotted keys, so typos fail to compile.   |
+| Shortcuts     | `src/app/shortcuts/`              | Pure table + matcher (unit tested) + one `keydown` listener. IME-safe (Telex/VNI).                   |
+| Design system | `src/ui/`                         | IconButton, Tabs, Section, Badges, EmptyState, TooltipLayer, Logo.                                   |
+| Catalog       | `src/app/catalog.ts`              | MVP topic list (names only, no scientific data).                                                     |
+| Learner UI    | `src/app/learner/`, `levels.ts`   | Home screen, onboarding phases, Basic/Advanced (`uiMode`), Level → Subject → Topic (3b.4).           |
+| Learning      | `src/learn/`                      | Challenges + predict–observe–explain checked with `solve()`, progress/badges, break reminder (3b.5). |
 
 ### Why these choices (Phase 0)
 
