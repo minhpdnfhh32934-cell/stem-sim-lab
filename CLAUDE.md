@@ -197,7 +197,7 @@ Progress log: `docs/PROGRESS.md`.
 
 - `src/app/learner/`: `HomeScreen` ("Hôm nay học gì?", shown by `AppShell` while `useIsHome()`;
   no stage/timeline/bottom/inspector then, and the top-bar problem box is hidden — the home box is
-  the main action), `Onboarding` + `onboarding.ts` (`useOnboardingPhase`: profile → gate → connect
+  the main action), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
   (main, only when status is `noKey`) → tour; `AgeGate hold`, the Tour waits for its phase),
   `profileStore` (`stemsim.profile`: level, interests, lastTopic; users with `stemsim.tourDone`
   skip onboarding), `ModeSwitch`.
