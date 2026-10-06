@@ -1,4 +1,9 @@
+import { ChevronsUpDown } from 'lucide-react';
+import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { useSettingsStore } from '@/app/settings/settingsStore';
+import { basicSplit } from './basicParams';
+import '@/app/learner/learner.css';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { fromSI, toSI, unitLabel } from '@/core/units';
@@ -9,22 +14,41 @@ import { useSimStore } from './simStore';
 
 /** Parameter sliders + numeric inputs, with the origin of each value (§2.1). */
 export function ParamsPanel() {
+  const t = useT();
   const { scene, params, sources } = useSimStore(
     useShallow((s) => ({ scene: s.scene, params: s.params, sources: s.sources })),
   );
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const [showAll, setShowAll] = useState(false);
   if (!scene) return null;
+  const visible = scene.params.filter((d) => !d.when || d.when(params));
+  const { main, more } = advanced
+    ? { main: visible, more: [] as ParamDef[] }
+    : basicSplit(visible, sources);
+  const rows = showAll ? [...main, ...more] : main;
   return (
     <div className="params">
-      {scene.params
-        .filter((d) => !d.when || d.when(params))
-        .map((d) => (
-          <ParamRow
-            key={d.key}
-            def={d}
-            valueSI={params[d.key] ?? 0}
-            source={sources[d.key] ?? 'default'}
-          />
-        ))}
+      {rows.map((d) => (
+        <ParamRow
+          key={d.key}
+          def={d}
+          valueSI={params[d.key] ?? 0}
+          source={sources[d.key] ?? 'default'}
+        />
+      ))}
+      {more.length > 0 && (
+        <button
+          type="button"
+          className="params__more"
+          aria-expanded={showAll}
+          onClick={() => {
+            setShowAll(!showAll);
+          }}
+        >
+          <ChevronsUpDown size={14} strokeWidth={1.75} aria-hidden="true" />
+          {showAll ? t('mode.fewerParams') : t('mode.moreParams', { count: more.length })}
+        </button>
+      )}
     </div>
   );
 }
