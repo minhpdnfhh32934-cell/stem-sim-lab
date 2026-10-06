@@ -5,6 +5,7 @@ import { sim } from './sim/runtime';
 import { useSimStore } from './sim/simStore';
 import { useWorkspaceStore, type Subject } from './workspaceStore';
 import { CATALOG } from './catalog';
+import { useProfileStore } from './learner/profileStore';
 
 /** Subject that contains a topic id (for switching the subject when opening). */
 export function subjectOf(topicId: string): Subject | undefined {
@@ -27,7 +28,23 @@ export async function openTopic(topicId: string): Promise<void> {
   } else if (hasScene(topicId)) {
     closeModule();
     await sim.open(topicId);
+  } else {
+    return;
   }
+  useProfileStore.getState().setLastTopic(topicId);
+}
+
+/** Closes the open topic and shows the home screen ("Hôm nay học gì?"). */
+export function goHome(): void {
+  sim.shutdown();
+  closeModule();
+}
+
+/** True when nothing is open or opening: the home screen takes the centre. */
+export function useIsHome(): boolean {
+  const sim = useSimStore((s) => s.scene === null && !s.loading && s.error === null);
+  const mod = useModuleStore((s) => s.active === null && !s.loading && s.error === null);
+  return sim && mod;
 }
 
 export function useActiveTopic(): string | null {
