@@ -17,9 +17,11 @@ export function UpdateDialog() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const ref = useRef<HTMLDialogElement>(null);
-  const { dialogOpen, phase, status, manifest, error } = useUpdateStore();
+  const { dialogOpen, phase, status, manifest, error, required } = useUpdateStore();
+  // A mandatory update cannot be dismissed (no ✕, no Esc, no "Để sau") until it is applied.
+  const locked = required && phase !== 'upToDate' && phase !== 'idle';
   const close = () => {
-    useUpdateStore.setState({ dialogOpen: false });
+    if (!locked) useUpdateStore.setState({ dialogOpen: false });
   };
 
   useEffect(() => {
@@ -28,15 +30,26 @@ export function UpdateDialog() {
     if (dialogOpen && !d.open) d.showModal();
     if (!dialogOpen && d.open) d.close();
   }, [dialogOpen]);
+  const offerLater = !locked && (phase === 'available' || phase === 'needsInstaller');
 
   const mb = (bytes: number) => formatNumber(locale, bytes / 2 ** 20, { maximumFractionDigits: 1 });
   const busy = phase === 'checking' || phase === 'downloading';
 
   return (
-    <dialog ref={ref} className="dialog" aria-labelledby="update-title" onClose={close}>
+    <dialog
+      ref={ref}
+      className="dialog"
+      aria-labelledby="update-title"
+      onClose={close}
+      onCancel={(e) => {
+        if (locked) e.preventDefault();
+      }}
+    >
       <header className="dialog__header">
         <h2 id="update-title">{t('update.title')}</h2>
-        <IconButton icon={X} label={t('update.close')} onClick={close} tooltipSide="left" />
+        {!locked && (
+          <IconButton icon={X} label={t('update.close')} onClick={close} tooltipSide="left" />
+        )}
       </header>
       <div className="dialog__body update">
         {status && (
@@ -62,6 +75,11 @@ export function UpdateDialog() {
               </span>
             </p>
             {manifest.notes && <p className="update__notes">{manifest.notes}</p>}
+            {required && (
+              <p className="update__warn" role="alert">
+                {t('update.requiredNote')}
+              </p>
+            )}
             {phase === 'needsInstaller' && (
               <p className="update__warn">
                 {t('update.needsInstaller', { native: manifest.minNative })}
@@ -78,7 +96,7 @@ export function UpdateDialog() {
         <p className="small muted">{t('update.safety')}</p>
       </div>
       <footer className="dialog__footer">
-        {status?.downloaded && (
+        {status?.downloaded && !locked && (
           <button
             type="button"
             className="btn"
@@ -90,6 +108,11 @@ export function UpdateDialog() {
           </button>
         )}
         <span className="update__spacer" />
+        {offerLater && (
+          <button type="button" className="btn" onClick={close}>
+            {t('update.later')}
+          </button>
+        )}
         {phase === 'available' && (
           <button type="button" className="btn btn--accent" onClick={() => void applyUpdate()}>
             <CloudDownload size={15} aria-hidden="true" />
@@ -108,7 +131,12 @@ export function UpdateDialog() {
             {t('update.restart')}
           </button>
         )}
-        {(phase === 'upToDate' || phase === 'error' || phase === 'idle') && (
+        {locked && phase === 'error' && (
+          <button type="button" className="btn btn--accent" onClick={() => void applyUpdate()}>
+            {t('update.retry')}
+          </button>
+        )}
+        {!locked && (phase === 'upToDate' || phase === 'error' || phase === 'idle') && (
           <button type="button" className="btn" onClick={() => void checkForUpdate()}>
             {t('update.checkAgain')}
           </button>

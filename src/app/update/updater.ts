@@ -20,6 +20,8 @@ export interface UpdateManifest {
   size: number;
   notes: string;
   date: string;
+  /** Web versions older than this must update (signed; empty = none). */
+  minRequired?: string;
 }
 
 interface CheckResult {
@@ -27,6 +29,8 @@ interface CheckResult {
   manifest: UpdateManifest;
   available: boolean;
   needsInstaller: boolean;
+  /** The running version is below the signed mandatory floor. */
+  required?: boolean;
 }
 
 export type UpdatePhase =
@@ -45,6 +49,8 @@ export interface UpdateState {
   manifest: UpdateManifest | null;
   error: string | null;
   dialogOpen: boolean;
+  /** A mandatory update: the dialog cannot be dismissed until the app is updated. */
+  required: boolean;
 }
 
 export const useUpdateStore = create<UpdateState>()(() => ({
@@ -53,6 +59,7 @@ export const useUpdateStore = create<UpdateState>()(() => ({
   manifest: null,
   error: null,
   dialogOpen: false,
+  required: false,
 }));
 
 export const updatesSupported = (): boolean => isTauri();
@@ -70,7 +77,11 @@ export async function refreshStatus(): Promise<void> {
 
 let checkSeq = 0;
 
-/** Asks the release server for the newest version. `quiet`: no dialog unless there is one. */
+/**
+ * Asks the release server for the newest version. `quiet` (start-up check): the dialog only
+ * opens when there is something to update — with "Để sau", or without it when the update is
+ * mandatory.
+ */
 export async function checkForUpdate(quiet = false): Promise<void> {
   if (!updatesSupported()) return;
   const mine = ++checkSeq;
@@ -79,11 +90,15 @@ export async function checkForUpdate(quiet = false): Promise<void> {
   try {
     const r = await invoke<CheckResult>('web_update_check');
     if (mine !== checkSeq) return;
-    useUpdateStore.setState({
+    const phase = r.available ? 'available' : r.needsInstaller ? 'needsInstaller' : 'upToDate';
+    const required = r.required === true && phase !== 'upToDate';
+    useUpdateStore.setState((s) => ({
       status: r.status,
       manifest: r.manifest,
-      phase: r.available ? 'available' : r.needsInstaller ? 'needsInstaller' : 'upToDate',
-    });
+      phase,
+      required,
+      dialogOpen: s.dialogOpen || phase !== 'upToDate',
+    }));
   } catch (e) {
     if (mine !== checkSeq) return;
     // A quiet check without internet is not worth bothering the user about, unless the
