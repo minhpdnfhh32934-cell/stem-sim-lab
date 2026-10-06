@@ -32,9 +32,9 @@ const en: Messages = {
     notAllowedHint:
       'AI is not enabled on this computer yet (age not confirmed or no supervisor consent). Simulations work as usual.',
     offline: 'AI: offline',
-    cloud: 'AI: cloud',
+    cloud: 'Connected to {provider}',
     off: 'AI: off',
-    noKey: 'AI: no key',
+    noKey: 'AI not connected',
     cloudHint: 'Using {provider} · model: {model}. The problem is sent to their servers.',
     offHint: 'AI is off. The sample library and the manual scene builder still work.',
     noKeyHint: 'No API key for {provider}. Open Settings → Connect AI to enter it.',
@@ -165,7 +165,7 @@ const en: Messages = {
     graphsEmpty:
       'x–t, v–t, a–t, energy, concentration… graphs appear here while a simulation runs.',
     solutionEmpty:
-      'The step-by-step solution appears here. All numbers come from the engine; AI only explains them in words.',
+      'The step-by-step solution appears here. All numbers come from the program; AI only explains them in words.',
     dataEmpty: 'The data table (exportable to CSV) appears here.',
   },
   timeline: {
@@ -267,7 +267,7 @@ const en: Messages = {
     aiPrivacy:
       "The problem text is sent to the AI provider's servers. On Gemini's free tier Google may use what you send to improve its products, so never put personal information (names, phone numbers, addresses…) in a problem.",
     aiRule:
-      'The AI only reads the problem and explains in words. Every number comes from the engine; numbers the AI adds that are not in the problem are rejected.',
+      'The AI only reads the problem and explains in words. Every number comes from the program; numbers the AI adds that are not in the problem are rejected.',
     aiStatusOk: 'Connected — the key works.',
     aiStatusQuota:
       'Quota used up — the provider is not accepting more requests for now. Wait about a minute; if it persists, today’s quota is used up.',
@@ -373,13 +373,13 @@ const en: Messages = {
   },
   solution: {
     explainUnsafe:
-      'The explanation was hidden because it contained unsuitable content. The engine results are still correct.',
+      'The explanation was hidden because it contained unsuitable content. The program’s results are still correct.',
     answers: 'Answers',
     steps: 'Step-by-step solution',
     check: 'Numerical check',
     agree: 'agrees, deviation {value}',
     engineNote:
-      'Every number here is computed by the engine from formulas and cross-checked by numerical integration. AI produces no numbers.',
+      'Every number here is computed by the program from formulas and cross-checked by numerical integration. AI produces no numbers.',
     intervenedNote:
       'The solution applies to the initial conditions. After an intervention use the simulation data (Data tab).',
     invalid: 'No solution: the parameters are not valid yet.',
@@ -387,7 +387,7 @@ const en: Messages = {
     explain: 'AI explanation',
     explaining: 'The AI is writing an explanation…',
     explainTitle: 'Explanation in words by the AI',
-    explainNote: 'Checked: every number in this text was computed by the engine.',
+    explainNote: 'Checked: every number in this text was computed by the program.',
     explainHidden:
       'Explanation hidden: the AI wrote numbers the program did not compute ({numbers}). Retry, or rely on the solution above.',
     explainError: 'Could not get an explanation: {message}',
@@ -423,6 +423,8 @@ const en: Messages = {
     topic: 'Topic',
     problem: 'Problem',
     quantity: 'Quantity',
+    quantities: 'Quantities in the problem',
+    defaultValue: 'default value',
     value: 'Value',
     source: 'Source',
     inProblem: 'In the problem: {value}',
@@ -463,7 +465,7 @@ const en: Messages = {
     unsupportedBody:
       'The problem is outside the available topics. The program never builds a simulation it has not verified.',
     reason: 'Reason: {reason}',
-    errorTitle: 'Could not analyze the problem',
+    errorTitle: 'I couldn’t read this problem yet',
     crisisTitle: 'We want to check on you',
     error: {
       notAllowed: 'AI is not enabled on this computer.',
@@ -472,21 +474,21 @@ const en: Messages = {
       unsafe: 'This content is not suitable for a learning app, so it was not sent to the AI.',
       crisis: 'The problem was not sent to the AI.',
       outputUnsafe: 'The AI answer was hidden because it contained unsuitable content.',
-      timeout: 'The AI took too long (timed out).',
+      timeout: 'The AI took too long, so I stopped waiting.',
       cancelled: 'Cancelled.',
       http: 'The AI server returned an error ({detail}).',
-      network: 'Could not reach the AI server.',
-      missingKey: 'No API key for this provider.',
-      badResponse: 'The AI returned unreadable data.',
+      network: 'I couldn’t reach the AI — the connection may be weak or down.',
+      missingKey: 'AI is not connected yet (no API key).',
+      badResponse: 'I couldn’t understand the AI’s reply.',
       keychain: 'Could not read the system keychain.',
-      invalidJson: 'The AI returned malformed JSON, still wrong after 2 repair attempts.',
+      invalidJson: 'The AI answered in the wrong format three times in a row, so I stopped.',
       unavailable: 'This AI feature is not available here.',
       quota: 'The free AI quota is used up for now (provider limit).',
       badKey: 'The AI provider refused the API key (wrong, deleted or disabled).',
       badModel: 'The selected AI model was not found.',
       dailyLimit: 'Today’s AI calls are used up ({detail}).',
-      empty: 'Enter a problem first.',
-      tooLong: 'The problem is too long (at most {max} characters).',
+      empty: 'Please type a problem first.',
+      tooLong: 'The problem is too long (at most {max} characters) — please shorten it.',
     },
     hint: {
       notAllowed:
@@ -756,6 +758,72 @@ const en: Messages = {
         'Students under 18 use AI only after the parents signed the consent form and the supervisor recorded it in the app. It can be withdrawn at any time.',
       close: 'Close',
     },
+  },
+  home: {
+    regionLabel: 'Home',
+    goHome: 'Back to home',
+    title: 'What shall we learn today?',
+    subtitle: 'Pick a subject, open a topic, or paste a problem to turn it into a simulation.',
+    continue: 'Continue where you left off',
+    problemLabel: 'Type a problem or a question…',
+    problemPlaceholder:
+      'Example: A ball is thrown at 20 m/s at 45°. Find the range.\n(Multi-line problems are fine. Ctrl+Enter to analyze.)',
+    analyze: 'Analyze',
+    manual: 'Build a scene',
+    connectFirst: 'Connect AI to analyze problems',
+    subjectsTitle: 'Subjects',
+    subjectDesc: {
+      physics: 'Motion, forces, energy, oscillations',
+      chemistry: 'Atoms, molecules, reactions, particles',
+      biology: 'Cell division, genetics, ecology, enzymes',
+    },
+    topicCount: '{count} topics',
+    suggestedTitle: 'Suggested for the {level} level',
+    noSuggestions:
+      'This level is still being built. Choose the Foundation level in the Library to start now.',
+    teacherTitle: 'Learn with an AI teacher',
+    teacherBody:
+      'An AI teacher explains on a whiteboard and you can ask at any time. Every number still comes from the program.',
+    comingSoon: 'Coming soon',
+    noAiNote: 'No AI or no internet? You can still learn: open a topic or build a scene.',
+  },
+  levels: {
+    label: 'Level',
+    foundation: 'Foundation',
+    general: 'University',
+    foundationDesc: 'Core knowledge, about upper-secondary level — a solid refresher.',
+    generalDesc: 'First-year university physics, chemistry and biology.',
+    soon: 'coming soon',
+    plannedHint: 'The University level comes in a later phase.',
+    mappingPending: 'Mapping topics to curriculum lessons is waiting for a teacher’s review.',
+  },
+  onboarding: {
+    label: 'Getting started with STEM Sim Lab',
+    step: 'Step {i}/{n}',
+    levelTitle: 'Which level do you want to study?',
+    levelBody: 'Choose a level so the app can suggest topics. You can change it at any time.',
+    subjectsTitle: 'Which subjects interest you?',
+    subjectsBody: 'Choose one or more — they will be suggested first. Not sure? Just skip.',
+    next: 'Next',
+    back: 'Back',
+    skip: 'Skip',
+    finish: 'Done',
+    connectTitle: 'Connect AI (optional)',
+    connectBody:
+      'AI reads the problems you paste and explains results in words. You need a free Gemini API key (its creator must be 18+); Settings has a step-by-step guide with pictures.',
+    connectNote: 'Without AI, every simulation, sample and the manual scene builder still work.',
+    connectNow: 'Connect now',
+    later: 'Later',
+  },
+  mode: {
+    label: 'Display mode',
+    basic: 'Basic',
+    advanced: 'Advanced',
+    basicHint: 'Basic: only what the lesson needs.',
+    advancedHint:
+      'Advanced: the selected object, every parameter, the protractor, the data table and CSV export.',
+    moreParams: 'More parameters ({count})',
+    fewerParams: 'Fewer parameters',
   },
   languages: {
     vi: 'Tiếng Việt',
