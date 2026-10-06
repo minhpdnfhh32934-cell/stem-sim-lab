@@ -34,9 +34,9 @@ const vi = {
     notAllowedHint:
       'AI chưa được mở cho máy này (chưa xác nhận độ tuổi hoặc chưa có đồng ý của người giám sát). Mô phỏng vẫn dùng bình thường.',
     offline: 'AI: ngoại tuyến',
-    cloud: 'AI: đám mây',
+    cloud: 'Đã kết nối {provider}',
     off: 'AI: tắt',
-    noKey: 'AI: thiếu key',
+    noKey: 'Chưa kết nối AI',
     cloudHint: 'Dùng {provider} · mô hình: {model}. Đề bài sẽ được gửi lên máy chủ.',
     offHint: 'AI đang tắt. Bạn vẫn dùng được thư viện bài mẫu và Tự dựng cảnh.',
     noKeyHint: 'Chưa có khóa API cho {provider}. Mở Cài đặt → Kết nối AI để nhập.',
@@ -167,7 +167,7 @@ const vi = {
     data: 'Số liệu',
     graphsEmpty: 'Đồ thị x–t, v–t, a–t, năng lượng, nồng độ… sẽ hiện ở đây khi mô phỏng chạy.',
     solutionEmpty:
-      'Lời giải từng bước sẽ hiện ở đây. Mọi con số đều do engine tính, AI chỉ diễn giải bằng lời.',
+      'Lời giải từng bước sẽ hiện ở đây. Mọi con số đều do chương trình tính, AI chỉ diễn giải bằng lời.',
     dataEmpty: 'Bảng số liệu (có thể xuất CSV) sẽ hiện ở đây.',
   },
   timeline: {
@@ -267,7 +267,7 @@ const vi = {
     aiPrivacy:
       'Đề bài được gửi đến máy chủ của nhà cung cấp AI để đọc. Với gói miễn phí của Gemini, Google có thể dùng nội dung gửi lên để cải thiện sản phẩm, nên đừng nhập thông tin cá nhân (họ tên, số điện thoại, địa chỉ…) vào đề bài.',
     aiRule:
-      'AI chỉ đọc đề và diễn giải bằng lời. Mọi con số do engine tính; số AI đưa ra mà không có trong đề sẽ bị loại.',
+      'AI chỉ đọc đề và diễn giải bằng lời. Mọi con số do chương trình tính; số AI đưa ra mà không có trong đề sẽ bị loại.',
     aiStatusOk: 'Kết nối thành công — khóa hoạt động.',
     aiStatusQuota:
       'Hết hạn mức — nhà cung cấp tạm thời không nhận thêm yêu cầu. Đợi khoảng 1 phút; nếu vẫn báo thì lượt trong ngày đã hết.',
@@ -373,13 +373,13 @@ const vi = {
   },
   solution: {
     explainUnsafe:
-      'Đoạn diễn giải đã bị ẩn vì có nội dung không phù hợp. Các kết quả do engine tính vẫn đúng.',
+      'Đoạn diễn giải đã bị ẩn vì có nội dung không phù hợp. Các kết quả do chương trình tính vẫn đúng.',
     answers: 'Đáp số',
     steps: 'Lời giải từng bước',
     check: 'Kiểm chứng số',
     agree: 'khớp, sai lệch {value}',
     engineNote:
-      'Mọi con số ở đây do engine tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
+      'Mọi con số ở đây do chương trình tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
     intervenedNote:
       'Lời giải áp dụng cho điều kiện ban đầu. Sau khi can thiệp, hãy dùng số liệu mô phỏng (tab Số liệu).',
     invalid: 'Chưa có lời giải vì thông số chưa hợp lệ.',
@@ -387,7 +387,7 @@ const vi = {
     explain: 'AI diễn giải',
     explaining: 'AI đang viết diễn giải…',
     explainTitle: 'Diễn giải bằng lời của AI',
-    explainNote: 'Đã kiểm tra: mọi con số trong đoạn này đều do engine tính.',
+    explainNote: 'Đã kiểm tra: mọi con số trong đoạn này đều do chương trình tính.',
     explainHidden:
       'Đã ẩn diễn giải vì AI đưa ra con số không do chương trình tính ({numbers}). Hãy thử lại hoặc chỉ dùng lời giải ở trên.',
     explainError: 'Không lấy được diễn giải: {message}',
@@ -424,14 +424,17 @@ const vi = {
     topic: 'Chủ đề',
     problem: 'Đề bài',
     quantity: 'Đại lượng',
+    quantities: 'Các đại lượng của bài',
+    defaultValue: 'giá trị mặc định',
     value: 'Giá trị',
     source: 'Nguồn',
     inProblem: 'Trong đề: {value}',
     quote: 'Trích đề: “{quote}”',
     missing: 'Cần nhập',
-    missingHint: 'Đề bài không cho giá trị này mà bài toán cần nó. Hãy nhập, hoặc giữ mặc định.',
+    missingHint:
+      'Mình chưa thấy giá trị này trong đề mà bài lại cần nó — bạn ghi thêm giúp mình, hoặc giữ giá trị mặc định nhé.',
     keepDefault: 'Giữ mặc định',
-    missingBlock: 'Còn {count} giá trị cần nhập hoặc xác nhận.',
+    missingBlock: 'Còn {count} giá trị bạn cần nhập hoặc xác nhận.',
     questions: 'Đề hỏi',
     noQuestions: 'AI không nhận ra câu hỏi cụ thể; chương trình vẫn tính mọi đáp số.',
     assumptions: 'Giả thiết trong đề',
@@ -462,7 +465,7 @@ const vi = {
     unsupportedBody:
       'Đề bài không thuộc các chủ đề hiện có. Chương trình không tự dựng mô phỏng mà nó chưa kiểm chứng.',
     reason: 'Lý do: {reason}',
-    errorTitle: 'Không phân tích được đề',
+    errorTitle: 'Mình chưa đọc được đề này',
     crisisTitle: 'Mình muốn hỏi thăm bạn',
     error: {
       notAllowed: 'AI chưa được mở trên máy này.',
@@ -470,21 +473,21 @@ const vi = {
       unsafe: 'Nội dung này không phù hợp với ứng dụng học tập nên không được gửi cho AI.',
       crisis: 'Đề bài chưa được gửi cho AI.',
       outputUnsafe: 'Câu trả lời của AI đã bị ẩn vì có nội dung không phù hợp.',
-      timeout: 'AI trả lời quá lâu (hết thời gian chờ).',
+      timeout: 'AI trả lời lâu quá nên mình dừng chờ.',
       cancelled: 'Đã hủy.',
       http: 'Máy chủ AI báo lỗi ({detail}).',
-      network: 'Không kết nối được máy chủ AI.',
-      missingKey: 'Chưa có API key cho nhà cung cấp này.',
-      badResponse: 'AI trả về dữ liệu không đọc được.',
+      network: 'Mình chưa kết nối được tới AI — có thể mạng đang yếu hoặc mất mạng.',
+      missingKey: 'Bạn chưa kết nối AI (chưa có khóa API).',
+      badResponse: 'Mình chưa hiểu được câu trả lời của AI.',
       keychain: 'Không đọc được kho khóa của hệ điều hành.',
-      invalidJson: 'AI trả về JSON sai định dạng, đã yêu cầu sửa 2 lần nhưng vẫn sai.',
+      invalidJson: 'AI trả lời sai khuôn mẫu 3 lần liền nên mình dừng lại.',
       unavailable: 'Chức năng AI này chưa dùng được ở đây.',
-      quota: 'Đã hết lượt dùng AI miễn phí trong lúc này (giới hạn của nhà cung cấp).',
+      quota: 'AI đang hết lượt dùng miễn phí trong lúc này (giới hạn của nhà cung cấp).',
       badKey: 'Nhà cung cấp AI từ chối khóa API (khóa sai, đã bị xóa hoặc bị tắt).',
       badModel: 'Không tìm thấy mô hình AI đã chọn.',
       dailyLimit: 'Đã dùng hết số lượt AI cho hôm nay ({detail}).',
-      empty: 'Hãy nhập đề bài trước.',
-      tooLong: 'Đề bài quá dài (tối đa {max} ký tự).',
+      empty: 'Bạn nhập đề bài trước giúp mình nhé.',
+      tooLong: 'Đề bài dài quá (tối đa {max} ký tự) — bạn rút gọn giúp mình nhé.',
     },
     hint: {
       notAllowed:
@@ -754,6 +757,74 @@ const vi = {
         'Học sinh dưới 18 tuổi chỉ dùng AI khi phụ huynh đã ký phiếu đồng ý và người giám sát đã ghi nhận trong ứng dụng. Có thể rút lại bất cứ lúc nào.',
       close: 'Đóng',
     },
+  },
+  home: {
+    regionLabel: 'Trang chủ',
+    goHome: 'Về trang chủ',
+    title: 'Hôm nay học gì?',
+    subtitle: 'Chọn môn, mở một chủ đề, hoặc dán đề bài để xem nó thành mô phỏng.',
+    continue: 'Tiếp tục bài đang học',
+    problemLabel: 'Nhập đề bài hoặc câu hỏi…',
+    problemPlaceholder:
+      'Ví dụ: Một vật được ném xiên với vận tốc 20 m/s, góc 45°. Tính tầm xa.\n(Dán được cả đề nhiều dòng. Ctrl+Enter để phân tích.)',
+    analyze: 'Phân tích đề',
+    manual: 'Tự dựng cảnh',
+    connectFirst: 'Kết nối AI để phân tích đề',
+    subjectsTitle: 'Môn học',
+    subjectDesc: {
+      physics: 'Chuyển động, lực, năng lượng, dao động',
+      chemistry: 'Nguyên tử, phân tử, phản ứng, mức hạt',
+      biology: 'Phân bào, di truyền, sinh thái, enzyme',
+    },
+    topicCount: '{count} chủ đề',
+    suggestedTitle: 'Gợi ý cho trình độ {level}',
+    noSuggestions:
+      'Trình độ này đang được xây dựng. Chọn trình độ Nền tảng ở Thư viện để học ngay.',
+    teacherTitle: 'Dạy học bằng AI',
+    teacherBody:
+      'Giáo viên AI giảng trên bảng trắng, bạn hỏi lại được bất cứ lúc nào. Mọi con số vẫn do chương trình tính.',
+    comingSoon: 'Sắp có',
+    noAiNote: 'Không có AI hay mất mạng vẫn học được: mở chủ đề trong Thư viện hoặc Tự dựng cảnh.',
+  },
+  levels: {
+    label: 'Trình độ',
+    foundation: 'Nền tảng',
+    general: 'Đại cương',
+    foundationDesc: 'Kiến thức gốc, tương đương chương trình THPT — ôn lại cho chắc.',
+    generalDesc: 'Vật lý, Hóa học, Sinh học đại cương năm nhất.',
+    soon: 'sắp có',
+    plannedHint: 'Trình độ Đại cương sẽ có ở giai đoạn sau.',
+    mappingPending:
+      'Việc xếp chủ đề theo bài trong chương trình/sách giáo khoa đang chờ giáo viên duyệt.',
+  },
+  onboarding: {
+    label: 'Làm quen với STEM Sim Lab',
+    step: 'Bước {i}/{n}',
+    levelTitle: 'Bạn muốn học ở trình độ nào?',
+    levelBody: 'Chọn một trình độ để app gợi ý chủ đề phù hợp. Bạn đổi được bất cứ lúc nào.',
+    subjectsTitle: 'Bạn quan tâm môn nào?',
+    subjectsBody:
+      'Chọn một hoặc nhiều môn — app sẽ gợi ý các môn này trước. Chưa chắc thì cứ bỏ qua.',
+    next: 'Tiếp',
+    back: 'Quay lại',
+    skip: 'Bỏ qua',
+    finish: 'Xong',
+    connectTitle: 'Kết nối AI (không bắt buộc)',
+    connectBody:
+      'AI giúp đọc đề bài bạn dán vào và giải thích kết quả bằng lời. Bạn cần một khóa API Gemini miễn phí (người tạo khóa phải đủ 18 tuổi); trong Cài đặt có hướng dẫn từng bước kèm hình.',
+    connectNote: 'Không có AI, bạn vẫn dùng được mọi mô phỏng, bài mẫu và Tự dựng cảnh.',
+    connectNow: 'Kết nối ngay',
+    later: 'Để sau',
+  },
+  mode: {
+    label: 'Chế độ hiển thị',
+    basic: 'Cơ bản',
+    advanced: 'Nâng cao',
+    basicHint: 'Cơ bản: chỉ hiện những gì cần cho bài học.',
+    advancedHint:
+      'Nâng cao: hiện đầy đủ đối tượng, mọi thông số, công cụ đo góc, bảng số liệu và xuất CSV.',
+    moreParams: 'Thêm thông số ({count})',
+    fewerParams: 'Ẩn bớt thông số',
   },
   languages: {
     vi: 'Tiếng Việt',
