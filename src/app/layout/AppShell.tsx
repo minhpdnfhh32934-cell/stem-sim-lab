@@ -17,7 +17,7 @@ import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
-import { useIsHome } from '@/app/topics';
+import { useIsHome, useIsTeacher } from '@/app/topics';
 import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
@@ -41,6 +41,8 @@ import { usePresentationFullscreen } from './usePresentationFullscreen';
  *   └──────────────────────── StatusBar ─────────────────────┘
  */
 const SourcesDialog = lazy(() => import('@/app/project/SourcesDialog'));
+// The AI teacher is its own chunk (PROMPT_PHAN_2 B0: separate from the simulations).
+const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
 
 export function AppShell() {
   useGlobalShortcuts();
@@ -75,12 +77,13 @@ export function AppShell() {
   );
   const { presentation } = layout;
   const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
-  const home = useIsHome();
+  const teacher = useIsTeacher();
+  const home = useIsHome() && !teacher;
 
-  const showLeft = layout.leftOpen && !presentation;
+  const showLeft = layout.leftOpen && !presentation && !teacher;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
-  const showRight = layout.rightOpen && !presentation && !home;
-  const showBottom = layout.bottomOpen && !presentation && !home;
+  const showRight = layout.rightOpen && !presentation && !home && !teacher;
+  const showBottom = layout.bottomOpen && !presentation && !home && !teacher;
 
   const style = {
     '--left-w': `${layout.leftWidth}px`,
@@ -124,8 +127,16 @@ export function AppShell() {
         )}
 
         <main className="shell__center">
-          {home ? <HomeScreen /> : <Stage />}
-          {!moduleActive && !home && <Timeline />}
+          {teacher ? (
+            <Suspense fallback={null}>
+              <TeacherScreen />
+            </Suspense>
+          ) : home ? (
+            <HomeScreen />
+          ) : (
+            <Stage />
+          )}
+          {!moduleActive && !home && !teacher && <Timeline />}
           {showBottom && (
             <>
               <Splitter

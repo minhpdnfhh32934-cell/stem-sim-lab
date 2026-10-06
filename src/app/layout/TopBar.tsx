@@ -20,7 +20,7 @@ import { AiStatusPill } from '@/app/ai/AiStatusPill';
 import { cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
 import { submitProblem } from '@/app/ai/submit';
 import { useT } from '@/app/i18n';
-import { goHome, useIsHome } from '@/app/topics';
+import { goHome, useIsHome, useIsTeacher } from '@/app/topics';
 import { useAiStore } from '@/ai/aiStore';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
@@ -68,7 +68,8 @@ export const TopBar = memo(function TopBar() {
   const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff;
   const canAnalyze = !aiOff && problemText.trim().length > 0 && !running;
 
-  const home = useIsHome();
+  const teacher = useIsTeacher();
+  const home = useIsHome() && !teacher;
 
   const onProblemKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -124,7 +125,7 @@ export const TopBar = memo(function TopBar() {
       </div>
 
       {/* On the home screen the big problem box is the main action; no second one up here. */}
-      {home ? (
+      {home || teacher ? (
         <div className="topbar__spacer" />
       ) : (
         <div className="problem-input" data-tour="problem">

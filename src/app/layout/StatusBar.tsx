@@ -26,7 +26,10 @@ export const StatusBar = memo(function StatusBar() {
   const timeScale = usePerfStore((s) => s.timeScale);
   const degraded = usePerfStore((s) => s.degraded);
   const memoryMB = usePerfStore((s) => s.memoryMB);
-  const update = useUpdateStore((s) => (s.phase === 'available' ? s.manifest : null));
+  // Also when the new version needs the installer, so nobody misses it.
+  const update = useUpdateStore((s) =>
+    s.phase === 'available' || s.phase === 'needsInstaller' ? s.manifest : null,
+  );
   // The web part can be newer than the executable after an in-app update.
   const running = useUpdateStore((s) => s.status?.running ?? null);
   const tierText = benchmarking
