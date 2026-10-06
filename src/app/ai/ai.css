@@ -66,39 +66,76 @@
   overflow-y: auto;
 }
 
-.problem-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-sm);
+/* "Tôi hiểu đề như sau": one card per quantity (icon, name, value + unit, origin). */
+.qty-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
 }
-.problem-table th,
-.problem-table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-  vertical-align: top;
+.qty-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
 }
-.problem-table thead th {
-  color: var(--text-muted);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+.qty-card[data-source='problem'] {
+  border-left: 3px solid var(--conf-exact);
 }
-.problem-table tbody th {
-  font-weight: 500;
-  width: 38%;
+.qty-card[data-source='user'] {
+  border-left: 3px solid var(--accent);
 }
-.problem-table td:last-child {
-  width: 6.5rem;
+.qty-card[data-source='default'] {
+  border-left: 3px dashed var(--border-strong);
 }
-.problem-table tr.is-missing {
+.qty-card.is-missing {
+  border-color: var(--pending);
+  border-left: 3px solid var(--pending);
   background: var(--pending-soft);
 }
-.problem-table .param__number {
-  width: 7rem;
-  margin-right: 6px;
+.qty-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
+.qty-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  color: var(--text-muted);
+}
+.qty-card__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+}
+.qty-card__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.qty-card__value > p {
+  flex-basis: 100%;
+}
+.qty-card .param__number {
+  width: 8rem;
+  min-height: var(--target);
+  font-size: var(--text-content);
+}
+.qty-card .segmented__item {
+  min-height: var(--target);
+}
+
 .problem-table__quote,
 .problem-table__missing {
   display: flex;
@@ -455,4 +492,7 @@
 }
 .guide-art__mono {
   font-family: var(--font-mono);
+}
+.qty-card__badge {
+  margin-left: auto;
 }

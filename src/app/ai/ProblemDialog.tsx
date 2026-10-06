@@ -10,7 +10,7 @@ import {
   TriangleAlert,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { createElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -40,6 +40,8 @@ import {
   type AnalyzeErrorCode,
   type AnalyzePhase,
 } from './analyze';
+import { cx } from '@/ui/cx';
+import { quantityIcon } from './quantityIcon';
 import './ai.css';
 
 const isDialogPhase = (p: AnalyzePhase) => p === 'review' || p === 'unsupported' || p === 'error';
@@ -251,33 +253,24 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
           </>
         )}
 
-        <table className="problem-table">
-          <thead>
-            <tr>
-              <th scope="col">{t('analyze.quantity')}</th>
-              <th scope="col">{t('analyze.value')}</th>
-              <th scope="col">{t('analyze.source')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map((def) => (
-              <ReviewRow
-                key={def.key}
-                def={def}
-                valueSI={params[def.key] ?? 0}
-                source={sources[def.key] ?? 'default'}
-                written={draft.written[def.key]}
-                missing={missing.includes(def.key)}
-                onChange={(v) => {
-                  setValue(def.key, v);
-                }}
-                onKeep={() => {
-                  setKept(new Set([...kept, def.key]));
-                }}
-              />
-            ))}
-          </tbody>
-        </table>
+        <ul className="qty-cards" aria-label={t('analyze.quantities')}>
+          {visible.map((def) => (
+            <ReviewRow
+              key={def.key}
+              def={def}
+              valueSI={params[def.key] ?? 0}
+              source={sources[def.key] ?? 'default'}
+              written={draft.written[def.key]}
+              missing={missing.includes(def.key)}
+              onChange={(v) => {
+                setValue(def.key, v);
+              }}
+              onKeep={() => {
+                setKept(new Set([...kept, def.key]));
+              }}
+            />
+          ))}
+        </ul>
 
         {mode === 'ai' && (
           <section className="problem-review__section">
@@ -442,14 +435,22 @@ function ReviewRow({
   const t = useT();
   const L = useLocalized();
   const unit = def.unit ?? '1';
+  const nameId = `qty-${def.key}`;
   return (
-    <tr className={missing ? 'is-missing' : undefined}>
-      <th scope="row">
-        <span className="problem-table__name">
+    <li
+      className={cx('qty-card', missing && 'is-missing')}
+      data-source={missing ? 'missing' : source}
+      aria-labelledby={nameId}
+    >
+      <div className="qty-card__head">
+        <span className="qty-card__icon" aria-hidden="true">
+          {createElement(quantityIcon(def), { size: 16, strokeWidth: 1.75 })}
+        </span>
+        <span className="problem-table__name qty-card__name" id={nameId}>
           {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
         </span>
-      </th>
-      <td>
+      </div>
+      <div className="qty-card__value">
         {def.kind === 'number' && (
           <>
             <NumberField
@@ -490,6 +491,20 @@ function ReviewRow({
             }}
           />
         )}
+        <span className="qty-card__badge">
+          {missing ? (
+            <span className="param__source param__source--missing">{t('analyze.missing')}</span>
+          ) : source === 'default' ? (
+            <span
+              className="param__source param__source--default"
+              data-tip={t('params.sourceHint.default')}
+            >
+              {t('analyze.defaultValue')}
+            </span>
+          ) : (
+            <SourceBadge source={source} />
+          )}
+        </span>
         {written && <WrittenNote written={written} />}
         {missing && (
           <p className="problem-table__missing">
@@ -500,15 +515,8 @@ function ReviewRow({
             </button>
           </p>
         )}
-      </td>
-      <td>
-        {missing ? (
-          <span className="param__source param__source--missing">{t('analyze.missing')}</span>
-        ) : (
-          <SourceBadge source={source} />
-        )}
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 }
 
