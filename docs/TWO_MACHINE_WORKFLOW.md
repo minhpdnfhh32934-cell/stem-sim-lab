@@ -116,14 +116,16 @@ git config --global user.email "email-github-cua-ban@example.com"
 `gh auth login` hiện một mã 8 ký tự và mở trình duyệt. Dán mã đó vào trang GitHub rồi bấm
 **Authorize**.
 
-**Hai máy dùng cùng một tài khoản GitHub hay hai tài khoản?**
+**Thiết lập của dự án này:** mỗi máy dùng **một tài khoản GitHub riêng**, và cả hai tài khoản đã
+là Collaborator của repo (quyền **Write** trở lên). Nhờ vậy:
 
-- **Cùng một tài khoản** (dễ nhất): làm được hết, chỉ có một hạn chế: GitHub không cho tự
-  "Approve" PR của chính mình. Vì vậy máy Lead sẽ đăng review dạng **bình luận** (lệnh
-  `/sl-review` tự xử lý việc này).
-- **Hai tài khoản**: chủ repo vào GitHub → repo `stem-sim-lab` → **Settings → Collaborators → Add
-  people**, rồi mời tài khoản thứ hai với quyền **Write**. Tài khoản kia mở email và bấm **Accept**.
-  Khi đó review có thể Approve hoặc Request changes thật.
+- máy B (tài khoản GitHub 2) là người mở PR;
+- máy A (tài khoản GitHub 1) **Approve** hoặc **Request changes** thật trên PR đó;
+- GitHub không cho ai tự duyệt PR của chính mình, nên PR do máy A mở thì phải do máy B duyệt
+  (hoặc ngược lại).
+
+Mỗi máy đặt `user.name`/`user.email` theo **tài khoản GitHub của máy đó**, để lịch sử commit thể
+hiện rõ máy nào đã làm.
 
 **Kiểm tra:**
 
@@ -161,9 +163,10 @@ cd src-tauri; cargo test; cd ..
 
 ### 6.1 Đưa các lệnh `/sl-*` vào `main`
 
-Các file `.claude/settings.json`, `.claude/commands/sl-*.md` và tài liệu này đang nằm trên nhánh
-`claude/wizardly-galileo-k3vxcs`. Vào GitHub, mở một Pull Request từ nhánh đó vào `main`, rồi
-Merge. Xong thì trên cả hai máy chạy:
+Các file `.claude/settings.json`, `.claude/commands/sl-*.md` và tài liệu này nằm trong Pull
+Request từ nhánh `claude/wizardly-galileo-k3vxcs` vào `main`. Hãy Merge PR đó (nếu đã bật bảo vệ
+nhánh ở bước 6.3, tài khoản GitHub **không** mở PR phải Approve trước). Xong thì trên cả hai máy
+chạy:
 
 ```powershell
 cd $HOME\stem-sim-lab
@@ -191,8 +194,9 @@ Trên GitHub: repo → **Settings → Branches → Add classic branch protection
 
 1. _Branch name pattern_: `main`
 2. Tích **Require a pull request before merging**.
-   - Một tài khoản GitHub: _Required approvals_ = **0**.
-   - Hai tài khoản GitHub: _Required approvals_ = **1**.
+   - _Required approvals_ = **1** (người duyệt phải là tài khoản GitHub còn lại).
+   - Tích **Dismiss stale pull request approvals when new commits are pushed**, để khi Builder
+     push bản sửa thì Lead phải review lại.
 3. Tích **Require status checks to pass before merging**. Gõ tìm và thêm các check của CI:
    `Frontend (lint · typecheck · test · build)`, `End-to-end (Playwright, mocked Gemini)`, các
    dòng `Rust (fmt · clippy · test) — ...`. Một check chỉ hiện trong danh sách sau khi nó đã chạy ít
@@ -295,7 +299,19 @@ GitHub. Sau đó cả hai máy chạy `git switch main; git pull`.
 | Hết lượt dùng Claude trên một máy              | Đợi đến khi lượt được làm mới. Không đăng nhập tài khoản của máy kia để làm tiếp.                               |
 | Claude hỏi quyền quá nhiều                     | Chỉ thêm lệnh **chỉ đọc** vào `allow` trong `.claude/settings.json`. Không thêm `gh pr merge`, push lên `main`. |
 
-## 11. Ghi tiến độ
+## 11. Chuyển công việc từ Cowork sang (`docs/HANDOFF.md`)
+
+Nếu bạn làm một phần việc trong Claude Cowork, hãy dán prompt trong `docs/COWORK_HANDOFF_PROMPT.md`
+vào Cowork. Cowork sẽ viết `docs/HANDOFF.md`: đã làm gì, quyết định gì, còn dở gì và cần làm gì
+tiếp, rồi đưa file lên GitHub qua một PR. Sau khi PR đó được merge:
+
+- máy A chạy `/sl-plan` (không kèm nội dung). Claude đọc `docs/HANDOFF.md` và đề xuất việc tiếp
+  theo; bạn chọn việc nào thì chạy `/sl-plan <việc đó>`;
+- `/sl-plan` và `/sl-implement` luôn đọc `docs/HANDOFF.md` trước khi làm.
+
+**Kiểm tra:** sau `git pull` trên `main`, `Test-Path docs\HANDOFF.md` in ra `True`.
+
+## 12. Ghi tiến độ
 
 Sau mỗi PR được merge, Builder (hoặc bạn) thêm một dòng vào `docs/PROGRESS.md` như các bước trước
 đây. Việc này giúp phiên Claude nào mở sau, trên máy nào, cũng biết dự án đang ở đâu.

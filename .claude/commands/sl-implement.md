@@ -15,7 +15,7 @@ disable a test, never commit secrets.
 2. Branch:
    - no PR yet: `git switch main`, `git pull`, then `git switch -c feat/$ARGUMENTS-<short-slug>`;
    - PR already open (rework after review): `gh pr checkout <pr>` then `git pull`.
-3. Implement the plan step by step, one small commit per step. Commit messages: short English
+3. Read `docs/HANDOFF.md` if it exists (decisions made outside Claude Code). Implement the plan step by step, one small commit per step. Commit messages: short English
    summary + `Refs #$ARGUMENTS`. Add or update tests for every behaviour change.
    If the plan turns out to be wrong or incomplete, stop and explain instead of improvising a
    large change.
@@ -31,3 +31,5 @@ disable a test, never commit secrets.
      then `gh pr edit <pr> --remove-label changes-requested --add-label needs-review`.
 7. Reply with a short Vietnamese report and the PR link, and remind the user:
    "Chạy `/sl-review <số PR>` trên máy Lead."
+   If the task finishes an item listed in `docs/HANDOFF.md` → "Việc cần làm tiếp", tick it there
+   (`- [x]`) in the same PR.

@@ -8,7 +8,11 @@ You are the **Lead (planner)** for this repository. Task: $ARGUMENTS
 Rules: follow `CLAUDE.md` (scientific integrity, two editions, safety, i18n, no skipped tests).
 **Do not edit, commit or push any file in this step.** You only read and plan.
 
-1. `git switch main` and `git pull` so you plan against the latest code.
+1. `git switch main` and `git pull` so you plan against the latest code. Read `docs/HANDOFF.md`
+   if it exists (work done outside Claude Code, e.g. in Cowork: decisions, open items, next tasks).
+   **If no task was given** (`$ARGUMENTS` is empty): do not plan yet. List the next tasks from
+   `docs/HANDOFF.md` and `docs/PROGRESS.md` / `CLAUDE.md` "Phase status" (open issues:
+   `gh issue list --state open`), recommend one, and stop so the user can choose.
 2. If the task is an issue number, read it with `gh issue view <n> --comments`.
 3. Read the relevant docs (`docs/PROGRESS.md`, `docs/PLAN_PHAN_2.md`, and any spec the task names)
    and explore the code the task touches.
