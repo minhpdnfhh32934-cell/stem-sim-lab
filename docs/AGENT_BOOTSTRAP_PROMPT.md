@@ -9,7 +9,12 @@ và issue kiểm tra kết nối, Builder trả lời issue đó.
 
 **Cách dùng trên mỗi máy:**
 
-1. Mở PowerShell và tự đăng nhập GitHub (Claude không làm hộ được bước này vì cần trình duyệt):
+1. Mở **PowerShell** (không phải Command Prompt `cmd`: ở `cmd`, `$HOME` không hoạt động) và tự
+   đăng nhập GitHub. Claude không làm hộ được bước này vì cần trình duyệt. Dán **từng lệnh một**:
+   `gh auth login` sẽ hỏi lại vài câu, nếu dán nhiều dòng cùng lúc thì các dòng sau bị coi là câu
+   trả lời. Khi được hỏi _Authenticate Git with your GitHub credentials?_, gõ `Y` rồi Enter. Khi
+   thấy _one-time code_, chép mã đó, nhấn Enter để mở trình duyệt, dán mã vào rồi bấm
+   **Authorize**.
    ```powershell
    gh auth login --hostname github.com --git-protocol https --web
    gh auth setup-git
