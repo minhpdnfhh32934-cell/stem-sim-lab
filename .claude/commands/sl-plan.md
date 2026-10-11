@@ -26,8 +26,8 @@ Rules: follow `CLAUDE.md` (scientific integrity, two editions, safety, i18n, no 
    - **Tiêu chí xong** — a checklist the reviewer can tick.
      If something only the user can decide is unclear (legal, money, accounts, scope), list it under
      **Câu hỏi cho người dùng** instead of guessing.
-5. Save the plan to a temporary file **outside the repository** and post it:
-   - existing issue: `gh issue comment <n> --body-file <file>` and `gh issue edit <n> --add-label plan`
+5. Save the plan to a file in `.agent-logs/` (git-ignored) and post it:
+   - existing issue: `gh issue comment <n> --body-file <file>` and `gh issue edit <n> --add-label plan --remove-label needs-plan`
    - new task: `gh issue create --title "<short title>" --label plan --body-file <file>`
 6. Reply with a short Vietnamese summary and the issue link, and remind the user:
    "Đọc kế hoạch, nếu đồng ý thì gắn nhãn `approved` cho issue rồi chạy `/sl-implement <số issue>`

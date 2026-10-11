@@ -178,15 +178,14 @@ git pull
 
 ```powershell
 cd $HOME\stem-sim-lab
-gh label create plan              --color 1D76DB --description "Kế hoạch do máy Lead viết"
-gh label create approved          --color 0E8A16 --description "Người dùng đã duyệt kế hoạch"
-gh label create needs-review      --color FBCA04 --description "PR chờ máy Lead review"
-gh label create changes-requested --color D93F0B --description "Review yêu cầu sửa"
-gh label create ready-to-merge    --color 5319E7 --description "Review đạt, chờ người dùng merge"
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\setup-labels.ps1
 ```
 
-**Kiểm tra:** `gh label list` hiện đủ 5 nhãn trên. Nếu nhãn đã có sẵn, lệnh sẽ báo _already
-exists_. Không sao, bỏ qua.
+Script tạo (hoặc cập nhật) 10 nhãn: `needs-plan`, `plan`, `approved`, `in-progress`,
+`needs-review`, `changes-requested`, `ready-to-merge`, `needs-human`, `agent-failed`, `agent-ping`.
+Chạy lại nhiều lần cũng không sao.
+
+**Kiểm tra:** script in ra `OK: 10 labels`, và `gh label list` có đủ 10 nhãn đó.
 
 ### 6.3 Bảo vệ nhánh `main`
 
@@ -276,6 +275,50 @@ hoặc 🟡 (gợi ý). Nhãn PR đổi thành `changes-requested` hoặc `ready
 **⑥ Bạn — merge.** Khi nhãn là `ready-to-merge` và CI xanh, bấm **Merge pull request** trên
 GitHub. Sau đó cả hai máy chạy `git switch main; git pull`.
 
+## 8b. Kết nối tự động hai máy (watcher)
+
+**Hai Claude Code có "nói chuyện" trực tiếp với nhau được không?** Không. Hai máy dùng hai tài
+khoản Claude khác nhau, mà Claude Code chỉ nhắn được giữa các phiên của **cùng một** tài khoản.
+Phiên Claude trên cloud (phiên đã viết tài liệu này) cũng không làm "máy thứ ba" lâu dài được, vì
+nó bị thu hồi khi không dùng. Vì vậy GitHub là đường nối duy nhất. Script
+`scripts/agents/watch.ps1` giúp đường nối đó **gần như tự động**: cứ 5 phút, nó xem GitHub có
+việc gì cho vai trò của máy mình không, rồi tự gọi Claude Code để làm.
+
+| Nhãn trên GitHub                  | Máy nhận việc | Việc nó làm                                               |
+| --------------------------------- | ------------- | --------------------------------------------------------- |
+| Issue `needs-plan`                | Lead          | `/sl-plan <issue>`, sau đó đổi nhãn thành `plan`          |
+| Issue `approved` (do **bạn** gắn) | Builder       | Gắn `in-progress`, chạy `/sl-implement <issue>`, mở PR    |
+| PR `needs-review`                 | Lead          | `/sl-review <pr>`                                         |
+| PR `changes-requested`            | Builder       | Sửa theo review trên cùng PR                              |
+| Issue `agent-ping`                | Cả hai        | Bình luận `pong:lead` / `pong:builder` (kiểm tra kết nối) |
+
+Hai chốt chặn của bạn vẫn giữ nguyên: **gắn `approved`** và **bấm Merge**. Watcher dừng tự động
+và gắn nhãn `needs-human` khi một PR đã qua 3 vòng yêu cầu sửa, hoặc gắn `agent-failed` khi một
+lần chạy Claude bị lỗi (xem log trong `.agent-logs\`). Gỡ nhãn đó đi thì watcher thử lại. Builder
+sẽ bỏ qua một lượt nếu thư mục repo đang có thay đổi chưa commit (ví dụ bạn đang tự sửa).
+
+**Cách nhanh nhất:** dùng prompt trong `docs/AGENT_BOOTSTRAP_PROMPT.md`. Dán prompt vào Claude
+Code trên từng máy (Lead trước, Builder sau), Claude sẽ tự kiểm tra, tạo nhãn, chạy thử và kiểm
+tra kết nối.
+
+**Làm tay:**
+
+```powershell
+cd $HOME\stem-sim-lab
+# Chạy thử: chỉ in ra việc sẽ làm, không làm gì thật
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\watch.ps1 -Role lead -Once -DryRun
+# Chạy liên tục (để cửa sổ này mở). Máy B thay lead bằng builder
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\watch.ps1 -Role lead
+```
+
+**Kiểm tra kết nối:** trên máy A, chạy
+`gh issue create --title "Kiểm tra kết nối hai máy" --label agent-ping --body "ping"`.
+Trong vòng 5 phút, issue đó phải có hai bình luận `pong:lead from @…` và `pong:builder from @…`,
+đến từ hai tài khoản GitHub khác nhau.
+
+Mỗi lần chạy, watcher dùng lượt của tài khoản Claude trên máy đó. Muốn dừng thì đóng cửa sổ
+PowerShell, hoặc nhấn Ctrl+C.
+
 ## 9. Kiểm tra toàn bộ thiết lập (checklist)
 
 - [ ] Cả hai máy: `git`, `gh`, `node`, `cargo`, `claude` đều in ra phiên bản.
@@ -283,7 +326,8 @@ GitHub. Sau đó cả hai máy chạy `git switch main; git pull`.
 - [ ] Cả hai máy: `gh auth status` có dòng _Logged in_, và quyền repo là `ADMIN`/`WRITE`.
 - [ ] Cả hai máy: `npm run check` đạt trên `main`.
 - [ ] Gõ `/sl` thấy đủ 3 lệnh.
-- [ ] `gh label list` có đủ 5 nhãn.
+- [ ] `gh label list` có đủ 10 nhãn.
+- [ ] Issue `agent-ping` có cả `pong:lead` và `pong:builder`.
 - [ ] Push thẳng lên `main` bị từ chối.
 - [ ] Chạy thử một vòng ①→⑥ với một việc nhỏ (ví dụ: sửa một câu chữ trong tài liệu).
 

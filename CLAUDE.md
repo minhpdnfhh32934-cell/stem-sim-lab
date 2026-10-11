@@ -143,6 +143,12 @@ Progress log: `docs/PROGRESS.md`.
   → user merges. Commands in `.claude/commands/`, shared permissions in `.claude/settings.json`
   (merge, release and pushes to `main` denied). Setup guide: `docs/TWO_MACHINE_WORKFLOW.md`.
 - One issue = one branch = one machine. The Lead never commits to the Builder's branch.
+- `scripts/agents/watch.ps1 -Role lead|builder` connects the machines: it polls labels
+  (`needs-plan`, `approved`, `needs-review`, `changes-requested`, `agent-ping`) and runs
+  `claude -p` on the matching command; `needs-human`/`agent-failed` stop the loop. Labels:
+  `scripts/agents/setup-labels.ps1`. Per-machine setup prompt: `docs/AGENT_BOOTSTRAP_PROMPT.md`.
+  Temporary files and logs go to `.agent-logs/` (git-ignored). Keep the scripts PowerShell 5.1
+  compatible and saved as UTF-8 with BOM.
 - Each machine uses its own GitHub account (both collaborators); `main` needs 1 approval from the
   account that did not open the PR.
 - Work done in Claude Cowork arrives as `docs/HANDOFF.md` (prompt: `docs/COWORK_HANDOFF_PROMPT.md`).

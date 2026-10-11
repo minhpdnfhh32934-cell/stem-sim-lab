@@ -21,7 +21,7 @@ Rules: you review only. **Do not commit, push or merge.** Merging is the user's 
    - tests added for new behaviour; no test skipped or weakened; no secrets committed.
      Trace a real path to each bug before reporting it. Mark each finding **🔴 bắt buộc sửa** or
      **🟡 gợi ý**.
-4. Write the review in Vietnamese to a temporary file outside the repository and post it:
+4. Write the review in Vietnamese to a file in `.agent-logs/` (git-ignored) and post it:
    - blocking findings: `gh pr review $ARGUMENTS --request-changes --body-file <file>`,
      then `gh pr edit $ARGUMENTS --remove-label needs-review --add-label changes-requested`;
    - none: `gh pr review $ARGUMENTS --approve --body-file <file>`,

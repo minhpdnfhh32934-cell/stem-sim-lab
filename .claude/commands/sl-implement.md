@@ -21,13 +21,15 @@ disable a test, never commit secrets.
    large change.
 4. Before pushing, all of these must pass (fix the code if they fail):
    - `npm run check`
-   - if `src-tauri/` changed: `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test`
-     and `cargo test --no-default-features --features edition-pilot`
+   - if `src-tauri/` changed: `cargo fmt --manifest-path src-tauri/Cargo.toml --check`,
+     `cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings`,
+     `cargo test --manifest-path src-tauri/Cargo.toml` and
+     `cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --features edition-pilot`
 5. `git push -u origin <branch>`.
 6. PR:
-   - new: `gh pr create --base main --title "<title>" --label needs-review --body-file <file>`;
+   - new: `gh pr create --base main --title "<title>" --label needs-review --body-file .agent-logs/<file>.md`;
      the body (Vietnamese) has: what changed, how it was tested, `Closes #$ARGUMENTS`.
-   - existing: `gh pr comment <pr> --body-file <file>` listing which review points were fixed,
+   - existing: `gh pr comment <pr> --body-file .agent-logs/<file>.md` listing which review points were fixed,
      then `gh pr edit <pr> --remove-label changes-requested --add-label needs-review`.
 7. Reply with a short Vietnamese report and the PR link, and remind the user:
    "Chạy `/sl-review <số PR>` trên máy Lead."
