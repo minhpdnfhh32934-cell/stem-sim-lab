@@ -27,3 +27,6 @@ Thumbs.db
 .env.*
 !.env.example
 /release/
+
+# Claude Code watcher (scripts/agents/watch.ps1)
+.agent-logs/

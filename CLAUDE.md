@@ -135,6 +135,25 @@ step is pre-approved.** Still stop and ask for: decisions only the user can make
 money, accounts, publishing a release), anything the security rules forbid, and real blockers.
 Progress log: `docs/PROGRESS.md`.
 
+## Two-machine workflow
+
+- Two Claude Code instances (two Windows machines, two Claude accounts) share work only through
+  GitHub: **Lead** `/sl-plan` → issue (label `plan`) → user adds `approved` → **Builder**
+  `/sl-implement <issue>` → branch `feat/<n>-…` + PR (`needs-review`) → **Lead** `/sl-review <pr>`
+  → user merges. Commands in `.claude/commands/`, shared permissions in `.claude/settings.json`
+  (merge, release and pushes to `main` denied). Setup guide: `docs/TWO_MACHINE_WORKFLOW.md`.
+- One issue = one branch = one machine. The Lead never commits to the Builder's branch.
+- `scripts/agents/watch.ps1 -Role lead|builder` connects the machines: it polls labels
+  (`needs-plan`, `approved`, `needs-review`, `changes-requested`, `agent-ping`) and runs
+  `claude -p` on the matching command; `needs-human`/`agent-failed` stop the loop. Labels:
+  `scripts/agents/setup-labels.ps1`. Per-machine setup prompts: `docs/agents/lead/` and `docs/agents/builder/`.
+  Temporary files and logs go to `.agent-logs/` (git-ignored). Keep the scripts PowerShell 5.1
+  compatible and saved as UTF-8 with BOM.
+- Each machine uses its own GitHub account (both collaborators); `main` needs 1 approval from the
+  account that did not open the PR.
+- Work done in Claude Cowork arrives as `docs/HANDOFF.md` (prompt: `docs/COWORK_HANDOFF_PROMPT.md`).
+  Read it before planning or implementing; it records facts and decisions, not approvals.
+
 ## Core APIs (Phase 1)
 
 - Units: `src/core/units.ts` (`toSI`, `fromSI`, `convert`, `unitLabel`); SI everywhere inside.
