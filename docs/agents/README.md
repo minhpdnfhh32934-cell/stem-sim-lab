@@ -11,5 +11,8 @@ Claude tự cài và tự kiểm tra từ đầu đến cuối. Bạn chỉ cầ
 
 Điều kiện chung: PR #1 đã được merge vào `main`.
 
+**Không muốn tốn lượt Claude khi cài?** Máy B có bản làm tay từng bước:
+[`builder/MANUAL_SETUP.md`](builder/MANUAL_SETUP.md).
+
 Xong cả hai máy thì issue "Kiểm tra kết nối hai máy" phải có hai bình luận: `pong:lead` và
 `pong:builder`. Quy trình làm việc hằng ngày: `docs/TWO_MACHINE_WORKFLOW.md` mục 8 và 8b.
