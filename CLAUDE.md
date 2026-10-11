@@ -135,6 +135,15 @@ step is pre-approved.** Still stop and ask for: decisions only the user can make
 money, accounts, publishing a release), anything the security rules forbid, and real blockers.
 Progress log: `docs/PROGRESS.md`.
 
+## Two-machine workflow
+
+- Two Claude Code instances (two Windows machines, two Claude accounts) share work only through
+  GitHub: **Lead** `/sl-plan` → issue (label `plan`) → user adds `approved` → **Builder**
+  `/sl-implement <issue>` → branch `feat/<n>-…` + PR (`needs-review`) → **Lead** `/sl-review <pr>`
+  → user merges. Commands in `.claude/commands/`, shared permissions in `.claude/settings.json`
+  (merge, release and pushes to `main` denied). Setup guide: `docs/TWO_MACHINE_WORKFLOW.md`.
+- One issue = one branch = one machine. The Lead never commits to the Builder's branch.
+
 ## Core APIs (Phase 1)
 
 - Units: `src/core/units.ts` (`toSI`, `fromSI`, `convert`, `unitLabel`); SI everywhere inside.
