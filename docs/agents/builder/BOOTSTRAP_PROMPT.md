@@ -14,6 +14,15 @@ làm 3 việc, phần còn lại Claude tự làm:
    ```powershell
    irm https://claude.ai/install.ps1 | iex
    ```
+   Nếu sau đó gõ `claude` mà bị báo _not recognized_ (trình cài báo `.local\bin is not in your
+   PATH`), chạy từng dòng sau. Dòng cuối phải in ra số phiên bản:
+   ```powershell
+   $bin = "$env:USERPROFILE\.local\bin"
+   $old = [Environment]::GetEnvironmentVariable("Path", "User")
+   [Environment]::SetEnvironmentVariable("Path", "$old;$bin", "User")
+   $env:Path += ";$bin"
+   claude --version
+   ```
 2. Đóng PowerShell, mở lại, rồi chạy `cd $HOME` và `claude`. Đăng nhập **tài khoản Claude 2**.
 3. Gửi file này cho Claude: dán **toàn bộ** nội dung file, hoặc kéo thả file vào Claude.
 
