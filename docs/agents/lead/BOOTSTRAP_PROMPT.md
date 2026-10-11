@@ -4,9 +4,13 @@
 
 Làm máy này **trước** máy Builder. Chỉ cần làm 3 việc, phần còn lại Claude tự làm:
 
-1. Mở **PowerShell** (không dùng `cmd`) và chạy từng dòng một. Nếu đã cài rồi thì bỏ qua.
+1. Mở **PowerShell** (bấm phím Windows, gõ `PowerShell`, Enter; **không dùng `cmd`**). Chạy từng
+   dòng một. Dòng nào báo _already installed_ thì đã có rồi, bỏ qua. Nếu `winget` hỏi đồng ý điều
+   khoản, gõ `Y`.
    ```powershell
-   winget install --id Git.Git -e --accept-package-agreements --accept-source-agreements
+   winget install --id Git.Git -e
+   ```
+   ```powershell
    irm https://claude.ai/install.ps1 | iex
    ```
 2. Đóng PowerShell, mở lại, rồi chạy `cd $HOME` và `claude`. Đăng nhập **tài khoản Claude 1**.
