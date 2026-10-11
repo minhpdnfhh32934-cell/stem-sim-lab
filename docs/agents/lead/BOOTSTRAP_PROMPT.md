@@ -14,7 +14,7 @@ Làm máy này **trước** máy Builder. Chỉ cần làm 3 việc, phần còn
    irm https://claude.ai/install.ps1 | iex
    ```
    Nếu sau đó gõ `claude` mà bị báo _not recognized_ (trình cài báo `.local\bin is not in your
-   PATH`), chạy từng dòng sau. Dòng cuối phải in ra số phiên bản:
+PATH`), chạy từng dòng sau. Dòng cuối phải in ra số phiên bản:
    ```powershell
    $bin = "$env:USERPROFILE\.local\bin"
    $old = [Environment]::GetEnvironmentVariable("Path", "User")
