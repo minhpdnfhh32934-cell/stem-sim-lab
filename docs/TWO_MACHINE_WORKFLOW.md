@@ -297,7 +297,8 @@ và gắn nhãn `needs-human` khi một PR đã qua 3 vòng yêu cầu sửa, ho
 lần chạy Claude bị lỗi (xem log trong `.agent-logs\`). Gỡ nhãn đó đi thì watcher thử lại. Builder
 sẽ bỏ qua một lượt nếu thư mục repo đang có thay đổi chưa commit (ví dụ bạn đang tự sửa).
 
-**Cách nhanh nhất:** dùng prompt trong `docs/AGENT_BOOTSTRAP_PROMPT.md`. Dán prompt vào Claude
+**Cách nhanh nhất:** dùng prompt trong `docs/agents/lead/BOOTSTRAP_PROMPT.md` (máy A) và
+`docs/agents/builder/BOOTSTRAP_PROMPT.md` (máy B). Dán prompt vào Claude
 Code trên từng máy (Lead trước, Builder sau), Claude sẽ tự kiểm tra, tạo nhãn, chạy thử và kiểm
 tra kết nối.
 

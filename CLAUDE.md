@@ -146,7 +146,7 @@ Progress log: `docs/PROGRESS.md`.
 - `scripts/agents/watch.ps1 -Role lead|builder` connects the machines: it polls labels
   (`needs-plan`, `approved`, `needs-review`, `changes-requested`, `agent-ping`) and runs
   `claude -p` on the matching command; `needs-human`/`agent-failed` stop the loop. Labels:
-  `scripts/agents/setup-labels.ps1`. Per-machine setup prompt: `docs/AGENT_BOOTSTRAP_PROMPT.md`.
+  `scripts/agents/setup-labels.ps1`. Per-machine setup prompts: `docs/agents/lead/` and `docs/agents/builder/`.
   Temporary files and logs go to `.agent-logs/` (git-ignored). Keep the scripts PowerShell 5.1
   compatible and saved as UTF-8 with BOM.
 - Each machine uses its own GitHub account (both collaborators); `main` needs 1 approval from the

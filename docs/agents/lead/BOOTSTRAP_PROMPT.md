@@ -1,40 +1,35 @@
-# Prompt tự cài đặt và kết nối cho Claude Code trên từng máy
+# Prompt tự cài đặt — máy A (Lead)
 
 **Dùng khi nào:** sau khi đã cài Claude Code và đăng nhập (bước 1–4 trong
 `docs/TWO_MACHINE_WORKFLOW.md`), và sau khi PR #1 (các lệnh `/sl-*` + `scripts/agents/`) đã được
-merge vào `main`.
+merge vào `main`. Làm máy này **trước** máy Builder: Lead tạo nhãn và issue kiểm tra kết nối.
 
-**Thứ tự:** làm trên **máy A (Lead) trước**, sau đó mới làm trên máy B (Builder). Lead tạo nhãn
-và issue kiểm tra kết nối, Builder trả lời issue đó.
-
-**Cách dùng trên mỗi máy:**
+**Cách dùng:**
 
 1. Mở **PowerShell** (không phải Command Prompt `cmd`: ở `cmd`, `$HOME` không hoạt động) và tự
-   đăng nhập GitHub. Claude không làm hộ được bước này vì cần trình duyệt. Dán **từng lệnh một**:
-   `gh auth login` sẽ hỏi lại vài câu, nếu dán nhiều dòng cùng lúc thì các dòng sau bị coi là câu
-   trả lời. Khi được hỏi _Authenticate Git with your GitHub credentials?_, gõ `Y` rồi Enter. Khi
-   thấy _one-time code_, chép mã đó, nhấn Enter để mở trình duyệt, dán mã vào rồi bấm
+   đăng nhập GitHub bằng **tài khoản GitHub 1**. Claude không làm hộ được bước này vì cần trình duyệt. Dán
+   **từng lệnh một**: `gh auth login` sẽ hỏi lại vài câu, nếu dán nhiều dòng cùng lúc thì các dòng
+   sau bị coi là câu trả lời. Khi được hỏi _Authenticate Git with your GitHub credentials?_, gõ `Y`
+   rồi Enter. Khi thấy _one-time code_, chép mã đó, nhấn Enter để mở trình duyệt, dán mã vào rồi bấm
    **Authorize**.
    ```powershell
    gh auth login --hostname github.com --git-protocol https --web
-   gh auth setup-git
    ```
-2. Mở Claude Code ở thư mục nhà:
+2. Mở Claude Code ở thư mục nhà (từng dòng một):
    ```powershell
    cd $HOME
    claude
    ```
-3. Dán khung prompt bên dưới. Trước khi gửi, **sửa dòng `VAI TRÒ`** thành `lead` (máy A) hoặc
-   `builder` (máy B).
+3. Dán **toàn bộ** khung prompt bên dưới vào Claude. Không cần sửa gì.
 
 ---
 
 ```text
 VAI TRÒ = lead
 
-Bạn đang cài đặt máy này để làm việc trong quy trình hai máy Claude Code của dự án STEM Sim Lab
-(repo GitHub minhpdnfhh32934-cell/stem-sim-lab). Máy kia dùng một tài khoản Claude và một tài
-khoản GitHub khác. Hai máy kết nối với nhau CHỈ qua GitHub (issue, PR, nhãn), bằng script
+Bạn đang cài đặt máy này làm máy LEAD (lập kế hoạch, review) trong quy trình hai máy Claude Code
+của dự án STEM Sim Lab (repo GitHub minhpdnfhh32934-cell/stem-sim-lab). Máy kia là BUILDER (viết
+code), dùng một tài khoản Claude và một tài khoản GitHub khác. Hai máy kết nối với nhau CHỈ qua GitHub (issue, PR, nhãn), bằng script
 scripts/agents/watch.ps1. Hướng dẫn đầy đủ: docs/TWO_MACHINE_WORKFLOW.md.
 
 Quy tắc khi cài đặt:
@@ -71,7 +66,7 @@ BƯỚC 3 — Repo ở thư mục $HOME\stem-sim-lab.
 BƯỚC 4 — Chạy thử dự án (trong thư mục repo): npm install, rồi npm run check.
 Báo kết quả. Nếu lỗi, KHÔNG sửa code: chỉ ghi lại lỗi để báo tôi.
 
-BƯỚC 5 — Chỉ khi VAI TRÒ = lead:
+BƯỚC 5 — Nhãn và bảo vệ nhánh:
 - powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\setup-labels.ps1
   Kiểm tra: gh label list phải có đủ 10 nhãn: needs-plan, plan, approved, in-progress,
   needs-review, changes-requested, ready-to-merge, needs-human, agent-failed, agent-ping.
@@ -80,33 +75,30 @@ BƯỚC 5 — Chỉ khi VAI TRÒ = lead:
   trên trang GitHub. Đừng tự bật bằng API.
 
 BƯỚC 6 — Chạy thử watcher, không làm gì thật:
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\watch.ps1 -Role <VAI TRÒ> -Once -DryRun
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\watch.ps1 -Role lead -Once -DryRun
 Giải thích ngắn kết quả: watcher thấy việc nào và sẽ làm gì.
 
 BƯỚC 7 — Kiểm tra kết nối hai máy:
-- lead: hỏi tôi rồi tạo issue:
+- Hỏi tôi rồi tạo issue:
   gh issue create --title "Kiểm tra kết nối hai máy" --label agent-ping --body "Mỗi máy trả lời bằng một bình luận pong:<vai trò>."
   Sau đó chạy watcher thật một lần (bỏ -DryRun, giữ -Once). Kiểm tra: issue có bình luận pong:lead.
-- builder: gh issue list --label agent-ping --state open phải có issue. Nếu chưa có, bảo tôi làm
-  xong máy Lead trước. Có rồi thì chạy watcher thật một lần (bỏ -DryRun, giữ -Once).
-  Kiểm tra: gh issue view <số> --comments có CẢ pong:lead VÀ pong:builder, đến từ HAI tài khoản
-  GitHub khác nhau. Nếu đủ: báo "Hai máy đã kết nối" và hỏi tôi có muốn đóng issue không
-  (gh issue close <số>).
+- Báo tôi: "Giờ chạy prompt docs/agents/builder/BOOTSTRAP_PROMPT.md trên máy Builder". Khi máy
+  Builder xong, issue phải có CẢ pong:lead VÀ pong:builder từ HAI tài khoản GitHub khác nhau.
 
 BƯỚC 8 — Cách bật watcher chạy liên tục. Đừng tự bật: hướng dẫn tôi hai cách và hỏi tôi chọn cách
 nào.
 (a) Mở một cửa sổ PowerShell riêng và để nó chạy:
     cd $HOME\stem-sim-lab
-    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\watch.ps1 -Role <VAI TRÒ>
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\agents\watch.ps1 -Role lead
 (b) Tự chạy mỗi khi tôi đăng nhập Windows (Scheduled Task). Chỉ tạo khi tôi đồng ý:
     $repo = "$HOME\stem-sim-lab"
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" -WorkingDirectory $repo -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File `"$repo\scripts\agents\watch.ps1`" -Role <VAI TRÒ>"
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" -WorkingDirectory $repo -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File `"$repo\scripts\agents\watch.ps1`" -Role lead"
     $trigger = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
     $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew
-    Register-ScheduledTask -TaskName "StemSim-Claude-<VAI TRÒ>" -Action $action -Trigger $trigger -Settings $settings
-    Kiểm tra: Get-ScheduledTask -TaskName "StemSim-Claude-<VAI TRÒ>" phải có State = Ready.
-    Chạy ngay: Start-ScheduledTask -TaskName "StemSim-Claude-<VAI TRÒ>".
-    Tắt: Unregister-ScheduledTask -TaskName "StemSim-Claude-<VAI TRÒ>" -Confirm:$false
+    Register-ScheduledTask -TaskName "StemSim-Claude-lead" -Action $action -Trigger $trigger -Settings $settings
+    Kiểm tra: Get-ScheduledTask -TaskName "StemSim-Claude-lead" phải có State = Ready.
+    Chạy ngay: Start-ScheduledTask -TaskName "StemSim-Claude-lead".
+    Tắt: Unregister-ScheduledTask -TaskName "StemSim-Claude-lead" -Confirm:$false
 
 BƯỚC 9 — Báo cáo cuối cùng bằng tiếng Việt, dạng checklist ✅/❌: công cụ, tài khoản GitHub (tên),
 quyền repo, repo + file /sl-*, npm run check, nhãn (lead), bảo vệ nhánh (lead), dry run, kết nối
