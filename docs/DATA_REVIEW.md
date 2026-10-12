@@ -70,3 +70,9 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     tiêu đạt được trong khoảng thanh trượt (với g = 9,8; 9,81; 10). Đáp án đúng của câu dự đoán
     cũng được tính, không viết tay. Nhờ giáo viên duyệt cách diễn đạt câu hỏi và gợi ý cho hợp với
     học sinh. `review_status: "pending"`.
+14. **Thư viện kiến thức có sẵn của Thầy AI** (`src/teacher/chat/knowledge.ts`, `STARTER`): 66 ghi
+    chú ngắn về Vật lý, Hóa học, Sinh học THPT (công thức, định luật, khái niệm), do AI viết khi làm
+    bản Thầy AI, **chưa có nguồn cụ thể** (trường `source` chỉ là tên chủ đề) và chưa ai duyệt. Mọi
+    ghi chú đang `reviewStatus: 'pending'`: khi gửi cho AI, mỗi ghi chú kèm câu "chưa được giáo viên
+    duyệt", và Cài đặt → Thầy AI ghi rõ số ghi chú đang chờ duyệt. Nhờ giáo viên đọc từng ghi chú,
+    sửa câu sai, thêm nguồn (sách, trang), rồi đổi ghi chú đó thành `'verified'`.
