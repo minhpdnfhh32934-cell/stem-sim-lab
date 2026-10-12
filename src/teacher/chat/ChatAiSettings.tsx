@@ -28,7 +28,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useChatStore } from './chatStore';
 import { downloadErrorKey } from './downloadErrors';
-import { builtinKnowledge } from './knowledge';
+import { builtinKnowledge, builtinPendingCount } from './knowledge';
 import { listVoices, speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
 import { VOICE_SAMPLE, VOICE_STYLES, useVoiceStore } from '@/teacher/voice/voiceStore';
 import './chat.css';
@@ -705,7 +705,9 @@ export function ChatAiSettings() {
       </div>
       {libraryOpen && (
         <div className="chat-settings__library">
-          <p className="muted small">{t('chatSettings.builtIn', { count: builtIn.length })}</p>
+          <p className="muted small">
+            {t('chatSettings.builtIn', { count: builtIn.length, pending: builtinPendingCount() })}
+          </p>
           <div className="chat-settings__builtin">
             {['physics', 'chemistry', 'biology'].map((subject) => (
               <span key={subject}>

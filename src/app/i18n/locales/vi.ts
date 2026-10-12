@@ -992,7 +992,8 @@ const vi = {
     library: 'Thư viện kiến thức',
     hideLibrary: 'Ẩn thư viện',
     openLibrary: 'Mở thư viện',
-    builtIn: 'Có sẵn {count} ghi chú kiến thức STEM cơ bản cho THPT.',
+    builtIn:
+      'Có sẵn {count} ghi chú kiến thức STEM cơ bản cho THPT; {pending} ghi chú đang chờ giáo viên duyệt nên cần đối chiếu với sách giáo khoa.',
     notes: 'ghi chú',
     addFile: 'Thêm tệp kiến thức',
     fileFilter: 'Tệp văn bản và dữ liệu',

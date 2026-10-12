@@ -1000,7 +1000,8 @@ const en: Messages = {
     library: 'Knowledge library',
     hideLibrary: 'Hide library',
     openLibrary: 'Open library',
-    builtIn: '{count} built-in STEM notes for upper-secondary study.',
+    builtIn:
+      '{count} built-in STEM notes for upper-secondary study; {pending} are still waiting for a teacher’s review, so check them against the textbook.',
     notes: 'notes',
     addFile: 'Add knowledge file',
     fileFilter: 'Text and data files',
