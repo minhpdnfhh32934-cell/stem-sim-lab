@@ -174,7 +174,11 @@ Progress log: `docs/PROGRESS.md`.
 - One issue = one branch = one machine. The Lead never commits to the Builder's branch.
 - `scripts/agents/watch.ps1 -Role lead|builder` connects the machines: it polls labels
   (`needs-plan`, `approved`, `needs-review`, `changes-requested`, `agent-ping`) and runs
-  `claude -p` on the matching command; `needs-human`/`agent-failed` stop the loop. Labels:
+  `claude -p` on the matching command; `needs-human`/`agent-failed` stop the loop. `-Role both`
+  (both machines in parallel): a machine claims an issue by assigning its own account when it
+  plans or starts it, owns it to the end, reworks only its own PRs and reviews only the other
+  account's PRs; per cycle: review → own rework → plan → implement. Tool permissions follow the
+  command (review/plan read-only, implement edits). Labels:
   `scripts/agents/setup-labels.ps1`. Per-machine setup prompts: `docs/agents/lead/` and `docs/agents/builder/`.
   Temporary files and logs go to `.agent-logs/` (git-ignored). Keep the scripts PowerShell 5.1
   compatible and saved as UTF-8 with BOM.

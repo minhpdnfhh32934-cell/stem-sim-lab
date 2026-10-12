@@ -29,5 +29,5 @@ Rules: you review only. **Do not commit, push or merge.** Merging is the user's 
      If GitHub refuses because the PR author is the same GitHub account, post the same text with
      `gh pr review $ARGUMENTS --comment --body-file <file>` (labels as above).
 5. `git switch main`. Reply with a short Vietnamese summary: verdict, number of 🔴/🟡 findings,
-   link. Next step for the user: changes requested → `/sl-implement <issue>` on the Builder;
+   link. Next step for the user: changes requested → `/sl-implement <issue>` on the machine that opened the PR;
    ready → the user merges the PR on GitHub.

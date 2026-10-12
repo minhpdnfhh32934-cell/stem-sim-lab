@@ -320,6 +320,54 @@ Trong vòng 5 phút, issue đó phải có hai bình luận `pong:lead from @…
 Mỗi lần chạy, watcher dùng lượt của tài khoản Claude trên máy đó. Muốn dừng thì đóng cửa sổ
 PowerShell, hoặc nhấn Ctrl+C.
 
+## 8c. Hai máy cùng làm song song (`-Role both`)
+
+Ở chế độ này, **cả hai máy đều lập kế hoạch, viết code và review cho nhau**. Chế độ này nhanh hơn
+mục 8b vì không máy nào phải ngồi chờ.
+
+| Việc                              | Ai làm                                                                                              |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Issue `needs-plan`                | Máy nào rảnh trước thì **nhận** issue (gán tên tài khoản của mình vào ô Assignees) rồi lập kế hoạch |
+| Issue `approved` (do **bạn** gắn) | Máy đã nhận issue đó viết code và mở PR. Issue chưa ai nhận thì máy rảnh trước nhận                 |
+| PR `needs-review`                 | **Máy còn lại** review. Không máy nào review PR của chính mình                                      |
+| PR `changes-requested`            | Máy đã mở PR sửa lại                                                                                |
+
+Quy tắc giữ cho hai máy không giẫm chân nhau:
+
+- **Một issue thuộc về một máy, từ đầu đến cuối.** Tên trong ô **Assignees** của issue cho biết
+  máy nào đang giữ nó.
+- Nếu hai máy nhận cùng một issue đúng một lúc, tài khoản có tên đứng trước theo bảng chữ cái
+  giữ issue, máy còn lại tự rút.
+- Mỗi vòng, một máy chỉ làm **một việc**, theo thứ tự ưu tiên: review → sửa PR của mình → lập kế
+  hoạch → viết code mới.
+- Quyền của Claude đi theo **việc**: khi review hoặc lập kế hoạch thì chỉ đọc, khi viết code thì
+  mới được sửa file.
+
+**Bật trên cả hai máy:**
+
+```powershell
+cd $HOME\stem-sim-lab
+```
+
+```powershell
+git pull
+```
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+```
+
+```powershell
+.\scripts\agents\watch.ps1 -Role both
+```
+
+**Lưu ý:**
+
+- Lượt dùng Claude của **cả hai tài khoản** đều bị trừ. Gõ `/usage` để theo dõi.
+- Hai việc cùng sửa một file (ví dụ `CLAUDE.md`, `vi.ts`) dễ gây xung đột khi merge. Hãy tạo các
+  issue về những phần **khác nhau** của app, và merge từng PR một.
+- Đừng chạy `-Role both` cùng lúc với `-Role lead` hoặc `-Role builder` trên **cùng một máy**.
+
 ## 9. Kiểm tra toàn bộ thiết lập (checklist)
 
 - [ ] Cả hai máy: `git`, `gh`, `node`, `cargo`, `claude` đều in ra phiên bản.

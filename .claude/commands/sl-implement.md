@@ -32,6 +32,6 @@ disable a test, never commit secrets.
    - existing: `gh pr comment <pr> --body-file .agent-logs/<file>.md` listing which review points were fixed,
      then `gh pr edit <pr> --remove-label changes-requested --add-label needs-review`.
 7. Reply with a short Vietnamese report and the PR link, and remind the user:
-   "Chạy `/sl-review <số PR>` trên máy Lead."
+   "Chạy `/sl-review <số PR>` trên máy còn lại (máy Lead, hoặc máy kia nếu cả hai chạy `-Role both`)."
    If the task finishes an item listed in `docs/HANDOFF.md` → "Việc cần làm tiếp", tick it there
    (`- [x]`) in the same PR.
