@@ -1,10 +1,10 @@
 // Packs dist/ into a signed web update (docs/RELEASE.md).
 //
-//   WEB_UPDATE_SIGNING_KEY="-----BEGIN PRIVATE KEY-----…" node scripts/release/web-bundle.mjs [main]
+//   WEB_UPDATE_SIGNING_KEY="-----BEGIN PRIVATE KEY-----…" node scripts/release/web-bundle.mjs
 //
-// One update channel: release/web-bundle.zip + release/web-update.json. The high-school pilot
-// channel (web-update-pilot.json) was removed on 2026-10-12. dist/web-edition.txt must say
-// "main". The signed message must match `signed_message` in src-tauri/src/webupdate.rs.
+// One update channel: release/web-bundle.zip + release/web-update.json (the pilot edition and its
+// channel were removed in 0.5.0). The signed message must match `signed_message` in
+// src-tauri/src/webupdate.rs; it still names the edition ("main") so installed apps verify it.
 import { execFileSync } from 'node:child_process';
 import { createHash, createPrivateKey, sign } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -12,8 +12,7 @@ import { resolve } from 'node:path';
 import { signedMessage, signedMessageV2 } from './manifest-message.mjs';
 
 const REPO = 'minhpdnfhh32934-cell/stem-sim-lab';
-const edition = process.argv[2] ?? 'main';
-if (edition !== 'main') throw new Error(`unknown edition ${edition} (only "main" is built)`);
+const edition = 'main';
 // Mandatory-update floor: learners on an older web part must update (empty = none).
 const minRequired = (process.env.MIN_REQUIRED ?? '').trim();
 if (minRequired && !/^\d+\.\d+\.\d+$/.test(minRequired))

@@ -146,7 +146,7 @@ máy (kiểm tra giấy phép trước). Kết quả tra:
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng
   bấm), kiểm tra cập nhật trên GitHub, tải mô hình Gemma (người dùng bấm "Tải mô hình", chỉ tải
-  xuống) và tra Wikipedia (chỉ khi người dùng bật). Cài đặt → Thầy AI có ô "Dữ liệu của em đi
+  xuống) và tra Wikipedia (chỉ khi người dùng bật). Cài đặt → AI Teacher có ô "Dữ liệu của em đi
   đâu?" liệt kê theo cài đặt hiện tại.
 - Gửi cho nhà cung cấp AI: nội dung đề bài và kết quả đã tính. Đề có dấu hiệu thông tin cá nhân,
   nội dung không phù hợp, hoặc dấu hiệu khủng hoảng **không được gửi** (`src/safety/moderation.ts`).

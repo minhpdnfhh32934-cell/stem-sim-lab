@@ -91,15 +91,12 @@ describe('App shell (Phase 0)', () => {
     expect(document.documentElement.dataset.theme).toBe('dark');
   });
 
-  it('Ctrl+B hides and shows the library', async () => {
+  it('the lab panels cannot be hidden (no buttons, Ctrl+B/I/J do nothing; removed in 0.4.3)', async () => {
     const user = userEvent.setup();
     renderInLab();
-    await user.keyboard('{Control>}b{/Control}');
-    expect(
-      screen.queryByRole('complementary', { name: 'Thư viện chủ đề' }),
-    ).not.toBeInTheDocument();
-    await user.keyboard('{Control>}b{/Control}');
+    await user.keyboard('{Control>}b{/Control}{Control>}j{/Control}{Control>}i{/Control}');
     expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Ẩn \/ hiện/ })).not.toBeInTheDocument();
   });
 
   it('F5 enters presentation mode (side panels hidden) and Esc leaves it', async () => {
@@ -135,8 +132,8 @@ describe('App shell (Phase 0)', () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(screen.getByRole('button', { name: 'Cài đặt' }));
-    await user.keyboard('{Control>}b{/Control}');
-    expect(useLayoutStore.getState().leftOpen).toBe(true);
+    await user.keyboard('{F5}');
+    expect(useLayoutStore.getState().presentation).toBe(false);
   });
 
   it('play controls stay disabled until a simulation exists', () => {

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import pkg from '../package.json';
-import conf from '../src-tauri/tauri.conf.json';
 import { existsSync } from 'node:fs';
+import conf from '../src-tauri/tauri.conf.json';
 
 describe('one edition: SimLab (the high-school pilot was removed 2026-10-12)', () => {
   it('ships one installer named SimLab and keeps the identifier (data, keys, updates)', () => {
     expect(conf.productName).toBe('SimLab');
     expect(conf.identifier).toBe('vn.stemsimlab.desktop');
     expect(existsSync('src-tauri/tauri.pilot.conf.json')).toBe(false);
-    expect(Object.keys(pkg.scripts)).not.toContain('build:pilot');
+    expect(Object.keys(pkg.scripts).some((k) => k.includes('pilot'))).toBe(false);
   });
 });
 

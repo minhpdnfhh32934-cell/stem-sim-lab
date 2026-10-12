@@ -8,10 +8,9 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 
 ## PROMPT_PHAN_2 rules (summary — A1–A8, B1, B13)
 
-- **Users:** university students and other learners **18+** (bring their own Gemini key).
-  **User decision 2026-10-12:** the high-school pilot edition (under-18 testers) was removed; only
-  the main edition is built. Its PROMPT_PHAN_2 rules (A2 pilot build, PIN, parental consent) no
-  longer apply. Do not bring it back without asking.
+- **Users:** university students **18+** (bring their own Gemini key). **User decision 2026-10-12:**
+  the supervised high-school **pilot edition was removed** (0.5.0) — there is one build only. Do not
+  add editions, `VITE_EDITION`, Cargo edition features, PIN/consent flows or a second installer back.
 - **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model). All AI
   goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
   **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
@@ -19,9 +18,9 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
   data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §2b. First candidate:
   Groq (no training on data, 18+ account holder, minors allowed under the customer's
   responsibility). Plan: `docs/PLAN_PHAN_2.md` §6 (step 3b.3b, approved 2026-10-05).
-- **One build:** Gemini default, Claude optional, Groq free fallback; 18+ confirmation on first run
-  (no key may be saved before it); "AI-assisted" labels, two-way moderation, incident log without
-  private content, report button, minimal data.
+- **One build:** Gemini default, Claude and Groq optional; 18+ confirmation on first run (no key may
+  be saved before it; "under 18" keeps the simulations, AI off); "AI-assisted" labels, two-way
+  moderation, incident log without private content, report button, minimal data.
 - Never commit API keys (`.env` is git-ignored); never embed a project key in an installer.
 - AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
   problem readings; app fully usable without a key and offline (simulations, samples, manual mode).
@@ -72,6 +71,19 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   deterministic, property test: no overlap), `provenance.ts` (given / checked / unverified numbers),
   `plot.ts` (safe expression reader, no `eval`), `lesson.ts` (voice and pen in step), `Whiteboard.tsx`.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
+- **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
+  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (LUIDs change per
+  boot) and, before the window exists, adds `--use-adapter-luid=<high>,<low>` to wry's default
+  WebView2 args (restart needed; the whole GPU process moves). Never use
+  `--use-webgpu-power-preference=force-high-performance` (no adapter at all). UI:
+  `src/teacher/chat/GpuSettings.tsx`; it shows what WebGPU really reports, never the wish.
+  Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
+- **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
+  buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
+  add show/hide back. AI Teacher context is a token budget with an AI-written summary of older turns
+  (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
+  "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
+  was merged into it). Details: `docs/AI_TUTOR.md`.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
@@ -284,16 +296,15 @@ Progress log: `docs/PROGRESS.md`.
 
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
-- Gates live in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
+- The gate lives in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
   `incidents.json`); `ai_chat`/`ai_models`/`ai_test_key` return `notAllowed` while closed, and
-  `ai_set_key` needs the 18+ confirmation. Never move
-  a gate into the web page only. Bump `TERMS_VERSION` (Rust **and** `src/safety/safety.ts`) when the
+  `ai_set_key` needs the 18+ confirmation. Never move the gate into the web page only. Bump
+  `TERMS_VERSION` (Rust **and** `src/safety/safety.ts`) when the
   terms change.
 - Web side `src/safety/`: AgeGate, SafetySettings, AiContentBar (label + report — put it on every
   new AI output), CrisisCard, PrivacyDialog, `moderation.ts` (`checkInput` before every AI call,
   `outputIsSafe` on every AI text). The incident log stores **kind + time only**.
-- The pilot PIN/consent branches in `safety.rs` (`PILOT = false`) and `src/safety/safety.ts` are
-  dead code since 2026-10-12, kept for a later clean-up. Legal sources and open questions: `docs/LEGAL_COMPLIANCE.md` (list, never conclude).
+- Legal sources and open questions: `docs/LEGAL_COMPLIANCE.md` (list, never conclude).
 - Unit tests run with an open gate (`tests/setup.ts`); E2E storage state pre-answers it.
 
 ## Modules (chemistry, biology — Phase 4+)
@@ -356,10 +367,10 @@ Progress log: `docs/PROGRESS.md`.
   told to reinstall. Never break Rust command signatures without bumping the native version.
 - The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
   `webupdate.rs`. The repo must be public for the app to download releases.
-- **One installer / one update channel:** `tauri.conf.json` (productName "SimLab",
-  `vn.stemsimlab.desktop`, `web-update.json`). The pilot installer and `web-update-pilot.json` were
-  removed 2026-10-12; installed pilot apps get no more updates. The app still checks the manifest's
-  `edition` ("main") and the zip's `web-edition.txt`.
+- **One installer / one update channel** (productName "SimLab", `vn.stemsimlab.desktop`,
+  `web-update.json`; the pilot
+  installer and channel were removed in 0.5.0). The signed message still names `edition:main` and
+  the zip carries `web-edition.txt` = `main` — keep both, installed apps check them.
 - **Update window / mandatory updates (0.3.0+):** the start-up check opens `UpdateDialog` when a
   version is available ("Cập nhật ngay" / "Để sau"). Release input `required` → signed
   `minRequired` (v2 signature `signed_message_v2` ≡ `scripts/release/manifest-message.mjs`, tested

@@ -5,9 +5,9 @@ import { AgeGate } from './AgeGate';
 import { BrowserSafety, setSafetyBackendForTests } from './safety';
 import { useSafetyStore } from './safetyStore';
 
-describe('first-run age gate (main edition)', () => {
+describe('first-run age gate', () => {
   it('asks once, needs the terms for "18+", and remembers the answer', async () => {
-    setSafetyBackendForTests(new BrowserSafety(false));
+    setSafetyBackendForTests(new BrowserSafety());
     const user = userEvent.setup();
     render(<AgeGate />);
     const adult = await screen.findByRole('button', { name: /đủ 18 tuổi — bật AI/ });
@@ -22,7 +22,7 @@ describe('first-run age gate (main edition)', () => {
   });
 
   it('"under 18" keeps the AI off but closes the gate', async () => {
-    setSafetyBackendForTests(new BrowserSafety(false));
+    setSafetyBackendForTests(new BrowserSafety());
     const user = userEvent.setup();
     render(<AgeGate />);
     await user.click(await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }));

@@ -2,8 +2,7 @@ import { BookOpenCheck, ScrollText, ShieldCheck, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { getSafety, type Incident } from './safety';
-import { safetyErrorText } from './pinError';
+import { getSafety, toSafetyError, type Incident } from './safety';
 import { openGate, openPrivacy, useSafetyStore } from './safetyStore';
 import './safety.css';
 
@@ -54,12 +53,16 @@ function IncidentLog() {
   const locale = useSettingsStore((s) => s.locale);
   const [list, setList] = useState<Incident[] | null>(null);
   const [error, setError] = useState('');
+  const show = (e: unknown) => {
+    const err = toSafetyError(e);
+    setError(err.message || err.code);
+  };
   const load = async () => {
     setError('');
     try {
       setList(await getSafety().incidents());
     } catch (e) {
-      setError(safetyErrorText(t, e));
+      show(e);
     }
   };
   const clear = async () => {
@@ -67,7 +70,7 @@ function IncidentLog() {
       await getSafety().clearIncidents();
       setList([]);
     } catch (e) {
-      setError(safetyErrorText(t, e));
+      show(e);
     }
   };
   const fmt = new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-US', {

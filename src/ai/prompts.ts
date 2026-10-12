@@ -2,7 +2,7 @@ import { unitLabel } from '@/core/units';
 import type { PhysicsScene } from '@/physics/types';
 import { allowedUnits } from './spec';
 
-/** Safety lines added to every system prompt (PROMPT_PHAN_2 A3; users are 18+). */
+/** Safety line added to every system prompt (PROMPT_PHAN_2 A3). */
 export const SAFETY_RULES = `
 AN TOÀN: chỉ xử lý nội dung học tập; không hỏi hay nhắc lại thông tin cá nhân.`;
 

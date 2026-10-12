@@ -28,7 +28,7 @@ describe('matchShortcut()', () => {
   });
 
   it('treats Cmd (macOS) like Ctrl', () => {
-    expect(matchShortcut(key('b', { metaKey: true }), false)).toBe('toggleLeft');
+    expect(matchShortcut(key('s', { metaKey: true }), false)).toBe('save');
   });
 
   it('does not steal plain keys while typing in a text field', () => {
@@ -38,8 +38,13 @@ describe('matchShortcut()', () => {
   });
 
   it('keeps layout shortcuts working inside text fields', () => {
-    expect(matchShortcut(key('b', { ctrlKey: true }), true)).toBe('toggleLeft');
+    expect(matchShortcut(key('s', { ctrlKey: true }), true)).toBe('save');
     expect(matchShortcut(key('F5'), true)).toBe('presentation');
+  });
+
+  it('no longer hides panels with Ctrl+B / Ctrl+I / Ctrl+J (removed in 0.4.3)', () => {
+    for (const k of ['b', 'i', 'j'])
+      expect(matchShortcut(key(k, { ctrlKey: true }), false)).toBeNull();
   });
 
   it('requires modifiers to match exactly', () => {

@@ -245,10 +245,11 @@
   cursor: wait;
 }
 
+/* Board: small teacher · the lesson board · a narrow chat column (LessonBoard.tsx). */
 .teacher[data-layout='board'] .teacher__stage {
   /* Board layout (B4.1): a small teacher on the side, the board in the middle, the chat at
      the right. */
-  grid-template-columns: minmax(120px, 150px) minmax(0, 1fr) minmax(300px, 0.42fr);
+  grid-template-columns: minmax(110px, 150px) minmax(0, 1.6fr) minmax(300px, 0.9fr);
 }
 
 .teacher__board {
@@ -269,11 +270,35 @@
 }
 
 .teacher[data-layout='board'] .teacher-ring {
-  width: min(150px, 20vh, 100%);
+  width: min(130px, 18vh, 100%);
 }
 
 .teacher[data-layout='board'] .teacher__caption {
   font-size: var(--text-sm);
+}
+
+.teacher[data-layout='board'] .teacher__quick-actions button {
+  min-height: 36px;
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 1180px) {
+  .teacher[data-layout='board'] .teacher__stage {
+    grid-template-columns: minmax(0, 1.5fr) minmax(290px, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .teacher[data-layout='board'] .teacher__presence {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    padding: 0 8px;
+  }
+  .teacher[data-layout='board'] .teacher-ring {
+    width: 56px;
+    flex: none;
+  }
+  .teacher[data-layout='board'] .teacher__engine-pill {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

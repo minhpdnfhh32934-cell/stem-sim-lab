@@ -43,11 +43,7 @@ interface ProgressInfo {
 }
 
 type InMessage =
-  | {
-      kind: 'init';
-      ort: { wasm: string; mjs: string };
-      power?: 'high-performance' | 'low-power';
-    }
+  | { kind: 'init'; ort: { wasm: string; mjs: string } }
   | {
       kind: 'load';
       modelId: string;
@@ -64,14 +60,27 @@ type InMessage =
       images: ArrayBuffer[];
       temperature: number;
       maxTokens: number;
+      /** Most prompt tokens (exact count); the oldest turns are dropped above it. */
+      inputBudget?: number;
     }
   | { kind: 'unload' };
 
+interface Reply {
+  text: string;
+  /** Generation stopped at `maxTokens`. */
+  truncated: boolean;
+}
+
+interface GpuInfo {
+  vendor: string;
+  architecture: string;
+}
+
 type OutMessage =
   | { kind: 'inited' }
-  | { kind: 'loaded'; modelId: string }
+  | { kind: 'loaded'; modelId: string; gpu: GpuInfo | null }
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
-  | { kind: 'reply'; id: number; text: string }
+  | { kind: 'reply'; id: number; text: string; truncated: boolean }
   | { kind: 'error'; id: number; message: string };
 
 interface TextEngine {
@@ -141,18 +150,41 @@ async function loadVision(
   return { modality: 'vision', processor, model } as VisionEngine;
 }
 
+const lastDim = (t: Tensor) => t.dims[t.dims.length - 1] ?? 0;
+
+/**
+ * Tokenizes the prompt; while it is longer than `budget` tokens, drops the oldest turns (the
+ * page estimates the budget from characters, this is the exact safety net). The history must
+ * still start with the learner (Gemma's chat template requires it).
+ */
+function promptWithin(
+  eng: TextEngine,
+  system: string,
+  messages: TextMessage[],
+  budget: number | undefined,
+) {
+  let kept = messages;
+  for (;;) {
+    const prompt = eng.tokenizer.apply_chat_template(
+      [{ role: 'system', content: system }, ...kept],
+      { add_generation_prompt: true, tokenize: false },
+    );
+    const inputs = eng.tokenizer(prompt);
+    if (!budget || kept.length <= 1 || lastDim(inputs.input_ids) <= budget) return inputs;
+    kept = kept.slice(1);
+    while (kept.length > 1 && kept[0]?.role !== 'user') kept = kept.slice(1);
+  }
+}
+
 async function chatText(
   eng: TextEngine,
   system: string,
   messages: TextMessage[],
   temperature: number,
   maxTokens: number,
-): Promise<string> {
-  const prompt = eng.tokenizer.apply_chat_template(
-    [{ role: 'system', content: system }, ...messages],
-    { add_generation_prompt: true, tokenize: false },
-  );
-  const inputs = eng.tokenizer(prompt);
+  inputBudget: number | undefined,
+): Promise<Reply> {
+  const inputs = promptWithin(eng, system, messages, inputBudget);
   const output = (await eng.model.generate({
     ...inputs,
     max_new_tokens: maxTokens,
@@ -162,14 +194,17 @@ async function chatText(
     repetition_penalty: 1.2,
     no_repeat_ngram_size: 3,
   })) as Tensor;
-  const start = inputs.input_ids.dims[inputs.input_ids.dims.length - 1] ?? 0;
+  const start = lastDim(inputs.input_ids);
   const decoded = eng.tokenizer.batch_decode(
     output.slice(null, [start, null] as unknown as number[]),
     {
       skip_special_tokens: true,
     },
   );
-  return (decoded[0] ?? '').trim();
+  return {
+    text: (decoded[0] ?? '').trim(),
+    truncated: lastDim(output) - start >= maxTokens,
+  };
 }
 
 async function chatVision(
@@ -179,7 +214,7 @@ async function chatVision(
   images: ArrayBuffer[],
   temperature: number,
   maxTokens: number,
-): Promise<string> {
+): Promise<Reply> {
   const turns = [
     { role: 'system', content: system },
     ...messages.map((m, i) => {
@@ -215,7 +250,30 @@ async function chatVision(
     no_repeat_ngram_size: 3,
   })) as Tensor;
   const decoded = eng.processor.batch_decode(output, { skip_special_tokens: true });
-  return (decoded[0] ?? '').trim();
+  const promptTokens = inputs.input_ids ? lastDim(inputs.input_ids) : 0;
+  return {
+    text: (decoded[0] ?? '').trim(),
+    truncated: lastDim(output) - promptTokens >= maxTokens,
+  };
+}
+
+/**
+ * The adapter the model really runs on (shown in Settings). ONNX Runtime keeps the adapter of its
+ * WebGPU session; otherwise ask WebGPU (the desktop app pins one adapter for the whole process).
+ */
+async function gpuInfo(): Promise<GpuInfo | null> {
+  type Info = { vendor?: string; architecture?: string };
+  try {
+    const onnx = env.backends.onnx as { webgpu?: { adapter?: { info?: Info } } };
+    let info = onnx.webgpu?.adapter?.info;
+    if (!info) {
+      const gpu = (navigator as { gpu?: GPU }).gpu;
+      info = gpu ? (await gpu.requestAdapter())?.info : undefined;
+    }
+    return info ? { vendor: info.vendor ?? '', architecture: info.architecture ?? '' } : null;
+  } catch {
+    return null;
+  }
 }
 
 self.onmessage = async (event: MessageEvent<InMessage>) => {
@@ -230,10 +288,6 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
         // Both files, or ONNX Runtime looks for the loader next to the bundle and fails.
         wasm.wasmPaths = { wasm: msg.ort.wasm, mjs: msg.ort.mjs };
       }
-      // Read once, when ONNX Runtime first opens the GPU (Transformers.js defaults to
-      // high-performance); the page restarts the worker when the learner changes it.
-      const webgpu = (env.backends.onnx as { webgpu?: { powerPreference?: string } }).webgpu;
-      if (webgpu && msg.power) webgpu.powerPreference = msg.power;
       post({ kind: 'inited' });
     } else if (msg.kind === 'load') {
       if (engine && loadedModel !== msg.modelId) {
@@ -252,13 +306,13 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
             : await loadText(msg.repo, msg.dtype, msg.device, progressFor(msg.modelId, post));
         loadedModel = msg.modelId;
       }
-      post({ kind: 'loaded', modelId: msg.modelId });
+      post({ kind: 'loaded', modelId: msg.modelId, gpu: await gpuInfo() });
     } else if (msg.kind === 'chat') {
       if (!engine || !loadedModel) throw new Error('no model loaded');
       const history = msg.messages.map((m) => ({ role: m.role, content: m.content }));
-      let text: string;
+      let reply: Reply;
       if (engine.modality === 'vision') {
-        text = await chatVision(
+        reply = await chatVision(
           engine,
           msg.system,
           history,
@@ -268,9 +322,16 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
         );
       } else {
         if (msg.images.length > 0) throw new Error('needs-vision-model');
-        text = await chatText(engine, msg.system, history, msg.temperature, msg.maxTokens);
+        reply = await chatText(
+          engine,
+          msg.system,
+          history,
+          msg.temperature,
+          msg.maxTokens,
+          msg.inputBudget,
+        );
       }
-      post({ kind: 'reply', id: msg.id, text });
+      post({ kind: 'reply', id: msg.id, text: reply.text, truncated: reply.truncated });
     } else {
       try {
         if (engine) await engine.model.dispose();

@@ -36,7 +36,8 @@ export async function gemmaChatText(args: {
   images?: ArrayBuffer[];
   temperature?: number;
   maxTokens?: number;
-}): Promise<{ content: string; model: string }> {
+  inputBudget?: number;
+}): Promise<{ content: string; model: string; truncated: boolean }> {
   if (webGPUStatus() !== 'webgpu') throw new AiError('unavailable', 'webgpu-missing');
   return webGemmaChat({
     model: args.model,
@@ -45,6 +46,7 @@ export async function gemmaChatText(args: {
     ...(args.images ? { images: args.images } : {}),
     ...(args.temperature !== undefined ? { temperature: args.temperature } : {}),
     ...(args.maxTokens !== undefined ? { maxTokens: args.maxTokens } : {}),
+    ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
   });
 }
 
@@ -90,6 +92,7 @@ class GemmaTransport implements LlmTransport {
       content: answer.content,
       model: answer.model,
       durationMs: performance.now() - started,
+      truncated: answer.truncated,
     };
   }
   models(): Promise<string[]> {

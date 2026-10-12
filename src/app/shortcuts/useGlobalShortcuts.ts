@@ -52,15 +52,6 @@ function runAction(action: ShortcutAction): boolean {
     case 'open':
       void openProject();
       return true;
-    case 'toggleLeft':
-      layout.toggle('left');
-      return true;
-    case 'toggleRight':
-      layout.toggle('right');
-      return true;
-    case 'toggleBottom':
-      layout.toggle('bottom');
-      return true;
     case 'presentation':
       layout.setPresentation(!layout.presentation);
       return true;

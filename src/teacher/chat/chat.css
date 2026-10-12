@@ -880,3 +880,77 @@ progress.chat-settings__progress-track::-webkit-progress-value {
   flex: none;
   margin-top: 2px;
 }
+
+/* Graphics card for Gemma (GpuSettings.tsx) */
+.chat-settings__gpu h4 {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 0 0 6px;
+  font-size: var(--text-md);
+}
+.gpu-notice {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+.gpu-notice p {
+  margin: 0;
+}
+.gpu-notice > p,
+p.gpu-notice {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.gpu-notice svg {
+  flex: none;
+  margin-top: 2px;
+}
+.gpu-notice--warn {
+  border: 1px solid color-mix(in srgb, var(--warning) 45%, transparent);
+  background: color-mix(in srgb, var(--warning) 9%, transparent);
+  color: var(--text);
+}
+.gpu-notice--warn svg {
+  color: var(--warning);
+}
+.gpu-notice--restart {
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent-soft) 70%, var(--bg-panel));
+  color: var(--text);
+}
+.gpu-notice--restart svg {
+  color: var(--accent);
+}
+.gpu-notice .chat-settings__actions {
+  margin: 0;
+}
+/* App-wide reminder until the restart (above the status bar, left of the toasts). */
+.gpu-reminder {
+  position: fixed;
+  bottom: 36px;
+  left: 16px;
+  z-index: 59;
+  width: min(420px, calc(100vw - 32px));
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+.gpu-reminder .gpu-notice {
+  margin: 0;
+}
+
+/* An answer that stopped at the output limit ("Viết tiếp"). */
+.chat-message__continue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}

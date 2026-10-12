@@ -8,7 +8,7 @@ pub struct AppInfo {
     pub version: String,
     pub target_os: String,
     pub debug_build: bool,
-    /// Always "main" (the high-school pilot edition was removed 2026-10-12).
+    /// Always "main" since 0.5.0 (the pilot edition was removed).
     pub edition: String,
 }
 

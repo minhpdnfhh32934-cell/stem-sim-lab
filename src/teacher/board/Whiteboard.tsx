@@ -11,12 +11,14 @@ import {
 } from 'lucide-react';
 import { memo, useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
+import { AiContentBar } from '@/safety/AiContentBar';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { cx } from '@/ui/cx';
 import { PEN_SPEEDS, useBoardStore, type BoardMark } from './boardStore';
 import { BoardDrawing } from './BoardDrawing';
 import { BOARD_W, COLUMNS, COLUMN_TOP, type Line, type TextElement } from './layout';
 import {
+  continueLesson,
   finishNow,
   pauseLesson,
   playLesson,
@@ -46,12 +48,18 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   const set = useBoardStore((s) => s.set);
   const locale = useSettingsStore((s) => s.locale);
   useEffect(() => {
-    // A new answer starts a new lesson; the same answer is never taught twice by itself.
-    if (!lesson || useBoardStore.getState().lessonId === lesson.id) return;
-    useBoardStore.getState().set({ status: 'preparing', lessonId: lesson.id });
+    // A new answer starts a new lesson; a longer copy of the same answer ("Viết tiếp") is
+    // written after what is already on the board; nothing is ever taught twice by itself.
+    if (!lesson) return;
+    const store = useBoardStore.getState();
+    if (store.lessonId === lesson.id && store.lessonContent === lesson.content) return;
+    const append = store.lessonId === lesson.id;
+    store.set({ lessonId: lesson.id, lessonContent: lesson.content });
+    if (!append) store.set({ status: 'preparing' });
     void prepareMeasure().then(() => {
       // Skip it if a newer answer arrived while the fonts were loading.
-      if (useBoardStore.getState().lessonId === lesson.id) void playLesson(lesson, browserMeasure);
+      if (useBoardStore.getState().lessonContent !== lesson.content) return;
+      void (append ? continueLesson : playLesson)(lesson, browserMeasure);
     });
   }, [lesson]);
 
@@ -156,6 +164,8 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
         {status === 'preparing' ? t('board.preparing') : subtitle}
       </p>
       {!lesson && <p className="board__empty">{t('board.empty')}</p>}
+      {/* What is on the board was written by an AI: labelled, with the report button. */}
+      {lesson && <AiContentBar {...(lesson.model ? { model: lesson.model } : {})} />}
       <Legend />
     </section>
   );
@@ -205,6 +215,8 @@ function BoardSheet() {
       setScale(Math.max(0.3, (node.clientWidth - 2) / BOARD_W));
     };
     update();
+    // Very old engines (and jsdom) have no ResizeObserver: the first measurement stays.
+    if (typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver(update);
     observer.observe(node);
     return () => {

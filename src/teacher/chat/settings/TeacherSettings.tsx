@@ -248,6 +248,7 @@ function DataFlow({ desktop }: { desktop: boolean }) {
                 ? t('chatSettings.flowLocalChat')
                 : t('chatSettings.flowLocalChatSession')}
             </li>
+            <li>{t('chatSettings.flowLocalSummary')}</li>
             <li>{t('chatSettings.flowLocalDocs', { count: builtinKnowledge(locale).length })}</li>
             <li>{t('chatSettings.flowLocalModel')}</li>
             <li>

@@ -182,9 +182,6 @@ const vi = {
     time: 'Thời gian mô phỏng',
   },
   layout: {
-    toggleLeft: 'Ẩn / hiện Thư viện (Ctrl+B)',
-    toggleRight: 'Ẩn / hiện Thuộc tính (Ctrl+I)',
-    toggleBottom: 'Ẩn / hiện bảng Đồ thị (Ctrl+J)',
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',
     resizeRight: 'Kéo để đổi độ rộng bảng Thuộc tính',
     resizeBottom: 'Kéo để đổi chiều cao bảng Đồ thị',
@@ -342,9 +339,6 @@ const vi = {
     redo: 'Làm lại',
     save: 'Lưu mô phỏng (.stemsim)',
     open: 'Mở tệp .stemsim',
-    toggleLeft: 'Ẩn / hiện Thư viện',
-    toggleRight: 'Ẩn / hiện Thuộc tính',
-    toggleBottom: 'Ẩn / hiện bảng Đồ thị',
     presentation: 'Chế độ trình chiếu',
     fontLarger: 'Tăng cỡ chữ',
     fontSmaller: 'Giảm cỡ chữ',
@@ -678,29 +672,6 @@ const vi = {
       minor: 'Tôi chưa đủ 18 tuổi',
       minorNote:
         'Chưa đủ 18 tuổi: bạn vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu và Tự dựng cảnh; phần AI tắt. Có thể trả lời lại trong Cài đặt → An toàn & quyền riêng tư.',
-      pilotIntro:
-        'Đây là bản thử nghiệm có người lớn giám sát. Phần AI chỉ mở khi phụ huynh hoặc thầy cô đã thiết lập xong.',
-      birthYear: 'Em sinh năm nào?',
-      yearInvalid: 'Năm sinh không hợp lệ.',
-      next: 'Tiếp tục',
-      supervisorTitle: 'Phần dành cho người giám sát',
-      supervisorIntro:
-        'Phụ huynh hoặc thầy cô đặt mã PIN (4–8 chữ số). Mã này dùng để nhập khóa API, ghi nhận đồng ý và xem nhật ký sự cố. Đừng cho học sinh biết mã.',
-      pin: 'Mã PIN mới',
-      pinAgain: 'Nhập lại mã PIN',
-      pinMismatch: 'Hai lần nhập không giống nhau.',
-      pinInvalid: 'Mã PIN gồm 4–8 chữ số.',
-      setPin: 'Đặt mã PIN',
-      pinDone: 'Đã đặt mã PIN.',
-      consentTitle: 'Ghi nhận đồng ý của phụ huynh',
-      consentText:
-        'Tôi là cha mẹ/người giám hộ của học sinh, hoặc thầy cô được phụ huynh ủy quyền. Phụ huynh và học sinh đã đọc và ký Phiếu đồng ý tham gia thử nghiệm.',
-      consentPin: 'Mã PIN người giám sát',
-      recordConsent: 'Ghi nhận đồng ý và bật AI',
-      adultTester:
-        'Người dùng từ 18 tuổi không cần phiếu đồng ý của phụ huynh; chỉ cần mã PIN để quản lý khóa API.',
-      later: 'Để sau — chỉ dùng mô phỏng',
-      done: 'Xong',
     },
     settings: {
       ageCard: 'Độ tuổi và điều khoản',
@@ -710,27 +681,6 @@ const vi = {
       unanswered: 'Chưa trả lời câu hỏi độ tuổi — phần AI đang tắt.',
       answerAgain: 'Trả lời lại câu hỏi độ tuổi',
       privacy: 'Quyền riêng tư & dùng AI an toàn',
-      locked: 'Khu vực người giám sát đang khóa.',
-      noPin: 'Chưa có mã PIN người giám sát.',
-      setup: 'Thiết lập người giám sát',
-      pin: 'Mã PIN',
-      unlock: 'Mở khóa',
-      lock: 'Khóa lại',
-      unlocked: 'Đang mở khóa (tự khóa sau {min} phút).',
-      wrongPin: 'Sai mã PIN (còn {left} lần thử).',
-      tooMany: 'Nhập sai nhiều lần. Đợi {secs} giây rồi thử lại.',
-      studentMinor: 'Học sinh: dưới 18 tuổi.',
-      studentAdult: 'Người dùng: từ 18 tuổi.',
-      consentOn: 'Đã ghi nhận đồng ý ngày {day}.',
-      consentOff: 'Chưa ghi nhận đồng ý — phần AI đang tắt.',
-      recordConsent: 'Ghi nhận đồng ý (đã có phiếu ký)',
-      withdraw: 'Rút lại đồng ý (tắt AI)',
-      changePin: 'Đổi mã PIN',
-      newPin: 'Mã PIN mới',
-      changeYear: 'Sửa năm sinh',
-      year: 'Năm sinh',
-      save: 'Lưu',
-      saved: 'Đã lưu.',
       incidents: 'Nhật ký sự cố',
       incidentsHint: 'Chỉ ghi loại sự cố và thời gian, không ghi nội dung đề bài hay câu trả lời.',
       incidentsShow: 'Xem nhật ký sự cố',
@@ -742,13 +692,11 @@ const vi = {
         inputCrisis: 'Dấu hiệu cần hỗ trợ — đã hiện thông tin đường dây hỗ trợ',
         outputUnsafe: 'Câu trả lời của AI bị bộ lọc ẩn',
         userReport: 'Người dùng báo cáo nội dung không phù hợp',
-        pinFailed: 'Nhập sai mã PIN người giám sát',
       },
     },
     crisis: {
       title: 'Bạn không một mình',
       body: 'Có vẻ bạn đang gặp chuyện rất khó khăn. Hãy nói chuyện ngay với một người lớn bạn tin tưởng (bố mẹ, thầy cô, người thân), hoặc gọi:',
-      line111: 'Tổng đài quốc gia bảo vệ trẻ em 111 — miễn phí, 24/7.',
       ngayMai: 'Đường dây hỗ trợ tâm lý Ngày Mai: 096 306 1414 (13:00–20:30, thứ Tư đến Chủ nhật).',
       emergency: 'Nếu bạn hoặc ai đó đang gặp nguy hiểm ngay lúc này: gọi cấp cứu 115.',
       note: 'Số điện thoại được kiểm tra tháng 10/2026. Ứng dụng không gửi nội dung này đi đâu cả.',
@@ -790,11 +738,6 @@ const vi = {
       tip4: 'Thấy câu trả lời lạ, sai hoặc làm bạn khó chịu: bấm "Báo cáo nội dung không phù hợp" và hỏi thầy cô.',
       tip5: 'Không chia sẻ khóa API và không nhập thông tin cá nhân.',
       tip6: 'Nghỉ giải lao sau mỗi 45–60 phút học trên máy.',
-      pilotTitle: 'Bản thử nghiệm có giám sát',
-      pilot1:
-        'Khóa API Claude (và khóa Groq nếu dùng dự phòng miễn phí) thuộc về người lớn tạo tài khoản (sinh viên từ 18 tuổi hoặc phụ huynh). Người đó là khách hàng của Anthropic/Groq và chịu trách nhiệm tuân theo điều khoản của họ.',
-      pilot2:
-        'Học sinh dưới 18 tuổi chỉ dùng AI khi phụ huynh đã ký phiếu đồng ý và người giám sát đã ghi nhận trong ứng dụng. Có thể rút lại bất cứ lúc nào.',
       close: 'Đóng',
     },
   },
@@ -904,6 +847,8 @@ const vi = {
     checkedMeta: 'Đã rà soát: {model}',
     references: 'Nguồn kiến thức',
     thinking: 'Thầy đang suy nghĩ…',
+    truncatedNote: 'Câu trả lời dài nên đã dừng giữa chừng.',
+    continue: 'Viết tiếp',
     reviewing: 'Đang trả lời và kiểm tra chéo…',
     inputLabel: 'Nhập câu hỏi',
     placeholder: 'Nhập câu hỏi của em…',
@@ -976,6 +921,8 @@ const vi = {
     flowLocalChat: 'Lịch sử trò chuyện với AI Teacher (xóa bằng nút thùng rác).',
     flowLocalDocs: 'Tài liệu em tự thêm và {count} ghi chú có sẵn.',
     flowLocalModel: 'Mô hình Gemma đã tải; khi dùng Gemma, câu trả lời được tạo ngay trên máy.',
+    flowLocalSummary:
+      'Bản tóm tắt phần trò chuyện cũ (do chính AI đang trả lời viết, chỉ gửi kèm câu hỏi cho AI đó).',
     flowLocalKeyDesktop: 'Khóa API: trong kho bảo mật của hệ điều hành.',
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
@@ -1041,6 +988,52 @@ const vi = {
     removeFile: 'Xóa',
     localLibraryPrivacy:
       'Tệp được lưu trên máy này. Khi dùng API trực tuyến, các đoạn liên quan có thể được gửi kèm câu hỏi. Chỉ nạp tài liệu bạn có quyền sử dụng.',
+    memory: {
+      title: 'Trí nhớ hội thoại',
+      intro:
+        'Thầy nhớ bao nhiêu phần trò chuyện gần nhất. Phần cũ hơn được AI tóm tắt ngắn để thầy vẫn theo được mạch bài.',
+      medium: 'Vừa',
+      long: 'Dài',
+      mediumHint: 'Nhanh hơn, hợp với máy yếu và gói API miễn phí.',
+      longHint:
+        'Nhớ nhiều hơn nhưng chậm hơn (nhất là Gemma trên card tích hợp) và dễ hết lượt hơn với gói miễn phí (Groq, Gemini).',
+    },
+    gpu: {
+      title: 'Card đồ họa (GPU) chạy Gemma',
+      intro:
+        'Máy có nhiều card đồ họa thì em chọn được card chạy Gemma. Card rời thường nhanh hơn nhiều; card tích hợp tiết kiệm pin hơn.',
+      scanning: 'Đang quét card đồ họa của máy…',
+      scanFailed: 'Chưa quét được card đồ họa ({detail}).',
+      none: 'Không tìm thấy card đồ họa phần cứng nào.',
+      auto: 'Tự động (để Windows chọn)',
+      autoHint: 'Trên laptop thường là card tích hợp.',
+      integrated: 'Card tích hợp · dùng chung RAM',
+      discrete: 'Card rời · {vram} VRAM',
+      unknownKind: 'Chưa rõ loại card',
+      suggested: 'Nên dùng cho Gemma',
+      wholeApp:
+        'Card được chọn chạy toàn bộ phần hiển thị của ứng dụng (cả mô phỏng), không chỉ Gemma. Card rời tốn pin hơn — nên cắm sạc khi dùng.',
+      restartNeeded:
+        'Cần mở lại ứng dụng để dùng card mới ({name}). Đến lúc đó Gemma và giao diện vẫn chạy trên card cũ.',
+      restartNeededAuto:
+        'Cần mở lại ứng dụng để trở về chế độ tự động. Đến lúc đó Gemma vẫn chạy trên card cũ.',
+      restartNow: 'Mở lại ngay',
+      later: 'Để sau',
+      saved: 'Đã lưu lựa chọn card đồ họa. Mở lại ứng dụng để áp dụng.',
+      saveFailed: 'Chưa lưu được lựa chọn ({detail}).',
+      missing:
+        'Khi mở ứng dụng, không thấy card đã chọn ({name}) — có thể card rời đang tắt (chế độ tiết kiệm pin/Eco của hãng máy) hoặc phần cứng đã thay đổi. Ứng dụng đang dùng card mặc định.',
+      runningOn: 'WebGPU của ứng dụng đang chạy trên: {name}',
+      runningOnUnknown: 'Chưa đọc được card mà WebGPU đang dùng.',
+      gemmaRanOn: 'Lần nạp Gemma gần nhất chạy trên: {name}',
+      mismatch:
+        'Ứng dụng đã yêu cầu {wanted} nhưng WebGPU đang chạy trên {actual}. Hãy thử mở lại ứng dụng; nếu vẫn vậy, card này chưa dùng được cho WebGPU trên máy em.',
+      vramLow:
+        'Card này có {vram} VRAM, có thể không đủ cho {model} ({size}). Nên chọn bản Gemma nhỏ hơn.',
+      browserOnly:
+        'Trên trình duyệt, trình duyệt tự chọn card đồ họa. Chọn card chỉ có trong ứng dụng desktop trên Windows.',
+      unsupported: 'Chọn card đồ họa hiện chỉ có trên Windows.',
+    },
   },
   gpuSettings: {
     cardTitle: 'Card đồ họa (WebGPU)',
@@ -1080,13 +1073,6 @@ const vi = {
     freeNow: 'Giải phóng bộ nhớ GPU ngay',
   },
   memorySettings: {
-    contextTitle: 'Gửi kèm tin nhắn trước',
-    size: 'Số tin nhắn',
-    none: 'Không',
-    sizeNone: 'Mỗi câu hỏi được trả lời riêng: AI Teacher không nhớ những gì vừa nói.',
-    sizeHint:
-      'Gửi kèm {count} tin nhắn gần nhất để AI Teacher hiểu câu hỏi nối tiếp. Nhiều hơn thì hiểu mạch tốt hơn nhưng gửi đi nhiều chữ hơn.',
-    gemmaCap: 'Gemma trên máy dùng tối đa {count} tin nhắn để trả lời kịp.',
     storeTitle: 'Lưu cuộc trò chuyện',
     save: 'Lưu lịch sử trò chuyện trên máy này',
     saveOn: 'Mở lại ứng dụng vẫn thấy cuộc trò chuyện (giữ {max} tin nhắn gần nhất).',
@@ -1095,6 +1081,7 @@ const vi = {
     clear: 'Xóa cuộc trò chuyện',
     confirmClear: 'Xóa hẳn',
     cancel: 'Hủy',
+    hasSummary: 'Phần cũ hơn đã được tóm tắt ngắn (cũng lưu trên máy).',
   },
   board: {
     label: 'Bảng trắng của AI Teacher',
@@ -1344,6 +1331,16 @@ const vi = {
       example: 'Thêm ví dụ',
       simpler: 'Đơn giản hơn',
       lost: 'Em chưa hiểu chỗ này',
+    },
+    chipPrompts: {
+      again:
+        'Thầy giải thích lại câu trả lời vừa rồi theo một cách khác, dễ hiểu hơn, vẫn đúng nội dung đó.',
+      slower:
+        'Thầy giảng lại câu trả lời vừa rồi chậm hơn: chia thành nhiều bước nhỏ, mỗi bước một ý, giải thích từng bước.',
+      example: 'Thầy cho em thêm một ví dụ cụ thể, gần gũi về đúng nội dung vừa giảng.',
+      simpler:
+        'Thầy nói lại nội dung vừa rồi đơn giản hơn: ít thuật ngữ, câu ngắn, như giảng cho người mới học.',
+      lost: 'Em chưa hiểu phần vừa giảng. Thầy hỏi em đang vướng ở bước nào rồi gợi ý từng chút một nhé.',
     },
     connectTitle: 'Kết nối AI để học với thầy/cô',
     connectBody: 'AI Teacher cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',

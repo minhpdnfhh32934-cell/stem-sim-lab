@@ -5,28 +5,29 @@ import type { Provider } from '@/ai/types';
 
 export type ChatEngine = 'cloud' | 'gemma';
 export type ChatRole = 'user' | 'assistant';
+/** How much of the conversation is sent with each question (Settings → "Trí nhớ hội thoại"). */
+export type MemoryLength = 'medium' | 'long';
 export interface ChatMessageRecord {
   id: string;
   role: ChatRole;
+  /** What the learner sees. */
   content: string;
+  /** What the AI received, when it differs from `content` (quick buttons send full instructions). */
+  prompt?: string;
   model?: string;
   checkedBy?: string;
   references?: string[];
+  /** The answer stopped at the output limit: the chat offers "Viết tiếp". */
+  truncated?: boolean;
 }
-/** Earlier messages sent with a new question ("Trí nhớ hội thoại"); 0 = each question alone. */
-export type MemorySize = 0 | 4 | 12 | 24;
-export const MEMORY_SIZES: readonly MemorySize[] = [0, 4, 12, 24];
-/** Gemma's context is small and every extra message slows it down: it never takes more. */
-export const GEMMA_MEMORY_CAP = 4;
+/** AI-written summary of the turns that no longer fit the context budget (kept on this computer). */
+export interface ChatSummary {
+  text: string;
+  /** Id of the last message the summary covers. */
+  upto: string;
+}
 /** Messages kept on this computer (oldest dropped first). */
 export const STORED_MESSAGES = 80;
-
-/** Earlier messages to send with the next question, for the engine that will answer. */
-export function memoryFor<T>(records: readonly T[], size: MemorySize, gemma: boolean): T[] {
-  const n = gemma ? Math.min(size, GEMMA_MEMORY_CAP) : size;
-  // slice(-0) would return everything.
-  return n === 0 ? [] : records.slice(-n);
-}
 
 export interface KnowledgeDocument {
   id: string;
@@ -46,11 +47,14 @@ interface ChatState {
   includeScreen: boolean;
   /** Opt-in: send the question to Wikipedia for an extra excerpt. */
   webLookup: boolean;
-  memorySize: MemorySize;
   /** Keep the conversation on this computer between sessions (off: forgotten on exit). */
   saveHistory: boolean;
   messages: ChatMessageRecord[];
   documents: KnowledgeDocument[];
+  memoryLength: MemoryLength;
+  summary: ChatSummary | null;
+  /** A question is being answered (not persisted; the board shows "preparing"). */
+  answering: boolean;
   /** The learner's own choice of engine (marks it as chosen). */
   setEngine: (engine: ChatEngine) => void;
   setGemmaModel: (model: string) => void;
@@ -59,10 +63,13 @@ interface ChatState {
   setThinkEnabled: (enabled: boolean) => void;
   setIncludeScreen: (enabled: boolean) => void;
   setWebLookup: (enabled: boolean) => void;
-  setMemorySize: (size: MemorySize) => void;
   setSaveHistory: (enabled: boolean) => void;
   addMessage: (message: ChatMessageRecord) => void;
+  updateMessage: (id: string, patch: Partial<Omit<ChatMessageRecord, 'id' | 'role'>>) => void;
+  /** Also forgets the summary (it describes the cleared messages). */
   clearMessages: () => void;
+  setMemoryLength: (length: MemoryLength) => void;
+  setSummary: (summary: ChatSummary | null) => void;
   addDocument: (document: KnowledgeDocument) => void;
   removeDocument: (id: string) => void;
 }
@@ -135,10 +142,12 @@ export const useChatStore = create<ChatState>()(
       thinkEnabled: false,
       includeScreen: false,
       webLookup: false,
-      memorySize: 12,
       saveHistory: true,
       messages: [],
       documents: [],
+      memoryLength: 'medium',
+      summary: null,
+      answering: false,
       setEngine: (engine) => set({ engine, engineChosen: true }),
       setGemmaModel: (gemmaModel) => set({ gemmaModel }),
       setVerifierProvider: (verifierProvider) =>
@@ -147,11 +156,15 @@ export const useChatStore = create<ChatState>()(
       setThinkEnabled: (thinkEnabled) => set({ thinkEnabled }),
       setIncludeScreen: (includeScreen) => set({ includeScreen }),
       setWebLookup: (webLookup) => set({ webLookup }),
-      setMemorySize: (memorySize) => set({ memorySize }),
       setSaveHistory: (saveHistory) => set({ saveHistory }),
       addMessage: (message) =>
         set({ messages: [...get().messages, message].slice(-STORED_MESSAGES) }),
-      clearMessages: () => set({ messages: [] }),
+      updateMessage: (id, patch) =>
+        set({ messages: get().messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) }),
+      clearMessages: () => set({ messages: [], summary: null }),
+      setMemoryLength: (memoryLength) =>
+        set({ memoryLength: memoryLength === 'long' ? 'long' : 'medium' }),
+      setSummary: (summary) => set({ summary }),
       addDocument: (document) => {
         const docs = get().documents.filter((d) => d.name !== document.name);
         if (docs.length >= 20) docs.shift();
@@ -161,14 +174,11 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: 'stemsim.teacher-chat',
+      // v5 adds the memory length, the summary and "save history"; v4 settings are kept.
       version: 5,
       storage: createJSONStorage(() => localStorage),
-      // v5 adds the conversation-memory settings; a v4 state keeps everything it had.
-      migrate: (state, version) => ({
-        ...(version >= 4 ? (state as object) : migrateChatSettings(state)),
-        memorySize: 12,
-        saveHistory: true,
-      }),
+      migrate: (state, version) =>
+        (version >= 4 ? state : migrateChatSettings(state)) as Partial<ChatState>,
       partialize: ({
         engine,
         engineChosen,
@@ -176,10 +186,11 @@ export const useChatStore = create<ChatState>()(
         verifierProvider,
         verifierModel,
         webLookup,
-        memorySize,
         saveHistory,
         messages,
         documents,
+        memoryLength,
+        summary,
       }) => ({
         engine,
         engineChosen,
@@ -187,11 +198,12 @@ export const useChatStore = create<ChatState>()(
         verifierProvider,
         verifierModel,
         webLookup,
-        memorySize,
         saveHistory,
-        // "Không lưu lịch sử": the conversation lives only until the app closes.
+        // "Không lưu lịch sử": the conversation (and its summary) lives only until the app closes.
         messages: saveHistory ? messages : [],
         documents,
+        memoryLength,
+        summary: saveHistory ? summary : null,
       }),
     },
   ),

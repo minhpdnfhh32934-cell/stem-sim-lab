@@ -107,6 +107,22 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   app tự dùng API đã kết nối; nếu em tự chọn Gemma mà chưa tải, app không gửi câu hỏi lên mạng.
   Mô hình được lưu trên máy, mở lại app không phải tải lại. Khi Gemma đang trả lời, hãy để cửa sổ
   app hiện trên màn hình (thu nhỏ cửa sổ có thể làm máy tạm dừng GPU).
+- **Chọn card đồ họa (GPU) cho Gemma** (bản desktop trên Windows): máy có cả card tích hợp và card
+  rời (ví dụ laptop chơi game) thì vào Cài đặt → GPU cho Gemma → **Card đồ họa (GPU) chạy Gemma** để
+  chọn.
+  Card rời (thường có nhãn "Nên dùng cho Gemma") chạy nhanh hơn nhiều nhưng tốn pin hơn; card được
+  chọn chạy cả phần hiển thị của app. Đổi card xong phải **mở lại app** (có nút **Mở lại ngay**);
+  trước đó Gemma vẫn chạy trên card cũ. Dòng "WebGPU của ứng dụng đang chạy trên: …" cho biết card
+  thật đang dùng. Nếu card rời đang tắt (chế độ Eco/tiết kiệm pin của hãng máy), app báo không thấy
+  card đã chọn và tạm dùng card mặc định.
+- **Trí nhớ hội thoại** (Cài đặt → Trí nhớ hội thoại): **Vừa** (mặc định) hoặc **Dài**. Thầy nhớ phần trò
+  chuyện gần nhất; phần cũ hơn được chính AI đang trả lời tóm tắt ngắn (lưu trên máy) để thầy vẫn
+  theo được mạch bài. "Dài" nhớ nhiều hơn nhưng chậm hơn trên máy yếu và dễ hết lượt hơn với gói API
+  miễn phí.
+- Câu trả lời quá dài bị dừng giữa chừng thì dưới câu trả lời có dòng báo và nút **Viết tiếp**. Khi
+  đang giảng trên bảng, phần viết tiếp được giảng tiếp ngay trên cùng bảng.
+- Các nút nhanh ở trang AI Teacher (Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn giản hơn, Em chưa hiểu
+  chỗ này) gửi cho AI một câu hướng dẫn đầy đủ dựa trên câu trả lời vừa rồi.
 - **Thư viện kiến thức** có sẵn ghi chú Vật lý, Hóa học, Sinh học THPT và cho phép nạp tệp `.txt`,
   `.md`, `.csv`, `.json`. Tệp và lịch sử chat lưu trên máy; khi chat bằng API trực tuyến, các đoạn
   kiến thức liên quan có thể được gửi cùng câu hỏi. **Tra thêm Wikipedia** là tùy chọn (mặc định
@@ -120,7 +136,7 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
 trắng: thầy vừa nói vừa viết (chữ viết tay tiếng Việt, đầu bút đi theo), công thức hiện dần, gạch chân
 từ khóa, khoanh công thức quan trọng, đóng khung kết quả, mũi tên nối các ý, vẽ đồ thị, sơ đồ lực, bảng
 số. Bảng chia ba cột như lớp học: trái là tóm tắt đề và ghi chú, giữa là các bước giải, phải là hình
-vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì.
+vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì. Bảng có nhãn "Nội dung do AI hỗ trợ" và nút báo cáo.
 
 - Nút **Tạm dừng / Tiếp tục / Giảng lại**, **Viết nhanh** (viết ngay phần còn lại), tốc độ viết
   0,75–2×. Bảng dài tự cuộn theo bút; khi sang phần mới có các thẻ **Bảng 1, Bảng 2…** để xem lại.
@@ -172,7 +188,7 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
 
 ## Bố cục màn hình
 
-- **Thanh trên:** chọn môn, ô nhập đề bài, trạng thái AI, các nút ẩn/hiện bảng, sáng/tối, trình
+- **Thanh trên:** chọn môn, ô nhập đề bài, trạng thái AI, sáng/tối, trình
   chiếu, cài đặt.
 - **Cột trái:** Thư viện chủ đề và Lịch sử.
 - **Giữa:** khung mô phỏng và thanh công cụ nổi. Bên dưới là thanh thời gian (chạy, dừng, tua,
@@ -308,10 +324,10 @@ Khi dùng AI:
   phần đó rồi phân tích lại. Nội dung không phù hợp với việc học cũng bị chặn; câu trả lời của AI
   có nội dung không phù hợp sẽ bị ẩn.
 - Nếu đề bài cho thấy bạn đang gặp chuyện rất khó khăn, app **không gửi cho AI** mà hiện các số
-  điện thoại hỗ trợ (bản thử nghiệm: Tổng đài bảo vệ trẻ em **111**; cả hai bản: đường dây Ngày Mai
-  096 306 1414; nguy hiểm ngay: **115**). Hãy nói chuyện với người lớn bạn tin tưởng.
+  điện thoại hỗ trợ (đường dây Ngày Mai 096 306 1414; nguy hiểm ngay: **115**). Hãy nói chuyện với
+  người bạn tin tưởng.
 - **Nhật ký sự cố** (Cài đặt → An toàn & quyền riêng tư) chỉ ghi **loại sự cố và thời gian**, không
-  ghi nội dung. Bản thử nghiệm: chỉ người giám sát xem được.
+  ghi nội dung.
 - Đọc thêm: menu ☰ → **Quyền riêng tư & dùng AI an toàn** (ứng dụng gửi gì, lưu gì, nhà cung cấp AI
   làm gì với đề bài, điều khoản tóm tắt, mẹo học với AI). Nguồn pháp lý: `docs/LEGAL_COMPLIANCE.md`.
 
@@ -401,12 +417,12 @@ tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
   phòng khi hết lượt" (mặc định Groq, xem phần Groq ở trên).
 - **AI Teacher:** Think (API thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
 - **AI local (Gemma):** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
-- **GPU cho Gemma:** thông tin card đồ họa WebGPU (đọc trên máy, không gửi đi); chọn card mạnh hay
-  card tiết kiệm pin (máy có hai card); độ dài câu trả lời của Gemma (Ngắn / Vừa / Dài); giải phóng bộ
-  nhớ GPU sau 5 hoặc 15 phút không dùng, hoặc ngay lập tức.
+- **GPU cho Gemma:** chọn card đồ họa chạy Gemma (bản desktop trên Windows, máy có hai card; đổi card
+  cần mở lại app) và xem WebGPU thật đang chạy trên card nào; độ dài câu trả lời của Gemma (Ngắn / Vừa
+  / Dài); giải phóng bộ nhớ GPU sau 5 hoặc 15 phút không dùng, hoặc ngay lập tức.
 - **Thư viện kiến thức:** ghi chú có sẵn, tài liệu em thêm (.txt, .md, .csv, .json), tra Wikipedia.
-- **Trí nhớ hội thoại:** số tin nhắn trước gửi kèm câu hỏi (Không / 4 / 12 / 24; Gemma tối đa 4); lưu
-  hay không lưu cuộc trò chuyện trên máy; xóa cuộc trò chuyện.
+- **Trí nhớ hội thoại:** Vừa / Dài (phần cũ hơn được tóm tắt ngắn); lưu hay không lưu cuộc trò chuyện
+  trên máy (tắt thì bản tóm tắt cũng không lưu); xóa cuộc trò chuyện.
 - **Giọng nói:** xem mục "Giọng đọc tiếng Việt" bên dưới.
 - **An toàn & quyền riêng tư:** xác nhận độ tuổi và điều khoản, trang quyền riêng tư, nhật ký sự cố.
 
@@ -447,14 +463,13 @@ Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm,
 
 ## Phím tắt
 
-| Phím                     | Tác dụng                                    |
-| ------------------------ | ------------------------------------------- |
-| Space                    | Chạy / tạm dừng                             |
-| R                        | Đặt lại                                     |
-| .                        | Bước tiếp theo                              |
-| Ctrl+Z / Ctrl+Y          | Hoàn tác / Làm lại                          |
-| Ctrl+S / Ctrl+O          | Lưu / mở tệp .stemsim                       |
-| Ctrl+B / Ctrl+I / Ctrl+J | Ẩn/hiện Thư viện / Thuộc tính / bảng Đồ thị |
-| F5 / Esc                 | Vào / thoát chế độ trình chiếu              |
-| Ctrl+= / Ctrl+-          | Tăng / giảm cỡ chữ                          |
-| Ctrl+Enter               | Phân tích đề (khi đang ở ô đề bài)          |
+| Phím            | Tác dụng                           |
+| --------------- | ---------------------------------- |
+| Space           | Chạy / tạm dừng                    |
+| R               | Đặt lại                            |
+| .               | Bước tiếp theo                     |
+| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                 |
+| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim              |
+| F5 / Esc        | Vào / thoát chế độ trình chiếu     |
+| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                 |
+| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài) |

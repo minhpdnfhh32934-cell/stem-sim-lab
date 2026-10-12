@@ -1,43 +1,24 @@
-import { Gpu, MemoryStick, Ruler, Zap } from 'lucide-react';
+import { MemoryStick, Ruler } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
-import {
-  ANSWER_LENGTHS,
-  ANSWER_TOKENS,
-  GPU_POWERS,
-  UNLOAD_CHOICES,
-  readGpuInfo,
-  useGemmaPrefs,
-  type GpuInfo,
-} from '@/ai/gemmaPrefs';
-import { freeGemmaMemory, loadedGemma, webGPUStatus } from '@/ai/webGemma';
+import { ANSWER_LENGTHS, ANSWER_TOKENS, UNLOAD_CHOICES, useGemmaPrefs } from '@/ai/gemmaPrefs';
+import { freeGemmaMemory, loadedGemma } from '@/ai/webGemma';
 import { formatNumber, useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { formatBytes } from './format';
+import { GpuSettings } from '../GpuSettings';
 
 /**
- * "GPU cho Gemma": what card WebGPU uses, which one to ask for, how long an answer may be and
- * when the model leaves the GPU memory. Every control changes how the engine really runs.
+ * "GPU cho Gemma": which graphics card runs the in-app AI (the desktop app switches WebView2 to
+ * it at start-up, `GpuSettings`), how long an answer may be, and when the model leaves the GPU
+ * memory. Every control changes how the engine really runs.
  */
 export function GemmaGpuSettings() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const prefs = useGemmaPrefs();
-  const [info, setInfo] = useState<GpuInfo | null | 'checking'>('checking');
   const [loaded, setLoaded] = useState<string | null>(() => loadedGemma());
-  const powerId = useId();
   const lengthId = useId();
   const unloadId = useId();
-  const hasWebGpu = webGPUStatus() === 'webgpu';
 
-  useEffect(() => {
-    let alive = true;
-    void readGpuInfo(prefs.power).then((next) => {
-      if (alive) setInfo(next);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [prefs.power]);
   useEffect(() => {
     const update = () => {
       setLoaded(loadedGemma());
@@ -48,78 +29,9 @@ export function GemmaGpuSettings() {
     };
   }, []);
 
-  const card =
-    info === 'checking'
-      ? t('gpuSettings.checking')
-      : info === null
-        ? t('gpuSettings.none')
-        : [info.vendor, info.architecture, info.description].filter(Boolean).join(' · ') ||
-          t('gpuSettings.unnamed');
-
   return (
     <>
-      <fieldset className="settings-group">
-        <legend>
-          <Gpu size={15} aria-hidden="true" />
-          {t('gpuSettings.cardTitle')}
-        </legend>
-        <dl className="settings-facts">
-          <div>
-            <dt>{t('gpuSettings.card')}</dt>
-            <dd>{card}</dd>
-          </div>
-          {info !== 'checking' && info !== null && (
-            <>
-              <div>
-                <dt>{t('gpuSettings.f16')}</dt>
-                <dd>{info.shaderF16 ? t('gpuSettings.yes') : t('gpuSettings.no')}</dd>
-              </div>
-              <div>
-                <dt>{t('gpuSettings.maxBuffer')}</dt>
-                <dd className="mono">{formatBytes(info.maxBufferSize)}</dd>
-              </div>
-            </>
-          )}
-          <div>
-            <dt>{t('gpuSettings.loaded')}</dt>
-            <dd>{loaded ?? t('gpuSettings.notLoaded')}</dd>
-          </div>
-        </dl>
-        {info !== 'checking' && info !== null && info.fallback && (
-          <p className="settings-warning" role="note">
-            {t('gpuSettings.fallbackWarning')}
-          </p>
-        )}
-        {!hasWebGpu && <p className="muted small">{t('chatSettings.webgpuRequired')}</p>}
-        <p className="muted small">{t('gpuSettings.privacy')}</p>
-      </fieldset>
-
-      <fieldset className="settings-group">
-        <legend>
-          <Zap size={15} aria-hidden="true" />
-          {t('gpuSettings.powerTitle')}
-        </legend>
-        <div className="settings-row">
-          <span id={powerId}>{t('gpuSettings.power')}</span>
-          <div className="segmented" role="radiogroup" aria-labelledby={powerId}>
-            {GPU_POWERS.map((p) => (
-              <button
-                key={p}
-                type="button"
-                role="radio"
-                aria-checked={prefs.power === p}
-                className="segmented__item"
-                onClick={() => {
-                  prefs.setPower(p);
-                }}
-              >
-                {t(p === 'high-performance' ? 'gpuSettings.powerHigh' : 'gpuSettings.powerLow')}
-              </button>
-            ))}
-          </div>
-        </div>
-        <p className="muted small">{t('gpuSettings.powerHint')}</p>
-      </fieldset>
+      <GpuSettings />
 
       <fieldset className="settings-group">
         <legend>
@@ -157,6 +69,9 @@ export function GemmaGpuSettings() {
           <MemoryStick size={15} aria-hidden="true" />
           {t('gpuSettings.memoryTitle')}
         </legend>
+        <p className="muted small">
+          {t('gpuSettings.loaded')}: {loaded ?? t('gpuSettings.notLoaded')}
+        </p>
         <div className="settings-row">
           <span id={unloadId}>{t('gpuSettings.unload')}</span>
           <div className="segmented" role="radiogroup" aria-labelledby={unloadId}>

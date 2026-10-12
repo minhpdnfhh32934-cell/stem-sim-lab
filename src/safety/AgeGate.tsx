@@ -2,8 +2,7 @@ import { ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
 import { checkAiStatus } from '@/app/ai/useAiStatus';
-import { getSafety, type SafetyStatus } from './safety';
-import { safetyErrorText } from './pinError';
+import { getSafety, toSafetyError, type SafetyStatus } from './safety';
 import {
   closeGate,
   loadSafety,
@@ -14,7 +13,7 @@ import {
 } from './safetyStore';
 import './safety.css';
 
-/** Saves a new status and refreshes the AI pill (the gateway follows the same rules). */
+/** Saves a new status and refreshes the AI pill (the gateway follows the same rule). */
 function applied(status: SafetyStatus): SafetyStatus {
   setSafetyStatus(status);
   void checkAiStatus();
@@ -22,11 +21,8 @@ function applied(status: SafetyStatus): SafetyStatus {
 }
 
 /**
- * First-run safety gate (PROMPT_PHAN_2 A3).
- * - Main edition: "Tôi đủ 18 tuổi" (with the terms) or "Tôi chưa đủ 18 tuổi". Simulations work
- *   either way; the AI only after the first answer.
- * - Pilot edition: birth year → supervisor PIN → (under 18) recorded parental consent. The
- *   supervisor can choose "Để sau": the app then works without AI.
+ * First-run safety gate (PROMPT_PHAN_2 A3): "Tôi đủ 18 tuổi" (with the terms) or "Tôi chưa đủ
+ * 18 tuổi". Simulations work either way; the AI only after the first answer.
  */
 export function AgeGate({ hold = false }: { hold?: boolean }) {
   const t = useT();
@@ -52,11 +48,9 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
       className="dialog age-gate"
       aria-labelledby="age-gate-title"
       onCancel={(e) => {
-        // Esc: the main-edition question has to be answered (one click either way); the pilot
-        // supervisor can postpone.
+        // Esc: the question has to be answered once (one click either way).
         e.preventDefault();
-        if (status?.edition === 'pilot') closeGate(true);
-        else if (status?.answered) closeGate();
+        if (status?.answered) closeGate();
       }}
     >
       <header className="dialog__header">
@@ -80,7 +74,8 @@ function MainGate() {
       applied(await getSafety().answerAdult(adult));
       closeGate();
     } catch (e) {
-      setError(safetyErrorText(t, e));
+      const err = toSafetyError(e);
+      setError(err.message || err.code);
     }
   };
   return (

@@ -32,6 +32,8 @@ export interface LessonInput {
   content: string;
   /** The learner's question (numbers in it count as given). */
   question: string;
+  /** The model that answered (shown in the AI label). */
+  model?: string;
 }
 
 /** TeachScript when the answer has board tags, else the markdown layout. */
@@ -317,33 +319,20 @@ async function playSentence(
   await sleep(sentence.pauseMs + 220, signal);
 }
 
-/** Starts (or restarts) a lesson on a clean board. */
-export async function playLesson(input: LessonInput, measure: Measure): Promise<void> {
-  stopLesson();
+/** Results proved so far in the current lesson (a continuation may use them). */
+let lessonKnown: number[] = [];
+
+async function run(script: ParsedScript, input: LessonInput, measure: Measure): Promise<void> {
   const ctrl = new AbortController();
   controller = ctrl;
   instant = false;
   lastInput = input;
   lastMeasure = measure;
-  const script = scriptFor(input.content);
-  useBoardStore.getState().set({
-    lessonId: input.id,
-    layout: emptyLayout(),
-    progress: {},
-    erased: {},
-    provenance: {},
-    marks: [],
-    face: 0,
-    focus: null,
-    pen: null,
-    subtitle: '',
-    status: 'playing',
-    strokes: [],
-  });
+  useBoardStore.getState().set({ lessonId: input.id, status: 'playing' });
   const ctx = {
     measure,
     sources: sourceNumbers(input.question),
-    known: [] as number[],
+    known: lessonKnown,
     signal: ctrl.signal,
   };
   try {
@@ -356,6 +345,46 @@ export async function playLesson(input: LessonInput, measure: Measure): Promise<
     if (controller === ctrl) controller = null;
     instant = false;
   }
+}
+
+/** Starts (or restarts) a lesson on a clean board. */
+export async function playLesson(input: LessonInput, measure: Measure): Promise<void> {
+  stopLesson();
+  lessonKnown = [];
+  useBoardStore.getState().set({
+    layout: emptyLayout(),
+    progress: {},
+    erased: {},
+    provenance: {},
+    marks: [],
+    face: 0,
+    focus: null,
+    pen: null,
+    subtitle: '',
+    strokes: [],
+  });
+  await run(scriptFor(input.content), input, measure);
+}
+
+/**
+ * "Viết tiếp": the same answer grew (the AI was asked for the rest). Only the new part is
+ * taught, on the same board, after what is already written; anything else starts over.
+ */
+export async function continueLesson(input: LessonInput, measure: Measure): Promise<void> {
+  const previous = lastInput;
+  if (!previous || previous.id !== input.id || !input.content.startsWith(previous.content)) {
+    await playLesson(input, measure);
+    return;
+  }
+  // Whatever was still being written is finished at once before the new part starts.
+  controller?.abort();
+  controller = null;
+  stopSpeaking();
+  const store = useBoardStore.getState();
+  const progress = { ...store.progress };
+  for (const e of store.layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
+  store.set({ progress, marks: store.marks.map((m) => ({ ...m, shown: true })) });
+  await run(scriptFor(input.content.slice(previous.content.length)), input, measure);
 }
 
 export function pauseLesson(): void {

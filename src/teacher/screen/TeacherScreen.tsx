@@ -26,7 +26,12 @@ function latestLesson(messages: ChatMessageRecord[]): LessonInput | null {
       .slice(0, i)
       .reverse()
       .find((q) => q.role === 'user');
-    return { id: m.id, content: m.content, question: question?.content ?? '' };
+    return {
+      id: m.id,
+      content: m.content,
+      question: question?.content ?? '',
+      ...(m.model ? { model: m.model } : {}),
+    };
   }
   return null;
 }
@@ -175,7 +180,7 @@ export default function TeacherScreen() {
         )}
 
         <main className="teacher__chat-wrap" aria-label={t('chat.label')}>
-          <ChatPanel showScreenContext={false} teacherPage boardMode={layout === 'board'} />
+          <ChatPanel showScreenContext={false} teacherPage />
         </main>
       </div>
     </section>

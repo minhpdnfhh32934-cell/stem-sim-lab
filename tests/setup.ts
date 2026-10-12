@@ -24,27 +24,17 @@ afterEach(() => {
   if (typeof localStorage !== 'undefined') localStorage.clear();
 });
 
-// Unit tests run as an adult who accepted the terms, so the AI code paths can be tested. The gates themselves are tested in src/safety and in Rust.
+// Unit tests run as an adult who accepted the terms, so the AI code paths can be tested. The
+// gate itself is tested in src/safety and in Rust.
 class OpenSafety extends BrowserSafety {
   override status() {
-    return Promise.resolve(
-      statusOf(
-        { adultTerms: TERMS_VERSION, birthYear: 2000, pinHash: 'x', pinSalt: 'x' },
-        false,
-        2026,
-      ),
-    );
+    return Promise.resolve(statusOf({ adultTerms: TERMS_VERSION }));
   }
 }
 
 beforeEach(() => {
   setSafetyBackendForTests(new OpenSafety());
-  useSafetyStore.setState({
-    status: null,
-    deferred: false,
-    gateRequested: false,
-    unlockedUntil: 0,
-  });
+  useSafetyStore.setState({ status: null, gateRequested: false });
   // Unit tests start after the first-run onboarding (tested in src/app/learner and E2E).
   useProfileStore.setState({ onboarded: true, connectSeen: true, lastTopic: null });
 });

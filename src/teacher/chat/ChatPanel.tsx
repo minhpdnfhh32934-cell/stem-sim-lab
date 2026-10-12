@@ -1,4 +1,5 @@
 import {
+  ArrowDownToLine,
   Bot,
   Check,
   CircleAlert,
@@ -25,6 +26,8 @@ import { speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { askTeacher } from './chatService';
+import { useTeacherStore } from '@/teacher/teacherStore';
+import { CONTINUE_PROMPT, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
 import { useT, type MessageKey } from '@/app/i18n';
 import { gemmaReady } from '@/ai/gemmaTransport';
@@ -36,15 +39,12 @@ export function ChatPanel({
   compact = false,
   showScreenContext = true,
   teacherPage = false,
-  boardMode = false,
   onClose,
   onExpand,
 }: {
   compact?: boolean;
   showScreenContext?: boolean;
   teacherPage?: boolean;
-  /** The teacher page shows the whiteboard: answers are board lessons, read by the board. */
-  boardMode?: boolean;
   onClose?: () => void;
   onExpand?: () => void;
 }) {
@@ -59,7 +59,13 @@ export function ChatPanel({
   const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
   const [draft, setDraft] = useState('');
-  const [busy, setBusy] = useState(false);
+  // On the board the lesson reads itself sentence by sentence, in step with the pen (Whiteboard).
+  const board = useTeacherStore((s) => teacherPage && s.layout === 'board');
+  const [busy, setLocalBusy] = useState(false);
+  const setBusy = (value: boolean) => {
+    setLocalBusy(value);
+    useChatStore.setState({ answering: value });
+  };
   const [error, setError] = useState('');
   /** Latest cloud-key lookup, tagged so a stale answer never overrides a newer engine/provider. */
   const [keyLookup, setKeyLookup] = useState<{ id: string; available: boolean } | null>(null);
@@ -173,15 +179,21 @@ export function ChatPanel({
   // Never keep reading after the panel goes away.
   useEffect(() => stopSpeaking, []);
 
-  const submit = async (text = draft) => {
-    const question = text.trim();
+  /**
+   * Sends a question. `prompt` is what the AI receives when it differs from what the learner
+   * sees (the quick buttons show "Chậm hơn" but send a full instruction).
+   */
+  const submit = async (text = draft, prompt?: string) => {
+    const shown = text.trim();
+    const question = (prompt ?? shown).trim();
     if (!question || busy) return;
     stopSpeaking();
     setError('');
     const userMessage: ChatMessageRecord = {
       id: crypto.randomUUID(),
       role: 'user',
-      content: question,
+      content: shown,
+      ...(prompt ? { prompt: question } : {}),
     };
     const prior = chat.messages;
     chat.addMessage(userMessage);
@@ -191,7 +203,7 @@ export function ChatPanel({
       const result = await askTeacher(question, locale, prior, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: chat.thinkEnabled,
-        board: boardMode,
+        board,
       });
       chat.addMessage({
         id: crypto.randomUUID(),
@@ -200,9 +212,9 @@ export function ChatPanel({
         model: result.metadata.model,
         ...(result.metadata.checkedBy ? { checkedBy: result.metadata.checkedBy } : {}),
         ...(result.metadata.references.length ? { references: result.metadata.references } : {}),
+        ...(result.truncated ? { truncated: true } : {}),
       });
-      // On the board the lesson reads itself sentence by sentence, in step with the pen.
-      if (useVoiceStore.getState().enabled && !boardMode) void speak(result.content);
+      if (useVoiceStore.getState().enabled && !board) void speak(result.content);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -210,6 +222,32 @@ export function ChatPanel({
       input.current?.focus();
     }
   };
+
+  /** "Viết tiếp": asks for the rest of an answer that stopped at the output limit. */
+  const continueAnswer = async (message: ChatMessageRecord) => {
+    if (busy) return;
+    stopSpeaking();
+    setError('');
+    setBusy(true);
+    try {
+      const upto = chat.messages.slice(0, chat.messages.indexOf(message) + 1);
+      const result = await askTeacher(CONTINUE_PROMPT[locale], locale, upto, {
+        includeScreen: showScreenContext && chat.includeScreen,
+        think: false,
+        board,
+      });
+      chat.updateMessage(message.id, {
+        content: joinContinuation(message.content, result.content),
+        truncated: result.truncated,
+      });
+      if (useVoiceStore.getState().enabled && !board) void speak(result.content);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const lastMessage = chat.messages[chat.messages.length - 1];
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -445,6 +483,22 @@ export function ChatPanel({
                       {t('chat.references')}: {message.references.join(' · ')}
                     </small>
                   )}
+                {message.role === 'assistant' && message.truncated && (
+                  <div className="chat-message__continue">
+                    <small>{t('chat.truncatedNote')}</small>
+                    {message === lastMessage && (
+                      <button
+                        type="button"
+                        className="btn"
+                        disabled={busy}
+                        onClick={() => void continueAnswer(message)}
+                      >
+                        <ArrowDownToLine size={14} aria-hidden="true" />
+                        {t('chat.continue')}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </article>
           ))
@@ -476,7 +530,12 @@ export function ChatPanel({
               key={key}
               type="button"
               onClick={() => {
-                void submit(t(`teacher.chips.${key}` as MessageKey));
+                // Shown as the short label, sent as a full instruction (a bare "Chậm hơn"
+                // was misread by small models).
+                void submit(
+                  t(`teacher.chips.${key}` as MessageKey),
+                  t(`teacher.chipPrompts.${key}` as MessageKey),
+                );
               }}
               disabled={busy}
             >

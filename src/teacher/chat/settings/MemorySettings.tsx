@@ -1,59 +1,59 @@
-import { Archive, History, Trash2 } from 'lucide-react';
+import { Archive, Brain, Trash2 } from 'lucide-react';
 import { useId, useState } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { GEMMA_MEMORY_CAP, MEMORY_SIZES, STORED_MESSAGES, useChatStore } from '../chatStore';
+import { STORED_MESSAGES, useChatStore, type MemoryLength } from '../chatStore';
 import '../chat.css';
 
+const MEMORY_LENGTHS: readonly MemoryLength[] = ['medium', 'long'];
+
 /**
- * "Trí nhớ hội thoại": how many earlier messages go with a new question, whether the
- * conversation stays on this computer, and a way to forget it.
+ * "Trí nhớ hội thoại": how much of the conversation goes with each question (a token budget per
+ * engine; older turns are summarised, `memory.ts`), whether the conversation stays on this
+ * computer, and a way to forget it.
  */
 export function MemorySettings() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
-  const memorySize = useChatStore((s) => s.memorySize);
-  const setMemorySize = useChatStore((s) => s.setMemorySize);
+  const length = useChatStore((s) => s.memoryLength);
+  const setLength = useChatStore((s) => s.setMemoryLength);
   const saveHistory = useChatStore((s) => s.saveHistory);
   const setSaveHistory = useChatStore((s) => s.setSaveHistory);
   const count = useChatStore((s) => s.messages.length);
+  const hasSummary = useChatStore((s) => s.summary !== null);
   const clearMessages = useChatStore((s) => s.clearMessages);
   const [confirming, setConfirming] = useState(false);
-  const sizeId = useId();
+  const labelId = useId();
 
   return (
     <>
       <fieldset className="settings-group">
         <legend>
-          <History size={15} aria-hidden="true" />
-          {t('memorySettings.contextTitle')}
+          <Brain size={15} aria-hidden="true" />
+          {t('chatSettings.memory.title')}
         </legend>
+        <p className="muted small">{t('chatSettings.memory.intro')}</p>
         <div className="settings-row">
-          <span id={sizeId}>{t('memorySettings.size')}</span>
-          <div className="segmented" role="radiogroup" aria-labelledby={sizeId}>
-            {MEMORY_SIZES.map((n) => (
+          <span id={labelId}>{t('chatSettings.memory.title')}</span>
+          <div className="segmented" role="radiogroup" aria-labelledby={labelId}>
+            {MEMORY_LENGTHS.map((item) => (
               <button
-                key={n}
+                key={item}
                 type="button"
                 role="radio"
-                aria-checked={memorySize === n}
+                aria-checked={length === item}
                 className="segmented__item"
                 onClick={() => {
-                  setMemorySize(n);
+                  setLength(item);
                 }}
               >
-                {n === 0 ? t('memorySettings.none') : formatNumber(locale, n)}
+                {t(`chatSettings.memory.${item}`)}
               </button>
             ))}
           </div>
         </div>
         <p className="muted small">
-          {memorySize === 0
-            ? t('memorySettings.sizeNone')
-            : t('memorySettings.sizeHint', { count: formatNumber(locale, memorySize) })}
-        </p>
-        <p className="muted small">
-          {t('memorySettings.gemmaCap', { count: formatNumber(locale, GEMMA_MEMORY_CAP) })}
+          {t(length === 'long' ? 'chatSettings.memory.longHint' : 'chatSettings.memory.mediumHint')}
         </p>
       </fieldset>
 
@@ -84,6 +84,7 @@ export function MemorySettings() {
         </label>
         <p className="muted small" role="status">
           {t('memorySettings.count', { count: formatNumber(locale, count) })}
+          {hasSummary ? ` ${t('memorySettings.hasSummary')}` : ''}
         </p>
         <div className="settings-actions">
           {confirming ? (

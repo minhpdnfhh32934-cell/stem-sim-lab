@@ -19,7 +19,7 @@ function renderOpen() {
 describe('Settings: one small page per section', () => {
   beforeEach(() => {
     useWorkspaceStore.setState({ settingsOpen: true, settingsSection: 'appearance' });
-    useChatStore.setState({ messages: [], memorySize: 12, saveHistory: true });
+    useChatStore.setState({ messages: [], memoryLength: 'medium', saveHistory: true });
   });
 
   it('lists every section in the navigation and shows only the chosen page', () => {
@@ -51,7 +51,7 @@ describe('Settings: one small page per section', () => {
     await user.click(screen.getByRole('tab', { name: 'Trí nhớ hội thoại' }));
     expect(useWorkspaceStore.getState().settingsSection).toBe('memory');
     expect(screen.getByRole('tabpanel')).toHaveAttribute('id', 'settings-memory');
-    expect(screen.getByRole('radio', { name: '12' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('radio', { name: 'Vừa' })).toHaveAttribute('aria-checked', 'true');
 
     await user.keyboard('{ArrowDown}');
     expect(useWorkspaceStore.getState().settingsSection).toBe('voice');
@@ -77,9 +77,9 @@ describe('Settings: one small page per section', () => {
     });
     useWorkspaceStore.setState({ settingsSection: 'memory' });
     renderOpen();
-    await user.click(screen.getByRole('radio', { name: 'Không' }));
-    expect(useChatStore.getState().memorySize).toBe(0);
-    expect(screen.getByText(/không nhớ những gì vừa nói/)).toBeInTheDocument();
+    await user.click(screen.getByRole('radio', { name: 'Dài' }));
+    expect(useChatStore.getState().memoryLength).toBe('long');
+    expect(screen.getByText(/Nhớ nhiều hơn nhưng chậm hơn/)).toBeInTheDocument();
 
     await user.click(screen.getByRole('checkbox', { name: /Lưu lịch sử trò chuyện/ }));
     expect(useChatStore.getState().saveHistory).toBe(false);

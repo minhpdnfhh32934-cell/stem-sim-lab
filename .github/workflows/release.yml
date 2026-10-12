@@ -91,7 +91,7 @@ jobs:
           WEB_UPDATE_SIGNING_KEY: ${{ secrets.WEB_UPDATE_SIGNING_KEY }}
           RELEASE_NOTES: ${{ inputs.notes }}
           MIN_REQUIRED: ${{ steps.floor.outputs.main }}
-        run: node scripts/release/web-bundle.mjs main
+        run: node scripts/release/web-bundle.mjs
       - uses: actions/upload-artifact@v7
         with:
           name: web-update

@@ -96,18 +96,15 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
 - Rust owns every network call and the API keys (OS keychain via `keyring`). Requests have an id;
   `ai_cancel` aborts them; `tokio::select!` enforces the timeout (default 30 s, retries included).
 - **`AIProvider` trait** (`src-tauri/src/ai/provider.rs`): builds the chat/models requests and reads
-  the answers. Implementations: `ai/gemini.rs` (`responseJsonSchema`, main edition only) and
+  the answers. Implementations: `ai/gemini.rs` (`responseJsonSchema`) and
   `ai/claude.rs` (forced tool call with `input_schema`, system prompt marked for prompt caching).
   `ai/mod.rs` sends them: retry on 429/5xx with backoff 1 s → 2 s → 4 s or `Retry-After` (max 8 s,
   at most 3 retries; a Gemini _per-day_ 429 is not retried), daily cap counted in
   `ai-usage.json` (`ai/usage.rs`, day = user's local date, cap from Settings, 0 = none).
-- **One edition** (user decision 2026-10-12): the high-school pilot edition (Cargo feature
-  `edition-pilot`, `VITE_EDITION`/`__EDITION__`, `build:pilot`, `tauri.pilot.conf.json`, its update
-  channel) was removed. `ai::EDITION` and `webupdate::EDITION` are the constant `"main"`; update
-  manifests and `web-edition.txt` still carry it and are still checked. The pilot branches of
-  `safety.rs` (`PILOT = false`) and `src/safety/safety.ts` (`pilot: false`) are dead code kept for
-  a later clean-up; the PIN/consent UI is gone. The keychain service stays "STEM Sim Lab" and the
-  identifier `vn.stemsimlab.desktop`, so keys and data survive the rename to SimLab.
+- **One edition** since 0.5.0: the supervised high-school pilot edition (Cargo features, `VITE_EDITION`,
+  second installer and update channel) was removed at the user's request (2026-10-12). The app was
+  renamed SimLab the same day; the keychain service stays "STEM Sim Lab" and the identifier
+  `vn.stemsimlab.desktop`, so keys and data survive the rename.
 - **Kết nối AI** (`AiSettings.tsx`): `ai_test_key` sends one tiny request with the chosen model
   and classifies the answer (`classify_key_test` / `src/ai/keyTest.ts`: 2xx ok, 401/403 or
   `API_KEY_INVALID` bad key, 404 bad model, 429/402/"credit balance" quota, network error offline).
@@ -124,7 +121,7 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
 
 ## 3e. Free fallback provider (step 3b.3b)
 
-- `GroqProvider` (`src-tauri/src/ai/groq.rs`, both editions): OpenAI-compatible `chat/completions`,
+- `GroqProvider` (`src-tauri/src/ai/groq.rs`): OpenAI-compatible `chat/completions`,
   `response_format: json_schema` (strict for gpt-oss / Qwen 3.8), reasoning kept out of the answer
   (`include_reasoning: false` / `reasoning_format: hidden`, `reasoning_effort: low`), `<think>` blocks
   stripped. Same body in `groqBody` (`src/ai/transport.ts`).
@@ -144,14 +141,14 @@ problem ──► moderation.checkInput ──► (blocked: incident kind+time, 
 ```
 
 - **Rules in Rust** (`src-tauri/src/safety.rs`), so the page cannot open the AI by itself:
-  `status_of` (pure, tested). `adult_terms == TERMS_VERSION` → AI allowed; "under 18" → answered,
+  `status_of` (pure, tested): `adult_terms == TERMS_VERSION` → AI allowed; "under 18" → answered,
   AI off. `ai_chat`, `ai_models`, `ai_test_key` refuse with `notAllowed` while the gate is closed;
-  `ai_set_key` needs the 18+ confirmation (`key_gate` in `ai/mod.rs`). The supervisor PIN and
-  parental-consent paths belonged to the removed pilot edition and are unreachable (`PILOT = false`).
+  `ai_set_key` needs the 18+ confirmation (`key_gate` in `ai/mod.rs`); deleting a key is always
+  allowed. (The pilot's birth year, supervisor PIN and consent were removed in 0.5.0.)
 - **Incident log** (`incidents.json`, newest 500): `{at, kind}` only — `inputPersonalData`,
   `inputUnsafe`, `inputCrisis`, `outputUnsafe`, `userReport`.
 - **Web side** (`src/safety/`): `safety.ts` (types, `statusOf` mirror, `TauriSafety`, browser copy
-  `BrowserSafety` in localStorage for dev/E2E), `safetyStore.ts` (status, gate visibility, session),
+  `BrowserSafety` in localStorage for dev/E2E), `safetyStore.ts` (status, gate visibility),
   `moderation.ts` (crisis → personal data → unsuitable; Unicode-aware word boundaries; NFC),
   `AgeGate`, `SafetySettings` (Settings → "An toàn & quyền riêng tư"), `AiContentBar` (AI label +
   report), `CrisisCard`, `PrivacyDialog`. `analyze.ts` runs `safetyBlock` before any AI call and the

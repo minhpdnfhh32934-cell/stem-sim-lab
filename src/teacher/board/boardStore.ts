@@ -32,6 +32,8 @@ export type BoardStatus = 'idle' | 'preparing' | 'playing' | 'paused' | 'done';
 
 interface BoardState {
   lessonId: string | null;
+  /** The answer text taught so far (it grows when the learner asks for "Viết tiếp"). */
+  lessonContent: string;
   layout: Layout;
   /** Units drawn per element id (characters; a formula counts 1, fractions are partial). */
   progress: Record<string, number>;
@@ -59,6 +61,7 @@ interface BoardState {
 
 export const useBoardStore = create<BoardState>()((set, get) => ({
   lessonId: null,
+  lessonContent: '',
   layout: emptyLayout(),
   progress: {},
   erased: {},

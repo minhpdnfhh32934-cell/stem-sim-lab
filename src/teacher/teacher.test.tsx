@@ -42,8 +42,16 @@ describe('"Dạy học bằng AI" screen', () => {
     const { container } = render(<TeacherScreen />);
     const root = container.querySelector('.teacher');
     expect(root).toHaveAttribute('data-layout', 'talk');
+    expect(
+      screen.queryByRole('region', { name: 'Bảng trắng của AI Teacher' }),
+    ).not.toBeInTheDocument();
     await user.click(screen.getByRole('radio', { name: 'Giảng trên bảng' }));
     expect(root).toHaveAttribute('data-layout', 'board');
+    // The board is a real lesson area next to the chat, not only a different background.
+    expect(
+      await screen.findByRole('region', { name: 'Bảng trắng của AI Teacher' }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeInTheDocument();
   });
 
   it('without a cloud key: a notice that opens Settings (never a fake reply)', async () => {

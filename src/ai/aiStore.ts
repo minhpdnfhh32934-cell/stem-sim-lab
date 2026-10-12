@@ -15,11 +15,7 @@ export type AiStatus =
   /** The safety gates are closed (src/safety): no AI call is made. */
   | 'notAllowed';
 
-/**
- * Providers of this edition (PROMPT_PHAN_2 A2 + user decision 2026-10-05): the main edition has
- * Gemini (default), Claude and Groq; the supervised pilot edition has Claude and Groq (no Gemini:
- * its terms exclude users under 18).
- */
+/** Providers (PROMPT_PHAN_2 A2 + user decision 2026-10-05): Gemini (default), Claude and Groq. */
 export const PROVIDERS: readonly Provider[] = ['gemini', 'claude', 'groq'];
 export const DEFAULT_PROVIDER: Provider = 'gemini';
 /** Free fallback when the chosen provider is out of quota/credit (used only if it has a key). */

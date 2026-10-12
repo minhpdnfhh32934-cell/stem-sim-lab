@@ -13,10 +13,9 @@
 //!   checked (no `..`), and total size is limited;
 //! - never downgrades; a newer installer wins over an older downloaded web part;
 //! - "Khôi phục bản gốc" removes the downloaded part;
-//! - the manifest names the edition inside the signed message and the unpacked bundle must say
-//!   `main` in `web-edition.txt`. The high-school pilot edition and its channel
-//!   (`web-update-pilot.json`) were removed on 2026-10-12; the check stays so a bundle from
-//!   that old channel can never be installed here.
+//! - one update channel (`web-update.json`). The signed message still names the edition and the
+//!   bundle carries `web-edition.txt`: only `main` is accepted (the pilot edition and its
+//!   channel were removed in 0.5.0; the message format stays so published manifests verify).
 
 use base64::Engine as _;
 use ed25519_dalek::{Signature, VerifyingKey};
@@ -30,8 +29,7 @@ use tauri::utils::assets::{AssetKey, AssetsIter, CspHash};
 use tauri::{App, AppHandle, Assets, Runtime, State};
 
 const REPO: &str = "minhpdnfhh32934-cell/stem-sim-lab";
-/// Edition of this executable, also its update channel. Only "main" remains (the high-school
-/// pilot was removed 2026-10-12); manifests still carry the value and it is still checked.
+/// Edition of this executable; only manifests and bundles of this edition are accepted.
 pub const EDITION: &str = "main";
 /// Manifest of the newest release (GitHub redirects `latest` to the newest published one).
 pub const MANIFEST_URL: &str =
@@ -60,7 +58,7 @@ pub struct Manifest {
     pub notes: String,
     #[serde(default)]
     pub date: String,
-    /// "main" (or empty: manifests written before the pilot channel existed) or "pilot".
+    /// "main" (or empty: manifests written before 0.3.0); any other edition is refused.
     #[serde(default)]
     pub edition: String,
     /// Web versions older than this must update before the app can be used (empty = none).
@@ -690,7 +688,7 @@ mod tests {
         assert!(verify_manifest(&m, &key.verifying_key()).is_ok());
         // Correctly signed, but for the other edition: refused.
         let mut other = m.clone();
-        other.edition = if EDITION == "main" { "pilot" } else { "main" }.into();
+        other.edition = "pilot".into();
         resign(&key, &mut other);
         assert!(verify_manifest(&other, &key.verifying_key()).is_err());
         // The edition is part of the signed message: relabelling a pilot manifest breaks it.

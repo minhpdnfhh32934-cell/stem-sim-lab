@@ -1,22 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { GEMMA_MEMORY_CAP, memoryFor, useChatStore } from './chatStore';
+import { STORED_MESSAGES, useChatStore } from './chatStore';
 
-const records = Array.from({ length: 30 }, (_, i) => i);
-
-describe('conversation memory', () => {
-  it('sends the chosen number of earlier messages; 0 sends none (never all)', () => {
-    expect(memoryFor(records, 0, false)).toEqual([]);
-    expect(memoryFor(records, 4, false)).toEqual([26, 27, 28, 29]);
-    expect(memoryFor(records, 12, false)).toHaveLength(12);
-    expect(memoryFor(records, 24, false)).toHaveLength(24);
-  });
-
-  it('Gemma never takes more than its cap', () => {
-    expect(memoryFor(records, 24, true)).toHaveLength(GEMMA_MEMORY_CAP);
-    expect(memoryFor(records, 0, true)).toEqual([]);
-  });
-
-  it('migrating from v4 keeps every setting and adds the memory defaults', async () => {
+describe('conversation memory settings', () => {
+  it('migrating from v4 keeps every setting (new ones come from the defaults)', async () => {
     const options = useChatStore.persist.getOptions();
     const migrated = (await options.migrate?.(
       {
@@ -35,21 +21,45 @@ describe('conversation memory', () => {
       engineChosen: true,
       webLookup: true,
       gemmaModel: 'gemma3-270m',
-      memorySize: 12,
-      saveHistory: true,
     });
+    const fresh = useChatStore.getInitialState();
+    expect(fresh.saveHistory).toBe(true);
+    expect(fresh.memoryLength).toBe('medium');
   });
 
-  it('"Không lưu lịch sử" keeps the conversation out of storage', () => {
+  it('"Không lưu lịch sử" keeps the conversation and its summary out of storage', () => {
     const partialize = useChatStore.persist.getOptions().partialize;
     if (!partialize) throw new Error('partialize missing');
     const message = { id: '1', role: 'user' as const, content: 'Xin chào' };
-    const base = { ...useChatStore.getState(), messages: [message] };
-    expect(
-      (partialize({ ...base, saveHistory: true }) as { messages: unknown[] }).messages,
-    ).toHaveLength(1);
-    expect(
-      (partialize({ ...base, saveHistory: false }) as { messages: unknown[] }).messages,
-    ).toHaveLength(0);
+    const base = {
+      ...useChatStore.getState(),
+      messages: [message],
+      summary: { text: 'Tóm tắt', upto: '1' },
+    };
+    const kept = partialize({ ...base, saveHistory: true }) as {
+      messages: unknown[];
+      summary: unknown;
+    };
+    expect(kept.messages).toHaveLength(1);
+    expect(kept.summary).not.toBeNull();
+    const dropped = partialize({ ...base, saveHistory: false }) as {
+      messages: unknown[];
+      summary: unknown;
+    };
+    expect(dropped.messages).toHaveLength(0);
+    expect(dropped.summary).toBeNull();
+  });
+
+  it('keeps at most the newest messages on this computer', () => {
+    useChatStore.setState({ messages: [] });
+    for (let i = 0; i < STORED_MESSAGES + 5; i++) {
+      useChatStore
+        .getState()
+        .addMessage({ id: String(i), role: 'user', content: `câu ${String(i)}` });
+    }
+    const messages = useChatStore.getState().messages;
+    expect(messages).toHaveLength(STORED_MESSAGES);
+    expect(messages[0]?.id).toBe('5');
+    useChatStore.getState().clearMessages();
   });
 });

@@ -24,6 +24,11 @@ pub trait AIProvider: Send + Sync {
     /// The answer text (or the forced tool input, serialized as JSON).
     fn extract_content(&self, v: &Value) -> Result<String, AiError>;
 
+    /// The answer stopped because it reached the output-token limit.
+    fn truncated(&self, _v: &Value) -> bool {
+        false
+    }
+
     /// Model that actually answered, if the response says so.
     fn response_model(&self, v: &Value) -> Option<String> {
         v["model"].as_str().map(str::to_string)

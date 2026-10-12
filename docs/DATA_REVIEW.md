@@ -74,5 +74,5 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     chú ngắn về Vật lý, Hóa học, Sinh học THPT (công thức, định luật, khái niệm), do AI viết khi làm
     bản Thầy AI, **chưa có nguồn cụ thể** (trường `source` chỉ là tên chủ đề) và chưa ai duyệt. Mọi
     ghi chú đang `reviewStatus: 'pending'`: khi gửi cho AI, mỗi ghi chú kèm câu "chưa được giáo viên
-    duyệt", và Cài đặt → Thầy AI ghi rõ số ghi chú đang chờ duyệt. Nhờ giáo viên đọc từng ghi chú,
+    duyệt", và Cài đặt → Thư viện kiến thức ghi rõ số ghi chú đang chờ duyệt. Nhờ giáo viên đọc từng ghi chú,
     sửa câu sai, thêm nguồn (sách, trang), rồi đổi ghi chú đó thành `'verified'`.

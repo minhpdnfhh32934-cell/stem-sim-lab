@@ -34,8 +34,8 @@ export default defineConfig({
       name: 'stemsim-web-version',
       generateBundle() {
         this.emitFile({ type: 'asset', fileName: 'web-version.txt', source: `${pkg.version}\n` });
-        // Edition of the bundle: always "main" since the high-school pilot was removed; the
-        // desktop app still checks it so an update can never come from another channel.
+        // The app only installs "main" bundles (the pilot edition was removed in 0.5.0; the
+        // file stays so the update check of installed apps keeps working).
         this.emitFile({ type: 'asset', fileName: 'web-edition.txt', source: 'main\n' });
       },
     },
