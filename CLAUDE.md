@@ -10,7 +10,8 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 
 - **Users:** primary = university students **18+** (bring their own Gemini key); pilot testers =
   high-school students (mostly under 18) in supervised sessions with parental/school consent.
-- **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model). All AI
+- **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model) —
+  **except** the in-app Gemma of "Thầy AI" (see "Thầy AI" exceptions below). All AI
   goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
   **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
   as a free fallback when paid tokens run out, in both editions, but only after their terms (age,
@@ -34,10 +35,11 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 - Legal points are researched with citations in `docs/LEGAL_COMPLIANCE.md`; never conclude legally
   on the user's behalf — list what the user/teacher must confirm.
 
-## Fork exceptions — "Thầy AI" fork (user decision 2026-10-12)
+## "Thầy AI" exceptions (user decision 2026-10-12)
 
-This copy is a fork distributed as a ZIP (`stem-sim-lab-ai-v*.zip`), not the upstream repo. The user
-accepted, **for this fork only**:
+"Thầy AI" started as a fork shipped as a ZIP (`stem-sim-lab-ai-v*.zip`). It was merged into this
+repository (PR #7, 0.4.1) and the user decided on 2026-10-12 to **keep it here**, so these exceptions
+now apply to this repository (both editions unless the code gates them):
 
 - **Local AI:** Gemma runs inside the app (Transformers.js + ONNX Runtime Web on WebGPU, worker in
   `src/ai/webGemma*.ts`). Ollama is not used (the old `gemma.rs` was removed in 0.4.0). No other
@@ -45,6 +47,10 @@ accepted, **for this fork only**:
 - **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
   (`tests/tauri-config.test.ts` pins the list). Nothing else.
 - Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
+- **Open question for the user (do not decide it):** Gemma is not gated by edition, so the pilot
+  (under-18) build also downloads and runs the on-device model and has the HuggingFace hosts in its
+  CSP. PROMPT_PHAN_2 A2 limits the pilot to Claude. Until the user answers, do not widen this further
+  in the pilot; list it in reports.
 - Design and data-flow notes: `docs/AI_TUTOR.md`. Engine choice: `src/app/ai/engineChoice.ts`
   (a pre-selected Gemma without a model never blocks a learner who connected an API; a Gemma the
   learner chose never silently goes online). Think sends the draft with `noFallback`. Wikipedia
