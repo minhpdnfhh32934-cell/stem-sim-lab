@@ -101,6 +101,12 @@
   --board-bg: #fdfdfb;
   --board-ink: #1d2a44;
   --board-mark: #c93a3a;
+  /* Whiteboard pens: a teacher uses 3–4 colours with fixed meanings (B7.1). */
+  --board-blue: #1f5fbf;
+  --board-green: #1f7a45;
+  --board-highlight: rgba(255, 214, 64, 0.45);
+  --board-student: #7a3fc2;
+  --board-rule: rgba(29, 42, 68, 0.12);
 
   /* Science Card confidence levels (§2.3 of MASTER_PROMPT) */
   --conf-exact: #16804a;
@@ -154,6 +160,11 @@
   --board-bg: #1f2a24;
   --board-ink: #eef2ea;
   --board-mark: #ff8a7a;
+  --board-blue: #8cc4ff;
+  --board-green: #8fe0a8;
+  --board-highlight: rgba(255, 214, 64, 0.28);
+  --board-student: #d6b3ff;
+  --board-rule: rgba(238, 242, 234, 0.14);
 
   --conf-exact: #4cc38a;
   --conf-exact-soft: #13301f;

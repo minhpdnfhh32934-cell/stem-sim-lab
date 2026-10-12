@@ -246,7 +246,19 @@
 }
 
 .teacher[data-layout='board'] .teacher__stage {
-  grid-template-columns: minmax(145px, 190px) minmax(0, 1fr);
+  /* Board layout (B4.1): a small teacher on the side, the board in the middle, the chat at
+     the right. */
+  grid-template-columns: minmax(120px, 150px) minmax(0, 1fr) minmax(300px, 0.42fr);
+}
+
+.teacher__board {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+}
+.teacher__board .board {
+  flex: 1;
 }
 
 .teacher[data-layout='board'] .teacher__presence {
@@ -262,12 +274,6 @@
 
 .teacher[data-layout='board'] .teacher__caption {
   font-size: var(--text-sm);
-}
-
-.teacher[data-layout='board'] .chat-panel__messages {
-  background:
-    linear-gradient(var(--bg-panel) 31px, transparent 32px) 0 0 / 100% 32px,
-    color-mix(in srgb, var(--accent-soft) 20%, var(--bg-panel));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -286,11 +292,16 @@
     padding: var(--space-3);
     overflow: auto;
   }
-  .teacher__stage,
-  .teacher[data-layout='board'] .teacher__stage {
+  .teacher__stage {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(420px, 1fr);
     min-height: 650px;
+    overflow: visible;
+  }
+  .teacher[data-layout='board'] .teacher__stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(460px, 1fr) minmax(380px, auto);
+    min-height: 1100px;
     overflow: visible;
   }
   .teacher__presence,

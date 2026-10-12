@@ -20,6 +20,7 @@ import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
+import { boardAnswerText } from '@/teacher/board/lesson';
 import { speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
@@ -35,12 +36,15 @@ export function ChatPanel({
   compact = false,
   showScreenContext = true,
   teacherPage = false,
+  boardMode = false,
   onClose,
   onExpand,
 }: {
   compact?: boolean;
   showScreenContext?: boolean;
   teacherPage?: boolean;
+  /** The teacher page shows the whiteboard: answers are board lessons, read by the board. */
+  boardMode?: boolean;
   onClose?: () => void;
   onExpand?: () => void;
 }) {
@@ -187,6 +191,7 @@ export function ChatPanel({
       const result = await askTeacher(question, locale, prior, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: chat.thinkEnabled,
+        board: boardMode,
       });
       chat.addMessage({
         id: crypto.randomUUID(),
@@ -196,7 +201,8 @@ export function ChatPanel({
         ...(result.metadata.checkedBy ? { checkedBy: result.metadata.checkedBy } : {}),
         ...(result.metadata.references.length ? { references: result.metadata.references } : {}),
       });
-      if (useVoiceStore.getState().enabled) void speak(result.content);
+      // On the board the lesson reads itself sentence by sentence, in step with the pen.
+      if (useVoiceStore.getState().enabled && !boardMode) void speak(result.content);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -420,7 +426,7 @@ export function ChatPanel({
               )}
               <div className="chat-message__body">
                 {message.role === 'assistant' ? (
-                  <MessageBody content={message.content} />
+                  <MessageBody content={boardAnswerText(message.content)} />
                 ) : (
                   <p>{message.content}</p>
                 )}

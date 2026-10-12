@@ -100,7 +100,7 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   sang nhà cung cấp dự phòng, để người rà soát không tự chấm bài của chính mình. Trên trình duyệt,
   khóa chỉ nằm trong phiên (tải lại trang là mất) và Claude chỉ rà soát được ở bản desktop.
 - Chọn **Gemma cục bộ** để trò chuyện ngay trên máy, không cần Ollama, không cần mạng sau
-  khi đã tải model. Vào Cài đặt → AI Teacher để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
+  khi đã tải model. Vào Cài đặt → AI local (Gemma) để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
   còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng; có
   nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Máy và trình duyệt cần hỗ trợ WebGPU;
   nếu không, app nói rõ và dùng API thay thế. Cài mới chọn sẵn Gemma, nhưng khi chưa tải model thì
@@ -113,6 +113,25 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   tắt): khi bật, câu hỏi được gửi tới Wikipedia. Ô **Dữ liệu của em đi đâu?** trong Cài đặt → AI Teacher
   liệt kê theo cài đặt hiện tại những gì lưu trên máy và những gì có thể gửi đi. Xem thêm
   `docs/AI_TUTOR.md`.
+
+### Giảng trên bảng
+
+Ở trang AI Teacher, chọn **Giảng trên bảng** (góc trên bên phải). Mỗi câu trả lời được giảng trên bảng
+trắng: thầy vừa nói vừa viết (chữ viết tay tiếng Việt, đầu bút đi theo), công thức hiện dần, gạch chân
+từ khóa, khoanh công thức quan trọng, đóng khung kết quả, mũi tên nối các ý, vẽ đồ thị, sơ đồ lực, bảng
+số. Bảng chia ba cột như lớp học: trái là tóm tắt đề và ghi chú, giữa là các bước giải, phải là hình
+vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì.
+
+- Nút **Tạm dừng / Tiếp tục / Giảng lại**, **Viết nhanh** (viết ngay phần còn lại), tốc độ viết
+  0,75–2×. Bảng dài tự cuộn theo bút; khi sang phần mới có các thẻ **Bảng 1, Bảng 2…** để xem lại.
+- **Bút của em:** bật để tự viết, vẽ lên bảng bằng chuột hoặc cảm ứng (màu tím); nút cục tẩy xóa nét
+  của em. Nét vẽ chỉ ở trên máy.
+- Mọi con số trên bảng được kiểm nguồn gốc: số có trong đề là bình thường; phép tính viết trên bảng
+  được máy tính lại (dấu ✓); số không rõ nguồn có dấu ⚠ "Có số do AI tự tính, chưa kiểm chứng" — hãy
+  tự tính lại. Đồ thị do app tự tính từ biểu thức.
+- Với API trực tuyến, AI được yêu cầu trả lời dạng "kịch bản bảng" (chỉ nói ý định, không bao giờ cho
+  tọa độ; app tự xếp chỗ). Với Gemma trên máy, câu trả lời thường được app tự xếp lên bảng. Chi tiết:
+  `docs/WHITEBOARD.md`.
 
 ### Trình độ: Nền tảng và Đại cương
 
@@ -368,18 +387,49 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 
 ## Cài đặt (nút bánh răng)
 
-- **Giao diện:** sáng / tối / theo hệ thống; cỡ chữ 90–140 %; ngôn ngữ Tiếng Việt / English.
-- **Vật lý:** giá trị g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s²) — chỉ dùng khi đề không cho g.
-- **Chất lượng hiển thị:** Tự động / Thấp / Trung bình / Cao, nút Đo lại. Chỉ ảnh hưởng hình ảnh,
-  không ảnh hưởng số liệu.
-- **Kết nối AI:** chọn Gemini (khuyên dùng), Claude, Groq (miễn phí) hoặc tắt AI; hướng dẫn lấy
-  khóa API Gemini; khóa API; mô hình; thời gian chờ (mặc định 30 giây); số lượt tối đa mỗi ngày; xóa
-  các đề đã lưu; nút Kiểm tra key (kết quả: thành công / key không hợp lệ / hết hạn mức / không có
-  mạng); mục **Dự phòng khi hết lượt** (mặc định Groq, chỉ dùng khi đã có khóa Groq, xem phần "Dự
-  phòng miễn phí khi hết lượt: Groq" ở trên).
-- **AI Teacher:** chọn Gemma cục bộ, quản lý tải/xóa mô hình, cấu hình API kiểm tra chéo và nạp/xóa
-  tệp trong Thư viện kiến thức.
+Cài đặt chia thành các trang nhỏ, chọn ở cột bên trái (màn hình hẹp: hàng thẻ phía trên; phím mũi
+tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
+
+- **Giao diện:** chế độ Cơ bản / Nâng cao; sáng / tối / theo hệ thống; cỡ chữ 90–140 %; ngôn ngữ;
+  khôi phục bố cục.
+- **Mô phỏng & hiệu năng:** chất lượng hiển thị (Tự động / Thấp / Trung bình / Cao, nút Đo lại — chỉ
+  ảnh hưởng hình ảnh, không ảnh hưởng số liệu); g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s², chỉ dùng
+  khi đề không cho g).
 - **Phím tắt:** danh sách đầy đủ.
+- **Kết nối AI:** ô "Nhà cung cấp và khóa API" (Gemini khuyên dùng, Claude, Groq miễn phí hoặc tắt;
+  hướng dẫn lấy khóa; mô hình; nút Kiểm tra key), ô "Thời gian chờ và giới hạn mỗi ngày" và ô "Dự
+  phòng khi hết lượt" (mặc định Groq, xem phần Groq ở trên).
+- **AI Teacher:** Think (API thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
+- **AI local (Gemma):** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
+- **GPU cho Gemma:** thông tin card đồ họa WebGPU (đọc trên máy, không gửi đi); chọn card mạnh hay
+  card tiết kiệm pin (máy có hai card); độ dài câu trả lời của Gemma (Ngắn / Vừa / Dài); giải phóng bộ
+  nhớ GPU sau 5 hoặc 15 phút không dùng, hoặc ngay lập tức.
+- **Thư viện kiến thức:** ghi chú có sẵn, tài liệu em thêm (.txt, .md, .csv, .json), tra Wikipedia.
+- **Trí nhớ hội thoại:** số tin nhắn trước gửi kèm câu hỏi (Không / 4 / 12 / 24; Gemma tối đa 4); lưu
+  hay không lưu cuộc trò chuyện trên máy; xóa cuộc trò chuyện.
+- **Giọng nói:** xem mục "Giọng đọc tiếng Việt" bên dưới.
+- **An toàn & quyền riêng tư:** xác nhận độ tuổi và điều khoản, trang quyền riêng tư, nhật ký sự cố.
+
+### Giọng đọc tiếng Việt
+
+Bật **Đọc to câu trả lời** (hoặc nút loa trong khung chat). Trước khi đọc, app chuyển câu trả lời
+thành lời tiếng Việt: số dùng dấu phẩy thập phân ("9,81" → "chín phẩy tám mốt"), đơn vị ("m/s²" →
+"mét trên giây bình phương"), công thức ("F = m·a" → "ép bằng mờ nhân a"), phân số, căn, chữ Hy Lạp,
+công thức hóa học ("H₂O" → "hát hai ô"), và ngắt nghỉ ở dấu câu như khi thầy cô giảng. Nút **Xem chữ
+sẽ đọc** cho thấy đúng lời app sẽ đọc. Có ba nguồn giọng:
+
+- **Giọng của Windows** (miễn phí, không cần mạng). Máy chưa có giọng tiếng Việt thì Windows đọc bằng
+  giọng tiếng Anh, sai dấu. Cách cài: Settings → Time & language → Speech → "Manage voices" → **Add
+  voices** → gõ "Vietnamese" → chọn **Vietnamese (Vietnam)** → Add (giọng "Microsoft An"), rồi mở lại
+  SimLab. Nút **Mở cài đặt giọng nói của Windows** mở thẳng trang đó (bản desktop).
+- **Giọng Gemini (trực tuyến):** tự nhiên nhất; dùng khóa Gemini ở Kết nối AI và tính vào số lượt AI
+  mỗi ngày. Chữ của câu trả lời (không có câu hỏi của em) được gửi tới Google để đọc.
+- **Giọng tiếng Việt trên máy:** tải một lần (≈ 115 MB, mô hình MMS-TTS của Meta, giấy phép CC BY-NC
+  4.0: chỉ dùng phi thương mại), sau đó đọc không cần mạng; giọng hơi giống máy hơn nhưng đúng dấu.
+  Chạy bằng card đồ họa nếu có, nếu không thì bằng CPU (chậm hơn).
+
+Giọng đã chọn không đọc được (thiếu khóa, mất mạng, chưa tải) thì app đọc bằng giọng Windows và trang
+Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm, Lanh lẹ, Hài hước) và tốc độ 0,8–1,3×.
 
 ## Lỗi thường gặp
 

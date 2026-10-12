@@ -57,6 +57,21 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`.
+- **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
+  (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
+  A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
+  `settings.nav.*`); other screens open a page with `openSettingsAt(id)`.
+- **Voice** (`src/teacher/voice/`): every spoken text goes through `toSpeech` + `splitForSpeech`
+  (`vietnameseText.ts`, Vietnamese numbers/units/LaTeX/chemistry, tested) — never send raw text to a
+  voice. Engines in `speak.ts`: Windows/Web Speech, Gemini TTS (Rust `ai/tts.rs` → `ai_tts`: model
+  and voice validated, 18+ gate, daily cap, cancel) and the on-device MMS-TTS Vietnamese model
+  (`localVoice*.ts`, CC BY-NC 4.0, WebGPU else WASM, OPFS). A failing voice falls back to Windows
+  and sets `lastError`. Licences: `docs/THIRD_PARTY.md`, `docs/LEGAL_COMPLIANCE.md` §2e.
+- **Whiteboard** (`src/teacher/board/`, design `docs/WHITEBOARD.md`): `teachscript.ts` (fault
+  tolerant, strips coordinates), `fromMarkdown.ts` (any answer → board), `layout.ts` (3 columns,
+  deterministic, property test: no overlap), `provenance.ts` (given / checked / unverified numbers),
+  `plot.ts` (safe expression reader, no `eval`), `lesson.ts` (voice and pen in step), `Whiteboard.tsx`.
+  The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 

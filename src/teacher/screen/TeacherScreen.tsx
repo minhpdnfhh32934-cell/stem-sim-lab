@@ -1,16 +1,35 @@
 import { ArrowLeft, BookOpen, MessageCircle, Presentation, ShieldCheck } from 'lucide-react';
-import { useEffect, useId } from 'react';
+import { lazy, Suspense, useEffect, useId } from 'react';
 import { useT } from '@/app/i18n';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useChatStore } from '@/teacher/chat/chatStore';
+import { useChatStore, type ChatMessageRecord } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
 import { cx } from '@/ui/cx';
+import type { LessonInput } from '@/teacher/board/lesson';
 import './teacher.css';
 
+// The board (fonts, KaTeX, layout) loads only when the learner opens the board layout.
+const Whiteboard = lazy(() =>
+  import('@/teacher/board/Whiteboard').then((m) => ({ default: m.Whiteboard })),
+);
+
 const LAYOUTS: TeacherLayout[] = ['talk', 'board'];
+
+function latestLesson(messages: ChatMessageRecord[]): LessonInput | null {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role !== 'assistant') continue;
+    const question = messages
+      .slice(0, i)
+      .reverse()
+      .find((q) => q.role === 'user');
+    return { id: m.id, content: m.content, question: question?.content ?? '' };
+  }
+  return null;
+}
 
 export default function TeacherScreen() {
   const t = useT();
@@ -21,6 +40,8 @@ export default function TeacherScreen() {
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
   const layoutId = useId();
+  // The board teaches the latest answer, with the question it answers (its numbers are given).
+  const lesson = latestLesson(messages);
   const completedSteps = Math.min(
     4,
     messages.filter((message) => message.role === 'assistant').length,
@@ -145,8 +166,16 @@ export default function TeacherScreen() {
           </span>
         </aside>
 
+        {layout === 'board' && (
+          <div className="teacher__board">
+            <Suspense fallback={<p className="muted">{t('board.preparing')}</p>}>
+              <Whiteboard lesson={lesson} />
+            </Suspense>
+          </div>
+        )}
+
         <main className="teacher__chat-wrap" aria-label={t('chat.label')}>
-          <ChatPanel showScreenContext={false} teacherPage />
+          <ChatPanel showScreenContext={false} teacherPage boardMode={layout === 'board'} />
         </main>
       </div>
     </section>

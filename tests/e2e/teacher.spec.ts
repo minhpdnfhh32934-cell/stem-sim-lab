@@ -157,3 +157,55 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
   await expect(panel.getByText(/Đã rà soát: groq/)).toBeVisible();
   expect(calls).toEqual({ gemini: 1, groq: 1, wiki: 0 });
 });
+
+test('whiteboard: the answer is taught on the board (written, circled, boxed), the chat shows no tags', async ({
+  page,
+}) => {
+  const bodies: string[] = [];
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
+  });
+  const lesson = [
+    'Ta xét <write id="t1" zone="title" role="heading">Định luật II Newton</write> nhé.',
+    'Đề cho <write id="g1" zone="side_notes" role="note">Cho: m = 2 kg, F = 10 N</write>.',
+    'Công thức là <write id="f1" zone="steps" math="true">a = \\frac{F}{m}</write><circle target="f1"/>.',
+    'Thay số <write id="r1" zone="steps" role="result">a = 10/2 = 5 m/s²</write><box target="r1"/>.',
+  ].join(' ');
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
+    bodies.push(route.request().postData() ?? '');
+    return route.fulfill({
+      json: {
+        candidates: [
+          { content: { role: 'model', parts: [{ text: lesson }] }, finishReason: 'STOP' },
+        ],
+      },
+    });
+  });
+
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toBeVisible();
+  const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
+  await panel
+    .getByRole('textbox', { name: 'Nhập câu hỏi' })
+    .fill('Vật 2 kg chịu lực 10 N, gia tốc?');
+  await panel.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+
+  // The AI was asked for a board lesson (TeachScript), with no coordinates.
+  await expect.poll(() => bodies.length).toBe(1);
+  expect(bodies[0]).toContain('CHẾ ĐỘ BẢNG TRẮNG');
+
+  // Written on the board, then marked by hand.
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.locator('[data-id="t1"]')).toContainText('Định luật II Newton');
+  await expect(board.locator('[data-id="r1"]')).toContainText('a = 10/2 = 5 m/s²');
+  await expect(board.locator('.board__mark.is-circle.is-shown')).toHaveCount(1);
+  await expect(board.locator('.board__mark.is-box.is-shown')).toHaveCount(1);
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible();
+  // The chat keeps a readable copy: no raw tags.
+  await expect(panel.getByText(/<write/)).toHaveCount(0);
+  await expect(panel.getByText('Định luật II Newton').first()).toBeVisible();
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});

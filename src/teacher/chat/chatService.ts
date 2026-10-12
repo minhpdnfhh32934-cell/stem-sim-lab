@@ -20,8 +20,34 @@ const BASE_SYSTEM: Record<Locale, string> = {
 
 /** Think: the second provider reviews and rewrites the draft (never just "agrees"). */
 const REVIEW_SYSTEM: Record<Locale, string> = {
-  vi: 'Bạn là người rà soát độc lập câu trả lời STEM cho học sinh THPT. Kiểm tra lập luận, đơn vị, giả định và sự khớp với ngữ cảnh. Nếu có sai, sửa lại. Trả về một câu trả lời hoàn chỉnh, dễ hiểu bằng tiếng Việt; ghi rõ điểm chưa chắc chắn và chỉ trích dẫn nguồn có trong ngữ cảnh. Không bịa nguồn.',
-  en: 'You independently review a STEM answer for upper-secondary students. Check the reasoning, units, assumptions and agreement with the context. Fix any mistake. Return one complete, easy-to-read answer in English; state what is uncertain and cite only sources present in the context. Never invent sources.',
+  vi: 'Bạn là người rà soát độc lập câu trả lời STEM cho học sinh THPT. Kiểm tra lập luận, đơn vị, giả định và sự khớp với ngữ cảnh. Nếu có sai, sửa lại. Trả về một câu trả lời hoàn chỉnh, dễ hiểu bằng tiếng Việt; ghi rõ điểm chưa chắc chắn và chỉ trích dẫn nguồn có trong ngữ cảnh. Không bịa nguồn. Nếu bản nháp có thẻ bảng trắng (<write>, <circle>…), giữ đúng định dạng thẻ đó.',
+  en: 'You independently review a STEM answer for upper-secondary students. Check the reasoning, units, assumptions and agreement with the context. Fix any mistake. Return one complete, easy-to-read answer in English; state what is uncertain and cite only sources present in the context. Never invent sources. If the draft has whiteboard tags (<write>, <circle>…), keep that tag format.',
+};
+
+/**
+ * Board mode (cloud AI): the answer is a TeachScript lesson (docs/TEACHSCRIPT.md). The AI names
+ * zones and roles only; positions, sizes and every plotted point are computed by the app.
+ */
+export const BOARD_SYSTEM: Record<Locale, string> = {
+  vi: String.raw`CHẾ ĐỘ BẢNG TRẮNG. Trả lời như thầy cô vừa giảng vừa viết bảng, theo định dạng TeachScript:
+- Chữ thường bên ngoài thẻ là LỜI GIẢNG (được đọc to, không viết lên bảng).
+- Viết lên bảng: <write id="w1" zone="title|steps|main|side_notes|example|diagram" role="heading|body|keyword|note|result" math="true">nội dung</write>. id: chữ thường + số, không trùng. math="true" khi nội dung là công thức LaTeX (không có $). Chỉ viết ý chính, ngắn (dưới 80 ký tự), không chép cả đoạn văn.
+- Nhấn mạnh thứ đã viết: <underline target="id" span="cụm chữ"/>, <circle target="id"/>, <box target="id"/>, <highlight target="id"/>, mũi tên <arrow from="id" to="id" label="chữ"/>, chỉ vào <point target="id"/>, sửa <correct target="id">nội dung đúng</correct>.
+- Hình: <plot id="p1" fn="biểu thức theo x" domain="a..b" label="y = ..."/> (máy tự tính các điểm), <draw id="d1" type="free_body" spec='{"body":"vật","forces":["P","N","F","Fms"]}'/>, type="flow" spec='{"steps":["...","..."]}', type="table" spec='{"header":["..."],"rows":[["..."]]}'.
+- Sang phần mới khi bảng đã nhiều: <newboard title="..."/>.
+- KHÔNG BAO GIỜ ghi tọa độ, kích thước, màu. Bố cục do ứng dụng tự xếp.
+- Số liệu: chỉ dùng số có trong đề hoặc ngữ cảnh; khi tính, viết rõ phép tính rồi kết quả (ví dụ a = F/m = 10/2 = 5 m/s²) để ứng dụng kiểm lại.
+- Trình tự như giáo viên: tiêu đề (zone title) → tóm tắt đề "Cho/Tìm" (side_notes) → các bước giải đánh số (steps) → kết quả (role result, rồi <box>) → câu hỏi gợi mở cho học sinh.
+Ví dụ: Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Định luật II Newton</write> nhé. Đề cho <write id="g1" zone="side_notes" role="note">Cho: m = 2 kg, F = 10 N</write>. Theo định luật II, <write id="f1" zone="steps" math="true">a = \frac{F}{m}</write><circle target="f1"/> gia tốc tỉ lệ với lực. Thay số, <write id="r1" zone="steps" role="result" math="true">a = \frac{10}{2} = 5\ \text{m/s}^2</write><box target="r1"/>. Em thử đoán nếu khối lượng gấp đôi thì gia tốc thế nào?`,
+  en: String.raw`WHITEBOARD MODE. Answer like a teacher who talks while writing on a board, in TeachScript:
+- Plain text outside tags is SPEECH (read aloud, not written).
+- Write on the board: <write id="w1" zone="title|steps|main|side_notes|example|diagram" role="heading|body|keyword|note|result" math="true">content</write>. ids: lowercase + digits, unique. math="true" for LaTeX formulas (no $). Key points only, short (under 80 characters).
+- Emphasise what is written: <underline target="id" span="words"/>, <circle target="id"/>, <box target="id"/>, <highlight target="id"/>, <arrow from="id" to="id" label="text"/>, <point target="id"/>, <correct target="id">fixed content</correct>.
+- Figures: <plot id="p1" fn="expression in x" domain="a..b" label="y = ..."/> (the app computes the points), <draw id="d1" type="free_body" spec='{"body":"block","forces":["P","N","F","Fms"]}'/>, type="flow" spec='{"steps":["...","..."]}', type="table" spec='{"header":["..."],"rows":[["..."]]}'.
+- New section when the board is full: <newboard title="..."/>.
+- NEVER give coordinates, sizes or colours: the app lays the board out.
+- Numbers: only those in the problem or context; when computing, write the operation and the result (a = F/m = 10/2 = 5 m/s²) so the app can check it.
+- Order like a teacher: title → given/find (side_notes) → numbered steps (steps) → result (role result, then <box>) → a question for the learner.`,
 };
 
 const REVIEW_REQUEST: Record<Locale, (question: string, draft: string) => string> = {
@@ -128,7 +154,7 @@ export async function askTeacher(
   question: string,
   locale: Locale,
   records: ChatMessageRecord[],
-  options: { includeScreen: boolean; think: boolean },
+  options: { includeScreen: boolean; think: boolean; board?: boolean },
 ): Promise<ReplyResult> {
   const safety = await currentSafety();
   if (!safety.aiAllowed) throw new Error(translate(locale, 'chat.errors.notAllowed'));
@@ -168,13 +194,18 @@ export async function askTeacher(
   // then explained); the pre-selected default never blocks a learner who connected an API.
   const engine = (await analysisEngine()) === 'cloud' ? 'cloud' : 'gemma';
   const compact = engine === 'gemma';
-  const { system, references } = await contextPrompt(
+  const prompt = await contextPrompt(
     question,
     locale,
     options.includeScreen,
     chat.webLookup,
     compact,
   );
+  const { references } = prompt;
+  // Board mode: the cloud AI writes a TeachScript lesson; a small on-device model answers in
+  // plain markdown, which the board lays out by itself (src/teacher/board/fromMarkdown.ts).
+  const system =
+    options.board && !compact ? [prompt.system, BOARD_SYSTEM[locale]].join('\n\n') : prompt.system;
   const history: ChatMessage[] = memoryFor(records, chat.memorySize, compact).map(
     ({ role, content }) => ({ role, content }),
   );
