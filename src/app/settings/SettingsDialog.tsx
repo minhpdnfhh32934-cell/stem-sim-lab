@@ -4,6 +4,7 @@ import { AiSettings } from '@/app/ai/AiSettings';
 import { SafetySettings } from '@/safety/SafetySettings';
 import { LOCALES, formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { useWorkspaceStore } from '@/app/workspaceStore';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { SHORTCUTS, formatChord, type ShortcutAction } from '@/app/shortcuts/shortcuts';
 import { GRAVITY_PRESETS } from '@/core/constants';
@@ -12,6 +13,7 @@ import type { QualityPreference } from '@/perf/tiers';
 import { remeasure } from '@/perf/useStartupBenchmark';
 import { IconButton } from '@/ui/IconButton';
 import { FONT_SCALES, useSettingsStore, type ThemePreference } from './settingsStore';
+import { ChatAiSettings } from '@/teacher/chat/ChatAiSettings';
 
 const QUALITY: QualityPreference[] = ['auto', 'low', 'medium', 'high'];
 
@@ -59,6 +61,18 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     if (open && !dialog.open) dialog.showModal();
     if (!open && dialog.open) dialog.close();
   }, [open]);
+
+  const focus = useWorkspaceStore((s) => s.settingsFocus);
+  useEffect(() => {
+    if (!open || !focus) return;
+    const id = requestAnimationFrame(() => {
+      const section = document.getElementById(`settings-${focus}`);
+      if (section?.scrollIntoView) section.scrollIntoView({ block: 'start' });
+    });
+    return () => {
+      cancelAnimationFrame(id);
+    };
+  }, [open, focus]);
 
   return (
     <dialog
@@ -238,6 +252,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         </fieldset>
 
         <AiSettings />
+        <ChatAiSettings />
         <SafetySettings />
 
         <fieldset className="settings-group">

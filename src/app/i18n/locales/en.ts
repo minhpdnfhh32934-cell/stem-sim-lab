@@ -263,8 +263,8 @@ const en: Messages = {
     aiKeyNone: 'No key stored.',
     aiKeyHint:
       "The key is kept in the operating system's keychain (Windows Credential Manager), never in the app's files.",
-    aiCloudDesktopOnly:
-      'AI only works in the installed app (the browser version is for development).',
+    aiSessionKey:
+      'In the browser/localhost, the key lives only in this page’s memory (gone on reload); the desktop app uses the system keychain.',
     aiPrivacy:
       "The problem text is sent to the AI provider's servers. On Gemini's free tier Google may use what you send to improve its products, so never put personal information (names, phone numbers, addresses…) in a problem.",
     aiRule:
@@ -791,12 +791,243 @@ const en: Messages = {
     suggestedTitle: 'Suggested for the {level} level',
     noSuggestions:
       'This level is still being built. Choose the Foundation level in the Library to start now.',
-    teacherTitle: 'Learn with an AI teacher',
+    teacherTitle: 'AI Teacher',
     teacherBody:
-      'An AI teacher explains on a whiteboard and you can ask at any time. Every number still comes from the program.',
+      'Ask questions, get step-by-step hints and check your understanding. Simulation numbers still come from the app.',
     comingSoon: 'Coming soon',
-    teacherOpen: 'See the sketch',
+    teacherOpen: 'Open AI Teacher',
     noAiNote: 'No AI or no internet? You can still learn: open a topic or build a scene.',
+    cameraButton: 'Photograph the problem',
+  },
+  camera: {
+    title: 'Photograph the problem',
+    close: 'Close the camera',
+    preview: 'What the camera sees',
+    photoAlt: 'The photographed problem',
+    capture: 'Capture',
+    mirror: 'Mirror',
+    retake: 'Retake',
+    usePhoto: 'Use photo',
+    reading: 'Reading the photo…',
+    privacy:
+      'The photo goes to the AI in use (on-device Gemma or cloud API) only to read the problem.',
+    denied: 'Could not open the camera. Allow the browser/app to use the camera and try again.',
+    retry: 'Try again',
+    blockedHint:
+      'If the browser blocked it permanently, click the lock/site-settings icon next to the address bar, set Camera to “Allow”, then press Try again.',
+    unsupported: 'This device has no supported camera.',
+    needGemma: 'No Gemma model yet. Download one in Settings → AI Teacher.',
+    needVision:
+      'Could not read the photo: need a cloud API (Gemini/Groq with a key) or a ready Gemma model.',
+    readFailed: 'Could not read the problem in the photo. Please retake it more clearly.',
+    badKey: 'The API key was refused (wrong key or no permission). Check it in Settings.',
+    badModel: 'The API model name is wrong. Check the Model field in Settings.',
+  },
+  landing: {
+    eyebrow: 'Explore science by doing',
+    title: 'Welcome to STEM Sim Lab',
+    subtitle:
+      'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
+    labTitle: 'Laboratory',
+    labBody:
+      'Explore Physics, Chemistry and Biology simulations, adjust parameters and inspect results.',
+    teacherTitle: 'AI Teacher',
+    teacherBody:
+      'Ask questions, get hints and check your understanding with an AI study assistant.',
+    privacy: 'You choose when to share screen context or use an online AI service.',
+  },
+  chat: {
+    label: 'Chat with the AI teacher',
+    title: 'AI Teacher',
+    product: 'STEM Sim Lab',
+    model: 'Gemma · {model}',
+    clear: 'Clear conversation',
+    voice: 'Teacher reads answers aloud',
+    voiceHint: 'Turn the teacher’s voice on/off',
+    close: 'Close chat',
+    expand: 'Open AI Teacher page',
+    contextToggle: 'Use current screen information',
+    contextHint: 'Only shares STEM Sim Lab data currently open',
+    engineLabel: 'Choose AI model',
+    cloud: 'API',
+    gemma: 'Local Gemma',
+    noApi:
+      'No API key is configured. Connect an API in Settings or choose a downloaded Gemma model.',
+    gemmaMissingNotice:
+      'Gemma is not ready: this model is not downloaded. Download it in Settings → AI Teacher, or choose “API”.',
+    settings: 'Settings',
+    localOnly: 'Questions are processed locally on this computer.',
+    noWebgpuNotice:
+      'This computer or browser does not support WebGPU, so Gemma cannot run here. Choose “API” and connect a key in Settings.',
+    thinkNoVerifier:
+      'Think needs a second API to cross-check, but it has no key yet. Choose a provider and enter its key in Settings → AI Teacher.',
+    reviewTarget: '{name} (review)',
+    sentTo: 'Your question and related library excerpts will be sent to: {targets}.',
+    sentToWithScreen:
+      'Your question, the screen context and related library excerpts will be sent to: {targets}.',
+    welcomeTitle: 'Ask questions your way',
+    welcomeBody:
+      'Turn on “Use current screen information” if your question is about the open simulation.',
+    welcomeBodyTeacher:
+      'Ask a question or choose a suggestion below. The AI teacher will explain step by step using the knowledge library.',
+    starters: {
+      one: 'Explain the main idea of this topic.',
+      two: 'Where should I start solving this problem?',
+      three: 'Give me an easier example.',
+    },
+    modelMeta: 'Model: {model}',
+    checkedMeta: 'Reviewed by: {model}',
+    references: 'Knowledge sources',
+    thinking: 'Thinking…',
+    reviewing: 'Answering and cross-checking…',
+    inputLabel: 'Enter your question',
+    placeholder: 'Type your question…',
+    send: 'Send question',
+    think: 'Think',
+    thinkTitle: 'Use a second API to review the answer',
+    twoApis: '· 2 APIs',
+    enterHint: 'Enter to send · Shift+Enter for a new line',
+    footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
+    errors: {
+      cloudOff: 'Online AI is off. Enable an AI provider in Settings or choose local Gemma.',
+      notAllowed:
+        'AI is not enabled for this profile. Complete the safety setup in Settings to continue.',
+      noCloudKey: 'No API key is set for the answering model. Add one in Settings.',
+      gemmaMissing:
+        'Gemma is not downloaded, or this browser has no WebGPU. Check Settings → AI Teacher.',
+      webgpu: 'This browser or device has no WebGPU support, so Gemma cannot run on it.',
+      crisis:
+        'I’m sorry you are having a hard time. Please tell a trusted adult now. If you are in immediate danger in Vietnam, call 111 or 115. This message was not sent to AI.',
+      personal:
+        'This message may contain personal information. Remove names, addresses, email or phone numbers and try again.',
+      unsafe: 'I can only help with appropriate learning content.',
+      sameProvider:
+        'Choose a different provider for Think so a second API can cross-check the answer.',
+      noVerifierKey:
+        'No second API key is configured. Open Settings → AI Teacher to connect a review provider.',
+      filtered:
+        'The answer was hidden because it did not pass the safety filter. Try again or ask a teacher.',
+      screenPersonal:
+        'The screen context may contain personal information, so it was not sent. Remove it or turn off screen context.',
+      screenUnsafe: 'The screen context did not pass the safety check and was not sent.',
+    },
+  },
+  chatSettings: {
+    title: 'AI Teacher · Gemma and knowledge library',
+    intro:
+      'Choose an answering model, configure a cross-check API and manage local study materials.',
+    gemmaModel: 'Gemma version',
+    gemma270m: '270M · smallest',
+    gemma1b: '1B · recommended',
+    gemmaE2b: 'E2B · strongest, reads photos',
+    modelReady: 'Gemma is ready on this computer.',
+    modelMissing: 'This model is not downloaded.',
+    checking: 'Checking this model…',
+    gemmaTerms: 'Read Gemma terms of use',
+    gemmaWhere:
+      'Gemma runs inside the app with WebGPU (no Ollama, no key). The model files are downloaded once from HuggingFace and kept in the app’s storage on this computer. Without WebGPU Gemma cannot run — use an API instead.',
+    downloadingShort: 'Downloading…',
+    cancelDownload: 'Cancel download',
+    downloadCancelled: 'Download cancelled. The model is not marked as downloaded.',
+    downloadNoSpace:
+      'Not enough free space to store the model. Free some disk space or pick a smaller model.',
+    downloadNetwork:
+      'The download failed because of the network. Check the connection and press “Download model” again.',
+    downloadMemory:
+      'This computer does not have enough graphics memory for this model. Choose a smaller one (270M or 1B).',
+    downloadFailed: 'The download did not finish ({detail}). The model is not marked as ready.',
+    desktopOnly: 'desktop app only',
+    webLookup: 'Also look up Wikipedia when online',
+    webLookupHint:
+      'Off by default. When on, your question is sent to Wikipedia to fetch one reference excerpt (community content, check it).',
+    flowTitle: 'Where does your data go?',
+    flowLocalTitle: 'Stays on this computer',
+    flowLocalChat: 'Your AI Teacher chat history (clear it with the bin button).',
+    flowLocalDocs: 'Files you added and the {count} built-in notes.',
+    flowLocalModel: 'Downloaded Gemma models; with Gemma, answers are generated on this computer.',
+    flowLocalKeyDesktop: 'API keys: in the operating-system keychain.',
+    flowLocalKeyBrowser: 'API keys: only in this browser session, gone on reload.',
+    flowSentTitle: 'May be sent online (with the current settings)',
+    flowAnswer: 'With “API”: question + related library excerpts → {name}.',
+    flowThink: 'With Think on: question + draft → {name} for review.',
+    flowThinkOnly:
+      'With Gemma: only when Think is on, the question + draft go → {name} for review.',
+    flowWiki: 'Wikipedia lookup is on: question → Wikipedia.',
+    flowPhoto:
+      'When you photograph a problem (browser): the downscaled photo → {name} to read the text.',
+    flowModelDownload:
+      'When you press “Download model”: files come from HuggingFace (no question is sent).',
+    flowScreen:
+      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is STEM Sim Lab data, not a screenshot.',
+    download: 'Download model',
+    downloaded: 'Downloaded',
+    deleteModel: 'Delete Gemma',
+    downloading: 'Downloading the model. It can be large; keep the app open until it completes.',
+    webgpuRequired: 'This browser or device has no WebGPU support, so Gemma cannot run on it.',
+    openRepo: 'Open the model page',
+    recommended: 'Recommended',
+    progressPreparing: 'Preparing model download…',
+    progressDownloading: 'Downloading model files…',
+    progressVerifying: 'Verifying downloaded files…',
+    progressSaving: 'Saving the model on this computer…',
+    progressComplete: 'Gemma download complete.',
+    progressLoading:
+      'Files downloaded — loading the model onto the GPU (this can take a few dozen seconds)…',
+    verifier: 'Answer review API',
+    verifierModel: 'Review model name',
+    verifierKey: 'Second API key',
+    keyPlaceholder: 'Paste the selected provider’s API key',
+    saveKey: 'Save key',
+    testKey: 'Test key',
+    deleteKey: 'Delete key',
+    keySaved: 'The key was saved in the operating system credential store.',
+    keyDeleted: 'The second API key was deleted.',
+    keyPrivacy:
+      'Think sends the question and draft to the second provider for review. The key stays in the operating system credential store and is shared with settings for that provider.',
+    browserKeyNote:
+      'In the browser, the second API key lives for this session only (gone on reload); Claude can review only in the desktop app. The desktop app keeps keys in the system keychain.',
+    keyTest: {
+      ok: 'Connection succeeded.',
+      noKey: 'No key is set.',
+      badKey: 'The API key is invalid.',
+      quota: 'The provider reports its quota is used up.',
+      badModel: 'The model was not found.',
+      offline: 'No network connection.',
+      error: 'Could not test the key.',
+      notAllowed: 'Complete the safety setup before using AI.',
+      failed: 'Could not test the key.',
+    },
+    library: 'Knowledge library',
+    hideLibrary: 'Hide library',
+    openLibrary: 'Open library',
+    builtIn: '{count} built-in STEM notes for upper-secondary study.',
+    notes: 'notes',
+    addFile: 'Add knowledge file',
+    fileFilter: 'Text and data files',
+    fileTooLarge: 'Each file is limited to 120,000 characters.',
+    libraryFull: 'The personal library reached its 1.5-million-character limit.',
+    supportedFiles: 'Supports .txt, .md, .csv, .json',
+    noDocs: 'No personal files yet. Add one to use it as a reference.',
+    characters: 'characters',
+    removeFile: 'Remove',
+    localLibraryPrivacy:
+      'Files are stored on this computer. With online APIs, relevant excerpts may be sent with your question. Only add materials you have permission to use.',
+  },
+  voice: {
+    title: 'Teacher’s voice',
+    intro:
+      'The teacher reads each answer aloud through the speakers. Free, uses the device voices.',
+    style: 'Voice style',
+    styles: {
+      vui: 'Cheerful',
+      am: 'Warm',
+      lanh: 'Brisk',
+      hai: 'Playful',
+    },
+    voiceLabel: 'Reading voice',
+    auto: 'Automatic (Vietnamese first)',
+    preview: 'Preview',
+    noSpeech: 'This device has no speech engine. Try another browser.',
   },
   levels: {
     label: 'Level',
@@ -842,6 +1073,7 @@ const en: Messages = {
     predictTitle: 'Predict first',
     poeSteps: 'Predict → Observe → Explain',
     observe: 'Run to check',
+    observeFailed: 'Could not compute the check result. Adjust the parameters and try again.',
     predictRight: 'Your prediction was right!',
     predictOther: 'The result differs from your prediction — well worth thinking about.',
     observed: 'Changing {param}: {quantity} went from {before} to {after}.',
@@ -895,16 +1127,16 @@ const en: Messages = {
   teacher: {
     regionLabel: 'Learn with an AI teacher',
     title: 'Learn with an AI teacher',
-    sketchBadge: 'Interface sketch — not working yet',
+    sketchBadge: 'Study assistant',
     sketchNote:
-      'This is an interface sketch for review. The AI teacher will speak, write on the board and listen in later phases; it cannot talk yet.',
+      'Ask questions, request hints and learn at your pace. Choose an online API or Gemma running on this computer.',
     back: 'Back to home',
     layoutLabel: 'Preview layout',
     layoutTalk: 'Conversation',
     layoutBoard: 'Board lesson',
     aiLabel: 'AI teacher',
     talkCaption: 'Hi! What shall we learn today?',
-    boardCaption: 'First, let us identify the forces acting on the object.',
+    boardCaption: 'Let’s put the key ideas on the board and reason through them step by step.',
     startTitle: 'What do you want to learn today?',
     startHint: 'Pick a topic, speak, type or paste a problem',
     durationLabel: 'How long?',
@@ -914,6 +1146,7 @@ const en: Messages = {
     boardFormula: 'P = m·g',
     boardNote: 'pointing straight down',
     progressLabel: 'Lesson progress',
+    turnProgress: 'Lesson conversation turns',
     controlsLabel: 'Lesson controls',
     mic: 'Hold to talk',
     raiseHand: 'Raise hand',
@@ -933,7 +1166,7 @@ const en: Messages = {
     connectBody:
       'The AI teacher needs an AI key. It takes about 2 minutes, with step-by-step help.',
     connect: 'Open Connect AI',
-    notYet: 'Not available in the sketch',
+    notYet: 'This feature will be added later',
   },
   languages: {
     vi: 'Tiếng Việt',

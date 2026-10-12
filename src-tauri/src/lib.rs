@@ -6,6 +6,7 @@
 //!
 //! - `safety_*`: age gate, supervisor PIN, consent, incident log (PROMPT_PHAN_2 A3)
 //! - `save_file` / `open_text_file`: native Save/Open dialogs (`.stemsim`, PNG, CSV)
+//! - `open_known_page`: opens a fixed list of external pages (Gemma terms, model pages)
 //! - `history_*`: simulation history in SQLite (app data folder)
 //! - `web_update_*`: signed in-app updates of the web part (no new executable)
 
@@ -13,6 +14,7 @@ mod ai;
 mod app_info;
 mod files;
 mod history;
+mod links;
 mod safety;
 mod webupdate;
 
@@ -63,6 +65,7 @@ pub fn run() {
             safety::safety_clear_incidents,
             files::save_file,
             files::open_text_file,
+            links::open_known_page,
             history::history_add,
             history::history_update,
             history::history_list,

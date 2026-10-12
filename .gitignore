@@ -28,5 +28,8 @@ Thumbs.db
 !.env.example
 /release/
 
+# onnxruntime binaries copied by scripts/copy-ort-wasm.mjs (postinstall)
+public/ort/
+
 # Claude Code watcher (scripts/agents/watch.ps1)
 .agent-logs/

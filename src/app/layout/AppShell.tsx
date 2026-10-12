@@ -17,7 +17,7 @@ import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
-import { useIsHome, useIsTeacher } from '@/app/topics';
+import { useIsHome, useIsLanding, useIsTeacher } from '@/app/topics';
 import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
@@ -30,6 +30,8 @@ import { StatusBar } from './StatusBar';
 import { Timeline } from './Timeline';
 import { TopBar } from './TopBar';
 import { usePresentationFullscreen } from './usePresentationFullscreen';
+import { LandingScreen } from '@/app/learner/LandingScreen';
+import { ChatBubble } from '@/teacher/chat/ChatBubble';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -78,9 +80,11 @@ export function AppShell() {
   const { presentation } = layout;
   const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
   const teacher = useIsTeacher();
-  const home = useIsHome() && !teacher;
+  const landing = useIsLanding();
+  const labHome = useIsHome() && !teacher;
+  const home = landing || labHome;
 
-  const showLeft = layout.leftOpen && !presentation && !teacher;
+  const showLeft = layout.leftOpen && !presentation && !teacher && !landing;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
   const showRight = layout.rightOpen && !presentation && !home && !teacher;
   const showBottom = layout.bottomOpen && !presentation && !home && !teacher;
@@ -131,7 +135,9 @@ export function AppShell() {
             <Suspense fallback={null}>
               <TeacherScreen />
             </Suspense>
-          ) : home ? (
+          ) : landing ? (
+            <LandingScreen />
+          ) : labHome ? (
             <HomeScreen />
           ) : (
             <Stage />
@@ -194,6 +200,8 @@ export function AppShell() {
       ) : (
         <StatusBar />
       )}
+      {/* The launch page already has its own "Thầy AI" entry: the bubble is for the lab. */}
+      {!presentation && !teacher && !landing && <ChatBubble />}
     </div>
   );
 }

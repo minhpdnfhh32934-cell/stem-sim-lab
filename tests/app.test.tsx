@@ -5,6 +5,8 @@ import { App } from '@/app/App';
 import { Inspector } from '@/app/layout/Inspector';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { Timeline } from '@/app/layout/Timeline';
+import { openLab } from '@/app/topics';
+import { useNavigationStore } from '@/app/navigationStore';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 
@@ -15,22 +17,48 @@ describe('App shell (Phase 0)', () => {
       useLayoutStore.getState().resetLayout();
       useLayoutStore.getState().setPresentation(false);
       useWorkspaceStore.setState({ subject: 'physics', problemText: '' });
+      useNavigationStore.getState().setScreen('home');
     });
   });
 
-  it('starts on the home screen; the simulation regions appear with a topic (A4.2)', () => {
+  /** The lab workspace (library, subjects, home screen) lives behind the landing page. */
+  function renderInLab() {
+    act(() => {
+      openLab();
+    });
+    return render(<App />);
+  }
+
+  it('starts on the landing page; the brand returns there; the lab home follows (A4.2)', async () => {
+    const user = userEvent.setup();
     render(<App />);
+    expect(
+      screen.getByRole('heading', { name: 'Chào mừng đến với STEM Sim Lab' }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Phòng thí nghiệm/ }));
     expect(screen.getByRole('radiogroup', { name: 'Môn học' })).toBeInTheDocument();
     expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Nhập đề bài hoặc câu hỏi…' })).toBeInTheDocument();
-    expect(screen.getByText('Dạy học bằng AI')).toBeInTheDocument();
+    expect(screen.getAllByText('Thầy AI').length).toBeGreaterThan(0);
     // Nothing open yet: no stage, timeline, inspector or graphs.
     expect(screen.queryByRole('region', { name: 'Khung mô phỏng' })).not.toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Điều khiển thời gian' })).not.toBeInTheDocument();
     expect(
       screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
     ).not.toBeInTheDocument();
+    // The "STEM Sim Lab" brand goes back to the landing page.
+    await user.click(screen.getByRole('button', { name: 'Về trang chủ' }));
+    expect(
+      screen.getByRole('heading', { name: 'Chào mừng đến với STEM Sim Lab' }),
+    ).toBeInTheDocument();
+  });
+
+  it('the landing page has clear Lab and Teacher entries', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /cùng kiểm tra kiến thức/ }));
+    expect(await screen.findByRole('heading', { name: 'Dạy học bằng AI' })).toBeInTheDocument();
   });
 
   it('shows the three Science Card confidence levels', () => {
@@ -43,7 +71,7 @@ describe('App shell (Phase 0)', () => {
 
   it('switching subject changes the library', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
     expect(within(library).getByText('Ném xiên')).toBeInTheDocument();
     await user.click(screen.getByRole('radio', { name: 'Hóa học' }));
@@ -53,7 +81,7 @@ describe('App shell (Phase 0)', () => {
 
   it('library search ignores diacritics', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     await user.type(screen.getByRole('searchbox'), 'con lac');
     expect(screen.getByText('Con lắc đơn')).toBeInTheDocument();
     expect(screen.queryByText('Rơi tự do')).not.toBeInTheDocument();
@@ -69,7 +97,7 @@ describe('App shell (Phase 0)', () => {
 
   it('Ctrl+B hides and shows the library', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     await user.keyboard('{Control>}b{/Control}');
     expect(
       screen.queryByRole('complementary', { name: 'Thư viện chủ đề' }),
@@ -80,7 +108,7 @@ describe('App shell (Phase 0)', () => {
 
   it('F5 enters presentation mode (side panels hidden) and Esc leaves it', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     await user.keyboard('{F5}');
     expect(
       screen.queryByRole('complementary', { name: 'Thư viện chủ đề' }),
@@ -92,7 +120,7 @@ describe('App shell (Phase 0)', () => {
 
   it('language can be switched to English in Settings', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     await user.click(screen.getByRole('button', { name: 'Cài đặt' }));
     await user.click(screen.getByRole('radio', { name: 'English' }));
     expect(screen.getByRole('radio', { name: 'Physics' })).toBeInTheDocument();
@@ -101,7 +129,7 @@ describe('App shell (Phase 0)', () => {
 
   it('Space on a focused subject button selects it (not Play/Pause)', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     screen.getByRole('radio', { name: 'Sinh học' }).focus();
     await user.keyboard(' ');
     expect(screen.getByRole('radio', { name: 'Sinh học' })).toHaveAttribute('aria-checked', 'true');
@@ -122,7 +150,7 @@ describe('App shell (Phase 0)', () => {
 
   it('a subject card selects the subject and shows its topics in the library', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderInLab();
     await user.click(screen.getByRole('button', { name: /^Sinh học/ }));
     expect(screen.getByRole('radio', { name: 'Sinh học' })).toHaveAttribute('aria-checked', 'true');
     const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });

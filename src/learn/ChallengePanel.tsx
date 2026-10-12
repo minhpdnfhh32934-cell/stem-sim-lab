@@ -73,6 +73,7 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
     after: number;
     correct: number;
   } | null>(null);
+  const [observeError, setObserveError] = useState(false);
   const [note, setNote] = useState('');
   const groupId = useId();
   const noteId = useId();
@@ -83,7 +84,11 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
     const base = scene.usesGravity && g !== undefined ? { ...scene.defaults, g } : scene.defaults;
     const start = { ...base, ...poe.start };
     const out = observe(scene, poe, start);
-    if (!out || choice === null) return;
+    if (!out || choice === null) {
+      if (!out) setObserveError(true);
+      return;
+    }
+    setObserveError(false);
     setObserved(out);
     record(poe.id, choice === out.correct);
     // Observe: the simulation runs with the changed value (marked "đã chỉnh").
@@ -95,6 +100,7 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
   const restart = () => {
     setObserved(null);
     setChoice(null);
+    setObserveError(false);
     setNote('');
   };
 
@@ -129,10 +135,22 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
         ))}
       </div>
       {observed === null ? (
-        <button type="button" className="btn btn--accent" disabled={choice === null} onClick={run}>
-          <Play size={15} strokeWidth={1.75} aria-hidden="true" />
-          {t('learn.observe')}
-        </button>
+        <>
+          <button
+            type="button"
+            className="btn btn--accent"
+            disabled={choice === null}
+            onClick={run}
+          >
+            <Play size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('learn.observe')}
+          </button>
+          {observeError && (
+            <p className="learn-result__verdict" role="alert">
+              {t('learn.observeFailed')}
+            </p>
+          )}
+        </>
       ) : (
         <div className="learn-result" role="status">
           <p className={cx('learn-result__verdict', right ? 'is-right' : 'is-other')}>

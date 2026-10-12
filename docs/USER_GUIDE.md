@@ -71,17 +71,52 @@ phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT
      PIN) → hướng dẫn nhanh. Không có bước nhập khóa.
      Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
      (khoảng 1 giây) để chọn chất lượng hiển thị.
-2. **Trang chủ "Hôm nay học gì?"** hiện khi chưa mở chủ đề nào:
+2. **Trang chủ STEM Sim Lab** có hai lối vào:
+   - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
+   - **Thầy AI** mở trang trò chuyện với trợ lý học tập.
+     Bấm logo **STEM Sim Lab** ở góc trái để quay về trang chủ.
+3. Trong **Phòng thí nghiệm**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
    - nút **Tiếp tục bài đang học** (mở lại chủ đề lần trước);
    - ô **Nhập đề bài hoặc câu hỏi…** (dán được đề nhiều dòng, Ctrl+Enter để phân tích) và nút
      **Tự dựng cảnh** (không cần AI);
    - 3 thẻ môn **Vật lý · Hóa học · Sinh học** (bấm để xem các chủ đề của môn trong Thư viện);
    - **chủ đề gợi ý** theo trình độ, môn bạn quan tâm được gợi ý trước;
-   - **Dạy học bằng AI** (sắp có).
-     Bấm logo **STEM Sim Lab** ở góc trái để quay về trang chủ.
-3. Chọn một chủ đề (trang chủ hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
+   - **Thầy AI** để hỏi bài trong trang chat riêng.
+4. Chọn một chủ đề (trang chủ Phòng thí nghiệm hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
    Space) để chạy.
-4. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
+5. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
+
+### Trò chuyện với Thầy AI
+
+Trong Phòng thí nghiệm, bấm bong bóng **Thầy AI** ở góc dưới bên phải để hỏi nhanh; ở trang chủ, bấm
+thẻ **Thầy AI** để mở cuộc trò chuyện toàn màn hình. Bấm chữ **STEM Sim Lab** ở góc trên để về trang
+chủ. Chọn API trực tuyến hoặc Gemma cục bộ ở thanh trên của khung chat. Nếu chưa kết nối API hoặc
+Gemma chưa sẵn sàng, khung chat hiện thông báo và nút **Cài đặt** mở thẳng đúng mục cần chỉnh. Dòng
+nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi tới đâu (hoặc chỉ xử lý trên máy).
+
+- Bật **Lấy thông tin từ màn hình** để gửi chủ đề, thông số, đề bài đã mở, trạng thái mô phỏng và
+  Thẻ Khoa học của STEM Sim Lab cùng câu hỏi. Mặc định tắt; nút tự tắt lại mỗi lần mở bong bóng.
+  Công tắc này chỉ có trong bong bóng chat, không có ở trang Thầy AI toàn màn hình.
+  Ứng dụng dùng trạng thái có cấu trúc, không chụp màn hình hay đọc cửa sổ khác.
+- Bật **Think** để API trả lời thứ nhất tạo bản nháp và một nhà cung cấp API khác kiểm tra, chỉnh lại
+  câu trả lời. Think dùng thêm lượt API; cấu hình nhà cung cấp thứ hai trong Cài đặt → Thầy AI. Thiếu
+  khóa thứ hai thì app báo ngay khi bật Think, không gửi gì. Khi bật Think, bản nháp không chuyển
+  sang nhà cung cấp dự phòng, để người rà soát không tự chấm bài của chính mình. Trên trình duyệt,
+  khóa chỉ nằm trong phiên (tải lại trang là mất) và Claude chỉ rà soát được ở bản desktop.
+- Chọn **Gemma cục bộ** để trò chuyện ngay trên máy, không cần Ollama, không cần mạng sau
+  khi đã tải model. Vào Cài đặt → Thầy AI để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
+  còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng; có
+  nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Máy và trình duyệt cần hỗ trợ WebGPU;
+  nếu không, app nói rõ và dùng API thay thế. Cài mới chọn sẵn Gemma, nhưng khi chưa tải model thì
+  app tự dùng API đã kết nối; nếu em tự chọn Gemma mà chưa tải, app không gửi câu hỏi lên mạng.
+  Mô hình được lưu trên máy, mở lại app không phải tải lại. Khi Gemma đang trả lời, hãy để cửa sổ
+  app hiện trên màn hình (thu nhỏ cửa sổ có thể làm máy tạm dừng GPU).
+- **Thư viện kiến thức** có sẵn ghi chú Vật lý, Hóa học, Sinh học THPT và cho phép nạp tệp `.txt`,
+  `.md`, `.csv`, `.json`. Tệp và lịch sử chat lưu trên máy; khi chat bằng API trực tuyến, các đoạn
+  kiến thức liên quan có thể được gửi cùng câu hỏi. **Tra thêm Wikipedia** là tùy chọn (mặc định
+  tắt): khi bật, câu hỏi được gửi tới Wikipedia. Ô **Dữ liệu của em đi đâu?** trong Cài đặt → Thầy AI
+  liệt kê theo cài đặt hiện tại những gì lưu trên máy và những gì có thể gửi đi. Xem thêm
+  `docs/AI_TUTOR.md`.
 
 ### Trình độ: Nền tảng và Đại cương
 
@@ -207,8 +242,9 @@ Cần biết:
 - **Riêng tư:** đề bài được gửi lên máy chủ Google để đọc. Với gói miễn phí, Google có thể dùng nội
   dung gửi lên để cải thiện sản phẩm, nên **đừng nhập thông tin cá nhân** (họ tên, số điện thoại,
   địa chỉ…) vào đề bài.
-- **Giữ khóa như mật khẩu:** không gửi cho bạn bè, không đăng lên mạng. App cất khóa trong kho khóa
-  của Windows (Windows Credential Manager), không lưu trong tệp. Lỡ để lộ khóa: vào Google AI Studio
+- **Giữ khóa như mật khẩu:** không gửi cho bạn bè, không đăng lên mạng. Bản desktop cất khóa trong kho khóa
+  của Windows (Windows Credential Manager), không lưu trong tệp. Trên trình duyệt/localhost, khóa chỉ nằm
+  trong bộ nhớ của trang (tắt hoặc tải lại là mất) nên mỗi phiên phải nhập lại. Lỡ để lộ khóa: vào Google AI Studio
   xóa khóa đó, tạo khóa mới và dán lại.
 - Ô **Mô hình** để trống là dùng mô hình mặc định (`gemini-3.8-flash`, thuộc gói miễn phí lúc viết
   hướng dẫn này — tháng 10/2026). Chỉ đổi khi thầy cô hướng dẫn.
@@ -351,6 +387,8 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 - **Kết nối AI:** chọn Gemini (khuyên dùng), Claude hoặc tắt AI; hướng dẫn lấy khóa API Gemini;
   khóa API; mô hình; thời gian chờ (mặc định 30 giây); số lượt tối đa mỗi ngày; xóa các đề đã lưu;
   nút Kiểm tra key (kết quả: thành công / key không hợp lệ / hết hạn mức / không có mạng).
+- **Thầy AI:** chọn Gemma cục bộ, quản lý tải/xóa mô hình, cấu hình API kiểm tra chéo và nạp/xóa
+  tệp trong Thư viện kiến thức.
 - **Phím tắt:** danh sách đầy đủ.
 
 ## Lỗi thường gặp

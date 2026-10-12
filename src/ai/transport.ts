@@ -16,6 +16,18 @@ export interface LlmTransport {
   usageToday?(): Promise<number>;
   /** "Kiểm tra key": one tiny request with the chosen model. */
   testKey?(provider: Provider, model: string): Promise<KeyTest>;
+  /**
+   * Reads a photographed problem (base64 JPEG) with a vision-capable cloud API.
+   * Optional: the desktop gateway has no image endpoint, so only FetchTransport
+   * implements it. Callers fall back to the local model when absent.
+   */
+  transcribePhoto?(req: {
+    provider: Provider;
+    model: string;
+    system: string;
+    base64: string;
+    timeoutSecs: number;
+  }): Promise<string>;
   /** The stored key masked as "••••••••abcd", or null (the key itself never reaches the page). */
   keyHint?(provider: Provider): Promise<string | null>;
 }
@@ -28,12 +40,13 @@ class TauriTransport implements LlmTransport {
     signal?.addEventListener('abort', onAbort, { once: true });
     // The Rust gateway counts the call against the user's daily cap and switches to the
     // fallback provider when the chosen one is out of quota/credit.
-    const fallback = fallbackFor(req.provider);
+    const { noFallback, ...rest } = req;
+    const fallback = noFallback ? undefined : fallbackFor(req.provider);
     const request = {
       day: localDay(),
       dailyCap: useAiStore.getState().dailyCap,
       ...(fallback ? { fallback } : {}),
-      ...req,
+      ...rest,
     };
     try {
       return await invoke<ChatResponse>('ai_chat', { request });
@@ -221,15 +234,99 @@ async function groqChat(req: ChatRequest, key: string, http: Http): Promise<stri
   return text.replace(/^\s*<think>[\s\S]*?<\/think>\s*/, '');
 }
 
+export interface VisionRequest {
+  provider: Provider;
+  model: string;
+  system: string;
+  base64: string;
+  timeoutSecs: number;
+}
+
+function visionParts(json: unknown): string {
+  const candidates = (json as { candidates?: { content?: { parts?: unknown } }[] }).candidates;
+  const parts = candidates?.[0]?.content?.parts;
+  if (!Array.isArray(parts)) return '';
+  return parts
+    .map((p) => {
+      if (typeof p === 'object' && p !== null && 'text' in p) {
+        const text = (p as { text?: unknown }).text;
+        return typeof text === 'string' ? text : '';
+      }
+      return '';
+    })
+    .join('');
+}
+
+/** Gemini photo reading (inlineData part). Browser/localhost only. */
+async function geminiVision(req: VisionRequest, key: string, http: Http): Promise<string> {
+  const name = req.model.trim().replace(/^models\//, '');
+  const resp = await http(
+    `https://generativelanguage.googleapis.com/v1beta/models/${name}:generateContent`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: req.system }] },
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: 'Đề bài trong ảnh là gì?' },
+              { inlineData: { mimeType: 'image/jpeg', data: req.base64 } },
+            ],
+          },
+        ],
+        generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
+      }),
+    },
+  );
+  if (!resp.ok) throw await httpError(resp);
+  return visionParts(await resp.json());
+}
+
+/** Groq photo reading (OpenAI-compatible image_url part). Browser/localhost only. */
+async function groqVision(req: VisionRequest, key: string, http: Http): Promise<string> {
+  const resp = await http('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      model: req.model.trim(),
+      messages: [
+        { role: 'system', content: req.system },
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Đề bài trong ảnh là gì?' },
+            { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${req.base64}` } },
+          ],
+        },
+      ],
+      max_completion_tokens: 1024,
+      temperature: 0.2,
+    }),
+  });
+  if (!resp.ok) throw await httpError(resp);
+  const json = (await resp.json()) as { choices?: { message?: { content?: string } }[] };
+  const content = json.choices?.[0]?.message?.content;
+  return typeof content === 'string' ? content : '';
+}
+
 /**
  * Transport without the desktop app: UI development, end-to-end tests (which mock the Gemini
- * server) and golden runs against the real APIs from Node. Keys must never live in the web
- * page, so it only works with a test key injected by the test runner. Claude is only called
- * from Node (Anthropic does not accept browser calls without a special opt-in header).
+ * server) and golden runs against the real APIs from Node. Keys typed into the page on
+ * localhost/browser live in `sessionKeys`: memory only, never persisted, gone on reload.
+ * The desktop app keeps using the OS keychain instead. Claude is only called from Node
+ * (Anthropic does not accept browser calls without a special opt-in header).
  */
+const sessionKeys = new Map<Provider, string>();
+
+function pageKey(provider: Provider): string | undefined {
+  return injectedKey(provider) ?? sessionKeys.get(provider);
+}
+
 class FetchTransport implements LlmTransport {
   private key(provider: Provider): string {
-    const k = injectedKey(provider);
+    const k = pageKey(provider);
     if (!k) throw new AiError('missingKey', provider);
     return k;
   }
@@ -240,8 +337,8 @@ class FetchTransport implements LlmTransport {
   }
   /** Same fallback rule as the Rust gateway (`send_with_fallback`). */
   async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
-    const fb = fallbackFor(req.provider);
-    const fbUsable = fb && this.supported(fb.provider) && !!injectedKey(fb.provider);
+    const fb = req.noFallback ? undefined : fallbackFor(req.provider);
+    const fbUsable = fb && this.supported(fb.provider) && !!pageKey(fb.provider);
     try {
       return { ...(await this.chatOnce(req, signal)), provider: req.provider, fallback: false };
     } catch (e) {
@@ -287,18 +384,22 @@ class FetchTransport implements LlmTransport {
       throw toAiError(e);
     }
   }
-  setKey(): Promise<void> {
-    return Promise.reject(new AiError('unavailable', 'desktop app only'));
+  setKey(provider: Provider, key: string): Promise<void> {
+    const trimmed = key.trim();
+    if (!trimmed) return Promise.reject(new AiError('missingKey', provider));
+    sessionKeys.set(provider, trimmed);
+    return Promise.resolve();
   }
   hasKey(provider: Provider): Promise<boolean> {
-    return Promise.resolve(this.supported(provider) && !!injectedKey(provider));
+    return Promise.resolve(this.supported(provider) && !!pageKey(provider));
   }
-  deleteKey(): Promise<void> {
+  deleteKey(provider: Provider): Promise<void> {
+    sessionKeys.delete(provider);
     return Promise.resolve();
   }
   async testKey(provider: Provider, model: string): Promise<KeyTest> {
     if (!this.supported(provider)) return { status: 'error', detail: 'desktop app only' };
-    const key = injectedKey(provider);
+    const key = pageKey(provider);
     if (!key) return { status: 'noKey', detail: '' };
     if (provider !== 'gemini' || __EDITION__ !== 'main') {
       return { status: 'error', detail: 'desktop app only' };
@@ -323,8 +424,38 @@ class FetchTransport implements LlmTransport {
     return { status, detail: status === 'error' ? `${resp.status}` : '' };
   }
   keyHint(provider: Provider): Promise<string | null> {
-    const key = this.supported(provider) ? injectedKey(provider) : undefined;
+    const key = this.supported(provider) ? pageKey(provider) : undefined;
     return Promise.resolve(key ? maskKey(key) : null);
+  }
+  async transcribePhoto(req: {
+    provider: Provider;
+    model: string;
+    system: string;
+    base64: string;
+    timeoutSecs: number;
+  }): Promise<string> {
+    if (!this.supported(req.provider)) throw new AiError('unavailable', 'desktop app only');
+    const key = this.key(req.provider);
+    const secs = req.timeoutSecs;
+    const timeout = AbortSignal.timeout(secs * 1000);
+    const http: Http = (url, init) => fetch(url, { ...init, signal: timeout });
+    const vision: VisionRequest = {
+      provider: req.provider,
+      model: req.model,
+      system: req.system,
+      base64: req.base64,
+      timeoutSecs: secs,
+    };
+    try {
+      if (req.provider === 'groq') return await groqVision(vision, key, http);
+      if (req.provider === 'gemini' && __EDITION__ === 'main') {
+        return await geminiVision(vision, key, http);
+      }
+      throw new AiError('unavailable', req.provider);
+    } catch (e) {
+      if (timeout.aborted) throw new AiError('timeout', `${secs}s`);
+      throw toAiError(e);
+    }
   }
 }
 

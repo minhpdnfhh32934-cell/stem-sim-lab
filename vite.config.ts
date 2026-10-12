@@ -19,6 +19,21 @@ export default defineConfig({
   plugins: [
     react(),
     {
+      // Dev only: ONNX Runtime (Gemma engine) imports its loader from /ort/ at run time. Vite
+      // answers the `?import` form of a public file with an error, so serve the plain file —
+      // exactly what the production build does.
+      name: 'stemsim-ort-public-import',
+      apply: 'serve',
+      configureServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          if (req.url?.startsWith('/ort/') && req.url.includes('?')) {
+            req.url = req.url.slice(0, req.url.indexOf('?'));
+          }
+          next();
+        });
+      },
+    },
+    {
       // Version of the web part; the desktop app compares it with downloaded updates.
       name: 'stemsim-web-version',
       generateBundle() {
@@ -57,6 +72,9 @@ export default defineConfig({
   },
 
   worker: { format: 'es' },
+  // Pre-bundled at dev start: otherwise the Gemma worker's first import makes Vite re-optimize
+  // and reload the page in the middle of a model download (dev server only).
+  optimizeDeps: { include: ['@huggingface/transformers'] },
 
   test: {
     environment: 'jsdom',

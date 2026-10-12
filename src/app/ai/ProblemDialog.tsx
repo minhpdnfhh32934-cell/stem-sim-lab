@@ -22,7 +22,7 @@ import { fromSI, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import { CATALOG } from '@/app/catalog';
 import { SUBJECTS } from '@/app/workspaceStore';
-import { useModuleStore } from '@/modules/moduleStore';
+import { useModuleStore, closeModule } from '@/modules/moduleStore';
 import { hasModule } from '@/modules/registry';
 import { hasScene } from '@/physics/registry';
 import type { ParamDef, ParamSource, Params, PhysicsScene } from '@/physics/types';
@@ -158,7 +158,15 @@ function ModuleManual({ id }: { id: string }) {
         </div>
       </div>
       <footer className="dialog__footer">
-        <button type="button" className="btn" onClick={closeAnalyze}>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            // Cancel: close the module opened behind this dialog, not just the dialog.
+            closeAnalyze();
+            closeModule();
+          }}
+        >
           {t('analyze.close')}
         </button>
         <button type="button" className="btn btn--accent" onClick={closeAnalyze}>
