@@ -774,7 +774,7 @@ export function ChatAiSettings() {
           <p className="muted small">{t('chatSettings.localLibraryPrivacy')}</p>
         </div>
       )}
-      {__EDITION__ === 'main' && (
+      {
         <label className={`chat-toggle chat-settings__web${chat.webLookup ? ' is-on' : ''}`}>
           <input
             type="checkbox"
@@ -791,7 +791,7 @@ export function ChatAiSettings() {
             <small>{t('chatSettings.webLookupHint')}</small>
           </span>
         </label>
-      )}
+      }
 
       <div className="chat-settings__divider" />
       <DataFlow desktop={desktop} />

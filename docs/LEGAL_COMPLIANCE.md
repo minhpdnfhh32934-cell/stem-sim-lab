@@ -1,5 +1,10 @@
 # Tuân thủ pháp lý và điều khoản (PROMPT_PHAN_2 A3)
 
+> **Cập nhật 12/10/2026:** bản thử nghiệm THPT (dưới 18 tuổi) đã bỏ theo quyết định của người dùng.
+> Các mục nói về "bản THPT" bên dưới chỉ còn giá trị tham khảo. Người dưới 18 vẫn có thể mở app
+> và trả lời "Tôi chưa đủ 18 tuổi" (AI tắt, mô phỏng dùng được); người dùng tự quyết định có cho
+> học sinh dưới 18 thử app hay không.
+
 > **Đây không phải tư vấn pháp lý.** Tài liệu chỉ liệt kê những gì đã tra được (có nguồn và ngày
 > tra) và những điểm **người dùng / nhà trường / phụ huynh phải tự xác nhận**. Không có kết luận
 > "đã hợp pháp" nào ở đây. Điều khoản và luật có thể thay đổi: tra lại trước mỗi đợt thử nghiệm.

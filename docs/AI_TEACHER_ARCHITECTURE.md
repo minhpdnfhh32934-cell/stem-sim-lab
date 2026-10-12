@@ -1,5 +1,9 @@
 # AI Teacher ("Dạy học bằng AI") — architecture (PROMPT_PHAN_2 Part B)
 
+> **Cập nhật 12/10/2026:** tên mới là **AI Teacher**; bản THPT đã bỏ nên các dòng về "pilot",
+> Azure và `edition-pilot` dưới đây không còn áp dụng. Người dùng đồng ý thêm giọng tiếng Việt chạy
+> trên máy (kiểm tra giấy phép trước), ngoại lệ cho quy tắc "không có AI trên máy".
+
 > **Implementation note (2026-10-09 fork):** this document describes the earlier proposed voice,
 > whiteboard and TeachScript architecture. The current fork implements a text tutor, optional
 > local Gemma running inside the app (WebGPU, no Ollama) and the model/knowledge controls

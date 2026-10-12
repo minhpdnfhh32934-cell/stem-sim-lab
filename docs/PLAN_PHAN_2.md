@@ -1,5 +1,8 @@
 # Kế hoạch chuyển đổi theo PROMPT_PHAN_2.md (Bước 0)
 
+> **Cập nhật 12/10/2026:** bản thử nghiệm THPT (pilot) đã bỏ theo quyết định của người dùng; app
+> đổi tên thành SimLab. Các bước về pilot trong kế hoạch này là lịch sử.
+
 Trạng thái: **đã duyệt theo đề xuất** (2026-10-05): gỡ OpenAI, timeout 30 s, làm xen kẽ như mục 4, ngắt lời theo mục 4b. Còn chờ: ai giữ khóa Claude cho bản thử nghiệm (điểm 2).
 
 Tiến độ: 3b.1 xong, 3b.2 xong (2026-10-05). Lưu ý phát hành: 3b.1–3b.2 đổi phần Rust (lệnh mới, tên nhà cung cấp `claude`), nên lần phát hành tới phải tăng **cả** phiên bản native (bộ cài mới); bản cập nhật web không đủ.

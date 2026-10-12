@@ -183,7 +183,7 @@ async function sha256Hex(text: string): Promise<string> {
 export class BrowserSafety implements SafetyBackend {
   private unlockedUntil = 0;
   constructor(
-    private readonly pilot = __EDITION__ === 'pilot',
+    private readonly pilot = false,
     private readonly now: () => Date = () => new Date(),
   ) {}
 

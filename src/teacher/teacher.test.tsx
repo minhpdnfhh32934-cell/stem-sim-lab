@@ -30,7 +30,7 @@ describe('"Dạy học bằng AI" screen', () => {
     openTeacher();
     render(<TeacherScreen />);
     // Honest that it is an AI, never a person.
-    expect(screen.getByText('AI Teacher')).toBeInTheDocument();
+    expect(screen.getAllByText('AI Teacher').length).toBeGreaterThan(0);
     expect(screen.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Nhập câu hỏi' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Gửi câu hỏi' })).toBeInTheDocument();

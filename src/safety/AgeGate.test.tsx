@@ -31,23 +31,3 @@ describe('first-run age gate (main edition)', () => {
     });
   });
 });
-
-describe('first-run gate (pilot edition)', () => {
-  it('birth year → supervisor PIN → parental consent', async () => {
-    setSafetyBackendForTests(new BrowserSafety(true, () => new Date('2026-10-05T10:00:00')));
-    const user = userEvent.setup();
-    render(<AgeGate />);
-    await user.type(await screen.findByRole('spinbutton'), '2010');
-    await user.click(screen.getByRole('button', { name: 'Tiếp tục' }));
-    const pins = await screen.findAllByLabelText(/mã PIN/i);
-    await user.type(pins[0] as HTMLElement, '2468');
-    await user.type(pins[1] as HTMLElement, '2468');
-    await user.click(screen.getByRole('button', { name: 'Đặt mã PIN' }));
-    // The PIN opened the supervisor session: consent needs no second PIN entry.
-    await user.click(await screen.findByRole('checkbox'));
-    await user.click(screen.getByRole('button', { name: 'Ghi nhận đồng ý và bật AI' }));
-    await waitFor(() => {
-      expect(useSafetyStore.getState().status).toMatchObject({ minor: true, aiAllowed: true });
-    });
-  });
-});

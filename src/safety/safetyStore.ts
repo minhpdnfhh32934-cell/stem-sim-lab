@@ -43,7 +43,6 @@ export function gateVisible(s: SafetyUiState): boolean {
   if (!st) return false;
   if (s.gateRequested) return true;
   if (!st.answered) return true;
-  if (st.edition === 'pilot' && !s.deferred) return !st.pinSet || !st.aiAllowed;
   return false;
 }
 

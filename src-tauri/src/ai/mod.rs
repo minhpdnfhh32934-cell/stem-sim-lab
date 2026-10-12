@@ -11,7 +11,6 @@
 //! (b) explain results already computed by the engine. It never computes numbers.
 
 pub mod claude;
-#[cfg(feature = "edition-main")]
 pub mod gemini;
 pub mod groq;
 pub mod provider;
@@ -29,24 +28,12 @@ use tokio::sync::oneshot;
 
 use provider::AIProvider;
 
-#[cfg(all(feature = "edition-main", feature = "edition-pilot"))]
-compile_error!("enable exactly one of the features `edition-main` and `edition-pilot`");
-#[cfg(not(any(feature = "edition-main", feature = "edition-pilot")))]
-compile_error!("enable one of the features `edition-main` or `edition-pilot`");
+/// Only one edition is built since the high-school pilot was removed (2026-10-12). The value
+/// stays in app info and update manifests, which still carry it.
+pub const EDITION: &str = "main";
 
-/// "main" or "pilot" (PROMPT_PHAN_2 A2).
-pub const EDITION: &str = if cfg!(feature = "edition-pilot") {
-    "pilot"
-} else {
-    "main"
-};
-
-/// Keychain service. The pilot edition has its own, so the two editions never share keys.
-const KEYRING_SERVICE: &str = if cfg!(feature = "edition-pilot") {
-    "STEM Sim Lab Pilot"
-} else {
-    "STEM Sim Lab"
-};
+/// Keychain service. Keeps the name from before the rename to SimLab, so saved keys survive.
+const KEYRING_SERVICE: &str = "STEM Sim Lab";
 
 /// Default timeout of one AI call, retries included (PROMPT_PHAN_2 A2: 30 s, adjustable).
 pub const DEFAULT_TIMEOUT_SECS: u64 = 30;
@@ -58,7 +45,6 @@ const MAX_BACKOFF: Duration = Duration::from_secs(8);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Provider {
-    #[cfg(feature = "edition-main")]
     Gemini,
     /// "anthropic" was the id before PROMPT_PHAN_2.
     #[serde(alias = "anthropic")]
@@ -70,7 +56,6 @@ pub enum Provider {
 impl Provider {
     fn key_name(self) -> &'static str {
         match self {
-            #[cfg(feature = "edition-main")]
             Provider::Gemini => "gemini",
             Provider::Claude => "claude",
             Provider::Groq => "groq",
@@ -81,7 +66,6 @@ impl Provider {
 /// The implementation of a provider.
 pub fn provider(p: Provider) -> &'static dyn AIProvider {
     match p {
-        #[cfg(feature = "edition-main")]
         Provider::Gemini => &gemini::GeminiProvider,
         Provider::Claude => &claude::ClaudeProvider,
         Provider::Groq => &groq::GroqProvider,
@@ -180,7 +164,7 @@ fn require_key_permission(
     pin: Option<&str>,
 ) -> Result<(), AiError> {
     key_gate(
-        cfg!(feature = "edition-pilot"),
+        false,
         || crate::safety::ai_allowed(app),
         || crate::safety::verify_pin(app, safety, pin),
     )
@@ -512,18 +496,10 @@ pub async fn ai_models(
 /// Opens the Google AI Studio page where students create a Gemini API key (main edition).
 #[tauri::command]
 pub fn open_gemini_key_page(app: tauri::AppHandle) -> Result<(), String> {
-    #[cfg(feature = "edition-main")]
-    {
-        use tauri_plugin_opener::OpenerExt;
-        app.opener()
-            .open_url(gemini::GEMINI_KEY_PAGE, None::<&str>)
-            .map_err(|e| e.to_string())
-    }
-    #[cfg(not(feature = "edition-main"))]
-    {
-        let _ = app;
-        Err("not available in this edition".into())
-    }
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(gemini::GEMINI_KEY_PAGE, None::<&str>)
+        .map_err(|e| e.to_string())
 }
 
 /// Opens the GroqCloud page where an API key is created (both editions; fixed address).
@@ -683,12 +659,8 @@ pub fn ai_delete_key(
     provider: Provider,
     pin: Option<String>,
 ) -> Result<(), AiError> {
-    // Main edition: deleting is always allowed (also after "I am under 18").
-    if cfg!(feature = "edition-pilot") {
-        require_key_permission(&app, &safety, pin.as_deref())?;
-    } else {
-        let _ = (&app, &safety, &pin);
-    }
+    // Deleting a key is always allowed (also after "I am under 18").
+    let _ = (&app, &safety, &pin);
     match keyring_entry(provider)?.delete_credential() {
         Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
         Err(e) => Err(AiError::Keychain(e.to_string())),
@@ -820,7 +792,6 @@ pub(crate) mod tests {
         assert_eq!(provider(Provider::Claude).id(), Provider::Claude);
     }
 
-    #[cfg(feature = "edition-main")]
     #[test]
     fn main_edition_has_gemini_and_claude() {
         assert_eq!(EDITION, "main");
@@ -830,25 +801,6 @@ pub(crate) mod tests {
         );
         assert_eq!(provider(Provider::Gemini).id(), Provider::Gemini);
         assert_eq!(KEYRING_SERVICE, "STEM Sim Lab");
-    }
-
-    /// PROMPT_PHAN_2 A2: the pilot edition must not contain any Gemini code. Checked twice:
-    /// the provider id is refused, and the compiled test program (which links the same
-    /// library code) does not contain the Gemini API host. The host is assembled at run time
-    /// so that this test does not put it into the program itself: it is stored reversed,
-    /// because the compiler may place separate string pieces next to each other (it did on
-    /// Windows), which would recreate the host in the program. (The embedded web assets are
-    /// compressed, so the web bundle is checked separately by `scripts/edition-bundle.mjs`.)
-    #[cfg(feature = "edition-pilot")]
-    #[test]
-    fn pilot_edition_has_no_gemini() {
-        assert_eq!(EDITION, "pilot");
-        assert_eq!(KEYRING_SERVICE, "STEM Sim Lab Pilot");
-        assert!(serde_json::from_value::<Provider>(json!("gemini")).is_err());
-        let host: String = "moc.sipaelgoog.egaugnalevitareneg".chars().rev().collect();
-        let exe = std::fs::read(std::env::current_exe().unwrap()).unwrap();
-        let found = exe.windows(host.len()).any(|w| w == host.as_bytes());
-        assert!(!found, "the pilot program contains the Gemini API host");
     }
 
     #[test]

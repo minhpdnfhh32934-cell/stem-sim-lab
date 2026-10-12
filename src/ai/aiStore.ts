@@ -20,9 +20,8 @@ export type AiStatus =
  * Gemini (default), Claude and Groq; the supervised pilot edition has Claude and Groq (no Gemini:
  * its terms exclude users under 18).
  */
-export const PROVIDERS: readonly Provider[] =
-  __EDITION__ === 'pilot' ? ['claude', 'groq'] : ['gemini', 'claude', 'groq'];
-export const DEFAULT_PROVIDER: Provider = __EDITION__ === 'pilot' ? 'claude' : 'gemini';
+export const PROVIDERS: readonly Provider[] = ['gemini', 'claude', 'groq'];
+export const DEFAULT_PROVIDER: Provider = 'gemini';
 /** Free fallback when the chosen provider is out of quota/credit (used only if it has a key). */
 export const DEFAULT_FALLBACK: ProviderChoice = 'groq';
 

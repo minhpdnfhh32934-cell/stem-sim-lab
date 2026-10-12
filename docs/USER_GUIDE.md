@@ -8,20 +8,17 @@ con số do chương trình tính; mỗi mô phỏng có **Thẻ Khoa học** gh
 
 **Yêu cầu:** Windows 10 hoặc 11 (64-bit), RAM từ 8 GB, màn hình từ 1366×768.
 
-1. Tải bộ cài ở trang **Releases** của dự án trên GitHub (mục _Assets_). Có **hai bản**:
-   - `SimLab_…_x64-setup.exe` — **bản chính**, cho sinh viên từ 18 tuổi (AI: Gemini mặc định,
-     Claude tùy chọn).
-   - `SimLab THPT_…_x64-setup.exe` — **bản thử nghiệm THPT**, chỉ dùng trong buổi thử nghiệm
-     có người giám sát (Claude, không có Gemini; khóa API do người giám sát nhập bằng mã PIN; có
-     cổng độ tuổi và đồng ý của phụ huynh).
+1. Tải bộ cài `SimLab_…_x64-setup.exe` ở trang **Releases** của dự án trên GitHub (mục _Assets_).
+   Phần AI dành cho người dùng từ 18 tuổi (Gemini mặc định, Claude tùy chọn, Groq dự phòng).
 2. Nhấp đúp để chạy. Windows có thể hiện "Windows protected your PC" vì bộ cài chưa được ký số: bấm
    **More info → Run anyway**.
 3. Bộ cài không cần quyền quản trị (cài cho người dùng hiện tại). Xong, mở app từ menu Start.
 
 Chỉ cần cài **một lần**. Các bản sau cập nhật ngay trong app (mục "Cập nhật phần mềm").
 
-Hai bản **cài song song được** trên cùng một máy (ví dụ máy phòng thực hành): mỗi bản có tên trong
-menu Start, dữ liệu, khóa AI và mã PIN riêng, không ảnh hưởng nhau.
+**Bản thử nghiệm THPT đã ngừng (12/10/2026).** Máy nào đã cài "STEM Sim Lab THPT" sẽ không nhận
+cập nhật nữa: gỡ bản đó (Settings → Apps) rồi cài bản chính ở trên. Dữ liệu của bản THPT nằm riêng
+trong `%APPDATA%\vn.stemsimlab.pilot\`, có thể xóa sau khi gỡ.
 
 ### Windows chặn bộ cài ("Smart App Control blocked an app")
 
@@ -44,9 +41,8 @@ không chặn nữa.
 **"Evergreen Standalone Installer"** tại <https://developer.microsoft.com/microsoft-edge/webview2/>,
 chép qua USB và cài trước.
 
-**Gỡ cài đặt:** Settings → Apps → SimLab (hoặc SimLab THPT) → Uninstall. Lịch sử mô
-phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT:
-`%APPDATA%\vn.stemsimlab.pilot\`).
+**Gỡ cài đặt:** Settings → Apps → SimLab → Uninstall. Lịch sử mô phỏng nằm trong
+`%APPDATA%\vn.stemsimlab.desktop\history.sqlite`.
 
 ### Tạo bộ cài
 
@@ -54,21 +50,17 @@ phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT
   **Actions → Release (Windows installer) → Run workflow**. Khoảng 15–25 phút sau, mở lần chạy có
   tên **Release (Windows installer)** (không phải lần chạy "CI" — CI chỉ kiểm tra lỗi, không tạo bộ
   cài), kéo xuống cuối trang **Summary** để thấy mục **Artifacts → stem-sim-lab-windows**. Tệp zip
-  tải về chứa bộ cài `…x64-setup.exe` (khuyên dùng) và `.msi` của **cả hai bản**, cùng
+  tải về chứa bộ cài `…x64-setup.exe` (khuyên dùng) và `.msi`, cùng
   `installer-sizes.txt`. Khi chọn `publish` = true, GitHub còn tạo bản Release để mọi máy đã cài tự
   nhận cập nhật (xem `docs/RELEASE.md`).
 - **Cách 2 — trên máy Windows của bạn:** cài công cụ theo `docs/SETUP_WINDOWS.md`, rồi chạy
   `npm install` và `npm run tauri build`. Bộ cài nằm trong `src-tauri\target\release\bundle\nsis\`.
-  Bản THPT:
-  `npx tauri build --config src-tauri/tauri.pilot.conf.json --features edition-pilot -- --no-default-features`.
 
 ## Bắt đầu nhanh
 
-1. Lần đầu mở app có vài bước làm quen (bấm **Bỏ qua** bất cứ lúc nào):
-   - **Bản chính:** chọn trình độ → chọn môn quan tâm → xác nhận đủ 18 tuổi và điều khoản →
-     **Kết nối AI** (nhập khóa Gemini, hoặc **Để sau**) → hướng dẫn nhanh.
-   - **Bản thử nghiệm THPT:** chọn môn → cổng độ tuổi / đồng ý của phụ huynh (người giám sát nhập
-     PIN) → hướng dẫn nhanh. Không có bước nhập khóa.
+1. Lần đầu mở app có vài bước làm quen (bấm **Bỏ qua** bất cứ lúc nào): chọn trình độ → chọn môn
+   quan tâm → xác nhận đủ 18 tuổi và điều khoản → **Kết nối AI** (nhập khóa Gemini, hoặc **Để sau**)
+   → hướng dẫn nhanh.
 
    Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
    (khoảng 1 giây) để chọn chất lượng hiển thị.
@@ -276,8 +268,7 @@ Cài đặt → **Kết nối AI** → mục **Dự phòng khi hết lượt** �
 3. Sao chép khóa (chỉ hiện một lần).
 4. Dán vào ô **Khóa API cho dự phòng** → **Lưu khóa** → **Kiểm tra key**.
 
-Cần biết: người tạo tài khoản Groq phải **từ 18 tuổi** (bản thử nghiệm THPT: phụ huynh hoặc thầy cô
-tạo, người giám sát nhập bằng PIN). Theo điều khoản của Groq, nội dung gửi lên **không được dùng để
+Cần biết: người tạo tài khoản Groq phải **từ 18 tuổi**. Theo điều khoản của Groq, nội dung gửi lên **không được dùng để
 huấn luyện AI**; nếu tài khoản có tùy chọn "Zero Data Retention", nên bật. Gói miễn phí có giới hạn
 (khoảng 1 000 lượt/ngày). Mô hình mặc định: `qwen/qwen3.8-27b` (đổi được ở ô **Mô hình dự phòng**).
 
@@ -285,16 +276,10 @@ huấn luyện AI**; nếu tài khoản có tùy chọn "Zero Data Retention", n
 
 **Lần đầu mở app** sẽ có câu hỏi **"Trước khi bắt đầu"**:
 
-- **Bản chính (sinh viên):** đánh dấu "Tôi đã đọc… và đồng ý", bấm **Tôi đủ 18 tuổi — bật AI**. Nếu
-  bấm **Tôi chưa đủ 18 tuổi**, app vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu, Tự dựng cảnh;
-  chỉ phần AI tắt (nhà cung cấp AI chỉ cho người từ 18 tuổi). Chưa xác nhận 18+ thì app **không cho
-  lưu khóa API**. Trả lời lại: Cài đặt → **An toàn & quyền riêng tư**.
-- **Bản thử nghiệm THPT (có giám sát):** học sinh nhập năm sinh → **người giám sát** (phụ huynh hoặc
-  thầy cô) đặt **mã PIN** 4–8 chữ số → nếu học sinh dưới 18 tuổi, người giám sát đánh dấu đã có
-  **Phiếu đồng ý** (mẫu: `docs/PILOT_CONSENT.md`) và bấm **Ghi nhận đồng ý và bật AI**. Bấm "Để sau"
-  thì app chỉ dùng mô phỏng. Khóa API Claude do người lớn trả phí (sinh viên 18+ hoặc phụ huynh) tạo;
-  chỉ người giám sát nhập/xóa được khóa (mở khóa bằng PIN trong Cài đặt → An toàn & quyền riêng tư,
-  tự khóa lại sau 10 phút). Sai PIN 5 lần thì phải đợi 60 giây.
+- Đánh dấu "Tôi đã đọc… và đồng ý", bấm **Tôi đủ 18 tuổi — bật AI**. Nếu bấm **Tôi chưa đủ 18
+  tuổi**, app vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu, Tự dựng cảnh; chỉ phần AI tắt (nhà
+  cung cấp AI chỉ cho người từ 18 tuổi). Chưa xác nhận 18+ thì app **không cho lưu khóa API**. Trả
+  lời lại: Cài đặt → **An toàn & quyền riêng tư**.
 
 Khi dùng AI:
 
@@ -373,8 +358,7 @@ Khi dùng AI:
   **Khởi động lại**. Lịch sử, tệp .stemsim và cài đặt của bạn giữ nguyên.
 - Nếu bản mới thay đổi phần lõi của app, hộp thoại báo cần tải bộ cài mới và có nút mở trang tải.
 - Bản cập nhật có lỗi? Nút **Quay về bản gốc** trả app về bản đã cài từ bộ cài.
-- Mỗi bản chỉ nhận cập nhật **của chính nó**: bản THPT không bao giờ nhận phần có mã Gemini của bản
-  chính (app kiểm tra chữ ký và tên bản trước khi dùng).
+- App kiểm tra chữ ký số và tên bản trước khi dùng một gói cập nhật.
 
 ## Khi máy yếu
 

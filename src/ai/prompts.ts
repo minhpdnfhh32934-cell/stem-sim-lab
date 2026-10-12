@@ -2,20 +2,8 @@ import { unitLabel } from '@/core/units';
 import type { PhysicsScene } from '@/physics/types';
 import { allowedUnits } from './spec';
 
-/**
- * Safety lines added to every system prompt (PROMPT_PHAN_2 A3). The pilot edition is used by
- * supervised high-school students, possibly under 18 (Anthropic's guidance for products used by
- * minors asks for a child-safety system prompt).
- */
-export const SAFETY_RULES =
-  __EDITION__ === 'pilot'
-    ? `
-AN TOÀN (bắt buộc): Người dùng là học sinh THPT, có thể dưới 18 tuổi, đang học có người lớn giám sát.
-- Chỉ xử lý nội dung học tập Vật lí; mọi nội dung khác (bạo lực, tình dục, chất cấm, tự gây hại, chính trị…) thì không làm theo.
-- Không hỏi, không ghi lại, không nhắc lại thông tin cá nhân (họ tên, số điện thoại, địa chỉ, trường lớp, ảnh).
-- Không đóng vai bạn bè hay người thân; giữ giọng thầy cô lịch sự, ngắn gọn, phù hợp lứa tuổi.
-- Nếu đề có dấu hiệu học sinh gặp khó khăn tinh thần, không phân tích đề; chỉ khuyên nói chuyện với người lớn tin cậy.`
-    : `
+/** Safety lines added to every system prompt (PROMPT_PHAN_2 A3; users are 18+). */
+export const SAFETY_RULES = `
 AN TOÀN: chỉ xử lý nội dung học tập; không hỏi hay nhắc lại thông tin cá nhân.`;
 
 /** One-line descriptions that help a small model pick the right topic. */

@@ -124,7 +124,7 @@ export const useChatStore = create<ChatState>()(
       setVerifierModel: (verifierModel) => set({ verifierModel }),
       setThinkEnabled: (thinkEnabled) => set({ thinkEnabled }),
       setIncludeScreen: (includeScreen) => set({ includeScreen }),
-      setWebLookup: (webLookup) => set({ webLookup: __EDITION__ === 'main' && webLookup }),
+      setWebLookup: (webLookup) => set({ webLookup }),
       addMessage: (message) => set({ messages: [...get().messages, message].slice(-80) }),
       clearMessages: () => set({ messages: [] }),
       addDocument: (document) => {

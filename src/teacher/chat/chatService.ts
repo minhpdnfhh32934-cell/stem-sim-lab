@@ -70,7 +70,7 @@ export async function contextPrompt(
   );
   // Wikipedia is opt-in (Settings → AI Teacher): it receives the question text, so it never
   // runs silently. Web excerpts come last and are always labelled: checked library first.
-  const web = webLookup && __EDITION__ === 'main' ? await fetchWebKnowledge(question, locale) : [];
+  const web = webLookup ? await fetchWebKnowledge(question, locale) : [];
   const notes = [...local, ...web].filter((note) => checkInput(note.text).ok);
   const screen = includeScreen ? screenContext(locale).slice(0, compact ? 1500 : undefined) : '';
   const sources = notes.map((n) => n.name);

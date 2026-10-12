@@ -101,13 +101,13 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
   `ai/mod.rs` sends them: retry on 429/5xx with backoff 1 s → 2 s → 4 s or `Retry-After` (max 8 s,
   at most 3 retries; a Gemini _per-day_ 429 is not retried), daily cap counted in
   `ai-usage.json` (`ai/usage.rs`, day = user's local date, cap from Settings, 0 = none).
-- **Editions** (PROMPT_PHAN_2 A2): Cargo features `edition-main` (default) / `edition-pilot`, and
-  `VITE_EDITION` → `__EDITION__` in the web bundle. The pilot edition does not compile
-  `ai/gemini.rs` (the `Provider::Gemini` variant does not exist) and the bundle drops every
-  `__EDITION__ === 'main'` branch. Checks: Rust test `pilot_edition_has_no_gemini` (looks for the
-  Gemini host in the compiled test program) and `npm run build:pilot`
-  (`scripts/edition-bundle.mjs`, fails if `dist/` contains the Gemini host or key header). The
-  pilot uses its own keychain service ("SimLab Pilot").
+- **One edition** (user decision 2026-10-12): the high-school pilot edition (Cargo feature
+  `edition-pilot`, `VITE_EDITION`/`__EDITION__`, `build:pilot`, `tauri.pilot.conf.json`, its update
+  channel) was removed. `ai::EDITION` and `webupdate::EDITION` are the constant `"main"`; update
+  manifests and `web-edition.txt` still carry it and are still checked. The pilot branches of
+  `safety.rs` (`PILOT = false`) and `src/safety/safety.ts` (`pilot: false`) are dead code kept for
+  a later clean-up; the PIN/consent UI is gone. The keychain service stays "STEM Sim Lab" and the
+  identifier `vn.stemsimlab.desktop`, so keys and data survive the rename to SimLab.
 - **Kết nối AI** (`AiSettings.tsx`): `ai_test_key` sends one tiny request with the chosen model
   and classifies the answer (`classify_key_test` / `src/ai/keyTest.ts`: 2xx ok, 401/403 or
   `API_KEY_INVALID` bad key, 404 bad model, 429/402/"credit balance" quota, network error offline).
@@ -144,23 +144,18 @@ problem ──► moderation.checkInput ──► (blocked: incident kind+time, 
 ```
 
 - **Rules in Rust** (`src-tauri/src/safety.rs`), so the page cannot open the AI by itself:
-  `status_of` (pure, tested for both editions). Main: `adult_terms == TERMS_VERSION` → AI allowed;
-  "under 18" → answered, AI off. Pilot: birth year (`current − year ≤ 18` counts as minor) + recorded
-  consent day for minors. `ai_chat`, `ai_models`, `ai_test_key` refuse with `notAllowed` while the
-  gate is closed; `ai_set_key` needs the 18+ confirmation (main) or the supervisor PIN / open
-  supervisor session (pilot, `key_gate` in `ai/mod.rs`); `ai_delete_key` needs it in the pilot only.
-- **Supervisor PIN:** salted SHA-256 × 100 000 rounds in `safety.json`; 5 wrong PINs → 60 s lockout,
-  each wrong PIN is an incident. A correct PIN (`safety_unlock`) or setting the PIN opens a 10-minute
-  supervisor session held in Rust (`SafetyState.unlocked`); `safety_lock` closes it.
+  `status_of` (pure, tested). `adult_terms == TERMS_VERSION` → AI allowed; "under 18" → answered,
+  AI off. `ai_chat`, `ai_models`, `ai_test_key` refuse with `notAllowed` while the gate is closed;
+  `ai_set_key` needs the 18+ confirmation (`key_gate` in `ai/mod.rs`). The supervisor PIN and
+  parental-consent paths belonged to the removed pilot edition and are unreachable (`PILOT = false`).
 - **Incident log** (`incidents.json`, newest 500): `{at, kind}` only — `inputPersonalData`,
-  `inputUnsafe`, `inputCrisis`, `outputUnsafe`, `userReport`, `pinFailed`. Pilot: PIN to read/clear.
+  `inputUnsafe`, `inputCrisis`, `outputUnsafe`, `userReport`.
 - **Web side** (`src/safety/`): `safety.ts` (types, `statusOf` mirror, `TauriSafety`, browser copy
   `BrowserSafety` in localStorage for dev/E2E), `safetyStore.ts` (status, gate visibility, session),
   `moderation.ts` (crisis → personal data → unsuitable; Unicode-aware word boundaries; NFC),
   `AgeGate`, `SafetySettings` (Settings → "An toàn & quyền riêng tư"), `AiContentBar` (AI label +
   report), `CrisisCard`, `PrivacyDialog`. `analyze.ts` runs `safetyBlock` before any AI call and the
-  output filter after it; `explain.ts` returns `safe`; prompts get `SAFETY_RULES` (child-safety
-  lines in the pilot). Unit tests run with an open gate (`tests/setup.ts`); E2E storage state has
+  output filter after it; `explain.ts` returns `safe`; prompts get `SAFETY_RULES`. Unit tests run with an open gate (`tests/setup.ts`); E2E storage state has
   `stemsim.safety = {adultTerms: 1}`.
 
 ## 3c. Projects, undo, history (Phase 6)

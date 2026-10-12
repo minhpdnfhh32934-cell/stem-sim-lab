@@ -253,7 +253,8 @@ fn paths(app: &tauri::AppHandle) -> Result<(PathBuf, PathBuf), SafetyError> {
     Ok((dir.join("safety.json"), dir.join("incidents.json")))
 }
 
-const PILOT: bool = cfg!(feature = "edition-pilot");
+/// The supervised high-school pilot edition was removed (2026-10-12): only the 18+ gate is used.
+const PILOT: bool = false;
 
 /// Current state of the gates.
 pub fn status(app: &tauri::AppHandle) -> SafetyStatus {

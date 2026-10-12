@@ -13,10 +13,10 @@
 //!   checked (no `..`), and total size is limited;
 //! - never downgrades; a newer installer wins over an older downloaded web part;
 //! - "Khôi phục bản gốc" removes the downloaded part;
-//! - two update channels, one per edition: the pilot app reads `web-update-pilot.json`, its
-//!   manifest names the edition inside the signed message, and the unpacked bundle must say
-//!   `pilot` in `web-edition.txt` — a main-edition bundle (with Gemini code) can never be
-//!   installed into the pilot app, nor the other way round.
+//! - the manifest names the edition inside the signed message and the unpacked bundle must say
+//!   `main` in `web-edition.txt`. The high-school pilot edition and its channel
+//!   (`web-update-pilot.json`) were removed on 2026-10-12; the check stays so a bundle from
+//!   that old channel can never be installed here.
 
 use base64::Engine as _;
 use ed25519_dalek::{Signature, VerifyingKey};
@@ -30,19 +30,12 @@ use tauri::utils::assets::{AssetKey, AssetsIter, CspHash};
 use tauri::{App, AppHandle, Assets, Runtime, State};
 
 const REPO: &str = "minhpdnfhh32934-cell/stem-sim-lab";
-/// Edition of this executable (Cargo feature), also its update channel.
-pub const EDITION: &str = if cfg!(feature = "edition-pilot") {
-    "pilot"
-} else {
-    "main"
-};
+/// Edition of this executable, also its update channel. Only "main" remains (the high-school
+/// pilot was removed 2026-10-12); manifests still carry the value and it is still checked.
+pub const EDITION: &str = "main";
 /// Manifest of the newest release (GitHub redirects `latest` to the newest published one).
-#[cfg(not(feature = "edition-pilot"))]
 pub const MANIFEST_URL: &str =
     "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/latest/download/web-update.json";
-#[cfg(feature = "edition-pilot")]
-pub const MANIFEST_URL: &str =
-    "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/latest/download/web-update-pilot.json";
 pub const RELEASES_PAGE: &str =
     "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/latest";
 /// Ed25519 public key of the release signing key (private key: GitHub secret
@@ -724,7 +717,6 @@ mod tests {
     }
 
     /// Signed by `scripts/release/web-bundle.mjs` (Node) with the real release key.
-    #[cfg(feature = "edition-main")]
     #[test]
     fn node_signed_manifest_verifies_with_the_built_in_key() {
         let m: Manifest =

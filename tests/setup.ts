@@ -24,14 +24,13 @@ afterEach(() => {
   if (typeof localStorage !== 'undefined') localStorage.clear();
 });
 
-// Unit tests run as an adult who accepted the terms (main) or with recorded consent (pilot), so
-// the AI code paths can be tested. The gates themselves are tested in src/safety and in Rust.
+// Unit tests run as an adult who accepted the terms, so the AI code paths can be tested. The gates themselves are tested in src/safety and in Rust.
 class OpenSafety extends BrowserSafety {
   override status() {
     return Promise.resolve(
       statusOf(
         { adultTerms: TERMS_VERSION, birthYear: 2000, pinHash: 'x', pinSalt: 'x' },
-        __EDITION__ === 'pilot',
+        false,
         2026,
       ),
     );

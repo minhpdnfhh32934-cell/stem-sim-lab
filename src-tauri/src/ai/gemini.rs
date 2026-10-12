@@ -1,6 +1,4 @@
-//! `GeminiProvider` — main edition only. This file is not compiled into the pilot edition
-//! (`#[cfg(feature = "edition-main")]` on the module in `mod.rs`), so the pilot build never
-//! contains the Gemini endpoint (PROMPT_PHAN_2 A2: Gemini API terms require users 18+).
+//! `GeminiProvider` (Gemini API terms require users 18+; the app's age gate asks for it).
 
 use serde_json::{json, Value};
 

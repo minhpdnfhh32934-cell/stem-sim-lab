@@ -1,13 +1,10 @@
 // Packs dist/ into a signed web update (docs/RELEASE.md).
 //
-//   WEB_UPDATE_SIGNING_KEY="-----BEGIN PRIVATE KEY-----…" node scripts/release/web-bundle.mjs [main|pilot]
+//   WEB_UPDATE_SIGNING_KEY="-----BEGIN PRIVATE KEY-----…" node scripts/release/web-bundle.mjs [main]
 //
-// Two update channels, one per edition (PROMPT_PHAN_2 3b.6):
-//   main  → release/web-bundle.zip       + release/web-update.json
-//   pilot → release/web-bundle-pilot.zip + release/web-update-pilot.json
-// dist/ must have been built for that edition (dist/web-edition.txt). The signed message must
-// match `signed_message` in src-tauri/src/webupdate.rs (main keeps the original format, other
-// editions add an "edition:" line, so a manifest can never be moved to the other channel).
+// One update channel: release/web-bundle.zip + release/web-update.json. The high-school pilot
+// channel (web-update-pilot.json) was removed on 2026-10-12. dist/web-edition.txt must say
+// "main". The signed message must match `signed_message` in src-tauri/src/webupdate.rs.
 import { execFileSync } from 'node:child_process';
 import { createHash, createPrivateKey, sign } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -16,8 +13,7 @@ import { signedMessage, signedMessageV2 } from './manifest-message.mjs';
 
 const REPO = 'minhpdnfhh32934-cell/stem-sim-lab';
 const edition = process.argv[2] ?? 'main';
-if (!['main', 'pilot'].includes(edition)) throw new Error(`unknown edition ${edition}`);
-const suffix = edition === 'main' ? '' : `-${edition}`;
+if (edition !== 'main') throw new Error(`unknown edition ${edition} (only "main" is built)`);
 // Mandatory-update floor: learners on an older web part must update (empty = none).
 const minRequired = (process.env.MIN_REQUIRED ?? '').trim();
 if (minRequired && !/^\d+\.\d+\.\d+$/.test(minRequired))
@@ -53,7 +49,7 @@ const key = createPrivateKey(pem);
 
 const out = resolve(root, 'release');
 mkdirSync(out, { recursive: true });
-const zipName = `web-bundle${suffix}.zip`;
+const zipName = 'web-bundle.zip';
 const zipPath = resolve(out, zipName);
 rmSync(zipPath, { force: true });
 // -X: no extra file attributes, so the zip only depends on the file contents.
@@ -74,7 +70,7 @@ const manifest = {
 const sig = (message) => sign(null, Buffer.from(message), key).toString('base64');
 manifest.signature = sig(signedMessage(manifest));
 manifest.signatureV2 = sig(signedMessageV2(manifest));
-writeFileSync(resolve(out, `web-update${suffix}.json`), `${JSON.stringify(manifest, null, 2)}\n`);
+writeFileSync(resolve(out, 'web-update.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(
   `web update ${webVersion} [${edition}] (needs app ≥ ${minNative}` +
     `${minRequired ? `, required from ${minRequired}` : ''}): ${zip.length} bytes`,

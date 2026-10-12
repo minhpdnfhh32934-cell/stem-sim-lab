@@ -11,8 +11,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "postinstall": "node scripts/copy-ort-wasm.mjs",
-    "build:pilot": "node scripts/edition-bundle.mjs build pilot",
-    "check:edition": "node scripts/edition-bundle.mjs check",
     "preview": "vite preview",
     "tauri": "tauri",
     "typecheck": "tsc -b --noEmit",

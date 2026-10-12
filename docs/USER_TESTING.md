@@ -1,5 +1,9 @@
 # Thử nghiệm với người học thật (PROMPT_PHAN_2 A4.5)
 
+> **Cập nhật 12/10/2026:** bản thử nghiệm THPT đã bỏ. Nhóm A bên dưới không còn bộ cài riêng; nếu
+> vẫn thử với học sinh dưới 18, các em dùng bản chính và chọn "Tôi chưa đủ 18 tuổi" (AI tắt).
+> Người dùng và nhà trường tự quyết định việc này.
+
 Tài liệu này hướng dẫn tổ chức một buổi thử nghiệm và là nơi **ghi kết quả**. Làm lại ở mỗi mốc lớn
 (sau 3b.6, sau AI Teacher T5, trước khi nộp hồ sơ dự thi). Kết quả thật, ghi đúng như quan sát được,
 là bằng chứng mạnh cho hồ sơ — **không sửa, không làm tròn đẹp, không bịa số liệu**.

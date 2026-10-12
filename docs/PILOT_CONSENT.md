@@ -1,5 +1,8 @@
 # Phiếu đồng ý tham gia thử nghiệm SimLab (mẫu)
 
+> **Không còn dùng (12/10/2026):** bản thử nghiệm THPT đã bỏ theo quyết định của người dùng; app
+> chỉ còn bản chính (AI cho người từ 18 tuổi). Mẫu này giữ lại để tham khảo.
+
 > Mẫu để nhà trường/phụ huynh tham khảo, **không phải văn bản pháp lý đã được luật sư duyệt**.
 > Trước khi dùng, xem các điểm cần xác nhận ở `docs/LEGAL_COMPLIANCE.md` mục 6.
 

@@ -99,7 +99,7 @@ declare global {
 function injectedKey(provider: Provider): string | undefined {
   if (provider === 'claude') return globalThis.__STEMSIM_TEST_CLAUDE_KEY__;
   if (provider === 'groq') return globalThis.__STEMSIM_TEST_GROQ_KEY__;
-  return __EDITION__ === 'main' ? globalThis.__STEMSIM_TEST_GEMINI_KEY__ : undefined;
+  return globalThis.__STEMSIM_TEST_GEMINI_KEY__;
 }
 
 /** "429: {…}" — status plus the start of the body, like the Rust gateway reports it. */
@@ -112,10 +112,7 @@ type Http = (url: string, init: RequestInit) => Promise<Response>;
 
 const nodeOnly = typeof window === 'undefined';
 
-/**
- * Same request as `gemini_body` in src-tauri/src/ai/gemini.rs. Only referenced behind
- * `__EDITION__ === 'main'`, so it is not part of the pilot bundle.
- */
+/** Same request as `gemini_body` in src-tauri/src/ai/gemini.rs. */
 async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<string> {
   const url = 'https://generativelanguage.googleapis.com/v1beta';
   const generationConfig: Record<string, unknown> = {
@@ -333,7 +330,7 @@ class FetchTransport implements LlmTransport {
   private supported(provider: Provider): boolean {
     if (provider === 'claude') return nodeOnly;
     if (provider === 'groq') return true;
-    return __EDITION__ === 'main';
+    return true;
   }
   /** Same fallback rule as the Rust gateway (`send_with_fallback`). */
   async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
@@ -362,8 +359,7 @@ class FetchTransport implements LlmTransport {
     try {
       if (req.provider === 'claude') content = await claudeChat(req, key, http);
       else if (req.provider === 'groq') content = await groqChat(req, key, http);
-      else if (__EDITION__ === 'main') content = await geminiChat(req, key, http);
-      else throw new AiError('unavailable', req.provider);
+      else content = await geminiChat(req, key, http);
     } catch (e) {
       if (timeout.aborted) throw new AiError('timeout', `${secs}s`);
       throw toAiError(e);
@@ -372,7 +368,7 @@ class FetchTransport implements LlmTransport {
     return { content, model: req.model.trim(), durationMs: performance.now() - started };
   }
   async models(provider: Provider): Promise<string[]> {
-    if (provider !== 'gemini' || __EDITION__ !== 'main') {
+    if (provider !== 'gemini') {
       throw new AiError('unavailable', 'desktop app only');
     }
     const key = this.key(provider);
@@ -401,7 +397,7 @@ class FetchTransport implements LlmTransport {
     if (!this.supported(provider)) return { status: 'error', detail: 'desktop app only' };
     const key = pageKey(provider);
     if (!key) return { status: 'noKey', detail: '' };
-    if (provider !== 'gemini' || __EDITION__ !== 'main') {
+    if (provider !== 'gemini') {
       return { status: 'error', detail: 'desktop app only' };
     }
     const name = model.trim().replace(/^models\//, '');
@@ -448,7 +444,7 @@ class FetchTransport implements LlmTransport {
     };
     try {
       if (req.provider === 'groq') return await groqVision(vision, key, http);
-      if (req.provider === 'gemini' && __EDITION__ === 'main') {
+      if (req.provider === 'gemini') {
         return await geminiVision(vision, key, http);
       }
       throw new AiError('unavailable', req.provider);
