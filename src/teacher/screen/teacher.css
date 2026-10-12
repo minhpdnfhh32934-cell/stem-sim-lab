@@ -213,7 +213,7 @@
   cursor: wait;
 }
 
-/* Board: small teacher · the lesson board · a narrow chat column (LessonBoard.tsx). */
+/* Board: small teacher · the whiteboard (Whiteboard.tsx) · a narrow chat column. */
 .teacher[data-layout='board'] .teacher__stage {
   /* Board layout (B4.1): a small teacher on the side, the board in the middle, the chat at
      the right. */
