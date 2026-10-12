@@ -69,12 +69,16 @@ phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT
      **Kết nối AI** (nhập khóa Gemini, hoặc **Để sau**) → hướng dẫn nhanh.
    - **Bản thử nghiệm THPT:** chọn môn → cổng độ tuổi / đồng ý của phụ huynh (người giám sát nhập
      PIN) → hướng dẫn nhanh. Không có bước nhập khóa.
-     Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
-     (khoảng 1 giây) để chọn chất lượng hiển thị.
+
+   Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
+   (khoảng 1 giây) để chọn chất lượng hiển thị.
+
 2. **Trang chủ STEM Sim Lab** có hai lối vào:
    - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
    - **Thầy AI** mở trang trò chuyện với trợ lý học tập.
-     Bấm logo **STEM Sim Lab** ở góc trái để quay về trang chủ.
+
+   Bấm logo **STEM Sim Lab** ở góc trái để quay về trang chủ.
+
 3. Trong **Phòng thí nghiệm**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
    - nút **Tiếp tục bài đang học** (mở lại chủ đề lần trước);
    - ô **Nhập đề bài hoặc câu hỏi…** (dán được đề nhiều dòng, Ctrl+Enter để phân tích) và nút
@@ -384,9 +388,11 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 - **Vật lý:** giá trị g mặc định (9,80665 / 9,81 / 9,8 / 10 m/s²) — chỉ dùng khi đề không cho g.
 - **Chất lượng hiển thị:** Tự động / Thấp / Trung bình / Cao, nút Đo lại. Chỉ ảnh hưởng hình ảnh,
   không ảnh hưởng số liệu.
-- **Kết nối AI:** chọn Gemini (khuyên dùng), Claude hoặc tắt AI; hướng dẫn lấy khóa API Gemini;
-  khóa API; mô hình; thời gian chờ (mặc định 30 giây); số lượt tối đa mỗi ngày; xóa các đề đã lưu;
-  nút Kiểm tra key (kết quả: thành công / key không hợp lệ / hết hạn mức / không có mạng).
+- **Kết nối AI:** chọn Gemini (khuyên dùng), Claude, Groq (miễn phí) hoặc tắt AI; hướng dẫn lấy
+  khóa API Gemini; khóa API; mô hình; thời gian chờ (mặc định 30 giây); số lượt tối đa mỗi ngày; xóa
+  các đề đã lưu; nút Kiểm tra key (kết quả: thành công / key không hợp lệ / hết hạn mức / không có
+  mạng); mục **Dự phòng khi hết lượt** (mặc định Groq, chỉ dùng khi đã có khóa Groq, xem phần "Dự
+  phòng miễn phí khi hết lượt: Groq" ở trên).
 - **Thầy AI:** chọn Gemma cục bộ, quản lý tải/xóa mô hình, cấu hình API kiểm tra chéo và nạp/xóa
   tệp trong Thư viện kiến thức.
 - **Phím tắt:** danh sách đầy đủ.
