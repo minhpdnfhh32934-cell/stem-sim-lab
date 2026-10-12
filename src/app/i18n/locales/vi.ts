@@ -984,6 +984,7 @@ const vi = {
     flowThinkOnly:
       'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi + bản nháp mới được gửi → {name} để rà soát.',
     flowWiki: 'Tra Wikipedia đang bật: câu hỏi → Wikipedia.',
+    flowVoice: 'Đọc to bằng giọng Gemini đang bật: chữ của câu trả lời → Google.',
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',
     flowModelDownload: 'Khi bấm “Tải mô hình”: máy tải tệp từ HuggingFace (không gửi câu hỏi).',
     flowScreen:
@@ -1096,8 +1097,69 @@ const vi = {
     cancel: 'Hủy',
   },
   voice: {
-    title: 'Giọng nói của thầy',
-    intro: 'Thầy đọc to mỗi câu trả lời qua loa máy. Miễn phí, dùng giọng có sẵn của máy.',
+    readAloudCard: 'Đọc to',
+    readAloud: 'Đọc to câu trả lời của AI Teacher',
+    readAloudHint:
+      'Cũng bật/tắt được bằng nút loa trong khung trò chuyện. Âm thanh không được ghi lại.',
+    sourceCard: 'Nguồn giọng',
+    engines: {
+      system: {
+        title: 'Giọng của Windows',
+        hint: 'Miễn phí, không cần mạng. Đọc đúng tiếng Việt khi Windows đã có giọng tiếng Việt.',
+      },
+      gemini: {
+        title: 'Giọng Gemini (trực tuyến)',
+        hint: 'Tự nhiên nhất, ngắt nghỉ như người thật. Cần mạng và khóa Gemini; tính vào số lượt AI mỗi ngày.',
+      },
+      local: {
+        title: 'Giọng tiếng Việt trên máy',
+        hint: 'Tải một lần, sau đó đọc không cần mạng và đúng dấu tiếng Việt; nghe hơi giống máy hơn hai giọng kia.',
+      },
+    },
+    systemFound: 'Đã có giọng tiếng Việt: {names}.',
+    systemMissing:
+      'Máy chưa có giọng tiếng Việt, nên Windows đọc bằng giọng tiếng Anh và sai dấu. Cài giọng tiếng Việt (miễn phí):',
+    installStep1: 'Mở Settings (Cài đặt) của Windows → Time & language → Speech.',
+    installStep2: 'Ở mục "Manage voices", bấm "Add voices".',
+    installStep3:
+      'Gõ "Vietnamese", chọn "Vietnamese (Vietnam)" rồi bấm Add. Windows tải giọng "Microsoft An".',
+    installStep4: 'Đóng rồi mở lại SimLab: giọng mới hiện trong danh sách bên dưới.',
+    openWindowsSpeech: 'Mở cài đặt giọng nói của Windows',
+    voiceLabel: 'Giọng đọc',
+    auto: 'Tự động (ưu tiên tiếng Việt)',
+    noSpeech: 'Máy này không có bộ đọc giọng nói. Hãy chọn giọng Gemini hoặc giọng trên máy.',
+    geminiNoKey: 'Chưa có khóa Gemini. Giọng Gemini dùng chung khóa với mục Kết nối AI.',
+    openConnect: 'Mở Kết nối AI',
+    geminiVoice: 'Giọng Gemini',
+    geminiModel: 'Mô hình giọng',
+    traits: {
+      friendly: 'thân thiện',
+      warm: 'ấm áp',
+      knowledgeable: 'hiểu biết',
+      informative: 'rõ ràng, mạch lạc',
+      firm: 'chắc chắn',
+      upbeat: 'tươi vui',
+      breezy: 'nhẹ nhàng',
+      gentle: 'dịu dàng',
+    },
+    modelFlash: 'Flash (hay nhất)',
+    modelLite: 'Flash-Lite (rẻ hơn)',
+    geminiPrivacy:
+      'Khi dùng giọng Gemini, chữ của câu trả lời (không kèm câu hỏi của em) được gửi tới Google để đọc. Với gói miễn phí, Google có thể dùng nội dung để cải thiện dịch vụ. Âm thanh có thủy vân SynthID.',
+    localLicence:
+      'Mô hình MMS-TTS tiếng Việt của Meta ({size}), giấy phép {licence}: chỉ dùng cho mục đích phi thương mại và phải ghi nguồn.',
+    localReady: 'Đã tải, sẵn sàng đọc.',
+    localDelete: 'Xóa giọng',
+    localDownload: 'Tải giọng ({size})',
+    localDownloading: 'Đang tải…',
+    localPreparing: 'Đang chuẩn bị…',
+    localModelPage: 'Trang mô hình',
+    localLicencePage: 'Đọc giấy phép',
+    downloadCancelled: 'Đã hủy tải. Giọng chưa được tính là đã tải xong.',
+    downloadFailed: 'Tải chưa thành công. Kiểm tra mạng và chỗ trống trên ổ đĩa rồi thử lại.',
+    localHint:
+      'Chạy bằng card đồ họa (WebGPU) nếu máy có, nếu không thì bằng CPU (chậm hơn, có thể ngắt quãng). Câu đầu tiên chờ vài giây để nạp mô hình.',
+    howCard: 'Cách đọc',
     style: 'Kiểu giọng',
     styles: {
       vui: 'Vui vẻ',
@@ -1105,10 +1167,23 @@ const vi = {
       lanh: 'Lanh lẹ',
       hai: 'Hài hước',
     },
-    voiceLabel: 'Giọng đọc',
-    auto: 'Tự động (ưu tiên tiếng Việt)',
+    speed: 'Tốc độ',
+    howHint:
+      'Số, đơn vị, công thức và kí hiệu hóa học được đọc thành lời (9,81 m/s² → "chín phẩy tám mốt mét trên giây bình phương"); câu dài được ngắt ở dấu câu như khi thầy cô giảng.',
+    previewCard: 'Nghe thử',
     preview: 'Nghe thử',
-    noSpeech: 'Máy này không có giọng đọc. Hãy thử trình duyệt khác.',
+    stop: 'Dừng đọc',
+    showText: 'Xem chữ sẽ đọc',
+    errors: {
+      noKey: 'Giọng Gemini cần khóa Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      noModel:
+        'Chưa tải giọng tiếng Việt trên máy: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      quota: 'Gemini báo hết lượt: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      offline: 'Không có mạng: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      notAllowed:
+        'Cần xác nhận đủ 18 tuổi để dùng giọng Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      other: 'Giọng đã chọn chưa đọc được: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+    },
   },
   levels: {
     label: 'Trình độ',

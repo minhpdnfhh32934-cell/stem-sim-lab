@@ -1,4 +1,5 @@
-//! Opens a fixed set of external pages in the system browser (Gemma terms, model pages).
+//! Opens a fixed set of external pages in the system browser (Gemma terms, model pages) and
+//! the Windows speech settings.
 //! The web page only sends an id: it can never ask the app to open an arbitrary URL.
 
 const PAGES: &[(&str, &str)] = &[
@@ -15,6 +16,14 @@ const PAGES: &[(&str, &str)] = &[
         "gemma4-e2b",
         "https://huggingface.co/onnx-community/gemma-4-E2B-it-ONNX",
     ),
+    // AI Teacher's voice: the Vietnamese on-device voice model and its licence, and the
+    // Windows page where a Vietnamese voice is added (Time & language → Speech).
+    ("mms-tts-vie", "https://huggingface.co/facebook/mms-tts-vie"),
+    (
+        "cc-by-nc-4",
+        "https://creativecommons.org/licenses/by-nc/4.0/",
+    ),
+    ("windows-speech", "ms-settings:speech"),
 ];
 
 fn page_url(id: &str) -> Option<&'static str> {
@@ -44,6 +53,7 @@ mod tests {
             Some("https://ai.google.dev/gemma/terms")
         );
         assert!(page_url("gemma3-1b").is_some_and(|u| u.starts_with("https://huggingface.co/")));
+        assert_eq!(page_url("windows-speech"), Some("ms-settings:speech"));
         assert_eq!(page_url("https://evil.example"), None);
         assert_eq!(page_url(""), None);
     }

@@ -9,6 +9,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useChatStore } from '../chatStore';
 import { builtinKnowledge } from '../knowledge';
+import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import '../chat.css';
 
 /**
@@ -218,6 +219,8 @@ function DataFlow({ desktop }: { desktop: boolean }) {
   const chat = useChatStore();
   const provider = useAiStore((s) => s.provider);
   const engine = useAnalysisEngine() === 'cloud' ? 'cloud' : 'gemma';
+  const voiceEnabled = useVoiceStore((s) => s.enabled);
+  const voiceEngine = useVoiceStore((s) => s.engine);
   const name = (p: string) => t(`settings.aiProviders.${p}` as MessageKey);
   const sent: string[] = [];
   if (engine === 'cloud' && provider !== 'off') {
@@ -227,6 +230,7 @@ function DataFlow({ desktop }: { desktop: boolean }) {
     sent.push(t('chatSettings.flowThinkOnly', { name: name(chat.verifierProvider) }));
   else sent.push(t('chatSettings.flowThink', { name: name(chat.verifierProvider) }));
   if (chat.webLookup) sent.push(t('chatSettings.flowWiki'));
+  if (voiceEnabled && voiceEngine === 'gemini') sent.push(t('chatSettings.flowVoice'));
   // The camera reads photos with the cloud API only in the browser (see photoVision.ts).
   if (!desktop && provider !== 'off')
     sent.push(t('chatSettings.flowPhoto', { name: name(provider) }));

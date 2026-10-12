@@ -30,6 +30,23 @@ export interface LlmTransport {
   }): Promise<string>;
   /** The stored key masked as "••••••••abcd", or null (the key itself never reaches the page). */
   keyHint?(provider: Provider): Promise<string | null>;
+  /** AI Teacher's cloud voice: Gemini text-to-speech of text already written in words. */
+  tts?(req: TtsRequest, signal?: AbortSignal): Promise<TtsAudio>;
+}
+
+export interface TtsRequest {
+  requestId: string;
+  model: string;
+  voice: string;
+  style: string;
+  text: string;
+  timeoutSecs?: number;
+}
+
+export interface TtsAudio {
+  /** Base64 bytes: WAV, or raw 16-bit PCM when `mimeType` says L16/pcm. */
+  audio: string;
+  mimeType: string;
 }
 
 class TauriTransport implements LlmTransport {
@@ -87,6 +104,34 @@ class TauriTransport implements LlmTransport {
   keyHint(provider: Provider): Promise<string | null> {
     return invoke<string | null>('ai_key_hint', { provider });
   }
+  async tts(req: TtsRequest, signal?: AbortSignal): Promise<TtsAudio> {
+    const onAbort = () => {
+      void invoke('ai_cancel', { requestId: req.requestId });
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+    try {
+      return await invoke<TtsAudio>('ai_tts', {
+        request: { ...req, day: localDay(), dailyCap: useAiStore.getState().dailyCap },
+      });
+    } catch (e) {
+      throw toAiError(e);
+    } finally {
+      signal?.removeEventListener('abort', onAbort);
+    }
+  }
+}
+
+/** Same request as `tts_body` in src-tauri/src/ai/tts.rs. */
+export function ttsBody(req: TtsRequest): Record<string, unknown> {
+  const part: Record<string, unknown> = { text: req.text };
+  if (req.style.trim()) part.speech_metadata = { style: req.style.trim() };
+  return {
+    contents: [{ role: 'user', parts: [part] }],
+    generationConfig: {
+      responseModalities: ['AUDIO'],
+      speechConfig: { voiceConfig: { voice: req.voice } },
+    },
+  };
 }
 
 /** Keys used by the browser-only transport (set by tests, never typed in the UI). */
@@ -422,6 +467,48 @@ class FetchTransport implements LlmTransport {
   keyHint(provider: Provider): Promise<string | null> {
     const key = this.supported(provider) ? pageKey(provider) : undefined;
     return Promise.resolve(key ? maskKey(key) : null);
+  }
+  async tts(req: TtsRequest, signal?: AbortSignal): Promise<TtsAudio> {
+    const key = this.key('gemini');
+    const secs = req.timeoutSecs ?? 45;
+    const timeout = AbortSignal.timeout(secs * 1000);
+    const combined = signal ? AbortSignal.any([signal, timeout]) : timeout;
+    const model = req.model.trim().replace(/^models\//, '');
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+          body: JSON.stringify(ttsBody(req)),
+          signal: combined,
+        },
+      );
+      if (!resp.ok) throw await httpError(resp);
+      const json = (await resp.json()) as {
+        candidates?: {
+          content?: {
+            parts?: {
+              inlineData?: { data?: string; mimeType?: string };
+              inline_data?: { data?: string; mime_type?: string };
+            }[];
+          };
+        }[];
+      };
+      for (const p of json.candidates?.[0]?.content?.parts ?? []) {
+        const data = p.inlineData?.data ?? p.inline_data?.data;
+        if (data) {
+          return {
+            audio: data,
+            mimeType: p.inlineData?.mimeType ?? p.inline_data?.mime_type ?? 'audio/wav',
+          };
+        }
+      }
+      throw new AiError('badResponse', 'no audio in the answer');
+    } catch (e) {
+      if (timeout.aborted) throw new AiError('timeout', `${secs}s`);
+      throw toAiError(e);
+    }
   }
   async transcribePhoto(req: {
     provider: Provider;

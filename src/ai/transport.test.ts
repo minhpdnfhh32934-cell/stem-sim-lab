@@ -54,3 +54,61 @@ describe('transport without the desktop app (golden runs from Node)', () => {
     });
   });
 });
+
+describe('Gemini voice (text-to-speech) without the desktop app', () => {
+  it('asks for audio with the voice and style, and returns the audio part', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    const fetch = vi.fn((_url: string, _init: RequestInit) =>
+      Promise.resolve(
+        Response.json({
+          candidates: [
+            { content: { parts: [{ inlineData: { mimeType: 'audio/wav', data: 'UklGRg==' } }] } },
+          ],
+        }),
+      ),
+    );
+    vi.stubGlobal('fetch', fetch);
+    const transport = getTransport();
+    if (!transport.tts) throw new Error('tts missing');
+    const audio = await transport.tts({
+      requestId: 'v1',
+      model: 'gemini-3.8-flash-tts',
+      voice: 'Achird',
+      style: 'vui vẻ',
+      text: 'ép bằng mờ nhân a',
+    });
+    expect(audio).toEqual({ audio: 'UklGRg==', mimeType: 'audio/wav' });
+    const [url, init] = fetch.mock.calls[0]!;
+    expect(url).toBe(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash-tts:generateContent',
+    );
+    expect(JSON.parse(init.body as string)).toEqual({
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: 'ép bằng mờ nhân a', speech_metadata: { style: 'vui vẻ' } }],
+        },
+      ],
+      generationConfig: {
+        responseModalities: ['AUDIO'],
+        speechConfig: { voiceConfig: { voice: 'Achird' } },
+      },
+    });
+  });
+
+  it('refuses without a Gemini key and reports an answer without audio', async () => {
+    const t = getTransport();
+    const call = () =>
+      t.tts!.call(t, {
+        requestId: 'v2',
+        model: 'gemini-3.8-flash-tts',
+        voice: 'Kore',
+        style: '',
+        text: 'a',
+      });
+    await expect(call()).rejects.toMatchObject({ code: 'missingKey' });
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    vi.stubGlobal('fetch', () => Promise.resolve(Response.json({ candidates: [] })));
+    await expect(call()).rejects.toMatchObject({ code: 'badResponse' });
+  });
+});

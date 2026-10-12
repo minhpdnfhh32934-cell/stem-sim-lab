@@ -14,6 +14,7 @@ pub mod claude;
 pub mod gemini;
 pub mod groq;
 pub mod provider;
+pub mod tts;
 pub mod usage;
 
 use std::collections::HashMap;
@@ -335,7 +336,17 @@ fn usage_path(app: &tauri::AppHandle) -> Option<PathBuf> {
 
 /// Counts the call against the daily cap (skipped without a valid day or a cap).
 fn count_call(app: &tauri::AppHandle, state: &AiState, req: &ChatRequest) -> Result<(), AiError> {
-    let (Some(day), Some(cap)) = (req.day.as_deref(), req.daily_cap) else {
+    count_usage(app, state, req.day.as_deref(), req.daily_cap)
+}
+
+/// Counts one AI call (chat or speech) against the user's daily cap.
+fn count_usage(
+    app: &tauri::AppHandle,
+    state: &AiState,
+    day: Option<&str>,
+    cap: Option<u32>,
+) -> Result<(), AiError> {
+    let (Some(day), Some(cap)) = (day, cap) else {
         return Ok(());
     };
     if !usage::valid_day(day) {

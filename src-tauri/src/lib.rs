@@ -40,6 +40,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             app_info,
             ai::ai_chat,
+            ai::tts::ai_tts,
             ai::ai_cancel,
             ai::ai_models,
             ai::ai_set_key,

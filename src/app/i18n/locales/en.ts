@@ -988,6 +988,7 @@ const en: Messages = {
     flowThinkOnly:
       'With Gemma: only when Think is on, the question + draft go → {name} for review.',
     flowWiki: 'Wikipedia lookup is on: question → Wikipedia.',
+    flowVoice: 'Reading aloud with the Gemini voice is on: answer text → Google.',
     flowPhoto:
       'When you photograph a problem (browser): the downscaled photo → {name} to read the text.',
     flowModelDownload:
@@ -1102,20 +1103,93 @@ const en: Messages = {
     cancel: 'Cancel',
   },
   voice: {
-    title: 'Teacher’s voice',
-    intro:
-      'The teacher reads each answer aloud through the speakers. Free, uses the device voices.',
-    style: 'Voice style',
+    readAloudCard: 'Read aloud',
+    readAloud: "Read AI Teacher's answers aloud",
+    readAloudHint: 'Also switched with the speaker button in the chat. No audio is recorded.',
+    sourceCard: 'Voice source',
+    engines: {
+      system: {
+        title: 'Windows voice',
+        hint: 'Free and offline. Sounds right once Windows has a Vietnamese voice installed.',
+      },
+      gemini: {
+        title: 'Gemini voice (online)',
+        hint: 'Most natural, with human-like pauses. Needs the Internet and a Gemini key; counts towards the daily AI limit.',
+      },
+      local: {
+        title: 'Vietnamese voice on this computer',
+        hint: 'Downloaded once, then reads offline with correct Vietnamese tones; sounds more synthetic than the other two.',
+      },
+    },
+    systemFound: 'Vietnamese voice found: {names}.',
+    systemMissing:
+      'No Vietnamese voice on this computer, so Windows reads with an English voice and gets the tones wrong. Install the free Vietnamese voice:',
+    installStep1: 'Open Windows Settings → Time & language → Speech.',
+    installStep2: 'Under "Manage voices", press "Add voices".',
+    installStep3:
+      'Type "Vietnamese", choose "Vietnamese (Vietnam)" and press Add. Windows downloads the voice "Microsoft An".',
+    installStep4: 'Close and reopen SimLab: the new voice appears in the list below.',
+    openWindowsSpeech: 'Open the Windows speech settings',
+    voiceLabel: 'Voice',
+    auto: 'Automatic (Vietnamese first)',
+    noSpeech: 'This computer has no speech engine. Choose the Gemini voice or the on-device voice.',
+    geminiNoKey: 'No Gemini key yet. The Gemini voice uses the same key as Connect AI.',
+    openConnect: 'Open Connect AI',
+    geminiVoice: 'Gemini voice',
+    geminiModel: 'Voice model',
+    traits: {
+      friendly: 'friendly',
+      warm: 'warm',
+      knowledgeable: 'knowledgeable',
+      informative: 'clear, informative',
+      firm: 'firm',
+      upbeat: 'upbeat',
+      breezy: 'breezy',
+      gentle: 'gentle',
+    },
+    modelFlash: 'Flash (best)',
+    modelLite: 'Flash-Lite (cheaper)',
+    geminiPrivacy:
+      "With the Gemini voice, the answer's text (not your question) is sent to Google to be read. On the free tier Google may use content to improve its services. The audio carries a SynthID watermark.",
+    localLicence:
+      "Meta's MMS-TTS Vietnamese model ({size}), licence {licence}: non-commercial use only, with attribution.",
+    localReady: 'Downloaded and ready.',
+    localDelete: 'Delete voice',
+    localDownload: 'Download voice ({size})',
+    localDownloading: 'Downloading…',
+    localPreparing: 'Preparing…',
+    localModelPage: 'Model page',
+    localLicencePage: 'Read the licence',
+    downloadCancelled: 'Download cancelled. The voice is not marked as downloaded.',
+    downloadFailed:
+      'The download did not finish. Check the network and free disk space, then retry.',
+    localHint:
+      'Runs on the graphics card (WebGPU) when there is one, else on the CPU (slower, may pause between phrases). The first sentence waits a few seconds while the model loads.',
+    howCard: 'How it reads',
+    style: 'Style',
     styles: {
       vui: 'Cheerful',
       am: 'Warm',
       lanh: 'Brisk',
       hai: 'Playful',
     },
-    voiceLabel: 'Reading voice',
-    auto: 'Automatic (Vietnamese first)',
+    speed: 'Speed',
+    howHint:
+      'Numbers, units, formulas and chemical symbols are read as Vietnamese words (9,81 m/s² → "chín phẩy tám mốt mét trên giây bình phương"); long sentences pause at punctuation like a teacher.',
+    previewCard: 'Preview',
     preview: 'Preview',
-    noSpeech: 'This device has no speech engine. Try another browser.',
+    stop: 'Stop reading',
+    showText: 'Show the words it will read',
+    errors: {
+      noKey: 'The Gemini voice needs a Gemini key: the Windows voice read the last answer instead.',
+      noModel:
+        'The on-device Vietnamese voice is not downloaded: the Windows voice read the last answer instead.',
+      quota: 'Gemini reported no quota left: the Windows voice read the last answer instead.',
+      offline: 'No network: the Windows voice read the last answer instead.',
+      notAllowed:
+        'The Gemini voice needs the 18+ confirmation: the Windows voice read the last answer instead.',
+      other: 'The chosen voice could not read: the Windows voice read the last answer instead.',
+    },
   },
   levels: {
     label: 'Level',
