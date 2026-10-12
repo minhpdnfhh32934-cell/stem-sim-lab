@@ -13,6 +13,21 @@ export interface ChatMessageRecord {
   checkedBy?: string;
   references?: string[];
 }
+/** Earlier messages sent with a new question ("Trí nhớ hội thoại"); 0 = each question alone. */
+export type MemorySize = 0 | 4 | 12 | 24;
+export const MEMORY_SIZES: readonly MemorySize[] = [0, 4, 12, 24];
+/** Gemma's context is small and every extra message slows it down: it never takes more. */
+export const GEMMA_MEMORY_CAP = 4;
+/** Messages kept on this computer (oldest dropped first). */
+export const STORED_MESSAGES = 80;
+
+/** Earlier messages to send with the next question, for the engine that will answer. */
+export function memoryFor<T>(records: readonly T[], size: MemorySize, gemma: boolean): T[] {
+  const n = gemma ? Math.min(size, GEMMA_MEMORY_CAP) : size;
+  // slice(-0) would return everything.
+  return n === 0 ? [] : records.slice(-n);
+}
+
 export interface KnowledgeDocument {
   id: string;
   name: string;
@@ -29,8 +44,11 @@ interface ChatState {
   verifierModel: string;
   thinkEnabled: boolean;
   includeScreen: boolean;
-  /** Opt-in: send the question to Wikipedia for an extra excerpt (main edition only). */
+  /** Opt-in: send the question to Wikipedia for an extra excerpt. */
   webLookup: boolean;
+  memorySize: MemorySize;
+  /** Keep the conversation on this computer between sessions (off: forgotten on exit). */
+  saveHistory: boolean;
   messages: ChatMessageRecord[];
   documents: KnowledgeDocument[];
   /** The learner's own choice of engine (marks it as chosen). */
@@ -41,6 +59,8 @@ interface ChatState {
   setThinkEnabled: (enabled: boolean) => void;
   setIncludeScreen: (enabled: boolean) => void;
   setWebLookup: (enabled: boolean) => void;
+  setMemorySize: (size: MemorySize) => void;
+  setSaveHistory: (enabled: boolean) => void;
   addMessage: (message: ChatMessageRecord) => void;
   clearMessages: () => void;
   addDocument: (document: KnowledgeDocument) => void;
@@ -115,6 +135,8 @@ export const useChatStore = create<ChatState>()(
       thinkEnabled: false,
       includeScreen: false,
       webLookup: false,
+      memorySize: 12,
+      saveHistory: true,
       messages: [],
       documents: [],
       setEngine: (engine) => set({ engine, engineChosen: true }),
@@ -125,7 +147,10 @@ export const useChatStore = create<ChatState>()(
       setThinkEnabled: (thinkEnabled) => set({ thinkEnabled }),
       setIncludeScreen: (includeScreen) => set({ includeScreen }),
       setWebLookup: (webLookup) => set({ webLookup }),
-      addMessage: (message) => set({ messages: [...get().messages, message].slice(-80) }),
+      setMemorySize: (memorySize) => set({ memorySize }),
+      setSaveHistory: (saveHistory) => set({ saveHistory }),
+      addMessage: (message) =>
+        set({ messages: [...get().messages, message].slice(-STORED_MESSAGES) }),
       clearMessages: () => set({ messages: [] }),
       addDocument: (document) => {
         const docs = get().documents.filter((d) => d.name !== document.name);
@@ -136,9 +161,14 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: 'stemsim.teacher-chat',
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => localStorage),
-      migrate: (state) => migrateChatSettings(state),
+      // v5 adds the conversation-memory settings; a v4 state keeps everything it had.
+      migrate: (state, version) => ({
+        ...(version >= 4 ? (state as object) : migrateChatSettings(state)),
+        memorySize: 12,
+        saveHistory: true,
+      }),
       partialize: ({
         engine,
         engineChosen,
@@ -146,6 +176,8 @@ export const useChatStore = create<ChatState>()(
         verifierProvider,
         verifierModel,
         webLookup,
+        memorySize,
+        saveHistory,
         messages,
         documents,
       }) => ({
@@ -155,7 +187,10 @@ export const useChatStore = create<ChatState>()(
         verifierProvider,
         verifierModel,
         webLookup,
-        messages,
+        memorySize,
+        saveHistory,
+        // "Không lưu lịch sử": the conversation lives only until the app closes.
+        messages: saveHistory ? messages : [],
         documents,
       }),
     },

@@ -58,6 +58,10 @@
 .btn--accent:hover:not(:disabled) {
   background: var(--accent-hover);
 }
+.btn--danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
 
 /* Icon buttons with micro-animations */
 .icon-btn {

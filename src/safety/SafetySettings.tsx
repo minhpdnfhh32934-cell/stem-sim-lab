@@ -2,35 +2,16 @@ import { BookOpenCheck, ScrollText, ShieldCheck, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { getSafety, type Incident, type SafetyStatus } from './safety';
+import { getSafety, type Incident } from './safety';
 import { safetyErrorText } from './pinError';
 import { openGate, openPrivacy, useSafetyStore } from './safetyStore';
 import './safety.css';
 
-/** Settings → "An toàn & quyền riêng tư" (PROMPT_PHAN_2 A3). */
+/** Settings → "An toàn & quyền riêng tư" (PROMPT_PHAN_2 A3): age/terms card and the incident log. */
 export function SafetySettings() {
   const t = useT();
   const status = useSafetyStore((s) => s.status);
   if (!status) return null;
-  return (
-    <fieldset className="settings-group safety-settings">
-      <legend>
-        <ShieldCheck size={15} strokeWidth={1.75} aria-hidden="true" />
-        {t('safety.settings.title')}
-      </legend>
-      <MainPanel status={status} />
-      <div className="ai-settings__actions">
-        <button type="button" className="btn" onClick={openPrivacy}>
-          <BookOpenCheck size={14} strokeWidth={1.75} aria-hidden="true" />
-          {t('safety.settings.privacy')}
-        </button>
-      </div>
-    </fieldset>
-  );
-}
-
-function MainPanel({ status }: { status: SafetyStatus }) {
-  const t = useT();
   const line = status.aiAllowed
     ? t('safety.settings.mainAdult', { version: String(status.termsVersion) })
     : status.answered
@@ -38,20 +19,36 @@ function MainPanel({ status }: { status: SafetyStatus }) {
       : t('safety.settings.unanswered');
   return (
     <>
-      <p className="safety-settings__line" data-ok={status.aiAllowed}>
-        {line}
-      </p>
-      <div className="ai-settings__actions">
-        <button type="button" className="btn" onClick={openGate}>
-          {t('safety.settings.answerAgain')}
-        </button>
-      </div>
-      <IncidentLog />
+      <fieldset className="settings-group safety-settings">
+        <legend>
+          <ShieldCheck size={15} strokeWidth={1.75} aria-hidden="true" />
+          {t('safety.settings.ageCard')}
+        </legend>
+        <p className="safety-settings__line" data-ok={status.aiAllowed}>
+          {line}
+        </p>
+        <div className="ai-settings__actions">
+          <button type="button" className="btn" onClick={openGate}>
+            {t('safety.settings.answerAgain')}
+          </button>
+          <button type="button" className="btn" onClick={openPrivacy}>
+            <BookOpenCheck size={14} strokeWidth={1.75} aria-hidden="true" />
+            {t('safety.settings.privacy')}
+          </button>
+        </div>
+      </fieldset>
+      <fieldset className="settings-group">
+        <legend>
+          <ScrollText size={15} strokeWidth={1.75} aria-hidden="true" />
+          {t('safety.settings.incidents')}
+        </legend>
+        <IncidentLog />
+      </fieldset>
     </>
   );
 }
 
-/** Kind + time only. In the pilot edition it is behind the supervisor session (Rust checks). */
+/** Kind + time only (no question text, no answer). */
 function IncidentLog() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);

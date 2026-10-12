@@ -25,7 +25,7 @@ export async function submitProblem(text: string): Promise<void> {
     if (useAnalyzeStore.getState().phase === 'running') return;
     // Gemma was chosen but is not downloaded: show where to get it, send nothing online.
     if (engine === 'gemma-missing') {
-      useWorkspaceStore.getState().openSettingsAt('teacher');
+      useWorkspaceStore.getState().openSettingsAt('local');
       return;
     }
     await analyze(text);

@@ -16,7 +16,7 @@ import {
 import { useEffect, useRef, useState, type KeyboardEvent, type SyntheticEvent } from 'react';
 import { useAiStore } from '@/ai/aiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
@@ -230,12 +230,12 @@ export function ChatPanel({
   const gemmaUnavailable = engine === 'gemma' && gemmaReadyState === false;
   const verifierMissing =
     chat.thinkEnabled && verifierLookup?.id === chat.verifierProvider && !verifierLookup.available;
-  const notice: { text: string; section: 'ai' | 'teacher' } | null = noApi
+  const notice: { text: string; section: SettingsSection } | null = noApi
     ? { text: t('chat.noApi'), section: 'ai' }
     : noWebGpu
-      ? { text: t('chat.noWebgpuNotice'), section: 'teacher' }
+      ? { text: t('chat.noWebgpuNotice'), section: 'local' }
       : gemmaUnavailable
-        ? { text: t('chat.gemmaMissingNotice'), section: 'teacher' }
+        ? { text: t('chat.gemmaMissingNotice'), section: 'local' }
         : verifierMissing
           ? { text: t('chat.thinkNoVerifier'), section: 'teacher' }
           : null;

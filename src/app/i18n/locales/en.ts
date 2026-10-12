@@ -30,7 +30,7 @@ const en: Messages = {
   ai: {
     notAllowed: 'AI: not enabled',
     notAllowedHint:
-      'AI is not enabled on this computer yet (age not confirmed or no supervisor consent). Simulations work as usual.',
+      'AI is not enabled on this computer yet (18+ not confirmed). Simulations work as usual.',
     offline: 'AI: offline',
     cloud: 'Connected to {provider}',
     off: 'AI: off',
@@ -197,6 +197,38 @@ const en: Messages = {
     browserMode: 'browser mode',
   },
   settings: {
+    nav: {
+      label: 'Settings pages',
+      groupGeneral: 'General',
+      groupAi: 'AI',
+      groupPrivacy: 'Privacy',
+      appearance: 'Appearance',
+      appearanceHint: 'Basic/Advanced mode, colours, text size, language and layout.',
+      simulation: 'Simulation & performance',
+      simulationHint: 'Display quality for this computer and the default gravity.',
+      aiHint: 'Choose the online AI provider, enter the API key, set limits and the fallback.',
+      teacher: 'AI Teacher',
+      teacherHint: 'Think (a second API reviews the answer) and what data is sent.',
+      local: 'Local AI (Gemma)',
+      localHint:
+        'Download, choose or delete the Gemma models that run on this computer: no network, no key.',
+      gpu: 'GPU for Gemma',
+      gpuHint: 'The graphics card in use, answer length and when to free the GPU memory.',
+      knowledge: 'Knowledge library',
+      knowledgeHint: 'Built-in notes, your own documents and the Wikipedia lookup.',
+      memory: 'Conversation memory',
+      memoryHint:
+        'How many earlier messages AI Teacher remembers and whether the chat is kept on this computer.',
+      voice: 'Voice',
+      voiceHint: "AI Teacher's Vietnamese reading voice and how it reads.",
+      safetyHint: 'Age confirmation, terms, the privacy page and the safety log.',
+      shortcutsHint: 'The main keyboard shortcuts for simulations.',
+    },
+    lookCard: 'Mode and colours',
+    textCard: 'Text and language',
+    layoutHint: 'Put the panels (library, controls, graphs) back to their original place and size.',
+    aiProviderCard: 'Provider and API key',
+    aiLimitsCard: 'Timeout and daily limit',
     aiFallback: 'Fallback when quota runs out',
     aiFallbackHint:
       'When the main provider runs out of free quota or credit, the app switches to this provider (if it has a key). The "AI-assisted content" label shows which model answered.',
@@ -204,7 +236,7 @@ const en: Messages = {
     aiFallbackModel: 'Fallback model',
     groqGuide: {
       title: 'How to get a Groq API key (free)',
-      age: 'Under Groq terms, the account holder must be 18 or older. In the high-school pilot, a parent or teacher creates the key and the supervisor enters it.',
+      age: 'Under Groq terms, the account holder must be 18 or older.',
       step1:
         'Press "Open the key page" below (or type console.groq.com/keys in a browser) and sign in.',
       step2: 'Press "Create API Key", give it any name (e.g. "SimLab") and confirm.',
@@ -216,10 +248,7 @@ const en: Messages = {
       privacy:
         'Under Groq terms, submitted content is not used to train AI. If the account offers "Zero Data Retention", turn it on so Groq keeps no copy of the problems.',
     },
-    aiStatusNotAllowed:
-      'AI is not enabled: confirm your age (or the supervisor consent) in Settings → Safety.',
-    aiPilotLocked:
-      'Only the supervisor can enter or delete the API key. Unlock under "Safety & privacy" below.',
+    aiStatusNotAllowed: 'AI is not enabled: confirm your age in Settings → Safety & privacy.',
     title: 'Settings',
     close: 'Close',
     appearance: 'Appearance',
@@ -245,8 +274,6 @@ const en: Messages = {
     aiKeyShow: 'Show key',
     aiKeyHide: 'Hide key',
     aiKeyStoredHint: 'Saved key: {hint}',
-    aiPilotKey:
-      'Pilot edition: the API key (Claude, or the free Groq) is entered by the supervising adult. Students do not need to (and should not) enter a key.',
     aiTimeout: 'Timeout (seconds)',
     aiDailyCap: 'Maximum AI calls per day',
     aiDailyCapHint:
@@ -280,7 +307,7 @@ const en: Messages = {
     aiStatusBadKey: 'Invalid key — check it or create a new one.',
     geminiGuide: {
       title: 'How to get a Gemini API key (free)',
-      age: "Google's terms require the person creating the API key to be 18 or older. Students under 18: ask a teacher or parent to create the key and enter it for you.",
+      age: "Google's terms require the person creating the API key to be 18 or older.",
       art: {
         create: 'Drawing: the key page, "Create API key" button at the bottom right.',
         copy: 'Drawing: the new key with the copy button next to it.',
@@ -497,8 +524,7 @@ const en: Messages = {
       tooLong: 'The problem is too long (at most {max} characters) — please shorten it.',
     },
     hint: {
-      notAllowed:
-        'AI needs an age confirmation (main edition) or supervisor consent (pilot edition). Open Settings → Safety & privacy.',
+      notAllowed: 'AI needs the 18+ confirmation. Open Settings → Safety & privacy.',
       personalData:
         'Remove names, phone numbers, e-mails, addresses or ID numbers from the problem, then analyse again.',
       unsafe:
@@ -520,8 +546,9 @@ const en: Messages = {
       other: 'You can still build the scene manually or use the sample library.',
     },
     hintClaude: {
-      missingKey: 'No Claude API key yet. Ask the supervisor to enter it in Settings → Connect AI.',
-      badKey: 'The Claude API key was refused. Ask the supervisor to check it in Settings.',
+      missingKey:
+        'No Claude API key yet. Create one at console.anthropic.com and enter it in Settings → Connect AI.',
+      badKey: 'The Claude API key was refused. Check it in Settings → Connect AI.',
     },
     cached:
       'This problem was read and confirmed before, so the AI is not called again. Check the table as usual.',
@@ -674,6 +701,7 @@ const en: Messages = {
       done: 'Done',
     },
     settings: {
+      ageCard: 'Age and terms',
       title: 'Safety & privacy',
       mainAdult: 'Confirmed: 18 or older, terms accepted (version {version}).',
       mainMinor: 'Answered: under 18 — AI is off.',
@@ -913,9 +941,16 @@ const en: Messages = {
     },
   },
   chatSettings: {
-    title: 'AI Teacher · Gemma and knowledge library',
-    intro:
-      'Choose an answering model, configure a cross-check API and manage local study materials.',
+    gemmaTermsCard: 'Gemma terms',
+    gemmaTermsHint:
+      'Gemma is a Google DeepMind model, used under the Gemma Terms of Use. Please read them before downloading.',
+    thinkCard: 'Think · cross-check',
+    thinkHint:
+      'With Think on in the chat, a second API (not the one that answered) reads the draft and fixes mistakes before you see the answer.',
+    builtInCard: 'Built-in notes',
+    webCard: 'Online lookup',
+    flowLocalChatSession:
+      'The conversation is kept only until the app closes (history saving is off).',
     gemmaModel: 'Gemma version',
     gemma270m: '270M · smallest',
     gemma1b: '1B · recommended',
@@ -998,8 +1033,6 @@ const en: Messages = {
       failed: 'Could not test the key.',
     },
     library: 'Knowledge library',
-    hideLibrary: 'Hide library',
-    openLibrary: 'Open library',
     builtIn:
       '{count} built-in STEM notes for upper-secondary study; {pending} are still waiting for a teacher’s review, so check them against the textbook.',
     notes: 'notes',
@@ -1013,6 +1046,60 @@ const en: Messages = {
     removeFile: 'Remove',
     localLibraryPrivacy:
       'Files are stored on this computer. With online APIs, relevant excerpts may be sent with your question. Only add materials you have permission to use.',
+  },
+  gpuSettings: {
+    cardTitle: 'Graphics card (WebGPU)',
+    card: 'Card',
+    checking: 'Reading the card details…',
+    none: 'No WebGPU-capable card was found.',
+    unnamed: 'A WebGPU card is available (the browser does not tell its name).',
+    f16: 'Half-precision maths (shader-f16)',
+    maxBuffer: 'Largest buffer',
+    loaded: 'Loaded on the GPU',
+    notLoaded: 'No model loaded',
+    yes: 'Yes',
+    no: 'No',
+    fallbackWarning: 'This is a CPU-emulated card: Gemma still runs, but very slowly.',
+    privacy: 'The browser reads this on this computer; nothing is sent.',
+    powerTitle: 'Which card on a two-GPU computer',
+    power: 'Prefer',
+    powerHigh: 'Powerful card (faster)',
+    powerLow: 'Battery-saving card',
+    powerHint:
+      'Only matters on computers with both a discrete and an integrated card; the browser may ignore it. Applies from the next question.',
+    lengthTitle: "Length of Gemma's answers",
+    length: 'At most',
+    lengths: {
+      short: 'Short',
+      medium: 'Medium',
+      long: 'Long',
+    },
+    lengthHint:
+      'At most about {tokens} tokens per answer. Longer means waiting longer, and a small model tends to ramble.',
+    memoryTitle: 'GPU memory',
+    unload: 'Free it',
+    keep: 'Keep loaded',
+    after: 'After {minutes} min',
+    unloadHint:
+      'The model stays in GPU memory to answer quickly. Freeing it makes the computer lighter; the next question loads it again from disk (seconds to tens of seconds).',
+    freeNow: 'Free the GPU memory now',
+  },
+  memorySettings: {
+    contextTitle: 'Send earlier messages along',
+    size: 'Messages',
+    none: 'None',
+    sizeNone: 'Each question is answered on its own: AI Teacher does not remember what was said.',
+    sizeHint:
+      'The last {count} messages go with each question so AI Teacher understands follow-ups. More means better context but more text sent.',
+    gemmaCap: 'Gemma on this computer uses at most {count} messages to answer in time.',
+    storeTitle: 'Keep the conversation',
+    save: 'Save the chat history on this computer',
+    saveOn: 'The conversation is still there after reopening the app (the last {max} messages).',
+    saveOff: 'The conversation is kept only until the app closes.',
+    count: '{count} messages so far.',
+    clear: 'Clear the conversation',
+    confirmClear: 'Clear for good',
+    cancel: 'Cancel',
   },
   voice: {
     title: 'Teacher’s voice',

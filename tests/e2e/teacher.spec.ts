@@ -13,7 +13,7 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   await page.locator('.launch-card--teacher').click();
   const screen = page.getByRole('region', { name: 'Dạy học bằng AI' });
   await expect(screen).toBeVisible();
-  await expect(page.getByText('AI Teacher', { exact: true })).toBeVisible();
+  await expect(screen.getByText('AI Teacher', { exact: true }).first()).toBeVisible();
   // The screen-context switch belongs to the bubble only.
   await expect(page.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).toHaveCount(0);
   // No API key and no local model: a clear notice, never a pretend answer.
@@ -60,20 +60,23 @@ test('chat bubble: screen toggle off by default, Think explains the missing seco
       .first(),
   ).toBeVisible();
 
-  // "Cài đặt" lands on the right section of Settings.
+  // "Cài đặt" lands on the right page of Settings.
   await panel.getByRole('button', { name: 'Cài đặt' }).click();
-  await expect(page.locator('#settings-ai, #settings-teacher').first()).toBeInViewport();
+  const shown = page.locator('.settings-panel:not([hidden])');
+  await expect(shown).toHaveAttribute('id', /^settings-(ai|teacher|local)$/);
+  await expect(shown).toBeInViewport();
 });
 
 test('knowledge library: add a .txt file, refuse a .pdf, Wikipedia stays off', async ({ page }) => {
   await openLab(page);
   await page.getByRole('button', { name: 'Cài đặt', exact: true }).first().click();
-  const teacher = page.locator('#settings-teacher');
-  await teacher.scrollIntoViewIfNeeded();
-  await expect(teacher.getByText('Dữ liệu của em đi đâu?')).toBeVisible();
-  await expect(teacher.getByRole('checkbox', { name: /Tra thêm Wikipedia/ })).not.toBeChecked();
+  const settings = page.getByRole('dialog', { name: 'Cài đặt' });
+  await settings.getByRole('tab', { name: 'AI Teacher' }).click();
+  await expect(page.locator('#settings-teacher').getByText('Dữ liệu của em đi đâu?')).toBeVisible();
 
-  await teacher.getByRole('button', { name: 'Mở thư viện' }).click();
+  await settings.getByRole('tab', { name: 'Thư viện kiến thức' }).click();
+  const teacher = page.locator('#settings-knowledge');
+  await expect(teacher.getByRole('checkbox', { name: /Tra thêm Wikipedia/ })).not.toBeChecked();
   const input = teacher.locator('input[type="file"]');
   await input.setInputFiles({
     name: 'dong-luc-hoc.txt',

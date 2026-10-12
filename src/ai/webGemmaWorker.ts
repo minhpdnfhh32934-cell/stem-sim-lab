@@ -43,7 +43,11 @@ interface ProgressInfo {
 }
 
 type InMessage =
-  | { kind: 'init'; ort: { wasm: string; mjs: string } }
+  | {
+      kind: 'init';
+      ort: { wasm: string; mjs: string };
+      power?: 'high-performance' | 'low-power';
+    }
   | {
       kind: 'load';
       modelId: string;
@@ -226,6 +230,10 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
         // Both files, or ONNX Runtime looks for the loader next to the bundle and fails.
         wasm.wasmPaths = { wasm: msg.ort.wasm, mjs: msg.ort.mjs };
       }
+      // Read once, when ONNX Runtime first opens the GPU (Transformers.js defaults to
+      // high-performance); the page restarts the worker when the learner changes it.
+      const webgpu = (env.backends.onnx as { webgpu?: { powerPreference?: string } }).webgpu;
+      if (webgpu && msg.power) webgpu.powerPreference = msg.power;
       post({ kind: 'inited' });
     } else if (msg.kind === 'load') {
       if (engine && loadedModel !== msg.modelId) {

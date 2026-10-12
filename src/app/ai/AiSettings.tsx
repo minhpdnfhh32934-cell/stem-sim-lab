@@ -6,6 +6,8 @@ import {
   CircleX,
   ExternalLink,
   Eye,
+  Gauge,
+  LifeBuoy,
   EyeOff,
   Hourglass,
   KeyRound,
@@ -43,7 +45,10 @@ function openGroqKeyPage() {
   else window.open(GROQ_KEY_PAGE, '_blank', 'noopener,noreferrer');
 }
 
-/** Settings → "Kết nối AI" (PROMPT_PHAN_2 A2): provider, key guide, model, key, test, limits. */
+/**
+ * Settings → "Kết nối AI" (PROMPT_PHAN_2 A2), in three cards: provider + key (with the key
+ * guide and test), limits (timeout, daily cap, usage, cache) and the free fallback.
+ */
 export function AiSettings() {
   const t = useT();
   const ai = useAiStore();
@@ -51,52 +56,57 @@ export function AiSettings() {
   const on = ai.provider !== 'off';
 
   return (
-    <fieldset className="settings-group" id="settings-ai">
-      <legend>
-        <Bot size={15} strokeWidth={1.75} aria-hidden="true" />
-        {t('settings.ai')}
-      </legend>
-      <p className="muted">{t('settings.aiRule')}</p>
+    <>
+      <fieldset className="settings-group">
+        <legend>
+          <Bot size={15} strokeWidth={1.75} aria-hidden="true" />
+          {t('settings.aiProviderCard')}
+        </legend>
+        <p className="muted">{t('settings.aiRule')}</p>
 
-      <div className="settings-row">
-        <span id="ai-provider-label">{t('settings.aiProvider')}</span>
-        <div className="segmented" role="radiogroup" aria-labelledby="ai-provider-label">
-          {CHOICES.map((p) => (
-            <button
-              key={p}
-              type="button"
-              role="radio"
-              aria-checked={ai.provider === p}
-              className="segmented__item"
-              onClick={() => {
-                ai.setProvider(p);
-              }}
-            >
-              {t(`settings.aiProviders.${p}`)}
-            </button>
-          ))}
+        <div className="settings-row">
+          <span id="ai-provider-label">{t('settings.aiProvider')}</span>
+          <div className="segmented" role="radiogroup" aria-labelledby="ai-provider-label">
+            {CHOICES.map((p) => (
+              <button
+                key={p}
+                type="button"
+                role="radio"
+                aria-checked={ai.provider === p}
+                className="segmented__item"
+                onClick={() => {
+                  ai.setProvider(p);
+                }}
+              >
+                {t(`settings.aiProviders.${p}`)}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Gemini exists only in the main edition (the pilot bundle drops this branch). */}
-      {ai.provider === 'gemini' && <GeminiGuide openByDefault={ai.status === 'noKey'} />}
+        {ai.provider === 'gemini' && <GeminiGuide openByDefault={ai.status === 'noKey'} />}
 
-      {ai.provider === 'groq' && <GroqGuide openByDefault={ai.status === 'noKey'} />}
+        {ai.provider === 'groq' && <GroqGuide openByDefault={ai.status === 'noKey'} />}
 
-      {on && <ModelField provider={ai.provider as Provider} />}
+        {on && <ModelField provider={ai.provider as Provider} />}
+
+        {on && (
+          <KeyArea
+            provider={ai.provider as Provider}
+            desktop={desktop}
+            inputId="ai-key-input"
+            label={t('settings.aiKey')}
+          />
+        )}
+        {on && <p className="muted small">{t('settings.aiPrivacy')}</p>}
+      </fieldset>
 
       {on && (
-        <KeyArea
-          provider={ai.provider as Provider}
-          desktop={desktop}
-          inputId="ai-key-input"
-          label={t('settings.aiKey')}
-        />
-      )}
-      {on && <p className="muted small">{t('settings.aiPrivacy')}</p>}
-
-      {on && (
-        <>
+        <fieldset className="settings-group">
+          <legend>
+            <Gauge size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('settings.aiLimitsCard')}
+          </legend>
           <label className="ai-settings__field">
             <span>{t('settings.aiTimeout')}</span>
             <input
@@ -127,10 +137,19 @@ export function AiSettings() {
           </label>
           <UsageLine cap={ai.dailyCap} />
           <ReadingCacheLine />
-          <FallbackSection primary={ai.provider as Provider} desktop={desktop} />
-        </>
+        </fieldset>
       )}
-    </fieldset>
+
+      {on && (
+        <fieldset className="settings-group">
+          <legend>
+            <LifeBuoy size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('settings.aiFallback')}
+          </legend>
+          <FallbackSection primary={ai.provider as Provider} desktop={desktop} />
+        </fieldset>
+      )}
+    </>
   );
 }
 
@@ -209,10 +228,7 @@ function GroqGuide({ openByDefault }: { openByDefault: boolean }) {
   );
 }
 
-/**
- * Pilot edition: only the supervisor (open session, src/safety) may enter or delete the key;
- * Rust checks it again. The main edition shows the key field to the adult user.
- */
+/** The key field; Rust refuses to save a key before the 18+ confirmation. */
 interface KeyAreaProps {
   provider: Provider;
   desktop: boolean;

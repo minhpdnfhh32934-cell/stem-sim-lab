@@ -550,16 +550,6 @@
 .chat-settings__actions .btn {
   min-height: 36px;
 }
-.chat-settings__terms {
-  min-height: 32px;
-  margin-top: 7px;
-  color: var(--text-muted);
-}
-.chat-settings__divider {
-  height: 1px;
-  margin: 14px 0;
-  background: var(--border);
-}
 .chat-settings__error,
 .chat-settings__success {
   display: flex;
@@ -580,11 +570,6 @@
   margin: 12px 0;
   padding: 0;
   border: 0;
-}
-.chat-settings__models-title {
-  margin-bottom: 8px;
-  font-size: var(--text-sm);
-  font-weight: 600;
 }
 .chat-settings__model {
   display: flex;
@@ -756,32 +741,6 @@ progress.chat-settings__progress-track::-webkit-progress-value {
   white-space: nowrap;
   clip-path: inset(50%);
 }
-.chat-settings__library-heading,
-.chat-settings__library-heading > div {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-}
-.chat-settings__library-heading {
-  justify-content: space-between;
-  margin-top: 8px;
-}
-.chat-settings__library-heading > div > span {
-  min-width: 22px;
-  padding: 1px 6px;
-  border-radius: 99px;
-  background: var(--bg-sunken);
-  color: var(--text-muted);
-  text-align: center;
-  font-size: var(--text-xs);
-}
-.chat-settings__library {
-  margin-top: 10px;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-panel-2);
-}
 .chat-settings__builtin {
   display: flex;
   flex-wrap: wrap;
@@ -894,16 +853,6 @@ progress.chat-settings__progress-track::-webkit-progress-value {
 }
 
 /* "Dữ liệu của em đi đâu?" */
-.chat-settings__flow {
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-panel-2);
-}
-.chat-settings__flow h4 {
-  margin: 0 0 8px;
-  font-size: var(--text-md);
-}
 .chat-settings__flow-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
