@@ -20,6 +20,8 @@ const WRY_DEFAULT_ARGS: &str = "--disable-features=msWebOOUI,msPdfOOUI,msSmartSc
 const FILE_NAME: &str = "gpu.json";
 const FILE_VERSION: u32 = 1;
 
+// Built on Windows only (DXGI); other platforms list no adapters.
+#[cfg_attr(not(windows), allow(dead_code))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum GpuKind {
@@ -89,6 +91,7 @@ pub struct GpuStatus {
     pub restart_needed: bool,
 }
 
+#[cfg_attr(not(windows), allow(dead_code))]
 pub fn adapter_id(vendor_id: u32, device_id: u32, sub_sys_id: u32) -> String {
     format!("{vendor_id:04x}:{device_id:04x}:{sub_sys_id:08x}")
 }
