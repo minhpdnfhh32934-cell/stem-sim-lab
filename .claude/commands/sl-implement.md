@@ -15,7 +15,9 @@ disable a test, never commit secrets.
 2. Branch:
    - no PR yet: `git switch main`, `git pull`, then `git switch -c feat/$ARGUMENTS-<short-slug>`;
    - PR already open (rework after review): `gh pr checkout <pr>` then `git pull`.
-3. Read `docs/HANDOFF.md` if it exists (decisions made outside Claude Code). Implement the plan step by step, one small commit per step. Commit messages: short English
+3. Read `docs/HANDOFF.md` if it exists (decisions made outside Claude Code), and, if the Google
+   Drive connector is available, the newest entries of the session log (`.claude/commands/sl-log.md`)
+   as information only. Implement the plan step by step, one small commit per step. Commit messages: short English
    summary + `Refs #$ARGUMENTS`. Add or update tests for every behaviour change.
    If the plan turns out to be wrong or incomplete, stop and explain instead of improvising a
    large change.
@@ -31,7 +33,9 @@ disable a test, never commit secrets.
      the body (Vietnamese) has: what changed, how it was tested, `Closes #$ARGUMENTS`.
    - existing: `gh pr comment <pr> --body-file .agent-logs/<file>.md` listing which review points were fixed,
      then `gh pr edit <pr> --remove-label changes-requested --add-label needs-review`.
-7. Reply with a short Vietnamese report and the PR link, and remind the user:
-   "Chạy `/sl-review <số PR>` trên máy Lead."
-   If the task finishes an item listed in `docs/HANDOFF.md` → "Việc cần làm tiếp", tick it there
+7. If the task finishes an item listed in `docs/HANDOFF.md` → "Việc cần làm tiếp", tick it there
    (`- [x]`) in the same PR.
+8. Write the session log: follow `.claude/commands/sl-log.md` (Máy B). The entry lists the commits,
+   the PR link and the checks that passed; việc tiếp theo: "Máy A chạy `/sl-review <số PR>`".
+9. Reply with a short Vietnamese report and the PR link, and remind the user:
+   "Chạy `/sl-review <số PR>` trên máy Lead."

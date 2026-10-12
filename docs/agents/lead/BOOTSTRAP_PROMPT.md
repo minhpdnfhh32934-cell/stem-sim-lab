@@ -167,6 +167,13 @@ Giải thích ngắn kết quả.
   rồi chạy file đó một lần.
 - Kiểm tra: sau khoảng 10 giây, `.agent-logs\lead-watch.log` có dòng `watching as @...`.
 
+**BƯỚC 8b — Nhật ký phiên chung (Google Doc).** Tìm bằng kết nối Google Drive tài liệu có tên đúng
+`STEM Sim Lab: Nhật ký phiên làm việc Máy A và Máy B` (`search_files`, `title = '…'`). Tìm thấy
+đúng 1 tài liệu → ✅ và chỉ đọc, không sửa. Không có kết nối Google Drive / Google Docs, hoặc không
+thấy tài liệu → ❌ và nhắc tôi: vào claude.ai → Settings → Connectors, bật **Google Drive** và
+**Google Docs**, đăng nhập bằng tài khoản Google đã được chia sẻ tài liệu này. Không tự tạo tài liệu
+mới. Cách ghi nhật ký cuối mỗi phiên: `.claude/commands/sl-log.md` (lệnh `/sl-log`).
+
 **BƯỚC 9 — Báo cáo cuối cùng** bằng tiếng Việt, dạng checklist ✅/❌:
 
 - công cụ;
@@ -177,7 +184,8 @@ Giải thích ngắn kết quả.
 - nhãn;
 - bảo vệ nhánh;
 - issue ping (số issue + `pong:lead`);
-- watcher (Scheduled Task hoặc Startup).
+- watcher (Scheduled Task hoặc Startup);
+- nhật ký phiên chung (Google Doc).
 
 Cuối báo cáo, ghi đúng dòng:
 "Việc tiếp theo: gửi file docs/agents/builder/BOOTSTRAP_PROMPT.md cho Claude Code trên máy
