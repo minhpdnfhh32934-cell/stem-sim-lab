@@ -94,7 +94,12 @@ export function AppShell() {
   } as CSSProperties;
 
   return (
-    <div className="shell" data-presentation={presentation || undefined} style={style}>
+    <div
+      className="shell"
+      data-presentation={presentation || undefined}
+      data-inspector={showRight || undefined}
+      style={style}
+    >
       {!presentation && <TopBar />}
       <ProblemDialog />
       {sourcesOpen && (

@@ -350,6 +350,7 @@ const en: Messages = {
     method: 'Numerical method',
     sources: 'Sources',
     intervened: 'User intervention — results are a numerical simulation.',
+    more: 'Equations, assumptions and sources',
     estimatedError: 'Estimated error: {value}',
   },
   quality: {
@@ -391,6 +392,7 @@ const en: Messages = {
       user: 'Value you changed',
     },
     liveHint: 'Can be changed while running (counts as an intervention)',
+    allDefault: 'Using default values (not given by a problem). Drag a slider to try.',
     resetHint: 'Changing it restarts the simulation',
   },
   solution: {
@@ -811,7 +813,6 @@ const en: Messages = {
   chat: {
     label: 'Chat with the AI teacher',
     title: 'AI Teacher',
-    product: 'SimLab',
     model: 'Gemma · {model}',
     clear: 'Clear conversation',
     voice: 'Teacher reads answers aloud',
@@ -1144,6 +1145,8 @@ const en: Messages = {
     openWindowsSpeech: 'Open the Windows speech settings',
     voiceLabel: 'Voice',
     auto: 'Automatic (Vietnamese first)',
+    groupVietnamese: 'Vietnamese',
+    groupOther: 'Other languages (wrong Vietnamese tones)',
     noSpeech: 'This computer has no speech engine. Choose the Gemini voice or the on-device voice.',
     geminiNoKey: 'No Gemini key yet. The Gemini voice uses the same key as Connect AI.',
     openConnect: 'Open Connect AI',
@@ -1320,7 +1323,6 @@ const en: Messages = {
     boardFormula: 'P = m·g',
     boardNote: 'pointing straight down',
     progressLabel: 'Lesson progress',
-    turnProgress: 'Lesson conversation turns',
     controlsLabel: 'Lesson controls',
     mic: 'Hold to talk',
     raiseHand: 'Raise hand',

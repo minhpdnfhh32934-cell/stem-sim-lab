@@ -47,12 +47,6 @@
 }
 .problem-review__topic select {
   min-width: 16rem;
-  padding: 4px 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-panel-2);
-  color: var(--text);
-  font: inherit;
 }
 .problem-review__text {
   margin: var(--space-2) 0 var(--space-3);
@@ -250,8 +244,11 @@
   padding: 6px 0;
   font-size: var(--text-sm);
 }
-.ai-settings__field input,
 .ai-settings__field select {
+  flex: 1;
+  max-width: 20rem;
+}
+.ai-settings__field input {
   flex: 1;
   max-width: 20rem;
   padding: 4px 8px;

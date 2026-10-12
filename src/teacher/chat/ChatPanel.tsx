@@ -248,6 +248,7 @@ export function ChatPanel({
     }
   };
   const lastMessage = chat.messages[chat.messages.length - 1];
+  const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -310,14 +311,22 @@ export function ChatPanel({
               />
             </span>
           )}
-          <span>
-            <strong>{t('chat.title')}</strong>
-            <small>
-              {engine === 'gemma' ? t('chat.model', { model: chat.gemmaModel }) : t('chat.product')}
-            </small>
-          </span>
+          <strong>{t('chat.title')}</strong>
         </div>
         <div className="chat-panel__header-actions">
+          <label className="chat-engine" data-tip={t('chat.engineLabel')} data-tip-side="bottom">
+            <span className="sr-only">{t('chat.engineLabel')}</span>
+            <select
+              aria-label={t('chat.engineLabel')}
+              value={engine}
+              onChange={(e) => {
+                chat.setEngine(e.target.value as 'cloud' | 'gemma');
+              }}
+            >
+              <option value="cloud">{t('chat.cloud')}</option>
+              <option value="gemma">{t('chat.gemma')}</option>
+            </select>
+          </label>
           {speechSupported() && (
             <button
               type="button"
@@ -368,8 +377,8 @@ export function ChatPanel({
         </div>
       </header>
 
-      <div className="chat-panel__toolbar">
-        {showScreenContext && (
+      {showScreenContext && (
+        <div className="chat-panel__toolbar">
           <label
             className={cx('chat-toggle', chat.includeScreen && 'is-on')}
             title={t('chat.contextHint')}
@@ -387,21 +396,8 @@ export function ChatPanel({
             </span>
             <span>{t('chat.contextToggle')}</span>
           </label>
-        )}
-        <label className="chat-engine">
-          <span>{t('chat.engineLabel')}</span>
-          <select
-            aria-label={t('chat.engineLabel')}
-            value={engine}
-            onChange={(e) => {
-              chat.setEngine(e.target.value as 'cloud' | 'gemma');
-            }}
-          >
-            <option value="cloud">{t('chat.cloud')}</option>
-            <option value="gemma">{t('chat.gemma')}</option>
-          </select>
-        </label>
-      </div>
+        </div>
+      )}
 
       {notice && (
         <div className="chat-panel__notice" role="status">
@@ -523,7 +519,8 @@ export function ChatPanel({
         <div ref={messagesEnd} />
       </div>
 
-      {teacherPage && (
+      {/* "Giải thích lại", "Chậm hơn"… only make sense once there is an answer to rework. */}
+      {teacherPage && hasAnswer && (
         <div className="teacher__quick-actions" role="group" aria-label={t('teacher.chipsLabel')}>
           {(['again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
             <button
@@ -570,12 +567,14 @@ export function ChatPanel({
             <Check size={14} /> {t('chat.think')}{' '}
             {chat.thinkEnabled && <span>{t('chat.twoApis')}</span>}
           </button>
-          <span className="chat-panel__composer-hint">{t('chat.enterHint')}</span>
+          <span className="chat-panel__composer-spacer" />
           <button
             type="submit"
             className="btn btn--accent chat-panel__send"
             disabled={!draft.trim() || busy}
             aria-label={t('chat.send')}
+            data-tip={t('chat.enterHint')}
+            data-tip-side="top"
           >
             <Send size={16} />
           </button>

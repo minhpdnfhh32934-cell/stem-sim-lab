@@ -20,10 +20,13 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   await expect(page.getByText(/Chưa có API/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cài đặt' }).first()).toBeVisible();
   expect(await overflow(page)).toBeLessThanOrEqual(0);
-  for (const name of ['Gửi câu hỏi', 'Em chưa hiểu chỗ này']) {
-    const box = await page.getByRole('button', { name }).boundingBox();
+  for (const name of ['Gửi câu hỏi', 'Về trang chủ']) {
+    const box = await screen.getByRole('button', { name }).boundingBox();
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
   }
+  // Compact page: the lab's subject switch is not shown, and "Chậm hơn"… wait for an answer.
+  await expect(page.getByRole('radiogroup', { name: 'Môn học' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Em chưa hiểu chỗ này' })).toHaveCount(0);
 
   await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
   await expect(screen).toHaveAttribute('data-layout', 'board');

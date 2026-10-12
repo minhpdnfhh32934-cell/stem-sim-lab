@@ -78,7 +78,7 @@ export const Inspector = memo(function Inspector() {
           trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
         >
           {card ? (
-            <ScienceCard card={card} />
+            <ScienceCard card={card} collapsible={!advanced} />
           ) : (
             <>
               <p className="science-intro">{t('inspector.scienceCardIntro')}</p>

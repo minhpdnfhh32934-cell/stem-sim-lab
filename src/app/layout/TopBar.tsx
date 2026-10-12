@@ -93,7 +93,8 @@ export const TopBar = memo(function TopBar() {
         <House className="topbar__home-icon" size={15} strokeWidth={1.75} aria-hidden="true" />
       </button>
 
-      {!landing && (
+      {/* Subjects and undo/redo belong to the lab; the AI Teacher page does not use them. */}
+      {!landing && !teacher && (
         <div
           className="subject-switch"
           role="radiogroup"
@@ -217,22 +218,26 @@ export const TopBar = memo(function TopBar() {
           }}
         />
         <span className="topbar__divider" aria-hidden="true" />
-        <IconButton
-          icon={Undo2}
-          label={t('topbar.undo')}
-          disabled={!canUndo}
-          onClick={() => {
-            undo();
-          }}
-        />
-        <IconButton
-          icon={Redo2}
-          label={t('topbar.redo')}
-          disabled={!canRedo}
-          onClick={() => {
-            redo();
-          }}
-        />
+        {!teacher && (
+          <>
+            <IconButton
+              icon={Undo2}
+              label={t('topbar.undo')}
+              disabled={!canUndo}
+              onClick={() => {
+                undo();
+              }}
+            />
+            <IconButton
+              icon={Redo2}
+              label={t('topbar.redo')}
+              disabled={!canRedo}
+              onClick={() => {
+                redo();
+              }}
+            />
+          </>
+        )}
         <IconButton
           icon={theme === 'dark' ? Sun : Moon}
           label={t('topbar.toggleTheme')}

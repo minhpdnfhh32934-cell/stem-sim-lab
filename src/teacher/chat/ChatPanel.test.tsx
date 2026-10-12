@@ -41,15 +41,26 @@ describe('AI Teacher chat panel', () => {
     setTransportForTests(null);
   });
 
+  it('quick buttons ("Chậm hơn"…) wait until there is an answer to rework', () => {
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.queryByRole('button', { name: 'Chậm hơn' })).not.toBeInTheDocument();
+  });
+
   it('a quick button shows its short label but sends a full instruction', async () => {
     const user = userEvent.setup();
+    useChatStore.setState({
+      messages: [
+        { id: 'q', role: 'user', content: 'Rơi tự do là gì?' },
+        { id: 'a', role: 'assistant', content: 'Là chuyển động chỉ dưới tác dụng của trọng lực.' },
+      ],
+    });
     render(<ChatPanel teacherPage showScreenContext={false} />);
     await user.click(screen.getByRole('button', { name: 'Chậm hơn' }));
     await waitFor(() => {
       expect(calls).toHaveLength(1);
     });
     expect(calls[0]?.messages.at(-1)?.content).toMatch(/chia thành nhiều bước nhỏ/);
-    const [shown] = useChatStore.getState().messages;
+    const shown = useChatStore.getState().messages[2];
     expect(shown?.content).toBe('Chậm hơn');
     expect(shown?.prompt).toMatch(/chia thành nhiều bước nhỏ/);
   });

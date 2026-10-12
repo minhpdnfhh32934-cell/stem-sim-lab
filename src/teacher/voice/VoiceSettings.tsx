@@ -48,6 +48,7 @@ import {
   useVoiceStore,
   type VoiceEngine,
 } from './voiceStore';
+import { voiceChoices } from './voiceChoices';
 import '@/teacher/chat/chat.css';
 import './voice.css';
 
@@ -263,13 +264,14 @@ function EngineCard({ engine }: { engine: VoiceEngine }) {
 
 function SystemVoice() {
   const t = useT();
+  const locale = useSettingsStore((s) => s.locale);
   const voices = useOsVoices();
   const voiceURI = useVoiceStore((s) => s.voiceURI);
   const setVoiceURI = useVoiceStore((s) => s.setVoiceURI);
   const desktop = isTauri();
   if (!speechSupported()) return <p className="muted small">{t('voice.noSpeech')}</p>;
   const vietnamese = vietnameseVoices(voices);
-  const others = voices.filter((v) => !vietnamese.includes(v));
+  const choices = voiceChoices(voices, locale);
   return (
     <>
       {vietnamese.length > 0 ? (
@@ -312,11 +314,24 @@ function SystemVoice() {
           }}
         >
           <option value="">{t('voice.auto')}</option>
-          {[...vietnamese, ...others].map((v) => (
-            <option key={v.voiceURI} value={v.voiceURI}>
-              {v.name} · {v.lang}
-            </option>
-          ))}
+          {choices.vietnamese.length > 0 && (
+            <optgroup label={t('voice.groupVietnamese')}>
+              {choices.vietnamese.map((v) => (
+                <option key={v.uri} value={v.uri}>
+                  {v.label}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          {choices.others.length > 0 && (
+            <optgroup label={t('voice.groupOther')}>
+              {choices.others.map((v) => (
+                <option key={v.uri} value={v.uri}>
+                  {v.label}
+                </option>
+              ))}
+            </optgroup>
+          )}
         </select>
       </label>
     </>

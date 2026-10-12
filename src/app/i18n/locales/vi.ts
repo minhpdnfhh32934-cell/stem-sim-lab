@@ -353,6 +353,7 @@ const vi = {
     method: 'Phương pháp tính',
     sources: 'Nguồn',
     intervened: 'Đã có can thiệp — kết quả là mô phỏng số.',
+    more: 'Phương trình, giả định và nguồn',
     estimatedError: 'Sai số ước lượng: {value}',
   },
   quality: {
@@ -394,6 +395,7 @@ const vi = {
       user: 'Giá trị do bạn chỉnh',
     },
     liveHint: 'Có thể chỉnh khi đang chạy (tính là can thiệp)',
+    allDefault: 'Đang dùng giá trị mặc định (đề bài chưa cho). Kéo thanh trượt để thử.',
     resetHint: 'Đổi giá trị sẽ chạy lại từ đầu',
   },
   solution: {
@@ -809,7 +811,6 @@ const vi = {
   chat: {
     label: 'Trò chuyện với AI Teacher',
     title: 'AI Teacher',
-    product: 'SimLab',
     model: 'Gemma · {model}',
     clear: 'Xóa cuộc trò chuyện',
     voice: 'Thầy đọc to câu trả lời',
@@ -1138,6 +1139,8 @@ const vi = {
     openWindowsSpeech: 'Mở cài đặt giọng nói của Windows',
     voiceLabel: 'Giọng đọc',
     auto: 'Tự động (ưu tiên tiếng Việt)',
+    groupVietnamese: 'Tiếng Việt',
+    groupOther: 'Ngôn ngữ khác (đọc tiếng Việt sai dấu)',
     noSpeech: 'Máy này không có bộ đọc giọng nói. Hãy chọn giọng Gemini hoặc giọng trên máy.',
     geminiNoKey: 'Chưa có khóa Gemini. Giọng Gemini dùng chung khóa với mục Kết nối AI.',
     openConnect: 'Mở Kết nối AI',
@@ -1316,7 +1319,6 @@ const vi = {
     boardFormula: 'P = m·g',
     boardNote: 'hướng thẳng đứng xuống dưới',
     progressLabel: 'Tiến độ bài học',
-    turnProgress: 'Lượt trao đổi trong buổi học',
     controlsLabel: 'Điều khiển buổi học',
     mic: 'Giữ để nói',
     raiseHand: 'Giơ tay',

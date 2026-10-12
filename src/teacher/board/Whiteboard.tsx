@@ -70,48 +70,53 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   return (
     <section className="board" aria-label={t('board.label')}>
       <div className="board__toolbar" role="toolbar" aria-label={t('board.controls')}>
-        {playing ? (
-          <button type="button" className="btn" onClick={pauseLesson}>
-            <Pause size={15} aria-hidden="true" />
-            {t('board.pause')}
-          </button>
-        ) : status === 'paused' ? (
-          <button type="button" className="btn btn--accent" onClick={resumeLesson}>
-            <Play size={15} aria-hidden="true" />
-            {t('board.resume')}
-          </button>
-        ) : (
-          <button type="button" className="btn" disabled={!lesson} onClick={replayLesson}>
-            <RotateCcw size={15} aria-hidden="true" />
-            {t('board.replay')}
-          </button>
-        )}
-        <button
-          type="button"
-          className="btn"
-          disabled={!(playing || status === 'paused')}
-          onClick={finishNow}
-          title={t('board.finishHint')}
-        >
-          <FastForward size={15} aria-hidden="true" />
-          {t('board.finish')}
-        </button>
-        <div className="segmented" role="radiogroup" aria-label={t('board.speed')}>
-          {PEN_SPEEDS.map((v) => (
+        {/* Playback controls appear with the first lesson; an empty board only offers the pen. */}
+        {lesson && (
+          <>
+            {playing ? (
+              <button type="button" className="btn" onClick={pauseLesson}>
+                <Pause size={15} aria-hidden="true" />
+                {t('board.pause')}
+              </button>
+            ) : status === 'paused' ? (
+              <button type="button" className="btn btn--accent" onClick={resumeLesson}>
+                <Play size={15} aria-hidden="true" />
+                {t('board.resume')}
+              </button>
+            ) : (
+              <button type="button" className="btn" onClick={replayLesson}>
+                <RotateCcw size={15} aria-hidden="true" />
+                {t('board.replay')}
+              </button>
+            )}
             <button
-              key={v}
               type="button"
-              role="radio"
-              aria-checked={speed === v}
-              className="segmented__item mono"
-              onClick={() => {
-                set({ speed: v });
-              }}
+              className="btn"
+              disabled={!(playing || status === 'paused')}
+              onClick={finishNow}
+              title={t('board.finishHint')}
             >
-              {formatNumber(locale, v)}×
+              <FastForward size={15} aria-hidden="true" />
+              {t('board.finish')}
             </button>
-          ))}
-        </div>
+            <div className="segmented" role="radiogroup" aria-label={t('board.speed')}>
+              {PEN_SPEEDS.map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  role="radio"
+                  aria-checked={speed === v}
+                  className="segmented__item mono"
+                  onClick={() => {
+                    set({ speed: v });
+                  }}
+                >
+                  {formatNumber(locale, v)}×
+                </button>
+              ))}
+            </div>
+          </>
+        )}
         <span className="board__toolbar-gap" />
         <button
           type="button"
@@ -158,12 +163,16 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
         </div>
       )}
 
-      <BoardSheet />
+      <div className="board__area">
+        <BoardSheet />
+        {!lesson && <p className="board__empty">{t('board.empty')}</p>}
+      </div>
 
-      <p className="board__subtitle" aria-live="polite">
-        {status === 'preparing' ? t('board.preparing') : subtitle}
-      </p>
-      {!lesson && <p className="board__empty">{t('board.empty')}</p>}
+      {(lesson || status === 'preparing') && (
+        <p className="board__subtitle" aria-live="polite">
+          {status === 'preparing' ? t('board.preparing') : subtitle}
+        </p>
+      )}
       {/* What is on the board was written by an AI: labelled, with the report button. */}
       {lesson && <AiContentBar {...(lesson.model ? { model: lesson.model } : {})} />}
       <Legend />

@@ -84,9 +84,10 @@ chép qua USB và cài trước.
 
 ### Trò chuyện với AI Teacher
 
-Trong Phòng thí nghiệm, bấm bong bóng **AI Teacher** ở góc dưới bên phải để hỏi nhanh; ở trang chủ, bấm
-thẻ **AI Teacher** để mở cuộc trò chuyện toàn màn hình. Bấm chữ **SimLab** ở góc trên để về trang
-chủ. Chọn API trực tuyến hoặc Gemma cục bộ ở thanh trên của khung chat. Nếu chưa kết nối API hoặc
+Trong Phòng thí nghiệm, bấm nút tròn có mặt **AI Teacher** ở góc dưới (bên trái cột Thuộc tính) để
+hỏi nhanh; ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc trò chuyện toàn màn hình. Bấm chữ **SimLab**
+ở góc trên để về trang chủ. Chọn API trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
+ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
 Gemma chưa sẵn sàng, khung chat hiện thông báo và nút **Cài đặt** mở thẳng đúng mục cần chỉnh. Dòng
 nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi tới đâu (hoặc chỉ xử lý trên máy).
 
@@ -122,7 +123,8 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
 - Câu trả lời quá dài bị dừng giữa chừng thì dưới câu trả lời có dòng báo và nút **Viết tiếp**. Khi
   đang giảng trên bảng, phần viết tiếp được giảng tiếp ngay trên cùng bảng.
 - Các nút nhanh ở trang AI Teacher (Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn giản hơn, Em chưa hiểu
-  chỗ này) gửi cho AI một câu hướng dẫn đầy đủ dựa trên câu trả lời vừa rồi.
+  chỗ này) hiện sau câu trả lời đầu tiên và gửi cho AI một câu hướng dẫn đầy đủ dựa trên câu trả
+  lời vừa rồi.
 - **Thư viện kiến thức** có sẵn ghi chú Vật lý, Hóa học, Sinh học THPT và cho phép nạp tệp `.txt`,
   `.md`, `.csv`, `.json`. Tệp và lịch sử chat lưu trên máy; khi chat bằng API trực tuyến, các đoạn
   kiến thức liên quan có thể được gửi cùng câu hỏi. **Tra thêm Wikipedia** là tùy chọn (mặc định
@@ -139,7 +141,7 @@ số. Bảng chia ba cột như lớp học: trái là tóm tắt đề và ghi 
 vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì. Bảng có nhãn "Nội dung do AI hỗ trợ" và nút báo cáo.
 
 - Nút **Tạm dừng / Tiếp tục / Giảng lại**, **Viết nhanh** (viết ngay phần còn lại), tốc độ viết
-  0,75–2×. Bảng dài tự cuộn theo bút; khi sang phần mới có các thẻ **Bảng 1, Bảng 2…** để xem lại.
+  0,75–2× (hiện khi bảng đã có bài). Bảng dài tự cuộn theo bút; khi sang phần mới có các thẻ **Bảng 1, Bảng 2…** để xem lại.
 - **Bút của em:** bật để tự viết, vẽ lên bảng bằng chuột hoặc cảm ứng (màu tím); nút cục tẩy xóa nét
   của em. Nét vẽ chỉ ở trên máy.
 - Mọi con số trên bảng được kiểm nguồn gốc: số có trong đề là bình thường; phép tính viết trên bảng
@@ -162,9 +164,14 @@ giai đoạn sau. Việc ghép chủ đề với bài cụ thể trong sách gi�
 
 - **Cơ bản** (mặc định): 3–5 thông số quan trọng nhất (nút **Thêm thông số** để xem phần còn lại;
   giá trị lấy từ đề bài hoặc bạn đã chỉnh thì luôn hiện), thẻ dưới **Đồ thị · Lời giải**, thanh
-  công cụ chỉ có chọn, kéo, thước đo, vectơ và căn khung nhìn.
+  công cụ chỉ có chọn, kéo, thước đo, vectơ và căn khung nhìn. Khi mọi thông số đều là giá trị mặc
+  định, một dòng ghi điều đó thay cho nhãn "mặc định" ở từng dòng; có giá trị từ đề hoặc do bạn chỉnh
+  thì mọi dòng ghi rõ nguồn. **Thẻ Khoa học** hiện tên, mức tin cậy, cảnh báo can thiệp và mô hình;
+  phương trình, giả định và nguồn gấp lại dưới một dòng, bấm để mở. Thanh trạng thái chỉ hiện các
+  cảnh báo (chuyển động chậm, hạ chất lượng), không hiện FPS/RAM.
 - **Nâng cao:** thêm mục Đối tượng, mọi thông số, thước đo góc, đồng hồ bấm giờ, vết quỹ đạo, thẻ
-  **Số liệu** và **Xuất CSV**.
+  **Số liệu** và **Xuất CSV**; Thẻ Khoa học mở đầy đủ; thanh trạng thái có chất lượng hiển thị, FPS,
+  RAM.
 
 Người đã dùng bản cũ được giữ ở chế độ Nâng cao như trước.
 

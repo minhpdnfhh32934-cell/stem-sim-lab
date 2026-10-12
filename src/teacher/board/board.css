@@ -232,6 +232,7 @@
   padding: 4px 10px;
   border: 2px solid color-mix(in srgb, var(--board-ink) 70%, transparent);
   text-align: center;
+  text-wrap: balance;
 }
 .board__table th {
   color: var(--board-blue);
@@ -272,10 +273,27 @@
   font-size: var(--text-content);
   line-height: 1.4;
 }
+/* The sheet plus, before the first lesson, a hint written in the middle of it. */
+.board__area {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+}
 .board__empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
   margin: 0;
-  color: var(--text-muted);
-  font-size: var(--text-sm);
+  padding: 24px 15%;
+  place-items: center;
+  color: color-mix(in srgb, var(--board-ink) 62%, transparent);
+  font-size: var(--text-content);
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+  pointer-events: none;
 }
 .board__legend {
   display: flex;
