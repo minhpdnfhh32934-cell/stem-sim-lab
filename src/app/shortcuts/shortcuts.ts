@@ -11,9 +11,6 @@ export type ShortcutAction =
   | 'redo'
   | 'save'
   | 'open'
-  | 'toggleLeft'
-  | 'toggleRight'
-  | 'toggleBottom'
   | 'presentation'
   | 'exitPresentation'
   | 'fontLarger'
@@ -54,9 +51,6 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   },
   { action: 'save', chords: [{ key: 's', ctrl: true }], worksInInputs: true },
   { action: 'open', chords: [{ key: 'o', ctrl: true }], worksInInputs: true },
-  { action: 'toggleLeft', chords: [{ key: 'b', ctrl: true }], worksInInputs: true },
-  { action: 'toggleRight', chords: [{ key: 'i', ctrl: true }], worksInInputs: true },
-  { action: 'toggleBottom', chords: [{ key: 'j', ctrl: true }], worksInInputs: true },
   { action: 'presentation', chords: [{ key: 'F5' }], worksInInputs: true },
   { action: 'exitPresentation', chords: [{ key: 'Escape' }], worksInInputs: true },
   {

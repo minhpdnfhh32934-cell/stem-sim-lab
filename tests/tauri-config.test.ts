@@ -1,32 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import pkg from '../package.json';
+import { existsSync } from 'node:fs';
 import conf from '../src-tauri/tauri.conf.json';
-import pilot from '../src-tauri/tauri.pilot.conf.json';
-
-describe('tauri.pilot.conf.json (second installer, 3b.6)', () => {
-  it('installs next to the main app: own name and identifier (own data and keys)', () => {
-    expect(pilot.identifier).not.toBe(conf.identifier);
-    expect(pilot.productName).not.toBe(conf.productName);
-    expect(pilot.productName.startsWith(conf.productName)).toBe(true);
-  });
-
-  it('packs the pilot web part (the build that checks there is no Gemini code)', () => {
-    expect(pilot.build.beforeBuildCommand).toBe('npm run build:pilot');
-    expect(pkg.scripts['build:pilot']).toContain('pilot');
-  });
-
-  it('never overrides the security settings, the version or the bundle targets', () => {
-    expect(pilot).not.toHaveProperty('version');
-    expect(pilot.app).not.toHaveProperty('security');
-    expect(pilot.bundle).not.toHaveProperty('targets');
-  });
-
-  it('keeps the same window size as the main app (merging replaces the whole window list)', () => {
-    const [main] = conf.app.windows;
-    const [win] = pilot.app.windows;
-    expect({ ...win, title: main?.title }).toEqual(main);
-  });
-});
 
 const ALLOWED_REMOTES = [
   '*.hf.co',
@@ -60,5 +35,13 @@ describe('tauri.conf.json security', () => {
     // (seen in WebKitGTK; WebView2 behaves the same).
     expect(sec.csp).toContain("style-src 'self' 'unsafe-inline'");
     expect(sec.dangerousDisableAssetCspModification).toContain('style-src');
+  });
+});
+
+describe('one edition only (pilot removed in 0.5.0)', () => {
+  it('has no pilot config, build script or edition switch', () => {
+    expect(existsSync('src-tauri/tauri.pilot.conf.json')).toBe(false);
+    expect(Object.keys(pkg.scripts).some((k) => k.includes('pilot'))).toBe(false);
+    expect(conf.identifier).toBe('vn.stemsimlab.desktop');
   });
 });

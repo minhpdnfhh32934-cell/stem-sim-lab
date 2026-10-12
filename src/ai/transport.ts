@@ -99,7 +99,7 @@ declare global {
 function injectedKey(provider: Provider): string | undefined {
   if (provider === 'claude') return globalThis.__STEMSIM_TEST_CLAUDE_KEY__;
   if (provider === 'groq') return globalThis.__STEMSIM_TEST_GROQ_KEY__;
-  return __EDITION__ === 'main' ? globalThis.__STEMSIM_TEST_GEMINI_KEY__ : undefined;
+  return globalThis.__STEMSIM_TEST_GEMINI_KEY__;
 }
 
 /** "429: {…}" — status plus the start of the body, like the Rust gateway reports it. */
@@ -110,13 +110,16 @@ async function httpError(resp: Response): Promise<AiError> {
 
 type Http = (url: string, init: RequestInit) => Promise<Response>;
 
+/** Answer text, and whether it stopped at the output-token limit (like the Rust gateway). */
+interface Reply {
+  text: string;
+  truncated: boolean;
+}
+
 const nodeOnly = typeof window === 'undefined';
 
-/**
- * Same request as `gemini_body` in src-tauri/src/ai/gemini.rs. Only referenced behind
- * `__EDITION__ === 'main'`, so it is not part of the pilot bundle.
- */
-async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<string> {
+/** Same request as `gemini_body` in src-tauri/src/ai/gemini.rs. */
+async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
   const url = 'https://generativelanguage.googleapis.com/v1beta';
   const generationConfig: Record<string, unknown> = {
     temperature: req.temperature ?? 0,
@@ -142,12 +145,17 @@ async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<st
   });
   if (!resp.ok) throw await httpError(resp);
   const json = (await resp.json()) as {
-    candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[];
+    candidates?: {
+      content?: { parts?: { text?: string; thought?: boolean }[] };
+      finishReason?: string;
+    }[];
   };
-  return (json.candidates?.[0]?.content?.parts ?? [])
+  const first = json.candidates?.[0];
+  const text = (first?.content?.parts ?? [])
     .filter((p) => !p.thought)
     .map((p) => p.text ?? '')
     .join('');
+  return { text, truncated: first?.finishReason === 'MAX_TOKENS' };
 }
 
 async function geminiModels(key: string, http: Http): Promise<string[]> {
@@ -160,7 +168,7 @@ async function geminiModels(key: string, http: Http): Promise<string[]> {
 }
 
 /** Same request as `claude_body` in src-tauri/src/ai/claude.rs (golden runs from Node). */
-async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<string> {
+async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
   const name = req.schemaName ?? 'result';
   const body: Record<string, unknown> = {
     model: req.model.trim(),
@@ -186,11 +194,16 @@ async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<st
   if (!resp.ok) throw await httpError(resp);
   const json = (await resp.json()) as {
     content?: { type: string; text?: string; input?: unknown }[];
+    stop_reason?: string;
   };
+  const truncated = json.stop_reason === 'max_tokens';
   const blocks = json.content ?? [];
   const tool = blocks.find((b) => b.type === 'tool_use');
-  if (tool) return JSON.stringify(tool.input);
-  return blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join('');
+  if (tool) return { text: JSON.stringify(tool.input), truncated };
+  return {
+    text: blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join(''),
+    truncated,
+  };
 }
 
 /** Same request as `groq_body` in src-tauri/src/ai/groq.rs (OpenAI-compatible). */
@@ -222,16 +235,21 @@ export function groqBody(req: ChatRequest): Record<string, unknown> {
   return body;
 }
 
-async function groqChat(req: ChatRequest, key: string, http: Http): Promise<string> {
+async function groqChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
   const resp = await http('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
     body: JSON.stringify(groqBody(req)),
   });
   if (!resp.ok) throw await httpError(resp);
-  const json = (await resp.json()) as { choices?: { message?: { content?: string } }[] };
-  const text = json.choices?.[0]?.message?.content ?? '';
-  return text.replace(/^\s*<think>[\s\S]*?<\/think>\s*/, '');
+  const json = (await resp.json()) as {
+    choices?: { message?: { content?: string }; finish_reason?: string }[];
+  };
+  const choice = json.choices?.[0];
+  return {
+    text: (choice?.message?.content ?? '').replace(/^\s*<think>[\s\S]*?<\/think>\s*/, ''),
+    truncated: choice?.finish_reason === 'length',
+  };
 }
 
 export interface VisionRequest {
@@ -332,8 +350,7 @@ class FetchTransport implements LlmTransport {
   }
   private supported(provider: Provider): boolean {
     if (provider === 'claude') return nodeOnly;
-    if (provider === 'groq') return true;
-    return __EDITION__ === 'main';
+    return true;
   }
   /** Same fallback rule as the Rust gateway (`send_with_fallback`). */
   async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
@@ -358,21 +375,25 @@ class FetchTransport implements LlmTransport {
     const timeout = AbortSignal.timeout(secs * 1000);
     const combined = signal ? AbortSignal.any([signal, timeout]) : timeout;
     const http: Http = (url, init) => fetch(url, { ...init, signal: combined });
-    let content: string;
+    let reply: Reply;
     try {
-      if (req.provider === 'claude') content = await claudeChat(req, key, http);
-      else if (req.provider === 'groq') content = await groqChat(req, key, http);
-      else if (__EDITION__ === 'main') content = await geminiChat(req, key, http);
-      else throw new AiError('unavailable', req.provider);
+      if (req.provider === 'claude') reply = await claudeChat(req, key, http);
+      else if (req.provider === 'groq') reply = await groqChat(req, key, http);
+      else reply = await geminiChat(req, key, http);
     } catch (e) {
       if (timeout.aborted) throw new AiError('timeout', `${secs}s`);
       throw toAiError(e);
     }
-    if (!content.trim()) throw new AiError('badResponse', 'missing content');
-    return { content, model: req.model.trim(), durationMs: performance.now() - started };
+    if (!reply.text.trim()) throw new AiError('badResponse', 'missing content');
+    return {
+      content: reply.text,
+      model: req.model.trim(),
+      durationMs: performance.now() - started,
+      truncated: reply.truncated,
+    };
   }
   async models(provider: Provider): Promise<string[]> {
-    if (provider !== 'gemini' || __EDITION__ !== 'main') {
+    if (provider !== 'gemini') {
       throw new AiError('unavailable', 'desktop app only');
     }
     const key = this.key(provider);
@@ -401,7 +422,7 @@ class FetchTransport implements LlmTransport {
     if (!this.supported(provider)) return { status: 'error', detail: 'desktop app only' };
     const key = pageKey(provider);
     if (!key) return { status: 'noKey', detail: '' };
-    if (provider !== 'gemini' || __EDITION__ !== 'main') {
+    if (provider !== 'gemini') {
       return { status: 'error', detail: 'desktop app only' };
     }
     const name = model.trim().replace(/^models\//, '');
@@ -448,9 +469,7 @@ class FetchTransport implements LlmTransport {
     };
     try {
       if (req.provider === 'groq') return await groqVision(vision, key, http);
-      if (req.provider === 'gemini' && __EDITION__ === 'main') {
-        return await geminiVision(vision, key, http);
-      }
+      if (req.provider === 'gemini') return await geminiVision(vision, key, http);
       throw new AiError('unavailable', req.provider);
     } catch (e) {
       if (timeout.aborted) throw new AiError('timeout', `${secs}s`);

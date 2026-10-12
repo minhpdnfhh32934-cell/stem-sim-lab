@@ -32,6 +32,7 @@ import { TopBar } from './TopBar';
 import { usePresentationFullscreen } from './usePresentationFullscreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { ChatBubble } from '@/teacher/chat/ChatBubble';
+import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -69,9 +70,6 @@ export function AppShell() {
       leftWidth: s.leftWidth,
       rightWidth: s.rightWidth,
       bottomHeight: s.bottomHeight,
-      leftOpen: s.leftOpen,
-      rightOpen: s.rightOpen,
-      bottomOpen: s.bottomOpen,
       presentation: s.presentation,
       setSize: s.setSize,
       setPresentation: s.setPresentation,
@@ -84,10 +82,10 @@ export function AppShell() {
   const labHome = useIsHome() && !teacher;
   const home = landing || labHome;
 
-  const showLeft = layout.leftOpen && !presentation && !teacher && !landing;
+  const showLeft = !presentation && !teacher && !landing;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
-  const showRight = layout.rightOpen && !presentation && !home && !teacher;
-  const showBottom = layout.bottomOpen && !presentation && !home && !teacher;
+  const showRight = !presentation && !home && !teacher;
+  const showBottom = !presentation && !home && !teacher;
 
   const style = {
     '--left-w': `${layout.leftWidth}px`,
@@ -108,6 +106,7 @@ export function AppShell() {
       <Tour />
       <UpdateDialog />
       <Toaster />
+      {!presentation && <GpuRestartReminder />}
 
       <div className="shell__body">
         {showLeft && (

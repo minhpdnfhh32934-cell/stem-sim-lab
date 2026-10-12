@@ -1,6 +1,6 @@
 [package]
 name = "stem-sim-lab"
-version = "0.4.1"
+version = "0.5.0"
 description = "STEM Sim Lab — offline STEM simulator (desktop shell)"
 authors = ["STEM Sim Lab team"]
 edition = "2021"
@@ -13,15 +13,6 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
-
-[features]
-# Exactly one edition must be enabled (PROMPT_PHAN_2 A2):
-# - edition-main: students 18+, Gemini (default) + optional Claude
-# - edition-pilot: supervised high-school pilot, Claude only; Gemini code is not compiled in
-#   (build with `--no-default-features --features edition-pilot`)
-default = ["edition-main"]
-edition-main = []
-edition-pilot = []
 
 [dependencies]
 tauri = { version = "2", features = [] }
@@ -39,6 +30,17 @@ sha2 = "0.10.9"
 zip = { version = "4.2.0", default-features = false, features = ["deflate"] }
 tauri-plugin-opener = "2"
 dirs = "7"
+
+# GPU list for the in-app AI (src/gpu.rs): DXGI adapters + D3D12 UMA check. Microsoft's official
+# bindings, already in the dependency tree through Tauri/WebView2 (same 0.61 version).
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_Graphics_Dxgi",
+  "Win32_Graphics_Dxgi_Common",
+  "Win32_Graphics_Direct3D",
+  "Win32_Graphics_Direct3D12",
+] }
 
 [profile.release]
 # Small installer, fast startup (target: installer < 80 MB).

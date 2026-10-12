@@ -5,13 +5,26 @@ import type { Provider } from '@/ai/types';
 
 export type ChatEngine = 'cloud' | 'gemma';
 export type ChatRole = 'user' | 'assistant';
+/** How much of the conversation is sent with each question (Settings → "Trí nhớ hội thoại"). */
+export type MemoryLength = 'medium' | 'long';
 export interface ChatMessageRecord {
   id: string;
   role: ChatRole;
+  /** What the learner sees. */
   content: string;
+  /** What the AI received, when it differs from `content` (quick buttons send full instructions). */
+  prompt?: string;
   model?: string;
   checkedBy?: string;
   references?: string[];
+  /** The answer stopped at the output limit: the chat offers "Viết tiếp". */
+  truncated?: boolean;
+}
+/** AI-written summary of the turns that no longer fit the context budget (kept on this computer). */
+export interface ChatSummary {
+  text: string;
+  /** Id of the last message the summary covers. */
+  upto: string;
 }
 export interface KnowledgeDocument {
   id: string;
@@ -29,10 +42,14 @@ interface ChatState {
   verifierModel: string;
   thinkEnabled: boolean;
   includeScreen: boolean;
-  /** Opt-in: send the question to Wikipedia for an extra excerpt (main edition only). */
+  /** Opt-in: send the question to Wikipedia for an extra excerpt. */
   webLookup: boolean;
   messages: ChatMessageRecord[];
   documents: KnowledgeDocument[];
+  memoryLength: MemoryLength;
+  summary: ChatSummary | null;
+  /** A question is being answered (not persisted; the board shows "preparing"). */
+  answering: boolean;
   /** The learner's own choice of engine (marks it as chosen). */
   setEngine: (engine: ChatEngine) => void;
   setGemmaModel: (model: string) => void;
@@ -42,7 +59,11 @@ interface ChatState {
   setIncludeScreen: (enabled: boolean) => void;
   setWebLookup: (enabled: boolean) => void;
   addMessage: (message: ChatMessageRecord) => void;
+  updateMessage: (id: string, patch: Partial<Omit<ChatMessageRecord, 'id' | 'role'>>) => void;
+  /** Also forgets the summary (it describes the cleared messages). */
   clearMessages: () => void;
+  setMemoryLength: (length: MemoryLength) => void;
+  setSummary: (summary: ChatSummary | null) => void;
   addDocument: (document: KnowledgeDocument) => void;
   removeDocument: (id: string) => void;
 }
@@ -117,6 +138,9 @@ export const useChatStore = create<ChatState>()(
       webLookup: false,
       messages: [],
       documents: [],
+      memoryLength: 'medium',
+      summary: null,
+      answering: false,
       setEngine: (engine) => set({ engine, engineChosen: true }),
       setGemmaModel: (gemmaModel) => set({ gemmaModel }),
       setVerifierProvider: (verifierProvider) =>
@@ -124,9 +148,14 @@ export const useChatStore = create<ChatState>()(
       setVerifierModel: (verifierModel) => set({ verifierModel }),
       setThinkEnabled: (thinkEnabled) => set({ thinkEnabled }),
       setIncludeScreen: (includeScreen) => set({ includeScreen }),
-      setWebLookup: (webLookup) => set({ webLookup: __EDITION__ === 'main' && webLookup }),
+      setWebLookup: (webLookup) => set({ webLookup }),
       addMessage: (message) => set({ messages: [...get().messages, message].slice(-80) }),
-      clearMessages: () => set({ messages: [] }),
+      updateMessage: (id, patch) =>
+        set({ messages: get().messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) }),
+      clearMessages: () => set({ messages: [], summary: null }),
+      setMemoryLength: (memoryLength) =>
+        set({ memoryLength: memoryLength === 'long' ? 'long' : 'medium' }),
+      setSummary: (summary) => set({ summary }),
       addDocument: (document) => {
         const docs = get().documents.filter((d) => d.name !== document.name);
         if (docs.length >= 20) docs.shift();
@@ -136,9 +165,11 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: 'stemsim.teacher-chat',
-      version: 4,
+      // v5 adds the memory length and the summary; v4 settings are kept as they are.
+      version: 5,
       storage: createJSONStorage(() => localStorage),
-      migrate: (state) => migrateChatSettings(state),
+      migrate: (state, version) =>
+        (version >= 4 ? state : migrateChatSettings(state)) as Partial<ChatState>,
       partialize: ({
         engine,
         engineChosen,
@@ -148,6 +179,8 @@ export const useChatStore = create<ChatState>()(
         webLookup,
         messages,
         documents,
+        memoryLength,
+        summary,
       }) => ({
         engine,
         engineChosen,
@@ -157,6 +190,8 @@ export const useChatStore = create<ChatState>()(
         webLookup,
         messages,
         documents,
+        memoryLength,
+        summary,
       }),
     },
   ),

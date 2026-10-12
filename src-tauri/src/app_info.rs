@@ -8,7 +8,7 @@ pub struct AppInfo {
     pub version: String,
     pub target_os: String,
     pub debug_build: bool,
-    /// "main" or "pilot" (Cargo feature, PROMPT_PHAN_2 A2).
+    /// Always "main" since 0.5.0 (the pilot edition was removed).
     pub edition: String,
 }
 

@@ -138,7 +138,7 @@ describe('AI controller', () => {
     });
 
     it('makes no AI call while the age question is unanswered', async () => {
-      setSafetyBackendForTests(new BrowserSafety(false));
+      setSafetyBackendForTests(new BrowserSafety());
       const seen = counting();
       await analyze('Một vật rơi tự do từ độ cao 20 m.');
       expect(useAnalyzeStore.getState().error?.code).toBe('notAllowed');

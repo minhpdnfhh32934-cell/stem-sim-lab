@@ -5,6 +5,7 @@ import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
+import { LessonBoard } from '@/teacher/board/LessonBoard';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
 import { cx } from '@/ui/cx';
@@ -144,6 +145,8 @@ export default function TeacherScreen() {
             {engine === 'gemma' ? t('chat.model', { model: gemmaModel }) : t('chat.cloud')}
           </span>
         </aside>
+
+        {layout === 'board' && <LessonBoard />}
 
         <main className="teacher__chat-wrap" aria-label={t('chat.label')}>
           <ChatPanel showScreenContext={false} teacherPage />

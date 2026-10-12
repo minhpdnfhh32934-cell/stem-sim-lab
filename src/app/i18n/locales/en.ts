@@ -180,9 +180,6 @@ const en: Messages = {
     time: 'Simulation time',
   },
   layout: {
-    toggleLeft: 'Show / hide Library (Ctrl+B)',
-    toggleRight: 'Show / hide Properties (Ctrl+I)',
-    toggleBottom: 'Show / hide Graphs panel (Ctrl+J)',
     resizeLeft: 'Drag to resize the Library',
     resizeRight: 'Drag to resize the Properties panel',
     resizeBottom: 'Drag to resize the Graphs panel',
@@ -218,8 +215,6 @@ const en: Messages = {
     },
     aiStatusNotAllowed:
       'AI is not enabled: confirm your age (or the supervisor consent) in Settings → Safety.',
-    aiPilotLocked:
-      'Only the supervisor can enter or delete the API key. Unlock under "Safety & privacy" below.',
     title: 'Settings',
     close: 'Close',
     appearance: 'Appearance',
@@ -245,8 +240,6 @@ const en: Messages = {
     aiKeyShow: 'Show key',
     aiKeyHide: 'Hide key',
     aiKeyStoredHint: 'Saved key: {hint}',
-    aiPilotKey:
-      'Pilot edition: the API key (Claude, or the free Groq) is entered by the supervising adult. Students do not need to (and should not) enter a key.',
     aiTimeout: 'Timeout (seconds)',
     aiDailyCap: 'Maximum AI calls per day',
     aiDailyCapHint:
@@ -312,9 +305,6 @@ const en: Messages = {
     redo: 'Redo',
     save: 'Save simulation (.stemsim)',
     open: 'Open .stemsim file',
-    toggleLeft: 'Show / hide Library',
-    toggleRight: 'Show / hide Properties',
-    toggleBottom: 'Show / hide Graphs panel',
     presentation: 'Presentation mode',
     fontLarger: 'Increase font size',
     fontSmaller: 'Decrease font size',
@@ -650,28 +640,6 @@ const en: Messages = {
       minor: 'I am under 18',
       minorNote:
         'Under 18: you can still use every simulation, the library and manual scenes; AI stays off. You can answer again in Settings → Safety & privacy.',
-      pilotIntro:
-        'This is a supervised pilot. AI is only enabled after a parent or teacher has finished the setup.',
-      birthYear: 'What year were you born?',
-      yearInvalid: 'Invalid birth year.',
-      next: 'Continue',
-      supervisorTitle: 'For the supervisor',
-      supervisorIntro:
-        'A parent or teacher sets a PIN (4–8 digits). It is needed to enter the API key, record consent and view the incident log. Do not tell the student.',
-      pin: 'New PIN',
-      pinAgain: 'Repeat the PIN',
-      pinMismatch: 'The two entries differ.',
-      pinInvalid: 'The PIN has 4–8 digits.',
-      setPin: 'Set PIN',
-      pinDone: 'PIN set.',
-      consentTitle: 'Record parental consent',
-      consentText:
-        'I am the parent/guardian of the student, or a teacher authorised by the parents. The parents and the student have read and signed the pilot consent form.',
-      consentPin: 'Supervisor PIN',
-      recordConsent: 'Record consent and turn on AI',
-      adultTester: 'Users aged 18+ need no parental consent; only the PIN to manage the API key.',
-      later: 'Later — simulations only',
-      done: 'Done',
     },
     settings: {
       title: 'Safety & privacy',
@@ -680,27 +648,6 @@ const en: Messages = {
       unanswered: 'Age question not answered — AI is off.',
       answerAgain: 'Answer the age question again',
       privacy: 'Privacy & safe AI use',
-      locked: 'The supervisor area is locked.',
-      noPin: 'No supervisor PIN yet.',
-      setup: 'Supervisor setup',
-      pin: 'PIN',
-      unlock: 'Unlock',
-      lock: 'Lock',
-      unlocked: 'Unlocked (locks again in {min} min).',
-      wrongPin: 'Wrong PIN ({left} tries left).',
-      tooMany: 'Too many wrong PINs. Wait {secs} s and try again.',
-      studentMinor: 'Student: under 18.',
-      studentAdult: 'User: 18 or older.',
-      consentOn: 'Consent recorded on {day}.',
-      consentOff: 'No consent recorded — AI is off.',
-      recordConsent: 'Record consent (signed form)',
-      withdraw: 'Withdraw consent (AI off)',
-      changePin: 'Change PIN',
-      newPin: 'New PIN',
-      changeYear: 'Change birth year',
-      year: 'Birth year',
-      save: 'Save',
-      saved: 'Saved.',
       incidents: 'Incident log',
       incidentsHint:
         'Only the kind of incident and the time, never the problem text or the answer.',
@@ -713,13 +660,11 @@ const en: Messages = {
         inputCrisis: 'Signs of distress — support lines shown',
         outputUnsafe: 'AI answer hidden by the filter',
         userReport: 'User reported unsuitable content',
-        pinFailed: 'Wrong supervisor PIN',
       },
     },
     crisis: {
       title: 'You are not alone',
       body: 'It sounds like you are going through something very hard. Please talk to an adult you trust (parents, teachers, relatives) now, or call:',
-      line111: 'National child protection hotline 111 — free, 24/7.',
       ngayMai: 'Ngày Mai support line: 096 306 1414 (13:00–20:30, Wednesday to Sunday).',
       emergency: 'If you or someone else is in danger right now: call emergency 115.',
       note: 'Numbers checked in October 2026. The app does not send this text anywhere.',
@@ -761,11 +706,6 @@ const en: Messages = {
       tip4: 'If an answer is strange, wrong or upsetting: press "Report unsuitable content" and ask your teacher.',
       tip5: 'Do not share the API key and do not enter personal data.',
       tip6: 'Take a break every 45–60 minutes at the computer.',
-      pilotTitle: 'Supervised pilot',
-      pilot1:
-        'The Claude API key (and the Groq key if the free fallback is used) belongs to the adult who created the account (a student aged 18+ or a parent). That person is the Anthropic/Groq customer and is responsible for following their terms.',
-      pilot2:
-        'Students under 18 use AI only after the parents signed the consent form and the supervisor recorded it in the app. It can be withdrawn at any time.',
       close: 'Close',
     },
   },
@@ -879,6 +819,8 @@ const en: Messages = {
     checkedMeta: 'Reviewed by: {model}',
     references: 'Knowledge sources',
     thinking: 'Thinking…',
+    truncatedNote: 'This answer was long, so it stopped in the middle.',
+    continue: 'Continue',
     reviewing: 'Answering and cross-checking…',
     inputLabel: 'Enter your question',
     placeholder: 'Type your question…',
@@ -945,6 +887,8 @@ const en: Messages = {
     flowLocalChat: 'Your AI Teacher chat history (clear it with the bin button).',
     flowLocalDocs: 'Files you added and the {count} built-in notes.',
     flowLocalModel: 'Downloaded Gemma models; with Gemma, answers are generated on this computer.',
+    flowLocalSummary:
+      'A summary of the older conversation (written by the AI that answers, sent only to that AI with your questions).',
     flowLocalKeyDesktop: 'API keys: in the operating-system keychain.',
     flowLocalKeyBrowser: 'API keys: only in this browser session, gone on reload.',
     flowSentTitle: 'May be sent online (with the current settings)',
@@ -1012,6 +956,52 @@ const en: Messages = {
     removeFile: 'Remove',
     localLibraryPrivacy:
       'Files are stored on this computer. With online APIs, relevant excerpts may be sent with your question. Only add materials you have permission to use.',
+    memory: {
+      title: 'Conversation memory',
+      intro:
+        'How much of the latest conversation the teacher remembers. Older parts are summarised briefly by the AI so the teacher keeps track of the lesson.',
+      medium: 'Medium',
+      long: 'Long',
+      mediumHint: 'Faster; suits slower computers and free API plans.',
+      longHint:
+        'Remembers more but is slower (especially Gemma on an integrated card) and uses free plans up faster (Groq, Gemini).',
+    },
+    gpu: {
+      title: 'Graphics card (GPU) running Gemma',
+      intro:
+        'If this computer has several graphics cards, you can choose the one that runs Gemma. A dedicated card is usually much faster; an integrated card saves battery.',
+      scanning: 'Looking for graphics cards…',
+      scanFailed: 'Could not list the graphics cards ({detail}).',
+      none: 'No hardware graphics card was found.',
+      auto: 'Automatic (let Windows choose)',
+      autoHint: 'On laptops this is usually the integrated card.',
+      integrated: 'Integrated card · shares system RAM',
+      discrete: 'Dedicated card · {vram} VRAM',
+      unknownKind: 'Card type unknown',
+      suggested: 'Best for Gemma',
+      wholeApp:
+        'The chosen card runs everything the app draws (simulations too), not only Gemma. A dedicated card uses more battery — plug in the charger when you can.',
+      restartNeeded:
+        'Restart the app to use the new card ({name}). Until then Gemma and the app keep running on the previous card.',
+      restartNeededAuto:
+        'Restart the app to go back to automatic. Until then Gemma keeps running on the previous card.',
+      restartNow: 'Restart now',
+      later: 'Later',
+      saved: 'Graphics card choice saved. Restart the app to apply it.',
+      saveFailed: 'Could not save the choice ({detail}).',
+      missing:
+        'When the app started, the chosen card ({name}) was not found — the dedicated card may be switched off (the laptop maker’s battery/Eco mode) or the hardware changed. The app is using the default card.',
+      runningOn: 'The app’s WebGPU is running on: {name}',
+      runningOnUnknown: 'Could not read which card WebGPU is using.',
+      gemmaRanOn: 'Gemma last loaded on: {name}',
+      mismatch:
+        'The app asked for {wanted} but WebGPU is running on {actual}. Try restarting the app; if it stays this way, this card cannot be used for WebGPU on this computer.',
+      vramLow:
+        'This card has {vram} VRAM, which may not be enough for {model} ({size}). A smaller Gemma is a safer choice.',
+      browserOnly:
+        'In a browser, the browser picks the graphics card. Choosing a card is only available in the Windows desktop app.',
+      unsupported: 'Choosing a graphics card is currently only available on Windows.',
+    },
   },
   voice: {
     title: 'Teacher’s voice',
@@ -1137,6 +1127,21 @@ const en: Messages = {
     aiLabel: 'AI teacher',
     talkCaption: 'Hi! What shall we learn today?',
     boardCaption: 'Let’s put the key ideas on the board and reason through them step by step.',
+    board: {
+      title: 'Lesson board',
+      regionLabel: 'Lesson board',
+      empty:
+        'Ask the teacher a question in the panel beside — the lesson will be written on the board step by step.',
+      preparing: 'The teacher is preparing the lesson…',
+      source:
+        'The board copies the AI’s answer exactly, split into steps. Check the Science Card when needed.',
+      progress: 'Step {n}/{total}',
+      prev: 'Previous step',
+      next: 'Next step',
+      all: 'Show all',
+      read: 'Read the lesson',
+      stop: 'Stop reading',
+    },
     startTitle: 'What do you want to learn today?',
     startHint: 'Pick a topic, speak, type or paste a problem',
     durationLabel: 'How long?',
@@ -1161,6 +1166,15 @@ const en: Messages = {
       example: 'Another example',
       simpler: 'Simpler',
       lost: 'I do not get this part',
+    },
+    chipPrompts: {
+      again: 'Explain your last answer again in a different, easier way, keeping the same content.',
+      slower:
+        'Teach your last answer again more slowly: split it into small steps, one idea per step, and explain each step.',
+      example: 'Give me one more concrete, everyday example of exactly what you just explained.',
+      simpler:
+        'Say what you just explained more simply: fewer technical words, short sentences, as for a beginner.',
+      lost: 'I do not understand what you just explained. Ask me which step I am stuck on, then give hints one at a time.',
     },
     connectTitle: 'Connect AI to learn with the teacher',
     connectBody:

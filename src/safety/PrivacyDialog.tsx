@@ -21,15 +21,12 @@ const SECTIONS: Section[] = [
   },
   {
     title: 'safety.privacy.providerTitle',
-    items:
-      __EDITION__ === 'pilot'
-        ? ['safety.privacy.providerClaude', 'safety.privacy.providerGroq', 'safety.privacy.checked']
-        : [
-            'safety.privacy.providerGemini',
-            'safety.privacy.providerClaude',
-            'safety.privacy.providerGroq',
-            'safety.privacy.checked',
-          ],
+    items: [
+      'safety.privacy.providerGemini',
+      'safety.privacy.providerClaude',
+      'safety.privacy.providerGroq',
+      'safety.privacy.checked',
+    ],
   },
   {
     title: 'safety.privacy.rulesTitle',
@@ -51,14 +48,6 @@ const SECTIONS: Section[] = [
       'safety.privacy.tip6',
     ],
   },
-  ...(__EDITION__ === 'pilot'
-    ? [
-        {
-          title: 'safety.privacy.pilotTitle',
-          items: ['safety.privacy.pilot1', 'safety.privacy.pilot2'],
-        } satisfies Section,
-      ]
-    : []),
 ];
 
 /** "Quyền riêng tư & dùng AI an toàn": privacy, terms summary and the safe-use guide. */

@@ -1,0 +1,171 @@
+/* "Giảng trên bảng": the latest answer written on the board step by step (LessonBoard.tsx). */
+.lesson-board {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 22px 14px;
+  border: 1px solid color-mix(in srgb, var(--board-ink) 14%, transparent);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(color-mix(in srgb, var(--board-ink) 5%, transparent) 1px, transparent 1px) 0 0 /
+      100% 34px,
+    var(--board-bg);
+  box-shadow:
+    inset 0 0 0 6px color-mix(in srgb, var(--board-ink) 4%, transparent),
+    0 12px 38px rgb(10 22 34 / 10%);
+  color: var(--board-ink);
+}
+
+.lesson-board.is-empty {
+  align-items: center;
+  justify-content: center;
+}
+
+.lesson-board__notice {
+  display: flex;
+  max-width: 44ch;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+  color: color-mix(in srgb, var(--board-ink) 70%, transparent);
+  font-size: var(--text-content);
+  line-height: 1.55;
+  text-align: center;
+}
+
+.lesson-board__header {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: baseline;
+  padding-bottom: 8px;
+  border-bottom: 2px solid color-mix(in srgb, var(--board-mark) 55%, transparent);
+}
+
+.lesson-board__title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lesson-board__busy {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: color-mix(in srgb, var(--board-ink) 65%, transparent);
+  font-size: var(--text-sm);
+}
+
+.lesson-board__steps {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 2px 4px 2px 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.lesson-board__step {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 12px;
+  padding: 8px 10px;
+  border-left: 3px solid transparent;
+  border-radius: 10px;
+  font-size: var(--text-content);
+  line-height: 1.6;
+  animation: lesson-step-in 420ms var(--ease-out) both;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease;
+}
+
+.lesson-board__step.is-current {
+  border-left-color: var(--board-mark);
+  background: color-mix(in srgb, var(--board-mark) 9%, transparent);
+}
+
+.lesson-board__number {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid color-mix(in srgb, var(--board-ink) 40%, transparent);
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.lesson-board__step.is-current .lesson-board__number {
+  border-color: var(--board-mark);
+  color: var(--board-mark);
+}
+
+.lesson-board__body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lesson-board__body > :first-child {
+  margin-top: 0;
+}
+
+.lesson-board__body > :last-child {
+  margin-bottom: 0;
+}
+
+.lesson-board__body strong {
+  color: var(--board-mark);
+}
+
+.lesson-board__footer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--board-ink) 12%, transparent);
+}
+
+.lesson-board__source {
+  margin: 0;
+  color: color-mix(in srgb, var(--board-ink) 62%, transparent);
+  font-size: var(--text-xs);
+}
+
+.lesson-board__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.lesson-board__progress {
+  margin-right: auto;
+  color: color-mix(in srgb, var(--board-ink) 70%, transparent);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes lesson-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-board__step {
+    animation: none;
+  }
+}

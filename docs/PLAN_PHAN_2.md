@@ -1,5 +1,9 @@
 # Kế hoạch chuyển đổi theo PROMPT_PHAN_2.md (Bước 0)
 
+> **Cập nhật 2026-10-12 (0.5.0):** theo quyết định của người dùng, **bản thử nghiệm THPT (pilot) đã bị
+> bỏ** — app chỉ còn một bản (người dùng 18+). Các đoạn nói về bản THPT bên dưới chỉ còn giá trị
+> lịch sử.
+
 Trạng thái: **đã duyệt theo đề xuất** (2026-10-05): gỡ OpenAI, timeout 30 s, làm xen kẽ như mục 4, ngắt lời theo mục 4b. Còn chờ: ai giữ khóa Claude cho bản thử nghiệm (điểm 2).
 
 Tiến độ: 3b.1 xong, 3b.2 xong (2026-10-05). Lưu ý phát hành: 3b.1–3b.2 đổi phần Rust (lệnh mới, tên nhà cung cấp `claude`), nên lần phát hành tới phải tăng **cả** phiên bản native (bộ cài mới); bản cập nhật web không đủ.

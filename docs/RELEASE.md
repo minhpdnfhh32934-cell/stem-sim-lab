@@ -7,20 +7,15 @@
 | **Phần web** (gần như mọi thay đổi) | giao diện, mô phỏng, dữ liệu khoa học, tài liệu   | `package.json` → `version`                            | menu ☰ → **Kiểm tra cập nhật** → **Cập nhật ngay** (vài giây) |
 | **Phần lõi** (hiếm khi đổi)         | mã Rust trong `src-tauri/`: AI, lưu tệp, lịch sử… | `src-tauri/tauri.conf.json` và `src-tauri/Cargo.toml` | tải bộ cài `…x64-setup.exe` mới một lần                        |
 
-## Hai bản cài (3b.6)
+## Một bản cài
 
-| Bản                     | Bộ cài                                | Dành cho                                      | Kênh cập nhật           | Dữ liệu và khóa AI                 |
-| ----------------------- | ------------------------------------- | --------------------------------------------- | ----------------------- | ---------------------------------- |
-| **Bản chính**           | `STEM Sim Lab_<v>_x64-setup.exe`      | sinh viên 18+ (Gemini mặc định, Claude tùy ý) | `web-update.json`       | `%APPDATA%\vn.stemsimlab.desktop\` |
-| **Bản thử nghiệm THPT** | `STEM Sim Lab THPT_<v>_x64-setup.exe` | buổi thử nghiệm có giám sát với học sinh THPT | `web-update-pilot.json` | `%APPDATA%\vn.stemsimlab.pilot\`   |
+Bộ cài `STEM Sim Lab_<v>_x64-setup.exe` (người dùng 18+; Gemini mặc định, Claude và Groq tùy ý),
+kênh cập nhật `web-update.json`, dữ liệu và khóa AI ở `%APPDATA%\vn.stemsimlab.desktop\`.
 
-- Hai bản có tên và mã định danh khác nhau, nên **cài song song được** trên cùng một máy và không
-  dùng chung dữ liệu, khóa AI hay mã PIN.
-- Bản THPT được dựng bằng `npm run build:pilot` (kiểm tra không có mã Gemini) và Rust
-  `--no-default-features --features edition-pilot` (`src-tauri/tauri.pilot.conf.json`).
-- Mỗi bản chỉ nhận phần web **của chính nó**: tệp `web-update-pilot.json` có thêm dòng
-  `edition:pilot` trong nội dung được ký, và app kiểm tra cả trường `edition` lẫn tệp
-  `web-edition.txt` trong zip. Bản chính không thể nhận phần web của bản THPT và ngược lại.
+- Bản thử nghiệm THPT (bộ cài thứ hai, kênh `web-update-pilot.json`) đã **bỏ từ 0.5.0** theo quyết
+  định của người dùng (2026-10-12).
+- Nội dung được ký vẫn có dòng `edition:main` và zip vẫn có tệp `web-edition.txt` = `main`: app đã
+  cài kiểm tra cả hai, nên giữ nguyên.
 
 Cập nhật phần web **không cài tệp .exe nào**, nên Windows Smart App Control / SmartScreen không
 chặn. Bộ cài (.exe/.msi) chưa được ký số, nên Smart App Control có thể chặn — xem USER_GUIDE, mục
@@ -39,9 +34,8 @@ chặn. Bộ cài (.exe/.msi) chưa được ký số, nên Smart App Control c�
 1. Đẩy mã lên nhánh `main` (CI phải xanh).
 2. GitHub → **Actions → Release (Windows installer) → Run workflow**. Để `publish` = true, ghi chú
    thay đổi bằng tiếng Việt (hiện trong hộp thoại cập nhật của app).
-3. Khoảng 15–35 phút sau có bản Release `v<phiên bản>` gồm: bộ cài `.exe`, `.msi` của **cả hai
-   bản**, `web-bundle.zip` + `web-update.json` (bản chính) và `web-bundle-pilot.zip` +
-   `web-update-pilot.json` (bản THPT).
+3. Khoảng 15–35 phút sau có bản Release `v<phiên bản>` gồm: bộ cài `.exe`, `.msi`,
+   `web-bundle.zip` và `web-update.json`.
 4. Mọi máy đã cài app sẽ tự thấy "Có bản cập nhật" ở thanh trạng thái (app kiểm tra khi mở, nếu có
    mạng).
 
@@ -72,8 +66,7 @@ chặn. Bộ cài (.exe/.msi) chưa được ký số, nên Smart App Control c�
 - Chữ ký bao gồm phiên bản, `minNative`, SHA-256 và kích thước của `web-bundle.zip`, và địa chỉ
   tải (phải thuộc Releases của dự án). App kiểm tra chữ ký, SHA-256, kích thước, đường dẫn trong
   zip (không có `..`), và giới hạn dung lượng trước khi dùng.
-- Phần web tải về nằm ở `%APPDATA%\vn.stemsimlab.desktop\web\<phiên bản>\` (bản THPT:
-  `vn.stemsimlab.pilot`). Nút **Quay về bản gốc** xóa nó. Cài bộ cài mới hơn thì phần tải về cũ tự
+- Phần web tải về nằm ở `%APPDATA%\vn.stemsimlab.desktop\web\<phiên bản>\`. Nút **Quay về bản gốc** xóa nó. Cài bộ cài mới hơn thì phần tải về cũ tự
   bị bỏ.
 - **Mất khóa bí mật:** tạo cặp khóa mới, thay khóa công khai trong `webupdate.rs`, phát hành bộ
   cài mới (người dùng cài lại một lần). **Lộ khóa bí mật:** làm như trên ngay lập tức.

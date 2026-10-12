@@ -4,6 +4,7 @@
  * Files live in the browser Cache Storage (Transformers.js default); a tiny
  * IndexedDB flag records which models finished downloading.
  */
+import { useGpuStore, type WebGpuInfo } from './gpu';
 import { deleteRepo, opfsAvailable, repoStored } from './modelStore';
 import { webGemmaModel } from './webGemmaModels';
 
@@ -164,9 +165,9 @@ export async function deleteWebGemma(modelId: string): Promise<void> {
 
 type WorkerOut =
   | { kind: 'inited' }
-  | { kind: 'loaded'; modelId: string }
+  | { kind: 'loaded'; modelId: string; gpu: WebGpuInfo | null }
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
-  | { kind: 'reply'; id: number; text: string }
+  | { kind: 'reply'; id: number; text: string; truncated: boolean }
   | { kind: 'error'; id: number; message: string };
 
 let worker: Worker | null = null;
@@ -212,6 +213,8 @@ function ensureWorker(): Worker {
         if (progressListener) progressListener({ loaded: out.loaded, total: out.total });
       } else {
         loadedId = out.modelId;
+        // The card the model really runs on (Settings → GPU shows it).
+        useGpuStore.getState().setGemmaInfo(out.gpu);
         const resolve = pending.get(-3);
         if (resolve) {
           pending.delete(-3);
@@ -365,6 +368,13 @@ function unloadWebGemma(): void {
   }
 }
 
+export interface WebGemmaReply {
+  content: string;
+  model: string;
+  /** The answer stopped at the maxTokens limit. */
+  truncated: boolean;
+}
+
 export interface WebChatMessage {
   role: string;
   content: string;
@@ -398,8 +408,10 @@ export function webGemmaChat(args: {
   images?: ArrayBuffer[];
   temperature?: number;
   maxTokens?: number;
-}): Promise<{ content: string; model: string }> {
-  const task = async (): Promise<{ content: string; model: string }> => {
+  /** Most prompt tokens; the worker drops the oldest turns above it (exact count). */
+  inputBudget?: number;
+}): Promise<WebGemmaReply> {
+  const task = async (): Promise<WebGemmaReply> => {
     const meta = webGemmaModel(args.model);
     if (!meta) throw new Error(`unknown model ${args.model}`);
     // Photos need the vision model: switch automatically when it is ready.
@@ -424,6 +436,7 @@ export function webGemmaChat(args: {
       images: args.images ?? [],
       temperature: args.temperature ?? 0.2,
       maxTokens: args.maxTokens ?? 1024,
+      ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
     });
     const out = await waiting;
     if (out.kind === 'error') throw new Error(out.message);
@@ -436,7 +449,7 @@ export function webGemmaChat(args: {
       text = text.slice(echo.length).trim();
     }
     if (!text) throw new Error('empty reply');
-    return { content: text, model: id };
+    return { content: text, model: id, truncated: out.kind === 'reply' && out.truncated };
   };
   const run = queue.then(task, task);
   queue = run.catch(() => undefined);

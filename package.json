@@ -1,7 +1,7 @@
 {
   "name": "stem-sim-lab",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "STEM Sim Lab — offline desktop simulator for Physics, Chemistry and Biology (Tauri + React)",
   "type": "module",
   "engines": {
@@ -11,8 +11,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "postinstall": "node scripts/copy-ort-wasm.mjs",
-    "build:pilot": "node scripts/edition-bundle.mjs build pilot",
-    "check:edition": "node scripts/edition-bundle.mjs check",
     "preview": "vite preview",
     "tauri": "tauri",
     "typecheck": "tsc -b --noEmit",

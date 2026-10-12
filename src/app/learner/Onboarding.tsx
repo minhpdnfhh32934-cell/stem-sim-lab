@@ -11,8 +11,8 @@ import './learner.css';
 
 type Step = 'level' | 'subjects';
 /** Main: level, subjects, (gate), (connect), (tour) = 5 steps. Pilot: subject, (gate), (tour). */
-const STEPS: Step[] = __EDITION__ === 'pilot' ? ['subjects'] : ['level', 'subjects'];
-const TOTAL = __EDITION__ === 'pilot' ? 3 : 5;
+const STEPS: Step[] = ['level', 'subjects'];
+const TOTAL = 5;
 
 /** First-run onboarding: profile steps, then (after the age gate) "Kết nối AI" in main. */
 export function Onboarding() {

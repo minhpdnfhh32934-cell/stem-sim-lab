@@ -8,26 +8,25 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 
 ## PROMPT_PHAN_2 rules (summary — A1–A8, B1, B13)
 
-- **Users:** primary = university students **18+** (bring their own Gemini key); pilot testers =
-  high-school students (mostly under 18) in supervised sessions with parental/school consent.
+- **Users:** university students **18+** (bring their own Gemini key). **User decision 2026-10-12:**
+  the supervised high-school **pilot edition was removed** (0.5.0) — there is one build only. Do not
+  add editions, `VITE_EDITION`, Cargo edition features, PIN/consent flows or a second installer back.
 - **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model). All AI
   goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
   **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
-  as a free fallback when paid tokens run out, in both editions, but only after their terms (age,
+  as a free fallback when paid tokens run out, but only after their terms (age,
   data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §2b. First candidate:
   Groq (no training on data, 18+ account holder, minors allowed under the customer's
   responsibility). Plan: `docs/PLAN_PHAN_2.md` §6 (step 3b.3b, approved 2026-10-05).
-- **Two builds** (Cargo feature + `VITE_EDITION`): `main` (Gemini default, Claude optional, 18+
-  confirmation on first run, no Gemini key may be saved before it) and `pilot` (**Claude only —
-  Gemini code must never be compiled into or shipped with the pilot build**, key entered by a
-  supervisor behind a PIN, full under-18 safeguards: age gate + parental consent, "AI-assisted"
-  labels, two-way moderation, incident log without private content, report button, minimal data).
+- **One build:** Gemini default, Claude and Groq optional; 18+ confirmation on first run (no key may
+  be saved before it; "under 18" keeps the simulations, AI off); "AI-assisted" labels, two-way
+  moderation, incident log without private content, report button, minimal data.
 - Never commit API keys (`.env` is git-ignored); never embed a project key in an installer.
 - AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
   problem readings; app fully usable without a key and offline (simulations, samples, manual mode).
 - UI for learners (A4): one main action per screen, Basic/Advanced modes, Level → Subject → Topic →
   Lesson, predict–observe–explain, challenges, step hints, no streaks/leaderboards, 1366×768,
-  targets ≥ 40 px, touch. Ask: "would a first-year student — or a high-school pilot tester — get it?"
+  targets ≥ 40 px, touch. Ask: "would a first-year student get it?"
 - AI Teacher (Part B): numbers only from deterministic tools; honest that it is an AI; warm but
   bounded; crisis protocol with verified hotlines; mic/camera opt-in, no audio stored; "perform
   before brain"; third-party licences in `docs/THIRD_PARTY.md`; no cloned real voices/faces.
@@ -48,13 +47,26 @@ accepted, **for this fork only**:
 - Design and data-flow notes: `docs/AI_TUTOR.md`. Engine choice: `src/app/ai/engineChoice.ts`
   (a pre-selected Gemma without a model never blocks a learner who connected an API; a Gemma the
   learner chose never silently goes online). Think sends the draft with `noFallback`. Wikipedia
-  lookup is opt-in (`chatStore.webLookup`, main edition only). External pages on desktop open via
+  lookup is opt-in (`chatStore.webLookup`). External pages on desktop open via
   `open_known_page` (fixed allow-list, `src-tauri/src/links.rs`).
 - Gemma files live in OPFS (`src/ai/modelStore.ts`, Transformers.js `customCache`): Cache Storage
   refuses ~300 MB entries. The worker needs both ORT asyncify files in `public/ort/` (`.mjs` + `.wasm`)
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`.
+- **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
+  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (LUIDs change per
+  boot) and, before the window exists, adds `--use-adapter-luid=<high>,<low>` to wry's default
+  WebView2 args (restart needed; the whole GPU process moves). Never use
+  `--use-webgpu-power-preference=force-high-performance` (no adapter at all). UI:
+  `src/teacher/chat/GpuSettings.tsx`; it shows what WebGPU really reports, never the wish.
+  Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
+- **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
+  buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
+  add show/hide back. AI Teacher context is a token budget with an AI-written summary of older turns
+  (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
+  "Giảng trên bảng" is the compact lesson board (`src/teacher/board/`): it only re-shows the AI's
+  answer as steps; the TeachScript whiteboard (B7) is still planned. Details: `docs/AI_TUTOR.md`.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
@@ -86,7 +98,6 @@ accepted, **for this fork only**:
 | All checks                | `npm run check` (+ `npm run format:check`)                                                                |
 | Rust                      | `cd src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test`            |
 | Production build          | `npm run build` (web) / `npm run tauri build` (installer)                                                 |
-| Pilot edition             | `npm run build:pilot`; Rust: `cargo test --no-default-features --features edition-pilot`                  |
 | E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)                  |
 | Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm`; `LLM_PROVIDER=claude ANTHROPIC_API_KEY=…` / `=groq GROQ_API_KEY=…` |
 
@@ -204,7 +215,7 @@ Progress log: `docs/PROGRESS.md`.
 ## AI layer (Phase 3)
 
 - Rust `src-tauri/src/ai/`: trait `AIProvider` (`provider.rs`), `gemini.rs` (`generateContent` +
-  `responseJsonSchema`; **main edition only**), `claude.rs` (forced tool call, prompt caching, no
+  `responseJsonSchema`), `claude.rs` (forced tool call, prompt caching, no
   `temperature`), `usage.rs` (daily cap); `mod.rs`: `ai_chat` (retry 429/5xx ≤ 3, timeout 30 s
   default, daily cap), `ai_cancel`, `ai_models`, `ai_usage`, `ai_edition`, `ai_test_key` (one tiny
   request → `KeyStatus` ok/noKey/badKey/quota/badModel/offline/error, same rules as
@@ -212,10 +223,9 @@ Progress log: `docs/PROGRESS.md`.
   `ai_set_key/ai_has_key/ai_delete_key`, `open_gemini_key_page`. Keys never reach the web page.
   Without the desktop app, `FetchTransport` is used (Gemini; Claude from Node only) with test keys
   `__STEMSIM_TEST_GEMINI_KEY__` / `__STEMSIM_TEST_CLAUDE_KEY__` injected by tests — never typed in
-  the UI. Two editions: `__EDITION__` (web) and Cargo features `edition-main`/`edition-pilot`;
-  Gemini code only behind `__EDITION__ === 'main'` / `#[cfg(feature = "edition-main")]`.
+  the UI.
   Confirmed readings are cached in `src/ai/cache.ts` (not the AI's numbers: the checks rerun).
-- **Free fallback (3b.3b):** `groq.rs` (`GroqProvider`, both editions, default model
+- **Free fallback (3b.3b):** `groq.rs` (`GroqProvider`, default model
   `qwen/qwen3.8-27b`); `ChatRequest.fallback` + `send_with_fallback` switch only on quota/credit
   errors (`is_quota_error` ↔ `src/ai/fallback.ts`); the response's `provider`/`fallback` are shown
   in the AI label. Settings → "Dự phòng khi hết lượt" (default Groq; used only if it has a key).
@@ -269,16 +279,14 @@ Progress log: `docs/PROGRESS.md`.
 
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
-- Gates live in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
+- The gate lives in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
   `incidents.json`); `ai_chat`/`ai_models`/`ai_test_key` return `notAllowed` while closed, and
-  `ai_set_key` needs the 18+ confirmation (main) or the supervisor PIN/session (pilot). Never move
-  a gate into the web page only. Bump `TERMS_VERSION` (Rust **and** `src/safety/safety.ts`) when the
+  `ai_set_key` needs the 18+ confirmation. Never move the gate into the web page only. Bump `TERMS_VERSION` (Rust **and** `src/safety/safety.ts`) when the
   terms change.
 - Web side `src/safety/`: AgeGate, SafetySettings, AiContentBar (label + report — put it on every
   new AI output), CrisisCard, PrivacyDialog, `moderation.ts` (`checkInput` before every AI call,
   `outputIsSafe` on every AI text). The incident log stores **kind + time only**.
-- Pilot pay-for key: an 18+ student or a parent owns the Anthropic account (`docs/PILOT_CONSENT.md`).
-  Legal sources and open questions: `docs/LEGAL_COMPLIANCE.md` (list, never conclude).
+- Legal sources and open questions: `docs/LEGAL_COMPLIANCE.md` (list, never conclude).
 - Unit tests run with an open gate (`tests/setup.ts`); E2E storage state pre-answers it.
 
 ## Modules (chemistry, biology — Phase 4+)
@@ -341,12 +349,9 @@ Progress log: `docs/PROGRESS.md`.
   told to reinstall. Never break Rust command signatures without bumping the native version.
 - The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
   `webupdate.rs`. The repo must be public for the app to download releases.
-- **Two installers / two update channels (3b.6):** main (`tauri.conf.json`, `vn.stemsimlab.desktop`,
-  `web-update.json`) and pilot (`tauri.pilot.conf.json` merged on top: "STEM Sim Lab THPT",
-  `vn.stemsimlab.pilot`, `build:pilot`, `--features edition-pilot -- --no-default-features`,
-  `web-update-pilot.json`). Pilot manifests sign an extra `edition:pilot` line; the app checks the
-  manifest's `edition` and the zip's `web-edition.txt`. `web-bundle.mjs <main|pilot>` packs one
-  edition. Never let the pilot config override security/CSP or the version (tested).
+- **One installer / one update channel** (`vn.stemsimlab.desktop`, `web-update.json`; the pilot
+  installer and channel were removed in 0.5.0). The signed message still names `edition:main` and
+  the zip carries `web-edition.txt` = `main` — keep both, installed apps check them.
 - **Update window / mandatory updates (0.3.0+):** the start-up check opens `UpdateDialog` when a
   version is available ("Cập nhật ngay" / "Để sau"). Release input `required` → signed
   `minRequired` (v2 signature `signed_message_v2` ≡ `scripts/release/manifest-message.mjs`, tested

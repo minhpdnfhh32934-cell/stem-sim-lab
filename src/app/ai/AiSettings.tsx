@@ -25,7 +25,6 @@ import { toAiError, type Provider } from '@/ai/types';
 import { IconButton } from '@/ui/IconButton';
 import { ArtCopyKey, ArtCreateKey, ArtPasteKey } from './GuideArt';
 import { checkAiStatus } from './useAiStatus';
-import { useSafetyStore } from '@/safety/safetyStore';
 import './ai.css';
 
 const CHOICES: readonly ProviderChoice[] = [...PROVIDERS, 'off'];
@@ -79,14 +78,9 @@ export function AiSettings() {
         </div>
       </div>
 
-      {/* Gemini exists only in the main edition (the pilot bundle drops this branch). */}
-      {__EDITION__ === 'main' && ai.provider === 'gemini' && (
-        <GeminiGuide openByDefault={ai.status === 'noKey'} />
-      )}
+      {ai.provider === 'gemini' && <GeminiGuide openByDefault={ai.status === 'noKey'} />}
 
       {ai.provider === 'groq' && <GroqGuide openByDefault={ai.status === 'noKey'} />}
-
-      {__EDITION__ === 'pilot' && <p className="ai-guide__note">{t('settings.aiPilotKey')}</p>}
 
       {on && <ModelField provider={ai.provider as Provider} />}
 
@@ -214,10 +208,6 @@ function GroqGuide({ openByDefault }: { openByDefault: boolean }) {
   );
 }
 
-/**
- * Pilot edition: only the supervisor (open session, src/safety) may enter or delete the key;
- * Rust checks it again. The main edition shows the key field to the adult user.
- */
 interface KeyAreaProps {
   provider: Provider;
   desktop: boolean;
@@ -228,19 +218,6 @@ interface KeyAreaProps {
 }
 
 function KeyArea({ provider, desktop, inputId, label, fallback = false }: KeyAreaProps) {
-  const t = useT();
-  const unlockedUntil = useSafetyStore((s) => s.unlockedUntil);
-  // The countdown is shown in the safety section; here a stale "unlocked" only means Rust
-  // refuses the save and the error is shown.
-  const locked = __EDITION__ === 'pilot' && unlockedUntil === 0;
-  if (locked) {
-    return (
-      <>
-        <p className="ai-guide__note">{t('settings.aiPilotLocked')}</p>
-        <KeyTestRow {...(fallback ? { provider } : {})} />
-      </>
-    );
-  }
   return (
     <KeyField
       key={provider}

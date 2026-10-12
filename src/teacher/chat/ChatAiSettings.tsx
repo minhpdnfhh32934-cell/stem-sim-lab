@@ -2,6 +2,7 @@ import { invoke, isTauri } from '@tauri-apps/api/core';
 import {
   BookOpen,
   Bot,
+  Brain,
   CircleAlert,
   CircleCheck,
   Download,
@@ -26,8 +27,9 @@ import { WEB_GEMMA_MODELS } from '@/ai/webGemmaModels';
 import { formatNumber, useT, type MessageKey } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useChatStore } from './chatStore';
+import { useChatStore, type MemoryLength } from './chatStore';
 import { downloadErrorKey } from './downloadErrors';
+import { GpuSettings } from './GpuSettings';
 import { builtinKnowledge } from './knowledge';
 import { listVoices, speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
 import { VOICE_SAMPLE, VOICE_STYLES, useVoiceStore } from '@/teacher/voice/voiceStore';
@@ -152,6 +154,47 @@ function KnownPageLink({
     </a>
   );
 }
+
+/** "Trí nhớ hội thoại": how much conversation goes with each question (`memory.ts`). */
+function MemorySettings() {
+  const t = useT();
+  const length = useChatStore((s) => s.memoryLength);
+  const setLength = useChatStore((s) => s.setMemoryLength);
+  const labelId = useId();
+  return (
+    <fieldset className="settings-group">
+      <legend>
+        <Brain size={15} aria-hidden="true" />
+        {t('chatSettings.memory.title')}
+      </legend>
+      <p className="muted">{t('chatSettings.memory.intro')}</p>
+      <div className="settings-row">
+        <span id={labelId}>{t('chatSettings.memory.title')}</span>
+        <div className="segmented" role="radiogroup" aria-labelledby={labelId}>
+          {MEMORY_LENGTHS.map((item) => (
+            <button
+              key={item}
+              type="button"
+              role="radio"
+              aria-checked={length === item}
+              className="segmented__item"
+              onClick={() => {
+                setLength(item);
+              }}
+            >
+              {t(`chatSettings.memory.${item}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="muted small">
+        {t(length === 'long' ? 'chatSettings.memory.longHint' : 'chatSettings.memory.mediumHint')}
+      </p>
+    </fieldset>
+  );
+}
+
+const MEMORY_LENGTHS: MemoryLength[] = ['medium', 'long'];
 
 /** "Giọng nói của thầy": style presets, OS voice picker and a sample preview. */
 function VoiceSettings() {
@@ -597,6 +640,12 @@ export function ChatAiSettings() {
       </p>
 
       <div className="chat-settings__divider" />
+      <MemorySettings />
+
+      <div className="chat-settings__divider" />
+      <GpuSettings />
+
+      <div className="chat-settings__divider" />
       <VoiceSettings />
 
       <div className="chat-settings__divider" />
@@ -772,24 +821,22 @@ export function ChatAiSettings() {
           <p className="muted small">{t('chatSettings.localLibraryPrivacy')}</p>
         </div>
       )}
-      {__EDITION__ === 'main' && (
-        <label className={`chat-toggle chat-settings__web${chat.webLookup ? ' is-on' : ''}`}>
-          <input
-            type="checkbox"
-            checked={chat.webLookup}
-            onChange={(e) => {
-              chat.setWebLookup(e.target.checked);
-            }}
-          />
-          <span className="chat-toggle__track">
-            <span />
-          </span>
-          <span>
-            <strong>{t('chatSettings.webLookup')}</strong>
-            <small>{t('chatSettings.webLookupHint')}</small>
-          </span>
-        </label>
-      )}
+      <label className={`chat-toggle chat-settings__web${chat.webLookup ? ' is-on' : ''}`}>
+        <input
+          type="checkbox"
+          checked={chat.webLookup}
+          onChange={(e) => {
+            chat.setWebLookup(e.target.checked);
+          }}
+        />
+        <span className="chat-toggle__track">
+          <span />
+        </span>
+        <span>
+          <strong>{t('chatSettings.webLookup')}</strong>
+          <small>{t('chatSettings.webLookupHint')}</small>
+        </span>
+      </label>
 
       <div className="chat-settings__divider" />
       <DataFlow desktop={desktop} />
@@ -832,6 +879,7 @@ function DataFlow({ desktop }: { desktop: boolean }) {
             <li>{t('chatSettings.flowLocalChat')}</li>
             <li>{t('chatSettings.flowLocalDocs', { count: builtinKnowledge(locale).length })}</li>
             <li>{t('chatSettings.flowLocalModel')}</li>
+            <li>{t('chatSettings.flowLocalSummary')}</li>
             <li>
               {desktop
                 ? t('chatSettings.flowLocalKeyDesktop')

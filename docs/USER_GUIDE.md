@@ -8,20 +8,14 @@ con số do chương trình tính; mỗi mô phỏng có **Thẻ Khoa học** gh
 
 **Yêu cầu:** Windows 10 hoặc 11 (64-bit), RAM từ 8 GB, màn hình từ 1366×768.
 
-1. Tải bộ cài ở trang **Releases** của dự án trên GitHub (mục _Assets_). Có **hai bản**:
-   - `STEM Sim Lab_…_x64-setup.exe` — **bản chính**, cho sinh viên từ 18 tuổi (AI: Gemini mặc định,
-     Claude tùy chọn).
-   - `STEM Sim Lab THPT_…_x64-setup.exe` — **bản thử nghiệm THPT**, chỉ dùng trong buổi thử nghiệm
-     có người giám sát (Claude, không có Gemini; khóa API do người giám sát nhập bằng mã PIN; có
-     cổng độ tuổi và đồng ý của phụ huynh).
+1. Tải bộ cài `STEM Sim Lab_…_x64-setup.exe` ở trang **Releases** của dự án trên GitHub (mục
+   _Assets_), dành cho người dùng từ 18 tuổi (AI: Gemini mặc định, Claude và Groq tùy chọn). Từ
+   bản 0.5.0 chỉ còn **một bản** (bản thử nghiệm THPT đã bỏ).
 2. Nhấp đúp để chạy. Windows có thể hiện "Windows protected your PC" vì bộ cài chưa được ký số: bấm
    **More info → Run anyway**.
 3. Bộ cài không cần quyền quản trị (cài cho người dùng hiện tại). Xong, mở app từ menu Start.
 
 Chỉ cần cài **một lần**. Các bản sau cập nhật ngay trong app (mục "Cập nhật phần mềm").
-
-Hai bản **cài song song được** trên cùng một máy (ví dụ máy phòng thực hành): mỗi bản có tên trong
-menu Start, dữ liệu, khóa AI và mã PIN riêng, không ảnh hưởng nhau.
 
 ### Windows chặn bộ cài ("Smart App Control blocked an app")
 
@@ -44,9 +38,8 @@ không chặn nữa.
 **"Evergreen Standalone Installer"** tại <https://developer.microsoft.com/microsoft-edge/webview2/>,
 chép qua USB và cài trước.
 
-**Gỡ cài đặt:** Settings → Apps → STEM Sim Lab (hoặc STEM Sim Lab THPT) → Uninstall. Lịch sử mô
-phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT:
-`%APPDATA%\vn.stemsimlab.pilot\`).
+**Gỡ cài đặt:** Settings → Apps → STEM Sim Lab → Uninstall. Lịch sử mô phỏng nằm trong
+`%APPDATA%\vn.stemsimlab.desktop\history.sqlite`.
 
 ### Tạo bộ cài
 
@@ -54,23 +47,18 @@ phỏng nằm trong `%APPDATA%\vn.stemsimlab.desktop\history.sqlite` (bản THPT
   **Actions → Release (Windows installer) → Run workflow**. Khoảng 15–25 phút sau, mở lần chạy có
   tên **Release (Windows installer)** (không phải lần chạy "CI" — CI chỉ kiểm tra lỗi, không tạo bộ
   cài), kéo xuống cuối trang **Summary** để thấy mục **Artifacts → stem-sim-lab-windows**. Tệp zip
-  tải về chứa bộ cài `…x64-setup.exe` (khuyên dùng) và `.msi` của **cả hai bản**, cùng
+  tải về chứa bộ cài `…x64-setup.exe` (khuyên dùng) và `.msi`, cùng
   `installer-sizes.txt`. Khi chọn `publish` = true, GitHub còn tạo bản Release để mọi máy đã cài tự
   nhận cập nhật (xem `docs/RELEASE.md`).
 - **Cách 2 — trên máy Windows của bạn:** cài công cụ theo `docs/SETUP_WINDOWS.md`, rồi chạy
   `npm install` và `npm run tauri build`. Bộ cài nằm trong `src-tauri\target\release\bundle\nsis\`.
-  Bản THPT:
-  `npx tauri build --config src-tauri/tauri.pilot.conf.json --features edition-pilot -- --no-default-features`.
 
 ## Bắt đầu nhanh
 
 1. Lần đầu mở app có vài bước làm quen (bấm **Bỏ qua** bất cứ lúc nào):
-   - **Bản chính:** chọn trình độ → chọn môn quan tâm → xác nhận đủ 18 tuổi và điều khoản →
-     **Kết nối AI** (nhập khóa Gemini, hoặc **Để sau**) → hướng dẫn nhanh.
-   - **Bản thử nghiệm THPT:** chọn môn → cổng độ tuổi / đồng ý của phụ huynh (người giám sát nhập
-     PIN) → hướng dẫn nhanh. Không có bước nhập khóa.
-     Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
-     (khoảng 1 giây) để chọn chất lượng hiển thị.
+   chọn trình độ → chọn môn quan tâm → xác nhận đủ 18 tuổi và điều khoản → **Kết nối AI** (nhập
+   khóa Gemini, hoặc **Để sau**) → hướng dẫn nhanh. Hướng dẫn nhanh mở lại được bằng menu ☰ →
+   Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy (khoảng 1 giây) để chọn chất lượng hiển thị.
 2. **Trang chủ STEM Sim Lab** có hai lối vào:
    - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
    - **Thầy AI** mở trang trò chuyện với trợ lý học tập.
@@ -111,6 +99,24 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   app tự dùng API đã kết nối; nếu em tự chọn Gemma mà chưa tải, app không gửi câu hỏi lên mạng.
   Mô hình được lưu trên máy, mở lại app không phải tải lại. Khi Gemma đang trả lời, hãy để cửa sổ
   app hiện trên màn hình (thu nhỏ cửa sổ có thể làm máy tạm dừng GPU).
+- **Chọn card đồ họa (GPU) cho Gemma** (bản desktop trên Windows): máy có cả card tích hợp và card
+  rời (ví dụ laptop chơi game) thì vào Cài đặt → Thầy AI → **Card đồ họa (GPU) chạy Gemma** để chọn.
+  Card rời (thường có nhãn "Nên dùng cho Gemma") chạy nhanh hơn nhiều nhưng tốn pin hơn; card được
+  chọn chạy cả phần hiển thị của app. Đổi card xong phải **mở lại app** (có nút **Mở lại ngay**);
+  trước đó Gemma vẫn chạy trên card cũ. Dòng "WebGPU của ứng dụng đang chạy trên: …" cho biết card
+  thật đang dùng. Nếu card rời đang tắt (chế độ Eco/tiết kiệm pin của hãng máy), app báo không thấy
+  card đã chọn và tạm dùng card mặc định.
+- **Trí nhớ hội thoại** (Cài đặt → Thầy AI): **Vừa** (mặc định) hoặc **Dài**. Thầy nhớ phần trò
+  chuyện gần nhất; phần cũ hơn được chính AI đang trả lời tóm tắt ngắn (lưu trên máy) để thầy vẫn
+  theo được mạch bài. "Dài" nhớ nhiều hơn nhưng chậm hơn trên máy yếu và dễ hết lượt hơn với gói API
+  miễn phí.
+- Câu trả lời quá dài bị dừng giữa chừng thì dưới câu trả lời có dòng báo và nút **Viết tiếp**.
+- Các nút nhanh ở trang Thầy AI (Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn giản hơn, Em chưa hiểu chỗ
+  này) gửi cho AI một câu hướng dẫn đầy đủ dựa trên câu trả lời vừa rồi.
+- **Giảng trên bảng** (trang Thầy AI): câu trả lời mới nhất được viết lên bảng thành tiêu đề và các
+  bước đánh số, hiện dần từng bước; công thức hiển thị như trong sách. Nếu bật giọng đọc, thầy đọc
+  từng bước và bước đang đọc được tô sáng. Có nút **Bước trước**, **Bước sau**, **Hiện tất cả**,
+  **Đọc bài giảng**. Bảng chỉ chép lại đúng câu trả lời của AI (có nhãn "Nội dung do AI hỗ trợ").
 - **Thư viện kiến thức** có sẵn ghi chú Vật lý, Hóa học, Sinh học THPT và cho phép nạp tệp `.txt`,
   `.md`, `.csv`, `.json`. Tệp và lịch sử chat lưu trên máy; khi chat bằng API trực tuyến, các đoạn
   kiến thức liên quan có thể được gửi cùng câu hỏi. **Tra thêm Wikipedia** là tùy chọn (mặc định
@@ -157,7 +163,7 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
 
 ## Bố cục màn hình
 
-- **Thanh trên:** chọn môn, ô nhập đề bài, trạng thái AI, các nút ẩn/hiện bảng, sáng/tối, trình
+- **Thanh trên:** chọn môn, ô nhập đề bài, trạng thái AI, sáng/tối, trình
   chiếu, cài đặt.
 - **Cột trái:** Thư viện chủ đề và Lịch sử.
 - **Giữa:** khung mô phỏng và thanh công cụ nổi. Bên dưới là thanh thời gian (chạy, dừng, tua,
@@ -272,8 +278,7 @@ Cài đặt → **Kết nối AI** → mục **Dự phòng khi hết lượt** �
 3. Sao chép khóa (chỉ hiện một lần).
 4. Dán vào ô **Khóa API cho dự phòng** → **Lưu khóa** → **Kiểm tra key**.
 
-Cần biết: người tạo tài khoản Groq phải **từ 18 tuổi** (bản thử nghiệm THPT: phụ huynh hoặc thầy cô
-tạo, người giám sát nhập bằng PIN). Theo điều khoản của Groq, nội dung gửi lên **không được dùng để
+Cần biết: người tạo tài khoản Groq phải **từ 18 tuổi**. Theo điều khoản của Groq, nội dung gửi lên **không được dùng để
 huấn luyện AI**; nếu tài khoản có tùy chọn "Zero Data Retention", nên bật. Gói miễn phí có giới hạn
 (khoảng 1 000 lượt/ngày). Mô hình mặc định: `qwen/qwen3.8-27b` (đổi được ở ô **Mô hình dự phòng**).
 
@@ -281,16 +286,10 @@ huấn luyện AI**; nếu tài khoản có tùy chọn "Zero Data Retention", n
 
 **Lần đầu mở app** sẽ có câu hỏi **"Trước khi bắt đầu"**:
 
-- **Bản chính (sinh viên):** đánh dấu "Tôi đã đọc… và đồng ý", bấm **Tôi đủ 18 tuổi — bật AI**. Nếu
-  bấm **Tôi chưa đủ 18 tuổi**, app vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu, Tự dựng cảnh;
-  chỉ phần AI tắt (nhà cung cấp AI chỉ cho người từ 18 tuổi). Chưa xác nhận 18+ thì app **không cho
-  lưu khóa API**. Trả lời lại: Cài đặt → **An toàn & quyền riêng tư**.
-- **Bản thử nghiệm THPT (có giám sát):** học sinh nhập năm sinh → **người giám sát** (phụ huynh hoặc
-  thầy cô) đặt **mã PIN** 4–8 chữ số → nếu học sinh dưới 18 tuổi, người giám sát đánh dấu đã có
-  **Phiếu đồng ý** (mẫu: `docs/PILOT_CONSENT.md`) và bấm **Ghi nhận đồng ý và bật AI**. Bấm "Để sau"
-  thì app chỉ dùng mô phỏng. Khóa API Claude do người lớn trả phí (sinh viên 18+ hoặc phụ huynh) tạo;
-  chỉ người giám sát nhập/xóa được khóa (mở khóa bằng PIN trong Cài đặt → An toàn & quyền riêng tư,
-  tự khóa lại sau 10 phút). Sai PIN 5 lần thì phải đợi 60 giây.
+- Đánh dấu "Tôi đã đọc… và đồng ý", bấm **Tôi đủ 18 tuổi — bật AI**. Nếu bấm **Tôi chưa đủ 18
+  tuổi**, app vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu, Tự dựng cảnh; chỉ phần AI tắt (nhà
+  cung cấp AI chỉ cho người từ 18 tuổi). Chưa xác nhận 18+ thì app **không cho lưu khóa API**. Trả
+  lời lại: Cài đặt → **An toàn & quyền riêng tư**.
 
 Khi dùng AI:
 
@@ -300,10 +299,10 @@ Khi dùng AI:
   phần đó rồi phân tích lại. Nội dung không phù hợp với việc học cũng bị chặn; câu trả lời của AI
   có nội dung không phù hợp sẽ bị ẩn.
 - Nếu đề bài cho thấy bạn đang gặp chuyện rất khó khăn, app **không gửi cho AI** mà hiện các số
-  điện thoại hỗ trợ (bản thử nghiệm: Tổng đài bảo vệ trẻ em **111**; cả hai bản: đường dây Ngày Mai
-  096 306 1414; nguy hiểm ngay: **115**). Hãy nói chuyện với người lớn bạn tin tưởng.
+  điện thoại hỗ trợ (đường dây Ngày Mai 096 306 1414; nguy hiểm ngay: **115**). Hãy nói chuyện với
+  người bạn tin tưởng.
 - **Nhật ký sự cố** (Cài đặt → An toàn & quyền riêng tư) chỉ ghi **loại sự cố và thời gian**, không
-  ghi nội dung. Bản thử nghiệm: chỉ người giám sát xem được.
+  ghi nội dung.
 - Đọc thêm: menu ☰ → **Quyền riêng tư & dùng AI an toàn** (ứng dụng gửi gì, lưu gì, nhà cung cấp AI
   làm gì với đề bài, điều khoản tóm tắt, mẹo học với AI). Nguồn pháp lý: `docs/LEGAL_COMPLIANCE.md`.
 
@@ -369,8 +368,7 @@ Khi dùng AI:
   **Khởi động lại**. Lịch sử, tệp .stemsim và cài đặt của bạn giữ nguyên.
 - Nếu bản mới thay đổi phần lõi của app, hộp thoại báo cần tải bộ cài mới và có nút mở trang tải.
 - Bản cập nhật có lỗi? Nút **Quay về bản gốc** trả app về bản đã cài từ bộ cài.
-- Mỗi bản chỉ nhận cập nhật **của chính nó**: bản THPT không bao giờ nhận phần có mã Gemini của bản
-  chính (app kiểm tra chữ ký và tên bản trước khi dùng).
+- App kiểm tra chữ ký số và tên bản ("main") trước khi dùng một bản cập nhật.
 
 ## Khi máy yếu
 
@@ -407,14 +405,13 @@ App ưu tiên đúng hơn mượt. Nếu máy không kịp vẽ, thanh trạng t
 
 ## Phím tắt
 
-| Phím                     | Tác dụng                                    |
-| ------------------------ | ------------------------------------------- |
-| Space                    | Chạy / tạm dừng                             |
-| R                        | Đặt lại                                     |
-| .                        | Bước tiếp theo                              |
-| Ctrl+Z / Ctrl+Y          | Hoàn tác / Làm lại                          |
-| Ctrl+S / Ctrl+O          | Lưu / mở tệp .stemsim                       |
-| Ctrl+B / Ctrl+I / Ctrl+J | Ẩn/hiện Thư viện / Thuộc tính / bảng Đồ thị |
-| F5 / Esc                 | Vào / thoát chế độ trình chiếu              |
-| Ctrl+= / Ctrl+-          | Tăng / giảm cỡ chữ                          |
-| Ctrl+Enter               | Phân tích đề (khi đang ở ô đề bài)          |
+| Phím            | Tác dụng                           |
+| --------------- | ---------------------------------- |
+| Space           | Chạy / tạm dừng                    |
+| R               | Đặt lại                            |
+| .               | Bước tiếp theo                     |
+| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                 |
+| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim              |
+| F5 / Esc        | Vào / thoát chế độ trình chiếu     |
+| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                 |
+| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài) |

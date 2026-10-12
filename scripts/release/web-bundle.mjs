@@ -1,13 +1,10 @@
 // Packs dist/ into a signed web update (docs/RELEASE.md).
 //
-//   WEB_UPDATE_SIGNING_KEY="-----BEGIN PRIVATE KEY-----…" node scripts/release/web-bundle.mjs [main|pilot]
+//   WEB_UPDATE_SIGNING_KEY="-----BEGIN PRIVATE KEY-----…" node scripts/release/web-bundle.mjs
 //
-// Two update channels, one per edition (PROMPT_PHAN_2 3b.6):
-//   main  → release/web-bundle.zip       + release/web-update.json
-//   pilot → release/web-bundle-pilot.zip + release/web-update-pilot.json
-// dist/ must have been built for that edition (dist/web-edition.txt). The signed message must
-// match `signed_message` in src-tauri/src/webupdate.rs (main keeps the original format, other
-// editions add an "edition:" line, so a manifest can never be moved to the other channel).
+// One update channel: release/web-bundle.zip + release/web-update.json (the pilot edition and its
+// channel were removed in 0.5.0). The signed message must match `signed_message` in
+// src-tauri/src/webupdate.rs; it still names the edition ("main") so installed apps verify it.
 import { execFileSync } from 'node:child_process';
 import { createHash, createPrivateKey, sign } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -15,9 +12,8 @@ import { resolve } from 'node:path';
 import { signedMessage, signedMessageV2 } from './manifest-message.mjs';
 
 const REPO = 'minhpdnfhh32934-cell/stem-sim-lab';
-const edition = process.argv[2] ?? 'main';
-if (!['main', 'pilot'].includes(edition)) throw new Error(`unknown edition ${edition}`);
-const suffix = edition === 'main' ? '' : `-${edition}`;
+const edition = 'main';
+const suffix = '';
 // Mandatory-update floor: learners on an older web part must update (empty = none).
 const minRequired = (process.env.MIN_REQUIRED ?? '').trim();
 if (minRequired && !/^\d+\.\d+\.\d+$/.test(minRequired))

@@ -25,9 +25,6 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - run: npm run check:edition main
-      # Pilot edition: the bundle must not contain any Gemini code (PROMPT_PHAN_2 A2).
-      - run: npm run build:pilot
 
   e2e:
     name: End-to-end (Playwright, mocked Gemini)
@@ -74,10 +71,4 @@ jobs:
       - run: cargo clippy --all-targets -- -D warnings
         working-directory: src-tauri
       - run: cargo test
-        working-directory: src-tauri
-      # Pilot edition (Claude only, no Gemini code compiled in).
-      - run: npm run build:pilot
-      - run: cargo clippy --all-targets --no-default-features --features edition-pilot -- -D warnings
-        working-directory: src-tauri
-      - run: cargo test --no-default-features --features edition-pilot
         working-directory: src-tauri

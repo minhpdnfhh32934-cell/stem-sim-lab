@@ -4,6 +4,9 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export type LeftTab = 'library' | 'history';
 export type BottomTab = 'graphs' | 'solution' | 'challenge' | 'data';
 
+const LEFT_TABS: readonly LeftTab[] = ['library', 'history'];
+const BOTTOM_TABS: readonly BottomTab[] = ['graphs', 'solution', 'challenge', 'data'];
+
 /** Size limits in CSS pixels. Keep the defaults usable on a 1366×768 screen. */
 export const LAYOUT_LIMITS = {
   left: { min: 200, max: 420, default: 256 },
@@ -13,25 +16,30 @@ export const LAYOUT_LIMITS = {
 
 type PanelSizeKey = keyof typeof LAYOUT_LIMITS;
 
+/**
+ * The lab panels (library, properties, graphs) are always shown; they can only be resized.
+ * Presentation mode, the home page and the AI teacher page hide them (`AppShell`).
+ */
 export interface LayoutState {
   leftWidth: number;
   rightWidth: number;
   bottomHeight: number;
-  leftOpen: boolean;
-  rightOpen: boolean;
-  bottomOpen: boolean;
   leftTab: LeftTab;
   bottomTab: BottomTab;
   /** Presentation mode (for judges): hides side panels and enlarges text. Never persisted. */
   presentation: boolean;
 
   setSize: (panel: PanelSizeKey, px: number) => void;
-  toggle: (panel: 'left' | 'right' | 'bottom') => void;
   setLeftTab: (tab: LeftTab) => void;
   setBottomTab: (tab: BottomTab) => void;
   setPresentation: (on: boolean) => void;
   resetLayout: () => void;
 }
+
+type PersistedLayout = Pick<
+  LayoutState,
+  'leftWidth' | 'rightWidth' | 'bottomHeight' | 'leftTab' | 'bottomTab'
+>;
 
 export function clampSize(panel: PanelSizeKey, px: number): number {
   const { min, max, default: fallback } = LAYOUT_LIMITS[panel];
@@ -43,15 +51,11 @@ const DEFAULT_LAYOUT = {
   leftWidth: LAYOUT_LIMITS.left.default,
   rightWidth: LAYOUT_LIMITS.right.default,
   bottomHeight: LAYOUT_LIMITS.bottom.default,
-  leftOpen: true,
-  rightOpen: true,
-  bottomOpen: true,
   leftTab: 'library',
   bottomTab: 'graphs',
-} as const satisfies Partial<LayoutState>;
+} as const satisfies PersistedLayout;
 
 const SIZE_FIELD = { left: 'leftWidth', right: 'rightWidth', bottom: 'bottomHeight' } as const;
-const OPEN_FIELD = { left: 'leftOpen', right: 'rightOpen', bottom: 'bottomOpen' } as const;
 
 export const useLayoutStore = create<LayoutState>()(
   persist(
@@ -61,14 +65,11 @@ export const useLayoutStore = create<LayoutState>()(
       setSize: (panel, px) => {
         set({ [SIZE_FIELD[panel]]: clampSize(panel, px) });
       },
-      toggle: (panel) => {
-        set((s) => ({ [OPEN_FIELD[panel]]: !s[OPEN_FIELD[panel]] }));
-      },
       setLeftTab: (leftTab) => {
-        set({ leftTab, leftOpen: true });
+        set({ leftTab });
       },
       setBottomTab: (bottomTab) => {
-        set({ bottomTab, bottomOpen: true });
+        set({ bottomTab });
       },
       setPresentation: (presentation) => {
         set({ presentation });
@@ -81,25 +82,26 @@ export const useLayoutStore = create<LayoutState>()(
       name: 'stemsim.layout',
       version: 1,
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({
+      partialize: (s): PersistedLayout => ({
         leftWidth: s.leftWidth,
         rightWidth: s.rightWidth,
         bottomHeight: s.bottomHeight,
-        leftOpen: s.leftOpen,
-        rightOpen: s.rightOpen,
-        bottomOpen: s.bottomOpen,
         leftTab: s.leftTab,
         bottomTab: s.bottomTab,
       }),
-      // Re-clamp persisted sizes: limits may change between versions.
+      // Only known fields are restored, sizes re-clamped (limits may change). Until 0.4.3 the
+      // panels could be hidden (`leftOpen`/`rightOpen`/`bottomOpen` were saved): those flags are
+      // ignored, so a panel hidden back then is shown again.
       merge: (persisted, current) => {
-        const p = (persisted ?? {}) as Partial<LayoutState>;
+        const p = (persisted ?? {}) as Partial<Record<keyof PersistedLayout, unknown>>;
+        const num = (v: unknown, fallback: number) => (typeof v === 'number' ? v : fallback);
         return {
           ...current,
-          ...p,
-          leftWidth: clampSize('left', p.leftWidth ?? current.leftWidth),
-          rightWidth: clampSize('right', p.rightWidth ?? current.rightWidth),
-          bottomHeight: clampSize('bottom', p.bottomHeight ?? current.bottomHeight),
+          leftWidth: clampSize('left', num(p.leftWidth, current.leftWidth)),
+          rightWidth: clampSize('right', num(p.rightWidth, current.rightWidth)),
+          bottomHeight: clampSize('bottom', num(p.bottomHeight, current.bottomHeight)),
+          leftTab: LEFT_TABS.find((t) => t === p.leftTab) ?? current.leftTab,
+          bottomTab: BOTTOM_TABS.find((t) => t === p.bottomTab) ?? current.bottomTab,
         };
       },
     },

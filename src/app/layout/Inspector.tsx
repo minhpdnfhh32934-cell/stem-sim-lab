@@ -1,10 +1,9 @@
 import { memo } from 'react';
-import { BadgeInfo, MousePointerClick, SlidersHorizontal, X } from 'lucide-react';
+import { BadgeInfo, MousePointerClick, SlidersHorizontal } from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { CONFIDENCE_LEVELS } from '@/science-card/types';
 import { ConfidenceBadge, ReviewBadge } from '@/ui/Badges';
 import { EmptyState } from '@/ui/EmptyState';
-import { IconButton } from '@/ui/IconButton';
 import { Section } from '@/ui/Section';
 import { ObjectPanel } from '@/app/sim/ObjectPanel';
 import { ParamsPanel } from '@/app/sim/ParamsPanel';
@@ -13,14 +12,12 @@ import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useLocalized } from '@/app/i18n/localized';
 import { useModuleStore } from '@/modules/moduleStore';
 import { ScienceCard } from '@/science-card/ScienceCard';
-import { useLayoutStore } from './layoutStore';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 
 /** Right-hand panel: selected object, parameters, and the Science Card. */
 export const Inspector = memo(function Inspector() {
   const t = useT();
-  const toggle = useLayoutStore((s) => s.toggle);
   const card = useWorkspaceStore((s) => s.scienceCard);
   const hasScene = useSimStore((s) => s.scene !== null);
   const mod = useModuleStore((s) => s.active);
@@ -37,15 +34,6 @@ export const Inspector = memo(function Inspector() {
       <header className="panel__header">
         <h2 className="panel__title">{t('inspector.title')}</h2>
         <ModeSwitch compact />
-        <IconButton
-          icon={X}
-          size="sm"
-          label={t('layout.toggleRight')}
-          tooltipSide="left"
-          onClick={() => {
-            toggle('right');
-          }}
-        />
       </header>
 
       <div className="panel__scroll">

@@ -1,5 +1,9 @@
 # Tuân thủ pháp lý và điều khoản (PROMPT_PHAN_2 A3)
 
+> **Cập nhật 2026-10-12 (0.5.0):** theo quyết định của người dùng, **bản thử nghiệm THPT (pilot) đã bị
+> bỏ** — app chỉ còn một bản (người dùng 18+). Các đoạn nói về bản THPT bên dưới chỉ còn giá trị
+> lịch sử.
+
 > **Đây không phải tư vấn pháp lý.** Tài liệu chỉ liệt kê những gì đã tra được (có nguồn và ngày
 > tra) và những điểm **người dùng / nhà trường / phụ huynh phải tự xác nhận**. Không có kết luận
 > "đã hợp pháp" nào ở đây. Điều khoản và luật có thể thay đổi: tra lại trước mỗi đợt thử nghiệm.

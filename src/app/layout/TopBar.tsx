@@ -5,9 +5,6 @@ import {
   Maximize2,
   PencilRuler,
   Moon,
-  PanelBottom,
-  PanelLeft,
-  PanelRight,
   Redo2,
   Settings,
   Sparkles,
@@ -41,16 +38,7 @@ export const TopBar = memo(function TopBar() {
   const t = useT();
   const theme = useResolvedTheme();
   const toggleTheme = useSettingsStore((s) => s.toggleTheme);
-  const layout = useLayoutStore(
-    useShallow((s) => ({
-      leftOpen: s.leftOpen,
-      rightOpen: s.rightOpen,
-      bottomOpen: s.bottomOpen,
-      toggle: s.toggle,
-      setPresentation: s.setPresentation,
-    })),
-  );
-  const { setPresentation } = layout;
+  const setPresentation = useLayoutStore((s) => s.setPresentation);
   const { subject, setSubject, problemText, setProblemText } = useWorkspaceStore(
     useShallow((s) => ({
       subject: s.subject,
@@ -226,31 +214,6 @@ export const TopBar = memo(function TopBar() {
         <AiStatusPill
           onClick={() => {
             setSettingsOpen(true);
-          }}
-        />
-        <span className="topbar__divider" aria-hidden="true" />
-        <IconButton
-          icon={PanelLeft}
-          label={t('layout.toggleLeft')}
-          active={layout.leftOpen}
-          onClick={() => {
-            layout.toggle('left');
-          }}
-        />
-        <IconButton
-          icon={PanelBottom}
-          label={t('layout.toggleBottom')}
-          active={layout.bottomOpen}
-          onClick={() => {
-            layout.toggle('bottom');
-          }}
-        />
-        <IconButton
-          icon={PanelRight}
-          label={t('layout.toggleRight')}
-          active={layout.rightOpen}
-          onClick={() => {
-            layout.toggle('right');
           }}
         />
         <span className="topbar__divider" aria-hidden="true" />
