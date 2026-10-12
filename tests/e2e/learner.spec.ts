@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { enterLab, openLab } from './nav';
 
 /** No horizontal scrolling at the test viewport (1366×768, PROMPT_PHAN_2 A4.1). */
 async function expectNoHorizontalScroll(page: Page) {
@@ -11,10 +12,10 @@ async function expectNoHorizontalScroll(page: Page) {
 test('home "Hôm nay học gì?": suggestions, back home, continue the last lesson', async ({
   page,
 }) => {
-  await page.goto('/');
+  await openLab(page);
   await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible();
   await expect(page.locator('.home__subject')).toHaveCount(3);
-  await expect(page.getByText('Dạy học bằng AI')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mở Thầy AI' })).toBeVisible();
   await expect(page.locator('.topbar .ai-status')).toBeVisible();
   // No continue button before any lesson.
   await expect(page.getByRole('button', { name: /Tiếp tục bài đang học/ })).toHaveCount(0);
@@ -35,7 +36,10 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
   await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toHaveCount(0);
   await expectNoHorizontalScroll(page);
 
+  // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
+  await expect(page.getByRole('button', { name: /Thầy AI/ }).first()).toBeVisible();
+  await enterLab(page);
   const resume = page.getByRole('button', { name: /Tiếp tục bài đang học/ });
   await expect(resume).toContainText('Chuyển động thẳng đều');
   await resume.click();
@@ -43,7 +47,7 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
 });
 
 test('subject cards and the level picker (Level → Subject → Topic)', async ({ page }) => {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('button', { name: /^Hóa học/ }).click();
   await expect(page.getByRole('radio', { name: 'Hóa học' })).toBeChecked();
   const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
@@ -61,7 +65,7 @@ test.describe('Basic / Advanced', () => {
   test('Basic is the default: key sliders, Đồ thị · Lời giải · Thử thách; Advanced adds the rest', async ({
     page,
   }) => {
-    await page.goto('/');
+    await openLab(page);
     await page.getByRole('button', { name: 'Ném xiên', exact: true }).click();
     const inspector = page.getByRole('complementary', { name: 'Bảng thuộc tính' });
     const mode = inspector.getByRole('radiogroup', { name: 'Chế độ hiển thị' });
@@ -97,6 +101,7 @@ test.describe('Basic / Advanced', () => {
 
     // The choice is remembered.
     await page.reload();
+    await enterLab(page);
     await page.getByRole('button', { name: 'Ném xiên', exact: true }).click();
     await expect(
       page
@@ -114,7 +119,7 @@ test('touch screens get 40px targets for icon buttons', async ({ browser }) => {
     isMobile: false,
   });
   const page = await context.newPage();
-  await page.goto('/');
+  await openLab(page);
   const coarse = await page.evaluate(() => matchMedia('(any-pointer: coarse)').matches);
   test.skip(!coarse, 'this browser does not report a touch pointer');
   const box = await page.getByRole('button', { name: 'Cài đặt', exact: true }).boundingBox();
@@ -126,7 +131,7 @@ test('touch screens get 40px targets for icon buttons', async ({ browser }) => {
 test('learn by exploring: predict → observe, a challenge solved, progress and a badge', async ({
   page,
 }) => {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('button', { name: 'Rơi tự do', exact: true }).click();
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
@@ -153,14 +158,17 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   // Topic complete (opened + predicted + challenge) → check in the library; badges on home.
   const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
   await expect(library.getByLabel('Đã hoàn thành chủ đề')).toHaveCount(1);
+  // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
+  await expect(page.getByRole('button', { name: /Thầy AI/ }).first()).toBeVisible();
+  await enterLab(page);
   await expect(page.getByText('Vượt thử thách')).toBeVisible();
   await expect(page.getByText('Bước đầu tiên')).toBeVisible();
 });
 
 test('a reminder to rest the eyes after ~45 minutes of continuous use', async ({ page }) => {
   await page.clock.install();
-  await page.goto('/');
+  await openLab(page);
   for (let m = 0; m < 45; m++) {
     await page.mouse.move(200 + (m % 5), 300);
     await page.clock.fastForward('01:00');

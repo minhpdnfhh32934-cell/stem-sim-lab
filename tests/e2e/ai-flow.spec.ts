@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { enterLab, openLab } from './nav';
 import golden from '../golden/physics.json' with { type: 'json' };
 
 interface Item {
@@ -131,7 +132,7 @@ async function mockGroq(page: Page) {
 }
 
 async function typeProblem(page: Page, text: string) {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('textbox', { name: /đề bài/i }).fill(text);
 }
 
@@ -309,7 +310,7 @@ for (const [name, opts, expected] of [
 ] as const) {
   test(`"Kiểm tra key" explains: ${name}`, async ({ page }) => {
     await mockGemini(page, opts);
-    await page.goto('/');
+    await openLab(page);
     await page.getByRole('button', { name: 'Cài đặt' }).click();
     const settings = page.getByRole('dialog', { name: 'Cài đặt' });
     // Only the last characters of a stored key are ever shown.
@@ -334,7 +335,7 @@ test('manual mode builds a scene without any AI call', async ({ page }) => {
     calls++;
     return route.abort();
   });
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' }).click();
   const dialog = page.getByRole('dialog', { name: 'Tự dựng cảnh' });
   await dialog.getByRole('combobox', { name: 'Chủ đề' }).selectOption('freeFall');
@@ -375,12 +376,14 @@ test.describe('first run (age question not answered yet)', () => {
     page,
   }) => {
     const stats = await mockGemini(page);
+    // The age question comes before anything else, even on the launch page.
     await page.goto('/');
     const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
     await expect(gate).toBeVisible();
     await expect(gate.getByRole('button', { name: 'Tôi đủ 18 tuổi — bật AI' })).toBeDisabled();
     await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
     await expect(gate).toBeHidden();
+    await enterLab(page);
     await expect(page.locator('.topbar .ai-status')).toContainText('AI: chưa mở');
     await page.getByRole('textbox', { name: /đề bài/i }).fill(item.text);
     await page.getByRole('button', { name: 'Phân tích đề' }).click();
@@ -390,6 +393,7 @@ test.describe('first run (age question not answered yet)', () => {
     expect(stats.generate).toBe(0);
     // Simulations still work without AI.
     await page.reload();
+    await enterLab(page);
     await expect(gate).toBeHidden();
   });
 
@@ -404,6 +408,7 @@ test.describe('first run (age question not answered yet)', () => {
     await gate.getByRole('checkbox').check();
     await gate.getByRole('button', { name: 'Tôi đủ 18 tuổi — bật AI' }).click();
     await expect(gate).toBeHidden();
+    await enterLab(page);
     await expect(page.locator('.topbar .ai-status')).toHaveAttribute('data-status', 'cloud');
   });
 });

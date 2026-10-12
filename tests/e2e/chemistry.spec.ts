@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openLab } from './nav';
 
 const TOPICS = [
   'Bảng tuần hoàn',
@@ -16,7 +17,7 @@ const TOPICS = [
 ];
 
 async function openChemistry(page: Page) {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('radio', { name: 'Hóa học' }).click();
 }
 

@@ -8,6 +8,7 @@ import { CATALOG } from './catalog';
 import { useProfileStore } from './learner/profileStore';
 import { useProgressStore } from '@/learn/progressStore';
 import { closeTeacher, useTeacherStore } from '@/teacher/teacherStore';
+import { useNavigationStore } from './navigationStore';
 
 /** Subject that contains a topic id (for switching the subject when opening). */
 export function subjectOf(topicId: string): Subject | undefined {
@@ -23,18 +24,21 @@ export function subjectOf(topicId: string): Subject | undefined {
 /** Opens any available topic (physics scenes for now; chemistry/biology modules later). */
 export async function openTopic(topicId: string): Promise<void> {
   closeTeacher();
+  useNavigationStore.getState().setScreen('lab');
   const subject = subjectOf(topicId);
   if (subject) useWorkspaceStore.setState({ subject });
-  if (hasModule(topicId)) {
+  const isModule = hasModule(topicId);
+  if (!isModule && !hasScene(topicId)) return;
+  // Remembered right away: going home while the engine is still loading must not lose
+  // "Tiếp tục bài đang học".
+  useProfileStore.getState().setLastTopic(topicId);
+  if (isModule) {
     sim.shutdown();
     await openModule(topicId);
-  } else if (hasScene(topicId)) {
+  } else {
     closeModule();
     await sim.open(topicId);
-  } else {
-    return;
   }
-  useProfileStore.getState().setLastTopic(topicId);
   useProgressStore.getState().markVisited(topicId);
 }
 
@@ -43,18 +47,32 @@ export function goHome(): void {
   closeTeacher();
   sim.shutdown();
   closeModule();
+  useNavigationStore.getState().setScreen('home');
+}
+
+/** Opens the existing topic browser and simulation workspace from the new landing page. */
+export function openLab(): void {
+  closeTeacher();
+  useNavigationStore.getState().setScreen('lab');
 }
 
 /** True while the "Dạy học bằng AI" screen replaces the workspace. */
 export function useIsTeacher(): boolean {
-  return useTeacherStore((s) => s.open);
+  const nav = useNavigationStore((s) => s.screen === 'teacher');
+  const legacy = useTeacherStore((s) => s.open);
+  return nav || legacy;
+}
+
+export function useIsLanding(): boolean {
+  return useNavigationStore((s) => s.screen === 'home');
 }
 
 /** True when nothing is open or opening: the home screen takes the centre. */
 export function useIsHome(): boolean {
+  const inLab = useNavigationStore((s) => s.screen === 'lab');
   const sim = useSimStore((s) => s.scene === null && !s.loading && s.error === null);
   const mod = useModuleStore((s) => s.active === null && !s.loading && s.error === null);
-  return sim && mod;
+  return inLab && sim && mod;
 }
 
 export function useActiveTopic(): string | null {

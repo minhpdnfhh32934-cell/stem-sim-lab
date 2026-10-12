@@ -3,6 +3,7 @@ import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError } from '@/ai/types';
 import { BrowserSafety, setSafetyBackendForTests, type Incident } from '@/safety/safety';
+import { useChatStore } from '@/teacher/chat/chatStore';
 import { analyze, cancelAnalyze, openManual, resolveAi, useAnalyzeStore } from './analyze';
 
 function transport(over: Partial<LlmTransport> = {}): LlmTransport {
@@ -22,6 +23,8 @@ describe('AI controller', () => {
       provider: 'gemini',
       models: { gemini: '', claude: 'm', groq: '' },
     });
+    // These tests cover the cloud path: pin the engine (fresh installs default to Gemma).
+    useChatStore.setState({ engine: 'cloud' });
     useAnalyzeStore.setState({ phase: 'idle', error: null, draft: null });
   });
   afterEach(() => {

@@ -1,9 +1,10 @@
 /// <reference types="node" />
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
+import { enterLab, openLab } from './nav';
 
 async function openLogistic(page: Page) {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
   await page.getByRole('button', { name: 'Tăng trưởng logistic', exact: true }).click();
   await expect(page.locator('.science-card')).toBeVisible();
@@ -42,7 +43,7 @@ test('save and reopen a .stemsim file', async ({ page }) => {
   expect(json.module.state.K).toBe(1500);
 
   // Open it on a fresh page (another topic open), through the menu.
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('radio', { name: 'Hóa học' }).click();
   await page.getByRole('button', { name: 'Bảng tuần hoàn', exact: true }).click();
   const chooserPromise = page.waitForEvent('filechooser');
@@ -59,7 +60,7 @@ test('save and reopen a .stemsim file', async ({ page }) => {
 });
 
 test('a broken project file is rejected with a message', async ({ page }) => {
-  await page.goto('/');
+  await openLab(page);
   const chooserPromise = page.waitForEvent('filechooser');
   await page.getByRole('button', { name: 'Tệp' }).click();
   await page.getByRole('menuitem', { name: /Mở tệp/ }).click();
@@ -99,7 +100,7 @@ test('sources & assumptions page lists datasets and review status', async ({ pag
 });
 
 test('in-app updates are explained as desktop-only in the browser build', async ({ page }) => {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('button', { name: 'Tệp' }).click();
   await page.getByRole('menuitem', { name: 'Kiểm tra cập nhật' }).click();
   await expect(page.getByText('Cập nhật trong app chỉ có ở bản cài trên máy.')).toBeVisible();
@@ -120,13 +121,16 @@ test('first run: level → subjects → age question → tour (once, can be skip
   const subjects = page.getByRole('dialog', { name: 'Bạn quan tâm môn nào?' });
   await subjects.getByRole('button', { name: /^Sinh học/ }).click();
   await subjects.getByRole('button', { name: 'Xong' }).click();
-  await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
   const gate = page.getByRole('dialog', { name: 'Trước khi bắt đầu' });
   await expect(gate).toBeVisible();
   await expect(page.locator('.tour')).toHaveCount(0);
   await gate.getByRole('button', { name: 'Tôi chưa đủ 18 tuổi' }).click();
   // Under 18 in the main edition: no AI, so no "Kết nối AI" step.
   await expect(page.getByRole('dialog', { name: /Kết nối AI/ })).toHaveCount(0);
+  // The tour explains the lab, so it starts when the learner opens it.
+  await expect(page.locator('.tour')).toHaveCount(0);
+  await enterLab(page);
+  await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
   const tour = page.getByRole('dialog', { name: 'Chào mừng đến STEM Sim Lab' });
   await expect(tour).toBeVisible();
   await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();
@@ -134,12 +138,13 @@ test('first run: level → subjects → age question → tour (once, can be skip
   await page.locator('.tour').getByRole('button', { name: 'Bỏ qua' }).click();
   await expect(page.locator('.tour')).toHaveCount(0);
   await page.reload();
+  await enterLab(page);
   await expect(page.locator('.tour')).toHaveCount(0);
   await context.close();
 });
 
 test('undo works for physics parameters too', async ({ page }) => {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('button', { name: 'Ném xiên', exact: true }).click();
   const field = page.getByRole('spinbutton').first();
   await expect(field).toHaveValue('15');
@@ -154,7 +159,7 @@ test('undo works for physics parameters too', async ({ page }) => {
 });
 
 test('manual mode offers chemistry and biology topics too', async ({ page }) => {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('button', { name: 'Tự dựng cảnh (không dùng AI)' }).click();
   const dialog = page.getByRole('dialog', { name: 'Tự dựng cảnh' });
   const select = dialog.getByRole('combobox', { name: 'Chủ đề' });

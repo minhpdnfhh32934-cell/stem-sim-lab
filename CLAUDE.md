@@ -34,6 +34,28 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 - Legal points are researched with citations in `docs/LEGAL_COMPLIANCE.md`; never conclude legally
   on the user's behalf — list what the user/teacher must confirm.
 
+## Fork exceptions — "Thầy AI" fork (user decision 2026-10-12)
+
+This copy is a fork distributed as a ZIP (`stem-sim-lab-ai-v*.zip`), not the upstream repo. The user
+accepted, **for this fork only**:
+
+- **Local AI:** Gemma runs inside the app (Transformers.js + ONNX Runtime Web on WebGPU, worker in
+  `src/ai/webGemma*.ts`). Ollama is not used (the old `gemma.rs` was removed in 0.4.0). No other
+  local model may be added without asking.
+- **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
+  (`tests/tauri-config.test.ts` pins the list). Nothing else.
+- Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
+- Design and data-flow notes: `docs/AI_TUTOR.md`. Engine choice: `src/app/ai/engineChoice.ts`
+  (a pre-selected Gemma without a model never blocks a learner who connected an API; a Gemma the
+  learner chose never silently goes online). Think sends the draft with `noFallback`. Wikipedia
+  lookup is opt-in (`chatStore.webLookup`, main edition only). External pages on desktop open via
+  `open_known_page` (fixed allow-list, `src-tauri/src/links.rs`).
+- Gemma files live in OPFS (`src/ai/modelStore.ts`, Transformers.js `customCache`): Cache Storage
+  refuses ~300 MB entries. The worker needs both ORT asyncify files in `public/ort/` (`.mjs` + `.wasm`)
+  and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
+  HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
+- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`.
+
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
 1. **The LLM never computes and never invents simulations.** It only (a) extracts a problem into
@@ -114,7 +136,8 @@ tests/            app-level tests, golden set, e2e
 - Vite 8 uses Rolldown/Oxc. Do not set `build.minify: 'esbuild'` (esbuild is no longer bundled).
 - Lucide is 1.x (`lucide-react`). Check that an icon name exists before using it.
 - `tauri.conf.json` has a separate, looser `devCsp` (Vite's inline React-refresh preamble and the
-  HMR websocket). The production `csp` stays strict. Never loosen the production CSP.
+  HMR websocket). The production `csp` stays strict. Never loosen the production CSP (fork
+  exception above: HuggingFace model hosts + Wikipedia only).
 - `dangerousDisableAssetCspModification: ["style-src"]` is required: otherwise Tauri adds hashes
   to `style-src`, browsers then ignore `'unsafe-inline'`, and KaTeX's inline `style="top:…"` is
   blocked (every subscript drops below the line in the packaged app). Test:
@@ -299,6 +322,8 @@ Progress log: `docs/PROGRESS.md`.
   - [x] 3b.4 learner UI (home, onboarding, Basic/Advanced, levels, quantity cards)
   - [x] 3b.5 learn/ (predict–observe–explain, challenges, step hints, progress/badges, break reminder)
   - [x] 3b.6 two installers + update channels, `docs/USER_TESTING.md`
+- [x] Fork "Thầy AI" 0.4.0 (2026-10-12): launch page, chat bubble/page, Think, Gemma WebGPU,
+      knowledge library, data-flow box — see `docs/AI_TUTOR.md`, `docs/PROGRESS.md`
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
   - [~] T0 specs (`docs/TEACHSCRIPT.md`, `docs/AI_TEACHER_ARCHITECTURE.md`, `docs/VOICE_BENCHMARK.md`),
     sketch route `src/teacher/` (dev builds only) — **waiting for user approval**

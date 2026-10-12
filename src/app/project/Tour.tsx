@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useOnboardingPhase } from '@/app/learner/onboardingPhase';
+import { useNavigationStore } from '@/app/navigationStore';
 import { endTour, useProjectUi } from './uiStore';
 
 interface Step {
@@ -27,8 +28,10 @@ const GAP = 12;
 export function Tour() {
   const t = useT();
   const step = useProjectUi((s) => s.tourStep);
-  // Onboarding (level, subjects), the safety question and "Kết nối AI" come first.
-  const waiting = useOnboardingPhase() !== 'tour';
+  // Onboarding (level, subjects), the safety question and "Kết nối AI" come first; the tour
+  // explains the lab, so it waits until the learner opens "Phòng thí nghiệm".
+  const inLab = useNavigationStore((s) => s.screen === 'lab');
+  const waiting = useOnboardingPhase() !== 'tour' || !inLab;
   const [rect, setRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardH, setCardH] = useState(180);
@@ -50,7 +53,9 @@ export function Tour() {
   }, [current]);
 
   useEffect(() => {
-    if (!current) return;
+    // While the tour waits (onboarding, launch page, teacher page) Esc belongs to whatever
+    // is on screen: it must not silently end a tour the learner has not seen yet.
+    if (!current || waiting) return;
     cardRef.current?.querySelector<HTMLButtonElement>('.btn--accent')?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') endTour();
@@ -59,7 +64,7 @@ export function Tour() {
     return () => {
       window.removeEventListener('keydown', onKey);
     };
-  }, [current]);
+  }, [current, waiting]);
 
   if (step === null || !current || waiting) return null;
   const last = step === STEPS.length - 1;

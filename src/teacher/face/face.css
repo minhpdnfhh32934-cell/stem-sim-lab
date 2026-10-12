@@ -1,0 +1,48 @@
+.teacher-face {
+  position: relative;
+  width: 64%;
+  height: 64%;
+}
+
+.teacher-face__head {
+  fill: var(--teacher-ring-bg, var(--bg-panel));
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+.teacher-face__brow,
+.teacher-face__mouth {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.teacher-face__eye {
+  fill: var(--text);
+}
+
+.teacher-face__mouth-open {
+  fill: var(--text);
+}
+
+.chat-panel__avatar .teacher-face,
+.chat-message__avatar .teacher-face,
+.chat-bubble__face {
+  width: 26px;
+  height: 26px;
+}
+
+/* The collapsed bubble sits on the accent background: draw the face in white. */
+.chat-bubble .teacher-face__head {
+  fill: transparent;
+  stroke: white;
+}
+.chat-bubble .teacher-face__brow,
+.chat-bubble .teacher-face__mouth {
+  stroke: white;
+}
+.chat-bubble .teacher-face__eye,
+.chat-bubble .teacher-face__mouth-open {
+  fill: white;
+}

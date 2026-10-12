@@ -104,10 +104,26 @@ thử nghiệm.
 
 Chưa tìm được đường dây khủng hoảng cho người lớn hoạt động 24/7 toàn quốc đã kiểm chứng.
 
+## 2d. Bản fork Thầy AI: Gemma trên máy, HuggingFace, Wikipedia (ghi 2026-10-12)
+
+Đây là **ngoại lệ do người dùng quyết định cho bản fork** (CLAUDE.md gốc cấm AI cục bộ). Vòng này
+**chưa tra cứu lại** điều khoản; chỉ ghi sự thật kỹ thuật và điều cần xác nhận:
+
+- Mô hình Gemma có điều khoản riêng của Google ("Gemma Terms of Use" và chính sách cấm sử dụng,
+  ai.google.dev/gemma/terms). App hiện liên kết tới trang này phía trên danh sách mô hình.
+- Tệp mô hình tải từ các kho công khai `onnx-community/*` trên HuggingFace (không cần tài khoản,
+  không gửi câu hỏi). Điều khoản dịch vụ HuggingFace với người dưới 18 **chưa kiểm tra**.
+- Khi dùng Gemma (không bật Think, không bật tra Wikipedia), câu hỏi và câu trả lời ở lại trên máy.
+- Tra Wikipedia là tùy chọn, mặc định tắt, chỉ có ở bản chính (bản THPT luôn tắt); khi bật, câu hỏi
+  được gửi tới vi/en.wikipedia.org. Nội dung Wikipedia là nội dung cộng đồng (giấy phép CC BY-SA) —
+  app ghi rõ nguồn và lời nhắc đối chiếu.
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng
-  bấm), kiểm tra cập nhật trên GitHub.
+  bấm), kiểm tra cập nhật trên GitHub, tải mô hình Gemma (người dùng bấm "Tải mô hình", chỉ tải
+  xuống) và tra Wikipedia (chỉ khi người dùng bật). Cài đặt → Thầy AI có ô "Dữ liệu của em đi
+  đâu?" liệt kê theo cài đặt hiện tại.
 - Gửi cho nhà cung cấp AI: nội dung đề bài và kết quả đã tính. Đề có dấu hiệu thông tin cá nhân,
   nội dung không phù hợp, hoặc dấu hiệu khủng hoảng **không được gửi** (`src/safety/moderation.ts`).
 - Khóa API: kho khóa của hệ điều hành (Rust), trang web không bao giờ thấy khóa.
@@ -142,3 +158,8 @@ Chưa tìm được đường dây khủng hoảng cho người lớn hoạt đ�
     sản phẩm và có người nghe.
 12. Âm thanh Gemini có thủy vân SynthID; giọng Azure phải được công bố là giọng tổng hợp — nhãn
     "Thầy/cô AI" trên màn hình có đủ không.
+13. (Bản fork) Người dùng/nhà trường đã đọc điều khoản Gemma của Google và xác nhận việc học sinh
+    dùng mô hình Gemma trên máy phù hợp (mục 2d).
+14. (Bản fork) Việc tải tệp mô hình từ HuggingFace trên máy của học sinh có phù hợp với quy định của
+    nhà trường không; có cần tải sẵn trên máy của trường thay vì để học sinh tự tải không.
+15. (Bản fork) Có cho phép học sinh dưới 18 bật tra Wikipedia không (hiện bản THPT đã tắt hẳn).

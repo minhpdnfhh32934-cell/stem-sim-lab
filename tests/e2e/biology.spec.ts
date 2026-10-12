@@ -1,5 +1,6 @@
 declare const process: { env: Record<string, string | undefined> };
 import { expect, test, type Page } from '@playwright/test';
+import { openLab } from './nav';
 
 const TOPICS = [
   'Nguyên phân',
@@ -16,7 +17,7 @@ const TOPICS = [
 ];
 
 async function openBiology(page: Page) {
-  await page.goto('/');
+  await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
 }
 
