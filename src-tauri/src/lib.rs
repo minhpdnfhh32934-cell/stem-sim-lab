@@ -1,4 +1,4 @@
-//! Rust backend for STEM Sim Lab.
+//! Rust backend for SimLab.
 //!
 //! - `app_info`: build information
 //! - `ai_*`: AI gateway (`AIProvider`: Gemini in the main edition, Claude in both; keys in
@@ -79,5 +79,5 @@ pub fn run() {
             webupdate::open_releases_page
         ])
         .run(context)
-        .expect("error while running STEM Sim Lab");
+        .expect("error while running SimLab");
 }

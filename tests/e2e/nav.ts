@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 /**
- * The app starts on the launch page (two entries: "Phòng thí nghiệm" and "Thầy AI").
+ * The app starts on the launch page (two entries: "Phòng thí nghiệm" and "AI Teacher").
  * Lab tests enter the simulator the way a learner does: by clicking the lab card.
  */
 export async function enterLab(page: Page): Promise<void> {

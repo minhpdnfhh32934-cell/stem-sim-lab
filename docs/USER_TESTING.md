@@ -6,10 +6,10 @@ là bằng chứng mạnh cho hồ sơ — **không sửa, không làm tròn đ�
 
 ## 1. Hai nhóm
 
-| Nhóm                 | Số người | Bản cài                                              | Mục tiêu kiểm tra                                                 |
-| -------------------- | -------- | ---------------------------------------------------- | ----------------------------------------------------------------- |
-| **A. Học sinh THPT** | 5–10 em  | `STEM Sim Lab THPT_…_x64-setup.exe` (bản thử nghiệm) | mô phỏng và giao diện có dễ hiểu ở trình độ _Nền tảng_ không      |
-| **B. Sinh viên**     | 5–10 bạn | `STEM Sim Lab_…_x64-setup.exe` (bản chính)           | toàn bộ luồng: lần mở đầu, nhập key Gemini của chính mình, đọc đề |
+| Nhóm                 | Số người | Bản cài                                        | Mục tiêu kiểm tra                                                 |
+| -------------------- | -------- | ---------------------------------------------- | ----------------------------------------------------------------- |
+| **A. Học sinh THPT** | 5–10 em  | `SimLab THPT_…_x64-setup.exe` (bản thử nghiệm) | mô phỏng và giao diện có dễ hiểu ở trình độ _Nền tảng_ không      |
+| **B. Sinh viên**     | 5–10 bạn | `SimLab_…_x64-setup.exe` (bản chính)           | toàn bộ luồng: lần mở đầu, nhập key Gemini của chính mình, đọc đề |
 
 Vì sao 5–10 người: theo Nielsen & Landauer (1993), khoảng 5 người đã cho thấy phần lớn chỗ vướng
 lớn; thêm người chủ yếu để thấy chỗ vướng có lặp lại hay không.

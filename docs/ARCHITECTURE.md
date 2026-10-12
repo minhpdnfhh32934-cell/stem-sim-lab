@@ -1,4 +1,4 @@
-# Architecture — STEM Sim Lab
+# Architecture — SimLab
 
 Status: **Phase 0** (scaffold). Sections marked _(planned)_ describe the target design from
 `MASTER_PROMPT.md` and are filled in as each phase lands.
@@ -107,7 +107,7 @@ Problem text ──► src/ai/pipeline.ts ──► LlmTransport ──► Rust 
   `__EDITION__ === 'main'` branch. Checks: Rust test `pilot_edition_has_no_gemini` (looks for the
   Gemini host in the compiled test program) and `npm run build:pilot`
   (`scripts/edition-bundle.mjs`, fails if `dist/` contains the Gemini host or key header). The
-  pilot uses its own keychain service ("STEM Sim Lab Pilot").
+  pilot uses its own keychain service ("SimLab Pilot").
 - **Kết nối AI** (`AiSettings.tsx`): `ai_test_key` sends one tiny request with the chosen model
   and classifies the answer (`classify_key_test` / `src/ai/keyTest.ts`: 2xx ok, 401/403 or
   `API_KEY_INVALID` bad key, 404 bad model, 429/402/"credit balance" quota, network error offline).

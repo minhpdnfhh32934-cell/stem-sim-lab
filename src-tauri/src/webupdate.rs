@@ -1,6 +1,6 @@
 //! In-app updates of the web part of the app (HTML, JavaScript, CSS and scientific data).
 //!
-//! Almost every change to STEM Sim Lab is in the web part. Updating it does not install a
+//! Almost every change to SimLab is in the web part. Updating it does not install a
 //! new executable, so Windows Smart App Control / SmartScreen never has to approve anything:
 //! the app downloads a signed zip, checks it, unpacks it into the app data folder and serves
 //! it instead of the copy built into the executable.

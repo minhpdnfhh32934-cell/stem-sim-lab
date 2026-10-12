@@ -3,7 +3,7 @@ import type { Messages } from '../types';
 /** English UI strings. Must have exactly the same keys as `vi.ts` (checked by the type). */
 const en: Messages = {
   app: {
-    name: 'STEM Sim Lab',
+    name: 'SimLab',
     tagline: 'Physics · Chemistry · Biology simulations',
   },
   subjects: {
@@ -207,7 +207,7 @@ const en: Messages = {
       age: 'Under Groq terms, the account holder must be 18 or older. In the high-school pilot, a parent or teacher creates the key and the supervisor enters it.',
       step1:
         'Press "Open the key page" below (or type console.groq.com/keys in a browser) and sign in.',
-      step2: 'Press "Create API Key", give it any name (e.g. "STEM Sim Lab") and confirm.',
+      step2: 'Press "Create API Key", give it any name (e.g. "SimLab") and confirm.',
       step3: 'Copy the new key (it is shown only once).',
       step4:
         'Back here: paste it into the API key field (Ctrl+V), press "Save key", then "Test key".',
@@ -570,7 +570,7 @@ const en: Messages = {
     skip: 'Skip',
     done: 'Get started',
     counter: '{i}/{n}',
-    welcomeTitle: 'Welcome to STEM Sim Lab',
+    welcomeTitle: 'Welcome to SimLab',
     welcomeBody:
       'Physics, chemistry and biology simulations that run fully on this computer. Every number is computed by the program, with a Science Card stating the model and sources.',
     subjectTitle: 'Pick a subject',
@@ -825,7 +825,7 @@ const en: Messages = {
   },
   landing: {
     eyebrow: 'Explore science by doing',
-    title: 'Welcome to STEM Sim Lab',
+    title: 'Welcome to SimLab',
     subtitle:
       'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
     labTitle: 'Laboratory',
@@ -839,7 +839,7 @@ const en: Messages = {
   chat: {
     label: 'Chat with the AI teacher',
     title: 'AI Teacher',
-    product: 'STEM Sim Lab',
+    product: 'SimLab',
     model: 'Gemma · {model}',
     clear: 'Clear conversation',
     voice: 'Teacher reads answers aloud',
@@ -847,7 +847,7 @@ const en: Messages = {
     close: 'Close chat',
     expand: 'Open AI Teacher page',
     contextToggle: 'Use current screen information',
-    contextHint: 'Only shares STEM Sim Lab data currently open',
+    contextHint: 'Only shares SimLab data currently open',
     engineLabel: 'Choose AI model',
     cloud: 'API',
     gemma: 'Local Gemma',
@@ -958,7 +958,7 @@ const en: Messages = {
     flowModelDownload:
       'When you press “Download model”: files come from HuggingFace (no question is sent).',
     flowScreen:
-      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is STEM Sim Lab data, not a screenshot.',
+      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is SimLab data, not a screenshot.',
     download: 'Download model',
     downloaded: 'Downloaded',
     deleteModel: 'Delete Gemma',
@@ -1041,7 +1041,7 @@ const en: Messages = {
     mappingPending: 'Mapping topics to curriculum lessons is waiting for a teacher’s review.',
   },
   onboarding: {
-    label: 'Getting started with STEM Sim Lab',
+    label: 'Getting started with SimLab',
     step: 'Step {i}/{n}',
     levelTitle: 'Which level do you want to study?',
     levelBody: 'Choose a level so the app can suggest topics. You can change it at any time.',

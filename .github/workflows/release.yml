@@ -169,14 +169,14 @@ jobs:
         with:
           tag_name: v${{ needs.check.outputs.version }}
           target_commitish: ${{ github.sha }}
-          name: STEM Sim Lab ${{ needs.check.outputs.version }}
+          name: SimLab ${{ needs.check.outputs.version }}
           make_latest: true
           body: |
             ${{ inputs.notes }}
 
-            **Đã cài STEM Sim Lab:** mở menu ☰ → *Kiểm tra cập nhật* (không cần tải tệp nào).
-            **Cài lần đầu (sinh viên, bản chính):** tải `STEM Sim Lab_…_x64-setup.exe` (Windows 10/11, 64-bit).
-            **Buổi thử nghiệm có giám sát với học sinh THPT:** tải `STEM Sim Lab THPT_…_x64-setup.exe`
+            **Đã cài SimLab:** mở menu ☰ → *Kiểm tra cập nhật* (không cần tải tệp nào).
+            **Cài lần đầu (sinh viên, bản chính):** tải `SimLab_…_x64-setup.exe` (Windows 10/11, 64-bit).
+            **Buổi thử nghiệm có giám sát với học sinh THPT:** tải `SimLab THPT_…_x64-setup.exe`
             (Claude, không có mã Gemini; khóa API do người giám sát nhập bằng PIN).
           files: |
             out/stem-sim-lab-windows/*.exe

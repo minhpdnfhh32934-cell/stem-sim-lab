@@ -1,4 +1,4 @@
-# Phiếu đồng ý tham gia thử nghiệm STEM Sim Lab (mẫu)
+# Phiếu đồng ý tham gia thử nghiệm SimLab (mẫu)
 
 > Mẫu để nhà trường/phụ huynh tham khảo, **không phải văn bản pháp lý đã được luật sư duyệt**.
 > Trước khi dùng, xem các điểm cần xác nhận ở `docs/LEGAL_COMPLIANCE.md` mục 6.
@@ -11,7 +11,7 @@
 
 ## 1. Ứng dụng làm gì
 
-STEM Sim Lab mô phỏng Vật lí, Hóa học, Sinh học. Phần mô phỏng chạy hoàn toàn trên máy. Phần AI
+SimLab mô phỏng Vật lí, Hóa học, Sinh học. Phần mô phỏng chạy hoàn toàn trên máy. Phần AI
 (đọc đề bài, diễn giải kết quả bằng lời) gửi **nội dung đề bài** đến dịch vụ Claude của công ty
 Anthropic (Mỹ). Khi Claude hết lượt hoặc hết tiền, ứng dụng có thể chuyển sang dịch vụ **Groq**
 (Mỹ, gói miễn phí) nếu người giám sát đã nhập khóa Groq. Mọi con số do chương trình tính, không do

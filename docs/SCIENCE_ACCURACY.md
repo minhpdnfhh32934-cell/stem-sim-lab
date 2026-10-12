@@ -1,4 +1,4 @@
-# Độ chính xác khoa học — STEM Sim Lab
+# Độ chính xác khoa học — SimLab
 
 > Tài liệu nộp kèm hồ sơ dự thi: mô hình, sai số, nguồn và cách kiểm chứng của mọi mô phỏng.
 > Phiên bản app 0.1.0 — gồm bộ giải (§3), Vật lý (§4), AI đọc đề (§5), Hóa học (§6), Sinh học (§7),

@@ -13,7 +13,7 @@ interface Note {
 
 /**
  * Short study notes so the built-in library is useful before learners import files. They were
- * written for the "Thầy AI" fork and are not yet checked by a teacher: every note is 'pending'.
+ * written for the "AI Teacher" fork and are not yet checked by a teacher: every note is 'pending'.
  */
 const STARTER: Note[] = [
   {

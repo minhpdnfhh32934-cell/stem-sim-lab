@@ -9,10 +9,10 @@
 
 ## Hai bản cài (3b.6)
 
-| Bản                     | Bộ cài                                | Dành cho                                      | Kênh cập nhật           | Dữ liệu và khóa AI                 |
-| ----------------------- | ------------------------------------- | --------------------------------------------- | ----------------------- | ---------------------------------- |
-| **Bản chính**           | `STEM Sim Lab_<v>_x64-setup.exe`      | sinh viên 18+ (Gemini mặc định, Claude tùy ý) | `web-update.json`       | `%APPDATA%\vn.stemsimlab.desktop\` |
-| **Bản thử nghiệm THPT** | `STEM Sim Lab THPT_<v>_x64-setup.exe` | buổi thử nghiệm có giám sát với học sinh THPT | `web-update-pilot.json` | `%APPDATA%\vn.stemsimlab.pilot\`   |
+| Bản                     | Bộ cài                          | Dành cho                                      | Kênh cập nhật           | Dữ liệu và khóa AI                 |
+| ----------------------- | ------------------------------- | --------------------------------------------- | ----------------------- | ---------------------------------- |
+| **Bản chính**           | `SimLab_<v>_x64-setup.exe`      | sinh viên 18+ (Gemini mặc định, Claude tùy ý) | `web-update.json`       | `%APPDATA%\vn.stemsimlab.desktop\` |
+| **Bản thử nghiệm THPT** | `SimLab THPT_<v>_x64-setup.exe` | buổi thử nghiệm có giám sát với học sinh THPT | `web-update-pilot.json` | `%APPDATA%\vn.stemsimlab.pilot\`   |
 
 - Hai bản có tên và mã định danh khác nhau, nên **cài song song được** trên cùng một máy và không
   dùng chung dữ liệu, khóa AI hay mã PIN.

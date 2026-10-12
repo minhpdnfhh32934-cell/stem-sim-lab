@@ -32,26 +32,22 @@ describe('App shell (Phase 0)', () => {
   it('starts on the landing page; the brand returns there; the lab home follows (A4.2)', async () => {
     const user = userEvent.setup();
     render(<App />);
-    expect(
-      screen.getByRole('heading', { name: 'Chào mừng đến với STEM Sim Lab' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Chào mừng đến với SimLab' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Phòng thí nghiệm/ }));
     expect(screen.getByRole('radiogroup', { name: 'Môn học' })).toBeInTheDocument();
     expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Nhập đề bài hoặc câu hỏi…' })).toBeInTheDocument();
-    expect(screen.getAllByText('Thầy AI').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('AI Teacher').length).toBeGreaterThan(0);
     // Nothing open yet: no stage, timeline, inspector or graphs.
     expect(screen.queryByRole('region', { name: 'Khung mô phỏng' })).not.toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Điều khiển thời gian' })).not.toBeInTheDocument();
     expect(
       screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
     ).not.toBeInTheDocument();
-    // The "STEM Sim Lab" brand goes back to the landing page.
+    // The "SimLab" brand goes back to the landing page.
     await user.click(screen.getByRole('button', { name: 'Về trang chủ' }));
-    expect(
-      screen.getByRole('heading', { name: 'Chào mừng đến với STEM Sim Lab' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Chào mừng đến với SimLab' })).toBeInTheDocument();
   });
 
   it('the landing page has clear Lab and Teacher entries', async () => {

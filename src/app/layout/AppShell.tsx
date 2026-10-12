@@ -200,7 +200,7 @@ export function AppShell() {
       ) : (
         <StatusBar />
       )}
-      {/* The launch page already has its own "Thầy AI" entry: the bubble is for the lab. */}
+      {/* The launch page already has its own "AI Teacher" entry: the bubble is for the lab. */}
       {!presentation && !teacher && !landing && <ChatBubble />}
     </div>
   );

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { openLab } from './nav';
 
-/** "Thầy AI": launch page entry, the full teacher page and the floating chat bubble. */
+/** "AI Teacher": launch page entry, the full teacher page and the floating chat bubble. */
 
 const overflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -13,7 +13,7 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   await page.locator('.launch-card--teacher').click();
   const screen = page.getByRole('region', { name: 'Dạy học bằng AI' });
   await expect(screen).toBeVisible();
-  await expect(page.getByText('Thầy/cô AI', { exact: true })).toBeVisible();
+  await expect(page.getByText('AI Teacher', { exact: true })).toBeVisible();
   // The screen-context switch belongs to the bubble only.
   await expect(page.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).toHaveCount(0);
   // No API key and no local model: a clear notice, never a pretend answer.
@@ -37,8 +37,8 @@ test('chat bubble: screen toggle off by default, Think explains the missing seco
   page,
 }) => {
   await openLab(page);
-  await page.getByRole('button', { name: 'Thầy AI', exact: true }).click();
-  const panel = page.getByRole('region', { name: 'Trò chuyện với Thầy AI' });
+  await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
   await expect(panel).toBeVisible();
   const toggle = panel.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' });
   await expect(toggle).not.toBeChecked();
@@ -47,7 +47,7 @@ test('chat bubble: screen toggle off by default, Think explains the missing seco
 
   // Closing and opening the bubble again starts with the toggle off.
   await page.getByRole('button', { name: 'Đóng chat' }).first().click();
-  await page.getByRole('button', { name: 'Thầy AI', exact: true }).click();
+  await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
   await expect(
     panel.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' }),
   ).not.toBeChecked();
@@ -128,8 +128,8 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
   });
 
   await openLab(page);
-  await page.getByRole('button', { name: 'Thầy AI', exact: true }).click();
-  const panel = page.getByRole('region', { name: 'Trò chuyện với Thầy AI' });
+  await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
   // The pre-selected Gemma has no model here, so the connected API answers — and the panel says so.
   await expect(panel.getByRole('combobox', { name: 'Chọn mô hình AI' })).toHaveValue('cloud');
   await expect(panel.getByText(/sẽ được gửi tới: Gemini/)).toBeVisible();
@@ -144,7 +144,7 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
   });
   await page.reload();
   await page.getByRole('button', { name: /Phòng thí nghiệm/ }).click();
-  await page.getByRole('button', { name: 'Thầy AI', exact: true }).click();
+  await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
   await panel.getByRole('button', { name: /Think/ }).click();
   await expect(panel.getByText(/Groq \(miễn phí\) \(rà soát\)/)).toBeVisible();
   await panel.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Lực là gì?');

@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "STEM Sim Lab",
+  "productName": "SimLab",
   "version": "0.4.1",
   "identifier": "vn.stemsimlab.desktop",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "STEM Sim Lab",
+        "title": "SimLab",
         "width": 1280,
         "height": 720,
         "minWidth": 1024,

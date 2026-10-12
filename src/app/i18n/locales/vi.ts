@@ -5,7 +5,7 @@
  */
 const vi = {
   app: {
-    name: 'STEM Sim Lab',
+    name: 'SimLab',
     tagline: 'Mô phỏng Vật lý · Hóa học · Sinh học',
   },
   subjects: {
@@ -209,7 +209,7 @@ const vi = {
       age: 'Theo điều khoản của Groq, người tạo tài khoản phải từ 18 tuổi trở lên. Ở bản thử nghiệm THPT, phụ huynh hoặc thầy cô tạo khóa và người giám sát nhập vào máy.',
       step1:
         'Bấm "Mở trang tạo khóa" bên dưới (hoặc gõ console.groq.com/keys vào trình duyệt) và đăng nhập.',
-      step2: 'Bấm "Create API Key", đặt tên bất kỳ (ví dụ "STEM Sim Lab") rồi xác nhận.',
+      step2: 'Bấm "Create API Key", đặt tên bất kỳ (ví dụ "SimLab") rồi xác nhận.',
       step3: 'Sao chép khóa vừa hiện ra (khóa chỉ hiện một lần).',
       step4: 'Quay lại đây: dán khóa vào ô khóa API (Ctrl+V), bấm "Lưu khóa" rồi "Kiểm tra key".',
       open: 'Mở trang tạo khóa',
@@ -570,7 +570,7 @@ const vi = {
     skip: 'Bỏ qua',
     done: 'Bắt đầu',
     counter: '{i}/{n}',
-    welcomeTitle: 'Chào mừng đến STEM Sim Lab',
+    welcomeTitle: 'Chào mừng đến SimLab',
     welcomeBody:
       'Mô phỏng Vật lý, Hóa học, Sinh học chạy hoàn toàn trên máy. Mọi con số đều do chương trình tính, có Thẻ Khoa học ghi rõ mô hình và nguồn.',
     subjectTitle: 'Chọn môn',
@@ -790,11 +790,11 @@ const vi = {
     suggestedTitle: 'Gợi ý cho trình độ {level}',
     noSuggestions:
       'Trình độ này đang được xây dựng. Chọn trình độ Nền tảng ở Thư viện để học ngay.',
-    teacherTitle: 'Thầy AI',
+    teacherTitle: 'AI Teacher',
     teacherBody:
-      'Thầy AI hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
+      'AI Teacher hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
     comingSoon: 'Sắp có',
-    teacherOpen: 'Mở Thầy AI',
+    teacherOpen: 'Mở AI Teacher',
     noAiNote: 'Không có AI hay mất mạng vẫn học được: mở chủ đề trong Thư viện hoặc Tự dựng cảnh.',
     cameraButton: 'Chụp đề bài',
   },
@@ -815,7 +815,7 @@ const vi = {
     blockedHint:
       'Nếu trình duyệt đã chặn hẳn, hãy bấm biểu tượng ổ khóa/cài đặt trang bên cạnh thanh địa chỉ, chuyển Camera thành “Cho phép”, rồi bấm Thử lại.',
     unsupported: 'Thiết bị này không hỗ trợ camera.',
-    needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → Thầy AI.',
+    needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → AI Teacher.',
     needVision:
       'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
@@ -824,39 +824,39 @@ const vi = {
   },
   landing: {
     eyebrow: 'Học khoa học bằng khám phá',
-    title: 'Chào mừng đến với STEM Sim Lab',
+    title: 'Chào mừng đến với SimLab',
     subtitle:
       'Chọn cách em muốn học hôm nay. Mô phỏng, dữ liệu và trợ lý học tập nằm trong cùng một không gian.',
     labTitle: 'Phòng thí nghiệm',
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
-    teacherTitle: 'Thầy AI',
+    teacherTitle: 'AI Teacher',
     teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
   },
   chat: {
-    label: 'Trò chuyện với Thầy AI',
-    title: 'Thầy AI',
-    product: 'STEM Sim Lab',
+    label: 'Trò chuyện với AI Teacher',
+    title: 'AI Teacher',
+    product: 'SimLab',
     model: 'Gemma · {model}',
     clear: 'Xóa cuộc trò chuyện',
     voice: 'Thầy đọc to câu trả lời',
     voiceHint: 'Bật/tắt giọng nói của thầy',
     close: 'Đóng chat',
-    expand: 'Mở trang Thầy AI',
+    expand: 'Mở trang AI Teacher',
     contextToggle: 'Lấy thông tin từ màn hình',
-    contextHint: 'Chỉ chia sẻ dữ liệu STEM Sim Lab đang mở',
+    contextHint: 'Chỉ chia sẻ dữ liệu SimLab đang mở',
     engineLabel: 'Chọn mô hình AI',
     cloud: 'API',
     gemma: 'Gemma cục bộ',
     noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
-      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → Thầy AI, hoặc chọn “API”.',
+      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
     settings: 'Cài đặt',
     localOnly: 'Câu hỏi được xử lý cục bộ trên máy này.',
     noWebgpuNotice:
       'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “API” và kết nối khóa trong Cài đặt.',
     thinkNoVerifier:
-      'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → Thầy AI.',
+      'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     sentToWithScreen:
@@ -864,7 +864,7 @@ const vi = {
     welcomeTitle: 'Hỏi bài theo cách của em',
     welcomeBody: 'Bật “Lấy thông tin từ màn hình” nếu câu hỏi liên quan đến mô phỏng đang mở.',
     welcomeBodyTeacher:
-      'Đặt câu hỏi hoặc chọn một gợi ý bên dưới. Thầy AI sẽ giải thích từng bước dựa trên thư viện kiến thức.',
+      'Đặt câu hỏi hoặc chọn một gợi ý bên dưới. AI Teacher sẽ giải thích từng bước dựa trên thư viện kiến thức.',
     starters: {
       one: 'Giải thích giúp em ý chính của chủ đề này.',
       two: 'Em nên bắt đầu giải bài này từ đâu?',
@@ -890,7 +890,7 @@ const vi = {
         'AI chưa được bật cho hồ sơ này. Hoàn tất bước an toàn trong Cài đặt để tiếp tục.',
       noCloudKey: 'Chưa có khóa API cho mô hình trả lời. Hãy nhập khóa trong Cài đặt.',
       gemmaMissing:
-        'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → Thầy AI để kiểm tra.',
+        'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI Teacher để kiểm tra.',
       webgpu:
         'Trình duyệt hoặc máy này không hỗ trợ WebGPU nên chưa chạy được Gemma ngay trên máy.',
       crisis:
@@ -900,7 +900,7 @@ const vi = {
       unsafe: 'Mình chỉ có thể hỗ trợ nội dung học tập phù hợp.',
       sameProvider: 'Để Think kiểm tra chéo, hãy chọn một nhà cung cấp khác với API trả lời chính.',
       noVerifierKey:
-        'Chưa có khóa API thứ hai. Mở Cài đặt → Thầy AI để kết nối nhà cung cấp kiểm tra.',
+        'Chưa có khóa API thứ hai. Mở Cài đặt → AI Teacher để kết nối nhà cung cấp kiểm tra.',
       filtered:
         'Câu trả lời bị ẩn vì không qua được bộ lọc an toàn. Hãy thử hỏi lại hoặc báo giáo viên.',
       screenPersonal:
@@ -909,7 +909,7 @@ const vi = {
     },
   },
   chatSettings: {
-    title: 'Thầy AI · Gemma và thư viện kiến thức',
+    title: 'AI Teacher · Gemma và thư viện kiến thức',
     intro: 'Chọn mô hình trả lời, cấu hình API kiểm tra chéo và quản lý tài liệu kiến thức cục bộ.',
     gemmaModel: 'Phiên bản Gemma',
     gemma270m: '270M · nhẹ nhất',
@@ -936,7 +936,7 @@ const vi = {
       'Tắt sẵn. Khi bật, câu hỏi của em được gửi tới Wikipedia để lấy một đoạn tham khảo (nội dung cộng đồng, cần đối chiếu).',
     flowTitle: 'Dữ liệu của em đi đâu?',
     flowLocalTitle: 'Lưu trên máy này',
-    flowLocalChat: 'Lịch sử trò chuyện với Thầy AI (xóa bằng nút thùng rác).',
+    flowLocalChat: 'Lịch sử trò chuyện với AI Teacher (xóa bằng nút thùng rác).',
     flowLocalDocs: 'Tài liệu em tự thêm và {count} ghi chú có sẵn.',
     flowLocalModel: 'Mô hình Gemma đã tải; khi dùng Gemma, câu trả lời được tạo ngay trên máy.',
     flowLocalKeyDesktop: 'Khóa API: trong kho bảo mật của hệ điều hành.',
@@ -950,7 +950,7 @@ const vi = {
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',
     flowModelDownload: 'Khi bấm “Tải mô hình”: máy tải tệp từ HuggingFace (không gửi câu hỏi).',
     flowScreen:
-      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của STEM Sim Lab, không phải ảnh chụp màn hình.',
+      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
     downloaded: 'Đã tải',
     deleteModel: 'Xóa Gemma',
@@ -1033,7 +1033,7 @@ const vi = {
       'Việc xếp chủ đề theo bài trong chương trình/sách giáo khoa đang chờ giáo viên duyệt.',
   },
   onboarding: {
-    label: 'Làm quen với STEM Sim Lab',
+    label: 'Làm quen với SimLab',
     step: 'Bước {i}/{n}',
     levelTitle: 'Bạn muốn học ở trình độ nào?',
     levelBody: 'Chọn một trình độ để app gợi ý chủ đề phù hợp. Bạn đổi được bất cứ lúc nào.',
@@ -1129,7 +1129,7 @@ const vi = {
     layoutLabel: 'Xem thử bố cục',
     layoutTalk: 'Trò chuyện',
     layoutBoard: 'Giảng trên bảng',
-    aiLabel: 'Thầy/cô AI',
+    aiLabel: 'AI Teacher',
     talkCaption: 'Chào em! Hôm nay mình học gì nhỉ?',
     boardCaption: 'Mình cùng ghi lại ý chính và suy luận từng bước lên bảng nhé.',
     startTitle: 'Hôm nay muốn học gì?',
@@ -1158,7 +1158,7 @@ const vi = {
       lost: 'Em chưa hiểu chỗ này',
     },
     connectTitle: 'Kết nối AI để học với thầy/cô',
-    connectBody: 'Thầy/cô AI cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',
+    connectBody: 'AI Teacher cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',
     connect: 'Mở Kết nối AI',
     notYet: 'Tính năng này sẽ được bổ sung sau',
   },

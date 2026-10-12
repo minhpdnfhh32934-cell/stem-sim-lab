@@ -1,6 +1,6 @@
-# Thầy AI and local Gemma
+# AI Teacher and local Gemma
 
-This fork adds a launch page (“Phòng thí nghiệm” / “Thầy AI”), an AI tutor page and a floating
+This fork adds a launch page (“Phòng thí nghiệm” / “AI Teacher”), an AI tutor page and a floating
 chat bubble in the lab. The chat is text-based. It never takes screenshots or inspects other
 applications.
 
@@ -12,8 +12,8 @@ applications.
 ## Navigation
 
 - The app opens on the launch page with two entries: **Phòng thí nghiệm** (the existing topic
-  browser and simulations) and **Thầy AI** (the full tutor page).
-- The **STEM Sim Lab** brand in the top bar always returns to the launch page. Esc leaves the tutor
+  browser and simulations) and **AI Teacher** (the full tutor page).
+- The **SimLab** brand in the top bar always returns to the launch page. Esc leaves the tutor
   page.
 - The chat bubble is shown in the lab only (the launch page already has its own entry).
 - The first-run tour explains the lab, so it starts the first time the learner opens the lab.
@@ -23,12 +23,12 @@ applications.
 The chat has an engine selector (“API” or “Gemma cục bộ”). New installs pre-select Gemma, but a
 pre-selected default never blocks anyone:
 
-| Selected | Gemma model ready | Learner picked it | Who answers (chat **and** “Phân tích đề”)          |
-| -------- | ----------------- | ----------------- | -------------------------------------------------- |
-| API      | –                 | –                 | the provider from Settings → Kết nối AI            |
-| Gemma    | yes               | –                 | Gemma on this computer                             |
-| Gemma    | no                | no (default)      | the connected API (selector shows “API”)           |
-| Gemma    | no                | yes               | nothing is sent; a notice opens Settings → Thầy AI |
+| Selected | Gemma model ready | Learner picked it | Who answers (chat **and** “Phân tích đề”)             |
+| -------- | ----------------- | ----------------- | ----------------------------------------------------- |
+| API      | –                 | –                 | the provider from Settings → Kết nối AI               |
+| Gemma    | yes               | –                 | Gemma on this computer                                |
+| Gemma    | no                | no (default)      | the connected API (selector shows “API”)              |
+| Gemma    | no                | yes               | nothing is sent; a notice opens Settings → AI Teacher |
 
 The rule lives in `src/app/ai/engineChoice.ts` (tested). Before, a fresh install with a Gemini key
 could not analyse a problem until a Gemma model was downloaded.
@@ -90,7 +90,7 @@ HuggingFace answers model downloads with a redirect to its CDN (`us.aws.cdn.hf.c
 
 Sizes are the q4 files from the HuggingFace API (2026-10-12) and may change. On-device answers use a
 short prompt (2 library excerpts of ≤ 700 characters, last 4 messages) and at most 384 new tokens:
-small models lose the question under a long prompt and are slow per token. Settings → Thầy AI shows, per model: download (with live
+small models lose the question under a long prompt and are slow per token. Settings → AI Teacher shows, per model: download (with live
 percent and bytes, or a waiting bar while the total is unknown), **Hủy tải**, delete, and a link to
 the model page; the Gemma terms link sits above the list. A model counts as ready only after the
 whole download **and** a successful load; cancelled, failed or crashed downloads are never marked
@@ -124,16 +124,16 @@ in this app's local storage on this computer. Relevant excerpts are selected wit
 
 Imported files are treated as reference data, never as instructions. The tutor names the sources it
 used below its answer. AI answers can still be wrong; numerical simulation results continue to come
-from STEM Sim Lab's deterministic engines.
+from SimLab's deterministic engines.
 
-**Wikipedia lookup is opt-in** (Settings → Thầy AI, off by default, main edition only): when on,
+**Wikipedia lookup is opt-in** (Settings → AI Teacher, off by default, main edition only): when on,
 the question text is sent to `vi`/`en.wikipedia.org` to fetch one labelled excerpt. Earlier fork
 versions queried Wikipedia on every question without telling the learner; v4 of the chat settings
 turns it off for everyone.
 
 ## Where data goes
 
-Settings → Thầy AI shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
+Settings → AI Teacher shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
 the chat shows one line naming where the next question will go.
 
 | Stays on this computer                    | May be sent online                                                |
@@ -149,7 +149,7 @@ the chat shows one line naming where the next question will go.
 
 The speaker button in the chat header turns the teacher's voice on and off; the state is
 remembered. Each new answer is read with the device's built-in voices — free, no key, no network.
-Settings → Thầy AI → “Giọng nói của thầy” offers four styles, a voice picker and a preview. Asking a
+Settings → AI Teacher → “Giọng nói của thầy” offers four styles, a voice picker and a preview. Asking a
 new question, clearing history, leaving the page or closing the panel stops the speech.
 
 ## Teacher face
