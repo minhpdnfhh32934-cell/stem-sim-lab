@@ -2,6 +2,27 @@
 
 Cập nhật lần cuối: 2026-10-12 · Nguồn: Claude Cowork
 
+## 0. Cập nhật tối 12/10/2026 (máy A) — đọc trước mục 1 đến 7
+
+Các mục bên dưới viết lúc bản 0.3.0, nay **một số đã cũ**:
+
+- **Thầy AI đã vào `main` và đã phát hành:** PR #7 gộp bản 0.4.1 (trang chủ hai lối vào, trang Thầy AI
+  thật chứ không còn là màn phác thảo chỉ có ở bản dev, bong bóng chat, Think kiểm tra chéo, thư viện
+  kiến thức, giọng đọc). Release **v0.4.1** đã phát hành (phần lõi đổi nên máy cũ phải cài lại một lần).
+- **Quy tắc "không AI chạy trên máy" đã có ngoại lệ:** người dùng giữ Gemma chạy ngay trong app bằng
+  WebGPU (Transformers.js, mô hình lưu trong OPFS) và CSP mở cho HuggingFace/Wikipedia. Chi tiết:
+  `CLAUDE.md` mục ngoại lệ Thầy AI (đang được PR #3 cập nhật) và `docs/AI_TUTOR.md`.
+- **Câu hỏi mới chỉ người dùng trả lời được:** Gemma hiện chạy cả trong bản THPT (dưới 18 tuổi), trong
+  khi PROMPT_PHAN_2 A2 giới hạn bản này chỉ dùng Claude; xem `docs/LEGAL_COMPLIANCE.md` mục 2d và mục
+  13 đến 15.
+- **Mục 5 "Việc cần làm tiếp" cần xem lại:** T1 (TeachScript, bộ điều phối, giọng nói) được lập kế
+  hoạch trước khi có trang Thầy AI dạng chat. Máy A nên lập lại kế hoạch T1 dựa trên phần đã có
+  (`src/teacher/chat`, `src/teacher/voice`, `src/teacher/face`) sau khi người dùng trả lời các câu ở
+  mục 6.
+- **Nhật ký phiên chung:** từ PR #9, mỗi máy ghi việc đã làm và việc còn lại vào Google Doc "STEM Sim
+  Lab: Nhật ký phiên làm việc Máy A và Máy B" (lệnh `/sl-log`).
+- **PR đang chờ người dùng gộp (12/10):** #3, #5, #9, #10, #11, #12, #13 và PR này (#6).
+
 ## 1. Tóm tắt một đoạn
 
 Dự án STEM Sim Lab đã xong giai đoạn 0–7 và giai đoạn chuyển đổi 3b (3b.1 → 3b.6). Bản **0.3.0** đã
@@ -79,3 +100,4 @@ Mọi mục dưới đây đã được đưa lên `main` và kiểm tra CI. Chi
 ## Nhật ký bàn giao
 
 - 2026-10-12: Bàn giao đầu tiên từ Cowork — 3b.1–3b.6 và v0.3.0 xong, T0 chờ duyệt, T1 chưa bắt đầu.
+- 2026-10-12 (tối): máy A thêm mục 0 — Thầy AI 0.4.1 đã gộp và phát hành, ngoại lệ AI chạy trên máy, các PR đang chờ.
