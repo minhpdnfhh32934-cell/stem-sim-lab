@@ -14,6 +14,9 @@ export type PlaybackSpeed = (typeof PLAYBACK_SPEEDS)[number];
 
 export type AiStatus = 'offline' | 'cloud';
 
+/** Settings sections that other screens can jump to. */
+export type SettingsSection = 'ai' | 'teacher';
+
 /**
  * Session state of the workspace (not persisted).
  * Phase 0: only UI state. From Phase 1 the simulation clock is driven by the engine worker;
@@ -33,8 +36,12 @@ export interface WorkspaceState {
   /** Science Card of the open simulation (null when none). */
   scienceCard: ScienceCardData | null;
   settingsOpen: boolean;
+  /** Section to scroll to when Settings opens (e.g. from the chat's "Cài đặt" button). */
+  settingsFocus: SettingsSection | null;
 
   setSettingsOpen: (open: boolean) => void;
+  /** Opens Settings scrolled to one section, so learners land on the right controls. */
+  openSettingsAt: (section: SettingsSection) => void;
   setSubject: (subject: Subject) => void;
   setProblemText: (text: string) => void;
   setActiveTool: (tool: StageTool) => void;
@@ -54,9 +61,13 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
   aiStatus: 'offline',
   scienceCard: null,
   settingsOpen: false,
+  settingsFocus: null,
 
   setSettingsOpen: (settingsOpen) => {
-    set({ settingsOpen });
+    set({ settingsOpen, settingsFocus: null });
+  },
+  openSettingsAt: (settingsFocus) => {
+    set({ settingsOpen: true, settingsFocus });
   },
   setSubject: (subject) => {
     set({ subject });

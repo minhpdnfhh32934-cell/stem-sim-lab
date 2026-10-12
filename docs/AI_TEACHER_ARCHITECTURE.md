@@ -1,5 +1,11 @@
 # AI Teacher ("Dạy học bằng AI") — architecture (PROMPT_PHAN_2 Part B)
 
+> **Implementation note (2026-10-09 fork):** this document describes the earlier proposed voice,
+> whiteboard and TeachScript architecture. The current fork implements a text tutor, optional
+> local Gemma running inside the app (WebGPU, no Ollama) and the model/knowledge controls
+> documented in `docs/AI_TUTOR.md`.
+> The voice pipeline below remains a future design and is not part of the current chat implementation.
+
 > **Tóm tắt tiếng Việt.** Tách **"bộ não"** (AI quyết định dạy gì, viết kịch bản TeachScript) khỏi
 > **"bộ diễn"** (chương trình tất định: giọng nói, khuôn mặt, vòng sóng, bảng trắng, con trỏ). Đồng
 > hồ chủ là âm thanh đang phát. Mọi con số đến từ công cụ tính toán của app. Không có AI chạy trên
@@ -124,22 +130,23 @@ interface FaceRenderer {
 - The CSP `connect-src` is unchanged unless the Azure JS SDK path is approved (then the Azure
   regional speech host is added to production CSP — a security-relevant change, listed for approval).
 
-## 7. Screen and layout (B4) — T0 sketch
+## 7. Screen and layout (B4) — text tutor in this copy
 
-The route is implemented in T0 as a **non-functional sketch** (`src/teacher/screen/`), clearly
-labelled "Bản phác thảo — chưa hoạt động". It is reachable from the home card **only in development
-builds** (`import.meta.env.DEV`; E2E and screenshots) until approved; released installers keep the
-"Sắp có" card:
+This copy turns the source screen sketch into a working text tutor while retaining its original
+visual ideas:
 
-- **Talk layout:** large ring in the centre, label "Thầy/cô AI", captions below, minimal control bar.
-- **Board layout:** ring shrinks to the top-left, whiteboard takes most of the area; 400–600 ms
-  eased transition (instant with `prefers-reduced-motion`).
-- Control bar: mic (hold to talk), "Giơ tay", pause/continue, speed, captions, quick chips
-  (Giải thích lại · Chậm hơn · Thêm ví dụ · Đơn giản hơn · Em chưa hiểu chỗ này) — all disabled in the
-  sketch. Thin lesson progress bar on top; transcript drawer closed by default.
-- Start sheet (B4.1b): "Hôm nay muốn học gì?" + "Học trong bao lâu?" (15/30/45 phút).
-- Main edition without a key: friendly invitation + button to "Kết nối AI" (no error text).
-- Targets ≥ 44 px, works at 1366×768 and with touch.
+- **Talk layout:** a large, original vector teacher face with a breathing wave ring sits beside the
+  conversation.
+- **Board layout:** the ring moves to a compact left column and the conversation area gains a quiet
+  lined-board treatment. The change animates over about 480 ms and respects `prefers-reduced-motion`.
+- Quick request chips (Giải thích lại · Chậm hơn · Thêm ví dụ · Đơn giản hơn · Em chưa hiểu chỗ này)
+  send their text as follow-up questions. A small four-step marker counts assistant replies; it is
+  not a measure of lesson mastery.
+- The answer provider, API notice and text composer remain available on the page. The optional
+  screen-context switch is shown only in the floating chat bubble and is disabled on this route.
+
+Voice input/output, a structured TeachScript whiteboard, lesson planning and transcript controls from
+the full B4 roadmap have not been implemented in this text-tutor copy.
 
 ## 8. Tests per phase (B11)
 

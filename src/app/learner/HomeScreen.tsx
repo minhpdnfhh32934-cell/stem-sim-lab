@@ -1,9 +1,18 @@
-import { ArrowRight, Award, GraduationCap, PencilRuler, Play, Sparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  Award,
+  Camera,
+  GraduationCap,
+  PencilRuler,
+  Play,
+  Sparkles,
+} from 'lucide-react';
 import { earnedBadges } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
 import { useId, type KeyboardEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { openManual, useAnalyzeStore } from '@/app/ai/analyze';
+import { usePhotoCapture } from '@/app/ai/usePhotoCapture';
 import { submitProblem } from '@/app/ai/submit';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
@@ -14,14 +23,9 @@ import { SUBJECTS, useWorkspaceStore, type Subject } from '@/app/workspaceStore'
 import { useAiStore } from '@/ai/aiStore';
 import { cx } from '@/ui/cx';
 import { openTeacher } from '@/teacher/teacherStore';
+import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useProfileStore } from './profileStore';
 import './learner.css';
-
-/**
- * The AI teacher interface sketch (T0) is reachable only in development builds until the user
- * approves it; released installers keep the "Sắp có" card.
- */
-const TEACHER_PREVIEW = import.meta.env.DEV;
 
 /**
  * Home screen "Hôm nay học gì?" (PROMPT_PHAN_2 A4.2), shown while no topic is open:
@@ -114,17 +118,12 @@ export function HomeScreen() {
         <div className="home__teacher">
           <GraduationCap size={22} strokeWidth={1.5} aria-hidden="true" />
           <div>
-            <p className="home__teacher-title">
-              {t('home.teacherTitle')}
-              <span className="home__soon">{t('home.comingSoon')}</span>
-            </p>
+            <p className="home__teacher-title">{t('home.teacherTitle')}</p>
             <p className="home__note">{t('home.teacherBody')}</p>
           </div>
-          {TEACHER_PREVIEW && (
-            <button type="button" className="btn home__teacher-open" onClick={openTeacher}>
-              {t('home.teacherOpen')}
-            </button>
-          )}
+          <button type="button" className="btn home__teacher-open" onClick={openTeacher}>
+            {t('home.teacherOpen')}
+          </button>
         </div>
 
         <p className="home__note home__footnote">{t('home.noAiNote')}</p>
@@ -179,13 +178,17 @@ function ProblemBox() {
   );
   const running = useAnalyzeStore((s) => s.phase === 'running');
   const ai = useAiStore(useShallow((s) => ({ provider: s.provider, status: s.status })));
-  const needsKey = ai.provider !== 'off' && ai.status === 'noKey';
-  const canAnalyze = ai.provider !== 'off' && !running && problemText.trim().length > 0;
+  const gemmaEngine = useAnalysisEngine() !== 'cloud';
+  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !gemmaEngine;
+  const canAnalyze =
+    (ai.provider !== 'off' || gemmaEngine) && !running && problemText.trim().length > 0;
+  const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
+    usePhotoCapture();
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      submitProblem(problemText);
+      void submitProblem(problemText);
     }
   };
 
@@ -212,7 +215,7 @@ function ProblemBox() {
           className="btn btn--accent"
           disabled={!canAnalyze && !needsKey}
           onClick={() => {
-            submitProblem(problemText);
+            void submitProblem(problemText);
           }}
         >
           <Sparkles size={16} strokeWidth={1.75} aria-hidden="true" />
@@ -229,7 +232,29 @@ function ProblemBox() {
           <PencilRuler size={16} strokeWidth={1.75} aria-hidden="true" />
           {t('home.manual')}
         </button>
+        <button
+          type="button"
+          className="btn"
+          aria-label={t('home.cameraButton')}
+          title={t('home.cameraButton')}
+          disabled={running || cameraBusy}
+          onClick={openCamera}
+        >
+          <Camera size={16} strokeWidth={1.75} aria-hidden="true" />
+          {t('home.cameraButton')}
+        </button>
       </div>
+      {cameraOpen && (
+        <CameraDialog
+          open={cameraOpen}
+          busy={cameraBusy}
+          error={cameraError}
+          onClose={closeCamera}
+          onCapture={(photo) => {
+            void onPhoto(photo);
+          }}
+        />
+      )}
     </div>
   );
 }

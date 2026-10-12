@@ -28,12 +28,30 @@ describe('tauri.pilot.conf.json (second installer, 3b.6)', () => {
   });
 });
 
+const ALLOWED_REMOTES = [
+  '*.hf.co',
+  'cas-bridge.xethub.huggingface.co',
+  'cdn-lfs.huggingface.co',
+  'en.wikipedia.org',
+  'huggingface.co',
+  'vi.wikipedia.org',
+].sort();
+
+const remotes = (csp: string) => [...csp.matchAll(/https:\/\/([^\s;]+)/g)].map((m) => m[1]).sort();
+
 describe('tauri.conf.json security', () => {
   const sec = conf.app.security;
 
-  it('keeps the production CSP strict (no inline scripts, no remote hosts)', () => {
+  it('keeps the production CSP strict (no inline scripts, only the model hosts)', () => {
     expect(sec.csp).toContain("script-src 'self' 'wasm-unsafe-eval';");
-    expect(sec.csp).not.toMatch(/https?:\/\/(?!ipc\.localhost)/);
+    // The in-app Gemma engine downloads model files from HuggingFace, which redirects to its
+    // CDN (e.g. us.aws.cdn.hf.co, checked 2026-10-12), plus the opt-in Wikipedia lookup.
+    // These are the only remote hosts allowed — nothing else (fork exception, CLAUDE.md).
+    expect(remotes(sec.csp)).toEqual(ALLOWED_REMOTES);
+  });
+
+  it('the dev CSP allows the same model hosts, so `tauri dev` can download a model', () => {
+    expect(remotes(sec.devCsp)).toEqual(ALLOWED_REMOTES);
   });
 
   it("lets KaTeX's inline style attributes work in the packaged app", () => {

@@ -1,5 +1,189 @@
 /* Home screen, onboarding and level picker (PROMPT_PHAN_2 A4). */
 
+.launch {
+  position: relative;
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  place-items: center;
+  overflow: auto;
+  padding: clamp(24px, 7vh, 72px) 24px;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      color-mix(in srgb, var(--accent-soft) 65%, transparent),
+      transparent 58%
+    ),
+    var(--bg-stage);
+}
+/* Animated science glow blobs: dark mode only, purely decorative. */
+.launch__glow {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+:root[data-theme='dark'] .launch__glow {
+  display: block;
+}
+.launch__blob {
+  position: absolute;
+  width: 44vmax;
+  height: 44vmax;
+  border-radius: 50%;
+  opacity: 0.5;
+  filter: blur(70px);
+  animation: launch-blob-drift 26s ease-in-out infinite alternate;
+}
+.launch__blob--1 {
+  top: -14vmax;
+  left: -10vmax;
+  background: radial-gradient(circle, rgb(56 130 246 / 42%), transparent 68%);
+}
+.launch__blob--2 {
+  top: 8vh;
+  right: -12vmax;
+  background: radial-gradient(circle, rgb(168 85 247 / 38%), transparent 68%);
+  animation-duration: 32s;
+  animation-delay: -8s;
+}
+.launch__blob--3 {
+  bottom: -16vmax;
+  left: 22vw;
+  background: radial-gradient(circle, rgb(34 211 238 / 32%), transparent 68%);
+  animation-duration: 29s;
+  animation-delay: -15s;
+}
+.launch__blob--4 {
+  top: 30vh;
+  left: -14vmax;
+  background: radial-gradient(circle, rgb(52 211 153 / 26%), transparent 68%);
+  animation-duration: 36s;
+  animation-delay: -4s;
+}
+@keyframes launch-blob-drift {
+  from {
+    transform: translate3d(-6vmax, -3vmax, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(7vmax, 4vmax, 0) scale(1.12);
+  }
+  to {
+    transform: translate3d(-3vmax, 7vmax, 0) scale(0.94);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch__blob {
+    animation: none;
+  }
+}
+.launch__inner {
+  position: relative;
+  width: min(100%, 850px);
+  text-align: center;
+}
+.launch__eyebrow {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+.launch__title {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.launch__subtitle {
+  max-width: 58ch;
+  margin: 0 auto;
+  color: var(--text-muted);
+  font-size: var(--text-content);
+}
+.launch__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: clamp(26px, 5vh, 48px);
+}
+.launch-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  min-height: 154px;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl, 18px);
+  background: var(--bg-panel);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 160ms var(--ease-out),
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.launch-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md, var(--shadow-sm));
+}
+.launch-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.launch-card__icon {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.launch-card--teacher .launch-card__icon {
+  background: color-mix(in srgb, var(--teacher-warm) 17%, var(--bg-panel));
+  color: var(--teacher-warm);
+}
+.launch-card__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.launch-card__copy strong {
+  font-size: var(--text-lg);
+}
+.launch-card__copy span {
+  color: var(--text-muted);
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+.launch-card__arrow {
+  color: var(--text-muted);
+}
+.launch__privacy {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin: var(--space-5) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+@media (max-width: 700px) {
+  .launch__cards {
+    grid-template-columns: 1fr;
+  }
+  .launch-card {
+    min-height: 126px;
+  }
+}
+
 .subject--physics {
   --subject: var(--subject-physics);
 }
@@ -420,4 +604,66 @@
 .home__badge-desc {
   color: var(--text-muted);
   font-size: var(--text-md);
+}
+
+/* Camera capture dialog (photographing a problem). */
+.camera-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(8, 12, 20, 0.45);
+}
+.camera-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+}
+.camera-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.camera-dialog__title {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 650;
+}
+.camera-dialog__preview {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #000;
+}
+.camera-dialog__preview video,
+.camera-dialog__preview img {
+  display: block;
+  width: 100%;
+  max-height: 46vh;
+  object-fit: contain;
+}
+.camera-dialog__preview video.is-mirrored {
+  transform: scaleX(-1);
+}
+.camera-dialog__error {
+  margin: 0;
+  color: var(--danger);
+  font-size: var(--text-sm);
+}
+.camera-dialog__footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
 }

@@ -32,6 +32,12 @@ export interface ChatRequest {
   dailyCap?: number;
   /** Filled in by the transport from Settings ("Dự phòng khi hết lượt"). */
   fallback?: Fallback;
+  /**
+   * Never switch to the fallback provider for this call. Used by Think, so the draft and the
+   * review always come from the two providers the learner chose (the reviewer never checks
+   * its own answer). Stays on the web side; the gateway just gets no `fallback`.
+   */
+  noFallback?: boolean;
 }
 
 export interface ChatResponse {

@@ -3,12 +3,15 @@ import { getDictionary } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
 import { useWorkspaceStore } from '@/app/workspaceStore';
-import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
+import { DEFAULT_MODELS, DEFAULT_PROVIDER, useAiStore } from '@/ai/aiStore';
 import { getReading, putReading, type Reading } from '@/ai/cache';
 import { manualDraft, type Draft } from '@/ai/draft';
 import { analyzeProblem, type Stage } from '@/ai/pipeline';
-import { getTransport } from '@/ai/transport';
+import { getTransport, type LlmTransport } from '@/ai/transport';
+import { gemmaTransport } from '@/ai/gemmaTransport';
+import { analysisEngine } from './engineChoice';
 import { AiError, toAiError, type AiErrorCode, type Provider } from '@/ai/types';
+import { useChatStore } from '@/teacher/chat/chatStore';
 import { CATALOG } from '@/app/catalog';
 import { openTopic } from '@/app/topics';
 import { useModuleStore } from '@/modules/moduleStore';
@@ -109,6 +112,31 @@ export function resolveAi(): Promise<ResolvedAi> {
   return Promise.resolve({ provider, model, timeoutSecs: ai.timeoutSecs });
 }
 
+interface AnalysisEngine extends ResolvedAi {
+  transport: LlmTransport;
+}
+
+/**
+ * Picks the engine for "Phân tích đề": the local Gemma model when the learner chose
+ * the Gemma engine (no cloud key needed), otherwise the configured cloud provider.
+ */
+export async function resolveAiForAnalysis(): Promise<AnalysisEngine> {
+  const chat = useChatStore.getState();
+  const engine = await analysisEngine();
+  if (engine === 'gemma-missing') throw new AiError('unavailable', 'gemma');
+  if (engine === 'gemma') {
+    const ai = useAiStore.getState();
+    return {
+      provider: ai.provider === 'off' ? DEFAULT_PROVIDER : ai.provider,
+      model: chat.gemmaModel,
+      timeoutSecs: ai.timeoutSecs,
+      transport: gemmaTransport,
+    };
+  }
+  const ai = await resolveAi();
+  return { ...ai, transport: getTransport() };
+}
+
 /**
  * Turns an HTTP error from the provider into a code the dialog can explain in simple words
  * (the Rust gateway reports "429 Too Many Requests: …", the browser transport "429").
@@ -164,11 +192,13 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
       useAnalyzeStore.setState({ phase: 'error', stage: null, error: blocked });
       return;
     }
-    const ai = await resolveAi();
+    const ai = await resolveAiForAnalysis();
     const topics = getDictionary('vi').topics as Record<string, string>;
     const result = await analyzeProblem(text, {
-      transport: getTransport(),
-      ...ai,
+      transport: ai.transport,
+      provider: ai.provider,
+      model: ai.model,
+      timeoutSecs: ai.timeoutSecs,
       defaultGravity: useSettingsStore.getState().defaultGravity,
       topicTitles: topics,
       signal: ctrl.signal,

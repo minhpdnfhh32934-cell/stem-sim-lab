@@ -52,7 +52,7 @@ export function AiSettings() {
   const on = ai.provider !== 'off';
 
   return (
-    <fieldset className="settings-group">
+    <fieldset className="settings-group" id="settings-ai">
       <legend>
         <Bot size={15} strokeWidth={1.75} aria-hidden="true" />
         {t('settings.ai')}
@@ -90,7 +90,6 @@ export function AiSettings() {
 
       {on && <ModelField provider={ai.provider as Provider} />}
 
-      {on && !desktop && <p className="muted">{t('settings.aiCloudDesktopOnly')}</p>}
       {on && (
         <KeyArea
           provider={ai.provider as Provider}
@@ -438,7 +437,8 @@ function ModelField({ provider, label }: { provider: Provider; label?: string })
 
 /**
  * API key field: password input with a show/hide button (Ctrl+V works), save and delete. After
- * saving only "••••••••abcd" is shown; the key itself stays in the OS keychain (Rust).
+ * saving only "••••••••abcd" is shown. Desktop keeps the key in the OS keychain (Rust);
+ * on localhost/browser it lives in memory for this session only (gone on reload).
  */
 function KeyField({
   provider,
@@ -487,6 +487,7 @@ function KeyField({
     setError('');
     try {
       await getTransport().setKey(provider, key.trim());
+      window.dispatchEvent(new Event('stemsim:credentials-changed'));
       setKey('');
       setShow(false);
       await refreshHint();
@@ -499,6 +500,7 @@ function KeyField({
     setError('');
     try {
       await getTransport().deleteKey(provider);
+      window.dispatchEvent(new Event('stemsim:credentials-changed'));
       setHint(null);
       if (!fallback) void checkAiStatus();
     } catch (e) {
@@ -508,47 +510,43 @@ function KeyField({
 
   return (
     <>
-      {desktop && (
-        <div className="ai-settings__field">
-          <label htmlFor={inputId}>{label}</label>
-          <div className="ai-key">
-            <input
-              id={inputId}
-              type={show ? 'text' : 'password'}
-              autoComplete="off"
-              spellCheck={false}
-              value={key}
-              placeholder={hint ?? ''}
-              onChange={(e) => {
-                setKey(e.target.value);
-              }}
-            />
-            <IconButton
-              icon={show ? EyeOff : Eye}
-              label={show ? t('settings.aiKeyHide') : t('settings.aiKeyShow')}
-              active={show}
-              onClick={() => {
-                setShow((v) => !v);
-              }}
-              tooltipSide="left"
-            />
-          </div>
-        </div>
-      )}
-      <div className="ai-settings__actions">
-        {desktop && (
-          <button
-            type="button"
-            className="btn"
-            disabled={!key.trim()}
-            onClick={() => {
-              void save();
+      <div className="ai-settings__field">
+        <label htmlFor={inputId}>{label}</label>
+        <div className="ai-key">
+          <input
+            id={inputId}
+            type={show ? 'text' : 'password'}
+            autoComplete="off"
+            spellCheck={false}
+            value={key}
+            placeholder={hint ?? ''}
+            onChange={(e) => {
+              setKey(e.target.value);
             }}
-          >
-            <KeyRound size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiKeySave')}
-          </button>
-        )}
-        {desktop && hint && (
+          />
+          <IconButton
+            icon={show ? EyeOff : Eye}
+            label={show ? t('settings.aiKeyHide') : t('settings.aiKeyShow')}
+            active={show}
+            onClick={() => {
+              setShow((v) => !v);
+            }}
+            tooltipSide="left"
+          />
+        </div>
+      </div>
+      <div className="ai-settings__actions">
+        <button
+          type="button"
+          className="btn"
+          disabled={!key.trim()}
+          onClick={() => {
+            void save();
+          }}
+        >
+          <KeyRound size={14} strokeWidth={1.75} aria-hidden="true" /> {t('settings.aiKeySave')}
+        </button>
+        {hint && (
           <button
             type="button"
             className="btn"
@@ -573,7 +571,11 @@ function KeyField({
           {error}
         </p>
       )}
-      {desktop && <p className="muted small">{t('settings.aiKeyHint')}</p>}
+      {desktop ? (
+        <p className="muted small">{t('settings.aiKeyHint')}</p>
+      ) : (
+        <p className="muted small">{t('settings.aiSessionKey')}</p>
+      )}
     </>
   );
 }

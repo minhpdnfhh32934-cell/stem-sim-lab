@@ -6,6 +6,14 @@ viên và giám khảo các cuộc thi Khoa học Kỹ thuật.
 Nguyên tắc cốt lõi: **mọi con số do engine tính.** AI chỉ đọc đề và diễn giải kết quả. Mỗi mô
 phỏng có một _Thẻ Khoa học_ ghi rõ mô hình, giả định, nguồn và mức độ tin cậy.
 
+## Thầy AI
+
+Bản này có trang chủ mới với lối vào **Phòng thí nghiệm** và **Thầy AI**, bong bóng chat trong
+phòng thí nghiệm, tùy chọn chia sẻ ngữ cảnh mô phỏng, chế độ Think kiểm tra câu trả lời qua API
+thứ hai, thư viện kiến thức có thể nạp tệp và tùy chọn Gemma chạy ngay trong app bằng WebGPU
+(không cần Ollama). Xem
+[docs/AI_TUTOR.md](docs/AI_TUTOR.md) để biết yêu cầu cài đặt, quyền riêng tư và giới hạn.
+
 ![Giao diện Giai đoạn 0](docs/images/phase0-light.png)
 
 ## Bắt đầu nhanh

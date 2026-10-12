@@ -4,13 +4,16 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { goHome, openTopic } from '@/app/topics';
 import { useAiStore } from '@/ai/aiStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useChatStore } from './chat/chatStore';
 import TeacherScreen from './screen/TeacherScreen';
 import { closeTeacher, openTeacher, useTeacherStore } from './teacherStore';
 
-describe('"Dạy học bằng AI" route (T0 sketch)', () => {
+describe('"Dạy học bằng AI" screen', () => {
   beforeEach(() => {
     closeTeacher();
     useAiStore.setState({ status: 'ok' });
+    useChatStore.setState({ engine: 'cloud', messages: [] });
+    useWorkspaceStore.setState({ settingsOpen: false });
   });
 
   it('opening a topic or going home leaves the teacher screen', async () => {
@@ -23,38 +26,35 @@ describe('"Dạy học bằng AI" route (T0 sketch)', () => {
     expect(useTeacherStore.getState().open).toBe(false);
   });
 
-  it('is clearly labelled as a sketch and as an AI; controls do nothing yet', () => {
+  it('is clearly labelled as an AI assistant with a working chat panel', () => {
     openTeacher();
     render(<TeacherScreen />);
-    expect(screen.getByText('Bản phác thảo — chưa hoạt động')).toBeInTheDocument();
+    // Honest that it is an AI, never a person.
     expect(screen.getByText('Thầy/cô AI')).toBeInTheDocument();
-    const toolbar = screen.getByRole('toolbar', { name: 'Điều khiển buổi học' });
-    for (const b of toolbar.querySelectorAll('button')) {
-      expect(b).toHaveAttribute('aria-disabled', 'true');
-    }
-    expect(screen.getByRole('button', { name: 'Giơ tay' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Em chưa hiểu chỗ này' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Trò chuyện với Thầy AI' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Nhập câu hỏi' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Gửi câu hỏi' })).toBeInTheDocument();
   });
 
-  it('previews both layouts: ring in the centre, then ring + whiteboard', async () => {
+  it('switches between the talk and board layouts', async () => {
     const user = userEvent.setup();
     openTeacher();
     const { container } = render(<TeacherScreen />);
     const root = container.querySelector('.teacher');
     expect(root).toHaveAttribute('data-layout', 'talk');
-    expect(screen.getByText('Hôm nay muốn học gì?')).toBeInTheDocument();
     await user.click(screen.getByRole('radio', { name: 'Giảng trên bảng' }));
     expect(root).toHaveAttribute('data-layout', 'board');
-    expect(screen.getByRole('img', { name: 'Bảng trắng' })).toBeInTheDocument();
   });
 
-  it('without a key: a friendly invitation that opens "Kết nối AI" (B4.1b)', async () => {
+  it('without a cloud key: a notice that opens Settings (never a fake reply)', async () => {
     const user = userEvent.setup();
     useAiStore.setState({ status: 'noKey' });
-    useWorkspaceStore.setState({ settingsOpen: false });
     openTeacher();
     render(<TeacherScreen />);
-    await user.click(screen.getByRole('button', { name: 'Mở Kết nối AI' }));
+    expect(
+      await screen.findByText('Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.'),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Cài đặt' }));
     expect(useWorkspaceStore.getState().settingsOpen).toBe(true);
   });
 
@@ -65,5 +65,19 @@ describe('"Dạy học bằng AI" route (T0 sketch)', () => {
       window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     });
     expect(useTeacherStore.getState().open).toBe(false);
+  });
+
+  it('Esc that closes a dialog (e.g. Settings) does not also leave the page', () => {
+    openTeacher();
+    render(
+      <>
+        <TeacherScreen />
+        <dialog open>Cài đặt</dialog>
+      </>,
+    );
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    });
+    expect(useTeacherStore.getState().open).toBe(true);
   });
 });
