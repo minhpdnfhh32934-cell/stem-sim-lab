@@ -5,7 +5,7 @@
 //   npm run dev                                   (dev server, default http://localhost:1420)
 //   node scripts/teaching/eval-gemma.mjs --model gemma3-1b --profile <folder> --out <folder>
 //        [--variants legacy,current] [--decoding app] [--temperature 0] [--repeats 1]
-//        [--label <name>] [--only P1,C3] [--base <url>]
+//        [--label <name>] [--only P1,C3] [--base <url>] [--skip <file,...>] [--retries 0]
 //
 // --variants   legacy  = the on-device prompt of main before the 2026-10-13 audit (below);
 //              current = the live prompt, contextPrompt(question, 'vi', false, false, 'compact').
@@ -13,7 +13,13 @@
 //              app = the decoding the app uses now). The app must support the option.
 // --temperature 0 = greedy (default): the same prompt gives the same answer, so a difference
 //              between variants is not sampling noise. With sampling, use --repeats > 1.
-// --label      output file eval-<model>-<label>.json (default eval-<model>.json).
+// --label      output file eval-<model>-<label>.json (default eval-<model>.json). An existing
+//              file is never overwritten: pick a new label (results of an earlier run stay as
+//              they are).
+// --skip       earlier result files: every (question, variant, decoding, temperature, repeat)
+//              they hold with an answer is not run again (to finish an interrupted run).
+// --retries    0–2 more attempts for a run that failed for a non-GPU reason. Every attempt is
+//              kept; a failed attempt is never scored as an answer. A GPU failure stops the run.
 // Variants (and decodings) are interleaved per question so drift during the run (heat, other
 // load) hits them alike. Every result records how it was made, the system prompt included (for
 // blind judging and audits). Compare runs with scripts/teaching/compare.mjs; re-score a saved run
@@ -26,7 +32,8 @@
 // model (one-token warm-up); re-checked after every answer.
 // The model must already be downloaded in <profile> (the script never starts a big download).
 import { createRequire } from 'node:module';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gpuRefusal, groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
@@ -66,6 +73,8 @@ const decodings = list('decoding', 'app', ['legacy', 'app']);
 const temperature = Number(arg('temperature', '0'));
 const repeats = Number(arg('repeats', '1'));
 const label = arg('label');
+const skipFiles = arg('skip') ? String(arg('skip')).split(',').filter(Boolean) : [];
+const retries = Number(arg('retries', '0'));
 if (!profile)
   throw new Error('--profile <Edge profile folder that already holds the model> is required');
 if (!Number.isFinite(temperature) || temperature < 0 || temperature > 2)
@@ -74,11 +83,50 @@ if (!Number.isInteger(repeats) || repeats < 1 || repeats > 20)
   throw new Error('--repeats must be a whole number from 1 to 20');
 if (label !== undefined && !/^[\w.-]{1,40}$/.test(label))
   throw new Error('--label: letters, digits, "-", "_" and "." only');
+if (!Number.isInteger(retries) || retries < 0 || retries > 2)
+  throw new Error('--retries must be 0, 1 or 2');
 if (temperature === 0 && repeats > 1)
   console.warn('Greedy decoding (--temperature 0): repeats give the same answers (timing only).');
 mkdirSync(out, { recursive: true });
 const file = resolve(out, label ? `eval-${model}-${label}.json` : `eval-${model}.json`);
-const settings = { variants, decodings, temperature, repeats, label: label ?? null };
+if (existsSync(file))
+  throw new Error(`${file} already exists: choose another --label (earlier results are kept)`);
+const settings = {
+  variants,
+  decodings,
+  temperature,
+  repeats,
+  label: label ?? null,
+  skip: skipFiles,
+  retries,
+};
+/** One run of the evaluation, the same in every result file. */
+const runKey = (r) => [r.id, r.variant, r.decoding, r.temperature, r.repeat].join('|');
+const done = new Set(
+  skipFiles.flatMap((f) =>
+    JSON.parse(readFileSync(f, 'utf8'))
+      .results.filter((r) => r.ok && r.answer.trim())
+      .map(runKey),
+  ),
+);
+/** Load on the NVIDIA card before a run (another app using it slows Gemma down). */
+function gpuLoad() {
+  try {
+    const [util, memory] = execFileSync(
+      'nvidia-smi',
+      ['--query-gpu=utilization.gpu,memory.used', '--format=csv,noheader,nounits'],
+      { encoding: 'utf8', timeout: 5000 },
+    )
+      .trim()
+      .split(',')
+      .map((x) => Number(x.trim()));
+    return { util, memoryMiB: memory };
+  } catch {
+    return null;
+  }
+}
+/** A failure of the graphics card itself: never retried (audit GPU-01). */
+const GPU_FAILURE = /gpu|device|webgpu|blocked|crash|lost|dxgi|mapasync/i;
 
 const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
 const items = only ? set.items.filter((i) => only.split(',').includes(i.id)) : set.items;
@@ -177,89 +225,108 @@ for (const item of items) {
       // Alternate which variant goes first, so neither always runs right after a model switch.
       const order = (index + repeat) % 2 ? [...variants].reverse() : variants;
       for (const variant of order) {
-        const r = await page.evaluate(
-          async ({ item, variant, decoding, temperature, model, LEGACY_SYSTEM }) => {
-            const k = await import('/src/teacher/chat/knowledge.ts');
-            const c = await import('/src/teacher/chat/chatService.ts');
-            const g = await import('/src/ai/webGemma.ts');
-            const { useGpuStore } = await import('/src/ai/gpu.ts');
-            // The adapter the worker reported for its current model (a restarted worker reloads it).
-            const gpu = () => {
-              const info = useGpuStore.getState().gemmaInfo;
-              return info ? `${info.vendor} ${info.architecture}`.trim() : 'none';
-            };
-            let system;
-            if (variant === 'legacy') {
-              const notes = k
-                .searchKnowledge(item.question, 'vi', 4)
-                .map((n) => ({ ...n, text: n.text.slice(0, 1500) }));
-              system = notes.length
-                ? `${LEGACY_SYSTEM}\n\nTrích đoạn thư viện kiến thức cục bộ (tham khảo; có thể chưa bao quát):\n${notes.map((n) => `[${n.name}] ${n.text}`).join('\n\n')}`
-                : LEGACY_SYSTEM;
-            } else {
-              system = (await c.contextPrompt(item.question, 'vi', false, false, 'compact')).system;
-            }
-            const messages = [...(item.history ?? []), { role: 'user', content: item.question }];
-            const t0 = performance.now();
-            let first = null;
-            try {
-              const res = await g.webGemmaChat({
-                model,
-                system,
-                messages,
-                maxTokens: 1024,
-                temperature,
-                decoding,
-                onPartial: () => {
-                  if (first === null) first = performance.now() - t0;
-                },
-              });
-              return {
-                ok: true,
-                answer: res.content,
-                truncated: res.truncated,
-                // null when no piece was seen (never 0 ms).
-                firstMs: first === null ? null : Math.round(first),
-                ms: Math.round(performance.now() - t0),
-                promptChars: system.length,
-                system,
-                gpu: gpu(),
+        if (done.has(runKey({ id: item.id, variant, decoding, temperature, repeat }))) {
+          console.log(`${item.id} ${variant}/${decoding} #${repeat}: already done (skipped)`);
+          continue;
+        }
+        for (let attempt = 0; attempt <= retries; attempt += 1) {
+          const startedAt = new Date().toISOString();
+          const load = gpuLoad();
+          const r = await page.evaluate(
+            async ({ item, variant, decoding, temperature, model, LEGACY_SYSTEM }) => {
+              const k = await import('/src/teacher/chat/knowledge.ts');
+              const c = await import('/src/teacher/chat/chatService.ts');
+              const g = await import('/src/ai/webGemma.ts');
+              const { useGpuStore } = await import('/src/ai/gpu.ts');
+              // The adapter the worker reported for its current model (a restarted worker reloads it).
+              const gpu = () => {
+                const info = useGpuStore.getState().gemmaInfo;
+                return info ? `${info.vendor} ${info.architecture}`.trim() : 'none';
               };
-            } catch (e) {
-              return {
-                ok: false,
-                answer: '',
-                error: String(e),
-                firstMs: null,
-                ms: Math.round(performance.now() - t0),
-                promptChars: system.length,
-                system,
-                gpu: gpu(),
-              };
-            }
-          },
-          { item, variant, decoding, temperature, model, LEGACY_SYSTEM },
-        );
-        const score = scoreAnswer(item, r.answer);
-        results.push({
-          id: item.id,
-          subject: item.subject,
-          type: item.type,
-          variant,
-          decoding,
-          temperature,
-          repeat,
-          ...r,
-          score,
-        });
-        console.log(
-          `${item.id} ${variant}/${decoding} #${repeat}: ${r.ok ? 'ok' : 'FAIL'} ${r.ms} ms facts ${score.keyFacts.toFixed(2)} errors ${score.wrong.length} q ${score.checkQuestion} ask ${score.asksClarification} names ${score.namesMissing} steps ${score.steps === null ? '–' : pct(score.steps)} trap ${score.trapHandled} invented ${score.invented.length} foreign ${pct(score.foreignScript)} mangled ${score.mangled.length}`,
-        );
-        writeFileSync(
-          file,
-          JSON.stringify({ model, adapter, adapters, settings, results }, null, 2),
-        );
-        await refuseUnlessNvidia({ gemma: r.gpu });
+              let system;
+              if (variant === 'legacy') {
+                const notes = k
+                  .searchKnowledge(item.question, 'vi', 4)
+                  .map((n) => ({ ...n, text: n.text.slice(0, 1500) }));
+                system = notes.length
+                  ? `${LEGACY_SYSTEM}\n\nTrích đoạn thư viện kiến thức cục bộ (tham khảo; có thể chưa bao quát):\n${notes.map((n) => `[${n.name}] ${n.text}`).join('\n\n')}`
+                  : LEGACY_SYSTEM;
+              } else {
+                system = (await c.contextPrompt(item.question, 'vi', false, false, 'compact'))
+                  .system;
+              }
+              const messages = [...(item.history ?? []), { role: 'user', content: item.question }];
+              const t0 = performance.now();
+              let first = null;
+              try {
+                const res = await g.webGemmaChat({
+                  model,
+                  system,
+                  messages,
+                  maxTokens: 1024,
+                  temperature,
+                  decoding,
+                  onPartial: () => {
+                    if (first === null) first = performance.now() - t0;
+                  },
+                });
+                return {
+                  ok: true,
+                  answer: res.content,
+                  truncated: res.truncated,
+                  // null when no piece was seen (never 0 ms).
+                  firstMs: first === null ? null : Math.round(first),
+                  ms: Math.round(performance.now() - t0),
+                  promptChars: system.length,
+                  system,
+                  gpu: gpu(),
+                };
+              } catch (e) {
+                return {
+                  ok: false,
+                  answer: '',
+                  error: String(e),
+                  firstMs: null,
+                  ms: Math.round(performance.now() - t0),
+                  promptChars: system.length,
+                  system,
+                  gpu: gpu(),
+                };
+              }
+            },
+            { item, variant, decoding, temperature, model, LEGACY_SYSTEM },
+          );
+          const score = scoreAnswer(item, r.answer);
+          results.push({
+            id: item.id,
+            subject: item.subject,
+            type: item.type,
+            variant,
+            decoding,
+            temperature,
+            repeat,
+            attempt,
+            startedAt,
+            gpuLoad: load,
+            ...r,
+            score,
+          });
+          console.log(
+            `${item.id} ${variant}/${decoding} #${repeat}: ${r.ok ? 'ok' : 'FAIL'} ${r.ms} ms facts ${score.keyFacts.toFixed(2)} errors ${score.wrong.length} q ${score.checkQuestion} ask ${score.asksClarification} names ${score.namesMissing} steps ${score.steps === null ? '–' : pct(score.steps)} trap ${score.trapHandled} invented ${score.invented.length} foreign ${pct(score.foreignScript)} mangled ${score.mangled.length}`,
+          );
+          writeFileSync(
+            file,
+            JSON.stringify({ model, adapter, adapters, settings, results }, null, 2),
+          );
+          await refuseUnlessNvidia({ gemma: r.gpu });
+          if (r.ok) break;
+          if (GPU_FAILURE.test(r.error ?? '')) {
+            console.error(`Stopping: GPU failure (${r.error}); no retry (audit GPU-01).`);
+            await context.close();
+            process.exit(6);
+          }
+          if (attempt < retries) console.log(`  retry ${attempt + 1}/${retries} after: ${r.error}`);
+        }
       }
     }
   }
