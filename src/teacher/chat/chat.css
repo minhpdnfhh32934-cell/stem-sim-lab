@@ -13,8 +13,28 @@
   pointer-events: auto;
 }
 /* With the Inspector open, the bubble sits left of it so it never covers the Science Card. */
+/* In a topic the button sits in the stage's bottom-right corner: left of the Inspector and
+   above the graphs/tables and the timeline, so it never hides data. */
 .shell[data-inspector] .chat-bubble-root {
   right: calc(var(--right-w) + var(--splitter) + 16px);
+}
+.shell[data-bottom] .chat-bubble-root {
+  bottom: calc(var(--statusbar-h) + min(var(--bottom-h), 38vh) + var(--splitter) + 14px);
+}
+.shell[data-bottom][data-timeline] .chat-bubble-root {
+  bottom: calc(
+    var(--statusbar-h) + min(var(--bottom-h), 38vh) + var(--splitter) + var(--timeline-h) + 14px
+  );
+}
+/* The open chat uses the full height between the top bar and the status bar; the round button
+   hides meanwhile (the panel has its own close button). */
+.chat-bubble-root > .chat-panel {
+  position: fixed;
+  top: calc(var(--topbar-h) + 10px);
+  right: inherit;
+  bottom: calc(var(--statusbar-h) + 10px);
+  height: auto;
+  min-height: 0;
 }
 /* A round button with the teacher's face; its name is the tooltip and the accessible name. */
 .chat-bubble {
@@ -100,8 +120,7 @@
   display: flex;
   flex-direction: column;
   width: min(435px, calc(100vw - 28px));
-  /* Stays below the top bar: bubble (52px) + gaps + status bar are under the panel. */
-  height: min(680px, calc(100vh - var(--topbar-h) - var(--statusbar-h) - 96px));
+  height: min(680px, calc(100vh - 138px));
   min-height: 360px;
   overflow: hidden;
   border: 1px solid var(--border);

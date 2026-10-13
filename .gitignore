@@ -33,3 +33,6 @@ public/ort/
 
 # Claude Code watcher (scripts/agents/watch.ps1)
 .agent-logs/
+
+# MSIX packages built by scripts/store/make-msix.mjs
+store/out/

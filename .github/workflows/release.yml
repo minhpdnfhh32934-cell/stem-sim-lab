@@ -11,6 +11,11 @@ name: Release (Windows installer)
 # Versions (docs/RELEASE.md): package.json = web part, src-tauri/tauri.conf.json + Cargo.toml
 # = native part. Bump only package.json for interface/simulation changes (in-app update);
 # bump the native version as well when Rust code changes (needs the installer once).
+#
+# Microsoft Store (docs/STORE.md): the same executable is also wrapped in an MSIX package
+# (artifact "simlab-store") once store/identity.json is filled in. With the repository variable
+# STORE_SUBMIT = true and the PARTNER_CENTER_* secrets, a published release is also submitted to
+# the Store (Microsoft certifies it, then the Store updates its users).
 on:
   push:
     tags: ['v*']
@@ -133,6 +138,27 @@ jobs:
           name: stem-sim-lab-windows
           path: installer/
           if-no-files-found: error
+      # Microsoft Store package (unsigned: Microsoft signs it after certification). Skipped
+      # until store/identity.json holds the Partner Center identity.
+      - name: Store package (MSIX)
+        id: msix
+        shell: pwsh
+        run: |
+          $id = Get-Content store/identity.json -Raw | ConvertFrom-Json
+          if (-not $id.identityName) {
+            Write-Host "::notice::store/identity.json is empty: no Microsoft Store package (docs/STORE.md)"
+            "built=false" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          node scripts/store/make-msix.mjs --out store-package
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "built=true" >> $env:GITHUB_OUTPUT
+      - if: steps.msix.outputs.built == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: simlab-store
+          path: store-package/*.msix
+          if-no-files-found: error
 
   publish:
     name: Publish GitHub Release
@@ -159,3 +185,32 @@ jobs:
             out/web-update/web-bundle.zip
             out/web-update/web-update.json
           fail_on_unmatched_files: true
+
+  store:
+    name: Submit to Microsoft Store
+    needs: [check, publish]
+    # Only after the first submission was made by hand in Partner Center (docs/STORE.md, step 6).
+    if: vars.STORE_SUBMIT == 'true' && (github.event_name == 'push' || inputs.publish)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v7
+        with:
+          name: simlab-store
+          path: store-package
+      - name: Setup Microsoft Store Developer CLI
+        uses: microsoft/microsoft-store-apppublisher@v1.4
+      - name: Configure Microsoft Store Developer CLI
+        run: >-
+          msstore reconfigure
+          --tenantId ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+          --sellerId ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+          --clientId ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+          --clientSecret ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
+      - name: Submit the package (Microsoft certifies it before users get it)
+        shell: pwsh
+        run: |
+          $productId = (Get-Content store/identity.json -Raw | ConvertFrom-Json).productId
+          if (-not $productId) { Write-Host "::error::store/identity.json has no productId"; exit 1 }
+          $msix = (Get-ChildItem store-package/*.msix | Select-Object -First 1).FullName
+          msstore publish store-package --inputFile $msix --appId $productId

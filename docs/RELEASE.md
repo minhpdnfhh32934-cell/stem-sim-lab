@@ -33,6 +33,15 @@ chặn. Bộ cài (.exe/.msi) chưa được ký số, nên Smart App Control c�
   "cần tải bộ cài mới" thay vì nhận một phần web không chạy được.
 - Không bao giờ giảm số phiên bản: app không bao giờ hạ cấp.
 
+## Kênh Microsoft Store
+
+Từ 0.5.1, cùng một tệp chạy còn được đóng gói MSIX cho Microsoft Store (`docs/STORE.md`). Bản cài
+từ Store tự biết mình đến từ Store và **không** dùng cập nhật trong app; Store cập nhật nó sau khi
+Microsoft duyệt. Mỗi lần nộp Store cần phiên bản lõi mới (số thứ tư luôn là 0, ví dụ `0.5.2.0`), nên
+bản chỉ đổi phần web vẫn đến tay người dùng GitHub ngay, còn người dùng Store nhận ở lần nộp sau.
+Workflow Release tạo gói (artifact `simlab-store`) khi `store/identity.json` đã điền, và tự nộp khi
+biến `STORE_SUBMIT` = `true`.
+
 ## Phát hành (GitHub)
 
 1. Đẩy mã lên nhánh `main` (CI phải xanh).

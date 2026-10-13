@@ -638,6 +638,9 @@ const vi = {
     checking: 'Đang kiểm tra bản mới…',
     downloading: 'Đang tải và kiểm tra chữ ký…',
     upToDate: 'Bạn đang dùng bản mới nhất.',
+    fromStore:
+      'Bản này được cài từ Microsoft Store, nên Store tự cập nhật khi có bản mới. Bạn cũng có thể mở Store để cập nhật ngay.',
+    openStore: 'Mở Microsoft Store',
     newVersion: 'Có phiên bản mới {version}',
     needsInstaller:
       'Bản này thay đổi phần lõi của ứng dụng (cần lõi {native}), nên phải tải bộ cài mới một lần.',

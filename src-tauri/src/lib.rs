@@ -13,6 +13,7 @@
 
 mod ai;
 mod app_info;
+mod channel;
 mod files;
 mod gpu;
 mod history;

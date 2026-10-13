@@ -7,6 +7,7 @@ import {
   applyUpdate,
   checkForUpdate,
   openReleasesPage,
+  openStoreUpdates,
   resetToBuiltIn,
   restartApp,
   useUpdateStore,
@@ -66,6 +67,7 @@ export function UpdateDialog() {
           </p>
         )}
         {phase === 'upToDate' && <p className="update__line">{t('update.upToDate')}</p>}
+        {phase === 'store' && <p className="update__line">{t('update.fromStore')}</p>}
         {(phase === 'available' || phase === 'needsInstaller') && manifest && (
           <>
             <p className="update__line">
@@ -93,7 +95,7 @@ export function UpdateDialog() {
             {t('update.error')} {error}
           </p>
         )}
-        <p className="small muted">{t('update.safety')}</p>
+        {phase !== 'store' && <p className="small muted">{t('update.safety')}</p>}
       </div>
       <footer className="dialog__footer">
         {status?.downloaded && !locked && (
@@ -123,6 +125,12 @@ export function UpdateDialog() {
           <button type="button" className="btn btn--accent" onClick={() => void openReleasesPage()}>
             <ExternalLink size={15} aria-hidden="true" />
             {t('update.openReleases')}
+          </button>
+        )}
+        {phase === 'store' && (
+          <button type="button" className="btn btn--accent" onClick={() => void openStoreUpdates()}>
+            <ExternalLink size={15} aria-hidden="true" />
+            {t('update.openStore')}
           </button>
         )}
         {phase === 'ready' && (

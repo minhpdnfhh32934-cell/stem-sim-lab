@@ -24,6 +24,8 @@ const PAGES: &[(&str, &str)] = &[
         "https://creativecommons.org/licenses/by-nc/4.0/",
     ),
     ("windows-speech", "ms-settings:speech"),
+    // Store copies: "Thư viện → Cập nhật" in the Microsoft Store app.
+    ("store-updates", "ms-windows-store://downloadsandupdates"),
 ];
 
 fn page_url(id: &str) -> Option<&'static str> {
@@ -54,6 +56,10 @@ mod tests {
         );
         assert!(page_url("gemma3-1b").is_some_and(|u| u.starts_with("https://huggingface.co/")));
         assert_eq!(page_url("windows-speech"), Some("ms-settings:speech"));
+        assert_eq!(
+            page_url("store-updates"),
+            Some("ms-windows-store://downloadsandupdates")
+        );
         assert_eq!(page_url("https://evil.example"), None);
         assert_eq!(page_url(""), None);
     }

@@ -6,6 +6,8 @@ interface NativeAppInfo {
   version: string;
   targetOs: string;
   debugBuild: boolean;
+  /** 'store' when installed from the Microsoft Store (0.5.1+). */
+  channel?: 'store' | 'github';
 }
 
 export interface AppInfo extends NativeAppInfo {

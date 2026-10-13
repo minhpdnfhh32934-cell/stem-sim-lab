@@ -4,16 +4,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // The desktop backend (src-tauri/src/webupdate.rs) is replaced by a fake answer.
 const answer = { current: {} as Record<string, unknown> };
-vi.mock('@tauri-apps/api/core', () => ({
-  isTauri: () => true,
-  invoke: vi.fn((cmd: string) =>
-    Promise.resolve(
-      cmd === 'web_update_check'
-        ? answer.current
-        : { native: '0.3.0', embedded: '0.3.0', downloaded: null, running: '0.3.0' },
-    ),
+const channel = { current: 'github' };
+const invoke = vi.fn((cmd: string) =>
+  Promise.resolve(
+    cmd === 'web_update_check'
+      ? answer.current
+      : {
+          native: '0.3.0',
+          embedded: '0.3.0',
+          downloaded: null,
+          running: '0.3.0',
+          channel: channel.current,
+        },
   ),
-}));
+);
+vi.mock('@tauri-apps/api/core', () => ({ isTauri: () => true, invoke }));
 
 const { checkForUpdate, useUpdateStore } = await import('./updater');
 const { UpdateDialog } = await import('./UpdateDialog');
@@ -39,6 +44,8 @@ async function startUpCheck(over: Record<string, unknown>) {
 
 describe('update window at start-up (in-app updates)', () => {
   beforeEach(() => {
+    channel.current = 'github';
+    invoke.mockClear();
     useUpdateStore.setState({
       phase: 'idle',
       dialogOpen: false,
@@ -86,5 +93,26 @@ describe('update window at start-up (in-app updates)', () => {
     await startUpCheck({ available: false, needsInstaller: true, required: true });
     expect(screen.getByRole('button', { name: 'Mở trang tải bộ cài' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Để sau' })).toBeNull();
+  });
+
+  it('a Microsoft Store copy never checks GitHub: the Store updates it', async () => {
+    channel.current = 'store';
+    await startUpCheck({});
+    expect(useUpdateStore.getState().dialogOpen).toBe(false);
+    expect(invoke).not.toHaveBeenCalledWith('web_update_check');
+  });
+
+  it('"Kiểm tra cập nhật" in a Store copy points to the Microsoft Store', async () => {
+    const user = userEvent.setup();
+    channel.current = 'store';
+    render(<UpdateDialog />);
+    await act(async () => {
+      await checkForUpdate();
+    });
+    expect(screen.getByText(/được cài từ Microsoft Store/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Cập nhật ngay' })).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Mở Microsoft Store' }));
+    expect(invoke).toHaveBeenCalledWith('open_known_page', { id: 'store-updates' });
+    expect(invoke).not.toHaveBeenCalledWith('web_update_check');
   });
 });
