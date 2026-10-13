@@ -1,0 +1,26 @@
+# cargo-audit configuration (read from <working directory>/.cargo/audit.toml; the Security workflow
+# runs `cargo audit --deny unsound --deny yanked` in src-tauri/, so any vulnerability and any
+# unsound or yanked crate fails the job unless it is listed here with a reason).
+#
+# Reviewed 2026-10-14 (audit of PR #20). Both advisories come only from the Linux GTK3 stack of
+# Tauri, which is not compiled for Windows (`cargo tree -i glib@0.18.5 --target
+# x86_64-pc-windows-msvc` prints nothing). Releases are built for Windows only; Linux is compiled
+# in CI for the Rust checks, and the app code does not use glib.
+#
+#   tauri 2.12.0 / tao 0.37.1 / wry 0.57.0 / muda 0.20.0
+#     -> gtk 0.18.2, webkit2gtk 2.0.2, javascriptcore-rs 1.1.2, soup3 0.5.0
+#       (and gio, gdk, gdkx11, atk, cairo-rs, pango, gdk-pixbuf 0.18)
+#       -> glib 0.18.5 -> glib-macros 0.18.5 (gtk 0.18.2 -> gtk3-macros 0.18.2)
+#         -> proc-macro-error 1.0.4
+#
+# No fix is available for these locked versions: glib >= 0.20 exists only with the GTK4
+# bindings, and Tauri, wry and tao still use GTK3 / webkit2gtk 4.1. Remove both entries when
+# Tauri moves to GTK4 (`cargo audit` then no longer lists them).
+[advisories]
+ignore = [
+  # glib 0.18.5: unsound `VariantStrIter` iterator impls. Linux-only (see above).
+  "RUSTSEC-2024-0429",
+  # proc-macro-error 1.0.4: unmaintained. Compile-time proc-macro of glib-macros and
+  # gtk3-macros only, Linux-only; nothing of it ends up in a binary.
+  "RUSTSEC-2024-0370",
+]

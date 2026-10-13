@@ -27,7 +27,7 @@ Quyết định của người dùng (13/10/2026):
 | Gói MSIX               | `scripts/store/make-msix.mjs` bọc `stem-sim-lab.exe` + logo + manifest      |
 | Danh tính gói          | `store/identity.json` (chép từ Partner Center, không phải bí mật)           |
 | Dựng gói khi phát hành | workflow **Release**, bước "Store package (MSIX)" → artifact `simlab-store` |
-| Tự nộp các bản sau     | job `store` trong workflow Release (khi bật, xem bước 7)                    |
+| Nộp các bản sau        | **nộp tay** trong Partner Center (bước 7); workflow không có job tự nộp     |
 | Trang quyền riêng tư   | `site/` → workflow **Pages**                                                |
 | Nội dung trang Store   | `store/listing/` (mô tả, tính năng, ảnh chụp 1366×768)                      |
 
@@ -130,10 +130,11 @@ Mỗi lần ra bản mới cho Store:
 Người dùng đã cài từ Store tự nhận bản mới sau khi Microsoft duyệt (và sau khi bấm Publish now nếu
 bản nộp chọn giữ lại).
 
-Nếu sau này có công ty (có mã số thuế), có thể làm tự nộp: tenant Entra + ứng dụng vai trò Manager
-
-- 4 secret `PARTNER_CENTER_*` + `msstore publish` (tài liệu: "Publish app updates to Microsoft Store
-  with GitHub Actions" trên Microsoft Learn). App phải đã lên Store và miễn phí.
+Nếu sau này có công ty (có mã số thuế), có thể làm tự nộp: tenant Entra, ứng dụng vai trò Manager,
+4 secret `PARTNER_CENTER_*` và `msstore publish` (tài liệu: "Publish app updates to Microsoft Store
+with GitHub Actions" trên Microsoft Learn). App phải đã lên Store và miễn phí. Khi đó, đặt các
+secret này trong một environment có người duyệt (như `release`), không ở mức repo
+(`docs/RELEASE.md`, mục "An toàn khi phát hành").
 
 ## Ghi chú kỹ thuật
 
