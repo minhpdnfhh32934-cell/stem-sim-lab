@@ -136,7 +136,11 @@ const vi = {
       vectors: 'Hiện vectơ lực / vận tốc / gia tốc',
       trail: 'Vết quỹ đạo',
       fitView: 'Căn vừa khung nhìn (F)',
+      pinCompare: 'Ghim lần chạy này để so sánh',
+      unpinCompare: 'Bỏ ghim so sánh',
     },
+    compareLegend: 'Nét đứt: lần chạy đã ghim',
+    compareBefore: 'Lúc ghim: {values}',
   },
   inspector: {
     regionLabel: 'Bảng thuộc tính',

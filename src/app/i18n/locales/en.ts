@@ -133,7 +133,11 @@ const en: Messages = {
       vectors: 'Show force / velocity / acceleration vectors',
       trail: 'Trajectory trail',
       fitView: 'Fit view (F)',
+      pinCompare: 'Pin this run to compare',
+      unpinCompare: 'Unpin comparison',
     },
+    compareLegend: 'Dashed: the pinned run',
+    compareBefore: 'When pinned: {values}',
   },
   inspector: {
     regionLabel: 'Inspector',

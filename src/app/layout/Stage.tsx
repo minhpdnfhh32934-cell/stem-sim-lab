@@ -4,10 +4,13 @@ import {
   Hand,
   MousePointer2,
   MoveUpRight,
+  Pin,
+  PinOff,
   Ruler,
   Scan,
   Spline,
   Timer,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 import { memo } from 'react';
@@ -15,12 +18,15 @@ import { useShallow } from 'zustand/react/shallow';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { changedParams, recordedTracks, useCompareStore } from '@/app/sim/compare';
+import { sim as runtime } from '@/app/sim/runtime';
 import { StageCanvas } from '@/app/sim/StageCanvas';
 import { Stopwatch } from '@/app/sim/Stopwatch';
 import { useSimStore } from '@/app/sim/simStore';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
 import { useModuleStore } from '@/modules/moduleStore';
+import { fmtQty } from '@/physics/common/tex';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
 import { IconButton } from '@/ui/IconButton';
@@ -77,6 +83,21 @@ export const Stage = memo(function Stage() {
   const mod = useModuleStore(
     useShallow((s) => ({ active: s.active, loading: s.loading, error: s.error })),
   );
+  const ghost = useCompareStore((s) =>
+    s.ghost && s.ghost.sceneId === sim.scene?.id ? s.ghost : null,
+  );
+  const togglePin = () => {
+    const scene = useSimStore.getState().scene;
+    if (ghost || !scene) {
+      useCompareStore.getState().clear();
+      return;
+    }
+    const params = { ...useSimStore.getState().params };
+    const tracks = recordedTracks(runtime.history, scene, params);
+    if (tracks.some((tr) => tr.length > 1)) {
+      useCompareStore.getState().pin({ sceneId: scene.id, tracks, params });
+    }
+  };
   const SubjectIcon = SUBJECT_ICON[subject];
   const disabled = !hasSimulation;
 
@@ -150,6 +171,16 @@ export const Stage = memo(function Stage() {
             useSimStore.setState((s) => ({ fitRequest: s.fitRequest + 1 }));
           }}
         />
+        {sim.scene?.trail && (
+          <IconButton
+            icon={ghost ? PinOff : Pin}
+            label={t(ghost ? 'stage.tools.unpinCompare' : 'stage.tools.pinCompare')}
+            tooltipSide="right"
+            active={ghost !== null}
+            disabled={disabled}
+            onClick={togglePin}
+          />
+        )}
       </div>
 
       {sim.scene && (
@@ -172,6 +203,8 @@ export const Stage = memo(function Stage() {
       )}
 
       {sim.stopwatch && sim.scene && <Stopwatch />}
+
+      {ghost && sim.scene && <CompareLegend />}
 
       {sim.scene && sim.validation.length > 0 && (
         <div className="stage__message" role="alert">
@@ -207,3 +240,49 @@ export const Stage = memo(function Stage() {
     </section>
   );
 });
+
+/** "Nét đứt: lần chạy đã ghim" + what changed since (values of the pinned run). */
+function CompareLegend() {
+  const t = useT();
+  const L = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
+  const ghost = useCompareStore((s) => s.ghost);
+  const { scene, params } = useSimStore(useShallow((s) => ({ scene: s.scene, params: s.params })));
+  if (!ghost || !scene) return null;
+  const changed = changedParams(
+    scene.params.filter((d) => d.kind === 'number'),
+    ghost.params,
+    params,
+  ).slice(0, 3);
+  return (
+    <div className="stage__compare" role="status">
+      <svg width="26" height="8" aria-hidden="true">
+        <line x1="1" y1="4" x2="25" y2="4" />
+      </svg>
+      <span>
+        {t('stage.compareLegend')}
+        {changed.length > 0 && (
+          <small>
+            {t('stage.compareBefore', {
+              values: changed
+                .map(
+                  (d) => `${L(d.label)} ${fmtQty(locale, ghost.params[d.key] ?? 0, d.unit ?? '1')}`,
+                )
+                .join(' · '),
+            })}
+          </small>
+        )}
+      </span>
+      <button
+        type="button"
+        className="stage__compare-close"
+        aria-label={t('stage.tools.unpinCompare')}
+        onClick={() => {
+          useCompareStore.getState().clear();
+        }}
+      >
+        <X size={14} strokeWidth={1.75} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
