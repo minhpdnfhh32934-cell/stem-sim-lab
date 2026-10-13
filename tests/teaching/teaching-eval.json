@@ -1,5 +1,5 @@
 {
-  "about": "AI Teacher evaluation set (audit EDU-02, 2026-10-13). Patterns are matched on the answer folded to ASCII lower case (no accents, đ → d). keyFacts: every group needs one match (textbook facts, review_status pending: docs/DATA_REVIEW.md). mustNot: known wrong statements. Scoring: scripts/teaching/rubric.mjs. Only objective checks; explanation quality still needs a teacher's reading.",
+  "about": "AI Teacher evaluation set (audit EDU-02, 2026-10-13). Patterns are matched on the answer folded to ASCII lower case (no accents, đ → d). keyFacts: every group needs one match (textbook facts, review_status pending: docs/DATA_REVIEW.md). mustNot: known wrong statements. Scoring: scripts/teaching/rubric.mjs. Optional fields: missing (groups naming each missing quantity, asked for in a data request), answerUnit (unit of the asked quantity: a new number before it is an invented answer), allowNumbers (numbers a correct answer may write although the question does not), steps (ordered stages of keyFacts indices), trap {note, premise} (keyFacts[0] is the explicit correction), derivation and expected (for reviewers), review_status per item. Only objective checks; explanation quality still needs a teacher's reading.",
   "review_status": "pending",
   "items": [
     {
@@ -21,7 +21,9 @@
       "type": "misconception",
       "question": "Vì sao trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau?",
       "keyFacts": [["gia toc"], ["khong phu thuoc|nhu nhau|nhu cu|bang nhau"]],
-      "mustNot": ["vat nang (roi )?nhanh hon"]
+      "mustNot": [
+        "(?<!(khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu) )vat (nang|nhe) (se |thi )?(roi )?nhanh hon"
+      ]
     },
     {
       "id": "P3",
@@ -46,7 +48,8 @@
       "question": "Tính quãng đường ô tô đi được.",
       "keyFacts": [["van toc|thoi gian|gia toc|thieu|cho biet|can biet"]],
       "mustNot": [],
-      "expectsClarify": true
+      "expectsClarify": true,
+      "missing": [["van toc|toc do|gia toc|thoi gian|bao lau"]]
     },
     {
       "id": "P6",
@@ -75,7 +78,10 @@
       "subject": "physics",
       "type": "problem",
       "question": "Một lò xo có độ cứng 100 N/m bị nén 0,1 m. Tính độ lớn lực đàn hồi.",
-      "keyFacts": [["\\b10 ?n\\b"], ["k ?.?\\|?.?x|k ?\\*? ?\\(?delta|hooke|huc"]],
+      "keyFacts": [
+        ["\\b10 ?n\\b"],
+        ["k ?.?\\|?.?x|k ?[*.·×]? ?\\|? ?\\\\?\\(?(delta|δ)|hooke|\\bhuc\\b"]
+      ],
       "mustNot": ["\\b1000 ?n\\b"]
     },
     {
@@ -84,11 +90,15 @@
       "type": "misconception",
       "question": "Chu kì của con lắc đơn dao động nhỏ có phụ thuộc vào khối lượng quả nặng không?",
       "keyFacts": [
-        ["khong phu thuoc|khong"],
+        [
+          "(^|[.!?:] )[*_ ]*khong[*_ ]*[,.!:]|khong phu thuoc (vao )?(khoi luong|m\\b)|doc lap (voi|vao) khoi luong|khoi luong khong anh huong|khong (co|chua) (m\\b|khoi luong)"
+        ],
         ["chieu dai|do dai"],
         ["\\bg\\b|gia toc trong truong"]
       ],
-      "mustNot": ["(co|chu ki) phu thuoc vao khoi luong"]
+      "mustNot": [
+        "(co|chu k[iy]) phu thuoc vao khoi luong(?!( qua nang)? (khong|hay))|t[iy] le (nghich|thuan) voi khoi luong"
+      ]
     },
     {
       "id": "P10",
@@ -109,6 +119,95 @@
       "mustNot": [
         "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
       ]
+    },
+    {
+      "id": "P11",
+      "subject": "physics",
+      "type": "missing-data",
+      "question": "Một ô tô đang chạy với vận tốc 20 m/s thì hãm phanh và chuyển động chậm dần đều. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
+      "keyFacts": [
+        ["gia toc|thoi gian|bao lau|luc ham"],
+        [
+          "v_?\\{?0?\\}? ?(\\^ ?\\{?2|²)|2 ?[.·×*]? ?a ?[.·×*]? ?s\\b|2as|v_?0 ?[.·×*]? ?t\\b|cong thuc|phuong trinh|phu thuoc|de tinh|neu (biet|co)"
+        ]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["gia toc|thoi gian|bao lau|luc ham|he so ma sat"]],
+      "answerUnit": "(m|met|km)\\b(?! ?/)",
+      "allowNumbers": ["0", "1", "2"],
+      "expected": "Hỏi lại gia tốc (hoặc thời gian hãm phanh, hoặc lực hãm và khối lượng); có thể nêu công thức v² − v₀² = 2as với v = 0. Không tự chọn gia tốc, không đưa ra quãng đường bằng số. Cặp với P13 (cùng tình huống, đủ dữ kiện).",
+      "review_status": "pending"
+    },
+    {
+      "id": "P12",
+      "subject": "physics",
+      "type": "missing-data",
+      "question": "Một bóng đèn sợi đốt được mắc vào hiệu điện thế 220 V và sáng bình thường. Tính cường độ dòng điện chạy qua bóng đèn.",
+      "keyFacts": [
+        ["cong suat|dien tro"],
+        [
+          "i ?= ?p ?/ ?u|p ?= ?u ?[.·×*]? ?i|i ?= ?u ?/ ?r|dinh luat (om|ohm)|cong thuc|phu thuoc|de tinh|neu (biet|co)"
+        ]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["cong suat|dien tro|\\b(p|r)\\b|\\boat\\b|\\bw\\b|thong so|so ghi tren"]],
+      "answerUnit": "(a|ma|ampe|ampere)\\b",
+      "allowNumbers": [],
+      "expected": "Hỏi công suất định mức (số oát ghi trên đèn) hoặc điện trở của đèn; có thể nêu I = P/U hoặc I = U/R. Không tự giả sử 60 W, 100 W…, không đưa ra cường độ dòng điện bằng số.",
+      "review_status": "pending"
+    },
+    {
+      "id": "P13",
+      "subject": "physics",
+      "type": "steps",
+      "question": "Giải giúp em từng bước: Một ô tô khối lượng 1000 kg đang chạy trên đường nằm ngang với vận tốc 20 m/s thì hãm phanh. Lực hãm không đổi, có độ lớn 4000 N; bỏ qua các lực cản khác. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
+      "keyFacts": [
+        [
+          "(?<![\\d.,])[-−]? ?4 ?\\(?m/s|a ?= ?[-−]? ?4\\b|\\|a\\| ?= ?4\\b|dong nang|1/2 ?[.·×*]? ?m ?[.·×*]? ?v|\\b200[. ]?000\\b|2 ?[.·×*]? ?10 ?(\\^ ?5|⁵)"
+        ],
+        [
+          "v_?\\{?0?\\}? ?(\\^ ?\\{?2|²) ?[-−]|v_?0 ?(\\^ ?2|²) ?/|\\b20 ?(\\^ ?\\{?2|²)|2 ?[.·×*]? ?a ?[.·×*]? ?s\\b|2as|(?<![\\d.,])5 ?\\(?(s\\b|giay)|t ?= ?5\\b|dinh l[iy] dong nang|bien thien dong nang|cong (cua )?(luc ham|luc can)|f ?[.·×*]? ?s\\b"
+        ],
+        ["(?<![\\d.,])50 ?\\(?(m\\b|met)"]
+      ],
+      "steps": [[0], [1], [2]],
+      "mustNot": [
+        "(=|la|bang|duoc) ?100 ?\\(?(m\\b|met)\\)?(?! ?[-−–+])",
+        "(=|la|bang|duoc) ?150 ?\\(?(m\\b|met)",
+        "(=|la|bang) ?[-−] ?50 ?\\(?(m\\b|met)"
+      ],
+      "derivation": "Chọn chiều dương theo chiều chuyển động. Bước 1: a = −F/m = −4000 N / 1000 kg = −4 m/s². Bước 2: v² − v₀² = 2as với v = 0. Bước 3: s = −v₀²/(2a) = −20²/(2·(−4)) = 400/8 = 50 m. Kiểm tra 1: t = (0 − 20)/(−4) = 5 s; s = v₀t + ½at² = 20·5 + ½·(−4)·5² = 100 − 50 = 50 m. Kiểm tra 2 (định lý động năng): ½mv₀² = ½·1000·20² = 200 000 J = F·s ⇒ s = 200 000/4000 = 50 m. Không cần g (đường nằm ngang, lực hãm cho sẵn). mustNot: 100 m (s = v₀t bỏ qua chậm dần, hoặc v₀²/a quên hệ số 2), 150 m (v₀t + ½|a|t², sai dấu), −50 m (sai dấu trong công thức độc lập thời gian).",
+      "expected": "Bước 1 gia tốc 4 m/s² (hoặc động năng ban đầu 200 000 J), bước 2 công thức liên hệ, bước 3 kết quả 50 m; kiểm tra đơn vị; kết thúc bằng một câu hỏi kiểm tra.",
+      "review_status": "pending"
+    },
+    {
+      "id": "P14",
+      "subject": "physics",
+      "type": "trap",
+      "question": "Ném một quả bóng thẳng đứng lên trên (bỏ qua sức cản không khí). Ở điểm cao nhất vận tốc của bóng bằng 0, vậy gia tốc của bóng ở đó cũng bằng 0, đúng không?",
+      "keyFacts": [
+        [
+          "khong (dung|phai|bang (0|khong))|chua (dung|chinh xac)|\\bsai\\b|van (bang|la) g\\b|khac (0|khong)"
+        ],
+        ["\\bg\\b|gia toc (roi tu do|trong truong)|9[,.]8|(?<![\\d.,])10 ?m/s"],
+        ["huong xuong|xuong duoi|thang dung xuong|huong (ve )?(phia )?(mat )?dat|trong luc"],
+        [
+          "doi chieu|doi huong|(dang|van|tiep tuc) thay doi|tuc thoi|khoanh khac|roi xuong|di xuong|bat dau roi"
+        ]
+      ],
+      "mustNot": [
+        "(?<!(khong phai|khong phai la|khong the|khong co nghia la|chu khong phai|nghi|tuong|cho rang|neu) )gia toc (cua (qua )?bong )?(o do |tai do |luc do |o diem cao nhat |tai diem (cao nhat|nay|do) )?(cung )?(bang 0|bang khong\\b(?! phai)|= ?0\\b)(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)"
+      ],
+      "trap": {
+        "note": "Nhầm \"vận tốc bằng 0\" với \"gia tốc bằng 0\". Gia tốc vẫn bằng g, hướng xuống, vì trọng lực vẫn tác dụng.",
+        "premise": true
+      },
+      "derivation": "Không cần tính. Bỏ qua sức cản, lực duy nhất là trọng lực P = mg nên a = P/m = g ≈ 9,8 m/s² (hoặc lấy 10 m/s²), hướng thẳng đứng xuống, ở mọi điểm của quỹ đạo kể cả điểm cao nhất; vận tốc bằng 0 chỉ trong một khoảnh khắc rồi đổi chiều.",
+      "expected": "Nói rõ \"không/chưa đúng\"; gia tốc vẫn là g hướng xuống; vận tốc bằng 0 chỉ tức thời rồi đổi chiều; không mở đầu bằng \"Đúng\".",
+      "review_status": "pending"
     },
 
     {
@@ -143,8 +242,13 @@
       "subject": "chemistry",
       "type": "concept",
       "question": "Dung dịch có pH = 3 thì có môi trường gì?",
-      "keyFacts": [["axit|acid"], ["< ?7|nho hon 7|be hon 7"]],
-      "mustNot": ["moi truong (bazo|kiem)\\b"]
+      "keyFacts": [
+        ["(moi truong|dung dich|co tinh|mang tinh|\\bla)[*_ ]*(axit|acid)"],
+        ["< ?7|nho hon 7|be hon 7"]
+      ],
+      "mustNot": [
+        "(?<!(>|lon hon|tren) ?7[^.;]{0,30})(moi truong (bazo|kiem)\\b|(dung dich|kha nang cao) (la|co tinh)[*_ ]*(bazo|kiem)\\b)(?![^.;]{0,15}(>|lon hon|tren) ?7)|bi kiem hoa"
+      ]
     },
     {
       "id": "C5",
@@ -161,14 +265,20 @@
       "question": "Tính nồng độ mol của dung dịch.",
       "keyFacts": [["so mol|the tich|khoi luong|thieu|cho biet|can biet"]],
       "mustNot": [],
-      "expectsClarify": true
+      "expectsClarify": true,
+      "missing": [["so mol|khoi luong|the tich|bao nhieu (gam|mol|ml|lit)"]]
     },
     {
       "id": "C7",
       "subject": "chemistry",
       "type": "misconception",
       "question": "Chất xúc tác có làm tăng lượng sản phẩm tạo thành không?",
-      "keyFacts": [["khong"], ["toc do|nhanh"]],
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong[*_ ]*[,.!:]|khong (lam )?(tang|thay doi|anh huong( den)?) (luong|hieu suat|vi tri can bang|can bang)|khong (lam )?(dich chuyen|chuyen dich) can bang|luong san pham (van )?(khong (doi|tang|thay doi)|giu nguyen)|chi (lam )?tang toc do"
+        ],
+        ["toc do|nhanh"]
+      ],
       "mustNot": ["(co|xuc tac) lam tang luong san pham"]
     },
     {
@@ -199,10 +309,103 @@
         }
       ],
       "question": "Vế trái 2, vế phải 1 ạ.",
-      "keyFacts": [["chua (dung|chinh xac)|sai|khong (dung|phai)"], ["\\b2\\b|hai"]],
+      "keyFacts": [
+        ["chua (dung|chinh xac)|sai|khong (dung|phai)"],
+        [
+          "2 ?h2o.{0,30}\\b(2|hai) nguyen tu|(ve phai|ben phai|ve sau).{0,25}\\b(2|hai)\\b|(moi|ca hai|2) ve (deu )?(co )?(2|hai)\\b|(cung|van) (co |la )?(2|hai) nguyen tu"
+        ]
+      ],
       "mustNot": [
         "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
       ]
+    },
+    {
+      "id": "C11",
+      "subject": "chemistry",
+      "type": "missing-data",
+      "question": "Hòa tan NaOH vào nước, thu được 250 ml dung dịch. Tính nồng độ mol của dung dịch thu được.",
+      "keyFacts": [
+        ["khoi luong|so mol|bao nhieu (gam|mol)"],
+        [
+          "c_?\\{?m\\}? ?= ?n ?/ ?v|n ?/ ?v\\b|n ?= ?m ?/ ?m|cong thuc|phu thuoc|de tinh|neu (biet|co)"
+        ]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["khoi luong|so mol|bao nhieu (gam|mol)\\b|luong naoh|bao nhieu naoh"]],
+      "answerUnit": "(m|mol/l|mol/lit|mol/dm3|mol/dm³)\\b(?! ?/)",
+      "allowNumbers": ["0.25", "40", "23", "16", "1000"],
+      "expected": "Hỏi khối lượng (hoặc số mol) NaOH đã hòa tan; có thể nêu C_M = n/V với V = 0,25 L và M(NaOH) = 40 g/mol. Không tự chọn khối lượng, không đưa ra nồng độ bằng số. Khác C6: thể tích đã cho, chỉ thiếu lượng chất tan.",
+      "review_status": "pending"
+    },
+    {
+      "id": "C12",
+      "subject": "chemistry",
+      "type": "missing-data",
+      "question": "Tính thể tích của 0,2 mol khí CO₂.",
+      "keyFacts": [
+        ["nhiet do|ap suat|dieu kien"],
+        ["the tich mol|v ?= ?n ?[.·×*]?|pv ?= ?nrt|phu thuoc|moi mol khi|1 mol khi"]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["dieu kien|nhiet do|ap suat|\\bdkc\\b|\\bdktc\\b|tieu chuan|\\bchuan\\b"]],
+      "answerUnit": "(l|lit|ml|dm3|dm³|cm3|cm³|m3|m³)\\b(?! ?/)",
+      "allowNumbers": ["24.79", "22.4", "25", "0", "273", "298", "1"],
+      "expected": "Hỏi khí ở điều kiện nào (nhiệt độ, áp suất) vì thể tích khí phụ thuộc vào chúng; có thể nêu thể tích mol ở điều kiện chuẩn (24,79 L/mol ở 25 °C, 1 bar) để học sinh đối chiếu, nhưng không tự chọn điều kiện rồi đưa ra một thể tích bằng số (4,958 L hay 4,48 L). Giáo viên cần xác nhận: có chấp nhận \"ngầm hiểu đkc\" hay không.",
+      "review_status": "pending"
+    },
+    {
+      "id": "C13",
+      "subject": "chemistry",
+      "type": "steps",
+      "question": "Giải giúp em từng bước: Cho 6,5 gam kẽm tác dụng hết với dung dịch axit clohiđric (HCl) dư. Tính khối lượng muối kẽm clorua (ZnCl₂) tạo thành. (Zn = 65; Cl = 35,5)",
+      "keyFacts": [
+        ["zn\\}? ?\\+ ?2 ?(\\\\(text|mathrm)\\{)?hcl"],
+        [
+          "(?<![\\d.,])0[,.]1 ?\\(?mol|6[,.]5 ?(/|:|chia( cho)?|\\\\div) ?65|\\\\frac\\{6[,.]5\\}\\{65\\}"
+        ],
+        [
+          "theo (pt|pthh|phuong trinh)|1 ?: ?1|bang (voi )?so mol (cua )?(kem|zn)|zn ?cl_?\\{?2\\}?\\)?\\}? ?= ?n_?\\{?\\(?zn\\b|(?<![\\d.,])0[,.]1 ?\\(?mol\\)? (zn ?cl_?\\{?2|muoi)"
+        ],
+        ["\\b136\\b"],
+        ["(?<![\\d.,])13[,.]6 ?\\(?(g\\b|gam)"]
+      ],
+      "steps": [[0, 1], [2], [4]],
+      "mustNot": [
+        "(?<![\\d.,])10[,.]05 ?\\(?(g\\b|gam)",
+        "(?<![\\d.,])27[,.]2 ?\\(?(g\\b|gam)",
+        "(?<![\\d.,])6[,.]8 ?\\(?(g\\b|gam)"
+      ],
+      "derivation": "Zn + 2HCl → ZnCl₂ + H₂. n(Zn) = 6,5/65 = 0,1 mol. Theo phương trình, 1 mol Zn tạo 1 mol ZnCl₂ ⇒ n(ZnCl₂) = 0,1 mol. M(ZnCl₂) = 65 + 2·35,5 = 136 g/mol. m(ZnCl₂) = 0,1·136 = 13,6 g. mustNot: 10,05 g (M = 65 + 35,5 = 100,5, quên chỉ số 2), 27,2 g (n(ZnCl₂) = 2·n(Zn) = 0,2 mol, lấy nhầm hệ số của HCl), 6,8 g (n(ZnCl₂) = n(Zn)/2 = 0,05 mol).",
+      "expected": "PTHH → n(Zn) = 0,1 mol → tỉ lệ 1 : 1 theo phương trình → M(ZnCl₂) = 136 g/mol → m = 13,6 g; kết thúc bằng một câu hỏi kiểm tra.",
+      "review_status": "pending"
+    },
+    {
+      "id": "C14",
+      "subject": "chemistry",
+      "type": "trap",
+      "question": "Trộn 100 ml dung dịch NaCl 1 M với 100 ml dung dịch NaCl 1 M. Dung dịch thu được có nồng độ 2 M, đúng không ạ?",
+      "keyFacts": [
+        ["khong (dung|phai)|chua (dung|chinh xac)|\\bsai\\b"],
+        [
+          "(?<![\\d.,])1 ?\\(?(m\\b|mol/l)|khong (doi|thay doi)|giu nguyen|nhu (cu|ban dau|truoc)|van (la|bang) 1"
+        ],
+        [
+          "(?<![\\d.,])0[,.]2 ?\\(?mol|200 ?ml|(?<![\\d.,])0[,.]2 ?\\(?(l\\b|lit)|(so mol|luong chat tan|luong muoi|luong nacl).{0,40}(tang|gap doi|cong)|the tich.{0,40}(tang|gap doi|cong)"
+        ]
+      ],
+      "mustNot": [
+        "(?<!(khong phai|khong phai la|khong the la|chu khong phai|chu khong|khong bang|khong la|thay vi|nghi|tuong|cho rang|neu|≠|khac) )(?<![\\d.,])2 ?\\(?(m\\b|mol/l)(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)"
+      ],
+      "trap": {
+        "note": "Cộng nồng độ như cộng số mol: 1 M + 1 M = 2 M. Số mol và thể tích cùng gấp đôi nên nồng độ vẫn 1 M.",
+        "premise": true
+      },
+      "derivation": "n(NaCl) = 0,1 L × 1 mol/L + 0,1 L × 1 mol/L = 0,2 mol; V = 100 ml + 100 ml = 200 ml = 0,2 L (hai phần của cùng một dung dịch nên thể tích cộng được); C_M = 0,2 mol / 0,2 L = 1 M.",
+      "expected": "Nói rõ \"không/chưa đúng\"; nồng độ vẫn 1 M; giải thích số mol và thể tích cùng gấp đôi (0,2 mol trong 0,2 L); không mở đầu bằng \"Đúng\".",
+      "review_status": "pending"
     },
 
     {
@@ -213,7 +416,7 @@
       "keyFacts": [
         ["pha s|ki trung gian|ky trung gian"],
         ["te bao con"],
-        ["giong|du|bo (nst|nhiem sac the)|2n"]
+        ["giong|\\bdu\\b|bo (nst|nhiem sac the)|2n"]
       ],
       "mustNot": ["pha m.{0,25}nhan doi|nhan doi.{0,25}pha m\\b|pha g2.{0,15}nhan doi adn"]
     },
@@ -258,7 +461,7 @@
       "type": "concept",
       "question": "Vì sao nhiệt độ quá cao làm enzyme mất hoạt tính?",
       "keyFacts": [
-        ["bien tinh|pha vo cau truc|thay doi cau truc|bien doi cau truc"],
+        ["bien tinh|(thay doi|bien doi|pha vo|pha huy)( trong| ve| cua)? cau truc"],
         ["trung tam hoat dong|cau truc khong gian|protein"]
       ],
       "mustNot": []
@@ -270,7 +473,8 @@
       "question": "Tính số nhiễm sắc thể trong mỗi tế bào con sau nguyên phân.",
       "keyFacts": [["2n|bo nhiem sac the|cho biet|thieu|can biet|loai"]],
       "mustNot": [],
-      "expectsClarify": true
+      "expectsClarify": true,
+      "missing": [["2n|bo nhiem sac the|bo nst|loai"]]
     },
     {
       "id": "B8",
@@ -282,7 +486,7 @@
         ["\\barn\\b|\\brna\\b|marn|mrna"],
         ["mach (khuon|goc)|khuon"]
       ],
-      "mustNot": ["arn ?(→|tao ra|thanh) ?adn"]
+      "mustNot": ["(?<!phien ma nguoc.{0,30})arn ?(→|tao ra|thanh) ?adn"]
     },
     {
       "id": "B9",
@@ -290,7 +494,9 @@
       "type": "misconception",
       "question": "Đột biến gen lúc nào cũng có hại phải không?",
       "keyFacts": [["khong (phai )?(luc nao|bao gio)|co loi|trung tinh|khong phai tat ca"]],
-      "mustNot": ["(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)"]
+      "mustNot": [
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(co|phai)[*_ ]*[,.!]|(?<!(khong phai|khong|chua chac|khong han) )luon (co hai|gay hai)"
+      ]
     },
     {
       "id": "B10",
@@ -308,6 +514,94 @@
       "mustNot": [
         "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
       ]
+    },
+    {
+      "id": "B11",
+      "subject": "biology",
+      "type": "missing-data",
+      "question": "Một gen có tổng số 3000 nuclêôtit. Tính số liên kết hiđro của gen.",
+      "keyFacts": [
+        [
+          "(loai|so) (nu(cleotit)? )?(loai )?(a|t|g|x)\\b|(tung|moi|cac) loai|adenin|timin|guanin|xitozin|ti le|phan tram|%"
+        ],
+        ["2 ?[.·×*]? ?a ?\\+ ?3 ?[.·×*]? ?g|2 ?lien ket.{0,80}3 ?lien ket|n ?\\+ ?g\\b|h ?= ?2 ?a"]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [
+        [
+          "(loai|so) (nu(cleotit)? )?(loai )?(a|t|g|x)\\b|(tung|moi|cac) loai|adenin|timin|guanin|xitozin|ti le|phan tram|%|\\b(a|t|g|x) (la|bang|chiem) bao nhieu"
+        ]
+      ],
+      "answerUnit": "(lien ket|lk)\\b",
+      "allowNumbers": ["1500", "2", "3"],
+      "expected": "Hỏi số nuclêôtit (hoặc tỉ lệ %) của một loại, ví dụ A hoặc G; có thể nêu H = 2A + 3G và A + G = 1500. Không tự giả sử A = G hay một tỉ lệ nào, không đưa ra số liên kết hiđro bằng số. Cặp với B13.",
+      "review_status": "pending"
+    },
+    {
+      "id": "B12",
+      "subject": "biology",
+      "type": "missing-data",
+      "question": "Một quần thể thực vật có 1000 cây, đang ở trạng thái cân bằng di truyền về một gen có hai alen A và a. Tính số cây có kiểu gen dị hợp Aa.",
+      "keyFacts": [
+        ["tan so (alen|tuong doi|cua (alen|a))|\\bp\\b.{0,30}\\bq\\b"],
+        ["2 ?pq|2 ?p ?[.·×*]? ?q|p ?(\\^ ?2|²) ?\\+ ?2|hacdi|hardy|vanbec|weinberg"]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [
+        [
+          "tan so|\\bp\\b|\\bq\\b|ti le (kieu gen|kieu hinh|cay|ca the)|so cay (co |mang )?(kieu gen|kieu hinh|hoa|dong hop|lan|troi|than|qua)|kieu hinh lan|dong hop (lan|troi)|thanh phan kieu gen|cau truc di truyen"
+        ]
+      ],
+      "answerUnit": "(cay|ca the)\\b",
+      "allowNumbers": ["1", "2"],
+      "expected": "Hỏi tần số alen (p, q) hoặc tỉ lệ/số cây của một kiểu gen hay kiểu hình (ví dụ số cây mang tính trạng lặn); có thể nêu số cây dị hợp = 2pq × 1000. Không tự giả sử p = q = 0,5, không đưa ra số cây bằng số. Lưu ý: chữ đã gấp (fold) không phân biệt AA/Aa/aa, nên mẫu dùng chữ \"dị hợp/đồng hợp\".",
+      "review_status": "pending"
+    },
+    {
+      "id": "B13",
+      "subject": "biology",
+      "type": "steps",
+      "question": "Giải giúp em từng bước: Một gen có tổng số 2400 nuclêôtit, trong đó số nuclêôtit loại A chiếm 20%. Tính số liên kết hiđro của gen.",
+      "keyFacts": [
+        ["\\b480\\b"],
+        ["\\b720\\b"],
+        [
+          "2 ?[.·×*]? ?(a|t|480)\\b ?\\+ ?3 ?[.·×*]? ?(g|x|720)\\b|2 ?lien ket.{0,80}3 ?lien ket|n ?\\+ ?g\\b"
+        ],
+        ["\\b3[. ]?120\\b"]
+      ],
+      "steps": [[0], [1], [3]],
+      "mustNot": ["\\b1[. ]?560\\b", "\\b2[. ]?880\\b", "\\b3[. ]?840\\b"],
+      "derivation": "N = 2400. A = T = 20% × 2400 = 480. %G = %X = 50% − 20% = 30% ⇒ G = X = 30% × 2400 = 720 (kiểm tra: 2·480 + 2·720 = 960 + 1440 = 2400). H = 2A + 3G = 2·480 + 3·720 = 960 + 2160 = 3120. Cách khác: H = N + G = 2400 + 720 = 3120. mustNot: 1560 (tính % trên một mạch: A = 240, G = 360), 2880 (đổi chỗ hệ số: 3·480 + 2·720), 3840 (G = (2400 − 480)/2 = 960, quên trừ T).",
+      "expected": "A = T = 480 → G = X = 720 → H = 2A + 3G = 3120; kết thúc bằng một câu hỏi kiểm tra.",
+      "review_status": "pending"
+    },
+    {
+      "id": "B14",
+      "subject": "biology",
+      "type": "trap",
+      "question": "Cây xanh chỉ hô hấp vào ban đêm, còn ban ngày thì chỉ quang hợp, phải không ạ?",
+      "keyFacts": [
+        ["khong (phai|dung)|chua (dung|chinh xac)|\\bsai\\b|khong chi|(van|cung) ho hap"],
+        [
+          "ca (ngay|ban ngay)|ngay (lan|va) dem|suot ngay dem|ngay dem|lien tuc|moi luc|moi thoi diem|24 ?(gio|h\\b)|ca khi co anh sang"
+        ],
+        ["quang hop.{0,60}anh sang|anh sang.{0,60}quang hop|can anh sang|khi co anh sang"]
+      ],
+      "mustNot": [
+        "(?<!(khong|khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu)( cay| cay xanh)? )chi ho hap (vao )?(ban )?dem(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(?<!(khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu) )ban ngay (thi )?(cay (xanh )?)?(khong|chang) ho hap",
+        "(^|[.!?:,] )[*_ ]*(dung|phai)([*_ ]*[.!,]| (vay|the|roi)\\b)"
+      ],
+      "trap": {
+        "note": "Cho rằng cây chỉ hô hấp ban đêm. Cây hô hấp liên tục cả ngày lẫn đêm; quang hợp chỉ diễn ra khi có ánh sáng; ban ngày quang hợp thường mạnh hơn hô hấp nên nhìn chung cây thải O₂.",
+        "premise": true
+      },
+      "derivation": "Không cần tính. Kiến thức SGK Sinh học 11 (hô hấp và quang hợp ở thực vật): hô hấp diễn ra ở mọi tế bào sống, liên tục; quang hợp cần ánh sáng.",
+      "expected": "Nói rõ \"không phải\"; cây hô hấp cả ngày lẫn đêm; quang hợp cần ánh sáng nên chỉ có ban ngày; không mở đầu bằng \"Phải/Đúng\".",
+      "review_status": "pending"
     }
   ]
 }

@@ -4,10 +4,23 @@ import { describe, expect, it } from 'vitest';
 import {
   asksForMissingData,
   endsWithQuestion,
+  fold,
+  foreignScript,
   gpuRefusal,
+  groupKey,
+  inventedNumbers,
+  mangledTerms,
+  mcnemarP,
+  namesMissing,
+  opensWithAgreement,
+  pairedComparison,
   scoreAnswer,
+  signTestP,
+  stepsInOrder,
   summarize,
   summarizeRuns,
+  trapHandled,
+  type AnswerScore,
   type EvalItem,
   type EvalRun,
 } from '../scripts/teaching/rubric.mjs';
@@ -23,46 +36,371 @@ function item(id: string): EvalItem {
   return found;
 }
 
+/** Items added on 2026-10-14 (missing data, step-by-step and trap questions). */
+const NEW_IDS = [
+  'P11',
+  'P12',
+  'P13',
+  'P14',
+  'C11',
+  'C12',
+  'C13',
+  'C14',
+  'B11',
+  'B12',
+  'B13',
+  'B14',
+];
+
+const matches = (patterns: string[], text: string) =>
+  patterns.some((p) => new RegExp(p).test(fold(text)));
+
 describe('teaching evaluation set', () => {
-  it('covers three subjects and every question type, at least 30 items', () => {
-    expect(set.items.length).toBeGreaterThanOrEqual(30);
+  it('covers three subjects and every question type, 42 items', () => {
+    expect(set.items.length).toBe(42);
     for (const subject of ['physics', 'chemistry', 'biology'] as const) {
-      expect(set.items.filter((i) => i.subject === subject).length).toBeGreaterThanOrEqual(10);
+      expect(set.items.filter((i) => i.subject === subject).length).toBe(14);
     }
     const types = new Set(set.items.map((i) => i.type));
-    for (const t of ['concept', 'problem', 'missing-data', 'misconception', 'followup', 'tool']) {
+    for (const t of [
+      'concept',
+      'problem',
+      'missing-data',
+      'misconception',
+      'followup',
+      'tool',
+      'steps',
+      'trap',
+    ]) {
       expect(types).toContain(t);
     }
     expect(new Set(set.items.map((i) => i.id)).size).toBe(set.items.length);
-    // Every pattern compiles.
-    for (const i of set.items) for (const p of [...i.keyFacts.flat(), ...i.mustNot]) new RegExp(p);
     expect(set.review_status).toBe('pending');
   });
 
+  it('has patterns that compile and well-formed item fields', () => {
+    for (const i of set.items) {
+      for (const p of [...i.keyFacts.flat(), ...i.mustNot, ...(i.missing ?? []).flat()]) {
+        new RegExp(p);
+      }
+      if (i.answerUnit) new RegExp(i.answerUnit);
+      for (const stage of i.steps ?? []) {
+        for (const k of stage) expect(i.keyFacts[k], `${i.id} step ${k}`).toBeDefined();
+      }
+      for (const n of i.allowNumbers ?? []) expect(Number.isFinite(Number(n))).toBe(true);
+      if (i.type === 'missing-data') {
+        expect(i.expectsClarify, i.id).toBe(true);
+        expect(i.missing?.length, i.id).toBeGreaterThan(0);
+      }
+      if (i.type === 'steps') {
+        expect(i.steps?.length, i.id).toBeGreaterThan(1);
+        expect(i.derivation, i.id).toBeTruthy();
+      }
+      if (i.type === 'trap') {
+        expect(i.trap?.note, i.id).toBeTruthy();
+        expect(i.keyFacts[0]?.length, i.id).toBeGreaterThan(0);
+      }
+    }
+    for (const id of NEW_IDS) {
+      expect(item(id).review_status).toBe('pending');
+      expect(item(id).expected).toBeTruthy();
+    }
+  });
+
+  // The numbers of the step-by-step and trap items, recomputed here: the answer key must accept
+  // the right result and the mustNot patterns must catch the named mistakes.
+  const comma = (x: number) => String(Math.round(x * 1000) / 1000).replace('.', ',');
+
+  it('P13: braking distance 50 m (a = F/m, v² − v₀² = 2as, energy cross-check)', () => {
+    const [m, v0, F] = [1000, 20, 4000];
+    const a = F / m;
+    const s = v0 ** 2 / (2 * a);
+    const t = v0 / a;
+    expect([a, s, t]).toEqual([4, 50, 5]);
+    expect(v0 * t - 0.5 * a * t ** 2).toBe(s);
+    expect((0.5 * m * v0 ** 2) / F).toBe(s);
+    const p13 = item('P13');
+    expect(p13.derivation).toContain(`${s} m`);
+    expect(matches(p13.keyFacts[2] ?? [], `s = ${s} m`)).toBe(true);
+    expect(scoreAnswer(p13, `Vậy s = ${s} m.`).noKnownErrors).toBe(true);
+    // Named mistakes: s = v₀t, v₀t + ½|a|t², a sign error.
+    for (const wrong of [v0 * t, v0 * t + 0.5 * a * t ** 2, -s]) {
+      expect(scoreAnswer(p13, `Vậy s = ${comma(wrong).replace('-', '−')} m.`).noKnownErrors).toBe(
+        false,
+      );
+    }
+  });
+
+  it('C13: 13,6 g ZnCl₂ from 6,5 g Zn (Zn = 65, Cl = 35,5)', () => {
+    const n = 6.5 / 65;
+    const M = 65 + 2 * 35.5;
+    const mass = n * M;
+    expect(n).toBeCloseTo(0.1, 12);
+    expect(M).toBe(136);
+    expect(mass).toBeCloseTo(13.6, 12);
+    const c13 = item('C13');
+    expect(c13.derivation).toContain('13,6 g');
+    expect(matches(c13.keyFacts[4] ?? [], `m = ${comma(mass)} g`)).toBe(true);
+    expect(matches(c13.keyFacts[4] ?? [], `m = ${comma(mass)} (g)`)).toBe(true);
+    expect(matches(c13.keyFacts[3] ?? [], `M = ${M} g/mol`)).toBe(true);
+    // Named mistakes: ZnCl (index 2 forgotten), the HCl coefficient, half the moles.
+    for (const wrong of [n * (65 + 35.5), 2 * n * M, (n / 2) * M]) {
+      expect(scoreAnswer(c13, `m = ${comma(wrong)} g.`).noKnownErrors).toBe(false);
+    }
+  });
+
+  it('B13: 3120 hydrogen bonds for N = 2400, A = 20 %', () => {
+    const N = 2400;
+    const A = 0.2 * N;
+    const G = N / 2 - A;
+    const H = 2 * A + 3 * G;
+    expect([A, G, H]).toEqual([480, 720, 3120]);
+    expect(N + G).toBe(H);
+    const b13 = item('B13');
+    expect(b13.derivation).toContain(String(H));
+    expect(matches(b13.keyFacts[3] ?? [], `H = ${H}`)).toBe(true);
+    expect(matches(b13.keyFacts[3] ?? [], 'H = 3.120')).toBe(true);
+    // Named mistakes: % of one strand, swapped coefficients, T forgotten.
+    const wrongs = [
+      2 * (0.2 * (N / 2)) + 3 * (0.3 * (N / 2)),
+      3 * A + 2 * G,
+      2 * A + 3 * ((N - A) / 2),
+    ];
+    expect(wrongs).toEqual([1560, 2880, 3840]);
+    for (const wrong of wrongs) {
+      expect(scoreAnswer(b13, `H = ${wrong}.`).noKnownErrors).toBe(false);
+    }
+  });
+
+  it('C14 and C12: mixed concentration stays 1 M; a volume needs the conditions', () => {
+    expect((0.1 * 1 + 0.1 * 1) / (0.1 + 0.1)).toBe(1);
+    expect(item('C14').derivation).toContain('1 M');
+    // C12: a volume at assumed conditions is an invented number (teacher decision pending).
+    for (const v of [0.2 * 24.79, 0.2 * 22.4]) {
+      expect(inventedNumbers(item('C12'), `V = ${comma(v)} L.`)).toEqual([comma(v)]);
+    }
+    expect(item('C12').expected).toMatch(/Giáo viên cần xác nhận/);
+  });
+});
+
+/**
+ * Answer-key fixes (report on the 2026-10-13 Gemma 3 1B run): each old pattern misjudged a real
+ * sentence of the saved answers (eval-gemma3-1b.json). keyFacts: `oldHit` is what the old pattern
+ * said for that group, the current group must say the opposite. mustNot: `oldHit` is whether the
+ * old pattern flagged the sentence; the current noKnownErrors must equal it (a missed error is now
+ * flagged, a wrongly flagged correct sentence is now accepted).
+ */
+const KEY_FIXES: {
+  id: string;
+  group?: number;
+  old: string;
+  oldHit: boolean;
+  text: string;
+}[] = [
+  // Too loose: "huc" inside "công thức".
+  {
+    id: 'P8',
+    group: 1,
+    old: 'k ?.?\\|?.?x|k ?\\*? ?\\(?delta|hooke|huc',
+    oldHit: true,
+    text: 'Theo công thức, ΔPE = -F * l.',
+  },
+  // Too loose: "du" inside "duy".
+  {
+    id: 'B1',
+    group: 2,
+    old: 'giong|du|bo (nst|nhiem sac the)|2n',
+    oldHit: true,
+    text: 'Điều này giúp duy trì sự cân bằng gen và tránh những biến chứng không mong muốn.',
+  },
+  // Too loose: any "không".
+  {
+    id: 'C7',
+    group: 0,
+    old: 'khong',
+    oldHit: true,
+    text: 'Để xác định xem chất xúcatz đã làm tăng hoặc không làm tăng sự hình thành sản phẩm, chúng ta cần phân tích mối quan hệ giữa enthalpy (ΔrH°) và lượng sản phôi.',
+  },
+  {
+    id: 'P9',
+    group: 0,
+    old: 'khong phu thuoc|khong',
+    oldHit: true,
+    text: 'Nếu chúng ta giả định rằng con shaken giản dị, thì L (khối lượng) không phụ thuộc trực tiếp vào góc phi.',
+  },
+  // Too loose: "hai" inside "phải".
+  {
+    id: 'C10',
+    group: 1,
+    old: '\\b2\\b|hai',
+    oldHit: true,
+    text: 'Vậy, vể trái 96, vê phải 3.',
+  },
+  // Too loose: "axit" in "tính axit hay bazơ" is not a conclusion.
+  {
+    id: 'C4',
+    group: 0,
+    old: 'axit|acid',
+    oldHit: true,
+    text: 'pH là thước đo tính axit hay bazơ của dung dịch.',
+  },
+  // Too strict: "thay đổi trong cấu trúc".
+  {
+    id: 'B6',
+    group: 0,
+    old: 'bien tinh|pha vo cau truc|thay doi cau truc|bien doi cau truc',
+    oldHit: false,
+    text: 'Nhiệt độ quá nóng làm enzyme bị phá hủy do sự thay đổi trong cấu trúc não vật chất.',
+  },
+  // Too strict mustNot: "chu kỳ" (y), "tỉ lệ nghịch với khối lượng".
+  {
+    id: 'P9',
+    old: '(co|chu ki) phu thuoc vao khoi luong',
+    oldHit: false,
+    text: 'Khi con lắc đàn đơn dài, chu kỳ tự nhiên (T) của dao động tỉ lệ nghịch với khối lượng của quả nặng.',
+  },
+  // mustNot flagged a restated question.
+  {
+    id: 'P9',
+    old: '(co|chu ki) phu thuoc vao khoi luong',
+    oldHit: true,
+    text: 'Chu kì của con lắc đơn có phụ thuộc vào khối lượng quả nặng không? Không: T = 2π√(l/g).',
+  },
+  // Too strict mustNot: "sẽ rơi nhanh hơn", and the reverse error.
+  {
+    id: 'P2',
+    old: 'vat nang (roi )?nhanh hon',
+    oldHit: false,
+    text: 'Trong chân không (không có môi trường), vật nặng sẽ rơi nhanh hơn vật nhẹ vì lực hấp dẫn tác dụng lên cả hai vật đều là F = ma * g, nhưng ma (m) của vật nặng nhỏ hơn so với ma của vật nhẹ.',
+  },
+  {
+    id: 'P2',
+    old: 'vat nang (roi )?nhanh hon',
+    oldHit: false,
+    text: 'Do đó, vật nhẹ sẽ rơi nhanh hơn vật nặng trong chânnang.',
+  },
+  // mustNot flagged a correction.
+  {
+    id: 'P2',
+    old: 'vat nang (roi )?nhanh hon',
+    oldHit: true,
+    text: 'Không phải vật nặng rơi nhanh hơn: trong chân không mọi vật rơi với cùng gia tốc g.',
+  },
+  // Too strict mustNot: "dung dịch là bazơ", "khả năng cao là **bazơ**".
+  {
+    id: 'C4',
+    old: 'moi truong (bazo|kiem)\\b',
+    oldHit: false,
+    text: 'Nếu pH < 7 thì dung dịch là bazơ.',
+  },
+  {
+    id: 'C4',
+    old: 'moi truong (bazo|kiem)\\b',
+    oldHit: false,
+    text: 'Do đó, dung chất phụ gia có pH ≈ 3, có khả năng cao là **bazơ**.',
+  },
+  // mustNot flagged the pH scale itself.
+  {
+    id: 'C4',
+    old: 'moi truong (bazo|kiem)\\b',
+    oldHit: true,
+    text: 'Dung dịch có pH > 7 mới là môi trường bazơ; pH = 3 < 7 nên dung dịch có môi trường axit.',
+  },
+  // Too strict mustNot: "Có, … luôn có hại".
+  {
+    id: 'B9',
+    old: '(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)',
+    oldHit: false,
+    text: 'Có, đột biến gen luôn có hại.',
+  },
+  // mustNot flagged reverse transcription, which is correct. No saved answer mentions it: this
+  // sentence is a textbook one.
+  {
+    id: 'B8',
+    old: 'arn ?(→|tao ra|thanh) ?adn',
+    oldHit: true,
+    text: 'Ngược lại, phiên mã ngược (ARN → ADN) chỉ gặp ở một số virut.',
+  },
+];
+
+describe('answer-key fixes (saved Gemma 3 1B answers)', () => {
+  for (const fix of KEY_FIXES) {
+    const what = fix.group === undefined ? 'mustNot' : `keyFacts[${fix.group}]`;
+    it(`${fix.id} ${what}: "${fix.text.slice(0, 50)}…"`, () => {
+      expect(new RegExp(fix.old).test(fold(fix.text))).toBe(fix.oldHit);
+      if (fix.group === undefined) {
+        expect(scoreAnswer(item(fix.id), fix.text).noKnownErrors).toBe(fix.oldHit);
+      } else {
+        expect(matches(item(fix.id).keyFacts[fix.group] ?? [], fix.text)).toBe(!fix.oldHit);
+      }
+    });
+  }
+
+  it('still credits the correct statements', () => {
+    const credited: [string, number, string][] = [
+      ['P8', 1, 'F = k * x, trong đó:'],
+      ['P8', 1, 'Theo định luật Húc, F = k·|Δl| = 100·0,1 = 10 N.'],
+      ['B1', 2, 'Nhờ vậy mỗi tế bào con nhận đủ bộ NST giống tế bào mẹ.'],
+      ['C7', 0, 'Không, xúc tác chỉ làm tăng tốc độ phản ứng, không làm tăng lượng sản phẩm.'],
+      ['C7', 0, 'Không. Chất xúc tác chỉ làm phản ứng nhanh hơn.'],
+      ['P9', 0, 'Không, chu kì không phụ thuộc vào khối lượng quả nặng.'],
+      ['P9', 0, 'T = 2π√(l/g) không chứa m.'],
+      ['C10', 1, 'Vế phải có 2 phân tử H₂O nên cũng có 2 nguyên tử O.'],
+      ['C10', 1, 'Mỗi vế đều có 2 nguyên tử oxi.'],
+      ['C4', 0, 'pH = 3 < 7 nên dung dịch có môi trường axit.'],
+      ['C4', 0, 'Dung dịch này là **axit**.'],
+      ['B6', 0, 'Nhiệt độ cao làm protein enzyme bị biến tính.'],
+    ];
+    for (const [id, g, text] of credited) {
+      expect(matches(item(id).keyFacts[g] ?? [], text), `${id} ${text}`).toBe(true);
+    }
+    // Wrong statements stay flagged; negated ones and the misconception sentence do not.
+    expect(scoreAnswer(item('B9'), 'Phải, đột biến luôn gây hại.').noKnownErrors).toBe(false);
+    expect(
+      scoreAnswer(item('B9'), 'Đột biến gen không phải luôn có hại: có đột biến trung tính.')
+        .noKnownErrors,
+    ).toBe(true);
+    expect(scoreAnswer(item('B8'), 'Phiên mã là quá trình ARN tạo ra ADN.').noKnownErrors).toBe(
+      false,
+    );
+    expect(scoreAnswer(item('C4'), 'Môi trường bazơ.').noKnownErrors).toBe(false);
+  });
+});
+
+describe('teaching rubric', () => {
   it('scores a good answer above a wrong one', () => {
-    const item = set.items.find((i) => i.id === 'B1');
-    if (!item) throw new Error('B1 missing');
     const good =
       'Ở kì trung gian (pha S), ADN nhân đôi nên mỗi nhiễm sắc thể có 2 cromatit. Nhờ vậy mỗi tế bào con nhận đủ bộ 2n giống tế bào mẹ. Lỗi hay gặp: nghĩ ADN nhân đôi trong kì đầu. Em thử trả lời: pha nào ADN nhân đôi?';
     const wrong = 'ADN nhân đôi xảy ra ở pha M rồi chia đều cho các tế bào.';
-    const a = scoreAnswer(item, good);
-    const b = scoreAnswer(item, wrong);
+    const a = scoreAnswer(item('B1'), good);
+    const b = scoreAnswer(item('B1'), wrong);
     expect(a.keyFacts).toBe(1);
+    expect(a.facts).toEqual([true, true, true]);
     expect(a.noKnownErrors).toBe(true);
     expect(a.checkQuestion).toBe(true);
+    expect(a.mangled).toEqual([]);
+    expect(a.foreignScript).toBe(0);
     expect(b.noKnownErrors).toBe(false);
     expect(b.keyFacts).toBeLessThan(1);
+    // Checks that do not apply to a concept question.
+    expect([a.asksClarification, a.namesMissing, a.steps, a.trapHandled]).toEqual([
+      null,
+      null,
+      null,
+      null,
+    ]);
   });
 
   it('expects a clarifying question when data is missing', () => {
-    const item = set.items.find((i) => i.id === 'P5');
-    if (!item) throw new Error('P5 missing');
-    expect(scoreAnswer(item, 'Quãng đường là 100 m.').asksClarification).toBe(false);
-    expect(
-      scoreAnswer(item, 'Em cho thầy biết vận tốc và thời gian chuyển động là bao nhiêu nhé?')
-        .asksClarification,
-    ).toBe(true);
-    expect(summarize([scoreAnswer(item, 'Em cho biết vận tốc là bao nhiêu?')]).n).toBe(1);
+    expect(scoreAnswer(item('P5'), 'Quãng đường là 100 m.').asksClarification).toBe(false);
+    const asks = scoreAnswer(
+      item('P5'),
+      'Em cho thầy biết vận tốc và thời gian chuyển động là bao nhiêu nhé?',
+    );
+    expect(asks.asksClarification).toBe(true);
+    expect(asks.namesMissing).toBe(true);
+    expect(scoreAnswer(item('P5'), 'Em cho thầy biết thêm dữ kiện nhé?').namesMissing).toBe(false);
+    expect(summarize([scoreAnswer(item('P5'), 'Em cho biết vận tốc là bao nhiêu?')]).n).toBe(1);
   });
 
   it('does not count an answer that invents the missing numbers as asking for them', () => {
@@ -95,6 +433,48 @@ describe('teaching evaluation set', () => {
       asksForMissingData('Ví dụ, nếu biết v₀ và bộ 2n thì sao? Em cho thầy biết các số đó nhé?'),
     ).toBe(true);
     expect(asksForMissingData('Để cho dễ hiểu, em nghĩ quãng đường phụ thuộc gì?')).toBe(false);
+  });
+
+  it('does not count symbols, formula coefficients or given numbers as invented', () => {
+    // Used to fail: "= 2n" and "s = 1/2·a·t²" were read as invented values.
+    expect(
+      asksForMissingData('Số NST trong tế bào con = 2n. Em cho thầy biết 2n là bao nhiêu?'),
+    ).toBe(true);
+    expect(
+      asksForMissingData('Em cho thầy biết thời gian là bao nhiêu? Công thức s = 1/2·a·t².'),
+    ).toBe(true);
+    // A value given in the question may be repeated.
+    expect(
+      scoreAnswer(item('P11'), 'Đề cho v₀ = 20 m/s, v = 0. Em cho thầy biết gia tốc là bao nhiêu?')
+        .asksClarification,
+    ).toBe(true);
+    // Without the question, the same 20 is new.
+    expect(inventedNumbers({ question: '' }, 'Ta có v₀ = 20 m/s.')).toEqual(['20']);
+    // A final number before the asked unit, an estimate, an assumption.
+    expect(
+      inventedNumbers(item('P11'), 'Quãng đường ô tô đi được là 40 m. Đề có cho gia tốc không?'),
+    ).toEqual(['40']);
+    expect(
+      inventedNumbers(
+        item('P11'),
+        'Ta dùng v² − v₀² = 2as. Giả sử gia tốc a = −5 m/s² thì s = 40 m.',
+      ),
+    ).toEqual(['5', '40']);
+    expect(inventedNumbers(item('C12'), 'Thể tích khoảng 4,48 lít.')).toEqual(['4,48']);
+    // Thousands dots read both ways (3.120 = 3120).
+    expect(inventedNumbers(item('B13'), 'H = 3.120.')).toEqual(['3.120']);
+    expect(inventedNumbers({ question: 'N = 3120' }, 'H = 3.120.')).toEqual([]);
+    // allowNumbers: the molar volume at standard conditions may be quoted.
+    expect(inventedNumbers(item('C12'), 'Ở đkc, 1 mol khí chiếm 24,79 L/mol.')).toEqual([]);
+  });
+
+  it('reads a natural request for an amount as asking for data', () => {
+    // Used to fail: "Em đã hòa tan bao nhiêu gam NaOH?" matched no request pattern.
+    expect(asksForMissingData('Em đã hòa tan bao nhiêu gam NaOH?')).toBe(true);
+    expect(asksForMissingData('Em đã dùng bao nhiêu ml dung dịch?')).toBe(true);
+    const s = scoreAnswer(item('C11'), 'Em đã hòa tan bao nhiêu gam NaOH?');
+    expect(s.asksClarification).toBe(true);
+    expect(s.namesMissing).toBe(true);
   });
 
   it('needs the last sentence to be the question', () => {
@@ -150,9 +530,352 @@ describe('teaching evaluation set', () => {
   });
 });
 
+/** Hand-written answers to the new items: [label, answer, expected fields]. */
+type Want = Partial<
+  Pick<
+    AnswerScore,
+    | 'keyFacts'
+    | 'noKnownErrors'
+    | 'checkQuestion'
+    | 'asksClarification'
+    | 'namesMissing'
+    | 'steps'
+    | 'trapHandled'
+    | 'invented'
+  >
+>;
+const NEW_ITEM_CASES: Record<string, [string, string, Want][]> = {
+  P11: [
+    [
+      'good',
+      'Để tính quãng đường hãm phanh ta dùng v² − v₀² = 2as, với v₀ = 20 m/s và v = 0. Nhưng đề chưa cho gia tốc. Em cho thầy biết gia tốc (hoặc thời gian hãm phanh) là bao nhiêu nhé?',
+      { asksClarification: true, namesMissing: true, keyFacts: 1, invented: [] },
+    ],
+    [
+      'invents a',
+      'Ta dùng v² − v₀² = 2as. Giả sử gia tốc a = −5 m/s² thì s = 40 m. Em cho thầy biết gia tốc thật là bao nhiêu nhé?',
+      { asksClarification: false, invented: ['5', '40'] },
+    ],
+    [
+      'final number, no "="',
+      'Quãng đường ô tô đi được là 40 m. Đề có cho gia tốc không?',
+      { asksClarification: false, invented: ['40'] },
+    ],
+    [
+      'generic ask',
+      'Bài này cần thêm dữ kiện. Em cho thầy biết thêm nhé?',
+      { asksClarification: true, namesMissing: false },
+    ],
+    [
+      'asks for the braking time',
+      'Em cho thầy biết ô tô hãm phanh trong bao lâu thì dừng?',
+      { asksClarification: true, namesMissing: true },
+    ],
+  ],
+  P12: [
+    [
+      'good',
+      'Đèn sáng bình thường nên U = 220 V. Muốn tính I ta dùng I = P/U, nhưng đề chưa cho công suất của đèn. Em xem trên bóng ghi bao nhiêu W rồi cho thầy biết nhé?',
+      { asksClarification: true, namesMissing: true, keyFacts: 1 },
+    ],
+    [
+      'assumes 100 W',
+      'Bóng đèn thường là 100 W nên I = 100/220 ≈ 0,45 A. Em cho thầy biết công suất thật là bao nhiêu nhé?',
+      { asksClarification: false, invented: ['0,45'] },
+    ],
+    [
+      '"hoạt động" is not "oát"',
+      'Em cho thầy biết đèn hoạt động thế nào nhé?',
+      { namesMissing: false },
+    ],
+  ],
+  P13: [
+    [
+      'good',
+      'Bước 1: gia tốc a = −F/m = −4000/1000 = −4 m/s². Bước 2: dùng v² − v₀² = 2as với v = 0. Bước 3: s = 400/8 = 50 m. Kiểm tra: đơn vị m hợp lý. Em thử: nếu lực hãm gấp đôi thì quãng đường thay đổi thế nào?',
+      { keyFacts: 1, steps: 1, noKnownErrors: true, checkQuestion: true },
+    ],
+    [
+      'energy route',
+      'Động năng ban đầu ½mv₀² = 200 000 J. Theo định lý động năng, công của lực hãm bằng độ giảm động năng: F·s = 200 000 J, nên s = 50 m. Em thử tính thời gian hãm phanh nhé?',
+      { keyFacts: 1, steps: 1 },
+    ],
+    [
+      'substituted formula, units in brackets',
+      'Gia tốc a = F/m = 4 (m/s²). Áp dụng 0 − 20² = 2·(−4)·s, suy ra s = 50 (m). Em hiểu chưa?',
+      { keyFacts: 1, steps: 1, noKnownErrors: true },
+    ],
+    ['result only', 'Quãng đường là 50 m. Em hiểu chưa?', { steps: 0 }],
+    [
+      'wrong 100 m',
+      'a = 4 m/s², t = 20/4 = 5 s, s = v₀·t = 100 m. Em hiểu chưa?',
+      { noKnownErrors: false },
+    ],
+    [
+      '100 m − 50 m is fine',
+      'a = −4 m/s², t = 5 s. s = v₀t + ½at² = 100 m − 50 m = 50 m. Em thử lại nhé?',
+      { noKnownErrors: true, steps: 1 },
+    ],
+  ],
+  P14: [
+    [
+      'good',
+      'Chưa đúng em ạ. Ở điểm cao nhất vận tốc bằng 0 chỉ trong một khoảnh khắc, nhưng trọng lực vẫn tác dụng nên gia tốc vẫn bằng g ≈ 9,8 m/s², hướng xuống. Lỗi hay gặp: nghĩ vận tốc bằng 0 thì gia tốc cũng bằng 0. Em thử nghĩ: nếu gia tốc bằng 0 thật thì bóng sẽ ra sao?',
+      { keyFacts: 1, noKnownErrors: true, trapHandled: true },
+    ],
+    [
+      'agrees',
+      'Đúng vậy, ở điểm cao nhất bóng dừng lại nên gia tốc của bóng cũng bằng 0. Em hiểu chưa?',
+      { noKnownErrors: false, trapHandled: false },
+    ],
+    [
+      '"Đúng là" + correction',
+      'Đúng là vận tốc bằng 0, nhưng gia tốc không bằng 0: gia tốc vẫn là g hướng xuống, vì vận tốc đang đổi chiều. Em thử giải thích vì sao nhé?',
+      { noKnownErrors: true, trapHandled: true },
+    ],
+    [
+      'negated mention',
+      'Không phải gia tốc bằng 0 đâu em. Gia tốc luôn là g, hướng xuống. Em hiểu chưa?',
+      { noKnownErrors: true, trapHandled: true },
+    ],
+  ],
+  C11: [
+    [
+      'good',
+      'Ta có C_M = n/V với V = 250 ml = 0,25 L. Nhưng đề chưa cho khối lượng NaOH. Em cho thầy biết đã hòa tan bao nhiêu gam NaOH nhé?',
+      { asksClarification: true, namesMissing: true, keyFacts: 1 },
+    ],
+    [
+      'invents 4 g',
+      'Giả sử hòa tan 4 g NaOH: n = 4/40 = 0,1 mol, C_M = 0,1/0,25 = 0,4 M. Em cho thầy biết khối lượng thật nhé?',
+      { asksClarification: false },
+    ],
+    [
+      'asks for the given volume',
+      'Em cho thầy biết thể tích dung dịch là bao nhiêu?',
+      { namesMissing: false },
+    ],
+  ],
+  C12: [
+    [
+      'good',
+      'Thể tích khí phụ thuộc nhiệt độ và áp suất. Ở điều kiện chuẩn (25 °C, 1 bar) 1 mol khí chiếm 24,79 L/mol. Em cho thầy biết khí ở điều kiện nào nhé?',
+      { asksClarification: true, namesMissing: true, keyFacts: 1 },
+    ],
+    [
+      'assumes standard conditions',
+      'Ở điều kiện chuẩn, V = 0,2 × 24,79 = 4,958 L. Em có muốn thử với 0,5 mol không?',
+      { asksClarification: false },
+    ],
+    [
+      'silent result',
+      'Thể tích của 0,2 mol CO₂ là 4,48 lít. Em hiểu chưa?',
+      { asksClarification: false, invented: ['4,48'] },
+    ],
+  ],
+  C13: [
+    [
+      'good',
+      'Bước 1: Zn + 2HCl → ZnCl₂ + H₂. Bước 2: n(Zn) = 6,5/65 = 0,1 mol. Bước 3: theo PTHH, n(ZnCl₂) = n(Zn) = 0,1 mol. M(ZnCl₂) = 65 + 2·35,5 = 136 g/mol. Bước 4: m = 0,1 × 136 = 13,6 g. Em thử: nếu dùng 13 g kẽm thì được bao nhiêu gam muối?',
+      { keyFacts: 1, steps: 1, noKnownErrors: true, checkQuestion: true },
+    ],
+    [
+      'forgot index 2',
+      'n(Zn) = 0,1 mol, Zn + 2HCl → ZnCl₂ + H₂, theo phương trình n muối = 0,1 mol, M = 100,5 nên m = 10,05 g. Em hiểu chưa?',
+      { noKnownErrors: false },
+    ],
+    [
+      'moles first, then the equation',
+      'n(Zn) = 6,5 : 65 = 0,1 mol. Phương trình: Zn + 2HCl → ZnCl₂ + H₂, theo PT tỉ lệ 1 : 1 nên n(ZnCl₂) = 0,1 mol; m = 0,1·136 = 13,6 g. Em thử lại với 3,25 g nhé?',
+      { steps: 1 },
+    ],
+    [
+      'units in brackets',
+      'PTHH: Zn + 2HCl → ZnCl2 + H2. nZn = 6,5 : 65 = 0,1 (mol). Theo PT: nZnCl2 = nZn = 0,1 (mol). mZnCl2 = 0,1 × 136 = 13,6 (g). Em hiểu chưa?',
+      { keyFacts: 1, steps: 1 },
+    ],
+  ],
+  C14: [
+    [
+      'good',
+      'Chưa đúng em ạ. Số mol NaCl là 0,1 + 0,1 = 0,2 mol, nhưng thể tích cũng tăng lên 200 ml = 0,2 L, nên nồng độ vẫn là 1 M. Lỗi hay gặp: cộng nồng độ 1 M + 1 M = 2 M. Em thử: trộn 100 ml NaCl 1 M với 100 ml nước thì nồng độ bao nhiêu?',
+      { keyFacts: 1, noKnownErrors: true, trapHandled: true },
+    ],
+    [
+      'agrees',
+      'Đúng rồi, 1 M + 1 M = 2 M. Em hiểu chưa?',
+      { noKnownErrors: false, trapHandled: false },
+    ],
+    [
+      'negated',
+      'Không đúng, nồng độ không phải 2 M mà vẫn là 1 M vì số mol và thể tích cùng gấp đôi. Em hiểu chưa?',
+      { noKnownErrors: true, trapHandled: true },
+    ],
+    [
+      '0,2 mol is not 2 M',
+      'Sai rồi: không đổi, vẫn 1 M; n = 0,2 mol trong 0,2 L. Em hiểu chưa?',
+      { noKnownErrors: true },
+    ],
+    ['2 M in brackets', 'Nồng độ thu được là 2 (M).', { noKnownErrors: false }],
+  ],
+  B11: [
+    [
+      'good',
+      'Số liên kết hiđro H = 2A + 3G, và từ N = 3000 ta có A + G = 1500. Nhưng đề chưa cho số nuclêôtit loại A (hay G). Em cho thầy biết số nuclêôtit loại A là bao nhiêu nhé?',
+      { asksClarification: true, namesMissing: true, keyFacts: 1 },
+    ],
+    [
+      'assumes A = G',
+      'Giả sử A = G = 750 thì H = 2·750 + 3·750 = 3750 liên kết. Em cho thầy biết số A nhé?',
+      { asksClarification: false },
+    ],
+    [
+      'A–T 2 bonds, G–X 3 bonds',
+      'A liên kết với T bằng 2 liên kết, G với X bằng 3 liên kết. Đề chưa cho tỉ lệ từng loại. Em cho thầy biết A chiếm bao nhiêu phần trăm nhé?',
+      { asksClarification: true, namesMissing: true },
+    ],
+  ],
+  B12: [
+    [
+      'good',
+      'Ở trạng thái cân bằng, số cây dị hợp = 2pq × 1000, với p + q = 1. Nhưng đề chưa cho tần số alen. Em cho thầy biết tần số alen A (hoặc số cây mang tính trạng lặn) là bao nhiêu nhé?',
+      { asksClarification: true, namesMissing: true, keyFacts: 1 },
+    ],
+    [
+      'assumes p = q',
+      'Giả sử p = q = 0,5 thì số cây dị hợp = 2·0,5·0,5·1000 = 500 cây. Em cho thầy biết tần số alen thật nhé?',
+      { asksClarification: false },
+    ],
+  ],
+  B13: [
+    [
+      'good',
+      'Bước 1: A = T = 20% × 2400 = 480. Bước 2: G = X = 30% × 2400 = 720. Bước 3: H = 2A + 3G = 2·480 + 3·720 = 3120 liên kết. Em thử: nếu A chiếm 30% thì sao?',
+      { keyFacts: 1, steps: 1, noKnownErrors: true },
+    ],
+    ['thousands dot', 'A = T = 480, G = X = 720, H = 2A + 3G = 3.120. Em hiểu chưa?', { steps: 1 }],
+    [
+      'swapped coefficients',
+      'A = 480, G = 720, H = 3·480 + 2·720 = 2880. Em hiểu chưa?',
+      { noKnownErrors: false, steps: 2 / 3 },
+    ],
+  ],
+  B14: [
+    [
+      'good',
+      'Không phải em ạ. Cây hô hấp liên tục cả ngày lẫn đêm; còn quang hợp chỉ diễn ra khi có ánh sáng. Ban ngày quang hợp mạnh hơn hô hấp nên ta thấy cây thải O₂. Lỗi hay gặp: nghĩ cây chỉ hô hấp ban đêm. Em thử: trong phòng tối, cây có thải CO₂ không?',
+      { keyFacts: 1, noKnownErrors: true, trapHandled: true },
+    ],
+    [
+      'agrees',
+      'Phải, ban ngày cây không hô hấp mà chỉ quang hợp. Em hiểu chưa?',
+      { noKnownErrors: false, trapHandled: false },
+    ],
+    [
+      '"không chỉ"',
+      'Cây không chỉ hô hấp ban đêm: cây hô hấp mọi lúc, còn quang hợp cần ánh sáng. Em hiểu chưa?',
+      { noKnownErrors: true, trapHandled: true },
+    ],
+    ['agrees with "Phải rồi"', 'Phải rồi em. Cây quang hợp ban ngày.', { noKnownErrors: false }],
+  ],
+};
+
+describe('new items: missing data, steps and traps', () => {
+  for (const [id, cases] of Object.entries(NEW_ITEM_CASES)) {
+    for (const [label, answer, want] of cases) {
+      it(`${id} ${label}`, () => {
+        const s = scoreAnswer(item(id), answer);
+        for (const [key, value] of Object.entries(want)) {
+          const got = s[key as keyof AnswerScore];
+          if (typeof value === 'number') expect(got, key).toBeCloseTo(value, 9);
+          else expect(got, key).toEqual(value);
+        }
+      });
+    }
+  }
+
+  it('reads steps in order and stops at the first missing stage', () => {
+    const b13 = item('B13');
+    expect(stepsInOrder(b13, 'H = 3120, A = 480, G = 720.')).toBeCloseTo(2 / 3, 9);
+    expect(stepsInOrder(b13, '')).toBe(0);
+    expect(stepsInOrder(item('P1'), 'Lực ma sát nghỉ.')).toBe(null);
+  });
+
+  it('finds an opening agreement but not "Đúng là …"', () => {
+    for (const a of ['Đúng.', 'Đúng vậy, …', '**Đúng!** Gia tốc…', 'Vâng, em nói đúng.', 'Phải.']) {
+      expect(opensWithAgreement(a), a).toBe(true);
+    }
+    for (const a of ['Đúng là vận tốc bằng 0, nhưng…', 'Chưa đúng.', 'Không phải.', '']) {
+      expect(opensWithAgreement(a), a).toBe(false);
+    }
+    expect(trapHandled(item('P1'), 'Đúng.')).toBe(null);
+    expect(namesMissing(item('P1'), 'Đề chưa cho gì?')).toBe(null);
+  });
+});
+
+describe('decoding health', () => {
+  it('measures letters written in another script, not Greek math symbols', () => {
+    expect(foreignScript('Gia tốc là 5 m/s².')).toBe(0);
+    // Real lines of the saved answers: math symbols are fine.
+    expect(foreignScript('ΣF = Ma')).toBe(0);
+    expect(foreignScript('v² = v_0² + 2 * a * Δx')).toBe(0);
+    expect(foreignScript('ΔrH = ΣνΔfH(sản phẩm) − ΣνΔfH(chất đầu); ω = 2π/T')).toBe(0);
+    // …other scripts are not.
+    // 5 Arabic letters out of 17 (Số 2, المول 5, lượng 5, NaOH 4, g 1).
+    expect(foreignScript('Số المول lượng NaOH = 7,0 g')).toBeCloseTo(5 / 17, 9);
+    expect(foreignScript('tìm hiểu về tính số nhiễm ισ trong chu kỳ')).toBeGreaterThan(0);
+    expect(foreignScript('(0)² = (9.76 m/сс)² + 0.2 * (-10 м/с²) * 2 м')).toBeGreaterThan(0);
+    expect(foreignScript('')).toBe(0);
+  });
+
+  it('finds key terms of the question written wrongly (real lines of the saved answers)', () => {
+    const cases: [string, string, string[]][] = [
+      ['B10', 'Do đó, mỗi tế báo con có **23** nhiễm sắc tố.', ['tế báo con']],
+      [
+        'B7',
+        'Chúng ta sẽ cùng tìm hiểu về tính số nhiễm ισ trong chu kỳ tế bào.',
+        ['nhiễm ισ', 'số nhiễm ισ'],
+      ],
+      ['B7', 'Do đó tế bào sẽ phát triển thêm 2 nhiễm sắc tể.', ['nhiễm sắc tể']],
+      ['P8', 'Trong đó, m là khối lượng ban đầu của lòxo.', ['lòxo']],
+      [
+        'C6',
+        'Tuy nhiên, nếu chỉ cần tìm ra nồng đo mol, bạn vẫn có thể thực hiện.',
+        ['nồng đo mol'],
+      ],
+      ['B9', '**Đột biễn gen:** Các đột biến liên quan đến việc sửa lỗi DNA.', ['đột biễn gen']],
+      ['C7', 'chứng tỏ chất xúcافل đang giúp quá trình xảy ra nhanh hơn', ['xúcافل']],
+      ['P6', 'Đúng. Khi vật chuyểnộng thẳng đều, lực dài bằng lực ma sát.', ['chuyểnộng']],
+      ['P1', 'Nếu lực maắt sát này đủ nhỏ, nó sẽ không ảnh hưởng.', ['maắt']],
+    ];
+    for (const [id, text, want] of cases) {
+      expect(mangledTerms(item(id), text).sort(), `${id} ${text}`).toEqual(want.sort());
+    }
+  });
+
+  it('does not flag correct text, real words one tone apart or function words', () => {
+    const clean: [string, string][] = [
+      [
+        'B1',
+        'Ở kì trung gian (pha S), ADN nhân đôi nên mỗi nhiễm sắc thể có 2 cromatit. Nhờ vậy mỗi tế bào con nhận đủ bộ 2n giống tế bào mẹ.',
+      ],
+      ['B10', 'Mỗi tế bào con có 46 nhiễm sắc thể; tế bào có 2n = 46.'],
+      // "rơi từ" and "rơi tự do" are both real.
+      ['P2', 'Khi rơi từ độ cao h, vật nặng và vật nhẹ rơi tự do như nhau.'],
+      // Real words one letter apart.
+      ['B1', 'Nguyên nhân là ADN phải được sao chép trước khi phân bào.'],
+      ['P1', 'Lực ma sát trượt khác lực ma sát nghỉ.'],
+      ['C3', 'Liên kết ổn định khi hai nguyên tử dùng chung cặp electron.'],
+      ['P9', 'Chu kỳ con lắc đơn không phụ thuộc vào khối lượng của quả nặng.'],
+    ];
+    for (const [id, text] of clean) expect(mangledTerms(item(id), text), text).toEqual([]);
+  });
+});
+
 describe('evaluation run summary', () => {
   const answer = 'Gia tốc là 5 m/s². Em thử lại nhé?';
   const run = (over: Partial<EvalRun>): EvalRun => ({
+    id: 'P3',
     ok: true,
     answer,
     firstMs: 800,
@@ -171,17 +894,112 @@ describe('evaluation run summary', () => {
       run({ firstMs: null }),
     ]);
     expect(s.runs).toBe(4);
+    expect(s.items).toBe(1);
     expect(s.failures).toBe(1);
     expect(s.noFirstPiece).toBe(1);
     expect(s.n).toBe(3);
     expect(s.meanFirstPieceMs).toBe(1000);
     expect(s.medianFirstPieceMs).toBe(1000);
     expect(s.meanMs).toBe(4667);
+    expect(s.medianMs).toBe(4000);
     expect(s.meanChars).toBe(answer.length);
+  });
+
+  it('summarizes the new checks over the questions they apply to', () => {
+    const scores = [
+      scoreAnswer(
+        item('P13'),
+        'Bước 1: a = 4 m/s². Bước 2: v² − v₀² = 2as. Bước 3: s = 50 m. Em hiểu chưa?',
+      ),
+      scoreAnswer(item('P13'), 'Quãng đường là 50 m. Em hiểu chưa?'),
+      scoreAnswer(item('P14'), 'Đúng vậy, gia tốc cũng bằng 0.'),
+      scoreAnswer(item('C11'), 'Em cho thầy biết khối lượng NaOH là bao nhiêu gam?'),
+      scoreAnswer(item('B10'), 'Mỗi tế báo con có 46 nhiễm sắc thể. Số المول.'),
+    ];
+    const s = summarize(scores);
+    expect(s.steps).toBeCloseTo(0.5, 9);
+    expect(s.trapHandled).toBe(0);
+    expect(s.namesMissing).toBe(1);
+    expect(s.mangledTerms).toBeCloseTo(1 / 5, 9);
+    expect(s.foreignScriptAnswers).toBeCloseTo(1 / 5, 9);
+    expect(s.foreignScript).toBeGreaterThan(0);
+    // Older saved scores without the new fields are left out of those rates.
+    const old = { ...scores[0], steps: undefined, mangled: undefined } as unknown as AnswerScore;
+    expect(summarize([old]).steps).toBe(null);
+    expect(summarize([old]).mangledTerms).toBe(null);
+  });
+});
+
+describe('paired comparison statistics', () => {
+  it('computes exact two-sided sign test and McNemar p-values', () => {
+    // 5 worse, 2 better (2026-10-13 item-level result): p = 2·(1 + 7 + 21)/128.
+    expect(signTestP(2, 5)).toBeCloseTo(58 / 128, 12);
+    expect(signTestP(5, 2)).toBeCloseTo(58 / 128, 12);
+    // 6 lost against 5 gained key-fact groups: p = 1.
+    expect(mcnemarP(5, 6)).toBe(1);
+    expect(signTestP(0, 10)).toBeCloseTo(2 / 1024, 15);
+    expect(signTestP(0, 0)).toBe(1);
+    expect(signTestP(3, 3)).toBe(1);
+    // Large counts do not overflow.
+    expect(signTestP(500, 500)).toBe(1);
+    expect(signTestP(400, 600)).toBeLessThan(1e-9);
+  });
+
+  it('pairs runs by question and repeat', () => {
+    const p3 = item('P3');
+    const good = 'F = m.a nên a = 10/2 = 5 m/s². Em hiểu chưa?';
+    const half = 'Theo định luật II Newton, a = F/m. Em hiểu chưa?';
+    const none = 'Em hiểu chưa?';
+    const r = (variant: string, id: string, answer: string, repeat = 0, ok = true): EvalRun => ({
+      id,
+      variant,
+      decoding: 'app',
+      temperature: 0,
+      repeat,
+      ok,
+      answer,
+      ms: 1,
+      promptChars: 1,
+      score: scoreAnswer(id === 'P3' ? p3 : item(id), answer),
+    });
+    const a = [
+      r('current', 'P3', good),
+      r('current', 'P3', good, 1),
+      r('current', 'C5', '0,1 mol vì M = 40. Em hiểu chưa?'),
+      r('current', 'B5', '8 tế bào con'),
+      r('current', 'P4', 'x', 0, false),
+    ];
+    const b = [
+      r('legacy', 'P3', half),
+      r('legacy', 'P3', none, 1),
+      r('legacy', 'C5', '0,1 mol vì M = 40.'),
+      r('legacy', 'B5', '2^3 = 8 tế bào con'),
+      r('legacy', 'P4', '2 s'),
+      r('legacy', 'C1', 'unpaired'),
+    ];
+    const c = pairedComparison(a, b);
+    // P3: A 1 vs B 0.25 (win), C5 tie, B5 0.5 vs 1 (loss); P4 failed in A, C1 only in B.
+    expect(c.items).toBe(3);
+    expect([c.wins, c.ties, c.losses]).toEqual([1, 1, 1]);
+    expect(c.meanDiff).toBeCloseTo((0.75 + 0 - 0.5) / 3, 9);
+    expect(c.signP).toBe(1);
+    // Groups: P3 r0 (A both, B second only), P3 r1 (A both, B none), C5 (both twice), B5.
+    expect(c.groups).toEqual({ both: 4, onlyA: 3, onlyB: 1, neither: 0 });
+    expect(c.mcnemarP).toBeCloseTo(signTestP(3, 1), 12);
+  });
+
+  it('labels runs by variant, decoding and temperature, with the old defaults', () => {
+    expect(groupKey({ variant: 'current', decoding: 'app', temperature: 0 })).toBe('current/app/0');
+    expect(groupKey({ variant: 'before' })).toBe('before/legacy/0.2');
   });
 });
 
 describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
+  const src = readFileSync(
+    resolve(import.meta.dirname, '../scripts/teaching/eval-gemma.mjs'),
+    'utf8',
+  );
+
   it('refuses unless every adapter it saw, the worker one included, is NVIDIA', () => {
     expect(gpuRefusal({ default: 'nvidia blackwell', highPerformance: 'nvidia blackwell' })).toBe(
       null,
@@ -196,10 +1014,6 @@ describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
   });
 
   it('checks the default adapter and the worker adapter before the first question', () => {
-    const src = readFileSync(
-      resolve(import.meta.dirname, '../scripts/teaching/eval-gemma.mjs'),
-      'utf8',
-    );
     const loop = src.indexOf('for (const item of items)');
     expect(loop).toBeGreaterThan(0);
     const before = src.slice(0, loop);
@@ -209,5 +1023,27 @@ describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
     // Page adapters first, then the adapter the worker reported, both before the loop.
     expect(before.match(/await refuseUnlessNvidia\(/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
     expect(before).toMatch(/gemma: warmUp\.gemma/);
+    // The model must already be downloaded.
+    expect(before).toMatch(/webGemmaStatus\(/);
+    // Re-checked after every answer.
+    expect(src.slice(loop)).toMatch(/await refuseUnlessNvidia\(\{ gemma: r\.gpu \}\)/);
+  });
+
+  it('interleaves the prompt variants per question and records how each answer was made', () => {
+    for (const option of ['variants', 'decoding', 'temperature', 'repeats', 'label']) {
+      expect(src).toMatch(new RegExp(`\\b(arg|list)\\('${option}'`));
+      expect(src).toContain(`--${option}`);
+    }
+    const loop = src.slice(src.indexOf('for (const item of items)'));
+    // Repeats, decodings and variants are inner loops of the question loop.
+    expect(loop).toMatch(/for \(let repeat = 0; repeat < repeats; repeat \+= 1\)/);
+    expect(loop).toMatch(/for \(const decoding of decodings\)/);
+    expect(loop).toMatch(/for \(const variant of /);
+    // Passed to the app and saved with every result, the prompt itself included.
+    expect(loop).toMatch(/webGemmaChat\(\{[^}]*temperature,[^}]*decoding,/s);
+    for (const field of ['variant', 'decoding', 'temperature', 'repeat', 'promptChars', 'system']) {
+      expect(loop).toMatch(new RegExp(`\\b${field}\\b`));
+    }
+    expect(src).toMatch(/contextPrompt\(item\.question, 'vi', false, false, 'compact'\)/);
   });
 });
