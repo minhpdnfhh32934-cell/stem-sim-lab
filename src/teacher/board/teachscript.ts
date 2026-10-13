@@ -55,11 +55,71 @@ export interface TimedAction {
 }
 
 export interface Sentence {
-  /** Words the teacher says (tags removed, whitespace collapsed). */
+  /** Words outside the tags (tags removed, whitespace collapsed). */
   speech: string;
+  /**
+   * What the teacher reads aloud and the subtitle shows (audit BRD-01): `speech` with what is
+   * written on the board put back where its tag stood ("Đề cho <write>m = 2 kg</write>." is read
+   * "Đề cho m = 2 kg."), formulas as `$…$` for the speech reader. A write the sentence already
+   * says is not repeated.
+   */
+  spoken: string;
   actions: TimedAction[];
   /** Silence after the sentence (from `<pause>` tags), milliseconds. */
   pauseMs: number;
+}
+
+const fold = (s: string) =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+
+function wordsOf(s: string): string[] {
+  return fold(s)
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+/** True when most words of `text` are already in `speech` (the teacher says it anyway). */
+function alreadySaid(speech: string, text: string): boolean {
+  const said = new Set(wordsOf(speech));
+  const words = wordsOf(text);
+  if (words.length === 0) return true;
+  return words.filter((w) => said.has(w)).length / words.length >= 0.6;
+}
+
+/** The sentence as read aloud: written texts spliced in at their tags. */
+export function spokenSentence(speech: string, actions: readonly TimedAction[]): string {
+  const inserts = actions
+    .filter(
+      (a): a is TimedAction & { action: Extract<BoardAction, { kind: 'write' | 'correct' }> } =>
+        a.action.kind === 'write' || a.action.kind === 'correct',
+    )
+    .filter((a) => !alreadySaid(speech, a.action.text))
+    .sort((a, b) => a.at - b.at);
+  let out = '';
+  let pos = 0;
+  for (const { at, action } of inserts) {
+    const before = speech.slice(pos, at);
+    out += before;
+    let text = action.text.trim();
+    const math = action.kind === 'write' && action.math;
+    if (!math) {
+      // "Đề cho" + "Cho: m = 2 kg" → "Đề cho m = 2 kg" (the board's label is not read twice).
+      const lastWord = /([\p{L}]+)\s*$/u.exec(out)?.[1];
+      const first = /^([\p{L}]+)\s*:?\s*/u.exec(text);
+      if (lastWord && first?.[1] && fold(first[1]) === fold(lastWord)) {
+        text = text.slice(first[0].length);
+      }
+    }
+    out += `${/\S$/.test(out) ? ' ' : ''}${math ? `$${text}$` : text}`;
+    pos = at;
+    if (/^[^\s.,;:!?…]/.test(speech.slice(pos))) out += ' ';
+  }
+  out += speech.slice(pos);
+  return out
+    .replace(/\s+([.,;:!?…])/g, '$1')
+    .replace(/([,;:])(?=[.!?…])/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export interface Diagnostic {
@@ -329,12 +389,17 @@ function sentencesOf(
     const trimmed = speech.replace(/\s+/g, ' ').trim();
     if (trimmed || actions.length) {
       const lead = speech.length - speech.trimStart().length;
+      // Offsets follow the collapsed text: count the characters removed before each action.
+      const collapsedAt = (at: number) =>
+        speech.slice(lead, Math.max(lead, at)).replace(/\s+/g, ' ').length;
+      const timed = actions.map((a) => ({
+        at: Math.max(0, Math.min(trimmed.length, collapsedAt(a.at))),
+        action: a.action,
+      }));
       out.push({
         speech: trimmed,
-        actions: actions.map((a) => ({
-          at: Math.max(0, Math.min(trimmed.length, a.at - lead)),
-          action: a.action,
-        })),
+        spoken: spokenSentence(trimmed, timed),
+        actions: timed,
         pauseMs,
       });
     }

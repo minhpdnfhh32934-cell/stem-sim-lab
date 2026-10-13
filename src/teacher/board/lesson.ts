@@ -295,28 +295,80 @@ function readingTime(text: string): number {
   return Math.min(4200, Math.max(700, text.length * 42));
 }
 
+/** Set when a pause cut the sentence being spoken: it is read again after "Tiếp tục". */
+let speechCut = false;
+
+/**
+ * Speaks a sentence, again from its start when a pause cut it (audit BRD-02): the learner never
+ * loses the end of a sentence. The board's speed (0,75–2×) also sets the voice's pace (BRD-03).
+ */
+async function speakSentence(
+  text: string,
+  signal: AbortSignal,
+  entry: SentenceTiming,
+): Promise<void> {
+  for (;;) {
+    speechCut = false;
+    const begin = performance.now();
+    if (metrics) metrics.firstSpeechMs ??= Math.round(begin - metrics.startedAt);
+    await speak(text, { rate: useBoardStore.getState().speed });
+    entry.speechMs = (entry.speechMs ?? 0) + Math.round(performance.now() - begin);
+    if (!speechCut || isAborted(signal) || instant) return;
+    await waitIfPaused(signal);
+    if (instant) return;
+  }
+}
+
 async function playSentence(
   sentence: Sentence,
   ctx: { measure: Measure; sources: number[]; known: number[]; signal: AbortSignal },
 ): Promise<void> {
   const { signal } = ctx;
   await waitIfPaused(signal);
-  useBoardStore.getState().set({ subtitle: subtitleText(sentence.speech) });
-  const voice = !instant && useVoiceStore.getState().enabled && sentence.speech.trim() !== '';
-  const speech = voice ? speak(sentence.speech) : Promise.resolve();
+  // What is said and shown includes what is being written (audit BRD-01).
+  const said = sentence.spoken || sentence.speech;
+  useBoardStore.getState().set({ subtitle: subtitleText(said) });
+  const voice = !instant && useVoiceStore.getState().enabled && said.trim() !== '';
+  const entry: SentenceTiming = { speechMs: null, writingMs: 0 };
+  metrics?.sentences.push(entry);
+  const speech = voice ? speakSentence(said, signal, entry) : Promise.resolve();
   const started = performance.now();
   for (const { action } of sentence.actions) {
     await waitIfPaused(signal);
     await runAction(action, ctx);
   }
+  entry.writingMs = Math.round(performance.now() - started);
   await speech;
   if (isAborted(signal)) throw new Stopped();
   if (!voice && !instant) {
     // Without a voice the learner reads the subtitle: give them the time to.
-    const left = readingTime(toSpokenText(sentence.speech)) - (performance.now() - started);
+    const left = readingTime(toSpokenText(said)) - (performance.now() - started);
     await sleep(left / useBoardStore.getState().speed, signal);
   }
   await sleep(sentence.pauseMs + 220, signal);
+}
+
+/**
+ * Timing of the current lesson, kept on this computer only (audit G3 measurement): when the first
+ * word was heard, and for each sentence how long the voice and the pen took.
+ */
+export interface SentenceTiming {
+  /** Time the voice spoke (null without voice); a sentence read again after a pause adds up. */
+  speechMs: number | null;
+  writingMs: number;
+}
+
+export interface LessonMetrics {
+  startedAt: number;
+  firstSpeechMs: number | null;
+  sentences: SentenceTiming[];
+}
+
+let metrics: LessonMetrics | null = null;
+
+/** The timing of the lesson being taught (or the last one), for tests and diagnostics. */
+export function lessonMetrics(): LessonMetrics | null {
+  return metrics;
 }
 
 /** Results proved so far in the current lesson (a continuation may use them). */
@@ -351,6 +403,7 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
 export async function playLesson(input: LessonInput, measure: Measure): Promise<void> {
   stopLesson();
   lessonKnown = [];
+  metrics = { startedAt: performance.now(), firstSpeechMs: null, sentences: [] };
   useBoardStore.getState().set({
     layout: emptyLayout(),
     progress: {},
@@ -394,6 +447,8 @@ export function pauseLesson(): void {
     open = resolve;
   });
   gate = { promise, open };
+  // The sentence being spoken is cut here and read again on "Tiếp tục" (audit BRD-02).
+  if (useVoiceStore.getState().speaking) speechCut = true;
   stopSpeaking();
   useBoardStore.getState().set({ status: 'paused' });
 }
@@ -411,6 +466,7 @@ export function resumeLesson(): void {
 export function finishNow(): void {
   if (!controller) return;
   instant = true;
+  speechCut = false;
   stopSpeaking();
   resumeLesson();
 }

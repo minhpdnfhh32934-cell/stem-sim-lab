@@ -71,8 +71,23 @@ export function toSpokenText(content: string): string {
 
 let controller: AbortController | null = null;
 
+export interface SpeakOptions {
+  /** Pace on top of the learner's voice speed (the board's 0,75–2×). */
+  rate?: number;
+}
+
+/** How far a voice got: phrases fully played (the fallback continues from there, VOI-01). */
+interface Progress {
+  played: number;
+}
+
+/** The style's pace and pitch; an unknown stored style falls back to the default (VOI-03). */
+function stylePreset(style: string): { rate: number; pitch: number } {
+  return VOICE_PRESETS[style as keyof typeof VOICE_PRESETS] ?? VOICE_PRESETS.vui;
+}
+
 /** Reads text aloud with the teacher's voice. Resolves when done, stopped or unavailable. */
-export async function speak(text: string): Promise<void> {
+export async function speak(text: string, opts: SpeakOptions = {}): Promise<void> {
   stopSpeaking();
   const chunks = splitForSpeech(toSpokenText(text));
   if (chunks.length === 0) return;
@@ -80,17 +95,22 @@ export async function speak(text: string): Promise<void> {
   controller = ctrl;
   const store = useVoiceStore.getState();
   store.setSpeaking(true);
+  const rate = Math.min(2, Math.max(0.5, opts.rate ?? 1));
+  const progress: Progress = { played: 0 };
   try {
-    await speakWith(store.engine, chunks, ctrl.signal);
+    await speakWith(store.engine, chunks, ctrl.signal, rate, progress);
     if (!ctrl.signal.aborted) useVoiceStore.getState().setLastError(null);
   } catch (e) {
     if (ctrl.signal.aborted) return;
     const message = e instanceof Error ? e.message : String(e);
     console.warn('[teacher-voice]', message);
     useVoiceStore.getState().setLastError(message);
-    // The learner still hears the answer: the operating-system voice takes over.
+    // The learner still hears the answer: the operating-system voice takes over from the first
+    // phrase not yet heard, so nothing is read twice (audit VOI-01).
     if (store.engine !== 'system' && speechSupported()) {
-      await speakSystem(chunks, ctrl.signal).catch(() => undefined);
+      await speakSystem(chunks.slice(progress.played), ctrl.signal, rate, {
+        played: 0,
+      }).catch(() => undefined);
     }
   } finally {
     if (controller === ctrl) {
@@ -100,10 +120,16 @@ export async function speak(text: string): Promise<void> {
   }
 }
 
-function speakWith(engine: VoiceEngine, chunks: SpeechChunk[], signal: AbortSignal) {
-  if (engine === 'gemini') return speakGemini(chunks, signal);
-  if (engine === 'local') return speakLocal(chunks, signal);
-  return speakSystem(chunks, signal);
+function speakWith(
+  engine: VoiceEngine,
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+) {
+  if (engine === 'gemini') return speakGemini(chunks, signal, rate, progress);
+  if (engine === 'local') return speakLocal(chunks, signal, rate, progress);
+  return speakSystem(chunks, signal, rate, progress);
 }
 
 /** Stops any ongoing teacher speech. Safe to call anytime. */
@@ -121,11 +147,16 @@ export function stopSpeaking(): void {
 
 // ------------------------------------------------------------ operating-system voice
 
-async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<void> {
+async function speakSystem(
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+): Promise<void> {
   const s = synth();
   if (!s) throw new Error('no-speech-engine');
   const store = useVoiceStore.getState();
-  const preset = VOICE_PRESETS[store.style];
+  const preset = stylePreset(store.style);
   const voice = pickVoice(listVoices(), store.voiceURI);
   for (const chunk of chunks) {
     if (signal.aborted) return;
@@ -133,7 +164,7 @@ async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<
       const utterance = new SpeechSynthesisUtterance(chunk.text);
       utterance.lang = voice?.lang ?? 'vi-VN';
       if (voice) utterance.voice = voice;
-      utterance.rate = preset.rate * store.speed;
+      utterance.rate = preset.rate * store.speed * rate;
       utterance.pitch = preset.pitch;
       // Some engines never fire "end": a phrase may not hold the teacher for ever.
       const guard = window.setTimeout(done, 8000 + chunk.text.length * 150);
@@ -151,6 +182,7 @@ async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<
       signal.addEventListener('abort', cancel, { once: true });
       s.speak(utterance);
     });
+    if (!signal.aborted) progress.played++;
     await pause(chunk.pauseMs, signal);
   }
 }
@@ -159,19 +191,30 @@ async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<
 
 /** Phrases joined into requests of a few sentences; the pauses become Gemini pause tags. */
 export function geminiGroups(chunks: SpeechChunk[], max = GEMINI_GROUP_CHARS): string[] {
-  const groups: string[] = [];
+  return geminiGroupSizes(chunks, max).map((g) => g.text);
+}
+
+/** The groups and how many phrases each holds (so a failure knows what was already heard). */
+export function geminiGroupSizes(
+  chunks: SpeechChunk[],
+  max = GEMINI_GROUP_CHARS,
+): { text: string; phrases: number }[] {
+  const groups: { text: string; phrases: number }[] = [];
   let current = '';
+  let count = 0;
   for (const c of chunks) {
     const piece = c.pauseMs >= 450 ? `${c.text} <long pause>` : c.text;
     if (current && current.length + piece.length + 1 > max) {
-      groups.push(current);
+      groups.push({ text: current, phrases: count });
       current = piece;
+      count = 1;
     } else {
       current = current ? `${current} ${piece}` : piece;
+      count++;
     }
   }
-  if (current) groups.push(current);
-  return groups.map((g) => g.replace(/\s*<long pause>$/, ''));
+  if (current) groups.push({ text: current, phrases: count });
+  return groups.map((g) => ({ ...g, text: g.text.replace(/\s*<long pause>$/, '') }));
 }
 
 function speedWords(speed: number): string {
@@ -182,12 +225,17 @@ function speedWords(speed: number): string {
   return '';
 }
 
-async function speakGemini(chunks: SpeechChunk[], signal: AbortSignal): Promise<void> {
+async function speakGemini(
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+): Promise<void> {
   const transport = getTransport();
   if (!transport.tts) throw new Error('gemini-tts-unavailable');
   if (!(await transport.hasKey('gemini'))) throw new Error('gemini-tts-no-key');
   const store = useVoiceStore.getState();
-  const style = `${GEMINI_STYLES[store.style]}${speedWords(store.speed)}`;
+  const style = `${GEMINI_STYLES[store.style as keyof typeof GEMINI_STYLES] ?? GEMINI_STYLES.vui}${speedWords(store.speed * rate)}`;
   const timeoutSecs = Math.max(30, useAiStore.getState().timeoutSecs);
   const tts = transport.tts.bind(transport);
   const fetchGroup = async (text: string): Promise<Pcm> => {
@@ -205,27 +253,38 @@ async function speakGemini(chunks: SpeechChunk[], signal: AbortSignal): Promise<
     return decodeAudio(audio.audio, audio.mimeType);
   };
   // While one group plays, the next is already being made.
-  const groups = geminiGroups(chunks);
-  let next = groups[0] ? fetchGroup(groups[0]) : null;
+  const groups = geminiGroupSizes(chunks);
+  let next = groups[0] ? fetchGroup(groups[0].text) : null;
   for (let i = 0; i < groups.length && next; i++) {
     const pcm = await next;
     const after = groups[i + 1];
-    next = after ? fetchGroup(after) : null;
+    next = after ? fetchGroup(after.text) : null;
     next?.catch(() => undefined);
     if (signal.aborted) return;
     await playPcm(pcm, signal);
+    if (!signal.aborted) progress.played += groups[i]?.phrases ?? 0;
     await pause(220, signal);
   }
 }
 
 // ------------------------------------------------------------ on-device voice
 
-async function speakLocal(chunks: SpeechChunk[], signal: AbortSignal): Promise<void> {
-  const speed = useVoiceStore.getState().speed;
+async function speakLocal(
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+): Promise<void> {
+  const speed = useVoiceStore.getState().speed * rate;
   // Commas are pauses for this model (it has no punctuation): one phrase per piece.
   const pieces = chunks.flatMap((c) => {
     const parts = c.text.split(/,\s*/).filter((p) => p.trim());
-    return parts.map((text, i) => ({ text, pauseMs: i === parts.length - 1 ? c.pauseMs : 140 }));
+    return parts.map((text, i) => ({
+      text,
+      pauseMs: i === parts.length - 1 ? c.pauseMs : 140,
+      // The last piece of a phrase completes it.
+      ends: i === parts.length - 1,
+    }));
   });
   let next = pieces[0] ? synthesizeLocal(pieces[0].text, signal) : null;
   for (let i = 0; i < pieces.length && next; i++) {
@@ -236,6 +295,7 @@ async function speakLocal(chunks: SpeechChunk[], signal: AbortSignal): Promise<v
     if (signal.aborted) return;
     // Playback rate is the only speed control this model has (it also shifts the pitch a bit).
     await playPcm(pcm, signal, speed);
+    if (!signal.aborted && pieces[i]?.ends) progress.played++;
     await pause(pieces[i]?.pauseMs ?? 0, signal);
   }
 }
