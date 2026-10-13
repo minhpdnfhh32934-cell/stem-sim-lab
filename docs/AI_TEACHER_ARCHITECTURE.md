@@ -1,5 +1,9 @@
 # AI Teacher ("Dạy học bằng AI") — architecture (PROMPT_PHAN_2 Part B)
 
+> **Cập nhật 12/10/2026:** tên mới là **AI Teacher**; bản THPT đã bỏ nên các dòng về "pilot",
+> Azure và `edition-pilot` dưới đây không còn áp dụng. Người dùng đồng ý thêm giọng tiếng Việt chạy
+> trên máy (kiểm tra giấy phép trước), ngoại lệ cho quy tắc "không có AI trên máy".
+
 > **Implementation note (2026-10-09 fork):** this document describes the earlier proposed voice,
 > whiteboard and TeachScript architecture. The current fork implements a text tutor, optional
 > local Gemma running inside the app (WebGPU, no Ollama) and the model/knowledge controls
@@ -137,11 +141,16 @@ visual ideas:
 
 - **Talk layout:** a large, original vector teacher face with a breathing wave ring sits beside the
   conversation.
-- **Board layout:** the ring moves to a compact left column and the conversation area gains a quiet
-  lined-board treatment. The change animates over about 480 ms and respects `prefers-reduced-motion`.
+- **Board layout (0.4.3, compact lesson board):** the ring moves to a compact left column, the
+  latest answer is written on a board (`src/teacher/board/`: title + numbered steps revealed one by
+  one, KaTeX, current step highlighted; with the voice on the teacher reads one step at a time) and
+  the conversation becomes a narrow right column. The board only re-shows the AI's own answer, split
+  along its structure (`lesson.ts`), with the AI label and report button; the AI is asked for a
+  "title + 3–7 steps" layout while the board is open. This is not the TeachScript whiteboard
+  (handwriting, marks, camera) of B7, which stays planned for T1–T2.
 - Quick request chips (Giải thích lại · Chậm hơn · Thêm ví dụ · Đơn giản hơn · Em chưa hiểu chỗ này)
-  send their text as follow-up questions. A small four-step marker counts assistant replies; it is
-  not a measure of lesson mastery.
+  show their short label but send a full instruction (`teacher.chipPrompts`, 0.4.3). A small
+  four-step marker counts assistant replies; it is not a measure of lesson mastery.
 - The answer provider, API notice and text composer remain available on the page. The optional
   screen-context switch is shown only in the floating chat bubble and is disabled on this route.
 

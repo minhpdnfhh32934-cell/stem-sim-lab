@@ -1,6 +1,5 @@
-//! `GeminiProvider` — main edition only. This file is not compiled into the pilot edition
-//! (`#[cfg(feature = "edition-main")]` on the module in `mod.rs`), so the pilot build never
-//! contains the Gemini endpoint (PROMPT_PHAN_2 A2: Gemini API terms require users 18+).
+//! `GeminiProvider` — the default provider (Gemini API terms require users 18+: keys can only
+//! be stored after the 18+ confirmation, see `safety`).
 
 use serde_json::{json, Value};
 
@@ -98,6 +97,10 @@ impl AIProvider for GeminiProvider {
         Ok(text)
     }
 
+    fn truncated(&self, v: &Value) -> bool {
+        v["candidates"][0]["finishReason"] == "MAX_TOKENS"
+    }
+
     fn response_model(&self, v: &Value) -> Option<String> {
         v["modelVersion"].as_str().map(str::to_string)
     }
@@ -170,6 +173,15 @@ mod tests {
         let cut = json!({"candidates": [{"content": {"parts": []}, "finishReason": "MAX_TOKENS"}]});
         let err = GeminiProvider.extract_content(&cut).unwrap_err();
         assert!(err.to_string().contains("MAX_TOKENS"));
+    }
+
+    #[test]
+    fn reports_answers_cut_at_the_output_limit() {
+        let cut = json!({"candidates": [{"content": {"parts": [{"text": "Bước 1"}]}, "finishReason": "MAX_TOKENS"}]});
+        assert!(GeminiProvider.truncated(&cut));
+        let done = json!({"candidates": [{"content": {"parts": [{"text": "Xong"}]}, "finishReason": "STOP"}]});
+        assert!(!GeminiProvider.truncated(&done));
+        assert!(!GeminiProvider.truncated(&json!({})));
     }
 
     #[test]

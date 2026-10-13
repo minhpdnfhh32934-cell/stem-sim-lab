@@ -26,14 +26,19 @@ export function ParamsPanel() {
     ? { main: visible, more: [] as ParamDef[] }
     : basicSplit(visible, sources);
   const rows = showAll ? [...main, ...more] : main;
+  // Basic mode: while every value is a default, one line says so instead of a badge per row.
+  // As soon as one value comes from the problem or the learner, every row shows its origin.
+  const allDefault = !advanced && visible.every((d) => (sources[d.key] ?? 'default') === 'default');
   return (
     <div className="params">
+      {allDefault && <p className="params__note">{t('params.allDefault')}</p>}
       {rows.map((d) => (
         <ParamRow
           key={d.key}
           def={d}
           valueSI={params[d.key] ?? 0}
           source={sources[d.key] ?? 'default'}
+          showSource={!allDefault}
         />
       ))}
       {more.length > 0 && (
@@ -57,10 +62,12 @@ function ParamRow({
   def,
   valueSI,
   source,
+  showSource,
 }: {
   def: ParamDef;
   valueSI: number;
   source: 'problem' | 'default' | 'user';
+  showSource: boolean;
 }) {
   const t = useT();
   const L = useLocalized();
@@ -85,13 +92,15 @@ function ParamRow({
             {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
           </label>
         )}
-        <span
-          className={`param__source param__source--${source}`}
-          data-tip={t(`params.sourceHint.${source}`)}
-          data-tip-side="left"
-        >
-          {t(`params.source.${source}`)}
-        </span>
+        {showSource && (
+          <span
+            className={`param__source param__source--${source}`}
+            data-tip={t(`params.sourceHint.${source}`)}
+            data-tip-side="left"
+          >
+            {t(`params.source.${source}`)}
+          </span>
+        )}
       </div>
       {def.kind === 'number' && (
         <div className="param__controls">

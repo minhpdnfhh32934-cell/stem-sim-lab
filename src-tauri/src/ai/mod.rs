@@ -2,19 +2,19 @@
 //! not an issue, and requests have a timeout, can be cancelled, are retried with backoff on
 //! 429/5xx and are counted against a daily cap.
 //!
-//! Providers implement [`provider::AIProvider`]: [`claude::ClaudeProvider`] and
-//! [`groq::GroqProvider`] (both editions) and `gemini::GeminiProvider` (main edition only — not
-//! compiled into the pilot edition). When the chosen provider runs out of quota or credit, a
+//! Providers implement [`provider::AIProvider`]: [`gemini::GeminiProvider`] (default),
+//! [`claude::ClaudeProvider`] and [`groq::GroqProvider`]. When the chosen provider runs out of
+//! quota or credit, a
 //! configured fallback provider answers instead (see [`is_quota_error`]).
 //!
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
 //! (b) explain results already computed by the engine. It never computes numbers.
 
 pub mod claude;
-#[cfg(feature = "edition-main")]
 pub mod gemini;
 pub mod groq;
 pub mod provider;
+pub mod tts;
 pub mod usage;
 
 use std::collections::HashMap;
@@ -29,24 +29,12 @@ use tokio::sync::oneshot;
 
 use provider::AIProvider;
 
-#[cfg(all(feature = "edition-main", feature = "edition-pilot"))]
-compile_error!("enable exactly one of the features `edition-main` and `edition-pilot`");
-#[cfg(not(any(feature = "edition-main", feature = "edition-pilot")))]
-compile_error!("enable one of the features `edition-main` or `edition-pilot`");
+/// The only edition since 0.5.0 (the supervised high-school "pilot" edition was removed at the
+/// user's request, 2026-10-12). Still reported by `ai_edition` / `app_info`.
+pub const EDITION: &str = "main";
 
-/// "main" or "pilot" (PROMPT_PHAN_2 A2).
-pub const EDITION: &str = if cfg!(feature = "edition-pilot") {
-    "pilot"
-} else {
-    "main"
-};
-
-/// Keychain service. The pilot edition has its own, so the two editions never share keys.
-const KEYRING_SERVICE: &str = if cfg!(feature = "edition-pilot") {
-    "STEM Sim Lab Pilot"
-} else {
-    "STEM Sim Lab"
-};
+/// Keychain service. Keeps the name from before the rename to SimLab, so saved keys survive.
+const KEYRING_SERVICE: &str = "STEM Sim Lab";
 
 /// Default timeout of one AI call, retries included (PROMPT_PHAN_2 A2: 30 s, adjustable).
 pub const DEFAULT_TIMEOUT_SECS: u64 = 30;
@@ -58,7 +46,6 @@ const MAX_BACKOFF: Duration = Duration::from_secs(8);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Provider {
-    #[cfg(feature = "edition-main")]
     Gemini,
     /// "anthropic" was the id before PROMPT_PHAN_2.
     #[serde(alias = "anthropic")]
@@ -70,7 +57,6 @@ pub enum Provider {
 impl Provider {
     fn key_name(self) -> &'static str {
         match self {
-            #[cfg(feature = "edition-main")]
             Provider::Gemini => "gemini",
             Provider::Claude => "claude",
             Provider::Groq => "groq",
@@ -81,7 +67,6 @@ impl Provider {
 /// The implementation of a provider.
 pub fn provider(p: Provider) -> &'static dyn AIProvider {
     match p {
-        #[cfg(feature = "edition-main")]
         Provider::Gemini => &gemini::GeminiProvider,
         Provider::Claude => &claude::ClaudeProvider,
         Provider::Groq => &groq::GroqProvider,
@@ -137,6 +122,8 @@ pub struct ChatResponse {
     pub provider: Provider,
     /// True when the fallback provider answered (the chosen one was out of quota/credit).
     pub fallback: bool,
+    /// The answer stopped at the output limit (the AI Teacher offers "Viết tiếp").
+    pub truncated: bool,
 }
 
 #[derive(Debug, Clone, Serialize, thiserror::Error)]
@@ -158,12 +145,12 @@ pub enum AiError {
     Keychain(String),
     #[error("daily limit reached: {0}")]
     DailyLimit(String),
-    /// Blocked by the safety gates (age confirmation / consent / supervisor PIN), see `safety`.
+    /// Blocked by the safety gate (18+ confirmation), see `safety`.
     #[error("not allowed: {0}")]
     NotAllowed(String),
 }
 
-/// AI calls need the safety gates open (main: 18+ confirmed; pilot: consent for a minor).
+/// AI calls need the safety gate open (18+ and the terms confirmed).
 fn require_ai_allowed(app: &tauri::AppHandle) -> Result<(), AiError> {
     if crate::safety::ai_allowed(app) {
         Ok(())
@@ -172,35 +159,14 @@ fn require_ai_allowed(app: &tauri::AppHandle) -> Result<(), AiError> {
     }
 }
 
-/// Who may store or delete a key. Main edition: only after the 18+ confirmation (Gemini API
-/// terms). Pilot edition: only with the supervisor PIN (the key belongs to the paying adult).
-fn require_key_permission(
-    app: &tauri::AppHandle,
-    safety: &crate::safety::SafetyState,
-    pin: Option<&str>,
-) -> Result<(), AiError> {
-    key_gate(
-        cfg!(feature = "edition-pilot"),
-        || crate::safety::ai_allowed(app),
-        || crate::safety::verify_pin(app, safety, pin),
-    )
+/// Keys may be stored only after the 18+ confirmation (Gemini API terms: users must be 18+).
+fn require_key_permission(app: &tauri::AppHandle) -> Result<(), AiError> {
+    key_gate(|| crate::safety::ai_allowed(app))
 }
 
-/// The rule behind [`require_key_permission`], without the app (tested for both editions).
-/// Pilot: only the PIN decides. Main: only the 18+ confirmation decides.
-pub fn key_gate(
-    pilot: bool,
-    adult_confirmed: impl FnOnce() -> bool,
-    check_pin: impl FnOnce() -> Result<(), crate::safety::SafetyError>,
-) -> Result<(), AiError> {
-    use crate::safety::SafetyError;
-    if pilot {
-        check_pin().map_err(|e| match e {
-            SafetyError::Locked(s) => AiError::NotAllowed(format!("locked:{s}")),
-            SafetyError::WrongPin(s) => AiError::NotAllowed(format!("wrongPin:{s}")),
-            other => AiError::NotAllowed(format!("pin:{other}")),
-        })
-    } else if adult_confirmed() {
+/// The rule behind [`require_key_permission`], without the app (tested).
+pub fn key_gate(adult_confirmed: impl FnOnce() -> bool) -> Result<(), AiError> {
+    if adult_confirmed() {
         Ok(())
     } else {
         Err(AiError::NotAllowed("ageGate".into()))
@@ -338,6 +304,7 @@ async fn send(req: &ChatRequest, key: &str) -> Result<ChatResponse, AiError> {
             retries: attempt,
             provider: req.provider,
             fallback: false,
+            truncated: p.truncated(&v),
         });
     }
 }
@@ -351,7 +318,17 @@ fn usage_path(app: &tauri::AppHandle) -> Option<PathBuf> {
 
 /// Counts the call against the daily cap (skipped without a valid day or a cap).
 fn count_call(app: &tauri::AppHandle, state: &AiState, req: &ChatRequest) -> Result<(), AiError> {
-    let (Some(day), Some(cap)) = (req.day.as_deref(), req.daily_cap) else {
+    count_usage(app, state, req.day.as_deref(), req.daily_cap)
+}
+
+/// Counts one AI call (chat or speech) against the user's daily cap.
+fn count_usage(
+    app: &tauri::AppHandle,
+    state: &AiState,
+    day: Option<&str>,
+    cap: Option<u32>,
+) -> Result<(), AiError> {
+    let (Some(day), Some(cap)) = (day, cap) else {
         return Ok(());
     };
     if !usage::valid_day(day) {
@@ -470,7 +447,7 @@ pub fn ai_usage(app: tauri::AppHandle, day: String) -> usage::Usage {
     }
 }
 
-/// The edition this program was built as ("main" / "pilot").
+/// The edition of this program (always "main" since 0.5.0).
 #[tauri::command]
 pub fn ai_edition() -> &'static str {
     EDITION
@@ -509,24 +486,16 @@ pub async fn ai_models(
     })
 }
 
-/// Opens the Google AI Studio page where students create a Gemini API key (main edition).
+/// Opens the Google AI Studio page where students create a Gemini API key.
 #[tauri::command]
 pub fn open_gemini_key_page(app: tauri::AppHandle) -> Result<(), String> {
-    #[cfg(feature = "edition-main")]
-    {
-        use tauri_plugin_opener::OpenerExt;
-        app.opener()
-            .open_url(gemini::GEMINI_KEY_PAGE, None::<&str>)
-            .map_err(|e| e.to_string())
-    }
-    #[cfg(not(feature = "edition-main"))]
-    {
-        let _ = app;
-        Err("not available in this edition".into())
-    }
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(gemini::GEMINI_KEY_PAGE, None::<&str>)
+        .map_err(|e| e.to_string())
 }
 
-/// Opens the GroqCloud page where an API key is created (both editions; fixed address).
+/// Opens the GroqCloud page where an API key is created (fixed address).
 #[tauri::command]
 pub fn open_groq_key_page(app: tauri::AppHandle) -> Result<(), String> {
     use tauri_plugin_opener::OpenerExt;
@@ -536,14 +505,8 @@ pub fn open_groq_key_page(app: tauri::AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn ai_set_key(
-    app: tauri::AppHandle,
-    safety: tauri::State<'_, crate::safety::SafetyState>,
-    provider: Provider,
-    key: String,
-    pin: Option<String>,
-) -> Result<(), AiError> {
-    require_key_permission(&app, &safety, pin.as_deref())?;
+pub fn ai_set_key(app: tauri::AppHandle, provider: Provider, key: String) -> Result<(), AiError> {
+    require_key_permission(&app)?;
     let key = key.trim();
     if key.is_empty() {
         return Err(AiError::MissingKey(provider.key_name().into()));
@@ -587,7 +550,7 @@ pub enum KeyStatus {
     BadModel,
     Offline,
     Error,
-    /// The safety gates are closed (age confirmation / consent missing).
+    /// The safety gate is closed (18+ confirmation missing).
     NotAllowed,
 }
 
@@ -676,19 +639,9 @@ pub async fn ai_test_key(app: tauri::AppHandle, provider: Provider, model: Strin
     done(status, detail)
 }
 
+/// Deleting a key is always allowed (also after "I am under 18").
 #[tauri::command]
-pub fn ai_delete_key(
-    app: tauri::AppHandle,
-    safety: tauri::State<'_, crate::safety::SafetyState>,
-    provider: Provider,
-    pin: Option<String>,
-) -> Result<(), AiError> {
-    // Main edition: deleting is always allowed (also after "I am under 18").
-    if cfg!(feature = "edition-pilot") {
-        require_key_permission(&app, &safety, pin.as_deref())?;
-    } else {
-        let _ = (&app, &safety, &pin);
-    }
+pub fn ai_delete_key(provider: Provider) -> Result<(), AiError> {
     match keyring_entry(provider)?.delete_credential() {
         Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
         Err(e) => Err(AiError::Keychain(e.to_string())),
@@ -768,7 +721,7 @@ pub(crate) mod tests {
     }
 
     #[test]
-    fn groq_is_in_both_editions() {
+    fn groq_is_available() {
         let p: Provider = serde_json::from_str("\"groq\"").unwrap();
         assert_eq!(p, Provider::Groq);
         assert_eq!(provider(p).id(), Provider::Groq);
@@ -820,9 +773,8 @@ pub(crate) mod tests {
         assert_eq!(provider(Provider::Claude).id(), Provider::Claude);
     }
 
-    #[cfg(feature = "edition-main")]
     #[test]
-    fn main_edition_has_gemini_and_claude() {
+    fn gemini_and_claude_are_available() {
         assert_eq!(EDITION, "main");
         assert_eq!(
             serde_json::from_value::<Provider>(json!("gemini")).unwrap(),
@@ -830,25 +782,6 @@ pub(crate) mod tests {
         );
         assert_eq!(provider(Provider::Gemini).id(), Provider::Gemini);
         assert_eq!(KEYRING_SERVICE, "STEM Sim Lab");
-    }
-
-    /// PROMPT_PHAN_2 A2: the pilot edition must not contain any Gemini code. Checked twice:
-    /// the provider id is refused, and the compiled test program (which links the same
-    /// library code) does not contain the Gemini API host. The host is assembled at run time
-    /// so that this test does not put it into the program itself: it is stored reversed,
-    /// because the compiler may place separate string pieces next to each other (it did on
-    /// Windows), which would recreate the host in the program. (The embedded web assets are
-    /// compressed, so the web bundle is checked separately by `scripts/edition-bundle.mjs`.)
-    #[cfg(feature = "edition-pilot")]
-    #[test]
-    fn pilot_edition_has_no_gemini() {
-        assert_eq!(EDITION, "pilot");
-        assert_eq!(KEYRING_SERVICE, "STEM Sim Lab Pilot");
-        assert!(serde_json::from_value::<Provider>(json!("gemini")).is_err());
-        let host: String = "moc.sipaelgoog.egaugnalevitareneg".chars().rev().collect();
-        let exe = std::fs::read(std::env::current_exe().unwrap()).unwrap();
-        let found = exe.windows(host.len()).any(|w| w == host.as_bytes());
-        assert!(!found, "the pilot program contains the Gemini API host");
     }
 
     #[test]
@@ -904,17 +837,10 @@ pub(crate) mod tests {
     }
 
     #[test]
-    fn keys_need_the_age_confirmation_or_the_supervisor_pin() {
-        use crate::safety::SafetyError;
-        // Main edition: no key (Gemini or Claude) before "I am 18+"; the PIN is not consulted.
-        let r = key_gate(false, || false, || panic!("no PIN in the main edition"));
+    fn keys_need_the_age_confirmation() {
+        // No key (Gemini, Claude or Groq) before "I am 18+".
+        let r = key_gate(|| false);
         assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "ageGate"));
-        assert!(key_gate(false, || true, || panic!()).is_ok());
-        // Pilot edition: only the supervisor PIN counts.
-        let r = key_gate(true, || true, || Err(SafetyError::WrongPin("4".into())));
-        assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "wrongPin:4"));
-        let r = key_gate(true, || true, || Err(SafetyError::Locked("60".into())));
-        assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "locked:60"));
-        assert!(key_gate(true, || false, || Ok(())).is_ok());
+        assert!(key_gate(|| true).is_ok());
     }
 }

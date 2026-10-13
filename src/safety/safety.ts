@@ -1,39 +1,33 @@
 import { invoke, isTauri } from '@tauri-apps/api/core';
 
 /**
- * Safety gates (PROMPT_PHAN_2 A3). The rules live in Rust (src-tauri/src/safety.rs) so the web
- * page cannot bypass them: the AI gateway itself refuses calls and keys while a gate is closed.
- * This file is the page's view of them, with a browser-only copy for UI development and tests.
+ * Safety gate (PROMPT_PHAN_2 A3). The rule lives in Rust (src-tauri/src/safety.rs) so the web
+ * page cannot bypass it: the AI gateway itself refuses calls and keys while the gate is closed.
+ * This file is the page's view of it, with a browser-only copy for UI development and tests.
+ * (The supervised high-school "pilot" edition — birth year, PIN, consent — was removed in 0.5.0.)
  */
 
 /** Bump together with `TERMS_VERSION` in safety.rs when the terms change. */
 export const TERMS_VERSION = 1;
 
 export interface SafetyStatus {
-  edition: 'main' | 'pilot';
   termsVersion: number;
   /** The age question has been answered. */
   answered: boolean;
-  /** AI features may be used (adult confirmed, or consent recorded for a minor). */
+  /** AI features may be used (18+ and the current terms confirmed). */
   aiAllowed: boolean;
-  /** Under 18 (main: declared; pilot: from the birth year). */
+  /** The user said they are under 18. */
   minor: boolean;
-  consentDay: string | null;
-  pinSet: boolean;
 }
 
-/** What is stored (`safety.json` in the desktop app). Never the PIN itself. */
+/** What is stored (`safety.json` in the desktop app). */
 export interface SafetyFile {
   adultTerms?: number | null;
   declaredMinor?: boolean;
-  birthYear?: number | null;
-  consentDay?: string | null;
-  pinSalt?: string | null;
-  pinHash?: string | null;
 }
 
 export type IncidentKind =
-  'inputPersonalData' | 'inputUnsafe' | 'inputCrisis' | 'outputUnsafe' | 'userReport' | 'pinFailed';
+  'inputPersonalData' | 'inputUnsafe' | 'inputCrisis' | 'outputUnsafe' | 'userReport';
 
 /** One line of the incident log: the kind and the time (seconds since 1970) — no content. */
 export interface Incident {
@@ -41,7 +35,7 @@ export interface Incident {
   kind: IncidentKind;
 }
 
-export type SafetyErrorCode = 'wrongPin' | 'locked' | 'notAllowed' | 'invalid' | 'storage';
+export type SafetyErrorCode = 'invalid' | 'storage';
 
 export class SafetyError extends Error {
   override name = 'SafetyError';
@@ -65,59 +59,25 @@ export function toSafetyError(e: unknown): SafetyError {
   return new SafetyError('storage', e instanceof Error ? e.message : String(e));
 }
 
-/** Under 18 by birth year: someone born in `current - 18` may still be 17, so counted as minor. */
-export function isMinorByYear(birthYear: number, currentYear: number): boolean {
-  return currentYear - birthYear <= 18;
-}
-
-/** Same rules as `status_of` in safety.rs (both are tested with the same cases). */
-export function statusOf(f: SafetyFile, pilot: boolean, year: number): SafetyStatus {
-  const pinSet = !!f.pinHash;
-  if (pilot) {
-    const by = f.birthYear ?? null;
-    const minor = by === null || isMinorByYear(by, year);
-    return {
-      edition: 'pilot',
-      termsVersion: TERMS_VERSION,
-      answered: by !== null,
-      aiAllowed: by !== null && (!minor || !!f.consentDay),
-      minor,
-      consentDay: f.consentDay ?? null,
-      pinSet,
-    };
-  }
+/** Same rule as `status_of` in safety.rs (both are tested with the same cases). */
+export function statusOf(f: SafetyFile): SafetyStatus {
   const adult = f.adultTerms === TERMS_VERSION && !f.declaredMinor;
   return {
-    edition: 'main',
     termsVersion: TERMS_VERSION,
     answered: adult || !!f.declaredMinor,
     aiAllowed: adult,
     minor: !!f.declaredMinor,
-    consentDay: null,
-    pinSet,
   };
 }
-
-export const validPin = (pin: string) => /^\d{4,8}$/.test(pin);
 
 /** What the page can ask of the safety layer. */
 export interface SafetyBackend {
   status(): Promise<SafetyStatus>;
-  /** Main edition: "Tôi đủ 18 tuổi và đồng ý điều khoản" / "Tôi chưa đủ 18 tuổi". */
+  /** "Tôi đủ 18 tuổi và đồng ý điều khoản" / "Tôi chưa đủ 18 tuổi". */
   answerAdult(adult: boolean): Promise<SafetyStatus>;
-  /** Pilot edition. Changing an existing year needs the PIN or an open supervisor session. */
-  setBirthYear(year: number, pin?: string): Promise<SafetyStatus>;
-  /** Pilot edition. The first PIN needs nothing; changing it needs the current PIN or session. */
-  setPin(newPin: string, currentPin?: string): Promise<SafetyStatus>;
-  recordConsent(day: string, pin?: string): Promise<SafetyStatus>;
-  withdrawConsent(pin?: string): Promise<SafetyStatus>;
-  /** Opens the supervisor session; returns its remaining seconds. */
-  unlock(pin: string): Promise<number>;
-  unlockedSecs(): Promise<number>;
-  lock(): Promise<void>;
   logIncident(kind: IncidentKind): Promise<void>;
-  incidents(pin?: string): Promise<Incident[]>;
-  clearIncidents(pin?: string): Promise<void>;
+  incidents(): Promise<Incident[]>;
+  clearIncidents(): Promise<void>;
 }
 
 async function call<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
@@ -132,26 +92,13 @@ class TauriSafety implements SafetyBackend {
   status = () => call<SafetyStatus>('safety_status');
   answerAdult = (adult: boolean) =>
     call<SafetyStatus>('safety_answer_adult', { adult, termsVersion: TERMS_VERSION });
-  setBirthYear = (year: number, pin?: string) =>
-    call<SafetyStatus>('safety_set_birth_year', { year, pin: pin ?? null });
-  setPin = (newPin: string, currentPin?: string) =>
-    call<SafetyStatus>('safety_set_pin', { newPin, currentPin: currentPin ?? null });
-  recordConsent = (day: string, pin?: string) =>
-    call<SafetyStatus>('safety_record_consent', { day, pin: pin ?? null });
-  withdrawConsent = (pin?: string) =>
-    call<SafetyStatus>('safety_withdraw_consent', { pin: pin ?? null });
-  unlock = (pin: string) => call<number>('safety_unlock', { pin });
-  unlockedSecs = () => call<number>('safety_unlocked');
-  lock = () => call<undefined>('safety_lock');
   logIncident = (kind: IncidentKind) => call<undefined>('safety_log_incident', { kind });
-  incidents = (pin?: string) => call<Incident[]>('safety_incidents', { pin: pin ?? null });
-  clearIncidents = (pin?: string) =>
-    call<undefined>('safety_clear_incidents', { pin: pin ?? null });
+  incidents = () => call<Incident[]>('safety_incidents');
+  clearIncidents = () => call<undefined>('safety_clear_incidents');
 }
 
 const DEV_KEY = 'stemsim.safety';
 const DEV_LOG = 'stemsim.incidents';
-const UNLOCK_SECS = 600;
 const MAX_INCIDENTS = 500;
 
 function readJson<T>(key: string, fallback: T): T {
@@ -171,97 +118,28 @@ function writeJson(key: string, v: unknown): void {
   }
 }
 
-async function sha256Hex(text: string): Promise<string> {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
-}
-
 /**
  * Browser-only copy for UI development and end-to-end tests (`localStorage`). It follows the
- * same rules, but a web page can always be edited, so the shipped desktop app uses Rust.
+ * same rule, but a web page can always be edited, so the shipped desktop app uses Rust.
  */
 export class BrowserSafety implements SafetyBackend {
-  private unlockedUntil = 0;
-  constructor(
-    private readonly pilot = __EDITION__ === 'pilot',
-    private readonly now: () => Date = () => new Date(),
-  ) {}
+  constructor(private readonly now: () => Date = () => new Date()) {}
 
   private file(): SafetyFile {
     return readJson<SafetyFile>(DEV_KEY, {});
   }
-  private save(f: SafetyFile): SafetyStatus {
-    writeJson(DEV_KEY, f);
-    return this.view(f);
-  }
-  private view(f: SafetyFile): SafetyStatus {
-    return statusOf(f, this.pilot, this.now().getFullYear());
-  }
-  private async authorize(f: SafetyFile, pin?: string): Promise<void> {
-    if (pin === undefined && this.unlockedSecsSync() > 0) return;
-    if (!f.pinHash || !f.pinSalt || (await sha256Hex(`${f.pinSalt}:${pin ?? ''}`)) !== f.pinHash) {
-      await this.logIncident('pinFailed');
-      throw new SafetyError('wrongPin', '');
-    }
-  }
-  private unlockedSecsSync(): number {
-    return Math.max(0, Math.ceil((this.unlockedUntil - this.now().getTime()) / 1000));
-  }
 
   status(): Promise<SafetyStatus> {
-    return Promise.resolve(this.view(this.file()));
+    return Promise.resolve(statusOf(this.file()));
   }
   answerAdult(adult: boolean): Promise<SafetyStatus> {
-    if (this.pilot) return Promise.reject(new SafetyError('notAllowed', 'main edition only'));
-    const f = this.file();
-    return Promise.resolve(
-      this.save({ ...f, adultTerms: adult ? TERMS_VERSION : null, declaredMinor: !adult }),
-    );
-  }
-  async setBirthYear(year: number, pin?: string): Promise<SafetyStatus> {
-    if (!this.pilot) throw new SafetyError('notAllowed', 'pilot edition only');
-    const cur = this.now().getFullYear();
-    if (!Number.isInteger(year) || year < cur - 100 || year > cur - 5) {
-      throw new SafetyError('invalid', 'birth year');
-    }
-    const f = this.file();
-    if (f.birthYear !== undefined && f.birthYear !== null) await this.authorize(f, pin);
-    return this.save({ ...f, birthYear: year });
-  }
-  async setPin(newPin: string, currentPin?: string): Promise<SafetyStatus> {
-    if (!this.pilot) throw new SafetyError('notAllowed', 'pilot edition only');
-    if (!validPin(newPin)) throw new SafetyError('invalid', 'PIN');
-    const f = this.file();
-    if (f.pinHash) await this.authorize(f, currentPin);
-    const salt = await sha256Hex(`${Math.random()}:${Date.now()}`);
-    const pinSalt = salt.slice(0, 32);
-    const st = this.save({ ...f, pinSalt, pinHash: await sha256Hex(`${pinSalt}:${newPin}`) });
-    this.unlockedUntil = this.now().getTime() + UNLOCK_SECS * 1000;
-    return st;
-  }
-  async recordConsent(day: string, pin?: string): Promise<SafetyStatus> {
-    if (!this.pilot) throw new SafetyError('notAllowed', 'pilot edition only');
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new SafetyError('invalid', 'day');
-    const f = this.file();
-    await this.authorize(f, pin);
-    return this.save({ ...f, consentDay: day });
-  }
-  async withdrawConsent(pin?: string): Promise<SafetyStatus> {
-    const f = this.file();
-    await this.authorize(f, pin);
-    return this.save({ ...f, consentDay: null });
-  }
-  async unlock(pin: string): Promise<number> {
-    await this.authorize(this.file(), pin);
-    this.unlockedUntil = this.now().getTime() + UNLOCK_SECS * 1000;
-    return this.unlockedSecsSync();
-  }
-  unlockedSecs(): Promise<number> {
-    return Promise.resolve(this.unlockedSecsSync());
-  }
-  lock(): Promise<void> {
-    this.unlockedUntil = 0;
-    return Promise.resolve();
+    const f: SafetyFile = {
+      ...this.file(),
+      adultTerms: adult ? TERMS_VERSION : null,
+      declaredMinor: !adult,
+    };
+    writeJson(DEV_KEY, f);
+    return Promise.resolve(statusOf(f));
   }
   logIncident(kind: IncidentKind): Promise<void> {
     const list = readJson<Incident[]>(DEV_LOG, []);
@@ -269,17 +147,16 @@ export class BrowserSafety implements SafetyBackend {
     writeJson(DEV_LOG, list.slice(-MAX_INCIDENTS));
     return Promise.resolve();
   }
-  async incidents(pin?: string): Promise<Incident[]> {
-    if (this.pilot) await this.authorize(this.file(), pin);
-    return readJson<Incident[]>(DEV_LOG, []);
+  incidents(): Promise<Incident[]> {
+    return Promise.resolve(readJson<Incident[]>(DEV_LOG, []));
   }
-  async clearIncidents(pin?: string): Promise<void> {
-    if (this.pilot) await this.authorize(this.file(), pin);
+  clearIncidents(): Promise<void> {
     try {
       localStorage.removeItem(DEV_LOG);
     } catch {
       /* ignore */
     }
+    return Promise.resolve();
   }
 }
 

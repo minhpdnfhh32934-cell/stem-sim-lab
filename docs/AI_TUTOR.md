@@ -1,6 +1,6 @@
-# Thầy AI and local Gemma
+# AI Teacher and local Gemma
 
-This fork adds a launch page (“Phòng thí nghiệm” / “Thầy AI”), an AI tutor page and a floating
+This fork adds a launch page (“Phòng thí nghiệm” / “AI Teacher”), an AI tutor page and a floating
 chat bubble in the lab. The chat is text-based. It never takes screenshots or inspects other
 applications.
 
@@ -12,8 +12,8 @@ applications.
 ## Navigation
 
 - The app opens on the launch page with two entries: **Phòng thí nghiệm** (the existing topic
-  browser and simulations) and **Thầy AI** (the full tutor page).
-- The **STEM Sim Lab** brand in the top bar always returns to the launch page. Esc leaves the tutor
+  browser and simulations) and **AI Teacher** (the full tutor page).
+- The **SimLab** brand in the top bar always returns to the launch page. Esc leaves the tutor
   page.
 - The chat bubble is shown in the lab only (the launch page already has its own entry).
 - The first-run tour explains the lab, so it starts the first time the learner opens the lab.
@@ -23,12 +23,12 @@ applications.
 The chat has an engine selector (“API” or “Gemma cục bộ”). New installs pre-select Gemma, but a
 pre-selected default never blocks anyone:
 
-| Selected | Gemma model ready | Learner picked it | Who answers (chat **and** “Phân tích đề”)          |
-| -------- | ----------------- | ----------------- | -------------------------------------------------- |
-| API      | –                 | –                 | the provider from Settings → Kết nối AI            |
-| Gemma    | yes               | –                 | Gemma on this computer                             |
-| Gemma    | no                | no (default)      | the connected API (selector shows “API”)           |
-| Gemma    | no                | yes               | nothing is sent; a notice opens Settings → Thầy AI |
+| Selected | Gemma model ready | Learner picked it | Who answers (chat **and** “Phân tích đề”)             |
+| -------- | ----------------- | ----------------- | ----------------------------------------------------- |
+| API      | –                 | –                 | the provider from Settings → Kết nối AI               |
+| Gemma    | yes               | –                 | Gemma on this computer                                |
+| Gemma    | no                | no (default)      | the connected API (selector shows “API”)              |
+| Gemma    | no                | yes               | nothing is sent; a notice opens Settings → AI Teacher |
 
 The rule lives in `src/app/ai/engineChoice.ts` (tested). Before, a fresh install with a Gemini key
 could not analyse a problem until a Gemma model was downloaded.
@@ -89,8 +89,8 @@ HuggingFace answers model downloads with a redirect to its CDN (`us.aws.cdn.hf.c
 | `gemma4-e2b`  | `onnx-community/gemma-4-E2B-it-ONNX`  | ≈ 3,8 GB | strongest, reads photos; one file is 1,86 GB — needs a large storage quota |
 
 Sizes are the q4 files from the HuggingFace API (2026-10-12) and may change. On-device answers use a
-short prompt (2 library excerpts of ≤ 700 characters, last 4 messages) and at most 384 new tokens:
-small models lose the question under a long prompt and are slow per token. Settings → Thầy AI shows, per model: download (with live
+short instruction (4 library excerpts of ≤ 1 500 characters) and at most 1 024 new tokens; how much
+of the conversation is sent is set by the memory budget (see "Conversation memory" below). Settings → AI local (Gemma) shows, per model: download (with live
 percent and bytes, or a waiting bar while the total is unknown), **Hủy tải**, delete, and a link to
 the model page; the Gemma terms link sits above the list. A model counts as ready only after the
 whole download **and** a successful load; cancelled, failed or crashed downloads are never marked
@@ -113,6 +113,87 @@ Limits (browser vs desktop):
 Without WebGPU the settings and the chat say so plainly and the Gemma engine cannot answer; the app
 never pretends a local answer was produced.
 
+### Choosing the graphics card (0.4.2, desktop on Windows)
+
+**Why:** on a hybrid laptop WebView2 gives WebGPU the integrated card, whatever the page asks for.
+Measured 2026-10-12 on AMD Radeon 610M + NVIDIA RTX 5070 Laptop, WebView2 154 (real WebView2 host
+and Edge 154, compute shader + Windows "GPU Engine" counters per adapter LUID):
+
+| WebView2 started with                                  | Card WebGPU used             | Compute      |
+| ------------------------------------------------------ | ---------------------------- | ------------ |
+| nothing (0.4.1 behaviour), any `powerPreference`       | AMD 610M                     | ≈ 200 Gop/s  |
+| `--use-adapter-luid=<RTX>`                             | NVIDIA RTX 5070              | ≈ 2000 Gop/s |
+| `--use-adapter-luid=<610M>`                            | AMD 610M                     | ≈ 200 Gop/s  |
+| a LUID that does not exist                             | AMD 610M (default, no crash) | ≈ 200 Gop/s  |
+| `--use-webgpu-power-preference=force-high-performance` | **no adapter at all** (Edge) | —            |
+
+Transformers.js already sets `powerPreference: 'high-performance'`; WebView2 ignores it here.
+
+**How:** `src-tauri/src/gpu.rs` lists the hardware adapters with DXGI (software renderers skipped)
+and asks D3D12 for `UMA` (shares system memory → integrated, else discrete; unknown if no D3D12
+device). The choice is saved in `gpu.json` (app data folder) as PCI ids `vendor:device:subsystem`,
+because **LUIDs change on every boot**. Before the window exists, `gpu::prepare` resolves the saved
+id to this boot's LUID and sets `additional_browser_args` on every window config to wry's default
+arguments plus `--use-adapter-luid=<high>,<low>` (decimal). Browser arguments only apply when
+WebView2 starts, so **a change needs a restart** (`app_restart`). The switch moves the whole GPU
+process: the app's drawing (simulations, UI) also runs on that card. Commands: `gpu_status`,
+`gpu_set_choice` (only ids of present cards). A missing card at start-up (e.g. the laptop maker's
+Eco mode turned the dGPU off) → no switch, WebView2's default card, and Settings says so.
+
+**UI** (`src/teacher/chat/GpuSettings.tsx`, Settings → GPU cho Gemma): "Tự động" + each card with its
+type and VRAM, "Nên dùng cho Gemma" on the discrete card with the most VRAM, a VRAM warning when a
+discrete card is clearly too small for the selected model, the restart notice with **Mở lại ngay**
+(also as an app-wide reminder until the restart, "Để sau" hides it for the session), and what
+WebGPU really uses: the page's `requestAdapter().info` and, after a Gemma load, the adapter ONNX
+Runtime reports from the worker. If that vendor differs from the card start-up applied, a warning
+says so — the app never claims a card WebGPU did not report. In a browser the picker is not shown
+(the browser picks the card).
+
+Checked in the dev app (2026-10-12, same laptop): list = 610M (integrated, 483 MB) and RTX 5070
+(discrete, 7891 MB); choose RTX → `gpu.json` written → **Mở lại ngay** restarts → `startupApplied`
+true and `requestAdapter().info` = `nvidia / blackwell`; the window renders normally on screen.
+
+## Conversation memory, "Viết tiếp" and the lesson board (0.4.3)
+
+**Budgets instead of "last N messages"** (`src/teacher/chat/memory.ts`). Each request sends the
+newest turns that fit an input budget (instruction + excerpts + summary + history + question),
+estimated at 3 characters per token (on the safe side). The Gemma worker also counts the prompt
+exactly with the model's tokenizer and drops the oldest turns if the estimate was low. Settings →
+**Trí nhớ hội thoại** (which also has "save the history on this computer" and "clear"):
+
+| Engine                | Vừa (default) | Dài    | Answer limit | Model limit (config.json) |
+| --------------------- | ------------- | ------ | ------------ | ------------------------- |
+| Gemma 3 270M / 1B     | 4 000         | 8 000  | 1 024        | 32 768                    |
+| Gemma 4 E2B           | 8 000         | 16 000 | 1 024        | 131 072                   |
+| API (Gemini/Groq/...) | 12 000        | 32 000 | 4 096        | much larger               |
+
+Before 0.4.3: Gemma 4 messages + 384 answer tokens, API 12 messages + 1 600 tokens. "Dài" is slower
+on a small GPU and uses free plans (Groq, Gemini tokens per minute) up faster; Settings says so.
+
+**Summary of older turns.** Turns that no longer fit are folded into one short summary (≤ 150 words,
+no new facts or numbers, instructions inside the chat are ignored) written by the **same engine**
+that answers, stored with the chat on this computer (`chatStore.summary`, cleared with the chat)
+and added to the instruction labelled "do AI viết". Only turns not covered yet are summarised; a
+failed or unsafe summary is skipped and never blocks the answer. Nothing goes to a new place
+("Dữ liệu của em đi đâu?" lists it).
+
+**"Viết tiếp".** The Rust gateway and the browser transport report `truncated` when the provider
+stopped at the output limit (Gemini `MAX_TOKENS`, Claude `max_tokens`, Groq `length`); the Gemma
+worker when it generated `maxTokens` tokens. The chat then shows "Câu trả lời dài nên đã dừng giữa
+chừng." and **Viết tiếp**, which asks for the rest and appends it to the same message (a new list
+item, heading or formula starts a new line).
+
+**Quick buttons** show a short label ("Chậm hơn") but send a full instruction
+(`teacher.chipPrompts`): a bare "Chậm hơn" was misread by Gemma 1B as "speak more slowly".
+
+**Lesson board** ("Giảng trên bảng", `src/teacher/board/`): the latest answer as a title and
+numbered steps (`lesson.ts` splits the answer's own heading, list items and paragraphs; a formula
+stays with the sentence before it), revealed one step every 1,6 s (all at once with reduced
+motion), or read aloud one step at a time with the voice on (the step being read is highlighted).
+Buttons: Bước trước / Bước sau / Hiện tất cả / Đọc bài giảng. The board shows only the AI's text,
+with the AI label and report button; while it is open the AI is asked for "# title + 3–7 numbered
+steps". Layout: teacher · board · narrow chat (two rows under 1 180 px, one column under 820 px).
+
 ## Knowledge library
 
 The built-in library contains 66 short notes across upper-secondary Physics, Chemistry and Biology.
@@ -124,16 +205,16 @@ in this app's local storage on this computer. Relevant excerpts are selected wit
 
 Imported files are treated as reference data, never as instructions. The tutor names the sources it
 used below its answer. AI answers can still be wrong; numerical simulation results continue to come
-from STEM Sim Lab's deterministic engines.
+from SimLab's deterministic engines.
 
-**Wikipedia lookup is opt-in** (Settings → Thầy AI, off by default, main edition only): when on,
+**Wikipedia lookup is opt-in** (Settings → AI Teacher, off by default, main edition only): when on,
 the question text is sent to `vi`/`en.wikipedia.org` to fetch one labelled excerpt. Earlier fork
 versions queried Wikipedia on every question without telling the learner; v4 of the chat settings
 turns it off for everyone.
 
 ## Where data goes
 
-Settings → Thầy AI shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
+Settings → AI Teacher shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
 the chat shows one line naming where the next question will go.
 
 | Stays on this computer                    | May be sent online                                                |
@@ -149,7 +230,7 @@ the chat shows one line naming where the next question will go.
 
 The speaker button in the chat header turns the teacher's voice on and off; the state is
 remembered. Each new answer is read with the device's built-in voices — free, no key, no network.
-Settings → Thầy AI → “Giọng nói của thầy” offers four styles, a voice picker and a preview. Asking a
+Settings → AI Teacher → “Giọng nói của thầy” offers four styles, a voice picker and a preview. Asking a
 new question, clearing history, leaving the page or closing the panel stops the speech.
 
 ## Teacher face

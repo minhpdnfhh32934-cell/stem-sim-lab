@@ -17,12 +17,6 @@ export function CrisisCard() {
       </h3>
       <p>{t('safety.crisis.body')}</p>
       <ul>
-        {__EDITION__ === 'pilot' && (
-          <li>
-            <Phone size={14} strokeWidth={1.75} aria-hidden="true" />
-            {t('safety.crisis.line111')}
-          </li>
-        )}
         <li>
           <Phone size={14} strokeWidth={1.75} aria-hidden="true" />
           {t('safety.crisis.ngayMai')}

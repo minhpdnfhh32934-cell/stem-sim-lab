@@ -1,4 +1,12 @@
-import { AlertTriangle, BookMarked, Cpu, Hand, Ruler, SquareFunction } from 'lucide-react';
+import {
+  AlertTriangle,
+  BookMarked,
+  ChevronRight,
+  Cpu,
+  Hand,
+  Ruler,
+  SquareFunction,
+} from 'lucide-react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { formatNumber } from '@/app/i18n';
@@ -7,11 +15,120 @@ import { ConfidenceBadge, ReviewBadge } from '@/ui/Badges';
 import { Equation } from './Equation';
 import type { ScienceCardData } from './types';
 
-/** The Science Card (MASTER_PROMPT §2.3). */
-export function ScienceCard({ card }: { card: ScienceCardData }) {
+/**
+ * The Science Card (MASTER_PROMPT §2.3). `collapsible` (Basic mode) keeps the title, the
+ * confidence level, an intervention notice and the model in view and folds the equations,
+ * assumptions, validity, method and sources under one "Xem thêm" line — nothing is removed.
+ */
+export function ScienceCard({
+  card,
+  collapsible = false,
+}: {
+  card: ScienceCardData;
+  collapsible?: boolean;
+}) {
   const t = useT();
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
+
+  const details = (
+    <>
+      {card.equations.length > 0 && (
+        <>
+          <dt>
+            <SquareFunction size={13} strokeWidth={1.75} aria-hidden="true" />
+            {t('science.equations')}
+          </dt>
+          <dd className="science-card__equations">
+            {card.equations.map((eq) => (
+              <div key={eq.tex} className="science-card__equation">
+                {eq.label && <span className="science-card__eq-label">{L(eq.label)}</span>}
+                <Equation tex={eq.tex} />
+              </div>
+            ))}
+          </dd>
+        </>
+      )}
+
+      {card.assumptions.length > 0 && (
+        <>
+          <dt>
+            <AlertTriangle size={13} strokeWidth={1.75} aria-hidden="true" />
+            {t('science.assumptions')}
+          </dt>
+          <dd>
+            <ul>
+              {card.assumptions.map((a) => (
+                <li key={a.vi}>{L(a)}</li>
+              ))}
+            </ul>
+          </dd>
+        </>
+      )}
+
+      {card.validity && (
+        <>
+          <dt>
+            <Ruler size={13} strokeWidth={1.75} aria-hidden="true" />
+            {t('science.validity')}
+          </dt>
+          <dd>{L(card.validity)}</dd>
+        </>
+      )}
+
+      {(card.method ?? card.confidenceNote ?? card.estimatedError !== undefined) && (
+        <>
+          <dt>
+            <Cpu size={13} strokeWidth={1.75} aria-hidden="true" />
+            {t('science.method')}
+          </dt>
+          <dd>
+            {card.method && <p>{L(card.method)}</p>}
+            {card.confidenceNote && <p>{L(card.confidenceNote)}</p>}
+            {card.estimatedError !== undefined && (
+              <p className="mono">
+                {t('science.estimatedError', {
+                  value: formatNumber(locale, card.estimatedError, {
+                    style: 'percent',
+                    maximumSignificantDigits: 2,
+                  }),
+                })}
+              </p>
+            )}
+          </dd>
+        </>
+      )}
+
+      {card.sources.length > 0 && (
+        <>
+          <dt>
+            <BookMarked size={13} strokeWidth={1.75} aria-hidden="true" />
+            {t('science.sources')}
+          </dt>
+          <dd>
+            <ul className="science-card__sources">
+              {/* The same source can arrive twice (dataset + module); show it once. */}
+              {card.sources
+                .filter((s, i, all) => all.findIndex((o) => o.id === s.id) === i)
+                .map((s) => (
+                  <li key={s.id}>{s.citation}</li>
+                ))}
+            </ul>
+          </dd>
+        </>
+      )}
+    </>
+  );
+
+  const model = (
+    <>
+      <dt>
+        <Cpu size={13} strokeWidth={1.75} aria-hidden="true" />
+        {t('science.model')}
+      </dt>
+      <dd>{L(card.model)}</dd>
+    </>
+  );
 
   return (
     <article className="science-card" aria-label={t('science.cardLabel')}>
@@ -30,98 +147,23 @@ export function ScienceCard({ card }: { card: ScienceCardData }) {
         </p>
       )}
 
-      <dl className="science-card__list">
-        <dt>
-          <Cpu size={13} strokeWidth={1.75} aria-hidden="true" />
-          {t('science.model')}
-        </dt>
-        <dd>{L(card.model)}</dd>
-
-        {card.equations.length > 0 && (
-          <>
-            <dt>
-              <SquareFunction size={13} strokeWidth={1.75} aria-hidden="true" />
-              {t('science.equations')}
-            </dt>
-            <dd className="science-card__equations">
-              {card.equations.map((eq) => (
-                <div key={eq.tex} className="science-card__equation">
-                  {eq.label && <span className="science-card__eq-label">{L(eq.label)}</span>}
-                  <Equation tex={eq.tex} />
-                </div>
-              ))}
-            </dd>
-          </>
-        )}
-
-        {card.assumptions.length > 0 && (
-          <>
-            <dt>
-              <AlertTriangle size={13} strokeWidth={1.75} aria-hidden="true" />
-              {t('science.assumptions')}
-            </dt>
-            <dd>
-              <ul>
-                {card.assumptions.map((a) => (
-                  <li key={a.vi}>{L(a)}</li>
-                ))}
-              </ul>
-            </dd>
-          </>
-        )}
-
-        {card.validity && (
-          <>
-            <dt>
-              <Ruler size={13} strokeWidth={1.75} aria-hidden="true" />
-              {t('science.validity')}
-            </dt>
-            <dd>{L(card.validity)}</dd>
-          </>
-        )}
-
-        {(card.method ?? card.confidenceNote ?? card.estimatedError !== undefined) && (
-          <>
-            <dt>
-              <Cpu size={13} strokeWidth={1.75} aria-hidden="true" />
-              {t('science.method')}
-            </dt>
-            <dd>
-              {card.method && <p>{L(card.method)}</p>}
-              {card.confidenceNote && <p>{L(card.confidenceNote)}</p>}
-              {card.estimatedError !== undefined && (
-                <p className="mono">
-                  {t('science.estimatedError', {
-                    value: formatNumber(locale, card.estimatedError, {
-                      style: 'percent',
-                      maximumSignificantDigits: 2,
-                    }),
-                  })}
-                </p>
-              )}
-            </dd>
-          </>
-        )}
-
-        {card.sources.length > 0 && (
-          <>
-            <dt>
-              <BookMarked size={13} strokeWidth={1.75} aria-hidden="true" />
-              {t('science.sources')}
-            </dt>
-            <dd>
-              <ul className="science-card__sources">
-                {/* The same source can arrive twice (dataset + module); show it once. */}
-                {card.sources
-                  .filter((s, i, all) => all.findIndex((o) => o.id === s.id) === i)
-                  .map((s) => (
-                    <li key={s.id}>{s.citation}</li>
-                  ))}
-              </ul>
-            </dd>
-          </>
-        )}
-      </dl>
+      {collapsible ? (
+        <>
+          <dl className="science-card__list">{model}</dl>
+          <details className="science-card__more">
+            <summary>
+              <ChevronRight size={14} strokeWidth={1.75} aria-hidden="true" />
+              {t('science.more')}
+            </summary>
+            <dl className="science-card__list">{details}</dl>
+          </details>
+        </>
+      ) : (
+        <dl className="science-card__list">
+          {model}
+          {details}
+        </dl>
+      )}
     </article>
   );
 }

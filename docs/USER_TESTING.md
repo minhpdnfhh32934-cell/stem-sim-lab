@@ -1,15 +1,19 @@
 # Thử nghiệm với người học thật (PROMPT_PHAN_2 A4.5)
 
+> **Cập nhật 12/10/2026:** bản thử nghiệm THPT đã bỏ. Nhóm A bên dưới không còn bộ cài riêng; nếu
+> vẫn thử với học sinh dưới 18, các em dùng bản chính và chọn "Tôi chưa đủ 18 tuổi" (AI tắt).
+> Người dùng và nhà trường tự quyết định việc này.
+
 Tài liệu này hướng dẫn tổ chức một buổi thử nghiệm và là nơi **ghi kết quả**. Làm lại ở mỗi mốc lớn
 (sau 3b.6, sau AI Teacher T5, trước khi nộp hồ sơ dự thi). Kết quả thật, ghi đúng như quan sát được,
 là bằng chứng mạnh cho hồ sơ — **không sửa, không làm tròn đẹp, không bịa số liệu**.
 
 ## 1. Hai nhóm
 
-| Nhóm                 | Số người | Bản cài                                              | Mục tiêu kiểm tra                                                 |
-| -------------------- | -------- | ---------------------------------------------------- | ----------------------------------------------------------------- |
-| **A. Học sinh THPT** | 5–10 em  | `STEM Sim Lab THPT_…_x64-setup.exe` (bản thử nghiệm) | mô phỏng và giao diện có dễ hiểu ở trình độ _Nền tảng_ không      |
-| **B. Sinh viên**     | 5–10 bạn | `STEM Sim Lab_…_x64-setup.exe` (bản chính)           | toàn bộ luồng: lần mở đầu, nhập key Gemini của chính mình, đọc đề |
+| Nhóm                 | Số người | Bản cài                                        | Mục tiêu kiểm tra                                                 |
+| -------------------- | -------- | ---------------------------------------------- | ----------------------------------------------------------------- |
+| **A. Học sinh THPT** | 5–10 em  | `SimLab THPT_…_x64-setup.exe` (bản thử nghiệm) | mô phỏng và giao diện có dễ hiểu ở trình độ _Nền tảng_ không      |
+| **B. Sinh viên**     | 5–10 bạn | `SimLab_…_x64-setup.exe` (bản chính)           | toàn bộ luồng: lần mở đầu, nhập key Gemini của chính mình, đọc đề |
 
 Vì sao 5–10 người: theo Nielsen & Landauer (1993), khoảng 5 người đã cho thấy phần lớn chỗ vướng
 lớn; thêm người chủ yếu để thấy chỗ vướng có lặp lại hay không.

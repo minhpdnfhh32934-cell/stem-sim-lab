@@ -280,7 +280,7 @@ test('no API key → the AI button opens "Kết nối AI" with the Gemini key gu
   await expect(analyze).toBeEnabled();
   await analyze.click();
   const settings = page.getByRole('dialog', { name: 'Cài đặt' });
-  await expect(settings.getByText('Kết nối AI', { exact: true })).toBeVisible();
+  await expect(settings.getByRole('heading', { name: 'Kết nối AI' })).toBeVisible();
   const guide = page.locator('details.ai-guide').filter({ hasText: 'khóa API Gemini' });
   await expect(guide).toHaveAttribute('open', '');
   // The free Groq fallback has its own (closed) guide below.
@@ -313,6 +313,7 @@ for (const [name, opts, expected] of [
     await openLab(page);
     await page.getByRole('button', { name: 'Cài đặt' }).click();
     const settings = page.getByRole('dialog', { name: 'Cài đặt' });
+    await settings.getByRole('tab', { name: 'Kết nối AI' }).click();
     // Only the last characters of a stored key are ever shown.
     await expect(settings.getByText('Đã lưu khóa: ••••••••')).toBeVisible();
     await expect(settings.getByRole('textbox', { name: 'Mô hình', exact: true })).toHaveCount(1);

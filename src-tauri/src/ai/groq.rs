@@ -91,6 +91,10 @@ impl AIProvider for GroqProvider {
             .json(&groq_body(req))
     }
 
+    fn truncated(&self, v: &Value) -> bool {
+        v["choices"][0]["finish_reason"] == "length"
+    }
+
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
         let choice = &v["choices"][0];
         let text = choice["message"]["content"].as_str().unwrap_or_default();
@@ -124,6 +128,12 @@ impl AIProvider for GroqProvider {
 mod tests {
     use super::*;
     use crate::ai::tests::req;
+
+    #[test]
+    fn reports_answers_cut_at_the_output_limit() {
+        assert!(GroqProvider.truncated(&json!({"choices": [{"finish_reason": "length"}]})));
+        assert!(!GroqProvider.truncated(&json!({"choices": [{"finish_reason": "stop"}]})));
+    }
 
     fn with_model(model: &str, schema: bool) -> ChatRequest {
         let mut r = req(Provider::Groq, schema);

@@ -1,4 +1,4 @@
-# STEM Sim Lab
+# SimLab
 
 Ứng dụng desktop chạy offline, mô phỏng **Vật lý · Hóa học · Sinh học** cho học sinh THPT, giáo
 viên và giám khảo các cuộc thi Khoa học Kỹ thuật.
@@ -6,9 +6,9 @@ viên và giám khảo các cuộc thi Khoa học Kỹ thuật.
 Nguyên tắc cốt lõi: **mọi con số do engine tính.** AI chỉ đọc đề và diễn giải kết quả. Mỗi mô
 phỏng có một _Thẻ Khoa học_ ghi rõ mô hình, giả định, nguồn và mức độ tin cậy.
 
-## Thầy AI
+## AI Teacher
 
-Bản này có trang chủ mới với lối vào **Phòng thí nghiệm** và **Thầy AI**, bong bóng chat trong
+Bản này có trang chủ mới với lối vào **Phòng thí nghiệm** và **AI Teacher**, bong bóng chat trong
 phòng thí nghiệm, tùy chọn chia sẻ ngữ cảnh mô phỏng, chế độ Think kiểm tra câu trả lời qua API
 thứ hai, thư viện kiến thức có thể nạp tệp và tùy chọn Gemma chạy ngay trong app bằng WebGPU
 (không cần Ollama). Xem

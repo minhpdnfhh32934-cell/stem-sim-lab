@@ -1,5 +1,10 @@
 # Tuân thủ pháp lý và điều khoản (PROMPT_PHAN_2 A3)
 
+> **Cập nhật 12/10/2026:** bản thử nghiệm THPT (dưới 18 tuổi) đã bỏ theo quyết định của người dùng.
+> Các mục nói về "bản THPT" bên dưới chỉ còn giá trị tham khảo. Người dưới 18 vẫn có thể mở app
+> và trả lời "Tôi chưa đủ 18 tuổi" (AI tắt, mô phỏng dùng được); người dùng tự quyết định có cho
+> học sinh dưới 18 thử app hay không.
+
 > **Đây không phải tư vấn pháp lý.** Tài liệu chỉ liệt kê những gì đã tra được (có nguồn và ngày
 > tra) và những điểm **người dùng / nhà trường / phụ huynh phải tự xác nhận**. Không có kết luận
 > "đã hợp pháp" nào ở đây. Điều khoản và luật có thể thay đổi: tra lại trước mỗi đợt thử nghiệm.
@@ -118,11 +123,30 @@ Chưa tìm được đường dây khủng hoảng cho người lớn hoạt đ�
   được gửi tới vi/en.wikipedia.org. Nội dung Wikipedia là nội dung cộng đồng (giấy phép CC BY-SA) —
   app ghi rõ nguồn và lời nhắc đối chiếu.
 
+## 2e. Giọng nói của AI Teacher (tra 2026-10-12)
+
+Người dùng chọn ba nguồn giọng (12/10/2026): giọng Windows, giọng Gemini, giọng tiếng Việt chạy trên
+máy (kiểm tra giấy phép trước). Kết quả tra:
+
+- **Giọng Windows** (ví dụ "Microsoft An", tiếng Việt): cài miễn phí trong Settings → Time & language
+  → Speech; chạy trên máy, không gửi gì đi. App không cài giúp, chỉ hướng dẫn và mở trang cài đặt.
+- **Gemini TTS** (`gemini-3.8-flash-tts`, `gemini-3.8-flash-lite-tts`, ai.google.dev, trang
+  speech-generation, tra 2026-10-12): có tiếng Việt; gửi **chữ của câu trả lời** tới Google; gói miễn
+  phí: Google có thể dùng nội dung để cải thiện sản phẩm; âm thanh có thủy vân SynthID. Dùng chung
+  khóa Gemini và cổng 18+ như phần AI khác.
+- **Giọng trên máy: MMS-TTS tiếng Việt của Meta** (`facebook/mms-tts-vie`, bản ONNX
+  `Xenova/mms-tts-vie`): giấy phép **CC BY-NC 4.0** (trang mô hình trên HuggingFace) — chỉ dùng
+  **phi thương mại**, phải ghi nguồn. App ghi nguồn và giấy phép ngay cạnh nút tải.
+- **Không dùng Piper tiếng Việt** (`vi_VN-vais1000` …): MODEL_CARD ghi dữ liệu VAIS-1000 là CC BY 4.0
+  nhưng giọng được tinh chỉnh từ giọng `lessac` mà dữ liệu gốc (Blizzard 2013) chỉ cho phép dùng
+  **nghiên cứu**; Piper còn cần bộ phiên âm espeak-ng (GPL-3). Nguồn: thảo luận
+  github.com/rhasspy/piper/discussions/271 và huggingface.co/vnhellboy/vietnamese-piper-voices.
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng
   bấm), kiểm tra cập nhật trên GitHub, tải mô hình Gemma (người dùng bấm "Tải mô hình", chỉ tải
-  xuống) và tra Wikipedia (chỉ khi người dùng bật). Cài đặt → Thầy AI có ô "Dữ liệu của em đi
+  xuống) và tra Wikipedia (chỉ khi người dùng bật). Cài đặt → AI Teacher có ô "Dữ liệu của em đi
   đâu?" liệt kê theo cài đặt hiện tại.
 - Gửi cho nhà cung cấp AI: nội dung đề bài và kết quả đã tính. Đề có dấu hiệu thông tin cá nhân,
   nội dung không phù hợp, hoặc dấu hiệu khủng hoảng **không được gửi** (`src/safety/moderation.ts`).
@@ -163,3 +187,8 @@ Chưa tìm được đường dây khủng hoảng cho người lớn hoạt đ�
 14. (Bản fork) Việc tải tệp mô hình từ HuggingFace trên máy của học sinh có phù hợp với quy định của
     nhà trường không; có cần tải sẵn trên máy của trường thay vì để học sinh tự tải không.
 15. (Bản fork) Có cho phép học sinh dưới 18 bật tra Wikipedia không (hiện bản THPT đã tắt hẳn).
+16. Giọng MMS-TTS (CC BY-NC 4.0): việc dùng SimLab (miễn phí, cho học tập, dự thi) có được coi là
+    **phi thương mại** không — nếu sau này thu phí, bán, hay có tài trợ thương mại thì phải bỏ giọng
+    này hoặc xin phép (mục 2e).
+17. Giọng Gemini: người dùng biết chữ của câu trả lời được gửi tới Google khi bật giọng này (ô "Dữ
+    liệu của em đi đâu?" có ghi), và chấp nhận điều khoản gói miễn phí.

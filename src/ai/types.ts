@@ -50,6 +50,8 @@ export interface ChatResponse {
   provider?: Provider;
   /** True when the fallback provider answered (the chosen one was out of quota/credit). */
   fallback?: boolean;
+  /** The answer stopped at the output-token limit (the AI Teacher offers "Viết tiếp"). */
+  truncated?: boolean;
 }
 
 export type AiErrorCode =

@@ -52,7 +52,7 @@ describe('AI status / "Kiểm tra key"', () => {
   it('stays "notAllowed" without the age confirmation, before any key check', async () => {
     const seen: string[] = [];
     useAiStore.setState({ provider: 'gemini', models: { gemini: '', claude: '', groq: '' } });
-    setSafetyBackendForTests(new BrowserSafety(false));
+    setSafetyBackendForTests(new BrowserSafety());
     setTransportForTests(transport(true, 'ok', seen));
     expect(await checkAiStatus(true)).toBe('notAllowed');
     expect(seen).toEqual([]);

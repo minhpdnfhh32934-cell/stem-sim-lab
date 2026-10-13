@@ -20,25 +20,44 @@ describe('useLayoutStore', () => {
     useLayoutStore.getState().setPresentation(false);
   });
 
-  it('toggles panels', () => {
-    const { toggle } = useLayoutStore.getState();
-    toggle('left');
-    expect(useLayoutStore.getState().leftOpen).toBe(false);
-    toggle('left');
-    expect(useLayoutStore.getState().leftOpen).toBe(true);
-  });
-
   it('clamps sizes set through the store', () => {
     useLayoutStore.getState().setSize('right', 5);
     expect(useLayoutStore.getState().rightWidth).toBe(LAYOUT_LIMITS.right.min);
   });
 
-  it('opening a tab also opens its panel', () => {
-    useLayoutStore.getState().toggle('bottom');
+  it('switches tabs', () => {
     useLayoutStore.getState().setBottomTab('solution');
+    useLayoutStore.getState().setLeftTab('history');
     const s = useLayoutStore.getState();
-    expect(s.bottomOpen).toBe(true);
     expect(s.bottomTab).toBe('solution');
+    expect(s.leftTab).toBe('history');
+  });
+
+  it('panels hidden by an older version are shown again; bad values are ignored', async () => {
+    // Until 0.4.3 the panels could be hidden and that choice was saved.
+    localStorage.setItem(
+      'stemsim.layout',
+      JSON.stringify({
+        state: {
+          leftWidth: 333,
+          leftOpen: false,
+          rightOpen: false,
+          bottomOpen: false,
+          bottomTab: 'nope',
+        },
+        version: 1,
+      }),
+    );
+    await useLayoutStore.persist.rehydrate();
+    const s = useLayoutStore.getState() as unknown as Record<string, unknown>;
+    expect(s.leftWidth).toBe(333);
+    expect(s).not.toHaveProperty('leftOpen');
+    expect(s).not.toHaveProperty('rightOpen');
+    expect(s).not.toHaveProperty('bottomOpen');
+    expect(s.bottomTab).toBe('graphs');
+    // The next save drops the old flags from storage.
+    useLayoutStore.getState().setSize('right', 300);
+    expect(localStorage.getItem('stemsim.layout')).not.toContain('Open');
   });
 
   it('persists sizes but never the presentation flag', () => {

@@ -5,7 +5,7 @@
  */
 const vi = {
   app: {
-    name: 'STEM Sim Lab',
+    name: 'SimLab',
     tagline: 'Mô phỏng Vật lý · Hóa học · Sinh học',
   },
   subjects: {
@@ -32,7 +32,7 @@ const vi = {
   ai: {
     notAllowed: 'AI: chưa mở',
     notAllowedHint:
-      'AI chưa được mở cho máy này (chưa xác nhận độ tuổi hoặc chưa có đồng ý của người giám sát). Mô phỏng vẫn dùng bình thường.',
+      'AI chưa được mở cho máy này (chưa xác nhận đủ 18 tuổi). Mô phỏng vẫn dùng bình thường.',
     offline: 'AI: ngoại tuyến',
     cloud: 'Đã kết nối {provider}',
     off: 'AI: tắt',
@@ -182,9 +182,6 @@ const vi = {
     time: 'Thời gian mô phỏng',
   },
   layout: {
-    toggleLeft: 'Ẩn / hiện Thư viện (Ctrl+B)',
-    toggleRight: 'Ẩn / hiện Thuộc tính (Ctrl+I)',
-    toggleBottom: 'Ẩn / hiện bảng Đồ thị (Ctrl+J)',
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',
     resizeRight: 'Kéo để đổi độ rộng bảng Thuộc tính',
     resizeBottom: 'Kéo để đổi chiều cao bảng Đồ thị',
@@ -199,6 +196,40 @@ const vi = {
     browserMode: 'chế độ trình duyệt',
   },
   settings: {
+    nav: {
+      label: 'Mục cài đặt',
+      groupGeneral: 'Chung',
+      groupAi: 'AI',
+      groupPrivacy: 'Quyền riêng tư',
+      appearance: 'Giao diện',
+      appearanceHint: 'Chế độ Cơ bản/Nâng cao, màu nền, cỡ chữ, ngôn ngữ và bố cục.',
+      simulation: 'Mô phỏng & hiệu năng',
+      simulationHint: 'Chất lượng hiển thị theo sức máy và gia tốc trọng trường mặc định.',
+      aiHint:
+        'Chọn nhà cung cấp AI trực tuyến, nhập khóa API, đặt giới hạn và dự phòng khi hết lượt.',
+      teacher: 'AI Teacher',
+      teacherHint: 'Think (một API thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
+      local: 'AI local (Gemma)',
+      localHint:
+        'Tải, chọn hoặc xóa mô hình Gemma chạy ngay trên máy: trả lời không cần mạng, không cần khóa.',
+      gpu: 'GPU cho Gemma',
+      gpuHint: 'Card đồ họa đang dùng, độ dài câu trả lời và khi nào giải phóng bộ nhớ GPU.',
+      knowledge: 'Thư viện kiến thức',
+      knowledgeHint: 'Ghi chú có sẵn, tài liệu em tự thêm và tra cứu Wikipedia.',
+      memory: 'Trí nhớ hội thoại',
+      memoryHint:
+        'AI Teacher nhớ bao nhiêu tin nhắn trước và có lưu cuộc trò chuyện trên máy hay không.',
+      voice: 'Giọng nói',
+      voiceHint: 'Giọng đọc tiếng Việt của AI Teacher và cách đọc.',
+      safetyHint: 'Xác nhận độ tuổi, điều khoản, trang quyền riêng tư và nhật ký an toàn.',
+      shortcutsHint: 'Các phím tắt chính khi làm mô phỏng.',
+    },
+    lookCard: 'Chế độ và màu sắc',
+    textCard: 'Chữ và ngôn ngữ',
+    layoutHint:
+      'Đưa các khung (thư viện, bảng điều khiển, đồ thị) về vị trí và kích thước ban đầu.',
+    aiProviderCard: 'Nhà cung cấp và khóa API',
+    aiLimitsCard: 'Thời gian chờ và giới hạn mỗi ngày',
     aiFallback: 'Dự phòng khi hết lượt',
     aiFallbackHint:
       'Khi nhà cung cấp chính hết lượt miễn phí hoặc hết tiền, app tự chuyển sang nhà cung cấp này (nếu đã có khóa). Nhãn "Nội dung do AI hỗ trợ" ghi rõ mô hình nào đã trả lời.',
@@ -206,10 +237,10 @@ const vi = {
     aiFallbackModel: 'Mô hình dự phòng',
     groqGuide: {
       title: 'Hướng dẫn lấy khóa API Groq (miễn phí)',
-      age: 'Theo điều khoản của Groq, người tạo tài khoản phải từ 18 tuổi trở lên. Ở bản thử nghiệm THPT, phụ huynh hoặc thầy cô tạo khóa và người giám sát nhập vào máy.',
+      age: 'Theo điều khoản của Groq, người tạo tài khoản phải từ 18 tuổi trở lên.',
       step1:
         'Bấm "Mở trang tạo khóa" bên dưới (hoặc gõ console.groq.com/keys vào trình duyệt) và đăng nhập.',
-      step2: 'Bấm "Create API Key", đặt tên bất kỳ (ví dụ "STEM Sim Lab") rồi xác nhận.',
+      step2: 'Bấm "Create API Key", đặt tên bất kỳ (ví dụ "SimLab") rồi xác nhận.',
       step3: 'Sao chép khóa vừa hiện ra (khóa chỉ hiện một lần).',
       step4: 'Quay lại đây: dán khóa vào ô khóa API (Ctrl+V), bấm "Lưu khóa" rồi "Kiểm tra key".',
       open: 'Mở trang tạo khóa',
@@ -218,9 +249,7 @@ const vi = {
         'Theo điều khoản của Groq, nội dung gửi lên không được dùng để huấn luyện AI. Nếu tài khoản có tùy chọn "Zero Data Retention", nên bật để Groq không lưu lại đề bài.',
     },
     aiStatusNotAllowed:
-      'AI chưa được mở: cần xác nhận độ tuổi (hoặc đồng ý của người giám sát) trong Cài đặt → An toàn.',
-    aiPilotLocked:
-      'Chỉ người giám sát mới nhập hoặc xóa được khóa API. Mở khóa ở mục "An toàn & quyền riêng tư" bên dưới.',
+      'AI chưa được mở: cần xác nhận độ tuổi trong Cài đặt → An toàn & quyền riêng tư.',
     title: 'Cài đặt',
     close: 'Đóng',
     appearance: 'Giao diện',
@@ -246,8 +275,6 @@ const vi = {
     aiKeyShow: 'Hiện khóa',
     aiKeyHide: 'Ẩn khóa',
     aiKeyStoredHint: 'Đã lưu khóa: {hint}',
-    aiPilotKey:
-      'Bản thử nghiệm: khóa API (Claude, hoặc Groq miễn phí) do người lớn giám sát nhập. Học sinh không cần (và không nên) tự nhập khóa.',
     aiTimeout: 'Thời gian chờ (giây)',
     aiDailyCap: 'Số lượt AI tối đa mỗi ngày',
     aiDailyCapHint:
@@ -280,7 +307,7 @@ const vi = {
     aiStatusBadKey: 'Key không hợp lệ — kiểm tra lại hoặc tạo khóa mới.',
     geminiGuide: {
       title: 'Hướng dẫn lấy khóa API Gemini (miễn phí)',
-      age: 'Theo điều khoản của Google, người tạo khóa API phải từ 18 tuổi trở lên. Học sinh dưới 18 tuổi hãy nhờ thầy cô hoặc phụ huynh tạo khóa và nhập giúp vào máy.',
+      age: 'Theo điều khoản của Google, người tạo khóa API phải từ 18 tuổi trở lên.',
       art: {
         create: 'Hình minh họa: trang tạo khóa, nút "Create API key" ở góc dưới bên phải.',
         copy: 'Hình minh họa: khóa vừa tạo và nút sao chép bên cạnh.',
@@ -312,9 +339,6 @@ const vi = {
     redo: 'Làm lại',
     save: 'Lưu mô phỏng (.stemsim)',
     open: 'Mở tệp .stemsim',
-    toggleLeft: 'Ẩn / hiện Thư viện',
-    toggleRight: 'Ẩn / hiện Thuộc tính',
-    toggleBottom: 'Ẩn / hiện bảng Đồ thị',
     presentation: 'Chế độ trình chiếu',
     fontLarger: 'Tăng cỡ chữ',
     fontSmaller: 'Giảm cỡ chữ',
@@ -329,6 +353,7 @@ const vi = {
     method: 'Phương pháp tính',
     sources: 'Nguồn',
     intervened: 'Đã có can thiệp — kết quả là mô phỏng số.',
+    more: 'Phương trình, giả định và nguồn',
     estimatedError: 'Sai số ước lượng: {value}',
   },
   quality: {
@@ -370,6 +395,7 @@ const vi = {
       user: 'Giá trị do bạn chỉnh',
     },
     liveHint: 'Có thể chỉnh khi đang chạy (tính là can thiệp)',
+    allDefault: 'Đang dùng giá trị mặc định (đề bài chưa cho). Kéo thanh trượt để thử.',
     resetHint: 'Đổi giá trị sẽ chạy lại từ đầu',
   },
   solution: {
@@ -496,8 +522,7 @@ const vi = {
       tooLong: 'Đề bài dài quá (tối đa {max} ký tự) — bạn rút gọn giúp mình nhé.',
     },
     hint: {
-      notAllowed:
-        'Phần AI cần xác nhận độ tuổi (bản thường) hoặc đồng ý của người giám sát (bản thử nghiệm). Mở Cài đặt → An toàn & quyền riêng tư.',
+      notAllowed: 'Phần AI cần xác nhận đủ 18 tuổi. Mở Cài đặt → An toàn & quyền riêng tư.',
       personalData:
         'Hãy xóa họ tên, số điện thoại, email, địa chỉ hoặc số căn cước khỏi đề bài rồi bấm Phân tích lại.',
       unsafe:
@@ -520,8 +545,8 @@ const vi = {
     },
     hintClaude: {
       missingKey:
-        'Chưa có khóa API Claude. Nhờ người giám sát nhập khóa trong Cài đặt → Kết nối AI.',
-      badKey: 'Khóa API Claude bị từ chối. Nhờ người giám sát kiểm tra lại khóa trong Cài đặt.',
+        'Chưa có khóa API Claude. Tạo khóa ở console.anthropic.com rồi nhập trong Cài đặt → Kết nối AI.',
+      badKey: 'Khóa API Claude bị từ chối. Kiểm tra lại khóa trong Cài đặt → Kết nối AI.',
     },
     cached:
       'Đề này đã được đọc và xác nhận trước đây nên không cần gọi AI lại. Hãy kiểm tra bảng số liệu như thường lệ.',
@@ -570,7 +595,7 @@ const vi = {
     skip: 'Bỏ qua',
     done: 'Bắt đầu',
     counter: '{i}/{n}',
-    welcomeTitle: 'Chào mừng đến STEM Sim Lab',
+    welcomeTitle: 'Chào mừng đến SimLab',
     welcomeBody:
       'Mô phỏng Vật lý, Hóa học, Sinh học chạy hoàn toàn trên máy. Mọi con số đều do chương trình tính, có Thẻ Khoa học ghi rõ mô hình và nguồn.',
     subjectTitle: 'Chọn môn',
@@ -649,58 +674,15 @@ const vi = {
       minor: 'Tôi chưa đủ 18 tuổi',
       minorNote:
         'Chưa đủ 18 tuổi: bạn vẫn dùng được toàn bộ mô phỏng, thư viện bài mẫu và Tự dựng cảnh; phần AI tắt. Có thể trả lời lại trong Cài đặt → An toàn & quyền riêng tư.',
-      pilotIntro:
-        'Đây là bản thử nghiệm có người lớn giám sát. Phần AI chỉ mở khi phụ huynh hoặc thầy cô đã thiết lập xong.',
-      birthYear: 'Em sinh năm nào?',
-      yearInvalid: 'Năm sinh không hợp lệ.',
-      next: 'Tiếp tục',
-      supervisorTitle: 'Phần dành cho người giám sát',
-      supervisorIntro:
-        'Phụ huynh hoặc thầy cô đặt mã PIN (4–8 chữ số). Mã này dùng để nhập khóa API, ghi nhận đồng ý và xem nhật ký sự cố. Đừng cho học sinh biết mã.',
-      pin: 'Mã PIN mới',
-      pinAgain: 'Nhập lại mã PIN',
-      pinMismatch: 'Hai lần nhập không giống nhau.',
-      pinInvalid: 'Mã PIN gồm 4–8 chữ số.',
-      setPin: 'Đặt mã PIN',
-      pinDone: 'Đã đặt mã PIN.',
-      consentTitle: 'Ghi nhận đồng ý của phụ huynh',
-      consentText:
-        'Tôi là cha mẹ/người giám hộ của học sinh, hoặc thầy cô được phụ huynh ủy quyền. Phụ huynh và học sinh đã đọc và ký Phiếu đồng ý tham gia thử nghiệm.',
-      consentPin: 'Mã PIN người giám sát',
-      recordConsent: 'Ghi nhận đồng ý và bật AI',
-      adultTester:
-        'Người dùng từ 18 tuổi không cần phiếu đồng ý của phụ huynh; chỉ cần mã PIN để quản lý khóa API.',
-      later: 'Để sau — chỉ dùng mô phỏng',
-      done: 'Xong',
     },
     settings: {
+      ageCard: 'Độ tuổi và điều khoản',
       title: 'An toàn & quyền riêng tư',
       mainAdult: 'Đã xác nhận: từ 18 tuổi, đồng ý điều khoản (phiên bản {version}).',
       mainMinor: 'Đã chọn: chưa đủ 18 tuổi — phần AI đang tắt.',
       unanswered: 'Chưa trả lời câu hỏi độ tuổi — phần AI đang tắt.',
       answerAgain: 'Trả lời lại câu hỏi độ tuổi',
       privacy: 'Quyền riêng tư & dùng AI an toàn',
-      locked: 'Khu vực người giám sát đang khóa.',
-      noPin: 'Chưa có mã PIN người giám sát.',
-      setup: 'Thiết lập người giám sát',
-      pin: 'Mã PIN',
-      unlock: 'Mở khóa',
-      lock: 'Khóa lại',
-      unlocked: 'Đang mở khóa (tự khóa sau {min} phút).',
-      wrongPin: 'Sai mã PIN (còn {left} lần thử).',
-      tooMany: 'Nhập sai nhiều lần. Đợi {secs} giây rồi thử lại.',
-      studentMinor: 'Học sinh: dưới 18 tuổi.',
-      studentAdult: 'Người dùng: từ 18 tuổi.',
-      consentOn: 'Đã ghi nhận đồng ý ngày {day}.',
-      consentOff: 'Chưa ghi nhận đồng ý — phần AI đang tắt.',
-      recordConsent: 'Ghi nhận đồng ý (đã có phiếu ký)',
-      withdraw: 'Rút lại đồng ý (tắt AI)',
-      changePin: 'Đổi mã PIN',
-      newPin: 'Mã PIN mới',
-      changeYear: 'Sửa năm sinh',
-      year: 'Năm sinh',
-      save: 'Lưu',
-      saved: 'Đã lưu.',
       incidents: 'Nhật ký sự cố',
       incidentsHint: 'Chỉ ghi loại sự cố và thời gian, không ghi nội dung đề bài hay câu trả lời.',
       incidentsShow: 'Xem nhật ký sự cố',
@@ -712,13 +694,11 @@ const vi = {
         inputCrisis: 'Dấu hiệu cần hỗ trợ — đã hiện thông tin đường dây hỗ trợ',
         outputUnsafe: 'Câu trả lời của AI bị bộ lọc ẩn',
         userReport: 'Người dùng báo cáo nội dung không phù hợp',
-        pinFailed: 'Nhập sai mã PIN người giám sát',
       },
     },
     crisis: {
       title: 'Bạn không một mình',
       body: 'Có vẻ bạn đang gặp chuyện rất khó khăn. Hãy nói chuyện ngay với một người lớn bạn tin tưởng (bố mẹ, thầy cô, người thân), hoặc gọi:',
-      line111: 'Tổng đài quốc gia bảo vệ trẻ em 111 — miễn phí, 24/7.',
       ngayMai: 'Đường dây hỗ trợ tâm lý Ngày Mai: 096 306 1414 (13:00–20:30, thứ Tư đến Chủ nhật).',
       emergency: 'Nếu bạn hoặc ai đó đang gặp nguy hiểm ngay lúc này: gọi cấp cứu 115.',
       note: 'Số điện thoại được kiểm tra tháng 10/2026. Ứng dụng không gửi nội dung này đi đâu cả.',
@@ -760,11 +740,6 @@ const vi = {
       tip4: 'Thấy câu trả lời lạ, sai hoặc làm bạn khó chịu: bấm "Báo cáo nội dung không phù hợp" và hỏi thầy cô.',
       tip5: 'Không chia sẻ khóa API và không nhập thông tin cá nhân.',
       tip6: 'Nghỉ giải lao sau mỗi 45–60 phút học trên máy.',
-      pilotTitle: 'Bản thử nghiệm có giám sát',
-      pilot1:
-        'Khóa API Claude (và khóa Groq nếu dùng dự phòng miễn phí) thuộc về người lớn tạo tài khoản (sinh viên từ 18 tuổi hoặc phụ huynh). Người đó là khách hàng của Anthropic/Groq và chịu trách nhiệm tuân theo điều khoản của họ.',
-      pilot2:
-        'Học sinh dưới 18 tuổi chỉ dùng AI khi phụ huynh đã ký phiếu đồng ý và người giám sát đã ghi nhận trong ứng dụng. Có thể rút lại bất cứ lúc nào.',
       close: 'Đóng',
     },
   },
@@ -790,11 +765,11 @@ const vi = {
     suggestedTitle: 'Gợi ý cho trình độ {level}',
     noSuggestions:
       'Trình độ này đang được xây dựng. Chọn trình độ Nền tảng ở Thư viện để học ngay.',
-    teacherTitle: 'Thầy AI',
+    teacherTitle: 'AI Teacher',
     teacherBody:
-      'Thầy AI hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
+      'AI Teacher hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
     comingSoon: 'Sắp có',
-    teacherOpen: 'Mở Thầy AI',
+    teacherOpen: 'Mở AI Teacher',
     noAiNote: 'Không có AI hay mất mạng vẫn học được: mở chủ đề trong Thư viện hoặc Tự dựng cảnh.',
     cameraButton: 'Chụp đề bài',
   },
@@ -815,7 +790,7 @@ const vi = {
     blockedHint:
       'Nếu trình duyệt đã chặn hẳn, hãy bấm biểu tượng ổ khóa/cài đặt trang bên cạnh thanh địa chỉ, chuyển Camera thành “Cho phép”, rồi bấm Thử lại.',
     unsupported: 'Thiết bị này không hỗ trợ camera.',
-    needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → Thầy AI.',
+    needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → AI Teacher.',
     needVision:
       'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
@@ -824,39 +799,38 @@ const vi = {
   },
   landing: {
     eyebrow: 'Học khoa học bằng khám phá',
-    title: 'Chào mừng đến với STEM Sim Lab',
+    title: 'Chào mừng đến với SimLab',
     subtitle:
       'Chọn cách em muốn học hôm nay. Mô phỏng, dữ liệu và trợ lý học tập nằm trong cùng một không gian.',
     labTitle: 'Phòng thí nghiệm',
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
-    teacherTitle: 'Thầy AI',
+    teacherTitle: 'AI Teacher',
     teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
   },
   chat: {
-    label: 'Trò chuyện với Thầy AI',
-    title: 'Thầy AI',
-    product: 'STEM Sim Lab',
+    label: 'Trò chuyện với AI Teacher',
+    title: 'AI Teacher',
     model: 'Gemma · {model}',
     clear: 'Xóa cuộc trò chuyện',
     voice: 'Thầy đọc to câu trả lời',
     voiceHint: 'Bật/tắt giọng nói của thầy',
     close: 'Đóng chat',
-    expand: 'Mở trang Thầy AI',
+    expand: 'Mở trang AI Teacher',
     contextToggle: 'Lấy thông tin từ màn hình',
-    contextHint: 'Chỉ chia sẻ dữ liệu STEM Sim Lab đang mở',
+    contextHint: 'Chỉ chia sẻ dữ liệu SimLab đang mở',
     engineLabel: 'Chọn mô hình AI',
     cloud: 'API',
     gemma: 'Gemma cục bộ',
     noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
-      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → Thầy AI, hoặc chọn “API”.',
+      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
     settings: 'Cài đặt',
     localOnly: 'Câu hỏi được xử lý cục bộ trên máy này.',
     noWebgpuNotice:
       'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “API” và kết nối khóa trong Cài đặt.',
     thinkNoVerifier:
-      'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → Thầy AI.',
+      'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     sentToWithScreen:
@@ -864,7 +838,7 @@ const vi = {
     welcomeTitle: 'Hỏi bài theo cách của em',
     welcomeBody: 'Bật “Lấy thông tin từ màn hình” nếu câu hỏi liên quan đến mô phỏng đang mở.',
     welcomeBodyTeacher:
-      'Đặt câu hỏi hoặc chọn một gợi ý bên dưới. Thầy AI sẽ giải thích từng bước dựa trên thư viện kiến thức.',
+      'Đặt câu hỏi hoặc chọn một gợi ý bên dưới. AI Teacher sẽ giải thích từng bước dựa trên thư viện kiến thức.',
     starters: {
       one: 'Giải thích giúp em ý chính của chủ đề này.',
       two: 'Em nên bắt đầu giải bài này từ đâu?',
@@ -874,6 +848,8 @@ const vi = {
     checkedMeta: 'Đã rà soát: {model}',
     references: 'Nguồn kiến thức',
     thinking: 'Thầy đang suy nghĩ…',
+    truncatedNote: 'Câu trả lời dài nên đã dừng giữa chừng.',
+    continue: 'Viết tiếp',
     reviewing: 'Đang trả lời và kiểm tra chéo…',
     inputLabel: 'Nhập câu hỏi',
     placeholder: 'Nhập câu hỏi của em…',
@@ -890,7 +866,7 @@ const vi = {
         'AI chưa được bật cho hồ sơ này. Hoàn tất bước an toàn trong Cài đặt để tiếp tục.',
       noCloudKey: 'Chưa có khóa API cho mô hình trả lời. Hãy nhập khóa trong Cài đặt.',
       gemmaMissing:
-        'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → Thầy AI để kiểm tra.',
+        'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI Teacher để kiểm tra.',
       webgpu:
         'Trình duyệt hoặc máy này không hỗ trợ WebGPU nên chưa chạy được Gemma ngay trên máy.',
       crisis:
@@ -900,7 +876,7 @@ const vi = {
       unsafe: 'Mình chỉ có thể hỗ trợ nội dung học tập phù hợp.',
       sameProvider: 'Để Think kiểm tra chéo, hãy chọn một nhà cung cấp khác với API trả lời chính.',
       noVerifierKey:
-        'Chưa có khóa API thứ hai. Mở Cài đặt → Thầy AI để kết nối nhà cung cấp kiểm tra.',
+        'Chưa có khóa API thứ hai. Mở Cài đặt → AI Teacher để kết nối nhà cung cấp kiểm tra.',
       filtered:
         'Câu trả lời bị ẩn vì không qua được bộ lọc an toàn. Hãy thử hỏi lại hoặc báo giáo viên.',
       screenPersonal:
@@ -909,8 +885,15 @@ const vi = {
     },
   },
   chatSettings: {
-    title: 'Thầy AI · Gemma và thư viện kiến thức',
-    intro: 'Chọn mô hình trả lời, cấu hình API kiểm tra chéo và quản lý tài liệu kiến thức cục bộ.',
+    gemmaTermsCard: 'Điều khoản Gemma',
+    gemmaTermsHint:
+      'Gemma là mô hình của Google DeepMind, dùng theo Điều khoản sử dụng Gemma. Hãy đọc trước khi tải.',
+    thinkCard: 'Think · kiểm tra chéo',
+    thinkHint:
+      'Khi bật Think trong khung chat, một API thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
+    builtInCard: 'Ghi chú có sẵn',
+    webCard: 'Tra cứu trực tuyến',
+    flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
     gemmaModel: 'Phiên bản Gemma',
     gemma270m: '270M · nhẹ nhất',
     gemma1b: '1B · khuyên dùng',
@@ -936,9 +919,11 @@ const vi = {
       'Tắt sẵn. Khi bật, câu hỏi của em được gửi tới Wikipedia để lấy một đoạn tham khảo (nội dung cộng đồng, cần đối chiếu).',
     flowTitle: 'Dữ liệu của em đi đâu?',
     flowLocalTitle: 'Lưu trên máy này',
-    flowLocalChat: 'Lịch sử trò chuyện với Thầy AI (xóa bằng nút thùng rác).',
+    flowLocalChat: 'Lịch sử trò chuyện với AI Teacher (xóa bằng nút thùng rác).',
     flowLocalDocs: 'Tài liệu em tự thêm và {count} ghi chú có sẵn.',
     flowLocalModel: 'Mô hình Gemma đã tải; khi dùng Gemma, câu trả lời được tạo ngay trên máy.',
+    flowLocalSummary:
+      'Bản tóm tắt phần trò chuyện cũ (do chính AI đang trả lời viết, chỉ gửi kèm câu hỏi cho AI đó).',
     flowLocalKeyDesktop: 'Khóa API: trong kho bảo mật của hệ điều hành.',
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
@@ -947,10 +932,11 @@ const vi = {
     flowThinkOnly:
       'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi + bản nháp mới được gửi → {name} để rà soát.',
     flowWiki: 'Tra Wikipedia đang bật: câu hỏi → Wikipedia.',
+    flowVoice: 'Đọc to bằng giọng Gemini đang bật: chữ của câu trả lời → Google.',
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',
     flowModelDownload: 'Khi bấm “Tải mô hình”: máy tải tệp từ HuggingFace (không gửi câu hỏi).',
     flowScreen:
-      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của STEM Sim Lab, không phải ảnh chụp màn hình.',
+      'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
     downloaded: 'Đã tải',
     deleteModel: 'Xóa Gemma',
@@ -990,9 +976,8 @@ const vi = {
       failed: 'Không kiểm tra được khóa.',
     },
     library: 'Thư viện kiến thức',
-    hideLibrary: 'Ẩn thư viện',
-    openLibrary: 'Mở thư viện',
-    builtIn: 'Có sẵn {count} ghi chú kiến thức STEM cơ bản cho THPT.',
+    builtIn:
+      'Có sẵn {count} ghi chú kiến thức STEM cơ bản cho THPT; {pending} ghi chú đang chờ giáo viên duyệt nên cần đối chiếu với sách giáo khoa.',
     notes: 'ghi chú',
     addFile: 'Thêm tệp kiến thức',
     fileFilter: 'Tệp văn bản và dữ liệu',
@@ -1004,10 +989,191 @@ const vi = {
     removeFile: 'Xóa',
     localLibraryPrivacy:
       'Tệp được lưu trên máy này. Khi dùng API trực tuyến, các đoạn liên quan có thể được gửi kèm câu hỏi. Chỉ nạp tài liệu bạn có quyền sử dụng.',
+    memory: {
+      title: 'Trí nhớ hội thoại',
+      intro:
+        'Thầy nhớ bao nhiêu phần trò chuyện gần nhất. Phần cũ hơn được AI tóm tắt ngắn để thầy vẫn theo được mạch bài.',
+      medium: 'Vừa',
+      long: 'Dài',
+      mediumHint: 'Nhanh hơn, hợp với máy yếu và gói API miễn phí.',
+      longHint:
+        'Nhớ nhiều hơn nhưng chậm hơn (nhất là Gemma trên card tích hợp) và dễ hết lượt hơn với gói miễn phí (Groq, Gemini).',
+    },
+    gpu: {
+      title: 'Card đồ họa (GPU) chạy Gemma',
+      intro:
+        'Máy có nhiều card đồ họa thì em chọn được card chạy Gemma. Card rời thường nhanh hơn nhiều; card tích hợp tiết kiệm pin hơn.',
+      scanning: 'Đang quét card đồ họa của máy…',
+      scanFailed: 'Chưa quét được card đồ họa ({detail}).',
+      none: 'Không tìm thấy card đồ họa phần cứng nào.',
+      auto: 'Tự động (để Windows chọn)',
+      autoHint: 'Trên laptop thường là card tích hợp.',
+      integrated: 'Card tích hợp · dùng chung RAM',
+      discrete: 'Card rời · {vram} VRAM',
+      unknownKind: 'Chưa rõ loại card',
+      suggested: 'Nên dùng cho Gemma',
+      wholeApp:
+        'Card được chọn chạy toàn bộ phần hiển thị của ứng dụng (cả mô phỏng), không chỉ Gemma. Card rời tốn pin hơn — nên cắm sạc khi dùng.',
+      restartNeeded:
+        'Cần mở lại ứng dụng để dùng card mới ({name}). Đến lúc đó Gemma và giao diện vẫn chạy trên card cũ.',
+      restartNeededAuto:
+        'Cần mở lại ứng dụng để trở về chế độ tự động. Đến lúc đó Gemma vẫn chạy trên card cũ.',
+      restartNow: 'Mở lại ngay',
+      later: 'Để sau',
+      saved: 'Đã lưu lựa chọn card đồ họa. Mở lại ứng dụng để áp dụng.',
+      saveFailed: 'Chưa lưu được lựa chọn ({detail}).',
+      missing:
+        'Khi mở ứng dụng, không thấy card đã chọn ({name}) — có thể card rời đang tắt (chế độ tiết kiệm pin/Eco của hãng máy) hoặc phần cứng đã thay đổi. Ứng dụng đang dùng card mặc định.',
+      runningOn: 'WebGPU của ứng dụng đang chạy trên: {name}',
+      runningOnUnknown: 'Chưa đọc được card mà WebGPU đang dùng.',
+      gemmaRanOn: 'Lần nạp Gemma gần nhất chạy trên: {name}',
+      mismatch:
+        'Ứng dụng đã yêu cầu {wanted} nhưng WebGPU đang chạy trên {actual}. Hãy thử mở lại ứng dụng; nếu vẫn vậy, card này chưa dùng được cho WebGPU trên máy em.',
+      vramLow:
+        'Card này có {vram} VRAM, có thể không đủ cho {model} ({size}). Nên chọn bản Gemma nhỏ hơn.',
+      browserOnly:
+        'Trên trình duyệt, trình duyệt tự chọn card đồ họa. Chọn card chỉ có trong ứng dụng desktop trên Windows.',
+      unsupported: 'Chọn card đồ họa hiện chỉ có trên Windows.',
+    },
+  },
+  gpuSettings: {
+    cardTitle: 'Card đồ họa (WebGPU)',
+    card: 'Card',
+    checking: 'Đang đọc thông tin card…',
+    none: 'Không tìm thấy card hỗ trợ WebGPU.',
+    unnamed: 'Có card WebGPU (trình duyệt không cho biết tên).',
+    f16: 'Tính nửa độ chính xác (shader-f16)',
+    maxBuffer: 'Bộ đệm lớn nhất',
+    loaded: 'Đang nạp trong GPU',
+    notLoaded: 'Chưa nạp mô hình nào',
+    yes: 'Có',
+    no: 'Không',
+    fallbackWarning: 'Đây là card giả lập bằng CPU: Gemma vẫn chạy nhưng rất chậm.',
+    privacy: 'Thông tin này do trình duyệt đọc trên máy, không gửi đi đâu.',
+    powerTitle: 'Chọn card khi máy có hai card',
+    power: 'Ưu tiên',
+    powerHigh: 'Card mạnh (nhanh hơn)',
+    powerLow: 'Card tiết kiệm pin',
+    powerHint:
+      'Chỉ có tác dụng trên máy có cả card rời và card tích hợp; trình duyệt có thể bỏ qua lựa chọn này. Áp dụng từ câu hỏi tiếp theo.',
+    lengthTitle: 'Độ dài câu trả lời của Gemma',
+    length: 'Tối đa',
+    lengths: {
+      short: 'Ngắn',
+      medium: 'Vừa',
+      long: 'Dài',
+    },
+    lengthHint:
+      'Tối đa khoảng {tokens} token mỗi câu trả lời. Dài hơn thì phải chờ lâu hơn, và mô hình nhỏ dễ lan man.',
+    memoryTitle: 'Bộ nhớ GPU',
+    unload: 'Giải phóng',
+    keep: 'Giữ luôn',
+    after: 'Sau {minutes} phút',
+    unloadHint:
+      'Mô hình nằm trong bộ nhớ GPU để trả lời nhanh. Giải phóng giúp máy nhẹ hơn; câu hỏi sau sẽ nạp lại từ ổ đĩa (vài giây đến vài chục giây).',
+    freeNow: 'Giải phóng bộ nhớ GPU ngay',
+  },
+  memorySettings: {
+    storeTitle: 'Lưu cuộc trò chuyện',
+    save: 'Lưu lịch sử trò chuyện trên máy này',
+    saveOn: 'Mở lại ứng dụng vẫn thấy cuộc trò chuyện (giữ {max} tin nhắn gần nhất).',
+    saveOff: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng.',
+    count: 'Đang có {count} tin nhắn.',
+    clear: 'Xóa cuộc trò chuyện',
+    confirmClear: 'Xóa hẳn',
+    cancel: 'Hủy',
+    hasSummary: 'Phần cũ hơn đã được tóm tắt ngắn (cũng lưu trên máy).',
+  },
+  board: {
+    label: 'Bảng trắng của AI Teacher',
+    controls: 'Điều khiển bảng',
+    pause: 'Tạm dừng',
+    resume: 'Tiếp tục',
+    replay: 'Giảng lại',
+    finish: 'Viết nhanh',
+    finishHint: 'Viết ngay phần còn lại lên bảng, không đọc',
+    speed: 'Tốc độ viết',
+    myPen: 'Bút của em',
+    penHint: 'Bật để tự viết, vẽ lên bảng bằng chuột hoặc cảm ứng',
+    penArea: 'Vùng viết của em',
+    clearPen: 'Xóa nét của em trên mặt bảng này',
+    history: 'Các mặt bảng',
+    face: 'Bảng {n}',
+    preparing: 'Đang chuẩn bị bảng…',
+    empty:
+      'Hỏi AI Teacher một câu: thầy sẽ vừa giảng vừa viết công thức, gạch chân, khoanh tròn và vẽ hình lên bảng này.',
+    checked: 'Phép tính đã được máy kiểm lại',
+    unverified: 'Có số do AI tự tính, chưa kiểm chứng: em hãy tính lại',
+    axes: 'Hệ trục tọa độ',
+    plotOf: 'Đồ thị của {fn}',
+    plotUnreadable: 'Chưa đọc được biểu thức để vẽ',
   },
   voice: {
-    title: 'Giọng nói của thầy',
-    intro: 'Thầy đọc to mỗi câu trả lời qua loa máy. Miễn phí, dùng giọng có sẵn của máy.',
+    readAloudCard: 'Đọc to',
+    readAloud: 'Đọc to câu trả lời của AI Teacher',
+    readAloudHint:
+      'Cũng bật/tắt được bằng nút loa trong khung trò chuyện. Âm thanh không được ghi lại.',
+    sourceCard: 'Nguồn giọng',
+    engines: {
+      system: {
+        title: 'Giọng của Windows',
+        hint: 'Miễn phí, không cần mạng. Đọc đúng tiếng Việt khi Windows đã có giọng tiếng Việt.',
+      },
+      gemini: {
+        title: 'Giọng Gemini (trực tuyến)',
+        hint: 'Tự nhiên nhất, ngắt nghỉ như người thật. Cần mạng và khóa Gemini; tính vào số lượt AI mỗi ngày.',
+      },
+      local: {
+        title: 'Giọng tiếng Việt trên máy',
+        hint: 'Tải một lần, sau đó đọc không cần mạng và đúng dấu tiếng Việt; nghe hơi giống máy hơn hai giọng kia.',
+      },
+    },
+    systemFound: 'Đã có giọng tiếng Việt: {names}.',
+    systemMissing:
+      'Máy chưa có giọng tiếng Việt, nên Windows đọc bằng giọng tiếng Anh và sai dấu. Cài giọng tiếng Việt (miễn phí):',
+    installStep1: 'Mở Settings (Cài đặt) của Windows → Time & language → Speech.',
+    installStep2: 'Ở mục "Manage voices", bấm "Add voices".',
+    installStep3:
+      'Gõ "Vietnamese", chọn "Vietnamese (Vietnam)" rồi bấm Add. Windows tải giọng "Microsoft An".',
+    installStep4: 'Đóng rồi mở lại SimLab: giọng mới hiện trong danh sách bên dưới.',
+    openWindowsSpeech: 'Mở cài đặt giọng nói của Windows',
+    voiceLabel: 'Giọng đọc',
+    auto: 'Tự động (ưu tiên tiếng Việt)',
+    groupVietnamese: 'Tiếng Việt',
+    groupOther: 'Ngôn ngữ khác (đọc tiếng Việt sai dấu)',
+    noSpeech: 'Máy này không có bộ đọc giọng nói. Hãy chọn giọng Gemini hoặc giọng trên máy.',
+    geminiNoKey: 'Chưa có khóa Gemini. Giọng Gemini dùng chung khóa với mục Kết nối AI.',
+    openConnect: 'Mở Kết nối AI',
+    geminiVoice: 'Giọng Gemini',
+    geminiModel: 'Mô hình giọng',
+    traits: {
+      friendly: 'thân thiện',
+      warm: 'ấm áp',
+      knowledgeable: 'hiểu biết',
+      informative: 'rõ ràng, mạch lạc',
+      firm: 'chắc chắn',
+      upbeat: 'tươi vui',
+      breezy: 'nhẹ nhàng',
+      gentle: 'dịu dàng',
+    },
+    modelFlash: 'Flash (hay nhất)',
+    modelLite: 'Flash-Lite (rẻ hơn)',
+    geminiPrivacy:
+      'Khi dùng giọng Gemini, chữ của câu trả lời (không kèm câu hỏi của em) được gửi tới Google để đọc. Với gói miễn phí, Google có thể dùng nội dung để cải thiện dịch vụ. Âm thanh có thủy vân SynthID.',
+    localLicence:
+      'Mô hình MMS-TTS tiếng Việt của Meta ({size}), giấy phép {licence}: chỉ dùng cho mục đích phi thương mại và phải ghi nguồn.',
+    localReady: 'Đã tải, sẵn sàng đọc.',
+    localDelete: 'Xóa giọng',
+    localDownload: 'Tải giọng ({size})',
+    localDownloading: 'Đang tải…',
+    localPreparing: 'Đang chuẩn bị…',
+    localModelPage: 'Trang mô hình',
+    localLicencePage: 'Đọc giấy phép',
+    downloadCancelled: 'Đã hủy tải. Giọng chưa được tính là đã tải xong.',
+    downloadFailed: 'Tải chưa thành công. Kiểm tra mạng và chỗ trống trên ổ đĩa rồi thử lại.',
+    localHint:
+      'Chạy bằng card đồ họa (WebGPU) nếu máy có, nếu không thì bằng CPU (chậm hơn, có thể ngắt quãng). Câu đầu tiên chờ vài giây để nạp mô hình.',
+    howCard: 'Cách đọc',
     style: 'Kiểu giọng',
     styles: {
       vui: 'Vui vẻ',
@@ -1015,10 +1181,23 @@ const vi = {
       lanh: 'Lanh lẹ',
       hai: 'Hài hước',
     },
-    voiceLabel: 'Giọng đọc',
-    auto: 'Tự động (ưu tiên tiếng Việt)',
+    speed: 'Tốc độ',
+    howHint:
+      'Số, đơn vị, công thức và kí hiệu hóa học được đọc thành lời (9,81 m/s² → "chín phẩy tám mốt mét trên giây bình phương"); câu dài được ngắt ở dấu câu như khi thầy cô giảng.',
+    previewCard: 'Nghe thử',
     preview: 'Nghe thử',
-    noSpeech: 'Máy này không có giọng đọc. Hãy thử trình duyệt khác.',
+    stop: 'Dừng đọc',
+    showText: 'Xem chữ sẽ đọc',
+    errors: {
+      noKey: 'Giọng Gemini cần khóa Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      noModel:
+        'Chưa tải giọng tiếng Việt trên máy: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      quota: 'Gemini báo hết lượt: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      offline: 'Không có mạng: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      notAllowed:
+        'Cần xác nhận đủ 18 tuổi để dùng giọng Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      other: 'Giọng đã chọn chưa đọc được: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+    },
   },
   levels: {
     label: 'Trình độ',
@@ -1032,7 +1211,7 @@ const vi = {
       'Việc xếp chủ đề theo bài trong chương trình/sách giáo khoa đang chờ giáo viên duyệt.',
   },
   onboarding: {
-    label: 'Làm quen với STEM Sim Lab',
+    label: 'Làm quen với SimLab',
     step: 'Bước {i}/{n}',
     levelTitle: 'Bạn muốn học ở trình độ nào?',
     levelBody: 'Chọn một trình độ để app gợi ý chủ đề phù hợp. Bạn đổi được bất cứ lúc nào.',
@@ -1128,7 +1307,7 @@ const vi = {
     layoutLabel: 'Xem thử bố cục',
     layoutTalk: 'Trò chuyện',
     layoutBoard: 'Giảng trên bảng',
-    aiLabel: 'Thầy/cô AI',
+    aiLabel: 'AI Teacher',
     talkCaption: 'Chào em! Hôm nay mình học gì nhỉ?',
     boardCaption: 'Mình cùng ghi lại ý chính và suy luận từng bước lên bảng nhé.',
     startTitle: 'Hôm nay muốn học gì?',
@@ -1140,7 +1319,6 @@ const vi = {
     boardFormula: 'P = m·g',
     boardNote: 'hướng thẳng đứng xuống dưới',
     progressLabel: 'Tiến độ bài học',
-    turnProgress: 'Lượt trao đổi trong buổi học',
     controlsLabel: 'Điều khiển buổi học',
     mic: 'Giữ để nói',
     raiseHand: 'Giơ tay',
@@ -1156,8 +1334,18 @@ const vi = {
       simpler: 'Đơn giản hơn',
       lost: 'Em chưa hiểu chỗ này',
     },
+    chipPrompts: {
+      again:
+        'Thầy giải thích lại câu trả lời vừa rồi theo một cách khác, dễ hiểu hơn, vẫn đúng nội dung đó.',
+      slower:
+        'Thầy giảng lại câu trả lời vừa rồi chậm hơn: chia thành nhiều bước nhỏ, mỗi bước một ý, giải thích từng bước.',
+      example: 'Thầy cho em thêm một ví dụ cụ thể, gần gũi về đúng nội dung vừa giảng.',
+      simpler:
+        'Thầy nói lại nội dung vừa rồi đơn giản hơn: ít thuật ngữ, câu ngắn, như giảng cho người mới học.',
+      lost: 'Em chưa hiểu phần vừa giảng. Thầy hỏi em đang vướng ở bước nào rồi gợi ý từng chút một nhé.',
+    },
     connectTitle: 'Kết nối AI để học với thầy/cô',
-    connectBody: 'Thầy/cô AI cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',
+    connectBody: 'AI Teacher cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',
     connect: 'Mở Kết nối AI',
     notYet: 'Tính năng này sẽ được bổ sung sau',
   },

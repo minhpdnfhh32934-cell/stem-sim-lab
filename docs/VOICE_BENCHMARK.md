@@ -1,5 +1,9 @@
 # So sánh dịch vụ giọng nói cloud cho "Dạy học bằng AI" (PROMPT_PHAN_2 B6.0, giai đoạn T0)
 
+> **Cập nhật 12/10/2026:** bản THPT đã bỏ, nên các lựa chọn "cho bản THPT" (Azure…) không còn cần.
+> Hướng giọng nói hiện tại: Gemini TTS, giọng tiếng Việt của Windows, và giọng tiếng Việt chạy trên
+> máy (người dùng đồng ý 12/10/2026, phải kiểm tra giấy phép trước).
+
 > **Trạng thái: ĐỀ XUẤT, CHỜ NGƯỜI DÙNG DUYỆT.** Chưa có dòng mã giọng nói nào được viết.
 >
 > Ngày tra: **2026-10-06**. Nguồn là trang chính thức của nhà cung cấp, đọc qua công cụ tóm tắt

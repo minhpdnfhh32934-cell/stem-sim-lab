@@ -1,0 +1,75 @@
+/* Settings → Giọng nói */
+
+.voice-engines {
+  display: grid;
+  gap: 8px;
+}
+.voice-engine {
+  flex-direction: column;
+  align-items: stretch;
+}
+.voice-engine__body {
+  display: grid;
+  gap: 8px;
+  padding-top: 4px;
+}
+.voice-engine strong svg {
+  vertical-align: -2px;
+}
+.voice-status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.voice-status p {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin: 0;
+}
+.voice-status.is-ok {
+  flex-direction: row;
+  align-items: center;
+  color: var(--conf-exact);
+}
+.voice-status.is-warn {
+  padding: 10px 12px;
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-md);
+  background: var(--pending-soft);
+  color: var(--text);
+}
+.voice-status.is-warn > p svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--warning);
+}
+.voice-status .btn {
+  align-self: flex-start;
+}
+.voice-speed {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+.voice-speed input {
+  width: 180px;
+  accent-color: var(--accent);
+}
+.voice-speed output {
+  min-width: 3.5em;
+  text-align: right;
+}
+.voice-spoken {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-sunken);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.voice-engine > .chat-settings__model-choice {
+  flex: none;
+}

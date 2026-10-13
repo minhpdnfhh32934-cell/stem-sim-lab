@@ -4,27 +4,20 @@ import { getSafety, type IncidentKind, type SafetyStatus } from './safety';
 export interface SafetyUiState {
   /** Null until the first `loadSafety()` answers. */
   status: SafetyStatus | null;
-  /** Pilot: the supervisor chose "Để sau" this session (the AI stays off, no gate shown). */
-  deferred: boolean;
-  /** The gate was opened from Settings (to answer again / finish the supervisor setup). */
+  /** The gate was opened from Settings (to answer again). */
   gateRequested: boolean;
-  /** Supervisor session end (ms since 1970, 0 = locked). The real check is in Rust. */
-  unlockedUntil: number;
   privacyOpen: boolean;
 }
 
 export const useSafetyStore = create<SafetyUiState>()(() => ({
   status: null,
-  deferred: false,
   gateRequested: false,
-  unlockedUntil: 0,
   privacyOpen: false,
 }));
 
 export async function loadSafety(): Promise<SafetyStatus> {
-  const safety = getSafety();
-  const [status, secs] = await Promise.all([safety.status(), safety.unlockedSecs()]);
-  useSafetyStore.setState({ status, unlockedUntil: secs > 0 ? Date.now() + secs * 1000 : 0 });
+  const status = await getSafety().status();
+  useSafetyStore.setState({ status });
   return status;
 }
 
@@ -41,10 +34,7 @@ export function setSafetyStatus(status: SafetyStatus): void {
 export function gateVisible(s: SafetyUiState): boolean {
   const st = s.status;
   if (!st) return false;
-  if (s.gateRequested) return true;
-  if (!st.answered) return true;
-  if (st.edition === 'pilot' && !s.deferred) return !st.pinSet || !st.aiAllowed;
-  return false;
+  return s.gateRequested || !st.answered;
 }
 
 export function useGateVisible(): boolean {
@@ -52,31 +42,11 @@ export function useGateVisible(): boolean {
 }
 
 export function openGate(): void {
-  useSafetyStore.setState({ gateRequested: true, deferred: false });
+  useSafetyStore.setState({ gateRequested: true });
 }
 
-export function closeGate(deferred = false): void {
-  useSafetyStore.setState({ gateRequested: false, deferred });
-}
-
-export async function unlockSupervisor(pin: string): Promise<void> {
-  const secs = await getSafety().unlock(pin);
-  useSafetyStore.setState({ unlockedUntil: Date.now() + secs * 1000 });
-}
-
-/** Called after `setPin`: Rust opened the session for the person who set the PIN. */
-export async function refreshUnlock(): Promise<void> {
-  const secs = await getSafety().unlockedSecs();
-  useSafetyStore.setState({ unlockedUntil: secs > 0 ? Date.now() + secs * 1000 : 0 });
-}
-
-export async function lockSupervisor(): Promise<void> {
-  await getSafety().lock();
-  useSafetyStore.setState({ unlockedUntil: 0 });
-}
-
-export function isUnlocked(s: SafetyUiState, now = Date.now()): boolean {
-  return s.unlockedUntil > now;
+export function closeGate(): void {
+  useSafetyStore.setState({ gateRequested: false });
 }
 
 /** Records an incident (kind and time only). Never fails the caller. */

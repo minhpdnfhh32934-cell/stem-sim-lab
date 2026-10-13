@@ -14,8 +14,21 @@ export type PlaybackSpeed = (typeof PLAYBACK_SPEEDS)[number];
 
 export type AiStatus = 'offline' | 'cloud';
 
-/** Settings sections that other screens can jump to. */
-export type SettingsSection = 'ai' | 'teacher';
+/** Pages of the Settings dialog (left navigation, one page at a time). */
+export const SETTINGS_SECTIONS = [
+  'appearance',
+  'simulation',
+  'ai',
+  'teacher',
+  'local',
+  'gpu',
+  'knowledge',
+  'memory',
+  'voice',
+  'safety',
+  'shortcuts',
+] as const;
+export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
 
 /**
  * Session state of the workspace (not persisted).
@@ -36,11 +49,12 @@ export interface WorkspaceState {
   /** Science Card of the open simulation (null when none). */
   scienceCard: ScienceCardData | null;
   settingsOpen: boolean;
-  /** Section to scroll to when Settings opens (e.g. from the chat's "Cài đặt" button). */
-  settingsFocus: SettingsSection | null;
+  /** Page shown in Settings; kept while the app runs, so reopening lands where the learner was. */
+  settingsSection: SettingsSection;
 
   setSettingsOpen: (open: boolean) => void;
-  /** Opens Settings scrolled to one section, so learners land on the right controls. */
+  setSettingsSection: (section: SettingsSection) => void;
+  /** Opens Settings on one page, so learners land on the right controls. */
   openSettingsAt: (section: SettingsSection) => void;
   setSubject: (subject: Subject) => void;
   setProblemText: (text: string) => void;
@@ -61,13 +75,16 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
   aiStatus: 'offline',
   scienceCard: null,
   settingsOpen: false,
-  settingsFocus: null,
+  settingsSection: 'appearance',
 
   setSettingsOpen: (settingsOpen) => {
-    set({ settingsOpen, settingsFocus: null });
+    set({ settingsOpen });
   },
-  openSettingsAt: (settingsFocus) => {
-    set({ settingsOpen: true, settingsFocus });
+  setSettingsSection: (settingsSection) => {
+    set({ settingsSection });
+  },
+  openSettingsAt: (settingsSection) => {
+    set({ settingsOpen: true, settingsSection });
   },
   setSubject: (subject) => {
     set({ subject });

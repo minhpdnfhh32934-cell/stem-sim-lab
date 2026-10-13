@@ -82,6 +82,7 @@
   position: relative;
   width: min(100%, 850px);
   text-align: center;
+  text-wrap: balance;
 }
 .launch__eyebrow {
   display: inline-flex;
@@ -572,6 +573,11 @@
 }
 .params__more:hover {
   text-decoration: underline;
+}
+.params__note {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
 }
 
 /* ---------- Badges ---------- */

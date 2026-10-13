@@ -14,8 +14,7 @@ Rules: you review only. **Do not commit, push or merge.** Merging is the user's 
 3. Check, with file and line for every finding:
    - the diff does what the plan's **Tiêu chí xong** says, and nothing large outside it;
    - `CLAUDE.md` supreme rule: no number from the LLM, defaults marked, Science Card present;
-   - pilot edition: no Gemini code reachable outside `__EDITION__ === 'main'` /
-     `#[cfg(feature = "edition-main")]`; safety gates stay in Rust;
+   - safety gates stay in Rust (18+ confirmation before any AI call or saved key);
    - i18n: every user-visible string in `vi.ts` and `en.ts`; numbers via `formatNumber`;
      colors from tokens; Lucide icons only;
    - tests added for new behaviour; no test skipped or weakened; no secrets committed.

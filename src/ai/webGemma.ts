@@ -1,9 +1,12 @@
 /**
  * Gemma running fully inside the app (Transformers.js + WebGPU, no server).
  * Models come from public onnx-community repos, so downloading needs no token.
- * Files live in the browser Cache Storage (Transformers.js default); a tiny
- * IndexedDB flag records which models finished downloading.
+ * Files live in OPFS (src/ai/modelStore.ts); a tiny IndexedDB flag records which models
+ * finished downloading. Which card runs it is chosen by the desktop app at start-up (gpu.ts);
+ * when the model leaves the GPU memory comes from gemmaPrefs.ts.
  */
+import { useGemmaPrefs } from './gemmaPrefs';
+import { useGpuStore, type WebGpuInfo } from './gpu';
 import { deleteRepo, opfsAvailable, repoStored } from './modelStore';
 import { webGemmaModel } from './webGemmaModels';
 
@@ -164,14 +167,15 @@ export async function deleteWebGemma(modelId: string): Promise<void> {
 
 type WorkerOut =
   | { kind: 'inited' }
-  | { kind: 'loaded'; modelId: string }
+  | { kind: 'loaded'; modelId: string; gpu: WebGpuInfo | null }
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
-  | { kind: 'reply'; id: number; text: string }
+  | { kind: 'reply'; id: number; text: string; truncated: boolean }
   | { kind: 'error'; id: number; message: string };
 
 let worker: Worker | null = null;
 let inited = false;
 let loadedId: string | null = null;
+let idleTimer: ReturnType<typeof setTimeout> | null = null;
 let nextId = 1;
 /** The worker runs one generation at a time: serialize every request. */
 let queue: Promise<unknown> = Promise.resolve();
@@ -212,6 +216,8 @@ function ensureWorker(): Worker {
         if (progressListener) progressListener({ loaded: out.loaded, total: out.total });
       } else {
         loadedId = out.modelId;
+        // The card the model really runs on (Settings → GPU shows it).
+        useGpuStore.getState().setGemmaInfo(out.gpu);
         const resolve = pending.get(-3);
         if (resolve) {
           pending.delete(-3);
@@ -250,6 +256,7 @@ function resetWorker(): void {
   inited = false;
   loadedId = null;
   progressListener = null;
+  memoryChanged();
 }
 
 async function ensureInited(signal?: AbortSignal): Promise<void> {
@@ -357,12 +364,53 @@ export async function downloadWebGemma(
 }
 
 function unloadWebGemma(): void {
+  clearIdleTimer();
+  const wasLoaded = loadedId !== null;
   loadedId = null;
   try {
     worker?.postMessage({ kind: 'unload' });
   } catch {
     /* the worker may already be gone */
   }
+  if (wasLoaded) memoryChanged();
+}
+
+/** Tells Settings that the model in GPU memory changed (loaded, freed). */
+function memoryChanged(): void {
+  try {
+    window.dispatchEvent(new Event('stemsim:gemma-memory'));
+  } catch {
+    /* no window (worker or test) */
+  }
+}
+
+function clearIdleTimer(): void {
+  if (idleTimer !== null) clearTimeout(idleTimer);
+  idleTimer = null;
+}
+
+/** Frees the GPU memory after the chosen idle time ("AI local → GPU"); 0 keeps the model. */
+function scheduleIdleUnload(): void {
+  clearIdleTimer();
+  const minutes = useGemmaPrefs.getState().unloadAfterMin;
+  if (minutes > 0) idleTimer = setTimeout(unloadWebGemma, minutes * 60_000);
+}
+
+/** The model now held in GPU memory, if any. */
+export function loadedGemma(): string | null {
+  return loadedId;
+}
+
+/** "Giải phóng bộ nhớ GPU ngay": the next question loads the model again from disk. */
+export function freeGemmaMemory(): void {
+  unloadWebGemma();
+}
+
+export interface WebGemmaReply {
+  content: string;
+  model: string;
+  /** The answer stopped at the maxTokens limit. */
+  truncated: boolean;
 }
 
 export interface WebChatMessage {
@@ -398,8 +446,10 @@ export function webGemmaChat(args: {
   images?: ArrayBuffer[];
   temperature?: number;
   maxTokens?: number;
-}): Promise<{ content: string; model: string }> {
-  const task = async (): Promise<{ content: string; model: string }> => {
+  /** Most prompt tokens; the worker drops the oldest turns above it (exact count). */
+  inputBudget?: number;
+}): Promise<WebGemmaReply> {
+  const task = async (): Promise<WebGemmaReply> => {
     const meta = webGemmaModel(args.model);
     if (!meta) throw new Error(`unknown model ${args.model}`);
     // Photos need the vision model: switch automatically when it is ready.
@@ -412,7 +462,10 @@ export function webGemmaChat(args: {
       }
     }
     if ((await webGemmaStatus(id)) !== 'ready') throw new Error('model-missing');
+    clearIdleTimer();
+    const wasLoaded = loadedId;
     await loadIntoWorker(id, () => undefined);
+    if (wasLoaded !== loadedId) memoryChanged();
     const w = ensureWorker();
     const chatId = nextId++;
     const waiting = waitFor(chatId);
@@ -424,8 +477,10 @@ export function webGemmaChat(args: {
       images: args.images ?? [],
       temperature: args.temperature ?? 0.2,
       maxTokens: args.maxTokens ?? 1024,
+      ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
     });
     const out = await waiting;
+    scheduleIdleUnload();
     if (out.kind === 'error') throw new Error(out.message);
     let text = out.kind === 'reply' ? out.text.trim() : '';
     if (!text) throw new Error('empty reply');
@@ -436,7 +491,7 @@ export function webGemmaChat(args: {
       text = text.slice(echo.length).trim();
     }
     if (!text) throw new Error('empty reply');
-    return { content: text, model: id };
+    return { content: text, model: id, truncated: out.kind === 'reply' && out.truncated };
   };
   const run = queue.then(task, task);
   queue = run.catch(() => undefined);

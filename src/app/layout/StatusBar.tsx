@@ -26,6 +26,9 @@ export const StatusBar = memo(function StatusBar() {
   const timeScale = usePerfStore((s) => s.timeScale);
   const degraded = usePerfStore((s) => s.degraded);
   const memoryMB = usePerfStore((s) => s.memoryMB);
+  // Quality tier, FPS and RAM are for Advanced mode; warnings (slow motion, lower quality)
+  // always show, because they change what the learner sees.
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   // Also when the new version needs the installer, so nobody misses it.
   const update = useUpdateStore((s) =>
     s.phase === 'available' || s.phase === 'needsInstaller' ? s.manifest : null,
@@ -56,14 +59,18 @@ export const StatusBar = memo(function StatusBar() {
         <CircleCheck size={12} strokeWidth={2} aria-hidden="true" />
         {t('status.ready')}
       </span>
-      <span className="statusbar__item">
-        <MonitorCog size={12} strokeWidth={2} aria-hidden="true" />
-        {t('status.quality')}: {tierText}
-      </span>
-      <span className="statusbar__item mono">
-        <Gauge size={12} strokeWidth={2} aria-hidden="true" />
-        {t('status.fps')}: {fps === null ? '—' : Math.round(fps)}
-      </span>
+      {advanced && (
+        <>
+          <span className="statusbar__item">
+            <MonitorCog size={12} strokeWidth={2} aria-hidden="true" />
+            {t('status.quality')}: {tierText}
+          </span>
+          <span className="statusbar__item mono">
+            <Gauge size={12} strokeWidth={2} aria-hidden="true" />
+            {t('status.fps')}: {fps === null ? '—' : Math.round(fps)}
+          </span>
+        </>
+      )}
       {timeScale < 0.98 && (
         <span className="statusbar__item statusbar__item--warn" role="status">
           <Turtle size={12} strokeWidth={2} aria-hidden="true" />
@@ -91,7 +98,7 @@ export const StatusBar = memo(function StatusBar() {
           {t('update.available', { version: update.webVersion })}
         </button>
       )}
-      {memoryMB !== null && (
+      {advanced && memoryMB !== null && (
         <span className="statusbar__item mono">
           <MemoryStick size={12} strokeWidth={2} aria-hidden="true" />
           {t('perf.memory', { mb: memoryMB })}

@@ -90,6 +90,7 @@
   color: var(--text-faint);
   font-size: 0.65rem;
   text-align: center;
+  text-wrap: balance;
 }
 .pt__f-gap {
   height: 6px;
@@ -279,12 +280,7 @@
   font-size: var(--text-sm);
 }
 .el-picker select {
-  padding: 4px 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-panel);
-  color: var(--text);
-  font: inherit;
+  min-width: 0;
 }
 
 /* ───── Electron configuration ───── */
@@ -396,7 +392,9 @@
   justify-content: space-between;
   gap: var(--space-2);
 }
-.chem-form select,
+.chem-form select {
+  min-width: 0;
+}
 .chem-form input[type='number'],
 .chem-form input[type='text'] {
   min-width: 0;
