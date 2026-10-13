@@ -39,11 +39,16 @@ người công bố, nên cần tự xác nhận nội dung đúng (xem `docs/LE
 
 ### 2. Tạo tài khoản nhà phát triển (miễn phí cho cá nhân)
 
-1. Mở <https://partner.microsoft.com/dashboard/registration>, đăng nhập bằng tài khoản Microsoft
-   của bạn.
-2. Chọn **Individual** (cá nhân). Xác minh danh tính bằng giấy tờ tùy thân và ảnh selfie.
-3. Chọn **Publisher display name** (tên nhà phát triển hiện trên Store), ví dụ tên của bạn hoặc
-   "SimLab Team". Tên này phải khác tên app.
+1. Mở <https://storedeveloper.microsoft.com> (lối vào duy nhất của cách đăng ký miễn phí; vào
+   thẳng Partner Center sẽ ra cách cũ). Bấm **Get started for free**.
+2. Chọn **Individual developer** (cá nhân: dự án học tập, phi thương mại). Không đổi sang công ty
+   được về sau.
+3. Đăng nhập bằng tài khoản Microsoft cá nhân.
+4. Xác minh danh tính: chụp **giấy tờ tùy thân gốc** (CCCD/hộ chiếu) và **ảnh selfie** bằng điện
+   thoại, chỗ đủ sáng.
+5. Kiểm tra thông tin tự điền, chọn **Publisher display name** (tên nhà phát triển hiện trên Store,
+   khác tên app), xong bấm **Go to Partner Center dashboard** và chọn đúng tài khoản vừa dùng.
+   Chưa thấy ô **Apps & Games** thì đợi khoảng 5 phút rồi tải lại trang.
 
 ### 3. Giữ tên app và chép danh tính gói
 
