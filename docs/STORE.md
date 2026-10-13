@@ -132,6 +132,9 @@ chat):
   `PARTNER_CENTER_CLIENT_SECRET`.
 - Variables (tab Variables): `STORE_SUBMIT` = `true` — **chỉ sau khi app đã lên Store**.
 
+Thêm secret xong, kiểm tra ngay (không nộp gì): **Actions → Store connection check → Run
+workflow**. Xanh nghĩa là GitHub đăng nhập được Partner Center và thấy SimLab.
+
 Từ đó, mỗi lần chạy Release (publish = true): GitHub Releases như cũ **và** một lần nộp mới lên
 Store; người dùng Store nhận bản mới sau khi Microsoft duyệt. Client secret có hạn dùng (chọn khi
 tạo): hết hạn thì tạo secret mới và thay `PARTNER_CENTER_CLIENT_SECRET`. Muốn tắt: đổi

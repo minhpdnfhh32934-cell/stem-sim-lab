@@ -1,0 +1,51 @@
+name: Store connection check
+
+# Checks that the PARTNER_CENTER_* secrets can sign in to Partner Center and see SimLab — without
+# submitting anything. Run it from Actions → "Store connection check" → Run workflow after adding
+# the secrets (docs/STORE.md, step 7). Automatic submissions (release.yml, job "store") also need
+# the app to be live in the Store and the variable STORE_SUBMIT = true.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Secrets present
+        shell: pwsh
+        env:
+          TENANT: ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+          SELLER: ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+          CLIENT: ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+          SECRET: ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
+        run: |
+          $missing = @()
+          if (-not $env:TENANT) { $missing += 'PARTNER_CENTER_TENANT_ID' }
+          if (-not $env:SELLER) { $missing += 'PARTNER_CENTER_SELLER_ID' }
+          if (-not $env:CLIENT) { $missing += 'PARTNER_CENTER_CLIENT_ID' }
+          if (-not $env:SECRET) { $missing += 'PARTNER_CENTER_CLIENT_SECRET' }
+          if ($missing.Count) { Write-Host "::error::Missing secrets: $($missing -join ', ')"; exit 1 }
+          Write-Host 'All four secrets are set.'
+      - name: Setup Microsoft Store Developer CLI
+        uses: microsoft/microsoft-store-apppublisher@v1.4
+      - name: Sign in to Partner Center
+        run: >-
+          msstore reconfigure
+          --tenantId ${{ secrets.PARTNER_CENTER_TENANT_ID }}
+          --sellerId ${{ secrets.PARTNER_CENTER_SELLER_ID }}
+          --clientId ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
+          --clientSecret ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
+      - name: SimLab is visible to this account (read only)
+        shell: pwsh
+        run: |
+          $productId = (Get-Content store/identity.json -Raw | ConvertFrom-Json).productId
+          msstore apps get $productId
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::error::Signed in, but cannot read $productId — check the Manager role (docs/STORE.md, step 7c)"
+            exit 1
+          }
+          msstore submission status $productId
