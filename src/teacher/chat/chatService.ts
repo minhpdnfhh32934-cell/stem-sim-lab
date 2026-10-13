@@ -292,8 +292,10 @@ export async function contextPrompt(
   const full = size === 'full';
   const local = searchKnowledge(question, locale, full ? 5 : 1);
   // Wikipedia is opt-in (Settings → AI Teacher): it receives the question text, so it never
-  // runs silently. Web excerpts come last and are always labelled: checked library first.
-  const web = webLookup ? await fetchWebKnowledge(question, locale) : [];
+  // runs silently. Web excerpts come last and are always labelled: checked library first (an
+  // on-device prompt that already has its one library note does not ask Wikipedia at all).
+  const web =
+    webLookup && (full || local.length === 0) ? await fetchWebKnowledge(question, locale) : [];
   const notes = [...local, ...web]
     .slice(0, full ? undefined : 1)
     .map((note) => ({

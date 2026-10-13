@@ -132,6 +132,22 @@ describe('the on-device prompt', () => {
     const en = await contextPrompt('What is force?', 'en', false, false, 'compact');
     expect(en.system).toContain('Chosen level: General (first-year university)');
   });
+
+  it('with Wikipedia on, an on-device prompt asks it only when the library has no note', async () => {
+    const fetchSpy = vi.fn(() => Promise.resolve(new Response('{}', { status: 404 })));
+    vi.stubGlobal('fetch', fetchSpy);
+    await contextPrompt('Lực ma sát là gì?', 'vi', false, true, 'compact');
+    expect(fetchSpy).not.toHaveBeenCalled();
+    await contextPrompt(
+      'Thuật toán sắp xếp nổi bọt hoạt động ra sao?',
+      'vi',
+      false,
+      true,
+      'compact',
+    );
+    expect(fetchSpy).toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
 });
 
 describe('the note right before the question', () => {
