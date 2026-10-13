@@ -37,6 +37,8 @@ export async function gemmaChatText(args: {
   temperature?: number;
   maxTokens?: number;
   inputBudget?: number;
+  /** The answer so far, while it is generated (see webGemmaChat). */
+  onPartial?: (textSoFar: string) => void;
 }): Promise<{ content: string; model: string; truncated: boolean }> {
   if (webGPUStatus() !== 'webgpu') throw new AiError('unavailable', 'webgpu-missing');
   return webGemmaChat({
@@ -47,6 +49,7 @@ export async function gemmaChatText(args: {
     ...(args.temperature !== undefined ? { temperature: args.temperature } : {}),
     ...(args.maxTokens !== undefined ? { maxTokens: args.maxTokens } : {}),
     ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
+    ...(args.onPartial ? { onPartial: args.onPartial } : {}),
   });
 }
 

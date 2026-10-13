@@ -67,6 +67,8 @@ export function ChatPanel({
     useChatStore.setState({ answering: value });
   };
   const [error, setError] = useState('');
+  /** The on-device answer as it is being written (null when nothing is streaming). */
+  const [streaming, setStreaming] = useState<string | null>(null);
   /** Latest cloud-key lookup, tagged so a stale answer never overrides a newer engine/provider. */
   const [keyLookup, setKeyLookup] = useState<{ id: string; available: boolean } | null>(null);
   /** Latest Gemma readiness lookup, tagged by model name for the same reason. */
@@ -174,7 +176,7 @@ export function ChatPanel({
   useEffect(() => {
     const node = messagesEnd.current;
     if (node?.scrollIntoView) node.scrollIntoView({ block: 'end', behavior: 'smooth' });
-  }, [chat.messages, busy, error]);
+  }, [chat.messages, busy, error, streaming]);
 
   // Never keep reading after the panel goes away.
   useEffect(() => stopSpeaking, []);
@@ -204,6 +206,9 @@ export function ChatPanel({
         includeScreen: showScreenContext && chat.includeScreen,
         think: chat.thinkEnabled,
         board,
+        onPartial: (text) => {
+          setStreaming(text || null);
+        },
       });
       chat.addMessage({
         id: crypto.randomUUID(),
@@ -218,6 +223,7 @@ export function ChatPanel({
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
+      setStreaming(null);
       setBusy(false);
       input.current?.focus();
     }
@@ -499,7 +505,23 @@ export function ChatPanel({
             </article>
           ))
         )}
-        {busy && (
+        {busy && streaming !== null && (
+          // Text being written by the on-device model: plain text until the answer is complete
+          // (then it is laid out with formulas). Screen readers hear the finished answer only.
+          <div className="chat-message chat-message--assistant chat-message--streaming">
+            <span className="chat-message__avatar">
+              <Bot size={15} />
+            </span>
+            <div className="chat-message__body">
+              <span className="sr-only">{t('chat.thinking')}</span>
+              <p aria-hidden="true">
+                {streaming}
+                <span className="chat-message__caret" />
+              </p>
+            </div>
+          </div>
+        )}
+        {busy && streaming === null && (
           <div className="chat-message chat-message--assistant">
             <span className="chat-message__avatar">
               <Bot size={15} />

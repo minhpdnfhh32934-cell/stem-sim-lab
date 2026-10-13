@@ -167,11 +167,19 @@ async function localGemma(
   locale: Locale,
   maxTokens: number,
   inputBudget: number,
+  onPartial?: (textSoFar: string) => void,
 ): Promise<Answer> {
   if (webGPUStatus() !== 'webgpu') throw new Error(translate(locale, 'chat.errors.webgpu'));
   if (!(await gemmaReady(model))) throw new Error(translate(locale, 'chat.errors.gemmaMissing'));
   try {
-    return await gemmaChatText({ model, system, messages, maxTokens, inputBudget });
+    return await gemmaChatText({
+      model,
+      system,
+      messages,
+      maxTokens,
+      inputBudget,
+      ...(onPartial ? { onPartial } : {}),
+    });
   } catch (e) {
     console.warn('[teacher-gemma]', e instanceof Error ? e.message : String(e));
     throw new Error(translate(locale, 'chat.errors.gemmaMissing'), { cause: e });
@@ -210,7 +218,17 @@ export async function askTeacher(
   question: string,
   locale: Locale,
   records: ChatMessageRecord[],
-  options: { includeScreen: boolean; think: boolean; board?: boolean },
+  options: {
+    includeScreen: boolean;
+    think: boolean;
+    board?: boolean;
+    /**
+     * The answer so far while the on-device model writes it (gallery pattern 086). Every piece
+     * passes `outputIsSafe` before it is shown; after an unsafe piece nothing more is streamed.
+     * Not used with Think (the draft is not shown) or for cloud answers (they arrive whole).
+     */
+    onPartial?: (textSoFar: string) => void;
+  },
 ): Promise<ReplyResult> {
   const safety = await currentSafety();
   if (!safety.aiAllowed) throw new Error(translate(locale, 'chat.errors.notAllowed'));
@@ -288,9 +306,15 @@ export async function askTeacher(
     engine === 'gemma'
       ? { ...fullBudget, output: ANSWER_TOKENS[useGemmaPrefs.getState().answerLength] }
       : fullBudget;
-  const ask = (system: string, messages: ChatMessage[], maxTokens: number, noFallback = false) =>
+  const ask = (
+    system: string,
+    messages: ChatMessage[],
+    maxTokens: number,
+    noFallback = false,
+    onPartial?: (textSoFar: string) => void,
+  ) =>
     engine === 'gemma'
-      ? localGemma(chat.gemmaModel, system, messages, locale, maxTokens, budget.input)
+      ? localGemma(chat.gemmaModel, system, messages, locale, maxTokens, budget.input, onPartial)
       : cloudChat(
           provider as Provider,
           modelFor(ai.models, provider as Provider),
@@ -315,7 +339,22 @@ export async function askTeacher(
   const system = `${baseSystem}${summaryBlock(locale, summary)}`;
   const history: ChatMessage[] = [...fitted.messages, { role: 'user', content: question }];
 
-  const draft = await ask(system, history, budget.output, options.think);
+  const stream = options.onPartial;
+  let streamStopped = false;
+  const shown =
+    stream && !options.think
+      ? (text: string) => {
+          if (streamStopped) return;
+          if (!outputIsSafe(text)) {
+            // Take back what was shown; the final check below reports the block.
+            streamStopped = true;
+            stream('');
+            return;
+          }
+          stream(text);
+        }
+      : undefined;
+  const draft = await ask(system, history, budget.output, options.think, shown);
 
   let content = draft.content;
   let truncated = draft.truncated;

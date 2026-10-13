@@ -12,6 +12,7 @@ import {
   AutoTokenizer,
   Gemma4ForConditionalGeneration,
   RawImage,
+  TextStreamer,
   env,
   type Tensor,
 } from '@huggingface/transformers';
@@ -81,7 +82,23 @@ type OutMessage =
   | { kind: 'loaded'; modelId: string; gpu: GpuInfo | null }
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
   | { kind: 'reply'; id: number; text: string; truncated: boolean }
+  /** A new piece of the answer while it is being generated (the page shows it as it comes). */
+  | { kind: 'partial'; id: number; text: string }
   | { kind: 'error'; id: number; message: string };
+
+/** Streams decoded text pieces of the answer (not the prompt) to `onText`. */
+function streamerFor(
+  tokenizer: ConstructorParameters<typeof TextStreamer>[0],
+  onText: (text: string) => void,
+) {
+  return new TextStreamer(tokenizer, {
+    skip_prompt: true,
+    skip_special_tokens: true,
+    callback_function: (text: string) => {
+      if (text) onText(text);
+    },
+  });
+}
 
 interface TextEngine {
   modality: 'text';
@@ -183,10 +200,12 @@ async function chatText(
   temperature: number,
   maxTokens: number,
   inputBudget: number | undefined,
+  onText: (text: string) => void,
 ): Promise<Reply> {
   const inputs = promptWithin(eng, system, messages, inputBudget);
   const output = (await eng.model.generate({
     ...inputs,
+    streamer: streamerFor(eng.tokenizer, onText),
     max_new_tokens: maxTokens,
     do_sample: temperature > 0,
     temperature: Math.max(temperature, 0.01),
@@ -214,6 +233,7 @@ async function chatVision(
   images: ArrayBuffer[],
   temperature: number,
   maxTokens: number,
+  onText: (text: string) => void,
 ): Promise<Reply> {
   const turns = [
     { role: 'system', content: system },
@@ -242,6 +262,10 @@ async function chatVision(
   >;
   const output = (await eng.model.generate({
     ...inputs,
+    streamer: streamerFor(
+      eng.processor.tokenizer as ConstructorParameters<typeof TextStreamer>[0],
+      onText,
+    ),
     max_new_tokens: maxTokens,
     do_sample: temperature > 0,
     temperature: Math.max(temperature, 0.01),
@@ -310,6 +334,9 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
     } else if (msg.kind === 'chat') {
       if (!engine || !loadedModel) throw new Error('no model loaded');
       const history = msg.messages.map((m) => ({ role: m.role, content: m.content }));
+      const onText = (text: string) => {
+        post({ kind: 'partial', id: msg.id, text });
+      };
       let reply: Reply;
       if (engine.modality === 'vision') {
         reply = await chatVision(
@@ -319,6 +346,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
           msg.images,
           msg.temperature,
           msg.maxTokens,
+          onText,
         );
       } else {
         if (msg.images.length > 0) throw new Error('needs-vision-model');
@@ -329,6 +357,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
           msg.temperature,
           msg.maxTokens,
           msg.inputBudget,
+          onText,
         );
       }
       post({ kind: 'reply', id: msg.id, text: reply.text, truncated: reply.truncated });
