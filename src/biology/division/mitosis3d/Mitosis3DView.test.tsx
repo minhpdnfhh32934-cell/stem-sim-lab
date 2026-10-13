@@ -1,19 +1,55 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import * as THREE from 'three';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useApplyTheme } from '@/app/theme/useApplyTheme';
+import { useWorkspaceStore } from '@/app/workspaceStore';
+import type { BenchmarkResult } from '@/perf/benchmark';
 import { FrameMonitor } from '@/perf/frameMonitor';
+import { usePerfStore } from '@/perf/perfStore';
 import { DivisionStage } from '../DivisionViews';
 import { STAGES } from '../division';
 import { setDivisionState } from '../stageIndex';
-import { useDivisionStore } from '../state';
+import { STAGE_NAME, useDivisionStore } from '../state';
 import { MitosisBottom, MitosisPanel, MitosisStage } from '../views';
+import { STAGE3D_NAME, stageNote } from './components';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
 import { Mitosis3DView, type RendererFactory, type RendererLike } from './Mitosis3DView';
 import { Mitosis3DParts } from './panels';
+import { buildMitosisScene, type ScenePalette } from './scene';
 import { index2dOf, stage3dOf, timelineFor, useMitosis3D } from './store';
-import { STAGES_3D } from './timeline';
+import { STAGES_3D, type CellType } from './timeline';
+
+/**
+ * The view's own renderer factory calls `new THREE.WebGLRenderer(…)`, and jsdom has no WebGL.
+ * `gl.real` → the real three.js class (it throws: there is no context); otherwise a stand-in
+ * that works until its canvas fires 'webglcontextlost'. Tests that pass `createRenderer` are
+ * not affected.
+ */
+const gl = vi.hoisted(() => ({
+  real: false,
+  made: [] as { canvas: HTMLCanvasElement; disposed: number }[],
+}));
+vi.mock('three', async (importOriginal) => {
+  const three = await importOriginal<typeof THREE>();
+  function WebGLRenderer(params?: THREE.WebGLRendererParameters): RendererLike {
+    if (gl.real) return new three.WebGLRenderer(params);
+    const made = { canvas: document.createElement('canvas'), disposed: 0 };
+    gl.made.push(made);
+    return {
+      domElement: made.canvas,
+      localClippingEnabled: false,
+      setPixelRatio: () => undefined,
+      setSize: () => undefined,
+      render: () => undefined,
+      dispose: () => {
+        made.disposed++;
+      },
+      info: { memory: { geometries: 0, textures: 0 }, programs: [], render: { calls: 0 } },
+    };
+  }
+  return { ...three, WebGLRenderer };
+});
 
 function fakeRenderer() {
   const made: RendererLike[] = [];
@@ -179,24 +215,119 @@ describe('Mitosis3DView', () => {
     expect(useMitosis3D.getState().active).toBe(false);
   });
 
-  it('falls back to the 2D picture when WebGL cannot start', () => {
-    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
-    const failing: RendererFactory = () => {
-      throw new Error('no WebGL');
-    };
-    render(<Mitosis3DView createRenderer={failing} />);
-    expect(useMitosis3D.getState().webglFailed).toBe(true);
-    // The module view now shows the 2D stage with the 3D / 2D switch and a notice.
-    render(
-      <>
-        <MitosisStage />
-        <MitosisPanel />
-        <MitosisBottom />
-      </>,
+  it('plant cell: the stage label, caption and Science Card name the plant cell and its parts', () => {
+    setDivisionState('mitosis', { cellType: 'plant' });
+    const { factory } = fakeRenderer();
+    render(<Mitosis3DView createRenderer={factory} />);
+    expect(stageLabel()).toBe(`${STAGE3D_NAME.g1.vi}. ${stageNote('g1', 'plant').vi}`);
+    expect(stageLabel()).toMatch(/thành tế bào cứng và không có trung thể/);
+    const caption = document.querySelector('.m3d__caption');
+    expect(caption).toHaveTextContent(/Tế bào thực vật ·/);
+    expect(caption).not.toHaveTextContent(/Tế bào động vật/);
+    expect(useWorkspaceStore.getState().scienceCard?.title.vi).toBe(
+      'Nguyên phân 3D — tế bào thực vật',
     );
-    expect(screen.getByText(/chưa vẽ được 3D/)).toBeInTheDocument();
-    expect(screen.getAllByRole('radio', { name: '2D' }).length).toBeGreaterThan(0);
-    vi.restoreAllMocks();
+    // Cytokinesis of a plant cell: a cell plate, never a furrow.
+    act(() => {
+      useMitosis3D.setState({ t: timelineFor(2, 'plant').keyTime('cytokinesis') });
+    });
+    expect(stageLabel()).toMatch(/^Phân chia tế bào chất\. Tấm tế bào hình thành/);
+    expect(stageLabel()).not.toMatch(/rãnh phân cắt|vòng co|trung thể/i);
+    expect(
+      screen.getByText('Sau khi chia: 2 tế bào con · mỗi tế bào 4 NST đơn'),
+    ).toBeInTheDocument();
+    // Back to the animal cell: centrosome and furrow texts, animal card.
+    fireEvent.click(screen.getByRole('radio', { name: 'Động vật' }));
+    expect(stageLabel()).toMatch(/rãnh phân cắt/);
+    expect(document.querySelector('.m3d__caption')).toHaveTextContent(/Tế bào động vật ·/);
+    expect(useWorkspaceStore.getState().scienceCard?.title.vi).toBe(
+      'Nguyên phân 3D — tế bào động vật',
+    );
+  });
+
+  it('replays and scene rebuilds free every geometry and material they create', () => {
+    const palette: ScenePalette = {
+      maternal: 'gray',
+      paternal: 'gray',
+      centromere: 'gray',
+      membrane: 'gray',
+      envelope: 'gray',
+      wall: 'gray',
+      spindle: 'gray',
+      centrosome: 'gray',
+      plate: 'gray',
+      ring: 'gray',
+      highlight: 'gray',
+    };
+    // three.js numbers geometries and materials in creation order: everything created between
+    // two probes has an id strictly between theirs.
+    // (`Material.id` is documented but missing from @types/three.)
+    const materialId = (m: unknown) => (m as THREE.Material & { readonly id: number }).id;
+    const probe = () => ({ g: new THREE.BufferGeometry().id, m: materialId(new THREE.Material()) });
+    const between = (a: number, b: number) =>
+      Array.from({ length: b - a - 1 }, (_, k) => a + 1 + k);
+    /** How many geometries / materials one scene creates. */
+    const perScene = (pairs: number, type: CellType) => {
+      const a = probe();
+      buildMitosisScene(timelineFor(pairs, type), palette, { segments: 12 }).dispose();
+      const b = probe();
+      return { g: b.g - a.g - 1, m: b.m - a.m - 1 };
+    };
+    const initial = perScene(2, 'animal');
+    const final = perScene(4, 'plant');
+    const geo = vi.spyOn(THREE.BufferGeometry.prototype, 'dispose');
+    const mat = vi.spyOn(THREE.Material.prototype, 'dispose');
+    const freed = () => ({
+      g: new Set(geo.mock.contexts.map((x) => (x as THREE.BufferGeometry).id)),
+      m: new Set(mat.mock.contexts.map(materialId)),
+    });
+
+    const start = probe();
+    const { factory, made } = fakeRenderer();
+    const view = render(<Mitosis3DView createRenderer={factory} />);
+    const built = probe();
+    expect(built.g - start.g - 1).toBe(initial.g);
+    expect(built.m - start.m - 1).toBe(initial.m);
+    // Five replays, stepping through every stage: nothing is created or freed.
+    for (let r = 0; r < 5; r++) {
+      fireEvent.click(screen.getByRole('button', { name: 'Phát lại từ đầu' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Tạm dừng' }));
+      for (let k = 0; k < STAGES_3D.length - 1; k++)
+        fireEvent.click(screen.getByRole('button', { name: 'Bước tiếp theo' }));
+      expect(screen.getByRole('button', { name: 'Bước tiếp theo' })).toBeDisabled();
+    }
+    const replayed = probe();
+    expect(between(built.g, replayed.g)).toEqual([]);
+    expect(between(built.m, replayed.m)).toEqual([]);
+    expect(freed().g.size).toBe(0);
+    expect(freed().m.size).toBe(0);
+    // Scene rebuilds: cell type back and forth, theme, 2n. Only the last scene stays alive.
+    for (const type of ['Thực vật', 'Động vật', 'Thực vật', 'Động vật', 'Thực vật'])
+      fireEvent.click(screen.getByRole('radio', { name: type }));
+    act(() => {
+      useSettingsStore.setState({
+        theme: useSettingsStore.getState().theme === 'dark' ? 'light' : 'dark',
+      });
+    });
+    act(() => {
+      useDivisionStore.setState({ pairs: 4 });
+    });
+    const end = probe();
+    const live = (f: ReturnType<typeof freed>) => ({
+      g: between(start.g, end.g).filter(
+        (id) => id !== built.g && id !== replayed.g && !f.g.has(id),
+      ),
+      m: between(start.m, end.m).filter(
+        (id) => id !== built.m && id !== replayed.m && !f.m.has(id),
+      ),
+    });
+    expect(live(freed()).g).toHaveLength(final.g);
+    expect(live(freed()).m).toHaveLength(final.m);
+    // The renderer (WebGL context) was kept through all of it.
+    expect(made).toHaveLength(1);
+    view.unmount();
+    expect(live(freed())).toEqual({ g: [], m: [] });
+    useSettingsStore.setState({ theme: 'system' });
   });
 
   it('a theme switch rebuilds the scene with the new theme colours', async () => {
@@ -275,6 +406,128 @@ describe('Mitosis3DView', () => {
     flush(4016);
     expect(record).toHaveBeenCalledTimes(2);
     expect(record).toHaveBeenLastCalledWith(expect.closeTo(0.016, 6));
+  });
+});
+
+describe('the module shows the 2D picture when 3D cannot be drawn', () => {
+  const benchmark: BenchmarkResult = {
+    cpuScore: 1,
+    drawScore: 1,
+    webgl2: true,
+    cores: 4,
+    tier: 'medium',
+    measuredAt: '2026-10-14T00:00:00.000Z',
+    durationMs: 1,
+  };
+  const stops: (() => void)[] = [];
+
+  beforeEach(() => {
+    gl.real = false;
+    gl.made.length = 0;
+    // WebGL 2 reported and Medium quality: the module starts with the 3D view.
+    usePerfStore.setState({ preference: 'medium', benchmark, degraded: false });
+    // jsdom has no canvas: the 2D picture draws nothing (its controls and table still work).
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+  });
+
+  afterEach(() => {
+    // Unmount first: resetting the quality would otherwise bring the 3D view back on screen.
+    cleanup();
+    for (const stop of stops.splice(0)) stop();
+    gl.real = false;
+    usePerfStore.setState({ preference: 'auto', benchmark: null, degraded: false });
+  });
+
+  /** Stage, inspector panel and bottom table, as the module shows them (3D view lazy-loaded). */
+  function renderModule() {
+    // Every time the 3D view comes on or goes off screen.
+    const shown: boolean[] = [];
+    stops.push(
+      useMitosis3D.subscribe((s, prev) => {
+        if (s.active !== prev.active) shown.push(s.active);
+      }),
+    );
+    const view = render(
+      <>
+        <MitosisStage />
+        <MitosisPanel />
+        <MitosisBottom />
+      </>,
+    );
+    return { ...view, shown };
+  }
+
+  function expect2dPicture(container: HTMLElement, notice: RegExp) {
+    expect(container.querySelector('.m3d')).toBeNull();
+    expect(container.querySelector('canvas.chem-canvas')).not.toBeNull();
+    expect(screen.getByText(notice)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bước tiếp theo' })).toBeEnabled();
+    // 3D is still the learner's choice (the switch shows it); it just cannot be drawn.
+    expect(screen.getByRole('radio', { name: '3D' })).toHaveAttribute('aria-checked', 'true');
+    expect(useDivisionStore.getState().view3d).toBe(true);
+    expect(useMitosis3D.getState().active).toBe(false);
+    // Inspector without the 3D parts list; the 2D table (6 stages, no nuclei column).
+    expect(screen.queryByRole('group', { name: 'Bộ phận tế bào' })).toBeNull();
+    const table = screen.getByRole('table');
+    expect(within(table).queryByRole('columnheader', { name: 'Số nhân / tế bào' })).toBeNull();
+    expect(
+      within(table)
+        .getAllByRole('rowheader')
+        .map((th) => th.textContent),
+    ).toEqual(STAGES.mitosis.map((s) => STAGE_NAME[s].vi));
+    expect(screen.getByText(`${String(STAGES.mitosis.length)} giai đoạn`)).toBeInTheDocument();
+  }
+
+  it('the real WebGL renderer cannot start: the 3D view hands over to the 2D picture', async () => {
+    gl.real = true;
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const { container, shown } = renderModule();
+    await screen.findByText(/Máy này chưa vẽ được 3D/);
+    expect(useMitosis3D.getState().webglFailed).toBe(true);
+    // The 3D view was on screen first (it is what failed), then the 2D picture replaced it.
+    expect(shown).toEqual([true, false]);
+    expect(errors.mock.calls.flat().join(' ')).toMatch(/Error creating WebGL context/);
+    expect2dPicture(container, /Máy này chưa vẽ được 3D \(WebGL\), nên dùng hình 2D/);
+  });
+
+  it('the GPU context is lost while 3D is shown: the 2D picture takes over', async () => {
+    const { container, shown } = renderModule();
+    await waitFor(() => {
+      expect(container.querySelector('.m3d canvas')).not.toBeNull();
+    });
+    // The 3D view: its parts list and its seven-step table with the nuclei column.
+    expect(shown).toEqual([true]);
+    expect(screen.getByRole('group', { name: 'Bộ phận tế bào' })).toBeInTheDocument();
+    const table3d = screen.getByRole('table');
+    expect(
+      within(table3d).getByRole('columnheader', { name: 'Số nhân / tế bào' }),
+    ).toBeInTheDocument();
+    expect(within(table3d).getAllByRole('rowheader')).toHaveLength(STAGES_3D.length);
+    expect(gl.made).toHaveLength(1);
+    const r = gl.made[0]!;
+    expect(container.querySelector('.m3d canvas')).toBe(r.canvas);
+    act(() => {
+      useMitosis3D.setState({ playing: true });
+    });
+    act(() => {
+      r.canvas.dispatchEvent(new Event('webglcontextlost', { cancelable: true }));
+    });
+    await screen.findByText(/Máy này chưa vẽ được 3D/);
+    expect(useMitosis3D.getState()).toMatchObject({ webglFailed: true, playing: false });
+    expect(shown).toEqual([true, false]);
+    // The lost renderer is released and its canvas removed; no new one is tried.
+    expect(r.disposed).toBe(1);
+    expect(r.canvas.isConnected).toBe(false);
+    expect(gl.made).toHaveLength(1);
+    expect2dPicture(container, /Máy này chưa vẽ được 3D \(WebGL\), nên dùng hình 2D/);
+  });
+
+  it('display quality Low: the 2D picture with its notice; the 3D view never starts', () => {
+    usePerfStore.setState({ preference: 'low' });
+    const { container, shown } = renderModule();
+    expect2dPicture(container, /Đang ở chất lượng hiển thị Thấp nên dùng hình 2D/);
+    expect(shown).toEqual([]);
+    expect(gl.made).toHaveLength(0);
   });
 });
 

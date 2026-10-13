@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { countsOf, runDivision } from '../division';
 import {
+  PLANT,
   SISTER_OFFSET,
   STAGES_3D,
   buildTimeline,
   insideCell,
+  type CellShape,
   type CellType,
+  type CentromereState,
+  type Counts3D,
+  type Fibre,
   type Mitosis3DState,
   type Stage3D,
   type Timeline,
+  type Vec3,
 } from './timeline';
 
 const CELL_TYPES: CellType[] = ['animal', 'plant'];
@@ -28,6 +34,275 @@ const stateIn = (tl: Timeline, stage: Stage3D, u: number) => {
   // u = 1 would be the next stage's start; stay just inside the stage.
   return tl.stateAt(w.start + Math.min(u, 0.999999) * (w.end - w.start));
 };
+const dist = (a: readonly number[], b: readonly number[]) =>
+  Math.hypot(...a.map((v, i) => v - b[i]!));
+
+/**
+ * Textbook counts per cell (SGK Sinh học 10), derived by hand for 2n = 2p, for the seven 3D
+ * steps. Telophase follows the 3D convention (pending teacher review, DATA_REVIEW): ONE cell
+ * with TWO nuclei, each holding 2n single chromosomes (4n in the cell). Cytokinesis: per
+ * daughter cell after the division. Nuclei per cell at the start → end of the step.
+ */
+const TEXTBOOK: Record<Stage3D, (p: number) => Counts3D> = {
+  g1: (p) => ({
+    cells: 1,
+    nuclei: { from: 1, to: 1 },
+    chromosomes: 2 * p,
+    state: 'single',
+    chromatids: 0,
+    centromeres: 2 * p,
+    dnaMolecules: 2 * p,
+  }),
+  g2: (p) => ({
+    cells: 1,
+    nuclei: { from: 1, to: 1 },
+    chromosomes: 2 * p,
+    state: 'double',
+    chromatids: 4 * p,
+    centromeres: 2 * p,
+    dnaMolecules: 4 * p,
+  }),
+  prophase: (p) => ({
+    cells: 1,
+    nuclei: { from: 1, to: 0 },
+    chromosomes: 2 * p,
+    state: 'double',
+    chromatids: 4 * p,
+    centromeres: 2 * p,
+    dnaMolecules: 4 * p,
+  }),
+  metaphase: (p) => ({
+    cells: 1,
+    nuclei: { from: 0, to: 0 },
+    chromosomes: 2 * p,
+    state: 'double',
+    chromatids: 4 * p,
+    centromeres: 2 * p,
+    dnaMolecules: 4 * p,
+  }),
+  anaphase: (p) => ({
+    cells: 1,
+    nuclei: { from: 0, to: 0 },
+    chromosomes: 4 * p,
+    state: 'single',
+    chromatids: 0,
+    centromeres: 4 * p,
+    dnaMolecules: 4 * p,
+  }),
+  telophase: (p) => ({
+    cells: 1,
+    nuclei: { from: 0, to: 2 },
+    chromosomes: 4 * p,
+    state: 'single',
+    chromatids: 0,
+    centromeres: 4 * p,
+    dnaMolecules: 4 * p,
+    perNucleus: 2 * p,
+  }),
+  cytokinesis: (p) => ({
+    cells: 2,
+    nuclei: { from: 2, to: 1 },
+    chromosomes: 2 * p,
+    state: 'single',
+    chromatids: 0,
+    centromeres: 2 * p,
+    dnaMolecules: 2 * p,
+  }),
+};
+
+// ---------------------------------------------------------------- continuity check
+
+/**
+ * Speed limits of the continuity check, in cell units (the animal cell radius is 5) per second
+ * of model time. Every motion is a smoothstep between key poses, whose slope is at most
+ * 1.5 × distance / window. The fastest ones: chromosomes moving to the plate (≤ ~5 units in
+ * 1.2 s, about 6 units/s) and kinetochore fibres growing from a pole to a kinetochore (≤ ~6
+ * units in 0.6 s, about 15 units/s). Between samples dt apart nothing may change by more than
+ * limit · dt: on the 10 ms grid a chromosome jump above 0.08 units (about half its width)
+ * fails, and across a stage boundary (samples 1 µs apart) any jump above ~1e-5 fails.
+ */
+const LIMIT = {
+  /** Centromeres, centrosomes, nuclei (centre, radius), fibre roots, cell size. */
+  position: 8,
+  /** Chromatid arm directions (unit vectors). */
+  direction: 8,
+  fibreTip: 20,
+  /** 0…1 quantities: condensation, spindle, nuclear envelope, cell plate growth, stretch. */
+  fraction: 1,
+  /** Furrow radius squared: the neck of two overlapping spheres closes like a square root. */
+  neckSquared: 25,
+} as const;
+
+/** Every 10 ms of model time, plus 1 µs before each stage boundary. */
+function fineTimes(tl: Timeline): number[] {
+  const out = new Set<number>();
+  const steps = Math.round(tl.total * 100);
+  for (let k = 0; k <= steps; k++) out.add(Math.min(tl.total, k / 100));
+  for (const w of tl.stages.slice(1)) out.add(w.start - 1e-6);
+  return [...out].sort((a, b) => a - b);
+}
+
+/** Fibres by identity: kinetochore fibres by chromatid, the others by pole and order. */
+function fibresById(s: Mitosis3DState): Map<string, Fibre> {
+  const out = new Map<string, Fibre>();
+  const seen = new Map<string, number>();
+  for (const f of s.fibres) {
+    if (f.kind === 'kinetochore') {
+      out.set(`kinetochore→${String(f.chromatid)}`, f);
+      continue;
+    }
+    const base = `${f.kind}@${String(f.pole)}`;
+    const k = seen.get(base) ?? 0;
+    seen.set(base, k + 1);
+    out.set(`${base}#${String(k)}`, f);
+  }
+  return out;
+}
+
+const centromereKey = (c: CentromereState) => `${String(c.chromosome)}:${c.sisters.join('')}`;
+
+/** Everything that moved too far between two moments (empty = continuous). */
+function jumps(a: Mitosis3DState, b: Mitosis3DState): string[] {
+  const out: string[] = [];
+  const dt = b.t - a.t;
+  const boundary = a.stage !== b.stage;
+  const at = `${a.cellType} t=${a.t.toFixed(6)}→${b.t.toFixed(6)} (${a.stage}→${b.stage})`;
+  const within = (what: string, moved: number, limit: keyof typeof LIMIT) => {
+    // Written so that NaN fails too.
+    if (!(moved <= LIMIT[limit] * dt + 1e-9))
+      out.push(`${at}: ${what} changed by ${String(moved)}`);
+  };
+  const onlyAtBoundary = (what: string) => {
+    if (!boundary) out.push(`${at}: ${what} inside a stage`);
+  };
+
+  // Chromatids: centromere and arm directions (arms, bead and chromatin thread follow them).
+  if (a.chromatids.length !== b.chromatids.length) out.push(`${at}: chromatid list changed`);
+  a.chromatids.forEach((p, i) => {
+    const q = b.chromatids[i];
+    if (!q) return;
+    if (p.side !== q.side) out.push(`${at}: chromatid ${String(i)} changed pole`);
+    // Replication (S, shown between G1 and G2) is the only time a chromatid appears.
+    if (p.present !== q.present && !(a.stage === 'g1' && b.stage === 'g2'))
+      out.push(`${at}: chromatid ${String(i)} appeared or vanished`);
+    if (p.joined !== q.joined) onlyAtBoundary(`chromatid ${String(i)} joined or split`);
+    if (!p.present || !q.present) return;
+    within(`chromatid ${String(i)} centromere`, dist(p.centromere, q.centromere), 'position');
+    within(`chromatid ${String(i)} arm A`, dist(p.dirA, q.dirA), 'direction');
+    within(`chromatid ${String(i)} arm B`, dist(p.dirB, q.dirB), 'direction');
+  });
+
+  // Centromeres: the same ones move smoothly; a centromere is shared (S) or splits (anaphase)
+  // only at a stage boundary, next to the old centromere of the same chromosome.
+  const before = new Map(a.centromeres.map((c) => [centromereKey(c), c]));
+  const after = new Set(b.centromeres.map(centromereKey));
+  for (const c of b.centromeres) {
+    const old = before.get(centromereKey(c));
+    if (old) {
+      within(`centromere ${centromereKey(c)}`, dist(old.position, c.position), 'position');
+      continue;
+    }
+    onlyAtBoundary(`centromere ${centromereKey(c)} formed`);
+    const near = Math.min(
+      ...a.centromeres
+        .filter((x) => x.chromosome === c.chromosome)
+        .map((x) => dist(x.position, c.position)),
+    );
+    if (!(near <= SISTER_OFFSET + LIMIT.position * dt + 1e-9))
+      out.push(`${at}: centromere ${centromereKey(c)} formed ${String(near)} from its chromosome`);
+  }
+  for (const c of a.centromeres)
+    if (!after.has(centromereKey(c))) onlyAtBoundary(`centromere ${centromereKey(c)} vanished`);
+
+  // Centrosomes (animal): the copy made in S appears at the G1 → G2 boundary, next to the first.
+  if (a.centrosomes.length !== b.centrosomes.length) {
+    const added = b.centrosomes[1];
+    const first = b.centrosomes[0];
+    const ok =
+      a.stage === 'g1' &&
+      b.stage === 'g2' &&
+      a.centrosomes.length === 1 &&
+      b.centrosomes.length === 2 &&
+      !!added &&
+      !!first &&
+      dist(added, first) <= 1;
+    if (!ok) out.push(`${at}: centrosome count changed`);
+  }
+  for (let i = 0; i < Math.min(a.centrosomes.length, b.centrosomes.length); i++)
+    within(`centrosome ${String(i)}`, dist(a.centrosomes[i]!, b.centrosomes[i]!), 'position');
+
+  // Nuclei: a nucleus appears or disappears only while its envelope is invisible.
+  const shared = Math.min(a.nuclei.length, b.nuclei.length);
+  for (let i = 0; i < Math.max(a.nuclei.length, b.nuclei.length); i++) {
+    const x = a.nuclei[i];
+    const y = b.nuclei[i];
+    if (x && y) {
+      within(`nucleus ${String(i)} centre`, dist(x.center, y.center), 'position');
+      within(`nucleus ${String(i)} radius`, Math.abs(x.radius - y.radius), 'position');
+      within(`nucleus ${String(i)} envelope`, Math.abs(x.envelope - y.envelope), 'fraction');
+    } else {
+      const only = x ?? y;
+      if (only && i >= shared)
+        within(`nucleus ${String(i)} (dis)appearing envelope`, only.envelope, 'fraction');
+    }
+  }
+
+  within('condensation', Math.abs(a.condensation - b.condensation), 'fraction');
+  within('spindle', Math.abs(a.spindle - b.spindle), 'fraction');
+
+  // Cell shape.
+  const sa = a.shape;
+  const sb = b.shape;
+  if (sa.type === 'animal' && sb.type === 'animal') {
+    within('elongation', Math.abs(sa.elongation - sb.elongation), 'fraction');
+    within('daughter offset', Math.abs(sa.offset - sb.offset), 'position');
+    within('cell radius', Math.abs(sa.radius - sb.radius), 'position');
+    within('furrow radius²', Math.abs(sa.ringRadius ** 2 - sb.ringRadius ** 2), 'neckSquared');
+    if (sa.separated && !sb.separated) out.push(`${at}: daughter cells joined again`);
+  } else if (sa.type === 'plant' && sb.type === 'plant') {
+    within('cell plate growth', Math.abs(sa.plate - sb.plate), 'fraction');
+    within('cell plate radius', Math.abs(sa.plateRadius - sb.plateRadius), 'position');
+    within('cell size', dist(sa.half, sb.half), 'position');
+    within('wall', Math.abs(sa.wall - sb.wall), 'position');
+    if (sa.separated && !sb.separated) out.push(`${at}: daughter cells joined again`);
+  } else {
+    out.push(`${at}: cell type changed`);
+  }
+
+  // Spindle fibres: the same fibre moves smoothly; a fibre grows out of its root and shrinks
+  // back into it (zero length when it appears or disappears).
+  const fa = fibresById(a);
+  const fb = fibresById(b);
+  for (const [key, f] of fb) {
+    const g = fa.get(key);
+    if (!g) {
+      within(`new fibre ${key} length`, dist(f.from, f.to), 'fibreTip');
+      continue;
+    }
+    if (g.pole !== f.pole) out.push(`${at}: fibre ${key} changed pole`);
+    within(`fibre ${key} root`, dist(g.from, f.from), 'position');
+    within(`fibre ${key} tip`, dist(g.to, f.to), 'fibreTip');
+  }
+  for (const [key, g] of fa)
+    if (!fb.has(key)) within(`removed fibre ${key} length`, dist(g.from, g.to), 'fibreTip');
+  return out;
+}
+
+/** Inside daughter cell `side` (−1 = −x, 1 = +x): its sphere (animal) or its half box (plant). */
+function insideDaughter(shape: CellShape, side: -1 | 1, p: Vec3, margin: number): boolean {
+  if (shape.type === 'plant') {
+    return (
+      side * p[0] >= margin &&
+      Math.abs(p[0]) <= shape.half[0] - margin &&
+      Math.abs(p[1]) <= shape.half[1] - margin &&
+      Math.abs(p[2]) <= shape.half[2] - margin
+    );
+  }
+  const s = 1 + shape.elongation;
+  const x = p[0] / s;
+  const r = Math.hypot(p[1], p[2]) * Math.sqrt(s);
+  return side * p[0] > 0 && Math.hypot(x - side * shape.offset, r) <= shape.radius - margin;
+}
 
 describe('3D mitosis timeline', () => {
   it('has the stages in textbook order for both cell types', () => {
@@ -74,8 +349,12 @@ describe('3D mitosis timeline', () => {
         expect(tel.nuclei).toEqual({ from: 0, to: 2 });
         expect(tel.perNucleus).toBe(sets.chromosomes);
         expect(tel.chromosomes).toBe(2 * sets.chromosomes);
+        expect(tel.chromatids).toBe(2 * sets.chromatids);
+        expect(tel.centromeres).toBe(2 * sets.centromeres);
+        expect(tel.dnaMolecules).toBe(2 * sets.dnaMolecules);
+        expect(tel.state).toBe(sets.state);
         expect(tel.state).toBe('single');
-        // Cytokinesis: the model's two daughter cells, each 2n single.
+        // Cytokinesis: the model's two daughter cells (the 2D telophase row), each 2n single.
         const cyt = tl.counts('cytokinesis');
         expect([cyt.cells, cyt.chromosomes, cyt.state, cyt.chromatids, cyt.centromeres]).toEqual([
           2,
@@ -84,10 +363,32 @@ describe('3D mitosis timeline', () => {
           0,
           2 * n,
         ]);
+        expect([
+          cyt.cells,
+          cyt.chromosomes,
+          cyt.state,
+          cyt.chromatids,
+          cyt.centromeres,
+          cyt.dnaMolecules,
+        ]).toEqual([
+          sets.cells,
+          sets.chromosomes,
+          sets.state,
+          sets.chromatids,
+          sets.centromeres,
+          sets.dnaMolecules,
+        ]);
         expect(cyt.nuclei).toEqual({ from: 2, to: 1 });
         expect(tl.counts('prophase').nuclei).toEqual({ from: 1, to: 0 });
         expect(tl.counts('metaphase').nuclei).toEqual({ from: 0, to: 0 });
         expect(tl.counts('g1').nuclei).toEqual({ from: 1, to: 1 });
+      }
+    });
+
+    it(`every count row matches the textbook table by hand (2n = ${2 * n})`, () => {
+      for (const type of CELL_TYPES) {
+        const tl = buildTimeline(n, type);
+        for (const id of STAGES_3D) expect(tl.counts(id), `${type} ${id}`).toEqual(TEXTBOOK[id](n));
       }
     });
 
@@ -105,6 +406,15 @@ describe('3D mitosis timeline', () => {
           const single = present(s).every((x) => !x.joined);
           expect(c.state === 'double' ? double : single, id).toBe(true);
         }
+        // Telophase: one cell holding all 4n DNA molecules; cytokinesis: 2n in each daughter.
+        const tel = tl.stateAt(tl.keyTime('telophase'));
+        expect(tel.cells).toHaveLength(1);
+        expect(present(tel)).toHaveLength(tl.counts('telophase').dnaMolecules);
+        expect(tel.centromeres).toHaveLength(tl.counts('telophase').centromeres);
+        const end = tl.stateAt(tl.keyTime('cytokinesis'));
+        expect(end.cells).toHaveLength(tl.counts('cytokinesis').cells);
+        for (const cell of end.cells)
+          expect(cell.chromatids).toHaveLength(tl.counts('cytokinesis').dnaMolecules);
       }
     });
   }
@@ -181,8 +491,7 @@ describe('3D mitosis timeline', () => {
         for (let i = 0; i < start.chromatids.length; i += 2) {
           const s0 = start.chromatids[i]!;
           const s1 = start.chromatids[i + 1]!;
-          const gap = Math.hypot(...s0.centromere.map((v, k) => v - s1.centromere[k]!));
-          expect(gap).toBeCloseTo(2 * SISTER_OFFSET, 9);
+          expect(dist(s0.centromere, s1.centromere)).toBeCloseTo(2 * SISTER_OFFSET, 9);
         }
         // Sister 0 stays where it was in G1; nothing duplicates or splits inside G2.
         for (const c of present(g1End)) {
@@ -195,11 +504,9 @@ describe('3D mitosis timeline', () => {
     }
   });
 
-  it('metaphase: kinetochore fibres reach a chromosome before it moves to the plate', () => {
-    const dist = (a: readonly number[], b: readonly number[]) =>
-      Math.hypot(...a.map((v, i) => v - b[i]!));
-    for (const type of CELL_TYPES) {
-      for (const n of [2, 4, 23]) {
+  for (const type of CELL_TYPES) {
+    for (const n of [2, 4, 23]) {
+      it(`metaphase: kinetochore fibres reach a chromosome before it moves to the plate (${type}, 2n = ${String(2 * n)})`, () => {
         const tl = buildTimeline(n, type);
         const w = tl.stages.find((x) => x.id === 'metaphase')!;
         const prophase = tl.stateAt(tl.keyTime('prophase'));
@@ -230,9 +537,9 @@ describe('3D mitosis timeline', () => {
         expect(moved).toBeGreaterThan(0);
         // Sanity: the samples cover the whole stage.
         expect(stateIn(tl, 'metaphase', 1).t).toBeCloseTo(w.end, 4);
-      }
+      });
     }
-  });
+  }
 
   it('metaphase: every centromere on the equatorial plane, attached to both poles', () => {
     for (const type of CELL_TYPES) {
@@ -251,9 +558,67 @@ describe('3D mitosis timeline', () => {
             const c = s.chromatids[f.chromatid!]!;
             expect(f.pole).toBe(c.sister);
             // Fibre reaches the kinetochore.
-            expect(Math.hypot(...f.to.map((v, i) => v - c.centromere[i]!))).toBeLessThan(1e-6);
+            expect(dist(f.to, c.centromere)).toBeLessThan(1e-6);
           }
         }
+      }
+    }
+  });
+
+  it('spindle fibres start at their own pole; one kinetochore fibre from each pole per double chromosome', () => {
+    // Plant cells have no centrosomes: their fibres start in a broad polar region near the end
+    // walls (this test: beyond 3/4 of the half length, within half the half width of the axis).
+    const inPolarRegion = (p: Vec3, side: -1 | 1) =>
+      side * p[0] >= 0.75 * PLANT.half[0] && Math.hypot(p[1], p[2]) <= PLANT.half[1] / 2;
+    for (const type of CELL_TYPES) {
+      for (const n of [1, 2, 4, 23]) {
+        const tl = buildTimeline(n, type);
+        const errors: string[] = [];
+        for (const stage of ['metaphase', 'anaphase'] as const) {
+          for (let k = 1; k <= 40; k++) {
+            const s = stateIn(tl, stage, k / 40);
+            const at = `${type} 2n=${String(2 * n)} ${stage} u=${String(k / 40)}`;
+            for (const f of s.fibres) {
+              const side = f.pole === 0 ? -1 : 1;
+              if (Math.sign(f.from[0]) !== side)
+                errors.push(`${at}: ${f.kind} fibre on the wrong side`);
+              if (type === 'animal') {
+                // Animal spindle: every fibre comes out of the centrosome at its pole.
+                const pole = s.centrosomes[f.pole];
+                if (!pole || dist(f.from, pole) > 1e-9 || side * pole[0] < 3)
+                  errors.push(
+                    `${at}: ${f.kind} fibre does not start at centrosome ${String(f.pole)}`,
+                  );
+              } else if (!inPolarRegion(f.from, side) || !insideCell(s.shape, f.from)) {
+                errors.push(`${at}: ${f.kind} fibre starts outside polar region ${String(f.pole)}`);
+              }
+            }
+            const kf = s.fibres.filter((f) => f.kind === 'kinetochore');
+            for (const f of kf) {
+              const c = s.chromatids[f.chromatid ?? -1];
+              if (!c?.present) errors.push(`${at}: kinetochore fibre to a missing chromatid`);
+              else if (f.pole !== c.sister)
+                errors.push(`${at}: sister ${String(c.sister)} pulled to pole ${String(f.pole)}`);
+            }
+            // One fibre from each pole to every double chromosome (metaphase), and one to
+            // each single chromosome from the pole it moves to (anaphase).
+            for (let chromosome = 0; chromosome < 2 * n; chromosome++) {
+              const poles = kf
+                .filter((f) => s.chromatids[f.chromatid ?? -1]?.chromosome === chromosome)
+                .map((f) => f.pole)
+                .sort();
+              if (poles.join() !== '0,1')
+                errors.push(
+                  `${at}: chromosome ${String(chromosome)} fibres from poles ${poles.join()}`,
+                );
+            }
+            if (stage === 'metaphase') {
+              for (const cen of s.centromeres)
+                if (cen.sisters.length !== 2) errors.push(`${at}: single chromosome in metaphase`);
+            }
+          }
+        }
+        expect(errors.slice(0, 10), `${String(errors.length)} problems`).toEqual([]);
       }
     }
   });
@@ -275,22 +640,93 @@ describe('3D mitosis timeline', () => {
     }
   });
 
-  it('telophase: one cell with two nuclei, each around one full set', () => {
+  it('telophase: one cell with two nuclei; the −x nucleus holds exactly the sister-0 chromatids', () => {
     for (const type of CELL_TYPES) {
-      const n = 4;
-      const tl = buildTimeline(n, type);
-      const s = stateIn(tl, 'telophase', 1);
-      expect(s.cells).toHaveLength(1);
-      const nuclei = s.nuclei.filter((x) => x.envelope > 0.5);
-      expect(nuclei).toHaveLength(2);
-      expect(s.spindle).toBe(0);
-      expect(s.condensation).toBe(0);
-      for (const nucleus of nuclei) {
-        const inside = present(s).filter(
-          (c) => Math.hypot(...c.centromere.map((v, i) => v - nucleus.center[i]!)) < nucleus.radius,
-        );
-        expect(inside).toHaveLength(2 * n);
-        expect(new Set(inside.map((c) => c.chromosome)).size).toBe(2 * n);
+      for (const n of [1, 2, 4, 23]) {
+        const tl = buildTimeline(n, type);
+        const sisters = (k: 0 | 1, s: Mitosis3DState) =>
+          present(s)
+            .filter((c) => c.sister === k)
+            .map((c) => c.id);
+        for (let k = 0; k <= 20; k++) {
+          const u = k / 20;
+          const s = stateIn(tl, 'telophase', u);
+          expect(s.cells).toHaveLength(1);
+          // Each set stays on its own side all through telophase.
+          for (const c of present(s)) expect(Math.sign(c.centromere[0])).toBe(c.side);
+          if (u < 0.8) continue;
+          // The chromosomes have arrived: each re-forming nucleus holds exactly one set.
+          const nuclei = s.nuclei.filter((x) => x.envelope >= 0.5);
+          expect(nuclei).toHaveLength(2);
+          for (const nucleus of nuclei) {
+            const inside = present(s)
+              .filter((c) => dist(c.centromere, nucleus.center) < nucleus.radius)
+              .map((c) => c.id);
+            const side = nucleus.center[0] < 0 ? 0 : 1;
+            expect(inside, `${type} 2n=${String(2 * n)} u=${String(u)}`).toEqual(sisters(side, s));
+            expect(new Set(inside.map((id) => s.chromatids[id]!.chromosome)).size).toBe(2 * n);
+          }
+        }
+        const end = stateIn(tl, 'telophase', 1);
+        expect(end.spindle).toBe(0);
+        expect(end.condensation).toBe(0);
+      }
+    }
+  });
+
+  it('cytokinesis: every chromatid of daughter k lies inside daughter k and its nucleus', () => {
+    for (const type of CELL_TYPES) {
+      for (const n of [1, 2, 4, 23]) {
+        const tl = buildTimeline(n, type);
+        let separatedAt: number | null = null;
+        for (let k = 0; k <= 40; k++) {
+          const u = k / 40;
+          const s = stateIn(tl, 'cytokinesis', u);
+          const at = `${type} 2n=${String(2 * n)} u=${String(u)}`;
+          for (const side of [-1, 1] as const) {
+            const ids = present(s)
+              .filter((c) => c.side === side)
+              .map((c) => c.id);
+            // The −x nucleus holds exactly the sister-0 chromatids, the +x one sister 1.
+            const nucleus = s.nuclei.find((x) => Math.sign(x.center[0]) === side)!;
+            expect(
+              present(s)
+                .filter((c) => dist(c.centromere, nucleus.center) < nucleus.radius)
+                .map((c) => c.id),
+              at,
+            ).toEqual(ids);
+            for (const id of ids)
+              expect(insideDaughter(s.shape, side, s.chromatids[id]!.centromere, 0.3), at).toBe(
+                true,
+              );
+          }
+          if (!s.shape.separated) {
+            expect(s.cells, at).toHaveLength(1);
+            expect(separatedAt, `${at}: joined again`).toBeNull();
+            continue;
+          }
+          separatedAt ??= u;
+          expect(s.cells, at).toHaveLength(2);
+          s.cells.forEach((cell, i) => {
+            const side = i === 0 ? -1 : 1;
+            expect(Math.sign(cell.center[0])).toBe(side);
+            // The listed chromatids are this daughter's set, inside it and inside its nucleus.
+            expect(cell.chromatids, at).toEqual(
+              present(s)
+                .filter((c) => c.side === side)
+                .map((c) => c.id),
+            );
+            const nucleus = s.nuclei.find((x) => x.cell === i)!;
+            expect(Math.sign(nucleus.center[0])).toBe(side);
+            expect(insideDaughter(s.shape, side, nucleus.center, nucleus.radius * 0.9)).toBe(true);
+            for (const id of cell.chromatids) {
+              const p = s.chromatids[id]!.centromere;
+              expect(insideDaughter(s.shape, side, p, 0.3), at).toBe(true);
+              expect(dist(p, nucleus.center), at).toBeLessThan(nucleus.radius);
+            }
+          });
+        }
+        expect(separatedAt).not.toBeNull();
       }
     }
   });
@@ -318,45 +754,49 @@ describe('3D mitosis timeline', () => {
     }
   });
 
-  it('stateAt is continuous (topology changes only at stage boundaries)', () => {
-    for (const type of CELL_TYPES) {
-      const tl = buildTimeline(4, type);
-      const dt = 1e-3;
-      for (const w of tl.stages) {
-        for (let t = w.start; t + dt < w.end; t += 0.05) {
-          const a = tl.stateAt(t);
-          const b = tl.stateAt(t + dt);
-          expect(b.stage).toBe(a.stage);
-          for (let i = 0; i < a.chromatids.length; i++) {
-            const p = a.chromatids[i]!;
-            const q = b.chromatids[i]!;
-            const d = Math.hypot(...p.centromere.map((v, k) => v - q.centromere[k]!));
-            expect(d).toBeLessThan(0.05);
-            expect(Math.hypot(...p.dirA.map((v, k) => v - q.dirA[k]!))).toBeLessThan(0.05);
-          }
-          expect(Math.abs(a.condensation - b.condensation)).toBeLessThan(0.01);
-          expect(Math.abs(a.spindle - b.spindle)).toBeLessThan(0.01);
-          expect(b.centrosomes).toHaveLength(a.centrosomes.length);
-          a.centrosomes.forEach((c, i) => {
-            expect(Math.hypot(...c.map((v, k) => v - b.centrosomes[i]![k]!))).toBeLessThan(0.05);
-          });
-        }
-      }
-      // Positions are also continuous across boundaries (only topology flags change there).
-      for (const w of tl.stages.slice(1)) {
-        const a = tl.stateAt(w.start - 1e-6);
-        const b = tl.stateAt(w.start);
-        for (let i = 0; i < a.chromatids.length; i++) {
-          const p = a.chromatids[i]!;
-          const q = b.chromatids[i]!;
-          expect(Math.hypot(...p.centromere.map((v, k) => v - q.centromere[k]!))).toBeLessThan(
-            1e-3,
-          );
-        }
-        expect(Math.abs(a.condensation - b.condensation)).toBeLessThan(1e-3);
-      }
-    }
+  it('the continuity check catches small jumps', () => {
+    const tl = buildTimeline(2, 'animal');
+    // Metaphase after the move (u 0.6): chromosomes and fibres hold still.
+    const a = tl.stateAt(13.4);
+    const b = tl.stateAt(13.41);
+    expect(a.stage).toBe('metaphase');
+    expect(jumps(a, b)).toEqual([]);
+    const moved = structuredClone(b);
+    moved.chromatids[3]!.centromere[1] += 0.1;
+    expect(jumps(a, moved)).toHaveLength(1);
+    const tip = structuredClone(b);
+    tip.fibres.find((f) => f.kind === 'kinetochore')!.to[0] += 0.25;
+    expect(jumps(a, tip)).toHaveLength(1);
+    const cut = structuredClone(b);
+    cut.fibres = cut.fibres.filter((f) => f.kind !== 'polar');
+    expect(jumps(a, cut).length).toBeGreaterThan(0);
+    // G1: the nucleus may not fade or vanish suddenly.
+    const g = tl.stateAt(1);
+    const h = tl.stateAt(1.01);
+    expect(jumps(g, h)).toEqual([]);
+    const faded = structuredClone(h);
+    faded.nuclei[0]!.envelope = 0.97;
+    expect(jumps(g, faded)).toHaveLength(1);
+    expect(jumps(g, { ...h, nuclei: [] })).toHaveLength(1);
   });
+
+  for (const type of CELL_TYPES) {
+    for (const n of [1, 2, 3, 4, 23]) {
+      it(`stateAt is continuous: no jump in 10 ms or across a boundary (${type}, 2n = ${String(2 * n)})`, () => {
+        const tl = buildTimeline(n, type);
+        const times = fineTimes(tl);
+        expect(times.length).toBeGreaterThan(tl.total * 100);
+        const errors: string[] = [];
+        let prev = tl.stateAt(times[0]!);
+        for (const t of times.slice(1)) {
+          const next = tl.stateAt(t);
+          for (const e of jumps(prev, next)) errors.push(e);
+          prev = next;
+        }
+        expect(errors.slice(0, 10), `${String(errors.length)} jumps`).toEqual([]);
+      });
+    }
+  }
 
   it('chromosomes, nuclei and centrosomes stay inside the cell', () => {
     for (const type of CELL_TYPES) {

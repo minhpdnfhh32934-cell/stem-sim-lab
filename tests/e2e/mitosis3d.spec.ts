@@ -63,8 +63,10 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   await expect(page.locator('.m3d__info')).toContainText('Golgi');
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-plant-end.png` });
 
-  // Replay 10 times (stepping through every stage): GPU resources must not grow.
-  const next = page.getByRole('button', { name: 'Kì tiếp theo' });
+  // Replay 10 times (stepping through every stage): GPU resources must not grow. Every
+  // measurement is taken at the same moment (end of cytokinesis, after one full pass), so the
+  // same geometries and shader programs have been drawn each time.
+  const next = page.getByRole('button', { name: 'Bước tiếp theo' });
   const pass = async () => {
     await page.getByRole('button', { name: 'Phát lại từ đầu' }).click();
     await page.getByRole('button', { name: 'Tạm dừng' }).click();
@@ -73,25 +75,26 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
       await page.waitForTimeout(60);
     }
     await expect(next).toBeDisabled();
+    expect(await stage(page)).toBe('cytokinesis');
+    await page.waitForTimeout(100);
+    const now = await info(page);
+    return { geometries: now?.geometries, programs: now?.programs };
   };
-  await pass();
-  const first = await info(page);
-  expect(first?.geometries).toBeGreaterThan(0);
+  const first = await pass();
+  expect(first.geometries).toBeGreaterThan(0);
+  expect(first.programs).toBeGreaterThan(0);
   for (let r = 0; r < 9; r++) await pass();
-  const after = await info(page);
-  expect(after?.geometries).toBe(first?.geometries);
-  expect(after?.textures).toBe(first?.textures);
-  expect(after?.objects).toBe(first?.objects);
+  expect(await pass()).toEqual(first);
 
-  // Switching cell type back and forth rebuilds the scene and frees the old one.
+  // Switching cell type back and forth rebuilds the scene and frees the old one: after the
+  // same pass (same part selected) the plant cell uses exactly what it used before.
   for (let r = 0; r < 3; r++) {
     await page.getByRole('radio', { name: 'Động vật' }).click();
     await page.getByRole('radio', { name: 'Thực vật' }).click();
   }
-  await page.waitForTimeout(300);
-  const toggled = await info(page);
-  expect(toggled?.objects).toBe(first?.objects);
-  expect(toggled?.geometries).toBeLessThanOrEqual((first?.geometries ?? 0) + 2);
+  await parts.getByRole('button', { name: 'Vách ngăn (tấm tế bào)' }).click();
+  await expect(page.locator('.m3d__info')).toContainText('Golgi');
+  expect(await pass()).toEqual(first);
 
   // Close-up and metaphase picture for the record.
   await page.getByRole('button', { name: 'Kì giữa' }).click();

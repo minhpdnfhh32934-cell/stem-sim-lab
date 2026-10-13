@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { componentsFor, type Selection } from './components';
 import { buildMitosisScene, type ScenePalette } from './scene';
-import { buildTimeline, type CellType } from './timeline';
+import { buildTimeline, type CellType, type Timeline } from './timeline';
 
 const PALETTE: ScenePalette = {
   maternal: 'rgb(213, 94, 0)',
@@ -33,50 +34,155 @@ function collect(scene: THREE.Scene) {
   return { geometries, materials };
 }
 
+/** Materials on objects that are drawn (the object and all its parents visible). */
+function visibleMaterials(scene: THREE.Scene): Set<THREE.Material> {
+  const out = new Set<THREE.Material>();
+  scene.traverse((o) => {
+    if (!(o instanceof THREE.Mesh || o instanceof THREE.LineSegments)) return;
+    for (let p: THREE.Object3D | null = o; p; p = p.parent) if (!p.visible) return;
+    out.add(o.material as THREE.Material);
+  });
+  return out;
+}
+
+/** three.js numbers every material (`Material.id`, documented, missing from @types/three). */
+const materialId = (m: unknown) => (m as THREE.Material & { readonly id: number }).id;
+
+/**
+ * Ids the next BufferGeometry / Material will get: three.js numbers both in creation order, so
+ * everything created between two probes has an id strictly between theirs.
+ */
+function nextIds() {
+  return { geometry: new THREE.BufferGeometry().id, material: materialId(new THREE.Material()) };
+}
+const idsBetween = (a: number, b: number) => Array.from({ length: b - a - 1 }, (_, k) => a + 1 + k);
+
+/** Ids of the geometries / materials whose dispose() has been called since this was set up. */
+function trackDisposal() {
+  const geo = vi.spyOn(THREE.BufferGeometry.prototype, 'dispose');
+  const mat = vi.spyOn(THREE.Material.prototype, 'dispose');
+  return {
+    geometries: () => new Set(geo.mock.contexts.map((g) => (g as THREE.BufferGeometry).id)),
+    materials: () => new Set(mat.mock.contexts.map(materialId)),
+  };
+}
+
+/** Three moments of every stage plus its key moment (furrow and cell plate mid-way included). */
+function visitTimes(tl: Timeline): number[] {
+  return tl.stages.flatMap((w) => [
+    ...[0.1, 0.5, 0.9].map((u) => w.start + u * (w.end - w.start)),
+    tl.keyTime(w.id),
+  ]);
+}
+
 describe('3D mitosis scene', () => {
   for (const type of ['animal', 'plant'] as CellType[]) {
-    it(`${type}: dispose() frees every geometry and material`, () => {
+    it(`${type}: every listed part can be highlighted; dispose() frees all it created`, () => {
       const tl = buildTimeline(2, type);
+      const track = trackDisposal();
+      const start = nextIds();
       const ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
-      // Visit every stage so all materials (normal + highlighted) have been used.
+      const times = visitTimes(tl);
       const used = {
         geometries: new Set<THREE.BufferGeometry>(),
         materials: new Set<THREE.Material>(),
       };
-      for (const sel of [
-        null,
-        { component: 'membrane' as const },
-        { component: 'spindle' as const },
-      ]) {
-        ms.setSelection(sel);
-        for (let t = 0; t <= tl.total; t += 0.5) {
-          ms.update(tl.stateAt(t));
-          const c = collect(ms.scene);
-          c.geometries.forEach((g) => used.geometries.add(g));
-          c.materials.forEach((m) => used.materials.add(m));
-        }
+      const visit = () => {
+        const c = collect(ms.scene);
+        c.geometries.forEach((g) => used.geometries.add(g));
+        c.materials.forEach((m) => used.materials.add(m));
+      };
+      // The materials drawn when nothing is selected…
+      const plain = new Set<THREE.Material>();
+      for (const t of times) {
+        ms.update(tl.stateAt(t));
+        visibleMaterials(ms.scene).forEach((m) => plain.add(m));
+        visit();
       }
-      const geoDispose = vi.spyOn(THREE.BufferGeometry.prototype, 'dispose');
-      const matDispose = vi.spyOn(THREE.Material.prototype, 'dispose');
+      // …and every part of the list (as picked from the list, and as clicked on a chromosome)
+      // swaps some drawn object to a highlight material at some moment.
+      for (const component of componentsFor(type)) {
+        let lit = false;
+        const picks: Selection[] = [{ component }, { component, chromosome: 1, sister: 1 }];
+        for (const sel of picks) {
+          ms.setSelection(sel);
+          for (const t of times) {
+            ms.update(tl.stateAt(t));
+            for (const m of visibleMaterials(ms.scene)) if (!plain.has(m)) lit = true;
+            visit();
+          }
+        }
+        expect(lit, component).toBe(true);
+      }
+      ms.setSelection(null);
+      const end = nextIds();
+      // Playing and selecting freed nothing.
+      expect(track.geometries().size).toBe(0);
+      expect(track.materials().size).toBe(0);
       ms.dispose();
-      const disposedGeo = new Set(geoDispose.mock.contexts);
-      const disposedMat = new Set(matDispose.mock.contexts);
-      for (const g of used.geometries) expect(disposedGeo.has(g)).toBe(true);
-      for (const m of used.materials) expect(disposedMat.has(m)).toBe(true);
+      const freedGeo = track.geometries();
+      const freedMat = track.materials();
+      const madeGeo = idsBetween(start.geometry, end.geometry);
+      const madeMat = idsBetween(start.material, end.material);
+      expect(madeGeo.length).toBeGreaterThan(5);
+      expect(madeMat.length).toBeGreaterThan(5);
+      // Every geometry and material the scene created is freed (used or not)…
+      expect(madeGeo.filter((id) => !freedGeo.has(id))).toEqual([]);
+      expect(madeMat.filter((id) => !freedMat.has(id))).toEqual([]);
+      // …including everything it drew (normal and highlighted).
+      for (const g of used.geometries) expect(freedGeo.has(g.id)).toBe(true);
+      for (const m of used.materials) expect(freedMat.has(materialId(m))).toBe(true);
       expect(ms.scene.children).toHaveLength(0);
     });
 
-    it(`${type}: object count stays constant across 20 replays`, () => {
+    it(`${type}: replays create and free nothing; a rebuild frees the old scene entirely`, () => {
       const tl = buildTimeline(4, type);
-      const ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
+      const other = buildTimeline(2, type === 'animal' ? 'plant' : 'animal');
+      const track = trackDisposal();
+      const s0 = nextIds();
+      let ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
+      const s1 = nextIds();
+      const made = {
+        geometries: idsBetween(s0.geometry, s1.geometry),
+        materials: idsBetween(s0.material, s1.material),
+      };
       ms.update(tl.stateAt(0));
       const first = ms.stats();
+      // 20 replays with selections: no geometry or material is created or freed.
       for (let replay = 0; replay < 20; replay++) {
+        ms.setSelection(replay % 2 ? { component: 'spindle' } : { component: 'centromere' });
         for (let t = 0; t <= tl.total; t += 0.7) ms.update(tl.stateAt(t));
         ms.update(tl.stateAt(tl.total));
         expect(ms.stats()).toEqual(first);
       }
+      const s2 = nextIds();
+      expect(idsBetween(s1.geometry, s2.geometry)).toEqual([]);
+      expect(idsBetween(s1.material, s2.material)).toEqual([]);
+      expect(track.geometries().size).toBe(0);
+      expect(track.materials().size).toBe(0);
+      // Rebuilds (another cell type or 2n, a theme or quality change): after each one only the
+      // new scene's geometries and materials are alive.
+      for (let k = 0; k < 6; k++) {
+        ms.dispose();
+        const a = nextIds();
+        const next = k % 2 ? tl : other;
+        ms = buildMitosisScene(next, PALETTE, { segments: k % 3 ? 24 : 12 });
+        const b = nextIds();
+        for (const t of visitTimes(next)) ms.update(next.stateAt(t));
+        const geometries = idsBetween(a.geometry, b.geometry);
+        const materials = idsBetween(a.material, b.material);
+        made.geometries.push(...geometries);
+        made.materials.push(...materials);
+        const freedGeo = track.geometries();
+        const freedMat = track.materials();
+        expect(made.geometries.filter((id) => !freedGeo.has(id))).toEqual(geometries);
+        expect(made.materials.filter((id) => !freedMat.has(id))).toEqual(materials);
+      }
       ms.dispose();
+      const freedGeo = track.geometries();
+      const freedMat = track.materials();
+      expect(made.geometries.filter((id) => !freedGeo.has(id))).toEqual([]);
+      expect(made.materials.filter((id) => !freedMat.has(id))).toEqual([]);
     });
   }
 
