@@ -671,8 +671,9 @@ function quantity(
   const exp = exp1 ?? exp2 ?? exp3;
   if (exp) words += ` nhân mười mũ ${exponentWords(exp)}`;
   const after = unitAfter(unit);
-  // Not a unit: give the letters back untouched ("3 con" stays "ba con").
-  if (!after) return ` ${words}${space ?? ''}${unit ?? ''}`;
+  // Not a unit: give the letters back untouched ("3 con" stays "ba con"), always after a space
+  // so a coefficient is not glued to its letter ("2n" → "hai nờ", not "hain"; audit VOI-02).
+  if (!after) return ` ${words}${unit ? space || ' ' : (space ?? '')}${unit ?? ''}`;
   return ` ${words}${after[0]}${after[1]} `;
 }
 
@@ -738,6 +739,15 @@ export function toSpeech(content: string): string {
       /(?<![\p{L}\d./])(\d+)\/(\d+)(?![\p{L}\d/])/gu,
       (_m, a: string, b: string) => ` ${readInteger(a)} phần ${readInteger(b)} `,
     );
+  // Concentrations "[S]", "[H⁺]" → "nồng độ S" (audit VOI-02), also when a formula already turned
+  // the letter into a word ("[ ét ]"); citations like "[1]" (digits) are left.
+  s = s.replace(/\[\s*(\p{L}[^[\]\d\n]{0,18}?)\s*\]/gu, ' nồng độ $1 ');
+  // State symbols after a formula: "NaCl (aq)" → "NaCl dung dịch", "H2O(l)" → "… lỏng".
+  s = s.replace(
+    /(?<=[A-Za-z0-9₀-₉⁺⁻)])\s?\((aq|dd|s|r|l|g|k)\)/g,
+    (_m, st: string) =>
+      ` ${({ aq: 'dung dịch', dd: 'dung dịch', s: 'rắn', r: 'rắn', l: 'lỏng', g: 'khí', k: 'khí' } as Record<string, string>)[st] ?? st} `,
+  );
   // Chemistry: "2H2O" → "hai hát hai ô"; a reaction arrow means "tạo thành".
   const found = { chemistry: false };
   s = s.replace(FORMULA, (all, coef: string, body: string, charge: string | undefined) => {
@@ -784,7 +794,7 @@ export function toSpeech(content: string): string {
   s = s.replace(/°/g, ' độ ');
   // Roman numerals after the words that use them: "Định luật II" → "hai".
   s = s.replace(
-    /(luật|chương|bài|phần|mục|kỷ|kỳ|kì|loại|nhóm|nhóm chính|lớp|giai đoạn)\s+([IVX]{1,6})(?![\p{L}\d])/gu,
+    /((?<![\p{L}])(?:[Kk][ìỳ]\s+(?:đầu|giữa|sau|cuối)|[Gg]iảm phân|[Nn]guyên phân|[Ll]ần|[Ll]uật|[Cc]hương|[Bb]ài|[Pp]hần|[Mm]ục|[Kk][ỷỳì]|[Ll]oại|[Nn]hóm(?: chính)?|[Ll]ớp|[Gg]iai đoạn))\s+([IVX]{1,6})(?![\p{L}\d])/gu,
     (all, w: string, r: string) => {
       const n = roman(r);
       return n ? `${w} ${readInteger(String(n))}` : all;

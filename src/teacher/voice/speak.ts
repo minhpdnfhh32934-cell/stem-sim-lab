@@ -83,8 +83,12 @@ interface Progress {
 
 /** The style's pace and pitch; an unknown stored style falls back to the default (VOI-03). */
 function stylePreset(style: string): { rate: number; pitch: number } {
-  return VOICE_PRESETS[style as keyof typeof VOICE_PRESETS] ?? VOICE_PRESETS.vui;
+  const presets: Partial<Record<string, { rate: number; pitch: number }>> = VOICE_PRESETS;
+  return presets[style] ?? VOICE_PRESETS.vui;
 }
+
+/** Read through a function: the signal is aborted while a phrase plays. */
+const stopped = (signal: AbortSignal) => signal.aborted;
 
 /** Reads text aloud with the teacher's voice. Resolves when done, stopped or unavailable. */
 export async function speak(text: string, opts: SpeakOptions = {}): Promise<void> {
@@ -182,7 +186,7 @@ async function speakSystem(
       signal.addEventListener('abort', cancel, { once: true });
       s.speak(utterance);
     });
-    if (!signal.aborted) progress.played++;
+    if (!stopped(signal)) progress.played++;
     await pause(chunk.pauseMs, signal);
   }
 }
@@ -235,7 +239,8 @@ async function speakGemini(
   if (!transport.tts) throw new Error('gemini-tts-unavailable');
   if (!(await transport.hasKey('gemini'))) throw new Error('gemini-tts-no-key');
   const store = useVoiceStore.getState();
-  const style = `${GEMINI_STYLES[store.style as keyof typeof GEMINI_STYLES] ?? GEMINI_STYLES.vui}${speedWords(store.speed * rate)}`;
+  const styles: Partial<Record<string, string>> = GEMINI_STYLES;
+  const style = `${styles[store.style] ?? GEMINI_STYLES.vui}${speedWords(store.speed * rate)}`;
   const timeoutSecs = Math.max(30, useAiStore.getState().timeoutSecs);
   const tts = transport.tts.bind(transport);
   const fetchGroup = async (text: string): Promise<Pcm> => {
@@ -262,7 +267,7 @@ async function speakGemini(
     next?.catch(() => undefined);
     if (signal.aborted) return;
     await playPcm(pcm, signal);
-    if (!signal.aborted) progress.played += groups[i]?.phrases ?? 0;
+    if (!stopped(signal)) progress.played += groups[i]?.phrases ?? 0;
     await pause(220, signal);
   }
 }
@@ -295,7 +300,7 @@ async function speakLocal(
     if (signal.aborted) return;
     // Playback rate is the only speed control this model has (it also shifts the pitch a bit).
     await playPcm(pcm, signal, speed);
-    if (!signal.aborted && pieces[i]?.ends) progress.played++;
+    if (!stopped(signal) && pieces[i]?.ends) progress.played++;
     await pause(pieces[i]?.pauseMs ?? 0, signal);
   }
 }

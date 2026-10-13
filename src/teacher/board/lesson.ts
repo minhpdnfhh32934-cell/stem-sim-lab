@@ -297,6 +297,9 @@ function readingTime(text: string): number {
 
 /** Set when a pause cut the sentence being spoken: it is read again after "Tiếp tục". */
 let speechCut = false;
+/** Read through functions: a pause or "Viết nhanh" changes these while a sentence is spoken. */
+const wasCut = () => speechCut;
+const isInstant = () => instant;
 
 /**
  * Speaks a sentence, again from its start when a pause cut it (audit BRD-02): the learner never
@@ -313,9 +316,9 @@ async function speakSentence(
     if (metrics) metrics.firstSpeechMs ??= Math.round(begin - metrics.startedAt);
     await speak(text, { rate: useBoardStore.getState().speed });
     entry.speechMs = (entry.speechMs ?? 0) + Math.round(performance.now() - begin);
-    if (!speechCut || isAborted(signal) || instant) return;
+    if (!wasCut() || isAborted(signal) || isInstant()) return;
     await waitIfPaused(signal);
-    if (instant) return;
+    if (isInstant()) return;
   }
 }
 
