@@ -7,6 +7,7 @@
  */
 import { useGemmaPrefs } from './gemmaPrefs';
 import { useGpuStore, type WebGpuInfo } from './gpu';
+import { gemmaBlockedByGpuFault, isGpuFailure, noteGpuFault } from './gpuSafety';
 import { deleteRepo, opfsAvailable, repoStored } from './modelStore';
 import { GEMMA_FIRST_PIECE_MS, GEMMA_PIECE_GAP_MS, watchStall } from './stallWatch';
 import { webGemmaModel } from './webGemmaModels';
@@ -209,7 +210,9 @@ function ensureWorker(): Worker {
         return;
       }
       if (out.kind === 'device-lost') {
-        // The model is gone with its GPU device: fail what waits, start fresh next time.
+        // The model is gone with its GPU device: fail what waits and keep Gemma off for this
+        // session, so it is never reloaded onto a card that just failed (audit GPU-01).
+        noteGpuFault('device-lost', useGpuStore.getState().gemmaInfo);
         failAll('gpu-lost');
         return;
       }
@@ -243,6 +246,7 @@ function ensureWorker(): Worker {
     // call — init, load and chat — instead of leaving "downloading…" spinning forever.
     worker.onerror = (event) => {
       event.preventDefault();
+      noteGpuFault('worker-crashed', useGpuStore.getState().gemmaInfo);
       failAll('worker-crashed');
     };
   }
@@ -306,6 +310,8 @@ async function loadIntoWorker(
   const meta = webGemmaModel(modelId);
   if (!meta) throw new Error(`unknown model ${modelId}`);
   if (webGPUStatus() !== 'webgpu') throw new Error('webgpu-missing');
+  // After a GPU fault the model is not loaded again by itself (audit GPU-01).
+  if (gemmaBlockedByGpuFault()) throw new Error('gpu-blocked');
   await ensureInited(signal);
   if (loadedId === modelId) return;
   const w = ensureWorker();
@@ -537,7 +543,14 @@ export function webGemmaChat(args: {
       partials.delete(chatId);
     });
     scheduleIdleUnload();
-    if (out.kind === 'error') throw new Error(out.message);
+    if (out.kind === 'error') {
+      // The runtime lost its GPU buffers (driver reset): same treatment as a lost device.
+      if (isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
+        noteGpuFault('runtime-gpu-error', useGpuStore.getState().gemmaInfo);
+        resetWorker();
+      }
+      throw new Error(out.message);
+    }
     let text = out.kind === 'reply' ? out.text.trim() : '';
     if (!text) throw new Error('empty reply');
     // Small models often echo the question first: drop that prefix for readability.

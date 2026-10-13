@@ -912,6 +912,8 @@ const vi = {
         'Gemma không viết thêm chữ nào trong một lúc lâu nên mình đã dừng và khởi động lại nó. Em hỏi lại nhé; nếu vẫn chậm, chọn câu trả lời "Ngắn" hoặc mô hình nhỏ hơn trong Cài đặt.',
       gemmaGpu:
         'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Mình đã khởi động lại Gemma, em hỏi lại nhé. Nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
+      gemmaGpuBlocked:
+        'Lần trước card đồ họa bị treo khi chạy Gemma. Để máy không bị khởi động lại, Gemma tạm dừng tới khi em mở lại app. Hãy chọn card rời trong Cài đặt → GPU cho Gemma, dùng mô hình nhỏ hơn, hoặc hỏi bằng API.',
       gemmaFailed:
         'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI Teacher.',
       crisis:
@@ -1079,6 +1081,18 @@ const vi = {
       browserOnly:
         'Trên trình duyệt, trình duyệt tự chọn card đồ họa. Chọn card chỉ có trong ứng dụng desktop trên Windows.',
       unsupported: 'Chọn card đồ họa hiện chỉ có trên Windows.',
+      faultTitle: 'Card đồ họa đã bị treo khi chạy Gemma',
+      faultBody:
+        'Lúc {when}, card {card} ngừng phản hồi khi Gemma đang trả lời. Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động lại.',
+      faultBlocked: 'Gemma đang tạm dừng tới khi em mở lại ứng dụng.',
+      faultAdvice:
+        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng API trực tuyến.',
+      useDiscrete: 'Dùng card rời: {name}',
+      allowAgain: 'Vẫn cho Gemma chạy lại',
+      dismissFault: 'Ẩn thông báo',
+      unknownCard: 'đồ họa',
+      integratedHint:
+        'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
     },
   },
   gpuSettings: {

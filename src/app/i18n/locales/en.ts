@@ -914,6 +914,8 @@ const en: Messages = {
         'Gemma wrote nothing for a long time, so it was stopped and restarted. Please ask again; if it stays slow, pick "Short" answers or a smaller model in Settings.',
       gemmaGpu:
         'The graphics card stopped Gemma (out of memory or a driver reset). Gemma was restarted; please ask again. If it happens again, close other apps or pick a smaller model.',
+      gemmaGpuBlocked:
+        'The graphics card hung while running Gemma. So the computer does not restart, Gemma stays off until you reopen the app. Pick the discrete card in Settings → GPU for Gemma, use a smaller model, or ask through an API.',
       gemmaFailed:
         'Gemma hit an error while answering. Please ask again; if it repeats, open Settings → AI Teacher.',
       crisis:
@@ -1086,6 +1088,18 @@ const en: Messages = {
       browserOnly:
         'In a browser, the browser picks the graphics card. Choosing a card is only available in the Windows desktop app.',
       unsupported: 'Choosing a graphics card is currently only available on Windows.',
+      faultTitle: 'The graphics card hung while running Gemma',
+      faultBody:
+        'At {when}, the {card} card stopped responding while Gemma was answering. Windows had to reset it; if this repeats, the computer may restart.',
+      faultBlocked: 'Gemma is paused until you reopen the app.',
+      faultAdvice:
+        'Pick the discrete card for Gemma, a smaller model, or ask through an online API.',
+      useDiscrete: 'Use the discrete card: {name}',
+      allowAgain: 'Let Gemma run again anyway',
+      dismissFault: 'Hide this notice',
+      unknownCard: 'graphics',
+      integratedHint:
+        'Gemma runs on the integrated card, which can hang on long questions; this computer has a discrete card ({name}): pick it for Gemma.',
     },
   },
   gpuSettings: {
