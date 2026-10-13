@@ -5,6 +5,7 @@ import type { ScienceCardData } from '@/science-card/types';
 import { BSRC, L } from '../common';
 import { rng } from '../genetics/stats';
 import { runDivision, type Division, type StageId, type StageState } from './division';
+import type { CellType } from './mitosis3d/timeline';
 
 export const STAGE_NAME: Record<StageId, LocalizedText> = {
   g1: L('Kì trung gian (pha G1)', 'Interphase (G1)'),
@@ -88,7 +89,14 @@ export interface DivisionState {
   playing: boolean;
   crossover: boolean;
   seed: number;
+  /** Mitosis 3D view: cell type, 3D on/off (2D fallback stays available), playback speed. */
+  cellType: CellType;
+  view3d: boolean;
+  speed: number;
 }
+
+/** Playback speeds offered by the 3D view. */
+export const SPEEDS = [0.5, 1, 2] as const;
 
 export const useDivisionStore = create<DivisionState>()(() => ({
   pairs: 2,
@@ -96,6 +104,9 @@ export const useDivisionStore = create<DivisionState>()(() => ({
   playing: false,
   crossover: true,
   seed: 1,
+  cellType: 'animal',
+  view3d: true,
+  speed: 1,
 }));
 
 /** Stages of the current division (deterministic for a given seed). */
