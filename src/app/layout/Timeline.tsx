@@ -38,7 +38,9 @@ export const Timeline = memo(function Timeline() {
   return (
     <div className="timeline" role="group" aria-label={t('timeline.regionLabel')}>
       <IconButton
-        icon={playing ? Pause : Play}
+        icon={Play}
+        altIcon={Pause}
+        showAlt={playing}
         label={playing ? t('timeline.pause') : t('timeline.play')}
         variant="accent"
         tooltipSide="top"

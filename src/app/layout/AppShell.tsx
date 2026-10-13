@@ -11,6 +11,8 @@ import { initUndo } from '@/app/project/undo';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
 import { UpdateDialog } from '@/app/update/UpdateDialog';
 import { scheduleAutoCheck } from '@/app/update/updater';
+import { installSlidingIndicators } from '@/ui/slidingIndicator';
+import { Skeleton } from '@/ui/Skeleton';
 import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
 import { Toaster } from '@/ui/Toaster';
 import '@/app/project/project.css';
@@ -57,10 +59,12 @@ export function AppShell() {
     const offUndo = initUndo();
     const offHistory = initHistory();
     const offUpdate = scheduleAutoCheck();
+    const offIndicators = installSlidingIndicators();
     return () => {
       offUndo();
       offHistory();
       offUpdate();
+      offIndicators();
     };
   }, []);
   const sourcesOpen = useProjectUi((s) => s.sourcesOpen);
@@ -138,7 +142,7 @@ export function AppShell() {
 
         <main className="shell__center">
           {teacher ? (
-            <Suspense fallback={null}>
+            <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
               <TeacherScreen />
             </Suspense>
           ) : landing ? (

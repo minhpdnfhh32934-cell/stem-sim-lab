@@ -2,7 +2,6 @@ import {
   AlertTriangle,
   DraftingCompass,
   Hand,
-  Loader2,
   MousePointer2,
   MoveUpRight,
   Ruler,
@@ -23,6 +22,7 @@ import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
 import { useModuleStore } from '@/modules/moduleStore';
 import { EmptyState } from '@/ui/EmptyState';
+import { Skeleton } from '@/ui/Skeleton';
 import { IconButton } from '@/ui/IconButton';
 
 /** `basic`: shown in Basic mode too (drag, measure, vectors, camera — PROMPT_PHAN_2 A4.2). */
@@ -85,11 +85,7 @@ export const Stage = memo(function Stage() {
     return (
       <section className="stage stage--module" aria-label={t('stage.regionLabel')}>
         {View && <View />}
-        {mod.loading && (
-          <div className="stage__empty">
-            <Loader2 className="spin" size={28} strokeWidth={1.5} aria-label={t('stage.loading')} />
-          </div>
-        )}
+        {mod.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
         {mod.error && (
           <div className="stage__message" role="alert">
             <AlertTriangle size={16} strokeWidth={1.75} aria-hidden="true" />
@@ -199,11 +195,7 @@ export const Stage = memo(function Stage() {
         </div>
       )}
 
-      {sim.loading && (
-        <div className="stage__empty">
-          <Loader2 className="spin" size={28} strokeWidth={1.5} aria-label={t('stage.loading')} />
-        </div>
-      )}
+      {sim.loading && <Skeleton label={t('stage.loading')} className="stage__skeleton" />}
 
       {!hasSimulation && !sim.loading && (
         <div className="stage__empty">

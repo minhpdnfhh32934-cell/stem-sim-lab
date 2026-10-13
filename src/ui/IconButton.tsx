@@ -6,6 +6,12 @@ export type IconAnimation = 'pop' | 'spin' | 'nudge' | 'none';
 
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon: LucideIcon;
+  /**
+   * A second icon the button morphs into while `showAlt` is true (play ⇄ pause, sun ⇄ moon,
+   * gallery pattern 007). Both stay in the DOM so the change can animate.
+   */
+  altIcon?: LucideIcon;
+  showAlt?: boolean;
   /** Accessible name; also shown as the tooltip. */
   label: string;
   /** Pressed/selected state for toggle buttons. */
@@ -21,6 +27,8 @@ const ICON_SIZE = { sm: 15, md: 17, lg: 20 } as const;
 
 export function IconButton({
   icon: Icon,
+  altIcon: AltIcon,
+  showAlt = false,
   label,
   active,
   size = 'md',
@@ -48,7 +56,24 @@ export function IconButton({
       )}
       {...rest}
     >
-      <Icon size={ICON_SIZE[size]} strokeWidth={1.75} aria-hidden="true" />
+      {AltIcon ? (
+        <span className="icon-swap" data-alt={showAlt}>
+          <Icon
+            className="icon-swap__main"
+            size={ICON_SIZE[size]}
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+          <AltIcon
+            className="icon-swap__alt"
+            size={ICON_SIZE[size]}
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+        </span>
+      ) : (
+        <Icon size={ICON_SIZE[size]} strokeWidth={1.75} aria-hidden="true" />
+      )}
     </button>
   );
 }

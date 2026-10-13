@@ -239,7 +239,9 @@ export const TopBar = memo(function TopBar() {
           </>
         )}
         <IconButton
-          icon={theme === 'dark' ? Sun : Moon}
+          icon={Moon}
+          altIcon={Sun}
+          showAlt={theme === 'dark'}
           label={t('topbar.toggleTheme')}
           animation="spin"
           onClick={() => {

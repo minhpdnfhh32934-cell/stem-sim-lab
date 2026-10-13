@@ -247,6 +247,16 @@ body[data-resizing] .splitter {
   width: var(--left-w);
   flex: none;
 }
+/* No results: jump to the subject that has them, or clear the search. */
+.sidebar__recover {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.sidebar__recover .btn {
+  justify-content: center;
+}
 .sidebar__search {
   display: flex;
   align-items: center;
@@ -437,6 +447,13 @@ body[data-resizing] .splitter {
   position: absolute;
   left: 14px;
   top: -4px;
+}
+.stage__skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--bg-stage);
+  pointer-events: none;
 }
 .stage__empty {
   position: absolute;

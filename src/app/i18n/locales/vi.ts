@@ -54,6 +54,8 @@ const vi = {
     history: 'Lịch sử',
     search: 'Tìm chủ đề…',
     noResults: 'Không tìm thấy chủ đề phù hợp.',
+    foundIn: 'Có {count} chủ đề ở {subject}',
+    clearSearch: 'Xóa tìm kiếm',
     comingSoon: 'Sắp có',
     comingSoonHint: 'Chủ đề này sẽ được xây dựng ở các giai đoạn sau.',
     historyEmpty: 'Chưa có mô phỏng nào. Các mô phỏng bạn chạy sẽ xuất hiện ở đây.',

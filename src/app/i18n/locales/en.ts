@@ -51,6 +51,8 @@ const en: Messages = {
     history: 'History',
     search: 'Search topics…',
     noResults: 'No matching topics.',
+    foundIn: '{count} in {subject}',
+    clearSearch: 'Clear search',
     comingSoon: 'Coming soon',
     comingSoonHint: 'This topic will be built in a later phase.',
     historyEmpty: 'No simulations yet. Simulations you run will appear here.',

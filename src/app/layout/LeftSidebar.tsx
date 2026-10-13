@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle2, ChevronRight, History, Search, SearchX } from 'lucide-react';
+import { BookOpen, CheckCircle2, ChevronRight, History, Search, SearchX, X } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import { chapterProgress, topicProgress } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
@@ -7,7 +7,7 @@ import { normalizeForSearch, type ChapterEntry } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { openTopic, useActiveTopic } from '@/app/topics';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { HistoryList } from '@/app/project/HistoryList';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, LEVELS } from '@/app/levels';
@@ -37,6 +37,22 @@ export const LeftSidebar = memo(function LeftSidebar() {
   );
 });
 
+/** Chapters whose title or topics match the query (accent- and case-insensitive). */
+function searchChapters(all: ChapterEntry[], query: string, t: TFunction): ChapterEntry[] {
+  const q = normalizeForSearch(query);
+  if (!q) return all;
+  return all
+    .map((c) => ({
+      ...c,
+      topics: c.topics.filter(
+        (topic) =>
+          normalizeForSearch(t(topic.titleKey)).includes(q) ||
+          normalizeForSearch(t(c.titleKey)).includes(q),
+      ),
+    }))
+    .filter((c) => c.topics.length > 0);
+}
+
 function Library({ t }: { t: TFunction }) {
   const subject = useWorkspaceStore((s) => s.subject);
   const level = useProfileStore((s) => s.level);
@@ -44,21 +60,27 @@ function Library({ t }: { t: TFunction }) {
   const [query, setQuery] = useState('');
   const SubjectIcon = SUBJECT_ICON[subject];
 
-  const chapters = useMemo<ChapterEntry[]>(() => {
-    const q = normalizeForSearch(query);
-    const all = chaptersFor(level, subject);
-    if (!q) return all;
-    return all
-      .map((c) => ({
-        ...c,
-        topics: c.topics.filter(
-          (topic) =>
-            normalizeForSearch(t(topic.titleKey)).includes(q) ||
-            normalizeForSearch(t(c.titleKey)).includes(q),
-        ),
-      }))
-      .filter((c) => c.topics.length > 0);
-  }, [query, subject, level, t]);
+  const setSubject = useWorkspaceStore((s) => s.setSubject);
+  const chapters = useMemo<ChapterEntry[]>(
+    () => searchChapters(chaptersFor(level, subject), query, t),
+    [query, subject, level, t],
+  );
+  // Nothing here: does another subject have it? (gallery pattern 092, recover from no results)
+  const elsewhere = useMemo(
+    () =>
+      chapters.length > 0 || !normalizeForSearch(query)
+        ? []
+        : SUBJECTS.filter((s) => s !== subject)
+            .map((s) => ({
+              subject: s,
+              count: searchChapters(chaptersFor(level, s), query, t).reduce(
+                (n, c) => n + c.topics.length,
+                0,
+              ),
+            }))
+            .filter((m) => m.count > 0),
+    [chapters.length, query, subject, level, t],
+  );
 
   return (
     <>
@@ -105,7 +127,38 @@ function Library({ t }: { t: TFunction }) {
           <p className="level-note">{t('levels.plannedHint')}</p>
         ) : chapters.length === 0 ? (
           <EmptyState icon={SearchX} compact>
-            {t('sidebar.noResults')}
+            <p>{t('sidebar.noResults')}</p>
+            <div className="sidebar__recover">
+              {elsewhere.map((m) => {
+                const Icon = SUBJECT_ICON[m.subject];
+                return (
+                  <button
+                    key={m.subject}
+                    type="button"
+                    className="btn"
+                    onClick={() => {
+                      setSubject(m.subject);
+                    }}
+                  >
+                    <Icon size={15} strokeWidth={1.75} aria-hidden="true" />
+                    {t('sidebar.foundIn', {
+                      count: m.count,
+                      subject: t(`subjects.${m.subject}`),
+                    })}
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setQuery('');
+                }}
+              >
+                <X size={15} strokeWidth={1.75} aria-hidden="true" />
+                {t('sidebar.clearSearch')}
+              </button>
+            </div>
           </EmptyState>
         ) : (
           <ul className="tree" aria-label={t(`subjects.${subject}`)}>
