@@ -11,6 +11,8 @@ import {
   AutoProcessor,
   AutoTokenizer,
   Gemma4ForConditionalGeneration,
+  LogitsProcessor,
+  LogitsProcessorList,
   RawImage,
   TextStreamer,
   env,
@@ -65,8 +67,146 @@ type InMessage =
       maxTokens: number;
       /** Most prompt tokens (exact count); the oldest turns are dropped above it. */
       inputBudget?: number;
+      /** Repetition rules; default 'app' (see `Decoding`). */
+      decoding?: Decoding;
     }
   | { kind: 'unload' };
+
+/**
+ * How repetition is held back while the answer is generated.
+ * - 'app' (default): `ANSWER_RULES`, which look only at the answer being written.
+ * - 'legacy': the shipped 0.6.0 settings, Transformers.js' built-in `repetition_penalty: 1.2` and
+ *   `no_repeat_ngram_size: 3`. Those count the PROMPT too (see `generate()` in
+ *   node_modules/@huggingface/transformers/src/models/modeling_utils.js: every processor gets
+ *   prompt + answer ids), so the answer could not reuse the wording of its own context
+ *   (eval report 2026-10-14 §4: "nhiễm sắc thể" written as "nhiễm sắc tố"). It exists only so
+ *   scripts/teaching/eval-gemma.mjs can reproduce the 0.6.0 behaviour; the app never sends it.
+ */
+export type Decoding = 'app' | 'legacy';
+
+/** Repetition rules that only count the answer's own tokens (never the prompt). */
+export interface AnswerRules {
+  /** No n-gram of this many tokens may occur twice in the answer; 0 turns the rule off. */
+  ngram: number;
+  /** Divides (positive) or multiplies (negative) the logit of a token the answer used; 1 = off. */
+  penalty: number;
+  /** The penalty only counts the answer's last `window` tokens. */
+  window: number;
+}
+
+/**
+ * The app's rules, chosen for Gemma 3 1B (the smallest model that teaches) answering in
+ * Vietnamese:
+ * - `ngram: 10`: only a loop guard. Natural Vietnamese repeats short spans all the time: in
+ *   answer-sized pieces (170 syllables or punctuation marks) of the repo's Vietnamese docs, 55%
+ *   repeat a 4-unit span, 11% a 6-unit span and 1% an 8-unit span. A Gemma token is about one
+ *   such unit (inferred from the mangled words in the eval; the tokenizer was not loaded), so a
+ *   4-token rule would still cut the second "nhiễm sắc thể" or a restated formula. A real loop
+ *   repeats whole clauses and is still cut after 10 tokens.
+ * - `penalty: 1.1` over the last `window: 64` answer tokens: the usual mild setting for small
+ *   local models (Ollama's defaults `repeat_penalty` 1.1, `repeat_last_n` 64). It discourages
+ *   stutter without pushing a long answer, word after word, towards rare or foreign tokens; 1.2
+ *   over the whole prompt likely fed the drift into other scripts (26 of 60 eval answers).
+ */
+export const ANSWER_RULES: AnswerRules = { ngram: 10, penalty: 1.1, window: 64 };
+
+/**
+ * Tokens that would complete an n-gram the answer already contains. Only the ids after
+ * `promptLength` (the answer) are read, so the answer may copy the prompt word for word.
+ */
+export function bannedAnswerTokens(
+  ids: readonly bigint[],
+  promptLength: number,
+  n: number,
+): number[] {
+  if (n <= 0) return [];
+  const answer = ids.slice(promptLength).map(Number);
+  const prefix = n - 1;
+  const tail = answer.length - prefix;
+  const banned = new Set<number>();
+  // Every complete n-gram j..j+n-1 of the answer whose first n-1 tokens equal the last n-1.
+  for (let j = 0; j + n <= answer.length; j++) {
+    let same = true;
+    for (let k = 0; k < prefix && same; k++) same = answer[j + k] === answer[tail + k];
+    const next = answer[j + prefix];
+    if (same && next !== undefined) banned.add(next);
+  }
+  return [...banned];
+}
+
+/**
+ * Applies the repetition penalty (Transformers.js semantics: once per distinct token) to the
+ * tokens of the answer's last `window` tokens. Prompt tokens are never penalized.
+ */
+export function penalizeAnswerTokens(
+  row: Float32Array,
+  ids: readonly bigint[],
+  promptLength: number,
+  penalty: number,
+  window: number,
+): void {
+  if (penalty === 1) return;
+  const seen = new Set<number>();
+  for (let i = Math.max(promptLength, ids.length - window); i < ids.length; i++) {
+    const id = Number(ids[i]);
+    const logit = row[id];
+    if (seen.has(id) || logit === undefined) continue;
+    seen.add(id);
+    row[id] = logit < 0 ? logit * penalty : logit / penalty;
+  }
+}
+
+/** Both rules on the logits of one sequence (`row`), in place. */
+export function applyAnswerRules(
+  row: Float32Array,
+  ids: readonly bigint[],
+  promptLength: number,
+  rules: AnswerRules = ANSWER_RULES,
+): void {
+  penalizeAnswerTokens(row, ids, promptLength, rules.penalty, rules.window);
+  for (const token of bannedAnswerTokens(ids, promptLength, rules.ngram)) {
+    if (token < row.length) row[token] = Number.NEGATIVE_INFINITY;
+  }
+}
+
+/** `applyAnswerRules` as a Transformers.js logits processor (`generate({ logits_processor })`). */
+class AnswerOnlyRules extends LogitsProcessor {
+  private readonly promptLength: number;
+  private readonly rules: AnswerRules;
+
+  /** `promptLength`: prompt tokens (image tokens included); the same for every row (batch 1). */
+  constructor(promptLength: number, rules: AnswerRules) {
+    super();
+    this.promptLength = promptLength;
+    this.rules = rules;
+  }
+
+  override _call(inputIds: bigint[][], logits: Tensor): Tensor {
+    // `logits` is [batch, vocab] (float32): rule each row in place.
+    const vocab = logits.dims.at(-1) ?? 0;
+    const data = logits.data as Float32Array;
+    inputIds.forEach((ids, i) => {
+      applyAnswerRules(
+        data.subarray(i * vocab, (i + 1) * vocab),
+        ids,
+        this.promptLength,
+        this.rules,
+      );
+    });
+    return logits;
+  }
+}
+
+/**
+ * The repetition options of `generate()`. 'app' turns the built-in prompt-wide rules off
+ * explicitly (a model's generation_config.json could otherwise turn them on).
+ */
+function repetitionOptions(decoding: Decoding, promptLength: number) {
+  if (decoding === 'legacy') return { repetition_penalty: 1.2, no_repeat_ngram_size: 3 };
+  const logits_processor = new LogitsProcessorList();
+  logits_processor.push(new AnswerOnlyRules(promptLength, ANSWER_RULES));
+  return { repetition_penalty: 1, no_repeat_ngram_size: 0, logits_processor };
+}
 
 interface Reply {
   text: string;
@@ -237,9 +377,11 @@ async function chatText(
   temperature: number,
   maxTokens: number,
   inputBudget: number | undefined,
+  decoding: Decoding,
   onText: (text: string) => void,
 ): Promise<Reply> {
   const inputs = promptWithin(eng, system, messages, inputBudget);
+  const start = lastDim(inputs.input_ids);
   const output = (await eng.model.generate({
     ...inputs,
     streamer: streamerFor(eng.tokenizer, onText),
@@ -247,10 +389,8 @@ async function chatText(
     do_sample: temperature > 0,
     temperature: Math.max(temperature, 0.01),
     top_k: 40,
-    repetition_penalty: 1.2,
-    no_repeat_ngram_size: 3,
+    ...repetitionOptions(decoding, start),
   })) as Tensor;
-  const start = lastDim(inputs.input_ids);
   const decoded = eng.tokenizer.batch_decode(
     output.slice(null, [start, null] as unknown as number[]),
     {
@@ -270,6 +410,7 @@ async function chatVision(
   images: ArrayBuffer[],
   temperature: number,
   maxTokens: number,
+  decoding: Decoding,
   onText: (text: string) => void,
 ): Promise<Reply> {
   const turns = [
@@ -297,6 +438,8 @@ async function chatVision(
     string,
     Tensor
   >;
+  // Image tokens included: the processor expands each image in input_ids.
+  const promptTokens = inputs.input_ids ? lastDim(inputs.input_ids) : 0;
   const output = (await eng.model.generate({
     ...inputs,
     streamer: streamerFor(
@@ -307,11 +450,9 @@ async function chatVision(
     do_sample: temperature > 0,
     temperature: Math.max(temperature, 0.01),
     top_k: 40,
-    repetition_penalty: 1.2,
-    no_repeat_ngram_size: 3,
+    ...repetitionOptions(decoding, promptTokens),
   })) as Tensor;
   const decoded = eng.processor.batch_decode(output, { skip_special_tokens: true });
-  const promptTokens = inputs.input_ids ? lastDim(inputs.input_ids) : 0;
   return {
     text: (decoded[0] ?? '').trim(),
     truncated: lastDim(output) - promptTokens >= maxTokens,
@@ -413,6 +554,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
       const onText = (text: string) => {
         post({ kind: 'partial', id: msg.id, text });
       };
+      const decoding = msg.decoding ?? 'app';
       let reply: Reply;
       if (engine.modality === 'vision') {
         reply = await chatVision(
@@ -422,6 +564,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
           msg.images,
           msg.temperature,
           msg.maxTokens,
+          decoding,
           onText,
         );
       } else {
@@ -433,6 +576,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
           msg.temperature,
           msg.maxTokens,
           msg.inputBudget,
+          decoding,
           onText,
         );
       }
