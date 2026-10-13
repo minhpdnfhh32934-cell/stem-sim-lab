@@ -488,8 +488,18 @@ export function webGemmaChat(args: {
   inputBudget?: number;
   /** Called with the answer so far while it is being generated (echoed question removed). */
   onPartial?: (textSoFar: string) => void;
+  /**
+   * Stops the answer ("Dừng" in the chat): a request still waiting never starts, a running one is
+   * interrupted in the worker (InterruptableStoppingCriteria) and its partial text is dropped.
+   * The call rejects with "cancelled" at once; the queue moves on when the worker has stopped.
+   */
+  signal?: AbortSignal;
+  /** The question a small model may repeat first (default: the last user message). */
+  echo?: string;
 }): Promise<WebGemmaReply> {
+  const signal = args.signal;
   const task = async (): Promise<WebGemmaReply> => {
+    if (signal?.aborted) throw new Error('cancelled');
     const meta = webGemmaModel(args.model);
     if (!meta) throw new Error(`unknown model ${args.model}`);
     // Photos need the vision model: switch automatically when it is ready.
@@ -506,11 +516,20 @@ export function webGemmaChat(args: {
     const wasLoaded = loadedId;
     await loadIntoWorker(id, () => undefined);
     if (wasLoaded !== loadedId) memoryChanged();
+    if (signal?.aborted) throw new Error('cancelled');
     const w = ensureWorker();
     const chatId = nextId++;
     const waiting = waitFor(chatId);
     const lastUser = [...args.messages].reverse().find((m) => m.role !== 'assistant');
-    const echo = lastUser?.content.trim() ?? '';
+    const echo = (args.echo ?? lastUser?.content ?? '').trim();
+    const stop = () => {
+      try {
+        w.postMessage({ kind: 'stop', id: chatId });
+      } catch {
+        /* the worker is already gone */
+      }
+    };
+    signal?.addEventListener('abort', stop, { once: true });
     const onPartial = args.onPartial;
     // An answer that stops coming is ended with a clear error and a fresh worker (audit AI-01).
     const watch = watchStall({
@@ -541,8 +560,10 @@ export function webGemmaChat(args: {
     const out = await waiting.finally(() => {
       watch.stop();
       partials.delete(chatId);
+      signal?.removeEventListener('abort', stop);
     });
     scheduleIdleUnload();
+    if (signal?.aborted) throw new Error('cancelled');
     if (out.kind === 'error') {
       // The runtime lost its GPU buffers (driver reset): same treatment as a lost device.
       if (isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
@@ -560,5 +581,30 @@ export function webGemmaChat(args: {
   };
   const run = queue.then(task, task);
   queue = run.catch(() => undefined);
-  return run;
+  return abortable(run, signal);
+}
+
+/** Rejects with "cancelled" as soon as `signal` aborts (the work itself may still finish). */
+export function abortable<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
+  if (!signal) return work;
+  return new Promise<T>((resolve, reject) => {
+    const cancel = () => {
+      reject(new Error('cancelled'));
+    };
+    if (signal.aborted) {
+      cancel();
+      return;
+    }
+    signal.addEventListener('abort', cancel, { once: true });
+    work.then(
+      (value) => {
+        signal.removeEventListener('abort', cancel);
+        resolve(value);
+      },
+      (e: unknown) => {
+        signal.removeEventListener('abort', cancel);
+        reject(e instanceof Error ? e : new Error(String(e)));
+      },
+    );
+  });
 }

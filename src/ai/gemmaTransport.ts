@@ -39,6 +39,10 @@ export async function gemmaChatText(args: {
   inputBudget?: number;
   /** The answer so far, while it is generated (see webGemmaChat). */
   onPartial?: (textSoFar: string) => void;
+  /** Stops the generation ("Dừng"); the call then rejects with "cancelled". */
+  signal?: AbortSignal;
+  /** The question a small model may repeat first (default: the last user message). */
+  echo?: string;
 }): Promise<{ content: string; model: string; truncated: boolean }> {
   if (webGPUStatus() !== 'webgpu') throw new AiError('unavailable', 'webgpu-missing');
   return webGemmaChat({
@@ -50,6 +54,8 @@ export async function gemmaChatText(args: {
     ...(args.maxTokens !== undefined ? { maxTokens: args.maxTokens } : {}),
     ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
     ...(args.onPartial ? { onPartial: args.onPartial } : {}),
+    ...(args.signal ? { signal: args.signal } : {}),
+    ...(args.echo ? { echo: args.echo } : {}),
   });
 }
 
