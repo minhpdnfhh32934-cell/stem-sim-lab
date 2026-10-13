@@ -456,7 +456,7 @@ Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm,
 
 ## Lỗi thường gặp
 
-- **App mở ra màn hình trắng:** máy thiếu WebView2 — xem mục Cài đặt.
+- **App mở ra màn hình trắng:** máy thiếu WebView2 — xem đoạn **WebView2** trong mục "Cài đặt" ở đầu hướng dẫn.
 - **"AI: thiếu key":** chưa nhập khóa API — làm theo mục "Cài AI: lấy khóa API Gemini" ở trên.
 - **"Khóa bị từ chối":** khóa gõ sai, đã bị xóa hoặc bị tắt. Tạo khóa mới trong Google AI Studio và
   dán lại.
