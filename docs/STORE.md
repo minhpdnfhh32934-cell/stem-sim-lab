@@ -18,7 +18,7 @@ Quyết định của người dùng (13/10/2026):
   trang Store (sau khi phát hành): <https://apps.microsoft.com/detail/9P1FDCQBSDHT>.
 - Bản nộp 1 (gói `SimLab_0.5.1.0_x64.msix`) đã gửi duyệt ngày 13/10/2026, chọn **giữ lại**: duyệt
   xong, người dùng bấm **Publish now** trong Partner Center thì app mới lên Store.
-- Bước 7 (tự nộp từ GitHub Actions) chưa bật.
+- Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ## Cách hoạt động
 
@@ -109,36 +109,31 @@ Thử cài từ Store trên một máy, mở menu ☰ → **Kiểm tra cập nh�
 Microsoft Store…". Dữ liệu của bản Store nằm riêng với bản cài từ GitHub; khóa AI dùng chung (kho
 khóa của Windows).
 
-### 7. Tự nộp các bản sau (tùy chọn)
+### 7. Nộp bản cập nhật (làm tay, khoảng 3 phút)
 
-Theo tài liệu Microsoft, tự nộp chỉ chạy được khi app **đã lên Store** (đã Publish), và app phải
-miễn phí. Phần chuẩn bị (a–c) làm được ngay cả khi bản đầu còn đang duyệt; chỉ bật (d) sau khi app
-đã lên Store.
+**Quyết định của người dùng (13/10/2026): không dùng tự nộp từ GitHub Actions.** Tự nộp cần một
+tenant Microsoft Entra; tạo tenant đi qua form đăng ký tổ chức, bắt buộc mã số thuế doanh nghiệp
+(TIN) và bước thiết lập thanh toán, trong khi tài khoản nhà phát triển là **cá nhân**. Microsoft
+cũng dặn không nhập giấy tờ cá nhân vào ô mã đăng ký. Đổi lại chỉ đỡ vài phút mỗi bản, nên nộp tay.
 
-a. **Gắn một "tenant" Microsoft Entra vào tài khoản:** Partner Center → biểu tượng bánh răng
-(**Account settings**) → **Tenants** → **Create** (tạo tenant mới). Bước này tạo một tài khoản
-quản trị mới cho tenant — bạn tự tạo và tự giữ mật khẩu.
-b. **Đăng ký một ứng dụng trong Entra:** <https://entra.microsoft.com> (đăng nhập bằng tài khoản
-quản trị của tenant vừa tạo) → **App registrations** → **New registration** (tên ví dụ
-`simlab-store-ci`). Ghi lại **Application (client) ID** và **Directory (tenant) ID**. Vào
-**Certificates & secrets → New client secret**, chép **Value** ngay (chỉ hiện một lần).
-c. **Cho ứng dụng đó quyền nộp bài:** Partner Center → **Account settings → User management →
-Microsoft Entra applications → Add Microsoft Entra application** → chọn `simlab-store-ci`, vai
-trò **Manager**. **Seller ID** nằm ở **Account settings → Legal info** (hoặc Identifiers).
-d. **GitHub → repo → Settings → Secrets and variables → Actions** (bạn tự dán, không gửi khóa qua
-chat):
+Mỗi lần ra bản mới cho Store:
 
-- Secrets: `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`, `PARTNER_CENTER_CLIENT_ID`,
-  `PARTNER_CENTER_CLIENT_SECRET`.
-- Variables (tab Variables): `STORE_SUBMIT` = `true` — **chỉ sau khi app đã lên Store**.
+1. Tăng phiên bản lõi (`tauri.conf.json` + `Cargo.toml` + `package.json`, ví dụ 0.5.1 → 0.5.2):
+   Store chỉ nhận gói có số lớn hơn lần trước.
+2. Chạy workflow **Release** (hoặc dựng trên máy). Tải artifact **simlab-store**, giải nén lấy
+   `SimLab_<phiên bản>.0_x64.msix`.
+3. Partner Center → SimLab → **Update** (tạo bản nộp mới từ bản đã phát hành).
+4. **Packages**: xóa gói cũ, kéo gói mới vào, đợi "Validated", bấm **Save**.
+5. (Tùy chọn) **Store listings** → mỗi ngôn ngữ → **What's new in this version**: ghi điểm mới.
+6. **Submit for certification**. Mô tả, ảnh, xếp loại, giá giữ nguyên từ lần trước.
 
-Thêm secret xong, kiểm tra ngay (không nộp gì): **Actions → Store connection check → Run
-workflow**. Xanh nghĩa là GitHub đăng nhập được Partner Center và thấy SimLab.
+Người dùng đã cài từ Store tự nhận bản mới sau khi Microsoft duyệt (và sau khi bấm Publish now nếu
+bản nộp chọn giữ lại).
 
-Từ đó, mỗi lần chạy Release (publish = true): GitHub Releases như cũ **và** một lần nộp mới lên
-Store; người dùng Store nhận bản mới sau khi Microsoft duyệt. Client secret có hạn dùng (chọn khi
-tạo): hết hạn thì tạo secret mới và thay `PARTNER_CENTER_CLIENT_SECRET`. Muốn tắt: đổi
-`STORE_SUBMIT` thành `false`.
+Nếu sau này có công ty (có mã số thuế), có thể làm tự nộp: tenant Entra + ứng dụng vai trò Manager
+
+- 4 secret `PARTNER_CENTER_*` + `msstore publish` (tài liệu: "Publish app updates to Microsoft Store
+  with GitHub Actions" trên Microsoft Learn). App phải đã lên Store và miễn phí.
 
 ## Ghi chú kỹ thuật
 

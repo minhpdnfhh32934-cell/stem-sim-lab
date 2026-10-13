@@ -39,8 +39,8 @@ Từ 0.5.1, cùng một tệp chạy còn được đóng gói MSIX cho Microsof
 từ Store tự biết mình đến từ Store và **không** dùng cập nhật trong app; Store cập nhật nó sau khi
 Microsoft duyệt. Mỗi lần nộp Store cần phiên bản lõi mới (số thứ tư luôn là 0, ví dụ `0.5.2.0`), nên
 bản chỉ đổi phần web vẫn đến tay người dùng GitHub ngay, còn người dùng Store nhận ở lần nộp sau.
-Workflow Release tạo gói (artifact `simlab-store`) khi `store/identity.json` đã điền, và tự nộp khi
-biến `STORE_SUBMIT` = `true`.
+Workflow Release tạo gói (artifact `simlab-store`); bản Store được **nộp tay** trong Partner Center
+(`docs/STORE.md`, mục "Nộp bản cập nhật").
 
 ## Phát hành (GitHub)
 

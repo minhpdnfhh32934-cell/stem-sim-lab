@@ -13,9 +13,9 @@ name: Release (Windows installer)
 # bump the native version as well when Rust code changes (needs the installer once).
 #
 # Microsoft Store (docs/STORE.md): the same executable is also wrapped in an MSIX package
-# (artifact "simlab-store") once store/identity.json is filled in. With the repository variable
-# STORE_SUBMIT = true and the PARTNER_CENTER_* secrets, a published release is also submitted to
-# the Store (Microsoft certifies it, then the Store updates its users).
+# (artifact "simlab-store"). Store updates are submitted by hand in Partner Center (user decision
+# 2026-10-13: automatic submission needs an organisation Entra tenant with a business tax number,
+# which an individual developer account does not have).
 on:
   push:
     tags: ['v*']
@@ -185,32 +185,3 @@ jobs:
             out/web-update/web-bundle.zip
             out/web-update/web-update.json
           fail_on_unmatched_files: true
-
-  store:
-    name: Submit to Microsoft Store
-    needs: [check, publish]
-    # Only after the first submission was made by hand in Partner Center (docs/STORE.md, step 6).
-    if: vars.STORE_SUBMIT == 'true' && (github.event_name == 'push' || inputs.publish)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/download-artifact@v7
-        with:
-          name: simlab-store
-          path: store-package
-      - name: Setup Microsoft Store Developer CLI
-        uses: microsoft/microsoft-store-apppublisher@v1.4
-      - name: Configure Microsoft Store Developer CLI
-        run: >-
-          msstore reconfigure
-          --tenantId ${{ secrets.PARTNER_CENTER_TENANT_ID }}
-          --sellerId ${{ secrets.PARTNER_CENTER_SELLER_ID }}
-          --clientId ${{ secrets.PARTNER_CENTER_CLIENT_ID }}
-          --clientSecret ${{ secrets.PARTNER_CENTER_CLIENT_SECRET }}
-      - name: Submit the package (Microsoft certifies it before users get it)
-        shell: pwsh
-        run: |
-          $productId = (Get-Content store/identity.json -Raw | ConvertFrom-Json).productId
-          if (-not $productId) { Write-Host "::error::store/identity.json has no productId"; exit 1 }
-          $msix = (Get-ChildItem store-package/*.msix | Select-Object -First 1).FullName
-          msstore publish store-package --inputFile $msix --appId $productId
