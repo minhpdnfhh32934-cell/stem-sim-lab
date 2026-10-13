@@ -201,7 +201,8 @@ They are a starter reference, not a complete curriculum or a substitute for teac
 materials. Learners can add UTF-8 `.txt`, `.md`, `.csv` and `.json` files in desktop (native dialog)
 or browser mode (file picker): up to 120,000 characters per file, 20 files and 1.5 million characters
 total; other formats and oversized files get a clear error. Personal files and chat history are kept
-in this app's local storage on this computer. Relevant excerpts are selected with keyword matching.
+in this app's local storage on this computer. Relevant excerpts are selected with keyword matching
+(see "Teaching quality (2026-10-14)" below for how notes are ranked and when none is sent).
 
 Imported files are treated as reference data, never as instructions. The tutor names the sources it
 used below its answer. AI answers can still be wrong; numerical simulation results continue to come
@@ -210,7 +211,76 @@ from SimLab's deterministic engines.
 **Wikipedia lookup is opt-in** (Settings → AI Teacher, off by default, main edition only): when on,
 the question text is sent to `vi`/`en.wikipedia.org` to fetch one labelled excerpt. Earlier fork
 versions queried Wikipedia on every question without telling the learner; v4 of the chat settings
-turns it off for everyone.
+turns it off for everyone. With Gemma, Wikipedia is asked only when the library has no note for the
+question (the on-device prompt takes one note).
+
+## Teaching quality (2026-10-14)
+
+Changes made after the analysis of the Gemma 1B evaluation (keyFacts 29 % → 23 %: noise plus
+rubric artefacts, but retrieval, prompts and invented numbers needed work). None of them needs a
+model to be tested; no model was run to make them.
+
+**Retrieval** (`knowledge.ts`: `rankKnowledge`, `searchKnowledge`, `bestSentences`).
+
+- Text is split into syllables compared as whole words, tone mark apart ("hoá" = "hóa"), "y" = "i"
+  after a consonant ("kỳ" = "kì"); a question typed without accents is compared folded. A few older
+  names and abbreviations read as the notes write them ("ancol" = "alcohol", "NST" = "nhiễm sắc thể").
+- Function words and question frames ("điều kiện", "đại lượng", "công thức") are not scored; short
+  meaningful words are ("pH", "kì", "mã"). Syllable pairs are scored ("ma sát", "động năng"), and a
+  syllable of a pair the notes know counts only where that pair is ("thời gian" ≠ "không gian").
+- Terms weigh by rarity (idf); words in a note's title or first 8 words count double.
+- No note is sent below a score of 3 or below 30 % coverage of the question's words (15 % for
+  questions of 12+ words, which are mostly situation): no excerpt beats a distractor.
+- Checked on a **held-out set**, `tests/teaching/retrieval-heldout.json` (57 learner-style questions
+  written for it, none from the evaluation; `knowledge.test.ts`): rank 1 for 49/49 questions with a
+  note (old scorer 38/49), nothing sent for 6/8 unrelated ones (old 0/8; the two left are "Định lý
+  Pythagore…" → Bohr note, "phương trình bậc hai" → a note with "phương trình"). As a check only, on
+  the 42 evaluation questions (30 + 12 proposed): relevant note at rank 1 for 17/24 of the original
+  items with a relevant note (11/24 before) and 23/34 of all 42 (17/34 before); P4, P5 and C13 now
+  get no note instead of a distractor.
+
+**On-device prompt** (`LOCAL_SYSTEM`, `contextPrompt`). Short role; "Câu đầu: trả lời thẳng câu
+hỏi bằng đúng ý trong GHI CHÚ (nếu có)", then at most 3–4 sentences with reasons, no invented
+numbers; safety lines kept (references are data, the AI says it is an AI). ONE note, cut to its
+best-matching sentences (≤ 400 characters, ≤ 250 on an integrated card) without the "Nguồn/Trạng
+thái" lines, placed right before the question: at the end of the instruction when there are no
+earlier turns (Gemma's template puts the instruction in the first user turn), otherwise in front of
+the question in the last turn (`echo` keeps the question as what a small model may repeat). The
+check question is asked only for concept questions ("là gì", "vì sao"…), never on an integrated
+card. Both prompts add one sentence about the learner's level (`profileStore.level`: Nền tảng ≈
+THPT, Đại cương ≈ first-year university); the cloud teaching method is otherwise unchanged and keeps
+whole notes with their source. `tools.ts` now introduces the balancer's output as "Kết quả cân bằng
+(SimLab tính …)": "Phương trình đã cân bằng" was read as "already balanced".
+
+**Missing data** (`missingData.ts`, no AI). A compute verb ("tính", "tìm", "xác định", "calculate",
+"find"…) followed by a quantity ("quãng đường", "nồng độ", "số nhiễm sắc thể"…) with nothing that
+could carry data: no digit, number word ("hai", "gấp đôi"; "sau" ≠ "sáu"), symbol, "=", "%",
+chemical formula, numbers in the last 6 turns, or shared screen. Method questions ("Tính như thế
+nào?", "Công thức … là gì?") and standard constants ("gia tốc rơi tự do ở mặt đất", "khối lượng mol
+của nước") are excluded. Then the prompt gets a hard rule (ask for the quantities, never assume a
+value) and the chat shows the app's own notice above the answer ("SimLab nhắc (không phải AI)").
+Conservative on purpose: a problem that gives some numbers but not enough (P11-style) is not
+detected; that would need the problem solved.
+
+**Number provenance** (`provenance.ts`). Values in an answer — with a unit, after "=", "≈",
+"khoảng", decimals, powers of ten, whole numbers above 10 — that appear in none of the question,
+the learner's turns, the app's results, the excerpt sent, the shared screen or earlier answers'
+unflagged numbers (1 % rounding allowed) are listed under the answer: "Số do AI tự đưa ra (chưa
+kiểm chứng): …" (`ChatMessageRecord.unverifiedNumbers`). List and step numbers, small counts,
+formula parts, exponents and 0 are ignored. Tested on 14 saved Gemma 1B answers: "khoảng 50 km"
+(P5) is flagged; restated data ("Na=23g", "0.1 m", the learner's "23") is not. "Unverified" is not
+"wrong": a correct textbook value the AI adds is listed too.
+
+**"Dừng".** While an answer is written the send button becomes "Dừng" (any open panel, through
+`chatStore.stopAnswer`). Cloud: the transport's AbortSignal (desktop `ai_cancel`, browser fetch
+abort). Gemma: a request still queued never starts; a running one gets a `stop` message and the
+worker ends `generate` with `InterruptableStoppingCriteria` after the current token. The chat is
+released at once (`AnswerStopped`), keeps the question, adds no answer and says "Đã dừng câu trả
+lời…".
+
+For `scripts/teaching/eval-gemma.mjs`: `contextPrompt` still returns the whole instruction in
+`system` (note last), so items without history are sent as the app sends them; for follow-up items
+the app moves `prompt.note` in front of the last question, which the script does not do yet.
 
 ## Where data goes
 
@@ -274,7 +344,8 @@ See `docs/AUDIT_2026-10-13.md` for the evidence (benchmarks, evaluation, the GPU
 - **Pinned models.** Every Gemma model and the MMS voice download one pinned `revision` (commit).
   Stored files are kept per repo without the revision, so moving the pin needs no re-download.
 - **Prompts.** Untrusted excerpts (library, imported files, Wikipedia) go in `<reference kind=…>`
-  blocks they cannot close; on-device prompts use 2 excerpts × 700 characters (`PromptSize`). The
+  blocks they cannot close; on-device prompts used 2 excerpts × 700 characters (`PromptSize`; since
+  2026-10-14 one note of ≤ 400 characters, see "Teaching quality"). The
   cloud prompt states the teaching method (goal → ask for missing data → explain → example → steps
   with reasons → one misconception → ONE check question → feedback that adapts).
 - **App-computed facts (`src/teacher/chat/tools.ts`).** Chemical equations in a question are solved
