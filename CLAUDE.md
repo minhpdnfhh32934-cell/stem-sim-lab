@@ -294,6 +294,12 @@ Progress log: `docs/PROGRESS.md`.
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
+- UI polish kit (0.5.1): `.segmented`/`.subject-switch`/`.tabs__list` get a sliding indicator
+  automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
+  `Skeleton` for loading, `ProgressBar` + `eta.ts` for downloads (estimate only from progress
+  callbacks, never during render), `Celebrate` for a reached goal (no scores/streaks); floating
+  overlays use `--glass-*` tokens. Ctrl+K palette: `src/app/command/` (lazy; topics come from
+  `CATALOG`, Settings pages from `src/app/settings/sectionMeta.ts`).
 
 ## Learning (3b.5, `src/learn/`)
 
