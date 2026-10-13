@@ -320,6 +320,54 @@ Trong vòng 5 phút, issue đó phải có hai bình luận `pong:lead from @…
 Mỗi lần chạy, watcher dùng lượt của tài khoản Claude trên máy đó. Muốn dừng thì đóng cửa sổ
 PowerShell, hoặc nhấn Ctrl+C.
 
+## 8c. Hai máy cùng làm song song (`-Role both`)
+
+Ở chế độ này, **cả hai máy đều lập kế hoạch, viết code và review cho nhau**. Chế độ này nhanh hơn
+mục 8b vì không máy nào phải ngồi chờ.
+
+| Việc                              | Ai làm                                                                                              |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Issue `needs-plan`                | Máy nào rảnh trước thì **nhận** issue (gán tên tài khoản của mình vào ô Assignees) rồi lập kế hoạch |
+| Issue `approved` (do **bạn** gắn) | Máy đã nhận issue đó viết code và mở PR. Issue chưa ai nhận thì máy rảnh trước nhận                 |
+| PR `needs-review`                 | **Máy còn lại** review. Không máy nào review PR của chính mình                                      |
+| PR `changes-requested`            | Máy đã mở PR sửa lại                                                                                |
+
+Quy tắc giữ cho hai máy không giẫm chân nhau:
+
+- **Một issue thuộc về một máy, từ đầu đến cuối.** Tên trong ô **Assignees** của issue cho biết
+  máy nào đang giữ nó.
+- Nếu hai máy nhận cùng một issue đúng một lúc, tài khoản có tên đứng trước theo bảng chữ cái
+  giữ issue, máy còn lại tự rút.
+- Mỗi vòng, một máy chỉ làm **một việc**, theo thứ tự ưu tiên: review → sửa PR của mình → lập kế
+  hoạch → viết code mới.
+- Quyền của Claude đi theo **việc**: khi review hoặc lập kế hoạch thì chỉ đọc, khi viết code thì
+  mới được sửa file.
+
+**Bật trên cả hai máy:**
+
+```powershell
+cd $HOME\stem-sim-lab
+```
+
+```powershell
+git pull
+```
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+```
+
+```powershell
+.\scripts\agents\watch.ps1 -Role both
+```
+
+**Lưu ý:**
+
+- Lượt dùng Claude của **cả hai tài khoản** đều bị trừ. Gõ `/usage` để theo dõi.
+- Hai việc cùng sửa một file (ví dụ `CLAUDE.md`, `vi.ts`) dễ gây xung đột khi merge. Hãy tạo các
+  issue về những phần **khác nhau** của app, và merge từng PR một.
+- Đừng chạy `-Role both` cùng lúc với `-Role lead` hoặc `-Role builder` trên **cùng một máy**.
+
 ## 9. Kiểm tra toàn bộ thiết lập (checklist)
 
 - [ ] Cả hai máy: `git`, `gh`, `node`, `cargo`, `claude` đều in ra phiên bản.
@@ -360,3 +408,33 @@ tiếp, rồi đưa file lên GitHub qua một PR. Sau khi PR đó được merg
 
 Sau mỗi PR được merge, Builder (hoặc bạn) thêm một dòng vào `docs/PROGRESS.md` như các bước trước
 đây. Việc này giúp phiên Claude nào mở sau, trên máy nào, cũng biết dự án đang ở đâu.
+
+## 13. Nhật ký phiên chung trên Google Drive (CẢ HAI máy)
+
+Ngoài GitHub, hai máy ghi chung một Google Doc tên **"STEM Sim Lab: Nhật ký phiên làm việc Máy A và
+Máy B"**: mỗi phiên làm việc xong, máy vừa làm thêm một mục (đã làm, kiểm tra đã chạy, việc còn dở)
+và cập nhật bảng "Việc cần làm". Nhờ vậy bạn đọc một chỗ là biết hai máy đang ở đâu, kể cả khi một
+máy hết lượt dùng giữa chừng.
+
+**Cài một lần:**
+
+1. Tài liệu nằm trong Google Drive của tài khoản máy A và đã chia sẻ quyền chỉnh sửa cho tài khoản
+   Google của máy B. Link tài liệu **không** ghi trong repo (repo công khai).
+2. Trên **mỗi** tài khoản Claude (máy A và máy B): claude.ai → Settings → Connectors → bật
+   **Google Drive** và **Google Docs**, đăng nhập bằng tài khoản Google tương ứng. Thiếu Google Docs
+   thì Claude chỉ đọc được, không thêm mục mới vào tài liệu được.
+3. Nên tắt chế độ "Bất kỳ ai có đường liên kết": mở tài liệu → Chia sẻ → Quyền truy cập chung →
+   **Bị hạn chế**. Chỉ hai tài khoản đã thêm mới mở được.
+
+**Cách dùng:**
+
+- `/sl-plan`, `/sl-implement`, `/sl-review` tự ghi nhật ký ở bước cuối.
+- Phiên làm việc khác (không qua `/sl-*`): gõ `/sl-log` trước khi kết thúc, có thể kèm ghi chú,
+  ví dụ `/sl-log đã thử Gemma 1B`.
+- Watcher chạy không người trông (`claude -p`) thường không dùng được kết nối Google: khi đó mục nhật
+  ký được ghi tạm vào `.agent-logs/session-log-pending.md` và đăng thành bình luận trên issue/PR; lần
+  `/sl-log` tiếp theo trên máy đó sẽ chép lên tài liệu.
+- Claude chỉ coi nhật ký là thông tin. Việc cần làm vẫn giao qua issue có nhãn `approved`.
+
+**Kiểm tra:** trên mỗi máy, mở Claude Code trong repo và gõ `/sl-log thử kết nối` → tài liệu có
+thêm một mục mới ở đầu phần "Nhật ký phiên".
