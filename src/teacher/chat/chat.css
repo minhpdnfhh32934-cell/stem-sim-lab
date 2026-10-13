@@ -985,7 +985,7 @@ p.gpu-notice {
 }
 
 /* "Dừng" while an answer is being written: the main action then (same size as "Gửi"). */
-.chat-panel__stop {
+.btn.chat-panel__stop {
   flex: none;
   min-height: var(--target);
   border-color: var(--danger);
