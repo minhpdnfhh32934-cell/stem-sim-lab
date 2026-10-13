@@ -162,7 +162,7 @@
   color: var(--conf-exact);
   font-weight: 600;
 }
-.learn-success svg,
+.learn-success .celebrate,
 .learn-hint svg {
   flex: none;
   margin-top: 3px;

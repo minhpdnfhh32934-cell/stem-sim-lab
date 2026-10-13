@@ -883,3 +883,87 @@ kbd {
 .toast__close:hover {
   background: var(--bg-hover, var(--bg-sunken));
 }
+
+/* ---------- Celebrate (goal reached, pattern 093) ---------- */
+.celebrate {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+.celebrate__icon {
+  animation: celebrate-icon 420ms var(--ease-out) both;
+}
+.celebrate__ring,
+.celebrate__spark {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  pointer-events: none;
+}
+.celebrate__ring {
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  animation: celebrate-ring 650ms var(--ease-out) both;
+}
+.celebrate__spark {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--chart-1);
+  opacity: 0;
+  animation: celebrate-spark 750ms var(--ease-out) 80ms both;
+}
+.celebrate__spark:nth-child(4n + 1) {
+  background: var(--chart-2);
+}
+.celebrate__spark:nth-child(4n + 2) {
+  background: var(--chart-3);
+}
+.celebrate__spark:nth-child(4n + 3) {
+  background: var(--accent);
+}
+@keyframes celebrate-icon {
+  0% {
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes celebrate-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+@keyframes celebrate-spark {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-20px) scale(0.4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .celebrate__icon {
+    animation: none;
+  }
+  .celebrate__ring,
+  .celebrate__spark {
+    display: none;
+  }
+}
