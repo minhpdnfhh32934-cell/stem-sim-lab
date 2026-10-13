@@ -23,6 +23,8 @@ const CASES: [string, RegExp | string][] = [
   ['$v = \\frac{V_{max}[S]}{K_m + [S]}$', /nồng độ ét/],
   ['NaCl (aq)', /dung dịch/],
   ['H2O(l)', /lỏng/],
+  // A chemical equation inside a formula: its arrow reads "tạo thành", not "suy ra".
+  ['$2H_2 + O_2 \\rightarrow 2H_2O$', 'hai hát hai cộng ô hai tạo thành hai hát hai ô'],
 ];
 
 describe('reading scientific notation aloud (audit VOI-02)', () => {

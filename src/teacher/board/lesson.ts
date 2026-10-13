@@ -57,6 +57,23 @@ export function boardAnswerText(content: string): string {
     .join('\n\n');
 }
 
+const SUBSCRIPT = '₀₁₂₃₄₅₆₇₈₉';
+const SUPERSCRIPT: Record<string, string> = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+  '+': '⁺',
+  '-': '⁻',
+  '−': '⁻',
+};
+
 /** Subtitle: the spoken sentence with markdown and LaTeX turned into readable text. */
 export function subtitleText(speech: string): string {
   return speech
@@ -66,6 +83,16 @@ export function subtitleText(speech: string): string {
         .replace(/\\(cdot|times)/g, '·')
         .replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
         .replace(/\\text\{([^{}]*)\}/g, '$1')
+        // "2H_2 + O_2 \\rightarrow 2H_2O" → "2H₂ + O₂ → 2H₂O"; "m/s^2" → "m/s²"; "\\ " → space.
+        .replace(/\\(?:long)?rightarrow\b|\\to\b/g, '→')
+        .replace(/\\(?:rightleftharpoons|leftrightarrow)\b/g, '⇌')
+        .replace(/\\[ ,;:!]/g, ' ')
+        .replace(/_\{?(\d+)\}?/g, (_s, d: string) =>
+          Array.from(d, (c) => SUBSCRIPT[Number(c)] ?? c).join(''),
+        )
+        .replace(/\^\{?([0-9+\-−]+)\}?/g, (_s, d: string) =>
+          Array.from(d, (c) => SUPERSCRIPT[c] ?? c).join(''),
+        )
         .replace(/\\([a-zA-Z]+)/g, '$1')
         .replace(/[{}]/g, ''),
     )

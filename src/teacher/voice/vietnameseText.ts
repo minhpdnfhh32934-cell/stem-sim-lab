@@ -717,15 +717,23 @@ function readTable(block: string): string {
   return `${lines.map((l) => `${l}.`).join('\n')}\n`;
 }
 
+/** A chemical equation written in LaTeX ("2H_2 + O_2 \\rightarrow 2H_2O"): its arrow reads "tạo thành". */
+function latexSpeech(tex: string): string {
+  const read = readLatex(tex);
+  const chemical =
+    /(?:^|[^A-Za-z\\])[A-Z][a-z]?_\{?\d/.test(tex) && /\\(?:long)?rightarrow|\\to\b|→/.test(tex);
+  return chemical ? read.replace(/\s*→\s*/g, ' tạo thành ') : read;
+}
+
 /** Whole answer → words for a Vietnamese voice. */
 export function toSpeech(content: string): string {
   let s = stripMarkdown(content);
   // Math segments first: they use their own grammar.
   s = s
-    .replace(/\$\$([\s\S]+?)\$\$/g, (_m, m: string) => `\n${readLatex(m)}.\n`)
-    .replace(/\\\[([\s\S]+?)\\\]/g, (_m, m: string) => `\n${readLatex(m)}.\n`)
-    .replace(/\\\(([\s\S]+?)\\\)/g, (_m, m: string) => ` ${readLatex(m)} `)
-    .replace(/\$([^$\n]+)\$/g, (_m, m: string) => ` ${readLatex(m)} `)
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_m, m: string) => `\n${latexSpeech(m)}.\n`)
+    .replace(/\\\[([\s\S]+?)\\\]/g, (_m, m: string) => `\n${latexSpeech(m)}.\n`)
+    .replace(/\\\(([\s\S]+?)\\\)/g, (_m, m: string) => ` ${latexSpeech(m)} `)
+    .replace(/\$([^$\n]+)\$/g, (_m, m: string) => ` ${latexSpeech(m)} `)
     .replace(/\\([#$&%_{}])/g, '$1');
   for (const [re, words] of ABBREVIATIONS) s = s.replace(re, words);
   // Dates and plain fractions before numbers lose their slashes.

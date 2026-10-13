@@ -107,6 +107,16 @@ describe('what the teacher says while writing (BRD-01)', () => {
   });
 });
 
+describe('subtitles', () => {
+  it('turn LaTeX into readable text (no "rightarrow", "^2" or "\\ ")', async () => {
+    const { subtitleText } = await import('./lesson');
+    expect(subtitleText('Thay số vào, $a = \\frac{10}{2} = 5\\ \\text{m/s}^2$.')).toBe(
+      'Thay số vào, a = 10/2 = 5 m/s².',
+    );
+    expect(subtitleText('Ví dụ: $2H_2 + O_2 \\rightarrow 2H_2O$.')).toBe('Ví dụ: 2H₂ + O₂ → 2H₂O.');
+  });
+});
+
 describe('pause and resume (BRD-02)', () => {
   beforeEach(() => {
     voice.calls.length = 0;
