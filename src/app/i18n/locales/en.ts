@@ -902,6 +902,7 @@ const en: Messages = {
     twoApis: '· 2 APIs',
     enterHint: 'Enter to send · Shift+Enter for a new line',
     footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
+    openSimulation: 'Open the simulation: {title}',
     errors: {
       cloudOff: 'Online AI is off. Enable an AI provider in Settings or choose local Gemma.',
       notAllowed:

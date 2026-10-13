@@ -899,6 +899,7 @@ const vi = {
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
+    openSimulation: 'Xem mô phỏng: {title}',
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:

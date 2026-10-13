@@ -3,6 +3,7 @@ import {
   Bot,
   Check,
   CircleAlert,
+  FlaskConical,
   Globe,
   LoaderCircle,
   Maximize2,
@@ -34,6 +35,8 @@ import { gemmaReady } from '@/ai/gemmaTransport';
 import { webGPUStatus } from '@/ai/webGemma';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { openTopic, useActiveTopic } from '@/app/topics';
+import { topicForText } from './topicLink';
 
 export function ChatPanel({
   compact = false,
@@ -255,6 +258,13 @@ export function ChatPanel({
   };
   const lastMessage = chat.messages[chat.messages.length - 1];
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
+  // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
+  const activeTopic = useActiveTopic();
+  const lastQuestion = [...chat.messages].reverse().find((m) => m.role === 'user');
+  const simLink =
+    hasAnswer && lastQuestion
+      ? topicForText(lastQuestion.content, useSettingsStore.getState().locale)
+      : null;
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -536,6 +546,20 @@ export function ChatPanel({
           <div className="chat-panel__error" role="alert">
             <CircleAlert size={15} />
             {error}
+          </div>
+        )}
+        {!busy && simLink && simLink.id !== activeTopic && (
+          <div className="chat-panel__sim-link">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                void openTopic(simLink.id);
+              }}
+            >
+              <FlaskConical size={14} aria-hidden="true" />
+              {t('chat.openSimulation', { title: simLink.title })}
+            </button>
           </div>
         )}
         <div ref={messagesEnd} />

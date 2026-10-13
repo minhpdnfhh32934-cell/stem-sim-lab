@@ -44,6 +44,8 @@ export default function TeacherScreen() {
   const gemmaModel = useChatStore((s) => s.gemmaModel);
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
+  // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
+  const answering = useChatStore((s) => s.answering);
   const layoutId = useId();
   // The board teaches the latest answer, with the question it answers (its numbers are given).
   const lesson = latestLesson(messages);
@@ -140,7 +142,10 @@ export default function TeacherScreen() {
                 className="teacher-ring__wave teacher-ring__wave--3"
               />
             </svg>
-            <TeacherFace mood={speaking ? 'speaking' : 'idle'} trackCursor />
+            <TeacherFace
+              mood={speaking ? 'speaking' : answering ? 'thinking' : 'idle'}
+              trackCursor
+            />
           </div>
           <span className="teacher__ai-label">{t('teacher.aiLabel')}</span>
           <p className="teacher__caption">
