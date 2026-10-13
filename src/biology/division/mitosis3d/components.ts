@@ -308,13 +308,22 @@ export function card3d(cellType: CellType): ScienceCardData {
         'Số NST, cromatit, tâm động, phân tử ADN là chính xác (đếm từ mô hình). Kì cuối: 1 tế bào có 2 nhân; bước "Phân chia tế bào chất": số liệu tính cho mỗi tế bào con.',
         'Chromosome, chromatid, centromere and DNA counts are exact (counted from the model). Telophase: one cell with two nuclei; "Cytokinesis": counts per daughter cell.',
       ),
+      cellType === 'animal'
+        ? L(
+            'Pha S không được vẽ thành một bước riêng: ADN và trung thể nhân đôi trong pha S (giữa G1 và G2), nên ngay từ đầu bước G2 mỗi NST đã là NST kép và tế bào đã có 2 trung thể.',
+            'S phase is not shown as its own step: DNA and the centrosome are duplicated in S phase (between G1 and G2), so from the very start of G2 every chromosome is double and the cell has two centrosomes.',
+          )
+        : L(
+            'Pha S không được vẽ thành một bước riêng: ADN nhân đôi trong pha S (giữa G1 và G2), nên ngay từ đầu bước G2 mỗi NST đã là NST kép.',
+            'S phase is not shown as its own step: DNA is replicated in S phase (between G1 and G2), so from the very start of G2 every chromosome is double.',
+          ),
       L(
         'Trong tế bào thật, phân chia tế bào chất thường bắt đầu từ cuối kì sau hoặc kì cuối; ở đây tách thành một bước riêng cho dễ quan sát.',
         'In real cells cytokinesis usually begins in late anaphase or telophase; here it is shown as a separate step for clarity.',
       ),
       L(
-        'Các NST tập trung về mặt phẳng xích đạo ở đầu kì giữa (một số tài liệu tách thành kì riêng: tiền kì giữa).',
-        'Chromosomes move to the equatorial plate at the start of metaphase (some books call this a separate stage, prometaphase).',
+        'Ở đầu kì giữa, sợi thoi đính vào tâm động trước rồi kéo các NST về mặt phẳng xích đạo (một số tài liệu tách giai đoạn này thành kì riêng: tiền kì giữa).',
+        'At the start of metaphase the spindle fibres first attach to the centromeres, then pull the chromosomes to the equatorial plate (some books call this a separate stage, prometaphase).',
       ),
       cellType === 'animal'
         ? L(
@@ -328,8 +337,8 @@ export function card3d(cellType: CellType): ScienceCardData {
     ],
     confidence: 'exact',
     confidenceNote: L(
-      'Test tự động: số lượng ở mọi kì lấy từ mô hình đếm NST (khớp bảng SGK với 2n = 4, 8, 46); ở kì giữa mọi tâm động nằm trên mặt phẳng xích đạo; kì sau hai cromatit chị em về hai cực; sau phân chia: 2 tế bào, mỗi tế bào 2n NST đơn.',
-      'Automated tests: counts at every stage come from the bookkeeping model (textbook table for 2n = 4, 8, 46); in metaphase every centromere is on the equatorial plane; in anaphase sisters go to opposite poles; after division: two cells with 2n single chromosomes each.',
+      'Test tự động với 2n = 4, 8, 46: mọi số lượng lấy từ mô hình đếm NST; từ G1 đến kì sau, và số liệu mỗi tế bào con ở bước phân chia tế bào chất, khớp bảng SGK. Cách ghi kì cuối (1 tế bào có 2 nhân, cả tế bào 4n NST đơn) là quy ước riêng của bản 3D, đang chờ giáo viên duyệt. Kì giữa: sợi thoi đính vào tâm động trước khi kéo NST, mọi tâm động nằm trên mặt phẳng xích đạo; kì sau: hai cromatit chị em về hai cực; sau phân chia: 2 tế bào, mỗi tế bào 2n NST đơn.',
+      'Automated tests with 2n = 4, 8, 46: every count comes from the bookkeeping model; G1 to anaphase, and the per-daughter-cell counts of the cytokinesis step, match the textbook table. The telophase convention (one cell with two nuclei, 4n single chromosomes in the whole cell) is specific to the 3D view and awaits teacher review. Metaphase: fibres attach to the centromeres before pulling the chromosomes, and every centromere ends on the equatorial plane; anaphase: sisters go to opposite poles; after division: two cells with 2n single chromosomes each.',
     ),
     userIntervened: false,
     sources: [BSRC.sgk10, BSRC.campbell],

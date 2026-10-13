@@ -14,9 +14,12 @@
  *
  * `stateAt(t)` is continuous in t. The only discrete changes happen at stage boundaries,
  * where the biology changes topology (positions stay continuous across them):
- *  - g1 → g2 (DNA replication in S): each chromosome gains its sister chromatid, which
- *    appears where the first one is and moves a little apart; the animal centrosome is
- *    duplicated the same way.
+ *  - g1 → g2 (S phase): S is not shown as its own step, because the model has no S stage —
+ *    `runDivision` builds its g2 cell as `replicate(g1)`, and a half-replicated cell has no
+ *    textbook count. So the result of S is shown at once: at the start of G2 every chromosome
+ *    already has its sister chromatid (sister 1 appears side by side with sister 0, which has
+ *    been in that place since G1) and the animal cell already has its second centrosome (next
+ *    to the first one). Nothing duplicates or splits inside the G2 window.
  *  - prophase → metaphase: the nucleus entry disappears (its envelope has already faded to 0).
  *  - metaphase → anaphase: every centromere splits — each sister becomes a single chromosome.
  *  - anaphase → telophase: two nuclei start to form (envelope opacity starts at 0).
@@ -110,6 +113,16 @@ export const SISTER_OFFSET = 0.17;
 const SPLAY = 0.45;
 const ANIMAL_DAUGHTER_X = 1.06 * ANIMAL.daughterRadius;
 const ANIMAL_CENTROSOME_END = ANIMAL_DAUGHTER_X + 2.1;
+/** Interphase centrosome x: the G1 one sits at −x; S adds its copy at +x (both near the nucleus). */
+const CENTROSOME_GAP = 0.45;
+/**
+ * Metaphase timing (fractions of the stage): kinetochore fibres reach the centromeres first
+ * (attachment done at ATTACH_END), and only then pull the chromosomes to the equatorial plane
+ * (motion from MOVE_START to MOVE_END). Shared by the animal and plant frames.
+ */
+const META_ATTACH_END = 0.15;
+const META_MOVE_START = META_ATTACH_END;
+const META_MOVE_END = 0.45;
 
 /** Condensed length and centromere position (fraction along the chromatid) per pair. */
 const PAIR_LENGTH = [2.2, 1.8, 1.45, 1.15];
@@ -244,7 +257,7 @@ export interface Mitosis3DState {
   chromatids: ChromatidPose[];
   centromeres: CentromereState[];
   nuclei: NucleusState[];
-  /** Animal only (plants have no centrosomes): 1 in G1, 2 after duplication. */
+  /** Animal only (plants have no centrosomes): 1 in G1, 2 from the start of G2 (copied in S). */
   centrosomes: Vec3[];
   fibres: Fibre[];
   shape: CellShape;
@@ -525,11 +538,12 @@ function animalFrame(stage: Stage3D, u: number): Frame {
   const one = (envelope: number): NucleusState[] => [
     { center: v3(0, 0, 0), radius: A.nucleus, envelope, cell: 0 },
   ];
+  const gap = CENTROSOME_GAP;
   switch (stage) {
     case 'g1':
       return {
-        poles: [v3(0, top, 0), v3(0, top, 0)],
-        centrosomes: [v3(0, top, 0)],
+        poles: [v3(-gap, top, 0), v3(-gap, top, 0)],
+        centrosomes: [v3(-gap, top, 0)],
         condensation: 0,
         spindle: 0,
         attach: 0,
@@ -538,8 +552,8 @@ function animalFrame(stage: Stage3D, u: number): Frame {
         daughterX: 0,
       };
     case 'g2': {
-      const d = 0.45 * ease(u, 0, 0.4);
-      const cs: [Vec3, Vec3] = [v3(-d, top, 0), v3(d, top, 0)];
+      // Already duplicated in S (between G1 and G2): the copy sits next to the original.
+      const cs: [Vec3, Vec3] = [v3(-gap, top, 0), v3(gap, top, 0)];
       return {
         poles: cs,
         centrosomes: [...cs],
@@ -554,10 +568,10 @@ function animalFrame(stage: Stage3D, u: number): Frame {
     case 'prophase': {
       // The two centrosomes travel around the nucleus to opposite poles.
       const k = ease(u, 0.05, 0.85);
-      const r0 = Math.hypot(0.45, top);
+      const r0 = Math.hypot(gap, top);
       const r = lerp(r0, A.pole, k);
-      const a0 = Math.atan2(top, -0.45);
-      const a1 = Math.atan2(top, 0.45);
+      const a0 = Math.atan2(top, -gap);
+      const a1 = Math.atan2(top, gap);
       const cs: [Vec3, Vec3] = [
         v3(r * Math.cos(lerp(a0, Math.PI, k)), r * Math.sin(lerp(a0, Math.PI, k)), 0),
         v3(r * Math.cos(lerp(a1, 0, k)), r * Math.sin(lerp(a1, 0, k)), 0),
@@ -579,7 +593,8 @@ function animalFrame(stage: Stage3D, u: number): Frame {
         centrosomes: pole(A.pole),
         condensation: lerp(0.85, 1, ease(u, 0, 0.4)),
         spindle: 1,
-        attach: ease(u, 0, 0.35),
+        // Fibres attach before the chromosomes move (see META_MOVE_START in computeState).
+        attach: ease(u, 0, META_ATTACH_END),
         nuclei: [],
         shape: shape(0),
         daughterX: 0,
@@ -671,7 +686,8 @@ function plantFrame(stage: Stage3D, u: number): Frame {
         ...base,
         condensation: lerp(0.85, 1, ease(u, 0, 0.4)),
         spindle: 1,
-        attach: ease(u, 0, 0.35),
+        // Fibres attach before the chromosomes move (see META_MOVE_START in computeState).
+        attach: ease(u, 0, META_ATTACH_END),
         nuclei: [],
         shape: shape(),
       };
@@ -731,8 +747,13 @@ interface Pose {
   b: Vec3;
 }
 
-function prophasePose(info: ChromatidInfo, side: -1 | 1, sep: number): Pose {
-  const off = mul(info.sisterAxis, side * SISTER_OFFSET * sep);
+/**
+ * Pose inside the nucleus, from G1 to the end of prophase: sisters side by side around the
+ * territory. Sister 0 already sits here in G1, so the sister made in S (shown from the start
+ * of G2) appears next to it without anything jumping.
+ */
+function prophasePose(info: ChromatidInfo, side: -1 | 1): Pose {
+  const off = mul(info.sisterAxis, side * SISTER_OFFSET);
   const splay = mul(info.sisterAxis, SPLAY * side);
   return {
     c: add(info.territory, off),
@@ -797,17 +818,21 @@ function computeState(
     let present = true;
     switch (stage) {
       case 'g1':
+        // Sister 1 is made in S (not its own step): it exists from the start of G2.
         present = info.sister === 0;
-        pose = prophasePose(info, side, 0);
+        pose = prophasePose(info, side);
         break;
       case 'g2':
-        pose = prophasePose(info, side, ease(u, 0, 0.4));
-        break;
       case 'prophase':
-        pose = prophasePose(info, side, 1);
+        pose = prophasePose(info, side);
         break;
       case 'metaphase':
-        pose = mix(prophasePose(info, side, 1), platePose(info, side), ease(u, 0, 0.4));
+        // Pulled to the plate by the kinetochore fibres, which are attached by META_MOVE_START.
+        pose = mix(
+          prophasePose(info, side),
+          platePose(info, side),
+          ease(u, META_MOVE_START, META_MOVE_END),
+        );
         break;
       case 'anaphase':
         joined = false;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { countsOf, runDivision } from '../division';
 import {
+  SISTER_OFFSET,
   STAGES_3D,
   buildTimeline,
   insideCell,
@@ -123,9 +124,17 @@ describe('3D mitosis timeline', () => {
       expect('wall' in s.shape).toBe(false);
     }
     expect(furrow).toBe(true);
-    // One centrosome in G1; duplicated in interphase (G2); one at each pole in metaphase.
+    // One centrosome in G1; duplicated in S (not its own step), so G2 has two from its very
+    // start, the original stays where it was and nothing moves inside G2; one at each pole in
+    // metaphase.
+    const g1End = stateIn(tl, 'g1', 1);
+    const g2Start = stateIn(tl, 'g2', 0);
     expect(tl.stateAt(tl.keyTime('g1')).centrosomes).toHaveLength(1);
-    expect(tl.stateAt(tl.keyTime('g2')).centrosomes).toHaveLength(2);
+    expect(g1End.centrosomes).toHaveLength(1);
+    expect(g2Start.centrosomes).toHaveLength(2);
+    expect(g2Start.centrosomes[0]).toEqual(g1End.centrosomes[0]);
+    expect(stateIn(tl, 'g2', 1).centrosomes).toEqual(g2Start.centrosomes);
+    expect(tl.stateAt(tl.keyTime('g2')).centrosomes).toEqual(g2Start.centrosomes);
     const meta = tl.stateAt(tl.keyTime('metaphase'));
     const [c0, c1] = meta.centrosomes;
     expect(c0![0]).toBeLessThan(-3);
@@ -150,6 +159,79 @@ describe('3D mitosis timeline', () => {
     expect(plate).toBe(1);
     // The plant spindle still forms (without centrosomes).
     expect(tl.stateAt(tl.keyTime('metaphase')).fibres.length).toBeGreaterThan(0);
+  });
+
+  it('S phase is not its own step: every chromosome is already double at the start of G2', () => {
+    for (const type of CELL_TYPES) {
+      for (const n of [2, 4, 23]) {
+        const tl = buildTimeline(n, type);
+        const g1End = stateIn(tl, 'g1', 1);
+        const start = stateIn(tl, 'g2', 0);
+        const end = stateIn(tl, 'g2', 1);
+        // G1 up to its last moment: single chromosomes (the model's G1 count).
+        expect(present(g1End)).toHaveLength(tl.counts('g1').dnaMolecules);
+        expect(present(g1End).every((c) => c.sister === 0)).toBe(true);
+        // G2 from its first moment: the model's G2 counts, all double, sisters side by side.
+        const g2 = tl.counts('g2');
+        expect(g2.state).toBe('double');
+        expect(present(start)).toHaveLength(g2.dnaMolecules);
+        expect(start.centromeres).toHaveLength(g2.centromeres);
+        expect(start.centromeres.every((c) => c.sisters.length === 2)).toBe(true);
+        expect(present(start).every((c) => c.joined)).toBe(true);
+        for (let i = 0; i < start.chromatids.length; i += 2) {
+          const s0 = start.chromatids[i]!;
+          const s1 = start.chromatids[i + 1]!;
+          const gap = Math.hypot(...s0.centromere.map((v, k) => v - s1.centromere[k]!));
+          expect(gap).toBeCloseTo(2 * SISTER_OFFSET, 9);
+        }
+        // Sister 0 stays where it was in G1; nothing duplicates or splits inside G2.
+        for (const c of present(g1End)) {
+          expect(start.chromatids[c.id]!.centromere).toEqual(c.centromere);
+        }
+        expect(end.chromatids.map((c) => c.centromere)).toEqual(
+          start.chromatids.map((c) => c.centromere),
+        );
+      }
+    }
+  });
+
+  it('metaphase: kinetochore fibres reach a chromosome before it moves to the plate', () => {
+    const dist = (a: readonly number[], b: readonly number[]) =>
+      Math.hypot(...a.map((v, i) => v - b[i]!));
+    for (const type of CELL_TYPES) {
+      for (const n of [2, 4, 23]) {
+        const tl = buildTimeline(n, type);
+        const w = tl.stages.find((x) => x.id === 'metaphase')!;
+        const prophase = tl.stateAt(tl.keyTime('prophase'));
+        const steps = 200;
+        let moved = 0;
+        for (let k = 0; k <= steps; k++) {
+          const s = stateIn(tl, 'metaphase', k / steps);
+          expect(s.stage).toBe('metaphase');
+          for (const cen of s.centromeres) {
+            const before = prophase.centromeres.find((c) => c.chromosome === cen.chromosome)!;
+            if (dist(cen.position, before.position) < 1e-9) continue;
+            moved++;
+            // Moved → both sisters are held by a fibre from their own pole, tip on the kinetochore.
+            expect(cen.sisters).toEqual([0, 1]);
+            for (const sister of cen.sisters) {
+              const c = s.chromatids.find(
+                (x) => x.chromosome === cen.chromosome && x.sister === sister,
+              )!;
+              const f = s.fibres.filter((x) => x.kind === 'kinetochore' && x.chromatid === c.id);
+              expect(f, `${type} 2n=${2 * n} t=${s.t}`).toHaveLength(1);
+              expect(f[0]!.pole).toBe(sister);
+              expect(dist(f[0]!.to, c.centromere), `${type} 2n=${2 * n} t=${s.t}`).toBeLessThan(
+                1e-6,
+              );
+            }
+          }
+        }
+        expect(moved).toBeGreaterThan(0);
+        // Sanity: the samples cover the whole stage.
+        expect(stateIn(tl, 'metaphase', 1).t).toBeCloseTo(w.end, 4);
+      }
+    }
   });
 
   it('metaphase: every centromere on the equatorial plane, attached to both poles', () => {
