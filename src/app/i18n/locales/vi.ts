@@ -908,6 +908,12 @@ const vi = {
         'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI Teacher để kiểm tra.',
       webgpu:
         'Trình duyệt hoặc máy này không hỗ trợ WebGPU nên chưa chạy được Gemma ngay trên máy.',
+      gemmaStalled:
+        'Gemma không viết thêm chữ nào trong một lúc lâu nên mình đã dừng và khởi động lại nó. Em hỏi lại nhé; nếu vẫn chậm, chọn câu trả lời "Ngắn" hoặc mô hình nhỏ hơn trong Cài đặt.',
+      gemmaGpu:
+        'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Mình đã khởi động lại Gemma, em hỏi lại nhé. Nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
+      gemmaFailed:
+        'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI Teacher.',
       crisis:
         'Mình rất tiếc em đang gặp khó khăn. Hãy nói ngay với người lớn em tin tưởng. Nếu em đang nguy hiểm, gọi 111 hoặc 115. Tin nhắn này không được gửi tới AI.',
       personal:

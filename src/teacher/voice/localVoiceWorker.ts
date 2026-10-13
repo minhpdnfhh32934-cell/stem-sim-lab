@@ -23,6 +23,8 @@ type InMessage =
   | {
       kind: 'load';
       repo: string;
+      /** Pinned commit of the repo (audit SEC-06). */
+      revision: string;
       dtype: 'fp32' | 'q8';
       device: 'wasm' | 'webgpu';
       ort: { wasm: string; mjs: string };
@@ -76,9 +78,11 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
           post({ kind: 'progress', loaded, total: sum > 0 ? sum : null });
         };
         const tokenizer = await AutoTokenizer.from_pretrained(msg.repo, {
+          revision: msg.revision,
           progress_callback: progress,
         });
         const model = await VitsModel.from_pretrained(msg.repo, {
+          revision: msg.revision,
           dtype: msg.dtype,
           device: msg.device,
           progress_callback: progress,

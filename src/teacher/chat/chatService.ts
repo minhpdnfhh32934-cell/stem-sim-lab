@@ -214,9 +214,26 @@ async function localGemma(
       ...(onPartial ? { onPartial } : {}),
     });
   } catch (e) {
-    console.warn('[teacher-gemma]', e instanceof Error ? e.message : String(e));
-    throw new Error(translate(locale, 'chat.errors.gemmaMissing'), { cause: e });
+    const message = e instanceof Error ? e.message : String(e);
+    console.warn('[teacher-gemma]', message);
+    throw new Error(translate(locale, gemmaErrorKey(message)), { cause: e });
   }
+}
+
+/** The learner's sentence for an on-device failure (it never silently goes online instead). */
+export function gemmaErrorKey(
+  message: string,
+):
+  | 'chat.errors.gemmaStalled'
+  | 'chat.errors.gemmaGpu'
+  | 'chat.errors.gemmaMissing'
+  | 'chat.errors.gemmaFailed' {
+  const m = message.toLowerCase();
+  if (m.includes('gemma-stalled')) return 'chat.errors.gemmaStalled';
+  if (m.includes('gpu-lost') || m.includes('worker-crashed') || m.includes('memory'))
+    return 'chat.errors.gemmaGpu';
+  if (m.includes('model-missing') || m.includes('webgpu')) return 'chat.errors.gemmaMissing';
+  return 'chat.errors.gemmaFailed';
 }
 
 /** Tokens the summary of older turns may use. */

@@ -49,6 +49,8 @@ type InMessage =
       kind: 'load';
       modelId: string;
       repo: string;
+      /** Pinned commit of the repo (audit SEC-06). */
+      revision: string;
       modality: 'text' | 'vision';
       dtype: 'q4' | 'q4f16';
       device: 'webgpu' | 'cpu';
@@ -84,6 +86,8 @@ type OutMessage =
   | { kind: 'reply'; id: number; text: string; truncated: boolean }
   /** A new piece of the answer while it is being generated (the page shows it as it comes). */
   | { kind: 'partial'; id: number; text: string }
+  /** The GPU device was lost (driver reset, out of memory): the page restarts the worker. */
+  | { kind: 'device-lost'; message: string }
   | { kind: 'error'; id: number; message: string };
 
 /** Streams decoded text pieces of the answer (not the prompt) to `onText`. */
@@ -139,12 +143,17 @@ function progressFor(modelId: string, post: (out: OutMessage) => void) {
 
 async function loadText(
   repo: string,
+  revision: string,
   dtype: 'q4' | 'q4f16',
   device: 'webgpu' | 'cpu',
   onProgress: (info: ProgressInfo) => void,
 ) {
-  const tokenizer = await AutoTokenizer.from_pretrained(repo, { progress_callback: onProgress });
+  const tokenizer = await AutoTokenizer.from_pretrained(repo, {
+    revision,
+    progress_callback: onProgress,
+  });
   const model = await AutoModelForCausalLM.from_pretrained(repo, {
+    revision,
     dtype,
     device,
     progress_callback: onProgress,
@@ -154,12 +163,17 @@ async function loadText(
 
 async function loadVision(
   repo: string,
+  revision: string,
   dtype: 'q4' | 'q4f16',
   device: 'webgpu' | 'cpu',
   onProgress: (info: ProgressInfo) => void,
 ) {
-  const processor = await AutoProcessor.from_pretrained(repo, { progress_callback: onProgress });
+  const processor = await AutoProcessor.from_pretrained(repo, {
+    revision,
+    progress_callback: onProgress,
+  });
   const model = await Gemma4ForConditionalGeneration.from_pretrained(repo, {
+    revision,
     dtype,
     device,
     progress_callback: onProgress,
@@ -300,6 +314,30 @@ async function gpuInfo(): Promise<GpuInfo | null> {
   }
 }
 
+/**
+ * Reports a lost GPU device (driver reset, out of memory, window hidden too long) so the page can
+ * restart the worker instead of waiting for an answer that never comes (audit AI-01). ONNX Runtime
+ * exposes its WebGPU device after the first session; older builds may not, then nothing happens.
+ */
+function watchDevice(post: (out: OutMessage) => void): void {
+  try {
+    const onnx = env.backends.onnx as { webgpu?: { device?: unknown } };
+    void Promise.resolve(onnx.webgpu?.device)
+      .then((device) => {
+        const lost = (device as { lost?: Promise<{ message?: string }> } | undefined)?.lost;
+        if (!lost) return;
+        void lost.then((info) => {
+          engine = null;
+          loadedModel = '';
+          post({ kind: 'device-lost', message: info.message ?? '' });
+        });
+      })
+      .catch(() => undefined);
+  } catch {
+    /* no WebGPU device to watch */
+  }
+}
+
 self.onmessage = async (event: MessageEvent<InMessage>) => {
   const msg = event.data;
   const post = (out: OutMessage) => {
@@ -326,9 +364,22 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
       if (!engine) {
         engine =
           msg.modality === 'vision'
-            ? await loadVision(msg.repo, msg.dtype, msg.device, progressFor(msg.modelId, post))
-            : await loadText(msg.repo, msg.dtype, msg.device, progressFor(msg.modelId, post));
+            ? await loadVision(
+                msg.repo,
+                msg.revision,
+                msg.dtype,
+                msg.device,
+                progressFor(msg.modelId, post),
+              )
+            : await loadText(
+                msg.repo,
+                msg.revision,
+                msg.dtype,
+                msg.device,
+                progressFor(msg.modelId, post),
+              );
         loadedModel = msg.modelId;
+        watchDevice(post);
       }
       post({ kind: 'loaded', modelId: msg.modelId, gpu: await gpuInfo() });
     } else if (msg.kind === 'chat') {

@@ -910,6 +910,12 @@ const en: Messages = {
       gemmaMissing:
         'Gemma is not downloaded, or this browser has no WebGPU. Check Settings → AI Teacher.',
       webgpu: 'This browser or device has no WebGPU support, so Gemma cannot run on it.',
+      gemmaStalled:
+        'Gemma wrote nothing for a long time, so it was stopped and restarted. Please ask again; if it stays slow, pick "Short" answers or a smaller model in Settings.',
+      gemmaGpu:
+        'The graphics card stopped Gemma (out of memory or a driver reset). Gemma was restarted; please ask again. If it happens again, close other apps or pick a smaller model.',
+      gemmaFailed:
+        'Gemma hit an error while answering. Please ask again; if it repeats, open Settings → AI Teacher.',
       crisis:
         'I’m sorry you are having a hard time. Please tell a trusted adult now. If you are in immediate danger in Vietnam, call 111 or 115. This message was not sent to AI.',
       personal:

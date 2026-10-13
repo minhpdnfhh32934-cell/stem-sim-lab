@@ -8,6 +8,7 @@
 import { useGemmaPrefs } from './gemmaPrefs';
 import { useGpuStore, type WebGpuInfo } from './gpu';
 import { deleteRepo, opfsAvailable, repoStored } from './modelStore';
+import { GEMMA_FIRST_PIECE_MS, GEMMA_PIECE_GAP_MS, watchStall } from './stallWatch';
 import { webGemmaModel } from './webGemmaModels';
 
 export type WebGemmaStatus = 'missing' | 'ready';
@@ -171,6 +172,7 @@ type WorkerOut =
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
   | { kind: 'reply'; id: number; text: string; truncated: boolean }
   | { kind: 'partial'; id: number; text: string }
+  | { kind: 'device-lost'; message: string }
   | { kind: 'error'; id: number; message: string };
 
 let worker: Worker | null = null;
@@ -206,6 +208,11 @@ function ensureWorker(): Worker {
         partials.get(out.id)?.(out.text);
         return;
       }
+      if (out.kind === 'device-lost') {
+        // The model is gone with its GPU device: fail what waits, start fresh next time.
+        failAll('gpu-lost');
+        return;
+      }
       if (out.kind === 'reply' || out.kind === 'error') {
         const resolve = pending.get(out.id);
         if (resolve) {
@@ -236,15 +243,20 @@ function ensureWorker(): Worker {
     // call — init, load and chat — instead of leaving "downloading…" spinning forever.
     worker.onerror = (event) => {
       event.preventDefault();
-      const failed = [...pending.entries()];
-      pending.clear();
-      resetWorker();
-      for (const [id, resolve] of failed) {
-        resolve({ kind: 'error', id, message: 'worker-crashed' });
-      }
+      failAll('worker-crashed');
     };
   }
   return worker;
+}
+
+/** Answers every waiting call with `message` and starts a fresh worker next time. */
+function failAll(message: string): void {
+  const failed = [...pending.entries()];
+  pending.clear();
+  resetWorker();
+  for (const [id, resolve] of failed) {
+    resolve({ kind: 'error', id, message });
+  }
 }
 
 function waitFor(id: number): Promise<WorkerOut> {
@@ -306,6 +318,7 @@ async function loadIntoWorker(
     kind: 'load',
     modelId,
     repo: meta.repo,
+    revision: meta.revision,
     modality: meta.kind,
     dtype: meta.dtype,
     device: 'webgpu',
@@ -493,14 +506,22 @@ export function webGemmaChat(args: {
     const lastUser = [...args.messages].reverse().find((m) => m.role !== 'assistant');
     const echo = lastUser?.content.trim() ?? '';
     const onPartial = args.onPartial;
-    if (onPartial) {
-      let soFar = '';
-      partials.set(chatId, (piece) => {
-        soFar += piece;
-        const shown = withoutEcho(soFar, echo);
-        if (shown) onPartial(shown);
-      });
-    }
+    // An answer that stops coming is ended with a clear error and a fresh worker (audit AI-01).
+    const watch = watchStall({
+      firstMs: GEMMA_FIRST_PIECE_MS,
+      gapMs: GEMMA_PIECE_GAP_MS,
+      onStall: () => {
+        failAll('gemma-stalled');
+      },
+    });
+    let soFar = '';
+    partials.set(chatId, (piece) => {
+      watch.touch();
+      if (!onPartial) return;
+      soFar += piece;
+      const shown = withoutEcho(soFar, echo);
+      if (shown) onPartial(shown);
+    });
     w.postMessage({
       kind: 'chat',
       id: chatId,
@@ -511,7 +532,10 @@ export function webGemmaChat(args: {
       maxTokens: args.maxTokens ?? 1024,
       ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
     });
-    const out = await waiting.finally(() => partials.delete(chatId));
+    const out = await waiting.finally(() => {
+      watch.stop();
+      partials.delete(chatId);
+    });
     scheduleIdleUnload();
     if (out.kind === 'error') throw new Error(out.message);
     let text = out.kind === 'reply' ? out.text.trim() : '';

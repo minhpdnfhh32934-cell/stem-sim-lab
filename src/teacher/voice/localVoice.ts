@@ -11,6 +11,8 @@ import type { Pcm } from './audio';
 
 export const LOCAL_VOICE = {
   repo: 'Xenova/mms-tts-vie',
+  /** Pinned commit (audit SEC-06, checked 2026-10-13). */
+  revision: '7f40ca63bb6072ac57026210f2fea55242511214',
   pageId: 'mms-tts-vie',
   /** Full-precision weights: the 8-bit file is smaller but audibly rougher. */
   dtype: 'fp32' as const,
@@ -113,6 +115,7 @@ async function load(
   w.postMessage({
     kind: 'load',
     repo: LOCAL_VOICE.repo,
+    revision: LOCAL_VOICE.revision,
     dtype: LOCAL_VOICE.dtype,
     device: webGPUStatus() === 'webgpu' ? 'webgpu' : 'wasm',
     ort: ortPaths(),
