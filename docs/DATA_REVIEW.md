@@ -76,3 +76,8 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     ghi chú đang `reviewStatus: 'pending'`: khi gửi cho AI, mỗi ghi chú kèm câu "chưa được giáo viên
     duyệt", và Cài đặt → Thư viện kiến thức ghi rõ số ghi chú đang chờ duyệt. Nhờ giáo viên đọc từng ghi chú,
     sửa câu sai, thêm nguồn (sách, trang), rồi đổi ghi chú đó thành `'verified'`.
+15. **Bộ 30 câu đánh giá cách giảng** (`tests/teaching/teaching-eval.json`, đợt audit 13/10/2026):
+    10 câu mỗi môn Vật lý / Hóa học / Sinh học, mỗi câu có "ý chính phải có" (`keyFacts`, viết dưới
+    dạng mẫu chữ) và "điều không được nói" (`mustNot`). Do Claude viết, `review_status: "pending"`.
+    Tỉ lệ "ý chính đúng" trong `docs/AUDIT_2026-10-13.md` chỉ có ý nghĩa khi các mẫu này đúng —
+    nhờ giáo viên kiểm tra đáp án và các mẫu chữ (ví dụ cách viết "2n", "NST kép").
