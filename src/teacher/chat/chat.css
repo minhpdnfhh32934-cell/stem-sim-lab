@@ -961,3 +961,25 @@ p.gpu-notice {
   display: flex;
   padding: 0 12px 8px 44px;
 }
+
+/* Results the app computed for the question (audit G3): set apart from the AI's own text. */
+.chat-message__facts {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--conf-exact) 45%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--conf-exact) 8%, var(--bg-panel));
+  font-size: var(--text-sm);
+}
+.chat-message__facts strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--conf-exact);
+}
+.chat-message__facts ul {
+  margin: 0;
+  padding-left: 18px;
+}

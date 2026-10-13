@@ -51,14 +51,19 @@ export interface ToolFact {
   kind: 'balanced' | 'unbalanceable';
   /** The equation as the learner wrote it. */
   input: string;
-  /** One sentence for the AI and for the learner. */
+  /** One sentence for the AI (with what it must not do). */
   text: string;
+  /** What the learner sees, as computed by the app (shown next to the answer, not by the AI). */
+  shown: string;
 }
 
 const TEXT = {
   vi: {
     balanced: (eq: string, coef: string) =>
       `Phương trình đã cân bằng (SimLab tính bằng bộ cân bằng chính xác, không phải AI): ${eq}. Hệ số theo thứ tự: ${coef}.`,
+    shownBalanced: (eq: string) => `Phương trình cân bằng: ${eq}`,
+    shownOther: (input: string) =>
+      `SimLab chưa cân bằng được "${input}": hãy kiểm tra lại công thức trong đề.`,
     impossible: (input: string) =>
       `SimLab không cân bằng được "${input}" (không có bộ hệ số dương nào bảo toàn mọi nguyên tố): có thể đề viết sai công thức. Không tự đoán hệ số.`,
     ambiguous: (input: string) =>
@@ -69,6 +74,9 @@ const TEXT = {
   en: {
     balanced: (eq: string, coef: string) =>
       `Balanced equation (computed by SimLab's exact balancer, not by the AI): ${eq}. Coefficients in order: ${coef}.`,
+    shownBalanced: (eq: string) => `Balanced equation: ${eq}`,
+    shownOther: (input: string) =>
+      `SimLab could not balance "${input}": check the formulas in the problem.`,
     impossible: (input: string) =>
       `SimLab cannot balance "${input}" (no positive coefficients conserve every element): a formula may be wrong. Do not guess coefficients.`,
     ambiguous: (input: string) =>
@@ -95,21 +103,29 @@ export function toolFacts(question: string, locale: Locale): ToolFact[] {
       const eq = parseEquation(text);
       const result = balance(eq);
       if (result.kind === 'balanced') {
+        const equation = formatted(eq, result.coefficients);
         facts.push({
           kind: 'balanced',
           input,
-          text: t.balanced(formatted(eq, result.coefficients), result.coefficients.join(', ')),
+          text: t.balanced(equation, result.coefficients.join(', ')),
+          shown: t.shownBalanced(equation),
         });
       } else {
         facts.push({
           kind: 'unbalanceable',
           input,
           text: result.kind === 'impossible' ? t.impossible(input) : t.ambiguous(input),
+          shown: t.shownOther(input),
         });
       }
     } catch (e) {
       if (!(e instanceof EquationError)) throw e;
-      facts.push({ kind: 'unbalanceable', input, text: t.unread(input) });
+      facts.push({
+        kind: 'unbalanceable',
+        input,
+        text: t.unread(input),
+        shown: t.shownOther(input),
+      });
     }
     if (facts.length >= 3) break;
   }

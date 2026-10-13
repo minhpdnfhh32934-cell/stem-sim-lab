@@ -17,6 +17,11 @@ export interface ChatMessageRecord {
   model?: string;
   checkedBy?: string;
   references?: string[];
+  /**
+   * Results SimLab computed for this question (exact chemical balancing…), shown by the app next
+   * to the answer: a small model may garble them in its own text (benchmark 2026-10-13).
+   */
+  facts?: string[];
   /** The answer stopped at the output limit: the chat offers "Viết tiếp". */
   truncated?: boolean;
 }

@@ -900,6 +900,7 @@ const vi = {
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
     openSimulation: 'Xem mô phỏng: {title}',
+    factsTitle: 'Kết quả do SimLab tính (chính xác, không phải AI)',
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:
@@ -943,8 +944,8 @@ const vi = {
     webCard: 'Tra cứu trực tuyến',
     flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
     gemmaModel: 'Phiên bản Gemma',
-    gemma270m: '270M · nhẹ nhất',
-    gemma1b: '1B · khuyên dùng',
+    gemma270m: '270M · nhẹ nhất, chỉ để thử (hay lạc đề, trả lời kém)',
+    gemma1b: '1B · khuyên dùng trên máy; hay sai kiến thức, nên kiểm tra lại hoặc bật Think',
     gemmaE2b: 'E2B · mạnh nhất, đọc được ảnh',
     modelReady: 'Gemma đã sẵn sàng trên máy.',
     modelMissing: 'Chưa tải mô hình này.',

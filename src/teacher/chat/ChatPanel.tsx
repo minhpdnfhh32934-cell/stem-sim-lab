@@ -1,6 +1,7 @@
 import {
   ArrowDownToLine,
   Bot,
+  Calculator,
   Check,
   CircleAlert,
   FlaskConical,
@@ -220,6 +221,7 @@ export function ChatPanel({
         model: result.metadata.model,
         ...(result.metadata.checkedBy ? { checkedBy: result.metadata.checkedBy } : {}),
         ...(result.metadata.references.length ? { references: result.metadata.references } : {}),
+        ...(result.metadata.facts.length ? { facts: result.metadata.facts } : {}),
         ...(result.truncated ? { truncated: true } : {}),
       });
       if (useVoiceStore.getState().enabled && !board) void speak(result.content);
@@ -479,6 +481,19 @@ export function ChatPanel({
                   <MessageBody content={boardAnswerText(message.content)} />
                 ) : (
                   <p>{message.content}</p>
+                )}
+                {message.role === 'assistant' && message.facts && message.facts.length > 0 && (
+                  <div className="chat-message__facts" role="note">
+                    <strong>
+                      <Calculator size={14} aria-hidden="true" />
+                      {t('chat.factsTitle')}
+                    </strong>
+                    <ul>
+                      {message.facts.map((fact) => (
+                        <li key={fact}>{fact}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 {message.role === 'assistant' && (
                   <AiContentBar {...(message.model ? { model: message.model } : {})} />

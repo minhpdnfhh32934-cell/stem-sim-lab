@@ -13,7 +13,7 @@ import type { ChatMessage, Provider } from '@/ai/types';
 import { analysisEngine } from '@/app/ai/engineChoice';
 import { screenContext } from './context';
 import { fetchWebKnowledge, searchKnowledge } from './knowledge';
-import { toolBlock } from './tools';
+import { toolBlock, toolFacts } from './tools';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import {
   contextBudget,
@@ -76,6 +76,8 @@ export interface ReplyMetadata {
   model: string;
   checkedBy?: string;
   references: string[];
+  /** Results computed by the app for this question (shown by the app, never by the AI). */
+  facts: string[];
 }
 
 export interface ReplyResult {
@@ -472,7 +474,12 @@ export async function askTeacher(
   }
   return {
     content,
-    metadata: { model: draft.model, ...(checkedBy ? { checkedBy } : {}), references },
+    metadata: {
+      model: draft.model,
+      ...(checkedBy ? { checkedBy } : {}),
+      references,
+      facts: toolFacts(question, locale).map((f) => f.shown),
+    },
     truncated,
   };
 }

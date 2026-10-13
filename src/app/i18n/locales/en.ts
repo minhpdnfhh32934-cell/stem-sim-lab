@@ -903,6 +903,7 @@ const en: Messages = {
     enterHint: 'Enter to send · Shift+Enter for a new line',
     footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
     openSimulation: 'Open the simulation: {title}',
+    factsTitle: 'Computed by SimLab (exact, not the AI)',
     errors: {
       cloudOff: 'Online AI is off. Enable an AI provider in Settings or choose local Gemma.',
       notAllowed:
@@ -947,8 +948,8 @@ const en: Messages = {
     flowLocalChatSession:
       'The conversation is kept only until the app closes (history saving is off).',
     gemmaModel: 'Gemma version',
-    gemma270m: '270M · smallest',
-    gemma1b: '1B · recommended',
+    gemma270m: '270M · lightest, for trying only (often off-topic, weak answers)',
+    gemma1b: '1B · recommended on-device; often wrong on facts, double-check or turn on Think',
     gemmaE2b: 'E2B · strongest, reads photos',
     modelReady: 'Gemma is ready on this computer.',
     modelMissing: 'This model is not downloaded.',
