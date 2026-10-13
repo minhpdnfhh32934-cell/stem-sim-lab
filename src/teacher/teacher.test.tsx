@@ -1,10 +1,12 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { goHome, openTopic } from '@/app/topics';
 import { useAiStore } from '@/ai/aiStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useChatStore } from './chat/chatStore';
+import { useToastStore } from '@/ui/toast';
+import { useVoiceStore } from './voice/voiceStore';
 import TeacherScreen from './screen/TeacherScreen';
 import { closeTeacher, openTeacher, useTeacherStore } from './teacherStore';
 
@@ -88,5 +90,38 @@ describe('"Dạy học bằng AI" screen', () => {
       window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     });
     expect(useTeacherStore.getState().open).toBe(true);
+  });
+
+  it('warns when the voice is turned on but the computer has no Vietnamese voice', async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal('speechSynthesis', {
+      getVoices: () => [
+        {
+          name: 'Microsoft David',
+          lang: 'en-US',
+          voiceURI: 'david',
+          localService: true,
+          default: true,
+        },
+      ],
+      cancel: () => undefined,
+      speak: () => undefined,
+    });
+    useVoiceStore.setState({ enabled: false, engine: 'system' });
+    useToastStore.setState({ toasts: [] });
+    act(() => {
+      openTeacher();
+    });
+    render(<TeacherScreen />);
+    await user.click(screen.getByRole('button', { name: 'Thầy đọc to câu trả lời' }));
+    expect(useVoiceStore.getState().enabled).toBe(true);
+    expect(
+      useToastStore
+        .getState()
+        .toasts.map((t) => t.text)
+        .join(' '),
+    ).toContain('chưa có giọng đọc tiếng Việt');
+    vi.unstubAllGlobals();
+    useVoiceStore.setState({ enabled: false });
   });
 });

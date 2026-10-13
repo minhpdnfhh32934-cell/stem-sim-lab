@@ -1190,6 +1190,8 @@ const vi = {
       },
     },
     systemFound: 'Đã có giọng tiếng Việt: {names}.',
+    noVietnameseOnEnable:
+      'Máy chưa có giọng đọc tiếng Việt nên thầy sẽ đọc sai dấu. Vào Cài đặt → Giọng nói để thêm giọng tiếng Việt của Windows hoặc chọn giọng tiếng Việt chạy trên máy.',
     systemMissing:
       'Máy chưa có giọng tiếng Việt, nên Windows đọc bằng giọng tiếng Anh và sai dấu. Cài giọng tiếng Việt (miễn phí):',
     installStep1: 'Mở Settings (Cài đặt) của Windows → Time & language → Speech.',

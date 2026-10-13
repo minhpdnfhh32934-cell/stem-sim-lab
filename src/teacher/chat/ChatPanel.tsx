@@ -24,7 +24,14 @@ import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
 import { boardAnswerText } from '@/teacher/board/lesson';
-import { speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
+import {
+  listVoices,
+  speak,
+  speechSupported,
+  stopSpeaking,
+  vietnameseVoices,
+} from '@/teacher/voice/speak';
+import { toast } from '@/ui/toast';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { askTeacher } from './chatService';
@@ -349,6 +356,16 @@ export function ChatPanel({
               onClick={() => {
                 if (voiceEnabled) stopSpeaking();
                 setVoiceEnabled(!voiceEnabled);
+                // Without a Vietnamese voice the Windows voice reads with the wrong accent
+                // (seen on a test machine with only English voices, 2026-10-14).
+                if (
+                  !voiceEnabled &&
+                  useVoiceStore.getState().engine === 'system' &&
+                  speechSupported() &&
+                  vietnameseVoices(listVoices()).length === 0
+                ) {
+                  toast(t('voice.noVietnameseOnEnable'), 'warn');
+                }
               }}
               aria-pressed={voiceEnabled}
               aria-label={t('chat.voice')}

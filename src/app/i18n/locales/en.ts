@@ -1196,6 +1196,8 @@ const en: Messages = {
       },
     },
     systemFound: 'Vietnamese voice found: {names}.',
+    noVietnameseOnEnable:
+      'This computer has no Vietnamese voice, so the teacher will mispronounce. Open Settings → Voice to add a Windows Vietnamese voice or pick the on-device Vietnamese voice.',
     systemMissing:
       'No Vietnamese voice on this computer, so Windows reads with an English voice and gets the tones wrong. Install the free Vietnamese voice:',
     installStep1: 'Open Windows Settings → Time & language → Speech.',
