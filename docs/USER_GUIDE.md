@@ -402,6 +402,12 @@ Khi dùng AI:
 - **Nguyên phân / Giảm phân:** nhấn ▶ hoặc mũi tên để đi qua từng kì. Chọn bộ NST 2n; ở giảm phân
   bật/tắt trao đổi chéo và bấm "Sắp xếp ngẫu nhiên lại" để thấy phân li độc lập. Bảng dưới liệt kê
   số NST, cromatit, tâm động, ADN ở mọi kì.
+- **Nguyên phân 3D:** chủ đề Nguyên phân mở hình 3D (nút **3D / 2D** để đổi). Chọn tế bào **Động
+  vật** hoặc **Thực vật**, bấm Phát hoặc **Bước trước / Bước tiếp theo**, chọn tốc độ; kéo chuột để
+  xoay, bấm vào một bộ phận (NST kép, tâm động, thoi phân bào, trung thể, thành tế bào…) để đọc chức
+  năng của nó. Số NST, cromatit, ADN luôn do mô hình đếm; kích thước, vị trí, thời gian chỉ là minh
+  họa. Pha S không vẽ thành bước riêng (G2 đã có NST kép). Khi chất lượng hiển thị là Thấp hoặc máy
+  không có WebGL2, app dùng hình 2D và ghi rõ lý do.
 - **ADN → mARN → Protein / Đột biến điểm:** dán trình tự ADN (có thể có khoảng trắng, 5′/3′), chọn
   mạch bổ sung hay mạch gốc. Ở Đột biến điểm, chọn dạng đột biến, vị trí và nuclêôtit mới — app so
   sánh protein trước/sau và gọi tên kiểu đột biến.

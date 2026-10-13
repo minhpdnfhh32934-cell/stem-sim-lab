@@ -56,7 +56,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   refuses ~300 MB entries. The worker needs both ORT asyncify files in `public/ort/` (`.mjs` + `.wasm`)
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
-- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`.
+- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
+  of a lazy module waits up to 20 s (the dev server compiles it on first use).
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
@@ -350,6 +351,12 @@ Progress log: `docs/PROGRESS.md`.
   (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 11 ModuleViews. Small shared controls in
   `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
+- Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
+  `runDivision('mitosis')`, S phase folded into the G1→G2 boundary), `scene.ts` (three.js, nothing
+  allocated per frame, everything disposed), `Mitosis3DView`/`Mitosis3DSwitch` (falls back to 2D on
+  tier low / no WebGL2 / context lost). The division store records which division `index` belongs to
+  (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d` Playwright project (software WebGL
+  starves parallel specs).
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
