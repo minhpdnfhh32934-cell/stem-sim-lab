@@ -390,6 +390,9 @@ export function buildMitosisScene(
     const sel = selection;
     const c = data.chromatid !== undefined ? st.chromatids[data.chromatid] : undefined;
     const sameChromosome = sel.chromosome === undefined || c?.chromosome === sel.chromosome;
+    // After the centromere splits (anaphase on) the two sisters are two separate chromosomes:
+    // a picked single chromosome or its centromere is only that sister.
+    const sameSister = sel.sister === undefined || c?.sister === sel.sister;
     switch (sel.component) {
       case 'membrane':
         return data.part === 'membrane';
@@ -409,10 +412,15 @@ export function buildMitosisScene(
         );
       case 'singleChromosome':
         return (
-          (data.part === 'arm' || data.part === 'thread') && !!c && !c.joined && sameChromosome
+          (data.part === 'arm' || data.part === 'thread') &&
+          !!c &&
+          !c.joined &&
+          sameChromosome &&
+          sameSister
         );
       case 'centromere':
-        return data.part === 'bead' && sameChromosome;
+        // Still joined: the two sisters' beads are one shared centromere.
+        return data.part === 'bead' && sameChromosome && (!!c?.joined || sameSister);
       case 'spindle':
         return data.part === 'fibre';
       case 'centrosome':
@@ -551,7 +559,11 @@ export function buildMitosisScene(
             ? { component: 'doubleChromosome', chromosome: c.chromosome, sister: c.sister }
             : { component: 'singleChromosome', chromosome: c.chromosome, sister: c.sister };
         case 'bead':
-          return c ? { component: 'centromere', chromosome: c.chromosome } : null;
+          if (!c) return null;
+          // A split centromere belongs to one sister (now its own single chromosome).
+          return c.joined
+            ? { component: 'centromere', chromosome: c.chromosome }
+            : { component: 'centromere', chromosome: c.chromosome, sister: c.sister };
         case 'thread':
           return { component: 'chromatin' };
         case 'fibre':

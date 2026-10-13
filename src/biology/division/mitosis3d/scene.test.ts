@@ -112,6 +112,62 @@ describe('3D mitosis scene', () => {
     expect(show('plant', tlP.total).has('plate')).toBe(true);
   });
 
+  it('a picked single chromosome (after the split) highlights only that sister', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
+    const lit = () => {
+      const out = new Set<string>();
+      ms.scene.traverse((o) => {
+        const data = o.userData as { part?: string; chromatid?: number };
+        if (data.chromatid === undefined || !(o instanceof THREE.Mesh)) return;
+        const mat = o.material as THREE.MeshStandardMaterial;
+        const info = tl.chromatids[data.chromatid];
+        if (info && mat.emissive.getHex() !== 0)
+          out.add(`${data.part ?? ''}:${String(info.chromosome)}/${String(info.sister)}`);
+      });
+      return out;
+    };
+    for (const stage of ['anaphase', 'telophase', 'cytokinesis'] as const) {
+      ms.update(tl.stateAt(tl.keyTime(stage)));
+      ms.setSelection({ component: 'singleChromosome', chromosome: 1, sister: 1 });
+      const arms = [...lit()].filter((k) => k.startsWith('arm:') || k.startsWith('thread:'));
+      expect(arms.length).toBeGreaterThan(0);
+      for (const k of arms) expect(k.endsWith(':1/1')).toBe(true);
+      // The split centromere of that sister only.
+      ms.setSelection({ component: 'centromere', chromosome: 1, sister: 1 });
+      expect([...lit()]).toEqual(['bead:1/1']);
+    }
+    // Before the split the centromere is shared: both sisters' beads light up.
+    ms.update(tl.stateAt(tl.keyTime('metaphase')));
+    ms.setSelection({ component: 'centromere', chromosome: 1, sister: 1 });
+    expect([...lit()].sort()).toEqual(['bead:1/0', 'bead:1/1']);
+    // From the parts list (no chromosome picked) every single chromosome is shown.
+    ms.update(tl.stateAt(tl.keyTime('anaphase')));
+    ms.setSelection({ component: 'singleChromosome' });
+    expect([...lit()].filter((k) => k.startsWith('arm:'))).toHaveLength(tl.chromatids.length);
+    ms.dispose();
+  });
+
+  it('picking a split centromere names its sister', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });
+    const st = tl.stateAt(tl.keyTime('anaphase'));
+    ms.update(st);
+    ms.scene.updateMatrixWorld(true);
+    // Straight down the spindle axis onto the bead of the chromatid nearest the +x pole.
+    const c = st.chromatids
+      .filter((x) => x.present)
+      .sort((a, b) => b.centromere[0] - a.centromere[0])[0]!;
+    const ray = new THREE.Raycaster(
+      new THREE.Vector3(30, c.centromere[1], c.centromere[2]),
+      new THREE.Vector3(-1, 0, 0),
+    );
+    ray.params.Line = { threshold: 0.01 };
+    const hit = ms.pick(ray);
+    expect(hit).toEqual({ component: 'centromere', chromosome: c.chromosome, sister: c.sister });
+    ms.dispose();
+  });
+
   it('picks the chromosome in front of the membrane', () => {
     const tl = buildTimeline(2, 'animal');
     const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });

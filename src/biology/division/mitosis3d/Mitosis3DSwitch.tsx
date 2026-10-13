@@ -1,13 +1,13 @@
 import { L } from '../../common';
 import { Segmented } from '../../ui';
-import { STAGES } from '../division';
 import { useDivisionStore } from '../state';
-import { timelineFor, useMitosis3D } from './store';
-import { MODEL_STAGE, STAGES_3D } from './timeline';
+import { setDivisionState, stageIndexKind } from '../stageIndex';
+import { index2dOf, stage3dOf, timelineFor, useMitosis3D } from './store';
 
 /**
- * "3D / 2D" switch of the mitosis view. Switching keeps the stage the learner was looking at
- * (cytokinesis maps to the 2D telophase picture, which already shows two daughter cells).
+ * "3D / 2D" switch of the mitosis view. Switching keeps the stage the learner was looking at:
+ * 3D telophase and cytokinesis map to the 2D telophase picture (two daughter cells), and the
+ * 2D telophase maps back to the end of cytokinesis.
  */
 export function Mitosis3DSwitch() {
   const view3d = useDivisionStore((s) => s.view3d);
@@ -23,14 +23,19 @@ export function Mitosis3DSwitch() {
         const d = useDivisionStore.getState();
         const tl = timelineFor(d.pairs, d.cellType);
         if (v === '2d' && d.view3d) {
-          const stage = tl.stageAt(useMitosis3D.getState().t).stage;
-          const index = Math.max(0, STAGES.mitosis.indexOf(MODEL_STAGE[stage]));
+          const ui = useMitosis3D.getState();
           useMitosis3D.setState({ playing: false });
-          useDivisionStore.setState({ view3d: false, index, playing: false });
+          if (ui.active) {
+            const index = index2dOf(tl.stageAt(ui.t).stage);
+            setDivisionState('mitosis', { view3d: false, index, playing: false });
+          } else {
+            // The 2D fallback (low quality, no WebGL) is already on screen: keep its stage.
+            useDivisionStore.setState({ view3d: false, playing: false });
+          }
         } else if (v === '3d' && !d.view3d) {
-          const stage2d = STAGES.mitosis[d.index] ?? 'g1';
-          const stage = STAGES_3D.find((s) => MODEL_STAGE[s] === stage2d) ?? 'g1';
-          useMitosis3D.setState({ t: tl.keyTime(stage), playing: false });
+          // An index left by the meiosis view is not a mitosis stage.
+          const index = stageIndexKind() === 'meiosis' ? 0 : d.index;
+          useMitosis3D.setState({ t: tl.keyTime(stage3dOf(index)), playing: false });
           useDivisionStore.setState({ view3d: true, playing: false });
         }
       }}

@@ -24,7 +24,7 @@ import {
   type Selection,
 } from './components';
 import { buildMitosisScene, type CameraFrame, type MitosisScene, type ScenePalette } from './scene';
-import { timelineFor, useMitosis3D } from './store';
+import { stateFor, timelineFor, useMitosis3D } from './store';
 import { STAGES_3D, type CellType, type Stage3D, type Timeline } from './timeline';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
 import '../../bio.css';
@@ -157,7 +157,7 @@ function StageStrip({ tl }: { tl: Timeline }) {
 /** Name + function of the picked part (and whether it can be seen at this moment). */
 function PartInfo({ tl, selected }: { tl: Timeline; selected: Selection }) {
   const Lz = useLocalized();
-  const visible = useMitosis3D((s) => componentVisible(selected.component, tl.stateAt(s.t)));
+  const visible = useMitosis3D((s) => componentVisible(selected.component, stateFor(tl, s.t)));
   const info = COMPONENTS[selected.component];
   return (
     <aside className="m3d__info" aria-live="polite">
@@ -165,7 +165,7 @@ function PartInfo({ tl, selected }: { tl: Timeline; selected: Selection }) {
         <strong>{Lz(info.name)}</strong>
         <IconButton
           icon={X}
-          size="sm"
+          size="lg"
           label={Lz(L('Bỏ chọn', 'Clear selection'))}
           onClick={() => {
             useMitosis3D.setState({ selected: null });
@@ -190,6 +190,10 @@ function PartInfo({ tl, selected }: { tl: Timeline; selected: Selection }) {
 function CountsChip({ tl, stage }: { tl: Timeline; stage: Stage3D }) {
   const Lz = useLocalized();
   const c = tl.counts(stage);
+  // Telophase nuclei count once their envelope has formed (≥ 0.5, as in the counts table).
+  const formed = useMitosis3D((s) =>
+    stage === 'telophase' ? stateFor(tl, s.t).nuclei.filter((n) => n.envelope >= 0.5).length : 0,
+  );
   const kind = (n: number) =>
     Lz(
       L(
@@ -198,11 +202,18 @@ function CountsChip({ tl, stage }: { tl: Timeline; stage: Stage3D }) {
       ),
     );
   let text: string;
-  if (stage === 'telophase') {
+  if (stage === 'telophase' && formed >= c.nuclei.to) {
     text = Lz(
       L(
-        `1 tế bào · 2 nhân · mỗi nhân ${kind(c.perNucleus ?? 0)}`,
-        `1 cell · 2 nuclei · ${kind(c.perNucleus ?? 0)} per nucleus`,
+        `1 tế bào · ${formed} nhân · mỗi nhân ${kind(c.perNucleus ?? 0)}`,
+        `1 cell · ${formed} nuclei · ${kind(c.perNucleus ?? 0)} per nucleus`,
+      ),
+    );
+  } else if (stage === 'telophase') {
+    text = Lz(
+      L(
+        `1 tế bào · ${kind(c.chromosomes)} · đang hình thành ${c.nuclei.to} nhân`,
+        `1 cell · ${kind(c.chromosomes)} · ${c.nuclei.to} nuclei forming`,
       ),
     );
   } else if (stage === 'cytokinesis') {
@@ -418,7 +429,7 @@ export function Mitosis3DView({
     const ms = buildMitosisScene(tl, readPalette(), { segments: tier.sphereSegments });
     rt.scene = ms;
     const ui = useMitosis3D.getState();
-    ms.update(tl.stateAt(ui.t));
+    ms.update(stateFor(tl, ui.t));
     ms.setSelection(ui.selected);
     // A theme change keeps the learner's camera; a new cell or 2n is framed again.
     if (rt.framedFor !== tl) {
@@ -427,7 +438,7 @@ export function Mitosis3DView({
     }
     rt.request();
     const unsub = useMitosis3D.subscribe((s, prev) => {
-      if (s.t !== prev.t) ms.update(tl.stateAt(s.t));
+      if (s.t !== prev.t) ms.update(stateFor(tl, s.t));
       if (s.selected !== prev.selected) ms.setSelection(s.selected);
       if (s.camera !== prev.camera || s.viewNonce !== prev.viewNonce) rt.frameCamera(s.camera);
       rt.request();
@@ -447,13 +458,18 @@ export function Mitosis3DView({
     let prev = performance.now();
     const monitor = new FrameMonitor(1 / 30);
     const step = (now: number) => {
-      const dt = Math.min(0.1, Math.max(0, (now - prev) / 1000));
+      const elapsed = Math.max(0, (now - prev) / 1000);
       prev = now;
-      monitor.record(dt);
-      if (monitor.overloaded) {
-        reportOverload();
-        monitor.resetOverload();
+      // The monitor gets the raw frame time (it skips pauses itself); hidden tabs are not frames.
+      if (document.visibilityState === 'visible') {
+        monitor.record(elapsed);
+        if (monitor.overloaded) {
+          reportOverload();
+          monitor.resetOverload();
+        }
       }
+      // Playback moves at most 0.1 s per frame (no jump after a pause or a hidden tab).
+      const dt = Math.min(0.1, elapsed);
       const next = useMitosis3D.getState().t + dt * speed;
       if (next >= tl.total) {
         useMitosis3D.setState({ t: tl.total, playing: false });
@@ -485,7 +501,7 @@ export function Mitosis3DView({
         <IconButton
           icon={ChevronLeft}
           size="lg"
-          label={Lz(L('Kì trước', 'Previous stage'))}
+          label={Lz(L('Bước trước', 'Previous step'))}
           disabled={stageIndex === 0}
           onClick={() => {
             goToStage(tl, stageIndex - 1);
@@ -503,7 +519,7 @@ export function Mitosis3DView({
         <IconButton
           icon={ChevronRight}
           size="lg"
-          label={Lz(L('Kì tiếp theo', 'Next stage'))}
+          label={Lz(L('Bước tiếp theo', 'Next step'))}
           disabled={stageIndex >= STAGES_3D.length - 1}
           onClick={() => {
             goToStage(tl, stageIndex + 1);

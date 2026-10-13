@@ -7,6 +7,7 @@ import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
 import { STAGE_NAME, STAGE_NOTE, cardFor, useDivisionStore, useStages } from './state';
+import { claimStageIndex, setDivisionState } from './stageIndex';
 import {
   STAGES,
   countsOf,
@@ -165,9 +166,6 @@ function drawStage(d: DrawContext, s: StageState) {
   });
 }
 
-/** The last division kind shown: the stage index resets only when the kind changes. */
-let lastKind: Division | null = null;
-
 export function DivisionStage({
   kind,
   toolbar,
@@ -188,9 +186,9 @@ export function DivisionStage({
   const s = stages[i];
 
   useEffect(() => {
-    // Keeps the stage when coming back from the 3D view or restoring a file.
-    if (lastKind !== null && lastKind !== kind) useDivisionStore.setState({ index: 0 });
-    lastKind = kind;
+    // Keeps the stage when it is this division's (back from the 3D view, a restored file);
+    // an index written for the other division starts again at the first stage.
+    claimStageIndex(kind);
     useDivisionStore.setState({ playing: false });
   }, [kind]);
   useEffect(() => {
@@ -198,12 +196,12 @@ export function DivisionStage({
     const id = window.setInterval(() => {
       const st = useDivisionStore.getState();
       if (st.index >= stages.length - 1) useDivisionStore.setState({ playing: false });
-      else useDivisionStore.setState({ index: st.index + 1 });
+      else setDivisionState(kind, { index: st.index + 1 });
     }, 1600);
     return () => {
       window.clearInterval(id);
     };
-  }, [playing, stages.length]);
+  }, [playing, stages.length, kind]);
 
   const canvasRef = useCanvas(
     (d) => {
@@ -220,10 +218,10 @@ export function DivisionStage({
       <div className="chem-overlay">
         <IconButton
           icon={ChevronLeft}
-          label={Lz(L('Kì trước', 'Previous stage'))}
+          label={Lz(L('Bước trước', 'Previous step'))}
           disabled={i === 0}
           onClick={() => {
-            useDivisionStore.setState({ index: Math.max(0, i - 1), playing: false });
+            setDivisionState(kind, { index: Math.max(0, i - 1), playing: false });
           }}
         />
         <IconButton
@@ -231,21 +229,19 @@ export function DivisionStage({
           label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
           variant="solid"
           onClick={() => {
-            useDivisionStore.setState((x) => ({
+            const x = useDivisionStore.getState();
+            setDivisionState(kind, {
               playing: !x.playing,
               index: x.index >= stages.length - 1 ? 0 : x.index,
-            }));
+            });
           }}
         />
         <IconButton
           icon={ChevronRight}
-          label={Lz(L('Kì sau', 'Next stage'))}
+          label={Lz(L('Bước tiếp theo', 'Next step'))}
           disabled={i >= stages.length - 1}
           onClick={() => {
-            useDivisionStore.setState({
-              index: Math.min(stages.length - 1, i + 1),
-              playing: false,
-            });
+            setDivisionState(kind, { index: Math.min(stages.length - 1, i + 1), playing: false });
           }}
         />
         <span className="chem-chip">
@@ -283,7 +279,7 @@ export function DivisionPanel({ kind }: { kind: Division }) {
         <select
           value={pairs}
           onChange={(e) => {
-            useDivisionStore.setState({ pairs: Number(e.target.value), index: 0 });
+            setDivisionState(kind, { pairs: Number(e.target.value), index: 0 });
           }}
         >
           {[1, 2, 3, 4].map((n) => (
@@ -373,7 +369,7 @@ export function DivisionBottom({ kind }: { kind: Division }) {
                 key={s.stage}
                 className={cx(k === index && 'is-active')}
                 onClick={() => {
-                  useDivisionStore.setState({ index: k, playing: false });
+                  setDivisionState(kind, { index: k, playing: false });
                 }}
               >
                 <th scope="row">{Lz(STAGE_NAME[s.stage])}</th>
