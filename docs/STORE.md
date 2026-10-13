@@ -12,6 +12,14 @@ Quyết định của người dùng (13/10/2026):
 - Chính sách quyền riêng tư đặt trên GitHub Pages:
   `https://minhpdnfhh32934-cell.github.io/stem-sim-lab/privacy.html` (tệp `site/privacy.html`).
 
+## Trạng thái (13/10/2026)
+
+- Tài khoản nhà phát triển cá nhân: **FPTTECH**. App: **SimLab**, Store ID `9P1FDCQBSDHT`,
+  trang Store (sau khi phát hành): <https://apps.microsoft.com/detail/9P1FDCQBSDHT>.
+- Bản nộp 1 (gói `SimLab_0.5.1.0_x64.msix`) đã gửi duyệt ngày 13/10/2026, chọn **giữ lại**: duyệt
+  xong, người dùng bấm **Publish now** trong Partner Center thì app mới lên Store.
+- Bước 7 (tự nộp từ GitHub Actions) chưa bật.
+
 ## Cách hoạt động
 
 | Phần                   | Ở đâu                                                                       |
