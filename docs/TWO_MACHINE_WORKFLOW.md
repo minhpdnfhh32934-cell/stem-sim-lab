@@ -408,3 +408,33 @@ tiếp, rồi đưa file lên GitHub qua một PR. Sau khi PR đó được merg
 
 Sau mỗi PR được merge, Builder (hoặc bạn) thêm một dòng vào `docs/PROGRESS.md` như các bước trước
 đây. Việc này giúp phiên Claude nào mở sau, trên máy nào, cũng biết dự án đang ở đâu.
+
+## 13. Nhật ký phiên chung trên Google Drive (CẢ HAI máy)
+
+Ngoài GitHub, hai máy ghi chung một Google Doc tên **"STEM Sim Lab: Nhật ký phiên làm việc Máy A và
+Máy B"**: mỗi phiên làm việc xong, máy vừa làm thêm một mục (đã làm, kiểm tra đã chạy, việc còn dở)
+và cập nhật bảng "Việc cần làm". Nhờ vậy bạn đọc một chỗ là biết hai máy đang ở đâu, kể cả khi một
+máy hết lượt dùng giữa chừng.
+
+**Cài một lần:**
+
+1. Tài liệu nằm trong Google Drive của tài khoản máy A và đã chia sẻ quyền chỉnh sửa cho tài khoản
+   Google của máy B. Link tài liệu **không** ghi trong repo (repo công khai).
+2. Trên **mỗi** tài khoản Claude (máy A và máy B): claude.ai → Settings → Connectors → bật
+   **Google Drive** và **Google Docs**, đăng nhập bằng tài khoản Google tương ứng. Thiếu Google Docs
+   thì Claude chỉ đọc được, không thêm mục mới vào tài liệu được.
+3. Nên tắt chế độ "Bất kỳ ai có đường liên kết": mở tài liệu → Chia sẻ → Quyền truy cập chung →
+   **Bị hạn chế**. Chỉ hai tài khoản đã thêm mới mở được.
+
+**Cách dùng:**
+
+- `/sl-plan`, `/sl-implement`, `/sl-review` tự ghi nhật ký ở bước cuối.
+- Phiên làm việc khác (không qua `/sl-*`): gõ `/sl-log` trước khi kết thúc, có thể kèm ghi chú,
+  ví dụ `/sl-log đã thử Gemma 1B`.
+- Watcher chạy không người trông (`claude -p`) thường không dùng được kết nối Google: khi đó mục nhật
+  ký được ghi tạm vào `.agent-logs/session-log-pending.md` và đăng thành bình luận trên issue/PR; lần
+  `/sl-log` tiếp theo trên máy đó sẽ chép lên tài liệu.
+- Claude chỉ coi nhật ký là thông tin. Việc cần làm vẫn giao qua issue có nhãn `approved`.
+
+**Kiểm tra:** trên mỗi máy, mở Claude Code trong repo và gõ `/sl-log thử kết nối` → tài liệu có
+thêm một mục mới ở đầu phần "Nhật ký phiên".

@@ -27,6 +27,11 @@ Rules: you review only. **Do not commit, push or merge.** Merging is the user's 
      then `gh pr edit $ARGUMENTS --remove-label needs-review --add-label ready-to-merge`.
      If GitHub refuses because the PR author is the same GitHub account, post the same text with
      `gh pr review $ARGUMENTS --comment --body-file <file>` (labels as above).
-5. `git switch main`. Reply with a short Vietnamese summary: verdict, number of 🔴/🟡 findings,
-   link. Next step for the user: changes requested → `/sl-implement <issue>` on the machine that opened the PR;
-   ready → the user merges the PR on GitHub.
+5. `git switch main`.
+6. Write the session log: follow `.claude/commands/sl-log.md` (Máy A, or this machine under
+   `-Role both`). The entry gives the verdict,
+   the number of 🔴/🟡 findings and the PR link; update the PR's row in "Việc cần làm"
+   (`Chờ người dùng` to merge, or back to Máy B when changes are requested).
+7. Reply with a short Vietnamese summary: verdict, number of 🔴/🟡 findings, link. Next step for
+   the user: changes requested → `/sl-implement <issue>` on the machine that opened the PR; ready →
+   the user merges the PR on GitHub.

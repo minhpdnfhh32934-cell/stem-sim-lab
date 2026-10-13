@@ -46,7 +46,7 @@ Mất khoảng 20–40 phút. Cài Build Tools và Rust là lâu nhất.
 VAI TRÒ = builder
 
 Bạn là Claude Code trên một máy Windows **mới**, có thể chưa cài gì ngoài bạn. Hãy cài đặt máy này
-làm máy **BUILDER** (viết code) của dự án STEM Sim Lab (repo GitHub
+làm máy **BUILDER** (viết code) của dự án SimLab (repo GitHub
 `minhpdnfhh32934-cell/stem-sim-lab`), **từ đầu đến cuối, không dừng lại hỏi ý kiến tôi**. Tôi gửi
 file này tức là đã đồng ý cho mọi bước dưới đây. Máy A là LEAD (lập kế hoạch, review), dùng tài
 khoản GitHub `minhpdnfhh32934-cell`. Hai máy chỉ nối với nhau qua GitHub (issue, PR, nhãn), bằng
@@ -189,6 +189,13 @@ changes-requested), máy này sẽ gọi Claude và tốn lượt dùng của t�
 - **Không:** chỉ tôi cách chạy tay khi cần, gồm 3 lệnh: `cd $HOME\stem-sim-lab`, rồi
   `Set-ExecutionPolicy -Scope Process Bypass`, rồi `.\scripts\agents\watch.ps1 -Role builder -Once`.
 
+**BƯỚC 10b — Nhật ký phiên chung (Google Doc).** Tìm bằng kết nối Google Drive tài liệu có tên đúng
+`STEM Sim Lab: Nhật ký phiên làm việc Máy A và Máy B` (`search_files`, `title = '…'`). Tìm thấy
+đúng 1 tài liệu → ✅ và chỉ đọc, không sửa. Không có kết nối Google Drive / Google Docs, hoặc không
+thấy tài liệu → ❌ và nhắc tôi: vào claude.ai → Settings → Connectors, bật **Google Drive** và
+**Google Docs**, đăng nhập bằng tài khoản Google đã được chia sẻ tài liệu này. Không tự tạo tài liệu
+mới. Cách ghi nhật ký cuối mỗi phiên: `.claude/commands/sl-log.md` (lệnh `/sl-log`).
+
 **BƯỚC 11 — Báo cáo cuối cùng** bằng tiếng Việt, dạng checklist ✅/❌/⚠️:
 
 - máy (winget, khóa API);
@@ -199,7 +206,8 @@ changes-requested), máy này sẽ gọi Claude và tốn lượt dùng của t�
 - `npm run check` và `cargo test`;
 - nhãn của máy Lead;
 - kết nối (`pong:lead` + `pong:builder`);
-- watcher.
+- watcher;
+- nhật ký phiên chung (Google Doc).
 
 Cuối báo cáo, thêm các dòng sau:
 
