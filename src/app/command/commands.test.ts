@@ -17,6 +17,8 @@ const all = [
   cmd('topic.horizontalProjectile', 'topics', 'Ném ngang'),
   cmd('go.teacher', 'go', 'AI Teacher'),
   cmd('action.theme', 'actions', 'Đổi giao diện sáng / tối', 'dark light'),
+  cmd('go.board', 'go', 'AI Teacher — giảng trên bảng'),
+  cmd('topic.periodicTable', 'topics', 'Bảng tuần hoàn'),
 ];
 
 describe('command palette ranking', () => {
@@ -36,9 +38,16 @@ describe('command palette ranking', () => {
     expect(rankCommands(all, 'dark').map((c) => c.id)).toEqual(['action.theme']);
   });
 
+  it('shows the group of the best match first, so the first result is the top row', () => {
+    // "Bảng tuần hoàn" starts with the query (topics); the board only has a word that does (go).
+    expect(rankCommands(all, 'bang').map((c) => c.id)).toEqual(['topic.periodicTable', 'go.board']);
+  });
+
   it('with no query lists everything by group: go, topics, settings, actions', () => {
     expect(rankCommands(all, '').map((c) => c.group)).toEqual([
       'go',
+      'go',
+      'topics',
       'topics',
       'topics',
       'settings',

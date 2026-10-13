@@ -1038,3 +1038,10 @@ kbd {
     animation: none;
   }
 }
+
+/* Without backdrop blur the glass would let busy content show through: fall back to a solid panel. */
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-bg: var(--bg-panel);
+  }
+}

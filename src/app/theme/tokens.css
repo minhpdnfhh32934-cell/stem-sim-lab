@@ -124,6 +124,8 @@
   /* Floating glass over the stage/board (pattern 001): mostly opaque so text stays readable. */
   --glass-bg: rgba(255, 255, 255, 0.78);
   --glass-border: rgba(20, 30, 50, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(14px) saturate(1.4);
 }
 
 :root[data-theme='dark'] {
@@ -193,6 +195,8 @@
 
   --glass-bg: rgba(21, 27, 36, 0.76);
   --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --glass-blur: blur(14px) saturate(1.2);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -28,7 +28,7 @@ import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { SETTINGS_SECTIONS, SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { cx } from '@/ui/cx';
-import { COMMAND_GROUPS, rankCommands, useCommandPalette, type Command } from './commands';
+import { rankCommands, useCommandPalette, type Command } from './commands';
 import './command.css';
 
 /** Ctrl+K: search topics, pages, Settings and quick actions in one box. */
@@ -198,8 +198,6 @@ export function CommandPalette() {
     const d = ref.current;
     if (!d) return;
     if (open && !d.open) {
-      setQuery('');
-      setActive(0);
       d.showModal();
       input.current?.focus();
     }
@@ -215,6 +213,9 @@ export function CommandPalette() {
 
   const close = () => {
     setOpen(false);
+    // Cleared on the way out: a learner who types right after Ctrl+K must not land on old text.
+    setQuery('');
+    setActive(0);
   };
   const run = (command: Command | undefined) => {
     if (!command) return;
@@ -273,7 +274,7 @@ export function CommandPalette() {
         {open && results.length === 0 && (
           <li className="command-palette__empty">{t('command.empty')}</li>
         )}
-        {COMMAND_GROUPS.map((group) => {
+        {[...new Set(results.map((c) => c.group))].map((group) => {
           const inGroup = results.filter((c) => c.group === group);
           if (inGroup.length === 0) return null;
           return (

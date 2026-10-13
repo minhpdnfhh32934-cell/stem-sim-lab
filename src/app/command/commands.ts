@@ -37,15 +37,18 @@ export function matchScore(command: Pick<Command, 'label' | 'hint' | 'keywords'>
   return q.split(/\s+/).every((w) => rest.includes(w)) ? 1 : 0;
 }
 
-/** Matching commands, best first, grouped in COMMAND_GROUPS order; at most `limit`. */
+/**
+ * Matching commands, at most `limit`, in the order they are shown: grouped, the group with the
+ * best match first (ties in COMMAND_GROUPS order), best match first inside a group. With no query
+ * the groups keep COMMAND_GROUPS order. The first result is therefore always the top row.
+ */
 export function rankCommands(commands: readonly Command[], query: string, limit = 40): Command[] {
   const scored = commands.map((c, i) => ({ c, i, s: matchScore(c, query) })).filter((x) => x.s > 0);
-  const groupIndex = (g: CommandGroup) => COMMAND_GROUPS.indexOf(g);
-  scored.sort((a, b) =>
-    normalizeForSearch(query)
-      ? b.s - a.s || groupIndex(a.c.group) - groupIndex(b.c.group) || a.i - b.i
-      : groupIndex(a.c.group) - groupIndex(b.c.group) || a.i - b.i,
-  );
+  const best = new Map<CommandGroup, number>();
+  for (const x of scored) best.set(x.c.group, Math.max(best.get(x.c.group) ?? 0, x.s));
+  const groupRank = (g: CommandGroup) =>
+    (normalizeForSearch(query) ? -(best.get(g) ?? 0) * 10 : 0) + COMMAND_GROUPS.indexOf(g);
+  scored.sort((a, b) => groupRank(a.c.group) - groupRank(b.c.group) || b.s - a.s || a.i - b.i);
   return scored.slice(0, limit).map((x) => x.c);
 }
 
