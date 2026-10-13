@@ -905,6 +905,15 @@ const vi = {
       balanced: 'Phương trình cân bằng: {equation}',
       unbalanced: 'SimLab chưa cân bằng được “{input}”: hãy kiểm tra lại công thức trong đề.',
     },
+    stop: 'Dừng',
+    stopLabel: 'Dừng câu trả lời đang viết',
+    stopped: 'Đã dừng câu trả lời. Em có thể hỏi lại hoặc hỏi câu khác.',
+    missingDataTitle: 'SimLab nhắc (không phải AI)',
+    missingData:
+      'Đề bài chưa có số liệu nào nên chưa giải được. Em bổ sung các số đề cho (kèm đơn vị) rồi gửi lại nhé.',
+    unverifiedNumbers: 'Số do AI tự đưa ra (chưa kiểm chứng): {numbers}',
+    unverifiedHint:
+      'Các số này không có trong câu hỏi, cuộc trò chuyện, ghi chú tham khảo hay kết quả SimLab tính. Em hãy tự kiểm tra lại.',
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:
