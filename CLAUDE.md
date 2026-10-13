@@ -205,8 +205,10 @@ Progress log: `docs/PROGRESS.md`.
   `scripts/agents/setup-labels.ps1`. Per-machine setup prompts: `docs/agents/lead/` and `docs/agents/builder/`.
   Temporary files and logs go to `.agent-logs/` (git-ignored). Keep the scripts PowerShell 5.1
   compatible and saved as UTF-8 with BOM.
-- Each machine uses its own GitHub account (both collaborators); `main` needs 1 approval from the
-  account that did not open the PR.
+- Each machine uses its own GitHub account (both collaborators). `main` (user decision 2026-10-13):
+  2 approvals required, admins not bound. The owner account (admin, machine A) may merge alone with
+  "bypass branch protections"; machine B's account (write) cannot. With only two accounts a PR
+  never reaches 2 approvals, so the owner merges every PR. Claude never merges (`gh pr merge` denied).
 - Work done in Claude Cowork arrives as `docs/HANDOFF.md` (prompt: `docs/COWORK_HANDOFF_PROMPT.md`).
   Read it before planning or implementing; it records facts and decisions, not approvals.
 - **Session log (both machines, every session):** at the end of every work session — including
@@ -294,6 +296,12 @@ Progress log: `docs/PROGRESS.md`.
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
+- UI polish kit (0.5.1): `.segmented`/`.subject-switch`/`.tabs__list` get a sliding indicator
+  automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
+  `Skeleton` for loading, `ProgressBar` + `eta.ts` for downloads (estimate only from progress
+  callbacks, never during render), `Celebrate` for a reached goal (no scores/streaks); floating
+  overlays use `--glass-*` tokens. Ctrl+K palette: `src/app/command/` (lazy; topics come from
+  `CATALOG`, Settings pages from `src/app/settings/sectionMeta.ts`).
 
 ## Learning (3b.5, `src/learn/`)
 

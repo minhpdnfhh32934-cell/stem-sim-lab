@@ -6,6 +6,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
 import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
+import { useCommandPalette } from '@/app/command/commands';
 import {
   isActivationTarget,
   isEditableTarget,
@@ -68,6 +69,9 @@ function runAction(action: ShortcutAction): boolean {
     case 'toolStopwatch':
       if (!workspace.hasSimulation) return false;
       useSimStore.setState((s) => ({ stopwatch: !s.stopwatch }));
+      return true;
+    case 'commandPalette':
+      useCommandPalette.getState().setOpen(true);
       return true;
     case 'toolFitView':
       if (!workspace.hasSimulation) return false;

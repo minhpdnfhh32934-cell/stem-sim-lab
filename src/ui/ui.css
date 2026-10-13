@@ -132,6 +132,103 @@
   transform: scale(0.92);
 }
 
+/* Loading placeholders (Skeleton.tsx) */
+.skeleton {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: var(--space-4);
+}
+.skeleton__stage,
+.skeleton__board,
+.skeleton__lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+}
+.skeleton__row {
+  display: flex;
+  gap: var(--space-3);
+}
+.skeleton__block {
+  display: block;
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    100deg,
+    var(--bg-sunken) 30%,
+    color-mix(in srgb, var(--bg-hover) 80%, var(--text-faint)) 50%,
+    var(--bg-sunken) 70%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+.skeleton__block--canvas {
+  flex: 1;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+.skeleton__block--pill {
+  width: 40px;
+  height: 32px;
+  border-radius: var(--radius-full);
+}
+.skeleton__block--bar {
+  flex: 1;
+  height: 32px;
+}
+.skeleton__board {
+  padding: var(--space-5) 12%;
+}
+.skeleton__block--title {
+  width: 45%;
+  height: 26px;
+}
+.skeleton__block--line {
+  width: 85%;
+}
+.skeleton__block--short {
+  width: 55%;
+}
+.skeleton__block--formula {
+  width: 35%;
+  height: 34px;
+  margin: var(--space-2) auto;
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton__block {
+    animation: none;
+  }
+}
+
+/* Icon morph (IconButton altIcon): the two icons swap with a turn and a fade. */
+.icon-swap {
+  display: inline-grid;
+  place-items: center;
+}
+.icon-swap > svg {
+  grid-area: 1 / 1;
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    opacity var(--dur-fast) linear;
+}
+.icon-swap[data-alt='true'] > .icon-swap__main,
+.icon-swap[data-alt='false'] > .icon-swap__alt {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
 /* Dropdowns: one look for every <select>. WebView2 / Chromium draws the open list with these
    styles (`appearance: base-select`); other browsers keep their own list. Options stay plain
    text so the native keyboard, screen-reader and form behaviour is unchanged. */
@@ -540,6 +637,69 @@ select:disabled {
   box-shadow: var(--shadow-sm);
 }
 
+/* Sliding indicator (src/ui/slidingIndicator.ts, gallery pattern 039): the checked pill glides
+   between items. Without the script the checked item keeps its own background (above). */
+.segmented,
+.subject-switch,
+.tabs__list {
+  position: relative;
+  isolation: isolate;
+}
+.segmented.has-indicator::before,
+.subject-switch.has-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: var(--ind-w);
+  height: var(--ind-h);
+  border-radius: calc(var(--radius-md) - 2px);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-sm);
+  transform: translate(var(--ind-x), var(--ind-y));
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    width var(--dur-med) var(--ease-out),
+    height var(--dur-med) var(--ease-out);
+}
+.segmented.has-indicator > [aria-checked='true'],
+.subject-switch.has-indicator > [aria-checked='true'] {
+  background: transparent;
+  box-shadow: none;
+}
+/* Tabs: one underline that slides instead of one per tab. */
+.tabs__list.has-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--ind-w) - 2 * var(--space-2));
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: translate(
+    calc(var(--ind-x) + var(--space-2)),
+    calc(var(--ind-y) + var(--ind-h) - 1px)
+  );
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    width var(--dur-med) var(--ease-out);
+}
+.tabs__list.has-indicator > .tabs__tab::after {
+  display: none;
+}
+.no-indicator-motion::before {
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .segmented.has-indicator::before,
+  .subject-switch.has-indicator::before,
+  .tabs__list.has-indicator::before {
+    transition: none;
+  }
+}
+
 .shortcut-list {
   margin: 0;
   font-size: var(--text-sm);
@@ -722,4 +882,166 @@ kbd {
 }
 .toast__close:hover {
   background: var(--bg-hover, var(--bg-sunken));
+}
+
+/* ---------- Celebrate (goal reached, pattern 093) ---------- */
+.celebrate {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+.celebrate__icon {
+  animation: celebrate-icon 420ms var(--ease-out) both;
+}
+.celebrate__ring,
+.celebrate__spark {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  pointer-events: none;
+}
+.celebrate__ring {
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  animation: celebrate-ring 650ms var(--ease-out) both;
+}
+.celebrate__spark {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--chart-1);
+  opacity: 0;
+  animation: celebrate-spark 750ms var(--ease-out) 80ms both;
+}
+.celebrate__spark:nth-child(4n + 1) {
+  background: var(--chart-2);
+}
+.celebrate__spark:nth-child(4n + 2) {
+  background: var(--chart-3);
+}
+.celebrate__spark:nth-child(4n + 3) {
+  background: var(--accent);
+}
+@keyframes celebrate-icon {
+  0% {
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes celebrate-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+@keyframes celebrate-spark {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-20px) scale(0.4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .celebrate__icon {
+    animation: none;
+  }
+  .celebrate__ring,
+  .celebrate__spark {
+    display: none;
+  }
+}
+
+/* ---------- Progress bar (downloads, pattern 083) ---------- */
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--bg-sunken);
+}
+.progress-bar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transition:
+    width 260ms var(--ease-out),
+    background-color var(--dur-med) var(--ease-out);
+}
+/* A soft light that runs along the filled part: the download is alive even when it is slow. */
+.progress-bar:not(.is-indeterminate, .is-done) .progress-bar__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-on-accent) 35%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: progress-glint 1.6s linear infinite;
+}
+.progress-bar.is-indeterminate .progress-bar__fill {
+  width: 35%;
+  animation: progress-wander 1.35s ease-in-out infinite;
+}
+.progress-bar.is-done .progress-bar__fill {
+  background: var(--conf-exact);
+}
+@keyframes progress-glint {
+  from {
+    background-position: -40% 0;
+  }
+  to {
+    background-position: 140% 0;
+  }
+}
+@keyframes progress-wander {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(310%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar__fill {
+    transition: none;
+  }
+  .progress-bar:not(.is-indeterminate, .is-done) .progress-bar__fill::after {
+    display: none;
+  }
+  .progress-bar.is-indeterminate .progress-bar__fill {
+    width: 100%;
+    opacity: 0.45;
+    animation: none;
+  }
+}
+
+/* Without backdrop blur the glass would let busy content show through: fall back to a solid panel. */
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-bg: var(--bg-panel);
+  }
 }

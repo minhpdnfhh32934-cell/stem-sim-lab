@@ -22,6 +22,8 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { KnownPageLink } from '@/teacher/chat/settings/KnownPageLink';
 import { formatBytes } from '@/teacher/chat/settings/format';
+import { createEtaTracker, formatEta } from '@/ui/eta';
+import { ProgressBar } from '@/ui/ProgressBar';
 import {
   LOCAL_VOICE,
   deleteLocalVoice,
@@ -423,7 +425,11 @@ function GeminiVoice() {
 function LocalVoice() {
   const t = useT();
   const [status, setStatus] = useState<LocalVoiceStatus | 'checking'>('checking');
-  const [progress, setProgress] = useState<{ loaded: number; total: number | null } | null>(null);
+  const [progress, setProgress] = useState<{
+    loaded: number;
+    total: number | null;
+    eta: number | null;
+  } | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const abort = useRef<AbortController | null>(null);
@@ -443,12 +449,13 @@ function LocalVoice() {
   const download = async () => {
     setBusy(true);
     setError('');
-    setProgress({ loaded: 0, total: null });
+    setProgress({ loaded: 0, total: null, eta: null });
     const ctrl = new AbortController();
     abort.current = ctrl;
+    const eta = createEtaTracker();
     try {
       await downloadLocalVoice((loaded, total) => {
-        setProgress({ loaded, total });
+        setProgress({ loaded, total, eta: eta(loaded, total ?? LOCAL_VOICE.bytes) });
       }, ctrl.signal);
       await refresh();
     } catch (e) {
@@ -475,6 +482,18 @@ function LocalVoice() {
     progress?.total && progress.total > 0
       ? Math.min(99, Math.floor((progress.loaded / progress.total) * 100))
       : null;
+  const eta =
+    progress && progress.eta !== null && percent !== null ? formatEta(t, progress.eta) : null;
+  const progressText =
+    percent === null || !progress
+      ? t('voice.localPreparing')
+      : [
+          `${String(percent)}%`,
+          `${formatBytes(progress.loaded)} / ${formatBytes(progress.total ?? LOCAL_VOICE.bytes)}`,
+          eta,
+        ]
+          .filter(Boolean)
+          .join(' · ');
   return (
     <>
       <p className="muted small">
@@ -538,19 +557,9 @@ function LocalVoice() {
         <div className="chat-settings__progress" role="status" aria-live="polite">
           <div className="chat-settings__progress-copy">
             <LoaderCircle size={15} className="spin" />
-            <strong>
-              {percent === null
-                ? t('voice.localPreparing')
-                : `${String(percent)}% · ${formatBytes(progress.loaded)} / ${formatBytes(progress.total ?? LOCAL_VOICE.bytes)}`}
-            </strong>
+            <strong>{progressText}</strong>
           </div>
-          {percent === null ? (
-            <div className="chat-settings__progress-track is-indeterminate">
-              <span />
-            </div>
-          ) : (
-            <progress className="chat-settings__progress-track" max={100} value={percent} />
-          )}
+          <ProgressBar value={percent} label={progressText} />
         </div>
       )}
       {error && (

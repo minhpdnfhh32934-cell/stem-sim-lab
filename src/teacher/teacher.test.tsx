@@ -48,8 +48,9 @@ describe('"Dạy học bằng AI" screen', () => {
     await user.click(screen.getByRole('radio', { name: 'Giảng trên bảng' }));
     expect(root).toHaveAttribute('data-layout', 'board');
     // The board is a real lesson area next to the chat, not only a different background.
+    // The board is a lazy chunk (fonts, KaTeX): give the import time when the suite is busy.
     expect(
-      await screen.findByRole('region', { name: 'Bảng trắng của AI Teacher' }),
+      await screen.findByRole('region', { name: 'Bảng trắng của AI Teacher' }, { timeout: 5000 }),
     ).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeInTheDocument();
   });

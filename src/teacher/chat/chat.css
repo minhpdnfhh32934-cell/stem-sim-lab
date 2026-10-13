@@ -467,6 +467,27 @@
 .chat-message--user .chat-message__meta {
   color: rgb(255 255 255 / 78%);
 }
+/* The on-device answer while it is written: a soft blinking caret at the end. */
+.chat-message__caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  border-radius: 2px;
+  background: var(--accent);
+  animation: chat-caret 1s steps(2, start) infinite;
+}
+@keyframes chat-caret {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-message__caret {
+    animation: none;
+  }
+}
 .chat-message__thinking {
   display: flex;
   gap: 8px;
@@ -707,44 +728,6 @@
 .chat-settings__progress-copy strong {
   color: var(--text);
   font-weight: 550;
-}
-.chat-settings__progress-track {
-  display: block;
-  width: 100%;
-  height: 9px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 99px;
-  background: var(--bg-sunken);
-  accent-color: var(--accent);
-}
-progress.chat-settings__progress-track::-webkit-progress-bar {
-  border-radius: 99px;
-  background: var(--bg-sunken);
-}
-progress.chat-settings__progress-track::-webkit-progress-value {
-  border-radius: 99px;
-  background: var(--accent);
-  transition: width 180ms ease;
-}
-.chat-settings__progress-track.is-indeterminate {
-  position: relative;
-}
-.chat-settings__progress-track.is-indeterminate span {
-  position: absolute;
-  width: 35%;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--accent);
-  animation: chat-progress 1.35s ease-in-out infinite;
-}
-@keyframes chat-progress {
-  from {
-    transform: translateX(-110%);
-  }
-  to {
-    transform: translateX(310%);
-  }
 }
 .chat-settings__file-input {
   position: absolute;

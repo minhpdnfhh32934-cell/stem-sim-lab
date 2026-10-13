@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { markdownToScript } from './fromMarkdown';
 import { BOARD_W, COLUMNS, emptyLayout, overlaps, place, spanBox, type Measure } from './layout';
 import { boardAnswerText, scriptFor, subtitleText } from './lesson';
+import { scrollForRow, visibleBand } from './minimap';
 import { compileFn, sample } from './plot';
 import { checkNumbers, evaluate, toArithmetic } from './provenance';
 import { circle, rng } from './rough';
@@ -295,5 +296,16 @@ describe('plots and drawings', () => {
     const box = { x: 10, y: 10, w: 100, h: 30 };
     expect(circle(box, 7)).toBe(circle(box, 7));
     expect(circle(box, 7)).not.toBe(circle(box, 8));
+  });
+});
+
+describe('board minimap geometry', () => {
+  it('maps the scroll position to board units and back', () => {
+    expect(visibleBand(300, 400, 0.5)).toEqual({ top: 600, height: 800 });
+    // Row 1000 at scale 0.5 is 500 px down; centred in a 400 px viewport → 300.
+    expect(scrollForRow(1000, 0.5, 400, 2000)).toBe(300);
+    // Clamped at both ends.
+    expect(scrollForRow(0, 0.5, 400, 2000)).toBe(0);
+    expect(scrollForRow(5000, 0.5, 400, 2000)).toBe(1600);
   });
 });

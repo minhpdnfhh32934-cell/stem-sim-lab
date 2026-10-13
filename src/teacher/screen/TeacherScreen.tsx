@@ -8,6 +8,7 @@ import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
 import type { LessonInput } from '@/teacher/board/lesson';
+import { Skeleton } from '@/ui/Skeleton';
 import './teacher.css';
 
 // The board (fonts, KaTeX, layout) loads only when the learner opens the board layout.
@@ -153,7 +154,7 @@ export default function TeacherScreen() {
 
         {layout === 'board' && (
           <div className="teacher__board">
-            <Suspense fallback={<p className="muted">{t('board.preparing')}</p>}>
+            <Suspense fallback={<Skeleton label={t('board.preparing')} variant="board" />}>
               <Whiteboard lesson={lesson} />
             </Suspense>
           </div>

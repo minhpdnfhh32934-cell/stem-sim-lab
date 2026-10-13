@@ -123,6 +123,10 @@ là Collaborator của repo (quyền **Write** trở lên). Nhờ vậy:
 - máy A (tài khoản GitHub 1) **Approve** hoặc **Request changes** thật trên PR đó;
 - GitHub không cho ai tự duyệt PR của chính mình, nên PR do máy A mở thì phải do máy B duyệt
   (hoặc ngược lại).
+- Từ 13/10/2026 (người dùng quyết định): `main` cần **2 người duyệt**, và chủ repo (tài khoản
+  admin của máy A) được **tự gộp một mình**: trong khung Merge, tích ô _Merge without waiting for
+  requirements to be met (bypass branch protections)_. Tài khoản máy B (quyền Write) không bỏ qua
+  được. Repo chỉ có hai tài khoản nên PR không bao giờ đủ 2 lượt duyệt: mọi PR đều do chủ repo gộp.
 
 Mỗi máy đặt `user.name`/`user.email` theo **tài khoản GitHub của máy đó**, để lịch sử commit thể
 hiện rõ máy nào đã làm.
@@ -193,7 +197,8 @@ Trên GitHub: repo → **Settings → Branches → Add classic branch protection
 
 1. _Branch name pattern_: `main`
 2. Tích **Require a pull request before merging**.
-   - _Required approvals_ = **1** (người duyệt phải là tài khoản GitHub còn lại).
+   - _Required approvals_ = **2** (người duyệt không thể là người mở PR). Để **trống** ô _Do not
+     allow bypassing the above settings_, để chủ repo vẫn tự gộp được (xem mục 4).
    - Tích **Dismiss stale pull request approvals when new commits are pushed**, để khi Builder
      push bản sửa thì Lead phải review lại.
 3. Tích **Require status checks to pass before merging**. Gõ tìm và thêm các check của CI:

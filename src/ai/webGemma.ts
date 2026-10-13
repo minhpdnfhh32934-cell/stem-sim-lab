@@ -170,9 +170,12 @@ type WorkerOut =
   | { kind: 'loaded'; modelId: string; gpu: WebGpuInfo | null }
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
   | { kind: 'reply'; id: number; text: string; truncated: boolean }
+  | { kind: 'partial'; id: number; text: string }
   | { kind: 'error'; id: number; message: string };
 
 let worker: Worker | null = null;
+/** Listeners for the pieces of an answer that is still being generated, by request id. */
+const partials = new Map<number, (piece: string) => void>();
 let inited = false;
 let loadedId: string | null = null;
 let idleTimer: ReturnType<typeof setTimeout> | null = null;
@@ -199,6 +202,10 @@ function ensureWorker(): Worker {
     worker = new Worker(new URL('./webGemmaWorker.ts', import.meta.url), { type: 'module' });
     worker.onmessage = (event: MessageEvent<WorkerOut>) => {
       const out = event.data;
+      if (out.kind === 'partial') {
+        partials.get(out.id)?.(out.text);
+        return;
+      }
       if (out.kind === 'reply' || out.kind === 'error') {
         const resolve = pending.get(out.id);
         if (resolve) {
@@ -438,6 +445,18 @@ function normalizeHistory(messages: WebChatMessage[]): WebChatMessage[] {
   return merged;
 }
 
+/**
+ * The answer without the question that small models often repeat first. While the echo is still
+ * arriving (the text so far is a prefix of the question) there is nothing to show yet.
+ */
+export function withoutEcho(text: string, echo: string): string {
+  const t = text.trimStart();
+  if (!echo) return t.trim() ? t : '';
+  if (t.startsWith(echo)) return t.slice(echo.length).trim();
+  if (echo.startsWith(t.trim())) return '';
+  return t;
+}
+
 /** Asks the in-browser model. Serialized: one generation at a time. */
 export function webGemmaChat(args: {
   model: string;
@@ -448,6 +467,8 @@ export function webGemmaChat(args: {
   maxTokens?: number;
   /** Most prompt tokens; the worker drops the oldest turns above it (exact count). */
   inputBudget?: number;
+  /** Called with the answer so far while it is being generated (echoed question removed). */
+  onPartial?: (textSoFar: string) => void;
 }): Promise<WebGemmaReply> {
   const task = async (): Promise<WebGemmaReply> => {
     const meta = webGemmaModel(args.model);
@@ -469,6 +490,17 @@ export function webGemmaChat(args: {
     const w = ensureWorker();
     const chatId = nextId++;
     const waiting = waitFor(chatId);
+    const lastUser = [...args.messages].reverse().find((m) => m.role !== 'assistant');
+    const echo = lastUser?.content.trim() ?? '';
+    const onPartial = args.onPartial;
+    if (onPartial) {
+      let soFar = '';
+      partials.set(chatId, (piece) => {
+        soFar += piece;
+        const shown = withoutEcho(soFar, echo);
+        if (shown) onPartial(shown);
+      });
+    }
     w.postMessage({
       kind: 'chat',
       id: chatId,
@@ -479,17 +511,13 @@ export function webGemmaChat(args: {
       maxTokens: args.maxTokens ?? 1024,
       ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
     });
-    const out = await waiting;
+    const out = await waiting.finally(() => partials.delete(chatId));
     scheduleIdleUnload();
     if (out.kind === 'error') throw new Error(out.message);
     let text = out.kind === 'reply' ? out.text.trim() : '';
     if (!text) throw new Error('empty reply');
     // Small models often echo the question first: drop that prefix for readability.
-    const lastUser = [...args.messages].reverse().find((m) => m.role !== 'assistant');
-    const echo = lastUser?.content.trim();
-    if (echo && text.startsWith(echo)) {
-      text = text.slice(echo.length).trim();
-    }
+    if (echo && text.startsWith(echo)) text = text.slice(echo.length).trim();
     if (!text) throw new Error('empty reply');
     return { content: text, model: id, truncated: out.kind === 'reply' && out.truncated };
   };

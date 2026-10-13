@@ -26,12 +26,14 @@
   gap: var(--space-2);
   max-width: 60%;
   padding: 5px 10px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--bg-panel) 90%, transparent);
-  backdrop-filter: blur(6px);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
   font-size: var(--text-sm);
-  box-shadow: var(--shadow-sm);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 var(--glass-highlight);
   pointer-events: none;
 }
 .stage__hud-title {
@@ -90,10 +92,13 @@
   flex-direction: column;
   gap: 4px;
   padding: var(--space-2);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  background: var(--bg-panel);
-  box-shadow: var(--shadow-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 var(--glass-highlight);
 }
 .stopwatch__time {
   font-size: var(--text-xl);
@@ -405,4 +410,61 @@
 /* Presentation: keep the HUD clear of the exit button. */
 .shell[data-presentation] .stage__hud {
   right: calc(var(--space-3) + 56px);
+}
+
+/* Before / after legend (pinned run, pattern 060). */
+.stage__compare {
+  position: absolute;
+  left: calc(var(--space-3) + 3.4rem);
+  bottom: var(--space-3);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: min(60%, 420px);
+  padding: 4px 4px 4px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 var(--glass-highlight);
+  font-size: var(--text-sm);
+}
+.stage__compare svg line {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+}
+.stage__compare > span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.stage__compare small {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.stage__compare-close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.stage__compare-close:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+@media (any-pointer: coarse) {
+  .stage__compare-close {
+    width: var(--target);
+    height: var(--target);
+  }
 }

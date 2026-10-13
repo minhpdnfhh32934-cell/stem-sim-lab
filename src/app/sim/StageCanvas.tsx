@@ -9,6 +9,7 @@ import { reportOverload, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import { Camera } from '@/physics/render/camera';
 import { drawGrid, line, polyline, text } from '@/physics/render/draw';
 import type { PhysicsScene, ThemeColors } from '@/physics/types';
+import { useCompareStore } from './compare';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 import { readThemeColors } from './themeColors';
@@ -115,6 +116,11 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       drawGrid(c, cam, colors, locale);
       if (!state || sstate.validation.length > 0) return;
       const p = sstate.params;
+      // Pinned run (before / after): a copy of its recorded trail, dashed and muted.
+      const ghost = useCompareStore.getState().ghost;
+      if (ghost && ghost.sceneId === scene.id) {
+        for (const tr of ghost.tracks) polyline(c, cam, tr, colors.muted, 1.6, [7, 6]);
+      }
       // Trail from recorded history (up to the current time when scrubbing).
       if (sstate.trail && scene.trail) {
         const h = sim.history;

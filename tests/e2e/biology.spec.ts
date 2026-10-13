@@ -27,7 +27,9 @@ test('every biology topic opens without errors and publishes a Science Card', as
   await openBiology(page);
   for (const [i, name] of TOPICS.entries()) {
     await page.getByRole('button', { name, exact: true }).click();
-    await expect(page.locator('.science-card')).toBeVisible();
+    // Each topic is a lazy module: the dev server compiles it on first use, which can take
+    // several seconds while other spec files run in parallel.
+    await expect(page.locator('.science-card')).toBeVisible({ timeout: 20_000 });
     await page.waitForTimeout(400);
     if (process.env.SHOTS)
       await page.screenshot({ path: `${process.env.SHOTS}/bio-${String(i)}.png` });

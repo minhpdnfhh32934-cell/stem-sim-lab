@@ -70,6 +70,11 @@ chép qua USB và cài trước.
    Hướng dẫn nhanh mở lại được bằng menu ☰ → Hướng dẫn nhanh. App cũng đo nhanh sức mạnh máy
    (khoảng 1 giây) để chọn chất lượng hiển thị.
 
+   **Tìm nhanh (Ctrl+K)** hoặc nút kính lúp trên thanh trên cùng: gõ vài chữ (không cần dấu, ví
+   dụ "nem xien") để mở một chủ đề, một trang Cài đặt, AI Teacher, hoặc làm nhanh một việc (đổi
+   sáng/tối, Cơ bản/Nâng cao, ngôn ngữ, trình chiếu, lưu/mở tệp). Mũi tên ↑ ↓ để chọn, Enter để mở,
+   Esc để đóng.
+
 2. **Trang chủ SimLab** có hai lối vào:
    - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
    - **AI Teacher** mở trang trò chuyện với trợ lý học tập.
@@ -107,8 +112,11 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   khóa chỉ nằm trong phiên (tải lại trang là mất) và Claude chỉ rà soát được ở bản desktop.
 - Chọn **Gemma cục bộ** để trò chuyện ngay trên máy, không cần Ollama, không cần mạng sau
   khi đã tải model. Vào Cài đặt → AI local (Gemma) để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
-  còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng; có
-  nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Máy và trình duyệt cần hỗ trợ WebGPU;
+  còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng, và
+  "còn khoảng … phút" sau vài giây (ước tính theo tốc độ mạng mấy giây gần nhất, nên có thể thay
+  đổi); có nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Với Gemma, câu trả lời hiện
+  dần từng chữ trong khi thầy đang viết; nếu giữa chừng có đoạn không an toàn, phần đã hiện bị thu
+  lại ngay. Khi bật Think, bản nháp không hiện ra mà chờ rà soát xong. Máy và trình duyệt cần hỗ trợ WebGPU;
   nếu không, app nói rõ và dùng API thay thế. Cài mới chọn sẵn Gemma, nhưng khi chưa tải model thì
   app tự dùng API đã kết nối; nếu em tự chọn Gemma mà chưa tải, app không gửi câu hỏi lên mạng.
   Mô hình được lưu trên máy, mở lại app không phải tải lại. Khi Gemma đang trả lời, hãy để cửa sổ
@@ -147,6 +155,8 @@ vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì. Bảng có nh
 
 - Nút **Tạm dừng / Tiếp tục / Giảng lại**, **Viết nhanh** (viết ngay phần còn lại), tốc độ viết
   0,75–2× (hiện khi bảng đã có bài). Bảng dài tự cuộn theo bút; khi sang phần mới có các thẻ **Bảng 1, Bảng 2…** để xem lại.
+  Khi bảng dài hơn khung nhìn, góc trên bên phải có **bản đồ nhỏ** của bảng: các khối đã viết và
+  khung phần đang nhìn; bấm hoặc kéo trên bản đồ để đến chỗ đó.
 - **Bút của em:** bật để tự viết, vẽ lên bảng bằng chuột hoặc cảm ứng (màu tím); nút cục tẩy xóa nét
   của em. Nét vẽ chỉ ở trên máy.
 - Mọi con số trên bảng được kiểm nguồn gốc: số có trong đề là bình thường; phép tính viết trên bảng
@@ -190,6 +200,8 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
   không gửi đi). Đáp án đúng do chương trình tính, không ai viết sẵn.
 - **Thử thách nhỏ**: ví dụ "chỉnh góc ném để vật bay xa nhất". Bấm **Bắt đầu thử thách**, chỉ chỉnh
   thông số được nêu; ô "Hiện tại / Mục tiêu" cập nhật ngay, có nút **Xem gợi ý**.
+- Đúng dự đoán hoặc đạt thử thách thì dấu ✓ bật lên với một chùm chấm nhỏ (dưới 1 giây; tắt khi
+  máy đặt "giảm chuyển động").
 - **Gợi ý từng bước**: khi bạn nhập đề bài, thẻ **Lời giải** ẩn đáp số để bạn tự giải trước: bấm
   **Gợi ý 1**, **Gợi ý 2**… đến **Lời giải đầy đủ**, hoặc **Xem lời giải ngay** để đối chiếu.
 - **Tiến độ và huy hiệu**: chủ đề hoàn thành (đã mở, đã dự đoán, đã làm thử thách) có dấu ✓ trong
@@ -232,6 +244,10 @@ xo, con lắc đơn.
 - **Thanh công cụ nổi** trên khung mô phỏng: Chọn (V), Kéo/ném vật (H), Thước đo (M), Thước đo góc
   (A), Đồng hồ bấm giờ (T), hiện vectơ, vết quỹ đạo, căn vừa khung nhìn (F). Lăn chuột để phóng to,
   kéo nền để di chuyển.
+- **So sánh trước / sau** (nút ghim, ở chủ đề có vết quỹ đạo): chạy một lần, bấm **Ghim lần chạy
+  này để so sánh**, đổi thông số rồi chạy lại. Quỹ đạo đã ghim hiện bằng nét đứt màu xám; ô chú thích
+  ở góc dưới ghi giá trị lúc ghim của các thông số đã đổi. Nét đứt là bản sao quỹ đạo đã tính, không
+  tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
   (và tua nhanh cho bài toán tính bằng giờ).
 - **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
@@ -475,13 +491,14 @@ Giọng nói ghi lý do. Có thể chọn kiểu giọng (Vui vẻ, Trầm ấm,
 
 ## Phím tắt
 
-| Phím            | Tác dụng                           |
-| --------------- | ---------------------------------- |
-| Space           | Chạy / tạm dừng                    |
-| R               | Đặt lại                            |
-| .               | Bước tiếp theo                     |
-| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                 |
-| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim              |
-| F5 / Esc        | Vào / thoát chế độ trình chiếu     |
-| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                 |
-| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài) |
+| Phím            | Tác dụng                            |
+| --------------- | ----------------------------------- |
+| Space           | Chạy / tạm dừng                     |
+| R               | Đặt lại                             |
+| .               | Bước tiếp theo                      |
+| Ctrl+Z / Ctrl+Y | Hoàn tác / Làm lại                  |
+| Ctrl+S / Ctrl+O | Lưu / mở tệp .stemsim               |
+| F5 / Esc        | Vào / thoát chế độ trình chiếu      |
+| Ctrl+= / Ctrl+- | Tăng / giảm cỡ chữ                  |
+| Ctrl+Enter      | Phân tích đề (khi đang ở ô đề bài)  |
+| Ctrl+K          | Tìm nhanh (chủ đề, trang, thao tác) |

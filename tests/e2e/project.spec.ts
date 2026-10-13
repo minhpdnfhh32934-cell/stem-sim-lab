@@ -7,7 +7,8 @@ async function openLogistic(page: Page) {
   await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
   await page.getByRole('button', { name: 'Tăng trưởng logistic', exact: true }).click();
-  await expect(page.locator('.science-card')).toBeVisible();
+  // First use of a lazy module: the dev server compiles it (slow while specs run in parallel).
+  await expect(page.locator('.science-card')).toBeVisible({ timeout: 20_000 });
 }
 
 function slider(page: Page, name: RegExp) {

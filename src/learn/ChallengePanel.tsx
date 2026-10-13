@@ -9,6 +9,7 @@ import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { fmtQty } from '@/physics/common/tex';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
+import { Celebrate } from '@/ui/Celebrate';
 import { cx } from '@/ui/cx';
 import { challengesFor, evaluate, optimum, startParams, type Challenge } from './challenges';
 import { changedValue, observe, poeFor, type Poe, type PoeChoice } from './poe';
@@ -155,7 +156,7 @@ function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
         <div className="learn-result" role="status">
           <p className={cx('learn-result__verdict', right ? 'is-right' : 'is-other')}>
             {right ? (
-              <CheckCircle2 size={16} strokeWidth={2} aria-hidden="true" />
+              <Celebrate icon={CheckCircle2} />
             ) : (
               <Sparkles size={16} strokeWidth={1.75} aria-hidden="true" />
             )}
@@ -298,7 +299,7 @@ function ChallengeCard({ scene, challenge: c }: { scene: PhysicsScene; challenge
           )}
           {status?.state === 'done' && meta && (
             <p className="learn-success" role="status">
-              <CheckCircle2 size={16} strokeWidth={2} aria-hidden="true" />
+              <Celebrate icon={CheckCircle2} />
               {c.goal.kind === 'target'
                 ? t('learn.successTarget', {
                     quantity: L(meta.label),
