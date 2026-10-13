@@ -25,11 +25,11 @@ import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
 import { boardAnswerText } from '@/teacher/board/lesson';
 import {
-  listVoices,
   speak,
   speechSupported,
   stopSpeaking,
   vietnameseVoices,
+  voicesWhenLoaded,
 } from '@/teacher/voice/speak';
 import { toast } from '@/ui/toast';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
@@ -269,8 +269,12 @@ export function ChatPanel({
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
   const activeTopic = useActiveTopic();
-  // The newest question that names a topic: a short reply ("Ở kì giữa ạ.") keeps the link.
-  const simLink = hasAnswer ? latestTopic(chat.messages, useSettingsStore.getState().locale) : null;
+  // The latest question's topic: a short reply ("Ở kì giữa ạ.") keeps the link of the question
+  // it follows; an unrelated new question drops it.
+  const simLink = hasAnswer ? latestTopic(chat.messages, locale) : null;
+  // A question may still be answered by another panel (the bubble before "Mở rộng").
+  const answering = useChatStore((s) => s.answering);
+  const pending = busy || answering;
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -357,14 +361,23 @@ export function ChatPanel({
                 if (voiceEnabled) stopSpeaking();
                 setVoiceEnabled(!voiceEnabled);
                 // Without a Vietnamese voice the Windows voice reads with the wrong accent
-                // (seen on a test machine with only English voices, 2026-10-14).
+                // (seen on a test machine with only English voices, 2026-10-14). The list may
+                // still be loading (WebView2: empty until "voiceschanged"), so wait for it.
                 if (
                   !voiceEnabled &&
                   useVoiceStore.getState().engine === 'system' &&
-                  speechSupported() &&
-                  vietnameseVoices(listVoices()).length === 0
+                  speechSupported()
                 ) {
-                  toast(t('voice.noVietnameseOnEnable'), 'warn');
+                  void voicesWhenLoaded().then((voices) => {
+                    const { enabled, engine: voiceEngine } = useVoiceStore.getState();
+                    if (
+                      enabled &&
+                      voiceEngine === 'system' &&
+                      vietnameseVoices(voices).length === 0
+                    ) {
+                      toast(t('voice.noVietnameseOnEnable'), 'warn');
+                    }
+                  });
                 }
               }}
               aria-pressed={voiceEnabled}
@@ -577,7 +590,7 @@ export function ChatPanel({
             {error}
           </div>
         )}
-        {!busy && simLink && simLink.id !== activeTopic && (
+        {!pending && simLink && simLink.id !== activeTopic && (
           <div className="chat-panel__sim-link">
             <button
               type="button"

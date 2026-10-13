@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
@@ -35,6 +35,7 @@ describe('AI Teacher chat panel', () => {
       messages: [],
       summary: null,
       thinkEnabled: false,
+      answering: false,
     });
   });
   afterEach(() => {
@@ -84,5 +85,37 @@ describe('AI Teacher chat panel', () => {
     expect(messages).toHaveLength(2);
     expect(messages[1]?.content).toBe('Bước 1: đặt trục. Bước 2: viết phương trình.');
     expect(messages[1]?.truncated).toBe(false);
+  });
+
+  it('"Xem mô phỏng" follows the latest question, not an older one', () => {
+    useChatStore.setState({
+      messages: [
+        { id: 'q1', role: 'user', content: 'Vì sao NST nhân đôi trước nguyên phân?' },
+        { id: 'a1', role: 'assistant', content: 'Để mỗi tế bào con nhận đủ bộ NST.' },
+        { id: 'q2', role: 'user', content: 'Lực ma sát nghỉ là gì?' },
+        { id: 'a2', role: 'assistant', content: 'Là lực giữ vật đứng yên.' },
+      ],
+    });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.queryByRole('button', { name: /Xem mô phỏng/ })).not.toBeInTheDocument();
+  });
+
+  it('no "Xem mô phỏng" for a question still being answered in another panel', () => {
+    // The bubble sent the question, then the learner expanded it: this panel is new (not busy
+    // itself) but the answer is still on its way.
+    useChatStore.setState({
+      answering: true,
+      messages: [
+        { id: 'q1', role: 'user', content: 'Rơi tự do là gì?' },
+        { id: 'a1', role: 'assistant', content: 'Là chuyển động chỉ dưới tác dụng của trọng lực.' },
+        { id: 'q2', role: 'user', content: 'Vì sao NST nhân đôi trước nguyên phân?' },
+      ],
+    });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.queryByRole('button', { name: /Xem mô phỏng/ })).not.toBeInTheDocument();
+    act(() => {
+      useChatStore.setState({ answering: false });
+    });
+    expect(screen.getByRole('button', { name: 'Xem mô phỏng: Nguyên phân' })).toBeInTheDocument();
   });
 });

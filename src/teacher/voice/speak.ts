@@ -38,6 +38,37 @@ export function listVoices(): SpeechSynthesisVoice[] {
   }
 }
 
+/**
+ * The voice list once it is known: Chromium/WebView2 return [] from getVoices() until the first
+ * "voiceschanged". An empty list waits for that event (at most `timeoutMs`), then answers with
+ * whatever is known, so a caller never decides on a list that has not loaded yet.
+ */
+export function voicesWhenLoaded(timeoutMs = 1500): Promise<SpeechSynthesisVoice[]> {
+  const s = synth();
+  const known = listVoices();
+  if (!s || known.length > 0) return Promise.resolve(known);
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      try {
+        s.removeEventListener('voiceschanged', finish);
+      } catch {
+        /* engine without events */
+      }
+      resolve(listVoices());
+    };
+    const timer = window.setTimeout(finish, timeoutMs);
+    try {
+      s.addEventListener('voiceschanged', finish);
+    } catch {
+      /* engine without events: the timeout decides */
+    }
+  });
+}
+
 /** Vietnamese voices installed in Windows or offered by the browser. */
 export function vietnameseVoices(voices = listVoices()): SpeechSynthesisVoice[] {
   return voices.filter((v) => v.lang.toLowerCase().replace('_', '-').startsWith('vi'));
