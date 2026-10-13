@@ -1,0 +1,111 @@
+/* GitHub Pages for SimLab (privacy policy and a short home page). No external resources. */
+:root {
+  --bg: #f6f8fb;
+  --panel: #ffffff;
+  --text: #172033;
+  --muted: #5a6477;
+  --border: #dde2eb;
+  --accent: #2f62d8;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --panel: #151b24;
+    --text: #e6ebf3;
+    --muted: #9aa4b5;
+    --border: #252e3b;
+    --accent: #7aa2ff;
+    color-scheme: dark;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    16px/1.6 'Segoe UI',
+    system-ui,
+    sans-serif;
+  text-wrap: pretty;
+}
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+h1,
+h2 {
+  line-height: 1.25;
+  text-wrap: balance;
+}
+h1 {
+  margin: 8px 0 4px;
+  font-size: 1.9rem;
+}
+h2 {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+}
+a {
+  color: var(--accent);
+}
+.brand a {
+  font-weight: 700;
+  text-decoration: none;
+}
+.muted {
+  color: var(--muted);
+}
+.lang {
+  font-size: 0.95rem;
+}
+ul {
+  padding-left: 1.2rem;
+}
+li {
+  margin: 0.35rem 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  font-size: 0.95rem;
+}
+th,
+td {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: var(--bg);
+}
+hr {
+  margin: 3rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 600px) {
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+  }
+  thead {
+    display: none;
+  }
+  tr {
+    margin-bottom: 12px;
+  }
+  td:first-child {
+    font-weight: 600;
+  }
+}

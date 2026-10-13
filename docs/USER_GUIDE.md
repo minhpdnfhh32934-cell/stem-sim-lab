@@ -16,6 +16,11 @@ con số do chương trình tính; mỗi mô phỏng có **Thẻ Khoa học** gh
 
 Chỉ cần cài **một lần**. Các bản sau cập nhật ngay trong app (mục "Cập nhật phần mềm").
 
+**Cài từ Microsoft Store (khi app đã lên Store):** mở Microsoft Store, tìm **SimLab**, bấm
+**Nhận** (Get). Không có cảnh báo "Windows protected your PC", và Store tự cập nhật app; trong app,
+menu ☰ → **Kiểm tra cập nhật** chỉ mở Store. Bản Store và bản cài từ GitHub giữ dữ liệu riêng (khóa
+AI dùng chung). Cách đưa app lên Store: `docs/STORE.md`.
+
 **Bản thử nghiệm THPT đã ngừng (12/10/2026).** Máy nào đã cài "STEM Sim Lab THPT" sẽ không nhận
 cập nhật nữa: gỡ bản đó (Settings → Apps) rồi cài bản chính ở trên. Dữ liệu của bản THPT nằm riêng
 trong `%APPDATA%\vn.stemsimlab.pilot\`, có thể xóa sau khi gỡ.

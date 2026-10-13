@@ -192,3 +192,10 @@ máy (kiểm tra giấy phép trước). Kết quả tra:
     này hoặc xin phép (mục 2e).
 17. Giọng Gemini: người dùng biết chữ của câu trả lời được gửi tới Google khi bật giọng này (ô "Dữ
     liệu của em đi đâu?" có ghi), và chấp nhận điều khoản gói miễn phí.
+18. Microsoft Store (ghi 2026-10-13, `docs/STORE.md`): người công bố app (chủ tài khoản Partner
+    Center) đọc và chấp nhận Microsoft Store App Developer Agreement và Store Policies; tự trả lời
+    bảng xếp loại độ tuổi (IARC); và xác nhận trang chính sách quyền riêng tư
+    (`site/privacy.html`, đăng trên GitHub Pages) mô tả đúng app. Trang đó là mô tả kỹ thuật theo mã
+    hiện tại, **không phải ý kiến pháp lý**. Chưa tìm thấy văn bản chính sách Store nói rõ app trên
+    Store có được tự tải phần web không; vì vậy bản Store tắt cập nhật trong app (quyết định
+    2026-10-13).

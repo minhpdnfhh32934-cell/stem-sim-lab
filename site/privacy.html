@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SimLab · Quyền riêng tư</title>
+    <meta
+      name="description"
+      content="Chính sách quyền riêng tư của SimLab: ứng dụng lưu gì trên máy và gửi gì ra ngoài."
+    />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <main>
+      <p class="brand"><a href="./">SimLab</a></p>
+      <h1>Chính sách quyền riêng tư</h1>
+      <p class="muted">Cập nhật ngày 13/10/2026 · áp dụng cho SimLab 0.5.1 trở lên trên Windows.</p>
+      <p class="lang"><a href="#en">English version below</a></p>
+
+      <h2>Tóm tắt</h2>
+      <ul>
+        <li>
+          SimLab là ứng dụng học Vật lý, Hóa học, Sinh học chạy trên máy của bạn. Các mô phỏng chạy
+          hoàn toàn trên máy, không cần mạng.
+        </li>
+        <li>
+          Không có tài khoản, không quảng cáo, không gửi thống kê sử dụng. Nhà phát triển
+          <strong>không có máy chủ nào nhận dữ liệu của bạn</strong>.
+        </li>
+        <li>
+          Dữ liệu chỉ rời máy khi bạn dùng một tính năng AI trực tuyến hoặc một tính năng mạng mà
+          bạn tự bật (liệt kê bên dưới), và chỉ đi thẳng tới dịch vụ đó.
+        </li>
+        <li>
+          Phần AI dành cho người từ 18 tuổi; app hỏi xác nhận trước khi cho lưu khóa AI. Người chưa
+          đủ 18 tuổi vẫn dùng được toàn bộ mô phỏng, phần AI tắt.
+        </li>
+      </ul>
+
+      <h2>Lưu trên máy của bạn</h2>
+      <ul>
+        <li>
+          Khóa API của dịch vụ AI: trong kho khóa của Windows (Credential Manager); màn hình chỉ
+          hiện 4 ký tự cuối.
+        </li>
+        <li>Cài đặt, đề bài đã xác nhận, lịch sử mô phỏng, tiến độ học, huy hiệu.</li>
+        <li>
+          Lịch sử trò chuyện với AI Teacher và bản tóm tắt phần trò chuyện cũ (có thể tắt lưu, hoặc
+          xóa bằng nút thùng rác).
+        </li>
+        <li>Tài liệu bạn tự thêm vào thư viện kiến thức.</li>
+        <li>Mô hình AI chạy trên máy (Gemma) và giọng đọc trên máy, nếu bạn tải về.</li>
+        <li>
+          Nhật ký sự cố an toàn: chỉ loại sự cố và thời gian, không lưu nội dung câu hỏi hay câu trả
+          lời.
+        </li>
+      </ul>
+      <p>
+        Gỡ ứng dụng sẽ xóa các dữ liệu này (khóa API xóa được trong Cài đặt → Kết nối AI, hoặc trong
+        Credential Manager của Windows).
+      </p>
+
+      <h2>Gửi ra ngoài — chỉ khi bạn dùng</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Khi nào</th>
+            <th>Gửi gì</th>
+            <th>Tới đâu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bấm “Phân tích đề”, “AI diễn giải”, hoặc hỏi AI Teacher bằng API trực tuyến</td>
+            <td>
+              Đề bài / câu hỏi, các kết quả do app tính, đoạn trích liên quan từ thư viện kiến thức;
+              nếu bạn bật “Lấy thông tin từ màn hình”: trạng thái mô phỏng đang mở (dữ liệu của app,
+              không phải ảnh chụp màn hình)
+            </td>
+            <td>Nhà cung cấp AI bạn chọn: Google (Gemini), Anthropic (Claude) hoặc Groq</td>
+          </tr>
+          <tr>
+            <td>Bật “Think”</td>
+            <td>Câu hỏi và bản nháp câu trả lời</td>
+            <td>Nhà cung cấp AI thứ hai bạn chọn để rà soát</td>
+          </tr>
+          <tr>
+            <td>Bật đọc to bằng giọng Gemini</td>
+            <td>Chữ của câu trả lời (không kèm câu hỏi)</td>
+            <td>Google</td>
+          </tr>
+          <tr>
+            <td>Bật “Tra thêm Wikipedia”</td>
+            <td>Câu hỏi</td>
+            <td>Wikipedia (vi / en)</td>
+          </tr>
+          <tr>
+            <td>Bấm tải mô hình Gemma hoặc giọng đọc trên máy</td>
+            <td>Không gửi nội dung học tập; chỉ tải tệp về</td>
+            <td>HuggingFace</td>
+          </tr>
+          <tr>
+            <td>Kiểm tra cập nhật (bản cài từ GitHub)</td>
+            <td>Không gửi nội dung học tập; chỉ hỏi có bản mới không</td>
+            <td>GitHub. Bản cài từ Microsoft Store được Store cập nhật.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Dùng Gemma chạy trên máy (không bật Think) thì câu hỏi không rời máy. Ảnh chụp đề bài trong
+        ứng dụng desktop được đọc bằng Gemma ngay trên máy và không được lưu lại.
+      </p>
+      <p>
+        App không gửi họ tên, tài khoản hay tệp của bạn. Đề bài có dấu hiệu thông tin cá nhân (số
+        điện thoại, email, địa chỉ, số căn cước) bị chặn trước khi gửi.
+      </p>
+
+      <h2>Nhà cung cấp AI xử lý dữ liệu thế nào</h2>
+      <p>
+        Khi bạn dùng AI trực tuyến, dữ liệu gửi đi tuân theo chính sách của nhà cung cấp đó, với
+        khóa API do chính bạn tạo:
+        <a href="https://ai.google.dev/gemini-api/terms">Google Gemini API</a>,
+        <a href="https://www.anthropic.com/legal/privacy">Anthropic</a>,
+        <a href="https://groq.com/privacy-policy">Groq</a>,
+        <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy">Wikimedia</a>. Ví dụ:
+        với gói miễn phí của Gemini, Google có thể dùng nội dung để cải thiện sản phẩm. Ứng dụng tóm
+        tắt các điểm này trong Cài đặt → An toàn &amp; quyền riêng tư.
+      </p>
+
+      <h2>Camera</h2>
+      <p>
+        Camera chỉ bật khi bạn bấm “Chụp đề bài”, và Windows hỏi quyền trước. Ứng dụng không dùng
+        micro.
+      </p>
+
+      <h2>Liên hệ</h2>
+      <p>
+        Câu hỏi về quyền riêng tư:
+        <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/issues">
+          mở một issue trên GitHub
+        </a>
+        (đừng đăng thông tin cá nhân hay khóa API trong issue).
+      </p>
+
+      <hr />
+
+      <section id="en" lang="en">
+        <h1>Privacy policy</h1>
+        <p class="muted">Updated 13 October 2026 · SimLab 0.5.1 and later on Windows.</p>
+        <h2>Summary</h2>
+        <ul>
+          <li>
+            SimLab is a physics, chemistry and biology learning app. Simulations run entirely on
+            your computer, offline.
+          </li>
+          <li>
+            No accounts, no ads, no usage statistics. The developer runs
+            <strong>no server that receives your data</strong>.
+          </li>
+          <li>
+            Data leaves your computer only when you use an online AI feature or a network feature
+            you switched on (below), and goes straight to that service.
+          </li>
+          <li>
+            The AI features are for people aged 18 or over; the app asks before an AI key can be
+            saved. Under-18 users keep every simulation, with AI off.
+          </li>
+        </ul>
+        <h2>Stored on your computer</h2>
+        <p>
+          AI keys (Windows Credential Manager), settings, confirmed problems, simulation history,
+          progress, the AI Teacher chat history and its summary (can be switched off or cleared),
+          documents you add, downloaded on-device models and voices, and a safety log with only the
+          kind and time of each incident. Uninstalling removes them.
+        </p>
+        <h2>Sent only when you use it</h2>
+        <ul>
+          <li>
+            Online AI (problem analysis, explanations, AI Teacher): your question or problem, the
+            results the app computed, related library excerpts and, if you switch it on, the state
+            of the open simulation → the provider you chose (Google Gemini, Anthropic Claude or
+            Groq). “Think” also sends the draft answer to a second provider.
+          </li>
+          <li>
+            Gemini voice: the answer text → Google. Wikipedia lookup: the question → Wikipedia.
+          </li>
+          <li>
+            Downloading Gemma or the on-device voice: files from HuggingFace (nothing of yours is
+            sent). Update check (GitHub copy): GitHub; Store copies are updated by the Microsoft
+            Store.
+          </li>
+        </ul>
+        <p>
+          With on-device Gemma (without Think) questions stay on the computer. Photos of a problem
+          are read on the computer by Gemma and not kept. Personal data patterns (phone, email,
+          address, ID numbers) are blocked before sending. The camera turns on only when you press
+          “Chụp đề bài” (Take a photo); the microphone is not used.
+        </p>
+        <p>
+          Providers' policies apply to what you send them with your own key:
+          <a href="https://ai.google.dev/gemini-api/terms">Google Gemini API</a>,
+          <a href="https://www.anthropic.com/legal/privacy">Anthropic</a>,
+          <a href="https://groq.com/privacy-policy">Groq</a>,
+          <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy">Wikimedia</a>.
+        </p>
+        <p>
+          Contact:
+          <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/issues"
+            >open a GitHub issue</a
+          >
+          (please do not post personal data or API keys).
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

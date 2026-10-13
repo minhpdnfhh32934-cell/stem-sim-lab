@@ -98,6 +98,8 @@ export function AppShell() {
       className="shell"
       data-presentation={presentation || undefined}
       data-inspector={showRight || undefined}
+      data-bottom={showBottom || undefined}
+      data-timeline={(!moduleActive && !home && !teacher) || undefined}
       style={style}
     >
       {!presentation && <TopBar />}

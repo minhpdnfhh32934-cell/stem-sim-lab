@@ -507,6 +507,15 @@
 .chem-table td.num {
   white-space: nowrap;
 }
+/* The Inspector is narrow: labels keep a readable column and long values (angle lists,
+   SMILES) wrap instead of pushing the table out of the panel. */
+.chem-form .chem-table th {
+  width: 40%;
+}
+.chem-form .chem-table td.num {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 
 /* ───── 3D molecule viewer ───── */
 .mol-viewer {

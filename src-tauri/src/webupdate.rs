@@ -44,6 +44,8 @@ const MAX_UNPACKED_BYTES: u64 = 256 * 1024 * 1024;
 const VERSION_FILE: &str = "web-version.txt";
 const EDITION_FILE: &str = "web-edition.txt";
 const ACTIVE_FILE: &str = "active.json";
+/// Answer of the update commands in a Microsoft Store copy.
+const STORE_ONLY: &str = "bản cài từ Microsoft Store được Store tự cập nhật";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -334,6 +336,10 @@ pub fn install<R: Runtime>(context: &mut tauri::Context<R>) -> Arc<Shared> {
     let shared = Arc::new(Shared::default());
     let embedded = context.set_assets(Box::new(NoAssets));
     context.set_assets(Box::new(OverrideAssets::new(embedded, shared.clone())));
+    // A Store copy is updated by the Store only: it never serves or downloads a web part.
+    if crate::channel::is_store() {
+        return shared;
+    }
     // Same folder as `app.path().app_data_dir()`, resolved before any window loads a page.
     if let Some(data) = dirs::data_dir() {
         let root = data.join(&context.config().identifier).join("web");
@@ -354,6 +360,8 @@ pub struct Status {
     pub embedded: String,
     pub downloaded: Option<String>,
     pub running: String,
+    /// "store": the Microsoft Store updates this copy; the in-app update is off.
+    pub channel: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -376,6 +384,7 @@ fn status(shared: &Shared) -> Status {
         embedded: shared.embedded(),
         downloaded: shared.active_version(),
         running: shared.running(),
+        channel: crate::channel::current().to_string(),
     }
 }
 
@@ -420,6 +429,9 @@ pub fn web_update_status(state: State<'_, WebUpdateState>) -> Status {
 
 #[tauri::command]
 pub async fn web_update_check(state: State<'_, WebUpdateState>) -> Result<CheckResult, String> {
+    if crate::channel::is_store() {
+        return Err(STORE_ONLY.into());
+    }
     let manifest = fetch_manifest().await?;
     let (available, needs_installer, required) = evaluate(&state.0, &manifest);
     Ok(CheckResult {
@@ -434,6 +446,9 @@ pub async fn web_update_check(state: State<'_, WebUpdateState>) -> Result<CheckR
 /// Downloads, verifies and activates the newest web part. Takes effect after a restart.
 #[tauri::command]
 pub async fn web_update_apply(state: State<'_, WebUpdateState>) -> Result<String, String> {
+    if crate::channel::is_store() {
+        return Err(STORE_ONLY.into());
+    }
     let shared = state.0.clone();
     let m = fetch_manifest().await?;
     let (available, _, _) = evaluate(&shared, &m);

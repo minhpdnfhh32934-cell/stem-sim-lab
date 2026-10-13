@@ -637,6 +637,9 @@ const en: Messages = {
     checking: 'Checking for a new version…',
     downloading: 'Downloading and checking the signature…',
     upToDate: 'You have the latest version.',
+    fromStore:
+      'This copy was installed from the Microsoft Store, which updates it when a new version is out. You can also open the Store to update now.',
+    openStore: 'Open Microsoft Store',
     newVersion: 'Version {version} is available',
     needsInstaller:
       'This version changes the core of the app (needs core {native}), so the new installer is needed once.',

@@ -10,6 +10,8 @@ pub struct AppInfo {
     pub debug_build: bool,
     /// Always "main" since 0.5.0 (the pilot edition was removed).
     pub edition: String,
+    /// "store" (Microsoft Store package) or "github" (installer from GitHub Releases).
+    pub channel: String,
 }
 
 impl AppInfo {
@@ -20,6 +22,7 @@ impl AppInfo {
             target_os: std::env::consts::OS.to_string(),
             debug_build: cfg!(debug_assertions),
             edition: crate::ai::EDITION.to_string(),
+            channel: crate::channel::current().to_string(),
         }
     }
 }
@@ -41,5 +44,6 @@ mod tests {
         assert!(json.get("targetOs").is_some());
         assert!(json.get("debugBuild").is_some());
         assert!(json.get("target_os").is_none());
+        assert_eq!(json["channel"], "github");
     }
 }
