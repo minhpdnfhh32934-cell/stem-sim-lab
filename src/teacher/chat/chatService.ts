@@ -3,8 +3,13 @@ import { modelFor, useAiStore } from '@/ai/aiStore';
 import { ANSWER_TOKENS, useGemmaPrefs } from '@/ai/gemmaPrefs';
 import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
 import { webGPUStatus } from '@/ai/webGemma';
-import { useGpuStore } from '@/ai/gpu';
-import { INTEGRATED_INPUT_BUDGET, gemmaOnIntegrated } from '@/ai/gpuSafety';
+import { loadGpuStatus, useGpuStore } from '@/ai/gpu';
+import {
+  INTEGRATED_INPUT_BUDGET,
+  gemmaBlockedByGpuFault,
+  gemmaOnIntegrated,
+  isGpuFailure,
+} from '@/ai/gpuSafety';
 import { getTransport } from '@/ai/transport';
 import { outputIsSafe, checkInput } from '@/safety/moderation';
 import { currentSafety } from '@/safety/safetyStore';
@@ -14,11 +19,12 @@ import { analysisEngine } from '@/app/ai/engineChoice';
 import { screenContext } from './context';
 import { fetchWebKnowledge, searchKnowledge } from './knowledge';
 import { toolBlock, toolFacts } from './tools';
-import { useChatStore, type ChatMessageRecord } from './chatStore';
+import { useChatStore, type ChatMessageRecord, type ChatSummary } from './chatStore';
 import {
   contextBudget,
   estimateTokens,
   fitHistory,
+  sentText,
   summaryBlock,
   summaryRequest,
   unsummarized,
@@ -142,9 +148,20 @@ const EXCERPT_HEADER_COMPACT: Record<Locale, string> = {
  */
 export type PromptSize = 'full' | 'compact' | 'tight';
 
-/** Untrusted text cannot close its own block or open a fake one. */
+/**
+ * Untrusted text cannot close its own block or open a fake one. Repeated until nothing changes:
+ * one pass could rebuild a tag from its pieces ('</refe<reference>rence>' → '</reference>'), and
+ * a '<' left in front of "reference" (an unfinished tag) is dropped too.
+ */
 function fenced(text: string): string {
-  return text.replace(/<\s*\/?\s*reference\b[^>]*>/gi, '');
+  let out = text;
+  for (;;) {
+    const next = out
+      .replace(/<\s*\/?\s*reference\b[^>]*>/gi, '')
+      .replace(/<(?=\s*\/?\s*reference)/gi, '');
+    if (next === out) return out;
+    out = next;
+  }
 }
 
 function attribute(value: string): string {
@@ -265,8 +282,10 @@ export function gemmaErrorKey(
   const m = message.toLowerCase();
   if (m.includes('gemma-stalled')) return 'chat.errors.gemmaStalled';
   if (m.includes('gpu-blocked')) return 'chat.errors.gemmaGpuBlocked';
-  if (m.includes('gpu-lost') || m.includes('worker-crashed') || m.includes('memory'))
-    return 'chat.errors.gemmaGpu';
+  // A GPU fault turns Gemma off for the session (audit GPU-01): never invite a retry that the
+  // block would refuse.
+  if (isGpuFailure(m) || m.includes('memory'))
+    return gemmaBlockedByGpuFault() ? 'chat.errors.gemmaGpuBlocked' : 'chat.errors.gemmaGpu';
   if (m.includes('model-missing') || m.includes('webgpu')) return 'chat.errors.gemmaMissing';
   return 'chat.errors.gemmaFailed';
 }
@@ -274,23 +293,69 @@ export function gemmaErrorKey(
 /** Tokens the summary of older turns may use. */
 const SUMMARY_TOKENS = 400;
 
+type SummaryRequest = ReturnType<typeof summaryRequest>;
+
+function requestTokens(request: SummaryRequest): number {
+  return request.messages.reduce(
+    (sum, m) => sum + estimateTokens(m.content),
+    estimateTokens(request.system),
+  );
+}
+
+/** Shortest text kept of one turn when the summary request must be squeezed. */
+const MIN_SUMMARY_TURN_CHARS = 120;
+
+/**
+ * The summary request within `maxTokens` (Gemma on an integrated card, audit GPU-01): it is one
+ * message the worker cannot trim, so the turns are shortened evenly here and the oldest ones are
+ * left out when even that is not enough. Null when nothing fits (no summary this time).
+ */
+function fittedSummaryRequest(
+  locale: Locale,
+  previous: ChatSummary | null,
+  pending: ChatMessageRecord[],
+  maxTokens: number,
+): SummaryRequest | null {
+  // Characters left for the turns (`estimateTokens` counts 3 characters per token).
+  const room = (maxTokens - requestTokens(summaryRequest(locale, previous, []))) * 3;
+  for (let from = 0; from < pending.length; from++) {
+    const turns = pending.slice(from);
+    // ~20 characters per turn for the speaker label and the line break.
+    const perTurn = Math.floor(room / turns.length) - 20;
+    if (perTurn < MIN_SUMMARY_TURN_CHARS) continue;
+    const request = summaryRequest(
+      locale,
+      previous,
+      turns.map((r) => ({ id: r.id, role: r.role, content: sentText(r).slice(0, perTurn) })),
+    );
+    if (requestTokens(request) <= maxTokens) return request;
+  }
+  return null;
+}
+
 /**
  * Turns that no longer fit the budget are folded into the stored summary, written by the same
  * engine that answers (nothing goes anywhere new). A failed or unsafe summary is skipped: the
- * answer is never blocked by it, the oldest turns are then simply left out.
+ * answer is never blocked by it, the oldest turns are then simply left out. `maxInputTokens`
+ * caps the whole summary request (on-device Gemma on an integrated card).
  */
 async function updateSummary(
   locale: Locale,
   older: ChatMessageRecord[],
   all: ChatMessageRecord[],
   ask: (system: string, messages: ChatMessage[], maxTokens: number) => Promise<Answer>,
+  maxInputTokens?: number,
 ): Promise<void> {
   const store = useChatStore.getState();
   const pending = unsummarized(older, store.summary, all);
   const last = pending[pending.length - 1];
   if (!last) return;
   try {
-    const request = summaryRequest(locale, store.summary, pending);
+    const request =
+      maxInputTokens === undefined
+        ? summaryRequest(locale, store.summary, pending)
+        : fittedSummaryRequest(locale, store.summary, pending, maxInputTokens);
+    if (!request) return;
     const answer = await ask(request.system, request.messages, SUMMARY_TOKENS);
     const text = answer.content.trim();
     if (text && outputIsSafe(text)) useChatStore.getState().setSummary({ text, upto: last.id });
@@ -354,8 +419,10 @@ export async function askTeacher(
   const engine = (await analysisEngine()) === 'cloud' ? 'cloud' : 'gemma';
   const compact = engine === 'gemma';
   const gpu = useGpuStore.getState();
-  // Gemma on an integrated card: a tight prompt and input budget (audit GPU-01).
-  const integrated = compact && gemmaOnIntegrated(gpu.status, gpu.gemmaInfo) === true;
+  // Gemma on an integrated card: a tight prompt and input budget (audit GPU-01). The card list
+  // is read at start-up; if it is not there yet, read it now rather than guess "not integrated".
+  const gpuStatus = compact && !gpu.status ? await loadGpuStatus().catch(() => null) : gpu.status;
+  const integrated = compact && gemmaOnIntegrated(gpuStatus, gpu.gemmaInfo) === true;
   const prompt = await contextPrompt(
     question,
     locale,
@@ -427,7 +494,13 @@ export async function askTeacher(
     (chat.summary ? estimateTokens(chat.summary.text) : SUMMARY_TOKENS);
   const fitted = fitHistory(records, Math.max(budget.input - reserved, 300));
   if (fitted.older.length > 0) {
-    await updateSummary(locale, fitted.older, records, (s, m, max) => ask(s, m, max));
+    await updateSummary(
+      locale,
+      fitted.older,
+      records,
+      (s, m, max) => ask(s, m, max),
+      integrated ? budget.input : undefined,
+    );
   }
   const summary = fitted.older.length > 0 ? useChatStore.getState().summary : null;
   const system = `${baseSystem}${summaryBlock(locale, summary)}`;

@@ -36,6 +36,7 @@ import { usePresentationFullscreen } from './usePresentationFullscreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { ChatBubble } from '@/teacher/chat/ChatBubble';
 import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
+import { loadGpuStatus } from '@/ai/gpu';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -65,6 +66,9 @@ export function AppShell() {
     const offHistory = initHistory();
     const offUpdate = scheduleAutoCheck();
     const offIndicators = installSlidingIndicators();
+    // Desktop: which cards exist decides how short Gemma's prompt must be (audit GPU-01), so it
+    // is known before the first question, not only after Settings → GPU was opened.
+    void loadGpuStatus().catch(() => null);
     return () => {
       offUndo();
       offHistory();

@@ -25,9 +25,25 @@ describe('Settings after a GPU fault (audit GPU-01)', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('amd rdna-3');
     expect(screen.getByRole('alert')).toHaveTextContent('Gemma đang tạm dừng');
     expect(gemmaBlockedByGpuFault()).toBe(true);
+    // While Gemma is paused the notice cannot be hidden: it holds the only way to resume.
+    expect(screen.queryByRole('button', { name: 'Ẩn thông báo' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Vẫn cho Gemma chạy lại' }));
     expect(gemmaBlockedByGpuFault()).toBe(false);
     await user.click(screen.getByRole('button', { name: 'Ẩn thông báo' }));
+    expect(screen.queryByText('Card đồ họa đã bị treo khi chạy Gemma')).not.toBeInTheDocument();
+  });
+
+  it('shows the pause and the way out even when the stored record is gone', async () => {
+    const user = userEvent.setup();
+    act(() => {
+      noteGpuFault('worker-crashed', null);
+    });
+    // Storage blocked or cleared: only the in-memory block remains.
+    forgetGpuFault();
+    render(<GpuSettings />);
+    expect(screen.getByRole('alert')).toHaveTextContent('Gemma đang tạm dừng');
+    await user.click(screen.getByRole('button', { name: 'Vẫn cho Gemma chạy lại' }));
+    expect(gemmaBlockedByGpuFault()).toBe(false);
     expect(screen.queryByText('Card đồ họa đã bị treo khi chạy Gemma')).not.toBeInTheDocument();
   });
 });

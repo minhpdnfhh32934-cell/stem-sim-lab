@@ -919,7 +919,7 @@ const en: Messages = {
       gemmaStalled:
         'Gemma wrote nothing for a long time, so it was stopped and restarted. Please ask again; if it stays slow, pick "Short" answers or a smaller model in Settings.',
       gemmaGpu:
-        'The graphics card stopped Gemma (out of memory or a driver reset). Gemma was restarted; please ask again. If it happens again, close other apps or pick a smaller model.',
+        'The graphics card stopped Gemma (out of memory or a driver reset). You can ask again; if it happens again, close other apps or pick a smaller model.',
       gemmaGpuBlocked:
         'The graphics card hung while running Gemma. So the computer does not restart, Gemma stays off until you reopen the app. Pick the discrete card in Settings → GPU for Gemma, use a smaller model, or ask through an API.',
       gemmaFailed:
@@ -970,6 +970,8 @@ const en: Messages = {
       'The download failed because of the network. Check the connection and press “Download model” again.',
     downloadMemory:
       'This computer does not have enough graphics memory for this model. Choose a smaller one (270M or 1B).',
+    downloadGpuBlocked:
+      'Gemma is paused because the graphics card hung while running it (so the computer does not restart). To try again: open Settings → GPU for Gemma, pick the discrete card if there is one, then press “Let Gemma run again anyway” — or reopen the app.',
     downloadFailed: 'The download did not finish ({detail}). The model is not marked as ready.',
     desktopOnly: 'desktop app only',
     webLookup: 'Also look up Wikipedia when online',

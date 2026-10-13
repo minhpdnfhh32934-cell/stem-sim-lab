@@ -116,8 +116,31 @@ interface VisionEngine {
   model: Awaited<ReturnType<typeof Gemma4ForConditionalGeneration.from_pretrained>>;
 }
 
-let engine: TextEngine | VisionEngine | null = null;
+type Engine = TextEngine | VisionEngine;
+
+let engine: Engine | null = null;
 let loadedModel = '';
+/** True while a model is released on purpose: losing its device then is expected. */
+let disposing = false;
+
+/**
+ * Releases the current model. ONNX Runtime then destroys its own WebGPU device (the last session
+ * is gone, `preserve_device` defaults to false), which resolves `device.lost` with 'destroyed'.
+ */
+async function disposeEngine(): Promise<void> {
+  const old = engine;
+  engine = null;
+  loadedModel = '';
+  if (!old) return;
+  disposing = true;
+  try {
+    await old.model.dispose();
+  } catch {
+    /* already gone */
+  } finally {
+    disposing = false;
+  }
+}
 
 function progressFor(modelId: string, post: (out: OutMessage) => void) {
   const files = new Map<string, { loaded: number; total: number }>();
@@ -318,19 +341,28 @@ async function gpuInfo(): Promise<GpuInfo | null> {
  * Reports a lost GPU device (driver reset, out of memory, window hidden too long) so the page can
  * restart the worker instead of waiting for an answer that never comes (audit AI-01). ONNX Runtime
  * exposes its WebGPU device after the first session; older builds may not, then nothing happens.
+ *
+ * Only a real fault of the device `owner` runs on counts: not a device ONNX Runtime destroyed
+ * itself (reason 'destroyed', every unload), not one lost while a model is disposed on purpose,
+ * and not one of a model already replaced (that listener must never drop the new model).
  */
-function watchDevice(post: (out: OutMessage) => void): void {
+function watchDevice(owner: Engine, post: (out: OutMessage) => void): void {
   try {
     const onnx = env.backends.onnx as { webgpu?: { device?: unknown } };
     void Promise.resolve(onnx.webgpu?.device)
       .then((device) => {
-        const lost = (device as { lost?: Promise<{ message?: string }> } | undefined)?.lost;
+        const lost = (device as { lost?: Promise<{ reason?: string; message?: string }> } | null)
+          ?.lost;
         if (!lost) return;
-        void lost.then((info) => {
-          engine = null;
-          loadedModel = '';
-          post({ kind: 'device-lost', message: info.message ?? '' });
-        });
+        void lost.then(
+          (info) => {
+            if (info.reason === 'destroyed' || disposing || engine !== owner) return;
+            engine = null;
+            loadedModel = '';
+            post({ kind: 'device-lost', message: info.message ?? '' });
+          },
+          () => undefined,
+        );
       })
       .catch(() => undefined);
   } catch {
@@ -352,17 +384,9 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
       }
       post({ kind: 'inited' });
     } else if (msg.kind === 'load') {
-      if (engine && loadedModel !== msg.modelId) {
-        try {
-          await engine.model.dispose();
-        } catch {
-          /* keep going */
-        }
-        engine = null;
-        loadedModel = '';
-      }
+      if (engine && loadedModel !== msg.modelId) await disposeEngine();
       if (!engine) {
-        engine =
+        const loaded =
           msg.modality === 'vision'
             ? await loadVision(
                 msg.repo,
@@ -378,8 +402,9 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
                 msg.device,
                 progressFor(msg.modelId, post),
               );
+        engine = loaded;
         loadedModel = msg.modelId;
-        watchDevice(post);
+        watchDevice(loaded, post);
       }
       post({ kind: 'loaded', modelId: msg.modelId, gpu: await gpuInfo() });
     } else if (msg.kind === 'chat') {
@@ -413,13 +438,7 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
       }
       post({ kind: 'reply', id: msg.id, text: reply.text, truncated: reply.truncated });
     } else {
-      try {
-        if (engine) await engine.model.dispose();
-      } catch {
-        /* already gone */
-      }
-      engine = null;
-      loadedModel = '';
+      await disposeEngine();
     }
   } catch (e) {
     // The page waits on fixed ids for init (-2) and load (-3): answer on the same id, or a

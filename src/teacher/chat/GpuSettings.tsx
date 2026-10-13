@@ -102,7 +102,8 @@ export function GpuRestartReminder() {
 
 /**
  * A GPU fault while Gemma ran (audit GPU-01): what happened, why Gemma is paused, and the safer
- * choices. Shown until the learner hides it; "let it run again" is a knowing choice.
+ * choices. "Let it run again" is a knowing choice. While Gemma is paused the notice stays (it
+ * holds the only way to resume, even when the stored record is gone); afterwards it can be hidden.
  */
 function GpuFaultNotice({
   suggested,
@@ -126,19 +127,19 @@ function GpuFaultNotice({
     };
   }, []);
   const fault = lastGpuFault();
-  if (!fault) return null;
-  const when = new Date(fault.at).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-GB');
   const blocked = gemmaBlockedByGpuFault();
+  if (!fault && !blocked) return null;
   return (
     <div className="gpu-notice gpu-notice--warn" role="alert">
       <p>
         <TriangleAlert size={15} aria-hidden="true" />
         <span>
           <strong>{t('chatSettings.gpu.faultTitle')}</strong>{' '}
-          {t('chatSettings.gpu.faultBody', {
-            when,
-            card: fault.adapter ?? t('chatSettings.gpu.unknownCard'),
-          })}{' '}
+          {fault &&
+            t('chatSettings.gpu.faultBody', {
+              when: new Date(fault.at).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-GB'),
+              card: fault.adapter ?? t('chatSettings.gpu.unknownCard'),
+            })}{' '}
           {blocked && t('chatSettings.gpu.faultBlocked')} {t('chatSettings.gpu.faultAdvice')}
         </span>
       </p>
@@ -169,17 +170,19 @@ function GpuFaultNotice({
             {t('chatSettings.gpu.allowAgain')}
           </button>
         )}
-        <button
-          type="button"
-          className="btn"
-          onClick={() => {
-            forgetGpuFault();
-            refresh((n) => n + 1);
-          }}
-        >
-          <X size={14} />
-          {t('chatSettings.gpu.dismissFault')}
-        </button>
+        {!blocked && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              forgetGpuFault();
+              refresh((n) => n + 1);
+            }}
+          >
+            <X size={14} />
+            {t('chatSettings.gpu.dismissFault')}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -328,12 +331,16 @@ export function GpuSettings() {
         onUseDiscrete={(id) => void choose(id)}
         saving={saving}
       />
-      {onIntegrated && suggested && status?.choice !== suggested.id && !lastGpuFault() && (
-        <p className="gpu-notice gpu-notice--warn" role="status">
-          <TriangleAlert size={15} aria-hidden="true" />
-          <span>{t('chatSettings.gpu.integratedHint', { name: suggested.name })}</span>
-        </p>
-      )}
+      {onIntegrated &&
+        suggested &&
+        status?.choice !== suggested.id &&
+        !lastGpuFault() &&
+        !gemmaBlockedByGpuFault() && (
+          <p className="gpu-notice gpu-notice--warn" role="status">
+            <TriangleAlert size={15} aria-hidden="true" />
+            <span>{t('chatSettings.gpu.integratedHint', { name: suggested.name })}</span>
+          </p>
+        )}
       {picker}
       {saveError && (
         <p className="chat-settings__error" role="alert">

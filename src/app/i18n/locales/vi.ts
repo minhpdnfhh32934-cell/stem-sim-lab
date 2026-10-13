@@ -917,9 +917,9 @@ const vi = {
       gemmaStalled:
         'Gemma không viết thêm chữ nào trong một lúc lâu nên mình đã dừng và khởi động lại nó. Em hỏi lại nhé; nếu vẫn chậm, chọn câu trả lời "Ngắn" hoặc mô hình nhỏ hơn trong Cài đặt.',
       gemmaGpu:
-        'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Mình đã khởi động lại Gemma, em hỏi lại nhé. Nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
+        'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Em có thể hỏi lại; nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
       gemmaGpuBlocked:
-        'Lần trước card đồ họa bị treo khi chạy Gemma. Để máy không bị khởi động lại, Gemma tạm dừng tới khi em mở lại app. Hãy chọn card rời trong Cài đặt → GPU cho Gemma, dùng mô hình nhỏ hơn, hoặc hỏi bằng API.',
+        'Card đồ họa đã bị treo khi chạy Gemma. Để máy không bị khởi động lại, Gemma tạm dừng tới khi em mở lại app. Hãy chọn card rời trong Cài đặt → GPU cho Gemma, dùng mô hình nhỏ hơn, hoặc hỏi bằng API.',
       gemmaFailed:
         'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI Teacher.',
       crisis:
@@ -965,6 +965,8 @@ const vi = {
     downloadNetwork: 'Không tải được do mạng. Kiểm tra kết nối rồi bấm “Tải mô hình” lần nữa.',
     downloadMemory:
       'Máy không đủ bộ nhớ đồ họa để chạy mô hình này. Hãy chọn bản nhỏ hơn (270M hoặc 1B).',
+    downloadGpuBlocked:
+      'Gemma đang tạm dừng vì card đồ họa vừa bị treo khi chạy nó (để máy không bị khởi động lại). Muốn thử lại: vào Cài đặt → GPU cho Gemma, chọn card rời nếu có, rồi bấm “Vẫn cho Gemma chạy lại” — hoặc mở lại ứng dụng.',
     downloadFailed: 'Tải chưa thành công ({detail}). Mô hình chưa được đánh dấu là sẵn sàng.',
     desktopOnly: 'chỉ bản desktop',
     webLookup: 'Tra thêm Wikipedia khi có mạng',
