@@ -321,19 +321,17 @@ fn count_call(app: &tauri::AppHandle, state: &AiState, req: &ChatRequest) -> Res
     count_usage(app, state, req.day.as_deref(), req.daily_cap)
 }
 
-/// Counts one AI call (chat or speech) against the user's daily cap.
+/// Counts one AI call (chat or speech) against the user's daily cap. Every call is counted:
+/// without a cap the default applies, and the day is checked against the system clock
+/// (audit SEC-07), so the page cannot skip the count by leaving a field out.
 fn count_usage(
     app: &tauri::AppHandle,
     state: &AiState,
     day: Option<&str>,
     cap: Option<u32>,
 ) -> Result<(), AiError> {
-    let (Some(day), Some(cap)) = (day, cap) else {
-        return Ok(());
-    };
-    if !usage::valid_day(day) {
-        return Ok(());
-    }
+    let day = usage::counting_day(day, usage::utc_today());
+    let cap = cap.unwrap_or(usage::DEFAULT_DAILY_CAP);
     let Some(path) = usage_path(app) else {
         return Ok(());
     };
@@ -341,7 +339,7 @@ fn count_usage(
         .usage
         .lock()
         .map_err(|e| AiError::Network(e.to_string()))?;
-    usage::consume(&path, day, cap).map(|_| ())
+    usage::consume(&path, &day, cap).map(|_| ())
 }
 
 #[tauri::command]
@@ -441,9 +439,10 @@ pub fn ai_cancel(state: tauri::State<'_, AiState>, request_id: String) -> bool {
 /// AI calls made today (for Settings).
 #[tauri::command]
 pub fn ai_usage(app: tauri::AppHandle, day: String) -> usage::Usage {
+    let day = usage::counting_day(Some(&day), usage::utc_today());
     match usage_path(&app) {
-        Some(p) if usage::valid_day(&day) => usage::current(&p, &day),
-        _ => usage::Usage { day, count: 0 },
+        Some(p) => usage::current(&p, &day),
+        None => usage::Usage { day, count: 0 },
     }
 }
 

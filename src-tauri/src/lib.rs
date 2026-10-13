@@ -7,6 +7,7 @@
 //! - `safety_*`: 18+ confirmation and incident log (PROMPT_PHAN_2 A3)
 //! - `save_file` / `open_text_file`: native Save/Open dialogs (`.stemsim`, PNG, CSV)
 //! - `open_known_page`: opens a fixed list of external pages (Gemma terms, model pages)
+//! - `navigation`: the window never navigates away from the app (audit SEC-03)
 //! - `gpu_*`: graphics card for the in-app AI (WebView2 adapter, applied at start-up)
 //! - `history_*`: simulation history in SQLite (app data folder)
 //! - `web_update_*`: signed in-app updates of the web part (no new executable)
@@ -18,6 +19,7 @@ mod files;
 mod gpu;
 mod history;
 mod links;
+mod navigation;
 mod safety;
 mod webupdate;
 
@@ -38,6 +40,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(navigation::init())
         .manage(webupdate::WebUpdateState(web))
         .manage(gpu)
         .manage(ai::AiState::default())
