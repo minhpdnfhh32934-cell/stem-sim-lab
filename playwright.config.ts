@@ -17,6 +17,10 @@ const chromium = {
  * specs timed out only in the full parallel run). It runs on its own, after the others.
  */
 const HEAVY_3D = /mitosis3d\.spec\.ts$/;
+/** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
+const PERF = /@perf/;
+/** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */
+const SWIFTSHADER = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
 
 export default defineConfig({
   testDir: 'tests/e2e',
@@ -36,7 +40,23 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: chromium, testIgnore: HEAVY_3D },
     // Skipped when a spec of the first project fails (Playwright dependencies); fix those first.
-    { name: 'chromium-3d', use: chromium, testMatch: HEAVY_3D, dependencies: ['chromium'] },
+    {
+      name: 'chromium-3d',
+      use: chromium,
+      testMatch: HEAVY_3D,
+      grepInvert: PERF,
+      dependencies: ['chromium'],
+    },
+    {
+      name: 'chromium-3d-perf',
+      use: {
+        ...chromium,
+        launchOptions: { ...(executablePath ? { executablePath } : {}), args: SWIFTSHADER },
+      },
+      testMatch: HEAVY_3D,
+      grep: PERF,
+      dependencies: ['chromium-3d'],
+    },
   ],
   webServer: {
     command: 'npm run dev',

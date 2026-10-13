@@ -13,6 +13,7 @@ export type ComponentId =
   | 'membrane'
   | 'nucleus'
   | 'nuclearEnvelope'
+  | 'nucleolus'
   | 'chromatin'
   | 'doubleChromosome'
   | 'sisterChromatid'
@@ -55,7 +56,7 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
   nucleus: {
     name: L('Nhân tế bào', 'Nucleus'),
     role: L(
-      'Chứa vật chất di truyền (ADN, ở kì trung gian dưới dạng sợi nhiễm sắc) và điều khiển mọi hoạt động của tế bào.',
+      'Chứa vật chất di truyền (ADN, ở kì trung gian dưới dạng chất nhiễm sắc) và điều khiển mọi hoạt động của tế bào.',
       'Holds the genetic material (DNA, as chromatin in interphase) and controls the activities of the cell.',
     ),
     cells: BOTH,
@@ -68,8 +69,16 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
     ),
     cells: BOTH,
   },
+  nucleolus: {
+    name: L('Nhân con', 'Nucleolus'),
+    role: L(
+      'Vùng đậm đặc trong nhân, nơi tổng hợp rARN và lắp ráp ribosome; tiêu biến ở kì đầu và xuất hiện lại ở kì cuối.',
+      'A dense region inside the nucleus where rRNA is made and ribosomes are assembled; it disappears in prophase and re-forms in telophase.',
+    ),
+    cells: BOTH,
+  },
   chromatin: {
-    name: L('Sợi nhiễm sắc (NST dãn xoắn)', 'Chromatin (decondensed chromosome)'),
+    name: L('Chất nhiễm sắc (NST dãn xoắn)', 'Chromatin (decondensed chromosomes)'),
     role: L(
       'Ở kì trung gian, NST ở dạng sợi mảnh dãn xoắn, nhờ đó ADN có thể nhân đôi và phiên mã.',
       'In interphase chromosomes are long, thin, decondensed threads, so their DNA can be replicated and transcribed.',
@@ -103,16 +112,16 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
   centromere: {
     name: L('Tâm động', 'Centromere'),
     role: L(
-      'Vùng thắt nơi hai cromatit chị em dính nhau; sợi thoi phân bào bám vào tâm động (tại thể động) để kéo NST về các cực.',
-      'The constriction where sister chromatids are joined; spindle fibres attach there (at the kinetochores) to pull chromosomes to the poles.',
+      'Vùng thắt trên NST. Ở NST kép, hai cromatit chị em dính nhau tại tâm động; từ kì sau, tâm động tách ra và mỗi NST đơn có tâm động riêng. Sợi thoi đính vào tâm động (tại thể động) để kéo NST về các cực.',
+      'The constriction of a chromosome. In a double chromosome the two sister chromatids are joined there; from anaphase on it has split and each single chromosome has its own. Spindle fibres attach there (at the kinetochores) to pull chromosomes to the poles.',
     ),
     cells: BOTH,
   },
   spindle: {
     name: L('Thoi phân bào', 'Mitotic spindle'),
     role: L(
-      'Hệ vi ống hình thành ở kì đầu, đính vào tâm động và kéo các NST về hai cực tế bào; tiêu biến ở kì cuối.',
-      'Microtubules that form in prophase, attach to the centromeres and pull the chromosomes to the poles; they disassemble in telophase.',
+      'Hệ vi ống hình thành ở kì đầu. Chỉ một số sợi thoi đính vào tâm động (tại thể động) và kéo NST về hai cực; các sợi còn lại không gắn với NST. Thoi phân bào tiêu biến ở kì cuối.',
+      'Microtubules that form in prophase. Only some fibres attach to the centromeres (at the kinetochores) and pull the chromosomes to the poles; the other fibres do not attach to chromosomes. The spindle disassembles in telophase.',
     ),
     cells: BOTH,
   },
@@ -133,7 +142,7 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
     cells: ['plant'],
   },
   cleavageFurrow: {
-    name: L('Rãnh phân cắt (eo thắt)', 'Cleavage furrow'),
+    name: L('Vòng co (rãnh phân cắt)', 'Contractile ring (cleavage furrow)'),
     role: L(
       'Ở tế bào động vật, vòng co gồm các sợi actin và myosin thắt dần màng tế bào ở mặt phẳng xích đạo, chia tế bào chất làm hai.',
       'In animal cells a contractile ring of actin and myosin filaments tightens the membrane at the equator and divides the cytoplasm in two.',
@@ -155,6 +164,7 @@ const ORDER: ComponentId[] = [
   'membrane',
   'nucleus',
   'nuclearEnvelope',
+  'nucleolus',
   'chromatin',
   'doubleChromosome',
   'sisterChromatid',
@@ -184,6 +194,8 @@ export function componentVisible(id: ComponentId, s: Mitosis3DState): boolean {
     case 'nucleus':
     case 'nuclearEnvelope':
       return s.nuclei.some((n) => n.envelope > 0.2);
+    case 'nucleolus':
+      return s.nuclei.some((n) => n.nucleolus > 0.2);
     case 'chromatin':
       return s.condensation < 0.5;
     case 'doubleChromosome':
@@ -225,8 +237,8 @@ const NOTES: Record<CellType, Record<Stage3D, LocalizedText>> = {
       `${STAGE_NOTE.g2.en} The centrosome has duplicated too.`,
     ),
     prophase: L(
-      'NST kép co xoắn dần; màng nhân tiêu biến; hai trung thể đi về hai cực và thoi phân bào hình thành giữa chúng.',
-      'Double chromosomes condense; the nuclear envelope breaks down; the two centrosomes move to opposite poles and the spindle forms between them.',
+      'NST kép co xoắn dần; nhân con và màng nhân tiêu biến; hai trung thể đi về hai cực và thoi phân bào hình thành giữa chúng.',
+      'Double chromosomes condense; the nucleolus and the nuclear envelope disappear; the two centrosomes move to opposite poles and the spindle forms between them.',
     ),
     metaphase: L(
       'NST kép co xoắn cực đại, tập trung thành 1 hàng ở mặt phẳng xích đạo; tâm động của mỗi NST đính với sợi thoi từ cả hai cực.',
@@ -237,8 +249,8 @@ const NOTES: Record<CellType, Record<Stage3D, LocalizedText>> = {
       'Sister chromatids separate at the centromere and, as single chromosomes, move to opposite poles; the cell elongates.',
     ),
     telophase: L(
-      'NST dãn xoắn; màng nhân hình thành lại quanh mỗi bộ NST: 1 tế bào có 2 nhân; thoi phân bào tiêu biến.',
-      'Chromosomes decondense; a nuclear envelope re-forms around each set: one cell with two nuclei; the spindle disassembles.',
+      'NST dãn xoắn; thoi phân bào tiêu biến; màng nhân và nhân con hình thành lại quanh mỗi bộ NST: 1 tế bào có 2 nhân.',
+      'Chromosomes decondense; the spindle disassembles; a nuclear envelope and a nucleolus re-form around each set: one cell with two nuclei.',
     ),
     cytokinesis: L(
       'Vòng co thắt màng tế bào ở mặt phẳng xích đạo (rãnh phân cắt), chia tế bào chất làm hai: 2 tế bào con, mỗi tế bào có 2n NST đơn giống tế bào mẹ.',
@@ -252,8 +264,8 @@ const NOTES: Record<CellType, Record<Stage3D, LocalizedText>> = {
     ),
     g2: STAGE_NOTE.g2,
     prophase: L(
-      'NST kép co xoắn dần; màng nhân tiêu biến; thoi phân bào hình thành từ hai vùng cực (tế bào thực vật không có trung thể).',
-      'Double chromosomes condense; the nuclear envelope breaks down; the spindle forms from two polar regions (plant cells have no centrosomes).',
+      'NST kép co xoắn dần; nhân con và màng nhân tiêu biến; thoi phân bào hình thành từ hai vùng cực (tế bào thực vật không có trung thể).',
+      'Double chromosomes condense; the nucleolus and the nuclear envelope disappear; the spindle forms from two polar regions (plant cells have no centrosomes).',
     ),
     metaphase: L(
       'NST kép co xoắn cực đại, tập trung thành 1 hàng ở mặt phẳng xích đạo; tâm động của mỗi NST đính với sợi thoi từ cả hai cực.',
@@ -264,8 +276,8 @@ const NOTES: Record<CellType, Record<Stage3D, LocalizedText>> = {
       'Sister chromatids separate at the centromere and, as single chromosomes, move to opposite poles; the wall keeps the cell’s shape.',
     ),
     telophase: L(
-      'NST dãn xoắn; màng nhân hình thành lại quanh mỗi bộ NST: 1 tế bào có 2 nhân; thoi phân bào tiêu biến.',
-      'Chromosomes decondense; a nuclear envelope re-forms around each set: one cell with two nuclei; the spindle disassembles.',
+      'NST dãn xoắn; thoi phân bào tiêu biến; màng nhân và nhân con hình thành lại quanh mỗi bộ NST: 1 tế bào có 2 nhân.',
+      'Chromosomes decondense; the spindle disassembles; a nuclear envelope and a nucleolus re-form around each set: one cell with two nuclei.',
     ),
     cytokinesis: L(
       'Tấm tế bào hình thành ở mặt phẳng xích đạo, lớn dần từ giữa ra tới thành tế bào và trở thành vách ngăn: 2 tế bào con, mỗi tế bào có 2n NST đơn giống tế bào mẹ.',
@@ -308,6 +320,14 @@ export function card3d(cellType: CellType): ScienceCardData {
         'Số NST, cromatit, tâm động, phân tử ADN là chính xác (đếm từ mô hình). Kì cuối: 1 tế bào có 2 nhân; bước "Phân chia tế bào chất": số liệu tính cho mỗi tế bào con.',
         'Chromosome, chromatid, centromere and DNA counts are exact (counted from the model). Telophase: one cell with two nuclei; "Cytokinesis": counts per daughter cell.',
       ),
+      L(
+        'Hình 3D chỉ vẽ cho 2n = 2, 4, 6, 8 (bộ chọn 2n). Với bộ NST lớn như 2n = 46, các NST sẽ chồng lên nhau nên app không vẽ; số lượng của 2n = 46 vẫn được kiểm tra bằng test tự động.',
+        'The 3D picture is drawn for 2n = 2, 4, 6, 8 only (the 2n selector). With a large set such as 2n = 46 the chromosomes would overlap, so it is not drawn; the counts for 2n = 46 are still checked by automated tests.',
+      ),
+      L(
+        'Nhân con được vẽ đơn giản (một khối trong nhân) để thấy nó tiêu biến ở kì đầu và xuất hiện lại ở kì cuối; nó không ảnh hưởng tới số lượng.',
+        'The nucleolus is drawn simply (one dense body in the nucleus) to show it disappearing in prophase and re-forming in telophase; it does not affect any count.',
+      ),
       cellType === 'animal'
         ? L(
             'Pha S không được vẽ thành một bước riêng: ADN và trung thể nhân đôi trong pha S (giữa G1 và G2), nên ngay từ đầu bước G2 mỗi NST đã là NST kép và tế bào đã có 2 trung thể.',
@@ -337,8 +357,8 @@ export function card3d(cellType: CellType): ScienceCardData {
     ],
     confidence: 'exact',
     confidenceNote: L(
-      'Test tự động với 2n = 4, 8, 46: mọi số lượng lấy từ mô hình đếm NST; từ G1 đến kì sau, và số liệu mỗi tế bào con ở bước phân chia tế bào chất, khớp bảng SGK. Cách ghi kì cuối (1 tế bào có 2 nhân, cả tế bào 4n NST đơn) là quy ước riêng của bản 3D, đang chờ giáo viên duyệt. Kì giữa: sợi thoi đính vào tâm động trước khi kéo NST, mọi tâm động nằm trên mặt phẳng xích đạo; kì sau: hai cromatit chị em về hai cực; sau phân chia: 2 tế bào, mỗi tế bào 2n NST đơn.',
-      'Automated tests with 2n = 4, 8, 46: every count comes from the bookkeeping model; G1 to anaphase, and the per-daughter-cell counts of the cytokinesis step, match the textbook table. The telophase convention (one cell with two nuclei, 4n single chromosomes in the whole cell) is specific to the 3D view and awaits teacher review. Metaphase: fibres attach to the centromeres before pulling the chromosomes, and every centromere ends on the equatorial plane; anaphase: sisters go to opposite poles; after division: two cells with 2n single chromosomes each.',
+      'Số lượng: test tự động với 2n = 4, 8, 46, mọi số lấy từ mô hình đếm NST; từ G1 đến kì sau, và số liệu mỗi tế bào con ở bước phân chia tế bào chất, khớp bảng SGK. Cách ghi kì cuối (1 tế bào có 2 nhân, cả tế bào có 4n NST đơn) là quy ước riêng của bản 3D, đang chờ giáo viên duyệt. Hình 3D (chỉ có cho 2n = 2–8), test tự động: kì đầu: màng nhân tiêu biến trước khi sợi thoi đi vào vùng nhân; kì giữa: sợi thoi đính vào tâm động trước khi kéo NST, mọi tâm động nằm trên mặt phẳng xích đạo, NST nguồn gốc từ mẹ và từ bố xen kẽ nhau; kì sau: hai cromatit chị em về hai cực; sau phân chia: 2 tế bào, mỗi tế bào 2n NST đơn.',
+      'Counts: automated tests with 2n = 4, 8, 46, every number comes from the bookkeeping model; G1 to anaphase, and the per-daughter-cell counts of the cytokinesis step, match the textbook table. The telophase convention (one cell with two nuclei, 4n single chromosomes in the whole cell) is specific to the 3D view and awaits teacher review. 3D picture (offered for 2n = 2–8 only), automated tests: prophase: the nuclear envelope breaks down before spindle fibres enter the nuclear region; metaphase: fibres attach to the centromeres before pulling the chromosomes, every centromere ends on the equatorial plane, maternal and paternal chromosomes alternate; anaphase: sisters go to opposite poles; after division: two cells with 2n single chromosomes each.',
     ),
     userIntervened: false,
     sources: [BSRC.sgk10, BSRC.campbell],

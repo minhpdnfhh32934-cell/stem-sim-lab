@@ -1,9 +1,10 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { setDivisionState } from '../stageIndex';
 import { Mitosis3DBottom } from './panels';
 import { timelineFor, useMitosis3D } from './store';
-import type { CellType } from './timeline';
+import { STAGES_3D, type CellType } from './timeline';
 
 /**
  * The seven rows of the 3D counts table for 2n = 2p, derived by hand from the textbook table
@@ -56,7 +57,9 @@ describe('3D counts table (Mitosis3DBottom)', () => {
           `${type} 2n=${String(2 * p)}`,
         ).toEqual(textbookRows(p));
         expect(
-          screen.getByText(/^Kì cuối: 1 tế bào có 2 nhân, mỗi nhân 2n NST đơn \(cả tế bào 4n\)/),
+          screen.getByText(
+            /^Kì cuối: 1 tế bào có 2 nhân, mỗi nhân 2n NST đơn \(cả tế bào có 4n NST đơn\)/,
+          ),
         ).toBeInTheDocument();
         view.unmount();
       }
@@ -82,5 +85,28 @@ describe('3D counts table (Mitosis3DBottom)', () => {
     fireEvent.click(screen.getByRole('rowheader', { name: 'Kì cuối' }));
     expect(useMitosis3D.getState()).toMatchObject({ t: tl.keyTime('telophase'), playing: false });
     expect(active()).toEqual(['Kì cuối']);
+  });
+
+  it('every row can be reached and used with the keyboard', async () => {
+    const user = userEvent.setup();
+    const tl = timelineFor(2, 'animal');
+    render(<Mitosis3DBottom />);
+    const rows = screen.getAllByRole('rowheader');
+    expect(rows).toHaveLength(STAGES_3D.length);
+    // Each row header holds a button named like the row; Tab goes through them in order.
+    const buttons = rows.map((th) => within(th).getByRole('button'));
+    for (const [k, b] of buttons.entries()) {
+      expect(b).toHaveAccessibleName(rows[k]!.textContent.trim());
+      await user.tab();
+      expect(b).toHaveFocus();
+    }
+    expect(buttons[0]).toHaveAttribute('aria-current', 'step');
+    buttons[4]!.focus();
+    await user.keyboard('{Enter}');
+    expect(useMitosis3D.getState()).toMatchObject({ t: tl.keyTime('anaphase'), playing: false });
+    expect(buttons[4]).toHaveAttribute('aria-current', 'step');
+    buttons[2]!.focus();
+    await user.keyboard(' ');
+    expect(useMitosis3D.getState().t).toBe(tl.keyTime('prophase'));
   });
 });

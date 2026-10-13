@@ -2,7 +2,7 @@ import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { useDogmaStore } from './central/state';
 import { STAGES, type Division } from './division/division';
-import { SPEEDS, useDivisionStore, type DivisionState } from './division/state';
+import { PAIR_CHOICES, SPEEDS, useDivisionStore, type DivisionState } from './division/state';
 import { setDivisionState } from './division/stageIndex';
 import { useLogistic, useLv } from './ecology/store';
 import { useEnzyme } from './enzyme/store';
@@ -52,9 +52,6 @@ import {
   DiffusionOsmosisStage,
 } from './transport/TransportViews';
 
-/** Homologous pairs offered by the 2n selector (2n = 2 … 8). */
-const PAIRS_MIN = 1;
-const PAIRS_MAX = 4;
 const intIn = (v: number, lo: number, hi: number) => Number.isInteger(v) && v >= lo && v <= hi;
 
 /**
@@ -64,7 +61,8 @@ const intIn = (v: number, lo: number, hi: number) => Number.isInteger(v) && v >=
  */
 function restoreDivision(kind: Division, patch: Partial<DivisionState>): void {
   const clean = { ...patch };
-  if (clean.pairs !== undefined && !intIn(clean.pairs, PAIRS_MIN, PAIRS_MAX)) delete clean.pairs;
+  if (clean.pairs !== undefined && !(PAIR_CHOICES as readonly number[]).includes(clean.pairs))
+    delete clean.pairs;
   if (clean.index !== undefined && !intIn(clean.index, 0, STAGES[kind].length - 1))
     delete clean.index;
   const cellType: unknown = clean.cellType;

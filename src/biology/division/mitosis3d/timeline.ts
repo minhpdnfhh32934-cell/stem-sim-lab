@@ -123,6 +123,20 @@ const CENTROSOME_GAP = 0.45;
 const META_ATTACH_END = 0.15;
 const META_MOVE_START = META_ATTACH_END;
 const META_MOVE_END = 0.45;
+/**
+ * Prophase timing (fractions of the stage). The nucleolus fades first; the nuclear envelope
+ * breaks down (opacity below 0.5 from u = 0.375) before the spindle has grown far enough to
+ * reach the nucleus, so no fibre is ever drawn inside an intact envelope (tested).
+ */
+const PRO_NUCLEOLUS = [0.02, 0.35] as const;
+const PRO_ENVELOPE = [0.2, 0.55] as const;
+const PRO_SPINDLE = [0.3, 0.95] as const;
+/**
+ * Telophase: the spindle has disassembled (u = 0.5) before the new envelopes reach 0.5 opacity
+ * (u = 0.55), and the nucleoli re-form inside the new nuclei once the chromosomes decondense.
+ */
+const TEL_SPINDLE_END = 0.5;
+const TEL_NUCLEOLUS = [0.55, 0.95] as const;
 
 /** Condensed length and centromere position (fraction along the chromatid) per pair. */
 const PAIR_LENGTH = [2.2, 1.8, 1.45, 1.15];
@@ -183,6 +197,11 @@ export interface NucleusState {
   radius: number;
   /** Nuclear envelope opacity 0…1 (breaks down in prophase, re-forms in telophase). */
   envelope: number;
+  /**
+   * Nucleolus 0…1 (illustrative, no effect on any count): fades early in prophase and
+   * re-forms in late telophase.
+   */
+  nucleolus: number;
   /** Geometric cell the nucleus belongs to. */
   cell: number;
 }
@@ -376,9 +395,11 @@ export function buildTimeline(pairs: number, cellType: CellType): Timeline {
     // Sister axis: perpendicular to the long axis, pointing towards +x (sister 1 side).
     let axis = norm(cross(orient, randomUnit(rand)), norm(cross(orient, [0, 0, 1])));
     if (dot(axis, X) < 0) axis = mul(axis, -1);
-    // Homologues are not neighbours on the plate (no pairing in mitosis): maternal
-    // chromosomes take the first half of the slots, paternal ones the second half.
-    const slotIndex = c.origin === 'M' ? c.pair : c.pair + pairs;
+    // No pairing in mitosis: maternal and paternal chromosomes alternate on the plate (even and
+    // odd slots), and a paternal homologue sits about a quarter turn from its maternal partner
+    // (never a half-ring of each origin; homologues are not neighbours when there is room).
+    const slotIndex =
+      c.origin === 'M' ? 2 * c.pair : 2 * ((c.pair + Math.floor(pairs / 2)) % pairs) + 1;
     const slot = slots[slotIndex] ?? slots[i] ?? { pos: v3(0, 0, 0), tangent: v3(0, 1, 0) };
     // Orient the plate direction like the prophase one, so the turn is at most 90°.
     const tangent = dot(slot.tangent, orient) < 0 ? mul(slot.tangent, -1) : slot.tangent;
@@ -535,8 +556,8 @@ function animalFrame(stage: Stage3D, u: number): Frame {
       separated,
     };
   };
-  const one = (envelope: number): NucleusState[] => [
-    { center: v3(0, 0, 0), radius: A.nucleus, envelope, cell: 0 },
+  const one = (envelope: number, nucleolus = 1): NucleusState[] => [
+    { center: v3(0, 0, 0), radius: A.nucleus, envelope, nucleolus, cell: 0 },
   ];
   const gap = CENTROSOME_GAP;
   switch (stage) {
@@ -580,9 +601,9 @@ function animalFrame(stage: Stage3D, u: number): Frame {
         poles: cs,
         centrosomes: [...cs],
         condensation: 0.85 * ease(u, 0, 0.7),
-        spindle: ease(u, 0.15, 0.95),
+        spindle: ease(u, ...PRO_SPINDLE),
         attach: 0,
-        nuclei: one(1 - ease(u, 0.45, 0.85)),
+        nuclei: one(1 - ease(u, ...PRO_ENVELOPE), 1 - ease(u, ...PRO_NUCLEOLUS)),
         shape: shape(0),
         daughterX: 0,
       };
@@ -614,9 +635,10 @@ function animalFrame(stage: Stage3D, u: number): Frame {
     }
     case 'telophase': {
       const x = lerp(A.poleAnaphase, A.poleTelophase, ease(u, 0, 0.6));
-      const sp = 1 - ease(u, 0, 0.7);
+      const sp = 1 - ease(u, 0, TEL_SPINDLE_END);
       const r = A.telNucleusR * (0.6 + 0.4 * ease(u, 0.1, 0.85));
       const env = ease(u, 0.25, 0.85);
+      const nl = ease(u, ...TEL_NUCLEOLUS);
       return {
         poles: pole(x),
         centrosomes: pole(x),
@@ -624,8 +646,8 @@ function animalFrame(stage: Stage3D, u: number): Frame {
         spindle: sp,
         attach: sp,
         nuclei: [
-          { center: v3(-A.telNucleusX, 0, 0), radius: r, envelope: env, cell: 0 },
-          { center: v3(A.telNucleusX, 0, 0), radius: r, envelope: env, cell: 0 },
+          { center: v3(-A.telNucleusX, 0, 0), radius: r, envelope: env, nucleolus: nl, cell: 0 },
+          { center: v3(A.telNucleusX, 0, 0), radius: r, envelope: env, nucleolus: nl, cell: 0 },
         ],
         shape: shape(A.elongation),
         daughterX: A.telNucleusX,
@@ -643,8 +665,14 @@ function animalFrame(stage: Stage3D, u: number): Frame {
         spindle: 0,
         attach: 0,
         nuclei: [
-          { center: v3(-nx, 0, 0), radius: A.telNucleusR, envelope: 1, cell: 0 },
-          { center: v3(nx, 0, 0), radius: A.telNucleusR, envelope: 1, cell: s.separated ? 1 : 0 },
+          { center: v3(-nx, 0, 0), radius: A.telNucleusR, envelope: 1, nucleolus: 1, cell: 0 },
+          {
+            center: v3(nx, 0, 0),
+            radius: A.telNucleusR,
+            envelope: 1,
+            nucleolus: 1,
+            cell: s.separated ? 1 : 0,
+          },
         ],
         shape: s,
         daughterX: nx,
@@ -664,8 +692,8 @@ function plantFrame(stage: Stage3D, u: number): Frame {
     plateRadius: p * Math.hypot(P.half[1], P.half[2]),
     separated: p >= 1,
   });
-  const one = (envelope: number): NucleusState[] => [
-    { center: v3(0, 0, 0), radius: P.nucleus, envelope, cell: 0 },
+  const one = (envelope: number, nucleolus = 1): NucleusState[] => [
+    { center: v3(0, 0, 0), radius: P.nucleus, envelope, nucleolus, cell: 0 },
   ];
   const base = { centrosomes: [] as Vec3[], poles: pole(P.pole), daughterX: 0 };
   switch (stage) {
@@ -676,9 +704,9 @@ function plantFrame(stage: Stage3D, u: number): Frame {
       return {
         ...base,
         condensation: 0.85 * ease(u, 0, 0.7),
-        spindle: ease(u, 0.15, 0.95),
+        spindle: ease(u, ...PRO_SPINDLE),
         attach: 0,
-        nuclei: one(1 - ease(u, 0.45, 0.85)),
+        nuclei: one(1 - ease(u, ...PRO_ENVELOPE), 1 - ease(u, ...PRO_NUCLEOLUS)),
         shape: shape(),
       };
     case 'metaphase':
@@ -702,9 +730,10 @@ function plantFrame(stage: Stage3D, u: number): Frame {
         shape: shape(),
       };
     case 'telophase': {
-      const sp = 1 - ease(u, 0, 0.7);
+      const sp = 1 - ease(u, 0, TEL_SPINDLE_END);
       const r = P.telNucleusR * (0.6 + 0.4 * ease(u, 0.1, 0.85));
       const env = ease(u, 0.25, 0.85);
+      const nl = ease(u, ...TEL_NUCLEOLUS);
       return {
         ...base,
         poles: pole(P.poleAnaphase),
@@ -712,8 +741,8 @@ function plantFrame(stage: Stage3D, u: number): Frame {
         spindle: sp,
         attach: sp,
         nuclei: [
-          { center: v3(-P.telNucleusX, 0, 0), radius: r, envelope: env, cell: 0 },
-          { center: v3(P.telNucleusX, 0, 0), radius: r, envelope: env, cell: 0 },
+          { center: v3(-P.telNucleusX, 0, 0), radius: r, envelope: env, nucleolus: nl, cell: 0 },
+          { center: v3(P.telNucleusX, 0, 0), radius: r, envelope: env, nucleolus: nl, cell: 0 },
         ],
         shape: shape(),
         daughterX: P.telNucleusX,
@@ -730,8 +759,14 @@ function plantFrame(stage: Stage3D, u: number): Frame {
         spindle: 0,
         attach: 0,
         nuclei: [
-          { center: v3(-nx, 0, 0), radius: P.telNucleusR, envelope: 1, cell: 0 },
-          { center: v3(nx, 0, 0), radius: P.telNucleusR, envelope: 1, cell: s.separated ? 1 : 0 },
+          { center: v3(-nx, 0, 0), radius: P.telNucleusR, envelope: 1, nucleolus: 1, cell: 0 },
+          {
+            center: v3(nx, 0, 0),
+            radius: P.telNucleusR,
+            envelope: 1,
+            nucleolus: 1,
+            cell: s.separated ? 1 : 0,
+          },
         ],
         shape: s,
         daughterX: nx,

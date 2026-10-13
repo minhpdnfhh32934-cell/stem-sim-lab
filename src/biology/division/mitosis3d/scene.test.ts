@@ -10,6 +10,7 @@ const PALETTE: ScenePalette = {
   centromere: 'rgb(23, 32, 51)',
   membrane: 'rgb(22, 128, 74)',
   envelope: 'rgb(47, 98, 216)',
+  nucleolus: 'rgb(86, 180, 233)',
   wall: 'rgb(154, 107, 0)',
   spindle: 'rgb(138, 147, 165)',
   centrosome: 'rgb(204, 121, 167)',

@@ -240,10 +240,13 @@ function jumps(a: Mitosis3DState, b: Mitosis3DState): string[] {
       within(`nucleus ${String(i)} centre`, dist(x.center, y.center), 'position');
       within(`nucleus ${String(i)} radius`, Math.abs(x.radius - y.radius), 'position');
       within(`nucleus ${String(i)} envelope`, Math.abs(x.envelope - y.envelope), 'fraction');
+      within(`nucleus ${String(i)} nucleolus`, Math.abs(x.nucleolus - y.nucleolus), 'fraction');
     } else {
       const only = x ?? y;
-      if (only && i >= shared)
+      if (only && i >= shared) {
         within(`nucleus ${String(i)} (dis)appearing envelope`, only.envelope, 'fraction');
+        within(`nucleus ${String(i)} (dis)appearing nucleolus`, only.nucleolus, 'fraction');
+      }
     }
   }
 
@@ -777,7 +780,11 @@ describe('3D mitosis timeline', () => {
     const faded = structuredClone(h);
     faded.nuclei[0]!.envelope = 0.97;
     expect(jumps(g, faded)).toHaveLength(1);
-    expect(jumps(g, { ...h, nuclei: [] })).toHaveLength(1);
+    const noNucleolus = structuredClone(h);
+    noNucleolus.nuclei[0]!.nucleolus = 0.97;
+    expect(jumps(g, noNucleolus)).toHaveLength(1);
+    // A vanishing nucleus: its envelope and its nucleolus both disappear at once.
+    expect(jumps(g, { ...h, nuclei: [] })).toHaveLength(2);
   });
 
   for (const type of CELL_TYPES) {
@@ -811,6 +818,115 @@ describe('3D mitosis timeline', () => {
           for (const c of s.centrosomes) expect(insideCell(s.shape, c, 0.2)).toBe(true);
           for (const f of s.fibres) expect(insideCell(s.shape, f.to, 0)).toBe(true);
         }
+      }
+    }
+  });
+
+  it('prophase: no spindle fibre enters a nucleus whose envelope is still there (≥ 0.5)', () => {
+    /** Shortest distance from point c to the segment a–b. */
+    const toSegment = (c: Vec3, a: Vec3, b: Vec3) => {
+      const ab = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+      const ac = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+      const l2 = ab[0]! ** 2 + ab[1]! ** 2 + ab[2]! ** 2;
+      const k =
+        l2 < 1e-12
+          ? 0
+          : Math.min(1, Math.max(0, (ab[0]! * ac[0]! + ab[1]! * ac[1]! + ab[2]! * ac[2]!) / l2));
+      return dist(c, [a[0] + k * ab[0]!, a[1] + k * ab[1]!, a[2] + k * ab[2]!]);
+    };
+    for (const type of CELL_TYPES) {
+      for (const n of [1, 2, 3, 4, 23]) {
+        const tl = buildTimeline(n, type);
+        const errors: string[] = [];
+        let fibresSeen = 0;
+        for (const t of fineTimes(tl)) {
+          const s = tl.stateAt(t);
+          for (const nucleus of s.nuclei) {
+            if (nucleus.envelope < 0.5) continue;
+            for (const f of s.fibres) {
+              fibresSeen++;
+              const d = toSegment(nucleus.center, f.from, f.to);
+              if (d < nucleus.radius)
+                errors.push(
+                  `${type} 2n=${String(2 * n)} ${s.stage} u=${s.u.toFixed(3)}: ${f.kind} fibre ${d.toFixed(2)} from the centre (r ${String(nucleus.radius)})`,
+                );
+            }
+          }
+        }
+        expect(
+          fibresSeen,
+          `${type}: the spindle starts while the envelope is there`,
+        ).toBeGreaterThan(0);
+        expect(errors.slice(0, 5), `${String(errors.length)} fibres inside a nucleus`).toEqual([]);
+      }
+    }
+  });
+
+  it('nucleolus: in interphase nuclei, gone early in prophase, back in late telophase', () => {
+    for (const type of CELL_TYPES) {
+      const tl = buildTimeline(2, type);
+      const nucleoli = (stage: Stage3D, u: number) =>
+        stateIn(tl, stage, u).nuclei.map((x) => x.nucleolus);
+      expect(nucleoli('g1', 0.5)).toEqual([1]);
+      expect(nucleoli('g2', 0.5)).toEqual([1]);
+      expect(nucleoli('prophase', 0)).toEqual([1]);
+      // It fades before the envelope breaks down.
+      const pro = stateIn(tl, 'prophase', 0.4).nuclei[0]!;
+      expect(pro.nucleolus).toBe(0);
+      expect(pro.envelope).toBeGreaterThan(0);
+      expect(nucleoli('metaphase', 0.5)).toEqual([]);
+      expect(nucleoli('anaphase', 0.5)).toEqual([]);
+      expect(nucleoli('telophase', 0.3)).toEqual([0, 0]);
+      expect(nucleoli('telophase', 0.95)).toEqual([1, 1]);
+      expect(nucleoli('cytokinesis', 0.5)).toEqual([1, 1]);
+      // Drawing only: the counts are those of the model (tested above), whatever it shows.
+    }
+  });
+
+  it('metaphase plate: maternal and paternal chromosomes are interleaved (no half-ring split)', () => {
+    const angle = (p: Vec3) => Math.atan2(p[2], p[1]);
+    for (const type of CELL_TYPES) {
+      for (const n of [1, 2, 3, 4]) {
+        const tl = buildTimeline(n, type);
+        const s = tl.stateAt(tl.keyTime('metaphase'));
+        // One entry per chromosome (sister 0), in order around the ring.
+        const ring = s.chromatids
+          .filter((c) => c.sister === 0)
+          .map((c) => ({
+            origin: c.origin,
+            pair: tl.chromatids[c.id]!.pair,
+            a: angle(c.centromere),
+          }))
+          .sort((x, y) => x.a - y.a);
+        expect(ring).toHaveLength(2 * n);
+        // Going around the ring the origin changes at every step: M, P, M, P …
+        ring.forEach((c, i) => {
+          const next = ring[(i + 1) % ring.length]!;
+          expect(next.origin, `${type} 2n=${String(2 * n)}`).not.toBe(c.origin);
+        });
+        // Enough room (2n = 8): homologues are not neighbours on the plate either.
+        if (n === 4) {
+          ring.forEach((c, i) => {
+            const next = ring[(i + 1) % ring.length]!;
+            expect(next.pair, `${type} 2n=8 neighbours`).not.toBe(c.pair);
+          });
+        }
+      }
+      // 2n = 46 (a disc): sorted from the axis outwards, maternal and paternal chromosomes mix
+      // (never an inner disc of one origin and an outer ring of the other).
+      const tl = buildTimeline(23, type);
+      const s = tl.stateAt(tl.keyTime('metaphase'));
+      const byRadius = s.chromatids
+        .filter((c) => c.sister === 0)
+        .sort(
+          (x, y) =>
+            Math.hypot(x.centromere[1], x.centromere[2]) -
+            Math.hypot(y.centromere[1], y.centromere[2]),
+        )
+        .map((c) => c.origin);
+      for (let i = 0; i + 4 <= byRadius.length; i += 4) {
+        const block = byRadius.slice(i, i + 4);
+        expect(new Set(block).size, `${type} 2n=46 block ${String(i)}`).toBe(2);
       }
     }
   });

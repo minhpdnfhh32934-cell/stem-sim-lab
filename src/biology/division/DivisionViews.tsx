@@ -6,7 +6,14 @@ import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
-import { STAGE_NAME, STAGE_NOTE, cardFor, useDivisionStore, useStages } from './state';
+import {
+  PAIR_CHOICES,
+  STAGE_NAME,
+  STAGE_NOTE,
+  cardFor,
+  useDivisionStore,
+  useStages,
+} from './state';
 import { claimStageIndex, setDivisionState } from './stageIndex';
 import {
   STAGES,
@@ -258,8 +265,9 @@ export function DivisionStage({
           {Lz(L(' / tế bào', ' / cell'))}
         </span>
         <span className="chem-chip bio-legend">
-          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'maternal'))}
-          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'paternal'))}
+          {Lz(L('NST nguồn gốc', 'Chromosomes from'))}
+          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'the mother'))}
+          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'the father'))}
         </span>
         {toolbar}
         {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
@@ -282,7 +290,7 @@ export function DivisionPanel({ kind }: { kind: Division }) {
             setDivisionState(kind, { pairs: Number(e.target.value), index: 0 });
           }}
         >
-          {[1, 2, 3, 4].map((n) => (
+          {PAIR_CHOICES.map((n) => (
             <option key={n} value={n}>
               2n = {2 * n}
             </option>
@@ -372,7 +380,16 @@ export function DivisionBottom({ kind }: { kind: Division }) {
                   setDivisionState(kind, { index: k, playing: false });
                 }}
               >
-                <th scope="row">{Lz(STAGE_NAME[s.stage])}</th>
+                <th scope="row">
+                  {/* Keyboard access to the row: its click bubbles up to the row's handler. */}
+                  <button
+                    type="button"
+                    className="bio-row-btn"
+                    aria-current={k === index ? 'step' : undefined}
+                  >
+                    {Lz(STAGE_NAME[s.stage])}
+                  </button>
+                </th>
                 <td className="num">{c.cells}</td>
                 <td className="num">{c.chromosomes}</td>
                 <td>{Lz(c.state === 'double' ? L('kép', 'double') : L('đơn', 'single'))}</td>

@@ -6,6 +6,7 @@
  * geometry and material it created. Rendering (renderer, camera, controls) lives in the view.
  */
 import * as THREE from 'three';
+import { cameraFrame, type CameraFrame } from './camera';
 import type { CameraMode, Selection } from './components';
 import {
   ANIMAL,
@@ -18,9 +19,6 @@ import {
   type Vec3,
 } from './timeline';
 
-/** Half length (x) of the two animal daughter cells together at the end of cytokinesis. */
-const ANIMAL_EXTENT = 1.06 * ANIMAL.daughterRadius + ANIMAL.daughterRadius;
-
 /** CSS colour strings (read from theme tokens by the view). */
 export interface ScenePalette {
   maternal: string;
@@ -28,6 +26,7 @@ export interface ScenePalette {
   centromere: string;
   membrane: string;
   envelope: string;
+  nucleolus: string;
   wall: string;
   spindle: string;
   centrosome: string;
@@ -42,24 +41,44 @@ export interface SceneOptions {
 }
 
 export type PickResult = Selection;
-export type { CameraMode, Selection };
+export type { CameraFrame, CameraMode, Selection };
 
-/** What the camera must show: points (relative to `center`) that have to be in view. */
-export interface CameraFrame {
-  center: Vec3;
-  points: Vec3[];
+/** Draw calls, triangles and line segments of one frame. */
+export interface DrawStats {
+  calls: number;
+  triangles: number;
+  lines: number;
 }
 
-/** 26 points on a sphere (axes, edge and corner directions of a cube). */
-function spherePoints(c: Vec3, r: number): Vec3[] {
-  const out: Vec3[] = [];
-  for (let i = -1; i <= 1; i++)
-    for (let j = -1; j <= 1; j++)
-      for (let k = -1; k <= 1; k++) {
-        if (i === 0 && j === 0 && k === 0) continue;
-        const l = Math.hypot(i, j, k);
-        out.push([c[0] + (r * i) / l, c[1] + (r * j) / l, c[2] + (r * k) / l]);
+/**
+ * What three.js draws for a scene in one frame, counted on the CPU (no GPU needed). Mirrors
+ * WebGLRenderer: hidden objects (or hidden parents) and empty draw ranges are skipped, and a
+ * transparent double-sided material without `forceSinglePass` is drawn twice (back faces, then
+ * front faces). An upper bound of `renderer.info.render`: frustum culling can only lower it.
+ */
+export function drawStats(root: THREE.Object3D): DrawStats {
+  const out: DrawStats = { calls: 0, triangles: 0, lines: 0 };
+  const visit = (o: THREE.Object3D) => {
+    if (!o.visible) return;
+    const isMesh = o instanceof THREE.Mesh;
+    const isLines = o instanceof THREE.LineSegments;
+    if (isMesh || isLines) {
+      const g = o.geometry as THREE.BufferGeometry;
+      const mat = o.material as THREE.Material;
+      const total = g.index ? g.index.count : (g.attributes.position?.count ?? 0);
+      const start = Math.max(0, g.drawRange.start);
+      const count = Math.max(0, Math.min(total, start + g.drawRange.count) - start);
+      if (count > 0) {
+        const passes =
+          mat.transparent && mat.side === THREE.DoubleSide && !mat.forceSinglePass ? 2 : 1;
+        out.calls += passes;
+        if (isMesh) out.triangles += passes * Math.floor(count / 3);
+        else out.lines += passes * Math.floor(count / 2);
       }
+    }
+    for (const c of o.children) visit(c);
+  };
+  visit(root);
   return out;
 }
 
@@ -72,6 +91,8 @@ export interface MitosisScene {
   /** Box to frame with the camera: the whole cell (after division too), or the chromosomes now. */
   frame(mode: CameraMode): CameraFrame;
   stats(): { objects: number; meshes: number; geometries: number; materials: number };
+  /** Draw calls and triangles of the current moment (see `drawStats`). */
+  drawStats(): DrawStats;
   dispose(): void;
 }
 
@@ -83,6 +104,7 @@ type Part =
   | 'centrosome'
   | 'ring'
   | 'plate'
+  | 'nucleolus'
   | 'envelope'
   | 'membrane'
   | 'wall';
@@ -143,7 +165,14 @@ export function buildMitosisScene(
       P: look(palette.paternal, { transparent: true }),
     },
     bead: look(palette.centromere, { transparent: true }),
-    envelope: look(palette.envelope, { ...glass, opacity: 0.3, side: THREE.DoubleSide }),
+    // One pass for the see-through double-sided parts (one draw call each, not two).
+    envelope: look(palette.envelope, {
+      ...glass,
+      opacity: 0.3,
+      side: THREE.DoubleSide,
+      forceSinglePass: true,
+    }),
+    nucleolus: look(palette.nucleolus, { transparent: true, opacity: 0.9 }),
     membrane: look(palette.membrane, {
       ...glass,
       opacity: tl.cellType === 'animal' ? 0.16 : 0.08,
@@ -152,7 +181,12 @@ export function buildMitosisScene(
     centriole: look(palette.centrosome),
     pcm: look(palette.centrosome, { ...glass, opacity: 0.25 }),
     ring: look(palette.ring),
-    plate: look(palette.plate, { ...glass, opacity: 0.75, side: THREE.DoubleSide }),
+    plate: look(palette.plate, {
+      ...glass,
+      opacity: 0.75,
+      side: THREE.DoubleSide,
+      forceSinglePass: true,
+    }),
     spindle: lineLook(palette.spindle, 0.75),
     wallEdge: lineLook(palette.wall, 0.9),
   };
@@ -234,8 +268,9 @@ export function buildMitosisScene(
     };
   });
 
-  // ---- nuclei (at most two)
+  // ---- nuclei (at most two), each with a simple nucleolus (illustrative, no effect on counts)
   const envelopes = [0, 1].map(() => mesh(sphere, mats.envelope.base, { part: 'envelope' }));
+  const nucleoli = [0, 1].map(() => mesh(sphere, mats.nucleolus.base, { part: 'nucleolus' }));
 
   // ---- centrosomes (animal): two centrioles at right angles + pericentriolar material
   const centrosomes = [0, 1].map(() => {
@@ -399,9 +434,11 @@ export function buildMitosisScene(
       case 'cellWall':
         return data.part === 'wall';
       case 'nucleus':
-        return data.part === 'envelope' || data.part === 'thread';
+        return data.part === 'envelope' || data.part === 'thread' || data.part === 'nucleolus';
       case 'nuclearEnvelope':
         return data.part === 'envelope';
+      case 'nucleolus':
+        return data.part === 'nucleolus';
       case 'chromatin':
         return data.part === 'thread';
       case 'doubleChromosome':
@@ -446,6 +483,7 @@ export function buildMitosisScene(
     const pick = <M extends THREE.Material>(l: Look<M>, part: Part) =>
       isSelected({ part }, st) ? l.hi : l.base;
     for (const e of envelopes) e.material = pick(mats.envelope, 'envelope');
+    for (const e of nucleoli) e.material = pick(mats.nucleolus, 'nucleolus');
     membrane.material = pick(mats.membrane, 'membrane');
     wall.material = pick(mats.wall, 'wall');
     wallEdges.material = pick(mats.wallEdge, 'wall');
@@ -497,6 +535,20 @@ export function buildMitosisScene(
     });
     const env = st.nuclei.reduce((m, n) => Math.max(m, n.envelope), 0);
     setOpacity(mats.envelope, 0.3 * env);
+    nucleoli.forEach((e, i) => {
+      const n = st.nuclei[i];
+      e.visible = !!n && n.nucleolus > 0.01;
+      if (!n) return;
+      // Off-centre inside its nucleus, a quarter of its radius.
+      e.position.set(
+        n.center[0] + 0.3 * n.radius,
+        n.center[1] + 0.25 * n.radius,
+        n.center[2] - 0.2 * n.radius,
+      );
+      e.scale.setScalar(0.24 * n.radius);
+    });
+    const nl = st.nuclei.reduce((m, n) => Math.max(m, n.nucleolus), 0);
+    setOpacity(mats.nucleolus, 0.9 * nl);
 
     if (animal) {
       centrosomes.forEach((c, i) => {
@@ -574,6 +626,8 @@ export function buildMitosisScene(
           return { component: 'cleavageFurrow' };
         case 'plate':
           return { component: 'cellPlate' };
+        case 'nucleolus':
+          return { component: 'nucleolus' };
         default:
           return null;
       }
@@ -593,46 +647,7 @@ export function buildMitosisScene(
     return null;
   };
 
-  const frame = (mode: CameraMode): CameraFrame => {
-    if (mode === 'overview' || !last) {
-      if (!animal) {
-        const w = PLANT.wall;
-        const corners: Vec3[] = [];
-        for (const sx of [-1, 1])
-          for (const sy of [-1, 1])
-            for (const sz of [-1, 1]) corners.push([sx * (hx + w), sy * (hy + w), sz * (hz + w)]);
-        return { center: [0, 0, 0], points: corners };
-      }
-      // The mother cell and, at the end, the two daughter cells.
-      const d = ANIMAL_EXTENT - ANIMAL.daughterRadius;
-      return {
-        center: [0, 0, 0],
-        points: [
-          ...spherePoints([0, 0, 0], ANIMAL.radius * (1 + ANIMAL.elongation / 2)),
-          ...spherePoints([-d, 0, 0], ANIMAL.daughterRadius),
-          ...spherePoints([d, 0, 0], ANIMAL.daughterRadius),
-        ],
-      };
-    }
-    const pts = last.chromatids.filter((c) => c.present).map((c) => c.centromere);
-    if (pts.length === 0) return { center: [0, 0, 0], points: spherePoints([0, 0, 0], 4) };
-    const lo: Vec3 = [Infinity, Infinity, Infinity];
-    const hi: Vec3 = [-Infinity, -Infinity, -Infinity];
-    for (const p of pts) {
-      for (let k = 0; k < 3; k++) {
-        lo[k] = Math.min(lo[k] ?? 0, p[k] ?? 0);
-        hi[k] = Math.max(hi[k] ?? 0, p[k] ?? 0);
-      }
-    }
-    const center: Vec3 = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2];
-    // Every centromere plus a margin for the arms around it.
-    return {
-      center,
-      points: pts.flatMap((p) =>
-        spherePoints([p[0] - center[0], p[1] - center[1], p[2] - center[2]], 1.2),
-      ),
-    };
-  };
+  const frame = (mode: CameraMode): CameraFrame => cameraFrame(mode, last, tl.cellType);
 
   const stats = () => {
     let objects = 0;
@@ -660,6 +675,7 @@ export function buildMitosisScene(
     pick,
     frame,
     stats,
+    drawStats: () => drawStats(scene),
     dispose() {
       for (const d of disposables) d.dispose();
       disposables.length = 0;

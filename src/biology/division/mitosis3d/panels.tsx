@@ -51,7 +51,10 @@ export function Mitosis3DParts() {
 const nucleiText = (n: { from: number; to: number }) =>
   n.from === n.to ? String(n.to) : `${String(n.from)} → ${String(n.to)}`;
 
-/** Counts of the seven 3D stages (read from the bookkeeping model). Click a row to go there. */
+/**
+ * Counts of the seven 3D stages (read from the bookkeeping model). Click a row to go there; with
+ * the keyboard, each row header is a button (Tab, then Enter or Space).
+ */
 export function Mitosis3DBottom() {
   const Lz = useLocalized();
   const pairs = useDivisionStore((s) => s.pairs);
@@ -96,7 +99,16 @@ export function Mitosis3DBottom() {
                   useMitosis3D.setState({ t: tl.keyTime(id), playing: false });
                 }}
               >
-                <th scope="row">{Lz(STAGE3D_NAME[id])}</th>
+                <th scope="row">
+                  {/* The row's click handler runs (the click bubbles up to the row). */}
+                  <button
+                    type="button"
+                    className="bio-row-btn"
+                    aria-current={k === current ? 'step' : undefined}
+                  >
+                    {Lz(STAGE3D_NAME[id])}
+                  </button>
+                </th>
                 <td className="num">{c.cells}</td>
                 <td className="num">{nucleiText(c.nuclei)}</td>
                 <td className="num">{c.chromosomes}</td>
@@ -112,8 +124,8 @@ export function Mitosis3DBottom() {
       <p className="small muted">
         {Lz(
           L(
-            'Kì cuối: 1 tế bào có 2 nhân, mỗi nhân 2n NST đơn (cả tế bào 4n). Phân chia tế bào chất: số liệu cho mỗi tế bào con. "1 → 0": thay đổi trong kì.',
-            'Telophase: one cell with two nuclei, 2n single chromosomes in each (4n in the cell). Cytokinesis: counts per daughter cell. "1 → 0": changes during the stage.',
+            'Kì cuối: 1 tế bào có 2 nhân, mỗi nhân 2n NST đơn (cả tế bào có 4n NST đơn). Phân chia tế bào chất: số liệu cho mỗi tế bào con. "1 → 0": thay đổi trong kì.',
+            'Telophase: one cell with two nuclei, 2n single chromosomes in each (4n single chromosomes in the whole cell). Cytokinesis: counts per daughter cell. "1 → 0": changes during the stage.',
           ),
         )}
       </p>
