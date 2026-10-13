@@ -45,3 +45,17 @@ export function topicForText(text: string, locale: Locale): TopicLink | null {
   }
   return best;
 }
+
+/** The topic of the newest learner message that names one (null when none does). */
+export function latestTopic(
+  messages: readonly { role: string; content: string }[],
+  locale: Locale,
+): TopicLink | null {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role !== 'user') continue;
+    const found = topicForText(m.content, locale);
+    if (found) return found;
+  }
+  return null;
+}

@@ -37,7 +37,7 @@ import { webGPUStatus } from '@/ai/webGemma';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { openTopic, useActiveTopic } from '@/app/topics';
-import { topicForText } from './topicLink';
+import { latestTopic } from './topicLink';
 
 export function ChatPanel({
   compact = false,
@@ -262,11 +262,8 @@ export function ChatPanel({
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
   const activeTopic = useActiveTopic();
-  const lastQuestion = [...chat.messages].reverse().find((m) => m.role === 'user');
-  const simLink =
-    hasAnswer && lastQuestion
-      ? topicForText(lastQuestion.content, useSettingsStore.getState().locale)
-      : null;
+  // The newest question that names a topic: a short reply ("Ở kì giữa ạ.") keeps the link.
+  const simLink = hasAnswer ? latestTopic(chat.messages, useSettingsStore.getState().locale) : null;
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
