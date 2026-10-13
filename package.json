@@ -1,7 +1,7 @@
 {
   "name": "stem-sim-lab",
   "private": true,
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "SimLab — offline desktop simulator for Physics, Chemistry and Biology (Tauri + React)",
   "type": "module",
   "engines": {
