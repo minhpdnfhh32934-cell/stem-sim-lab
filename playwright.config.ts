@@ -1,11 +1,22 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * End-to-end tests in a real browser against the Vite dev server. LM Studio is mocked
- * with `page.route`, so no model is needed. Set PW_CHROMIUM to use an already installed
+ * End-to-end tests in a real browser against the Vite dev server. The AI providers are mocked
+ * with `page.route`, so no key or model is needed. Set PW_CHROMIUM to use an already installed
  * Chromium instead of `npx playwright install chromium`.
  */
 const executablePath = process.env.PW_CHROMIUM;
+const chromium = {
+  ...devices['Desktop Chrome'],
+  locale: 'vi-VN',
+  viewport: { width: 1366, height: 768 },
+};
+/**
+ * The 3D mitosis spec renders WebGL in software for about a minute; next to the other specs it
+ * starved them while the dev server was still compiling (seen 2026-10-14: chemistry and learner
+ * specs timed out only in the full parallel run). It runs on its own, after the others.
+ */
+const HEAVY_3D = /mitosis3d\.spec\.ts$/;
 
 export default defineConfig({
   testDir: 'tests/e2e',
@@ -23,14 +34,9 @@ export default defineConfig({
     ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },
   projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        locale: 'vi-VN',
-        viewport: { width: 1366, height: 768 },
-      },
-    },
+    { name: 'chromium', use: chromium, testIgnore: HEAVY_3D },
+    // Skipped when a spec of the first project fails (Playwright dependencies); fix those first.
+    { name: 'chromium-3d', use: chromium, testMatch: HEAVY_3D, dependencies: ['chromium'] },
   ],
   webServer: {
     command: 'npm run dev',

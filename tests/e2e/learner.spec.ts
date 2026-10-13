@@ -43,7 +43,10 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
   const resume = page.getByRole('button', { name: /Tiếp tục bài đang học/ });
   await expect(resume).toContainText('Chuyển động thẳng đều');
   await resume.click();
-  await expect(page.locator('.stage__hud-title')).toHaveText('Chuyển động thẳng đều');
+  // The dev server compiles the physics stage on first use (up to ~20 s on a busy machine).
+  await expect(page.locator('.stage__hud-title')).toHaveText('Chuyển động thẳng đều', {
+    timeout: 20_000,
+  });
 });
 
 test('subject cards and the level picker (Level → Subject → Topic)', async ({ page }) => {
