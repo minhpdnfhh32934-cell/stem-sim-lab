@@ -75,12 +75,17 @@ pub fn utc_today() -> i64 {
     secs.div_euclid(86_400)
 }
 
-/// The day the call is counted on (audit SEC-07): the page's local date when it is within one
-/// day of the system clock's UTC date (every time zone is), otherwise the UTC date. A wrong or
-/// forged date can no longer reset the counter.
+/// How far (in days) the page's local date may be from the system clock's UTC date. One day
+/// covers every time zone (UTC-12 … UTC+14).
+const WINDOW_DAYS: i64 = 1;
+
+/// The day the call is asked to be counted on (audit SEC-07): the page's local date when it is
+/// within [`WINDOW_DAYS`] of the system clock's UTC date, otherwise the UTC date. A date further
+/// away falls back to the clock; inside the window, [`consume`] never lets the counting day go
+/// backwards, so switching between accepted dates cannot reset the counter either.
 pub fn counting_day(page_day: Option<&str>, today: i64) -> String {
     match page_day.and_then(day_number) {
-        Some(n) if (n - today).abs() <= 1 => civil_from_days(n),
+        Some(n) if (n - today).abs() <= WINDOW_DAYS => civil_from_days(n),
         _ => civil_from_days(today),
     }
 }
@@ -92,20 +97,32 @@ fn load(path: &Path) -> Usage {
         .unwrap_or_default()
 }
 
-/// Calls made on `day` so far.
-pub fn current(path: &Path, day: &str) -> Usage {
-    let u = load(path);
-    if u.day == day {
-        u
-    } else {
-        Usage {
+/// The counter a call asked for `day` is counted on. The counting day never goes backwards
+/// (audit 2026-10-14): when the stored day is later than `day` but both fit in the accepted
+/// window (at most `2 * WINDOW_DAYS` apart), the stored day and its count stay. Otherwise a page
+/// alternating "today + 1" and "today" would reset the count on every switch. A stored day
+/// further ahead (clock moved back, file from an older version) is dropped, so it cannot lock the
+/// learner out.
+fn counter_for(stored: Usage, day: &str) -> Usage {
+    if stored.day == day {
+        return stored;
+    }
+    match (day_number(&stored.day), day_number(day)) {
+        (Some(s), Some(d)) if s > d && s - d <= 2 * WINDOW_DAYS => stored,
+        _ => Usage {
             day: day.to_string(),
             count: 0,
-        }
+        },
     }
 }
 
-/// Counts one call. `cap == 0` means no limit. Fails with `DailyLimit` when the cap is reached.
+/// Calls counted so far on the counter a call for `day` would use (see [`counter_for`]).
+pub fn current(path: &Path, day: &str) -> Usage {
+    counter_for(load(path), day)
+}
+
+/// Counts one call on `day`, or on a later stored day (see [`counter_for`]). `cap == 0` means
+/// no limit. Fails with `DailyLimit` when the cap is reached.
 pub fn consume(path: &Path, day: &str, cap: u32) -> Result<Usage, AiError> {
     let mut u = current(path, day);
     if cap > 0 && u.count >= cap {
@@ -180,6 +197,37 @@ mod tests {
         assert_eq!(counting_day(Some("2030-01-01"), today), "2026-10-13");
         assert_eq!(counting_day(Some("../../x"), today), "2026-10-13");
         assert_eq!(counting_day(None, today), "2026-10-13");
+    }
+
+    #[test]
+    fn switching_between_accepted_days_does_not_reset_the_count() {
+        let p = temp("alternate");
+        let today = day_number("2026-10-13").unwrap();
+        // The page alternates "today + 1" and "today" (both inside the window).
+        let days = ["2026-10-14", "2026-10-13"];
+        for i in 0..3 {
+            let day = counting_day(Some(days[i % 2]), today);
+            assert_eq!(consume(&p, &day, 3).unwrap().count, i as u32 + 1);
+        }
+        for asked in ["2026-10-13", "2026-10-14", "2026-10-12"] {
+            let day = counting_day(Some(asked), today);
+            let err = consume(&p, &day, 3).unwrap_err();
+            assert!(matches!(err, AiError::DailyLimit(_)), "{asked}: {err:?}");
+            // Settings show the count the next call is checked against.
+            assert_eq!(current(&p, &day).count, 3);
+        }
+    }
+
+    #[test]
+    fn the_counting_day_still_moves_forward() {
+        let p = temp("forward");
+        assert_eq!(consume(&p, "2026-10-12", 1).unwrap().count, 1);
+        assert_eq!(consume(&p, "2026-10-13", 1).unwrap().count, 1);
+        assert!(consume(&p, "2026-10-12", 1).is_err());
+        // A stored day far ahead (clock moved back, older file) never locks the learner out.
+        fs::write(&p, br#"{"day":"2030-01-01","count":9}"#).unwrap();
+        assert_eq!(current(&p, "2026-10-13").count, 0);
+        assert_eq!(consume(&p, "2026-10-13", 1).unwrap().count, 1);
     }
 
     #[test]

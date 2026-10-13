@@ -93,10 +93,11 @@ pub struct ChatRequest {
     pub temperature: Option<f64>,
     pub max_tokens: Option<u32>,
     pub timeout_secs: Option<u64>,
-    /// The user's local date ("YYYY-MM-DD") for the daily cap.
+    /// The user's local date ("YYYY-MM-DD") for the daily cap; only trusted within one day of
+    /// the system clock (`usage::counting_day`).
     #[serde(default)]
     pub day: Option<String>,
-    /// Maximum calls per day (0 = no limit).
+    /// Maximum calls per day (0 = no limit; missing = `usage::DEFAULT_DAILY_CAP`).
     #[serde(default)]
     pub daily_cap: Option<u32>,
     /// Provider that answers when `provider` is out of quota or credit.
@@ -316,14 +317,16 @@ fn usage_path(app: &tauri::AppHandle) -> Option<PathBuf> {
         .map(|d| d.join("ai-usage.json"))
 }
 
-/// Counts the call against the daily cap (skipped without a valid day or a cap).
+/// Counts the call against the daily cap. Never skipped: a missing or invalid day falls back to
+/// the clock and a missing cap to the default (see `count_usage`).
 fn count_call(app: &tauri::AppHandle, state: &AiState, req: &ChatRequest) -> Result<(), AiError> {
     count_usage(app, state, req.day.as_deref(), req.daily_cap)
 }
 
 /// Counts one AI call (chat or speech) against the user's daily cap. Every call is counted:
 /// without a cap the default applies, and the day is checked against the system clock
-/// (audit SEC-07), so the page cannot skip the count by leaving a field out.
+/// (audit SEC-07), so the page cannot skip the count by leaving a field out. The counting day
+/// never goes backwards (`usage::consume`), so switching dates cannot reset the count either.
 fn count_usage(
     app: &tauri::AppHandle,
     state: &AiState,
