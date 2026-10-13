@@ -729,44 +729,6 @@
   color: var(--text);
   font-weight: 550;
 }
-.chat-settings__progress-track {
-  display: block;
-  width: 100%;
-  height: 9px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 99px;
-  background: var(--bg-sunken);
-  accent-color: var(--accent);
-}
-progress.chat-settings__progress-track::-webkit-progress-bar {
-  border-radius: 99px;
-  background: var(--bg-sunken);
-}
-progress.chat-settings__progress-track::-webkit-progress-value {
-  border-radius: 99px;
-  background: var(--accent);
-  transition: width 180ms ease;
-}
-.chat-settings__progress-track.is-indeterminate {
-  position: relative;
-}
-.chat-settings__progress-track.is-indeterminate span {
-  position: absolute;
-  width: 35%;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--accent);
-  animation: chat-progress 1.35s ease-in-out infinite;
-}
-@keyframes chat-progress {
-  from {
-    transform: translateX(-110%);
-  }
-  to {
-    transform: translateX(310%);
-  }
-}
 .chat-settings__file-input {
   position: absolute;
   width: 1px;

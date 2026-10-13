@@ -358,6 +358,10 @@ const vi = {
     open: 'Mở tệp .stemsim',
     update: 'Kiểm tra cập nhật',
   },
+  progress: {
+    etaSeconds: 'còn khoảng {n} giây',
+    etaMinutes: 'còn khoảng {n} phút',
+  },
   shortcuts: {
     playPause: 'Chạy / tạm dừng',
     reset: 'Đặt lại mô phỏng',

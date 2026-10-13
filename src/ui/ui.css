@@ -967,3 +967,74 @@ kbd {
     display: none;
   }
 }
+
+/* ---------- Progress bar (downloads, pattern 083) ---------- */
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--bg-sunken);
+}
+.progress-bar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transition:
+    width 260ms var(--ease-out),
+    background-color var(--dur-med) var(--ease-out);
+}
+/* A soft light that runs along the filled part: the download is alive even when it is slow. */
+.progress-bar:not(.is-indeterminate, .is-done) .progress-bar__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--text-on-accent) 35%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: progress-glint 1.6s linear infinite;
+}
+.progress-bar.is-indeterminate .progress-bar__fill {
+  width: 35%;
+  animation: progress-wander 1.35s ease-in-out infinite;
+}
+.progress-bar.is-done .progress-bar__fill {
+  background: var(--conf-exact);
+}
+@keyframes progress-glint {
+  from {
+    background-position: -40% 0;
+  }
+  to {
+    background-position: 140% 0;
+  }
+}
+@keyframes progress-wander {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(310%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar__fill {
+    transition: none;
+  }
+  .progress-bar:not(.is-indeterminate, .is-done) .progress-bar__fill::after {
+    display: none;
+  }
+  .progress-bar.is-indeterminate .progress-bar__fill {
+    width: 100%;
+    opacity: 0.45;
+    animation: none;
+  }
+}

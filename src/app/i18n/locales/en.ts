@@ -355,6 +355,10 @@ const en: Messages = {
     open: 'Open a .stemsim file',
     update: 'Check for updates',
   },
+  progress: {
+    etaSeconds: 'about {n} s left',
+    etaMinutes: 'about {n} min left',
+  },
   shortcuts: {
     playPause: 'Play / pause',
     reset: 'Reset simulation',

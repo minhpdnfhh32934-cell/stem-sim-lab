@@ -14,6 +14,8 @@ import { WEB_GEMMA_MODELS } from '@/ai/webGemmaModels';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useChatStore } from '../chatStore';
 import { downloadErrorKey } from '../downloadErrors';
+import { createEtaTracker, formatEta } from '@/ui/eta';
+import { ProgressBar } from '@/ui/ProgressBar';
 import { formatBytes } from './format';
 import { KnownPageLink } from './KnownPageLink';
 import '../chat.css';
@@ -28,6 +30,8 @@ interface WebDownloadProgress {
   model: string;
   loaded: number;
   total: number | null;
+  /** Seconds left at the recent speed (null: no fair estimate yet). */
+  eta?: number | null;
   finished: boolean;
   /** 'gated': the host needs sign-in/terms (import by hand). Otherwise raw text. */
   error?: string | null;
@@ -55,6 +59,10 @@ function GemmaProgress({
         : progress.total && progress.total > 0
           ? Math.min(99, Math.floor((progress.loaded / progress.total) * 100))
           : null;
+  const eta =
+    percent !== null && typeof progress.eta === 'number' && !progress.finished && !progress.error
+      ? formatEta(t, progress.eta)
+      : null;
   const errorKey = progress.error ? downloadErrorKey(progress.error) : null;
   const description = progress.error
     ? errorKey
@@ -66,7 +74,14 @@ function GemmaProgress({
         ? t('chatSettings.progressLoading')
         : percent === null
           ? t('chatSettings.progressDownloading')
-          : `${t('chatSettings.progressDownloading')} · ${percent}% · ${formatBytes(progress.loaded)} / ${progress.total ? formatBytes(progress.total) : '?'}`;
+          : [
+              t('chatSettings.progressDownloading'),
+              `${String(percent)}%`,
+              `${formatBytes(progress.loaded)} / ${progress.total ? formatBytes(progress.total) : '?'}`,
+              eta,
+            ]
+              .filter(Boolean)
+              .join(' · ');
 
   return (
     <div className="chat-settings__progress" role="status" aria-live="polite">
@@ -82,19 +97,8 @@ function GemmaProgress({
         </span>
         <strong>{description}</strong>
       </div>
-      {progress.error || percent === null ? (
-        progress.error ? null : (
-          <div className="chat-settings__progress-track is-indeterminate">
-            <span />
-          </div>
-        )
-      ) : (
-        <progress
-          className="chat-settings__progress-track"
-          max={100}
-          value={percent}
-          aria-label={description}
-        />
+      {!progress.error && (
+        <ProgressBar value={percent} label={description} done={progress.finished} />
       )}
     </div>
   );
@@ -160,6 +164,7 @@ export function GemmaSettings() {
     setDownloadProgress({ model: modelId, loaded: 0, total: null, finished: false });
     const abort = new AbortController();
     downloadAbort.current = abort;
+    const eta = createEtaTracker();
     try {
       await downloadWebGemma(
         modelId,
@@ -168,6 +173,7 @@ export function GemmaSettings() {
             model: modelId,
             loaded: p.loaded,
             total: p.total,
+            eta: eta(p.loaded, p.total),
             finished: false,
           });
         },
