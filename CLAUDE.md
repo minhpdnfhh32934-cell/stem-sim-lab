@@ -296,6 +296,12 @@ Progress log: `docs/PROGRESS.md`.
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
+- Audit 2026-10-13 (`docs/AUDIT_2026-10-13.md`): **never run Gemma on an integrated GPU for tests or
+  benchmarks** (it crashed the lead's laptop, bugcheck 0x119); `gpuSafety.ts` stops Gemma after one
+  GPU fault. Numbers the AI explains come from app tools when one applies (`tools.ts`, shown in a
+  "Kết quả do SimLab tính" card). AI-written links are never clickable; `navigation.rs` keeps the
+  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); releases only publish
+  commits on `main`, signing in the `release` environment.
 - UI polish kit (0.5.2): `.segmented`/`.subject-switch`/`.tabs__list` get a sliding indicator
   automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
   `Skeleton` for loading, `ProgressBar` + `eta.ts` for downloads (estimate only from progress

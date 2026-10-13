@@ -256,3 +256,35 @@ in the problem box for the learner to review first.
 
 Not verified: `gemma3-1b` / `gemma4-e2b` on real hardware, the packaged Windows installers (only
 `cargo clippy`/`cargo test` for both editions and `tauri dev` were run).
+
+## Audit 2026-10-13: safety and quality changes
+
+See `docs/AUDIT_2026-10-13.md` for the evidence (benchmarks, evaluation, the GPU crash).
+
+- **GPU safety (GPU-01, `src/ai/gpuSafety.ts`).** Gemma 1B on an integrated AMD Radeon 780M made the
+  driver time out repeatedly and Windows stopped with bugcheck 0x119. After one GPU fault (lost
+  device, crashed worker, ONNX Runtime buffer errors) Gemma is not loaded again in that session; the
+  fault is stored (`stemsim.gemma-gpu-fault`) and shown in Settings → GPU cho Gemma with "Dùng card
+  rời" / "Vẫn cho Gemma chạy lại". On an integrated card (`gemmaOnIntegrated`) the prompt is capped
+  at 1024 tokens and uses the "tight" context. Never benchmark Gemma on an integrated GPU;
+  `scripts/teaching/eval-gemma.mjs` refuses anything but a discrete NVIDIA adapter.
+- **Stalled answers (`src/ai/stallWatch.ts`).** No first piece in 120 s or no new piece in 45 s ends
+  the answer with `gemma-stalled` and a fresh worker; the worker also reports a lost WebGPU device.
+  Each failure has its own learner sentence (`gemmaErrorKey`), and none of them goes online.
+- **Pinned models.** Every Gemma model and the MMS voice download one pinned `revision` (commit).
+  Stored files are kept per repo without the revision, so moving the pin needs no re-download.
+- **Prompts.** Untrusted excerpts (library, imported files, Wikipedia) go in `<reference kind=…>`
+  blocks they cannot close; on-device prompts use 2 excerpts × 700 characters (`PromptSize`). The
+  cloud prompt states the teaching method (goal → ask for missing data → explain → example → steps
+  with reasons → one misconception → ONE check question → feedback that adapts).
+- **App-computed facts (`src/teacher/chat/tools.ts`).** Chemical equations in a question are solved
+  by `src/chemistry/balance.ts`; the result goes into the prompt ("KẾT QUẢ DO SIMLAB TÍNH") and is
+  shown by the app under the answer (`ChatMessageRecord.facts`), because a small model garbles it.
+- **Board speech.** `Sentence.spoken` reads written words where their tag stands; a pause re-reads
+  the cut sentence; `lessonMetrics()` keeps per-sentence timing in memory.
+- **Simulation link (`topicLink.ts`).** The newest question naming an available topic shows "Xem mô
+  phỏng: …" (catalog text match, never chosen by the AI).
+- **Evaluation.** `tests/teaching/teaching-eval.json` (30 questions) + `scripts/teaching/rubric.mjs`
+  (objective checks only). Gemma 1B, old → new prompt: check question 8 % → 54 %, asks for missing
+  data 0 % → 33 %, first word 1.59 → 0.86 s; key facts 29 % → 23 % (the model, not the prompt, is
+  the limit).

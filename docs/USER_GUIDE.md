@@ -129,15 +129,35 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   trước đó Gemma vẫn chạy trên card cũ. Dòng "WebGPU của ứng dụng đang chạy trên: …" cho biết card
   thật đang dùng. Nếu card rời đang tắt (chế độ Eco/tiết kiệm pin của hãng máy), app báo không thấy
   card đã chọn và tạm dùng card mặc định.
+- **Card tích hợp và Gemma (quan trọng):** trên laptop có card tích hợp, câu hỏi dài có thể làm card
+  tích hợp bị treo (Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động
+  lại — đã gặp thật với AMD Radeon 780M). Vì vậy app: rút ngắn câu hỏi gửi cho Gemma khi chạy trên
+  card tích hợp; **sau một lần card bị treo, Gemma tạm dừng tới khi em mở lại app**; Cài đặt → GPU cho
+  Gemma hiện thông báo với nút **Dùng card rời** và **Vẫn cho Gemma chạy lại** (chỉ bấm khi em hiểu
+  rủi ro). Máy có card rời thì nên chọn card rời cho Gemma.
+- **Chất lượng của Gemma trên máy:** 270M chỉ để thử (hay lạc đề); 1B nhanh nhưng **hay sai kiến
+  thức** (đánh giá 30 câu ngày 13/10/2026). Với kiến thức quan trọng, hãy kiểm tra lại với Thẻ Khoa
+  học/giáo viên, bật **Think**, hoặc dùng API trực tuyến.
 - **Trí nhớ hội thoại** (Cài đặt → Trí nhớ hội thoại): **Vừa** (mặc định) hoặc **Dài**. Thầy nhớ phần trò
   chuyện gần nhất; phần cũ hơn được chính AI đang trả lời tóm tắt ngắn (lưu trên máy) để thầy vẫn
   theo được mạch bài. "Dài" nhớ nhiều hơn nhưng chậm hơn trên máy yếu và dễ hết lượt hơn với gói API
   miễn phí.
 - Câu trả lời quá dài bị dừng giữa chừng thì dưới câu trả lời có dòng báo và nút **Viết tiếp**. Khi
   đang giảng trên bảng, phần viết tiếp được giảng tiếp ngay trên cùng bảng.
-- Các nút nhanh ở trang AI Teacher (Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn giản hơn, Em chưa hiểu
-  chỗ này) hiện sau câu trả lời đầu tiên và gửi cho AI một câu hướng dẫn đầy đủ dựa trên câu trả
-  lời vừa rồi.
+- Các nút nhanh ở trang AI Teacher (**Gợi ý từng bước**, Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn
+  giản hơn, Em chưa hiểu chỗ này) hiện sau câu trả lời đầu tiên và gửi cho AI một câu hướng dẫn đầy
+  đủ dựa trên câu trả lời vừa rồi. "Gợi ý từng bước" chỉ cho một gợi ý nhỏ cho bước tiếp theo, chưa
+  nói đáp số.
+- Thầy giảng theo trình tự: điều cần hiểu → hỏi lại nếu đề thiếu dữ kiện → giải thích đơn giản → ví
+  dụ → các bước có lý do → một lỗi hay nhầm → **một câu hỏi kiểm tra**. Em trả lời câu hỏi đó, thầy
+  nói rõ đúng/sai ở đâu và giải thích theo cách khác.
+- **Kết quả do SimLab tính:** khi câu hỏi có phương trình hóa học (ví dụ "Cân bằng H2 + O2 → H2O"),
+  bộ cân bằng chính xác của SimLab giải trước; dưới câu trả lời có khung xanh **Kết quả do SimLab tính
+  (chính xác, không phải AI)**. Nếu chữ của AI khác khung này, tin khung này.
+- **Xem mô phỏng:** khi câu hỏi nêu đúng tên một chủ đề có mô phỏng (ví dụ "nguyên phân", "rơi tự
+  do"), dưới câu trả lời có nút **Xem mô phỏng: …** để mở chủ đề đó.
+- Đường link trong câu trả lời của AI chỉ hiện dưới dạng chữ (kèm tên trang), không bấm được: AI có
+  thể bị nội dung lạ đánh lừa; trang ngoài chỉ mở từ các nút của app.
 - **Thư viện kiến thức** có sẵn ghi chú Vật lý, Hóa học, Sinh học THPT và cho phép nạp tệp `.txt`,
   `.md`, `.csv`, `.json`. Tệp và lịch sử chat lưu trên máy; khi chat bằng API trực tuyến, các đoạn
   kiến thức liên quan có thể được gửi cùng câu hỏi. **Tra thêm Wikipedia** là tùy chọn (mặc định
@@ -163,8 +183,11 @@ vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì. Bảng có nh
   được máy tính lại (dấu ✓); số không rõ nguồn có dấu ⚠ "Có số do AI tự tính, chưa kiểm chứng" — hãy
   tự tính lại. Đồ thị do app tự tính từ biểu thức.
 - Với API trực tuyến, AI được yêu cầu trả lời dạng "kịch bản bảng" (chỉ nói ý định, không bao giờ cho
-  tọa độ; app tự xếp chỗ). Với Gemma trên máy, câu trả lời thường được app tự xếp lên bảng. Chi tiết:
-  `docs/WHITEBOARD.md`.
+  tọa độ; app tự xếp chỗ). Với Gemma trên máy, câu trả lời thường được app tự xếp lên bảng (chỉ viết ý
+  chính của bước dài, phần còn lại thầy đọc). Chi tiết: `docs/WHITEBOARD.md`.
+- Khi bật giọng: thầy đọc cả nội dung đang viết đúng lúc viết (công thức đọc thành lời, ví dụ "2n"
+  là "hai nờ"); bấm **Tạm dừng** giữa câu rồi **Tiếp tục** thì thầy đọc lại câu đó; tốc độ 0,75–2× của
+  bảng áp cho cả giọng.
 
 ### Trình độ: Nền tảng và Đại cương
 

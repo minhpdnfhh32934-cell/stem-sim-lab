@@ -44,6 +44,12 @@ Workflow Release tạo gói (artifact `simlab-store`); bản Store được **n�
 
 ## Phát hành (GitHub)
 
+**Chỉ mã đã có trên `main`** mới được phát hành (từ 13/10/2026, audit SEC-01): workflow dừng nếu
+chạy từ nhánh khác với `publish = true`, hoặc khi tag trỏ vào commit chưa có trên `main`. Bước ký và
+bước phát hành chạy trong environment **`release`**: chủ repo nên đặt người duyệt bắt buộc cho
+environment này và để secret `WEB_UPDATE_SIGNING_KEY` ở đó (xem `docs/AUDIT_2026-10-13.md`, mục
+"Việc chủ repo cần làm"). Chạy thử bản dựng từ nhánh khác vẫn được với `publish = false`.
+
 1. Đẩy mã lên nhánh `main` (CI phải xanh).
 2. GitHub → **Actions → Release (Windows installer) → Run workflow**. Để `publish` = true, ghi chú
    thay đổi bằng tiếng Việt (hiện trong hộp thoại cập nhật của app).
