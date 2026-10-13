@@ -320,3 +320,38 @@
     transition: none;
   }
 }
+
+/* Minimap of a long face (pattern 104): written blocks + the part on screen. */
+.board__minimap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 6px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px) saturate(1.2);
+  opacity: 0.8;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.board__minimap:hover {
+  opacity: 1;
+}
+.board__minimap svg {
+  display: block;
+  cursor: pointer;
+  touch-action: none;
+}
+.board__minimap rect {
+  fill: color-mix(in srgb, var(--board-ink) 18%, transparent);
+}
+.board__minimap rect.is-written {
+  fill: color-mix(in srgb, var(--board-ink) 55%, transparent);
+}
+.board__minimap rect.board__minimap-view {
+  fill: color-mix(in srgb, var(--accent) 14%, transparent);
+  stroke: var(--accent);
+  stroke-width: 18;
+}

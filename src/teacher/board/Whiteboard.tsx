@@ -16,6 +16,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { cx } from '@/ui/cx';
 import { PEN_SPEEDS, useBoardStore, type BoardMark } from './boardStore';
 import { BoardDrawing } from './BoardDrawing';
+import { BoardMinimap } from './BoardMinimap';
 import { BOARD_W, COLUMNS, COLUMN_TOP, type Line, type TextElement } from './layout';
 import {
   continueLesson,
@@ -254,79 +255,87 @@ function BoardSheet() {
   };
 
   return (
-    <div className="board__viewport" ref={viewport} data-pen={penMode || undefined}>
-      <div className="board__scaler" style={{ width: BOARD_W * scale, height: height * scale }}>
-        <div
-          className="board__sheet"
-          style={{ width: BOARD_W, height, transform: `scale(${String(scale)})` }}
-        >
-          <svg className="board__rules" width={BOARD_W} height={height} aria-hidden="true">
-            <line
-              x1={COLUMNS.side.x + COLUMNS.side.w + 20}
-              y1={COLUMN_TOP - 8}
-              x2={COLUMNS.side.x + COLUMNS.side.w + 20}
-              y2={height - 30}
-            />
-            <line
-              x1={COLUMNS.right.x - 20}
-              y1={COLUMN_TOP - 8}
-              x2={COLUMNS.right.x - 20}
-              y2={height - 30}
-            />
-          </svg>
-          {elements.map((e) =>
-            e.kind === 'text' ? <TextEl key={e.id} element={e} /> : <DrawEl key={e.id} id={e.id} />,
-          )}
-          <svg className="board__marks" width={BOARD_W} height={height} aria-hidden="true">
-            {marks
-              .filter((m) => m.face === face)
-              .map((m) => (
-                <MarkPath key={m.key} mark={m} />
-              ))}
-          </svg>
-          <svg
-            className="board__student"
-            width={BOARD_W}
-            height={height}
-            role={penMode ? 'img' : undefined}
-            aria-label={penMode ? t('board.penArea') : undefined}
-            aria-hidden={penMode ? undefined : true}
-            onPointerDown={(e) => {
-              if (!penMode) return;
-              e.currentTarget.setPointerCapture(e.pointerId);
-              drawing.current = [toBoard(e)];
-              setLive(drawing.current);
-            }}
-            onPointerMove={(e) => {
-              if (!drawing.current) return;
-              drawing.current = [...drawing.current, toBoard(e)];
-              setLive(drawing.current);
-            }}
-            onPointerUp={() => {
-              const pts = drawing.current;
-              drawing.current = null;
-              setLive(null);
-              if (pts && pts.length > 1) useBoardStore.getState().addStroke({ face, points: pts });
-            }}
+    <>
+      <div className="board__viewport" ref={viewport} data-pen={penMode || undefined}>
+        <div className="board__scaler" style={{ width: BOARD_W * scale, height: height * scale }}>
+          <div
+            className="board__sheet"
+            style={{ width: BOARD_W, height, transform: `scale(${String(scale)})` }}
           >
-            {[
-              ...strokes.filter((s) => s.face === face).map((s) => s.points),
-              ...(live ? [live] : []),
-            ].map((pts, i) => (
-              <polyline key={i} points={pts.map((p) => p.join(',')).join(' ')} />
-            ))}
-          </svg>
-          {pen && status !== 'done' && (
-            <PenLine
-              className="board__pen"
-              size={34}
-              style={{ left: pen.x, top: pen.y - 34 }}
-              aria-hidden="true"
-            />
-          )}
+            <svg className="board__rules" width={BOARD_W} height={height} aria-hidden="true">
+              <line
+                x1={COLUMNS.side.x + COLUMNS.side.w + 20}
+                y1={COLUMN_TOP - 8}
+                x2={COLUMNS.side.x + COLUMNS.side.w + 20}
+                y2={height - 30}
+              />
+              <line
+                x1={COLUMNS.right.x - 20}
+                y1={COLUMN_TOP - 8}
+                x2={COLUMNS.right.x - 20}
+                y2={height - 30}
+              />
+            </svg>
+            {elements.map((e) =>
+              e.kind === 'text' ? (
+                <TextEl key={e.id} element={e} />
+              ) : (
+                <DrawEl key={e.id} id={e.id} />
+              ),
+            )}
+            <svg className="board__marks" width={BOARD_W} height={height} aria-hidden="true">
+              {marks
+                .filter((m) => m.face === face)
+                .map((m) => (
+                  <MarkPath key={m.key} mark={m} />
+                ))}
+            </svg>
+            <svg
+              className="board__student"
+              width={BOARD_W}
+              height={height}
+              role={penMode ? 'img' : undefined}
+              aria-label={penMode ? t('board.penArea') : undefined}
+              aria-hidden={penMode ? undefined : true}
+              onPointerDown={(e) => {
+                if (!penMode) return;
+                e.currentTarget.setPointerCapture(e.pointerId);
+                drawing.current = [toBoard(e)];
+                setLive(drawing.current);
+              }}
+              onPointerMove={(e) => {
+                if (!drawing.current) return;
+                drawing.current = [...drawing.current, toBoard(e)];
+                setLive(drawing.current);
+              }}
+              onPointerUp={() => {
+                const pts = drawing.current;
+                drawing.current = null;
+                setLive(null);
+                if (pts && pts.length > 1)
+                  useBoardStore.getState().addStroke({ face, points: pts });
+              }}
+            >
+              {[
+                ...strokes.filter((s) => s.face === face).map((s) => s.points),
+                ...(live ? [live] : []),
+              ].map((pts, i) => (
+                <polyline key={i} points={pts.map((p) => p.join(',')).join(' ')} />
+              ))}
+            </svg>
+            {pen && status !== 'done' && (
+              <PenLine
+                className="board__pen"
+                size={34}
+                style={{ left: pen.x, top: pen.y - 34 }}
+                aria-hidden="true"
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <BoardMinimap viewport={viewport} scale={scale} height={height} />
+    </>
   );
 }
 
