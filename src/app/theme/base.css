@@ -26,6 +26,17 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   user-select: none;
+  /* Never leave one word alone on the last line (inherited by every text block). */
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+legend,
+summary {
+  text-wrap: balance;
 }
 
 input,

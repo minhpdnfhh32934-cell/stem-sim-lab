@@ -28,7 +28,7 @@ export async function saveProject(): Promise<void> {
   try {
     const saved = await saveFile({
       name: `${slugify(topicName(snap.topicId))}-${stamp()}.stemsim`,
-      filterName: 'STEM Sim Lab',
+      filterName: 'SimLab',
       extensions: ['stemsim'],
       contents: serializeSnapshot(snap),
     });
@@ -42,7 +42,7 @@ export async function saveProject(): Promise<void> {
 /** Opens a `.stemsim` file (validated before anything is changed). */
 export async function openProject(): Promise<void> {
   try {
-    const file = await openTextFile('STEM Sim Lab', ['stemsim', 'json']);
+    const file = await openTextFile('SimLab', ['stemsim', 'json']);
     if (!file) return;
     await openProjectText(file.text, file.name);
   } catch (e) {

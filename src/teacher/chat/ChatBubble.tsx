@@ -39,9 +39,10 @@ export function ChatBubble() {
         }}
         aria-expanded={open}
         aria-label={open ? t('chat.close') : t('chat.title')}
+        data-tip={open ? t('chat.close') : t('chat.title')}
+        data-tip-side="left"
       >
         {open ? <X size={22} /> : <TeacherFace className="chat-bubble__face" trackCursor={false} />}
-        {!open && <span>{t('chat.title')}</span>}
       </button>
     </div>
   );

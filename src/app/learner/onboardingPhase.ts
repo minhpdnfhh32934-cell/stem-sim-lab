@@ -22,6 +22,6 @@ export function useOnboardingPhase(): OnboardingPhase {
   if (!onboarded) return 'profile';
   if (!loaded) return 'loading';
   if (gate) return 'gate';
-  if (__EDITION__ === 'main' && !connectSeen && noKey) return 'connect';
+  if (!connectSeen && noKey) return 'connect';
   return tour ? 'tour' : 'done';
 }

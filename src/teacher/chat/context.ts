@@ -32,7 +32,7 @@ export function screenContext(locale: Locale): string {
     workspace.scienceCard
       ? `Thẻ Khoa học: mô hình=${localized(workspace.scienceCard.model, locale)}; giả định=${workspace.scienceCard.assumptions.map((a) => localized(a, locale)).join(' | ')}; mức tin cậy=${workspace.scienceCard.confidence}; nguồn=${workspace.scienceCard.sources.map((s) => s.citation).join(', ')}`
       : '',
-    module ? `Mô-đun STEM Sim Lab đang mở: ${topic ?? module.id}` : '',
+    module ? `Mô-đun SimLab đang mở: ${topic ?? module.id}` : '',
     moduleInputs ? `Thông số đầu vào của mô-đun hiện tại (JSON): ${moduleInputs}` : '',
   ].filter(Boolean);
   return chunks.join('\n');

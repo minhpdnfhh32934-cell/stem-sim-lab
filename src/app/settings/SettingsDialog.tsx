@@ -1,59 +1,150 @@
-import { Gauge, Keyboard, LayoutPanelLeft, Orbit, Palette, X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import {
+  BookOpen,
+  Cpu,
+  GraduationCap,
+  Gpu,
+  History,
+  Keyboard,
+  Orbit,
+  Palette,
+  PlugZap,
+  ShieldCheck,
+  Volume2,
+  X,
+  type LucideIcon,
+} from 'lucide-react';
+import { useEffect, useRef, useState, type ComponentType, type KeyboardEvent } from 'react';
 import { AiSettings } from '@/app/ai/AiSettings';
+import { useT, type MessageKey } from '@/app/i18n';
+import { SETTINGS_SECTIONS, useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { SafetySettings } from '@/safety/SafetySettings';
-import { LOCALES, formatNumber, useT } from '@/app/i18n';
-import { useLayoutStore } from '@/app/layout/layoutStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
-import { ModeSwitch } from '@/app/learner/ModeSwitch';
-import { SHORTCUTS, formatChord, type ShortcutAction } from '@/app/shortcuts/shortcuts';
-import { GRAVITY_PRESETS } from '@/core/constants';
-import { usePerfStore } from '@/perf/perfStore';
-import type { QualityPreference } from '@/perf/tiers';
-import { remeasure } from '@/perf/useStartupBenchmark';
+import { GemmaGpuSettings } from '@/teacher/chat/settings/GemmaGpuSettings';
+import { GemmaSettings } from '@/teacher/chat/settings/GemmaSettings';
+import { KnowledgeSettings } from '@/teacher/chat/settings/KnowledgeSettings';
+import { MemorySettings } from '@/teacher/chat/settings/MemorySettings';
+import { TeacherSettings } from '@/teacher/chat/settings/TeacherSettings';
+import { VoiceSettings } from '@/teacher/voice/VoiceSettings';
 import { IconButton } from '@/ui/IconButton';
-import { FONT_SCALES, useSettingsStore, type ThemePreference } from './settingsStore';
-import { ChatAiSettings } from '@/teacher/chat/ChatAiSettings';
+import { AppearanceSettings, ShortcutSettings, SimulationSettings } from './GeneralSettings';
+import './settings.css';
 
-const QUALITY: QualityPreference[] = ['auto', 'low', 'medium', 'high'];
+interface SectionMeta {
+  icon: LucideIcon;
+  title: MessageKey;
+  hint: MessageKey;
+  group: 'general' | 'ai' | 'privacy';
+  Body: ComponentType;
+}
 
-const THEMES: {
-  id: ThemePreference;
-  key: 'settings.themeSystem' | 'settings.themeLight' | 'settings.themeDark';
-}[] = [
-  { id: 'system', key: 'settings.themeSystem' },
-  { id: 'light', key: 'settings.themeLight' },
-  { id: 'dark', key: 'settings.themeDark' },
+/** One page per section; the navigation lists them in this order, grouped. */
+const SECTIONS: Record<SettingsSection, SectionMeta> = {
+  appearance: {
+    icon: Palette,
+    title: 'settings.nav.appearance',
+    hint: 'settings.nav.appearanceHint',
+    group: 'general',
+    Body: AppearanceSettings,
+  },
+  simulation: {
+    icon: Orbit,
+    title: 'settings.nav.simulation',
+    hint: 'settings.nav.simulationHint',
+    group: 'general',
+    Body: SimulationSettings,
+  },
+  ai: {
+    icon: PlugZap,
+    title: 'settings.ai',
+    hint: 'settings.nav.aiHint',
+    group: 'ai',
+    Body: AiSettings,
+  },
+  teacher: {
+    icon: GraduationCap,
+    title: 'settings.nav.teacher',
+    hint: 'settings.nav.teacherHint',
+    group: 'ai',
+    Body: TeacherSettings,
+  },
+  local: {
+    icon: Cpu,
+    title: 'settings.nav.local',
+    hint: 'settings.nav.localHint',
+    group: 'ai',
+    Body: GemmaSettings,
+  },
+  gpu: {
+    icon: Gpu,
+    title: 'settings.nav.gpu',
+    hint: 'settings.nav.gpuHint',
+    group: 'ai',
+    Body: GemmaGpuSettings,
+  },
+  knowledge: {
+    icon: BookOpen,
+    title: 'settings.nav.knowledge',
+    hint: 'settings.nav.knowledgeHint',
+    group: 'ai',
+    Body: KnowledgeSettings,
+  },
+  memory: {
+    icon: History,
+    title: 'settings.nav.memory',
+    hint: 'settings.nav.memoryHint',
+    group: 'ai',
+    Body: MemorySettings,
+  },
+  voice: {
+    icon: Volume2,
+    title: 'settings.nav.voice',
+    hint: 'settings.nav.voiceHint',
+    group: 'ai',
+    Body: VoiceSettings,
+  },
+  safety: {
+    icon: ShieldCheck,
+    title: 'safety.settings.title',
+    hint: 'settings.nav.safetyHint',
+    group: 'privacy',
+    Body: SafetySettings,
+  },
+  shortcuts: {
+    icon: Keyboard,
+    title: 'settings.shortcuts',
+    hint: 'settings.nav.shortcutsHint',
+    group: 'general',
+    Body: ShortcutSettings,
+  },
+};
+
+const GROUPS: { id: SectionMeta['group']; title: MessageKey }[] = [
+  { id: 'general', title: 'settings.nav.groupGeneral' },
+  { id: 'ai', title: 'settings.nav.groupAi' },
+  { id: 'privacy', title: 'settings.nav.groupPrivacy' },
 ];
 
-/** Shortcuts listed in the dialog (tool keys are shown in tool tooltips instead). */
-const LISTED = [
-  'playPause',
-  'reset',
-  'step',
-  'undo',
-  'redo',
-  'save',
-  'open',
-  'toggleLeft',
-  'toggleRight',
-  'toggleBottom',
-  'presentation',
-  'fontLarger',
-  'fontSmaller',
-] as const satisfies readonly ShortcutAction[];
+const ORDER: readonly SettingsSection[] = GROUPS.flatMap((g) =>
+  SETTINGS_SECTIONS.filter((id) => SECTIONS[id].group === g.id),
+);
 
 interface SettingsDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
+/**
+ * Settings: a list of small pages on the left (Giao diện, Kết nối AI, AI local, GPU cho Gemma,
+ * Trí nhớ hội thoại, Giọng nói…), one page shown on the right, each made of small cards.
+ * A page stays mounted once visited, so a Gemma download or a typed key survives a page switch.
+ */
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
-  const settings = useSettingsStore();
-  const resetLayout = useLayoutStore((s) => s.resetLayout);
-  const perf = usePerfStore();
+  const section = useWorkspaceStore((s) => s.settingsSection);
+  const setSection = useWorkspaceStore((s) => s.setSettingsSection);
+  const [visited, setVisited] = useState<ReadonlySet<SettingsSection>>(() => new Set([section]));
+  const tabs = useRef(new Map<SettingsSection, HTMLButtonElement>());
+  const panel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const dialog = ref.current;
@@ -62,22 +153,36 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
-  const focus = useWorkspaceStore((s) => s.settingsFocus);
+  // Derived during render (React's "adjust state when a prop changes" pattern).
+  if (!visited.has(section)) setVisited(new Set([...visited, section]));
+
   useEffect(() => {
-    if (!open || !focus) return;
-    const id = requestAnimationFrame(() => {
-      const section = document.getElementById(`settings-${focus}`);
-      if (section?.scrollIntoView) section.scrollIntoView({ block: 'start' });
-    });
-    return () => {
-      cancelAnimationFrame(id);
-    };
-  }, [open, focus]);
+    if (panel.current) panel.current.scrollTop = 0;
+    // On narrow windows the page list is a scrolling row: keep the chosen page in view.
+    const tab = tabs.current.get(section);
+    if (tab?.scrollIntoView) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [section]);
+
+  const onNavKey = (event: KeyboardEvent<HTMLDivElement>) => {
+    const keys = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
+    if (!keys.includes(event.key)) return;
+    event.preventDefault();
+    const i = ORDER.indexOf(section);
+    const next =
+      event.key === 'Home'
+        ? ORDER[0]
+        : event.key === 'End'
+          ? ORDER[ORDER.length - 1]
+          : ORDER[(i + (event.key === 'ArrowDown' ? 1 : ORDER.length - 1)) % ORDER.length];
+    if (!next) return;
+    setSection(next);
+    tabs.current.get(next)?.focus();
+  };
 
   return (
     <dialog
       ref={ref}
-      className="dialog"
+      className="dialog settings-dialog"
       aria-labelledby="settings-title"
       onClose={onClose}
       onClick={(e) => {
@@ -90,199 +195,68 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         <IconButton icon={X} label={t('settings.close')} onClick={onClose} tooltipSide="left" />
       </header>
 
-      <div className="dialog__body">
-        <fieldset className="settings-group">
-          <legend>
-            <Palette size={15} strokeWidth={1.75} aria-hidden="true" />
-            {t('settings.appearance')}
-          </legend>
-
-          <ModeSwitch />
-
-          <div className="settings-row">
-            <span id="theme-label">{t('settings.theme')}</span>
-            <div className="segmented" role="radiogroup" aria-labelledby="theme-label">
-              {THEMES.map((th) => (
-                <button
-                  key={th.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={settings.theme === th.id}
-                  className="segmented__item"
-                  onClick={() => {
-                    settings.setTheme(th.id);
-                  }}
-                >
-                  {t(th.key)}
-                </button>
-              ))}
-            </div>
+      <div className="settings-layout">
+        <nav className="settings-nav" aria-label={t('settings.nav.label')}>
+          <div role="tablist" aria-orientation="vertical" onKeyDown={onNavKey}>
+            {GROUPS.map((group) => (
+              <div key={group.id} className="settings-nav__group" role="presentation">
+                <p className="settings-nav__group-title" role="presentation">
+                  {t(group.title)}
+                </p>
+                {ORDER.filter((id) => SECTIONS[id].group === group.id).map((id) => {
+                  const meta = SECTIONS[id];
+                  const Icon = meta.icon;
+                  const selected = id === section;
+                  return (
+                    <button
+                      key={id}
+                      ref={(el) => {
+                        if (el) tabs.current.set(id, el);
+                        else tabs.current.delete(id);
+                      }}
+                      type="button"
+                      role="tab"
+                      id={`settings-tab-${id}`}
+                      aria-selected={selected}
+                      aria-controls={`settings-${id}`}
+                      tabIndex={selected ? 0 : -1}
+                      className="settings-nav__item"
+                      onClick={() => {
+                        setSection(id);
+                      }}
+                    >
+                      <Icon size={16} strokeWidth={1.75} aria-hidden="true" />
+                      <span>{t(meta.title)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
+        </nav>
 
-          <div className="settings-row">
-            <span id="font-label">{t('settings.fontSize')}</span>
-            <div className="segmented" role="radiogroup" aria-labelledby="font-label">
-              {FONT_SCALES.map((scale) => (
-                <button
-                  key={scale}
-                  type="button"
-                  role="radio"
-                  aria-checked={settings.fontScale === scale}
-                  className="segmented__item mono"
-                  onClick={() => {
-                    settings.setFontScale(scale);
-                  }}
-                >
-                  {formatNumber(settings.locale, scale, { style: 'percent' })}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="settings-row">
-            <span id="lang-label">{t('settings.language')}</span>
-            <div className="segmented" role="radiogroup" aria-labelledby="lang-label">
-              {LOCALES.map((loc) => (
-                <button
-                  key={loc}
-                  type="button"
-                  role="radio"
-                  aria-checked={settings.locale === loc}
-                  className="segmented__item"
-                  onClick={() => {
-                    settings.setLocale(loc);
-                  }}
-                >
-                  {t(`languages.${loc}`)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset className="settings-group">
-          <legend>
-            <LayoutPanelLeft size={15} strokeWidth={1.75} aria-hidden="true" />
-            {t('settings.layout')}
-          </legend>
-          <button type="button" className="btn" onClick={resetLayout}>
-            {t('settings.resetLayout')}
-          </button>
-        </fieldset>
-
-        <fieldset className="settings-group">
-          <legend>
-            <Gauge size={15} strokeWidth={1.75} aria-hidden="true" />
-            {t('settings.quality')}
-          </legend>
-          <div className="settings-row">
-            <span id="quality-label">{t('settings.quality')}</span>
-            <div className="segmented" role="radiogroup" aria-labelledby="quality-label">
-              {QUALITY.map((q) => (
-                <button
-                  key={q}
-                  type="button"
-                  role="radio"
-                  aria-checked={perf.preference === q}
-                  className="segmented__item"
-                  onClick={() => {
-                    perf.setPreference(q);
-                  }}
-                >
-                  {q === 'auto' && perf.benchmark
-                    ? t('quality.autoWith', { tier: t(`quality.${perf.benchmark.tier}`) })
-                    : t(`quality.${q}`)}
-                </button>
-              ))}
-            </div>
-          </div>
-          <p className="muted">{t('settings.qualityHint')}</p>
-          <div className="settings-row">
-            <span className="muted mono">
-              {perf.benchmarking
-                ? t('quality.measuring')
-                : perf.benchmark
-                  ? t('quality.benchmarkSummary', {
-                      cpu: perf.benchmark.cpuScore,
-                      draw: perf.benchmark.drawScore,
-                      webgl: perf.benchmark.webgl2 ? t('quality.yes') : t('quality.no'),
-                      cores: perf.benchmark.cores,
-                    })
-                  : ''}
-            </span>
-            <button
-              type="button"
-              className="btn"
-              disabled={perf.benchmarking}
-              onClick={() => {
-                void remeasure();
-              }}
-            >
-              {t('quality.remeasure')}
-            </button>
-          </div>
-        </fieldset>
-
-        <fieldset className="settings-group">
-          <legend>
-            <Orbit size={15} strokeWidth={1.75} aria-hidden="true" />
-            {t('physicsSettings.title')}
-          </legend>
-          <div className="settings-row">
-            <span id="gravity-label">{t('physicsSettings.defaultGravity')}</span>
-            <div className="segmented" role="radiogroup" aria-labelledby="gravity-label">
-              {GRAVITY_PRESETS.map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  role="radio"
-                  aria-checked={settings.defaultGravity === g}
-                  className="segmented__item mono"
-                  onClick={() => {
-                    settings.setDefaultGravity(g);
-                  }}
-                >
-                  {formatNumber(settings.locale, g)}
-                  {g === 9.80665 ? ` (${t('physicsSettings.standard')})` : ''}
-                </button>
-              ))}
-            </div>
-          </div>
-          <p className="muted">{t('physicsSettings.defaultGravityHint')}</p>
-        </fieldset>
-
-        <AiSettings />
-        <ChatAiSettings />
-        <SafetySettings />
-
-        <fieldset className="settings-group">
-          <legend>
-            <Keyboard size={15} strokeWidth={1.75} aria-hidden="true" />
-            {t('settings.shortcuts')}
-          </legend>
-          <dl className="shortcut-list">
-            {LISTED.map((action) => {
-              const def = SHORTCUTS.find((s) => s.action === action);
-              if (!def) return null;
-              return (
-                <div key={action} className="shortcut-list__row">
-                  <dt>{t(`shortcuts.${action}`)}</dt>
-                  <dd>
-                    {def.chords.slice(0, 2).map((c) => (
-                      <kbd key={formatChord(c)}>{formatChord(c)}</kbd>
-                    ))}
-                  </dd>
-                </div>
-              );
-            })}
-            <div className="shortcut-list__row">
-              <dt>{t('shortcuts.analyze')}</dt>
-              <dd>
-                <kbd>Ctrl + Enter</kbd>
-              </dd>
-            </div>
-          </dl>
-        </fieldset>
+        <div className="settings-panels" ref={panel}>
+          {ORDER.filter((id) => visited.has(id) || id === section).map((id) => {
+            const meta = SECTIONS[id];
+            const Body = meta.Body;
+            return (
+              <section
+                key={id}
+                id={`settings-${id}`}
+                role="tabpanel"
+                aria-labelledby={`settings-tab-${id}`}
+                className="settings-panel"
+                hidden={id !== section}
+              >
+                <header className="settings-panel__header">
+                  <h3>{t(meta.title)}</h3>
+                  <p>{t(meta.hint)}</p>
+                </header>
+                <Body />
+              </section>
+            );
+          })}
+        </div>
       </div>
     </dialog>
   );

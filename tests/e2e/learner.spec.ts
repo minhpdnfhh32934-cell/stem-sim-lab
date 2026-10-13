@@ -15,7 +15,7 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
   await openLab(page);
   await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible();
   await expect(page.locator('.home__subject')).toHaveCount(3);
-  await expect(page.getByRole('button', { name: 'Mở Thầy AI' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mở AI Teacher' })).toBeVisible();
   await expect(page.locator('.topbar .ai-status')).toBeVisible();
   // No continue button before any lesson.
   await expect(page.getByRole('button', { name: /Tiếp tục bài đang học/ })).toHaveCount(0);
@@ -38,7 +38,7 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
 
   // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
-  await expect(page.getByRole('button', { name: /Thầy AI/ }).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: /AI Teacher/ }).first()).toBeVisible();
   await enterLab(page);
   const resume = page.getByRole('button', { name: /Tiếp tục bài đang học/ });
   await expect(resume).toContainText('Chuyển động thẳng đều');
@@ -160,7 +160,7 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await expect(library.getByLabel('Đã hoàn thành chủ đề')).toHaveCount(1);
   // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
-  await expect(page.getByRole('button', { name: /Thầy AI/ }).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: /AI Teacher/ }).first()).toBeVisible();
   await enterLab(page);
   await expect(page.getByText('Vượt thử thách')).toBeVisible();
   await expect(page.getByText('Bước đầu tiên')).toBeVisible();

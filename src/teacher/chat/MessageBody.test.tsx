@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { MessageBody, parseMessage } from './MessageBody';
+import { MessageBody } from './MessageBody';
+import { parseMessage } from './messageParse';
 
 describe('parseMessage', () => {
   it('splits fences, display math and markdown', () => {

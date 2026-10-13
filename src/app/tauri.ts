@@ -27,7 +27,7 @@ export async function getAppInfo(): Promise<AppInfo> {
     }
   }
   return {
-    name: 'STEM Sim Lab',
+    name: 'SimLab',
     version: __APP_VERSION__,
     targetOs: 'browser',
     debugBuild: import.meta.env.DEV,

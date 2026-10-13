@@ -58,6 +58,10 @@
 .btn--accent:hover:not(:disabled) {
   background: var(--accent-hover);
 }
+.btn--danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
 
 /* Icon buttons with micro-animations */
 .icon-btn {
@@ -126,6 +130,120 @@
 }
 .icon-btn:active:not(:disabled) svg {
   transform: scale(0.92);
+}
+
+/* Dropdowns: one look for every <select>. WebView2 / Chromium draws the open list with these
+   styles (`appearance: base-select`); other browsers keep their own list. Options stay plain
+   text so the native keyboard, screen-reader and form behaviour is unchanged. */
+select {
+  min-height: 2.43rem;
+  max-width: 100%;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast),
+    background var(--dur-fast),
+    box-shadow var(--dur-fast);
+}
+select:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border-strong));
+  background: var(--bg-hover);
+}
+select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+@supports (appearance: base-select) {
+  select,
+  ::picker(select) {
+    appearance: base-select;
+  }
+  select {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    padding: 0 var(--space-2) 0 var(--space-3);
+  }
+  /* Lucide "chevron-down", drawn in the current text colour. */
+  select::picker-icon {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background-color: var(--text-muted);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: rotate var(--dur-med) var(--ease-out);
+  }
+  select:open {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  select:open::picker-icon {
+    rotate: 180deg;
+  }
+  ::picker(select) {
+    min-width: anchor-size(width);
+    max-block-size: min(22rem, 60vh);
+    margin-block: 6px;
+    padding: 4px;
+    overflow-y: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--bg-panel);
+    box-shadow: var(--shadow-md);
+    color: var(--text);
+  }
+  select option {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: 2.29rem;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: var(--text-sm);
+    font-weight: 450;
+    text-transform: none;
+    letter-spacing: normal;
+    cursor: pointer;
+  }
+  select option::checkmark {
+    order: 1;
+    margin-inline-start: auto;
+    color: var(--accent);
+  }
+  select option:hover,
+  select option:focus-visible {
+    outline: none;
+    background: var(--bg-hover);
+  }
+  select option:checked {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  select option:disabled {
+    background: none;
+    color: var(--text-faint);
+    cursor: not-allowed;
+  }
+  /* Group titles ("Tiếng Việt", "Ngôn ngữ khác"): small caps above their options. */
+  select optgroup {
+    padding: 8px 6px 2px;
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  select optgroup + optgroup {
+    margin-top: 4px;
+    border-top: 1px solid var(--border);
+  }
 }
 
 /* Tabs */
@@ -230,6 +348,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  text-wrap: balance;
   gap: var(--space-2);
   max-width: 30rem;
   margin: 0 auto;
@@ -477,6 +596,29 @@ kbd {
   background: var(--conf-approx-soft);
   color: var(--conf-approx);
   font-weight: 600;
+}
+/* Basic mode: the details fold under one line (ScienceCard `collapsible`). */
+.science-card__more > summary {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-height: var(--target);
+  color: var(--accent);
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+.science-card__more > summary::-webkit-details-marker {
+  display: none;
+}
+.science-card__more > summary svg {
+  transition: rotate var(--dur-fast) var(--ease-out);
+}
+.science-card__more[open] > summary svg {
+  rotate: 90deg;
+}
+.science-card__more > summary:hover {
+  text-decoration: underline;
 }
 .science-card__list {
   margin: 0;

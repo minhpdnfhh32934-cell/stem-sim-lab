@@ -131,7 +131,7 @@ test('first run: level → subjects → age question → tour (once, can be skip
   await expect(page.locator('.tour')).toHaveCount(0);
   await enterLab(page);
   await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
-  const tour = page.getByRole('dialog', { name: 'Chào mừng đến STEM Sim Lab' });
+  const tour = page.getByRole('dialog', { name: 'Chào mừng đến SimLab' });
   await expect(tour).toBeVisible();
   await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Chọn môn' })).toBeVisible();

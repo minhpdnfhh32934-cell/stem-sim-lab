@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { ScienceCard } from './ScienceCard';
 import { loadKatex } from './katex';
@@ -36,6 +37,20 @@ describe('ScienceCard', () => {
     render(<ScienceCard card={changed} />);
     expect(screen.getByText('Đã có can thiệp — kết quả là mô phỏng số.')).toBeInTheDocument();
     expect(screen.getByText('Định lượng gần đúng')).toBeInTheDocument();
+  });
+
+  it('Basic mode folds the details but keeps model, confidence and intervention in view', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ScienceCard card={withIntervention(card, true)} collapsible />);
+    expect(screen.getByText('Chất điểm, bỏ qua lực cản không khí')).toBeVisible();
+    expect(screen.getByText('Định lượng gần đúng')).toBeVisible();
+    expect(screen.getByText('Đã có can thiệp — kết quả là mô phỏng số.')).toBeVisible();
+    const more = container.querySelector('details');
+    expect(more).not.toHaveAttribute('open');
+    // Folded, not removed: assumptions and sources are one click away.
+    expect(screen.getByText('SGK Vật lý 10')).toBeInTheDocument();
+    await user.click(screen.getByText('Phương trình, giả định và nguồn'));
+    expect(more).toHaveAttribute('open');
   });
 
   it('never upgrades a qualitative card', () => {

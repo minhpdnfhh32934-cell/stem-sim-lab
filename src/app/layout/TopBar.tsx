@@ -5,9 +5,6 @@ import {
   Maximize2,
   PencilRuler,
   Moon,
-  PanelBottom,
-  PanelLeft,
-  PanelRight,
   Redo2,
   Settings,
   Sparkles,
@@ -41,16 +38,7 @@ export const TopBar = memo(function TopBar() {
   const t = useT();
   const theme = useResolvedTheme();
   const toggleTheme = useSettingsStore((s) => s.toggleTheme);
-  const layout = useLayoutStore(
-    useShallow((s) => ({
-      leftOpen: s.leftOpen,
-      rightOpen: s.rightOpen,
-      bottomOpen: s.bottomOpen,
-      toggle: s.toggle,
-      setPresentation: s.setPresentation,
-    })),
-  );
-  const { setPresentation } = layout;
+  const setPresentation = useLayoutStore((s) => s.setPresentation);
   const { subject, setSubject, problemText, setProblemText } = useWorkspaceStore(
     useShallow((s) => ({
       subject: s.subject,
@@ -105,7 +93,8 @@ export const TopBar = memo(function TopBar() {
         <House className="topbar__home-icon" size={15} strokeWidth={1.75} aria-hidden="true" />
       </button>
 
-      {!landing && (
+      {/* Subjects and undo/redo belong to the lab; the AI Teacher page does not use them. */}
+      {!landing && !teacher && (
         <div
           className="subject-switch"
           role="radiogroup"
@@ -229,47 +218,26 @@ export const TopBar = memo(function TopBar() {
           }}
         />
         <span className="topbar__divider" aria-hidden="true" />
-        <IconButton
-          icon={PanelLeft}
-          label={t('layout.toggleLeft')}
-          active={layout.leftOpen}
-          onClick={() => {
-            layout.toggle('left');
-          }}
-        />
-        <IconButton
-          icon={PanelBottom}
-          label={t('layout.toggleBottom')}
-          active={layout.bottomOpen}
-          onClick={() => {
-            layout.toggle('bottom');
-          }}
-        />
-        <IconButton
-          icon={PanelRight}
-          label={t('layout.toggleRight')}
-          active={layout.rightOpen}
-          onClick={() => {
-            layout.toggle('right');
-          }}
-        />
-        <span className="topbar__divider" aria-hidden="true" />
-        <IconButton
-          icon={Undo2}
-          label={t('topbar.undo')}
-          disabled={!canUndo}
-          onClick={() => {
-            undo();
-          }}
-        />
-        <IconButton
-          icon={Redo2}
-          label={t('topbar.redo')}
-          disabled={!canRedo}
-          onClick={() => {
-            redo();
-          }}
-        />
+        {!teacher && (
+          <>
+            <IconButton
+              icon={Undo2}
+              label={t('topbar.undo')}
+              disabled={!canUndo}
+              onClick={() => {
+                undo();
+              }}
+            />
+            <IconButton
+              icon={Redo2}
+              label={t('topbar.redo')}
+              disabled={!canRedo}
+              onClick={() => {
+                redo();
+              }}
+            />
+          </>
+        )}
         <IconButton
           icon={theme === 'dark' ? Sun : Moon}
           label={t('topbar.toggleTheme')}

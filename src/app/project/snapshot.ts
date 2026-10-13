@@ -44,7 +44,7 @@ export function takeSnapshot(): Snapshot | null {
   const base = {
     format: STEMSIM_FORMAT,
     version: STEMSIM_VERSION,
-    app: `STEM Sim Lab ${__APP_VERSION__}`,
+    app: `SimLab ${__APP_VERSION__}`,
     savedAt: new Date().toISOString(),
   } as const;
   const mod = useModuleStore.getState().active;

@@ -1,4 +1,5 @@
 import {
+  ArrowDownToLine,
   Bot,
   Check,
   CircleAlert,
@@ -16,14 +17,17 @@ import {
 import { useEffect, useRef, useState, type KeyboardEvent, type SyntheticEvent } from 'react';
 import { useAiStore } from '@/ai/aiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
+import { boardAnswerText } from '@/teacher/board/lesson';
 import { speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { askTeacher } from './chatService';
+import { useTeacherStore } from '@/teacher/teacherStore';
+import { CONTINUE_PROMPT, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
 import { useT, type MessageKey } from '@/app/i18n';
 import { gemmaReady } from '@/ai/gemmaTransport';
@@ -55,7 +59,13 @@ export function ChatPanel({
   const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
   const [draft, setDraft] = useState('');
-  const [busy, setBusy] = useState(false);
+  // On the board the lesson reads itself sentence by sentence, in step with the pen (Whiteboard).
+  const board = useTeacherStore((s) => teacherPage && s.layout === 'board');
+  const [busy, setLocalBusy] = useState(false);
+  const setBusy = (value: boolean) => {
+    setLocalBusy(value);
+    useChatStore.setState({ answering: value });
+  };
   const [error, setError] = useState('');
   /** Latest cloud-key lookup, tagged so a stale answer never overrides a newer engine/provider. */
   const [keyLookup, setKeyLookup] = useState<{ id: string; available: boolean } | null>(null);
@@ -169,15 +179,21 @@ export function ChatPanel({
   // Never keep reading after the panel goes away.
   useEffect(() => stopSpeaking, []);
 
-  const submit = async (text = draft) => {
-    const question = text.trim();
+  /**
+   * Sends a question. `prompt` is what the AI receives when it differs from what the learner
+   * sees (the quick buttons show "Chậm hơn" but send a full instruction).
+   */
+  const submit = async (text = draft, prompt?: string) => {
+    const shown = text.trim();
+    const question = (prompt ?? shown).trim();
     if (!question || busy) return;
     stopSpeaking();
     setError('');
     const userMessage: ChatMessageRecord = {
       id: crypto.randomUUID(),
       role: 'user',
-      content: question,
+      content: shown,
+      ...(prompt ? { prompt: question } : {}),
     };
     const prior = chat.messages;
     chat.addMessage(userMessage);
@@ -187,6 +203,7 @@ export function ChatPanel({
       const result = await askTeacher(question, locale, prior, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: chat.thinkEnabled,
+        board,
       });
       chat.addMessage({
         id: crypto.randomUUID(),
@@ -195,8 +212,9 @@ export function ChatPanel({
         model: result.metadata.model,
         ...(result.metadata.checkedBy ? { checkedBy: result.metadata.checkedBy } : {}),
         ...(result.metadata.references.length ? { references: result.metadata.references } : {}),
+        ...(result.truncated ? { truncated: true } : {}),
       });
-      if (useVoiceStore.getState().enabled) void speak(result.content);
+      if (useVoiceStore.getState().enabled && !board) void speak(result.content);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -204,6 +222,33 @@ export function ChatPanel({
       input.current?.focus();
     }
   };
+
+  /** "Viết tiếp": asks for the rest of an answer that stopped at the output limit. */
+  const continueAnswer = async (message: ChatMessageRecord) => {
+    if (busy) return;
+    stopSpeaking();
+    setError('');
+    setBusy(true);
+    try {
+      const upto = chat.messages.slice(0, chat.messages.indexOf(message) + 1);
+      const result = await askTeacher(CONTINUE_PROMPT[locale], locale, upto, {
+        includeScreen: showScreenContext && chat.includeScreen,
+        think: false,
+        board,
+      });
+      chat.updateMessage(message.id, {
+        content: joinContinuation(message.content, result.content),
+        truncated: result.truncated,
+      });
+      if (useVoiceStore.getState().enabled && !board) void speak(result.content);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+  const lastMessage = chat.messages[chat.messages.length - 1];
+  const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -230,12 +275,12 @@ export function ChatPanel({
   const gemmaUnavailable = engine === 'gemma' && gemmaReadyState === false;
   const verifierMissing =
     chat.thinkEnabled && verifierLookup?.id === chat.verifierProvider && !verifierLookup.available;
-  const notice: { text: string; section: 'ai' | 'teacher' } | null = noApi
+  const notice: { text: string; section: SettingsSection } | null = noApi
     ? { text: t('chat.noApi'), section: 'ai' }
     : noWebGpu
-      ? { text: t('chat.noWebgpuNotice'), section: 'teacher' }
+      ? { text: t('chat.noWebgpuNotice'), section: 'local' }
       : gemmaUnavailable
-        ? { text: t('chat.gemmaMissingNotice'), section: 'teacher' }
+        ? { text: t('chat.gemmaMissingNotice'), section: 'local' }
         : verifierMissing
           ? { text: t('chat.thinkNoVerifier'), section: 'teacher' }
           : null;
@@ -266,14 +311,22 @@ export function ChatPanel({
               />
             </span>
           )}
-          <span>
-            <strong>{t('chat.title')}</strong>
-            <small>
-              {engine === 'gemma' ? t('chat.model', { model: chat.gemmaModel }) : t('chat.product')}
-            </small>
-          </span>
+          <strong>{t('chat.title')}</strong>
         </div>
         <div className="chat-panel__header-actions">
+          <label className="chat-engine" data-tip={t('chat.engineLabel')} data-tip-side="bottom">
+            <span className="sr-only">{t('chat.engineLabel')}</span>
+            <select
+              aria-label={t('chat.engineLabel')}
+              value={engine}
+              onChange={(e) => {
+                chat.setEngine(e.target.value as 'cloud' | 'gemma');
+              }}
+            >
+              <option value="cloud">{t('chat.cloud')}</option>
+              <option value="gemma">{t('chat.gemma')}</option>
+            </select>
+          </label>
           {speechSupported() && (
             <button
               type="button"
@@ -324,8 +377,8 @@ export function ChatPanel({
         </div>
       </header>
 
-      <div className="chat-panel__toolbar">
-        {showScreenContext && (
+      {showScreenContext && (
+        <div className="chat-panel__toolbar">
           <label
             className={cx('chat-toggle', chat.includeScreen && 'is-on')}
             title={t('chat.contextHint')}
@@ -343,21 +396,8 @@ export function ChatPanel({
             </span>
             <span>{t('chat.contextToggle')}</span>
           </label>
-        )}
-        <label className="chat-engine">
-          <span>{t('chat.engineLabel')}</span>
-          <select
-            aria-label={t('chat.engineLabel')}
-            value={engine}
-            onChange={(e) => {
-              chat.setEngine(e.target.value as 'cloud' | 'gemma');
-            }}
-          >
-            <option value="cloud">{t('chat.cloud')}</option>
-            <option value="gemma">{t('chat.gemma')}</option>
-          </select>
-        </label>
-      </div>
+        </div>
+      )}
 
       {notice && (
         <div className="chat-panel__notice" role="status">
@@ -420,7 +460,7 @@ export function ChatPanel({
               )}
               <div className="chat-message__body">
                 {message.role === 'assistant' ? (
-                  <MessageBody content={message.content} />
+                  <MessageBody content={boardAnswerText(message.content)} />
                 ) : (
                   <p>{message.content}</p>
                 )}
@@ -439,6 +479,22 @@ export function ChatPanel({
                       {t('chat.references')}: {message.references.join(' · ')}
                     </small>
                   )}
+                {message.role === 'assistant' && message.truncated && (
+                  <div className="chat-message__continue">
+                    <small>{t('chat.truncatedNote')}</small>
+                    {message === lastMessage && (
+                      <button
+                        type="button"
+                        className="btn"
+                        disabled={busy}
+                        onClick={() => void continueAnswer(message)}
+                      >
+                        <ArrowDownToLine size={14} aria-hidden="true" />
+                        {t('chat.continue')}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </article>
           ))
@@ -463,14 +519,20 @@ export function ChatPanel({
         <div ref={messagesEnd} />
       </div>
 
-      {teacherPage && (
+      {/* "Giải thích lại", "Chậm hơn"… only make sense once there is an answer to rework. */}
+      {teacherPage && hasAnswer && (
         <div className="teacher__quick-actions" role="group" aria-label={t('teacher.chipsLabel')}>
           {(['again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
             <button
               key={key}
               type="button"
               onClick={() => {
-                void submit(t(`teacher.chips.${key}` as MessageKey));
+                // Shown as the short label, sent as a full instruction (a bare "Chậm hơn"
+                // was misread by small models).
+                void submit(
+                  t(`teacher.chips.${key}` as MessageKey),
+                  t(`teacher.chipPrompts.${key}` as MessageKey),
+                );
               }}
               disabled={busy}
             >
@@ -505,12 +567,14 @@ export function ChatPanel({
             <Check size={14} /> {t('chat.think')}{' '}
             {chat.thinkEnabled && <span>{t('chat.twoApis')}</span>}
           </button>
-          <span className="chat-panel__composer-hint">{t('chat.enterHint')}</span>
+          <span className="chat-panel__composer-spacer" />
           <button
             type="submit"
             className="btn btn--accent chat-panel__send"
             disabled={!draft.trim() || busy}
             aria-label={t('chat.send')}
+            data-tip={t('chat.enterHint')}
+            data-tip-side="top"
           >
             <Send size={16} />
           </button>

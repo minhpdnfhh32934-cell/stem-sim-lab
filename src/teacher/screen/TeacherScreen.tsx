@@ -1,16 +1,39 @@
-import { ArrowLeft, BookOpen, MessageCircle, Presentation, ShieldCheck } from 'lucide-react';
-import { useEffect, useId } from 'react';
+import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
+import { lazy, Suspense, useEffect, useId } from 'react';
 import { useT } from '@/app/i18n';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useChatStore } from '@/teacher/chat/chatStore';
+import { useChatStore, type ChatMessageRecord } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
-import { cx } from '@/ui/cx';
+import type { LessonInput } from '@/teacher/board/lesson';
 import './teacher.css';
 
+// The board (fonts, KaTeX, layout) loads only when the learner opens the board layout.
+const Whiteboard = lazy(() =>
+  import('@/teacher/board/Whiteboard').then((m) => ({ default: m.Whiteboard })),
+);
+
 const LAYOUTS: TeacherLayout[] = ['talk', 'board'];
+
+function latestLesson(messages: ChatMessageRecord[]): LessonInput | null {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role !== 'assistant') continue;
+    const question = messages
+      .slice(0, i)
+      .reverse()
+      .find((q) => q.role === 'user');
+    return {
+      id: m.id,
+      content: m.content,
+      question: question?.content ?? '',
+      ...(m.model ? { model: m.model } : {}),
+    };
+  }
+  return null;
+}
 
 export default function TeacherScreen() {
   const t = useT();
@@ -21,10 +44,10 @@ export default function TeacherScreen() {
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
   const layoutId = useId();
-  const completedSteps = Math.min(
-    4,
-    messages.filter((message) => message.role === 'assistant').length,
-  );
+  // The board teaches the latest answer, with the question it answers (its numbers are given).
+  const lesson = latestLesson(messages);
+  // What the page is and what may leave the computer: one tooltip instead of two lines of text.
+  const about = `${t('teacher.sketchNote')} ${t('landing.privacy')}`;
 
   // Esc goes back to where the learner came from (ignored while typing a question).
   useEffect(() => {
@@ -49,16 +72,23 @@ export default function TeacherScreen() {
   return (
     <section className="teacher" aria-labelledby="teacher-title" data-layout={layout}>
       <header className="teacher__header">
-        <button type="button" className="btn" onClick={closeTeacher}>
+        <button type="button" className="btn teacher__back" onClick={closeTeacher}>
           <ArrowLeft size={16} strokeWidth={1.75} aria-hidden="true" />
           {t('teacher.back')}
         </button>
-        <div className="teacher__heading">
-          <h1 id="teacher-title" className="teacher__title">
-            {t('teacher.title')}
-          </h1>
-          <p>{t('teacher.sketchNote')}</p>
-        </div>
+        <h1 id="teacher-title" className="teacher__title">
+          {t('teacher.title')}
+        </h1>
+        <span
+          className="teacher__about"
+          role="note"
+          tabIndex={0}
+          aria-label={about}
+          data-tip={about}
+          data-tip-side="bottom"
+        >
+          <Info size={16} strokeWidth={1.75} aria-hidden="true" />
+        </span>
         <div className="teacher__layout">
           <span id={layoutId} className="sr-only">
             {t('teacher.layoutLabel')}
@@ -85,30 +115,6 @@ export default function TeacherScreen() {
           </div>
         </div>
       </header>
-
-      <div className="teacher__trust">
-        <span>
-          <BookOpen size={15} aria-hidden="true" />
-          {t('landing.teacherBody')}
-        </span>
-        <span>
-          <ShieldCheck size={15} aria-hidden="true" />
-          {t('landing.privacy')}
-        </span>
-      </div>
-
-      <div
-        className="teacher__progress"
-        role="progressbar"
-        aria-label={t('teacher.turnProgress')}
-        aria-valuemin={0}
-        aria-valuemax={4}
-        aria-valuenow={completedSteps}
-      >
-        {[0, 1, 2, 3].map((step) => (
-          <span key={step} className={cx('teacher__step', step < completedSteps && 'is-done')} />
-        ))}
-      </div>
 
       <div className="teacher__stage">
         <aside className="teacher__presence">
@@ -144,6 +150,14 @@ export default function TeacherScreen() {
             {engine === 'gemma' ? t('chat.model', { model: gemmaModel }) : t('chat.cloud')}
           </span>
         </aside>
+
+        {layout === 'board' && (
+          <div className="teacher__board">
+            <Suspense fallback={<p className="muted">{t('board.preparing')}</p>}>
+              <Whiteboard lesson={lesson} />
+            </Suspense>
+          </div>
+        )}
 
         <main className="teacher__chat-wrap" aria-label={t('chat.label')}>
           <ChatPanel showScreenContext={false} teacherPage />

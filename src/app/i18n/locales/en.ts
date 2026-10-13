@@ -3,7 +3,7 @@ import type { Messages } from '../types';
 /** English UI strings. Must have exactly the same keys as `vi.ts` (checked by the type). */
 const en: Messages = {
   app: {
-    name: 'STEM Sim Lab',
+    name: 'SimLab',
     tagline: 'Physics · Chemistry · Biology simulations',
   },
   subjects: {
@@ -30,7 +30,7 @@ const en: Messages = {
   ai: {
     notAllowed: 'AI: not enabled',
     notAllowedHint:
-      'AI is not enabled on this computer yet (age not confirmed or no supervisor consent). Simulations work as usual.',
+      'AI is not enabled on this computer yet (18+ not confirmed). Simulations work as usual.',
     offline: 'AI: offline',
     cloud: 'Connected to {provider}',
     off: 'AI: off',
@@ -180,9 +180,6 @@ const en: Messages = {
     time: 'Simulation time',
   },
   layout: {
-    toggleLeft: 'Show / hide Library (Ctrl+B)',
-    toggleRight: 'Show / hide Properties (Ctrl+I)',
-    toggleBottom: 'Show / hide Graphs panel (Ctrl+J)',
     resizeLeft: 'Drag to resize the Library',
     resizeRight: 'Drag to resize the Properties panel',
     resizeBottom: 'Drag to resize the Graphs panel',
@@ -197,6 +194,38 @@ const en: Messages = {
     browserMode: 'browser mode',
   },
   settings: {
+    nav: {
+      label: 'Settings pages',
+      groupGeneral: 'General',
+      groupAi: 'AI',
+      groupPrivacy: 'Privacy',
+      appearance: 'Appearance',
+      appearanceHint: 'Basic/Advanced mode, colours, text size, language and layout.',
+      simulation: 'Simulation & performance',
+      simulationHint: 'Display quality for this computer and the default gravity.',
+      aiHint: 'Choose the online AI provider, enter the API key, set limits and the fallback.',
+      teacher: 'AI Teacher',
+      teacherHint: 'Think (a second API reviews the answer) and what data is sent.',
+      local: 'Local AI (Gemma)',
+      localHint:
+        'Download, choose or delete the Gemma models that run on this computer: no network, no key.',
+      gpu: 'GPU for Gemma',
+      gpuHint: 'The graphics card in use, answer length and when to free the GPU memory.',
+      knowledge: 'Knowledge library',
+      knowledgeHint: 'Built-in notes, your own documents and the Wikipedia lookup.',
+      memory: 'Conversation memory',
+      memoryHint:
+        'How many earlier messages AI Teacher remembers and whether the chat is kept on this computer.',
+      voice: 'Voice',
+      voiceHint: "AI Teacher's Vietnamese reading voice and how it reads.",
+      safetyHint: 'Age confirmation, terms, the privacy page and the safety log.',
+      shortcutsHint: 'The main keyboard shortcuts for simulations.',
+    },
+    lookCard: 'Mode and colours',
+    textCard: 'Text and language',
+    layoutHint: 'Put the panels (library, controls, graphs) back to their original place and size.',
+    aiProviderCard: 'Provider and API key',
+    aiLimitsCard: 'Timeout and daily limit',
     aiFallback: 'Fallback when quota runs out',
     aiFallbackHint:
       'When the main provider runs out of free quota or credit, the app switches to this provider (if it has a key). The "AI-assisted content" label shows which model answered.',
@@ -204,10 +233,10 @@ const en: Messages = {
     aiFallbackModel: 'Fallback model',
     groqGuide: {
       title: 'How to get a Groq API key (free)',
-      age: 'Under Groq terms, the account holder must be 18 or older. In the high-school pilot, a parent or teacher creates the key and the supervisor enters it.',
+      age: 'Under Groq terms, the account holder must be 18 or older.',
       step1:
         'Press "Open the key page" below (or type console.groq.com/keys in a browser) and sign in.',
-      step2: 'Press "Create API Key", give it any name (e.g. "STEM Sim Lab") and confirm.',
+      step2: 'Press "Create API Key", give it any name (e.g. "SimLab") and confirm.',
       step3: 'Copy the new key (it is shown only once).',
       step4:
         'Back here: paste it into the API key field (Ctrl+V), press "Save key", then "Test key".',
@@ -216,10 +245,7 @@ const en: Messages = {
       privacy:
         'Under Groq terms, submitted content is not used to train AI. If the account offers "Zero Data Retention", turn it on so Groq keeps no copy of the problems.',
     },
-    aiStatusNotAllowed:
-      'AI is not enabled: confirm your age (or the supervisor consent) in Settings → Safety.',
-    aiPilotLocked:
-      'Only the supervisor can enter or delete the API key. Unlock under "Safety & privacy" below.',
+    aiStatusNotAllowed: 'AI is not enabled: confirm your age in Settings → Safety & privacy.',
     title: 'Settings',
     close: 'Close',
     appearance: 'Appearance',
@@ -245,8 +271,6 @@ const en: Messages = {
     aiKeyShow: 'Show key',
     aiKeyHide: 'Hide key',
     aiKeyStoredHint: 'Saved key: {hint}',
-    aiPilotKey:
-      'Pilot edition: the API key (Claude, or the free Groq) is entered by the supervising adult. Students do not need to (and should not) enter a key.',
     aiTimeout: 'Timeout (seconds)',
     aiDailyCap: 'Maximum AI calls per day',
     aiDailyCapHint:
@@ -280,7 +304,7 @@ const en: Messages = {
     aiStatusBadKey: 'Invalid key — check it or create a new one.',
     geminiGuide: {
       title: 'How to get a Gemini API key (free)',
-      age: "Google's terms require the person creating the API key to be 18 or older. Students under 18: ask a teacher or parent to create the key and enter it for you.",
+      age: "Google's terms require the person creating the API key to be 18 or older.",
       art: {
         create: 'Drawing: the key page, "Create API key" button at the bottom right.',
         copy: 'Drawing: the new key with the copy button next to it.',
@@ -312,9 +336,6 @@ const en: Messages = {
     redo: 'Redo',
     save: 'Save simulation (.stemsim)',
     open: 'Open .stemsim file',
-    toggleLeft: 'Show / hide Library',
-    toggleRight: 'Show / hide Properties',
-    toggleBottom: 'Show / hide Graphs panel',
     presentation: 'Presentation mode',
     fontLarger: 'Increase font size',
     fontSmaller: 'Decrease font size',
@@ -329,6 +350,7 @@ const en: Messages = {
     method: 'Numerical method',
     sources: 'Sources',
     intervened: 'User intervention — results are a numerical simulation.',
+    more: 'Equations, assumptions and sources',
     estimatedError: 'Estimated error: {value}',
   },
   quality: {
@@ -370,6 +392,7 @@ const en: Messages = {
       user: 'Value you changed',
     },
     liveHint: 'Can be changed while running (counts as an intervention)',
+    allDefault: 'Using default values (not given by a problem). Drag a slider to try.',
     resetHint: 'Changing it restarts the simulation',
   },
   solution: {
@@ -497,8 +520,7 @@ const en: Messages = {
       tooLong: 'The problem is too long (at most {max} characters) — please shorten it.',
     },
     hint: {
-      notAllowed:
-        'AI needs an age confirmation (main edition) or supervisor consent (pilot edition). Open Settings → Safety & privacy.',
+      notAllowed: 'AI needs the 18+ confirmation. Open Settings → Safety & privacy.',
       personalData:
         'Remove names, phone numbers, e-mails, addresses or ID numbers from the problem, then analyse again.',
       unsafe:
@@ -520,8 +542,9 @@ const en: Messages = {
       other: 'You can still build the scene manually or use the sample library.',
     },
     hintClaude: {
-      missingKey: 'No Claude API key yet. Ask the supervisor to enter it in Settings → Connect AI.',
-      badKey: 'The Claude API key was refused. Ask the supervisor to check it in Settings.',
+      missingKey:
+        'No Claude API key yet. Create one at console.anthropic.com and enter it in Settings → Connect AI.',
+      badKey: 'The Claude API key was refused. Check it in Settings → Connect AI.',
     },
     cached:
       'This problem was read and confirmed before, so the AI is not called again. Check the table as usual.',
@@ -570,7 +593,7 @@ const en: Messages = {
     skip: 'Skip',
     done: 'Get started',
     counter: '{i}/{n}',
-    welcomeTitle: 'Welcome to STEM Sim Lab',
+    welcomeTitle: 'Welcome to SimLab',
     welcomeBody:
       'Physics, chemistry and biology simulations that run fully on this computer. Every number is computed by the program, with a Science Card stating the model and sources.',
     subjectTitle: 'Pick a subject',
@@ -650,57 +673,15 @@ const en: Messages = {
       minor: 'I am under 18',
       minorNote:
         'Under 18: you can still use every simulation, the library and manual scenes; AI stays off. You can answer again in Settings → Safety & privacy.',
-      pilotIntro:
-        'This is a supervised pilot. AI is only enabled after a parent or teacher has finished the setup.',
-      birthYear: 'What year were you born?',
-      yearInvalid: 'Invalid birth year.',
-      next: 'Continue',
-      supervisorTitle: 'For the supervisor',
-      supervisorIntro:
-        'A parent or teacher sets a PIN (4–8 digits). It is needed to enter the API key, record consent and view the incident log. Do not tell the student.',
-      pin: 'New PIN',
-      pinAgain: 'Repeat the PIN',
-      pinMismatch: 'The two entries differ.',
-      pinInvalid: 'The PIN has 4–8 digits.',
-      setPin: 'Set PIN',
-      pinDone: 'PIN set.',
-      consentTitle: 'Record parental consent',
-      consentText:
-        'I am the parent/guardian of the student, or a teacher authorised by the parents. The parents and the student have read and signed the pilot consent form.',
-      consentPin: 'Supervisor PIN',
-      recordConsent: 'Record consent and turn on AI',
-      adultTester: 'Users aged 18+ need no parental consent; only the PIN to manage the API key.',
-      later: 'Later — simulations only',
-      done: 'Done',
     },
     settings: {
+      ageCard: 'Age and terms',
       title: 'Safety & privacy',
       mainAdult: 'Confirmed: 18 or older, terms accepted (version {version}).',
       mainMinor: 'Answered: under 18 — AI is off.',
       unanswered: 'Age question not answered — AI is off.',
       answerAgain: 'Answer the age question again',
       privacy: 'Privacy & safe AI use',
-      locked: 'The supervisor area is locked.',
-      noPin: 'No supervisor PIN yet.',
-      setup: 'Supervisor setup',
-      pin: 'PIN',
-      unlock: 'Unlock',
-      lock: 'Lock',
-      unlocked: 'Unlocked (locks again in {min} min).',
-      wrongPin: 'Wrong PIN ({left} tries left).',
-      tooMany: 'Too many wrong PINs. Wait {secs} s and try again.',
-      studentMinor: 'Student: under 18.',
-      studentAdult: 'User: 18 or older.',
-      consentOn: 'Consent recorded on {day}.',
-      consentOff: 'No consent recorded — AI is off.',
-      recordConsent: 'Record consent (signed form)',
-      withdraw: 'Withdraw consent (AI off)',
-      changePin: 'Change PIN',
-      newPin: 'New PIN',
-      changeYear: 'Change birth year',
-      year: 'Birth year',
-      save: 'Save',
-      saved: 'Saved.',
       incidents: 'Incident log',
       incidentsHint:
         'Only the kind of incident and the time, never the problem text or the answer.',
@@ -713,13 +694,11 @@ const en: Messages = {
         inputCrisis: 'Signs of distress — support lines shown',
         outputUnsafe: 'AI answer hidden by the filter',
         userReport: 'User reported unsuitable content',
-        pinFailed: 'Wrong supervisor PIN',
       },
     },
     crisis: {
       title: 'You are not alone',
       body: 'It sounds like you are going through something very hard. Please talk to an adult you trust (parents, teachers, relatives) now, or call:',
-      line111: 'National child protection hotline 111 — free, 24/7.',
       ngayMai: 'Ngày Mai support line: 096 306 1414 (13:00–20:30, Wednesday to Sunday).',
       emergency: 'If you or someone else is in danger right now: call emergency 115.',
       note: 'Numbers checked in October 2026. The app does not send this text anywhere.',
@@ -761,11 +740,6 @@ const en: Messages = {
       tip4: 'If an answer is strange, wrong or upsetting: press "Report unsuitable content" and ask your teacher.',
       tip5: 'Do not share the API key and do not enter personal data.',
       tip6: 'Take a break every 45–60 minutes at the computer.',
-      pilotTitle: 'Supervised pilot',
-      pilot1:
-        'The Claude API key (and the Groq key if the free fallback is used) belongs to the adult who created the account (a student aged 18+ or a parent). That person is the Anthropic/Groq customer and is responsible for following their terms.',
-      pilot2:
-        'Students under 18 use AI only after the parents signed the consent form and the supervisor recorded it in the app. It can be withdrawn at any time.',
       close: 'Close',
     },
   },
@@ -825,7 +799,7 @@ const en: Messages = {
   },
   landing: {
     eyebrow: 'Explore science by doing',
-    title: 'Welcome to STEM Sim Lab',
+    title: 'Welcome to SimLab',
     subtitle:
       'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
     labTitle: 'Laboratory',
@@ -839,7 +813,6 @@ const en: Messages = {
   chat: {
     label: 'Chat with the AI teacher',
     title: 'AI Teacher',
-    product: 'STEM Sim Lab',
     model: 'Gemma · {model}',
     clear: 'Clear conversation',
     voice: 'Teacher reads answers aloud',
@@ -847,7 +820,7 @@ const en: Messages = {
     close: 'Close chat',
     expand: 'Open AI Teacher page',
     contextToggle: 'Use current screen information',
-    contextHint: 'Only shares STEM Sim Lab data currently open',
+    contextHint: 'Only shares SimLab data currently open',
     engineLabel: 'Choose AI model',
     cloud: 'API',
     gemma: 'Local Gemma',
@@ -879,6 +852,8 @@ const en: Messages = {
     checkedMeta: 'Reviewed by: {model}',
     references: 'Knowledge sources',
     thinking: 'Thinking…',
+    truncatedNote: 'This answer was long, so it stopped in the middle.',
+    continue: 'Continue',
     reviewing: 'Answering and cross-checking…',
     inputLabel: 'Enter your question',
     placeholder: 'Type your question…',
@@ -913,9 +888,16 @@ const en: Messages = {
     },
   },
   chatSettings: {
-    title: 'AI Teacher · Gemma and knowledge library',
-    intro:
-      'Choose an answering model, configure a cross-check API and manage local study materials.',
+    gemmaTermsCard: 'Gemma terms',
+    gemmaTermsHint:
+      'Gemma is a Google DeepMind model, used under the Gemma Terms of Use. Please read them before downloading.',
+    thinkCard: 'Think · cross-check',
+    thinkHint:
+      'With Think on in the chat, a second API (not the one that answered) reads the draft and fixes mistakes before you see the answer.',
+    builtInCard: 'Built-in notes',
+    webCard: 'Online lookup',
+    flowLocalChatSession:
+      'The conversation is kept only until the app closes (history saving is off).',
     gemmaModel: 'Gemma version',
     gemma270m: '270M · smallest',
     gemma1b: '1B · recommended',
@@ -945,6 +927,8 @@ const en: Messages = {
     flowLocalChat: 'Your AI Teacher chat history (clear it with the bin button).',
     flowLocalDocs: 'Files you added and the {count} built-in notes.',
     flowLocalModel: 'Downloaded Gemma models; with Gemma, answers are generated on this computer.',
+    flowLocalSummary:
+      'A summary of the older conversation (written by the AI that answers, sent only to that AI with your questions).',
     flowLocalKeyDesktop: 'API keys: in the operating-system keychain.',
     flowLocalKeyBrowser: 'API keys: only in this browser session, gone on reload.',
     flowSentTitle: 'May be sent online (with the current settings)',
@@ -953,12 +937,13 @@ const en: Messages = {
     flowThinkOnly:
       'With Gemma: only when Think is on, the question + draft go → {name} for review.',
     flowWiki: 'Wikipedia lookup is on: question → Wikipedia.',
+    flowVoice: 'Reading aloud with the Gemini voice is on: answer text → Google.',
     flowPhoto:
       'When you photograph a problem (browser): the downscaled photo → {name} to read the text.',
     flowModelDownload:
       'When you press “Download model”: files come from HuggingFace (no question is sent).',
     flowScreen:
-      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is STEM Sim Lab data, not a screenshot.',
+      'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is SimLab data, not a screenshot.',
     download: 'Download model',
     downloaded: 'Downloaded',
     deleteModel: 'Delete Gemma',
@@ -998,9 +983,8 @@ const en: Messages = {
       failed: 'Could not test the key.',
     },
     library: 'Knowledge library',
-    hideLibrary: 'Hide library',
-    openLibrary: 'Open library',
-    builtIn: '{count} built-in STEM notes for upper-secondary study.',
+    builtIn:
+      '{count} built-in STEM notes for upper-secondary study; {pending} are still waiting for a teacher’s review, so check them against the textbook.',
     notes: 'notes',
     addFile: 'Add knowledge file',
     fileFilter: 'Text and data files',
@@ -1012,22 +996,215 @@ const en: Messages = {
     removeFile: 'Remove',
     localLibraryPrivacy:
       'Files are stored on this computer. With online APIs, relevant excerpts may be sent with your question. Only add materials you have permission to use.',
+    memory: {
+      title: 'Conversation memory',
+      intro:
+        'How much of the latest conversation the teacher remembers. Older parts are summarised briefly by the AI so the teacher keeps track of the lesson.',
+      medium: 'Medium',
+      long: 'Long',
+      mediumHint: 'Faster; suits slower computers and free API plans.',
+      longHint:
+        'Remembers more but is slower (especially Gemma on an integrated card) and uses free plans up faster (Groq, Gemini).',
+    },
+    gpu: {
+      title: 'Graphics card (GPU) running Gemma',
+      intro:
+        'If this computer has several graphics cards, you can choose the one that runs Gemma. A dedicated card is usually much faster; an integrated card saves battery.',
+      scanning: 'Looking for graphics cards…',
+      scanFailed: 'Could not list the graphics cards ({detail}).',
+      none: 'No hardware graphics card was found.',
+      auto: 'Automatic (let Windows choose)',
+      autoHint: 'On laptops this is usually the integrated card.',
+      integrated: 'Integrated card · shares system RAM',
+      discrete: 'Dedicated card · {vram} VRAM',
+      unknownKind: 'Card type unknown',
+      suggested: 'Best for Gemma',
+      wholeApp:
+        'The chosen card runs everything the app draws (simulations too), not only Gemma. A dedicated card uses more battery — plug in the charger when you can.',
+      restartNeeded:
+        'Restart the app to use the new card ({name}). Until then Gemma and the app keep running on the previous card.',
+      restartNeededAuto:
+        'Restart the app to go back to automatic. Until then Gemma keeps running on the previous card.',
+      restartNow: 'Restart now',
+      later: 'Later',
+      saved: 'Graphics card choice saved. Restart the app to apply it.',
+      saveFailed: 'Could not save the choice ({detail}).',
+      missing:
+        'When the app started, the chosen card ({name}) was not found — the dedicated card may be switched off (the laptop maker’s battery/Eco mode) or the hardware changed. The app is using the default card.',
+      runningOn: 'The app’s WebGPU is running on: {name}',
+      runningOnUnknown: 'Could not read which card WebGPU is using.',
+      gemmaRanOn: 'Gemma last loaded on: {name}',
+      mismatch:
+        'The app asked for {wanted} but WebGPU is running on {actual}. Try restarting the app; if it stays this way, this card cannot be used for WebGPU on this computer.',
+      vramLow:
+        'This card has {vram} VRAM, which may not be enough for {model} ({size}). A smaller Gemma is a safer choice.',
+      browserOnly:
+        'In a browser, the browser picks the graphics card. Choosing a card is only available in the Windows desktop app.',
+      unsupported: 'Choosing a graphics card is currently only available on Windows.',
+    },
+  },
+  gpuSettings: {
+    cardTitle: 'Graphics card (WebGPU)',
+    card: 'Card',
+    checking: 'Reading the card details…',
+    none: 'No WebGPU-capable card was found.',
+    unnamed: 'A WebGPU card is available (the browser does not tell its name).',
+    f16: 'Half-precision maths (shader-f16)',
+    maxBuffer: 'Largest buffer',
+    loaded: 'Loaded on the GPU',
+    notLoaded: 'No model loaded',
+    yes: 'Yes',
+    no: 'No',
+    fallbackWarning: 'This is a CPU-emulated card: Gemma still runs, but very slowly.',
+    privacy: 'The browser reads this on this computer; nothing is sent.',
+    powerTitle: 'Which card on a two-GPU computer',
+    power: 'Prefer',
+    powerHigh: 'Powerful card (faster)',
+    powerLow: 'Battery-saving card',
+    powerHint:
+      'Only matters on computers with both a discrete and an integrated card; the browser may ignore it. Applies from the next question.',
+    lengthTitle: "Length of Gemma's answers",
+    length: 'At most',
+    lengths: {
+      short: 'Short',
+      medium: 'Medium',
+      long: 'Long',
+    },
+    lengthHint:
+      'At most about {tokens} tokens per answer. Longer means waiting longer, and a small model tends to ramble.',
+    memoryTitle: 'GPU memory',
+    unload: 'Free it',
+    keep: 'Keep loaded',
+    after: 'After {minutes} min',
+    unloadHint:
+      'The model stays in GPU memory to answer quickly. Freeing it makes the computer lighter; the next question loads it again from disk (seconds to tens of seconds).',
+    freeNow: 'Free the GPU memory now',
+  },
+  memorySettings: {
+    storeTitle: 'Keep the conversation',
+    save: 'Save the chat history on this computer',
+    saveOn: 'The conversation is still there after reopening the app (the last {max} messages).',
+    saveOff: 'The conversation is kept only until the app closes.',
+    count: '{count} messages so far.',
+    clear: 'Clear the conversation',
+    confirmClear: 'Clear for good',
+    cancel: 'Cancel',
+    hasSummary: 'Older turns have been summarised briefly (also kept on this computer).',
+  },
+  board: {
+    label: "AI Teacher's whiteboard",
+    controls: 'Board controls',
+    pause: 'Pause',
+    resume: 'Resume',
+    replay: 'Teach again',
+    finish: 'Write it all',
+    finishHint: 'Write the rest on the board at once, without reading it',
+    speed: 'Writing speed',
+    myPen: 'My pen',
+    penHint: 'Turn on to write or draw on the board with the mouse or touch',
+    penArea: 'Your writing area',
+    clearPen: 'Clear your strokes on this board',
+    history: 'Board faces',
+    face: 'Board {n}',
+    preparing: 'Preparing the board…',
+    empty:
+      'Ask AI Teacher a question: it will explain while writing formulas, underlining, circling and drawing on this board.',
+    checked: 'Arithmetic re-checked by the app',
+    unverified: 'Contains numbers the AI computed itself, not verified: check them yourself',
+    axes: 'Coordinate axes',
+    plotOf: 'Graph of {fn}',
+    plotUnreadable: 'Could not read the expression to plot',
   },
   voice: {
-    title: 'Teacher’s voice',
-    intro:
-      'The teacher reads each answer aloud through the speakers. Free, uses the device voices.',
-    style: 'Voice style',
+    readAloudCard: 'Read aloud',
+    readAloud: "Read AI Teacher's answers aloud",
+    readAloudHint: 'Also switched with the speaker button in the chat. No audio is recorded.',
+    sourceCard: 'Voice source',
+    engines: {
+      system: {
+        title: 'Windows voice',
+        hint: 'Free and offline. Sounds right once Windows has a Vietnamese voice installed.',
+      },
+      gemini: {
+        title: 'Gemini voice (online)',
+        hint: 'Most natural, with human-like pauses. Needs the Internet and a Gemini key; counts towards the daily AI limit.',
+      },
+      local: {
+        title: 'Vietnamese voice on this computer',
+        hint: 'Downloaded once, then reads offline with correct Vietnamese tones; sounds more synthetic than the other two.',
+      },
+    },
+    systemFound: 'Vietnamese voice found: {names}.',
+    systemMissing:
+      'No Vietnamese voice on this computer, so Windows reads with an English voice and gets the tones wrong. Install the free Vietnamese voice:',
+    installStep1: 'Open Windows Settings → Time & language → Speech.',
+    installStep2: 'Under "Manage voices", press "Add voices".',
+    installStep3:
+      'Type "Vietnamese", choose "Vietnamese (Vietnam)" and press Add. Windows downloads the voice "Microsoft An".',
+    installStep4: 'Close and reopen SimLab: the new voice appears in the list below.',
+    openWindowsSpeech: 'Open the Windows speech settings',
+    voiceLabel: 'Voice',
+    auto: 'Automatic (Vietnamese first)',
+    groupVietnamese: 'Vietnamese',
+    groupOther: 'Other languages (wrong Vietnamese tones)',
+    noSpeech: 'This computer has no speech engine. Choose the Gemini voice or the on-device voice.',
+    geminiNoKey: 'No Gemini key yet. The Gemini voice uses the same key as Connect AI.',
+    openConnect: 'Open Connect AI',
+    geminiVoice: 'Gemini voice',
+    geminiModel: 'Voice model',
+    traits: {
+      friendly: 'friendly',
+      warm: 'warm',
+      knowledgeable: 'knowledgeable',
+      informative: 'clear, informative',
+      firm: 'firm',
+      upbeat: 'upbeat',
+      breezy: 'breezy',
+      gentle: 'gentle',
+    },
+    modelFlash: 'Flash (best)',
+    modelLite: 'Flash-Lite (cheaper)',
+    geminiPrivacy:
+      "With the Gemini voice, the answer's text (not your question) is sent to Google to be read. On the free tier Google may use content to improve its services. The audio carries a SynthID watermark.",
+    localLicence:
+      "Meta's MMS-TTS Vietnamese model ({size}), licence {licence}: non-commercial use only, with attribution.",
+    localReady: 'Downloaded and ready.',
+    localDelete: 'Delete voice',
+    localDownload: 'Download voice ({size})',
+    localDownloading: 'Downloading…',
+    localPreparing: 'Preparing…',
+    localModelPage: 'Model page',
+    localLicencePage: 'Read the licence',
+    downloadCancelled: 'Download cancelled. The voice is not marked as downloaded.',
+    downloadFailed:
+      'The download did not finish. Check the network and free disk space, then retry.',
+    localHint:
+      'Runs on the graphics card (WebGPU) when there is one, else on the CPU (slower, may pause between phrases). The first sentence waits a few seconds while the model loads.',
+    howCard: 'How it reads',
+    style: 'Style',
     styles: {
       vui: 'Cheerful',
       am: 'Warm',
       lanh: 'Brisk',
       hai: 'Playful',
     },
-    voiceLabel: 'Reading voice',
-    auto: 'Automatic (Vietnamese first)',
+    speed: 'Speed',
+    howHint:
+      'Numbers, units, formulas and chemical symbols are read as Vietnamese words (9,81 m/s² → "chín phẩy tám mốt mét trên giây bình phương"); long sentences pause at punctuation like a teacher.',
+    previewCard: 'Preview',
     preview: 'Preview',
-    noSpeech: 'This device has no speech engine. Try another browser.',
+    stop: 'Stop reading',
+    showText: 'Show the words it will read',
+    errors: {
+      noKey: 'The Gemini voice needs a Gemini key: the Windows voice read the last answer instead.',
+      noModel:
+        'The on-device Vietnamese voice is not downloaded: the Windows voice read the last answer instead.',
+      quota: 'Gemini reported no quota left: the Windows voice read the last answer instead.',
+      offline: 'No network: the Windows voice read the last answer instead.',
+      notAllowed:
+        'The Gemini voice needs the 18+ confirmation: the Windows voice read the last answer instead.',
+      other: 'The chosen voice could not read: the Windows voice read the last answer instead.',
+    },
   },
   levels: {
     label: 'Level',
@@ -1040,7 +1217,7 @@ const en: Messages = {
     mappingPending: 'Mapping topics to curriculum lessons is waiting for a teacher’s review.',
   },
   onboarding: {
-    label: 'Getting started with STEM Sim Lab',
+    label: 'Getting started with SimLab',
     step: 'Step {i}/{n}',
     levelTitle: 'Which level do you want to study?',
     levelBody: 'Choose a level so the app can suggest topics. You can change it at any time.',
@@ -1146,7 +1323,6 @@ const en: Messages = {
     boardFormula: 'P = m·g',
     boardNote: 'pointing straight down',
     progressLabel: 'Lesson progress',
-    turnProgress: 'Lesson conversation turns',
     controlsLabel: 'Lesson controls',
     mic: 'Hold to talk',
     raiseHand: 'Raise hand',
@@ -1161,6 +1337,15 @@ const en: Messages = {
       example: 'Another example',
       simpler: 'Simpler',
       lost: 'I do not get this part',
+    },
+    chipPrompts: {
+      again: 'Explain your last answer again in a different, easier way, keeping the same content.',
+      slower:
+        'Teach your last answer again more slowly: split it into small steps, one idea per step, and explain each step.',
+      example: 'Give me one more concrete, everyday example of exactly what you just explained.',
+      simpler:
+        'Say what you just explained more simply: fewer technical words, short sentences, as for a beginner.',
+      lost: 'I do not understand what you just explained. Ask me which step I am stuck on, then give hints one at a time.',
     },
     connectTitle: 'Connect AI to learn with the teacher',
     connectBody:

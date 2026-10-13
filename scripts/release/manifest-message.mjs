@@ -3,7 +3,7 @@
 // literal strings: tests/web-update-message.test.ts and the Rust test
 // `signed_messages_match_the_release_script`).
 
-/** v1 — read by apps older than 0.3.0. Main keeps the original format; pilot adds its edition. */
+/** v1 — read by apps older than 0.3.0 (original format for "main"; the edition line is kept for compatibility). */
 export function signedMessage(m) {
   const lines = ['stemsim-web-update', m.webVersion, m.minNative, m.sha256, String(m.size), m.url];
   if ((m.edition || 'main') !== 'main') lines.push(`edition:${m.edition}`);

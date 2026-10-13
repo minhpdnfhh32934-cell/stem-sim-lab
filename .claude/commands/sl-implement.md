@@ -22,9 +22,8 @@ disable a test, never commit secrets.
 4. Before pushing, all of these must pass (fix the code if they fail):
    - `npm run check`
    - if `src-tauri/` changed: `cargo fmt --manifest-path src-tauri/Cargo.toml --check`,
-     `cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings`,
-     `cargo test --manifest-path src-tauri/Cargo.toml` and
-     `cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --features edition-pilot`
+     `cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings` and
+     `cargo test --manifest-path src-tauri/Cargo.toml`
 5. `git push -u origin <branch>`.
 6. PR:
    - new: `gh pr create --base main --title "<title>" --label needs-review --body-file .agent-logs/<file>.md`;

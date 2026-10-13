@@ -23,6 +23,7 @@
   background: color-mix(in srgb, var(--bg-panel) 90%, transparent);
   font-size: var(--text-sm);
   text-align: center;
+  text-wrap: balance;
 }
 .bio-swatch--m {
   background: var(--chart-4);
@@ -114,6 +115,7 @@
   padding: 6px 8px;
   border: 1px solid var(--border);
   text-align: center;
+  text-wrap: balance;
 }
 .punnett th {
   background: var(--bg-sunken);

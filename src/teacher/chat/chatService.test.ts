@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
-import type { ChatRequest, Provider } from '@/ai/types';
+import type { ChatRequest, ChatResponse, Provider } from '@/ai/types';
 import { askTeacher, contextPrompt } from './chatService';
-import { useChatStore } from './chatStore';
+import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { downloadErrorKey } from './downloadErrors';
 
 function transport(keys: Provider[], calls: ChatRequest[]): LlmTransport {
@@ -129,6 +129,110 @@ describe('AI Teacher chat service', () => {
       askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false }),
     ).rejects.toThrow(/WebGPU/);
     expect(calls).toHaveLength(0);
+  });
+});
+
+describe('AI Teacher long conversations', () => {
+  let calls: ChatRequest[];
+  /** 30 turns of ~1 200 characters: far more than the medium cloud budget (12 000 tokens). */
+  const history: ChatMessageRecord[] = Array.from({ length: 60 }, (_, i) => ({
+    id: `m${i}`,
+    role: i % 2 === 0 ? 'user' : 'assistant',
+    content: `Lượt ${i}: `.padEnd(1200, 'a'),
+  }));
+
+  function scripted(reply: (req: ChatRequest) => Partial<ChatResponse>): LlmTransport {
+    return {
+      ...transport(['gemini'], calls),
+      chat: (req) => {
+        calls.push(req);
+        return Promise.resolve({
+          content: 'ok',
+          model: 'gemini-model',
+          durationMs: 1,
+          ...reply(req),
+        });
+      },
+    };
+  }
+
+  beforeEach(() => {
+    calls = [];
+    useAiStore.setState({ provider: 'gemini', fallback: 'groq' });
+    useChatStore.setState({
+      engine: 'cloud',
+      engineChosen: true,
+      memoryLength: 'medium',
+      summary: null,
+      webLookup: false,
+    });
+  });
+  afterEach(() => {
+    setTransportForTests(null);
+  });
+
+  it('old turns are summarised once, then the summary travels with the newest turns', async () => {
+    setTransportForTests(
+      scripted((req) =>
+        req.system.includes('tóm tắt') && !req.system.includes('AI Teacher của SimLab')
+          ? { content: '- Đang học con lắc đơn.' }
+          : { content: 'Câu trả lời' },
+      ),
+    );
+    await askTeacher('tiếp nhé', 'vi', history, { includeScreen: false, think: false });
+    expect(calls).toHaveLength(2);
+    const [summaryCall, answerCall] = calls;
+    expect(summaryCall?.messages[0]?.content).toContain('Lượt 0');
+    expect(answerCall?.system).toContain('- Đang học con lắc đơn.');
+    // Far more than the old "last 12 messages", but within the budget, newest last.
+    expect(answerCall?.messages.length).toBeGreaterThan(12);
+    expect(answerCall?.messages.length).toBeLessThan(history.length + 1);
+    expect(answerCall?.messages.at(-2)?.content).toContain('Lượt 59');
+    expect(answerCall?.maxTokens).toBe(4096);
+    const summary = useChatStore.getState().summary;
+    expect(summary?.text).toBe('- Đang học con lắc đơn.');
+
+    // Next question: the same old turns are already covered → no second summary call.
+    calls = [];
+    await askTeacher('còn gì nữa?', 'vi', history, { includeScreen: false, think: false });
+    expect(calls).toHaveLength(1);
+  });
+
+  it('"Dài" sends more of the conversation than "Vừa"', async () => {
+    setTransportForTests(scripted(() => ({ content: 'ok' })));
+    await askTeacher('hỏi', 'vi', history, { includeScreen: false, think: false });
+    const medium = calls.at(-1)?.messages.length ?? 0;
+    useChatStore.setState({ memoryLength: 'long', summary: null });
+    calls = [];
+    await askTeacher('hỏi', 'vi', history, { includeScreen: false, think: false });
+    expect(calls.at(-1)?.messages.length ?? 0).toBeGreaterThan(medium);
+  });
+
+  it('a failed summary never blocks the answer', async () => {
+    let first = true;
+    setTransportForTests({
+      ...scripted(() => ({ content: 'Câu trả lời' })),
+      chat: (req) => {
+        calls.push(req);
+        if (first) {
+          first = false;
+          return Promise.reject(new Error('quota'));
+        }
+        return Promise.resolve({ content: 'Câu trả lời', model: 'm', durationMs: 1 });
+      },
+    });
+    const reply = await askTeacher('hỏi', 'vi', history, { includeScreen: false, think: false });
+    expect(reply.content).toBe('Câu trả lời');
+    expect(useChatStore.getState().summary).toBeNull();
+  });
+
+  it('an answer cut at the output limit is reported (for "Viết tiếp")', async () => {
+    setTransportForTests(scripted(() => ({ content: 'Bước 1…', truncated: true })));
+    const reply = await askTeacher('giải chi tiết', 'vi', [], {
+      includeScreen: false,
+      think: false,
+    });
+    expect(reply.truncated).toBe(true);
   });
 });
 

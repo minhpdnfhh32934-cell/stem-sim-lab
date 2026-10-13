@@ -1,5 +1,4 @@
-//! `ClaudeProvider` (Anthropic Messages API). The only provider of the pilot edition and an
-//! option in the main edition.
+//! `ClaudeProvider` (Anthropic Messages API), an optional provider.
 
 use serde_json::{json, Value};
 
@@ -71,6 +70,10 @@ impl AIProvider for ClaudeProvider {
             .json(&claude_body(req))
     }
 
+    fn truncated(&self, v: &Value) -> bool {
+        v["stop_reason"] == "max_tokens"
+    }
+
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
         let blocks = v["content"]
             .as_array()
@@ -114,6 +117,12 @@ impl AIProvider for ClaudeProvider {
 mod tests {
     use super::*;
     use crate::ai::tests::req;
+
+    #[test]
+    fn reports_answers_cut_at_the_output_limit() {
+        assert!(ClaudeProvider.truncated(&json!({"stop_reason": "max_tokens"})));
+        assert!(!ClaudeProvider.truncated(&json!({"stop_reason": "end_turn"})));
+    }
 
     #[test]
     fn body_forces_the_schema_tool_and_caches_the_system_prompt() {
