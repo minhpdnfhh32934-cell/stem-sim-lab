@@ -24,6 +24,16 @@ export type ComponentId =
   | 'cleavageFurrow'
   | 'cellPlate';
 
+/** The part the learner picked (by clicking the 3D view or the parts list). */
+export interface Selection {
+  component: ComponentId;
+  /** Picked chromosome (index in the G1 cell of the model) and sister, when one was clicked. */
+  chromosome?: number;
+  sister?: 0 | 1;
+}
+
+export type CameraMode = 'overview' | 'closeup';
+
 export interface ComponentInfo {
   name: LocalizedText;
   role: LocalizedText;

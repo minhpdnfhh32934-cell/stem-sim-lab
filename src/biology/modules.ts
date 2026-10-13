@@ -1,7 +1,7 @@
 import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { useDogmaStore } from './central/state';
-import { useDivisionStore } from './division/state';
+import { SPEEDS, useDivisionStore } from './division/state';
 import { useLogistic, useLv } from './ecology/store';
 import { useEnzyme } from './enzyme/store';
 import { useDrift, useHw, useMendel } from './genetics/store';
@@ -51,6 +51,20 @@ import {
 } from './transport/TransportViews';
 
 const division = bindStore(useDivisionStore, ['pairs', 'crossover', 'seed', 'index']);
+const mitosisState = bindStore(
+  useDivisionStore,
+  ['pairs', 'crossover', 'seed', 'index', 'cellType', 'view3d', 'speed'],
+  // Files are untrusted input: keep only known cell types and speeds.
+  (patch) => {
+    const clean = { ...patch };
+    const cellType: unknown = clean.cellType;
+    if (cellType !== undefined && cellType !== 'animal' && cellType !== 'plant')
+      delete clean.cellType;
+    if (clean.speed !== undefined && !(SPEEDS as readonly number[]).includes(clean.speed))
+      delete clean.speed;
+    useDivisionStore.setState(clean);
+  },
+);
 const dogma = bindStore(useDogmaStore, ['input', 'strand', 'kind', 'pos', 'bases', 'count']);
 
 export const mitosis: ModuleView = {
@@ -59,7 +73,7 @@ export const mitosis: ModuleView = {
   Panel: MitosisPanel,
   Bottom: MitosisBottom,
   bottomTitle: L('Số lượng NST, crômatit, tâm động, ADN', 'Chromosome, chromatid, DNA counts'),
-  state: division,
+  state: mitosisState,
 };
 export const meiosis: ModuleView = {
   title: L('Giảm phân', 'Meiosis'),
