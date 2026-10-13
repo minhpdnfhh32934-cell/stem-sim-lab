@@ -2,8 +2,9 @@ name: Security checks
 
 # Known-vulnerable dependencies and leaked secrets (audit SEC-02/SEC-08, 2026-10-13).
 # - npm audit: production and development dependencies, fails on high or critical.
-# - cargo audit: RustSec advisories for src-tauri/Cargo.lock (vulnerabilities fail; "unmaintained"
-#   and "unsound" notices are printed as warnings, e.g. the Linux-only glib 0.18).
+# - cargo audit: RustSec advisories for src-tauri/Cargo.lock. Vulnerabilities and unsound or
+#   yanked crates fail; "unmaintained" notices are printed as warnings. Two reviewed Linux-only
+#   GTK3 advisories are ignored in src-tauri/.cargo/audit.toml (2026-10-14).
 # - gitleaks: secrets anywhere in the git history.
 # - dependency review (pull requests): blocks a change that adds a vulnerable package.
 # A green run is not proof that the app is secure; it only means these checks found nothing.
@@ -46,7 +47,9 @@ jobs:
         with:
           toolchain: stable
       - run: cargo install cargo-audit --locked
-      - run: cargo audit
+      # Fails on any vulnerability and on any unsound or yanked crate. The reviewed exceptions
+      # (Linux-only GTK3 crates) are listed, with reasons, in src-tauri/.cargo/audit.toml.
+      - run: cargo audit --deny unsound --deny yanked
         working-directory: src-tauri
 
   gitleaks:

@@ -1278,6 +1278,12 @@ const en: Messages = {
       noModel:
         'The on-device Vietnamese voice is not downloaded: the Windows voice read the last answer instead.',
       quota: 'Gemini reported no quota left: the Windows voice read the last answer instead.',
+      dailyLimit:
+        "Today's AI limit (set in Settings) is used up: the Windows voice read the last answer instead.",
+      timeout:
+        'The chosen voice took too long to answer: the Windows voice read the rest of the lesson instead.',
+      systemVoice:
+        "The Windows voice could not read the last sentence (the computer's speech engine reported an error). Try another voice.",
       offline: 'No network: the Windows voice read the last answer instead.',
       notAllowed:
         'The Gemini voice needs the 18+ confirmation: the Windows voice read the last answer instead.',

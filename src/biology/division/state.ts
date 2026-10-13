@@ -98,6 +98,12 @@ export interface DivisionState {
 /** Playback speeds offered by the 3D view. */
 export const SPEEDS = [0.5, 1, 2] as const;
 
+/**
+ * Homologous pairs offered by the 2n selector (2n = 2 … 8). The 3D picture is drawn for these
+ * only: with large sets (2n = 46) its chromosomes would overlap. Counts of any 2n are tested.
+ */
+export const PAIR_CHOICES = [1, 2, 3, 4] as const;
+
 export const useDivisionStore = create<DivisionState>()(() => ({
   pairs: 2,
   index: 0,

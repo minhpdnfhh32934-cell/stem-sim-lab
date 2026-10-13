@@ -486,6 +486,12 @@ export function webGemmaChat(args: {
   maxTokens?: number;
   /** Most prompt tokens; the worker drops the oldest turns above it (exact count). */
   inputBudget?: number;
+  /**
+   * Repetition rules (webGemmaWorker.ts `Decoding`); the worker defaults to 'app'. 'legacy'
+   * reproduces the shipped 0.6.0 decoding for scripts/teaching/eval-gemma.mjs only: the app
+   * never sets it.
+   */
+  decoding?: 'app' | 'legacy';
   /** Called with the answer so far while it is being generated (echoed question removed). */
   onPartial?: (textSoFar: string) => void;
   /**
@@ -556,6 +562,7 @@ export function webGemmaChat(args: {
       temperature: args.temperature ?? 0.2,
       maxTokens: args.maxTokens ?? 1024,
       ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
+      ...(args.decoding !== undefined ? { decoding: args.decoding } : {}),
     });
     const out = await waiting.finally(() => {
       watch.stop();

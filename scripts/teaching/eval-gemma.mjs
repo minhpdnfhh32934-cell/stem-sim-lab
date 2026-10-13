@@ -1,10 +1,23 @@
 // Runs the AI Teacher evaluation set (tests/teaching/teaching-eval.json) on the in-app Gemma, in
 // Microsoft Edge (same engine as WebView2), through the app's own code, and scores the answers
-// with scripts/teaching/rubric.mjs. Compares the on-device prompt of main (before the 2026-10-13
-// audit) with the current one.
+// with scripts/teaching/rubric.mjs. Compares prompt variants and decodings on the same questions.
 //
 //   npm run dev                                   (dev server, default http://localhost:1420)
 //   node scripts/teaching/eval-gemma.mjs --model gemma3-1b --profile <folder> --out <folder>
+//        [--variants legacy,current] [--decoding app] [--temperature 0] [--repeats 1]
+//        [--label <name>] [--only P1,C3] [--base <url>]
+//
+// --variants   legacy  = the on-device prompt of main before the 2026-10-13 audit (below);
+//              current = the live prompt, contextPrompt(question, 'vi', false, false, 'compact').
+// --decoding   passed to webGemmaChat as `decoding` (legacy = the worker's pre-audit decoding,
+//              app = the decoding the app uses now). The app must support the option.
+// --temperature 0 = greedy (default): the same prompt gives the same answer, so a difference
+//              between variants is not sampling noise. With sampling, use --repeats > 1.
+// --label      output file eval-<model>-<label>.json (default eval-<model>.json).
+// Variants (and decodings) are interleaved per question so drift during the run (heat, other
+// load) hits them alike. Every result records how it was made, the system prompt included (for
+// blind judging and audits). Compare runs with scripts/teaching/compare.mjs; re-score a saved run
+// with the current rubric (no browser, no GPU) with scripts/teaching/rescore.mjs.
 //
 // SAFETY (audit GPU-01): runs only on a discrete NVIDIA GPU (--force_high_performance_gpu) and
 // stops otherwise: long Gemma work on an integrated card crashed a test machine (bugcheck 0x119).
@@ -12,12 +25,11 @@
 // default one) and the high-performance one, then the adapter the worker reports after loading the
 // model (one-token warm-up); re-checked after every answer.
 // The model must already be downloaded in <profile> (the script never starts a big download).
-// Re-score a saved run with the current rubric (no browser, no GPU): scripts/teaching/rescore.mjs.
 import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { gpuRefusal, scoreAnswer, summarizeRuns } from './rubric.mjs';
+import { gpuRefusal, groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const require = createRequire(resolve(root, 'package.json'));
@@ -27,14 +39,46 @@ const arg = (name, fallback) => {
   const i = process.argv.indexOf(`--${name}`);
   return i > 0 ? process.argv[i + 1] : fallback;
 };
+/** A comma-separated option whose values must come from `allowed`. */
+const list = (name, fallback, allowed) => {
+  const values = [
+    ...new Set(
+      String(arg(name, fallback))
+        .split(',')
+        .map((s) => s.trim()),
+    ),
+  ].filter(Boolean);
+  const bad = values.filter((v) => !allowed.includes(v));
+  if (!values.length || bad.length) {
+    throw new Error(
+      `--${name}: expected some of ${allowed.join(', ')}, got "${arg(name, fallback)}"`,
+    );
+  }
+  return values;
+};
 const model = arg('model', 'gemma3-1b');
 const profile = arg('profile');
 const out = arg('out', resolve(root, '.agent-logs/teaching-eval'));
 const base = arg('base', 'http://localhost:1420');
 const only = arg('only');
+const variants = list('variants', 'legacy,current', ['legacy', 'current']);
+const decodings = list('decoding', 'app', ['legacy', 'app']);
+const temperature = Number(arg('temperature', '0'));
+const repeats = Number(arg('repeats', '1'));
+const label = arg('label');
 if (!profile)
   throw new Error('--profile <Edge profile folder that already holds the model> is required');
+if (!Number.isFinite(temperature) || temperature < 0 || temperature > 2)
+  throw new Error('--temperature must be a number from 0 (greedy) to 2');
+if (!Number.isInteger(repeats) || repeats < 1 || repeats > 20)
+  throw new Error('--repeats must be a whole number from 1 to 20');
+if (label !== undefined && !/^[\w.-]{1,40}$/.test(label))
+  throw new Error('--label: letters, digits, "-", "_" and "." only');
+if (temperature === 0 && repeats > 1)
+  console.warn('Greedy decoding (--temperature 0): repeats give the same answers (timing only).');
 mkdirSync(out, { recursive: true });
+const file = resolve(out, label ? `eval-${model}-${label}.json` : `eval-${model}.json`);
+const settings = { variants, decodings, temperature, repeats, label: label ?? null };
 
 const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
 const items = only ? set.items.filter((i) => only.split(',').includes(i.id)) : set.items;
@@ -47,6 +91,17 @@ const context = await chromium.launchPersistentContext(profile, {
 const page = context.pages()[0] ?? (await context.newPage());
 await page.goto(base);
 await page.waitForLoadState('networkidle');
+
+// Results labelled with a decoding the app ignores would be wrong: check the option exists in the
+// served webGemma module before anything else (no GPU work).
+const knowsDecoding = await page.evaluate(async () =>
+  /\bdecoding\b/.test(await (await fetch('/src/ai/webGemma.ts')).text()),
+);
+if (!knowsDecoding) {
+  console.error('This app version has no `decoding` option in webGemmaChat; update the app first.');
+  await context.close();
+  process.exit(5);
+}
 
 /** Stops before any (more) Gemma work unless every adapter seen is a discrete NVIDIA card. */
 async function refuseUnlessNvidia(seen) {
@@ -110,91 +165,113 @@ if (warmUp.error && !warmUp.error.includes('empty reply')) {
 const adapter = warmUp.gemma;
 
 // The on-device prompt of main before the audit (src/teacher/chat/chatService.ts @ c25ad9d).
-const BEFORE_SYSTEM =
+const LEGACY_SYSTEM =
   'Bạn là AI Teacher, trợ lý học tập (bạn là AI). Trả lời đúng câu hỏi của học sinh bằng tiếng Việt, ngắn gọn, từng bước, dễ hiểu. Chỉ dùng số liệu có trong ngữ cảnh; nếu không chắc thì nói rõ.';
 
+const pct = (x) => (x === null ? '–' : x.toFixed(2));
 const results = [];
 for (const item of items) {
-  for (const variant of ['before', 'after']) {
-    const r = await page.evaluate(
-      async ({ item, variant, model, BEFORE_SYSTEM }) => {
-        const k = await import('/src/teacher/chat/knowledge.ts');
-        const c = await import('/src/teacher/chat/chatService.ts');
-        const g = await import('/src/ai/webGemma.ts');
-        const { useGpuStore } = await import('/src/ai/gpu.ts');
-        // The adapter the worker reported for its current model (a restarted worker reloads it).
-        const gpu = () => {
-          const info = useGpuStore.getState().gemmaInfo;
-          return info ? `${info.vendor} ${info.architecture}`.trim() : 'none';
-        };
-        let system;
-        if (variant === 'before') {
-          const notes = k
-            .searchKnowledge(item.question, 'vi', 4)
-            .map((n) => ({ ...n, text: n.text.slice(0, 1500) }));
-          system = notes.length
-            ? `${BEFORE_SYSTEM}\n\nTrích đoạn thư viện kiến thức cục bộ (tham khảo; có thể chưa bao quát):\n${notes.map((n) => `[${n.name}] ${n.text}`).join('\n\n')}`
-            : BEFORE_SYSTEM;
-        } else {
-          system = (await c.contextPrompt(item.question, 'vi', false, false, 'compact')).system;
-        }
-        const messages = [...(item.history ?? []), { role: 'user', content: item.question }];
-        const t0 = performance.now();
-        let first = null;
-        try {
-          const res = await g.webGemmaChat({
-            model,
-            system,
-            messages,
-            maxTokens: 1024,
-            onPartial: () => {
-              if (first === null) first = performance.now() - t0;
-            },
-          });
-          return {
-            ok: true,
-            answer: res.content,
-            truncated: res.truncated,
-            // null when no piece was seen (never 0 ms).
-            firstMs: first === null ? null : Math.round(first),
-            ms: Math.round(performance.now() - t0),
-            promptChars: system.length,
-            gpu: gpu(),
-          };
-        } catch (e) {
-          return {
-            ok: false,
-            answer: '',
-            error: String(e),
-            firstMs: null,
-            ms: Math.round(performance.now() - t0),
-            promptChars: system.length,
-            gpu: gpu(),
-          };
-        }
-      },
-      { item, variant, model, BEFORE_SYSTEM },
-    );
-    const score = scoreAnswer(item, r.answer);
-    results.push({ id: item.id, subject: item.subject, type: item.type, variant, ...r, score });
-    console.log(
-      `${item.id} ${variant}: ${r.ok ? 'ok' : 'FAIL'} ${r.ms} ms facts ${score.keyFacts.toFixed(2)} errors ${score.wrong.length} q ${score.checkQuestion}`,
-    );
-    writeFileSync(
-      resolve(out, `eval-${model}.json`),
-      JSON.stringify({ model, adapter, adapters, results }, null, 2),
-    );
-    await refuseUnlessNvidia({ gemma: r.gpu });
+  const index = items.indexOf(item);
+  for (let repeat = 0; repeat < repeats; repeat += 1) {
+    for (const decoding of decodings) {
+      // Alternate which variant goes first, so neither always runs right after a model switch.
+      const order = (index + repeat) % 2 ? [...variants].reverse() : variants;
+      for (const variant of order) {
+        const r = await page.evaluate(
+          async ({ item, variant, decoding, temperature, model, LEGACY_SYSTEM }) => {
+            const k = await import('/src/teacher/chat/knowledge.ts');
+            const c = await import('/src/teacher/chat/chatService.ts');
+            const g = await import('/src/ai/webGemma.ts');
+            const { useGpuStore } = await import('/src/ai/gpu.ts');
+            // The adapter the worker reported for its current model (a restarted worker reloads it).
+            const gpu = () => {
+              const info = useGpuStore.getState().gemmaInfo;
+              return info ? `${info.vendor} ${info.architecture}`.trim() : 'none';
+            };
+            let system;
+            if (variant === 'legacy') {
+              const notes = k
+                .searchKnowledge(item.question, 'vi', 4)
+                .map((n) => ({ ...n, text: n.text.slice(0, 1500) }));
+              system = notes.length
+                ? `${LEGACY_SYSTEM}\n\nTrích đoạn thư viện kiến thức cục bộ (tham khảo; có thể chưa bao quát):\n${notes.map((n) => `[${n.name}] ${n.text}`).join('\n\n')}`
+                : LEGACY_SYSTEM;
+            } else {
+              system = (await c.contextPrompt(item.question, 'vi', false, false, 'compact')).system;
+            }
+            const messages = [...(item.history ?? []), { role: 'user', content: item.question }];
+            const t0 = performance.now();
+            let first = null;
+            try {
+              const res = await g.webGemmaChat({
+                model,
+                system,
+                messages,
+                maxTokens: 1024,
+                temperature,
+                decoding,
+                onPartial: () => {
+                  if (first === null) first = performance.now() - t0;
+                },
+              });
+              return {
+                ok: true,
+                answer: res.content,
+                truncated: res.truncated,
+                // null when no piece was seen (never 0 ms).
+                firstMs: first === null ? null : Math.round(first),
+                ms: Math.round(performance.now() - t0),
+                promptChars: system.length,
+                system,
+                gpu: gpu(),
+              };
+            } catch (e) {
+              return {
+                ok: false,
+                answer: '',
+                error: String(e),
+                firstMs: null,
+                ms: Math.round(performance.now() - t0),
+                promptChars: system.length,
+                system,
+                gpu: gpu(),
+              };
+            }
+          },
+          { item, variant, decoding, temperature, model, LEGACY_SYSTEM },
+        );
+        const score = scoreAnswer(item, r.answer);
+        results.push({
+          id: item.id,
+          subject: item.subject,
+          type: item.type,
+          variant,
+          decoding,
+          temperature,
+          repeat,
+          ...r,
+          score,
+        });
+        console.log(
+          `${item.id} ${variant}/${decoding} #${repeat}: ${r.ok ? 'ok' : 'FAIL'} ${r.ms} ms facts ${score.keyFacts.toFixed(2)} errors ${score.wrong.length} q ${score.checkQuestion} ask ${score.asksClarification} names ${score.namesMissing} steps ${score.steps === null ? '–' : pct(score.steps)} trap ${score.trapHandled} invented ${score.invented.length} foreign ${pct(score.foreignScript)} mangled ${score.mangled.length}`,
+        );
+        writeFileSync(
+          file,
+          JSON.stringify({ model, adapter, adapters, settings, results }, null, 2),
+        );
+        await refuseUnlessNvidia({ gemma: r.gpu });
+      }
+    }
   }
 }
 // Means of time and length over the answers that came back; failures are counted separately.
 const summary = {};
-for (const variant of ['before', 'after']) {
-  summary[variant] = summarizeRuns(results.filter((r) => r.variant === variant));
+for (const key of [...new Set(results.map(groupKey))]) {
+  summary[key] = summarizeRuns(results.filter((r) => groupKey(r) === key));
 }
 writeFileSync(
-  resolve(out, `eval-${model}.json`),
-  JSON.stringify({ model, adapter, adapters, summary, results }, null, 2),
+  file,
+  JSON.stringify({ model, adapter, adapters, settings, summary, results }, null, 2),
 );
 console.log(JSON.stringify(summary, null, 2));
 await context.close();

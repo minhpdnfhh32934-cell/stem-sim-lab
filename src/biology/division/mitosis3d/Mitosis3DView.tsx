@@ -7,7 +7,8 @@ import { formatNumber } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { FrameMonitor } from '@/perf/frameMonitor';
-import { reportOverload, useTierConfig } from '@/perf/perfStore';
+import { effectiveTier, reportOverload, usePerfStore, useTierConfig } from '@/perf/perfStore';
+import type { QualityTier } from '@/perf/tiers';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
@@ -23,9 +24,11 @@ import {
   type CameraMode,
   type Selection,
 } from './components';
-import { buildMitosisScene, type CameraFrame, type MitosisScene, type ScenePalette } from './scene';
+import { VIEW_DIR, applyViewport, placeCamera } from './camera';
+import { buildMitosisScene, type MitosisScene, type ScenePalette } from './scene';
 import { stateFor, timelineFor, useMitosis3D } from './store';
-import { STAGES_3D, type CellType, type Stage3D, type Timeline } from './timeline';
+import { createTapTracker } from './tap';
+import { STAGES_3D, type CellType, type Stage3D, type Timeline, type Vec3 } from './timeline';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
 import '../../bio.css';
 
@@ -42,7 +45,7 @@ export interface RendererLike {
   info: {
     memory: { geometries: number; textures: number };
     programs: unknown[] | null;
-    render: { calls: number };
+    render: { calls: number; triangles: number };
   };
 }
 export type RendererFactory = (opts: { antialias: boolean }) => RendererLike;
@@ -58,8 +61,18 @@ const webglRenderer: RendererFactory = ({ antialias }) =>
 
 /** Read-only hook for end-to-end tests (dev builds only). */
 interface DebugHook {
-  info(): { geometries: number; textures: number; programs: number; objects: number };
+  /** GPU memory and, for the last frame drawn, its draw calls and triangles. */
+  info(): {
+    geometries: number;
+    textures: number;
+    programs: number;
+    objects: number;
+    calls: number;
+    triangles: number;
+  };
   stage(): Stage3D;
+  /** Quality tier in effect, and whether the app lowered it by itself (overload). */
+  quality(): { tier: QualityTier; degraded: boolean };
 }
 declare global {
   interface Window {
@@ -77,6 +90,7 @@ function readPalette(): ScenePalette {
     centromere: token('--text'),
     membrane: token('--subject-biology'),
     envelope: token('--chart-6'),
+    nucleolus: token('--chart-6'),
     wall: token('--chart-2'),
     spindle: token('--text-muted'),
     centrosome: token('--chart-5'),
@@ -86,27 +100,12 @@ function readPalette(): ScenePalette {
   };
 }
 
-// Slightly from the side and above: the equatorial plate shows as a plane, not a line.
-const VIEW_DIR = new THREE.Vector3(0.55, 0.4, 1).normalize();
-
-const VIEW_RIGHT = new THREE.Vector3()
-  .crossVectors(new THREE.Vector3(0, 1, 0), VIEW_DIR)
-  .normalize();
-const VIEW_UP = new THREE.Vector3().crossVectors(VIEW_DIR, VIEW_RIGHT);
-
-/** Camera distance (along VIEW_DIR) at which every point of the frame is inside the view. */
-function fitDistance(f: CameraFrame, tanH: number, tanV: number): number {
-  let dist = 1;
-  const p = new THREE.Vector3();
-  for (const q of f.points) {
-    p.set(q[0], q[1], q[2]);
-    const need =
-      p.dot(VIEW_DIR) +
-      Math.max(Math.abs(p.dot(VIEW_RIGHT)) / tanH, Math.abs(p.dot(VIEW_UP)) / tanV);
-    dist = Math.max(dist, need);
-  }
-  // Margin for the controls drawn over the edges of the canvas.
-  return dist * 1.22;
+/** The learner asked the system for less motion: nothing starts moving on its own. */
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 }
 
 const SHORT: Record<Stage3D, ReturnType<typeof L>> = {
@@ -125,7 +124,10 @@ function goToStage(tl: Timeline, index: number) {
   if (stage) useMitosis3D.setState({ t: tl.keyTime(stage), playing: false });
 }
 
-/** Stage strip: one button per stage, filled up to the current time. */
+/**
+ * Stage strip: one button per stage, filled up to the current time. The accessible name is the
+ * visible (short) text; the full stage name is the tooltip.
+ */
 function StageStrip({ tl }: { tl: Timeline }) {
   const Lz = useLocalized();
   const t = useMitosis3D((s) => s.t);
@@ -134,19 +136,21 @@ function StageStrip({ tl }: { tl: Timeline }) {
     <div className="m3d__stages" role="group" aria-label={Lz(L('Các kì', 'Stages'))}>
       {tl.stages.map((w, k) => {
         const fill = Math.min(1, Math.max(0, (t - w.start) / (w.end - w.start)));
+        const short = Lz(SHORT[w.id]);
+        const full = Lz(STAGE3D_NAME[w.id]);
         return (
           <button
             key={w.id}
             type="button"
             className={cx('m3d__stage', k === current && 'is-current')}
             aria-current={k === current ? 'step' : undefined}
-            aria-label={Lz(STAGE3D_NAME[w.id])}
+            title={full === short ? undefined : full}
             style={{ '--fill': fill } as CSSProperties}
             onClick={() => {
               goToStage(tl, k);
             }}
           >
-            {Lz(SHORT[w.id])}
+            {short}
           </button>
         );
       })}
@@ -270,8 +274,12 @@ export function Mitosis3DView({
   /** Renderer, camera and controls shared by the two effects below. */
   const rtRef = useRef<{
     request: () => void;
+    /** Frames the camera from the default direction (new cell, view switch, "Đặt lại góc nhìn"). */
     frameCamera: (mode: CameraMode) => void;
+    /** Close-up: keeps the learner's direction, re-centres and fits the chromosomes now. */
+    follow: () => void;
     scene: MitosisScene | null;
+    tl: Timeline | null;
     framedFor: Timeline | null;
   } | null>(null);
 
@@ -294,43 +302,40 @@ export function Mitosis3DView({
     renderer.domElement.className = 'mol-viewer__canvas';
     host.appendChild(renderer.domElement);
 
-    const cam = new THREE.PerspectiveCamera(38, width() / height(), 0.1, 400);
-    // The stage strip and caption cover the bottom of the canvas: draw the picture a little
-    // higher (a taller virtual image, cropped), so orbiting still turns around the cell centre.
-    const lift = () => Math.round(height() * 0.07);
-    const fitView = () => {
-      const w = width();
-      const h = height();
-      const d = lift();
-      cam.aspect = w / (h + 2 * d);
-      cam.setViewOffset(w, h + 2 * d, 0, 2 * d, w, h);
-      cam.updateProjectionMatrix();
-    };
-    fitView();
+    // The stage strip and caption cover the bottom of the canvas: the picture is drawn a little
+    // higher (camera.ts), so orbiting still turns around the target.
+    const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
+    applyViewport(cam, width(), height());
     const controls = new OrbitControls(cam, renderer.domElement);
-    controls.minDistance = 4;
-    controls.maxDistance = 80;
+    // Orbit and zoom only: the target stays on the cell (or its chromosomes), so the zoom
+    // limits below keep the camera outside the cell.
+    controls.enablePan = false;
 
+    /** Puts the camera at `dir` from the frame centre, at the distance that fits the frame. */
+    const place = (mode: CameraMode, dir: Vec3) => {
+      if (!rt.scene || !rt.tl) return;
+      const p = placeCamera(rt.scene.frame(mode), rt.tl.cellType, width(), height(), dir);
+      controls.minDistance = p.min;
+      controls.maxDistance = p.max;
+      controls.target.set(...p.target);
+      cam.position.set(...p.position);
+      cam.lookAt(controls.target);
+      controls.update();
+    };
     let frame = 0;
     const rt = {
       request: () => {
         if (!frame) frame = requestAnimationFrame(render);
       },
       frameCamera: (mode: CameraMode) => {
-        if (!rt.scene) return;
-        const f = rt.scene.frame(mode);
-        // Visible half-angles of the cropped view.
-        const h = height();
-        const tanV = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) * (h / (h + 2 * lift()));
-        const tanH = (tanV * width()) / h;
-        const dist = fitDistance(f, tanH, tanV);
-        const [cx, cy, cz] = f.center;
-        controls.target.set(cx, cy, cz);
-        cam.position.set(cx + VIEW_DIR.x * dist, cy + VIEW_DIR.y * dist, cz + VIEW_DIR.z * dist);
-        cam.lookAt(controls.target);
-        controls.update();
+        place(mode, VIEW_DIR);
+      },
+      follow: () => {
+        const d = cam.position.clone().sub(controls.target).normalize();
+        place('closeup', [d.x, d.y, d.z]);
       },
       scene: null as MitosisScene | null,
+      tl: null as Timeline | null,
       framedFor: null as Timeline | null,
     };
     const render = () => {
@@ -339,18 +344,19 @@ export function Mitosis3DView({
     };
     controls.addEventListener('change', rt.request);
 
-    // Picking: a click without a drag selects the part under the pointer.
+    // Picking: a tap (not a drag, not a pinch) selects the part under the pointer.
     const ray = new THREE.Raycaster();
     ray.params.Line = { threshold: 0.12 };
     const ndc = new THREE.Vector2();
-    let down: { x: number; y: number } | null = null;
+    const tap = createTapTracker();
     const onDown = (e: PointerEvent) => {
-      down = { x: e.clientX, y: e.clientY };
+      tap.down(e);
+    };
+    const onCancel = (e: PointerEvent) => {
+      tap.cancel(e);
     };
     const onUp = (e: PointerEvent) => {
-      if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 4) return;
-      down = null;
-      if (!rt.scene) return;
+      if (!tap.up(e) || !rt.scene) return;
       const rect = renderer.domElement.getBoundingClientRect();
       ndc.set(
         ((e.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1,
@@ -370,6 +376,7 @@ export function Mitosis3DView({
     };
     renderer.domElement.addEventListener('pointerdown', onDown);
     renderer.domElement.addEventListener('pointerup', onUp);
+    renderer.domElement.addEventListener('pointercancel', onCancel);
 
     // A lost GPU context (driver reset) never retries: the 2D view takes over.
     const onLost = (e: Event) => {
@@ -383,7 +390,18 @@ export function Mitosis3DView({
         ? null
         : new ResizeObserver(() => {
             renderer.setSize(width(), height());
-            fitView();
+            applyViewport(cam, width(), height());
+            // The zoom-out limit depends on the canvas shape (a narrow canvas needs more room).
+            if (rt.tl) {
+              const target: Vec3 = [controls.target.x, controls.target.y, controls.target.z];
+              const p = placeCamera(
+                { center: target, points: [] },
+                rt.tl.cellType,
+                width(),
+                height(),
+              );
+              controls.maxDistance = p.max;
+            }
             rt.request();
           });
     ro?.observe(host);
@@ -396,10 +414,16 @@ export function Mitosis3DView({
           textures: renderer.info.memory.textures,
           programs: renderer.info.programs?.length ?? 0,
           objects: rt.scene?.stats().objects ?? 0,
+          calls: renderer.info.render.calls,
+          triangles: renderer.info.render.triangles,
         }),
         stage: () => {
           const d = useDivisionStore.getState();
           return timelineFor(d.pairs, d.cellType).stageAt(useMitosis3D.getState().t).stage;
+        },
+        quality: () => {
+          const perf = usePerfStore.getState();
+          return { tier: effectiveTier(perf), degraded: perf.degraded };
         },
       };
       window.__simlabMitosis3d = hook;
@@ -415,6 +439,7 @@ export function Mitosis3DView({
       controls.dispose();
       renderer.domElement.removeEventListener('pointerdown', onDown);
       renderer.domElement.removeEventListener('pointerup', onUp);
+      renderer.domElement.removeEventListener('pointercancel', onCancel);
       renderer.domElement.removeEventListener('webglcontextlost', onLost);
       renderer.dispose();
       renderer.forceContextLoss?.();
@@ -428,6 +453,7 @@ export function Mitosis3DView({
     if (!rt) return;
     const ms = buildMitosisScene(tl, readPalette(), { segments: tier.sphereSegments });
     rt.scene = ms;
+    rt.tl = tl;
     const ui = useMitosis3D.getState();
     ms.update(stateFor(tl, ui.t));
     ms.setSelection(ui.selected);
@@ -438,9 +464,14 @@ export function Mitosis3DView({
     }
     rt.request();
     const unsub = useMitosis3D.subscribe((s, prev) => {
-      if (s.t !== prev.t) ms.update(stateFor(tl, s.t));
+      const reframe = s.camera !== prev.camera || s.viewNonce !== prev.viewNonce;
+      if (s.t !== prev.t) {
+        ms.update(stateFor(tl, s.t));
+        // The close-up follows the chromosomes as they move and spread out.
+        if (s.camera === 'closeup' && !reframe) rt.follow();
+      }
       if (s.selected !== prev.selected) ms.setSelection(s.selected);
-      if (s.camera !== prev.camera || s.viewNonce !== prev.viewNonce) rt.frameCamera(s.camera);
+      if (reframe) rt.frameCamera(s.camera);
       rt.request();
     });
     return () => {
@@ -497,110 +528,115 @@ export function Mitosis3DView({
         role="img"
         aria-label={`${Lz(STAGE3D_NAME[stage])}. ${Lz(stageNote(stage, cellType))}`}
       />
-      <div className="chem-overlay m3d__top">
-        <IconButton
-          icon={ChevronLeft}
-          size="lg"
-          label={Lz(L('Bước trước', 'Previous step'))}
-          disabled={stageIndex === 0}
-          onClick={() => {
-            goToStage(tl, stageIndex - 1);
-          }}
-        />
-        <IconButton
-          icon={Play}
-          altIcon={Pause}
-          showAlt={playing}
-          size="lg"
-          variant="solid"
-          label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-          onClick={play}
-        />
-        <IconButton
-          icon={ChevronRight}
-          size="lg"
-          label={Lz(L('Bước tiếp theo', 'Next step'))}
-          disabled={stageIndex >= STAGES_3D.length - 1}
-          onClick={() => {
-            goToStage(tl, stageIndex + 1);
-          }}
-        />
-        <IconButton
-          icon={RotateCcw}
-          size="lg"
-          label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
-          onClick={() => {
-            useMitosis3D.setState({ t: 0, playing: true });
-          }}
-        />
-        <Segmented
-          label={L('Tốc độ', 'Speed')}
-          value={String(speed)}
-          options={SPEEDS.map((v) => ({ id: String(v), label: L(fmtSpeed(v), fmtSpeed(v)) }))}
-          onChange={(v) => {
-            useDivisionStore.setState({ speed: Number(v) });
-          }}
-        />
-        <span className="chem-chip">
-          <strong>{Lz(STAGE3D_NAME[stage])}</strong>
-        </span>
-        <CountsChip tl={tl} stage={stage} />
-        <span className="chem-chip bio-legend">
-          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'maternal'))}
-          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'paternal'))}
-        </span>
-      </div>
-      <div className="m3d__side">
-        <Segmented<CellType>
-          label={L('Loại tế bào', 'Cell type')}
-          value={cellType}
-          options={[
-            { id: 'animal', label: L('Động vật', 'Animal') },
-            { id: 'plant', label: L('Thực vật', 'Plant') },
-          ]}
-          onChange={(v) => {
-            useDivisionStore.setState({ cellType: v });
-          }}
-        />
-        <Mitosis3DSwitch />
-        <Segmented<CameraMode>
-          label={L('Góc nhìn', 'View')}
-          value={camera}
-          options={[
-            { id: 'overview', label: L('Toàn cảnh', 'Whole cell') },
-            { id: 'closeup', label: L('Cận cảnh NST', 'Chromosomes close up') },
-          ]}
-          onChange={(v) => {
-            useMitosis3D.setState((s) => ({ camera: v, viewNonce: s.viewNonce + 1 }));
-          }}
-        />
-        <IconButton
-          icon={Focus}
-          size="lg"
-          label={Lz(L('Đặt lại góc nhìn', 'Reset view'))}
-          tooltipSide="left"
-          onClick={() => {
-            useMitosis3D.setState((s) => ({ viewNonce: s.viewNonce + 1 }));
-          }}
-        />
-      </div>
-      {selected && <PartInfo tl={tl} selected={selected} />}
-      <div className="m3d__bottom">
-        <StageStrip tl={tl} />
-        <p className="m3d__caption">
-          <strong>{Lz(STAGE3D_NAME[stage])}.</strong> {Lz(stageNote(stage, cellType))}{' '}
-          <span className="muted">
-            {Lz(CELL_TYPE_NAME[cellType])} ·{' '}
-            {atEnd
-              ? Lz(L('Hết — bấm Phát để xem lại.', 'Done — press Play to watch again.'))
-              : Lz(
-                  L(
-                    'Kéo để xoay, cuộn để phóng to; bấm vào một bộ phận để xem tên và chức năng.',
-                    'Drag to rotate, scroll to zoom; click a part to see its name and function.',
-                  ),
-                )}
+      {/* Controls over the picture, laid out on a grid so no two boxes ever overlap. */}
+      <div className="m3d__hud">
+        <div className="chem-overlay m3d__top">
+          <IconButton
+            icon={ChevronLeft}
+            size="lg"
+            label={Lz(L('Bước trước', 'Previous step'))}
+            disabled={stageIndex === 0}
+            onClick={() => {
+              goToStage(tl, stageIndex - 1);
+            }}
+          />
+          <IconButton
+            icon={Play}
+            altIcon={Pause}
+            showAlt={playing}
+            size="lg"
+            variant="solid"
+            label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
+            onClick={play}
+          />
+          <IconButton
+            icon={ChevronRight}
+            size="lg"
+            label={Lz(L('Bước tiếp theo', 'Next step'))}
+            disabled={stageIndex >= STAGES_3D.length - 1}
+            onClick={() => {
+              goToStage(tl, stageIndex + 1);
+            }}
+          />
+          <IconButton
+            icon={RotateCcw}
+            size="lg"
+            label={Lz(L('Phát lại từ đầu', 'Replay from the start'))}
+            onClick={() => {
+              // With reduced motion the replay waits for "Phát" instead of starting by itself.
+              useMitosis3D.setState({ t: 0, playing: !prefersReducedMotion() });
+            }}
+          />
+          <Segmented
+            label={L('Tốc độ', 'Speed')}
+            value={String(speed)}
+            options={SPEEDS.map((v) => ({ id: String(v), label: L(fmtSpeed(v), fmtSpeed(v)) }))}
+            onChange={(v) => {
+              useDivisionStore.setState({ speed: Number(v) });
+            }}
+          />
+          <span className="chem-chip">
+            <strong>{Lz(STAGE3D_NAME[stage])}</strong>
           </span>
-        </p>
+          <CountsChip tl={tl} stage={stage} />
+          <span className="chem-chip bio-legend">
+            {Lz(L('NST nguồn gốc', 'Chromosomes from'))}
+            <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'the mother'))}
+            <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'the father'))}
+          </span>
+        </div>
+        <div className="m3d__side">
+          <Segmented<CellType>
+            label={L('Loại tế bào', 'Cell type')}
+            value={cellType}
+            options={[
+              { id: 'animal', label: L('Động vật', 'Animal') },
+              { id: 'plant', label: L('Thực vật', 'Plant') },
+            ]}
+            onChange={(v) => {
+              useDivisionStore.setState({ cellType: v });
+            }}
+          />
+          <Mitosis3DSwitch />
+          <Segmented<CameraMode>
+            label={L('Góc nhìn', 'View')}
+            value={camera}
+            options={[
+              { id: 'overview', label: L('Toàn cảnh', 'Whole cell') },
+              { id: 'closeup', label: L('Cận cảnh NST', 'Chromosomes close up') },
+            ]}
+            onChange={(v) => {
+              useMitosis3D.setState((s) => ({ camera: v, viewNonce: s.viewNonce + 1 }));
+            }}
+          />
+          <IconButton
+            icon={Focus}
+            size="lg"
+            label={Lz(L('Đặt lại góc nhìn', 'Reset view'))}
+            tooltipSide="left"
+            onClick={() => {
+              useMitosis3D.setState((s) => ({ viewNonce: s.viewNonce + 1 }));
+            }}
+          />
+        </div>
+        {selected && <PartInfo tl={tl} selected={selected} />}
+        <div className="m3d__bottom">
+          <StageStrip tl={tl} />
+          <p className="m3d__caption">
+            <strong>{Lz(STAGE3D_NAME[stage])}.</strong> {Lz(stageNote(stage, cellType))}{' '}
+            <span className="muted">
+              {Lz(CELL_TYPE_NAME[cellType])} ·{' '}
+              {atEnd
+                ? Lz(L('Hết — bấm Phát để xem lại.', 'Done — press Play to watch again.'))
+                : Lz(
+                    L(
+                      'Kéo để xoay, cuộn để phóng to; bấm vào một bộ phận để xem tên và chức năng.',
+                      'Drag to rotate, scroll to zoom; click a part to see its name and function.',
+                    ),
+                  )}
+            </span>
+          </p>
+        </div>
       </div>
     </div>
   );

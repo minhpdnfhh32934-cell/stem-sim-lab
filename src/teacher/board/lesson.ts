@@ -4,7 +4,7 @@
  * for both). Marks (underline, circle, box, highlight, arrows) are drawn when their tag comes.
  * Every number written is checked for provenance (provenance.ts).
  */
-import { speak, stopSpeaking, toSpokenText } from '@/teacher/voice/speak';
+import { speak, stopSpeaking, toSpokenText, type VoiceSession } from '@/teacher/voice/speak';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { markdownToScript } from './fromMarkdown';
 import {
@@ -115,6 +115,8 @@ let gate: { promise: Promise<void>; open: () => void } | null = null;
 let instant = false;
 let lastInput: LessonInput | null = null;
 let lastMeasure: Measure | null = null;
+/** The lesson's voice: once the chosen voice failed for good, its later sentences do not wait. */
+let voiceSession: VoiceSession = { skipped: null };
 
 class Stopped extends Error {}
 
@@ -347,7 +349,7 @@ async function speakSentence(
     speechCut = false;
     const begin = performance.now();
     if (metrics) metrics.firstSpeechMs ??= Math.round(begin - metrics.startedAt);
-    await speak(text, { rate: useBoardStore.getState().speed });
+    await speak(text, { rate: useBoardStore.getState().speed, session: voiceSession });
     entry.speechMs = (entry.speechMs ?? 0) + Math.round(performance.now() - begin);
     if (!wasCut() || isAborted(signal) || isInstant()) return;
     // Never throws: when the pen stops first (a stop during the pause), nobody awaits this
@@ -441,6 +443,8 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
 export async function playLesson(input: LessonInput, measure: Measure): Promise<void> {
   stopLesson();
   lessonKnown = [];
+  // A new lesson (or "Giảng lại") tries the chosen voice again; "Viết tiếp" keeps the session.
+  voiceSession = { skipped: null };
   metrics = { startedAt: performance.now(), firstSpeechMs: null, sentences: [] };
   useBoardStore.getState().set({
     layout: emptyLayout(),
@@ -516,11 +520,14 @@ export function stopLesson(): void {
   gate = null;
   g?.open();
   stopSpeaking();
-  if (
-    useBoardStore.getState().status === 'playing' ||
-    useBoardStore.getState().status === 'paused'
-  ) {
+  const status = useBoardStore.getState().status;
+  if (status === 'playing' || status === 'paused') {
     useBoardStore.getState().set({ status: 'done', pen: null });
+  } else if (status === 'preparing') {
+    // Stopped (the page closed) while the board waited for its fonts: the pending start
+    // (Whiteboard.tsx) compares `lessonContent` with its answer and gives up, so a voice never
+    // starts on a page that is gone. The same answer shown again starts it afresh.
+    useBoardStore.getState().set({ status: 'idle', lessonContent: '' });
   }
 }
 

@@ -6,7 +6,7 @@ import { useApplyTheme } from '@/app/theme/useApplyTheme';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import type { BenchmarkResult } from '@/perf/benchmark';
 import { FrameMonitor } from '@/perf/frameMonitor';
-import { usePerfStore } from '@/perf/perfStore';
+import { effectiveTier, usePerfStore } from '@/perf/perfStore';
 import { DivisionStage } from '../DivisionViews';
 import { STAGES } from '../division';
 import { setDivisionState } from '../stageIndex';
@@ -14,6 +14,7 @@ import { STAGE_NAME, useDivisionStore } from '../state';
 import { MitosisBottom, MitosisPanel, MitosisStage } from '../views';
 import { STAGE3D_NAME, stageNote } from './components';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
+import { cellBound, placeCamera, cameraFrame } from './camera';
 import { Mitosis3DView, type RendererFactory, type RendererLike } from './Mitosis3DView';
 import { Mitosis3DParts } from './panels';
 import { buildMitosisScene, type ScenePalette } from './scene';
@@ -45,7 +46,11 @@ vi.mock('three', async (importOriginal) => {
       dispose: () => {
         made.disposed++;
       },
-      info: { memory: { geometries: 0, textures: 0 }, programs: [], render: { calls: 0 } },
+      info: {
+        memory: { geometries: 0, textures: 0 },
+        programs: [],
+        render: { calls: 0, triangles: 0 },
+      },
     };
   }
   return { ...three, WebGLRenderer };
@@ -61,7 +66,11 @@ function fakeRenderer() {
       setSize: vi.fn(),
       render: vi.fn(),
       dispose: vi.fn(),
-      info: { memory: { geometries: 0, textures: 0 }, programs: [], render: { calls: 0 } },
+      info: {
+        memory: { geometries: 0, textures: 0 },
+        programs: [],
+        render: { calls: 0, triangles: 0 },
+      },
     };
     made.push(r);
     return r;
@@ -139,7 +148,7 @@ describe('Mitosis3DView', () => {
     expect(screen.getByRole('button', { name: 'Bước tiếp theo' })).toBeDisabled();
     // The stage strip marks the current stage.
     const strip = screen.getByRole('group', { name: 'Các kì' });
-    expect(within(strip).getByRole('button', { name: 'Phân chia tế bào chất' })).toHaveAttribute(
+    expect(within(strip).getByRole('button', { name: 'Chia tế bào chất' })).toHaveAttribute(
       'aria-current',
       'step',
     );
@@ -179,7 +188,7 @@ describe('Mitosis3DView', () => {
     const parts = () => screen.getByRole('group', { name: 'Bộ phận tế bào' });
     expect(within(parts()).getByRole('button', { name: 'Trung thể' })).toBeInTheDocument();
     expect(
-      within(parts()).getByRole('button', { name: 'Rãnh phân cắt (eo thắt)' }),
+      within(parts()).getByRole('button', { name: 'Vòng co (rãnh phân cắt)' }),
     ).toBeInTheDocument();
     expect(within(parts()).queryByRole('button', { name: 'Thành tế bào' })).toBeNull();
     // Select an animal-only part, then switch to plant: the selection is cleared.
@@ -194,7 +203,7 @@ describe('Mitosis3DView', () => {
       within(parts()).getByRole('button', { name: 'Vách ngăn (tấm tế bào)' }),
     ).toBeInTheDocument();
     expect(within(parts()).queryByRole('button', { name: 'Trung thể' })).toBeNull();
-    expect(within(parts()).queryByRole('button', { name: 'Rãnh phân cắt (eo thắt)' })).toBeNull();
+    expect(within(parts()).queryByRole('button', { name: 'Vòng co (rãnh phân cắt)' })).toBeNull();
     expect(useMitosis3D.getState().selected).toBeNull();
     // The scene was rebuilt for the plant cell; the renderer (WebGL context) was kept.
     expect(made).toHaveLength(1);
@@ -208,6 +217,14 @@ describe('Mitosis3DView', () => {
     const { factory, made } = fakeRenderer();
     const view = render(<Mitosis3DView createRenderer={factory} />);
     expect(window.__simlabMitosis3d?.stage()).toBe('g1');
+    // The hook also reports the last frame's draw calls and triangles, and the quality in use.
+    made[0]!.info.render.calls = 26;
+    made[0]!.info.render.triangles = 9152;
+    expect(window.__simlabMitosis3d?.info()).toMatchObject({ calls: 26, triangles: 9152 });
+    expect(window.__simlabMitosis3d?.quality()).toEqual({
+      tier: effectiveTier(usePerfStore.getState()),
+      degraded: false,
+    });
     view.unmount();
     expect(made[0]?.dispose).toHaveBeenCalled();
     expect(made[0]?.domElement.isConnected).toBe(false);
@@ -252,6 +269,7 @@ describe('Mitosis3DView', () => {
       centromere: 'gray',
       membrane: 'gray',
       envelope: 'gray',
+      nucleolus: 'gray',
       wall: 'gray',
       spindle: 'gray',
       centrosome: 'gray',
@@ -373,6 +391,119 @@ describe('Mitosis3DView', () => {
     }
   });
 
+  it('stage buttons: each accessible name contains the visible text (label in name)', () => {
+    const { factory } = fakeRenderer();
+    render(<Mitosis3DView createRenderer={factory} />);
+    const strip = screen.getByRole('group', { name: 'Các kì' });
+    const buttons = within(strip).getAllByRole('button');
+    expect(buttons).toHaveLength(STAGES_3D.length);
+    for (const b of buttons) {
+      const visible = b.textContent.trim();
+      expect(visible).not.toBe('');
+      expect(within(strip).getAllByRole('button', { name: (n) => n.includes(visible) })).toContain(
+        b,
+      );
+    }
+  });
+
+  it('with reduced motion, "Phát lại từ đầu" goes back to the start without playing', () => {
+    const queries: string[] = [];
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: (query: string) => {
+        queries.push(query);
+        return {
+          matches: query.includes('prefers-reduced-motion: reduce'),
+          media: query,
+          onchange: null,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+          addListener: () => undefined,
+          removeListener: () => undefined,
+          dispatchEvent: () => false,
+        };
+      },
+    });
+    try {
+      const { factory } = fakeRenderer();
+      render(<Mitosis3DView createRenderer={factory} />);
+      act(() => {
+        useMitosis3D.setState({ t: 12, playing: false });
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Phát lại từ đầu' }));
+      expect(useMitosis3D.getState()).toMatchObject({ t: 0, playing: false });
+      expect(queries).toContain('(prefers-reduced-motion: reduce)');
+      // Play still plays: the learner asked for it.
+      fireEvent.click(screen.getByRole('button', { name: 'Phát' }));
+      expect(useMitosis3D.getState().playing).toBe(true);
+    } finally {
+      delete (window as { matchMedia?: unknown }).matchMedia;
+    }
+  });
+
+  it('zoom stays outside the cell and within the far limit; "Đặt lại góc nhìn" restores the view', async () => {
+    const { factory, made } = fakeRenderer();
+    render(<Mitosis3DView createRenderer={factory} />);
+    const r = made[0]!;
+    await waitFor(() => {
+      expect(r.render).toHaveBeenCalled();
+    });
+    const cam = vi.mocked(r.render).mock.calls.at(-1)![1] as THREE.PerspectiveCamera;
+    // Overview of the animal cell: the camera looks at the cell centre.
+    const framed = cam.position.clone();
+    // jsdom has no layout: the canvas is 1 × 1 px.
+    const limits = placeCamera(cameraFrame('overview', null, 'animal'), 'animal', 1, 1);
+    expect(framed.length()).toBeCloseTo(limits.distance, 6);
+    const wheel = (deltaY: number) => {
+      fireEvent.wheel(r.domElement, { deltaY, clientX: 0, clientY: 0 });
+    };
+    for (let k = 0; k < 100; k++) {
+      wheel(-120);
+      // Never inside the cell, at any moment of the division.
+      expect(cam.position.length()).toBeGreaterThan(cellBound('animal'));
+    }
+    expect(cam.position.length()).toBeCloseTo(limits.min, 6);
+    for (let k = 0; k < 100; k++) {
+      wheel(120);
+      expect(cam.position.length()).toBeLessThanOrEqual(limits.max + 1e-6);
+    }
+    expect(cam.position.length()).toBeCloseTo(limits.max, 6);
+    fireEvent.click(screen.getByRole('button', { name: 'Đặt lại góc nhìn' }));
+    expect(cam.position.distanceTo(framed)).toBeLessThan(1e-9);
+  });
+
+  it('close-up: the camera follows the chromosomes as they spread out', async () => {
+    const { factory, made } = fakeRenderer();
+    render(<Mitosis3DView createRenderer={factory} />);
+    const r = made[0]!;
+    fireEvent.click(screen.getByRole('radio', { name: 'Cận cảnh NST' }));
+    await waitFor(() => {
+      expect(r.render).toHaveBeenCalled();
+    });
+    const cam = vi.mocked(r.render).mock.calls.at(-1)![1] as THREE.PerspectiveCamera;
+    const tl = timelineFor(2, 'animal');
+    const inView = () => {
+      cam.updateMatrixWorld(true);
+      const f = cameraFrame('closeup', tl.stateAt(useMitosis3D.getState().t), 'animal');
+      const v = new THREE.Vector3();
+      return f.points.every((p) => {
+        v.set(f.center[0] + p[0], f.center[1] + p[1], f.center[2] + p[2]).project(cam);
+        return Math.abs(v.x) <= 1 && Math.abs(v.y) <= 1;
+      });
+    };
+    expect(inView()).toBe(true);
+    // Playback moves the time on: the close-up keeps every chromosome in view.
+    for (const stage of ['metaphase', 'anaphase', 'telophase', 'cytokinesis'] as const) {
+      for (const u of [0.2, 0.6, 1]) {
+        const w = tl.stages.find((x) => x.id === stage)!;
+        act(() => {
+          useMitosis3D.setState({ t: w.start + u * (w.end - w.start) - 1e-6 });
+        });
+        expect(inView(), `${stage} u=${String(u)}`).toBe(true);
+      }
+    }
+  });
+
   it('playback feeds raw frame times to the monitor, only while the page is visible', () => {
     const frames: FrameRequestCallback[] = [];
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
@@ -491,6 +622,9 @@ describe('the module shows the 2D picture when 3D cannot be drawn', () => {
   });
 
   it('the GPU context is lost while 3D is shown: the 2D picture takes over', async () => {
+    // The 3D view is at metaphase; the 2D index is still the G1 left from before.
+    useMitosis3D.setState({ t: timelineFor(2, 'animal').keyTime('metaphase') });
+    expect(useDivisionStore.getState().index).toBe(0);
     const { container, shown } = renderModule();
     await waitFor(() => {
       expect(container.querySelector('.m3d canvas')).not.toBeNull();
@@ -520,6 +654,50 @@ describe('the module shows the 2D picture when 3D cannot be drawn', () => {
     expect(r.canvas.isConnected).toBe(false);
     expect(gl.made).toHaveLength(1);
     expect2dPicture(container, /Máy này chưa vẽ được 3D \(WebGL\), nên dùng hình 2D/);
+    // The 2D picture opens at the stage the 3D view was showing.
+    expect(useDivisionStore.getState().index).toBe(STAGES.mitosis.indexOf('metaphase'));
+    expect(screen.getByText('Kì giữa', { selector: 'strong' })).toBeInTheDocument();
+  });
+
+  it('sustained overload at Medium: the 2D picture at the 3D stage, without blaming a Low setting', async () => {
+    const tl = timelineFor(2, 'animal');
+    useMitosis3D.setState({ t: tl.keyTime('anaphase') });
+    const { container, shown } = renderModule();
+    await waitFor(() => {
+      expect(container.querySelector('.m3d canvas')).not.toBeNull();
+    });
+    // From here on, animation frames run only when the test says so, 50 ms apart (slower than
+    // the 3D budget of 1/30 s plus 20 % tolerance).
+    const frames: FrameRequestCallback[] = [];
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      frames.push(cb);
+      return frames.length;
+    });
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
+    let now = 1000;
+    vi.spyOn(performance, 'now').mockImplementation(() => now);
+    act(() => {
+      useMitosis3D.setState({ playing: true });
+    });
+    for (let k = 0; k < 60 && container.querySelector('.m3d'); k++) {
+      now += 50;
+      const due = frames.splice(0);
+      act(() => {
+        for (const cb of due) cb(now);
+      });
+    }
+    // The app lowered the quality by itself (Medium → Low draws 2D).
+    expect(usePerfStore.getState()).toMatchObject({ preference: 'medium', degraded: true });
+    expect(shown).toEqual([true, false]);
+    expect(container.querySelector('.m3d')).toBeNull();
+    const notice = await screen.findByText(/chạy chậm/);
+    expect(notice).not.toHaveTextContent(/Thấp/);
+    expect(screen.queryByText(/chất lượng hiển thị Thấp/)).toBeNull();
+    // The 2D picture shows the stage the 3D playback had reached.
+    const stage = tl.stageAt(useMitosis3D.getState().t).stage;
+    expect(stage).toBe('telophase');
+    expect(useDivisionStore.getState().index).toBe(index2dOf(stage));
+    expect(screen.getByText('Kì cuối', { selector: 'strong' })).toBeInTheDocument();
   });
 
   it('display quality Low: the 2D picture with its notice; the 3D view never starts', () => {

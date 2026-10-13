@@ -15,7 +15,8 @@ const CASES: [string, RegExp | string][] = [
   ['góc α = 30°', 'góc an-pha bằng ba mươi độ'],
   ['50%', 'năm mươi phần trăm'],
   // Wrong before the audit fix:
-  ['NST 2n = 46', 'nờ ét tê hai nờ bằng bốn mươi sáu'],
+  // "NST" is read as the words it stands for (golden set B01, pending a teacher's review).
+  ['NST 2n = 46', 'nhiễm sắc thể hai nờ bằng bốn mươi sáu'],
   ['x² + 2x + 1 = 0', 'ích bình phương cộng hai ích cộng một bằng không'],
   ['Kì sau I', 'Kì sau một'],
   ['Kì đầu II của giảm phân', 'Kì đầu hai của giảm phân'],

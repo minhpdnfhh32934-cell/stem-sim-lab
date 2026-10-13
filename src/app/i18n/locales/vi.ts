@@ -1271,6 +1271,12 @@ const vi = {
       noModel:
         'Chưa tải giọng tiếng Việt trên máy: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       quota: 'Gemini báo hết lượt: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      dailyLimit:
+        'Đã dùng hết số lượt AI trong ngày (giới hạn đặt trong Cài đặt): lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      timeout:
+        'Giọng đã chọn trả lời quá lâu: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
+      systemVoice:
+        'Giọng Windows chưa đọc được câu vừa rồi (bộ đọc của máy báo lỗi). Em thử chọn một giọng khác nhé.',
       offline: 'Không có mạng: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       notAllowed:
         'Cần xác nhận đủ 18 tuổi để dùng giọng Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',

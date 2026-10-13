@@ -50,6 +50,13 @@ vi.mock('@huggingface/transformers', () => ({
   AutoModelForCausalLM: { from_pretrained: () => Promise.resolve(fake.model) },
   Gemma4ForConditionalGeneration: { from_pretrained: () => Promise.resolve(fake.model) },
   InterruptableStoppingCriteria: fake.InterruptableStoppingCriteria,
+  // The answer-only repetition rules (src/ai/webGemmaWorker.test.ts tests them).
+  LogitsProcessor: class {},
+  LogitsProcessorList: class {
+    push() {
+      /* the fake model applies no rules */
+    }
+  },
   RawImage: {},
   TextStreamer: vi.fn(),
 }));

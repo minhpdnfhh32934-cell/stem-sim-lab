@@ -6,7 +6,9 @@
  */
 import { newRequestId, getTransport } from '@/ai/transport';
 import { useAiStore } from '@/ai/aiStore';
-import { decodeAudio, pause, playPcm, stopAudio, type Pcm } from './audio';
+import { isQuotaError } from '@/ai/fallback';
+import { AiError } from '@/ai/types';
+import { decodeAudio, isSilent, pause, playPcm, stopAudio, type Pcm } from './audio';
 import { synthesizeLocal } from './localVoice';
 import { splitForSpeech, toSpeech, type SpeechChunk } from './vietnameseText';
 import { GEMINI_STYLES, VOICE_PRESETS, useVoiceStore, type VoiceEngine } from './voiceStore';
@@ -102,9 +104,43 @@ export function toSpokenText(content: string): string {
 
 let controller: AbortController | null = null;
 
+/**
+ * One lesson's voice (the board keeps one per lesson; a chat answer gets its own). After the
+ * chosen voice fails for a reason that will not pass within the lesson (a timeout, no network,
+ * no quota, the daily cap, a missing or hung on-device model), the rest of it is read by the
+ * system voice at once instead of waiting for that voice again at every sentence.
+ */
+export interface VoiceSession {
+  /** Why the chosen voice is skipped for the rest of the session (null = it is tried). */
+  skipped: string | null;
+}
+
+export function newVoiceSession(): VoiceSession {
+  return { skipped: null };
+}
+
 export interface SpeakOptions {
   /** Pace on top of the learner's voice speed (the board's 0,75–2×). */
   rate?: number;
+  /** Shared by the sentences of one lesson (see `VoiceSession`). */
+  session?: VoiceSession;
+}
+
+/** "code: message" for AI errors (Settings tells a timeout from a quota), else the message. */
+function errorText(e: unknown): string {
+  if (e instanceof AiError) return `${e.code}: ${e.message}`;
+  return e instanceof Error ? e.message : String(e);
+}
+
+/** A failure that will not pass within a lesson: trying that voice again only adds waiting. */
+function lastingFailure(e: unknown): boolean {
+  if (e instanceof AiError) {
+    return isQuotaError(e) || ['timeout', 'network', 'dailyLimit', 'missingKey'].includes(e.code);
+  }
+  const message = e instanceof Error ? e.message : String(e);
+  return /^(?:gemini-tts-(?:no-key|unavailable)|voice-model-(?:missing|timeout)|worker-crashed)$/.test(
+    message,
+  );
 }
 
 /** How far a voice got: phrases fully played (the fallback continues from there, VOI-01). */
@@ -132,20 +168,28 @@ export async function speak(text: string, opts: SpeakOptions = {}): Promise<void
   store.setSpeaking(true);
   const rate = Math.min(2, Math.max(0.5, opts.rate ?? 1));
   const progress: Progress = { played: 0 };
+  const session = opts.session ?? newVoiceSession();
+  // Skipped for this lesson: the system voice reads at once, and Settings keeps the reason.
+  const engine = session.skipped && store.engine !== 'system' ? 'system' : store.engine;
   try {
-    await speakWith(store.engine, chunks, ctrl.signal, rate, progress);
-    if (!ctrl.signal.aborted) useVoiceStore.getState().setLastError(null);
+    await speakWith(engine, chunks, ctrl.signal, rate, progress);
+    if (!ctrl.signal.aborted && engine === store.engine) {
+      useVoiceStore.getState().setLastError(null);
+    }
   } catch (e) {
     if (ctrl.signal.aborted) return;
-    const message = e instanceof Error ? e.message : String(e);
+    const message = errorText(e);
     console.warn('[teacher-voice]', message);
     useVoiceStore.getState().setLastError(message);
+    if (engine !== 'system' && lastingFailure(e)) session.skipped = message;
     // The learner still hears the answer: the operating-system voice takes over from the first
     // phrase not yet heard, so nothing is read twice (audit VOI-01).
-    if (store.engine !== 'system' && speechSupported()) {
+    if (engine !== 'system' && speechSupported()) {
       await speakSystem(chunks.slice(progress.played), ctrl.signal, rate, {
         played: 0,
-      }).catch(() => undefined);
+      }).catch((fallback: unknown) => {
+        console.warn('[teacher-voice] fallback', errorText(fallback));
+      });
     }
   } finally {
     if (controller === ctrl) {
@@ -195,7 +239,7 @@ async function speakSystem(
   const voice = pickVoice(listVoices(), store.voiceURI);
   for (const chunk of chunks) {
     if (signal.aborted) return;
-    await new Promise<void>((resolve) => {
+    await new Promise<void>((resolve, reject) => {
       const utterance = new SpeechSynthesisUtterance(chunk.text);
       utterance.lang = voice?.lang ?? 'vi-VN';
       if (voice) utterance.voice = voice;
@@ -203,9 +247,12 @@ async function speakSystem(
       utterance.pitch = preset.pitch;
       // Some engines never fire "end": a phrase may not hold the teacher for ever.
       const guard = window.setTimeout(done, 8000 + chunk.text.length * 150);
-      function done() {
+      function settle() {
         window.clearTimeout(guard);
         signal.removeEventListener('abort', cancel);
+      }
+      function done() {
+        settle();
         resolve();
       }
       function cancel() {
@@ -213,7 +260,17 @@ async function speakSystem(
         done();
       }
       utterance.onend = done;
-      utterance.onerror = done;
+      // A stop or a new phrase interrupts or cancels: not an error. Anything else (not allowed,
+      // synthesis failed…) is reported and the phrase was not heard.
+      utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
+        const error = (event as Partial<SpeechSynthesisErrorEvent>).error ?? 'unknown';
+        if (error === 'interrupted' || error === 'canceled' || signal.aborted) {
+          done();
+          return;
+        }
+        settle();
+        reject(new Error(`system-voice-${error}`));
+      };
       signal.addEventListener('abort', cancel, { once: true });
       s.speak(utterance);
     });
@@ -286,7 +343,10 @@ async function speakGemini(
       },
       signal,
     );
-    return decodeAudio(audio.audio, audio.mimeType);
+    const pcm = decodeAudio(audio.audio, audio.mimeType);
+    // Empty or silent audio is not speech: the system voice then reads these phrases.
+    if (isSilent(pcm)) throw new Error('gemini-tts-silent');
+    return pcm;
   };
   // While one group plays, the next is already being made.
   const groups = geminiGroupSizes(chunks);

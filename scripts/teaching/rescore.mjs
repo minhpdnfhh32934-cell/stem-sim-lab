@@ -4,12 +4,12 @@
 //
 //   node scripts/teaching/rescore.mjs <eval-….json> [--out <rescored.json>] [--changes]
 //
-// Prints a summary per variant (before/after) next to the summary saved with the run, and with
-// --changes every answer whose check changed.
+// Prints a summary per configuration (variant/decoding/temperature, see groupKey) next to the
+// summary saved with the run, and with --changes every answer whose check changed.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { scoreAnswer, summarizeRuns } from './rubric.mjs';
+import { groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
@@ -35,10 +35,13 @@ const results = saved.results.map((r) => {
   if (!item) throw new Error(`question ${r.id} is not in tests/teaching/teaching-eval.json`);
   return { ...r, savedScore: r.score, score: scoreAnswer(item, r.answer ?? '') };
 });
-const variants = [...new Set(results.map((r) => r.variant))];
+const groups = [...new Set(results.map(groupKey))];
 const summary = Object.fromEntries(
-  variants.map((v) => [v, summarizeRuns(results.filter((r) => r.variant === v))]),
+  groups.map((g) => [g, summarizeRuns(results.filter((r) => groupKey(r) === g))]),
 );
+// Files written before 2026-10-14 keyed their summary by variant only ("before", "after").
+const savedSummary = (g) =>
+  saved.summary?.[g] ?? saved.summary?.[results.find((r) => groupKey(r) === g)?.variant];
 
 const pct = (x) => (x === null || x === undefined ? '–' : `${Math.round(x * 100)} %`);
 const num = (x) => (x === null || x === undefined ? '–' : String(Math.round(x)));
@@ -47,6 +50,11 @@ const rows = [
   ['no known errors', (s) => pct(s.noKnownErrors)],
   ['ends with a check question', (s) => pct(s.checkQuestion)],
   ['asks for missing data', (s) => pct(s.asksClarification)],
+  ['names the missing data', (s) => pct(s.namesMissing)],
+  ['steps in order', (s) => pct(s.steps)],
+  ['trap handled', (s) => pct(s.trapHandled)],
+  ['answers with foreign script', (s) => pct(s.foreignScriptAnswers)],
+  ['answers with corrupted terms', (s) => pct(s.mangledTerms)],
   ['mean characters', (s) => num(s.meanChars)],
   ['mean first piece (ms)', (s) => num(s.meanFirstPieceMs)],
   ['median first piece (ms)', (s) => num(s.medianFirstPieceMs)],
@@ -54,12 +62,12 @@ const rows = [
   ['answers / failures', (s) => (s ? `${s.n} / ${s.failures ?? 0}` : '–')],
 ];
 console.log(`${saved.model ?? '?'} on ${saved.adapter ?? '?'}: ${results.length} answers`);
-for (const v of variants) {
-  const was = saved.summary?.[v];
-  console.log(`\n${v}${was ? ' (saved → re-scored)' : ''}`);
+for (const g of groups) {
+  const was = savedSummary(g);
+  console.log(`\n${g}${was ? ' (saved → re-scored)' : ''}`);
   for (const [label, show] of rows) {
-    const now = show(summary[v]);
-    console.log(`  ${label.padEnd(28)} ${was ? `${show(was)} → ${now}` : now}`);
+    const now = show(summary[g]);
+    console.log(`  ${label.padEnd(30)} ${was ? `${show(was)} → ${now}` : now}`);
   }
 }
 
@@ -67,9 +75,19 @@ if (args.includes('--changes')) {
   console.log('\nchanged checks:');
   for (const r of results) {
     const before = r.savedScore ?? {};
-    for (const key of ['noKnownErrors', 'checkQuestion', 'asksClarification', 'keyFacts']) {
+    for (const key of [
+      'noKnownErrors',
+      'checkQuestion',
+      'asksClarification',
+      'namesMissing',
+      'steps',
+      'trapHandled',
+      'keyFacts',
+    ]) {
       if (before[key] !== undefined && before[key] !== r.score[key]) {
-        console.log(`  ${r.id} ${r.variant} ${key}: ${before[key]} → ${r.score[key]}`);
+        console.log(
+          `  ${r.id} ${groupKey(r)} #${r.repeat ?? 0} ${key}: ${before[key]} → ${r.score[key]}`,
+        );
       }
     }
   }

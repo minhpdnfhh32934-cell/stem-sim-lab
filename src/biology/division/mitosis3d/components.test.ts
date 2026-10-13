@@ -21,18 +21,34 @@ const ALL = Object.keys(COMPONENTS) as ComponentId[];
  */
 const SEEN: Record<Stage3D, ComponentId[]> = {
   // G1: a nucleus with decondensed single chromosomes (chromatin); no spindle yet.
-  g1: ['membrane', 'nucleus', 'nuclearEnvelope', 'chromatin', 'singleChromosome'],
+  g1: ['membrane', 'nucleus', 'nuclearEnvelope', 'nucleolus', 'chromatin', 'singleChromosome'],
   // G2: already double, but still decondensed — chromatin, not yet visible double chromosomes.
-  g2: ['membrane', 'nucleus', 'nuclearEnvelope', 'chromatin'],
-  // End of prophase: the envelope is gone; condensed double chromosomes; the spindle has formed.
+  g2: ['membrane', 'nucleus', 'nuclearEnvelope', 'nucleolus', 'chromatin'],
+  // End of prophase: the nucleolus and the envelope are gone; condensed double chromosomes; the
+  // spindle has formed.
   prophase: ['membrane', 'doubleChromosome', 'sisterChromatid', 'centromere', 'spindle'],
   metaphase: ['membrane', 'doubleChromosome', 'sisterChromatid', 'centromere', 'spindle'],
   // Anaphase: the sisters are single chromosomes now, still condensed, pulled by the spindle.
   anaphase: ['membrane', 'singleChromosome', 'centromere', 'spindle'],
-  // End of telophase: two nuclei around decondensed single chromosomes; the spindle is gone.
-  telophase: ['membrane', 'nucleus', 'nuclearEnvelope', 'chromatin', 'singleChromosome'],
+  // End of telophase: two nuclei (each with its nucleolus again) around decondensed single
+  // chromosomes; the spindle is gone.
+  telophase: [
+    'membrane',
+    'nucleus',
+    'nuclearEnvelope',
+    'nucleolus',
+    'chromatin',
+    'singleChromosome',
+  ],
   // End of cytokinesis: two daughter cells with interphase nuclei.
-  cytokinesis: ['membrane', 'nucleus', 'nuclearEnvelope', 'chromatin', 'singleChromosome'],
+  cytokinesis: [
+    'membrane',
+    'nucleus',
+    'nuclearEnvelope',
+    'nucleolus',
+    'chromatin',
+    'singleChromosome',
+  ],
 };
 /**
  * Parts of one cell type: animal centrosomes at every step (one in G1, two from G2); the plant

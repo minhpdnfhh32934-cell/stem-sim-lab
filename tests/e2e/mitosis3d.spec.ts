@@ -4,19 +4,52 @@ import { openLab } from './nav';
 
 const STAGES = ['g1', 'g2', 'prophase', 'metaphase', 'anaphase', 'telophase', 'cytokinesis'];
 
-async function openMitosis(page: Page) {
+/**
+ * WebGL runs in software (SwiftShader) for every test of this file, never on the GPU: a laptop
+ * GPU driver reset (bugcheck 0x119) is not a test result. Each test checks the renderer before
+ * the 3D view starts.
+ */
+const SWIFTSHADER = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
+test.use({
+  launchOptions: {
+    args: SWIFTSHADER,
+    ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}),
+  },
+});
+
+async function expectSoftwareWebGL(page: Page): Promise<string> {
+  const renderer = await page.evaluate(() => {
+    const gl = document.createElement('canvas').getContext('webgl2');
+    if (!gl) return 'no WebGL 2';
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    const name = String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return name;
+  });
+  expect(renderer, 'WebGL must run in software (SwiftShader), never on the GPU').toContain(
+    'SwiftShader',
+  );
+  return renderer;
+}
+
+/** Opens the mitosis topic with the 3D view (after checking that WebGL is software). */
+async function openMitosis(page: Page, quality: 'medium' | 'high' = 'medium'): Promise<string> {
   // A slow test machine may measure as "low" quality, where mitosis uses the 2D picture.
-  await page.addInitScript(() => {
+  await page.addInitScript((preference) => {
     localStorage.setItem(
       'stemsim.perf',
-      JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
+      JSON.stringify({ state: { preference, benchmark: null }, version: 1 }),
     );
-  });
+  }, quality);
   await openLab(page);
+  const renderer = await expectSoftwareWebGL(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
   await page.getByRole('button', { name: 'Nguyên phân', exact: true }).click();
   await expect(page.locator('.m3d canvas')).toBeVisible({ timeout: 20_000 });
+  return renderer;
 }
+
+const strip = (page: Page) => page.getByRole('group', { name: 'Các kì' });
 
 const stage = (page: Page) => page.evaluate(() => window.__simlabMitosis3d?.stage() ?? null);
 const info = (page: Page) => page.evaluate(() => window.__simlabMitosis3d?.info() ?? null);
@@ -97,7 +130,7 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   expect(await pass()).toEqual(first);
 
   // Close-up and metaphase picture for the record.
-  await page.getByRole('button', { name: 'Kì giữa' }).click();
+  await strip(page).getByRole('button', { name: 'Kì giữa' }).click();
   await page.getByRole('radio', { name: 'Cận cảnh NST' }).click();
   await page.waitForTimeout(300);
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-plant-meta.png` });
@@ -118,4 +151,155 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   await expect(page.locator('canvas.chem-canvas')).toBeVisible();
 
   expect(errors).toEqual([]);
+});
+
+/** Boxes of the overlay parts, the hits of the 40 px rule and the page's horizontal scroll. */
+async function layout(page: Page) {
+  return page.evaluate(() => {
+    const box = (sel: string) => {
+      const el = document.querySelector(sel);
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+    };
+    const small = [...document.querySelectorAll('.m3d button, .m3d [role="radio"]')]
+      .map((el) => ({ el, r: el.getBoundingClientRect() }))
+      .filter(({ r }) => r.width > 0 && (r.width < 39.5 || r.height < 39.5))
+      .map(
+        ({ el, r }) =>
+          `${el.getAttribute('aria-label') ?? el.textContent.trim()}: ${r.width.toFixed(1)}×${r.height.toFixed(1)}`,
+      );
+    const root = document.documentElement;
+    return {
+      view: box('.m3d'),
+      parts: {
+        top: box('.m3d__top'),
+        side: box('.m3d__side'),
+        info: box('.m3d__info'),
+        bottom: box('.m3d__bottom'),
+      },
+      small,
+      scroll: root.scrollWidth - root.clientWidth,
+    };
+  });
+}
+
+test('mitosis 3D at 1366 × 768: with a part picked, the boxes never overlap at any stage', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await openMitosis(page);
+  const parts = page.getByRole('group', { name: 'Bộ phận tế bào' });
+  // The parts with the longest texts, in each cell type.
+  for (const [cell, part] of [
+    ['Động vật', 'Tâm động'],
+    ['Thực vật', 'Vách ngăn (tấm tế bào)'],
+  ] as const) {
+    await page.getByRole('radio', { name: cell }).click();
+    await parts.getByRole('button', { name: part }).click();
+    for (const button of await strip(page).getByRole('button').all()) {
+      await button.click();
+      await expect(page.locator('.m3d__info')).toContainText(part);
+      const l = await layout(page);
+      const where = `${cell}, ${part}, ${await button.innerText()}`;
+      expect(l.view, where).not.toBeNull();
+      const view = l.view!;
+      const named = Object.entries(l.parts);
+      for (const [name, b] of named) {
+        expect(b, `${where}: ${name}`).not.toBeNull();
+        // Inside the 3D view.
+        expect(b!.left, `${where}: ${name} left`).toBeGreaterThanOrEqual(view.left - 0.5);
+        expect(b!.top, `${where}: ${name} top`).toBeGreaterThanOrEqual(view.top - 0.5);
+        expect(b!.right, `${where}: ${name} right`).toBeLessThanOrEqual(view.right + 0.5);
+        expect(b!.bottom, `${where}: ${name} bottom`).toBeLessThanOrEqual(view.bottom + 0.5);
+      }
+      for (let i = 0; i < named.length; i++)
+        for (let j = i + 1; j < named.length; j++) {
+          const [an, a] = named[i]!;
+          const [bn, b] = named[j]!;
+          const w = Math.min(a!.right, b!.right) - Math.max(a!.left, b!.left);
+          const h = Math.min(a!.bottom, b!.bottom) - Math.max(a!.top, b!.top);
+          expect(w > 0.5 && h > 0.5, `${where}: ${an} overlaps ${bn}`).toBe(false);
+        }
+      expect(l.small, `${where}: buttons and radios under 40 px`).toEqual([]);
+      expect(l.scroll, `${where}: horizontal scroll`).toBeLessThanOrEqual(0);
+    }
+  }
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-layout.png` });
+});
+
+declare global {
+  interface Window {
+    __m3dPerf?: { frames: number[]; calls: number; triangles: number; running: boolean };
+  }
+}
+
+/** Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test). */
+const PERF = { calls: 74, triangles: 46_000, p95Ms: 150 };
+
+test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame budgets @perf', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  const renderer = await openMitosis(page, 'high');
+  await page.getByLabel('Bộ NST lưỡng bội 2n').selectOption('4');
+  await expect(page.getByText('1 tế bào · 8 NST đơn')).toBeVisible();
+  expect(await page.evaluate(() => window.__simlabMitosis3d?.quality() ?? null)).toEqual({
+    tier: 'high',
+    degraded: false,
+  });
+  // From the end of prophase through telophase (the most triangles: the rod → thread fade).
+  await page.getByRole('radio', { name: '2×' }).click();
+  await strip(page).getByRole('button', { name: 'Kì đầu' }).click();
+  await page.getByRole('button', { name: 'Phát', exact: true }).click();
+  await page.evaluate(() => {
+    const s = { frames: [] as number[], calls: 0, triangles: 0, running: true };
+    window.__m3dPerf = s;
+    let prev = performance.now();
+    const tick = (now: number) => {
+      if (!s.running) return;
+      s.frames.push(now - prev);
+      prev = now;
+      const i = window.__simlabMitosis3d?.info();
+      if (i) {
+        s.calls = Math.max(s.calls, i.calls);
+        s.triangles = Math.max(s.triangles, i.triangles);
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  await page.waitForTimeout(8000);
+  const run = await page.evaluate(() => {
+    const s = window.__m3dPerf;
+    if (!s) return null;
+    s.running = false;
+    return { frames: s.frames.slice(1), calls: s.calls, triangles: s.triangles };
+  });
+  expect(run).not.toBeNull();
+  const frames = [...run!.frames].sort((a, b) => a - b);
+  const pct = (q: number) =>
+    frames[Math.min(frames.length - 1, Math.floor(q * frames.length))] ?? 0;
+  const result = {
+    renderer,
+    frames: frames.length,
+    p50Ms: Number(pct(0.5).toFixed(1)),
+    p95Ms: Number(pct(0.95).toFixed(1)),
+    maxCalls: run!.calls,
+    maxTriangles: run!.triangles,
+    stageAtEnd: await page.evaluate(() => window.__simlabMitosis3d?.stage() ?? null),
+    quality: await page.evaluate(() => window.__simlabMitosis3d?.quality() ?? null),
+  };
+  await testInfo.attach('mitosis3d-perf.json', {
+    body: JSON.stringify(result, null, 2),
+    contentType: 'application/json',
+  });
+  expect(result.frames).toBeGreaterThan(20);
+  expect(result.stageAtEnd).not.toBe('prophase');
+  expect(result.maxCalls).toBeGreaterThan(0);
+  expect(result.maxCalls).toBeLessThanOrEqual(PERF.calls);
+  expect(result.maxTriangles).toBeLessThanOrEqual(PERF.triangles);
+  expect(result.p95Ms).toBeLessThanOrEqual(PERF.p95Ms);
+  // The app did not have to lower the quality while playing.
+  expect(result.quality).toEqual({ tier: 'high', degraded: false });
 });

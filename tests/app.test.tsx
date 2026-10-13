@@ -56,7 +56,10 @@ describe('App shell (Phase 0)', () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(screen.getByRole('button', { name: /cùng kiểm tra kiến thức/ }));
-    expect(await screen.findByRole('heading', { name: 'Dạy học bằng AI' })).toBeInTheDocument();
+    // The Teacher screen is a lazy module: its first import is slow when the whole suite runs.
+    expect(
+      await screen.findByRole('heading', { name: 'Dạy học bằng AI' }, { timeout: 5000 }),
+    ).toBeInTheDocument();
   });
 
   it('shows the three Science Card confidence levels', () => {
@@ -92,7 +95,7 @@ describe('App shell (Phase 0)', () => {
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     await user.keyboard('{Control>}k{/Control}');
     // The palette's code loads on first use.
-    const box = await screen.findByRole('combobox', { name: 'Tìm nhanh' });
+    const box = await screen.findByRole('combobox', { name: 'Tìm nhanh' }, { timeout: 5000 });
     expect(box).toHaveFocus();
     await user.type(box, 'con lac');
     expect(screen.getByRole('option', { name: /Con lắc đơn/ })).toBeInTheDocument();
