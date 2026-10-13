@@ -205,8 +205,10 @@ Progress log: `docs/PROGRESS.md`.
   `scripts/agents/setup-labels.ps1`. Per-machine setup prompts: `docs/agents/lead/` and `docs/agents/builder/`.
   Temporary files and logs go to `.agent-logs/` (git-ignored). Keep the scripts PowerShell 5.1
   compatible and saved as UTF-8 with BOM.
-- Each machine uses its own GitHub account (both collaborators); `main` needs 1 approval from the
-  account that did not open the PR.
+- Each machine uses its own GitHub account (both collaborators). `main` (user decision 2026-10-13):
+  2 approvals required, admins not bound. The owner account (admin, machine A) may merge alone with
+  "bypass branch protections"; machine B's account (write) cannot. With only two accounts a PR
+  never reaches 2 approvals, so the owner merges every PR. Claude never merges (`gh pr merge` denied).
 - Work done in Claude Cowork arrives as `docs/HANDOFF.md` (prompt: `docs/COWORK_HANDOFF_PROMPT.md`).
   Read it before planning or implementing; it records facts and decisions, not approvals.
 - **Session log (both machines, every session):** at the end of every work session — including
