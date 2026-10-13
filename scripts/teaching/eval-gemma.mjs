@@ -8,7 +8,8 @@
 //        [--label <name>] [--only P1,C3] [--base <url>]
 //
 // --variants   legacy  = the on-device prompt of main before the 2026-10-13 audit (below);
-//              current = the live prompt, contextPrompt(question, 'vi', false, false, 'compact').
+//              current = the live prompt, contextPrompt(question, 'vi', false, false, 'compact', history),
+//              with the note placed as askTeacher places it.
 // --decoding   passed to webGemmaChat as `decoding` (legacy = the worker's pre-audit decoding,
 //              app = the decoding the app uses now). The app must support the option.
 // --temperature 0 = greedy (default): the same prompt gives the same answer, so a difference
@@ -189,6 +190,9 @@ for (const item of items) {
               return info ? `${info.vendor} ${info.architecture}`.trim() : 'none';
             };
             let system;
+            // What the learner's question turns into: the app (askTeacher) moves the on-device
+            // note in front of the question when earlier turns come in between.
+            let asked = item.question;
             if (variant === 'legacy') {
               const notes = k
                 .searchKnowledge(item.question, 'vi', 4)
@@ -197,9 +201,23 @@ for (const item of items) {
                 ? `${LEGACY_SYSTEM}\n\nTrích đoạn thư viện kiến thức cục bộ (tham khảo; có thể chưa bao quát):\n${notes.map((n) => `[${n.name}] ${n.text}`).join('\n\n')}`
                 : LEGACY_SYSTEM;
             } else {
-              system = (await c.contextPrompt(item.question, 'vi', false, false, 'compact')).system;
+              const history = item.history ?? [];
+              const prompt = await c.contextPrompt(
+                item.question,
+                'vi',
+                false,
+                false,
+                'compact',
+                history,
+              );
+              const noteInTurn = Boolean(prompt.note) && history.length > 0;
+              system = noteInTurn ? prompt.system.slice(0, -prompt.note.length) : prompt.system;
+              if (noteInTurn)
+                asked = `${prompt.note.trim()}
+
+${item.question}`;
             }
-            const messages = [...(item.history ?? []), { role: 'user', content: item.question }];
+            const messages = [...(item.history ?? []), { role: 'user', content: asked }];
             const t0 = performance.now();
             let first = null;
             try {
@@ -210,6 +228,8 @@ for (const item of items) {
                 maxTokens: 1024,
                 temperature,
                 decoding,
+                // The app strips the question a small model repeats first (askTeacher's echo).
+                echo: item.question,
                 onPartial: () => {
                   if (first === null) first = performance.now() - t0;
                 },
@@ -223,6 +243,7 @@ for (const item of items) {
                 ms: Math.round(performance.now() - t0),
                 promptChars: system.length,
                 system,
+                asked,
                 gpu: gpu(),
               };
             } catch (e) {
@@ -234,6 +255,7 @@ for (const item of items) {
                 ms: Math.round(performance.now() - t0),
                 promptChars: system.length,
                 system,
+                asked,
                 gpu: gpu(),
               };
             }
