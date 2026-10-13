@@ -280,11 +280,21 @@ See `docs/AUDIT_2026-10-13.md` for the evidence (benchmarks, evaluation, the GPU
 - **App-computed facts (`src/teacher/chat/tools.ts`).** Chemical equations in a question are solved
   by `src/chemistry/balance.ts`; the result goes into the prompt ("KẾT QUẢ DO SIMLAB TÍNH") and is
   shown by the app under the answer (`ChatMessageRecord.facts`), because a small model garbles it.
+  A question is read only when it asks to balance ("cân bằng", "balance") or names a reaction
+  ("phản ứng", "PTHH", "reaction") next to an arrow; every species must parse as a formula; units
+  ("10N", "220V") are never formulas; "cannot balance" is said only to an explicit balancing
+  request written with an arrow (with "=", the line may be physics: only a real balance counts).
 - **Board speech.** `Sentence.spoken` reads written words where their tag stands; a pause re-reads
   the cut sentence; `lessonMetrics()` keeps per-sentence timing in memory.
-- **Simulation link (`topicLink.ts`).** The newest question naming an available topic shows "Xem mô
-  phỏng: …" (catalog text match, never chosen by the AI).
+- **Simulation link (`topicLink.ts`).** "Xem mô phỏng: …" follows the learner's latest question only
+  (a short follow-up or a quick button keeps the topic of the question before it). Catalog text
+  match, never chosen by the AI; words typed with accents are compared with accents (tone position
+  "hoá"/"hóa" does not matter), words typed without accents are compared folded.
 - **Evaluation.** `tests/teaching/teaching-eval.json` (30 questions) + `scripts/teaching/rubric.mjs`
-  (objective checks only). Gemma 1B, old → new prompt: check question 8 % → 54 %, asks for missing
-  data 0 % → 33 %, first word 1.59 → 0.86 s; key facts 29 % → 23 % (the model, not the prompt, is
-  the limit).
+  (objective checks only); `scripts/teaching/rescore.mjs` re-scores a saved run without a browser or
+  GPU. Gemma 1B, old → new prompt, re-scored on 2026-10-14 with the corrected rubric on the same 60
+  saved answers: last sentence is a check question 4 % → 42 %, asks for missing data 0 % → 0 % (it
+  invents numbers instead), first word 1.59 → 0.86 s (median 1.39 → 0.83 s), key facts 29 % → 23 %;
+  with the new prompt it still answers "Đúng!" to wrong answers (P6, P10, B10). The model, not the
+  prompt, is the limit. The first scoring (8 % → 54 %, 0 % → 33 %) counted any "?" near the end and
+  answers that invented the missing numbers.

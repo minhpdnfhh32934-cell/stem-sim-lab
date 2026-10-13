@@ -8,12 +8,16 @@
 //
 // SAFETY (audit GPU-01): runs only on a discrete NVIDIA GPU (--force_high_performance_gpu) and
 // stops otherwise: long Gemma work on an integrated card crashed a test machine (bugcheck 0x119).
+// Checked before the first question: the page's default adapter (the Gemma worker asks for the
+// default one) and the high-performance one, then the adapter the worker reports after loading the
+// model (one-token warm-up); re-checked after every answer.
 // The model must already be downloaded in <profile> (the script never starts a big download).
+// Re-score a saved run with the current rubric (no browser, no GPU): scripts/teaching/rescore.mjs.
 import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { scoreAnswer, summarize } from './rubric.mjs';
+import { gpuRefusal, scoreAnswer, summarizeRuns } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const require = createRequire(resolve(root, 'package.json'));
@@ -44,15 +48,26 @@ const page = context.pages()[0] ?? (await context.newPage());
 await page.goto(base);
 await page.waitForLoadState('networkidle');
 
-const adapter = await page.evaluate(async () => {
-  const a = await navigator.gpu?.requestAdapter({ powerPreference: 'high-performance' });
-  return a ? `${a.info.vendor} ${a.info.architecture}` : 'none';
-});
-if (!adapter.startsWith('nvidia')) {
-  console.error(`Refusing to run on "${adapter}": discrete NVIDIA GPU only (audit GPU-01).`);
+/** Stops before any (more) Gemma work unless every adapter seen is a discrete NVIDIA card. */
+async function refuseUnlessNvidia(seen) {
+  const why = gpuRefusal(seen);
+  if (!why) return;
+  console.error(`Refusing to run: ${why} (discrete NVIDIA GPU only, audit GPU-01).`);
   await context.close();
   process.exit(2);
 }
+
+// The Gemma worker asks WebGPU for the default adapter (no options): check that one, and the
+// high-performance one, before anything touches the GPU.
+const pageAdapters = await page.evaluate(async () => {
+  const name = (a) => (a ? `${a.info.vendor} ${a.info.architecture}`.trim() : 'none');
+  const gpu = navigator.gpu;
+  return {
+    default: name(await gpu?.requestAdapter()),
+    highPerformance: name(await gpu?.requestAdapter({ powerPreference: 'high-performance' })),
+  };
+});
+await refuseUnlessNvidia(pageAdapters);
 const ready = await page.evaluate(
   async (id) => (await import('/src/ai/webGemma.ts')).webGemmaStatus(id),
   model,
@@ -62,6 +77,37 @@ if (ready !== 'ready') {
   await context.close();
   process.exit(3);
 }
+
+// Load the model with a one-token warm-up (not an evaluation question) and read the adapter the
+// worker really used: its "loaded" message sets useGpuStore.gemmaInfo. This also keeps the model
+// load out of the first question's timing.
+const warmUp = await page.evaluate(async (id) => {
+  const g = await import('/src/ai/webGemma.ts');
+  const { useGpuStore } = await import('/src/ai/gpu.ts');
+  useGpuStore.getState().setGemmaInfo(null);
+  let error = null;
+  try {
+    await g.webGemmaChat({
+      model: id,
+      system: 'Trả lời ngắn.',
+      messages: [{ role: 'user', content: 'Xin chào' }],
+      maxTokens: 1,
+    });
+  } catch (e) {
+    error = String(e);
+  }
+  const info = useGpuStore.getState().gemmaInfo;
+  return { gemma: info ? `${info.vendor} ${info.architecture}`.trim() : 'none', error };
+}, model);
+const adapters = { ...pageAdapters, gemma: warmUp.gemma };
+await refuseUnlessNvidia(adapters);
+// One token may decode to nothing ("empty reply"); any other error means Gemma is not usable.
+if (warmUp.error && !warmUp.error.includes('empty reply')) {
+  console.error(`Gemma warm-up failed: ${warmUp.error}`);
+  await context.close();
+  process.exit(4);
+}
+const adapter = warmUp.gemma;
 
 // The on-device prompt of main before the audit (src/teacher/chat/chatService.ts @ c25ad9d).
 const BEFORE_SYSTEM =
@@ -75,6 +121,12 @@ for (const item of items) {
         const k = await import('/src/teacher/chat/knowledge.ts');
         const c = await import('/src/teacher/chat/chatService.ts');
         const g = await import('/src/ai/webGemma.ts');
+        const { useGpuStore } = await import('/src/ai/gpu.ts');
+        // The adapter the worker reported for its current model (a restarted worker reloads it).
+        const gpu = () => {
+          const info = useGpuStore.getState().gemmaInfo;
+          return info ? `${info.vendor} ${info.architecture}`.trim() : 'none';
+        };
         let system;
         if (variant === 'before') {
           const notes = k
@@ -103,17 +155,21 @@ for (const item of items) {
             ok: true,
             answer: res.content,
             truncated: res.truncated,
-            firstMs: first && Math.round(first),
+            // null when no piece was seen (never 0 ms).
+            firstMs: first === null ? null : Math.round(first),
             ms: Math.round(performance.now() - t0),
             promptChars: system.length,
+            gpu: gpu(),
           };
         } catch (e) {
           return {
             ok: false,
             answer: '',
             error: String(e),
+            firstMs: null,
             ms: Math.round(performance.now() - t0),
             promptChars: system.length,
+            gpu: gpu(),
           };
         }
       },
@@ -126,27 +182,19 @@ for (const item of items) {
     );
     writeFileSync(
       resolve(out, `eval-${model}.json`),
-      JSON.stringify({ model, adapter, results }, null, 2),
+      JSON.stringify({ model, adapter, adapters, results }, null, 2),
     );
+    await refuseUnlessNvidia({ gemma: r.gpu });
   }
 }
+// Means of time and length over the answers that came back; failures are counted separately.
 const summary = {};
 for (const variant of ['before', 'after']) {
-  const rs = results.filter((r) => r.variant === variant);
-  summary[variant] = {
-    ...summarize(rs.map((r) => r.score)),
-    failures: rs.filter((r) => !r.ok).length,
-    truncated: rs.filter((r) => r.truncated).length,
-    meanFirstPieceMs: Math.round(
-      rs.reduce((a, r) => a + (r.firstMs ?? 0), 0) / Math.max(1, rs.length),
-    ),
-    meanMs: Math.round(rs.reduce((a, r) => a + r.ms, 0) / Math.max(1, rs.length)),
-    meanPromptChars: Math.round(rs.reduce((a, r) => a + r.promptChars, 0) / Math.max(1, rs.length)),
-  };
+  summary[variant] = summarizeRuns(results.filter((r) => r.variant === variant));
 }
 writeFileSync(
   resolve(out, `eval-${model}.json`),
-  JSON.stringify({ model, adapter, summary, results }, null, 2),
+  JSON.stringify({ model, adapter, adapters, summary, results }, null, 2),
 );
 console.log(JSON.stringify(summary, null, 2));
 await context.close();
