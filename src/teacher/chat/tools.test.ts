@@ -36,6 +36,13 @@ describe('facts computed by the app for the AI Teacher', () => {
     expect(toolBlock('Cân bằng H2 + O2 → H2O', 'vi')).toMatch(/^\n\nKẾT QUẢ DO SIMLAB TÍNH/);
   });
 
+  it('introduces the result as a result, never as "already balanced"', () => {
+    // Gemma 1B read "Phương trình đã cân bằng (…)" as "the equation is already balanced".
+    const [fact] = toolFacts('Cân bằng phương trình: H2 + O2 → H2O', 'vi');
+    expect(fact?.text).toMatch(/^Kết quả cân bằng \(SimLab tính/);
+    expect(fact?.text).not.toContain('đã cân bằng');
+  });
+
   // Audit G3: "hệ số", "coefficient", "reaction" or any arrow used to turn units into formulas
   // ("10N" → N) and the result was shown as exact and sent to the AI.
   it.each([
