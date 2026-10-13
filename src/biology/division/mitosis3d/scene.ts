@@ -6,7 +6,7 @@
  * geometry and material it created. Rendering (renderer, camera, controls) lives in the view.
  */
 import * as THREE from 'three';
-import type { ComponentId } from './components';
+import type { CameraMode, Selection } from './components';
 import {
   ANIMAL,
   PLANT,
@@ -17,6 +17,9 @@ import {
   type Timeline,
   type Vec3,
 } from './timeline';
+
+/** Half length (x) of the two animal daughter cells together at the end of cytokinesis. */
+const ANIMAL_EXTENT = 1.06 * ANIMAL.daughterRadius + ANIMAL.daughterRadius;
 
 /** CSS colour strings (read from theme tokens by the view). */
 export interface ScenePalette {
@@ -38,14 +41,27 @@ export interface SceneOptions {
   segments: number;
 }
 
-export interface Selection {
-  component: ComponentId;
-  chromosome?: number;
-  sister?: 0 | 1;
-}
 export type PickResult = Selection;
+export type { CameraMode, Selection };
 
-export type CameraMode = 'overview' | 'closeup';
+/** What the camera must show: points (relative to `center`) that have to be in view. */
+export interface CameraFrame {
+  center: Vec3;
+  points: Vec3[];
+}
+
+/** 26 points on a sphere (axes, edge and corner directions of a cube). */
+function spherePoints(c: Vec3, r: number): Vec3[] {
+  const out: Vec3[] = [];
+  for (let i = -1; i <= 1; i++)
+    for (let j = -1; j <= 1; j++)
+      for (let k = -1; k <= 1; k++) {
+        if (i === 0 && j === 0 && k === 0) continue;
+        const l = Math.hypot(i, j, k);
+        out.push([c[0] + (r * i) / l, c[1] + (r * j) / l, c[2] + (r * k) / l]);
+      }
+  return out;
+}
 
 export interface MitosisScene {
   scene: THREE.Scene;
@@ -53,8 +69,8 @@ export interface MitosisScene {
   setSelection(sel: Selection | null): void;
   /** The cell part under a ray (inner parts win over the membranes they sit in). */
   pick(raycaster: THREE.Raycaster): PickResult | null;
-  /** Sphere to frame with the camera: the whole cell, or the chromosomes right now. */
-  frame(mode: CameraMode): { center: Vec3; radius: number };
+  /** Box to frame with the camera: the whole cell (after division too), or the chromosomes now. */
+  frame(mode: CameraMode): CameraFrame;
   stats(): { objects: number; meshes: number; geometries: number; materials: number };
   dispose(): void;
 }
@@ -128,7 +144,10 @@ export function buildMitosisScene(
     },
     bead: look(palette.centromere, { transparent: true }),
     envelope: look(palette.envelope, { ...glass, opacity: 0.3, side: THREE.DoubleSide }),
-    membrane: look(palette.membrane, { ...glass, opacity: 0.16 }),
+    membrane: look(palette.membrane, {
+      ...glass,
+      opacity: tl.cellType === 'animal' ? 0.16 : 0.08,
+    }),
     wall: look(palette.wall, { ...glass, opacity: 0.2 }),
     centriole: look(palette.centrosome),
     pcm: look(palette.centrosome, { ...glass, opacity: 0.25 }),
@@ -444,7 +463,7 @@ export function buildMitosisScene(
     const late = st.stage === 'telophase' || st.stage === 'cytokinesis';
     const nucleusR = animal ? ANIMAL.nucleus : PLANT.nucleus;
     const telR = animal ? ANIMAL.telNucleusR : PLANT.telNucleusR;
-    const threadScale = 0.55 * (late ? telR / nucleusR : 1);
+    const threadScale = 0.75 * (late ? telR / nucleusR : 1);
     chromatids.forEach((o, i) => {
       const p = st.chromatids[i];
       const show = !!p?.present;
@@ -562,21 +581,45 @@ export function buildMitosisScene(
     return null;
   };
 
-  const frame = (mode: CameraMode): { center: Vec3; radius: number } => {
+  const frame = (mode: CameraMode): CameraFrame => {
     if (mode === 'overview' || !last) {
-      return animal ? { center: [0, 0, 0], radius: 8.8 } : { center: [0, 0, 0], radius: 7.4 };
+      if (!animal) {
+        const w = PLANT.wall;
+        const corners: Vec3[] = [];
+        for (const sx of [-1, 1])
+          for (const sy of [-1, 1])
+            for (const sz of [-1, 1]) corners.push([sx * (hx + w), sy * (hy + w), sz * (hz + w)]);
+        return { center: [0, 0, 0], points: corners };
+      }
+      // The mother cell and, at the end, the two daughter cells.
+      const d = ANIMAL_EXTENT - ANIMAL.daughterRadius;
+      return {
+        center: [0, 0, 0],
+        points: [
+          ...spherePoints([0, 0, 0], ANIMAL.radius * (1 + ANIMAL.elongation / 2)),
+          ...spherePoints([-d, 0, 0], ANIMAL.daughterRadius),
+          ...spherePoints([d, 0, 0], ANIMAL.daughterRadius),
+        ],
+      };
     }
     const pts = last.chromatids.filter((c) => c.present).map((c) => c.centromere);
-    if (pts.length === 0) return { center: [0, 0, 0], radius: 4 };
-    const c: Vec3 = [0, 0, 0];
+    if (pts.length === 0) return { center: [0, 0, 0], points: spherePoints([0, 0, 0], 4) };
+    const lo: Vec3 = [Infinity, Infinity, Infinity];
+    const hi: Vec3 = [-Infinity, -Infinity, -Infinity];
     for (const p of pts) {
-      c[0] += p[0] / pts.length;
-      c[1] += p[1] / pts.length;
-      c[2] += p[2] / pts.length;
+      for (let k = 0; k < 3; k++) {
+        lo[k] = Math.min(lo[k] ?? 0, p[k] ?? 0);
+        hi[k] = Math.max(hi[k] ?? 0, p[k] ?? 0);
+      }
     }
-    let r = 0;
-    for (const p of pts) r = Math.max(r, Math.hypot(p[0] - c[0], p[1] - c[1], p[2] - c[2]));
-    return { center: c, radius: r + 1.2 };
+    const center: Vec3 = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2];
+    // Every centromere plus a margin for the arms around it.
+    return {
+      center,
+      points: pts.flatMap((p) =>
+        spherePoints([p[0] - center[0], p[1] - center[1], p[2] - center[2]], 1.2),
+      ),
+    };
   };
 
   const stats = () => {

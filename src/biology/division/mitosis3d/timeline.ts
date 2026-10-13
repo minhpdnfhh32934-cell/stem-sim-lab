@@ -104,13 +104,15 @@ export const PLANT = {
 } as const;
 
 /** Condensed rod radius and the distance of each sister from the shared centromere. */
-export const ROD_RADIUS = 0.17;
-export const SISTER_OFFSET = 0.19;
+export const ROD_RADIUS = 0.15;
+export const SISTER_OFFSET = 0.17;
+/** Sister arms diverge from the centromere (the X shape of a double chromosome). */
+const SPLAY = 0.45;
 const ANIMAL_DAUGHTER_X = 1.06 * ANIMAL.daughterRadius;
 const ANIMAL_CENTROSOME_END = ANIMAL_DAUGHTER_X + 2.1;
 
 /** Condensed length and centromere position (fraction along the chromatid) per pair. */
-const PAIR_LENGTH = [1.7, 1.35, 1.05, 0.85];
+const PAIR_LENGTH = [2.2, 1.8, 1.45, 1.15];
 const PAIR_CENTROMERE = [0.5, 0.4, 0.45, 0.33];
 
 /** Static, per-chromatid data (built once per timeline). */
@@ -320,7 +322,7 @@ function randomInBall(rand: () => number): Vec3 {
 function plateLayout(n: number): { pos: Vec3; tangent: Vec3 }[] {
   const out: { pos: Vec3; tangent: Vec3 }[] = [];
   if (n <= 10) {
-    const r = Math.max(1.2, (n * 1.9) / (2 * Math.PI));
+    const r = Math.max(1.6, (n * 2.6) / (2 * Math.PI));
     for (let i = 0; i < n; i++) {
       const a = 0.35 + (2 * Math.PI * i) / n;
       out.push({
@@ -384,8 +386,9 @@ export function buildTimeline(pairs: number, cellType: CellType): Timeline {
         sisterAxis: axis,
         plate: slot.pos,
         tangent,
-        threadVariant: (2 * i + sister) % 4,
-        threadRotation: sister === 0 ? threadRotation : add(threadRotation, [0.7, 0.4, 0.2]),
+        // Sisters share the thread shape: the two daughter nuclei look alike (they are).
+        threadVariant: i % 4,
+        threadRotation,
       });
     }
   });
@@ -730,7 +733,7 @@ interface Pose {
 
 function prophasePose(info: ChromatidInfo, side: -1 | 1, sep: number): Pose {
   const off = mul(info.sisterAxis, side * SISTER_OFFSET * sep);
-  const splay = mul(info.sisterAxis, 0.18 * side);
+  const splay = mul(info.sisterAxis, SPLAY * side);
   return {
     c: add(info.territory, off),
     a: norm(add(info.orient, splay)),
@@ -739,7 +742,7 @@ function prophasePose(info: ChromatidInfo, side: -1 | 1, sep: number): Pose {
 }
 
 function platePose(info: ChromatidInfo, side: -1 | 1): Pose {
-  const splay = mul(X, 0.18 * side);
+  const splay = mul(X, SPLAY * side);
   return {
     c: add(info.plate, mul(X, side * SISTER_OFFSET)),
     a: norm(add(info.tangent, splay)),

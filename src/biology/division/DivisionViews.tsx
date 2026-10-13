@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Pause, Play, Shuffle } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useCanvas, type DrawContext } from '@/ui/canvas/useCanvas';
 import { IconButton } from '@/ui/IconButton';
@@ -165,7 +165,20 @@ function drawStage(d: DrawContext, s: StageState) {
   });
 }
 
-export function DivisionStage({ kind }: { kind: Division }) {
+/** The last division kind shown: the stage index resets only when the kind changes. */
+let lastKind: Division | null = null;
+
+export function DivisionStage({
+  kind,
+  toolbar,
+  notice,
+}: {
+  kind: Division;
+  /** Extra controls at the end of the toolbar (the mitosis 3D / 2D switch). */
+  toolbar?: ReactNode;
+  /** Why this 2D picture is shown instead of the 3D one, when it is not the learner's choice. */
+  notice?: string | undefined;
+}) {
   const Lz = useLocalized();
   const card = useMemo(() => cardFor(kind), [kind]);
   usePublishCard(card);
@@ -175,7 +188,10 @@ export function DivisionStage({ kind }: { kind: Division }) {
   const s = stages[i];
 
   useEffect(() => {
-    useDivisionStore.setState({ index: 0, playing: false });
+    // Keeps the stage when coming back from the 3D view or restoring a file.
+    if (lastKind !== null && lastKind !== kind) useDivisionStore.setState({ index: 0 });
+    lastKind = kind;
+    useDivisionStore.setState({ playing: false });
   }, [kind]);
   useEffect(() => {
     if (!playing) return;
@@ -249,6 +265,8 @@ export function DivisionStage({ kind }: { kind: Division }) {
           <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'maternal'))}
           <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'paternal'))}
         </span>
+        {toolbar}
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
       <p className="bio-caption">{Lz(STAGE_NOTE[s.stage])}</p>
     </div>
