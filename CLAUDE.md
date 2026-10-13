@@ -376,7 +376,9 @@ Progress log: `docs/PROGRESS.md`.
   MSIX (`scripts/store/make-msix.mjs`, identity in `store/identity.json`; Microsoft signs it). A
   packaged copy knows it (`src-tauri/src/channel.rs`, `channel: "store"` in `web_update_status` /
   `app_info`) and **never** checks, downloads or serves a web update — the Store updates it. Store
-  submissions need a higher native version each time (`x.y.z.0`). Privacy policy for the listing:
+  submissions need a higher native version each time (`x.y.z.0`) and are made **by hand** in
+  Partner Center (user decision 2026-10-13: auto-submit needs an organisation Entra tenant with a
+  business tax number; the developer account is individual) — do not add msstore auto-submit back. Privacy policy for the listing:
   `site/privacy.html` on GitHub Pages — keep it in line with what the app sends.
 - Full procedure: `docs/RELEASE.md`. Windows installers are built by GitHub Actions on
   `windows-latest` (no cross-compiling from Linux). Actions → Release → Run workflow (publish=true)
