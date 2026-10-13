@@ -20,7 +20,8 @@ export type ShortcutAction =
   | 'toolRuler'
   | 'toolProtractor'
   | 'toolStopwatch'
-  | 'toolFitView';
+  | 'toolFitView'
+  | 'commandPalette';
 
 export interface KeyChord {
   /** `KeyboardEvent.key`, compared case-insensitively. */
@@ -69,6 +70,7 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   { action: 'toolProtractor', chords: [{ key: 'a' }] },
   { action: 'toolStopwatch', chords: [{ key: 't' }] },
   { action: 'toolFitView', chords: [{ key: 'f' }] },
+  { action: 'commandPalette', chords: [{ key: 'k', ctrl: true }], worksInInputs: true },
 ];
 
 export interface KeyEventLike {

@@ -13,6 +13,7 @@ import { UpdateDialog } from '@/app/update/UpdateDialog';
 import { scheduleAutoCheck } from '@/app/update/updater';
 import { installSlidingIndicators } from '@/ui/slidingIndicator';
 import { Skeleton } from '@/ui/Skeleton';
+import { CommandPalette } from '@/app/command/CommandPalette';
 import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
 import { Toaster } from '@/ui/Toaster';
 import '@/app/project/project.css';
@@ -117,6 +118,7 @@ export function AppShell() {
       <Tour />
       <UpdateDialog />
       <Toaster />
+      <CommandPalette />
       {!presentation && <GpuRestartReminder />}
 
       <div className="shell__body">

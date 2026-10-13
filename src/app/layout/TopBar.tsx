@@ -6,6 +6,7 @@ import {
   PencilRuler,
   Moon,
   Redo2,
+  Search,
   Settings,
   Sparkles,
   Sun,
@@ -32,6 +33,7 @@ import { cx } from '@/ui/cx';
 import { IconButton } from '@/ui/IconButton';
 import { Logo } from '@/ui/Logo';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { useCommandPalette } from '@/app/command/commands';
 import { useLayoutStore } from './layoutStore';
 
 export const TopBar = memo(function TopBar() {
@@ -215,6 +217,13 @@ export const TopBar = memo(function TopBar() {
         <AiStatusPill
           onClick={() => {
             setSettingsOpen(true);
+          }}
+        />
+        <IconButton
+          icon={Search}
+          label={t('command.openButton')}
+          onClick={() => {
+            useCommandPalette.getState().setOpen(true);
           }}
         />
         <span className="topbar__divider" aria-hidden="true" />

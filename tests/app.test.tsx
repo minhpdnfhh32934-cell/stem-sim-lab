@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from '@/app/App';
@@ -81,6 +81,26 @@ describe('App shell (Phase 0)', () => {
     await user.type(screen.getByRole('searchbox'), 'con lac');
     expect(screen.getByText('Con lắc đơn')).toBeInTheDocument();
     expect(screen.queryByText('Rơi tự do')).not.toBeInTheDocument();
+  });
+
+  it('Ctrl+K quick search finds commands without accents and runs one with Enter', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    // Closed: the topic list is not in the page.
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    await user.keyboard('{Control>}k{/Control}');
+    const box = screen.getByRole('combobox', { name: 'Tìm nhanh' });
+    expect(box).toHaveFocus();
+    await user.type(box, 'con lac');
+    expect(screen.getByRole('option', { name: /Con lắc đơn/ })).toBeInTheDocument();
+    await user.clear(box);
+    await user.type(box, 'giao dien sang');
+    expect(screen.getAllByRole('option')[0]).toHaveAttribute('aria-selected', 'true');
+    await user.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(document.documentElement.dataset.theme).toBe('dark');
+    });
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 
   it('theme toggle switches <html data-theme>', async () => {

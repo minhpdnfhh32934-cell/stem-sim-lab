@@ -1,18 +1,4 @@
-import {
-  BookOpen,
-  Cpu,
-  GraduationCap,
-  Gpu,
-  History,
-  Keyboard,
-  Orbit,
-  Palette,
-  PlugZap,
-  ShieldCheck,
-  Volume2,
-  X,
-  type LucideIcon,
-} from 'lucide-react';
+import { X } from 'lucide-react';
 import { useEffect, useRef, useState, type ComponentType, type KeyboardEvent } from 'react';
 import { AiSettings } from '@/app/ai/AiSettings';
 import { useT, type MessageKey } from '@/app/i18n';
@@ -26,95 +12,22 @@ import { TeacherSettings } from '@/teacher/chat/settings/TeacherSettings';
 import { VoiceSettings } from '@/teacher/voice/VoiceSettings';
 import { IconButton } from '@/ui/IconButton';
 import { AppearanceSettings, ShortcutSettings, SimulationSettings } from './GeneralSettings';
+import { SECTIONS, type SectionMeta } from './sectionMeta';
 import './settings.css';
 
-interface SectionMeta {
-  icon: LucideIcon;
-  title: MessageKey;
-  hint: MessageKey;
-  group: 'general' | 'ai' | 'privacy';
-  Body: ComponentType;
-}
-
-/** One page per section; the navigation lists them in this order, grouped. */
-const SECTIONS: Record<SettingsSection, SectionMeta> = {
-  appearance: {
-    icon: Palette,
-    title: 'settings.nav.appearance',
-    hint: 'settings.nav.appearanceHint',
-    group: 'general',
-    Body: AppearanceSettings,
-  },
-  simulation: {
-    icon: Orbit,
-    title: 'settings.nav.simulation',
-    hint: 'settings.nav.simulationHint',
-    group: 'general',
-    Body: SimulationSettings,
-  },
-  ai: {
-    icon: PlugZap,
-    title: 'settings.ai',
-    hint: 'settings.nav.aiHint',
-    group: 'ai',
-    Body: AiSettings,
-  },
-  teacher: {
-    icon: GraduationCap,
-    title: 'settings.nav.teacher',
-    hint: 'settings.nav.teacherHint',
-    group: 'ai',
-    Body: TeacherSettings,
-  },
-  local: {
-    icon: Cpu,
-    title: 'settings.nav.local',
-    hint: 'settings.nav.localHint',
-    group: 'ai',
-    Body: GemmaSettings,
-  },
-  gpu: {
-    icon: Gpu,
-    title: 'settings.nav.gpu',
-    hint: 'settings.nav.gpuHint',
-    group: 'ai',
-    Body: GemmaGpuSettings,
-  },
-  knowledge: {
-    icon: BookOpen,
-    title: 'settings.nav.knowledge',
-    hint: 'settings.nav.knowledgeHint',
-    group: 'ai',
-    Body: KnowledgeSettings,
-  },
-  memory: {
-    icon: History,
-    title: 'settings.nav.memory',
-    hint: 'settings.nav.memoryHint',
-    group: 'ai',
-    Body: MemorySettings,
-  },
-  voice: {
-    icon: Volume2,
-    title: 'settings.nav.voice',
-    hint: 'settings.nav.voiceHint',
-    group: 'ai',
-    Body: VoiceSettings,
-  },
-  safety: {
-    icon: ShieldCheck,
-    title: 'safety.settings.title',
-    hint: 'settings.nav.safetyHint',
-    group: 'privacy',
-    Body: SafetySettings,
-  },
-  shortcuts: {
-    icon: Keyboard,
-    title: 'settings.shortcuts',
-    hint: 'settings.nav.shortcutsHint',
-    group: 'general',
-    Body: ShortcutSettings,
-  },
+/** The contents of each page (SECTIONS in sectionMeta.ts holds its title and icon). */
+const BODIES: Record<SettingsSection, ComponentType> = {
+  appearance: AppearanceSettings,
+  simulation: SimulationSettings,
+  ai: AiSettings,
+  teacher: TeacherSettings,
+  local: GemmaSettings,
+  gpu: GemmaGpuSettings,
+  knowledge: KnowledgeSettings,
+  memory: MemorySettings,
+  voice: VoiceSettings,
+  safety: SafetySettings,
+  shortcuts: ShortcutSettings,
 };
 
 const GROUPS: { id: SectionMeta['group']; title: MessageKey }[] = [
@@ -238,7 +151,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         <div className="settings-panels" ref={panel}>
           {ORDER.filter((id) => visited.has(id) || id === section).map((id) => {
             const meta = SECTIONS[id];
-            const Body = meta.Body;
+            const Body = BODIES[id];
             return (
               <section
                 key={id}
