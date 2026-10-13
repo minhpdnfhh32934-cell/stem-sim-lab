@@ -111,19 +111,31 @@ khóa của Windows).
 
 ### 7. Tự nộp các bản sau (tùy chọn)
 
-Từ lần thứ hai, workflow Release có thể tự nộp gói lên Store:
+Theo tài liệu Microsoft, tự nộp chỉ chạy được khi app **đã lên Store** (đã Publish), và app phải
+miễn phí. Phần chuẩn bị (a–c) làm được ngay cả khi bản đầu còn đang duyệt; chỉ bật (d) sau khi app
+đã lên Store.
 
-1. Partner Center → **Account settings → User management → Microsoft Entra applications** → tạo
-   một ứng dụng, vai trò **Developer**. Ghi lại Tenant ID, Client ID, tạo một Client secret.
-   Seller ID ở **Account settings → Legal info**.
-2. GitHub → repo → **Settings → Secrets and variables → Actions**:
-   - Secrets: `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`, `PARTNER_CENTER_CLIENT_ID`,
-     `PARTNER_CENTER_CLIENT_SECRET`.
-   - Variables: `STORE_SUBMIT` = `true`.
-3. Từ đó, mỗi lần chạy Release (publish = true): GitHub Releases như cũ **và** một lần nộp mới lên
-   Store. Người dùng Store nhận bản mới sau khi Microsoft duyệt.
+a. **Gắn một "tenant" Microsoft Entra vào tài khoản:** Partner Center → biểu tượng bánh răng
+(**Account settings**) → **Tenants** → **Create** (tạo tenant mới). Bước này tạo một tài khoản
+quản trị mới cho tenant — bạn tự tạo và tự giữ mật khẩu.
+b. **Đăng ký một ứng dụng trong Entra:** <https://entra.microsoft.com> (đăng nhập bằng tài khoản
+quản trị của tenant vừa tạo) → **App registrations** → **New registration** (tên ví dụ
+`simlab-store-ci`). Ghi lại **Application (client) ID** và **Directory (tenant) ID**. Vào
+**Certificates & secrets → New client secret**, chép **Value** ngay (chỉ hiện một lần).
+c. **Cho ứng dụng đó quyền nộp bài:** Partner Center → **Account settings → User management →
+Microsoft Entra applications → Add Microsoft Entra application** → chọn `simlab-store-ci`, vai
+trò **Manager**. **Seller ID** nằm ở **Account settings → Legal info** (hoặc Identifiers).
+d. **GitHub → repo → Settings → Secrets and variables → Actions** (bạn tự dán, không gửi khóa qua
+chat):
 
-Muốn tắt: đổi `STORE_SUBMIT` thành `false`.
+- Secrets: `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`, `PARTNER_CENTER_CLIENT_ID`,
+  `PARTNER_CENTER_CLIENT_SECRET`.
+- Variables (tab Variables): `STORE_SUBMIT` = `true` — **chỉ sau khi app đã lên Store**.
+
+Từ đó, mỗi lần chạy Release (publish = true): GitHub Releases như cũ **và** một lần nộp mới lên
+Store; người dùng Store nhận bản mới sau khi Microsoft duyệt. Client secret có hạn dùng (chọn khi
+tạo): hết hạn thì tạo secret mới và thay `PARTNER_CENTER_CLIENT_SECRET`. Muốn tắt: đổi
+`STORE_SUBMIT` thành `false`.
 
 ## Ghi chú kỹ thuật
 
