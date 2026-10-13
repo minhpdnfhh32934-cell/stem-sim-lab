@@ -1391,6 +1391,7 @@ const en: Messages = {
     transcript: 'Transcript',
     chipsLabel: 'Quick requests',
     chips: {
+      hint: 'Step hint',
       again: 'Explain again',
       slower: 'Slower',
       example: 'Another example',
@@ -1398,6 +1399,7 @@ const en: Messages = {
       lost: 'I do not get this part',
     },
     chipPrompts: {
+      hint: 'Do not solve it all. Give me one small hint for the next step only (no final answer yet), then ask me to try that step.',
       again: 'Explain your last answer again in a different, easier way, keeping the same content.',
       slower:
         'Teach your last answer again more slowly: split it into small steps, one idea per step, and explain each step.',

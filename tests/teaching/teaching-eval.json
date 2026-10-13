@@ -1,0 +1,305 @@
+{
+  "about": "AI Teacher evaluation set (audit EDU-02, 2026-10-13). Patterns are matched on the answer folded to ASCII lower case (no accents, đ → d). keyFacts: every group needs one match (textbook facts, review_status pending: docs/DATA_REVIEW.md). mustNot: known wrong statements. Scoring: scripts/teaching/rubric.mjs. Only objective checks; explanation quality still needs a teacher's reading.",
+  "review_status": "pending",
+  "items": [
+    {
+      "id": "P1",
+      "subject": "physics",
+      "type": "concept",
+      "question": "Lực ma sát nghỉ là gì? Cho một ví dụ.",
+      "keyFacts": [
+        ["ma sat nghi"],
+        [
+          "chua (chuyen dong|truot|di chuyen)|khong (chuyen dong|truot|di chuyen)|giu (cho )?vat|can (tro|lai)"
+        ]
+      ],
+      "mustNot": []
+    },
+    {
+      "id": "P2",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Vì sao trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau?",
+      "keyFacts": [["gia toc"], ["khong phu thuoc|nhu nhau|nhu cu|bang nhau"]],
+      "mustNot": ["vat nang (roi )?nhanh hon"]
+    },
+    {
+      "id": "P3",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Một vật khối lượng 2 kg chịu lực kéo 10 N trên mặt phẳng ngang không ma sát. Tính gia tốc của vật.",
+      "keyFacts": [["\\b5 ?m/s"], ["f ?= ?m ?.?a|a ?= ?f ?/ ?m|dinh luat (ii|2|hai)|newton"]],
+      "mustNot": ["\\b20 ?m/s"]
+    },
+    {
+      "id": "P4",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Thả rơi tự do một hòn bi từ độ cao 20 m, lấy g = 10 m/s². Tính thời gian rơi.",
+      "keyFacts": [["\\b2 ?(s\\b|giay)"], ["t\\^?2|sqrt|can bac hai|can\\(|h ?= ?.{0,10}g"]],
+      "mustNot": ["\\b4 ?(s\\b|giay)"]
+    },
+    {
+      "id": "P5",
+      "subject": "physics",
+      "type": "missing-data",
+      "question": "Tính quãng đường ô tô đi được.",
+      "keyFacts": [["van toc|thoi gian|gia toc|thieu|cho biet|can biet"]],
+      "mustNot": [],
+      "expectsClarify": true
+    },
+    {
+      "id": "P6",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Có phải khi vật chuyển động thẳng đều thì không có lực nào tác dụng lên vật không?",
+      "keyFacts": [["hop luc|tong (cac )?luc|can bang"], ["bang 0|bang khong|triet tieu|can bang"]],
+      "mustNot": ["dung (vay|the|la khong co luc)"]
+    },
+    {
+      "id": "P7",
+      "subject": "physics",
+      "type": "concept",
+      "question": "Động năng là gì và phụ thuộc vào những đại lượng nào?",
+      "keyFacts": [
+        ["khoi luong"],
+        ["van toc|toc do"],
+        ["1/2|mot nua|frac\\{1\\}\\{2\\}|mv\\^?2|m ?v ?\\^? ?2"]
+      ],
+      "mustNot": []
+    },
+    {
+      "id": "P8",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Một lò xo có độ cứng 100 N/m bị nén 0,1 m. Tính độ lớn lực đàn hồi.",
+      "keyFacts": [["\\b10 ?n\\b"], ["k ?.?\\|?.?x|k ?\\*? ?\\(?delta|hooke|huc"]],
+      "mustNot": ["\\b1000 ?n\\b"]
+    },
+    {
+      "id": "P9",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Chu kì của con lắc đơn dao động nhỏ có phụ thuộc vào khối lượng quả nặng không?",
+      "keyFacts": [
+        ["khong phu thuoc|khong"],
+        ["chieu dai|do dai"],
+        ["\\bg\\b|gia toc trong truong"]
+      ],
+      "mustNot": ["(co|chu ki) phu thuoc vao khoi luong"]
+    },
+    {
+      "id": "P10",
+      "subject": "physics",
+      "type": "followup",
+      "history": [
+        { "role": "user", "content": "Định luật II Newton nói gì?" },
+        {
+          "role": "assistant",
+          "content": "Gia tốc của vật tỉ lệ thuận với lực tác dụng và tỉ lệ nghịch với khối lượng: a = F/m. Câu hỏi kiểm tra: nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì gia tốc thay đổi thế nào?"
+        }
+      ],
+      "question": "Gia tốc tăng gấp đôi ạ.",
+      "keyFacts": [
+        ["chua (dung|chinh xac)|sai|khong (dung|phai)"],
+        ["giam|mot nua|mot phan hai|1/2"]
+      ],
+      "mustNot": ["(em|ban) (tra loi )?dung (roi)?"]
+    },
+
+    {
+      "id": "C1",
+      "subject": "chemistry",
+      "type": "tool",
+      "question": "Cân bằng phương trình: H2 + O2 → H2O",
+      "keyFacts": [["2 ?h2 ?\\+ ?o2 ?(→|->|tao thanh|=|⟶) ?2 ?h2o"]],
+      "mustNot": ["\\b3 ?o2"]
+    },
+    {
+      "id": "C2",
+      "subject": "chemistry",
+      "type": "tool",
+      "question": "Cân bằng phương trình Fe + O2 → Fe2O3",
+      "keyFacts": [["4 ?fe ?\\+ ?3 ?o2"], ["2 ?fe2o3"]],
+      "mustNot": []
+    },
+    {
+      "id": "C3",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Liên kết ion khác liên kết cộng hóa trị như thế nào?",
+      "keyFacts": [
+        ["nhuong|nhan electron|ion duong|ion am|tinh dien|hut nhau"],
+        ["dung chung|cap electron chung|gop chung"]
+      ],
+      "mustNot": []
+    },
+    {
+      "id": "C4",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Dung dịch có pH = 3 thì có môi trường gì?",
+      "keyFacts": [["axit|acid"], ["< ?7|nho hon 7|be hon 7"]],
+      "mustNot": ["moi truong (bazo|kiem)\\b"]
+    },
+    {
+      "id": "C5",
+      "subject": "chemistry",
+      "type": "problem",
+      "question": "Tính số mol có trong 4 gam NaOH (Na = 23, O = 16, H = 1).",
+      "keyFacts": [["0[,.]1 ?mol"], ["\\b40\\b"]],
+      "mustNot": ["0[,.]25 ?mol"]
+    },
+    {
+      "id": "C6",
+      "subject": "chemistry",
+      "type": "missing-data",
+      "question": "Tính nồng độ mol của dung dịch.",
+      "keyFacts": [["so mol|the tich|khoi luong|thieu|cho biet|can biet"]],
+      "mustNot": [],
+      "expectsClarify": true
+    },
+    {
+      "id": "C7",
+      "subject": "chemistry",
+      "type": "misconception",
+      "question": "Chất xúc tác có làm tăng lượng sản phẩm tạo thành không?",
+      "keyFacts": [["khong"], ["toc do|nhanh"]],
+      "mustNot": ["(co|xuc tac) lam tang luong san pham"]
+    },
+    {
+      "id": "C8",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Vì sao muối ăn (NaCl) tan được trong nước?",
+      "keyFacts": [["phan cuc|luong cuc"], ["ion"]],
+      "mustNot": []
+    },
+    {
+      "id": "C9",
+      "subject": "chemistry",
+      "type": "tool",
+      "question": "Cân bằng phương trình H2 → O2",
+      "keyFacts": [["khong (the )?can bang|khong hop ly|sai|khong bao toan|khong dung"]],
+      "mustNot": ["\\b2 ?h2 ?(→|->) ?\\d* ?o2"]
+    },
+    {
+      "id": "C10",
+      "subject": "chemistry",
+      "type": "followup",
+      "history": [
+        { "role": "user", "content": "Giải thích phương trình 2H2 + O2 → 2H2O." },
+        {
+          "role": "assistant",
+          "content": "Hai phân tử hiđro phản ứng với một phân tử oxi tạo hai phân tử nước. Câu hỏi kiểm tra: có bao nhiêu nguyên tử oxi ở mỗi vế?"
+        }
+      ],
+      "question": "Vế trái 2, vế phải 1 ạ.",
+      "keyFacts": [["chua (dung|chinh xac)|sai|khong (dung|phai)"], ["\\b2\\b|hai"]],
+      "mustNot": ["(em|ban) (tra loi )?dung (roi)?"]
+    },
+
+    {
+      "id": "B1",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Vì sao nhiễm sắc thể phải nhân đôi trước khi tế bào nguyên phân?",
+      "keyFacts": [
+        ["pha s|ki trung gian|ky trung gian"],
+        ["te bao con"],
+        ["giong|du|bo (nst|nhiem sac the)|2n"]
+      ],
+      "mustNot": ["pha m.{0,25}nhan doi|nhan doi.{0,25}pha m\\b|pha g2.{0,15}nhan doi adn"]
+    },
+    {
+      "id": "B2",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Nguyên phân gồm những kì nào?",
+      "keyFacts": [["ki dau|ky dau"], ["ki giua|ky giua"], ["ki sau|ky sau"], ["ki cuoi|ky cuoi"]],
+      "mustNot": []
+    },
+    {
+      "id": "B3",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Ở kì giữa của nguyên phân, nhiễm sắc thể sắp xếp như thế nào?",
+      "keyFacts": [["mat phang xich dao"], ["mot hang|1 hang"], ["kep"]],
+      "mustNot": ["hai hang|2 hang"]
+    },
+    {
+      "id": "B4",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Tế bào thực vật phân chia tế bào chất bằng cách nào?",
+      "keyFacts": [
+        ["vach ngan|tam te bao|tam phan bao|thanh te bao moi"],
+        ["giua|o giua|mat phang xich dao"]
+      ],
+      "mustNot": []
+    },
+    {
+      "id": "B5",
+      "subject": "biology",
+      "type": "problem",
+      "question": "Một tế bào nguyên phân 3 lần liên tiếp. Tạo ra bao nhiêu tế bào con?",
+      "keyFacts": [["\\b8 te bao|tam te bao"], ["2 ?\\^ ?\\{?3|2 mu 3|2 x 2 x 2|2\\.2\\.2"]],
+      "mustNot": ["\\b6 te bao"]
+    },
+    {
+      "id": "B6",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Vì sao nhiệt độ quá cao làm enzyme mất hoạt tính?",
+      "keyFacts": [
+        ["bien tinh|pha vo cau truc|thay doi cau truc|bien doi cau truc"],
+        ["trung tam hoat dong|cau truc khong gian|protein"]
+      ],
+      "mustNot": []
+    },
+    {
+      "id": "B7",
+      "subject": "biology",
+      "type": "missing-data",
+      "question": "Tính số nhiễm sắc thể trong mỗi tế bào con sau nguyên phân.",
+      "keyFacts": [["2n|bo nhiem sac the|cho biet|thieu|can biet|loai"]],
+      "mustNot": [],
+      "expectsClarify": true
+    },
+    {
+      "id": "B8",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Phiên mã là gì?",
+      "keyFacts": [
+        ["\\badn\\b|\\bdna\\b"],
+        ["\\barn\\b|\\brna\\b|marn|mrna"],
+        ["mach (khuon|goc)|khuon"]
+      ],
+      "mustNot": ["arn ?(→|tao ra|thanh) ?adn"]
+    },
+    {
+      "id": "B9",
+      "subject": "biology",
+      "type": "misconception",
+      "question": "Đột biến gen lúc nào cũng có hại phải không?",
+      "keyFacts": [["khong (phai )?(luc nao|bao gio)|co loi|trung tinh|khong phai tat ca"]],
+      "mustNot": ["dung (vay|the)"]
+    },
+    {
+      "id": "B10",
+      "subject": "biology",
+      "type": "followup",
+      "history": [
+        { "role": "user", "content": "Kết quả của nguyên phân là gì?" },
+        {
+          "role": "assistant",
+          "content": "Từ một tế bào mẹ tạo hai tế bào con có bộ nhiễm sắc thể giống tế bào mẹ. Câu hỏi kiểm tra: tế bào mẹ có 2n = 46 thì mỗi tế bào con có bao nhiêu nhiễm sắc thể?"
+        }
+      ],
+      "question": "Mỗi tế bào con có 23 nhiễm sắc thể ạ.",
+      "keyFacts": [["chua (dung|chinh xac)|sai|khong (dung|phai)"], ["\\b46\\b"]],
+      "mustNot": ["(em|ban) (tra loi )?dung (roi)?"]
+    }
+  ]
+}

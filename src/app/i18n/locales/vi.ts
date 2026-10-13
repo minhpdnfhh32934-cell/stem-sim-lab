@@ -1387,6 +1387,7 @@ const vi = {
     transcript: 'Lời thoại',
     chipsLabel: 'Yêu cầu nhanh',
     chips: {
+      hint: 'Gợi ý từng bước',
       again: 'Giải thích lại',
       slower: 'Chậm hơn',
       example: 'Thêm ví dụ',
@@ -1394,6 +1395,7 @@ const vi = {
       lost: 'Em chưa hiểu chỗ này',
     },
     chipPrompts: {
+      hint: 'Thầy đừng giải hết. Chỉ cho em một gợi ý nhỏ cho bước tiếp theo (chưa nói đáp số), rồi hỏi em thử làm bước đó.',
       again:
         'Thầy giải thích lại câu trả lời vừa rồi theo một cách khác, dễ hiểu hơn, vẫn đúng nội dung đó.',
       slower:

@@ -544,7 +544,7 @@ export function ChatPanel({
       {/* "Giải thích lại", "Chậm hơn"… only make sense once there is an answer to rework. */}
       {teacherPage && hasAnswer && (
         <div className="teacher__quick-actions" role="group" aria-label={t('teacher.chipsLabel')}>
-          {(['again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
+          {(['hint', 'again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
             <button
               key={key}
               type="button"
