@@ -12,6 +12,14 @@ Quyết định của người dùng (13/10/2026):
 - Chính sách quyền riêng tư đặt trên GitHub Pages:
   `https://minhpdnfhh32934-cell.github.io/stem-sim-lab/privacy.html` (tệp `site/privacy.html`).
 
+## Trạng thái (13/10/2026)
+
+- Tài khoản nhà phát triển cá nhân: **FPTTECH**. App: **SimLab**, Store ID `9P1FDCQBSDHT`,
+  trang Store (sau khi phát hành): <https://apps.microsoft.com/detail/9P1FDCQBSDHT>.
+- Bản nộp 1 (gói `SimLab_0.5.1.0_x64.msix`) đã gửi duyệt ngày 13/10/2026, chọn **giữ lại**: duyệt
+  xong, người dùng bấm **Publish now** trong Partner Center thì app mới lên Store.
+- Bước 7 (tự nộp từ GitHub Actions) chưa bật.
+
 ## Cách hoạt động
 
 | Phần                   | Ở đâu                                                                       |
@@ -39,11 +47,16 @@ người công bố, nên cần tự xác nhận nội dung đúng (xem `docs/LE
 
 ### 2. Tạo tài khoản nhà phát triển (miễn phí cho cá nhân)
 
-1. Mở <https://partner.microsoft.com/dashboard/registration>, đăng nhập bằng tài khoản Microsoft
-   của bạn.
-2. Chọn **Individual** (cá nhân). Xác minh danh tính bằng giấy tờ tùy thân và ảnh selfie.
-3. Chọn **Publisher display name** (tên nhà phát triển hiện trên Store), ví dụ tên của bạn hoặc
-   "SimLab Team". Tên này phải khác tên app.
+1. Mở <https://storedeveloper.microsoft.com> (lối vào duy nhất của cách đăng ký miễn phí; vào
+   thẳng Partner Center sẽ ra cách cũ). Bấm **Get started for free**.
+2. Chọn **Individual developer** (cá nhân: dự án học tập, phi thương mại). Không đổi sang công ty
+   được về sau.
+3. Đăng nhập bằng tài khoản Microsoft cá nhân.
+4. Xác minh danh tính: chụp **giấy tờ tùy thân gốc** (CCCD/hộ chiếu) và **ảnh selfie** bằng điện
+   thoại, chỗ đủ sáng.
+5. Kiểm tra thông tin tự điền, chọn **Publisher display name** (tên nhà phát triển hiện trên Store,
+   khác tên app), xong bấm **Go to Partner Center dashboard** và chọn đúng tài khoản vừa dùng.
+   Chưa thấy ô **Apps & Games** thì đợi khoảng 5 phút rồi tải lại trang.
 
 ### 3. Giữ tên app và chép danh tính gói
 
@@ -98,19 +111,34 @@ khóa của Windows).
 
 ### 7. Tự nộp các bản sau (tùy chọn)
 
-Từ lần thứ hai, workflow Release có thể tự nộp gói lên Store:
+Theo tài liệu Microsoft, tự nộp chỉ chạy được khi app **đã lên Store** (đã Publish), và app phải
+miễn phí. Phần chuẩn bị (a–c) làm được ngay cả khi bản đầu còn đang duyệt; chỉ bật (d) sau khi app
+đã lên Store.
 
-1. Partner Center → **Account settings → User management → Microsoft Entra applications** → tạo
-   một ứng dụng, vai trò **Developer**. Ghi lại Tenant ID, Client ID, tạo một Client secret.
-   Seller ID ở **Account settings → Legal info**.
-2. GitHub → repo → **Settings → Secrets and variables → Actions**:
-   - Secrets: `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`, `PARTNER_CENTER_CLIENT_ID`,
-     `PARTNER_CENTER_CLIENT_SECRET`.
-   - Variables: `STORE_SUBMIT` = `true`.
-3. Từ đó, mỗi lần chạy Release (publish = true): GitHub Releases như cũ **và** một lần nộp mới lên
-   Store. Người dùng Store nhận bản mới sau khi Microsoft duyệt.
+a. **Gắn một "tenant" Microsoft Entra vào tài khoản:** Partner Center → biểu tượng bánh răng
+(**Account settings**) → **Tenants** → **Create** (tạo tenant mới). Bước này tạo một tài khoản
+quản trị mới cho tenant — bạn tự tạo và tự giữ mật khẩu.
+b. **Đăng ký một ứng dụng trong Entra:** <https://entra.microsoft.com> (đăng nhập bằng tài khoản
+quản trị của tenant vừa tạo) → **App registrations** → **New registration** (tên ví dụ
+`simlab-store-ci`). Ghi lại **Application (client) ID** và **Directory (tenant) ID**. Vào
+**Certificates & secrets → New client secret**, chép **Value** ngay (chỉ hiện một lần).
+c. **Cho ứng dụng đó quyền nộp bài:** Partner Center → **Account settings → User management →
+Microsoft Entra applications → Add Microsoft Entra application** → chọn `simlab-store-ci`, vai
+trò **Manager**. **Seller ID** nằm ở **Account settings → Legal info** (hoặc Identifiers).
+d. **GitHub → repo → Settings → Secrets and variables → Actions** (bạn tự dán, không gửi khóa qua
+chat):
 
-Muốn tắt: đổi `STORE_SUBMIT` thành `false`.
+- Secrets: `PARTNER_CENTER_TENANT_ID`, `PARTNER_CENTER_SELLER_ID`, `PARTNER_CENTER_CLIENT_ID`,
+  `PARTNER_CENTER_CLIENT_SECRET`.
+- Variables (tab Variables): `STORE_SUBMIT` = `true` — **chỉ sau khi app đã lên Store**.
+
+Thêm secret xong, kiểm tra ngay (không nộp gì): **Actions → Store connection check → Run
+workflow**. Xanh nghĩa là GitHub đăng nhập được Partner Center và thấy SimLab.
+
+Từ đó, mỗi lần chạy Release (publish = true): GitHub Releases như cũ **và** một lần nộp mới lên
+Store; người dùng Store nhận bản mới sau khi Microsoft duyệt. Client secret có hạn dùng (chọn khi
+tạo): hết hạn thì tạo secret mới và thay `PARTNER_CENTER_CLIENT_SECRET`. Muốn tắt: đổi
+`STORE_SUBMIT` thành `false`.
 
 ## Ghi chú kỹ thuật
 
