@@ -54,12 +54,15 @@ export function rankCommands(commands: readonly Command[], query: string, limit 
 
 interface PaletteState {
   open: boolean;
+  /** Opened at least once: the palette's code is loaded only then (not at start-up). */
+  used: boolean;
   setOpen: (open: boolean) => void;
 }
 
 export const useCommandPalette = create<PaletteState>()((set) => ({
   open: false,
+  used: false,
   setOpen: (open) => {
-    set({ open });
+    set(open ? { open, used: true } : { open });
   },
 }));

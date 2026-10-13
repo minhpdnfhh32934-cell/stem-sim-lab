@@ -13,7 +13,7 @@ import { UpdateDialog } from '@/app/update/UpdateDialog';
 import { scheduleAutoCheck } from '@/app/update/updater';
 import { installSlidingIndicators } from '@/ui/slidingIndicator';
 import { Skeleton } from '@/ui/Skeleton';
-import { CommandPalette } from '@/app/command/CommandPalette';
+import { useCommandPalette } from '@/app/command/commands';
 import { useMemoryWatchdog } from '@/perf/useMemoryWatchdog';
 import { Toaster } from '@/ui/Toaster';
 import '@/app/project/project.css';
@@ -49,6 +49,10 @@ import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
 const SourcesDialog = lazy(() => import('@/app/project/SourcesDialog'));
 // The AI teacher is its own chunk (PROMPT_PHAN_2 B0: separate from the simulations).
 const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
+// Quick search (Ctrl+K) loads on first use; the shortcut and the top-bar button only flip a flag.
+const CommandPalette = lazy(() =>
+  import('@/app/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
+);
 
 export function AppShell() {
   useGlobalShortcuts();
@@ -69,6 +73,7 @@ export function AppShell() {
     };
   }, []);
   const sourcesOpen = useProjectUi((s) => s.sourcesOpen);
+  const paletteUsed = useCommandPalette((s) => s.used);
   const t = useT();
   const layout = useLayoutStore(
     useShallow((s) => ({
@@ -118,7 +123,11 @@ export function AppShell() {
       <Tour />
       <UpdateDialog />
       <Toaster />
-      <CommandPalette />
+      {paletteUsed && (
+        <Suspense fallback={null}>
+          <CommandPalette />
+        </Suspense>
+      )}
       {!presentation && <GpuRestartReminder />}
 
       <div className="shell__body">
