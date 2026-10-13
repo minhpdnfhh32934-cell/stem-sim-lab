@@ -109,7 +109,10 @@ describe('toSpeech', () => {
 
   it('reads powers of ten and scientific notation', () => {
     expect(toSpeech('c = 3 × 10^8 m/s')).toBe('xê bằng ba nhân mười mũ tám mét trên giây');
-    expect(toSpeech('N_A = 6,02.10²³')).toContain('sáu phẩy không hai');
+    // The Vietnamese dot before a power of ten is a multiplication, never a decimal point.
+    expect(toSpeech('N_A = 6,02.10²³')).toBe(
+      'nờ a bằng sáu phẩy không hai nhân mười mũ hai mươi ba',
+    );
     expect(toSpeech('q = 1,6 × 10⁻¹⁹ C')).toBe(
       'quy bằng một phẩy sáu nhân mười mũ trừ mười chín cu-lông',
     );

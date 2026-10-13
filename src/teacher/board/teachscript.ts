@@ -383,6 +383,45 @@ function emptyAction(
   }
 }
 
+/** A "." that does not end its sentence; `before` is the sentence up to the dot. */
+function notAnEnd(before: string, after: string): boolean {
+  const word = /(\S+)$/.exec(before)?.[1] ?? '';
+  const opens = before.slice(0, before.length - word.length).trim() === '';
+  // A step "1." or an option "A." that opens the sentence.
+  if (opens && /^(?:\d{1,2}|[A-F])$/.test(word)) return true;
+  // A page "tr. 45".
+  if (/^[Tt]r$/.test(word) && /^\s*\d/.test(after)) return true;
+  // "v.v." in the middle of a sentence ("lực cản v.v. đều …").
+  if (/(?:^|[\s(])v\.v$/.test(before) && /^\s+\p{Ll}/u.test(after)) return true;
+  return false;
+}
+
+/**
+ * Index just after the end of the sentence that `text` continues (`head` is what the sentence
+ * already holds), or -1. Ends: . ! ? … followed by a space (not inside numbers like 9.81), except
+ * the dots of `notAnEnd`; a sentence that opens with an option "A." also ends before the next
+ * option ("A. 10 m/s B. 20 m/s").
+ */
+function sentenceEnd(head: string, text: string): number {
+  const full = head + text;
+  const base = head.length;
+  let optionCut = -1;
+  const marker = /^\s*[A-F][.)]\s/.exec(full);
+  if (marker) {
+    const next = /\s(?=[B-F][.)]\s)/g;
+    next.lastIndex = Math.max(marker[0].length, base);
+    const o = next.exec(full);
+    if (o) optionCut = o.index - base;
+  }
+  const ends = /[.!?…](?=\s|$)/g;
+  for (let m = ends.exec(text); m; m = ends.exec(text)) {
+    if (optionCut >= 0 && optionCut <= m.index) return optionCut;
+    if (m[0] === '.' && notAnEnd(full.slice(0, base + m.index), text.slice(m.index + 1))) continue;
+    return m.index + 1;
+  }
+  return optionCut;
+}
+
 /** Splits spoken text into sentences, keeping actions anchored to their sentence. */
 function sentencesOf(
   segments: { speech: string; actions: TimedAction[]; pauseMs: number }[],
@@ -415,15 +454,14 @@ function sentencesOf(
   };
   for (const seg of segments) {
     pauseMs += seg.pauseMs;
-    // Sentence ends: . ! ? … followed by a space (not inside numbers like 9.81). Each action
-    // goes to the sentence in which its tag stood.
+    // Sentence ends (`sentenceEnd`). Each action goes to the sentence in which its tag stood.
     let pending = [...seg.actions];
     let consumed = 0;
     let rest = seg.speech;
     for (;;) {
-      const m = /[.!?…](?=\s|$)/.exec(rest);
-      if (!m) break;
-      const cut = m.index + 1;
+      const cut = sentenceEnd(speech, rest);
+      // An empty cut only closes a sentence that already holds words.
+      if (cut < 0 || (cut === 0 && !speech.trim())) break;
       const end = consumed + cut;
       for (const a of pending.filter((x) => x.at <= end)) {
         actions.push({ at: speech.length + a.at - consumed, action: a.action });

@@ -120,12 +120,22 @@ export function readNumber(raw: string): string {
   return `${sign}${frac ? `${words} phẩy ${readFraction(frac)}` : words}`;
 }
 
+/**
+ * A fraction of two whole numbers: "3/4" → "ba phần tư" (a quarter is "tư", as in "một phần
+ * tư"; convention to confirm), "1/2" → "một phần hai".
+ */
+function fraction(num: string, den: string): string {
+  return `${readInteger(num)} phần ${den === '4' ? 'tư' : readInteger(den)}`;
+}
+
 /** Names of Latin letters as Vietnamese science teachers read symbols ("F" → "ép"). */
 const LETTERS: Record<string, string> = {
   a: 'a',
   b: 'bê',
   c: 'xê',
   d: 'đê',
+  // The Vietnamese letter used as an index: W_đ (động năng), W_t (thế năng).
+  đ: 'đê',
   e: 'e',
   f: 'ép',
   g: 'gờ',
@@ -153,6 +163,11 @@ const LETTERS: Record<string, string> = {
 export function letterName(ch: string): string {
   if (ch === 'O') return 'ô';
   return LETTERS[ch.toLowerCase()] ?? ch;
+}
+
+/** Letter by letter: "Fe" → "ép e", "ac" → "a xê". */
+function spell(letters: string): string {
+  return Array.from(letters).map(letterName).join(' ');
 }
 
 const GREEK: Record<string, string> = {
@@ -264,6 +279,9 @@ const BASE_UNITS: Record<string, string> = {
   L: 'lít',
   mL: 'mi-li-lít',
   ml: 'mi-li-lít',
+  // Molar concentration "0,1 M" (convention to confirm: "mol trên lít" or "mo-lan").
+  M: 'mol trên lít',
+  mM: 'mi-li-mol trên lít',
   '%': 'phần trăm',
 };
 // Longest first, so "kWh" wins over "kW" and "mmHg" over "mm".
@@ -275,13 +293,11 @@ export function readUnit(raw: string): string | null {
   const s = fromScript(raw).replace(/\^\{?([+\-−]?\d)\}?/g, '^$1');
   const out: string[] = [];
   let i = 0;
-  let afterSlash = false;
   let units = 0;
   while (i < s.length) {
     const c = s[i] ?? '';
     if (c === '/') {
       out.push('trên');
-      afterSlash = true;
       i++;
       continue;
     }
@@ -303,8 +319,10 @@ export function readUnit(raw: string): string | null {
     if (exp && (s[i] === '^' || /[\d\-−+]/.test(s[i] ?? ''))) {
       const n = (exp[1] ?? '').replace('−', '-');
       i += exp[0].length;
-      if (n === '2') words += LENGTHS.has(key) && !afterSlash ? ' vuông' : ' bình phương';
-      else if (n === '3') words += LENGTHS.has(key) && !afterSlash ? ' khối' : ' lập phương';
+      // A length squared or cubed is an area or a volume wherever it stands: "kg/m³" is
+      // "ki-lô-gam trên mét khối", "N/m²" "niu-tơn trên mét vuông".
+      if (n === '2') words += LENGTHS.has(key) ? ' vuông' : ' bình phương';
+      else if (n === '3') words += LENGTHS.has(key) ? ' khối' : ' lập phương';
       else words += ` mũ ${n.startsWith('-') ? `trừ ${readInteger(n.slice(1))}` : readInteger(n)}`;
     }
     out.push(words);
@@ -408,6 +426,8 @@ function isSpecies(raw: string): boolean {
 function concentrations(text: string): string {
   return text.replace(BRACKETED, (all, inner: string, offset: number) => {
     if (!isSpecies(inner)) return all;
+    // "[Ar] 3d⁶ 4s²" is a noble-gas core of an electron configuration, not a concentration.
+    if (/^\s*[1-7][spdf]/.test(text.slice(offset + all.length))) return all;
     const said = SAID_CONCENTRATION.test(text.slice(Math.max(0, offset - 40), offset));
     return ` ${said ? '' : CONCENTRATION} ${inner} `;
   });
@@ -452,6 +472,8 @@ const LATEX_WORDS: Record<string, string> = {
   sim: ' xấp xỉ ',
   neq: ' khác ',
   ne: ' khác ',
+  in: ' thuộc ',
+  notin: ' không thuộc ',
   leq: ' nhỏ hơn hoặc bằng ',
   le: ' nhỏ hơn hoặc bằng ',
   geq: ' lớn hơn hoặc bằng ',
@@ -563,7 +585,12 @@ export function readLatex(src: string): string {
         const num = readLatex(a).trim();
         const den = readLatex(b).trim();
         const plain = /^\d+$/.test(num) && /^\d+$/.test(den);
-        out += ` ${num} ${plain ? 'phần' : 'trên'} ${den} `;
+        out += plain ? ` ${fraction(num, den)} ` : ` ${num} trên ${den} `;
+      } else if (name === 'log' && s[skipSpaces(s, i)] === '_') {
+        // "\log_2 8" → "lốc cơ số hai của tám".
+        const [base, i1] = group(s, skipSpaces(s, i) + 1);
+        i = i1;
+        out += ` lốc cơ số ${readLatex(base).trim()} của `;
       } else if (name === 'sqrt') {
         let degree = 'hai';
         if (s[i] === '[') {
@@ -603,9 +630,9 @@ export function readLatex(src: string): string {
       out += inner === '°' ? '°' : `^{${inner}}`;
     } else if (c === '{' || c === '}') {
       i++;
-    } else if (/[a-zA-Z]/.test(c)) {
+    } else if (/[a-zA-ZđĐ]/.test(c)) {
       // Product of single-letter symbols ("mv" = m·v); longer words (max, min) stay whole.
-      const run = /^[a-zA-Z]+/.exec(s.slice(i))?.[0] ?? c;
+      const run = /^[a-zA-ZđĐ]+/.exec(s.slice(i))?.[0] ?? c;
       i += run.length;
       // Read as letter names here, so "2m" in a formula is "hai mờ", never "hai mét".
       out +=
@@ -640,8 +667,17 @@ const ABBREVIATIONS: [RegExp, string][] = [
   [word('ĐLBT'), 'định luật bảo toàn'],
   [word('đktc'), 'điều kiện tiêu chuẩn'],
   [word('VD|Vd'), 'ví dụ'],
+  // "tr. 45" is a page, not a sentence end.
+  [/(?<![\p{L}])[Tt]r\.[ \t]*(?=\d)/gu, 'trang '],
+  // "v.v." keeps its full stop when a new sentence follows ("… v.v. Vậy …").
+  [/(?<![\p{L}])v\.v\.?(?=[ \t]+\p{Lu}|[ \t]*$)/gmu, 'vân vân.'],
   [/(?<![\p{L}])v\.v\.?/gu, 'vân vân'],
   [word('pH'), 'pê hát'],
+  [word('NST'), 'nhiễm sắc thể'],
+  [word('mARN|mRNA'), 'mờ a rờ nờ'],
+  [word('tARN|tRNA'), 'tê a rờ nờ'],
+  [word('rARN|rRNA'), 'rờ a rờ nờ'],
+  [word('ADP'), 'a đê pê'],
   [word('ADN'), 'a đê nờ'],
   [word('ARN|RNA'), 'a rờ nờ'],
   [word('DNA'), 'đê nờ a'],
@@ -666,6 +702,7 @@ const ABBREVIATIONS: [RegExp, string][] = [
   [word('Galileo'), 'Ga-li-lê'],
   [word('Einstein'), 'Anh-xtanh'],
   [word('Kelvin'), 'Ken-vin'],
+  [word('Planck'), 'Plăng'],
 ];
 
 const ROMAN: Record<string, number> = { I: 1, V: 5, X: 10 };
@@ -699,15 +736,22 @@ const SYMBOLS: [RegExp, string][] = [
   [/⊥/g, ' vuông góc '],
   [/∥/g, ' song song '],
   [/∆/g, ' đen-ta '],
+  // Number sets are read by their letter: "x ∈ ℝ" → "ích thuộc rờ".
+  [/ℝ/g, ' R '],
+  [/ℕ/g, ' N '],
+  [/ℤ/g, ' Z '],
+  [/ℚ/g, ' Q '],
   [/\s=\s|(?<=[\p{L}\d)\s])=(?=[\p{L}\d(\s-])/gu, ' bằng '],
   [/\s<\s/g, ' nhỏ hơn '],
   [/\s>\s/g, ' lớn hơn '],
   [/\s\+\s|(?<=[\p{L}\d)])\+(?=[\p{L}\d(])/gu, ' cộng '],
   [/\s[-−–]\s/g, ' trừ '],
-  [/(?<=[\p{L}\d)])\/(?=[\p{L}\d(])/gu, ' trên '],
+  // Also when an earlier rule left spaces: "1/cos²x" → "một / cốt …".
+  [/(?<=[\p{L}\d)][ \t]*)\/(?=[ \t]*[\p{L}\d(])/gu, ' trên '],
 ];
 
-const NUMBER = String.raw`\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d{1,3}(?:,\d{3}){2,}(?:\.\d+)?|\d+[.,]\d+|\d+`;
+// Grouping by a space ("1 000 kg", the Vietnamese standard), a dot or a comma; then decimals.
+const NUMBER = String.raw`\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?!\d)(?:,\d+)?|\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d{1,3}(?:,\d{3}){2,}(?:\.\d+)?|\d+[.,]\d+|\d+`;
 const UNIT_CANDIDATE = String.raw`(?:°[CF]?|%|[A-Za-zµμΩ][A-Za-zµμΩ²³⁻¹·⋅./()^{}\d−-]*)`;
 const QUANTITY = new RegExp(
   String.raw`(?<![\p{L}\d.,^{])([-−](?=\d))?(${NUMBER})` +
@@ -758,6 +802,9 @@ function quantity(
   const exp = exp1 ?? exp2 ?? exp3;
   if (exp) words += ` nhân mười mũ ${exponentWords(exp)}`;
   const after = unitAfter(unit);
+  // Letters glued to a coefficient are a product of symbols: "4ac" → "bốn a xê".
+  const product = !after && !space ? /^([A-Za-z]{2,3})([^\p{L}\d]*)$/u.exec(unit ?? '') : null;
+  if (product) return ` ${words} ${spell(product[1] ?? '')}${product[2] ?? ''}`;
   // Not a unit: give the letters back untouched ("3 con" stays "ba con"), always after a space
   // so a coefficient is not glued to its letter ("2n" → "hai nờ", not "hain"; audit VOI-02).
   if (!after) return ` ${words}${unit ? space || ' ' : (space ?? '')}${unit ?? ''}`;
@@ -776,6 +823,15 @@ function stripMarkdown(content: string): string {
       .replace(/^\s*[-*+]\s+/gm, '')
       // Numbered steps keep their number: "1. Tính a" → "1, Tính a" ("một, …").
       .replace(/^\s*(\d+)[.)]\s+/gm, '$1, ')
+      // Answer options on one line ("A. 10 m/s B. 20 m/s", also after "Câu hỏi:") go on lines
+      // of their own (never "Phương án A. sai, phương án B. đúng")…
+      .replace(/^(?:[^\n]*:[ \t]*)?A[.)]\s.*\sB[.)]\s.*$/gm, (line) =>
+        line.replace(/:[ \t]*(?=A[.)]\s)/, ':\n').replace(/\s+(?=[B-F][.)]\s)/g, '\n'),
+      )
+      // …and an option letter is read with a comma, never as a sentence end ("A, 10 m/s").
+      .replace(/^\s*([A-F])[.)]\s+/gm, '$1, ')
+      // A step number after a colon or a sentence end: "Có hai bước: 1. Tính a. 2. Tính F."
+      .replace(/([:.!?])([ \t]+)(\d{1,2})\.[ \t]+(?=\p{L})/gu, '$1$2$3, ')
       .replace(/^\s*>\s?/gm, '')
       .replace(/\*\*([^*]+)\*\*/g, '$1')
       .replace(/(?<![\w*])\*([^*\n]+)\*(?!\w)/g, '$1')
@@ -843,8 +899,82 @@ function latexSpeech(tex: string): string {
   return chemicalTex(tex) ? read.replace(/\s*→\s*/g, ' tạo thành ') : read;
 }
 
+/** Words that put a text in chemistry, where "Fe", "Cu", "Na" are element symbols. */
+const CHEM_WORDS =
+  /(?<![\p{L}])(?:kim loại|phi kim|nguyên tố|nguyên tử|electron|phản ứng|dung dịch|ion|oxi ho[áa]|kết tủa|cấu hình|ho[áa] trị|muối|axit|bazơ)(?![\p{L}])/iu;
+/** The cell's energy carriers: an arrow between them is a reaction ("ATP → ADP + Pi"). */
+const BIO_SPECIES = /(?<![\p{L}])(?:ATP|ADP|AMP|NADP?H?|FADH?2?)(?![\p{L}\d])/u;
+/**
+ * Element symbols that are also Vietnamese words opening a sentence ("Ba vật…", "Ta có…"):
+ * there they stay words; elsewhere in a chemistry text they are spelled ("Cho Ba vào nước").
+ */
+const WORD_SYMBOLS = new Set('Ba Ta Co Ra La Ga Be Li Mo Ti Te Lu Ho No Bi Xe In Si'.split(' '));
+
+/** One orbital of an electron configuration: "1s²", "2p^6", "3d10". */
+const ORBITAL = String.raw`[1-7][spdf](?:\^\{?\d{1,2}\}?|[⁰¹²³⁴⁵⁶⁷⁸⁹]{1,2}|\d{1,2})?`;
+const CONFIGURATION = new RegExp(
+  String.raw`(?<![\p{L}\d])(?:\[(He|Ne|Ar|Kr|Xe|Rn)\][ \t]*)?(${ORBITAL}(?:[ \t.]*${ORBITAL})*)(?![\p{L}\d])`,
+  'gu',
+);
+
+/** "1s² 2s² 2p⁶" → "một ét hai, hai ét hai, hai pê sáu"; null when it is not a configuration. */
+function readConfiguration(
+  core: string | undefined,
+  seq: string,
+  chemistry: boolean,
+): string | null {
+  const orbitals = [
+    ...seq.matchAll(/([1-7])([spdf])(?:\^\{?(\d{1,2})\}?|([⁰¹²³⁴⁵⁶⁷⁸⁹]{1,2})|(\d{1,2}))?/gu),
+  ].map((m) => ({ n: m[1] ?? '', l: m[2] ?? '', e: m[3] ?? m[4] ?? m[5] ?? '' }));
+  const first = orbitals[0];
+  // A lone "2s" is two seconds; "3s¹", "2p⁶" or a sequence is a configuration.
+  const sure =
+    Boolean(core) ||
+    orbitals.length >= 2 ||
+    (first !== undefined && first.e !== '' && (first.l !== 's' || chemistry));
+  if (!sure) return null;
+  const parts = orbitals.map(
+    (o) => `${readInteger(o.n)} ${letterName(o.l)}${o.e ? ` ${readInteger(fromScript(o.e))}` : ''}`,
+  );
+  return (core ? [spell(core), ...parts] : parts).join(', ');
+}
+
+/**
+ * "AaBb", "aa", "Bb": pairs of the same letter (alleles of one gene). No Vietnamese word is
+ * made of doubled letters.
+ */
+function isGenotype(w: string): boolean {
+  if (w.length % 2 !== 0 || w.length > 8) return false;
+  for (let i = 0; i < w.length; i += 2) {
+    if ((w[i] ?? '').toLowerCase() !== (w[i + 1] ?? '').toLowerCase()) return false;
+  }
+  return true;
+}
+
+/** Mathematical functions written in plain text (LaTeX has its own words in LATEX_WORDS). */
+const FUNCTIONS: [RegExp, string][] = [
+  [/(?<![\p{L}\\])(?:cotg|cot)(?![\p{L}])/gu, ' cô-tang '],
+  [/(?<![\p{L}\\])cos(?![\p{L}])/gu, ' cốt '],
+  [/(?<![\p{L}\\])tg(?![\p{L}])/gu, ' tang '],
+  // "tan" is also a Vietnamese word ("muối tan trong nước"): a function only before its argument.
+  [/(?<![\p{L}\\])tan(?=\s*(?:[\d(αβγδθφπ√²³]|[A-Za-z](?![\p{L}])))/gu, ' tang '],
+  [/(?<![\p{L}\\])ln(?![\p{L}])/gu, ' lốc nê-pe '],
+  [/(?<![\p{L}\\])log(?![\p{L}])/gu, ' lốc '],
+];
+
+/** "[0; 1]", "đoạn [a, b]", "∈ [a, b]": a closed interval, read "từ … đến …". */
+const INTERVAL =
+  /(?:(∈|∉|(?<![\p{L}])thuộc|(?<![\p{L}])đoạn)\s*)?\[\s*([^[\];,\n]+?)\s*([;,])\s*([^[\];,\n]+?)\s*\]/gu;
+const INTERVAL_HEAD: Record<string, string> = {
+  đoạn: 'đoạn ',
+  '∉': 'không thuộc đoạn ',
+  '∈': 'thuộc đoạn ',
+  thuộc: 'thuộc đoạn ',
+};
+
 /** Whole answer → words for a Vietnamese voice. */
 export function toSpeech(content: string): string {
+  const chemContext = CHEM_WORDS.test(content);
   // Concentrations "[S]", "[H⁺]" → "nồng độ S" (audit VOI-02), in text and in LaTeX alike; an
   // interval "[a, b]" or a citation "[1]", "[Wikipedia]" is not a species and is left.
   let s = concentrations(stripMarkdown(content));
@@ -856,6 +986,48 @@ export function toSpeech(content: string): string {
     .replace(/\$([^$\n]+)\$/g, (_m, m: string) => ` ${latexSpeech(m)} `)
     .replace(/\\([#$&%_{}])/g, '$1');
   for (const [re, words] of ABBREVIATIONS) s = s.replace(re, words);
+  // Sets and intervals: "x ∈ [0; 1]" → "ích thuộc đoạn từ không đến một".
+  s = s
+    .replace(INTERVAL, (all, lead: string | undefined, a: string, sep: string, b: string) => {
+      if (!lead && sep !== ';') return all;
+      const head = lead ? (INTERVAL_HEAD[lead] ?? '') : '';
+      return ` ${head}từ ${a} đến ${b} `;
+    })
+    .replace(/∉/g, ' không thuộc ')
+    .replace(/∈/g, ' thuộc ');
+  // Functions: "log₂8" → "lốc cơ số hai của tám", "cos 60°" → "cốt …", "Vmax" → "vê cực đại".
+  s = s.replace(
+    /(?<![\p{L}\\])log(?:_\{?([^{}\s]+?)\}?|([₀-₉]+))\s*/gu,
+    (_m, a: string | undefined, b: string | undefined) =>
+      ` lốc cơ số ${fromScript(a ?? b ?? '')} của `,
+  );
+  for (const [re, words] of FUNCTIONS) s = s.replace(re, words);
+  s = s.replace(
+    /(?<![\p{L}\d])([A-Za-z])(max|min)(?![\p{L}\d])/gu,
+    (_m, l: string, w: string) => ` ${letterName(l)} ${SUBSCRIPT_WORDS[w] ?? w} `,
+  );
+  // Genetics: a cross "AaBb × AaBb" → "a a bê bê lai với a a bê bê"; a ratio "9 : 3 : 3 : 1"
+  // → "chín ba ba một" (a time "10:30" is not one).
+  s = s
+    .replace(
+      /(?<![\p{L}\d])([A-Za-z]{2,8})\s*[×xX]\s*([A-Za-z]{2,8})(?![\p{L}\d])/gu,
+      (all, a: string, b: string) =>
+        isGenotype(a) && isGenotype(b) ? ` ${spell(a)} lai với ${spell(b)} ` : all,
+    )
+    // Never a state symbol "NaCl (dd)" or a unit "2 mM". All capitals ("AA") are read alike by
+    // the acronym rule.
+    .replace(
+      /(?<![\p{L}\d(])([A-Za-z]{2,8})(?![\p{L}\d])/gu,
+      (all, w: string, offset: number, text: string) => {
+        const unit = /\d\s*$/.test(text.slice(0, offset)) && readUnit(w) !== null;
+        return !unit && /[a-z]/.test(w) && isGenotype(w) ? ` ${spell(w)} ` : all;
+      },
+    )
+    .replace(/(?<![\d:.,])(\d+)((?:\s*:\s*\d+)+)(?!\d|[.,]\d)/g, (all, a: string, rest: string) => {
+      const parts = [a, ...rest.split(':').slice(1)].map((p) => p.trim());
+      const ratio = parts.length >= 3 || /\s:\s/.test(all) || /^\d+:\d$/.test(all);
+      return ratio ? ` ${parts.map((p) => readInteger(p)).join(' ')} ` : all;
+    });
   // Dates and plain fractions before numbers lose their slashes.
   s = s
     .replace(
@@ -865,8 +1037,28 @@ export function toSpeech(content: string): string {
     )
     .replace(
       /(?<![\p{L}\d./])(\d+)\/(\d+)(?![\p{L}\d/])/gu,
-      (_m, a: string, b: string) => ` ${readInteger(a)} phần ${readInteger(b)} `,
+      (_m, a: string, b: string) => ` ${fraction(a, b)} `,
     );
+  // Class names "lớp 10A1" → "lớp mười a một"; groups "nhóm IA, VIIA" → "nhóm một a, bảy a".
+  s = s
+    .replace(
+      /((?<![\p{L}])[Ll]ớp\s+)(\d{1,2})([A-Z])(\d{1,2})?(?![\p{L}\d])/gu,
+      (_m, w: string, n: string, l: string, k: string | undefined) =>
+        `${w}${readInteger(n)} ${letterName(l)}${k ? ` ${readInteger(k)}` : ''} `,
+    )
+    .replace(
+      /((?<![\p{L}])[Nn]hóm(?:\s+chính)?\s+)([IVX]{1,4}[AB](?:(?:\s*,\s*|\s+(?:và|hoặc|đến)\s+)[IVX]{1,4}[AB])*)(?![\p{L}\d])/gu,
+      (_m, w: string, list: string) =>
+        `${w}${list.replace(/([IVX]{1,4})([AB])/g, (g, r: string, x: string) => {
+          const n = roman(r);
+          return n ? `${readInteger(String(n))} ${letterName(x)}` : g;
+        })}`,
+    );
+  // Electron configurations: "1s² 2s² 2p⁶" (before the numbers read "1 s" as one second).
+  s = s.replace(CONFIGURATION, (all, core: string | undefined, seq: string) => {
+    const read = readConfiguration(core, seq, chemContext);
+    return read ? ` ${read} ` : all;
+  });
   // State symbols after a formula: "NaCl (aq)" → "NaCl dung dịch", "H2O(l)" → "… lỏng"; a unit
   // after a symbol, a number or a word stays a unit ("t (s)", "5 (s)", "Thời gian (s)").
   s = s.replace(STATE_AFTER_FORMULA, stateAfterFormula);
@@ -878,14 +1070,69 @@ export function toSpeech(content: string): string {
     found.chemistry = true;
     return ` ${coef ? `${readInteger(coef)} ` : ''}${read}${charge ? ` ${readCharge(charge)}` : ''} `;
   });
-  s = s.replace(/→|⟶|->/g, found.chemistry ? ' tạo thành ' : ' suy ra ');
+  const reaction = found.chemistry || BIO_SPECIES.test(content);
+  s = s.replace(/→|⟶|->/g, reaction ? ' tạo thành ' : ' suy ra ');
+  // A gas given off / a precipitate in a reaction; elsewhere the arrows mean up and down.
+  const chemistry = found.chemistry || chemContext;
+  s = s
+    .replace(/↑/g, chemistry ? ' bay lên ' : ' tăng ')
+    .replace(/↓/g, chemistry ? ' kết tủa ' : ' giảm ');
+  // A lone element symbol in a chemistry text: "Kim loại Fe, Cu" → "ép e, xê u".
+  if (chemistry) {
+    s = s.replace(
+      /(?<![\p{L}\d])([A-Z][a-z])(?![\p{L}\d])/gu,
+      (all, sym: string, offset: number, text: string) => {
+        if (!ELEMENTS.has(sym)) return all;
+        const before = text.slice(0, offset);
+        const inReaction =
+          /(?:\+|tạo thành)\s*$/u.test(before) ||
+          /^\s*(?:\+|tạo thành)/u.test(text.slice(offset + all.length));
+        // "Ba vật…", "Ta có…": a word that opens a sentence and goes on with more words (a list
+        // "kiềm: Li, Na, K" is symbols).
+        const opensSentence =
+          /(?:^|[.!?:]\s+|\n\s*)$/u.test(before) &&
+          /^\s+\p{Ll}/u.test(text.slice(offset + all.length));
+        if (opensSentence && WORD_SYMBOLS.has(sym) && !inReaction) return all;
+        return ` ${spell(sym)} `;
+      },
+    );
+  }
   // Indexed symbols: v0, t₁, F12.
   s = s.replace(
     /(?<![\p{L}\d])([A-Za-z])(\d{1,2}|[₀-₉]{1,2})(?![\p{L}\d.,])/gu,
     (_m, l: string, d: string) => ` ${letterName(l)} ${readInteger(fromScript(d))} `,
   );
+  // Products of symbols right after an operator: "F = ma", "v0 + at", "A = Fs" → letter names;
+  // before the numbers become words, so "= 3" ("= ba") is never spelled.
+  s = s.replace(
+    /(?<=(?:[=+×·*]|\s[-−])\s*)([A-Za-z]{2,3})(?=\s*(?:[=+\-−×·*/)<>.,;:!?…]|$))/gmu,
+    (w: string) => ` ${spell(w)} `,
+  );
+  // "3.10⁸", "6,626.10⁻³⁴": the dot before a power of ten is a multiplication sign.
+  s = s.replace(/(\d)\.(?=10(?:\^\{?[+\-−]?\d|[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]))/g, '$1·');
+  // "220 . 2": a dot between spaces is never a decimal point either.
+  s = s.replace(/(\d)[ \t]+\.[ \t]+(?=\d)/g, '$1 · ');
   // Numbers, with their unit and powers of ten.
   s = s.replace(QUANTITY, quantity);
+  // A unit on its own: "đơn vị kg/m³", "km/h", "N/m²" (a part of two letters, a power, or the
+  // word "đơn vị" before it); "F/m", "s/t" stay formulas.
+  s = s.replace(
+    /(?<![\p{L}\d/])([A-Za-zµμΩ]{1,4}[²³]?)\/([A-Za-zµμΩ]{1,4}[²³]?)(?![\p{L}\d/])/gu,
+    (all, a: string, b: string, offset: number, text: string) => {
+      const named = /đơn vị[\s:(]*$/iu.test(text.slice(Math.max(0, offset - 12), offset));
+      const unitLike = named || [a, b].some((p) => /[A-Za-zµμΩ]{2}|[²³]/u.test(p));
+      const read = unitLike ? readUnit(all) : null;
+      return read ? ` ${read} ` : all;
+    },
+  );
+  // A unit after a word: "1.200 cá thể/km²" → "… cá thể trên ki-lô-mét vuông" (never "l/g").
+  s = s.replace(
+    /(?<![\p{L}\d])(\p{L}+)\/([A-Za-zµμΩ°][A-Za-zµμΩ²³⁻¹^\d]*)(?![\p{L}\d])/gu,
+    (all, w: string, u: string) => {
+      const read = w.length >= 3 || /[^a-zA-Z]/.test(w) ? readUnit(u) : null;
+      return read ? `${w} trên ${read} ` : all;
+    },
+  );
   // Powers left over: x², 10^{-3} (numbers are words by now), with a unit after them.
   s = s
     .replace(
@@ -901,7 +1148,8 @@ export function toSpeech(content: string): string {
                 ? `mũ ${exponentWords(e)}`
                 : `mũ ${e}`;
         const after = unitAfter(unit);
-        if (!after) return ` ${words}${space ?? ''}${unit ?? ''}`;
+        // A symbol after the power is a word of its own: "sin²x" → "sin bình phương ích".
+        if (!after) return ` ${words}${unit ? space || ' ' : (space ?? '')}${unit ?? ''}`;
         return ` ${words}${after[0]}${after[1]} `;
       },
     )
@@ -916,7 +1164,7 @@ export function toSpeech(content: string): string {
   s = s.replace(/°/g, ' độ ');
   // Roman numerals after the words that use them: "Định luật II" → "hai", "lần thứ IV" → "tư".
   s = s.replace(
-    /((?<![\p{L}])(?:[Kk][ìỳ]\s+(?:đầu|giữa|sau|cuối)|[Gg]iảm phân|[Nn]guyên phân|[Ll]ần thứ|[Ll]uật|[Cc]hương|[Bb]ài|[Pp]hần|[Mm]ục|[Kk][ỷỳì]|[Ll]oại|[Nn]hóm(?: chính)?|[Ll]ớp|[Gg]iai đoạn))\s+([IVX]{1,6})(?![\p{L}\d])/gu,
+    /((?<![\p{L}])(?:[Kk][ìỳ]\s+(?:đầu|giữa|sau|cuối)|[Gg]iảm phân|[Nn]guyên phân|[Ll]ần thứ|[Ll]uật|[Cc]hương|[Bb]ài|[Pp]hần|[Mm]ục|[Kk][ỷỳìỉ]|[Ll]oại|[Nn]hóm(?: chính)?|[Ll]ớp|[Gg]iai đoạn))\s+([IVX]{1,6})(?![\p{L}\d])/gu,
     (all, w: string, r: string) => {
       const n = roman(r);
       if (!n) return all;
@@ -934,16 +1182,16 @@ export function toSpeech(content: string): string {
     },
   );
   // Symbols written as single letters ("g", "F"), short capital acronyms ("AB", "AI") and
-  // vowel-less runs that cannot be Vietnamese words ("mgh", "mc").
+  // vowel-less runs that cannot be Vietnamese words ("mgh", "mc", "Km").
   s = s.replace(
-    /(?<![\p{L}\d'-])([A-Za-z]|[A-Z]{2,4}|[b-df-hj-np-tv-z]{2,4})(?![\p{L}\d'-])/gu,
-    (_m, w: string) => ` ${Array.from(w).map(letterName).join(' ')} `,
+    /(?<![\p{L}\d'-])([A-Za-z]|[A-Z]{2,4}|[B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]{2,4})(?![\p{L}\d'-])/gu,
+    (_m, w: string) => ` ${spell(w)} `,
   );
   // Any digit still left (an odd format) is read digit by digit rather than skipped.
   s = s.replace(/\d+/g, (d) => ` ${readInteger(d)} `);
   return s
     .replaceAll(CONCENTRATION, ' nồng độ ')
-    .replace(/[\\{}_^*#|~]/g, ' ')
+    .replace(/[\\{}_^*#|~[\]$]/g, ' ')
     .replace(/\(\s*\)/g, ' ')
     .replace(/[ \t]+([,.;:!?)])/g, '$1')
     .replace(/\(\s+/g, '(')

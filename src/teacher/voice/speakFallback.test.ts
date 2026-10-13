@@ -6,8 +6,10 @@ import { useVoiceStore } from './voiceStore';
  * Audit VOI-01: when the Gemini voice fails half-way, the Windows voice goes on from the first
  * phrase the learner has not heard yet; nothing is read twice.
  */
-vi.mock('./audio', () => ({
-  decodeAudio: () => ({ samples: new Float32Array(8), sampleRate: 24000 }),
+vi.mock('./audio', async (importOriginal) => ({
+  // Real `isSilent`: the first group must be audio a learner hears (audit G5), not silence.
+  ...(await importOriginal<typeof import('./audio')>()),
+  decodeAudio: () => ({ samples: Float32Array.from([0.2, -0.2, 0.1, -0.1]), sampleRate: 24000 }),
   playPcm: () => Promise.resolve(),
   stopAudio: () => undefined,
   pause: () => Promise.resolve(),
@@ -61,7 +63,7 @@ describe('voice fallback (VOI-01)', () => {
       tts: () => {
         calls++;
         return calls === 1
-          ? Promise.resolve({ audio: '', mimeType: 'audio/L16;rate=24000' })
+          ? Promise.resolve({ audio: 'AEA=', mimeType: 'audio/L16;rate=24000' })
           : Promise.reject(new Error('503 overloaded'));
       },
     } as unknown as LlmTransport);

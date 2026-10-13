@@ -55,6 +55,20 @@ export function decodeAudio(b64: string, mimeType: string): Pcm {
   return { samples: int16ToFloat(view, 0, bytes.length), sampleRate: rate ? Number(rate) : 24000 };
 }
 
+/**
+ * No sound a learner could hear: no samples, broken samples (NaN), or nothing above about
+ * −60 dBFS. A voice that returns this did not speak, whatever it reported.
+ */
+export function isSilent(pcm: Pcm, floor = 1e-3): boolean {
+  let peak = 0;
+  for (const v of pcm.samples) {
+    if (!Number.isFinite(v)) return true;
+    const a = Math.abs(v);
+    if (a > peak) peak = a;
+  }
+  return peak < floor;
+}
+
 let context: AudioContext | null = null;
 let current: AudioBufferSourceNode | null = null;
 
