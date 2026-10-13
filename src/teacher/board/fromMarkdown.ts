@@ -32,7 +32,14 @@ export function keyPoint(text: string): string {
   const head = text.slice(0, KEY_POINT_CHARS - 10);
   const clause = Math.max(head.lastIndexOf(','), head.lastIndexOf(';'), head.lastIndexOf(':'));
   const cut = clause >= 30 ? clause : head.lastIndexOf(' ');
-  return `${text.slice(0, cut > 0 ? cut : head.length).trimEnd()}…`;
+  let at = cut > 0 ? cut : head.length;
+  // Never inside a $…$ formula (an unclosed "$a =…" on the board): the formula is kept whole.
+  for (const m of text.matchAll(/\$[^$]+\$/g)) {
+    const end = m.index + m[0].length;
+    if (at > m.index && at < end) at = end;
+  }
+  if (at >= text.trimEnd().length) return text;
+  return `${text.slice(0, at).trimEnd()}…`;
 }
 
 // `\b` does not work after Vietnamese letters: a lookahead ends the word instead.

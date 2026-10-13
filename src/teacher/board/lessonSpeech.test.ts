@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
-import { markdownToScript } from './fromMarkdown';
+import { keyPoint, markdownToScript } from './fromMarkdown';
 import type { Measure } from './layout';
 import { parseTeachScript } from './teachscript';
 
@@ -35,7 +35,8 @@ vi.mock('@/teacher/voice/speak', () => ({
   toSpokenText: (text: string) => text,
 }));
 
-const { playLesson, pauseLesson, resumeLesson, lessonMetrics } = await import('./lesson');
+const { playLesson, pauseLesson, resumeLesson, stopLesson, lessonMetrics } =
+  await import('./lesson');
 const { useBoardStore } = await import('./boardStore');
 
 const measure: Measure = {
@@ -105,6 +106,22 @@ describe('what the teacher says while writing (BRD-01)', () => {
     const w2 = withNumbers.sentences[0]?.actions.find((a) => a.action.kind === 'write');
     expect(w2?.action.kind === 'write' ? w2.action.text : '').toContain('46 nhiễm sắc thể đơn');
   });
+
+  it('never cuts a key point inside a $…$ formula', () => {
+    const line =
+      'Theo định luật hai Newton thì gia tốc của vật được tính bằng $a = \\frac{F}{m}$ với F là hợp lực tác dụng lên vật';
+    const point = keyPoint(line);
+    expect(point.endsWith('…')).toBe(true);
+    expect(point.split('$').length % 2).toBe(1);
+    expect(point).toContain('$a = \\frac{F}{m}$');
+  });
+
+  it('says a written result whose number the sentence does not say', () => {
+    const [s] = spoken(
+      'Thay m bằng 2 kg và a bằng 3 ta được lực F <write id="r1" zone="steps" role="result">F = m a = 2 · 3 = 6 N</write>.',
+    );
+    expect(s).toContain('6 N');
+  });
 });
 
 describe('subtitles', () => {
@@ -114,6 +131,17 @@ describe('subtitles', () => {
       'Thay số vào, a = 10/2 = 5 m/s².',
     );
     expect(subtitleText('Ví dụ: $2H_2 + O_2 \\rightarrow 2H_2O$.')).toBe('Ví dụ: 2H₂ + O₂ → 2H₂O.');
+  });
+
+  it('raise or lower only what LaTeX raises or lowers', async () => {
+    const { subtitleText } = await import('./lesson');
+    expect(subtitleText('$a^2+b^2=c^2$')).toBe('a²+b²=c²');
+    expect(subtitleText('$v^2-v_0^2=2as$')).toBe('v²-v₀²=2as');
+    expect(subtitleText('$e^{-kt}$')).toBe('e^(-kt)');
+    expect(subtitleText('$x^{2n}$')).toBe('x^(2n)');
+    expect(subtitleText('$10^{-3}$ và $Fe^{3+}$')).toBe('10⁻³ và Fe³⁺');
+    expect(subtitleText('$x_{2n}$ và $x_{12}$')).toBe('x_(2n) và x₁₂');
+    expect(subtitleText('$V_{max}$')).toBe('V_max');
   });
 });
 
@@ -152,5 +180,30 @@ describe('pause and resume (BRD-02)', () => {
     const m = lessonMetrics();
     expect(m?.sentences).toHaveLength(3);
     expect(m?.firstSpeechMs).not.toBeNull();
+  });
+
+  it('stops a lesson paused mid-sentence without an unhandled rejection', async () => {
+    const rejections: unknown[] = [];
+    const onRejection = (reason: unknown) => {
+      rejections.push(reason);
+    };
+    process.on('unhandledRejection', onRejection);
+    try {
+      const script =
+        'Câu đang viết <write id="w1" zone="steps">một dòng chữ khá dài để cây bút viết lâu hơn giọng đọc</write>. Câu sau.';
+      const done = playLesson({ id: 'p2', content: script, question: '' }, measure);
+      // Paused while the voice speaks and the pen writes, then stopped (a new question, unmount).
+      await until(
+        () => useVoiceStore.getState().speaking && (useBoardStore.getState().progress.w1 ?? 0) > 0,
+      );
+      pauseLesson();
+      await new Promise((r) => setTimeout(r, 50));
+      stopLesson();
+      await done;
+      await new Promise((r) => setTimeout(r, 50));
+      expect(rejections).toEqual([]);
+    } finally {
+      process.off('unhandledRejection', onRejection);
+    }
   });
 });

@@ -87,12 +87,18 @@ export function subtitleText(speech: string): string {
         .replace(/\\(?:long)?rightarrow\b|\\to\b/g, '→')
         .replace(/\\(?:rightleftharpoons|leftrightarrow)\b/g, '⇌')
         .replace(/\\[ ,;:!]/g, ' ')
-        .replace(/_\{?(\d+)\}?/g, (_s, d: string) =>
-          Array.from(d, (c) => SUBSCRIPT[Number(c)] ?? c).join(''),
+        // As LaTeX reads them: without braces one character ("a^2+b^2" → "a²+b²"); a braced
+        // group only when it is all digits/signs ("10^{-3}" → "10⁻³"), else kept readable
+        // ("e^{-kt}" → "e^(-kt)", "x_{2n}" → "x_(2n)", "V_{max}" → "V_max").
+        .replace(/\^\{?\\circ\}?/g, '°')
+        .replace(/_(?:\{(\d+)\}|(\d))/g, (_s, a?: string, b?: string) =>
+          Array.from(a ?? b ?? '', (c) => SUBSCRIPT[Number(c)] ?? c).join(''),
         )
-        .replace(/\^\{?([0-9+\-−]+)\}?/g, (_s, d: string) =>
-          Array.from(d, (c) => SUPERSCRIPT[c] ?? c).join(''),
+        .replace(/_\{([^{}]*)\}/g, (_s, g: string) => (/^[A-Za-z]+$/.test(g) ? `_${g}` : `_(${g})`))
+        .replace(/\^(?:\{([0-9+\-−]+)\}|([0-9+\-−]))/g, (_s, a?: string, b?: string) =>
+          Array.from(a ?? b ?? '', (c) => SUPERSCRIPT[c] ?? c).join(''),
         )
+        .replace(/\^\{([^{}]*)\}/g, (_s, g: string) => (g.length === 1 ? `^${g}` : `^(${g})`))
         .replace(/\\([a-zA-Z]+)/g, '$1')
         .replace(/[{}]/g, ''),
     )
@@ -344,8 +350,10 @@ async function speakSentence(
     await speak(text, { rate: useBoardStore.getState().speed });
     entry.speechMs = (entry.speechMs ?? 0) + Math.round(performance.now() - begin);
     if (!wasCut() || isAborted(signal) || isInstant()) return;
-    await waitIfPaused(signal);
-    if (isInstant()) return;
+    // Never throws: when the pen stops first (a stop during the pause), nobody awaits this
+    // promise any more, and a rejection here would be unhandled.
+    if (gate) await gate.promise;
+    if (isAborted(signal) || isInstant()) return;
   }
 }
 

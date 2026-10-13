@@ -323,8 +323,95 @@ const ELEMENTS = new Set(
   ).split(' '),
 );
 
-const FORMULA =
-  /(?<![\p{L}\d])(\d*)((?:[A-Z][a-z]?(?:\d+|[₀-₉]+)?|\((?:[A-Z][a-z]?(?:\d+|[₀-₉]+)?)+\)(?:\d+|[₀-₉]+)?)+)(\^?\{?\d*[+\-−]\}?|[⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻])?(?![\p{L}\d])/gu;
+/** A formula as written in text: "H2O", "Fe(OH)₃", "NaCl" (coefficient and charge apart). */
+const FORMULA_BODY = String.raw`(?:[A-Z][a-z]?(?:\d+|[₀-₉]+)?|\((?:[A-Z][a-z]?(?:\d+|[₀-₉]+)?)+\)(?:\d+|[₀-₉]+)?)+`;
+const FORMULA_CHARGE = String.raw`\^?\{?\d*[+\-−]\}?|[⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻]`;
+const FORMULA = new RegExp(
+  String.raw`(?<![\p{L}\d])(\d*)(${FORMULA_BODY})(${FORMULA_CHARGE})?(?![\p{L}\d])`,
+  'gu',
+);
+
+/** A state symbol right after a formula: "H2O(l)", "NaCl (dd)", "CO₂(k)". */
+const STATE_AFTER_FORMULA = new RegExp(
+  String.raw`(?<![\p{L}\d])(\d*)(${FORMULA_BODY})(${FORMULA_CHARGE})?(\s?)\((aq|dd|s|r|l|g|k)\)`,
+  'gu',
+);
+/** Elements written as molecules with a count: H₂, N₂, O₂, O₃, F₂, Cl₂, Br₂, I₂, P₄, S₈. */
+const MOLECULES = new Set(['H', 'N', 'O', 'F', 'Cl', 'Br', 'I', 'P', 'S']);
+const STATES: Record<string, string> = {
+  aq: 'dung dịch',
+  dd: 'dung dịch',
+  s: 'rắn',
+  r: 'rắn',
+  l: 'lỏng',
+  g: 'khí',
+  k: 'khí',
+};
+
+function stateAfterFormula(
+  all: string,
+  coef: string,
+  body: string,
+  charge: string | undefined,
+  space: string,
+  state: string,
+  offset: number,
+  text: string,
+): string {
+  const symbols = body.match(/[A-Z][a-z]?/g) ?? [];
+  if (!symbols.every((x) => ELEMENTS.has(x))) return all;
+  // A lone one-letter symbol with "(s)", "(l)", "(g)" is usually a quantity with its unit: "V (l)",
+  // "m(g)", "t (s)" (never "vê lỏng"). It is a state only inside an equation, next to "+" or an
+  // arrow: "C(s) + O2(g)", "→ Fe(s)". Vietnamese "(r)", "(k)", "(dd)" are never units: "C(r)".
+  const inEquation =
+    /(?:[+→⟶⇌]|->)\s*$/u.test(text.slice(0, offset)) ||
+    /^\s*(?:[+→⟶⇌]|->)/u.test(text.slice(offset + all.length));
+  const lone =
+    symbols.length === 1 &&
+    body.length === 1 &&
+    !charge &&
+    (space !== '' || ['s', 'l', 'g'].includes(state)) &&
+    !inEquation;
+  // After a space only a solution ("NaCl (dd)"), a compound ("H2O (l)") or an element's molecule
+  // ("O₂ (k)"): "V1 (l)", "V2 (l)" are volumes in litres.
+  const molecule =
+    symbols.length === 1 &&
+    symbols.every((x) => MOLECULES.has(x)) &&
+    Number(/\d+/.exec(fromScript(body))?.[0] ?? 0) >= 2;
+  const spacedOk = !space || state === 'aq' || state === 'dd' || symbols.length >= 2 || molecule;
+  if (lone || !spacedOk) return all;
+  return `${coef}${body}${charge ?? ''} ${STATES[state] ?? state} `;
+}
+
+/** Stands for "nồng độ" until the end, so neither LaTeX nor the letter rules touch the words. */
+const CONCENTRATION = String.fromCharCode(0xe000);
+/** "[S]", "[H+]", "$[OH^-]$", "\left[ H_2O \right]": a bracket around one token (no list, no space). */
+const BRACKETED =
+  /(?:\\left\s*)?(?<!\\)\[\s*((?:\\[a-zA-Z]+\s*\{[^{}]*\}|[^[\]\s,;\\])+)\s*(?:\\right\s*)?\]/g;
+/** The words before the bracket already say it: "nồng độ [H+]", "nồng độ cơ chất [S]". */
+const SAID_CONCENTRATION = /nồng độ(?:\s+\p{L}+){0,2}[\s$(]*$/iu;
+
+/** One chemical species, the only thing whose bracket means a concentration. */
+function isSpecies(raw: string): boolean {
+  const plain = fromScript(
+    raw.replace(/\\[a-zA-Z]+\s*\{([^{}]*)\}/g, '$1').replace(/[_^{}]/g, ''),
+  ).replace('−', '-');
+  const m = /^((?:[A-Z][a-z]?\d*|\((?:[A-Z][a-z]?\d*)+\)\d*)+)(\d*[+-])?$/.exec(plain);
+  if (!m) return false;
+  const body = m[1] ?? '';
+  const symbols = body.match(/[A-Z][a-z]?/g) ?? [];
+  // Real elements ("[Na⁺]", "[H2O]"), or a generic species of one or two capitals ("[E]", "[ES]");
+  // never a word or an abbreviation ("[Wikipedia]", "[SGK]").
+  return symbols.every((x) => ELEMENTS.has(x)) || /^[A-Z]{1,2}$/.test(body);
+}
+
+function concentrations(text: string): string {
+  return text.replace(BRACKETED, (all, inner: string, offset: number) => {
+    if (!isSpecies(inner)) return all;
+    const said = SAID_CONCENTRATION.test(text.slice(Math.max(0, offset - 40), offset));
+    return ` ${said ? '' : CONCENTRATION} ${inner} `;
+  });
+}
 
 /** "H2SO4" → "hát hai ét ô bốn"; null when it is not a plausible formula. */
 function readFormula(body: string, charged: boolean): string | null {
@@ -717,17 +804,50 @@ function readTable(block: string): string {
   return `${lines.map((l) => `${l}.`).join('\n')}\n`;
 }
 
+const TEX_ARROW = /\\(?:long)?rightarrow|\\to(?![a-zA-Z])|→/;
+const TEX_ARROWS = new RegExp(TEX_ARROW.source, 'g');
+
+/** Element symbols of one LaTeX term ("2H_2O" → H, O); null when it is not a chemical species. */
+function texSpecies(term: string): string[] | null {
+  const count = String.raw`(?:_\{?\d+\}?)?`;
+  const m = new RegExp(
+    String.raw`^\d*((?:[A-Z][a-z]?${count}|\((?:[A-Z][a-z]?${count})+\)${count})+)$`,
+  ).exec(term);
+  const body = m?.[1] ?? '';
+  const symbols = body.match(/[A-Z][a-z]?/g) ?? [];
+  // A subscript 0 or 1 is an index (T_1, v_0), never a number of atoms.
+  if (!m || /_\{?[01]\}?(?!\d)/.test(body) || !symbols.every((x) => ELEMENTS.has(x))) return null;
+  return symbols;
+}
+
+/**
+ * A chemical equation around the arrow: two species joined by "+" ("H_2 + O_2") or a compound
+ * ("H_2O"). "T_1 \\to T_2" or "E_3 \\rightarrow E_2" is not one.
+ */
+function chemicalTex(tex: string): boolean {
+  if (!TEX_ARROW.test(tex)) return false;
+  const plain = tex
+    .replace(/\\(?:mathrm|text|ce)\s*\{([^{}]*)\}/g, '$1')
+    .replace(/\^\{?\d*[+\-−]\}?/g, '')
+    .replace(/\((?:aq|dd|s|r|l|g|k)\)/g, '')
+    .replace(/\s+/g, '');
+  return plain.split(TEX_ARROWS).some((side) => {
+    const terms = side.split('+').map(texSpecies);
+    return (terms.length >= 2 && terms.every(Boolean)) || terms.some((t) => (t?.length ?? 0) >= 2);
+  });
+}
+
 /** A chemical equation written in LaTeX ("2H_2 + O_2 \\rightarrow 2H_2O"): its arrow reads "tạo thành". */
 function latexSpeech(tex: string): string {
   const read = readLatex(tex);
-  const chemical =
-    /(?:^|[^A-Za-z\\])[A-Z][a-z]?_\{?\d/.test(tex) && /\\(?:long)?rightarrow|\\to\b|→/.test(tex);
-  return chemical ? read.replace(/\s*→\s*/g, ' tạo thành ') : read;
+  return chemicalTex(tex) ? read.replace(/\s*→\s*/g, ' tạo thành ') : read;
 }
 
 /** Whole answer → words for a Vietnamese voice. */
 export function toSpeech(content: string): string {
-  let s = stripMarkdown(content);
+  // Concentrations "[S]", "[H⁺]" → "nồng độ S" (audit VOI-02), in text and in LaTeX alike; an
+  // interval "[a, b]" or a citation "[1]", "[Wikipedia]" is not a species and is left.
+  let s = concentrations(stripMarkdown(content));
   // Math segments first: they use their own grammar.
   s = s
     .replace(/\$\$([\s\S]+?)\$\$/g, (_m, m: string) => `\n${latexSpeech(m)}.\n`)
@@ -747,15 +867,9 @@ export function toSpeech(content: string): string {
       /(?<![\p{L}\d./])(\d+)\/(\d+)(?![\p{L}\d/])/gu,
       (_m, a: string, b: string) => ` ${readInteger(a)} phần ${readInteger(b)} `,
     );
-  // Concentrations "[S]", "[H⁺]" → "nồng độ S" (audit VOI-02), also when a formula already turned
-  // the letter into a word ("[ ét ]"); citations like "[1]" (digits) are left.
-  s = s.replace(/\[\s*(\p{L}[^[\]\d\n]{0,18}?)\s*\]/gu, ' nồng độ $1 ');
-  // State symbols after a formula: "NaCl (aq)" → "NaCl dung dịch", "H2O(l)" → "… lỏng".
-  s = s.replace(
-    /(?<=[A-Za-z0-9₀-₉⁺⁻)])\s?\((aq|dd|s|r|l|g|k)\)/g,
-    (_m, st: string) =>
-      ` ${({ aq: 'dung dịch', dd: 'dung dịch', s: 'rắn', r: 'rắn', l: 'lỏng', g: 'khí', k: 'khí' } as Record<string, string>)[st] ?? st} `,
-  );
+  // State symbols after a formula: "NaCl (aq)" → "NaCl dung dịch", "H2O(l)" → "… lỏng"; a unit
+  // after a symbol, a number or a word stays a unit ("t (s)", "5 (s)", "Thời gian (s)").
+  s = s.replace(STATE_AFTER_FORMULA, stateAfterFormula);
   // Chemistry: "2H2O" → "hai hát hai ô"; a reaction arrow means "tạo thành".
   const found = { chemistry: false };
   s = s.replace(FORMULA, (all, coef: string, body: string, charge: string | undefined) => {
@@ -800,9 +914,20 @@ export function toSpeech(content: string): string {
   for (const [re, words] of SYMBOLS) s = s.replace(re, words);
   s = s.replace(/[αβγδΔεζηθλμµνξπρσΣτφΦχψωΩ]/g, (g) => ` ${GREEK[g] ?? g} `);
   s = s.replace(/°/g, ' độ ');
-  // Roman numerals after the words that use them: "Định luật II" → "hai".
+  // Roman numerals after the words that use them: "Định luật II" → "hai", "lần thứ IV" → "tư".
   s = s.replace(
-    /((?<![\p{L}])(?:[Kk][ìỳ]\s+(?:đầu|giữa|sau|cuối)|[Gg]iảm phân|[Nn]guyên phân|[Ll]ần|[Ll]uật|[Cc]hương|[Bb]ài|[Pp]hần|[Mm]ục|[Kk][ỷỳì]|[Ll]oại|[Nn]hóm(?: chính)?|[Ll]ớp|[Gg]iai đoạn))\s+([IVX]{1,6})(?![\p{L}\d])/gu,
+    /((?<![\p{L}])(?:[Kk][ìỳ]\s+(?:đầu|giữa|sau|cuối)|[Gg]iảm phân|[Nn]guyên phân|[Ll]ần thứ|[Ll]uật|[Cc]hương|[Bb]ài|[Pp]hần|[Mm]ục|[Kk][ỷỳì]|[Ll]oại|[Nn]hóm(?: chính)?|[Ll]ớp|[Gg]iai đoạn))\s+([IVX]{1,6})(?![\p{L}\d])/gu,
+    (all, w: string, r: string) => {
+      const n = roman(r);
+      if (!n) return all;
+      const ordinal = w.endsWith('thứ') && (n === 1 || n === 4);
+      return `${w} ${ordinal ? (n === 1 ? 'nhất' : 'tư') : readInteger(String(n))}`;
+    },
+  );
+  // After a bare "lần" a single I or V is usually a symbol ("Mỗi lần I tăng": current I): only
+  // II, III, IV… or a numeral that ends the clause ("phân bào lần I.") is a number.
+  s = s.replace(
+    /((?<![\p{L}])[Ll]ần)\s+([IVX]{2,6}|[IVX](?=[ \t]*(?:[,.;:!?…)]|$)))(?![\p{L}\d])/gmu,
     (all, w: string, r: string) => {
       const n = roman(r);
       return n ? `${w} ${readInteger(String(n))}` : all;
@@ -817,6 +942,7 @@ export function toSpeech(content: string): string {
   // Any digit still left (an odd format) is read digit by digit rather than skipped.
   s = s.replace(/\d+/g, (d) => ` ${readInteger(d)} `);
   return s
+    .replaceAll(CONCENTRATION, ' nồng độ ')
     .replace(/[\\{}_^*#|~]/g, ' ')
     .replace(/\(\s*\)/g, ' ')
     .replace(/[ \t]+([,.;:!?)])/g, '$1')

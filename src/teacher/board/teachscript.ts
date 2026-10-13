@@ -78,11 +78,17 @@ function wordsOf(s: string): string[] {
     .filter(Boolean);
 }
 
-/** True when most words of `text` are already in `speech` (the teacher says it anyway). */
+/**
+ * True when most words of `text` are already in `speech` (the teacher says it anyway). A write
+ * with a number the sentence does not say ("… = 6 N" after "2 kg và 3") never is: the result
+ * must be heard.
+ */
 function alreadySaid(speech: string, text: string): boolean {
   const said = new Set(wordsOf(speech));
   const words = wordsOf(text);
   if (words.length === 0) return true;
+  const saidNumbers = new Set(speech.match(/\d+/g) ?? []);
+  if ((text.match(/\d+/g) ?? []).some((n) => !saidNumbers.has(n))) return false;
   return words.filter((w) => said.has(w)).length / words.length >= 0.6;
 }
 
