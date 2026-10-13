@@ -904,6 +904,10 @@ const en: Messages = {
     footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
     openSimulation: 'Open the simulation: {title}',
     factsTitle: 'Computed by SimLab (exact, not the AI)',
+    facts: {
+      balanced: 'Balanced equation: {equation}',
+      unbalanced: 'SimLab could not balance “{input}”: check the formulas in the problem.',
+    },
     errors: {
       cloudOff: 'Online AI is off. Enable an AI provider in Settings or choose local Gemma.',
       notAllowed:

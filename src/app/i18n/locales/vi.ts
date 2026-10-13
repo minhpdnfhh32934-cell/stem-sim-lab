@@ -901,6 +901,10 @@ const vi = {
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
     openSimulation: 'Xem mô phỏng: {title}',
     factsTitle: 'Kết quả do SimLab tính (chính xác, không phải AI)',
+    facts: {
+      balanced: 'Phương trình cân bằng: {equation}',
+      unbalanced: 'SimLab chưa cân bằng được “{input}”: hãy kiểm tra lại công thức trong đề.',
+    },
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:

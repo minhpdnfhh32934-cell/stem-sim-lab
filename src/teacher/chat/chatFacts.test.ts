@@ -48,4 +48,15 @@ describe('app-computed results next to the answer', () => {
     expect(result.metadata.facts).toEqual([]);
     expect(seen.system).not.toContain('KẾT QUẢ DO SIMLAB TÍNH (dùng đúng');
   });
+
+  it('never shows a physics question as an exact chemistry result (audit G3)', async () => {
+    const result = await askTeacher(
+      'Vật m = 2kg chịu lực kéo F = 10N, hệ số ma sát 0,1. Tính gia tốc.',
+      'vi',
+      [],
+      { includeScreen: false, think: false },
+    );
+    expect(result.metadata.facts).toEqual([]);
+    expect(seen.system).not.toContain('KẾT QUẢ DO SIMLAB TÍNH (dùng đúng');
+  });
 });
