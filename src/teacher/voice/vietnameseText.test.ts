@@ -143,6 +143,14 @@ describe('toSpeech', () => {
     expect(toSpeech('Xem [hình](http://x) và SGK')).toBe('Xem hình và sách giáo khoa');
   });
 
+  it('removes known tags only: a comparison without spaces is read, not dropped', () => {
+    expect(toSpeech('Ta có x<y khi y>0.')).toBe('Ta có ích nhỏ hơn i khi i lớn hơn không.');
+    expect(toSpeech('a<b and c>d')).toBe('a nhỏ hơn bê and xê lớn hơn đê');
+    expect(toSpeech('<b>Gia tốc</b> của nước H<sub>2</sub>O<br/>là gì')).toBe(
+      'Gia tốc của nước hát hai ô là gì',
+    );
+  });
+
   it('never leaves raw digits or LaTeX for the voice', () => {
     const out = toSpeech(
       'Ta có $a = \\frac{F}{m} = \\frac{10}{2} = 5\\,\\text{m/s}^2$, tức là 5 m/s² (theo SGK).',

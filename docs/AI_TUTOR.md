@@ -342,7 +342,9 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
 
 1. **Speech plan** (`src/teacher/voice/speechPlan.ts`, pure). `prepareSpeech(text, {role, emphasis})`
    removes what is not meant to be heard (`<think>` blocks, `<reference>` blocks, comments,
-   TeachScript/HTML tags even with `>` inside an attribute, horizontal rules, emoji), applies the
+   known tags only — TeachScript, SSML and a short HTML list (`markup.ts`), even with `>` inside an
+   attribute; a comparison without spaces such as "x<y khi y>0" stays and is read "nhỏ hơn" /
+   "lớn hơn" —, horizontal rules, emoji), applies the
    **pronunciation dictionary** (`pronunciations.json`: term, reading, subject, `review_status`;
    applied before the rule-based reader so an entry wins; never inside `$…$`, LaTeX or code, never
    next to an operator or an arrow; a reading is words only — no digit, unit symbol or formula,

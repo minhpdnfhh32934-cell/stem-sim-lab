@@ -9,6 +9,7 @@
  * Pure functions, no I/O. Readings follow common Northern classroom usage
  * ("linh", "nghìn", "mốt", "tư", "lăm").
  */
+import { stripTags } from './markup';
 
 const DIGITS = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
 const GROUPS = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ'];
@@ -770,6 +771,9 @@ const SYMBOLS: [RegExp, string][] = [
   [/\s=\s|(?<=[\p{L}\d)\s])=(?=[\p{L}\d(\s-])/gu, ' bằng '],
   [/\s<\s/g, ' nhỏ hơn '],
   [/\s>\s/g, ' lớn hơn '],
+  // Also unspaced between symbols or numbers ("x<y", "y>0"): a tag never reaches this rule.
+  [/(?<=[\p{L}\d)]\s*)<(?=\s*[\p{L}\d(−-])/gu, ' nhỏ hơn '],
+  [/(?<=[\p{L}\d)]\s*)>(?=\s*[\p{L}\d(−-])/gu, ' lớn hơn '],
   [/\s\+\s|(?<=[\p{L}\d)])\+(?=[\p{L}\d(])/gu, ' cộng '],
   [/\s[-−–]\s/g, ' trừ '],
   // Also when an earlier rule left spaces: "1/cos²x" → "một / cốt …".
@@ -837,12 +841,11 @@ function quantity(
   return ` ${words}${after[0]}${after[1]} `;
 }
 
-/** Markdown → plain text; keeps $…$ math for `readLatex`. */
+/** Markdown → plain text; keeps $…$ math for `readLatex`. Only known tags go (`markup.ts`). */
 function stripMarkdown(content: string): string {
   return (
-    content
-      .replace(/```[\s\S]*?```/g, '\n(đoạn mã trong tin nhắn)\n')
-      .replace(/<\/?[a-zA-Z][^>]*>/g, ' ')
+    stripTags(content.replace(/```[\s\S]*?```/g, '\n(đoạn mã trong tin nhắn)\n'))
+      .replace(/<!--[\s\S]*?-->/g, ' ')
       .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
       .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
       .replace(/^#{1,6}\s+(.*)$/gm, (_m, h: string) => `${h.replace(/[.:!?]+$/, '')}.`)

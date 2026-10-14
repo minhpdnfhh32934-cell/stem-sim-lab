@@ -302,6 +302,21 @@ describe('what is not meant to be heard', () => {
     expect(plan.text).toContain('Xin chào các em!');
   });
 
+  it('removes only known tags: "x<y khi y>0" and "a<b and c>d" are comparisons, read whole', () => {
+    expect(stripInternalMarkup('x<y khi y>0')).toBe('x<y khi y>0');
+    expect(stripInternalMarkup('a<b and c>d')).toBe('a<b and c>d');
+    expect(prepareSpeech('Ta có x<y khi y>0.').text).toBe(
+      'Ta có ích nhỏ hơn i khi i lớn hơn không.',
+    );
+    expect(prepareSpeech('a<b and c>d').text).toBe('a nhỏ hơn bê and xê lớn hơn đê');
+    // Known tags still go: TeachScript, speech tags, HTML (inline ones without a space).
+    expect(
+      stripInternalMarkup(
+        '<emph>Gia tốc</emph><pause ms="300"/> <speak>của</speak> H<sub>2</sub>O<br/>xong',
+      ),
+    ).toBe(' Gia tốc    của  H2O xong');
+  });
+
   it('keeps arrows and symbols that are also emoji characters (↔ ↗ ✔ ™), drops real emoji', () => {
     const text = 'A ↔ B, giá ↗, đúng ✔, SimLab™ ✅ 😀 \u{2b06}\u{fe0f} ↑ ↓ → ⇌';
     expect(stripInternalMarkup(text)).toBe('A ↔ B, giá ↗, đúng ✔, SimLab™    ↑ ↓ → ⇌');

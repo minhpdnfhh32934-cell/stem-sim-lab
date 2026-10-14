@@ -9,6 +9,7 @@
  * first chunk is kept short. A chunk never ends inside a number with its unit, a formula or a
  * name, and the chunks are the prepared text in order, word for word.
  */
+import { stripTags } from './markup';
 import { applyPronunciations, type PronunciationEntry } from './pronunciations';
 import {
   UNIT_WORDS,
@@ -123,19 +124,18 @@ export interface PrepareOptions {
 
 /**
  * Removes what is not meant to be heard: a model's hidden reasoning, reference blocks, comments,
- * tags (TeachScript, HTML; a ">" inside a quoted attribute does not end the tag), horizontal
- * rules and emoji. Markdown itself is read by `toSpeech`.
+ * known tags (TeachScript, speech and a few HTML tags, `markup.ts`; a ">" inside a quoted
+ * attribute does not end the tag), horizontal rules and emoji. A "<" between words is a
+ * comparison and stays ("x<y khi y>0"). Markdown itself is read by `toSpeech`.
  */
 export function stripInternalMarkup(text: string): string {
   return (
-    text
-      .replace(/<think>[\s\S]*?<\/think>/gi, ' ')
-      .replace(/<reference\b[\s\S]*?<\/reference>/gi, ' ')
-      .replace(/<!--[\s\S]*?-->/g, ' ')
-      .replace(
-        /<\/?[a-zA-Z][\w-]*(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?)*\s*\/?>/g,
-        ' ',
-      )
+    stripTags(
+      text
+        .replace(/<think>[\s\S]*?<\/think>/gi, ' ')
+        .replace(/<reference\b[\s\S]*?<\/reference>/gi, ' ')
+        .replace(/<!--[\s\S]*?-->/g, ' '),
+    )
       .replace(/^[ \t]*(?:[-*_][ \t]*){3,}$/gm, '')
       // Emoji shown as emoji only: "↔", "↗", "✔" or "™" without the emoji selector are symbols.
       .replace(/\p{Emoji_Presentation}\u{fe0f}?|\p{Extended_Pictographic}\u{fe0f}/gu, '')

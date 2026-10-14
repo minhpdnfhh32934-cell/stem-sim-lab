@@ -171,6 +171,8 @@ const EMPTY = new Set([
   'wait_student',
   'checkpoint',
 ]);
+/** Every TeachScript tag name (the voice removes these and a few HTML tags before reading). */
+export const TEACHSCRIPT_TAGS: readonly string[] = [...CONTAINERS, ...EMPTY];
 /** Attributes that would be coordinates or sizes: never accepted from the AI (§7). */
 const GEOMETRY = /^(x|y|x1|y1|x2|y2|left|top|right|bottom|width|height|px|size|pos|position)$/i;
 
