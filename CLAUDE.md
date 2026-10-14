@@ -86,6 +86,23 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
   was merged into it). Details: `docs/AI_TUTOR.md`.
+- **Gemma answer quality (0.6.0, benchmark 2026-10-14, `docs/TEACHING_EVAL.md`):** repetition rules
+  look only at the generated tokens (`webGemmaWorker.ts` `ANSWER_RULES`); never apply
+  `repetition_penalty` / `no_repeat_ngram_size` to the prompt again (it garbled every term the model
+  had to copy). The on-device prompt gets one unambiguous library note (`knowledge.ts`), an opening
+  chosen by `turnKind` (premise question / learner reply / ordinary question), the
+  `missingData.ts` notice and the `provenance.ts` "Số do AI tự đưa ra" chip. **Any change to an
+  on-device prompt or decoding is benchmarked before it ships:** `scripts/teaching/eval-gemma.mjs`
+  (discrete NVIDIA only, never the iGPU; `--variants/--decoding/--set/--improved-name/--skip`),
+  `compare.mjs`, `breakdown.mjs`, the held-out set `tests/teaching/teaching-heldout.json` and blind
+  AI judging (`judge-prep.mjs`, `judge-score.mjs`, `judge-rubric.md`). Saved results in
+  `tests/teaching/results/` are never edited.
+- **Release notes and "Có gì mới":** one source, `release-notes/versions.json`; `npm run
+release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
+  `release-notes/google-docs.html` (never edit generated files). A version's `notesReady` becomes
+  true only when its notes are reviewed for a real release; never describe an unreleased version
+  as released or invent a date. In-app box and Settings → "Lịch sử phiên bản": `src/app/whatsnew/`
+  (`stemsim.whatsnew`). Procedure: `release-notes/README.md`.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
