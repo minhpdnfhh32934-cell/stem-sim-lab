@@ -12,12 +12,16 @@
 //! A call is registered for `ai_cancel` before anything else ([`InflightGuard`]), so a stop
 //! pressed while the gate, the key or the daily cap is being checked is never counted or sent.
 //!
+//! Language models run by another program on this computer (Ollama, LM Studio, llama.cpp) go
+//! through [`local`]: no key, no daily cap, never a cloud fallback.
+//!
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
 //! (b) explain results already computed by the engine. It never computes numbers.
 
 pub mod claude;
 pub mod gemini;
 pub mod groq;
+pub mod local;
 pub mod provider;
 pub mod reasoning;
 pub mod tts;
