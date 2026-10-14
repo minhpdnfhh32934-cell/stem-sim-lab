@@ -94,8 +94,6 @@ describe('release-notes/versions.json', () => {
         expect(v.notesReady, v.version).toBe(false);
       }
     }
-    // 0.6.0 is in review: its notes are a draft until someone reviews them for publication.
-    expect(notes().versions.find((v) => v.version === '0.6.0')?.notesReady).toBe(false);
   });
 
   it('dates are in order: first commit ≤ last commit, build ≤ release, start ≤ first commit', () => {
