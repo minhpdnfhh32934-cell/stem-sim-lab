@@ -107,6 +107,13 @@ describe('"Viết tiếp" equals teaching the whole answer at once', () => {
       'Vậy <write id="r1" zone="steps" role="result">a = 5',
       'Vậy <write id="r1" zone="steps" role="result">a = 5 m/s²</write>.<box target="r1"/> Hết.',
     ],
+    [
+      // Fix round 2: the stump held the face's only title slot, so the whole title became a
+      // heading among the steps.
+      'a TeachScript title cut inside its text',
+      'Hôm nay <write id="h1" zone="title" role="heading">Chuyển động thẳng',
+      'Hôm nay <write id="h1" zone="title" role="heading">Chuyển động thẳng biến đổi đều</write>. Ta có <write id="s1" zone="steps">v = v₀ + at</write>.',
+    ],
   ])('%s', async (_name, part, full) => {
     expect(full.startsWith(part)).toBe(true);
     const whole = await fresh(full);
@@ -121,6 +128,58 @@ describe('"Viết tiếp" equals teaching the whole answer at once', () => {
       const whole = await fresh(answer);
       expect(await continued(part, answer)).toEqual(whole);
     },
+  );
+});
+
+/**
+ * What the learner sees, face by face: each text with its face and role, and each mark with the
+ * text it stands on (an arrow: both ends). Positions may differ (an erased stump leaves a gap);
+ * what is written, where, and what is marked may not.
+ */
+function seenOnFaces(): { texts: string[]; marks: string[] } {
+  const { layout, erased, marks } = useBoardStore.getState();
+  const shown = layout.elements.filter((e) => !erased[e.id]);
+  const on = (face: number, b: { x: number; y: number; w: number; h: number }): string => {
+    const cx = b.x + b.w / 2;
+    const cy = b.y + b.h / 2;
+    const e = shown.find(
+      (x) => x.face === face && cx >= x.x && cx <= x.x + x.w && cy >= x.y && cy <= x.y + x.h,
+    );
+    return e ? (e.kind === 'text' ? e.source : `draw:${e.type}`) : '?';
+  };
+  return {
+    texts: shown.map((e) =>
+      e.kind === 'text' ? `${String(e.face)}|${e.role}|${e.source}` : `${String(e.face)}|draw`,
+    ),
+    marks: marks
+      .map(
+        (m) =>
+          `${String(m.face)}|${m.kind}|${on(m.face, m.box)}${m.to ? `→${on(m.face, m.to)}` : ''}`,
+      )
+      .sort(),
+  };
+}
+
+describe('"Viết tiếp" equals teaching at once, wherever a TeachScript answer is cut', () => {
+  const answers = [
+    'Hôm nay <write id="h1" zone="title" role="heading">Rơi tự do</write>. Đề cho <write id="g1" zone="side_notes" role="note">h = 20 m</write>. Ta có <write id="f1" zone="steps">h = ½gt²</write><underline target="f1"/>, nên <write id="r1" zone="steps" role="result">t = 2 s</write>.<box target="r1"/><arrow from="f1" to="r1"/> Hết.',
+    'Bài một <write id="t1" zone="title" role="heading">Lực ma sát</write>. <write id="s1" zone="steps">F = μmg</write><circle target="s1" span="μ"/>. <newboard title="Ví dụ"/>Với <write id="s2" zone="steps">μ = 0,2</write> thì <write id="r2" zone="steps" role="result">F = 4 N</write>.<box target="r2"/>',
+    '<write id="h1" zone="title" role="heading">Động lượng</write> <write id="k1" zone="steps">Kết luận:</write> Ta có <write id="s1" zone="steps">p = mv = 2·3 = 6 kg·m/s</write>.<highlight target="s1" span="6 kg·m/s"/> À nhầm, <correct target="s1">p = 2·3 = 6 kg·m/s</correct>. <point target="s1"/>Ở câu b, <write id="s2" zone="steps">p = mv = 2·3 = 6 kg·m/s</write>. <write id="q1" zone="steps">Nếu m tăng gấp đôi thì p thế nào?</write>',
+  ];
+  it.each(answers.map((answer, i) => [i, answer] as const))(
+    'answer %i, cut every 4 characters',
+    async (_i, answer) => {
+      const whole = await (async () => {
+        await fresh(answer);
+        return seenOnFaces();
+      })();
+      for (let at = 4; at < answer.length; at += 4) {
+        const part = answer.slice(0, at);
+        await continued(part, answer);
+        expect(seenOnFaces(), `cut at ${String(at)}: ${part}`).toEqual(whole);
+      }
+    },
+    60000,
   );
 });
 

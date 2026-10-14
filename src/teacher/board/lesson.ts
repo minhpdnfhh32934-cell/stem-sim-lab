@@ -911,19 +911,33 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
   const full = lessonFor(input.content, scriptOptions(input));
   const before = teachScriptSource(cleanAnswer(previous.content, cleanOptions(input)).text);
   const rest = untaught(full.script.sentences, sharedLength(before, full.source), store.layout);
-  const progress = { ...store.progress };
-  for (const e of store.layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
   // Stumps of the part taught (and their marks) are wiped before the rest is taught; a face
-  // that held only stumps goes (the rest opens it again).
-  const erased = { ...store.erased };
-  for (const p of rest.wiped) for (const id of p.elements) erased[id] = true;
+  // that held only stumps goes (the rest opens it again). A stump of a face's title is taken
+  // off the board, not erased in place: it would hold the face's only title slot, and the whole
+  // title would become a heading among the steps.
+  const wipedIds = new Set(rest.wiped.flatMap((p) => p.elements));
+  const titles = new Set(
+    store.layout.elements.flatMap((e) =>
+      wipedIds.has(e.id) && e.kind === 'text' && e.role === 'title' ? [e.id] : [],
+    ),
+  );
+  const erased: Record<string, boolean> = {};
+  for (const [id, value] of Object.entries(store.erased)) if (!titles.has(id)) erased[id] = value;
+  for (const id of wipedIds) if (!titles.has(id)) erased[id] = true;
   const unmarked = new Set(rest.wiped.flatMap((p) => p.marks));
   const dropped = new Set(rest.wiped.flatMap((p) => (p.face === null ? [] : [p.face])));
   const faces = store.layout.faces.filter((_, i) => !dropped.has(i));
   const layout =
-    dropped.size === 0
+    dropped.size === 0 && titles.size === 0
       ? store.layout
-      : { faces, elements: store.layout.elements.filter((e) => !dropped.has(e.face)) };
+      : {
+          faces,
+          elements: store.layout.elements.filter((e) => !dropped.has(e.face) && !titles.has(e.id)),
+        };
+  const progress: Record<string, number> = {};
+  for (const [id, value] of Object.entries(store.progress))
+    if (!titles.has(id)) progress[id] = value;
+  for (const e of layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
   lessonTrail = lessonTrail.filter((p) => !rest.wiped.includes(p));
   const teacherFace = Math.min(store.teacherFace, faces.length - 1);
   // The new part is written where the teacher is, in view.
