@@ -69,27 +69,40 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   khi vẽ, mỗi câu trả lời được kiểm thành một bài có kiểu rõ ràng (tiêu đề, dữ kiện, công thức,
   bước, ghi chú, kết quả, câu hỏi kiểm tra…).
   - Lời chào, "Tôi là AI…", "Dưới đây là…", "Hy vọng…" được **nói** nhưng không viết lên bảng.
-    Nếu ngay sau lời chào có phép tính ("Chào em, v = gt = 9,8·2 = 19,6 m/s.") thì phép tính vẫn
-    được viết. Dòng ngắn của bài học không bao giờ bị coi là lời nói suông: câu trả lời "Không." /
-    "Có.", ẩn số "a = ?", ký hiệu "σ là độ đàn hồi", "Dây dẫn." (so từ có dấu: "dây" khác "đây").
-  - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, đường link, dòng "---"
-    không được nói, cũng không được viết.
+    Nếu ngay sau lời chào có phép tính ("Chào em, v = gt = 9,8·2 = 19,6 m/s.") hoặc một lý do
+    ("Câu hỏi hay đấy, vì trọng lực…") thì phần đó vẫn được viết. Dòng ngắn của bài học không bao
+    giờ bị coi là lời nói suông: câu trả lời "Không." / "Có." / "Được.", ẩn số "a = ?", ký hiệu
+    "σ là độ đàn hồi", "Dây dẫn." (so từ có dấu: "dây" khác "đây"). Câu bài học chỉ trông giống
+    lời chào hay suy nghĩ vẫn được giữ: "Chào mào là loài chim…", "Cháo là…", "Hy vọng sống…",
+    "Người dùng muốn tiết kiệm điện…", "Mình cần suy nghĩ xem vật chịu những lực nào."
+  - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, dòng nguồn ("Wikipedia:
+    https://…"), dòng "---" không được nói, cũng không được viết. Dòng ngắn có công thức hay số
+    đo kèm link ("g = 9,81 m/s² (https://…).") chỉ mất cái link, công thức và số vẫn được nói và
+    viết.
   - Một nhãn đứng một mình ("**Kết luận:**", "Phân tích:", "Cho:", "Ghi chú:") không được viết:
     thầy nói nhãn cùng dòng ngay sau, và ý nghĩa của nhãn đi theo dòng đó (kết luận → khung kết
     quả đúng một lần, không bao giờ có khung rỗng; dữ kiện, ghi chú → cột bên; câu hỏi kiểm tra
     cuối bài → ghi chú ngắn ở cột bên). "Kiểm tra (lại):" là kiểm lại đáp số: phép tính sau nó
     được viết đủ. Chỉ câu hỏi kiểm tra cuối bài mới được rút gọn còn câu hỏi, và câu nào có số
-    vẫn được giữ; câu hỏi nằm trong đề bài ("… 72 km/h … Tính quãng đường?") được viết đủ.
-  - Mỗi loại có giới hạn độ dài: câu chỉ có chữ thì viết ý chính (đọc đủ cả câu); câu có số thì
-    tách ở dấu phẩy thành tối đa 3 dòng, không bao giờ cắt giữa một con số hay một công thức.
+    vẫn được giữ; câu hỏi nằm trong đề bài ("… 72 km/h … Tính quãng đường?") được viết đủ; câu hỏi
+    thầy tự trả lời ngay ("Vì sao vật rơi nhanh dần? Vì trọng lực…") là một bước, viết đủ.
+  - Mỗi loại có giới hạn độ dài: câu chỉ có chữ thì viết ý chính (đọc đủ cả câu); câu có số
+    hoặc công thức viết bằng chữ ("a = F/m", "HCl + NaOH → NaCl + H₂O", "p = mv") thì tách ở dấu
+    phẩy thành tối đa 3 dòng hoặc giữ nguyên, không bao giờ cắt giữa hay cắt mất một con số, một
+    công thức.
     Đoạn dài chỉ được nói, và mọi phương trình trong đó (cả `$…$`, `\(…\)` lẫn dạng chữ như
     `a = F/m = 10/2 = 5 m/s²`, tối đa 4) được viết lên bảng: viết đủ cả phương trình hoặc không
     viết, không bao giờ một mẩu dừng sau dấu phép tính hay ngoặc chưa đóng ("T = R *").
   - Dấu gạch chân, khung, mũi tên chỉ vào chữ đã bị bỏ thì cũng bị bỏ; lời thầy nói được tính
     lại theo những gì còn trên bảng. Dòng dài bị tách: khung ở mẩu cuối, gạch chân cả dòng thì
-    gạch mọi mẩu, sửa sai thì gạch bỏ mọi mẩu rồi viết lời sửa sau mẩu cuối. Không con số nào bị
-    đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so sánh "v<s và t>0", "<v>" không
-    bao giờ bị xóa như thẻ HTML; chỗ trống "F = ____ N" được giữ.
+    gạch mọi mẩu, sửa sai thì gạch bỏ mọi mẩu rồi viết lời sửa sau mẩu cuối. Cùng một dòng viết
+    lặp ngay ở câu sau (lỗi của AI) chỉ viết một lần nhưng vẫn được đọc; cùng kết quả ở câu b, ở
+    bài khác hay ở mặt bảng khác thì vẫn được viết lại; "Vật rơi" và "Vật rời" là hai dòng khác
+    nhau. Không con số nào bị đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so sánh
+    "v<s và t>0", "<v>" không bao giờ bị xóa như thẻ HTML; thẻ lạ có thẻ đóng ("<note>…</note>",
+    "<step>…</step>") thì bỏ thẻ, giữ chữ; "10<sup>23</sup>" thành lũy thừa 10²³ (giọng đọc
+    "mười mũ hai mươi ba", không phải "một nghìn không trăm hai mươi ba"); chỗ trống "F = ____ N"
+    được giữ.
   - Trình đọc TeachScript: thẻ `<write>` sai mã được sửa mã (không mất chữ), thẻ chưa đóng kết
     thúc ở cuối câu, "$x<y$ và $y>z$" là chữ chứ không phải thẻ, thẻ bị cắt ở cuối câu trả lời
     không bao giờ được đọc lên (chỉ khi cả đoạn cuối đúng là một thẻ đang viết dở: "Khi v<c thì
@@ -99,7 +112,8 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     dừng giữa chừng được giảng tiếp từ chỗ dừng. Những gì câu cuối đã đặt lên bảng được so với câu
     trả lời đầy đủ: giống hệt thì giữ, khác (mẩu cụt, dòng bị cắt trong `**`, dòng dài ra quá giới
     hạn, mẩu thành nhãn, câu hỏi cuối bài nay là một bước, mặt bảng có tiêu đề bị cắt) thì xóa
-    cùng dấu đánh dấu của nó rồi viết bản đầy đủ. Bảng cuối cùng giống hệt như giảng cả câu trả
+    cùng dấu đánh dấu của nó rồi viết bản đầy đủ (tiêu đề bị cắt được gỡ hẳn khỏi bảng để tiêu
+    đề đầy đủ vẫn nằm ở chỗ tiêu đề). Bảng cuối cùng giống hệt như giảng cả câu trả
     lời một lần (kiểm thử `lessonContinue.test.ts`).
 - **Chữ viết tay:** phông Patrick Hand (nội dung) và Pangolin (tiêu đề), giấy phép OFL, có bộ chữ
   tiếng Việt, đóng gói sẵn trong app (không tải từ mạng). Mỗi chữ cái lệch nhẹ (xoay ±2°, lệch dòng,
