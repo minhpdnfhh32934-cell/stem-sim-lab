@@ -485,8 +485,11 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
   } catch (e) {
     if (!(e instanceof Stopped)) throw e;
   } finally {
-    if (controller === ctrl) controller = null;
-    instant = false;
+    // A newer run owns `instant` ("Viết nhanh" pressed during it): only reset our own.
+    if (controller === ctrl) {
+      controller = null;
+      instant = false;
+    }
   }
 }
 
@@ -522,9 +525,14 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
     await playLesson(input, measure);
     return;
   }
-  // Whatever was still being written is finished at once before the new part starts.
+  // Whatever was still being written is finished at once before the new part starts. A pause
+  // ends too: the new part must not wait on the old run's gate (the board would freeze).
   controller?.abort();
   controller = null;
+  const g = gate;
+  gate = null;
+  g?.open();
+  speechCut = false;
   stopSpeaking();
   const store = useBoardStore.getState();
   const progress = { ...store.progress };

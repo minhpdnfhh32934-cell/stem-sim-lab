@@ -44,8 +44,15 @@ vi.mock('@/teacher/voice/speak', () => ({
   toSpokenText: (text: string) => text,
 }));
 
-const { playLesson, pauseLesson, resumeLesson, stopLesson, lessonMetrics, voiceCue } =
-  await import('./lesson');
+const {
+  playLesson,
+  continueLesson,
+  pauseLesson,
+  resumeLesson,
+  stopLesson,
+  lessonMetrics,
+  voiceCue,
+} = await import('./lesson');
 const { useBoardStore } = await import('./boardStore');
 
 const measure: Measure = {
@@ -189,6 +196,37 @@ describe('pause and resume (BRD-02)', () => {
     const m = lessonMetrics();
     expect(m?.sentences).toHaveLength(3);
     expect(m?.firstSpeechMs).not.toBeNull();
+  });
+
+  it('"Viết tiếp" while paused teaches the new part instead of freezing the board', async () => {
+    const first =
+      'Câu một <write id="c1" zone="steps">một dòng chữ khá dài để cây bút viết lâu</write>. Câu hai.';
+    const done = playLesson({ id: 'c', content: first, question: '' }, measure);
+    await until(() => (useBoardStore.getState().progress.c1 ?? 0) > 0);
+    pauseLesson();
+    expect(useBoardStore.getState().status).toBe('paused');
+    const more = continueLesson(
+      {
+        id: 'c',
+        content: `${first} Phần thêm <write id="c2" zone="steps">tiếp</write>.`,
+        question: '',
+      },
+      measure,
+    );
+    await until(() => voice.calls.some((c) => c.startsWith('Phần thêm')), 3000);
+    await more;
+    await done;
+    expect(useBoardStore.getState().status).toBe('done');
+    // Pause works again afterwards: the old gate is gone.
+    const again = playLesson(
+      { id: 'd', content: 'Câu mới <write id="d1" zone="steps">mới</write>.', question: '' },
+      measure,
+    );
+    await until(() => useBoardStore.getState().status === 'playing');
+    pauseLesson();
+    expect(useBoardStore.getState().status).toBe('paused');
+    stopLesson();
+    await again;
   });
 
   it('stops a lesson paused mid-sentence without an unhandled rejection', async () => {

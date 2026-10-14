@@ -783,9 +783,11 @@ const SYMBOLS: [RegExp, string][] = [
 // Grouping by a space ("1 000 kg", the Vietnamese standard), a dot or a comma; then decimals.
 const NUMBER = String.raw`\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?!\d)(?:,\d+)?|\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d{1,3}(?:,\d{3}){2,}(?:\.\d+)?|\d+[.,]\d+|\d+`;
 const UNIT_CANDIDATE = String.raw`(?:°[CF]?|%|[A-Za-zµμΩ][A-Za-zµμΩ²³⁻¹·⋅./()^{}\d−-]*)`;
+// Never inside an exponent: in "2^{-3}" the "3" is left to POWER ("mũ trừ ba"), not read alone.
+// A bare power of ten ("10^{-3} m", "10^-7") is a quantity of its own, so its unit is read.
 const QUANTITY = new RegExp(
-  String.raw`(?<![\p{L}\d.,^{])([-−](?=\d))?(${NUMBER})` +
-    String.raw`(?:\s*[×x·*]\s*10(?:\^\{?([+\-−]?\d+)\}?|([⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+))|[eE]([+-]?\d+))?` +
+  String.raw`(?<![\p{L}\d.,^{])(?<!\^\{?[+\-−])([-−](?=\d))?(${NUMBER})` +
+    String.raw`(?:\s*[×x·*]\s*10(?:\^\{?([+\-−]?\d+)\}?|([⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+))|[eE]([+-]?\d+)|(?<=(?<![\d.,])10)\^\{?([+\-−]?\d+)\}?)?` +
     String.raw`(?:(\s{0,2})(${UNIT_CANDIDATE})(?!\p{L}))?`,
   'gu',
 );
@@ -825,12 +827,15 @@ function quantity(
   exp1: string | undefined,
   exp2: string | undefined,
   exp3: string | undefined,
+  tenPower: string | undefined,
   space: string | undefined,
   unit: string | undefined,
 ): string {
   let words = readNumber(`${minus ? '-' : ''}${num}`);
   const exp = exp1 ?? exp2 ?? exp3;
   if (exp) words += ` nhân mười mũ ${exponentWords(exp)}`;
+  // "10^{-3}": the number is 10 itself, raised to the power ("mười mũ trừ ba").
+  if (tenPower) words += ` mũ ${exponentWords(tenPower)}`;
   const after = unitAfter(unit, opts);
   // Letters glued to a coefficient are a product of symbols: "4ac" → "bốn a xê".
   const product = !after && !space ? /^([A-Za-z]{2,3})([^\p{L}\d]*)$/u.exec(unit ?? '') : null;
@@ -1297,9 +1302,10 @@ export function toSpeech(content: string, context: SpeechContext = {}): string {
       exp1: string | undefined,
       exp2: string | undefined,
       exp3: string | undefined,
+      tenPower: string | undefined,
       space: string | undefined,
       unit: string | undefined,
-    ) => quantity(units, minus, num, exp1, exp2, exp3, space, unit),
+    ) => quantity(units, minus, num, exp1, exp2, exp3, tenPower, space, unit),
   );
   // A unit on its own: "đơn vị kg/m³", "km/h", "N/m²" (a part of two letters, a power, or the
   // word "đơn vị" before it); "F/m", "s/t" stay formulas.
