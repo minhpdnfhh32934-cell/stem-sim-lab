@@ -281,6 +281,137 @@ fn reasoning_only_empty_and_refused_answers_are_errors() {
 }
 
 #[test]
+fn a_stop_by_the_providers_filter_after_text_was_shown_is_an_error() {
+    // Gemini's safety filter stops the answer partway: what was shown is no answer (the page takes
+    // it back), it never reaches the board or speech as a complete one.
+    for reason in ["SAFETY", "RECITATION", "PROHIBITED_CONTENT"] {
+        let mock = serve(move |_| {
+            vec![
+                sse_head(),
+                data(&gemini_piece("Bước 1: lấy ")),
+                data(&gemini_piece("hóa chất")),
+                data(&json!({"candidates": [{"finishReason": reason, "index": 0,
+                    "safetyRatings": [{"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                        "probability": "HIGH", "blocked": true}]}]})),
+            ]
+        });
+        let (r, events) = run_one(&mock, &req(Provider::Gemini, false));
+        assert!(
+            matches!(r, Err(AiError::BadResponse(ref m)) if *m == format!("empty answer ({reason})")),
+            "{reason}: {r:?}"
+        );
+        assert_eq!(events, vec![delta("Bước 1: lấy "), delta("hóa chất")]);
+        // Not retried: the same question would be stopped again.
+        assert_eq!(mock.seen().len(), 1);
+    }
+    // Groq's `content_filter` stop.
+    let mock = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Bước 1: ")),
+            data(&groq_end("content_filter")),
+            done(),
+        ]
+    });
+    let (r, events) = run_one(&mock, &req(Provider::Groq, false));
+    assert!(matches!(r, Err(AiError::BadResponse(ref m)) if m == "empty answer (content_filter)"));
+    assert_eq!(events, vec![delta("Bước 1: ")]);
+}
+
+#[test]
+fn an_answer_whose_end_mark_came_is_kept_when_the_connection_stays_open() {
+    // The provider said it finished, then holds the connection: Groq without its `[DONE]`,
+    // Gemini (which has no closing mark) without closing.
+    for (p, steps, text) in [
+        (
+            Provider::Groq,
+            vec![
+                sse_head(),
+                data(&groq_piece("Vận tốc là đại lượng vectơ.")),
+                data(&groq_end("stop")),
+                Step::WaitForClose,
+            ],
+            "Vận tốc là đại lượng vectơ.",
+        ),
+        (
+            Provider::Gemini,
+            vec![
+                sse_head(),
+                data(&gemini_piece("Gia tốc.")),
+                data(&gemini_end("STOP")),
+                Step::WaitForClose,
+            ],
+            "Gia tốc.",
+        ),
+    ] {
+        let mock = serve(move |_| steps.clone());
+        let started = std::time::Instant::now();
+        let (r, events) = run(
+            &AiState::default(),
+            &req(p, false),
+            |_| mock.url(),
+            short(2000, 300, 10_000),
+        );
+        let r = r.unwrap();
+        assert_eq!(r.content, text, "{p:?}");
+        assert!(!r.truncated, "{p:?}");
+        assert_eq!(events, vec![delta(text)], "{p:?}");
+        assert!(started.elapsed() < Duration::from_millis(1500), "{p:?}");
+        // The connection is dropped, not left open.
+        assert_eq!(mock.closed.recv_timeout(Duration::from_secs(10)), Ok(true));
+    }
+    // After the end mark the wait is short ([`END_GRACE`]), not the whole gap between chunks:
+    // speech and the board wait for the final text.
+    let mock = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Vận tốc")),
+            data(&groq_end("stop")),
+            Step::Wait(8000),
+        ]
+    });
+    let started = std::time::Instant::now();
+    let (r, _) = run(
+        &AiState::default(),
+        &req(Provider::Groq, false),
+        |_| mock.url(),
+        short(2000, 6000, 20_000),
+    );
+    assert_eq!(r.unwrap().content, "Vận tốc");
+    assert!(started.elapsed() < END_GRACE + Duration::from_secs(1));
+}
+
+/// A streamed answer sent with chunked transfer encoding whose closing chunk never comes: the
+/// connection breaks after `payload`.
+fn broken_after(payload: String) -> Mock {
+    let head = Step::Send(
+        b"HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nTransfer-Encoding: chunked\r\n\r\n"
+            .to_vec(),
+    );
+    let chunk = Step::Send(format!("{:x}\r\n{payload}\r\n", payload.len()).into_bytes());
+    serve(move |_| vec![head.clone(), chunk.clone(), Step::Wait(100)])
+}
+
+#[test]
+fn a_connection_broken_after_the_end_mark_loses_nothing() {
+    let ended = format!(
+        "data: {}\n\ndata: {}\n\n",
+        groq_piece("Vận tốc"),
+        groq_end("stop")
+    );
+    let mock = broken_after(ended);
+    let (r, _) = run_one(&mock, &req(Provider::Groq, false));
+    let r = r.unwrap();
+    assert_eq!(r.content, "Vận tốc");
+    assert!(!r.truncated);
+    // Before the end mark the same break is a network error (the answer may be incomplete).
+    let mock = broken_after(format!("data: {}\n\n", groq_piece("Vận tốc")));
+    let (r, events) = run_one(&mock, &req(Provider::Groq, false));
+    assert!(matches!(r, Err(AiError::Network(_))), "{r:?}");
+    assert_eq!(events, vec![delta("Vận tốc")]);
+}
+
+#[test]
 fn a_stream_without_its_end_mark_is_marked_incomplete() {
     let mock = serve(|_| vec![sse_head(), data(&gemini_piece("Gia tốc"))]);
     let (r, _) = run_one(&mock, &req(Provider::Gemini, false));
@@ -415,6 +546,107 @@ fn the_fallback_answers_only_before_anything_was_shown() {
     assert!(crate::ai::is_quota_error(&e), "{e:?}");
     assert_eq!(events, vec![delta("Gia")]);
     assert!(groq.seen().is_empty());
+}
+
+/// Gemini's per-day quota error as Google words it: the message does not say which quota ran
+/// out, only `details[].violations[].quotaId` does.
+fn gemini_per_day_in_details() -> Value {
+    json!({"error": {"code": 429, "status": "RESOURCE_EXHAUSTED",
+    "message": "You exceeded your current quota, please check your plan and billing details.",
+    "details": [
+        {"@type": "type.googleapis.com/google.rpc.QuotaFailure",
+         "violations": [{
+            "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+            "quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+            "quotaDimensions": {"location": "global", "model": "gemini-3.8-flash"},
+            "quotaValue": "250"}]},
+        {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": "43s"}
+    ]}})
+}
+
+#[test]
+fn a_per_day_quota_named_only_in_the_details_is_not_retried_inside_the_stream() {
+    // As the same body in an HTTP 429: one request, no backoff (1 s, 2 s, …).
+    let gemini = counting(|_| vec![sse_head(), data(&gemini_per_day_in_details())]);
+    let started = std::time::Instant::now();
+    let (r, events) = run_one(&gemini, &req(Provider::Gemini, false));
+    assert!(
+        started.elapsed() < Duration::from_millis(900),
+        "{:?}",
+        started.elapsed()
+    );
+    let e = r.unwrap_err();
+    assert!(crate::ai::is_quota_error(&e), "{e:?}");
+    assert!(
+        matches!(e, AiError::Http(ref m) if m.contains("GenerateRequestsPerDayPerProjectPerModel")),
+        "{e:?}"
+    );
+    assert!(events.is_empty());
+    assert_eq!(gemini.seen().len(), 1);
+    // With a fallback, it answers straight away.
+    let gemini = counting(|_| vec![sse_head(), data(&gemini_per_day_in_details())]);
+    let groq = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Vận tốc")),
+            data(&groq_end("stop")),
+            done(),
+        ]
+    });
+    let base = |p: Provider| match p {
+        Provider::Groq => groq.url(),
+        _ => gemini.url(),
+    };
+    let started = std::time::Instant::now();
+    let (r, _) = run(
+        &AiState::default(),
+        &with_groq_fallback(Provider::Gemini),
+        base,
+        quick(),
+    );
+    assert!(r.unwrap().fallback);
+    assert!(started.elapsed() < Duration::from_millis(900));
+    assert_eq!(gemini.seen().len(), 1);
+}
+
+#[test]
+fn no_fallback_once_the_first_text_was_due() {
+    // Gemini reasons quietly (nothing shown) past the first-text timer, then reports a per-day
+    // quota inside the stream. The fallback's own wait would already be over: the user gets the
+    // quota error, not a timeout, and Gemini is not marked as out of quota by a switch that never
+    // happened.
+    let gemini = serve(|_| {
+        vec![
+            sse_head(),
+            data(&gemini_piece("<think>mình nháp")),
+            Step::Wait(600),
+            data(&serde_json::from_str::<Value>(PER_DAY).unwrap()),
+        ]
+    });
+    let groq = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Vận tốc")),
+            data(&groq_end("stop")),
+            done(),
+        ]
+    });
+    let state = AiState::default();
+    let base = |p: Provider| match p {
+        Provider::Groq => groq.url(),
+        _ => gemini.url(),
+    };
+    let (r, events) = run(
+        &state,
+        &with_groq_fallback(Provider::Gemini),
+        base,
+        short(300, 5000, 10_000),
+    );
+    let e = r.unwrap_err();
+    assert!(crate::ai::is_quota_error(&e), "{e:?}");
+    assert!(events.is_empty());
+    assert!(groq.seen().is_empty());
+    assert!(!state.is_exhausted(Provider::Gemini));
 }
 
 #[test]

@@ -159,16 +159,14 @@ fn gemini_reads_text_parts_without_thoughts() {
         )
         .unwrap();
     assert!(st.truncated && st.ended);
-    // A blocked question: no candidate, only the reason.
-    let mut st = StreamState::default();
-    GeminiProvider
+    // A blocked question: no candidate, only the reason. No answer, as without streaming.
+    let blocked = GeminiProvider
         .on_sse(
             &g(json!({"promptFeedback": {"blockReason": "SAFETY"}})),
-            &mut st,
+            &mut StreamState::default(),
         )
-        .unwrap();
-    assert_eq!(st.finish.as_deref(), Some("SAFETY"));
-    assert!(st.delta.is_empty());
+        .unwrap_err();
+    assert!(matches!(blocked, AiError::BadResponse(ref m) if m == "empty answer (SAFETY)"));
     // An error inside the stream is the HTTP error it stands for.
     let e = GeminiProvider
         .on_sse(
@@ -277,6 +275,120 @@ fn groq_reads_content_deltas_and_stops_at_done() {
         matches!(e, AiError::Http(ref m) if m == "429: rate_limit_exceeded: Rate limit reached")
     );
     assert!(is_quota_error(&e));
+}
+
+#[test]
+fn a_stop_by_the_providers_filter_is_no_answer_even_after_text() {
+    let g = |v: serde_json::Value| ev("message", &v.to_string());
+    let piece = |text: &str| json!({"candidates": [{"content": {"parts": [{"text": text}]}}]});
+    for reason in [
+        "SAFETY",
+        "RECITATION",
+        "PROHIBITED_CONTENT",
+        "BLOCKLIST",
+        "SPII",
+        "IMAGE_SAFETY",
+    ] {
+        let mut st = StreamState::default();
+        GeminiProvider
+            .on_sse(&g(piece("Bước 1: lấy ")), &mut st)
+            .unwrap();
+        assert_eq!(st.delta, "Bước 1: lấy ");
+        // The stop comes after text that was already passed on (with or without more text).
+        let stop = json!({"candidates": [{"content": {"parts": [{"text": "hóa chất"}]},
+            "finishReason": reason, "safetyRatings": [{"blocked": true}]}]});
+        let e = GeminiProvider.on_sse(&g(stop), &mut st).unwrap_err();
+        assert!(
+            matches!(e, AiError::BadResponse(ref m) if *m == format!("empty answer ({reason})")),
+            "{reason}: {e:?}"
+        );
+        // The same reason without streaming gives the same error.
+        let whole = json!({"candidates": [{"finishReason": reason}]});
+        assert_eq!(
+            GeminiProvider
+                .extract_content(&whole)
+                .unwrap_err()
+                .to_string(),
+            e.to_string()
+        );
+    }
+    // A natural end and the output limit are answers (the second one cut).
+    for (reason, cut) in [("STOP", false), ("MAX_TOKENS", true)] {
+        let mut st = StreamState::default();
+        let end = json!({"candidates": [{"content": {"parts": [{"text": "Xong"}]},
+            "finishReason": reason}]});
+        GeminiProvider.on_sse(&g(end), &mut st).unwrap();
+        assert_eq!(st.delta, "Xong");
+        assert!(st.ended && st.truncated == cut, "{reason}");
+    }
+
+    // Groq (OpenAI format): a `content_filter` stop.
+    let o = |v: serde_json::Value| ev("message", &v.to_string());
+    let mut st = StreamState::default();
+    GroqProvider
+        .on_sse(
+            &o(json!({"choices": [{"delta": {"content": "Bước 1: "}, "finish_reason": null}]})),
+            &mut st,
+        )
+        .unwrap();
+    let e = GroqProvider
+        .on_sse(
+            &o(json!({"choices": [{"delta": {}, "finish_reason": "content_filter"}]})),
+            &mut st,
+        )
+        .unwrap_err();
+    assert!(matches!(e, AiError::BadResponse(ref m) if m == "empty answer (content_filter)"));
+}
+
+#[test]
+fn a_quota_named_only_in_the_error_details_is_kept() {
+    // Gemini says which quota ran out only in `details[].violations[].quotaId`.
+    let gemini_quota = |quota: &str| {
+        json!({"code": 429, "status": "RESOURCE_EXHAUSTED",
+        "message": "You exceeded your current quota, please check your plan and billing details.",
+        "details": [
+            {"@type": "type.googleapis.com/google.rpc.QuotaFailure",
+             "violations": [{"quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
+                             "quotaId": quota, "quotaValue": "250"}]},
+            {"@type": "type.googleapis.com/google.rpc.RetryInfo", "retryDelay": "43s"}
+        ]})
+    };
+    let AiError::Http(m) = provider_error(&gemini_quota(
+        "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+    )) else {
+        unreachable!()
+    };
+    assert_eq!(
+        m,
+        "429: RESOURCE_EXHAUSTED: You exceeded your current quota, please check your plan and \
+         billing details. (quota: GenerateRequestsPerDayPerProjectPerModel-FreeTier)"
+    );
+    // The retry rule reads it as it reads the same body from an HTTP 429: a day's quota is not
+    // retried, a minute's quota is.
+    assert_eq!(retry_delay(http_status(&m), None, &m, 0), None);
+    let AiError::Http(m) = provider_error(&gemini_quota(
+        "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
+    )) else {
+        unreachable!()
+    };
+    assert!(retry_delay(http_status(&m), None, &m, 0).is_some());
+    // A quota id at the first level of the details (as in `ai_chat`'s retry test) counts too;
+    // odd ids are cleaned and bounded, and only a few are kept.
+    let odd = "Per\nDay".to_string() + &"x".repeat(500);
+    let AiError::Http(m) = provider_error(&json!({"code": 429, "message": "quota",
+        "details": [{"quotaId": "A"}, {"quotaId": odd}, {"quotaId": "C"}, {"quotaId": "D"},
+                    {"quotaId": "E"}, {"quotaId": 7}]}))
+    else {
+        unreachable!()
+    };
+    assert!(m.starts_with("429: error: quota (quota: A, PerDay"), "{m}");
+    assert!(m.ends_with(", C, D)"), "{m}");
+    assert!(m.len() < 600 && !m.contains('\n'), "{m}");
+    // Without details nothing is added.
+    let AiError::Http(m) = provider_error(&json!({"code": 429, "message": "quota"})) else {
+        unreachable!()
+    };
+    assert_eq!(m, "429: error: quota");
 }
 
 #[test]

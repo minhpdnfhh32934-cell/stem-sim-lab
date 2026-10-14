@@ -51,6 +51,20 @@ pub fn gemini_body(req: &ChatRequest) -> Value {
     })
 }
 
+/// Finish reasons that mean Gemini's own filters stopped the answer: neither a natural end
+/// (`STOP`) nor the output limit (`MAX_TOKENS`). What was written before such a stop is not an
+/// answer.
+const BLOCKED: [&str; 8] = [
+    "SAFETY",
+    "RECITATION",
+    "PROHIBITED_CONTENT",
+    "BLOCKLIST",
+    "SPII",
+    "IMAGE_SAFETY",
+    "IMAGE_PROHIBITED_CONTENT",
+    "IMAGE_RECITATION",
+];
+
 /// The answer text of a candidate. Thought summaries are not part of the answer.
 fn answer_text(candidate: &Value) -> String {
     candidate["content"]["parts"]
@@ -127,8 +141,11 @@ impl AIProvider for GeminiProvider {
         .json(&gemini_body(req))
     }
 
-    /// Text parts without thoughts; `finishReason` (or a blocked prompt's `blockReason`) ends the
-    /// answer, `MAX_TOKENS` means it was cut. An `error` object is the HTTP error it stands for.
+    /// Text parts without thoughts; `finishReason` ends the answer, `MAX_TOKENS` means it was
+    /// cut. A blocked question (`promptFeedback.blockReason`) or an answer stopped by Gemini's
+    /// filters ([`BLOCKED`], also after text was shown) is no answer, as without streaming:
+    /// "empty answer (SAFETY)", and the page takes back what it showed. An `error` object is the
+    /// HTTP error it stands for.
     fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
         let v = event_json(ev)?;
         if let Some(err) = v.get("error") {
@@ -138,11 +155,15 @@ impl AIProvider for GeminiProvider {
             st.model = self.response_model(&v);
         }
         let candidate = &v["candidates"][0];
-        st.delta.push_str(&answer_text(candidate));
-        if let Some(reason) = candidate["finishReason"]
+        let finish = candidate["finishReason"].as_str();
+        if let Some(reason) = v["promptFeedback"]["blockReason"]
             .as_str()
-            .or_else(|| v["promptFeedback"]["blockReason"].as_str())
+            .or_else(|| finish.filter(|r| BLOCKED.contains(r)))
         {
+            return Err(AiError::BadResponse(format!("empty answer ({reason})")));
+        }
+        st.delta.push_str(&answer_text(candidate));
+        if let Some(reason) = finish {
             st.finished(reason, "MAX_TOKENS");
         }
         Ok(())

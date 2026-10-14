@@ -117,7 +117,9 @@ impl AIProvider for GroqProvider {
 
     /// `chat.completion.chunk` events: text in `choices[0].delta.content` (a separate
     /// `reasoning` field is not answer text), `finish_reason` (`length` = cut), then `[DONE]`.
-    /// An `error` object is the HTTP error it stands for.
+    /// A `content_filter` stop is no answer, also after text was shown ("empty answer
+    /// (content_filter)", as Claude's refusal and Gemini's safety stops). An `error` object is
+    /// the HTTP error it stands for.
     fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
         if ev.data.trim() == "[DONE]" {
             st.ended = true;
@@ -132,9 +134,13 @@ impl AIProvider for GroqProvider {
             st.model = self.response_model(&v);
         }
         let choice = &v["choices"][0];
+        let finish = choice["finish_reason"].as_str();
+        if finish == Some("content_filter") {
+            return Err(AiError::BadResponse("empty answer (content_filter)".into()));
+        }
         st.delta
             .push_str(choice["delta"]["content"].as_str().unwrap_or_default());
-        if let Some(reason) = choice["finish_reason"].as_str() {
+        if let Some(reason) = finish {
             st.finished(reason, "length");
         }
         Ok(())

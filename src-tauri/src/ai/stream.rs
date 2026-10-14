@@ -13,11 +13,15 @@
 //! - Retries (429/5xx, at most [`super::MAX_RETRIES`]) and the quota fallback happen only before
 //!   the first [`StreamEvent`] reaches the page, so the text of two attempts or two providers
 //!   never mixes. An error after that ends the call with that error; the page keeps what it was
-//!   shown and decides what to do with it.
+//!   shown and decides what to do with it. A stop by the provider's own filter (Claude
+//!   `refusal`, Gemini `SAFETY` and the like, Groq `content_filter`) is such an error, also after
+//!   text was shown: as without streaming, it is no answer.
 //! - Timers: the first answer text (reasoning included: the model is answering) must arrive
 //!   within the call's `timeoutSecs` from the start, retries and fallback included (a retry wait
-//!   that would pass that deadline gives the provider's error at once); then at most [`IDLE_GAP`]
-//!   may pass between two chunks, and [`OVERALL_MAX`] in all.
+//!   that would pass that deadline gives the provider's error at once, and once it has passed the
+//!   fallback is not asked); then at most [`IDLE_GAP`] may pass between two chunks, and
+//!   [`OVERALL_MAX`] in all. Once the provider said it finished, its closing mark is awaited for
+//!   at most [`END_GRACE`]; a silent or broken connection after that point keeps the answer.
 //!
 //! No new crate: reqwest's `Response::chunk()` reads the body. The event formats follow the
 //! providers' documentation; no live call was recorded (the fixtures are hand-written).
@@ -40,6 +44,9 @@ use super::{
 pub const IDLE_GAP: Duration = Duration::from_secs(45);
 /// Longest streamed answer, in all.
 pub const OVERALL_MAX: Duration = Duration::from_secs(600);
+/// Longest wait for the closing mark (or the end of the connection) once the provider said its
+/// answer is finished: nothing more of the answer can come.
+pub const END_GRACE: Duration = Duration::from_secs(2);
 /// Largest single event.
 pub const MAX_EVENT_BYTES: usize = 1 << 20;
 /// Largest answer text (reasoning included).
@@ -253,11 +260,42 @@ fn status_of(kind: &str) -> Option<u16> {
     })
 }
 
+/// Most quota names kept from an error's details, and the longest one.
+const MAX_QUOTA_IDS: usize = 4;
+const MAX_QUOTA_ID_CHARS: usize = 100;
+
+/// The `quotaId`s anywhere in an error's `details` (Gemini names the quota that ran out only
+/// there, in `details[].violations[].quotaId`), cleaned and bounded.
+fn quota_ids(v: &Value, out: &mut Vec<String>, depth: u8) {
+    if depth > 8 || out.len() >= MAX_QUOTA_IDS {
+        return;
+    }
+    match v {
+        Value::Array(items) => items.iter().for_each(|i| quota_ids(i, out, depth + 1)),
+        Value::Object(fields) => {
+            for (name, value) in fields {
+                match (name.as_str(), value.as_str()) {
+                    ("quotaId", Some(id)) if out.len() < MAX_QUOTA_IDS => out.push(
+                        id.chars()
+                            .filter(|c| !c.is_control())
+                            .take(MAX_QUOTA_ID_CHARS)
+                            .collect(),
+                    ),
+                    _ => quota_ids(value, out, depth + 1),
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
 /// An error the provider reported inside the stream (Claude's `error` event, an `error` object in
 /// a Gemini or Groq event), as the HTTP error it stands for: `"<status>: <type>: <message>"`, so
 /// the quota rule ([`is_quota_error`]) and the retry rule read it like an HTTP answer. The status
 /// is Gemini's numeric `code`, or comes from the error type; an unknown type counts as 500 (the
-/// answer had started, so the failure is on the server's side).
+/// answer had started, so the failure is on the server's side). The quota names in the details
+/// are added as `" (quota: …)"`: an HTTP error body holds them too, and the retry rule needs them
+/// (a "…PerDay…" quota is not retried).
 pub fn provider_error(err: &Value) -> AiError {
     let names: Vec<&str> = ["type", "status", "code"]
         .iter()
@@ -274,13 +312,18 @@ pub fn provider_error(err: &Value) -> AiError {
         .map(|(n, _)| n)
         .or_else(|| names.first().copied())
         .unwrap_or("error");
-    let message: String = err["message"]
+    let mut message: String = err["message"]
         .as_str()
         .unwrap_or_default()
         .chars()
         .filter(|c| !c.is_control())
         .take(400)
         .collect();
+    let mut quotas = Vec::new();
+    quota_ids(&err["details"], &mut quotas, 0);
+    if !quotas.is_empty() {
+        message = format!("{message} (quota: {})", quotas.join(", "));
+    }
     AiError::Http(format!("{status}: {kind}: {message}"))
 }
 
@@ -512,12 +555,17 @@ async fn attempt(c: &Call<'_>, started: Instant, tries: u32) -> Result<ChatRespo
     };
     let mut last = Instant::now();
     'read: while !answer.st.closed {
-        let until = if answer.got_text {
+        let until = if answer.st.ended {
+            // The provider said it finished: only its closing mark may still come.
+            (last + clock.timing.gap.min(END_GRACE)).min(clock.end)
+        } else if answer.got_text {
             (last + clock.timing.gap).min(clock.end)
         } else {
             clock.first
         };
         let chunk = match tokio::time::timeout_at(until, resp.chunk()).await {
+            // After the end mark, a silent or broken connection loses nothing of the answer.
+            Err(_) | Ok(Err(_)) if answer.st.ended => break,
             Err(_) => return Err(clock.expired(answer.got_text).into()),
             Ok(Err(e)) => return Err(AiError::Network(e.to_string()).into()),
             Ok(Ok(None)) => break,
@@ -608,8 +656,11 @@ where
             .await
         }
     };
+    // The fallback shares the first-text deadline: once it has passed (the first provider reasoned
+    // quietly, then ran out of quota), the fallback could only time out, so the provider's own
+    // error is returned and nothing is marked out of quota.
     with_fallback(state, req, key_of, send, |e| {
-        is_quota_error(e) && !emit.sent()
+        is_quota_error(e) && !emit.sent() && Instant::now() < clock.first
     })
     .await
 }
