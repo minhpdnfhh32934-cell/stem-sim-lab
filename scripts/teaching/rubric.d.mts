@@ -162,6 +162,7 @@ export function buildConflicts(runs: EvalRun[]): { key: string; builds: string[]
 export function skipRefusal(saved: SavedEval, now: { model: string; build: Build }): string | null;
 export function servedPromptVariant(source: string): 'current' | 'improved';
 export function variantRefusal(variants: string[], source: string): string | null;
+export function stopsRun(error: string): boolean;
 export function signTestP(wins: number, losses: number): number;
 export function mcnemarP(onlyA: number, onlyB: number): number;
 export function numberRepeats<T extends EvalRun>(runs: T[]): T[];

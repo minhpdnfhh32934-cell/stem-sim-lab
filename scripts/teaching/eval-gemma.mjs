@@ -26,8 +26,9 @@
 // --skip       earlier result files: every (question, variant, decoding, temperature, repeat)
 //              they hold with an answer is not run again (to finish an interrupted run). A file
 //              of another model or another build is refused.
-// --retries    0–2 more attempts for a run that failed for a non-GPU reason. Every attempt is
-//              kept; a failed attempt is never scored as an answer. A GPU failure stops the run.
+// --retries    0–2 more attempts for a run that failed for another reason than the GPU or a
+//              stall. Every attempt is kept; a failed attempt is never scored as an answer. A GPU
+//              failure or a stalled answer stops the run.
 // Variants (and decodings) are interleaved per question so drift during the run (heat, other
 // load) hits them alike. Every result records how it was made: the system prompt and the turn
 // asked (for blind judging and audits), the model and the build = { commit: git rev-parse HEAD of
@@ -53,6 +54,7 @@ import {
   groupKey,
   scoreAnswer,
   skipRefusal,
+  stopsRun,
   summarizeRuns,
   variantRefusal,
 } from './rubric.mjs';
@@ -141,8 +143,6 @@ function gpuLoad() {
     return null;
   }
 }
-/** A failure of the graphics card itself: never retried (audit GPU-01). */
-const GPU_FAILURE = /gpu|device|webgpu|blocked|crash|lost|dxgi|mapasync/i;
 /** A git query in the repository this script runs in (null when git is not available). */
 function git(...args) {
   try {
@@ -388,8 +388,11 @@ for (const item of items) {
           );
           await refuseUnlessNvidia({ gemma: r.gpu });
           if (r.ok) break;
-          if (GPU_FAILURE.test(r.error ?? '')) {
-            await stop(`Stopping: GPU failure (${r.error}); no retry (audit GPU-01).`, 6);
+          if (stopsRun(r.error ?? '')) {
+            await stop(
+              `Stopping: ${r.error}; no retry and no further question (audit GPU-01: GPU failure or stalled answer).`,
+              6,
+            );
           }
           if (attempt < retries) console.log(`  retry ${attempt + 1}/${retries} after: ${r.error}`);
         }

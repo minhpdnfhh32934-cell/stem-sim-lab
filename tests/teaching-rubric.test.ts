@@ -24,6 +24,7 @@ import {
   signTestP,
   skipRefusal,
   stepsInOrder,
+  stopsRun,
   summarize,
   summarizeRuns,
   trapHandled,
@@ -1435,6 +1436,20 @@ describe('build identity of saved results', () => {
     // One build cannot serve both.
     expect(variantRefusal(['current', 'improved'], current[0] ?? '')).not.toBe(null);
   });
+
+  it('stops the run on a GPU failure or a stalled answer, never retries them', () => {
+    for (const e of [
+      'Error: gemma-stalled',
+      'Error: device lost',
+      'GPU blocked',
+      'Error: mapAsync failed',
+    ]) {
+      expect(stopsRun(e), e).toBe(true);
+    }
+    for (const e of ['Error: empty reply', 'Error: model-missing', 'Error: timeout', '']) {
+      expect(stopsRun(e), e).toBe(false);
+    }
+  });
 });
 
 describe('compare.mjs and breakdown.mjs on saved files', () => {
@@ -1607,5 +1622,11 @@ describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
     expect(src).toMatch(
       /JSON\.stringify\(\{ model, build, adapter, adapters, settings, results \}/,
     );
+  });
+
+  it('stops on a stalled answer like on a GPU failure', () => {
+    const loop = src.slice(src.indexOf('for (const item of items)'));
+    expect(loop).toMatch(/if \(stopsRun\(r\.error \?\? ''\)\) \{/);
+    expect(src).not.toMatch(/const GPU_FAILURE/);
   });
 });

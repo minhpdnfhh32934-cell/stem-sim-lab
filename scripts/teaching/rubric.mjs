@@ -671,6 +671,15 @@ export function variantRefusal(variants, source) {
     : null;
 }
 
+/**
+ * An error that stops the whole evaluation run without a retry (audit GPU-01): a failure of the
+ * graphics card itself, or a stalled answer ("gemma-stalled": the worker stopped sending pieces,
+ * which a hung GPU also looks like). The next question would reload the model on that card.
+ */
+export function stopsRun(error) {
+  return /gpu|device|webgpu|blocked|crash|lost|dxgi|mapasync|stall/i.test(error);
+}
+
 /** P(X ≤ k) for X ~ Binomial(n, 1/2), summed in log space (no overflow for large n). */
 function binomialLowerTail(k, n) {
   let logP = -n * Math.LN2;
