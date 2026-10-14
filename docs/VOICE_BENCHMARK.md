@@ -110,3 +110,62 @@ thường đủ cho một đợt thử nghiệm 5–10 học sinh.
 | Azure HoaiMy             | _chưa đo_      | _chưa đo_               | _chưa đo_              |         |
 | Azure NamMinh            | _chưa đo_      | _chưa đo_               | _chưa đo_              |         |
 | Giọng Windows (dự phòng) | _chưa đo_      | _chưa đo_               | _chưa đo_              |         |
+
+## 6. G6 — Giọng thầy tự nhiên hơn (14/10/2026)
+
+Nguồn đo: `scripts/voice/tts-bench.mjs` (19 câu `src/teacher/voice/ttsBenchSet.json`: chào, khái
+niệm mới, câu hỏi kiểm tra, sửa lỗi và động viên, đoạn dài, công thức/đơn vị, nguyên phân, phương
+trình hóa học). Kết quả thô: `tests/voice/results/2026-10-14-tts-bench-cpu.json` (build 7b2c697).
+
+### Nguyên nhân giọng MMS thiếu tự nhiên (đã kiểm chứng)
+
+- Mô hình MMS-TTS tiếng Việt (VITS, CC BY-NC 4.0) không có điều khiển cao độ, cảm xúc hay SSML; bản
+  ONNX đang dùng chỉ nhận chữ (tốc độ và độ biến thiên bị cố định khi xuất mô hình).
+- Mô hình không thấy dấu câu: mọi ngắt nghỉ phải do app tạo bằng cách chia đoạn.
+- Bản trước đổi tốc độ bằng `playbackRate` (làm lệch cao độ), mỗi đoạn có âm lượng khác nhau và
+  khoảng lặng ở hai đầu không đều.
+
+### Đã thay đổi (nhánh `feat/voice-natural`)
+
+- Tách bước biên tập lời đọc khỏi bước tổng hợp: `speechPlan.ts` (bỏ thẻ/markdown, từ điển phát âm
+  `pronunciations.json` mở rộng được, 42 mục chờ giáo viên duyệt, chia đoạn theo mệnh đề, không cắt
+  giữa số và đơn vị, công thức, tên riêng; mỗi đoạn có khoảng nghỉ theo dấu câu).
+- Ngữ điệu trong khả năng của MMS: tốc độ theo vai trò câu (khái niệm mới, bước giải, kết quả, câu
+  hỏi, phản hồi) bằng co giãn thời gian giữ cao độ; nhấn ý chính bằng một quãng nghỉ ngắn trước thuật
+  ngữ, không tăng âm lượng.
+- Ghép âm thanh (`stitch.ts`): cắt khoảng lặng thừa, cùng mức âm lượng −20 dBFS, giới hạn đỉnh
+  −1 dBFS, nhấc/hạ tiếng 8–12 ms ở mép đoạn, chèn đúng khoảng nghỉ đã lên kế hoạch.
+- Phát dần từng đoạn (render trước một đoạn), đúng thứ tự, bài cũ không còn phát sau khi đổi bài,
+  "Tiếp tục" dùng lại đoạn đã render.
+- Sửa 23 lỗi rà soát (bài giảng dừng sau câu đầu khi bật giọng, "MeV" đọc thành "mol trên lít",
+  giọng trên máy có thể nạp lại vào card vừa lỗi, …).
+
+### Kết quả đo (CPU, WASM, Edge, 19 câu; trung vị)
+
+| Chỉ số                                | MMS hiện tại (cách chia cũ) | MMS cải tiến    |
+| ------------------------------------- | --------------------------- | --------------- |
+| Câu lỗi / NaN / mất, thừa, đảo từ     | 0 / 0 / 0                   | 0 / 0 / 0       |
+| Tiếng đầu tiên                        | 4,07 s                      | 3,22 s          |
+| Chênh âm lượng giữa các đoạn          | 2,47 dB                     | 0 dB            |
+| Đỉnh biên độ (không vỡ tiếng)         | 0,84                        | 0,71            |
+| Mật độ lời (âm tiết/giây)             | 2,64                        | 3,00            |
+| Hệ số thời gian thực (tổng hợp / lời) | 2,01                        | 2,00            |
+| Thời gian chờ giữa các đoạn (mỗi câu) | 7,3 s                       | 8,4 s           |
+| CPU của Edge / RAM đỉnh               | 15,5 s / 906 MB             | 16,3 s / 908 MB |
+
+- Trên CPU, MMS tổng hợp chậm khoảng 2 lần so với thời gian nói, nên **cả hai cách đều có quãng chờ
+  dài** giữa các đoạn; cải tiến không làm mô hình nhanh hơn. Trên card rời NVIDIA (WebGPU, đo
+  13–14/10) MMS cần khoảng 0,05–0,3 s cho 3,5–5 s âm thanh, nên không có quãng chờ. App chỉ dùng
+  WebGPU cho giọng khi xác nhận được card rời; card tích hợp hoặc sau lỗi card luôn dùng CPU.
+- Các số trên là kiểm tra tự động (lỗi từ, âm lượng, độ trễ, tài nguyên). **Chưa có người nghe chấm
+  độ tự nhiên, ngữ điệu và phát âm.** Gói nghe thử mù A/B (19 cặp WAV, thứ tự A/B trộn theo từng
+  câu) đã tạo, đặt ngoài repo; khóa A/B giữ riêng.
+
+### Giới hạn và bước tiếp theo
+
+- Không thể có ngữ điệu, cảm xúc thật với MMS hiện tại. Phương án thay thế (nghiên cứu, chưa tải):
+  Supertonic 3 (ONNX chạy trong WebView2, OpenRAIL-M, dự án đã ngừng phát triển, ~130–400 MB) và
+  VieNeu-TTS (Apache-2.0, giọng Việt ba miền, chưa chạy được trong trình duyệt: cần tiến trình phụ).
+  Thêm mô hình trên máy cần chủ dự án đồng ý (CLAUDE.md) và kiểm tra giấy phép.
+- Gemini TTS (cloud) có điều khiển phong cách tốt nhất nhưng chưa thử được (không có khóa).
+- Cần người nghe thành thạo tiếng Việt chấm gói A/B và các cách đọc chờ duyệt (DATA_REVIEW).

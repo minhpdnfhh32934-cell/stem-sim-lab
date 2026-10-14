@@ -10,3 +10,4 @@ docs/images
 data/*.json
 tests/golden/*.json
 tests/teaching/results
+tests/voice/results
