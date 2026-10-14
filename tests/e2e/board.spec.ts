@@ -84,6 +84,48 @@ test('a markdown answer is laid out on the board, and a cut answer is continued 
   await expect(board.locator('[data-id="h1"]')).toContainText('Rơi tự do');
 });
 
+test('the board shows learning content only: no greeting, reasoning, echo, rule or empty box', async ({
+  page,
+}) => {
+  await fakeGemini(page, [
+    {
+      text: [
+        'Chào bạn! Mình sẽ cùng giải bài toán này nhé.',
+        '',
+        '# Rơi tự do',
+        '**GHI CHÚ:**',
+        '1. Chọn chiều dương hướng xuống.',
+        '<think>người dùng muốn số, thử g = 7</think>',
+        '2. Quãng đường $s = \\frac{1}{2} g t^2$ với g = 10 m/s², t = 2 s.',
+        '---',
+        '**Kết luận:**',
+        '',
+        'Đáp số: s = 20 m',
+      ].join('\n'),
+      finishReason: 'STOP',
+    },
+  ]);
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  const elements = board.locator('.board__el');
+  await expect(elements).toHaveCount(4); // title, 2 steps, the result
+  await expect(board.locator('[data-id="h1"]')).toContainText('Rơi tự do');
+  await expect(board.locator('.board__el.is-result')).toHaveCount(1);
+  await expect(board.locator('.board__el.is-result')).toContainText('s = 20 m');
+  await expect(board.locator('.board__mark.is-box')).toHaveCount(1);
+  for (const text of await elements.allTextContents())
+    expect(text).not.toMatch(/Chào|GHI CHÚ|---|think|thử g|Kết luận:/u);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
 test('Think on the board: hidden reasoning and the reviewer’s notes reach neither the board nor the chat', async ({
   page,
 }) => {

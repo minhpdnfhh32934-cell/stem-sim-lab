@@ -178,6 +178,45 @@ describe('whiteboard: a new answer with the voice on', () => {
     expect(voice.said).toEqual(SAID);
   });
 
+  it('item 1: greetings are said but not written; rules, links and labels alone are not written; one boxed result', async () => {
+    const content = [
+      'Chào bạn! Tôi là AI Teacher của SimLab. Chúng ta sẽ cùng giải bài toán này nhé.',
+      '',
+      '# Rơi tự do',
+      '**Phân tích:**',
+      '1. Vật rơi từ độ cao 20 m, lấy g = 10 m/s².',
+      '---',
+      'Wikipedia: https://vi.wikipedia.org/wiki/R%C6%A1i_t%E1%BB%B1_do',
+      '**Kết luận:**',
+      '',
+      'Thời gian rơi t = 2 s.',
+      '',
+      'Hy vọng giải thích này giúp bạn!',
+    ].join('\n');
+    const view = render(<Page id="answer-item-1" content={content} />);
+    await untilDone();
+    const sources = useBoardStore
+      .getState()
+      .layout.elements.flatMap((e) => (e.kind === 'text' ? [e.source] : []));
+    expect(sources).toEqual([
+      'Rơi tự do',
+      '1. Vật rơi từ độ cao 20 m, lấy g = 10 m/s².',
+      'Thời gian rơi t = 2 s.',
+    ]);
+    const shown = [...view.container.querySelectorAll('.board__el')].map((e) => e.textContent);
+    expect(shown).toHaveLength(3);
+    expect(shown.join(' ')).not.toMatch(/Chào|Phân tích|Kết luận|---|wiki|Hy vọng/iu);
+    expect(view.container.querySelectorAll('.board__el.is-result')).toHaveLength(1);
+    const boxes = useBoardStore.getState().marks.filter((m) => m.kind === 'box');
+    expect(boxes).toHaveLength(1);
+    // The greeting and the wish are said; the label is said with its line; the link is not.
+    const said = voice.said.join(' ');
+    expect(said).toContain('Chào bạn!');
+    expect(said).toContain('Hy vọng giải thích này giúp bạn!');
+    expect(said).toContain('Kết luận: Thời gian rơi t = 2 s.');
+    expect(said).not.toMatch(/https?:|wikipedia|---/iu);
+  });
+
   it('a page closed while "Viết tiếp" waits for the fonts never starts the voice either', async () => {
     const view = render(<Page id="answer-more" />);
     await untilDone();

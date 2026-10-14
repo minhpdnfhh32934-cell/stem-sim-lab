@@ -1244,6 +1244,7 @@ const vi = {
     axes: 'Hệ trục tọa độ',
     plotOf: 'Đồ thị của {fn}',
     plotUnreadable: 'Chưa đọc được biểu thức để vẽ',
+    codeInMessage: '(đoạn mã trong tin nhắn)',
   },
   voice: {
     readAloudCard: 'Đọc to',

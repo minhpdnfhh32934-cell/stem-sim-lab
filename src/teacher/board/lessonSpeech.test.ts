@@ -312,3 +312,61 @@ describe('the voice knows each sentence’s role and key terms (natural teacher 
     });
   });
 });
+
+describe('"Viết tiếp" reads the whole answer again and skips what was taught by position (item 1)', () => {
+  beforeEach(() => {
+    voice.calls.length = 0;
+    useVoiceStore.setState({ enabled: true, speaking: false });
+    useBoardStore.getState().set({ speed: 2 });
+  });
+  afterEach(() => {
+    stopLesson();
+    useVoiceStore.setState({ enabled: false });
+    useBoardStore.getState().set({ speed: 1 });
+  });
+
+  /** What the learner sees: the sources of the elements that are not erased. */
+  const visible = () => {
+    const { layout, erased } = useBoardStore.getState();
+    return layout.elements.flatMap((e) => (e.kind === 'text' && !erased[e.id] ? [e.source] : []));
+  };
+
+  it('a tag cut where the answer stopped is never said, and is written once the rest comes', async () => {
+    const first =
+      'Câu một <write id="a1" zone="steps">alpha</write>. Câu hai <write id="b1" zone="ste';
+    await playLesson({ id: 'cut-tag', content: first, question: '' }, measure);
+    expect(voice.calls.join(' ')).not.toContain('<');
+    await continueLesson(
+      { id: 'cut-tag', content: `${first}ps">beta</write>. Câu ba xong.`, question: '' },
+      measure,
+    );
+    expect(voice.calls.join(' ')).not.toMatch(/<|ps">/u);
+    expect(voice.calls.slice(-2)).toEqual(['Câu hai beta.', 'Câu ba xong.']);
+    expect(visible()).toEqual(['alpha', 'beta']);
+  });
+
+  it('a markdown line cut mid-sentence is written whole, never as a fragment plus the rest', async () => {
+    const first = '# Rơi tự do\n1. Vật rơi từ độ';
+    await playLesson({ id: 'cut-line', content: first, question: '' }, measure);
+    // joinContinuation: text cut mid-sentence goes on the same line.
+    const more = `${first} cao 20 m.\n2. Thời gian rơi là 2 s.`;
+    await continueLesson({ id: 'cut-line', content: more, question: '' }, measure);
+    expect(visible()).toEqual([
+      'Rơi tự do',
+      '1. Vật rơi từ độ cao 20 m.',
+      '2. Thời gian rơi là 2 s.',
+    ]);
+    expect(voice.calls.filter((c) => c.startsWith('Rơi tự do'))).toHaveLength(1);
+  });
+
+  it('a step cut inside its text is wiped and written whole', async () => {
+    const first = 'Ta có <write id="s1" zone="steps">v = g';
+    await playLesson({ id: 'cut-write', content: first, question: '' }, measure);
+    expect(visible()).toEqual(['v = g']);
+    await continueLesson(
+      { id: 'cut-write', content: `${first}t = 20 m/s</write>. Xong.`, question: '' },
+      measure,
+    );
+    expect(visible()).toEqual(['v = gt = 20 m/s']);
+  });
+});

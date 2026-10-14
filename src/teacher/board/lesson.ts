@@ -19,10 +19,13 @@ import {
 } from '@/teacher/voice/speak';
 import type { SpeechRole } from '@/teacher/voice/speechPlan';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
+import type { Locale } from '@/app/i18n/types';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { cleanAnswer, type CleanOptions } from '@/teacher/chat/answerClean';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { markdownToScript } from './fromMarkdown';
+import { validateLesson, type ValidatedLesson } from './lessonCheck';
 import {
   emptyLayout,
   findElement,
@@ -37,9 +40,11 @@ import { checkNumbers, sourceNumbers } from './provenance';
 import { seedOf } from './rough';
 import {
   parseTeachScript,
+  teachScriptSource,
   type BoardAction,
   type ParsedScript,
   type Sentence,
+  type TimedAction,
 } from './teachscript';
 
 export interface LessonInput {
@@ -57,15 +62,34 @@ export interface LessonInput {
   reviewed?: boolean;
 }
 
+export interface ScriptOptions extends CleanOptions {
+  /** The language of what the board says in place of a code block (default Vietnamese). */
+  locale?: Locale;
+}
+
+/** An answer as the board teaches it: the text the reader read, and the checked lesson. */
+export interface BoardLesson extends ValidatedLesson {
+  /** The cleaned answer the sentences' `start`/`end` offsets refer to. */
+  source: string;
+}
+
 /**
- * TeachScript when the answer has board tags, else the markdown layout. The answer is cleaned
- * first (answerClean.ts): new answers already are, answers saved by an older version may still
- * hold hidden reasoning or echoed prompt labels.
+ * The answer cleaned (answerClean.ts: new answers already are, answers saved by an older version
+ * may still hold hidden reasoning or echoed prompt labels), read as TeachScript when it has board
+ * tags, else laid out from its markdown, then checked (lessonCheck.ts): the board shows learning
+ * content only.
  */
-export function scriptFor(content: string, options: CleanOptions = {}): ParsedScript {
-  const clean = cleanAnswer(content, options).text;
-  const parsed = parseTeachScript(clean);
-  return parsed.hasBoard ? parsed : markdownToScript(clean);
+export function lessonFor(content: string, options: ScriptOptions = {}): BoardLesson {
+  const { locale = 'vi', ...clean } = options;
+  const source = teachScriptSource(cleanAnswer(content, clean).text);
+  const parsed = parseTeachScript(source);
+  const script = parsed.hasBoard ? parsed : markdownToScript(source, locale);
+  return { source, ...validateLesson(script) };
+}
+
+/** The checked lesson of an answer (`lessonFor`). */
+export function scriptFor(content: string, options: ScriptOptions = {}): ParsedScript {
+  return lessonFor(content, options).script;
 }
 
 /** Plain text of an answer for the chat history (cleaned, tags removed, board writing kept). */
@@ -358,7 +382,10 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
             : action;
       const { layout, element } = placeNow(resolved);
       if (!element || element.kind !== 'text') return;
-      if (action.kind === 'write') r.ids.set(action.id, element.id);
+      if (action.kind === 'write') {
+        r.ids.set(action.id, element.id);
+        lessonWrites.set(action.id, { text: action.text, placed: element.id });
+      }
       const prov = checkNumbers(element.source, ctx.sources, ctx.known);
       ctx.known.push(...prov.results);
       patch(r, {
@@ -530,6 +557,7 @@ async function playSentence(sentence: Sentence, ctx: LessonCtx): Promise<void> {
   const started = performance.now();
   for (const { action } of sentence.actions) {
     await waitIfPaused(r);
+    lessonPlaced.add(actionKey(action));
     await runAction(action, ctx);
   }
   entry.writingMs = Math.round(performance.now() - started);
@@ -568,6 +596,71 @@ export function lessonMetrics(): LessonMetrics | null {
 
 /** Results proved so far in the current lesson (a continuation may use them). */
 let lessonKnown: number[] = [];
+
+/**
+ * What the lesson's runs have started on the board so far: every action as the answer wrote it,
+ * and for each write its text and the id it got on the board. "Viết tiếp" places only what is not
+ * there yet, and writes again, whole, a step whose text grew (`untaught`).
+ */
+let lessonPlaced = new Set<string>();
+let lessonWrites = new Map<string, { text: string; placed: string }>();
+
+const actionKey = (a: BoardAction): string => JSON.stringify(a);
+
+function forgetPlaced(): void {
+  lessonKnown = [];
+  lessonPlaced = new Set();
+  lessonWrites = new Map();
+}
+
+/** How an answer of this lesson is cleaned (the same for the lesson and its "Viết tiếp"). */
+function cleanOptions(input: LessonInput): CleanOptions {
+  return { reviewed: input.reviewed === true, question: input.question };
+}
+
+/** How the board reads an answer of this lesson. */
+function scriptOptions(input: LessonInput): ScriptOptions {
+  return { ...cleanOptions(input), locale: useSettingsStore.getState().locale };
+}
+
+/** Length of the common start of two texts. */
+function sharedLength(a: string, b: string): number {
+  const n = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < n && a.charCodeAt(i) === b.charCodeAt(i)) i++;
+  return i;
+}
+
+/**
+ * The sentences of the whole answer still to teach after "Viết tiếp": those that end after
+ * `boundary` (where the part already taught stopped in the source). The sentence that was cut
+ * there is said again whole, without the actions it already put on the board; a step it was
+ * writing whose text grew is wiped and written whole (never a fragment and then the whole step).
+ * Sentences after the boundary are new, all their actions too (a mark may repeat an old one).
+ */
+function untaught(sentences: readonly Sentence[], boundary: number): Sentence[] {
+  const out: Sentence[] = [];
+  for (const s of sentences) {
+    if ((s.end ?? Infinity) <= boundary) continue;
+    if ((s.start ?? 0) >= boundary) {
+      out.push(s);
+      continue;
+    }
+    const actions: TimedAction[] = [];
+    for (const t of s.actions) {
+      const a = t.action;
+      if (lessonPlaced.has(actionKey(a))) continue;
+      const old = a.kind === 'write' ? lessonWrites.get(a.id) : undefined;
+      // The same step, grown ("v = g" → "v = gt = 20 m/s"); another text under a reused id is new.
+      if (old && a.kind === 'write' && old.text !== a.text && a.text.startsWith(old.text)) {
+        actions.push({ at: t.at, action: { kind: 'erase', target: old.placed } });
+      }
+      actions.push(t);
+    }
+    out.push({ ...s, actions });
+  }
+  return out;
+}
 
 /** Ends the current run: its waiting steps stop, and a pause it waits on opens (to stop it). */
 function endRun(): void {
@@ -614,7 +707,7 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
 /** Starts (or restarts) a lesson on a clean board. */
 export async function playLesson(input: LessonInput, measure: Measure): Promise<void> {
   stopLesson();
-  lessonKnown = [];
+  forgetPlaced();
   // A new lesson (or "Giảng lại") tries the chosen voice again; "Viết tiếp" keeps the session.
   voiceSession = newVoiceSession();
   metrics = { startedAt: performance.now(), firstSpeechMs: null, sentences: [] };
@@ -632,16 +725,14 @@ export async function playLesson(input: LessonInput, measure: Measure): Promise<
     subtitle: '',
     strokes: [],
   });
-  await run(
-    scriptFor(input.content, { reviewed: input.reviewed === true, question: input.question }),
-    input,
-    measure,
-  );
+  await run(lessonFor(input.content, scriptOptions(input)).script, input, measure);
 }
 
 /**
  * "Viết tiếp": the same answer grew (the AI was asked for the rest). Only the new part is
- * taught, on the same board, after what is already written; anything else starts over.
+ * taught, on the same board, after what is already written; anything else starts over. The
+ * whole answer is read again (a tag or a sentence cut where the first part stopped is read whole)
+ * and what was already taught is skipped by its place in the answer, not by counting sentences.
  */
 export async function continueLesson(input: LessonInput, measure: Measure): Promise<void> {
   const previous = lastInput;
@@ -664,9 +755,10 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
     face: store.teacherFace,
     pen: null,
   });
-  // The rest comes from "Viết tiếp", which is never reviewed: a reviewer's notes could only
-  // stand at the start of the whole answer.
-  await run(scriptFor(input.content.slice(previous.content.length)), input, measure);
+  const full = lessonFor(input.content, scriptOptions(input));
+  const before = teachScriptSource(cleanAnswer(previous.content, cleanOptions(input)).text);
+  const rest = untaught(full.script.sentences, sharedLength(before, full.source));
+  await run({ ...full.script, sentences: rest }, input, measure);
 }
 
 export function pauseLesson(): void {
@@ -777,7 +869,7 @@ export function clearBoard(): void {
   stopLesson();
   pendingStart = null;
   lastInput = null;
-  lessonKnown = [];
+  forgetPlaced();
   board().set({
     lessonId: null,
     lessonContent: '',

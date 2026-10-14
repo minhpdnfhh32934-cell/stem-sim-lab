@@ -406,13 +406,36 @@ describe('the pen and the lesson belong to one face and one run', () => {
 
   it('"Viết tiếp": the marks of the new part land on its own elements, never on the old ones with the same id', async () => {
     voice.ms = 10;
+    // A markdown answer is read whole again (item 1): the new result is the answer's second
+    // one, "r2", and its box goes around it.
     const first = { id: 'lesson-more', content: 'Vậy a = 1 m.', question: '' };
     await finish(lesson.playLesson(first, measure));
     const more = { ...first, content: `${first.content}\n\nVậy b = 2 m.` };
     await finish(lesson.continueLesson(more, measure));
-    const ids = board().layout.elements.map((e) => e.id);
-    expect(ids).toEqual(['r1', 'r1_2']);
-    const boxes = board().marks.filter((m) => m.kind === 'box');
+    expect(board().layout.elements.map((e) => e.id)).toEqual(['r1', 'r2']);
+    let boxes = board().marks.filter((m) => m.kind === 'box');
+    expect(boxes).toHaveLength(2);
+    expect(boxes[0]?.box.y).toBe(textOf('r1').y);
+    expect(boxes[1]?.box.y).toBe(textOf('r2').y);
+
+    // The AI reuses an id in the new part: it is placed as "r1_2", and its box goes there.
+    const script = {
+      id: 'lesson-more-script',
+      content: 'Ta có <write id="r1" zone="steps" role="result">a = 1 m</write>.<box target="r1"/>',
+      question: '',
+    };
+    await finish(lesson.playLesson(script, measure));
+    await finish(
+      lesson.continueLesson(
+        {
+          ...script,
+          content: `${script.content} Tiếp <write id="r1" zone="steps" role="result">b = 2 m</write>.<box target="r1"/>`,
+        },
+        measure,
+      ),
+    );
+    expect(board().layout.elements.map((e) => e.id)).toEqual(['r1', 'r1_2']);
+    boxes = board().marks.filter((m) => m.kind === 'box');
     expect(boxes).toHaveLength(2);
     expect(boxes[0]?.box.y).toBe(textOf('r1').y);
     // Without the run's id map this box went around the first result again.

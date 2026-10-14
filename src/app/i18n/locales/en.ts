@@ -1251,6 +1251,7 @@ const en: Messages = {
     axes: 'Coordinate axes',
     plotOf: 'Graph of {fn}',
     plotUnreadable: 'Could not read the expression to plot',
+    codeInMessage: '(code in the message)',
   },
   voice: {
     readAloudCard: 'Read aloud',
