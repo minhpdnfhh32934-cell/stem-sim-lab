@@ -32,6 +32,7 @@ import {
   place,
   spanBox,
   type BoardElement,
+  type Layout,
   type Measure,
   type TextElement,
 } from './layout';
@@ -346,6 +347,8 @@ interface LessonCtx {
   measure: Measure;
   sources: number[];
   known: number[];
+  /** The record of the action being run: what it puts on the board goes there. */
+  placed: Placed | null;
 }
 
 async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
@@ -364,10 +367,23 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
     case 'correct': {
       const old = action.kind === 'correct' ? target(action.target) : undefined;
       if (action.kind === 'correct' && !old) return;
-      if (old) {
+      // A long write split into pieces: each piece is struck out, the correction goes after the
+      // last one.
+      const wrong =
+        action.kind === 'correct'
+          ? [
+              ...(action.strike ?? []).flatMap((id) => {
+                const e = target(id);
+                return e ? [e] : [];
+              }),
+              ...(old ? [old] : []),
+            ]
+          : [];
+      for (const e of wrong) {
         // The teacher walks to the wrong line and strikes it out first.
-        moveTo(r, old, { x: old.x + old.w, y: old.y + old.h / 2 });
-        const key = addMark(r, { kind: 'strike', face: old.face, box: old, seed: seedOf(old.id) });
+        moveTo(r, e, { x: e.x + e.w, y: e.y + e.h / 2 });
+        const key = addMark(r, { kind: 'strike', face: e.face, box: e, seed: seedOf(e.id) });
+        ctx.placed?.marks.push(key);
         await sleep(80, r);
         await waitIfPaused(r);
         showMark(r, key);
@@ -382,10 +398,8 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
             : action;
       const { layout, element } = placeNow(resolved);
       if (!element || element.kind !== 'text') return;
-      if (action.kind === 'write') {
-        r.ids.set(action.id, element.id);
-        lessonWrites.set(action.id, { text: action.text, placed: element.id });
-      }
+      if (action.kind === 'write') r.ids.set(action.id, element.id);
+      ctx.placed?.elements.push(element.id);
       const prov = checkNumbers(element.source, ctx.sources, ctx.known);
       ctx.known.push(...prov.results);
       patch(r, {
@@ -407,6 +421,7 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
         box,
         seed: seedOf(`${e.id}${action.mark}`),
       });
+      ctx.placed?.marks.push(key);
       await sleep(60, r);
       await waitIfPaused(r);
       showMark(r, key);
@@ -426,6 +441,7 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
         ...(action.label ? { label: action.label } : {}),
         seed: seedOf(`${a.id}>${b.id}`),
       });
+      ctx.placed?.marks.push(key);
       await sleep(60, r);
       await waitIfPaused(r);
       showMark(r, key);
@@ -457,6 +473,10 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
         ...(board().follow ? { face: n } : {}),
         ...(element ? { progress: { ...board().progress, [element.id]: 0 } } : {}),
       });
+      if (ctx.placed) {
+        ctx.placed.face = n;
+        if (element) ctx.placed.elements.push(element.id);
+      }
       await sleep(350, r);
       if (element?.kind === 'text') await writeElement(element, r);
       return;
@@ -466,6 +486,7 @@ async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
       const { layout, element } = placeNow(action);
       if (!element) return;
       r.ids.set(action.id, element.id);
+      ctx.placed?.elements.push(element.id);
       patch(r, { layout: { ...layout }, progress: { ...board().progress, [element.id]: 1 } });
       moveTo(r, element, { x: element.x + element.w / 2, y: element.y + element.h / 2 });
       await sleep(1400, r);
@@ -550,6 +571,7 @@ async function playSentence(sentence: Sentence, ctx: LessonCtx): Promise<void> {
   // What is said and shown includes what is being written (audit BRD-01).
   const said = sentence.spoken || sentence.speech;
   patch(r, { subtitle: subtitleText(said) });
+  if (sentence.start !== undefined) lessonLastStart = sentence.start;
   const voice = !r.instant && useVoiceStore.getState().enabled && said.trim() !== '';
   const entry: SentenceTiming = { speechMs: null, writingMs: 0 };
   metrics?.sentences.push(entry);
@@ -557,12 +579,32 @@ async function playSentence(sentence: Sentence, ctx: LessonCtx): Promise<void> {
   const started = performance.now();
   for (const { action } of sentence.actions) {
     await waitIfPaused(r);
-    lessonPlaced.add(actionKey(action));
-    await runAction(action, ctx);
+    const placed: Placed = {
+      kind: action.kind,
+      key: actionKey(action),
+      id:
+        action.kind === 'write' || action.kind === 'draw' || action.kind === 'plot'
+          ? action.id
+          : null,
+      start: sentence.start ?? null,
+      end: sentence.end ?? null,
+      elements: [],
+      marks: [],
+      face: null,
+    };
+    lessonTrail.push(placed);
+    ctx.placed = placed;
+    try {
+      await runAction(action, ctx);
+    } finally {
+      ctx.placed = null;
+    }
   }
   entry.writingMs = Math.round(performance.now() - started);
   await speech;
   ensure(r);
+  // Said and written whole: "Viết tiếp" never teaches it again.
+  if (sentence.end !== undefined) lessonTaughtTo = Math.max(lessonTaughtTo, sentence.end);
   if (!voice && !isInstant(r)) {
     // Without a voice the learner reads the subtitle: give them the time to.
     const left = readingTime(toSpokenText(said)) - (performance.now() - started);
@@ -597,20 +639,40 @@ export function lessonMetrics(): LessonMetrics | null {
 /** Results proved so far in the current lesson (a continuation may use them). */
 let lessonKnown: number[] = [];
 
+/** One action a run of the lesson started, and what it put on the board. */
+interface Placed {
+  kind: BoardAction['kind'];
+  /** The action as the answer wrote it (after the lesson check). */
+  key: string;
+  /** The AI's id of a write, drawing or plot. */
+  id: string | null;
+  /** Where its sentence stands in the answer. */
+  start: number | null;
+  end: number | null;
+  /** Board elements it placed (a text, a drawing, a correction). */
+  elements: string[];
+  /** Marks it drew (an underline, an arrow, the strike of a correction). */
+  marks: string[];
+  /** The face a `<newboard>` opened (null until it is open). */
+  face: number | null;
+}
+
 /**
- * What the lesson's runs have started on the board so far: every action as the answer wrote it,
- * and for each write its text and the id it got on the board. "Viết tiếp" places only what is not
- * there yet, and writes again, whole, a step whose text grew (`untaught`).
+ * Everything the lesson's runs started on the board, in order (`untaught` reads it for "Viết
+ * tiếp"); where the runs got to: the end of the last sentence said and written whole, and the
+ * start of the last sentence begun.
  */
-let lessonPlaced = new Set<string>();
-let lessonWrites = new Map<string, { text: string; placed: string }>();
+let lessonTrail: Placed[] = [];
+let lessonTaughtTo = 0;
+let lessonLastStart = Infinity;
 
 const actionKey = (a: BoardAction): string => JSON.stringify(a);
 
 function forgetPlaced(): void {
   lessonKnown = [];
-  lessonPlaced = new Set();
-  lessonWrites = new Map();
+  lessonTrail = [];
+  lessonTaughtTo = 0;
+  lessonLastStart = Infinity;
 }
 
 /** How an answer of this lesson is cleaned (the same for the lesson and its "Viết tiếp"). */
@@ -631,35 +693,130 @@ function sharedLength(a: string, b: string): number {
   return i;
 }
 
+/** What "Viết tiếp" still teaches, what it wipes first, and the ids of what stays. */
+interface Continuation {
+  sentences: Sentence[];
+  /** What the taught part placed that the whole answer does not have again (stumps). */
+  wiped: Placed[];
+  /** The AI's ids → the board ids of what stays (marks of the new part land on them). */
+  ids: Map<string, string>;
+}
+
+/** The AI ids an action needs on the board (its target, its arrow's ends, its note's anchor). */
+function needs(a: BoardAction): string[] {
+  switch (a.kind) {
+    case 'mark':
+    case 'point':
+    case 'erase':
+      return [a.target];
+    case 'correct':
+      return [a.target, ...(a.strike ?? [])];
+    case 'arrow':
+      return [a.from, a.to];
+    case 'write':
+      return a.noteFor ? [a.noteFor] : [];
+    default:
+      return [];
+  }
+}
+
 /**
- * The sentences of the whole answer still to teach after "Viết tiếp": those that end after
- * `boundary` (where the part already taught stopped in the source). The sentence that was cut
- * there is said again whole, without the actions it already put on the board; a step it was
- * writing whose text grew is wiped and written whole (never a fragment and then the whole step).
- * Sentences after the boundary are new, all their actions too (a mark may repeat an old one).
+ * "Viết tiếp" (item 1): the sentences of the whole answer still to teach. `boundary` is where
+ * the part already taught stopped in the answer; the lesson's runs may have stopped earlier (a
+ * stop, a new part while the old one was still being taught): teaching goes on from where they
+ * got to. The sentence cut there is said again whole.
+ *
+ * What the runs placed from the last sentence they began on is checked against the whole answer:
+ * an action that comes again, exactly, on elements that stay, is not placed twice; anything else
+ * they placed (a stump of a line cut mid-word, a line that became a label, a check that is now a
+ * step…) is wiped, and the whole answer's version is placed. So the board ends as if the whole
+ * answer had been taught at once. Taught sentences before that are skipped by position.
  */
-function untaught(sentences: readonly Sentence[], boundary: number): Sentence[] {
+function untaught(sentences: readonly Sentence[], boundary: number, layout: Layout): Continuation {
+  const upTo = Math.min(boundary, lessonTaughtTo);
+  const firstTodo = sentences.find((s) => (s.end ?? Infinity) > upTo);
+  // Checked again from the last sentence begun, and from the last one that wrote: the last
+  // write of a lesson may be its final check, which is a step once the answer goes on.
+  const lastWrote = lessonTrail[lessonTrail.length - 1]?.start ?? Infinity;
+  const from = Math.min(upTo, lessonLastStart, lastWrote, firstTodo?.start ?? upTo);
+  const tail = lessonTrail.filter((p) => p.end !== null && p.end > from);
+  const reused = new Set<Placed>();
+  /** AI ids placed anew: an old mark on them does not stand on the new element. */
+  const fresh = new Set<string>();
+  const stays = (p: Placed, a: BoardAction): boolean => {
+    if (needs(a).some((id) => fresh.has(id))) return false;
+    if (a.kind === 'newboard') return p.face !== null;
+    if (a.kind === 'mark' || a.kind === 'arrow') return p.marks.length > 0;
+    // The teacher already pointed there or erased it.
+    if (a.kind === 'point' || a.kind === 'erase') return true;
+    return p.elements.length > 0;
+  };
+  /** A face the taught part opened under another title (a heading cut mid-word). */
+  const faces: { p: Placed; action: TimedAction }[] = [];
   const out: Sentence[] = [];
   for (const s of sentences) {
-    if ((s.end ?? Infinity) <= boundary) continue;
-    if ((s.start ?? 0) >= boundary) {
-      out.push(s);
-      continue;
-    }
+    const end = s.end ?? Infinity;
+    if (end <= from) continue;
     const actions: TimedAction[] = [];
     for (const t of s.actions) {
       const a = t.action;
-      if (lessonPlaced.has(actionKey(a))) continue;
-      const old = a.kind === 'write' ? lessonWrites.get(a.id) : undefined;
-      // The same step, grown ("v = g" → "v = gt = 20 m/s"); another text under a reused id is new.
-      if (old && a.kind === 'write' && old.text !== a.text && a.text.startsWith(old.text)) {
-        actions.push({ at: t.at, action: { kind: 'erase', target: old.placed } });
+      const key = actionKey(a);
+      const same = tail.find((p) => !reused.has(p) && p.key === key && stays(p, a));
+      if (same) {
+        reused.add(same);
+        continue;
       }
+      if (a.kind === 'newboard') {
+        const face = tail.find((p) => !reused.has(p) && p.kind === 'newboard' && p.face !== null);
+        if (face) {
+          reused.add(face);
+          faces.push({ p: face, action: t });
+        }
+      }
+      if (a.kind === 'write' || a.kind === 'draw' || a.kind === 'plot') fresh.add(a.id);
       actions.push(t);
     }
-    out.push({ ...s, actions });
+    if (end > upTo) out.push({ ...s, actions });
+    // Already said: only what the whole answer places differently, without words.
+    else if (actions.length > 0) out.push({ ...s, speech: '', spoken: '', actions, pauseMs: 0 });
   }
-  return out;
+  const wiped = tail.filter(
+    (p) => !reused.has(p) && (p.elements.length > 0 || p.marks.length > 0 || p.face !== null),
+  );
+  // A face opened by the taught part goes when nothing on it stays (it is the last face, and
+  // all it holds is wiped): the whole answer opens it again. Otherwise it stays, and is not
+  // opened twice.
+  const gone = new Set(wiped.flatMap((p) => p.elements));
+  const unopened = new Set<TimedAction>();
+  for (const p of [...wiped.filter((x) => x.face !== null && !faces.some((f) => f.p === x))]) {
+    if (!droppable(p, layout, gone)) wiped.splice(wiped.indexOf(p), 1);
+  }
+  for (const { p, action } of faces) {
+    if (droppable(p, layout, new Set([...gone, ...p.elements]))) wiped.push(p);
+    else unopened.add(action);
+  }
+  const sentencesLeft =
+    unopened.size === 0
+      ? out
+      : out
+          .map((s) => ({ ...s, actions: s.actions.filter((t) => !unopened.has(t)) }))
+          .filter((s) => s.speech !== '' || s.actions.length > 0);
+  const ids = new Map<string, string>();
+  for (const p of lessonTrail) {
+    const element = p.elements[0];
+    if (p.id && element && !wiped.includes(p)) ids.set(p.id, element);
+  }
+  return { sentences: sentencesLeft, wiped, ids };
+}
+
+/** The face `p` opened is the last one and holds only elements in `gone`. */
+function droppable(p: Placed, layout: Layout, gone: ReadonlySet<string>): boolean {
+  return (
+    p.face !== null &&
+    p.face === layout.faces.length - 1 &&
+    p.face > 0 &&
+    layout.elements.every((e) => e.face !== p.face || gone.has(e.id))
+  );
 }
 
 /** Ends the current run: its waiting steps stop, and a pause it waits on opens (to stop it). */
@@ -673,7 +830,12 @@ function endRun(): void {
   g?.open();
 }
 
-async function run(script: ParsedScript, input: LessonInput, measure: Measure): Promise<void> {
+async function run(
+  script: ParsedScript,
+  input: LessonInput,
+  measure: Measure,
+  ids: ReadonlyMap<string, string> = new Map(),
+): Promise<void> {
   endRun();
   runs += 1;
   const r: Run = {
@@ -682,7 +844,7 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
     gate: null,
     instant: false,
     speechCut: false,
-    ids: new Map(),
+    ids: new Map(ids),
   };
   current = r;
   lastInput = input;
@@ -693,6 +855,7 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
     measure,
     sources: sourceNumbers(input.question),
     known: lessonKnown,
+    placed: null,
   };
   try {
     for (const sentence of script.sentences) await playSentence(sentence, ctx);
@@ -745,20 +908,38 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
   endRun();
   stopSpeaking();
   const store = board();
-  const progress = { ...store.progress };
-  for (const e of store.layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
-  // The new part is written where the teacher is, in view.
-  store.set({
-    progress,
-    marks: store.marks.map((m) => ({ ...m, shown: true })),
-    follow: true,
-    face: store.teacherFace,
-    pen: null,
-  });
   const full = lessonFor(input.content, scriptOptions(input));
   const before = teachScriptSource(cleanAnswer(previous.content, cleanOptions(input)).text);
-  const rest = untaught(full.script.sentences, sharedLength(before, full.source));
-  await run({ ...full.script, sentences: rest }, input, measure);
+  const rest = untaught(full.script.sentences, sharedLength(before, full.source), store.layout);
+  const progress = { ...store.progress };
+  for (const e of store.layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
+  // Stumps of the part taught (and their marks) are wiped before the rest is taught; a face
+  // that held only stumps goes (the rest opens it again).
+  const erased = { ...store.erased };
+  for (const p of rest.wiped) for (const id of p.elements) erased[id] = true;
+  const unmarked = new Set(rest.wiped.flatMap((p) => p.marks));
+  const dropped = new Set(rest.wiped.flatMap((p) => (p.face === null ? [] : [p.face])));
+  const faces = store.layout.faces.filter((_, i) => !dropped.has(i));
+  const layout =
+    dropped.size === 0
+      ? store.layout
+      : { faces, elements: store.layout.elements.filter((e) => !dropped.has(e.face)) };
+  lessonTrail = lessonTrail.filter((p) => !rest.wiped.includes(p));
+  const teacherFace = Math.min(store.teacherFace, faces.length - 1);
+  // The new part is written where the teacher is, in view.
+  store.set({
+    layout,
+    progress,
+    erased,
+    marks: store.marks
+      .filter((m) => !unmarked.has(m.key) && !dropped.has(m.face))
+      .map((m) => ({ ...m, shown: true })),
+    follow: true,
+    teacherFace,
+    face: teacherFace,
+    pen: null,
+  });
+  await run({ ...full.script, sentences: rest.sentences }, input, measure, rest.ids);
 }
 
 export function pauseLesson(): void {
