@@ -11,6 +11,8 @@ import {
   gemmaOnIntegrated,
   isGpuFailure,
   lastGpuFault,
+  noteGpuFault,
+  type GpuFault,
 } from '@/ai/gpuSafety';
 import { deleteRepo, opfsAvailable, repoStored } from '@/ai/modelStore';
 import { ortPaths, webGPUStatus } from '@/ai/webGemma';
@@ -73,9 +75,10 @@ let gpuFailedHere = false;
 
 /**
  * Where the voice model runs. The graphics card only when WebGPU exists, nothing forces the CPU,
- * no GPU fault is recorded (here or by Gemma) and the card is not known to be integrated: long
+ * no GPU fault is recorded (here or by Gemma) and the card is known to be a discrete one: long
  * WebGPU work made an integrated card's driver reset until Windows crashed (0x119, audit
- * GPU-01). Otherwise the CPU (WebAssembly): slower, never a risk for the computer.
+ * GPU-01). A card that cannot be told (a browser, a failed adapter list, an unknown kind) is
+ * treated as integrated. Otherwise the CPU (WebAssembly): slower, never a risk for the computer.
  */
 export async function localVoiceDevice(): Promise<LocalVoiceDevice> {
   if (localVoiceDevicePreference() === 'wasm' || webGPUStatus() !== 'webgpu') return 'wasm';
@@ -83,26 +86,110 @@ export async function localVoiceDevice(): Promise<LocalVoiceDevice> {
   const gpu = useGpuStore.getState();
   // The desktop app lists the cards at start-up; if it has not yet, ask rather than guess.
   const status = gpu.status ?? (await loadGpuStatus().catch(() => null));
-  return gemmaOnIntegrated(status, gpu.gemmaInfo) === true ? 'wasm' : 'webgpu';
+  return gemmaOnIntegrated(status, gpu.gemmaInfo) === false ? 'webgpu' : 'wasm';
 }
 
 type WorkerOut =
   | { kind: 'progress'; loaded: number; total: number | null }
   | { kind: 'loaded' }
+  | { kind: 'started'; id: number }
   | { kind: 'audio'; id: number; samples: Float32Array; sampleRate: number }
   | { kind: 'error'; id: number; message: string };
 
 let worker: Worker | null = null;
 let loaded = false;
 let loadedDevice: LocalVoiceDevice | null = null;
+/** The device a load in progress puts the model on: a failure during the load is that device's. */
+let loadingDevice: LocalVoiceDevice | null = null;
 let nextId = 1;
 const waiting = new Map<number, (out: WorkerOut) => void>();
 let onLoad: ((out: WorkerOut) => void) | null = null;
 let onProgress: ((loaded: number, total: number | null) => void) | null = null;
 
-/** A failure of the worker on the graphics card keeps the voice off the card from then on. */
-function noteFailure(message: string): void {
-  if (loadedDevice === 'webgpu' && isGpuFailure(message)) gpuFailedHere = true;
+/**
+ * What a failure means when the voice runs on the graphics card, or null when it is not the
+ * card's: a lost device or a crashed worker, and also a phrase or a load that hangs and audio made
+ * of NaN (how a failing card shows in this model).
+ */
+function gpuFaultReason(message: string): GpuFault['reason'] | null {
+  if (/worker-crashed/.test(message)) return 'worker-crashed';
+  if (/gpu-lost|device (?:was )?lost|device_removed|device_hung|dxgi_error/i.test(message))
+    return 'device-lost';
+  if (isGpuFailure(message) || /^voice-model-(?:timeout|load-timeout|nan)\b/.test(message))
+    return 'runtime-gpu-error';
+  return null;
+}
+
+/**
+ * A failure of the worker on the graphics card keeps the voice off the card from then on, and is
+ * recorded like Gemma's (src/ai/gpuSafety.ts): kept across restarts, and Gemma stops too. Never
+ * reload onto a card that just failed (the reload loop behind the 0x119 crash). True when it was
+ * a GPU failure.
+ */
+function noteFailure(message: string): boolean {
+  if ((loadedDevice ?? loadingDevice) !== 'webgpu') return false;
+  const reason = gpuFaultReason(message);
+  if (!reason) return false;
+  if (!gpuFailedHere) {
+    gpuFailedHere = true;
+    // Both workers ask WebGPU for the default adapter of the same page: the same card.
+    noteGpuFault(reason, useGpuStore.getState().gemmaInfo);
+  }
+  return true;
+}
+
+// ------------------------------------------------------------ phrase watchdog
+
+/** Phrases posted to the worker (id → characters) until it answers them. */
+const posted = new Map<number, number>();
+/** The phrase the worker is working on, with the timer that declares it hung. */
+let running: {
+  id: number;
+  chars: number;
+  startedAt: number;
+  timer: ReturnType<typeof setTimeout>;
+} | null = null;
+/** Work per character measured on this computer (ms), for the device the model runs on. */
+let measuredMsPerChar: number | null = null;
+/** The device the speed was measured on (a new device starts a new measurement). */
+let measuredOn: LocalVoiceDevice | null = null;
+
+/** A phrase this short is mostly fixed cost: it says little about the speed per character. */
+const MEASURE_MIN_CHARS = 20;
+
+function noteSpeed(chars: number, ms: number): void {
+  if (chars < MEASURE_MIN_CHARS) return;
+  const perChar = ms / chars;
+  // Slower phrases count at once, faster ones slowly: the budget is for hangs, not for speed.
+  measuredMsPerChar =
+    measuredMsPerChar === null
+      ? perChar
+      : Math.max(perChar, measuredMsPerChar * 0.7 + perChar * 0.3);
+}
+
+/** The worker started a phrase: its time budget runs from now, not from when it was asked for. */
+function watchStarted(id: number): void {
+  if (running) clearTimeout(running.timer);
+  const chars = posted.get(id) ?? 0;
+  running = {
+    id,
+    chars,
+    startedAt: Date.now(),
+    timer: setTimeout(() => {
+      running = null;
+      noteFailure('voice-model-timeout');
+      failAll('voice-model-timeout');
+    }, speakTimeoutMs(chars)),
+  };
+}
+
+/** The worker answered a phrase (audio, error, or dropped after a cancel). */
+function watchFinished(id: number, measured: boolean): void {
+  posted.delete(id);
+  if (running?.id !== id) return;
+  clearTimeout(running.timer);
+  if (measured) noteSpeed(running.chars, Date.now() - running.startedAt);
+  running = null;
 }
 
 function ensureWorker(): Worker {
@@ -110,9 +197,23 @@ function ensureWorker(): Worker {
   worker = new Worker(new URL('./localVoiceWorker.ts', import.meta.url), { type: 'module' });
   worker.onmessage = (event: MessageEvent<WorkerOut>) => {
     const out = event.data;
-    if (out.kind === 'error') noteFailure(out.message);
-    if (out.kind === 'progress') onProgress?.(out.loaded, out.total);
-    else if (out.kind === 'loaded' || (out.kind === 'error' && out.id === -1)) {
+    if (out.kind === 'progress') {
+      onProgress?.(out.loaded, out.total);
+      return;
+    }
+    if (out.kind === 'started') {
+      watchStarted(out.id);
+      return;
+    }
+    if (out.kind === 'audio' || (out.kind === 'error' && out.id !== -1)) {
+      watchFinished(out.id, out.kind === 'audio');
+    }
+    // The card failed: the worker is unloaded at once and everything waiting on it fails.
+    if (out.kind === 'error' && noteFailure(out.message)) {
+      failAll(out.message);
+      return;
+    }
+    if (out.kind === 'loaded' || (out.kind === 'error' && out.id === -1)) {
       const resolve = onLoad;
       onLoad = null;
       resolve?.(out);
@@ -151,11 +252,19 @@ function resetWorker(): void {
   worker = null;
   loaded = false;
   loadedDevice = null;
+  loadingDevice = null;
+  if (running) clearTimeout(running.timer);
+  running = null;
+  posted.clear();
 }
+
+/** A stored model loads in seconds: this long without progress means the load hung. */
+export const LOAD_STALL_MS = 60_000;
 
 async function load(
   progress: (loaded: number, total: number | null) => void,
   signal?: AbortSignal,
+  stallMs?: number,
 ): Promise<void> {
   const device = await localVoiceDevice();
   // Loaded on the CPU, or on the card that is still fine: nothing to do. A card that became
@@ -164,7 +273,19 @@ async function load(
   if (loaded) resetWorker();
   if (signal?.aborted) throw new Error('cancelled');
   const w = ensureWorker();
-  onProgress = progress;
+  const stall: { timer?: ReturnType<typeof setTimeout> } = {};
+  const arm = () => {
+    if (stallMs === undefined) return;
+    clearTimeout(stall.timer);
+    stall.timer = setTimeout(() => {
+      noteFailure('voice-model-load-timeout');
+      failAll('voice-model-load-timeout');
+    }, stallMs);
+  };
+  onProgress = (done, total) => {
+    arm();
+    progress(done, total);
+  };
   let cancel: () => void = () => undefined;
   const done = new Promise<WorkerOut>((resolve, reject) => {
     onLoad = resolve;
@@ -174,6 +295,10 @@ async function load(
     };
     signal?.addEventListener('abort', cancel, { once: true });
   });
+  if (measuredMsPerChar !== null && device !== measuredOn) measuredMsPerChar = null;
+  measuredOn = device;
+  loadingDevice = device;
+  arm();
   // The graphics card when it is safe (measured 2026-10-12: ~0.6 s of work per second of
   // speech), else the CPU (~1.7 s per second: phrases then wait for each other).
   w.postMessage({
@@ -190,6 +315,8 @@ async function load(
     loaded = true;
     loadedDevice = device;
   } finally {
+    clearTimeout(stall.timer);
+    loadingDevice = null;
     onProgress = null;
     // Only the load listens: stopping a later phrase must never unload a loaded model.
     signal?.removeEventListener('abort', cancel);
@@ -237,12 +364,34 @@ export function textForModel(text: string): string {
     .trim();
 }
 
+/** Time the worker may take for a phrase whatever its length (loading a session, warming up). */
+const PHRASE_BASE_MS = 15_000;
+/** Never less per character than this (the first fixed budget, 2026-10-13). */
+const MIN_MS_PER_CHAR = 200;
 /**
- * Longest wait for one phrase (the CPU needs ~1.7 s per second of speech, ~15 characters per
- * second): past it the worker is taken as hung and restarted, so a lesson never waits for ever.
+ * Before anything is measured: the CPU needed ~1.7 s per second of speech, ~113 ms per character
+ * (measured 2026-10-12); rounded up, then times three like a measured speed.
  */
-export function speakTimeoutMs(words: string): number {
-  return 15_000 + words.length * 200;
+const GUESS_MS_PER_CHAR = 120;
+
+/**
+ * Longest a phrase may run once the worker started it: past it the worker is taken as hung and
+ * restarted, so a lesson never waits for ever. Three times the speed measured on this computer
+ * (or the guess before the first phrase), so a slow CPU is not taken for a hung one.
+ */
+export function speakTimeoutMs(
+  words: string | number,
+  msPerChar: number | null = measuredMsPerChar,
+): number {
+  const chars = typeof words === 'number' ? words : words.length;
+  const perChar = Math.max(MIN_MS_PER_CHAR, 3 * (msPerChar ?? GUESS_MS_PER_CHAR));
+  return PHRASE_BASE_MS + chars * perChar;
+}
+
+/** Any sample that is not a number (NaN, ±∞): the model's maths failed. */
+function hasNonFinite(samples: Float32Array): boolean {
+  for (const v of samples) if (!Number.isFinite(v)) return true;
+  return false;
 }
 
 /** Speaks one phrase into samples (loads the stored model first if needed). */
@@ -251,7 +400,14 @@ export async function synthesizeLocal(text: string, signal: AbortSignal): Promis
   if (!words) return { samples: new Float32Array(0), sampleRate: 16000 };
   if (signal.aborted) throw new Error('cancelled');
   if ((await localVoiceStatus()) !== 'ready') throw new Error('voice-model-missing');
-  await load(() => undefined, signal);
+  try {
+    await load(() => undefined, signal, LOAD_STALL_MS);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    // Named, so a lesson knows the model will not load and stops asking for it (speak.ts).
+    if (message === 'cancelled' || message.startsWith('voice-model-')) throw e;
+    throw new Error(`voice-model-load-failed: ${message}`, { cause: e });
+  }
   const w = ensureWorker();
   const id = nextId++;
   const out = await new Promise<WorkerOut>((resolve, reject) => {
@@ -260,30 +416,30 @@ export async function synthesizeLocal(text: string, signal: AbortSignal): Promis
       reject(new Error('cancelled'));
       return;
     }
-    const finish = () => {
-      clearTimeout(timer);
-      signal.removeEventListener('abort', stop);
-      waiting.delete(id);
-    };
     const stop = () => {
-      finish();
+      waiting.delete(id);
+      // A phrase not started yet is dropped; one already running cannot be cut short, and its
+      // own time budget still guards the worker (watchStarted).
+      try {
+        worker?.postMessage({ kind: 'cancel', id });
+      } catch {
+        /* the worker is gone */
+      }
       reject(new Error('cancelled'));
     };
-    const timer = setTimeout(() => {
-      finish();
-      reject(new Error('voice-model-timeout'));
-      failAll('voice-model-timeout');
-    }, speakTimeoutMs(words));
     signal.addEventListener('abort', stop, { once: true });
     waiting.set(id, (o) => {
-      finish();
+      signal.removeEventListener('abort', stop);
       resolve(o);
     });
+    posted.set(id, words.length);
     w.postMessage({ kind: 'speak', id, text: words });
   });
   if (out.kind === 'error') throw new Error(out.message);
   if (out.kind !== 'audio') throw new Error('no audio');
   const pcm = { samples: out.samples, sampleRate: out.sampleRate };
+  // NaN audio from the graphics card is the card failing: off the card at once.
+  if (hasNonFinite(pcm.samples) && noteFailure('voice-model-nan')) failAll('voice-model-nan');
   // Silence is not speech: the system voice then reads the phrase instead.
   if (isSilent(pcm)) throw new Error('voice-model-silent');
   return pcm;

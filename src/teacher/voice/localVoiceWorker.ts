@@ -30,11 +30,17 @@ type InMessage =
       ort: { wasm: string; mjs: string };
     }
   | { kind: 'speak'; id: number; text: string }
+  /** The page stopped waiting for this phrase: dropped if it has not started yet. */
+  | { kind: 'cancel'; id: number }
   | { kind: 'unload' };
+
+type Job = Exclude<InMessage, { kind: 'cancel' }>;
 
 type OutMessage =
   | { kind: 'progress'; loaded: number; total: number | null }
   | { kind: 'loaded' }
+  /** Work on this phrase begins now: the page's time budget for it starts here. */
+  | { kind: 'started'; id: number }
   | { kind: 'audio'; id: number; samples: Float32Array; sampleRate: number }
   | { kind: 'error'; id: number; message: string };
 
@@ -56,8 +62,26 @@ function post(out: OutMessage, transfer: Transferable[] = []) {
   self.postMessage(out, transfer);
 }
 
-self.onmessage = async (event: MessageEvent<InMessage>) => {
+/** Phrases the page no longer waits for (ids only grow: older ones are already done). */
+const cancelled = new Set<number>();
+let lastSpoken = 0;
+/**
+ * One job at a time, in order: an `await` inside a job would otherwise let the next message start
+ * a second synthesis beside it, and the page could not tell when a phrase really started.
+ */
+let queue: Promise<void> = Promise.resolve();
+
+self.onmessage = (event: MessageEvent<InMessage>) => {
   const msg = event.data;
+  if (msg.kind === 'cancel') {
+    if (msg.id > lastSpoken) cancelled.add(msg.id);
+    return;
+  }
+  queue = queue.then(() => run(msg));
+};
+
+/** Never throws: an error is answered on the id the page waits for (-1 for a load). */
+async function run(msg: Job): Promise<void> {
   try {
     if (msg.kind === 'load') {
       const wasm = env.backends.onnx.wasm as { wasmPaths?: unknown } | undefined;
@@ -92,7 +116,13 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
       }
       post({ kind: 'loaded' });
     } else if (msg.kind === 'speak') {
+      lastSpoken = msg.id;
+      if (cancelled.delete(msg.id)) {
+        post({ kind: 'error', id: msg.id, message: 'cancelled' });
+        return;
+      }
       if (!engine) throw new Error('voice model not loaded');
+      post({ kind: 'started', id: msg.id });
       const inputs = engine.tokenizer(msg.text);
       const { waveform } = (await engine.model(inputs)) as { waveform: Tensor };
       const samples = new Float32Array(waveform.data as Float32Array);
@@ -108,4 +138,4 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
   } catch (e) {
     post({ kind: 'error', id: msg.kind === 'speak' ? msg.id : -1, message: String(e) });
   }
-};
+}
