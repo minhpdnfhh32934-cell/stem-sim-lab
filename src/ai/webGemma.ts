@@ -518,11 +518,22 @@ export function webGemmaChat(args: {
       }
     }
     if ((await webGemmaStatus(id)) !== 'ready') throw new Error('model-missing');
+    if (signal?.aborted) throw new Error('cancelled');
     clearIdleTimer();
     const wasLoaded = loadedId;
-    await loadIntoWorker(id, () => undefined);
+    try {
+      await loadIntoWorker(id, () => undefined);
+    } catch (e) {
+      // A model still in GPU memory must leave it after the idle time, whatever went wrong.
+      if (loadedId !== null) scheduleIdleUnload();
+      throw e;
+    }
     if (wasLoaded !== loadedId) memoryChanged();
-    if (signal?.aborted) throw new Error('cancelled');
+    if (signal?.aborted) {
+      // Stopped while the model was loading: it still leaves the GPU memory after the idle time.
+      scheduleIdleUnload();
+      throw new Error('cancelled');
+    }
     const w = ensureWorker();
     const chatId = nextId++;
     const waiting = waitFor(chatId);
@@ -570,15 +581,14 @@ export function webGemmaChat(args: {
       signal?.removeEventListener('abort', stop);
     });
     scheduleIdleUnload();
-    if (signal?.aborted) throw new Error('cancelled');
-    if (out.kind === 'error') {
-      // The runtime lost its GPU buffers (driver reset): same treatment as a lost device.
-      if (isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
-        noteGpuFault('runtime-gpu-error', useGpuStore.getState().gemmaInfo);
-        resetWorker();
-      }
-      throw new Error(out.message);
+    // A GPU error is handled even after "Dừng": a driver reset while the answer was being stopped
+    // must still turn Gemma off and replace the worker (audit GPU-01).
+    if (out.kind === 'error' && isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
+      noteGpuFault('runtime-gpu-error', useGpuStore.getState().gemmaInfo);
+      resetWorker();
     }
+    if (signal?.aborted) throw new Error('cancelled');
+    if (out.kind === 'error') throw new Error(out.message);
     let text = out.kind === 'reply' ? out.text.trim() : '';
     if (!text) throw new Error('empty reply');
     // Small models often echo the question first: drop that prefix for readability.
