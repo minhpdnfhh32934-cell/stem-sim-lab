@@ -251,6 +251,9 @@ export function ChatPanel({
         think: chat.thinkEnabled,
         board,
         signal: controller.signal,
+        // Only the quick buttons send a `prompt`: a request about the last answer, never an
+        // answer to the teacher's check question that the answer may end with.
+        quickAction: prompt !== undefined,
         onPartial: (text) => {
           if (!controller.signal.aborted) setStreaming(text || null);
         },

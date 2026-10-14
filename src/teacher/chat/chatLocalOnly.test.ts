@@ -243,3 +243,55 @@ describe('Gemma on an integrated card (audit GPU-01)', () => {
     expect(useChatStore.getState().summary?.text).toBe('- Đang học lực ma sát.');
   });
 });
+
+describe('a quick button after the teacher’s check question (final review)', () => {
+  const calls: ChatRequest[] = [];
+  const asked: ChatMessageRecord[] = [
+    { id: 'q', role: 'user', content: 'Định luật II Newton nói gì?' },
+    {
+      id: 'a',
+      role: 'assistant',
+      content: 'a = F/m. Nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì gia tốc thế nào?',
+    },
+  ];
+
+  beforeEach(() => {
+    calls.length = 0;
+    gemmaCalls.length = 0;
+    failure.current = null;
+    desktop.status = RTX_ONLY;
+    useGpuStore.setState({ status: RTX_ONLY, gemmaInfo: null });
+    useChatStore.setState({
+      engine: 'gemma',
+      engineChosen: true,
+      gemmaModel: 'gemma3-1b',
+      messages: [],
+      summary: null,
+      webLookup: false,
+    });
+    setTransportForTests(transport(calls));
+  });
+  afterEach(() => {
+    setTransportForTests(null);
+  });
+
+  it('is reworked, never judged as the learner’s answer', async () => {
+    const { getDictionary } = await import('@/app/i18n');
+    for (const prompt of Object.values(getDictionary('vi').teacher.chipPrompts)) {
+      gemmaCalls.length = 0;
+      await askTeacher(prompt, 'vi', asked, {
+        includeScreen: false,
+        think: false,
+        quickAction: true,
+      });
+      expect(gemmaCalls.at(-1)?.system, prompt).not.toContain('Không khen ngay');
+    }
+    // The same path with a typed answer does judge it.
+    gemmaCalls.length = 0;
+    await askTeacher('Gia tốc tăng gấp đôi ạ.', 'vi', asked, {
+      includeScreen: false,
+      think: false,
+    });
+    expect(gemmaCalls.at(-1)?.system).toContain('Không khen ngay');
+  });
+});
