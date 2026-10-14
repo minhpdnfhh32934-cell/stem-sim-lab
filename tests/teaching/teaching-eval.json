@@ -29,7 +29,7 @@
       "subject": "physics",
       "type": "misconception",
       "question": "Vì sao trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau?",
-      "keyFacts": [["gia toc"], ["khong phu thuoc|nhu nhau|nhu cu|bang nhau"]],
+      "keyFacts": [["gia toc"], ["khong phu thuoc|(?<!nhanh )nhu nhau|nhu cu|bang nhau"]],
       "mustNot": [
         "(?<!(khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu) )vat (nang|nhe) (se |thi )?(roi )?nhanh hon"
       ],
@@ -126,7 +126,7 @@
       "keyFacts": [
         ["khoi luong"],
         ["van toc|toc do"],
-        ["1/2|mot nua|frac\\{1\\}\\{2\\}|mv\\^?2|m ?v ?\\^? ?2"]
+        ["1/2|mot nua|frac\\{1\\}\\{2\\}|mv\\^?2|m ?v ?\\^? ?2|m ?[.·×*]? ?v ?(\\^ ?\\{?2|²)"]
       ],
       "mustNot": [],
       "expected": "Động năng là dạng năng lượng mà vật có được do nó đang chuyển động. Công thức: W_đ = ½mv², trong đó m là khối lượng (kg), v là tốc độ của vật (m/s), đơn vị là jun (J). Động năng phụ thuộc khối lượng (tỉ lệ thuận với m) và tốc độ (tỉ lệ với bình phương tốc độ, nên tốc độ tăng gấp đôi thì động năng tăng gấp bốn); động năng là đại lượng vô hướng, không âm, không phụ thuộc hướng chuyển động và có giá trị phụ thuộc hệ quy chiếu.",
@@ -228,16 +228,20 @@
       "type": "missing-data",
       "question": "Một ô tô đang chạy với vận tốc 20 m/s thì hãm phanh và chuyển động chậm dần đều. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
       "keyFacts": [
-        ["gia toc|thoi gian|bao lau|luc ham"],
+        ["gia toc|thoi gian|bao lau|luc ham(?! phanh)|(do lon|gia tri) (cua )?luc ham|khoi luong"],
         [
           "v_?\\{?0?\\}? ?(\\^ ?\\{?2|²)|2 ?[.·×*]? ?a ?[.·×*]? ?s\\b|2as|v_?0 ?[.·×*]? ?t\\b|cong thuc|phuong trinh|phu thuoc|de tinh|neu (biet|co)"
         ]
       ],
       "mustNot": [],
       "expectsClarify": true,
-      "missing": [["gia toc|thoi gian|bao lau|luc ham|he so ma sat"]],
+      "missing": [
+        [
+          "gia toc|thoi gian|bao lau|luc ham(?! phanh)|(do lon|gia tri) (cua )?luc ham|khoi luong|he so ma sat"
+        ]
+      ],
       "answerUnit": "(m|met|km)\\b(?! ?/)",
-      "allowNumbers": ["0", "1", "2"],
+      "allowNumbers": ["0", "1", "2", "400"],
       "expected": "Hỏi lại gia tốc (hoặc thời gian hãm phanh, hoặc lực hãm và khối lượng); có thể nêu công thức v² − v₀² = 2as với v = 0. Không tự chọn gia tốc, không đưa ra quãng đường bằng số. Cặp với P13 (cùng tình huống, đủ dữ kiện).",
       "review_status": "pending"
     },
@@ -276,9 +280,9 @@
       ],
       "steps": [[0], [1], [2]],
       "mustNot": [
-        "(=|la|bang|duoc) ?100 ?\\(?(m\\b|met)\\)?(?! ?[-−–+])",
+        "(?<!(?<!\\bs ?= ?)\\bv_?0 ?[.·×*]? ?t ?(= ?20 ?[.·×*x] ?5 ?)?)(=|la|bang|duoc) ?100 ?\\(?(m\\b|met)\\)?(?! ?[-−–+])",
         "(=|la|bang|duoc) ?150 ?\\(?(m\\b|met)",
-        "(=|la|bang) ?[-−] ?50 ?\\(?(m\\b|met)"
+        "(?<!(?<!\\bs ?= ?)((1/2|mot nua) ?[.·×*]? ?a ?[.·×*]? ?t|a ?[.·×*]? ?t ?(\\^ ?\\{?2\\}?|²) ?/ ?2) ?(\\^ ?\\{?2\\}?|²)? ?(= ?[^=;]{0,30})?)(=|la|bang) ?[-−] ?50 ?\\(?(m\\b|met)"
       ],
       "derivation": "Chọn chiều dương theo chiều chuyển động. Bước 1: a = −F/m = −4000 N / 1000 kg = −4 m/s². Bước 2: v² − v₀² = 2as với v = 0. Bước 3: s = −v₀²/(2a) = −20²/(2·(−4)) = 400/8 = 50 m. Kiểm tra 1: t = (0 − 20)/(−4) = 5 s; s = v₀t + ½at² = 20·5 + ½·(−4)·5² = 100 − 50 = 50 m. Kiểm tra 2 (định lý động năng): ½mv₀² = ½·1000·20² = 200 000 J = F·s ⇒ s = 200 000/4000 = 50 m. Không cần g (đường nằm ngang, lực hãm cho sẵn). mustNot: 100 m (s = v₀t bỏ qua chậm dần, hoặc v₀²/a quên hệ số 2), 150 m (v₀t + ½|a|t², sai dấu), −50 m (sai dấu trong công thức độc lập thời gian).",
       "expected": "Bước 1 gia tốc 4 m/s² (hoặc động năng ban đầu 200 000 J), bước 2 công thức liên hệ, bước 3 kết quả 50 m; kiểm tra đơn vị; kết thúc bằng một câu hỏi kiểm tra.",
@@ -294,7 +298,9 @@
           "khong (dung|phai|bang (0|khong))|chua (dung|chinh xac)|\\bsai\\b|van (bang|la) g\\b|khac (0|khong)"
         ],
         ["\\bg\\b|gia toc (roi tu do|trong truong)|9[,.]8|(?<![\\d.,])10 ?m/s"],
-        ["huong xuong|xuong duoi|thang dung xuong|huong (ve )?(phia )?(mat )?dat|trong luc"],
+        [
+          "huong xuong|xuong duoi|thang dung xuong|huong (ve )?(phia )?(mat )?dat|\\btrong luc (van |luon |chi )?(tac dung|huong|keo|p\\b|=|la|cua)|\\b(do|cua|boi) trong luc\\b|luc hut (cua )?trai dat"
+        ],
         [
           "doi chieu|doi huong|(dang|van|tiep tuc) thay doi|tuc thoi|khoanh khac|roi xuong|di xuong|bat dau roi"
         ]
@@ -545,7 +551,7 @@
       "expectsClarify": true,
       "missing": [["dieu kien|nhiet do|ap suat|\\bdkc\\b|\\bdktc\\b|tieu chuan|\\bchuan\\b"]],
       "answerUnit": "(l|lit|ml|dm3|dm³|cm3|cm³|m3|m³)\\b(?! ?/)",
-      "allowNumbers": ["24.79", "22.4", "25", "0", "273", "298", "1"],
+      "allowNumbers": ["24.79", "22.4", "25", "0", "273", "298", "1", "0.082", "8.314", "273.15"],
       "expected": "Hỏi khí ở điều kiện nào (nhiệt độ, áp suất) vì thể tích khí phụ thuộc vào chúng; có thể nêu thể tích mol ở điều kiện chuẩn (24,79 L/mol ở 25 °C, 1 bar) để học sinh đối chiếu, nhưng không tự chọn điều kiện rồi đưa ra một thể tích bằng số (4,958 L hay 4,48 L). Giáo viên cần xác nhận: có chấp nhận \"ngầm hiểu đkc\" hay không.",
       "review_status": "pending"
     },
@@ -583,14 +589,14 @@
       "keyFacts": [
         ["khong (dung|phai)|chua (dung|chinh xac)|\\bsai\\b"],
         [
-          "(?<![\\d.,])1 ?\\(?(m\\b|mol/l)|khong (doi|thay doi)|giu nguyen|nhu (cu|ban dau|truoc)|van (la|bang) 1"
+          "(van|giu|con|chi|luon) (la |bang |o |muc )?1 ?\\(?(m\\b|mol/l)|nong do[^.;+=?]{0,40}(?<![\\d.,])1 ?\\(?(m\\b|mol/l)(?! ?\\+)|(=|\\bla\\b|\\bbang\\b) ?1 ?\\(?(m\\b|mol/l)(?! ?\\+)|khong (doi|thay doi)|giu nguyen|nhu (cu|ban dau|truoc)|van (la|bang) 1"
         ],
         [
           "(?<![\\d.,])0[,.]2 ?\\(?mol|200 ?ml|(?<![\\d.,])0[,.]2 ?\\(?(l\\b|lit)|(so mol|luong chat tan|luong muoi|luong nacl).{0,40}(tang|gap doi|cong)|the tich.{0,40}(tang|gap doi|cong)"
         ]
       ],
       "mustNot": [
-        "(?<!(khong phai|khong phai la|khong the la|chu khong phai|chu khong|khong bang|khong la|thay vi|nghi|tuong|cho rang|neu|≠|khac) )(?<![\\d.,])2 ?\\(?(m\\b|mol/l)(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(?<!(khong phai|khong phai la|khong phai bang|khong the la|chu khong phai|chu khong|khong bang|khong la|khong (tang |the )?(len|thanh)|thay vi|nghi|tuong|cho rang|neu|≠|khac) )(?<![\\d.,])2 ?\\(?(m\\b|mol/l)(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
         "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)"
       ],
       "trap": {
@@ -819,7 +825,7 @@
         ]
       ],
       "answerUnit": "(lien ket|lk)\\b",
-      "allowNumbers": ["1500", "2", "3"],
+      "allowNumbers": ["1500", "2", "3", "50"],
       "expected": "Hỏi số nuclêôtit (hoặc tỉ lệ %) của một loại, ví dụ A hoặc G; có thể nêu H = 2A + 3G và A + G = 1500. Không tự giả sử A = G hay một tỉ lệ nào, không đưa ra số liên kết hiđro bằng số. Cặp với B13.",
       "review_status": "pending"
     },
@@ -836,7 +842,7 @@
       "expectsClarify": true,
       "missing": [
         [
-          "tan so|\\bp\\b|\\bq\\b|ti le (kieu gen|kieu hinh|cay|ca the)|so cay (co |mang )?(kieu gen|kieu hinh|hoa|dong hop|lan|troi|than|qua)|kieu hinh lan|dong hop (lan|troi)|thanh phan kieu gen|cau truc di truyen"
+          "tan so|\\bp\\b|\\bq\\b|ti le (kieu gen|kieu hinh|cay|ca the)|so cay (co |mang )?(kieu hinh|hoa|dong hop|lan|troi|than|qua)|kieu hinh lan|dong hop (lan|troi)|thanh phan kieu gen|cau truc di truyen"
         ]
       ],
       "answerUnit": "(cay|ca the)\\b",

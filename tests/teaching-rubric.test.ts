@@ -816,6 +816,224 @@ describe('new items: missing data, steps and traps', () => {
   });
 });
 
+/**
+ * Second review of the answer key (2026-10-14): false matches found by reading the patterns
+ * against the questions. Each case failed before the fix.
+ */
+describe('answer key: no credit for restating the question', () => {
+  /**
+   * Groups the question (or the earlier turns) may satisfy on purpose. Every other keyFacts or
+   * missing group must come from the answer: a model that only repeats the question gets nothing.
+   */
+  const GIVEN_ON_PURPOSE: Record<string, string> = {
+    'P1 keyFacts[0]': 'names the concept asked about ("ma sát nghỉ"): an on-topic check',
+    'B10 keyFacts[1]':
+      'the right number (2n = 46) is in the earlier teacher turn; the answer has to state it',
+  };
+
+  it('no keyFacts or missing group is satisfied by the question and history alone', () => {
+    const hits: string[] = [];
+    for (const i of set.items) {
+      const given = fold([i.question, ...(i.history ?? []).map((h) => h.content)].join('\n'));
+      const check = (kind: string, groups: string[][]) => {
+        groups.forEach((group, k) => {
+          if (group.some((p) => new RegExp(p).test(given))) hits.push(`${i.id} ${kind}[${k}]`);
+        });
+      };
+      check('keyFacts', i.keyFacts);
+      check('missing', i.missing ?? []);
+    }
+    expect(hits.sort()).toEqual(Object.keys(GIVEN_ON_PURPOSE).sort());
+  });
+
+  it('P11: "lúc hãm phanh" is not "lực hãm"; the braking force still counts', () => {
+    const restated =
+      'Để tính quãng đường từ lúc hãm phanh đến khi dừng lại, cần biết thêm dữ kiện. Em cho thầy biết thêm nhé?';
+    const s = scoreAnswer(item('P11'), restated);
+    expect(s.namesMissing).toBe(false);
+    expect(s.facts[0]).toBe(false);
+    for (const asks of [
+      'Em cho thầy biết lực hãm là bao nhiêu nhé?',
+      'Em cho thầy biết độ lớn lực hãm phanh nhé?',
+      'Đề chưa cho khối lượng xe và lực hãm. Em cho thầy biết nhé?',
+    ]) {
+      expect(scoreAnswer(item('P11'), asks).namesMissing, asks).toBe(true);
+    }
+  });
+
+  it('P2: "rơi nhanh như nhau" repeats the question; "gia tốc như nhau" is the fact', () => {
+    expect(matches(item('P2').keyFacts[1] ?? [], 'Vì vậy hai vật rơi nhanh như nhau.')).toBe(false);
+    expect(matches(item('P2').keyFacts[1] ?? [], 'Gia tốc của hai vật như nhau, bằng g.')).toBe(
+      true,
+    );
+  });
+
+  it('B12: "số cây có kiểu gen dị hợp" is the task, not the missing data', () => {
+    const restated =
+      'Để tính số cây có kiểu gen dị hợp Aa, em cần biết thêm thông tin. Em cho thầy biết thêm nhé?';
+    expect(scoreAnswer(item('B12'), restated).namesMissing).toBe(false);
+    expect(
+      scoreAnswer(item('B12'), 'Em cho thầy biết số cây có kiểu hình lặn là bao nhiêu nhé?')
+        .namesMissing,
+    ).toBe(true);
+  });
+
+  it('C14: the question\'s "1 M" is not "the concentration stays 1 M"', () => {
+    const stays = item('C14').keyFacts[1] ?? [];
+    expect(matches(stays, 'Đúng rồi, 1 M + 1 M = 2 M.')).toBe(false);
+    expect(matches(stays, 'Nồng độ 1 M + 1 M = 2 M.')).toBe(false);
+    expect(matches(stays, 'Trộn 100 ml NaCl 1 M với 100 ml NaCl 1 M.')).toBe(false);
+    for (const good of [
+      'Nồng độ vẫn là 1 M.',
+      'C = 0,2 / 0,2 = 1 M.',
+      'Nồng độ của dung dịch sau khi trộn là 1 M.',
+      'Không đổi, vẫn 1 M.',
+    ]) {
+      expect(matches(stays, good), good).toBe(true);
+    }
+    expect(scoreAnswer(item('C14'), 'Đúng rồi, 1 M + 1 M = 2 M. Em hiểu chưa?').keyFacts).toBe(0);
+  });
+
+  it('P14: "trong lúc" (while) is not "trọng lực" (gravity)', () => {
+    const down = item('P14').keyFacts[2] ?? [];
+    expect(matches(down, 'Trong lúc bóng bay lên, vận tốc giảm dần.')).toBe(false);
+    for (const good of [
+      'Trọng lực vẫn tác dụng lên bóng.',
+      'Gia tốc do trọng lực gây ra.',
+      'Lực hút của Trái Đất kéo bóng lại.',
+      'Gia tốc hướng xuống.',
+    ]) {
+      expect(matches(down, good), good).toBe(true);
+    }
+  });
+});
+
+describe("known errors: restated premises and the item's own checks", () => {
+  it("does not flag the learner's premise when the answer restates it", () => {
+    const restated: [string, string][] = [
+      ['P14', 'Em nghĩ rằng gia tốc cũng bằng 0, nhưng thực ra gia tốc vẫn là g, hướng xuống.'],
+      ['P14', 'Ý của em là gia tốc bằng 0 vì vận tốc bằng 0. Không phải vậy: gia tốc vẫn là g.'],
+      ['P14', 'Em hỏi gia tốc có bằng 0 không. Gia tốc vẫn là g, hướng xuống.'],
+      ['B14', 'Em nghĩ rằng cây chỉ hô hấp vào ban đêm, nhưng thực ra cây hô hấp cả ngày lẫn đêm.'],
+      ['B14', 'Bạn tưởng rằng ban ngày cây không hô hấp; thật ra cây hô hấp liên tục.'],
+      ['C14', 'Nồng độ không tăng lên 2 M mà vẫn là 1 M.'],
+      ['C14', 'Nồng độ không phải bằng 2 M: số mol và thể tích cùng gấp đôi.'],
+      ['C14', 'Nồng độ không thành 2 M.'],
+    ];
+    for (const [id, text] of restated) {
+      expect(scoreAnswer(item(id), text).noKnownErrors, `${id} ${text}`).toBe(true);
+    }
+    expect(trapHandled(item('P14'), restated[0]?.[1] ?? '')).toBe(true);
+    // The claims themselves stay flagged.
+    for (const [id, text] of [
+      ['C14', 'Nồng độ tăng lên 2 M.'],
+      ['C14', 'Nồng độ phải bằng 2 M.'],
+      ['P14', 'Ở điểm cao nhất gia tốc cũng bằng 0.'],
+      ['B14', 'Cây chỉ hô hấp vào ban đêm.'],
+    ] as const) {
+      expect(scoreAnswer(item(id), text).noKnownErrors, `${id} ${text}`).toBe(false);
+    }
+  });
+
+  it("P13: the derivation's own check (v₀t = 100 m, ½at² = −50 m) is not a wrong answer", () => {
+    const p13 = item('P13');
+    for (const check of [
+      'Kiểm tra: v₀t = 20·5 = 100 m; ½at² = −50 m; s = 50 m.',
+      'Kiểm tra: v₀t = 100 m, ½at² = ½·(−4)·5² = −50 m, nên s = 100 − 50 = 50 m.',
+      'Kiểm tra: v_0 t = 100 m và at²/2 = −50 m, cộng lại được 50 m.',
+    ]) {
+      expect(scoreAnswer(p13, check).noKnownErrors, check).toBe(true);
+    }
+    // The named mistakes stay flagged.
+    for (const wrong of ['s = v₀·t = 100 m.', 's = v₀t = 20·5 = 100 m.', 's = ½at² = −50 m.']) {
+      expect(scoreAnswer(p13, wrong).noKnownErrors, wrong).toBe(false);
+    }
+  });
+
+  it('sees an agreement behind a heading', () => {
+    for (const a of [
+      '**Trả lời:**\n\nĐúng, em hiểu đúng.',
+      '**Trả lời:**\nĐúng vậy, nồng độ là 2 M.',
+      '## Giải thích\n\nVâng, gia tốc bằng 0.',
+    ]) {
+      expect(opensWithAgreement(a), a).toBe(true);
+    }
+    expect(opensWithAgreement('**Trả lời:**\n\nChưa đúng em ạ.')).toBe(false);
+    // The misconception heading keeps its line.
+    expect(opensWithAgreement('Lỗi hay gặp:\nĐúng là ai cũng nghĩ thế.')).toBe(false);
+    const agrees = '**Trả lời:**\n\nĐúng, nồng độ thu được không đổi.';
+    expect(scoreAnswer(item('C14'), agrees).noKnownErrors).toBe(false);
+    expect(trapHandled(item('C14'), agrees)).toBe(false);
+  });
+});
+
+describe('number and unit checks: LaTeX and fractions', () => {
+  it('allows derived numbers and constants a correct answer writes', () => {
+    expect(
+      inventedNumbers(item('P11'), 'Ta có s = 400/(2a). Em cho thầy biết gia tốc là bao nhiêu?'),
+    ).toEqual([]);
+    expect(
+      inventedNumbers(item('C12'), 'Dùng pV = nRT với R = 0,082 (hoặc R = 8,314) và T = 273,15 K.'),
+    ).toEqual([]);
+    expect(inventedNumbers(item('B11'), 'Ta luôn có %A + %G = 50%.')).toEqual([]);
+  });
+
+  it('reads \\approx, \\simeq and ~ as "=" and looks through \\text{} for the unit', () => {
+    const c12 = item('C12');
+    expect(inventedNumbers(c12, 'V \\approx 4,958 \\text{ L}')).toEqual(['4,958']);
+    expect(inventedNumbers(c12, 'V \\simeq 4,48')).toEqual(['4,48']);
+    expect(inventedNumbers(c12, 'Áp suất ~ 0,3 atm.')).toEqual(['0,3']);
+    expect(inventedNumbers(c12, 'Thể tích là 4,48\\text{lít}.')).toEqual(['4,48']);
+    // Given numbers stay given.
+    expect(inventedNumbers(c12, 'n \\approx 0,2 \\text{ mol}')).toEqual([]);
+  });
+
+  it('folds "½" to 1/2 but keeps "²" (P11 and P13 read it)', () => {
+    expect(fold('W = ½mv²')).toBe('w = 1/2mv²');
+    expect(fold('v₀²')).toBe('v0²');
+    const formula = item('P7').keyFacts[2] ?? [];
+    for (const f of ['W = ½mv²', 'Wđ = mv²/2', 'W = ½·m·v²']) {
+      expect(matches(formula, f), f).toBe(true);
+    }
+  });
+});
+
+describe('corrupted terms: real spellings are not corruption', () => {
+  it('does not flag spelling variants, other words or phrases across punctuation', () => {
+    const clean: [string, string][] = [
+      // The same marks on another letter (older tone placement).
+      ['C3', 'Liên kết cộng hoá trị hình thành do dùng chung electron.'],
+      // "thứ" is another word than "thu" (a plain syllable with marks added).
+      ['C14', 'V₂: dùng dung dịch thứ hai = 200 mL.'],
+      // Unaccented spelling of a loanword.
+      ['B13', 'Ta có số nucleotit loại A là 480.'],
+      // The phrase stops at the comma or the full stop.
+      ['B12', 'Ở trạng thái cân bằng, dị hợp chiếm 2pq.'],
+      ['P12', 'Dòng điện chạy qua bóng, đến khi đèn sáng.'],
+      ['P12', 'Dòng điện chạy qua bóng. Đến lúc đó đèn sáng.'],
+    ];
+    for (const [id, text] of clean) expect(mangledTerms(item(id), text), text).toEqual([]);
+  });
+
+  it('still finds corrupted syllables, short ones included (saved Gemma answers)', () => {
+    expect(mangledTerms(item('B4'), 'Quá trình phân chia tễ bào chất diễn ra ở kì cuối.')).toEqual([
+      'phân chia tễ',
+      'chia tễ bào',
+    ]);
+    expect(mangledTerms(item('B13'), 'Ta có số liên kêt hiđro là 3120.')).toEqual([
+      'số liên kêt',
+      'liên kêt hiđro',
+    ]);
+    expect(mangledTerms(item('P12'), 'Dòng điện đi qua bóng đen là 0,5 A.')).toEqual([
+      'qua bóng đen',
+    ]);
+    // Without any mark, a short syllable still counts ("the" for "thể").
+    expect(mangledTerms(item('B10'), 'Mỗi tế bào con có 46 nhiễm sắc the.')).toEqual([
+      'nhiễm sắc the',
+    ]);
+  });
+});
+
 describe('decoding health', () => {
   it('measures letters written in another script, not Greek math symbols', () => {
     expect(foreignScript('Gia tốc là 5 m/s².')).toBe(0);

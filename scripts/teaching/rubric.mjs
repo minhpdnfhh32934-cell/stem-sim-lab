@@ -4,7 +4,10 @@
 // mechanically; how clear an explanation is still needs a teacher's reading
 // (docs/USER_TESTING.md).
 
-/** Answer folded for matching: no accents, đ → d, lower case, single spaces. */
+/**
+ * Answer folded for matching: no accents, đ → d, lower case, single spaces, subscript digits as
+ * digits (v₀ → v0) and "½" as "1/2". Superscripts stay ("v²"): answer-key patterns read "²".
+ */
 export function fold(text) {
   return text
     .normalize('NFD')
@@ -12,6 +15,7 @@ export function fold(text) {
     .replace(/[đĐ]/g, 'd')
     .toLowerCase()
     .replace(/[₀-₉]/g, (d) => String('₀₁₂₃₄₅₆₇₈₉'.indexOf(d)))
+    .replace(/½/g, '1/2')
     .replace(/\s+/g, ' ');
 }
 
@@ -83,15 +87,19 @@ const ASSUME =
   /\b(gia su|gia dinh|chang han|vi du|assume|assuming|suppose|let's say|for example)\b/;
 /** A computed or estimated value: a number within 40 characters after these words. */
 const APPROX = /\b(khoang|xap xi|uoc tinh|du doan|ket qua)\b/g;
-/** "= 200", "≈ −4", "= **50**". */
-const EQUALS_BEFORE = /[=≈]\s*[*_]*\s*[-−]?\s*$/;
+/** "= 200", "≈ −4", "= **50**", "~ 0,25", LaTeX "\approx 4,96" and "\simeq 4,96". */
+const EQUALS_BEFORE = /(?:[=≈~]|\\approx|\\simeq)\s*[*_]*\s*[-−]?\s*$/;
+/** LaTeX text blocks read as their content: "4,958 \text{ L}" → "4,958 l". */
+const plainMath = (s) =>
+  s.replace(/\\(?:text|mathrm|rm)\s*\{\s*([^{}]*?)\s*\}/g, ' $1').replace(/\s+/g, ' ');
 
 /**
  * Numbers the answer brings in that are not in the question (nor in item.allowNumbers), where they
- * act as values: after "=" or "≈", within 40 characters after "khoảng / xấp xỉ / kết quả…",
- * anywhere after "giả sử / ví dụ…" in the same sentence, or directly before item.answerUnit.
- * Returns the offending tokens (empty: nothing invented). Known limits: numbers written in words
- * and a typical value stated without "=" ("thường là 100 W") are not seen.
+ * act as values: after "=", "≈", "~", "\approx" or "\simeq", within 40 characters after "khoảng /
+ * xấp xỉ / kết quả…", anywhere after "giả sử / ví dụ…" in the same sentence, or directly before
+ * item.answerUnit (LaTeX "\text{…}" read as its content). Returns the offending tokens (empty:
+ * nothing invented). Known limits: numbers written in words and a typical value stated without
+ * "=" ("thường là 100 W") are not seen.
  */
 export function inventedNumbers(item, answer) {
   const known = givenNumbers(item);
@@ -99,13 +107,13 @@ export function inventedNumbers(item, answer) {
     ? new RegExp(`(?<![a-z\\d^_/.,])(\\d+(?:[.,]\\d+)*) ?(?:${item.answerUnit})`, 'g')
     : null;
   const found = [];
-  for (const s of sentences(answer).map(fold)) {
+  for (const s of sentences(answer).map((x) => plainMath(fold(x)))) {
     const assumeAt = s.search(ASSUME);
     const approxEnds = [...s.matchAll(APPROX)].map((m) => m.index + m[0].length);
     for (const m of s.matchAll(NUMBER)) {
       const at = m.index;
       const asValue =
-        EQUALS_BEFORE.test(s.slice(Math.max(0, at - 8), at)) ||
+        EQUALS_BEFORE.test(s.slice(Math.max(0, at - 16), at)) ||
         approxEnds.some((e) => at >= e && at - e <= 40) ||
         (assumeAt >= 0 && at > assumeAt);
       if (asValue && !isKnown(m[0], known)) found.push(m[0]);
@@ -179,19 +187,49 @@ export function stepsInOrder(item, answer) {
 
 /**
  * A sentence that names a misconception (the teaching method asks for one), e.g. "Lỗi hay gặp:
- * nghĩ vật nặng rơi nhanh hơn". A known wrong statement inside it is not the model's claim.
+ * nghĩ vật nặng rơi nhanh hơn", or restates the learner's premise ("Em nghĩ rằng gia tốc cũng
+ * bằng 0, nhưng…", "Ý của em là…", "Em hỏi…"). A known wrong statement inside it is not the
+ * model's claim.
  */
 const MISCONCEPTION =
-  /\b(loi (hay|thuong) gap|nhieu (ban|nguoi) (hay |thuong |van )?(nghi|tuong|cho rang)|sai lam|hieu nham|hieu sai|nham lan|quan niem sai|misconception|common mistake)\b/;
+  /\b(loi (hay|thuong) gap|nhieu (ban|nguoi) (hay |thuong |van )?(nghi|tuong|cho rang)|(em|ban) (nghi|tuong|cho) rang|y (cua )?em la|em hoi|sai lam|hieu nham|hieu sai|nham lan|quan niem sai|misconception|common mistake)\b/;
+
+/** The first sentence opens by agreeing: "Đúng.", "Đúng vậy", "Vâng,", "Phải.", "Có,". */
+const AGREEMENT =
+  /^[\s*_#>"'“(]*(?:(?:dung|chinh xac)(?:[\s*_]*[.,!:]|\s+(?:vay|roi|the|het|a)\b)|(?:vang|co|phai|yes|right|correct)[\s*_]*[.,!:])/;
+
+/**
+ * A line that only labels what follows: a Markdown heading ("## Giải thích"), a short line in bold
+ * or italics without a full stop ("**Trả lời:**") or a short label ending in ":" ("Trả lời:"). A
+ * line that agrees or names a misconception ("Lỗi hay gặp:") is content, never a label.
+ */
+const LABEL = /^(?:#{1,6}\s.*|[*_]{1,3}[^*_.!?]{1,60}[*_]{1,3}:?|[*_]*[^.!?:]{1,30}:[*_]*)$/;
+function isLabel(line) {
+  const f = fold(line).trim();
+  return LABEL.test(line.trim()) && !AGREEMENT.test(f) && !MISCONCEPTION.test(f);
+}
+
+/** Sentences with their leading label lines split off ("**Trả lời:**\nĐúng, …"). */
+function labelledSentences(answer) {
+  return sentences(answer).flatMap((s) => {
+    const lines = s.split('\n');
+    const out = [];
+    while (lines.length > 1 && isLabel(lines[0] ?? '')) out.push((lines.shift() ?? '').trim());
+    out.push(lines.join('\n').trim());
+    return out.filter(Boolean);
+  });
+}
 
 /** The mustNot patterns that match outside a misconception sentence. */
 function knownErrors(item, answer) {
   // Fold sentence by sentence and remember where each one sits: a pattern can still span two
   // sentences, and a hit is ignored only when it starts and ends in misconception sentences.
+  // Sentences are joined with ". ", so a sentence after a label or a blank line starts like one
+  // ("**Trả lời:**\n\nĐúng, …" → "**tra loi:**. dung, …").
   let text = '';
   const spans = [];
-  for (const s of sentences(answer).map(fold)) {
-    if (text) text += ' ';
+  for (const s of labelledSentences(answer).map(fold)) {
+    if (text) text += '. ';
     spans.push({ start: text.length, end: text.length + s.length, marked: MISCONCEPTION.test(s) });
     text += s;
   }
@@ -203,13 +241,14 @@ function knownErrors(item, answer) {
   );
 }
 
-/** The first sentence opens by agreeing: "Đúng.", "Đúng vậy", "Vâng,", "Phải.", "Có,". */
-const AGREEMENT =
-  /^[\s*_#>"'“(]*(?:(?:dung|chinh xac)(?:[\s*_]*[.,!:]|\s+(?:vay|roi|the|het|a)\b)|(?:vang|co|phai|yes|right|correct)[\s*_]*[.,!:])/;
-
-/** The answer opens by agreeing with the learner ("Đúng là …" does not count: it often goes on "…, nhưng"). */
+/**
+ * The answer opens by agreeing with the learner ("Đúng là …" does not count: it often goes on
+ * "…, nhưng"). Leading label lines ("**Trả lời:**", "## Giải thích") are skipped.
+ */
 export function opensWithAgreement(answer) {
-  return AGREEMENT.test(fold(sentences(answer)[0] ?? ''));
+  const lines = answer.split('\n');
+  while (lines.length && (!(lines[0] ?? '').trim() || isLabel(lines[0] ?? ''))) lines.shift();
+  return AGREEMENT.test(fold(sentences(lines.join('\n'))[0] ?? ''));
 }
 
 /**
@@ -330,16 +369,41 @@ export function questionTerms(item) {
   return [...terms.values()];
 }
 
+/** Every mark of `sub` is also in `all`, counted with repeats. */
+function subMarks(sub, all) {
+  const rest = [...all];
+  for (const m of sub) {
+    const k = rest.indexOf(m);
+    if (k < 0) return false;
+    rest.splice(k, 1);
+  }
+  return true;
+}
+
 /**
- * One syllable of a 3-syllable term written wrongly: same letters with other tone marks
- * ("báo" for "bào"), or one letter left out or added with the same marks ("tể" for "thể"). A
- * function word is never counted ("tế bào có" is not a corrupted "tế bào con").
+ * One syllable of a 3-syllable term written wrongly: same letters with other marks ("báo" for
+ * "bào", "kêt" for "kết", "đo" for "độ"), or one letter left out or added with the same marks
+ * ("tể" for "thể"). Not counted, because they are real spellings or other words:
+ * - a function word ("tế bào có" is not a corrupted "tế bào con");
+ * - the same marks on another letter, the older tone placement ("hoá" for "hóa");
+ * - marks added to a syllable the question writes without any ("thứ" for "thu", "dị" for "di");
+ * - a syllable of four letters or more written without any mark, as loanwords often are
+ *   ("nucleotit").
+ * Short syllables are not exempt: "đo" for "độ" and "tễ" for "tế" are real corruptions of the
+ * saved Gemma answers. Known limit: a tone swap between two real words ("chảy" for "chạy") is
+ * still counted, like the real corruption "báo" for "bào".
  */
 function misspelt(got, want) {
   if (got === want || STOP_WORDS.has(got) || !latinWord(got)) return false;
   const a = letters(got);
   const b = letters(want);
-  if (a === b) return true;
+  if (a === b) {
+    const mg = marks(got);
+    const mw = marks(want);
+    if (mg.length === mw.length && subMarks(mg, mw)) return false;
+    if (!mw) return false;
+    return Boolean(mg) || b.length < 4;
+  }
   return (
     b.length >= 3 &&
     marks(got) === marks(want) &&
@@ -355,6 +419,7 @@ function misspelt(got, want) {
  * - glued to the next syllable or to foreign letters: "lòxo", "xúcافل", "chuyểnộng";
  * - followed by a word in another script: "nhiễm ισ";
  * - in a 3-syllable term, one syllable misspelt (see misspelt): "tế báo con", "nhiễm sắc tể".
+ * A term never spans punctuation in the answer ("cân bằng, dị hợp" is not "cân bằng di").
  * Phrases that occur in the question itself are never counted. Returns the corrupted forms.
  * Known limits: a wrong first syllable ("Niacn sắc thể") and bigger changes ("nhiễm sắc tố")
  * are not seen; 2-syllable terms only count glued and foreign forms, because Vietnamese has many
@@ -364,29 +429,36 @@ export function mangledTerms(item, answer) {
   const question = syllables(
     [item.question ?? '', ...(item.history ?? []).map((h) => h.content)].join(' '),
   ).join(' ');
-  const words = syllables(answer);
+  // Runs of words between punctuation marks and symbols, as questionTerms cuts the question.
+  const runs = answer
+    .normalize('NFC')
+    .toLowerCase()
+    .split(/[^\p{L}\p{M}\p{N}\s]+/u)
+    .map((chunk) => chunk.split(/\s+/).filter(Boolean));
   const found = new Set();
   for (const [head, ...rest] of questionTerms(item)) {
     const next = rest[0];
     if (head === undefined || next === undefined) continue;
-    for (let i = 0; i < words.length; i += 1) {
-      const w = words[i] ?? '';
-      if (w === head) {
-        const got = words.slice(i + 1, i + 1 + rest.length);
-        if (got.length < rest.length) continue;
-        const differ = rest.flatMap((want, j) => (want === got[j] ? [] : [j]));
-        const j = differ[0];
-        if (differ.length !== 1 || j === undefined) continue;
-        const g = got[j] ?? '';
-        const wrong = otherScript(g) || (rest.length === 2 && misspelt(g, rest[j] ?? ''));
-        const phrase = [head, ...got].join(' ');
-        if (wrong && !question.includes(phrase)) found.add(phrase);
-      } else if (w.startsWith(head) && w.length > head.length) {
-        const tail = w.slice(head.length);
-        const a = letters(tail);
-        const b = letters(next);
-        const glued = otherScript(tail) || a === b || (b.length >= 3 && editDistance(a, b) === 1);
-        if (glued) found.add(w);
+    for (const words of runs) {
+      for (let i = 0; i < words.length; i += 1) {
+        const w = words[i] ?? '';
+        if (w === head) {
+          const got = words.slice(i + 1, i + 1 + rest.length);
+          if (got.length < rest.length) continue;
+          const differ = rest.flatMap((want, j) => (want === got[j] ? [] : [j]));
+          const j = differ[0];
+          if (differ.length !== 1 || j === undefined) continue;
+          const g = got[j] ?? '';
+          const wrong = otherScript(g) || (rest.length === 2 && misspelt(g, rest[j] ?? ''));
+          const phrase = [head, ...got].join(' ');
+          if (wrong && !question.includes(phrase)) found.add(phrase);
+        } else if (w.startsWith(head) && w.length > head.length) {
+          const tail = w.slice(head.length);
+          const a = letters(tail);
+          const b = letters(next);
+          const glued = otherScript(tail) || a === b || (b.length >= 3 && editDistance(a, b) === 1);
+          if (glued) found.add(w);
+        }
       }
     }
   }
