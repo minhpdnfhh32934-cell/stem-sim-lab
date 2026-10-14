@@ -9,16 +9,16 @@ thật sự làm.
 Tổng hợp từ tài liệu sư phạm và hướng dẫn thực hành (nguồn ở mục 6; phần lớn là tài liệu hướng dẫn,
 không phải nghiên cứu thực nghiệm, nên chỉ coi là kinh nghiệm thực hành tốt):
 
-| Nguyên tắc                            | Ý nghĩa                                                                                           | App làm thế nào                                                                                                                                      |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Chia bảng trước khi giảng**         | Bảng có vùng nội dung chính và vùng phụ (nháp, ví dụ, ghi chú); học sinh biết nhìn đâu, chép đâu. | Bố cục cố định 3 cột dưới dải tiêu đề: trái = tóm tắt đề/ghi chú, giữa = các bước giải, phải = hình, bảng số, nháp. Có đường kẻ chia cột nhạt.       |
-| **Viết ý chính, ngắn gọn**            | Bảng quá trống thì khó theo, quá dày thì rối.                                                     | Câu dài chỉ được _nói_; trên bảng chỉ có tiêu đề, dữ kiện, công thức, bước, kết quả. Một dòng viết tối đa ~150 ký tự.                                |
-| **Trái → phải, trên → dưới**          | Thứ tự đọc rõ ràng.                                                                               | Mỗi cột điền từ trên xuống; không bao giờ chồng chữ (có test sinh ngẫu nhiên 400 thao tác).                                                          |
-| **Màu có nghĩa cố định**              | 3–4 màu, mỗi màu một vai trò, học sinh quen dần.                                                  | Đỏ = tiêu đề, khoanh, đóng khung; xanh dương = đề mục, từ khóa, gạch chân, đồ thị; xanh lá = ghi chú; mực = nội dung. Học sinh có bút màu tím riêng. |
-| **Tín hiệu hướng chú ý** (signaling)  | Gạch chân, khoanh, mũi tên, bàn tay đang viết dẫn mắt người học.                                  | Gạch chân đúng cụm chữ, khoanh tròn hơi hở như vẽ tay, đóng khung kết quả, mũi tên cong có nhãn, đầu bút hiện ở chỗ đang viết.                       |
-| **Chia nhỏ** (segmenting)             | Học từng phần nhỏ, có nhịp nghỉ.                                                                  | Giảng từng câu: thầy nói câu nào thì viết phần của câu đó; câu sau chờ cả lời và bút xong; có nút Tạm dừng, tốc độ viết 0,75×–2×.                    |
-| **Giải từng bước, hỏi lại**           | Không đưa đáp án ngay, mời học sinh nghĩ.                                                         | Lời nhắc chế độ bảng yêu cầu: tiêu đề → Cho/Tìm → các bước đánh số → kết quả → một câu hỏi gợi mở.                                                   |
-| **Giữ những gì quan trọng, xóa nháp** | Công thức chính ở lại trên bảng.                                                                  | Thầy có `<erase>`, `<correct>` (gạch và viết lại bên cạnh), `<newboard>` sang mặt bảng mới; các mặt cũ vẫn xem lại được.                             |
+| Nguyên tắc                            | Ý nghĩa                                                                                           | App làm thế nào                                                                                                                                                                                                                                                          |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Chia bảng trước khi giảng**         | Bảng có vùng nội dung chính và vùng phụ (nháp, ví dụ, ghi chú); học sinh biết nhìn đâu, chép đâu. | Trước khi viết, mỗi mặt bảng được chia theo đúng những gì mặt đó sẽ có: chỉ có các bước thì viết trên cả bề ngang; có tóm tắt đề/ghi chú thì thêm cột trái; có hình, bảng số thì thêm cột phải; có cả hai thì 3 cột. Đường kẻ nhạt chỉ có giữa hai vùng đều đang có chữ. |
+| **Viết ý chính, ngắn gọn**            | Bảng quá trống thì khó theo, quá dày thì rối.                                                     | Câu dài chỉ được _nói_; trên bảng chỉ có tiêu đề, dữ kiện, công thức, bước, kết quả. Một dòng viết tối đa ~150 ký tự.                                                                                                                                                    |
+| **Trái → phải, trên → dưới**          | Thứ tự đọc rõ ràng.                                                                               | Mỗi vùng điền từ trên xuống; không bao giờ chồng chữ, đo theo đúng bề rộng nét chữ (có test sinh ngẫu nhiên 400 thao tác, và 40 bài ngẫu nhiên được chia mặt bảng, có cả "Viết tiếp").                                                                                   |
+| **Màu có nghĩa cố định**              | 3–4 màu, mỗi màu một vai trò, học sinh quen dần.                                                  | Đỏ = tiêu đề, khoanh, đóng khung; xanh dương = đề mục, từ khóa, gạch chân, đồ thị; xanh lá = ghi chú; mực = nội dung. Học sinh có bút màu tím riêng.                                                                                                                     |
+| **Tín hiệu hướng chú ý** (signaling)  | Gạch chân, khoanh, mũi tên, bàn tay đang viết dẫn mắt người học.                                  | Gạch chân đúng cụm chữ, khoanh tròn hơi hở như vẽ tay, đóng khung kết quả, mũi tên cong có nhãn, đầu bút hiện ở chỗ đang viết.                                                                                                                                           |
+| **Chia nhỏ** (segmenting)             | Học từng phần nhỏ, có nhịp nghỉ.                                                                  | Giảng từng câu: thầy nói câu nào thì viết phần của câu đó; câu sau chờ cả lời và bút xong; có nút Tạm dừng, tốc độ viết 0,75×–2×.                                                                                                                                        |
+| **Giải từng bước, hỏi lại**           | Không đưa đáp án ngay, mời học sinh nghĩ.                                                         | Lời nhắc chế độ bảng yêu cầu: tiêu đề → Cho/Tìm → các bước đánh số → kết quả → một câu hỏi gợi mở.                                                                                                                                                                       |
+| **Giữ những gì quan trọng, xóa nháp** | Công thức chính ở lại trên bảng.                                                                  | Thầy có `<erase>`, `<correct>` (gạch và viết lại bên cạnh), `<newboard>` sang mặt bảng mới; các mặt cũ vẫn xem lại được.                                                                                                                                                 |
 
 ## 2. Sản phẩm và nghiên cứu tương tự (tra 12/10/2026)
 
@@ -60,7 +60,7 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
                                              ▼
           lesson.ts: nói câu (giọng tiếng Việt) ∥ bút viết / đánh dấu / vẽ
                                              ▼
-          layout.ts (3 cột, không chồng)   provenance.ts (nguồn gốc số)
+          layout.ts (chia mặt bảng theo nội dung, không chồng)   provenance.ts (nguồn gốc số)
                                              ▼
           Whiteboard.tsx: chữ viết tay, đầu bút, nét vẽ tay (rough.ts), hình (BoardDrawing.tsx)
 ```
@@ -115,6 +115,36 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     cùng dấu đánh dấu của nó rồi viết bản đầy đủ (tiêu đề bị cắt được gỡ hẳn khỏi bảng để tiêu
     đề đầy đủ vẫn nằm ở chỗ tiêu đề). Bảng cuối cùng giống hệt như giảng cả câu trả
     lời một lần (kiểm thử `lessonContinue.test.ts`).
+- **Dùng hết bảng (mục 3, `layout.ts`, `formulaSplit.ts`):** trước khi giảng (bài mới, "Giảng
+  lại", phần mới của "Viết tiếp"), mỗi mặt bảng được chia theo những gì sẽ viết lên nó, đọc từ các
+  hành động **còn phải giảng** (mặt đã có chữ giữ nguyên cách chia, nên không gì bị dời):
+  - chỉ có bước giải, công thức (câu trả lời thường của Gemma): một vùng rộng 40–1160 trên bảng
+    1200 đơn vị (trước đây là cột giữa 480, chỉ 40% bề ngang);
+  - có tóm tắt đề, ghi chú, sửa sai: cột trái 300 + vùng chính 780;
+  - có hình, bảng số, đồ thị: vùng chính 680 + cột phải 400;
+  - có cả hai: 3 cột như cũ (260 / 480 / 300).
+  - Thứ mặt bảng chưa tính trước (ví dụ ghi chú của "Viết tiếp" trên mặt chỉ có bước giải) được
+    viết thành một **dải ngang hết bề rộng** bên dưới mọi thứ đã có; các vùng viết tiếp bên dưới
+    dải đó, không bao giờ chồng chữ.
+  - Hộp của mỗi phần tử là đúng bề rộng nét chữ (không còn cắt hộp cho vừa cột trong khi chữ tràn
+    sang cột bên). Công thức quá rộng: thu nhỏ tối đa còn 60%; vẫn quá rộng thì xuống dải ngang;
+    chỉ khi cả bề ngang bảng cũng không đủ mới viết nhỏ hơn nữa (rất hiếm, có cờ `squeezed`).
+  - Chuỗi bằng nhau dài (`a = F/m = 10/2 = 5 m/s²`) được viết thành nhiều dòng, mỗi dòng bắt đầu
+    bằng dấu `=` và thụt vào một chút, như thầy viết bảng. Chỉ tách ở dấu quan hệ ngoài cùng
+    (không tách trong ngoặc, `\text{…}`, `\left…\right`, môi trường `aligned`…); công thức
+    không cân ngoặc thì không tách. Các mẩu ghép lại đúng nguyên văn công thức, và việc kiểm nguồn gốc
+    số vẫn đọc nguyên công thức (không con số nào bị đổi). Mỗi mẩu là một bước của bút.
+  - Bảng số quá rộng cho cột phải thì sang vùng giữa, rồi sang dải ngang, cuối cùng mới thu nhỏ
+    (bảng được vẽ thu nhỏ đúng bằng hộp của nó).
+  - **Đổi cỡ cửa sổ, phóng to:** bảng là tờ giấy 1200 đơn vị được co giãn theo khung nhìn; đổi cỡ
+    chỉ đổi tỉ lệ, **không bao giờ dời chữ đã viết** (dấu gạch chân, nét của học sinh là tọa độ trên
+    bảng). Phần bảng đang ở giữa khung nhìn vẫn ở giữa sau khi đổi cỡ (không nhảy về dòng cuối);
+    khi thầy đang viết và học sinh đang theo thì dòng đang viết vẫn trong tầm nhìn. Thanh cuộn luôn
+    giữ chỗ (`scrollbar-gutter: stable`) để tỉ lệ không dao động.
+  - Nút **Thu nhỏ / Phóng to** (100%, 125%, 150%, 200%, chỉ trong lần dùng này) và **Vừa khung**
+    (hiện khi đang phóng to). Phóng to thì bảng cuộn ngang bên trong khung bảng (trang không cuộn
+    ngang), bút của thầy được theo cả chiều ngang, bản đồ nhỏ hiện đúng phần đang xem. Không dùng
+    Ctrl+lăn chuột hay Ctrl+= (Ctrl+= là cỡ chữ của cả app).
 - **Chữ viết tay:** phông Patrick Hand (nội dung) và Pangolin (tiêu đề), giấy phép OFL, có bộ chữ
   tiếng Việt, đóng gói sẵn trong app (không tải từ mạng). Mỗi chữ cái lệch nhẹ (xoay ±2°, lệch dòng,
   co giãn ±3%) theo seed cố định; dòng dài hơi trôi xuống như viết tay.
