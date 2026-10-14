@@ -172,3 +172,17 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
       lượng", P2 "vật nặng sẽ rơi nhanh hơn", C4 "dung dịch là bazơ", B9 "Có, … luôn có hại"); B8
       không còn coi "phiên mã ngược (ARN → ADN)" là sai. Mỗi chỗ sửa có một bài kiểm tra trong
       `tests/teaching-rubric.test.ts`. Nhờ giáo viên kiểm tra lại các mẫu mới.
+17. **Đáp án tham khảo cho 30 câu đầu của bộ đánh giá** (`tests/teaching/teaching-eval.json`,
+    trường `expected` và `keyPoints`, 14/10/2026): giúp người chấm (AI hoặc người) phân biệt câu
+    trả lời đúng và sai. Do một AI viết và một AI khác kiểm tra (7 chỗ đã sửa); chưa giáo viên nào
+    duyệt — `review_status: "pending"`. Tiêu chí chấm cố định trong `scripts/teaching/judge-rubric.md`.
+    Kết quả chấm bằng AI trong `docs/TEACHING_EVAL.md` chỉ có giá trị khi các đáp án này đúng.
+18. **Bộ 15 câu kiểm tra độc lập** (`tests/teaching/teaching-heldout.json`, H1–H15, 14/10/2026):
+    viết trước khi xem bất kỳ câu trả lời nào của model, để kiểm tra lời nhắc mới không chỉ "học
+    thuộc" bộ 42 câu. Mỗi môn 5 câu: hiểu sai thường gặp, câu bẫy, câu hỏi tiếp theo, khái niệm,
+    bài toán. Do Claude viết, `review_status: "pending"`. Nhờ giáo viên kiểm tra các mẫu `keyFacts`
+    và `mustNot` của từng câu.
+19. **19 câu đo giọng đọc** (`src/teacher/voice/ttsBenchSet.json`, B01–B19): câu mẫu để so sánh
+    hai cách đọc trong `docs/VOICE_BENCHMARK.md` §6 (không phải dữ liệu khoa học dạy cho học sinh,
+    nhưng có công thức, đơn vị, phương trình hóa học). Cách đọc từng câu vẫn cần người nghe xác nhận
+    (gói nghe thử mù A/B do người dùng tự nghe; chưa có kết quả nghe).

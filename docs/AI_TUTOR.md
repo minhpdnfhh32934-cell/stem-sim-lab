@@ -415,7 +415,8 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    `speak()` once per sentence, so speech and board stay in sync. The Windows and Gemini voices
    keep their sentence-sized phrases (they now get the dictionary too); after an on-device failure
    the Windows voice goes on from the first chunk not yet heard.
-7. **Benchmark** (`scripts/voice/tts-bench.mjs`, not yet run). Renders `ttsBenchSet.json` (19
+7. **Benchmark** (`scripts/voice/tts-bench.mjs`; first CPU run 2026-10-14, results in
+   `docs/VOICE_BENCHMARK.md` §6 and `tests/voice/results/`). Renders `ttsBenchSet.json` (19
    sentences: greeting, transition, new concepts, check questions, correction and encouragement, a
    long paragraph, formulas, units and numbers, names, mitosis, chemical equations, a heading, a
    result, a note) as `legacy` and `natural` on the same prepared text (`prepareSpeech`'s
