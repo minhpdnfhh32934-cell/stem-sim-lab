@@ -43,9 +43,9 @@ const SCRIPT =
 const SAID = ['Câu một alpha.', 'Câu hai beta.', 'Câu ba gamma.'];
 
 /** Like TeacherScreen: re-renders on `speaking` and builds a new lesson object every render. */
-function Page({ id = 'answer-1' }: { id?: string }) {
+function Page({ id = 'answer-1', content = SCRIPT }: { id?: string; content?: string }) {
   useVoiceStore((s) => s.speaking);
-  const lesson: LessonInput = { id, content: SCRIPT, question: '' };
+  const lesson: LessonInput = { id, content, question: '' };
   return <Whiteboard lesson={lesson} />;
 }
 
@@ -112,6 +112,22 @@ describe('whiteboard: a new answer with the voice on', () => {
     fonts.ready = Promise.resolve();
     render(<Page id="answer-closed" />);
     await untilDone();
+    expect(voice.said).toEqual(SAID);
+  });
+
+  it('a page closed while "Viết tiếp" waits for the fonts never starts the voice either', async () => {
+    const view = render(<Page id="answer-more" />);
+    await untilDone();
+    expect(voice.said).toEqual(SAID);
+    let release: () => void = () => undefined;
+    fonts.ready = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const more = `${SCRIPT} Câu bốn <write id="d1" zone="steps">delta</write>.`;
+    view.rerender(<Page id="answer-more" content={more} />);
+    view.unmount();
+    release();
+    await advance(5000);
     expect(voice.said).toEqual(SAID);
   });
 });
