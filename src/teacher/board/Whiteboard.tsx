@@ -14,6 +14,8 @@ import { formatNumber, useT } from '@/app/i18n';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { cx } from '@/ui/cx';
+import { useChatStore } from '@/teacher/chat/chatStore';
+import { useTeacherStore } from '@/teacher/teacherStore';
 import { PEN_SPEEDS, useBoardStore, type BoardMark } from './boardStore';
 import { BoardDrawing } from './BoardDrawing';
 import { BoardMinimap } from './BoardMinimap';
@@ -21,6 +23,7 @@ import { BOARD_W, COLUMNS, COLUMN_TOP, type Line, type TextElement } from './lay
 import {
   cancelPendingStart,
   claimStart,
+  clearBoard,
   continueLesson,
   finishNow,
   pauseLesson,
@@ -28,6 +31,7 @@ import {
   replayLesson,
   reserveStart,
   resumeLesson,
+  showFace,
   stopLesson,
   type LessonInput,
 } from './lesson';
@@ -46,6 +50,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   const status = useBoardStore((s) => s.status);
   const faces = useBoardStore((s) => s.layout.faces);
   const face = useBoardStore((s) => s.face);
+  const teacherFace = useBoardStore((s) => s.teacherFace);
   const speed = useBoardStore((s) => s.speed);
   const penMode = useBoardStore((s) => s.penMode);
   const subtitle = useBoardStore((s) => s.subtitle);
@@ -54,12 +59,19 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   useEffect(() => {
     // A new answer starts a new lesson; a longer copy of the same answer ("Viết tiếp") is
     // written after what is already on the board; nothing is ever taught twice by itself.
-    if (!lesson) return;
     const store = useBoardStore.getState();
+    if (!lesson) {
+      // The chat was cleared: the lesson ends and the board is empty again.
+      if (store.lessonId !== null) clearBoard();
+      return;
+    }
     if (store.lessonId === lesson.id && store.lessonContent === lesson.content) return;
     // Written after what is on the board only when the board holds the start of this answer
     // (an empty `lessonContent` means its start was cancelled before it began).
     const append = store.lessonId === lesson.id && store.lessonContent !== '';
+    // A new answer stops the old lesson now, not once the fonts are ready: its pen and voice
+    // never go on under "Đang chuẩn bị bảng…".
+    if (!append) stopLesson();
     store.set({ lessonId: lesson.id, lessonContent: lesson.content });
     if (!append) store.set({ status: 'preparing' });
     const ticket = reserveStart();
@@ -70,12 +82,24 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
     });
   }, [lesson]);
 
-  // Leaving the page stops the lesson (and the voice), and a start still waiting never begins.
+  // Hiding the board ("Trò chuyện") pauses the lesson, so coming back shows "Tiếp tục"; leaving
+  // the page stops it (and the voice). A start still waiting for the fonts never begins.
   useEffect(
     () => () => {
       cancelPendingStart();
-      stopLesson();
+      if (useTeacherStore.getState().open) pauseLesson();
+      else stopLesson();
     },
+    [],
+  );
+
+  // The teacher stops to listen when the learner asks something: the lesson pauses as the chat
+  // starts answering, and the sentence it cut is read again on "Tiếp tục".
+  useEffect(
+    () =>
+      useChatStore.subscribe((s, p) => {
+        if (s.answering && !p.answering) pauseLesson();
+      }),
     [],
   );
 
@@ -166,11 +190,18 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
               aria-selected={face === i}
               className="board__face-tab"
               onClick={() => {
-                set({ face: i });
+                showFace(i);
               }}
             >
               {t('board.face', { n: i + 1 })}
               {f.title ? ` · ${f.title}` : ''}
+              {/* Where the teacher writes, while the lesson is under way. */}
+              {i === teacherFace && (playing || status === 'paused') && (
+                <span className="board__face-teacher" title={t('board.teacherHere')}>
+                  <PenLine size={13} aria-hidden="true" />
+                  <span className="sr-only"> {t('board.teacherHere')}</span>
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -224,11 +255,35 @@ function BoardSheet() {
   const focus = useBoardStore((s) => s.focus);
   const marks = useBoardStore((s) => s.marks);
   const pen = useBoardStore((s) => s.pen);
+  const run = useBoardStore((s) => s.run);
+  const follow = useBoardStore((s) => s.follow);
   const penMode = useBoardStore((s) => s.penMode);
   const strokes = useBoardStore((s) => s.strokes);
   const status = useBoardStore((s) => s.status);
   const height = layout.faces[face]?.height ?? 700;
   const elements = layout.elements.filter((e) => e.face === face);
+  // The teacher's pen only on the face it writes on, and only for the lesson under way.
+  const showPen =
+    pen !== null &&
+    pen.face === face &&
+    pen.run === run &&
+    (status === 'playing' || status === 'paused');
+
+  /** The learner's stroke being drawn, on the face where it began (null when not drawing). */
+  const drawing = useRef<{ face: number; points: [number, number][] } | null>(null);
+  const [live, setLive] = useState<{ face: number; points: [number, number][] } | null>(null);
+  const stroking = live !== null;
+  /** Ends the learner's stroke: kept on the face it was drawn on (a dot alone is dropped). */
+  const endStroke = () => {
+    const stroke = drawing.current;
+    drawing.current = null;
+    setLive(null);
+    if (stroke && stroke.points.length > 1) useBoardStore.getState().addStroke(stroke);
+  };
+  // A stroke never moves to another face: when the face changes mid-stroke, it ends where it is.
+  useEffect(() => {
+    if (drawing.current && drawing.current.face !== face) endStroke();
+  }, [face]);
 
   useLayoutEffect(() => {
     const node = viewport.current;
@@ -247,20 +302,20 @@ function BoardSheet() {
   }, []);
 
   // Camera: keep what the teacher is writing in view, like a teacher stepping along the board.
+  // Only while the lesson plays and the learner follows the teacher, never under the learner's
+  // own pen (the stroke would jump), and only for the face shown.
   useEffect(() => {
     const node = viewport.current;
     const e = focus ? layout.elements.find((x) => x.id === focus) : undefined;
-    if (!node || !e || e.face !== face) return;
+    if (!node || !e || e.face !== face || status !== 'playing' || !follow || stroking) return;
     const top = e.y * scale;
     const bottom = (e.y + e.h) * scale;
     if (bottom > node.scrollTop + node.clientHeight * 0.85 || top < node.scrollTop) {
       // `scroll-behavior: smooth` (board.css) makes this a camera pan.
       node.scrollTop = Math.max(0, bottom - node.clientHeight * 0.7);
     }
-  }, [focus, face, scale, layout]);
+  }, [focus, face, scale, layout, status, follow, stroking]);
 
-  const drawing = useRef<[number, number][] | null>(null);
-  const [live, setLive] = useState<[number, number][] | null>(null);
   const toBoard = (e: PointerEvent<SVGSVGElement>): [number, number] => {
     const r = e.currentTarget.getBoundingClientRect();
     return [(e.clientX - r.left) / scale, (e.clientY - r.top) / scale];
@@ -312,30 +367,31 @@ function BoardSheet() {
               onPointerDown={(e) => {
                 if (!penMode) return;
                 e.currentTarget.setPointerCapture(e.pointerId);
-                drawing.current = [toBoard(e)];
+                // The stroke belongs to the face it begins on.
+                drawing.current = { face, points: [toBoard(e)] };
                 setLive(drawing.current);
               }}
               onPointerMove={(e) => {
-                if (!drawing.current) return;
-                drawing.current = [...drawing.current, toBoard(e)];
+                // A move without a pressed button is not drawing (the press ended elsewhere).
+                if (!drawing.current || e.buttons === 0) return;
+                drawing.current = {
+                  face: drawing.current.face,
+                  points: [...drawing.current.points, toBoard(e)],
+                };
                 setLive(drawing.current);
               }}
-              onPointerUp={() => {
-                const pts = drawing.current;
-                drawing.current = null;
-                setLive(null);
-                if (pts && pts.length > 1)
-                  useBoardStore.getState().addStroke({ face, points: pts });
-              }}
+              onPointerUp={endStroke}
+              onPointerCancel={endStroke}
+              onLostPointerCapture={endStroke}
             >
               {[
                 ...strokes.filter((s) => s.face === face).map((s) => s.points),
-                ...(live ? [live] : []),
+                ...(live && live.face === face ? [live.points] : []),
               ].map((pts, i) => (
                 <polyline key={i} points={pts.map((p) => p.join(',')).join(' ')} />
               ))}
             </svg>
-            {pen && status !== 'done' && (
+            {showPen && (
               <PenLine
                 className="board__pen"
                 size={34}

@@ -3,6 +3,11 @@
  * teacher speaks while the pen writes; the voice never races the pen (the next sentence waits
  * for both). Marks (underline, circle, box, highlight, arrows) are drawn when their tag comes.
  * Every number written is checked for provenance (provenance.ts).
+ *
+ * Each lesson run (a lesson, "Giảng lại", the new part of "Viết tiếp") owns the board while it is
+ * the current run: its pen carries its face and run id, and a run that was stopped or replaced
+ * can no longer write anything (`patch`). The learner may look at another face than the one the
+ * teacher writes on (`showFace`, which pauses); the view follows the teacher only while `follow`.
  */
 import {
   newVoiceSession,
@@ -15,6 +20,8 @@ import {
 import type { SpeechRole } from '@/teacher/voice/speechPlan';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { cleanAnswer, type CleanOptions } from '@/teacher/chat/answerClean';
+import { useChatStore } from '@/teacher/chat/chatStore';
+import { useTeacherStore } from '@/teacher/teacherStore';
 import { markdownToScript } from './fromMarkdown';
 import {
   emptyLayout,
@@ -25,7 +32,7 @@ import {
   type Measure,
   type TextElement,
 } from './layout';
-import { useBoardStore, type BoardMark } from './boardStore';
+import { useBoardStore, type BoardMark, type BoardPatch } from './boardStore';
 import { checkNumbers, sourceNumbers } from './provenance';
 import { seedOf } from './rough';
 import {
@@ -130,9 +137,34 @@ export function subtitleText(speech: string): string {
 
 const UNIT_MS = { slow: 82, normal: 52, fast: 34 } as const;
 
-let controller: AbortController | null = null;
-let gate: { promise: Promise<void>; open: () => void } | null = null;
-let instant = false;
+interface Gate {
+  promise: Promise<void>;
+  open: () => void;
+}
+
+/**
+ * One lesson run: a lesson, a "Giảng lại", or the new part of a "Viết tiếp". Everything a run
+ * writes on the board goes through `patch`, which refuses once the run is no longer the current
+ * one, so a late step of an old run can never write on a newer lesson or move its pen or view.
+ */
+interface Run {
+  id: number;
+  ctrl: AbortController;
+  /** Set while paused; "Tiếp tục" opens it. */
+  gate: Gate | null;
+  /** "Viết nhanh": everything left is written at once, without the voice. */
+  instant: boolean;
+  /** A pause cut the sentence being spoken: it is read again after "Tiếp tục" (BRD-02). */
+  speechCut: boolean;
+  /**
+   * The AI's element ids → the ids this run placed. A continuation's "s1" is placed as "s1_2"
+   * (layout.freeId): its marks must land on it, never on the older "s1" of the first part.
+   */
+  ids: Map<string, string>;
+}
+
+let current: Run | null = null;
+let runs = 0;
 let lastInput: LessonInput | null = null;
 let lastMeasure: Measure | null = null;
 /** The lesson's voice: once the chosen voice failed for good, its later sentences do not wait. */
@@ -140,34 +172,81 @@ let voiceSession: VoiceSession = newVoiceSession();
 
 class Stopped extends Error {}
 
-function sleep(ms: number, signal: AbortSignal): Promise<void> {
-  if (instant || ms <= 0) return Promise.resolve();
+const board = () => useBoardStore.getState();
+
+/** The run still owns the board: not stopped, not replaced by a newer run. */
+const alive = (r: Run): boolean => current === r && !r.ctrl.signal.aborted;
+/** Read through functions: a pause or "Viết nhanh" changes these while the run awaits. */
+const isInstant = (r: Run): boolean => r.instant;
+const wasCut = (r: Run): boolean => r.speechCut;
+
+function ensure(r: Run): void {
+  if (!alive(r)) throw new Stopped();
+}
+
+/** Every write of a run to the board goes through here. */
+function patch(r: Run, p: BoardPatch): void {
+  ensure(r);
+  board().set(p);
+}
+
+function progressTo(r: Run, id: string, value: number): void {
+  patch(r, { progress: { ...board().progress, [id]: value } });
+}
+
+function showMark(r: Run, key: string): void {
+  patch(r, { marks: board().marks.map((m) => (m.key === key ? { ...m, shown: true } : m)) });
+}
+
+/** Waits `ms`; rejects at once when the run is over (and when it ends while waiting). */
+function sleep(ms: number, r: Run): Promise<void> {
+  if (!alive(r)) return Promise.reject(new Stopped());
+  if (r.instant || ms <= 0) return Promise.resolve();
+  const signal = r.ctrl.signal;
   return new Promise((resolve, reject) => {
     const t = setTimeout(done, ms);
     function done() {
-      clearTimeout(t);
       signal.removeEventListener('abort', abort);
       resolve();
     }
     function abort() {
       clearTimeout(t);
+      signal.removeEventListener('abort', abort);
       reject(new Stopped());
     }
     signal.addEventListener('abort', abort, { once: true });
   });
 }
 
-/** Read through a function: the signal can change while we wait. */
-const isAborted = (signal: AbortSignal) => signal.aborted;
+/** Holds the run while the lesson is paused, again if a new pause starts meanwhile. */
+async function waitIfPaused(r: Run): Promise<void> {
+  ensure(r);
+  while (r.gate) {
+    await r.gate.promise;
+    ensure(r);
+  }
+}
 
-async function waitIfPaused(signal: AbortSignal): Promise<void> {
-  if (isAborted(signal)) throw new Stopped();
-  if (gate) await gate.promise;
-  if (isAborted(signal)) throw new Stopped();
+interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * The teacher goes to an element (to write, mark, point at or erase it). The pen goes with the
+ * teacher; the view follows only while the learner follows the teacher.
+ */
+function moveTo(r: Run, e: BoardElement, at: Point): void {
+  patch(r, {
+    focus: e.id,
+    teacherFace: e.face,
+    pen: { run: r.id, face: e.face, x: at.x, y: at.y },
+    ...(board().follow ? { face: e.face } : {}),
+  });
 }
 
 /** Where the pen is after `units` of an element (board units, approximate). */
-function penAt(e: TextElement, units: number): { x: number; y: number } {
+function penAt(e: TextElement, units: number): Point {
   let left = units;
   for (const line of e.lines) {
     let x = 0;
@@ -187,14 +266,22 @@ function penAt(e: TextElement, units: number): { x: number; y: number } {
 }
 
 /** Writes one text element, letter by letter, with the pen tip following. */
-async function writeElement(e: TextElement, signal: AbortSignal): Promise<void> {
-  const store = useBoardStore.getState();
-  store.set({ focus: e.id, face: e.face });
-  if (instant) {
-    store.setProgress(e.id, e.length);
+async function writeElement(e: TextElement, r: Run): Promise<void> {
+  // A pause that came while the step before was finishing keeps the teacher where they are.
+  await waitIfPaused(r);
+  moveTo(r, e, penAt(e, 0));
+  if (r.instant) {
+    progressTo(r, e.id, e.length);
     return;
   }
   const unit = UNIT_MS[e.speed];
+  const penTo = (value: number) => {
+    const at = penAt(e, value);
+    patch(r, {
+      progress: { ...board().progress, [e.id]: value },
+      pen: { run: r.id, face: e.face, x: at.x, y: at.y },
+    });
+  };
   let done = 0;
   for (const line of e.lines) {
     for (const t of line.tokens) {
@@ -203,89 +290,108 @@ async function writeElement(e: TextElement, signal: AbortSignal): Promise<void> 
         const steps = 10;
         const total = 380 + t.w * 1.6;
         for (let k = 1; k <= steps; k++) {
-          await waitIfPaused(signal);
-          const value = done + k / steps;
-          useBoardStore.getState().setProgress(e.id, value);
-          useBoardStore.getState().set({ pen: penAt(e, value) });
-          await sleep(total / steps / useBoardStore.getState().speed, signal);
+          await waitIfPaused(r);
+          penTo(done + k / steps);
+          await sleep(total / steps / board().speed, r);
         }
         done += 1;
         continue;
       }
       for (let c = 0; c <= t.value.length; c++) {
-        await waitIfPaused(signal);
+        await waitIfPaused(r);
         done += 1;
-        useBoardStore.getState().setProgress(e.id, done);
-        useBoardStore.getState().set({ pen: penAt(e, done) });
+        penTo(done);
         // Irregular rhythm: a short stop between words, quicker in the middle of a word.
         const ms = c === t.value.length ? unit * 2.4 : unit * (0.75 + ((c * 37) % 10) / 20);
-        await sleep(ms / useBoardStore.getState().speed, signal);
+        await sleep(ms / board().speed, r);
       }
     }
   }
-  useBoardStore.getState().setProgress(e.id, e.length);
+  progressTo(r, e.id, e.length);
 }
 
-function addMark(mark: Omit<BoardMark, 'shown' | 'key'>): string {
-  const key = `${mark.kind}-${String(useBoardStore.getState().marks.length)}`;
-  const store = useBoardStore.getState();
-  store.set({ marks: [...store.marks, { ...mark, key, shown: instant }] });
+function addMark(r: Run, mark: Omit<BoardMark, 'shown' | 'key'>): string {
+  const marks = board().marks;
+  const key = `${mark.kind}-${String(marks.length)}`;
+  patch(r, { marks: [...marks, { ...mark, key, shown: r.instant }] });
   return key;
 }
 
-async function runAction(
-  action: BoardAction,
-  ctx: { measure: Measure; sources: number[]; known: number[]; signal: AbortSignal },
-): Promise<void> {
-  const { measure, signal } = ctx;
-  const store = useBoardStore.getState();
-  const layout = store.layout;
-  const target = (id: string): BoardElement | undefined => findElement(layout, id);
+interface LessonCtx {
+  r: Run;
+  measure: Measure;
+  sources: number[];
+  known: number[];
+}
+
+async function runAction(action: BoardAction, ctx: LessonCtx): Promise<void> {
+  const { measure, r } = ctx;
+  /** The element the AI names: the one this run placed under that id, else the newest with it. */
+  const target = (id: string): BoardElement | undefined =>
+    findElement(board().layout, r.ids.get(id) ?? id);
+  /** Places an action on the board's current layout at once (nothing awaited in between). */
+  const placeNow = (a: BoardAction) => {
+    ensure(r);
+    const layout = board().layout;
+    return { layout, element: place(layout, a, measure).element };
+  };
   switch (action.kind) {
     case 'write':
     case 'correct': {
       const old = action.kind === 'correct' ? target(action.target) : undefined;
       if (action.kind === 'correct' && !old) return;
       if (old) {
-        const key = addMark({ kind: 'strike', face: old.face, box: old, seed: seedOf(old.id) });
-        await sleep(80, signal);
-        useBoardStore.getState().showMark(key);
-        await sleep(450, signal);
+        // The teacher walks to the wrong line and strikes it out first.
+        moveTo(r, old, { x: old.x + old.w, y: old.y + old.h / 2 });
+        const key = addMark(r, { kind: 'strike', face: old.face, box: old, seed: seedOf(old.id) });
+        await sleep(80, r);
+        await waitIfPaused(r);
+        showMark(r, key);
+        await sleep(450, r);
+        await waitIfPaused(r);
       }
-      const { element } = place(layout, action, measure);
+      const resolved: BoardAction =
+        action.kind === 'correct'
+          ? { ...action, target: old?.id ?? action.target }
+          : action.noteFor
+            ? { ...action, noteFor: r.ids.get(action.noteFor) ?? action.noteFor }
+            : action;
+      const { layout, element } = placeNow(resolved);
       if (!element || element.kind !== 'text') return;
+      if (action.kind === 'write') r.ids.set(action.id, element.id);
       const prov = checkNumbers(element.source, ctx.sources, ctx.known);
       ctx.known.push(...prov.results);
-      useBoardStore.getState().set({
+      patch(r, {
         layout: { ...layout },
-        provenance: { ...useBoardStore.getState().provenance, [element.id]: prov },
-        progress: { ...useBoardStore.getState().progress, [element.id]: 0 },
+        provenance: { ...board().provenance, [element.id]: prov },
+        progress: { ...board().progress, [element.id]: 0 },
       });
-      if (instant) useBoardStore.getState().setProgress(element.id, element.length);
-      else await writeElement(element, signal);
+      await writeElement(element, r);
       return;
     }
     case 'mark': {
       const e = target(action.target);
       if (!e) return;
       const box = spanBox(e, action.span, measure);
-      useBoardStore.getState().set({ focus: e.id, pen: { x: box.x + box.w, y: box.y + box.h } });
-      const key = addMark({
+      moveTo(r, e, { x: box.x + box.w, y: box.y + box.h });
+      const key = addMark(r, {
         kind: action.mark,
         face: e.face,
         box,
         seed: seedOf(`${e.id}${action.mark}`),
       });
-      await sleep(60, signal);
-      useBoardStore.getState().showMark(key);
-      await sleep(650, signal);
+      await sleep(60, r);
+      await waitIfPaused(r);
+      showMark(r, key);
+      await sleep(650, r);
       return;
     }
     case 'arrow': {
       const a = target(action.from);
       const b = target(action.to);
       if (!a || !b || a.face !== b.face) return;
-      const key = addMark({
+      moveTo(r, b, { x: b.x, y: b.y + b.h / 2 });
+      const key = addMark(r, {
         kind: 'arrow',
         face: a.face,
         box: a,
@@ -293,54 +399,49 @@ async function runAction(
         ...(action.label ? { label: action.label } : {}),
         seed: seedOf(`${a.id}>${b.id}`),
       });
-      await sleep(60, signal);
-      useBoardStore.getState().showMark(key);
-      await sleep(750, signal);
+      await sleep(60, r);
+      await waitIfPaused(r);
+      showMark(r, key);
+      await sleep(750, r);
       return;
     }
     case 'point': {
       const e = target(action.target);
       if (!e) return;
-      useBoardStore
-        .getState()
-        .set({ focus: e.id, face: e.face, pen: { x: e.x + e.w + 12, y: e.y + e.h / 2 } });
-      await sleep(600, signal);
+      moveTo(r, e, { x: e.x + e.w + 12, y: e.y + e.h / 2 });
+      await sleep(600, r);
       return;
     }
     case 'erase': {
       const e = target(action.target);
       if (!e) return;
-      useBoardStore
-        .getState()
-        .set({ erased: { ...useBoardStore.getState().erased, [e.id]: true } });
-      await sleep(450, signal);
+      moveTo(r, e, { x: e.x + e.w / 2, y: e.y + e.h / 2 });
+      patch(r, { erased: { ...board().erased, [e.id]: true } });
+      await sleep(450, r);
       return;
     }
     case 'newboard': {
-      const { element } = place(layout, action, measure);
-      useBoardStore
-        .getState()
-        .set({ layout: { ...layout }, face: layout.faces.length - 1, pen: null });
-      await sleep(350, signal);
-      if (element?.kind === 'text') {
-        useBoardStore.getState().setProgress(element.id, 0);
-        if (instant) useBoardStore.getState().setProgress(element.id, element.length);
-        else await writeElement(element, signal);
-      }
+      const { layout, element } = placeNow(action);
+      const n = layout.faces.length - 1;
+      patch(r, {
+        layout: { ...layout },
+        teacherFace: n,
+        pen: null,
+        ...(board().follow ? { face: n } : {}),
+        ...(element ? { progress: { ...board().progress, [element.id]: 0 } } : {}),
+      });
+      await sleep(350, r);
+      if (element?.kind === 'text') await writeElement(element, r);
       return;
     }
     case 'draw':
     case 'plot': {
-      const { element } = place(layout, action, measure);
+      const { layout, element } = placeNow(action);
       if (!element) return;
-      useBoardStore.getState().set({
-        layout: { ...layout },
-        focus: element.id,
-        face: element.face,
-        pen: { x: element.x + element.w / 2, y: element.y + element.h / 2 },
-        progress: { ...useBoardStore.getState().progress, [element.id]: 1 },
-      });
-      await sleep(1400, signal);
+      r.ids.set(action.id, element.id);
+      patch(r, { layout: { ...layout }, progress: { ...board().progress, [element.id]: 1 } });
+      moveTo(r, element, { x: element.x + element.w / 2, y: element.y + element.h / 2 });
+      await sleep(1400, r);
       return;
     }
   }
@@ -386,12 +487,6 @@ function readingTime(text: string): number {
   return Math.min(4200, Math.max(700, text.length * 42));
 }
 
-/** Set when a pause cut the sentence being spoken: it is read again after "Tiếp tục". */
-let speechCut = false;
-/** Read through functions: a pause or "Viết nhanh" changes these while a sentence is spoken. */
-const wasCut = () => speechCut;
-const isInstant = () => instant;
-
 /**
  * Speaks a sentence, again from its start when a pause cut it (audit BRD-02): the learner never
  * loses the end of a sentence. The board's speed (0,75–2×) also sets the voice's pace (BRD-03).
@@ -399,56 +494,53 @@ const isInstant = () => instant;
 async function speakSentence(
   text: string,
   cue: VoiceCue,
-  signal: AbortSignal,
+  r: Run,
   entry: SentenceTiming,
 ): Promise<void> {
   for (;;) {
-    speechCut = false;
+    r.speechCut = false;
     const begin = performance.now();
     if (metrics) metrics.firstSpeechMs ??= Math.round(begin - metrics.startedAt);
     const opts: SpeakOptions = {
-      rate: useBoardStore.getState().speed,
+      rate: board().speed,
       session: voiceSession,
       emphasis: cue.emphasis,
       ...(cue.role ? { role: cue.role } : {}),
     };
     await speak(text, opts);
     entry.speechMs = (entry.speechMs ?? 0) + Math.round(performance.now() - begin);
-    if (!wasCut() || isAborted(signal) || isInstant()) return;
     // Never throws: when the pen stops first (a stop during the pause), nobody awaits this
     // promise any more, and a rejection here would be unhandled.
-    if (gate) await gate.promise;
-    if (isAborted(signal) || isInstant()) return;
+    if (!wasCut(r) || !alive(r) || isInstant(r)) return;
+    while (r.gate) await r.gate.promise;
+    if (!alive(r) || isInstant(r)) return;
   }
 }
 
-async function playSentence(
-  sentence: Sentence,
-  ctx: { measure: Measure; sources: number[]; known: number[]; signal: AbortSignal },
-): Promise<void> {
-  const { signal } = ctx;
-  await waitIfPaused(signal);
+async function playSentence(sentence: Sentence, ctx: LessonCtx): Promise<void> {
+  const { r } = ctx;
+  await waitIfPaused(r);
   // What is said and shown includes what is being written (audit BRD-01).
   const said = sentence.spoken || sentence.speech;
-  useBoardStore.getState().set({ subtitle: subtitleText(said) });
-  const voice = !instant && useVoiceStore.getState().enabled && said.trim() !== '';
+  patch(r, { subtitle: subtitleText(said) });
+  const voice = !r.instant && useVoiceStore.getState().enabled && said.trim() !== '';
   const entry: SentenceTiming = { speechMs: null, writingMs: 0 };
   metrics?.sentences.push(entry);
-  const speech = voice ? speakSentence(said, voiceCue(sentence), signal, entry) : Promise.resolve();
+  const speech = voice ? speakSentence(said, voiceCue(sentence), r, entry) : Promise.resolve();
   const started = performance.now();
   for (const { action } of sentence.actions) {
-    await waitIfPaused(signal);
+    await waitIfPaused(r);
     await runAction(action, ctx);
   }
   entry.writingMs = Math.round(performance.now() - started);
   await speech;
-  if (isAborted(signal)) throw new Stopped();
-  if (!voice && !instant) {
+  ensure(r);
+  if (!voice && !isInstant(r)) {
     // Without a voice the learner reads the subtitle: give them the time to.
     const left = readingTime(toSpokenText(said)) - (performance.now() - started);
-    await sleep(left / useBoardStore.getState().speed, signal);
+    await sleep(left / board().speed, r);
   }
-  await sleep(sentence.pauseMs + 220, signal);
+  await sleep(sentence.pauseMs + 220, r);
 }
 
 /**
@@ -477,31 +569,45 @@ export function lessonMetrics(): LessonMetrics | null {
 /** Results proved so far in the current lesson (a continuation may use them). */
 let lessonKnown: number[] = [];
 
+/** Ends the current run: its waiting steps stop, and a pause it waits on opens (to stop it). */
+function endRun(): void {
+  const r = current;
+  current = null;
+  if (!r) return;
+  r.ctrl.abort();
+  const g = r.gate;
+  r.gate = null;
+  g?.open();
+}
+
 async function run(script: ParsedScript, input: LessonInput, measure: Measure): Promise<void> {
-  const ctrl = new AbortController();
-  controller = ctrl;
-  instant = false;
+  endRun();
+  runs += 1;
+  const r: Run = {
+    id: runs,
+    ctrl: new AbortController(),
+    gate: null,
+    instant: false,
+    speechCut: false,
+    ids: new Map(),
+  };
+  current = r;
   lastInput = input;
   lastMeasure = measure;
-  useBoardStore.getState().set({ lessonId: input.id, status: 'playing' });
-  const ctx = {
+  board().set({ lessonId: input.id, status: 'playing', run: r.id });
+  const ctx: LessonCtx = {
+    r,
     measure,
     sources: sourceNumbers(input.question),
     known: lessonKnown,
-    signal: ctrl.signal,
   };
   try {
     for (const sentence of script.sentences) await playSentence(sentence, ctx);
-    if (controller === ctrl)
-      useBoardStore.getState().set({ status: 'done', pen: null, subtitle: '' });
+    patch(r, { status: 'done', pen: null, subtitle: '' });
   } catch (e) {
     if (!(e instanceof Stopped)) throw e;
   } finally {
-    // A newer run owns `instant` ("Viết nhanh" pressed during it): only reset our own.
-    if (controller === ctrl) {
-      controller = null;
-      instant = false;
-    }
+    if (current === r) current = null;
   }
 }
 
@@ -512,13 +618,15 @@ export async function playLesson(input: LessonInput, measure: Measure): Promise<
   // A new lesson (or "Giảng lại") tries the chosen voice again; "Viết tiếp" keeps the session.
   voiceSession = newVoiceSession();
   metrics = { startedAt: performance.now(), firstSpeechMs: null, sentences: [] };
-  useBoardStore.getState().set({
+  board().set({
     layout: emptyLayout(),
     progress: {},
     erased: {},
     provenance: {},
     marks: [],
     face: 0,
+    teacherFace: 0,
+    follow: true,
     focus: null,
     pen: null,
     subtitle: '',
@@ -543,70 +651,92 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
   }
   // Whatever was still being written is finished at once before the new part starts. A pause
   // ends too: the new part must not wait on the old run's gate (the board would freeze).
-  controller?.abort();
-  controller = null;
-  const g = gate;
-  gate = null;
-  g?.open();
-  speechCut = false;
+  endRun();
   stopSpeaking();
-  const store = useBoardStore.getState();
+  const store = board();
   const progress = { ...store.progress };
   for (const e of store.layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
-  store.set({ progress, marks: store.marks.map((m) => ({ ...m, shown: true })) });
+  // The new part is written where the teacher is, in view.
+  store.set({
+    progress,
+    marks: store.marks.map((m) => ({ ...m, shown: true })),
+    follow: true,
+    face: store.teacherFace,
+    pen: null,
+  });
   // The rest comes from "Viết tiếp", which is never reviewed: a reviewer's notes could only
   // stand at the start of the whole answer.
   await run(scriptFor(input.content.slice(previous.content.length)), input, measure);
 }
 
 export function pauseLesson(): void {
-  if (!controller || gate) return;
+  const r = current;
+  if (!r || r.gate || !alive(r)) return;
   let open: () => void = () => undefined;
   const promise = new Promise<void>((resolve) => {
     open = resolve;
   });
-  gate = { promise, open };
+  r.gate = { promise, open };
   // The sentence being spoken is cut here and read again on "Tiếp tục" (audit BRD-02).
-  if (useVoiceStore.getState().speaking) speechCut = true;
+  if (useVoiceStore.getState().speaking) r.speechCut = true;
   stopSpeaking();
-  useBoardStore.getState().set({ status: 'paused' });
+  board().set({ status: 'paused' });
 }
 
+/** "Tiếp tục": the view goes back to the face the teacher writes on, and the lesson goes on. */
 export function resumeLesson(): void {
-  const g = gate;
-  gate = null;
-  if (g) {
-    useBoardStore.getState().set({ status: 'playing' });
-    g.open();
-  }
+  const r = current;
+  const g = r?.gate;
+  if (!r || !g) return;
+  r.gate = null;
+  const store = board();
+  store.set({ status: 'playing', follow: true, face: store.teacherFace });
+  g.open();
 }
 
-/** Writes everything that is left at once (no animation, no voice). */
+/** Writes everything that is left at once (no animation, no voice), in view. */
 export function finishNow(): void {
-  if (!controller) return;
-  instant = true;
-  speechCut = false;
+  const r = current;
+  if (!r) return;
+  r.instant = true;
+  r.speechCut = false;
   stopSpeaking();
-  resumeLesson();
+  if (r.gate) {
+    resumeLesson();
+    return;
+  }
+  const store = board();
+  store.set({ follow: true, face: store.teacherFace });
+}
+
+/**
+ * The learner opens a face ("Bảng 1, Bảng 2…"). Looking at another face than the one the teacher
+ * writes on pauses the lesson: the voice never talks about writing the learner cannot see, and
+ * the teacher's pen is not drawn there. Coming back does not resume by itself (no surprise
+ * voice, no new voice request per click); "Tiếp tục" does, and brings the view back.
+ */
+export function showFace(i: number): void {
+  const store = board();
+  store.set({ face: i, follow: i === store.teacherFace });
+  if (store.status === 'playing' && i !== store.teacherFace) pauseLesson();
 }
 
 /**
  * Stops the lesson being taught. It never touches a start that is still waiting for the board's
  * fonts (`cancelPendingStart` does, when the page closes): `playLesson` calls this first, and the
  * board must not forget which answer it is about to teach (it would then take a re-render for
- * "Viết tiếp" and cut the new lesson after its first sentence).
+ * "Viết tiếp" and cut the new lesson after its first sentence). The pen always goes, also when
+ * no lesson was playing (a start cancelled while preparing must not leave a frozen pen).
  */
 export function stopLesson(): void {
-  controller?.abort();
-  controller = null;
-  const g = gate;
-  gate = null;
-  g?.open();
+  endRun();
   stopSpeaking();
-  const status = useBoardStore.getState().status;
-  if (status === 'playing' || status === 'paused') {
-    useBoardStore.getState().set({ status: 'done', pen: null });
-  }
+  const status = board().status;
+  board().set({
+    pen: null,
+    run: 0,
+    ...(status === 'playing' || status === 'paused' ? { status: 'done' as const } : {}),
+  });
 }
 
 /** Numbers the starts the board schedules; `pendingStart` is the one still allowed to begin. */
@@ -638,10 +768,46 @@ export function claimStart(ticket: number): boolean {
 export function cancelPendingStart(): void {
   if (pendingStart === null) return;
   pendingStart = null;
-  const store = useBoardStore.getState();
+  const store = board();
   store.set({ lessonContent: '', ...(store.status === 'preparing' ? { status: 'idle' } : {}) });
+}
+
+/** The chat was cleared: the lesson ends at once and the board is empty again. */
+export function clearBoard(): void {
+  stopLesson();
+  pendingStart = null;
+  lastInput = null;
+  lessonKnown = [];
+  board().set({
+    lessonId: null,
+    lessonContent: '',
+    layout: emptyLayout(),
+    progress: {},
+    erased: {},
+    provenance: {},
+    marks: [],
+    strokes: [],
+    subtitle: '',
+    status: 'idle',
+    face: 0,
+    teacherFace: 0,
+    follow: true,
+    focus: null,
+    pen: null,
+    run: 0,
+  });
 }
 
 export function replayLesson(): void {
   if (lastInput && lastMeasure) void playLesson(lastInput, lastMeasure);
 }
+
+// A lesson never outlives the teacher screen: closing it (Back, Esc, a topic, home) stops the
+// lesson, also one left paused in the talk layout while the board was hidden.
+useTeacherStore.subscribe((s, p) => {
+  if (p.open && !s.open) stopLesson();
+});
+// Clearing the chat ends the lesson and empties the board, also while the board is hidden.
+useChatStore.subscribe((s, p) => {
+  if (p.messages.length > 0 && s.messages.length === 0) clearBoard();
+});

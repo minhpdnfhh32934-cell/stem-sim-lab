@@ -77,9 +77,35 @@ Câu trả lời AI ──► TeachScript? ──có──► parseTeachScript (
 - **Đồng bộ lời – bút:** câu nào nói thì phần bảng của câu đó được viết cùng lúc; câu sau chờ cả hai
   xong (giọng không chạy trước bút). Không bật giọng thì có thời gian đọc phụ đề.
 - **Camera và mặt bảng:** bảng dài xuống dưới, khung nhìn tự lia theo bút; `<newboard>` mở mặt mới, có
-  thẻ "Bảng 1, Bảng 2…" để xem lại.
+  thẻ "Bảng 1, Bảng 2…" để xem lại. Thẻ của mặt thầy đang viết có biểu tượng cây bút. Khung nhìn chỉ
+  lia khi bài đang giảng, học sinh đang theo thầy và không đang tự viết bằng "Bút của em".
+- **Bút và bài giảng thuộc về một mặt bảng, một lượt giảng** (`lesson.ts`): mỗi lượt giảng (bài mới,
+  "Giảng lại", phần "Viết tiếp") có số lượt riêng; mọi thay đổi trên bảng đi qua một bước kiểm tra
+  "lượt này còn là lượt hiện tại", nên một lượt đã dừng không bao giờ viết đè lên bài mới. Đầu bút
+  mang theo mặt bảng và số lượt, chỉ hiện trên đúng mặt đó.
+  - Học sinh mở mặt khác khi thầy đang viết: bài **tạm dừng** (giọng ngừng, câu bị cắt sẽ đọc lại),
+    đầu bút không hiện ở mặt kia, chữ đã viết giữ nguyên. Quay lại mặt của thầy thì thấy bút đúng chỗ
+    cũ, vẫn đang dừng (không tự giảng tiếp: không bật tiếng bất ngờ, không tốn thêm lượt giọng đọc
+    trực tuyến). "Tiếp tục" (bấm ở mặt nào cũng được) đưa khung nhìn về mặt thầy đang viết rồi giảng
+    tiếp. Khi đang dừng hoặc đã giảng xong, bấm thẻ chỉ đổi mặt đang xem.
+  - Thầy đánh dấu (gạch chân, khoanh…) một chữ ở mặt cũ: thầy "đi" sang mặt đó rồi quay lại; khung
+    nhìn đi theo nếu học sinh đang theo thầy.
+  - Chuyển sang "Trò chuyện": bài tạm dừng; quay lại "Giảng trên bảng" thấy bảng như cũ và nút "Tiếp
+    tục". Rời màn hình AI Teacher (Quay lại, Esc, mở bài học, về trang chủ): bài dừng hẳn, kể cả bài
+    đang tạm dừng lúc bảng bị ẩn.
+  - Có câu trả lời mới: lượt cũ dừng ngay (không viết tiếp dưới dòng "Đang chuẩn bị bảng…"); bài mới
+    bắt đầu ở mặt 1. Học sinh gửi câu hỏi mới khi thầy đang giảng: bài tạm dừng ngay khi AI bắt đầu
+    trả lời (thầy dừng lại nghe), câu bị cắt đọc lại khi bấm "Tiếp tục". Xóa cuộc trò chuyện: bài
+    dừng và bảng trống.
+  - Ai đọc to câu trả lời được quyết định lúc câu trả lời đến: ở "Giảng trên bảng" bảng tự đọc theo
+    từng câu, ở "Trò chuyện" khung chat đọc (đổi bố cục trong lúc AI đang trả lời không làm câu trả
+    lời bị đọc hai lần hay không ai đọc).
+  - "Viết tiếp": mỗi lượt giữ bảng đối chiếu mã phần tử của AI → mã thật trên bảng, nên dấu gạch
+    chân, khung… của phần mới nằm đúng ở phần mới (không rơi vào phần tử cũ trùng mã như `r1`).
 - **Bút của học sinh:** bật "Bút của em" để viết/vẽ bằng chuột hoặc cảm ứng (màu tím), xóa nét của
-  mình. Nét chỉ ở trên máy, không gửi đi.
+  mình. Nét chỉ ở trên máy, không gửi đi. Nét thuộc về mặt bảng nơi bắt đầu viết: nếu mặt bảng đổi
+  giữa chừng, nét kết thúc và được giữ ở mặt cũ. Thao tác bị hủy (chạm chuyển thành cuộn…) cũng kết
+  thúc nét; di chuột mà không nhấn không vẽ thêm.
 - **Chế độ bảng với AI cloud:** lời nhắc TeachScript (`BOARD_SYSTEM` trong
   `src/teacher/chat/chatService.ts`): ví dụ mẫu, cấm tọa độ, yêu cầu viết rõ phép tính. Think giữ nguyên
   định dạng thẻ khi rà soát. Gemma (mô hình nhỏ) trả lời bình thường, bảng tự xếp.
@@ -89,7 +115,9 @@ Câu trả lời AI ──► TeachScript? ──có──► parseTeachScript (
 - "Thầy xem giúp" (gửi ảnh phần bảng học sinh vẽ cho AI nhận xét) và xuất bảng thành ảnh PNG/PDF.
 - Viết tay mức 2 (vẽ theo khung xương nét, dấu thanh viết sau chữ cái gốc).
 - Khẩu hình theo âm, nhận dạng giọng nói, nút "Giơ tay", ngắt lời (T3, T5).
-- Tạm dừng giữa câu sẽ cắt giọng của câu đó; khi tiếp tục, bút viết tiếp nhưng câu đó không đọc lại.
+- Khi đang tạm dừng, khung nhìn không tự lia tới chỗ thầy dừng; "Tiếp tục" mới đưa khung nhìn về.
+  Học sinh tự cuộn trên mặt bảng thầy đang viết thì khung nhìn vẫn theo bút (chưa có nút "về chỗ
+  thầy đang viết").
 - Chưa có công cụ tính toán tất định cho AI gọi (T4): hiện chỉ kiểm lại phép tính AI viết ra.
 
 ## 6. Nguồn

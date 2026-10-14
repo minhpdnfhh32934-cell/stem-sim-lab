@@ -1242,6 +1242,7 @@ const en: Messages = {
     clearPen: 'Clear your strokes on this board',
     history: 'Board faces',
     face: 'Board {n}',
+    teacherHere: 'the teacher is writing on this board',
     preparing: 'Preparing the board…',
     empty:
       'Ask AI Teacher a question: it will explain while writing formulas, underlining, circling and drawing on this board.',

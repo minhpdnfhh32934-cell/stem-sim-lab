@@ -1235,6 +1235,7 @@ const vi = {
     clearPen: 'Xóa nét của em trên mặt bảng này',
     history: 'Các mặt bảng',
     face: 'Bảng {n}',
+    teacherHere: 'thầy đang viết ở mặt bảng này',
     preparing: 'Đang chuẩn bị bảng…',
     empty:
       'Hỏi AI Teacher một câu: thầy sẽ vừa giảng vừa viết công thức, gạch chân, khoanh tròn và vẽ hình lên bảng này.',

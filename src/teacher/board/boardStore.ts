@@ -30,6 +30,17 @@ export interface Stroke {
 
 export type BoardStatus = 'idle' | 'preparing' | 'playing' | 'paused' | 'done';
 
+/**
+ * The teacher's pen tip: on one face, owned by one lesson run (lesson.ts). It is drawn only on
+ * that face and only while that run is the board's run, so it never moves across another face.
+ */
+export interface TeacherPen {
+  run: number;
+  face: number;
+  x: number;
+  y: number;
+}
+
 interface BoardState {
   lessonId: string | null;
   /** The answer text taught so far (it grows when the learner asks for "Viết tiếp"). */
@@ -40,11 +51,17 @@ interface BoardState {
   erased: Record<string, boolean>;
   provenance: Record<string, Provenance>;
   marks: BoardMark[];
-  /** Face shown on screen (the teacher's current face unless the learner browses history). */
+  /** Face shown on screen (the learner may browse other faces than the teacher's). */
   face: number;
+  /** Face the teacher is on (where the pen is, or writes next). */
+  teacherFace: number;
+  /** The view follows the teacher; false while the learner looks at another face. */
+  follow: boolean;
+  /** Lesson run that owns the board (lesson.ts; 0 = none). */
+  run: number;
   /** Element the camera keeps in view. */
   focus: string | null;
-  pen: { x: number; y: number } | null;
+  pen: TeacherPen | null;
   subtitle: string;
   status: BoardStatus;
   /** Pen speed multiplier (1 = normal). */
@@ -52,12 +69,17 @@ interface BoardState {
   /** The learner is drawing with their own pen. */
   penMode: boolean;
   strokes: Stroke[];
-  set: (patch: Partial<Omit<BoardState, 'set'>>) => void;
+  set: (patch: BoardPatch) => void;
   setProgress: (id: string, value: number) => void;
   showMark: (key: string) => void;
   addStroke: (stroke: Stroke) => void;
   clearStrokes: (face: number) => void;
 }
+
+/** A change to the board's data (no actions). */
+export type BoardPatch = Partial<
+  Omit<BoardState, 'set' | 'setProgress' | 'showMark' | 'addStroke' | 'clearStrokes'>
+>;
 
 export const useBoardStore = create<BoardState>()((set, get) => ({
   lessonId: null,
@@ -68,6 +90,9 @@ export const useBoardStore = create<BoardState>()((set, get) => ({
   provenance: {},
   marks: [],
   face: 0,
+  teacherFace: 0,
+  follow: true,
+  run: 0,
   focus: null,
   pen: null,
   subtitle: '',

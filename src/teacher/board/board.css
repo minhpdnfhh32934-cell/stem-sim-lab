@@ -21,7 +21,7 @@
   overflow-x: auto;
 }
 .board__face-tab {
-  min-height: 32px;
+  min-height: var(--target);
   padding: 0 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -34,6 +34,13 @@
   border-color: var(--accent);
   color: var(--text);
   font-weight: 600;
+}
+/* The face the teacher writes on, while the learner may look at another one. */
+.board__face-teacher {
+  display: inline-flex;
+  margin-left: 6px;
+  color: var(--accent);
+  vertical-align: -2px;
 }
 
 .board__viewport {
