@@ -4,7 +4,10 @@
 // mechanically; how clear an explanation is still needs a teacher's reading
 // (docs/USER_TESTING.md).
 
-/** Answer folded for matching: no accents, đ → d, lower case, single spaces. */
+/**
+ * Answer folded for matching: no accents, đ → d, lower case, single spaces, subscript digits as
+ * digits (v₀ → v0) and "½" as "1/2". Superscripts stay ("v²"): answer-key patterns read "²".
+ */
 export function fold(text) {
   return text
     .normalize('NFD')
@@ -12,6 +15,7 @@ export function fold(text) {
     .replace(/[đĐ]/g, 'd')
     .toLowerCase()
     .replace(/[₀-₉]/g, (d) => String('₀₁₂₃₄₅₆₇₈₉'.indexOf(d)))
+    .replace(/½/g, '1/2')
     .replace(/\s+/g, ' ');
 }
 
@@ -83,15 +87,19 @@ const ASSUME =
   /\b(gia su|gia dinh|chang han|vi du|assume|assuming|suppose|let's say|for example)\b/;
 /** A computed or estimated value: a number within 40 characters after these words. */
 const APPROX = /\b(khoang|xap xi|uoc tinh|du doan|ket qua)\b/g;
-/** "= 200", "≈ −4", "= **50**". */
-const EQUALS_BEFORE = /[=≈]\s*[*_]*\s*[-−]?\s*$/;
+/** "= 200", "≈ −4", "= **50**", "~ 0,25", LaTeX "\approx 4,96" and "\simeq 4,96". */
+const EQUALS_BEFORE = /(?:[=≈~]|\\approx|\\simeq)\s*[*_]*\s*[-−]?\s*$/;
+/** LaTeX text blocks read as their content: "4,958 \text{ L}" → "4,958 l". */
+const plainMath = (s) =>
+  s.replace(/\\(?:text|mathrm|rm)\s*\{\s*([^{}]*?)\s*\}/g, ' $1').replace(/\s+/g, ' ');
 
 /**
  * Numbers the answer brings in that are not in the question (nor in item.allowNumbers), where they
- * act as values: after "=" or "≈", within 40 characters after "khoảng / xấp xỉ / kết quả…",
- * anywhere after "giả sử / ví dụ…" in the same sentence, or directly before item.answerUnit.
- * Returns the offending tokens (empty: nothing invented). Known limits: numbers written in words
- * and a typical value stated without "=" ("thường là 100 W") are not seen.
+ * act as values: after "=", "≈", "~", "\approx" or "\simeq", within 40 characters after "khoảng /
+ * xấp xỉ / kết quả…", anywhere after "giả sử / ví dụ…" in the same sentence, or directly before
+ * item.answerUnit (LaTeX "\text{…}" read as its content). Returns the offending tokens (empty:
+ * nothing invented). Known limits: numbers written in words and a typical value stated without
+ * "=" ("thường là 100 W") are not seen.
  */
 export function inventedNumbers(item, answer) {
   const known = givenNumbers(item);
@@ -99,13 +107,13 @@ export function inventedNumbers(item, answer) {
     ? new RegExp(`(?<![a-z\\d^_/.,])(\\d+(?:[.,]\\d+)*) ?(?:${item.answerUnit})`, 'g')
     : null;
   const found = [];
-  for (const s of sentences(answer).map(fold)) {
+  for (const s of sentences(answer).map((x) => plainMath(fold(x)))) {
     const assumeAt = s.search(ASSUME);
     const approxEnds = [...s.matchAll(APPROX)].map((m) => m.index + m[0].length);
     for (const m of s.matchAll(NUMBER)) {
       const at = m.index;
       const asValue =
-        EQUALS_BEFORE.test(s.slice(Math.max(0, at - 8), at)) ||
+        EQUALS_BEFORE.test(s.slice(Math.max(0, at - 16), at)) ||
         approxEnds.some((e) => at >= e && at - e <= 40) ||
         (assumeAt >= 0 && at > assumeAt);
       if (asValue && !isKnown(m[0], known)) found.push(m[0]);
@@ -179,19 +187,49 @@ export function stepsInOrder(item, answer) {
 
 /**
  * A sentence that names a misconception (the teaching method asks for one), e.g. "Lỗi hay gặp:
- * nghĩ vật nặng rơi nhanh hơn". A known wrong statement inside it is not the model's claim.
+ * nghĩ vật nặng rơi nhanh hơn", or restates the learner's premise ("Em nghĩ rằng gia tốc cũng
+ * bằng 0, nhưng…", "Ý của em là…", "Em hỏi…"). A known wrong statement inside it is not the
+ * model's claim.
  */
 const MISCONCEPTION =
-  /\b(loi (hay|thuong) gap|nhieu (ban|nguoi) (hay |thuong |van )?(nghi|tuong|cho rang)|sai lam|hieu nham|hieu sai|nham lan|quan niem sai|misconception|common mistake)\b/;
+  /\b(loi (hay|thuong) gap|nhieu (ban|nguoi) (hay |thuong |van )?(nghi|tuong|cho rang)|(em|ban) (nghi|tuong|cho) rang|y (cua )?em la|em hoi|sai lam|hieu nham|hieu sai|nham lan|quan niem sai|misconception|common mistake)\b/;
+
+/** The first sentence opens by agreeing: "Đúng.", "Đúng vậy", "Vâng,", "Phải.", "Có,". */
+const AGREEMENT =
+  /^[\s*_#>"'“(]*(?:(?:dung|chinh xac)(?:[\s*_]*[.,!:]|\s+(?:vay|roi|the|het|a)\b)|(?:vang|co|phai|yes|right|correct)[\s*_]*[.,!:])/;
+
+/**
+ * A line that only labels what follows: a Markdown heading ("## Giải thích"), a short line in bold
+ * or italics without a full stop ("**Trả lời:**") or a short label ending in ":" ("Trả lời:"). A
+ * line that agrees or names a misconception ("Lỗi hay gặp:") is content, never a label.
+ */
+const LABEL = /^(?:#{1,6}\s.*|[*_]{1,3}[^*_.!?]{1,60}[*_]{1,3}:?|[*_]*[^.!?:]{1,30}:[*_]*)$/;
+function isLabel(line) {
+  const f = fold(line).trim();
+  return LABEL.test(line.trim()) && !AGREEMENT.test(f) && !MISCONCEPTION.test(f);
+}
+
+/** Sentences with their leading label lines split off ("**Trả lời:**\nĐúng, …"). */
+function labelledSentences(answer) {
+  return sentences(answer).flatMap((s) => {
+    const lines = s.split('\n');
+    const out = [];
+    while (lines.length > 1 && isLabel(lines[0] ?? '')) out.push((lines.shift() ?? '').trim());
+    out.push(lines.join('\n').trim());
+    return out.filter(Boolean);
+  });
+}
 
 /** The mustNot patterns that match outside a misconception sentence. */
 function knownErrors(item, answer) {
   // Fold sentence by sentence and remember where each one sits: a pattern can still span two
   // sentences, and a hit is ignored only when it starts and ends in misconception sentences.
+  // Sentences are joined with ". ", so a sentence after a label or a blank line starts like one
+  // ("**Trả lời:**\n\nĐúng, …" → "**tra loi:**. dung, …").
   let text = '';
   const spans = [];
-  for (const s of sentences(answer).map(fold)) {
-    if (text) text += ' ';
+  for (const s of labelledSentences(answer).map(fold)) {
+    if (text) text += '. ';
     spans.push({ start: text.length, end: text.length + s.length, marked: MISCONCEPTION.test(s) });
     text += s;
   }
@@ -203,13 +241,14 @@ function knownErrors(item, answer) {
   );
 }
 
-/** The first sentence opens by agreeing: "Đúng.", "Đúng vậy", "Vâng,", "Phải.", "Có,". */
-const AGREEMENT =
-  /^[\s*_#>"'“(]*(?:(?:dung|chinh xac)(?:[\s*_]*[.,!:]|\s+(?:vay|roi|the|het|a)\b)|(?:vang|co|phai|yes|right|correct)[\s*_]*[.,!:])/;
-
-/** The answer opens by agreeing with the learner ("Đúng là …" does not count: it often goes on "…, nhưng"). */
+/**
+ * The answer opens by agreeing with the learner ("Đúng là …" does not count: it often goes on
+ * "…, nhưng"). Leading label lines ("**Trả lời:**", "## Giải thích") are skipped.
+ */
 export function opensWithAgreement(answer) {
-  return AGREEMENT.test(fold(sentences(answer)[0] ?? ''));
+  const lines = answer.split('\n');
+  while (lines.length && (!(lines[0] ?? '').trim() || isLabel(lines[0] ?? ''))) lines.shift();
+  return AGREEMENT.test(fold(sentences(lines.join('\n'))[0] ?? ''));
 }
 
 /**
@@ -330,16 +369,41 @@ export function questionTerms(item) {
   return [...terms.values()];
 }
 
+/** Every mark of `sub` is also in `all`, counted with repeats. */
+function subMarks(sub, all) {
+  const rest = [...all];
+  for (const m of sub) {
+    const k = rest.indexOf(m);
+    if (k < 0) return false;
+    rest.splice(k, 1);
+  }
+  return true;
+}
+
 /**
- * One syllable of a 3-syllable term written wrongly: same letters with other tone marks
- * ("báo" for "bào"), or one letter left out or added with the same marks ("tể" for "thể"). A
- * function word is never counted ("tế bào có" is not a corrupted "tế bào con").
+ * One syllable of a 3-syllable term written wrongly: same letters with other marks ("báo" for
+ * "bào", "kêt" for "kết", "đo" for "độ"), or one letter left out or added with the same marks
+ * ("tể" for "thể"). Not counted, because they are real spellings or other words:
+ * - a function word ("tế bào có" is not a corrupted "tế bào con");
+ * - the same marks on another letter, the older tone placement ("hoá" for "hóa");
+ * - marks added to a syllable the question writes without any ("thứ" for "thu", "dị" for "di");
+ * - a syllable of four letters or more written without any mark, as loanwords often are
+ *   ("nucleotit").
+ * Short syllables are not exempt: "đo" for "độ" and "tễ" for "tế" are real corruptions of the
+ * saved Gemma answers. Known limit: a tone swap between two real words ("chảy" for "chạy") is
+ * still counted, like the real corruption "báo" for "bào".
  */
 function misspelt(got, want) {
   if (got === want || STOP_WORDS.has(got) || !latinWord(got)) return false;
   const a = letters(got);
   const b = letters(want);
-  if (a === b) return true;
+  if (a === b) {
+    const mg = marks(got);
+    const mw = marks(want);
+    if (mg.length === mw.length && subMarks(mg, mw)) return false;
+    if (!mw) return false;
+    return Boolean(mg) || b.length < 4;
+  }
   return (
     b.length >= 3 &&
     marks(got) === marks(want) &&
@@ -355,6 +419,7 @@ function misspelt(got, want) {
  * - glued to the next syllable or to foreign letters: "lòxo", "xúcافل", "chuyểnộng";
  * - followed by a word in another script: "nhiễm ισ";
  * - in a 3-syllable term, one syllable misspelt (see misspelt): "tế báo con", "nhiễm sắc tể".
+ * A term never spans punctuation in the answer ("cân bằng, dị hợp" is not "cân bằng di").
  * Phrases that occur in the question itself are never counted. Returns the corrupted forms.
  * Known limits: a wrong first syllable ("Niacn sắc thể") and bigger changes ("nhiễm sắc tố")
  * are not seen; 2-syllable terms only count glued and foreign forms, because Vietnamese has many
@@ -364,29 +429,36 @@ export function mangledTerms(item, answer) {
   const question = syllables(
     [item.question ?? '', ...(item.history ?? []).map((h) => h.content)].join(' '),
   ).join(' ');
-  const words = syllables(answer);
+  // Runs of words between punctuation marks and symbols, as questionTerms cuts the question.
+  const runs = answer
+    .normalize('NFC')
+    .toLowerCase()
+    .split(/[^\p{L}\p{M}\p{N}\s]+/u)
+    .map((chunk) => chunk.split(/\s+/).filter(Boolean));
   const found = new Set();
   for (const [head, ...rest] of questionTerms(item)) {
     const next = rest[0];
     if (head === undefined || next === undefined) continue;
-    for (let i = 0; i < words.length; i += 1) {
-      const w = words[i] ?? '';
-      if (w === head) {
-        const got = words.slice(i + 1, i + 1 + rest.length);
-        if (got.length < rest.length) continue;
-        const differ = rest.flatMap((want, j) => (want === got[j] ? [] : [j]));
-        const j = differ[0];
-        if (differ.length !== 1 || j === undefined) continue;
-        const g = got[j] ?? '';
-        const wrong = otherScript(g) || (rest.length === 2 && misspelt(g, rest[j] ?? ''));
-        const phrase = [head, ...got].join(' ');
-        if (wrong && !question.includes(phrase)) found.add(phrase);
-      } else if (w.startsWith(head) && w.length > head.length) {
-        const tail = w.slice(head.length);
-        const a = letters(tail);
-        const b = letters(next);
-        const glued = otherScript(tail) || a === b || (b.length >= 3 && editDistance(a, b) === 1);
-        if (glued) found.add(w);
+    for (const words of runs) {
+      for (let i = 0; i < words.length; i += 1) {
+        const w = words[i] ?? '';
+        if (w === head) {
+          const got = words.slice(i + 1, i + 1 + rest.length);
+          if (got.length < rest.length) continue;
+          const differ = rest.flatMap((want, j) => (want === got[j] ? [] : [j]));
+          const j = differ[0];
+          if (differ.length !== 1 || j === undefined) continue;
+          const g = got[j] ?? '';
+          const wrong = otherScript(g) || (rest.length === 2 && misspelt(g, rest[j] ?? ''));
+          const phrase = [head, ...got].join(' ');
+          if (wrong && !question.includes(phrase)) found.add(phrase);
+        } else if (w.startsWith(head) && w.length > head.length) {
+          const tail = w.slice(head.length);
+          const a = letters(tail);
+          const b = letters(next);
+          const glued = otherScript(tail) || a === b || (b.length >= 3 && editDistance(a, b) === 1);
+          if (glued) found.add(w);
+        }
       }
     }
   }
@@ -396,20 +468,31 @@ export function mangledTerms(item, answer) {
 // ---------------------------------------------------------------- scores and summaries
 
 /**
+ * Question types whose answer should end with a check question. The on-device prompt asks for one
+ * only on concept questions (chatService.ts CONCEPT_QUESTION), so other types would penalise it
+ * for following its own design.
+ */
+const CHECK_QUESTION_TYPES = new Set(['concept', 'misconception']);
+
+/**
  * Scores one answer. keyFacts: groups of alternative patterns (each group needs one match; `facts`
- * keeps the hit of every group for paired tests); mustNot: patterns of known wrong statements (not
- * counted inside a misconception sentence). Item-specific checks are null when they do not apply.
+ * keeps the hit of every group); mustNot: patterns of known wrong statements (not counted inside a
+ * misconception sentence); correct: every key fact and no known error. endsWithQuestion is
+ * recorded for every item, checkQuestion only for concept and misconception items. Item-specific
+ * checks are null when they do not apply.
  */
 export function scoreAnswer(item, answer) {
   const f = fold(answer);
   const facts = (item.keyFacts ?? []).map((group) => group.some((p) => new RegExp(p).test(f)));
   const wrong = knownErrors(item, answer);
+  const ends = endsWithQuestion(answer);
   const checks = {
     keyFacts: facts.length ? facts.filter(Boolean).length / facts.length : 1,
     facts,
     noKnownErrors: wrong.length === 0,
-    checkQuestion:
-      item.type === 'followup' || item.type === 'missing-data' ? null : endsWithQuestion(answer),
+    correct: facts.every(Boolean) && wrong.length === 0,
+    endsWithQuestion: ends,
+    checkQuestion: CHECK_QUESTION_TYPES.has(item.type) ? ends : null,
     asksClarification: item.expectsClarify ? asksForMissingData(answer, item) : null,
     namesMissing: namesMissing(item, answer),
     steps: stepsInOrder(item, answer),
@@ -430,10 +513,10 @@ export function scoreAnswer(item, answer) {
 const meanOf = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 
 /**
- * Summary over a list of scores: mean key-fact coverage, pass rates of the boolean checks, mean
- * share of steps in order, mean foreign-script share, and the share of answers with any foreign
- * script or any corrupted key term. Checks that do not apply (null) or that an older saved score
- * lacks (undefined) are left out of their rate.
+ * Summary over a list of scores: mean key-fact coverage, pass rates of the boolean checks (correct
+ * = every key fact and no known error), mean share of steps in order, mean foreign-script share,
+ * and the share of answers with any foreign script or any corrupted key term. Checks that do not
+ * apply (null) or that an older saved score lacks (undefined) are left out of their rate.
  */
 export function summarize(scores) {
   const present = (key) => scores.map((s) => s[key]).filter((v) => v !== null && v !== undefined);
@@ -447,6 +530,7 @@ export function summarize(scores) {
     n: scores.length,
     keyFacts: meanOf(scores.map((s) => s.keyFacts)),
     noKnownErrors: rate('noKnownErrors'),
+    correct: rate('correct'),
     checkQuestion: rate('checkQuestion'),
     asksClarification: rate('asksClarification'),
     namesMissing: rate('namesMissing'),
@@ -499,13 +583,101 @@ export function summarizeRuns(runs) {
 // ---------------------------------------------------------------- comparing runs
 
 /**
- * The configuration a run belongs to: "variant/decoding/temperature". Runs saved before these
- * fields existed (eval files up to 2026-10-13) used the worker's fixed decoding of that time
- * ("legacy": repetition_penalty 1.2, no_repeat_ngram_size 3) and webGemmaChat's default
- * temperature 0.2, so those are the defaults.
+ * The configuration a run belongs to: "model/variant/decoding/temperature" (a gemma3-270m run
+ * never joins a gemma3-1b one). Runs saved before these fields existed (eval files up to
+ * 2026-10-13) used the worker's fixed decoding of that time ("legacy": repetition_penalty 1.2,
+ * no_repeat_ngram_size 3) and webGemmaChat's default temperature 0.2, so those are the defaults.
+ * A run without a model (see fileRuns) is "?".
  */
 export function groupKey(run) {
-  return `${run.variant ?? '?'}/${run.decoding ?? 'legacy'}/${run.temperature ?? 0.2}`;
+  return `${run.model ?? '?'}/${run.variant ?? '?'}/${run.decoding ?? 'legacy'}/${run.temperature ?? 0.2}`;
+}
+
+/**
+ * The results of a saved evaluation file with the file's model and build filled in where a result
+ * has none (files up to 2026-10-14 record the model once per file and no build at all; no build
+ * is made up for them), and the file name.
+ */
+export function fileRuns(saved, file) {
+  return (saved.results ?? []).map((r) => {
+    const model = r.model ?? r.build?.model ?? saved.model;
+    const build = r.build ?? saved.build;
+    return {
+      ...r,
+      ...(model === undefined ? {} : { model }),
+      ...(build === undefined ? {} : { build }),
+      file,
+    };
+  });
+}
+
+/** What identifies the app build that produced a run: commit and served chatService.ts. */
+const buildId = (b) => `${b.commit ?? '?'} ${b.chatServiceSha256 ?? '?'}`;
+
+/**
+ * Groups (groupKey) whose runs come from different app builds: two runs that both carry a build
+ * with another commit or another hash of the served chatService.ts. Results without a build (the
+ * 2026-10-14 baseline files, whose "current" is the 0.6.0 prompt) are accepted as they are.
+ * Returns one entry per such group with the builds seen ("<commit> <hash>"), in reading order.
+ */
+export function buildConflicts(runs) {
+  const seen = new Map();
+  for (const r of runs) {
+    if (!r.build) continue;
+    const key = groupKey(r);
+    const ids = seen.get(key) ?? [];
+    if (!ids.includes(buildId(r.build))) ids.push(buildId(r.build));
+    seen.set(key, ids);
+  }
+  return [...seen.entries()]
+    .filter(([, ids]) => ids.length > 1)
+    .map(([key, builds]) => ({ key, builds }));
+}
+
+/**
+ * Why the runs of an earlier result file must not be skipped by a new run (`--skip`): another
+ * model, or another build (the file's or any result's) than the one being evaluated now. Files
+ * without a build are accepted. null when they may be skipped.
+ */
+export function skipRefusal(saved, now) {
+  if (saved.model !== undefined && saved.model !== now.model)
+    return `model ${saved.model}, not ${now.model}`;
+  const builds = [saved.build, ...(saved.results ?? []).map((r) => r.build)].filter(Boolean);
+  const other = builds.find((b) => buildId(b) !== buildId(now.build));
+  return other ? `build ${buildId(other)}, not ${buildId(now.build)}` : null;
+}
+
+/**
+ * Which on-device prompt a served chatService.ts holds: 'improved' when it imports ./missingData
+ * (raw TypeScript or as Vite serves it, "/src/teacher/chat/missingData.ts?t=…"), else 'current'
+ * (the 0.6.0 prompt).
+ */
+export function servedPromptVariant(source) {
+  return /\bimport\b[^;]*?["'][^"'\n]*\/missingData(?:\.[jt]s)?(?:\?[^"'\n]*)?["']/.test(source)
+    ? 'improved'
+    : 'current';
+}
+
+/**
+ * Why the requested prompt variants cannot run against this served chatService.ts: 'current' (the
+ * 0.6.0 prompt) and 'improved' are both the live contextPrompt, so the label must match what the
+ * server really serves. 'legacy' is built in the script and runs anywhere. null when they may run.
+ */
+export function variantRefusal(variants, source) {
+  const served = servedPromptVariant(source);
+  const wrong = variants.filter((v) => (v === 'current' || v === 'improved') && v !== served);
+  return wrong.length
+    ? `--variants ${wrong.join(',')}: the served chatService.ts is the ${served === 'improved' ? 'improved build (it imports ./missingData)' : '0.6.0 build (no ./missingData import)'}`
+    : null;
+}
+
+/**
+ * An error that stops the whole evaluation run without a retry (audit GPU-01): a failure of the
+ * graphics card itself, or a stalled answer ("gemma-stalled": the worker stopped sending pieces,
+ * which a hung GPU also looks like). The next question would reload the model on that card.
+ */
+export function stopsRun(error) {
+  return /gpu|device|webgpu|blocked|crash|lost|dxgi|mapasync|stall/i.test(error);
 }
 
 /** P(X ≤ k) for X ~ Binomial(n, 1/2), summed in log space (no overflow for large n). */
@@ -535,12 +707,46 @@ export function mcnemarP(onlyA, onlyB) {
 }
 
 /**
+ * Repeat numbers for pairing runs of saved files. A recorded `repeat` is kept (the run of
+ * `--skip` or `--retries` that answered keeps the number of the attempt that failed). Only runs
+ * that returned an answer and have no number (files up to 2026-10-13) are numbered, in reading
+ * order, with the lowest number not yet used by an answered run of the same configuration and
+ * question. Failed runs without a number keep none: they are never paired.
+ */
+export function numberRepeats(runs) {
+  const used = new Map();
+  const keyOf = (r) => `${groupKey(r)} ${r.id}`;
+  for (const r of runs) {
+    if (!r.ok || !Number.isInteger(r.repeat)) continue;
+    const set = used.get(keyOf(r)) ?? new Set();
+    set.add(r.repeat);
+    used.set(keyOf(r), set);
+  }
+  return runs.map((r) => {
+    if (!r.ok || Number.isInteger(r.repeat)) return r;
+    const set = used.get(keyOf(r)) ?? new Set();
+    let repeat = 0;
+    while (set.has(repeat)) repeat += 1;
+    set.add(repeat);
+    used.set(keyOf(r), set);
+    return { ...r, repeat };
+  });
+}
+
+/** Every key fact and no known error (older saved scores lack the field). */
+const isCorrect = (score) => score.correct ?? (score.keyFacts === 1 && score.noKnownErrors);
+
+/**
  * Paired comparison of two configurations on the same questions. Only runs that returned an
- * answer are used.
- * - Item level: per question, mean keyFacts over its repeats in A and in B; A wins, loses or
- *   ties; exact sign test on wins against losses.
- * - Key-fact group level: runs are paired by question and repeat number; every keyFacts group
- *   gives one yes/no pair (score.facts); exact McNemar test on the discordant pairs.
+ * answer are used. Both tests take ONE outcome per question (averaged over its repeats): repeats
+ * of a question, and the key-fact groups of one answer, are not independent (greedy repeats are
+ * identical), so counting them separately would inflate the evidence.
+ * - Sign test: per question, mean keyFacts over its repeats in A and in B; A wins, loses or ties.
+ * - McNemar: per question, the share of correct answers (every key fact, no known error) in A and
+ *   in B: only A (A higher), only B (B higher), both (equal and above 0) or neither (both 0).
+ *   With one run per question this is McNemar's 2 × 2 table.
+ * - `groups` (description only, no test): runs paired by question and repeat number, one yes/no
+ *   pair per keyFacts group (score.facts).
  */
 export function pairedComparison(a, b) {
   const byItem = (runs) => {
@@ -560,6 +766,7 @@ export function pairedComparison(a, b) {
   let ties = 0;
   const diffs = [];
   const groups = { both: 0, onlyA: 0, onlyB: 0, neither: 0 };
+  const correct = { both: 0, onlyA: 0, onlyB: 0, neither: 0 };
   for (const id of ids) {
     const ra = A.get(id) ?? [];
     const rb = B.get(id) ?? [];
@@ -568,6 +775,10 @@ export function pairedComparison(a, b) {
     if (Math.abs(d) < 1e-12) ties += 1;
     else if (d > 0) wins += 1;
     else losses += 1;
+    const ca = meanOf(ra.map((r) => (isCorrect(r.score) ? 1 : 0)));
+    const cb = meanOf(rb.map((r) => (isCorrect(r.score) ? 1 : 0)));
+    if (Math.abs(ca - cb) >= 1e-12) correct[ca > cb ? 'onlyA' : 'onlyB'] += 1;
+    else correct[ca > 0 ? 'both' : 'neither'] += 1;
     const repeatOf = (r, i) => r.repeat ?? i;
     const rbByRepeat = new Map(rb.map((r, i) => [repeatOf(r, i), r]));
     ra.forEach((x, i) => {
@@ -590,8 +801,9 @@ export function pairedComparison(a, b) {
     ties,
     meanDiff: meanOf(diffs),
     signP: signTestP(wins, losses),
+    correct,
+    mcnemarP: mcnemarP(correct.onlyA, correct.onlyB),
     groups,
-    mcnemarP: mcnemarP(groups.onlyA, groups.onlyB),
   };
 }
 

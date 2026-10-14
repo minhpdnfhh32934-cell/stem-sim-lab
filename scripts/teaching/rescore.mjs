@@ -4,12 +4,12 @@
 //
 //   node scripts/teaching/rescore.mjs <eval-….json> [--out <rescored.json>] [--changes]
 //
-// Prints a summary per configuration (variant/decoding/temperature, see groupKey) next to the
-// summary saved with the run, and with --changes every answer whose check changed.
+// Prints a summary per configuration (model/variant/decoding/temperature, see groupKey) next to
+// the summary saved with the run, and with --changes every answer whose check changed.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
+import { fileRuns, groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
@@ -30,7 +30,7 @@ const saved = JSON.parse(readFileSync(resolve(input), 'utf8'));
 const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 
-const results = saved.results.map((r) => {
+const results = fileRuns(saved, input).map((r) => {
   const item = items.get(r.id);
   if (!item) throw new Error(`question ${r.id} is not in tests/teaching/teaching-eval.json`);
   return { ...r, savedScore: r.score, score: scoreAnswer(item, r.answer ?? '') };
@@ -39,16 +39,24 @@ const groups = [...new Set(results.map(groupKey))];
 const summary = Object.fromEntries(
   groups.map((g) => [g, summarizeRuns(results.filter((r) => groupKey(r) === g))]),
 );
-// Files written before 2026-10-14 keyed their summary by variant only ("before", "after").
-const savedSummary = (g) =>
-  saved.summary?.[g] ?? saved.summary?.[results.find((r) => groupKey(r) === g)?.variant];
+// Older files keyed their summary without the model ("current/app/0", up to 2026-10-14) or by
+// variant only ("before", "after", up to 2026-10-13).
+const savedSummary = (g) => {
+  const r = results.find((x) => groupKey(x) === g);
+  return (
+    saved.summary?.[g] ??
+    (r ? saved.summary?.[groupKey({ ...r, model: undefined }).replace(/^\?\//, '')] : undefined) ??
+    saved.summary?.[r?.variant]
+  );
+};
 
 const pct = (x) => (x === null || x === undefined ? '–' : `${Math.round(x * 100)} %`);
 const num = (x) => (x === null || x === undefined ? '–' : String(Math.round(x)));
 const rows = [
   ['key facts', (s) => pct(s.keyFacts)],
   ['no known errors', (s) => pct(s.noKnownErrors)],
-  ['ends with a check question', (s) => pct(s.checkQuestion)],
+  ['correct (all key facts, no error)', (s) => pct(s.correct)],
+  ['check q. (concept/misconception)', (s) => pct(s.checkQuestion)],
   ['asks for missing data', (s) => pct(s.asksClarification)],
   ['names the missing data', (s) => pct(s.namesMissing)],
   ['steps in order', (s) => pct(s.steps)],
@@ -67,7 +75,7 @@ for (const g of groups) {
   console.log(`\n${g}${was ? ' (saved → re-scored)' : ''}`);
   for (const [label, show] of rows) {
     const now = show(summary[g]);
-    console.log(`  ${label.padEnd(30)} ${was ? `${show(was)} → ${now}` : now}`);
+    console.log(`  ${label.padEnd(34)} ${was ? `${show(was)} → ${now}` : now}`);
   }
 }
 
@@ -77,6 +85,7 @@ if (args.includes('--changes')) {
     const before = r.savedScore ?? {};
     for (const key of [
       'noKnownErrors',
+      'correct',
       'checkQuestion',
       'asksClarification',
       'namesMissing',

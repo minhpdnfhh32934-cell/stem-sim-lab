@@ -1,9 +1,13 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   asksForMissingData,
+  buildConflicts,
   endsWithQuestion,
+  fileRuns,
   fold,
   foreignScript,
   gpuRefusal,
@@ -12,14 +16,19 @@ import {
   mangledTerms,
   mcnemarP,
   namesMissing,
+  numberRepeats,
   opensWithAgreement,
   pairedComparison,
   scoreAnswer,
+  servedPromptVariant,
   signTestP,
+  skipRefusal,
   stepsInOrder,
+  stopsRun,
   summarize,
   summarizeRuns,
   trapHandled,
+  variantRefusal,
   type AnswerScore,
   type EvalItem,
   type EvalRun,
@@ -350,6 +359,9 @@ describe('answer-key fixes (saved Gemma 3 1B answers)', () => {
       ['C4', 0, 'pH = 3 < 7 nên dung dịch có môi trường axit.'],
       ['C4', 0, 'Dung dịch này là **axit**.'],
       ['B6', 0, 'Nhiệt độ cao làm protein enzyme bị biến tính.'],
+      // 2026-10-14: superscript and "×" forms were missed (found while writing the references).
+      ['B5', 1, 'Sau 3 lần nguyên phân có 2³ = 8 tế bào con.'],
+      ['B5', 1, 'Số tế bào con: 2 × 2 × 2 = 8.'],
     ];
     for (const [id, g, text] of credited) {
       expect(matches(item(id).keyFacts[g] ?? [], text), `${id} ${text}`).toBe(true);
@@ -536,7 +548,9 @@ type Want = Partial<
     AnswerScore,
     | 'keyFacts'
     | 'noKnownErrors'
+    | 'correct'
     | 'checkQuestion'
+    | 'endsWithQuestion'
     | 'asksClarification'
     | 'namesMissing'
     | 'steps'
@@ -593,7 +607,15 @@ const NEW_ITEM_CASES: Record<string, [string, string, Want][]> = {
     [
       'good',
       'Bước 1: gia tốc a = −F/m = −4000/1000 = −4 m/s². Bước 2: dùng v² − v₀² = 2as với v = 0. Bước 3: s = 400/8 = 50 m. Kiểm tra: đơn vị m hợp lý. Em thử: nếu lực hãm gấp đôi thì quãng đường thay đổi thế nào?',
-      { keyFacts: 1, steps: 1, noKnownErrors: true, checkQuestion: true },
+      {
+        keyFacts: 1,
+        steps: 1,
+        noKnownErrors: true,
+        correct: true,
+        endsWithQuestion: true,
+        // The check-question metric covers concept and misconception items only.
+        checkQuestion: null,
+      },
     ],
     [
       'energy route',
@@ -677,7 +699,15 @@ const NEW_ITEM_CASES: Record<string, [string, string, Want][]> = {
     [
       'good',
       'Bước 1: Zn + 2HCl → ZnCl₂ + H₂. Bước 2: n(Zn) = 6,5/65 = 0,1 mol. Bước 3: theo PTHH, n(ZnCl₂) = n(Zn) = 0,1 mol. M(ZnCl₂) = 65 + 2·35,5 = 136 g/mol. Bước 4: m = 0,1 × 136 = 13,6 g. Em thử: nếu dùng 13 g kẽm thì được bao nhiêu gam muối?',
-      { keyFacts: 1, steps: 1, noKnownErrors: true, checkQuestion: true },
+      {
+        keyFacts: 1,
+        steps: 1,
+        noKnownErrors: true,
+        correct: true,
+        endsWithQuestion: true,
+        // The check-question metric covers concept and misconception items only.
+        checkQuestion: null,
+      },
     ],
     [
       'forgot index 2',
@@ -810,6 +840,224 @@ describe('new items: missing data, steps and traps', () => {
     }
     expect(trapHandled(item('P1'), 'Đúng.')).toBe(null);
     expect(namesMissing(item('P1'), 'Đề chưa cho gì?')).toBe(null);
+  });
+});
+
+/**
+ * Second review of the answer key (2026-10-14): false matches found by reading the patterns
+ * against the questions. Each case failed before the fix.
+ */
+describe('answer key: no credit for restating the question', () => {
+  /**
+   * Groups the question (or the earlier turns) may satisfy on purpose. Every other keyFacts or
+   * missing group must come from the answer: a model that only repeats the question gets nothing.
+   */
+  const GIVEN_ON_PURPOSE: Record<string, string> = {
+    'P1 keyFacts[0]': 'names the concept asked about ("ma sát nghỉ"): an on-topic check',
+    'B10 keyFacts[1]':
+      'the right number (2n = 46) is in the earlier teacher turn; the answer has to state it',
+  };
+
+  it('no keyFacts or missing group is satisfied by the question and history alone', () => {
+    const hits: string[] = [];
+    for (const i of set.items) {
+      const given = fold([i.question, ...(i.history ?? []).map((h) => h.content)].join('\n'));
+      const check = (kind: string, groups: string[][]) => {
+        groups.forEach((group, k) => {
+          if (group.some((p) => new RegExp(p).test(given))) hits.push(`${i.id} ${kind}[${k}]`);
+        });
+      };
+      check('keyFacts', i.keyFacts);
+      check('missing', i.missing ?? []);
+    }
+    expect(hits.sort()).toEqual(Object.keys(GIVEN_ON_PURPOSE).sort());
+  });
+
+  it('P11: "lúc hãm phanh" is not "lực hãm"; the braking force still counts', () => {
+    const restated =
+      'Để tính quãng đường từ lúc hãm phanh đến khi dừng lại, cần biết thêm dữ kiện. Em cho thầy biết thêm nhé?';
+    const s = scoreAnswer(item('P11'), restated);
+    expect(s.namesMissing).toBe(false);
+    expect(s.facts[0]).toBe(false);
+    for (const asks of [
+      'Em cho thầy biết lực hãm là bao nhiêu nhé?',
+      'Em cho thầy biết độ lớn lực hãm phanh nhé?',
+      'Đề chưa cho khối lượng xe và lực hãm. Em cho thầy biết nhé?',
+    ]) {
+      expect(scoreAnswer(item('P11'), asks).namesMissing, asks).toBe(true);
+    }
+  });
+
+  it('P2: "rơi nhanh như nhau" repeats the question; "gia tốc như nhau" is the fact', () => {
+    expect(matches(item('P2').keyFacts[1] ?? [], 'Vì vậy hai vật rơi nhanh như nhau.')).toBe(false);
+    expect(matches(item('P2').keyFacts[1] ?? [], 'Gia tốc của hai vật như nhau, bằng g.')).toBe(
+      true,
+    );
+  });
+
+  it('B12: "số cây có kiểu gen dị hợp" is the task, not the missing data', () => {
+    const restated =
+      'Để tính số cây có kiểu gen dị hợp Aa, em cần biết thêm thông tin. Em cho thầy biết thêm nhé?';
+    expect(scoreAnswer(item('B12'), restated).namesMissing).toBe(false);
+    expect(
+      scoreAnswer(item('B12'), 'Em cho thầy biết số cây có kiểu hình lặn là bao nhiêu nhé?')
+        .namesMissing,
+    ).toBe(true);
+  });
+
+  it('C14: the question\'s "1 M" is not "the concentration stays 1 M"', () => {
+    const stays = item('C14').keyFacts[1] ?? [];
+    expect(matches(stays, 'Đúng rồi, 1 M + 1 M = 2 M.')).toBe(false);
+    expect(matches(stays, 'Nồng độ 1 M + 1 M = 2 M.')).toBe(false);
+    expect(matches(stays, 'Trộn 100 ml NaCl 1 M với 100 ml NaCl 1 M.')).toBe(false);
+    for (const good of [
+      'Nồng độ vẫn là 1 M.',
+      'C = 0,2 / 0,2 = 1 M.',
+      'Nồng độ của dung dịch sau khi trộn là 1 M.',
+      'Không đổi, vẫn 1 M.',
+    ]) {
+      expect(matches(stays, good), good).toBe(true);
+    }
+    expect(scoreAnswer(item('C14'), 'Đúng rồi, 1 M + 1 M = 2 M. Em hiểu chưa?').keyFacts).toBe(0);
+  });
+
+  it('P14: "trong lúc" (while) is not "trọng lực" (gravity)', () => {
+    const down = item('P14').keyFacts[2] ?? [];
+    expect(matches(down, 'Trong lúc bóng bay lên, vận tốc giảm dần.')).toBe(false);
+    for (const good of [
+      'Trọng lực vẫn tác dụng lên bóng.',
+      'Gia tốc do trọng lực gây ra.',
+      'Lực hút của Trái Đất kéo bóng lại.',
+      'Gia tốc hướng xuống.',
+    ]) {
+      expect(matches(down, good), good).toBe(true);
+    }
+  });
+});
+
+describe("known errors: restated premises and the item's own checks", () => {
+  it("does not flag the learner's premise when the answer restates it", () => {
+    const restated: [string, string][] = [
+      ['P14', 'Em nghĩ rằng gia tốc cũng bằng 0, nhưng thực ra gia tốc vẫn là g, hướng xuống.'],
+      ['P14', 'Ý của em là gia tốc bằng 0 vì vận tốc bằng 0. Không phải vậy: gia tốc vẫn là g.'],
+      ['P14', 'Em hỏi gia tốc có bằng 0 không. Gia tốc vẫn là g, hướng xuống.'],
+      ['B14', 'Em nghĩ rằng cây chỉ hô hấp vào ban đêm, nhưng thực ra cây hô hấp cả ngày lẫn đêm.'],
+      ['B14', 'Bạn tưởng rằng ban ngày cây không hô hấp; thật ra cây hô hấp liên tục.'],
+      ['C14', 'Nồng độ không tăng lên 2 M mà vẫn là 1 M.'],
+      ['C14', 'Nồng độ không phải bằng 2 M: số mol và thể tích cùng gấp đôi.'],
+      ['C14', 'Nồng độ không thành 2 M.'],
+    ];
+    for (const [id, text] of restated) {
+      expect(scoreAnswer(item(id), text).noKnownErrors, `${id} ${text}`).toBe(true);
+    }
+    expect(trapHandled(item('P14'), restated[0]?.[1] ?? '')).toBe(true);
+    // The claims themselves stay flagged.
+    for (const [id, text] of [
+      ['C14', 'Nồng độ tăng lên 2 M.'],
+      ['C14', 'Nồng độ phải bằng 2 M.'],
+      ['P14', 'Ở điểm cao nhất gia tốc cũng bằng 0.'],
+      ['B14', 'Cây chỉ hô hấp vào ban đêm.'],
+    ] as const) {
+      expect(scoreAnswer(item(id), text).noKnownErrors, `${id} ${text}`).toBe(false);
+    }
+  });
+
+  it("P13: the derivation's own check (v₀t = 100 m, ½at² = −50 m) is not a wrong answer", () => {
+    const p13 = item('P13');
+    for (const check of [
+      'Kiểm tra: v₀t = 20·5 = 100 m; ½at² = −50 m; s = 50 m.',
+      'Kiểm tra: v₀t = 100 m, ½at² = ½·(−4)·5² = −50 m, nên s = 100 − 50 = 50 m.',
+      'Kiểm tra: v_0 t = 100 m và at²/2 = −50 m, cộng lại được 50 m.',
+    ]) {
+      expect(scoreAnswer(p13, check).noKnownErrors, check).toBe(true);
+    }
+    // The named mistakes stay flagged.
+    for (const wrong of ['s = v₀·t = 100 m.', 's = v₀t = 20·5 = 100 m.', 's = ½at² = −50 m.']) {
+      expect(scoreAnswer(p13, wrong).noKnownErrors, wrong).toBe(false);
+    }
+  });
+
+  it('sees an agreement behind a heading', () => {
+    for (const a of [
+      '**Trả lời:**\n\nĐúng, em hiểu đúng.',
+      '**Trả lời:**\nĐúng vậy, nồng độ là 2 M.',
+      '## Giải thích\n\nVâng, gia tốc bằng 0.',
+    ]) {
+      expect(opensWithAgreement(a), a).toBe(true);
+    }
+    expect(opensWithAgreement('**Trả lời:**\n\nChưa đúng em ạ.')).toBe(false);
+    // The misconception heading keeps its line.
+    expect(opensWithAgreement('Lỗi hay gặp:\nĐúng là ai cũng nghĩ thế.')).toBe(false);
+    const agrees = '**Trả lời:**\n\nĐúng, nồng độ thu được không đổi.';
+    expect(scoreAnswer(item('C14'), agrees).noKnownErrors).toBe(false);
+    expect(trapHandled(item('C14'), agrees)).toBe(false);
+  });
+});
+
+describe('number and unit checks: LaTeX and fractions', () => {
+  it('allows derived numbers and constants a correct answer writes', () => {
+    expect(
+      inventedNumbers(item('P11'), 'Ta có s = 400/(2a). Em cho thầy biết gia tốc là bao nhiêu?'),
+    ).toEqual([]);
+    expect(
+      inventedNumbers(item('C12'), 'Dùng pV = nRT với R = 0,082 (hoặc R = 8,314) và T = 273,15 K.'),
+    ).toEqual([]);
+    expect(inventedNumbers(item('B11'), 'Ta luôn có %A + %G = 50%.')).toEqual([]);
+  });
+
+  it('reads \\approx, \\simeq and ~ as "=" and looks through \\text{} for the unit', () => {
+    const c12 = item('C12');
+    expect(inventedNumbers(c12, 'V \\approx 4,958 \\text{ L}')).toEqual(['4,958']);
+    expect(inventedNumbers(c12, 'V \\simeq 4,48')).toEqual(['4,48']);
+    expect(inventedNumbers(c12, 'Áp suất ~ 0,3 atm.')).toEqual(['0,3']);
+    expect(inventedNumbers(c12, 'Thể tích là 4,48\\text{lít}.')).toEqual(['4,48']);
+    // Given numbers stay given.
+    expect(inventedNumbers(c12, 'n \\approx 0,2 \\text{ mol}')).toEqual([]);
+  });
+
+  it('folds "½" to 1/2 but keeps "²" (P11 and P13 read it)', () => {
+    expect(fold('W = ½mv²')).toBe('w = 1/2mv²');
+    expect(fold('v₀²')).toBe('v0²');
+    const formula = item('P7').keyFacts[2] ?? [];
+    for (const f of ['W = ½mv²', 'Wđ = mv²/2', 'W = ½·m·v²']) {
+      expect(matches(formula, f), f).toBe(true);
+    }
+  });
+});
+
+describe('corrupted terms: real spellings are not corruption', () => {
+  it('does not flag spelling variants, other words or phrases across punctuation', () => {
+    const clean: [string, string][] = [
+      // The same marks on another letter (older tone placement).
+      ['C3', 'Liên kết cộng hoá trị hình thành do dùng chung electron.'],
+      // "thứ" is another word than "thu" (a plain syllable with marks added).
+      ['C14', 'V₂: dùng dung dịch thứ hai = 200 mL.'],
+      // Unaccented spelling of a loanword.
+      ['B13', 'Ta có số nucleotit loại A là 480.'],
+      // The phrase stops at the comma or the full stop.
+      ['B12', 'Ở trạng thái cân bằng, dị hợp chiếm 2pq.'],
+      ['P12', 'Dòng điện chạy qua bóng, đến khi đèn sáng.'],
+      ['P12', 'Dòng điện chạy qua bóng. Đến lúc đó đèn sáng.'],
+    ];
+    for (const [id, text] of clean) expect(mangledTerms(item(id), text), text).toEqual([]);
+  });
+
+  it('still finds corrupted syllables, short ones included (saved Gemma answers)', () => {
+    expect(mangledTerms(item('B4'), 'Quá trình phân chia tễ bào chất diễn ra ở kì cuối.')).toEqual([
+      'phân chia tễ',
+      'chia tễ bào',
+    ]);
+    expect(mangledTerms(item('B13'), 'Ta có số liên kêt hiđro là 3120.')).toEqual([
+      'số liên kêt',
+      'liên kêt hiđro',
+    ]);
+    expect(mangledTerms(item('P12'), 'Dòng điện đi qua bóng đen là 0,5 A.')).toEqual([
+      'qua bóng đen',
+    ]);
+    // Without any mark, a short syllable still counts ("the" for "thể").
+    expect(mangledTerms(item('B10'), 'Mỗi tế bào con có 46 nhiễm sắc the.')).toEqual([
+      'nhiễm sắc the',
+    ]);
   });
 });
 
@@ -983,14 +1231,305 @@ describe('paired comparison statistics', () => {
     expect([c.wins, c.ties, c.losses]).toEqual([1, 1, 1]);
     expect(c.meanDiff).toBeCloseTo((0.75 + 0 - 0.5) / 3, 9);
     expect(c.signP).toBe(1);
-    // Groups: P3 r0 (A both, B second only), P3 r1 (A both, B none), C5 (both twice), B5.
+    // Groups (description only): P3 r0 (A both, B second only), P3 r1 (A both, B none), C5
+    // (both twice), B5.
     expect(c.groups).toEqual({ both: 4, onlyA: 3, onlyB: 1, neither: 0 });
-    expect(c.mcnemarP).toBeCloseTo(signTestP(3, 1), 12);
+    // McNemar on one correct/not-correct outcome per question: P3 only A, C5 both, B5 only B.
+    expect(c.correct).toEqual({ both: 1, onlyA: 1, onlyB: 1, neither: 0 });
+    expect(c.mcnemarP).toBe(1);
   });
 
-  it('labels runs by variant, decoding and temperature, with the old defaults', () => {
-    expect(groupKey({ variant: 'current', decoding: 'app', temperature: 0 })).toBe('current/app/0');
-    expect(groupKey({ variant: 'before' })).toBe('before/legacy/0.2');
+  /** A made-up item with three key-fact groups ("mot", "hai", "ba") and one known error ("sai"). */
+  const fake = (id: string): EvalItem => ({
+    id,
+    subject: 'physics',
+    type: 'concept',
+    question: 'Câu hỏi?',
+    keyFacts: [['\\bmot\\b'], ['\\bhai\\b'], ['\\bba\\b']],
+    mustNot: ['\\bsai\\b'],
+  });
+  const fakeRun = (variant: string, id: string, answer: string, repeat: number): EvalRun => ({
+    id,
+    variant,
+    decoding: 'app',
+    temperature: 0,
+    repeat,
+    ok: true,
+    answer,
+    ms: 1,
+    promptChars: 1,
+    score: scoreAnswer(fake(id), answer),
+  });
+
+  it('tests questions, not repeats or key-fact groups (greedy repeats are not independent)', () => {
+    // Review scenario: 4 questions right in A and wrong in B, each run 3 times greedily. The
+    // real evidence is 4 against 0 (p = 0.125), not 24 key-fact pairs against 0.
+    const ids = ['X1', 'X2', 'X3', 'X4'];
+    const a = ids.flatMap((id) => [0, 1, 2].map((k) => fakeRun('current', id, 'mot hai ba', k)));
+    const b = ids.flatMap((id) => [0, 1, 2].map((k) => fakeRun('legacy', id, 'mot', k)));
+    const c = pairedComparison(a, b);
+    expect([c.wins, c.losses, c.ties]).toEqual([4, 0, 0]);
+    expect(c.signP).toBeCloseTo(0.125, 12);
+    expect(c.correct).toEqual({ both: 0, onlyA: 4, onlyB: 0, neither: 0 });
+    expect(c.mcnemarP).toBeCloseTo(0.125, 12);
+    // The group counts are still reported, as a description.
+    expect(c.groups.onlyA).toBe(4 * 3 * 2);
+  });
+
+  it('counts an answer as correct only with every key fact and no known error', () => {
+    expect(scoreAnswer(fake('X1'), 'mot hai ba').correct).toBe(true);
+    expect(scoreAnswer(fake('X1'), 'mot hai').correct).toBe(false);
+    expect(scoreAnswer(fake('X1'), 'mot hai ba, nhung sai').correct).toBe(false);
+    // Per question, the share of correct runs is compared: 2 of 3 beats 1 of 3.
+    const a = [0, 1, 2].map((k) => fakeRun('current', 'X1', k < 2 ? 'mot hai ba' : 'mot', k));
+    const b = [0, 1, 2].map((k) => fakeRun('legacy', 'X1', k < 1 ? 'mot hai ba' : 'mot', k));
+    expect(pairedComparison(a, b).correct).toEqual({ both: 0, onlyA: 1, onlyB: 0, neither: 0 });
+    const s = summarize([...a, ...b].map((r) => r.score));
+    expect(s.correct).toBeCloseTo(3 / 6, 12);
+  });
+
+  it('scores the check question on concept and misconception items only', () => {
+    const asks = 'Em thử trả lời nhé?';
+    expect(scoreAnswer(item('P1'), asks).checkQuestion).toBe(true);
+    expect(scoreAnswer(item('P2'), 'Gia tốc như nhau.').checkQuestion).toBe(false);
+    for (const id of ['P3', 'P13', 'P14', 'C1', 'P10', 'P11']) {
+      const s = scoreAnswer(item(id), asks);
+      expect(s.checkQuestion, id).toBe(null);
+      expect(s.endsWithQuestion, id).toBe(true);
+    }
+  });
+
+  it('keeps recorded repeat numbers and numbers only answered runs that lack one', () => {
+    const base = { variant: 'legacy', decoding: 'app', temperature: 0, ms: 1, promptChars: 1 };
+    const run = (id: string, ok: boolean, repeat?: number): EvalRun => ({
+      ...base,
+      id,
+      ok,
+      answer: ok ? 'mot' : '',
+      ...(repeat === undefined ? {} : { repeat }),
+      score: scoreAnswer(fake(id), ok ? 'mot' : ''),
+    });
+    const runs = [
+      // Interrupted run: the failed first attempt and the rerun of `--skip` / `--retries`.
+      run('C5', false, 0),
+      run('C5', true, 0),
+      // Older files without repeat numbers: only answered runs are numbered.
+      run('P3', false),
+      run('P3', true),
+      run('P3', true),
+      // A recorded repeat keeps its number; an unnumbered run takes the next free one.
+      run('B5', true, 0),
+      run('B5', true),
+    ];
+    expect(numberRepeats(runs).map((r) => r.repeat)).toEqual([0, 0, undefined, 0, 1, 0, 1]);
+    // The rerun pairs with the other configuration's run of the same question and repeat.
+    const other = [{ ...run('C5', true, 0), variant: 'current' }];
+    expect(pairedComparison(other, numberRepeats(runs)).groups).toEqual({
+      both: 1,
+      onlyA: 0,
+      onlyB: 0,
+      neither: 2,
+    });
+  });
+
+  it('labels runs by model, variant, decoding and temperature, with the old defaults', () => {
+    const run = { variant: 'current', decoding: 'app', temperature: 0 };
+    expect(groupKey({ ...run, model: 'gemma3-1b' })).toBe('gemma3-1b/current/app/0');
+    // Two models never share a group.
+    expect(groupKey({ ...run, model: 'gemma3-270m' })).not.toBe(
+      groupKey({ ...run, model: 'gemma3-1b' }),
+    );
+    expect(groupKey({ variant: 'before' })).toBe('?/before/legacy/0.2');
+  });
+});
+
+describe('build identity of saved results', () => {
+  const build = (commit: string, chatServiceSha256 = 'h1') => ({
+    commit,
+    dirty: false,
+    chatServiceSha256,
+    model: 'gemma3-1b',
+  });
+  const run = (over: Partial<EvalRun>): EvalRun => ({
+    id: 'P3',
+    model: 'gemma3-1b',
+    variant: 'current',
+    decoding: 'app',
+    temperature: 0,
+    repeat: 0,
+    ok: true,
+    answer: 'a',
+    ms: 1,
+    promptChars: 1,
+    score: scoreAnswer(item('P3'), 'a'),
+    ...over,
+  });
+
+  it('takes the model and build of the file when a result has none', () => {
+    const saved = {
+      model: 'gemma3-1b',
+      build: build('c1'),
+      results: [run({ model: undefined }), run({ id: 'P4', build: build('c2') })],
+    };
+    const runs = fileRuns(saved, 'x.json');
+    expect(runs.map((r) => r.model)).toEqual(['gemma3-1b', 'gemma3-1b']);
+    expect(runs.map((r) => r.build?.commit)).toEqual(['c1', 'c2']);
+    expect(runs.map((r) => r.file)).toEqual(['x.json', 'x.json']);
+    // Files of 2026-10-14 carry no build: none is made up.
+    expect(fileRuns({ model: 'gemma3-1b', results: [run({})] }, 'y.json')[0]?.build).toBe(
+      undefined,
+    );
+  });
+
+  it('refuses to merge two builds under one group, accepts files without a build', () => {
+    // The 771dd86 scenario: one script, run against the 0.6.0 server and the improved one.
+    expect(
+      buildConflicts([run({ build: build('v2') }), run({ id: 'P4', build: build('tq') })]),
+    ).toEqual([{ key: 'gemma3-1b/current/app/0', builds: ['v2 h1', 'tq h1'] }]);
+    // Same commit, other served chatService.ts (an uncommitted prompt change).
+    expect(
+      buildConflicts([run({ build: build('v2', 'h1') }), run({ build: build('v2', 'h2') })]),
+    ).toHaveLength(1);
+    expect(buildConflicts([run({ build: build('v2') }), run({ build: build('v2') })])).toEqual([]);
+    // Baseline files without a build are accepted as they are.
+    expect(buildConflicts([run({}), run({ build: build('v2') })])).toEqual([]);
+    // Different models are different groups.
+    expect(
+      buildConflicts([
+        run({ build: build('v2') }),
+        run({ model: 'gemma3-270m', build: build('x') }),
+      ]),
+    ).toEqual([]);
+  });
+
+  it('refuses to skip runs of another model or build', () => {
+    const now = { model: 'gemma3-1b', build: build('v2') };
+    expect(skipRefusal({ model: 'gemma3-1b', results: [] }, now)).toBe(null);
+    expect(skipRefusal({ model: 'gemma3-1b', build: build('v2'), results: [] }, now)).toBe(null);
+    expect(skipRefusal({ model: 'gemma3-270m', results: [] }, now)).toMatch(/model/);
+    expect(skipRefusal({ model: 'gemma3-1b', build: build('tq'), results: [] }, now)).toMatch(
+      /build/,
+    );
+    expect(
+      skipRefusal({ model: 'gemma3-1b', results: [run({ build: build('v2', 'h9') })] }, now),
+    ).toMatch(/build/);
+  });
+
+  it('tells the served 0.6.0 prompt from the improved one, raw or as Vite serves it', () => {
+    const improved = [
+      "import { missingNumericData, type MissingData } from './missingData';",
+      'import { missingNumericData } from "/src/teacher/chat/missingData.ts";',
+      'import { missingNumericData } from "/src/teacher/chat/missingData.ts?t=1760400000000";',
+    ];
+    const current = [
+      "import { searchKnowledge } from './knowledge';",
+      '// The check question is asked by the app (missingData.ts), see below.',
+      '',
+    ];
+    for (const s of improved) expect(servedPromptVariant(s), s).toBe('improved');
+    for (const s of current) expect(servedPromptVariant(s), s).toBe('current');
+    expect(variantRefusal(['legacy', 'current'], improved[1] ?? '')).toMatch(/current/);
+    expect(variantRefusal(['improved'], current[0] ?? '')).toMatch(/improved/);
+    expect(variantRefusal(['legacy', 'current'], current[0] ?? '')).toBe(null);
+    expect(variantRefusal(['legacy', 'improved'], improved[0] ?? '')).toBe(null);
+    expect(variantRefusal(['legacy'], improved[0] ?? '')).toBe(null);
+    // One build cannot serve both.
+    expect(variantRefusal(['current', 'improved'], current[0] ?? '')).not.toBe(null);
+  });
+
+  it('stops the run on a GPU failure or a stalled answer, never retries them', () => {
+    for (const e of [
+      'Error: gemma-stalled',
+      'Error: device lost',
+      'GPU blocked',
+      'Error: mapAsync failed',
+    ]) {
+      expect(stopsRun(e), e).toBe(true);
+    }
+    for (const e of ['Error: empty reply', 'Error: model-missing', 'Error: timeout', '']) {
+      expect(stopsRun(e), e).toBe(false);
+    }
+  });
+});
+
+describe('compare.mjs and breakdown.mjs on saved files', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'teaching-compare-'));
+  const script = (name: string) => resolve(import.meta.dirname, `../scripts/teaching/${name}`);
+  const results = resolve(import.meta.dirname, 'teaching/results');
+  const write = (name: string, data: unknown) => {
+    const f = join(dir, name);
+    writeFileSync(f, JSON.stringify(data));
+    return f;
+  };
+  const node = (name: string, args: string[]) =>
+    spawnSync(process.execPath, [script(name), ...args], { encoding: 'utf8' });
+  const good = 'NaOH = 40 g/mol nên n = 4/40 = 0,1 mol. Em hiểu chưa?';
+  const res = (over: Record<string, unknown>) => ({
+    id: 'C5',
+    variant: 'current',
+    decoding: 'app',
+    temperature: 0,
+    repeat: 0,
+    ok: true,
+    answer: good,
+    ms: 1,
+    promptChars: 1,
+    firstMs: 1,
+    ...over,
+  });
+  const build = (commit: string) => ({ commit, dirty: false, chatServiceSha256: 'h', model: 'm' });
+
+  it('prints the correct-answer row and pairs a rerun with the attempt that failed', () => {
+    const first = write('first.json', {
+      model: 'm',
+      results: [
+        res({}),
+        res({ variant: 'legacy', ok: false, answer: '', error: 'Error: timeout', attempt: 0 }),
+      ],
+    });
+    const rerun = write('rerun.json', { model: 'm', results: [res({ variant: 'legacy' })] });
+    const out = node('compare.mjs', [
+      first,
+      rerun,
+      '--a',
+      'm/current/app/0',
+      '--b',
+      'm/legacy/app/0',
+    ]);
+    expect(out.status, out.stderr).toBe(0);
+    expect(out.stdout).toMatch(/correct \(all key facts, no known error\)/);
+    expect(out.stdout).toMatch(/check question \(concept\/misconception\)/);
+    expect(out.stdout).toMatch(/1 questions answered by both/);
+    expect(out.stdout).toMatch(/exact McNemar p = 1\.000/);
+    // The rerun is paired (old compare numbered it repeat 1 and dropped the pair).
+    expect(out.stdout).toMatch(/description, not a test\): only A 0, only B 0, both [1-9]/);
+  });
+
+  it('keeps two models apart and refuses two builds under one group', () => {
+    const one = write('one.json', { model: 'm', build: build('aaa'), results: [res({})] });
+    const other = write('other.json', { model: 'm', build: build('bbb'), results: [res({})] });
+    const small = write('small.json', { model: 'm2', build: build('bbb'), results: [res({})] });
+    for (const name of ['compare.mjs', 'breakdown.mjs']) {
+      const refused = node(name, [one, other]);
+      expect(refused.status, name).toBe(1);
+      expect(refused.stderr, name).toMatch(/m\/current\/app\/0.*aaa.*bbb/s);
+      const apart = node(name, [one, small]);
+      expect(apart.status, `${name} ${apart.stderr}`).toBe(0);
+      expect(apart.stdout).toMatch(/m\/current\/app\/0/);
+      expect(apart.stdout).toMatch(/m2\/current\/app\/0/);
+    }
+  });
+
+  it('accepts the 2026-10-14 baseline files, which carry no build', () => {
+    const files = [
+      join(results, '2026-10-14-gemma3-1b-baseline-greedy.json'),
+      join(results, '2026-10-14-gemma3-1b-baseline-greedy-part2.json'),
+    ];
+    const out = node('compare.mjs', files);
+    expect(out.status, out.stderr).toBe(0);
+    expect(out.stdout).toMatch(/168 answers from 2 file/);
+    expect(out.stdout).toMatch(/gemma3-1b\/legacy\/legacy\/0/);
+    expect(node('breakdown.mjs', files).status).toBe(0);
   });
 });
 
@@ -1044,6 +1583,50 @@ describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
     for (const field of ['variant', 'decoding', 'temperature', 'repeat', 'promptChars', 'system']) {
       expect(loop).toMatch(new RegExp(`\\b${field}\\b`));
     }
-    expect(src).toMatch(/contextPrompt\(item\.question, 'vi', false, false, 'compact'\)/);
+    // The live prompt with the earlier turns (the improved build reads them for missing data).
+    expect(src).toMatch(
+      /contextPrompt\(\s*item\.question,\s*'vi',\s*false,\s*false,\s*'compact',\s*history,?\s*\)/,
+    );
+  });
+
+  it('builds current and improved like askTeacher: note before the question, echo removed', () => {
+    expect(src).toMatch(
+      /list\('variants', 'legacy,current', \['legacy', 'current', 'improved'\]\)/,
+    );
+    const loop = src.slice(src.indexOf('for (const item of items)'));
+    // The note moves next to the question when earlier turns come in between.
+    expect(loop).toMatch(/const noteInTurn = Boolean\(prompt\.note\) && history\.length > 0;/);
+    expect(loop).toMatch(/prompt\.system\.slice\(0, -prompt\.note\.length\)/);
+    expect(loop).toMatch(/asked = `\$\{prompt\.note\.trim\(\)\}\\n\\n\$\{item\.question\}`/);
+    expect(loop).toMatch(/content: asked \}/);
+    // The echo is the question itself (not the note), and what was asked is saved.
+    expect(loop).toMatch(/echo: item\.question,/);
+    expect(loop.match(/\basked,/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
+  });
+
+  it('records the build and refuses a variant the served build does not have', () => {
+    const loop = src.indexOf('for (const item of items)');
+    const before = src.slice(0, loop);
+    // Before any GPU work: the served chatService.ts decides which variant may run.
+    const guard = before.indexOf('variantRefusal(');
+    expect(guard).toBeGreaterThan(0);
+    expect(guard).toBeLessThan(before.indexOf('requestAdapter('));
+    expect(before).toMatch(/fetch\('\/src\/teacher\/chat\/chatService\.ts'\)/);
+    expect(before).toMatch(/createHash\('sha256'\)/);
+    expect(before).toMatch(/'rev-parse', 'HEAD'/);
+    expect(before).toMatch(/'status', '--porcelain', '--untracked-files=no'/);
+    expect(before).toMatch(/skipRefusal\(/);
+    // Saved with every result and the file.
+    const push = src.slice(src.indexOf('results.push({'));
+    expect(push.slice(0, push.indexOf('});'))).toMatch(/\bmodel,[^}]*\bbuild,/s);
+    expect(src).toMatch(
+      /JSON\.stringify\(\{ model, build, adapter, adapters, settings, results \}/,
+    );
+  });
+
+  it('stops on a stalled answer like on a GPU failure', () => {
+    const loop = src.slice(src.indexOf('for (const item of items)'));
+    expect(loop).toMatch(/if \(stopsRun\(r\.error \?\? ''\)\) \{/);
+    expect(src).not.toMatch(/const GPU_FAILURE/);
   });
 });

@@ -39,6 +39,11 @@ export interface AnswerScore {
   /** Hit of every keyFacts group, in order (paired tests). */
   facts: boolean[];
   noKnownErrors: boolean;
+  /** Every key fact and no known error. */
+  correct: boolean;
+  /** The last sentence is a question (every item). */
+  endsWithQuestion: boolean;
+  /** endsWithQuestion on concept and misconception items; null on the others. */
   checkQuestion: boolean | null;
   asksClarification: boolean | null;
   namesMissing: boolean | null;
@@ -52,9 +57,22 @@ export interface AnswerScore {
   invented: string[];
 }
 
+/** The app build an evaluation ran against (scripts/teaching/eval-gemma.mjs). */
+export interface Build {
+  /** git rev-parse HEAD of the repository the script ran in. */
+  commit: string | null;
+  /** Tracked files differed from that commit. */
+  dirty: boolean | null;
+  /** SHA-256 of /src/teacher/chat/chatService.ts as the server under --base served it. */
+  chatServiceSha256: string;
+  model: string;
+}
+
 /** One model answer of an evaluation run (scripts/teaching/eval-gemma.mjs). */
 export interface EvalRun {
   id?: string;
+  model?: string | undefined;
+  build?: Build | undefined;
   variant?: string;
   decoding?: string;
   temperature?: number;
@@ -73,6 +91,7 @@ export interface Summary {
   n: number;
   keyFacts: number | null;
   noKnownErrors: number | null;
+  correct: number | null;
   checkQuestion: number | null;
   asksClarification: number | null;
   namesMissing: number | null;
@@ -104,8 +123,11 @@ export interface PairedComparison {
   ties: number;
   meanDiff: number | null;
   signP: number;
-  groups: { both: number; onlyA: number; onlyB: number; neither: number };
+  /** Per question: which configuration more often answered correctly (McNemar's table). */
+  correct: { both: number; onlyA: number; onlyB: number; neither: number };
   mcnemarP: number;
+  /** Key-fact groups paired by question and repeat: a description, not a test. */
+  groups: { both: number; onlyA: number; onlyB: number; neither: number };
 }
 
 export function fold(text: string): string;
@@ -125,8 +147,24 @@ export function mangledTerms(item: Partial<EvalItem>, answer: string): string[];
 export function scoreAnswer(item: EvalItem, answer: string): AnswerScore;
 export function summarize(scores: AnswerScore[]): Summary;
 export function summarizeRuns(runs: EvalRun[]): RunSummary;
-export function groupKey(run: Pick<EvalRun, 'variant' | 'decoding' | 'temperature'>): string;
+/** A saved evaluation file. */
+export interface SavedEval {
+  model?: string;
+  build?: Build;
+  results?: EvalRun[];
+}
+
+export function groupKey(
+  run: Pick<EvalRun, 'model' | 'variant' | 'decoding' | 'temperature'>,
+): string;
+export function fileRuns(saved: SavedEval, file: string): (EvalRun & { file: string })[];
+export function buildConflicts(runs: EvalRun[]): { key: string; builds: string[] }[];
+export function skipRefusal(saved: SavedEval, now: { model: string; build: Build }): string | null;
+export function servedPromptVariant(source: string): 'current' | 'improved';
+export function variantRefusal(variants: string[], source: string): string | null;
+export function stopsRun(error: string): boolean;
 export function signTestP(wins: number, losses: number): number;
 export function mcnemarP(onlyA: number, onlyB: number): number;
+export function numberRepeats<T extends EvalRun>(runs: T[]): T[];
 export function pairedComparison(a: EvalRun[], b: EvalRun[]): PairedComparison;
 export function gpuRefusal(adapters: Record<string, string | null | undefined>): string | null;
