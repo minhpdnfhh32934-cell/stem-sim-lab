@@ -718,3 +718,260 @@ describe('whiteboard: the learner’s pen ("Bút của em")', () => {
     expect(tops.length).toBeGreaterThan(0);
   });
 });
+
+describe('whiteboard: the camera on a zoomed board (item 3)', () => {
+  /** Two lines far down the board. */
+  function farLayout() {
+    const layout = emptyLayout();
+    for (const [id, y] of [
+      ['far', 3000],
+      ['next', 3300],
+    ] as const) {
+      const { element } = place(
+        layout,
+        {
+          kind: 'write',
+          id,
+          zone: 'steps',
+          role: 'body',
+          math: false,
+          text: 'xa',
+          speed: 'normal',
+        },
+        measure,
+      );
+      if (!element) throw new Error('not placed');
+      element.y = y;
+    }
+    const face0 = layout.faces[0];
+    if (face0) face0.height = 3500;
+    return layout;
+  }
+
+  /**
+   * A viewport of 600 × 400 px whose smooth scroll moves only when the test says so (`pos`), the
+   * way a pan is still under way when the next letter is written. Direct writes to scrollTop /
+   * scrollLeft are recorded: in Chromium each one cancels a smooth scroll of the other axis.
+   */
+  function smoothViewport(root: HTMLElement) {
+    const node = root.querySelector<HTMLElement>('.board__viewport');
+    if (!node) throw new Error('no viewport');
+    const pos = { top: 0, left: 0 };
+    const direct: string[] = [];
+    const pans: { top: number; left: number }[] = [];
+    const define = (name: string, value: number) => {
+      Object.defineProperty(node, name, { value, configurable: true });
+    };
+    define('clientHeight', 400);
+    define('clientWidth', 600);
+    define('scrollHeight', 10_000);
+    define('scrollWidth', 2_000);
+    Object.defineProperty(node, 'scrollTop', {
+      configurable: true,
+      get: () => pos.top,
+      set: (v: number) => direct.push(`top ${String(v)}`),
+    });
+    Object.defineProperty(node, 'scrollLeft', {
+      configurable: true,
+      get: () => pos.left,
+      set: (v: number) => direct.push(`left ${String(v)}`),
+    });
+    Object.defineProperty(node, 'scrollTo', {
+      configurable: true,
+      value: (o: ScrollToOptions) => {
+        pans.push({ top: o.top ?? NaN, left: o.left ?? NaN });
+      },
+    });
+    return { node, pos, direct, pans };
+  }
+
+  beforeEach(() => {
+    useBoardStore.getState().set({
+      status: 'playing',
+      lessonId: null,
+      lessonContent: '',
+      layout: farLayout(),
+      progress: {},
+      face: 0,
+      teacherFace: 0,
+      follow: true,
+      focus: null,
+      pen: null,
+      run: 7,
+      penMode: false,
+      strokes: [],
+      zoom: 2,
+    });
+  });
+  afterEach(() => {
+    useBoardStore.getState().set({ status: 'idle', zoom: 1, pen: null, focus: null, run: 0 });
+  });
+
+  const penAt = (x: number, y = 3030) => ({ run: 7, face: 0, x, y });
+  /** Scroll top that puts the bottom of line `id` at 70 % of the 400 px view (scale 0,6). */
+  const topFor = (id: string) => {
+    const e = useBoardStore.getState().layout.elements.find((x) => x.id === id);
+    if (!e) throw new Error(`no ${id}`);
+    return (e.y + e.h) * 0.6 - 400 * 0.7;
+  };
+
+  it('moves both axes in one pan and never re-aims while the pen stays where it is going', () => {
+    // jsdom measures nothing: the board is drawn at 0,3 (smallest fit) × zoom 2 = 0,6.
+    const view = render(<Whiteboard lesson={null} />);
+    const { node, pos, direct, pans } = smoothViewport(view.container);
+    // A new line far down and to the right: down the board, then sideways, in one camera.
+    act(() => {
+      useBoardStore.getState().set({ focus: 'far', pen: penAt(1000) });
+    });
+    const top = topFor('far');
+    expect(pans).toHaveLength(2);
+    expect(pans[0]?.top).toBeCloseTo(top);
+    expect(pans[1]?.top).toBeCloseTo(top);
+    expect(pans[1]?.left).toBeCloseTo(1000 * 0.6 - 600 * 0.3);
+    // The pen goes on writing while the pan is under way (the view has not moved yet): the
+    // camera judges from where it is going, so it does not start again for every letter.
+    for (let x = 1010; x <= 1500; x += 10)
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(x) });
+      });
+    expect(pans).toHaveLength(2);
+    // Nothing set one axis alone (that would stop the pan of the other).
+    expect(direct).toEqual([]);
+
+    // The pan arrives; the pen leaves the view on the right: sideways again, at the same height.
+    pos.top = pans[1]?.top ?? 0;
+    pos.left = pans[1]?.left ?? 0;
+    act(() => {
+      node.dispatchEvent(new Event('scrollend'));
+      useBoardStore.getState().set({ pen: penAt(1650) });
+    });
+    expect(pans).toHaveLength(3);
+    expect(pans[2]?.top).toBeCloseTo(top);
+    expect(pans[2]?.left).toBeCloseTo(1650 * 0.6 - 600 * 0.3);
+    expect(direct).toEqual([]);
+  });
+
+  it('the learner’s own scroll is left alone until the teacher starts the next line', () => {
+    const view = render(<Whiteboard lesson={null} />);
+    const { node, pos, pans } = smoothViewport(view.container);
+    act(() => {
+      useBoardStore.getState().set({ focus: 'far', pen: penAt(1000) });
+    });
+    const before = pans.length;
+    // The learner scrolls back to the start of the line with the wheel.
+    pos.top = pans.at(-1)?.top ?? 0;
+    pos.left = 0;
+    act(() => {
+      node.dispatchEvent(new Event('wheel'));
+    });
+    for (let x = 1010; x <= 1300; x += 10)
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(x) });
+      });
+    expect(pans).toHaveLength(before);
+    // The next line: the camera follows again, down and sideways together.
+    act(() => {
+      useBoardStore.getState().set({ focus: 'next', pen: penAt(1000, 3330) });
+    });
+    expect(pans.length).toBeGreaterThan(before);
+    const last = pans.at(-1);
+    expect(last?.top).toBeCloseTo(topFor('next'));
+    expect(last?.left).toBeCloseTo(1000 * 0.6 - 600 * 0.3);
+  });
+
+  it('a click on the writing is not a scroll; a press on the scrollbar is', () => {
+    const view = render(<Whiteboard lesson={null} />);
+    const { node, pos, pans } = smoothViewport(view.container);
+    act(() => {
+      useBoardStore.getState().set({ focus: 'far', pen: penAt(1000) });
+    });
+    pos.top = pans.at(-1)?.top ?? 0;
+    pos.left = pans.at(-1)?.left ?? 0;
+    // A click on the line itself: the camera goes on following the pen sideways.
+    const line = view.container.querySelector('[data-id="far"]');
+    if (!line) throw new Error('no line');
+    act(() => {
+      node.dispatchEvent(new Event('scrollend'));
+      line.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+      useBoardStore.getState().set({ pen: penAt(1700) });
+    });
+    const followed = pans.length;
+    expect(pans.at(-1)?.left).toBeCloseTo(1700 * 0.6 - 600 * 0.3);
+    // A press on the viewport itself (its scrollbar): the learner has the view now.
+    pos.left = pans.at(-1)?.left ?? 0;
+    act(() => {
+      node.dispatchEvent(new Event('scrollend'));
+      node.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+      useBoardStore.getState().set({ pen: penAt(400) });
+    });
+    expect(pans).toHaveLength(followed);
+  });
+
+  it('a zoom after the board’s height alone changed keeps the row in the middle of the screen', () => {
+    const observers: (() => void)[] = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(callback: () => void) {
+          observers.push(callback);
+        }
+        observe() {
+          return undefined;
+        }
+        disconnect() {
+          return undefined;
+        }
+        unobserve() {
+          return undefined;
+        }
+      },
+    );
+    try {
+      useBoardStore.getState().set({ status: 'done', zoom: 1 });
+      const view = render(<Whiteboard lesson={null} />);
+      const node = view.container.querySelector<HTMLElement>('.board__viewport');
+      if (!node) throw new Error('no viewport');
+      const size = { w: 1202, h: 400 };
+      const pos = { top: 0, left: 0 };
+      Object.defineProperty(node, 'clientWidth', { configurable: true, get: () => size.w });
+      Object.defineProperty(node, 'clientHeight', { configurable: true, get: () => size.h });
+      Object.defineProperty(node, 'scrollHeight', { configurable: true, value: 100_000 });
+      Object.defineProperty(node, 'scrollWidth', { configurable: true, value: 100_000 });
+      Object.defineProperty(node, 'scrollTop', {
+        configurable: true,
+        get: () => pos.top,
+        set: (v: number) => {
+          pos.top = v;
+        },
+      });
+      Object.defineProperty(node, 'scrollLeft', {
+        configurable: true,
+        get: () => pos.left,
+        set: (v: number) => {
+          pos.left = v;
+        },
+      });
+      // Measured: the board fits at scale 1. The learner scrolls to rows 1000…1400.
+      act(() => {
+        for (const o of observers) o();
+      });
+      pos.top = 1000;
+      act(() => {
+        node.dispatchEvent(new Event('scroll'));
+      });
+      // The board gets taller (the window, or the subtitle went away): rows 1000…1800 are on
+      // screen now, row 1400 in the middle. The width, so the scale, did not change.
+      size.h = 800;
+      act(() => {
+        for (const o of observers) o();
+      });
+      act(() => {
+        fireEvent.click(screen.getByRole('button', { name: 'Phóng to bảng' }));
+      });
+      // Zoom 1,25: row 1400 is still in the middle (not row 1200, the middle of the old height).
+      expect(pos.top).toBeCloseTo(1400 * 1.25 - 800 / 2);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+});

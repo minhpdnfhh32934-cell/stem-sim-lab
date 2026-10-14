@@ -31,6 +31,15 @@ export function scrollForRow(
 }
 
 /**
+ * A scroll position kept inside the content (px). Content smaller than the viewport is content
+ * not laid out yet (an engine without layout, such as jsdom): the position is then kept as asked.
+ */
+export function clampScroll(value: number, content: number, client: number): number {
+  const limit = content - client;
+  return Math.max(0, limit >= 0 ? Math.min(limit, value) : value);
+}
+
+/**
  * The scroll position that keeps the board point that was in the middle of the viewport in the
  * middle after the sheet's scale changed (a window resize, a zoom), clamped to the content: the
  * learner keeps looking at the same part of the board. Works for either axis.

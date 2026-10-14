@@ -497,6 +497,93 @@ test('item 3: resizing the window during a lesson moves nothing on the board', a
   expect(r.scroll.width).toBeLessThanOrEqual(r.scroll.client);
 });
 
+/** A long lesson of long steps: zoomed in, the camera must follow the pen down and across. */
+const LONG_LESSON = [
+  '# Chuyển động ném ngang',
+  '1. Chọn hệ trục tọa độ Oxy có gốc tại điểm ném, trục Ox nằm ngang theo hướng ném và trục Oy hướng thẳng xuống dưới.',
+  '2. Theo phương ngang vật không chịu lực nào nên chuyển động thẳng đều với vận tốc bằng vận tốc ném ban đầu.',
+  '3. Theo phương thẳng đứng vật chỉ chịu tác dụng của trọng lực nên rơi tự do với gia tốc bằng gia tốc trọng trường.',
+  '4. Hai chuyển động thành phần này xảy ra cùng một lúc và hoàn toàn độc lập với nhau trong suốt quá trình bay.',
+  '5. Thời gian bay chỉ phụ thuộc vào độ cao lúc ném, không phụ thuộc vào vận tốc ném ban đầu của vật đó.',
+  '6. Tầm xa bằng vận tốc ném nhân với thời gian bay, nên ném càng nhanh thì vật rơi xuống càng xa chân tháp.',
+  '7. Quỹ đạo của vật là một nhánh parabol, bắt đầu từ điểm ném và cong dần xuống phía mặt đất bên dưới.',
+  '8. Vận tốc lúc chạm đất là tổng hợp của vận tốc theo phương ngang và vận tốc theo phương thẳng đứng lúc đó.',
+  '9. Muốn kiểm tra kết quả, em hãy so sánh tầm xa tính được với tầm xa đo được trong mô phỏng của bài học.',
+].join('\n');
+
+test('item 3: zoomed in, the camera follows the pen down and across the board while it writes', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await fakeVoice(page);
+  await fakeGemini(page, [{ text: LONG_LESSON, finishReason: 'STOP' }]);
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
+  // Zoom 2 (three steps) before the lesson: it is kept for the whole session.
+  for (let n = 0; n < 3; n++) await board.getByRole('button', { name: 'Phóng to bảng' }).click();
+  await expect(board.getByRole('button', { name: 'Phóng to bảng' })).toBeDisabled();
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải thích ném ngang');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await expect(board.locator('.board__pen')).toHaveCount(1, { timeout: 20_000 });
+  await board.getByRole('radio', { name: '2×' }).click();
+
+  // Where the pen tip is, seen from the viewport, every 50 ms until the lesson ends (the
+  // reviewer's probe: before the fix the pen was out of view most of the time, scrollTop 0).
+  await page.evaluate(() => {
+    const samples: PenSample[] = [];
+    const timer = window.setInterval(() => {
+      const pen = document.querySelector('.board__pen');
+      const viewport = document.querySelector<HTMLElement>('.board__viewport');
+      if (!pen || !viewport) return;
+      const p = pen.getBoundingClientRect();
+      const v = viewport.getBoundingClientRect();
+      // The tip of the pen icon is its lower left corner.
+      const inside = (at: number, from: number, size: number) => at >= from && at <= from + size;
+      samples.push({
+        x: inside(p.left, v.left, viewport.clientWidth),
+        y: inside(p.bottom, v.top, viewport.clientHeight),
+        top: viewport.scrollTop,
+      });
+    }, 50);
+    Object.assign(window, {
+      __penSamples: () => {
+        window.clearInterval(timer);
+        return samples;
+      },
+    });
+  });
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 90_000 });
+  const samples = await page.evaluate(() =>
+    (window as unknown as { __penSamples: () => PenSample[] }).__penSamples(),
+  );
+  expect(samples.length).toBeGreaterThan(100);
+  const out = samples.map((s) => !s.x || !s.y);
+  let longest = 0;
+  let run = 0;
+  for (const o of out) {
+    run = o ? run + 1 : 0;
+    longest = Math.max(longest, run);
+  }
+  // The camera went down the board with the teacher…
+  expect(Math.max(...samples.map((s) => s.top))).toBeGreaterThan(0);
+  // …the pen was in view nearly all the time (only during a pan to the start of a new line)…
+  expect(out.filter(Boolean).length / samples.length).toBeLessThan(0.1);
+  expect(samples.filter((s) => !s.y).length / samples.length).toBeLessThan(0.05);
+  // …and never out of view for long (20 samples: about 1 s).
+  expect(longest).toBeLessThan(20);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+/** One look at the pen while the lesson plays: its tip inside the view sideways / vertically. */
+interface PenSample {
+  x: boolean;
+  y: boolean;
+  top: number;
+}
+
 test('item 3: faces keep their writing and the learner’s strokes; zoom scrolls inside the board', async ({
   page,
 }) => {

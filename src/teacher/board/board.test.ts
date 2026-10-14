@@ -13,7 +13,7 @@ import {
 } from './layout';
 import { splitFormula } from './formulaSplit';
 import { boardAnswerText, scriptFor, subtitleText } from './lesson';
-import { rescaleScroll, scrollForRow, visibleBand } from './minimap';
+import { clampScroll, rescaleScroll, scrollForRow, visibleBand } from './minimap';
 import { compileFn, sample } from './plot';
 import { checkNumbers, evaluate, toArithmetic } from './provenance';
 import { circle, rng } from './rough';
@@ -473,5 +473,16 @@ describe('board minimap geometry', () => {
     expect(rescaleScroll(0, 700, 0.6, 0.75, 1200 * 0.75, 700)).toBeCloseTo(
       (350 / 0.6) * 0.75 - 350,
     );
+  });
+
+  it('a camera target stays inside the content (as asked when nothing is laid out)', () => {
+    expect(clampScroll(500, 2000, 400)).toBe(500);
+    expect(clampScroll(1900, 2000, 400)).toBe(1600);
+    expect(clampScroll(-20, 2000, 400)).toBe(0);
+    // Content that fits: nowhere to scroll.
+    expect(clampScroll(300, 400, 400)).toBe(0);
+    // An engine without layout (content 0): kept as asked, never negative.
+    expect(clampScroll(300, 0, 400)).toBe(300);
+    expect(clampScroll(-5, 0, 400)).toBe(0);
   });
 });

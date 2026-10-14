@@ -28,11 +28,14 @@ export function BoardMinimap({
   scale,
   height,
   zoomed = false,
+  onMove,
 }: {
   viewport: RefObject<HTMLDivElement | null>;
   scale: number;
   height: number;
   zoomed?: boolean;
+  /** The learner moves the view with the map (the board's camera then leaves it to them). */
+  onMove?: () => void;
 }) {
   const face = useBoardStore((s) => s.face);
   const elements = useBoardStore((s) => s.layout.elements);
@@ -75,6 +78,7 @@ export function BoardMinimap({
     const x = ((e.clientX - r.left) / r.width) * BOARD_W;
     const top = scrollForRow(y, scale, node.clientHeight, node.scrollHeight);
     const sideways = scrollForRow(x, scale, node.clientWidth, node.scrollWidth);
+    onMove?.();
     // Straight there: the board's smooth scrolling would lag behind a dragging finger.
     // (jsdom has no element scrollTo.)
     if (typeof node.scrollTo === 'function')

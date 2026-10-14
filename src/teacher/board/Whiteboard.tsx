@@ -12,7 +12,15 @@ import {
   ZoomIn,
   ZoomOut,
 } from 'lucide-react';
-import { memo, useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from 'react';
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+} from 'react';
 import { formatNumber, useT } from '@/app/i18n';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -30,7 +38,7 @@ import {
 import { BoardDrawing } from './BoardDrawing';
 import { BoardMinimap } from './BoardMinimap';
 import { BOARD_W, boardRules, type Line, type TextElement } from './layout';
-import { rescaleScroll } from './minimap';
+import { clampScroll, rescaleScroll } from './minimap';
 import {
   cancelPendingStart,
   claimStart,
@@ -326,6 +334,42 @@ function scrollInstant(node: HTMLElement, top: number, left: number): void {
   }
 }
 
+/** Where the camera is taking the view (scroll px at the scale the sheet is drawn at). */
+interface Aim {
+  top: number;
+  left: number;
+}
+
+/** Where the camera looks from: where its pan under way is going, else where the view is. */
+function cameraView(node: HTMLElement, aimed: Aim | null): Aim {
+  return aimed ?? { top: node.scrollTop, left: node.scrollLeft };
+}
+
+/**
+ * Moves the camera, both axes in one scroll: setting one axis stops a smooth scroll of the other
+ * (Chromium / WebView2), so a pan sideways would cancel the pan down the board. The axis not
+ * asked for keeps where the camera is already going, not where the view is half-way there.
+ */
+function aimCamera(
+  node: HTMLElement,
+  aimed: { current: Aim | null },
+  want: { top?: number; left?: number },
+): void {
+  const from = cameraView(node, aimed.current);
+  const top = clampScroll(want.top ?? from.top, node.scrollHeight, node.clientHeight);
+  const left = clampScroll(want.left ?? from.left, node.scrollWidth, node.clientWidth);
+  aimed.current = { top, left };
+  // `scroll-behavior: smooth` (board.css) makes this a camera pan. (jsdom has no element scrollTo.)
+  if (typeof node.scrollTo === 'function') node.scrollTo({ top, left });
+  else {
+    node.scrollTop = top;
+    node.scrollLeft = left;
+  }
+}
+
+/** What the learner does on the board to move the view themselves. */
+const LEARNER_MOVES = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+
 /**
  * The scaled board surface for the shown face, with the camera following the pen. The sheet is
  * the board in board units, scaled to the viewport's width (times the learner's zoom): a resize
@@ -343,6 +387,20 @@ function BoardSheet() {
   const drawnScale = useRef(scale);
   /** Where the view was before the scale changed (kept on every scroll). */
   const lastView = useRef<ViewSnapshot | null>(null);
+  /** The fit last measured (a resize that keeps it changes only the viewport's height). */
+  const measuredFit = useRef<number | null>(null);
+  /** Where the camera's pan under way is taking the view (null once it arrived or was stopped). */
+  const aimed = useRef<Aim | null>(null);
+  /** The learner moved the view while the teacher wrote this element (null: not since). */
+  const heldOn = useRef<{ focus: string | null } | null>(null);
+  /**
+   * The learner moves the view: the pan under way is no longer the camera's, and the camera
+   * leaves the view sideways to the learner until the teacher starts the next element.
+   */
+  const takeOver = useCallback(() => {
+    aimed.current = null;
+    heldOn.current = { focus: useBoardStore.getState().focus };
+  }, []);
   const face = useBoardStore((s) => s.face);
   const layout = useBoardStore((s) => s.layout);
   const focus = useBoardStore((s) => s.focus);
@@ -382,7 +440,13 @@ function BoardSheet() {
     const node = viewport.current;
     if (!node) return;
     const update = () => {
-      setFit(Math.max(0.3, (node.clientWidth - 2) / BOARD_W));
+      const next = Math.max(0.3, (node.clientWidth - 2) / BOARD_W);
+      // The same scale, a new height (the window, the subtitle or the legend): the view is noted
+      // again, so the next zoom keeps in the middle the row that is in the middle now.
+      if (next === measuredFit.current && lastView.current)
+        lastView.current = snapshotOf(node, drawnScale.current);
+      measuredFit.current = next;
+      setFit(next);
     };
     update();
     // Very old engines (and jsdom) have no ResizeObserver: the first measurement stays.
@@ -407,6 +471,31 @@ function BoardSheet() {
     };
   }, []);
 
+  // The camera's pan ends where it was going (or where the learner stopped it); the learner's
+  // wheel, touch, keys or scrollbar take the view over. Drawing with "Bút của em" does not, nor
+  // does a click on the writing (a press on the viewport itself is one on its scrollbar).
+  useEffect(() => {
+    const node = viewport.current;
+    if (!node) return;
+    const arrived = () => {
+      aimed.current = null;
+    };
+    const learner = (e: Event) => {
+      if (e.type === 'pointerdown' && e.target !== node) return;
+      const drawing =
+        useBoardStore.getState().penMode &&
+        e.target instanceof Element &&
+        e.target.closest('.board__student') !== null;
+      if (!drawing) takeOver();
+    };
+    node.addEventListener('scrollend', arrived);
+    for (const type of LEARNER_MOVES) node.addEventListener(type, learner, { passive: true });
+    return () => {
+      node.removeEventListener('scrollend', arrived);
+      for (const type of LEARNER_MOVES) node.removeEventListener(type, learner);
+    };
+  }, [takeOver]);
+
   // A new scale (the board was measured, the window or the panes were resized, or the learner
   // zoomed): the same part of the board stays in the middle of the view, or, while the teacher
   // writes and the learner follows, the line being written is put in view. Never a jump back to
@@ -414,6 +503,8 @@ function BoardSheet() {
   useLayoutEffect(() => {
     const node = viewport.current;
     drawnScale.current = scale;
+    // A pan aimed at the old scale goes nowhere useful now.
+    aimed.current = null;
     if (!node || fit === null) return;
     const before = lastView.current;
     const s = useBoardStore.getState();
@@ -451,10 +542,16 @@ function BoardSheet() {
     lastView.current = snapshotOf(node, scale);
   }, [scale, fit]);
 
+  // Another face: a pan aimed on the face before goes nowhere useful.
+  useEffect(() => {
+    aimed.current = null;
+  }, [face]);
+
   // Camera: keep what the teacher is writing in view, like a teacher stepping along the board.
   // Only while the lesson plays and the learner follows the teacher, never under the learner's
   // own pen (the stroke would jump), and only for the face shown. A new scale does not move it
-  // (the effect above keeps the view).
+  // (the effect above keeps the view). It judges from where its pan under way is going, not
+  // from where the view is half-way there, and moves both axes at once (`aimCamera`).
   useEffect(() => {
     const node = viewport.current;
     const e = focus ? layout.elements.find((x) => x.id === focus) : undefined;
@@ -462,22 +559,28 @@ function BoardSheet() {
     const k = drawnScale.current;
     const top = e.y * k;
     const bottom = (e.y + e.h) * k;
-    if (bottom > node.scrollTop + node.clientHeight * 0.85 || top < node.scrollTop) {
-      // `scroll-behavior: smooth` (board.css) makes this a camera pan.
-      node.scrollTop = Math.max(0, bottom - node.clientHeight * 0.7);
-    }
+    const view = cameraView(node, aimed.current);
+    if (bottom > view.top + node.clientHeight * 0.85 || top < view.top)
+      aimCamera(node, aimed, { top: Math.max(0, bottom - node.clientHeight * 0.7) });
   }, [focus, face, layout, status, follow, stroking]);
 
-  // Zoomed in, the camera also follows the pen sideways.
+  // Zoomed in, the camera also follows the pen sideways: once when the pen leaves the part of
+  // the board it is going to (never again for every letter while the pan is under way), and not
+  // while the learner looks elsewhere on the line the teacher writes.
   const penX = showPen ? pen.x : null;
   useEffect(() => {
     const node = viewport.current;
     if (!node || penX === null || zoom === 1 || status !== 'playing' || !follow || stroking) return;
+    if (heldOn.current) {
+      if (heldOn.current.focus === focus) return;
+      heldOn.current = null;
+    }
     const x = penX * drawnScale.current;
     const width = node.clientWidth;
-    if (x < node.scrollLeft + width * 0.1 || x > node.scrollLeft + width * 0.9)
-      node.scrollLeft = Math.max(0, x - width * 0.3);
-  }, [penX, zoom, status, follow, stroking]);
+    const view = cameraView(node, aimed.current);
+    if (x < view.left + width * 0.1 || x > view.left + width * 0.9)
+      aimCamera(node, aimed, { left: Math.max(0, x - width * 0.3) });
+  }, [penX, focus, zoom, status, follow, stroking]);
 
   const toBoard = (e: PointerEvent<SVGSVGElement>): [number, number] => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -563,7 +666,13 @@ function BoardSheet() {
           </div>
         </div>
       </div>
-      <BoardMinimap viewport={viewport} scale={scale} height={height} zoomed={zoom !== 1} />
+      <BoardMinimap
+        viewport={viewport}
+        scale={scale}
+        height={height}
+        zoomed={zoom !== 1}
+        onMove={takeOver}
+      />
     </>
   );
 }
