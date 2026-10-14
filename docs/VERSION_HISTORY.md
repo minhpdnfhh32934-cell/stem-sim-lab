@@ -74,14 +74,14 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do S
 
 - Trạng thái: Đang xét duyệt.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.
+- Ghi chú trạng thái: PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.
 - Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
 | --- | --- | --- |
 | Bắt đầu phát triển | 13/10/2026 22:42 | `2026-10-13T22:42:01+07:00` |
 | Commit đầu tiên | 13/10/2026 22:42 | `2026-10-13T22:42:01+07:00` |
-| Commit cuối cùng | 14/10/2026 02:04 | `2026-10-14T02:04:44+07:00` |
+| Commit cuối cùng | 14/10/2026 14:54 | `2026-10-14T14:54:05+07:00` |
 | Gộp vào nhánh (merge) | Chưa xác minh được | — |
 | Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
 | Phát hành (GitHub Release) | Chưa xác minh được | — |
@@ -152,9 +152,9 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do S
 
 - firstCommit: 511345d 2026-10-13T22:42:01+07:00 'fix(security): release integrity…' (G1), commit đầu sau tag v0.5.2 (c25ad9d)
 - Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0
-- lastCommit: đầu PR #20 trên GitHub là f527f18 2026-10-14T02:04:44+07:00 (git ls-remote origin)
+- lastCommit: đầu PR #20 trên GitHub là 8a3c48d 2026-10-14T14:54:05+07:00 (git ls-remote origin, sau lần đẩy f527f18..8a3c48d); các commit sau đó chỉ cập nhật ghi chú này
 - PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp
-- Commit sau đầu PR f527f18 (gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) nằm trên nhánh local feat/audit-g0-g5 cho tới khi được đẩy lên GitHub; danh sách đầy đủ: git log f527f18..feat/audit-g0-g5
+- Các commit f527f18..8a3c48d (98 commit, gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) đã được đẩy lên PR #20 ngày 14/10/2026
 - built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app\_info = 0.6.0
 - Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới
 - Gemma quality: docs/TEACHING\_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -\> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -\> 7 %; corrupted terms 19 % -\> 4.8 %; first piece p50 1.90 s -\> 0.91 s; answer length 810 -\> 1047 characters. The blind AI judge still flagged language problems in 31 % of v2 answers; check question in 18.8 % of concept/misconception answers.
@@ -956,7 +956,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.6.0** (Đang xét duyệt): PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.
+- **0.6.0** (Đang xét duyệt): PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
 - **0.4.2** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.
@@ -980,7 +980,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0.6.0 | — | — | — | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20) | `511345d` → `f527f18` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history` |
+| 0.6.0 | — | — | — | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20) | `511345d` → `f527f18` → `8a3c48d` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history` |
 | 0.5.2 | `v0.5.2` | `c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da` | [Release v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | `f25e3ae` → `c25ad9d` | `feat/ui-polish`, `release/0.5.2` |
 | 0.5.1 | — | — | — | [#15](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15), [#16](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16), [#17](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17) | `2d506e7` → `069df6c` | `feat/microsoft-store`, `chore/store-identity`, `chore/store-manual-submit` |
 | 0.5.0 | `v0.5.0` | `c6d01f4081eee86e244136074e6997dd64bebe3f` | [Release v0.5.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0) | [#8](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8), [#11](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11), [#12](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12), [#13](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13), [#14](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14) | `cbb176a` → `c6d01f4` | `feat/simlab-ai-teacher-board`, `feat/v0.5.0-gpu-thay-ai`, `fix/knowledge-review-status`, `perf/ort-asyncify-only`, `chore/message-parse-module` |

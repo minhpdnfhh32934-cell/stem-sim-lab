@@ -4,7 +4,7 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.6.0 (Đang xét duyệt)
 
-_PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub._
+_PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5._
 
 _Ghi chú này là bản nháp, chưa được duyệt để công bố._
 

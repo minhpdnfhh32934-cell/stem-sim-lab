@@ -81,7 +81,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <ul>
 <li>Trạng thái: Đang xét duyệt.</li>
 <li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
-<li>Ghi chú trạng thái: PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.</li>
+<li>Ghi chú trạng thái: PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.</li>
 <li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
 </ul>
 <table>
@@ -89,7 +89,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <tbody>
 <tr><td>Bắt đầu phát triển</td><td>13/10/2026 22:42</td><td><code>2026-10-13T22:42:01+07:00</code></td></tr>
 <tr><td>Commit đầu tiên</td><td>13/10/2026 22:42</td><td><code>2026-10-13T22:42:01+07:00</code></td></tr>
-<tr><td>Commit cuối cùng</td><td>14/10/2026 02:04</td><td><code>2026-10-14T02:04:44+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>14/10/2026 14:54</td><td><code>2026-10-14T14:54:05+07:00</code></td></tr>
 <tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
 <tr><td>Dựng bộ cài (GitHub Actions)</td><td>Chưa xác minh được</td><td>—</td></tr>
 <tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
@@ -161,9 +161,9 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <ul>
 <li>firstCommit: 511345d 2026-10-13T22:42:01+07:00 'fix(security): release integrity…' (G1), commit đầu sau tag v0.5.2 (c25ad9d)</li>
 <li>Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0</li>
-<li>lastCommit: đầu PR #20 trên GitHub là f527f18 2026-10-14T02:04:44+07:00 (git ls-remote origin)</li>
+<li>lastCommit: đầu PR #20 trên GitHub là 8a3c48d 2026-10-14T14:54:05+07:00 (git ls-remote origin, sau lần đẩy f527f18..8a3c48d); các commit sau đó chỉ cập nhật ghi chú này</li>
 <li>PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp</li>
-<li>Commit sau đầu PR f527f18 (gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) nằm trên nhánh local feat/audit-g0-g5 cho tới khi được đẩy lên GitHub; danh sách đầy đủ: git log f527f18..feat/audit-g0-g5</li>
+<li>Các commit f527f18..8a3c48d (98 commit, gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) đã được đẩy lên PR #20 ngày 14/10/2026</li>
 <li>built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0</li>
 <li>Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới</li>
 <li>Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -&gt; 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -&gt; 7 %; corrupted terms 19 % -&gt; 4.8 %; first piece p50 1.90 s -&gt; 0.91 s; answer length 810 -&gt; 1047 characters. The blind AI judge still flagged language problems in 31 % of v2 answers; check question in 18.8 % of concept/misconception answers.</li>
@@ -969,7 +969,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 </ul>
 <h3>Phiên bản chưa phát hành hoặc chưa xác minh</h3>
 <ul>
-<li><strong>0.6.0</strong> (Đang xét duyệt): PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.</li>
 <li><strong>0.5.1</strong> (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.</li>
 <li><strong>0.4.3</strong> (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.</li>
 <li><strong>0.4.2</strong> (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.</li>
@@ -992,7 +992,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <table>
 <thead><tr><th>Phiên bản</th><th>Tag</th><th>Commit của tag</th><th>GitHub Release</th><th>PR</th><th>Commit (đầu → cuối)</th><th>Nhánh</th></tr></thead>
 <tbody>
-<tr><td>0.6.0</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20">#20</a></td><td><code>511345d</code> → <code>f527f18</code></td><td><code>feat/audit-g0-g5</code>, <code>feat/mitosis-3d</code>, <code>feat/teacher-quality</code>, <code>feat/voice-natural</code>, <code>feat/release-history</code></td></tr>
+<tr><td>0.6.0</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20">#20</a></td><td><code>511345d</code> → <code>f527f18</code> → <code>8a3c48d</code></td><td><code>feat/audit-g0-g5</code>, <code>feat/mitosis-3d</code>, <code>feat/teacher-quality</code>, <code>feat/voice-natural</code>, <code>feat/release-history</code></td></tr>
 <tr><td>0.5.2</td><td><code>v0.5.2</code></td><td><code>c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2">Release v0.5.2</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18">#18</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19">#19</a></td><td><code>f25e3ae</code> → <code>c25ad9d</code></td><td><code>feat/ui-polish</code>, <code>release/0.5.2</code></td></tr>
 <tr><td>0.5.1</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15">#15</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16">#16</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17">#17</a></td><td><code>2d506e7</code> → <code>069df6c</code></td><td><code>feat/microsoft-store</code>, <code>chore/store-identity</code>, <code>chore/store-manual-submit</code></td></tr>
 <tr><td>0.5.0</td><td><code>v0.5.0</code></td><td><code>c6d01f4081eee86e244136074e6997dd64bebe3f</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0">Release v0.5.0</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11">#11</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12">#12</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13">#13</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14">#14</a></td><td><code>cbb176a</code> → <code>c6d01f4</code></td><td><code>feat/simlab-ai-teacher-board</code>, <code>feat/v0.5.0-gpu-thay-ai</code>, <code>fix/knowledge-review-status</code>, <code>perf/ort-asyncify-only</code>, <code>chore/message-parse-module</code></td></tr>

@@ -149,12 +149,12 @@
     {
       "version": "0.6.0",
       "status": "in-review",
-      "statusNote": "PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.",
+      "statusNote": "PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-13T22:42:01+07:00",
         "firstCommit": "2026-10-13T22:42:01+07:00",
-        "lastCommit": "2026-10-14T02:04:44+07:00",
+        "lastCommit": "2026-10-14T14:54:05+07:00",
         "merged": null,
         "built": null,
         "released": null,
@@ -163,9 +163,9 @@
       "evidence": [
         "firstCommit: 511345d 2026-10-13T22:42:01+07:00 'fix(security): release integrity…' (G1), commit đầu sau tag v0.5.2 (c25ad9d)",
         "Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0",
-        "lastCommit: đầu PR #20 trên GitHub là f527f18 2026-10-14T02:04:44+07:00 (git ls-remote origin)",
+        "lastCommit: đầu PR #20 trên GitHub là 8a3c48d 2026-10-14T14:54:05+07:00 (git ls-remote origin, sau lần đẩy f527f18..8a3c48d); các commit sau đó chỉ cập nhật ghi chú này",
         "PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp",
-        "Commit sau đầu PR f527f18 (gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) nằm trên nhánh local feat/audit-g0-g5 cho tới khi được đẩy lên GitHub; danh sách đầy đủ: git log f527f18..feat/audit-g0-g5",
+        "Các commit f527f18..8a3c48d (98 commit, gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) đã được đẩy lên PR #20 ngày 14/10/2026",
         "built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0",
         "Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới",
         "Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -> 7 %; corrupted terms 19 % -> 4.8 %; first piece p50 1.90 s -> 0.91 s; answer length 810 -> 1047 characters. The blind AI judge still flagged language problems in 31 % of v2 answers; check question in 18.8 % of concept/misconception answers.",
@@ -185,7 +185,7 @@
         "tagSha": null,
         "releaseUrl": null,
         "prs": [20],
-        "commits": ["511345d", "f527f18"],
+        "commits": ["511345d", "f527f18", "8a3c48d"],
         "branches": [
           "feat/audit-g0-g5",
           "feat/mitosis-3d",
