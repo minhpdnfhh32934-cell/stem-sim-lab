@@ -73,6 +73,13 @@ export function setLocalVoiceDevicePreference(preference: LocalVoiceDevicePrefer
 
 /** The voice's own GPU worker failed in this session: the CPU from then on. */
 let gpuFailedHere = false;
+/** The failure that moved the voice off the card (as the page received it), for Settings. */
+let gpuFaultMessage: string | null = null;
+
+/** Why the voice left the graphics card in this session, or null (Settings explains it). */
+export function localVoiceGpuFault(): string | null {
+  return gpuFaultMessage;
+}
 
 /**
  * Where the voice model runs. The graphics card only when WebGPU exists, nothing forces the CPU,
@@ -144,6 +151,7 @@ function noteFailure(message: string): boolean {
   if (!reason) return false;
   if (!gpuFailedHere) {
     gpuFailedHere = true;
+    gpuFaultMessage = message;
     // Both workers ask WebGPU for the default adapter of the same page: the same card.
     noteGpuFault(reason, useGpuStore.getState().gemmaInfo);
   }

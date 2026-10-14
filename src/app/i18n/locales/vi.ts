@@ -1283,6 +1283,10 @@ const vi = {
       notAllowed:
         'Cần xác nhận đủ 18 tuổi để dùng giọng Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       other: 'Giọng đã chọn chưa đọc được: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      lessonRest:
+        'Giọng trên máy chưa đọc được: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
+      gpuToCpu:
+        'Card đồ họa gặp lỗi khi đọc: giọng trên máy đã chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy), phần chưa đọc được đã do giọng Windows đọc thay.',
     },
   },
   levels: {

@@ -217,9 +217,12 @@ describe('on-device voice: where it runs', () => {
   it('moves to the CPU after its own GPU worker crashed', async () => {
     gpu.useGpuStore.setState({ status: RTX_ONLY });
     await voice.synthesizeLocal('một', new AbortController().signal);
+    expect(voice.localVoiceGpuFault()).toBeNull();
     FakeWorker.all[0]?.crash();
     await voice.synthesizeLocal('hai', new AbortController().signal);
     expect(loads()).toEqual(['webgpu', 'wasm']);
+    // Settings tells the learner why the voice now runs on the CPU.
+    expect(voice.localVoiceGpuFault()).toBe('worker-crashed');
   });
 
   it('a GPU fault elsewhere (Gemma) reloads the voice on the CPU', async () => {

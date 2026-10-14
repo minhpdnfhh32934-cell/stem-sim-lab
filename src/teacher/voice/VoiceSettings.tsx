@@ -28,6 +28,7 @@ import {
   LOCAL_VOICE,
   deleteLocalVoice,
   downloadLocalVoice,
+  localVoiceGpuFault,
   localVoiceStatus,
   type LocalVoiceStatus,
 } from './localVoice';
@@ -124,7 +125,7 @@ export function VoiceSettings() {
         {voice.lastError && (
           <p className="chat-settings__error" role="alert">
             <CircleAlert size={14} />
-            {t(voiceErrorKey(voice.lastError))}
+            {t(voiceErrorKey(voice.lastError, localVoiceGpuFault()))}
           </p>
         )}
       </fieldset>

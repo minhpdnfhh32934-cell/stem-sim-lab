@@ -251,7 +251,21 @@ describe('why the chosen voice was not heard (Settings)', () => {
     ['notAllowed: ageGate', 'voice.errors.notAllowed'],
     ['system-voice-synthesis-failed', 'voice.errors.systemVoice'],
     ['gemini-tts-silent', 'voice.errors.other'],
+    // On-device failures that skip the voice for the rest of the lesson say so.
+    ['voice-model-silent', 'voice.errors.lessonRest'],
+    ['voice-model-load-failed: Error: no session', 'voice.errors.lessonRest'],
+    ['voice-model-load-timeout', 'voice.errors.lessonRest'],
+    ['worker-crashed', 'voice.errors.lessonRest'],
   ])('%s → %s', (error, key) => {
     expect(voiceErrorKey(error)).toBe(key);
+  });
+
+  it('the failure that moved the on-device voice off the graphics card says it now runs on the CPU', () => {
+    expect(voiceErrorKey('worker-crashed', 'worker-crashed')).toBe('voice.errors.gpuToCpu');
+    expect(voiceErrorKey('voice-model-timeout', 'voice-model-timeout')).toBe(
+      'voice.errors.gpuToCpu',
+    );
+    // A later failure on the CPU is told as itself.
+    expect(voiceErrorKey('voice-model-silent', 'worker-crashed')).toBe('voice.errors.lessonRest');
   });
 });
