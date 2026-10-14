@@ -26,6 +26,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   buildConflicts,
+  evalSetPath,
   fileRuns,
   groupKey,
   numberRepeats,
@@ -40,7 +41,9 @@ const valueOf = (name) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const files = args.filter((a, i) => !a.startsWith('--') && !['--a', '--b'].includes(args[i - 1]));
+const files = args.filter(
+  (a, i) => !a.startsWith('--') && !['--a', '--b', '--set'].includes(args[i - 1]),
+);
 if (!files.length) {
   console.error(
     'usage: node scripts/teaching/compare.mjs <eval-….json> [more files…] [--a <group>] [--b <group>]',
@@ -48,7 +51,7 @@ if (!files.length) {
   process.exit(1);
 }
 
-const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
+const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 
 const read = [];

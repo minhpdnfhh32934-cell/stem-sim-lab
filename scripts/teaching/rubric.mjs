@@ -822,3 +822,14 @@ export function gpuRefusal(adapters) {
   if (!bad.length) return null;
   return `not a discrete NVIDIA adapter: ${bad.map(([k, v]) => `${k} = "${v ?? 'none'}"`).join(', ')}`;
 }
+
+/**
+ * The evaluation set a script reads: `--set <file>` (for example the held-out set
+ * tests/teaching/teaching-heldout.json), else tests/teaching/teaching-eval.json.
+ */
+export function evalSetPath(root, argv) {
+  const i = argv.indexOf('--set');
+  const file = i >= 0 ? argv[i + 1] : undefined;
+  if (i >= 0 && !file) throw new Error('--set needs a file');
+  return file ? file : `${root}/tests/teaching/teaching-eval.json`;
+}

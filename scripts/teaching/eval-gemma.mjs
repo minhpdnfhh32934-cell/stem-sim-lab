@@ -50,6 +50,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  evalSetPath,
   gpuRefusal,
   groupKey,
   scoreAnswer,
@@ -90,6 +91,13 @@ const out = arg('out', resolve(root, '.agent-logs/teaching-eval'));
 const base = arg('base', 'http://localhost:1420');
 const only = arg('only');
 const variants = list('variants', 'legacy,current', ['legacy', 'current', 'improved']);
+// --improved-name <name>: how results of the 'improved' variant are labelled (e.g. improved-v2),
+// so two improved builds never share a group in compare.mjs. Must start with "improved".
+const improvedName = arg('improved-name', 'improved');
+if (!/^improved[\w.-]{0,20}$/.test(improvedName))
+  throw new Error('--improved-name must start with "improved" (letters, digits, - _ . only)');
+/** The label a result is stored under (the prompt used is still the variant's). */
+const storedVariant = (variant) => (variant === 'improved' ? improvedName : variant);
 const decodings = list('decoding', 'app', ['legacy', 'app']);
 const temperature = Number(arg('temperature', '0'));
 const repeats = Number(arg('repeats', '1'));
@@ -118,6 +126,8 @@ const settings = {
   temperature,
   repeats,
   label: label ?? null,
+  improvedName,
+  set: arg('set') ?? 'tests/teaching/teaching-eval.json',
   skip: skipFiles,
   retries,
 };
@@ -152,7 +162,7 @@ function git(...args) {
   }
 }
 
-const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
+const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = only ? set.items.filter((i) => only.split(',').includes(i.id)) : set.items;
 
 const context = await chromium.launchPersistentContext(profile, {
@@ -270,7 +280,11 @@ for (const item of items) {
       // Alternate which variant goes first, so neither always runs right after a model switch.
       const order = (index + repeat) % 2 ? [...variants].reverse() : variants;
       for (const variant of order) {
-        if (done.has(runKey({ id: item.id, variant, decoding, temperature, repeat }))) {
+        if (
+          done.has(
+            runKey({ id: item.id, variant: storedVariant(variant), decoding, temperature, repeat }),
+          )
+        ) {
           console.log(`${item.id} ${variant}/${decoding} #${repeat}: already done (skipped)`);
           continue;
         }
@@ -369,7 +383,7 @@ for (const item of items) {
             type: item.type,
             model,
             build,
-            variant,
+            variant: storedVariant(variant),
             decoding,
             temperature,
             repeat,
