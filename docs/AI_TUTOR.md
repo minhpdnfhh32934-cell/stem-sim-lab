@@ -304,8 +304,12 @@ invented "60 km/h"). The chip's hint says that a ✓ calculation can still use a
 abort). Gemma: a request still queued never starts; a running one gets a `stop` message and the
 worker ends `generate` with `InterruptableStoppingCriteria` after the current token. An optional
 Wikipedia lookup gets the same signal (`fetchWebKnowledge`), so nothing more is sent after "Dừng".
-The chat is released at once (`AnswerStopped`), keeps the question, adds no answer and says "Đã dừng câu trả
-lời…".
+The chat is released at once (`AnswerStopped`), keeps the question, adds no answer and says "Đã
+dừng câu trả lời…". A cloud request stopped while its key is looked up is never sent; on desktop a
+stop that reaches Rust before `ai_chat` registers the request (`ai_cancel` → false) is sent again
+every 50 ms while the call runs (up to 2 s). Known limit (Rust, not changed): `ai_chat` counts the
+call against the daily cap before it registers it, so a call stopped in that window is still
+counted. A second question cannot start while another panel is answering.
 
 For `scripts/teaching/eval-gemma.mjs`: `contextPrompt` still returns the whole instruction in
 `system` (note last), so items without history are sent as the app sends them; for follow-up items

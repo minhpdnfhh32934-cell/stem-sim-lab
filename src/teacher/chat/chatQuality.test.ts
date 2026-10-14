@@ -439,4 +439,34 @@ describe('"Dừng"', () => {
     );
     expect(gemma.calls).toHaveLength(0);
   });
+
+  it('"Dừng" while the cloud key is looked up sends no request', async () => {
+    engine.current = 'cloud';
+    useAiStore.setState({ provider: 'gemini' });
+    const sent: ChatRequest[] = [];
+    const key: { found: ((value: boolean) => void) | null } = { found: null };
+    const transport: LlmTransport = {
+      chat: (req) => {
+        sent.push(req);
+        return Promise.resolve({ content: 'Trả lời', model: 'gemini-model', durationMs: 1 });
+      },
+      models: () => Promise.resolve([]),
+      setKey: () => Promise.resolve(),
+      hasKey: () =>
+        new Promise((resolve) => {
+          key.found = resolve;
+        }),
+      deleteKey: () => Promise.resolve(),
+    };
+    setTransportForTests(transport);
+    const controller = new AbortController();
+    const answer = ask('Lực ma sát là gì?', [], controller.signal);
+    await vi.waitFor(() => {
+      expect(key.found).not.toBeNull();
+    });
+    controller.abort();
+    key.found?.(true);
+    await expect(answer).rejects.toBeInstanceOf(AnswerStopped);
+    expect(sent).toHaveLength(0);
+  });
 });

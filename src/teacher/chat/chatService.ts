@@ -392,6 +392,8 @@ async function cloudChat(
   const transport = getTransport();
   if (!(await transport.hasKey(provider)))
     throw new Error(translate(locale, 'chat.errors.noCloudKey'));
+  // Stopped while the key was looked up: send nothing (it would count and be paid for).
+  stopIfAsked(signal);
   // "Dừng" cancels the request itself (desktop: ai_cancel, browser: fetch abort).
   const answer = await untilStopped(
     transport.chat(

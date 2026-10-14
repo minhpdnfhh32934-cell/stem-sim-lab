@@ -49,10 +49,30 @@ export interface TtsAudio {
   mimeType: string;
 }
 
+/**
+ * Asks Rust to cancel `requestId` ("Dừng"). Rust registers a request only after its safety, key
+ * and daily-cap checks, so a stop sent in that window finds nothing (`ai_cancel` → false): it is
+ * sent again every 50 ms while the call still runs, for up to 2 s. Known limit (Rust side,
+ * src-tauri/src/ai/mod.rs `ai_chat`): such a call is already counted against the daily cap.
+ */
+async function cancelInRust(requestId: string, running: () => boolean): Promise<void> {
+  for (let attempt = 0; attempt < 40 && running(); attempt++) {
+    try {
+      if (await invoke<boolean>('ai_cancel', { requestId })) return;
+    } catch {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
+
 class TauriTransport implements LlmTransport {
   async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
+    // Stopped before it was sent (e.g. while the key was looked up): send nothing.
+    if (signal?.aborted) throw new AiError('cancelled', req.requestId);
+    let running = true;
     const onAbort = () => {
-      void invoke('ai_cancel', { requestId: req.requestId });
+      void cancelInRust(req.requestId, () => running);
     };
     signal?.addEventListener('abort', onAbort, { once: true });
     // The Rust gateway counts the call against the user's daily cap and switches to the
@@ -70,6 +90,7 @@ class TauriTransport implements LlmTransport {
     } catch (e) {
       throw toAiError(e);
     } finally {
+      running = false;
       signal?.removeEventListener('abort', onAbort);
     }
   }
@@ -105,8 +126,10 @@ class TauriTransport implements LlmTransport {
     return invoke<string | null>('ai_key_hint', { provider });
   }
   async tts(req: TtsRequest, signal?: AbortSignal): Promise<TtsAudio> {
+    if (signal?.aborted) throw new AiError('cancelled', req.requestId);
+    let running = true;
     const onAbort = () => {
-      void invoke('ai_cancel', { requestId: req.requestId });
+      void cancelInRust(req.requestId, () => running);
     };
     signal?.addEventListener('abort', onAbort, { once: true });
     try {
@@ -116,6 +139,7 @@ class TauriTransport implements LlmTransport {
     } catch (e) {
       throw toAiError(e);
     } finally {
+      running = false;
       signal?.removeEventListener('abort', onAbort);
     }
   }
