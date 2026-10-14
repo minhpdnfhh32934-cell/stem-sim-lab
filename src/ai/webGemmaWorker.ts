@@ -11,6 +11,7 @@ import {
   AutoProcessor,
   AutoTokenizer,
   Gemma4ForConditionalGeneration,
+  InterruptableStoppingCriteria,
   LogitsProcessor,
   LogitsProcessorList,
   RawImage,
@@ -70,6 +71,8 @@ type InMessage =
       /** Repetition rules; default 'app' (see `Decoding`). */
       decoding?: Decoding;
     }
+  /** "Dừng": ends generation `id` after the current token (its partial reply is still sent). */
+  | { kind: 'stop'; id: number }
   | { kind: 'unload' };
 
 /**
@@ -260,6 +263,8 @@ type Engine = TextEngine | VisionEngine;
 
 let engine: Engine | null = null;
 let loadedModel = '';
+/** Running generations by request id, so "stop" can interrupt them. */
+const running = new Map<number, InterruptableStoppingCriteria>();
 /** True while a model is released on purpose: losing its device then is expected. */
 let disposing = false;
 
@@ -379,11 +384,13 @@ async function chatText(
   inputBudget: number | undefined,
   decoding: Decoding,
   onText: (text: string) => void,
+  stop: InterruptableStoppingCriteria,
 ): Promise<Reply> {
   const inputs = promptWithin(eng, system, messages, inputBudget);
   const start = lastDim(inputs.input_ids);
   const output = (await eng.model.generate({
     ...inputs,
+    stopping_criteria: stop,
     streamer: streamerFor(eng.tokenizer, onText),
     max_new_tokens: maxTokens,
     do_sample: temperature > 0,
@@ -412,6 +419,7 @@ async function chatVision(
   maxTokens: number,
   decoding: Decoding,
   onText: (text: string) => void,
+  stop: InterruptableStoppingCriteria,
 ): Promise<Reply> {
   const turns = [
     { role: 'system', content: system },
@@ -442,6 +450,7 @@ async function chatVision(
   const promptTokens = inputs.input_ids ? lastDim(inputs.input_ids) : 0;
   const output = (await eng.model.generate({
     ...inputs,
+    stopping_criteria: stop,
     streamer: streamerFor(
       eng.processor.tokenizer as ConstructorParameters<typeof TextStreamer>[0],
       onText,
@@ -548,39 +557,51 @@ self.onmessage = async (event: MessageEvent<InMessage>) => {
         watchDevice(loaded, post);
       }
       post({ kind: 'loaded', modelId: msg.modelId, gpu: await gpuInfo() });
+    } else if (msg.kind === 'stop') {
+      // Handled while `generate` awaits the GPU: the criteria end it after the current token.
+      running.get(msg.id)?.interrupt();
     } else if (msg.kind === 'chat') {
-      if (!engine || !loadedModel) throw new Error('no model loaded');
-      const history = msg.messages.map((m) => ({ role: m.role, content: m.content }));
-      const onText = (text: string) => {
-        post({ kind: 'partial', id: msg.id, text });
-      };
-      const decoding = msg.decoding ?? 'app';
-      let reply: Reply;
-      if (engine.modality === 'vision') {
-        reply = await chatVision(
-          engine,
-          msg.system,
-          history,
-          msg.images,
-          msg.temperature,
-          msg.maxTokens,
-          decoding,
-          onText,
-        );
-      } else {
-        if (msg.images.length > 0) throw new Error('needs-vision-model');
-        reply = await chatText(
-          engine,
-          msg.system,
-          history,
-          msg.temperature,
-          msg.maxTokens,
-          msg.inputBudget,
-          decoding,
-          onText,
-        );
+      // Registered before any await, so a "stop" sent right after "chat" always finds it.
+      const stop = new InterruptableStoppingCriteria();
+      running.set(msg.id, stop);
+      try {
+        if (!engine || !loadedModel) throw new Error('no model loaded');
+        const history = msg.messages.map((m) => ({ role: m.role, content: m.content }));
+        const onText = (text: string) => {
+          post({ kind: 'partial', id: msg.id, text });
+        };
+        const decoding = msg.decoding ?? 'app';
+        let reply: Reply;
+        if (engine.modality === 'vision') {
+          reply = await chatVision(
+            engine,
+            msg.system,
+            history,
+            msg.images,
+            msg.temperature,
+            msg.maxTokens,
+            decoding,
+            onText,
+            stop,
+          );
+        } else {
+          if (msg.images.length > 0) throw new Error('needs-vision-model');
+          reply = await chatText(
+            engine,
+            msg.system,
+            history,
+            msg.temperature,
+            msg.maxTokens,
+            msg.inputBudget,
+            decoding,
+            onText,
+            stop,
+          );
+        }
+        post({ kind: 'reply', id: msg.id, text: reply.text, truncated: reply.truncated });
+      } finally {
+        running.delete(msg.id);
       }
-      post({ kind: 'reply', id: msg.id, text: reply.text, truncated: reply.truncated });
     } else {
       await disposeEngine();
     }

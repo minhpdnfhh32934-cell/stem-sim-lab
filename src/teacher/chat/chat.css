@@ -983,3 +983,63 @@ p.gpu-notice {
   margin: 0;
   padding-left: 18px;
 }
+
+/* "Dừng" while an answer is being written: the main action then (same size as "Gửi"). */
+.btn.chat-panel__stop {
+  flex: none;
+  min-height: var(--target);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.chat-panel__stopped {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  align-self: center;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Written by the app, not the AI (missingData.ts): above the answer, set apart from it. */
+.chat-message__app-notice {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+  font-size: var(--text-sm);
+}
+.chat-message__app-notice strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+}
+
+/*
+ * Numbers nobody gave the AI (provenance.ts): unverified, so they get the "approx" colour. Written
+ * by the app, so it carries the app's title line like the missing-data notice.
+ */
+.chat-message__unverified {
+  display: grid;
+  gap: 3px;
+  margin: 8px 0 0;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--conf-approx) 50%, var(--border));
+  border-radius: var(--radius-md);
+  background: var(--conf-approx-soft);
+  color: var(--text);
+  font-size: var(--text-xs);
+}
+.chat-message__unverified strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chat-message__unverified svg {
+  flex: none;
+  color: var(--conf-approx);
+}

@@ -908,6 +908,17 @@ const en: Messages = {
       balanced: 'Balanced equation: {equation}',
       unbalanced: 'SimLab could not balance “{input}”: check the formulas in the problem.',
     },
+    stop: 'Stop',
+    stopLabel: 'Stop the answer being written',
+    stopped: 'The answer was stopped. You can ask again or ask something else.',
+    missingDataTitle: 'SimLab note (not the AI)',
+    missingData:
+      'This problem may be missing data: SimLab found no numbers in the question. If the problem gives values, add them (with units) and send it again.',
+    unverifiedTitle: 'SimLab check (not the AI)',
+    unverifiedNumbers: 'Numbers the AI brought in itself (not checked): {numbers}',
+    unverifiedMore: '… and {count} more',
+    unverifiedHint:
+      'SimLab did not find these numbers in your question, the conversation, the reference notes or SimLab’s results. A calculation the board marks as right may still use a wrong formula. Check them yourself.',
     errors: {
       cloudOff: 'Online AI is off. Enable an AI provider in Settings or choose local Gemma.',
       notAllowed:

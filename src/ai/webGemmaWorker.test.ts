@@ -91,6 +91,12 @@ vi.mock('@huggingface/transformers', () => ({
   AutoModelForCausalLM: { from_pretrained: () => Promise.resolve(fake.model()) },
   Gemma4ForConditionalGeneration: { from_pretrained: () => Promise.resolve(fake.model()) },
   RawImage: {},
+  // The stop button's criteria (src/ai/webGemmaStop.test.ts tests them); never interrupted here.
+  InterruptableStoppingCriteria: class {
+    interrupt() {
+      /* not used by the decoding tests */
+    }
+  },
   // The real classes are callable objects; the tests call `_call` directly.
   LogitsProcessor: class {
     _call(): never {

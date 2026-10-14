@@ -494,8 +494,18 @@ export function webGemmaChat(args: {
   decoding?: 'app' | 'legacy';
   /** Called with the answer so far while it is being generated (echoed question removed). */
   onPartial?: (textSoFar: string) => void;
+  /**
+   * Stops the answer ("Dừng" in the chat): a request still waiting never starts, a running one is
+   * interrupted in the worker (InterruptableStoppingCriteria) and its partial text is dropped.
+   * The call rejects with "cancelled" at once; the queue moves on when the worker has stopped.
+   */
+  signal?: AbortSignal;
+  /** The question a small model may repeat first (default: the last user message). */
+  echo?: string;
 }): Promise<WebGemmaReply> {
+  const signal = args.signal;
   const task = async (): Promise<WebGemmaReply> => {
+    if (signal?.aborted) throw new Error('cancelled');
     const meta = webGemmaModel(args.model);
     if (!meta) throw new Error(`unknown model ${args.model}`);
     // Photos need the vision model: switch automatically when it is ready.
@@ -508,15 +518,35 @@ export function webGemmaChat(args: {
       }
     }
     if ((await webGemmaStatus(id)) !== 'ready') throw new Error('model-missing');
+    if (signal?.aborted) throw new Error('cancelled');
     clearIdleTimer();
     const wasLoaded = loadedId;
-    await loadIntoWorker(id, () => undefined);
+    try {
+      await loadIntoWorker(id, () => undefined);
+    } catch (e) {
+      // A model still in GPU memory must leave it after the idle time, whatever went wrong.
+      if (loadedId !== null) scheduleIdleUnload();
+      throw e;
+    }
     if (wasLoaded !== loadedId) memoryChanged();
+    if (signal?.aborted) {
+      // Stopped while the model was loading: it still leaves the GPU memory after the idle time.
+      scheduleIdleUnload();
+      throw new Error('cancelled');
+    }
     const w = ensureWorker();
     const chatId = nextId++;
     const waiting = waitFor(chatId);
     const lastUser = [...args.messages].reverse().find((m) => m.role !== 'assistant');
-    const echo = lastUser?.content.trim() ?? '';
+    const echo = (args.echo ?? lastUser?.content ?? '').trim();
+    const stop = () => {
+      try {
+        w.postMessage({ kind: 'stop', id: chatId });
+      } catch {
+        /* the worker is already gone */
+      }
+    };
+    signal?.addEventListener('abort', stop, { once: true });
     const onPartial = args.onPartial;
     // An answer that stops coming is ended with a clear error and a fresh worker (audit AI-01).
     const watch = watchStall({
@@ -548,16 +578,17 @@ export function webGemmaChat(args: {
     const out = await waiting.finally(() => {
       watch.stop();
       partials.delete(chatId);
+      signal?.removeEventListener('abort', stop);
     });
     scheduleIdleUnload();
-    if (out.kind === 'error') {
-      // The runtime lost its GPU buffers (driver reset): same treatment as a lost device.
-      if (isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
-        noteGpuFault('runtime-gpu-error', useGpuStore.getState().gemmaInfo);
-        resetWorker();
-      }
-      throw new Error(out.message);
+    // A GPU error is handled even after "Dừng": a driver reset while the answer was being stopped
+    // must still turn Gemma off and replace the worker (audit GPU-01).
+    if (out.kind === 'error' && isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
+      noteGpuFault('runtime-gpu-error', useGpuStore.getState().gemmaInfo);
+      resetWorker();
     }
+    if (signal?.aborted) throw new Error('cancelled');
+    if (out.kind === 'error') throw new Error(out.message);
     let text = out.kind === 'reply' ? out.text.trim() : '';
     if (!text) throw new Error('empty reply');
     // Small models often echo the question first: drop that prefix for readability.
@@ -567,5 +598,30 @@ export function webGemmaChat(args: {
   };
   const run = queue.then(task, task);
   queue = run.catch(() => undefined);
-  return run;
+  return abortable(run, signal);
+}
+
+/** Rejects with "cancelled" as soon as `signal` aborts (the work itself may still finish). */
+export function abortable<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
+  if (!signal) return work;
+  return new Promise<T>((resolve, reject) => {
+    const cancel = () => {
+      reject(new Error('cancelled'));
+    };
+    if (signal.aborted) {
+      cancel();
+      return;
+    }
+    signal.addEventListener('abort', cancel, { once: true });
+    work.then(
+      (value) => {
+        signal.removeEventListener('abort', cancel);
+        resolve(value);
+      },
+      (e: unknown) => {
+        signal.removeEventListener('abort', cancel);
+        reject(e instanceof Error ? e : new Error(String(e)));
+      },
+    );
+  });
 }

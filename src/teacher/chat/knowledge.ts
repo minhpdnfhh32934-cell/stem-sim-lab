@@ -569,28 +569,420 @@ export function builtinPendingCount(): number {
   return STARTER.filter((n) => n.reviewStatus === 'pending').length;
 }
 
-function score(document: KnowledgeDocument, query: string): number {
-  const tokens = query
-    .toLocaleLowerCase()
-    .normalize('NFC')
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter((t) => t.length > 2);
-  const body = `${document.name} ${document.text}`.toLocaleLowerCase().normalize('NFC');
-  return tokens.reduce(
-    (sum, token) => sum + (body.includes(token) ? Math.min(5, token.length) : 0),
-    0,
-  );
+/*
+ * Retrieval (2026-10-14). The old scorer dropped every token of two letters or fewer ("pH", "kì",
+ * "tế", "mã") and counted function syllables ("không", "một", "trong", "tính") as substring hits,
+ * so "Tính quãng đường ô tô đi được" brought up the reaction-rate note. Now:
+ * - text is split into syllables compared as whole words, tone mark apart ("hoá" = "hóa") and
+ *   "y" = "i" after a consonant ("kỳ" = "kì", "lý" = "lí"); a question typed without any accent is
+ *   compared with accents removed on both sides; a few older names and abbreviations are read as
+ *   the notes write them ("ancol" = "alcohol", "NST" = "nhiễm sắc thể");
+ * - function words and question frames ("điều kiện", "đại lượng") are left out; syllable pairs are
+ *   scored too ("ma sát", "động năng", "nhiễm sắc", "không khí"), and a syllable of a pair the notes
+ *   know counts only where that pair is ("thời gian" never finds "không gian");
+ * - every term weighs by how rare it is among the notes; words in a note's title or first words
+ *   (its topic) count double;
+ * - a note that scores too little or covers too little of the question is not injected: no
+ *   excerpt is better than a distractor.
+ * Tuned and checked on a held-out set (tests/teaching/retrieval-heldout.json), never on the
+ * evaluation questions (tests/teaching/teaching-eval.json).
+ */
+
+/** Vietnamese tone marks (grave, acute, tilde, hook, dot below); other marks stay on the letter. */
+const TONE_MARKS = /[\u0300\u0301\u0303\u0309\u0323]/gu;
+const ALL_MARKS = /\p{M}/gu;
+
+/** Lower case, no marks at all, "đ" → "d". */
+function fold(word: string): string {
+  return word.normalize('NFD').toLowerCase().replace(ALL_MARKS, '').replace(/đ/g, 'd');
+}
+
+/** "kỳ"/"kì", "lý"/"lí", "tỷ"/"tỉ": a final "y" after consonants only is the same as "i". */
+function iForY(base: string): string {
+  return /^[bcdđghklmnpqrstvx]+y$/u.test(base) ? `${base.slice(0, -1)}i` : base;
+}
+
+/**
+ * Older and newer names of the same thing (the notes follow the 2018 programme: "alcohol",
+ * "acid", "iodine"); keys and values are folded words.
+ */
+const SYNONYMS: Record<string, string> = {
+  ancol: 'alcohol',
+  axit: 'acid',
+  andehit: 'aldehyde',
+  xeton: 'ketone',
+  iot: 'iodine',
+  om: 'ohm',
+  benzen: 'benzene',
+  enzim: 'enzyme',
+  hoocmon: 'hormone',
+  riboxom: 'ribosome',
+  glucozo: 'glucose',
+  fructozo: 'fructose',
+  saccarozo: 'saccharose',
+  mantozo: 'maltose',
+  xenlulozo: 'cellulose',
+  hidro: 'hydrogen',
+  hydro: 'hydrogen',
+  nito: 'nitrogen',
+  sunfuric: 'sulfuric',
+  sunfat: 'sulfate',
+  cacbon: 'carbon',
+  nucleotit: 'nucleotide',
+};
+
+interface Syllable {
+  /** Marks kept, tone apart and sorted: "hoá" and "hóa" are both "hoa|" + acute. */
+  exact: string;
+  /** No marks: for questions typed without accents. */
+  folded: string;
+}
+
+function syllable(raw: string): Syllable {
+  const synonym = SYNONYMS[fold(raw)];
+  const word = (synonym ?? raw).normalize('NFD').toLowerCase();
+  const tones = (word.match(TONE_MARKS) ?? []).sort().join('');
+  const base = iForY(word.replace(TONE_MARKS, '').normalize('NFC'));
+  return { exact: `${base}|${tones}`, folded: iForY(fold(word)) };
+}
+
+/** Abbreviations the notes use, read as the words they stand for (folded keys). */
+const ABBREVIATIONS: Record<string, string> = {
+  nst: 'nhiễm sắc thể',
+  dna: 'ADN',
+  rna: 'ARN',
+  mrna: 'mARN',
+};
+
+/** Syllables of a text; numbers alone are left out (they are data, not a topic). */
+function syllables(text: string): Syllable[] {
+  return (text.normalize('NFD').match(/[\p{L}\p{M}\d]+/gu) ?? [])
+    .filter((w) => /\p{L}/u.test(w))
+    .flatMap((w) => (ABBREVIATIONS[fold(w)]?.split(' ') ?? [w]).map(syllable));
+}
+
+/** Function words: never scored alone (pairs may still contain them: "không khí", "có hại"). */
+const STOP_WORDS = `không một những các cái của là và có được cho trong tính khi thì mà với về để
+  này đó kia nào gì sao vì do nên nếu thế như hay hoặc bị đã đang sẽ rồi còn cũng chỉ rất lại ra
+  vào lên xuống từ tới đến theo trên dưới ở tại bằng hơn nhất nhiều ít mỗi mọi cả em anh chị thầy
+  cô bạn mình tôi ta chúng họ nó ạ ơi nhé nha à ừ vâng dạ hãy giúp xin cảm ơn hỏi trả lời giải
+  thích bài câu ví dụ cách làm biết cần phải nói xem thấy đi gồm bao nhiêu lâu xa mấy vậy đúng
+  sai chưa khác giống nhau ấy đây sau trước đầu cuối giữa người việc gọi thường luôn hai ba bốn
+  năm sáu bảy tám chín mười
+  the a an of to in on at for and or is are was were be been being what which who whom why how
+  when where does do did can could would should will with by from as that this these those it its
+  into than then there their about please explain tell me my i you your we our`
+  .split(/\s+/)
+  .filter(Boolean);
+
+/** Particles that also break a pair ("của các", "là gì", "em hỏi"). */
+const GLUE_WORDS = `là và của các những cho thì mà với về để này đó nào gì em ạ ơi nhé nha hãy giúp
+  mình bạn tôi ta thầy cô anh chị vậy ấy đây sao vì nếu khi đã đang sẽ rồi cũng rất
+  the a an of to is are and or what which how why does do please me my i you`
+  .split(/\s+/)
+  .filter(Boolean);
+
+/**
+ * Words that frame a question rather than name its topic ("phụ thuộc vào những đại lượng nào",
+ * "cần điều kiện gì", "công thức nào"): left out as a whole, while their syllables still count in
+ * other words ("động" in "động lượng", "ứng" in "phản ứng").
+ */
+const FRAME_WORDS =
+  `hiện tượng|phụ thuộc|xảy ra|đặc biệt|ra sao|thế nào|như thế|hoạt động|công thức|
+  đại lượng|điều kiện|đặc điểm|ý nghĩa|vai trò|định nghĩa|khái niệm|nguyên nhân|ứng dụng|
+  phương pháp|trường hợp|người ta|tác dụng|thay đổi`
+    .split('|')
+    .map((w) => w.trim())
+    .filter(Boolean);
+
+const STOP = {
+  exact: new Set(STOP_WORDS.map((w) => syllable(w).exact)),
+  folded: new Set(STOP_WORDS.map((w) => syllable(w).folded)),
+};
+const GLUE = {
+  exact: new Set(GLUE_WORDS.map((w) => syllable(w).exact)),
+  folded: new Set(GLUE_WORDS.map((w) => syllable(w).folded)),
+};
+const FRAME = {
+  exact: new Set(
+    FRAME_WORDS.map((w) =>
+      syllables(w)
+        .map((s) => s.exact)
+        .join(' '),
+    ),
+  ),
+  folded: new Set(
+    FRAME_WORDS.map((w) =>
+      syllables(w)
+        .map((s) => s.folded)
+        .join(' '),
+    ),
+  ),
+};
+
+type Mode = 'exact' | 'folded';
+
+interface Terms {
+  single: Set<string>;
+  pairs: Set<string>;
+}
+
+function termsOf(text: string, mode: Mode): Terms {
+  const words = syllables(text).map((s) => s[mode]);
+  // Syllables of a framing word ("điều kiện") take no part in singles or pairs.
+  const framing = new Set<number>();
+  for (let i = 0; i + 1 < words.length; i++) {
+    if (FRAME[mode].has(`${words[i]} ${words[i + 1]}`)) {
+      framing.add(i);
+      framing.add(i + 1);
+    }
+  }
+  const single = new Set<string>();
+  const pairs = new Set<string>();
+  for (let i = 0; i < words.length; i++) {
+    if (framing.has(i)) continue;
+    const w = words[i] as string;
+    // One letter ("v", "a") is a symbol, not a topic.
+    if (!STOP[mode].has(w) && w.replace(/\|.*$/, '').length > 1) single.add(w);
+    const next = words[i + 1];
+    if (next === undefined || framing.has(i + 1)) continue;
+    if (GLUE[mode].has(w) || GLUE[mode].has(next)) continue;
+    if (STOP[mode].has(w) && STOP[mode].has(next)) continue;
+    pairs.add(`${w} ${next}`);
+  }
+  return { single, pairs };
+}
+
+/** A question typed with no accent at all is compared with accents removed. */
+function modeOf(query: string): Mode {
+  return /[\u0300-\u036f]|đ/iu.test(query.normalize('NFD')) ? 'exact' : 'folded';
+}
+
+/** The text a note is found by: its body and name, never the "Nguồn"/"Trạng thái" lines. */
+function searchableText(document: KnowledgeDocument): string {
+  return `${document.name}\n${excerptBody(document.text)}`;
+}
+
+/** The note without its "Nguồn: …" and "Trạng thái: …" lines (also "Source:", "Status:"). */
+export function excerptBody(text: string): string {
+  return text
+    .split('\n')
+    .filter((line) => !/^\s*(Nguồn|Source|Trạng thái|Status)\s*:/iu.test(line))
+    .join('\n')
+    .trim();
+}
+
+/** Words at the start of a note (its topic: "Enzyme là…", "Quang hợp chuyển…") count double. */
+const LEAD_WORDS = 8;
+
+interface DocumentTerms extends Terms {
+  /** Terms of the title (after the last "·") and of the first LEAD_WORDS words. */
+  lead: Set<string>;
+}
+
+function leadText(document: KnowledgeDocument): string {
+  const title = document.name.split('·').pop() ?? document.name;
+  const words = excerptBody(document.text).match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
+  return `${title}\n${words.slice(0, LEAD_WORDS).join(' ')}`;
+}
+
+const termCache = new Map<string, DocumentTerms>();
+
+function documentTerms(document: KnowledgeDocument, mode: Mode, locale: Locale): DocumentTerms {
+  // A built-in note has the same id in both languages (and may have the same text length).
+  const key = `${locale}\u0000${mode}\u0000${document.id}\u0000${document.addedAt}\u0000${document.text.length}`;
+  let terms = termCache.get(key);
+  if (!terms) {
+    if (termCache.size > 400) termCache.clear();
+    const lead = termsOf(leadText(document), mode);
+    terms = {
+      ...termsOf(searchableText(document), mode),
+      lead: new Set([...lead.single, ...lead.pairs]),
+    };
+    termCache.set(key, terms);
+  }
+  return terms;
+}
+
+/** Rarer terms weigh more: ln((N + 1) / (df + 0.5)), N notes, df notes containing the term. */
+function weights(query: Terms, docs: readonly Terms[]): Map<string, number> {
+  const out = new Map<string, number>();
+  const n = docs.length;
+  for (const term of [...query.single, ...query.pairs]) {
+    const pair = term.includes(' ');
+    const df = docs.filter((d) => (pair ? d.pairs : d.single).has(term)).length;
+    if (df > 0) out.set(term, Math.log((n + 1) / (df + 0.5)));
+  }
+  return out;
+}
+
+/**
+ * A question syllable that is part of a compound the notes know ("gian" in "thời gian", "hợp" in
+ * "quang hợp") counts only where that compound appears: "thời gian" must not find "không gian",
+ * nor "quang hợp" find "trùng hợp". Syllables of unknown pairs count anywhere.
+ */
+function compounds(query: Terms, weight: ReadonlyMap<string, number>): Map<string, string[]> {
+  const out = new Map<string, string[]>();
+  for (const pair of query.pairs) {
+    if (!weight.has(pair)) continue;
+    for (const part of pair.split(' ')) {
+      if (query.single.has(part)) out.set(part, [...(out.get(part) ?? []), pair]);
+    }
+  }
+  return out;
+}
+
+/** Query singles that count in `doc` (see `compounds`). */
+function matchedSingles(query: Terms, doc: Terms, bound: ReadonlyMap<string, string[]>): string[] {
+  return [...query.single].filter((t) => {
+    if (!doc.single.has(t)) return false;
+    const pairs = bound.get(t);
+    return !pairs || pairs.some((p) => doc.pairs.has(p));
+  });
+}
+
+function overlap(
+  query: Terms,
+  doc: Terms & { lead?: Set<string> },
+  weight: ReadonlyMap<string, number>,
+  bound: ReadonlyMap<string, string[]>,
+): number {
+  let sum = 0;
+  const add = (t: string) => {
+    sum += (weight.get(t) ?? 0) * (doc.lead?.has(t) ? 2 : 1);
+  };
+  for (const t of matchedSingles(query, doc, bound)) add(t);
+  for (const t of query.pairs) if (doc.pairs.has(t)) add(t);
+  return sum;
+}
+
+/**
+ * A note is injected only when both hold (otherwise no note: better than a distractor):
+ * - its score reaches MIN_SCORE (one word found in two notes weighs about 3.3);
+ * - it covers MIN_COVERAGE of the question's words, by weight (a word no note has counts as the
+ *   rarest), so one shared word does not bring a note to an unrelated question ("Thuật toán sắp
+ *   xếp…" shares "xếp" with the electrochemistry note). A long exercise is mostly its situation
+ *   ("ô tô", "hãm phanh", "quả bóng"…), so from LONG_QUESTION_WORDS words on less is needed.
+ * Chosen on the held-out set (tests/teaching/retrieval-heldout.json); the result was the same
+ * for long thresholds of 10–14 words and 0.1–0.2 coverage.
+ */
+export const MIN_SCORE = 3;
+export const MIN_COVERAGE = 0.3;
+const LONG_QUESTION_WORDS = 12;
+const LONG_MIN_COVERAGE = 0.15;
+/** A cloud prompt may take more notes, but none far below the best one. */
+const RELATIVE_SCORE = 0.5;
+
+export interface ScoredDocument {
+  document: KnowledgeDocument;
+  score: number;
+  /** Share of the question's word weight the document contains (0–1). */
+  coverage: number;
+}
+
+/** All notes and imported files that pass MIN_SCORE and MIN_COVERAGE, best first. */
+export function rankKnowledge(query: string, locale: Locale): ScoredDocument[] {
+  const all = [...builtinKnowledge(locale), ...useChatStore.getState().documents];
+  const mode = modeOf(query);
+  const q = termsOf(query, mode);
+  if (q.single.size === 0 && q.pairs.size === 0) return [];
+  const terms = all.map((d) => documentTerms(d, mode, locale));
+  const weight = weights(q, terms);
+  // Coverage: every single word (one no note has weighs as the rarest) and every compound the
+  // notes know ("nhiệt lượng"); unknown pairs ("cần để") are just neighbouring words.
+  const unseen = Math.log((all.length + 1) / 0.5);
+  const known = [...q.pairs].filter((t) => weight.has(t));
+  const total =
+    [...q.single].reduce((sum, t) => sum + (weight.get(t) ?? unseen), 0) +
+    known.reduce((sum, t) => sum + (weight.get(t) ?? 0), 0);
+  const minCoverage = q.single.size >= LONG_QUESTION_WORDS ? LONG_MIN_COVERAGE : MIN_COVERAGE;
+  const bound = compounds(q, weight);
+  return all
+    .map((document, i) => {
+      const doc = terms[i] as DocumentTerms;
+      const covered = [...matchedSingles(q, doc, bound), ...known.filter((t) => doc.pairs.has(t))]
+        .map((t) => weight.get(t) ?? 0)
+        .reduce((sum, w) => sum + w, 0);
+      const score = overlap(q, doc, weight, bound);
+      return { document, score, coverage: total > 0 ? covered / total : 0 };
+    })
+    .filter((item) => item.score >= MIN_SCORE && item.coverage >= minCoverage)
+    .sort((a, b) => b.score - a.score);
 }
 
 /** Keyword retrieval keeps the prompt small and records which local files informed a reply. */
 export function searchKnowledge(query: string, locale: Locale, limit = 5): KnowledgeDocument[] {
-  const all = [...builtinKnowledge(locale), ...useChatStore.getState().documents];
-  return all
-    .map((document) => ({ document, score: score(document, query) }))
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score)
+  const ranked = rankKnowledge(query, locale);
+  const best = ranked[0]?.score ?? 0;
+  return ranked
+    .filter((item) => item.score >= best * RELATIVE_SCORE)
     .slice(0, limit)
     .map(({ document }) => ({ ...document, text: document.text.slice(0, 6000) }));
+}
+
+/**
+ * The runner-up within this share of the best score: the question does not tell the two notes
+ * apart ("Kì giữa là gì?" scores the periodic-table and the cell-cycle notes alike).
+ */
+export const TIE_MARGIN = 0.05;
+
+/**
+ * The one note for a small on-device prompt, whole (its best sentences are cut from all of it),
+ * or none when the two best notes score within TIE_MARGIN: that prompt tells the model to answer
+ * with the note, so a coin-flip distractor would become the answer. On the held-out set
+ * (tests/teaching/retrieval-heldout.json, 2026-10-14) this silences the two tied unrelated
+ * questions and drops one long exercise whose two best notes are 2 % apart.
+ */
+export function unambiguousNote(query: string, locale: Locale): KnowledgeDocument[] {
+  const [best, second] = rankKnowledge(query, locale);
+  if (!best) return [];
+  if (second && second.score >= best.score * (1 - TIE_MARGIN)) return [];
+  return [best.document];
+}
+
+/** Sentences of a note (a formula's "." inside "0.5" or "v.v." does not end one). */
+function sentencesOf(text: string): string[] {
+  return text
+    .split(/\n+|(?<=[.!?])\s+(?=[\p{Lu}\p{N}(“"])/u)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/**
+ * The sentences of `document` that best match the question, in their original order, within
+ * `maxChars` and without the "Nguồn"/"Trạng thái" lines (the small on-device prompt, where a long
+ * excerpt buries the question). The best sentence is always kept, cut at a word if needed; when
+ * no sentence shares a word with the question the result is '' (no note rather than the file's
+ * first sentence, e.g. a chapter title).
+ */
+export function bestSentences(document: KnowledgeDocument, query: string, maxChars = 400): string {
+  const sentences = sentencesOf(excerptBody(document.text));
+  if (sentences.length === 0) return '';
+  const mode = modeOf(query);
+  const q = termsOf(query, mode);
+  const terms = sentences.map((s) => termsOf(s, mode));
+  const weight = weights(q, terms);
+  const bound = compounds(q, weight);
+  const order = sentences
+    .map((_, i) => ({ i, score: overlap(q, terms[i] as Terms, weight, bound) }))
+    .sort((a, b) => b.score - a.score || a.i - b.i);
+  if ((order[0]?.score ?? 0) <= 0) return '';
+  const picked: number[] = [];
+  let used = 0;
+  for (const { i, score } of order) {
+    const length = (sentences[i] as string).length + (picked.length ? 1 : 0);
+    if (picked.length > 0 && (score <= 0 || used + length > maxChars)) continue;
+    picked.push(i);
+    used += length;
+  }
+  const text = picked
+    .sort((a, b) => a - b)
+    .map((i) => sentences[i] as string)
+    .join(' ');
+  if (text.length <= maxChars) return text;
+  const cut = text.slice(0, maxChars - 1);
+  const space = cut.lastIndexOf(' ');
+  return `${space > maxChars / 2 ? cut.slice(0, space) : cut}…`;
 }
 
 const WIKI_HOSTS: Record<Locale, string> = {
@@ -605,28 +997,33 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 /**
  * One short web excerpt (Vietnamese/English Wikipedia) when the device is online.
  * Always labelled as community content to check against the lesson — never mixed
- * silently with the checked library. Fails silently offline.
+ * silently with the checked library. Fails silently offline. `signal` ("Dừng") ends both requests
+ * at once and nothing more is sent.
  */
 export async function fetchWebKnowledge(
   query: string,
   locale: Locale,
+  signal?: AbortSignal,
 ): Promise<KnowledgeDocument[]> {
+  const limit = () =>
+    signal ? AbortSignal.any([signal, AbortSignal.timeout(8000)]) : AbortSignal.timeout(8000);
   try {
     if (typeof navigator !== 'undefined' && !navigator.onLine) return [];
+    if (signal?.aborted) return [];
     const host = WIKI_HOSTS[locale];
     const api = `https://${host}/w/api.php?format=json&origin=*`;
     const found = await fetch(
       `${api}&action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=2`,
-      { signal: AbortSignal.timeout(8000) },
+      { signal: limit() },
     );
     if (!found.ok) return [];
     const results = asRecord(asRecord(await found.json())?.query)?.search;
     if (!Array.isArray(results) || results.length === 0) return [];
     const title = asRecord(results[0])?.title;
-    if (typeof title !== 'string' || !title) return [];
+    if (typeof title !== 'string' || !title || signal?.aborted) return [];
     const page = await fetch(
       `${api}&action=query&prop=extracts&exsentences=3&explaintext&titles=${encodeURIComponent(title)}`,
-      { signal: AbortSignal.timeout(8000) },
+      { signal: limit() },
     );
     if (!page.ok) return [];
     const pages = asRecord(asRecord(await page.json())?.query)?.pages;

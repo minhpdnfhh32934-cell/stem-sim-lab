@@ -1,0 +1,4121 @@
+{
+ "judge": "j0",
+ "scores": [
+  {
+   "id": "C1",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents mole amounts (2 H2 + 2 O2 -> 1 H2O); never balances the equation."
+  },
+  {
+   "id": "C1",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Final 'balanced' equation left unbalanced; calls it hydrolysis; garbled words and Devanagari."
+  },
+  {
+   "id": "C1",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Calls unbalanced H2 + O2 -> H2O balanced; 2:1:2 mentioned only in passing."
+  },
+  {
+   "id": "C1",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Calls unbalanced H2 + O2 -> H2O balanced; 2:1:2 mentioned only in passing."
+  },
+  {
+   "id": "C1",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gives 2H2 + O2 -> 3H2O, which is unbalanced; garbled foreign words."
+  },
+  {
+   "id": "C1",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic redox and rate notes with errors; never balances the equation."
+  },
+  {
+   "id": "C1",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Only restates the unbalanced equation; no balancing done."
+  },
+  {
+   "id": "C2",
+   "code": "A",
+   "correctness": 1,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "States 4, 3, 2 but written equation omits 3 before O2; no method or check."
+  },
+  {
+   "id": "C2",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "States 4, 3, 2 but contradicts itself (O2 coefficient 4, then 2); shown equation unbalanced."
+  },
+  {
+   "id": "C2",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "States 4, 3, 2 but contradicts itself (O2 coefficient 4, then 2); shown equation unbalanced."
+  },
+  {
+   "id": "C2",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Never balances; invents mole values; wrongly says Fe2O3 dissolves well in water."
+  },
+  {
+   "id": "C2",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong product FeO2 and equation 4Fe + O2 -> 2FeO2; wrong oxide names."
+  },
+  {
+   "id": "C2",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Never balances; invented mole values; calls it a chain reaction."
+  },
+  {
+   "id": "C2",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gives 4Fe + 3O2 -> 5FeO2_3; invented coefficients and numbers; Arabic script."
+  },
+  {
+   "id": "C3",
+   "code": "A",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Core contrast present but invents term 'liên kết phân biểu'; omits electron transfer and examples."
+  },
+  {
+   "id": "C3",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Ambiguous sentence implies ionic bonds share electrons; ionic bond never explained."
+  },
+  {
+   "id": "C3",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Incoherent; describes neither ionic nor covalent bonding."
+  },
+  {
+   "id": "C3",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong mechanism ('liên kết nhóm', electron-sharing bridge); covalent bond missing; Greek letters."
+  },
+  {
+   "id": "C3",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Core contrast present but invents term 'liên kết phân biểu'; omits electron transfer and examples."
+  },
+  {
+   "id": "C3",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Only vague ionic description; covalent bond never explained; garbled word."
+  },
+  {
+   "id": "C3",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says ionic bonds share electrons; confuses ionic with hydrogen bonding."
+  },
+  {
+   "id": "C4",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Never states acidic; invents pH values and irrelevant ion calculations."
+  },
+  {
+   "id": "C4",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Acidic since pH < 7, but calls pH 3 weakly acidic; confused OH- reasoning."
+  },
+  {
+   "id": "C4",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says pH 3 is basic (kiềm); wrong; invented pH values for seawater."
+  },
+  {
+   "id": "C4",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says pH 3 is basic (kiềm); wrong; invented pH values for seawater."
+  },
+  {
+   "id": "C4",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Off-topic electrochemistry with invented potentials; never states acidic."
+  },
+  {
+   "id": "C4",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Discusses pH 2.5 and microbes; never answers for pH 3."
+  },
+  {
+   "id": "C4",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Reverses the pH scale; calls pH 3 high and basic."
+  },
+  {
+   "id": "C5",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "States M = 40 but divides by 23; 0.171 mol wrong (should be 0.1)."
+  },
+  {
+   "id": "C5",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong molar mass, irrelevant dilution steps, final about 6 mol; garbled scripts."
+  },
+  {
+   "id": "C5",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Solves a different problem with invented masses; answer 4.36 mol wrong."
+  },
+  {
+   "id": "C5",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Uses M = 23 instead of 40; 0.176 mol wrong; invented dilution steps."
+  },
+  {
+   "id": "C5",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "M computed as 38, n = 0.175; final 0.1 mol is an unsupported assumption."
+  },
+  {
+   "id": "C5",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "States M = 40 but divides by 23; 0.171 mol wrong (should be 0.1)."
+  },
+  {
+   "id": "C5",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent; invented masses; concludes '6 triệu mol'."
+  },
+  {
+   "id": "C6",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Misuses dilution formula; invents example data and gives a number; never asks."
+  },
+  {
+   "id": "C6",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": true
+   },
+   "note": "Recognises missing information but asks for wrong, garbled quantities; no moles or volume."
+  },
+  {
+   "id": "C6",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": false
+   },
+   "note": "Asks solute mass and solvent (not solution) volume; wrong molarity definition; offers to assume values."
+  },
+  {
+   "id": "C6",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong formula; invented example (Cl2 as a salt) ending in 0%; never asks."
+  },
+  {
+   "id": "C6",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": true
+   },
+   "note": "Garbled formulas; asks volume plus irrelevant pH; never asks solute amount."
+  },
+  {
+   "id": "C6",
+   "code": "F",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": false
+   },
+   "note": "Asks solute mass and solvent (not solution) volume; wrong molarity definition; offers to assume values."
+  },
+  {
+   "id": "C6",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Assumes 0.1 M and outputs 0.04 M; never asks for missing data."
+  },
+  {
+   "id": "C7",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confuses catalysis with enthalpy; contradictory claims on product amount; heavily garbled."
+  },
+  {
+   "id": "C7",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says a catalyst increases product amount; wrong; confused enthalpy reasoning."
+  },
+  {
+   "id": "C7",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Discusses enthalpy only; never answers about product amount; garbled words."
+  },
+  {
+   "id": "C7",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invented enthalpies; self-contradictory conclusion; garbled scripts."
+  },
+  {
+   "id": "C7",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says a catalyst increases product amount; wrong; confused enthalpy reasoning."
+  },
+  {
+   "id": "C7",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Off-topic enthalpy recipe; never answers whether product amount increases."
+  },
+  {
+   "id": "C7",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says catalyst increases product, lowers ΔH, leaves rate unchanged; all wrong."
+  },
+  {
+   "id": "C8",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic sulfuric acid list; gives no reason why NaCl dissolves."
+  },
+  {
+   "id": "C8",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Calls dissolving a chemical reaction; omits polar water and hydration."
+  },
+  {
+   "id": "C8",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent invented numbers; claims Cl- neutralises acid."
+  },
+  {
+   "id": "C8",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Misuses Raoult's law; says ions form water; omits water polarity and hydration."
+  },
+  {
+   "id": "C8",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents an SO2/sulfate mechanism; no water polarity or hydration."
+  },
+  {
+   "id": "C8",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent 'electrolytic reaction'; no polarity or hydration; garbled foreign words."
+  },
+  {
+   "id": "C8",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Misuses Raoult's law; says ions form water; omits water polarity and hydration."
+  },
+  {
+   "id": "C9",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic generic notes; never addresses the impossible equation."
+  },
+  {
+   "id": "C9",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Treats it as H2 + O2 reaction; never says H2 -> O2 is impossible."
+  },
+  {
+   "id": "C9",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Hints the expression is faulty but reasons with protons, implies H turns into O."
+  },
+  {
+   "id": "C9",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says no positive coefficients exist, suspects error; muddled reasoning, element mismatch not stated."
+  },
+  {
+   "id": "C9",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says no positive coefficients exist, suspects error; muddled reasoning, element mismatch not stated."
+  },
+  {
+   "id": "C9",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Writes unbalanced H2 + O2 -> 2H2O; never states the equation is impossible."
+  },
+  {
+   "id": "C9",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Writes nonsense H2 + O2 -> 2H2; never says it cannot be balanced."
+  },
+  {
+   "id": "C10",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Agrees the right side has 1 O atom; garbled 'água', 'H2OH'."
+  },
+  {
+   "id": "C10",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic HCl reaction with invented mole numbers."
+  },
+  {
+   "id": "C10",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says one O atom on each side; wrong, partly endorses the learner."
+  },
+  {
+   "id": "C10",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Opens 'Đúng', then claims 3 O atoms per side via invented oxidation numbers."
+  },
+  {
+   "id": "C10",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correctly says not right, but no coefficient explanation; 'hai phân tử oxi' wrong unit."
+  },
+  {
+   "id": "C10",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "No feedback on learner's error; says reaction 'produces 2 oxygen atoms', confusing."
+  },
+  {
+   "id": "C10",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Opens 'Đúng!', then nonsense algebra giving 4 O atoms."
+  },
+  {
+   "id": "C11",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents 200 mol/L via misused dilution formula; never asks for NaOH mass."
+  },
+  {
+   "id": "C11",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents volumes and 57.66 mol; incoherent; never asks for NaOH mass."
+  },
+  {
+   "id": "C11",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents values and gives 0.01 M; never asks for NaOH amount."
+  },
+  {
+   "id": "C11",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Treats 250 mL as 0.25 mol, wrong M = 59; gives 0.125 mol/L."
+  },
+  {
+   "id": "C11",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "No final number, but names pH not NaOH mass as missing; confuses n and C."
+  },
+  {
+   "id": "C11",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents 200 mol/L via misused dilution formula; never asks for NaOH mass."
+  },
+  {
+   "id": "C11",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents 26.3 g and other data; gives 0.1 mol/L; incoherent."
+  },
+  {
+   "id": "C12",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Treats gas volume as dilution; '0,02V lít' meaningless; never asks temperature or pressure."
+  },
+  {
+   "id": "C12",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong molar mass, misused dilution formula; invents 6.8 L."
+  },
+  {
+   "id": "C12",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent; invents 100 mL/60 mL and an irrelevant source link."
+  },
+  {
+   "id": "C12",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Misuses dilution formula, answers 1 L; ignores temperature and pressure."
+  },
+  {
+   "id": "C12",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Notes temperature missing but assumes 273.15 °C and invents 7.36 L."
+  },
+  {
+   "id": "C12",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Treats gas volume as dilution; '0,02V lít' meaningless; never asks temperature or pressure."
+  },
+  {
+   "id": "C12",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent dilution reasoning; invented volumes; answer 34.4 mL."
+  },
+  {
+   "id": "C13",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent mixed scripts; wrong reaction; 91.6 g instead of 13.6 g."
+  },
+  {
+   "id": "C13",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Correct equation only, then enthalpy nonsense and code; never reaches 13.6 g."
+  },
+  {
+   "id": "C13",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "n(Zn) 0.102, wrong M(ZnCl2), adds moles to grams; 75.8 g wrong."
+  },
+  {
+   "id": "C13",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Enthalpy detour, wrong n(HCl), M 136.5; answer 48.7 g instead of 13.6 g."
+  },
+  {
+   "id": "C13",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "n(Zn) 0.102, wrong M(ZnCl2), adds moles to grams; 75.8 g wrong."
+  },
+  {
+   "id": "C13",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong equation 2Zn + 2HCl; answer 32.43 g instead of 13.6 g."
+  },
+  {
+   "id": "C13",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent; wrong atomic data, ZnPO4; answer 76.7 g."
+  },
+  {
+   "id": "C14",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Opens 'Đúng' and claims higher concentration; garbled words."
+  },
+  {
+   "id": "C14",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Confirms 2 M with nonsense reasoning about lost moles."
+  },
+  {
+   "id": "C14",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says no, but misreads as 2 M solution and claims concentration falls below 1 M."
+  },
+  {
+   "id": "C14",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Confirms 2 M; 100 mol from mL unit error; invented 50 L."
+  },
+  {
+   "id": "C14",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Treats mL as L and confirms 2 M; irrelevant pH calculation."
+  },
+  {
+   "id": "C14",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent; asserts 2 M and 95%; invented densities."
+  },
+  {
+   "id": "C14",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confirms 2 mol/L using invented 99% and 0.99 mol."
+  },
+  {
+   "id": "B1",
+   "code": "A",
+   "correctness": 2,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Core reason correct (identical daughter chromosome sets) but omits S phase, sister chromatids and their separation."
+  },
+  {
+   "id": "B1",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrongly says mitosis makes haploid gametes with recombination; garbled 'N nhiễm'; fake SimLab label; no S phase."
+  },
+  {
+   "id": "B1",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Circular; claims mitosis produces haploid gametes and recombination; no identical 2n daughter sets."
+  },
+  {
+   "id": "B1",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Garbled words (Doenças, Niacn); vague; drifts to meiosis; no S phase or chromatids."
+  },
+  {
+   "id": "B1",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Frames replication as serving meiosis and variation; garbled terms; only the 'complete set' idea is right."
+  },
+  {
+   "id": "B1",
+   "code": "F",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrongly says mitosis makes haploid gametes with recombination; garbled 'N nhiễm'; fake SimLab label; no S phase."
+  },
+  {
+   "id": "B1",
+   "code": "G",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Vague; never says daughter cells receive an identical full chromosome set; garbled 'nhân son'."
+  },
+  {
+   "id": "B2",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Answers cell-cycle G1/S/G2 instead of mitosis phases; invented durations; false helicase claim."
+  },
+  {
+   "id": "B2",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Does not list prophase to telophase; muddled cell-cycle phase counts."
+  },
+  {
+   "id": "B2",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Answers cell-cycle G1/S/G2 instead of mitosis phases; invented durations; false helicase claim."
+  },
+  {
+   "id": "B2",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Describes cell cycle and meiosis with false facts; no mitosis phases; garbled terms."
+  },
+  {
+   "id": "B2",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Lists G1, S, G2 instead of the four mitosis phases."
+  },
+  {
+   "id": "B2",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Lists interphase and meiosis, not prophase to telophase; garbled words like 'Genoma', 'Phá giải'."
+  },
+  {
+   "id": "B2",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Greek characters and a nonsense list; does not name the four mitosis phases."
+  },
+  {
+   "id": "B3",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic dump of library notes (chemistry, Mendel); never describes metaphase arrangement."
+  },
+  {
+   "id": "B3",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong: chromosomes 'sorted left to right' by size; no equatorial plate, single row or centromere."
+  },
+  {
+   "id": "B3",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Talks about S-phase replication, not metaphase arrangement."
+  },
+  {
+   "id": "B3",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic dump; wrong 3:2 Mendel ratio; never answers the metaphase question."
+  },
+  {
+   "id": "B3",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong: chromosomes 'sorted left to right' by size; no equatorial plate, single row or centromere."
+  },
+  {
+   "id": "B3",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confuses mitosis with S phase; no metaphase arrangement; Greek letters in text."
+  },
+  {
+   "id": "B3",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gibberish mixing scripts and invented terms; no metaphase plate description."
+  },
+  {
+   "id": "B4",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Lists plant hormones instead of cell-plate formation; many garbled foreign words."
+  },
+  {
+   "id": "B4",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Hormone-based nonsense mechanism; no cell plate; garbled words."
+  },
+  {
+   "id": "B4",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong: attributes cytokinesis to hormones; no cell plate, equatorial position or cell-wall reason."
+  },
+  {
+   "id": "B4",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Garbled mixed scripts; claims DNA replicates in M phase; no cell plate."
+  },
+  {
+   "id": "B4",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Lists hormone functions; does not describe cell-plate formation."
+  },
+  {
+   "id": "B4",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Circular answer; wrongly ties cytokinesis to S phase; no cell plate."
+  },
+  {
+   "id": "B4",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong: attributes cytokinesis to hormones; no cell plate, equatorial position or cell-wall reason."
+  },
+  {
+   "id": "B5",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gibberish calculation with invented values; final estimate 60-70 instead of 8."
+  },
+  {
+   "id": "B5",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct 2³ = 8, but claims mitosis drives recombination; fake SimLab label and broken links."
+  },
+  {
+   "id": "B5",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Steps show 2, 4, 8 but multiplies them to a wrong total of 64."
+  },
+  {
+   "id": "B5",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says cells triple; wrong answer 10; foreign scripts."
+  },
+  {
+   "id": "B5",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent; answers 3, then 8, then 'Có'; mixed scripts."
+  },
+  {
+   "id": "B5",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong: sums 1+2+3+4 = 10 instead of doubling to 8."
+  },
+  {
+   "id": "B5",
+   "code": "G",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct 2³ = 8, but claims mitosis drives recombination; fake SimLab label and broken links."
+  },
+  {
+   "id": "B6",
+   "code": "A",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Vaguely says structure changes; garbled 'não vật chất'; no denaturation or active site."
+  },
+  {
+   "id": "B6",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Denaturation idea right; nonsense 'vùng α-π'; wrong amylase substrate; irreversibility missing."
+  },
+  {
+   "id": "B6",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Denaturation idea right; nonsense 'vùng α-π'; wrong amylase substrate; irreversibility missing."
+  },
+  {
+   "id": "B6",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Mentions denaturation, but claims water molecules and C-H bonds break; foreign scripts."
+  },
+  {
+   "id": "B6",
+   "code": "E",
+   "correctness": 2,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct but minimal; no protein nature, active site or irreversibility."
+  },
+  {
+   "id": "B6",
+   "code": "F",
+   "correctness": 1,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says the enzyme 'decomposes'; omits denaturation and active-site mismatch."
+  },
+  {
+   "id": "B6",
+   "code": "G",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Active-site damage right; wrongly says activation energy decreases; garbled 'não nhân'."
+  },
+  {
+   "id": "B7",
+   "code": "A",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "States daughter cells match the mother cell but never asks for 2n; garbled 'di hình'."
+  },
+  {
+   "id": "B7",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Asks for irrelevant quantities and invents an example giving 512 chromosomes; never asks for 2n."
+  },
+  {
+   "id": "B7",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Asks for irrelevant quantities and invents an example giving 512 chromosomes; never asks for 2n."
+  },
+  {
+   "id": "B7",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents an answer of 4 nuclei; does not ask for the species' 2n."
+  },
+  {
+   "id": "B7",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic dump; claims replication in M phase; invents 1-2 chromosomes; no request for 2n."
+  },
+  {
+   "id": "B7",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Garbled; asks irrelevant things (whether the cell has DNA); never asks for 2n."
+  },
+  {
+   "id": "B7",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gibberish with a wrong 2^n formula and mixed scripts; no request for the missing 2n."
+  },
+  {
+   "id": "B8",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Defines transcription as RNA to mRNA and mixes in translation steps."
+  },
+  {
+   "id": "B8",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confuses transcription with translation (RNA to amino acids); garbled Greek/French words."
+  },
+  {
+   "id": "B8",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says the ribosome performs it and lists translation as a stage; no template direction or pairing."
+  },
+  {
+   "id": "B8",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says the ribosome performs it and lists translation as a stage; no template direction or pairing."
+  },
+  {
+   "id": "B8",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "DNA to RNA right, but mixes in translation and says amino acids build mRNA."
+  },
+  {
+   "id": "B8",
+   "code": "F",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "DNA to RNA right; wrong steps: mutation, ribosome makes RNA, A-U replaced by C-G."
+  },
+  {
+   "id": "B8",
+   "code": "G",
+   "correctness": 2,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct but circular and minimal; no RNA polymerase, pairing rules or products."
+  },
+  {
+   "id": "B9",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Opens 'Đúng', says mutations usually harmful; discusses chromosome mutations, not gene mutations."
+  },
+  {
+   "id": "B9",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Agrees 'Đúng'; garbled; confuses gene and chromosome mutations; no neutral mutations."
+  },
+  {
+   "id": "B9",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Agrees 'Đúng rồi'; only vague mention of benefits; no neutral mutations or environment dependence."
+  },
+  {
+   "id": "B9",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "States mutations are always harmful, endorsing the learner's error."
+  },
+  {
+   "id": "B9",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Opens 'Đúng'; mentions some benefit but omits neutral mutations and environment dependence."
+  },
+  {
+   "id": "B9",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Agrees 'Đúng'; discusses chromosome mutations only, mislabels types; no beneficial or neutral cases."
+  },
+  {
+   "id": "B9",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Agrees 'Đúng'; defines mutation as a population change; no beneficial or neutral cases."
+  },
+  {
+   "id": "B10",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says 'Đúng' and endorses 23; invents 52; contradicts mitosis keeping 46."
+  },
+  {
+   "id": "B10",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says 'Chưa đúng' then affirms 2n = 23 and 23 per cell; never gives 46."
+  },
+  {
+   "id": "B10",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gibberish numbers (2, 21, 48, 47, 9); praises the learner's wrong claim."
+  },
+  {
+   "id": "B10",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Confirms 23 chromosomes after mitosis; correct answer is 46 (2n)."
+  },
+  {
+   "id": "B10",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Confirms 23; claims each daughter cell gets two nuclei."
+  },
+  {
+   "id": "B10",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confirms the learner, then invents 1n + 2³ = 9 chromosomes."
+  },
+  {
+   "id": "B10",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confirms 23 chromosomes; misses 46 and the n versus 2n confusion."
+  },
+  {
+   "id": "B11",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents 3000 - 2 = 2998; off-topic chemistry notes; never asks for A or G."
+  },
+  {
+   "id": "B11",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents values and gives 205; vague 'need more data' without naming A or G."
+  },
+  {
+   "id": "B11",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents nucleotide counts and a 1% rate; gives 68-69; no request for A or G."
+  },
+  {
+   "id": "B11",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says it cannot be computed but never names the A/G count or H = 2A + 3G."
+  },
+  {
+   "id": "B11",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Assumes 90% and gives 2700; no H = 2A + 3G or request for A or G."
+  },
+  {
+   "id": "B11",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents 3000 - 2 = 2998; off-topic chemistry notes; never asks for A or G."
+  },
+  {
+   "id": "B11",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Calls the H-bond a C-H bond, invents 150-200 and 15-20; mixed scripts."
+  },
+  {
+   "id": "B12",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invented frequencies and counts; answers 961; never asks for p or q."
+  },
+  {
+   "id": "B12",
+   "code": "B",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": false
+   },
+   "note": "Asks for allele frequencies, but gives wrong formula p² + 2pq instead of 2pq × 1000."
+  },
+  {
+   "id": "B12",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Assumes p = q = 0.5 and answers 1500, which exceeds the population."
+  },
+  {
+   "id": "B12",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Assumes p = 1/2 without basis; broken algebra; gives 500 without asking for frequencies."
+  },
+  {
+   "id": "B12",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gibberish; invents 995 and 1675; no Hardy-Weinberg calculation."
+  },
+  {
+   "id": "B12",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents a total of 1,006 and answers 999; P + Q = 2 is wrong."
+  },
+  {
+   "id": "B12",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Assumes p = 1/2 without basis; broken algebra; gives 500 without asking for frequencies."
+  },
+  {
+   "id": "B13",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "A = 480 right, then divides by 26; answers 180/18/19 instead of 3120."
+  },
+  {
+   "id": "B13",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "A = 480 right; invents 'type B' and a 60% rate; answers about 40, not 3120."
+  },
+  {
+   "id": "B13",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "A = 480 right; wrong total 1600, calls the gene 'Ankan no'; answers 800."
+  },
+  {
+   "id": "B13",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong totals and invented numbers throughout; answers 2710 instead of 3120."
+  },
+  {
+   "id": "B13",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Changes total to 2500/2300; contradictory 2430/2800/2700; mixed scripts."
+  },
+  {
+   "id": "B13",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Treats 20% as the H-bond share; answers 180/270; garbled text and fake links."
+  },
+  {
+   "id": "B13",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "A = 480 right, then divides by 26; answers 180/18/19 instead of 3120."
+  },
+  {
+   "id": "B14",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Opens 'Đúng vậy'; claims photosynthesis happens at night; misdefines photorespiration."
+  },
+  {
+   "id": "B14",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Goes along with night-only respiration; never says plants respire day and night."
+  },
+  {
+   "id": "B14",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic garbled photosynthesis equation; does not answer the yes/no claim."
+  },
+  {
+   "id": "B14",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Never corrects the claim; errors on photorespiration and glucose as photosynthesis energy source."
+  },
+  {
+   "id": "B14",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Accepts the night-only respiration premise; garbled words like 'quang hóm vào ban trăng'."
+  },
+  {
+   "id": "B14",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Praises the question and concludes plants respire at night; no day-and-night respiration."
+  },
+  {
+   "id": "B14",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Confirms night respiration and day photosynthesis; misdefines photorespiration."
+  },
+  {
+   "id": "P1",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": true
+   },
+   "note": "Off-topic: confuses friction with F=mg, calls a velocity, invents 0.5 m/s."
+  },
+  {
+   "id": "P1",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong definition (no applied force), N called gravity, sliding example; invented mu range."
+  },
+  {
+   "id": "P1",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong definition, circular formula; invents 1 kg and 0.7, gets 0.7 N."
+  },
+  {
+   "id": "P1",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong definition (no applied force), N called gravity, sliding example; invented mu range."
+  },
+  {
+   "id": "P1",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Gibberish definition and example; garbled words and Greek script."
+  },
+  {
+   "id": "P1",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong formula (area, mass), claims friction equals weight; many garbled words."
+  },
+  {
+   "id": "P1",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong definition (no force acting) and nonsensical car example."
+  },
+  {
+   "id": "P2",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Claims equal gravitational force on both; never shows a = g independent of mass."
+  },
+  {
+   "id": "P2",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Claims equal gravity force and says lighter falls faster in vacuum; no a = g argument."
+  },
+  {
+   "id": "P2",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Claims heavier object falls faster in vacuum; garbled words."
+  },
+  {
+   "id": "P2",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Claims heavier falls faster; nonsense Coulomb-law reasoning."
+  },
+  {
+   "id": "P2",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Claims heavier falls slower; incoherent with Greek-script garbling."
+  },
+  {
+   "id": "P2",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says heavier falls slower using electric-field nonsense; Cyrillic word."
+  },
+  {
+   "id": "P2",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Claims equal gravity force and says lighter falls faster in vacuum; no a = g argument."
+  },
+  {
+   "id": "P3",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong result 6.06 m/s², invents friction and numbers; heavily garbled."
+  },
+  {
+   "id": "P3",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Changes F to 9 N, uses negative mass, wrong result -3.04 m/s²."
+  },
+  {
+   "id": "P3",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct 5 m/s² but wrongly claims surface area is needed."
+  },
+  {
+   "id": "P3",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct 5 m/s², but states Newton's second law as 'net force always zero'."
+  },
+  {
+   "id": "P3",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct 5 m/s², but states Newton's second law as 'net force always zero'."
+  },
+  {
+   "id": "P3",
+   "code": "F",
+   "correctness": 2,
+   "clarity": 5,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "ok; correct 5 m/s², omits force balance and direction."
+  },
+  {
+   "id": "P3",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense kinematics, wrong result 7 m/s²; English mixed in."
+  },
+  {
+   "id": "P4",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Uses 9.8 instead of given g=10, nonsense mass step, wrong answer 1 s."
+  },
+  {
+   "id": "P4",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong formula with invented 0.5 s², wrong answer 28.6 s."
+  },
+  {
+   "id": "P4",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Right formula t=√(2h/g) but computes √40, wrong 6.33 s; false force claims."
+  },
+  {
+   "id": "P4",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Right formula t=√(2h/g) but computes √40, wrong 6.33 s; false force claims."
+  },
+  {
+   "id": "P4",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Restates problem as 25 m, nonsense formulas, wrong 1.02 s; foreign words."
+  },
+  {
+   "id": "P4",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents mass, v0 and height; wrong answer 4.16 s."
+  },
+  {
+   "id": "P4",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense formulas, invented mass, contradictory 1.32 s and 2.68 s."
+  },
+  {
+   "id": "P5",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Off-topic: reaction rates and homeostasis instead of asking speed and time."
+  },
+  {
+   "id": "P5",
+   "code": "B",
+   "correctness": 2,
+   "clarity": 4,
+   "completeness": 5,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": false
+   },
+   "note": "ok; asks for speed and time, adds irrelevant car/road/weather factors."
+  },
+  {
+   "id": "P5",
+   "code": "C",
+   "correctness": 2,
+   "clarity": 4,
+   "completeness": 5,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": false
+   },
+   "note": "ok; asks for speed and time, adds irrelevant car/road/weather factors."
+  },
+  {
+   "id": "P5",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Mentions speed but not time, invents 50-80 km/h, cites transformer topic."
+  },
+  {
+   "id": "P5",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic chemistry reaction rate; asks learner to estimate; garbled script."
+  },
+  {
+   "id": "P5",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Off-topic: treats distance as depending on reaction rate."
+  },
+  {
+   "id": "P5",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Irrelevant car engineering, invents 100 km and 80 km/h; never asks speed/time."
+  },
+  {
+   "id": "P6",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Answers 'Có', agreeing no force acts; nonsense magnetic-force formula."
+  },
+  {
+   "id": "P6",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Answers 'Đúng', claims no force acts in uniform motion."
+  },
+  {
+   "id": "P6",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Answers 'Có'; confuses zero net force with no forces acting."
+  },
+  {
+   "id": "P6",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Agrees with misconception; defines uniform motion as changing velocity."
+  },
+  {
+   "id": "P6",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Agrees with misconception; nonsense about gravity versus distance."
+  },
+  {
+   "id": "P6",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Opens 'Đúng', later contradicts itself; garbled words."
+  },
+  {
+   "id": "P6",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says 'Đúng' yet describes balanced forces; contradictory, Greek script."
+  },
+  {
+   "id": "P7",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Wrong definition, lists Planck constant; nonsense ΔU = KE + ½mv²."
+  },
+  {
+   "id": "P7",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong definition (drag and friction) and formula with v³."
+  },
+  {
+   "id": "P7",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 4,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct definition and ½mv², but says KE is set by force; F=ma×v."
+  },
+  {
+   "id": "P7",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Gives E = K − mgh and momentum instead of kinetic energy."
+  },
+  {
+   "id": "P7",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Confuses kinetic with potential energy; incoherent, English/Spanish words."
+  },
+  {
+   "id": "P7",
+   "code": "F",
+   "correctness": 1,
+   "clarity": 4,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct definition and ½mv², but says KE is set by force; F=ma×v."
+  },
+  {
+   "id": "P7",
+   "code": "G",
+   "correctness": 1,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Only formula ½mv²; no definition or explicit dependence on m and v²."
+  },
+  {
+   "id": "P8",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents k=120, wrong answer 0.6 Nm; garbled with Cyrillic."
+  },
+  {
+   "id": "P8",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Off-topic atomic mass, invents 100 kg mass, wrong 0.1 N."
+  },
+  {
+   "id": "P8",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense volume/charge reasoning, wrong results; Korean characters."
+  },
+  {
+   "id": "P8",
+   "code": "D",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Value 10 but unit N/m; calls k 'cosinus', says elasticity decreases."
+  },
+  {
+   "id": "P8",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Invents k = 20 N/m, gets 2 N, then irrelevant stress calculation."
+  },
+  {
+   "id": "P8",
+   "code": "F",
+   "correctness": 1,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Value 10 but unit N/m; calls k 'cosinus', says elasticity decreases."
+  },
+  {
+   "id": "P8",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Computes 'yield stress' with invented values, 61 MPa; garbled English."
+  },
+  {
+   "id": "P9",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": true
+   },
+   "note": "No answer; nonsense inductance formula, asks for angle; English garbage words."
+  },
+  {
+   "id": "P9",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent, talks about friction; Korean and Greek characters."
+  },
+  {
+   "id": "P9",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong T = 2π√(l/m), invents values, computes 63.2 s."
+  },
+  {
+   "id": "P9",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Claims period depends entirely on mass; fake citation, garbled words."
+  },
+  {
+   "id": "P9",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says period grows with mass by mislabeling L as mass."
+  },
+  {
+   "id": "P9",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Bold answer says depends on mass, calls g friction; contradicts own formula."
+  },
+  {
+   "id": "P9",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Bold answer says depends on mass, calls g friction; contradicts own formula."
+  },
+  {
+   "id": "P10",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 4,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Says 'Đúng', claims acceleration doubles when mass doubles."
+  },
+  {
+   "id": "P10",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Wrong relation (triple mass gives half); ignores learner's answer."
+  },
+  {
+   "id": "P10",
+   "code": "C",
+   "correctness": 2,
+   "clarity": 4,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Correct halving, but does not say learner is wrong or explain inverse proportion."
+  },
+  {
+   "id": "P10",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says 'Đúng'; claims acceleration doubles when mass triples; Spanish word."
+  },
+  {
+   "id": "P10",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Says 'Đúng' to wrong answer, then explains halving; contradictory."
+  },
+  {
+   "id": "P10",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Agrees acceleration doubles; misreads a = F/2m as doubling."
+  },
+  {
+   "id": "P10",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Contradictory: 'Chưa đúng' but bold answer 'tăng gấp đôi'; wrong v² law."
+  },
+  {
+   "id": "P11",
+   "code": "A",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 4,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": true,
+    "language_problem": true
+   },
+   "note": "Asks for braking time, but wrong v0 23 m/s and wrong formulas."
+  },
+  {
+   "id": "P11",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Uses g as braking deceleration, x0=20; never asks for acceleration."
+  },
+  {
+   "id": "P11",
+   "code": "C",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 3,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Names missing acceleration but adds off-topic biology and false motion claims."
+  },
+  {
+   "id": "P11",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Assumes a = g, arithmetic errors, gives numeric 38.6 m."
+  },
+  {
+   "id": "P11",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Uses g as braking deceleration, x0=20; never asks for acceleration."
+  },
+  {
+   "id": "P11",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Rewrites problem with negative mass, gives invented 2.5 m."
+  },
+  {
+   "id": "P11",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Incoherent with garbled scripts, gives invented 8.79 m."
+  },
+  {
+   "id": "P12",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Gives invented 10 A, irrelevant capacitor claims; never asks for power."
+  },
+  {
+   "id": "P12",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Uses 230 V, nonsense resonance, invented 0.314 A."
+  },
+  {
+   "id": "P12",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense LC circuit with 20 V, invented 6 A; garbled scripts."
+  },
+  {
+   "id": "P12",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Gives invented 10 A, irrelevant capacitor claims; never asks for power."
+  },
+  {
+   "id": "P12",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Uses 230 V, nonsense reasoning, invented 64 A and 8 A."
+  },
+  {
+   "id": "P12",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Irrelevant ionisation energy; estimates 1-2 A instead of asking for power."
+  },
+  {
+   "id": "P12",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Periodic-table nonsense, invents resistance, wrong 1.437 A."
+  },
+  {
+   "id": "P13",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Uses a = −g instead of F/m; wrong time and 15.1 m."
+  },
+  {
+   "id": "P13",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Invents angle and speeds; incoherent, gets 11.3 then 9.3 m."
+  },
+  {
+   "id": "P13",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense formulas, gets 1010.4 m; Greek characters, broken link."
+  },
+  {
+   "id": "P13",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Changes mass and speed, invents friction force, gets 21.4 m; mixed languages."
+  },
+  {
+   "id": "P13",
+   "code": "E",
+   "correctness": 0,
+   "clarity": 1,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense angle reasoning, gives 2.5 m."
+  },
+  {
+   "id": "P13",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Subtracts force from velocity, uses −g, invents mu, gives 104.7 m."
+  },
+  {
+   "id": "P13",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": true,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Nonsense formulas, gets 1010.4 m; Greek characters, broken link."
+  },
+  {
+   "id": "P14",
+   "code": "A",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Opens 'Đúng vậy'; irrelevant horizontal motion, though mentions a = −g."
+  },
+  {
+   "id": "P14",
+   "code": "B",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Agrees with learner; says acceleration continuously changes."
+  },
+  {
+   "id": "P14",
+   "code": "C",
+   "correctness": 0,
+   "clarity": 3,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Agrees acceleration is zero at the top."
+  },
+  {
+   "id": "P14",
+   "code": "D",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Agrees a = 0; claims speed is maximum at the top."
+  },
+  {
+   "id": "P14",
+   "code": "E",
+   "correctness": 1,
+   "clarity": 2,
+   "completeness": 2,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": false,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Concludes a = −g but never says claim is wrong; says acceleration increases."
+  },
+  {
+   "id": "P14",
+   "code": "F",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": true
+   },
+   "note": "Agrees; says acceleration is zero while rising; English words mixed in."
+  },
+  {
+   "id": "P14",
+   "code": "G",
+   "correctness": 0,
+   "clarity": 2,
+   "completeness": 1,
+   "flags": {
+    "invented_numbers": false,
+    "endorses_error": true,
+    "asks_for_missing_data": false,
+    "language_problem": false
+   },
+   "note": "Concludes 'Đúng', a = 0; nonsense static friction and 45° claims."
+  }
+ ]
+}

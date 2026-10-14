@@ -118,11 +118,15 @@ export interface ToolFact {
   shown: string;
 }
 
-/** Sentences for the AI (prompt text, like the system prompts in chatService.ts). */
+/**
+ * Sentences for the AI (prompt text, like the system prompts in chatService.ts). The balanced
+ * result is introduced as a result, not as "Phương trình đã cân bằng": Gemma 1B read that as
+ * "the equation is already balanced" and wrote "Phương trình đã được cân đều rồi" (2026-10-13).
+ */
 const TEXT = {
   vi: {
     balanced: (eq: string, coef: string) =>
-      `Phương trình đã cân bằng (SimLab tính bằng bộ cân bằng chính xác, không phải AI): ${eq}. Hệ số theo thứ tự: ${coef}.`,
+      `Kết quả cân bằng (SimLab tính bằng bộ cân bằng chính xác, không phải AI): ${eq}. Hệ số theo thứ tự: ${coef}.`,
     impossible: (input: string) =>
       `SimLab không cân bằng được "${input}" (không có bộ hệ số dương nào bảo toàn mọi nguyên tố): có thể đề viết sai công thức. Không tự đoán hệ số.`,
     ambiguous: (input: string) =>
@@ -132,7 +136,7 @@ const TEXT = {
   },
   en: {
     balanced: (eq: string, coef: string) =>
-      `Balanced equation (computed by SimLab's exact balancer, not by the AI): ${eq}. Coefficients in order: ${coef}.`,
+      `Balancing result (computed by SimLab's exact balancer, not by the AI): ${eq}. Coefficients in order: ${coef}.`,
     impossible: (input: string) =>
       `SimLab cannot balance "${input}" (no positive coefficients conserve every element): a formula may be wrong. Do not guess coefficients.`,
     ambiguous: (input: string) =>
