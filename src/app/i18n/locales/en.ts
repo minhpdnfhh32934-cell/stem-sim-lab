@@ -1002,6 +1002,8 @@ const en: Messages = {
         'No second API key is configured. Open Settings → AI Teacher to connect a review provider.',
       filtered:
         'The answer was hidden because it did not pass the safety filter. Try again or ask a teacher.',
+      noAnswer:
+        'No lesson came back to show: the AI sent only its working notes or comments. Please ask again; if it repeats, turn Think off or pick another model in Settings.',
       screenPersonal:
         'The screen context may contain personal information, so it was not sent. Remove it or turn off screen context.',
       screenUnsafe: 'The screen context did not pass the safety check and was not sent.',

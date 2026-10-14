@@ -58,6 +58,19 @@ describe('streamed on-device answers', () => {
     expect(seen.filter((t) => t.includes('0912345678'))).toEqual([]);
   });
 
+  it('never shows text inside hidden reasoning, even while it is being written', async () => {
+    pieces.current = ['Đáp án: ', '<thi', 'nk>nháp ', '3 kg', '</thi', 'nk>', ' a = 2 m/s².'];
+    const seen: string[] = [];
+    const result = await askTeacher('Tính gia tốc', 'vi', [], {
+      includeScreen: false,
+      think: false,
+      onPartial: (t) => seen.push(t),
+    });
+    expect(seen.filter((t) => /nháp|3 kg|<|think/u.test(t))).toEqual([]);
+    expect(seen.at(-1)).toBe('Đáp án: a = 2 m/s².');
+    expect(result.content).toBe('Đáp án: a = 2 m/s².');
+  });
+
   it('Think never streams the draft (it is reviewed before anyone sees it)', async () => {
     pieces.current = ['Bản nháp'];
     const seen: string[] = [];

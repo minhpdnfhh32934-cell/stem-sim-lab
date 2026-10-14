@@ -999,6 +999,8 @@ const vi = {
         'Chưa có khóa API thứ hai. Mở Cài đặt → AI Teacher để kết nối nhà cung cấp kiểm tra.',
       filtered:
         'Câu trả lời bị ẩn vì không qua được bộ lọc an toàn. Hãy thử hỏi lại hoặc báo giáo viên.',
+      noAnswer:
+        'Mình chưa nhận được phần bài giảng nào để hiện ra: AI chỉ gửi phần nháp hoặc lời nhận xét. Em hỏi lại nhé; nếu lặp lại, thử tắt Think hoặc chọn mô hình khác trong Cài đặt.',
       screenPersonal:
         'Ngữ cảnh màn hình có thể chứa thông tin cá nhân nên chưa được gửi. Xóa thông tin đó hoặc tắt nút lấy thông tin màn hình.',
       screenUnsafe: 'Ngữ cảnh màn hình chưa vượt qua kiểm tra an toàn nên không được gửi.',
