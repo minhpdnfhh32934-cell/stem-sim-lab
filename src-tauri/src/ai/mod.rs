@@ -4,10 +4,13 @@
 //!
 //! Providers implement [`provider::AIProvider`]: [`gemini::GeminiProvider`] (default),
 //! [`claude::ClaudeProvider`] and [`groq::GroqProvider`]. When the chosen provider runs out of
-//! quota or credit, a
-//! configured fallback provider answers instead (see [`is_quota_error`]).
+//! quota or credit, a configured fallback provider answers instead (see [`is_quota_error`]); a
+//! provider without a key is never replaced by the fallback.
 //!
 //! Every answer has the model's reasoning removed ([`reasoning`]) before it reaches the page.
+//!
+//! A call is registered for `ai_cancel` before anything else ([`InflightGuard`]), so a stop
+//! pressed while the gate, the key or the daily cap is being checked is never counted or sent.
 //!
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
 //! (b) explain results already computed by the engine. It never computes numbers.
@@ -21,6 +24,7 @@ pub mod tts;
 pub mod usage;
 
 use std::collections::HashMap;
+use std::future::Future;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
@@ -206,6 +210,82 @@ impl AiState {
     }
 }
 
+/// A call's entry in `AiState.inflight` (what `ai_cancel` looks up). Registered as the very
+/// first step of a call and removed again however the call ends.
+pub(crate) struct InflightGuard<'a> {
+    state: &'a AiState,
+    id: String,
+}
+
+impl<'a> InflightGuard<'a> {
+    pub(crate) fn register(
+        state: &'a AiState,
+        id: &str,
+    ) -> Result<(Self, oneshot::Receiver<()>), AiError> {
+        let (tx, rx) = oneshot::channel::<()>();
+        state
+            .inflight
+            .lock()
+            .map_err(|e| AiError::Network(e.to_string()))?
+            .insert(id.to_string(), tx);
+        Ok((
+            InflightGuard {
+                state,
+                id: id.to_string(),
+            },
+            rx,
+        ))
+    }
+}
+
+impl Drop for InflightGuard<'_> {
+    fn drop(&mut self) {
+        if let Ok(mut map) = self.state.inflight.lock() {
+            map.remove(&self.id);
+        }
+    }
+}
+
+/// A stop arrived for this call.
+pub(crate) fn stop_requested(stop: &mut oneshot::Receiver<()>) -> bool {
+    stop.try_recv().is_ok()
+}
+
+/// Stops a registered call (what `ai_cancel` does). False when no such call is running.
+pub(crate) fn cancel_inflight(state: &AiState, request_id: &str) -> bool {
+    state
+        .inflight
+        .lock()
+        .ok()
+        .and_then(|mut m| m.remove(request_id))
+        .map(|tx| tx.send(()).is_ok())
+        .unwrap_or(false)
+}
+
+/// The counted part of a call that is already registered: a stop that arrived before the count
+/// means nothing is counted or sent; a stop during the count means nothing is sent. Then the
+/// work runs with a timeout and can still be stopped (dropping it aborts the HTTP request).
+pub(crate) async fn run_counted<T>(
+    id: &str,
+    mut stop: oneshot::Receiver<()>,
+    count: impl FnOnce() -> Result<(), AiError>,
+    work: impl Future<Output = Result<T, AiError>>,
+    timeout: Duration,
+) -> Result<T, AiError> {
+    if stop_requested(&mut stop) {
+        return Err(AiError::Cancelled(id.to_string()));
+    }
+    count()?;
+    if stop_requested(&mut stop) {
+        return Err(AiError::Cancelled(id.to_string()));
+    }
+    tokio::select! {
+        r = work => r,
+        _ = tokio::time::sleep(timeout) => Err(AiError::Timeout(format!("{}s", timeout.as_secs()))),
+        _ = stop => Err(AiError::Cancelled(id.to_string())),
+    }
+}
+
 /// Errors after which the fallback provider may answer: the provider is out of quota or credit
 /// (HTTP 429 after the retries, 402, Claude's "credit balance is too low", Gemini's
 /// RESOURCE_EXHAUSTED). Not for a wrong key, an unknown model or a network problem: those need
@@ -366,43 +446,28 @@ pub async fn ai_chat(
     state: tauri::State<'_, AiState>,
     request: ChatRequest,
 ) -> Result<ChatResponse, AiError> {
+    // First of all, so `ai_cancel` finds the call however early the stop comes.
+    let (_inflight, stop) = InflightGuard::register(state.inner(), &request.request_id)?;
     require_ai_allowed(&app)?;
-    // A missing key is reported before the call is counted (unless the fallback can answer).
-    if api_key(request.provider).is_err() && fallback_key(&request).is_none() {
+    // The chosen provider needs its own key: the fallback only answers for a provider that is
+    // out of quota or credit (CLAUDE.md), never for one that was not set up.
+    if api_key(request.provider).is_err() {
         return Err(AiError::MissingKey(request.provider.key_name().into()));
     }
-    count_call(&app, &state, &request)?;
-    let (tx, rx) = oneshot::channel::<()>();
-    state
-        .inflight
-        .lock()
-        .map_err(|e| AiError::Network(e.to_string()))?
-        .insert(request.request_id.clone(), tx);
     let timeout = Duration::from_secs(
         request
             .timeout_secs
             .unwrap_or(DEFAULT_TIMEOUT_SECS)
             .clamp(5, 600),
     );
-    let result = tokio::select! {
-        r = send_with_fallback(&state, &request) => r,
-        _ = tokio::time::sleep(timeout) => Err(AiError::Timeout(format!("{}s", timeout.as_secs()))),
-        _ = rx => Err(AiError::Cancelled(request.request_id.clone())),
-    };
-    if let Ok(mut map) = state.inflight.lock() {
-        map.remove(&request.request_id);
-    }
-    result
-}
-
-/// The fallback and its key, when one is configured, differs from the chosen provider and has
-/// a key.
-fn fallback_key(req: &ChatRequest) -> Option<(&Fallback, String)> {
-    let f = req
-        .fallback
-        .as_ref()
-        .filter(|f| f.provider != req.provider)?;
-    api_key(f.provider).ok().map(|k| (f, k))
+    run_counted(
+        &request.request_id,
+        stop,
+        || count_call(&app, &state, &request),
+        send_with_fallback(&state, &request),
+        timeout,
+    )
+    .await
 }
 
 /// The same request for the fallback provider.
@@ -418,26 +483,54 @@ fn as_fallback(req: &ChatRequest, f: &Fallback) -> ChatRequest {
 /// Sends to the chosen provider; when it is out of quota/credit (or was a few minutes ago) and
 /// a fallback is configured, the fallback answers and the response says so.
 async fn send_with_fallback(state: &AiState, req: &ChatRequest) -> Result<ChatResponse, AiError> {
-    let fallback = fallback_key(req);
-    let primary_key = api_key(req.provider);
+    with_fallback(
+        state,
+        req,
+        api_key,
+        |r, key| async move { send(&r, &key).await },
+    )
+    .await
+}
+
+/// The fallback rule, with the key lookup and the sender passed in (tested without network):
+/// - the chosen provider must have a key (a missing key is never replaced by the fallback);
+/// - the fallback answers only when the chosen provider is out of quota or credit, now
+///   ([`is_quota_error`]) or in the last minutes ([`AiState::is_exhausted`]);
+/// - a fallback equal to the chosen provider, or without a key, is ignored.
+async fn with_fallback<K, S, F>(
+    state: &AiState,
+    req: &ChatRequest,
+    key_of: K,
+    send: S,
+) -> Result<ChatResponse, AiError>
+where
+    K: Fn(Provider) -> Result<String, AiError>,
+    S: Fn(ChatRequest, String) -> F,
+    F: Future<Output = Result<ChatResponse, AiError>>,
+{
+    let primary_key = key_of(req.provider)?;
+    let fallback = req
+        .fallback
+        .as_ref()
+        .filter(|f| f.provider != req.provider)
+        .and_then(|f| key_of(f.provider).ok().map(|k| (f.clone(), k)));
+    let answered_by_fallback = |r: ChatResponse| ChatResponse {
+        fallback: true,
+        ..r
+    };
     if let Some((f, key)) = &fallback {
-        if state.is_exhausted(req.provider) || primary_key.is_err() {
-            return send(&as_fallback(req, f), key).await.map(|r| ChatResponse {
-                fallback: true,
-                ..r
-            });
+        if state.is_exhausted(req.provider) {
+            return send(as_fallback(req, f), key.clone())
+                .await
+                .map(answered_by_fallback);
         }
     }
-    let result = send(req, &primary_key?).await;
-    match (result, fallback) {
+    match (send(req.clone(), primary_key).await, fallback) {
         (Err(e), Some((f, key))) if is_quota_error(&e) => {
             state.mark_exhausted(req.provider);
-            send(&as_fallback(req, f), &key)
+            send(as_fallback(req, &f), key)
                 .await
-                .map(|r| ChatResponse {
-                    fallback: true,
-                    ..r
-                })
+                .map(answered_by_fallback)
         }
         (other, _) => other,
     }
@@ -445,13 +538,7 @@ async fn send_with_fallback(state: &AiState, req: &ChatRequest) -> Result<ChatRe
 
 #[tauri::command]
 pub fn ai_cancel(state: tauri::State<'_, AiState>, request_id: String) -> bool {
-    state
-        .inflight
-        .lock()
-        .ok()
-        .and_then(|mut m| m.remove(&request_id))
-        .map(|tx| tx.send(()).is_ok())
-        .unwrap_or(false)
+    cancel_inflight(state.inner(), &request_id)
 }
 
 /// AI calls made today (for Settings).
@@ -669,6 +756,7 @@ pub fn ai_delete_key(provider: Provider) -> Result<(), AiError> {
 pub(crate) mod tests {
     use super::*;
     use serde_json::json;
+    use std::sync::atomic::{AtomicBool, Ordering};
 
     pub(crate) fn req(provider: Provider, schema: bool) -> ChatRequest {
         ChatRequest {
@@ -859,6 +947,272 @@ pub(crate) mod tests {
         let r = key_gate(|| false);
         assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "ageGate"));
         assert!(key_gate(|| true).is_ok());
+    }
+
+    fn block<T>(f: impl Future<Output = T>) -> T {
+        tauri::async_runtime::block_on(f)
+    }
+
+    #[test]
+    fn the_inflight_entry_is_removed_on_every_path() {
+        let st = AiState::default();
+        {
+            let (_guard, _stop) = InflightGuard::register(&st, "a").unwrap();
+            assert!(st.inflight.lock().unwrap().contains_key("a"));
+        }
+        assert!(st.inflight.lock().unwrap().is_empty());
+        // An early return (the gate, a missing key) drops the guard too.
+        let early = || -> Result<(), AiError> {
+            let (_guard, _stop) = InflightGuard::register(&st, "b")?;
+            Err(AiError::NotAllowed("ageGate".into()))
+        };
+        assert!(early().is_err());
+        assert!(st.inflight.lock().unwrap().is_empty());
+        assert!(!cancel_inflight(&st, "b"), "nothing left to stop");
+    }
+
+    #[test]
+    fn a_stop_before_the_count_is_never_counted_or_sent() {
+        let usage_file = std::env::temp_dir().join("stemsim-cancel-window-usage.json");
+        let _ = std::fs::remove_file(&usage_file);
+        let st = AiState::default();
+        let (_guard, stop) = InflightGuard::register(&st, "r1").unwrap();
+        // The stop arrives while the gate, the keychain or the cap is still being checked.
+        assert!(
+            cancel_inflight(&st, "r1"),
+            "registered before anything else"
+        );
+        let sent = AtomicBool::new(false);
+        let r: Result<(), AiError> = block(run_counted(
+            "r1",
+            stop,
+            || usage::consume(&usage_file, "2026-10-14", 100).map(|_| ()),
+            async {
+                sent.store(true, Ordering::SeqCst);
+                Ok(())
+            },
+            Duration::from_secs(5),
+        ));
+        assert!(matches!(r, Err(AiError::Cancelled(ref id)) if id == "r1"));
+        assert!(!usage_file.exists(), "not counted");
+        assert!(!sent.load(Ordering::SeqCst), "not sent");
+    }
+
+    #[test]
+    fn a_stop_during_the_count_is_never_sent() {
+        let st = AiState::default();
+        let (_guard, stop) = InflightGuard::register(&st, "r2").unwrap();
+        let sent = AtomicBool::new(false);
+        let r: Result<(), AiError> = block(run_counted(
+            "r2",
+            stop,
+            || {
+                assert!(cancel_inflight(&st, "r2"));
+                Ok(())
+            },
+            async {
+                sent.store(true, Ordering::SeqCst);
+                Ok(())
+            },
+            Duration::from_secs(5),
+        ));
+        assert!(matches!(r, Err(AiError::Cancelled(_))));
+        assert!(!sent.load(Ordering::SeqCst));
+    }
+
+    #[test]
+    fn a_counted_call_answers_times_out_or_stops_while_sending() {
+        let st = AiState::default();
+        let (_g1, stop) = InflightGuard::register(&st, "ok").unwrap();
+        let r = block(run_counted(
+            "ok",
+            stop,
+            || Ok(()),
+            async { Ok(7u8) },
+            Duration::from_secs(5),
+        ));
+        assert_eq!(r.unwrap(), 7);
+        let (_g2, stop) = InflightGuard::register(&st, "slow").unwrap();
+        let r: Result<u8, AiError> = block(run_counted(
+            "slow",
+            stop,
+            || Ok(()),
+            async {
+                tokio::time::sleep(Duration::from_secs(5)).await;
+                Ok(1)
+            },
+            Duration::from_millis(50),
+        ));
+        assert!(matches!(r, Err(AiError::Timeout(_))));
+        let (_g3, stop) = InflightGuard::register(&st, "capped").unwrap();
+        let r: Result<u8, AiError> = block(run_counted(
+            "capped",
+            stop,
+            || Err(AiError::DailyLimit("100/100".into())),
+            async { Ok(1) },
+            Duration::from_secs(5),
+        ));
+        assert!(matches!(r, Err(AiError::DailyLimit(_))));
+        let (_g4, stop) = InflightGuard::register(&st, "sending").unwrap();
+        let (r, stopped) = block(async {
+            let work = async {
+                tokio::time::sleep(Duration::from_secs(30)).await;
+                Ok(1u8)
+            };
+            let user = async {
+                tokio::time::sleep(Duration::from_millis(50)).await;
+                cancel_inflight(&st, "sending")
+            };
+            tokio::join!(
+                run_counted("sending", stop, || Ok(()), work, Duration::from_secs(60)),
+                user
+            )
+        });
+        assert!(stopped);
+        assert!(matches!(r, Err(AiError::Cancelled(_))));
+    }
+
+    #[test]
+    fn chat_and_speech_register_before_the_gate_key_and_count() {
+        // The commands need a running app, so check their order in the source.
+        let order = |code: &'static str, func: &str, count: &str| {
+            let code = code.split("#[cfg(test)]").next().unwrap_or_default();
+            let body = code.split(func).nth(1).expect(func);
+            let at = |s: &str| body.find(s).unwrap_or_else(|| panic!("{func}: no {s}"));
+            let reg = at("InflightGuard::register(");
+            assert!(reg < at("require_ai_allowed("), "{func}");
+            assert!(reg < at("api_key("), "{func}");
+            assert!(
+                at("run_counted(") < at(count),
+                "{func}: counted outside run_counted"
+            );
+        };
+        order(
+            include_str!("mod.rs"),
+            "pub async fn ai_chat(",
+            "count_call(",
+        );
+        order(
+            include_str!("tts.rs"),
+            "pub async fn ai_tts(",
+            "count_usage(",
+        );
+    }
+
+    fn answer(p: Provider) -> ChatResponse {
+        ChatResponse {
+            content: "ok".into(),
+            model: "m".into(),
+            duration_ms: 0,
+            retries: 0,
+            provider: p,
+            fallback: false,
+            truncated: false,
+        }
+    }
+
+    /// `with_fallback` with fake keys and answers: the result and the providers called.
+    fn fallback_run(
+        st: &AiState,
+        r: &ChatRequest,
+        keys: &[Provider],
+        answers: impl Fn(Provider) -> Result<ChatResponse, AiError>,
+    ) -> (Result<ChatResponse, AiError>, Vec<Provider>) {
+        let calls = Mutex::new(Vec::new());
+        let key_of = |p: Provider| {
+            if keys.contains(&p) {
+                Ok(format!("key-{}", p.key_name()))
+            } else {
+                Err(AiError::MissingKey(p.key_name().into()))
+            }
+        };
+        let result = block(with_fallback(st, r, key_of, |sent: ChatRequest, _key| {
+            calls.lock().unwrap().push(sent.provider);
+            let a = answers(sent.provider);
+            async move { a }
+        }));
+        (result, calls.into_inner().unwrap())
+    }
+
+    fn with_groq_fallback(p: Provider) -> ChatRequest {
+        let mut r = req(p, false);
+        r.fallback = Some(Fallback {
+            provider: Provider::Groq,
+            model: "qwen/qwen3.8-27b".into(),
+        });
+        r
+    }
+
+    #[test]
+    fn the_fallback_never_replaces_a_missing_key() {
+        let st = AiState::default();
+        let r = with_groq_fallback(Provider::Gemini);
+        let (res, calls) = fallback_run(&st, &r, &[Provider::Groq], |p| Ok(answer(p)));
+        assert!(matches!(res, Err(AiError::MissingKey(ref k)) if k == "gemini"));
+        assert!(calls.is_empty());
+        // Not even when the chosen provider was out of quota a minute ago.
+        st.mark_exhausted(Provider::Gemini);
+        let (res, calls) = fallback_run(&st, &r, &[Provider::Groq], |p| Ok(answer(p)));
+        assert!(res.is_err());
+        assert!(calls.is_empty());
+    }
+
+    #[test]
+    fn only_quota_or_credit_exhaustion_switches_to_the_fallback() {
+        let both = [Provider::Claude, Provider::Groq];
+        let r = with_groq_fallback(Provider::Claude);
+        let st = AiState::default();
+        // Credit gone: Groq answers, the response says so, and Claude is skipped for a while.
+        let (res, calls) = fallback_run(&st, &r, &both, |p| match p {
+            Provider::Claude => Err(AiError::Http(
+                "400 Bad Request: Your credit balance is too low".into(),
+            )),
+            _ => Ok(answer(p)),
+        });
+        let res = res.unwrap();
+        assert!(res.fallback);
+        assert_eq!(res.provider, Provider::Groq);
+        assert_eq!(calls, vec![Provider::Claude, Provider::Groq]);
+        assert!(st.is_exhausted(Provider::Claude));
+        let (res, calls) = fallback_run(&st, &r, &both, |p| Ok(answer(p)));
+        assert!(res.unwrap().fallback);
+        assert_eq!(calls, vec![Provider::Groq]);
+        // A wrong key, an unknown model, an overloaded server: no switch.
+        let st = AiState::default();
+        for e in [
+            "401 Unauthorized: invalid x-api-key",
+            "404 Not Found: model",
+            "503 Service Unavailable",
+        ] {
+            let (res, calls) = fallback_run(&st, &r, &both, |p| match p {
+                Provider::Claude => Err(AiError::Http(e.into())),
+                _ => Ok(answer(p)),
+            });
+            assert!(res.is_err(), "{e}");
+            assert_eq!(calls, vec![Provider::Claude], "{e}");
+        }
+        assert!(!st.is_exhausted(Provider::Claude));
+        // No fallback asked for (a Think draft or review): the quota error reaches the page.
+        let mut alone = r.clone();
+        alone.fallback = None;
+        let quota = |_: Provider| Err(AiError::Http("429 Too Many Requests".into()));
+        let (res, calls) = fallback_run(&st, &alone, &both, quota);
+        assert!(res.is_err());
+        assert_eq!(calls, vec![Provider::Claude]);
+        // A fallback equal to the chosen provider, or one without a key, is ignored.
+        let mut same = r.clone();
+        same.fallback = Some(Fallback {
+            provider: Provider::Claude,
+            model: "x".into(),
+        });
+        assert_eq!(
+            fallback_run(&st, &same, &both, quota).1,
+            vec![Provider::Claude]
+        );
+        assert_eq!(
+            fallback_run(&st, &r, &[Provider::Claude], quota).1,
+            vec![Provider::Claude]
+        );
     }
 
     #[test]
