@@ -17,11 +17,13 @@ import {
   UNVERIFIED,
   type Cap,
   type Capabilities,
+  type LocalChatMessage,
   type LocalChatRequest,
   type LocalModel,
   type ModelDetails,
   type RuntimeKind,
 } from './types';
+import { dataUrl } from './vision';
 import { utf8Length } from '../sse';
 
 /** A request of an adapter: method, fixed path and JSON body. */
@@ -277,11 +279,16 @@ export function ollamaContextLength(modelInfo: unknown): number | null {
   return key === undefined ? null : positive(modelInfo[key]);
 }
 
-function systemFirst(req: LocalChatRequest): { role: string; content: string }[] {
-  return [
-    { role: 'system', content: req.system },
-    ...req.messages.map((m) => ({ role: chatRole(m.role), content: m.content })),
-  ];
+/** The system prompt first, then the turns as `turn` writes them. */
+function systemFirst(req: LocalChatRequest, turn: (m: LocalChatMessage) => Json): Json[] {
+  return [{ role: 'system', content: req.system }, ...req.messages.map(turn)];
+}
+
+/** One turn of `/api/chat`; a checked picture goes in `images` as base64 (src/ai/local/vision.ts). */
+function ollamaMessage(m: LocalChatMessage): Json {
+  const turn: Json = { role: chatRole(m.role), content: m.content };
+  if (m.images !== undefined && m.images.length > 0) turn.images = [...m.images];
+  return turn;
 }
 
 /** JSON body for a streamed `/api/chat` (`num_ctx` always sent). */
@@ -290,7 +297,7 @@ export function ollamaBody(req: LocalChatRequest, opts: ChatOptions): Json {
   if (req.temperature !== undefined) options.temperature = req.temperature;
   const body: Json = {
     model: rustTrim(req.model),
-    messages: systemFirst(req),
+    messages: systemFirst(req, ollamaMessage),
     stream: true,
     options,
   };
@@ -384,11 +391,27 @@ const OLLAMA: LocalRuntimeAdapter = {
 
 // --- OpenAI-compatible (also the chat of LM Studio and llama.cpp) ---
 
+/**
+ * One turn of `/v1/chat/completions`. A turn with a checked picture is a list of parts: its text,
+ * then the picture as an `image_url` data URL.
+ */
+function openaiMessage(m: LocalChatMessage): Json {
+  const role = chatRole(m.role);
+  if (m.images === undefined || m.images.length === 0) return { role, content: m.content };
+  return {
+    role,
+    content: [
+      { type: 'text', text: m.content },
+      ...m.images.map((image) => ({ type: 'image_url', image_url: { url: dataUrl(image) } })),
+    ],
+  };
+}
+
 /** JSON body for a streamed `/v1/chat/completions`. */
 export function openaiBody(req: LocalChatRequest, opts: ChatOptions): Json {
   const body: Json = {
     model: rustTrim(req.model),
-    messages: systemFirst(req),
+    messages: systemFirst(req, openaiMessage),
     stream: true,
     max_tokens: opts.maxTokens,
   };

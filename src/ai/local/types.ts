@@ -137,6 +137,24 @@ export interface LocalTest {
   detail: string;
 }
 
+/** Most pictures in one question (all messages together). */
+export const MAX_IMAGES = 1;
+/** Largest picture, decoded. */
+export const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+
+/**
+ * One turn of a question for a local runtime (`LocalMessage` in Rust). Cloud messages stay text
+ * only (`ChatMessage`).
+ */
+export interface LocalChatMessage extends ChatMessage {
+  /**
+   * Pictures for a model that reads them: PNG or JPEG bytes as plain base64 (no `data:` prefix),
+   * at most `MAX_IMAGES` in the whole question, each at most `MAX_IMAGE_BYTES` decoded. Only sent
+   * when the request sets `vision` and the runtime says the model reads pictures.
+   */
+  images?: string[];
+}
+
 /** A question for a local runtime (`LocalChatRequest` in Rust). */
 export interface LocalChatRequest {
   /** Also the id `ai_cancel` stops. */
@@ -145,7 +163,13 @@ export interface LocalChatRequest {
   baseUrl: string;
   model: string;
   system: string;
-  messages: ChatMessage[];
+  messages: LocalChatMessage[];
+  /**
+   * The caller means to send a picture. Without it any picture is refused (`no-vision`); with it a
+   * picture is still only sent when the runtime says the model reads pictures (`no-vision` when it
+   * says no, `vision-unverified` when it cannot tell).
+   */
+  vision?: boolean;
   /** Structured output, only when the check on this computer said the runtime supports it. */
   jsonSchema?: unknown;
   temperature?: number;
@@ -236,6 +260,12 @@ export const NOT_LOOPBACK = 'not-loopback';
 export const TOO_LARGE = 'too-large';
 /** Any other error the runtime reported. */
 export const FAILED = 'local-failed';
+/** A picture without `vision`, or for a model the runtime says cannot read pictures. */
+export const NO_VISION = 'no-vision';
+/** A picture for a model whose runtime cannot tell whether it reads pictures. */
+export const VISION_UNVERIFIED = 'vision-unverified';
+/** A picture that is not PNG or JPEG base64, is too large, or one too many. */
+export const BAD_IMAGE = 'bad-image';
 /**
  * Web-side only: the desktop app is older than this page and has no local-runtime command (the
  * web part was updated alone). The learner must install the new app.

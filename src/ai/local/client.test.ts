@@ -188,6 +188,46 @@ describe('desktop client for local runtimes', () => {
     expect(partials).toEqual(['Lực']);
   });
 
+  it('a stop stays a stop when Rust finished the answer before the cancel reached it', async () => {
+    tauri.handler = (cmd, args) => {
+      if (cmd === 'local_ai_chat') {
+        const ch = channelOf(args);
+        ch.onmessage({ kind: 'delta', text: 'Lực' });
+        // Rust finishes the whole answer a moment later: the stop never finds the call.
+        return new Promise((resolve) =>
+          setTimeout(() => {
+            ch.onmessage({ kind: 'delta', text: ' là đại lượng vectơ.' });
+            resolve(answer('Lực là đại lượng vectơ.'));
+          }, 30),
+        );
+      }
+      // `ai_cancel`: nothing registered under that id any more.
+      return Promise.resolve(false);
+    };
+    const ctl = new AbortController();
+    const partials: string[] = [];
+    const pending = new TauriLocalClient().chat(request, {
+      signal: ctl.signal,
+      onPartial: (t) => partials.push(t),
+    });
+    ctl.abort();
+    await expect(pending).rejects.toMatchObject({ code: 'cancelled', message: 'req-local' });
+    // Nothing is shown after "Dừng": not the late piece, not the final answer.
+    expect(partials).toEqual(['Lực']);
+    expect(tauri.calls.some((c) => c.cmd === 'ai_cancel')).toBe(true);
+
+    // A failure that comes after a stop is a stop too.
+    tauri.handler = (cmd) =>
+      cmd === 'local_ai_chat'
+        ? // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+          Promise.reject({ code: 'network', message: 'local-unreachable: closed' })
+        : Promise.resolve(false);
+    const stop = new AbortController();
+    const failing = new TauriLocalClient().chat(request, { signal: stop.signal });
+    stop.abort();
+    await expect(failing).rejects.toMatchObject({ code: 'cancelled' });
+  });
+
   it('reports Rust errors, and an older desktop app without the commands', async () => {
     tauri.handler = () =>
       // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors

@@ -152,6 +152,37 @@ describe('local runtime settings', () => {
     expect(sanitizeLocalAi('garbage')).toEqual({ userEndpoints: [], selected: null, checks: {} });
   });
 
+  it('writes the cleaned data back right after loading, and leaves clean data alone', async () => {
+    await load({
+      userEndpoints: ['http://192.168.1.5:11434', 'http://127.0.0.1:1234/'],
+      selected: { ...selection, baseUrl: 'http://10.0.0.2:11434' },
+      checks: {},
+    });
+    // No change was made after loading, yet the address off this computer is gone from storage.
+    const raw = localStorage.getItem(KEY) ?? '';
+    expect(raw).not.toContain('192.168.1.5');
+    expect(raw).not.toContain('10.0.0.2');
+    expect(saved()).toEqual({
+      state: { userEndpoints: ['http://127.0.0.1:1234'], selected: null, checks: {} },
+      version: 1,
+    });
+    // Once clean, loading again writes nothing.
+    const write = vi.spyOn(Storage.prototype, 'setItem');
+    await useLocalAiStore.persist.rehydrate();
+    expect(write).not.toHaveBeenCalled();
+    // Clean stored data (key order aside) is not rewritten either.
+    const clean = JSON.stringify({
+      version: 1,
+      state: { checks: {}, selected: selection, userEndpoints: ['http://127.0.0.1:11435'] },
+    });
+    localStorage.setItem(KEY, clean);
+    write.mockClear();
+    await useLocalAiStore.persist.rehydrate();
+    expect(write).not.toHaveBeenCalled();
+    expect(localStorage.getItem(KEY)).toBe(clean);
+    write.mockRestore();
+  });
+
   it('refuses an address off this computer and keeps the list short', () => {
     const s = useLocalAiStore.getState();
     expect(() => s.addEndpoint('http://10.0.0.2:8080')).toThrow(

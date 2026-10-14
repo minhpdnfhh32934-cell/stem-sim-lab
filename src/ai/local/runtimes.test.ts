@@ -43,10 +43,18 @@ describe('local runtime adapters (same fixtures as the Rust adapters)', () => {
       ['NOT_LOOPBACK', types.NOT_LOOPBACK],
       ['TOO_LARGE', types.TOO_LARGE],
       ['FAILED', types.FAILED],
+      ['NO_VISION', types.NO_VISION],
+      ['VISION_UNVERIFIED', types.VISION_UNVERIFIED],
+      ['BAD_IMAGE', types.BAD_IMAGE],
     ];
     for (const [name, value] of tags) {
       expect(rust, name).toContain(`pub const ${name}: &str = "${value}";`);
     }
+    // The picture limits of src-tauri/src/ai/local/vision.rs.
+    const vision = read('src-tauri/src/ai/local/vision.rs');
+    expect(vision).toContain(`pub const MAX_IMAGES: usize = ${types.MAX_IMAGES};`);
+    expect(types.MAX_IMAGE_BYTES).toBe(2 * 1024 * 1024);
+    expect(vision).toContain('pub const MAX_IMAGE_BYTES: usize = 2 * 1024 * 1024;');
     expect(rust).toContain('pub const FIRST_PIECE: Duration = Duration::from_secs(120);');
     expect(rust).toContain('pub const PIECE_GAP: Duration = Duration::from_secs(45);');
     expect(types.PROBE_ORDER).toEqual(['ollama', 'lmStudio', 'llamaCpp', 'openAiCompatible']);
@@ -133,6 +141,30 @@ describe('local runtime adapters (same fixtures as the Rust adapters)', () => {
     expect(s).toMatchObject({ format: { type: 'object' }, think: false });
   });
 
+  it('puts a picture in the images of its turn for Ollama', () => {
+    const png = btoa('\x89PNG\r\n\x1a\n\0\0\0\rIHDR picture');
+    const b = ollamaBody(
+      {
+        ...chatReq,
+        vision: true,
+        messages: [
+          { role: 'assistant', content: 'Bảng có hình vẽ.' },
+          { role: 'user', content: 'Chỗ em khoanh là gì?', images: [png] },
+        ],
+      },
+      { maxTokens: 512, contextLength: 8192, think: null },
+    );
+    const messages = b.messages as Record<string, unknown>[];
+    expect(messages[2]).toEqual({ role: 'user', content: 'Chỗ em khoanh là gì?', images: [png] });
+    expect(messages[1]).not.toHaveProperty('images');
+    expect(messages[0]).not.toHaveProperty('images');
+    // Turns without a picture have no `images` field.
+    for (const m of ollamaBody(chatReq, { maxTokens: 8, contextLength: 8192, think: null })
+      .messages as Record<string, unknown>[]) {
+      expect(m).not.toHaveProperty('images');
+    }
+  });
+
   it('reads the Ollama stream: text only (never the thinking field), then done', () => {
     const lines = new Lines().push(enc.encode(fixture('ollama-chat.ndjson')));
     let answer = '';
@@ -203,6 +235,39 @@ describe('local runtime adapters (same fixtures as the Rust adapters)', () => {
     });
     expect(b).not.toHaveProperty('think');
     expect(b).not.toHaveProperty('num_ctx');
+  });
+
+  it('sends a picture as an image_url part after the text of its turn (OpenAI-compatible)', () => {
+    const png = btoa('\x89PNG\r\n\x1a\n\0\0\0\rIHDR picture');
+    const jpeg = btoa('\xff\xd8\xff\xe0\0\x10JFIF\0 picture');
+    for (const [image, mime] of [
+      [png, 'image/png'],
+      [jpeg, 'image/jpeg'],
+    ] as const) {
+      const b = openaiBody(
+        {
+          ...chatReq,
+          kind: 'lmStudio',
+          vision: true,
+          messages: [
+            { role: 'user', content: 'Bảng này nói gì?' },
+            { role: 'assistant', content: 'Về lực.' },
+            { role: 'user', content: 'Chỗ em khoanh là gì?', images: [image] },
+          ],
+        },
+        { maxTokens: 64, contextLength: 4096, think: null },
+      );
+      const messages = b.messages as Record<string, unknown>[];
+      expect(messages[1]).toEqual({ role: 'user', content: 'Bảng này nói gì?' });
+      expect(messages[2]).toEqual({ role: 'assistant', content: 'Về lực.' });
+      expect(messages[3]).toEqual({
+        role: 'user',
+        content: [
+          { type: 'text', text: 'Chỗ em khoanh là gì?' },
+          { type: 'image_url', image_url: { url: `data:${mime};base64,${image}` } },
+        ],
+      });
+    }
   });
 
   it('reads LM Studio models: vision, load state and context, no embedding models', () => {

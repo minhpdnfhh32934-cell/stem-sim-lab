@@ -6,7 +6,8 @@
  * Nothing is asked on load: the saved choice is restored as it was, and the runtime is first
  * contacted when the learner asks something or presses a button. Stored data is never trusted:
  * every address is checked again (loopback only) and anything invalid is dropped when the store
- * is read back.
+ * is read back, and the cleaned data is written back at once (an address off this computer does
+ * not stay in storage until the next change).
  */
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -152,6 +153,24 @@ export function sanitizeLocalAi(old: unknown): Persisted {
   };
 }
 
+/** The store's key in localStorage, and its version. */
+const STORE_NAME = 'stemsim.local-ai';
+const STORE_VERSION = 1;
+
+const storage = createJSONStorage<Persisted>(() => localStorage);
+
+/** JSON with object keys sorted: the same data always gives the same text. */
+function canonical(v: unknown): string {
+  return JSON.stringify(v, (_key, value: unknown) =>
+    typeof value === 'object' && value !== null && !Array.isArray(value)
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)))
+      : value,
+  );
+}
+
+/** The cleaned data while the stored data held something invalid, until it is written back. */
+let cleaned: Persisted | null = null;
+
 export const useLocalAiStore = create<LocalAiState>()(
   persist(
     (set, get) => ({
@@ -206,13 +225,29 @@ export const useLocalAiStore = create<LocalAiState>()(
       },
     }),
     {
-      name: 'stemsim.local-ai',
-      version: 1,
-      storage: createJSONStorage(() => localStorage),
+      name: STORE_NAME,
+      version: STORE_VERSION,
+      storage,
       partialize: ({ userEndpoints, selected, checks }) => ({ userEndpoints, selected, checks }),
       migrate: (old) => sanitizeLocalAi(old),
       // Checked again on every load, not only when the version changes.
-      merge: (persisted, current) => ({ ...current, ...sanitizeLocalAi(persisted) }),
+      merge: (persisted, current) => {
+        const clean = sanitizeLocalAi(persisted);
+        cleaned =
+          persisted !== undefined && canonical(persisted) !== canonical(clean) ? clean : null;
+        return { ...current, ...clean };
+      },
+      // What had to be cleaned is written back once, right after loading.
+      onRehydrateStorage: () => (state) => {
+        const clean = cleaned;
+        cleaned = null;
+        if (!state || !clean) return;
+        try {
+          void storage?.setItem(STORE_NAME, { state: clean, version: STORE_VERSION });
+        } catch {
+          // Storage unavailable: the cleaned data stays in memory, and is saved on the next change.
+        }
+      },
     },
   ),
 );

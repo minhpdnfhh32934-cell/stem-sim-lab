@@ -74,7 +74,9 @@ export class TauriLocalClient implements LocalRuntimeClient {
    * `local_ai_chat`: the answer streams through a channel (reasoning already removed). The
    * events are provisional (`ShownText`); the returned content is the answer. A stop asks Rust
    * to cancel the request id (`ai_cancel`, retried until Rust has registered the call), which
-   * drops the request and closes the connection to the runtime.
+   * drops the request and closes the connection to the runtime. A stopped call always ends as
+   * `cancelled`, also when Rust finished the answer before the stop reached it: after "Dừng"
+   * nothing more is shown.
    */
   async chat(req: LocalChatRequest, opts: LocalChatOptions = {}): Promise<LocalChatResponse> {
     const { signal } = opts;
@@ -90,16 +92,19 @@ export class TauriLocalClient implements LocalRuntimeClient {
       // Events that arrive after the call ended (or after a stop) are not shown.
       if (running && !signal?.aborted) shown.apply(e);
     });
+    let answer: LocalChatResponse;
     try {
-      const answer = await invoke<LocalChatResponse>('local_ai_chat', { request, onEvent });
-      shown.settle(answer.content);
-      return answer;
+      answer = await invoke<LocalChatResponse>('local_ai_chat', { request, onEvent });
     } catch (e) {
+      if (signal?.aborted) throw new AiError('cancelled', req.requestId);
       throw commandError(e);
     } finally {
       running = false;
       signal?.removeEventListener('abort', onAbort);
     }
+    if (signal?.aborted) throw new AiError('cancelled', req.requestId);
+    shown.settle(answer.content);
+    return answer;
   }
 }
 

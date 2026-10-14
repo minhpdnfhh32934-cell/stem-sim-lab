@@ -10,7 +10,9 @@
  * - no key, no daily cap, no retry and never a fallback to the cloud;
  * - stall timers: first piece 120 s, then 45 s between pieces, at most 600 s; sizes capped;
  * - reasoning is removed while it streams (`ThinkFilter`); streamed text is provisional and the
- *   returned content is final.
+ *   returned content is final;
+ * - a picture goes only to a model whose runtime says it reads pictures, and only when the
+ *   caller asked for it (src/ai/local/vision.ts).
  *
  * It works only when the runtime allows the page's origin (CORS): Ollama allows localhost pages
  * by default, LM Studio and llama.cpp need it switched on. A refused request looks like "nothing
@@ -39,6 +41,7 @@ import {
   type LocalRuntimeAdapter,
 } from './runtimes';
 import { Lines, MAX_ANSWER_BYTES, MAX_LINE_BYTES, MAX_MODELS, rustTrim, sseLine } from './stream';
+import { allowVision, checkRequest } from './vision';
 import {
   FAILED,
   IS_OLLAMA,
@@ -516,9 +519,29 @@ export class FetchLocalClient implements LocalRuntimeClient {
     return { models: models.slice(0, MAX_MODELS), more: models.length > MAX_MODELS };
   }
 
+  /** What the runtime says about one model: its own details request, else its model list. */
+  private async detailsOf(
+    rt: LocalRuntimeAdapter,
+    base: Loopback,
+    id: string,
+    limitMs: number,
+    signal?: AbortSignal,
+  ): Promise<ModelDetails> {
+    if (rt.info) {
+      const got = await this.fetchText(base, rt.info(id), limitMs, INFO_BODY_CAP, signal);
+      if (got.status < 200 || got.status >= 300) throw statusError(got.status, got.body);
+      return rt.parseInfo(jsonOf(got.body), id);
+    }
+    const listed = (await this.fetchModels(rt, base, limitMs)).models.find((m) => m.id === id);
+    if (!listed) throw new AiError('http', `${MODEL_MISSING}: not listed`);
+    return detailsFromListing(listed, rt.declared);
+  }
+
   /**
-   * The chosen address must answer as the chosen runtime, and must not be Ollama chosen as
-   * another kind, before it gets a prompt.
+   * The chosen address must not be Ollama chosen as another kind, and must answer as the chosen
+   * runtime, before it gets a prompt. The Ollama check comes first, as for lists and details: an
+   * Ollama address chosen as another kind is named as such (`not-runtime: ollama`) whatever that
+   * kind's own fingerprint says.
    */
   private async identify(
     rt: LocalRuntimeAdapter,
@@ -526,6 +549,7 @@ export class FetchLocalClient implements LocalRuntimeClient {
     limitMs: number,
     signal?: AbortSignal,
   ): Promise<void> {
+    await this.refuseOllamaAsOther(rt, base, limitMs, signal);
     const got = await this.fetchText(base, rt.fingerprint, limitMs, PROBE_BODY_CAP, signal);
     let status = got.status;
     let print = rt.parseFingerprint(got.status, got.body);
@@ -538,12 +562,12 @@ export class FetchLocalClient implements LocalRuntimeClient {
     if (print.kind === 'needsAuth') throw new AiError('http', `${NEEDS_AUTH}: ${status}`);
     if (print.kind === 'notThis') throw new AiError('badResponse', NOT_RUNTIME);
     if (print.loading) throw new AiError('http', `${LOADING}: ${status}`);
-    await this.refuseOllamaAsOther(rt, base, limitMs, signal);
   }
 
   /**
    * Generation settings; for Ollama also checks that the model exists and runs on this computer
-   * (a cloud model may have been copied under a name without "cloud").
+   * (a cloud model may have been copied under a name without "cloud"), and returns what Ollama
+   * said about the model.
    */
   private async prepare(
     rt: LocalRuntimeAdapter,
@@ -551,7 +575,7 @@ export class FetchLocalClient implements LocalRuntimeClient {
     req: LocalChatRequest,
     model: string,
     signal?: AbortSignal,
-  ): Promise<ChatOptions> {
+  ): Promise<{ opts: ChatOptions; details: ModelDetails | null }> {
     const asked =
       req.contextLength !== undefined
         ? clamp(Math.round(req.contextLength), MIN_CONTEXT, MAX_CONTEXT)
@@ -561,16 +585,8 @@ export class FetchLocalClient implements LocalRuntimeClient {
       contextLength: asked ?? DEFAULT_CONTEXT,
       think: null,
     };
-    if (rt.kind !== 'ollama' || !rt.info) return opts;
-    const got = await this.fetchText(
-      base,
-      rt.info(model),
-      this.limits.precheckMs,
-      INFO_BODY_CAP,
-      signal,
-    );
-    if (got.status < 200 || got.status >= 300) throw statusError(got.status, got.body);
-    const d = rt.parseInfo(jsonOf(got.body), model);
+    if (rt.kind !== 'ollama') return { opts, details: null };
+    const d = await this.detailsOf(rt, base, model, this.limits.precheckMs, signal);
     if (d.remote) throw new AiError('notAllowed', REMOTE_MODEL);
     const own = d.contextLength;
     opts.contextLength =
@@ -578,7 +594,7 @@ export class FetchLocalClient implements LocalRuntimeClient {
         ? Math.min(asked, own)
         : (asked ?? (own !== null ? Math.min(own, DEFAULT_CONTEXT) : DEFAULT_CONTEXT));
     opts.think = req.think !== undefined && d.thinking === 'yes' ? req.think : null;
-    return opts;
+    return { opts, details: d };
   }
 
   /** Identifies the runtime, checks the model, sends the question and streams the answer. */
@@ -598,8 +614,15 @@ export class FetchLocalClient implements LocalRuntimeClient {
     if (model === null) throw new AiError('http', `${MODEL_MISSING}: invalid name`);
     // A name in Ollama's cloud form is refused for every kind, before any request.
     if (isCloudName(model)) throw new AiError('notAllowed', REMOTE_MODEL);
+    // Pictures are checked before any request too (format, size, count, asked for).
+    const pictures = checkRequest(req);
     await this.identify(rt, base, precheckMs, signal);
-    const opts = await this.prepare(rt, base, req, model, signal);
+    const { opts, details } = await this.prepare(rt, base, req, model, signal);
+    if (pictures > 0) {
+      // The model must read pictures, by what its runtime says (Ollama's details came above).
+      const d = details ?? (await this.detailsOf(rt, base, model, precheckMs, signal));
+      allowVision(d.vision);
+    }
 
     // Sending: until the first-piece deadline. A stop closes the connection, also later.
     const a = new Attempt(Math.max(0, firstEnd - performance.now()), signal);
@@ -719,16 +742,7 @@ export class FetchLocalClient implements LocalRuntimeClient {
     const rt = adapter(kind);
     const limit = this.limits.precheckMs;
     await this.refuseOllamaAsOther(rt, base, limit);
-    let details: ModelDetails;
-    if (rt.info) {
-      const got = await this.fetchText(base, rt.info(id), limit, INFO_BODY_CAP);
-      if (got.status < 200 || got.status >= 300) throw statusError(got.status, got.body);
-      details = rt.parseInfo(jsonOf(got.body), id);
-    } else {
-      const listed = (await this.fetchModels(rt, base, limit)).models.find((m) => m.id === id);
-      if (!listed) throw new AiError('http', `${MODEL_MISSING}: not listed`);
-      details = detailsFromListing(listed, rt.declared);
-    }
+    let details = await this.detailsOf(rt, base, id, limit);
     if (rt.health && rt.parseHealth) {
       try {
         const got = await this.fetchText(base, rt.health, limit, PROBE_BODY_CAP);

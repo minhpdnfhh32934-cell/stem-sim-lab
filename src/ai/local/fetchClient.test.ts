@@ -197,6 +197,29 @@ describe('browser client for local runtimes', () => {
     expect(calls.some((c) => c.key.includes('/chat'))).toBe(false);
   });
 
+  it('names an Ollama address for every other kind, before its own fingerprint', async () => {
+    // Ollama answers llama.cpp's `/props` with a 404, which alone would only say "not llama.cpp".
+    const calls = servers({
+      ...ollamaRoutes(),
+      [`GET ${OLLAMA}/props`]: text('404 page not found', 404),
+      [`GET ${OLLAMA}/v1/models`]: text(fixture('openai-models.json')),
+    });
+    const client = new FetchLocalClient();
+    for (const kind of ['llamaCpp', 'lmStudio', 'openAiCompatible'] as const) {
+      calls.length = 0;
+      await expect(client.chat(ask({ kind, model: 'qwen3:8b' }))).rejects.toMatchObject({
+        code: 'badResponse',
+        message: 'not-runtime: ollama',
+      });
+      expect(calls.map((c) => c.key)).toEqual([`GET ${OLLAMA}/api/version`]);
+      expect(await client.test(kind, OLLAMA, 'qwen3:8b')).toMatchObject({
+        status: 'notRuntime',
+        detail: 'ollama',
+      });
+    }
+    expect(calls.some((c) => c.key.includes('/chat'))).toBe(false);
+  });
+
   it('reads model details: Ollama /api/show, llama.cpp /props and /health', async () => {
     const calls = servers({ ...ollamaRoutes(), ...llamaRoutes() });
     const client = new FetchLocalClient();
@@ -393,9 +416,126 @@ describe('browser client for local runtimes', () => {
     await expect(new FetchLocalClient({ maxAnswerBytes: 10 }).chat(req)).rejects.toThrow(
       'too-large: answer over 10 bytes',
     );
-    servers({ [`GET ${LLAMA}/props`]: text('Loading model', 503) });
+    // A llama-server that is loading its model answers every path so.
+    servers({
+      [`GET ${LLAMA}/api/version`]: text('Loading model', 503),
+      [`GET ${LLAMA}/props`]: text('Loading model', 503),
+    });
     expect(await client.test('llamaCpp', LLAMA, 'gemma.gguf')).toMatchObject({
       status: 'loading',
+    });
+  });
+
+  describe('a picture from the board', () => {
+    const png = btoa('\x89PNG\r\n\x1a\n\0\0\0\rIHDR picture');
+    const withPicture = (over: Partial<LocalChatRequest> = {}) =>
+      ask({
+        vision: true,
+        messages: [{ role: 'user', content: 'Chỗ em khoanh là gì?', images: [png] }],
+        ...over,
+      });
+    const showVision = json({
+      model_info: { 'general.architecture': 'gemma3', 'gemma3.context_length': 131072 },
+      capabilities: ['completion', 'vision'],
+    });
+    const chatAnswer: Handler = (init) => streamed(fixture('ollama-chat.ndjson')).handler(init);
+    const asked = (calls: Call[]) => calls.some((c) => c.key.includes('/chat'));
+
+    it('reaches an Ollama model that reads pictures, in the images of its turn', async () => {
+      const calls = servers({
+        ...ollamaRoutes(chatAnswer),
+        [`POST ${OLLAMA}/api/show`]: showVision,
+      });
+      const r = await new FetchLocalClient().chat(withPicture({ model: 'gemma3:4b' }));
+      expect(r.content).toBe('Gia tốc a = 2 m/s², lớn dần.');
+      const sent = bodyOf(calls, `POST ${OLLAMA}/api/chat`);
+      expect((sent.messages as Record<string, unknown>[])[1]).toEqual({
+        role: 'user',
+        content: 'Chỗ em khoanh là gì?',
+        images: [png],
+      });
+    });
+
+    it('never reaches a model that does not or may not read pictures', async () => {
+      const client = new FetchLocalClient();
+      // Ollama says no "vision" capability.
+      let calls = servers(ollamaRoutes(chatAnswer));
+      await expect(client.chat(withPicture())).rejects.toMatchObject({
+        code: 'notAllowed',
+        message: 'no-vision',
+      });
+      expect(asked(calls)).toBe(false);
+      // An older Ollama cannot tell.
+      calls = servers({
+        ...ollamaRoutes(chatAnswer),
+        [`POST ${OLLAMA}/api/show`]: text(fixture('ollama-show-vision-old.json')),
+      });
+      await expect(client.chat(withPicture({ model: 'llava:7b' }))).rejects.toMatchObject({
+        message: 'vision-unverified',
+      });
+      expect(asked(calls)).toBe(false);
+      // llama.cpp's /props says `modalities.vision: false`.
+      calls = servers(llamaRoutes(chatAnswer));
+      const gguf = 'gemma-3-4b-it-Q4_K_M.gguf';
+      await expect(
+        client.chat(withPicture({ kind: 'llamaCpp', baseUrl: LLAMA, model: gguf })),
+      ).rejects.toMatchObject({ message: 'no-vision' });
+      expect(asked(calls)).toBe(false);
+      // Any other OpenAI-compatible server cannot tell.
+      calls = servers(llamaRoutes(chatAnswer));
+      await expect(
+        client.chat(withPicture({ kind: 'openAiCompatible', baseUrl: LLAMA, model: gguf })),
+      ).rejects.toMatchObject({ message: 'vision-unverified' });
+      expect(asked(calls)).toBe(false);
+    });
+
+    it('LM Studio: a `vlm` model gets the picture as an image_url part', async () => {
+      const calls = servers({
+        [`GET ${LMS}/api/version`]: text('Not Found', 404),
+        [`GET ${LMS}/api/v0/models`]: text(fixture('lmstudio-models.json')),
+        [`POST ${LMS}/v1/chat/completions`]: streamed(
+          sse(piece('Đó là vectơ lực.', 'stop'), '[DONE]'),
+        ).handler,
+      });
+      const client = new FetchLocalClient();
+      const r = await client.chat(
+        withPicture({ kind: 'lmStudio', baseUrl: LMS, model: 'qwen2-vl-7b-instruct' }),
+      );
+      expect(r.content).toBe('Đó là vectơ lực.');
+      const sent = bodyOf(calls, `POST ${LMS}/v1/chat/completions`);
+      expect((sent.messages as Record<string, unknown>[])[1]).toEqual({
+        role: 'user',
+        content: [
+          { type: 'text', text: 'Chỗ em khoanh là gì?' },
+          { type: 'image_url', image_url: { url: `data:image/png;base64,${png}` } },
+        ],
+      });
+      // A text-only (`llm`) model is refused before the question.
+      calls.length = 0;
+      await expect(
+        client.chat(withPicture({ kind: 'lmStudio', baseUrl: LMS, model: 'qwen2.5-7b-instruct' })),
+      ).rejects.toMatchObject({ message: 'no-vision' });
+      expect(asked(calls)).toBe(false);
+    });
+
+    it('refuses a picture not asked for, or not valid, before any request', async () => {
+      const calls = servers({
+        ...ollamaRoutes(chatAnswer),
+        [`POST ${OLLAMA}/api/show`]: showVision,
+      });
+      const client = new FetchLocalClient();
+      await expect(client.chat(withPicture({ vision: false }))).rejects.toMatchObject({
+        code: 'notAllowed',
+        message: 'no-vision',
+      });
+      for (const images of [[btoa('GIF89a picture')], [png, png]]) {
+        const e: unknown = await client
+          .chat(withPicture({ messages: [{ role: 'user', content: 'Đây là gì?', images }] }))
+          .catch((err: unknown) => err);
+        expect(e).toMatchObject({ code: 'notAllowed' });
+        expect((e as { message: string }).message).toMatch(/^bad-image/);
+      }
+      expect(calls).toEqual([]);
     });
   });
 
