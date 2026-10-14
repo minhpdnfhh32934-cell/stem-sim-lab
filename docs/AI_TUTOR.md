@@ -346,7 +346,7 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    **pronunciation dictionary** (`pronunciations.json`: term, reading, subject, `review_status`;
    applied before the rule-based reader so an entry wins; never inside `$…$`, LaTeX or code, never
    next to an operator or an arrow; a reading is words only — no digit, unit symbol or formula,
-   all 41 entries wait for a teacher, DATA_REVIEW PRON-1), reads the text with `toSpeech`, and cuts
+   all 42 entries wait for a teacher, DATA_REVIEW PRON-1), reads the text with `toSpeech`, and cuts
    it into chunks: paragraph > sentence > `;`/`:` > `,`; a piece of one word joins its neighbour;
    a piece over 100 characters is cut between words, before a conjunction if possible, at least 3
    words on each side; the first chunk is cut at a conjunction past 64 characters (the first

@@ -72,6 +72,9 @@ describe('dictionary entries win over the rule-based reader', () => {
     const { text, readings } = applyPronunciations('Tần số đo bằng Hertz.');
     expect(toSpeech(text)).toBe('Tần số đo bằng Héc.');
     expect(readings).toEqual(['Héc']);
+    expect(toSpeech(applyPronunciations('nhà bác học Isaac Newton').text)).toBe(
+      'nhà bác học I-xắc Niu-tơn',
+    );
   });
 
   it('overrides a reading the rule reader has (an entry is the teacher’s choice)', () => {
