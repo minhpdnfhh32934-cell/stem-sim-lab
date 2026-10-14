@@ -49,6 +49,39 @@ describe('TeachScript reader', () => {
     expect(fallback.sentences[0]?.actions[0]?.action).toMatchObject({ zone: 'main', role: 'body' });
   });
 
+  it('drops hidden reasoning whole: none of it is spoken or written (unlike other unknown tags)', () => {
+    const everything = (input: string) => {
+      const r = parseTeachScript(input);
+      return {
+        r,
+        text: r.sentences
+          .flatMap((s) => [s.speech, s.spoken, ...s.actions.map((a) => JSON.stringify(a.action))])
+          .join(' '),
+        ids: r.sentences.flatMap((s) =>
+          s.actions.flatMap((a) => (a.action.kind === 'write' ? [a.action.id] : [])),
+        ),
+      };
+    };
+    const closed = everything(
+      '<think>tính nháp</think> Ta có <write id="f1" math="true">a=1</write>.',
+    );
+    expect(closed.text).not.toContain('tính nháp');
+    expect(closed.ids).toEqual(['f1']);
+    expect(closed.r.diagnostics).toContainEqual({ code: 'reasoning_removed' });
+    for (const input of [
+      // Cut at the output limit inside the reasoning.
+      'Ta có <write id="f1" zone="steps">a = 1</write>. <think>còn nháp <write id="x1">b = 2</write>',
+      // The chat template pre-filled the opening tag.
+      'nháp <write id="x1">b = 2</write> hết</think>Ta có <write id="f1" zone="steps">a = 1</write>.',
+      // Other names, any case.
+      '<REASONING>nháp</REASONING><reflection>b = 2</reflection>Ta có <write id="f1" zone="steps">a = 1</write>.',
+    ]) {
+      const { text, ids } = everything(input);
+      expect(text).not.toMatch(/nháp|b = 2|hết/u);
+      expect(ids).toEqual(['f1']);
+    }
+  });
+
   it('removes coordinates the AI might try to give', () => {
     const r = parseTeachScript(
       '<draw id="d1" type="free_body" x="10" spec=\'{"forces":["P"],"left":30}\'/>',
@@ -139,6 +172,40 @@ describe('markdown answers on the board', () => {
       'Ta có .\n$$a = 1$$',
     );
     expect(subtitleText('Ta có $a = \\frac{F}{m}$ nhé')).toBe('Ta có a = F/m nhé');
+  });
+});
+
+describe('answers are cleaned before the board and the chat copy', () => {
+  const written = (content: string, reviewed = false) =>
+    scriptFor(content, { reviewed }).sentences.flatMap((s) =>
+      s.actions.flatMap((a) => (a.action.kind === 'write' ? [a.action.text] : [])),
+    );
+  const said = (content: string, reviewed = false) =>
+    scriptFor(content, { reviewed })
+      .sentences.map((s) => s.spoken)
+      .join(' ');
+
+  it('an answer saved with hidden reasoning and an echoed label shows neither', () => {
+    const content =
+      '<think>thử m = 7 kg</think>**GHI CHÚ:**\n# Định luật II\n1. Cho m = 2 kg, F = 10 N\n2. Vậy a = 5 m/s²';
+    const all = [...written(content), said(content), boardAnswerText(content)].join(' ');
+    expect(all).not.toMatch(/think|thử|7 kg|GHI CHÚ/u);
+    expect(written(content)[0]).toBe('Định luật II');
+    expect(written(content).join(' ')).toContain('Vậy a = 5 m/s²');
+    // TeachScript answers too.
+    const script = 'Ta có <write id="f1" zone="steps">a = 1</write>.<think>nháp</think>';
+    expect(boardAnswerText(script)).not.toContain('nháp');
+  });
+
+  it('a Think answer saved with the reviewer notes teaches only the lesson', () => {
+    const content =
+      'Nhận xét về bản nháp: đúng hướng.\n\nBản đã sửa:\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.';
+    expect(written(content, true)[0]).toBe('Rơi tự do');
+    const all = [...written(content, true), said(content, true)].join(' ');
+    expect(all).not.toMatch(/bản nháp|Bản đã sửa/u);
+    expect(boardAnswerText(content, { reviewed: true })).toBe(
+      '# Rơi tự do\n1. Vật chỉ chịu trọng lực.',
+    );
   });
 });
 

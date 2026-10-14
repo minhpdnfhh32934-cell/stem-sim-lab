@@ -44,9 +44,17 @@ const SCRIPT =
 const SAID = ['Câu một alpha.', 'Câu hai beta.', 'Câu ba gamma.'];
 
 /** Like TeacherScreen: re-renders on `speaking` and builds a new lesson object every render. */
-function Page({ id = 'answer-1', content = SCRIPT }: { id?: string; content?: string }) {
+function Page({
+  id = 'answer-1',
+  content = SCRIPT,
+  reviewed = false,
+}: {
+  id?: string;
+  content?: string;
+  reviewed?: boolean;
+}) {
   useVoiceStore((s) => s.speaking);
-  const lesson: LessonInput = { id, content, question: '' };
+  const lesson: LessonInput = { id, content, question: '', ...(reviewed ? { reviewed } : {}) };
   return <Whiteboard lesson={lesson} />;
 }
 
@@ -112,6 +120,32 @@ describe('whiteboard: a new answer with the voice on', () => {
     // Shown again later, the same answer is taught from its start.
     fonts.ready = Promise.resolve();
     render(<Page id="answer-closed" />);
+    await untilDone();
+    expect(voice.said).toEqual(SAID);
+  });
+
+  it("teaches only the lesson: hidden reasoning, the reviewer's notes and echoed labels are neither said nor written", async () => {
+    const content =
+      '<think>tính nháp 7 kg</think>Nhận xét về bản nháp: đúng hướng.\n\nBản đã sửa:\n**GHI CHÚ:**\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.\n2. Vậy s = 20 m.<think>kiểm tra lại';
+    const view = render(<Page id="answer-clean" content={content} reviewed />);
+    await untilDone();
+    const banned = /nháp|7 kg|Nhận xét|Bản đã sửa|GHI CHÚ|kiểm tra lại|think/u;
+    expect(voice.said.length).toBeGreaterThan(0);
+    expect(voice.said.filter((s) => banned.test(s))).toEqual([]);
+    const elements = useBoardStore.getState().layout.elements;
+    const sources = elements.flatMap((e) => (e.kind === 'text' ? [e.source] : []));
+    expect(sources[0]).toBe('Rơi tự do');
+    expect(sources.join(' ')).toContain('Vậy s = 20 m.');
+    expect(sources.filter((s) => banned.test(s))).toEqual([]);
+    const shown = [...view.container.querySelectorAll('.board__el')].map((e) => e.textContent);
+    expect(shown.length).toBe(elements.length);
+    expect(shown.filter((s) => banned.test(s))).toEqual([]);
+  });
+
+  it('a TeachScript lesson with reasoning between sentences says each sentence once, without it', async () => {
+    const content =
+      'Câu một <write id="a1" zone="steps">alpha</write>. <think>nháp riêng</think>Câu hai <write id="b1" zone="steps">beta</write>. Câu ba <write id="c1" zone="steps">gamma</write>.';
+    render(<Page id="answer-script-think" content={content} />);
     await untilDone();
     expect(voice.said).toEqual(SAID);
   });

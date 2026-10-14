@@ -1,9 +1,11 @@
 /**
  * TeachScript 1.0 reader (docs/TEACHSCRIPT.md). Text outside tags is what the teacher says;
  * a tag's place in the text is when its action happens. The reader is fault tolerant: a broken
- * tag is dropped and its words are still spoken, unknown tags keep their text, nothing throws.
+ * tag is dropped and its words are still spoken, unknown tags keep their text (hidden reasoning
+ * such as <think> excepted: it is dropped whole), nothing throws.
  * The AI names intentions (zone, role, target), never coordinates: the layout engine places.
  */
+import { stripAllReasoning } from '@/ai/reasoning';
 
 export type Zone = 'title' | 'main' | 'steps' | 'side_notes' | 'example' | 'diagram' | 'scratch';
 export const ZONES: readonly Zone[] = [
@@ -137,7 +139,8 @@ export interface Diagnostic {
     | 'tag_too_long'
     | 'coordinates_removed'
     | 'unknown_zone'
-    | 'unknown_role';
+    | 'unknown_role'
+    | 'reasoning_removed';
   tag?: string;
 }
 
@@ -490,7 +493,13 @@ function sentencesOf(
 /** Reads a TeachScript answer. Never throws. */
 export function parseTeachScript(input: string): ParsedScript {
   const diagnostics: Diagnostic[] = [];
-  const tokens = tokenize(input.normalize('NFC'), diagnostics);
+  // Hidden reasoning (<think>, <thinking>, <reasoning>, <reflection>) is a drop container: none
+  // of its text is spoken or written, also when it is unclosed or its opening tag was pre-filled
+  // by a chat template (the shared rule, src/ai/reasoning.ts). Other unknown tags keep their
+  // words (§6).
+  const reasoning = stripAllReasoning(input.normalize('NFC'));
+  if (reasoning.removed) diagnostics.push({ code: 'reasoning_removed' });
+  const tokens = tokenize(reasoning.text, diagnostics);
   const segments: { speech: string; actions: TimedAction[]; pauseMs: number }[] = [];
   let speech = '';
   let actions: TimedAction[] = [];

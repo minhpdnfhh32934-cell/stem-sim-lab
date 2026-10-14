@@ -57,6 +57,15 @@ draft request and then asks a second, different provider to review and rewrite t
   draft go to the reviewer).
 - The answer shows the “Nội dung do AI hỗ trợ” label with the model and a report button, plus
   “Đã rà soát: …” when Think was used.
+- Only learning content is kept (`src/teacher/chat/answerClean.ts`, run in `askTeacher` before
+  the answer is stored, spoken, drawn or checked for numbers): hidden reasoning (`<think>`…,
+  also unclosed or orphan; the streaming preview hides it while it is written), echoed
+  `<reference>` blocks, HTML comments, lines that only repeat a prompt label (“GHI CHÚ”, “KẾT QUẢ
+  DO SIMLAB TÍNH”…, `promptLabels.ts`) and, for a Think answer, the reviewer’s notes about the
+  draft (“Nhận xét về bản nháp…”, “Bản đã sửa:”). The reviewer gets the cleaned draft. The safety
+  filter checks the text as received and the cleaned text; an answer with nothing left shows
+  `chat.errors.noAnswer`. The board and the chat copy clean answers saved by older versions
+  too (`lesson.scriptFor`, `boardAnswerText`). Nothing is rewritten and no number is changed.
 - Desktop: keys are stored in the operating-system keychain (shared with the same provider in other
   AI settings). Browser/localhost: keys typed into the page live in memory for this session only.
   Claude cannot be called from a web page, so in the browser it is listed as “chỉ bản desktop” and
@@ -398,7 +407,8 @@ new question, clearing history, leaving the page or closing the panel stops the 
 The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate from synthesis:
 
 1. **Speech plan** (`src/teacher/voice/speechPlan.ts`, pure). `prepareSpeech(text, {role, emphasis})`
-   removes what is not meant to be heard (`<think>` blocks, `<reference>` blocks, comments,
+   removes what is not meant to be heard (hidden reasoning — `<think>` and friends, also unclosed
+   or orphan, `src/ai/reasoning.ts` —, `<reference>` blocks, comments,
    known tags only — TeachScript, SSML and a short HTML list (`markup.ts`), even with `>` inside an
    attribute; a comparison without spaces such as "x<y khi y>0" stays and is read "nhỏ hơn" /
    "lớn hơn" —, horizontal rules, emoji), applies the

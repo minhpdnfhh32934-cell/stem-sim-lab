@@ -326,6 +326,19 @@ describe('what is not meant to be heard', () => {
     expect(plan.text).toContain('Xin chào các em!');
   });
 
+  it('never reads hidden reasoning: unclosed, orphan, other tag names (same rule as the board)', () => {
+    expect(stripInternalMarkup('Đáp án đây. <think>Mình cần kiểm tra lại 3 kg')).toBe(
+      'Đáp án đây.',
+    );
+    expect(stripInternalMarkup('Người dùng hỏi về lực…</think> Đáp án')).toBe('Đáp án');
+    expect(
+      stripInternalMarkup(
+        '<thinking>a</thinking><reasoning>b</reasoning>Câu <REFLECTION>c</REFLECTION>trả lời.',
+      ),
+    ).toBe('Câu trả lời.');
+    expect(prepareSpeech('Vậy a = 5. <think>thử lại 7 kg').text).not.toMatch(/thử|bảy|7/u);
+  });
+
   it('removes only known tags: "x<y khi y>0" and "a<b and c>d" are comparisons, read whole', () => {
     expect(stripInternalMarkup('x<y khi y>0')).toBe('x<y khi y>0');
     expect(stripInternalMarkup('a<b and c>d')).toBe('a<b and c>d');

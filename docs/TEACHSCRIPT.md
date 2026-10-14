@@ -151,6 +151,11 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   open. Unclosed containers at end of stream are closed implicitly (log `unclosed_tag`).
 - Unknown tag → dropped, its text content kept as speech (log `unknown_tag`). Unknown attribute →
   ignored (log). Malformed attribute → tag dropped, text kept.
+- Hidden reasoning (`<think>`, `<thinking>`, `<reasoning>`, `<reflection>`, any case) is the
+  exception: the whole block is dropped, never spoken or written (log `reasoning_removed`). An
+  unclosed block is cut to the end; a closing tag with no opening tag before it (a chat template
+  pre-filled the opening tag) drops everything before it. One rule for the chat, the voice and
+  the board: `src/ai/reasoning.ts`, shared vectors `tests/fixtures/reasoning-strip.json`.
 - The parser never throws; it returns `{ sentences, diagnostics }`. **Fuzz tests** feed random
   byte strings and random tag soups and assert: no exception, all plain text reaches speech in
   order, no action is emitted from inside a broken tag.

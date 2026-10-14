@@ -571,7 +571,11 @@ export function ChatPanel({
                   </div>
                 )}
                 {message.role === 'assistant' ? (
-                  <MessageBody content={boardAnswerText(message.content)} />
+                  <MessageBody
+                    content={boardAnswerText(message.content, {
+                      reviewed: message.checkedBy !== undefined,
+                    })}
+                  />
                 ) : (
                   <p>{message.content}</p>
                 )}

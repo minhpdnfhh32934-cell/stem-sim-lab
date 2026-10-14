@@ -14,6 +14,7 @@ import {
 } from '@/teacher/voice/speak';
 import type { SpeechRole } from '@/teacher/voice/speechPlan';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
+import { cleanAnswer, type CleanOptions } from '@/teacher/chat/answerClean';
 import { markdownToScript } from './fromMarkdown';
 import {
   emptyLayout,
@@ -42,18 +43,26 @@ export interface LessonInput {
   question: string;
   /** The model that answered (shown in the AI label). */
   model?: string;
+  /** Written by the Think reviewer (the record has `checkedBy`): its notes about the draft go. */
+  reviewed?: boolean;
 }
 
-/** TeachScript when the answer has board tags, else the markdown layout. */
-export function scriptFor(content: string): ParsedScript {
-  const parsed = parseTeachScript(content);
-  return parsed.hasBoard ? parsed : markdownToScript(content);
+/**
+ * TeachScript when the answer has board tags, else the markdown layout. The answer is cleaned
+ * first (answerClean.ts): new answers already are, answers saved by an older version may still
+ * hold hidden reasoning or echoed prompt labels.
+ */
+export function scriptFor(content: string, options: CleanOptions = {}): ParsedScript {
+  const clean = cleanAnswer(content, options).text;
+  const parsed = parseTeachScript(clean);
+  return parsed.hasBoard ? parsed : markdownToScript(clean);
 }
 
-/** Plain text of an answer for the chat history (tags removed, board writing kept). */
-export function boardAnswerText(content: string): string {
-  const parsed = parseTeachScript(content);
-  if (!parsed.hasBoard) return content;
+/** Plain text of an answer for the chat history (cleaned, tags removed, board writing kept). */
+export function boardAnswerText(content: string, options: CleanOptions = {}): string {
+  const clean = cleanAnswer(content, options).text;
+  const parsed = parseTeachScript(clean);
+  if (!parsed.hasBoard) return clean;
   return parsed.sentences
     .map((s) => {
       const written = s.actions
@@ -512,7 +521,7 @@ export async function playLesson(input: LessonInput, measure: Measure): Promise<
     subtitle: '',
     strokes: [],
   });
-  await run(scriptFor(input.content), input, measure);
+  await run(scriptFor(input.content, { reviewed: input.reviewed === true }), input, measure);
 }
 
 /**
@@ -538,6 +547,8 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
   const progress = { ...store.progress };
   for (const e of store.layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
   store.set({ progress, marks: store.marks.map((m) => ({ ...m, shown: true })) });
+  // The rest comes from "Viết tiếp", which is never reviewed: a reviewer's notes could only
+  // stand at the start of the whole answer.
   await run(scriptFor(input.content.slice(previous.content.length)), input, measure);
 }
 
