@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import vectors from '../../tests/fixtures/reasoning-strip.json';
-import { hideUnfinishedReasoning, stripAllReasoning, stripReasoning } from './reasoning';
+import {
+  hideUnfinishedReasoning,
+  stripAllReasoning,
+  stripReasoning,
+  stripReasoningOutsideCode,
+} from './reasoning';
 
 describe('hidden reasoning: the shared vectors (same file as the Rust test)', () => {
   it.each(vectors.cases)('$name', (c) => {
@@ -50,6 +55,53 @@ describe('hidden reasoning: the shared vectors (same file as the Rust test)', ()
       expect(once).not.toMatch(/<\/?(?:think|thinking|reasoning|reflection)[\s>]/i);
       expect(stripAllReasoning(once)).toEqual({ text: once, removed: false, unclosed: false });
     }
+  });
+});
+
+describe('a reasoning tag written as code', () => {
+  it('without code it is exactly the app rule (every shared vector)', () => {
+    for (const c of vectors.cases) {
+      expect(stripReasoningOutsideCode(c.input)).toEqual(stripAllReasoning(c.input));
+    }
+  });
+
+  it('an opening tag in inline code or a closed fence is code, not reasoning', () => {
+    for (const text of [
+      'Qwen dùng thẻ `<think>` để suy nghĩ. Bước 1: a = 2 m/s².',
+      '```html\n<think>\n```\nVậy a = 2.',
+      '~~~\n<reasoning type="x">\n~~~\nHết.',
+    ]) {
+      expect(stripReasoningOutsideCode(text)).toEqual({ text, removed: false, unclosed: false });
+      // The plain rule cuts these at the tag.
+      expect(stripAllReasoning(text).removed).toBe(true);
+    }
+  });
+
+  it('reasoning around or holding code still goes; a closing tag always counts', () => {
+    expect(stripReasoningOutsideCode('<think>dùng `<think>` nhé</think>Đáp số 4.').text).toBe(
+      'Đáp số 4.',
+    );
+    expect(stripReasoningOutsideCode('Viết `<think>` thế này. <think>nháp</think>Hết.').text).toBe(
+      'Viết `<think>` thế này. Hết.',
+    );
+    expect(stripReasoningOutsideCode('<think>x ` y</think> Ta có `a` b.').text).toBe(
+      'Ta có `a` b.',
+    );
+    expect(stripReasoningOutsideCode('Đáp số 4. <think>thử `x` và')).toEqual({
+      text: 'Đáp số 4.',
+      removed: true,
+      unclosed: true,
+    });
+    expect(stripReasoningOutsideCode('nháp riêng `</think>` Lực.').text).not.toContain(
+      'nháp riêng',
+    );
+  });
+
+  it('the streaming preview shows a tag written as code once its code span is closed', () => {
+    expect(hideUnfinishedReasoning('Qwen dùng thẻ `<think>` để')).toBe(
+      'Qwen dùng thẻ `<think>` để',
+    );
+    expect(hideUnfinishedReasoning('Qwen dùng thẻ `<think>')).toBe('Qwen dùng thẻ `');
   });
 });
 

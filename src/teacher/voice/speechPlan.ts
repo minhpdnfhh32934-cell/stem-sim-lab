@@ -9,7 +9,7 @@
  * first chunk is kept short. A chunk never ends inside a number with its unit, a formula or a
  * name, and the chunks are the prepared text in order, word for word.
  */
-import { stripAllReasoning } from '@/ai/reasoning';
+import { stripReasoningOutsideCode } from '@/ai/reasoning';
 import { stripTags } from './markup';
 import { applyPronunciations, type PronunciationEntry } from './pronunciations';
 import {
@@ -126,7 +126,7 @@ export interface PrepareOptions {
 /**
  * Removes what is not meant to be heard: a model's hidden reasoning (the shared rule of
  * `src/ai/reasoning.ts`: closed, unclosed and orphan blocks, <think>, <thinking>, <reasoning>,
- * <reflection>), reference blocks, comments, known tags (TeachScript, speech and a few HTML tags,
+ * <reflection>; a tag written as code stays), reference blocks, comments, known tags (TeachScript, speech and a few HTML tags,
  * `markup.ts`; a ">" inside a quoted attribute does not end the tag), horizontal rules and emoji.
  * A "<" between words is a comparison and stays ("x<y khi y>0"). Markdown itself is read by
  * `toSpeech`.
@@ -134,7 +134,7 @@ export interface PrepareOptions {
 export function stripInternalMarkup(text: string): string {
   return (
     stripTags(
-      stripAllReasoning(text)
+      stripReasoningOutsideCode(text)
         .text.replace(/<reference\b[\s\S]*?<\/reference>/gi, ' ')
         .replace(/<!--[\s\S]*?-->/g, ' '),
     )

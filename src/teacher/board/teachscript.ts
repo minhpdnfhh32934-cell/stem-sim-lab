@@ -5,7 +5,7 @@
  * such as <think> excepted: it is dropped whole), nothing throws.
  * The AI names intentions (zone, role, target), never coordinates: the layout engine places.
  */
-import { stripAllReasoning } from '@/ai/reasoning';
+import { stripReasoningOutsideCode } from '@/ai/reasoning';
 
 export type Zone = 'title' | 'main' | 'steps' | 'side_notes' | 'example' | 'diagram' | 'scratch';
 export const ZONES: readonly Zone[] = [
@@ -495,9 +495,10 @@ export function parseTeachScript(input: string): ParsedScript {
   const diagnostics: Diagnostic[] = [];
   // Hidden reasoning (<think>, <thinking>, <reasoning>, <reflection>) is a drop container: none
   // of its text is spoken or written, also when it is unclosed or its opening tag was pre-filled
-  // by a chat template (the shared rule, src/ai/reasoning.ts). Other unknown tags keep their
-  // words (§6).
-  const reasoning = stripAllReasoning(input.normalize('NFC'));
+  // by a chat template (the shared rule, src/ai/reasoning.ts). A tag between backticks is code,
+  // not reasoning ("`<think>`"); a bare literal "<think>" in the text is reasoning (cut to the
+  // end when unclosed). Other unknown tags keep their words (§6).
+  const reasoning = stripReasoningOutsideCode(input.normalize('NFC'));
   if (reasoning.removed) diagnostics.push({ code: 'reasoning_removed' });
   const tokens = tokenize(reasoning.text, diagnostics);
   const segments: { speech: string; actions: TimedAction[]; pauseMs: number }[] = [];

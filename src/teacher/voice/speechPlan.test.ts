@@ -339,6 +339,13 @@ describe('what is not meant to be heard', () => {
     expect(prepareSpeech('Vậy a = 5. <think>thử lại 7 kg').text).not.toMatch(/thử|bảy|7/u);
   });
 
+  it('a reasoning tag written as code is read on, the sentence after it too', () => {
+    expect(stripInternalMarkup('Qwen dùng thẻ `<think>` để suy nghĩ. Bước 1: a = 2.')).toBe(
+      'Qwen dùng thẻ `<think>` để suy nghĩ. Bước 1: a = 2.',
+    );
+    expect(stripInternalMarkup('<think>dùng `<think>` nhé</think>Đáp số 4.')).toBe('Đáp số 4.');
+  });
+
   it('removes only known tags: "x<y khi y>0" and "a<b and c>d" are comparisons, read whole', () => {
     expect(stripInternalMarkup('x<y khi y>0')).toBe('x<y khi y>0');
     expect(stripInternalMarkup('a<b and c>d')).toBe('a<b and c>d');

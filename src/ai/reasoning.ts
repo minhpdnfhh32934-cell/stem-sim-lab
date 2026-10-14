@@ -118,16 +118,49 @@ export function stripAllReasoning(text: string): StrippedReasoning {
   return removed ? { text: out, removed, unclosed } : { text, removed, unclosed };
 }
 
+/** A closed code fence (``` or ~~~ at a line start, closed by the same marker), or inline code. */
+const CODE = /^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[ \t]*$|`[^`\n]+`/gm;
+const ANY_CLOSE = new RegExp(`</${NAME}\\s*>`, 'i');
+const CODE_OPEN = '\u{E002}';
+const CODE_CLOSE = '\u{E003}';
+const HELD_CODE = /\u{E002}(\d+)\u{E003}/gu;
+
+/**
+ * `stripAllReasoning`, except that an opening tag written as code (inline code or a closed
+ * fence: "Qwen dùng thẻ `<think>`") is code, not the start of hidden reasoning. A code span that
+ * holds a closing reasoning tag is not set apart: a closing tag always ends a block or marks
+ * reasoning whose opening tag a chat template pre-filled, so hiding it could let reasoning
+ * through. Code inside a reasoning block goes with the block. What the app uses for an answer
+ * (chat, voice, board); without code it gives exactly `stripAllReasoning` (tested).
+ */
+export function stripReasoningOutsideCode(text: string): StrippedReasoning {
+  if (text.includes(CODE_OPEN) || text.includes(CODE_CLOSE)) return stripAllReasoning(text);
+  const spans: string[] = [];
+  const masked = text.replace(CODE, (code) => {
+    if (!OPEN.test(code) || ANY_CLOSE.test(code)) return code;
+    spans.push(code);
+    return `${CODE_OPEN}${String(spans.length - 1)}${CODE_CLOSE}`;
+  });
+  if (spans.length === 0) return stripAllReasoning(text);
+  const stripped = stripAllReasoning(masked);
+  if (!stripped.removed) return { text, removed: false, unclosed: false };
+  return {
+    ...stripped,
+    text: stripped.text.replace(HELD_CODE, (_, i: string) => spans[Number(i)] ?? ''),
+  };
+}
+
 const PARTIAL_TAG = /<(\/?)([a-z]*)(\s[^<>]*)?$/i;
 
 /**
  * The answer so far, for a streaming preview: reasoning blocks removed (an unfinished one hides
  * everything after its opening tag) and a tag still being typed at the very end ("<thi",
  * "<think type=\"x") hidden until it is known not to open a reasoning block. A closing tag left
- * without its opening tag (pre-filled template) can only be recognised once it has arrived.
+ * without its opening tag (pre-filled template) can only be recognised once it has arrived. A tag
+ * written as code is code (`stripReasoningOutsideCode`).
  */
 export function hideUnfinishedReasoning(partial: string): string {
-  const { text } = stripAllReasoning(partial);
+  const { text } = stripReasoningOutsideCode(partial);
   const tail = PARTIAL_TAG.exec(text);
   if (!tail) return text;
   const name = (tail[2] ?? '').toLowerCase();

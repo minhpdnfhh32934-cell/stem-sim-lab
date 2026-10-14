@@ -155,7 +155,9 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   exception: the whole block is dropped, never spoken or written (log `reasoning_removed`). An
   unclosed block is cut to the end; a closing tag with no opening tag before it (a chat template
   pre-filled the opening tag) drops everything before it. One rule for the chat, the voice and
-  the board: `src/ai/reasoning.ts`, shared vectors `tests/fixtures/reasoning-strip.json`.
+  the board: `src/ai/reasoning.ts`, shared vectors `tests/fixtures/reasoning-strip.json`. An
+  opening tag between backticks (inline code or a closed fence) is code, not reasoning; a bare
+  literal `<think>` in the text is reasoning (`stripReasoningOutsideCode`).
 - The parser never throws; it returns `{ sentences, diagnostics }`. **Fuzz tests** feed random
   byte strings and random tag soups and assert: no exception, all plain text reaches speech in
   order, no action is emitted from inside a broken tag.
