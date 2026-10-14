@@ -168,3 +168,4 @@ export function mcnemarP(onlyA: number, onlyB: number): number;
 export function numberRepeats<T extends EvalRun>(runs: T[]): T[];
 export function pairedComparison(a: EvalRun[], b: EvalRun[]): PairedComparison;
 export function gpuRefusal(adapters: Record<string, string | null | undefined>): string | null;
+export function evalSetPath(root: string, argv: readonly string[]): string;

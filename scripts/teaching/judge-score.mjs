@@ -10,6 +10,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { evalSetPath } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const argv = process.argv.slice(2);
@@ -19,11 +20,11 @@ const opt = (name) => {
 };
 const keyFile = opt('key');
 const jsonOut = opt('json');
-const valued = new Set(['--key', '--json']);
+const valued = new Set(['--key', '--json', '--set']);
 const files = argv.filter((a, i) => !a.startsWith('--') && !valued.has(argv[i - 1] ?? ''));
 if (!keyFile || !files.length) throw new Error('usage: --key <key> [--json <out>] <scores…>');
 const { key, groups } = JSON.parse(readFileSync(keyFile, 'utf8'));
-const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
+const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 const kindOf = (item) =>
   item.expectsClarify ? 'missing-data' : item.history?.length ? 'feedback' : item.type;

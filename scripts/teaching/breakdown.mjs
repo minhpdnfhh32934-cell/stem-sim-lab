@@ -8,14 +8,16 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildConflicts, fileRuns, groupKey, scoreAnswer } from './rubric.mjs';
+import { buildConflicts, evalSetPath, fileRuns, groupKey, scoreAnswer } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
 const jsonAt = args.indexOf('--json');
 const jsonOut = jsonAt >= 0 ? args[jsonAt + 1] : null;
-const files = args.filter((a, i) => !a.startsWith('--') && (jsonAt < 0 || i !== jsonAt + 1));
-const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
+const files = args.filter(
+  (a, i) => !a.startsWith('--') && (jsonAt < 0 || i !== jsonAt + 1) && args[i - 1] !== '--set',
+);
+const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 
 const all = files.flatMap((f) => fileRuns(JSON.parse(readFileSync(f, 'utf8')), f));

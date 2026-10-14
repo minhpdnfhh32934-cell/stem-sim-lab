@@ -9,7 +9,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fileRuns, groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
+import { evalSetPath, fileRuns, groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
@@ -17,7 +17,9 @@ const flag = (name) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const input = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--out');
+const input = args.find(
+  (a, i) => !a.startsWith('--') && args[i - 1] !== '--out' && args[i - 1] !== '--set',
+);
 if (!input) {
   console.error(
     'usage: node scripts/teaching/rescore.mjs <eval-….json> [--out <file>] [--changes]',
@@ -27,7 +29,7 @@ if (!input) {
 const out = flag('out');
 
 const saved = JSON.parse(readFileSync(resolve(input), 'utf8'));
-const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
+const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 
 const results = fileRuns(saved, input).map((r) => {

@@ -14,7 +14,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { groupKey } from './rubric.mjs';
+import { evalSetPath, groupKey } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const argv = process.argv.slice(2);
@@ -26,13 +26,13 @@ const out = opt('out');
 const groups = String(opt('groups', '')).split(',').filter(Boolean);
 const judges = Number(opt('judges', '2'));
 const seed = opt('seed', 'simlab-2026-10-14');
-const valued = new Set(['--out', '--groups', '--judges', '--seed']);
+const valued = new Set(['--out', '--groups', '--judges', '--seed', '--set']);
 const files = argv.filter((a, i) => !a.startsWith('--') && !valued.has(argv[i - 1] ?? ''));
 if (!out || groups.length < 2 || !files.length)
   throw new Error('usage: --out <folder> --groups <g1,g2,…> [--judges 2] <files…>');
 mkdirSync(out, { recursive: true });
 
-const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
+const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const runs = files.flatMap((f) => {
   const file = JSON.parse(readFileSync(f, 'utf8'));
   return file.results
