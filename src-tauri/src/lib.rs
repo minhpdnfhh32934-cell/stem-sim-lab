@@ -2,7 +2,7 @@
 //!
 //! - `app_info`: build information
 //! - `ai_*`: AI gateway (`AIProvider`: Gemini, Claude, Groq; keys in the OS keychain; retry,
-//!   timeout, cancel, daily cap)
+//!   timeout, cancel, daily cap); `ai_chat_stream` streams text answers through a channel
 //! - `local_ai_*`: language models run by another program on this computer (Ollama, LM Studio,
 //!   llama.cpp, OpenAI-compatible): loopback only, streamed, cancellable, never counted and
 //!   never sent to the cloud
@@ -52,6 +52,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             app_info,
             ai::ai_chat,
+            ai::ai_chat_stream,
             ai::tts::ai_tts,
             ai::ai_cancel,
             ai::ai_models,

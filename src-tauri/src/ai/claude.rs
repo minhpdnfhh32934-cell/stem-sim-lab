@@ -3,6 +3,7 @@
 use serde_json::{json, Value};
 
 use super::provider::AIProvider;
+use super::stream::{event_json, provider_error, SseEvent, StreamState};
 use super::{AiError, ChatRequest, Provider};
 
 pub const CLAUDE_URL: &str = "https://api.anthropic.com/v1";
@@ -92,6 +93,58 @@ impl AIProvider for ClaudeProvider {
             return Err(AiError::BadResponse(format!("empty answer ({reason})")));
         }
         Ok(text)
+    }
+
+    /// The same body with `"stream": true`.
+    fn stream_request(
+        &self,
+        http: &reqwest::Client,
+        base: &str,
+        key: &str,
+        req: &ChatRequest,
+    ) -> reqwest::RequestBuilder {
+        let mut body = claude_body(req);
+        body["stream"] = json!(true);
+        http.post(format!("{base}/messages"))
+            .header("x-api-key", key)
+            .header("anthropic-version", ANTHROPIC_VERSION)
+            .json(&body)
+    }
+
+    /// Messages API events: the model from `message_start`, text from `text_delta`s (thinking,
+    /// signature and tool deltas are not answer text), the stop reason from `message_delta`, the
+    /// end at `message_stop`. An `error` event (e.g. `overloaded_error`) is the HTTP error it
+    /// stands for. A `refusal` stop is an empty answer, as without streaming: the API leaves a
+    /// declined partial out of a whole answer, so a streamed one is not kept either.
+    fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
+        let v = event_json(ev)?;
+        match v["type"].as_str().unwrap_or(&ev.event) {
+            "message_start" => {
+                if st.model.is_none() {
+                    st.model = v["message"]["model"].as_str().map(str::to_string);
+                }
+            }
+            "content_block_delta" if v["delta"]["type"] == "text_delta" => {
+                st.delta
+                    .push_str(v["delta"]["text"].as_str().unwrap_or_default());
+            }
+            "message_delta" => {
+                if let Some(reason) = v["delta"]["stop_reason"].as_str() {
+                    if reason == "refusal" {
+                        return Err(AiError::BadResponse("empty answer (refusal)".into()));
+                    }
+                    st.finished(reason, "max_tokens");
+                }
+            }
+            "message_stop" => {
+                st.ended = true;
+                st.closed = true;
+            }
+            "error" => return Err(provider_error(&v["error"])),
+            // ping, content_block_start/stop, other deltas and future event types.
+            _ => {}
+        }
+        Ok(())
     }
 
     fn models_request(&self, http: &reqwest::Client, key: &str) -> reqwest::RequestBuilder {

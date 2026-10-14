@@ -2,172 +2,24 @@
 //! port on 127.0.0.1 and answers from a script: no real runtime is ever started or contacted,
 //! and `detect` (which asks the real default ports) is never called.
 
-use std::io::{ErrorKind, Read, Write};
-use std::net::{TcpListener, TcpStream};
+use std::io::ErrorKind;
+use std::net::TcpListener;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-use serde_json::{json, Value};
+use serde_json::json;
 
 use super::endpoint::{loopback_client, LoopHost, Loopback};
 use super::runtime::{runtime, Cap, RuntimeKind};
 use super::*;
+use crate::ai::mock_server::{json_answer, serve, stream_head, Mock, Req, Step};
 use crate::ai::{cancel_inflight, AiError, AiState, Message};
-
-struct Req {
-    method: String,
-    path: String,
-    body: String,
-}
-
-#[derive(Clone)]
-enum Step {
-    Send(Vec<u8>),
-    Wait(u64),
-    /// Waits until the client closes the connection and reports it.
-    WaitForClose,
-}
-
-struct Mock {
-    port: u16,
-    seen: Arc<Mutex<Vec<(String, String)>>>,
-    closed: mpsc::Receiver<bool>,
-}
 
 impl Mock {
     fn base(&self) -> Loopback {
         Loopback::v4(self.port)
     }
-
-    /// "METHOD /path" of every request, in order.
-    fn seen(&self) -> Vec<String> {
-        self.seen
-            .lock()
-            .unwrap()
-            .iter()
-            .map(|(r, _)| r.clone())
-            .collect()
-    }
-
-    fn body_of(&self, path: &str) -> Value {
-        let seen = self.seen.lock().unwrap();
-        let (_, body) = seen
-            .iter()
-            .find(|(r, _)| r.ends_with(path))
-            .unwrap_or_else(|| panic!("no request to {path}"));
-        serde_json::from_str(body).unwrap()
-    }
-}
-
-fn read_request(s: &mut TcpStream) -> Option<Req> {
-    let mut head = Vec::new();
-    let mut byte = [0u8; 1];
-    while !head.ends_with(b"\r\n\r\n") {
-        match s.read(&mut byte) {
-            Ok(1) => head.push(byte[0]),
-            _ => return None,
-        }
-    }
-    let head = String::from_utf8_lossy(&head).into_owned();
-    let mut first = head.lines().next()?.split(' ');
-    let method = first.next()?.to_string();
-    let path = first.next()?.to_string();
-    let len = head
-        .lines()
-        .filter_map(|l| l.split_once(':'))
-        .find(|(k, _)| k.eq_ignore_ascii_case("content-length"))
-        .and_then(|(_, v)| v.trim().parse::<usize>().ok())
-        .unwrap_or(0);
-    let mut body = vec![0u8; len];
-    s.read_exact(&mut body).ok()?;
-    Some(Req {
-        method,
-        path,
-        body: String::from_utf8_lossy(&body).into_owned(),
-    })
-}
-
-fn closed_by_peer(s: &mut TcpStream) -> bool {
-    s.set_read_timeout(Some(Duration::from_secs(5))).ok();
-    let mut buf = [0u8; 256];
-    loop {
-        match s.read(&mut buf) {
-            Ok(0) => return true,
-            Ok(_) => continue,
-            Err(e) => {
-                return matches!(
-                    e.kind(),
-                    ErrorKind::ConnectionReset
-                        | ErrorKind::ConnectionAborted
-                        | ErrorKind::BrokenPipe
-                )
-            }
-        }
-    }
-}
-
-fn serve(handler: impl Fn(&Req) -> Vec<Step> + Send + Sync + 'static) -> Mock {
-    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-    let port = listener.local_addr().unwrap().port();
-    let seen = Arc::new(Mutex::new(Vec::new()));
-    let (tx, closed) = mpsc::channel();
-    let handler = Arc::new(handler);
-    let log = seen.clone();
-    thread::spawn(move || {
-        for conn in listener.incoming() {
-            let Ok(mut stream) = conn else { break };
-            let (handler, log, tx) = (handler.clone(), log.clone(), tx.clone());
-            thread::spawn(move || {
-                stream.set_read_timeout(Some(Duration::from_secs(5))).ok();
-                let Some(req) = read_request(&mut stream) else {
-                    return;
-                };
-                let steps = handler(&req);
-                log.lock()
-                    .unwrap()
-                    .push((format!("{} {}", req.method, req.path), req.body));
-                for step in steps {
-                    match step {
-                        Step::Send(bytes) => {
-                            if stream
-                                .write_all(&bytes)
-                                .and_then(|_| stream.flush())
-                                .is_err()
-                            {
-                                let _ = tx.send(true);
-                                return;
-                            }
-                        }
-                        Step::Wait(ms) => thread::sleep(Duration::from_millis(ms)),
-                        Step::WaitForClose => {
-                            let _ = tx.send(closed_by_peer(&mut stream));
-                        }
-                    }
-                }
-            });
-        }
-    });
-    Mock { port, seen, closed }
-}
-
-fn json_answer(status: &str, body: &str) -> Vec<Step> {
-    vec![Step::Send(
-        format!(
-            "HTTP/1.1 {status}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
-            body.len()
-        )
-        .into_bytes(),
-    )]
-}
-
-/// Headers of a streamed answer whose body ends when the connection closes.
-fn stream_head(content_type: &str) -> Step {
-    Step::Send(
-        format!("HTTP/1.1 200 OK\r\nContent-Type: {content_type}\r\nConnection: close\r\n\r\n")
-            .into_bytes(),
-    )
 }
 
 fn ndjson_head() -> Step {

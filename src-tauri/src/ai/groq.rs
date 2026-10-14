@@ -5,6 +5,7 @@
 use serde_json::{json, Value};
 
 use super::provider::AIProvider;
+use super::stream::{event_json, provider_error, SseEvent, StreamState};
 use super::{AiError, ChatRequest, Provider};
 
 pub const GROQ_URL: &str = "https://api.groq.com/openai/v1";
@@ -97,6 +98,46 @@ impl AIProvider for GroqProvider {
             return Err(AiError::BadResponse(format!("empty answer ({reason})")));
         }
         Ok(text.to_string())
+    }
+
+    /// The same body with `"stream": true`.
+    fn stream_request(
+        &self,
+        http: &reqwest::Client,
+        base: &str,
+        key: &str,
+        req: &ChatRequest,
+    ) -> reqwest::RequestBuilder {
+        let mut body = groq_body(req);
+        body["stream"] = json!(true);
+        http.post(format!("{base}/chat/completions"))
+            .bearer_auth(key)
+            .json(&body)
+    }
+
+    /// `chat.completion.chunk` events: text in `choices[0].delta.content` (a separate
+    /// `reasoning` field is not answer text), `finish_reason` (`length` = cut), then `[DONE]`.
+    /// An `error` object is the HTTP error it stands for.
+    fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
+        if ev.data.trim() == "[DONE]" {
+            st.ended = true;
+            st.closed = true;
+            return Ok(());
+        }
+        let v = event_json(ev)?;
+        if let Some(err) = v.get("error") {
+            return Err(provider_error(err));
+        }
+        if st.model.is_none() {
+            st.model = self.response_model(&v);
+        }
+        let choice = &v["choices"][0];
+        st.delta
+            .push_str(choice["delta"]["content"].as_str().unwrap_or_default());
+        if let Some(reason) = choice["finish_reason"].as_str() {
+            st.finished(reason, "length");
+        }
+        Ok(())
     }
 
     fn models_request(&self, http: &reqwest::Client, key: &str) -> reqwest::RequestBuilder {

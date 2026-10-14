@@ -4,6 +4,7 @@
 use serde_json::{json, Value};
 
 use super::provider::AIProvider;
+use super::stream::{event_json, provider_error, SseEvent, StreamState};
 use super::{AiError, ChatRequest, Provider};
 
 pub const GEMINI_URL: &str = "https://generativelanguage.googleapis.com/v1beta";
@@ -50,6 +51,20 @@ pub fn gemini_body(req: &ChatRequest) -> Value {
     })
 }
 
+/// The answer text of a candidate. Thought summaries are not part of the answer.
+fn answer_text(candidate: &Value) -> String {
+    candidate["content"]["parts"]
+        .as_array()
+        .map(|ps| {
+            ps.iter()
+                .filter(|p| p["thought"].as_bool() != Some(true))
+                .filter_map(|p| p["text"].as_str())
+                .collect::<Vec<_>>()
+                .join("")
+        })
+        .unwrap_or_default()
+}
+
 impl AIProvider for GeminiProvider {
     fn id(&self) -> Provider {
         Provider::Gemini
@@ -76,17 +91,7 @@ impl AIProvider for GeminiProvider {
 
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
         let candidate = &v["candidates"][0];
-        let text: String = candidate["content"]["parts"]
-            .as_array()
-            .map(|ps| {
-                ps.iter()
-                    // Thought summaries are not part of the answer.
-                    .filter(|p| p["thought"].as_bool() != Some(true))
-                    .filter_map(|p| p["text"].as_str())
-                    .collect::<Vec<_>>()
-                    .join("")
-            })
-            .unwrap_or_default();
+        let text = answer_text(candidate);
         if text.trim().is_empty() {
             let reason = candidate["finishReason"]
                 .as_str()
@@ -103,6 +108,44 @@ impl AIProvider for GeminiProvider {
 
     fn response_model(&self, v: &Value) -> Option<String> {
         v["modelVersion"].as_str().map(str::to_string)
+    }
+
+    /// `streamGenerateContent` with `alt=sse`: the same body, answered as server-sent events, each
+    /// one a `GenerateContentResponse` with the next piece of the answer.
+    fn stream_request(
+        &self,
+        http: &reqwest::Client,
+        base: &str,
+        key: &str,
+        req: &ChatRequest,
+    ) -> reqwest::RequestBuilder {
+        http.post(format!(
+            "{base}/models/{}:streamGenerateContent?alt=sse",
+            gemini_model(&req.model)
+        ))
+        .header("x-goog-api-key", key)
+        .json(&gemini_body(req))
+    }
+
+    /// Text parts without thoughts; `finishReason` (or a blocked prompt's `blockReason`) ends the
+    /// answer, `MAX_TOKENS` means it was cut. An `error` object is the HTTP error it stands for.
+    fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
+        let v = event_json(ev)?;
+        if let Some(err) = v.get("error") {
+            return Err(provider_error(err));
+        }
+        if st.model.is_none() {
+            st.model = self.response_model(&v);
+        }
+        let candidate = &v["candidates"][0];
+        st.delta.push_str(&answer_text(candidate));
+        if let Some(reason) = candidate["finishReason"]
+            .as_str()
+            .or_else(|| v["promptFeedback"]["blockReason"].as_str())
+        {
+            st.finished(reason, "MAX_TOKENS");
+        }
+        Ok(())
     }
 
     fn models_request(&self, http: &reqwest::Client, key: &str) -> reqwest::RequestBuilder {

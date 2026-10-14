@@ -9,6 +9,10 @@
 //!
 //! Every answer has the model's reasoning removed ([`reasoning`]) before it reaches the page.
 //!
+//! Text answers can also stream to the page as they are written (`ai_chat_stream`, see
+//! [`stream`]), with the same gate, key check, daily cap, cancel and fallback rule; retries and the
+//! fallback then only happen before anything was shown.
+//!
 //! A call is registered for `ai_cancel` before anything else ([`InflightGuard`]), so a stop
 //! pressed while the gate, the key or the daily cap is being checked is never counted or sent.
 //!
@@ -24,6 +28,7 @@ pub mod groq;
 pub mod local;
 pub mod provider;
 pub mod reasoning;
+pub mod stream;
 pub mod tts;
 pub mod usage;
 
@@ -160,6 +165,10 @@ pub enum AiError {
     /// Blocked by the safety gate (18+ confirmation), see `safety`.
     #[error("not allowed: {0}")]
     NotAllowed(String),
+    /// This way of asking is not offered for the request (e.g. a JSON-schema answer through
+    /// `ai_chat_stream`). The page already knows the code `unavailable`.
+    #[error("unavailable: {0}")]
+    Unavailable(String),
 }
 
 /// AI calls need the safety gate open (18+ and the terms confirmed).
@@ -298,15 +307,20 @@ pub fn is_quota_error(e: &AiError) -> bool {
     let AiError::Http(msg) = e else {
         return false;
     };
-    let status: u16 = msg
-        .split(|c: char| !c.is_ascii_digit())
-        .find(|s| !s.is_empty())
-        .and_then(|s| s.parse().ok())
-        .unwrap_or(0);
+    let status = http_status(msg);
     let lower = msg.to_ascii_lowercase();
     matches!(status, 402 | 429)
         || (status == 400 && lower.contains("credit balance"))
         || lower.contains("resource_exhausted")
+}
+
+/// The HTTP status of an [`AiError::Http`] message (its first number: "429 Too Many Requests: …",
+/// "529: overloaded_error: …"), or 0.
+pub(crate) fn http_status(msg: &str) -> u16 {
+    msg.split(|c: char| !c.is_ascii_digit())
+        .find(|s| !s.is_empty())
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0)
 }
 
 fn client() -> Result<reqwest::Client, AiError> {
@@ -492,25 +506,30 @@ async fn send_with_fallback(state: &AiState, req: &ChatRequest) -> Result<ChatRe
         req,
         api_key,
         |r, key| async move { send(&r, &key).await },
+        is_quota_error,
     )
     .await
 }
 
-/// The fallback rule, with the key lookup and the sender passed in (tested without network):
+/// The fallback rule, with the key lookup, the sender and the switch test passed in (tested
+/// without network):
 /// - the chosen provider must have a key (a missing key is never replaced by the fallback);
 /// - the fallback answers only when the chosen provider is out of quota or credit, now
-///   ([`is_quota_error`]) or in the last minutes ([`AiState::is_exhausted`]);
+///   (`may_switch`: [`is_quota_error`], and for a stream also "nothing was shown yet") or in the
+///   last minutes ([`AiState::is_exhausted`]);
 /// - a fallback equal to the chosen provider, or without a key, is ignored.
-async fn with_fallback<K, S, F>(
+pub(crate) async fn with_fallback<K, S, F, W>(
     state: &AiState,
     req: &ChatRequest,
     key_of: K,
     send: S,
+    may_switch: W,
 ) -> Result<ChatResponse, AiError>
 where
     K: Fn(Provider) -> Result<String, AiError>,
     S: Fn(ChatRequest, String) -> F,
     F: Future<Output = Result<ChatResponse, AiError>>,
+    W: Fn(&AiError) -> bool,
 {
     let primary_key = key_of(req.provider)?;
     let fallback = req
@@ -530,7 +549,7 @@ where
         }
     }
     match (send(req.clone(), primary_key).await, fallback) {
-        (Err(e), Some((f, key))) if is_quota_error(&e) => {
+        (Err(e), Some((f, key))) if may_switch(&e) => {
             state.mark_exhausted(req.provider);
             send(as_fallback(req, &f), key)
                 .await
@@ -538,6 +557,51 @@ where
         }
         (other, _) => other,
     }
+}
+
+/// A text answer that streams to the page through `on_event` as it is written ([`stream`]). The
+/// same gate, key check, daily cap (counted once, before anything is sent), cancel (`ai_cancel`
+/// with the request id; dropping the request closes the connection) and fallback rule as
+/// [`ai_chat`]; retries and the fallback only before anything was shown. `timeoutSecs` is the wait
+/// for the first text; then at most 45 s between chunks and 600 s in all. Requests with a JSON
+/// schema are refused (`unavailable`): they keep using `ai_chat`.
+#[tauri::command]
+pub async fn ai_chat_stream(
+    app: tauri::AppHandle,
+    state: tauri::State<'_, AiState>,
+    request: ChatRequest,
+    on_event: tauri::ipc::Channel<stream::StreamEvent>,
+) -> Result<ChatResponse, AiError> {
+    // First of all, so `ai_cancel` finds the call however early the stop comes.
+    let (_inflight, stop) = InflightGuard::register(state.inner(), &request.request_id)?;
+    require_ai_allowed(&app)?;
+    stream::streamable(&request)?;
+    // As in `ai_chat`: the fallback never answers for a provider that was not set up.
+    if api_key(request.provider).is_err() {
+        return Err(AiError::MissingKey(request.provider.key_name().into()));
+    }
+    let http = client()?;
+    let timing = stream::Timing::chat(request.timeout_secs);
+    let sink = move |e: stream::StreamEvent| {
+        // A closed page simply stops receiving; the answer is still returned.
+        let _ = on_event.send(e);
+    };
+    run_counted(
+        &request.request_id,
+        stop,
+        || count_call(&app, &state, &request),
+        stream::stream_with_fallback(
+            &state,
+            &http,
+            &request,
+            api_key,
+            |p| provider(p).base_url().to_string(),
+            timing,
+            &sink,
+        ),
+        timing.overall,
+    )
+    .await
 }
 
 #[tauri::command]
@@ -1101,6 +1165,18 @@ pub(crate) mod tests {
             "pub async fn ai_tts(",
             "count_usage(",
         );
+        order(
+            include_str!("mod.rs"),
+            "pub async fn ai_chat_stream(",
+            "count_call(",
+        );
+        // A JSON-schema request is refused before anything is counted.
+        let code = include_str!("mod.rs")
+            .split("#[cfg(test)]")
+            .next()
+            .unwrap_or_default();
+        let body = code.split("pub async fn ai_chat_stream(").nth(1).unwrap();
+        assert!(body.find("stream::streamable(").unwrap() < body.find("run_counted(").unwrap());
     }
 
     fn answer(p: Provider) -> ChatResponse {
@@ -1130,11 +1206,17 @@ pub(crate) mod tests {
                 Err(AiError::MissingKey(p.key_name().into()))
             }
         };
-        let result = block(with_fallback(st, r, key_of, |sent: ChatRequest, _key| {
-            calls.lock().unwrap().push(sent.provider);
-            let a = answers(sent.provider);
-            async move { a }
-        }));
+        let result = block(with_fallback(
+            st,
+            r,
+            key_of,
+            |sent: ChatRequest, _key| {
+                calls.lock().unwrap().push(sent.provider);
+                let a = answers(sent.provider);
+                async move { a }
+            },
+            is_quota_error,
+        ));
         (result, calls.into_inner().unwrap())
     }
 
@@ -1267,3 +1349,7 @@ pub(crate) mod tests {
         assert!(!send_fn.contains("ChatResponse {"));
     }
 }
+
+// Below the tests on purpose: wiring tests read only the source above the first test attribute.
+#[cfg(test)]
+pub(crate) mod mock_server;

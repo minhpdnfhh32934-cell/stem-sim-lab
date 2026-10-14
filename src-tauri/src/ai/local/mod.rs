@@ -40,7 +40,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use tokio::time::Instant;
 
-use super::reasoning::{ReasoningStream, Shown};
+use super::reasoning::ReasoningStream;
 use super::{require_ai_allowed, stop_requested, AiError, AiState, InflightGuard, Message};
 use endpoint::{loopback_client, parse_loopback, Loopback, DEFAULTS};
 use runtime::{
@@ -142,30 +142,10 @@ pub struct LocalChatResponse {
     pub streamed: bool,
 }
 
-/// A change to the answer shown while it streams.
-///
-/// Provisional: when a chat template pre-fills the opening reasoning tag, the model's reasoning
-/// arrives first with nothing to mark it, so it is sent as `delta`s and only taken back by a
-/// `reset` when its closing tag comes (rule 3 of [`crate::ai::reasoning`]). The page may show
-/// deltas, but speech, board actions and anything that cannot be taken back wait for the final
-/// [`LocalChatResponse::content`].
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-#[serde(tag = "kind", content = "text", rename_all = "camelCase")]
-pub enum LocalEvent {
-    /// Add this text at the end.
-    Delta(String),
-    /// Replace everything shown so far (reasoning was recognised late).
-    Reset(String),
-}
-
-impl From<Shown> for LocalEvent {
-    fn from(s: Shown) -> LocalEvent {
-        match s {
-            Shown::Append(t) => LocalEvent::Delta(t),
-            Shown::Replace(t) => LocalEvent::Reset(t),
-        }
-    }
-}
+/// A change to the answer shown while it streams: the same events as a streamed cloud answer
+/// (provisional until the final [`LocalChatResponse::content`], see
+/// [`crate::ai::stream::StreamEvent`]).
+pub use super::stream::StreamEvent as LocalEvent;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -295,7 +275,8 @@ pub(crate) fn tag_of(e: &AiError) -> &str {
         | AiError::BadResponse(m)
         | AiError::Keychain(m)
         | AiError::DailyLimit(m)
-        | AiError::NotAllowed(m) => m,
+        | AiError::NotAllowed(m)
+        | AiError::Unavailable(m) => m,
     };
     msg.split(':').next().unwrap_or_default().trim()
 }
