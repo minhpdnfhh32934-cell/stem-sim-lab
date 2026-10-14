@@ -57,9 +57,22 @@ export interface AnswerScore {
   invented: string[];
 }
 
+/** The app build an evaluation ran against (scripts/teaching/eval-gemma.mjs). */
+export interface Build {
+  /** git rev-parse HEAD of the repository the script ran in. */
+  commit: string | null;
+  /** Tracked files differed from that commit. */
+  dirty: boolean | null;
+  /** SHA-256 of /src/teacher/chat/chatService.ts as the server under --base served it. */
+  chatServiceSha256: string;
+  model: string;
+}
+
 /** One model answer of an evaluation run (scripts/teaching/eval-gemma.mjs). */
 export interface EvalRun {
   id?: string;
+  model?: string | undefined;
+  build?: Build | undefined;
   variant?: string;
   decoding?: string;
   temperature?: number;
@@ -134,7 +147,21 @@ export function mangledTerms(item: Partial<EvalItem>, answer: string): string[];
 export function scoreAnswer(item: EvalItem, answer: string): AnswerScore;
 export function summarize(scores: AnswerScore[]): Summary;
 export function summarizeRuns(runs: EvalRun[]): RunSummary;
-export function groupKey(run: Pick<EvalRun, 'variant' | 'decoding' | 'temperature'>): string;
+/** A saved evaluation file. */
+export interface SavedEval {
+  model?: string;
+  build?: Build;
+  results?: EvalRun[];
+}
+
+export function groupKey(
+  run: Pick<EvalRun, 'model' | 'variant' | 'decoding' | 'temperature'>,
+): string;
+export function fileRuns(saved: SavedEval, file: string): (EvalRun & { file: string })[];
+export function buildConflicts(runs: EvalRun[]): { key: string; builds: string[] }[];
+export function skipRefusal(saved: SavedEval, now: { model: string; build: Build }): string | null;
+export function servedPromptVariant(source: string): 'current' | 'improved';
+export function variantRefusal(variants: string[], source: string): string | null;
 export function signTestP(wins: number, losses: number): number;
 export function mcnemarP(onlyA: number, onlyB: number): number;
 export function numberRepeats<T extends EvalRun>(runs: T[]): T[];

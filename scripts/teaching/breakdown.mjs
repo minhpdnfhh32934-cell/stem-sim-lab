@@ -1,13 +1,14 @@
 // Breaks saved AI Teacher evaluations down by question type and subject, and lists the answers
 // with a serious problem (no key fact, a known wrong claim, an invented number on a missing-data
 // question, agreement with a wrong learner claim). Re-scores every answer with the current rubric,
-// like compare.mjs. Reads files only: no browser, no GPU.
+// like compare.mjs, and groups runs like it ("model/variant/decoding/temperature"; two app builds
+// under one group stop the script). Reads files only: no browser, no GPU.
 //
 //   node scripts/teaching/breakdown.mjs <eval-….json> [more files…] [--json <out>]
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { groupKey, scoreAnswer } from './rubric.mjs';
+import { buildConflicts, fileRuns, groupKey, scoreAnswer } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
@@ -17,11 +18,21 @@ const files = args.filter((a, i) => !a.startsWith('--') && (jsonAt < 0 || i !== 
 const set = JSON.parse(readFileSync(resolve(root, 'tests/teaching/teaching-eval.json'), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 
-const runs = files
-  .flatMap((f) => JSON.parse(readFileSync(f, 'utf8')).results)
+const all = files.flatMap((f) => fileRuns(JSON.parse(readFileSync(f, 'utf8')), f));
+const conflicts = buildConflicts(all);
+if (conflicts.length) {
+  for (const c of conflicts) {
+    console.error(`${c.key}: results of different builds (commit, chatService.ts hash):`);
+    for (const b of c.builds) console.error(`  ${b}`);
+  }
+  console.error('Refusing to merge them into one group: break them down as separate files.');
+  process.exit(1);
+}
+const runs = all
   .filter((r) => r.ok && items.has(r.id))
   .map((r) => ({ ...r, score: scoreAnswer(items.get(r.id), r.answer), group: groupKey(r) }));
 const groups = [...new Set(runs.map((r) => r.group))].sort();
+const col = Math.max(18, ...groups.map((g) => g.length + 2));
 const kindOf = (item) =>
   item.expectsClarify ? 'missing-data' : item.history?.length ? 'feedback' : item.type;
 const pct = (x) => `${(x * 100).toFixed(0)} %`;
@@ -30,7 +41,7 @@ const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : Na
 const table = (title, keyOf) => {
   const keys = [...new Set(runs.map(keyOf))].sort();
   console.log(`\n${title}: mean key facts (answers)`);
-  console.log(['', ...groups].map((g) => g.padEnd(18)).join(''));
+  console.log(['', ...groups].map((g) => g.padEnd(col)).join(''));
   const rows = {};
   for (const k of keys) {
     const cells = groups.map((g) => {
@@ -38,7 +49,7 @@ const table = (title, keyOf) => {
       return rs.length ? `${pct(mean(rs.map((r) => r.score.keyFacts)))} (${rs.length})` : '–';
     });
     rows[k] = cells;
-    console.log([k, ...cells].map((c) => String(c).padEnd(18)).join(''));
+    console.log([k, ...cells].map((c) => String(c).padEnd(col)).join(''));
   }
   return rows;
 };

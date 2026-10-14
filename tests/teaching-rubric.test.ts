@@ -1,9 +1,13 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   asksForMissingData,
+  buildConflicts,
   endsWithQuestion,
+  fileRuns,
   fold,
   foreignScript,
   gpuRefusal,
@@ -16,11 +20,14 @@ import {
   opensWithAgreement,
   pairedComparison,
   scoreAnswer,
+  servedPromptVariant,
   signTestP,
+  skipRefusal,
   stepsInOrder,
   summarize,
   summarizeRuns,
   trapHandled,
+  variantRefusal,
   type AnswerScore,
   type EvalItem,
   type EvalRun,
@@ -1324,9 +1331,190 @@ describe('paired comparison statistics', () => {
     });
   });
 
-  it('labels runs by variant, decoding and temperature, with the old defaults', () => {
-    expect(groupKey({ variant: 'current', decoding: 'app', temperature: 0 })).toBe('current/app/0');
-    expect(groupKey({ variant: 'before' })).toBe('before/legacy/0.2');
+  it('labels runs by model, variant, decoding and temperature, with the old defaults', () => {
+    const run = { variant: 'current', decoding: 'app', temperature: 0 };
+    expect(groupKey({ ...run, model: 'gemma3-1b' })).toBe('gemma3-1b/current/app/0');
+    // Two models never share a group.
+    expect(groupKey({ ...run, model: 'gemma3-270m' })).not.toBe(
+      groupKey({ ...run, model: 'gemma3-1b' }),
+    );
+    expect(groupKey({ variant: 'before' })).toBe('?/before/legacy/0.2');
+  });
+});
+
+describe('build identity of saved results', () => {
+  const build = (commit: string, chatServiceSha256 = 'h1') => ({
+    commit,
+    dirty: false,
+    chatServiceSha256,
+    model: 'gemma3-1b',
+  });
+  const run = (over: Partial<EvalRun>): EvalRun => ({
+    id: 'P3',
+    model: 'gemma3-1b',
+    variant: 'current',
+    decoding: 'app',
+    temperature: 0,
+    repeat: 0,
+    ok: true,
+    answer: 'a',
+    ms: 1,
+    promptChars: 1,
+    score: scoreAnswer(item('P3'), 'a'),
+    ...over,
+  });
+
+  it('takes the model and build of the file when a result has none', () => {
+    const saved = {
+      model: 'gemma3-1b',
+      build: build('c1'),
+      results: [run({ model: undefined }), run({ id: 'P4', build: build('c2') })],
+    };
+    const runs = fileRuns(saved, 'x.json');
+    expect(runs.map((r) => r.model)).toEqual(['gemma3-1b', 'gemma3-1b']);
+    expect(runs.map((r) => r.build?.commit)).toEqual(['c1', 'c2']);
+    expect(runs.map((r) => r.file)).toEqual(['x.json', 'x.json']);
+    // Files of 2026-10-14 carry no build: none is made up.
+    expect(fileRuns({ model: 'gemma3-1b', results: [run({})] }, 'y.json')[0]?.build).toBe(
+      undefined,
+    );
+  });
+
+  it('refuses to merge two builds under one group, accepts files without a build', () => {
+    // The 771dd86 scenario: one script, run against the 0.6.0 server and the improved one.
+    expect(
+      buildConflicts([run({ build: build('v2') }), run({ id: 'P4', build: build('tq') })]),
+    ).toEqual([{ key: 'gemma3-1b/current/app/0', builds: ['v2 h1', 'tq h1'] }]);
+    // Same commit, other served chatService.ts (an uncommitted prompt change).
+    expect(
+      buildConflicts([run({ build: build('v2', 'h1') }), run({ build: build('v2', 'h2') })]),
+    ).toHaveLength(1);
+    expect(buildConflicts([run({ build: build('v2') }), run({ build: build('v2') })])).toEqual([]);
+    // Baseline files without a build are accepted as they are.
+    expect(buildConflicts([run({}), run({ build: build('v2') })])).toEqual([]);
+    // Different models are different groups.
+    expect(
+      buildConflicts([
+        run({ build: build('v2') }),
+        run({ model: 'gemma3-270m', build: build('x') }),
+      ]),
+    ).toEqual([]);
+  });
+
+  it('refuses to skip runs of another model or build', () => {
+    const now = { model: 'gemma3-1b', build: build('v2') };
+    expect(skipRefusal({ model: 'gemma3-1b', results: [] }, now)).toBe(null);
+    expect(skipRefusal({ model: 'gemma3-1b', build: build('v2'), results: [] }, now)).toBe(null);
+    expect(skipRefusal({ model: 'gemma3-270m', results: [] }, now)).toMatch(/model/);
+    expect(skipRefusal({ model: 'gemma3-1b', build: build('tq'), results: [] }, now)).toMatch(
+      /build/,
+    );
+    expect(
+      skipRefusal({ model: 'gemma3-1b', results: [run({ build: build('v2', 'h9') })] }, now),
+    ).toMatch(/build/);
+  });
+
+  it('tells the served 0.6.0 prompt from the improved one, raw or as Vite serves it', () => {
+    const improved = [
+      "import { missingNumericData, type MissingData } from './missingData';",
+      'import { missingNumericData } from "/src/teacher/chat/missingData.ts";',
+      'import { missingNumericData } from "/src/teacher/chat/missingData.ts?t=1760400000000";',
+    ];
+    const current = [
+      "import { searchKnowledge } from './knowledge';",
+      '// The check question is asked by the app (missingData.ts), see below.',
+      '',
+    ];
+    for (const s of improved) expect(servedPromptVariant(s), s).toBe('improved');
+    for (const s of current) expect(servedPromptVariant(s), s).toBe('current');
+    expect(variantRefusal(['legacy', 'current'], improved[1] ?? '')).toMatch(/current/);
+    expect(variantRefusal(['improved'], current[0] ?? '')).toMatch(/improved/);
+    expect(variantRefusal(['legacy', 'current'], current[0] ?? '')).toBe(null);
+    expect(variantRefusal(['legacy', 'improved'], improved[0] ?? '')).toBe(null);
+    expect(variantRefusal(['legacy'], improved[0] ?? '')).toBe(null);
+    // One build cannot serve both.
+    expect(variantRefusal(['current', 'improved'], current[0] ?? '')).not.toBe(null);
+  });
+});
+
+describe('compare.mjs and breakdown.mjs on saved files', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'teaching-compare-'));
+  const script = (name: string) => resolve(import.meta.dirname, `../scripts/teaching/${name}`);
+  const results = resolve(import.meta.dirname, 'teaching/results');
+  const write = (name: string, data: unknown) => {
+    const f = join(dir, name);
+    writeFileSync(f, JSON.stringify(data));
+    return f;
+  };
+  const node = (name: string, args: string[]) =>
+    spawnSync(process.execPath, [script(name), ...args], { encoding: 'utf8' });
+  const good = 'NaOH = 40 g/mol nên n = 4/40 = 0,1 mol. Em hiểu chưa?';
+  const res = (over: Record<string, unknown>) => ({
+    id: 'C5',
+    variant: 'current',
+    decoding: 'app',
+    temperature: 0,
+    repeat: 0,
+    ok: true,
+    answer: good,
+    ms: 1,
+    promptChars: 1,
+    firstMs: 1,
+    ...over,
+  });
+  const build = (commit: string) => ({ commit, dirty: false, chatServiceSha256: 'h', model: 'm' });
+
+  it('prints the correct-answer row and pairs a rerun with the attempt that failed', () => {
+    const first = write('first.json', {
+      model: 'm',
+      results: [
+        res({}),
+        res({ variant: 'legacy', ok: false, answer: '', error: 'Error: timeout', attempt: 0 }),
+      ],
+    });
+    const rerun = write('rerun.json', { model: 'm', results: [res({ variant: 'legacy' })] });
+    const out = node('compare.mjs', [
+      first,
+      rerun,
+      '--a',
+      'm/current/app/0',
+      '--b',
+      'm/legacy/app/0',
+    ]);
+    expect(out.status, out.stderr).toBe(0);
+    expect(out.stdout).toMatch(/correct \(all key facts, no known error\)/);
+    expect(out.stdout).toMatch(/check question \(concept\/misconception\)/);
+    expect(out.stdout).toMatch(/1 questions answered by both/);
+    expect(out.stdout).toMatch(/exact McNemar p = 1\.000/);
+    // The rerun is paired (old compare numbered it repeat 1 and dropped the pair).
+    expect(out.stdout).toMatch(/description, not a test\): only A 0, only B 0, both [1-9]/);
+  });
+
+  it('keeps two models apart and refuses two builds under one group', () => {
+    const one = write('one.json', { model: 'm', build: build('aaa'), results: [res({})] });
+    const other = write('other.json', { model: 'm', build: build('bbb'), results: [res({})] });
+    const small = write('small.json', { model: 'm2', build: build('bbb'), results: [res({})] });
+    for (const name of ['compare.mjs', 'breakdown.mjs']) {
+      const refused = node(name, [one, other]);
+      expect(refused.status, name).toBe(1);
+      expect(refused.stderr, name).toMatch(/m\/current\/app\/0.*aaa.*bbb/s);
+      const apart = node(name, [one, small]);
+      expect(apart.status, `${name} ${apart.stderr}`).toBe(0);
+      expect(apart.stdout).toMatch(/m\/current\/app\/0/);
+      expect(apart.stdout).toMatch(/m2\/current\/app\/0/);
+    }
+  });
+
+  it('accepts the 2026-10-14 baseline files, which carry no build', () => {
+    const files = [
+      join(results, '2026-10-14-gemma3-1b-baseline-greedy.json'),
+      join(results, '2026-10-14-gemma3-1b-baseline-greedy-part2.json'),
+    ];
+    const out = node('compare.mjs', files);
+    expect(out.status, out.stderr).toBe(0);
+    expect(out.stdout).toMatch(/168 answers from 2 file/);
+    expect(out.stdout).toMatch(/gemma3-1b\/legacy\/legacy\/0/);
+    expect(node('breakdown.mjs', files).status).toBe(0);
   });
 });
 
@@ -1380,6 +1568,44 @@ describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
     for (const field of ['variant', 'decoding', 'temperature', 'repeat', 'promptChars', 'system']) {
       expect(loop).toMatch(new RegExp(`\\b${field}\\b`));
     }
-    expect(src).toMatch(/contextPrompt\(item\.question, 'vi', false, false, 'compact'\)/);
+    // The live prompt with the earlier turns (the improved build reads them for missing data).
+    expect(src).toMatch(
+      /contextPrompt\(\s*item\.question,\s*'vi',\s*false,\s*false,\s*'compact',\s*history,?\s*\)/,
+    );
+  });
+
+  it('builds current and improved like askTeacher: note before the question, echo removed', () => {
+    expect(src).toMatch(
+      /list\('variants', 'legacy,current', \['legacy', 'current', 'improved'\]\)/,
+    );
+    const loop = src.slice(src.indexOf('for (const item of items)'));
+    // The note moves next to the question when earlier turns come in between.
+    expect(loop).toMatch(/const noteInTurn = Boolean\(prompt\.note\) && history\.length > 0;/);
+    expect(loop).toMatch(/prompt\.system\.slice\(0, -prompt\.note\.length\)/);
+    expect(loop).toMatch(/asked = `\$\{prompt\.note\.trim\(\)\}\\n\\n\$\{item\.question\}`/);
+    expect(loop).toMatch(/content: asked \}/);
+    // The echo is the question itself (not the note), and what was asked is saved.
+    expect(loop).toMatch(/echo: item\.question,/);
+    expect(loop.match(/\basked,/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
+  });
+
+  it('records the build and refuses a variant the served build does not have', () => {
+    const loop = src.indexOf('for (const item of items)');
+    const before = src.slice(0, loop);
+    // Before any GPU work: the served chatService.ts decides which variant may run.
+    const guard = before.indexOf('variantRefusal(');
+    expect(guard).toBeGreaterThan(0);
+    expect(guard).toBeLessThan(before.indexOf('requestAdapter('));
+    expect(before).toMatch(/fetch\('\/src\/teacher\/chat\/chatService\.ts'\)/);
+    expect(before).toMatch(/createHash\('sha256'\)/);
+    expect(before).toMatch(/'rev-parse', 'HEAD'/);
+    expect(before).toMatch(/'status', '--porcelain', '--untracked-files=no'/);
+    expect(before).toMatch(/skipRefusal\(/);
+    // Saved with every result and the file.
+    const push = src.slice(src.indexOf('results.push({'));
+    expect(push.slice(0, push.indexOf('});'))).toMatch(/\bmodel,[^}]*\bbuild,/s);
+    expect(src).toMatch(
+      /JSON\.stringify\(\{ model, build, adapter, adapters, settings, results \}/,
+    );
   });
 });

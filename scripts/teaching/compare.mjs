@@ -5,8 +5,12 @@
 //
 //   node scripts/teaching/compare.mjs <eval-….json> [more files…] [--a <group>] [--b <group>]
 //
-// Groups are configurations "variant/decoding/temperature" (rubric.mjs groupKey; files from
-// before 2026-10-14 count as decoding "legacy", temperature 0.2). Prints one column per group,
+// Groups are configurations "model/variant/decoding/temperature" (rubric.mjs groupKey; files from
+// before 2026-10-14 count as decoding "legacy", temperature 0.2; a result without a model takes
+// the file's). Runs of two app builds (another commit or another served chatService.ts, see
+// eval-gemma.mjs `build`) are never merged into one group: the script stops instead. Results
+// without a build (the 2026-10-14 baseline, whose "current" is the 0.6.0 prompt) are accepted
+// as they are. Prints one column per group,
 // then a paired comparison of group A against group B on the questions both answered, with ONE
 // outcome per question (averaged over its repeats): mean keyFacts (A better / B better / tie,
 // exact sign test) and the share of correct answers (every key fact, no known error; exact
@@ -21,6 +25,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  buildConflicts,
+  fileRuns,
   groupKey,
   numberRepeats,
   pairedComparison,
@@ -48,12 +54,21 @@ const items = new Map(set.items.map((i) => [i.id, i]));
 const read = [];
 for (const f of files) {
   const saved = JSON.parse(readFileSync(resolve(f), 'utf8'));
-  for (const r of saved.results ?? []) {
+  for (const r of fileRuns(saved, f)) {
     const item = items.get(r.id);
     if (!item)
       throw new Error(`${f}: question ${r.id} is not in tests/teaching/teaching-eval.json`);
-    read.push({ ...r, file: f, score: scoreAnswer(item, r.answer ?? '') });
+    read.push({ ...r, score: scoreAnswer(item, r.answer ?? '') });
   }
+}
+const conflicts = buildConflicts(read);
+if (conflicts.length) {
+  for (const c of conflicts) {
+    console.error(`${c.key}: results of different builds (commit, chatService.ts hash):`);
+    for (const b of c.builds) console.error(`  ${b}`);
+  }
+  console.error('Refusing to merge them into one group: compare them as separate files.');
+  process.exit(1);
 }
 const runs = numberRepeats(read);
 const groups = [...new Set(runs.map(groupKey))].sort();

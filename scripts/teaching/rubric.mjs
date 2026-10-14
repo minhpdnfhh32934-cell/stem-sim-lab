@@ -583,13 +583,92 @@ export function summarizeRuns(runs) {
 // ---------------------------------------------------------------- comparing runs
 
 /**
- * The configuration a run belongs to: "variant/decoding/temperature". Runs saved before these
- * fields existed (eval files up to 2026-10-13) used the worker's fixed decoding of that time
- * ("legacy": repetition_penalty 1.2, no_repeat_ngram_size 3) and webGemmaChat's default
- * temperature 0.2, so those are the defaults.
+ * The configuration a run belongs to: "model/variant/decoding/temperature" (a gemma3-270m run
+ * never joins a gemma3-1b one). Runs saved before these fields existed (eval files up to
+ * 2026-10-13) used the worker's fixed decoding of that time ("legacy": repetition_penalty 1.2,
+ * no_repeat_ngram_size 3) and webGemmaChat's default temperature 0.2, so those are the defaults.
+ * A run without a model (see fileRuns) is "?".
  */
 export function groupKey(run) {
-  return `${run.variant ?? '?'}/${run.decoding ?? 'legacy'}/${run.temperature ?? 0.2}`;
+  return `${run.model ?? '?'}/${run.variant ?? '?'}/${run.decoding ?? 'legacy'}/${run.temperature ?? 0.2}`;
+}
+
+/**
+ * The results of a saved evaluation file with the file's model and build filled in where a result
+ * has none (files up to 2026-10-14 record the model once per file and no build at all; no build
+ * is made up for them), and the file name.
+ */
+export function fileRuns(saved, file) {
+  return (saved.results ?? []).map((r) => {
+    const model = r.model ?? r.build?.model ?? saved.model;
+    const build = r.build ?? saved.build;
+    return {
+      ...r,
+      ...(model === undefined ? {} : { model }),
+      ...(build === undefined ? {} : { build }),
+      file,
+    };
+  });
+}
+
+/** What identifies the app build that produced a run: commit and served chatService.ts. */
+const buildId = (b) => `${b.commit ?? '?'} ${b.chatServiceSha256 ?? '?'}`;
+
+/**
+ * Groups (groupKey) whose runs come from different app builds: two runs that both carry a build
+ * with another commit or another hash of the served chatService.ts. Results without a build (the
+ * 2026-10-14 baseline files, whose "current" is the 0.6.0 prompt) are accepted as they are.
+ * Returns one entry per such group with the builds seen ("<commit> <hash>"), in reading order.
+ */
+export function buildConflicts(runs) {
+  const seen = new Map();
+  for (const r of runs) {
+    if (!r.build) continue;
+    const key = groupKey(r);
+    const ids = seen.get(key) ?? [];
+    if (!ids.includes(buildId(r.build))) ids.push(buildId(r.build));
+    seen.set(key, ids);
+  }
+  return [...seen.entries()]
+    .filter(([, ids]) => ids.length > 1)
+    .map(([key, builds]) => ({ key, builds }));
+}
+
+/**
+ * Why the runs of an earlier result file must not be skipped by a new run (`--skip`): another
+ * model, or another build (the file's or any result's) than the one being evaluated now. Files
+ * without a build are accepted. null when they may be skipped.
+ */
+export function skipRefusal(saved, now) {
+  if (saved.model !== undefined && saved.model !== now.model)
+    return `model ${saved.model}, not ${now.model}`;
+  const builds = [saved.build, ...(saved.results ?? []).map((r) => r.build)].filter(Boolean);
+  const other = builds.find((b) => buildId(b) !== buildId(now.build));
+  return other ? `build ${buildId(other)}, not ${buildId(now.build)}` : null;
+}
+
+/**
+ * Which on-device prompt a served chatService.ts holds: 'improved' when it imports ./missingData
+ * (raw TypeScript or as Vite serves it, "/src/teacher/chat/missingData.ts?t=…"), else 'current'
+ * (the 0.6.0 prompt).
+ */
+export function servedPromptVariant(source) {
+  return /\bimport\b[^;]*?["'][^"'\n]*\/missingData(?:\.[jt]s)?(?:\?[^"'\n]*)?["']/.test(source)
+    ? 'improved'
+    : 'current';
+}
+
+/**
+ * Why the requested prompt variants cannot run against this served chatService.ts: 'current' (the
+ * 0.6.0 prompt) and 'improved' are both the live contextPrompt, so the label must match what the
+ * server really serves. 'legacy' is built in the script and runs anywhere. null when they may run.
+ */
+export function variantRefusal(variants, source) {
+  const served = servedPromptVariant(source);
+  const wrong = variants.filter((v) => (v === 'current' || v === 'improved') && v !== served);
+  return wrong.length
+    ? `--variants ${wrong.join(',')}: the served chatService.ts is the ${served === 'improved' ? 'improved build (it imports ./missingData)' : '0.6.0 build (no ./missingData import)'}`
+    : null;
 }
 
 /** P(X ≤ k) for X ~ Binomial(n, 1/2), summed in log space (no overflow for large n). */
