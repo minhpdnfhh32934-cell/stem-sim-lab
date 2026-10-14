@@ -39,6 +39,11 @@ export interface AnswerScore {
   /** Hit of every keyFacts group, in order (paired tests). */
   facts: boolean[];
   noKnownErrors: boolean;
+  /** Every key fact and no known error. */
+  correct: boolean;
+  /** The last sentence is a question (every item). */
+  endsWithQuestion: boolean;
+  /** endsWithQuestion on concept and misconception items; null on the others. */
   checkQuestion: boolean | null;
   asksClarification: boolean | null;
   namesMissing: boolean | null;
@@ -73,6 +78,7 @@ export interface Summary {
   n: number;
   keyFacts: number | null;
   noKnownErrors: number | null;
+  correct: number | null;
   checkQuestion: number | null;
   asksClarification: number | null;
   namesMissing: number | null;
@@ -104,8 +110,11 @@ export interface PairedComparison {
   ties: number;
   meanDiff: number | null;
   signP: number;
-  groups: { both: number; onlyA: number; onlyB: number; neither: number };
+  /** Per question: which configuration more often answered correctly (McNemar's table). */
+  correct: { both: number; onlyA: number; onlyB: number; neither: number };
   mcnemarP: number;
+  /** Key-fact groups paired by question and repeat: a description, not a test. */
+  groups: { both: number; onlyA: number; onlyB: number; neither: number };
 }
 
 export function fold(text: string): string;
@@ -128,5 +137,6 @@ export function summarizeRuns(runs: EvalRun[]): RunSummary;
 export function groupKey(run: Pick<EvalRun, 'variant' | 'decoding' | 'temperature'>): string;
 export function signTestP(wins: number, losses: number): number;
 export function mcnemarP(onlyA: number, onlyB: number): number;
+export function numberRepeats<T extends EvalRun>(runs: T[]): T[];
 export function pairedComparison(a: EvalRun[], b: EvalRun[]): PairedComparison;
 export function gpuRefusal(adapters: Record<string, string | null | undefined>): string | null;

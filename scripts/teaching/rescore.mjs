@@ -48,7 +48,8 @@ const num = (x) => (x === null || x === undefined ? '–' : String(Math.round(x)
 const rows = [
   ['key facts', (s) => pct(s.keyFacts)],
   ['no known errors', (s) => pct(s.noKnownErrors)],
-  ['ends with a check question', (s) => pct(s.checkQuestion)],
+  ['correct (all key facts, no error)', (s) => pct(s.correct)],
+  ['check q. (concept/misconception)', (s) => pct(s.checkQuestion)],
   ['asks for missing data', (s) => pct(s.asksClarification)],
   ['names the missing data', (s) => pct(s.namesMissing)],
   ['steps in order', (s) => pct(s.steps)],
@@ -67,7 +68,7 @@ for (const g of groups) {
   console.log(`\n${g}${was ? ' (saved → re-scored)' : ''}`);
   for (const [label, show] of rows) {
     const now = show(summary[g]);
-    console.log(`  ${label.padEnd(30)} ${was ? `${show(was)} → ${now}` : now}`);
+    console.log(`  ${label.padEnd(34)} ${was ? `${show(was)} → ${now}` : now}`);
   }
 }
 
@@ -77,6 +78,7 @@ if (args.includes('--changes')) {
     const before = r.savedScore ?? {};
     for (const key of [
       'noKnownErrors',
+      'correct',
       'checkQuestion',
       'asksClarification',
       'namesMissing',

@@ -12,6 +12,7 @@ import {
   mangledTerms,
   mcnemarP,
   namesMissing,
+  numberRepeats,
   opensWithAgreement,
   pairedComparison,
   scoreAnswer,
@@ -539,7 +540,9 @@ type Want = Partial<
     AnswerScore,
     | 'keyFacts'
     | 'noKnownErrors'
+    | 'correct'
     | 'checkQuestion'
+    | 'endsWithQuestion'
     | 'asksClarification'
     | 'namesMissing'
     | 'steps'
@@ -596,7 +599,15 @@ const NEW_ITEM_CASES: Record<string, [string, string, Want][]> = {
     [
       'good',
       'Bước 1: gia tốc a = −F/m = −4000/1000 = −4 m/s². Bước 2: dùng v² − v₀² = 2as với v = 0. Bước 3: s = 400/8 = 50 m. Kiểm tra: đơn vị m hợp lý. Em thử: nếu lực hãm gấp đôi thì quãng đường thay đổi thế nào?',
-      { keyFacts: 1, steps: 1, noKnownErrors: true, checkQuestion: true },
+      {
+        keyFacts: 1,
+        steps: 1,
+        noKnownErrors: true,
+        correct: true,
+        endsWithQuestion: true,
+        // The check-question metric covers concept and misconception items only.
+        checkQuestion: null,
+      },
     ],
     [
       'energy route',
@@ -680,7 +691,15 @@ const NEW_ITEM_CASES: Record<string, [string, string, Want][]> = {
     [
       'good',
       'Bước 1: Zn + 2HCl → ZnCl₂ + H₂. Bước 2: n(Zn) = 6,5/65 = 0,1 mol. Bước 3: theo PTHH, n(ZnCl₂) = n(Zn) = 0,1 mol. M(ZnCl₂) = 65 + 2·35,5 = 136 g/mol. Bước 4: m = 0,1 × 136 = 13,6 g. Em thử: nếu dùng 13 g kẽm thì được bao nhiêu gam muối?',
-      { keyFacts: 1, steps: 1, noKnownErrors: true, checkQuestion: true },
+      {
+        keyFacts: 1,
+        steps: 1,
+        noKnownErrors: true,
+        correct: true,
+        endsWithQuestion: true,
+        // The check-question metric covers concept and misconception items only.
+        checkQuestion: null,
+      },
     ],
     [
       'forgot index 2',
@@ -1204,9 +1223,105 @@ describe('paired comparison statistics', () => {
     expect([c.wins, c.ties, c.losses]).toEqual([1, 1, 1]);
     expect(c.meanDiff).toBeCloseTo((0.75 + 0 - 0.5) / 3, 9);
     expect(c.signP).toBe(1);
-    // Groups: P3 r0 (A both, B second only), P3 r1 (A both, B none), C5 (both twice), B5.
+    // Groups (description only): P3 r0 (A both, B second only), P3 r1 (A both, B none), C5
+    // (both twice), B5.
     expect(c.groups).toEqual({ both: 4, onlyA: 3, onlyB: 1, neither: 0 });
-    expect(c.mcnemarP).toBeCloseTo(signTestP(3, 1), 12);
+    // McNemar on one correct/not-correct outcome per question: P3 only A, C5 both, B5 only B.
+    expect(c.correct).toEqual({ both: 1, onlyA: 1, onlyB: 1, neither: 0 });
+    expect(c.mcnemarP).toBe(1);
+  });
+
+  /** A made-up item with three key-fact groups ("mot", "hai", "ba") and one known error ("sai"). */
+  const fake = (id: string): EvalItem => ({
+    id,
+    subject: 'physics',
+    type: 'concept',
+    question: 'Câu hỏi?',
+    keyFacts: [['\\bmot\\b'], ['\\bhai\\b'], ['\\bba\\b']],
+    mustNot: ['\\bsai\\b'],
+  });
+  const fakeRun = (variant: string, id: string, answer: string, repeat: number): EvalRun => ({
+    id,
+    variant,
+    decoding: 'app',
+    temperature: 0,
+    repeat,
+    ok: true,
+    answer,
+    ms: 1,
+    promptChars: 1,
+    score: scoreAnswer(fake(id), answer),
+  });
+
+  it('tests questions, not repeats or key-fact groups (greedy repeats are not independent)', () => {
+    // Review scenario: 4 questions right in A and wrong in B, each run 3 times greedily. The
+    // real evidence is 4 against 0 (p = 0.125), not 24 key-fact pairs against 0.
+    const ids = ['X1', 'X2', 'X3', 'X4'];
+    const a = ids.flatMap((id) => [0, 1, 2].map((k) => fakeRun('current', id, 'mot hai ba', k)));
+    const b = ids.flatMap((id) => [0, 1, 2].map((k) => fakeRun('legacy', id, 'mot', k)));
+    const c = pairedComparison(a, b);
+    expect([c.wins, c.losses, c.ties]).toEqual([4, 0, 0]);
+    expect(c.signP).toBeCloseTo(0.125, 12);
+    expect(c.correct).toEqual({ both: 0, onlyA: 4, onlyB: 0, neither: 0 });
+    expect(c.mcnemarP).toBeCloseTo(0.125, 12);
+    // The group counts are still reported, as a description.
+    expect(c.groups.onlyA).toBe(4 * 3 * 2);
+  });
+
+  it('counts an answer as correct only with every key fact and no known error', () => {
+    expect(scoreAnswer(fake('X1'), 'mot hai ba').correct).toBe(true);
+    expect(scoreAnswer(fake('X1'), 'mot hai').correct).toBe(false);
+    expect(scoreAnswer(fake('X1'), 'mot hai ba, nhung sai').correct).toBe(false);
+    // Per question, the share of correct runs is compared: 2 of 3 beats 1 of 3.
+    const a = [0, 1, 2].map((k) => fakeRun('current', 'X1', k < 2 ? 'mot hai ba' : 'mot', k));
+    const b = [0, 1, 2].map((k) => fakeRun('legacy', 'X1', k < 1 ? 'mot hai ba' : 'mot', k));
+    expect(pairedComparison(a, b).correct).toEqual({ both: 0, onlyA: 1, onlyB: 0, neither: 0 });
+    const s = summarize([...a, ...b].map((r) => r.score));
+    expect(s.correct).toBeCloseTo(3 / 6, 12);
+  });
+
+  it('scores the check question on concept and misconception items only', () => {
+    const asks = 'Em thử trả lời nhé?';
+    expect(scoreAnswer(item('P1'), asks).checkQuestion).toBe(true);
+    expect(scoreAnswer(item('P2'), 'Gia tốc như nhau.').checkQuestion).toBe(false);
+    for (const id of ['P3', 'P13', 'P14', 'C1', 'P10', 'P11']) {
+      const s = scoreAnswer(item(id), asks);
+      expect(s.checkQuestion, id).toBe(null);
+      expect(s.endsWithQuestion, id).toBe(true);
+    }
+  });
+
+  it('keeps recorded repeat numbers and numbers only answered runs that lack one', () => {
+    const base = { variant: 'legacy', decoding: 'app', temperature: 0, ms: 1, promptChars: 1 };
+    const run = (id: string, ok: boolean, repeat?: number): EvalRun => ({
+      ...base,
+      id,
+      ok,
+      answer: ok ? 'mot' : '',
+      ...(repeat === undefined ? {} : { repeat }),
+      score: scoreAnswer(fake(id), ok ? 'mot' : ''),
+    });
+    const runs = [
+      // Interrupted run: the failed first attempt and the rerun of `--skip` / `--retries`.
+      run('C5', false, 0),
+      run('C5', true, 0),
+      // Older files without repeat numbers: only answered runs are numbered.
+      run('P3', false),
+      run('P3', true),
+      run('P3', true),
+      // A recorded repeat keeps its number; an unnumbered run takes the next free one.
+      run('B5', true, 0),
+      run('B5', true),
+    ];
+    expect(numberRepeats(runs).map((r) => r.repeat)).toEqual([0, 0, undefined, 0, 1, 0, 1]);
+    // The rerun pairs with the other configuration's run of the same question and repeat.
+    const other = [{ ...run('C5', true, 0), variant: 'current' }];
+    expect(pairedComparison(other, numberRepeats(runs)).groups).toEqual({
+      both: 1,
+      onlyA: 0,
+      onlyB: 0,
+      neither: 2,
+    });
   });
 
   it('labels runs by variant, decoding and temperature, with the old defaults', () => {

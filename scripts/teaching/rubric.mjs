@@ -468,20 +468,31 @@ export function mangledTerms(item, answer) {
 // ---------------------------------------------------------------- scores and summaries
 
 /**
+ * Question types whose answer should end with a check question. The on-device prompt asks for one
+ * only on concept questions (chatService.ts CONCEPT_QUESTION), so other types would penalise it
+ * for following its own design.
+ */
+const CHECK_QUESTION_TYPES = new Set(['concept', 'misconception']);
+
+/**
  * Scores one answer. keyFacts: groups of alternative patterns (each group needs one match; `facts`
- * keeps the hit of every group for paired tests); mustNot: patterns of known wrong statements (not
- * counted inside a misconception sentence). Item-specific checks are null when they do not apply.
+ * keeps the hit of every group); mustNot: patterns of known wrong statements (not counted inside a
+ * misconception sentence); correct: every key fact and no known error. endsWithQuestion is
+ * recorded for every item, checkQuestion only for concept and misconception items. Item-specific
+ * checks are null when they do not apply.
  */
 export function scoreAnswer(item, answer) {
   const f = fold(answer);
   const facts = (item.keyFacts ?? []).map((group) => group.some((p) => new RegExp(p).test(f)));
   const wrong = knownErrors(item, answer);
+  const ends = endsWithQuestion(answer);
   const checks = {
     keyFacts: facts.length ? facts.filter(Boolean).length / facts.length : 1,
     facts,
     noKnownErrors: wrong.length === 0,
-    checkQuestion:
-      item.type === 'followup' || item.type === 'missing-data' ? null : endsWithQuestion(answer),
+    correct: facts.every(Boolean) && wrong.length === 0,
+    endsWithQuestion: ends,
+    checkQuestion: CHECK_QUESTION_TYPES.has(item.type) ? ends : null,
     asksClarification: item.expectsClarify ? asksForMissingData(answer, item) : null,
     namesMissing: namesMissing(item, answer),
     steps: stepsInOrder(item, answer),
@@ -502,10 +513,10 @@ export function scoreAnswer(item, answer) {
 const meanOf = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 
 /**
- * Summary over a list of scores: mean key-fact coverage, pass rates of the boolean checks, mean
- * share of steps in order, mean foreign-script share, and the share of answers with any foreign
- * script or any corrupted key term. Checks that do not apply (null) or that an older saved score
- * lacks (undefined) are left out of their rate.
+ * Summary over a list of scores: mean key-fact coverage, pass rates of the boolean checks (correct
+ * = every key fact and no known error), mean share of steps in order, mean foreign-script share,
+ * and the share of answers with any foreign script or any corrupted key term. Checks that do not
+ * apply (null) or that an older saved score lacks (undefined) are left out of their rate.
  */
 export function summarize(scores) {
   const present = (key) => scores.map((s) => s[key]).filter((v) => v !== null && v !== undefined);
@@ -519,6 +530,7 @@ export function summarize(scores) {
     n: scores.length,
     keyFacts: meanOf(scores.map((s) => s.keyFacts)),
     noKnownErrors: rate('noKnownErrors'),
+    correct: rate('correct'),
     checkQuestion: rate('checkQuestion'),
     asksClarification: rate('asksClarification'),
     namesMissing: rate('namesMissing'),
@@ -607,12 +619,46 @@ export function mcnemarP(onlyA, onlyB) {
 }
 
 /**
+ * Repeat numbers for pairing runs of saved files. A recorded `repeat` is kept (the run of
+ * `--skip` or `--retries` that answered keeps the number of the attempt that failed). Only runs
+ * that returned an answer and have no number (files up to 2026-10-13) are numbered, in reading
+ * order, with the lowest number not yet used by an answered run of the same configuration and
+ * question. Failed runs without a number keep none: they are never paired.
+ */
+export function numberRepeats(runs) {
+  const used = new Map();
+  const keyOf = (r) => `${groupKey(r)} ${r.id}`;
+  for (const r of runs) {
+    if (!r.ok || !Number.isInteger(r.repeat)) continue;
+    const set = used.get(keyOf(r)) ?? new Set();
+    set.add(r.repeat);
+    used.set(keyOf(r), set);
+  }
+  return runs.map((r) => {
+    if (!r.ok || Number.isInteger(r.repeat)) return r;
+    const set = used.get(keyOf(r)) ?? new Set();
+    let repeat = 0;
+    while (set.has(repeat)) repeat += 1;
+    set.add(repeat);
+    used.set(keyOf(r), set);
+    return { ...r, repeat };
+  });
+}
+
+/** Every key fact and no known error (older saved scores lack the field). */
+const isCorrect = (score) => score.correct ?? (score.keyFacts === 1 && score.noKnownErrors);
+
+/**
  * Paired comparison of two configurations on the same questions. Only runs that returned an
- * answer are used.
- * - Item level: per question, mean keyFacts over its repeats in A and in B; A wins, loses or
- *   ties; exact sign test on wins against losses.
- * - Key-fact group level: runs are paired by question and repeat number; every keyFacts group
- *   gives one yes/no pair (score.facts); exact McNemar test on the discordant pairs.
+ * answer are used. Both tests take ONE outcome per question (averaged over its repeats): repeats
+ * of a question, and the key-fact groups of one answer, are not independent (greedy repeats are
+ * identical), so counting them separately would inflate the evidence.
+ * - Sign test: per question, mean keyFacts over its repeats in A and in B; A wins, loses or ties.
+ * - McNemar: per question, the share of correct answers (every key fact, no known error) in A and
+ *   in B: only A (A higher), only B (B higher), both (equal and above 0) or neither (both 0).
+ *   With one run per question this is McNemar's 2 × 2 table.
+ * - `groups` (description only, no test): runs paired by question and repeat number, one yes/no
+ *   pair per keyFacts group (score.facts).
  */
 export function pairedComparison(a, b) {
   const byItem = (runs) => {
@@ -632,6 +678,7 @@ export function pairedComparison(a, b) {
   let ties = 0;
   const diffs = [];
   const groups = { both: 0, onlyA: 0, onlyB: 0, neither: 0 };
+  const correct = { both: 0, onlyA: 0, onlyB: 0, neither: 0 };
   for (const id of ids) {
     const ra = A.get(id) ?? [];
     const rb = B.get(id) ?? [];
@@ -640,6 +687,10 @@ export function pairedComparison(a, b) {
     if (Math.abs(d) < 1e-12) ties += 1;
     else if (d > 0) wins += 1;
     else losses += 1;
+    const ca = meanOf(ra.map((r) => (isCorrect(r.score) ? 1 : 0)));
+    const cb = meanOf(rb.map((r) => (isCorrect(r.score) ? 1 : 0)));
+    if (Math.abs(ca - cb) >= 1e-12) correct[ca > cb ? 'onlyA' : 'onlyB'] += 1;
+    else correct[ca > 0 ? 'both' : 'neither'] += 1;
     const repeatOf = (r, i) => r.repeat ?? i;
     const rbByRepeat = new Map(rb.map((r, i) => [repeatOf(r, i), r]));
     ra.forEach((x, i) => {
@@ -662,8 +713,9 @@ export function pairedComparison(a, b) {
     ties,
     meanDiff: meanOf(diffs),
     signP: signTestP(wins, losses),
+    correct,
+    mcnemarP: mcnemarP(correct.onlyA, correct.onlyB),
     groups,
-    mcnemarP: mcnemarP(groups.onlyA, groups.onlyB),
   };
 }
 
