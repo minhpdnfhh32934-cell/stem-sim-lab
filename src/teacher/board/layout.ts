@@ -19,7 +19,7 @@
  * `<newboard>` starts a new face (the old one stays in history). Widths come from an injected
  * `Measure`, so the same code runs in tests and in the browser.
  */
-import { splitFormula } from './formulaSplit';
+import { formulaPieces } from './formulaSplit';
 import type { BoardAction, DrawType, Role, Zone } from './teachscript';
 
 export const BOARD_W = 1200;
@@ -253,13 +253,20 @@ export function tokenize(
 ): Token[] {
   if (math) {
     const s = m.math(text, px);
-    const pieces = s.w > width ? splitFormula(text) : [text];
+    const pieces = s.w > width ? formulaPieces(text) : [];
     if (pieces.length < 2) return [{ kind: 'math', value: text, w: s.w, h: s.h, space: 0 }];
     const space = m.text(' ', px, heading);
-    return pieces.map((value, i) => {
-      const size = m.math(value, px);
-      const token: Token = { kind: 'math', value, w: size.w, h: size.h, space: i ? space : 0 };
-      if (i) token.indent = px;
+    return pieces.map((piece, i) => {
+      const size = m.math(piece.tex, px);
+      const token: Token = {
+        kind: 'math',
+        value: piece.tex,
+        w: size.w,
+        h: size.h,
+        space: i ? space : 0,
+      };
+      // A chain's continuation ("= 10/2") is indented under its start; a new statement is not.
+      if (piece.continues) token.indent = px;
       return token;
     });
   }
@@ -629,7 +636,9 @@ export function boardRules(
     const bottom = Math.max(...held.map((e) => e.y + e.h)) + 12;
     let y = Math.max(COLUMN_TOP - 8, face.titleBottom + 8);
     for (const band of bands) {
-      if (band.y - 12 > y && band.y < bottom) rules.push({ x, y1: y, y2: band.y - 12 });
+      // A band below the lowest of the two regions (written last) does not cut the rule.
+      if (band.y >= bottom) break;
+      if (band.y - 12 > y) rules.push({ x, y1: y, y2: band.y - 12 });
       y = Math.max(y, band.y + band.h + 12);
     }
     if (y < bottom) rules.push({ x, y1: y, y2: bottom });

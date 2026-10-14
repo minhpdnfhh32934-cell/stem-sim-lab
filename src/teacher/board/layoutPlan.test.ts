@@ -422,6 +422,35 @@ describe('long formulas and drawings', () => {
     expect(element.lines[1]?.tokens[0]?.space).toBeGreaterThan(0);
   });
 
+  it('a list of givens is written one statement per line, never "name" over "= value"', () => {
+    const GIVENS = 'v_0 = 0,\\quad a = 2\\ \\text{m/s}^2,\\quad t = 3\\ \\text{s},\\quad s = ?';
+    for (const zone of ['main', 'side_notes'] as const) {
+      const { element } = place(emptyLayout(), write('g', zone, GIVENS, { math: true }), measure);
+      if (element?.kind !== 'text') throw new Error('not placed');
+      expect(element.lines.length, zone).toBeGreaterThanOrEqual(2);
+      // Every line starts with the name of what it gives, none with a relation.
+      for (const line of element.lines)
+        expect(line.tokens[0]?.value.trim(), zone).toMatch(/^[a-z]/i);
+      expect(element.lines.flatMap((l) => l.tokens.map((t) => t.value)).join('')).toBe(GIVENS);
+      expect(element.source).toBe(GIVENS);
+      // A new statement is not indented like a chain's continuation.
+      for (const line of element.lines) expect(line.tokens[0]?.space).toBe(0);
+    }
+  });
+
+  it('a negated relation is written whole on its line', () => {
+    const tex = 'a \\not= b \\not= c \\not= d \\not= e \\not= f \\not= g \\not= h \\not= i';
+    const { element } = place(emptyLayout(), write('n', 'main', tex, { math: true }), measure);
+    if (element?.kind !== 'text') throw new Error('not placed');
+    expect(element.lines.length).toBeGreaterThanOrEqual(2);
+    for (const line of element.lines) {
+      const values = line.tokens.map((t) => t.value);
+      expect(values.join('').trimEnd()).not.toMatch(/\\not$/);
+      for (const v of values.slice(1)) expect(v.trimStart()).toMatch(/^\\not/);
+    }
+    expect(element.lines.flatMap((l) => l.tokens.map((t) => t.value)).join('')).toBe(tex);
+  });
+
   it('a short formula, or one that fits, stays on one line', () => {
     const { element } = place(
       emptyLayout(),
@@ -513,6 +542,26 @@ describe('dashed rules between regions', () => {
     const rules = boardRules(layout, 0);
     expect(rules).toHaveLength(2);
     for (const r of rules) expect(r.y2 <= band.y || r.y1 >= band.y + band.h).toBe(true);
+  });
+
+  it('a band written last keeps the rule between the regions above it', () => {
+    const layout = plan([
+      write('g', 'side_notes', 'Cho: m = 2 kg'),
+      write('s', 'steps', 'bước một'),
+      write('s2', 'steps', 'bước hai'),
+    ]);
+    expect(layout.faces[0]?.template).toBe('sideMain');
+    const before = boardRules(layout, 0);
+    expect(before).toHaveLength(1);
+    // Something the plan has no region for, written at the end ("Viết tiếp"): a band below.
+    plan([write('w', 'diagram', 'x'.repeat(40))], layout);
+    const band = layout.elements.find((e) => e.column === 'band');
+    if (!band) throw new Error('no band');
+    const rules = boardRules(layout, 0);
+    expect(rules).toEqual(before);
+    const held = layout.elements.filter((e) => e.column === 'side' || e.column === 'center');
+    expect(rules[0]?.y2).toBe(Math.max(...held.map((e) => e.y + e.h)) + 12);
+    expect(rules[0]?.y2).toBeLessThanOrEqual(band.y);
   });
 });
 

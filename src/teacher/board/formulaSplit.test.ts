@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitFormula } from './formulaSplit';
+import { formulaPieces, splitFormula } from './formulaSplit';
 import { checkNumbers } from './provenance';
 
 const trimmed = (tex: string) => splitFormula(tex).map((p) => p.trim());
@@ -73,6 +73,75 @@ describe('splitFormula (an equality chain written on several lines)', () => {
     expect(splitFormula('x == y')).toEqual(['x == y']);
     expect(trimmed('a <= b == c')).toEqual(['a <= b', '== c']);
     expect(trimmed('x := 2 = 1 + 1')).toEqual(['x := 2', '= 1 + 1']);
+  });
+
+  it('a negated relation is never cut from its "\\not": "≠" stays "≠"', () => {
+    expect(trimmed('a \\not= b \\not= c')).toEqual(['a \\not= b', '\\not= c']);
+    expect(trimmed('a \\equiv b \\not\\equiv c')).toEqual(['a \\equiv b', '\\not\\equiv c']);
+    expect(trimmed('a = b \\not = c')).toEqual(['a = b', '\\not = c']);
+    expect(trimmed('a \\not= b = c')).toEqual(['a \\not= b', '= c']);
+    for (const tex of [
+      'a \\not= b \\not= c',
+      'x \\not\\le y \\not\\ge z',
+      'a = b \\not \\approx c = d',
+      'a = b \\not\\in C = D',
+    ]) {
+      expect(splitFormula(tex).join('')).toBe(tex);
+      for (const piece of splitFormula(tex)) expect(piece.trimEnd()).not.toMatch(/\\not$/);
+    }
+  });
+
+  it('a list of statements is cut after its separators, never between a name and its value', () => {
+    const givens = 'v_0 = 0,\\quad a = 2\\ \\text{m/s}^2,\\quad t = 3\\ \\text{s},\\quad s = ?';
+    expect(trimmed(givens)).toEqual([
+      'v_0 = 0,\\quad',
+      'a = 2\\ \\text{m/s}^2,\\quad',
+      't = 3\\ \\text{s},\\quad',
+      's = ?',
+    ]);
+    expect(trimmed('m = 4\\ \\text{kg};\\; F = 20\\ \\text{N}')).toEqual([
+      'm = 4\\ \\text{kg};\\;',
+      'F = 20\\ \\text{N}',
+    ]);
+    expect(trimmed('h = 20\\ \\text{m} \\qquad g = 10')).toEqual([
+      'h = 20\\ \\text{m} \\qquad',
+      'g = 10',
+    ]);
+    // A connective written as text: with spaces inside it, or set apart by spacing.
+    expect(trimmed('F = 10\\ \\text{N} \\text{ và } m = 2\\ \\text{kg}')).toEqual([
+      'F = 10\\ \\text{N} \\text{ và }',
+      'm = 2\\ \\text{kg}',
+    ]);
+    expect(splitFormula('F = 10\\ \\text{N}\\ \\text{và}\\ m = 2\\ \\text{kg}')).toEqual([
+      'F = 10\\ \\text{N}\\ \\text{và}\\ ',
+      'm = 2\\ \\text{kg}',
+    ]);
+    // Each statement still has its own chain.
+    expect(trimmed('a = b = c,\\quad d = e = f')).toEqual(['a = b', '= c,\\quad', 'd = e', '= f']);
+    for (const tex of [givens, 'a = b = c,\\quad d = e = f', 'x = 1, 2, 3'])
+      expect(splitFormula(tex).join('')).toBe(tex);
+  });
+
+  it('only a chain’s continuation is marked as one (it is written indented)', () => {
+    const kinds = (tex: string) => formulaPieces(tex).map((p) => p.continues);
+    expect(kinds('a = b = c,\\quad d = e')).toEqual([false, true, false]);
+    expect(kinds('v_0 = 0,\\quad a = 2,\\quad s = ?')).toEqual([false, false, false]);
+    expect(kinds('F = ma \\Rightarrow a = \\frac{F}{m} = 5')).toEqual([false, true, true]);
+    expect(kinds('E = mc^2')).toEqual([false]);
+  });
+
+  it('a decimal comma, a unit’s exponent and a trailing separator are never cut', () => {
+    expect(splitFormula('g = 9,81')).toEqual(['g = 9,81']);
+    expect(trimmed('g = 9,81 = 9{,}81')).toEqual(['g = 9,81', '= 9{,}81']);
+    expect(splitFormula('a = b,')).toEqual(['a = b,']);
+    expect(splitFormula('a = b,\\quad')).toEqual(['a = b,\\quad']);
+    expect(splitFormula(',\\quad a = b')).toEqual([',\\quad a = b']);
+    // A group set apart by spaces right before an exponent is part of what the exponent raises.
+    const unit = 'v = 5\\ \\text{ m }^2 = 5';
+    expect(splitFormula(unit).every((p) => !p.startsWith('^'))).toBe(true);
+    expect(splitFormula(unit).join('')).toBe(unit);
+    // Commas inside a group are not separators.
+    expect(splitFormula('f(x, y) = \\max\\{x, y\\}')).toEqual(['f(x, y) = \\max\\{x, y\\}']);
   });
 
   it('the number check reads the whole formula, as before the split', () => {
