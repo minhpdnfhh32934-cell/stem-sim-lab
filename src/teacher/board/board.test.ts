@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { markdownToScript } from './fromMarkdown';
-import { BOARD_W, COLUMNS, emptyLayout, overlaps, place, spanBox, type Measure } from './layout';
+import {
+  BOARD_W,
+  COLUMNS,
+  FONT,
+  emptyLayout,
+  overlaps,
+  place,
+  spanBox,
+  type Measure,
+  type TextElement,
+} from './layout';
+import { splitFormula } from './formulaSplit';
 import { boardAnswerText, scriptFor, subtitleText } from './lesson';
 import { scrollForRow, visibleBand } from './minimap';
 import { compileFn, sample } from './plot';
@@ -14,6 +25,16 @@ const measure: Measure = {
   text: (s, px) => s.length * px * 0.5,
   math: (tex, px) => ({ w: tex.length * px * 0.6, h: px * 1.3 }),
 };
+
+/**
+ * The widest piece of an element at its smallest normal size (formulas at 60 %, a formula chain
+ * by its pieces; words as they are), at the largest font its role may have.
+ */
+function widestAtSmallest(e: TextElement): number {
+  const px = e.role === 'title' ? FONT.title : FONT[e.role];
+  if (e.math) return Math.max(...splitFormula(e.source).map((p) => measure.math(p, px).w * 0.6));
+  return Math.max(...e.source.split(/\s+/).map((word) => measure.text(word, px, false)));
+}
 
 describe('TeachScript reader', () => {
   it('separates speech from board actions and anchors them in their sentence', () => {
@@ -298,10 +319,15 @@ describe('board layout (deterministic, never overlapping)', () => {
     expect(els.length).toBeGreaterThan(300);
     for (const e of els) {
       expect(e.x).toBeGreaterThanOrEqual(0);
-      expect(e.x + e.w).toBeLessThanOrEqual(BOARD_W);
+      // The box is the true width of the ink (item 3: no clamping), inside the margins.
+      expect(e.x + e.w).toBeLessThanOrEqual(BOARD_W - 40);
       expect(e.y).toBeGreaterThanOrEqual(0);
       expect(e.y + e.h).toBeLessThanOrEqual(layout.faces[e.face]?.height ?? 0);
-      if (e.kind === 'text') expect(e.fontSize * e.scale).toBeGreaterThanOrEqual(25 * 0.6);
+      if (e.kind !== 'text') continue;
+      for (const line of e.lines) expect(line.w).toBeLessThanOrEqual(e.w);
+      // Written smaller than usual only when even the whole board is too narrow for it.
+      if (e.squeezed) expect(widestAtSmallest(e)).toBeGreaterThan(BOARD_W - 80);
+      else expect(e.fontSize * e.scale).toBeGreaterThanOrEqual(25 * 0.6);
     }
     for (let i = 0; i < els.length; i++) {
       for (let j = i + 1; j < els.length; j++) {

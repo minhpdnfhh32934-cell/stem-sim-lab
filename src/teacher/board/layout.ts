@@ -1,38 +1,83 @@
 /**
  * Deterministic board layout (PROMPT_PHAN_2 B7.2). The AI only names zones and relations; this
- * code decides where things go, like a teacher who divides the board before the lesson:
+ * code decides where things go, like a teacher who divides the board before the lesson. Each face
+ * is divided by what it will hold (`planFaces`, item 3 "the AI Teacher uses the whole board"):
  *
- *   ┌──────────────────────────── title ─────────────────────────────┐
- *   │ side_notes │      main / steps (numbered)      │ diagram, example │
- *   │ (given,    │                                   │ table, plot      │
- *   │  formulas, │                                   │ ─ ─ scratch ─ ─  │
- *   │  notes)    │                                   │                  │
+ *   wide        ┌──────────────────────── title ────────────────────────┐
+ *               │ main / steps, across the whole board                   │
+ *   sideMain    │ side_notes │ main / steps                              │
+ *   mainRight   │ main / steps                  │ diagram, table, plot   │
+ *   three       │ side_notes │ main / steps     │ diagram, example       │
  *
- * Each column fills top to bottom, so nothing ever overlaps; the board grows downwards and the
- * camera follows the pen. `<newboard>` starts a new face (the old one stays in history).
- * Widths come from an injected `Measure`, so the same code runs in tests and in the browser.
+ * Each region fills top to bottom, so nothing ever overlaps; the board grows downwards and the
+ * camera follows the pen. Something the face's plan has no region for (a "Viết tiếp" side note on
+ * a face planned for steps only) goes in a full-width band below everything. An element's box is
+ * the true width of its ink: a line too wide for its region moves to a band, and is written
+ * smaller only when even the whole board is too narrow (`squeezed`). A long equality chain is
+ * written on several lines (formulaSplit.ts). Placed elements never move (marks and the learner's
+ * strokes are board coordinates); a resize or a zoom only scales the sheet.
+ * `<newboard>` starts a new face (the old one stays in history). Widths come from an injected
+ * `Measure`, so the same code runs in tests and in the browser.
  */
+import { splitFormula } from './formulaSplit';
 import type { BoardAction, DrawType, Role, Zone } from './teachscript';
 
 export const BOARD_W = 1200;
 export const COLUMN_TOP = 130;
+/** Space left and right of the writing, and between two regions of a face. */
+export const MARGIN = 40;
+export const GUTTER = 40;
 const GAP = 18;
 const MARGIN_BOTTOM = 60;
+/** Smallest formula scale in a region; below it the formula goes to a full-width band. */
+const MIN_SCALE = 0.6;
+/** Widest a drawing (not a table) is drawn: a full-width free-body diagram would fill the face. */
+const DRAW_MAX_W = 480;
 
-export type ColumnId = 'title' | 'side' | 'center' | 'right';
+export type RegionId = 'side' | 'center' | 'right';
+/** Where an element stands: the title strip, a region of its face, or a full-width band. */
+export type ColumnId = 'title' | RegionId | 'band';
+export type TemplateId = 'wide' | 'sideMain' | 'mainRight' | 'three';
 
-export const COLUMNS: Record<ColumnId, { x: number; w: number }> = {
-  title: { x: 40, w: 1120 },
+export interface Span {
+  x: number;
+  w: number;
+}
+export type Regions = Partial<Record<RegionId, Span>>;
+
+/** The whole writing width (title strip and bands). */
+const FULL: Span = { x: MARGIN, w: BOARD_W - 2 * MARGIN };
+
+/** How a face can be divided (board units; regions are ordered side < center < right). */
+export const TEMPLATES: Record<TemplateId, Regions> = {
+  wide: { center: FULL },
+  sideMain: { side: { x: 40, w: 300 }, center: { x: 380, w: 780 } },
+  mainRight: { center: { x: 40, w: 680 }, right: { x: 760, w: 400 } },
+  three: { side: { x: 40, w: 260 }, center: { x: 340, w: 480 }, right: { x: 860, w: 300 } },
+};
+
+export const REGION_ORDER: readonly RegionId[] = ['side', 'center', 'right'];
+
+/** The 'three' template with the title strip and the band (a face nobody planned). */
+export const COLUMNS: Record<ColumnId, Span> = {
+  title: FULL,
   side: { x: 40, w: 260 },
   center: { x: 340, w: 480 },
   right: { x: 860, w: 300 },
+  band: FULL,
 };
 
-export function columnOf(zone: Zone): ColumnId {
+export function columnOf(zone: Zone): 'title' | RegionId {
   if (zone === 'title') return 'title';
   if (zone === 'side_notes') return 'side';
   if (zone === 'diagram' || zone === 'example' || zone === 'scratch') return 'right';
   return 'center';
+}
+
+/** Region of a drawing: title and side zones draw on the right, as a teacher would. */
+function drawColumn(zone: Zone): RegionId {
+  const column = columnOf(zone);
+  return column === 'title' || column === 'side' ? 'right' : column;
 }
 
 export const FONT: Record<Role | 'title', number> = {
@@ -56,8 +101,10 @@ export interface Token {
   value: string;
   w: number;
   h: number;
-  /** Width of the space before this token on its line (0 for the first). */
+  /** Width of the space before this token on its line (the indent when it starts a line). */
   space: number;
+  /** A formula's continuation piece starts its line indented by this much (when it fits). */
+  indent?: number;
 }
 
 export interface Line {
@@ -85,28 +132,34 @@ export interface TextElement extends ElementBase {
   kind: 'text';
   role: Role | 'title';
   fontSize: number;
-  /** Formula scale when it was shrunk to fit its column (1 = natural size). */
+  /** Formula scale when it was shrunk to fit its region (1 = natural size). */
   scale: number;
   lines: Line[];
-  /** Characters to write (text characters + one unit per formula), for the pen timing. */
+  /** Characters to write (text characters + one unit per formula piece), for the pen timing. */
   length: number;
   speed: 'slow' | 'normal' | 'fast';
-  /** The source text (for provenance checks and the chat copy). */
+  /** The source text (for provenance checks and the chat copy); a split formula stays whole. */
   source: string;
   math: boolean;
+  /** Written smaller than usual: even the whole board's width was too narrow (very rare). */
+  squeezed?: true;
 }
 
 export interface DrawElement extends ElementBase {
   kind: 'draw';
   type: DrawType;
   spec: Record<string, unknown>;
+  /** Scale of the drawing's natural size (a wide table is drawn smaller to fit). */
+  scale: number;
 }
 
 export type BoardElement = TextElement | DrawElement;
 
 export interface Face {
   title?: string;
-  cursors: Record<Exclude<ColumnId, 'title'>, number>;
+  /** How the face is divided, planned from what it will hold (`planFaces`). */
+  template: TemplateId;
+  cursors: Record<RegionId, number>;
   titleBottom: number;
   height: number;
 }
@@ -114,26 +167,101 @@ export interface Face {
 export interface Layout {
   faces: Face[];
   elements: BoardElement[];
+  /** Plans of the faces the lesson's `<newboard>`s will open, in order. */
+  upcoming: TemplateId[];
 }
 
 export function emptyLayout(): Layout {
-  return { faces: [newFace()], elements: [] };
+  return { faces: [newFace()], elements: [], upcoming: [] };
 }
 
-function newFace(title?: string): Face {
+function newFace(title?: string, template: TemplateId = 'three'): Face {
   return {
     ...(title ? { title } : {}),
+    template,
     cursors: { side: COLUMN_TOP, center: COLUMN_TOP, right: COLUMN_TOP },
     titleBottom: COLUMN_TOP - 20,
     height: COLUMN_TOP + MARGIN_BOTTOM,
   };
 }
 
+/** The span of `column` on `face`: undefined when the face's plan has no such region. */
+export function regionOf(face: Face | undefined, column: ColumnId): Span | undefined {
+  if (column === 'title' || column === 'band') return FULL;
+  return TEMPLATES[face?.template ?? 'three'][column];
+}
+
+/**
+ * The regions each face will use, one set per face (split at `<newboard>`): writes by their zone
+ * (titles excepted: the title strip is on every face), corrections on the side, drawings and plots
+ * on the right (or in the middle when the AI asked for it).
+ */
+export function regionUsage(actions: readonly BoardAction[]): Set<RegionId>[] {
+  let current = new Set<RegionId>();
+  const usage = [current];
+  for (const a of actions) {
+    if (a.kind === 'newboard') {
+      current = new Set();
+      usage.push(current);
+    } else if (a.kind === 'write') {
+      const column = columnOf(a.zone);
+      if (column !== 'title') current.add(column);
+    } else if (a.kind === 'correct') current.add('side');
+    else if (a.kind === 'draw' || a.kind === 'plot') current.add(drawColumn(a.zone));
+  }
+  return usage;
+}
+
+/** The plan for a face from the regions it uses (steps alone get the whole width). */
+export function templateFor(used: ReadonlySet<RegionId>): TemplateId {
+  const side = used.has('side');
+  const right = used.has('right');
+  if (side && right) return 'three';
+  if (side) return 'sideMain';
+  if (right) return 'mainRight';
+  return 'wide';
+}
+
+/**
+ * Divides the faces before the teacher writes on them, from the actions still to play (a lesson,
+ * or the new part of "Viết tiếp"): the current face is planned when nothing but its title is on
+ * it yet (a face already written keeps its plan, so nothing on it moves), and each `<newboard>`
+ * opens a face planned from its own part. Mutates and returns `layout`.
+ */
+export function planFaces(layout: Layout, actions: readonly BoardAction[]): Layout {
+  const usage = regionUsage(actions);
+  const last = layout.faces.length - 1;
+  const face = layout.faces[last];
+  const first = usage[0];
+  const written = layout.elements.some(
+    (e) => e.face === last && !(e.kind === 'text' && e.role === 'title'),
+  );
+  if (face && first && !written) face.template = templateFor(first);
+  layout.upcoming = usage.slice(1).map(templateFor);
+  return layout;
+}
+
 /** Splits text with inline `$…$` formulas into words and formulas. */
-export function tokenize(text: string, math: boolean, px: number, heading: boolean, m: Measure) {
+export function tokenize(
+  text: string,
+  math: boolean,
+  px: number,
+  heading: boolean,
+  m: Measure,
+  /** A formula wider than this is cut into pieces at its relations (one per line if need be). */
+  width = Infinity,
+): Token[] {
   if (math) {
     const s = m.math(text, px);
-    return [{ kind: 'math' as const, value: text, w: s.w, h: s.h, space: 0 }];
+    const pieces = s.w > width ? splitFormula(text) : [text];
+    if (pieces.length < 2) return [{ kind: 'math', value: text, w: s.w, h: s.h, space: 0 }];
+    const space = m.text(' ', px, heading);
+    return pieces.map((value, i) => {
+      const size = m.math(value, px);
+      const token: Token = { kind: 'math', value, w: size.w, h: size.h, space: i ? space : 0 };
+      if (i) token.indent = px;
+      return token;
+    });
   }
   const tokens: Token[] = [];
   const space = m.text(' ', px, heading);
@@ -169,12 +297,121 @@ export function wrap(tokens: Token[], width: number, px: number): Line[] {
   for (const t of tokens) {
     const add = (current.length ? t.space : 0) + t.w;
     if (current.length && w + add > width) push();
-    const token = current.length ? t : { ...t, space: 0 };
+    // At the start of a line: no space, or the indent of a formula's continuation when it fits.
+    const lead = t.indent !== undefined && t.indent + t.w <= width ? t.indent : 0;
+    const token = current.length ? t : { ...t, space: lead };
     current.push(token);
-    w += (current.length > 1 ? token.space : 0) + token.w;
+    w += token.space + token.w;
   }
   push();
   return lines;
+}
+
+/** A text laid out in a width: its tokens, lines and true ink width. */
+interface Fit {
+  lines: Line[];
+  length: number;
+  scale: number;
+  fontSize: number;
+  w: number;
+  h: number;
+  fits: boolean;
+}
+
+function fitText(
+  text: string,
+  math: boolean,
+  px: number,
+  heading: boolean,
+  width: number,
+  m: Measure,
+  minScale = MIN_SCALE,
+): Fit {
+  let tokens = tokenize(text, math, px, heading, m, width);
+  // Formulas wider than the region are scaled down (never below `minScale`), then wrapped.
+  const widest = Math.max(0, ...tokens.filter((t) => t.kind === 'math').map((t) => t.w));
+  const scale = widest > width ? Math.max(minScale, width / widest) : 1;
+  if (scale < 1)
+    tokens = tokens.map((t) => (t.kind === 'math' ? { ...t, w: t.w * scale, h: t.h * scale } : t));
+  const lines = wrap(tokens, width, px);
+  const w = Math.max(...lines.map((l) => l.w), 1);
+  return {
+    lines,
+    length: tokens.reduce((n, t) => n + (t.kind === 'math' ? 1 : t.value.length + 1), 0),
+    scale,
+    fontSize: px,
+    w,
+    h: lines.reduce((sum, l) => sum + l.h, 0),
+    // A hair of rounding is not an overflow.
+    fits: w <= width + 0.5,
+  };
+}
+
+/** Last resort: the element is written smaller until it fits the whole board's width. */
+function squeeze(text: string, math: boolean, px: number, heading: boolean, m: Measure): Fit {
+  let fit = fitText(text, math, px, heading, FULL.w, m, 0);
+  for (let n = 0; n < 8 && !fit.fits; n++) {
+    fit = fitText(text, math, fit.fontSize * (FULL.w / fit.w) * 0.98, heading, FULL.w, m, 0);
+  }
+  return fit;
+}
+
+export interface PlaceResult {
+  layout: Layout;
+  element: BoardElement | null;
+}
+
+/** Where an element goes in a region of the current face (never on top of anything written). */
+function slot(
+  layout: Layout,
+  column: RegionId,
+  h: number,
+  near?: BoardElement,
+): { face: number; y: number } {
+  const face = layout.faces.length - 1;
+  const f = layout.faces[face];
+  if (!f) return { face: 0, y: COLUMN_TOP };
+  const cursor = f.cursors[column];
+  const y = near && near.face === face ? Math.max(cursor, near.y) : cursor;
+  f.cursors[column] = y + h + GAP;
+  f.height = Math.max(f.height, y + h + MARGIN_BOTTOM);
+  return { face, y };
+}
+
+/** A full-width band below everything on the current face; every region goes on below it. */
+function bandSlot(layout: Layout, h: number): { face: number; y: number } {
+  const face = layout.faces.length - 1;
+  const f = layout.faces[face];
+  if (!f) return { face: 0, y: COLUMN_TOP };
+  const y = Math.max(
+    COLUMN_TOP,
+    f.titleBottom + 24,
+    f.cursors.side,
+    f.cursors.center,
+    f.cursors.right,
+  );
+  const next = y + h + GAP;
+  f.cursors = { side: next, center: next, right: next };
+  f.height = Math.max(f.height, y + h + MARGIN_BOTTOM);
+  return { face, y };
+}
+
+export function findElement(layout: Layout, id: string): BoardElement | undefined {
+  // The newest element with that id (a correction keeps the id's history).
+  for (let i = layout.elements.length - 1; i >= 0; i--) {
+    const e = layout.elements[i];
+    if (e?.id === id) return e;
+  }
+  return undefined;
+}
+
+/** A free id: the AI's id, or `<id>_2`, `<id>_3`… when it is already used (validator §7). */
+export function freeId(layout: Layout, id: string): string {
+  if (!findElement(layout, id)) return id;
+  for (let n = 2; ; n++) {
+    const candidate = `${id}_${String(n)}`;
+    if (!findElement(layout, candidate)) return candidate;
+  }
 }
 
 function drawSize(type: DrawType, spec: Record<string, unknown>, width: number, m: Measure) {
@@ -198,51 +435,10 @@ function drawSize(type: DrawType, spec: Record<string, unknown>, width: number, 
   return { w: width, h: Math.round(width * 0.72) };
 }
 
-export interface PlaceResult {
-  layout: Layout;
-  element: BoardElement | null;
-}
-
-/** Where an element goes on the current face (never on top of anything already written). */
-function slot(
-  layout: Layout,
-  column: ColumnId,
-  h: number,
-  near?: BoardElement,
-): { face: number; y: number } {
-  const face = layout.faces.length - 1;
-  const f = layout.faces[face];
-  if (!f) return { face: 0, y: COLUMN_TOP };
-  if (column === 'title') return { face, y: 30 };
-  const cursor = f.cursors[column];
-  const y = near && near.face === face ? Math.max(cursor, near.y) : cursor;
-  f.cursors[column] = y + h + GAP;
-  f.height = Math.max(f.height, y + h + MARGIN_BOTTOM);
-  return { face, y };
-}
-
-export function findElement(layout: Layout, id: string): BoardElement | undefined {
-  // The newest element with that id (a correction keeps the id's history).
-  for (let i = layout.elements.length - 1; i >= 0; i--) {
-    const e = layout.elements[i];
-    if (e?.id === id) return e;
-  }
-  return undefined;
-}
-
-/** A free id: the AI's id, or `<id>_2`, `<id>_3`… when it is already used (validator §7). */
-export function freeId(layout: Layout, id: string): string {
-  if (!findElement(layout, id)) return id;
-  for (let n = 2; ; n++) {
-    const candidate = `${id}_${String(n)}`;
-    if (!findElement(layout, candidate)) return candidate;
-  }
-}
-
 /** Places one board action (write / draw / plot / newboard / correct); marks are not placed. */
 export function place(layout: Layout, action: BoardAction, m: Measure): PlaceResult {
   if (action.kind === 'newboard') {
-    layout.faces.push(newFace(action.title));
+    layout.faces.push(newFace(action.title, layout.upcoming.shift() ?? 'three'));
     if (action.title) {
       return place(
         layout,
@@ -269,68 +465,81 @@ export function place(layout: Layout, action: BoardAction, m: Measure): PlaceRes
     const math = isCorrection ? false : action.math;
     const text = action.text;
     const faceIndex = layout.faces.length - 1;
+    const face = layout.faces[faceIndex];
     let px = zone === 'title' ? FONT.title : FONT[role];
     if (zone === 'title') {
       // One title per face, at most two lines; anything else becomes a heading in the middle.
-      const taken = layout.elements.some(
-        (e) => e.face === faceIndex && e.kind === 'text' && e.role === 'title',
-      );
-      let lines = wrap(tokenize(text, math, px, true, m), COLUMNS.title.w, px);
+      // So does a title that comes after the face was written on and is too tall for the strip
+      // above it (it would cover what is there).
+      const onFace = layout.elements.filter((e) => e.face === faceIndex);
+      const taken = onFace.some((e) => e.kind === 'text' && e.role === 'title');
+      let lines = wrap(tokenize(text, math, px, true, m, FULL.w), FULL.w, px);
       if (lines.length > 1) {
         px = FONT.heading;
-        lines = wrap(tokenize(text, math, px, true, m), COLUMNS.title.w, px);
+        lines = wrap(tokenize(text, math, px, true, m, FULL.w), FULL.w, px);
       }
-      if (taken || lines.length > 2) {
+      const tall = 30 + lines.reduce((sum, l) => sum + l.h, 0) > COLUMN_TOP;
+      if (taken || lines.length > 2 || (tall && onFace.length > 0)) {
         zone = 'steps';
         px = FONT.heading;
       }
     }
-    const column = columnOf(zone);
+    let column: ColumnId = columnOf(zone);
     const titleRole = column === 'title';
-    const col = COLUMNS[column];
-    let tokens = tokenize(text, math, px, titleRole || role === 'heading', m);
-    // Formulas wider than the column are scaled down (never below 60 %), then wrapped.
-    const widest = Math.max(...tokens.map((t) => t.w), 1);
-    const scale = Math.max(0.6, Math.min(1, col.w / widest));
-    if (scale < 1)
-      tokens = tokens.map((t) =>
-        t.kind === 'math' ? { ...t, w: t.w * scale, h: t.h * scale } : t,
-      );
-    const lines = wrap(tokens, col.w, px);
-    const w = Math.min(col.w, Math.max(...lines.map((l) => l.w), 1));
-    const h = lines.reduce((sum, l) => sum + l.h, 0);
+    const heading = titleRole || role === 'heading';
+    let region = regionOf(face, column);
+    if (!region) {
+      // The face's plan has no region for it (e.g. a side note of "Viết tiếp" on a face
+      // planned for steps only): a full-width band below everything.
+      column = 'band';
+      region = FULL;
+    }
+    let fit = fitText(text, math, px, heading, region.w, m);
+    if (!fit.fits && column !== 'title' && column !== 'band') {
+      // Something in it is too wide for its region even at the smallest formula scale.
+      column = 'band';
+      region = FULL;
+      fit = fitText(text, math, px, heading, FULL.w, m);
+    }
+    const squeezed = !fit.fits;
+    if (squeezed) fit = squeeze(text, math, px, heading, m);
     const noteFor = action.kind === 'write' ? action.noteFor : undefined;
     const near = target ?? (noteFor ? findElement(layout, noteFor) : undefined);
-    const { face, y } = slot(layout, column, h, near);
+    const at =
+      column === 'title'
+        ? { face: faceIndex, y: 30 }
+        : column === 'band'
+          ? bandSlot(layout, fit.h)
+          : slot(layout, column, fit.h, near);
     const id = isCorrection ? freeId(layout, `${action.target}_fix`) : freeId(layout, action.id);
-    const length = tokens.reduce((n, t) => n + (t.kind === 'math' ? 1 : t.value.length + 1), 0);
     const element: TextElement = {
       kind: 'text',
       id,
-      face,
+      face: at.face,
       column,
-      x: col.x,
-      y,
-      w,
-      h,
+      x: region.x,
+      y: at.y,
+      w: fit.w,
+      h: fit.h,
       role: titleRole
         ? 'title'
         : zone === 'steps' && action.kind === 'write' && action.zone === 'title'
           ? 'heading'
           : role,
-      fontSize: px,
-      scale,
-      lines,
-      length,
+      fontSize: fit.fontSize,
+      scale: fit.scale,
+      lines: fit.lines,
+      length: fit.length,
       speed: action.kind === 'write' ? action.speed : 'normal',
       source: text,
       math,
+      ...(squeezed ? { squeezed: true as const } : {}),
     };
     if (titleRole) {
-      const f = layout.faces[face];
+      const f = layout.faces[at.face];
       if (f) {
-        f.titleBottom = y + h;
-        const top = Math.max(COLUMN_TOP, y + h + 24);
+        f.titleBottom = at.y + fit.h;
+        const top = Math.max(COLUMN_TOP, at.y + fit.h + 24);
         f.cursors = {
           side: Math.max(f.cursors.side, top),
           center: Math.max(f.cursors.center, top),
@@ -347,34 +556,85 @@ export function place(layout: Layout, action: BoardAction, m: Measure): PlaceRes
       action.kind === 'plot'
         ? { fn: action.fn, domain: action.domain, ...(action.label ? { label: action.label } : {}) }
         : action.spec;
-    let column = columnOf(action.zone);
-    if (column === 'title' || column === 'side') column = 'right';
-    let size = drawSize(type, spec, COLUMNS[column].w, m);
-    // A wide table moves to the middle of the board rather than becoming unreadable.
-    if (size.w > COLUMNS[column].w && column === 'right') {
-      column = 'center';
-      size = drawSize(type, spec, COLUMNS[column].w, m);
+    const face = layout.faces[layout.faces.length - 1];
+    let column: RegionId | 'band' = drawColumn(action.zone);
+    let region = regionOf(face, column);
+    if (!region) {
+      column = 'band';
+      region = FULL;
     }
-    const scale = Math.min(1, COLUMNS[column].w / size.w);
+    const size = drawSize(type, spec, Math.min(region.w, DRAW_MAX_W), m);
+    if (type === 'table') {
+      // A wide table moves to the middle of the board rather than becoming unreadable, and to a
+      // full-width band when even the middle is too narrow.
+      const center = regionOf(face, 'center');
+      if (size.w > region.w && column === 'right' && center) {
+        column = 'center';
+        region = center;
+      }
+      if (size.w > region.w && column !== 'band') {
+        column = 'band';
+        region = FULL;
+      }
+    }
+    const scale = Math.min(1, region.w / size.w);
     const w = size.w * scale;
     const h = size.h * scale;
-    const { face, y } = slot(layout, column, h);
+    const { face: faceIndex, y } =
+      column === 'band' ? bandSlot(layout, h) : slot(layout, column, h);
     const element: DrawElement = {
       kind: 'draw',
       id: freeId(layout, action.id),
-      face,
+      face: faceIndex,
       column,
-      x: COLUMNS[column].x,
+      x: region.x,
       y,
       w,
       h,
       type,
       spec,
+      scale,
     };
     layout.elements.push(element);
     return { layout, element };
   }
   return { layout, element: null };
+}
+
+/**
+ * The dashed rules of a face: one in the middle of each gutter between two neighbouring regions
+ * that both hold something on that face, from below the title to the lowest of them, broken
+ * around full-width bands. A face written across its whole width has none.
+ */
+export function boardRules(
+  layout: Layout,
+  faceIndex: number,
+): { x: number; y1: number; y2: number }[] {
+  const face = layout.faces[faceIndex];
+  if (!face) return [];
+  const regions = TEMPLATES[face.template];
+  const on = layout.elements.filter((e) => e.face === faceIndex);
+  const bands = on.filter((e) => e.column === 'band').sort((a, b) => a.y - b.y);
+  const present = REGION_ORDER.filter((r) => regions[r]);
+  const rules: { x: number; y1: number; y2: number }[] = [];
+  for (let i = 0; i + 1 < present.length; i++) {
+    const a = present[i];
+    const b = present[i + 1];
+    const ra = a && regions[a];
+    const rb = b && regions[b];
+    if (!ra || !rb) continue;
+    const held = on.filter((e) => e.column === a || e.column === b);
+    if (!held.some((e) => e.column === a) || !held.some((e) => e.column === b)) continue;
+    const x = (ra.x + ra.w + rb.x) / 2;
+    const bottom = Math.max(...held.map((e) => e.y + e.h)) + 12;
+    let y = Math.max(COLUMN_TOP - 8, face.titleBottom + 8);
+    for (const band of bands) {
+      if (band.y - 12 > y && band.y < bottom) rules.push({ x, y1: y, y2: band.y - 12 });
+      y = Math.max(y, band.y + band.h + 12);
+    }
+    if (y < bottom) rules.push({ x, y1: y, y2: bottom });
+  }
+  return rules;
 }
 
 /** The part of a text element covering `span` (for "gạch chân đúng chữ đó"), else the whole box. */

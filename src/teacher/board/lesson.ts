@@ -30,6 +30,7 @@ import {
   emptyLayout,
   findElement,
   place,
+  planFaces,
   spanBox,
   type BoardElement,
   type Layout,
@@ -849,7 +850,13 @@ async function run(
   current = r;
   lastInput = input;
   lastMeasure = measure;
-  board().set({ lessonId: input.id, status: 'playing', run: r.id });
+  // The teacher divides the faces before writing (item 3): from the actions still to play only,
+  // so a face already written ("Viết tiếp") keeps its plan and nothing on it moves.
+  const layout = planFaces(
+    board().layout,
+    script.sentences.flatMap((s) => s.actions.map((a) => a.action)),
+  );
+  board().set({ lessonId: input.id, status: 'playing', run: r.id, layout: { ...layout } });
   const ctx: LessonCtx = {
     r,
     measure,
@@ -933,6 +940,7 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
       : {
           faces,
           elements: store.layout.elements.filter((e) => !dropped.has(e.face) && !titles.has(e.id)),
+          upcoming: [],
         };
   const progress: Record<string, number> = {};
   for (const [id, value] of Object.entries(store.progress))
