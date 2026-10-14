@@ -228,7 +228,9 @@ export function ChatPanel({
   const submit = async (text = draft, prompt?: string) => {
     const shown = text.trim();
     const question = (prompt ?? shown).trim();
-    if (!question || busy) return;
+    // Another panel (the bubble before "Mở rộng") may still be answering: a second answer would
+    // take over its "Dừng", so the first one could no longer be stopped.
+    if (!question || busy || useChatStore.getState().answering) return;
     stopSpeaking();
     setError('');
     const userMessage: ChatMessageRecord = {
@@ -281,7 +283,7 @@ export function ChatPanel({
 
   /** "Viết tiếp": asks for the rest of an answer that stopped at the output limit. */
   const continueAnswer = async (message: ChatMessageRecord) => {
-    if (busy) return;
+    if (busy || useChatStore.getState().answering) return;
     stopSpeaking();
     setError('');
     setBusy(true);

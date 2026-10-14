@@ -140,4 +140,14 @@ describe('AI Teacher chat: stop, missing data, unverified numbers', () => {
     ).toBeInTheDocument();
     expect(useChatStore.getState().messages.at(-1)?.unverifiedNumbers).toEqual(invented);
   });
+
+  it('a second question waits while another panel is still answering', async () => {
+    const user = userEvent.setup();
+    // The bubble asked first and is still writing its answer.
+    useChatStore.setState({ answering: true, stopAnswer: () => undefined });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    await user.type(screen.getByRole('textbox', { name: 'Nhập câu hỏi' }), 'Lực là gì?{Enter}');
+    expect(calls).toHaveLength(0);
+    expect(useChatStore.getState().messages).toEqual([]);
+  });
 });
