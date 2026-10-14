@@ -292,6 +292,63 @@ counts ("là 2 bước"), formula parts, exponents and 0 are ignored. Tested on 
 answers: "khoảng 50 km" (P5) is flagged; restated data ("Na=23g", "0.1 m", the learner's "23") is
 not. "Unverified" is not "wrong": a correct textbook value the AI adds is listed too.
 
+**Number words, with and without accents: what they miss on purpose** (`numberWords.ts`). A number
+word the learner wrote counts as given, so when the reading is unsure the reader finds less, and an
+unsure numeral gives nothing at all, never a shorter value. The usual cost is a false "chưa kiểm
+chứng" on a value the learner did write.
+
+- _Spoken numbers._ A digit word, "mốt", "lăm" or "tư" right after a lone digit, "chục", "trăm" or
+  a scale word ends the number in speech ("hai tư" 24, "ba sáu" 36, "hai trăm hai" 220, "một trăm
+  mốt" 110, "một nghìn tư" 1400, "trăm hai" 120), or the words are a range ("hai ba người", two or
+  three people). So "hai bốn giờ", "hai trăm tư mét", "một nghìn hai", "nghìn hai" give nothing, not
+  2 and 4, 200, 1000 or 2; "một trăm tư nhân hai" gives only the 2. After a numeral that ends in a
+  units digit, a digit word is the other end of a range: "mười hai ba tuổi" (12 or 13) gives 12
+  only, "hai mươi lăm sáu độ" 25 only.
+- _"chục", rough numerals._ "hai chục" is 20 ("hai chục rưỡi" 25, "hai chục nghìn" 20 000). A rough
+  or partial numeral gives nothing: "hai trăm mấy", "hai mươi mấy", "hai trăm lẻ" (two hundred-odd),
+  "ba lẻ năm" (3,05 or 305?), "twenty-odd", "two and a half thousand", "half a million"; nor does a
+  numeral before "vạn" or "tá", which are not read ("hai vạn", "hai tá").
+- _"năm" is also "year"._ Right after a number it is the year: "một năm" gives 1, "hai mươi năm"
+  20, "Sau 3 năm" nothing. Before a unit or a count word it cannot be the year, so the whole numeral
+  gives nothing: "bốn năm lần" (four or five times), "trẻ bốn năm tuổi", "mười năm phút" (15 said
+  with an "n"?), "bốn năm nghìn". After "chục", "trăm" or a scale word it is the year only before
+  "rưỡi" or a word that settles it ("hai trăm năm trước", "hai nghìn năm qua"); "Em ra hai trăm
+  năm" (250 in speech?) gives nothing. Alone, "năm", "một" (also "a") and "chín" (also "ripe")
+  count only before a unit or measure word ("năm giây"; not "Năm nay", "năm nhất", "Năm 1905", "Quả
+  chín"), so "sinh viên năm hai" and "nhân năm" give nothing.
+- _Names._ A capitalised digit word that does not start a sentence is a name ("anh Ba", "chú Bảy",
+  "bạn Nam"), and so are "Ba Lan" (Poland) and, without accents, a capitalised "Nam" anywhere ("Nam
+  lan luot tha…"). They give nothing.
+- _"tư" that starts a word_ ("tư thế", "tư vấn", "tư nhân"; not "tư nhân viên") ends no numeral, and
+  the numeral it would have ended gives nothing: "hai mươi tư thế" gives neither 24 nor 20, "ba phần
+  tư nhân hai" neither 0,75 nor 3.
+- _Fractions and decimals._ A denominator is no value of its own ("phần mười giây", "mot phan muoi
+  giay", "two thirds", "one tenth"; "half-life" gives no 0,5). Decimals in words ("ba phẩy năm",
+  "one point five") are read; an unsure ending gives nothing: "hai phẩy năm năm" (2,55, or 2,5
+  years?), and one digit after "point" followed by a word that is no unit ("Through one point two
+  lines": one point, two lines). "hai giờ rưỡi" gives 2,5 only, so an answer that rewrites it as "2
+  giờ 30 phút" has "2 giờ" listed.
+- _Text with no Vietnamese mark at all._ Nearly every digit word is also an ordinary word ("sau"
+  after, "bay" fly, "tam" centre or "tầm" about, "muoi" salt, "do" because), "muoi" is both "mươi"
+  (tens) and "mười" (ten), and "gap" is both "gấp" (times) and "gặp" (meet), the core word of
+  meeting problems. A numeral then counts only before a unit, unless it has a word that means nothing
+  else ("nghin", English number words except "ten"); after "gap" it also counts at the end of its
+  run ("tang gap ba"; "gap doi" anywhere), but not a lone "mot" or "nam" or a capitalised name ("An
+  gap Nam"). A numeral that starts with "sau", "bay" or "tam" never counts, alone ("Sau giay dau
+  tien", "May bay bay thang", "tam giay") or longer ("Sau muoi giay" is after ten seconds, not 60;
+  "May bay bay muoi phut"; "Bay muoi met"), not even after "gap" ("Hai xe gap sau muoi giay": they
+  meet after ten seconds; "gap tam muoi phut": after about ten minutes), so "tang gap sau lan" gives
+  nothing either. Neither does "bon muoi" ("Mot bon muoi lit": a tank of ten litres, not 40). The
+  whole numeral is skipped, so its 10 or 15 is not taken either. Inside a numeral that starts with
+  another word they still count ("muoi sau giay" = 16). "nam", "do", "ngay", "tan", "can" are not
+  units there, so "ba muoi do", "ba ngay", "hai tan" and "hai nam ruoi" give nothing, and neither
+  does a numeral with no unit after it ("v = hai muoi lam"). A short reply such as "hai" or "ba" has
+  no marks even when typed on a Vietnamese keyboard, so it is read the same way and gives nothing.
+
+These rules make an invented value passing as given unlikely, not impossible: an ordinary word they
+do not foresee can still be read as a digit ("nam muoi phut" gives 50, though it may be "nằm mười
+phút"; "Hai xe gap doi xe" gives 2, though it may be "gặp đội xe").
+
 The board's ✓ (`board/provenance.ts`) answers a different question and is deliberately not shared
 (review 2): it means the arithmetic on that line is right, not the formula. B5 (Gemma 1B wrote
 "1 × 3³ = 27" for three mitoses, answer 2³ = 8) gets ✓ on the board and stays listed in the chat.

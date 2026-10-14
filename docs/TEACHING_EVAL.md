@@ -144,3 +144,8 @@ Mô hình 1B vẫn yếu nhất ở bài tính số, các bước giải và câ
 - Độ trễ chịu ảnh hưởng ứng dụng khác trên card: tải GPU trước mỗi lượt được ghi (0–51 %); phần 1
   benchmark gốc không ghi (lúc đó Wallpaper Engine và SimLab của người dùng đang dùng card). Các nhóm
   trong cùng lần chạy xen kẽ nhau; số giây chỉ nên so tương đối.
+- Sau đợt đo, cách nhận biết "học sinh đang trả lời câu hỏi kiểm tra" (`turnKind`) được sửa theo hai
+  vòng rà soát: nút nhanh, lời nhờ giúp, đề bài mới và câu hỏi không có dấu "?" không còn bị coi là
+  câu trả lời (commit b18ceb7). Trong bộ đánh giá, 6 câu có lịch sử hội thoại vẫn được nhận là câu
+  trả lời và các câu khác không có tin nhắn trước của thầy, nên số đo ở trên không đổi. Bản đo đã ghi
+  mã băm `chatService.ts` của lúc đo, không phải của bản hiện tại.
