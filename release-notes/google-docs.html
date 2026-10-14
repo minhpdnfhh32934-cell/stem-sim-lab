@@ -113,10 +113,14 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.</li>
 <li>Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).</li>
 <li>Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.</li>
+<li>Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.</li>
+<li>Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, &quot;tan&quot; trong hòa tan.</li>
 </ul>
 <p><strong>Sửa lỗi</strong></p>
 <ul>
 <li>Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.</li>
+<li>Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.</li>
+<li>Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.</li>
 </ul>
 <p><strong>Bảo mật</strong></p>
 <ul>
@@ -138,10 +142,11 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <ul>
 <li>Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.</li>
 <li>Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).</li>
-<li>Chưa có người nghe thử giọng đọc; một số cách đọc còn sai (ví dụ '2K(r)').</li>
 <li>Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.</li>
 <li>Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.</li>
 <li>Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.</li>
+<li>Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.</li>
+<li>Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.</li>
 </ul>
 <p><strong>Điểm nổi bật trong app</strong></p>
 <ul>
@@ -161,6 +166,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0</li>
 <li>Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới</li>
 <li>Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -&gt; 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -&gt; 7 %; corrupted terms 19 % -&gt; 4.8 %; first piece p50 1.90 s -&gt; 0.91 s; answer length 810 -&gt; 1047 characters.</li>
+<li>Voice: docs/VOICE_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -&gt; 0 dB, first sound 4.07 -&gt; 3.22 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes.</li>
 </ul>
 <h3>0.5.2 (Đã phát hành)</h3>
 <p>Giao diện đẹp và dễ dùng hơn: tìm nhanh bằng Ctrl+K, Gemma trả lời hiện dần từng chữ, ghim quỹ đạo để so sánh. Đây là bản cập nhật phần giao diện; bộ cài đi kèm mang số 0.5.1.</p>
@@ -797,7 +803,12 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.</li>
 <li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, [S], (aq), mũi tên phản ứng).</li>
 <li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.</li>
-<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Chưa có người nghe thử giọng đọc; một số cách đọc còn sai (ví dụ '2K(r)').</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, &quot;tan&quot; trong hòa tan.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, sửa lỗi): Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, sửa lỗi): Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.</li>
 </ul>
 <h3>Gemma chạy trên máy (local)</h3>
 <ul>
@@ -946,10 +957,11 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <ul>
 <li>Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.</li>
 <li>Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).</li>
-<li>Chưa có người nghe thử giọng đọc; một số cách đọc còn sai (ví dụ '2K(r)').</li>
 <li>Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.</li>
 <li>Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.</li>
 <li>Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.</li>
+<li>Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.</li>
+<li>Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.</li>
 </ul>
 <h3>Phiên bản chưa phát hành hoặc chưa xác minh</h3>
 <ul>

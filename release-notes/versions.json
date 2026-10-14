@@ -168,7 +168,8 @@
         "Commit sau đầu PR, lúc ghi chỉ có trên nhánh local: 01faf2f … 20b19c2 (tới 2026-10-14T08:15:31+07:00)",
         "built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0",
         "Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới",
-        "Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -> 7 %; corrupted terms 19 % -> 4.8 %; first piece p50 1.90 s -> 0.91 s; answer length 810 -> 1047 characters."
+        "Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -> 7 %; corrupted terms 19 % -> 4.8 %; first piece p50 1.90 s -> 0.91 s; answer length 810 -> 1047 characters.",
+        "Voice: docs/VOICE_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -> 0 dB, first sound 4.07 -> 3.22 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes."
       ],
       "tests": [
         "format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)",
@@ -258,6 +259,16 @@
             "vi": "Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.",
             "en": "Library notes are matched to the question better; off-topic notes are not sent to the AI.",
             "area": "teacher"
+          },
+          {
+            "vi": "Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.",
+            "en": "The on-device voice is steadier and clearer: even loudness between pieces, the first sound comes sooner, pauses follow sentences and clauses, numbers stay with their units; key ideas get a short pause before them.",
+            "area": "voice"
+          },
+          {
+            "vi": "Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, \"tan\" trong hòa tan.",
+            "en": "Many scientific symbols are read correctly: MeV, MPa, square/cubic units, electron configurations, reaction arrows, \"tan\" in dissolving.",
+            "area": "voice"
           }
         ],
         "fixed": [
@@ -265,6 +276,16 @@
             "vi": "Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.",
             "en": "Gemma could hang an integrated graphics card and restart the computer: now, after one graphics fault, Gemma stops until the app is reopened; integrated cards get a shorter prompt; a stalled answer is stopped automatically.",
             "area": "gemma"
+          },
+          {
+            "vi": "Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.",
+            "en": "With the voice on, a board lesson could stop after its first sentence.",
+            "area": "voice"
+          },
+          {
+            "vi": "Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.",
+            "en": "The on-device voice never reloads onto a graphics card that just failed; after a card fault it moves to the CPU.",
+            "area": "voice"
           }
         ],
         "security": [
@@ -320,11 +341,6 @@
             "area": "api"
           },
           {
-            "vi": "Chưa có người nghe thử giọng đọc; một số cách đọc còn sai (ví dụ '2K(r)').",
-            "en": "Nobody has listened to and rated the voice yet; some readings are still wrong (e.g. '2K(r)').",
-            "area": "voice"
-          },
-          {
             "vi": "Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.",
             "en": "The descriptions of the 3D mitosis stages are awaiting teacher review.",
             "area": "bio3d"
@@ -337,6 +353,16 @@
             "vi": "Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.",
             "en": "Before release, the project owner still has to turn on some extra protections for the GitHub release process.",
             "area": "security"
+          },
+          {
+            "vi": "Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.",
+            "en": "Without a discrete graphics card the on-device voice runs on the CPU, slower than speech, so there are waits between pieces.",
+            "area": "voice"
+          },
+          {
+            "vi": "Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.",
+            "en": "The MMS voice has no real intonation or emotion; no listener has rated its naturalness yet.",
+            "area": "voice"
           }
         ]
       },
