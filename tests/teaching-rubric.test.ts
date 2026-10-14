@@ -350,6 +350,9 @@ describe('answer-key fixes (saved Gemma 3 1B answers)', () => {
       ['C4', 0, 'pH = 3 < 7 nên dung dịch có môi trường axit.'],
       ['C4', 0, 'Dung dịch này là **axit**.'],
       ['B6', 0, 'Nhiệt độ cao làm protein enzyme bị biến tính.'],
+      // 2026-10-14: superscript and "×" forms were missed (found while writing the references).
+      ['B5', 1, 'Sau 3 lần nguyên phân có 2³ = 8 tế bào con.'],
+      ['B5', 1, 'Số tế bào con: 2 × 2 × 2 = 8.'],
     ];
     for (const [id, g, text] of credited) {
       expect(matches(item(id).keyFacts[g] ?? [], text), `${id} ${text}`).toBe(true);
