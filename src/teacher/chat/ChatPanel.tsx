@@ -27,6 +27,7 @@ import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
 import { boardAnswerText } from '@/teacher/board/lesson';
+import { useBoardStore } from '@/teacher/board/boardStore';
 import {
   speak,
   speechSupported,
@@ -75,7 +76,19 @@ export function ChatPanel({
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
   const [draft, setDraft] = useState('');
   // On the board the lesson reads itself sentence by sentence, in step with the pen (Whiteboard).
+  // `board` asks the AI for a board lesson; who reads an answer is decided when it arrives
+  // (`boardOwnsVoice`), because the learner may switch layouts while the AI is answering.
   const board = useTeacherStore((s) => teacherPage && s.layout === 'board');
+  const boardOwnsVoice = () => teacherPage && useTeacherStore.getState().layout === 'board';
+  /**
+   * Quiet before a new question. A board lesson that is speaking is left alone: the board pauses
+   * it when the chat starts answering (Whiteboard), so the sentence it cuts is read again on
+   * "Tiếp tục"; stopping the voice here would lose that sentence.
+   */
+  const quietBeforeAsking = () => {
+    if (boardOwnsVoice() && useBoardStore.getState().status === 'playing') return;
+    stopSpeaking();
+  };
   const [busy, setLocalBusy] = useState(false);
   const setBusy = (value: boolean) => {
     setLocalBusy(value);
@@ -231,7 +244,7 @@ export function ChatPanel({
     // Another panel (the bubble before "Mở rộng") may still be answering: a second answer would
     // take over its "Dừng", so the first one could no longer be stopped.
     if (!question || busy || useChatStore.getState().answering) return;
-    stopSpeaking();
+    quietBeforeAsking();
     setError('');
     const userMessage: ChatMessageRecord = {
       id: crypto.randomUUID(),
@@ -274,7 +287,7 @@ export function ChatPanel({
         unverifiedNumbers: meta.unverifiedNumbers,
       });
       endAnswer(answer);
-      if (useVoiceStore.getState().enabled && !board) void speak(result.content);
+      if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
     } catch (e) {
       if (!endAnswer(answer, e)) setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -287,7 +300,7 @@ export function ChatPanel({
   /** "Viết tiếp": asks for the rest of an answer that stopped at the output limit. */
   const continueAnswer = async (message: ChatMessageRecord) => {
     if (busy || useChatStore.getState().answering) return;
-    stopSpeaking();
+    quietBeforeAsking();
     setError('');
     setBusy(true);
     const answer = startAnswer();
@@ -311,7 +324,7 @@ export function ChatPanel({
         ...(unverified ? { unverifiedNumbers: unverified } : {}),
       });
       endAnswer(answer);
-      if (useVoiceStore.getState().enabled && !board) void speak(result.content);
+      if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
     } catch (e) {
       if (!endAnswer(answer, e)) setError(e instanceof Error ? e.message : String(e));
     } finally {
