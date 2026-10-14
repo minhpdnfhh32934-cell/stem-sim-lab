@@ -163,13 +163,26 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   first sentence end or line break; the rest is speech (log `unclosed_tag`).
 - A TeachScript or reasoning tag cut off at the very end of the stream (an answer stopped at the
   output limit: `<write id="s3" zone="ste`) is markup: it is dropped, never spoken (log
-  `unclosed_tag`). A short tail that may be text ("x<y") stays text.
+  `unclosed_tag`). Only when **all** of the tail reads as a cut tag: a name being typed, or a
+  whole TeachScript/reasoning name, complete `name="value"` attributes and at most one being
+  typed. Anything else stays text: "x<y" at the end, and "Khi v<c thì … 6 kg·m/s." (a comparison
+  followed by more of the lesson) keeps every word.
+- `<` followed by a letter is a tag only where a tag can stand: a TeachScript or reasoning name,
+  a name with `name="value"` attributes, a closing tag, or a bare name of known markup (HTML such
+  as `<b>`, answer wrappers such as `<answer>`). A bare unknown name is text: `<v> = s/t` is an
+  average.
 - Every sentence records where it stands in the text it was read from (`start`/`end`, after the
   hidden reasoning was removed). "Viết tiếp" (the answer was cut and its rest arrives) reads the
-  whole answer again and skips the sentences that end where the part already taught stopped; the
-  sentence that was cut is said again whole, its actions already on the board are not placed
-  again, and a step whose text grew is wiped and written whole. Skipping goes by position, never
-  by counting sentences (a cut sentence grows when its rest is joined on the same line).
+  whole answer again and goes on from where the lesson got to: the sentences already said and
+  written whole are skipped by position (never by counting sentences; a cut sentence grows when
+  its rest is joined on the same line), the sentence that was cut is said again whole, and a
+  lesson stopped part way goes on from where it stopped. What the lesson placed from its last
+  sentence on is checked against the whole answer: an action that comes again exactly, on
+  elements that stay, is not placed twice; anything else (a stump of a line cut mid-word or
+  inside `**`, a line that grew past the board's length or became a label, a final check that is
+  a step once the answer goes on, a face whose title was cut) is wiped with its marks, and the
+  whole answer's version is placed. The board then ends as if the whole answer had been taught at
+  once (oracle test `lessonContinue.test.ts`).
 - Hidden reasoning (`<think>`, `<thinking>`, `<reasoning>`, `<reflection>`, any case) is the
   exception: the whole block is dropped, never spoken or written (log `reasoning_removed`). An
   unclosed block is cut to the end; a closing tag with no opening tag before it (a chat template
@@ -212,14 +225,24 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   markup such as `---`): neither written nor said. Only positive evidence drops a text; when
   unsure, it stays.
 - **Social or meta text** (a greeting, "Tôi là AI…", "Hy vọng…", "Dưới đây là…", a sentence of
-  generic words only such as "Mình sẽ giải từng bước"): said, never written.
+  generic words only such as "Mình sẽ giải từng bước"): said, never written. When a computation
+  follows the greeting or the remark ("Chào em, v = gt = 9,8·2 = 19,6 m/s.", "Dưới đây là công
+  thức: a = F/m = 5 m/s²"), that computation is written (the greeting is still only said).
+  Generic words are compared with their Vietnamese marks ("có"/"cơ", "rồi"/"rơi", "đây"/"dây"
+  are different words), a single letter is a symbol, and a verdict ("Không.", "Có.", "Kết quả:
+  Có"), an unknown ("a = ?") or a symbol ("σ là độ đàn hồi") is never a remark.
 - **A label alone** from a closed list ("Kết luận:", "**Đáp án**", "Phân tích:", "Cho:", "Ghi
   chú:", "Câu hỏi kiểm tra:", "Tài liệu tham khảo:"), closed by ":" or set in bold: not written,
   said with the line it names (a list of sources: not said). Its meaning goes to that line: a
   conclusion becomes the boxed result (one box, never an empty one), given data and notes go to
-  the side, a check question becomes a side note of kind `check`. A neutral label in front of
-  content ("Trả lời: …") is not written either. A bare word ("Kết luận", "Yêu cầu") may be
-  content and stays.
+  the side, a check question becomes a side note of kind `check`. "Kiểm tra (lại):" is neutral:
+  in a solution it verifies the answer, and the computation after it is written. A neutral label
+  in front of content ("Trả lời: …") is not written either. A bare word ("Kết luận", "Yêu cầu")
+  may be content and stays.
+- **Questions**: only the learner's check (after a check label, or the lesson's last written
+  text when it asks) is shortened to its question, and a sentence of it with numbers or a formula
+  stays. A question among the steps ("… 72 km/h … sau 10 s dừng. Tính quãng đường?") is written
+  whole.
 - **Length** (`PART_LIMIT`: title 60, goal 80, given 120, concept 80, definition 100, equation
   120, step 80 or 140 with numbers, example 80, note 80, result 100, check 100): words only, the
   key point is written and the whole text said; with numbers, the text is split at clause
@@ -227,7 +250,13 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   Never cut inside a number or a `$…$`. Math is never split here (the layout does).
 - **Marks** (marks, arrows, points, corrections) on a write that was dropped, and underlines of
   words no longer written, are removed (a correction is still said). **The same write twice**:
-  the second is dropped, its marks go to the first.
+  the second is dropped, its marks go to the first. On a write split into pieces, a box goes
+  around the last piece, an underline, circle or highlight of the whole write under every piece,
+  and a correction strikes every piece and is written after the last. A result boxed anywhere in
+  the script is not boxed again.
+- **Sanitising** never eats a comparison: HTML is removed only when its attributes are
+  `name="value"` pairs ("Nếu v<s và t>0" stays), a bare unknown name stays ("<v>"), and a blank to
+  fill in ("F = ____ N") keeps its underscores.
 - **Tables** at most 8 rows × 5 columns with cells ≤ 40 characters, **flows** 6 steps ≤ 40,
   **new-board titles** ≤ 40. A cell with a number is kept whole.
 - **What the teacher says** is recomputed from what is still written, so the voice never reads a
@@ -236,13 +265,17 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
 
 Long markdown paragraphs are said and only their equations written: every `$…$` and `\(…\)`
 formula and plain-text chains such as `a = F/m = 10/2 = 5 m/s²` (written as text, never as
-KaTeX), at most four. `\[…\]` is display math. Nothing here changes, rounds or invents a number:
+KaTeX), at most four. A chain is written whole or not at all: one whose right side would stop
+after an operator, a `(` or a function name, or with brackets left open ("T = R *", "V₁ = 250 ml
+(dung") is not written (Greek letters, `½`, `⋅` and "cos α" are part of a formula). `\[…\]` is
+display math. Nothing here changes, rounds or invents a number:
 a property test checks that every number of a random answer is written or said, whole. The
 outline (`LessonOutline`) keeps the parts and, for dropped text, only reasons and counts (never
 learner text). Number provenance is shown as labels on the board (`provenance.ts`); withholding a
 sentence and asking the brain to rewrite it (the table above) is not built yet. Tests:
 `lessonCheck.test.ts`, `boardFixtures.test.ts` (copies of real eval answers and cloud-shaped
-answers), `teachscriptRepair.test.ts`.
+answers), `teachscriptRepair.test.ts`, `lessonContinue.test.ts` ("Viết tiếp" equals teaching the
+whole answer at once).
 
 ## 8. Text-to-speech normalisation (Vietnamese)
 

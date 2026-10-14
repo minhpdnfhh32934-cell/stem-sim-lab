@@ -69,25 +69,38 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   khi vẽ, mỗi câu trả lời được kiểm thành một bài có kiểu rõ ràng (tiêu đề, dữ kiện, công thức,
   bước, ghi chú, kết quả, câu hỏi kiểm tra…).
   - Lời chào, "Tôi là AI…", "Dưới đây là…", "Hy vọng…" được **nói** nhưng không viết lên bảng.
+    Nếu ngay sau lời chào có phép tính ("Chào em, v = gt = 9,8·2 = 19,6 m/s.") thì phép tính vẫn
+    được viết. Dòng ngắn của bài học không bao giờ bị coi là lời nói suông: câu trả lời "Không." /
+    "Có.", ẩn số "a = ?", ký hiệu "σ là độ đàn hồi", "Dây dẫn." (so từ có dấu: "dây" khác "đây").
   - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, đường link, dòng "---"
     không được nói, cũng không được viết.
   - Một nhãn đứng một mình ("**Kết luận:**", "Phân tích:", "Cho:", "Ghi chú:") không được viết:
     thầy nói nhãn cùng dòng ngay sau, và ý nghĩa của nhãn đi theo dòng đó (kết luận → khung kết
     quả đúng một lần, không bao giờ có khung rỗng; dữ kiện, ghi chú → cột bên; câu hỏi kiểm tra
-    cuối bài → ghi chú ngắn ở cột bên).
+    cuối bài → ghi chú ngắn ở cột bên). "Kiểm tra (lại):" là kiểm lại đáp số: phép tính sau nó
+    được viết đủ. Chỉ câu hỏi kiểm tra cuối bài mới được rút gọn còn câu hỏi, và câu nào có số
+    vẫn được giữ; câu hỏi nằm trong đề bài ("… 72 km/h … Tính quãng đường?") được viết đủ.
   - Mỗi loại có giới hạn độ dài: câu chỉ có chữ thì viết ý chính (đọc đủ cả câu); câu có số thì
     tách ở dấu phẩy thành tối đa 3 dòng, không bao giờ cắt giữa một con số hay một công thức.
     Đoạn dài chỉ được nói, và mọi phương trình trong đó (cả `$…$`, `\(…\)` lẫn dạng chữ như
-    `a = F/m = 10/2 = 5 m/s²`, tối đa 4) được viết lên bảng.
+    `a = F/m = 10/2 = 5 m/s²`, tối đa 4) được viết lên bảng: viết đủ cả phương trình hoặc không
+    viết, không bao giờ một mẩu dừng sau dấu phép tính hay ngoặc chưa đóng ("T = R *").
   - Dấu gạch chân, khung, mũi tên chỉ vào chữ đã bị bỏ thì cũng bị bỏ; lời thầy nói được tính
-    lại theo những gì còn trên bảng. Không con số nào bị đổi, làm tròn hay thêm vào (có kiểm thử
-    tính chất).
+    lại theo những gì còn trên bảng. Dòng dài bị tách: khung ở mẩu cuối, gạch chân cả dòng thì
+    gạch mọi mẩu, sửa sai thì gạch bỏ mọi mẩu rồi viết lời sửa sau mẩu cuối. Không con số nào bị
+    đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so sánh "v<s và t>0", "<v>" không
+    bao giờ bị xóa như thẻ HTML; chỗ trống "F = ____ N" được giữ.
   - Trình đọc TeachScript: thẻ `<write>` sai mã được sửa mã (không mất chữ), thẻ chưa đóng kết
     thúc ở cuối câu, "$x<y$ và $y>z$" là chữ chứ không phải thẻ, thẻ bị cắt ở cuối câu trả lời
-    không bao giờ được đọc lên.
-  - "Viết tiếp": đọc lại toàn bộ câu trả lời và bỏ qua phần đã giảng **theo vị trí** trong câu
-    trả lời (không đếm câu). Câu bị cắt được nói lại đủ; dòng đang viết dở được xóa và viết lại
-    đủ (không còn một mẩu cụt rồi phần còn lại ở dòng khác).
+    không bao giờ được đọc lên (chỉ khi cả đoạn cuối đúng là một thẻ đang viết dở: "Khi v<c thì
+    … 6 kg·m/s." vẫn được đọc và viết đủ).
+  - "Viết tiếp": đọc lại toàn bộ câu trả lời và tiếp tục từ chỗ bài đã giảng tới, bỏ qua phần
+    đã giảng **theo vị trí** trong câu trả lời (không đếm câu). Câu bị cắt được nói lại đủ; bài bị
+    dừng giữa chừng được giảng tiếp từ chỗ dừng. Những gì câu cuối đã đặt lên bảng được so với câu
+    trả lời đầy đủ: giống hệt thì giữ, khác (mẩu cụt, dòng bị cắt trong `**`, dòng dài ra quá giới
+    hạn, mẩu thành nhãn, câu hỏi cuối bài nay là một bước, mặt bảng có tiêu đề bị cắt) thì xóa
+    cùng dấu đánh dấu của nó rồi viết bản đầy đủ. Bảng cuối cùng giống hệt như giảng cả câu trả
+    lời một lần (kiểm thử `lessonContinue.test.ts`).
 - **Chữ viết tay:** phông Patrick Hand (nội dung) và Pangolin (tiêu đề), giấy phép OFL, có bộ chữ
   tiếng Việt, đóng gói sẵn trong app (không tải từ mạng). Mỗi chữ cái lệch nhẹ (xoay ±2°, lệch dòng,
   co giãn ±3%) theo seed cố định; dòng dài hơi trôi xuống như viết tay.
