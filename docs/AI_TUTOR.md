@@ -66,6 +66,22 @@ draft request and then asks a second, different provider to review and rewrite t
   filter checks the text as received and the cleaned text; an answer with nothing left shows
   `chat.errors.noAnswer`. The board and the chat copy clean answers saved by older versions
   too (`lesson.scriptFor`, `boardAnswerText`). Nothing is rewritten and no number is changed.
+- The reviewer’s notes are removed sentence by sentence from the start, never by whole
+  paragraph: the scan stops at the first sentence or line that is not about the draft (a
+  TeachScript sentence, a heading, a lesson line), so a lesson that shares its paragraph with a
+  remark is kept. A remark that holds a number, a formula, a tag or code stays unless a revision
+  header (“Bản đã sửa:”, “Revised answer:”, alone on its line or closed by “:”) follows it; then
+  only what follows the header is kept (up to 4 sentences without lesson structure between the
+  first remark and that header go too). “Câu trả lời cuối cùng:” counts as
+  a header only right after a remark. Feedback on the learner’s own draft (“Bản nháp của em…”,
+  “Your draft…”) is never a remark, and when the question mentions “nháp”/“draft” no wrapper is
+  removed at all. Known limits: a sentence that is both a remark and a fact without any number
+  or formula (“Bản nháp đúng: lực là đại lượng vectơ.”) goes as a remark; a remark in the middle
+  of the lesson stays.
+- A reasoning tag written as code (“Qwen dùng thẻ `` `<think>` ``”, or inside a closed code
+  fence) is code and stays (`stripReasoningOutsideCode`, used by the chat, the voice and the
+  board). A bare literal `<think>` outside code is hidden reasoning: unclosed, it is cut to the end
+  (the shared rule cannot tell it from a model stopped mid-reasoning).
 - Desktop: keys are stored in the operating-system keychain (shared with the same provider in other
   AI settings). Browser/localhost: keys typed into the page live in memory for this session only.
   Claude cannot be called from a web page, so in the browser it is listed as “chỉ bản desktop” and

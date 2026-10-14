@@ -48,13 +48,15 @@ function Page({
   id = 'answer-1',
   content = SCRIPT,
   reviewed = false,
+  question = '',
 }: {
   id?: string;
   content?: string;
   reviewed?: boolean;
+  question?: string;
 }) {
   useVoiceStore((s) => s.speaking);
-  const lesson: LessonInput = { id, content, question: '', ...(reviewed ? { reviewed } : {}) };
+  const lesson: LessonInput = { id, content, question, ...(reviewed ? { reviewed } : {}) };
   return <Whiteboard lesson={lesson} />;
 }
 
@@ -140,6 +142,29 @@ describe('whiteboard: a new answer with the voice on', () => {
     const shown = [...view.container.querySelectorAll('.board__el')].map((e) => e.textContent);
     expect(shown.length).toBe(elements.length);
     expect(shown.filter((s) => banned.test(s))).toEqual([]);
+  });
+
+  it('a Think lesson in one paragraph with a remark in front is taught whole, without the remark', async () => {
+    const content =
+      'Bản nháp đã đúng. Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.';
+    render(<Page id="answer-one-paragraph" content={content} reviewed />);
+    await untilDone();
+    expect(voice.said.join(' ')).not.toMatch(/nháp/u);
+    expect(voice.said.join(' ')).toContain('Rơi tự do');
+    const sources = useBoardStore
+      .getState()
+      .layout.elements.flatMap((e) => (e.kind === 'text' ? [e.source] : []));
+    expect(sources).toEqual(['Rơi tự do', 'h = 20 m', 'v = 20 m/s']);
+  });
+
+  it("a Think answer to a question about the learner's own draft keeps the feedback", async () => {
+    const content =
+      'Bản nháp đúng hướng nhưng thiếu đơn vị.\n\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.';
+    render(
+      <Page id="answer-own-draft" content={content} reviewed question="Xem giúp em bản nháp này" />,
+    );
+    await untilDone();
+    expect(voice.said.join(' ')).toContain('Bản nháp đúng hướng');
   });
 
   it('a TeachScript lesson with reasoning between sentences says each sentence once, without it', async () => {

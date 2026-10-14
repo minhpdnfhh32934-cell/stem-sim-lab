@@ -209,6 +209,55 @@ describe('answers are cleaned before the board and the chat copy', () => {
   });
 });
 
+describe('Think answers on the board (review round 1)', () => {
+  const written = (content: string, question = '') =>
+    scriptFor(content, { reviewed: true, question }).sentences.flatMap((s) =>
+      s.actions.flatMap((a) => (a.action.kind === 'write' ? [a.action.text] : [])),
+    );
+  const said = (content: string, question = '') =>
+    scriptFor(content, { reviewed: true, question })
+      .sentences.map((s) => s.spoken)
+      .join(' ');
+
+  it('a one-paragraph TeachScript lesson with a remark in front keeps every write', () => {
+    for (const remark of ['Bản nháp đã đúng.', 'The draft is correct.']) {
+      const content = `${remark} Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.`;
+      expect(written(content)).toEqual(['Rơi tự do', 'h = 20 m', 'v = 20 m/s']);
+      expect(said(content)).not.toMatch(/nháp|draft/iu);
+      expect(boardAnswerText(content, { reviewed: true })).toContain('v = 20 m/s');
+    }
+  });
+
+  it('a remark in the middle of the lesson is not cut, nor anything around it', () => {
+    const content =
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Bản nháp dùng g = 10, mình sửa thành <write id="s1" zone="steps">g = 9,8 m/s²</write>.';
+    expect(written(content)).toEqual(['Rơi tự do', 'g = 9,8 m/s²']);
+  });
+
+  it("the learner's own draft: the feedback stays when the question asks about it", () => {
+    const content =
+      'Bản nháp đúng hướng nhưng thiếu đơn vị.\n\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.';
+    expect(said(content)).not.toContain('Bản nháp');
+    expect(said(content, 'Xem giúp em bản nháp này')).toContain('Bản nháp đúng hướng');
+    expect(boardAnswerText(content, { reviewed: true, question: 'check my draft' })).toBe(content);
+  });
+
+  it('a reasoning tag between backticks is code; a bare literal one is reasoning (pinned)', () => {
+    const coded = parseTeachScript(
+      'Thẻ `<think>` là mã. Ta viết <write id="s1" zone="steps">a = 2</write>.',
+    );
+    expect(coded.diagnostics.map((d) => d.code)).not.toContain('reasoning_removed');
+    expect(coded.sentences.flatMap((s) => s.actions.map((a) => a.action.kind))).toEqual(['write']);
+    // Without backticks "<think>" opens hidden reasoning, cut to the end when unclosed: the
+    // shared rule (src/ai/reasoning.ts) cannot tell it from a model stopped mid-reasoning.
+    const bare = parseTeachScript(
+      'Ta viết <write id="s1">so sánh <think> trong code</write> và tiếp tục.',
+    );
+    expect(bare.diagnostics.map((d) => d.code)).toContain('reasoning_removed');
+    expect(bare.sentences.map((s) => s.spoken).join(' ')).not.toContain('tiếp tục');
+  });
+});
+
 describe('board layout (deterministic, never overlapping)', () => {
   it('places a long random lesson without any overlap and inside the board', () => {
     const r = rng(42);

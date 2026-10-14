@@ -549,7 +549,7 @@ export function ChatPanel({
             </div>
           </div>
         ) : (
-          chat.messages.map((message) => (
+          chat.messages.map((message, index) => (
             <article
               key={message.id}
               className={cx('chat-message', `chat-message--${message.role}`)}
@@ -574,6 +574,7 @@ export function ChatPanel({
                   <MessageBody
                     content={boardAnswerText(message.content, {
                       reviewed: message.checkedBy !== undefined,
+                      question: questionBefore(chat.messages, index),
                     })}
                   />
                 ) : (
@@ -792,4 +793,16 @@ export function ChatPanel({
       <footer className="chat-panel__footer">{t('chat.footer')}</footer>
     </section>
   );
+}
+
+/**
+ * The learner's question that the message at `index` answers (the user message before it), or
+ * ''. A Think answer to a question about the learner's own draft keeps its words about a draft.
+ */
+function questionBefore(messages: readonly ChatMessageRecord[], index: number): string {
+  for (let i = index - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role === 'user') return m.content;
+  }
+  return '';
 }

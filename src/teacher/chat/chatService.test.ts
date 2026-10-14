@@ -207,6 +207,30 @@ describe('AI Teacher chat service', () => {
     expect(reply.metadata).toMatchObject({ model: 'gemini-model', checkedBy: 'groq · groq-model' });
   });
 
+  it('Think: a lesson that shares its paragraph with a remark is kept whole, numbers included', async () => {
+    const lesson =
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.';
+    setTransportForTests(
+      answering({ gemini: 'Rơi tự do: v = 20 m/s.', groq: `Bản nháp đã đúng. ${lesson}` }),
+    );
+    const reply = await askTeacher('vật rơi từ h = 20 m, tìm v', 'vi', [], {
+      includeScreen: false,
+      think: true,
+    });
+    expect(reply.content).toBe(lesson);
+  });
+
+  it("Think: feedback on the learner's own draft is kept", async () => {
+    const answer =
+      'Bản nháp đúng hướng nhưng ở bước 2 em nhầm dấu: a = -2 m/s².\n\nBước 1: viết định luật II.';
+    setTransportForTests(answering({ gemini: 'Bước 1: viết định luật II.', groq: answer }));
+    const reply = await askTeacher('Xem giúp em bản nháp: a = 2 m/s²', 'vi', [], {
+      includeScreen: false,
+      think: true,
+    });
+    expect(reply.content).toBe(answer);
+  });
+
   it('an answer that is only reasoning is reported, not shown empty', async () => {
     setTransportForTests(answering({ gemini: '<think>Người dùng hỏi về lực, mình nghĩ' }));
     await expect(

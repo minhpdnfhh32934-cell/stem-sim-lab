@@ -43,7 +43,10 @@ export interface LessonInput {
   question: string;
   /** The model that answered (shown in the AI label). */
   model?: string;
-  /** Written by the Think reviewer (the record has `checkedBy`): its notes about the draft go. */
+  /**
+   * Written by the Think reviewer (the record has `checkedBy`): its notes about the draft go,
+   * unless the question was about the learner's own draft (answerClean.ts).
+   */
   reviewed?: boolean;
 }
 
@@ -521,7 +524,11 @@ export async function playLesson(input: LessonInput, measure: Measure): Promise<
     subtitle: '',
     strokes: [],
   });
-  await run(scriptFor(input.content, { reviewed: input.reviewed === true }), input, measure);
+  await run(
+    scriptFor(input.content, { reviewed: input.reviewed === true, question: input.question }),
+    input,
+    measure,
+  );
 }
 
 /**

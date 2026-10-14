@@ -115,6 +115,30 @@ describe('AI Teacher chat panel', () => {
     expect(view.container.textContent).not.toMatch(/nháp riêng|Nhận xét về bản nháp|Bản đã sửa/u);
   });
 
+  it('an older saved Think answer in one paragraph keeps its lesson; one about the learner’s draft keeps the feedback', () => {
+    useChatStore.setState({
+      messages: [
+        { id: 'q1', role: 'user', content: 'Lực là gì?' },
+        {
+          id: 'a1',
+          role: 'assistant',
+          content: 'Bản nháp đã đúng. Lực là đại lượng vectơ, đo bằng newton (N).',
+          checkedBy: 'groq · groq-model',
+        },
+        { id: 'q2', role: 'user', content: 'Kiểm tra nháp lời giải giúp em' },
+        {
+          id: 'a2',
+          role: 'assistant',
+          content: 'Bản nháp đúng hướng.\n\nNhớ ghi đơn vị.',
+          checkedBy: 'groq · groq-model',
+        },
+      ],
+    });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.getByText('Lực là đại lượng vectơ, đo bằng newton (N).')).toBeInTheDocument();
+    expect(screen.getByText('Bản nháp đúng hướng.')).toBeInTheDocument();
+  });
+
   it('"Xem mô phỏng" follows the latest question, not an older one', () => {
     useChatStore.setState({
       messages: [

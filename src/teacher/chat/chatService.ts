@@ -11,7 +11,7 @@ import {
   isGpuFailure,
 } from '@/ai/gpuSafety';
 import { getTransport } from '@/ai/transport';
-import { hideUnfinishedReasoning, stripAllReasoning } from '@/ai/reasoning';
+import { hideUnfinishedReasoning, stripReasoningOutsideCode } from '@/ai/reasoning';
 import { outputIsSafe, checkInput } from '@/safety/moderation';
 import { currentSafety } from '@/safety/safetyStore';
 import { logIncident } from '@/safety/safetyStore';
@@ -823,7 +823,7 @@ async function updateSummary(
     if (!request) return;
     const answer = await ask(request.system, request.messages, SUMMARY_TOKENS);
     // The summary travels with later questions: hidden reasoning is not part of it.
-    const text = stripAllReasoning(answer.content).text.trim();
+    const text = stripReasoningOutsideCode(answer.content).text.trim();
     if (text && outputIsSafe(answer.content) && outputIsSafe(text))
       useChatStore.getState().setSummary({ text, upto: last.id });
   } catch (e) {
@@ -1045,7 +1045,8 @@ export async function askTeacher(
       signal,
     );
     raw = review.content;
-    cleaned = cleanAnswer(review.content, { reviewed: true });
+    // A question about the learner's own draft keeps the answer's words about a draft.
+    cleaned = cleanAnswer(review.content, { reviewed: true, question });
     truncated = review.truncated;
     checkedBy = `${checker} · ${review.model}`;
   }
