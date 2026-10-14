@@ -80,5 +80,8 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
     exclude: ['tests/e2e/**', 'node_modules/**'],
     css: false,
+    // The engine-checked learning tests take ~0.9 s alone but over 5 s (the default) when the
+    // whole suite runs on 16 threads (seen 2026-10-14): a load wait, the assertions are unchanged.
+    testTimeout: 15_000,
   },
 });
