@@ -3,24 +3,26 @@
  * TeachScript or markdown, becomes a typed, checked lesson before anything is drawn:
  *
  * - each written text is cleaned of leftover markup (`sanitizeBoardText`) and classified
- *   (`classifyBoardText`): hidden reasoning, prompt echoes, links and bare markup are neither
- *   written nor said; greetings and remarks about the answer ("Dưới đây là…") are said, never
- *   written. Only positive evidence drops a text: when unsure, it stays;
+ *   (`classifyBoardText`): hidden reasoning, prompt echoes, source lines and bare markup are
+ *   neither written nor said; greetings and remarks about the answer ("Dưới đây là…") are said,
+ *   never written. Only positive evidence drops a text: when unsure, it stays. A link goes, the
+ *   content around it stays ("g = 9,81 m/s² (https://…)");
  * - a label alone ("Kết luận:", "Cho:") is not written; its meaning goes to the next written text
  *   (a conclusion is boxed once, never as an empty box);
  * - every written part has a kind (title, given, step, result, check…) and a length limit. A
- *   text is never cut inside a number or a formula: a long one with numbers is split at clause
- *   boundaries into at most three writes, or kept whole (`limitBoardText`). Formulas written as
- *   math are never split here (the layout does);
- * - marks, arrows, points and corrections on a text that was dropped go too; duplicate writes go;
- *   tables, flows and new-board titles are capped;
+ *   text is never cut inside a number or a formula: a long one with numbers or a formula ("a =
+ *   F/m", "A → B", "H₂O") is split at clause boundaries into at most three writes, or kept whole
+ *   (`limitBoardText`). Formulas written as math are never split here (the layout does);
+ * - marks, arrows, points and corrections on a text that was dropped go too; a write repeated
+ *   in the same or the next sentence (a glitch) is written once and still said; the same text in
+ *   another part of the answer or on another face is written again; tables, flows and new-board
+ *   titles are capped;
  * - what the teacher says is recomputed from what is still written, so the voice never reads a
  *   dropped write; a sentence left with nothing to say or do goes, and its pause moves on.
  *
  * Nothing here changes, rounds or invents a number (property test in lessonCheck.test.ts). Pure:
  * no store imports, so the parsers and the tests use it directly.
  */
-import { REASONING_TAGS } from '@/ai/reasoning';
 import {
   EXCERPT_HEADER,
   EXCERPT_HEADER_COMPACT,
@@ -28,9 +30,8 @@ import {
   TOOL_HEADER,
 } from '@/teacher/chat/promptLabels';
 import {
-  MARKUP_TAGS,
-  TEACHSCRIPT_TAGS,
   alreadySaid,
+  markupToText,
   spokenSentence,
   type BoardAction,
   type ParsedScript,
@@ -122,59 +123,26 @@ function fold(s: string): string {
     .trim();
 }
 
-const SUBSCRIPT: Record<string, string> = {
-  '0': '₀',
-  '1': '₁',
-  '2': '₂',
-  '3': '₃',
-  '4': '₄',
-  '5': '₅',
-  '6': '₆',
-  '7': '₇',
-  '8': '₈',
-  '9': '₉',
-  '+': '₊',
-  '-': '₋',
-};
-const SUPERSCRIPT: Record<string, string> = {
-  '+': '⁺',
-  '-': '⁻',
-  '−': '⁻',
-};
-
-/** A tag's attributes: `name="value"` pairs only ("<s và t>" is a comparison, not a tag). */
-const ATTRIBUTES = String.raw`(?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*\s*\/?>`;
-/** HTML a model may write around words; the words stay. Block tags leave a space. */
-const INLINE_HTML = new RegExp(
-  String.raw`<\/?(?:b|i|u|em|strong|span|small|big|mark|code|s|del|ins|font|tt|kbd|var|abbr)${ATTRIBUTES}`,
-  'gi',
-);
-const BLOCK_HTML = new RegExp(
-  String.raw`<\/?(?:br|p|div|hr|li|ul|ol|center|blockquote|h[1-6])${ATTRIBUTES}`,
-  'gi',
-);
-/**
- * Any other leftover tag, only when it reads as one: a name, then `name="value"` pairs. A bare
- * opening name is a tag only when it is known markup (TeachScript, reasoning, HTML, an answer
- * wrapper): "<v>" is an average, "x<y và y>z" a comparison.
- */
-const LEFTOVER_TAG =
-  /<(\/?)([a-z][a-z0-9_-]*)((?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(\/?)>/g;
-const NAMED_MARKUP: ReadonlySet<string> = new Set([
-  ...TEACHSCRIPT_TAGS,
-  ...REASONING_TAGS,
-  ...MARKUP_TAGS,
-]);
-/** A web address (a bare one; a markdown link keeps its words). */
-const URL = /\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[a-z0-9-]+\.[^\s<>()[\]]+/gi;
+/** A web address (a bare one; a markdown link keeps its words), with the spaces before it. */
+const URL = /[ \t]*(?:\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[a-z0-9-]+\.[^\s<>()[\]]+)/gi;
 const HOLD = /\u{E010}(\d+)\u{E011}/gu;
+/** A markdown link "[words](address)", with the spaces before it. */
+const MD_LINK = /([ \t]*)\[([^\]]*)\]\((?:[^()]|\([^()]*\))*\)/g;
+/** Link words that only name the link ("[nguồn](…)", "[link](…)"): they go with it. */
+const CITATION_WORDS =
+  /^(?:nguồn|nguồn tham khảo|tham khảo|xem thêm|tại đây|liên kết|link|source|here)$/iu;
+/** A markdown link's words (with the spaces before them), or nothing when they only name it. */
+const linkWords = (space: string, words: string): string =>
+  CITATION_WORDS.test(words.trim()) ? '' : `${space}${words}`;
+/** Brackets left empty once their address went ("m/s (https://…)." → "m/s."). */
+const EMPTY_BRACKETS = /[ \t]*\(\s*\)/g;
 
 /** The text with its web addresses removed: "[words](link)" keeps the words, a bare link goes. */
 export function withoutLinks(text: string): string {
   return text
-    .replace(/\[([^\]]*)\]\((?:[^()]|\([^()]*\))*\)/g, '$1')
+    .replace(MD_LINK, (_m, space: string, words: string) => linkWords(space, words))
     .replace(URL, '')
-    .replace(/\(\s*\)/g, '')
+    .replace(EMPTY_BRACKETS, '')
     .replace(/[ \t]{2,}/g, ' ');
 }
 
@@ -201,23 +169,7 @@ export function sanitizeBoardText(text: string, math = false): string {
     spans.push(m);
     return `\u{E010}${String(spans.length - 1)}\u{E011}`;
   });
-  t = t
-    .replace(/<sub>([^<>]{1,16})<\/sub>/gi, (_m, s: string) =>
-      /^[0-9+-]+$/.test(s) ? Array.from(s, (c) => SUBSCRIPT[c] ?? c).join('') : `_${s}`,
-    )
-    .replace(
-      /(\d+(?:[.,]\d+)?)?<sup>([^<>]{1,16})<\/sup>/gi,
-      (_m, base: string | undefined, s: string) => {
-        if (base && /\d/.test(s)) return `$${base}^{${s}}$`;
-        if (base) return `${base}${superscript(s)}`;
-        return superscript(s);
-      },
-    )
-    .replace(INLINE_HTML, '')
-    .replace(BLOCK_HTML, ' ')
-    .replace(LEFTOVER_TAG, (m, close: string, name: string, attrs: string, self: string) =>
-      close || attrs || self || NAMED_MARKUP.has(name) ? '' : m,
-    );
+  t = markupToText(t);
   t = withoutLinks(t)
     // Bold marks; a blank to fill in ("F = ____ N") keeps its underscores.
     .replace(/\*\*|~~/g, '')
@@ -232,16 +184,6 @@ export function sanitizeBoardText(text: string, math = false): string {
   return t.replace(HOLD, (_m, i: string) => spans[Number(i)] ?? '');
 }
 
-function superscript(s: string): string {
-  if (/^[0-9+\-−]+$/.test(s)) {
-    const digits = '⁰¹²³⁴⁵⁶⁷⁸⁹';
-    return Array.from(s, (c) =>
-      /\d/.test(c) ? (digits[Number(c)] ?? c) : (SUPERSCRIPT[c] ?? c),
-    ).join('');
-  }
-  return `^${s}`;
-}
-
 // ------------------------------------------------------------ classification
 
 /** Only markup: "---", "***", "> ", "|", "```", "• •". */
@@ -249,40 +191,63 @@ const MARKUP_ONLY = /^[\s\-–—*_=~#>|`.·•:]*$/u;
 const LINK = /https?:\/\/|\bwww\.[a-z0-9-]+\./i;
 /**
  * A source line: a link with only a short name around it ("Wikipedia: https://…", "Luật II
- * Newton - [https://…](…)"). Longer text around a link is content; only the link goes.
+ * Newton - [https://…](…)"). Longer text around a link is content; only the link goes. So is a
+ * short one that holds a formula, a quantity, or a number that is not a citation's ("g = 9,81
+ * m/s² (https://…)."): its link goes, its words and numbers stay.
  */
 const SOURCE_NAME_CHARS = 60;
 /** A line that cites sources ("Tài liệu tham khảo: …", "References: …"): not lesson content. */
 const SOURCES_LINE = /^(?:tai lieu tham khao|nguon tham khao|references?|sources|bibliography)\s*:/;
+/**
+ * What a citation's numbers look like (folded): a source word in front, an index "[1]", a year,
+ * a page, a textbook's grade ("SGK Vật lý 10").
+ */
+const CITATION =
+  /^(?:nguon|tai lieu|tham khao|xem them|xem|see|source|references?|ref|wikipedia|wiki|sgk|sach|giao trinh|bai bao|link|lien ket)\b|\[\d{1,3}\]|\b(?:1[5-9]|20)\d\d\b|\b(?:tr|trang|p|pp|page)\.?\s*\d|\b(?:vat ly|hoa hoc|sinh hoc|toan|physics|chemistry|biology) \d{1,2}\b/;
 
 /**
  * Hidden reasoning written as plain words, a Think reviewer's note about the draft: never said,
- * never written. Folded text (no marks, lower case). Narrow on purpose (high precision).
+ * never written. Folded text (no marks, lower case). Narrow on purpose (high precision): a
+ * sentence about "the user" or the reply itself, never one about the lesson ("Mình cần suy nghĩ
+ * xem vật chịu những lực nào.", "I need to answer two parts: speed and time.").
  */
 const INTERNAL: readonly RegExp[] = [
-  /^(?:ok(?:ay)?|alright|so)[, ]+(?:so |now )?(?:the user|let me think|i need to)\b/,
+  /^(?:ok(?:ay)?|alright|so)[, ]+(?:so |now )?(?:the user|let me think)\b/,
   /^let me (?:think|reconsider|re-?think|re-?check (?:my|the) (?:answer|reasoning|work))\b/,
   /^(?:the )?user (?:is asking|asks|asked|wants|wrote|said)\b/,
-  /^i (?:need|should|must|have) to (?:answer|respond|reply|figure out|explain to the user)\b/,
-  /^(?:nguoi dung|user) (?:dang )?(?:hoi|muon|yeu cau)\b/,
-  /^(?:minh|toi) (?:can|phai) (?:tra loi cau hoi|suy nghi|nghi xem)\b/,
+  /^(?:(?:ok(?:ay)?|alright|so|well|now)[, ]+)*i (?:need|should|must|have) to (?:respond|reply)\b/,
+  /^(?:(?:ok(?:ay)?|alright|so|well|now)[, ]+)*i (?:need|should|must|have) to (?:answer|explain|figure out|address|help)\b.*\b(?:the user|user's|their question)\b/,
+  /^(?:nguoi dung|user) (?:dang )?(?:hoi|muon|yeu cau)(?:\s*[:,.?!]|$| (?:ve|biet|minh|toi|giai thich|giai|tinh|hieu|tim hieu|lam ro|rang|la|xem|cach|tai sao|vi sao)\b)/,
+  /^(?:minh|toi) (?:can|phai|nen) (?:tra loi|suy nghi|nghi)\b.*\b(?:nguoi dung|user|cach tra loi|cau tra loi cua minh|ban nhap|tra loi (?:the nao|ra sao|nhu the nao))\b/,
   /^(?:nhan xet|danh gia|ra soat)(?: chung)?(?: ve| cho| cua)? ban nhap\b/,
   /^ban (?:da )?(?:sua|chinh sua)\s*[:.]?$/,
   /^(?:revised|corrected) (?:answer|version)\s*[:.]?$/,
   /^(?:the )?draft (?:is|was|answer|response)\b/,
 ];
 
-/** Greetings, self-introductions, wishes, offers of more help: said, never written. */
+/** A text written with Vietnamese marks (not accentless). */
+const hasMarks = (text: string): boolean => /[\u0300-\u036f]|đ/iu.test(text.normalize('NFD'));
+
+/**
+ * A greeting: "Chào …", "Xin chào …". Compared with the marks when the text has them: "Cháo là
+ * thức ăn…" and "Chào mào là loài chim…" are lessons.
+ */
+function greets(text: string): boolean {
+  const t = text.normalize('NFC').toLowerCase().trimStart();
+  if (hasMarks(t)) return /^(?:xin )?chào(?! mào)(?![\p{L}\d])/u.test(t);
+  return /^(?:xin )?chao(?! mao)\b/.test(fold(t));
+}
+
+/** Self-introductions, wishes, offers of more help: said, never written. Folded text. */
 const SOCIAL: readonly RegExp[] = [
-  /^(?:xin )?chao\b/,
-  /^(?:hello|hi|hey|greetings)\b/,
-  /\b(?:toi|minh|em) la (?:mot )?(?:ai|tro ly|gia su|tro giang|chatbot|mo hinh)\b/,
+  /^(?:hello|hi|hey|greetings)(?![\w-])/,
+  /^(?:toi|minh|em) la (?:mot )?(?:ai|tro ly|gia su|tro giang|chatbot|mo hinh)\b/,
   /\bla ai teacher\b/,
   /^i(?:'m| am) (?:an? )?(?:ai|assistant|tutor|language model)\b/,
-  /^hy vong\b/,
+  /^hy vong (?:rang|la|ban|em|cac ban|cac em|minh|toi|giai thich|bai giang|bai hoc|cau tra loi|loi giai|dieu nay|nhung|nay|se)\b/,
   /^(?:chuc (?:ban|em|cac ban|cac em)|cam on|rat vui)\b/,
   /^(?:i )?hope (?:this|that|it)\b/,
-  /^(?:good luck|feel free|let me know|thanks|thank you)\b/,
+  /^(?:good luck|feel free|let me know|thanks(?! to\b)|thank you)\b/,
   /^neu (?:(?:ban|em|cac ban|cac em) )?(?:co|con) (?:bat ky |bat cu |them )?(?:cau hoi|thac mac|gi chua ro)\b/,
   /^neu (?:ban|em) (?:can|muon) (?:them|giai thich|ho tro|tiep tuc|biet them|hoi them|tim hieu them)\b/,
   /^(?:ban|em) (?:co|con) (?:bat ky |bat cu |them )?(?:cau hoi|thac mac)\b/,
@@ -332,16 +297,19 @@ const GENERIC_FOLDED = new Set([
   ...GENERIC_VI.map(fold).filter((w) => !FOLDED_COLLISIONS.has(w)),
   ...GENERIC_EN,
 ]);
-/** A verdict on its own, perhaps after a label: "Không.", "Có không.", "Kết quả: Có". */
+/**
+ * A verdict on its own, perhaps after a label: "Không.", "Có không.", "Kết quả: Có", "Được.",
+ * "Không được." ("Được nhé!" is a reply, not a verdict).
+ */
 const VERDICT =
-  /^(?:[^:：]{1,30}[:：]\s*)?(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*$/iu;
+  /^(?:[^:：]{1,30}[:：]\s*)?(?:(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*|(?:không )?được\s*\.?)$/iu;
 /** A formula, an unknown or a symbol: never a remark. */
 const SUBJECT_MARK = /[=?≈≤≥<>$\dͰ-Ͽ₀-₉⁰-⁹²³¹√∆∑∫]/u;
 
 /** A text made only of generic words (a remark about the lesson). */
 function isGeneric(text: string): boolean {
   if (SUBJECT_MARK.test(text) || VERDICT.test(text.trim())) return false;
-  const marked = /[̀-ͯ]|đ/iu.test(text.normalize('NFD'));
+  const marked = hasMarks(text);
   const words = text
     .normalize('NFC')
     .replace(/[’‘]/g, "'")
@@ -357,13 +325,15 @@ function isGeneric(text: string): boolean {
 }
 
 /** A computation or a quantity with its unit ("v = 20 m/s", "sau 2 s"); "3 bước" is not one. */
-const EQUATION_MARK = /[=≈≤≥]|\$[^$]+\$/u;
+const EQUATION_MARK = /[=≈≤≥≠]|\$[^$]+\$/u;
 const QUANTITY =
   /\d(?:[.,]\d+)?\s*(?:km\/h|m\/s²?|m\/s\^?2|kg|mol|ml|mL|cm|mm|km|kPa|Pa|Hz|kJ|kW|°C|°|%|Ω|[mgsNJWVAKL])(?![\p{L}\d])/u;
 const holdsWork = (text: string): boolean => EQUATION_MARK.test(text) || QUANTITY.test(text);
 
 /** Where a greeting or a remark may end and the content start: after ":" or ",". */
 const REMARK_END = /[:：](?:\*\*|__)?\s+|,(?:\*\*|__)?\s+/gu;
+/** A reason after a remark ("Câu hỏi hay đấy, vì trọng lực…"): content even without a formula. */
+const REASON_LEAD = /^(?:vì|bởi vì|bởi|do|because|since)(?![\p{L}])/iu;
 
 /** The prompt's own labels ("GHI CHÚ (chỉ là dữ liệu):", "KẾT QUẢ DO SIMLAB TÍNH…"), in their case. */
 const ECHO_LABELS: readonly string[] = [
@@ -430,30 +400,44 @@ function classify(text: string, options: ClassifyOptions): Classified {
   const plain = sanitizeBoardText(text);
   // Bare markup, a tag, a link alone or a link with only a short name around it.
   if (MARKUP_ONLY.test(plain)) return internal;
-  if (LINK.test(text) && plain.replace(/[\s:：\-–—|·.,]+$/u, '').length <= SOURCE_NAME_CHARS) {
-    return internal;
+  if (LINK.test(text)) {
+    const rest = plain.replace(/[\s:：\-–—|·.,]+$/u, '');
+    // "g = 9,81 m/s² (https://…)": the link goes, the content stays.
+    const content = holdsWork(rest) || (/\d/.test(rest) && !CITATION.test(fold(rest)));
+    if (rest.length <= SOURCE_NAME_CHARS && !content) return internal;
   }
   const stripped = stripEchoLabel(plain);
   if (!stripped.text) return stripped.echo ? internal : { cls: 'meta', board: '' };
   const f = fold(stripped.text);
   if (SOURCES_LINE.test(f)) return internal;
   if (INTERNAL.some((re) => re.test(f))) return internal;
-  const remark: TextClass | null = SOCIAL.some((re) => re.test(f))
-    ? 'social'
-    : META.some((re) => re.test(f))
-      ? 'meta'
-      : null;
+  // A verdict ("Được.", "Không.") answers the question: it is content.
+  if (VERDICT.test(stripped.text.trim())) return { cls: 'learning', board: text };
+  const remark: TextClass | null =
+    greets(stripped.text) || SOCIAL.some((re) => re.test(f))
+      ? 'social'
+      : META.some((re) => re.test(f))
+        ? 'meta'
+        : null;
   if (remark) {
-    if (!holdsWork(stripped.text)) return { cls: remark, board: '' };
-    // "Dưới đây là công thức: a = F/m = 5 m/s²": the computation after the remark is written.
+    // "Dưới đây là công thức: a = F/m = 5 m/s²": the computation after the remark is written;
+    // so is a reason after ":" or ", vì" ("Here is why: the net force is zero.").
     for (const m of text.matchAll(REMARK_END)) {
       const before = text.slice(0, m.index);
       if ((before.match(/\$/g) ?? []).length % 2 === 1) continue;
       const rest = text.slice(m.index + m[0].length).trim();
-      if (rest && holdsWork(sanitizeBoardText(rest))) return classify(rest, options);
+      const clean = sanitizeBoardText(rest);
+      if (!rest || !/[\p{L}\p{N}]/u.test(clean)) continue;
+      const colon = /^[:：]/u.test(m[0]);
+      const reason = (colon || REASON_LEAD.test(clean)) && !isGeneric(clean);
+      if (holdsWork(clean) || reason) {
+        const after = classify(rest, options);
+        if (after.cls === 'learning') return after;
+      }
     }
-    // When unsure, it stays.
-    return { cls: 'learning', board: text };
+    // A remark with a computation that no ":" or "," sets apart: when unsure, it stays.
+    if (holdsWork(stripped.text)) return { cls: 'learning', board: text };
+    return { cls: remark, board: '' };
   }
   if (!options.structural && isGeneric(stripped.text)) return { cls: 'meta', board: '' };
   return { cls: 'learning', board: text };
@@ -563,27 +547,48 @@ function stepBody(text: string): string {
   return body;
 }
 
-/** Digits outside the step's own numbering, or a formula between `$`. */
-function holdsMaterial(text: string): boolean {
-  return /\d/.test(stepBody(text)) || /\$[^$]+\$/.test(text);
+/**
+ * A formula written as text: an equation or comparison sign, a reaction arrow, a sub- or
+ * superscript digit ("a = F/m", "HCl + NaOH → NaCl + H₂O", "p = mv").
+ */
+const FORMULA_MARK = /[=≈≤≥≠→⇌⟶⇄↔₀-₉⁰-⁹²³¹]|\$[^$]+\$/u;
+
+/** Digits outside the step's own numbering, or a formula (between `$` or written as text). */
+export function holdsMaterial(text: string): boolean {
+  return /\d/.test(stepBody(text)) || FORMULA_MARK.test(text);
+}
+
+/**
+ * Where the last formula of a text ends: a `$…$`, or a sign or arrow written as text with the
+ * rest of its clause ("p = mv, …" ends at the comma). 0 when it holds none.
+ */
+function formulaEnd(text: string): number {
+  let end = 0;
+  const masked = text.replace(/\$[^$]+\$/g, (m, at: number) => {
+    end = Math.max(end, at + m.length);
+    return ' '.repeat(m.length);
+  });
+  for (const m of masked.matchAll(/[=≈≤≥≠→⇌⟶⇄↔]/gu)) {
+    const rest = masked.slice(m.index + 1);
+    const stop = /[,;](?=\s)|[.!?…](?=\s|$)/u.exec(rest);
+    end = Math.max(end, stop ? m.index + 1 + stop.index : text.length);
+  }
+  return end;
 }
 
 /**
  * The key point of a words-only text for the board (audit BRD-04); the whole text is still read
  * aloud. Text with numbers is kept whole (every number on the board is checked and must not be
- * cut), and a cut never falls inside a `$…$` formula.
+ * cut), and a cut never falls inside or before a formula (`$…$`, "a = F/m", "A → B"): a text
+ * whose formula ends it is kept whole.
  */
 export function keyPoint(text: string, limit = PART_LIMIT.step): string {
   if (text.length <= limit || /\d/.test(stepBody(text))) return text;
   const head = text.slice(0, limit - 10);
   const clause = Math.max(head.lastIndexOf(','), head.lastIndexOf(';'), head.lastIndexOf(':'));
   const cut = clause >= Math.min(30, limit / 2) ? clause : head.lastIndexOf(' ');
-  let at = cut > 0 ? cut : head.length;
-  for (const m of text.matchAll(/\$[^$]+\$/g)) {
-    const end = m.index + m[0].length;
-    if (at > m.index && at < end) at = end;
-  }
-  if (at >= text.trimEnd().length) return text;
+  const at = Math.max(cut > 0 ? cut : head.length, formulaEnd(text));
+  if (at >= text.replace(/[\s.!?…]+$/u, '').length) return text;
   return `${text.slice(0, at).trimEnd()}…`;
 }
 
@@ -792,6 +797,26 @@ function kindOf(w: Write, firstHeading: boolean): PartKind {
 const QUESTION = /\?\s*$/;
 /** One of the text's sentences asks something ("Nếu … thì sao? Thử với m = 2 kg."). */
 const asks = (text: string): boolean => splitSentences(text).some((s) => QUESTION.test(s));
+/**
+ * A sentence that answers the question before it: "Vì…", "Do…", "Because…", "Không, vì…". A
+ * hint or data after a question ("Thử với m = 2 kg.") is not an answer.
+ */
+const ANSWER_LEAD =
+  /^(?:(?:có|không|đúng|sai|yes|no)\s*[,:.]\s*)?(?:(?:đó là |là )?(?:vì|bởi vì|bởi|tại vì|do(?! (?:the|it|this|you|not|we)\b))|because|since)(?![\p{L}])/iu;
+
+/**
+ * The text asks the learner something: its last question is its last sentence, or only hints and
+ * data follow it. "Vì sao vật rơi nhanh dần? Vì trọng lực không đổi…" is a question the teacher
+ * answers, not a check.
+ */
+export function asksLearner(text: string): boolean {
+  const sentences = splitSentences(text);
+  let last = -1;
+  sentences.forEach((s, i) => {
+    if (QUESTION.test(s)) last = i;
+  });
+  return last >= 0 && sentences.slice(last + 1).every((s) => !ANSWER_LEAD.test(s.trim()));
+}
 
 /**
  * The question of a check written as several sentences ("Hãy nghĩ kỹ. Nếu … thì sao?"): the
@@ -827,7 +852,7 @@ function finalCheck(script: ParsedScript): string | null {
       const structural = a.zone === 'title' || a.role === 'heading';
       if (!text || (!structural && labelOf(text))) continue;
       const board = learningPart(text, { structural }).board;
-      if (board) last = { id: a.id, question: !structural && asks(board) };
+      if (board) last = { id: a.id, question: !structural && asksLearner(board) };
     }
   return last?.question ? last.id : null;
 }
@@ -929,14 +954,9 @@ function speechWithoutLinks(
   actions: readonly TimedAction[],
 ): { speech: string; actions: TimedAction[] } {
   if (!LINK.test(speech)) return { speech, actions: [...actions] };
-  const words = replaceInSpeech(
-    speech,
-    actions,
-    /\[([^\]]*)\]\((?:[^()]|\([^()]*\))*\)/g,
-    (m) => m[1] ?? '',
-  );
+  const words = replaceInSpeech(speech, actions, MD_LINK, (m) => linkWords(m[1] ?? '', m[2] ?? ''));
   const bare = replaceInSpeech(words.speech, words.actions, URL, () => '');
-  return replaceInSpeech(bare.speech, bare.actions, /\(\s*\)/g, () => '');
+  return replaceInSpeech(bare.speech, bare.actions, EMPTY_BRACKETS, () => '');
 }
 
 /** Caps a table or flow drawing (rows, columns, cell and step length). */
@@ -963,7 +983,21 @@ function capDrawing(a: Extract<BoardAction, { kind: 'draw' }>): BoardAction {
   return a;
 }
 
-const sameText = (s: string) => fold(s).replace(/[\s.,;:!?…]+$/u, '');
+/**
+ * A write's text as a repeat is compared: NFC, lower case, without its end punctuation. The
+ * Vietnamese marks count ("Vật rơi" and "Vật rời" are two texts).
+ */
+const sameText = (s: string) =>
+  s
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[\s.,;:!?…]+$/u, '');
+
+/** A sentence that opens a new part of the answer ("Ở câu b, …", "b) …", "Bài 2: …"). */
+const NEW_PART =
+  /^(?:(?:ở|với|trong|sang|đến|còn|tiếp theo,?|for|in)\s+)?(?:câu|phần|ý|bài|part|question|problem)\s+(?:[a-h]|\d{1,2})(?![\p{L}\d])|^[a-h][).](?:\s|$)/iu;
 
 /**
  * A written text without a label of the closed list in front that only names the part ("Trả
@@ -1001,7 +1035,15 @@ export function validateLesson(
   const alias = new Map<string, string>();
   /** A split write's id → its pieces' ids (the first is the id itself). */
   const pieces = new Map<string, { ids: string[]; texts: string[] }>();
-  const seen = new Map<string, string>();
+  /**
+   * Writes by their text (zone, role, math and `sameText`): where each stood. A repeat is a glitch
+   * only in the same or the next sentence, on the same face, in the same part of the answer.
+   */
+  const seen = new Map<string, { id: string; sentence: number; face: number }>();
+  /** Marks kept (kind, target, span): a mark moved from a dropped repeat is not drawn twice. */
+  const marked = new Set<string>();
+  const markKey = (a: Extract<BoardAction, { kind: 'mark' }>) =>
+    `${a.mark}|${a.target}|${a.span ?? ''}`;
   /** What each kept write (or piece) shows. */
   const written = new Map<string, string>();
   const parts: BoardPart[] = [];
@@ -1040,8 +1082,12 @@ export function validateLesson(
     return pieces.get(real)?.ids ?? [real];
   };
 
+  let index = -1;
   for (const s of script.sentences) {
+    index += 1;
     let order = 0;
+    // "Ở câu b, …": the same result in another part of the answer is written again.
+    if (NEW_PART.test(sanitizeBoardText(s.speech))) seen.clear();
     // Reasoning written as plain words in the speech, or a link alone, is never said; a link
     // inside a sentence is not read out (its words are).
     let speech = s.speech;
@@ -1055,7 +1101,10 @@ export function validateLesson(
     }
     const kept: { at: number; order: number; action: BoardAction }[] = [];
     const inserts: Insert[] = [];
-    const keep = (at: number, action: BoardAction) => kept.push({ at, order: order++, action });
+    const keep = (at: number, action: BoardAction) => {
+      if (action.kind === 'mark') marked.add(markKey(action));
+      kept.push({ at, order: order++, action });
+    };
     /** Says `text` where the write stood, unless the sentence already says it. */
     const sayInstead = (at: number, text: string) => {
       const words = text.trim();
@@ -1138,12 +1187,16 @@ export function validateLesson(
             forced ?? (isFinalCheck ? 'check' : kindOf(w, title === null && w.zone !== 'steps'));
           const key = `${w.zone}|${w.role}|${String(w.math)}|${sameText(w.text)}`;
           const first = seen.get(key);
-          if (first !== undefined) {
-            alias.set(a.id, first);
+          if (first && first.face === newboards && index - first.sentence <= 1) {
+            // The same write again right after the first (a glitch): not written twice. Its
+            // marks go to the first (on the same face); a repeat in the next sentence is still
+            // said where it stood.
+            alias.set(a.id, first.id);
             drop('duplicate');
+            if (first.sentence !== index) sayInstead(at, w.math ? `$${whole}$` : whole);
             break;
           }
-          seen.set(key, a.id);
+          seen.set(key, { id: a.id, sentence: index, face: newboards });
           if (kind === 'title') title ??= w.text;
           // Only the learner's check is shortened to its question (and its sentences with data);
           // a question among the steps ("… sau 10 s dừng. Tính quãng đường?") is written whole.
@@ -1164,11 +1217,18 @@ export function validateLesson(
           break;
         }
         case 'mark': {
+          // A mark of a dropped repeat lands on the first write, unless that one has it already.
+          const moved = alias.has(a.target);
+          const keepMark = (target: string) => {
+            const mark = { ...a, target };
+            if (moved && marked.has(markKey(mark))) drop('duplicate');
+            else keep(at, mark);
+          };
           if (!a.span && a.mark !== 'box') {
             // The whole write is marked: every piece of it.
             const targets = resolveAll(a.target);
             if (targets === null) drop('orphan');
-            else for (const target of targets) keep(at, { ...a, target });
+            else for (const target of targets) keepMark(target);
             break;
           }
           const target = resolve(a.target, a.span ? { span: a.span } : 'last');
@@ -1176,7 +1236,7 @@ export function validateLesson(
           const shown = target === null ? undefined : written.get(target);
           if (target === null || (a.span && shown !== undefined && !shown.includes(a.span))) {
             drop('orphan');
-          } else keep(at, { ...a, target });
+          } else keepMark(target);
           break;
         }
         case 'arrow': {

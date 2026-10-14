@@ -85,8 +85,9 @@ describe('"<" starts a tag only where a tag can stand', () => {
   });
 
   it('an unknown tag that reads as one is still dropped, its words kept', () => {
+    // Fix round 2: a subscript is written as one ("H₂O"), never dropped to "H2O".
     const { speech, r } = read('Nước là H<sub>2</sub>O và <foo bar="x">chữ</foo> còn lại.');
-    expect(speech).toBe('Nước là H2O và chữ còn lại.');
+    expect(speech).toBe('Nước là H₂O và chữ còn lại.');
     expect(r.diagnostics.map((d) => d.code)).toContain('unknown_tag');
   });
 
@@ -151,6 +152,34 @@ describe('a tag cut at the end of an answer (output limit) is never said', () =>
   it('a bare "<v>" (an average) is text; known markup without attributes is still a tag', () => {
     const { speech } = read('Vận tốc trung bình <v> = s/t = 100/10 = 10 m/s. Chữ <b>đậm</b> đây.');
     expect(speech).toBe('Vận tốc trung bình <v> = s/t = 100/10 = 10 m/s. Chữ đậm đây.');
+  });
+});
+
+describe('markup around the words (fix round 2)', () => {
+  it('a bare unknown name closed later is a tag: dropped, its words kept (§6)', () => {
+    const a = read(
+      '<step>Bước 1: Đổi đơn vị.</step> <write id="s1" zone="steps">v = 72 km/h = 20 m/s</write>.',
+    );
+    expect(a.r.sentences[0]?.speech).toBe('Bước 1: Đổi đơn vị.');
+    expect(a.said).not.toMatch(/<\/?step>/u);
+    expect(a.r.diagnostics).toContainEqual({ code: 'unknown_tag', tag: 'step' });
+    const b = read(
+      'Ta có <write id="s1" zone="steps"><note>Lưu ý: đổi 500 ml = 0,5 L</note></write>.',
+    );
+    expect(b.writes.map((w) => w.text)).toEqual(['Lưu ý: đổi 500 ml = 0,5 L']);
+    // Without a "</v>" after it, "<v>" is still an average.
+    expect(read('Ta có <v> = s/t và <say>chữ</say> đây.').speech).toBe(
+      'Ta có <v> = s/t và chữ đây.',
+    );
+  });
+
+  it('<sub> and <sup> are written as text, never as dropped digits ("1023")', () => {
+    const { speech, writes } = read(
+      'Một mol chứa 6,02·10<sup>23</sup> hạt, tức <write id="r1" zone="steps">1,2·10<sup>24</sup> nguyên tử</write> trong 2 mol<sup>-1</sup> H<sub>2</sub>O.',
+    );
+    expect(speech).toContain('6,02·$10^{23}$ hạt');
+    expect(speech).toContain('mol⁻¹ H₂O');
+    expect(writes.map((w) => w.text)).toEqual(['1,2·$10^{24}$ nguyên tử']);
   });
 });
 

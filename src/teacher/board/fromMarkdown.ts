@@ -18,7 +18,9 @@ import vi from '@/app/i18n/locales/vi';
 import type { Locale } from '@/app/i18n/types';
 import { parseMessage } from '@/teacher/chat/messageParse';
 import {
+  asksLearner,
   extractEquations,
+  holdsMaterial,
   keyPoint,
   labelOf,
   learningPart,
@@ -27,6 +29,7 @@ import {
   type LabelMeaning,
 } from './lessonCheck';
 import {
+  markupToText,
   spokenSentence,
   type BoardAction,
   type ParsedScript,
@@ -109,6 +112,8 @@ class Builder {
   sentences: Sentence[] = [];
   /** Where the line being laid out stands in the answer (set before each line). */
   range: Range | null = null;
+  /** The answer after that line (a tag closed on a later line is markup, not text). */
+  after = '';
   private counters = new Map<string, number>();
   private written = 0;
   private titled = false;
@@ -192,7 +197,7 @@ class Builder {
   heading(text: string) {
     this.flushLabel();
     this.context = null;
-    const clean = stripMd(text).replace(/[.:!?]+$/, '');
+    const clean = stripMd(markupToText(text, this.after)).replace(/[.:!?]+$/, '');
     const part = learningPart(clean, { structural: true });
     if (part.cls === 'internal') return;
     if (part.cls !== 'learning') {
@@ -234,7 +239,9 @@ class Builder {
   }
 
   line(raw: string, item: boolean) {
-    const text = inlineDelimiters(raw.trim());
+    // Said and written alike: "10<sup>23</sup>" is "$10^{23}$" for the voice too, and markup
+    // such as "<note>…</note>" is neither read out nor written.
+    const text = markupToText(inlineDelimiters(raw.trim()), this.after).trim();
     if (!text) {
       this.blank();
       return;
@@ -286,8 +293,16 @@ class Builder {
     }
     const id = this.id(result ? 'r' : note || check ? 'n' : given ? 'g' : 's');
     // Results and given data are written whole, a check only as its question; a long
-    // explanation step only as its key point (the whole line is said).
-    const written = result || given ? plain : check ? questionOf(plain) : keyPoint(plain);
+    // explanation step of words only as its key point (the whole line is said). A step with a
+    // number or a formula is left whole here: the lesson check splits it at clause boundaries.
+    const written =
+      result || given
+        ? plain
+        : check
+          ? questionOf(plain)
+          : holdsMaterial(plain)
+            ? plain
+            : keyPoint(plain);
     const zone =
       note || given || check ? 'side_notes' : meaning === 'example' ? 'example' : 'steps';
     const role = result ? 'result' : note || check ? 'note' : 'body';
@@ -358,12 +373,14 @@ class Builder {
       const w = s?.actions.find((a) => a.action.kind === 'write');
       if (!s || !w) continue;
       const a = w.action;
-      // A question anywhere in it: "Nếu … thì sao? Thử với m = 2 kg." is a check too.
+      // "Nếu … thì sao? Thử với m = 2 kg." is a check too; "Vì sao …? Vì …" is a question the
+      // teacher answers, a step.
       if (
         a.kind === 'write' &&
         a.zone === 'steps' &&
         a.role === 'body' &&
-        /\?(?=\s|$)/.test(a.text)
+        asksLearner(a.text) &&
+        asksLearner(s.speech)
       ) {
         this.sentences[i] = {
           ...s,
@@ -385,7 +402,7 @@ function tableRows(lines: string[]): string[][] {
         .trim()
         .replace(/^\||\|$/g, '')
         .split('|')
-        .map((c) => stripMd(c.trim())),
+        .map((c) => stripMd(markupToText(c.trim()))),
     );
 }
 
@@ -445,6 +462,7 @@ export function markdownToScript(markdown: string, locale: Locale = 'vi'): Parse
       }
       flushTable();
       b.range = range;
+      b.after = source.slice(range.end);
       const heading = /^\s*#{1,6}\s+(.*)$/.exec(line);
       if (heading) {
         b.heading(heading[1] ?? '');

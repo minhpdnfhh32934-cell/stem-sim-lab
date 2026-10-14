@@ -2,7 +2,8 @@
  * TeachScript 1.0 reader (docs/TEACHSCRIPT.md). Text outside tags is what the teacher says;
  * a tag's place in the text is when its action happens. The reader is fault tolerant: a broken
  * tag is dropped and its words are still spoken, unknown tags keep their text (hidden reasoning
- * such as <think> excepted: it is dropped whole), nothing throws. A `<write>` whose id is broken
+ * such as <think> excepted: it is dropped whole), `<sub>`/`<sup>` become text, nothing throws.
+ * A `<write>` whose id is broken
  * or missing gets a repaired or automatic id (its text is never lost), an unclosed `<write>` ends
  * at its sentence, and "<" starts a tag only when a tag can stand there ("$x<y$ và $y>z$" is text).
  * The AI names intentions (zone, role, target), never coordinates: the layout engine places.
@@ -215,6 +216,106 @@ export const MARKUP_TAGS: ReadonlySet<string> = new Set([
 /** Attributes that would be coordinates or sizes: never accepted from the AI (§7). */
 const GEOMETRY = /^(x|y|x1|y1|x2|y2|left|top|right|bottom|width|height|px|size|pos|position)$/i;
 
+/** A closing `</name>` stands in `text` from `from` on: a bare unknown `<name>` before it is a tag. */
+function closesLater(text: string, name: string, from: number): boolean {
+  return new RegExp(`</${name}\\s*>`, 'i').test(text.slice(from));
+}
+
+const SUBSCRIPTS: Record<string, string> = {
+  '0': '₀',
+  '1': '₁',
+  '2': '₂',
+  '3': '₃',
+  '4': '₄',
+  '5': '₅',
+  '6': '₆',
+  '7': '₇',
+  '8': '₈',
+  '9': '₉',
+  '+': '₊',
+  '-': '₋',
+};
+const SUPERSCRIPTS: Record<string, string> = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+  '+': '⁺',
+  '-': '⁻',
+  '−': '⁻',
+};
+
+/** `<sub>…</sub>` as text: "2" → "₂", other words → "_x". */
+function subscriptText(s: string): string {
+  return /^[0-9+-]+$/.test(s) ? Array.from(s, (c) => SUBSCRIPTS[c] ?? c).join('') : `_${s}`;
+}
+
+/**
+ * `<sup>…</sup>` as text. A power of a number becomes `$10^{23}$`, so its digits stay visible to
+ * the number checks and the voice reads a power, never "1023"; other digits and signs become
+ * superscripts ("mol⁻¹", "m/s²"), other words "^x".
+ */
+function superscriptText(base: string | undefined, s: string): string {
+  if (base && /\d/.test(s)) return `$${base}^{${s}}$`;
+  const raised = /^[0-9+\-−]+$/.test(s)
+    ? Array.from(s, (c) => SUPERSCRIPTS[c] ?? c).join('')
+    : `^${s}`;
+  return `${base ?? ''}${raised}`;
+}
+
+/** A sub- or superscript written as HTML, at the start of the text. */
+const SCRIPT_TAG = /^<(sub|sup)>([^<>]{1,16})<\/\1>/i;
+/** The number a superscript raises: the digits just before it ("6,02·10" → "10"). */
+const POWER_BASE = /(\d+(?:[.,]\d+)?)$/;
+
+/** HTML that ends a line of text: removed with a space in its place. */
+const BLOCK_TAGS: ReadonlySet<string> = new Set([
+  ...['br', 'p', 'div', 'hr', 'li', 'ul', 'ol', 'center', 'blockquote'],
+  ...['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'tr', 'td', 'th'],
+]);
+/** A tag that reads as one: a name, then `name="value"` attributes only ("<s và t>" is not one). */
+const ANY_TAG =
+  /<(\/?)([a-zA-Z][a-zA-Z0-9_-]*)((?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(\/?)>/g;
+
+/**
+ * Text without markup, as the reader treats it (§6): `<sub>`/`<sup>` written as text (see
+ * `superscriptText`), and every tag removed that the reader would take for one (a TeachScript,
+ * reasoning or known markup name, a closing tag, a name with `name="value"` attributes, or a bare
+ * name closed later: "<step>…</step>"); its words stay. A bare unknown name that is never closed
+ * is text: "<v> = s/t" (an average), "x<y và y>z" (a comparison). `after` is what follows the
+ * text in the answer (a closing tag on a later line counts). Formulas between `$` are the
+ * caller's to protect.
+ */
+export function markupToText(text: string, after = ''): string {
+  return text
+    .replace(/<sub>([^<>]{1,16})<\/sub>/gi, (_m, s: string) => subscriptText(s))
+    .replace(/(\d+(?:[.,]\d+)?)?<sup>([^<>]{1,16})<\/sup>/gi, (_m, base: string | undefined, s) =>
+      superscriptText(base, String(s)),
+    )
+    .replace(
+      ANY_TAG,
+      (m, close: string, rawName: string, attrs: string, self: string, at: number, all: string) => {
+        const name = rawName.toLowerCase();
+        const markup =
+          close !== '' ||
+          attrs !== '' ||
+          self !== '' ||
+          KNOWN_TAGS.has(name) ||
+          MARKUP_TAGS.has(name) ||
+          closesLater(all, name, at + m.length) ||
+          closesLater(after, name, 0);
+        if (!markup) return m;
+        return BLOCK_TAGS.has(name) ? ' ' : '';
+      },
+    );
+}
+
 const ENTITIES: Record<string, string> = {
   '&lt;': '<',
   '&gt;': '>',
@@ -256,6 +357,8 @@ interface Token {
   name?: string;
   attrs?: Record<string, string>;
   text?: string;
+  /** A text token: the source offset of each character (a sub- or superscript is shorter). */
+  src?: number[];
   /** Where the token starts in the source, and just after its end. */
   start: number;
   end: number;
@@ -304,24 +407,56 @@ function cutTag(tail: string): string | null {
 /**
  * Splits into text and tags; anything that does not parse as a tag stays text. A TeachScript or
  * reasoning name is always a tag (malformed attributes drop it); another name only when the rest
- * reads as a tag ("<foo bar="x">", "<b>", "</foo>"), so a comparison such as "$x<y$ và $y>z$"
- * keeps every character.
+ * reads as a tag ("<foo bar="x">", "<b>", "</foo>", a bare "<step>" closed later by "</step>"),
+ * so a comparison such as "$x<y$ và $y>z$" and an average "<v>" keep every character.
+ * `<sub>`/`<sup>` become text ("H₂O", "6,02·$10^{23}$"), never dropped digits ("1023").
  */
 function tokenize(input: string, diags: Diagnostic[]): Token[] {
   const tokens: Token[] = [];
   let i = 0;
   let text = '';
-  let textStart = 0;
+  let textSrc: number[] = [];
   const flush = () => {
-    if (text) tokens.push({ type: 'text', text, start: textStart, end: textStart + text.length });
+    const start = textSrc[0];
+    if (text && start !== undefined)
+      tokens.push({
+        type: 'text',
+        text,
+        src: textSrc,
+        start,
+        end: (textSrc[textSrc.length - 1] ?? start) + 1,
+      });
     text = '';
+    textSrc = [];
   };
   const literal = () => {
-    if (!text) textStart = i;
     text += input[i] ?? '';
+    textSrc.push(i);
     i++;
   };
   while (i < input.length) {
+    const script = input[i] === '<' ? SCRIPT_TAG.exec(input.slice(i, i + 48)) : null;
+    if (script) {
+      // A sub- or superscript written as HTML: its text form, mapped to where it stood.
+      const end = i + script[0].length;
+      const inner = script[2] ?? '';
+      let from = i;
+      let out: string;
+      if ((script[1] ?? '').toLowerCase() === 'sub') out = subscriptText(inner);
+      else {
+        const base = POWER_BASE.exec(text)?.[1];
+        if (base && /\d/.test(inner)) {
+          from = textSrc[textSrc.length - base.length] ?? i;
+          text = text.slice(0, -base.length);
+          textSrc = textSrc.slice(0, -base.length);
+        }
+        out = superscriptText(base && /\d/.test(inner) ? base : undefined, inner);
+      }
+      text += out;
+      for (let k = 0; k < out.length; k++) textSrc.push(Math.min(end - 1, from + k));
+      i = end;
+      continue;
+    }
     if (input[i] === '<' && /[a-z/]/.test(input[i + 1] ?? '')) {
       const end = input.indexOf('>', i);
       if (end < 0) {
@@ -353,8 +488,13 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
         !KNOWN_TAGS.has(name) &&
         (!attrs ||
           (closing && !bare) ||
-          // "<v>" (an average) is text; "<b>", "</v>", "<foo/>" and "<foo a="1">" are markup.
-          (!closing && !selfClosing && bare && !MARKUP_TAGS.has(name)))
+          // "<v>" (an average) is text; "<b>", "</v>", "<foo/>", "<foo a="1">" and a bare
+          // "<step>" closed later by "</step>" are markup.
+          (!closing &&
+            !selfClosing &&
+            bare &&
+            !MARKUP_TAGS.has(name) &&
+            !closesLater(input, name, end + 1)))
       ) {
         literal();
         continue;
@@ -796,7 +936,7 @@ export function parseTeachScript(input: string): ParsedScript {
   for (const tok of tokens) {
     if (tok.type === 'text') {
       const raw = tok.text ?? '';
-      const src = Array.from({ length: raw.length }, (_, k) => tok.start + k);
+      const src = tok.src ?? Array.from({ length: raw.length }, (_, k) => tok.start + k);
       if (open && (open.name === 'write' || open.name === 'correct' || open.name === 'ask')) {
         open.text += raw;
         for (const at of src) open.src.push(at);

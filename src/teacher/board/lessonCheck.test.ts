@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
+import { toSpeech } from '@/teacher/voice/vietnameseText';
 import { markdownToScript } from './fromMarkdown';
-import { lessonFor, scriptFor, voiceCue } from './lesson';
+import { lessonFor, scriptFor, subtitleText, voiceCue } from './lesson';
 import {
   PART_LIMIT,
   classifyBoardText,
   extractEquations,
+  keyPoint,
   labelOf,
   limitBoardText,
+  questionOf,
   sanitizeBoardText,
   validateLesson,
   type TextClass,
@@ -110,6 +113,40 @@ describe('what a text is to the learner (high precision: when unsure, it stays)'
     ['Nếu có bất kỳ câu hỏi nào khác, đừng ngần ngại hỏi tôi nhé.', 'social'],
     ['Bạn có bất cứ câu hỏi nào khác không?', 'social'],
     ['Đừng ngần ngại hỏi thêm nhé.', 'social'],
+    // Fix round 2: lesson sentences that only look like reasoning, greetings or remarks.
+    ['Người dùng muốn tiết kiệm điện nên dùng bóng LED.', 'learning'],
+    ['Mình cần suy nghĩ xem vật chịu những lực nào.', 'learning'],
+    ['Mình phải suy nghĩ kỹ về chiều của lực.', 'learning'],
+    ['Tôi cần trả lời câu hỏi này bằng định luật III Newton.', 'learning'],
+    ['Minh can suy nghi xem vat chiu nhung luc nao.', 'learning'],
+    ['So I need to find the time first.', 'learning'],
+    ['I need to answer two parts: speed and time.', 'learning'],
+    ['Mẫu nguyên tử Bohr đã được chứng minh là một mô hình chưa hoàn chỉnh.', 'learning'],
+    ['Chào mào là loài chim ăn quả.', 'learning'],
+    ['Cháo là thức ăn dễ tiêu.', 'learning'],
+    ['Hy vọng sống trung bình của người Việt Nam tăng lên.', 'learning'],
+    ['Hi-fi speakers use magnets.', 'learning'],
+    ['Thanks to friction, we can walk.', 'learning'],
+    ['Here is why: the net force is zero.', 'learning'],
+    ['Được.', 'learning'],
+    ['Câu hỏi hay đấy, vì trọng lực không phụ thuộc vận tốc.', 'learning'],
+    // A short line with a link keeps its content: only the link goes.
+    ['Gia tốc rơi tự do g = 9,81 m/s² (https://vi.wikipedia.org/wiki/Rơi_tự_do).', 'learning'],
+    ['Theo Wikipedia, g ≈ 9,81 m/s² [nguồn](https://vi.wikipedia.org/wiki/Rơi_tự_do).', 'learning'],
+    ['Theo SGK, g = 9,8 m/s² (https://vi.wikipedia.org/wiki/Rơi_tự_do).', 'learning'],
+    // …while reasoning about the user and real source lines stay internal.
+    ['Người dùng muốn biết vận tốc của vật.', 'internal'],
+    ['Người dùng hỏi: vật rơi bao lâu?', 'internal'],
+    ['Mình cần trả lời câu hỏi của người dùng.', 'internal'],
+    ['I need to answer the user’s question about forces.', 'internal'],
+    ['So I need to respond in Vietnamese.', 'internal'],
+    ['SGK Vật lý 10, trang 45: https://example.org/sgk', 'internal'],
+    ['Nguồn: Halliday (2011) https://example.org/book', 'internal'],
+    // …and greetings and replies stay social.
+    ['Chào em, mình cùng học nhé.', 'social'],
+    ['Được nhé!', 'social'],
+    ['Thanks for asking!', 'social'],
+    ['Hi, I am an AI tutor.', 'social'],
   ];
   it.each(table)('%s → %s', (text, expected) => {
     expect(classifyBoardText(text)).toBe(expected);
@@ -556,6 +593,156 @@ describe('fix round 1: short lines, computations after a greeting, checks, piece
   });
 });
 
+describe('fix round 2: nothing the learner needs is lost', () => {
+  const written = (script: ParsedScript) => writesOf(script).map((w) => w.text);
+  const boxes = (script: ParsedScript) =>
+    actionsOf(script).flatMap((a) => (a.kind === 'mark' && a.mark === 'box' ? [a.target] : []));
+
+  it('a result repeated in parts a and b is written, boxed and said in both', () => {
+    const { script } = lessonFor(
+      'Ở câu a, <write id="r1" role="result">v = 20 m/s</write><box target="r1"/>. Ở câu b, vận tốc cũng là <write id="r2" role="result">v = 20 m/s</write><box target="r2"/>.',
+    );
+    expect(writesOf(script).map((w) => w.id)).toEqual(['r1', 'r2']);
+    expect(boxes(script)).toEqual(['r1', 'r2']);
+    expect(script.sentences[1]?.spoken).toBe('Ở câu b, vận tốc cũng là v = 20 m/s.');
+  });
+
+  it('a formula repeated on a new face is written there, with its own mark', () => {
+    for (const answer of [
+      'Bài 1: áp dụng <write id="f1" zone="steps">a = F/m</write> ta được <write id="r1" zone="steps">a = 2 m/s²</write>. <newboard title="Bài 2"/> Bài 2 cũng áp dụng <write id="f2" zone="steps">a = F/m</write><circle target="f2"/> ta được <write id="r2" zone="steps">a = 3 m/s²</write>.',
+      'Ta áp dụng <write id="f1" zone="steps">a = F/m</write>. <newboard title="Ví dụ"/>Lại áp dụng <write id="f2" zone="steps">a = F/m</write><circle target="f2"/>.',
+    ]) {
+      const { script } = lessonFor(answer);
+      expect(writesOf(script).map((w) => w.id)).toContain('f2');
+      expect(actionsOf(script)).toContainEqual({ kind: 'mark', mark: 'circle', target: 'f2' });
+      expect(saidOf(script)).toMatch(/áp dụng a = F\/m/u);
+    }
+  });
+
+  it('a step repeated in parts a) and b) of a markdown answer is written in both', () => {
+    const md =
+      '# Rơi tự do\n\n**a)** Tính vận tốc sau 2 s.\n\n1. Áp dụng công thức v = v₀ + at\n2. v = 0 + 10·2 = 20 m/s\n\n**b)** Tính vận tốc sau 3 s.\n\n1. Áp dụng công thức v = v₀ + at\n2. v = 0 + 10·3 = 30 m/s';
+    expect(written(scriptFor(md)).filter((t) => t.includes('v = v₀ + at'))).toHaveLength(2);
+  });
+
+  it('two texts that differ only by Vietnamese marks are both written', () => {
+    const { script } = lessonFor(
+      'So sánh: <write id="a1" zone="steps">Vật rơi</write> và <write id="a2" zone="steps">Vật rời</write>.',
+    );
+    expect(written(script)).toEqual(['Vật rơi', 'Vật rời']);
+  });
+
+  it('a glitch repeat in the next sentence is written once, still said, never boxed twice', () => {
+    const { script } = checked(
+      'Ta có <write id="s1" zone="steps">a = 2 m/s²</write><box target="s1"/>. Nhắc lại <write id="s2" zone="steps">a = 2 m/s²</write><box target="s2"/>.',
+    );
+    expect(writesOf(script).map((w) => w.id)).toEqual(['s1']);
+    expect(boxes(script)).toEqual(['s1']);
+    expect(script.sentences[1]?.spoken).toBe('Nhắc lại a = 2 m/s².');
+  });
+
+  it('a short line with a link keeps its formula or quantity; only the link goes', () => {
+    const md = scriptFor(
+      'Tốc độ ánh sáng trong chân không là c ≈ 3·10⁸ m/s (https://vi.wikipedia.org/wiki/Tốc_độ_ánh_sáng).\n\nVậy ánh sáng đi 1 m mất khoảng 3,3 ns.',
+    );
+    expect(written(md)).toContain('Tốc độ ánh sáng trong chân không là c ≈ 3·10⁸ m/s.');
+    expect(saidOf(md)).toContain('c ≈ 3·10⁸ m/s.');
+    const cited = scriptFor(
+      'Theo Wikipedia, g ≈ 9,81 m/s² [nguồn](https://vi.wikipedia.org/wiki/Rơi_tự_do).',
+    );
+    expect(written(cited)).toEqual(['Theo Wikipedia, g ≈ 9,81 m/s².']);
+    const ts = scriptFor(
+      'Theo SGK, g = 9,8 m/s² (https://vi.wikipedia.org/wiki/Rơi_tự_do). Khi đó <write id="s1" zone="steps">t = 2 s</write>.',
+    );
+    expect(saidOf(ts)).toContain('Theo SGK, g = 9,8 m/s².');
+    for (const s of [md, cited, ts]) expect(saidOf(s)).not.toMatch(/https?:|\(\s*\)/u);
+    // A real source line is still neither said nor written.
+    const source = scriptFor(
+      '# Lực\n\nLực là đại lượng vectơ.\n\nWikipedia: https://vi.wikipedia.org/wiki/Lực',
+    );
+    expect(saidOf(source)).not.toMatch(/Wikipedia/u);
+  });
+
+  it('a write with a formula but no digit is never cut to a key point', () => {
+    for (const text of [
+      'Định luật II Newton: gia tốc của vật tỉ lệ thuận với lực tác dụng và tỉ lệ nghịch với khối lượng, a = F/m.',
+      'Phản ứng trung hòa giữa axit và bazơ tạo thành muối và nước: HCl + NaOH → NaCl + H₂O.',
+      'Động lượng của một vật là tích của khối lượng và vận tốc của vật, kí hiệu p = mv, đơn vị kg·m/s.',
+    ]) {
+      expect(text.length).toBeGreaterThan(PART_LIMIT.step);
+      const { script } = lessonFor(`Ta nhớ <write id="s1">${text}</write>`);
+      expect(written(script).join(' ')).toBe(text);
+    }
+    // A key point never cuts a formula away: it ends after it.
+    expect(
+      keyPoint(
+        'Động lượng của một vật là tích của khối lượng và vận tốc, kí hiệu là p = mv, nó là một đại lượng vectơ cùng hướng với vận tốc',
+      ),
+    ).toContain('p = mv');
+  });
+
+  it('a last line the teacher answers is a step, not a check; "≠" is data of a check', () => {
+    const md = scriptFor(
+      '# Rơi tự do\n\n1. Vật rơi với gia tốc g.\n2. Vì sao vật rơi nhanh dần? Vì trọng lực không đổi nên gia tốc không đổi.',
+    );
+    const last = writesOf(md).at(-1);
+    expect([last?.zone, last?.role]).toEqual(['steps', 'body']);
+    expect(last?.text).toContain('Vì trọng lực không đổi');
+    const ts = checked(
+      'Ta có <write id="s1" zone="steps">a = g</write>. <write id="q1" zone="steps">Vì sao vật rơi nhanh dần? Vì trọng lực không đổi.</write>',
+    );
+    expect(writesOf(ts.script).at(-1)?.text).toBe(
+      'Vì sao vật rơi nhanh dần? Vì trọng lực không đổi.',
+    );
+    expect(ts.outline.parts.at(-1)?.kind).toBe('step');
+    // A hint after the question keeps it a check; a sentence with "≠" in it is data.
+    expect(questionOf('Hai lực này có cân bằng không? Ta thấy F ≠ P.')).toBe(
+      'Hai lực này có cân bằng không? Ta thấy F ≠ P.',
+    );
+  });
+
+  it('markup the reader drops is never said, shown or written', () => {
+    const ts = lessonFor(
+      '<step>Bước 1: Đổi đơn vị.</step> <write id="s1" zone="steps">v = 72 km/h = 20 m/s</write>.',
+    );
+    for (const s of ts.script.sentences) {
+      expect(subtitleText(s.spoken)).not.toMatch(/<\/?step>/u);
+      expect(toSpeech(s.spoken)).not.toMatch(/lớn hơn|nhỏ hơn/u);
+    }
+    expect(saidOf(lessonFor('<say>Chào em, mình cùng học nhé.</say>').script)).toBe(
+      'Chào em, mình cùng học nhé.',
+    );
+    for (const md of [
+      '# Pha loãng\n\n<note>Lưu ý: đổi 500 ml = 0,5 L</note>\n\n1. C₁V₁ = C₂V₂',
+      '# Pha loãng\n\n<note>\nLưu ý: đổi 500 ml = 0,5 L\n</note>\n\n1. C₁V₁ = C₂V₂',
+    ]) {
+      const notes = writesOf(scriptFor(md)).filter((w) => w.zone === 'side_notes');
+      expect(notes.map((w) => [w.role, w.text])).toEqual([['note', 'Lưu ý: đổi 500 ml = 0,5 L']]);
+      expect(written(scriptFor(md)).join(' ')).not.toMatch(/<\/?note>/u);
+    }
+    const inWrite = scriptFor(
+      'Ta có <write id="s1" zone="steps"><note>đổi 500 ml = 0,5 L</note></write>.',
+    );
+    expect(written(inWrite)).toEqual(['đổi 500 ml = 0,5 L']);
+  });
+
+  it('a power written with <sup> keeps its digits for the voice, the subtitle and the board', () => {
+    const md = scriptFor('Một mol chứa 6,02·10<sup>23</sup> hạt.');
+    const spoken = md.sentences[0]?.spoken ?? '';
+    expect(spoken).toBe('Một mol chứa 6,02·$10^{23}$ hạt.');
+    expect(subtitleText(spoken)).toBe('Một mol chứa 6,02·10²³ hạt.');
+    expect(toSpeech(spoken)).not.toMatch(/nghìn không trăm hai mươi ba/u);
+    expect(
+      written(scriptFor('Có <write id="r1" zone="steps">1,2·10<sup>24</sup> nguyên tử</write>.')),
+    ).toEqual(['1,2·$10^{24}$ nguyên tử']);
+    const avogadro = scriptFor('Số Avogadro N_A = 6,02·10<sup>23</sup> mol<sup>-1</sup>.');
+    expect(written(avogadro)).toEqual(['Số Avogadro N_A = 6,02·$10^{23}$ mol⁻¹.']);
+    expect(toSpeech(avogadro.sentences[0]?.spoken ?? '')).not.toMatch(
+      /nghìn không trăm hai mươi ba/u,
+    );
+  });
+});
+
 describe('numbers in = numbers out (property)', () => {
   const UNITS = ['m', 'kg', 'm/s', 'm/s²', 'N', 'J', 's', 'mol', '%', ''];
   const FILLER = [
@@ -570,6 +757,10 @@ describe('numbers in = numbers out (property)', () => {
     'Hy vọng điều này giúp bạn.',
     'Dưới đây là lời giải.',
     'tổng hợp lại',
+    // Fix round 2: citations and markup around the numbers.
+    '(https://vi.wikipedia.org/wiki/Lực)',
+    '[nguồn](https://vi.wikipedia.org/wiki/Lực)',
+    'trung bình <v>',
   ];
   const numbers = (s: string) => s.match(/\d+(?:[.,]\d+)?/g) ?? [];
 
@@ -578,7 +769,9 @@ describe('numbers in = numbers out (property)', () => {
     const pick = <T>(xs: readonly T[]): T => xs[Math.floor(r() * xs.length)] as T;
     const number = () => {
       const n = (r() * 1000).toFixed(Math.floor(r() * 3));
-      return r() < 0.5 ? n.replace('.', ',') : n;
+      const shown = r() < 0.5 ? n.replace('.', ',') : n;
+      // A power written as HTML ("6,02·10<sup>23</sup>"): its digits are never lost.
+      return r() < 0.1 ? `${shown}·10<sup>${String(Math.floor(r() * 30) - 5)}</sup>` : shown;
     };
     for (let round = 0; round < 150; round++) {
       const lines: string[] = [];
@@ -599,7 +792,9 @@ describe('numbers in = numbers out (property)', () => {
                 ? `**Kết luận:**\n${line}`
                 : shape < 0.5
                   ? `<write id="w${String(i)}" zone="steps">${line}</write>.`
-                  : line,
+                  : shape < 0.55
+                    ? `<step>${line}</step>`
+                    : line,
         );
       }
       const answer = lines.join('\n');
@@ -614,8 +809,10 @@ describe('numbers in = numbers out (property)', () => {
           new RegExp(`(?<![\\d.,])${n.replace(/[.,]/g, '[.,]')}(?![\\d])`),
         );
       }
+      // A words-only part fits its limit; one with a number or a formula ("=", "→", "H₂O") is
+      // split at clause boundaries or kept whole, never cut.
       for (const part of lesson.outline.parts) {
-        if (!part.math && !/\d|\$/.test(part.text))
+        if (!part.math && !/[\d$=≈≤≥≠→⇌⟶⇄↔₀-₉⁰-⁹²³¹]/u.test(part.text))
           expect(
             part.text.length,
             `${part.kind}: ${part.text}\nin:\n${answer}`,
