@@ -9,8 +9,8 @@
 // before 2026-10-14 count as decoding "legacy", temperature 0.2; a result without a model takes
 // the file's). Runs of two app builds (another commit or another served chatService.ts, see
 // eval-gemma.mjs `build`) are never merged into one group: the script stops instead. Results
-// without a build (the 2026-10-14 baseline, whose "current" is the 0.6.0 prompt) are accepted
-// as they are. Prints one column per group,
+// without a build (the 2026-10-14 baseline, whose "current" is the PR #20 (f527f18) prompt) are
+// accepted as they are. Prints one column per group,
 // then a paired comparison of group A against group B on the questions both answered, with ONE
 // outcome per question (averaged over its repeats): mean keyFacts (A better / B better / tie,
 // exact sign test) and the share of correct answers (every key fact, no known error; exact

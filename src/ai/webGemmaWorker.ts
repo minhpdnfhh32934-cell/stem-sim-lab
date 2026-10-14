@@ -78,12 +78,13 @@ type InMessage =
 /**
  * How repetition is held back while the answer is generated.
  * - 'app' (default): `ANSWER_RULES`, which look only at the answer being written.
- * - 'legacy': the shipped 0.6.0 settings, Transformers.js' built-in `repetition_penalty: 1.2` and
+ * - 'legacy': the PR #20 (f527f18) settings, Transformers.js' built-in `repetition_penalty: 1.2` and
  *   `no_repeat_ngram_size: 3`. Those count the PROMPT too (see `generate()` in
  *   node_modules/@huggingface/transformers/src/models/modeling_utils.js: every processor gets
  *   prompt + answer ids), so the answer could not reuse the wording of its own context
  *   (eval report 2026-10-14 §4: "nhiễm sắc thể" written as "nhiễm sắc tố"). It exists only so
- *   scripts/teaching/eval-gemma.mjs can reproduce the 0.6.0 behaviour; the app never sends it.
+ *   scripts/teaching/eval-gemma.mjs can reproduce the PR #20 (f527f18) decoding; the app never
+ *   sends it.
  */
 export type Decoding = 'app' | 'legacy';
 

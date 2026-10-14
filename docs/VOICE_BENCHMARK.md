@@ -111,7 +111,7 @@ thường đủ cho một đợt thử nghiệm 5–10 học sinh.
 | Azure NamMinh            | _chưa đo_      | _chưa đo_               | _chưa đo_              |         |
 | Giọng Windows (dự phòng) | _chưa đo_      | _chưa đo_               | _chưa đo_              |         |
 
-## 6. G6 — Giọng thầy tự nhiên hơn (14/10/2026)
+## 6. G6 — Giọng thầy: kế hoạch lời đọc và ghép đoạn (14/10/2026)
 
 Nguồn đo: `scripts/voice/tts-bench.mjs` (19 câu `src/teacher/voice/ttsBenchSet.json`: chào, khái
 niệm mới, câu hỏi kiểm tra, sửa lỗi và động viên, đoạn dài, công thức/đơn vị, nguyên phân, phương

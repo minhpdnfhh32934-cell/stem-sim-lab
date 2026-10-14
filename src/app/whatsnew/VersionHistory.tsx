@@ -12,8 +12,8 @@ import './whatsnew.css';
 
 /**
  * Settings → "Lịch sử phiên bản": every version of SimLab, newest first, with its status
- * (released / in review / unverified …) and its notes folded under it. Offline: the bundled
- * release-notes/versions.json.
+ * (released / in review / unverified …) and its notes folded under it; the running version gets
+ * a neutral "Bản đang dùng" label instead. Offline: the bundled release-notes/versions.json.
  */
 export function VersionHistory() {
   const t = useT();
@@ -75,6 +75,11 @@ function VersionItem({
   const t = useT();
   const L = useLocalized();
   const n = entry.publicNotes;
+  // The notes bundled with a version can never call that version "released": its GitHub Release
+  // does not exist yet when it is built (release-notes/README.md, steps 2–3). So the running
+  // version gets a neutral label instead of an "in review" / "not released" status that would
+  // be out of date in a released app.
+  const neutral = current && entry.status !== 'released';
   return (
     <details className="version-history__item" open={open}>
       <summary>
@@ -82,7 +87,7 @@ function VersionItem({
         <span className="version-history__version">
           {t('whatsnew.version', { version: entry.version })}
         </span>
-        <StatusBadge status={entry.status} />
+        {!neutral && <StatusBadge status={entry.status} />}
         {current && (
           <span className="badge release-badge release-badge--current">
             {t('whatsnew.history.currentBadge')}
@@ -93,7 +98,11 @@ function VersionItem({
         {entry.status === 'released' ? (
           <ReleaseDate entry={entry} />
         ) : (
-          <p className="whatsnew__date">{t(`whatsnew.statusHint.${STATUS_KEY[entry.status]}`)}</p>
+          <p className="whatsnew__date">
+            {neutral
+              ? t('whatsnew.history.currentHint')
+              : t(`whatsnew.statusHint.${STATUS_KEY[entry.status]}`)}
+          </p>
         )}
         {!entry.notesReady && (
           <p className="version-history__draft">{t('whatsnew.history.draft')}</p>

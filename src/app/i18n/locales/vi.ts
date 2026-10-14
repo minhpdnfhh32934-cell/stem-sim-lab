@@ -741,6 +741,8 @@ const vi = {
     history: {
       current: 'Bạn đang dùng phiên bản {version}.',
       currentBadge: 'Bản đang dùng',
+      currentHint:
+        'Bạn đang dùng bản này. Ngày phát hành của một bản chỉ được ghi vào lịch sử ở các bản sau.',
       draft: 'Ghi chú này là bản nháp, chưa được duyệt để công bố.',
       loading: 'Đang đọc lịch sử phiên bản…',
       unavailable:
@@ -1243,6 +1245,8 @@ const vi = {
   voice: {
     readAloudCard: 'Đọc to',
     readAloud: 'Đọc to câu trả lời của AI Teacher',
+    onCpuAfterGpuFault:
+      'Trong lần dùng này, giọng trên máy chạy bằng CPU vì card đồ họa đã gặp lỗi (chậm hơn nhưng an toàn cho máy).',
     readAloudHint:
       'Cũng bật/tắt được bằng nút loa trong khung trò chuyện. Âm thanh không được ghi lại.',
     sourceCard: 'Nguồn giọng',
@@ -1341,6 +1345,8 @@ const vi = {
         'Giọng trên máy chưa đọc được: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
       gpuToCpu:
         'Card đồ họa gặp lỗi khi đọc: giọng trên máy đã chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy), phần chưa đọc được đã do giọng Windows đọc thay.',
+      movedToCpu:
+        'Giọng trên máy vừa chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy): phần đang đọc dở đã do giọng Windows đọc tiếp.',
     },
   },
   levels: {

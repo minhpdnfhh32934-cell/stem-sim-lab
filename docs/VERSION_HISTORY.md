@@ -70,11 +70,11 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 
 ### 0.6.0 (Đang xét duyệt)
 
-Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi kiểm tra và dùng kết quả do SimLab tính, Gemma an toàn hơn trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.
+Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.
 
 - Trạng thái: Đang xét duyệt.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, hộp 'Có gì mới') lúc ghi chỉ có trên các nhánh local feat/audit-g0-g5, feat/teacher-quality và feat/release-history.
+- Ghi chú trạng thái: PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.
 - Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
@@ -95,16 +95,16 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.
 - SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).
 - Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.
-- Hộp 'Có gì mới trong SimLab' sau khi cập nhật và trang 'Lịch sử phiên bản' trong Cài đặt.
+- Hộp 'SimLab đã được cập nhật' cho biết điểm mới sau khi cập nhật, và trang 'Lịch sử phiên bản' trong Cài đặt.
 
 **Cải tiến**
 
-- Cách giảng rõ ràng hơn: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp và một câu hỏi kiểm tra ở cuối.
+- Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).
 - Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, \[S\], (aq), mũi tên phản ứng).
 - Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.
-- Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).
+- Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).
 - Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
-- Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.
+- Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.
 - Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, "tan" trong hòa tan.
 
 **Sửa lỗi**
@@ -118,7 +118,7 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.
 - Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.
 - Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
-- Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt) và không bị đặt lại khi đổi ngày.
+- Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
 - Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
 
 **Hiệu năng**
@@ -136,15 +136,16 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.
 - Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.
 - Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.
-- Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.
+- Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
+- Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
 - Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
 
 **Điểm nổi bật trong app**
 
 - Mô phỏng Nguyên phân 3D: xem từng kì ở tế bào động vật và thực vật.
-- AI Teacher kết thúc bằng một câu hỏi kiểm tra và dùng kết quả do SimLab tính cho phương trình hóa học.
+- AI Teacher dùng kết quả do SimLab tính cho phương trình hóa học và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp).
 - Nút 'Dừng' và lời nhắc khi đề bài có thể thiếu số liệu.
-- Gemma an toàn hơn trên card đồ họa tích hợp.
+- Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp (chưa thử lại trên card tích hợp thật).
 - Liên kết do AI viết không còn bấm được.
 
 **Bằng chứng**
@@ -153,11 +154,12 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0
 - lastCommit: đầu PR #20 trên GitHub là f527f18 2026-10-14T02:04:44+07:00 (git ls-remote origin)
 - PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp
-- Commit sau đầu PR, lúc ghi chỉ có trên nhánh local: 01faf2f … 20b19c2 (tới 2026-10-14T08:15:31+07:00)
+- Commit sau đầu PR f527f18 (gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) nằm trên nhánh local feat/audit-g0-g5 cho tới khi được đẩy lên GitHub; danh sách đầy đủ: git log f527f18..feat/audit-g0-g5
 - built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app\_info = 0.6.0
 - Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới
-- Gemma quality: docs/TEACHING\_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -\> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -\> 7 %; corrupted terms 19 % -\> 4.8 %; first piece p50 1.90 s -\> 0.91 s; answer length 810 -\> 1047 characters.
-- Voice: docs/VOICE\_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -\> 0 dB, first sound 4.07 -\> 3.22 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes.
+- Gemma quality: docs/TEACHING\_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -\> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -\> 7 %; corrupted terms 19 % -\> 4.8 %; first piece p50 1.90 s -\> 0.91 s; answer length 810 -\> 1047 characters. The blind AI judge still flagged language problems in 31 % of v2 answers; check question in 18.8 % of concept/misconception answers.
+- Voice: docs/VOICE\_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -\> 0 dB, first sound 4.07 -\> 3.22 s, waits between pieces per sentence (median) 7.3 -\> 8.4 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes. Nobody has listened to it yet (no naturalness rating).
+- Gemma safeguards on integrated graphics (GPU-01): not retested on an integrated card after the fix (docs/AUDIT\_2026-10-13.md G2, 1B on AMD 780M: 'Không đo lại').
 
 ### 0.5.2 (Đã phát hành)
 
@@ -776,7 +778,7 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.6.0** (Đang xét duyệt, tính năng mới): Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.
 - **0.6.0** (Đang xét duyệt, tính năng mới): Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.
 - **0.6.0** (Đang xét duyệt, tính năng mới): SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).
-- **0.6.0** (Đang xét duyệt, cải tiến): Cách giảng rõ ràng hơn: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp và một câu hỏi kiểm tra ở cuối.
+- **0.6.0** (Đang xét duyệt, cải tiến): Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).
 - **0.6.0** (Đang xét duyệt, cải tiến): Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
 - **0.6.0** (Đang xét duyệt, bảo mật): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
 
@@ -786,11 +788,11 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.6.0** (Đang xét duyệt, tính năng mới): Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.
 - **0.6.0** (Đang xét duyệt, cải tiến): Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, \[S\], (aq), mũi tên phản ứng).
 - **0.6.0** (Đang xét duyệt, cải tiến): Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.
-- **0.6.0** (Đang xét duyệt, cải tiến): Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.
+- **0.6.0** (Đang xét duyệt, cải tiến): Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.
 - **0.6.0** (Đang xét duyệt, cải tiến): Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, "tan" trong hòa tan.
 - **0.6.0** (Đang xét duyệt, sửa lỗi): Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.
 - **0.6.0** (Đang xét duyệt, sửa lỗi): Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.
+- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
 - **0.6.0** (Đang xét duyệt, vấn đề đã biết): Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
 
 ### Gemma chạy trên máy (local)
@@ -811,11 +813,12 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.5.0** (Đã phát hành, sửa lỗi): Gemma luôn chạy trên card tích hợp dù máy có card rời.
 - **0.5.2** (Đã phát hành, tính năng mới): Câu trả lời của Gemma hiện dần từng chữ.
 - **0.5.2** (Đã phát hành, bảo mật): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.
-- **0.6.0** (Đang xét duyệt, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).
+- **0.6.0** (Đang xét duyệt, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).
 - **0.6.0** (Đang xét duyệt, sửa lỗi): Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.
 - **0.6.0** (Đang xét duyệt, bảo mật): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
 - **0.6.0** (Đang xét duyệt, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.
 - **0.6.0** (Đang xét duyệt, vấn đề đã biết): Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.
+- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
 
 ### AI qua API (Gemini, Claude, Groq)
 
@@ -833,7 +836,7 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.4.0** (Chưa xác minh, sửa lỗi): Think với Gemini và dự phòng Groq luôn bị từ chối.
 - **0.4.1** (Đã phát hành, tính năng mới): Think: một nhà cung cấp AI thứ hai rà soát và viết lại câu trả lời.
 - **0.4.1** (Đã phát hành, sửa lỗi): Think không còn bị từ chối khi dùng Gemini kèm dự phòng Groq.
-- **0.6.0** (Đang xét duyệt, bảo mật): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt) và không bị đặt lại khi đổi ngày.
+- **0.6.0** (Đang xét duyệt, bảo mật): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
 - **0.6.0** (Đang xét duyệt, vấn đề đã biết): Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).
 
 ## V. Cải tiến mô phỏng 3D Sinh học
@@ -862,7 +865,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 - **0.6.0** (Đang xét duyệt): Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.
 - **0.6.0** (Đang xét duyệt): Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.
 - **0.6.0** (Đang xét duyệt): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
-- **0.6.0** (Đang xét duyệt): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt) và không bị đặt lại khi đổi ngày.
+- **0.6.0** (Đang xét duyệt): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
 - **0.6.0** (Đang xét duyệt): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
 
 ### Hiệu năng
@@ -933,10 +936,10 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 
 - format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT\_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)
 - App desktop bản release dựng trên máy người phát triển: chặn điều hướng ra trang ngoài, công thức KaTeX đúng vị trí, mô phỏng 3D mở được (AUDIT)
-- Gemma 270M/1B chạy thật trên card NVIDIA RTX 5060; đánh giá 30 câu chấm lại ngày 14/10: câu cuối là câu hỏi kiểm tra 4 % → 42 %, ý chính đúng 29 % → 23 % (AUDIT G3)
-- Benchmark 168/168 lượt, 42 câu, Gemma 1B: cách sinh văn bản mới tăng ý chính đúng 14,2 điểm với prompt cũ (p = 0,003); prompt 0.6.0 không làm câu trả lời đúng hơn (docs/TEACHING\_EVAL.md, nhánh local)
+- Gemma 270M/1B chạy thật trên card NVIDIA RTX 5060; đánh giá 30 câu chấm lại ngày 14/10, cùng thước chấm và cùng cách sinh chữ (greedy, Gemma 1B, docs/TEACHING\_EVAL.md): câu trả lời về khái niệm/hiểu lầm kết thúc bằng câu hỏi kiểm tra ở 43,8 % với lời nhắc của PR #20 (f527f18) và chỉ 18,8 % với lời nhắc v2 trên nhánh local. Các số 4 % → 42 % và 29 % → 23 % trong AUDIT G3 theo thước chấm lúc đó, không so trực tiếp được
+- Benchmark 168/168 lượt, 42 câu, Gemma 1B: cách sinh văn bản mới tăng ý chính đúng 13,4 điểm với prompt cũ (kiểm định dấu p = 0,007; câu đúng, McNemar p = 0,031); lời nhắc của PR #20 (f527f18) không đúng hơn prompt cũ; nhánh local dùng lời nhắc v2, đo được ý chính đúng 31,3 % (prompt và cách sinh cũ) → 47,7 % (docs/TEACHING\_EVAL.md)
 - Workflow 'Security checks' đạt trên PR #20 (2026-10-13T19:05:44Z)
-- Số test của các commit sau đầu PR: chưa xác minh được (chưa ghi trong tài liệu)
+- Số test của các commit sau đầu PR f527f18: xem docs/PROGRESS.md hàng '0.6.0-g6-g7' (số cuối cùng được ghi ở đó)
 
 ## VII. Những vấn đề chưa hoàn thành
 
@@ -947,12 +950,13 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 - Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.
 - Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.
 - Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.
-- Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.
+- Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
+- Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
 - Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.6.0** (Đang xét duyệt): PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, hộp 'Có gì mới') lúc ghi chỉ có trên các nhánh local feat/audit-g0-g5, feat/teacher-quality và feat/release-history.
+- **0.6.0** (Đang xét duyệt): PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
 - **0.4.2** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.
@@ -976,7 +980,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0.6.0 | — | — | — | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20) | `511345d` → `f527f18` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/release-history` |
+| 0.6.0 | — | — | — | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20) | `511345d` → `f527f18` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history` |
 | 0.5.2 | `v0.5.2` | `c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da` | [Release v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | `f25e3ae` → `c25ad9d` | `feat/ui-polish`, `release/0.5.2` |
 | 0.5.1 | — | — | — | [#15](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15), [#16](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16), [#17](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17) | `2d506e7` → `069df6c` | `feat/microsoft-store`, `chore/store-identity`, `chore/store-manual-submit` |
 | 0.5.0 | `v0.5.0` | `c6d01f4081eee86e244136074e6997dd64bebe3f` | [Release v0.5.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0) | [#8](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8), [#11](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11), [#12](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12), [#13](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13), [#14](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14) | `cbb176a` → `c6d01f4` | `feat/simlab-ai-teacher-board`, `feat/v0.5.0-gpu-thay-ai`, `fix/knowledge-review-status`, `perf/ort-asyncify-only`, `chore/message-parse-module` |

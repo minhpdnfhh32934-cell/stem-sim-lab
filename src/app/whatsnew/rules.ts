@@ -2,14 +2,15 @@ import type { ReleaseEntry } from './releaseNotes';
 import { compareVersions, isVersion } from './version';
 
 /**
- * When does "Có gì mới trong SimLab" appear? Pure rules (release-notes/README.md):
+ * When does the "SimLab đã được cập nhật" box appear? Pure rules (release-notes/README.md):
  *
  * - fresh install (no `stemsim.tourDone`, nothing recorded) → record the version, no box;
  * - upgrade (recorded version older than the running one) → every version in
  *   (recorded, running] whose notes are ready, newest first;
  * - a user from before this box (tour done, nothing recorded) → the running version only;
  * - "Để sau" (`snoozed` = running version) → no automatic box, the notes stay in the menu;
- * - nothing ready, the same version again, an older app or unreadable data → no box.
+ * - nothing ready, the same version again, an older app (than the recorded or the snoozed
+ *   version) or unreadable data → no box.
  */
 
 export const WHATSNEW_KEY = 'stemsim.whatsnew';
@@ -51,10 +52,13 @@ export function decideWhatsNew({
   const snoozed = isVersion(stored.snoozed) ? stored.snoozed : undefined;
   if (!lastSeen && !snoozed && !tourDone) return { kind: 'fresh' };
   if (lastSeen && compareVersions(lastSeen, current) >= 0) return { kind: 'none' };
+  // A newer version was put off with "Để sau" and this app is older (a downgrade): its notes
+  // were already offered in that newer version.
+  if (snoozed && compareVersions(snoozed, current) > 0) return { kind: 'none' };
   if (!versions) return { kind: 'none' };
 
   // Without a record, the earliest unseen version is the snoozed one, else the running one.
-  const from = snoozed && compareVersions(snoozed, current) <= 0 ? snoozed : current;
+  const from = snoozed ?? current;
   const inRange = (v: string) =>
     compareVersions(v, current) <= 0 &&
     (lastSeen ? compareVersions(v, lastSeen) > 0 : compareVersions(v, from) >= 0);

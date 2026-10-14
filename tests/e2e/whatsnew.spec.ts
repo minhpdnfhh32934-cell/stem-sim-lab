@@ -3,9 +3,9 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 /**
- * "Có gì mới trong SimLab" after an update (src/app/whatsnew/) and Settings → "Lịch sử phiên
- * bản". The expected versions come from the bundled release-notes/versions.json, so the test
- * follows the data when a version's notes are reviewed (notesReady).
+ * The "SimLab đã được cập nhật" box after an update (src/app/whatsnew/) and Settings → "Lịch sử
+ * phiên bản". The expected versions come from the bundled release-notes/versions.json, so the
+ * test follows the data when a version's notes are reviewed (notesReady).
  */
 interface Entry {
   version: string;
@@ -76,6 +76,12 @@ test('after an update the box shows once, then never again; the history is in Se
   await expect(list.locator('.version-history__version').first()).toHaveText(
     `Phiên bản ${versions[0]!.version}`,
   );
+  // The running version: a neutral label, never a status its own bundle cannot know.
+  const running = list.locator(':scope > li').first();
+  await expect(running.locator('.release-badge--current')).toHaveText('Bản đang dùng');
+  await expect(
+    running.locator('.release-badge--inReview, .release-badge--mergedNotReleased'),
+  ).toHaveCount(0);
   await expect(list.locator('.release-badge--released').first()).toHaveText('Đã phát hành');
   await expect(list.locator('.release-badge--unverified').first()).toHaveText('Chưa xác minh');
   // An older version opens to show its notes.

@@ -2,13 +2,13 @@
 
 `versions.json` là **nguồn duy nhất** cho lịch sử phiên bản của SimLab. Mọi thứ khác được tạo từ nó:
 
-| Tệp                              | Tạo bởi                                  | Dùng cho                                                         |
-| -------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
-| `docs/VERSION_HISTORY.md`        | `npm run release-notes`                  | Lịch sử phiên bản đầy đủ (tiếng Việt, 8 mục I–VIII)              |
-| `docs/CHANGELOG.md`              | `npm run release-notes`                  | Changelog kiểu Keep a Changelog, bản mới nhất ở trên             |
-| `release-notes/google-docs.html` | `npm run release-notes`                  | Cùng nội dung với VERSION_HISTORY, HTML sạch để nhập Google Docs |
-| Hộp "Có gì mới trong SimLab"     | app đọc bản `versions.json` đóng gói sẵn | Hiện sau khi cập nhật (không cần mạng)                           |
-| Cài đặt → "Lịch sử phiên bản"    | app, cùng dữ liệu                        | Danh sách mọi phiên bản, có nhãn trạng thái                      |
+| Tệp                                               | Tạo bởi                                  | Dùng cho                                                                                      |
+| ------------------------------------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `docs/VERSION_HISTORY.md`                         | `npm run release-notes`                  | Lịch sử phiên bản đầy đủ (tiếng Việt, 8 mục I–VIII)                                           |
+| `docs/CHANGELOG.md`                               | `npm run release-notes`                  | Changelog kiểu Keep a Changelog, bản mới nhất ở trên                                          |
+| `release-notes/google-docs.html`                  | `npm run release-notes`                  | Cùng nội dung với VERSION_HISTORY, HTML sạch để nhập Google Docs                              |
+| Hộp "SimLab đã được cập nhật" (menu: "Có gì mới") | app đọc bản `versions.json` đóng gói sẵn | Hiện sau khi cập nhật (không cần mạng)                                                        |
+| Cài đặt → "Lịch sử phiên bản"                     | app, cùng dữ liệu                        | Danh sách mọi phiên bản, có nhãn trạng thái; bản đang chạy có nhãn trung tính "Bản đang dùng" |
 
 **Không sửa tay** ba tệp được tạo: sửa `versions.json` rồi chạy `npm run release-notes`.
 `tests/release-notes.test.ts` báo lỗi nếu các tệp đó cũ hơn `versions.json`, nếu thiếu bằng chứng
@@ -64,6 +64,8 @@ Mỗi phần tử của `versions`:
 - Nâng cấp (`lastSeen` < bản hiện tại): hiện mọi phiên bản trong khoảng (`lastSeen`, hiện tại] có
   `notesReady: true`, mỗi phiên bản một mục. Không có bản nào sẵn sàng → không hiện, không ghi gì
   (để lần cập nhật sau vẫn hiện được).
+- Hạ phiên bản (`lastSeen` hoặc `snoozed` mới hơn bản đang chạy): không hiện gì.
+- Tiêu đề hộp là "SimLab đã được cập nhật"; mục trong menu là "Có gì mới".
 - Chỉ tự hiện ở trang mở đầu hoặc trang chủ Phòng thí nghiệm, khi không có hộp thoại nào đang mở
   (không chen vào giữa bài học hay mô phỏng). "Đóng" và "Xem chi tiết" ghi `lastSeen`; "Để sau" ghi
   `snoozed` (không tự hiện lại ở phiên bản này, nhưng menu ☰ còn mục "Có gì mới" có chấm báo).
@@ -79,6 +81,10 @@ Mỗi phần tử của `versions`:
    Ghi `status: "released"`, `dates.built`, `dates.released` (lấy `published_at` từ
    `gh api repos/<owner>/<repo>/releases`), `refs.tag`, `refs.tagSha`, `refs.releaseUrl` và dòng bằng
    chứng tương ứng; chạy `npm run release-notes`. Thay đổi này đi theo lần cập nhật kế tiếp — vì vậy
-   trong app, bản đang dùng có thể ghi "Ngày phát hành: chưa xác minh" cho tới lần cập nhật sau.
+   trong app, bản đang dùng có thể ghi "Ngày phát hành: chưa xác minh" cho tới lần cập nhật sau. Trong
+   Cài đặt → "Lịch sử phiên bản", bản đang chạy chưa có `status: "released"` không hiện nhãn trạng
+   thái (đang xét duyệt / chưa phát hành riêng…) mà hiện nhãn trung tính "Bản đang dùng" và câu
+   "Bạn đang dùng bản này…" (`VersionHistory.tsx`), vì dữ liệu đóng gói sẵn không thể biết bản đó
+   đã được phát hành hay chưa.
 4. **Bắt đầu phiên bản mới:** khi nâng `package.json`, thêm phần tử mới ở đầu `versions`
    (test yêu cầu phần tử đầu tiên trùng phiên bản trong `package.json`).

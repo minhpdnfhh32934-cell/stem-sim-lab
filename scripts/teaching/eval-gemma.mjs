@@ -8,9 +8,9 @@
 //        [--label <name>] [--only P1,C3] [--base <url>] [--skip <file,...>] [--retries 0]
 //
 // --variants   legacy   = the on-device prompt of main before the 2026-10-13 audit (below);
-//              current  = the live prompt of the 0.6.0 build, contextPrompt(question, 'vi', false,
-//                         false, 'compact', history), with the note placed and the echo removed as
-//                         askTeacher does;
+//              current  = the live prompt of the PR #20 (f527f18) build,
+//                         contextPrompt(question, 'vi', false, false, 'compact', history), with the
+//                         note placed and the echo removed as askTeacher does;
 //              improved = the same live prompt, served by the improved build (feat/teacher-quality).
 //              current and improved run the same code, so the label must match the build --base
 //              serves: current refuses a chatService.ts that imports ./missingData (the improved
@@ -329,7 +329,7 @@ for (const item of items) {
                   'compact',
                   history,
                 );
-                // The 0.6.0 build returns no `note`: nothing moves there.
+                // The PR #20 (f527f18) build returns no `note`: nothing moves there.
                 const noteInTurn = Boolean(prompt.note) && history.length > 0;
                 system = noteInTurn ? prompt.system.slice(0, -prompt.note.length) : prompt.system;
                 if (noteInTurn) asked = `${prompt.note.trim()}\n\n${item.question}`;
@@ -346,7 +346,7 @@ for (const item of items) {
                   temperature,
                   decoding,
                   // The app strips the question a small model repeats first (askTeacher's echo).
-                  // The 0.6.0 build ignores the option and strips the last user turn, which is
+                  // The PR #20 (f527f18) build ignores the option and strips the last user turn, which is
                   // the question there.
                   echo: item.question,
                   onPartial: () => {

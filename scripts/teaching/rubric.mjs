@@ -620,7 +620,8 @@ const buildId = (b) => `${b.commit ?? '?'} ${b.chatServiceSha256 ?? '?'}`;
 /**
  * Groups (groupKey) whose runs come from different app builds: two runs that both carry a build
  * with another commit or another hash of the served chatService.ts. Results without a build (the
- * 2026-10-14 baseline files, whose "current" is the 0.6.0 prompt) are accepted as they are.
+ * 2026-10-14 baseline files, whose "current" is the PR #20 (f527f18) prompt) are accepted as
+ * they are.
  * Returns one entry per such group with the builds seen ("<commit> <hash>"), in reading order.
  */
 export function buildConflicts(runs) {
@@ -653,7 +654,7 @@ export function skipRefusal(saved, now) {
 /**
  * Which on-device prompt a served chatService.ts holds: 'improved' when it imports ./missingData
  * (raw TypeScript or as Vite serves it, "/src/teacher/chat/missingData.ts?t=…"), else 'current'
- * (the 0.6.0 prompt).
+ * (the PR #20 (f527f18) prompt).
  */
 export function servedPromptVariant(source) {
   return /\bimport\b[^;]*?["'][^"'\n]*\/missingData(?:\.[jt]s)?(?:\?[^"'\n]*)?["']/.test(source)
@@ -663,14 +664,14 @@ export function servedPromptVariant(source) {
 
 /**
  * Why the requested prompt variants cannot run against this served chatService.ts: 'current' (the
- * 0.6.0 prompt) and 'improved' are both the live contextPrompt, so the label must match what the
- * server really serves. 'legacy' is built in the script and runs anywhere. null when they may run.
+ * PR #20 (f527f18) prompt) and 'improved' are both the live contextPrompt, so the label must match
+ * what the server really serves. 'legacy' is built in the script and runs anywhere. null when they may run.
  */
 export function variantRefusal(variants, source) {
   const served = servedPromptVariant(source);
   const wrong = variants.filter((v) => (v === 'current' || v === 'improved') && v !== served);
   return wrong.length
-    ? `--variants ${wrong.join(',')}: the served chatService.ts is the ${served === 'improved' ? 'improved build (it imports ./missingData)' : '0.6.0 build (no ./missingData import)'}`
+    ? `--variants ${wrong.join(',')}: the served chatService.ts is the ${served === 'improved' ? 'improved build (it imports ./missingData)' : 'PR #20 (f527f18) prompt (no ./missingData import)'}`
     : null;
 }
 

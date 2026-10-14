@@ -4,11 +4,11 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.6.0 (Đang xét duyệt)
 
-_PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, hộp 'Có gì mới') lúc ghi chỉ có trên các nhánh local feat/audit-g0-g5, feat/teacher-quality và feat/release-history._
+_PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub._
 
 _Ghi chú này là bản nháp, chưa được duyệt để công bố._
 
-Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi kiểm tra và dùng kết quả do SimLab tính, Gemma an toàn hơn trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.
+Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.
 
 ### Added
 
@@ -18,16 +18,16 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.
 - SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).
 - Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.
-- Hộp 'Có gì mới trong SimLab' sau khi cập nhật và trang 'Lịch sử phiên bản' trong Cài đặt.
+- Hộp 'SimLab đã được cập nhật' cho biết điểm mới sau khi cập nhật, và trang 'Lịch sử phiên bản' trong Cài đặt.
 
 ### Improved
 
-- Cách giảng rõ ràng hơn: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp và một câu hỏi kiểm tra ở cuối.
+- Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).
 - Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, \[S\], (aq), mũi tên phản ứng).
 - Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.
-- Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).
+- Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).
 - Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
-- Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.
+- Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.
 - Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, "tan" trong hòa tan.
 
 ### Fixed
@@ -41,7 +41,7 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.
 - Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.
 - Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
-- Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt) và không bị đặt lại khi đổi ngày.
+- Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
 - Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
 
 ### Performance
@@ -59,7 +59,8 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.
 - Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.
 - Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.
-- Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.
+- Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
+- Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
 - Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
 
 ## [0.5.2] - 2026-10-13

@@ -1384,7 +1384,8 @@ describe('build identity of saved results', () => {
   });
 
   it('refuses to merge two builds under one group, accepts files without a build', () => {
-    // The 771dd86 scenario: one script, run against the 0.6.0 server and the improved one.
+    // The 771dd86 scenario: one script, run against the PR #20 (f527f18) server and the improved
+    // one.
     expect(
       buildConflicts([run({ build: build('v2') }), run({ id: 'P4', build: build('tq') })]),
     ).toEqual([{ key: 'gemma3-1b/current/app/0', builds: ['v2 h1', 'tq h1'] }]);
@@ -1417,7 +1418,7 @@ describe('build identity of saved results', () => {
     ).toMatch(/build/);
   });
 
-  it('tells the served 0.6.0 prompt from the improved one, raw or as Vite serves it', () => {
+  it('tells the served PR #20 (f527f18) prompt from the improved one, raw or as Vite serves it', () => {
     const improved = [
       "import { missingNumericData, type MissingData } from './missingData';",
       'import { missingNumericData } from "/src/teacher/chat/missingData.ts";',
@@ -1432,6 +1433,10 @@ describe('build identity of saved results', () => {
     for (const s of current) expect(servedPromptVariant(s), s).toBe('current');
     expect(variantRefusal(['legacy', 'current'], improved[1] ?? '')).toMatch(/current/);
     expect(variantRefusal(['improved'], current[0] ?? '')).toMatch(/improved/);
+    // 'current' is the PR #20 (f527f18) prompt: 0.6.0 is not released, so the message never
+    // calls it the 0.6.0 build.
+    expect(variantRefusal(['improved'], current[0] ?? '')).toMatch(/PR #20 \(f527f18\)/);
+    expect(variantRefusal(['improved'], current[0] ?? '')).not.toMatch(/0\.6\.0/);
     expect(variantRefusal(['legacy', 'current'], current[0] ?? '')).toBe(null);
     expect(variantRefusal(['legacy', 'improved'], improved[0] ?? '')).toBe(null);
     expect(variantRefusal(['legacy'], improved[0] ?? '')).toBe(null);

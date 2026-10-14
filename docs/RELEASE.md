@@ -78,12 +78,13 @@ chạy: lượt sau chờ lượt trước xong, không lượt nào bị hủy 
 ### Ghi chú phát hành và "Có gì mới" (từ 0.6.0)
 
 Lịch sử phiên bản có **một nguồn duy nhất**: `release-notes/versions.json` (cách ghi và quy trình
-đầy đủ: `release-notes/README.md`). Hộp "Có gì mới trong SimLab" trong app, trang Cài đặt → "Lịch
-sử phiên bản", `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` và `release-notes/google-docs.html`
-đều lấy từ tệp này (`npm run release-notes`).
+đầy đủ: `release-notes/README.md`). Hộp "SimLab đã được cập nhật" trong app (mục "Có gì mới" trong
+menu ☰), trang Cài đặt → "Lịch sử phiên bản", `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` và
+`release-notes/google-docs.html` đều lấy từ tệp này (`npm run release-notes`).
 
 - **Trước bước 1:** đọc lại ghi chú của phiên bản sắp phát hành, đặt `notesReady: true` (chỉ khi đó
-  hộp "Có gì mới" mới hiện chúng), chạy `npm run release-notes`, commit trong pull request.
+  hộp "SimLab đã được cập nhật" mới hiện chúng), chạy `npm run release-notes`, commit trong pull
+  request.
 - **Sau bước 4:** ghi `status: "released"`, ngày `published_at`, tag và link Release vào
   `versions.json`, chạy lại `npm run release-notes`. Một bản không tự ghi được ngày phát hành của
   chính nó, nên trong app bản đó ghi "Ngày phát hành: chưa xác minh" tới lần cập nhật sau.

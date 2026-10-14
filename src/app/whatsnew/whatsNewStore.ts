@@ -18,7 +18,8 @@ import {
 import { compareVersions, isVersion } from './version';
 
 /**
- * "Có gì mới trong SimLab" after an update, and the data of Settings → "Lịch sử phiên bản".
+ * The "SimLab đã được cập nhật" box after an update (menu item "Có gì mới"), and the data of
+ * Settings → "Lịch sử phiên bản".
  * The notes are the bundled release-notes/versions.json (its own chunk, loaded on demand; no
  * network). Rules: ./rules.ts. Unrelated to the update dialog ("có phiên bản mới"), which
  * offers a newer version; this box describes the version that is already running.

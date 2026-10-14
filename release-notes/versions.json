@@ -149,7 +149,7 @@
     {
       "version": "0.6.0",
       "status": "in-review",
-      "statusNote": "PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, hộp 'Có gì mới') lúc ghi chỉ có trên các nhánh local feat/audit-g0-g5, feat/teacher-quality và feat/release-history.",
+      "statusNote": "PR #20 đang mở: chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. Các commit sau đầu PR f527f18 (cách giảng, nút Dừng, kiểm tra con số, tìm ghi chú, giọng đọc trên máy, hộp 'SimLab đã được cập nhật' và các sửa lỗi rà soát cuối) chỉ có trên nhánh local feat/audit-g0-g5 (gộp từ feat/teacher-quality, feat/voice-natural và feat/release-history) cho tới khi được đẩy lên GitHub.",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-13T22:42:01+07:00",
@@ -165,19 +165,20 @@
         "Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0",
         "lastCommit: đầu PR #20 trên GitHub là f527f18 2026-10-14T02:04:44+07:00 (git ls-remote origin)",
         "PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp",
-        "Commit sau đầu PR, lúc ghi chỉ có trên nhánh local: 01faf2f … 20b19c2 (tới 2026-10-14T08:15:31+07:00)",
+        "Commit sau đầu PR f527f18 (gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) nằm trên nhánh local feat/audit-g0-g5 cho tới khi được đẩy lên GitHub; danh sách đầy đủ: git log f527f18..feat/audit-g0-g5",
         "built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0",
         "Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới",
-        "Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -> 7 %; corrupted terms 19 % -> 4.8 %; first piece p50 1.90 s -> 0.91 s; answer length 810 -> 1047 characters.",
-        "Voice: docs/VOICE_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -> 0 dB, first sound 4.07 -> 3.22 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes."
+        "Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -> 7 %; corrupted terms 19 % -> 4.8 %; first piece p50 1.90 s -> 0.91 s; answer length 810 -> 1047 characters. The blind AI judge still flagged language problems in 31 % of v2 answers; check question in 18.8 % of concept/misconception answers.",
+        "Voice: docs/VOICE_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -> 0 dB, first sound 4.07 -> 3.22 s, waits between pieces per sentence (median) 7.3 -> 8.4 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes. Nobody has listened to it yet (no naturalness rating).",
+        "Gemma safeguards on integrated graphics (GPU-01): not retested on an integrated card after the fix (docs/AUDIT_2026-10-13.md G2, 1B on AMD 780M: 'Không đo lại')."
       ],
       "tests": [
         "format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)",
         "App desktop bản release dựng trên máy người phát triển: chặn điều hướng ra trang ngoài, công thức KaTeX đúng vị trí, mô phỏng 3D mở được (AUDIT)",
-        "Gemma 270M/1B chạy thật trên card NVIDIA RTX 5060; đánh giá 30 câu chấm lại ngày 14/10: câu cuối là câu hỏi kiểm tra 4 % → 42 %, ý chính đúng 29 % → 23 % (AUDIT G3)",
-        "Benchmark 168/168 lượt, 42 câu, Gemma 1B: cách sinh văn bản mới tăng ý chính đúng 14,2 điểm với prompt cũ (p = 0,003); prompt 0.6.0 không làm câu trả lời đúng hơn (docs/TEACHING_EVAL.md, nhánh local)",
+        "Gemma 270M/1B chạy thật trên card NVIDIA RTX 5060; đánh giá 30 câu chấm lại ngày 14/10, cùng thước chấm và cùng cách sinh chữ (greedy, Gemma 1B, docs/TEACHING_EVAL.md): câu trả lời về khái niệm/hiểu lầm kết thúc bằng câu hỏi kiểm tra ở 43,8 % với lời nhắc của PR #20 (f527f18) và chỉ 18,8 % với lời nhắc v2 trên nhánh local. Các số 4 % → 42 % và 29 % → 23 % trong AUDIT G3 theo thước chấm lúc đó, không so trực tiếp được",
+        "Benchmark 168/168 lượt, 42 câu, Gemma 1B: cách sinh văn bản mới tăng ý chính đúng 13,4 điểm với prompt cũ (kiểm định dấu p = 0,007; câu đúng, McNemar p = 0,031); lời nhắc của PR #20 (f527f18) không đúng hơn prompt cũ; nhánh local dùng lời nhắc v2, đo được ý chính đúng 31,3 % (prompt và cách sinh cũ) → 47,7 % (docs/TEACHING_EVAL.md)",
         "Workflow 'Security checks' đạt trên PR #20 (2026-10-13T19:05:44Z)",
-        "Số test của các commit sau đầu PR: chưa xác minh được (chưa ghi trong tài liệu)"
+        "Số test của các commit sau đầu PR f527f18: xem docs/PROGRESS.md hàng '0.6.0-g6-g7' (số cuối cùng được ghi ở đó)"
       ],
       "refs": {
         "tag": null,
@@ -189,13 +190,14 @@
           "feat/audit-g0-g5",
           "feat/mitosis-3d",
           "feat/teacher-quality",
+          "feat/voice-natural",
           "feat/release-history"
         ]
       },
       "publicNotes": {
         "summary": {
-          "vi": "Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi kiểm tra và dùng kết quả do SimLab tính, Gemma an toàn hơn trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.",
-          "en": "A large update after a full audit: AI Teacher ends with a check question and uses results computed by SimLab, Gemma is safer on integrated graphics, a new 3D mitosis simulation and many security fixes."
+          "vi": "Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.",
+          "en": "A large update after a full audit: AI Teacher uses results computed by SimLab and is asked to end concept answers with a check question (except Gemma on integrated graphics), Gemma gets new safeguards on integrated graphics, a new 3D mitosis simulation and many security fixes."
         },
         "added": [
           {
@@ -205,17 +207,17 @@
           },
           {
             "vi": "Thẻ 'Kết quả do SimLab tính' khi câu hỏi có phương trình hóa học: bộ cân bằng của SimLab giải phương trình, AI chỉ giải thích.",
-            "en": "A 'Kết quả do SimLab tính' card when a question contains a chemical equation: SimLab's balancer solves it, the AI only explains.",
+            "en": "A 'Computed by SimLab' card when a question contains a chemical equation: SimLab's balancer solves it, the AI only explains.",
             "area": "teacher"
           },
           {
             "vi": "Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.",
-            "en": "A 'Gợi ý từng bước' button, and a 'Xem mô phỏng' button under an answer when the question names a topic that has a simulation.",
+            "en": "A 'Step hint' button, and an 'Open the simulation' button under an answer when the question names a topic that has a simulation.",
             "area": "teacher"
           },
           {
             "vi": "Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.",
-            "en": "A 'Dừng' button to stop an answer while it is being written, for Gemma and online AI.",
+            "en": "A 'Stop' button to stop an answer while it is being written, for Gemma and online AI.",
             "area": "teacher"
           },
           {
@@ -229,15 +231,15 @@
             "area": "voice"
           },
           {
-            "vi": "Hộp 'Có gì mới trong SimLab' sau khi cập nhật và trang 'Lịch sử phiên bản' trong Cài đặt.",
-            "en": "A 'Có gì mới trong SimLab' box after an update and a 'Lịch sử phiên bản' page in Settings.",
+            "vi": "Hộp 'SimLab đã được cập nhật' cho biết điểm mới sau khi cập nhật, và trang 'Lịch sử phiên bản' trong Cài đặt.",
+            "en": "A 'SimLab has been updated' box showing what is new after an update, and a 'Version history' page in Settings.",
             "area": "ui"
           }
         ],
         "improved": [
           {
-            "vi": "Cách giảng rõ ràng hơn: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp và một câu hỏi kiểm tra ở cuối.",
-            "en": "Clearer teaching: a goal, a simple explanation, an example, steps with reasons, one common mistake and a check question at the end.",
+            "vi": "Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).",
+            "en": "With online AI, AI Teacher is instructed to teach in order: a goal, a simple explanation, an example, steps with reasons, one common mistake. Gemma is asked to answer the question directly first, then explain briefly with reasons. Concept answers are asked to end with a check question (except Gemma on integrated graphics, to keep answers short); Gemma 1B often does not (about 1 in 5 answers in testing).",
             "area": "teacher"
           },
           {
@@ -251,8 +253,8 @@
             "area": "voice"
           },
           {
-            "vi": "Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).",
-            "en": "Gemma answers are more often on point and start sooner, with almost no foreign words or garbled terms left (measured on 42 questions; answers are longer than before).",
+            "vi": "Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).",
+            "en": "Gemma answers are more often on point and start sooner; answers with foreign words are much rarer (50 % → 7 %) and garbled terms rarer too (19 % → 4.8 %), but both still happen (measured with Gemma 1B on 42 questions; answers are longer than before).",
             "area": "gemma"
           },
           {
@@ -261,13 +263,13 @@
             "area": "teacher"
           },
           {
-            "vi": "Giọng đọc trên máy đều và rõ hơn: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; nhấn ý chính bằng một quãng nghỉ ngắn.",
-            "en": "The on-device voice is steadier and clearer: even loudness between pieces, the first sound comes sooner, pauses follow sentences and clauses, numbers stay with their units; key ideas get a short pause before them.",
+            "vi": "Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.",
+            "en": "The on-device voice: even loudness between pieces, the first sound comes sooner, pauses follow sentences and clauses, numbers stay with their units; key ideas get a short pause before them.",
             "area": "voice"
           },
           {
             "vi": "Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, \"tan\" trong hòa tan.",
-            "en": "Many scientific symbols are read correctly: MeV, MPa, square/cubic units, electron configurations, reaction arrows, \"tan\" in dissolving.",
+            "en": "Many scientific symbols are read more correctly: MeV, MPa, square/cubic units, electron configurations, reaction arrows, \"tan\" in dissolving.",
             "area": "voice"
           }
         ],
@@ -305,8 +307,8 @@
             "area": "teacher"
           },
           {
-            "vi": "Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt) và không bị đặt lại khi đổi ngày.",
-            "en": "The daily AI limit is sturdier (100 requests by default) and is not reset by changing the date.",
+            "vi": "Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).",
+            "en": "The daily AI limit is sturdier (100 requests by default).",
             "area": "api"
           },
           {
@@ -355,8 +357,13 @@
             "area": "security"
           },
           {
-            "vi": "Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn.",
-            "en": "Without a discrete graphics card the on-device voice runs on the CPU, slower than speech, so there are waits between pieces.",
+            "vi": "Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.",
+            "en": "The new Gemma safeguards for integrated graphics have not been retested on a real integrated card.",
+            "area": "gemma"
+          },
+          {
+            "vi": "Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).",
+            "en": "Without a discrete graphics card the on-device voice runs on the CPU, slower than speech, so there are waits between pieces; in this version the waits are longer than before (median 7.3 s → 8.4 s per sentence, measured on 19 sentences).",
             "area": "voice"
           },
           {
@@ -375,18 +382,18 @@
         },
         {
           "area": "teacher",
-          "vi": "AI Teacher kết thúc bằng một câu hỏi kiểm tra và dùng kết quả do SimLab tính cho phương trình hóa học.",
-          "en": "AI Teacher ends with a check question and uses SimLab's own result for chemical equations."
+          "vi": "AI Teacher dùng kết quả do SimLab tính cho phương trình hóa học và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp).",
+          "en": "AI Teacher uses SimLab's own result for chemical equations and is asked to end concept answers with a check question (except Gemma on integrated graphics)."
         },
         {
           "area": "teacher",
           "vi": "Nút 'Dừng' và lời nhắc khi đề bài có thể thiếu số liệu.",
-          "en": "A 'Dừng' button and a reminder when a problem may be missing data."
+          "en": "A 'Stop' button and a reminder when a problem may be missing data."
         },
         {
           "area": "gemma",
-          "vi": "Gemma an toàn hơn trên card đồ họa tích hợp.",
-          "en": "Gemma is safer on integrated graphics cards."
+          "vi": "Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp (chưa thử lại trên card tích hợp thật).",
+          "en": "Gemma gets new safeguards on integrated graphics cards (not yet retested on a real integrated card)."
         },
         {
           "area": "security",
@@ -460,7 +467,7 @@
           },
           {
             "vi": "Thanh tải cho biết thời gian còn lại ('còn khoảng … phút').",
-            "en": "Download bars show the time left ('còn khoảng … phút').",
+            "en": "Download bars show the time left ('about … min left').",
             "area": "ui"
           },
           {
@@ -477,7 +484,7 @@
           },
           {
             "vi": "Tìm chủ đề không thấy thì gợi ý môn khác có kết quả, kèm nút 'Xóa tìm kiếm'.",
-            "en": "When a topic search finds nothing, other subjects with results are suggested, with a 'Xóa tìm kiếm' button.",
+            "en": "When a topic search finds nothing, other subjects with results are suggested, with a 'Clear search' button.",
             "area": "ui"
           },
           {
@@ -601,7 +608,7 @@
         "added": [
           {
             "vi": "Gói cài cho Microsoft Store; bản cài từ Store chỉ cập nhật qua Store (nút 'Mở Microsoft Store').",
-            "en": "A Microsoft Store package; a copy installed from the Store is updated only through the Store (the 'Mở Microsoft Store' button).",
+            "en": "A Microsoft Store package; a copy installed from the Store is updated only through the Store (the 'Open Microsoft Store' button).",
             "area": "ui"
           },
           {
@@ -722,17 +729,17 @@
           },
           {
             "vi": "Chọn card đồ họa chạy Gemma trên Windows: gợi ý card rời, nút 'Mở lại ngay'.",
-            "en": "Choose the graphics card that runs Gemma on Windows: the discrete card is suggested, with a 'Mở lại ngay' button.",
+            "en": "Choose the graphics card that runs Gemma on Windows: the discrete card is suggested, with a 'Restart now' button.",
             "area": "gemma"
           },
           {
             "vi": "Trí nhớ hội thoại dài hơn, có tóm tắt phần cũ; Cài đặt 'Trí nhớ hội thoại: Vừa/Dài'.",
-            "en": "Longer conversation memory with a summary of older turns; Settings 'Trí nhớ hội thoại: Vừa/Dài'.",
+            "en": "Longer conversation memory with a summary of older turns; Settings 'Conversation memory: Medium/Long'.",
             "area": "teacher"
           },
           {
             "vi": "Nút 'Viết tiếp' khi câu trả lời dài bị dừng giữa chừng; thầy viết tiếp ngay trên cùng bảng.",
-            "en": "A 'Viết tiếp' button when a long answer stops midway; the teacher continues on the same board.",
+            "en": "A 'Continue' button when a long answer stops midway; the teacher continues on the same board.",
             "area": "teacher"
           }
         ],
@@ -761,7 +768,7 @@
           },
           {
             "vi": "Nút nhanh chỉ gửi đúng hai chữ 'Chậm hơn' nên AI hiểu sai; nay gửi câu hướng dẫn đầy đủ.",
-            "en": "Quick buttons sent only the two words 'Chậm hơn', which the AI misread; they now send a full instruction.",
+            "en": "Quick buttons sent only their label ('Slower'), which the AI misread; they now send a full instruction.",
             "area": "teacher"
           },
           {
@@ -830,7 +837,7 @@
         {
           "area": "teacher",
           "vi": "Trí nhớ hội thoại dài hơn và nút 'Viết tiếp'.",
-          "en": "Longer conversation memory and a 'Viết tiếp' button."
+          "en": "Longer conversation memory and a 'Continue' button."
         },
         {
           "area": "ui",
@@ -874,12 +881,12 @@
       "publicNotes": {
         "summary": {
           "vi": "Bước phát triển nội bộ theo yêu cầu người dùng: trí nhớ hội thoại dài hơn, nút 'Viết tiếp', bỏ ẩn/hiện khung. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.",
-          "en": "An internal development step requested by the user: longer conversation memory, a 'Viết tiếp' button, no more hiding panels. Not released on its own; the content reached users in 0.5.0."
+          "en": "An internal development step requested by the user: longer conversation memory, a 'Continue' button, no more hiding panels. Not released on its own; the content reached users in 0.5.0."
         },
         "added": [
           {
             "vi": "Trí nhớ hội thoại theo độ dài, có tóm tắt phần cũ, và nút 'Viết tiếp' khi câu trả lời chạm giới hạn.",
-            "en": "Conversation memory by length with a summary of older turns, and a 'Viết tiếp' button when an answer hits the limit.",
+            "en": "Conversation memory by length with a summary of older turns, and a 'Continue' button when an answer hits the limit.",
             "area": "teacher"
           },
           {
@@ -898,7 +905,7 @@
         "fixed": [
           {
             "vi": "Nút nhanh chỉ gửi đúng hai chữ 'Chậm hơn' nên Gemma hiểu sai; nay gửi câu hướng dẫn đầy đủ.",
-            "en": "Quick buttons sent only the two words 'Chậm hơn', which Gemma misread; they now send a full instruction.",
+            "en": "Quick buttons sent only their label ('Slower'), which Gemma misread; they now send a full instruction.",
             "area": "teacher"
           }
         ],
@@ -924,7 +931,7 @@
         {
           "area": "teacher",
           "vi": "Trí nhớ hội thoại dài hơn và nút 'Viết tiếp'.",
-          "en": "Longer conversation memory and a 'Viết tiếp' button."
+          "en": "Longer conversation memory and a 'Continue' button."
         }
       ]
     },
@@ -967,7 +974,7 @@
         "added": [
           {
             "vi": "Chọn card đồ họa chạy Gemma trên Windows: danh sách card và bộ nhớ, gợi ý card rời, nút 'Mở lại ngay'.",
-            "en": "Choose the graphics card that runs Gemma on Windows: a list of cards and their memory, the discrete card suggested, a 'Mở lại ngay' button.",
+            "en": "Choose the graphics card that runs Gemma on Windows: a list of cards and their memory, the discrete card suggested, a 'Restart now' button.",
             "area": "gemma"
           }
         ],
@@ -1039,7 +1046,7 @@
       "publicNotes": {
         "summary": {
           "vi": "Ra mắt Thầy AI (nay là AI Teacher): trang trò chuyện riêng, Think kiểm tra chéo bằng một AI thứ hai, Gemma chạy ngay trên máy, thư viện kiến thức STEM và ô 'Dữ liệu của em đi đâu?'.",
-          "en": "Meet Thầy AI (now AI Teacher): its own chat page, Think cross-checks with a second AI, Gemma runs on your computer, a STEM knowledge library and the 'Dữ liệu của em đi đâu?' box."
+          "en": "Meet Thầy AI (now AI Teacher): its own chat page, Think cross-checks with a second AI, Gemma runs on your computer, a STEM knowledge library and the 'Where does your data go?' box."
         },
         "added": [
           {
@@ -1069,21 +1076,21 @@
           },
           {
             "vi": "Ô 'Dữ liệu của em đi đâu?', dòng cho biết câu hỏi sẽ được gửi tới đâu, nhãn AI và nút báo cáo trên mỗi câu trả lời.",
-            "en": "The 'Dữ liệu của em đi đâu?' box, a line saying where the question will be sent, and an AI label with a report button on every answer.",
+            "en": "The 'Where does your data go?' box, a line saying where the question will be sent, and an AI label with a report button on every answer.",
             "area": "security"
           }
         ],
         "improved": [
           {
             "vi": "Kiểm tra chỗ trống trước khi tải mô hình, nút 'Hủy tải', báo lỗi tải dễ hiểu và bước 'đang nạp vào GPU'.",
-            "en": "A free-space check before a model download, a 'Hủy tải' button, clear download errors and a 'loading onto the GPU' step.",
+            "en": "A free-space check before a model download, a 'Cancel download' button, clear download errors and a 'loading onto the GPU' step.",
             "area": "gemma"
           }
         ],
         "fixed": [
           {
             "vi": "Sửa 5 lỗi khiến Gemma không chạy được ở bản ZIP 0.4.0, gồm nút 'Đang tải…' quay mãi và việc mỗi lần mở app phải tải lại mô hình.",
-            "en": "Fixed 5 bugs that kept Gemma from running in the 0.4.0 ZIP, including the 'Đang tải…' button spinning forever and the model being downloaded again at every start.",
+            "en": "Fixed 5 bugs that kept Gemma from running in the 0.4.0 ZIP, including the 'Downloading…' button spinning forever and the model being downloaded again at every start.",
             "area": "gemma"
           },
           {
@@ -1155,7 +1162,7 @@
         {
           "area": "security",
           "vi": "Ô 'Dữ liệu của em đi đâu?' cho biết câu hỏi được gửi tới đâu.",
-          "en": "The 'Dữ liệu của em đi đâu?' box shows where your question goes."
+          "en": "The 'Where does your data go?' box shows where your question goes."
         }
       ]
     },
@@ -1228,7 +1235,7 @@
         "fixed": [
           {
             "vi": "Cài mới chọn sẵn Gemma làm 'Phân tích đề' và chat bị kẹt dù đã có khóa Gemini.",
-            "en": "A fresh install pre-selected Gemma, so 'Phân tích đề' and the chat got stuck even with a Gemini key.",
+            "en": "A fresh install pre-selected Gemma, so 'Analyze' and the chat got stuck even with a Gemini key.",
             "area": "gemma"
           },
           {
@@ -1313,12 +1320,12 @@
       "publicNotes": {
         "summary": {
           "vi": "Học dễ hơn với trang chủ 'Hôm nay học gì?', chế độ Cơ bản/Nâng cao, Dự đoán trước và Thử thách; thêm Claude bên cạnh Gemini, dự phòng Groq và các lớp an toàn khi dùng AI.",
-          "en": "Easier learning with the 'Hôm nay học gì?' home page, Basic/Advanced modes, Predict first and Challenges; Claude next to Gemini, a Groq fallback and safety layers for AI use."
+          "en": "Easier learning with the 'What shall we learn today?' home page, Basic/Advanced modes, Predict first and Challenges; Claude next to Gemini, a Groq fallback and safety layers for AI use."
         },
         "added": [
           {
             "vi": "Trang chủ 'Hôm nay học gì?' và phần làm quen lần đầu; chế độ Cơ bản/Nâng cao.",
-            "en": "The 'Hôm nay học gì?' home page and a first-run introduction; Basic/Advanced modes.",
+            "en": "The 'What shall we learn today?' home page and a first-run introduction; Basic/Advanced modes.",
             "area": "ui"
           },
           {
@@ -1328,7 +1335,7 @@
           },
           {
             "vi": "Màn hình 'Kết nối AI' với nút 'Kiểm tra key'; thêm Claude bên cạnh Gemini.",
-            "en": "A 'Kết nối AI' screen with a 'Kiểm tra key' button; Claude next to Gemini.",
+            "en": "A 'Connect AI' screen with a 'Test key' button; Claude next to Gemini.",
             "area": "api"
           },
           {
@@ -1342,7 +1349,7 @@
           },
           {
             "vi": "Hộp thoại tự hiện khi có bản mới ('Cập nhật ngay' / 'Để sau'); có thể đặt cập nhật bắt buộc, được ký số.",
-            "en": "A dialog that appears when a new version exists ('Cập nhật ngay' / 'Để sau'); updates can be made mandatory, with a signature.",
+            "en": "A dialog that appears when a new version exists ('Update now' / 'Later'); updates can be made mandatory, with a signature.",
             "area": "ui"
           }
         ],
@@ -1361,7 +1368,7 @@
         "fixed": [
           {
             "vi": "Bấm 'Thử lại' trong hộp thoại lỗi không còn tự hủy.",
-            "en": "Pressing 'Thử lại' in the error dialog no longer cancels itself.",
+            "en": "Pressing 'Retry' in the error dialog no longer cancels itself.",
             "area": "api"
           }
         ],
@@ -1393,7 +1400,7 @@
         "knownIssues": [
           {
             "vi": "'Dạy học bằng AI' mới ở mức thiết kế, chưa dùng được.",
-            "en": "'Dạy học bằng AI' is only at the design stage and cannot be used yet.",
+            "en": "'Learn with an AI teacher' is only at the design stage and cannot be used yet.",
             "area": "teacher"
           },
           {
@@ -1408,7 +1415,7 @@
         {
           "area": "ui",
           "vi": "Trang chủ 'Hôm nay học gì?' với chế độ Cơ bản và Nâng cao.",
-          "en": "The 'Hôm nay học gì?' home page with Basic and Advanced modes."
+          "en": "The 'What shall we learn today?' home page with Basic and Advanced modes."
         },
         {
           "area": "ui",
@@ -1418,7 +1425,7 @@
         {
           "area": "ui",
           "vi": "Kết nối AI có nút 'Kiểm tra key'; thêm Claude và dự phòng Groq.",
-          "en": "Kết nối AI has a 'Kiểm tra key' button; Claude and a Groq fallback were added."
+          "en": "Connect AI has a 'Test key' button; Claude and a Groq fallback were added."
         },
         {
           "area": "security",
@@ -1474,7 +1481,7 @@
         "added": [
           {
             "vi": "Cập nhật ngay trong app (menu ☰ → Kiểm tra cập nhật): tải phần giao diện mới, không cần cài lại tệp .exe.",
-            "en": "In-app updates (☰ menu → Kiểm tra cập nhật): download the new interface part without reinstalling the .exe.",
+            "en": "In-app updates (☰ menu → Check for updates): download the new interface part without reinstalling the .exe.",
             "area": "ui"
           },
           {
@@ -1581,7 +1588,7 @@
           },
           {
             "vi": "AI đọc đề bài và dựng mô phỏng; mọi con số do chương trình tính, bạn xác nhận bảng 'Tôi hiểu đề như sau' trước.",
-            "en": "The AI reads a problem and sets up the simulation; every number is computed by the program and you confirm the 'Tôi hiểu đề như sau' table first.",
+            "en": "The AI reads a problem and sets up the simulation; every number is computed by the program and you confirm the 'Here is how I read the problem' table first.",
             "area": "api"
           },
           {

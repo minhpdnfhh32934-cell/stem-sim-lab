@@ -488,8 +488,8 @@ export function webGemmaChat(args: {
   inputBudget?: number;
   /**
    * Repetition rules (webGemmaWorker.ts `Decoding`); the worker defaults to 'app'. 'legacy'
-   * reproduces the shipped 0.6.0 decoding for scripts/teaching/eval-gemma.mjs only: the app
-   * never sets it.
+   * reproduces the PR #20 (f527f18) decoding (the same as 0.5.2's) for
+   * scripts/teaching/eval-gemma.mjs only: the app never sets it.
    */
   decoding?: 'app' | 'legacy';
   /** Called with the answer so far while it is being generated (echoed question removed). */

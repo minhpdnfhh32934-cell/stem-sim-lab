@@ -82,7 +82,8 @@ const WINDOW_DAYS: i64 = 1;
 /// The day the call is asked to be counted on (audit SEC-07): the page's local date when it is
 /// within [`WINDOW_DAYS`] of the system clock's UTC date, otherwise the UTC date. A date further
 /// away falls back to the clock; inside the window, [`consume`] never lets the counting day go
-/// backwards, so switching between accepted dates cannot reset the counter either.
+/// backwards, so going back to an earlier accepted date cannot reset the counter. Moving forward
+/// one day inside the window does start that day's count: at most one extra day can be gained.
 pub fn counting_day(page_day: Option<&str>, today: i64) -> String {
     match page_day.and_then(day_number) {
         Some(n) if (n - today).abs() <= WINDOW_DAYS => civil_from_days(n),
@@ -200,7 +201,7 @@ mod tests {
     }
 
     #[test]
-    fn switching_between_accepted_days_does_not_reset_the_count() {
+    fn going_back_to_an_earlier_accepted_day_does_not_reset_the_count() {
         let p = temp("alternate");
         let today = day_number("2026-10-13").unwrap();
         // The page alternates "today + 1" and "today" (both inside the window).

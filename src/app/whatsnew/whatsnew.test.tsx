@@ -87,6 +87,9 @@ const FIXTURE = {
 };
 
 const loader = vi.fn(() => Promise.resolve<unknown>(FIXTURE));
+/** Settings → Lịch sử phiên bản, under the version the app is running. */
+const CURRENT_HINT =
+  'Bạn đang dùng bản này. Ngày phát hành của một bản chỉ được ghi vào lịch sử ở các bản sau.';
 const stored = () => JSON.parse(localStorage.getItem(WHATSNEW_KEY) ?? 'null') as unknown;
 
 /** A user who used the app before, last saw `lastSeen`, now runs 0.6.0. */
@@ -105,7 +108,7 @@ async function restart() {
 
 const calm = () => true;
 
-describe('"Có gì mới trong SimLab" after an update', () => {
+describe('the "SimLab đã được cập nhật" box after an update', () => {
   beforeEach(() => {
     loader.mockClear();
     resetWhatsNewForTests(loader);
@@ -323,16 +326,62 @@ describe('Settings → Lịch sử phiên bản', () => {
       'Phiên bản 0.5.1',
       'Phiên bản 0.5.0',
     ]);
-    expect(within(items[0]!).getByText('Đang xét duyệt')).toBeInTheDocument();
+    // The running version gets a neutral label, never a status its own bundle cannot know.
     expect(within(items[0]!).getByText('Bản đang dùng')).toBeInTheDocument();
+    expect(within(items[0]!).getByText(CURRENT_HINT)).toBeInTheDocument();
+    expect(within(items[0]!).queryByText('Đang xét duyệt')).not.toBeInTheDocument();
+    expect(
+      within(items[0]!).queryByText('Phiên bản này đang được xét duyệt, chưa phát hành.'),
+    ).not.toBeInTheDocument();
     expect(within(items[1]!).getByText('Đã phát hành')).toBeInTheDocument();
     expect(within(items[2]!).getByText('Chưa phát hành riêng')).toBeInTheDocument();
+    expect(
+      within(items[2]!).getByText(/^Phiên bản này không có bản phát hành riêng/),
+    ).toBeInTheDocument();
+    expect(within(items[2]!).queryByText(CURRENT_HINT)).not.toBeInTheDocument();
     expect(
       within(items[2]!).getByText('Ghi chú này là bản nháp, chưa được duyệt để công bố.'),
     ).toBeInTheDocument();
     // Notes are folded under each version; the newest is open.
     expect(items[0]!.querySelector('details')).toHaveAttribute('open');
     expect(items[1]!.querySelector('details')).not.toHaveAttribute('open');
+  });
+
+  it('a released app never calls its own version unreleased or in review', async () => {
+    // release-notes/README.md: after the merge the bundled entry says "merged-not-released";
+    // "released" can only be written after the GitHub Release exists, i.e. in a later version.
+    const merged = {
+      ...FIXTURE,
+      versions: [fixtureEntry('0.6.0', { status: 'merged-not-released' }), fixtureEntry('0.5.2')],
+    };
+    resetWhatsNewForTests(() => Promise.resolve(merged));
+    useWhatsNewStore.setState({ current: '0.6.0' });
+    useWorkspaceStore.setState({ settingsSection: 'versions' });
+    const view = render(<SettingsDialog open onClose={() => undefined} />);
+    let items = Array.from(
+      (await screen.findByRole('list', { name: 'Các phiên bản, mới nhất ở trên' })).children,
+    ) as HTMLElement[];
+    expect(within(items[0]!).getByText('Bản đang dùng')).toBeInTheDocument();
+    expect(within(items[0]!).getByText(CURRENT_HINT)).toBeInTheDocument();
+    expect(within(items[0]!).queryByText('Chưa phát hành riêng')).not.toBeInTheDocument();
+    expect(
+      within(items[0]!).queryByText(/^Phiên bản này không có bản phát hành riêng/),
+    ).not.toBeInTheDocument();
+    view.unmount();
+
+    // Running an older, really released version: its status and date are shown as usual.
+    resetWhatsNewForTests(() => Promise.resolve(merged));
+    useWhatsNewStore.setState({ current: '0.5.2' });
+    render(<SettingsDialog open onClose={() => undefined} />);
+    items = Array.from(
+      (await screen.findByRole('list', { name: 'Các phiên bản, mới nhất ở trên' })).children,
+    ) as HTMLElement[];
+    expect(within(items[0]!).getByText('Chưa phát hành riêng')).toBeInTheDocument();
+    expect(within(items[0]!).queryByText(CURRENT_HINT)).not.toBeInTheDocument();
+    expect(within(items[1]!).getByText('Bản đang dùng')).toBeInTheDocument();
+    expect(within(items[1]!).getByText('Đã phát hành')).toBeInTheDocument();
+    expect(within(items[1]!).getByText('Ngày phát hành: 13/10/2026')).toBeInTheDocument();
+    expect(within(items[1]!).queryByText(CURRENT_HINT)).not.toBeInTheDocument();
   });
 
   it('says so plainly when the history cannot be read', async () => {

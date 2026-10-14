@@ -341,7 +341,7 @@ describe('Gemma worker: decoding options', () => {
     expect(promptOnlyRow(rules[0], fake.promptTokens.vision, [])).toEqual(Array(8).fill(1));
   });
 
-  it("'legacy' reproduces the 0.6.0 settings exactly, text and photo (evaluation only)", async () => {
+  it("'legacy' reproduces the PR #20 (f527f18) / 0.5.2 settings exactly, text and photo (evaluation only)", async () => {
     const legacy = {
       repetition_penalty: 1.2,
       no_repeat_ngram_size: 3,

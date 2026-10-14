@@ -109,6 +109,13 @@ describe('"Có gì mới" rules', () => {
     expect(decide({ lastSeen: '0.7.0' })).toEqual({ kind: 'none' });
   });
 
+  it('a downgrade after "Để sau" in a newer version shows nothing either', () => {
+    // 0.7.0 was put off with "Để sau", then 0.6.0 runs again: its notes were already offered.
+    expect(decide({ snoozed: '0.7.0' })).toEqual({ kind: 'none' });
+    expect(decide({ snoozed: '0.7.0' }, { tourDone: false })).toEqual({ kind: 'none' });
+    expect(decide({ lastSeen: '0.5.2', snoozed: '0.7.0' })).toEqual({ kind: 'none' });
+  });
+
   it('missing or invalid notes give no popup and do not crash', () => {
     expect(
       decideWhatsNew({

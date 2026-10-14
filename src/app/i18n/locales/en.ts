@@ -740,6 +740,8 @@ const en: Messages = {
     history: {
       current: 'You are using version {version}.',
       currentBadge: 'Your version',
+      currentHint:
+        "The version you are using. A version's release date is only recorded in the history of later versions.",
       draft: 'These notes are a draft and have not been reviewed for publication.',
       loading: 'Reading the version history…',
       unavailable:
@@ -1250,6 +1252,8 @@ const en: Messages = {
   voice: {
     readAloudCard: 'Read aloud',
     readAloud: "Read AI Teacher's answers aloud",
+    onCpuAfterGpuFault:
+      'For this session the on-device voice runs on the CPU because the graphics card failed (slower but safe for the computer).',
     readAloudHint: 'Also switched with the speaker button in the chat. No audio is recorded.',
     sourceCard: 'Voice source',
     engines: {
@@ -1348,6 +1352,8 @@ const en: Messages = {
         'The on-device voice could not read: the Windows voice read the rest of the lesson instead.',
       gpuToCpu:
         'The graphics card failed while reading: the on-device voice now runs on the CPU (slower, but safe for the computer), and the Windows voice read what was left unread.',
+      movedToCpu:
+        'The on-device voice just moved to the CPU (slower, but safe for the computer): the Windows voice finished what it was reading.',
     },
   },
   levels: {
