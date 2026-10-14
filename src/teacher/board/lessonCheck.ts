@@ -20,6 +20,7 @@
  * Nothing here changes, rounds or invents a number (property test in lessonCheck.test.ts). Pure:
  * no store imports, so the parsers and the tests use it directly.
  */
+import { REASONING_TAGS } from '@/ai/reasoning';
 import {
   EXCERPT_HEADER,
   EXCERPT_HEADER_COMPACT,
@@ -27,6 +28,8 @@ import {
   TOOL_HEADER,
 } from '@/teacher/chat/promptLabels';
 import {
+  MARKUP_TAGS,
+  TEACHSCRIPT_TAGS,
   alreadySaid,
   spokenSentence,
   type BoardAction,
@@ -139,15 +142,29 @@ const SUPERSCRIPT: Record<string, string> = {
   '−': '⁻',
 };
 
+/** A tag's attributes: `name="value"` pairs only ("<s và t>" is a comparison, not a tag). */
+const ATTRIBUTES = String.raw`(?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*\s*\/?>`;
 /** HTML a model may write around words; the words stay. Block tags leave a space. */
-const INLINE_HTML =
-  /<\/?(?:b|i|u|em|strong|span|small|big|mark|code|s|del|ins|font|tt|kbd|var|abbr)\b[^<>]*>/gi;
-const BLOCK_HTML = /<\/?(?:br|p|div|hr|li|ul|ol|center|blockquote|h[1-6])\b[^<>]*\/?>/gi;
+const INLINE_HTML = new RegExp(
+  String.raw`<\/?(?:b|i|u|em|strong|span|small|big|mark|code|s|del|ins|font|tt|kbd|var|abbr)${ATTRIBUTES}`,
+  'gi',
+);
+const BLOCK_HTML = new RegExp(
+  String.raw`<\/?(?:br|p|div|hr|li|ul|ol|center|blockquote|h[1-6])${ATTRIBUTES}`,
+  'gi',
+);
 /**
- * Any other leftover tag, only when it reads as one (a name, then `name="value"` pairs): "x<y và
- * y>z" is a comparison, not a tag.
+ * Any other leftover tag, only when it reads as one: a name, then `name="value"` pairs. A bare
+ * opening name is a tag only when it is known markup (TeachScript, reasoning, HTML, an answer
+ * wrapper): "<v>" is an average, "x<y và y>z" a comparison.
  */
-const LEFTOVER_TAG = /<\/?[a-z][a-z0-9_-]*(?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*\s*\/?>/g;
+const LEFTOVER_TAG =
+  /<(\/?)([a-z][a-z0-9_-]*)((?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(\/?)>/g;
+const NAMED_MARKUP: ReadonlySet<string> = new Set([
+  ...TEACHSCRIPT_TAGS,
+  ...REASONING_TAGS,
+  ...MARKUP_TAGS,
+]);
 /** A web address (a bare one; a markdown link keeps its words). */
 const URL = /\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[a-z0-9-]+\.[^\s<>()[\]]+/gi;
 const HOLD = /\u{E010}(\d+)\u{E011}/gu;
@@ -198,9 +215,13 @@ export function sanitizeBoardText(text: string, math = false): string {
     )
     .replace(INLINE_HTML, '')
     .replace(BLOCK_HTML, ' ')
-    .replace(LEFTOVER_TAG, '');
+    .replace(LEFTOVER_TAG, (m, close: string, name: string, attrs: string, self: string) =>
+      close || attrs || self || NAMED_MARKUP.has(name) ? '' : m,
+    );
   t = withoutLinks(t)
-    .replace(/\*\*|__|~~/g, '')
+    // Bold marks; a blank to fill in ("F = ____ N") keeps its underscores.
+    .replace(/\*\*|~~/g, '')
+    .replace(/(?<!_)__(?!_)/g, '')
     // *emphasis* (never "2 * 3 * 4": a space after the opening star is multiplication).
     .replace(/(?<![\w*])\*(?=\S)([^*\n]*?\S)\*(?![\w*])/g, '$1')
     .replace(/`([^`\n]*)`/g, '$1')
@@ -262,9 +283,12 @@ const SOCIAL: readonly RegExp[] = [
   /^(?:chuc (?:ban|em|cac ban|cac em)|cam on|rat vui)\b/,
   /^(?:i )?hope (?:this|that|it)\b/,
   /^(?:good luck|feel free|let me know|thanks|thank you)\b/,
-  /^neu (?:ban|em|cac ban|cac em) (?:co|con) (?:bat ky |them )?(?:cau hoi|thac mac|gi chua ro)\b/,
+  /^neu (?:(?:ban|em|cac ban|cac em) )?(?:co|con) (?:bat ky |bat cu |them )?(?:cau hoi|thac mac|gi chua ro)\b/,
   /^neu (?:ban|em) (?:can|muon) (?:them|giai thich|ho tro|tiep tuc|biet them|hoi them|tim hieu them)\b/,
-  /^(?:ban|em) (?:co|con) (?:bat ky |them )?(?:cau hoi|thac mac)\b/,
+  /^(?:ban|em) (?:co|con) (?:bat ky |bat cu |them )?(?:cau hoi|thac mac)\b/,
+  /^(?:toi|minh) (?:da |rat )?hieu (?:cau hoi|yeu cau|y)\b/,
+  /^cau hoi (?:cua (?:ban|em) )?(?:rat |that |qua )?(?:hay|thu vi|tot)\b/,
+  /^(?:dung ngan ngai|don'?t hesitate)\b/,
   /^(?:duoc|vang|da|ok|okay|oke|tuyet|tuyet voi|great|sure|of course)(?:[ ,]+(?:nhe|nha|roi|thoi|a|ban|em|nao))*\s*[!.]*$/,
 ];
 
@@ -278,20 +302,68 @@ const META: readonly RegExp[] = [
 
 /**
  * Words that carry no subject matter ("Chúng ta sẽ cùng giải bài toán này nhé."). A sentence made
- * only of them is a remark about the lesson, not part of it. Folded forms.
+ * only of them is a remark about the lesson, not part of it. Compared with their marks: folded,
+ * "có" and "cơ", "rồi" and "rơi", "đây" and "dây", "độ" and "do" would be one word.
  */
-const GENERIC = new Set(
-  (
-    'chung ta toi minh ban em cac se cung nhau giai bai toan tap nay nhe nha cau hoi tim hieu tung ' +
-    'buoc mot hay van de nao voi thong tin da cap dua tren theo cach chi tiet ro hon ve cho la va ' +
-    'the nhung gi lam xem phan tich duoc roi thoi a oi nhu sau day duoi bat dau tiep co khong giup ' +
-    'ngay bay gio truoc het thu ne nhi vang ok oke ky them neu can muon biet tra loi ket qua ngan ' +
-    'gon huong dan vui long xin chao ' +
-    "let lets let's us me we will solve this that problem question questions together step steps " +
-    'by the a an now here is are look at i you your help answer go through it s ll do can okay so ' +
-    'first then and of to for with be going take quick sure great'
-  ).split(' '),
+const GENERIC_VI = (
+  'chúng ta tôi mình bạn em các sẽ cùng nhau giải bài toán tập này nhé nha câu hỏi tìm hiểu từng ' +
+  'bước một hãy vấn đề nào với thông tin đã cung cấp đưa dựa trên theo cách chi tiết rõ hơn về ' +
+  'cho là và thế những gì làm xem phân tích được rồi thôi à ạ ơi như sau đây dưới bắt đầu tiếp ' +
+  'có không giúp ngay bây giờ trước hết thử nè nhỉ vâng ok oke kỹ kĩ thêm nếu cần muốn biết trả ' +
+  'lời kết quả ngắn gọn hướng dẫn vui lòng xin chào'
+)
+  .normalize('NFC')
+  .split(' ');
+const GENERIC_EN = (
+  "let lets let's us me we we'll will solve this that problem question questions together step " +
+  "steps by the an now here here's is are look at you your help answer go through it it's do can " +
+  "okay so first then and of to for with be going take quick sure great i'll i'm"
+).split(' ');
+/** Generic words of a text written with Vietnamese marks (or of an English text). */
+const GENERIC = new Set([...GENERIC_VI, ...GENERIC_EN]);
+/**
+ * Generic words of a text written without marks ("Chung ta se cung giai"): folded forms, without
+ * those that would also be a subject word ("co" cơ, "roi" rơi, "day" dây, "do" độ, "tim" tim…).
+ */
+const FOLDED_COLLISIONS = new Set(
+  'co khong do dan hoi roi day tim qua cau van nao bay gio vang dau'.split(' '),
 );
+const GENERIC_FOLDED = new Set([
+  ...GENERIC_VI.map(fold).filter((w) => !FOLDED_COLLISIONS.has(w)),
+  ...GENERIC_EN,
+]);
+/** A verdict on its own, perhaps after a label: "Không.", "Có không.", "Kết quả: Có". */
+const VERDICT =
+  /^(?:[^:：]{1,30}[:：]\s*)?(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*$/iu;
+/** A formula, an unknown or a symbol: never a remark. */
+const SUBJECT_MARK = /[=?≈≤≥<>$\dͰ-Ͽ₀-₉⁰-⁹²³¹√∆∑∫]/u;
+
+/** A text made only of generic words (a remark about the lesson). */
+function isGeneric(text: string): boolean {
+  if (SUBJECT_MARK.test(text) || VERDICT.test(text.trim())) return false;
+  const marked = /[̀-ͯ]|đ/iu.test(text.normalize('NFD'));
+  const words = text
+    .normalize('NFC')
+    .replace(/[’‘]/g, "'")
+    .split(/[^\p{L}\p{N}']+/u)
+    .filter(Boolean);
+  if (words.length === 0) return false;
+  return words.every((w) => {
+    // A single letter is a symbol ("Tìm a.", "s"), except the English "I" and the particles.
+    if (w.length === 1) return w === 'I' || w === 'à' || w === 'ạ';
+    const lower = w.toLowerCase();
+    return marked ? GENERIC.has(lower) : GENERIC_FOLDED.has(lower);
+  });
+}
+
+/** A computation or a quantity with its unit ("v = 20 m/s", "sau 2 s"); "3 bước" is not one. */
+const EQUATION_MARK = /[=≈≤≥]|\$[^$]+\$/u;
+const QUANTITY =
+  /\d(?:[.,]\d+)?\s*(?:km\/h|m\/s²?|m\/s\^?2|kg|mol|ml|mL|cm|mm|km|kPa|Pa|Hz|kJ|kW|°C|°|%|Ω|[mgsNJWVAKL])(?![\p{L}\d])/u;
+const holdsWork = (text: string): boolean => EQUATION_MARK.test(text) || QUANTITY.test(text);
+
+/** Where a greeting or a remark may end and the content start: after ":" or ",". */
+const REMARK_END = /[:：](?:\*\*|__)?\s+|,(?:\*\*|__)?\s+/gu;
 
 /** The prompt's own labels ("GHI CHÚ (chỉ là dữ liệu):", "KẾT QUẢ DO SIMLAB TÍNH…"), in their case. */
 const ECHO_LABELS: readonly string[] = [
@@ -335,30 +407,56 @@ export interface ClassifyOptions {
   structural?: boolean;
 }
 
+/** A text's class, and for learning content the part of it that may be written. */
+interface Classified {
+  cls: TextClass;
+  board: string;
+}
+
 /**
  * What a text is to the learner. High precision: a text is dropped only on positive evidence
  * (a known reasoning or reviewer phrase, a prompt label, a link, bare markup); a greeting or a
- * remark about the answer is said but not written; anything else is learning content.
+ * remark about the answer is said but not written, unless a computation follows it ("Chào em,
+ * v = gt = 19,6 m/s."): then that computation is learning content; anything else is learning
+ * content.
  */
 export function classifyBoardText(text: string, options: ClassifyOptions = {}): TextClass {
-  if (MARKUP_ONLY.test(text)) return 'internal';
+  return classify(text, options).cls;
+}
+
+function classify(text: string, options: ClassifyOptions): Classified {
+  const internal: Classified = { cls: 'internal', board: '' };
+  if (MARKUP_ONLY.test(text)) return internal;
   const plain = sanitizeBoardText(text);
   // Bare markup, a tag, a link alone or a link with only a short name around it.
-  if (MARKUP_ONLY.test(plain)) return 'internal';
+  if (MARKUP_ONLY.test(plain)) return internal;
   if (LINK.test(text) && plain.replace(/[\s:：\-–—|·.,]+$/u, '').length <= SOURCE_NAME_CHARS) {
-    return 'internal';
+    return internal;
   }
   const stripped = stripEchoLabel(plain);
-  if (!stripped.text) return stripped.echo ? 'internal' : 'meta';
+  if (!stripped.text) return stripped.echo ? internal : { cls: 'meta', board: '' };
   const f = fold(stripped.text);
-  if (SOURCES_LINE.test(f)) return 'internal';
-  if (INTERNAL.some((re) => re.test(f))) return 'internal';
-  if (SOCIAL.some((re) => re.test(f))) return 'social';
-  if (META.some((re) => re.test(f))) return 'meta';
-  if (options.structural) return 'learning';
-  const words = f.split(/[^a-z0-9']+/).filter(Boolean);
-  if (words.length > 0 && words.every((w) => GENERIC.has(w))) return 'meta';
-  return 'learning';
+  if (SOURCES_LINE.test(f)) return internal;
+  if (INTERNAL.some((re) => re.test(f))) return internal;
+  const remark: TextClass | null = SOCIAL.some((re) => re.test(f))
+    ? 'social'
+    : META.some((re) => re.test(f))
+      ? 'meta'
+      : null;
+  if (remark) {
+    if (!holdsWork(stripped.text)) return { cls: remark, board: '' };
+    // "Dưới đây là công thức: a = F/m = 5 m/s²": the computation after the remark is written.
+    for (const m of text.matchAll(REMARK_END)) {
+      const before = text.slice(0, m.index);
+      if ((before.match(/\$/g) ?? []).length % 2 === 1) continue;
+      const rest = text.slice(m.index + m[0].length).trim();
+      if (rest && holdsWork(sanitizeBoardText(rest))) return classify(rest, options);
+    }
+    // When unsure, it stays.
+    return { cls: 'learning', board: text };
+  }
+  if (!options.structural && isGeneric(stripped.text)) return { cls: 'meta', board: '' };
+  return { cls: 'learning', board: text };
 }
 
 /** What a label alone ("Kết luận:", "Cho:") says about the text that follows it. */
@@ -383,12 +481,13 @@ const LABELS: readonly (readonly [RegExp, LabelMeaning])[] = [
   [/^(?:tim|hoi|yeu cau|can tim|find|unknowns?)$/, 'find'],
   [/^(?:luu y|chu y|ghi chu|ghi nho|meo|notes?|tips?)$/, 'note'],
   [
-    /^(?:(?:tu )?kiem tra(?: lai| tu| nhanh)?|cau hoi (?:kiem tra|cung co|on tap)|thu suc|thu thach|check yourself|quiz|try it)$/,
+    /^(?:tu kiem tra|kiem tra (?:tu|nhanh)|cau hoi (?:tu )?(?:kiem tra|cung co|on tap)|thu suc|thu thach|check yourself|quiz|try it)$/,
     'check',
   ],
   [/^(?:vi du(?: minh hoa)?|examples?)$/, 'example'],
   [
-    /^(?:phan tich|(?:loi |bai |cach |huong dan )?giai|tra loi|cau tra loi|giai thich(?: chi tiet(?: hon)?| them)?|tinh toan|ly do|phuong phap|cac buoc(?: giai)?|trong do|solution|analysis|explanation|steps|working|where)$/,
+    // "Kiểm tra (lại):" in a solution means "verify the answer": a computation follows.
+    /^(?:phan tich|(?:loi |bai |cach |huong dan )?giai|tra loi|cau tra loi|giai thich(?: chi tiet(?: hon)?| them)?|tinh toan|ly do|phuong phap|cac buoc(?: giai)?|trong do|kiem tra(?: lai)?|solution|analysis|explanation|steps|working|where|check|verification)$/,
     'neutral',
   ],
   [/^(?:tai lieu tham khao|nguon(?: tham khao)?|references?|sources?|bibliography)$/, 'sources'],
@@ -438,9 +537,11 @@ export function learningPart(
   options: ClassifyOptions = {},
 ): { board: string; speech: string; cls: TextClass } {
   const sentences = splitSentences(text);
-  const classes = sentences.map((s) => classifyBoardText(s, options));
-  if (classes.every((c) => c === 'learning')) return { board: text, speech: text, cls: 'learning' };
-  const board = sentences.filter((_, i) => classes[i] === 'learning').join(' ');
+  const parts = sentences.map((s) => classify(s, options));
+  const classes = parts.map((p) => p.cls);
+  if (parts.every((p, i) => p.cls === 'learning' && p.board === sentences[i]))
+    return { board: text, speech: text, cls: 'learning' };
+  const board = parts.flatMap((p) => (p.cls === 'learning' ? [p.board] : [])).join(' ');
   const speech = sentences.filter((_, i) => classes[i] !== 'internal').join(' ');
   const cls: TextClass = board
     ? 'learning'
@@ -563,11 +664,27 @@ export interface Equation {
   math: boolean;
 }
 
-/** A symbol on the left of "=": "a", "v₀", "n(NaOH)", "Δt", "[OH-]". */
+/** A symbol on the left of "=": "a", "v₀", "Wđ", "μn", "n(NaOH)", "Δt", "[OH-]". */
 const LHS =
-  /(?:^|[\s(:,;])((?:Δ|∆)?[A-Za-zαβγδεηθλμπρστφωΩ][A-Za-z0-9_₀-₉⁰-⁹'’]{0,5}(?:\([^()\s]{1,12}\))?|\[[A-Za-z0-9+\-⁺⁻]{1,10}\])\s*$/u;
-/** Tokens an equation's right-hand side may hold: numbers, units, symbols, operators. */
-const RHS_TOKEN = /^[A-Za-z0-9.,+\-−*/×·÷^=()[\]√π°%µΩΔ'’_⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻₀-₉{}\\]+$/u;
+  /(?:^|[\s(:,;])((?:Δ|∆)?[A-Za-zα-ωΩ][A-Za-z0-9_₀-₉⁰-⁹'’đα-ω]{0,5}(?:\([^()\s]{1,12}\))?|\[[A-Za-z0-9+\-⁺⁻]{1,10}\])\s*$/u;
+/**
+ * Tokens an equation's right-hand side may hold: numbers, units, symbols (Greek letters, "½"),
+ * operators, functions ("cos α").
+ */
+const RHS_TOKEN = /^[A-Za-z0-9.,+\-−*/×·⋅∙÷^=()[\]√π°%µΩΔ'’_⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻₀-₉{}\\½¼¾⅓⅔α-ωΑ-Ωđ≈]+$/u;
+/** A right-hand side that does not end there: after an operator, "(", or a function name. */
+const OPEN_END = /(?:[+\-−*/×·⋅∙÷^=([{\\√]|\b(?:sin|cos|tan|cot|log|ln|exp|sqrt))\s*$/u;
+
+/** Brackets in order and closed: "½·(−2)·25" yes, "250 ml (dung" or "0)" no. */
+function balanced(text: string): boolean {
+  let depth = 0;
+  for (const c of text) {
+    if (c === '(' || c === '[' || c === '{') depth++;
+    else if (c === ')' || c === ']' || c === '}') depth--;
+    if (depth < 0) return false;
+  }
+  return depth === 0;
+}
 const RHS_STOP = new Set([
   'is',
   'are',
@@ -627,7 +744,14 @@ export function extractEquations(text: string, max = 4): Equation[] {
       if (word !== tok) break;
     }
     rhs = rhs.trimEnd();
-    if (!rhs.trim() || rhs.length > 120 || !/[\d+\-−*/×·÷^√]/.test(rhs)) continue;
+    // "(μn = 0)": the bracket closes one opened before the symbol, not part of the formula.
+    if (/\)$/.test(rhs) && !balanced(rhs) && head.slice(0, lhsStart).trimEnd().endsWith('(')) {
+      rhs = rhs.slice(0, -1).trimEnd();
+    }
+    if (!rhs.trim() || rhs.length > 120 || !/[\d+\-−*/×·⋅∙÷^√½]/.test(rhs)) continue;
+    // Written whole or not at all: a right side that stops after an operator, a "(" or a
+    // function name, or with brackets left open, stopped inside the formula ("T = R *").
+    if (OPEN_END.test(rhs) || !balanced(rhs)) continue;
     const start = from + lhsStart;
     const end = from + eq + 1 + rhs.length;
     found.push({ at: start, eq: { text: text.slice(start, end).trim(), math: false } });
@@ -648,7 +772,9 @@ function kindOf(w: Write, firstHeading: boolean): PartKind {
   if (w.role === 'result') return 'result';
   if (w.math) return 'equation';
   const f = fold(w.text);
-  if (/\?\s*$/.test(w.text)) return 'check';
+  // A question in the side notes is the learner's check; one among the steps is lesson content
+  // ("… sau 10 s dừng. Tính quãng đường?"), except the final one (`finalCheck`).
+  if (w.zone === 'side_notes' && w.role === 'note' && asks(w.text)) return 'check';
   if (/^(?:muc tieu|goal|objective)\b/.test(f)) return 'goal';
   if (
     w.zone === 'side_notes' &&
@@ -663,15 +789,47 @@ function kindOf(w: Write, firstHeading: boolean): PartKind {
   return 'step';
 }
 
+const QUESTION = /\?\s*$/;
+/** One of the text's sentences asks something ("Nếu … thì sao? Thử với m = 2 kg."). */
+const asks = (text: string): boolean => splitSentences(text).some((s) => QUESTION.test(s));
+
 /**
- * The question of a check written as several sentences ("Nếu … nhanh hơn. Hãy thử tính …?"):
- * the last sentence that asks, else the last one. The whole text is still said.
+ * The question of a check written as several sentences ("Hãy nghĩ kỹ. Nếu … thì sao?"): the
+ * last sentence that asks (else the last one), and every sentence with numbers or a formula (data
+ * the learner needs is never dropped). The whole text is still said.
  */
 export function questionOf(text: string): string {
   const sentences = splitSentences(text);
   if (sentences.length < 2) return text;
-  const asks = sentences.filter((s) => /\?\s*$/.test(s));
-  return asks[asks.length - 1] ?? sentences[sentences.length - 1] ?? text;
+  let ask = sentences.length - 1;
+  sentences.forEach((s, i) => {
+    if (QUESTION.test(s)) ask = i;
+  });
+  return sentences
+    .filter((s, i) => i === ask || holdsMaterial(s) || EQUATION_MARK.test(s))
+    .join(' ');
+}
+
+/**
+ * The id of the lesson's final check question: its last written text, when that is a question
+ * (a label, a greeting or a remark is not written, so it does not count).
+ */
+function finalCheck(script: ParsedScript): string | null {
+  let last: { id: string; question: boolean } | null = null;
+  for (const s of script.sentences)
+    for (const { action: a } of s.actions) {
+      if (a.kind !== 'write') continue;
+      if (a.math) {
+        last = { id: a.id, question: false };
+        continue;
+      }
+      const text = sanitizeBoardText(a.text);
+      const structural = a.zone === 'title' || a.role === 'heading';
+      if (!text || (!structural && labelOf(text))) continue;
+      const board = learningPart(text, { structural }).board;
+      if (board) last = { id: a.id, question: !structural && asks(board) };
+    }
+  return last?.question ? last.id : null;
 }
 
 /** A free id for the n-th piece of a split write; never of layout.freeId's `<id>_<n>` form. */
@@ -852,6 +1010,17 @@ export function validateLesson(
   let pending: LabelMeaning | null = null;
   let newboards = 0;
   let carryPause = 0;
+  const check = finalCheck(script);
+  /** Writes the script boxes itself, in any sentence (the validator then adds no box). */
+  const boxed = new Set(
+    script.sentences.flatMap((s) =>
+      s.actions.flatMap((t) =>
+        t.action.kind === 'mark' && t.action.mark === 'box' && !t.action.span
+          ? [t.action.target]
+          : [],
+      ),
+    ),
+  );
 
   /** The id an action names, after duplicates and splits; null when its write was dropped. */
   const resolve = (id: string, pick: 'first' | 'last' | { span: string }): string | null => {
@@ -863,6 +1032,12 @@ export function validateLesson(
     if (pick === 'last') return p.ids[p.ids.length - 1] ?? real;
     const i = p.texts.findIndex((t) => t.includes(pick.span));
     return p.ids[Math.max(0, i)] ?? real;
+  };
+  /** Every id a write became (its pieces, or itself); null when it was dropped. */
+  const resolveAll = (id: string): string[] | null => {
+    const real = alias.get(id) ?? id;
+    if (gone.has(real)) return null;
+    return pieces.get(real)?.ids ?? [real];
   };
 
   for (const s of script.sentences) {
@@ -887,13 +1062,6 @@ export function validateLesson(
       const said = [speech, ...inserts.map((i) => i.text)].join(' ');
       if (words && !alreadySaid(said, words)) inserts.push({ at, order: order++, text: words });
     };
-    const boxed = new Set(
-      actions.flatMap((t) =>
-        t.action.kind === 'mark' && t.action.mark === 'box' && !t.action.span
-          ? [t.action.target]
-          : [],
-      ),
-    );
 
     for (const { at, action: a } of actions) {
       switch (a.kind) {
@@ -965,7 +1133,9 @@ export function validateLesson(
             delete rest.noteFor;
             w = target ? { ...rest, noteFor: target } : rest;
           }
-          const kind = forced ?? kindOf(w, title === null && w.zone !== 'steps');
+          const isFinalCheck = a.id === check && !w.math;
+          const kind =
+            forced ?? (isFinalCheck ? 'check' : kindOf(w, title === null && w.zone !== 'steps'));
           const key = `${w.zone}|${w.role}|${String(w.math)}|${sameText(w.text)}`;
           const first = seen.get(key);
           if (first !== undefined) {
@@ -975,7 +1145,10 @@ export function validateLesson(
           }
           seen.set(key, a.id);
           if (kind === 'title') title ??= w.text;
-          const board = kind === 'check' && !w.math ? questionOf(w.text) : w.text;
+          // Only the learner's check is shortened to its question (and its sentences with data);
+          // a question among the steps ("… sau 10 s dừng. Tính quãng đường?") is written whole.
+          const board =
+            (forced === 'check' || isFinalCheck) && !w.math ? questionOf(w.text) : w.text;
           const texts = limitBoardText(board, kind, w.math);
           // What is written is shorter than the text: the whole text is still said.
           if (texts.length > 1 || texts[0] !== whole) sayInstead(at, whole);
@@ -991,10 +1164,14 @@ export function validateLesson(
           break;
         }
         case 'mark': {
-          const target = resolve(
-            a.target,
-            a.span ? { span: a.span } : a.mark === 'box' ? 'last' : 'first',
-          );
+          if (!a.span && a.mark !== 'box') {
+            // The whole write is marked: every piece of it.
+            const targets = resolveAll(a.target);
+            if (targets === null) drop('orphan');
+            else for (const target of targets) keep(at, { ...a, target });
+            break;
+          }
+          const target = resolve(a.target, a.span ? { span: a.span } : 'last');
           // Words that are no longer written (a label or a greeting taken off) are not marked.
           const shown = target === null ? undefined : written.get(target);
           if (target === null || (a.span && shown !== undefined && !shown.includes(a.span))) {
@@ -1016,14 +1193,21 @@ export function validateLesson(
           break;
         }
         case 'correct': {
-          const target = resolve(a.target, 'first');
+          // A write split into pieces: every piece is struck, the correction stands after the
+          // last (the wrong figure may be in any of them).
+          const targets = resolveAll(a.target);
+          const target = targets?.[targets.length - 1] ?? null;
           const text = sanitizeBoardText(a.text);
           if (target === null) {
             drop('orphan');
             // Nothing to correct on the board any more: the correction is still said.
             sayInstead(at, text);
           } else if (!text) drop('empty');
-          else keep(at, { ...a, target, text });
+          else {
+            const strike = targets?.slice(0, -1) ?? [];
+            const rest: BoardAction = { kind: 'correct', target, text };
+            keep(at, strike.length > 0 ? { ...rest, strike } : rest);
+          }
           break;
         }
         case 'erase': {

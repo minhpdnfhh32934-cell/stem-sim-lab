@@ -113,6 +113,45 @@ describe('a tag cut at the end of an answer (output limit) is never said', () =>
   it('a comparison at the end is text', () => {
     expect(read('Vì x<y').said).toBe('Vì x<y');
   });
+
+  it('a cut tag is markup only when all of the tail reads as one', () => {
+    for (const input of [
+      'Câu hai <write id="b1" zone="steps" ro',
+      'Câu hai <write id="b1" zone="steps" role',
+      'Câu hai <write id="b1" zone=',
+      'Câu hai <box target="b1"/',
+      'Câu hai <write ',
+    ]) {
+      expect(read(input).said, input).toBe('Câu hai');
+    }
+  });
+
+  it('a comparison followed by more text keeps every word after it (numbers in = numbers out)', () => {
+    // Fix round 1: "<c thì …" was taken for a cut <correct>/<circle> and the rest was lost.
+    const a = read(
+      'Ta có <write id="s1" zone="steps">p = mv</write>. Khi v<c thì công thức cổ điển dùng được. Động lượng p = mv = 2·3 = 6 kg·m/s.',
+    );
+    expect(a.r.sentences.map((s) => s.speech)).toEqual([
+      'Ta có .',
+      'Khi v<c thì công thức cổ điển dùng được.',
+      'Động lượng p = mv = 2·3 = 6 kg·m/s.',
+    ]);
+    expect(a.r.diagnostics.map((d) => d.code)).not.toContain('unclosed_tag');
+    const b = read(
+      '<write id="s1" zone="steps">Cho m = 2 kg</write>. Nếu a<b thì vật chậm lại, vận tốc v = 10 m/s.',
+    );
+    expect(b.said).toContain('Nếu a<b thì vật chậm lại, vận tốc v = 10 m/s.');
+    // English words after the comparison are not attributes of a tag either.
+    expect(read('Ta có x. If v<c then it works').said).toContain('If v<c then it works');
+    expect(read('Vì v<c then').said).toBe('Vì v<c then');
+    // A whole TeachScript name at the very end is still a cut tag.
+    expect(read('Khi a<box').said).toBe('Khi a');
+  });
+
+  it('a bare "<v>" (an average) is text; known markup without attributes is still a tag', () => {
+    const { speech } = read('Vận tốc trung bình <v> = s/t = 100/10 = 10 m/s. Chữ <b>đậm</b> đây.');
+    expect(speech).toBe('Vận tốc trung bình <v> = s/t = 100/10 = 10 m/s. Chữ đậm đây.');
+  });
 });
 
 describe('sentences know where they stand in the source', () => {

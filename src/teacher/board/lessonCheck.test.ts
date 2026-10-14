@@ -76,6 +76,40 @@ describe('what a text is to the learner (high precision: when unsure, it stays)'
       'Theo Wikipedia (https://vi.wikipedia.org/wiki/Lực), lực là đại lượng vectơ có phương, chiều và độ lớn.',
       'learning',
     ],
+    // Fix round 1: short learning lines are never taken for generic remarks (verdicts, unknowns,
+    // symbols, words whose marks were folded away: "độ", "dẫn", "rơi", "dây"…).
+    ['Không.', 'learning'],
+    ['Có.', 'learning'],
+    ['Có không.', 'learning'],
+    ['**Câu trả lời:** Không.', 'learning'],
+    ['Kết quả: Có', 'learning'],
+    ['a = ?', 'learning'],
+    ['s = ?', 'learning'],
+    ['Tìm a?', 'learning'],
+    ['Tìm s.', 'learning'],
+    ['σ là độ đàn hồi', 'learning'],
+    ['Dây dẫn.', 'learning'],
+    ['Rơi.', 'learning'],
+    ['No.', 'learning'],
+    ['So the answer is yes.', 'learning'],
+    ['Điền vào chỗ trống: F = ____ N', 'learning'],
+    // …while generic remarks, also without marks, stay remarks.
+    ['Chung ta se cung nhau giai bai toan nay nhe.', 'meta'],
+    ['Minh se giai tung buoc.', 'meta'],
+    ['Chúng ta hãy cùng tìm hiểu nhé.', 'meta'],
+    // A greeting or a remark in front of a computation: the computation is learning.
+    ['Dưới đây là công thức: a = F/m = 10/2 = 5 m/s².', 'learning'],
+    ['Sau đây ta tính gia tốc: a = F/m = 10/2 = 5 m/s².', 'learning'],
+    ['Here is the key equation: F = ma = 2 · 5 = 10 N.', 'learning'],
+    ['Chào em, vận tốc sau 2 s là v = gt = 9,8·2 = 19,6 m/s.', 'learning'],
+    ['Chào bạn, mình là AI Teacher 2.0.', 'social'],
+    ['Dưới đây là 3 bước giải.', 'meta'],
+    // More greetings and offers of help (fix round 1).
+    ['Tôi hiểu yêu cầu của bạn.', 'social'],
+    ['Câu hỏi của bạn rất hay.', 'social'],
+    ['Nếu có bất kỳ câu hỏi nào khác, đừng ngần ngại hỏi tôi nhé.', 'social'],
+    ['Bạn có bất cứ câu hỏi nào khác không?', 'social'],
+    ['Đừng ngần ngại hỏi thêm nhé.', 'social'],
   ];
   it.each(table)('%s → %s', (text, expected) => {
     expect(classifyBoardText(text)).toBe(expected);
@@ -103,6 +137,13 @@ describe('labels alone: a closed list, closed by ":" or set in bold', () => {
     ['Cho:', 'given'],
     ['**Ghi chú:**', 'note'],
     ['**Kiểm tra tự:**', 'check'],
+    ['Câu hỏi kiểm tra:', 'check'],
+    ['**Câu hỏi tự kiểm tra:**', 'check'],
+    ['Tự kiểm tra:', 'check'],
+    ['Thử sức:', 'check'],
+    // In a solution "Kiểm tra (lại):" means "verify the answer": a computation follows.
+    ['Kiểm tra lại:', 'neutral'],
+    ['**Kiểm tra:**', 'neutral'],
     ['Tài liệu tham khảo:', 'sources'],
   ])('%s → %s', (text, meaning) => {
     expect(labelOf(text)).toBe(meaning);
@@ -132,6 +173,17 @@ describe('sanitizing a written text never touches a number or an operator', () =
     ['$x<y$ và $y>z$', '$x<y$ và $y>z$'],
     ['x<y và y>z', 'x<y và y>z'],
     ['> trích dẫn', 'trích dẫn'],
+    // Fix round 1: a comparison that starts with a tag's letter is not a tag.
+    ['Nếu v<s và t>0 thì vật dừng', 'Nếu v<s và t>0 thì vật dừng'],
+    ['Khi a<b và c>d thì', 'Khi a<b và c>d thì'],
+    [
+      'Vận tốc trung bình <v> = s/t = 100/10 = 10 m/s',
+      'Vận tốc trung bình <v> = s/t = 100/10 = 10 m/s',
+    ],
+    ['<reference kind="library">Lực</reference> và <answer>a = 2</answer>', 'Lực và a = 2'],
+    // Blanks to fill in are kept; only "__bold__" loses its marks.
+    ['Điền vào chỗ trống: F = ____ N', 'Điền vào chỗ trống: F = ____ N'],
+    ['__Lực__ là vectơ', 'Lực là vectơ'],
   ])('%s → %s', (input, output) => {
     expect(sanitizeBoardText(input)).toBe(output);
   });
@@ -185,6 +237,48 @@ describe('equations of a long line', () => {
     expect(many.map((e) => e.text)).toEqual(['a=1', 'b=2', 'c=3', 'd=4']);
     // Words with "=" but no number or operator on the right are not equations.
     expect(extractEquations('Kết quả = đúng như dự đoán của chúng ta')).toEqual([]);
+  });
+
+  it('writes a formula whole or not at all: never one cut after an operator or a bracket', () => {
+    const texts = (line: string) => extractEquations(line).map((e) => e.text);
+    expect(
+      texts(
+        'Vật chuyển động chậm dần đều, ta có s = v₀t + ½at² = 20·5 + ½·(−2)·25 = 75 m, đây là kết quả.',
+      ),
+    ).toEqual(['s = v₀t + ½at² = 20·5 + ½·(−2)·25 = 75 m']);
+    expect(texts('Công A = F·s·cos α = 10·2·cos 60° = 10 J.')).toEqual([
+      'A = F·s·cos α = 10·2·cos 60° = 10 J',
+    ]);
+    expect(texts('Lực ma sát F = μmg = 0,2·2·10 = 4 N.')).toEqual(['F = μmg = 0,2·2·10 = 4 N']);
+    expect(texts('Động năng Wđ = ½mv² = 9 J.')).toEqual(['Wđ = ½mv² = 9 J']);
+    // From real answers (tests/teaching/results): baseline-greedy P9, improved-greedy C11 and P1.
+    expect(
+      texts(
+        'Chu kỳ T (thời hành) của con shaken đơn tỉ do tính năng của nó là: T = R * θ, trong đó R là điện cảm và θ là góc dao động.',
+      ),
+    ).toEqual(['T = R * θ']);
+    expect(
+      texts(
+        'Theo phương trình C₁V₁ = C₂V₂, với C₁ = 250 (lượng NaOH ban đầu), V₁ = 250 ml (dung dịch ban đầu), và V₂ = dung dịch thu được (200 mol/L).',
+      ),
+    ).toEqual(['C₁ = 250']); // never "V₁ = 250 ml (dung"
+    expect(
+      texts(
+        'Nếu không có ma sát (μn = 0), thì lực ma sát là bằng trọng lực (Fn). Điều này có nghĩa là vật sẽ rơi xuống ngay lập tức.',
+      ),
+    ).toEqual(['μn = 0']);
+    // A right side that stops on an unknown word after an operator is not written.
+    expect(texts('Ta có T = R * điện cảm của cuộn dây')).toEqual([]);
+    for (const line of [
+      'Ta có x = (2 + 3 và y',
+      'Khi đó v = 2 · dài hơn',
+      'Lúc này a = F / khối lượng',
+    ]) {
+      for (const eq of texts(line)) {
+        expect(eq, line).not.toMatch(/[+\-−*/×·÷^=(]\s*$/u);
+        expect((eq.match(/\(/g) ?? []).length, line).toBe((eq.match(/\)/g) ?? []).length);
+      }
+    }
   });
 
   it('the markdown layout writes them all (not only the first two), plain ones as text', () => {
@@ -335,8 +429,11 @@ describe('the checked lesson', () => {
     );
     const last = writesOf(script).at(-1);
     expect([last?.zone, last?.role]).toEqual(['side_notes', 'note']);
-    // The asking sentence is written; the whole check is said.
-    expect(last?.text).toBe('Nếu vận tốc tăng gấp đôi thì động năng thay đổi thế nào?');
+    // The asking sentence is written, and a sentence with numbers is never dropped (fix round
+    // 1: "m = 2 kg" is data the learner needs); the whole check is said.
+    expect(last?.text).toBe(
+      'Nếu vận tốc tăng gấp đôi thì động năng thay đổi thế nào? Hãy thử tính với m = 2 kg.',
+    );
     expect(saidOf(script)).toContain('Hãy thử tính với m = 2 kg.');
     const plain = scriptFor('# Rơi tự do\n1. Vật rơi tự do.\n2. Vậy vật rơi bao lâu?');
     expect(writesOf(plain).at(-1)?.zone).toBe('side_notes');
@@ -357,6 +454,105 @@ describe('the checked lesson', () => {
       [0, 8],
       [9, lesson.source.length],
     ]);
+  });
+});
+
+describe('fix round 1: short lines, computations after a greeting, checks, pieces, boxes', () => {
+  const written = (answer: string) => writesOf(scriptFor(answer)).map((w) => w.text);
+
+  it('short learning lines are written (verdicts, unknowns, symbols)', () => {
+    expect(written('Không.\n\nVật chuyển động tròn đều có gia tốc hướng tâm.')).toEqual([
+      'Không.',
+      'Vật chuyển động tròn đều có gia tốc hướng tâm.',
+    ]);
+    expect(written('**Tóm tắt:**\n- m = 2 kg\n- a = ?')).toEqual(['m = 2 kg', 'a = ?']);
+    // Real answer (baseline-greedy P8): σ is written like F, and said in its place.
+    const script = scriptFor('Trong đó:\n* σ là độ đàn hồi\n* F là lực nén');
+    expect(writesOf(script).map((w) => w.text)).toEqual(['σ là độ đàn hồi', 'F là lực nén']);
+    expect(script.sentences.map((s) => s.spoken)).toEqual([
+      'Trong đó: σ là độ đàn hồi',
+      'F là lực nén',
+    ]);
+    const example = writesOf(scriptFor('Ví dụ:\n\nDây dẫn.'));
+    expect(example.map((w) => [w.text, w.zone])).toEqual([['Dây dẫn.', 'example']]);
+  });
+
+  it('a computation after a greeting or a remark is written, without the greeting', () => {
+    expect(written('Dưới đây là công thức: a = F/m = 10/2 = 5 m/s².')).toEqual([
+      'a = F/m = 10/2 = 5 m/s².',
+    ]);
+    expect(written('Here is the key equation: F = ma = 2 · 5 = 10 N.')).toEqual([
+      'F = ma = 2 · 5 = 10 N.',
+    ]);
+    const greeting = scriptFor('Chào em, vận tốc sau 2 s là v = gt = 9,8·2 = 19,6 m/s.');
+    expect(writesOf(greeting).map((w) => w.text)).toEqual([
+      'vận tốc sau 2 s là v = gt = 9,8·2 = 19,6 m/s.',
+    ]);
+    expect(saidOf(greeting)).toContain('Chào em');
+    const { script } = checked(
+      'Ta xét <write id="g1" zone="steps">Sau đây ta tính gia tốc: a = F/m = 10/2 = 5 m/s²</write>.',
+    );
+    expect(writesOf(script).map((w) => w.text)).toEqual(['a = F/m = 10/2 = 5 m/s²']);
+  });
+
+  it('a question in the lesson is written whole; only the final check is shortened', () => {
+    const problem = written(
+      '# Bài toán\nMột ô tô chạy 72 km/h thì hãm phanh, sau 10 s dừng. Tính quãng đường?\n1. Đổi 72 km/h = 20 m/s.',
+    );
+    expect(problem).toContain(
+      'Một ô tô chạy 72 km/h thì hãm phanh, sau 10 s dừng. Tính quãng đường?',
+    );
+    const { script, outline } = checked(
+      'Đề bài: <write id="d1" zone="steps">Một ô tô chạy 72 km/h thì hãm phanh, sau 10 s dừng. Tính quãng đường?</write> Ta giải. <write id="s1" zone="steps">v = 20 m/s</write>.',
+    );
+    expect(writesOf(script)[0]?.text).toContain('72 km/h');
+    expect(outline.parts.map((p) => p.kind)).toEqual(['step', 'step']);
+    // "Kiểm tra lại:" verifies the answer: its computation is written.
+    const verify = written(
+      '**Kiểm tra lại:**\n\nThay vào: F = m·a = 2·5 = 10 N. Khớp với đề bài.',
+    ).join(' ');
+    expect(verify).toContain('F = m·a = 2·5 = 10 N');
+    // The final check keeps a sentence with numbers; a words-only lead goes (it is said).
+    const check = scriptFor(
+      '# Rơi tự do\n1. $h = \\frac{1}{2}gt^2$\n**Câu hỏi kiểm tra:**\n\nHãy suy nghĩ kỹ nhé. Nếu thả từ 45 m thì sau bao lâu vật chạm đất?',
+    );
+    expect(writesOf(check).at(-1)?.text).toBe('Nếu thả từ 45 m thì sau bao lâu vật chạm đất?');
+    expect(saidOf(check)).toContain('Hãy suy nghĩ kỹ nhé.');
+    const final = checked(
+      'Ta có <write id="s1" zone="steps">a = 2 m/s²</write>. Thử nhé: <write id="q1" zone="steps">Em đã hiểu chưa. Với m = 4 kg thì F bằng bao nhiêu?</write>',
+    );
+    expect(writesOf(final.script).at(-1)?.text).toBe('Với m = 4 kg thì F bằng bao nhiêu?');
+    expect(final.outline.parts.at(-1)?.kind).toBe('check');
+  });
+
+  it('a correction on a split write strikes every piece and stands after the last', () => {
+    const { script } = checked(
+      'Ta tính <write id="s3" zone="steps">Quãng đường đi được trong giai đoạn đầu là s1 = 20·5 = 100 m, quãng đường đi được trong giai đoạn sau là s2 = 15·5 = 75 m, nên tổng quãng đường là s = 175 m</write>. À nhầm. <correct target="s3">s = 150 m</correct>.',
+    );
+    const ids = writesOf(script).map((w) => w.id);
+    expect(ids.length).toBeGreaterThan(1);
+    const correct = actionsOf(script).find((a) => a.kind === 'correct');
+    expect(correct).toEqual({
+      kind: 'correct',
+      target: ids.at(-1),
+      text: 's = 150 m',
+      strike: ids.slice(0, -1),
+    });
+    // An underline of the whole write goes under every piece.
+    const underlined = checked(
+      'Ta tính <write id="s3" zone="steps">Quãng đường đi được trong giai đoạn đầu là s1 = 20·5 = 100 m, quãng đường đi được trong giai đoạn sau là s2 = 15·5 = 75 m, nên tổng quãng đường là s = 175 m</write>.<underline target="s3"/>',
+    );
+    expect(
+      actionsOf(underlined.script).flatMap((a) => (a.kind === 'mark' ? [a.target] : [])),
+    ).toEqual(writesOf(underlined.script).map((w) => w.id));
+  });
+
+  it('a result boxed in a later sentence is boxed once', () => {
+    const { script } = checked(
+      'Cuối cùng. <write id="k" zone="steps">Kết luận:</write> <write id="r1" zone="steps" role="result">a = 5 m/s²</write>. Đây là đáp số. <box target="r1"/>',
+    );
+    const boxes = actionsOf(script).filter((a) => a.kind === 'mark' && a.mark === 'box');
+    expect(boxes).toEqual([{ kind: 'mark', mark: 'box', target: 'r1' }]);
   });
 });
 

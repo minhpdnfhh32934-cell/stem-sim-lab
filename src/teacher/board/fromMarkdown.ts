@@ -50,9 +50,12 @@ const RESULT = /^(đáp số|đáp án|kết quả|kết luận|vậy|=>|⇒|suy
 const NOTE = /^(lưu ý|chú ý|ghi nhớ|mẹo|nhớ|note|tip)\s*[:：]/i;
 const GIVEN = /^(cho|tóm tắt|dữ kiện|biết|given)\s*[:：]/i;
 const FIND = /^(tìm|tính|hỏi|find)\s*[:：]/i;
-/** A check question with its label on the same line ("Câu hỏi kiểm tra: …?"). */
+/**
+ * A check question with its label on the same line ("Câu hỏi kiểm tra: …?"). "Kiểm tra (lại):"
+ * alone is not one: in a solution it verifies the answer.
+ */
 const CHECK =
-  /^(câu hỏi (kiểm tra|củng cố|ôn tập)|tự kiểm tra|thử sức|check yourself|quiz)\s*[:：]/iu;
+  /^(câu hỏi (tự )?(kiểm tra|củng cố|ôn tập)|tự kiểm tra|kiểm tra nhanh|thử sức|check yourself|quiz)\s*[:：]/iu;
 const STEP = /^(bước\s*\d+|step\s*\d+|\d+[.)])\s*/i;
 /** Only markup: "---", "***", "___" (a table's separator row is read before this). */
 const RULE = /^[\s\-–—*_=~#>|`.·•:]*$/u;
@@ -355,7 +358,13 @@ class Builder {
       const w = s?.actions.find((a) => a.action.kind === 'write');
       if (!s || !w) continue;
       const a = w.action;
-      if (a.kind === 'write' && a.zone === 'steps' && a.role === 'body' && /\?\s*$/.test(a.text)) {
+      // A question anywhere in it: "Nếu … thì sao? Thử với m = 2 kg." is a check too.
+      if (
+        a.kind === 'write' &&
+        a.zone === 'steps' &&
+        a.role === 'body' &&
+        /\?(?=\s|$)/.test(a.text)
+      ) {
         this.sentences[i] = {
           ...s,
           actions: s.actions.map((t) =>

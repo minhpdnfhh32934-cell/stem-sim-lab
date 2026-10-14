@@ -49,7 +49,16 @@ export type BoardAction =
   | { kind: 'arrow'; from: string; to: string; label?: string }
   | { kind: 'point'; target: string }
   | { kind: 'erase'; target: string }
-  | { kind: 'correct'; target: string; text: string }
+  | {
+      kind: 'correct';
+      target: string;
+      text: string;
+      /**
+       * Set by the lesson check only (never read from the AI): the other pieces of a long write
+       * split into several, struck out too before the correction is written after `target`.
+       */
+      strike?: string[];
+    }
   | { kind: 'newboard'; title?: string }
   | { kind: 'draw'; id: string; zone: Zone; type: DrawType; spec: Record<string, unknown> }
   | { kind: 'plot'; id: string; zone: Zone; fn: string; domain: [number, number]; label?: string };
@@ -190,6 +199,19 @@ const EMPTY = new Set([
 export const TEACHSCRIPT_TAGS: readonly string[] = [...CONTAINERS, ...EMPTY];
 /** Names that are tags wherever they stand: TeachScript's own and hidden reasoning. */
 const KNOWN_TAGS: ReadonlySet<string> = new Set([...TEACHSCRIPT_TAGS, ...REASONING_TAGS]);
+/**
+ * Markup a model may write without attributes: HTML and the wrappers models put around an answer
+ * or a source. Another bare name ("<v>", an average) is text; with `name="value"` attributes any
+ * name is a tag.
+ */
+export const MARKUP_TAGS: ReadonlySet<string> = new Set([
+  ...['b', 'i', 'u', 'em', 'strong', 'span', 'small', 'big', 'mark', 'code', 's', 'del', 'ins'],
+  ...['font', 'tt', 'kbd', 'var', 'abbr', 'sub', 'sup', 'br', 'p', 'div', 'hr', 'li', 'ul', 'ol'],
+  ...['center', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'tr', 'td', 'th'],
+  ...['reference', 'references', 'source', 'sources', 'cite', 'citation', 'answer', 'final'],
+  ...['final_answer', 'response', 'output', 'solution', 'explanation', 'context', 'excerpt'],
+  ...['tool', 'tool_result', 'system', 'user', 'assistant'],
+]);
 /** Attributes that would be coordinates or sizes: never accepted from the AI (§7). */
 const GEOMETRY = /^(x|y|x1|y1|x2|y2|left|top|right|bottom|width|height|px|size|pos|position)$/i;
 
@@ -258,15 +280,24 @@ function readAttributes(rest: string): Record<string, string> | null {
 }
 
 /**
+ * A cut tag: a name being typed, or a whole name, complete `name="value"` attributes and at most
+ * one attribute being typed (`zone`, `zone=`, `zone="ste`), then perhaps the "/" of an empty tag.
+ */
+const CUT_TAG =
+  /^<(\/?)([a-z_]*)((?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*(?:\s+[a-zA-Z_-]+(?:\s*=\s*(?:"[^"]*|'[^']*)?)?)?)\s*\/?$/;
+
+/**
  * A TeachScript or reasoning tag cut off at the very end of the answer ('<write id="s3" zone="ste',
  * an answer stopped at the output limit): markup, never words. Its name, or null when the tail
- * may be text ("x<y", "a<b" at the end).
+ * may be text: all of the tail must read as a cut tag, so "x<y" or "v<c thì … 6 kg·m/s." stays
+ * text (a name followed by attributes must be a whole TeachScript or reasoning name).
  */
 function cutTag(tail: string): string | null {
-  const m = /^<(\/?)([a-z_]*)(\s[^<>]*)?$/.exec(tail);
+  const m = CUT_TAG.exec(tail);
   if (!m) return null;
   const name = m[2] ?? '';
-  const typing = m[1] === '/' || m[3] !== undefined || name.length >= 2;
+  if (m[3]) return KNOWN_TAGS.has(name) ? name : null;
+  const typing = m[1] === '/' || name.length >= 2;
   return typing && [...KNOWN_TAGS].some((k) => k.startsWith(name)) ? name : null;
 }
 
@@ -317,7 +348,14 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
         continue;
       }
       const attrs = readAttributes(body.slice(name.length));
-      if (!KNOWN_TAGS.has(name) && (!attrs || (closing && Object.keys(attrs).length > 0))) {
+      const bare = attrs !== null && Object.keys(attrs).length === 0;
+      if (
+        !KNOWN_TAGS.has(name) &&
+        (!attrs ||
+          (closing && !bare) ||
+          // "<v>" (an average) is text; "<b>", "</v>", "<foo/>" and "<foo a="1">" are markup.
+          (!closing && !selfClosing && bare && !MARKUP_TAGS.has(name)))
+      ) {
         literal();
         continue;
       }
