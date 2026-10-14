@@ -102,7 +102,7 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Cách giảng rõ ràng hơn: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp và một câu hỏi kiểm tra ở cuối.
 - Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, \[S\], (aq), mũi tên phản ứng).
 - Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.
-- Gemma trả lời gọn hơn và bắt đầu nhanh hơn; ít lẫn chữ nước ngoài và ít viết méo thuật ngữ hơn.
+- Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).
 - Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
 
 **Sửa lỗi**
@@ -151,6 +151,7 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - Commit sau đầu PR, lúc ghi chỉ có trên nhánh local: 01faf2f … 20b19c2 (tới 2026-10-14T08:15:31+07:00)
 - built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app\_info = 0.6.0
 - Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới
+- Gemma quality: docs/TEACHING\_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -\> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -\> 7 %; corrupted terms 19 % -\> 4.8 %; first piece p50 1.90 s -\> 0.91 s; answer length 810 -\> 1047 characters.
 
 ### 0.5.2 (Đã phát hành)
 
@@ -799,7 +800,7 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.5.0** (Đã phát hành, sửa lỗi): Gemma luôn chạy trên card tích hợp dù máy có card rời.
 - **0.5.2** (Đã phát hành, tính năng mới): Câu trả lời của Gemma hiện dần từng chữ.
 - **0.5.2** (Đã phát hành, bảo mật): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.
-- **0.6.0** (Đang xét duyệt, cải tiến): Gemma trả lời gọn hơn và bắt đầu nhanh hơn; ít lẫn chữ nước ngoài và ít viết méo thuật ngữ hơn.
+- **0.6.0** (Đang xét duyệt, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).
 - **0.6.0** (Đang xét duyệt, sửa lỗi): Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.
 - **0.6.0** (Đang xét duyệt, bảo mật): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
 - **0.6.0** (Đang xét duyệt, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.

@@ -167,7 +167,8 @@
         "PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp",
         "Commit sau đầu PR, lúc ghi chỉ có trên nhánh local: 01faf2f … 20b19c2 (tới 2026-10-14T08:15:31+07:00)",
         "built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0",
-        "Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới"
+        "Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới",
+        "Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -> 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -> 7 %; corrupted terms 19 % -> 4.8 %; first piece p50 1.90 s -> 0.91 s; answer length 810 -> 1047 characters."
       ],
       "tests": [
         "format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)",
@@ -249,8 +250,8 @@
             "area": "voice"
           },
           {
-            "vi": "Gemma trả lời gọn hơn và bắt đầu nhanh hơn; ít lẫn chữ nước ngoài và ít viết méo thuật ngữ hơn.",
-            "en": "Gemma's answers are shorter and start sooner, with fewer foreign words and fewer garbled terms.",
+            "vi": "Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).",
+            "en": "Gemma answers are more often on point and start sooner, with almost no foreign words or garbled terms left (measured on 42 questions; answers are longer than before).",
             "area": "gemma"
           },
           {

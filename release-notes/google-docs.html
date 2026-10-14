@@ -111,7 +111,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Cách giảng rõ ràng hơn: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp và một câu hỏi kiểm tra ở cuối.</li>
 <li>Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, [S], (aq), mũi tên phản ứng).</li>
 <li>Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.</li>
-<li>Gemma trả lời gọn hơn và bắt đầu nhanh hơn; ít lẫn chữ nước ngoài và ít viết méo thuật ngữ hơn.</li>
+<li>Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).</li>
 <li>Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.</li>
 </ul>
 <p><strong>Sửa lỗi</strong></p>
@@ -160,6 +160,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Commit sau đầu PR, lúc ghi chỉ có trên nhánh local: 01faf2f … 20b19c2 (tới 2026-10-14T08:15:31+07:00)</li>
 <li>built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0</li>
 <li>Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới</li>
+<li>Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -&gt; 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -&gt; 7 %; corrupted terms 19 % -&gt; 4.8 %; first piece p50 1.90 s -&gt; 0.91 s; answer length 810 -&gt; 1047 characters.</li>
 </ul>
 <h3>0.5.2 (Đã phát hành)</h3>
 <p>Giao diện đẹp và dễ dùng hơn: tìm nhanh bằng Ctrl+K, Gemma trả lời hiện dần từng chữ, ghim quỹ đạo để so sánh. Đây là bản cập nhật phần giao diện; bộ cài đi kèm mang số 0.5.1.</p>
@@ -816,7 +817,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.5.0</strong> (Đã phát hành, sửa lỗi): Gemma luôn chạy trên card tích hợp dù máy có card rời.</li>
 <li><strong>0.5.2</strong> (Đã phát hành, tính năng mới): Câu trả lời của Gemma hiện dần từng chữ.</li>
 <li><strong>0.5.2</strong> (Đã phát hành, bảo mật): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.</li>
-<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Gemma trả lời gọn hơn và bắt đầu nhanh hơn; ít lẫn chữ nước ngoài và ít viết méo thuật ngữ hơn.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn, hầu như không còn lẫn chữ nước ngoài hay viết méo thuật ngữ (đo trên 42 câu hỏi; câu trả lời dài hơn trước).</li>
 <li><strong>0.6.0</strong> (Đang xét duyệt, sửa lỗi): Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.</li>
 <li><strong>0.6.0</strong> (Đang xét duyệt, bảo mật): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.</li>
 <li><strong>0.6.0</strong> (Đang xét duyệt, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.</li>
