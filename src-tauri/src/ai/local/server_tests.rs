@@ -12,9 +12,10 @@ use serde_json::json;
 
 use super::endpoint::{loopback_client, LoopHost, Loopback};
 use super::runtime::{runtime, Cap, RuntimeKind};
+use super::vision::tests::png;
 use super::*;
 use crate::ai::mock_server::{json_answer, serve, stream_head, Mock, Req, Step};
-use crate::ai::{cancel_inflight, AiError, AiState, Message};
+use crate::ai::{cancel_inflight, AiError, AiState};
 
 impl Mock {
     fn base(&self) -> Loopback {
@@ -89,10 +90,8 @@ fn request(kind: RuntimeKind, mock: &Mock) -> LocalChatRequest {
         base_url: mock.base().base(),
         model: "qwen3:8b".into(),
         system: "Em là trợ giảng vật lý.".into(),
-        messages: vec![Message {
-            role: "user".into(),
-            content: "Gia tốc là gì?".into(),
-        }],
+        messages: vec![LocalMessage::text("user", "Gia tốc là gì?")],
+        vision: false,
         json_schema: None,
         temperature: None,
         max_tokens: None,
@@ -239,12 +238,12 @@ fn openai_compatible_and_lm_studio_stream_server_sent_events() {
     assert_eq!(r.content, "Lực là đại lượng vectơ.");
     assert_eq!(events, vec![delta("Lực"), delta(" là đại lượng vectơ.")]);
     assert_eq!(r.runtime, RuntimeKind::OpenAiCompatible);
-    // Identified, checked not to be Ollama, then the question.
+    // Checked not to be Ollama, identified, then the question.
     assert_eq!(
         mock.seen(),
         vec![
-            "GET /v1/models",
             "GET /api/version",
+            "GET /v1/models",
             "POST /v1/chat/completions"
         ]
     );
@@ -267,8 +266,8 @@ fn openai_compatible_and_lm_studio_stream_server_sent_events() {
     assert_eq!(
         lm.seen(),
         vec![
-            "GET /api/v0/models",
             "GET /api/version",
+            "GET /api/v0/models",
             "POST /v1/chat/completions"
         ]
     );
@@ -447,8 +446,8 @@ fn http_errors_get_tags_and_never_fall_back() {
         assert_eq!(
             mock.seen(),
             vec![
-                "GET /v1/models",
                 "GET /api/version",
+                "GET /v1/models",
                 "POST /v1/chat/completions"
             ],
             "{status}"
@@ -594,14 +593,13 @@ fn an_ollama_address_is_only_used_as_ollama() {
         assert!(mock.seen().is_empty(), "{kind:?}: {:?}", mock.seen());
     }
     // Any other model: the address answers as Ollama, so it is only used as Ollama (through
-    // `/v1` a copied cloud model cannot be recognised and `num_ctx` cannot be sent).
-    for (kind, before) in [
-        (RuntimeKind::OpenAiCompatible, vec!["GET /v1/models"]),
-        // LM Studio without its REST API falls back to `/v1/models`, which Ollama answers.
-        (
-            RuntimeKind::LmStudio,
-            vec!["GET /api/v0/models", "GET /v1/models"],
-        ),
+    // `/v1` a copied cloud model cannot be recognised and `num_ctx` cannot be sent). Ollama is
+    // asked first, so every kind names it, also one whose own fingerprint Ollama does not answer
+    // (llama.cpp's `/props`).
+    for kind in [
+        RuntimeKind::OpenAiCompatible,
+        RuntimeKind::LmStudio,
+        RuntimeKind::LlamaCpp,
     ] {
         for model in ["qwen3:8b", "my-copy:latest"] {
             let mock = ollama_with_v1();
@@ -610,27 +608,31 @@ fn an_ollama_address_is_only_used_as_ollama() {
             let (r, events) = chat(&mock, &req, quick());
             let e = r.unwrap_err();
             assert_eq!(tag_of(&e), NOT_RUNTIME, "{kind:?} {model}");
-            assert_eq!(e_message(&e), format!("{NOT_RUNTIME}: {IS_OLLAMA}"));
+            assert_eq!(
+                e_message(&e),
+                format!("{NOT_RUNTIME}: {IS_OLLAMA}"),
+                "{kind:?} {model}"
+            );
             assert!(events.is_empty());
             assert!(!posted(&mock), "{kind:?} {model}: the prompt was sent");
-            let mut expected = before.clone();
-            expected.push("GET /api/version");
-            assert_eq!(mock.seen(), expected, "{kind:?} {model}");
+            assert_eq!(mock.seen(), vec!["GET /api/version"], "{kind:?} {model}");
         }
     }
     // The answer test reports it too.
-    let mock = ollama_with_v1();
     let http = loopback_client().unwrap();
-    let t = tauri::async_runtime::block_on(test_model(
-        &http,
-        RuntimeKind::OpenAiCompatible,
-        &mock.base(),
-        "qwen3:8b",
-        quick(),
-    ));
-    assert_eq!(t.status, LocalTestStatus::NotRuntime);
-    assert_eq!(t.detail, IS_OLLAMA);
-    assert!(!posted(&mock));
+    for kind in [RuntimeKind::OpenAiCompatible, RuntimeKind::LlamaCpp] {
+        let mock = ollama_with_v1();
+        let t = tauri::async_runtime::block_on(test_model(
+            &http,
+            kind,
+            &mock.base(),
+            "qwen3:8b",
+            quick(),
+        ));
+        assert_eq!(t.status, LocalTestStatus::NotRuntime, "{kind:?}");
+        assert_eq!(t.detail, IS_OLLAMA, "{kind:?}");
+        assert!(!posted(&mock));
+    }
     // Lists and details under another kind are refused the same way, so the page can say
     // "this is Ollama" before a model is chosen.
     for kind in [RuntimeKind::OpenAiCompatible, RuntimeKind::LmStudio] {
@@ -692,9 +694,9 @@ fn lm_studio_without_its_rest_api_still_answers() {
         assert_eq!(
             mock.seen(),
             vec![
+                "GET /api/version",
                 "GET /api/v0/models",
                 "GET /v1/models",
-                "GET /api/version",
                 "POST /v1/chat/completions"
             ]
         );
@@ -727,11 +729,21 @@ fn an_unidentified_server_never_gets_the_question() {
             )]
         })
     };
-    for (kind, first) in [
-        (RuntimeKind::Ollama, "GET /api/version"),
-        (RuntimeKind::LmStudio, "GET /api/v0/models"),
-        (RuntimeKind::LlamaCpp, "GET /props"),
-        (RuntimeKind::OpenAiCompatible, "GET /v1/models"),
+    // Every other kind first checks that the address is not Ollama.
+    for (kind, asked) in [
+        (RuntimeKind::Ollama, vec!["GET /api/version"]),
+        (
+            RuntimeKind::LmStudio,
+            vec!["GET /api/version", "GET /api/v0/models"],
+        ),
+        (
+            RuntimeKind::LlamaCpp,
+            vec!["GET /api/version", "GET /props"],
+        ),
+        (
+            RuntimeKind::OpenAiCompatible,
+            vec!["GET /api/version", "GET /v1/models"],
+        ),
     ] {
         let mock = html();
         let (r, _) = chat(&mock, &request(kind, &mock), quick());
@@ -739,7 +751,7 @@ fn an_unidentified_server_never_gets_the_question() {
             matches!(r, Err(AiError::BadResponse(ref m)) if m == NOT_RUNTIME),
             "{kind:?}"
         );
-        assert_eq!(mock.seen(), vec![first], "{kind:?}");
+        assert_eq!(mock.seen(), asked, "{kind:?}");
     }
 }
 
@@ -953,4 +965,254 @@ fn the_answer_test_is_tiny_and_reports_a_status() {
         quick(),
     ));
     assert_eq!(t.status, LocalTestStatus::Unreachable);
+}
+
+/// A question with the learner's circled region as a picture.
+fn with_picture(kind: RuntimeKind, mock: &Mock, model: &str) -> LocalChatRequest {
+    let mut req = request(kind, mock);
+    req.model = model.into();
+    req.vision = true;
+    req.messages = vec![LocalMessage {
+        images: vec![png()],
+        ..LocalMessage::text("user", "Chỗ em khoanh trên bảng là gì?")
+    }];
+    req
+}
+
+fn refused_with(r: Result<LocalChatResponse, AiError>, tag: &str) {
+    match r {
+        Err(AiError::NotAllowed(ref m)) if m.split(':').next() == Some(tag) => {}
+        other => panic!("expected {tag}, got {other:?}"),
+    }
+}
+
+/// `/api/show` of a model whose capabilities list "vision".
+fn show_vision() -> String {
+    json!({
+        "details": {"family": "gemma3"},
+        "model_info": {"general.architecture": "gemma3", "gemma3.context_length": 131072},
+        "capabilities": ["completion", "vision"]
+    })
+    .to_string()
+}
+
+#[test]
+fn a_picture_reaches_an_ollama_model_that_reads_pictures() {
+    let show = show_vision();
+    let mock = serve(move |r| match (r.method.as_str(), r.path.as_str()) {
+        ("GET", "/api/version") => json_answer("200 OK", VERSION),
+        ("POST", "/api/show") => json_answer("200 OK", &show),
+        ("POST", "/api/chat") => vec![
+            ndjson_head(),
+            line(&piece("Đó là vectơ lực.")),
+            line(&finished("stop")),
+        ],
+        _ => not_found(),
+    });
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::Ollama, &mock, "gemma3:4b"),
+        quick(),
+    );
+    assert_eq!(r.unwrap().content, "Đó là vectơ lực.");
+    assert_eq!(
+        mock.seen(),
+        vec!["GET /api/version", "POST /api/show", "POST /api/chat"]
+    );
+    let body = mock.body_of("/api/chat");
+    assert_eq!(body["messages"][1]["images"], json!([png()]));
+    assert_eq!(
+        body["messages"][1]["content"],
+        "Chỗ em khoanh trên bảng là gì?"
+    );
+}
+
+#[test]
+fn a_picture_never_reaches_a_model_that_does_not_or_may_not_read_pictures() {
+    let no_chat = |m: &Mock| !m.seen().iter().any(|r| r.contains("chat"));
+    // Ollama says the model has no "vision" capability.
+    let mock = ollama(|_| vec![ndjson_head(), line(&piece("x"))]);
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::Ollama, &mock, "qwen3:8b"),
+        quick(),
+    );
+    refused_with(r, NO_VISION);
+    assert!(no_chat(&mock));
+    // An older Ollama without the capabilities list cannot tell.
+    let old = include_str!("../../../tests/fixtures/local-ai/ollama-show-vision-old.json");
+    let mock = ollama_with(old, |_| vec![ndjson_head(), line(&piece("x"))]);
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::Ollama, &mock, "llava:7b"),
+        quick(),
+    );
+    refused_with(r, VISION_UNVERIFIED);
+    assert!(no_chat(&mock));
+    // Any other OpenAI-compatible server cannot tell either.
+    let mock = compat(|_| vec![stream_head("text/event-stream"), Step::Send(SSE.into())]);
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::OpenAiCompatible, &mock, "qwen2.5-7b-instruct"),
+        quick(),
+    );
+    refused_with(r, VISION_UNVERIFIED);
+    assert!(no_chat(&mock));
+}
+
+#[test]
+fn lm_studio_and_llama_cpp_say_whether_their_model_reads_pictures() {
+    let posted = |m: &Mock| m.seen().iter().any(|r| r.starts_with("POST /v1/chat"));
+    let lm = || {
+        serve(|r| match r.path.as_str() {
+            "/api/v0/models" => json_answer("200 OK", LMSTUDIO_MODELS),
+            "/v1/chat/completions" => vec![
+                stream_head("text/event-stream"),
+                Step::Send(SSE.as_bytes().to_vec()),
+            ],
+            _ => not_found(),
+        })
+    };
+    // Type `vlm`: the picture is sent as an image_url part.
+    let mock = lm();
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::LmStudio, &mock, "qwen2-vl-7b-instruct"),
+        quick(),
+    );
+    assert_eq!(r.unwrap().content, "Lực là đại lượng vectơ.");
+    let body = mock.body_of("/v1/chat/completions");
+    assert_eq!(
+        body["messages"][1]["content"][1]["image_url"]["url"],
+        format!("data:image/png;base64,{}", png())
+    );
+    // Type `llm`: refused before the question.
+    let mock = lm();
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::LmStudio, &mock, "qwen2.5-7b-instruct"),
+        quick(),
+    );
+    refused_with(r, NO_VISION);
+    assert!(!posted(&mock));
+    // Without its REST API LM Studio cannot tell.
+    let mock = serve(|r| match r.path.as_str() {
+        "/v1/models" => json_answer("200 OK", OPENAI_MODELS),
+        "/v1/chat/completions" => vec![stream_head("text/event-stream"), Step::Send(SSE.into())],
+        _ => not_found(),
+    });
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::LmStudio, &mock, "qwen2.5-7b-instruct"),
+        quick(),
+    );
+    refused_with(r, VISION_UNVERIFIED);
+    assert!(!posted(&mock));
+
+    // llama.cpp: `/props` modalities.
+    let llama = |vision: Option<bool>| {
+        let mut props: serde_json::Value = serde_json::from_str(PROPS).unwrap();
+        match vision {
+            Some(v) => props["modalities"]["vision"] = json!(v),
+            None => {
+                props.as_object_mut().unwrap().remove("modalities");
+            }
+        }
+        let props = props.to_string();
+        serve(move |r| match r.path.as_str() {
+            "/props" => json_answer("200 OK", &props),
+            "/v1/chat/completions" => vec![
+                stream_head("text/event-stream"),
+                Step::Send(SSE.as_bytes().to_vec()),
+            ],
+            _ => not_found(),
+        })
+    };
+    let mock = llama(Some(true));
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::LlamaCpp, &mock, "gemma.gguf"),
+        quick(),
+    );
+    assert!(r.is_ok(), "{r:?}");
+    assert_eq!(
+        mock.body_of("/v1/chat/completions")["messages"][1]["content"][1]["type"],
+        "image_url"
+    );
+    for (vision, tag) in [(Some(false), NO_VISION), (None, VISION_UNVERIFIED)] {
+        let mock = llama(vision);
+        let (r, _) = chat(
+            &mock,
+            &with_picture(RuntimeKind::LlamaCpp, &mock, "gemma.gguf"),
+            quick(),
+        );
+        refused_with(r, tag);
+        assert!(!posted(&mock), "{vision:?}");
+    }
+}
+
+#[test]
+fn a_picture_not_asked_for_or_not_valid_is_refused_before_any_request() {
+    let show = show_vision();
+    let vision_ollama = || {
+        let show = show.clone();
+        serve(move |r| match r.path.as_str() {
+            "/api/version" => json_answer("200 OK", VERSION),
+            "/api/show" => json_answer("200 OK", &show),
+            _ => not_found(),
+        })
+    };
+    // No `vision` from the caller.
+    let mock = vision_ollama();
+    let mut req = with_picture(RuntimeKind::Ollama, &mock, "gemma3:4b");
+    req.vision = false;
+    let (r, _) = chat(&mock, &req, quick());
+    refused_with(r, NO_VISION);
+    assert!(mock.seen().is_empty());
+    // Not a PNG or JPEG, or two pictures.
+    for images in [vec!["R0lGODlhAQABAAAAACw=".to_string()], vec![png(), png()]] {
+        let mock = vision_ollama();
+        let mut req = with_picture(RuntimeKind::Ollama, &mock, "gemma3:4b");
+        req.messages[0].images = images;
+        let (r, _) = chat(&mock, &req, quick());
+        refused_with(r, BAD_IMAGE);
+        assert!(mock.seen().is_empty());
+    }
+}
+
+#[test]
+fn a_structured_answer_that_is_json_is_kept_as_sent() {
+    let json_text = r#"{"quote":"a </think> b","note":"<think>x"}"#;
+    let (head, tail) = json_text.split_at(14);
+    let (head, tail) = (head.to_string(), tail.to_string());
+    let mock = ollama(move |_| {
+        vec![
+            ndjson_head(),
+            line(&piece(&head)),
+            line(&piece(&tail)),
+            line(&finished("stop")),
+        ]
+    });
+    let mut req = request(RuntimeKind::Ollama, &mock);
+    req.json_schema = Some(json!({"type": "object"}));
+    let (r, _) = chat(&mock, &req, quick());
+    assert_eq!(r.unwrap().content, json_text);
+    assert_eq!(mock.body_of("/api/chat")["format"]["type"], "object");
+    // Reasoning before the JSON is still removed.
+    let mock = ollama(|_| {
+        vec![
+            ndjson_head(),
+            line(&piece("<think>nháp</think>{\"a\":1}")),
+            line(&finished("stop")),
+        ]
+    });
+    let mut req = request(RuntimeKind::Ollama, &mock);
+    req.json_schema = Some(json!({"type": "object"}));
+    let (r, _) = chat(&mock, &req, quick());
+    assert_eq!(r.unwrap().content, "{\"a\":1}");
+    // Without a schema the rule applies to any text.
+    let text = json_text.to_string();
+    let mock = ollama(move |_| vec![ndjson_head(), line(&piece(&text)), line(&finished("stop"))]);
+    let (r, _) = chat(&mock, &request(RuntimeKind::Ollama, &mock), quick());
+    assert_ne!(r.unwrap().content, json_text);
 }

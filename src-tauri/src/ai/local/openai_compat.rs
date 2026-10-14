@@ -13,19 +13,29 @@ use super::runtime::{
     clean_id, error_message, openai_model_list, Cap, Capabilities, ChatOptions, Fingerprint,
     LocalModel, LocalRuntime, RuntimeKind, StreamFormat, StreamPiece,
 };
-use super::{chat_role, stream_error, LocalChatRequest};
+use super::{chat_role, stream_error, vision, LocalChatRequest, LocalMessage};
 use crate::ai::AiError;
 
 pub struct OpenAiCompat;
 
+/// One turn of `/v1/chat/completions`. A turn with a checked picture ([`super::vision`]) is a list
+/// of parts: its text, then the picture as an `image_url` data URL.
+fn openai_message(m: &LocalMessage) -> Value {
+    let role = chat_role(&m.role);
+    if m.images.is_empty() {
+        return json!({ "role": role, "content": m.content });
+    }
+    let mut parts = vec![json!({ "type": "text", "text": m.content })];
+    parts.extend(m.images.iter().map(
+        |image| json!({ "type": "image_url", "image_url": { "url": vision::data_url(image) } }),
+    ));
+    json!({ "role": role, "content": parts })
+}
+
 /// JSON body for a streamed `/v1/chat/completions`.
 pub fn openai_body(req: &LocalChatRequest, opts: &ChatOptions) -> Value {
     let mut messages = vec![json!({ "role": "system", "content": req.system })];
-    messages.extend(
-        req.messages
-            .iter()
-            .map(|m| json!({ "role": chat_role(&m.role), "content": m.content })),
-    );
+    messages.extend(req.messages.iter().map(openai_message));
     let mut body = json!({
         "model": req.model.trim(),
         "messages": messages,
@@ -140,7 +150,7 @@ impl LocalRuntime for OpenAiCompat {
 mod tests {
     use super::*;
     use crate::ai::local::stream::{sse_line, Sse};
-    use crate::ai::Message;
+    use crate::ai::local::vision::tests::{jpeg, png};
 
     #[test]
     fn a_model_list_identifies_the_server_and_html_does_not() {
@@ -222,10 +232,8 @@ mod tests {
             base_url: "http://127.0.0.1:8080".into(),
             model: "m".into(),
             system: "sys".into(),
-            messages: vec![Message {
-                role: "user".into(),
-                content: "hi".into(),
-            }],
+            messages: vec![LocalMessage::text("user", "hi")],
+            vision: false,
             json_schema: Some(json!({"type": "object"})),
             temperature: None,
             max_tokens: None,
@@ -247,5 +255,53 @@ mod tests {
         assert_eq!(b["messages"][1]["role"], "user");
         assert_eq!(b["response_format"]["type"], "json_schema");
         assert!(b.get("temperature").is_none() && b.get("think").is_none());
+        // A turn without a picture keeps plain text content.
+        assert_eq!(b["messages"][1]["content"], "hi");
+    }
+
+    #[test]
+    fn a_picture_is_an_image_url_part_after_the_text_of_its_turn() {
+        for (image, mime) in [(png(), "image/png"), (jpeg(), "image/jpeg")] {
+            let req = LocalChatRequest {
+                request_id: "r".into(),
+                kind: RuntimeKind::LmStudio,
+                base_url: "http://127.0.0.1:1234".into(),
+                model: "qwen2-vl-7b-instruct".into(),
+                system: "sys".into(),
+                messages: vec![
+                    LocalMessage::text("user", "Bảng này nói gì?"),
+                    LocalMessage::text("assistant", "Về lực."),
+                    LocalMessage {
+                        images: vec![image.clone()],
+                        ..LocalMessage::text("user", "Chỗ em khoanh là gì?")
+                    },
+                ],
+                vision: true,
+                json_schema: None,
+                temperature: None,
+                max_tokens: None,
+                context_length: None,
+                think: None,
+                timeout_secs: None,
+            };
+            let b = openai_body(
+                &req,
+                &ChatOptions {
+                    max_tokens: 64,
+                    context_length: 4096,
+                    think: None,
+                },
+            );
+            assert_eq!(b["messages"][1]["content"], "Bảng này nói gì?");
+            assert_eq!(b["messages"][2]["content"], "Về lực.");
+            assert_eq!(
+                b["messages"][3]["content"],
+                json!([
+                    {"type": "text", "text": "Chỗ em khoanh là gì?"},
+                    {"type": "image_url", "image_url": {"url": format!("data:{mime};base64,{image}")}}
+                ])
+            );
+            assert_eq!(b["messages"][3]["role"], "user");
+        }
     }
 }

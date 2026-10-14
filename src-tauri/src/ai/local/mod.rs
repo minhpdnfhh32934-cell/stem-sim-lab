@@ -20,6 +20,8 @@
 //!   which closes the connection: Ollama and llama.cpp stop generating.
 //! - Streamed text is provisional (see [`LocalEvent`]): only the returned
 //!   [`LocalChatResponse::content`] is final.
+//! - A picture goes only to a model whose runtime says it reads pictures, and only when the
+//!   caller asked for it ([`vision`]).
 //! - Stall timers: first piece 120 s (the runtime may be loading the model), then 45 s between
 //!   pieces, at most 600 s in all. Sizes are capped ([`stream`]).
 //!
@@ -33,6 +35,7 @@ pub mod ollama;
 pub mod openai_compat;
 pub mod runtime;
 pub mod stream;
+pub mod vision;
 
 use std::time::Duration;
 
@@ -40,11 +43,11 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use tokio::time::Instant;
 
-use super::reasoning::ReasoningStream;
-use super::{require_ai_allowed, stop_requested, AiError, AiState, InflightGuard, Message};
+use super::reasoning::{is_json, ReasoningStream};
+use super::{require_ai_allowed, stop_requested, AiError, AiState, InflightGuard};
 use endpoint::{loopback_client, parse_loopback, Loopback, DEFAULTS};
 use runtime::{
-    clean_id, error_message, runtime, ChatOptions, Fingerprint, LocalModel, LocalRuntime,
+    clean_id, error_message, runtime, Cap, ChatOptions, Fingerprint, LocalModel, LocalRuntime,
     ModelDetails, RuntimeKind, StreamFormat,
 };
 use stream::{sse_line, Lines, Sse, MAX_ANSWER_BYTES, MAX_LINE_BYTES, MAX_MODELS};
@@ -72,6 +75,12 @@ pub const NOT_LOOPBACK: &str = "not-loopback";
 pub const TOO_LARGE: &str = "too-large";
 /// Any other error the runtime reported.
 pub const FAILED: &str = "local-failed";
+/// A picture without `vision`, or for a model the runtime says cannot read pictures.
+pub const NO_VISION: &str = "no-vision";
+/// A picture for a model whose runtime cannot tell whether it reads pictures.
+pub const VISION_UNVERIFIED: &str = "vision-unverified";
+/// A picture that is not PNG or JPEG base64, is too large, or one too many ([`vision`]).
+pub const BAD_IMAGE: &str = "bad-image";
 
 /// Wait for the first piece of an answer (connecting, loading the model, reading the prompt).
 pub const FIRST_PIECE: Duration = Duration::from_secs(120);
@@ -97,6 +106,28 @@ const DEFAULT_CONTEXT: u32 = 8192;
 const MIN_CONTEXT: u32 = 2048;
 const MAX_CONTEXT: u32 = 262_144;
 
+/// One turn of a question. Only user and assistant turns come from the page ([`chat_role`]).
+/// Unlike a cloud [`crate::ai::Message`], a turn may carry a picture ([`vision`]).
+#[derive(Debug, Clone, Deserialize)]
+pub struct LocalMessage {
+    pub role: String,
+    pub content: String,
+    /// PNG or JPEG bytes as plain base64, for a model that reads pictures.
+    #[serde(default)]
+    pub images: Vec<String>,
+}
+
+impl LocalMessage {
+    /// A turn without a picture.
+    pub fn text(role: &str, content: &str) -> LocalMessage {
+        LocalMessage {
+            role: role.into(),
+            content: content.into(),
+            images: Vec::new(),
+        }
+    }
+}
+
 /// A question for a local runtime.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -107,7 +138,10 @@ pub struct LocalChatRequest {
     pub base_url: String,
     pub model: String,
     pub system: String,
-    pub messages: Vec<Message>,
+    pub messages: Vec<LocalMessage>,
+    /// The caller means to send a picture: without it a picture is refused ([`vision`]).
+    #[serde(default)]
+    pub vision: bool,
     /// Structured output, only when the check on this computer said the runtime supports it.
     #[serde(default)]
     pub json_schema: Option<Value>,
@@ -500,21 +534,21 @@ async fn fetch_models(
     Ok(LocalModels { models, more })
 }
 
-pub(crate) async fn model_info(
+/// What the runtime says about one model: its own details request, else its model list.
+async fn details_of(
     http: &reqwest::Client,
     rt: &dyn LocalRuntime,
     base: &Loopback,
     model: &str,
     limit: Duration,
 ) -> Result<ModelDetails, AiError> {
-    refuse_ollama_as_other(http, rt, base, limit).await?;
-    let mut details = match rt.info_request(http, base, model) {
+    match rt.info_request(http, base, model) {
         Some(rb) => {
             let (status, body) = fetch_text(rb, limit, INFO_BODY_CAP).await?;
             if !(200..300).contains(&status) {
                 return Err(status_error(status, &body));
             }
-            rt.parse_info(&json_of(&body)?, model)
+            Ok(rt.parse_info(&json_of(&body)?, model))
         }
         None => {
             let list = fetch_models(http, rt, base, limit).await?;
@@ -523,22 +557,35 @@ pub(crate) async fn model_info(
                 .iter()
                 .find(|m| m.id == model)
                 .ok_or_else(|| AiError::Http(format!("{MODEL_MISSING}: not listed")))?;
-            ModelDetails::from_listing(m, rt.declared())
+            Ok(ModelDetails::from_listing(m, rt.declared()))
         }
-    };
+    }
+}
+
+pub(crate) async fn model_info(
+    http: &reqwest::Client,
+    rt: &dyn LocalRuntime,
+    base: &Loopback,
+    model: &str,
+    limit: Duration,
+) -> Result<ModelDetails, AiError> {
+    refuse_ollama_as_other(http, rt, base, limit).await?;
+    let mut details = details_of(http, rt, base, model, limit).await?;
     if let Some(rb) = rt.health_request(http, base) {
         if let Ok((status, body)) = fetch_text(rb, limit, PROBE_BODY_CAP).await {
             if let Some(loaded) = rt.parse_health(status, &body) {
                 details.loaded = Some(loaded);
-                details.capabilities.load_state = runtime::Cap::Yes;
+                details.capabilities.load_state = Cap::Yes;
             }
         }
     }
     Ok(details)
 }
 
-/// The chosen address must answer as the chosen runtime, and must not be Ollama chosen as
-/// another kind ([`refuse_ollama_as_other`]), before it gets a prompt.
+/// The chosen address must not be Ollama chosen as another kind ([`refuse_ollama_as_other`]),
+/// and must answer as the chosen runtime, before it gets a prompt. The Ollama check comes first,
+/// as for lists and details: an Ollama address chosen as another kind is named as such
+/// (`not-runtime: ollama`) whatever that kind's own fingerprint says.
 ///
 /// LM Studio without its `/api/v0` REST API is identified by its OpenAI-compatible model list,
 /// as its model list is. Detection ([`probe`]) does not do this: `/v1/models` alone cannot tell
@@ -550,6 +597,7 @@ async fn identify(
     base: &Loopback,
     limit: Duration,
 ) -> Result<(), AiError> {
+    refuse_ollama_as_other(http, rt, base, limit).await?;
     let (mut status, body) =
         fetch_text(rt.fingerprint_request(http, base), limit, PROBE_BODY_CAP).await?;
     let mut print = rt.parse_fingerprint(status, &body);
@@ -566,18 +614,18 @@ async fn identify(
         }
     }
     match print {
-        Fingerprint::Match { loading: false, .. } => {}
+        Fingerprint::Match { loading: false, .. } => Ok(()),
         Fingerprint::Match { loading: true, .. } => {
-            return Err(AiError::Http(format!("{LOADING}: {status}")))
+            Err(AiError::Http(format!("{LOADING}: {status}")))
         }
-        Fingerprint::NeedsAuth => return Err(AiError::Http(format!("{NEEDS_AUTH}: {status}"))),
-        Fingerprint::NotThis => return Err(AiError::BadResponse(NOT_RUNTIME.into())),
+        Fingerprint::NeedsAuth => Err(AiError::Http(format!("{NEEDS_AUTH}: {status}"))),
+        Fingerprint::NotThis => Err(AiError::BadResponse(NOT_RUNTIME.into())),
     }
-    refuse_ollama_as_other(http, rt, base, limit).await
 }
 
 /// Generation settings; for Ollama also checks that the model exists and runs on this computer
-/// (a cloud model may have been copied under a name without "cloud").
+/// (a cloud model may have been copied under a name without "cloud"), and returns what Ollama
+/// said about the model.
 async fn prepare(
     http: &reqwest::Client,
     rt: &dyn LocalRuntime,
@@ -585,7 +633,7 @@ async fn prepare(
     req: &LocalChatRequest,
     model: &str,
     limit: Duration,
-) -> Result<ChatOptions, AiError> {
+) -> Result<(ChatOptions, Option<ModelDetails>), AiError> {
     let asked = req
         .context_length
         .map(|c| c.clamp(MIN_CONTEXT, MAX_CONTEXT));
@@ -598,16 +646,9 @@ async fn prepare(
         think: None,
     };
     if rt.kind() != RuntimeKind::Ollama {
-        return Ok(opts);
+        return Ok((opts, None));
     }
-    let Some(rb) = rt.info_request(http, base, model) else {
-        return Ok(opts);
-    };
-    let (status, body) = fetch_text(rb, limit, INFO_BODY_CAP).await?;
-    if !(200..300).contains(&status) {
-        return Err(status_error(status, &body));
-    }
-    let d = rt.parse_info(&json_of(&body)?, model);
+    let d = details_of(http, rt, base, model, limit).await?;
     if d.remote {
         return Err(AiError::NotAllowed(REMOTE_MODEL.into()));
     }
@@ -620,8 +661,25 @@ async fn prepare(
         (None, Some(o)) => o.min(DEFAULT_CONTEXT),
         (None, None) => DEFAULT_CONTEXT,
     };
-    opts.think = req.think.filter(|_| d.thinking == runtime::Cap::Yes);
-    Ok(opts)
+    opts.think = req.think.filter(|_| d.thinking == Cap::Yes);
+    Ok((opts, Some(d)))
+}
+
+/// A question with a picture: the model must read pictures, by what its runtime says
+/// ([`vision::allow`]). Ollama's details came with [`prepare`]; the others are asked now.
+async fn check_vision(
+    http: &reqwest::Client,
+    rt: &dyn LocalRuntime,
+    base: &Loopback,
+    model: &str,
+    known: Option<&ModelDetails>,
+    limit: Duration,
+) -> Result<(), AiError> {
+    let vision = match known {
+        Some(d) => d.vision,
+        None => details_of(http, rt, base, model, limit).await?.vision,
+    };
+    vision::allow(vision)
 }
 
 /// The answer as it streams in.
@@ -727,8 +785,13 @@ async fn stream_answer(
     if ollama::is_cloud_name(&model) {
         return Err(AiError::NotAllowed(REMOTE_MODEL.into()));
     }
+    // Pictures are checked before any request too (format, size, count, asked for).
+    let pictures = vision::check_request(req)?;
     identify(http, rt, base, limits.precheck).await?;
-    let opts = prepare(http, rt, base, req, &model, limits.precheck).await?;
+    let (opts, details) = prepare(http, rt, base, req, &model, limits.precheck).await?;
+    if pictures > 0 {
+        check_vision(http, rt, base, &model, details.as_ref(), limits.precheck).await?;
+    }
 
     let sent = tokio::time::timeout_at(first_end, rt.chat_request(http, base, req, &opts).send());
     let mut resp = match sent.await {
@@ -792,13 +855,21 @@ async fn stream_answer(
             answer.line(rt, &line, emit)?;
         }
     }
+    // A structured answer that is JSON is kept as sent, as for the cloud
+    // (`reasoning::visible_structured`): a reasoning word inside a value is data.
+    let structured = req.json_schema.is_some() && is_json(answer.filter.raw());
+    let raw = structured.then(|| answer.filter.raw().to_string());
     let (all, change) = answer.filter.finish();
     if let Some(change) = change {
         emit(change.into());
     }
+    let (text, removed) = match raw {
+        Some(raw) => (raw, false),
+        None => (all.text, all.removed),
+    };
     Ok(Streamed {
-        text: all.text,
-        removed: all.removed,
+        text,
+        removed,
         model: answer.model,
         first_piece_ms: answer.first_piece_ms,
         // No end mark: the answer may be incomplete.
@@ -909,10 +980,8 @@ pub(crate) async fn test_model(
         base_url: base.base(),
         model: model.to_string(),
         system: "Reply with the single word OK.".into(),
-        messages: vec![Message {
-            role: "user".into(),
-            content: "OK?".into(),
-        }],
+        messages: vec![LocalMessage::text("user", "OK?")],
+        vision: false,
         json_schema: None,
         temperature: None,
         max_tokens: Some(8),
@@ -1042,6 +1111,7 @@ mod tests {
             ("openai_compat.rs", strip(include_str!("openai_compat.rs"))),
             ("lmstudio.rs", strip(include_str!("lmstudio.rs"))),
             ("llamacpp.rs", strip(include_str!("llamacpp.rs"))),
+            ("vision.rs", strip(include_str!("vision.rs"))),
         ]
     }
 
@@ -1053,6 +1123,9 @@ mod tests {
                 "count_usage",
                 "usage::",
                 "send_with_fallback",
+                // The cloud fallback rule and the cloud stream's fallback.
+                "with_fallback",
+                "stream::stream_with_fallback",
                 "retry_delay",
                 "api_key(",
                 "keyring",
@@ -1081,6 +1154,32 @@ mod tests {
             .nth(1)
             .unwrap_or_default();
         assert!(client_fn.contains("Client::builder"));
+        // From the cloud stream only its event shape is used. In `mod.rs`, `super::stream` is
+        // the cloud stream; in the adapters it is the local one, and the cloud one is reached as
+        // `super::super::stream` or `crate::ai::stream`.
+        for (file, code) in sources() {
+            let mut cloud = vec!["crate::ai::stream::", "super::super::stream::"];
+            if file == "mod.rs" {
+                cloud.push("super::stream::");
+            }
+            for path in cloud {
+                for (at, _) in code.match_indices(path) {
+                    let rest = &code[at + path.len()..];
+                    assert!(
+                        rest.starts_with("StreamEvent"),
+                        "{file} uses {path}{}",
+                        rest.chars().take(30).collect::<String>()
+                    );
+                }
+                let whole = path.trim_end_matches("::");
+                for (at, _) in code.match_indices(whole) {
+                    assert!(
+                        code[at + whole.len()..].starts_with("::"),
+                        "{file} imports the cloud stream module itself"
+                    );
+                }
+            }
+        }
     }
 
     #[test]
@@ -1152,6 +1251,10 @@ mod tests {
             test_status(&AiError::Timeout(format!("{STALLED}: gap 45000 ms"))),
             LocalTestStatus::Stalled
         );
+        // Picture refusals carry their own tags.
+        for tag in [NO_VISION, VISION_UNVERIFIED, BAD_IMAGE] {
+            assert_eq!(tag_of(&AiError::NotAllowed(format!("{tag}: x"))), tag);
+        }
     }
 
     #[test]
@@ -1166,11 +1269,22 @@ mod tests {
         );
         let r: LocalChatRequest = serde_json::from_value(serde_json::json!({
             "requestId": "x", "kind": "lmStudio", "baseUrl": "http://127.0.0.1:1234",
-            "model": "m", "system": "s", "messages": [], "contextLength": 4096
+            "model": "m", "system": "s", "messages": [{"role": "user", "content": "hỏi"}],
+            "contextLength": 4096
         }))
         .unwrap();
         assert_eq!(r.kind, RuntimeKind::LmStudio);
         assert_eq!(r.context_length, Some(4096));
+        // Pictures and `vision` are optional.
+        assert!(!r.vision && r.messages[0].images.is_empty());
+        let r: LocalChatRequest = serde_json::from_value(serde_json::json!({
+            "requestId": "x", "kind": "ollama", "baseUrl": "http://127.0.0.1:11434",
+            "model": "m", "system": "s", "vision": true,
+            "messages": [{"role": "user", "content": "hỏi", "images": ["iVBORw0KGgo="]}]
+        }))
+        .unwrap();
+        assert!(r.vision);
+        assert_eq!(r.messages[0].images, vec!["iVBORw0KGgo=".to_string()]);
         assert_eq!(
             serde_json::to_value(ProbeStatus::NeedsAuth).unwrap(),
             "needsAuth"

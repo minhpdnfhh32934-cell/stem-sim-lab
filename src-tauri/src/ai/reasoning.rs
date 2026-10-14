@@ -381,7 +381,6 @@ impl ReasoningStream {
     }
 
     /// Everything received so far (reasoning included).
-    #[cfg(test)]
     pub fn raw(&self) -> &str {
         &self.raw
     }

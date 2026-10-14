@@ -15,7 +15,7 @@ use super::runtime::{
     clean_id, clean_label, error_message, positive, Cap, Capabilities, ChatOptions, Fingerprint,
     LocalModel, LocalRuntime, ModelDetails, RuntimeKind, StreamFormat, StreamPiece,
 };
-use super::{chat_role, stream_error, LocalChatRequest};
+use super::{chat_role, stream_error, LocalChatRequest, LocalMessage};
 use crate::ai::AiError;
 
 pub struct Ollama;
@@ -58,14 +58,19 @@ pub fn context_length(model_info: &Value) -> Option<u64> {
         .and_then(|(_, v)| positive(v))
 }
 
+/// One turn of `/api/chat`; a checked picture goes in `images` as base64 ([`super::vision`]).
+fn ollama_message(m: &LocalMessage) -> Value {
+    let mut v = json!({ "role": chat_role(&m.role), "content": m.content });
+    if !m.images.is_empty() {
+        v["images"] = json!(m.images);
+    }
+    v
+}
+
 /// JSON body for a streamed `/api/chat`.
 pub fn ollama_body(req: &LocalChatRequest, opts: &ChatOptions) -> Value {
     let mut messages = vec![json!({ "role": "system", "content": req.system })];
-    messages.extend(
-        req.messages
-            .iter()
-            .map(|m| json!({ "role": chat_role(&m.role), "content": m.content })),
-    );
+    messages.extend(req.messages.iter().map(ollama_message));
     let mut options = json!({
         "num_ctx": opts.context_length,
         "num_predict": opts.max_tokens,
@@ -238,7 +243,7 @@ impl LocalRuntime for Ollama {
 mod tests {
     use super::*;
     use crate::ai::local::stream::Lines;
-    use crate::ai::Message;
+    use crate::ai::local::vision::tests::png;
 
     fn fixture(name: &str) -> Value {
         let text = match name {
@@ -327,19 +332,11 @@ mod tests {
             model: " qwen3:8b ".into(),
             system: "sys".into(),
             messages: vec![
-                Message {
-                    role: "user".into(),
-                    content: "hỏi".into(),
-                },
-                Message {
-                    role: "assistant".into(),
-                    content: "đáp".into(),
-                },
-                Message {
-                    role: "system".into(),
-                    content: "lạ".into(),
-                },
+                LocalMessage::text("user", "hỏi"),
+                LocalMessage::text("assistant", "đáp"),
+                LocalMessage::text("system", "lạ"),
             ],
+            vision: false,
             json_schema: None,
             temperature: Some(0.2),
             max_tokens: None,
@@ -378,6 +375,33 @@ mod tests {
         );
         assert_eq!(b["format"]["type"], "object");
         assert_eq!(b["think"], false);
+        // Turns without a picture have no `images` field.
+        assert!(b["messages"][1].get("images").is_none());
+    }
+
+    #[test]
+    fn a_picture_goes_in_the_images_of_its_turn() {
+        let mut r = chat_req();
+        r.vision = true;
+        r.messages = vec![
+            LocalMessage::text("assistant", "Bảng có hình vẽ."),
+            LocalMessage {
+                images: vec![png()],
+                ..LocalMessage::text("user", "Chỗ em khoanh là gì?")
+            },
+        ];
+        let b = ollama_body(
+            &r,
+            &ChatOptions {
+                max_tokens: 512,
+                context_length: 8192,
+                think: None,
+            },
+        );
+        assert_eq!(b["messages"][2]["content"], "Chỗ em khoanh là gì?");
+        assert_eq!(b["messages"][2]["images"], json!([png()]));
+        assert!(b["messages"][1].get("images").is_none());
+        assert!(b["messages"][0].get("images").is_none());
     }
 
     #[test]
