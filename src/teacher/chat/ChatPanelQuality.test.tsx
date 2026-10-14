@@ -119,5 +119,25 @@ describe('AI Teacher chat: stop, missing data, unverified numbers', () => {
     });
     expect(screen.queryByText(/chưa kiểm chứng/)).not.toBeInTheDocument();
     expect(screen.queryByText('SimLab nhắc (không phải AI)')).not.toBeInTheDocument();
+    // Checked and nothing flagged: recorded as such, so later turns may use its numbers.
+    expect(useChatStore.getState().messages.at(-1)?.unverifiedNumbers).toEqual([]);
+  });
+
+  it('the chip is the app’s: labelled SimLab, six values shown, all of them kept', async () => {
+    const user = userEvent.setup();
+    const invented = Array.from({ length: 8 }, (_, i) => `${i + 31} m`);
+    reply = `Các quãng đường: ${invented.join(', ')}.`;
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    await user.type(
+      screen.getByRole('textbox', { name: 'Nhập câu hỏi' }),
+      'Tính quãng đường ô tô đi được.{Enter}',
+    );
+    expect(await screen.findByText('SimLab kiểm tra (không phải AI)')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `Số do AI tự đưa ra (chưa kiểm chứng): ${invented.slice(0, 6).join(', ')} … và 2 số khác`,
+      ),
+    ).toBeInTheDocument();
+    expect(useChatStore.getState().messages.at(-1)?.unverifiedNumbers).toEqual(invented);
   });
 });

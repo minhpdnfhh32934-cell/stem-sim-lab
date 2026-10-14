@@ -279,13 +279,25 @@ reads words, it does not understand the problem. Conservative on purpose: a prob
 numbers but not enough (P11-style) is not detected; that would need the problem solved.
 
 **Number provenance** (`provenance.ts`). Values in an answer — with a unit, after "=", "≈",
-"khoảng", decimals, powers of ten, whole numbers above 10 — that appear in none of the question,
-the learner's turns, the app's results, the excerpt sent, the shared screen or earlier answers'
-unflagged numbers (1 % rounding allowed) are listed under the answer: "Số do AI tự đưa ra (chưa
-kiểm chứng): …" (`ChatMessageRecord.unverifiedNumbers`). List and step numbers, small counts,
-formula parts, exponents and 0 are ignored. Tested on 14 saved Gemma 1B answers: "khoảng 50 km"
-(P5) is flagged; restated data ("Na=23g", "0.1 m", the learner's "23") is not. "Unverified" is not
-"wrong": a correct textbook value the AI adds is listed too.
+"khoảng", after "là"/"bằng"/"is"/"equals" at the end of a sentence, decimals, powers of ten, whole
+numbers above 10 — that appear in none of the question, the learner's turns (number words too:
+"hai giờ", "hai mươi lăm", "nửa", `numberWords.ts`), the app's results, the excerpt sent, the shared
+screen or earlier answers' checked, unflagged numbers (1 % rounding allowed) are listed under the
+answer in a box the app labels as its own ("SimLab kiểm tra (không phải AI)": "Số do AI tự đưa ra
+(chưa kiểm chứng): …"). The record keeps the full list (`ChatMessageRecord.unverifiedNumbers`, set
+even when empty); the chip shows six and "… và N số khác". An answer saved before the check existed
+has no such field: it is checked again when used as history, so its numbers are never taken as
+given unchecked. Only real tags are removed ("pH < 7 … ->" is text). List and step numbers, small
+counts ("là 2 bước"), formula parts, exponents and 0 are ignored. Tested on 14 saved Gemma 1B
+answers: "khoảng 50 km" (P5) is flagged; restated data ("Na=23g", "0.1 m", the learner's "23") is
+not. "Unverified" is not "wrong": a correct textbook value the AI adds is listed too.
+
+The board's ✓ (`board/provenance.ts`) answers a different question and is deliberately not shared
+(review 2): it means the arithmetic on that line is right, not the formula. B5 (Gemma 1B wrote
+"1 × 3³ = 27" for three mitoses, answer 2³ = 8) gets ✓ on the board and stays listed in the chat.
+The board also counts standard values (9,8 / 10 / 60 / 1000…) and whole numbers 0–10 as given,
+because it marks every number it writes; the chat lists a stated value with a unit even then (P5's
+invented "60 km/h"). The chip's hint says that a ✓ calculation can still use a wrong formula.
 
 **"Dừng".** While an answer is written the send button becomes "Dừng" (any open panel, through
 `chatStore.stopAnswer`). Cloud: the transport's AbortSignal (desktop `ai_cancel`, browser fetch

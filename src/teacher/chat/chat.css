@@ -1019,11 +1019,13 @@ p.gpu-notice {
   color: var(--accent);
 }
 
-/* Numbers nobody gave the AI (provenance.ts): unverified, so they get the "approx" colour. */
+/*
+ * Numbers nobody gave the AI (provenance.ts): unverified, so they get the "approx" colour. Written
+ * by the app, so it carries the app's title line like the missing-data notice.
+ */
 .chat-message__unverified {
-  display: flex;
-  gap: 6px;
-  align-items: flex-start;
+  display: grid;
+  gap: 3px;
   margin: 8px 0 0;
   padding: 6px 9px;
   border: 1px solid color-mix(in srgb, var(--conf-approx) 50%, var(--border));
@@ -1032,8 +1034,12 @@ p.gpu-notice {
   color: var(--text);
   font-size: var(--text-xs);
 }
+.chat-message__unverified strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 .chat-message__unverified svg {
   flex: none;
-  margin-top: 1px;
   color: var(--conf-approx);
 }

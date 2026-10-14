@@ -911,9 +911,11 @@ const vi = {
     missingDataTitle: 'SimLab nhắc (không phải AI)',
     missingData:
       'Đề bài có thể còn thiếu số liệu: SimLab chưa thấy con số nào trong câu hỏi. Nếu đề có cho số, em ghi thêm (kèm đơn vị) rồi gửi lại nhé.',
+    unverifiedTitle: 'SimLab kiểm tra (không phải AI)',
     unverifiedNumbers: 'Số do AI tự đưa ra (chưa kiểm chứng): {numbers}',
+    unverifiedMore: '… và {count} số khác',
     unverifiedHint:
-      'Các số này không có trong câu hỏi, cuộc trò chuyện, ghi chú tham khảo hay kết quả SimLab tính. Em hãy tự kiểm tra lại.',
+      'SimLab không thấy các số này trong câu hỏi, cuộc trò chuyện, ghi chú tham khảo hay kết quả SimLab tính. Một phép tính được bảng giảng đánh dấu đúng vẫn có thể dùng sai công thức. Em hãy tự kiểm tra lại.',
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:

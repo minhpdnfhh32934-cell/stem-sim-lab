@@ -334,8 +334,9 @@ describe('numbers in the answer', () => {
     gemma.reply = 'Cho m = 2 kg, F = 10 N nên a = 5 m/s². Ở câu trước: v = 12 m/s.';
     const records: ChatMessageRecord[] = [
       { id: 'q', role: 'user', content: 'Xe đi 120 m trong 10 s.' },
-      // 12 m/s was worked out from given numbers: not flagged there, so it stays given.
-      { id: 'a', role: 'assistant', content: 'v = 120/10 = 12 m/s.' },
+      // An answer the app checked and found nothing to flag in (the field is set, even empty):
+      // its 12 m/s stays given. Without the field (older versions) see the test below.
+      { id: 'a', role: 'assistant', content: 'v = 120/10 = 12 m/s.', unverifiedNumbers: [] },
     ];
     const result = await ask('Vật 2 kg chịu lực 10 N. Tính gia tốc.', records);
     expect(result.metadata.unverifiedNumbers).toEqual(['5 m/s²']);
@@ -354,6 +355,36 @@ describe('numbers in the answer', () => {
     ];
     const result = await ask('Vậy là bao nhiêu?', records);
     expect(result.metadata.unverifiedNumbers).toEqual(['50 km']);
+  });
+
+  it('an answer saved before the check existed is checked now, not taken as given', async () => {
+    gemma.reply = 'Như đã nói, quãng đường là 50 km, xe chạy 60 km/h.';
+    const records: ChatMessageRecord[] = [
+      { id: 'q', role: 'user', content: 'Tính quãng đường ô tô đi được.' },
+      // Saved by an older version: no `unverifiedNumbers` field at all.
+      { id: 'a', role: 'assistant', content: 'Nếu xe chạy 60 km/h thì đi được khoảng 50 km.' },
+    ];
+    const result = await ask('Vậy là bao nhiêu?', records);
+    expect(result.metadata.unverifiedNumbers).toEqual(['50 km', '60 km/h']);
+  });
+
+  it('the 7th and later invented values of an earlier answer are not taken as given', async () => {
+    const invented = Array.from({ length: 8 }, (_, i) => `${i + 31} m`);
+    gemma.reply = `Như trên: ${invented.join(', ')}.`;
+    const first = await ask('Tính quãng đường ô tô đi được.');
+    // Every flagged value is kept on the record, not only the six the chip shows.
+    expect(first.metadata.unverifiedNumbers).toEqual(invented);
+    const records: ChatMessageRecord[] = [
+      { id: 'q', role: 'user', content: 'Tính quãng đường ô tô đi được.' },
+      {
+        id: 'a',
+        role: 'assistant',
+        content: gemma.reply,
+        unverifiedNumbers: first.metadata.unverifiedNumbers,
+      },
+    ];
+    const again = await ask('Nhắc lại giúp em?', records);
+    expect(again.metadata.unverifiedNumbers).toEqual(invented);
   });
 });
 

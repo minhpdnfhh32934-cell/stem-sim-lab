@@ -48,6 +48,7 @@ import { AiContentBar } from '@/safety/AiContentBar';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { openTopic, useActiveTopic } from '@/app/topics';
 import { latestTopic } from './topicLink';
+import { chipNumbers } from './provenance';
 
 export function ChatPanel({
   compact = false,
@@ -263,7 +264,9 @@ export function ChatPanel({
         ...(meta.facts.length ? { facts: meta.facts } : {}),
         ...(result.truncated ? { truncated: true } : {}),
         ...(meta.missingData ? { missingData: true } : {}),
-        ...(meta.unverifiedNumbers.length ? { unverifiedNumbers: meta.unverifiedNumbers } : {}),
+        // Always set, even empty: an answer without the field (older versions) was never checked
+        // and its numbers are not taken as given later (chatService.givenNumbers).
+        unverifiedNumbers: meta.unverifiedNumbers,
       });
       endAnswer(answer);
       if (useVoiceStore.getState().enabled && !board) void speak(result.content);
@@ -292,13 +295,15 @@ export function ChatPanel({
         board,
         signal: controller.signal,
       });
-      const unverified = [
-        ...new Set([...(message.unverifiedNumbers ?? []), ...result.metadata.unverifiedNumbers]),
+      // An answer saved before the check existed stays unchecked as a whole (it is checked again
+      // when it is used as history); otherwise both parts' lists are kept.
+      const unverified = message.unverifiedNumbers && [
+        ...new Set([...message.unverifiedNumbers, ...result.metadata.unverifiedNumbers]),
       ];
       chat.updateMessage(message.id, {
         content: joinContinuation(message.content, result.content),
         truncated: result.truncated,
-        ...(unverified.length ? { unverifiedNumbers: unverified } : {}),
+        ...(unverified ? { unverifiedNumbers: unverified } : {}),
       });
       endAnswer(answer);
       if (useVoiceStore.getState().enabled && !board) void speak(result.content);
@@ -580,21 +585,32 @@ export function ChatPanel({
                 )}
                 {message.role === 'assistant' &&
                   message.unverifiedNumbers &&
-                  message.unverifiedNumbers.length > 0 && (
-                    // provenance.ts: values nobody gave the AI. Unverified, not "wrong".
-                    <p
-                      className="chat-message__unverified"
-                      role="note"
-                      title={t('chat.unverifiedHint')}
-                    >
-                      <CircleHelp size={14} aria-hidden="true" />
-                      <span>
-                        {t('chat.unverifiedNumbers', {
-                          numbers: message.unverifiedNumbers.join(', '),
-                        })}
-                      </span>
-                    </p>
-                  )}
+                  message.unverifiedNumbers.length > 0 &&
+                  (() => {
+                    // provenance.ts: values nobody gave the AI. Unverified, not "wrong". Written
+                    // by the app, so labelled as SimLab's like the missing-data notice.
+                    const chip = chipNumbers(message.unverifiedNumbers);
+                    const numbers = chip.shown.join(', ');
+                    return (
+                      <div
+                        className="chat-message__unverified"
+                        role="note"
+                        title={t('chat.unverifiedHint')}
+                      >
+                        <strong>
+                          <CircleHelp size={14} aria-hidden="true" />
+                          {t('chat.unverifiedTitle')}
+                        </strong>
+                        <span>
+                          {t('chat.unverifiedNumbers', {
+                            numbers: chip.more
+                              ? `${numbers} ${t('chat.unverifiedMore', { count: chip.more })}`
+                              : numbers,
+                          })}
+                        </span>
+                      </div>
+                    );
+                  })()}
                 {message.role === 'assistant' && (
                   <AiContentBar {...(message.model ? { model: message.model } : {})} />
                 )}

@@ -1,21 +1,29 @@
 import { describe, expect, it } from 'vitest';
+import { checkNumbers, sourceNumbers } from '@/teacher/board/provenance';
 import fixtures from './provenance.fixtures.json';
-import { answerNumbers, contextNumbers, unverifiedNumbers } from './provenance';
+import {
+  MAX_LISTED,
+  answerNumbers,
+  chipNumbers,
+  contextNumbers,
+  unverifiedNumbers,
+} from './provenance';
 
-/** The numbers of `answer` that no context text gives. */
+/** The numbers of `answer` that no context text gives (written by the learner: words count). */
 const unverified = (answer: string, ...context: string[]) =>
-  unverifiedNumbers(answer, contextNumbers(context));
+  unverifiedNumbers(answer, contextNumbers(context, { words: true }));
 
 describe('numbers the AI wrote that nobody gave it (real Gemma 1B answers)', () => {
   const saved = (id: string, variant: string) => {
     const item = fixtures.items.find((f) => f.id === id && f.variant === variant);
     if (!item) throw new Error(`${id} ${variant} missing`);
-    return unverified(
-      item.answer,
-      item.question,
-      item.prompt,
-      ...item.history.map((m) => m.content),
-    );
+    // As in the app (chatService.givenNumbers): number words count in the learner's texts only.
+    const learner = item.history.filter((m) => m.role === 'user').map((m) => m.content);
+    const other = item.history.filter((m) => m.role !== 'user').map((m) => m.content);
+    return unverifiedNumbers(item.answer, [
+      ...contextNumbers([item.question, ...learner], { words: true }),
+      ...contextNumbers([item.prompt, ...other]),
+    ]);
   };
 
   it('flags invented results and assumed values', () => {
@@ -89,8 +97,53 @@ describe('what counts as a stated value', () => {
     expect(answerNumbers('<plot id="p1" fn="x^2" domain="0..10"/>')).toEqual([]);
   });
 
-  it('lists each number once and at most six', () => {
+  it('lists each number once, all of them: only the chip shortens the list', () => {
     const many = Array.from({ length: 9 }, (_, i) => `${i + 20} m`).join(', ');
-    expect(unverified(`${many}, 20 m`)).toHaveLength(6);
+    const list = unverified(`${many}, 20 m`);
+    expect(list).toHaveLength(9);
+    expect(new Set(list).size).toBe(9);
+    expect(chipNumbers(list)).toEqual({ shown: list.slice(0, MAX_LISTED), more: 3 });
+    expect(chipNumbers(['50 km'])).toEqual({ shown: ['50 km'], more: 0 });
+  });
+});
+
+describe('review 2', () => {
+  it('a "<" in the text is not a tag: what follows it is still read', () => {
+    // The old tag filter removed everything from "pH < 7" to the ">" of "->".
+    expect(
+      unverified('pH < 7 nên có tính axit, [H⁺] = 0,001 M. Phản ứng NaOH -> Na⁺ + OH⁻'),
+    ).toEqual(['0,001 M']);
+    // A given number inside such a span still counts as given.
+    expect(unverified('Quãng đường là 25 m.', 'Cho a < b, xe đi 25 m -> dừng lại')).toEqual([]);
+  });
+
+  it('numbers the learner wrote in words count as given', () => {
+    expect(unverified('t = 2 giờ, s = v·t', 'Xe chạy hai giờ với tốc độ 40 km/h.')).toEqual([]);
+    expect(unverified('t = 25 phút', 'Xe chạy hai mươi lăm phút.')).toEqual([]);
+    expect(unverified('t = 2,5 giờ', 'Xe chạy hai giờ rưỡi.')).toEqual([]);
+    expect(unverified('t = 0,5 giờ', 'Xe chạy nửa giờ.')).toEqual([]);
+    expect(unverified('t = 2 hours', 'A car moves for two hours.')).toEqual([]);
+    expect(unverified('m = 120 kg', 'one hundred and twenty kilograms')).toEqual([]);
+    // "sau" (after) is not "sáu" (six).
+    expect(unverified('t = 6 giây', 'Vật dừng sau khi trượt.')).toEqual(['6 giây']);
+  });
+
+  it('"là", "bằng", "is", "equals" before a value ending the sentence state a result', () => {
+    expect(unverified('Gia tốc của vật là 5.')).toEqual(['5']);
+    expect(unverified('Số tế bào con là 6')).toEqual(['6']);
+    expect(unverified('Hiệu suất bằng 8.')).toEqual(['8']);
+    expect(unverified('The acceleration is 5.')).toEqual(['5']);
+    expect(unverified('The answer equals 7.')).toEqual(['7']);
+    // A count with its noun stays a count.
+    expect(unverified('Có hai cách, cách thứ nhất là 2 bước.')).toEqual([]);
+    expect(unverified('Số tế bào con là 4', 'Một tế bào nguyên phân 2 lần.')).toEqual(['4']);
+  });
+
+  it('a result with right arithmetic is still listed: the board checks the sum, not the formula', () => {
+    // B5 (Gemma 1B, 2026-10-13): 3 mitoses give 2³ = 8 cells; the answer wrote 1 × 3³ = 27.
+    const question = 'Một tế bào nguyên phân 3 lần liên tiếp. Tạo ra bao nhiêu tế bào con?';
+    const line = 'Số tế bào con = 1 * 3^3 = 27';
+    expect(checkNumbers(line, sourceNumbers(question), []).status).toBe('checked');
+    expect(unverified(line, question)).toEqual(['27']);
   });
 });

@@ -5,15 +5,32 @@
  * "Tính quãng đường ô tô đi được." (no data) with "khoảng 50 km".
  *
  * A number counts as given when it appears in the question, the conversation (the learner's turns,
- * the app's results, earlier answers' numbers that were not flagged themselves), the excerpt sent
- * with the question or the shared screen; rounding within 1 % is the same number. Everything else
- * that looks like a value is listed under the answer as "chưa kiểm chứng" — unverified, not wrong.
+ * also in words: "hai giờ"; the app's results; earlier answers' numbers that were checked and not
+ * flagged), the excerpt sent with the question or the shared screen; rounding within 1 % is the same
+ * number. Everything else that looks like a value is listed under the answer by the app (SimLab),
+ * as "chưa kiểm chứng" — unverified, not wrong.
  *
- * What looks like a value: a number with a unit ("50 km", "10N"), after "=", "≈", "khoảng", a
- * decimal, a power of ten, or a whole number above 10. Not: list and step numbers ("1.", "Bước 2"),
- * small counts ("2 tế bào con", "3 giai đoạn"), formula parts ("H2O", "x²", "2π", "1/2 mv²") and 0.
+ * The board (board/provenance.ts) answers a different question, so one number may get a ✓ there
+ * and be listed here (review 2 asked to share one notion or say exactly why not):
+ * - Board ✓ "checked" = the arithmetic written on that line is right ("a = 10/2 = 5": 10 ÷ 2 is
+ *   5). It says nothing about the formula. Gemma 1B wrote "1 × 3³ = 27" for the cells after 3
+ *   mitoses (B5, 2026-10-13; the answer is 2³ = 8): right arithmetic, wrong formula, ✓ on the board.
+ *   Counting such results as given here would hide exactly that mistake, so they stay listed.
+ * - Board "given" also covers standard values (9,8 / 10 / 3,6 / 60 / 1000…) and whole numbers 0–10,
+ *   because the board marks every number it writes, counts and coefficients included. Here only
+ *   stated values are listed, and a stated value with a unit is listed even when it is such a
+ *   number: an invented "60 km/h" for a problem without data (P5) must not pass as given.
+ * - The board reads only the question; this check also reads the conversation, the excerpt and the
+ *   screen.
+ * The chip's hint (chat.unverifiedHint) says that a ✓ calculation can still use a wrong formula.
+ *
+ * What looks like a value: a number with a unit ("50 km", "10N"), after "=", "≈", "khoảng", after
+ * "là"/"bằng"/"is"/"equals" at the end of a sentence ("Số tế bào con là 6."), a decimal, a power of
+ * ten, or a whole number above 10. Not: list and step numbers ("1.", "Bước 2"), small counts
+ * ("2 tế bào con", "là 2 bước"), formula parts ("H2O", "x²", "2π", "1/2 mv²") and 0.
  */
 import { numbersIn } from '@/ai/numbers';
+import { numberWordValues } from './numberWords';
 
 const SUPERSCRIPTS: Record<string, string> = {
   '⁰': '0',
@@ -30,13 +47,19 @@ const SUPERSCRIPTS: Record<string, string> = {
 };
 
 /**
+ * Tags (TeachScript, HTML) only: "<write id=…>", "</write>", "<box …/>". A "<" in the text ("pH < 7",
+ * "a < b") is not a tag, nor is what follows it up to the next ">" ("->").
+ */
+const TAG = /<\/?[a-zA-Z][\w-]*(?:\s[^<>]*)?\/?>/g;
+
+/**
  * The answer as plain text: no tags (TeachScript, HTML), LaTeX commands, markdown marks or
  * superscripts ("x²" → "x^2"); line breaks are kept (they mark list items).
  */
 export function plainAnswer(text: string): string {
   return text
     .normalize('NFC')
-    .replace(/<[^>]*>/g, ' ')
+    .replace(TAG, ' ')
     .replace(/\\(?:d|t)?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)')
     .replace(/\\(?:text|mathrm|mathbf|operatorname)\s*\{([^{}]*)\}/g, ' $1')
     .replace(/\\(?:cdot|times)/g, '×')
@@ -167,6 +190,12 @@ const UNITS = [
 /** Text right before a value that makes it a stated result. */
 const MARKER =
   /(?:=|≈|≃|≅|~|\bkhoảng|\bxấp xỉ|\bchừng|\bgần|\bapproximately|\babout|\baround|\broughly)\s*[-+]?\s*\(?\s*$/iu;
+/**
+ * "là 5", "bằng 6", "is 5", "equals 7": a stated result when the sentence ends there (or a unit
+ * follows); in "là 2 bước" the number is a count.
+ */
+const WORD_MARKER = /(?:^|[\s,;:(])(?:là|bằng|is|equals|equal to)\s*[-+]?\s*$/iu;
+const SENTENCE_END = /^\s*(?:[.,;:!?)\]]|$)/u;
 /** Labels before a list or step number ("Bước 2", "Step 3", "câu 1", "lần thứ 2"). */
 const STEP_LABEL =
   /\b(?:bước|step|câu|ý|phần|cách|ví dụ|example|part|question|stage|phase|giai đoạn|thứ|mục|bài|trường hợp|case|option|lựa chọn)\s*$/iu;
@@ -246,7 +275,9 @@ export function answerNumbers(answer: string): Mention[] {
     const decimal = /[.,]/.test(token);
     // After "=" but followed by an operator, it is an operand ("= 1 × 3³ = 27"): the result is
     // the value after the last "=".
-    const stated = MARKER.test(before) && !/^\s*[*×·/+^]/u.test(rest);
+    const stated =
+      (MARKER.test(before) && !/^\s*[*×·/+^]/u.test(rest)) ||
+      (WORD_MARKER.test(before) && (unit !== null || SENTENCE_END.test(rest)));
     const large = values.some((v) => v > 10);
     if (!unit && !stated && !decimal && !large) continue;
     out.push({ text: display(unit ? `${token} ${unit}` : token), values });
@@ -257,10 +288,16 @@ export function answerNumbers(answer: string): Mention[] {
 /**
  * Every number written in the given texts, all readings ("1.200" is 1200 and 1.2), powers of ten
  * as values. Exponents and formula indices are not numbers someone gave: "m/s²" does not give 2.
+ * `words`: the texts were written by the learner, whose number words count too ("hai giờ" gives 2);
+ * the AI's own prose never gives a number this way.
  */
-export function contextNumbers(texts: readonly string[]): number[] {
+export function contextNumbers(
+  texts: readonly string[],
+  options: { words?: boolean } = {},
+): number[] {
   const out: number[] = [];
   for (const raw of texts) {
+    if (options.words) out.push(...numberWordValues(raw));
     const text = plainAnswer(raw);
     const taken: [number, number][] = [];
     for (const m of text.matchAll(POWERS)) {
@@ -283,19 +320,24 @@ export function sameNumber(a: number, b: number): boolean {
   return Math.abs(a - b) <= 0.01 * Math.max(Math.abs(a), Math.abs(b), 1e-12);
 }
 
-/** How many unverified numbers are listed at most (the chip stays one line or two). */
+/** How many unverified numbers the chip shows (it stays one line or two); the record keeps all. */
 export const MAX_LISTED = 6;
+
+/** The chip's part of a list: the first MAX_LISTED values and how many more there are. */
+export function chipNumbers(list: readonly string[]): { shown: string[]; more: number } {
+  return { shown: list.slice(0, MAX_LISTED), more: Math.max(0, list.length - MAX_LISTED) };
+}
 
 /**
  * The answer's stated values that match no number in `allowed`, as written ("50 km"), without
- * repeats, at most MAX_LISTED.
+ * repeats. All of them: the record keeps the full list (a value left out would count as given in
+ * later turns); only the chip shortens it (`chipNumbers`).
  */
 export function unverifiedNumbers(answer: string, allowed: readonly number[]): string[] {
   const out: string[] = [];
   for (const mention of answerNumbers(answer)) {
     const given = mention.values.some((v) => allowed.some((a) => sameNumber(a, v)));
     if (!given && !out.includes(mention.text)) out.push(mention.text);
-    if (out.length >= MAX_LISTED) break;
   }
   return out;
 }

@@ -769,22 +769,27 @@ function stopIfAsked(signal?: AbortSignal): void {
 }
 
 /**
- * Numbers the AI was given: the question, the learner's turns, the app's results, the texts sent
- * with this question (excerpt, screen) and earlier answers' numbers that were not flagged there.
+ * Numbers the AI was given: the question and the learner's turns (number words too), the app's
+ * results, the texts sent with this question (excerpt, screen) and earlier answers' numbers that
+ * were checked and not flagged there. An answer saved before the check existed (no
+ * `unverifiedNumbers` field) is checked now against what was given before it: its numbers are
+ * never taken as given unchecked.
  */
 function givenNumbers(
   question: string,
   records: readonly ChatMessageRecord[],
   sources: readonly string[],
 ): number[] {
-  const given = contextNumbers([
-    question,
-    ...sources,
-    ...records.flatMap((r) => (r.role === 'user' ? [r.content, r.prompt ?? ''] : (r.facts ?? []))),
-  ]);
+  const given = [
+    ...contextNumbers(
+      [question, ...records.flatMap((r) => (r.role === 'user' ? [r.content, r.prompt ?? ''] : []))],
+      { words: true },
+    ),
+    ...contextNumbers([...sources, ...records.flatMap((r) => r.facts ?? [])]),
+  ];
   for (const r of records) {
     if (r.role !== 'assistant') continue;
-    const flagged = contextNumbers(r.unverifiedNumbers ?? []);
+    const flagged = contextNumbers(r.unverifiedNumbers ?? unverifiedNumbers(r.content, given));
     given.push(
       ...contextNumbers([r.content]).filter((v) => !flagged.some((f) => sameNumber(f, v))),
     );
