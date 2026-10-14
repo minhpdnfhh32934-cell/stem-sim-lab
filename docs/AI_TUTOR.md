@@ -376,12 +376,15 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    | `heading`  | board: a heading write                                                              | 0.94 | 0.60        | 0.75                 |
    | `concept`  | words: "… được gọi là …", "là gì", "khái niệm", "định nghĩa"                        | 0.92 | 0.60        | 0.75                 |
    | `result`   | board: a result write; words: "Vậy…", "Kết quả…", "Đáp số…"                         | 0.90 | 0.60        | 0.70                 |
-   | `keyword`  | the chunk that starts with a key term (board keyword, marked word, `**bold**` term) | 0.90 | 0.60        | 0.70                 |
+   | `keyword`  | the key term itself (board keyword, marked word, `**bold**` term)                   | 0.90 | 0.60        | 0.70                 |
    | `check`    | words: the sentence ends with "?"                                                   | 0.96 | 0.70        | 0.85                 |
    | `feedback` | words: "Đúng rồi", "Chưa đúng", "Rất tốt", "Không sao"… (correction, encouragement) | 0.94 | 0.72        | 0.85                 |
 
-   Emphasis is a short pause before the key term and a slower pace for its chunk — never a louder
-   voice. A bold label at the start of a line ("**Bước 1:**") is not a key term.
+   Emphasis is a short pause before the key term and a slower pace for the term alone (it is cut
+   off after it, so the words after it keep their sentence's role: a question stays a question) —
+   never a louder voice. A one-word term followed by more words gets the pause only (MMS says a
+   lone word oddly); a term with fewer than 3 words before it in its piece gets neither. A bold
+   label at the start of a line ("**Bước 1:**") is not a key term.
 
 4. **What MMS supports (the limit).** Hugging Face's VITS reads `speaking_rate`, `noise_scale` and
    `noise_scale_duration` from its config inside `forward()`. Transformers.js 4.3 `VitsModel` feeds

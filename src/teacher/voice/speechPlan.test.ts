@@ -280,6 +280,30 @@ describe('roles and prosody', () => {
     expect(joined(plan)).toBe(flat(plan.text));
   });
 
+  it('the keyword pace covers the key term only, never the rest of its clause', () => {
+    const plan = prepareSpeech('Đại lượng đặc trưng cho sự biến đổi vận tốc là gia tốc của vật.', {
+      emphasis: ['gia tốc'],
+    });
+    expect(plan.chunks.filter((c) => c.role === 'keyword').map((c) => c.text)).toEqual(['gia tốc']);
+    expect(plan.chunks.at(-1)).toMatchObject({ text: 'của vật.', role: 'plain' });
+    expect(joined(plan)).toBe(flat(plan.text));
+  });
+
+  it('a question with a key term near its start keeps the question prosody', () => {
+    const near = prepareSpeech('Em tính gia tốc của vật bằng bao nhiêu khi lực tăng gấp đôi?', {
+      emphasis: ['gia tốc'],
+    });
+    expect(near.chunks.map((c) => c.role)).toEqual(near.chunks.map(() => 'check'));
+    const opening = prepareSpeech('Gia tốc của vật bằng bao nhiêu khi lực tác dụng tăng gấp đôi?', {
+      emphasis: ['gia tốc'],
+    });
+    expect(opening.chunks.map((c) => [c.text, c.role])).toEqual([
+      ['Gia tốc', 'keyword'],
+      ['của vật bằng bao nhiêu khi lực tác dụng tăng gấp đôi?', 'check'],
+    ]);
+    expect(opening.chunks[1]?.rate).toBe(ROLE_PROSODY.check.rate);
+  });
+
   it('bold words are key terms; a bold label such as "**Bước 1:**" is not', () => {
     const plan = prepareSpeech('Ta gọi đại lượng này là **gia tốc** của vật.');
     expect(plan.chunks.some((c) => c.role === 'keyword' && c.text.startsWith('gia tốc'))).toBe(

@@ -358,15 +358,15 @@ function emphasisTerms(source: string, given: readonly string[]): string[] {
   return terms.filter((t) => words(t) >= 1 && words(t) <= 5).slice(0, 8);
 }
 
-/** Where each key term starts in the spoken text (whole words, ignoring case). */
-function emphasisStarts(
+/** Where each key term is said in the spoken text, first place only (whole words, ignoring case). */
+function emphasisSpans(
   spoken: string,
   terms: readonly string[],
   dict: Dict,
   context: SpeechContext,
-): number[] {
+): Range[] {
   const s = spoken.toLowerCase();
-  const starts = new Set<number>();
+  const spans = new Map<number, number>();
   for (const term of terms) {
     const form = toSpeech(applyPronunciations(term, dict).text, context)
       .replace(/[.,;:!?…]+$/, '')
@@ -377,12 +377,12 @@ function emphasisStarts(
       const before = s[at - 1] ?? ' ';
       const after = s[at + form.length] ?? ' ';
       if (!/[\p{L}\d]/u.test(before) && !/[\p{L}\d]/u.test(after)) {
-        starts.add(at);
+        spans.set(at, Math.max(spans.get(at) ?? 0, at + form.length));
         break;
       }
     }
   }
-  return [...starts].sort((a, b) => a - b);
+  return [...spans].sort((a, b) => a[0] - b[0]);
 }
 
 type Dict = readonly PronunciationEntry[] | undefined;
@@ -541,25 +541,48 @@ function mergeTiny(text: string, pieces: Piece[]): Piece[] {
   return out;
 }
 
-/** Splits before each key term (a short pause first) and marks the piece that holds it. */
+/**
+ * A short pause before each key term and the keyword pace for the term itself: the piece is cut
+ * before the term (unless it opens the piece) and after it, so the words after it keep their
+ * sentence's role (a question stays a question). A term that cannot stand as a chunk of its own
+ * (one word followed by more words) gets the pause only; a term with fewer than
+ * `MIN_CUT_WORDS` words before it in its piece gets neither.
+ */
 function splitForEmphasis(
   text: string,
   pieces: Piece[],
-  starts: readonly number[],
+  spans: readonly Range[],
   ranges: readonly Range[],
 ): Piece[] {
   const out: Piece[] = [];
   for (const p of pieces) {
     let current = p;
-    for (const at of starts) {
+    for (const [at, termEnd] of spans) {
       if (at < current.start || at >= current.end) continue;
       const before = text.slice(current.start, at);
-      const free = !inside(at, ranges) && !inside(at - 1, ranges);
-      if (free && words(before) >= MIN_CUT_WORDS && words(text.slice(at, current.end)) >= 1) {
+      if (words(before) > 0) {
+        const free = !inside(at, ranges) && !inside(at - 1, ranges);
+        if (!free || words(before) < MIN_CUT_WORDS || words(text.slice(at, current.end)) < 1) {
+          continue;
+        }
         out.push({ ...current, end: at, boundary: 'emphasis' });
-        current = { ...current, start: at, keyword: true };
-      } else if (words(before) < MIN_CUT_WORDS) {
+        current = { ...current, start: at };
+      }
+      const end = Math.min(termEnd, current.end);
+      const gap = /^\s*/u.exec(text.slice(end, current.end))?.[0].length ?? 0;
+      const cut = end + gap;
+      const rest = text.slice(cut, current.end);
+      if (words(rest) < MIN_CHUNK_WORDS) {
+        // Nothing after the term can stand alone: the term and at most a word or a mark.
         current = { ...current, keyword: true };
+      } else if (
+        gap > 0 &&
+        words(text.slice(current.start, end)) >= MIN_CHUNK_WORDS &&
+        !inside(cut, ranges) &&
+        !inside(end, ranges)
+      ) {
+        out.push({ ...current, end: cut, boundary: 'phrase', keyword: true });
+        current = { ...current, start: cut, keyword: false };
       }
     }
     out.push(current);
@@ -625,7 +648,7 @@ export function prepareSpeech(text: string, opts: PrepareOptions = {}): SpeechPl
   const ranges = protectedRanges(spoken, pronounced, readings, context);
   const terms = emphasisTerms(source, opts.emphasis ?? []);
   let pieces = mergeTiny(spoken, cutAtPunctuation(spoken, ranges));
-  pieces = splitForEmphasis(spoken, pieces, emphasisStarts(spoken, terms, dict, context), ranges);
+  pieces = splitForEmphasis(spoken, pieces, emphasisSpans(spoken, terms, dict, context), ranges);
   pieces = splitLong(spoken, pieces, ranges, max, first);
 
   // A sentence's role is decided on all its words.
