@@ -24,11 +24,32 @@
 //! [`ReasoningStream`] applies the same rule to an answer that arrives in pieces: reasoning that
 //! is inside a block is never shown, a piece that may be the start of a tag is held back until it
 //! is complete, and the final text is always exactly [`strip_reasoning`] of everything received.
+//! It keeps its place between pieces (each byte is scanned a bounded number of times), so a long
+//! answer full of '<' (HTML, XML, inequalities) still streams in linear time.
+//!
+//! Rule 3 cannot be applied before its closing tag arrives: text before an orphan closing tag is
+//! shown while it streams (nothing marks it as reasoning yet) and is taken back by a
+//! [`Shown::Replace`] when the closing tag comes. So streamed text is provisional: speech, board
+//! actions and anything else that cannot be taken back must wait for the final text.
 
 use super::AiError;
 
 /// Reasoning tag names (lower case).
 const NAMES: [&str; 4] = ["think", "thinking", "reasoning", "reflection"];
+
+/// Length of the longest name: a longer run of letters after '<' is never a tag, so a scan never
+/// reads further than this into a word.
+const MAX_NAME: usize = 10;
+
+/// Reads the letters of a possible tag name from `i`, at most one more than [`MAX_NAME`] (enough
+/// to know the word is not a name). Returns the index after them.
+fn name_end(s: &[u8], mut i: usize) -> usize {
+    let start = i;
+    while i < s.len() && i - start <= MAX_NAME && s[i].is_ascii_alphabetic() {
+        i += 1;
+    }
+    i
+}
 
 /// The result of [`strip_reasoning`].
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -58,9 +79,7 @@ fn tag_at(s: &[u8], at: usize) -> Option<Tag> {
         i += 1;
     }
     let name_start = i;
-    while i < s.len() && s[i].is_ascii_alphabetic() {
-        i += 1;
-    }
+    i = name_end(s, i);
     let name = NAMES
         .iter()
         .find(|n| n.as_bytes().eq_ignore_ascii_case(&s[name_start..i]))?;
@@ -135,9 +154,6 @@ struct Scan {
     kept: String,
     removed: bool,
     unclosed: bool,
-    /// The text ends right after a closing tag (and spaces or tabs): spaces or tabs that arrive
-    /// next are still removed by rule 1/3.
-    after_closing_tag: bool,
 }
 
 fn scan(text: &str) -> Scan {
@@ -145,7 +161,6 @@ fn scan(text: &str) -> Scan {
     let mut kept = String::new();
     // Start of the text currently kept.
     let mut seg = 0;
-    let mut seg_after_tag = false;
     let mut removed = false;
     let mut unclosed = false;
     let mut pos = 0;
@@ -160,21 +175,17 @@ fn scan(text: &str) -> Scan {
                 // Rule 1: a closed block.
                 Some(close) => {
                     seg = skip_blanks(s, close.end);
-                    seg_after_tag = true;
                     pos = seg;
                     continue;
                 }
                 // Rule 2: unclosed, everything to the end goes.
                 None => {
                     unclosed = true;
-                    seg = s.len();
-                    seg_after_tag = false;
                     break;
                 }
             }
         }
         seg = skip_blanks(s, tag.end);
-        seg_after_tag = true;
         pos = seg;
     }
     if !unclosed {
@@ -184,7 +195,6 @@ fn scan(text: &str) -> Scan {
         kept,
         removed,
         unclosed,
-        after_closing_tag: seg_after_tag && seg == s.len(),
     }
 }
 
@@ -194,7 +204,9 @@ fn is_js_space(c: char) -> bool {
     (c.is_whitespace() && c != '\u{85}') || c == '\u{FEFF}'
 }
 
-fn js_trim(s: &str) -> &str {
+/// `String.prototype.trim` of JavaScript. Every rule shared with the web side trims this way
+/// (here and in `local::endpoint`), so both sides agree on U+0085 and U+FEFF.
+pub(crate) fn js_trim(s: &str) -> &str {
     s.trim_matches(is_js_space)
 }
 
@@ -225,44 +237,51 @@ pub fn visible_answer(text: &str) -> Result<String, AiError> {
     Ok(s.text)
 }
 
-/// Byte index of a tag that may still be completing at the end of `raw` (held back while
-/// streaming), or `raw.len()`.
-fn partial_tag_start(raw: &str) -> usize {
-    let Some(lt) = raw.rfind('<') else {
-        return raw.len();
-    };
-    let t = &raw.as_bytes()[lt + 1..];
-    let mut i = 0;
-    if t.first() == Some(&b'/') {
+/// What a possible tag at the end of a streamed text still waits for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Wait {
+    /// "<", "</", "<thi", "</think": the name may still grow (at most a few bytes).
+    Name,
+    /// "<think type=\"x": an opening tag waiting for its '>'.
+    Attrs,
+    /// "</think  ": a closing tag waiting for its '>'.
+    CloseSpace,
+}
+
+/// `t` starts with '<' and holds no other '<': what it waits for while it may still become a
+/// reasoning tag, or `None` when it is already a whole tag or can never be one. Either answer is
+/// final once `None`: more text cannot make it a possible tag again.
+fn partial_wait(t: &[u8]) -> Option<Wait> {
+    let mut i = 1;
+    let closing = t.get(1) == Some(&b'/');
+    if closing {
         i += 1;
     }
-    let closing = i == 1;
     let name_start = i;
-    while i < t.len() && t[i].is_ascii_alphabetic() {
-        i += 1;
-    }
+    i = name_end(t, i);
     let name = &t[name_start..i];
-    let partial = if i == t.len() {
+    if i == t.len() {
         // "<", "</", "<thi", "</think": may still become a tag.
-        NAMES
+        return NAMES
             .iter()
             .any(|n| n.len() >= name.len() && n.as_bytes()[..name.len()].eq_ignore_ascii_case(name))
-    } else if !NAMES
+            .then_some(Wait::Name);
+    }
+    if !NAMES
         .iter()
         .any(|n| n.as_bytes().eq_ignore_ascii_case(name))
     {
-        false
-    } else if closing {
+        return None;
+    }
+    if closing {
         // "</think  " waiting for '>'.
-        t[i..].iter().all(u8::is_ascii_whitespace)
+        t[i..]
+            .iter()
+            .all(u8::is_ascii_whitespace)
+            .then_some(Wait::CloseSpace)
     } else {
         // "<think type=\"x" waiting for '>' (no '>' yet, else the tag is complete).
-        t[i].is_ascii_whitespace() && !t[i..].contains(&b'>')
-    };
-    if partial {
-        lt
-    } else {
-        raw.len()
+        (t[i].is_ascii_whitespace() && !t[i..].contains(&b'>')).then_some(Wait::Attrs)
     }
 }
 
@@ -275,18 +294,70 @@ pub enum Shown {
     Replace(String),
 }
 
+/// The kept text of a stream, with the bounds of its trimmed form kept up to date as it grows.
+#[derive(Debug, Default)]
+struct Kept {
+    text: String,
+    /// First byte that is not JavaScript whitespace.
+    lead: Option<usize>,
+    /// Just after the last byte that is not JavaScript whitespace.
+    end: usize,
+}
+
+impl Kept {
+    fn push(&mut self, s: &str) {
+        let base = self.text.len();
+        self.text.push_str(s);
+        if self.lead.is_none() {
+            self.lead = s
+                .char_indices()
+                .find(|&(_, c)| !is_js_space(c))
+                .map(|(i, _)| base + i);
+        }
+        let content = s.trim_end_matches(is_js_space);
+        if !content.is_empty() {
+            self.end = base + content.len();
+        }
+    }
+
+    fn clear(&mut self) {
+        *self = Kept::default();
+    }
+
+    /// `js_trim(&self.text)`, without reading the text again.
+    fn trimmed(&self) -> &str {
+        self.lead.map_or("", |l| &self.text[l..self.end])
+    }
+}
+
 /// [`strip_reasoning`] for an answer that arrives in pieces.
+///
+/// The scan of [`strip_reasoning`] is run once over the text, resumed where it stopped when a
+/// piece arrives: a '<' that cannot change any more (every '<' but a possible tag at the very end)
+/// is decided once. Only the last '<' may be held back, and its wait is updated from the new
+/// piece alone.
 #[derive(Debug, Default)]
 pub struct ReasoningStream {
     raw: String,
-    /// Untrimmed kept text of `raw[..held_from]`.
-    kept: String,
+    /// `raw[..scanned]` is scanned; the rest is a possible tag held back.
+    scanned: usize,
+    /// Where the scan looks for the next tag.
+    pos: usize,
+    /// Start of scanned text not yet added to `kept` (outside a block).
+    seg: usize,
+    /// `seg` follows a closing tag: spaces and tabs there are still removed.
+    blanks: bool,
+    /// Inside a block opened with this name, waiting for its closing tag.
+    block: Option<&'static str>,
+    kept: Kept,
     removed: bool,
-    unclosed: bool,
-    after_closing_tag: bool,
-    /// The end of `raw` may be the start of a tag.
-    holding: bool,
+    /// The last '<' of `raw` and what it waits for, while it may still become a tag.
+    held: Option<(usize, Wait)>,
+    /// What the learner sees.
     shown: String,
+    /// `shown` may no longer be the start of the visible text (the kept text was cleared, or
+    /// trimming began): the next change compares the whole text.
+    reset: bool,
 }
 
 impl ReasoningStream {
@@ -308,50 +379,115 @@ impl ReasoningStream {
 
     fn visible(&self) -> &str {
         if self.removed {
-            js_trim(&self.kept)
+            self.kept.trimmed()
         } else {
-            &self.kept
+            &self.kept.text
         }
     }
 
     /// Adds a piece; returns how the shown text changes, if it does.
     pub fn push(&mut self, piece: &str) -> Option<Shown> {
+        let before = self.raw.len();
         self.raw.push_str(piece);
-        // Without a '<' in the piece, nothing held back and no tag just closed, no tag can start
-        // or end here: the piece only extends the current state.
-        let simple = !self.holding && !self.after_closing_tag && !piece.contains('<');
-        if simple && self.unclosed {
-            return None;
-        }
-        if simple {
-            self.kept.push_str(piece);
-            // `shown` is the visible text before this piece, and here the visible text can only
-            // grow (trimming only touches its ends), so the new part is what follows `shown`.
-            // No comparison of the whole text: long answers stay linear.
-            let now = self.visible();
-            return match now.get(self.shown.len()..) {
-                Some("") => None,
-                Some(added) => {
-                    let added = added.to_string();
-                    self.shown.push_str(&added);
-                    Some(Shown::Append(added))
-                }
-                None => self.update(),
-            };
-        }
-        let held_from = partial_tag_start(&self.raw);
-        let scan = scan(&self.raw[..held_from]);
-        self.kept = scan.kept;
-        self.removed = scan.removed;
-        self.unclosed = scan.unclosed;
-        self.after_closing_tag = scan.after_closing_tag;
-        self.holding = held_from < self.raw.len();
-        self.update()
+        let raw = self.raw.as_bytes();
+        self.held = match piece.rfind('<') {
+            Some(k) => partial_wait(&raw[before + k..]).map(|w| (before + k, w)),
+            // The held tag (if any) is still the last '<': only the new piece can change it.
+            None => match self.held {
+                Some((lt, Wait::Name)) => partial_wait(&raw[lt..]).map(|w| (lt, w)),
+                Some((lt, Wait::Attrs)) => (!piece.contains('>')).then_some((lt, Wait::Attrs)),
+                Some((lt, Wait::CloseSpace)) => piece
+                    .bytes()
+                    .all(|b| b.is_ascii_whitespace())
+                    .then_some((lt, Wait::CloseSpace)),
+                None => None,
+            },
+        };
+        let upto = self.held.map_or(self.raw.len(), |(lt, _)| lt);
+        self.advance(upto);
+        self.change()
     }
 
-    fn update(&mut self) -> Option<Shown> {
-        let now = self.visible().to_string();
-        self.show(now)
+    /// Continues the scan of [`scan`] up to byte `upto` of `raw`.
+    fn advance(&mut self, upto: usize) {
+        if upto <= self.scanned {
+            return;
+        }
+        let text = &self.raw[..upto];
+        let s = text.as_bytes();
+        loop {
+            if let Some(name) = self.block {
+                match closing_tag(text, self.pos, name) {
+                    // Rule 1: the block is closed.
+                    Some(close) => {
+                        self.block = None;
+                        self.seg = close.end;
+                        self.pos = close.end;
+                        self.blanks = true;
+                    }
+                    // Rule 2 so far: everything from the opening tag is left out.
+                    None => {
+                        self.pos = upto;
+                        break;
+                    }
+                }
+            }
+            if self.blanks {
+                self.seg = skip_blanks(s, self.seg);
+                self.pos = self.pos.max(self.seg);
+                // Spaces arriving with the next piece are still removed.
+                self.blanks = self.seg == upto;
+            }
+            match next_tag(text, self.pos) {
+                None => {
+                    self.kept.push(&text[self.seg..]);
+                    self.seg = upto;
+                    self.pos = upto;
+                    break;
+                }
+                Some(tag) => {
+                    if !self.removed {
+                        self.removed = true;
+                        self.reset = true;
+                    }
+                    if tag.closing {
+                        // Rule 3: an orphan closing tag removes everything before it.
+                        self.kept.clear();
+                        self.reset = true;
+                        self.blanks = true;
+                    } else {
+                        self.kept.push(&text[self.seg..tag.start]);
+                        self.block = Some(tag.name);
+                    }
+                    self.seg = tag.end;
+                    self.pos = tag.end;
+                }
+            }
+        }
+        self.scanned = upto;
+    }
+
+    /// The change to what is shown since the last piece.
+    fn change(&mut self) -> Option<Shown> {
+        if std::mem::take(&mut self.reset) {
+            let now = self.visible().to_string();
+            return self.show(now);
+        }
+        // The kept text only grew, so `shown` is the start of the visible text and the new part
+        // is what follows it. No comparison of the whole text: long answers stay linear.
+        let now = self.visible();
+        match now.get(self.shown.len()..) {
+            Some("") => None,
+            Some(added) => {
+                let added = added.to_string();
+                self.shown.push_str(&added);
+                Some(Shown::Append(added))
+            }
+            None => {
+                let now = now.to_string();
+                self.show(now)
+            }
+        }
     }
 
     fn show(&mut self, now: String) -> Option<Shown> {
@@ -420,6 +556,14 @@ mod tests {
     }
 
     #[test]
+    fn the_name_bound_is_the_longest_name() {
+        assert_eq!(NAMES.iter().map(|n| n.len()).max(), Some(MAX_NAME));
+        // A word longer than any name after '<' is never a tag.
+        let s = strip_reasoning("a <reflections> b <reflection>c</reflection>d");
+        assert_eq!(s.text, "a <reflections> b d");
+    }
+
+    #[test]
     fn reasoning_only_answers_are_errors_and_plain_answers_are_unchanged() {
         assert!(matches!(
             visible_answer("<think>chỉ có nháp</think>"),
@@ -434,6 +578,14 @@ mod tests {
             visible_answer("<think>x</think> Đáp số 12 N.").unwrap(),
             "Đáp số 12 N."
         );
+    }
+
+    /// Byte index of a possible tag held back at the end of `raw`, or `raw.len()`.
+    fn partial_tag_start(raw: &str) -> usize {
+        match raw.rfind('<') {
+            Some(lt) if partial_wait(&raw.as_bytes()[lt..]).is_some() => lt,
+            _ => raw.len(),
+        }
     }
 
     /// A complete reasoning tag, or the start of one at the end.
@@ -593,5 +745,137 @@ mod tests {
         }
         assert_eq!(st.shown().len(), 600_000);
         assert!(started.elapsed() < std::time::Duration::from_secs(5));
+    }
+
+    /// Streams `pieces` without the slow checks; returns the final text and the time it took.
+    fn timed(pieces: impl Iterator<Item = String>) -> (String, String, std::time::Duration) {
+        let mut st = ReasoningStream::new();
+        let mut screen = String::new();
+        let started = std::time::Instant::now();
+        for p in pieces {
+            let change = st.push(&p);
+            apply(change, &mut screen);
+        }
+        let (all, change) = st.finish();
+        apply(change, &mut screen);
+        let took = started.elapsed();
+        assert_eq!(screen, all.text);
+        (all.text, st.raw().to_string(), took)
+    }
+
+    #[test]
+    fn pieces_with_tag_marks_stream_in_linear_time() {
+        let n = 16_384;
+        let rep = |p: &'static str| std::iter::repeat_n(p.to_string(), n);
+        let cases: Vec<(&str, Vec<String>)> = vec![
+            // HTML, XML or inequalities: a '<' in every piece (64 KB).
+            ("a<b in every piece", rep("a<b ").collect()),
+            // The same inside a reasoning block that closes at the end.
+            (
+                "inside a block",
+                std::iter::once("<think>".to_string())
+                    .chain(rep("a<b "))
+                    .chain(std::iter::once("</think> Xong.".to_string()))
+                    .collect(),
+            ),
+            // A '<' followed by a very long word.
+            (
+                "long word after '<'",
+                std::iter::once("<".to_string())
+                    .chain(rep("abcd"))
+                    .collect(),
+            ),
+            // An opening tag whose '>' never comes (held back the whole time).
+            (
+                "unfinished attributes",
+                std::iter::once("Đáp <think ".to_string())
+                    .chain(rep("x=1 "))
+                    .collect(),
+            ),
+            // A closing tag waiting for its '>' behind many spaces.
+            (
+                "unfinished closing tag",
+                std::iter::once("A </think".to_string())
+                    .chain(rep("    "))
+                    .collect(),
+            ),
+            // Many orphan closing tags, each one taking back what was shown.
+            ("orphan closing tags", rep("x</think>").collect()),
+            // Many short blocks.
+            ("short blocks", rep("a<think>b</think>").collect()),
+        ];
+        for (name, pieces) in cases {
+            let (text, raw, took) = timed(pieces.into_iter());
+            assert_eq!(text, strip_reasoning(&raw).text, "{name}");
+            assert!(
+                took < std::time::Duration::from_secs(1),
+                "{name}: {took:?} for {} bytes",
+                raw.len()
+            );
+        }
+    }
+
+    /// A small deterministic generator (no new crate for tests).
+    struct Lcg(u64);
+
+    impl Lcg {
+        fn below(&mut self, n: usize) -> usize {
+            self.0 = self
+                .0
+                .wrapping_mul(6_364_136_223_846_793_005)
+                .wrapping_add(1_442_695_040_888_963_407);
+            ((self.0 >> 33) as usize) % n
+        }
+    }
+
+    #[test]
+    fn random_streams_match_a_full_rescan_after_every_piece() {
+        const PARTS: [&str; 24] = [
+            "<",
+            "</",
+            ">",
+            "think",
+            "Think",
+            "THINKING",
+            "reasoning",
+            "reflection",
+            "er",
+            " ",
+            "\t",
+            "\n",
+            "a",
+            "Lực",
+            "ố",
+            "$x<y$",
+            " type=\"x\"",
+            "<think>",
+            "</think>",
+            "<reasoning>",
+            "</reasoning>",
+            "\u{FEFF}",
+            "\u{85}",
+            "<thinker>",
+        ];
+        let mut rng = Lcg(0x5EED);
+        for case in 0..3000 {
+            let len = 1 + rng.below(24);
+            let text: String = (0..len).map(|_| PARTS[rng.below(PARTS.len())]).collect();
+            // Random cuts at character boundaries.
+            let bounds: Vec<usize> = text.char_indices().map(|(i, _)| i).skip(1).collect();
+            let mut cuts: Vec<usize> = bounds
+                .iter()
+                .copied()
+                .filter(|_| rng.below(3) == 0)
+                .collect();
+            cuts.push(text.len());
+            let mut pieces = Vec::new();
+            let mut from = 0;
+            for c in cuts {
+                pieces.push(&text[from..c]);
+                from = c;
+            }
+            let (_, last) = play(&pieces);
+            assert_eq!(last, strip_reasoning(&text).text, "case {case}: {text:?}");
+        }
     }
 }
