@@ -1,3 +1,20 @@
+/** What a mode asks the voice to say (`modeJobs`). */
+export interface BenchJob<C> {
+  text: string;
+  /** A pause the player waits after it (the legacy timer pause; 0 when it is in the audio). */
+  pauseAfterMs: number;
+  /** The plan's chunk (natural mode). */
+  chunk?: C;
+}
+
+export const LEGACY_COMMA_PAUSE_MS: number;
+
+export function modeJobs<C extends { text: string }>(
+  mode: 'legacy' | 'natural',
+  plan: { text: string; chunks: readonly C[] },
+  split: (spoken: string) => { text: string; pauseMs: number }[],
+): BenchJob<C>[];
+
 /** One rendered chunk as the benchmark page measured it. */
 export interface BenchChunk {
   text: string;

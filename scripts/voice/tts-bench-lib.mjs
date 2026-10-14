@@ -1,7 +1,33 @@
-// Pure helpers of the on-device voice benchmark (scripts/voice/tts-bench.mjs): the playback
-// timeline with a look-ahead of one, word integrity, per-item metrics, WAV encoding, the blind A/B
-// key, the listening sheet and the sampling of the browser's process tree. No browser, no model,
-// no audio device: everything here is unit-tested (tests/tts-bench.test.ts).
+// Pure helpers of the on-device voice benchmark (scripts/voice/tts-bench.mjs): what each mode
+// says, the playback timeline with a look-ahead of one, word integrity, per-item metrics, WAV
+// encoding, the blind A/B key, the listening sheet and the sampling of the browser's process
+// tree. No browser, no model, no audio device: everything here is unit-tested
+// (tests/tts-bench.test.ts). The page imports this file too (served by the dev server) for
+// `modeJobs`.
+
+/** A pause after a comma piece in the legacy voice (20b19c2 speakLocal). */
+export const LEGACY_COMMA_PAUSE_MS = 140;
+
+/**
+ * What each mode asks the voice to say, from one speech plan: the same prepared words (markup
+ * removed, pronunciation dictionary, the reader), so only the pipeline differs.
+ * - legacy: 20b19c2's speakLocal on `plan.text`: `split` (splitForSpeech) phrases, one model call
+ *   per comma piece, 140 ms after a comma and the phrase's own pause after its last piece, both
+ *   as a timer (`pauseAfterMs`); raw audio, playback rate = speed.
+ * - natural: the plan's chunks (role prosody and shaping by renderChunk; the pause is in the audio).
+ */
+export function modeJobs(mode, plan, split) {
+  if (mode === 'legacy') {
+    return split(plan.text).flatMap((c) => {
+      const pieces = c.text.split(/,\s*/).filter((p) => p.trim());
+      return pieces.map((text, i) => ({
+        text,
+        pauseAfterMs: i === pieces.length - 1 ? c.pauseMs : LEGACY_COMMA_PAUSE_MS,
+      }));
+    });
+  }
+  return plan.chunks.map((chunk) => ({ text: chunk.text, pauseAfterMs: 0, chunk }));
+}
 
 /** A gap between two chunks longer than this is heard as the teacher stalling. */
 export const LONG_GAP_MS = 600;

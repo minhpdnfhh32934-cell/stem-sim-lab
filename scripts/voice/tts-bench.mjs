@@ -1,12 +1,15 @@
-// Benchmark of the on-device Vietnamese voice (MMS-TTS) in two modes on the same served build:
+// Benchmark of the on-device Vietnamese voice (MMS-TTS) in two modes on the same served build.
+// Both modes say the SAME prepared text: prepareSpeech's plan.text (markup removed, pronunciation
+// dictionary, the served build's reader), so only the pipeline differs (modeJobs in
+// tts-bench-lib.mjs). Neither is "exactly how the app spoke" at 20b19c2: the reader has been fixed
+// since then (units, arrows, "tan", MeV) and the dictionary is new, in both modes alike.
 //
-//   legacy  — exactly how the app spoke before the natural-voice branch (commit 20b19c2,
-//             speak.ts + localVoice.ts): splitForSpeech(toSpokenText(text)), one model call per
-//             comma piece, 140 ms after a comma, the phrase's own pause (320 / 260 / 520 ms) after
-//             its last piece as a timer, raw model audio, playback rate = speed (1 here). The text
-//             reader is the served build's (no pronunciation dictionary).
-//   natural — the app's pipeline now: prepareSpeech (dictionary, chunks, roles, planned pauses)
-//             and renderChunk (role prosody, trim, loudness, fades, pace, pause in the audio).
+//   legacy  — 20b19c2's chunking, pauses and playback rate (speak.ts speakLocal) on that text:
+//             splitForSpeech(plan.text), one model call per comma piece, 140 ms after a comma,
+//             the phrase's own pause (320 / 260 / 520 ms) after its last piece as a timer, raw
+//             model audio, playback rate = speed (1 here).
+//   natural — the app's pipeline now: the plan's chunks (roles, planned pauses) and renderChunk
+//             (role prosody, trim, loudness, fades, pace, pause in the audio).
 //
 // Per sentence of src/teacher/voice/ttsBenchSet.json and per mode it records: first-audio latency
 // (first chunk ready), total synthesis time, real-time factor, audio duration, syllables per
@@ -187,6 +190,9 @@ function renderInPage(mode, item) {
       const v = await import('/src/teacher/voice/localVoice.ts');
       const t = await import('/src/teacher/voice/vietnameseText.ts');
       const st = await import('/src/teacher/voice/stitch.ts');
+      const sp = await import('/src/teacher/voice/speechPlan.ts');
+      const nv = await import('/src/teacher/voice/naturalVoice.ts');
+      const lib = await import('/scripts/voice/tts-bench-lib.mjs');
       const signal = new AbortController().signal;
       const toBase64 = (f32) => {
         const bytes = new Uint8Array(f32.buffer, f32.byteOffset, f32.byteLength);
@@ -208,38 +214,28 @@ function renderInPage(mode, item) {
       });
       const chunks = [];
       const parts = [];
-      let prepared = '';
-      if (mode === 'legacy') {
-        const sp = await import('/src/teacher/voice/speak.ts');
-        prepared = sp.toSpokenText(item.text);
-        // 20b19c2 speakLocal: one model call per comma piece, 140 ms after a comma, the phrase's
-        // pause after its last piece (a timer), raw audio.
-        const pieces = t.splitForSpeech(prepared).flatMap((c) => {
-          const ps = c.text.split(/,\s*/).filter((p) => p.trim());
-          return ps.map((text, i) => ({ text, pauseMs: i === ps.length - 1 ? c.pauseMs : 140 }));
-        });
-        for (const piece of pieces) {
-          const t0 = performance.now();
-          const pcm = await v.synthesizeLocal(piece.text, signal);
-          const ms = performance.now() - t0;
-          const samples = st.resample(pcm.samples, pcm.sampleRate, rate);
-          chunks.push(measure(samples, piece.text, ms, piece.pauseMs, 0));
-          parts.push(samples, st.silence(piece.pauseMs, rate));
+      // The same prepared words in both modes: only the pipeline differs.
+      const plan = sp.prepareSpeech(item.text, {
+        ...(item.role ? { role: item.role } : {}),
+        ...(item.emphasis ? { emphasis: item.emphasis } : {}),
+      });
+      const prepared = plan.text;
+      for (const job of lib.modeJobs(mode, plan, t.splitForSpeech)) {
+        const t0 = performance.now();
+        let samples;
+        let ms;
+        if (mode === 'legacy') {
+          // 20b19c2 speakLocal: one model call per comma piece, raw audio, the pause a timer.
+          const pcm = await v.synthesizeLocal(job.text, signal);
+          ms = performance.now() - t0;
+          samples = st.resample(pcm.samples, pcm.sampleRate, rate);
+        } else {
+          samples = (await nv.renderChunk(job.chunk, signal)).samples;
+          ms = performance.now() - t0;
         }
-      } else {
-        const plan = (await import('/src/teacher/voice/speechPlan.ts')).prepareSpeech(item.text, {
-          ...(item.role ? { role: item.role } : {}),
-          ...(item.emphasis ? { emphasis: item.emphasis } : {}),
-        });
-        const nv = await import('/src/teacher/voice/naturalVoice.ts');
-        prepared = plan.text;
-        for (const c of plan.chunks) {
-          const t0 = performance.now();
-          const pcm = await nv.renderChunk(c, signal);
-          const ms = performance.now() - t0;
-          chunks.push(measure(pcm.samples, c.text, ms, 0, c.pauseMs));
-          parts.push(pcm.samples);
-        }
+        const embedded = job.chunk ? job.chunk.pauseMs : 0;
+        chunks.push(measure(samples, job.text, ms, job.pauseAfterMs, embedded));
+        parts.push(samples, st.silence(job.pauseAfterMs, rate));
       }
       const audio = st.concat(parts);
       return {

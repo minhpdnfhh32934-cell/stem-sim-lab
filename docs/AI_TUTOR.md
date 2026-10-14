@@ -411,16 +411,19 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    board reads the sentence again on "Tiếp tục"; the lesson's `VoiceSession` keeps up to 48
    rendered chunks, so the re-read starts at once. A chunk the worker was already rendering when
    the learner paused cannot be cut short: it finishes into the lesson's cache, and the re-read
-   waits for that render instead of queueing the chunk again behind it. The board still calls `speak()` once per
-   sentence, so speech and board stay in sync. The Windows and Gemini voices keep their
-   sentence-sized phrases (they now get the dictionary too); after an on-device failure the
-   Windows voice goes on from the first chunk not yet heard.
+   waits for that render instead of queueing the chunk again behind it. The board still calls
+   `speak()` once per sentence, so speech and board stay in sync. The Windows and Gemini voices
+   keep their sentence-sized phrases (they now get the dictionary too); after an on-device failure
+   the Windows voice goes on from the first chunk not yet heard.
 7. **Benchmark** (`scripts/voice/tts-bench.mjs`, not yet run). Renders `ttsBenchSet.json` (19
    sentences: greeting, transition, new concepts, check questions, correction and encouragement, a
    long paragraph, formulas, units and numbers, names, mitosis, chemical equations, a heading, a
-   result, a note) as `legacy` (20b19c2: comma pieces, 140/260/320/520 ms timer pauses, raw audio)
-   and `natural`, on the CPU only (Edge with GPU and WebGPU off, `wasm` asserted, model hosts
-   blocked: the voice must already be stored). It records first-audio latency, synthesis time,
+   result, a note) as `legacy` and `natural` on the same prepared text (`prepareSpeech`'s
+   `plan.text`: dictionary and today's reader in both), so only the pipeline differs: `legacy` =
+   20b19c2's chunking, pauses and playback rate on that text (comma pieces, 140/260/320/520 ms
+   timer pauses, raw audio, playback rate = speed); it is not the old reader's words. On the CPU
+   only (Edge with GPU and WebGPU off, `wasm` asserted, model hosts blocked: the voice must
+   already be stored). It records first-audio latency, synthesis time,
    real-time factor, duration, syllables per second, chunk loudness spread and peak, the longest
    gap and gaps over 600 ms, clipping, NaN, words dropped or reordered, and the Edge process
    tree's CPU time and peak memory; it writes WAVs, a blind A/B sheet (`index.html`, four 1–5

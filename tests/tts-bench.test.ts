@@ -1,6 +1,10 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+import bench from '../src/teacher/voice/ttsBenchSet.json';
+import { prepareSpeech, type SpeechRole } from '../src/teacher/voice/speechPlan';
+import { splitForSpeech } from '../src/teacher/voice/vietnameseText';
 import {
+  LEGACY_COMMA_PAUSE_MS,
   LONG_GAP_MS,
   abKey,
   encodeWav,
@@ -16,7 +20,9 @@ import {
   summarize,
   syllableCount,
   treeUsage,
+  modeJobs,
   wordIntegrity,
+  wordsOf,
   type BenchChunk,
 } from '../scripts/voice/tts-bench-lib.mjs';
 
@@ -34,6 +40,43 @@ const chunk = (over: Partial<BenchChunk>): BenchChunk => ({
   tailMs: 30,
   rmsDb: -20,
   ...over,
+});
+
+describe('what each mode says', () => {
+  const items = bench as { id: string; text: string; role?: SpeechRole; emphasis?: string[] }[];
+  const planOf = (item: (typeof items)[number]) =>
+    prepareSpeech(item.text, {
+      ...(item.role ? { role: item.role } : {}),
+      ...(item.emphasis ? { emphasis: item.emphasis } : {}),
+    });
+
+  it.each(items.map((i) => [i.id, i] as const))(
+    '%s: both modes say the same prepared words (only the pipeline differs)',
+    (_id, item) => {
+      const plan = planOf(item);
+      const said = (mode: 'legacy' | 'natural') =>
+        wordsOf(
+          modeJobs(mode, plan, splitForSpeech)
+            .map((j) => j.text)
+            .join(' '),
+        );
+      expect(said('legacy')).toEqual(wordsOf(plan.text));
+      expect(said('natural')).toEqual(wordsOf(plan.text));
+    },
+  );
+
+  it('legacy: one call per comma piece, 140 ms after a comma, the phrase’s pause after its last', () => {
+    const plan = prepareSpeech('Ta có hai lực, lực kéo và lực ma sát. Xét lực kéo trước.');
+    expect(modeJobs('legacy', plan, splitForSpeech)).toEqual([
+      { text: 'Ta có hai lực', pauseAfterMs: LEGACY_COMMA_PAUSE_MS },
+      { text: 'lực kéo và lực ma sát.', pauseAfterMs: 320 },
+      { text: 'Xét lực kéo trước.', pauseAfterMs: 0 },
+    ]);
+    const natural = modeJobs('natural', plan, splitForSpeech);
+    expect(natural.map((j) => [j.text, j.pauseAfterMs, j.chunk?.pauseMs])).toEqual(
+      plan.chunks.map((c) => [c.text, 0, c.pauseMs]),
+    );
+  });
 });
 
 describe('playback timeline (look-ahead of one)', () => {
