@@ -17,6 +17,7 @@ import {
 import { deleteRepo, opfsAvailable, repoStored } from '@/ai/modelStore';
 import { ortPaths, webGPUStatus } from '@/ai/webGemma';
 import { isSilent, type Pcm } from './audio';
+import { VITS_CONTROLS, clampProsody, type VitsControl, type VitsProsody } from './vitsControls';
 
 export const LOCAL_VOICE = {
   repo: 'Xenova/mms-tts-vie',
@@ -93,8 +94,19 @@ type WorkerOut =
   | { kind: 'progress'; loaded: number; total: number | null }
   | { kind: 'loaded' }
   | { kind: 'started'; id: number }
-  | { kind: 'audio'; id: number; samples: Float32Array; sampleRate: number }
+  | {
+      kind: 'audio';
+      id: number;
+      samples: Float32Array;
+      sampleRate: number;
+      applied?: VitsControl[];
+    }
   | { kind: 'error'; id: number; message: string };
+
+/** A phrase's samples and the prosody controls the model applied itself (the page does the rest). */
+export interface LocalPcm extends Pcm {
+  applied: readonly VitsControl[];
+}
 
 let worker: Worker | null = null;
 let loaded = false;
@@ -394,10 +406,17 @@ function hasNonFinite(samples: Float32Array): boolean {
   return false;
 }
 
-/** Speaks one phrase into samples (loads the stored model first if needed). */
-export async function synthesizeLocal(text: string, signal: AbortSignal): Promise<Pcm> {
+/**
+ * Speaks one phrase into samples (loads the stored model first if needed). `prosody` is asked of
+ * the model, which applies what its graph accepts (`LocalPcm.applied`, vitsControls.ts).
+ */
+export async function synthesizeLocal(
+  text: string,
+  signal: AbortSignal,
+  prosody?: Partial<VitsProsody>,
+): Promise<LocalPcm> {
   const words = textForModel(text);
-  if (!words) return { samples: new Float32Array(0), sampleRate: 16000 };
+  if (!words) return { samples: new Float32Array(0), sampleRate: 16000, applied: [] };
   if (signal.aborted) throw new Error('cancelled');
   if ((await localVoiceStatus()) !== 'ready') throw new Error('voice-model-missing');
   try {
@@ -433,11 +452,17 @@ export async function synthesizeLocal(text: string, signal: AbortSignal): Promis
       resolve(o);
     });
     posted.set(id, words.length);
-    w.postMessage({ kind: 'speak', id, text: words });
+    w.postMessage({
+      kind: 'speak',
+      id,
+      text: words,
+      ...(prosody ? { prosody: clampProsody(prosody) } : {}),
+    });
   });
   if (out.kind === 'error') throw new Error(out.message);
   if (out.kind !== 'audio') throw new Error('no audio');
-  const pcm = { samples: out.samples, sampleRate: out.sampleRate };
+  const applied = (out.applied ?? []).filter((c) => VITS_CONTROLS.includes(c));
+  const pcm: LocalPcm = { samples: out.samples, sampleRate: out.sampleRate, applied };
   // NaN audio from the graphics card is the card failing: off the card at once.
   if (hasNonFinite(pcm.samples) && noteFailure('voice-model-nan')) failAll('voice-model-nan');
   // Silence is not speech: the system voice then reads the phrase instead.

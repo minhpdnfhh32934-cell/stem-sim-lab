@@ -5,8 +5,15 @@
  * the computer after the one-time download.
  */
 /// <reference lib="webworker" />
-import { AutoTokenizer, VitsModel, env, type Tensor } from '@huggingface/transformers';
+import { AutoTokenizer, Tensor, VitsModel, env } from '@huggingface/transformers';
 import { modelStore, opfsAvailable } from '@/ai/modelStore';
+import {
+  controlFeeds,
+  sessionInputNames,
+  supportedControls,
+  type VitsControl,
+  type VitsProsody,
+} from './vitsControls';
 
 // Same storage as Gemma: OPFS (Cache Storage refuses large entries), Cache Storage as fallback.
 if (opfsAvailable()) {
@@ -29,7 +36,8 @@ type InMessage =
       device: 'wasm' | 'webgpu';
       ort: { wasm: string; mjs: string };
     }
-  | { kind: 'speak'; id: number; text: string }
+  /** `prosody` is applied only where the model's graph accepts it (vitsControls.ts). */
+  | { kind: 'speak'; id: number; text: string; prosody?: VitsProsody }
   /** The page stopped waiting for this phrase: dropped if it has not started yet. */
   | { kind: 'cancel'; id: number }
   | { kind: 'unload' };
@@ -41,7 +49,14 @@ type OutMessage =
   | { kind: 'loaded' }
   /** Work on this phrase begins now: the page's time budget for it starts here. */
   | { kind: 'started'; id: number }
-  | { kind: 'audio'; id: number; samples: Float32Array; sampleRate: number }
+  /** `applied`: the prosody controls the model used for this phrase (the page does the rest). */
+  | {
+      kind: 'audio';
+      id: number;
+      samples: Float32Array;
+      sampleRate: number;
+      applied: VitsControl[];
+    }
   | { kind: 'error'; id: number; message: string };
 
 interface ProgressInfo {
@@ -56,6 +71,8 @@ let engine: {
   tokenizer: Awaited<ReturnType<typeof AutoTokenizer.from_pretrained>>;
   model: Awaited<ReturnType<typeof VitsModel.from_pretrained>>;
   sampleRate: number;
+  /** Prosody inputs the graph names (none for the MMS export in use). */
+  controls: VitsControl[];
 } | null = null;
 
 function post(out: OutMessage, transfer: Transferable[] = []) {
@@ -112,7 +129,12 @@ async function run(msg: Job): Promise<void> {
           progress_callback: progress,
         });
         const config = model.config as { sampling_rate?: number };
-        engine = { tokenizer, model, sampleRate: config.sampling_rate ?? 16000 };
+        engine = {
+          tokenizer,
+          model,
+          sampleRate: config.sampling_rate ?? 16000,
+          controls: supportedControls(sessionInputNames(model)),
+        };
       }
       post({ kind: 'loaded' });
     } else if (msg.kind === 'speak') {
@@ -123,10 +145,29 @@ async function run(msg: Job): Promise<void> {
       }
       if (!engine) throw new Error('voice model not loaded');
       post({ kind: 'started', id: msg.id });
-      const inputs = engine.tokenizer(msg.text);
-      const { waveform } = (await engine.model(inputs)) as { waveform: Tensor };
-      const samples = new Float32Array(waveform.data as Float32Array);
-      post({ kind: 'audio', id: msg.id, samples, sampleRate: engine.sampleRate }, [samples.buffer]);
+      const inputs = engine.tokenizer(msg.text) as Record<string, unknown>;
+      const feeds = controlFeeds(engine.controls, msg.prosody);
+      let applied = Object.keys(feeds) as VitsControl[];
+      const controls = Object.fromEntries(
+        Object.entries(feeds).map(([name, v]) => [
+          name,
+          new Tensor('float32', Float32Array.from([v]), [1]),
+        ]),
+      );
+      let output: { waveform: Tensor };
+      try {
+        output = (await engine.model({ ...inputs, ...controls })) as { waveform: Tensor };
+      } catch (e) {
+        // A graph that names a control but refuses our value: speak without, and stop asking.
+        if (applied.length === 0) throw e;
+        engine.controls = [];
+        applied = [];
+        output = (await engine.model(inputs)) as { waveform: Tensor };
+      }
+      const samples = new Float32Array(output.waveform.data as Float32Array);
+      post({ kind: 'audio', id: msg.id, samples, sampleRate: engine.sampleRate, applied }, [
+        samples.buffer,
+      ]);
     } else {
       try {
         if (engine) await engine.model.dispose();

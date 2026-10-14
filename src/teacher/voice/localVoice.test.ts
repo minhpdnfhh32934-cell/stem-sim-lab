@@ -31,7 +31,15 @@ class FakeWorker {
   static onSpeak: Reply = 'audio';
   static onLoad: LoadReply = 'loaded';
   static msPerChar = 0;
-  posted: { kind: string; id?: number; device?: string; text?: string }[] = [];
+  /** Prosody controls the fake model says it applied (none, like the MMS export in use). */
+  static applied: string[] | undefined = undefined;
+  posted: {
+    kind: string;
+    id?: number;
+    device?: string;
+    text?: string;
+    prosody?: Record<string, number>;
+  }[] = [];
   terminated = false;
   onmessage: ((event: MessageEvent) => void) | null = null;
   onerror: ((event: ErrorEvent) => void) | null = null;
@@ -41,7 +49,13 @@ class FakeWorker {
   constructor() {
     FakeWorker.all.push(this);
   }
-  postMessage(msg: { kind: string; id?: number; device?: string; text?: string }) {
+  postMessage(msg: {
+    kind: string;
+    id?: number;
+    device?: string;
+    text?: string;
+    prosody?: Record<string, number>;
+  }) {
     this.posted.push(msg);
     if (msg.kind === 'load') {
       const reply = FakeWorker.onLoad;
@@ -79,7 +93,13 @@ class FakeWorker {
           : Float32Array.from([0.2, -0.3]);
     const finish = () => {
       this.busy = false;
-      this.reply({ kind: 'audio', id: job.id, samples, sampleRate: 16000 });
+      this.reply({
+        kind: 'audio',
+        id: job.id,
+        samples,
+        sampleRate: 16000,
+        ...(FakeWorker.applied ? { applied: FakeWorker.applied } : {}),
+      });
       this.pump();
     };
     if (FakeWorker.msPerChar > 0) setTimeout(finish, job.text.length * FakeWorker.msPerChar);
@@ -471,5 +491,50 @@ describe('on-device voice: time budgets (second review)', () => {
     const long = track(voice.synthesizeLocal('a'.repeat(220), new AbortController().signal));
     await vi.advanceTimersByTimeAsync(140_000);
     expect(long.value).toMatchObject({ sampleRate: 16000 });
+  });
+});
+
+describe('on-device voice: prosody asked of the model', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    FakeWorker.applied = undefined;
+    env.webgpu = false;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+  });
+  afterEach(() => {
+    FakeWorker.applied = undefined;
+    voice.unloadLocalVoice();
+    vi.unstubAllGlobals();
+  });
+
+  const speaks = () => FakeWorker.all.flatMap((w) => w.posted.filter((m) => m.kind === 'speak'));
+
+  it('sends the role’s prosody, clamped to the safe range, and reports what the model applied', async () => {
+    FakeWorker.applied = ['speaking_rate', 'not-a-control'];
+    const pcm = await voice.synthesizeLocal('xin chào các em', new AbortController().signal, {
+      speakingRate: 0.5,
+      noiseScale: 0.7,
+    });
+    expect(speaks()[0]?.prosody).toEqual({
+      speakingRate: 0.85,
+      noiseScale: 0.7,
+      noiseScaleDuration: 0.8,
+    });
+    expect(pcm.applied).toEqual(['speaking_rate']);
+  });
+
+  it('a model that applies nothing (the MMS export in use) leaves the pace to the page', async () => {
+    const pcm = await voice.synthesizeLocal('xin chào', new AbortController().signal, {
+      speakingRate: 0.9,
+    });
+    expect(pcm.applied).toEqual([]);
+    await voice.synthesizeLocal('tạm biệt', new AbortController().signal);
+    expect(speaks()[1]).not.toHaveProperty('prosody');
   });
 });
