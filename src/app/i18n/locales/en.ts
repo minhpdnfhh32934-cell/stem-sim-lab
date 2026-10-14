@@ -1344,6 +1344,10 @@ const en: Messages = {
       notAllowed:
         'The Gemini voice needs the 18+ confirmation: the Windows voice read the last answer instead.',
       other: 'The chosen voice could not read: the Windows voice read the last answer instead.',
+      lessonRest:
+        'The on-device voice could not read: the Windows voice read the rest of the lesson instead.',
+      gpuToCpu:
+        'The graphics card failed while reading: the on-device voice now runs on the CPU (slower, but safe for the computer), and the Windows voice read what was left unread.',
     },
   },
   levels: {

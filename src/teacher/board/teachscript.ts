@@ -171,6 +171,8 @@ const EMPTY = new Set([
   'wait_student',
   'checkpoint',
 ]);
+/** Every TeachScript tag name (the voice removes these and a few HTML tags before reading). */
+export const TEACHSCRIPT_TAGS: readonly string[] = [...CONTAINERS, ...EMPTY];
 /** Attributes that would be coordinates or sizes: never accepted from the AI (§7). */
 const GEOMETRY = /^(x|y|x1|y1|x2|y2|left|top|right|bottom|width|height|px|size|pos|position)$/i;
 
@@ -400,7 +402,8 @@ function notAnEnd(before: string, after: string): boolean {
  * Index just after the end of the sentence that `text` continues (`head` is what the sentence
  * already holds), or -1. Ends: . ! ? … followed by a space (not inside numbers like 9.81), except
  * the dots of `notAnEnd`; a sentence that opens with an option "A." also ends before the next
- * option ("A. 10 m/s B. 20 m/s").
+ * option ("A. 10 m/s B. 20 m/s"), and options after a colon start a sentence of their own
+ * ("Câu hỏi: A. 10 m/s B. 20 m/s" → "Câu hỏi:" | "A. 10 m/s" | "B. 20 m/s").
  */
 function sentenceEnd(head: string, text: string): number {
   const full = head + text;
@@ -412,6 +415,10 @@ function sentenceEnd(head: string, text: string): number {
     next.lastIndex = Math.max(marker[0].length, base);
     const o = next.exec(full);
     if (o) optionCut = o.index - base;
+  } else {
+    // A list of options (an "A." and, later, a "B.") right after a colon.
+    const colon = /:(?=[ \t]*A[.)]\s[\s\S]*?\sB[.)]\s)/.exec(full);
+    if (colon) optionCut = Math.max(0, colon.index + 1 - base);
   }
   const ends = /[.!?…](?=\s|$)/g;
   for (let m = ends.exec(text); m; m = ends.exec(text)) {

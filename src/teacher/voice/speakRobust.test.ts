@@ -21,7 +21,11 @@ vi.mock('./localVoice', () => ({
     const error = local.fail.get(text);
     return error
       ? Promise.reject(new Error(error))
-      : Promise.resolve({ samples: Float32Array.from([0.2, -0.2]), sampleRate: 16000 });
+      : Promise.resolve({
+          samples: Float32Array.from([0.2, -0.2]),
+          sampleRate: 16000,
+          applied: [],
+        });
   },
 }));
 
@@ -181,6 +185,59 @@ describe('the teacher voice when something goes wrong', () => {
   });
 });
 
+describe('a lesson skips only the voice that failed (second review)', () => {
+  beforeEach(() => {
+    local.fail.clear();
+    local.said.length = 0;
+    useVoiceStore.setState({
+      enabled: true,
+      engine: 'gemini',
+      style: 'vui',
+      speed: 1,
+      lastError: null,
+      speaking: false,
+    });
+  });
+  afterEach(() => {
+    stopSpeaking();
+    setTransportForTests(null);
+    vi.unstubAllGlobals();
+  });
+
+  it('switching to the on-device voice mid-lesson uses it at once after a cloud failure', async () => {
+    const spoken = fakeSystemVoice();
+    gemini(() => Promise.reject(new AiError('http', '429: RESOURCE_EXHAUSTED')));
+    const session = newVoiceSession();
+    await speak('Câu một.', { session });
+    expect(spoken).toEqual(['Câu một.']);
+    // The learner picks the downloaded voice in Settings: it is heard, not the system voice.
+    useVoiceStore.setState({ engine: 'local' });
+    await speak('Câu hai.', { session });
+    expect(local.said).toEqual(['Câu hai.']);
+    expect(spoken).toEqual(['Câu một.']);
+    // Back to Gemini in the same lesson: still skipped (it ran out of quota).
+    useVoiceStore.setState({ engine: 'gemini' });
+    await speak('Câu ba.', { session });
+    expect(spoken).toEqual(['Câu một.', 'Câu ba.']);
+  });
+
+  it.each([
+    ['silent audio', 'voice-model-silent'],
+    ['a model that does not load', 'voice-model-load-failed: Error: no available backend'],
+    ['a load that hangs', 'voice-model-load-timeout'],
+  ])('after %s the on-device voice is not asked again in the lesson', async (_name, error) => {
+    useVoiceStore.setState({ engine: 'local' });
+    const spoken = fakeSystemVoice();
+    local.fail.set('Câu một.', error);
+    local.fail.set('Câu hai.', error);
+    const session = newVoiceSession();
+    await speak('Câu một.', { session });
+    await speak('Câu hai.', { session });
+    expect(local.said).toEqual(['Câu một.']);
+    expect(spoken).toEqual(['Câu một.', 'Câu hai.']);
+  });
+});
+
 describe('why the chosen voice was not heard (Settings)', () => {
   it.each([
     ['timeout: 30s', 'voice.errors.timeout'],
@@ -194,7 +251,21 @@ describe('why the chosen voice was not heard (Settings)', () => {
     ['notAllowed: ageGate', 'voice.errors.notAllowed'],
     ['system-voice-synthesis-failed', 'voice.errors.systemVoice'],
     ['gemini-tts-silent', 'voice.errors.other'],
+    // On-device failures that skip the voice for the rest of the lesson say so.
+    ['voice-model-silent', 'voice.errors.lessonRest'],
+    ['voice-model-load-failed: Error: no session', 'voice.errors.lessonRest'],
+    ['voice-model-load-timeout', 'voice.errors.lessonRest'],
+    ['worker-crashed', 'voice.errors.lessonRest'],
   ])('%s → %s', (error, key) => {
     expect(voiceErrorKey(error)).toBe(key);
+  });
+
+  it('the failure that moved the on-device voice off the graphics card says it now runs on the CPU', () => {
+    expect(voiceErrorKey('worker-crashed', 'worker-crashed')).toBe('voice.errors.gpuToCpu');
+    expect(voiceErrorKey('voice-model-timeout', 'voice-model-timeout')).toBe(
+      'voice.errors.gpuToCpu',
+    );
+    // A later failure on the CPU is told as itself.
+    expect(voiceErrorKey('voice-model-silent', 'worker-crashed')).toBe('voice.errors.lessonRest');
   });
 });

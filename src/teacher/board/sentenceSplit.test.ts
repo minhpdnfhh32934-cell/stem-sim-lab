@@ -45,6 +45,18 @@ describe('TeachScript sentence ends', () => {
     expect(speech('Chọn A. Vì lực ma sát nhỏ.')).toEqual(['Chọn A.', 'Vì lực ma sát nhỏ.']);
   });
 
+  it('starts the options after a colon on their own: each value stays with its letter', () => {
+    expect(speech('Câu hỏi: A. 10 m/s B. 20 m/s')).toEqual(['Câu hỏi:', 'A. 10 m/s', 'B. 20 m/s']);
+    expect(speech('Chọn đáp án đúng: A. Lực ma sát. B. Trọng lực. C. Lực đàn hồi.')).toEqual([
+      'Chọn đáp án đúng:',
+      'A. Lực ma sát.',
+      'B. Trọng lực.',
+      'C. Lực đàn hồi.',
+    ]);
+    // A colon before a single answer is not an option list.
+    expect(speech('Đáp án: A. Vì lực ma sát nhỏ.')).toEqual(['Đáp án: A.', 'Vì lực ma sát nhỏ.']);
+  });
+
   it('keeps every action in the sentence where its tag stood', () => {
     const r = parseTeachScript(
       '1. Ta có <write id="f1" zone="steps" math="true">a = \\frac{F}{m}</write> nhé. 2. Thay số <write id="r1" zone="steps">a = 5</write> ta được.',

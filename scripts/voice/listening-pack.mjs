@@ -15,6 +15,7 @@ import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { collectRows, failedChecks } from './listening-rows.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const require = createRequire(resolve(root, 'package.json'));
@@ -71,8 +72,8 @@ if (setup.status !== 'ready') {
   process.exit(3);
 }
 
-const rows = [];
-for (const item of golden) {
+/** Synthesises one sentence in the page, writes its WAV and returns what was measured. */
+async function measure(item) {
   const r = await page.evaluate(async (text) => {
     const v = await import('/src/teacher/voice/localVoice.ts');
     const t = await import('/src/teacher/voice/vietnameseText.ts');
@@ -142,28 +143,27 @@ for (const item of golden) {
     };
   }, item.text);
   writeFileSync(resolve(out, `${item.id}.wav`), Buffer.from(r.wav, 'base64'));
-  const { wav, ...metrics } = r;
-  const checks = {
-    audible: metrics.rms >= 0.02,
-    notClipped: metrics.clippedShare < 0.001,
-    shortSilences: metrics.leadMs < 300 && metrics.tailMs < 300,
-    plausibleRate: metrics.syllablesPerSecond >= 2 && metrics.syllablesPerSecond <= 7,
-    finite: !metrics.nan,
-    spokenMatchesGolden: metrics.spoken.trim() === item.reading.trim(),
-  };
-  rows.push({ ...item, ...metrics, checks });
-  console.log(
-    `${item.id}: ${metrics.seconds}s rms ${metrics.rms} peak ${metrics.peak} rate ${metrics.syllablesPerSecond}/s ${Object.entries(
-      checks,
-    )
-      .filter(([, ok]) => !ok)
-      .map(([k]) => `FAIL:${k}`)
-      .join(' ')}`,
-  );
+  const { wav: _wav, ...metrics } = r;
+  return metrics;
 }
+
+const saveResults = (rows) =>
+  writeFileSync(resolve(out, 'results.json'), JSON.stringify({ device: 'wasm', rows }, null, 2));
+
+// One sentence the voice cannot say (silent or NaN audio throws) is recorded as a failed row;
+// the others are still measured, and the results are saved after every sentence.
+const rows = await collectRows(golden, measure, (row, all) => {
+  const failed = failedChecks(row).map((k) => `FAIL:${k}`);
+  console.log(
+    row.error
+      ? `${row.id}: ERROR ${row.error} ${failed.join(' ')}`
+      : `${row.id}: ${row.seconds}s rms ${row.rms} peak ${row.peak} rate ${row.syllablesPerSecond}/s ${failed.join(' ')}`,
+  );
+  saveResults(all);
+});
 await context.close();
 
-writeFileSync(resolve(out, 'results.json'), JSON.stringify({ device: 'wasm', rows }, null, 2));
+saveResults(rows);
 const esc = (s) =>
   String(s).replace(
     /[&<>"]/g,
@@ -183,15 +183,16 @@ ${rows
     (
       r,
     ) => `<tr><td>${esc(r.id)}${r.pending ? '<br><span class="p">chờ GV xác nhận</span>' : ''}</td><td>${esc(r.text)}</td><td>${esc(r.reading)}</td>
-<td><audio controls preload="none" src="${esc(r.id)}.wav"></audio></td><td><input size="3" aria-label="Điểm ${esc(r.id)}"> <input size="18" aria-label="Từ sai ${esc(r.id)}"></td>
-<td>${r.seconds}s · ${r.syllablesPerSecond} âm tiết/s · rms ${r.rms}${Object.entries(r.checks)
-      .filter(([, ok]) => !ok)
-      .map(([k]) => ` · <b>${esc(k)}</b>`)
+<td>${r.error ? '' : `<audio controls preload="none" src="${esc(r.id)}.wav"></audio>`}</td><td><input size="3" aria-label="Điểm ${esc(r.id)}"> <input size="18" aria-label="Từ sai ${esc(r.id)}"></td>
+<td>${r.error ? `<b>Không đọc được:</b> ${esc(r.error)}` : `${r.seconds}s · ${r.syllablesPerSecond} âm tiết/s · rms ${r.rms}`}${failedChecks(
+      r,
+    )
+      .map((k) => ` · <b>${esc(k)}</b>`)
       .join('')}</td></tr>`,
   )
   .join('\n')}</table>`;
 writeFileSync(resolve(out, 'index.html'), html);
-const failed = rows.filter((r) => Object.values(r.checks).some((ok) => !ok));
+const failed = rows.filter((r) => failedChecks(r).length > 0);
 console.log(
   `${rows.length} sentences, ${failed.length} with a failed automatic check. Pack: ${out}`,
 );

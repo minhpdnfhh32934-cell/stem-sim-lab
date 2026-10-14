@@ -1,0 +1,101 @@
+[
+  {
+    "id": "B01",
+    "kind": "greeting",
+    "text": "Chào em! Hôm nay thầy trò mình cùng tìm hiểu về chuyển động rơi tự do nhé."
+  },
+  {
+    "id": "B02",
+    "kind": "transition",
+    "text": "Được rồi, bây giờ mình chuyển sang phần tiếp theo: lực ma sát."
+  },
+  {
+    "id": "B03",
+    "kind": "concept",
+    "role": "concept",
+    "emphasis": ["Gia tốc"],
+    "text": "Gia tốc là đại lượng cho biết vận tốc thay đổi nhanh hay chậm, được tính bằng độ biến thiên vận tốc chia cho thời gian xảy ra sự biến thiên đó."
+  },
+  {
+    "id": "B04",
+    "kind": "concept",
+    "text": "Nguyên phân là hình thức phân chia tế bào, trong đó một tế bào mẹ tạo ra hai tế bào con có bộ nhiễm sắc thể giống hệt tế bào mẹ."
+  },
+  {
+    "id": "B05",
+    "kind": "check",
+    "text": "Theo em, nếu thả hai vật có khối lượng khác nhau từ cùng một độ cao thì vật nào chạm đất trước?"
+  },
+  {
+    "id": "B06",
+    "kind": "check",
+    "text": "Em thử tính xem, sau 3 s vận tốc của vật là bao nhiêu?"
+  },
+  {
+    "id": "B07",
+    "kind": "correction",
+    "text": "Chưa đúng rồi, em nhầm dấu của gia tốc. Không sao cả, em xem lại hướng của trục tọa độ rồi thử lại nhé!"
+  },
+  {
+    "id": "B08",
+    "kind": "encouragement",
+    "text": "Đúng rồi! Em làm rất tốt, cách lập luận của em rất rõ ràng."
+  },
+  {
+    "id": "B09",
+    "kind": "paragraph",
+    "text": "Định luật II Newton cho biết gia tốc của một vật cùng hướng với lực tác dụng lên vật. Độ lớn của gia tốc tỉ lệ thuận với độ lớn của lực và tỉ lệ nghịch với khối lượng của vật. Khi em đẩy một chiếc xe đẩy rỗng thì xe tăng tốc rất nhanh, nhưng khi xe chất đầy hàng thì cùng một lực đẩy chỉ làm xe tăng tốc chậm hơn nhiều. Đó chính là ý nghĩa của khối lượng: khối lượng là số đo mức quán tính của vật."
+  },
+  {
+    "id": "B10",
+    "kind": "formula",
+    "text": "Ta có F = m·a, với m = 2,5 kg và a = 4 m/s², vậy F = 10 N."
+  },
+  {
+    "id": "B11",
+    "kind": "numbers",
+    "text": "Tốc độ ánh sáng trong chân không là c = 3.10⁸ m/s, còn gia tốc rơi tự do là g = 9,81 m/s²."
+  },
+  {
+    "id": "B12",
+    "kind": "terms",
+    "text": "Theo nguyên lí Le Chatelier, khi tăng áp suất thì cân bằng chuyển dịch theo chiều làm giảm số mol khí."
+  },
+  {
+    "id": "B13",
+    "kind": "mitosis",
+    "text": "Ở kì giữa của nguyên phân, các nhiễm sắc thể kép co xoắn cực đại và xếp thành một hàng trên mặt phẳng xích đạo của thoi phân bào."
+  },
+  {
+    "id": "B14",
+    "kind": "mitosis",
+    "text": "Ở kì sau, hai cromatit chị em tách nhau ở tâm động và đi về hai cực của tế bào."
+  },
+  {
+    "id": "B15",
+    "kind": "chemistry",
+    "text": "Phương trình phản ứng: 2H2 + O2 → 2H2O. Cứ 2 mol khí hiđro phản ứng với 1 mol khí oxi tạo thành 2 mol nước."
+  },
+  {
+    "id": "B16",
+    "kind": "chemistry",
+    "text": "Cho kẽm vào dung dịch axit clohiđric, ta có Zn + 2HCl → ZnCl2 + H2↑, khí hiđro bay lên."
+  },
+  {
+    "id": "B17",
+    "kind": "heading",
+    "role": "heading",
+    "text": "Bài 5: Chuyển động thẳng biến đổi đều"
+  },
+  {
+    "id": "B18",
+    "kind": "result",
+    "role": "result",
+    "text": "Vậy với g = 10 m/s², quãng đường vật rơi tự do sau 4 s là s = gt²/2 = 80 m."
+  },
+  {
+    "id": "B19",
+    "kind": "note",
+    "text": "Lưu ý: đơn vị của lực là niu-tơn, kí hiệu là N, đặt theo tên nhà bác học Isaac Newton."
+  }
+]

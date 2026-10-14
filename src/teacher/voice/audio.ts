@@ -77,6 +77,9 @@ function audioContext(): AudioContext {
   return context;
 }
 
+/** Read through a function: the signal can abort while we wait. */
+const aborted = (signal: AbortSignal) => signal.aborted;
+
 /** Plays samples; resolves when they end or when `signal` aborts (the sound stops at once). */
 export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<void> {
   if (signal.aborted || pcm.samples.length === 0) return;
@@ -84,6 +87,9 @@ export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<
   if (ctx.state === 'suspended') {
     // Autoplay rules can keep audio off until the learner clicks: never wait for ever.
     await Promise.race([ctx.resume(), new Promise((r) => setTimeout(r, 1500))]);
+    // Stopped meanwhile (a new lesson, the learner left): its "abort" has already fired, so a
+    // source started now would play to its end.
+    if (aborted(signal)) return;
     if ((ctx.state as AudioContextState) !== 'running') throw new Error('audio-blocked');
   }
   const buffer = ctx.createBuffer(1, pcm.samples.length, pcm.sampleRate);
