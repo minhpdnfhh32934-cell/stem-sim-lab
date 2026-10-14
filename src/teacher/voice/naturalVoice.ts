@@ -20,7 +20,10 @@ export interface RenderedChunk extends Pcm {
 /** Rendered chunks of one lesson, by text and prosody (most recent last). */
 export type RenderCache = Map<string, Pcm>;
 
-/** About a minute and a half of speech: a lesson's recent sentences, a few MB. */
+/**
+ * A lesson's most recent chunks. A chunk is at most about 6.5 s of audio (100 characters and its
+ * pause), so this is up to about 5 minutes of speech: about 20 MB of 16 kHz float samples.
+ */
 const CACHE_LIMIT = 48;
 
 const keyOf = (c: PlannedChunk) =>

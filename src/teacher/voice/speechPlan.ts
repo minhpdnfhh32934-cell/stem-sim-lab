@@ -514,7 +514,10 @@ function cutAtPunctuation(text: string, ranges: readonly Range[]): Piece[] {
 const stronger = (a: Boundary, b: Boundary) => (PAUSE_MS[a] >= PAUSE_MS[b] ? a : b);
 const ends = (b: Boundary) => b === 'sentence' || b === 'paragraph' || b === 'end';
 
-/** A piece of fewer than three words joins the next piece of its sentence (or the one before). */
+/**
+ * A piece of fewer than `MIN_CHUNK_WORDS` (two) words joins the next piece of its sentence (or the
+ * one before).
+ */
 function mergeTiny(text: string, pieces: Piece[]): Piece[] {
   const out: Piece[] = [];
   for (let i = 0; i < pieces.length; i++) {
