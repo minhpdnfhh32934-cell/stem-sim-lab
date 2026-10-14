@@ -1,0 +1,138 @@
+{
+  "about": "Shared vectors for stripReasoning (src/ai/reasoning.ts and src-tauri/src/ai/reasoning.rs). Rule: tag names think, thinking, reasoning, reflection, case-insensitive, optional attributes (<think type=\"x\">); a name followed by more letters (<thinker>) is not a tag. 1) Every closed block <name ...>...</name> (same name) is removed together with the spaces or tabs right after its closing tag. 2) An opening tag left without its closing tag: everything from it to the end is removed (unclosed = true). 3) A closing tag left with no opening tag before it (a template that pre-filled the opening tag): everything up to and including the LAST such closing tag is removed, plus the spaces or tabs after it. 4) When anything was removed, leading and trailing whitespace is trimmed; when nothing was removed the text is returned unchanged. removed = something was removed.",
+  "cases": [
+    {
+      "name": "no tags",
+      "input": "  Lực là đại lượng vectơ.  ",
+      "text": "  Lực là đại lượng vectơ.  ",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "leading closed block",
+      "input": "<think>tính nháp 3*4=12</think>Đáp số: 12 N.",
+      "text": "Đáp số: 12 N.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "block with newlines after",
+      "input": "<think>\nx\n</think>\n\nGia tốc a = 2 m/s².",
+      "text": "Gia tốc a = 2 m/s².",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "block in the middle keeps text on both sides",
+      "input": "Ta có <think>nháp</think> a = F/m.",
+      "text": "Ta có a = F/m.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "several blocks",
+      "input": "<think>a</think>Một. <think>b</think>Hai.",
+      "text": "Một. Hai.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "case and attributes",
+      "input": "<THINK type=\"x\">nháp</THINK>Kết quả.",
+      "text": "Kết quả.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "thinking and reasoning tags",
+      "input": "<thinking>a</thinking><reasoning>b</reasoning>Câu trả lời.",
+      "text": "Câu trả lời.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "reflection tag",
+      "input": "Bài giải.<reflection>kiểm tra lại</reflection>",
+      "text": "Bài giải.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "unclosed block cut at max tokens",
+      "input": "Vậy a = 5 m/s². <think>Mình cần kiểm tra lại đơn vị",
+      "text": "Vậy a = 5 m/s².",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "unclosed block at the start",
+      "input": "<think>Người dùng hỏi về lực…",
+      "text": "",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "orphan closing tag",
+      "input": "Người dùng hỏi về lực, mình trả lời ngắn.</think>\nLực là tác dụng đẩy hoặc kéo.",
+      "text": "Lực là tác dụng đẩy hoặc kéo.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "two orphan closing tags",
+      "input": "a</think>b</think> Kết luận.",
+      "text": "Kết luận.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "not a tag: thinker",
+      "input": "Nhà <thinker> nổi tiếng",
+      "text": "Nhà <thinker> nổi tiếng",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "not a tag: inequality",
+      "input": "Nếu $x<y$ và $y>z$ thì $x<z$.",
+      "text": "Nếu $x<y$ và $y>z$ thì $x<z$.",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "teachscript survives",
+      "input": "<think>x</think>Ta viết <write id=\"s1\" zone=\"steps\">a = F/m</write>.",
+      "text": "Ta viết <write id=\"s1\" zone=\"steps\">a = F/m</write>.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "numbers outside blocks unchanged",
+      "input": "m = 2 kg <think>thử 3 kg</think>F = 10 N",
+      "text": "m = 2 kg F = 10 N",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "only reasoning",
+      "input": "<think>chỉ có nháp</think>",
+      "text": "",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "closed block then unclosed",
+      "input": "<think>a</think>Đáp số 5. <thinking>còn tiếp",
+      "text": "Đáp số 5.",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "mismatched names do not close each other",
+      "input": "<think>a</thinking>b",
+      "text": "",
+      "removed": true,
+      "unclosed": true
+    }
+  ]
+}
