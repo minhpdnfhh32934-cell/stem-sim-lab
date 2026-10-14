@@ -44,6 +44,12 @@ describe('AI controller', () => {
     ['403', 'badKey'],
     ['404 Not Found: models/gemini-x is not found', 'badModel'],
     ['500 Internal Server Error', 'http'],
+    // Out of credit is a quota problem, as for the fallback (src/ai/errorKind.ts).
+    ['402 Payment Required: {}', 'quota'],
+    ['400 Bad Request: {"error":{"message":"Your credit balance is too low"}}', 'quota'],
+    // No sentence of their own in this dialog yet: the general server error with its detail.
+    ['413 Payload Too Large: Request too large', 'http'],
+    ['529: overloaded_error: Overloaded', 'http'],
   ])('explains provider error "%s" as %s', async (message, code) => {
     setTransportForTests(transport({ chat: () => Promise.reject(new AiError('http', message)) }));
     await analyze('Một vật rơi tự do từ độ cao 20 m.');

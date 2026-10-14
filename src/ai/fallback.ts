@@ -1,4 +1,5 @@
 import { modelFor, useAiStore } from './aiStore';
+import { isQuotaMessage } from './errorKind';
 import { AiError, type Fallback, type Provider } from './types';
 
 /**
@@ -8,15 +9,7 @@ import { AiError, type Fallback, type Provider } from './types';
  * network problem never switches provider.
  */
 export function isQuotaError(e: unknown): boolean {
-  if (!(e instanceof AiError) || e.code !== 'http') return false;
-  const status = Number(/\d{3}/.exec(e.message)?.[0] ?? 0);
-  const lower = e.message.toLowerCase();
-  return (
-    status === 402 ||
-    status === 429 ||
-    (status === 400 && lower.includes('credit balance')) ||
-    lower.includes('resource_exhausted')
-  );
+  return e instanceof AiError && e.code === 'http' && isQuotaMessage(e.message);
 }
 
 /** The fallback configured in Settings for `provider`, or undefined (off / same provider). */
