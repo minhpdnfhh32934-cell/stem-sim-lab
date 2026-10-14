@@ -10,6 +10,8 @@ import { useProjectUi } from '@/app/project/uiStore';
 import { initUndo } from '@/app/project/undo';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
 import { UpdateDialog } from '@/app/update/UpdateDialog';
+import { WhatsNewDialog } from '@/app/whatsnew/WhatsNewDialog';
+import { useWhatsNewStartup } from '@/app/whatsnew/whatsNewStore';
 import { scheduleAutoCheck } from '@/app/update/updater';
 import { installSlidingIndicators } from '@/ui/slidingIndicator';
 import { Skeleton } from '@/ui/Skeleton';
@@ -61,6 +63,8 @@ export function AppShell() {
   useMemoryWatchdog();
   usePresentationFullscreen();
   useBreakReminder();
+  // "Có gì mới" after an update; it waits for the launch page or the lab home.
+  useWhatsNewStartup();
   useEffect(() => {
     const offUndo = initUndo();
     const offHistory = initHistory();
@@ -126,6 +130,7 @@ export function AppShell() {
       <Onboarding />
       <Tour />
       <UpdateDialog />
+      <WhatsNewDialog />
       <Toaster />
       {paletteUsed && (
         <Suspense fallback={null}>

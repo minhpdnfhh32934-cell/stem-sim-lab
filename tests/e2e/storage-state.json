@@ -11,6 +11,10 @@
         {
           "name": "stemsim.safety",
           "value": "{\"adultTerms\": 1}"
+        },
+        {
+          "name": "stemsim.whatsnew",
+          "value": "{\"lastSeen\": \"999.0.0\"}"
         }
       ]
     }

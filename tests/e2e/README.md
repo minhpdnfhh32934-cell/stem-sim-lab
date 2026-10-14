@@ -13,3 +13,7 @@ problem; no Internet; free quota used up (429); no key → Gemini key guide; man
 any AI call.
 
 Real model accuracy (not mocked): `GEMINI_API_KEY=… npm run golden:llm` (uses free-tier quota).
+
+"Có gì mới" (`whatsnew.spec.ts`): `storage-state.json` records `stemsim.whatsnew` as
+`{"lastSeen": "999.0.0"}` (every version already seen), so the box never covers the other
+specs once a version's notes are marked ready. The spec itself sets an older `lastSeen`.
