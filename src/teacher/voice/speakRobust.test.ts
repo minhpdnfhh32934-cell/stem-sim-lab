@@ -21,7 +21,11 @@ vi.mock('./localVoice', () => ({
     const error = local.fail.get(text);
     return error
       ? Promise.reject(new Error(error))
-      : Promise.resolve({ samples: Float32Array.from([0.2, -0.2]), sampleRate: 16000 });
+      : Promise.resolve({
+          samples: Float32Array.from([0.2, -0.2]),
+          sampleRate: 16000,
+          applied: [],
+        });
   },
 }));
 
