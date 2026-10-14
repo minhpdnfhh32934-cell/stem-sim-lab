@@ -108,7 +108,8 @@ impl LocalRuntime for LlamaCpp {
             vision,
             thinking: Cap::Unverified,
             loaded: Some(true),
-            remote: false,
+            // As in every model list: a name in Ollama's cloud form is never shown as local.
+            remote: super::ollama::is_cloud_name(model),
             capabilities: Capabilities {
                 list_models: Cap::Yes,
                 context_length: if context.is_some() {
@@ -203,6 +204,13 @@ mod tests {
         assert_eq!(d.context_length, Some(4096));
         assert_eq!(d.vision, Cap::No);
         assert_eq!(d.loaded, Some(true));
+        assert!(!d.remote);
+        // The details agree with the model list (src/ai/local/runtimes.ts does the same).
+        assert!(
+            LlamaCpp
+                .parse_info(&serde_json::json!({}), "gpt-oss:120b-cloud")
+                .remote
+        );
         let old = LlamaCpp.parse_info(&serde_json::json!({"n_ctx": 2048}), "m");
         assert_eq!(old.context_length, Some(2048));
         assert_eq!(old.vision, Cap::Unverified);
