@@ -10,7 +10,13 @@
  * name, and the chunks are the prepared text in order, word for word.
  */
 import { applyPronunciations, type PronunciationEntry } from './pronunciations';
-import { speechContext, toSpeech, type SpeechChunk, type SpeechContext } from './vietnameseText';
+import {
+  UNIT_WORDS,
+  speechContext,
+  toSpeech,
+  type SpeechChunk,
+  type SpeechContext,
+} from './vietnameseText';
 
 /** The part a sentence plays in a lesson (from the board, or guessed from its words). */
 export type SpeechRole =
@@ -170,8 +176,23 @@ function sentenceRole(sentence: string, given: SpeechRole | undefined): SpeechRo
 // ------------------------------------------------------------ protected spans
 
 const MATH = /\$\$[\s\S]+?\$\$|\$[^$\n]+\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]/g;
-const QUANTITY =
-  /(?<![\p{L}\d])(?:\d+(?::\d+)+|[-−]?\d[\d.,\xa0\u{202f}]*(?:[ \xa0]\d{3})*)(?:\s?(?:%|°[CF]?|[A-Za-zµμΩ][A-Za-zµμΩ²³⁻¹·/]*)(?![\p{L}\d]))?/gu;
+/** A power written after a number: "10⁻³⁴", "10^{-19}", "10^3". */
+const POWER = String.raw`(?:\^\{?[+\-−]?\d+\}?|[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)`;
+/** A unit as written: "m/s²", "J.s", "m.s⁻¹", "kg·m/s²", "°C", "%". */
+const UNIT = String.raw`(?:%|°[CF]?|[A-Za-zµμΩ][A-Za-zµμΩ²³⁻¹]*(?:[./·][A-Za-zµμΩ][A-Za-zµμΩ²³⁻¹]*)*)`;
+/**
+ * A number as written with its sign, its power of ten and its unit: "6,626.10⁻³⁴ J.s",
+ * "1,6 × 10^{-19} C", "−3,2 °C", "0,1 M", "5 m.s⁻¹"; and a time, "10:30".
+ */
+const QUANTITY = new RegExp(
+  String.raw`(?<![\p{L}\d])(?:\d+(?::\d+)+|[-−]?(?:` +
+    String.raw`\d+(?:[.,]\d+)*?\s*[×x·*.]\s*10${POWER}|\d+(?:[.,]\d+)?[eE][+-]?\d+|` +
+    String.raw`\d+(?:[.,\xa0\u202f]\d+)*(?:[ \xa0]\d{3})*${POWER}?))` +
+    String.raw`(?:\s?${UNIT}(?![\p{L}\d]))?`,
+  'gu',
+);
+/** A number alone: its words are number words, which `bestCut` never separates anyway. */
+const BARE_NUMBER = /^[\d.,\s\xa0\u202f]+$/u;
 const SPECIES = String.raw`\d*[A-Z][A-Za-z0-9₀-₉()]*(?:[⁺⁻]|\^?\d*[+-])?(?:\s?\([a-z]{1,2}\))?`;
 const EQUATION = new RegExp(String.raw`${SPECIES}(?:\s*(?:\+|→|->|⟶|⇌|=)\s*${SPECIES})+`, 'g');
 /** Two or more capitalised words in a row: a name ("Lơ Sa-tơ-li-ê", "Hà Nội"). */
@@ -192,25 +213,121 @@ function occurrences(spoken: string, form: string, out: Range[]): void {
   for (let at = s.indexOf(f); at >= 0; at = s.indexOf(f, at + 1)) out.push([at, at + f.length]);
 }
 
+interface WrittenSpan {
+  text: string;
+  at: Range;
+}
+
+/** The parts of the written text a cut must never split: formulas, quantities, equations. */
+function writtenSpans(written: string): WrittenSpan[] {
+  const spans: WrittenSpan[] = [];
+  const add = (m: RegExpExecArray) => {
+    spans.push({ text: m[0], at: [m.index, m.index + m[0].length] });
+  };
+  for (const m of written.matchAll(MATH)) add(m);
+  // Outside formulas, with the offsets kept.
+  const prose = written.replace(MATH, (m) => ' '.repeat(m.length));
+  for (const m of prose.matchAll(QUANTITY)) if (!BARE_NUMBER.test(m[0])) add(m);
+  for (const m of prose.matchAll(EQUATION)) add(m);
+  return spans;
+}
+
+/** Marks that carry a span through the reader (private-use characters, never in a lesson). */
+const OPEN = '\u{e010}';
+const CLOSE = '\u{e011}';
+const isSpace = (c: string | undefined) => c !== undefined && /\s/.test(c);
+
 /**
- * Where a cut would split a number with its unit, a formula, an equation or a name: each is
- * found in the written text, read on its own (in the whole text's context), and its words are
- * looked up in the spoken text.
+ * The spans' readings in `spoken`, found by reading the written text once more with each span
+ * between marks. A mark stands next to a space (a span is widened to whole written words), where
+ * few of the reader's rules look. Null when the marks changed what the reader says or one was
+ * lost.
+ */
+function carriedRanges(
+  spoken: string,
+  written: string,
+  spans: readonly Range[],
+  context: SpeechContext,
+): Range[] | null {
+  const widened = spans
+    .map(([a, b]): Range => {
+      let from = a;
+      let to = b;
+      while (from > 0 && !isSpace(written[from - 1])) from--;
+      while (to < written.length && !isSpace(written[to])) to++;
+      return [from, to];
+    })
+    .sort((x, y) => x[0] - y[0]);
+  const merged: Range[] = [];
+  for (const r of widened) {
+    const last = merged.at(-1);
+    if (last && r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+    else merged.push(r);
+  }
+  let marked = '';
+  let last = 0;
+  for (const [a, b] of merged) {
+    marked += `${written.slice(last, a)}${OPEN}${written.slice(a, b)}${CLOSE}`;
+    last = b;
+  }
+  const read = toSpeech(marked + written.slice(last), context);
+  // Each mark as the number of non-space characters said before it.
+  const marks: { open: boolean; at: number }[] = [];
+  let said = '';
+  for (const c of read) {
+    if (c === OPEN || c === CLOSE) marks.push({ open: c === OPEN, at: said.length });
+    else if (!isSpace(c)) said += c;
+  }
+  if (!said.startsWith(spoken.replace(/\s+/g, ''))) return null;
+  if (marks.length !== merged.length * 2 || marks.some((m, i) => m.open !== (i % 2 === 0))) {
+    return null;
+  }
+  // Where the k-th non-space character of `spoken` is.
+  const at: number[] = [];
+  for (let i = 0; i < spoken.length; i++) if (!isSpace(spoken[i])) at.push(i);
+  const ranges: Range[] = [];
+  for (let i = 0; i + 1 < marks.length; i += 2) {
+    const from = marks[i]?.at ?? 0;
+    const to = Math.min(marks[i + 1]?.at ?? 0, at.length);
+    if (to <= from) continue;
+    const start = at[from] ?? 0;
+    let end = (at[to - 1] ?? start) + 1;
+    // The sentence's own punctuation after a span stays a place to pause.
+    while (end > start && /[\s.,;:!?…]/u.test(spoken[end - 1] ?? '')) end--;
+    if (end > start) ranges.push([start, end]);
+  }
+  return ranges;
+}
+
+/**
+ * Where a cut would split a number with its unit, a formula, an equation or a name. The written
+ * spans are carried through the reader together (`carriedRanges`); when the marks change the
+ * reading (a rule of the reader looks past a space: "+ Pi +", "2e → Cu"), each span is carried on
+ * its own, and one that still cannot be is read on its own in the whole text's context and its
+ * words are looked up in the spoken text. Dictionary readings and names are looked up in the
+ * spoken text.
  */
 function protectedRanges(
   spoken: string,
-  source: string,
+  written: string,
   readings: readonly string[],
   context: SpeechContext,
 ): Range[] {
-  const ranges: Range[] = [];
-  const read = (part: string) => toSpeech(part, context);
-  const prose = source.replace(MATH, (m) => {
-    occurrences(spoken, read(m), ranges);
-    return ' ';
-  });
-  for (const m of prose.matchAll(QUANTITY)) occurrences(spoken, read(m[0]), ranges);
-  for (const m of prose.matchAll(EQUATION)) occurrences(spoken, read(m[0]), ranges);
+  const spans = writtenSpans(written);
+  const all = carriedRanges(
+    spoken,
+    written,
+    spans.map((s) => s.at),
+    context,
+  );
+  const ranges: Range[] = all ?? [];
+  if (!all) {
+    for (const s of spans) {
+      const one = carriedRanges(spoken, written, [s.at], context);
+      if (one) ranges.push(...one);
+      else occurrences(spoken, toSpeech(s.text, context), ranges);
+    }
+  }
   for (const r of readings) occurrences(spoken, r, ranges);
   for (const m of spoken.matchAll(NAME)) ranges.push([m.index, m.index + m[0].length]);
   return ranges;
@@ -285,6 +402,8 @@ const NUMBER_WORDS = new Set(
     ' ',
   ),
 );
+/** Signs read with a number ("mũ trừ ba", "âm ba phẩy hai", "cộng hai"). */
+const SIGN_WORDS = new Set(['trừ', 'âm', 'cộng']);
 const CONJUNCTIONS = [
   'và',
   'nhưng',
@@ -313,10 +432,22 @@ const CONJUNCTIONS = [
 
 const lastWord = (s: string) => (/(\S+)\s*$/u.exec(s)?.[1] ?? '').toLowerCase();
 const firstWord = (s: string) => (/^\s*(\S+)/u.exec(s)?.[1] ?? '').toLowerCase();
+const numberish = (w: string) => NUMBER_WORDS.has(w) || SIGN_WORDS.has(w);
+
+/**
+ * A cut here would split a number: between two number words or signs ("mười mũ | trừ ba"), or
+ * between a number and the unit read after it ("năm | mét"). It holds whatever the written text
+ * was, so also where a quantity could not be followed through the reader.
+ */
+function splitsNumber(left: string, right: string): boolean {
+  const before = lastWord(left);
+  const after = firstWord(right);
+  return numberish(before) && (numberish(after) || UNIT_WORDS.has(after));
+}
 
 /**
  * The best place to cut a piece that has no punctuation where it needs one: between words,
- * never inside a protected span or between two number words, both sides long enough; before a
+ * never inside a protected span or a number (`splitsNumber`), both sides long enough; before a
  * conjunction if possible, near the middle (or as late as `maxLeft` allows). Null when there is
  * none (or, with `conjunctionOnly`, none before a conjunction).
  */
@@ -335,7 +466,7 @@ function bestCut(
     const right = text.slice(cut, piece.end);
     if (inside(cut, ranges) || inside(piece.start + m.index, ranges)) continue;
     if (words(left) < MIN_CUT_WORDS || words(right) < MIN_CUT_WORDS) continue;
-    if (NUMBER_WORDS.has(lastWord(left)) && NUMBER_WORDS.has(firstWord(right))) continue;
+    if (splitsNumber(left, right)) continue;
     const r = right.toLowerCase();
     const conjunction = CONJUNCTIONS.some((c) => r.startsWith(`${c} `));
     if (conjunctionOnly && !conjunction) continue;

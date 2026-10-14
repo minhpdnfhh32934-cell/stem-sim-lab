@@ -152,6 +152,56 @@ describe('chunks are sized for the on-device voice', () => {
     }
   });
 
+  describe('a number stays with its power of ten, its unit and its sign (long sentences)', () => {
+    it.each([
+      [
+        'Hằng số Planck có giá trị bằng 6,626.10⁻³⁴ J.s và nó xuất hiện trong mọi công thức của vật lí lượng tử hiện đại ngày nay',
+        'sáu phẩy sáu hai sáu nhân mười mũ trừ ba mươi tư jun giây',
+      ],
+      [
+        'Trong phòng thí nghiệm hóa học ta pha dung dịch axit clohiđric có nồng độ 0,1 M để chuẩn độ dung dịch natri hiđroxit chưa biết nồng độ',
+        'không phẩy một mol trên lít',
+      ],
+      [
+        'Một chiếc xe đạp chuyển động thẳng đều trên đoạn đường nằm ngang với tốc độ không đổi 5 m.s⁻¹ trong suốt khoảng thời gian quan sát của em',
+        'năm mét giây mũ trừ một',
+      ],
+      [
+        'Vào một buổi sáng mùa đông rất lạnh ở vùng núi cao phía bắc nhiệt độ ngoài trời đo được là −3,2 °C nên các em nhớ mặc ấm khi đi học nhé',
+        'âm ba phẩy hai độ xê',
+      ],
+    ])('%s', (text, phrase) => {
+      expect(prepareSpeech(text).text).toContain(phrase);
+      for (const max of [16, 24, 32, 40, 48, 64, MMS_CHUNK_MAX]) {
+        const plan = prepareSpeech(text, { maxChunkChars: max, firstChunkChars: max });
+        expect(plan.chunks.length).toBeGreaterThan(1);
+        expect(inOneChunk(plan, phrase)).toBe(true);
+        expect(joined(plan)).toBe(flat(plan.text));
+      }
+    });
+
+    it('a quantity stays whole beside an equation the marks cannot follow ("+ Pi +")', () => {
+      const text =
+        'Trong tế bào ATP → ADP + Pi + năng lượng và mỗi mol ATP giải phóng khoảng 30,5 kJ/mol năng lượng cho các hoạt động sống';
+      for (const max of [16, 24, 32, 40]) {
+        const plan = prepareSpeech(text, { maxChunkChars: max, firstChunkChars: max });
+        expect(inOneChunk(plan, 'ba mươi phẩy năm ki-lô-jun trên mol')).toBe(true);
+        expect(inOneChunk(plan, 'a tê pê tạo thành a đê pê cộng pê i')).toBe(true);
+        expect(joined(plan)).toBe(flat(plan.text));
+      }
+    });
+
+    it('also when the reader cannot be followed: never between a number word and a sign or a unit', () => {
+      const text =
+        'Ta lấy kết quả vừa tính được nhân với mười mũ trừ ba rồi viết quãng đường vật đi được là 5 mét trong khoảng thời gian đó';
+      for (const max of [16, 24, 32, 40]) {
+        const plan = prepareSpeech(text, { maxChunkChars: max, firstChunkChars: max });
+        expect(inOneChunk(plan, 'mười mũ trừ ba')).toBe(true);
+        expect(inOneChunk(plan, 'năm mét')).toBe(true);
+      }
+    });
+  });
+
   it('never cuts a time or a formula at its own colon or comma', () => {
     const plan = prepareSpeech('Lúc 10:30 thì $f(x, y) = x + y$, ta có kết quả.');
     expect(inOneChunk(plan, 'mười: ba mươi')).toBe(true);

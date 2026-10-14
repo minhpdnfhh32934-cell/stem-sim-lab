@@ -299,6 +299,14 @@ const LENGTHS = new Set(['m', 'cm', 'mm', 'km', 'dm', 'nm', 'µm', 'μm']);
  */
 const MOLAR: Record<string, string> = { M: 'mol trên lít', mM: 'mi-li-mol trên lít' };
 
+/**
+ * The first word of every unit's reading ("mét", "niu-tơn", "mol", "độ"…): the speech plan never
+ * cuts between a number and the unit read after it.
+ */
+export const UNIT_WORDS: ReadonlySet<string> = new Set(
+  [...Object.values(BASE_UNITS), ...Object.values(MOLAR)].map((r) => r.split(' ')[0] ?? ''),
+);
+
 export interface UnitOptions {
   /** The text is about solutions (chemistry, enzymes): a bare "M" is mol per litre. */
   molar?: boolean;

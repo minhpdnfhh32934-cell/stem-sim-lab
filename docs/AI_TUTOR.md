@@ -350,10 +350,14 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    it into chunks: paragraph > sentence > `;`/`:` > `,`; a piece of one word joins its neighbour;
    a piece over 100 characters is cut between words, before a conjunction if possible, at least 3
    words on each side; the first chunk is cut at a conjunction past 64 characters (the first
-   sound comes sooner). A cut never falls inside a number with its unit, a `$…$` formula, an
-   equation, a dictionary reading or a name (each is found in the written text, read on its own
-   and looked up in the spoken text). The chunks are the prepared text word for word (tested on
-   the 40 golden and 19 benchmark sentences).
+   sound comes sooner). A cut never falls inside a number with its sign, power of ten and unit
+   ("6,626.10⁻³⁴ J.s", "−3,2 °C", "0,1 M"), a `$…$` formula, an equation, a dictionary reading or a
+   name: the written spans are marked and carried through the reader, so their spoken words are
+   known exactly (a span whose marks change the reading is read on its own in the whole text's
+   context and looked up instead), and a cut never falls between a number word and a sign
+   ("trừ", "âm", "cộng"), another number word or a unit word. Chemistry and solutions ("0,2 M" =
+   mol per litre) are told from the text as written, before the dictionary. The chunks are the
+   prepared text word for word (tested on the 40 golden and 19 benchmark sentences).
 2. **Pauses after a chunk** (`PAUSE_MS`): phrase cut without punctuation 80 ms · before a key term
    120 · comma 150 · `;`/`:` 280 · sentence 400 · paragraph or list item 560 · last chunk 0 (the
    board adds its own pause between sentences).
