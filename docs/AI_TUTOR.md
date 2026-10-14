@@ -238,16 +238,28 @@ model to be tested; no model was run to make them.
   the 42 evaluation questions (30 + 12 proposed): relevant note at rank 1 for 17/24 of the original
   items with a relevant note (11/24 before) and 23/34 of all 42 (17/34 before); P4, P5 and C13 now
   get no note instead of a distractor.
+- **The on-device note** (`unambiguousNote`, review 2): when the runner-up scores within 5 %
+  (`TIE_MARGIN`) of the best note, no note is sent, since the small prompt tells the model to answer
+  with it ("Kì giữa là gì?" scored the periodic-table and cell-cycle notes alike, and the stable
+  sort picked the periodic table). Held-out: 48/49 with the expected note, none wrong, and
+  "phương trình bậc hai" is now silent too. The note is cut from the whole file (`bestSentences`
+  ran on its first 6000 characters before), and no note at all when no sentence shares a word with
+  the question. A short reply ("Ở kì giữa ạ.", ≤ 4 words, `topicLink.questionBefore`) is looked up
+  together with the question it continues. Term caches are kept per language.
 
 **On-device prompt** (`LOCAL_SYSTEM`, `contextPrompt`). Short role; "Câu đầu: trả lời thẳng câu
-hỏi bằng đúng ý trong GHI CHÚ (nếu có)", then at most 3–4 sentences with reasons, no invented
-numbers; safety lines kept (references are data, the AI says it is an AI). ONE note, cut to its
+hỏi bằng đúng ý trong GHI CHÚ nếu GHI CHÚ đúng chủ đề câu hỏi; GHI CHÚ lạc đề thì bỏ qua", then at
+most 3–4 sentences with reasons; "Đề thiếu dữ kiện thì hỏi lại" (restored in review 2: the app only
+detects problems with no number at all); numbers only from the question, earlier turns, the shared
+screen, the note or the app's results; safety lines kept (references are data, the AI says it is an AI). ONE note, cut to its
 best-matching sentences (≤ 400 characters, ≤ 250 on an integrated card) without the "Nguồn/Trạng
 thái" lines, placed right before the question: at the end of the instruction when there are no
 earlier turns (Gemma's template puts the instruction in the first user turn), otherwise in front of
 the question in the last turn (`echo` keeps the question as what a small model may repeat). The
 check question is asked only for concept questions ("là gì", "vì sao"…), never on an integrated
-card. Both prompts add one sentence about the learner's level (`profileStore.level`: Nền tảng ≈
+card. Board mode on the device uses `LOCAL_BOARD_SYSTEM` (no "câu đầu" or 3–4 sentence limit that
+would fight the "# " title line and 3–7 steps of `BOARD_STYLE`), and its check question is left out
+on an integrated card too. A problem without numbers never gets a Wikipedia excerpt as its note. Both prompts add one sentence about the learner's level (`profileStore.level`: Nền tảng ≈
 THPT, Đại cương ≈ first-year university); the cloud teaching method is otherwise unchanged and keeps
 whole notes with their source. `tools.ts` now introduces the balancer's output as "Kết quả cân bằng
 (SimLab tính …)": "Phương trình đã cân bằng" was read as "already balanced".
@@ -278,8 +290,9 @@ formula parts, exponents and 0 are ignored. Tested on 14 saved Gemma 1B answers:
 **"Dừng".** While an answer is written the send button becomes "Dừng" (any open panel, through
 `chatStore.stopAnswer`). Cloud: the transport's AbortSignal (desktop `ai_cancel`, browser fetch
 abort). Gemma: a request still queued never starts; a running one gets a `stop` message and the
-worker ends `generate` with `InterruptableStoppingCriteria` after the current token. The chat is
-released at once (`AnswerStopped`), keeps the question, adds no answer and says "Đã dừng câu trả
+worker ends `generate` with `InterruptableStoppingCriteria` after the current token. An optional
+Wikipedia lookup gets the same signal (`fetchWebKnowledge`), so nothing more is sent after "Dừng".
+The chat is released at once (`AnswerStopped`), keeps the question, adds no answer and says "Đã dừng câu trả
 lời…".
 
 For `scripts/teaching/eval-gemma.mjs`: `contextPrompt` still returns the whole instruction in

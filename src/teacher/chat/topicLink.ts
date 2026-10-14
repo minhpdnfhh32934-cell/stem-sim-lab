@@ -110,6 +110,21 @@ function isFollowUp(message: ChatLine, before: ChatLine | undefined): boolean {
 }
 
 /**
+ * The learner's question that a short reply continues ("Ở kì giữa ạ." after "Nguyên phân gồm những
+ * kì nào?" and the teacher's check question), or null when `reply` is a question of its own. Earlier
+ * follow-ups and quick buttons are skipped back to the question they continue.
+ */
+export function questionBefore(reply: string, history: readonly ChatLine[]): string | null {
+  if (!isFollowUp({ role: 'user', content: reply }, history[history.length - 1])) return null;
+  for (let i = history.length - 1; i >= 0; i--) {
+    const m = history[i];
+    if (m?.role !== 'user') continue;
+    if (!isFollowUp(m, history[i - 1])) return m.content;
+  }
+  return null;
+}
+
+/**
  * The topic of the learner's latest question (null when it names none). A short follow-up with
  * no topic of its own keeps the topic of the question it follows; anything else drops the link,
  * so an old topic never shows under an unrelated answer.

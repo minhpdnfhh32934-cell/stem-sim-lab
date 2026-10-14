@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import heldOut from '../../../tests/teaching/retrieval-heldout.json';
 import { useChatStore } from './chatStore';
 import {
@@ -7,6 +7,7 @@ import {
   builtinPendingCount,
   excerptBody,
   searchKnowledge,
+  unambiguousNote,
 } from './knowledge';
 
 describe('built-in knowledge notes (scientific content, docs/DATA_REVIEW.md #14)', () => {
@@ -50,6 +51,28 @@ describe('note retrieval', () => {
     // 2026-10-14: 49/49 (old scorer 38/49) and 6/8 (old scorer 0/8: it always injected a note).
     expect(hits.length / topics.length).toBeGreaterThanOrEqual(0.95);
     expect(silent.length).toBeGreaterThanOrEqual(6);
+  });
+
+  it('the one note of the on-device prompt: the held-out questions, nothing on a tie', () => {
+    const { items } = heldOut as {
+      items: { locale: 'vi' | 'en'; q: string; expected: string; alsoOk?: string[] }[];
+    };
+    const one = (q: string, locale: 'vi' | 'en') =>
+      unambiguousNote(q, locale).map((d) => d.id.replace('builtin:', ''));
+    const topics = items.filter((it) => it.expected !== 'none');
+    const hits = topics.filter((it) =>
+      [it.expected, ...(it.alsoOk ?? [])].includes(one(it.q, it.locale)[0] ?? ''),
+    );
+    const wrong = topics.filter((it) => {
+      const id = one(it.q, it.locale)[0];
+      return id !== undefined && ![it.expected, ...(it.alsoOk ?? [])].includes(id);
+    });
+    // 2026-10-14: 48/49 (one long exercise has its two best notes 2 % apart: no note) and no
+    // wrong note at all.
+    expect(hits.length / topics.length).toBeGreaterThanOrEqual(0.95);
+    expect(wrong).toEqual([]);
+    // "kì" alone is in the lead of the periodic-table and of the cell-cycle note.
+    expect(one('Kì giữa là gì?', 'vi')).toEqual([]);
   });
 
   it('keeps short meaningful words and drops function words', () => {
@@ -102,5 +125,28 @@ describe('excerpt for the small on-device prompt', () => {
     expect(text.length).toBeLessThanOrEqual(60);
     expect(text.endsWith('…')).toBe(true);
     expect(excerptBody(motion.text)).not.toContain('Nguồn:');
+  });
+});
+
+describe('notes the small prompt can trust (review 2)', () => {
+  const motion = builtinKnowledge('vi').find((n) => n.id === 'builtin:physics-motion');
+
+  it('no excerpt at all when no sentence of the note matches the question', () => {
+    if (!motion) throw new Error('note missing');
+    expect(bestSentences(motion, 'Thuật toán sắp xếp nổi bọt')).toBe('');
+  });
+
+  it('keeps the terms of each language apart (same note id, same text length)', async () => {
+    vi.resetModules();
+    const fresh = await import('./knowledge');
+    const id = 'builtin:bio-plant-resp';
+    const viNote = fresh.builtinKnowledge('vi').find((n) => n.id === id);
+    const enNote = fresh.builtinKnowledge('en').find((n) => n.id === id);
+    expect(viNote?.text.length).toBe(enNote?.text.length);
+    // Both questions typed without accents: the same comparison mode in both languages.
+    expect(fresh.searchKnowledge('ho hap o thuc vat', 'vi')[0]?.id).toBe(id);
+    expect(
+      fresh.searchKnowledge('What do stomata and lenticels do in plant respiration?', 'en')[0]?.id,
+    ).toBe(id);
   });
 });

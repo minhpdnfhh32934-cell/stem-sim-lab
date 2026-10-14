@@ -150,6 +150,135 @@ describe('the on-device prompt', () => {
   });
 });
 
+describe('the on-device prompt after review 2', () => {
+  it('sends no note when two notes match the question equally well', async () => {
+    // "kì" is in the lead of the periodic-table note and of the cell-cycle note.
+    const { references, note } = await contextPrompt(
+      'Kì giữa là gì?',
+      'vi',
+      false,
+      false,
+      'compact',
+    );
+    expect(references).toEqual([]);
+    expect(note).toBe('');
+  });
+
+  it('looks a short reply up together with the question it answers', async () => {
+    const history = [
+      { role: 'user', content: 'Nguyên phân gồm những kì nào?' },
+      {
+        role: 'assistant',
+        content: 'Gồm kì đầu, kì giữa, kì sau và kì cuối. NST xếp thành một hàng ở kì nào?',
+      },
+    ];
+    const { references } = await contextPrompt(
+      'Ở kì giữa ạ.',
+      'vi',
+      false,
+      false,
+      'compact',
+      history,
+    );
+    expect(references).toEqual(['Thư viện chủ đề Sinh học · Chu kì tế bào']);
+  });
+
+  it('cuts the excerpt from the whole imported file, not from its first 6000 characters', async () => {
+    const filler = 'Đây là phần giới thiệu chung của tài liệu ôn tập.\n'.repeat(160);
+    useChatStore.setState({
+      documents: [
+        {
+          id: 'doc-long',
+          name: 'Ôn tập',
+          text: `Chương 1. Mở đầu.\n${filler}Quang phổ vạch phát xạ gồm những vạch màu riêng lẻ trên nền tối.`,
+          addedAt: 1,
+        },
+      ],
+    });
+    const { note, references } = await contextPrompt(
+      'Quang phổ vạch phát xạ là gì?',
+      'vi',
+      false,
+      false,
+      'compact',
+    );
+    expect(references).toEqual(['Ôn tập']);
+    expect(note).toContain('vạch màu riêng lẻ trên nền tối');
+    expect(note).not.toContain('Chương 1');
+  });
+
+  it('tells the small model to ask back, which numbers it may use, and to skip an off-topic note', async () => {
+    const viPrompt = await contextPrompt('Lực ma sát là gì?', 'vi', false, false, 'compact');
+    expect(viPrompt.system).toContain('Đề thiếu dữ kiện thì hỏi lại');
+    expect(viPrompt.system).toMatch(/số có trong câu hỏi, các lượt trước, ngữ cảnh màn hình/);
+    expect(viPrompt.system).toContain('nếu GHI CHÚ đúng chủ đề');
+    const en = await contextPrompt('What is friction?', 'en', false, false, 'compact');
+    expect(en.system).toContain('If the problem lacks data, ask for it');
+    expect(en.system).toMatch(/numbers in the question, earlier turns, the shared screen/);
+    expect(en.system).toContain('if the NOTE is about this question');
+  });
+
+  it('board mode on the device asks for a title and steps, nothing that contradicts them', async () => {
+    await askTeacher('Lực ma sát là gì?', 'vi', [], {
+      includeScreen: false,
+      think: false,
+      board: true,
+    });
+    const system = gemma.calls.at(-1)?.system ?? '';
+    expect(system).toContain('dòng đầu là tiêu đề bắt đầu bằng "# "');
+    expect(system).not.toContain('Câu đầu: trả lời thẳng');
+    expect(system).not.toContain('tối đa 3–4 câu');
+    // The note still comes last, right before the question.
+    expect(system).toMatch(/<\/reference>$/);
+    // An integrated card ('tight') keeps the lesson as short as possible: no check question.
+    const tight = await contextPrompt('Lực ma sát là gì?', 'vi', false, false, 'tight', [], {
+      board: true,
+    });
+    expect(tight.system).toContain('dòng đầu là tiêu đề');
+    expect(tight.system).not.toContain('tự kiểm tra');
+  });
+
+  it('"Dừng" during the Wikipedia lookup stops it and asks the model nothing', async () => {
+    useChatStore.setState({ webLookup: true });
+    let seen: AbortSignal | undefined;
+    vi.stubGlobal('fetch', (_url: string, init?: RequestInit) => {
+      seen = init?.signal ?? undefined;
+      return new Promise((_, reject) => {
+        init?.signal?.addEventListener('abort', () => {
+          reject(new DOMException('aborted', 'AbortError'));
+        });
+      });
+    });
+    const controller = new AbortController();
+    const answer = ask('Thuật toán sắp xếp nổi bọt hoạt động ra sao?', [], controller.signal);
+    await vi.waitFor(() => {
+      expect(seen).toBeDefined();
+    });
+    controller.abort();
+    await vi.waitFor(() => {
+      expect(seen?.aborted).toBe(true);
+    });
+    await expect(answer).rejects.toBeInstanceOf(AnswerStopped);
+    expect(gemma.calls).toHaveLength(0);
+    vi.unstubAllGlobals();
+  });
+
+  it('a problem without numbers gets no Wikipedia excerpt as its note', async () => {
+    const fetchSpy = vi.fn(() => Promise.resolve(new Response('{}', { status: 404 })));
+    vi.stubGlobal('fetch', fetchSpy);
+    const { references } = await contextPrompt(
+      'Tính quãng đường ô tô đi được.',
+      'vi',
+      false,
+      true,
+      'compact',
+    );
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(references).toEqual([]);
+    vi.unstubAllGlobals();
+  });
+});
+
 describe('the note right before the question', () => {
   const history: ChatMessageRecord[] = [
     { id: 'q', role: 'user', content: 'Chào thầy' },

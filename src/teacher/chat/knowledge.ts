@@ -788,8 +788,9 @@ function leadText(document: KnowledgeDocument): string {
 
 const termCache = new Map<string, DocumentTerms>();
 
-function documentTerms(document: KnowledgeDocument, mode: Mode): DocumentTerms {
-  const key = `${mode}\u0000${document.id}\u0000${document.addedAt}\u0000${document.text.length}`;
+function documentTerms(document: KnowledgeDocument, mode: Mode, locale: Locale): DocumentTerms {
+  // A built-in note has the same id in both languages (and may have the same text length).
+  const key = `${locale}\u0000${mode}\u0000${document.id}\u0000${document.addedAt}\u0000${document.text.length}`;
   let terms = termCache.get(key);
   if (!terms) {
     if (termCache.size > 400) termCache.clear();
@@ -885,7 +886,7 @@ export function rankKnowledge(query: string, locale: Locale): ScoredDocument[] {
   const mode = modeOf(query);
   const q = termsOf(query, mode);
   if (q.single.size === 0 && q.pairs.size === 0) return [];
-  const terms = all.map((d) => documentTerms(d, mode));
+  const terms = all.map((d) => documentTerms(d, mode, locale));
   const weight = weights(q, terms);
   // Coverage: every single word (one no note has weighs as the rarest) and every compound the
   // notes know ("nhiệt lượng"); unknown pairs ("cần để") are just neighbouring words.
@@ -919,6 +920,26 @@ export function searchKnowledge(query: string, locale: Locale, limit = 5): Knowl
     .map(({ document }) => ({ ...document, text: document.text.slice(0, 6000) }));
 }
 
+/**
+ * The runner-up within this share of the best score: the question does not tell the two notes
+ * apart ("Kì giữa là gì?" scores the periodic-table and the cell-cycle notes alike).
+ */
+export const TIE_MARGIN = 0.05;
+
+/**
+ * The one note for a small on-device prompt, whole (its best sentences are cut from all of it),
+ * or none when the two best notes score within TIE_MARGIN: that prompt tells the model to answer
+ * with the note, so a coin-flip distractor would become the answer. On the held-out set
+ * (tests/teaching/retrieval-heldout.json, 2026-10-14) this silences the two tied unrelated
+ * questions and drops one long exercise whose two best notes are 2 % apart.
+ */
+export function unambiguousNote(query: string, locale: Locale): KnowledgeDocument[] {
+  const [best, second] = rankKnowledge(query, locale);
+  if (!best) return [];
+  if (second && second.score >= best.score * (1 - TIE_MARGIN)) return [];
+  return [best.document];
+}
+
 /** Sentences of a note (a formula's "." inside "0.5" or "v.v." does not end one). */
 function sentencesOf(text: string): string[] {
   return text
@@ -930,7 +951,9 @@ function sentencesOf(text: string): string[] {
 /**
  * The sentences of `document` that best match the question, in their original order, within
  * `maxChars` and without the "Nguồn"/"Trạng thái" lines (the small on-device prompt, where a long
- * excerpt buries the question). The best sentence is always kept, cut at a word if needed.
+ * excerpt buries the question). The best sentence is always kept, cut at a word if needed; when
+ * no sentence shares a word with the question the result is '' (no note rather than the file's
+ * first sentence, e.g. a chapter title).
  */
 export function bestSentences(document: KnowledgeDocument, query: string, maxChars = 400): string {
   const sentences = sentencesOf(excerptBody(document.text));
@@ -943,6 +966,7 @@ export function bestSentences(document: KnowledgeDocument, query: string, maxCha
   const order = sentences
     .map((_, i) => ({ i, score: overlap(q, terms[i] as Terms, weight, bound) }))
     .sort((a, b) => b.score - a.score || a.i - b.i);
+  if ((order[0]?.score ?? 0) <= 0) return '';
   const picked: number[] = [];
   let used = 0;
   for (const { i, score } of order) {
@@ -973,28 +997,33 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 /**
  * One short web excerpt (Vietnamese/English Wikipedia) when the device is online.
  * Always labelled as community content to check against the lesson — never mixed
- * silently with the checked library. Fails silently offline.
+ * silently with the checked library. Fails silently offline. `signal` ("Dừng") ends both requests
+ * at once and nothing more is sent.
  */
 export async function fetchWebKnowledge(
   query: string,
   locale: Locale,
+  signal?: AbortSignal,
 ): Promise<KnowledgeDocument[]> {
+  const limit = () =>
+    signal ? AbortSignal.any([signal, AbortSignal.timeout(8000)]) : AbortSignal.timeout(8000);
   try {
     if (typeof navigator !== 'undefined' && !navigator.onLine) return [];
+    if (signal?.aborted) return [];
     const host = WIKI_HOSTS[locale];
     const api = `https://${host}/w/api.php?format=json&origin=*`;
     const found = await fetch(
       `${api}&action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=2`,
-      { signal: AbortSignal.timeout(8000) },
+      { signal: limit() },
     );
     if (!found.ok) return [];
     const results = asRecord(asRecord(await found.json())?.query)?.search;
     if (!Array.isArray(results) || results.length === 0) return [];
     const title = asRecord(results[0])?.title;
-    if (typeof title !== 'string' || !title) return [];
+    if (typeof title !== 'string' || !title || signal?.aborted) return [];
     const page = await fetch(
       `${api}&action=query&prop=extracts&exsentences=3&explaintext&titles=${encodeURIComponent(title)}`,
-      { signal: AbortSignal.timeout(8000) },
+      { signal: limit() },
     );
     if (!page.ok) return [];
     const pages = asRecord(asRecord(await page.json())?.query)?.pages;
