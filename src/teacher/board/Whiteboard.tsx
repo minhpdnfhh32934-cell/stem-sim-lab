@@ -8,6 +8,9 @@ import {
   Pencil,
   Play,
   RotateCcw,
+  Shrink,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { memo, useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
@@ -16,10 +19,18 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { cx } from '@/ui/cx';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useTeacherStore } from '@/teacher/teacherStore';
-import { PEN_SPEEDS, useBoardStore, type BoardMark } from './boardStore';
+import {
+  MAX_ZOOM,
+  MIN_ZOOM,
+  PEN_SPEEDS,
+  nextZoom,
+  useBoardStore,
+  type BoardMark,
+} from './boardStore';
 import { BoardDrawing } from './BoardDrawing';
 import { BoardMinimap } from './BoardMinimap';
-import { BOARD_W, COLUMNS, COLUMN_TOP, type Line, type TextElement } from './layout';
+import { BOARD_W, boardRules, type Line, type TextElement } from './layout';
+import { rescaleScroll } from './minimap';
 import {
   cancelPendingStart,
   claimStart,
@@ -53,6 +64,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   const teacherFace = useBoardStore((s) => s.teacherFace);
   const speed = useBoardStore((s) => s.speed);
   const penMode = useBoardStore((s) => s.penMode);
+  const zoom = useBoardStore((s) => s.zoom);
   const subtitle = useBoardStore((s) => s.subtitle);
   const set = useBoardStore((s) => s.set);
   const locale = useSettingsStore((s) => s.locale);
@@ -155,6 +167,46 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
           </>
         )}
         <span className="board__toolbar-gap" />
+        {/* Larger writing for the learner who needs it; the board then scrolls sideways too. */}
+        <div className="board__zoom" role="group" aria-label={t('board.zoom')}>
+          <button
+            type="button"
+            className="btn board__icon-btn"
+            disabled={zoom <= MIN_ZOOM}
+            onClick={() => {
+              set({ zoom: nextZoom(zoom, -1) });
+            }}
+            title={t('board.zoomOut')}
+            aria-label={t('board.zoomOut')}
+          >
+            <ZoomOut size={15} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="btn board__icon-btn"
+            disabled={zoom >= MAX_ZOOM}
+            onClick={() => {
+              set({ zoom: nextZoom(zoom, 1) });
+            }}
+            title={t('board.zoomIn')}
+            aria-label={t('board.zoomIn')}
+          >
+            <ZoomIn size={15} aria-hidden="true" />
+          </button>
+          {zoom !== 1 && (
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                set({ zoom: 1 });
+              }}
+              title={t('board.zoomFitHint')}
+            >
+              <Shrink size={15} aria-hidden="true" />
+              {t('board.zoomFit')}
+            </button>
+          )}
+        </div>
         <button
           type="button"
           className={cx('btn', penMode && 'btn--accent')}
@@ -245,11 +297,52 @@ function Legend() {
   );
 }
 
-/** The scaled board surface for the shown face, with the camera following the pen. */
+/** Where the view was: scroll and viewport size (px) at the scale they were taken at. */
+interface ViewSnapshot {
+  top: number;
+  left: number;
+  h: number;
+  w: number;
+  scale: number;
+}
+
+function snapshotOf(node: HTMLElement, scale: number): ViewSnapshot {
+  return {
+    top: node.scrollTop,
+    left: node.scrollLeft,
+    h: node.clientHeight,
+    w: node.clientWidth,
+    scale,
+  };
+}
+
+/** Moves the view at once (the board's smooth scrolling is for the camera only). */
+function scrollInstant(node: HTMLElement, top: number, left: number): void {
+  // (jsdom has no element scrollTo.)
+  if (typeof node.scrollTo === 'function') node.scrollTo({ top, left, behavior: 'instant' });
+  else {
+    node.scrollTop = top;
+    node.scrollLeft = left;
+  }
+}
+
+/**
+ * The scaled board surface for the shown face, with the camera following the pen. The sheet is
+ * the board in board units, scaled to the viewport's width (times the learner's zoom): a resize
+ * or a zoom only changes the scale and keeps the same part of the board in view; nothing written
+ * ever moves on the board.
+ */
 function BoardSheet() {
   const t = useT();
   const viewport = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.6);
+  /** Scale at which the whole board width fits the viewport (null until it is measured). */
+  const [fit, setFit] = useState<number | null>(null);
+  const zoom = useBoardStore((s) => s.zoom);
+  const scale = (fit ?? 0.6) * zoom;
+  /** The scale the sheet is drawn at now (read by the scroll listener and the camera). */
+  const drawnScale = useRef(scale);
+  /** Where the view was before the scale changed (kept on every scroll). */
+  const lastView = useRef<ViewSnapshot | null>(null);
   const face = useBoardStore((s) => s.face);
   const layout = useBoardStore((s) => s.layout);
   const focus = useBoardStore((s) => s.focus);
@@ -289,7 +382,7 @@ function BoardSheet() {
     const node = viewport.current;
     if (!node) return;
     const update = () => {
-      setScale(Math.max(0.3, (node.clientWidth - 2) / BOARD_W));
+      setFit(Math.max(0.3, (node.clientWidth - 2) / BOARD_W));
     };
     update();
     // Very old engines (and jsdom) have no ResizeObserver: the first measurement stays.
@@ -301,20 +394,90 @@ function BoardSheet() {
     };
   }, []);
 
+  // Where the learner looks is noted on every scroll, at the scale the sheet is drawn at.
+  useEffect(() => {
+    const node = viewport.current;
+    if (!node) return;
+    const note = () => {
+      lastView.current = snapshotOf(node, drawnScale.current);
+    };
+    node.addEventListener('scroll', note, { passive: true });
+    return () => {
+      node.removeEventListener('scroll', note);
+    };
+  }, []);
+
+  // A new scale (the board was measured, the window or the panes were resized, or the learner
+  // zoomed): the same part of the board stays in the middle of the view, or, while the teacher
+  // writes and the learner follows, the line being written is put in view. Never a jump back to
+  // the last element. Nothing is anchored on the guess made before the first measurement.
+  useLayoutEffect(() => {
+    const node = viewport.current;
+    drawnScale.current = scale;
+    if (!node || fit === null) return;
+    const before = lastView.current;
+    const s = useBoardStore.getState();
+    const e = s.focus ? s.layout.elements.find((x) => x.id === s.focus) : undefined;
+    const following =
+      e !== undefined &&
+      e.face === s.face &&
+      s.status === 'playing' &&
+      s.follow &&
+      drawing.current === null;
+    const left =
+      before && before.scale !== scale
+        ? rescaleScroll(
+            before.left,
+            before.w,
+            before.scale,
+            scale,
+            node.scrollWidth,
+            node.clientWidth,
+          )
+        : node.scrollLeft;
+    if (following && (before === null || before.scale !== scale)) {
+      scrollInstant(node, Math.max(0, (e.y + e.h) * scale - node.clientHeight * 0.7), left);
+    } else if (before && before.scale !== scale) {
+      const top = rescaleScroll(
+        before.top,
+        before.h,
+        before.scale,
+        scale,
+        node.scrollHeight,
+        node.clientHeight,
+      );
+      scrollInstant(node, top, left);
+    }
+    lastView.current = snapshotOf(node, scale);
+  }, [scale, fit]);
+
   // Camera: keep what the teacher is writing in view, like a teacher stepping along the board.
   // Only while the lesson plays and the learner follows the teacher, never under the learner's
-  // own pen (the stroke would jump), and only for the face shown.
+  // own pen (the stroke would jump), and only for the face shown. A new scale does not move it
+  // (the effect above keeps the view).
   useEffect(() => {
     const node = viewport.current;
     const e = focus ? layout.elements.find((x) => x.id === focus) : undefined;
     if (!node || !e || e.face !== face || status !== 'playing' || !follow || stroking) return;
-    const top = e.y * scale;
-    const bottom = (e.y + e.h) * scale;
+    const k = drawnScale.current;
+    const top = e.y * k;
+    const bottom = (e.y + e.h) * k;
     if (bottom > node.scrollTop + node.clientHeight * 0.85 || top < node.scrollTop) {
       // `scroll-behavior: smooth` (board.css) makes this a camera pan.
       node.scrollTop = Math.max(0, bottom - node.clientHeight * 0.7);
     }
-  }, [focus, face, scale, layout, status, follow, stroking]);
+  }, [focus, face, layout, status, follow, stroking]);
+
+  // Zoomed in, the camera also follows the pen sideways.
+  const penX = showPen ? pen.x : null;
+  useEffect(() => {
+    const node = viewport.current;
+    if (!node || penX === null || zoom === 1 || status !== 'playing' || !follow || stroking) return;
+    const x = penX * drawnScale.current;
+    const width = node.clientWidth;
+    if (x < node.scrollLeft + width * 0.1 || x > node.scrollLeft + width * 0.9)
+      node.scrollLeft = Math.max(0, x - width * 0.3);
+  }, [penX, zoom, status, follow, stroking]);
 
   const toBoard = (e: PointerEvent<SVGSVGElement>): [number, number] => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -329,19 +492,17 @@ function BoardSheet() {
             className="board__sheet"
             style={{ width: BOARD_W, height, transform: `scale(${String(scale)})` }}
           >
+            {/* Faint rules only between regions in use on this face (none across a wide face). */}
             <svg className="board__rules" width={BOARD_W} height={height} aria-hidden="true">
-              <line
-                x1={COLUMNS.side.x + COLUMNS.side.w + 20}
-                y1={COLUMN_TOP - 8}
-                x2={COLUMNS.side.x + COLUMNS.side.w + 20}
-                y2={height - 30}
-              />
-              <line
-                x1={COLUMNS.right.x - 20}
-                y1={COLUMN_TOP - 8}
-                x2={COLUMNS.right.x - 20}
-                y2={height - 30}
-              />
+              {boardRules(layout, face).map((r) => (
+                <line
+                  key={`${String(r.x)}-${String(r.y1)}`}
+                  x1={r.x}
+                  y1={r.y1}
+                  x2={r.x}
+                  y2={r.y2}
+                />
+              ))}
             </svg>
             {elements.map((e) =>
               e.kind === 'text' ? (
@@ -402,7 +563,7 @@ function BoardSheet() {
           </div>
         </div>
       </div>
-      <BoardMinimap viewport={viewport} scale={scale} height={height} />
+      <BoardMinimap viewport={viewport} scale={scale} height={height} zoomed={zoom !== 1} />
     </>
   );
 }

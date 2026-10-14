@@ -68,6 +68,11 @@ interface BoardState {
   speed: number;
   /** The learner is drawing with their own pen. */
   penMode: boolean;
+  /**
+   * How much larger than "fit to width" the board is shown (1 = the whole width in view; see
+   * ZOOMS). A view setting of this session only: kept across lessons, never saved.
+   */
+  zoom: number;
   strokes: Stroke[];
   set: (patch: BoardPatch) => void;
   setProgress: (id: string, value: number) => void;
@@ -99,6 +104,7 @@ export const useBoardStore = create<BoardState>()((set, get) => ({
   status: 'idle',
   speed: 1,
   penMode: false,
+  zoom: 1,
   strokes: [],
   set: (patch) => {
     set(patch);
@@ -118,3 +124,15 @@ export const useBoardStore = create<BoardState>()((set, get) => ({
 }));
 
 export const PEN_SPEEDS = [0.75, 1, 1.5, 2] as const;
+
+/** Board zoom steps (1 = fit to width). */
+export const ZOOMS = [1, 1.25, 1.5, 2] as const;
+export const MIN_ZOOM = ZOOMS[0];
+export const MAX_ZOOM = ZOOMS[3];
+
+/** The next zoom step in or out from `zoom` (stays at the ends). */
+export function nextZoom(zoom: number, direction: 1 | -1): number {
+  const steps: readonly number[] = ZOOMS;
+  if (direction > 0) return steps.find((z) => z > zoom) ?? steps[steps.length - 1] ?? 1;
+  return [...steps].reverse().find((z) => z < zoom) ?? steps[0] ?? 1;
+}

@@ -13,7 +13,7 @@ import {
 } from './layout';
 import { splitFormula } from './formulaSplit';
 import { boardAnswerText, scriptFor, subtitleText } from './lesson';
-import { scrollForRow, visibleBand } from './minimap';
+import { rescaleScroll, scrollForRow, visibleBand } from './minimap';
 import { compileFn, sample } from './plot';
 import { checkNumbers, evaluate, toArithmetic } from './provenance';
 import { circle, rng } from './rough';
@@ -449,5 +449,29 @@ describe('board minimap geometry', () => {
     // Clamped at both ends.
     expect(scrollForRow(0, 0.5, 400, 2000)).toBe(0);
     expect(scrollForRow(5000, 0.5, 400, 2000)).toBe(1600);
+  });
+
+  it('a new scale keeps the board row in the middle of the view (resize, zoom), clamped', () => {
+    const height = 4000; // board units
+    const middle = (top: number, client: number, scale: number) => (top + client / 2) / scale;
+    for (const start of [0, 350, 900, 1700]) {
+      const row = middle(start, 400, 0.6);
+      const bigger = rescaleScroll(start, 400, 0.6, 0.9, height * 0.9, 400);
+      // Clamped at the top when the row is too close to it.
+      if (row * 0.9 >= 200) expect(Math.abs(middle(bigger, 400, 0.9) - row) * 0.9).toBeLessThan(1);
+      else expect(bigger).toBe(0);
+      const back = rescaleScroll(bigger, 400, 0.9, 0.6, height * 0.6, 400);
+      expect(Math.abs(back - start)).toBeLessThan(1);
+    }
+    // A taller view after the resize keeps the same row in its middle.
+    const taller = rescaleScroll(900, 400, 0.6, 0.6, height * 0.6, 600);
+    expect(middle(taller, 600, 0.6)).toBeCloseTo(middle(900, 400, 0.6));
+    // Never past the end of the board, never above its top.
+    expect(rescaleScroll(2000, 400, 0.6, 0.3, height * 0.3, 400)).toBe(height * 0.3 - 400);
+    expect(rescaleScroll(10, 400, 0.9, 0.3, height * 0.3, 400)).toBe(0);
+    // Sideways when zoomed: the same rule on the other axis.
+    expect(rescaleScroll(0, 700, 0.6, 0.75, 1200 * 0.75, 700)).toBeCloseTo(
+      (350 / 0.6) * 0.75 - 350,
+    );
   });
 });
