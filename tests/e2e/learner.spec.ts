@@ -79,6 +79,8 @@ test.describe('Basic / Advanced', () => {
     await expect(inspector.getByText('Đối tượng', { exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /Thước đo góc/ })).toHaveCount(0);
     const sliders = inspector.locator('.params input[type="range"]');
+    // count() does not wait: let the sliders render first (slow under a full parallel run).
+    await expect(sliders.first()).toBeVisible();
     const basicCount = await sliders.count();
     expect(basicCount).toBeGreaterThanOrEqual(3);
     expect(basicCount).toBeLessThanOrEqual(5);
@@ -88,7 +90,7 @@ test.describe('Basic / Advanced', () => {
     const more = inspector.getByRole('button', { name: /Thêm thông số/ });
     if ((await more.count()) > 0) {
       await more.click();
-      expect(await sliders.count()).toBeGreaterThan(basicCount);
+      await expect.poll(() => sliders.count()).toBeGreaterThan(basicCount);
     }
 
     await mode.getByRole('radio', { name: 'Nâng cao' }).click();

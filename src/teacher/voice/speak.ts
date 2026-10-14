@@ -295,7 +295,8 @@ async function speakSystem(
       // A stop or a new phrase interrupts or cancels: not an error. Anything else (not allowed,
       // synthesis failed…) is reported and the phrase was not heard.
       utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
-        const error = (event as Partial<SpeechSynthesisErrorEvent>).error ?? 'unknown';
+        // Optional: some speech engines (and test doubles) call the handler without an event.
+        const error = (event as Partial<SpeechSynthesisErrorEvent> | undefined)?.error ?? 'unknown';
         if (error === 'interrupted' || error === 'canceled' || signal.aborted) {
           done();
           return;

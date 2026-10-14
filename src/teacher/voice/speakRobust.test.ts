@@ -52,7 +52,9 @@ function fakeSystemVoice(errors: Record<string, string> = {}) {
       spoken.push(u.text);
       const error = errors[u.text];
       queueMicrotask(() => {
-        if (error) u.onerror?.({ error });
+        // 'no-event': an engine that calls the handler without an event object.
+        if (error === 'no-event') u.onerror?.(undefined as never);
+        else if (error) u.onerror?.({ error });
         else u.onend?.();
       });
     },
@@ -141,6 +143,14 @@ describe('the teacher voice when something goes wrong', () => {
     await speak('Câu một. Câu hai. Câu ba.');
     expect(spoken).toEqual(['Câu một.', 'Câu hai.', 'Câu ba.']);
     expect(useVoiceStore.getState().lastError).toBeNull();
+  });
+
+  it('an error handler called without an event is reported, not thrown', async () => {
+    useVoiceStore.setState({ engine: 'system' });
+    const spoken = fakeSystemVoice({ 'Câu hai.': 'no-event' });
+    await speak('Câu một. Câu hai. Câu ba.');
+    expect(spoken).toEqual(['Câu một.', 'Câu hai.']);
+    expect(useVoiceStore.getState().lastError).toBe('system-voice-unknown');
   });
 
   it.each([

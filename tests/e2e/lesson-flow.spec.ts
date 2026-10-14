@@ -31,7 +31,11 @@ async function setUp(page: Page, opts: { down?: boolean } = {}) {
     // Fake Windows voice: "speaks" 25 ms per character and records what it was given.
     const log: string[] = [];
     (window as unknown as { __speech: string[] }).__speech = log;
-    let current: { onend?: () => void; onerror?: () => void; timer?: number } | null = null;
+    let current: {
+      onend?: () => void;
+      onerror?: (e: { error: string }) => void;
+      timer?: number;
+    } | null = null;
     Object.defineProperty(window, 'speechSynthesis', {
       configurable: true,
       value: {
@@ -48,7 +52,8 @@ async function setUp(page: Page, opts: { down?: boolean } = {}) {
           if (current?.timer) window.clearTimeout(current.timer);
           const c = current;
           current = null;
-          c?.onerror?.();
+          // Like Chrome: cancelling the phrase being spoken fires "error" with "interrupted".
+          c?.onerror?.({ error: 'interrupted' });
         },
         addEventListener() {},
         removeEventListener() {},
