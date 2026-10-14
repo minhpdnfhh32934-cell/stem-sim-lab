@@ -118,6 +118,13 @@ describe('chunks are sized for the on-device voice', () => {
     expect(plan.chunks).toHaveLength(2);
   });
 
+  it('never cuts before "với": it binds to the words before it ("cùng hướng với")', () => {
+    const plan = prepareSpeech(
+      'Định luật hai Niu-tơn cho biết gia tốc của một vật cùng hướng với lực tác dụng lên vật.',
+    );
+    expect(plan.chunks.some((c) => c.text.startsWith('với'))).toBe(false);
+  });
+
   it('never cuts inside a number with its unit, a formula, an equation or a name', () => {
     const tight = { maxChunkChars: 30, firstChunkChars: 30 };
     const quantity = prepareSpeech(
@@ -167,6 +174,8 @@ describe('roles and prosody', () => {
     ['Em hãy cho biết vận tốc sau hai giây là bao nhiêu?', 'check'],
     ['Chưa đúng rồi, em xem lại dấu của gia tốc nhé.', 'feedback'],
     ['Đúng rồi! Em làm rất tốt.', 'feedback'],
+    ['Em làm rất tốt, cách lập luận rõ ràng.', 'feedback'],
+    ['Các em giỏi lắm!', 'feedback'],
     ['Vậy ép bằng hai mươi niu-tơn.', 'result'],
     ['Gia tốc là đại lượng được gọi là tốc độ biến đổi vận tốc.', 'concept'],
     ['Bước hai, ta thay số vào công thức.', 'step'],

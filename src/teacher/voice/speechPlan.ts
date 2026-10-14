@@ -139,7 +139,7 @@ export function stripInternalMarkup(text: string): string {
 // ------------------------------------------------------------ roles
 
 const FEEDBACK =
-  /^(?:chưa đúng|chưa chính xác|chưa hẳn|sai rồi|không đúng|đúng rồi|đúng vậy|chính xác|rất tốt|tốt lắm|giỏi lắm|làm tốt lắm|gần đúng|không sao|cố lên)(?![\p{L}])/u;
+  /^(?:(?:các em|em|bạn)\s+(?:đã\s+)?(?:làm\s+)?(?:rất\s+)?)?(?:chưa đúng|chưa chính xác|chưa hẳn|sai rồi|không đúng|đúng rồi|đúng vậy|chính xác|rất tốt|tốt lắm|giỏi lắm|làm tốt lắm|gần đúng|không sao|cố lên)(?![\p{L}])/u;
 const RESULT = /^(?:vậy|do đó|kết quả|đáp số|kết luận|suy ra|như vậy|tóm lại)(?![\p{L}])/u;
 const CONCEPT = /(?:được gọi là|(?<![\p{L}])gọi là|là gì|khái niệm|định nghĩa)(?![\p{L}])/u;
 const STEP =
@@ -288,7 +288,6 @@ const CONJUNCTIONS = [
   'còn',
   'do',
   'nếu',
-  'với',
   'tức là',
   'nghĩa là',
   'trong đó',
