@@ -292,3 +292,283 @@ test('switching faces while the teacher writes pauses the pen and keeps the boar
   expect(await overflow(page)).toBeLessThanOrEqual(0);
   expect(errors).toEqual([]);
 });
+
+/*
+ * Item 3: the AI Teacher uses the whole board. Assertions are relative (fractions of the board's
+ * view, rectangles that must not meet), never pixel constants: fonts and KaTeX set the sizes.
+ */
+
+/** A lesson of steps only (the usual Gemma answer): written across the whole width. */
+const WIDE_LESSON = [
+  '# Chuyển động rơi tự do',
+  '1. Chọn gốc tọa độ tại mặt đất, chiều dương hướng lên, gốc thời gian lúc thả vật là 0 s.',
+  '2. Vật được thả rơi từ độ cao 45 m so với mặt đất, bỏ qua sức cản của không khí.',
+  '3. Gia tốc rơi tự do lấy g = 10 m/s², vận tốc ban đầu của vật bằng 0 m/s.',
+  '4. Quãng đường vật rơi được sau t giây là s = 5t² mét, tính từ lúc thả vật.',
+  '5. Vật chạm đất khi quãng đường rơi bằng độ cao ban đầu 45 m, nên t = 3 s.',
+  '$$s = \\frac{1}{2} g t^2$$',
+  '$$t = \\sqrt{\\frac{2h}{g}} = \\sqrt{\\frac{2 \\cdot 45}{10}} = 3\\ \\text{s}$$',
+].join('\n');
+
+/** Given data on the side, steps with a long equality chain, a table on the right. */
+const THREE_LESSON = [
+  'Hôm nay <write id="t1" zone="title" role="heading">Định luật II Newton</write>.',
+  'Đề cho <write id="g1" zone="side_notes" role="note">m = 4 kg, F = 20 N</write>.',
+  'Áp dụng <write id="s1" zone="steps">định luật II Newton cho vật</write>.',
+  'Ta có <write id="f1" zone="steps" math="true">a = \\frac{F}{m} = \\frac{20\\ \\text{N}}{4\\ \\text{kg}} = \\frac{20}{4}\\ \\text{m/s}^2 = 5\\ \\text{m/s}^2 = 5{,}0\\ \\text{m/s}^2</write>.',
+  'Ghi lại <draw id="d1" zone="diagram" type="table" spec=\'{"header":["Đại lượng","Giá trị"],"rows":[["m","4 kg"],["F","20 N"],["a","5 m/s²"]]}\'/>.',
+].join(' ');
+
+/** Rectangles of the board on screen, measured in the page. */
+interface Rect {
+  id: string;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+  styleLeft: string;
+  styleTop: string;
+}
+
+async function rects(page: Page) {
+  return page.evaluate(() => {
+    const box = (e: Element) => e.getBoundingClientRect();
+    const viewport = document.querySelector('.board__viewport');
+    const sheet = document.querySelector('.board__sheet');
+    if (!viewport || !sheet) throw new Error('no board');
+    const els = [...document.querySelectorAll<HTMLElement>('.board__sheet .board__el')].map(
+      (e): Rect => {
+        const r = box(e);
+        return {
+          id: e.dataset.id ?? 'draw',
+          left: r.left,
+          right: r.right,
+          top: r.top,
+          bottom: r.bottom,
+          styleLeft: e.style.left,
+          styleTop: e.style.top,
+        };
+      },
+    );
+    /** The ink of each written element: its lines. */
+    const ink = [...document.querySelectorAll<HTMLElement>('.board__sheet [data-id]')].map((e) => {
+      const lines = [...e.querySelectorAll('.board__line')].map(box);
+      return {
+        id: e.dataset.id ?? '',
+        lines: lines.length,
+        left: Math.min(...lines.map((l) => l.left)),
+        right: Math.max(...lines.map((l) => l.right)),
+      };
+    });
+    const v = box(viewport);
+    const s = box(sheet);
+    const node = viewport as HTMLElement;
+    return {
+      viewport: { left: v.left, right: v.right, width: node.clientWidth },
+      sheet: { left: s.left, right: s.right, top: s.top, width: s.width },
+      scroll: { width: node.scrollWidth, client: node.clientWidth },
+      els,
+      ink,
+      katex: [...document.querySelectorAll('.board__sheet .katex')].map((k) => box(k).right),
+    };
+  });
+}
+
+const meet = (a: Rect, b: Rect) =>
+  a.left < b.right - 0.5 &&
+  b.left < a.right - 0.5 &&
+  a.top < b.bottom - 0.5 &&
+  b.top < a.bottom - 0.5;
+
+function expectNoOverlap(els: Rect[]) {
+  for (let i = 0; i < els.length; i++)
+    for (let j = i + 1; j < els.length; j++) {
+      const a = els[i];
+      const b = els[j];
+      if (a && b) expect(meet(a, b), `${a.id} / ${b.id}`).toBe(false);
+    }
+}
+
+async function askOnBoard(page: Page, text: string) {
+  await fakeGemini(page, [{ text, finishReason: 'STOP' }]);
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải giúp em bài này');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  return board;
+}
+
+test('item 3: steps alone are written across the whole board, nothing overlaps or spills', async ({
+  page,
+}) => {
+  const board = await askOnBoard(page, WIDE_LESSON);
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  await expect(board.locator('.board__rules line')).toHaveCount(0);
+  const r = await rects(page);
+  const steps = r.ink.filter((e) => e.id !== 'h1');
+  expect(steps.length).toBeGreaterThanOrEqual(7);
+  const first = steps[0];
+  if (!first) throw new Error('no step');
+  // From the left margin…
+  expect((first.left - r.viewport.left) / r.viewport.width).toBeLessThan(0.05);
+  // …across most of the board (the old middle column was 40 % of it).
+  const widest = Math.max(...steps.map((e) => e.right - e.left));
+  expect(widest / r.viewport.width).toBeGreaterThanOrEqual(0.6);
+  expectNoOverlap(r.els);
+  for (const e of r.els) expect(e.right).toBeLessThanOrEqual(r.viewport.right);
+  for (const right of r.katex) expect(right).toBeLessThanOrEqual(r.viewport.right);
+  expect(r.scroll.width).toBeLessThanOrEqual(r.scroll.client);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+  // The zoom buttons are real targets.
+  for (const name of ['Phóng to bảng', 'Thu nhỏ bảng']) {
+    const size = await board.getByRole('button', { name }).boundingBox();
+    expect(size?.width).toBeGreaterThanOrEqual(40);
+    expect(size?.height).toBeGreaterThanOrEqual(40);
+  }
+});
+
+test('item 3: given data left, steps in the middle, a table right; a long chain on several lines', async ({
+  page,
+}) => {
+  const board = await askOnBoard(page, THREE_LESSON);
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  await expect(board.locator('.board__drawing table')).toBeVisible();
+  const r = await rects(page);
+  const at = (id: string) => r.els.find((e) => e.id === id);
+  const given = at('g1');
+  const step = at('s1');
+  const table = r.els.find((e) => e.id === 'draw');
+  expect(given && step && table).toBeTruthy();
+  expect(given?.left).toBeLessThan(step?.left ?? 0);
+  expect(step?.left).toBeLessThan(table?.left ?? 0);
+  // The table is inside its box.
+  const inside = await page.evaluate(() => {
+    const box = document.querySelector('.board__drawing')?.getBoundingClientRect();
+    const table = document.querySelector('.board__drawing table')?.getBoundingClientRect();
+    return box && table ? table.right <= box.right + 1 && table.bottom <= box.bottom + 1 : false;
+  });
+  expect(inside).toBe(true);
+  // The chain is written on several lines, all inside the middle region of the board.
+  const chain = r.ink.find((e) => e.id === 'f1');
+  expect(chain?.lines).toBeGreaterThanOrEqual(2);
+  const k = r.sheet.width / 1200;
+  expect(chain?.right).toBeLessThanOrEqual(r.sheet.left + (340 + 480) * k + 1);
+  for (const right of r.katex) expect(right).toBeLessThanOrEqual(r.sheet.right);
+  await expect(board.locator('.board__rules line')).not.toHaveCount(0);
+  expectNoOverlap(r.els);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+test('item 3: resizing the window during a lesson moves nothing on the board', async ({ page }) => {
+  await fakeVoice(page);
+  const board = await askOnBoard(page, TWO_FACES.replace(/<newboard[^>]*\/>/, ''));
+  // Written while the window changes size.
+  await expect(board.locator('[data-id="a1"]')).toBeAttached({ timeout: 20_000 });
+  const before = (await rects(page)).els;
+  for (const size of [
+    { width: 1100, height: 700 },
+    { width: 1920, height: 1080 },
+    { width: 1366, height: 768 },
+  ]) {
+    await page.setViewportSize(size);
+    await page.waitForTimeout(300);
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+  }
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  const r = await rects(page);
+  for (const old of before) {
+    const now = r.els.find((e) => e.id === old.id);
+    expect({ left: now?.styleLeft, top: now?.styleTop }).toEqual({
+      left: old.styleLeft,
+      top: old.styleTop,
+    });
+  }
+  // Drawn where the board says, at the new scale.
+  const k = r.sheet.width / 1200;
+  for (const e of r.els)
+    expect(Math.abs(e.left - r.sheet.left - parseFloat(e.styleLeft) * k)).toBeLessThan(1);
+  expectNoOverlap(r.els);
+  expect(r.scroll.width).toBeLessThanOrEqual(r.scroll.client);
+});
+
+test('item 3: faces keep their writing and the learner’s strokes; zoom scrolls inside the board', async ({
+  page,
+}) => {
+  const board = await askOnBoard(page, TWO_FACES);
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  const face1 = board.getByRole('tab', { name: /^Bảng 1/ });
+  const face2 = board.getByRole('tab', { name: /^Bảng 2/ });
+  await expect(face2).toHaveAttribute('aria-selected', 'true');
+
+  // The learner circles a word on the second face, zoomed in and scrolled.
+  await board.getByRole('button', { name: 'Phóng to bảng' }).click();
+  await board.getByRole('button', { name: 'Phóng to bảng' }).click();
+  await expect(board.getByRole('button', { name: 'Vừa khung' })).toBeVisible();
+  const scrolled = await page.evaluate(() => {
+    const v = document.querySelector<HTMLElement>('.board__viewport');
+    if (!v) return null;
+    v.scrollTo({ left: v.scrollWidth - v.clientWidth, top: 0, behavior: 'instant' });
+    return { width: v.scrollWidth, client: v.clientWidth, left: v.scrollLeft };
+  });
+  expect(scrolled?.width).toBeGreaterThan(scrolled?.client ?? Infinity);
+  expect(scrolled?.left).toBeGreaterThan(0);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+  const target = board.locator('[data-id="b1"]');
+  await target.scrollIntoViewIfNeeded();
+  const box = await target.boundingBox();
+  if (!box) throw new Error('b1 not on screen');
+  await board.getByRole('button', { name: 'Bút của em' }).click();
+  const x = box.x + Math.min(box.width / 2, 60);
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + 12, y + 4, { steps: 3 });
+  await page.mouse.up();
+  const stroke = board.locator('.board__student polyline');
+  await expect(stroke).toHaveCount(1);
+  const points = (await stroke.getAttribute('points')) ?? '';
+  const [px, py] = (points.split(' ')[0] ?? '').split(',').map(Number);
+  // The point is in board units, inside the element the learner drew on.
+  const style = await target.evaluate((e) => ({
+    left: parseFloat((e as HTMLElement).style.left),
+    top: parseFloat((e as HTMLElement).style.top),
+    height: parseFloat((e as HTMLElement).style.height),
+    width: parseFloat((e as HTMLElement).style.width),
+  }));
+  expect(px).toBeGreaterThanOrEqual(style.left);
+  expect(px).toBeLessThanOrEqual(style.left + style.width);
+  expect(py).toBeGreaterThanOrEqual(style.top);
+  expect(py).toBeLessThanOrEqual(style.top + style.height);
+
+  // To the first face and back: the writing and the stroke are where they were.
+  const where = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('.board__sheet [data-id]')].map((e) => [
+        e.dataset.id,
+        e.style.left,
+        e.style.top,
+      ]),
+    );
+  const onFace2 = await where();
+  await face1.click();
+  await expect(board.locator('[data-id="a1"]')).toBeVisible();
+  await expect(stroke).toHaveCount(0);
+  await face2.click();
+  expect(await where()).toEqual(onFace2);
+  await expect(stroke).toHaveAttribute('points', points);
+  await board.getByRole('button', { name: 'Vừa khung' }).click();
+  await expect(board.getByRole('button', { name: 'Vừa khung' })).toHaveCount(0);
+  await expect(stroke).toHaveAttribute('points', points);
+  const fitted = await page.evaluate(() => {
+    const v = document.querySelector<HTMLElement>('.board__viewport');
+    return v ? v.scrollWidth - v.clientWidth : -1;
+  });
+  expect(fitted).toBeLessThanOrEqual(0);
+});
