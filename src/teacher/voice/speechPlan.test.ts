@@ -257,6 +257,25 @@ describe('what is not meant to be heard', () => {
     expect(stripInternalMarkup(text)).toBe('A ↔ B, giá ↗, đúng ✔, SimLab™    ↑ ↓ → ⇌');
   });
 
+  it('reads "0,2 M" as mol per litre although the dictionary changed "enzyme" (context as written)', () => {
+    const text = 'Enzyme catalase bị ức chế ở 0,2 M';
+    expect(prepareSpeech(text).text).toBe(
+      'En-zim catalase bị ức chế ở không phẩy hai mol trên lít',
+    );
+    // Any reading the dictionary gives: the context is taken before it.
+    const dictionary = [
+      {
+        term: 'enzyme',
+        reading: 'en-dim',
+        subject: 'biology' as const,
+        review_status: 'pending' as const,
+      },
+    ];
+    expect(prepareSpeech(text, { dictionary }).text).toBe(
+      'En-dim catalase bị ức chế ở không phẩy hai mol trên lít',
+    );
+  });
+
   it('applies the pronunciation dictionary and keeps a reading in one chunk', () => {
     const plan = prepareSpeech('Tần số đo bằng Hertz, theo Mendeleev.');
     expect(plan.text).toBe('Tần số đo bằng Héc, theo Men-đê-lê-ép.');

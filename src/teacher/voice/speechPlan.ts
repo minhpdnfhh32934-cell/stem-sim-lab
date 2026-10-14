@@ -10,7 +10,7 @@
  * name, and the chunks are the prepared text in order, word for word.
  */
 import { applyPronunciations, type PronunciationEntry } from './pronunciations';
-import { toSpeech, type SpeechChunk } from './vietnameseText';
+import { speechContext, toSpeech, type SpeechChunk, type SpeechContext } from './vietnameseText';
 
 /** The part a sentence plays in a lesson (from the board, or guessed from its words). */
 export type SpeechRole =
@@ -194,16 +194,23 @@ function occurrences(spoken: string, form: string, out: Range[]): void {
 
 /**
  * Where a cut would split a number with its unit, a formula, an equation or a name: each is
- * found in the written text, read on its own, and its words are looked up in the spoken text.
+ * found in the written text, read on its own (in the whole text's context), and its words are
+ * looked up in the spoken text.
  */
-function protectedRanges(spoken: string, source: string, readings: readonly string[]): Range[] {
+function protectedRanges(
+  spoken: string,
+  source: string,
+  readings: readonly string[],
+  context: SpeechContext,
+): Range[] {
   const ranges: Range[] = [];
+  const read = (part: string) => toSpeech(part, context);
   const prose = source.replace(MATH, (m) => {
-    occurrences(spoken, toSpeech(m), ranges);
+    occurrences(spoken, read(m), ranges);
     return ' ';
   });
-  for (const m of prose.matchAll(QUANTITY)) occurrences(spoken, toSpeech(m[0]), ranges);
-  for (const m of prose.matchAll(EQUATION)) occurrences(spoken, toSpeech(m[0]), ranges);
+  for (const m of prose.matchAll(QUANTITY)) occurrences(spoken, read(m[0]), ranges);
+  for (const m of prose.matchAll(EQUATION)) occurrences(spoken, read(m[0]), ranges);
   for (const r of readings) occurrences(spoken, r, ranges);
   for (const m of spoken.matchAll(NAME)) ranges.push([m.index, m.index + m[0].length]);
   return ranges;
@@ -235,11 +242,16 @@ function emphasisTerms(source: string, given: readonly string[]): string[] {
 }
 
 /** Where each key term starts in the spoken text (whole words, ignoring case). */
-function emphasisStarts(spoken: string, terms: readonly string[], dict: Dict): number[] {
+function emphasisStarts(
+  spoken: string,
+  terms: readonly string[],
+  dict: Dict,
+  context: SpeechContext,
+): number[] {
   const s = spoken.toLowerCase();
   const starts = new Set<number>();
   for (const term of terms) {
-    const form = toSpeech(applyPronunciations(term, dict).text)
+    const form = toSpeech(applyPronunciations(term, dict).text, context)
       .replace(/[.,;:!?…]+$/, '')
       .trim()
       .toLowerCase();
@@ -472,14 +484,17 @@ export function prepareSpeech(text: string, opts: PrepareOptions = {}): SpeechPl
   const first = Math.min(max, opts.firstChunkChars ?? MMS_FIRST_CHUNK_MAX);
   const dict = opts.dictionary;
   const source = stripInternalMarkup(text);
+  // Chemistry and solutions are told from the words as written: the dictionary may change one
+  // of them ("enzyme" → "en-zim") and must not change how "0,2 M" is read.
+  const context = speechContext(source);
   const { text: pronounced, readings } = applyPronunciations(source, dict);
-  const spoken = capLength(toSpeech(pronounced), MAX_SPEECH_CHARS);
+  const spoken = capLength(toSpeech(pronounced, context), MAX_SPEECH_CHARS);
   if (!spoken) return { text: '', chunks: [] };
 
-  const ranges = protectedRanges(spoken, pronounced, readings);
+  const ranges = protectedRanges(spoken, pronounced, readings, context);
   const terms = emphasisTerms(source, opts.emphasis ?? []);
   let pieces = mergeTiny(spoken, cutAtPunctuation(spoken, ranges));
-  pieces = splitForEmphasis(spoken, pieces, emphasisStarts(spoken, terms, dict), ranges);
+  pieces = splitForEmphasis(spoken, pieces, emphasisStarts(spoken, terms, dict, context), ranges);
   pieces = splitLong(spoken, pieces, ranges, max, first);
 
   // A sentence's role is decided on all its words.

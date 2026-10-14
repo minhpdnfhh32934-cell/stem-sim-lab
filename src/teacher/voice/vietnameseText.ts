@@ -920,9 +920,29 @@ function latexSpeech(tex: string): string {
 /** Words that put a text in chemistry, where "Fe", "Cu", "Na" are element symbols. */
 const CHEM_WORDS =
   /(?<![\p{L}])(?:kim loại|phi kim|nguyên tố|nguyên tử|electron|phản ứng|dung dịch|ion|oxi ho[áa]|kết tủa|cấu hình|ho[áa] trị|muối|axit|bazơ)(?![\p{L}])/iu;
-/** Words of a text about solutions, where "0,1 M" is a molar concentration. */
+/**
+ * Words of a text about solutions, where "0,1 M" is a molar concentration ("en-zim" is how the
+ * pronunciation dictionary writes "enzyme").
+ */
 const MOLAR_WORDS =
-  /(?<![\p{L}])(?:nồng độ|mol|dung dịch|cơ chất|enzim|enzyme|chất tan|pha loãng)(?![\p{L}])/iu;
+  /(?<![\p{L}])(?:nồng độ|mol|dung dịch|cơ chất|enzim|en-zim|enzyme|chất tan|pha loãng)(?![\p{L}])/iu;
+
+/** What a text is about, as far as the reader needs to know (chemistry symbols, molar "M"). */
+export interface SpeechContext {
+  /** Chemistry words: "Fe", "Cu", "Na" are element symbols. */
+  chemistry?: boolean;
+  /** Solutions: a bare "M" after a number is mol per litre. */
+  molar?: boolean;
+}
+
+/**
+ * The context of a text as written. The speech plan takes it before the pronunciation dictionary
+ * changes any word ("enzyme" → "en-zim"), and reads every part of the text with it.
+ */
+export function speechContext(text: string): SpeechContext {
+  return { chemistry: CHEM_WORDS.test(text), molar: MOLAR_WORDS.test(text) };
+}
+
 /**
  * The cell's energy carriers and fuels: an arrow between them is a reaction ("ATP → ADP + Pi",
  * "Glucozơ → 2 pyruvat").
@@ -1094,9 +1114,13 @@ const INTERVAL_HEAD: Record<string, string> = {
   thuộc: 'thuộc đoạn ',
 };
 
-/** Whole answer → words for a Vietnamese voice. */
-export function toSpeech(content: string): string {
-  const chemContext = CHEM_WORDS.test(content);
+/**
+ * Whole answer → words for a Vietnamese voice. `context` adds to what the text itself shows (the
+ * speech plan passes the context of the text before the dictionary, or of the whole answer when
+ * it reads a part on its own).
+ */
+export function toSpeech(content: string, context: SpeechContext = {}): string {
+  const chemContext = Boolean(context.chemistry) || CHEM_WORDS.test(content);
   // Concentrations "[S]", "[H⁺]" → "nồng độ S" (audit VOI-02), in text and in LaTeX alike; an
   // interval "[a, b]" or a citation "[1]", "[Wikipedia]" is not a species and is left.
   let s = concentrations(stripMarkdown(content));
@@ -1250,7 +1274,9 @@ export function toSpeech(content: string): string {
   // "220 . 2": a dot between spaces is never a decimal point either.
   s = s.replace(/(\d)[ \t]+\.[ \t]+(?=\d)/g, '$1 · ');
   // Numbers, with their unit and powers of ten ("0,1 M" is mol per litre only about solutions).
-  const units: UnitOptions = { molar: chemistry || MOLAR_WORDS.test(content) };
+  const units: UnitOptions = {
+    molar: chemistry || Boolean(context.molar) || MOLAR_WORDS.test(content),
+  };
   s = s.replace(
     QUANTITY,
     (
