@@ -245,17 +245,24 @@ const BASE_UNITS: Record<string, string> = {
   MW: 'mê-ga-oát',
   kWh: 'ki-lô-oát giờ',
   eV: 'e-léc-tron vôn',
+  keV: 'ki-lô e-léc-tron vôn',
+  MeV: 'mê-ga e-léc-tron vôn',
+  GeV: 'gi-ga e-léc-tron vôn',
   Pa: 'pát-xcan',
   kPa: 'ki-lô-pát-xcan',
+  MPa: 'mê-ga-pát-xcan',
+  GPa: 'gi-ga-pát-xcan',
   atm: 'át-mốt-phe',
   mmHg: 'mi-li-mét thủy ngân',
   V: 'vôn',
   mV: 'mi-li-vôn',
   kV: 'ki-lô-vôn',
+  MV: 'mê-ga-vôn',
   A: 'am-pe',
   mA: 'mi-li-am-pe',
   Ω: 'ôm',
   kΩ: 'ki-lô-ôm',
+  MΩ: 'mê-ga-ôm',
   C: 'cu-lông',
   µC: 'mi-crô-cu-lông',
   μC: 'mi-crô-cu-lông',
@@ -279,17 +286,28 @@ const BASE_UNITS: Record<string, string> = {
   L: 'lít',
   mL: 'mi-li-lít',
   ml: 'mi-li-lít',
-  // Molar concentration "0,1 M" (convention to confirm: "mol trên lít" or "mo-lan").
-  M: 'mol trên lít',
-  mM: 'mi-li-mol trên lít',
   '%': 'phần trăm',
 };
 // Longest first, so "kWh" wins over "kW" and "mmHg" over "mm".
 const UNIT_KEYS = Object.keys(BASE_UNITS).sort((a, b) => b.length - a.length);
 const LENGTHS = new Set(['m', 'cm', 'mm', 'km', 'dm', 'nm', 'µm', 'μm']);
 
+/**
+ * Molar concentration "0,1 M", "2 mM" (convention to confirm: "mol trên lít" or "mo-lan"). Only
+ * as the whole unit: as a prefix "M" would cut "MeV" into "mol trên lít e-léc-tron vôn", and a
+ * bare "M" is a symbol (a mass "2M") outside chemistry.
+ */
+const MOLAR: Record<string, string> = { M: 'mol trên lít', mM: 'mi-li-mol trên lít' };
+
+export interface UnitOptions {
+  /** The text is about solutions (chemistry, enzymes): a bare "M" is mol per litre. */
+  molar?: boolean;
+}
+
 /** "m/s²" → "mét trên giây bình phương", "J/(kg·K)" → "jun trên ki-lô-gam ken-vin"; null if not a unit. */
-export function readUnit(raw: string): string | null {
+export function readUnit(raw: string, opts: UnitOptions = {}): string | null {
+  const whole = fromScript(raw).trim();
+  if (whole === 'mM' || (whole === 'M' && opts.molar)) return MOLAR[whole] ?? null;
   const s = fromScript(raw).replace(/\^\{?([+\-−]?\d)\}?/g, '^$1');
   const out: string[] = [];
   let i = 0;
@@ -772,7 +790,7 @@ function exponentWords(raw: string): string {
 }
 
 /** The unit's words and what follows it; null when the letters are not a unit. */
-function unitAfter(unit: string | undefined): [string, string] | null {
+function unitAfter(unit: string | undefined, opts: UnitOptions = {}): [string, string] | null {
   if (!unit) return ['', ''];
   // Trailing punctuation belongs to the sentence, not to the unit; a closing bracket only
   // when it has no partner inside the unit ("J/(kg·K)" keeps it).
@@ -780,7 +798,7 @@ function unitAfter(unit: string | undefined): [string, string] | null {
   while (trimmed.endsWith(')') && count(trimmed, '(') < count(trimmed, ')')) {
     trimmed = trimmed.slice(0, -1).replace(/[./·-]+$/, '');
   }
-  const read = readUnit(trimmed);
+  const read = readUnit(trimmed, opts);
   return read ? [` ${read}`, unit.slice(trimmed.length)] : null;
 }
 
@@ -789,7 +807,7 @@ function count(s: string, ch: string): number {
 }
 
 function quantity(
-  _all: string,
+  opts: UnitOptions,
   minus: string | undefined,
   num: string,
   exp1: string | undefined,
@@ -801,7 +819,7 @@ function quantity(
   let words = readNumber(`${minus ? '-' : ''}${num}`);
   const exp = exp1 ?? exp2 ?? exp3;
   if (exp) words += ` nhân mười mũ ${exponentWords(exp)}`;
-  const after = unitAfter(unit);
+  const after = unitAfter(unit, opts);
   // Letters glued to a coefficient are a product of symbols: "4ac" → "bốn a xê".
   const product = !after && !space ? /^([A-Za-z]{2,3})([^\p{L}\d]*)$/u.exec(unit ?? '') : null;
   if (product) return ` ${words} ${spell(product[1] ?? '')}${product[2] ?? ''}`;
@@ -902,6 +920,9 @@ function latexSpeech(tex: string): string {
 /** Words that put a text in chemistry, where "Fe", "Cu", "Na" are element symbols. */
 const CHEM_WORDS =
   /(?<![\p{L}])(?:kim loại|phi kim|nguyên tố|nguyên tử|electron|phản ứng|dung dịch|ion|oxi ho[áa]|kết tủa|cấu hình|ho[áa] trị|muối|axit|bazơ)(?![\p{L}])/iu;
+/** Words of a text about solutions, where "0,1 M" is a molar concentration. */
+const MOLAR_WORDS =
+  /(?<![\p{L}])(?:nồng độ|mol|dung dịch|cơ chất|enzim|enzyme|chất tan|pha loãng)(?![\p{L}])/iu;
 /** The cell's energy carriers: an arrow between them is a reaction ("ATP → ADP + Pi"). */
 const BIO_SPECIES = /(?<![\p{L}])(?:ATP|ADP|AMP|NADP?H?|FADH?2?)(?![\p{L}\d])/u;
 /**
@@ -1064,12 +1085,19 @@ export function toSpeech(content: string): string {
   s = s.replace(STATE_AFTER_FORMULA, stateAfterFormula);
   // Chemistry: "2H2O" → "hai hát hai ô"; a reaction arrow means "tạo thành".
   const found = { chemistry: false };
-  s = s.replace(FORMULA, (all, coef: string, body: string, charge: string | undefined) => {
-    const read = readFormula(body, Boolean(charge));
-    if (!read) return all;
-    found.chemistry = true;
-    return ` ${coef ? `${readInteger(coef)} ` : ''}${read}${charge ? ` ${readCharge(charge)}` : ''} `;
-  });
+  s = s.replace(
+    FORMULA,
+    (all, coef: string, body: string, charge: string | undefined, offset: number, text: string) => {
+      // A unit after a number is read with the number: "2 GeV" is never germanium-vanadium (a
+      // count makes it a formula: "2H2" is never "hen-ri bình phương").
+      const afterNumber = coef !== '' || /\d[ \t]*$/.test(text.slice(0, offset));
+      if (afterNumber && !charge && !/[\d₀-₉]/.test(body) && readUnit(body) !== null) return all;
+      const read = readFormula(body, Boolean(charge));
+      if (!read) return all;
+      found.chemistry = true;
+      return ` ${coef ? `${readInteger(coef)} ` : ''}${read}${charge ? ` ${readCharge(charge)}` : ''} `;
+    },
+  );
   const reaction = found.chemistry || BIO_SPECIES.test(content);
   s = s.replace(/→|⟶|->/g, reaction ? ' tạo thành ' : ' suy ra ');
   // A gas given off / a precipitate in a reaction; elsewhere the arrows mean up and down.
@@ -1112,8 +1140,21 @@ export function toSpeech(content: string): string {
   s = s.replace(/(\d)\.(?=10(?:\^\{?[+\-−]?\d|[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]))/g, '$1·');
   // "220 . 2": a dot between spaces is never a decimal point either.
   s = s.replace(/(\d)[ \t]+\.[ \t]+(?=\d)/g, '$1 · ');
-  // Numbers, with their unit and powers of ten.
-  s = s.replace(QUANTITY, quantity);
+  // Numbers, with their unit and powers of ten ("0,1 M" is mol per litre only about solutions).
+  const units: UnitOptions = { molar: chemistry || MOLAR_WORDS.test(content) };
+  s = s.replace(
+    QUANTITY,
+    (
+      _all: string,
+      minus: string | undefined,
+      num: string,
+      exp1: string | undefined,
+      exp2: string | undefined,
+      exp3: string | undefined,
+      space: string | undefined,
+      unit: string | undefined,
+    ) => quantity(units, minus, num, exp1, exp2, exp3, space, unit),
+  );
   // A unit on its own: "đơn vị kg/m³", "km/h", "N/m²" (a part of two letters, a power, or the
   // word "đơn vị" before it); "F/m", "s/t" stay formulas.
   s = s.replace(
