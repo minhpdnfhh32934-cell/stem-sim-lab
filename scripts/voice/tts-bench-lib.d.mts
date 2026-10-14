@@ -24,7 +24,7 @@ export interface BenchChunk {
   durationMs: number;
   /** A pause the player waits after it (the legacy timer pause; 0 when embedded). */
   pauseAfterMs: number;
-  /** The planned pause inside the buffer (natural mode), left out of the real-time factor. */
+  /** The planned pause inside the buffer (natural mode); recorded only (rtf uses voiced time). */
   embeddedPauseMs: number;
   leadMs: number;
   tailMs: number;
@@ -36,6 +36,10 @@ export interface Timeline {
   firstSoundMs: number;
   totalSynthMs: number;
   wallMs: number;
+  /** When each chunk starts playing (ms from the request). */
+  starts: number[];
+  /** Time spent waiting for a chunk still rendering, beyond the planned pauses. */
+  stallMs: number;
   gaps: number[];
   maxGapMs: number;
   gapsOverLong: number;
@@ -46,6 +50,24 @@ export const LONG_GAP_MS: number;
 export function simulateTimeline(
   chunks: Pick<BenchChunk, 'synthMs' | 'durationMs' | 'pauseAfterMs' | 'leadMs' | 'tailMs'>[],
 ): Timeline;
+
+export function heardAudio(
+  parts: Float32Array[],
+  starts: number[],
+  sampleRate: number,
+): Float32Array;
+
+export interface BenchLayout {
+  /** The folder given to listeners: the sheet and the blind recordings only. */
+  listen: string;
+  sheet: string;
+  blind: string;
+  byMode: string;
+  keyDir: string;
+  key: string;
+  results: string;
+}
+export function benchLayout(out: string): BenchLayout;
 
 export function wordsOf(text: string): string[];
 export function syllableCount(text: string): number;
@@ -68,7 +90,10 @@ export interface ItemMetrics {
   firstSoundMs: number;
   totalSynthMs: number;
   rtf: number;
+  voicedSeconds: number;
   audioSeconds: number;
+  heardSeconds: number;
+  stallMs: number;
   syllablesPerSecond: number;
   rmsSpreadDb: number;
   peak: number;

@@ -1,7 +1,7 @@
 // Pure helpers of the on-device voice benchmark (scripts/voice/tts-bench.mjs): what each mode
-// says, the playback timeline with a look-ahead of one, word integrity, per-item metrics, WAV
-// encoding, the blind A/B key, the listening sheet and the sampling of the browser's process
-// tree. No browser, no model, no audio device: everything here is unit-tested
+// says, the playback timeline with a look-ahead of one and the audio as the app would play it,
+// word integrity, per-item metrics, WAV encoding, the output folders, the blind A/B key, the
+// listening sheet and the sampling of the browser's process tree. No browser, no model, no audio device: everything here is unit-tested
 // (tests/tts-bench.test.ts). The page imports this file too (served by the dev server) for
 // `modeJobs`.
 
@@ -43,6 +43,8 @@ export function simulateTimeline(chunks) {
   let start = 0;
   let ready = 0;
   const gaps = [];
+  const starts = [];
+  let stallMs = 0;
   let end = 0;
   chunks.forEach((c, i) => {
     if (i === 0) {
@@ -55,8 +57,10 @@ export function simulateTimeline(chunks) {
       const arrival = start + prev.durationMs + prev.pauseAfterMs;
       const next = Math.max(ready, arrival);
       gaps.push(prev.tailMs + (next - (start + prev.durationMs)) + c.leadMs);
+      stallMs += next - arrival;
       start = next;
     }
+    starts.push(start);
     end = start + c.durationMs;
   });
   const first = chunks[0];
@@ -65,9 +69,49 @@ export function simulateTimeline(chunks) {
     firstSoundMs: first ? first.synthMs + first.leadMs : 0,
     totalSynthMs: chunks.reduce((s, c) => s + c.synthMs, 0),
     wallMs: end,
+    starts,
+    stallMs,
     gaps,
     maxGapMs: gaps.length ? Math.max(...gaps) : 0,
     gapsOverLong: gaps.filter((g) => g > LONG_GAP_MS).length,
+  };
+}
+
+/**
+ * The audio as the learner would hear it in the app on this computer: each chunk where the
+ * timeline starts it, so the planned pauses, the legacy timer pauses and every stall while the
+ * next chunk is still rendering are silence. It begins with the first chunk (the wait for it is
+ * `firstAudioMs`, not part of the recording).
+ */
+export function heardAudio(parts, starts, sampleRate) {
+  const t0 = starts[0] ?? 0;
+  const offsets = [];
+  let end = 0;
+  parts.forEach((p, i) => {
+    const at = Math.max(end, Math.round((((starts[i] ?? t0) - t0) * sampleRate) / 1000));
+    offsets.push(at);
+    end = at + p.length;
+  });
+  const out = new Float32Array(end);
+  parts.forEach((p, i) => out.set(p, offsets[i]));
+  return out;
+}
+
+/**
+ * Where the benchmark writes. `listen/` is the folder given to listeners: the sheet and the blind
+ * recordings, nothing else. The recordings by mode, the A/B key and the results (which name the
+ * modes) stay outside it.
+ */
+export function benchLayout(out) {
+  const at = (...parts) => [out.replace(/[\\/]+$/, ''), ...parts].join('/');
+  return {
+    listen: at('listen'),
+    sheet: at('listen', 'index.html'),
+    blind: at('listen', 'blind'),
+    byMode: at('by-mode'),
+    keyDir: at('key'),
+    key: at('key', 'ab-key.json'),
+    results: at('results.json'),
   };
 }
 
@@ -129,12 +173,14 @@ export function rmsSpreadDb(chunkDbs) {
 
 /**
  * The metrics of one item in one mode, from what the page measured. `rtf` is synthesis time over
- * the speech produced (planned pauses left out); syllables per second are over the whole audio
- * as heard (pauses in).
+ * voiced time, measured alike in both modes: each chunk's audio without its leading and trailing
+ * silence (the model's own edge silence in legacy, the trim margin and the planned pause in
+ * natural). Syllables per second are over the audio as planned (pauses in, stalls out);
+ * `heardSeconds` and `stallMs` add the waits for a chunk still rendering.
  */
 export function itemMetrics({ prepared, chunks, audioMs, peak, clippingShare, nan }) {
   const timeline = simulateTimeline(chunks);
-  const speechMs = chunks.reduce((s, c) => s + c.durationMs - c.embeddedPauseMs, 0);
+  const speechMs = chunks.reduce((s, c) => s + Math.max(0, c.durationMs - c.leadMs - c.tailMs), 0);
   const integrity = wordIntegrity(
     prepared,
     chunks.map((c) => c.text),
@@ -146,7 +192,10 @@ export function itemMetrics({ prepared, chunks, audioMs, peak, clippingShare, na
     firstSoundMs: round(timeline.firstSoundMs),
     totalSynthMs: round(timeline.totalSynthMs),
     rtf: round(timeline.totalSynthMs / Math.max(1, speechMs), 3),
+    voicedSeconds: round(speechMs / 1000, 2),
     audioSeconds: round(audioMs / 1000, 2),
+    heardSeconds: round((timeline.wallMs - (timeline.starts[0] ?? 0)) / 1000, 2),
+    stallMs: round(timeline.stallMs),
     syllablesPerSecond: round(syllableCount(prepared) / Math.max(0.01, audioMs / 1000), 2),
     rmsSpreadDb: round(rmsSpreadDb(chunks.map((c) => c.rmsDb)), 2),
     peak: round(peak, 3),

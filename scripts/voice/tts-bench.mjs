@@ -12,13 +12,20 @@
 //             (role prosody, trim, loudness, fades, pace, pause in the audio).
 //
 // Per sentence of src/teacher/voice/ttsBenchSet.json and per mode it records: first-audio latency
-// (first chunk ready), total synthesis time, real-time factor, audio duration, syllables per
-// second, chunk loudness spread (dB) and peak, the longest gap between chunks and how many
-// exceed 600 ms (played with a look-ahead of one, as the app does), clipping share, NaN, words
-// dropped / added / reordered (chunk texts against the prepared text), and the CPU time and peak
-// memory of the browser's whole process tree (sampled from Node). It writes one WAV per sentence
-// and mode, a blind A/B listening sheet (index.html; A and B are shuffled per sentence, the key is
-// in key/ab-key.json) and results.json.
+// (first chunk ready), total synthesis time, real-time factor (synthesis over voiced time, each
+// chunk without its edge silence, alike in both modes), audio duration, syllables per second,
+// chunk loudness spread (dB) and peak, the longest gap between chunks, how many exceed 600 ms and
+// the time spent stalling (played with a look-ahead of one, as the app does), clipping share,
+// NaN, words dropped / added / reordered (chunk texts against the prepared text), and the CPU
+// time and peak memory of the browser's whole process tree (sampled from Node).
+//
+// The WAVs are what the app would play on this CPU: each chunk where the playback timeline starts
+// it, so a stall while the next chunk renders is heard as silence (the wait for the first chunk
+// is left out). Output (benchLayout):
+//   <out>/listen/       the folder for listeners, nothing else: index.html (blind A/B sheet, A and
+//                       B shuffled per sentence) and blind/<id>-A.wav, <id>-B.wav
+//   <out>/by-mode/      the same recordings named by mode   (never give these to listeners)
+//   <out>/key/ab-key.json, <out>/results.json               (name the modes: keep them apart)
 //
 //   npm run dev -- --port 1430        (the origin whose storage already holds the voice; started by
 //                                      whoever runs the benchmark, never by this script)
@@ -37,13 +44,16 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   abKey,
+  benchLayout,
   encodeWav,
   floatsFromBase64,
+  heardAudio,
   itemMetrics,
   listeningSheet,
   parsePs,
   parseSamplerLine,
   powershellSampler,
+  simulateTimeline,
   summarize,
   treeUsage,
 } from './tts-bench-lib.mjs';
@@ -75,7 +85,8 @@ const only = arg('only', '')
 
 const set = JSON.parse(readFileSync(resolve(root, 'src/teacher/voice/ttsBenchSet.json'), 'utf8'));
 const items = only.length ? set.filter((i) => only.includes(i.id)) : set;
-for (const dir of ['by-mode', 'blind', 'key']) mkdirSync(resolve(out, dir), { recursive: true });
+const layout = benchLayout(out);
+for (const dir of [layout.blind, layout.byMode, layout.keyDir]) mkdirSync(dir, { recursive: true });
 
 let commit = 'unknown';
 try {
@@ -214,6 +225,7 @@ function renderInPage(mode, item) {
       });
       const chunks = [];
       const parts = [];
+      const chunkAudio = [];
       // The same prepared words in both modes: only the pipeline differs.
       const plan = sp.prepareSpeech(item.text, {
         ...(item.role ? { role: item.role } : {}),
@@ -236,6 +248,8 @@ function renderInPage(mode, item) {
         const embedded = job.chunk ? job.chunk.pauseMs : 0;
         chunks.push(measure(samples, job.text, ms, job.pauseAfterMs, embedded));
         parts.push(samples, st.silence(job.pauseAfterMs, rate));
+        // Each chunk on its own: Node places it on the playback timeline (heardAudio).
+        chunkAudio.push(toBase64(samples));
       }
       const audio = st.concat(parts);
       return {
@@ -245,7 +259,7 @@ function renderInPage(mode, item) {
         peak: st.peakOf(audio),
         clippingShare: st.clippingShare(audio),
         nan: st.hasNonFinite(audio),
-        audio: toBase64(audio),
+        chunkAudio,
       };
     },
     { mode, item, rate: SAMPLE_RATE },
@@ -257,13 +271,14 @@ const key = abKey(
   MODES,
   seed,
 );
-writeFileSync(resolve(out, 'key/ab-key.json'), JSON.stringify({ seed, key }, null, 2));
-writeFileSync(resolve(out, 'index.html'), listeningSheet(items, 'blind'));
+writeFileSync(layout.key, JSON.stringify({ seed, key }, null, 2));
+// The sheet links blind/<id>-A.wav next to it: the listen/ folder is complete on its own.
+writeFileSync(layout.sheet, listeningSheet(items, 'blind'));
 
 const rows = [];
 const save = () =>
   writeFileSync(
-    resolve(out, 'results.json'),
+    layout.results,
     JSON.stringify(
       {
         when: new Date().toISOString(),
@@ -292,11 +307,13 @@ for (const [index, item] of items.entries()) {
       const r = await renderInPage(mode, item);
       await sleep(sampleMs + 250);
       const used = usage.between(from, Date.now());
-      const samples = floatsFromBase64(r.audio);
-      const wav = encodeWav(samples, SAMPLE_RATE);
-      writeFileSync(resolve(out, `by-mode/${item.id}-${mode}.wav`), wav);
+      // What the app would play: the chunks on the playback timeline, stalls included.
+      const timeline = simulateTimeline(r.chunks);
+      const heard = heardAudio(r.chunkAudio.map(floatsFromBase64), timeline.starts, SAMPLE_RATE);
+      const wav = encodeWav(heard, SAMPLE_RATE);
+      writeFileSync(`${layout.byMode}/${item.id}-${mode}.wav`, wav);
       const side = key[item.id]?.A === mode ? 'A' : 'B';
-      writeFileSync(resolve(out, `blind/${item.id}-${side}.wav`), wav);
+      writeFileSync(`${layout.blind}/${item.id}-${side}.wav`, wav);
       row[mode] = {
         ...itemMetrics(r),
         edgeCpuMs: Math.round(used.cpuMs),
@@ -313,7 +330,7 @@ for (const [index, item] of items.entries()) {
   const line = (m) =>
     row[m].error
       ? `${m}: ERROR ${row[m].error}`
-      : `${m}: first ${row[m].firstAudioMs} ms, rtf ${row[m].rtf}, gap ${row[m].maxGapMs} ms (${row[m].gapsOver600} > 600), spread ${row[m].rmsSpreadDb} dB, cpu ${row[m].edgeCpuMs} ms`;
+      : `${m}: first ${row[m].firstAudioMs} ms, rtf ${row[m].rtf}, gap ${row[m].maxGapMs} ms (${row[m].gapsOver600} > 600), stall ${row[m].stallMs} ms, spread ${row[m].rmsSpreadDb} dB, cpu ${row[m].edgeCpuMs} ms`;
   console.log(`${item.id} | ${line('legacy')} | ${line('natural')}`);
 }
 
@@ -324,5 +341,5 @@ for (const mode of MODES) {
   console.log(`${mode}: ${JSON.stringify(summary[mode])}`);
 }
 console.log(
-  `Results, WAVs and the blind listening sheet: ${out} (load ${loadMs} ms, seed ${seed})`,
+  `Results: ${layout.results}; give listeners only ${layout.listen} (load ${loadMs} ms, seed ${seed})`,
 );

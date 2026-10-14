@@ -7,8 +7,10 @@ import {
   LEGACY_COMMA_PAUSE_MS,
   LONG_GAP_MS,
   abKey,
+  benchLayout,
   encodeWav,
   floatsFromBase64,
+  heardAudio,
   itemMetrics,
   listeningSheet,
   parsePs,
@@ -121,6 +123,57 @@ describe('playback timeline (look-ahead of one)', () => {
     expect(simulateTimeline([chunk({})]).gaps).toEqual([]);
     expect(simulateTimeline([]).firstAudioMs).toBe(0);
   });
+
+  it('says when each chunk starts and how long the learner waited beyond the plan', () => {
+    const t = simulateTimeline([
+      chunk({ synthMs: 500, durationMs: 1000, pauseAfterMs: 140 }),
+      chunk({ synthMs: 3000, durationMs: 1000 }),
+      chunk({ synthMs: 200, durationMs: 1000 }),
+    ]);
+    // Chunk 2 is asked for at 500 ms and ready at 3 500; chunk 1 and its pause end at 1 640.
+    expect(t.starts).toEqual([500, 3500, 4500]);
+    expect(t.stallMs).toBe(3500 - 1640);
+  });
+});
+
+describe('the A/B recordings are what the app would play', () => {
+  it('each chunk where the timeline starts it: a stall is silence, the first wait is left out', () => {
+    const rate = 1000; // one sample per millisecond
+    const t = simulateTimeline([
+      chunk({ synthMs: 500, durationMs: 1000 }),
+      chunk({ synthMs: 3000, durationMs: 1000 }),
+    ]);
+    const heard = heardAudio(
+      [new Float32Array(1000).fill(0.5), new Float32Array(1000).fill(0.25)],
+      t.starts,
+      rate,
+    );
+    expect(heard).toHaveLength(3000 + 1000);
+    expect([heard[999], heard[1000], heard[2999], heard[3000]]).toEqual([0.5, 0, 0, 0.25]);
+  });
+
+  it('a timer pause (the legacy voice) is silence in the recording too', () => {
+    const t = simulateTimeline([
+      chunk({ synthMs: 100, durationMs: 10, pauseAfterMs: 140 }),
+      chunk({ synthMs: 100, durationMs: 10 }),
+    ]);
+    const heard = heardAudio(
+      [new Float32Array(10).fill(1), new Float32Array(10).fill(1)],
+      t.starts,
+      1000,
+    );
+    expect(heard).toHaveLength(10 + 140 + 10);
+    expect(heard.slice(10, 150).every((x) => x === 0)).toBe(true);
+  });
+
+  it('the listeners’ folder holds the sheet and the blind recordings only', () => {
+    const l = benchLayout('C:\\bench\\run1\\');
+    expect(l.sheet).toBe('C:\\bench\\run1/listen/index.html');
+    expect(l.blind.startsWith(`${l.listen}/`)).toBe(true);
+    for (const p of [l.byMode, l.keyDir, l.key, l.results]) {
+      expect(p.startsWith(l.listen)).toBe(false);
+    }
+  });
 });
 
 describe('words said', () => {
@@ -150,10 +203,17 @@ describe('item metrics', () => {
     const m = itemMetrics({
       prepared: 'một hai ba bốn',
       chunks: [
-        chunk({ text: 'một hai', synthMs: 600, durationMs: 1150, embeddedPauseMs: 150 }),
-        chunk({ text: 'ba bốn', synthMs: 400, durationMs: 1000, rmsDb: -21 }),
+        // 1 000 ms voiced: 30 ms trim margin before, 30 ms margin and a 150 ms pause after.
+        chunk({
+          text: 'một hai',
+          synthMs: 600,
+          durationMs: 1210,
+          tailMs: 180,
+          embeddedPauseMs: 150,
+        }),
+        chunk({ text: 'ba bốn', synthMs: 400, durationMs: 1060, rmsDb: -21 }),
       ],
-      audioMs: 2150,
+      audioMs: 2270,
       peak: 0.71234,
       clippingShare: 0,
       nan: false,
@@ -163,13 +223,34 @@ describe('item metrics', () => {
       firstAudioMs: 600,
       totalSynthMs: 1000,
       rtf: 0.5,
-      audioSeconds: 2.15,
-      syllablesPerSecond: 1.86,
+      voicedSeconds: 2,
+      audioSeconds: 2.27,
+      heardSeconds: 2.27,
+      stallMs: 0,
+      syllablesPerSecond: 1.76,
       rmsSpreadDb: 1,
       peak: 0.712,
       missingWords: 0,
       reorderedWords: 0,
     });
+  });
+
+  it('the real-time factor is over voiced time in both modes (edge silences and pauses out)', () => {
+    const one = (c: Partial<BenchChunk>) =>
+      itemMetrics({
+        prepared: 'một hai',
+        chunks: [chunk({ text: 'một hai', synthMs: 1000, ...c })],
+        audioMs: c.durationMs ?? 0,
+        peak: 0.5,
+        clippingShare: 0,
+        nan: false,
+      });
+    // The same 2 s of speech: raw model audio with 200 ms of its own silence at each edge
+    // (legacy), and trimmed audio with a 30 ms margin and a planned 150 ms pause (natural).
+    const legacy = one({ durationMs: 2400, leadMs: 200, tailMs: 200 });
+    const natural = one({ durationMs: 2210, leadMs: 30, tailMs: 180, embeddedPauseMs: 150 });
+    expect(legacy.rtf).toBe(0.5);
+    expect(natural.rtf).toBe(0.5);
   });
 
   it('summarizes each mode by medians and counts items with problems', () => {

@@ -423,11 +423,16 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    20b19c2's chunking, pauses and playback rate on that text (comma pieces, 140/260/320/520 ms
    timer pauses, raw audio, playback rate = speed); it is not the old reader's words. On the CPU
    only (Edge with GPU and WebGPU off, `wasm` asserted, model hosts blocked: the voice must
-   already be stored). It records first-audio latency, synthesis time,
-   real-time factor, duration, syllables per second, chunk loudness spread and peak, the longest
-   gap and gaps over 600 ms, clipping, NaN, words dropped or reordered, and the Edge process
-   tree's CPU time and peak memory; it writes WAVs, a blind A/B sheet (`index.html`, four 1–5
-   ratings per recording) and the A/B key in `key/ab-key.json`.
+   already be stored). It records first-audio latency, synthesis time, real-time factor
+   (synthesis over voiced time — each chunk without its edge silence — alike in both modes),
+   duration, syllables per second, chunk loudness spread and peak, the longest gap, gaps over
+   600 ms and the time spent stalling, clipping, NaN, words dropped or reordered, and the Edge
+   process tree's CPU time and peak memory. The WAVs are what the app would play on that CPU:
+   each chunk placed where the playback timeline (look-ahead of one) starts it, so a stall while
+   the next chunk renders is heard as silence (the wait for the first chunk is left out). The
+   folder for listeners is `listen/` only (the blind A/B sheet `index.html`, four 1–5 ratings
+   per recording, and `blind/`); `by-mode/`, `key/ab-key.json` and `results.json` name the modes
+   and stay outside it.
 
 ## Teacher face
 
