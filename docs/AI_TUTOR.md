@@ -336,6 +336,84 @@ remembered. Each new answer is read with the device's built-in voices — free, 
 Settings → AI Teacher → “Giọng nói của thầy” offers four styles, a voice picker and a preview. Asking a
 new question, clearing history, leaving the page or closing the panel stops the speech.
 
+### Natural teacher voice for the on-device MMS voice (2026-10-14)
+
+The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate from synthesis:
+
+1. **Speech plan** (`src/teacher/voice/speechPlan.ts`, pure). `prepareSpeech(text, {role, emphasis})`
+   removes what is not meant to be heard (`<think>` blocks, `<reference>` blocks, comments,
+   TeachScript/HTML tags even with `>` inside an attribute, horizontal rules, emoji), applies the
+   **pronunciation dictionary** (`pronunciations.json`: term, reading, subject, `review_status`;
+   applied before the rule-based reader so an entry wins; never inside `$…$`, LaTeX or code, never
+   next to an operator or an arrow; a reading is words only — no digit, unit symbol or formula,
+   all 41 entries wait for a teacher, DATA_REVIEW PRON-1), reads the text with `toSpeech`, and cuts
+   it into chunks: paragraph > sentence > `;`/`:` > `,`; a piece of one word joins its neighbour;
+   a piece over 100 characters is cut between words, before a conjunction if possible, at least 3
+   words on each side; the first chunk is cut at a conjunction past 64 characters (the first
+   sound comes sooner). A cut never falls inside a number with its unit, a `$…$` formula, an
+   equation, a dictionary reading or a name (each is found in the written text, read on its own
+   and looked up in the spoken text). The chunks are the prepared text word for word (tested on
+   the 40 golden and 19 benchmark sentences).
+2. **Pauses after a chunk** (`PAUSE_MS`): phrase cut without punctuation 80 ms · before a key term
+   120 · comma 150 · `;`/`:` 280 · sentence 400 · paragraph or list item 560 · last chunk 0 (the
+   board adds its own pause between sentences).
+3. **Roles and prosody** (`ROLE_PROSODY`). The board passes the sentence's role and key terms
+   (`voiceCue` in `lesson.ts`); otherwise a classifier reads the words. A role from the board wins
+   for a heading or a result; a question or feedback heard in the words wins over step, note and
+   plain.
+
+   | Role       | Where it comes from                                                                 | Rate | noise_scale | noise_scale_duration |
+   | ---------- | ----------------------------------------------------------------------------------- | ---- | ----------- | -------------------- |
+   | `plain`    | anything else                                                                       | 1.00 | 0.667       | 0.80                 |
+   | `step`     | board: a write in the `steps` zone; words: "Bước…", "Đầu tiên…", "một, …"           | 1.00 | 0.667       | 0.80                 |
+   | `note`     | board: only side notes                                                              | 1.03 | 0.667       | 0.80                 |
+   | `heading`  | board: a heading write                                                              | 0.94 | 0.60        | 0.75                 |
+   | `concept`  | words: "… được gọi là …", "là gì", "khái niệm", "định nghĩa"                        | 0.92 | 0.60        | 0.75                 |
+   | `result`   | board: a result write; words: "Vậy…", "Kết quả…", "Đáp số…"                         | 0.90 | 0.60        | 0.70                 |
+   | `keyword`  | the chunk that starts with a key term (board keyword, marked word, `**bold**` term) | 0.90 | 0.60        | 0.70                 |
+   | `check`    | words: the sentence ends with "?"                                                   | 0.96 | 0.70        | 0.85                 |
+   | `feedback` | words: "Đúng rồi", "Chưa đúng", "Rất tốt", "Không sao"… (correction, encouragement) | 0.94 | 0.72        | 0.85                 |
+
+   Emphasis is a short pause before the key term and a slower pace for its chunk — never a louder
+   voice. A bold label at the start of a line ("**Bước 1:**") is not a key term.
+
+4. **What MMS supports (the limit).** Hugging Face's VITS reads `speaking_rate`, `noise_scale` and
+   `noise_scale_duration` from its config inside `forward()`. Transformers.js 4.3 `VitsModel` feeds
+   the ONNX graph only the inputs it names (`session.inputNames`), and Optimum's VITS export (the
+   one behind `Xenova/mms-tts-*`) declares `input_ids` and `attention_mask` only, so the three
+   values are fixed in the graph (1, 0.667, 0.8). Not checked on the stored file itself (that
+   needs the model; the worker reads `session.inputNames` at load and adapts). The worker
+   (`localVoiceWorker.ts`, `vitsControls.ts`) passes a value only when the graph names it, clamped
+   to 0.85–1.15 / 0.5–0.8 / 0.6–1.0, and reports which it applied; a graph that refuses a value is
+   run without it from then on. With the expected graph nothing is applied, so the noise columns
+   above are not heard (VITS still samples its own variation at the fixed scales) and the role's
+   pace is applied on the page by a pitch-keeping time stretch (WSOLA). The learner's speed (and
+   the board's) stays the playback rate, the same for every chunk.
+5. **Stitching** (`stitch.ts`, pure, Float32Array): every chunk at 16 kHz; its own silence trimmed
+   (frames 40 dB below its loudest, 30 ms margin kept); one gain per chunk so its voiced RMS is
+   −20 dBFS, lowered if the peak would pass −1 dBFS (no clipping, no compressor, at most ±18 dB);
+   raised-cosine fades of 8 ms in and 12 ms out (no clicks); then the planned pause as silence.
+6. **Streaming, order, stop** (`chunkPlayer.ts`, `naturalVoice.ts`, `speak.ts`). Chunk n+1 renders
+   while chunk n plays (a look-ahead of one, never more); playback is in strict order. Every stop
+   moves a generation number on: a speech that is no longer the current one never plays another
+   chunk, even if its render finishes later (a new lesson, the learner leaving); `playPcm` also
+   never starts a sound stopped while the browser resumed audio. A pause stops the voice and the
+   board reads the sentence again on "Tiếp tục"; the lesson's `VoiceSession` keeps up to 48
+   rendered chunks, so the re-read starts at once. The board still calls `speak()` once per
+   sentence, so speech and board stay in sync. The Windows and Gemini voices keep their
+   sentence-sized phrases (they now get the dictionary too); after an on-device failure the
+   Windows voice goes on from the first chunk not yet heard.
+7. **Benchmark** (`scripts/voice/tts-bench.mjs`, not yet run). Renders `ttsBenchSet.json` (19
+   sentences: greeting, transition, new concepts, check questions, correction and encouragement, a
+   long paragraph, formulas, units and numbers, names, mitosis, chemical equations, a heading, a
+   result, a note) as `legacy` (20b19c2: comma pieces, 140/260/320/520 ms timer pauses, raw audio)
+   and `natural`, on the CPU only (Edge with GPU and WebGPU off, `wasm` asserted, model hosts
+   blocked: the voice must already be stored). It records first-audio latency, synthesis time,
+   real-time factor, duration, syllables per second, chunk loudness spread and peak, the longest
+   gap and gaps over 600 ms, clipping, NaN, words dropped or reordered, and the Edge process
+   tree's CPU time and peak memory; it writes WAVs, a blind A/B sheet (`index.html`, four 1–5
+   ratings per recording) and the A/B key in `key/ab-key.json`.
+
 ## Teacher face
 
 The teacher appears as an original vector face in the chat header (bubble mode), the bubble button

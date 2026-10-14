@@ -2,9 +2,10 @@
  * Prosody controls of the on-device voice (MMS-TTS, a VITS model). In Hugging Face's VITS the
  * speaking rate and the two noise scales are config values (`speaking_rate`, `noise_scale`,
  * `noise_scale_duration`) read inside `forward()`. Transformers.js runs the exported ONNX graph
- * and feeds it only the inputs the graph names (`session.inputNames`); the export of
- * `Xenova/mms-tts-vie` names `input_ids` and `attention_mask` only, so these values are fixed in
- * it (1, 0.667, 0.8). The worker passes a control only when a graph does name it and reports
+ * and feeds it only the inputs the graph names (`session.inputNames`); Optimum's VITS export
+ * (behind `Xenova/mms-tts-*`) declares `input_ids` and `attention_mask` only, so these values are
+ * fixed in it (1, 0.667, 0.8) — not checked on the stored file, which is why the worker reads the
+ * names at load. The worker passes a control only when a graph does name it and reports
  * which ones it applied; anything else is done on the page (the pace by `timeStretch`), and the
  * noise scales then stay the model's own (docs/AI_TUTOR.md, "Teacher voice").
  */
