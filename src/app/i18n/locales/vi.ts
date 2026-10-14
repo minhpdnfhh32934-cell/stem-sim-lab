@@ -910,7 +910,7 @@ const vi = {
     stopped: 'Đã dừng câu trả lời. Em có thể hỏi lại hoặc hỏi câu khác.',
     missingDataTitle: 'SimLab nhắc (không phải AI)',
     missingData:
-      'Đề bài chưa có số liệu nào nên chưa giải được. Em bổ sung các số đề cho (kèm đơn vị) rồi gửi lại nhé.',
+      'Đề bài có thể còn thiếu số liệu: SimLab chưa thấy con số nào trong câu hỏi. Nếu đề có cho số, em ghi thêm (kèm đơn vị) rồi gửi lại nhé.',
     unverifiedNumbers: 'Số do AI tự đưa ra (chưa kiểm chứng): {numbers}',
     unverifiedHint:
       'Các số này không có trong câu hỏi, cuộc trò chuyện, ghi chú tham khảo hay kết quả SimLab tính. Em hãy tự kiểm tra lại.',

@@ -254,13 +254,17 @@ whole notes with their source. `tools.ts` now introduces the balancer's output a
 
 **Missing data** (`missingData.ts`, no AI). A compute verb ("tính", "tìm", "xác định", "calculate",
 "find"…) followed by a quantity ("quãng đường", "nồng độ", "số nhiễm sắc thể"…) with nothing that
-could carry data: no digit, number word ("hai", "gấp đôi"; "sau" ≠ "sáu"), symbol, "=", "%",
-chemical formula, numbers in the last 6 turns, or shared screen. Method questions ("Tính như thế
-nào?", "Công thức … là gì?") and standard constants ("gia tốc rơi tự do ở mặt đất", "khối lượng mol
-của nước") are excluded. Then the prompt gets a hard rule (ask for the quantities, never assume a
-value) and the chat shows the app's own notice above the answer ("SimLab nhắc (không phải AI)").
-Conservative on purpose: a problem that gives some numbers but not enough (P11-style) is not
-detected; that would need the problem solved.
+could carry data: no digit, number word ("hai", "gấp đôi"; "sau" ≠ "sáu"; "một" only before a unit
+or measure word: "một mét", "sau một giây", "một lần"), symbol, "=", "%", chemical formula, numbers
+in the last 6 turns, or shared screen. Excluded: method and symbolic questions ("Tính như thế
+nào?", "Công thức … là gì?", "theo lực và khối lượng", "biểu thức", "in terms of"), standard
+constants ("gia tốc rơi tự do ở mặt đất", "khối lượng mol của nước"), table values of a named
+element or material ("số electron của natri", "khối lượng riêng của sắt", data/elements.json names)
+and "xác định lực …" (which forces act, not a value). Then the prompt gets a hard rule (ask for the
+quantities, never assume a value) and the chat shows the app's own notice above the answer
+("SimLab nhắc (không phải AI)"), worded as a possibility ("có thể còn thiếu số liệu"): the check
+reads words, it does not understand the problem. Conservative on purpose: a problem that gives some
+numbers but not enough (P11-style) is not detected; that would need the problem solved.
 
 **Number provenance** (`provenance.ts`). Values in an answer — with a unit, after "=", "≈",
 "khoảng", decimals, powers of ten, whole numbers above 10 — that appear in none of the question,

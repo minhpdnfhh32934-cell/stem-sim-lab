@@ -90,7 +90,10 @@ describe('AI Teacher chat: stop, missing data, unverified numbers', () => {
       'Tính quãng đường ô tô đi được.{Enter}',
     );
     expect(await screen.findByText('SimLab nhắc (không phải AI)')).toBeInTheDocument();
-    expect(screen.getByText(/Đề bài chưa có số liệu nào nên chưa giải được/)).toBeInTheDocument();
+    // Worded as a possibility: the check reads words, it cannot be sure (review 2).
+    expect(
+      screen.getByText(/Đề bài có thể còn thiếu số liệu: SimLab chưa thấy con số nào/),
+    ).toBeInTheDocument();
     expect(
       screen.getByText('Số do AI tự đưa ra (chưa kiểm chứng): 60 km/h, 1 giờ, 50 km'),
     ).toBeInTheDocument();

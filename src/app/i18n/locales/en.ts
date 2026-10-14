@@ -913,7 +913,7 @@ const en: Messages = {
     stopped: 'The answer was stopped. You can ask again or ask something else.',
     missingDataTitle: 'SimLab note (not the AI)',
     missingData:
-      'This problem has no numbers yet, so it cannot be solved. Add the values it gives (with units) and send it again.',
+      'This problem may be missing data: SimLab found no numbers in the question. If the problem gives values, add them (with units) and send it again.',
     unverifiedNumbers: 'Numbers the AI brought in itself (not checked): {numbers}',
     unverifiedHint:
       'These numbers are not in your question, the conversation, the reference notes or SimLab’s results. Check them yourself.',

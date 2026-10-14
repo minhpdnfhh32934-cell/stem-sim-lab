@@ -78,3 +78,43 @@ describe('a calculation request with no numbers at all', () => {
     expect(missingNumericData('Tính quãng đường ô tô đi được.', old)).not.toBeNull();
   });
 });
+
+describe('well-posed questions that only look like they have no numbers (review 2)', () => {
+  it.each([
+    // "một" with a unit or a measure word is a value.
+    'Tính chu kì con lắc dài một mét',
+    'Tính vận tốc của vật rơi tự do sau một giây',
+    'Tính số tế bào con sau một lần nguyên phân.',
+    'tinh chu ki con lac dai mot met',
+    // A symbolic answer: how one quantity depends on others.
+    'Tính gia tốc theo lực và khối lượng',
+    'Tìm vận tốc dưới dạng biểu thức.',
+    'Find the acceleration in terms of the force and the mass.',
+    // Values from tables (elements, materials).
+    'Xác định số electron của nguyên tử natri',
+    'Tìm khối lượng riêng của sắt',
+    'Tính số proton trong hạt nhân nguyên tử lưu huỳnh',
+    'Calculate the number of electrons in a sodium atom',
+    'Find the density of copper.',
+    // "Xác định lực": which forces act (a free-body question), not a value.
+    'Xác định lực tác dụng lên vật đặt trên mặt bàn',
+  ])('%s → no notice', (question) => {
+    expect(missingNumericData(question)).toBeNull();
+  });
+
+  it.each([
+    // "Một" in front of a thing is not a value.
+    ['Một ô tô chạy trên đường. Tính quãng đường ô tô đi được.', 'quãng đường'],
+    ['Một vật rơi tự do. Tính vận tốc của vật khi chạm đất.', 'vận tốc'],
+    // A table quantity without the element or material is still missing.
+    ['Tính khối lượng riêng của vật.', 'khối lượng riêng'],
+    ['Tính số electron của nguyên tử.', 'số electron'],
+    // "Xác định" a value of the force (its size) still needs numbers.
+    ['Xác định độ lớn lực tác dụng lên vật.', 'độ lớn'],
+    // "sát" (ma sát) is not "sắt" (iron), and lực is not a table value.
+    ['Tính lực ma sát tác dụng lên vật.', 'lực'],
+    ['tinh luc ma sat tac dung len vat', 'luc'],
+  ])('%s → still asks for the data (%s)', (question, quantity) => {
+    expect(missingNumericData(question)).toEqual({ quantity });
+  });
+});
