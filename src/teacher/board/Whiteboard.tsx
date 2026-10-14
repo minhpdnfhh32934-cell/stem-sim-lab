@@ -19,11 +19,14 @@ import { BoardDrawing } from './BoardDrawing';
 import { BoardMinimap } from './BoardMinimap';
 import { BOARD_W, COLUMNS, COLUMN_TOP, type Line, type TextElement } from './layout';
 import {
+  cancelPendingStart,
+  claimStart,
   continueLesson,
   finishNow,
   pauseLesson,
   playLesson,
   replayLesson,
+  reserveStart,
   resumeLesson,
   stopLesson,
   type LessonInput,
@@ -54,18 +57,27 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
     if (!lesson) return;
     const store = useBoardStore.getState();
     if (store.lessonId === lesson.id && store.lessonContent === lesson.content) return;
-    const append = store.lessonId === lesson.id;
+    // Written after what is on the board only when the board holds the start of this answer
+    // (an empty `lessonContent` means its start was cancelled before it began).
+    const append = store.lessonId === lesson.id && store.lessonContent !== '';
     store.set({ lessonId: lesson.id, lessonContent: lesson.content });
     if (!append) store.set({ status: 'preparing' });
+    const ticket = reserveStart();
     void prepareMeasure().then(() => {
-      // Skip it if a newer answer arrived while the fonts were loading.
-      if (useBoardStore.getState().lessonContent !== lesson.content) return;
+      // Skipped when a newer answer arrived, or the page closed, while the fonts were loading.
+      if (!claimStart(ticket)) return;
       void (append ? continueLesson : playLesson)(lesson, browserMeasure);
     });
   }, [lesson]);
 
-  // Leaving the page stops the lesson (and the voice).
-  useEffect(() => stopLesson, []);
+  // Leaving the page stops the lesson (and the voice), and a start still waiting never begins.
+  useEffect(
+    () => () => {
+      cancelPendingStart();
+      stopLesson();
+    },
+    [],
+  );
 
   const playing = status === 'playing';
   return (

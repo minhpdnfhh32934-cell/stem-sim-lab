@@ -513,6 +513,12 @@ export function finishNow(): void {
   resumeLesson();
 }
 
+/**
+ * Stops the lesson being taught. It never touches a start that is still waiting for the board's
+ * fonts (`cancelPendingStart` does, when the page closes): `playLesson` calls this first, and the
+ * board must not forget which answer it is about to teach (it would then take a re-render for
+ * "Viết tiếp" and cut the new lesson after its first sentence).
+ */
 export function stopLesson(): void {
   controller?.abort();
   controller = null;
@@ -523,12 +529,40 @@ export function stopLesson(): void {
   const status = useBoardStore.getState().status;
   if (status === 'playing' || status === 'paused') {
     useBoardStore.getState().set({ status: 'done', pen: null });
-  } else if (status === 'preparing') {
-    // Stopped (the page closed) while the board waited for its fonts: the pending start
-    // (Whiteboard.tsx) compares `lessonContent` with its answer and gives up, so a voice never
-    // starts on a page that is gone. The same answer shown again starts it afresh.
-    useBoardStore.getState().set({ status: 'idle', lessonContent: '' });
   }
+}
+
+/** Numbers the starts the board schedules; `pendingStart` is the one still allowed to begin. */
+let startTicket = 0;
+let pendingStart: number | null = null;
+
+/**
+ * The board schedules a start (it first waits for its fonts, Whiteboard.tsx): only the latest
+ * scheduled start may begin, see `claimStart`.
+ */
+export function reserveStart(): number {
+  startTicket += 1;
+  pendingStart = startTicket;
+  return startTicket;
+}
+
+/** True, once, when this start is still the latest and the page was not closed meanwhile. */
+export function claimStart(ticket: number): boolean {
+  if (pendingStart !== ticket) return false;
+  pendingStart = null;
+  return true;
+}
+
+/**
+ * The page closes while a start waits for the fonts: it never begins, so a voice never starts on
+ * a page that is gone. The answer was not taught, so showing it again starts it afresh (also
+ * after React's StrictMode remount in development).
+ */
+export function cancelPendingStart(): void {
+  if (pendingStart === null) return;
+  pendingStart = null;
+  const store = useBoardStore.getState();
+  store.set({ lessonContent: '', ...(store.status === 'preparing' ? { status: 'idle' } : {}) });
 }
 
 export function replayLesson(): void {

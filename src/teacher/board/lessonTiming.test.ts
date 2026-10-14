@@ -171,14 +171,37 @@ describe('board timing: voice, subtitle and pen', () => {
     expect(useBoardStore.getState().status).toBe('done');
   });
 
-  it('stopping while the board is still preparing never starts that lesson later', () => {
+  it('closing the page while the board is still preparing never starts that lesson later', () => {
     // The whiteboard marks the new answer and waits for its fonts (Whiteboard.tsx).
     useBoardStore.getState().set({ lessonId: 'next', lessonContent: SCRIPT, status: 'preparing' });
+    const start = lesson.reserveStart();
+    lesson.cancelPendingStart();
     lesson.stopLesson();
+    expect(lesson.claimStart(start)).toBe(false);
     expect(useBoardStore.getState().status).toBe('idle');
-    // The pending start compares this with its answer and gives up.
-    expect(useBoardStore.getState().lessonContent).not.toBe(SCRIPT);
+    // Shown again, the answer starts afresh.
+    expect(useBoardStore.getState().lessonContent).toBe('');
     expect(events().some((e) => e.startsWith('speak:'))).toBe(false);
+  });
+
+  it('starting a lesson does not make the board forget the answer it is teaching', async () => {
+    // playLesson stops the previous lesson first: the answer the board shows must stay recorded,
+    // or the next re-render of the page would take it for "Viết tiếp" and cut this lesson.
+    useBoardStore
+      .getState()
+      .set({ lessonId: input.id, lessonContent: SCRIPT, status: 'preparing' });
+    const start = lesson.reserveStart();
+    expect(lesson.claimStart(start)).toBe(true);
+    const done = lesson.playLesson(input, measure);
+    expect(useBoardStore.getState().lessonContent).toBe(SCRIPT);
+    // Only the latest scheduled start may begin, and only once.
+    expect(lesson.claimStart(start)).toBe(false);
+    const older = lesson.reserveStart();
+    const newer = lesson.reserveStart();
+    expect(lesson.claimStart(older)).toBe(false);
+    expect(lesson.claimStart(newer)).toBe(true);
+    await finish(done);
+    expect(events().filter((e) => e.startsWith('speak:'))).toEqual(SAID.map((s) => `speak:${s}`));
   });
 
   it('"Giảng lại" clears the board and starts again from the first sentence', async () => {
