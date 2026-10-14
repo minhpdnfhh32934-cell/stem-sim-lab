@@ -51,7 +51,11 @@ vi.mock('@huggingface/transformers', () => ({
   Gemma4ForConditionalGeneration: { from_pretrained: () => Promise.resolve(fake.model) },
   InterruptableStoppingCriteria: fake.InterruptableStoppingCriteria,
   // The answer-only repetition rules (src/ai/webGemmaWorker.test.ts tests them).
-  LogitsProcessor: class {},
+  LogitsProcessor: class {
+    _call(): never {
+      throw new Error('subclasses implement _call');
+    }
+  },
   LogitsProcessorList: class {
     push() {
       /* the fake model applies no rules */
