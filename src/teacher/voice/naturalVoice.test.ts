@@ -64,6 +64,7 @@ class FakeWorker {
   onmessage: ((event: MessageEvent) => void) | null = null;
   onerror: ((event: ErrorEvent) => void) | null = null;
   private queue: { id: number; text: string }[] = [];
+  private started = new Set<number>();
   private terminated = false;
   constructor() {
     FakeWorker.all.push(this);
@@ -83,11 +84,18 @@ class FakeWorker {
         });
     }
   }
+  /** Starts the oldest job (the page hears "started") without answering it yet. */
+  start() {
+    const job = this.queue[0];
+    if (!job || this.terminated || this.started.has(job.id)) return;
+    this.started.add(job.id);
+    this.reply({ kind: 'started', id: job.id });
+  }
   /** Answers the oldest job (a dropped one too: the page ignores it). */
   release() {
     const job = this.queue.shift();
     if (!job || this.terminated) return;
-    this.reply({ kind: 'started', id: job.id });
+    if (!this.started.has(job.id)) this.reply({ kind: 'started', id: job.id });
     this.reply({
       kind: 'audio',
       id: job.id,
@@ -221,6 +229,28 @@ describe('the on-device voice speaks like a teacher', () => {
     expect(heard()).toEqual(PLAN.chunks.map((c) => c.text));
     // Chunks 1 and 2 were rendered before the pause: only chunk 3 is new.
     expect(requests()).toHaveLength(3);
+  });
+
+  it('pause while the worker renders a chunk, then resume: that render is used, not queued again', async () => {
+    const session = newVoiceSession();
+    FakeWorker.hold = true;
+    const first = speak(SENTENCE, { session });
+    await until(() => requests().length === 1);
+    // The worker is rendering chunk 1 when the learner presses "Tạm dừng".
+    worker()?.start();
+    await flush();
+    stopSpeaking();
+    await first;
+    // "Tiếp tục" while chunk 1 is still being rendered; it finishes after the pause.
+    const resumed = speak(SENTENCE, { session });
+    await flush(10);
+    FakeWorker.hold = false;
+    worker()?.release();
+    await until(() => out.played.length === PLAN.chunks.length);
+    await resumed;
+    expect(heard()).toEqual(PLAN.chunks.map((c) => c.text));
+    // Chunk 1 was rendered once: the resumed speech waited for the render already running.
+    expect(requests()).toEqual(PLAN.chunks.map((c) => c.text.toLowerCase().replace(/[,;.]/g, '')));
   });
 
   it('replay (a new lesson session) renders again and keeps the order', async () => {

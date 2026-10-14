@@ -473,6 +473,33 @@ describe('on-device voice: time budgets (second review)', () => {
     expect(posted.filter((m) => m.kind === 'cancel')).toHaveLength(1);
   });
 
+  it('a stopped phrase the worker already started gives its late audio to `late`; one not started is dropped', async () => {
+    FakeWorker.msPerChar = 100;
+    const late: Promise<unknown>[] = [];
+    const keep = {
+      late: (audio: Promise<unknown>) => {
+        late.push(audio);
+      },
+    };
+    const running = new AbortController();
+    const first = voice.synthesizeLocal('một câu đang được đọc', running.signal, undefined, keep);
+    first.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(10);
+    const queued = new AbortController();
+    const second = voice.synthesizeLocal('câu thứ hai', queued.signal, undefined, keep);
+    second.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(10);
+    running.abort();
+    queued.abort();
+    await expect(first).rejects.toThrow('cancelled');
+    await expect(second).rejects.toThrow('cancelled');
+    expect(late).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(10_000);
+    await expect(late[0]).resolves.toMatchObject({ sampleRate: 16000 });
+    const posted = FakeWorker.all[0]?.posted ?? [];
+    expect(posted.filter((m) => m.kind === 'cancel')).toHaveLength(1);
+  });
+
   it('the budget follows the speed measured on this computer', () => {
     // Before anything is measured: a cautious guess, never under the first fixed budget.
     expect(voice.speakTimeoutMs('a'.repeat(100), null)).toBeGreaterThanOrEqual(15_000 + 100 * 200);

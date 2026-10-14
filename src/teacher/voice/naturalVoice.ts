@@ -7,7 +7,7 @@
  */
 import { playPcm, type Pcm } from './audio';
 import { playChunks } from './chunkPlayer';
-import { synthesizeLocal } from './localVoice';
+import { synthesizeLocal, type LocalPcm } from './localVoice';
 import type { PlannedChunk } from './speechPlan';
 import { shapeChunk } from './stitch';
 
@@ -26,6 +26,34 @@ const CACHE_LIMIT = 48;
 const keyOf = (c: PlannedChunk) =>
   [c.text, c.rate, c.noiseScale, c.noiseScaleDuration, c.pauseMs].join('|');
 
+/**
+ * Chunks the worker was already rendering when their speech stopped (a pause), by lesson and
+ * chunk: the render goes on, and "Tiếp tục" waits for it instead of queueing it again behind
+ * itself (on the CPU that doubled the wait for the first sound).
+ */
+const lateRenders = new WeakMap<RenderCache, Map<string, Promise<Pcm | null>>>();
+
+/** `promise`, or a 'cancelled' error as soon as `signal` stops. */
+function untilStopped<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
+  if (signal.aborted) return Promise.reject(new Error('cancelled'));
+  return new Promise<T>((resolve, reject) => {
+    const stop = () => {
+      reject(new Error('cancelled'));
+    };
+    signal.addEventListener('abort', stop, { once: true });
+    promise.then(
+      (value) => {
+        signal.removeEventListener('abort', stop);
+        resolve(value);
+      },
+      (e: unknown) => {
+        signal.removeEventListener('abort', stop);
+        reject(e instanceof Error ? e : new Error(String(e)));
+      },
+    );
+  });
+}
+
 /** Speaks one chunk and shapes it; a chunk this lesson already rendered comes from `cache`. */
 export async function renderChunk(
   chunk: PlannedChunk,
@@ -39,20 +67,43 @@ export async function renderChunk(
     cache.set(key, known);
     return known;
   }
-  const pcm = await synthesizeLocal(chunk.text, signal, {
-    speakingRate: chunk.rate,
-    noiseScale: chunk.noiseScale,
-    noiseScaleDuration: chunk.noiseScaleDuration,
-  });
-  // The model kept its own pace: the role's pace is set here, without changing the pitch.
-  const rate = pcm.applied.includes('speaking_rate') ? 1 : chunk.rate;
-  const shaped = shapeChunk(pcm, { rate, pauseMs: chunk.pauseMs });
-  if (cache) {
-    cache.set(key, shaped);
-    const oldest = cache.keys().next();
-    if (cache.size > CACHE_LIMIT && !oldest.done) cache.delete(oldest.value);
+  const pending = cache ? lateRenders.get(cache)?.get(key) : undefined;
+  if (pending) {
+    const done = await untilStopped(pending, signal);
+    if (done) return done;
   }
-  return shaped;
+  const shape = (pcm: LocalPcm): Pcm => {
+    // The model kept its own pace: the role's pace is set here, without changing the pitch.
+    const rate = pcm.applied.includes('speaking_rate') ? 1 : chunk.rate;
+    const shaped = shapeChunk(pcm, { rate, pauseMs: chunk.pauseMs });
+    if (cache) {
+      cache.set(key, shaped);
+      const oldest = cache.keys().next();
+      if (cache.size > CACHE_LIMIT && !oldest.done) cache.delete(oldest.value);
+    }
+    return shaped;
+  };
+  // Stopped while the worker renders it: the lesson keeps the render (see `lateRenders`).
+  const keepLate = (lesson: RenderCache) => (audio: Promise<LocalPcm>) => {
+    const renders = lateRenders.get(lesson) ?? new Map<string, Promise<Pcm | null>>();
+    lateRenders.set(lesson, renders);
+    const render = audio.then(shape, () => null);
+    renders.set(key, render);
+    void render.then(() => {
+      if (renders.get(key) === render) renders.delete(key);
+    });
+  };
+  const pcm = await synthesizeLocal(
+    chunk.text,
+    signal,
+    {
+      speakingRate: chunk.rate,
+      noiseScale: chunk.noiseScale,
+      noiseScaleDuration: chunk.noiseScaleDuration,
+    },
+    cache ? { late: keepLate(cache) } : {},
+  );
+  return shape(pcm);
 }
 
 export interface NaturalOptions {

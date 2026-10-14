@@ -406,6 +406,28 @@ function hasNonFinite(samples: Float32Array): boolean {
   return false;
 }
 
+/** A phrase's answer from the worker as samples; throws on an error, NaN or silence. */
+function pcmFrom(out: WorkerOut): LocalPcm {
+  if (out.kind === 'error') throw new Error(out.message);
+  if (out.kind !== 'audio') throw new Error('no audio');
+  const applied = (out.applied ?? []).filter((c) => VITS_CONTROLS.includes(c));
+  const pcm: LocalPcm = { samples: out.samples, sampleRate: out.sampleRate, applied };
+  // NaN audio from the graphics card is the card failing: off the card at once.
+  if (hasNonFinite(pcm.samples) && noteFailure('voice-model-nan')) failAll('voice-model-nan');
+  // Silence is not speech: the system voice then reads the phrase instead.
+  if (isSilent(pcm)) throw new Error('voice-model-silent');
+  return pcm;
+}
+
+export interface SynthesizeOptions {
+  /**
+   * Called when `signal` stops a phrase the worker already started (it cannot be cut short) with
+   * that phrase's audio still to come, so a lesson can keep it ("Tiếp tục" then needs no second
+   * render behind the first). Without it, the late audio is dropped.
+   */
+  late?: (audio: Promise<LocalPcm>) => void;
+}
+
 /**
  * Speaks one phrase into samples (loads the stored model first if needed). `prosody` is asked of
  * the model, which applies what its graph accepts (`LocalPcm.applied`, vitsControls.ts).
@@ -414,6 +436,7 @@ export async function synthesizeLocal(
   text: string,
   signal: AbortSignal,
   prosody?: Partial<VitsProsody>,
+  options: SynthesizeOptions = {},
 ): Promise<LocalPcm> {
   const words = textForModel(text);
   if (!words) return { samples: new Float32Array(0), sampleRate: 16000, applied: [] };
@@ -436,13 +459,29 @@ export async function synthesizeLocal(
       return;
     }
     const stop = () => {
-      waiting.delete(id);
       // A phrase not started yet is dropped; one already running cannot be cut short, and its
-      // own time budget still guards the worker (watchStarted).
-      try {
-        worker?.postMessage({ kind: 'cancel', id });
-      } catch {
-        /* the worker is gone */
+      // own time budget still guards the worker (watchStarted). Its audio goes to `late` when
+      // the caller keeps it.
+      const { late } = options;
+      if (late && running?.id === id) {
+        late(
+          new Promise<LocalPcm>((keep, fail) => {
+            waiting.set(id, (o) => {
+              try {
+                keep(pcmFrom(o));
+              } catch (e) {
+                fail(e instanceof Error ? e : new Error(String(e)));
+              }
+            });
+          }),
+        );
+      } else {
+        waiting.delete(id);
+        try {
+          worker?.postMessage({ kind: 'cancel', id });
+        } catch {
+          /* the worker is gone */
+        }
       }
       reject(new Error('cancelled'));
     };
@@ -459,15 +498,7 @@ export async function synthesizeLocal(
       ...(prosody ? { prosody: clampProsody(prosody) } : {}),
     });
   });
-  if (out.kind === 'error') throw new Error(out.message);
-  if (out.kind !== 'audio') throw new Error('no audio');
-  const applied = (out.applied ?? []).filter((c) => VITS_CONTROLS.includes(c));
-  const pcm: LocalPcm = { samples: out.samples, sampleRate: out.sampleRate, applied };
-  // NaN audio from the graphics card is the card failing: off the card at once.
-  if (hasNonFinite(pcm.samples) && noteFailure('voice-model-nan')) failAll('voice-model-nan');
-  // Silence is not speech: the system voice then reads the phrase instead.
-  if (isSilent(pcm)) throw new Error('voice-model-silent');
-  return pcm;
+  return pcmFrom(out);
 }
 
 /** Frees the model's memory (the files stay on disk). */

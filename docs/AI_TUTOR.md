@@ -408,7 +408,9 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    chunk, even if its render finishes later (a new lesson, the learner leaving); `playPcm` also
    never starts a sound stopped while the browser resumed audio. A pause stops the voice and the
    board reads the sentence again on "Tiếp tục"; the lesson's `VoiceSession` keeps up to 48
-   rendered chunks, so the re-read starts at once. The board still calls `speak()` once per
+   rendered chunks, so the re-read starts at once. A chunk the worker was already rendering when
+   the learner paused cannot be cut short: it finishes into the lesson's cache, and the re-read
+   waits for that render instead of queueing the chunk again behind it. The board still calls `speak()` once per
    sentence, so speech and board stay in sync. The Windows and Gemini voices keep their
    sentence-sized phrases (they now get the dictionary too); after an on-device failure the
    Windows voice goes on from the first chunk not yet heard.
