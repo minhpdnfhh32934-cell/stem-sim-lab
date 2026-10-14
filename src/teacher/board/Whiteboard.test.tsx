@@ -12,6 +12,7 @@ import type { LessonInput } from './lesson';
  */
 const voice = vi.hoisted(() => ({ ms: 400, said: [] as string[] }));
 vi.mock('@/teacher/voice/speak', () => ({
+  newVoiceSession: () => ({ skipped: null }),
   speak: async (text: string) => {
     const { useVoiceStore: store } = await import('@/teacher/voice/voiceStore');
     voice.said.push(text);

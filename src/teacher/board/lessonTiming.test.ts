@@ -14,6 +14,7 @@ const voice = vi.hoisted(() => ({
   current: null as (() => void) | null,
 }));
 vi.mock('@/teacher/voice/speak', () => ({
+  newVoiceSession: () => ({ skipped: null }),
   speak: (text: string, opts?: { rate?: number; session?: unknown }) => {
     voice.log.push({ at: Date.now(), event: `speak:${text}` });
     voice.rates.push(opts?.rate ?? 1);

@@ -8,16 +8,25 @@ import { parseTeachScript } from './teachscript';
  * Audit BRD-01 / BRD-02: the teacher says what is being written, and a pause never loses the end
  * of a sentence. The voice is a fake that "speaks" for a moment and records what it was given.
  */
+interface FakeSpeakOptions {
+  rate?: number;
+  role?: string;
+  emphasis?: readonly string[];
+  session?: unknown;
+}
 const voice = vi.hoisted(() => ({
   calls: [] as string[],
   rates: [] as number[],
+  opts: [] as FakeSpeakOptions[],
   current: null as (() => void) | null,
 }));
 vi.mock('@/teacher/voice/speak', () => ({
-  speak: async (text: string, opts?: { rate?: number }) => {
+  newVoiceSession: () => ({ skipped: null }),
+  speak: async (text: string, opts?: FakeSpeakOptions) => {
     const { useVoiceStore: store } = await import('@/teacher/voice/voiceStore');
     voice.calls.push(text);
     voice.rates.push(opts?.rate ?? 1);
+    voice.opts.push(opts ?? {});
     store.getState().setSpeaking(true);
     await new Promise<void>((resolve) => {
       const done = () => {
@@ -35,7 +44,7 @@ vi.mock('@/teacher/voice/speak', () => ({
   toSpokenText: (text: string) => text,
 }));
 
-const { playLesson, pauseLesson, resumeLesson, stopLesson, lessonMetrics } =
+const { playLesson, pauseLesson, resumeLesson, stopLesson, lessonMetrics, voiceCue } =
   await import('./lesson');
 const { useBoardStore } = await import('./boardStore');
 
@@ -205,5 +214,63 @@ describe('pause and resume (BRD-02)', () => {
     } finally {
       process.off('unhandledRejection', onRejection);
     }
+  });
+});
+
+describe('the voice knows each sentence’s role and key terms (natural teacher voice)', () => {
+  const sentences = (script: string) => parseTeachScript(script).sentences;
+
+  it('takes the role from what the sentence writes, and the key terms from keywords and marks', () => {
+    const [heading, step, keyword, result, note, plain] = sentences(
+      [
+        'Hôm nay ta học <write id="h1" zone="title" role="heading">Định luật II Newton</write>.',
+        'Đầu tiên ta viết <write id="s1" zone="steps">các lực tác dụng</write>.',
+        'Từ khóa là <write id="k1" zone="steps" role="keyword">gia tốc</write><underline target="k1"/>.',
+        'Vậy <write id="r1" zone="steps" role="result" math="true">F = 6\\ N</write>.',
+        'Ghi nhớ <write id="n1" zone="side_notes" role="note">đơn vị niu-tơn</write>.',
+        'Em đã hiểu chưa?',
+      ].join(' '),
+    );
+    expect(heading && voiceCue(heading)).toEqual({ role: 'heading', emphasis: [] });
+    expect(step && voiceCue(step)).toEqual({ role: 'step', emphasis: [] });
+    expect(keyword && voiceCue(keyword)).toEqual({ role: 'step', emphasis: ['gia tốc'] });
+    expect(result && voiceCue(result)).toEqual({ role: 'result', emphasis: [] });
+    expect(note && voiceCue(note)).toEqual({ role: 'note', emphasis: [] });
+    // No board role: the voice guesses from the words (here, a check question).
+    expect(plain && voiceCue(plain)).toEqual({ emphasis: [] });
+    const md = markdownToScript('Ta gọi đại lượng này là **gia tốc** của vật.');
+    const [line] = md.sentences;
+    expect(line && voiceCue(line).emphasis).toEqual(['gia tốc']);
+  });
+
+  describe('in a lesson', () => {
+    beforeEach(() => {
+      voice.calls.length = 0;
+      voice.opts.length = 0;
+      useVoiceStore.setState({ enabled: true, speaking: false });
+      useBoardStore.getState().set({ speed: 2 });
+    });
+    afterEach(() => {
+      stopLesson();
+      useVoiceStore.setState({ enabled: false });
+      useBoardStore.getState().set({ speed: 1 });
+    });
+
+    it('one voice call per sentence, in order, with its role, in one session per lesson', async () => {
+      const script =
+        'Hôm nay ta học <write id="h1" zone="title" role="heading">lực ma sát</write>. Từ khóa là <write id="k1" zone="steps" role="keyword">ma sát nghỉ</write>. Vậy <write id="r1" zone="steps" role="result">F = 2 N</write>.';
+      await playLesson({ id: 'cue1', content: script, question: '' }, measure);
+      expect(voice.calls).toEqual(sentences(script).map((s) => s.spoken));
+      expect(voice.opts.map((o) => [o.role, o.emphasis])).toEqual([
+        ['heading', []],
+        ['step', ['ma sát nghỉ']],
+        ['result', []],
+      ]);
+      const [first] = voice.opts;
+      expect(voice.opts.every((o) => o.session === first?.session)).toBe(true);
+      // "Giảng lại": a new lesson gets a new session (the chosen voice is tried again).
+      await playLesson({ id: 'cue1', content: script, question: '' }, measure);
+      expect(voice.opts.at(-1)?.session).not.toBe(first?.session);
+    });
   });
 });
