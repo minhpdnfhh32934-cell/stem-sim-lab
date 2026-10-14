@@ -10,3 +10,7 @@ docs/images
 data/*.json
 tests/golden/*.json
 tests/teaching/results
+# Generated from release-notes/versions.json by `npm run release-notes` (tests compare them)
+docs/VERSION_HISTORY.md
+docs/CHANGELOG.md
+release-notes/google-docs.html

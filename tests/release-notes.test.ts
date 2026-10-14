@@ -9,6 +9,17 @@ import {
   type ReleaseEntry,
 } from '@/app/whatsnew/releaseNotes';
 import { compareVersions } from '@/app/whatsnew/version';
+import {
+  CHANGELOG_SECTIONS,
+  DOC_TITLE,
+  OUTPUT_FILES,
+  SECTIONS,
+  STATUS_LABEL,
+  isoDay,
+  render,
+  viDate,
+  viDateTime,
+} from '../scripts/release-notes/build.mjs';
 
 /**
  * release-notes/versions.json is the one source of the version history (README in that folder):
@@ -144,6 +155,100 @@ describe('release-notes/versions.json', () => {
       en: 'b',
     }));
     expect(parseReleaseNotes(copy)).toBeNull();
+  });
+});
+
+describe('documents generated from versions.json (scripts/release-notes/build.mjs)', () => {
+  const out = render(data);
+  const history = out[OUTPUT_FILES.history];
+  const changelog = out[OUTPUT_FILES.changelog];
+  const html = out[OUTPUT_FILES.html];
+
+  it('are up to date on disk (run `npm run release-notes` after editing versions.json)', () => {
+    for (const path of Object.values(OUTPUT_FILES)) {
+      expect(text(path), `${path} is stale: npm run release-notes`).toBe(out[path]);
+    }
+  });
+
+  it('show times in Vietnam (UTC+7) and bare dates as they are', () => {
+    expect(viDate('2026-10-05T03:07:21Z')).toBe('05/10/2026');
+    expect(viDateTime('2026-10-13T19:05:41Z')).toBe('14/10/2026 02:05');
+    expect(viDateTime('2026-10-12T18:43:51+07:00')).toBe('12/10/2026 18:43');
+    expect(isoDay('2026-10-13T19:05:41Z')).toBe('2026-10-14');
+    expect(viDateTime('2026-10-09')).toBe('09/10/2026');
+  });
+
+  it('VERSION_HISTORY.md has exactly the sections I–VIII, in order', () => {
+    expect(history.startsWith(`# ${DOC_TITLE}\n`)).toBe(true);
+    const h2 = history.split('\n').filter((l) => l.startsWith('## '));
+    expect(h2).toEqual(SECTIONS.map((s) => `## ${s}`));
+  });
+
+  it('the Google Docs HTML carries the same title, sections and versions', () => {
+    expect(html).toContain(`<title>${DOC_TITLE.replace('&', '&amp;')}</title>`);
+    const h2 = [...html.matchAll(/<h2>(.*?)<\/h2>/g)].map((m) => m[1]);
+    expect(h2).toEqual(SECTIONS);
+    const mdH3 = history.split('\n').filter((l) => l.startsWith('### ')).length;
+    expect([...html.matchAll(/<h3>/g)]).toHaveLength(mdH3);
+    expect([...html.matchAll(/<table>/g)].length).toBe(
+      history.split('\n').filter((l) => /^\| -/.test(l)).length,
+    );
+    for (const v of notes().versions) expect(html).toContain(`<h3>${v.version} — `);
+  });
+
+  it('the timeline calls only real GitHub Releases "released", with their verified date', () => {
+    const timeline = history.split(`## ${SECTIONS[1]!}`)[1]!.split('\n## ')[0]!;
+    for (const v of notes().versions) {
+      const row = timeline.split('\n').find((l) => l.startsWith(`| ${v.version} |`));
+      expect(row, v.version).toBeDefined();
+      const cells = row!.split(' | ');
+      expect(cells[1], v.version).toBe(STATUS_LABEL[v.status]);
+      if (v.status === 'released') {
+        expect(cells[2], v.version).toBe(`${viDate(v.dates.released!)} (đã xác minh)`);
+      } else {
+        expect(cells[2], v.version).toBe('Chưa phát hành');
+        expect(row, v.version).not.toContain(STATUS_LABEL.released);
+      }
+    }
+  });
+
+  it('every missing date is shown as "Chưa xác minh được", never filled in', () => {
+    const nulls = notes().versions.flatMap((v) =>
+      Object.values(v.dates).filter((d) => d === null),
+    ).length;
+    expect(history.split('| Chưa xác minh được | — |').length - 1).toBe(nulls);
+  });
+
+  it('CHANGELOG.md: newest first, Keep a Changelog sections, a date only for real releases', () => {
+    const headings = changelog.split('\n').filter((l) => l.startsWith('## '));
+    expect(headings).toHaveLength(notes().versions.length);
+    notes().versions.forEach((v, i) => {
+      const h = headings[i]!;
+      expect(h, v.version).toContain(v.version);
+      if (v.status === 'released') {
+        expect(h).toBe(`## [${v.version}] - ${isoDay(v.dates.released!)}`);
+      } else {
+        expect(h, v.version).toContain(STATUS_LABEL[v.status]);
+        expect(h, v.version).not.toMatch(/\d{4}-\d{2}-\d{2}/);
+        expect(h, v.version).not.toContain(STATUS_LABEL.released);
+      }
+    });
+    const sections = new Set(
+      changelog
+        .split('\n')
+        .filter((l) => l.startsWith('### '))
+        .map((l) => l.slice(4)),
+    );
+    for (const s of sections) expect(CHANGELOG_SECTIONS).toContain(s);
+    for (const v of notes().versions.filter((x) => x.status === 'released')) {
+      expect(changelog).toContain(`[${v.version}]: ${v.refs.releaseUrl!}`);
+    }
+  });
+
+  it('contain no secrets, e-mail addresses or personal paths', () => {
+    for (const [path, content] of Object.entries(out)) {
+      expect(secretsOrPaths(content), path).toEqual([]);
+    }
   });
 });
 
