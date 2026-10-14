@@ -37,6 +37,10 @@ orchestrator) — this document is the contract for those tests.
   empty tags (anchors), not other containers. `<write>`, `<correct>`, `<ask>` contain text only.
 - Anything that is not a valid tag (e.g. a lone `<` in "a < b") is literal text. Authors should
   write `&lt;`; the parser tolerates the raw form when the next character cannot start a tag name.
+- A TeachScript tag name (§4) or a reasoning tag name (§6) after `<` is always a tag. Any other
+  name is a tag only when the rest reads as one: the name, then `name="value"` pairs only
+  (`<foo bar="x">`, `<b>`, `<h1>`), or a closing tag without attributes (`</foo>`). Otherwise
+  every character is text, so a comparison such as `$x<y$ và $y>z$` is never eaten.
 
 ## 3. Time model
 
@@ -151,6 +155,21 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   open. Unclosed containers at end of stream are closed implicitly (log `unclosed_tag`).
 - Unknown tag → dropped, its text content kept as speech (log `unknown_tag`). Unknown attribute →
   ignored (log). Malformed attribute → tag dropped, text kept.
+- A `<write>` whose `id` is missing or invalid keeps its text: the id is repaired (lower case,
+  `-` → `_`: `S1` → `s1`, `step-1` → `step_1`) or replaced by an automatic `autoN` that no other
+  `id` of the answer uses (log `id_repaired`; also for `<draw>`/`<plot>` ids). A `<correct>`
+  without a `target` has nothing to correct: its text is spoken instead.
+- An unclosed `<write>` or `<correct>` (end of stream, or another container opens) ends at its
+  first sentence end or line break; the rest is speech (log `unclosed_tag`).
+- A TeachScript or reasoning tag cut off at the very end of the stream (an answer stopped at the
+  output limit: `<write id="s3" zone="ste`) is markup: it is dropped, never spoken (log
+  `unclosed_tag`). A short tail that may be text ("x<y") stays text.
+- Every sentence records where it stands in the text it was read from (`start`/`end`, after the
+  hidden reasoning was removed). "Viết tiếp" (the answer was cut and its rest arrives) reads the
+  whole answer again and skips the sentences that end where the part already taught stopped; the
+  sentence that was cut is said again whole, its actions already on the board are not placed
+  again, and a step whose text grew is wiped and written whole. Skipping goes by position, never
+  by counting sentences (a cut sentence grows when its rest is joined on the same line).
 - Hidden reasoning (`<think>`, `<thinking>`, `<reasoning>`, `<reflection>`, any case) is the
   exception: the whole block is dropped, never spoken or written (log `reasoning_removed`). An
   unclosed block is cut to the end; a closing tag with no opening tag before it (a chat template
@@ -179,6 +198,51 @@ Applied per sentence, with the board state of the lesson:
 | Safety                                                                                          | Output moderation (`outputIsSafe`) runs on the spoken text and on written text before performance.                                                                                                                                                                                                                                                                                                  |
 
 Diagnostics are kept in the dev overlay and in tests; they never contain learner text.
+
+### 7.1 As built: the board shows learning content only (item 1, 2026-10-14)
+
+`src/teacher/board/lessonCheck.ts` (`validateLesson`) checks every answer, TeachScript or the
+markdown layout (`fromMarkdown.ts`), after it was cleaned (`answerClean.ts`: hidden reasoning,
+prompt echoes, a Think reviewer's notes) and before anything is drawn. No prompt change: the kind
+of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equation`, `step`,
+`example`, `note`, `result`, `check`) is inferred from its zone, role and words.
+
+- **Internal text** (reasoning in plain words such as "Let me think" or "Người dùng hỏi…", a
+  reviewer's note about the draft, a prompt label alone, a link alone or a source line, bare
+  markup such as `---`): neither written nor said. Only positive evidence drops a text; when
+  unsure, it stays.
+- **Social or meta text** (a greeting, "Tôi là AI…", "Hy vọng…", "Dưới đây là…", a sentence of
+  generic words only such as "Mình sẽ giải từng bước"): said, never written.
+- **A label alone** from a closed list ("Kết luận:", "**Đáp án**", "Phân tích:", "Cho:", "Ghi
+  chú:", "Câu hỏi kiểm tra:", "Tài liệu tham khảo:"), closed by ":" or set in bold: not written,
+  said with the line it names (a list of sources: not said). Its meaning goes to that line: a
+  conclusion becomes the boxed result (one box, never an empty one), given data and notes go to
+  the side, a check question becomes a side note of kind `check`. A neutral label in front of
+  content ("Trả lời: …") is not written either. A bare word ("Kết luận", "Yêu cầu") may be
+  content and stays.
+- **Length** (`PART_LIMIT`: title 60, goal 80, given 120, concept 80, definition 100, equation
+  120, step 80 or 140 with numbers, example 80, note 80, result 100, check 100): words only, the
+  key point is written and the whole text said; with numbers, the text is split at clause
+  boundaries into at most 3 writes (ids `<id>_pN`, never the layout's `<id>_N`), else kept whole.
+  Never cut inside a number or a `$…$`. Math is never split here (the layout does).
+- **Marks** (marks, arrows, points, corrections) on a write that was dropped, and underlines of
+  words no longer written, are removed (a correction is still said). **The same write twice**:
+  the second is dropped, its marks go to the first.
+- **Tables** at most 8 rows × 5 columns with cells ≤ 40 characters, **flows** 6 steps ≤ 40,
+  **new-board titles** ≤ 40. A cell with a number is kept whole.
+- **What the teacher says** is recomputed from what is still written, so the voice never reads a
+  dropped write; a sentence left with nothing to say or do goes, and its pause moves on. Links
+  are not read out.
+
+Long markdown paragraphs are said and only their equations written: every `$…$` and `\(…\)`
+formula and plain-text chains such as `a = F/m = 10/2 = 5 m/s²` (written as text, never as
+KaTeX), at most four. `\[…\]` is display math. Nothing here changes, rounds or invents a number:
+a property test checks that every number of a random answer is written or said, whole. The
+outline (`LessonOutline`) keeps the parts and, for dropped text, only reasons and counts (never
+learner text). Number provenance is shown as labels on the board (`provenance.ts`); withholding a
+sentence and asking the brain to rewrite it (the table above) is not built yet. Tests:
+`lessonCheck.test.ts`, `boardFixtures.test.ts` (copies of real eval answers and cloud-shaped
+answers), `teachscriptRepair.test.ts`.
 
 ## 8. Text-to-speech normalisation (Vietnamese)
 

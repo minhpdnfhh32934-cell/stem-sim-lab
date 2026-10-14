@@ -48,11 +48,15 @@ Từ "Stem Sim Lab app" (P8.3 – T2 Bảng trắng; phần B7 của PROMPT_PHAN
 ## 4. Thiết kế đã làm
 
 ```
-Câu trả lời AI ──► TeachScript? ──có──► parseTeachScript (chịu lỗi)
+Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời nhắc, nhận xét của người rà soát)
+                                             ▼
+                   TeachScript? ──có──► parseTeachScript (chịu lỗi)
                     │                        │
                     └──không──► markdownToScript (tự xếp câu trả lời thường)
                                              ▼
                        câu 1, câu 2, … (lời nói + hành động bảng)
+                                             ▼
+          lessonCheck.ts: chỉ giữ nội dung học, giới hạn độ dài, nhãn → ý nghĩa
                                              ▼
           lesson.ts: nói câu (giọng tiếng Việt) ∥ bút viết / đánh dấu / vẽ
                                              ▼
@@ -61,6 +65,29 @@ Câu trả lời AI ──► TeachScript? ──có──► parseTeachScript (
           Whiteboard.tsx: chữ viết tay, đầu bút, nét vẽ tay (rough.ts), hình (BoardDrawing.tsx)
 ```
 
+- **Bảng chỉ có nội dung học (mục 1, `lessonCheck.ts`, chi tiết ở TEACHSCRIPT.md §7.1):** trước
+  khi vẽ, mỗi câu trả lời được kiểm thành một bài có kiểu rõ ràng (tiêu đề, dữ kiện, công thức,
+  bước, ghi chú, kết quả, câu hỏi kiểm tra…).
+  - Lời chào, "Tôi là AI…", "Dưới đây là…", "Hy vọng…" được **nói** nhưng không viết lên bảng.
+  - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, đường link, dòng "---"
+    không được nói, cũng không được viết.
+  - Một nhãn đứng một mình ("**Kết luận:**", "Phân tích:", "Cho:", "Ghi chú:") không được viết:
+    thầy nói nhãn cùng dòng ngay sau, và ý nghĩa của nhãn đi theo dòng đó (kết luận → khung kết
+    quả đúng một lần, không bao giờ có khung rỗng; dữ kiện, ghi chú → cột bên; câu hỏi kiểm tra
+    cuối bài → ghi chú ngắn ở cột bên).
+  - Mỗi loại có giới hạn độ dài: câu chỉ có chữ thì viết ý chính (đọc đủ cả câu); câu có số thì
+    tách ở dấu phẩy thành tối đa 3 dòng, không bao giờ cắt giữa một con số hay một công thức.
+    Đoạn dài chỉ được nói, và mọi phương trình trong đó (cả `$…$`, `\(…\)` lẫn dạng chữ như
+    `a = F/m = 10/2 = 5 m/s²`, tối đa 4) được viết lên bảng.
+  - Dấu gạch chân, khung, mũi tên chỉ vào chữ đã bị bỏ thì cũng bị bỏ; lời thầy nói được tính
+    lại theo những gì còn trên bảng. Không con số nào bị đổi, làm tròn hay thêm vào (có kiểm thử
+    tính chất).
+  - Trình đọc TeachScript: thẻ `<write>` sai mã được sửa mã (không mất chữ), thẻ chưa đóng kết
+    thúc ở cuối câu, "$x<y$ và $y>z$" là chữ chứ không phải thẻ, thẻ bị cắt ở cuối câu trả lời
+    không bao giờ được đọc lên.
+  - "Viết tiếp": đọc lại toàn bộ câu trả lời và bỏ qua phần đã giảng **theo vị trí** trong câu
+    trả lời (không đếm câu). Câu bị cắt được nói lại đủ; dòng đang viết dở được xóa và viết lại
+    đủ (không còn một mẩu cụt rồi phần còn lại ở dòng khác).
 - **Chữ viết tay:** phông Patrick Hand (nội dung) và Pangolin (tiêu đề), giấy phép OFL, có bộ chữ
   tiếng Việt, đóng gói sẵn trong app (không tải từ mạng). Mỗi chữ cái lệch nhẹ (xoay ±2°, lệch dòng,
   co giãn ±3%) theo seed cố định; dòng dài hơi trôi xuống như viết tay.
