@@ -203,24 +203,34 @@ export function timeStretch(input: Float32Array, rate: number, sampleRate: numbe
   const window = new Float32Array(n);
   for (let j = 0; j < n; j++) window[j] = 0.5 * (1 - Math.cos((2 * Math.PI * j) / n));
   const at = (i: number) => (i >= 0 && i < input.length ? (input[i] ?? 0) : 0);
+  /** How well the frame at `candidate` continues the waveform at `natural`. */
+  const similarity = (candidate: number, natural: number) => {
+    let score = 0;
+    for (let j = 0; j < hs; j += 2) score += at(candidate + j) * at(natural + j);
+    return score;
+  };
+  /** The best start among `from…to` in steps of `step` (never before the input). */
+  const best = (from: number, to: number, step: number, natural: number, start: number) => {
+    let pos = start;
+    let score = -Infinity;
+    for (let c = Math.max(0, from); c <= to; c += step) {
+      const s = similarity(c, natural);
+      if (s > score) {
+        score = s;
+        pos = c;
+      }
+    }
+    return pos;
+  };
   let prev = 0;
   for (let k = 0; k * hs < outLength; k++) {
     let pos = 0;
     if (k > 0) {
       const nominal = Math.round(k * ha);
       const natural = prev + hs;
-      let bestScore = -Infinity;
-      pos = nominal;
-      for (let d = -tol; d <= tol; d++) {
-        const candidate = nominal + d;
-        if (candidate < 0) continue;
-        let score = 0;
-        for (let j = 0; j < hs; j += 2) score += at(candidate + j) * at(natural + j);
-        if (score > bestScore) {
-          bestScore = score;
-          pos = candidate;
-        }
-      }
+      // Coarse to fine: every 4th sample over ±8 ms, then each sample around the best one.
+      const coarse = best(nominal - tol, nominal + tol, 4, natural, Math.max(0, nominal));
+      pos = best(coarse - 3, coarse + 3, 1, natural, coarse);
     }
     const o = k * hs;
     for (let j = 0; j < n; j++) {
