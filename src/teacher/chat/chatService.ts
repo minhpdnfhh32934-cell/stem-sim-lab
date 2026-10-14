@@ -774,8 +774,8 @@ function stopIfAsked(signal?: AbortSignal): void {
  * Numbers the AI was given: the question and the learner's turns (number words too), the app's
  * results, the texts sent with this question (excerpt, screen) and earlier answers' numbers that
  * were checked and not flagged there. An answer saved before the check existed (no
- * `unverifiedNumbers` field) is checked now against what was given before it: its numbers are
- * never taken as given unchecked.
+ * `unverifiedNumbers` field) is checked now, against the learner's turns, the app's results, the
+ * texts sent now and the answers before it: its numbers are never taken as given unchecked.
  */
 function givenNumbers(
   question: string,
