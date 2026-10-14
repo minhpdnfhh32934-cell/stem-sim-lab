@@ -107,12 +107,13 @@ let controller: AbortController | null = null;
 /**
  * One lesson's voice (the board keeps one per lesson; a chat answer gets its own). After the
  * chosen voice fails for a reason that will not pass within the lesson (a timeout, no network,
- * no quota, the daily cap, a missing or hung on-device model), the rest of it is read by the
- * system voice at once instead of waiting for that voice again at every sentence.
+ * no quota, the daily cap, an on-device model that is missing, will not load, hangs or speaks
+ * silence), the rest of it is read by the system voice at once instead of waiting for that voice
+ * again at every sentence. Only that voice is skipped: another one chosen meanwhile is heard.
  */
 export interface VoiceSession {
-  /** Why the chosen voice is skipped for the rest of the session (null = it is tried). */
-  skipped: string | null;
+  /** The voice skipped for the rest of the session and why (null = the chosen voice is tried). */
+  skipped: { engine: VoiceEngine; reason: string } | null;
 }
 
 export function newVoiceSession(): VoiceSession {
@@ -138,8 +139,10 @@ function lastingFailure(e: unknown): boolean {
     return isQuotaError(e) || ['timeout', 'network', 'dailyLimit', 'missingKey'].includes(e.code);
   }
   const message = e instanceof Error ? e.message : String(e);
-  return /^(?:gemini-tts-(?:no-key|unavailable)|voice-model-(?:missing|timeout)|worker-crashed)$/.test(
-    message,
+  return (
+    /^(?:gemini-tts-(?:no-key|unavailable)|voice-model-(?:missing|timeout|silent)|worker-crashed)$/.test(
+      message,
+    ) || message.startsWith('voice-model-load-')
   );
 }
 
@@ -170,7 +173,7 @@ export async function speak(text: string, opts: SpeakOptions = {}): Promise<void
   const progress: Progress = { played: 0 };
   const session = opts.session ?? newVoiceSession();
   // Skipped for this lesson: the system voice reads at once, and Settings keeps the reason.
-  const engine = session.skipped && store.engine !== 'system' ? 'system' : store.engine;
+  const engine = session.skipped?.engine === store.engine ? 'system' : store.engine;
   try {
     await speakWith(engine, chunks, ctrl.signal, rate, progress);
     if (!ctrl.signal.aborted && engine === store.engine) {
@@ -181,7 +184,7 @@ export async function speak(text: string, opts: SpeakOptions = {}): Promise<void
     const message = errorText(e);
     console.warn('[teacher-voice]', message);
     useVoiceStore.getState().setLastError(message);
-    if (engine !== 'system' && lastingFailure(e)) session.skipped = message;
+    if (engine !== 'system' && lastingFailure(e)) session.skipped = { engine, reason: message };
     // The learner still hears the answer: the operating-system voice takes over from the first
     // phrase not yet heard, so nothing is read twice (audit VOI-01).
     if (engine !== 'system' && speechSupported()) {

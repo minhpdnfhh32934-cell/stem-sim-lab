@@ -181,6 +181,59 @@ describe('the teacher voice when something goes wrong', () => {
   });
 });
 
+describe('a lesson skips only the voice that failed (second review)', () => {
+  beforeEach(() => {
+    local.fail.clear();
+    local.said.length = 0;
+    useVoiceStore.setState({
+      enabled: true,
+      engine: 'gemini',
+      style: 'vui',
+      speed: 1,
+      lastError: null,
+      speaking: false,
+    });
+  });
+  afterEach(() => {
+    stopSpeaking();
+    setTransportForTests(null);
+    vi.unstubAllGlobals();
+  });
+
+  it('switching to the on-device voice mid-lesson uses it at once after a cloud failure', async () => {
+    const spoken = fakeSystemVoice();
+    gemini(() => Promise.reject(new AiError('http', '429: RESOURCE_EXHAUSTED')));
+    const session = newVoiceSession();
+    await speak('Câu một.', { session });
+    expect(spoken).toEqual(['Câu một.']);
+    // The learner picks the downloaded voice in Settings: it is heard, not the system voice.
+    useVoiceStore.setState({ engine: 'local' });
+    await speak('Câu hai.', { session });
+    expect(local.said).toEqual(['Câu hai.']);
+    expect(spoken).toEqual(['Câu một.']);
+    // Back to Gemini in the same lesson: still skipped (it ran out of quota).
+    useVoiceStore.setState({ engine: 'gemini' });
+    await speak('Câu ba.', { session });
+    expect(spoken).toEqual(['Câu một.', 'Câu ba.']);
+  });
+
+  it.each([
+    ['silent audio', 'voice-model-silent'],
+    ['a model that does not load', 'voice-model-load-failed: Error: no available backend'],
+    ['a load that hangs', 'voice-model-load-timeout'],
+  ])('after %s the on-device voice is not asked again in the lesson', async (_name, error) => {
+    useVoiceStore.setState({ engine: 'local' });
+    const spoken = fakeSystemVoice();
+    local.fail.set('Câu một.', error);
+    local.fail.set('Câu hai.', error);
+    const session = newVoiceSession();
+    await speak('Câu một.', { session });
+    await speak('Câu hai.', { session });
+    expect(local.said).toEqual(['Câu một.']);
+    expect(spoken).toEqual(['Câu một.', 'Câu hai.']);
+  });
+});
+
 describe('why the chosen voice was not heard (Settings)', () => {
   it.each([
     ['timeout: 30s', 'voice.errors.timeout'],
