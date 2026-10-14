@@ -7,9 +7,12 @@
  *   402, 429, 400 with "credit balance", RESOURCE_EXHAUSTED → quota. Then 401/403 or an invalid
  *   key → badKey; 404 or an unknown model → badModel; 413 → tooLarge; 5xx (529 included) or
  *   "overloaded" → server.
- * - Local runtimes tag their messages (src-tauri/src/ai/local/mod.rs); the tag decides first.
+ * - Local runtimes tag their messages (src-tauri/src/ai/local/mod.rs); the tag decides first. A
+ *   local runtime's message is never read as a cloud quota or key problem, whatever status it
+ *   carries ("local-failed: 429: busy", "needs-auth: 401"): those rules are for cloud providers.
  */
 import {
+  BAD_IMAGE,
   FAILED,
   IS_OLLAMA,
   LOADING,
@@ -19,12 +22,41 @@ import {
   NOT_LOOPBACK,
   NOT_RUNTIME,
   NOT_SELECTED,
+  NO_VISION,
   REMOTE_MODEL,
   STALLED,
   TOO_LARGE,
   UNREACHABLE,
+  VISION_UNVERIFIED,
 } from './local/types';
 import { toAiError } from './types';
+
+/**
+ * Every tag a local runtime's error message starts with, plus the page's own local messages
+ * (src/ai/local/types.ts).
+ */
+const LOCAL_TAGS: ReadonlySet<string> = new Set([
+  UNREACHABLE,
+  MODEL_MISSING,
+  LOADING,
+  NEEDS_AUTH,
+  STALLED,
+  REMOTE_MODEL,
+  NOT_RUNTIME,
+  NOT_LOOPBACK,
+  TOO_LARGE,
+  FAILED,
+  NO_VISION,
+  VISION_UNVERIFIED,
+  BAD_IMAGE,
+  NEEDS_APP_UPDATE,
+  NOT_SELECTED,
+]);
+
+/** The message comes from a local runtime (it starts with one of their tags). */
+export function isLocalMessage(message: string): boolean {
+  return LOCAL_TAGS.has(tagOf(message));
+}
 
 /**
  * The HTTP status of an error message: its first number ("429 Too Many Requests: …",
@@ -37,8 +69,13 @@ export function httpStatus(message: string): number {
   return n <= 65535 ? n : 0;
 }
 
-/** Out of quota or credit (the rule of `is_quota_error` in Rust and of `isQuotaError`). */
+/**
+ * Out of quota or credit (the rule of `is_quota_error` in Rust and of `isQuotaError`). Never for a
+ * local runtime's message: a busy runtime on this computer is not a provider's quota, and must not
+ * switch to a cloud fallback.
+ */
 export function isQuotaMessage(message: string): boolean {
+  if (isLocalMessage(message)) return false;
   const status = httpStatus(message);
   const lower = message.toLowerCase();
   return (
@@ -49,10 +86,22 @@ export function isQuotaMessage(message: string): boolean {
   );
 }
 
-export type HttpErrorKind = 'quota' | 'badKey' | 'badModel' | 'tooLarge' | 'server' | 'http';
+export type HttpErrorKind =
+  | 'quota'
+  | 'badKey'
+  | 'badModel'
+  | 'tooLarge'
+  | 'server'
+  | 'http'
+  /** A local runtime's error: not a cloud provider's quota, key or model (see `aiErrorKind`). */
+  | 'local';
 
-/** An HTTP error from a cloud provider, by its status and body. */
+/**
+ * An HTTP error from a cloud provider, by its status and body; `local` for a local runtime's
+ * message, whatever status it carries.
+ */
 export function httpErrorCode(message: string): HttpErrorKind {
+  if (isLocalMessage(message)) return 'local';
   if (isQuotaMessage(message)) return 'quota';
   const status = httpStatus(message);
   const lower = message.toLowerCase();
@@ -119,6 +168,12 @@ export type AiErrorKind =
   | 'localNotSelected'
   | 'notLoopback'
   | 'localFailed'
+  /** A picture was sent to a model that cannot read pictures (or without asking for it). */
+  | 'localNoVision'
+  /** The runtime does not say whether the model reads pictures, so none is sent. */
+  | 'localVisionUnverified'
+  /** The picture is not a PNG or JPEG, is too large, or there is more than one. */
+  | 'localBadImage'
   | 'other';
 
 /** Finish or block reasons that mean the provider's own filter stopped the answer. */
@@ -174,6 +229,16 @@ function localKind(message: string): AiErrorKind | null {
       return 'answerTooLarge';
     case FAILED:
       return 'localFailed';
+    case NO_VISION:
+      return 'localNoVision';
+    case VISION_UNVERIFIED:
+      return 'localVisionUnverified';
+    case BAD_IMAGE:
+      return 'localBadImage';
+    case NEEDS_APP_UPDATE:
+      return 'needsAppUpdate';
+    case NOT_SELECTED:
+      return 'localNotSelected';
     default:
       return null;
   }
@@ -184,8 +249,6 @@ export function aiErrorKind(e: unknown): AiErrorKind {
   const err = toAiError(e);
   const { message } = err;
   if (err.code === 'cancelled') return 'cancelled';
-  if (err.code === 'unavailable' && message === NEEDS_APP_UPDATE) return 'needsAppUpdate';
-  if (err.code === 'unavailable' && message === NOT_SELECTED) return 'localNotSelected';
   const local = localKind(message);
   if (local) return local;
   switch (err.code) {
@@ -209,7 +272,8 @@ export function aiErrorKind(e: unknown): AiErrorKind {
       return badResponseKind(message);
     case 'http': {
       const kind = httpErrorCode(message);
-      return kind === 'http' ? 'other' : kind;
+      // `local` cannot come here: every local tag was read above.
+      return kind === 'http' || kind === 'local' ? 'other' : kind;
     }
     default:
       // A code this page does not know (a newer desktop app).

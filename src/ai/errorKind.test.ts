@@ -1,6 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { aiErrorKind, httpErrorCode, httpStatus, type AiErrorKind } from './errorKind';
+import {
+  aiErrorKind,
+  httpErrorCode,
+  httpStatus,
+  isLocalMessage,
+  isQuotaMessage,
+  type AiErrorKind,
+} from './errorKind';
 import { isQuotaError } from './fallback';
+import {
+  BAD_IMAGE,
+  FAILED,
+  LOADING,
+  MODEL_MISSING,
+  NEEDS_APP_UPDATE,
+  NEEDS_AUTH,
+  NOT_LOOPBACK,
+  NOT_RUNTIME,
+  NOT_SELECTED,
+  NO_VISION,
+  REMOTE_MODEL,
+  STALLED,
+  TOO_LARGE,
+  UNREACHABLE,
+  VISION_UNVERIFIED,
+} from './local/types';
 import { AiError, type AiErrorCode } from './types';
 
 /** Message shapes of the Rust gateway (usage.rs, mod.rs, stream.rs, local/mod.rs) and the page. */
@@ -62,6 +86,28 @@ const TABLE: [AiErrorCode, string, AiErrorKind][] = [
   ['badResponse', 'too-large: answer over 524288 bytes', 'answerTooLarge'],
   ['http', 'local-failed: 429: busy', 'localFailed'],
   ['badResponse', 'local-failed: unreadable stream line', 'localFailed'],
+  ['notAllowed', 'no-vision', 'localNoVision'],
+  ['notAllowed', 'vision-unverified', 'localVisionUnverified'],
+  ['notAllowed', 'bad-image: over 2 MB', 'localBadImage'],
+];
+
+/** Every tag a local runtime's message may start with (src/ai/local/types.ts). */
+const LOCAL_TAGS = [
+  UNREACHABLE,
+  MODEL_MISSING,
+  LOADING,
+  NEEDS_AUTH,
+  STALLED,
+  REMOTE_MODEL,
+  NOT_RUNTIME,
+  NOT_LOOPBACK,
+  TOO_LARGE,
+  FAILED,
+  NOT_SELECTED,
+  NEEDS_APP_UPDATE,
+  NO_VISION,
+  VISION_UNVERIFIED,
+  BAD_IMAGE,
 ];
 
 describe('what went wrong with an AI call', () => {
@@ -82,6 +128,27 @@ describe('what went wrong with an AI call', () => {
       const e = new AiError('http', message);
       expect(httpErrorCode(message) === 'quota', message).toBe(isQuotaError(e));
     }
+  });
+
+  it('never reads a local runtime error as a cloud quota, key or model problem', () => {
+    for (const tag of LOCAL_TAGS) {
+      // Statuses that would mean quota, key or model for a cloud provider.
+      for (const rest of ['429: busy', '402: x', '400: credit balance too low', '401', '404: x']) {
+        const message = `${tag}: ${rest}`;
+        expect(isLocalMessage(message), message).toBe(true);
+        expect(isQuotaError(new AiError('http', message)), message).toBe(false);
+        expect(isQuotaMessage(message), message).toBe(false);
+        expect(httpErrorCode(message), message).toBe('local');
+        expect(['quota', 'badKey', 'badModel', 'server', 'other']).not.toContain(
+          aiErrorKind(new AiError('http', message)),
+        );
+      }
+      expect(isLocalMessage(tag)).toBe(true);
+    }
+    // Cloud messages are unchanged.
+    expect(isLocalMessage('429 Too Many Requests: {}')).toBe(false);
+    expect(isQuotaError(new AiError('http', '429 Too Many Requests: {}'))).toBe(true);
+    expect(httpErrorCode('401 Unauthorized: {}')).toBe('badKey');
   });
 
   it('reads the status as the gateway does: the first number', () => {
