@@ -11,6 +11,10 @@
 .whatsnew__title svg {
   color: var(--accent);
 }
+/* Focused on open so screen readers start here; it is not a control, so no ring. */
+.whatsnew__title:focus {
+  outline: none;
+}
 .whatsnew__body:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: -2px;
@@ -54,9 +58,27 @@
   margin-top: 3px;
   color: var(--accent);
 }
+.whatsnew__all > summary,
+.version-history__item > summary {
+  list-style: none;
+}
+.whatsnew__all > summary::-webkit-details-marker,
+.version-history__item > summary::-webkit-details-marker {
+  display: none;
+}
+/* Disclosure arrow: points right when folded, down when open. */
+.disclosure {
+  flex: none;
+  color: var(--text-muted);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+details[open] > summary > .disclosure {
+  transform: rotate(90deg);
+}
 .whatsnew__all > summary {
   display: flex;
   align-items: center;
+  gap: var(--space-1);
   min-height: var(--target);
   color: var(--text-muted);
   font-size: var(--text-sm);

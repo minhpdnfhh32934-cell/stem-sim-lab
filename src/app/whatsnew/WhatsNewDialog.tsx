@@ -1,4 +1,4 @@
-import { ScrollText, Sparkles } from 'lucide-react';
+import { ChevronRight, ScrollText, Sparkles } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useT } from '@/app/i18n';
@@ -22,6 +22,7 @@ import './whatsnew.css';
 export function WhatsNewDialog() {
   const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
+  const title = useRef<HTMLHeadingElement>(null);
   const { open, pending } = useWhatsNewStore(
     useShallow((s) => ({ open: s.open, pending: s.pending })),
   );
@@ -29,7 +30,12 @@ export function WhatsNewDialog() {
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (open && !d.open) d.showModal();
+    if (open && !d.open) {
+      d.showModal();
+      // Start on the title (read first by screen readers), not on a button that would close
+      // the box on Enter or on the scroll area with a large focus ring.
+      title.current?.focus();
+    }
     if (!open && d.open) d.close();
   }, [open]);
 
@@ -49,7 +55,7 @@ export function WhatsNewDialog() {
       }}
     >
       <header className="dialog__header">
-        <h2 id="whatsnew-title" className="whatsnew__title">
+        <h2 id="whatsnew-title" className="whatsnew__title" ref={title} tabIndex={-1}>
           <Sparkles size={18} strokeWidth={1.75} aria-hidden="true" />
           {t('whatsnew.title')}
         </h2>
@@ -103,7 +109,10 @@ function VersionSection({ entry, first }: { entry: ReleaseEntry; first: boolean 
       )}
       {/* The newest version shows every group; older ones keep them folded. */}
       <details className="whatsnew__all" open={first || highlights.length === 0}>
-        <summary>{t('whatsnew.allChanges')}</summary>
+        <summary>
+          <ChevronRight className="disclosure" size={15} aria-hidden="true" />
+          {t('whatsnew.allChanges')}
+        </summary>
         <NoteGroups
           groups={[
             { category: 'added', items: n.added },

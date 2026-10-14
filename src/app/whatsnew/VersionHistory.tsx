@@ -1,4 +1,4 @@
-import { ExternalLink, ScrollText, Sparkles } from 'lucide-react';
+import { ChevronRight, ExternalLink, ScrollText, Sparkles } from 'lucide-react';
 import { useEffect } from 'react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -78,6 +78,7 @@ function VersionItem({
   return (
     <details className="version-history__item" open={open}>
       <summary>
+        <ChevronRight className="disclosure" size={16} aria-hidden="true" />
         <span className="version-history__version">
           {t('whatsnew.version', { version: entry.version })}
         </span>
