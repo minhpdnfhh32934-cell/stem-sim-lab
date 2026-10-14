@@ -10,14 +10,18 @@
  *   generic upper-case name used as a markdown heading ("## TÀI LIỆU THAM KHẢO") or the
  *   excerpt section's name above a bullet list of sources;
  * - for an answer written by the Think reviewer (`reviewed`), its wrapper, sentence by sentence
- *   from the start: remarks about the draft ("Bản nháp đã đúng.", "The draft is correct.") and the
+ *   from the start: remarks about the draft or the answer under review ("Bản nháp đã đúng.", "The
+ *   draft is correct.", "Review: The answer is correct…", "Bản trả lời ban đầu đã đúng.") and the
  *   header that introduces the revision ("Bản đã sửa:", "Revised answer:", alone on its line or
  *   closed by ":"). The scan stops at the first sentence or line that is neither, so the lesson
- *   is never cut. A remark holding a number, a formula, a tag or code stays unless a revision
- *   header follows it (it may be a correction the learner needs). A closing paragraph that opens
- *   by naming the draft goes when it holds none of these. Feedback on the learner's own draft
- *   ("Bản nháp của em…", "Your draft…") is never a remark, and when the question is about the
- *   learner's draft nothing of the wrapper is removed.
+ *   is never cut; only a reviewer-only header alone on its line also ends a few opening
+ *   sentences without learning material ("Chào em!\n\nBản đã sửa:"). A remark holding a number,
+ *   a formula, a tag or code, or going on with more than a few words after "nhưng"/"rằng"/"but",
+ *   stays unless a revision header follows it (it may be a correction the learner needs). A
+ *   closing paragraph that opens by naming the draft goes when it holds none of these. Feedback
+ *   on the learner's own draft or answer ("Bản nháp của em…", "Your answer…") is never a remark;
+ *   when the question is about the learner's draft nothing of the wrapper is removed, and when it
+ *   asks for a correction a header alone does not end the opening sentences.
  *
  * Code fences and inline code are never edited (reasoning around code excepted). Text without
  * anything to remove comes back exactly as it was; the result is idempotent. Pure: no store
@@ -48,11 +52,15 @@ export interface CleanOptions {
 /** Cleans an answer (see the file comment). */
 export function cleanAnswer(text: string, options: CleanOptions = {}): CleanedAnswer {
   const found = new Set<CleanKind>();
-  const reviewed = options.reviewed === true && !asksAboutOwnDraft(options.question ?? '');
+  const question = options.question ?? '';
+  const review: ReviewMode | null =
+    options.reviewed === true && !asksAboutOwnDraft(question)
+      ? { correction: asksForCorrection(question) }
+      : null;
   let out = text;
   // Each pass only removes, so it ends; a second pass catches what the first one uncovered.
   for (let pass = 0; pass < 5; pass++) {
-    const next = cleanOnce(out, reviewed, found);
+    const next = cleanOnce(out, review, found);
     if (next === out) break;
     out = next;
   }
@@ -60,14 +68,25 @@ export function cleanAnswer(text: string, options: CleanOptions = {}): CleanedAn
   return { text: out, removed: KINDS.filter((k) => found.has(k)) };
 }
 
-function cleanOnce(text: string, reviewed: boolean, found: Set<CleanKind>): string {
+/** How the Think reviewer's wrapper is looked for. */
+interface ReviewMode {
+  /**
+   * The learner asked for a correction or a check ("sửa giúp em", "check this"): the teacher's
+   * feedback may then judge "câu trả lời" (the learner's) or open with "Nhận xét:" and come
+   * before a "Bản đã sửa:" of its own. Only words about the draft ("bản nháp", "Rà soát:") mark
+   * the reviewer's notes then; a header alone does not end the opening sentences.
+   */
+  correction: boolean;
+}
+
+function cleanOnce(text: string, review: ReviewMode | null, found: Set<CleanKind>): string {
   const reasoning = stripReasoningOutsideCode(text);
   if (reasoning.removed) found.add('reasoning');
   const masked = mask(reasoning.text);
   const start = masked ? masked.text : reasoning.text;
   let out = removeBlocks(start, found);
   out = removeEchoLines(out, found);
-  if (reviewed) out = removeReviewWrapper(out, found);
+  if (review) out = removeReviewWrapper(out, review, found);
   if (out !== start || reasoning.removed) out = tidy(out);
   return masked ? unmask(out, masked.spans) : out;
 }
@@ -201,30 +220,75 @@ function asksAboutOwnDraft(question: string): boolean {
 }
 
 /**
- * Words about the learner's own draft (feedback they asked for, never the reviewer's notes):
- * "bản nháp của em", "bản nháp bạn gửi", "em đã viết bản nháp", "your draft", "the draft you…".
+ * The learner asked for a correction or a check ("sửa giúp em", "fix this"): a teacher's
+ * feedback may then come before a "Bản đã sửa:" of its own, so that header alone, without a
+ * remark about the draft before it, does not mark the reviewer's notes.
+ */
+function asksForCorrection(question: string): boolean {
+  return /sửa|chỉnh|viết lại|kiểm tra|xem (?:lại|giúp|hộ)|chấm|góp ý|nhận xét|\b(?:correct|fix|revise|rewrite|edit|check|review|grade|feedback|improve)/iu.test(
+    question.normalize('NFC'),
+  );
+}
+
+/** A whole Vietnamese word or phrase out of `words` (letters around it break the match). */
+const viWords = (words: string) => String.raw`(?<![\p{L}\p{M}])(?:${words})(?![\p{L}\p{M}])`;
+
+/**
+ * Words about the learner's own draft or answer (feedback they asked for, never the reviewer's
+ * notes): "bản nháp của em", "bản nháp bạn gửi", "em đã viết bản nháp", "câu trả lời của em",
+ * "your draft", "your answer", "the draft you…".
  */
 const LEARNER_DRAFT: readonly RegExp[] = [
   /bản\s+nháp\s+(?:của\s+)?(?:các\s+)?(?:em|bạn|con|cậu)(?![\p{L}\p{M}])/giu,
   /(?<![\p{L}\p{M}])(?:em|bạn)(?:\s+[\p{L}\p{M}]+){0,3}\s+bản\s+nháp/giu,
-  /\byour\s+(?:own\s+)?(?:[a-z]+\s+)?draft/gi,
+  /(?:câu|bản)\s+trả\s+lời\s+(?:của\s+)?(?:các\s+)?(?:em|bạn|con|cậu)(?![\p{L}\p{M}])/giu,
+  /\byour\s+(?:own\s+)?(?:[a-z]+\s+)?(?:draft|answer|response|solution)/gi,
   /\bthe\s+draft\s+you\b/gi,
 ];
 
+/** A verdict on a text: "đúng", "thiếu đơn vị", "correct", "lacks units"… */
+const VERDICT_VI = new RegExp(
+  viWords(
+    'đúng|sai|chính xác|thiếu|chưa|lỗi|nhầm|ổn|tốt|hợp lý|đầy đủ|rõ ràng|cần|sửa|chỉnh|bổ sung|cải thiện|bỏ sót',
+  ),
+  'iu',
+);
+const VERDICT_EN =
+  /\b(?:correct|incorrect|wrong|error|mistake|accurate|inaccurate|missing|unclear|improv|fix|revis|review|lacks?|needs?|complete|incomplete)/i;
+const hasVerdict = (t: string) => VERDICT_VI.test(t) || VERDICT_EN.test(t);
+
 /** Words that only a reviewer writes about the draft it was given. */
 const DRAFT_STRONG = [
-  /bản\s+nháp/iu,
+  // "Nhận xét về bản nháp", "Rà soát bản nháp", "bản nháp trên": the draft under review.
+  new RegExp(
+    `${viWords('nhận xét|đánh giá|rà soát|ghi chú|lưu ý')}(?:\\s+(?:chung|thêm|lại))?\\s+(?:về\\s+|cho\\s+|của\\s+)?bản\\s+nháp|bản\\s+nháp\\s+${viWords('trên|ban đầu|gốc|đã cho|được cung cấp|được đưa ra')}`,
+    'iu',
+  ),
   new RegExp(labelCore(REVIEW_DRAFT_LABEL.vi).replace(/\s+/g, String.raw`\s+`), 'iu'),
   /\bdraft\s+(?:answer|response|solution|version|lesson)\b/i,
   /\b(?:original|initial|previous|first)\s+draft\b/i,
   /\bthe\s+draft['’]s\b/i,
 ];
-/** Opening a sentence: "Rà soát: …". */
-const REVIEW_OPENING = /^[\s>#*_-]*rà\s+soát(?![\p{L}\p{M}])/iu;
-/** "The draft is correct": a draft and a verdict in the same sentence. */
-const DRAFT_EN = /\b(?:the|this)\s+draft\b/i;
-const VERDICT_EN =
-  /\b(?:correct|incorrect|wrong|error|mistake|accurate|inaccurate|missing|unclear|improv|fix|revis|review)/i;
+/** "Bản nháp đúng": a draft with a verdict (a lesson may name a report's "bản nháp"). */
+const DRAFT_VI = /bản\s+nháp/iu;
+/** "The draft is correct": a draft (not "the draft of a ship") and a verdict. */
+const DRAFT_EN = /\b(?:the|this)\s+draft\b(?!\s+(?:of|for)\b)/i;
+/** "Câu trả lời ban đầu", "the original answer": the answer under review, with a verdict. */
+const ANSWER_UNDER_REVIEW = new RegExp(
+  `(?:câu|bản)\\s+trả\\s+lời\\s+${viWords('ban đầu|trên|gốc|cần rà soát|được cung cấp|được đưa ra')}|\\bthe\\s+(?:original|initial|above|given|provided|previous)\\s+(?:answer|response|solution)\\b|\\bthe\\s+(?:answer|response|solution)\\s+above\\b`,
+  'iu',
+);
+/** A reviewer's label opening the sentence: "Review:", "**Đánh giá:**", "Rà soát:". */
+const REVIEW_LABEL =
+  /^[\s>#*_-]*(?:review|feedback|assessment|verdict|nhận xét|đánh giá|rà soát)[*_]*\s*[:：][*_]*\s*/iu;
+/** After the label, the answer itself ("Câu trả lời đúng…", "The answer is correct…"). */
+const ANSWER_ANY = /^(?:(?:câu|bản)\s+trả\s+lời|(?:the|this)\s+(?:answer|response|solution)\b)/iu;
+/** After the label, a bare verdict ("Đúng.", "Correct, but…"); "sai số" is no verdict. */
+const BARE_VERDICT =
+  /^(?:(?:rất|hoàn toàn|nhìn chung|về cơ bản|mostly|fully|largely)\s+)?(?:đúng|chính xác|ổn|hợp lý|correct|incorrect|accurate|inaccurate|wrong)[*_]*\s*(?:[.,;!]|$)/iu;
+/** "Rà soát xong, …", "Rà soát cho thấy …": a review reported without a label. */
+const REVIEW_DONE =
+  /^[\s>#*_-]*rà\s+soát[*_]*\s+(?:xong|cho\s+thấy|không\s+(?:thấy|phát\s+hiện))/iu;
 /** A closing paragraph that opens by naming the draft as its topic. */
 const DRAFT_TOPIC =
   /^[\s>#*_-]*(?:(?:nhận xét|đánh giá|ghi chú|lưu ý)(?:\s+(?:chung|thêm))?\s+(?:về\s+|cho\s+)?bản\s+nháp|(?:notes?|comments?|review)\s+(?:on|about|of)\s+the\s+draft)/iu;
@@ -234,13 +298,52 @@ function reviewerWords(text: string): string {
   return LEARNER_DRAFT.reduce((t, re) => t.replace(re, ' … '), text.normalize('NFC'));
 }
 
-function aboutDraft(text: string): boolean {
+/**
+ * What a sentence is to the reviewer's wrapper. `remark`: about the draft or the answer under
+ * review ("Bản nháp đúng.", "Review: The answer is correct…", "Đánh giá: Đúng."). `tentative`: a
+ * reviewer's label with a verdict on something else ("Nhận xét: bước 2 sai."); a teacher may write
+ * that too, so it goes only when a reviewer-only header follows it. With `correction` (the learner
+ * asked for one), only words about the draft count: "câu trả lời" and "Nhận xét:" may then be
+ * the teacher's feedback on the learner's answer.
+ */
+function remarkKind(text: string, correction: boolean): 'remark' | 'tentative' | null {
   const t = reviewerWords(text);
-  return (
+  if (
     DRAFT_STRONG.some((re) => re.test(t)) ||
-    REVIEW_OPENING.test(t) ||
-    (DRAFT_EN.test(t) && VERDICT_EN.test(t))
-  );
+    ((DRAFT_VI.test(t) || DRAFT_EN.test(t)) && hasVerdict(t)) ||
+    REVIEW_DONE.test(t)
+  ) {
+    return 'remark';
+  }
+  const label = REVIEW_LABEL.exec(t);
+  // "Rà soát:" names the review itself.
+  if (label && /rà\s+soát/iu.test(label[0])) return 'remark';
+  if (correction) return null;
+  if (ANSWER_UNDER_REVIEW.test(t) && hasVerdict(t)) return 'remark';
+  if (!label) return null;
+  const rest = t.slice(label[0].length);
+  if ((ANSWER_ANY.test(rest) && hasVerdict(rest)) || BARE_VERDICT.test(rest)) return 'remark';
+  return hasVerdict(rest) ? 'tentative' : null;
+}
+
+const aboutDraft = (text: string, correction: boolean) => remarkKind(text, correction) === 'remark';
+
+/**
+ * The remark goes on after "nhưng", "rằng", "but", "that"… with more than a few words: it may
+ * state a fact the learner needs ("Bản nháp đúng nhưng cần nói rõ rằng gia tốc rơi tự do không
+ * phụ thuộc khối lượng."), so it stays unless a revision header follows it.
+ */
+const GOES_ON = new RegExp(
+  `${viWords('nhưng|tuy nhiên|song|rằng')}|\\b(?:but|however|though|although|that)\\b`,
+  'iu',
+);
+const GOES_ON_WORDS = 6;
+
+function goesOn(remark: string): boolean {
+  const m = GOES_ON.exec(remark);
+  if (!m) return false;
+  const words = remark.slice(m.index + m[0].length).match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
+  return words.length > GOES_ON_WORDS;
 }
 
 /** A list or quote marker at a line start ("1. ", "- ", "> ", "## "), not learning material. */
@@ -275,9 +378,9 @@ const INTRO_END =
   /(?:(?:dưới đây|sau đây|đây)\s+là|here\s+is|here['’]s|below\s+is|this\s+is)(?:\s+(?:the|my|a|an))?[\s*_]*$/iu;
 
 /** Text before a header in its sentence that a reviewer may write: nothing, or words about the draft. */
-function reviewerLead(before: string): boolean {
+function reviewerLead(before: string, correction: boolean): boolean {
   const rest = before.replace(INTRO_END, '');
-  return rest.replace(/[\s>#*_~\-–—:.,]/gu, '') === '' || aboutDraft(rest);
+  return rest.replace(/[\s>#*_~\-–—:.,]/gu, '') === '' || aboutDraft(rest, correction);
 }
 
 /**
@@ -285,7 +388,12 @@ function reviewerLead(before: string): boolean {
  * `lineEnd`: the unit ends its line, so a header without ":" may stand at its end. `strongOnly`:
  * only a phrase that a teacher never writes counts.
  */
-function revisionHeaderEnd(unit: string, lineEnd: boolean, strongOnly: boolean): number {
+function revisionHeaderEnd(
+  unit: string,
+  lineEnd: boolean,
+  strongOnly: boolean,
+  correction: boolean,
+): number {
   let end = -1;
   for (const m of unit.matchAll(HEADER_PHRASE)) {
     if (strongOnly && m[1] !== undefined) continue;
@@ -294,7 +402,7 @@ function revisionHeaderEnd(unit: string, lineEnd: boolean, strongOnly: boolean):
     if (!tail) continue;
     const closed = /[:：]/u.test(tail[0]);
     if (!closed && !lineEnd) continue;
-    if (reviewerLead(unit.slice(0, m.index))) end = after + tail[0].length;
+    if (reviewerLead(unit.slice(0, m.index), correction)) end = after + tail[0].length;
   }
   return end;
 }
@@ -338,7 +446,7 @@ function paragraphs(text: string): Range[] {
 }
 
 /** A bare label a reviewer may open with ("## Nhận xét"); it goes only with the remark after it. */
-const NEUTRAL_LABEL = /^(?:nhận xét|đánh giá|review|feedback|comments?|notes?)$/iu;
+const NEUTRAL_LABEL = /^(?:nhận xét|đánh giá|rà soát|review|feedback|comments?|notes?)$/iu;
 /** Lesson structure, never part of a reviewer's remarks: a tag, code or LaTeX. */
 const STRUCTURE = /<\/?[a-z]|\u{E000}|[$\\]/iu;
 const HEADING_START = /^[ \t]*(?:>[ \t]*)*#{1,6}[ \t]/u;
@@ -349,28 +457,45 @@ const HEADING_START = /^[ \t]*(?:>[ \t]*)*#{1,6}[ \t]/u;
 const GAP_UNITS = 4;
 const GAP_CHARS = 500;
 
-function removeReviewWrapper(text: string, found: Set<CleanKind>): string {
+interface Gap {
+  start: number;
+  units: number;
+  /**
+   * Before any remark: only a reviewer-only header alone on its line ends it, and a sentence
+   * with learning material ends the scan (unless it is a tentative remark).
+   */
+  early: boolean;
+}
+
+function removeReviewWrapper(text: string, review: ReviewMode, found: Set<CleanKind>): string {
   // Leading, sentence by sentence: remarks about the draft and revision headers. `cut` moves past
-  // a remark holding learning material only when a header follows it (`held`). Once the answer
-  // opened with a remark, a few sentences that do not name the draft (`gap`) go only when a
-  // reviewer-only header ("Bản đã sửa:") follows them, before any lesson structure.
+  // a remark holding learning material, or going on with more than a few words, only when a
+  // header follows it (`held`). Once the answer opened with a remark, a few sentences that do not
+  // name the draft (`gap`) go only when a reviewer-only header ("Bản đã sửa:") follows them,
+  // before any lesson structure. Before any remark (`early`), the same holds for a tentative
+  // remark and for sentences without learning material, when that header stands alone on its
+  // line; not when the learner asked for a correction.
+  const { correction } = review;
   let cut = 0;
   let held = false;
   let opened = false;
-  let gap: { start: number; units: number } | null = null;
+  let gap: Gap | null = null;
   let lesson = -1;
   for (const u of units(text)) {
     const unit = text.slice(u.start, u.end);
     if (!unit.trim()) continue;
     const lineEnd = u.end === text.length || text[u.end] === '\n';
     // A weak header ("Câu trả lời cuối cùng:") counts only right after the reviewer's remarks.
-    const header = revisionHeaderEnd(unit, lineEnd, gap !== null || !opened);
+    const header = revisionHeaderEnd(unit, lineEnd, gap !== null || !opened, correction);
     if (header >= 0) {
+      const after = text.slice(u.start + header, u.end).trim();
+      // "Bản đã sửa: lực là vectơ." after a sentence that is no remark is a teacher's correction.
+      if (gap?.early && (after || !lineEnd)) break;
       cut = u.start + header;
       held = false;
       opened = true;
       gap = null;
-      if (text.slice(cut, u.end).trim()) {
+      if (after) {
         lesson = cut;
         break;
       }
@@ -381,20 +506,26 @@ function removeReviewWrapper(text: string, found: Set<CleanKind>): string {
     if (gap) {
       gap.units++;
       if (structure || gap.units > GAP_UNITS || u.end - gap.start > GAP_CHARS) break;
+      if (gap.early && holdsMaterial(unit) && remarkKind(unit, correction) !== 'tentative') break;
       continue;
     }
     if (NEUTRAL_LABEL.test(labelCore(unit))) continue;
-    if (aboutDraft(unit)) {
+    const kind = remarkKind(unit, correction);
+    if (kind === 'remark') {
       opened = true;
-      if (held || holdsMaterial(unit)) held = true;
+      if (held || holdsMaterial(unit) || goesOn(unit)) held = true;
       else cut = u.end;
       continue;
     }
     if (!opened) {
-      lesson = u.start;
-      break;
+      if (correction || structure || (kind !== 'tentative' && holdsMaterial(unit))) {
+        lesson = u.start;
+        break;
+      }
+      gap = { start: u.start, units: 1, early: true };
+      continue;
     }
-    gap = { start: u.start, units: 1 };
+    gap = { start: u.start, units: 1, early: false };
     if (structure) break;
   }
   // Where the lesson starts (the text from `cut` is kept): closing notes can only come after it.

@@ -69,19 +69,32 @@ draft request and then asks a second, different provider to review and rewrite t
 - The reviewer’s notes are removed sentence by sentence from the start, never by whole
   paragraph: the scan stops at the first sentence or line that is not about the draft (a
   TeachScript sentence, a heading, a lesson line), so a lesson that shares its paragraph with a
-  remark is kept. A remark that holds a number, a formula, a tag or code stays unless a revision
-  header (“Bản đã sửa:”, “Revised answer:”, alone on its line or closed by “:”) follows it; then
-  only what follows the header is kept (up to 4 sentences without lesson structure between the
-  first remark and that header go too). “Câu trả lời cuối cùng:” counts as
-  a header only right after a remark. Feedback on the learner’s own draft (“Bản nháp của em…”,
-  “Your draft…”) is never a remark, and when the question mentions “nháp”/“draft” no wrapper is
-  removed at all. Known limits: a sentence that is both a remark and a fact without any number
-  or formula (“Bản nháp đúng: lực là đại lượng vectơ.”) goes as a remark; a remark in the middle
-  of the lesson stays.
+  remark is kept. A remark names the draft with a verdict (“Bản nháp đúng.”, “The draft is
+  correct.”; “Bản nháp báo cáo…” or “the draft of a ship” without a verdict is lesson text), the
+  answer under review (“Bản trả lời ban đầu đã đúng.”, “The original answer is correct.”), or
+  opens with a reviewer’s label (“Rà soát:”, or “Review:”/“Đánh giá:”/“Nhận xét:” followed by a
+  verdict on “câu trả lời”/“the answer” or by a bare verdict such as “Đúng.”). A remark that
+  holds a number, a formula, a tag or code, or that goes on with more than 6 words after
+  “nhưng”/“rằng”/“but”/“that” (it may state a fact), stays unless a revision header (“Bản đã
+  sửa:”, “Revised answer:”, alone on its line or closed by “:”) follows it; then only what
+  follows the header is kept (up to 4 sentences without lesson structure between the first
+  remark and that header go too). Before any remark, a reviewer-only header alone on its line
+  also ends up to 4 opening sentences without learning material (“Chào em!”, “Review: …”); a
+  labelled verdict on something else (“Nhận xét: bước 2 sai, g = 10.”) goes only then.
+  “Câu trả lời cuối cùng:” counts as a header only right after a remark. Feedback on the
+  learner’s own draft or answer (“Bản nháp của em…”, “Your answer…”) is never a remark; when the
+  question mentions “nháp”/“draft” no wrapper is removed at all, and when it asks for a
+  correction or a check (“sửa”, “kiểm tra”, “fix”, “check”…) only words about the draft count
+  and a header alone ends nothing. Known limits: a sentence that is both a short remark and a
+  fact without any number or formula (“Bản nháp đúng: lực là đại lượng vectơ.”) goes as a
+  remark; a remark in the middle of the lesson stays; reviewer notes with a number that are not
+  recognised as a remark stay (numbers are never dropped on a guess).
 - A reasoning tag written as code (“Qwen dùng thẻ `` `<think>` ``”, or inside a closed code
   fence) is code and stays (`stripReasoningOutsideCode`, used by the chat, the voice and the
   board). A bare literal `<think>` outside code is hidden reasoning: unclosed, it is cut to the end
-  (the shared rule cannot tell it from a model stopped mid-reasoning).
+  (the shared rule cannot tell it from a model stopped mid-reasoning). A closing tag always
+  counts, even as code; when it is all its code span holds (“`` `</think>` ``”), its backticks go
+  with it.
 - Desktop: keys are stored in the operating-system keychain (shared with the same provider in other
   AI settings). Browser/localhost: keys typed into the page live in memory for this session only.
   Claude cannot be called from a web page, so in the browser it is listed as “chỉ bản desktop” and
