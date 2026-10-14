@@ -237,6 +237,21 @@ pub fn visible_answer(text: &str) -> Result<String, AiError> {
     Ok(s.text)
 }
 
+/// The text is one whole JSON value.
+pub fn is_json(text: &str) -> bool {
+    serde_json::from_str::<serde::de::IgnoredAny>(text).is_ok()
+}
+
+/// The answer of a structured (JSON schema) request. When it is JSON it is kept exactly as sent:
+/// a string value may hold a word like "</think>" that is data, and the rule above would cut the
+/// JSON there. Otherwise the rule applies (a reasoning block before the JSON is removed).
+pub fn visible_structured(text: &str) -> Result<String, AiError> {
+    if is_json(text) {
+        return Ok(text.to_string());
+    }
+    visible_answer(text)
+}
+
 /// What a possible tag at the end of a streamed text still waits for.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Wait {

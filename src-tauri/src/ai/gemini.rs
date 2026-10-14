@@ -51,9 +51,14 @@ pub fn gemini_body(req: &ChatRequest) -> Value {
     })
 }
 
+/// The finish reason of an answer that ended naturally. Any other reason (`MAX_TOKENS`, `OTHER`,
+/// `LANGUAGE`, `FINISH_REASON_UNSPECIFIED`, `MALFORMED_FUNCTION_CALL`, a reason added later) marks
+/// the answer as possibly incomplete, streamed or not; the [`BLOCKED`] ones are errors.
+const NATURAL_END: [&str; 1] = ["STOP"];
+
 /// Finish reasons that mean Gemini's own filters stopped the answer: neither a natural end
 /// (`STOP`) nor the output limit (`MAX_TOKENS`). What was written before such a stop is not an
-/// answer.
+/// answer, streamed or not.
 const BLOCKED: [&str; 8] = [
     "SAFETY",
     "RECITATION",
@@ -103,12 +108,17 @@ impl AIProvider for GeminiProvider {
         .json(&gemini_body(req))
     }
 
+    /// The answer text. A stop by Gemini's filters ([`BLOCKED`]) is no answer even when some text
+    /// came with it, as when streamed: "empty answer (SAFETY)".
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
         let candidate = &v["candidates"][0];
+        let finish = candidate["finishReason"].as_str();
+        if let Some(reason) = finish.filter(|r| BLOCKED.contains(r)) {
+            return Err(AiError::BadResponse(format!("empty answer ({reason})")));
+        }
         let text = answer_text(candidate);
         if text.trim().is_empty() {
-            let reason = candidate["finishReason"]
-                .as_str()
+            let reason = finish
                 .or_else(|| v["promptFeedback"]["blockReason"].as_str())
                 .unwrap_or("no text");
             return Err(AiError::BadResponse(format!("empty answer ({reason})")));
@@ -116,8 +126,11 @@ impl AIProvider for GeminiProvider {
         Ok(text)
     }
 
+    /// Any finish reason but the natural end ([`NATURAL_END`]).
     fn truncated(&self, v: &Value) -> bool {
-        v["candidates"][0]["finishReason"] == "MAX_TOKENS"
+        v["candidates"][0]["finishReason"]
+            .as_str()
+            .is_some_and(|r| !NATURAL_END.contains(&r))
     }
 
     fn response_model(&self, v: &Value) -> Option<String> {
@@ -141,8 +154,8 @@ impl AIProvider for GeminiProvider {
         .json(&gemini_body(req))
     }
 
-    /// Text parts without thoughts; `finishReason` ends the answer, `MAX_TOKENS` means it was
-    /// cut. A blocked question (`promptFeedback.blockReason`) or an answer stopped by Gemini's
+    /// Text parts without thoughts; `finishReason` ends the answer, any reason but `STOP` means
+    /// it may be incomplete. A blocked question (`promptFeedback.blockReason`) or an answer stopped by Gemini's
     /// filters ([`BLOCKED`], also after text was shown) is no answer, as without streaming:
     /// "empty answer (SAFETY)", and the page takes back what it showed. An `error` object is the
     /// HTTP error it stands for.
@@ -164,7 +177,7 @@ impl AIProvider for GeminiProvider {
         }
         st.delta.push_str(&answer_text(candidate));
         if let Some(reason) = finish {
-            st.finished(reason, "MAX_TOKENS");
+            st.finished(reason, &NATURAL_END);
         }
         Ok(())
     }
@@ -246,6 +259,54 @@ mod tests {
         let done = json!({"candidates": [{"content": {"parts": [{"text": "Xong"}]}, "finishReason": "STOP"}]});
         assert!(!GeminiProvider.truncated(&done));
         assert!(!GeminiProvider.truncated(&json!({})));
+    }
+
+    fn ended(reason: &str) -> Value {
+        json!({"candidates": [{"content": {"parts": [{"text": "Bước 1: "}]}, "finishReason": reason}]})
+    }
+
+    #[test]
+    fn every_finish_reason_but_stop_may_be_incomplete_streamed_or_not() {
+        use crate::ai::stream::{SseEvent, StreamState};
+        for (reason, cut) in [
+            ("STOP", false),
+            ("MAX_TOKENS", true),
+            ("OTHER", true),
+            ("LANGUAGE", true),
+            ("FINISH_REASON_UNSPECIFIED", true),
+            ("MALFORMED_FUNCTION_CALL", true),
+            ("SOMETHING_NEW", true),
+        ] {
+            let v = ended(reason);
+            assert_eq!(GeminiProvider.truncated(&v), cut, "{reason}");
+            assert_eq!(GeminiProvider.extract_content(&v).unwrap(), "Bước 1: ");
+            let mut st = StreamState::default();
+            let ev = SseEvent {
+                event: "message".into(),
+                data: v.to_string(),
+            };
+            GeminiProvider.on_sse(&ev, &mut st).unwrap();
+            assert_eq!(st.truncated, cut, "{reason} streamed");
+            assert!(st.ended);
+        }
+    }
+
+    #[test]
+    fn a_filter_stop_is_no_answer_even_with_text() {
+        for reason in ["SAFETY", "RECITATION", "PROHIBITED_CONTENT", "SPII"] {
+            let e = GeminiProvider.extract_content(&ended(reason)).unwrap_err();
+            assert!(
+                matches!(e, AiError::BadResponse(ref m) if *m == format!("empty answer ({reason})")),
+                "{reason}: {e:?}"
+            );
+        }
+        // A blocked question has no candidate at all.
+        let blocked = json!({"promptFeedback": {"blockReason": "SAFETY"}});
+        assert!(GeminiProvider
+            .extract_content(&blocked)
+            .unwrap_err()
+            .to_string()
+            .contains("SAFETY"));
     }
 
     #[test]

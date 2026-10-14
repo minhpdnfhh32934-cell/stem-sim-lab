@@ -855,3 +855,224 @@ fn the_command_is_registered_and_shares_the_page_event_shape() {
     let code = include_str!("../mod.rs");
     assert!(code.contains("on_event: tauri::ipc::Channel<stream::StreamEvent>"));
 }
+
+#[test]
+fn leading_whitespace_is_not_shown_so_a_later_error_can_still_be_retried() {
+    // The model starts with a newline, then the server fails before any visible text: nothing
+    // reached the page, so the call is tried again.
+    let mock = counting(|n| match n {
+        0 => vec![
+            sse_head(),
+            data(&gemini_piece("\n")),
+            data(&json!({"error": {"code": 503, "status": "UNAVAILABLE", "message": "busy"}})),
+        ],
+        _ => vec![
+            sse_head(),
+            data(&gemini_piece("Gia tốc")),
+            data(&gemini_end("STOP")),
+        ],
+    });
+    let (r, events) = run_one(&mock, &req(Provider::Gemini, false));
+    let r = r.unwrap();
+    assert_eq!(r.content, "Gia tốc");
+    assert_eq!(r.retries, 1);
+    assert_eq!(events, vec![delta("Gia tốc")]);
+    assert_eq!(mock.seen().len(), 2);
+
+    // The same before a quota error: the fallback answers.
+    let gemini = serve(|_| {
+        vec![
+            sse_head(),
+            data(&gemini_piece(" \n")),
+            data(&serde_json::from_str::<Value>(PER_DAY).unwrap()),
+        ]
+    });
+    let groq = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Vận tốc")),
+            data(&groq_end("stop")),
+            done(),
+        ]
+    });
+    let base = |p: Provider| match p {
+        Provider::Groq => groq.url(),
+        _ => gemini.url(),
+    };
+    let (r, events) = run(
+        &AiState::default(),
+        &with_groq_fallback(Provider::Gemini),
+        base,
+        quick(),
+    );
+    let r = r.unwrap();
+    assert!(r.fallback);
+    assert_eq!(r.content, "Vận tốc");
+    // The whitespace of the first provider never reaches the page.
+    assert_eq!(events, vec![delta("Vận tốc")]);
+
+    // Whitespace before the first visible text is kept in the text that is shown.
+    let mock = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("\n\n")),
+            data(&groq_piece("Lực")),
+            data(&groq_piece(" là vectơ.")),
+            data(&groq_end("stop")),
+            done(),
+        ]
+    });
+    let (r, events) = run_one(&mock, &req(Provider::Groq, false));
+    assert_eq!(r.unwrap().content, "\n\nLực là vectơ.");
+    assert_eq!(events, vec![delta("\n\nLực"), delta(" là vectơ.")]);
+}
+
+/// Gemini reasons quietly for `wait_ms`, then reports a per-day quota inside the stream; Groq
+/// would answer at once. The result, whether Groq was asked and whether Gemini was marked out of
+/// quota.
+fn late_quota(wait_ms: u64, timing: Timing) -> (Result<ChatResponse, AiError>, bool, bool) {
+    let gemini = serve(move |_| {
+        vec![
+            sse_head(),
+            data(&gemini_piece("<think>mình nháp")),
+            Step::Wait(wait_ms),
+            data(&serde_json::from_str::<Value>(PER_DAY).unwrap()),
+        ]
+    });
+    let groq = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Vận tốc")),
+            data(&groq_end("stop")),
+            done(),
+        ]
+    });
+    let state = AiState::default();
+    let base = |p: Provider| match p {
+        Provider::Groq => groq.url(),
+        _ => gemini.url(),
+    };
+    let (r, _) = run(&state, &with_groq_fallback(Provider::Gemini), base, timing);
+    let asked = !groq.seen().is_empty();
+    (r, asked, state.is_exhausted(Provider::Gemini))
+}
+
+#[test]
+fn the_fallback_is_asked_only_with_enough_of_the_first_text_wait_left() {
+    // First text due in 2 s: the fallback needs a quarter of it (500 ms, less than 5 s) left.
+    let timing = short(2000, 5000, 10_000);
+    // About 300 ms left: not enough. The quota error itself, Gemini not marked out of quota.
+    let (r, asked, exhausted) = late_quota(1700, timing);
+    let e = r.unwrap_err();
+    assert!(crate::ai::is_quota_error(&e), "{e:?}");
+    assert!(!asked && !exhausted);
+    // About 1.8 s left: the fallback answers.
+    let (r, asked, exhausted) = late_quota(200, timing);
+    assert!(r.unwrap().fallback);
+    assert!(asked && exhausted);
+    // A long wait for the first text needs at most 5 s left.
+    let long = short(30_000, 5000, 60_000);
+    assert_eq!(
+        FALLBACK_ROOM.min(long.first_delta / 4),
+        Duration::from_secs(5)
+    );
+}
+
+#[test]
+fn an_error_after_the_end_mark_keeps_the_complete_answer() {
+    // Claude said why it stopped, then an error event comes instead of `message_stop`.
+    let claude = serve(|_| {
+        vec![
+            sse_head(),
+            claude_start(),
+            claude_text("Lực là đại lượng vectơ."),
+            named(
+                "message_delta",
+                &json!({"type": "message_delta", "delta": {"stop_reason": "end_turn"}}),
+            ),
+            claude_error("overloaded_error", "Overloaded"),
+        ]
+    });
+    // Gemini and Groq: a finish reason, then an error object.
+    let gemini = serve(|_| {
+        vec![
+            sse_head(),
+            data(&gemini_piece("Gia tốc.")),
+            data(&gemini_end("STOP")),
+            data(&json!({"error": {"code": 500, "status": "INTERNAL", "message": "x"}})),
+        ]
+    });
+    let groq = serve(|_| {
+        vec![
+            sse_head(),
+            data(&groq_piece("Vận tốc.")),
+            data(&groq_end("stop")),
+            data(&json!({"error": {"message": "x", "type": "server_error"}})),
+        ]
+    });
+    for (p, mock, text) in [
+        (Provider::Claude, &claude, "Lực là đại lượng vectơ."),
+        (Provider::Gemini, &gemini, "Gia tốc."),
+        (Provider::Groq, &groq, "Vận tốc."),
+    ] {
+        let (r, events) = run_one(mock, &req(p, false));
+        let r = r.unwrap_or_else(|e| panic!("{p:?}: {e:?}"));
+        assert_eq!(r.content, text, "{p:?}");
+        assert!(!r.truncated, "{p:?}");
+        assert_eq!(events, vec![delta(text)], "{p:?}");
+        assert_eq!(mock.seen().len(), 1, "{p:?}: not retried");
+    }
+    // A stop by the filter of the provider is still no answer.
+    let mock = serve(|_| {
+        vec![
+            sse_head(),
+            data(&gemini_piece("Gia tốc.")),
+            data(&gemini_end("STOP")),
+            data(&json!({"candidates": [{"finishReason": "SAFETY"}]})),
+        ]
+    });
+    let (r, _) = run_one(&mock, &req(Provider::Gemini, false));
+    assert!(matches!(r, Err(AiError::BadResponse(ref m)) if m == "empty answer (SAFETY)"));
+    // Before the end mark an error is still an error.
+    let mock = serve(|_| {
+        vec![
+            sse_head(),
+            data(&gemini_piece("Gia")),
+            data(&json!({"error": {"code": 500, "status": "INTERNAL", "message": "x"}})),
+        ]
+    });
+    let (r, _) = run_one(&mock, &req(Provider::Gemini, false));
+    assert!(matches!(r, Err(AiError::Http(ref m)) if m.starts_with("500")));
+}
+
+#[test]
+fn a_streamed_answer_stopped_for_another_reason_is_marked_incomplete() {
+    for reason in ["OTHER", "LANGUAGE", "FINISH_REASON_UNSPECIFIED"] {
+        let mock = serve(move |_| {
+            vec![
+                sse_head(),
+                data(&gemini_piece("Gia tốc")),
+                data(&gemini_end(reason)),
+            ]
+        });
+        let (r, _) = run_one(&mock, &req(Provider::Gemini, false));
+        let r = r.unwrap();
+        assert_eq!(r.content, "Gia tốc");
+        assert!(r.truncated, "{reason}");
+    }
+    let mock = serve(|_| {
+        vec![
+            sse_head(),
+            claude_start(),
+            claude_text("Lực"),
+            named(
+                "message_delta",
+                &json!({"type": "message_delta",
+                    "delta": {"stop_reason": "model_context_window_exceeded"}}),
+            ),
+            named("message_stop", &json!({"type": "message_stop"})),
+        ]
+    });
+    let (r, _) = run_one(&mock, &req(Provider::Claude, false));
+    assert!(r.unwrap().truncated);
+}

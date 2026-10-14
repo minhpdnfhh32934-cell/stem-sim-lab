@@ -12,14 +12,20 @@
 //!   `strip_reasoning` of everything received.
 //! - Retries (429/5xx, at most [`super::MAX_RETRIES`]) and the quota fallback happen only before
 //!   the first [`StreamEvent`] reaches the page, so the text of two attempts or two providers
-//!   never mixes. An error after that ends the call with that error; the page keeps what it was
-//!   shown and decides what to do with it. A stop by the provider's own filter (Claude
-//!   `refusal`, Gemini `SAFETY` and the like, Groq `content_filter`) is such an error, also after
-//!   text was shown: as without streaming, it is no answer.
+//!   never mixes. Whitespace before the first visible text is held back (it is not "shown"), so a
+//!   model that starts with a newline can still be retried. An error after that ends the call with
+//!   that error; the page keeps what it was shown and decides what to do with it. A stop by the
+//!   provider's own filter (Claude `refusal`, Gemini `SAFETY` and the like, Groq
+//!   `content_filter`) is such an error, also after text was shown: as without streaming, it is
+//!   no answer. A provider error after the provider's end mark (its stop reason) ends the stream
+//!   and keeps the answer, which was complete.
+//! - Finish reasons: any reason but the natural end marks the answer as possibly incomplete, as
+//!   for a whole answer (each provider's `truncated`).
 //! - Timers: the first answer text (reasoning included: the model is answering) must arrive
 //!   within the call's `timeoutSecs` from the start, retries and fallback included (a retry wait
-//!   that would pass that deadline gives the provider's error at once, and once it has passed the
-//!   fallback is not asked); then at most [`IDLE_GAP`] may pass between two chunks, and
+//!   that would pass that deadline gives the provider's error at once, and the fallback is only
+//!   asked while enough of that wait is left for it to answer, [`FALLBACK_ROOM`]); then
+//!   at most [`IDLE_GAP`] may pass between two chunks, and
 //!   [`OVERALL_MAX`] in all. Once the provider said it finished, its closing mark is awaited for
 //!   at most [`END_GRACE`]; a silent or broken connection after that point keeps the answer.
 //!
@@ -27,6 +33,7 @@
 //! providers' documentation; no live call was recorded (the fixtures are hand-written).
 
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Mutex;
 use std::time::Duration;
 
 use serde::Serialize;
@@ -47,6 +54,9 @@ pub const OVERALL_MAX: Duration = Duration::from_secs(600);
 /// Longest wait for the closing mark (or the end of the connection) once the provider said its
 /// answer is finished: nothing more of the answer can come.
 pub const END_GRACE: Duration = Duration::from_secs(2);
+/// The fallback is asked only while this much of the first-text wait is left (or a quarter of
+/// that wait, when it is shorter): less would only end in its own timeout.
+pub const FALLBACK_ROOM: Duration = Duration::from_secs(5);
 /// Largest single event.
 pub const MAX_EVENT_BYTES: usize = 1 << 20;
 /// Largest answer text (reasoning included).
@@ -216,7 +226,8 @@ pub struct StreamState {
     /// Why the provider stopped, once it said so (Gemini `finishReason`, Claude `stop_reason`,
     /// Groq `finish_reason`).
     pub finish: Option<String>,
-    /// The answer stopped at the output-token limit.
+    /// The answer may be incomplete: the provider stopped for another reason than the natural end
+    /// of its answer (the output-token limit, a context limit, an unknown reason).
     pub truncated: bool,
     /// The provider marked the end of its answer.
     pub ended: bool,
@@ -225,11 +236,14 @@ pub struct StreamState {
 }
 
 impl StreamState {
-    /// The provider said why it stopped; `cut` is its reason for "stopped at the output limit".
-    pub fn finished(&mut self, reason: &str, cut: &str) {
+    /// The provider said why it stopped; `natural` are its reasons for the natural end of an
+    /// answer. Any other reason marks the answer as possibly incomplete, as the provider's
+    /// `truncated` does for a whole answer (`ai_chat` and `ai_chat_stream` agree). A stop by the
+    /// provider's own filter never comes here: it is an error.
+    pub fn finished(&mut self, reason: &str, natural: &[&str]) {
         self.finish = Some(reason.to_string());
         self.ended = true;
-        self.truncated |= reason == cut;
+        self.truncated |= !natural.contains(&reason);
     }
 }
 
@@ -371,6 +385,13 @@ struct Clock {
 }
 
 impl Clock {
+    /// Enough of the first-text wait is left for the fallback to answer: at least
+    /// [`FALLBACK_ROOM`], or a quarter of the wait when that is less.
+    fn room_for_fallback(&self) -> bool {
+        let need = FALLBACK_ROOM.min(self.timing.first_delta / 4);
+        self.first.saturating_duration_since(Instant::now()) >= need
+    }
+
     /// The error for a timer that ran out (`text`: answer text had arrived).
     fn expired(&self, text: bool) -> AiError {
         let t = self.timing;
@@ -385,10 +406,14 @@ impl Clock {
     }
 }
 
-/// Sends events to the page and remembers whether anything was sent.
+/// Sends events to the page and remembers whether anything was sent. Until the first visible
+/// text, whitespace is held back: an answer that starts with a newline has shown nothing yet, so
+/// it may still be retried or replaced by the fallback.
 pub(crate) struct Emitter<'a> {
     sink: &'a (dyn Fn(StreamEvent) + Send + Sync),
     sent: AtomicBool,
+    /// What the page would show now, while it is only whitespace (nothing sent yet).
+    held: Mutex<String>,
 }
 
 impl<'a> Emitter<'a> {
@@ -396,12 +421,33 @@ impl<'a> Emitter<'a> {
         Emitter {
             sink,
             sent: AtomicBool::new(false),
+            held: Mutex::new(String::new()),
         }
     }
 
     fn send(&self, e: StreamEvent) {
+        if self.sent() {
+            (self.sink)(e);
+            return;
+        }
+        let mut held = self.held.lock().unwrap_or_else(|p| p.into_inner());
+        match e {
+            StreamEvent::Delta(t) => held.push_str(&t),
+            StreamEvent::Reset(t) => *held = t,
+        }
+        if held.trim().is_empty() {
+            return;
+        }
+        // Nothing was shown before: the whole text so far is one delta.
         self.sent.store(true, Ordering::SeqCst);
-        (self.sink)(e);
+        (self.sink)(StreamEvent::Delta(std::mem::take(&mut *held)));
+    }
+
+    /// A new attempt (a retry or the fallback) starts: whitespace held from the last one goes.
+    fn restart(&self) {
+        if !self.sent() {
+            self.held.lock().unwrap_or_else(|p| p.into_inner()).clear();
+        }
     }
 
     /// Something reached the page: no new attempt and no fallback any more.
@@ -449,6 +495,13 @@ struct Answer<'a> {
 impl Answer<'_> {
     fn event(&mut self, ev: &SseEvent) -> Result<(), Failed> {
         if let Err(error) = self.p.on_sse(ev, &mut self.st) {
+            // The provider already said why it stopped: the answer is complete, and an error the
+            // provider reports now (instead of its closing mark) ends the stream. A stop by its
+            // filter (`empty answer (…)`) is still no answer.
+            if self.st.ended && matches!(error, AiError::Http(_)) {
+                self.st.closed = true;
+                return Ok(());
+            }
             // An error inside the stream may be retried like the HTTP error it stands for (only
             // while nothing was shown, see `stream_provider`).
             let retry = match &error {
@@ -523,6 +576,7 @@ async fn error_body(resp: &mut reqwest::Response, until: Instant) -> String {
 /// One attempt: sends the request and streams the answer to the page.
 async fn attempt(c: &Call<'_>, started: Instant, tries: u32) -> Result<ChatResponse, Failed> {
     let clock = c.clock;
+    c.emit.restart();
     let sent = c.p.stream_request(c.http, c.base, c.key, c.req).send();
     let mut resp = match tokio::time::timeout_at(clock.first, sent).await {
         Err(_) => return Err(clock.expired(false).into()),
@@ -656,11 +710,11 @@ where
             .await
         }
     };
-    // The fallback shares the first-text deadline: once it has passed (the first provider reasoned
-    // quietly, then ran out of quota), the fallback could only time out, so the provider's own
-    // error is returned and nothing is marked out of quota.
+    // The fallback shares the first-text deadline: when little of it is left (the first provider
+    // reasoned quietly, then ran out of quota), the fallback could only time out, so the
+    // provider's own error is returned and nothing is marked out of quota.
     with_fallback(state, req, key_of, send, |e| {
-        is_quota_error(e) && !emit.sent() && Instant::now() < clock.first
+        is_quota_error(e) && !emit.sent() && clock.room_for_fallback()
     })
     .await
 }

@@ -404,7 +404,9 @@ async fn send(req: &ChatRequest, key: &str) -> Result<ChatResponse, AiError> {
 }
 
 /// The response for an answer: the provider's text with the model's reasoning removed (an
-/// answer that is only reasoning is a `reasoningOnly` error), for every provider.
+/// answer that is only reasoning is a `reasoningOnly` error), for every provider. A structured
+/// answer (JSON schema: Claude's tool input, Gemini's and Groq's JSON text) that is JSON is kept
+/// as sent ([`reasoning::visible_structured`]).
 fn chat_response(
     p: &dyn AIProvider,
     req: &ChatRequest,
@@ -412,8 +414,14 @@ fn chat_response(
     started: Instant,
     retries: u32,
 ) -> Result<ChatResponse, AiError> {
+    let text = p.extract_content(v)?;
+    let content = if req.json_schema.is_some() {
+        reasoning::visible_structured(&text)?
+    } else {
+        reasoning::visible_answer(&text)?
+    };
     Ok(ChatResponse {
-        content: reasoning::visible_answer(&p.extract_content(v)?)?,
+        content,
         model: p.response_model(v).unwrap_or_else(|| req.model.clone()),
         duration_ms: started.elapsed().as_millis() as u64,
         retries,
@@ -1347,6 +1355,62 @@ pub(crate) mod tests {
         let send_fn = send_fn.split("\nfn ").next().unwrap_or_default();
         assert!(send_fn.contains("chat_response(p, req, &v, started, attempt)"));
         assert!(!send_fn.contains("ChatResponse {"));
+    }
+
+    #[test]
+    fn a_structured_answer_that_is_json_is_kept_as_sent() {
+        let started = Instant::now();
+        // Claude's forced tool call: its input is data, a reasoning word in a value is not
+        // reasoning (removing "<think>…</think>" across the values would change or break it).
+        let tool = json!({"content": [{"type": "tool_use", "name": "scene_spec",
+            "input": {"note": "<think>x", "quote": "a </think> b", "unit": "m/s²"}}],
+            "stop_reason": "tool_use"});
+        let r = chat_response(
+            provider(Provider::Claude),
+            &req(Provider::Claude, true),
+            &tool,
+            started,
+            0,
+        )
+        .unwrap();
+        let v: Value = serde_json::from_str(&r.content).unwrap();
+        assert_eq!(v["quote"], "a </think> b");
+        assert_eq!(v["note"], "<think>x");
+        assert_eq!(v["unit"], "m/s²");
+        // The forced tool call is the natural end of a structured answer.
+        assert!(!r.truncated);
+        // Gemini's and Groq's JSON text, the same.
+        let json_text = r#"{"quote":"x </thinking> y"}"#;
+        let gemini = json!({"candidates": [{"content": {"parts": [{"text": json_text}]},
+            "finishReason": "STOP"}]});
+        let groq = json!({"choices": [{"message": {"content": json_text},
+            "finish_reason": "stop"}]});
+        for (p, v) in [(Provider::Gemini, &gemini), (Provider::Groq, &groq)] {
+            let r = chat_response(provider(p), &req(p, true), v, started, 0).unwrap();
+            assert_eq!(r.content, json_text, "{p:?}");
+        }
+        // Reasoning before the JSON (not JSON as a whole) is still removed.
+        let before = json!({"choices": [{"message": {"content": "<think>nháp</think>\n{\"a\":1}"},
+            "finish_reason": "stop"}]});
+        let r = chat_response(
+            provider(Provider::Groq),
+            &req(Provider::Groq, true),
+            &before,
+            started,
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "{\"a\":1}");
+        // Without a schema the rule applies to any text.
+        let r = chat_response(
+            provider(Provider::Groq),
+            &req(Provider::Groq, false),
+            &groq,
+            started,
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "y\"}");
     }
 }
 
