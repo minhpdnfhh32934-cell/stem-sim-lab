@@ -6,6 +6,15 @@ import { allowedUnits } from './spec';
 export const SAFETY_RULES = `
 AN TOÀN: chỉ xử lý nội dung học tập; không hỏi hay nhắc lại thông tin cá nhân.`;
 
+/**
+ * For a model without a JSON-schema mode (the in-app Gemma, a local runtime not checked for
+ * structured output): the schema goes into the system prompt, and the pipeline's repair loop
+ * (which feeds validation errors back) does the rest.
+ */
+export function schemaInSystem(system: string, schema: unknown): string {
+  return `${system}\n\nTrả về DUY NHẤT một JSON đúng schema sau, không giải thích, không dùng code fence:\n${JSON.stringify(schema)}`;
+}
+
 /** One-line descriptions that help a small model pick the right topic. */
 export const TOPIC_HINTS: Record<string, string> = {
   uniformMotion:

@@ -5,6 +5,7 @@
 use serde_json::{json, Value};
 
 use super::provider::AIProvider;
+use super::stream::{event_json, provider_error, SseEvent, StreamState};
 use super::{AiError, ChatRequest, Provider};
 
 pub const GROQ_URL: &str = "https://api.groq.com/openai/v1";
@@ -12,6 +13,11 @@ pub const GROQ_URL: &str = "https://api.groq.com/openai/v1";
 pub const GROQ_KEY_PAGE: &str = "https://console.groq.com/keys";
 
 pub struct GroqProvider;
+
+/// The finish reason of an answer that ended naturally. Any other reason (`length`, a reason
+/// added later) marks the answer as possibly incomplete, streamed or not; `content_filter` is an
+/// error.
+const NATURAL_END: [&str; 1] = ["stop"];
 
 /// Models that support strict JSON-schema output on Groq (checked 2026-10-05 on
 /// console.groq.com/docs/structured-outputs). Other models get best-effort JSON.
@@ -63,14 +69,6 @@ pub fn groq_body(req: &ChatRequest) -> Value {
     body
 }
 
-/// Removes a `<think>…</think>` block some models put before the answer.
-fn strip_thinking(text: &str) -> &str {
-    match (text.find("<think>"), text.find("</think>")) {
-        (Some(start), Some(end)) if start < end => text[end + "</think>".len()..].trim_start(),
-        _ => text,
-    }
-}
-
 impl AIProvider for GroqProvider {
     fn id(&self) -> Provider {
         Provider::Groq
@@ -91,19 +89,73 @@ impl AIProvider for GroqProvider {
             .json(&groq_body(req))
     }
 
+    /// Any finish reason but the natural end ([`NATURAL_END`]).
     fn truncated(&self, v: &Value) -> bool {
-        v["choices"][0]["finish_reason"] == "length"
+        v["choices"][0]["finish_reason"]
+            .as_str()
+            .is_some_and(|r| !NATURAL_END.contains(&r))
     }
 
+    /// The raw answer; reasoning blocks (`<think>…`) are removed by the gateway for every
+    /// provider (`reasoning::visible_answer`). A `content_filter` stop is no answer even with
+    /// text, as when streamed.
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
         let choice = &v["choices"][0];
+        if choice["finish_reason"] == "content_filter" {
+            return Err(AiError::BadResponse("empty answer (content_filter)".into()));
+        }
         let text = choice["message"]["content"].as_str().unwrap_or_default();
-        let text = strip_thinking(text);
         if text.trim().is_empty() {
             let reason = choice["finish_reason"].as_str().unwrap_or("no text");
             return Err(AiError::BadResponse(format!("empty answer ({reason})")));
         }
         Ok(text.to_string())
+    }
+
+    /// The same body with `"stream": true`.
+    fn stream_request(
+        &self,
+        http: &reqwest::Client,
+        base: &str,
+        key: &str,
+        req: &ChatRequest,
+    ) -> reqwest::RequestBuilder {
+        let mut body = groq_body(req);
+        body["stream"] = json!(true);
+        http.post(format!("{base}/chat/completions"))
+            .bearer_auth(key)
+            .json(&body)
+    }
+
+    /// `chat.completion.chunk` events: text in `choices[0].delta.content` (a separate
+    /// `reasoning` field is not answer text), `finish_reason` (`length` = cut), then `[DONE]`.
+    /// A `content_filter` stop is no answer, also after text was shown ("empty answer
+    /// (content_filter)", as Claude's refusal and Gemini's safety stops). An `error` object is
+    /// the HTTP error it stands for.
+    fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
+        if ev.data.trim() == "[DONE]" {
+            st.ended = true;
+            st.closed = true;
+            return Ok(());
+        }
+        let v = event_json(ev)?;
+        if let Some(err) = v.get("error") {
+            return Err(provider_error(err));
+        }
+        if st.model.is_none() {
+            st.model = self.response_model(&v);
+        }
+        let choice = &v["choices"][0];
+        let finish = choice["finish_reason"].as_str();
+        if finish == Some("content_filter") {
+            return Err(AiError::BadResponse("empty answer (content_filter)".into()));
+        }
+        st.delta
+            .push_str(choice["delta"]["content"].as_str().unwrap_or_default());
+        if let Some(reason) = finish {
+            st.finished(reason, &NATURAL_END);
+        }
+        Ok(())
     }
 
     fn models_request(&self, http: &reqwest::Client, key: &str) -> reqwest::RequestBuilder {
@@ -133,6 +185,38 @@ mod tests {
     fn reports_answers_cut_at_the_output_limit() {
         assert!(GroqProvider.truncated(&json!({"choices": [{"finish_reason": "length"}]})));
         assert!(!GroqProvider.truncated(&json!({"choices": [{"finish_reason": "stop"}]})));
+    }
+
+    #[test]
+    fn every_finish_reason_but_stop_may_be_incomplete_streamed_or_not() {
+        use crate::ai::stream::{SseEvent, StreamState};
+        for (reason, cut) in [
+            ("stop", false),
+            ("length", true),
+            ("tool_calls", true),
+            ("something_new", true),
+        ] {
+            let whole =
+                json!({"choices": [{"message": {"content": "Vận tốc"}, "finish_reason": reason}]});
+            assert_eq!(GroqProvider.truncated(&whole), cut, "{reason}");
+            assert_eq!(GroqProvider.extract_content(&whole).unwrap(), "Vận tốc");
+            let mut st = StreamState::default();
+            let ev = SseEvent {
+                event: "message".into(),
+                data:
+                    json!({"choices": [{"delta": {"content": "Vận tốc"}, "finish_reason": reason}]})
+                        .to_string(),
+            };
+            GroqProvider.on_sse(&ev, &mut st).unwrap();
+            assert_eq!(st.truncated, cut, "{reason} streamed");
+            assert!(st.ended);
+        }
+        // A `content_filter` stop is no answer, streamed or not, even with text.
+        let filtered = json!({"choices": [{"message": {"content": "Bước 1"}, "finish_reason": "content_filter"}]});
+        assert!(matches!(
+            GroqProvider.extract_content(&filtered),
+            Err(AiError::BadResponse(ref m)) if m == "empty answer (content_filter)"
+        ));
     }
 
     fn with_model(model: &str, schema: bool) -> ChatRequest {
@@ -179,7 +263,30 @@ mod tests {
     fn extracts_the_answer_without_thinking() {
         let v = json!({"choices": [{"message": {"content": "<think>hmm</think>\n{\"a\":1}"}}],
             "model": "qwen/qwen3.8-27b"});
-        assert_eq!(GroqProvider.extract_content(&v).unwrap(), "{\"a\":1}");
+        // The gateway removes the reasoning for every provider.
+        let r = crate::ai::chat_response(
+            &GroqProvider,
+            &req(Provider::Groq, true),
+            &v,
+            std::time::Instant::now(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "{\"a\":1}");
+        assert_eq!(r.model, "qwen/qwen3.8-27b");
+        // An answer cut while still reasoning keeps nothing of it.
+        let cut = json!({"choices": [{"message": {"content": "Đáp số 5. <think>còn tiếp"},
+            "finish_reason": "length"}]});
+        let r = crate::ai::chat_response(
+            &GroqProvider,
+            &req(Provider::Groq, false),
+            &cut,
+            std::time::Instant::now(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "Đáp số 5.");
+        assert!(r.truncated);
         assert_eq!(
             GroqProvider.response_model(&v).as_deref(),
             Some("qwen/qwen3.8-27b")

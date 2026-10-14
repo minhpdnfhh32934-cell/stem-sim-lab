@@ -1,0 +1,7 @@
+{
+  "object": "list",
+  "data": [
+    { "id": "qwen2.5-7b-instruct", "object": "model", "owned_by": "organization_owner" },
+    { "id": "phi-4-mini", "object": "model", "owned_by": "organization_owner" }
+  ]
+}

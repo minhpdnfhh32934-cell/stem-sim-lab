@@ -1,0 +1,14 @@
+: ping
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen2.5-7b-instruct","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen2.5-7b-instruct","choices":[{"index":0,"delta":{"reasoning_content":"Mình nhẩm thử"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen2.5-7b-instruct","choices":[{"index":0,"delta":{"content":"Lực"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen2.5-7b-instruct","choices":[{"index":0,"delta":{"content":" là đại lượng vectơ."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen2.5-7b-instruct","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

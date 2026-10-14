@@ -44,10 +44,36 @@ describe('AI controller', () => {
     ['403', 'badKey'],
     ['404 Not Found: models/gemini-x is not found', 'badModel'],
     ['500 Internal Server Error', 'http'],
+    // Out of credit is a quota problem, as for the fallback (src/ai/errorKind.ts).
+    ['402 Payment Required: {}', 'quota'],
+    ['400 Bad Request: {"error":{"message":"Your credit balance is too low"}}', 'quota'],
+    // No sentence of their own in this dialog yet: the general server error with its detail.
+    ['413 Payload Too Large: Request too large', 'http'],
+    ['529: overloaded_error: Overloaded', 'http'],
   ])('explains provider error "%s" as %s', async (message, code) => {
     setTransportForTests(transport({ chat: () => Promise.reject(new AiError('http', message)) }));
     await analyze('Một vật rơi tự do từ độ cao 20 m.');
     expect(useAnalyzeStore.getState().error?.code).toBe(code);
+  });
+
+  // A local runtime's error, whatever status or code it carries, is never explained as a cloud
+  // quota, key, model, Internet or 18+ problem: the general error with the runtime's detail.
+  it.each([
+    ['http', 'local-failed: 429: busy', 'http'],
+    ['http', 'local-failed: 402: x', 'http'],
+    ['http', 'needs-auth: 401', 'http'],
+    ['http', 'model-missing: 404: model "x" not found', 'http'],
+    ['http', 'loading: 503: Loading model', 'http'],
+    ['network', 'local-unreachable: error sending request', 'http'],
+    ['notAllowed', 'remote-model', 'http'],
+    ['notAllowed', 'not-loopback', 'http'],
+    ['notAllowed', 'no-vision', 'http'],
+    ['timeout', 'local-stalled: gap 45000 ms', 'timeout'],
+    ['unavailable', 'local-not-selected', 'unavailable'],
+  ] as const)('explains local runtime error %s "%s" as %s', async (code, message, shown) => {
+    setTransportForTests(transport({ chat: () => Promise.reject(new AiError(code, message)) }));
+    await analyze('Một vật rơi tự do từ độ cao 20 m.');
+    expect(useAnalyzeStore.getState().error).toEqual({ code: shown, detail: message });
   });
 
   it('maps a network failure to an error the dialog can explain', async () => {

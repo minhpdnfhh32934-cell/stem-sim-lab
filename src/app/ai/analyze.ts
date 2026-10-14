@@ -5,6 +5,7 @@ import { sim } from '@/app/sim/runtime';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { DEFAULT_MODELS, DEFAULT_PROVIDER, useAiStore } from '@/ai/aiStore';
 import { getReading, putReading, type Reading } from '@/ai/cache';
+import { aiErrorKind, httpErrorCode, isLocalMessage, type AiErrorKind } from '@/ai/errorKind';
 import { manualDraft, type Draft } from '@/ai/draft';
 import { analyzeProblem, type Stage } from '@/ai/pipeline';
 import { getTransport, type LlmTransport } from '@/ai/transport';
@@ -138,15 +139,24 @@ export async function resolveAiForAnalysis(): Promise<AnalysisEngine> {
 }
 
 /**
- * Turns an HTTP error from the provider into a code the dialog can explain in simple words
- * (the Rust gateway reports "429 Too Many Requests: …", the browser transport "429").
+ * Turns an HTTP error from the provider into a code the dialog can explain in simple words (the
+ * rules live in src/ai/errorKind.ts). A too-large request and a server failure have no sentence
+ * of their own here yet: they stay the general server error, with the detail.
  */
-export function httpErrorCode(message: string): AnalyzeErrorCode {
-  const status = /^\s*(\d{3})\b/.exec(message)?.[1];
-  if (status === '429' || /RESOURCE_EXHAUSTED|quota/i.test(message)) return 'quota';
-  if (status === '401' || status === '403' || /API_KEY_INVALID|API key not valid/i.test(message))
-    return 'badKey';
-  if (status === '404') return 'badModel';
+function analyzeHttpCode(message: string): AnalyzeErrorCode {
+  const kind = httpErrorCode(message);
+  return kind === 'tooLarge' || kind === 'server' || kind === 'local' ? 'http' : kind;
+}
+
+/**
+ * A local runtime's error (Ollama, LM Studio, llama.cpp…) is never explained as a cloud
+ * provider's quota, key, model, Internet or 18+ problem, whatever status or code it carries. This
+ * dialog has no sentences of its own for local runtimes yet: the general error with the runtime's
+ * detail, except a stall (a timeout) and a missing choice or app update (not available here).
+ */
+function localCode(kind: AiErrorKind): AnalyzeErrorCode {
+  if (kind === 'localStalled') return 'timeout';
+  if (kind === 'localNotSelected' || kind === 'needsAppUpdate') return 'unavailable';
   return 'http';
 }
 
@@ -155,7 +165,10 @@ let runSeq = 0;
 
 function errorOf(e: unknown): { code: AnalyzeErrorCode; detail: string } {
   const err = toAiError(e);
-  if (err.code === 'http') return { code: httpErrorCode(err.message), detail: err.message };
+  if (err.code !== 'cancelled' && isLocalMessage(err.message)) {
+    return { code: localCode(aiErrorKind(err)), detail: err.message };
+  }
+  if (err.code === 'http') return { code: analyzeHttpCode(err.message), detail: err.message };
   if (err.code === 'badResponse' && (err.message === 'empty' || err.message === 'tooLong')) {
     return { code: err.message, detail: '' };
   }

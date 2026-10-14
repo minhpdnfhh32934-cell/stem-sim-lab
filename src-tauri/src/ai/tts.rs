@@ -11,11 +11,11 @@ use std::time::{Duration, Instant};
 use base64::Engine as _;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use tokio::sync::oneshot;
 
 use super::gemini::{gemini_model, GEMINI_URL};
 use super::{
-    api_key, client, count_usage, require_ai_allowed, retry_delay, AiError, AiState, Provider,
+    api_key, client, count_usage, require_ai_allowed, retry_delay, run_counted, AiError, AiState,
+    InflightGuard, Provider,
 };
 
 /// Longest text in one request (a few sentences; the page sends phrase groups).
@@ -173,31 +173,25 @@ pub async fn ai_tts(
     state: tauri::State<'_, AiState>,
     request: TtsRequest,
 ) -> Result<TtsResponse, AiError> {
+    // First of all, so a stop that comes early is never counted or sent (see `run_counted`).
+    let (_inflight, stop) = InflightGuard::register(state.inner(), &request.request_id)?;
     require_ai_allowed(&app)?;
     validate(&request)?;
     let key = api_key(Provider::Gemini)?;
-    count_usage(&app, &state, request.day.as_deref(), request.daily_cap)?;
-    let (tx, rx) = oneshot::channel::<()>();
-    state
-        .inflight
-        .lock()
-        .map_err(|e| AiError::Network(e.to_string()))?
-        .insert(request.request_id.clone(), tx);
     let timeout = Duration::from_secs(
         request
             .timeout_secs
             .unwrap_or(DEFAULT_TTS_TIMEOUT_SECS)
             .clamp(5, 120),
     );
-    let result = tokio::select! {
-        r = synthesize(&request, &key) => r,
-        _ = tokio::time::sleep(timeout) => Err(AiError::Timeout(format!("{}s", timeout.as_secs()))),
-        _ = rx => Err(AiError::Cancelled(request.request_id.clone())),
-    };
-    if let Ok(mut map) = state.inflight.lock() {
-        map.remove(&request.request_id);
-    }
-    result
+    run_counted(
+        &request.request_id,
+        stop,
+        || count_usage(&app, &state, request.day.as_deref(), request.daily_cap),
+        synthesize(&request, &key),
+        timeout,
+    )
+    .await
 }
 
 #[cfg(test)]

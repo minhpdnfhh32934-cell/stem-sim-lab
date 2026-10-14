@@ -54,6 +54,61 @@ export interface ChatResponse {
   truncated?: boolean;
 }
 
+/**
+ * A change to an answer shown while it streams: `StreamEvent` in src-tauri/src/ai/stream.rs, the
+ * same for cloud providers (`ai_chat_stream`) and local runtimes (`local_ai_chat`).
+ *
+ * Provisional: when a chat template pre-fills the opening reasoning tag, the reasoning arrives
+ * first with nothing to mark it and is only taken back by a `reset` when its closing tag comes.
+ * Text may be shown, but speech, board actions and anything that cannot be taken back wait for
+ * the final text of the call.
+ */
+export type StreamEvent =
+  /** Add this text at the end. */
+  | { kind: 'delta'; text: string }
+  /** Replace everything shown so far (reasoning was recognised late). */
+  | { kind: 'reset'; text: string };
+
+/** The text shown after `e`, given the text shown before it. */
+export function applyStreamEvent(shown: string, e: StreamEvent): string {
+  return e.kind === 'delta' ? shown + e.text : e.text;
+}
+
+/**
+ * Follows a streamed answer for a caller that wants the whole text shown so far: after every
+ * event `onText` gets the full text (a `reset` replaces it), and when the call ends the final
+ * content is the authority (`settle`), so the last text the caller saw is the answer itself,
+ * also when an event was lost or arrived late.
+ */
+export class ShownText {
+  private shown = '';
+  private events = 0;
+
+  constructor(private readonly onText?: (shown: string) => void) {}
+
+  get text(): string {
+    return this.shown;
+  }
+
+  /** At least one event arrived. */
+  get started(): boolean {
+    return this.events > 0;
+  }
+
+  apply(e: StreamEvent): void {
+    this.events++;
+    this.shown = applyStreamEvent(this.shown, e);
+    this.onText?.(this.shown);
+  }
+
+  /** The call's final content; tells the caller only when it differs from what it saw. */
+  settle(final: string): void {
+    if (final === this.shown) return;
+    this.shown = final;
+    this.onText?.(final);
+  }
+}
+
 export type AiErrorCode =
   | 'timeout'
   | 'cancelled'
@@ -81,10 +136,12 @@ export class AiError extends Error {
 /** Converts whatever the transport threw into an AiError. */
 export function toAiError(e: unknown): AiError {
   if (e instanceof AiError) return e;
-  if (typeof e === 'object' && e !== null && 'code' in e) {
+  // Before the `code` check: a DOMException has a numeric `code` (20 for an AbortError).
+  if (e instanceof DOMException && e.name === 'AbortError') return new AiError('cancelled', '');
+  // Rust's AiError arrives as { code, message }.
+  if (typeof e === 'object' && e !== null && 'code' in e && typeof e.code === 'string') {
     const o = e as { code: string; message?: unknown };
     return new AiError(o.code as AiErrorCode, typeof o.message === 'string' ? o.message : '');
   }
-  if (e instanceof DOMException && e.name === 'AbortError') return new AiError('cancelled', '');
   return new AiError('network', e instanceof Error ? e.message : String(e));
 }
