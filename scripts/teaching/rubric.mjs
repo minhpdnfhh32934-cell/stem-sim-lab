@@ -1,3 +1,6 @@
+import { writeFileSync } from 'node:fs';
+import { basename, isAbsolute, relative, resolve, sep } from 'node:path';
+
 // Objective checks for AI Teacher answers (audit EDU-02). Used by the evaluation harness
 // (scripts/teaching/eval-gemma.mjs, scripts/teaching/rescore.mjs, scripts/teaching/compare.mjs) and
 // tested in tests/teaching-rubric.test.ts. These checks only cover what can be checked
@@ -832,4 +835,21 @@ export function evalSetPath(root, argv) {
   const file = i >= 0 ? argv[i + 1] : undefined;
   if (i >= 0 && !file) throw new Error('--set needs a file');
   return file ? file : `${root}/tests/teaching/teaching-eval.json`;
+}
+
+/** A path as stored in result files: relative to the repo with "/", never an absolute user path. */
+export function repoPath(root, p) {
+  const rel = relative(root, resolve(p)).split(sep).join('/');
+  return rel && !rel.startsWith('../') && rel !== '..' && !isAbsolute(rel) ? rel : basename(p);
+}
+
+/** Writes a new file and refuses to replace one that exists: results are never overwritten. */
+export function writeNew(path, text) {
+  try {
+    writeFileSync(path, text, { flag: 'wx' });
+  } catch (e) {
+    if (e && e.code === 'EEXIST')
+      throw new Error(`${path} already exists: choose another name (earlier results are kept)`);
+    throw e;
+  }
 }

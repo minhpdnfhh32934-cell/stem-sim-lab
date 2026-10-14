@@ -169,3 +169,9 @@ export function numberRepeats<T extends EvalRun>(runs: T[]): T[];
 export function pairedComparison(a: EvalRun[], b: EvalRun[]): PairedComparison;
 export function gpuRefusal(adapters: Record<string, string | null | undefined>): string | null;
 export function evalSetPath(root: string, argv: readonly string[]): string;
+
+/** A path as stored in result files: relative to the repo with "/", never an absolute user path. */
+export function repoPath(root: string, p: string): string;
+
+/** Writes a new file and refuses to replace one that exists: results are never overwritten. */
+export function writeNew(path: string, text: string): void;

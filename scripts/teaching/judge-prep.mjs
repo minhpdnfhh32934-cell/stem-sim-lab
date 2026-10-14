@@ -3,18 +3,21 @@
 // is shuffled per question and per judge (seeded, so it can be reproduced); the judge files hold
 // the question, the reference answer and the coded answers only — never the prompt, the decoding
 // or the group. The key that maps codes back to groups is written to a separate file the judges
-// must not read. Reads result files only: no browser, no GPU.
+// must not read: it goes to a sibling folder "<out>-key", never into the folder the judges get, and
+// it holds the SHA-256 of every judge file (judge-score.mjs --inputs checks them). Both folders must
+// be new: an existing key is never replaced. Reads result files only: no browser, no GPU.
 //
 //   node scripts/teaching/judge-prep.mjs --out <folder> --groups <g1,g2,…> --judges 2
 //        [--seed simlab-2026-10-14] <eval-….json> [more files…]
 //
 // A group is "model/variant/decoding/temperature" (rubric.mjs groupKey). Each group must have
-// exactly one answered run per question (greedy runs); the script stops otherwise.
+// exactly one answered run per question (greedy runs), from one app build; the script stops
+// otherwise.
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { evalSetPath, groupKey } from './rubric.mjs';
+import { buildConflicts, evalSetPath, fileRuns, groupKey, writeNew } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const argv = process.argv.slice(2);
@@ -30,19 +33,28 @@ const valued = new Set(['--out', '--groups', '--judges', '--seed', '--set']);
 const files = argv.filter((a, i) => !a.startsWith('--') && !valued.has(argv[i - 1] ?? ''));
 if (!out || groups.length < 2 || !files.length)
   throw new Error('usage: --out <folder> --groups <g1,g2,…> [--judges 2] <files…>');
-mkdirSync(out, { recursive: true });
+if (!Number.isInteger(judges) || judges < 1 || judges > 5)
+  throw new Error('--judges must be a whole number from 1 to 5');
+const codes = 'ABCDEFGHIJKL'.split('');
+if (groups.length > codes.length) throw new Error(`at most ${codes.length} groups`);
+const keyDir = `${out.replace(/[\\/]+$/, '')}-key`;
+for (const dir of [out, keyDir]) {
+  if (existsSync(dir) && readdirSync(dir).length)
+    throw new Error(`${dir} is not empty: choose another --out (an earlier key is never replaced)`);
+  mkdirSync(dir, { recursive: true });
+}
 
 const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
-const runs = files.flatMap((f) => {
-  const file = JSON.parse(readFileSync(f, 'utf8'));
-  return file.results
-    .filter((r) => r.ok && r.answer.trim())
-    .map((r) => ({
-      ...r,
-      model: r.model ?? file.model,
-      group: groupKey({ ...r, model: r.model ?? file.model }),
-    }));
-});
+const runs = files
+  .flatMap((f) => fileRuns(JSON.parse(readFileSync(f, 'utf8')), f))
+  .filter((r) => r.ok && r.answer.trim())
+  .map((r) => ({ ...r, group: groupKey(r) }));
+// Two app builds under one group would be judged as one configuration: stop, like compare.mjs.
+const conflicts = buildConflicts(runs).filter((c) => groups.includes(c.key));
+if (conflicts.length)
+  throw new Error(
+    `results of different builds in one group: ${conflicts.map((c) => `${c.key} (${c.builds.join(' | ')})`).join('; ')}`,
+  );
 
 /** Deterministic shuffle (Fisher–Yates driven by SHA-256 of seed + parts). */
 function shuffled(list, ...parts) {
@@ -57,7 +69,6 @@ function shuffled(list, ...parts) {
   return a;
 }
 
-const codes = 'ABCDEFGHIJKL'.split('');
 const key = {};
 const perJudge = Array.from({ length: judges }, () => ({}));
 for (const item of set.items) {
@@ -83,15 +94,23 @@ for (const item of set.items) {
     });
   }
 }
+const inputs = {};
 for (let j = 0; j < judges; j++) {
   for (const [subject, list] of Object.entries(perJudge[j])) {
-    writeFileSync(resolve(out, `judge-input-j${j}-${subject}.json`), JSON.stringify(list, null, 1));
+    const name = `judge-input-j${j}-${subject}.json`;
+    const text = JSON.stringify(list, null, 1);
+    writeNew(resolve(out, name), text);
+    inputs[name] = createHash('sha256').update(text).digest('hex');
   }
 }
-writeFileSync(
-  resolve(out, 'judge-key.SECRET.json'),
-  JSON.stringify({ seed, groups, files: files.map((f) => f.split(/[\\/]/).pop()), key }, null, 1),
+writeNew(
+  resolve(keyDir, 'judge-key.SECRET.json'),
+  JSON.stringify(
+    { seed, groups, files: files.map((f) => f.split(/[\\/]/).pop()), inputs, key },
+    null,
+    1,
+  ),
 );
 console.log(
-  `${set.items.length} questions × ${groups.length} answers, ${judges} judge orders → ${out}`,
+  `${set.items.length} questions × ${groups.length} answers, ${judges} judge orders → ${out} (key: ${keyDir})`,
 );

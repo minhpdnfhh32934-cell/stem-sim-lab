@@ -5,10 +5,17 @@
 // under one group stop the script). Reads files only: no browser, no GPU.
 //
 //   node scripts/teaching/breakdown.mjs <eval-….json> [more files…] [--json <out>]
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildConflicts, evalSetPath, fileRuns, groupKey, scoreAnswer } from './rubric.mjs';
+import {
+  buildConflicts,
+  evalSetPath,
+  fileRuns,
+  groupKey,
+  scoreAnswer,
+  writeNew,
+} from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
@@ -87,7 +94,7 @@ console.log(
   `\nQuestions with no key fact in EVERY group (${everyGroupFails.length}): ${everyGroupFails.join(', ')}`,
 );
 if (jsonOut)
-  writeFileSync(
+  writeNew(
     jsonOut,
     JSON.stringify({ groups, byKind, bySubject, serious, everyGroupFails }, null, 2),
   );

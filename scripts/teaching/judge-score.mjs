@@ -3,14 +3,20 @@
 // subject and question kind; and how much two judges agreed (exact agreement and Cohen's kappa on
 // correctness, mean absolute difference on the 1–5 scales). AI judgement, not a teacher's.
 //
-//   node scripts/teaching/judge-score.mjs --key <judge-key.SECRET.json> [--json <out>] <scores…>
+//   node scripts/teaching/judge-score.mjs --key <judge-key.SECRET.json> [--inputs <folder>]
+//        [--json <out>] <scores…>
+//
+// --inputs: the folder the judges were given; every judge file must match the SHA-256 the key
+// recorded (keys from before 2026-10-14 15:00 have no hashes). Every coded answer of a judge that
+// sent scores must be scored exactly once.
 //
 // A scores file: { "judge": "j0", "scores": [ { "id", "code", "correctness", "clarity",
 // "completeness", "flags": {…}, "note" } ] }.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { evalSetPath } from './rubric.mjs';
+import { evalSetPath, writeNew } from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const argv = process.argv.slice(2);
@@ -20,23 +26,52 @@ const opt = (name) => {
 };
 const keyFile = opt('key');
 const jsonOut = opt('json');
-const valued = new Set(['--key', '--json', '--set']);
+const inputsDir = opt('inputs');
+const valued = new Set(['--key', '--json', '--set', '--inputs']);
 const files = argv.filter((a, i) => !a.startsWith('--') && !valued.has(argv[i - 1] ?? ''));
 if (!keyFile || !files.length) throw new Error('usage: --key <key> [--json <out>] <scores…>');
-const { key, groups } = JSON.parse(readFileSync(keyFile, 'utf8'));
+const { key, groups, inputs } = JSON.parse(readFileSync(keyFile, 'utf8'));
+if (inputsDir) {
+  if (!inputs) throw new Error('this key has no input hashes: judge files cannot be checked');
+  const names = readdirSync(inputsDir).filter((n) => n.startsWith('judge-input-'));
+  for (const name of new Set([...names, ...Object.keys(inputs)])) {
+    const want = inputs[name];
+    const got = names.includes(name)
+      ? createHash('sha256')
+          .update(readFileSync(resolve(inputsDir, name), 'utf8'))
+          .digest('hex')
+      : undefined;
+    if (want !== got) throw new Error(`${name}: not the judge file this key was made with`);
+  }
+}
 const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 const kindOf = (item) =>
   item.expectsClarify ? 'missing-data' : item.history?.length ? 'feedback' : item.type;
 
 const rows = [];
+const scored = new Set();
+const judgesWithScores = new Set();
 for (const f of files) {
   const { judge, scores } = JSON.parse(readFileSync(f, 'utf8'));
+  judgesWithScores.add(judge);
   for (const s of scores) {
     const group = key[judge]?.[s.id]?.[s.code];
     if (!group) throw new Error(`${f}: no key for ${judge} ${s.id} ${s.code}`);
+    const one = `${judge} ${s.id} ${s.code}`;
+    if (scored.has(one)) throw new Error(`${f}: ${one} is scored twice`);
+    scored.add(one);
     const item = items.get(s.id);
     rows.push({ ...s, judge, group, subject: item.subject, kind: kindOf(item) });
+  }
+}
+// A judge that sent scores must have scored every coded answer it was given.
+for (const judge of judgesWithScores) {
+  for (const [id, coded] of Object.entries(key[judge] ?? {})) {
+    for (const code of Object.keys(coded)) {
+      if (!scored.has(`${judge} ${id} ${code}`))
+        throw new Error(`${judge} ${id} ${code}: no score (every answer must be scored once)`);
+    }
   }
 }
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
@@ -119,4 +154,4 @@ if (judgesSeen.length >= 2) {
     `\nJudges ${a} vs ${b} on ${pairs.length} answers: correctness agree ${pct(po)}, Cohen's kappa ${f2(agreement.correctnessKappa)}; clarity mean |diff| ${f2(agreement.clarityMeanAbsDiff)}; completeness mean |diff| ${f2(agreement.completenessMeanAbsDiff)}`,
   );
 }
-if (jsonOut) writeFileSync(jsonOut, JSON.stringify({ groups, summary, agreement, rows }, null, 2));
+if (jsonOut) writeNew(jsonOut, JSON.stringify({ groups, summary, agreement, rows }, null, 2));

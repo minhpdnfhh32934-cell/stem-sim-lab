@@ -12,7 +12,7 @@
 // voice reports the 'wasm' device. The voice must already be downloaded in <profile> (115 MB);
 // the script never starts a download.
 import { createRequire } from 'node:module';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectRows, failedChecks } from './listening-rows.mjs';
@@ -30,6 +30,8 @@ const out = arg('out', resolve(root, '.agent-logs/listening-pack'));
 const base = arg('base', 'http://localhost:1430');
 if (!profile)
   throw new Error('--profile <Edge profile folder that already holds the voice> is required');
+if (existsSync(out) && readdirSync(out).length)
+  throw new Error(`${out} is not empty: choose another --out (earlier recordings are kept)`);
 mkdirSync(out, { recursive: true });
 
 // The golden set (also checked by src/teacher/voice/pronounceGolden.test.ts).
@@ -42,6 +44,10 @@ const context = await chromium.launchPersistentContext(profile, {
   headless: true,
   args: ['--disable-gpu', '--disable-features=WebGPU,Vulkan'],
 });
+// Never download: the voice must already be stored; any request to the model hosts is refused.
+await context.route(/^https:\/\/(?:[a-z0-9-]+\.)*(?:huggingface\.co|hf\.co)\//i, (route) =>
+  route.abort(),
+);
 await context.addInitScript(() => {
   try {
     localStorage.setItem('stemsim.voice-device', 'wasm');

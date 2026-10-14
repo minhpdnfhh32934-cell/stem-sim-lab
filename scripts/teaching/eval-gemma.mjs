@@ -53,6 +53,7 @@ import {
   evalSetPath,
   gpuRefusal,
   groupKey,
+  repoPath,
   scoreAnswer,
   skipRefusal,
   stopsRun,
@@ -127,8 +128,8 @@ const settings = {
   repeats,
   label: label ?? null,
   improvedName,
-  set: arg('set') ?? 'tests/teaching/teaching-eval.json',
-  skip: skipFiles,
+  set: repoPath(root, arg('set') ?? 'tests/teaching/teaching-eval.json'),
+  skip: skipFiles.map((f) => repoPath(root, f)),
   retries,
 };
 /** One run of the evaluation, the same in every result file. */
@@ -170,6 +171,10 @@ const context = await chromium.launchPersistentContext(profile, {
   headless: true,
   args: ['--force_high_performance_gpu'],
 });
+// Never download: the model must already be stored; any request to the model hosts is refused.
+await context.route(/^https:\/\/(?:[a-z0-9-]+\.)*(?:huggingface\.co|hf\.co)\//i, (route) =>
+  route.abort(),
+);
 const page = context.pages()[0] ?? (await context.newPage());
 await page.goto(base);
 await page.waitForLoadState('networkidle');

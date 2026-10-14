@@ -27,6 +27,11 @@
 //   <out>/by-mode/      the same recordings named by mode   (never give these to listeners)
 //   <out>/key/ab-key.json, <out>/results.json               (name the modes: keep them apart)
 //
+// <out> must be new or empty: a rerun never replaces a key listeners' ratings depend on. The A/B
+// seed is random and written only to key/ab-key.json (results.json does not carry it): publish it
+// only after the ratings are in. Durations in results.json can still tell the modes apart, so
+// listeners must not see results.json either.
+//
 //   npm run dev -- --port 1430        (the origin whose storage already holds the voice; started by
 //                                      whoever runs the benchmark, never by this script)
 //   node scripts/voice/tts-bench.mjs --profile <Edge profile> [--out <folder>] [--base <url>]
@@ -39,7 +44,8 @@
 // Run it only when no other benchmark uses the CPU: the timings are the point.
 import { createRequire } from 'node:module';
 import { execFile, execFileSync, spawn } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { randomInt } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -76,7 +82,9 @@ if (!profileArg) {
 const profile = resolve(profileArg);
 const out = resolve(arg('out', resolve(root, '.agent-logs/tts-bench')));
 const base = arg('base', 'http://localhost:1430');
-const seed = Number(arg('seed', String(Date.now() % 2 ** 31)));
+const seed = Number(arg('seed', String(randomInt(2 ** 31 - 1))));
+if (existsSync(out) && readdirSync(out).length)
+  throw new Error(`${out} is not empty: choose another --out (earlier results and keys are kept)`);
 const sampleMs = Number(arg('sample-ms', '1000'));
 const only = arg('only', '')
   .split(',')
@@ -287,7 +295,6 @@ const save = () =>
         device: 'wasm',
         userAgent: setup.userAgent,
         loadMs,
-        seed,
         sampleMs,
         rows,
         summary: summarize(rows, MODES),
@@ -341,5 +348,5 @@ for (const mode of MODES) {
   console.log(`${mode}: ${JSON.stringify(summary[mode])}`);
 }
 console.log(
-  `Results: ${layout.results}; give listeners only ${layout.listen} (load ${loadMs} ms, seed ${seed})`,
+  `Results: ${layout.results}; give listeners only ${layout.listen} (load ${loadMs} ms; the A/B seed is in ${layout.key})`,
 );

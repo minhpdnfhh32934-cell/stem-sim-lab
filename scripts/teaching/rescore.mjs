@@ -6,10 +6,18 @@
 //
 // Prints a summary per configuration (model/variant/decoding/temperature, see groupKey) next to
 // the summary saved with the run, and with --changes every answer whose check changed.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { evalSetPath, fileRuns, groupKey, scoreAnswer, summarizeRuns } from './rubric.mjs';
+import {
+  evalSetPath,
+  fileRuns,
+  groupKey,
+  repoPath,
+  scoreAnswer,
+  summarizeRuns,
+  writeNew,
+} from './rubric.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args = process.argv.slice(2);
@@ -32,7 +40,7 @@ const saved = JSON.parse(readFileSync(resolve(input), 'utf8'));
 const set = JSON.parse(readFileSync(evalSetPath(root, process.argv), 'utf8'));
 const items = new Map(set.items.map((i) => [i.id, i]));
 
-const results = fileRuns(saved, input).map((r) => {
+const results = fileRuns(saved, repoPath(root, input)).map((r) => {
   const item = items.get(r.id);
   if (!item) throw new Error(`question ${r.id} is not in tests/teaching/teaching-eval.json`);
   return { ...r, savedScore: r.score, score: scoreAnswer(item, r.answer ?? '') };
@@ -105,7 +113,8 @@ if (args.includes('--changes')) {
 }
 
 if (out) {
-  writeFileSync(
+  // A new file only: never the raw input or an earlier rescore.
+  writeNew(
     resolve(out),
     JSON.stringify(
       { ...saved, rescoredWith: 'scripts/teaching/rubric.mjs', summary, results },

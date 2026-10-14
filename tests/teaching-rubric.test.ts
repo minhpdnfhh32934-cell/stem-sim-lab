@@ -19,10 +19,12 @@ import {
   numberRepeats,
   opensWithAgreement,
   pairedComparison,
+  repoPath,
   scoreAnswer,
   servedPromptVariant,
   signTestP,
   skipRefusal,
+  writeNew,
   stepsInOrder,
   stopsRun,
   summarize,
@@ -1628,5 +1630,61 @@ describe('Gemma evaluation GPU guard (audit GPU-01)', () => {
     const loop = src.slice(src.indexOf('for (const item of items)'));
     expect(loop).toMatch(/if \(stopsRun\(r\.error \?\? ''\)\) \{/);
     expect(src).not.toMatch(/const GPU_FAILURE/);
+  });
+});
+
+describe('result files: never overwritten, no absolute user paths', () => {
+  const root = resolve(__dirname, '..');
+
+  it('stores paths inside the repo relative with "/", others by file name only', () => {
+    expect(repoPath(root, join(root, 'tests', 'teaching', 'teaching-heldout.json'))).toBe(
+      'tests/teaching/teaching-heldout.json',
+    );
+    expect(repoPath(root, 'tests/teaching/teaching-eval.json')).toBe(
+      'tests/teaching/teaching-eval.json',
+    );
+    expect(repoPath(root, join(tmpdir(), 'someone', 'eval-gemma3-1b.json'))).toBe(
+      'eval-gemma3-1b.json',
+    );
+  });
+
+  it('writeNew refuses to replace an existing file and leaves it unchanged', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'simlab-writenew-'));
+    const file = join(dir, 'result.json');
+    writeNew(file, 'first');
+    expect(() => {
+      writeNew(file, 'second');
+    }).toThrow(/already exists/);
+    expect(readFileSync(file, 'utf8')).toBe('first');
+  });
+
+  it.each([
+    'scripts/teaching/rescore.mjs',
+    'scripts/teaching/breakdown.mjs',
+    'scripts/teaching/judge-score.mjs',
+    'scripts/teaching/judge-prep.mjs',
+  ])('%s writes results only through writeNew', (file) => {
+    const src = readFileSync(resolve(root, file), 'utf8');
+    expect(src).not.toMatch(/\bwriteFileSync\b/);
+    expect(src).toMatch(/\bwriteNew\(/);
+  });
+
+  it('the voice benchmark and listening pack refuse a folder that is not empty', () => {
+    for (const file of ['scripts/voice/tts-bench.mjs', 'scripts/voice/listening-pack.mjs']) {
+      const src = readFileSync(resolve(root, file), 'utf8');
+      expect(src, file).toMatch(/existsSync\(out\) && readdirSync\(out\)\.length/);
+    }
+    // The A/B seed stays in the key file, never in results.json.
+    const bench = readFileSync(resolve(root, 'scripts/voice/tts-bench.mjs'), 'utf8');
+    expect(bench).toMatch(/randomInt\(/);
+    expect(bench.slice(bench.indexOf('const save = () =>'))).not.toMatch(/^\s+seed,$/m);
+  });
+
+  it('the Gemma evaluation and the listening pack never download a model', () => {
+    for (const file of ['scripts/teaching/eval-gemma.mjs', 'scripts/voice/listening-pack.mjs']) {
+      const src = readFileSync(resolve(root, file), 'utf8');
+      expect(src, file).toContain('(?:huggingface\\.co|hf\\.co)');
+      expect(src, file).toMatch(/route\.abort\(\)/);
+    }
   });
 });
