@@ -28,4 +28,10 @@ describe('in-browser Gemma models (no Ollama, no token)', () => {
       expect(rust).toContain(`("${m.id}","${m.repoUrl}")`);
     }
   });
+
+  it('pins every model to one commit of its repo (audit SEC-06)', async () => {
+    for (const m of WEB_GEMMA_MODELS) expect(m.revision, m.id).toMatch(/^[0-9a-f]{40}$/);
+    const { LOCAL_VOICE } = await import('@/teacher/voice/localVoice');
+    expect(LOCAL_VOICE.revision).toMatch(/^[0-9a-f]{40}$/);
+  });
 });

@@ -1,0 +1,856 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { GpuStatus } from '@/ai/gpu';
+import { voiceErrorKey } from './voiceErrors';
+
+/**
+ * Audit G5: the on-device voice (MMS) must never put long WebGPU work on an integrated card or on
+ * a card that already failed (the 0x119 crash, audit GPU-01), and a hung worker must never hold
+ * `speak()` or the lesson. Nothing here runs a model: the worker is a fake.
+ */
+const env = vi.hoisted(() => ({ webgpu: true }));
+vi.mock('@/ai/webGemma', () => ({
+  webGPUStatus: () => (env.webgpu ? 'webgpu' : 'none'),
+  ortPaths: () => ({ wasm: '/ort/a.wasm', mjs: '/ort/a.mjs' }),
+}));
+vi.mock('@/ai/modelStore', () => ({
+  opfsAvailable: () => false,
+  repoStored: () => Promise.resolve(true),
+  deleteRepo: () => Promise.resolve(),
+}));
+// No sound in tests: a phrase "plays" at once (only the lessons through `speak()` play anything).
+vi.mock('./audio', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./audio')>()),
+  playPcm: () => Promise.resolve(),
+  stopAudio: () => undefined,
+  pause: () => Promise.resolve(),
+}));
+
+type Reply = 'audio' | 'silent' | 'nan' | 'hang';
+/** How a load ends: loaded, never answered, the worker crashing, or this error message. */
+type LoadReply = 'loaded' | 'hang' | 'crash' | { error: string };
+
+/**
+ * Behaves like localVoiceWorker.ts: one job at a time, "started" when a phrase begins, a
+ * cancelled phrase dropped if it has not started. A phrase takes `msPerChar` per character of
+ * (fake) time, or no time at all.
+ */
+class FakeWorker {
+  static all: FakeWorker[] = [];
+  static onSpeak: Reply = 'audio';
+  /** Replies for single phrases (by the text the model gets), over `onSpeak`. */
+  static replyFor = new Map<string, Reply>();
+  static onLoad: LoadReply = 'loaded';
+  static msPerChar = 0;
+  /** Prosody controls the fake model says it applied (none, like the MMS export in use). */
+  static applied: string[] | undefined = undefined;
+  posted: {
+    kind: string;
+    id?: number;
+    device?: string;
+    text?: string;
+    prosody?: Record<string, number>;
+  }[] = [];
+  terminated = false;
+  onmessage: ((event: MessageEvent) => void) | null = null;
+  onerror: ((event: ErrorEvent) => void) | null = null;
+  private queue: { id: number; text: string }[] = [];
+  private busy = false;
+  private cancelled = new Set<number>();
+  constructor() {
+    FakeWorker.all.push(this);
+  }
+  postMessage(msg: {
+    kind: string;
+    id?: number;
+    device?: string;
+    text?: string;
+    prosody?: Record<string, number>;
+  }) {
+    this.posted.push(msg);
+    if (msg.kind === 'load') {
+      const reply = FakeWorker.onLoad;
+      queueMicrotask(() => {
+        if (reply === 'loaded') this.reply({ kind: 'loaded' });
+        else if (reply === 'crash') this.crash();
+        else if (reply !== 'hang') this.reply({ kind: 'error', id: -1, message: reply.error });
+      });
+    }
+    if (msg.kind === 'cancel' && msg.id !== undefined) this.cancelled.add(msg.id);
+    if (msg.kind === 'speak' && msg.id !== undefined) {
+      this.queue.push({ id: msg.id, text: msg.text ?? '' });
+      queueMicrotask(() => {
+        this.pump();
+      });
+    }
+  }
+  private pump() {
+    if (this.busy || this.terminated) return;
+    const job = this.queue.shift();
+    if (!job) return;
+    if (this.cancelled.delete(job.id)) {
+      this.reply({ kind: 'error', id: job.id, message: 'cancelled' });
+      this.pump();
+      return;
+    }
+    this.busy = true;
+    this.reply({ kind: 'started', id: job.id });
+    const onSpeak = FakeWorker.replyFor.get(job.text) ?? FakeWorker.onSpeak;
+    if (onSpeak === 'hang') return;
+    const samples =
+      onSpeak === 'silent'
+        ? new Float32Array(1600)
+        : onSpeak === 'nan'
+          ? Float32Array.from([NaN, NaN])
+          : Float32Array.from([0.2, -0.3]);
+    const finish = () => {
+      this.busy = false;
+      this.reply({
+        kind: 'audio',
+        id: job.id,
+        samples,
+        sampleRate: 16000,
+        ...(FakeWorker.applied ? { applied: FakeWorker.applied } : {}),
+      });
+      this.pump();
+    };
+    if (FakeWorker.msPerChar > 0) setTimeout(finish, job.text.length * FakeWorker.msPerChar);
+    else queueMicrotask(finish);
+  }
+  terminate() {
+    this.terminated = true;
+  }
+  reply(data: unknown) {
+    if (!this.terminated) this.onmessage?.({ data } as MessageEvent);
+  }
+  crash() {
+    this.onerror?.({ preventDefault: () => undefined } as ErrorEvent);
+  }
+}
+
+const AMD_ONLY: GpuStatus = {
+  supported: true,
+  adapters: [
+    {
+      id: '1002:15bf:0',
+      name: 'AMD Radeon 780M',
+      vendorId: 0x1002,
+      deviceId: 0x15bf,
+      kind: 'integrated',
+      dedicatedMb: 512,
+      sharedMb: 16000,
+    },
+  ],
+  choice: null,
+  choiceName: null,
+  startupChoice: null,
+  startupApplied: false,
+  restartNeeded: false,
+};
+const RTX_ONLY: GpuStatus = {
+  ...AMD_ONLY,
+  adapters: [
+    {
+      id: '10de:2d59:0',
+      name: 'NVIDIA GeForce RTX 5060 Laptop GPU',
+      vendorId: 0x10de,
+      deviceId: 0x2d59,
+      kind: 'discrete',
+      dedicatedMb: 8151,
+      sharedMb: 16000,
+    },
+  ],
+};
+
+let voice: typeof import('./localVoice');
+let gpu: typeof import('@/ai/gpu');
+let safety: typeof import('@/ai/gpuSafety');
+
+const loads = () =>
+  FakeWorker.all.flatMap((w) => w.posted.filter((m) => m.kind === 'load').map((m) => m.device));
+
+/** The exact message a phrase fails with (what speak.ts keeps as `lastError`). */
+const failure = (result: Promise<unknown>): Promise<string> =>
+  result.then(
+    () => 'resolved instead of failing',
+    (e: unknown) => (e instanceof Error ? e.message : String(e)),
+  );
+
+/** Follows a promise without waiting for it: `state` stays 'pending' while it never settles. */
+function follow(result: Promise<unknown>): {
+  state: 'pending' | 'resolved' | 'rejected';
+  error: string;
+} {
+  const box: { state: 'pending' | 'resolved' | 'rejected'; error: string } = {
+    state: 'pending',
+    error: '',
+  };
+  result.then(
+    () => (box.state = 'resolved'),
+    (e: unknown) => {
+      box.state = 'rejected';
+      box.error = e instanceof Error ? e.message : String(e);
+    },
+  );
+  return box;
+}
+
+/** Lets the fake worker and the page answer each other (no timers involved). */
+const flush = async () => {
+  for (let i = 0; i < 30; i++) await Promise.resolve();
+};
+
+/** The page asked the worker for the phrase with this model text (it is now waited on). */
+const asked = (text: string) =>
+  FakeWorker.all.some((w) => w.posted.some((m) => m.kind === 'speak' && m.text === text));
+
+describe('on-device voice: where it runs', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    env.webgpu = true;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+    gpu = await import('@/ai/gpu');
+    safety = await import('@/ai/gpuSafety');
+    gpu.useGpuStore.setState({ status: null, gemmaInfo: null });
+  });
+  afterEach(() => {
+    voice.unloadLocalVoice();
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  it('uses the graphics card when it is a discrete one', async () => {
+    gpu.useGpuStore.setState({ status: RTX_ONLY });
+    await voice.synthesizeLocal('xin chào', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu']);
+  });
+
+  it('runs on the CPU when only an integrated card is known', async () => {
+    gpu.useGpuStore.setState({ status: AMD_ONLY });
+    await voice.synthesizeLocal('xin chào', new AbortController().signal);
+    expect(loads()).toEqual(['wasm']);
+  });
+
+  it('runs on the CPU after a recorded GPU fault, and without WebGPU', async () => {
+    gpu.useGpuStore.setState({ status: RTX_ONLY });
+    safety.noteGpuFault('device-lost', null);
+    await voice.synthesizeLocal('xin chào', new AbortController().signal);
+    expect(loads()).toEqual(['wasm']);
+    safety.allowGemmaAgain();
+    safety.forgetGpuFault();
+    voice.unloadLocalVoice();
+    env.webgpu = false;
+    await voice.synthesizeLocal('xin chào', new AbortController().signal);
+    expect(loads()).toEqual(['wasm', 'wasm']);
+  });
+
+  it('can be forced onto the CPU (tests, the listening-pack tool)', async () => {
+    gpu.useGpuStore.setState({ status: RTX_ONLY });
+    voice.setLocalVoiceDevicePreference('wasm');
+    expect(voice.localVoiceDevicePreference()).toBe('wasm');
+    expect(await voice.localVoiceDevice()).toBe('wasm');
+    await voice.synthesizeLocal('xin chào', new AbortController().signal);
+    expect(loads()).toEqual(['wasm']);
+    voice.setLocalVoiceDevicePreference('auto');
+    expect(await voice.localVoiceDevice()).toBe('webgpu');
+  });
+
+  it('moves to the CPU after its own GPU worker crashed', async () => {
+    gpu.useGpuStore.setState({ status: RTX_ONLY });
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    expect(voice.localVoiceGpuFault()).toBeNull();
+    FakeWorker.all[0]?.crash();
+    await voice.synthesizeLocal('hai', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+    // Settings tells the learner why the voice now runs on the CPU.
+    expect(voice.localVoiceGpuFault()).toBe('worker-crashed');
+  });
+
+  it('a GPU fault elsewhere (Gemma) reloads the voice on the CPU', async () => {
+    gpu.useGpuStore.setState({ status: RTX_ONLY });
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    safety.noteGpuFault('worker-crashed', null);
+    await voice.synthesizeLocal('hai', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+  });
+});
+
+describe('on-device voice: a phrase never hangs', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    env.webgpu = false;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+  });
+  afterEach(() => {
+    voice.unloadLocalVoice();
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  it('gives up on a hung worker after a timeout and restarts it', async () => {
+    vi.useFakeTimers();
+    FakeWorker.onSpeak = 'hang';
+    const text = 'một câu khá dài để máy đọc';
+    const result = voice.synthesizeLocal(text, new AbortController().signal);
+    const failed = expect(result).rejects.toThrow('voice-model-timeout');
+    await vi.advanceTimersByTimeAsync(voice.speakTimeoutMs(text) + 10);
+    await failed;
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+  });
+
+  it('stops waiting at once when the learner stops, even after the model loaded', async () => {
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    FakeWorker.onSpeak = 'hang';
+    const ctrl = new AbortController();
+    const result = voice.synthesizeLocal('hai', ctrl.signal);
+    await Promise.resolve();
+    ctrl.abort();
+    await expect(result).rejects.toThrow('cancelled');
+  });
+
+  it('keeps the loaded model when an earlier phrase is stopped afterwards', async () => {
+    const first = new AbortController();
+    await voice.synthesizeLocal('một', first.signal);
+    first.abort();
+    await voice.synthesizeLocal('hai', new AbortController().signal);
+    expect(FakeWorker.all).toHaveLength(1);
+    expect(FakeWorker.all[0]?.terminated).toBe(false);
+    expect(loads()).toHaveLength(1);
+  });
+
+  it('treats silent output as a failure, not as speech', async () => {
+    FakeWorker.onSpeak = 'silent';
+    await expect(voice.synthesizeLocal('xin chào', new AbortController().signal)).rejects.toThrow(
+      'voice-model-silent',
+    );
+    // Nothing to say is not a failure.
+    expect((await voice.synthesizeLocal('…', new AbortController().signal)).samples).toHaveLength(
+      0,
+    );
+  });
+});
+
+describe('on-device voice: a failing graphics card (second review)', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    env.webgpu = true;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+    gpu = await import('@/ai/gpu');
+    safety = await import('@/ai/gpuSafety');
+    gpu.useGpuStore.setState({ status: RTX_ONLY, gemmaInfo: null });
+  });
+  afterEach(() => {
+    voice.unloadLocalVoice();
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  it('uses the graphics card only when a discrete card is confirmed', async () => {
+    // A browser or a failed adapter list: the kind of card is unknown.
+    gpu.useGpuStore.setState({ status: null });
+    expect(await voice.localVoiceDevice()).toBe('wasm');
+    gpu.useGpuStore.setState({
+      status: { ...RTX_ONLY, adapters: RTX_ONLY.adapters.map((a) => ({ ...a, kind: 'unknown' })) },
+    });
+    expect(await voice.localVoiceDevice()).toBe('wasm');
+    await voice.synthesizeLocal('xin chào', new AbortController().signal);
+    expect(loads()).toEqual(['wasm']);
+    gpu.useGpuStore.setState({ status: RTX_ONLY });
+    expect(await voice.localVoiceDevice()).toBe('webgpu');
+  });
+
+  it.each([
+    [
+      'the device is lost while the model loads',
+      { error: 'Error: GPU device was lost' },
+      'device-lost',
+    ],
+    ['the worker crashes while the model loads', 'crash', 'worker-crashed'],
+  ] as const)(
+    '%s: recorded like a Gemma fault, never reloaded on the card',
+    async (_name, reply, reason) => {
+      FakeWorker.onLoad = reply;
+      const error = await voice.synthesizeLocal('một', new AbortController().signal).then(
+        () => null,
+        (e: unknown) => e,
+      );
+      // Final review: a card fault during the load fails the phrase with the fault as recorded,
+      // so Settings says the voice moved to the CPU and speak.ts tries the CPU next.
+      expect(error).toBeInstanceOf(voice.VoiceCardFault);
+      const message = error instanceof Error ? error.message : '';
+      expect(message).toBe(`voice-model-card-fault: ${voice.localVoiceGpuFault() ?? ''}`);
+      expect(voiceErrorKey(message)).toBe('voice.errors.gpuToCpu');
+      expect(safety.gemmaBlockedByGpuFault()).toBe(true);
+      expect(safety.lastGpuFault()?.reason).toBe(reason);
+      FakeWorker.onLoad = 'loaded';
+      await voice.synthesizeLocal('hai', new AbortController().signal);
+      expect(loads()).toEqual(['webgpu', 'wasm']);
+    },
+  );
+
+  it('a load that never finishes gives up, and on the card counts as a card failure', async () => {
+    vi.useFakeTimers();
+    FakeWorker.onLoad = 'hang';
+    const result = voice.synthesizeLocal('một', new AbortController().signal);
+    const failed = expect(result).rejects.toThrow('voice-model-load-timeout');
+    await vi.advanceTimersByTimeAsync(voice.LOAD_STALL_MS + 10);
+    await failed;
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+    expect(safety.lastGpuFault()?.reason).toBe('runtime-gpu-error');
+    FakeWorker.onLoad = 'loaded';
+    await voice.synthesizeLocal('hai', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+  });
+
+  it('a phrase that hangs on the card is a card failure: unloaded, then the CPU', async () => {
+    vi.useFakeTimers();
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    FakeWorker.onSpeak = 'hang';
+    const result = voice.synthesizeLocal('hai', new AbortController().signal);
+    const failed = expect(result).rejects.toThrow('voice-model-timeout');
+    await vi.advanceTimersByTimeAsync(voice.speakTimeoutMs('hai') + 10);
+    await failed;
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+    expect(safety.gemmaBlockedByGpuFault()).toBe(true);
+    FakeWorker.onSpeak = 'audio';
+    await voice.synthesizeLocal('ba', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+  });
+
+  it('NaN audio from the card is a card failure; the phrase is not played', async () => {
+    FakeWorker.onSpeak = 'nan';
+    // The phrase fails as a card fault naming what was recorded (not as "silence").
+    expect(await failure(voice.synthesizeLocal('một', new AbortController().signal))).toBe(
+      'voice-model-card-fault: voice-model-nan',
+    );
+    expect(voice.localVoiceGpuFault()).toBe('voice-model-nan');
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+    expect(safety.lastGpuFault()?.reason).toBe('runtime-gpu-error');
+    FakeWorker.onSpeak = 'audio';
+    await voice.synthesizeLocal('hai', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+  });
+
+  it('after NaN audio from the card, Settings says the voice moved to the CPU', async () => {
+    FakeWorker.onSpeak = 'nan';
+    const error = await failure(voice.synthesizeLocal('một', new AbortController().signal));
+    // speak.ts keeps the message as `lastError`; VoiceSettings.tsx turns it into words this way.
+    expect(voiceErrorKey(error)).toBe('voice.errors.gpuToCpu');
+  });
+
+  it('on the CPU, a timeout or NaN audio is not taken for a card failure', async () => {
+    vi.useFakeTimers();
+    gpu.useGpuStore.setState({ status: AMD_ONLY });
+    FakeWorker.onSpeak = 'nan';
+    await expect(voice.synthesizeLocal('một', new AbortController().signal)).rejects.toThrow(
+      'voice-model-silent',
+    );
+    FakeWorker.onSpeak = 'hang';
+    const result = voice.synthesizeLocal('hai', new AbortController().signal);
+    const failed = expect(result).rejects.toThrow('voice-model-timeout');
+    await vi.advanceTimersByTimeAsync(voice.speakTimeoutMs('hai') + 10);
+    await failed;
+    expect(safety.lastGpuFault()).toBeNull();
+    expect(safety.gemmaBlockedByGpuFault()).toBe(false);
+  });
+});
+
+describe('on-device voice: dropping the worker settles what waits on it (third review)', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.replyFor.clear();
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    env.webgpu = true;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+    gpu = await import('@/ai/gpu');
+    safety = await import('@/ai/gpuSafety');
+    gpu.useGpuStore.setState({ status: RTX_ONLY, gemmaInfo: null });
+  });
+  afterEach(() => {
+    voice.unloadLocalVoice();
+    FakeWorker.replyFor.clear();
+    vi.unstubAllGlobals();
+  });
+
+  /** The model loaded on the card, and a phrase the worker started and never finishes. */
+  async function hangingPhrase() {
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    FakeWorker.replyFor.set('hai', 'hang');
+    const phrase = follow(voice.synthesizeLocal('hai', new AbortController().signal));
+    await flush();
+    expect(asked('hai')).toBe(true);
+    expect(phrase.state).toBe('pending');
+    return phrase;
+  }
+
+  it('unloading the model fails a phrase still being rendered (the files stay)', async () => {
+    const phrase = await hangingPhrase();
+    voice.unloadLocalVoice();
+    await flush();
+    expect(phrase).toEqual({ state: 'rejected', error: 'voice-model-unloaded' });
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+    // Not a missing model: the next phrase simply loads it again.
+    await voice.synthesizeLocal('ba', new AbortController().signal);
+    expect(loads()).toEqual(['webgpu', 'webgpu']);
+  });
+
+  it('deleting the model (Settings → Giọng nói) fails a phrase still being rendered', async () => {
+    const phrase = await hangingPhrase();
+    await voice.deleteLocalVoice();
+    await flush();
+    expect(phrase).toEqual({ state: 'rejected', error: 'voice-model-missing' });
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+    // Settings tells the learner the voice is no longer on this computer.
+    expect(voiceErrorKey(phrase.error)).toBe('voice.errors.noModel');
+    expect(await failure(voice.synthesizeLocal('ba', new AbortController().signal))).toBe(
+      'voice-model-missing',
+    );
+  });
+
+  it('a phrase that started before the model was deleted never loads it again', async () => {
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    // Not awaited: the phrase is past its "ready" check when the learner deletes the voice.
+    const phrase = follow(voice.synthesizeLocal('hai', new AbortController().signal));
+    await voice.deleteLocalVoice();
+    await flush();
+    expect(phrase).toEqual({ state: 'rejected', error: 'voice-model-missing' });
+    // One load only (before the deletion): nothing was downloaded again.
+    expect(loads()).toEqual(['webgpu']);
+  });
+
+  it('deleting the model also fails the late audio a paused lesson waits for', async () => {
+    await voice.synthesizeLocal('một', new AbortController().signal);
+    FakeWorker.replyFor.set('hai', 'hang');
+    const late: Promise<unknown>[] = [];
+    const pause = new AbortController();
+    const phrase = voice.synthesizeLocal('hai', pause.signal, undefined, {
+      late: (audio) => {
+        late.push(audio);
+      },
+    });
+    await flush();
+    pause.abort();
+    expect(await failure(phrase)).toBe('cancelled');
+    const kept = late[0];
+    expect(kept).toBeDefined();
+    if (!kept) return;
+    const render = follow(kept);
+    await flush();
+    expect(render.state).toBe('pending');
+    // "Tiếp tục" waits for this render (naturalVoice.ts): it must end, not hang for ever.
+    await voice.deleteLocalVoice();
+    await flush();
+    expect(render).toEqual({ state: 'rejected', error: 'voice-model-missing' });
+  });
+
+  it('moving to the CPU (a GPU fault elsewhere) fails a phrase still rendered on the card', async () => {
+    const phrase = await hangingPhrase();
+    // Gemma's worker failed on the same card: the voice's next phrase reloads it on the CPU.
+    safety.noteGpuFault('worker-crashed', null);
+    await voice.synthesizeLocal('ba', new AbortController().signal);
+    await flush();
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+    expect(FakeWorker.all[0]?.terminated).toBe(true);
+    expect(phrase).toEqual({ state: 'rejected', error: 'voice-model-moved-to-cpu' });
+    // Not the voice's own fault, and not a lasting one: Settings says where it runs now.
+    expect(voice.localVoiceGpuFault()).toBeNull();
+    expect(voiceErrorKey(phrase.error)).toBe('voice.errors.movedToCpu');
+  });
+
+  it('the learner forcing the CPU while a phrase renders on the card fails it the same way', async () => {
+    const phrase = await hangingPhrase();
+    voice.setLocalVoiceDevicePreference('wasm');
+    await voice.synthesizeLocal('ba', new AbortController().signal);
+    await flush();
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+    expect(phrase).toEqual({ state: 'rejected', error: 'voice-model-moved-to-cpu' });
+  });
+});
+
+describe('on-device voice: time budgets (second review)', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    vi.useFakeTimers();
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    env.webgpu = false;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+  });
+  afterEach(() => {
+    voice.unloadLocalVoice();
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  /** Records how a phrase ends (fake time moves on by hand). */
+  function track(result: Promise<unknown>): { value: unknown } {
+    const box: { value: unknown } = { value: null };
+    result.then(
+      (pcm) => (box.value = pcm),
+      (e: unknown) => (box.value = e),
+    );
+    return box;
+  }
+
+  it('a phrase waiting behind a stopped one gets its full time once it starts', async () => {
+    // Pause, then "Tiếp tục": the look-ahead phrase that was stopped still runs in the worker
+    // (25 s); the short phrase read again waits behind it and must not time out meanwhile.
+    FakeWorker.msPerChar = 125;
+    const ahead = new AbortController();
+    const long = voice.synthesizeLocal('a'.repeat(200), ahead.signal);
+    long.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(1000);
+    ahead.abort();
+    await expect(long).rejects.toThrow('cancelled');
+    const again = track(
+      voice.synthesizeLocal('một câu ngắn để đọc lại', new AbortController().signal),
+    );
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(again.value).toMatchObject({ sampleRate: 16000 });
+    expect(FakeWorker.all).toHaveLength(1);
+  });
+
+  it('a phrase dropped before it started is never worked on', async () => {
+    FakeWorker.msPerChar = 100;
+    const first = track(
+      voice.synthesizeLocal('một câu khá dài đang được đọc', new AbortController().signal),
+    );
+    await vi.advanceTimersByTimeAsync(10);
+    const ctrl = new AbortController();
+    const second = voice.synthesizeLocal('câu thứ hai', ctrl.signal);
+    second.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(10);
+    ctrl.abort();
+    await expect(second).rejects.toThrow('cancelled');
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(first.value).toMatchObject({ sampleRate: 16000 });
+    const posted = FakeWorker.all[0]?.posted ?? [];
+    expect(posted.filter((m) => m.kind === 'cancel')).toHaveLength(1);
+  });
+
+  it('a stopped phrase the worker already started gives its late audio to `late`; one not started is dropped', async () => {
+    FakeWorker.msPerChar = 100;
+    const late: Promise<unknown>[] = [];
+    const keep = {
+      late: (audio: Promise<unknown>) => {
+        late.push(audio);
+      },
+    };
+    const running = new AbortController();
+    const first = voice.synthesizeLocal('một câu đang được đọc', running.signal, undefined, keep);
+    first.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(10);
+    const queued = new AbortController();
+    const second = voice.synthesizeLocal('câu thứ hai', queued.signal, undefined, keep);
+    second.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(10);
+    running.abort();
+    queued.abort();
+    await expect(first).rejects.toThrow('cancelled');
+    await expect(second).rejects.toThrow('cancelled');
+    expect(late).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(10_000);
+    await expect(late[0]).resolves.toMatchObject({ sampleRate: 16000 });
+    const posted = FakeWorker.all[0]?.posted ?? [];
+    expect(posted.filter((m) => m.kind === 'cancel')).toHaveLength(1);
+  });
+
+  it('the budget follows the speed measured on this computer', () => {
+    // Before anything is measured: a cautious guess, never under the first fixed budget.
+    expect(voice.speakTimeoutMs('a'.repeat(100), null)).toBeGreaterThanOrEqual(15_000 + 100 * 200);
+    // A CPU measured at 340 ms per character gets more than it needs for 220 characters.
+    expect(voice.speakTimeoutMs('a'.repeat(220), 340)).toBeGreaterThan(220 * 340 * 2);
+  });
+
+  it('a much slower computer: after its first phrase, long phrases are no longer cut', async () => {
+    FakeWorker.msPerChar = 600;
+    // 40 characters: 24 s of work, measured.
+    const first = track(voice.synthesizeLocal('a'.repeat(40), new AbortController().signal));
+    await vi.advanceTimersByTimeAsync(25_000);
+    expect(first.value).toMatchObject({ sampleRate: 16000 });
+    // 220 characters: 132 s of work, longer than the budget before any measurement.
+    expect(voice.speakTimeoutMs('a'.repeat(220), null)).toBeLessThan(132_000);
+    const long = track(voice.synthesizeLocal('a'.repeat(220), new AbortController().signal));
+    await vi.advanceTimersByTimeAsync(140_000);
+    expect(long.value).toMatchObject({ sampleRate: 16000 });
+  });
+});
+
+describe('on-device voice: prosody asked of the model', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    FakeWorker.applied = undefined;
+    env.webgpu = false;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+  });
+  afterEach(() => {
+    FakeWorker.applied = undefined;
+    voice.unloadLocalVoice();
+    vi.unstubAllGlobals();
+  });
+
+  const speaks = () => FakeWorker.all.flatMap((w) => w.posted.filter((m) => m.kind === 'speak'));
+
+  it('sends the role’s prosody, clamped to the safe range, and reports what the model applied', async () => {
+    FakeWorker.applied = ['speaking_rate', 'not-a-control'];
+    const pcm = await voice.synthesizeLocal('xin chào các em', new AbortController().signal, {
+      speakingRate: 0.5,
+      noiseScale: 0.7,
+    });
+    expect(speaks()[0]?.prosody).toEqual({
+      speakingRate: 0.85,
+      noiseScale: 0.7,
+      noiseScaleDuration: 0.8,
+    });
+    expect(pcm.applied).toEqual(['speaking_rate']);
+  });
+
+  it('a model that applies nothing (the MMS export in use) leaves the pace to the page', async () => {
+    const pcm = await voice.synthesizeLocal('xin chào', new AbortController().signal, {
+      speakingRate: 0.9,
+    });
+    expect(pcm.applied).toEqual([]);
+    await voice.synthesizeLocal('tạm biệt', new AbortController().signal);
+    expect(speaks()[1]).not.toHaveProperty('prosody');
+  });
+});
+
+/** A Windows voice that says every phrase at once; returns what it said. */
+function fakeSystemVoice(): string[] {
+  const spoken: string[] = [];
+  class Utterance {
+    lang = '';
+    rate = 1;
+    pitch = 1;
+    voice: SpeechSynthesisVoice | null = null;
+    onend: (() => void) | null = null;
+    onerror: ((event: { error: string }) => void) | null = null;
+    constructor(public text: string) {}
+  }
+  vi.stubGlobal('SpeechSynthesisUtterance', Utterance);
+  vi.stubGlobal('speechSynthesis', {
+    getVoices: () => [],
+    cancel: () => undefined,
+    speak: (u: Utterance) => {
+      spoken.push(u.text);
+      queueMicrotask(() => u.onend?.());
+    },
+  });
+  return spoken;
+}
+
+describe('a lesson read by the on-device voice goes on when it fails mid-sentence (third review)', () => {
+  let speech: typeof import('./speak');
+  let store: typeof import('./voiceStore');
+  let spoken: string[];
+  const TEXT = 'Câu một. Câu hai. Câu ba.';
+  let chunks: string[];
+
+  beforeEach(async () => {
+    vi.resetModules();
+    vi.stubGlobal('Worker', FakeWorker);
+    spoken = fakeSystemVoice();
+    FakeWorker.all = [];
+    FakeWorker.onSpeak = 'audio';
+    FakeWorker.replyFor.clear();
+    FakeWorker.onLoad = 'loaded';
+    FakeWorker.msPerChar = 0;
+    env.webgpu = true;
+    localStorage.setItem('stemsim.voice-model', 'Xenova/mms-tts-vie');
+    voice = await import('./localVoice');
+    speech = await import('./speak');
+    store = await import('./voiceStore');
+    gpu = await import('@/ai/gpu');
+    gpu.useGpuStore.setState({ status: RTX_ONLY, gemmaInfo: null });
+    store.useVoiceStore.setState({
+      enabled: true,
+      engine: 'local',
+      speed: 1,
+      lastError: null,
+      speaking: false,
+    });
+    const { prepareSpeech } = await import('./speechPlan');
+    chunks = prepareSpeech(TEXT).chunks.map((c) => c.text);
+  });
+  afterEach(() => {
+    speech.stopSpeaking();
+    voice.unloadLocalVoice();
+    FakeWorker.replyFor.clear();
+    vi.unstubAllGlobals();
+  });
+
+  /** Waits (a little real time at most) until `ok()`; fails instead of hanging. */
+  const until = async (ok: () => boolean) => {
+    for (let i = 0; i < 100 && !ok(); i++) {
+      await flush();
+      await new Promise((r) => setTimeout(r, 5));
+    }
+    expect(ok()).toBe(true);
+  };
+
+  it('the model is deleted while a sentence renders: the Windows voice reads on from the unheard part', async () => {
+    expect(chunks).toHaveLength(3);
+    const second = voice.textForModel(chunks[1] ?? '');
+    FakeWorker.replyFor.set(second, 'hang');
+    const lesson = follow(speech.speak(TEXT));
+    await until(() => asked(second));
+    await voice.deleteLocalVoice();
+    // The board's pen waits for this speech: it must end, never stay "playing".
+    await until(() => lesson.state !== 'pending');
+    expect(lesson.state).toBe('resolved');
+    expect(spoken).toEqual(chunks.slice(1));
+    const { lastError, speaking } = store.useVoiceStore.getState();
+    expect(lastError).toBe('voice-model-missing');
+    expect(voiceErrorKey(lastError ?? '')).toBe('voice.errors.noModel');
+    expect(speaking).toBe(false);
+  });
+
+  it('NaN audio from the card: the Windows voice reads on, Settings names the move to the CPU, the next sentence is on-device again', async () => {
+    const session = speech.newVoiceSession();
+    FakeWorker.replyFor.set(voice.textForModel(chunks[1] ?? ''), 'nan');
+    await speech.speak(TEXT, { session });
+    expect(spoken).toEqual(chunks.slice(1));
+    const { lastError } = store.useVoiceStore.getState();
+    expect(lastError).toBe('voice-model-card-fault: voice-model-nan');
+    expect(voiceErrorKey(lastError ?? '')).toBe('voice.errors.gpuToCpu');
+    // The same lesson's next sentence: the on-device voice again, now on the CPU.
+    FakeWorker.replyFor.clear();
+    spoken.length = 0;
+    await speech.speak(TEXT, { session });
+    expect(spoken).toEqual([]);
+    expect(loads()).toEqual(['webgpu', 'wasm']);
+  });
+});

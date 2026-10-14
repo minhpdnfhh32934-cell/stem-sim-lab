@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_DAILY_CAP,
@@ -65,5 +67,14 @@ describe('AI settings migration', () => {
 
   it('formats the local day for the daily cap', () => {
     expect(localDay(new Date(2026, 0, 5, 23, 59))).toBe('2026-01-05');
+  });
+
+  it('uses the same default daily cap as the desktop app (src-tauri/src/ai/usage.rs)', () => {
+    const rust = readFileSync(
+      resolve(import.meta.dirname, '../../src-tauri/src/ai/usage.rs'),
+      'utf8',
+    );
+    const m = /pub const DEFAULT_DAILY_CAP: u32 = (\d+);/.exec(rust);
+    expect(Number(m?.[1])).toBe(DEFAULT_DAILY_CAP);
   });
 });

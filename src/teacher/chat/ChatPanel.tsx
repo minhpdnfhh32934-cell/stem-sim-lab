@@ -1,14 +1,19 @@
 import {
   ArrowDownToLine,
   Bot,
+  Calculator,
   Check,
   CircleAlert,
+  CircleHelp,
+  ClipboardList,
+  FlaskConical,
   Globe,
   LoaderCircle,
   Maximize2,
   Send,
   Settings2,
   ShieldCheck,
+  Square,
   Trash2,
   Volume2,
   VolumeX,
@@ -22,10 +27,17 @@ import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
 import { boardAnswerText } from '@/teacher/board/lesson';
-import { speak, speechSupported, stopSpeaking } from '@/teacher/voice/speak';
+import {
+  speak,
+  speechSupported,
+  stopSpeaking,
+  vietnameseVoices,
+  voicesWhenLoaded,
+} from '@/teacher/voice/speak';
+import { toast } from '@/ui/toast';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
-import { askTeacher } from './chatService';
+import { AnswerStopped, askTeacher } from './chatService';
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
@@ -34,6 +46,9 @@ import { gemmaReady } from '@/ai/gemmaTransport';
 import { webGPUStatus } from '@/ai/webGemma';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { openTopic, useActiveTopic } from '@/app/topics';
+import { latestTopic } from './topicLink';
+import { chipNumbers } from './provenance';
 
 export function ChatPanel({
   compact = false,
@@ -182,13 +197,40 @@ export function ChatPanel({
   useEffect(() => stopSpeaking, []);
 
   /**
+   * "Dừng": one controller per answer, reachable from any open panel through the store (the
+   * bubble may have asked before the learner expanded it). A stopped answer leaves no message,
+   * only the app's line saying it was stopped.
+   */
+  const startAnswer = () => {
+    const controller = new AbortController();
+    const stop = () => {
+      controller.abort();
+    };
+    useChatStore.setState({ stopAnswer: stop, stopped: false });
+    return { controller, stop };
+  };
+  /** True when the answer ended because the learner stopped it (no error is shown then). */
+  const endAnswer = (answer: ReturnType<typeof startAnswer>, e?: unknown): boolean => {
+    const stopped =
+      e !== undefined && (e instanceof AnswerStopped || answer.controller.signal.aborted);
+    useChatStore.setState((s) => ({
+      // Only this answer's "Dừng" is removed (another panel may have started a newer one).
+      stopAnswer: s.stopAnswer === answer.stop ? null : s.stopAnswer,
+      stopped,
+    }));
+    return stopped;
+  };
+
+  /**
    * Sends a question. `prompt` is what the AI receives when it differs from what the learner
    * sees (the quick buttons show "Chậm hơn" but send a full instruction).
    */
   const submit = async (text = draft, prompt?: string) => {
     const shown = text.trim();
     const question = (prompt ?? shown).trim();
-    if (!question || busy) return;
+    // Another panel (the bubble before "Mở rộng") may still be answering: a second answer would
+    // take over its "Dừng", so the first one could no longer be stopped.
+    if (!question || busy || useChatStore.getState().answering) return;
     stopSpeaking();
     setError('');
     const userMessage: ChatMessageRecord = {
@@ -201,27 +243,40 @@ export function ChatPanel({
     chat.addMessage(userMessage);
     setDraft('');
     setBusy(true);
+    const answer = startAnswer();
+    const controller = answer.controller;
     try {
       const result = await askTeacher(question, locale, prior, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: chat.thinkEnabled,
         board,
+        signal: controller.signal,
+        // Only the quick buttons send a `prompt`: a request about the last answer, never an
+        // answer to the teacher's check question that the answer may end with.
+        quickAction: prompt !== undefined,
         onPartial: (text) => {
-          setStreaming(text || null);
+          if (!controller.signal.aborted) setStreaming(text || null);
         },
       });
+      const meta = result.metadata;
       chat.addMessage({
         id: crypto.randomUUID(),
         role: 'assistant',
         content: result.content,
-        model: result.metadata.model,
-        ...(result.metadata.checkedBy ? { checkedBy: result.metadata.checkedBy } : {}),
-        ...(result.metadata.references.length ? { references: result.metadata.references } : {}),
+        model: meta.model,
+        ...(meta.checkedBy ? { checkedBy: meta.checkedBy } : {}),
+        ...(meta.references.length ? { references: meta.references } : {}),
+        ...(meta.facts.length ? { facts: meta.facts } : {}),
         ...(result.truncated ? { truncated: true } : {}),
+        ...(meta.missingData ? { missingData: true } : {}),
+        // Always set, even empty: an answer without the field (older versions) was never checked
+        // and its numbers are not taken as given later (chatService.givenNumbers).
+        unverifiedNumbers: meta.unverifiedNumbers,
       });
+      endAnswer(answer);
       if (useVoiceStore.getState().enabled && !board) void speak(result.content);
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      if (!endAnswer(answer, e)) setError(e instanceof Error ? e.message : String(e));
     } finally {
       setStreaming(null);
       setBusy(false);
@@ -231,30 +286,50 @@ export function ChatPanel({
 
   /** "Viết tiếp": asks for the rest of an answer that stopped at the output limit. */
   const continueAnswer = async (message: ChatMessageRecord) => {
-    if (busy) return;
+    if (busy || useChatStore.getState().answering) return;
     stopSpeaking();
     setError('');
     setBusy(true);
+    const answer = startAnswer();
+    const controller = answer.controller;
     try {
       const upto = chat.messages.slice(0, chat.messages.indexOf(message) + 1);
       const result = await askTeacher(CONTINUE_PROMPT[locale], locale, upto, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: false,
         board,
+        signal: controller.signal,
       });
+      // An answer saved before the check existed stays unchecked as a whole (it is checked again
+      // when it is used as history); otherwise both parts' lists are kept.
+      const unverified = message.unverifiedNumbers && [
+        ...new Set([...message.unverifiedNumbers, ...result.metadata.unverifiedNumbers]),
+      ];
       chat.updateMessage(message.id, {
         content: joinContinuation(message.content, result.content),
         truncated: result.truncated,
+        ...(unverified ? { unverifiedNumbers: unverified } : {}),
       });
+      endAnswer(answer);
       if (useVoiceStore.getState().enabled && !board) void speak(result.content);
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      if (!endAnswer(answer, e)) setError(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
     }
   };
   const lastMessage = chat.messages[chat.messages.length - 1];
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
+  // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
+  const activeTopic = useActiveTopic();
+  // The latest question's topic: a short reply ("Ở kì giữa ạ.") keeps the link of the question
+  // it follows; an unrelated new question drops it.
+  const simLink = hasAnswer ? latestTopic(chat.messages, locale) : null;
+  // A question may still be answered by another panel (the bubble before "Mở rộng").
+  const answering = useChatStore((s) => s.answering);
+  const pending = busy || answering;
+  const stopAnswer = useChatStore((s) => s.stopAnswer);
+  const stopped = useChatStore((s) => s.stopped);
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -340,6 +415,25 @@ export function ChatPanel({
               onClick={() => {
                 if (voiceEnabled) stopSpeaking();
                 setVoiceEnabled(!voiceEnabled);
+                // Without a Vietnamese voice the Windows voice reads with the wrong accent
+                // (seen on a test machine with only English voices, 2026-10-14). The list may
+                // still be loading (WebView2: empty until "voiceschanged"), so wait for it.
+                if (
+                  !voiceEnabled &&
+                  useVoiceStore.getState().engine === 'system' &&
+                  speechSupported()
+                ) {
+                  void voicesWhenLoaded().then((voices) => {
+                    const { enabled, engine: voiceEngine } = useVoiceStore.getState();
+                    if (
+                      enabled &&
+                      voiceEngine === 'system' &&
+                      vietnameseVoices(voices).length === 0
+                    ) {
+                      toast(t('voice.noVietnameseOnEnable'), 'warn');
+                    }
+                  });
+                }
               }}
               aria-pressed={voiceEnabled}
               aria-label={t('chat.voice')}
@@ -354,6 +448,7 @@ export function ChatPanel({
             onClick={() => {
               stopSpeaking();
               chat.clearMessages();
+              useChatStore.setState({ stopped: false });
             }}
             aria-label={t('chat.clear')}
             title={t('chat.clear')}
@@ -465,11 +560,62 @@ export function ChatPanel({
                 </span>
               )}
               <div className="chat-message__body">
+                {message.role === 'assistant' && message.missingData && (
+                  // Written by the app (missingData.ts), set apart from the AI's text above it.
+                  <div className="chat-message__app-notice" role="note">
+                    <strong>
+                      <ClipboardList size={14} aria-hidden="true" />
+                      {t('chat.missingDataTitle')}
+                    </strong>
+                    <span>{t('chat.missingData')}</span>
+                  </div>
+                )}
                 {message.role === 'assistant' ? (
                   <MessageBody content={boardAnswerText(message.content)} />
                 ) : (
                   <p>{message.content}</p>
                 )}
+                {message.role === 'assistant' && message.facts && message.facts.length > 0 && (
+                  <div className="chat-message__facts" role="note">
+                    <strong>
+                      <Calculator size={14} aria-hidden="true" />
+                      {t('chat.factsTitle')}
+                    </strong>
+                    <ul>
+                      {message.facts.map((fact) => (
+                        <li key={fact}>{fact}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {message.role === 'assistant' &&
+                  message.unverifiedNumbers &&
+                  message.unverifiedNumbers.length > 0 &&
+                  (() => {
+                    // provenance.ts: values nobody gave the AI. Unverified, not "wrong". Written
+                    // by the app, so labelled as SimLab's like the missing-data notice.
+                    const chip = chipNumbers(message.unverifiedNumbers);
+                    const numbers = chip.shown.join(', ');
+                    return (
+                      <div
+                        className="chat-message__unverified"
+                        role="note"
+                        title={t('chat.unverifiedHint')}
+                      >
+                        <strong>
+                          <CircleHelp size={14} aria-hidden="true" />
+                          {t('chat.unverifiedTitle')}
+                        </strong>
+                        <span>
+                          {t('chat.unverifiedNumbers', {
+                            numbers: chip.more
+                              ? `${numbers} ${t('chat.unverifiedMore', { count: chip.more })}`
+                              : numbers,
+                          })}
+                        </span>
+                      </div>
+                    );
+                  })()}
                 {message.role === 'assistant' && (
                   <AiContentBar {...(message.model ? { model: message.model } : {})} />
                 )}
@@ -538,13 +684,33 @@ export function ChatPanel({
             {error}
           </div>
         )}
+        {stopped && !pending && !error && (
+          <p className="chat-panel__stopped" role="status">
+            <Square size={13} aria-hidden="true" />
+            {t('chat.stopped')}
+          </p>
+        )}
+        {!pending && simLink && simLink.id !== activeTopic && (
+          <div className="chat-panel__sim-link">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                void openTopic(simLink.id);
+              }}
+            >
+              <FlaskConical size={14} aria-hidden="true" />
+              {t('chat.openSimulation', { title: simLink.title })}
+            </button>
+          </div>
+        )}
         <div ref={messagesEnd} />
       </div>
 
       {/* "Giải thích lại", "Chậm hơn"… only make sense once there is an answer to rework. */}
       {teacherPage && hasAnswer && (
         <div className="teacher__quick-actions" role="group" aria-label={t('teacher.chipsLabel')}>
-          {(['again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
+          {(['hint', 'again', 'slower', 'example', 'simpler', 'lost'] as const).map((key) => (
             <button
               key={key}
               type="button"
@@ -590,16 +756,33 @@ export function ChatPanel({
             {chat.thinkEnabled && <span>{t('chat.twoApis')}</span>}
           </button>
           <span className="chat-panel__composer-spacer" />
-          <button
-            type="submit"
-            className="btn btn--accent chat-panel__send"
-            disabled={!draft.trim() || busy}
-            aria-label={t('chat.send')}
-            data-tip={t('chat.enterHint')}
-            data-tip-side="top"
-          >
-            <Send size={16} />
-          </button>
+          {pending && stopAnswer ? (
+            // While an answer is being written, the main action is to stop it.
+            <button
+              type="button"
+              className="btn chat-panel__stop"
+              onClick={() => {
+                stopSpeaking();
+                stopAnswer();
+              }}
+              aria-label={t('chat.stopLabel')}
+              title={t('chat.stopLabel')}
+            >
+              <Square size={14} aria-hidden="true" />
+              {t('chat.stop')}
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="btn btn--accent chat-panel__send"
+              disabled={!draft.trim() || busy}
+              aria-label={t('chat.send')}
+              data-tip={t('chat.enterHint')}
+              data-tip-side="top"
+            >
+              <Send size={16} />
+            </button>
+          )}
         </div>
       </form>
       <footer className="chat-panel__footer">{t('chat.footer')}</footer>

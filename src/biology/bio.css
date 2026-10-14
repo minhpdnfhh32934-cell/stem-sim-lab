@@ -197,3 +197,190 @@
 .bio-stage-chart .chart {
   height: 100%;
 }
+
+/* Mitosis 3D view (src/biology/division/mitosis3d). Controls are at least --target (40 px). */
+.m3d__gl {
+  position: absolute;
+  inset: 0;
+}
+.m3d .icon-btn--lg,
+.m3d__side .icon-btn {
+  width: var(--target);
+  height: var(--target);
+}
+.m3d .segmented__item {
+  min-width: var(--target);
+  min-height: var(--target);
+}
+/*
+ * Controls over the picture on one grid: top bar and side column at the top, the picked part's
+ * info above the bottom bar (its row shrinks first, the info then scrolls), so no two boxes ever
+ * overlap. The grid lets clicks through to the canvas except on the controls themselves.
+ */
+.m3d__hud {
+  position: absolute;
+  inset: var(--space-3) var(--space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'top side'
+    '. side'
+    'info info'
+    'bottom bottom';
+  gap: var(--space-2) var(--space-3);
+  pointer-events: none;
+}
+.m3d__top {
+  position: static;
+  grid-area: top;
+  align-self: start;
+}
+.m3d__side {
+  grid-area: side;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.m3d__side > * {
+  pointer-events: auto;
+}
+.m3d__info {
+  grid-area: info;
+  align-self: end;
+  justify-self: end;
+  width: min(22rem, 46%);
+  max-height: 100%;
+  overflow-y: auto;
+  pointer-events: auto;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: var(--glass-blur);
+  font-size: var(--text-content);
+}
+.m3d__info p {
+  margin: var(--space-1) 0 0;
+}
+.m3d__info-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.m3d__bottom {
+  grid-area: bottom;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+.m3d__bottom > * {
+  pointer-events: auto;
+}
+.m3d__stages {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.m3d__stage {
+  position: relative;
+  min-height: var(--target);
+  padding: 2px 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.2;
+  text-wrap: balance;
+  isolation: isolate;
+}
+.m3d__stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: calc(var(--fill, 0) * 100%);
+  background: var(--accent-soft);
+}
+.m3d__stage.is-current {
+  border-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+.m3d__caption {
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-panel) 90%, transparent);
+  font-size: var(--text-sm);
+  text-align: center;
+  text-wrap: balance;
+}
+.bio-row-btn {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.bio-row-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.m3d-parts {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+.m3d-parts__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+.m3d-parts__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: var(--space-2);
+}
+.m3d-parts__item {
+  min-height: var(--target);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+.m3d-parts__item:hover {
+  background: var(--bg-hover);
+}
+.m3d-parts__item.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+@media (max-width: 1100px) {
+  /* Narrow stage: the side column first, the top bar under it, both full width. */
+  .m3d__hud {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'side'
+      'top'
+      'info'
+      'bottom';
+  }
+  .m3d__side {
+    justify-self: end;
+  }
+}

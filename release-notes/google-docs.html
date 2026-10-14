@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>SimLab — Version History &amp; Release Notes</title>
+<style>
+body { font-family: Arial, Helvetica, sans-serif; line-height: 1.45; max-width: 64rem; margin: 2rem auto; padding: 0 1rem; }
+table { border-collapse: collapse; margin: 0.5rem 0 1rem; }
+th, td { border: 1px solid #8a94a0; padding: 4px 8px; text-align: left; vertical-align: top; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
+</style>
+</head>
+<body>
+<h1>SimLab — Version History &amp; Release Notes</h1>
+<p>Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ <code>release-notes/versions.json</code> bằng <code>npm run release-notes</code>. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 14/10/2026.</p>
+<h2>I. Tổng quan lịch sử SimLab</h2>
+<p>SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.</p>
+<p>Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.</p>
+<p>Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.</p>
+<ul>
+<li>Số phiên bản ghi nhận: 11 (0.1.0 → 0.6.0).</li>
+<li>Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026).</li>
+<li>Đã gộp, chưa phát hành: 0.5.1.</li>
+<li>Đang xét duyệt: 0.6.0.</li>
+<li>Bản phát triển, không phát hành: 0.1.0.</li>
+<li>Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.</li>
+<li>Phiên bản mới nhất trong dữ liệu: 0.6.0 (Đang xét duyệt).</li>
+</ul>
+<h2>II. Dòng thời gian phát triển từ bản gốc</h2>
+<p>Cũ nhất ở trên. Cột &quot;Ngày phát hành&quot; chỉ ghi ngày khi có GitHub Release thật (published_at, giờ Việt Nam); bản chưa có Release ghi &quot;Chưa phát hành&quot;.</p>
+<table>
+<thead><tr><th>Phiên bản</th><th>Trạng thái</th><th>Ngày phát hành</th><th>PR</th><th>Tag</th></tr></thead>
+<tbody>
+<tr><td>0.1.0</td><td>Bản phát triển, không phát hành</td><td>Chưa phát hành</td><td>—</td><td>—</td></tr>
+<tr><td>0.2.0</td><td>Đã phát hành</td><td>05/10/2026 (đã xác minh)</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.2.0">v0.2.0</a></td></tr>
+<tr><td>0.3.0</td><td>Đã phát hành</td><td>06/10/2026 (đã xác minh)</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.3.0">v0.3.0</a></td></tr>
+<tr><td>0.4.0</td><td>Chưa xác minh</td><td>Chưa phát hành</td><td>—</td><td>—</td></tr>
+<tr><td>0.4.1</td><td>Đã phát hành</td><td>12/10/2026 (đã xác minh)</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/7">#7</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.4.1">v0.4.1</a></td></tr>
+<tr><td>0.4.2</td><td>Chưa xác minh</td><td>Chưa phát hành</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a></td><td>—</td></tr>
+<tr><td>0.4.3</td><td>Chưa xác minh</td><td>Chưa phát hành</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a></td><td>—</td></tr>
+<tr><td>0.5.0</td><td>Đã phát hành</td><td>13/10/2026 (đã xác minh)</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11">#11</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12">#12</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13">#13</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14">#14</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0">v0.5.0</a></td></tr>
+<tr><td>0.5.1</td><td>Đã gộp, chưa phát hành</td><td>Chưa phát hành</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15">#15</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16">#16</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17">#17</a></td><td>—</td></tr>
+<tr><td>0.5.2</td><td>Đã phát hành</td><td>13/10/2026 (đã xác minh)</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18">#18</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19">#19</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2">v0.5.2</a></td></tr>
+<tr><td>0.6.0</td><td>Đang xét duyệt</td><td>Chưa phát hành</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20">#20</a></td><td>—</td></tr>
+</tbody>
+</table>
+<h3>Các mốc phát triển</h3>
+<table>
+<thead><tr><th>Thời điểm (giờ VN)</th><th>Mốc</th><th>Bằng chứng</th></tr></thead>
+<tbody>
+<tr><td>28/09/2026 18:13</td><td>Phase 0 — khung dự án, bố cục, giao diện sáng/tối, tiếng Việt/Anh, CI</td><td>commit b9a2430; docs/PROGRESS.md hàng '2026-09-28 | 0'</td></tr>
+<tr><td>28/09/2026 18:34</td><td>Phase 1 — lõi tính toán: đơn vị SI, hằng số CODATA 2022, bộ giải ODE, Thẻ Khoa học</td><td>commit 51f3540; PROGRESS '2026-09-28 | 1'</td></tr>
+<tr><td>28/09/2026 22:27</td><td>Phase 2 — 13 chủ đề Vật lý 2D</td><td>commit b3d2270 'complete Phase 2 physics MVP'; PROGRESS '2026-09-28 | 2'</td></tr>
+<tr><td>29/09/2026 07:05</td><td>Phase 3 — AI đọc đề, bảng 'Tôi hiểu đề như sau', bộ đề chuẩn 31 bài</td><td>commit e75f7f6; PROGRESS '2026-09-29 | 3'</td></tr>
+<tr><td>29/09/2026 12:16</td><td>Phase 4 — Hóa học: bảng tuần hoàn, phân tử 3D, 39 phản ứng, cân bằng phương trình</td><td>commit fcf8279 'complete Phase 4'; PROGRESS '2026-09-29 | 4'</td></tr>
+<tr><td>29/09/2026 12:50</td><td>Phase 5 — Sinh học: 11 chủ đề</td><td>commit 5d647b8; PROGRESS '2026-09-29 | 5'</td></tr>
+<tr><td>29/09/2026 13:25</td><td>Phase 6 — tệp .stemsim, hoàn tác, lịch sử, chế độ trình chiếu, tour</td><td>commit 624b23e; PROGRESS '2026-09-29 | 6'</td></tr>
+<tr><td>29/09/2026 17:09</td><td>Phase 7 — workflow bộ cài Windows, Hướng dẫn sử dụng, SCIENCE_ACCURACY</td><td>commit 365761f; PROGRESS '2026-09-29 | 7'</td></tr>
+<tr><td>29/09/2026 19:26</td><td>Lần dựng bộ cài đầu tiên trên GitHub Actions (artifact 0.1.0, không phát hành)</td><td>run 36565163753, job 'Build Windows installers'</td></tr>
+<tr><td>29/09/2026 22:09</td><td>Bắt đầu cập nhật ngay trong app (gói web ký số)</td><td>commit c515250; PROGRESS '2026-09-29 | sửa'</td></tr>
+<tr><td>05/10/2026 13:20</td><td>3b.1 — lớp AI cắm-rút (Gemini + Claude), gỡ OpenAI, hai bản build</td><td>commit d587a4c; PROGRESS '2026-10-05 | 3b.1'</td></tr>
+<tr><td>05/10/2026 20:14</td><td>3b.3 — an toàn và tuân thủ khi dùng AI</td><td>commit 3a52794; PROGRESS '2026-10-05 | 3b.3'</td></tr>
+<tr><td>06/10/2026 10:01</td><td>3b.4 — giao diện cho người học (trang chủ, Cơ bản/Nâng cao)</td><td>commit df84ddf; PROGRESS '2026-10-06 | 3b.4'</td></tr>
+<tr><td>06/10/2026 10:58</td><td>3b.5 — học bằng khám phá (Dự đoán trước, thử thách, huy hiệu)</td><td>commit a2c3561; PROGRESS '2026-10-06 | 3b.5'</td></tr>
+<tr><td>06/10/2026 21:25</td><td>3b.6 — hai bộ cài, hai kênh cập nhật</td><td>commit b72f030; PROGRESS '2026-10-06 | 3b.6'</td></tr>
+<tr><td>06/10/2026 22:30</td><td>T0 — đặc tả Dạy học bằng AI (chờ duyệt)</td><td>commit d480445; PROGRESS '2026-10-06 | T0'</td></tr>
+<tr><td>09/10/2026</td><td>Bắt đầu bản fork 'Thầy AI' (làm ngoài git)</td><td>PROGRESS các hàng '2026-10-09 | fork…'</td></tr>
+<tr><td>10/10/2026</td><td>Fork: Gemma chạy ngay trong app bằng card đồ họa (bỏ Ollama)</td><td>PROGRESS '2026-10-10 | fork-webgemma'</td></tr>
+<tr><td>11/10/2026 17:26</td><td>Quy trình hai máy Claude Code (Lead/Builder) vào main</td><td>PR #1 gộp lúc 2026-10-11T10:26:53Z</td></tr>
+<tr><td>12/10/2026 18:43</td><td>Bỏ bản thử nghiệm THPT (một bộ cài duy nhất)</td><td>commit cbb176a (máy B) và 8430959 (máy A); PROGRESS '2026-10-12 | 0.5.0'</td></tr>
+<tr><td>12/10/2026 20:39</td><td>Đổi tên app thành SimLab, 'Thầy AI' thành AI Teacher</td><td>commit f58a9be; PROGRESS '2026-10-12 | 0.5.0-bảng'</td></tr>
+<tr><td>13/10/2026</td><td>Nộp SimLab lên Microsoft Store (bản nộp 1, gói 0.5.1.0): đang chờ duyệt, chọn giữ lại</td><td>PROGRESS '0.5.1-store-nộp' ('In certification'); docs/STORE.md; commit 87df5ad</td></tr>
+<tr><td>13/10/2026</td><td>Sự cố máy khởi động lại khi đo Gemma 1B trên card đồ họa tích hợp → sửa lỗi GPU-01</td><td>docs/AUDIT_2026-10-13.md, mục 'Sự cố'</td></tr>
+<tr><td>14/10/2026 02:05</td><td>Mở PR #20 — rà soát G0–G5 (0.6.0)</td><td>PR #20 createdAt 2026-10-13T19:05:41Z; commit đầu 511345d</td></tr>
+<tr><td>14/10/2026 07:14</td><td>Đánh giá cách giảng 168/168 lượt trên Gemma 1B (nhánh local)</td><td>commit 4f1e2c7; docs/TEACHING_EVAL.md</td></tr>
+</tbody>
+</table>
+<h2>III. Chi tiết từng phiên bản</h2>
+<h3>0.6.0 (Đang xét duyệt)</h3>
+<p>Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.</p>
+<ul>
+<li>Trạng thái: Đang xét duyệt.</li>
+<li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
+<li>Ghi chú trạng thái: PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.</li>
+<li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>13/10/2026 22:42</td><td><code>2026-10-13T22:42:01+07:00</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>13/10/2026 22:42</td><td><code>2026-10-13T22:42:01+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>14/10/2026 14:54</td><td><code>2026-10-14T14:54:05+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.</li>
+<li>Thẻ 'Kết quả do SimLab tính' khi câu hỏi có phương trình hóa học: bộ cân bằng của SimLab giải phương trình, AI chỉ giải thích.</li>
+<li>Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.</li>
+<li>Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.</li>
+<li>SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).</li>
+<li>Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.</li>
+<li>Hộp 'SimLab đã được cập nhật' cho biết điểm mới sau khi cập nhật, và trang 'Lịch sử phiên bản' trong Cài đặt.</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).</li>
+<li>Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, [S], (aq), mũi tên phản ứng).</li>
+<li>Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.</li>
+<li>Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).</li>
+<li>Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.</li>
+<li>Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.</li>
+<li>Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, &quot;tan&quot; trong hòa tan.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.</li>
+<li>Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.</li>
+<li>Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.</li>
+</ul>
+<p><strong>Bảo mật</strong></p>
+<ul>
+<li>Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.</li>
+<li>Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.</li>
+<li>Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.</li>
+<li>Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).</li>
+<li>Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.</li>
+</ul>
+<p><strong>Hiệu năng</strong></p>
+<ul>
+<li>Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.</li>
+</ul>
+<p><strong>Thay đổi</strong></p>
+<ul>
+<li>Phiên bản 0.6.0 thay đổi cả phần lõi: máy đang dùng 0.5.x cần tải bộ cài mới một lần.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.</li>
+<li>Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).</li>
+<li>Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.</li>
+<li>Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.</li>
+<li>Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.</li>
+<li>Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.</li>
+<li>Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).</li>
+<li>Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Mô phỏng Nguyên phân 3D: xem từng kì ở tế bào động vật và thực vật.</li>
+<li>AI Teacher dùng kết quả do SimLab tính cho phương trình hóa học và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp).</li>
+<li>Nút 'Dừng' và lời nhắc khi đề bài có thể thiếu số liệu.</li>
+<li>Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp (chưa thử lại trên card tích hợp thật).</li>
+<li>Liên kết do AI viết không còn bấm được.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: 511345d 2026-10-13T22:42:01+07:00 'fix(security): release integrity…' (G1), commit đầu sau tag v0.5.2 (c25ad9d)</li>
+<li>Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0</li>
+<li>lastCommit: đầu PR #20 trên GitHub là 8a3c48d 2026-10-14T14:54:05+07:00 (git ls-remote origin, sau lần đẩy f527f18..8a3c48d); các commit sau đó chỉ cập nhật ghi chú này</li>
+<li>PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp</li>
+<li>Các commit f527f18..8a3c48d (98 commit, gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) đã được đẩy lên PR #20 ngày 14/10/2026</li>
+<li>built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0</li>
+<li>Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới</li>
+<li>Gemma quality: docs/TEACHING_EVAL.md (2026-10-14): key facts 31.3 % (0.5.2 prompt and decoding) -&gt; 47.7 % (v2 prompt, answer-only decoding); answers with foreign script 50 % -&gt; 7 %; corrupted terms 19 % -&gt; 4.8 %; first piece p50 1.90 s -&gt; 0.91 s; answer length 810 -&gt; 1047 characters. The blind AI judge still flagged language problems in 31 % of v2 answers; check question in 18.8 % of concept/misconception answers.</li>
+<li>Voice: docs/VOICE_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -&gt; 0 dB, first sound 4.07 -&gt; 3.22 s, waits between pieces per sentence (median) 7.3 -&gt; 8.4 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes. Nobody has listened to it yet (no naturalness rating).</li>
+<li>Gemma safeguards on integrated graphics (GPU-01): not retested on an integrated card after the fix (docs/AUDIT_2026-10-13.md G2, 1B on AMD 780M: 'Không đo lại').</li>
+</ul>
+<h3>0.5.2 (Đã phát hành)</h3>
+<p>Giao diện đẹp và dễ dùng hơn: tìm nhanh bằng Ctrl+K, Gemma trả lời hiện dần từng chữ, ghim quỹ đạo để so sánh. Đây là bản cập nhật phần giao diện; bộ cài đi kèm mang số 0.5.1.</p>
+<ul>
+<li>Trạng thái: Đã phát hành.</li>
+<li>Kênh phân phối: GitHub Releases: chỉ cập nhật phần web (bộ cài giữ số phiên bản lõi cũ).</li>
+<li>Ghi chú trạng thái: Chỉ nâng phần web (package.json 0.5.2); phần lõi giữ 0.5.1, nên bộ cài kèm Release mang số 0.5.1. Đây cũng là lần đầu các thay đổi của 0.5.1 đến tay người dùng.</li>
+<li>Ghi chú công khai: đã duyệt để công bố (hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>13/10/2026 20:14</td><td><code>2026-10-13T20:14:02+07:00</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>13/10/2026 20:14</td><td><code>2026-10-13T20:14:02+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>13/10/2026 21:38</td><td><code>2026-10-13T21:38:33+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>13/10/2026 21:38</td><td><code>2026-10-13T14:38:34Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>13/10/2026 21:49</td><td><code>2026-10-13T14:49:42Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>13/10/2026 21:50</td><td><code>2026-10-13T14:50:00Z</code></td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Tìm nhanh bằng Ctrl+K: chủ đề, trang, mục Cài đặt và thao tác; gõ không dấu vẫn tìm được.</li>
+<li>Câu trả lời của Gemma hiện dần từng chữ.</li>
+<li>Ghim quỹ đạo để so sánh trước và sau khi đổi thông số (bản sao của vết đã ghi, không tính lại).</li>
+<li>Bản đồ nhỏ của bảng trắng.</li>
+<li>Thanh tải cho biết thời gian còn lại ('còn khoảng … phút').</li>
+<li>Hiệu ứng nhẹ khi đoán đúng hoặc đạt thử thách (tắt khi bật giảm chuyển động).</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>Ô chọn và thẻ có viên chọn trượt; nút Chạy/Dừng và Sáng/Tối đổi hình mượt; khung chờ dạng xương thay vòng xoay.</li>
+<li>Tìm chủ đề không thấy thì gợi ý môn khác có kết quả, kèm nút 'Xóa tìm kiếm'.</li>
+<li>Thanh công cụ, bảng số nổi và đồng hồ có nền kính mờ.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Bảng thông tin phân tử không còn tràn khỏi cột Thuộc tính (sửa từ 0.5.1).</li>
+<li>Nút AI Teacher không còn che cột cuối của bảng; nay nằm ở góc vùng mô phỏng (sửa từ 0.5.1).</li>
+<li>Khung chat không còn mở cao hết màn hình (sửa từ 0.5.1).</li>
+</ul>
+<p><strong>Bảo mật</strong></p>
+<ul>
+<li>Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.</li>
+</ul>
+<p><strong>Hiệu năng</strong></p>
+<ul>
+<li>Tìm nhanh chỉ được tải khi dùng lần đầu (gói 6 kB), nên app mở vẫn nhẹ.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Bộ cài kèm bản này mang số 0.5.1 vì phần lõi không đổi; phần giao diện là 0.5.2.</li>
+<li>Máy đang dùng 0.5.0 cần tải bộ cài mới một lần.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Tìm nhanh bằng Ctrl+K, gõ không dấu cũng được.</li>
+<li>Câu trả lời của Gemma hiện dần từng chữ.</li>
+<li>Ghim quỹ đạo để so sánh trước và sau khi đổi thông số.</li>
+<li>Bản đồ nhỏ giúp đi lại trên bảng trắng.</li>
+<li>Thanh tải cho biết còn khoảng bao nhiêu phút.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: f25e3ae 2026-10-13T20:14:02+07:00 (commit đầu của PR #18)</li>
+<li>Nâng phiên bản: b1471c5 2026-10-13T21:34:59+07:00 — package.json 0.5.1 → 0.5.2; tauri.conf.json vẫn 0.5.1</li>
+<li>PR #18 gộp lúc 2026-10-13T14:29:18Z; PR #19 gộp lúc 2026-10-13T14:38:34Z (c25ad9d = tag v0.5.2)</li>
+<li>built: lượt Release 38415240996 (main, c25ad9d), job 'Build Windows installers' xong 2026-10-13T14:49:42Z</li>
+<li>released: GitHub Release v0.5.2 'SimLab 0.5.2', published_at 2026-10-13T14:50:00Z, target c25ad9d (gh api …/releases)</li>
+<li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
+<li>AUDIT G0: 'main @ c25ad9d (PR #19 đã merge, Release v0.5.2 đã phát hành). CI 4/4 đạt.'</li>
+</ul>
+<h3>0.5.1 (Đã gộp, chưa phát hành)</h3>
+<p>Chuẩn bị đưa SimLab lên Microsoft Store và sửa vài lỗi bố cục. Bản này không có bản phát hành riêng; các sửa lỗi đến với người dùng qua bản 0.5.2.</p>
+<ul>
+<li>Trạng thái: Đã gộp, chưa phát hành.</li>
+<li>Kênh phân phối: Microsoft Store (bản nộp duyệt).</li>
+<li>Ghi chú trạng thái: Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.</li>
+<li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>13/10/2026 12:49</td><td><code>2026-10-13T12:49:58+07:00</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>13/10/2026 12:49</td><td><code>2026-10-13T12:49:58+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>13/10/2026 15:32</td><td><code>2026-10-13T15:32:06+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>13/10/2026 12:56</td><td><code>2026-10-13T05:56:11Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>13/10/2026 21:49</td><td><code>2026-10-13T14:49:42Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Gói cài cho Microsoft Store; bản cài từ Store chỉ cập nhật qua Store (nút 'Mở Microsoft Store').</li>
+<li>Trang chính sách quyền riêng tư trên GitHub Pages.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Bảng thông tin phân tử không còn tràn khỏi cột Thuộc tính.</li>
+<li>Nút AI Teacher không còn che cột cuối của bảng; nay nằm ở góc vùng mô phỏng.</li>
+<li>Khung chat không còn mở cao hết màn hình.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Gói Store 0.5.1.0 đang chờ duyệt và được giữ lại; lúc ghi, app chưa có trên Microsoft Store.</li>
+<li>Gói Store này dùng giao diện cũ, chưa có phần làm đẹp của 0.5.2.</li>
+<li>Chưa kiểm chứng: cài thử gói Store và bộ kiểm tra của Windows (WACK).</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Chuẩn bị bản SimLab cho Microsoft Store.</li>
+<li>Bảng phân tử không còn tràn, nút AI Teacher không còn che bảng.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: 2d506e7 2026-10-13T12:49:58+07:00 'feat(store): Microsoft Store package…' — package.json, tauri.conf.json, Cargo.toml 0.5.0 → 0.5.1</li>
+<li>PR #15 gộp lúc 2026-10-13T05:56:11Z; PR #16 lúc 08:20:00Z; PR #17 lúc 08:35:20Z</li>
+<li>lastCommit: 069df6c 2026-10-13T15:32:06+07:00 'chore(store): submit Store updates by hand…'</li>
+<li>built: không có lượt Release riêng cho 0.5.1; bộ cài lõi 0.5.1 do lượt 38415240996 (cùng phần web 0.5.2) dựng, job xong 2026-10-13T14:49:42Z</li>
+<li>Không có tag v0.5.1 và không có Release v0.5.1 (gh api …/releases, git ls-remote origin)</li>
+<li>Microsoft Store: docs/STORE.md và PROGRESS '0.5.1-store-nộp' ghi đã gửi duyệt ngày 13/10/2026, trạng thái 'In certification', giữ lại tới khi bấm Publish now</li>
+</ul>
+<h3>0.5.0 (Đã phát hành)</h3>
+<p>App đổi tên thành SimLab, 'Thầy AI' thành AI Teacher. AI Teacher giảng trên bảng trắng và đọc bằng giọng tiếng Việt; chọn được card đồ họa cho Gemma; trí nhớ hội thoại dài hơn.</p>
+<ul>
+<li>Trạng thái: Đã phát hành.</li>
+<li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
+<li>Ghi chú công khai: đã duyệt để công bố (hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>12/10/2026 18:43</td><td><code>2026-10-12T18:43:51+07:00</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>12/10/2026 18:43</td><td><code>2026-10-12T18:43:51+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>13/10/2026 09:19</td><td><code>2026-10-13T09:19:30+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>13/10/2026 07:25</td><td><code>2026-10-13T00:25:18Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>13/10/2026 09:39</td><td><code>2026-10-13T02:39:21Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>13/10/2026 09:39</td><td><code>2026-10-13T02:39:36Z</code></td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>AI Teacher giảng trên bảng trắng: chữ viết tay tiếng Việt, công thức, khoanh/gạch chân/đóng khung, đồ thị và sơ đồ lực do chương trình vẽ, bút cho học sinh.</li>
+<li>Giọng đọc tiếng Việt với 3 nguồn: giọng Windows, Gemini TTS (trực tuyến) và giọng MMS chạy ngay trên máy.</li>
+<li>Chọn card đồ họa chạy Gemma trên Windows: gợi ý card rời, nút 'Mở lại ngay'.</li>
+<li>Trí nhớ hội thoại dài hơn, có tóm tắt phần cũ; Cài đặt 'Trí nhớ hội thoại: Vừa/Dài'.</li>
+<li>Nút 'Viết tiếp' khi câu trả lời dài bị dừng giữa chừng; thầy viết tiếp ngay trên cùng bảng.</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>AI Teacher được viết câu trả lời dài hơn trước.</li>
+<li>Cài đặt chia thành 11 trang nhỏ.</li>
+<li>Ô chọn đẹp hơn; trang AI Teacher và Phòng thí nghiệm gọn hơn; không để một chữ đứng một mình trên một dòng.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Gemma luôn chạy trên card tích hợp dù máy có card rời.</li>
+<li>Nút nhanh chỉ gửi đúng hai chữ 'Chậm hơn' nên AI hiểu sai; nay gửi câu hướng dẫn đầy đủ.</li>
+<li>Ghi chú kiến thức có sẵn được đánh dấu là đang chờ giáo viên duyệt.</li>
+</ul>
+<p><strong>Hiệu năng</strong></p>
+<ul>
+<li>Bộ cài và gói cập nhật nhỏ hơn: bộ cài 21,6 MB (0.4.1) → 11,7 MB, gói cập nhật 32,1 MB → 18,2 MB.</li>
+</ul>
+<p><strong>Thay đổi</strong></p>
+<ul>
+<li>Đổi tên app thành SimLab và 'Thầy AI' thành AI Teacher; dữ liệu và khóa đã lưu được giữ nguyên.</li>
+<li>Chỉ còn một bản cài (bỏ bản thử nghiệm THPT): một bộ cài, một kênh cập nhật; bỏ năm sinh, mã PIN người giám sát và phiếu đồng ý của phụ huynh.</li>
+<li>Các khung không còn ẩn/hiện bằng nút hay phím tắt Ctrl+B/I/J; vẫn kéo để đổi kích thước được.</li>
+<li>Phần lõi thay đổi: cần tải bộ cài mới một lần.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Máy đã cài bản thử nghiệm THPT (0.4.1 trở về trước) không nhận cập nhật nữa.</li>
+<li>Chưa kiểm chứng lúc phát hành: Gemma trên card rời sau khi gộp, giọng Gemini TTS với khóa thật, giọng 'Microsoft An' trong app, bộ cài Windows.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>AI Teacher giảng trên bảng trắng, có công thức, đồ thị và sơ đồ lực.</li>
+<li>Giọng đọc tiếng Việt: giọng Windows, Gemini hoặc giọng chạy ngay trên máy.</li>
+<li>Chọn card đồ họa rời để Gemma chạy nhanh hơn.</li>
+<li>Trí nhớ hội thoại dài hơn và nút 'Viết tiếp'.</li>
+<li>App đổi tên thành SimLab; Cài đặt chia thành trang nhỏ.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: cbb176a 2026-10-12T18:43:51+07:00 (máy B), lần đầu package.json 0.4.1 → 0.5.0; máy A nâng riêng ở 6b89f13 2026-10-12T23:41:16+07:00; hai nhánh gộp ở 7a127ae</li>
+<li>merged: PR #14 gộp lúc 2026-10-13T00:25:18Z (65ae076); cùng đợt PR #8, #11, #12, #13; trước tag còn PR #3, #5, #6, #9</li>
+<li>lastCommit: c6d01f4 2026-10-13T09:19:30+07:00 (gộp PR #6) = tag v0.5.0</li>
+<li>built: lượt Release 38336613170 (main, c6d01f4), job 'Build Windows installers' xong 2026-10-13T02:39:21Z</li>
+<li>released: GitHub Release v0.5.0 'SimLab 0.5.0', published_at 2026-10-13T02:39:36Z, target c6d01f4 (gh api …/releases)</li>
+<li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
+<li>Kích thước tài sản Release: bộ cài .exe 21 645 425 byte (v0.4.1) → 11 707 857 byte; web-bundle.zip 32 130 306 → 18 231 166 byte</li>
+<li>Một tệp ZIP mang tên v0.5.0 được tạo lúc 2026-10-12 23:43 (+07), trước khi gộp PR #8: khác bản phát hành (chưa mở)</li>
+</ul>
+<h3>0.4.3 (Chưa xác minh)</h3>
+<p>Bước phát triển nội bộ theo yêu cầu người dùng: trí nhớ hội thoại dài hơn, nút 'Viết tiếp', bỏ ẩn/hiện khung. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.</p>
+<ul>
+<li>Trạng thái: Chưa xác minh.</li>
+<li>Kênh phân phối: Không phân phối.</li>
+<li>Ghi chú trạng thái: Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.</li>
+<li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>12/10/2026</td><td><code>2026-10-12</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>12/10/2026 18:43</td><td><code>2026-10-12T18:43:51+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>12/10/2026 18:43</td><td><code>2026-10-12T18:43:51+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>13/10/2026 07:25</td><td><code>2026-10-13T00:25:20Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Trí nhớ hội thoại theo độ dài, có tóm tắt phần cũ, và nút 'Viết tiếp' khi câu trả lời chạm giới hạn.</li>
+<li>Bảng giảng các bước hiện dần (sau đó được thay bằng bảng trắng ở 0.5.0).</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>AI được viết câu trả lời dài hơn.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Nút nhanh chỉ gửi đúng hai chữ 'Chậm hơn' nên Gemma hiểu sai; nay gửi câu hướng dẫn đầy đủ.</li>
+</ul>
+<p><strong>Thay đổi</strong></p>
+<ul>
+<li>Bỏ ẩn/hiện khung (3 nút trên thanh trên cùng, phím Ctrl+B/I/J, nút X).</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Chưa kiểm chứng: chất lượng tóm tắt và câu trả lời với Gemma và API thật, bộ cài Windows.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Trí nhớ hội thoại dài hơn và nút 'Viết tiếp'.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>Nhãn 0.4.3 chỉ có trong docs/PROGRESS.md ('fork-0.4.3'), CLAUDE.md và mô tả PR #8</li>
+<li>Một commit chung cho 0.4.2–0.5.0: cbb176a 2026-10-12T18:43:51+07:00 (máy B)</li>
+<li>merged: PR #8 gộp lúc 2026-10-13T00:25:20Z (vào nhánh bảng trắng, commit gộp 7a127ae)</li>
+<li>Bảng giảng LessonBoard.tsx bị xóa khi gộp, thay bằng bảng trắng (PROGRESS '0.5.0-gộp')</li>
+</ul>
+<h3>0.4.2 (Chưa xác minh)</h3>
+<p>Bước phát triển nội bộ: chọn card đồ họa cho Gemma trên Windows. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.</p>
+<ul>
+<li>Trạng thái: Chưa xác minh.</li>
+<li>Kênh phân phối: Không phân phối.</li>
+<li>Ghi chú trạng thái: Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.</li>
+<li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>12/10/2026</td><td><code>2026-10-12</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>12/10/2026 18:43</td><td><code>2026-10-12T18:43:51+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>12/10/2026 19:44</td><td><code>2026-10-12T19:44:51+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>13/10/2026 07:25</td><td><code>2026-10-13T00:25:20Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Chọn card đồ họa chạy Gemma trên Windows: danh sách card và bộ nhớ, gợi ý card rời, nút 'Mở lại ngay'.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Gemma luôn chạy trên card tích hợp dù máy có card rời.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Chưa kiểm chứng: tốc độ Gemma thật trên từng card, bộ cài Windows.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Chọn card đồ họa rời cho Gemma.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>Nhãn 0.4.2 chỉ có trong docs/PROGRESS.md ('fork-0.4.2'), CLAUDE.md ('GPU choice (0.4.2)') và mô tả PR #8</li>
+<li>firstCommit: cbb176a 2026-10-12T18:43:51+07:00 (máy B), commit chung cho 0.4.2–0.5.0; lastCommit: d15587e 2026-10-12T19:44:51+07:00 'fix(ci): allow Windows-only GPU items…'</li>
+<li>merged: PR #8 gộp lúc 2026-10-13T00:25:20Z</li>
+<li>Đo thật trên laptop AMD Radeon 610M + NVIDIA RTX 5070: bản 0.4.1 luôn chạy trên card tích hợp; chọn card rời nhanh khoảng 10 lần ở phép tính mẫu (PROGRESS 'fork-0.4.2', docs/AI_TUTOR.md)</li>
+</ul>
+<h3>0.4.1 (Đã phát hành)</h3>
+<p>Ra mắt Thầy AI (nay là AI Teacher): trang trò chuyện riêng, Think kiểm tra chéo bằng một AI thứ hai, Gemma chạy ngay trên máy, thư viện kiến thức STEM và ô 'Dữ liệu của em đi đâu?'.</p>
+<ul>
+<li>Trạng thái: Đã phát hành.</li>
+<li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
+<li>Ghi chú trạng thái: Bản phát hành công khai đầu tiên của nhánh AI Teacher (lúc đó gọi là 'Thầy AI'), gồm cả nội dung của bản ZIP 0.4.0. Release được publish từ nhánh fork/thay-ai 6 phút trước khi PR #7 được gộp; mã phát hành (e342263) đúng là mã được gộp.</li>
+<li>Ghi chú công khai: đã duyệt để công bố (hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>12/10/2026</td><td><code>2026-10-12</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>12/10/2026 12:52</td><td><code>2026-10-12T12:52:15+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>12/10/2026 12:53</td><td><code>2026-10-12T12:53:02+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>12/10/2026 13:17</td><td><code>2026-10-12T06:17:26Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>12/10/2026 13:11</td><td><code>2026-10-12T06:11:16Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>12/10/2026 13:11</td><td><code>2026-10-12T06:11:35Z</code></td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Trang mở đầu với hai lối vào Phòng thí nghiệm và Thầy AI; khung chat nổi trong phòng thí nghiệm và trang Thầy AI riêng.</li>
+<li>Think: một nhà cung cấp AI thứ hai rà soát và viết lại câu trả lời.</li>
+<li>Gemma chạy ngay trên máy bằng card đồ họa: tải về một lần (bản 270M khoảng 345 MB), trả lời không gửi gì ra mạng.</li>
+<li>Thư viện kiến thức STEM (66 ghi chú) và thêm được tài liệu văn bản của riêng em.</li>
+<li>Chụp đề bằng camera; thầy đọc câu trả lời bằng giọng của máy; tin nhắn hiển thị công thức và khung code.</li>
+<li>Ô 'Dữ liệu của em đi đâu?', dòng cho biết câu hỏi sẽ được gửi tới đâu, nhãn AI và nút báo cáo trên mỗi câu trả lời.</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>Kiểm tra chỗ trống trước khi tải mô hình, nút 'Hủy tải', báo lỗi tải dễ hiểu và bước 'đang nạp vào GPU'.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Sửa 5 lỗi khiến Gemma không chạy được ở bản ZIP 0.4.0, gồm nút 'Đang tải…' quay mãi và việc mỗi lần mở app phải tải lại mô hình.</li>
+<li>Cài mới không còn bị kẹt chờ Gemma khi đã có khóa AI trực tuyến.</li>
+<li>Think không còn bị từ chối khi dùng Gemini kèm dự phòng Groq.</li>
+</ul>
+<p><strong>Bảo mật</strong></p>
+<ul>
+<li>Tra Wikipedia thành tùy chọn, mặc định tắt (bản fork trước đó gửi câu hỏi tới Wikipedia mỗi lần mà không báo).</li>
+<li>Trang ngoài chỉ mở được từ một danh sách cố định.</li>
+</ul>
+<p><strong>Thay đổi</strong></p>
+<ul>
+<li>Phần lõi thay đổi: cần tải bộ cài mới một lần.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Gemma 270M hay trả lời lạc đề.</li>
+<li>Chưa kiểm chứng lúc phát hành: Gemma 1B/E2B, chất lượng trả lời sau khi rút gọn lời nhắc, bộ cài Windows.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Gặp Thầy AI (nay là AI Teacher): hỏi bài ngay trong app.</li>
+<li>Gemma chạy ngay trên máy, không cần mạng sau khi tải.</li>
+<li>Think: một AI thứ hai kiểm tra lại câu trả lời.</li>
+<li>Thư viện kiến thức STEM với 66 ghi chú.</li>
+<li>Ô 'Dữ liệu của em đi đâu?' cho biết câu hỏi được gửi tới đâu.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>17e1cd4 (nhánh local master, 2026-10-12T12:52:15+07:00) và e342263 (GitHub, 12:53:02+07:00) cùng tiêu đề 'feat(fork): Thầy AI 0.4.1 …'; e342263 nâng package.json, tauri.conf.json, Cargo.toml 0.3.0 → 0.4.1</li>
+<li>merged: PR #7 gộp lúc 2026-10-12T06:17:26Z (abb4339)</li>
+<li>built: lượt Release 38210325461 (nhánh fork/thay-ai, e342263), job 'Build Windows installers' xong 2026-10-12T06:11:16Z</li>
+<li>released: GitHub Release v0.4.1 'STEM Sim Lab 0.4.1', published_at 2026-10-12T06:11:35Z, target e342263 — 6 phút trước khi PR #7 được gộp</li>
+<li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
+<li>git diff cea9d93 e342263: gồm trang mở đầu, chat, khuôn mặt thầy, thư viện kiến thức, camera, giọng đọc và engineChoice — tức cả công việc của bản fork 09–12/10</li>
+<li>Release v0.4.1 vẫn có bộ cài THPT (STEM.Sim.Lab.THPT_0.4.1)</li>
+</ul>
+<h3>0.4.0 (Chưa xác minh)</h3>
+<p>Bản thử 'Thầy AI' gửi dạng tệp ZIP: trang mở đầu hai lối vào, chat, Think, Gemma chạy trên máy, thư viện kiến thức. Chưa xác minh được nội dung chính xác của ZIP; các tính năng này được phát hành chính thức ở 0.4.1.</p>
+<ul>
+<li>Trạng thái: Chưa xác minh.</li>
+<li>Kênh phân phối: Tệp ZIP gửi tay.</li>
+<li>Ghi chú trạng thái: Bản fork 'Thầy AI' gửi dưới dạng tệp ZIP. Không commit nào mang số 0.4.0 (package.json đi thẳng 0.3.0 → 0.4.1) và ZIP chưa được mở để kiểm. Nội dung vào git và được phát hành cùng 0.4.1.</li>
+<li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>09/10/2026</td><td><code>2026-10-09</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>12/10/2026 08:16</td><td><code>2026-10-12T08:16:45+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Trang mở đầu hai lối vào Phòng thí nghiệm / Thầy AI; chat dạng bong bóng và trang Thầy AI riêng.</li>
+<li>Think: rà soát câu trả lời bằng một nhà cung cấp AI thứ hai.</li>
+<li>Gemma chạy ngay trong app bằng card đồ họa (không cần Ollama).</li>
+<li>Thư viện kiến thức STEM (66 ghi chú) và nhập tệp văn bản trên máy.</li>
+<li>Chụp đề bằng camera; giọng đọc của thầy; tin nhắn hiển thị công thức và khung code.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Cài mới chọn sẵn Gemma làm 'Phân tích đề' và chat bị kẹt dù đã có khóa Gemini.</li>
+<li>Think với Gemini và dự phòng Groq luôn bị từ chối.</li>
+<li>Esc đóng Cài đặt cũng thoát trang Thầy AI và kết thúc hướng dẫn.</li>
+</ul>
+<p><strong>Bảo mật</strong></p>
+<ul>
+<li>Tra Wikipedia thành tùy chọn, mặc định tắt.</li>
+<li>Gỡ phần mã Ollama cũ; trang ngoài chỉ mở từ một danh sách cố định.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Gemma trên máy chưa chạy được ở bản này; 0.4.1 sửa 5 lỗi khiến Gemma không chạy.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Bản thử Thầy AI dạng tệp ZIP (đã được phát hành chính thức ở 0.4.1).</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>devStart: docs/PROGRESS.md hàng '2026-10-09 | fork' (làm ngoài git, trên bản sao)</li>
+<li>firstCommit: 0f4d2f8 2026-10-12T08:16:45+07:00 'baseline: stem-sim-lab-ai.zip (2026-10-12)', chỉ trên nhánh local master, package.json 0.3.0 — trạng thái fork trước 0.4.0</li>
+<li>Tệp stem-sim-lab-ai-v0.4.0.zip: chỉ biết tên tệp và ngày sửa 2026-10-12 09:29:39 (+07); chưa mở</li>
+<li>docs/PROGRESS.md hàng '2026-10-12 | fork-0.4.0'; CLAUDE.md: 'the old gemma.rs was removed in 0.4.0'</li>
+<li>Không có tag hay Release v0.4.0 (git tag, git ls-remote origin, gh api …/releases)</li>
+</ul>
+<h3>0.3.0 (Đã phát hành)</h3>
+<p>Học dễ hơn với trang chủ 'Hôm nay học gì?', chế độ Cơ bản/Nâng cao, Dự đoán trước và Thử thách; thêm Claude bên cạnh Gemini, dự phòng Groq và các lớp an toàn khi dùng AI.</p>
+<ul>
+<li>Trạng thái: Đã phát hành.</li>
+<li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
+<li>Ghi chú công khai: đã duyệt để công bố (hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>05/10/2026 13:20</td><td><code>2026-10-05T13:20:52+07:00</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>05/10/2026 13:20</td><td><code>2026-10-05T13:20:52+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>06/10/2026 22:40</td><td><code>2026-10-06T22:40:41+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>06/10/2026 22:51</td><td><code>2026-10-06T15:51:41Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>06/10/2026 22:51</td><td><code>2026-10-06T15:51:58Z</code></td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Trang chủ 'Hôm nay học gì?' và phần làm quen lần đầu; chế độ Cơ bản/Nâng cao.</li>
+<li>Dự đoán trước (Dự đoán → Quan sát → Giải thích) và thử thách cho cả 13 chủ đề Vật lý; gợi ý từng bước; huy hiệu; nhắc nghỉ mắt sau khoảng 45 phút.</li>
+<li>Màn hình 'Kết nối AI' với nút 'Kiểm tra key'; thêm Claude bên cạnh Gemini.</li>
+<li>Dự phòng miễn phí Groq khi Gemini hoặc Claude hết lượt.</li>
+<li>Bộ cài thử nghiệm 'STEM Sim Lab THPT' cho buổi học có người giám sát (chỉ Claude, khóa do người giám sát nhập bằng PIN), có kênh cập nhật riêng.</li>
+<li>Hộp thoại tự hiện khi có bản mới ('Cập nhật ngay' / 'Để sau'); có thể đặt cập nhật bắt buộc, được ký số.</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>Tự thử lại khi máy chủ AI bận (tối đa 3 lần), giới hạn lượt AI mỗi ngày, nhớ đề đã xác nhận để không hỏi AI lại.</li>
+<li>Nút cao ít nhất 40 px, chữ bài học 15 px, vừa màn hình 1366×768 không cuộn ngang.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Bấm 'Thử lại' trong hộp thoại lỗi không còn tự hủy.</li>
+</ul>
+<p><strong>Bảo mật</strong></p>
+<ul>
+<li>Lần đầu mở app hỏi xác nhận đủ 18 tuổi và điều khoản; chưa xác nhận thì không lưu khóa và không gọi AI.</li>
+<li>Nhãn 'Nội dung do AI hỗ trợ' và nút báo cáo; chặn đề có thông tin cá nhân; lọc câu trả lời của AI; nhật ký sự cố chỉ ghi loại và thời gian; trang Quyền riêng tư.</li>
+</ul>
+<p><strong>Thay đổi</strong></p>
+<ul>
+<li>Bỏ OpenAI; AI dùng Gemini (mặc định) hoặc Claude.</li>
+<li>Phần lõi thay đổi: cần tải bộ cài mới một lần.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>'Dạy học bằng AI' mới ở mức thiết kế, chưa dùng được.</li>
+<li>Mô hình dự phòng Groq chưa được thử với khóa thật.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Trang chủ 'Hôm nay học gì?' với chế độ Cơ bản và Nâng cao.</li>
+<li>Dự đoán trước, thử thách và gợi ý từng bước.</li>
+<li>Kết nối AI có nút 'Kiểm tra key'; thêm Claude và dự phòng Groq.</li>
+<li>Xác nhận 18+ trước khi dùng AI; nhãn AI và nút báo cáo.</li>
+<li>App tự báo khi có bản mới.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: d587a4c 2026-10-05T13:20:52+07:00 'update: .github/workflows (3b.1: AIProvider, two editions)', commit đầu sau tag v0.2.0</li>
+<li>Nâng phiên bản: 3975db4 (package.json) và 884cc67 (tauri.conf.json, Cargo.toml) ngày 2026-10-06, 0.2.0 → 0.3.0</li>
+<li>lastCommit: 1e7029a 2026-10-06T22:40:41+07:00 = tag v0.3.0</li>
+<li>merged: không có PR (commit thẳng lên main)</li>
+<li>built: lượt Release 37489652593 (main, 1e7029a), job 'Build Windows installers' xong 2026-10-06T15:51:41Z; trước đó lượt 37480981103 chỉ dựng (không publish), lượt 37483213542 bị hủy</li>
+<li>released: GitHub Release v0.3.0 'STEM Sim Lab 0.3.0', published_at 2026-10-06T15:51:58Z, target 1e7029a (gh api …/releases)</li>
+<li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
+</ul>
+<h3>0.2.0 (Đã phát hành)</h3>
+<p>Cập nhật ngay trong ứng dụng, không cần cài lại; AI đọc đề chuyển sang Gemini (có gói miễn phí) kèm hướng dẫn lấy khóa API.</p>
+<ul>
+<li>Trạng thái: Đã phát hành.</li>
+<li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
+<li>Ghi chú trạng thái: PROGRESS.md ghi 'Phiên bản 0.2.0' ngày 29/09/2026 (lúc nâng số), nhưng Release v0.2.0 phát hành ngày 05/10/2026 và gồm cả việc chuyển sang Gemini.</li>
+<li>Ghi chú công khai: đã duyệt để công bố (hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>29/09/2026 22:09</td><td><code>2026-09-29T22:09:05+07:00</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>29/09/2026 22:09</td><td><code>2026-09-29T22:09:05+07:00</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>05/10/2026 07:54</td><td><code>2026-10-05T07:54:58+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>05/10/2026 10:07</td><td><code>2026-10-05T03:07:05Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>05/10/2026 10:07</td><td><code>2026-10-05T03:07:21Z</code></td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>Cập nhật ngay trong app (menu ☰ → Kiểm tra cập nhật): tải phần giao diện mới, không cần cài lại tệp .exe.</li>
+<li>Hướng dẫn lấy khóa API Gemini ngay trong Cài đặt (người tạo khóa phải từ 18 tuổi).</li>
+</ul>
+<p><strong>Cải tiến</strong></p>
+<ul>
+<li>Lỗi hết lượt, khóa sai hay tên mô hình sai được giải thích bằng lời dễ hiểu.</li>
+</ul>
+<p><strong>Bảo mật</strong></p>
+<ul>
+<li>Bản cập nhật trong app được ký số và kiểm tra chữ ký trước khi dùng.</li>
+</ul>
+<p><strong>Thay đổi</strong></p>
+<ul>
+<li>AI mặc định là Gemini (có gói miễn phí); bỏ LM Studio.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Cập nhật ngay trong app, không cần cài lại.</li>
+<li>AI đọc đề dùng Gemini, có gói miễn phí và hướng dẫn lấy khóa.</li>
+<li>Bản cập nhật được ký số trước khi dùng.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: c515250 2026-09-29T22:09:05+07:00 'update: .github/workflows (in-app updates, v0.2.0)'; nâng phiên bản ở fdb7e6e (package.json) và 47dc1ea (tauri.conf.json, Cargo.toml) cùng tối 29/09</li>
+<li>lastCommit: 7d32305 2026-10-05T07:54:58+07:00 'update: src-tauri/src/ai.rs (Gemini replaces LM Studio)' = tag v0.2.0</li>
+<li>merged: không có PR (commit thẳng lên main; PR đầu tiên của repo là #1 ngày 11/10)</li>
+<li>built: lượt Release 37257271728 (main, 7d32305), job 'Build Windows installers' xong 2026-10-05T03:07:05Z</li>
+<li>released: GitHub Release v0.2.0 'STEM Sim Lab 0.2.0', published_at 2026-10-05T03:07:21Z, target 7d32305 (gh api …/releases)</li>
+<li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
+</ul>
+<h3>0.1.0 (Bản phát triển, không phát hành)</h3>
+<p>Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật lý, Hóa học và Sinh học chạy ngay trên máy. Bản này chỉ được dựng thử, chưa phát hành.</p>
+<ul>
+<li>Trạng thái: Bản phát triển, không phát hành.</li>
+<li>Kênh phân phối: Không phân phối.</li>
+<li>Ghi chú trạng thái: Phiên bản khởi tạo. GitHub Actions dựng bộ cài 2 lần ngày 29/09/2026 nhưng chỉ thành artifact: không có tag v0.1.0 và không có GitHub Release.</li>
+<li>Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp &quot;Có gì mới&quot;).</li>
+</ul>
+<table>
+<thead><tr><th>Mốc</th><th>Thời điểm (giờ VN)</th><th>Giá trị gốc</th></tr></thead>
+<tbody>
+<tr><td>Bắt đầu phát triển</td><td>28/09/2026 18:13</td><td><code>2026-09-28T11:13:10Z</code></td></tr>
+<tr><td>Commit đầu tiên</td><td>28/09/2026 18:13</td><td><code>2026-09-28T11:13:10Z</code></td></tr>
+<tr><td>Commit cuối cùng</td><td>29/09/2026 20:09</td><td><code>2026-09-29T20:09:12+07:00</code></td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>29/09/2026 19:26</td><td><code>2026-09-29T12:26:56Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Tính năng mới</strong></p>
+<ul>
+<li>13 chủ đề Vật lý 2D có đồ thị, lời giải từng bước, bảng số liệu và xuất CSV.</li>
+<li>Thẻ Khoa học cho mỗi mô phỏng: mô hình, công thức, giả định, mức tin cậy và nguồn.</li>
+<li>AI đọc đề bài và dựng mô phỏng; mọi con số do chương trình tính, bạn xác nhận bảng 'Tôi hiểu đề như sau' trước.</li>
+<li>Hóa học: bảng tuần hoàn 118 nguyên tố, 63 phân tử 3D, hình dạng phân tử VSEPR, 39 phản ứng (10 có cơ chế), cân bằng phương trình.</li>
+<li>Sinh học: 11 chủ đề (nguyên phân, giảm phân, ADN → protein, di truyền Mendel, Hardy–Weinberg, sinh thái, enzyme, khuếch tán và thẩm thấu).</li>
+<li>Lưu và mở tệp .stemsim, xuất ảnh PNG, hoàn tác/làm lại, lịch sử, chế độ trình chiếu và hướng dẫn lần đầu.</li>
+<li>Giao diện sáng/tối, tiếng Việt và tiếng Anh.</li>
+</ul>
+<p><strong>Sửa lỗi</strong></p>
+<ul>
+<li>Mô phỏng không còn bỏ sót lúc vật chạm đất khi được ném từ mặt đất, hoặc khi điểm cao nhất và lúc chạm đất rơi vào cùng một bước tính.</li>
+<li>Công thức hiển thị đúng vị trí trong bản cài đặt.</li>
+<li>Không còn báo 'chuyển động chậm' sai trên màn hình có tần số quét cao.</li>
+</ul>
+<p><strong>Vấn đề đã biết</strong></p>
+<ul>
+<li>Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.</li>
+</ul>
+<p><strong>Điểm nổi bật trong app</strong></p>
+<ul>
+<li>Mô phỏng Vật lý, Hóa học và Sinh học chạy ngay trên máy.</li>
+<li>Mỗi mô phỏng có Thẻ Khoa học ghi rõ mô hình và mức tin cậy.</li>
+</ul>
+<p><strong>Bằng chứng</strong></p>
+<ul>
+<li>firstCommit: b9a2430 2026-09-28T11:13:10Z 'chore: scaffold Vite + React 19 + TypeScript (strict) project' thêm &quot;version&quot;: &quot;0.1.0&quot;; c8830ab (cùng thời điểm) thêm tauri.conf.json 'STEM Sim Lab' 0.1.0</li>
+<li>lastCommit: f857ec7 2026-09-29T20:09:12+07:00 'docs: where to find the installer artifact'; commit sau đó (c515250) bắt đầu 0.2.0</li>
+<li>built: lượt Release 36565163753 (workflow_dispatch, 02ae6d2), job 'Build Windows installers' xong 2026-09-29T12:26:56Z; lượt thứ hai 36573143091 (f857ec7) xong 13:20:25Z; cả hai chỉ tạo artifact stem-sim-lab-windows</li>
+<li>Không có tag v0.1.0 và không có GitHub Release (gh api …/releases, git tag, git ls-remote origin)</li>
+<li>Nội dung: docs/PROGRESS.md các hàng 2026-09-28 (Phase 0–2) và 2026-09-29 (Phase 3–7)</li>
+</ul>
+<h2>IV. Cải tiến về AI Teacher, bảng dạy, giọng nói, Gemma local + API</h2>
+<p>Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở trên; trong ngoặc là trạng thái của phiên bản và loại thay đổi.</p>
+<h3>AI Teacher và bảng dạy</h3>
+<ul>
+<li><strong>0.3.0</strong> (Đã phát hành, vấn đề đã biết): 'Dạy học bằng AI' mới ở mức thiết kế, chưa dùng được.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, tính năng mới): Trang mở đầu hai lối vào Phòng thí nghiệm / Thầy AI; chat dạng bong bóng và trang Thầy AI riêng.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, tính năng mới): Thư viện kiến thức STEM (66 ghi chú) và nhập tệp văn bản trên máy.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, tính năng mới): Chụp đề bằng camera; giọng đọc của thầy; tin nhắn hiển thị công thức và khung code.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, bảo mật): Tra Wikipedia thành tùy chọn, mặc định tắt.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, tính năng mới): Trang mở đầu với hai lối vào Phòng thí nghiệm và Thầy AI; khung chat nổi trong phòng thí nghiệm và trang Thầy AI riêng.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, tính năng mới): Thư viện kiến thức STEM (66 ghi chú) và thêm được tài liệu văn bản của riêng em.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, tính năng mới): Chụp đề bằng camera; thầy đọc câu trả lời bằng giọng của máy; tin nhắn hiển thị công thức và khung code.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, bảo mật): Tra Wikipedia thành tùy chọn, mặc định tắt (bản fork trước đó gửi câu hỏi tới Wikipedia mỗi lần mà không báo).</li>
+<li><strong>0.4.3</strong> (Chưa xác minh, tính năng mới): Trí nhớ hội thoại theo độ dài, có tóm tắt phần cũ, và nút 'Viết tiếp' khi câu trả lời chạm giới hạn.</li>
+<li><strong>0.4.3</strong> (Chưa xác minh, tính năng mới): Bảng giảng các bước hiện dần (sau đó được thay bằng bảng trắng ở 0.5.0).</li>
+<li><strong>0.4.3</strong> (Chưa xác minh, cải tiến): AI được viết câu trả lời dài hơn.</li>
+<li><strong>0.4.3</strong> (Chưa xác minh, sửa lỗi): Nút nhanh chỉ gửi đúng hai chữ 'Chậm hơn' nên Gemma hiểu sai; nay gửi câu hướng dẫn đầy đủ.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, tính năng mới): AI Teacher giảng trên bảng trắng: chữ viết tay tiếng Việt, công thức, khoanh/gạch chân/đóng khung, đồ thị và sơ đồ lực do chương trình vẽ, bút cho học sinh.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, tính năng mới): Trí nhớ hội thoại dài hơn, có tóm tắt phần cũ; Cài đặt 'Trí nhớ hội thoại: Vừa/Dài'.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, tính năng mới): Nút 'Viết tiếp' khi câu trả lời dài bị dừng giữa chừng; thầy viết tiếp ngay trên cùng bảng.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, cải tiến): AI Teacher được viết câu trả lời dài hơn trước.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, sửa lỗi): Nút nhanh chỉ gửi đúng hai chữ 'Chậm hơn' nên AI hiểu sai; nay gửi câu hướng dẫn đầy đủ.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, sửa lỗi): Ghi chú kiến thức có sẵn được đánh dấu là đang chờ giáo viên duyệt.</li>
+<li><strong>0.5.1</strong> (Đã gộp, chưa phát hành, sửa lỗi): Nút AI Teacher không còn che cột cuối của bảng; nay nằm ở góc vùng mô phỏng.</li>
+<li><strong>0.5.1</strong> (Đã gộp, chưa phát hành, sửa lỗi): Khung chat không còn mở cao hết màn hình.</li>
+<li><strong>0.5.2</strong> (Đã phát hành, tính năng mới): Bản đồ nhỏ của bảng trắng.</li>
+<li><strong>0.5.2</strong> (Đã phát hành, sửa lỗi): Nút AI Teacher không còn che cột cuối của bảng; nay nằm ở góc vùng mô phỏng (sửa từ 0.5.1).</li>
+<li><strong>0.5.2</strong> (Đã phát hành, sửa lỗi): Khung chat không còn mở cao hết màn hình (sửa từ 0.5.1).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): Thẻ 'Kết quả do SimLab tính' khi câu hỏi có phương trình hóa học: bộ cân bằng của SimLab giải phương trình, AI chỉ giải thích.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, bảo mật): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.</li>
+</ul>
+<h3>Giọng nói</h3>
+<ul>
+<li><strong>0.5.0</strong> (Đã phát hành, tính năng mới): Giọng đọc tiếng Việt với 3 nguồn: giọng Windows, Gemini TTS (trực tuyến) và giọng MMS chạy ngay trên máy.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, [S], (aq), mũi tên phản ứng).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, &quot;tan&quot; trong hòa tan.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, sửa lỗi): Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, sửa lỗi): Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.</li>
+</ul>
+<h3>Gemma chạy trên máy (local)</h3>
+<ul>
+<li><strong>0.4.0</strong> (Chưa xác minh, tính năng mới): Gemma chạy ngay trong app bằng card đồ họa (không cần Ollama).</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, sửa lỗi): Cài mới chọn sẵn Gemma làm 'Phân tích đề' và chat bị kẹt dù đã có khóa Gemini.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, vấn đề đã biết): Gemma trên máy chưa chạy được ở bản này; 0.4.1 sửa 5 lỗi khiến Gemma không chạy.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, tính năng mới): Gemma chạy ngay trên máy bằng card đồ họa: tải về một lần (bản 270M khoảng 345 MB), trả lời không gửi gì ra mạng.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, cải tiến): Kiểm tra chỗ trống trước khi tải mô hình, nút 'Hủy tải', báo lỗi tải dễ hiểu và bước 'đang nạp vào GPU'.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, sửa lỗi): Sửa 5 lỗi khiến Gemma không chạy được ở bản ZIP 0.4.0, gồm nút 'Đang tải…' quay mãi và việc mỗi lần mở app phải tải lại mô hình.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, sửa lỗi): Cài mới không còn bị kẹt chờ Gemma khi đã có khóa AI trực tuyến.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, vấn đề đã biết): Gemma 270M hay trả lời lạc đề.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, vấn đề đã biết): Chưa kiểm chứng lúc phát hành: Gemma 1B/E2B, chất lượng trả lời sau khi rút gọn lời nhắc, bộ cài Windows.</li>
+<li><strong>0.4.2</strong> (Chưa xác minh, tính năng mới): Chọn card đồ họa chạy Gemma trên Windows: danh sách card và bộ nhớ, gợi ý card rời, nút 'Mở lại ngay'.</li>
+<li><strong>0.4.2</strong> (Chưa xác minh, sửa lỗi): Gemma luôn chạy trên card tích hợp dù máy có card rời.</li>
+<li><strong>0.4.2</strong> (Chưa xác minh, vấn đề đã biết): Chưa kiểm chứng: tốc độ Gemma thật trên từng card, bộ cài Windows.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, tính năng mới): Chọn card đồ họa chạy Gemma trên Windows: gợi ý card rời, nút 'Mở lại ngay'.</li>
+<li><strong>0.5.0</strong> (Đã phát hành, sửa lỗi): Gemma luôn chạy trên card tích hợp dù máy có card rời.</li>
+<li><strong>0.5.2</strong> (Đã phát hành, tính năng mới): Câu trả lời của Gemma hiện dần từng chữ.</li>
+<li><strong>0.5.2</strong> (Đã phát hành, bảo mật): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, sửa lỗi): Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, bảo mật): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.</li>
+</ul>
+<h3>AI qua API (Gemini, Claude, Groq)</h3>
+<ul>
+<li><strong>0.1.0</strong> (Bản phát triển, không phát hành, tính năng mới): AI đọc đề bài và dựng mô phỏng; mọi con số do chương trình tính, bạn xác nhận bảng 'Tôi hiểu đề như sau' trước.</li>
+<li><strong>0.2.0</strong> (Đã phát hành, tính năng mới): Hướng dẫn lấy khóa API Gemini ngay trong Cài đặt (người tạo khóa phải từ 18 tuổi).</li>
+<li><strong>0.2.0</strong> (Đã phát hành, cải tiến): Lỗi hết lượt, khóa sai hay tên mô hình sai được giải thích bằng lời dễ hiểu.</li>
+<li><strong>0.2.0</strong> (Đã phát hành, thay đổi): AI mặc định là Gemini (có gói miễn phí); bỏ LM Studio.</li>
+<li><strong>0.3.0</strong> (Đã phát hành, tính năng mới): Màn hình 'Kết nối AI' với nút 'Kiểm tra key'; thêm Claude bên cạnh Gemini.</li>
+<li><strong>0.3.0</strong> (Đã phát hành, tính năng mới): Dự phòng miễn phí Groq khi Gemini hoặc Claude hết lượt.</li>
+<li><strong>0.3.0</strong> (Đã phát hành, cải tiến): Tự thử lại khi máy chủ AI bận (tối đa 3 lần), giới hạn lượt AI mỗi ngày, nhớ đề đã xác nhận để không hỏi AI lại.</li>
+<li><strong>0.3.0</strong> (Đã phát hành, sửa lỗi): Bấm 'Thử lại' trong hộp thoại lỗi không còn tự hủy.</li>
+<li><strong>0.3.0</strong> (Đã phát hành, thay đổi): Bỏ OpenAI; AI dùng Gemini (mặc định) hoặc Claude.</li>
+<li><strong>0.3.0</strong> (Đã phát hành, vấn đề đã biết): Mô hình dự phòng Groq chưa được thử với khóa thật.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, tính năng mới): Think: rà soát câu trả lời bằng một nhà cung cấp AI thứ hai.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh, sửa lỗi): Think với Gemini và dự phòng Groq luôn bị từ chối.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, tính năng mới): Think: một nhà cung cấp AI thứ hai rà soát và viết lại câu trả lời.</li>
+<li><strong>0.4.1</strong> (Đã phát hành, sửa lỗi): Think không còn bị từ chối khi dùng Gemini kèm dự phòng Groq.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, bảo mật): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).</li>
+</ul>
+<h2>V. Cải tiến mô phỏng 3D Sinh học</h2>
+<p>Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đang xét duyệt); các phiên bản trước không có ghi chú nào về mô phỏng 3D Sinh học.</p>
+<ul>
+<li><strong>0.6.0</strong> (Đang xét duyệt, tính năng mới): Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt, vấn đề đã biết): Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.</li>
+</ul>
+<p><strong>Kiểm thử liên quan</strong></p>
+<ul>
+<li><strong>0.6.0</strong>: App desktop bản release dựng trên máy người phát triển: chặn điều hướng ra trang ngoài, công thức KaTeX đúng vị trí, mô phỏng 3D mở được (AUDIT)</li>
+</ul>
+<h2>VI. Lịch sử bảo mật, hiệu năng và kết quả kiểm thử</h2>
+<h3>Bảo mật</h3>
+<ul>
+<li><strong>0.2.0</strong> (Đã phát hành): Bản cập nhật trong app được ký số và kiểm tra chữ ký trước khi dùng.</li>
+<li><strong>0.3.0</strong> (Đã phát hành): Lần đầu mở app hỏi xác nhận đủ 18 tuổi và điều khoản; chưa xác nhận thì không lưu khóa và không gọi AI.</li>
+<li><strong>0.3.0</strong> (Đã phát hành): Nhãn 'Nội dung do AI hỗ trợ' và nút báo cáo; chặn đề có thông tin cá nhân; lọc câu trả lời của AI; nhật ký sự cố chỉ ghi loại và thời gian; trang Quyền riêng tư.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh): Tra Wikipedia thành tùy chọn, mặc định tắt.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh): Gỡ phần mã Ollama cũ; trang ngoài chỉ mở từ một danh sách cố định.</li>
+<li><strong>0.4.1</strong> (Đã phát hành): Tra Wikipedia thành tùy chọn, mặc định tắt (bản fork trước đó gửi câu hỏi tới Wikipedia mỗi lần mà không báo).</li>
+<li><strong>0.4.1</strong> (Đã phát hành): Trang ngoài chỉ mở được từ một danh sách cố định.</li>
+<li><strong>0.5.2</strong> (Đã phát hành): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.</li>
+</ul>
+<h3>Hiệu năng</h3>
+<ul>
+<li><strong>0.5.0</strong> (Đã phát hành): Bộ cài và gói cập nhật nhỏ hơn: bộ cài 21,6 MB (0.4.1) → 11,7 MB, gói cập nhật 32,1 MB → 18,2 MB.</li>
+<li><strong>0.5.2</strong> (Đã phát hành): Tìm nhanh chỉ được tải khi dùng lần đầu (gói 6 kB), nên app mở vẫn nhẹ.</li>
+<li><strong>0.6.0</strong> (Đang xét duyệt): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.</li>
+</ul>
+<h3>Kết quả kiểm thử</h3>
+<p><strong>0.1.0</strong> (Bản phát triển, không phát hành)</p>
+<ul>
+<li>Bộ đề chuẩn 31 bài; E2E Playwright (PROGRESS '2026-09-29 | 3')</li>
+<li>Đo hiệu năng: khởi động 0,28 s, JS ban đầu 168 KB gzip (PROGRESS '2026-09-29 | 6')</li>
+<li>Job 'Tests before packaging' đạt ở run 36565163753 và 36573143091</li>
+<li>Số lượng unit/E2E/Rust test của bản này: chưa xác minh được</li>
+</ul>
+<p><strong>0.2.0</strong> (Đã phát hành)</p>
+<ul>
+<li>317 unit test, 27 E2E, 21 Rust test đạt (PROGRESS '2026-10-05 | sửa')</li>
+<li>Job 'Tests before packaging' đạt (run 37257271728)</li>
+</ul>
+<p><strong>0.3.0</strong> (Đã phát hành)</p>
+<ul>
+<li>Job 'Tests before packaging' đạt (run 37489652593); test bảo đảm bản THPT không chứa mã Gemini (PROGRESS 3b.1)</li>
+<li>E2E Kết nối AI (khóa đúng/sai/hết hạn mức/mất mạng), E2E 1366×768, test chữ ký thứ hai (commit e041c0b, 1409eeb, 511fef2)</li>
+<li>Tổng số unit/E2E/Rust test của 0.3.0: chưa xác minh được (các hàng 3b của PROGRESS không ghi số)</li>
+</ul>
+<p><strong>0.4.0</strong> (Chưa xác minh)</p>
+<ul>
+<li>format:check + lint + typecheck sạch, 412 unit test, build (PROGRESS 'fork-sửa'); 61 tệp / 416 test (PROGRESS 'fork-kiểm')</li>
+<li>4 E2E Thầy AI mới; số liệu kiểm tra cuối của 0.4.0: chưa xác minh được (PROGRESS trỏ tới docs/AI_TUTOR.md nhưng tài liệu đó không có số test)</li>
+</ul>
+<p><strong>0.4.1</strong> (Đã phát hành)</p>
+<ul>
+<li>457 unit, 47 E2E, Rust 53 + 48 (bản chính + THPT), clippy (PROGRESS 'fork-0.4.1'; mô tả PR #7; commit e342263)</li>
+<li>Thử thật: tải Gemma 270M (≈ 343 MB), nạp lên GPU AMD, trả lời trên máy trong 39 s (PROGRESS 'fork-0.4.1')</li>
+<li>Job 'Tests before packaging' đạt (run 38210325461)</li>
+</ul>
+<p><strong>0.4.2</strong> (Chưa xác minh)</p>
+<ul>
+<li>467 unit, 47 E2E (Edge 154), Rust 60 + 55 (bản chính + THPT), clippy; chọn RTX → mở lại → WebGPU báo nvidia/blackwell (PROGRESS 'fork-0.4.2')</li>
+</ul>
+<p><strong>0.4.3</strong> (Chưa xác minh)</p>
+<ul>
+<li>491 unit, 48 E2E (Edge 154), Rust 63 + 57 (PROGRESS 'fork-0.4.3')</li>
+<li>Mâu thuẫn: mô tả PR #8 ghi 'npm run check PASS — 484 test', 'E2E 48/48', 'Rust … 58 test'; chưa xác minh được lần chạy nào đúng</li>
+</ul>
+<p><strong>0.5.0</strong> (Đã phát hành)</p>
+<ul>
+<li>format:check/lint/typecheck đạt; 553 unit; E2E 49/49; Rust fmt + clippy + 61 test; build; thử tay tải giọng MMS 115 MB và bài giảng mẫu trên bảng (PR #14, PROGRESS '0.5.0-gộp')</li>
+<li>558 unit, 49 E2E, build; xem tận mắt 1366×768 sáng/tối (PROGRESS '0.5.0-gọn', vẫn trong PR #14)</li>
+<li>Job 'Tests before packaging' đạt (run 38336613170)</li>
+</ul>
+<p><strong>0.5.1</strong> (Đã gộp, chưa phát hành)</p>
+<ul>
+<li>format/lint/typecheck đạt; 565 unit; E2E 49/49; Rust fmt + clippy + 62 test; build web + bản release; dựng thử gói MSIX trên máy (12 MB) (PR #15, PROGRESS '0.5.1-store')</li>
+<li>PR #17: prettier, YAML hợp lệ, test cấp app (63)</li>
+</ul>
+<p><strong>0.5.2</strong> (Đã phát hành)</p>
+<ul>
+<li>format:check, lint, typecheck sạch; 587 unit test (86 tệp); build; 49 E2E; ảnh 1366×768 sáng/tối (PR #18, PROGRESS '0.5.2-ui-polish')</li>
+<li>Trạng thái ban đầu của audit tại c25ad9d: Rust fmt/clippy/62 test; 587 unit; 49 E2E; npm audit 0; CI 4/4 (AUDIT G0)</li>
+<li>Job 'Tests before packaging' đạt (run 38415240996)</li>
+<li>Hai E2E mở module Sinh học lần đầu có thể hết giờ khi chạy song song trên Windows; lần chạy đầu của PR #19 có 4 lần hết giờ khi máy tải nặng, chạy lại thì qua</li>
+</ul>
+<p><strong>0.6.0</strong> (Đang xét duyệt)</p>
+<ul>
+<li>format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)</li>
+<li>App desktop bản release dựng trên máy người phát triển: chặn điều hướng ra trang ngoài, công thức KaTeX đúng vị trí, mô phỏng 3D mở được (AUDIT)</li>
+<li>Gemma 270M/1B chạy thật trên card NVIDIA RTX 5060; đánh giá 30 câu chấm lại ngày 14/10, cùng thước chấm và cùng cách sinh chữ (greedy, Gemma 1B, docs/TEACHING_EVAL.md): câu trả lời về khái niệm/hiểu lầm kết thúc bằng câu hỏi kiểm tra ở 43,8 % với lời nhắc của PR #20 (f527f18) và chỉ 18,8 % với lời nhắc v2 trên nhánh local. Các số 4 % → 42 % và 29 % → 23 % trong AUDIT G3 theo thước chấm lúc đó, không so trực tiếp được</li>
+<li>Benchmark 168/168 lượt, 42 câu, Gemma 1B: cách sinh văn bản mới tăng ý chính đúng 13,4 điểm với prompt cũ (kiểm định dấu p = 0,007; câu đúng, McNemar p = 0,031); lời nhắc của PR #20 (f527f18) không đúng hơn prompt cũ; nhánh local dùng lời nhắc v2, đo được ý chính đúng 31,3 % (prompt và cách sinh cũ) → 47,7 % (docs/TEACHING_EVAL.md)</li>
+<li>Workflow 'Security checks' đạt trên PR #20 (2026-10-13T19:05:44Z)</li>
+<li>Số test của các commit sau đầu PR f527f18: xem docs/PROGRESS.md hàng '0.6.0-g6-g7' (số cuối cùng được ghi ở đó)</li>
+</ul>
+<h2>VII. Những vấn đề chưa hoàn thành</h2>
+<h3>Vấn đề đã biết của bản mới nhất (0.6.0, Đang xét duyệt)</h3>
+<ul>
+<li>Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.</li>
+<li>Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).</li>
+<li>Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.</li>
+<li>Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.</li>
+<li>Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.</li>
+<li>Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.</li>
+<li>Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).</li>
+<li>Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.</li>
+</ul>
+<h3>Phiên bản chưa phát hành hoặc chưa xác minh</h3>
+<ul>
+<li><strong>0.6.0</strong> (Đang xét duyệt): PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5.</li>
+<li><strong>0.5.1</strong> (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.</li>
+<li><strong>0.4.3</strong> (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.</li>
+<li><strong>0.4.2</strong> (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.</li>
+<li><strong>0.4.0</strong> (Chưa xác minh): Bản fork 'Thầy AI' gửi dưới dạng tệp ZIP. Không commit nào mang số 0.4.0 (package.json đi thẳng 0.3.0 → 0.4.1) và ZIP chưa được mở để kiểm. Nội dung vào git và được phát hành cùng 0.4.1.</li>
+<li><strong>0.1.0</strong> (Bản phát triển, không phát hành): Phiên bản khởi tạo. GitHub Actions dựng bộ cài 2 lần ngày 29/09/2026 nhưng chỉ thành artifact: không có tag v0.1.0 và không có GitHub Release.</li>
+</ul>
+<h3>Điểm chưa xác minh được</h3>
+<ul>
+<li>Ngày tạo tag: cả 5 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.</li>
+<li>0.1.0: có hai bản dựng thử (artifact) ngày 29/09/2026 nhưng không có tag hay GitHub Release; cần quyết định có nhắc bản này trong ghi chú phát hành công khai hay không.</li>
+<li>0.4.0: chỉ có tên tệp ZIP, hàng PROGRESS 'fork-0.4.0' và CLAUDE.md; chưa mở ZIP để xem package.json, và chưa biết ZIP được gửi cho ai, ngày nào (ngày sửa tệp không phải ngày phân phối).</li>
+<li>0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.</li>
+<li>0.5.0: tệp ZIP mang tên v0.5.0 được tạo trước khi gộp PR #8, nên khác bản phát hành v0.5.0.</li>
+<li>0.5.1: chưa biết trạng thái hiện tại của gói Microsoft Store (đã qua duyệt chưa, đã bấm Publish now chưa) và gói MSIX đã nộp được dựng ở đâu.</li>
+<li>0.6.0: mọi commit đã ở trên PR #20; số liệu test của lần chạy cuối ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7) và mô tả PR #20, phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.</li>
+<li>Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu.</li>
+</ul>
+<h2>VIII. Tham chiếu commit, PR, tag và GitHub Release</h2>
+<p>Kho mã: <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab">https://github.com/minhpdnfhh32934-cell/stem-sim-lab</a>. Commit chỉ có trên nhánh local (ghi trong phần bằng chứng) không mở được trên GitHub.</p>
+<table>
+<thead><tr><th>Phiên bản</th><th>Tag</th><th>Commit của tag</th><th>GitHub Release</th><th>PR</th><th>Commit (đầu → cuối)</th><th>Nhánh</th></tr></thead>
+<tbody>
+<tr><td>0.6.0</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20">#20</a></td><td><code>511345d</code> → <code>f527f18</code> → <code>8a3c48d</code></td><td><code>feat/audit-g0-g5</code>, <code>feat/mitosis-3d</code>, <code>feat/teacher-quality</code>, <code>feat/voice-natural</code>, <code>feat/release-history</code></td></tr>
+<tr><td>0.5.2</td><td><code>v0.5.2</code></td><td><code>c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2">Release v0.5.2</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18">#18</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19">#19</a></td><td><code>f25e3ae</code> → <code>c25ad9d</code></td><td><code>feat/ui-polish</code>, <code>release/0.5.2</code></td></tr>
+<tr><td>0.5.1</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15">#15</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16">#16</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17">#17</a></td><td><code>2d506e7</code> → <code>069df6c</code></td><td><code>feat/microsoft-store</code>, <code>chore/store-identity</code>, <code>chore/store-manual-submit</code></td></tr>
+<tr><td>0.5.0</td><td><code>v0.5.0</code></td><td><code>c6d01f4081eee86e244136074e6997dd64bebe3f</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0">Release v0.5.0</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11">#11</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12">#12</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13">#13</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14">#14</a></td><td><code>cbb176a</code> → <code>c6d01f4</code></td><td><code>feat/simlab-ai-teacher-board</code>, <code>feat/v0.5.0-gpu-thay-ai</code>, <code>fix/knowledge-review-status</code>, <code>perf/ort-asyncify-only</code>, <code>chore/message-parse-module</code></td></tr>
+<tr><td>0.4.3</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a></td><td><code>cbb176a</code></td><td><code>feat/v0.5.0-gpu-thay-ai</code></td></tr>
+<tr><td>0.4.2</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8">#8</a></td><td><code>cbb176a</code> → <code>d15587e</code></td><td><code>feat/v0.5.0-gpu-thay-ai</code></td></tr>
+<tr><td>0.4.1</td><td><code>v0.4.1</code></td><td><code>e342263be0836737e1c0a1eab009ced49f22ad8c</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.4.1">Release v0.4.1</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/7">#7</a></td><td><code>17e1cd4</code> → <code>e342263</code></td><td><code>fork/thay-ai</code>, <code>master</code></td></tr>
+<tr><td>0.4.0</td><td>—</td><td>—</td><td>—</td><td>—</td><td><code>0f4d2f8</code></td><td><code>master</code></td></tr>
+<tr><td>0.3.0</td><td><code>v0.3.0</code></td><td><code>1e7029a602ce17a29796a187e5093f7cec76987a</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.3.0">Release v0.3.0</a></td><td>—</td><td><code>d587a4c</code> → <code>1e7029a</code></td><td><code>main</code></td></tr>
+<tr><td>0.2.0</td><td><code>v0.2.0</code></td><td><code>7d32305da0d2e21fd62676d7250170801c2240b9</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.2.0">Release v0.2.0</a></td><td>—</td><td><code>c515250</code> → <code>7d32305</code></td><td><code>main</code></td></tr>
+<tr><td>0.1.0</td><td>—</td><td>—</td><td>—</td><td>—</td><td><code>b9a2430</code> → <code>f857ec7</code></td><td><code>main</code></td></tr>
+</tbody>
+</table>
+</body>
+</html>

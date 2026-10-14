@@ -1,4 +1,4 @@
-import { useEffect, useSyncExternalStore } from 'react';
+import { useLayoutEffect, useSyncExternalStore } from 'react';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { useSettingsStore, type ResolvedTheme } from '@/app/settings/settingsStore';
 
@@ -32,14 +32,18 @@ export function useResolvedTheme(): ResolvedTheme {
 /** Presentation mode enlarges everything on top of the user's font scale. */
 const PRESENTATION_BOOST = 1.25;
 
-/** Reflects theme, language and font scale onto <html> so CSS tokens can react. */
+/**
+ * Reflects theme, language and font scale onto <html> so CSS tokens can react. A layout
+ * effect: it runs before every passive effect of the same commit, so views that read theme
+ * tokens in their own effects (canvas, three.js palettes) already see the new theme's values.
+ */
 export function useApplyTheme(): ResolvedTheme {
   const theme = useResolvedTheme();
   const locale = useSettingsStore((s) => s.locale);
   const fontScale = useSettingsStore((s) => s.fontScale);
   const presentation = useLayoutStore((s) => s.presentation);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = theme;
     root.lang = locale;

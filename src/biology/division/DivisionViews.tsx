@@ -1,12 +1,20 @@
 import { ChevronLeft, ChevronRight, Pause, Play, Shuffle } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useCanvas, type DrawContext } from '@/ui/canvas/useCanvas';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
-import { STAGE_NAME, STAGE_NOTE, cardFor, useDivisionStore, useStages } from './state';
+import {
+  PAIR_CHOICES,
+  STAGE_NAME,
+  STAGE_NOTE,
+  cardFor,
+  useDivisionStore,
+  useStages,
+} from './state';
+import { claimStageIndex, setDivisionState } from './stageIndex';
 import {
   STAGES,
   countsOf,
@@ -165,7 +173,17 @@ function drawStage(d: DrawContext, s: StageState) {
   });
 }
 
-export function DivisionStage({ kind }: { kind: Division }) {
+export function DivisionStage({
+  kind,
+  toolbar,
+  notice,
+}: {
+  kind: Division;
+  /** Extra controls at the end of the toolbar (the mitosis 3D / 2D switch). */
+  toolbar?: ReactNode;
+  /** Why this 2D picture is shown instead of the 3D one, when it is not the learner's choice. */
+  notice?: string | undefined;
+}) {
   const Lz = useLocalized();
   const card = useMemo(() => cardFor(kind), [kind]);
   usePublishCard(card);
@@ -175,19 +193,22 @@ export function DivisionStage({ kind }: { kind: Division }) {
   const s = stages[i];
 
   useEffect(() => {
-    useDivisionStore.setState({ index: 0, playing: false });
+    // Keeps the stage when it is this division's (back from the 3D view, a restored file);
+    // an index written for the other division starts again at the first stage.
+    claimStageIndex(kind);
+    useDivisionStore.setState({ playing: false });
   }, [kind]);
   useEffect(() => {
     if (!playing) return;
     const id = window.setInterval(() => {
       const st = useDivisionStore.getState();
       if (st.index >= stages.length - 1) useDivisionStore.setState({ playing: false });
-      else useDivisionStore.setState({ index: st.index + 1 });
+      else setDivisionState(kind, { index: st.index + 1 });
     }, 1600);
     return () => {
       window.clearInterval(id);
     };
-  }, [playing, stages.length]);
+  }, [playing, stages.length, kind]);
 
   const canvasRef = useCanvas(
     (d) => {
@@ -204,10 +225,10 @@ export function DivisionStage({ kind }: { kind: Division }) {
       <div className="chem-overlay">
         <IconButton
           icon={ChevronLeft}
-          label={Lz(L('Kì trước', 'Previous stage'))}
+          label={Lz(L('Bước trước', 'Previous step'))}
           disabled={i === 0}
           onClick={() => {
-            useDivisionStore.setState({ index: Math.max(0, i - 1), playing: false });
+            setDivisionState(kind, { index: Math.max(0, i - 1), playing: false });
           }}
         />
         <IconButton
@@ -215,21 +236,19 @@ export function DivisionStage({ kind }: { kind: Division }) {
           label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
           variant="solid"
           onClick={() => {
-            useDivisionStore.setState((x) => ({
+            const x = useDivisionStore.getState();
+            setDivisionState(kind, {
               playing: !x.playing,
               index: x.index >= stages.length - 1 ? 0 : x.index,
-            }));
+            });
           }}
         />
         <IconButton
           icon={ChevronRight}
-          label={Lz(L('Kì sau', 'Next stage'))}
+          label={Lz(L('Bước tiếp theo', 'Next step'))}
           disabled={i >= stages.length - 1}
           onClick={() => {
-            useDivisionStore.setState({
-              index: Math.min(stages.length - 1, i + 1),
-              playing: false,
-            });
+            setDivisionState(kind, { index: Math.min(stages.length - 1, i + 1), playing: false });
           }}
         />
         <span className="chem-chip">
@@ -246,9 +265,12 @@ export function DivisionStage({ kind }: { kind: Division }) {
           {Lz(L(' / tế bào', ' / cell'))}
         </span>
         <span className="chem-chip bio-legend">
-          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'maternal'))}
-          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'paternal'))}
+          {Lz(L('NST nguồn gốc', 'Chromosomes from'))}
+          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'the mother'))}
+          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'the father'))}
         </span>
+        {toolbar}
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
       <p className="bio-caption">{Lz(STAGE_NOTE[s.stage])}</p>
     </div>
@@ -265,10 +287,10 @@ export function DivisionPanel({ kind }: { kind: Division }) {
         <select
           value={pairs}
           onChange={(e) => {
-            useDivisionStore.setState({ pairs: Number(e.target.value), index: 0 });
+            setDivisionState(kind, { pairs: Number(e.target.value), index: 0 });
           }}
         >
-          {[1, 2, 3, 4].map((n) => (
+          {PAIR_CHOICES.map((n) => (
             <option key={n} value={n}>
               2n = {2 * n}
             </option>
@@ -355,10 +377,19 @@ export function DivisionBottom({ kind }: { kind: Division }) {
                 key={s.stage}
                 className={cx(k === index && 'is-active')}
                 onClick={() => {
-                  useDivisionStore.setState({ index: k, playing: false });
+                  setDivisionState(kind, { index: k, playing: false });
                 }}
               >
-                <th scope="row">{Lz(STAGE_NAME[s.stage])}</th>
+                <th scope="row">
+                  {/* Keyboard access to the row: its click bubbles up to the row's handler. */}
+                  <button
+                    type="button"
+                    className="bio-row-btn"
+                    aria-current={k === index ? 'step' : undefined}
+                  >
+                    {Lz(STAGE_NAME[s.stage])}
+                  </button>
+                </th>
                 <td className="num">{c.cells}</td>
                 <td className="num">{c.chromosomes}</td>
                 <td>{Lz(c.state === 'double' ? L('kép', 'double') : L('đơn', 'single'))}</td>

@@ -1,0 +1,898 @@
+{
+  "about": "AI Teacher evaluation set (audit EDU-02, 2026-10-13). Patterns are matched on the answer folded to ASCII lower case (no accents, đ → d). keyFacts: every group needs one match (textbook facts, review_status pending: docs/DATA_REVIEW.md). mustNot: known wrong statements. Scoring: scripts/teaching/rubric.mjs. Optional fields: missing (groups naming each missing quantity, asked for in a data request), answerUnit (unit of the asked quantity: a new number before it is an invented answer), allowNumbers (numbers a correct answer may write although the question does not), steps (ordered stages of keyFacts indices), trap {note, premise} (keyFacts[0] is the explicit correction), derivation and expected (for reviewers), review_status per item. Only objective checks; explanation quality still needs a teacher's reading. expected/keyPoints of P1–P10, C1–C10, B1–B10: reference answers for judging (AI-written, independently AI-checked, pending teacher review; scripts/teaching/judge-rubric.md).",
+  "review_status": "pending",
+  "items": [
+    {
+      "id": "P1",
+      "subject": "physics",
+      "type": "concept",
+      "question": "Lực ma sát nghỉ là gì? Cho một ví dụ.",
+      "keyFacts": [
+        ["ma sat nghi"],
+        [
+          "chua (chuyen dong|truot|di chuyen)|khong (chuyen dong|truot|di chuyen)|giu (cho )?vat|can (tro|lai)"
+        ]
+      ],
+      "mustNot": [],
+      "expected": "Lực ma sát nghỉ là lực xuất hiện ở mặt tiếp xúc giữa hai vật khi có ngoại lực (hay xu hướng) làm vật trượt nhưng vật vẫn chưa chuyển động: nó giữ cho vật đứng yên so với mặt tiếp xúc. Lực có phương song song (tiếp tuyến) với mặt tiếp xúc, ngược chiều với xu hướng chuyển động, độ lớn bằng thành phần ngoại lực song song mặt tiếp xúc và chỉ tăng đến một giá trị cực đại; vượt quá giá trị đó thì vật bắt đầu trượt (khi đó là ma sát trượt). Ví dụ: đẩy nhẹ một thùng hàng nặng mà thùng chưa nhúc nhích; quyển sách nằm yên trên mặt bàn hơi nghiêng; ma sát nghỉ ở đế giày giúp ta bước đi không bị trượt.",
+      "keyPoints": [
+        "Xuất hiện khi vật có xu hướng chuyển động (chịu ngoại lực) nhưng chưa trượt; giữ vật đứng yên so với mặt tiếp xúc",
+        "Phương song song mặt tiếp xúc, chiều ngược với xu hướng chuyển động",
+        "Độ lớn bằng thành phần ngoại lực song song mặt tiếp xúc, có giá trị cực đại (ngoại lực vượt quá thì vật trượt)",
+        "Có ít nhất một ví dụ đúng: đẩy thùng chưa chuyển động, sách đứng yên trên mặt nghiêng, bàn chân không trượt khi đi bộ, xe đứng yên trên dốc",
+        "Không nhầm với ma sát trượt (xuất hiện khi vật đã trượt)"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P2",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Vì sao trong chân không, vật nặng và vật nhẹ rơi tự do nhanh như nhau?",
+      "keyFacts": [["gia toc"], ["khong phu thuoc|(?<!nhanh )nhu nhau|nhu cu|bang nhau"]],
+      "mustNot": [
+        "(?<!(khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu) )vat (nang|nhe) (se |thi )?(roi )?nhanh hon"
+      ],
+      "expected": "Trong chân không, lực duy nhất tác dụng lên vật là trọng lực P = mg, nên theo định luật II Newton a = P/m = mg/m = g: gia tốc rơi tự do không phụ thuộc khối lượng, mọi vật ở cùng một nơi đều rơi với cùng gia tốc g. Vật nặng chịu trọng lực lớn hơn nhưng cũng có khối lượng (quán tính) lớn hơn đúng bằng tỉ lệ đó, nên hai hiệu ứng triệt tiêu. Vì vậy thả cùng độ cao, không vận tốc đầu thì hai vật chạm đất cùng lúc (t = √(2h/g)); trong không khí chúng rơi khác nhau là do lực cản không khí, không phải do khối lượng.",
+      "keyPoints": [
+        "Trong chân không chỉ có trọng lực tác dụng (không có lực cản)",
+        "a = P/m = g: gia tốc không phụ thuộc khối lượng, như nhau với mọi vật tại cùng một nơi",
+        "Trọng lực lớn hơn được bù bởi khối lượng (quán tính) lớn hơn",
+        "Cùng độ cao, cùng điều kiện thả thì cùng thời gian rơi",
+        "Sự khác biệt hằng ngày là do lực cản không khí",
+        "Không được khẳng định vật nặng rơi nhanh hơn (trừ khi nêu như một quan niệm sai)"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P3",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Một vật khối lượng 2 kg chịu lực kéo 10 N trên mặt phẳng ngang không ma sát. Tính gia tốc của vật.",
+      "keyFacts": [["\\b5 ?m/s"], ["f ?= ?m ?.?a|a ?= ?f ?/ ?m|dinh luat (ii|2|hai)|newton"]],
+      "mustNot": ["\\b20 ?m/s"],
+      "expected": "Hiểu lực kéo 10 N nằm ngang. Theo phương thẳng đứng, trọng lực và phản lực của mặt phẳng cân bằng nhau; theo phương ngang không có ma sát nên hợp lực bằng lực kéo. Theo định luật II Newton: a = F/m = 10 N / 2 kg = 5 m/s², cùng hướng với lực kéo.",
+      "keyPoints": [
+        "Áp dụng định luật II Newton F = m·a (a = F/m)",
+        "Trọng lực và phản lực cân bằng; không ma sát nên hợp lực = lực kéo",
+        "a = 10/2 = 5 m/s², đơn vị m/s²",
+        "Hướng của gia tốc cùng hướng lực kéo",
+        "Sai điển hình: 20 m/s² (nhân F·m)"
+      ],
+      "derivation": "Chọn trục Ox theo hướng lực kéo (nằm ngang), Oy thẳng đứng. Oy: N − P = 0. Ox: F = m·a ⇒ a = F/m = 10 / 2 = 5 m/s². Sai điển hình 20 m/s² = 10 × 2 (nhân thay vì chia).",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P4",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Thả rơi tự do một hòn bi từ độ cao 20 m, lấy g = 10 m/s². Tính thời gian rơi.",
+      "keyFacts": [["\\b2 ?(s\\b|giay)"], ["t\\^?2|sqrt|can bac hai|can\\(|h ?= ?.{0,10}g"]],
+      "mustNot": ["\\b4 ?(s\\b|giay)"],
+      "expected": "Rơi tự do không vận tốc đầu: h = ½gt², suy ra t = √(2h/g) = √(2·20/10) = √4 = 2 s. Cũng có thể làm theo cách khác: v = √(2gh) = √(2·10·20) = 20 m/s, rồi t = v/g = 20/10 = 2 s. Lỗi thường gặp là quên lấy căn bậc hai (2h/g = 4) rồi trả lời 4 s. Cần chú ý một chỗ trùng số: viết t = h/g = 20/10 = 2 s cũng ra 2 s nhưng công thức này sai (h/g có đơn vị s², không phải s). Câu trả lời như vậy không được coi là đúng hoàn toàn: chỉ đúng một phần, vì sai ở bước lập luận.",
+      "keyPoints": [
+        "Công thức rơi tự do h = ½·g·t² (vận tốc đầu bằng 0)",
+        "t = √(2h/g) (hoặc v = √(2gh) = 20 m/s, rồi t = v/g)",
+        "t = 2 s, đơn vị giây",
+        "Có thể kiểm tra: v = g·t = 20 m/s khi chạm đất (không bắt buộc)",
+        "Sai điển hình: 4 s (quên căn bậc hai)",
+        "Bẫy trùng số: t = h/g = 2 s cho đúng số nhưng sai công thức và sai đơn vị (s²), nên chỉ đúng một phần"
+      ],
+      "derivation": "h = ½gt² ⇒ t² = 2h/g = 2·20/10 = 4 s² ⇒ t = √4 = 2 s. Kiểm tra: ½·10·2² = 20 m. Sai điển hình 4 s = 2h/g (quên lấy căn).",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P5",
+      "subject": "physics",
+      "type": "missing-data",
+      "question": "Tính quãng đường ô tô đi được.",
+      "keyFacts": [["van toc|thoi gian|gia toc|thieu|cho biet|can biet"]],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["van toc|toc do|gia toc|thoi gian|bao lau"]],
+      "expected": "Đề thiếu dữ kiện: phải hỏi lại vận tốc (tốc độ) của ô tô và thời gian chuyển động, hoặc nếu ô tô chuyển động biến đổi đều thì cần vận tốc đầu, gia tốc và thời gian (hay vận tốc cuối). Có thể nêu công thức sẽ dùng (s = v·t với chuyển động đều; s = v₀t + ½at² với chuyển động biến đổi đều), nhưng không được tự giả sử giá trị và không đưa ra quãng đường bằng số.",
+      "keyPoints": [
+        "Nhận ra đề thiếu dữ kiện và hỏi lại",
+        "Hỏi vận tốc/tốc độ và thời gian (hoặc gia tốc, vận tốc đầu, loại chuyển động)",
+        "Có thể nêu công thức s = v·t hoặc s = v₀t + ½at² để định hướng",
+        "Không tự chọn giá trị, không đưa ra đáp số bằng số"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P6",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Có phải khi vật chuyển động thẳng đều thì không có lực nào tác dụng lên vật không?",
+      "keyFacts": [["hop luc|tong (cac )?luc|can bang"], ["bang 0|bang khong|triet tieu|can bang"]],
+      "mustNot": [
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)|(?<!(tac|su) )dung la khong co luc"
+      ],
+      "expected": "Không đúng. Vật chuyển động thẳng đều có gia tốc bằng 0, nên theo định luật I (và II) Newton hợp lực tác dụng lên vật bằng 0: vật hoặc không chịu lực nào, hoặc chịu các lực cân bằng nhau (triệt tiêu nhau). Trên Trái Đất vật luôn chịu trọng lực, ví dụ ô tô chạy thẳng đều trên đường ngang: lực kéo của động cơ cân bằng với lực cản và ma sát, trọng lực cân bằng với phản lực của mặt đường. Lực không cần để duy trì chuyển động, lực chỉ cần để thay đổi vận tốc.",
+      "keyPoints": [
+        "Khẳng định rõ là không đúng (không mở đầu bằng \"Đúng\")",
+        "Chuyển động thẳng đều ⇒ a = 0 ⇒ hợp lực bằng 0",
+        "Có thể có nhiều lực tác dụng nhưng chúng cân bằng nhau",
+        "Ví dụ thực tế: ô tô chạy đều (lực kéo cân bằng lực cản; trọng lực cân bằng phản lực)",
+        "Lực là nguyên nhân làm thay đổi vận tốc, không phải để duy trì chuyển động"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P7",
+      "subject": "physics",
+      "type": "concept",
+      "question": "Động năng là gì và phụ thuộc vào những đại lượng nào?",
+      "keyFacts": [
+        ["khoi luong"],
+        ["van toc|toc do"],
+        ["1/2|mot nua|frac\\{1\\}\\{2\\}|mv\\^?2|m ?v ?\\^? ?2|m ?[.·×*]? ?v ?(\\^ ?\\{?2|²)"]
+      ],
+      "mustNot": [],
+      "expected": "Động năng là dạng năng lượng mà vật có được do nó đang chuyển động. Công thức: W_đ = ½mv², trong đó m là khối lượng (kg), v là tốc độ của vật (m/s), đơn vị là jun (J). Động năng phụ thuộc khối lượng (tỉ lệ thuận với m) và tốc độ (tỉ lệ với bình phương tốc độ, nên tốc độ tăng gấp đôi thì động năng tăng gấp bốn); động năng là đại lượng vô hướng, không âm, không phụ thuộc hướng chuyển động và có giá trị phụ thuộc hệ quy chiếu.",
+      "keyPoints": [
+        "Định nghĩa: năng lượng vật có do chuyển động",
+        "W_đ = ½·m·v², đơn vị jun (J)",
+        "Phụ thuộc khối lượng m (tỉ lệ thuận)",
+        "Phụ thuộc tốc độ v (tỉ lệ với v²)",
+        "Vô hướng, không âm; phụ thuộc hệ quy chiếu (không bắt buộc)"
+      ],
+      "derivation": "W_đ = ½mv². Với m gấp đôi: ½(2m)v² = 2·W_đ. Với v gấp đôi: ½m(2v)² = 4·W_đ.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P8",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Một lò xo có độ cứng 100 N/m bị nén 0,1 m. Tính độ lớn lực đàn hồi.",
+      "keyFacts": [
+        ["\\b10 ?n\\b"],
+        ["k ?.?\\|?.?x|k ?[*.·×]? ?\\|? ?\\\\?\\(?(delta|δ)|hooke|\\bhuc\\b"]
+      ],
+      "mustNot": ["\\b1000 ?n\\b"],
+      "expected": "Theo định luật Hooke (Húc), trong giới hạn đàn hồi, độ lớn lực đàn hồi F_đh = k·|Δl| = 100 N/m × 0,1 m = 10 N. Lực đàn hồi có phương dọc trục lò xo và chiều ngược với chiều biến dạng: lò xo bị nén nên lực đàn hồi đẩy ra, chống lại sự nén.",
+      "keyPoints": [
+        "Định luật Hooke F_đh = k·|Δl|",
+        "F_đh = 100 × 0,1 = 10 N",
+        "Điều kiện: trong giới hạn đàn hồi",
+        "Chiều lực ngược chiều biến dạng (lò xo nén thì đẩy ra)",
+        "Sai điển hình: 1000 N (chia k cho Δl)"
+      ],
+      "derivation": "F_đh = k·|Δl| = 100 N/m × 0,1 m = 10 N. Kiểm tra đơn vị: (N/m)·m = N. Sai điển hình 1000 N = 100 / 0,1 (chia thay vì nhân).",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P9",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Chu kì của con lắc đơn dao động nhỏ có phụ thuộc vào khối lượng quả nặng không?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong[*_ ]*[,.!:]|khong phu thuoc (vao )?(khoi luong|m\\b)|doc lap (voi|vao) khoi luong|khoi luong khong anh huong|khong (co|chua) (m\\b|khoi luong)"
+        ],
+        ["chieu dai|do dai"],
+        ["\\bg\\b|gia toc trong truong"]
+      ],
+      "mustNot": [
+        "(co|chu k[iy]) phu thuoc vao khoi luong(?!( qua nang)? (khong|hay))|t[iy] le (nghich|thuan) voi khoi luong"
+      ],
+      "expected": "Không. Với dao động nhỏ (biên độ góc nhỏ), chu kì con lắc đơn T = 2π√(l/g) chỉ phụ thuộc chiều dài dây l và gia tốc trọng trường g, không phụ thuộc khối lượng quả nặng (và gần như không phụ thuộc biên độ). Lí do: lực kéo về tỉ lệ với m (là thành phần của trọng lực mg) và quán tính cũng tỉ lệ với m, nên m bị triệt tiêu trong phương trình chuyển động a = −(g/l)·s (s là li độ cong). Điều này đúng với giả thiết dây nhẹ, không dãn, bỏ qua lực cản và kích thước quả nặng.",
+      "keyPoints": [
+        "Trả lời rõ: không phụ thuộc khối lượng",
+        "T = 2π√(l/g)",
+        "Phụ thuộc chiều dài dây l (T tỉ lệ với √l)",
+        "Phụ thuộc gia tốc trọng trường g, tức là nơi đặt con lắc (T tỉ lệ với 1/√g)",
+        "T chỉ phụ thuộc l và g (với dao động nhỏ)",
+        "Lí do: khối lượng triệt tiêu (lực kéo về và quán tính đều tỉ lệ với m)",
+        "Điều kiện: dao động nhỏ, dây nhẹ không dãn, bỏ qua ma sát/lực cản"
+      ],
+      "derivation": "Lực kéo về F = −mg·sinα ≈ −mg·s/l (α nhỏ). a = F/m = −(g/l)·s ⇒ ω = √(g/l), T = 2π/ω = 2π√(l/g): không chứa m.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P10",
+      "subject": "physics",
+      "type": "followup",
+      "history": [
+        {
+          "role": "user",
+          "content": "Định luật II Newton nói gì?"
+        },
+        {
+          "role": "assistant",
+          "content": "Gia tốc của vật tỉ lệ thuận với lực tác dụng và tỉ lệ nghịch với khối lượng: a = F/m. Câu hỏi kiểm tra: nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì gia tốc thay đổi thế nào?"
+        }
+      ],
+      "question": "Gia tốc tăng gấp đôi ạ.",
+      "keyFacts": [
+        ["chua (dung|chinh xac)|sai|khong (dung|phai)"],
+        ["giam|mot nua|mot phan hai|1/2"]
+      ],
+      "mustNot": [
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
+      ],
+      "expected": "Câu trả lời của học sinh chưa đúng. Theo a = F/m, gia tốc tỉ lệ nghịch với khối lượng: nếu khối lượng tăng gấp đôi mà lực giữ nguyên thì a' = F/(2m) = a/2, tức là gia tốc giảm đi một nửa (giảm 2 lần), không phải tăng gấp đôi. Giáo viên nên nhận xét nhẹ nhàng, chỉ ra chỗ nhầm (tưởng tỉ lệ thuận với khối lượng) và có thể hỏi thêm một câu kiểm tra, ví dụ nếu lực tăng gấp đôi còn khối lượng giữ nguyên thì gia tốc thay đổi thế nào.",
+      "keyPoints": [
+        "Nói rõ học sinh trả lời chưa đúng (không khen \"đúng rồi\")",
+        "Gia tốc tỉ lệ nghịch với khối lượng",
+        "a' = F/(2m) = a/2: gia tốc giảm một nửa",
+        "Chỉ ra chỗ nhầm: nhầm tỉ lệ nghịch thành tỉ lệ thuận",
+        "Giọng khích lệ, có thể kèm câu hỏi kiểm tra tiếp"
+      ],
+      "derivation": "a = F/m. Giữ F, thay m bằng 2m: a' = F/(2m) = ½·(F/m) = a/2. Ví dụ minh họa: F = 10 N, m = 2 kg ⇒ a = 5 m/s²; m = 4 kg ⇒ a' = 2,5 m/s² (giảm một nửa).",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "P11",
+      "subject": "physics",
+      "type": "missing-data",
+      "question": "Một ô tô đang chạy với vận tốc 20 m/s thì hãm phanh và chuyển động chậm dần đều. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
+      "keyFacts": [
+        ["gia toc|thoi gian|bao lau|luc ham(?! phanh)|(do lon|gia tri) (cua )?luc ham|khoi luong"],
+        [
+          "v_?\\{?0?\\}? ?(\\^ ?\\{?2|²)|2 ?[.·×*]? ?a ?[.·×*]? ?s\\b|2as|v_?0 ?[.·×*]? ?t\\b|cong thuc|phuong trinh|phu thuoc|de tinh|neu (biet|co)"
+        ]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [
+        [
+          "gia toc|thoi gian|bao lau|luc ham(?! phanh)|(do lon|gia tri) (cua )?luc ham|khoi luong|he so ma sat"
+        ]
+      ],
+      "answerUnit": "(m|met|km)\\b(?! ?/)",
+      "allowNumbers": ["0", "1", "2", "400"],
+      "expected": "Hỏi lại gia tốc (hoặc thời gian hãm phanh, hoặc lực hãm và khối lượng); có thể nêu công thức v² − v₀² = 2as với v = 0. Không tự chọn gia tốc, không đưa ra quãng đường bằng số. Cặp với P13 (cùng tình huống, đủ dữ kiện).",
+      "review_status": "pending"
+    },
+    {
+      "id": "P12",
+      "subject": "physics",
+      "type": "missing-data",
+      "question": "Một bóng đèn sợi đốt được mắc vào hiệu điện thế 220 V và sáng bình thường. Tính cường độ dòng điện chạy qua bóng đèn.",
+      "keyFacts": [
+        ["cong suat|dien tro"],
+        [
+          "i ?= ?p ?/ ?u|p ?= ?u ?[.·×*]? ?i|i ?= ?u ?/ ?r|dinh luat (om|ohm)|cong thuc|phu thuoc|de tinh|neu (biet|co)"
+        ]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["cong suat|dien tro|\\b(p|r)\\b|\\boat\\b|\\bw\\b|thong so|so ghi tren"]],
+      "answerUnit": "(a|ma|ampe|ampere)\\b",
+      "allowNumbers": [],
+      "expected": "Hỏi công suất định mức (số oát ghi trên đèn) hoặc điện trở của đèn; có thể nêu I = P/U hoặc I = U/R. Không tự giả sử 60 W, 100 W…, không đưa ra cường độ dòng điện bằng số.",
+      "review_status": "pending"
+    },
+    {
+      "id": "P13",
+      "subject": "physics",
+      "type": "steps",
+      "question": "Giải giúp em từng bước: Một ô tô khối lượng 1000 kg đang chạy trên đường nằm ngang với vận tốc 20 m/s thì hãm phanh. Lực hãm không đổi, có độ lớn 4000 N; bỏ qua các lực cản khác. Tính quãng đường ô tô đi được từ lúc hãm phanh đến khi dừng lại.",
+      "keyFacts": [
+        [
+          "(?<![\\d.,])[-−]? ?4 ?\\(?m/s|a ?= ?[-−]? ?4\\b|\\|a\\| ?= ?4\\b|dong nang|1/2 ?[.·×*]? ?m ?[.·×*]? ?v|\\b200[. ]?000\\b|2 ?[.·×*]? ?10 ?(\\^ ?5|⁵)"
+        ],
+        [
+          "v_?\\{?0?\\}? ?(\\^ ?\\{?2|²) ?[-−]|v_?0 ?(\\^ ?2|²) ?/|\\b20 ?(\\^ ?\\{?2|²)|2 ?[.·×*]? ?a ?[.·×*]? ?s\\b|2as|(?<![\\d.,])5 ?\\(?(s\\b|giay)|t ?= ?5\\b|dinh l[iy] dong nang|bien thien dong nang|cong (cua )?(luc ham|luc can)|f ?[.·×*]? ?s\\b"
+        ],
+        ["(?<![\\d.,])50 ?\\(?(m\\b|met)"]
+      ],
+      "steps": [[0], [1], [2]],
+      "mustNot": [
+        "(?<!(?<!\\bs ?= ?)\\bv_?0 ?[.·×*]? ?t ?(= ?20 ?[.·×*x] ?5 ?)?)(=|la|bang|duoc) ?100 ?\\(?(m\\b|met)\\)?(?! ?[-−–+])",
+        "(=|la|bang|duoc) ?150 ?\\(?(m\\b|met)",
+        "(?<!(?<!\\bs ?= ?)((1/2|mot nua) ?[.·×*]? ?a ?[.·×*]? ?t|a ?[.·×*]? ?t ?(\\^ ?\\{?2\\}?|²) ?/ ?2) ?(\\^ ?\\{?2\\}?|²)? ?(= ?[^=;]{0,30})?)(=|la|bang) ?[-−] ?50 ?\\(?(m\\b|met)"
+      ],
+      "derivation": "Chọn chiều dương theo chiều chuyển động. Bước 1: a = −F/m = −4000 N / 1000 kg = −4 m/s². Bước 2: v² − v₀² = 2as với v = 0. Bước 3: s = −v₀²/(2a) = −20²/(2·(−4)) = 400/8 = 50 m. Kiểm tra 1: t = (0 − 20)/(−4) = 5 s; s = v₀t + ½at² = 20·5 + ½·(−4)·5² = 100 − 50 = 50 m. Kiểm tra 2 (định lý động năng): ½mv₀² = ½·1000·20² = 200 000 J = F·s ⇒ s = 200 000/4000 = 50 m. Không cần g (đường nằm ngang, lực hãm cho sẵn). mustNot: 100 m (s = v₀t bỏ qua chậm dần, hoặc v₀²/a quên hệ số 2), 150 m (v₀t + ½|a|t², sai dấu), −50 m (sai dấu trong công thức độc lập thời gian).",
+      "expected": "Bước 1 gia tốc 4 m/s² (hoặc động năng ban đầu 200 000 J), bước 2 công thức liên hệ, bước 3 kết quả 50 m; kiểm tra đơn vị; kết thúc bằng một câu hỏi kiểm tra.",
+      "review_status": "pending"
+    },
+    {
+      "id": "P14",
+      "subject": "physics",
+      "type": "trap",
+      "question": "Ném một quả bóng thẳng đứng lên trên (bỏ qua sức cản không khí). Ở điểm cao nhất vận tốc của bóng bằng 0, vậy gia tốc của bóng ở đó cũng bằng 0, đúng không?",
+      "keyFacts": [
+        [
+          "khong (dung|phai|bang (0|khong))|chua (dung|chinh xac)|\\bsai\\b|van (bang|la) g\\b|khac (0|khong)"
+        ],
+        ["\\bg\\b|gia toc (roi tu do|trong truong)|9[,.]8|(?<![\\d.,])10 ?m/s"],
+        [
+          "huong xuong|xuong duoi|thang dung xuong|huong (ve )?(phia )?(mat )?dat|\\btrong luc (van |luon |chi )?(tac dung|huong|keo|p\\b|=|la|cua)|\\b(do|cua|boi) trong luc\\b|luc hut (cua )?trai dat"
+        ],
+        [
+          "doi chieu|doi huong|(dang|van|tiep tuc) thay doi|tuc thoi|khoanh khac|roi xuong|di xuong|bat dau roi"
+        ]
+      ],
+      "mustNot": [
+        "(?<!(khong phai|khong phai la|khong the|khong co nghia la|chu khong phai|nghi|tuong|cho rang|neu) )gia toc (cua (qua )?bong )?(o do |tai do |luc do |o diem cao nhat |tai diem (cao nhat|nay|do) )?(cung )?(bang 0|bang khong\\b(?! phai)|= ?0\\b)(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)"
+      ],
+      "trap": {
+        "note": "Nhầm \"vận tốc bằng 0\" với \"gia tốc bằng 0\". Gia tốc vẫn bằng g, hướng xuống, vì trọng lực vẫn tác dụng.",
+        "premise": true
+      },
+      "derivation": "Không cần tính. Bỏ qua sức cản, lực duy nhất là trọng lực P = mg nên a = P/m = g ≈ 9,8 m/s² (hoặc lấy 10 m/s²), hướng thẳng đứng xuống, ở mọi điểm của quỹ đạo kể cả điểm cao nhất; vận tốc bằng 0 chỉ trong một khoảnh khắc rồi đổi chiều.",
+      "expected": "Nói rõ \"không/chưa đúng\"; gia tốc vẫn là g hướng xuống; vận tốc bằng 0 chỉ tức thời rồi đổi chiều; không mở đầu bằng \"Đúng\".",
+      "review_status": "pending"
+    },
+    {
+      "id": "C1",
+      "subject": "chemistry",
+      "type": "tool",
+      "question": "Cân bằng phương trình: H2 + O2 → H2O",
+      "keyFacts": [["2 ?h2 ?\\+ ?o2 ?(→|->|tao thanh|=|⟶) ?2 ?h2o"]],
+      "mustNot": ["\\b3 ?o2"],
+      "expected": "Phương trình đã cân bằng: 2H₂ + O₂ → 2H₂O. Kiểm tra: vế trái có 4 nguyên tử H và 2 nguyên tử O, vế phải 2H₂O cũng có 4 H và 2 O. Hệ số đúng là 2 : 1 : 2, không có hệ số 3 cho O₂.",
+      "keyPoints": [
+        "Hệ số 2 : 1 : 2 (2H₂ + O₂ → 2H₂O)",
+        "Đếm nguyên tử từng nguyên tố ở hai vế: H 4 = 4, O 2 = 2",
+        "Hệ số nhân với cả công thức, không sửa chỉ số trong công thức",
+        "Sai nếu ghi 3O₂ hoặc đổi công thức H₂O"
+      ],
+      "derivation": "Đặt aH₂ + bO₂ → cH₂O. O: 2b = c; H: 2a = 2c ⇒ a = c. Chọn b = 1 ⇒ c = 2, a = 2. Kiểm tra: H vế trái 2·2 = 4, vế phải 2·2 = 4; O vế trái 1·2 = 2, vế phải 2·1 = 2.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C2",
+      "subject": "chemistry",
+      "type": "tool",
+      "question": "Cân bằng phương trình Fe + O2 → Fe2O3",
+      "keyFacts": [["4 ?fe ?\\+ ?3 ?o2"], ["2 ?fe2o3"]],
+      "mustNot": [],
+      "expected": "Phương trình đã cân bằng: 4Fe + 3O₂ → 2Fe₂O₃ (thường ghi điều kiện t°). Cách làm: O ở hai vế là 2 và 3, bội chung nhỏ nhất là 6 nên đặt 3O₂ và 2Fe₂O₃, rồi cân bằng Fe được 4Fe. Kiểm tra: Fe 4 = 4, O 6 = 6.",
+      "keyPoints": [
+        "Hệ số 4 : 3 : 2 (4Fe + 3O₂ → 2Fe₂O₃)",
+        "Dùng bội chung nhỏ nhất của số nguyên tử O (2 và 3 → 6)",
+        "Kiểm tra lại: Fe 4 = 4, O 6 = 6"
+      ],
+      "derivation": "aFe + bO₂ → cFe₂O₃. O: 2b = 3c ⇒ BCNN(2,3) = 6 ⇒ b = 3, c = 2. Fe: a = 2c = 4. Kiểm tra: Fe 4 = 2·2 = 4; O 3·2 = 6 = 2·3 = 6.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C3",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Liên kết ion khác liên kết cộng hóa trị như thế nào?",
+      "keyFacts": [
+        ["nhuong|nhan electron|ion duong|ion am|tinh dien|hut nhau"],
+        ["dung chung|cap electron chung|gop chung"]
+      ],
+      "mustNot": [],
+      "expected": "Liên kết ion hình thành do nguyên tử này nhường electron, nguyên tử kia nhận electron, tạo ion dương và ion âm hút nhau bằng lực hút tĩnh điện (thường giữa kim loại điển hình và phi kim điển hình, ví dụ NaCl). Liên kết cộng hóa trị hình thành do hai nguyên tử góp chung (dùng chung) một hay nhiều cặp electron (thường giữa các phi kim, ví dụ H₂, HCl, H₂O). Có thể nêu thêm: hợp chất ion thường là chất rắn kết tinh, nhiệt độ nóng chảy cao, dẫn điện khi nóng chảy hoặc tan trong nước; liên kết cộng hóa trị có thể phân cực hoặc không phân cực.",
+      "keyPoints": [
+        "Ion: nhường/nhận electron → ion dương và ion âm",
+        "Ion: lực hút tĩnh điện giữa các ion trái dấu",
+        "Cộng hóa trị: dùng chung (góp chung) cặp electron",
+        "Ví dụ đúng: NaCl (ion); H₂, Cl₂, HCl, H₂O (cộng hóa trị)",
+        "Tùy chọn: dựa vào hiệu độ âm điện; cộng hóa trị phân cực / không phân cực"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C4",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Dung dịch có pH = 3 thì có môi trường gì?",
+      "keyFacts": [
+        ["(moi truong|dung dich|co tinh|mang tinh|\\bla)[*_ ]*(axit|acid)"],
+        ["< ?7|nho hon 7|be hon 7"]
+      ],
+      "mustNot": [
+        "(?<!(>|lon hon|tren) ?7[^.;]{0,30})(moi truong (bazo|kiem)\\b|(dung dich|kha nang cao) (la|co tinh)[*_ ]*(bazo|kiem)\\b)(?![^.;]{0,15}(>|lon hon|tren) ?7)|bi kiem hoa"
+      ],
+      "expected": "Dung dịch có pH = 3 có môi trường axit, vì pH < 7 (ở 25 °C: pH = 7 trung tính, pH > 7 bazơ). Có thể nêu thêm [H⁺] = 10⁻³ M = 0,001 mol/L và quỳ tím chuyển sang màu đỏ. Không được nói là môi trường bazơ/kiềm.",
+      "keyPoints": [
+        "Môi trường axit",
+        "Lý do: pH = 3 < 7",
+        "Mốc so sánh: pH = 7 trung tính, pH > 7 bazơ (ở 25 °C)",
+        "Tùy chọn: [H⁺] = 10⁻³ mol/L; quỳ tím hóa đỏ"
+      ],
+      "derivation": "pH = −lg[H⁺] ⇒ [H⁺] = 10⁻³ = 0,001 mol/L. Ở 25 °C, [OH⁻] = 10⁻¹⁴ / 10⁻³ = 10⁻¹¹ mol/L < [H⁺] ⇒ môi trường axit.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C5",
+      "subject": "chemistry",
+      "type": "problem",
+      "question": "Tính số mol có trong 4 gam NaOH (Na = 23, O = 16, H = 1).",
+      "keyFacts": [["0[,.]1 ?mol"], ["\\b40\\b"]],
+      "mustNot": ["0[,.]25 ?mol"],
+      "expected": "M(NaOH) = 23 + 16 + 1 = 40 g/mol; n = m/M = 4/40 = 0,1 mol. Đáp số: 0,1 mol NaOH (không phải 0,25 mol).",
+      "keyPoints": [
+        "Công thức n = m/M",
+        "Khối lượng mol M(NaOH) = 40 g/mol",
+        "Kết quả n = 0,1 mol",
+        "Ghi đơn vị mol"
+      ],
+      "derivation": "M(NaOH) = 23 + 16 + 1 = 40 g/mol. n = 4 g / 40 g/mol = 0,1 mol.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C6",
+      "subject": "chemistry",
+      "type": "missing-data",
+      "question": "Tính nồng độ mol của dung dịch.",
+      "keyFacts": [["so mol|the tich|khoi luong|thieu|cho biet|can biet"]],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["so mol|khoi luong|the tich|bao nhieu (gam|mol|ml|lit)"]],
+      "expected": "Đề thiếu dữ kiện nên không tính ra được một con số. Cần hỏi lại: chất tan là chất gì, lượng chất tan (số mol, hoặc khối lượng để tính n = m/M) và thể tích dung dịch. Khi đủ dữ kiện thì tính C_M = n/V, với V tính bằng lít. Cách hỏi tương đương cũng đúng, ví dụ hỏi nồng độ phần trăm và khối lượng riêng của dung dịch cùng tên chất tan. Không được tự giả định số liệu, kể cả trong một 'ví dụ', rồi đưa ra một nồng độ bằng số.",
+      "keyPoints": [
+        "Nhận ra đề thiếu dữ kiện và hỏi lại, không tính ra số",
+        "Hỏi lượng chất tan: số mol, hoặc khối lượng kèm tên chất tan",
+        "Hỏi thể tích dung dịch",
+        "Chấp nhận cách hỏi tương đương (ví dụ nồng độ phần trăm + khối lượng riêng + tên chất tan)",
+        "Có thể nêu C_M = n/V (V tính bằng lít)",
+        "Sai nếu tự chọn số liệu và đưa ra nồng độ bằng số"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C7",
+      "subject": "chemistry",
+      "type": "misconception",
+      "question": "Chất xúc tác có làm tăng lượng sản phẩm tạo thành không?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong[*_ ]*[,.!:]|khong (lam )?(tang|thay doi|anh huong( den)?) (luong|hieu suat|vi tri can bang|can bang)|khong (lam )?(dich chuyen|chuyen dich) can bang|luong san pham (van )?(khong (doi|tang|thay doi)|giu nguyen)|chi (lam )?tang toc do"
+        ],
+        ["toc do|nhanh"]
+      ],
+      "mustNot": ["(co|xuc tac) lam tang luong san pham"],
+      "expected": "Không. Chất xúc tác chỉ làm tăng tốc độ phản ứng (giảm năng lượng hoạt hóa) và còn nguyên sau phản ứng; nó không làm tăng lượng sản phẩm cuối cùng. Với phản ứng thuận nghịch, xúc tác làm tăng tốc độ cả chiều thuận lẫn chiều nghịch như nhau nên không làm chuyển dịch cân bằng, chỉ giúp đạt cân bằng nhanh hơn; hiệu suất cân bằng không đổi.",
+      "keyPoints": [
+        "Trả lời rõ: không làm tăng lượng sản phẩm",
+        "Xúc tác chỉ làm tăng tốc độ phản ứng (giảm năng lượng hoạt hóa)",
+        "Không làm chuyển dịch cân bằng; tăng tốc cả hai chiều như nhau",
+        "Đạt cân bằng nhanh hơn; xúc tác không bị tiêu hao",
+        "Sai nếu nói xúc tác làm tăng lượng sản phẩm/hiệu suất cân bằng"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C8",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Vì sao muối ăn (NaCl) tan được trong nước?",
+      "keyFacts": [["phan cuc|luong cuc"], ["ion"]],
+      "mustNot": [],
+      "expected": "NaCl là hợp chất ion, gồm các ion Na⁺ và Cl⁻ sắp xếp trong mạng tinh thể. Phân tử nước là phân tử phân cực: đầu O mang một phần điện tích âm hút ion Na⁺, các đầu H mang một phần điện tích dương hút ion Cl⁻. Các phân tử nước bao quanh từng ion (sự hiđrat hóa) và kéo chúng tách khỏi mạng tinh thể vào dung dịch: NaCl → Na⁺ + Cl⁻ (chất tan phân cực/ion dễ tan trong dung môi phân cực).",
+      "keyPoints": [
+        "NaCl là hợp chất ion (Na⁺, Cl⁻ trong mạng tinh thể)",
+        "Nước là phân tử phân cực (O mang phần điện tích âm, H mang phần điện tích dương)",
+        "Đầu O hút Na⁺, đầu H hút Cl⁻; tương tác tĩnh điện ion – lưỡng cực",
+        "Phân tử nước bao quanh ion (hiđrat hóa), tách ion khỏi tinh thể",
+        "Phân li: NaCl → Na⁺ + Cl⁻"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C9",
+      "subject": "chemistry",
+      "type": "tool",
+      "question": "Cân bằng phương trình H2 → O2",
+      "keyFacts": [["khong (the )?can bang|khong hop ly|sai|khong bao toan|khong dung"]],
+      "mustNot": ["\\b2 ?h2 ?(→|->) ?\\d* ?o2"],
+      "expected": "Phương trình H₂ → O₂ không thể cân bằng và không phải một phương trình hóa học hợp lý: vế trái chỉ có nguyên tố H, vế phải chỉ có nguyên tố O. Trong phản ứng hóa học, nguyên tố được bảo toàn (nguyên tử không tự sinh ra, mất đi hay biến thành nguyên tố khác), nên không có hệ số nào làm hai vế bằng nhau. Nên hỏi lại học sinh có chép thiếu chất không (ví dụ 2H₂ + O₂ → 2H₂O hoặc 2H₂O → 2H₂ + O₂).",
+      "keyPoints": [
+        "Nói rõ: không cân bằng được / phương trình sai",
+        "Lý do: hai vế khác nguyên tố (H ↔ O), vi phạm bảo toàn nguyên tố/khối lượng",
+        "Không được đưa ra hệ số kiểu 2H₂ → O₂",
+        "Gợi ý kiểm tra lại đề, có thể nêu phương trình đúng liên quan"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C10",
+      "subject": "chemistry",
+      "type": "followup",
+      "history": [
+        {
+          "role": "user",
+          "content": "Giải thích phương trình 2H2 + O2 → 2H2O."
+        },
+        {
+          "role": "assistant",
+          "content": "Hai phân tử hiđro phản ứng với một phân tử oxi tạo hai phân tử nước. Câu hỏi kiểm tra: có bao nhiêu nguyên tử oxi ở mỗi vế?"
+        }
+      ],
+      "question": "Vế trái 2, vế phải 1 ạ.",
+      "keyFacts": [
+        ["chua (dung|chinh xac)|sai|khong (dung|phai)"],
+        [
+          "2 ?h2o.{0,30}\\b(2|hai) nguyen tu|(ve phai|ben phai|ve sau).{0,25}\\b(2|hai)\\b|(moi|ca hai|2) ve (deu )?(co )?(2|hai)\\b|(cung|van) (co |la )?(2|hai) nguyen tu"
+        ]
+      ],
+      "mustNot": [
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
+      ],
+      "expected": "Học sinh mới đúng một nửa nên phải nói \"chưa đúng hoàn toàn\", không mở đầu bằng \"Đúng\": vế trái O₂ có 2 nguyên tử O là đúng, nhưng vế phải cũng có 2 nguyên tử O. Hệ số 2 trong 2H₂O nhân với cả công thức: 2 phân tử H₂O, mỗi phân tử có 1 nguyên tử O, nên có 2 × 1 = 2 nguyên tử O. Mỗi vế đều có 2 nguyên tử O, nên phương trình đã cân bằng về oxi (H cũng 4 = 4).",
+      "keyPoints": [
+        "Nhận xét rõ: chưa đúng hoàn toàn, không khen \"đúng\"",
+        "Ghi nhận vế trái 2 nguyên tử O là đúng",
+        "Vế phải 2H₂O có 2 nguyên tử O (hệ số nhân cả công thức)",
+        "Kết luận mỗi vế đều có 2 nguyên tử O, phương trình cân bằng",
+        "Tùy chọn: hỏi tiếp đếm nguyên tử H (4 = 4)"
+      ],
+      "derivation": "Vế trái: 1 phân tử O₂ × 2 = 2 nguyên tử O. Vế phải: 2 phân tử H₂O × 1 = 2 nguyên tử O. H: vế trái 2 × 2 = 4, vế phải 2 × 2 = 4.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "C11",
+      "subject": "chemistry",
+      "type": "missing-data",
+      "question": "Hòa tan NaOH vào nước, thu được 250 ml dung dịch. Tính nồng độ mol của dung dịch thu được.",
+      "keyFacts": [
+        ["khoi luong|so mol|bao nhieu (gam|mol)"],
+        [
+          "c_?\\{?m\\}? ?= ?n ?/ ?v|n ?/ ?v\\b|n ?= ?m ?/ ?m|cong thuc|phu thuoc|de tinh|neu (biet|co)"
+        ]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["khoi luong|so mol|bao nhieu (gam|mol)\\b|luong naoh|bao nhieu naoh"]],
+      "answerUnit": "(m|mol/l|mol/lit|mol/dm3|mol/dm³)\\b(?! ?/)",
+      "allowNumbers": ["0.25", "40", "23", "16", "1000"],
+      "expected": "Hỏi khối lượng (hoặc số mol) NaOH đã hòa tan; có thể nêu C_M = n/V với V = 0,25 L và M(NaOH) = 40 g/mol. Không tự chọn khối lượng, không đưa ra nồng độ bằng số. Khác C6: thể tích đã cho, chỉ thiếu lượng chất tan.",
+      "review_status": "pending"
+    },
+    {
+      "id": "C12",
+      "subject": "chemistry",
+      "type": "missing-data",
+      "question": "Tính thể tích của 0,2 mol khí CO₂.",
+      "keyFacts": [
+        ["nhiet do|ap suat|dieu kien"],
+        ["the tich mol|v ?= ?n ?[.·×*]?|pv ?= ?nrt|phu thuoc|moi mol khi|1 mol khi"]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["dieu kien|nhiet do|ap suat|\\bdkc\\b|\\bdktc\\b|tieu chuan|\\bchuan\\b"]],
+      "answerUnit": "(l|lit|ml|dm3|dm³|cm3|cm³|m3|m³)\\b(?! ?/)",
+      "allowNumbers": ["24.79", "22.4", "25", "0", "273", "298", "1", "0.082", "8.314", "273.15"],
+      "expected": "Hỏi khí ở điều kiện nào (nhiệt độ, áp suất) vì thể tích khí phụ thuộc vào chúng; có thể nêu thể tích mol ở điều kiện chuẩn (24,79 L/mol ở 25 °C, 1 bar) để học sinh đối chiếu, nhưng không tự chọn điều kiện rồi đưa ra một thể tích bằng số (4,958 L hay 4,48 L). Giáo viên cần xác nhận: có chấp nhận \"ngầm hiểu đkc\" hay không.",
+      "review_status": "pending"
+    },
+    {
+      "id": "C13",
+      "subject": "chemistry",
+      "type": "steps",
+      "question": "Giải giúp em từng bước: Cho 6,5 gam kẽm tác dụng hết với dung dịch axit clohiđric (HCl) dư. Tính khối lượng muối kẽm clorua (ZnCl₂) tạo thành. (Zn = 65; Cl = 35,5)",
+      "keyFacts": [
+        ["zn\\}? ?\\+ ?2 ?(\\\\(text|mathrm)\\{)?hcl"],
+        [
+          "(?<![\\d.,])0[,.]1 ?\\(?mol|6[,.]5 ?(/|:|chia( cho)?|\\\\div) ?65|\\\\frac\\{6[,.]5\\}\\{65\\}"
+        ],
+        [
+          "theo (pt|pthh|phuong trinh)|1 ?: ?1|bang (voi )?so mol (cua )?(kem|zn)|zn ?cl_?\\{?2\\}?\\)?\\}? ?= ?n_?\\{?\\(?zn\\b|(?<![\\d.,])0[,.]1 ?\\(?mol\\)? (zn ?cl_?\\{?2|muoi)"
+        ],
+        ["\\b136\\b"],
+        ["(?<![\\d.,])13[,.]6 ?\\(?(g\\b|gam)"]
+      ],
+      "steps": [[0, 1], [2], [4]],
+      "mustNot": [
+        "(?<![\\d.,])10[,.]05 ?\\(?(g\\b|gam)",
+        "(?<![\\d.,])27[,.]2 ?\\(?(g\\b|gam)",
+        "(?<![\\d.,])6[,.]8 ?\\(?(g\\b|gam)"
+      ],
+      "derivation": "Zn + 2HCl → ZnCl₂ + H₂. n(Zn) = 6,5/65 = 0,1 mol. Theo phương trình, 1 mol Zn tạo 1 mol ZnCl₂ ⇒ n(ZnCl₂) = 0,1 mol. M(ZnCl₂) = 65 + 2·35,5 = 136 g/mol. m(ZnCl₂) = 0,1·136 = 13,6 g. mustNot: 10,05 g (M = 65 + 35,5 = 100,5, quên chỉ số 2), 27,2 g (n(ZnCl₂) = 2·n(Zn) = 0,2 mol, lấy nhầm hệ số của HCl), 6,8 g (n(ZnCl₂) = n(Zn)/2 = 0,05 mol).",
+      "expected": "PTHH → n(Zn) = 0,1 mol → tỉ lệ 1 : 1 theo phương trình → M(ZnCl₂) = 136 g/mol → m = 13,6 g; kết thúc bằng một câu hỏi kiểm tra.",
+      "review_status": "pending"
+    },
+    {
+      "id": "C14",
+      "subject": "chemistry",
+      "type": "trap",
+      "question": "Trộn 100 ml dung dịch NaCl 1 M với 100 ml dung dịch NaCl 1 M. Dung dịch thu được có nồng độ 2 M, đúng không ạ?",
+      "keyFacts": [
+        ["khong (dung|phai)|chua (dung|chinh xac)|\\bsai\\b"],
+        [
+          "(van|giu|con|chi|luon) (la |bang |o |muc )?1 ?\\(?(m\\b|mol/l)|nong do[^.;+=?]{0,40}(?<![\\d.,])1 ?\\(?(m\\b|mol/l)(?! ?\\+)|(=|\\bla\\b|\\bbang\\b) ?1 ?\\(?(m\\b|mol/l)(?! ?\\+)|khong (doi|thay doi)|giu nguyen|nhu (cu|ban dau|truoc)|van (la|bang) 1"
+        ],
+        [
+          "(?<![\\d.,])0[,.]2 ?\\(?mol|200 ?ml|(?<![\\d.,])0[,.]2 ?\\(?(l\\b|lit)|(so mol|luong chat tan|luong muoi|luong nacl).{0,40}(tang|gap doi|cong)|the tich.{0,40}(tang|gap doi|cong)"
+        ]
+      ],
+      "mustNot": [
+        "(?<!(khong phai|khong phai la|khong phai bang|khong the la|chu khong phai|chu khong|khong bang|khong la|khong (tang |the )?(len|thanh)|thay vi|nghi|tuong|cho rang|neu|≠|khac) )(?<![\\d.,])2 ?\\(?(m\\b|mol/l)(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)"
+      ],
+      "trap": {
+        "note": "Cộng nồng độ như cộng số mol: 1 M + 1 M = 2 M. Số mol và thể tích cùng gấp đôi nên nồng độ vẫn 1 M.",
+        "premise": true
+      },
+      "derivation": "n(NaCl) = 0,1 L × 1 mol/L + 0,1 L × 1 mol/L = 0,2 mol; V = 100 ml + 100 ml = 200 ml = 0,2 L (hai phần của cùng một dung dịch nên thể tích cộng được); C_M = 0,2 mol / 0,2 L = 1 M.",
+      "expected": "Nói rõ \"không/chưa đúng\"; nồng độ vẫn 1 M; giải thích số mol và thể tích cùng gấp đôi (0,2 mol trong 0,2 L); không mở đầu bằng \"Đúng\".",
+      "review_status": "pending"
+    },
+    {
+      "id": "B1",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Vì sao nhiễm sắc thể phải nhân đôi trước khi tế bào nguyên phân?",
+      "keyFacts": [
+        ["pha s|ki trung gian|ky trung gian"],
+        ["te bao con"],
+        ["giong|\\bdu\\b|bo (nst|nhiem sac the)|2n"]
+      ],
+      "mustNot": ["pha m.{0,25}nhan doi|nhan doi.{0,25}pha m\\b|pha g2.{0,15}nhan doi adn"],
+      "expected": "Ở kì trung gian (pha S), ADN nhân đôi nên mỗi NST đơn trở thành NST kép gồm 2 crômatit chị em giống hệt nhau, dính ở tâm động. Khi nguyên phân, hai crômatit tách nhau và đi về hai cực, nên mỗi tế bào con nhận được một bộ NST đầy đủ (2n) giống hệt tế bào mẹ. Nếu không nhân đôi trước, các tế bào con sẽ thiếu vật chất di truyền, bộ NST bị giảm đi qua mỗi lần phân bào.",
+      "keyPoints": [
+        "Nhân đôi ADN/NST xảy ra ở pha S của kì trung gian (không phải ở pha G2 hay trong pha M)",
+        "Sau nhân đôi mỗi NST thành NST kép gồm 2 crômatit giống nhau",
+        "Hai crômatit chia đều về hai tế bào con",
+        "Mục đích: mỗi tế bào con có bộ NST 2n đầy đủ, giống tế bào mẹ; giữ ổn định bộ NST qua các thế hệ tế bào"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B2",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Nguyên phân gồm những kì nào?",
+      "keyFacts": [["ki dau|ky dau"], ["ki giua|ky giua"], ["ki sau|ky sau"], ["ki cuoi|ky cuoi"]],
+      "mustNot": [],
+      "expected": "Nguyên phân (phần phân chia nhân) gồm 4 kì theo thứ tự: kì đầu, kì giữa, kì sau, kì cuối. Đi kèm là phân chia tế bào chất, diễn ra chủ yếu ở kì cuối (có thể bắt đầu từ cuối kì sau). Kì trung gian diễn ra trước nguyên phân và thuộc chu kì tế bào, không phải một kì của nguyên phân.",
+      "keyPoints": [
+        "Đủ 4 kì theo đúng thứ tự: kì đầu → kì giữa → kì sau → kì cuối",
+        "Lỗi (trừ điểm đúng): liệt kê kì trung gian như một kì của nguyên phân; nếu nhắc đến kì trung gian thì phải nói nó diễn ra trước nguyên phân",
+        "Không bắt buộc: nhắc đến phân chia tế bào chất đi kèm (chủ yếu ở kì cuối, có thể bắt đầu từ cuối kì sau); thiếu ý này không trừ điểm đầy đủ",
+        "Chấp nhận thêm 'kì tiền giữa' (giáo trình đại học) nếu vẫn đủ 4 kì theo SGK — giáo viên xác nhận"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B3",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Ở kì giữa của nguyên phân, nhiễm sắc thể sắp xếp như thế nào?",
+      "keyFacts": [["mat phang xich dao"], ["mot hang|1 hang"], ["kep"]],
+      "mustNot": ["hai hang|2 hang"],
+      "expected": "Ở kì giữa, các NST kép co xoắn cực đại và xếp thành một hàng trên mặt phẳng xích đạo của thoi phân bào. Mỗi NST kép đính vào sợi thoi ở tâm động (thể động), sợi thoi từ hai cực nối vào hai phía của tâm động.",
+      "keyPoints": [
+        "NST ở trạng thái kép, co xoắn cực đại",
+        "Xếp thành MỘT hàng",
+        "Trên mặt phẳng xích đạo của thoi phân bào",
+        "Đính vào sợi thoi ở tâm động",
+        "Không nói 'hai hàng' (đó là kì giữa I của giảm phân)"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B4",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Tế bào thực vật phân chia tế bào chất bằng cách nào?",
+      "keyFacts": [
+        ["vach ngan|tam te bao|tam phan bao|thanh te bao moi"],
+        ["giua|o giua|mat phang xich dao"]
+      ],
+      "mustNot": [],
+      "expected": "Tế bào thực vật có thành xenlulôzơ cứng nên không thắt eo ở giữa như tế bào động vật. Ở kì cuối, các túi (từ bộ máy Gôngi) tập trung ở giữa tế bào, tại vị trí mặt phẳng xích đạo, hợp lại thành vách ngăn (tấm tế bào); vách này lớn dần ra phía ngoài, nối với thành tế bào và chia tế bào mẹ thành hai tế bào con.",
+      "keyPoints": [
+        "Hình thành vách ngăn (tấm tế bào/thành tế bào mới)",
+        "Vách xuất hiện ở giữa tế bào, tại mặt phẳng xích đạo, rồi phát triển ra phía ngoài",
+        "Phân biệt với tế bào động vật: màng thắt eo ở giữa",
+        "Lí do: tế bào thực vật có thành tế bào cứng"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B5",
+      "subject": "biology",
+      "type": "problem",
+      "question": "Một tế bào nguyên phân 3 lần liên tiếp. Tạo ra bao nhiêu tế bào con?",
+      "keyFacts": [
+        ["\\b8 te bao|tam te bao"],
+        ["2 ?(\\^ ?\\{?3|³)|2 mu 3|2 ?[x×·.*] ?2 ?[x×·.*] ?2"]
+      ],
+      "mustNot": ["\\b6 te bao"],
+      "expected": "Mỗi lần nguyên phân, số tế bào tăng gấp đôi: 1 → 2 → 4 → 8. Vậy một tế bào nguyên phân 3 lần liên tiếp tạo ra 2³ (2 mũ 3) = 2.2.2 = 8 tế bào con.",
+      "keyPoints": [
+        "Công thức: số tế bào con = a · 2^k (a = 1 tế bào ban đầu, k = 3 lần nguyên phân)",
+        "2³ = 2 × 2 × 2 = 8 tế bào con (viết 2^3, 2 mũ 3, 2.2.2 hay 2 × 2 × 2 đều được)",
+        "Không nhầm thành 2 × 3 = 6",
+        "Đáp án chuẩn là 8; nếu câu trả lời tính thêm 'tổng số tế bào con qua các lần' = 14 hoặc 'số tế bào tạo thêm' = 7 thì phải nói rõ đó là đại lượng khác"
+      ],
+      "derivation": "k = 3 lần, a = 1 tế bào ban đầu. Số tế bào con = a · 2^k = 1 · 2³ = 8. Kiểm tra từng lần: lần 1: 1 → 2; lần 2: 2 → 4; lần 3: 4 → 8. Sai thường gặp: 2 · 3 = 6 (nhân thay vì lũy thừa).",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B6",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Vì sao nhiệt độ quá cao làm enzyme mất hoạt tính?",
+      "keyFacts": [
+        ["bien tinh|(thay doi|bien doi|pha vo|pha huy)( trong| ve| cua)? cau truc"],
+        ["trung tam hoat dong|cau truc khong gian|protein"]
+      ],
+      "mustNot": [],
+      "expected": "Hầu hết enzyme có bản chất là prôtêin; hoạt tính của enzyme phụ thuộc vào cấu trúc không gian, đặc biệt là trung tâm hoạt động khớp với cơ chất. Nhiệt độ quá cao (vượt nhiệt độ tối ưu) phá vỡ các liên kết yếu (như liên kết hiđrô) giữ cấu trúc không gian, làm prôtêin bị biến tính; trung tâm hoạt động biến dạng nên cơ chất không liên kết được và enzyme mất hoạt tính, thường không phục hồi được.",
+      "keyPoints": [
+        "Hầu hết enzyme là prôtêin; hoạt tính phụ thuộc cấu trúc không gian (nói 'enzyme là prôtêin' theo kiểu SGK vẫn chấp nhận)",
+        "Nhiệt độ cao làm prôtêin biến tính (phá vỡ liên kết yếu giữ cấu trúc không gian)",
+        "Trung tâm hoạt động thay đổi, không còn khớp với cơ chất",
+        "Vượt nhiệt độ tối ưu thì hoạt tính giảm mạnh; biến tính do nhiệt thường không thuận nghịch"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B7",
+      "subject": "biology",
+      "type": "missing-data",
+      "question": "Tính số nhiễm sắc thể trong mỗi tế bào con sau nguyên phân.",
+      "keyFacts": [["2n|bo nhiem sac the|cho biet|thieu|can biet|loai"]],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [["2n|bo nhiem sac the|bo nst|loai"]],
+      "expected": "Đề thiếu dữ kiện: chưa cho biết bộ NST của loài (2n) hay số NST trong tế bào mẹ, nên chưa tính ra con số được. Có thể nêu quy tắc: nguyên phân tạo ra các tế bào con có bộ NST giống hệt tế bào mẹ (tế bào mẹ 2n thì mỗi tế bào con cũng có 2n NST). Không tự chọn một loài (chẳng hạn lấy bộ NST của người) và không đưa ra số NST cụ thể. Câu trả lời nên kết thúc bằng một câu hỏi lại, ví dụ: Em cho thầy biết bộ NST 2n của loài này bằng bao nhiêu nhé?",
+      "keyPoints": [
+        "Nhận ra đề thiếu dữ kiện và hỏi lại: bộ NST của loài (2n), số NST của tế bào mẹ, hoặc tên loài (cả ba đều đúng)",
+        "Có thể nêu quy tắc: tế bào con có bộ NST giống hệt tế bào mẹ (mẹ 2n → con 2n); trả lời bằng kí hiệu '2n' không phải là bịa số",
+        "Không tự chọn loài hay giá trị 2n (ví dụ lấy bộ NST của người), không đưa ra số NST cụ thể; bịa số và cho kết quả bằng số thì điểm đúng = 0",
+        "Kết thúc bằng một câu hỏi xin dữ kiện còn thiếu"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B8",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Phiên mã là gì?",
+      "keyFacts": [
+        ["\\badn\\b|\\bdna\\b"],
+        ["\\barn\\b|\\brna\\b|marn|mrna"],
+        ["mach (khuon|goc)|khuon"]
+      ],
+      "mustNot": ["(?<!phien ma nguoc.{0,30})arn ?(→|tao ra|thanh) ?adn"],
+      "expected": "Phiên mã là quá trình tổng hợp phân tử ARN dựa trên khuôn mẫu là một mạch của gen (ADN) — mạch mã gốc, chiều 3'→5'. Enzyme ARN pôlimeraza lắp các ribônuclêôtit theo nguyên tắc bổ sung (A–U, T–A, G–X, X–G), ARN được tổng hợp theo chiều 5'→3'. Ở sinh vật nhân thực, phiên mã diễn ra trong nhân, tạo ra mARN (cùng tARN, rARN); mARN mang thông tin để dịch mã.",
+      "keyPoints": [
+        "Tổng hợp ARN từ ADN (gen)",
+        "Chỉ một mạch làm khuôn: mạch mã gốc (mạch khuôn) 3'→5'",
+        "Enzyme ARN pôlimeraza; nguyên tắc bổ sung A–U, T–A, G–X, X–G",
+        "Sản phẩm: mARN (và tARN, rARN); ở nhân thực diễn ra trong nhân",
+        "Không nhầm với phiên mã ngược (ARN → ADN)"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B9",
+      "subject": "biology",
+      "type": "misconception",
+      "question": "Đột biến gen lúc nào cũng có hại phải không?",
+      "keyFacts": [["khong (phai )?(luc nao|bao gio)|co loi|trung tinh|khong phai tat ca"]],
+      "mustNot": [
+        "(^|[.!?:,] )[*_ ]*dung([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(co|phai)[*_ ]*[,.!]|(?<!(khong phai|khong|chua chac|khong han) )luon (co hai|gay hai)"
+      ],
+      "expected": "Không phải. Đột biến gen có thể có hại, có lợi hoặc trung tính đối với thể đột biến; nhiều đột biến điểm là trung tính (ví dụ đột biến thay một nuclêôtit nhưng vẫn mã hóa cùng axit amin). Mức độ có hại hay có lợi còn phụ thuộc vào điều kiện môi trường và tổ hợp gen, ví dụ vi khuẩn có đột biến kháng kháng sinh có lợi khi môi trường có kháng sinh. Vì vậy đột biến gen là nguồn nguyên liệu cho tiến hóa và chọn giống.",
+      "keyPoints": [
+        "Mở đầu bằng 'Không' (không phải lúc nào cũng có hại); không mở đầu bằng 'Đúng/Có/Phải'",
+        "Đột biến gen có thể có hại, có lợi hoặc trung tính",
+        "Tính có hại/có lợi phụ thuộc môi trường và tổ hợp gen",
+        "Có ví dụ đột biến trung tính hoặc có lợi",
+        "Đột biến là nguồn nguyên liệu cho tiến hóa và chọn giống"
+      ],
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B10",
+      "subject": "biology",
+      "type": "followup",
+      "history": [
+        {
+          "role": "user",
+          "content": "Kết quả của nguyên phân là gì?"
+        },
+        {
+          "role": "assistant",
+          "content": "Từ một tế bào mẹ tạo hai tế bào con có bộ nhiễm sắc thể giống tế bào mẹ. Câu hỏi kiểm tra: tế bào mẹ có 2n = 46 thì mỗi tế bào con có bao nhiêu nhiễm sắc thể?"
+        }
+      ],
+      "question": "Mỗi tế bào con có 23 nhiễm sắc thể ạ.",
+      "keyFacts": [["chua (dung|chinh xac)|sai|khong (dung|phai)"], ["\\b46\\b"]],
+      "mustNot": [
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b|(^|[.!?:,] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)"
+      ],
+      "expected": "Câu trả lời của học sinh chưa đúng. Nguyên phân giữ nguyên bộ NST, nên mỗi tế bào con có 2n = 46 NST, giống tế bào mẹ. Con số 23 (n) là bộ NST đơn bội trong giao tử, tạo ra sau giảm phân; nên phản hồi nhẹ nhàng, chỉ ra chỗ nhầm giữa nguyên phân và giảm phân, và không mở đầu bằng 'Đúng'.",
+      "keyPoints": [
+        "Nói rõ 'chưa đúng'/'sai', không khen là đúng",
+        "Đáp án đúng: 46 NST (2n) ở mỗi tế bào con",
+        "Giải thích: nguyên phân giữ nguyên bộ NST 2n của tế bào mẹ",
+        "Chỉ ra chỗ nhầm: 23 = n là số NST trong giao tử sau giảm phân",
+        "Giọng nhẹ nhàng, có thể kèm một câu hỏi kiểm tra"
+      ],
+      "derivation": "Tế bào mẹ 2n = 46. Nguyên phân: tế bào con có bộ NST giống tế bào mẹ ⇒ 46 NST (2n). Học sinh trả lời 23 = 46/2 = n, đó là số NST trong giao tử sau giảm phân, không phải sau nguyên phân.",
+      "reference": "AI-written 2026-10-14, checked by a second AI; pending teacher review"
+    },
+    {
+      "id": "B11",
+      "subject": "biology",
+      "type": "missing-data",
+      "question": "Một gen có tổng số 3000 nuclêôtit. Tính số liên kết hiđro của gen.",
+      "keyFacts": [
+        [
+          "(loai|so) (nu(cleotit)? )?(loai )?(a|t|g|x)\\b|(tung|moi|cac) loai|adenin|timin|guanin|xitozin|ti le|phan tram|%"
+        ],
+        ["2 ?[.·×*]? ?a ?\\+ ?3 ?[.·×*]? ?g|2 ?lien ket.{0,80}3 ?lien ket|n ?\\+ ?g\\b|h ?= ?2 ?a"]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [
+        [
+          "(loai|so) (nu(cleotit)? )?(loai )?(a|t|g|x)\\b|(tung|moi|cac) loai|adenin|timin|guanin|xitozin|ti le|phan tram|%|\\b(a|t|g|x) (la|bang|chiem) bao nhieu"
+        ]
+      ],
+      "answerUnit": "(lien ket|lk)\\b",
+      "allowNumbers": ["1500", "2", "3", "50"],
+      "expected": "Hỏi số nuclêôtit (hoặc tỉ lệ %) của một loại, ví dụ A hoặc G; có thể nêu H = 2A + 3G và A + G = 1500. Không tự giả sử A = G hay một tỉ lệ nào, không đưa ra số liên kết hiđro bằng số. Cặp với B13.",
+      "review_status": "pending"
+    },
+    {
+      "id": "B12",
+      "subject": "biology",
+      "type": "missing-data",
+      "question": "Một quần thể thực vật có 1000 cây, đang ở trạng thái cân bằng di truyền về một gen có hai alen A và a. Tính số cây có kiểu gen dị hợp Aa.",
+      "keyFacts": [
+        ["tan so (alen|tuong doi|cua (alen|a))|\\bp\\b.{0,30}\\bq\\b"],
+        ["2 ?pq|2 ?p ?[.·×*]? ?q|p ?(\\^ ?2|²) ?\\+ ?2|hacdi|hardy|vanbec|weinberg"]
+      ],
+      "mustNot": [],
+      "expectsClarify": true,
+      "missing": [
+        [
+          "tan so|\\bp\\b|\\bq\\b|ti le (kieu gen|kieu hinh|cay|ca the)|so cay (co |mang )?(kieu hinh|hoa|dong hop|lan|troi|than|qua)|kieu hinh lan|dong hop (lan|troi)|thanh phan kieu gen|cau truc di truyen"
+        ]
+      ],
+      "answerUnit": "(cay|ca the)\\b",
+      "allowNumbers": ["1", "2"],
+      "expected": "Hỏi tần số alen (p, q) hoặc tỉ lệ/số cây của một kiểu gen hay kiểu hình (ví dụ số cây mang tính trạng lặn); có thể nêu số cây dị hợp = 2pq × 1000. Không tự giả sử p = q = 0,5, không đưa ra số cây bằng số. Lưu ý: chữ đã gấp (fold) không phân biệt AA/Aa/aa, nên mẫu dùng chữ \"dị hợp/đồng hợp\".",
+      "review_status": "pending"
+    },
+    {
+      "id": "B13",
+      "subject": "biology",
+      "type": "steps",
+      "question": "Giải giúp em từng bước: Một gen có tổng số 2400 nuclêôtit, trong đó số nuclêôtit loại A chiếm 20%. Tính số liên kết hiđro của gen.",
+      "keyFacts": [
+        ["\\b480\\b"],
+        ["\\b720\\b"],
+        [
+          "2 ?[.·×*]? ?(a|t|480)\\b ?\\+ ?3 ?[.·×*]? ?(g|x|720)\\b|2 ?lien ket.{0,80}3 ?lien ket|n ?\\+ ?g\\b"
+        ],
+        ["\\b3[. ]?120\\b"]
+      ],
+      "steps": [[0], [1], [3]],
+      "mustNot": ["\\b1[. ]?560\\b", "\\b2[. ]?880\\b", "\\b3[. ]?840\\b"],
+      "derivation": "N = 2400. A = T = 20% × 2400 = 480. %G = %X = 50% − 20% = 30% ⇒ G = X = 30% × 2400 = 720 (kiểm tra: 2·480 + 2·720 = 960 + 1440 = 2400). H = 2A + 3G = 2·480 + 3·720 = 960 + 2160 = 3120. Cách khác: H = N + G = 2400 + 720 = 3120. mustNot: 1560 (tính % trên một mạch: A = 240, G = 360), 2880 (đổi chỗ hệ số: 3·480 + 2·720), 3840 (G = (2400 − 480)/2 = 960, quên trừ T).",
+      "expected": "A = T = 480 → G = X = 720 → H = 2A + 3G = 3120; kết thúc bằng một câu hỏi kiểm tra.",
+      "review_status": "pending"
+    },
+    {
+      "id": "B14",
+      "subject": "biology",
+      "type": "trap",
+      "question": "Cây xanh chỉ hô hấp vào ban đêm, còn ban ngày thì chỉ quang hợp, phải không ạ?",
+      "keyFacts": [
+        ["khong (phai|dung)|chua (dung|chinh xac)|\\bsai\\b|khong chi|(van|cung) ho hap"],
+        [
+          "ca (ngay|ban ngay)|ngay (lan|va) dem|suot ngay dem|ngay dem|lien tuc|moi luc|moi thoi diem|24 ?(gio|h\\b)|ca khi co anh sang"
+        ],
+        ["quang hop.{0,60}anh sang|anh sang.{0,60}quang hop|can anh sang|khi co anh sang"]
+      ],
+      "mustNot": [
+        "(?<!(khong|khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu)( cay| cay xanh)? )chi ho hap (vao )?(ban )?dem(?!.{0,20}(la )?(sai|chua dung|khong dung|khong phai))",
+        "(?<!(khong phai|khong phai la|chu khong phai|nghi|tuong|cho rang|neu) )ban ngay (thi )?(cay (xanh )?)?(khong|chang) ho hap",
+        "(^|[.!?:,] )[*_ ]*(dung|phai)([*_ ]*[.!,]| (vay|the|roi)\\b)"
+      ],
+      "trap": {
+        "note": "Cho rằng cây chỉ hô hấp ban đêm. Cây hô hấp liên tục cả ngày lẫn đêm; quang hợp chỉ diễn ra khi có ánh sáng; ban ngày quang hợp thường mạnh hơn hô hấp nên nhìn chung cây thải O₂.",
+        "premise": true
+      },
+      "derivation": "Không cần tính. Kiến thức SGK Sinh học 11 (hô hấp và quang hợp ở thực vật): hô hấp diễn ra ở mọi tế bào sống, liên tục; quang hợp cần ánh sáng.",
+      "expected": "Nói rõ \"không phải\"; cây hô hấp cả ngày lẫn đêm; quang hợp cần ánh sáng nên chỉ có ban ngày; không mở đầu bằng \"Phải/Đúng\".",
+      "review_status": "pending"
+    }
+  ]
+}

@@ -93,10 +93,11 @@ pub struct ChatRequest {
     pub temperature: Option<f64>,
     pub max_tokens: Option<u32>,
     pub timeout_secs: Option<u64>,
-    /// The user's local date ("YYYY-MM-DD") for the daily cap.
+    /// The user's local date ("YYYY-MM-DD") for the daily cap; only trusted within one day of
+    /// the system clock (`usage::counting_day`).
     #[serde(default)]
     pub day: Option<String>,
-    /// Maximum calls per day (0 = no limit).
+    /// Maximum calls per day (0 = no limit; missing = `usage::DEFAULT_DAILY_CAP`).
     #[serde(default)]
     pub daily_cap: Option<u32>,
     /// Provider that answers when `provider` is out of quota or credit.
@@ -316,24 +317,24 @@ fn usage_path(app: &tauri::AppHandle) -> Option<PathBuf> {
         .map(|d| d.join("ai-usage.json"))
 }
 
-/// Counts the call against the daily cap (skipped without a valid day or a cap).
+/// Counts the call against the daily cap. Never skipped: a missing or invalid day falls back to
+/// the clock and a missing cap to the default (see `count_usage`).
 fn count_call(app: &tauri::AppHandle, state: &AiState, req: &ChatRequest) -> Result<(), AiError> {
     count_usage(app, state, req.day.as_deref(), req.daily_cap)
 }
 
-/// Counts one AI call (chat or speech) against the user's daily cap.
+/// Counts one AI call (chat or speech) against the user's daily cap. Every call is counted:
+/// without a cap the default applies, and the day is checked against the system clock
+/// (audit SEC-07), so the page cannot skip the count by leaving a field out. The counting day
+/// never goes backwards (`usage::consume`), so switching dates cannot reset the count either.
 fn count_usage(
     app: &tauri::AppHandle,
     state: &AiState,
     day: Option<&str>,
     cap: Option<u32>,
 ) -> Result<(), AiError> {
-    let (Some(day), Some(cap)) = (day, cap) else {
-        return Ok(());
-    };
-    if !usage::valid_day(day) {
-        return Ok(());
-    }
+    let day = usage::counting_day(day, usage::utc_today());
+    let cap = cap.unwrap_or(usage::DEFAULT_DAILY_CAP);
     let Some(path) = usage_path(app) else {
         return Ok(());
     };
@@ -341,7 +342,7 @@ fn count_usage(
         .usage
         .lock()
         .map_err(|e| AiError::Network(e.to_string()))?;
-    usage::consume(&path, day, cap).map(|_| ())
+    usage::consume(&path, &day, cap).map(|_| ())
 }
 
 #[tauri::command]
@@ -441,9 +442,10 @@ pub fn ai_cancel(state: tauri::State<'_, AiState>, request_id: String) -> bool {
 /// AI calls made today (for Settings).
 #[tauri::command]
 pub fn ai_usage(app: tauri::AppHandle, day: String) -> usage::Usage {
+    let day = usage::counting_day(Some(&day), usage::utc_today());
     match usage_path(&app) {
-        Some(p) if usage::valid_day(&day) => usage::current(&p, &day),
-        _ => usage::Usage { day, count: 0 },
+        Some(p) => usage::current(&p, &day),
+        None => usage::Usage { day, count: 0 },
     }
 }
 

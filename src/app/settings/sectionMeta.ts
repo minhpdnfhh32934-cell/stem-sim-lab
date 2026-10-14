@@ -8,6 +8,7 @@ import {
   Orbit,
   Palette,
   PlugZap,
+  ScrollText,
   ShieldCheck,
   Volume2,
   type LucideIcon,
@@ -92,6 +93,12 @@ export const SECTIONS: Record<SettingsSection, SectionMeta> = {
     icon: Keyboard,
     title: 'settings.shortcuts',
     hint: 'settings.nav.shortcutsHint',
+    group: 'general',
+  },
+  versions: {
+    icon: ScrollText,
+    title: 'settings.nav.versions',
+    hint: 'settings.nav.versionsHint',
     group: 'general',
   },
 };

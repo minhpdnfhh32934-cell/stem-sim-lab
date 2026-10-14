@@ -1,6 +1,18 @@
 .file-menu {
   position: relative;
 }
+/* Unseen "Có gì mới" notes (src/app/whatsnew/). */
+.file-menu__dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--bg-panel);
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  pointer-events: none;
+}
 .file-menu__list {
   position: absolute;
   top: calc(100% + 6px);

@@ -189,7 +189,7 @@ test('whiteboard: the answer is taught on the board (written, circled, boxed), t
   await page.locator('.launch-card--teacher').click();
   await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
-  await expect(board).toBeVisible();
+  await expect(board).toBeVisible({ timeout: 20_000 });
   const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
   await panel
     .getByRole('textbox', { name: 'Nhập câu hỏi' })

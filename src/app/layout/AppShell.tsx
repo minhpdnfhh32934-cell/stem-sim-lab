@@ -10,6 +10,8 @@ import { useProjectUi } from '@/app/project/uiStore';
 import { initUndo } from '@/app/project/undo';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
 import { UpdateDialog } from '@/app/update/UpdateDialog';
+import { WhatsNewDialog } from '@/app/whatsnew/WhatsNewDialog';
+import { useWhatsNewStartup } from '@/app/whatsnew/whatsNewStore';
 import { scheduleAutoCheck } from '@/app/update/updater';
 import { installSlidingIndicators } from '@/ui/slidingIndicator';
 import { Skeleton } from '@/ui/Skeleton';
@@ -36,6 +38,7 @@ import { usePresentationFullscreen } from './usePresentationFullscreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { ChatBubble } from '@/teacher/chat/ChatBubble';
 import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
+import { loadGpuStatus } from '@/ai/gpu';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -60,11 +63,16 @@ export function AppShell() {
   useMemoryWatchdog();
   usePresentationFullscreen();
   useBreakReminder();
+  // "Có gì mới" after an update; it waits for the launch page or the lab home.
+  useWhatsNewStartup();
   useEffect(() => {
     const offUndo = initUndo();
     const offHistory = initHistory();
     const offUpdate = scheduleAutoCheck();
     const offIndicators = installSlidingIndicators();
+    // Desktop: which cards exist decides how short Gemma's prompt must be (audit GPU-01), so it
+    // is known before the first question, not only after Settings → GPU was opened.
+    void loadGpuStatus().catch(() => null);
     return () => {
       offUndo();
       offHistory();
@@ -122,6 +130,7 @@ export function AppShell() {
       <Onboarding />
       <Tour />
       <UpdateDialog />
+      <WhatsNewDialog />
       <Toaster />
       {paletteUsed && (
         <Suspense fallback={null}>

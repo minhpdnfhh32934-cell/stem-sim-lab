@@ -201,7 +201,8 @@ They are a starter reference, not a complete curriculum or a substitute for teac
 materials. Learners can add UTF-8 `.txt`, `.md`, `.csv` and `.json` files in desktop (native dialog)
 or browser mode (file picker): up to 120,000 characters per file, 20 files and 1.5 million characters
 total; other formats and oversized files get a clear error. Personal files and chat history are kept
-in this app's local storage on this computer. Relevant excerpts are selected with keyword matching.
+in this app's local storage on this computer. Relevant excerpts are selected with keyword matching
+(see "Teaching quality (2026-10-14)" below for how notes are ranked and when none is sent).
 
 Imported files are treated as reference data, never as instructions. The tutor names the sources it
 used below its answer. AI answers can still be wrong; numerical simulation results continue to come
@@ -210,7 +211,166 @@ from SimLab's deterministic engines.
 **Wikipedia lookup is opt-in** (Settings → AI Teacher, off by default, main edition only): when on,
 the question text is sent to `vi`/`en.wikipedia.org` to fetch one labelled excerpt. Earlier fork
 versions queried Wikipedia on every question without telling the learner; v4 of the chat settings
-turns it off for everyone.
+turns it off for everyone. With Gemma, Wikipedia is asked only when the library has no note for the
+question (the on-device prompt takes one note).
+
+## Teaching quality (2026-10-14)
+
+Changes made after the analysis of the Gemma 1B evaluation (keyFacts 29 % → 23 %: noise plus
+rubric artefacts, but retrieval, prompts and invented numbers needed work). None of them needs a
+model to be tested; no model was run to make them.
+
+**Retrieval** (`knowledge.ts`: `rankKnowledge`, `searchKnowledge`, `bestSentences`).
+
+- Text is split into syllables compared as whole words, tone mark apart ("hoá" = "hóa"), "y" = "i"
+  after a consonant ("kỳ" = "kì"); a question typed without accents is compared folded. A few older
+  names and abbreviations read as the notes write them ("ancol" = "alcohol", "NST" = "nhiễm sắc thể").
+- Function words and question frames ("điều kiện", "đại lượng", "công thức") are not scored; short
+  meaningful words are ("pH", "kì", "mã"). Syllable pairs are scored ("ma sát", "động năng"), and a
+  syllable of a pair the notes know counts only where that pair is ("thời gian" ≠ "không gian").
+- Terms weigh by rarity (idf); words in a note's title or first 8 words count double.
+- No note is sent below a score of 3 or below 30 % coverage of the question's words (15 % for
+  questions of 12+ words, which are mostly situation): no excerpt beats a distractor.
+- Checked on a **held-out set**, `tests/teaching/retrieval-heldout.json` (57 learner-style questions
+  written for it, none from the evaluation; `knowledge.test.ts`): rank 1 for 49/49 questions with a
+  note (old scorer 38/49), nothing sent for 6/8 unrelated ones (old 0/8; the two left are "Định lý
+  Pythagore…" → Bohr note, "phương trình bậc hai" → a note with "phương trình"). As a check only, on
+  the 42 evaluation questions (30 + 12 proposed): relevant note at rank 1 for 17/24 of the original
+  items with a relevant note (11/24 before) and 23/34 of all 42 (17/34 before); P4, P5 and C13 now
+  get no note instead of a distractor.
+- **The on-device note** (`unambiguousNote`, review 2): when the runner-up scores within 5 %
+  (`TIE_MARGIN`) of the best note, no note is sent, since the small prompt tells the model to answer
+  with it ("Kì giữa là gì?" scored the periodic-table and cell-cycle notes alike, and the stable
+  sort picked the periodic table). Held-out: 48/49 with the expected note, none wrong, and
+  "phương trình bậc hai" is now silent too. The note is cut from the whole file (`bestSentences`
+  ran on its first 6000 characters before), and no note at all when no sentence shares a word with
+  the question. A short reply ("Ở kì giữa ạ.", ≤ 4 words, `topicLink.questionBefore`) is looked up
+  together with the question it continues. Term caches are kept per language.
+
+**On-device prompt** (`LOCAL_SYSTEM`, `contextPrompt`). Short role; "Câu đầu: trả lời thẳng câu
+hỏi bằng đúng ý trong GHI CHÚ nếu GHI CHÚ đúng chủ đề câu hỏi; GHI CHÚ lạc đề thì bỏ qua", then at
+most 3–4 sentences with reasons; "Đề thiếu dữ kiện thì hỏi lại" (restored in review 2: the app only
+detects problems with no number at all); numbers only from the question, earlier turns, the shared
+screen, the note or the app's results; safety lines kept (references are data, the AI says it is an AI). ONE note, cut to its
+best-matching sentences (≤ 400 characters, ≤ 250 on an integrated card) without the "Nguồn/Trạng
+thái" lines, placed right before the question: at the end of the instruction when there are no
+earlier turns (Gemma's template puts the instruction in the first user turn), otherwise in front of
+the question in the last turn (`echo` keeps the question as what a small model may repeat). The
+check question is asked only for concept questions ("là gì", "vì sao"…), never on an integrated
+card. Board mode on the device uses `LOCAL_BOARD_SYSTEM` (no "câu đầu" or 3–4 sentence limit that
+would fight the "# " title line and 3–7 steps of `BOARD_STYLE`), and its check question is left out
+on an integrated card too. A problem without numbers never gets a Wikipedia excerpt as its note. Both prompts add one sentence about the learner's level (`profileStore.level`: Nền tảng ≈
+THPT, Đại cương ≈ first-year university); the cloud teaching method is otherwise unchanged and keeps
+whole notes with their source. `tools.ts` now introduces the balancer's output as "Kết quả cân bằng
+(SimLab tính …)": "Phương trình đã cân bằng" was read as "already balanced".
+
+**Missing data** (`missingData.ts`, no AI). A compute verb ("tính", "tìm", "xác định", "calculate",
+"find"…) followed by a quantity ("quãng đường", "nồng độ", "số nhiễm sắc thể"…) with nothing that
+could carry data: no digit, number word ("hai", "gấp đôi"; "sau" ≠ "sáu"; "một" only before a unit
+or measure word: "một mét", "sau một giây", "một lần"), symbol, "=", "%", chemical formula, numbers
+in the last 6 turns, or shared screen. Excluded: method and symbolic questions ("Tính như thế
+nào?", "Công thức … là gì?", "theo lực và khối lượng", "biểu thức", "in terms of"), standard
+constants ("gia tốc rơi tự do ở mặt đất", "khối lượng mol của nước"), table values of a named
+element or material ("số electron của natri", "khối lượng riêng của sắt", data/elements.json names)
+and "xác định lực …" (which forces act, not a value). Then the prompt gets a hard rule (ask for the
+quantities, never assume a value) and the chat shows the app's own notice above the answer
+("SimLab nhắc (không phải AI)"), worded as a possibility ("có thể còn thiếu số liệu"): the check
+reads words, it does not understand the problem. Conservative on purpose: a problem that gives some
+numbers but not enough (P11-style) is not detected; that would need the problem solved.
+
+**Number provenance** (`provenance.ts`). Values in an answer — with a unit, after "=", "≈",
+"khoảng", after "là"/"bằng"/"is"/"equals" at the end of a sentence, decimals, powers of ten, whole
+numbers above 10 — that appear in none of the question, the learner's turns (number words too:
+"hai giờ", "hai mươi lăm", "nửa", `numberWords.ts`), the app's results, the excerpt sent, the shared
+screen or earlier answers' checked, unflagged numbers (1 % rounding allowed) are listed under the
+answer in a box the app labels as its own ("SimLab kiểm tra (không phải AI)": "Số do AI tự đưa ra
+(chưa kiểm chứng): …"). The record keeps the full list (`ChatMessageRecord.unverifiedNumbers`, set
+even when empty); the chip shows six and "… và N số khác". An answer saved before the check existed
+has no such field: it is checked again when used as history, so its numbers are never taken as
+given unchecked. Only real tags are removed ("pH < 7 … ->" is text). List and step numbers, small
+counts ("là 2 bước"), formula parts, exponents and 0 are ignored. Tested on 14 saved Gemma 1B
+answers: "khoảng 50 km" (P5) is flagged; restated data ("Na=23g", "0.1 m", the learner's "23") is
+not. "Unverified" is not "wrong": a correct textbook value the AI adds is listed too.
+
+**Number words, with and without accents: what they miss on purpose** (`numberWords.ts`). A number
+word the learner wrote counts as given, so when the reading is unsure the reader finds less, and an
+unsure numeral gives nothing at all, never a shorter value. The usual cost is a false "chưa kiểm
+chứng" on a value the learner did write.
+
+- _Spoken numbers._ A digit word, "mốt", "lăm" or "tư" right after a lone digit, "chục", "trăm" or
+  a scale word ends the number in speech ("hai tư" 24, "ba sáu" 36, "hai trăm hai" 220, "một trăm
+  mốt" 110, "một nghìn tư" 1400, "trăm hai" 120), or the words are a range ("hai ba người", two or
+  three people). So "hai bốn giờ", "hai trăm tư mét", "một nghìn hai", "nghìn hai" give nothing, not
+  2 and 4, 200, 1000 or 2; "một trăm tư nhân hai" gives only the 2. After a numeral that ends in a
+  units digit, a digit word is the other end of a range: "mười hai ba tuổi" (12 or 13) gives 12
+  only, "hai mươi lăm sáu độ" 25 only.
+- _"chục", rough numerals._ "hai chục" is 20 ("hai chục rưỡi" 25, "hai chục nghìn" 20 000). A rough
+  or partial numeral gives nothing: "hai trăm mấy", "hai mươi mấy", "hai trăm lẻ" (two hundred-odd),
+  "ba lẻ năm" (3,05 or 305?), "twenty-odd", "two and a half thousand", "half a million"; nor does a
+  numeral before "vạn" or "tá", which are not read ("hai vạn", "hai tá").
+- _"năm" is also "year"._ Right after a number it is the year: "một năm" gives 1, "hai mươi năm"
+  20, "Sau 3 năm" nothing. Before a unit or a count word it cannot be the year, so the whole numeral
+  gives nothing: "bốn năm lần" (four or five times), "trẻ bốn năm tuổi", "mười năm phút" (15 said
+  with an "n"?), "bốn năm nghìn". After "chục", "trăm" or a scale word it is the year only before
+  "rưỡi" or a word that settles it ("hai trăm năm trước", "hai nghìn năm qua"); "Em ra hai trăm
+  năm" (250 in speech?) gives nothing. Alone, "năm", "một" (also "a") and "chín" (also "ripe")
+  count only before a unit or measure word ("năm giây"; not "Năm nay", "năm nhất", "Năm 1905", "Quả
+  chín"), so "sinh viên năm hai" and "nhân năm" give nothing.
+- _Names._ A capitalised digit word that does not start a sentence is a name ("anh Ba", "chú Bảy",
+  "bạn Nam"), and so are "Ba Lan" (Poland) and, without accents, a capitalised "Nam" anywhere ("Nam
+  lan luot tha…"). They give nothing.
+- _"tư" that starts a word_ ("tư thế", "tư vấn", "tư nhân"; not "tư nhân viên") ends no numeral, and
+  the numeral it would have ended gives nothing: "hai mươi tư thế" gives neither 24 nor 20, "ba phần
+  tư nhân hai" neither 0,75 nor 3.
+- _Fractions and decimals._ A denominator is no value of its own ("phần mười giây", "mot phan muoi
+  giay", "two thirds", "one tenth"; "half-life" gives no 0,5). Decimals in words ("ba phẩy năm",
+  "one point five") are read; an unsure ending gives nothing: "hai phẩy năm năm" (2,55, or 2,5
+  years?), and one digit after "point" followed by a word that is no unit ("Through one point two
+  lines": one point, two lines). "hai giờ rưỡi" gives 2,5 only, so an answer that rewrites it as "2
+  giờ 30 phút" has "2 giờ" listed.
+- _Text with no Vietnamese mark at all._ Nearly every digit word is also an ordinary word ("sau"
+  after, "bay" fly, "tam" centre or "tầm" about, "muoi" salt, "do" because), "muoi" is both "mươi"
+  (tens) and "mười" (ten), and "gap" is both "gấp" (times) and "gặp" (meet), the core word of
+  meeting problems. A numeral then counts only before a unit, unless it has a word that means nothing
+  else ("nghin", English number words except "ten"); after "gap" it also counts at the end of its
+  run ("tang gap ba"; "gap doi" anywhere), but not a lone "mot" or "nam" or a capitalised name ("An
+  gap Nam"). A numeral that starts with "sau", "bay" or "tam" never counts, alone ("Sau giay dau
+  tien", "May bay bay thang", "tam giay") or longer ("Sau muoi giay" is after ten seconds, not 60;
+  "May bay bay muoi phut"; "Bay muoi met"), not even after "gap" ("Hai xe gap sau muoi giay": they
+  meet after ten seconds; "gap tam muoi phut": after about ten minutes), so "tang gap sau lan" gives
+  nothing either. Neither does "bon muoi" ("Mot bon muoi lit": a tank of ten litres, not 40). The
+  whole numeral is skipped, so its 10 or 15 is not taken either. Inside a numeral that starts with
+  another word they still count ("muoi sau giay" = 16). "nam", "do", "ngay", "tan", "can" are not
+  units there, so "ba muoi do", "ba ngay", "hai tan" and "hai nam ruoi" give nothing, and neither
+  does a numeral with no unit after it ("v = hai muoi lam"). A short reply such as "hai" or "ba" has
+  no marks even when typed on a Vietnamese keyboard, so it is read the same way and gives nothing.
+
+These rules make an invented value passing as given unlikely, not impossible: an ordinary word they
+do not foresee can still be read as a digit ("nam muoi phut" gives 50, though it may be "nằm mười
+phút"; "Hai xe gap doi xe" gives 2, though it may be "gặp đội xe").
+
+The board's ✓ (`board/provenance.ts`) answers a different question and is deliberately not shared
+(review 2): it means the arithmetic on that line is right, not the formula. B5 (Gemma 1B wrote
+"1 × 3³ = 27" for three mitoses, answer 2³ = 8) gets ✓ on the board and stays listed in the chat.
+The board also counts standard values (9,8 / 10 / 60 / 1000…) and whole numbers 0–10 as given,
+because it marks every number it writes; the chat lists a stated value with a unit even then (P5's
+invented "60 km/h"). The chip's hint says that a ✓ calculation can still use a wrong formula.
+
+**"Dừng".** While an answer is written the send button becomes "Dừng" (any open panel, through
+`chatStore.stopAnswer`). Cloud: the transport's AbortSignal (desktop `ai_cancel`, browser fetch
+abort). Gemma: a request still queued never starts; a running one gets a `stop` message and the
+worker ends `generate` with `InterruptableStoppingCriteria` after the current token. An optional
+Wikipedia lookup gets the same signal (`fetchWebKnowledge`), so nothing more is sent after "Dừng".
+The chat is released at once (`AnswerStopped`), keeps the question, adds no answer and says "Đã
+dừng câu trả lời…". A cloud request stopped while its key is looked up is never sent; on desktop a
+stop that reaches Rust before `ai_chat` registers the request (`ai_cancel` → false) is sent again
+every 50 ms while the call runs (up to 2 s). Known limit (Rust, not changed): `ai_chat` counts the
+call against the daily cap before it registers it, so a call stopped in that window is still
+counted. A second question cannot start while another panel is answering.
+
+For `scripts/teaching/eval-gemma.mjs`: `contextPrompt` still returns the whole instruction in
+`system` (note last), so items without history are sent as the app sends them; for follow-up items
+the app moves `prompt.note` in front of the last question, which the script does not do yet.
 
 ## Where data goes
 
@@ -232,6 +392,105 @@ The speaker button in the chat header turns the teacher's voice on and off; the 
 remembered. Each new answer is read with the device's built-in voices — free, no key, no network.
 Settings → AI Teacher → “Giọng nói của thầy” offers four styles, a voice picker and a preview. Asking a
 new question, clearing history, leaving the page or closing the panel stops the speech.
+
+### Natural teacher voice for the on-device MMS voice (2026-10-14)
+
+The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate from synthesis:
+
+1. **Speech plan** (`src/teacher/voice/speechPlan.ts`, pure). `prepareSpeech(text, {role, emphasis})`
+   removes what is not meant to be heard (`<think>` blocks, `<reference>` blocks, comments,
+   known tags only — TeachScript, SSML and a short HTML list (`markup.ts`), even with `>` inside an
+   attribute; a comparison without spaces such as "x<y khi y>0" stays and is read "nhỏ hơn" /
+   "lớn hơn" —, horizontal rules, emoji), applies the
+   **pronunciation dictionary** (`pronunciations.json`: term, reading, subject, `review_status`;
+   applied before the rule-based reader so an entry wins; never inside `$…$`, LaTeX or code, never
+   next to an operator or an arrow; a reading is words only — no digit, unit symbol or formula,
+   all 42 entries wait for a teacher, DATA_REVIEW PRON-1), reads the text with `toSpeech`, and cuts
+   it into chunks: paragraph > sentence > `;`/`:` > `,`; a piece of one word joins its neighbour;
+   a piece over 100 characters is cut between words, before a conjunction if possible, at least 3
+   words on each side; the first chunk is cut at a conjunction past 64 characters (the first
+   sound comes sooner). A cut never falls inside a number with its sign, power of ten and unit
+   ("6,626.10⁻³⁴ J.s", "−3,2 °C", "0,1 M"), a `$…$` formula, an equation, a dictionary reading or a
+   name: the written spans are marked and carried through the reader, so their spoken words are
+   known exactly (a span whose marks change the reading is read on its own in the whole text's
+   context and looked up instead), and a cut never falls between a number word and a sign
+   ("trừ", "âm", "cộng"), another number word or a unit word. Chemistry and solutions ("0,2 M" =
+   mol per litre) are told from the text as written, before the dictionary. The chunks are the
+   prepared text word for word (tested on the 40 golden and 19 benchmark sentences).
+2. **Pauses after a chunk** (`PAUSE_MS`): phrase cut without punctuation 80 ms · before a key term
+   120 · comma 150 · `;`/`:` 280 · sentence 400 · paragraph or list item 560 · last chunk 0 (the
+   board adds its own pause between sentences).
+3. **Roles and prosody** (`ROLE_PROSODY`). The board passes the sentence's role and key terms
+   (`voiceCue` in `lesson.ts`); otherwise a classifier reads the words. A role from the board wins
+   for a heading or a result; a question or feedback heard in the words wins over step, note and
+   plain.
+
+   | Role       | Where it comes from                                                                 | Rate | noise_scale | noise_scale_duration |
+   | ---------- | ----------------------------------------------------------------------------------- | ---- | ----------- | -------------------- |
+   | `plain`    | anything else                                                                       | 1.00 | 0.667       | 0.80                 |
+   | `step`     | board: a write in the `steps` zone; words: "Bước…", "Đầu tiên…", "một, …"           | 1.00 | 0.667       | 0.80                 |
+   | `note`     | board: only side notes                                                              | 1.03 | 0.667       | 0.80                 |
+   | `heading`  | board: a heading write                                                              | 0.94 | 0.60        | 0.75                 |
+   | `concept`  | words: "… được gọi là …", "là gì", "khái niệm", "định nghĩa"                        | 0.92 | 0.60        | 0.75                 |
+   | `result`   | board: a result write; words: "Vậy…", "Kết quả…", "Đáp số…"                         | 0.90 | 0.60        | 0.70                 |
+   | `keyword`  | the key term itself (board keyword, marked word, `**bold**` term)                   | 0.90 | 0.60        | 0.70                 |
+   | `check`    | words: the sentence ends with "?"                                                   | 0.96 | 0.70        | 0.85                 |
+   | `feedback` | words: "Đúng rồi", "Chưa đúng", "Rất tốt", "Không sao"… (correction, encouragement) | 0.94 | 0.72        | 0.85                 |
+
+   Emphasis is a short pause before the key term and a slower pace for the term alone (it is cut
+   off after it, so the words after it keep their sentence's role: a question stays a question) —
+   never a louder voice. A one-word term followed by more words gets the pause only (MMS says a
+   lone word oddly); a term with fewer than 3 words before it in its piece gets neither. A bold
+   label at the start of a line ("**Bước 1:**") is not a key term.
+
+4. **What MMS supports (the limit).** Hugging Face's VITS reads `speaking_rate`, `noise_scale` and
+   `noise_scale_duration` from its config inside `forward()`. Transformers.js 4.3 `VitsModel` feeds
+   the ONNX graph only the inputs it names (`session.inputNames`), and Optimum's VITS export (the
+   one behind `Xenova/mms-tts-*`) declares `input_ids` and `attention_mask` only, so the three
+   values are fixed in the graph (1, 0.667, 0.8). Not checked on the stored file itself (that
+   needs the model; the worker reads `session.inputNames` at load and adapts). The worker
+   (`localVoiceWorker.ts`, `vitsControls.ts`) passes a value only when the graph names it, clamped
+   to 0.85–1.15 / 0.5–0.8 / 0.6–1.0, and reports which it applied; a graph that refuses a value (a
+   wrong type, rank or shape) is run without it from then on. Any other error, above all a
+   graphics-card failure, is never retried: it reaches the page, which moves the voice off the card. With the expected graph nothing is applied, so the noise columns
+   above are not heard (VITS still samples its own variation at the fixed scales) and the role's
+   pace is applied on the page by a pitch-keeping time stretch (WSOLA). The learner's speed (and
+   the board's) stays the playback rate, the same for every chunk.
+5. **Stitching** (`stitch.ts`, pure, Float32Array): every chunk at 16 kHz; its own silence trimmed
+   (frames 40 dB below its loudest, 30 ms margin kept); one gain per chunk so its voiced RMS is
+   −20 dBFS, lowered if the peak would pass −1 dBFS (no clipping, no compressor, at most ±18 dB);
+   raised-cosine fades of 8 ms in and 12 ms out (no clicks); then the planned pause as silence.
+6. **Streaming, order, stop** (`chunkPlayer.ts`, `naturalVoice.ts`, `speak.ts`). Chunk n+1 renders
+   while chunk n plays (a look-ahead of one, never more); playback is in strict order. Every stop
+   moves a generation number on: a speech that is no longer the current one never plays another
+   chunk, even if its render finishes later (a new lesson, the learner leaving); `playPcm` also
+   never starts a sound stopped while the browser resumed audio. A pause stops the voice and the
+   board reads the sentence again on "Tiếp tục"; the lesson's `VoiceSession` keeps up to 48
+   rendered chunks, so the re-read starts at once. A chunk the worker was already rendering when
+   the learner paused cannot be cut short: it finishes into the lesson's cache, and the re-read
+   waits for that render instead of queueing the chunk again behind it. The board still calls
+   `speak()` once per sentence, so speech and board stay in sync. The Windows and Gemini voices
+   keep their sentence-sized phrases (they now get the dictionary too); after an on-device failure
+   the Windows voice goes on from the first chunk not yet heard.
+7. **Benchmark** (`scripts/voice/tts-bench.mjs`; first CPU run 2026-10-14, results in
+   `docs/VOICE_BENCHMARK.md` §6 and `tests/voice/results/`). Renders `ttsBenchSet.json` (19
+   sentences: greeting, transition, new concepts, check questions, correction and encouragement, a
+   long paragraph, formulas, units and numbers, names, mitosis, chemical equations, a heading, a
+   result, a note) as `legacy` and `natural` on the same prepared text (`prepareSpeech`'s
+   `plan.text`: dictionary and today's reader in both), so only the pipeline differs: `legacy` =
+   20b19c2's chunking, pauses and playback rate on that text (comma pieces, 140/260/320/520 ms
+   timer pauses, raw audio, playback rate = speed); it is not the old reader's words. On the CPU
+   only (Edge with GPU and WebGPU off, `wasm` asserted, model hosts blocked: the voice must
+   already be stored). It records first-audio latency, synthesis time, real-time factor
+   (synthesis over voiced time — each chunk without its edge silence — alike in both modes),
+   duration, syllables per second, chunk loudness spread and peak, the longest gap, gaps over
+   600 ms and the time spent stalling, clipping, NaN, words dropped or reordered, and the Edge
+   process tree's CPU time and peak memory. The WAVs are what the app would play on that CPU:
+   each chunk placed where the playback timeline (look-ahead of one) starts it, so a stall while
+   the next chunk renders is heard as silence (the wait for the first chunk is left out). The
+   folder for listeners is `listen/` only (the blind A/B sheet `index.html`, four 1–5 ratings
+   per recording, and `blind/`); `by-mode/`, `key/ab-key.json` and `results.json` name the modes
+   and stay outside it.
 
 ## Teacher face
 
@@ -256,3 +515,46 @@ in the problem box for the learner to review first.
 
 Not verified: `gemma3-1b` / `gemma4-e2b` on real hardware, the packaged Windows installers (only
 `cargo clippy`/`cargo test` for both editions and `tauri dev` were run).
+
+## Audit 2026-10-13: safety and quality changes
+
+See `docs/AUDIT_2026-10-13.md` for the evidence (benchmarks, evaluation, the GPU crash).
+
+- **GPU safety (GPU-01, `src/ai/gpuSafety.ts`).** Gemma 1B on an integrated AMD Radeon 780M made the
+  driver time out repeatedly and Windows stopped with bugcheck 0x119. After one GPU fault (lost
+  device, crashed worker, ONNX Runtime buffer errors) Gemma is not loaded again in that session; the
+  fault is stored (`stemsim.gemma-gpu-fault`) and shown in Settings → GPU cho Gemma with "Dùng card
+  rời" / "Vẫn cho Gemma chạy lại". On an integrated card (`gemmaOnIntegrated`) the prompt is capped
+  at 1024 tokens and uses the "tight" context. Never benchmark Gemma on an integrated GPU;
+  `scripts/teaching/eval-gemma.mjs` refuses anything but a discrete NVIDIA adapter.
+- **Stalled answers (`src/ai/stallWatch.ts`).** No first piece in 120 s or no new piece in 45 s ends
+  the answer with `gemma-stalled` and a fresh worker; the worker also reports a lost WebGPU device.
+  Each failure has its own learner sentence (`gemmaErrorKey`), and none of them goes online.
+- **Pinned models.** Every Gemma model and the MMS voice download one pinned `revision` (commit).
+  Stored files are kept per repo without the revision, so moving the pin needs no re-download.
+- **Prompts.** Untrusted excerpts (library, imported files, Wikipedia) go in `<reference kind=…>`
+  blocks they cannot close; on-device prompts used 2 excerpts × 700 characters (`PromptSize`; since
+  2026-10-14 one note of ≤ 400 characters, see "Teaching quality"). The
+  cloud prompt states the teaching method (goal → ask for missing data → explain → example → steps
+  with reasons → one misconception → ONE check question → feedback that adapts).
+- **App-computed facts (`src/teacher/chat/tools.ts`).** Chemical equations in a question are solved
+  by `src/chemistry/balance.ts`; the result goes into the prompt ("KẾT QUẢ DO SIMLAB TÍNH") and is
+  shown by the app under the answer (`ChatMessageRecord.facts`), because a small model garbles it.
+  A question is read only when it asks to balance ("cân bằng", "balance") or names a reaction
+  ("phản ứng", "PTHH", "reaction") next to an arrow; every species must parse as a formula; units
+  ("10N", "220V") are never formulas; "cannot balance" is said only to an explicit balancing
+  request written with an arrow (with "=", the line may be physics: only a real balance counts).
+- **Board speech.** `Sentence.spoken` reads written words where their tag stands; a pause re-reads
+  the cut sentence; `lessonMetrics()` keeps per-sentence timing in memory.
+- **Simulation link (`topicLink.ts`).** "Xem mô phỏng: …" follows the learner's latest question only
+  (a short follow-up or a quick button keeps the topic of the question before it). Catalog text
+  match, never chosen by the AI; words typed with accents are compared with accents (tone position
+  "hoá"/"hóa" does not matter), words typed without accents are compared folded.
+- **Evaluation.** `tests/teaching/teaching-eval.json` (30 questions) + `scripts/teaching/rubric.mjs`
+  (objective checks only); `scripts/teaching/rescore.mjs` re-scores a saved run without a browser or
+  GPU. Gemma 1B, old → new prompt, re-scored on 2026-10-14 with the corrected rubric on the same 60
+  saved answers: last sentence is a check question 4 % → 42 %, asks for missing data 0 % → 0 % (it
+  invents numbers instead), first word 1.59 → 0.86 s (median 1.39 → 0.83 s), key facts 29 % → 23 %;
+  with the new prompt it still answers "Đúng!" to wrong answers (P6, P10, B10). The model, not the
+  prompt, is the limit. The first scoring (8 % → 54 %, 0 % → 33 %) counted any "?" near the end and
+  answers that invented the missing numbers.

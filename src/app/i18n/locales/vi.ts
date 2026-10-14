@@ -229,6 +229,8 @@ const vi = {
       voiceHint: 'Giọng đọc tiếng Việt của AI Teacher và cách đọc.',
       safetyHint: 'Xác nhận độ tuổi, điều khoản, trang quyền riêng tư và nhật ký an toàn.',
       shortcutsHint: 'Các phím tắt chính khi làm mô phỏng.',
+      versions: 'Lịch sử phiên bản',
+      versionsHint: 'Những gì đã thay đổi qua từng phiên bản SimLab và bản nào đã phát hành.',
     },
     lookCard: 'Chế độ và màu sắc',
     textCard: 'Chữ và ngôn ngữ',
@@ -696,6 +698,60 @@ const vi = {
     available: 'Có bản cập nhật {version}',
     browserOnly: 'Cập nhật trong app chỉ có ở bản cài trên máy.',
   },
+  whatsnew: {
+    title: 'SimLab đã được cập nhật',
+    intro: 'Đây là những điểm mới kể từ lần trước bạn mở SimLab.',
+    notesLabel: 'Ghi chú cập nhật',
+    version: 'Phiên bản {version}',
+    releasedOn: 'Ngày phát hành: {date}',
+    releaseDateUnknown: 'Ngày phát hành: chưa xác minh',
+    highlights: 'Điểm nổi bật',
+    allChanges: 'Tất cả thay đổi',
+    where: 'Bạn luôn xem lại được trong Cài đặt → Lịch sử phiên bản.',
+    details: 'Xem chi tiết',
+    later: 'Để sau',
+    close: 'Đóng',
+    menu: 'Có gì mới',
+    menuButton: 'Tệp (có điểm mới trong SimLab)',
+    category: {
+      added: 'Tính năng mới',
+      improved: 'Cải tiến',
+      fixed: 'Sửa lỗi',
+      security: 'An toàn và bảo mật',
+      performance: 'Hiệu năng',
+      changed: 'Thay đổi',
+      deprecated: 'Ngừng hỗ trợ',
+      knownIssues: 'Vấn đề đã biết',
+    },
+    status: {
+      released: 'Đã phát hành',
+      mergedNotReleased: 'Chưa phát hành riêng',
+      inReview: 'Đang xét duyệt',
+      development: 'Bản dựng thử',
+      unverified: 'Chưa xác minh',
+    },
+    statusHint: {
+      mergedNotReleased:
+        'Phiên bản này không có bản phát hành riêng; các thay đổi đến với người dùng ở bản phát hành sau.',
+      inReview: 'Phiên bản này đang được xét duyệt, chưa phát hành.',
+      development: 'Bản dựng thử đầu tiên, không phát hành.',
+      unverified:
+        'Số phiên bản này chỉ có trong tài liệu hoặc một tệp ZIP; chưa xác minh được bằng một bản phát hành.',
+    },
+    history: {
+      current: 'Bạn đang dùng phiên bản {version}.',
+      currentBadge: 'Bản đang dùng',
+      currentHint:
+        'Bạn đang dùng bản này. Ngày phát hành của một bản chỉ được ghi vào lịch sử ở các bản sau.',
+      draft: 'Ghi chú này là bản nháp, chưa được duyệt để công bố.',
+      loading: 'Đang đọc lịch sử phiên bản…',
+      unavailable:
+        'Chưa đọc được lịch sử phiên bản. Mô phỏng và các tính năng khác vẫn dùng bình thường.',
+      listLabel: 'Các phiên bản, mới nhất ở trên',
+      releasesPage: 'Mở trang phát hành trên GitHub',
+      showWhatsNew: 'Xem lại hộp "Có gì mới"',
+    },
+  },
   safety: {
     aiLabel: 'Nội dung do AI hỗ trợ',
     aiLabelHint: 'Phần này do AI đọc hoặc viết. AI có thể sai: hãy kiểm tra lại.',
@@ -899,6 +955,23 @@ const vi = {
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
+    openSimulation: 'Xem mô phỏng: {title}',
+    factsTitle: 'Kết quả do SimLab tính (chính xác, không phải AI)',
+    facts: {
+      balanced: 'Phương trình cân bằng: {equation}',
+      unbalanced: 'SimLab chưa cân bằng được “{input}”: hãy kiểm tra lại công thức trong đề.',
+    },
+    stop: 'Dừng',
+    stopLabel: 'Dừng câu trả lời đang viết',
+    stopped: 'Đã dừng câu trả lời. Em có thể hỏi lại hoặc hỏi câu khác.',
+    missingDataTitle: 'SimLab nhắc (không phải AI)',
+    missingData:
+      'Đề bài có thể còn thiếu số liệu: SimLab chưa thấy con số nào trong câu hỏi. Nếu đề có cho số, em ghi thêm (kèm đơn vị) rồi gửi lại nhé.',
+    unverifiedTitle: 'SimLab kiểm tra (không phải AI)',
+    unverifiedNumbers: 'Số do AI tự đưa ra (chưa kiểm chứng): {numbers}',
+    unverifiedMore: '… và {count} số khác',
+    unverifiedHint:
+      'SimLab không thấy các số này trong câu hỏi, cuộc trò chuyện, ghi chú tham khảo hay kết quả SimLab tính. Một phép tính được bảng giảng đánh dấu đúng vẫn có thể dùng sai công thức. Em hãy tự kiểm tra lại.',
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:
@@ -908,6 +981,14 @@ const vi = {
         'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI Teacher để kiểm tra.',
       webgpu:
         'Trình duyệt hoặc máy này không hỗ trợ WebGPU nên chưa chạy được Gemma ngay trên máy.',
+      gemmaStalled:
+        'Gemma không viết thêm chữ nào trong một lúc lâu nên mình đã dừng và khởi động lại nó. Em hỏi lại nhé; nếu vẫn chậm, chọn câu trả lời "Ngắn" hoặc mô hình nhỏ hơn trong Cài đặt.',
+      gemmaGpu:
+        'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Em có thể hỏi lại; nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
+      gemmaGpuBlocked:
+        'Card đồ họa đã bị treo khi chạy Gemma. Để máy không bị khởi động lại, Gemma tạm dừng tới khi em mở lại app. Hãy chọn card rời trong Cài đặt → GPU cho Gemma, dùng mô hình nhỏ hơn, hoặc hỏi bằng API.',
+      gemmaFailed:
+        'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI Teacher.',
       crisis:
         'Mình rất tiếc em đang gặp khó khăn. Hãy nói ngay với người lớn em tin tưởng. Nếu em đang nguy hiểm, gọi 111 hoặc 115. Tin nhắn này không được gửi tới AI.',
       personal:
@@ -934,8 +1015,8 @@ const vi = {
     webCard: 'Tra cứu trực tuyến',
     flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
     gemmaModel: 'Phiên bản Gemma',
-    gemma270m: '270M · nhẹ nhất',
-    gemma1b: '1B · khuyên dùng',
+    gemma270m: '270M · nhẹ nhất, chỉ để thử (hay lạc đề, trả lời kém)',
+    gemma1b: '1B · khuyên dùng trên máy; hay sai kiến thức, nên kiểm tra lại hoặc bật Think',
     gemmaE2b: 'E2B · mạnh nhất, đọc được ảnh',
     modelReady: 'Gemma đã sẵn sàng trên máy.',
     modelMissing: 'Chưa tải mô hình này.',
@@ -951,6 +1032,8 @@ const vi = {
     downloadNetwork: 'Không tải được do mạng. Kiểm tra kết nối rồi bấm “Tải mô hình” lần nữa.',
     downloadMemory:
       'Máy không đủ bộ nhớ đồ họa để chạy mô hình này. Hãy chọn bản nhỏ hơn (270M hoặc 1B).',
+    downloadGpuBlocked:
+      'Gemma đang tạm dừng vì card đồ họa vừa bị treo khi chạy nó (để máy không bị khởi động lại). Muốn thử lại: vào Cài đặt → GPU cho Gemma, chọn card rời nếu có, rồi bấm “Vẫn cho Gemma chạy lại” — hoặc mở lại ứng dụng.',
     downloadFailed: 'Tải chưa thành công ({detail}). Mô hình chưa được đánh dấu là sẵn sàng.',
     desktopOnly: 'chỉ bản desktop',
     webLookup: 'Tra thêm Wikipedia khi có mạng',
@@ -1073,6 +1156,18 @@ const vi = {
       browserOnly:
         'Trên trình duyệt, trình duyệt tự chọn card đồ họa. Chọn card chỉ có trong ứng dụng desktop trên Windows.',
       unsupported: 'Chọn card đồ họa hiện chỉ có trên Windows.',
+      faultTitle: 'Card đồ họa đã bị treo khi chạy Gemma',
+      faultBody:
+        'Lúc {when}, card {card} ngừng phản hồi khi Gemma đang trả lời. Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động lại.',
+      faultBlocked: 'Gemma đang tạm dừng tới khi em mở lại ứng dụng.',
+      faultAdvice:
+        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng API trực tuyến.',
+      useDiscrete: 'Dùng card rời: {name}',
+      allowAgain: 'Vẫn cho Gemma chạy lại',
+      dismissFault: 'Ẩn thông báo',
+      unknownCard: 'đồ họa',
+      integratedHint:
+        'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
     },
   },
   gpuSettings: {
@@ -1150,6 +1245,8 @@ const vi = {
   voice: {
     readAloudCard: 'Đọc to',
     readAloud: 'Đọc to câu trả lời của AI Teacher',
+    onCpuAfterGpuFault:
+      'Trong lần dùng này, giọng trên máy chạy bằng CPU vì card đồ họa đã gặp lỗi (chậm hơn nhưng an toàn cho máy).',
     readAloudHint:
       'Cũng bật/tắt được bằng nút loa trong khung trò chuyện. Âm thanh không được ghi lại.',
     sourceCard: 'Nguồn giọng',
@@ -1168,6 +1265,8 @@ const vi = {
       },
     },
     systemFound: 'Đã có giọng tiếng Việt: {names}.',
+    noVietnameseOnEnable:
+      'Máy chưa có giọng đọc tiếng Việt nên thầy sẽ đọc sai dấu. Vào Cài đặt → Giọng nói để thêm giọng tiếng Việt của Windows hoặc chọn giọng tiếng Việt chạy trên máy.',
     systemMissing:
       'Máy chưa có giọng tiếng Việt, nên Windows đọc bằng giọng tiếng Anh và sai dấu. Cài giọng tiếng Việt (miễn phí):',
     installStep1: 'Mở Settings (Cài đặt) của Windows → Time & language → Speech.',
@@ -1232,10 +1331,22 @@ const vi = {
       noModel:
         'Chưa tải giọng tiếng Việt trên máy: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       quota: 'Gemini báo hết lượt: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      dailyLimit:
+        'Đã dùng hết số lượt AI trong ngày (giới hạn đặt trong Cài đặt): lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      timeout:
+        'Giọng đã chọn trả lời quá lâu: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
+      systemVoice:
+        'Giọng Windows chưa đọc được câu vừa rồi (bộ đọc của máy báo lỗi). Em thử chọn một giọng khác nhé.',
       offline: 'Không có mạng: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       notAllowed:
         'Cần xác nhận đủ 18 tuổi để dùng giọng Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       other: 'Giọng đã chọn chưa đọc được: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      lessonRest:
+        'Giọng trên máy chưa đọc được: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
+      gpuToCpu:
+        'Card đồ họa gặp lỗi khi đọc: giọng trên máy đã chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy), phần chưa đọc được đã do giọng Windows đọc thay.',
+      movedToCpu:
+        'Giọng trên máy vừa chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy): phần đang đọc dở đã do giọng Windows đọc tiếp.',
     },
   },
   levels: {
@@ -1367,6 +1478,7 @@ const vi = {
     transcript: 'Lời thoại',
     chipsLabel: 'Yêu cầu nhanh',
     chips: {
+      hint: 'Gợi ý từng bước',
       again: 'Giải thích lại',
       slower: 'Chậm hơn',
       example: 'Thêm ví dụ',
@@ -1374,6 +1486,7 @@ const vi = {
       lost: 'Em chưa hiểu chỗ này',
     },
     chipPrompts: {
+      hint: 'Thầy đừng giải hết. Chỉ cho em một gợi ý nhỏ cho bước tiếp theo (chưa nói đáp số), rồi hỏi em thử làm bước đó.',
       again:
         'Thầy giải thích lại câu trả lời vừa rồi theo một cách khác, dễ hiểu hơn, vẫn đúng nội dung đó.',
       slower:

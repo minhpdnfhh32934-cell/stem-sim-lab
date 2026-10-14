@@ -1,0 +1,497 @@
+{
+  "about": "Held-out evaluation set for the AI Teacher (H1–H15), written on 2026-10-14 without seeing any model output: no saved answers, no evaluation results and no tutor prompt were read, so neither the prompts nor the answer keys of tests/teaching/teaching-eval.json can have been tuned on these questions. Same schema and scoring as tests/teaching/teaching-eval.json (scripts/teaching/rubric.mjs): patterns are matched on the answer folded to ASCII lower case (no accents, đ → d). keyFacts: every group needs one match (generous for correct paraphrases); mustNot: known wrong statements, written so that negated forms, conditionals, misconception sentences and a wrong statement asked back as a question (its sentence ends in \"?\") do not trigger; agreement patterns only look at sentence openings (\"Đúng.\", \"Đúng vậy\", \"Vâng,\"), never at \"Đúng là …\". Mix per subject (5 physics, 5 chemistry, 5 biology): 2 yes/no questions built on a common misconception whose right answer is \"no\" (one type misconception, one type trap with a false premise: keyFacts[0] is the explicit correction), 1 learner-feedback item (type followup: the teacher asked a check question and the learner answered wrongly; mustNot catches praise such as a bare \"Đúng\"), 1 concept question and 1 small calculation with all data given (derivation recomputed). expected, keyPoints and derivation are for reviewers and judges. AI-written, not independently checked; every item is review_status pending until a teacher reviews it (docs/DATA_REVIEW.md).",
+  "review_status": "pending",
+  "items": [
+    {
+      "id": "H1",
+      "subject": "physics",
+      "type": "misconception",
+      "question": "Có phải vật chuyển động tròn đều thì không có gia tốc vì tốc độ của nó không đổi không ạ?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong( phai| dung| han)?( (vay|the|dau))?[*_ ]*[,.!:]|(van|luon|vat) (van |luon )?co gia toc|co gia toc huong tam|chua (dung|chinh xac)|\\bsai\\b|gia toc (huong tam )?(khac|khong bang) (0|khong)"
+        ],
+        ["huong tam|huong vao tam|(ve|huong ve) (phia )?tam"],
+        [
+          "(huong|phuong|chieu) (cua )?(vecto |vec-to )?(van toc|chuyen dong)[^.;]{0,30}(thay doi|bien doi|doi)|(van toc|vecto van toc)[^.;]{0,40}(doi huong|doi phuong|doi chieu|thay doi (huong|phuong|chieu)|(huong|phuong) (lien tuc )?thay doi)|doi huong|thay doi huong|(vecto|vec-to) van toc (luon |lien tuc )?(thay doi|bien doi)"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong phai|chu khong phai|khong the|khong co nghia|\\bneu|\\bmoi|thang deu|dung yen|tiep tuyen|nghi rang|tuong rang|cho rang)[^.;!?]{0,30})khong co gia toc(?! tiep tuyen)(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai|thang deu)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong phai|\\bneu|thang deu|tiep tuyen|nghi rang|tuong rang|cho rang)[^.;!?]{0,30})gia toc (cua vat )?(cung )?(bang 0|bang khong\\b(?! phai)|= ?0\\b)(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai|thang deu)))(?![^.;!?]*\\?)",
+        "(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(vang|co|phai)[*_ ]*[,.!]"
+      ],
+      "expected": "Không. Vật chuyển động tròn đều có tốc độ không đổi, nhưng hướng của vectơ vận tốc thay đổi liên tục, nên vật vẫn có gia tốc: gia tốc hướng tâm, luôn hướng vào tâm quỹ đạo, độ lớn a_ht = v²/r = ω²r. Gia tốc đặc trưng cho sự thay đổi của vectơ vận tốc (cả độ lớn lẫn hướng), không chỉ của tốc độ; muốn có gia tốc này phải có hợp lực hướng tâm (ví dụ lực căng dây, lực hấp dẫn).",
+      "keyPoints": [
+        "Trả lời rõ: không đúng (không mở đầu bằng \"Đúng/Có/Phải\")",
+        "Tốc độ không đổi nhưng hướng của vectơ vận tốc thay đổi liên tục",
+        "Vật có gia tốc hướng tâm, hướng vào tâm quỹ đạo",
+        "Độ lớn a_ht = v²/r = ω²r (không bắt buộc)",
+        "Gia tốc đặc trưng cho sự thay đổi vectơ vận tốc, không chỉ độ lớn; gia tốc tiếp tuyến bằng 0 mới là phần đúng của ý học sinh",
+        "Cần hợp lực hướng tâm (lực hướng tâm) để giữ vật trên quỹ đạo tròn (không bắt buộc)"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H2",
+      "subject": "physics",
+      "type": "trap",
+      "question": "Khi em đẩy vào tường, tường cũng đẩy lại em một lực cùng độ lớn nhưng ngược chiều. Vậy hai lực này triệt tiêu nhau nên hợp lực bằng 0, đúng không ạ?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong( phai| dung| han)?( (vay|the|dau))?[*_ ]*[,.!:]|khong (dung|phai)\\b|chua (dung|chinh xac)|\\bsai\\b|khong (the |he )?(triet tieu|can bang|bu tru)|khong (duoc )?(cong|tong hop)"
+        ],
+        [
+          "(hai|2|cac) (vat|doi tuong) khac nhau|vat khac nhau|diem dat khac nhau|khac diem dat|dat (vao|len|o|tren) (hai|2) vat|(tac dung|dat) (len|vao) (buc )?tuong\\b|(tac dung|dat) (len|vao) (em|nguoi|tay em|ban tay|ban than em)\\b|khong (cung )?(tac dung|dat) (len|vao) (cung )?(mot|1) vat|khong cung (mot|1) vat"
+        ],
+        [
+          "(dinh luat|dl) (iii|3|ba)|(newton|niu ?ton|niuton) (iii|3|ba)|phan luc|tuong tac|truc doi"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(\\bkhong|\\bchang|\\bneu|\\bchi|\\bmoi|cho rang|nghi rang|tuong rang|sai lam|hieu nham)\\b[^.;!?]{0,50})triet tieu (nhau|lan nhau)(?! (khi|neu))(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bchang|\\bneu|\\bchi|\\bmoi|cho rang|nghi rang|tuong rang|sai lam|hieu nham)\\b[^.;!?]{0,50})(hai luc (nay |do )?|chung )(can bang|bu tru) (nhau|lan nhau)(?! (khi|neu))(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(vang|phai)[*_ ]*[,.!]"
+      ],
+      "trap": {
+        "note": "Cho rằng lực và phản lực (định luật III Newton) triệt tiêu nhau. Hai lực này đặt vào hai vật khác nhau (một lên tường, một lên em) nên không tổng hợp thành một hợp lực và không triệt tiêu nhau; chỉ các lực tác dụng lên cùng một vật mới cộng được.",
+        "premise": true
+      },
+      "expected": "Không đúng. Theo định luật III Newton, lực em đẩy tường và lực tường đẩy em là cặp lực và phản lực: cùng độ lớn, ngược chiều, nhưng đặt vào hai vật khác nhau (một lực tác dụng lên tường, một lực tác dụng lên em). Chỉ các lực tác dụng lên cùng một vật mới cộng thành hợp lực, nên cặp lực này không triệt tiêu nhau. Em đứng yên hay chuyển động phụ thuộc vào tất cả các lực tác dụng lên chính em (lực tường đẩy, ma sát nghỉ ở chân, trọng lực, phản lực của sàn).",
+      "keyPoints": [
+        "Nói rõ \"không/chưa đúng\"; không mở đầu bằng \"Đúng/Vâng/Phải\"",
+        "Đây là cặp lực – phản lực (định luật III Newton): cùng độ lớn, ngược chiều",
+        "Hai lực đặt vào hai vật khác nhau (tường và em) nên không triệt tiêu, không tổng hợp thành hợp lực",
+        "Chỉ các lực tác dụng lên cùng một vật mới cộng thành hợp lực",
+        "Trạng thái của em do các lực tác dụng lên em quyết định (lực tường đẩy, ma sát, trọng lực, phản lực sàn) (không bắt buộc)"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H3",
+      "subject": "physics",
+      "type": "followup",
+      "history": [
+        {
+          "role": "user",
+          "content": "Mắc nối tiếp hai điện trở là thế nào ạ?"
+        },
+        {
+          "role": "assistant",
+          "content": "Hai điện trở mắc nối tiếp khi chúng nối liền nhau thành một đường duy nhất, nên dòng điện chạy lần lượt qua từng điện trở và cường độ dòng điện qua chúng như nhau. Câu hỏi kiểm tra: hai điện trở R₁ = 2 Ω và R₂ = 3 Ω mắc nối tiếp thì điện trở tương đương của đoạn mạch bằng bao nhiêu?"
+        }
+      ],
+      "question": "Dạ, bằng 1,2 Ω ạ.",
+      "keyFacts": [
+        ["chua (dung|chinh xac)|\\bsai\\b|khong (dung|phai)\\b|nham"],
+        [
+          "(?<![\\d.,])5 ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?(ω|\\\\omega|ohm\\b|om\\b)|(=|la|bang) ?5\\b(?![.,]\\d)|r_?\\{?1\\}? ?\\+ ?r_?\\{?2|2 ?\\+ ?3\\b|(tong|cong) (cac |hai )?dien tro"
+        ]
+      ],
+      "mustNot": [
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b(?![^.;!?]{0,40}(nhung|mot phan|song song|kieu gen))|(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)",
+        "(?:(?<!(\\bkhong|\\bneu|song song|thay vi|(em|ban) (da )?(tra loi|noi|neu|viet|tinh ra|cho la))\\b[^.;!?]{0,30})(dien tro tuong duong|r_?\\{?(td|tuong duong|ab)\\}?)[^.;!?\\d]{0,30}(=|la|bang) ?1[,.]2\\b(?![^.;!?]{0,40}(song song|sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Chưa đúng em ạ. Khi mắc nối tiếp, điện trở tương đương bằng tổng các điện trở: R_tđ = R₁ + R₂ = 2 + 3 = 5 Ω, lớn hơn mỗi điện trở thành phần. Kết quả 1,2 Ω là điện trở tương đương khi hai điện trở này mắc song song (R₁R₂/(R₁ + R₂) = 6/5 = 1,2 Ω, nhỏ hơn mỗi điện trở). Thầy hỏi lại: nếu mắc thêm một điện trở nữa nối tiếp vào đoạn mạch thì điện trở tương đương tăng hay giảm?",
+      "keyPoints": [
+        "Nói rõ học sinh trả lời chưa đúng (không khen \"đúng rồi\")",
+        "Mắc nối tiếp: R_tđ = R₁ + R₂",
+        "R_tđ = 2 + 3 = 5 Ω",
+        "Chỉ ra chỗ nhầm: 1,2 Ω là công thức của mạch song song (R₁R₂/(R₁ + R₂))",
+        "Mẹo kiểm tra: nối tiếp thì R_tđ lớn hơn mỗi điện trở, song song thì nhỏ hơn (không bắt buộc)",
+        "Giọng khích lệ, có thể kèm câu hỏi kiểm tra tiếp"
+      ],
+      "derivation": "Nối tiếp: R_tđ = R₁ + R₂ = 2 + 3 = 5 Ω. Nguồn gốc của 1,2 Ω (song song): 1/R = 1/2 + 1/3 = 5/6 ⇒ R = 6/5 = 1,2 Ω, hay R₁R₂/(R₁ + R₂) = 2·3/(2 + 3) = 6/5 = 1,2 Ω.",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H4",
+      "subject": "physics",
+      "type": "concept",
+      "question": "Khối lượng và trọng lượng của một vật khác nhau như thế nào?",
+      "keyFacts": [
+        ["luong chat|quan tinh|kilogam|\\bkg\\b"],
+        [
+          "trong luc|luc hut|(la|bang) (mot )?(do lon (cua )?)?(mot )?luc\\b|niuton|newton|p ?= ?m ?[.·×*]? ?g\\b|\\bn\\)|\\(n\\b|don vi (la |do la )?n\\b|(?<![a-z])\\d+([.,]\\d+)? ?n\\b"
+        ],
+        [
+          "(thay doi|khac nhau|phu thuoc)[^.;]{0,40}(\\bnoi\\b|vi tri|do cao|mat trang|hanh tinh|gia toc trong truong|\\bg\\b)|mat trang|(khong (thay )?doi|khong phu thuoc|nhu nhau|giu nguyen)[^.;]{0,40}(moi noi|vi tri|o dau|mat trang)"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(\\bkhong|\\bneu|nham|nhieu (ban|nguoi)|tuong rang|nghi rang|cho rang)\\b[^.;!?]{0,25})(khoi luong|\\bkl) (cua (vat|nguoi|em|no) )?(se |cung |bi )?(thay doi|giam|nho hon|nho di)\\b[^.;!?]{0,30}(mat trang|vi tri|noi khac|do cao|hanh tinh|len cao)(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nham|nhieu (ban|nguoi)|tuong rang|nghi rang|cho rang)\\b[^.;!?]{0,25})(mat trang|len cao|hanh tinh khac)[^.;!?]{0,30}khoi luong (cua (vat|nguoi|em|no) )?(se |cung |bi )?(thay doi|giam|nho hon|nho di)\\b(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nham|tuong rang|nghi rang|cho rang)\\b[^.;!?]{0,25})trong luong (cua (vat|nguoi|em|no) )?(khong (thay )?doi|giu nguyen|nhu nhau)\\b[^.;!?]{0,30}(moi noi|mat trang|vi tri|o dau))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nham|nhieu (ban|nguoi)|tuong rang|nghi rang|cho rang|thuong)\\b[^.;!?]{0,25})trong luong (cua (vat|nguoi|em|no) )?(duoc )?(do|tinh|co don vi|don vi)( la| bang)? (bang )?(kg|kilogam)\\b)(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nham|tuong rang|nghi rang|cho rang)\\b[^.;!?]{0,25})khoi luong (cua vat )?(la|chinh la) (mot )?(luc|do lon (cua )?(trong )?luc|trong luc)\\b)(?![^.;!?]*\\?)"
+      ],
+      "expected": "Khối lượng (m, đơn vị kg) cho biết lượng chất và mức quán tính của vật; nó không đổi dù vật ở đâu (trong cơ học cổ điển). Trọng lượng (P, đơn vị niutơn N) là độ lớn của trọng lực, tức lực hút của Trái Đất (hay thiên thể) lên vật: P = mg, nên phụ thuộc gia tốc trọng trường g và thay đổi theo vị trí (độ cao, vĩ độ; trên Mặt Trăng nhỏ hơn khoảng 6 lần). Khối lượng đo bằng cân, trọng lượng đo bằng lực kế; \"cân nặng 50 kg\" trong đời sống thực chất là khối lượng.",
+      "keyPoints": [
+        "Khối lượng: lượng chất / mức quán tính, đơn vị kg, đại lượng vô hướng",
+        "Trọng lượng: độ lớn của trọng lực (lực hút của Trái Đất), đơn vị N",
+        "Liên hệ P = m·g",
+        "Khối lượng không đổi theo vị trí; trọng lượng thay đổi theo g (độ cao, vĩ độ, Mặt Trăng)",
+        "Dụng cụ đo: cân (khối lượng), lực kế (trọng lượng) (không bắt buộc)",
+        "Sai nếu nói khối lượng giảm trên Mặt Trăng, trọng lượng đo bằng kg, hay khối lượng là một lực"
+      ],
+      "derivation": "P = m·g. Ví dụ để giáo viên đối chiếu (không có trong câu hỏi): m = 60 kg, g ≈ 9,8 m/s² ⇒ P ≈ 588 N trên Trái Đất; g_Mặt Trăng ≈ 1,62 m/s² ⇒ P ≈ 97 N, khối lượng vẫn 60 kg (9,8/1,62 ≈ 6).",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H5",
+      "subject": "physics",
+      "type": "problem",
+      "question": "Viên bi A khối lượng 0,2 kg đang chuyển động với vận tốc 3 m/s thì va chạm vào viên bi B khối lượng 0,1 kg đang đứng yên. Sau va chạm hai viên bi dính vào nhau và chuyển động cùng vận tốc. Bỏ qua ma sát. Tính vận tốc của hai viên bi sau va chạm.",
+      "keyFacts": [
+        ["(?<![\\d.,])2(?:[,.]0+)? ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?m/s"],
+        [
+          "dong luong|bao toan|m_?\\{?(1|a)\\}? ?[.·×*]? ?v_?\\{?(1|a)\\}?|\\(m_?\\{?(1|a)\\}? ?\\+ ?m_?\\{?(2|b)|0[,.]2 ?[.·×*x] ?3\\b|0[,.]6 ?(/|:) ?0[,.]3|\\\\frac\\{0[,.]6\\}\\{0[,.]3\\}|p ?= ?m ?[.·×*]? ?v"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})(?<![\\d.,])6 ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?m/s(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})(?<![\\d.,])1[,.]5 ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?m/s(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})(?<![\\d.,])2[,.]4[45]\\d* ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?m/s(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Hệ hai viên bi là hệ kín theo phương ngang (bỏ qua ma sát) nên động lượng được bảo toàn: m_A·v_A + m_B·0 = (m_A + m_B)·v. Suy ra v = m_A·v_A/(m_A + m_B) = 0,2·3/(0,2 + 0,1) = 0,6/0,3 = 2 m/s, cùng hướng chuyển động ban đầu của bi A. Va chạm mềm không bảo toàn động năng, nên không được dùng định luật bảo toàn động năng ở đây.",
+      "keyPoints": [
+        "Hệ kín (bỏ qua ma sát): bảo toàn động lượng",
+        "m_A·v_A = (m_A + m_B)·v (bi B đứng yên)",
+        "v = 0,6/0,3 = 2 m/s, cùng hướng chuyển động ban đầu của A",
+        "Va chạm mềm: động năng không bảo toàn (một phần chuyển thành nhiệt, biến dạng)",
+        "Sai điển hình: 6 m/s (quên khối lượng bi A sau va chạm), 1,5 m/s (chia đôi vận tốc), ≈ 2,45 m/s (dùng bảo toàn động năng)"
+      ],
+      "derivation": "Chọn chiều dương theo chiều chuyển động của A. p trước = 0,2·3 + 0,1·0 = 0,6 kg·m/s. p sau = (0,2 + 0,1)·v = 0,3·v. ⇒ v = 0,6/0,3 = 2 m/s. Kiểm tra động năng: trước ½·0,2·3² = 0,9 J; sau ½·0,3·2² = 0,6 J (mất 0,3 J, đúng với va chạm mềm). mustNot: 6 m/s = 0,6/0,1 (chỉ chia cho khối lượng bi B), 1,5 m/s = 3/2 (chia đôi vận tốc), √6 ≈ 2,45 m/s (dùng nhầm bảo toàn động năng: ½·0,2·3² = ½·0,3·v² ⇒ v² = 6).",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H6",
+      "subject": "chemistry",
+      "type": "misconception",
+      "question": "Có phải khi nước sôi, các bọt khí nổi lên là khí hiđro và khí oxi vì phân tử nước bị tách ra không?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong( phai| dung| han)?( (vay|the|dau))?[*_ ]*[,.!:]|khong phai (la )?(khi )?(hidro|h2\\b|oxi|o2\\b)|chua (dung|chinh xac)|\\bsai\\b|khong (bi )?(tach|phan huy|pha vo|phan tach)|(van|giu nguyen) (la )?(phan tu )?(nuoc|h2o)"
+        ],
+        [
+          "hoi nuoc|nuoc (o |chuyen sang |chuyen thanh |sang )?(the|dang) (khi|hoi)|h2o ?\\((k|g|h|hoi|khi)\\)|phan tu (nuoc|h2o) (o )?(the |dang )?(khi|hoi)"
+        ],
+        [
+          "bien doi vat l[iy]|hien tuong vat l[iy]|qua trinh vat l[iy]|chuyen the|(ban chat|thanh phan|cau tao) (phan tu |cua nuoc )?(khong (doi|thay doi)|giu nguyen)|khong (co |xay ra )?(phan ung|bien doi) hoa hoc|khong tao (ra )?chat moi|lien ket (giua cac phan tu|lien phan tu|hidro)|(khong|chua) (bi )?(pha vo|be gay) (cac )?lien ket (cong hoa tri|o ?[-–] ?h|trong phan tu)|(phan tu|ban than phan tu) (nuoc|h2o) (van )?(giu nguyen|khong (bi )?(thay doi|pha vo|tach))"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(\\bkhong|chu khong|\\bneu|dien phan)\\b[^.;!?]{0,25})(bot|bong bong|bong khi|cac bot)( khi)?( noi len| do| nay)? (la|chinh la|gom|chua|chu yeu la)( khi)? (hidro|h2\\b|oxi\\b|o2\\b)(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|chu khong|\\bneu|dien phan)\\b[^.;!?]{0,25})(nuoc|phan tu nuoc|h2o) (bi |da |se )?(phan huy|tach|phan tach)( ra)?( thanh| tao ra| tao thanh)? (khi )?(hidro|h2\\b)(?![^.;!?]{0,40}(dien phan|nhiet do (rat )?cao|sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(vang|co|phai)[*_ ]*[,.!]"
+      ],
+      "expected": "Không. Khi nước sôi, nước chuyển từ thể lỏng sang thể khí: các bọt khí nổi lên là hơi nước (H₂O ở thể khí). Đây là biến đổi vật lí: chỉ các liên kết giữa các phân tử nước (liên kết hiđro) bị phá vỡ, còn phân tử H₂O vẫn giữ nguyên, không tạo ra chất mới. Muốn tách nước thành khí hiđro và khí oxi phải dùng một phản ứng hóa học, ví dụ điện phân nước: 2H₂O → 2H₂ + O₂. (Những bọt nhỏ xuất hiện lúc mới đun chủ yếu là không khí hòa tan thoát ra.)",
+      "keyPoints": [
+        "Trả lời rõ: không (không mở đầu bằng \"Đúng/Có/Phải\")",
+        "Bọt khí khi sôi là hơi nước (H₂O ở thể khí)",
+        "Sôi là biến đổi vật lí (chuyển thể): phân tử H₂O không bị phá vỡ, không tạo chất mới",
+        "Chỉ liên kết giữa các phân tử (liên kết hiđro) bị phá vỡ (không bắt buộc)",
+        "Tách nước thành H₂ và O₂ cần phản ứng hóa học, ví dụ điện phân (không bắt buộc)",
+        "Tùy chọn: bọt nhỏ lúc mới đun là không khí hòa tan"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H7",
+      "subject": "chemistry",
+      "type": "trap",
+      "question": "Đốt cháy một mẩu than trong không khí, khối lượng tro còn lại nhỏ hơn nhiều so với mẩu than ban đầu. Vậy trong phản ứng này khối lượng không được bảo toàn, đúng không ạ?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong( phai| dung| han)?( (vay|the|dau))?[*_ ]*[,.!:]|khong (dung|phai)\\b|chua (dung|chinh xac)|\\bsai\\b|(van|luon) (duoc )?bao toan|(van|luon) (dung|nghiem dung|ap dung)|khong (he )?(bi )?(mat|bien mat|mat di)\\b"
+        ],
+        ["co2|cacbon ?dioxit|cacbonic|(bay|thoat) (ra|di|vao|len)|dang khi|chat khi|the khi"],
+        ["oxi|o2\\b|tong khoi luong|binh kin|he kin|m_?\\{?(c|than)\\}? ?\\+|c ?\\+ ?o_?\\{?2"]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong phai|chu khong|\\bneu|tuong nhu|co ve|nhin thi|hinh nhu|cho rang|nghi rang|tuong rang)\\b[^.;!?]{0,20})khoi luong (khong (duoc |con )?bao toan|bi mat( di)?|mat di|bien mat|bi hao hut)(?! (chinh |thuc ra )?(la|do|vi|nay|o|nam|chuyen|di|bay|thoat|thuc))(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai|tuong nhu|chi la)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong|\\bneu|cho rang|nghi rang|tuong rang)\\b[^.;!?]{0,20})dinh luat bao toan khoi luong (khong (dung|con dung|ap dung|nghiem dung)|bi vi pham|sai|khong duoc (thoa man|tuan theo))(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(vang|phai)[*_ ]*[,.!]"
+      ],
+      "trap": {
+        "note": "Cho rằng khối lượng mất đi khi đốt than. Khối lượng vẫn bảo toàn: than (chủ yếu là C) phản ứng với O₂ của không khí, C + O₂ → CO₂; khí CO₂ bay đi nên không cân được. m(than) + m(O₂ phản ứng) = m(CO₂) + m(tro).",
+        "premise": true
+      },
+      "expected": "Không đúng. Định luật bảo toàn khối lượng vẫn đúng: than (chủ yếu là cacbon) phản ứng với oxi trong không khí, C + O₂ → CO₂. Sản phẩm chính là khí CO₂ bay vào không khí nên ta không cân được, chỉ còn lại tro (phần không cháy). Tổng khối lượng than và oxi đã phản ứng bằng tổng khối lượng CO₂ và tro; nếu đốt trong bình kín rồi cân cả bình thì khối lượng không đổi.",
+      "keyPoints": [
+        "Nói rõ \"không đúng\"; không mở đầu bằng \"Đúng/Vâng/Phải\"",
+        "Khối lượng vẫn được bảo toàn trong mọi phản ứng hóa học",
+        "Cacbon phản ứng với oxi tạo khí CO₂ (C + O₂ → CO₂), khí này bay đi",
+        "m(than) + m(O₂) = m(CO₂) + m(tro): phải tính cả chất khí tham gia và tạo thành",
+        "Đốt trong bình kín thì tổng khối lượng không đổi (không bắt buộc)"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H8",
+      "subject": "chemistry",
+      "type": "followup",
+      "history": [
+        {
+          "role": "user",
+          "content": "Làm sao biết số proton, nơtron và electron của một nguyên tử ạ?"
+        },
+        {
+          "role": "assistant",
+          "content": "Số proton bằng số hiệu nguyên tử Z; nguyên tử trung hòa về điện nên số electron bằng số proton. Số khối A là tổng số proton và số nơtron. Câu hỏi kiểm tra: nguyên tử natri có Z = 11 và số khối A = 23 thì có bao nhiêu nơtron?"
+        }
+      ],
+      "question": "Dạ, natri có 34 nơtron ạ.",
+      "keyFacts": [
+        ["chua (dung|chinh xac)|\\bsai\\b|khong (dung|phai)\\b|nham"],
+        ["\\b12\\b|23 ?[-−–] ?11\\b"]
+      ],
+      "mustNot": [
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b(?![^.;!?]{0,40}(nhung|mot phan|song song|kieu gen))|(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)",
+        "(?:(?<!(khong phai|chu khong|\\bkhong|\\bneu|thay vi|(em|ban) (da )?(tra loi|noi|neu|viet|tinh ra|cho la))\\b[^.;!?]{0,20})(natri|nguyen tu (natri|na|nay|do)|\\bna\\b) (co|chua|gom) 34\\b(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong|\\bkhong|\\bneu|thay vi|(em|ban) (da )?(tra loi|noi|neu|viet|tinh ra|cho la))\\b[^.;!?]{0,20})(so notron|so neutron|\\bn\\b) ?(=|la|bang) ?34\\b(?! ?[-−–+])(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Chưa đúng em ạ. Số khối là tổng số proton và số nơtron (A = Z + N), nên số nơtron N = A − Z = 23 − 11 = 12. Em đã cộng Z vào A (23 + 11 = 34) thay vì lấy A trừ Z. Vậy nguyên tử natri có 11 proton, 11 electron và 12 nơtron.",
+      "keyPoints": [
+        "Nói rõ học sinh trả lời chưa đúng (không khen \"đúng rồi\")",
+        "A = Z + N ⇒ N = A − Z",
+        "N = 23 − 11 = 12 nơtron",
+        "Chỉ ra chỗ nhầm: cộng 23 + 11 thay vì trừ",
+        "Kiểm tra lại: 11 + 12 = 23 = A (không bắt buộc)",
+        "Giọng khích lệ, có thể kèm câu hỏi kiểm tra tiếp"
+      ],
+      "derivation": "A = Z + N ⇒ N = A − Z = 23 − 11 = 12. Kiểm tra: Z + N = 11 + 12 = 23 = A. Số electron = Z = 11. Học sinh: 23 + 11 = 34 (cộng thay vì trừ).",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H9",
+      "subject": "chemistry",
+      "type": "concept",
+      "question": "Phản ứng oxi hóa – khử là gì?",
+      "keyFacts": [
+        [
+          "so oxi hoa|(chuyen|trao doi|cho nhan|nhuong nhan|nhuong va nhan|cho va nhan|di chuyen|dich chuyen) (cac |mot so )?(electron|e\\b)|(electron|e\\b)[^.;]{0,40}(chuyen|di chuyen|dich chuyen) (tu|sang)|dong thoi"
+        ],
+        [
+          "(chat khu|su oxi hoa|qua trinh oxi hoa|chat bi oxi hoa)[^.;]{0,60}(nhuong|cho|mat|giai phong) (di )?(electron|e\\b)|(nhuong|cho|mat) (di )?(electron|e\\b)[^.;]{0,40}(chat khu|su oxi hoa|qua trinh oxi hoa|bi oxi hoa)|(chat khu|chat bi oxi hoa)[^.;]{0,50}so oxi hoa[^.;]{0,15}tang|so oxi hoa tang[^.;]{0,40}(chat khu|bi oxi hoa)"
+        ],
+        [
+          "(chat oxi hoa|su khu|qua trinh khu|chat bi khu)[^.;]{0,60}(nhan|thu) (them )?(electron|e\\b)|(nhan|thu) (them )?(electron|e\\b)[^.;]{0,40}(chat oxi hoa|su khu|qua trinh khu|bi khu)|(chat oxi hoa|chat bi khu)[^.;]{0,50}so oxi hoa[^.;]{0,15}giam|so oxi hoa giam[^.;]{0,40}(chat oxi hoa|bi khu)"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(\\bkhong|\\bnham|cho rang|nghi rang|tuong rang|nguoc lai)\\b[^.;!?]{0,25})(chat khu (la (chat )?|thi |se )?(nhan|thu) (them )?(electron|e\\b)|chat oxi hoa (la (chat )?|thi |se )?(nhuong|cho|mat) (di )?(electron|e\\b)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bnham|cho rang|nghi rang|tuong rang|nguoc lai)\\b[^.;!?]{0,25})(su oxi hoa (la )?(qua trinh )?(nhan|thu) (them )?(electron|e\\b)|su khu (la )?(qua trinh )?(nhuong|cho|mat) (di )?(electron|e\\b)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Phản ứng oxi hóa – khử là phản ứng hóa học trong đó có sự chuyển electron giữa các chất, nên có nguyên tố thay đổi số oxi hóa. Chất khử là chất nhường electron (số oxi hóa tăng, nó bị oxi hóa); chất oxi hóa là chất nhận electron (số oxi hóa giảm, nó bị khử). Sự oxi hóa (nhường electron) và sự khử (nhận electron) luôn xảy ra đồng thời. Ví dụ: Zn + CuSO₄ → ZnSO₄ + Cu: Zn nhường 2 electron (0 → +2) là chất khử, Cu²⁺ nhận 2 electron (+2 → 0) là chất oxi hóa.",
+      "keyPoints": [
+        "Định nghĩa: có sự chuyển electron giữa các chất / có sự thay đổi số oxi hóa của một số nguyên tố",
+        "Chất khử nhường electron (số oxi hóa tăng, bị oxi hóa)",
+        "Chất oxi hóa nhận electron (số oxi hóa giảm, bị khử)",
+        "Sự oxi hóa và sự khử xảy ra đồng thời",
+        "Có ít nhất một ví dụ đúng (Zn + CuSO₄, Fe + CuSO₄, đốt H₂ trong O₂…) (không bắt buộc)",
+        "Sai nếu đảo vai trò: chất khử nhận electron, chất oxi hóa nhường electron"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H10",
+      "subject": "chemistry",
+      "type": "problem",
+      "question": "Lấy 50 ml dung dịch HCl 2 M rồi thêm nước cất vào cho đến khi thu được 200 ml dung dịch. Tính nồng độ mol của dung dịch HCl thu được.",
+      "keyFacts": [
+        [
+          "(?<![\\d.,])0[,.]1 ?\\(?mol|c_?\\{?1\\}? ?[.·×*]? ?v_?\\{?1\\}? ?= ?c_?\\{?2\\}? ?[.·×*]? ?v_?\\{?2|2 ?[.·×*x] ?(50|0[,.]05)\\b|(50|0[,.]05) ?[.·×*x] ?2\\b|so mol[^.;]{0,30}(khong (doi|thay doi)|giu nguyen|duoc bao toan|nhu nhau|nhu cu)|(pha loang|loang|giam) (di )?(4|bon) lan|(gap|tang) (len )?(4|bon) lan|200 ?(/|:) ?50|50 ?(/|:) ?200|\\\\frac\\{50\\}\\{200\\}|\\\\frac\\{200\\}\\{50\\}"
+        ],
+        [
+          "(?<![\\d.,])0[,.]5 ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?(m\\b|mol/l|mol/lit|mol\\.l)"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})(?<![\\d.,])8 ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?(m\\b|mol/l)(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})(?<![\\d.,])0[,.]4 ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?(m\\b|mol/l)(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})((?<![\\d.,])0[,.]0005|5 ?[.·×*] ?10 ?(\\^ ?\\{?[-−]4\\}?|⁻⁴)) ?(\\\\[,;: ])? ?(\\\\(text|mathrm|rm)\\{ ?)?\\(?(m\\b|mol/l)(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Khi pha loãng, số mol chất tan không đổi. n(HCl) = C₁·V₁ = 2 mol/L × 0,05 L = 0,1 mol. Sau khi pha, V₂ = 200 ml = 0,2 L nên C₂ = n/V₂ = 0,1/0,2 = 0,5 M (hay C₁V₁ = C₂V₂ ⇒ C₂ = 2·50/200 = 0,5 M). Thể tích tăng 4 lần nên nồng độ giảm 4 lần.",
+      "keyPoints": [
+        "Pha loãng bằng nước: số mol chất tan không đổi (C₁V₁ = C₂V₂)",
+        "n(HCl) = 2 × 0,05 = 0,1 mol",
+        "V₂ = 200 ml = 0,2 L (đổi đơn vị thể tích sang lít)",
+        "C₂ = 0,1/0,2 = 0,5 M",
+        "Sai điển hình: 8 M (đảo tỉ lệ thể tích), 0,4 M (hiểu là thêm 200 ml nước), 0,0005 M (để V theo ml)"
+      ],
+      "derivation": "n = C₁·V₁ = 2 × 0,050 = 0,1 mol; V₂ = 0,200 L; C₂ = 0,1/0,2 = 0,5 M. Kiểm tra: C₁V₁ = 2·50 = 100 mmol = C₂V₂ = 0,5·200 = 100 mmol. mustNot: 8 M = 2·200/50 (đảo tỉ lệ thể tích), 0,4 M = 0,1/0,25 (hiểu nhầm là thêm 200 ml nước, V = 250 ml), 0,0005 M = 0,1/200 (để thể tích theo ml).",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H11",
+      "subject": "biology",
+      "type": "misconception",
+      "question": "Có phải vi khuẩn không có ADN vì tế bào của chúng không có nhân không?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong( phai| dung| han)?( (vay|the|dau))?[*_ ]*[,.!:]|(van|deu|cung|vi khuan|chung) (van |deu |cung |luon )?co (adn|dna|vat chat di truyen|phan tu adn|nhiem sac the)|chua (dung|chinh xac)|\\bsai\\b|khong phai (la )?khong co"
+        ],
+        [
+          "vung nhan|nucleoid|te bao chat|(chua|khong) co mang nhan|khong co mang bao (boc|quanh)|khong duoc bao boc|chua co nhan hoan chinh|nhan chua hoan chinh"
+        ],
+        ["adn vong|dna vong|dang vong|mach vong|vong kep|kep vong|plasmit|plasmid|nhan so"]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong phai|chu khong|\\bneu|nghi rang|tuong rang|cho rang)\\b[^.;!?]{0,25})(vi khuan|te bao nhan so|sinh vat nhan so|chung)( thi)?( hoan toan)? khong (co|chua) (adn|dna|vat chat di truyen)(?! (trong|o trong|nam trong|duoc bao boc|ben trong) (nhan|mang|mot nhan))(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)",
+        "(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(vang|co|phai)[*_ ]*[,.!]"
+      ],
+      "expected": "Không. Vi khuẩn là sinh vật nhân sơ: tế bào chưa có nhân hoàn chỉnh (không có màng nhân), nhưng vẫn có ADN. Vật chất di truyền của vi khuẩn chủ yếu là một phân tử ADN kép, dạng vòng, nằm ở vùng nhân trong tế bào chất; nhiều vi khuẩn còn có plasmit (phân tử ADN vòng nhỏ). Không có nhân không có nghĩa là không có ADN: cả sinh vật nhân sơ lẫn nhân thực đều dùng ADN làm vật chất di truyền.",
+      "keyPoints": [
+        "Trả lời rõ: không (không mở đầu bằng \"Đúng/Có/Phải\")",
+        "Vi khuẩn là sinh vật nhân sơ: không có màng nhân, nhưng vẫn có ADN",
+        "ADN nằm ở vùng nhân, trong tế bào chất",
+        "ADN của vi khuẩn là phân tử kép, dạng vòng; có thể có plasmit",
+        "Không có nhân ≠ không có vật chất di truyền"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H12",
+      "subject": "biology",
+      "type": "trap",
+      "question": "Mẹ mang thai nên việc sinh con trai hay con gái là do người mẹ quyết định, đúng không ạ?",
+      "keyFacts": [
+        [
+          "(^|[.!?:] )[*_ ]*khong( phai| dung| han)?( (vay|the|dau))?[*_ ]*[,.!:]|khong (dung|phai)\\b|chua (dung|chinh xac)|\\bsai\\b|khong (do|phai do|phai la do) (nguoi )?me"
+        ],
+        [
+          "\\bxy\\b|\\bxx\\b|(nst|nhiem sac the)( gioi tinh)? (x|y)\\b|tinh trung (mang |chua )?(nst |nhiem sac the )?(gioi tinh )?(x|y)\\b|trung (chi )?(mang |chua )?(nst |nhiem sac the )?(gioi tinh )?x\\b|giao tu (mang |chua )?(nst )?(x|y)\\b"
+        ],
+        [
+          "tinh trung|ngau nhien|xac suat|50 ?%|1 ?/ ?2|(nguoi )?(bo|cha) (cho|tao|sinh ra|mang|quyet dinh|truyen)"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong|khong phai|chu khong|chu khong phai|chang phai|nghi|cho|tuong|cho rang|nghi rang|tuong rang)( la)? )(la )?do (nguoi )?me (quyet dinh|chiu trach nhiem)(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai|la quan niem)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nghi rang|tuong rang|cho rang)\\b[^.;!?]{0,20})(nguoi )?me (la nguoi )?quyet dinh gioi tinh(?![^.;!?]{0,30}(sai|chua dung|khong dung|khong phai|la quan niem)))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nghi rang|tuong rang|cho rang)\\b[^.;!?]{0,20})(?<!tinh )\\b(trung|te bao trung|nguoi me) (cung )?(co the )?(mang|chua|cho|tao ra) (nst |nhiem sac the )?(gioi tinh )?(x (hoac|hay) y|y)\\b)(?![^.;!?]*\\?)",
+        "(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (vay|the|roi)\\b)|^[*_ ]*(vang|phai)[*_ ]*[,.!]"
+      ],
+      "trap": {
+        "note": "Cho rằng mẹ quyết định giới tính của con. Ở người, mẹ (XX) chỉ tạo trứng mang X; bố (XY) tạo hai loại tinh trùng mang X hoặc Y với tỉ lệ ngang nhau. Giới tính phụ thuộc vào loại tinh trùng thụ tinh với trứng (ngẫu nhiên, xác suất xấp xỉ 1/2).",
+        "premise": true
+      },
+      "expected": "Không đúng. Ở người, giới tính được xác định bởi cặp nhiễm sắc thể giới tính: nữ XX, nam XY. Mẹ chỉ tạo một loại trứng mang X; bố tạo hai loại tinh trùng, mang X hoặc mang Y, với số lượng ngang nhau. Tinh trùng X thụ tinh với trứng tạo hợp tử XX (con gái), tinh trùng Y tạo hợp tử XY (con trai); loại tinh trùng nào thụ tinh là ngẫu nhiên nên mỗi lần sinh, xác suất con trai hay con gái xấp xỉ 1/2. Vì vậy không thể đổ lỗi cho người mẹ (và cũng không phải lỗi của người bố).",
+      "keyPoints": [
+        "Nói rõ \"không đúng\"; không mở đầu bằng \"Đúng/Vâng/Phải\"",
+        "Cặp NST giới tính: nữ XX, nam XY",
+        "Mẹ chỉ cho trứng mang X; bố cho tinh trùng mang X hoặc Y (tỉ lệ 1 : 1)",
+        "Tinh trùng X + trứng → XX (gái); tinh trùng Y + trứng → XY (trai)",
+        "Thụ tinh ngẫu nhiên: xác suất mỗi lần sinh xấp xỉ 1/2; không phải lỗi của ai"
+      ],
+      "derivation": "P: XX × XY. Giao tử: mẹ 100 % X; bố ½ X : ½ Y. Hợp tử: ½ XX (gái) : ½ XY (trai).",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H13",
+      "subject": "biology",
+      "type": "followup",
+      "history": [
+        {
+          "role": "user",
+          "content": "Phép lai một cặp tính trạng của Menđen là gì ạ?"
+        },
+        {
+          "role": "assistant",
+          "content": "Menđen lai hai dòng thuần chủng khác nhau về một cặp tính trạng, ví dụ hoa đỏ và hoa trắng ở đậu Hà Lan; F₁ đều mang tính trạng trội. Câu hỏi kiểm tra: cho hai cây F₁ dị hợp Aa (hoa đỏ, alen A trội hoàn toàn so với alen a) lai với nhau, tỉ lệ kiểu hình ở F₂ là bao nhiêu?"
+        }
+      ],
+      "question": "Dạ, tỉ lệ kiểu hình là 1 : 2 : 1 ạ.",
+      "keyFacts": [
+        ["chua (dung|chinh xac)|\\bsai\\b|khong (dung|phai)\\b|nham"],
+        [
+          "(?<![\\d.,])3 ?: ?1\\b|\\b3 (cay )?(hoa )?(do|troi)[^.;]{0,20}(: ?)?1 (cay )?(hoa )?(trang|lan)|75 ?%|3 ?/ ?4"
+        ],
+        ["kieu gen|1 ?aa ?: ?2 ?aa"]
+      ],
+      "mustNot": [
+        "(em|ban) (da )?(tra loi|giai|tinh) (rat |hoan toan )?(dung|chinh xac)(?! dich)\\b(?![^.;!?]{0,40}(nhung|mot phan|song song|kieu gen))|(^|[.!?:] )[*_ ]*(dung|chinh xac)([*_ ]*[.!,]| (roi|vay)\\b)",
+        "(?:(?<!(\\bkhong|\\bneu|troi khong hoan toan|nghi rang|tuong rang|cho rang|(em|ban) (da )?(tra loi|noi|neu|viet|cho la))\\b[^.;!?]{0,30})kieu hinh(?![^.;!?\\d]{0,30}(khong|chu khong|chang|kieu gen))[^.;!?\\d]{0,30}(la|=|bang|:)? ?1 ?: ?2 ?: ?1(?![^.;!?]{0,40}(sai|chua dung|khong dung|khong phai|troi khong hoan toan|kieu gen)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Chưa đúng em ạ. Aa × Aa cho F₂ có tỉ lệ kiểu gen 1 AA : 2 Aa : 1 aa; vì A trội hoàn toàn nên AA và Aa đều cho hoa đỏ, tỉ lệ kiểu hình là 3 hoa đỏ : 1 hoa trắng (3 : 1). Tỉ lệ 1 : 2 : 1 em nêu là tỉ lệ kiểu gen; nó chỉ trùng với tỉ lệ kiểu hình khi trội không hoàn toàn.",
+      "keyPoints": [
+        "Nói rõ học sinh trả lời chưa đúng (không khen \"đúng rồi\")",
+        "F₂: tỉ lệ kiểu gen 1 AA : 2 Aa : 1 aa",
+        "Trội hoàn toàn: AA và Aa cùng kiểu hình trội ⇒ kiểu hình 3 trội : 1 lặn (3 hoa đỏ : 1 hoa trắng)",
+        "Chỉ ra chỗ nhầm: 1 : 2 : 1 là tỉ lệ kiểu gen (chỉ là tỉ lệ kiểu hình khi trội không hoàn toàn)",
+        "Giọng khích lệ, có thể kèm câu hỏi kiểm tra tiếp"
+      ],
+      "derivation": "Aa × Aa: mỗi bên cho giao tử ½ A : ½ a ⇒ F₂: ¼ AA : ½ Aa : ¼ aa = 1 : 2 : 1 (kiểu gen). Kiểu hình trội (AA + Aa) = ¼ + ½ = ¾ = 75 %, lặn (aa) = ¼ ⇒ 3 : 1.",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H14",
+      "subject": "biology",
+      "type": "concept",
+      "question": "Vận chuyển thụ động và vận chuyển chủ động các chất qua màng tế bào khác nhau như thế nào?",
+      "keyFacts": [
+        [
+          "(noi )?(co )?(nong do )?(cao|nhieu|lon) (sang|den|toi|xuong|ve) (noi )?(co )?(nong do )?(thap|it|nho)|(theo|thuan|xuoi|cung) (chieu )?(gradien|gradient|nong do|chenh lech nong do|do doc nong do)|khuech tan|tham thau"
+        ],
+        [
+          "(noi )?(co )?(nong do )?(thap|it|nho) (sang|den|toi|len|ve) (noi )?(co )?(nong do )?(cao|nhieu|lon)|nguoc (chieu )?(gradien|gradient|nong do|chenh lech nong do|do doc nong do)"
+        ],
+        ["\\batp\\b|nang luong"]
+      ],
+      "mustNot": [
+        "(?:(?<!(\\bkhong|\\bneu|nghi rang|tuong rang|cho rang|\\bnham)\\b[^.;!?]{0,20})(thu|bi) dong((?!chu dong|khong|chang)[^.;!?,]){0,25}\\b(can|ton|tieu ton|tieu thu|su dung|mat) (nang luong|atp))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bneu|nghi rang|tuong rang|cho rang|\\bnham)\\b[^.;!?]{0,20})chu dong((?!thu dong|bi dong)[^.;!?,]){0,25}\\b(khong (can|ton|tieu ton|tieu thu|su dung|mat)|chang can) (nang luong|atp))(?![^.;!?]*\\?)",
+        "(?:(?<!(\\bkhong|\\bneu|nghi rang|tuong rang|cho rang|\\bnham)\\b[^.;!?]{0,20})(thu|bi) dong((?!chu dong|khong)[^.;!?,]){0,40}(thap|it) (sang|den|toi|len) (noi )?(co )?(nong do )?(cao|nhieu))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Vận chuyển thụ động: chất đi qua màng theo chiều građien nồng độ (từ nơi có nồng độ cao đến nơi có nồng độ thấp), bằng khuếch tán trực tiếp qua lớp phôtpholipit kép hoặc qua kênh prôtêin; không tiêu tốn năng lượng ATP (ví dụ O₂, CO₂ khuếch tán; nước thẩm thấu qua kênh aquaporin). Vận chuyển chủ động: chất đi ngược chiều građien nồng độ (từ nơi có nồng độ thấp đến nơi có nồng độ cao), cần prôtêin vận chuyển (bơm) và tiêu tốn năng lượng ATP (ví dụ bơm Na⁺–K⁺; tế bào lông hút ở rễ hút ion khoáng khi nồng độ trong tế bào đã cao hơn ngoài đất).",
+      "keyPoints": [
+        "Thụ động: theo chiều građien nồng độ (cao → thấp), không tiêu tốn ATP",
+        "Thụ động: khuếch tán trực tiếp qua lớp phôtpholipit hoặc qua kênh prôtêin; thẩm thấu với nước",
+        "Chủ động: ngược chiều građien nồng độ (thấp → cao), tiêu tốn ATP",
+        "Chủ động: cần prôtêin vận chuyển đặc hiệu (bơm), ví dụ bơm Na⁺–K⁺",
+        "Sai nếu nói thụ động cần ATP, chủ động không cần năng lượng, hay thụ động đi từ thấp đến cao"
+      ],
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    },
+    {
+      "id": "H15",
+      "subject": "biology",
+      "type": "problem",
+      "question": "Trong một chuỗi thức ăn, năng lượng tích lũy ở sinh vật tiêu thụ bậc 1 là 1200 kcal, ở sinh vật tiêu thụ bậc 2 là 96 kcal. Tính hiệu suất sinh thái giữa hai bậc dinh dưỡng này.",
+      "keyFacts": [
+        ["(?<![\\d.,])8 ?\\\\?%|(?<![\\d.,])0[,.]08\\b"],
+        [
+          "96 ?(/|:|chia( cho)?|\\\\div|tren) ?1[. ]?200\\b|\\\\frac\\{96\\}\\{1(\\\\,|[. ])?200\\}|ti (so|le)[^.;]{0,50}(bac|cap)[^.;]{0,50}(bac|cap)"
+        ]
+      ],
+      "mustNot": [
+        "(?:(?<!(khong phai|chu khong|khong the|khong bang|thay vi)[^.;!?]{0,25})(?<!\\bneu\\b[^.;!?]{0,60})((?<![\\d.,])1[. ]?250|(?<![\\d.,])12[,.]5) ?\\\\?%(?![^.;!?]{0,25}(sai|chua dung|khong dung|khong phai)))(?![^.;!?]*\\?)"
+      ],
+      "expected": "Hiệu suất sinh thái giữa hai bậc dinh dưỡng là tỉ lệ phần trăm năng lượng tích lũy ở bậc sau so với bậc trước: H = E₂/E₁ × 100% = 96/1200 × 100% = 8%. Nghĩa là chỉ 8% năng lượng tích lũy ở sinh vật tiêu thụ bậc 1 được tích lũy ở sinh vật tiêu thụ bậc 2; phần còn lại (92%) bị mất qua hô hấp, tỏa nhiệt, chất thải và phần không được sử dụng.",
+      "keyPoints": [
+        "Hiệu suất sinh thái = năng lượng bậc sau / năng lượng bậc trước × 100%",
+        "H = 96/1200 × 100% = 8%",
+        "Ý nghĩa: phần lớn năng lượng (92%) bị thất thoát qua hô hấp, nhiệt, chất thải (không bắt buộc)",
+        "Sai điển hình: 1250% (đảo tỉ số; hiệu suất không thể lớn hơn 100%)"
+      ],
+      "derivation": "H = 96/1200 × 100% = 0,08 × 100% = 8%. Kiểm tra: 1200 × 0,08 = 96 kcal. Phần không được tích lũy ở bậc sau: 1200 − 96 = 1104 kcal = 92%. mustNot: 1250% = 1200/96 × 100% (đảo tỉ số).",
+      "review_status": "pending",
+      "reference": "AI-written 2026-10-14 for the held-out set, without seeing any model output; pending teacher review"
+    }
+  ]
+}

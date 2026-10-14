@@ -59,7 +59,8 @@ test('a markdown answer is laid out on the board, and a cut answer is continued 
   await page.locator('.launch-card--teacher').click();
   await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
   const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
-  await expect(board).toContainText('Hỏi AI Teacher một câu');
+  // The board is lazy-loaded ("Đang chuẩn bị bảng…"): the first load can be slow in a full run.
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
 
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
   await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();

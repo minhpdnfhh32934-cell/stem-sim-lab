@@ -109,7 +109,10 @@ describe('toSpeech', () => {
 
   it('reads powers of ten and scientific notation', () => {
     expect(toSpeech('c = 3 × 10^8 m/s')).toBe('xê bằng ba nhân mười mũ tám mét trên giây');
-    expect(toSpeech('N_A = 6,02.10²³')).toContain('sáu phẩy không hai');
+    // The Vietnamese dot before a power of ten is a multiplication, never a decimal point.
+    expect(toSpeech('N_A = 6,02.10²³')).toBe(
+      'nờ a bằng sáu phẩy không hai nhân mười mũ hai mươi ba',
+    );
     expect(toSpeech('q = 1,6 × 10⁻¹⁹ C')).toBe(
       'quy bằng một phẩy sáu nhân mười mũ trừ mười chín cu-lông',
     );
@@ -138,6 +141,14 @@ describe('toSpeech', () => {
     );
     expect(toSpeech('```python\nprint(1)\n```')).toBe('(đoạn mã trong tin nhắn)');
     expect(toSpeech('Xem [hình](http://x) và SGK')).toBe('Xem hình và sách giáo khoa');
+  });
+
+  it('removes known tags only: a comparison without spaces is read, not dropped', () => {
+    expect(toSpeech('Ta có x<y khi y>0.')).toBe('Ta có ích nhỏ hơn i khi i lớn hơn không.');
+    expect(toSpeech('a<b and c>d')).toBe('a nhỏ hơn bê and xê lớn hơn đê');
+    expect(toSpeech('<b>Gia tốc</b> của nước H<sub>2</sub>O<br/>là gì')).toBe(
+      'Gia tốc của nước hát hai ô là gì',
+    );
   });
 
   it('never leaves raw digits or LaTeX for the voice', () => {

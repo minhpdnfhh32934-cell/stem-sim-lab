@@ -27,6 +27,7 @@ export const SETTINGS_SECTIONS = [
   'voice',
   'safety',
   'shortcuts',
+  'versions',
 ] as const;
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
 

@@ -1,0 +1,36 @@
+# Code owners (2026-10-14, release security review of PR #20).
+#
+# These paths decide what is built, signed and shipped to every installed app, or what runs on the
+# two agent machines. A pull request that changes one of them needs the owner's review, but only
+# when the rules of `main` have "Require review from Code Owners" turned on (docs/RELEASE.md,
+# section "An toàn khi phát hành"). Without that setting this file only adds the owner as a
+# suggested reviewer.
+
+# Workflows, Dependabot and this file.
+/.github/                       @minhpdnfhh32934-cell
+
+# Release signing script and the signed message format.
+/scripts/release/               @minhpdnfhh32934-cell
+
+# Update verification in the app: public key, repository, manifest checks.
+/src-tauri/src/webupdate.rs     @minhpdnfhh32934-cell
+
+# Content Security Policy, build commands and the app's permissions.
+/src-tauri/tauri.conf.json      @minhpdnfhh32934-cell
+/src-tauri/capabilities/        @minhpdnfhh32934-cell
+
+# Native dependencies, build script and the reviewed cargo-audit exceptions.
+/src-tauri/Cargo.toml           @minhpdnfhh32934-cell
+/src-tauri/Cargo.lock           @minhpdnfhh32934-cell
+/src-tauri/build.rs             @minhpdnfhh32934-cell
+/src-tauri/.cargo/              @minhpdnfhh32934-cell
+
+# npm dependencies and the scripts that run during install and build (CI and the release build).
+/package.json                   @minhpdnfhh32934-cell
+/package-lock.json              @minhpdnfhh32934-cell
+/scripts/copy-ort-wasm.mjs      @minhpdnfhh32934-cell
+/vite.config.ts                 @minhpdnfhh32934-cell
+
+# Claude Code permissions, commands and the watcher that runs them on the agent machines.
+/.claude/                       @minhpdnfhh32934-cell
+/scripts/agents/                @minhpdnfhh32934-cell

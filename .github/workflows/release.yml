@@ -5,8 +5,16 @@ name: Release (Windows installer)
 # - Actions → "Release (Windows installer)" → "Run workflow":
 #     publish = true  → GitHub Release v<package.json version> (installers + in-app update);
 #                       every installed app offers the update (menu ☰ → Kiểm tra cập nhật).
-#     publish = false → only builds; files are in the run's Artifacts.
+#     publish = false → only builds; files are in the run's Artifacts (any branch).
 # - Pushing a tag v<version> publishes too.
+#
+# Release integrity (audit SEC-01, 2026-10-13): a signed update reaches every installed app, so
+# only commits that are already on `main` (reviewed) may be published, from the `main` branch or
+# from a tag on a `main` commit; a tag v<version> that already exists must name the commit being
+# published (2026-10-14). Signing and publishing run in the `release` environment: the owner
+# can require their approval there (Settings → Environments → release) and keep the signing key as
+# an environment secret. The signing job never runs `npm ci` (no third-party install scripts next
+# to the key); third-party actions are pinned to commit SHAs (SEC-05).
 #
 # Versions (docs/RELEASE.md): package.json = web part, src-tauri/tauri.conf.json + Cargo.toml
 # = native part. Bump only package.json for interface/simulation changes (in-app update);
@@ -35,7 +43,14 @@ on:
         default: false
 
 permissions:
-  contents: write
+  contents: read
+
+# One release at a time (2026-10-14): two runs would read the same "latest" floor and race to
+# create the release. A running release is never cancelled half-way; a newer run waits (GitHub
+# keeps at most one waiting run in the group).
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   check:
@@ -44,8 +59,32 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Only reviewed code (already on main) is published
+        if: github.event_name == 'push' || inputs.publish
+        shell: bash
+        run: |
+          git fetch --no-tags origin main
+          if [ "${GITHUB_REF_TYPE}" = "branch" ] && [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "::error::Publishing runs from main only (this run: ${GITHUB_REF}). Use publish=false to test-build a branch."; exit 1
+          fi
+          if ! git merge-base --is-ancestor "${GITHUB_SHA}" origin/main; then
+            echo "::error::Commit ${GITHUB_SHA} is not on main: merge the reviewed pull request first."; exit 1
+          fi
+          # The release action attaches the release to an existing tag v<version> and then ignores
+          # target_commitish: a tag pushed earlier must name this very commit (audit 2026-10-14).
+          v=$(node -p "require('./package.json').version")
+          head=$(git rev-parse "${GITHUB_SHA}^{commit}")
+          refs=$(git ls-remote origin "refs/tags/v${v}" "refs/tags/v${v}^{}")
+          # An annotated tag is listed twice: the tag object, then (^{}) the commit it names.
+          tag_commit=$(printf '%s\n' "${refs}" | awk -v t="refs/tags/v${v}" '$2 == t "^{}" { p = $1 } $2 == t { l = $1 } END { print (p != "" ? p : l) }')
+          if [ -n "${tag_commit}" ] && [ "${tag_commit}" != "${head}" ]; then
+            echo "::error::Tag v${v} already exists on ${tag_commit}, not on this commit ${head}: the release would be attached to that tag. Bump the version in package.json, or check and delete the old tag first."; exit 1
+          fi
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -60,20 +99,52 @@ jobs:
       - run: npm ci
       - run: npm run check
 
-  web:
-    name: Signed in-app update (web part)
+  # The web part is built here, without any secret; the signing job only packs this output.
+  web-build:
+    name: Build the web part
     needs: check
     if: github.event_name == 'push' || inputs.publish
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
       - run: npm ci
+      # One update channel (the high-school pilot edition was removed 2026-10-12).
+      - run: npm run build
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-dist
+          path: dist/
+          if-no-files-found: error
+
+  web:
+    name: Signed in-app update (web part)
+    needs: [check, web-build]
+    runs-on: ubuntu-24.04
+    environment: release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # No npm ci: web-bundle.mjs uses Node's built-in modules only.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: web-dist
+          path: dist
       # Mandatory-update floor (signed into the manifest): this version when "required" is ticked,
-      # otherwise the floor of the latest release, carried forward so it is never lost.
+      # otherwise the floor of the latest release, carried forward so it is never lost. Anyone with
+      # write access can edit a release, so that floor is carried only when the latest manifest's
+      # v2 signature verifies with the app's own public key (src-tauri/src/webupdate.rs) over the
+      # app's own message (scripts/release/manifest-message.mjs); otherwise it is ignored with a
+      # warning (2026-10-14). Tested in tests/workflows.test.ts.
       - name: Mandatory-update floor
         id: floor
         shell: bash
@@ -84,20 +155,60 @@ jobs:
           if [ "$REQUIRED" = "true" ]; then
             v="$VERSION"
           else
-            v=$(curl -fsSL "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/web-update.json" \
-              | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{process.stdout.write(JSON.parse(s).minRequired||'')}catch{}})" || true)
+            latest="${RUNNER_TEMP}/latest-web-update.json"
+            curl -fsSL "https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/web-update.json" \
+              -o "$latest" || rm -f "$latest"
+            v=$(LATEST_MANIFEST="$latest" node --input-type=module - <<'JS'
+          import { createPublicKey, verify } from 'node:crypto';
+          import { readFileSync } from 'node:fs';
+          import { resolve } from 'node:path';
+          import { pathToFileURL } from 'node:url';
+
+          const messages = pathToFileURL(resolve('scripts/release/manifest-message.mjs'));
+          const { signedMessageV2 } = await import(messages.href);
+          const rust = readFileSync('src-tauri/src/webupdate.rs', 'utf8');
+          const b64 = /const PUBLIC_KEY_B64: &str = "([A-Za-z0-9+/]{43}=)";/.exec(rust)?.[1];
+          if (!b64) throw new Error('PUBLIC_KEY_B64 not found in src-tauri/src/webupdate.rs');
+          const x = Buffer.from(b64, 'base64').toString('base64url');
+          const key = createPublicKey({ key: { kty: 'OKP', crv: 'Ed25519', x }, format: 'jwk' });
+
+          let m;
+          try {
+            m = JSON.parse(readFileSync(process.env.LATEST_MANIFEST ?? '', 'utf8'));
+          } catch {
+            m = undefined;
+          }
+          if (!m || typeof m !== 'object') {
+            console.error('::notice::No readable web-update.json in the latest release: no floor.');
+            process.exit(0);
+          }
+          let signed = false;
+          try {
+            const sig = Buffer.from(String(m.signatureV2 ?? ''), 'base64');
+            signed = verify(null, Buffer.from(signedMessageV2(m)), key, sig);
+          } catch {
+            signed = false;
+          }
+          if (!signed) {
+            console.error(
+              '::warning::The latest web-update.json does not verify with the release key: ' +
+                'its mandatory-update floor is ignored. Check that release on GitHub.',
+            );
+          } else if (typeof m.minRequired === 'string' && m.minRequired) {
+            process.stdout.write(m.minRequired);
+          }
+          JS
+            )
           fi
           echo "main floor: ${v:-none}"
           echo "main=$v" >> "$GITHUB_OUTPUT"
-      # One update channel (the high-school pilot edition was removed 2026-10-12).
-      - run: npm run build
       - name: Pack and sign
         env:
           WEB_UPDATE_SIGNING_KEY: ${{ secrets.WEB_UPDATE_SIGNING_KEY }}
           RELEASE_NOTES: ${{ inputs.notes }}
           MIN_REQUIRED: ${{ steps.floor.outputs.main }}
         run: node scripts/release/web-bundle.mjs
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: web-update
           path: release/
@@ -108,13 +219,17 @@ jobs:
     needs: check
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch, 2026-10
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           workspaces: src-tauri
       - run: npm ci
@@ -133,7 +248,7 @@ jobs:
             ForEach-Object { "{0}  {1:N1} MB" -f $_.Name, ($_.Length / 1MB) } |
             Tee-Object -FilePath installer/installer-sizes.txt
       # Artifact "stem-sim-lab-windows": the .exe (recommended), the .msi and their sizes.
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: stem-sim-lab-windows
           path: installer/
@@ -154,7 +269,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           "built=true" >> $env:GITHUB_OUTPUT
       - if: steps.msix.outputs.built == 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: simlab-store
           path: store-package/*.msix
@@ -164,11 +279,21 @@ jobs:
     name: Publish GitHub Release
     needs: [check, web, windows]
     runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: write
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           path: out
-      - uses: softprops/action-gh-release@v3
+      # SHA-256 of the installers (they are not code-signed), published next to them so a
+      # download can be compared (docs/RELEASE.md). Only as trustworthy as the release page itself:
+      # with immutable releases neither the installers nor this file can be swapped later.
+      - name: Installer checksums
+        shell: bash
+        working-directory: out/stem-sim-lab-windows
+        run: sha256sum -- *.exe *.msi | tee ../SHA256SUMS.txt
+      - uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           tag_name: v${{ needs.check.outputs.version }}
           target_commitish: ${{ github.sha }}
@@ -179,9 +304,11 @@ jobs:
 
             **Đã cài SimLab:** mở menu ☰ → *Kiểm tra cập nhật* (không cần tải tệp nào).
             **Cài lần đầu:** tải `SimLab_…_x64-setup.exe` (Windows 10/11, 64-bit).
+            **Kiểm tra tệp tải về:** mã SHA-256 nằm trong `SHA256SUMS.txt` (PowerShell: `Get-FileHash <tệp>`).
           files: |
             out/stem-sim-lab-windows/*.exe
             out/stem-sim-lab-windows/*.msi
+            out/SHA256SUMS.txt
             out/web-update/web-bundle.zip
             out/web-update/web-update.json
           fail_on_unmatched_files: true

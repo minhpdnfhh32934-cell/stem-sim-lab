@@ -1,0 +1,181 @@
+/* "Có gì mới trong SimLab" and Settings → "Lịch sử phiên bản" (src/app/whatsnew/). */
+
+.dialog.whatsnew {
+  width: min(40rem, calc(100vw - 2rem));
+}
+.whatsnew__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.whatsnew__title svg {
+  color: var(--accent);
+}
+/* Focused on open so screen readers start here; it is not a control, so no ring. */
+.whatsnew__title:focus {
+  outline: none;
+}
+.whatsnew__body:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+.whatsnew__intro {
+  margin: var(--space-2) 0;
+  font-size: var(--text-content);
+}
+.whatsnew__version {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+.whatsnew__version h3 {
+  margin: 0;
+  font-size: var(--text-md);
+}
+.whatsnew__date {
+  margin: 2px 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.whatsnew__summary {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-content);
+}
+.whatsnew__highlights {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+.whatsnew__highlights li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-content);
+}
+.whatsnew__highlights svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+.whatsnew__all > summary,
+.version-history__item > summary {
+  list-style: none;
+}
+.whatsnew__all > summary::-webkit-details-marker,
+.version-history__item > summary::-webkit-details-marker {
+  display: none;
+}
+/* Disclosure arrow: points right when folded, down when open. */
+.disclosure {
+  flex: none;
+  color: var(--text-muted);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+details[open] > summary > .disclosure {
+  transform: rotate(90deg);
+}
+.whatsnew__all > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.whatsnew__all > summary:focus-visible,
+.version-history__item > summary:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.whatsnew__group h4 {
+  margin: var(--space-2) 0 var(--space-1);
+  font-size: var(--text-sm);
+}
+.whatsnew__group ul {
+  margin: 0;
+  padding-left: 1.3rem;
+}
+.whatsnew__group li {
+  margin: 2px 0;
+}
+.whatsnew__where {
+  margin: var(--space-3) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Status of a version: text + icon, the colour only supports them. */
+.release-badge--released {
+  color: var(--conf-exact);
+  background: var(--conf-exact-soft);
+}
+.release-badge--inReview {
+  color: var(--conf-approx);
+  background: var(--conf-approx-soft);
+}
+.release-badge--mergedNotReleased,
+.release-badge--development {
+  color: var(--conf-qual);
+  background: var(--conf-qual-soft);
+}
+.release-badge--unverified {
+  color: var(--pending);
+  background: var(--pending-soft);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--pending) 45%, transparent);
+}
+.release-badge--current {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.version-history__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.version-history__actions:empty {
+  display: none;
+}
+.version-history__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.version-history__item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.version-history__item > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+}
+.version-history__item[open] > summary {
+  border-bottom: 1px solid var(--border);
+}
+.version-history__version {
+  font-weight: 600;
+}
+.version-history__body {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+.version-history__draft {
+  margin: 0 0 var(--space-2);
+  color: var(--pending);
+  font-size: var(--text-sm);
+}
+.version-history__empty {
+  color: var(--text-muted);
+}

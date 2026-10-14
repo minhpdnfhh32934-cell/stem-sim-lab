@@ -1,7 +1,9 @@
 import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { useDogmaStore } from './central/state';
-import { useDivisionStore } from './division/state';
+import { STAGES, type Division } from './division/division';
+import { PAIR_CHOICES, SPEEDS, useDivisionStore, type DivisionState } from './division/state';
+import { setDivisionState } from './division/stageIndex';
 import { useLogistic, useLv } from './ecology/store';
 import { useEnzyme } from './enzyme/store';
 import { useDrift, useHw, useMendel } from './genetics/store';
@@ -50,7 +52,37 @@ import {
   DiffusionOsmosisStage,
 } from './transport/TransportViews';
 
-const division = bindStore(useDivisionStore, ['pairs', 'crossover', 'seed', 'index']);
+const intIn = (v: number, lo: number, hi: number) => Number.isInteger(v) && v >= lo && v <= hi;
+
+/**
+ * Files (and history entries) are untrusted input: drop values the views cannot show — 2n
+ * outside the selector, a stage index outside this division's stages, unknown cell types and
+ * speeds — and record which division the restored stage index belongs to.
+ */
+function restoreDivision(kind: Division, patch: Partial<DivisionState>): void {
+  const clean = { ...patch };
+  if (clean.pairs !== undefined && !(PAIR_CHOICES as readonly number[]).includes(clean.pairs))
+    delete clean.pairs;
+  if (clean.index !== undefined && !intIn(clean.index, 0, STAGES[kind].length - 1))
+    delete clean.index;
+  const cellType: unknown = clean.cellType;
+  if (cellType !== undefined && cellType !== 'animal' && cellType !== 'plant')
+    delete clean.cellType;
+  if (clean.speed !== undefined && !(SPEEDS as readonly number[]).includes(clean.speed))
+    delete clean.speed;
+  setDivisionState(kind, clean);
+}
+
+const division = bindStore(useDivisionStore, ['pairs', 'crossover', 'seed', 'index'], (patch) => {
+  restoreDivision('meiosis', patch);
+});
+const mitosisState = bindStore(
+  useDivisionStore,
+  ['pairs', 'crossover', 'seed', 'index', 'cellType', 'view3d', 'speed'],
+  (patch) => {
+    restoreDivision('mitosis', patch);
+  },
+);
 const dogma = bindStore(useDogmaStore, ['input', 'strand', 'kind', 'pos', 'bases', 'count']);
 
 export const mitosis: ModuleView = {
@@ -59,7 +91,7 @@ export const mitosis: ModuleView = {
   Panel: MitosisPanel,
   Bottom: MitosisBottom,
   bottomTitle: L('Số lượng NST, crômatit, tâm động, ADN', 'Chromosome, chromatid, DNA counts'),
-  state: division,
+  state: mitosisState,
 };
 export const meiosis: ModuleView = {
   title: L('Giảm phân', 'Meiosis'),
