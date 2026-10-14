@@ -289,7 +289,7 @@ function historyBlocks(data, newestFirst) {
         code('release-notes/versions.json'),
         ' bằng ',
         code('npm run release-notes'),
-        ` — đừng sửa tay. Bằng chứng được kiểm lần cuối ngày ${viDate(data.evidenceCheckedAt)}.`,
+        `. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày ${viDate(data.evidenceCheckedAt)}.`,
       ],
     },
   ];
@@ -357,7 +357,7 @@ function historyBlocks(data, newestFirst) {
   blocks.push({ t: 'h2', text: SECTIONS[2] });
   for (const v of newestFirst) {
     blocks.push(
-      { t: 'h3', text: `${v.version} — ${status(v)}` },
+      { t: 'h3', text: `${v.version} (${status(v)})` },
       { t: 'p', inl: [v.publicNotes.summary.vi] },
       {
         t: 'ul',
@@ -536,7 +536,7 @@ function changelog(data, newestFirst) {
   const lines = [
     '# Changelog',
     '',
-    'Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes` — đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\\_HISTORY.md](VERSION_HISTORY.md).',
+    'Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\\_HISTORY.md](VERSION_HISTORY.md).',
     '',
   ];
   const refs = [];

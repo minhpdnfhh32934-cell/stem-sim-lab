@@ -191,7 +191,7 @@ describe('documents generated from versions.json (scripts/release-notes/build.mj
     expect([...html.matchAll(/<table>/g)].length).toBe(
       history.split('\n').filter((l) => /^\| -/.test(l)).length,
     );
-    for (const v of notes().versions) expect(html).toContain(`<h3>${v.version} — `);
+    for (const v of notes().versions) expect(html).toContain(`<h3>${v.version} (`);
   });
 
   it('the timeline calls only real GitHub Releases "released", with their verified date', () => {

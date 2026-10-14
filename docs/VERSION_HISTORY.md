@@ -1,6 +1,6 @@
 # SimLab — Version History & Release Notes
 
-Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ `release-notes/versions.json` bằng `npm run release-notes` — đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 14/10/2026.
+Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 14/10/2026.
 
 ## I. Tổng quan lịch sử SimLab
 
@@ -68,7 +68,7 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 
 ## III. Chi tiết từng phiên bản
 
-### 0.6.0 — Đang xét duyệt
+### 0.6.0 (Đang xét duyệt)
 
 Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi kiểm tra và dùng kết quả do SimLab tính, Gemma an toàn hơn trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.
 
@@ -152,7 +152,7 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi
 - built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app\_info = 0.6.0
 - Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới
 
-### 0.5.2 — Đã phát hành
+### 0.5.2 (Đã phát hành)
 
 Giao diện đẹp và dễ dùng hơn: tìm nhanh bằng Ctrl+K, Gemma trả lời hiện dần từng chữ, ghim quỹ đạo để so sánh. Đây là bản cập nhật phần giao diện; bộ cài đi kèm mang số 0.5.1.
 
@@ -223,7 +223,7 @@ Giao diện đẹp và dễ dùng hơn: tìm nhanh bằng Ctrl+K, Gemma trả l�
 - tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag
 - AUDIT G0: 'main @ c25ad9d (PR #19 đã merge, Release v0.5.2 đã phát hành). CI 4/4 đạt.'
 
-### 0.5.1 — Đã gộp, chưa phát hành
+### 0.5.1 (Đã gộp, chưa phát hành)
 
 Chuẩn bị đưa SimLab lên Microsoft Store và sửa vài lỗi bố cục. Bản này không có bản phát hành riêng; các sửa lỗi đến với người dùng qua bản 0.5.2.
 
@@ -273,7 +273,7 @@ Chuẩn bị đưa SimLab lên Microsoft Store và sửa vài lỗi bố cục. 
 - Không có tag v0.5.1 và không có Release v0.5.1 (gh api …/releases, git ls-remote origin)
 - Microsoft Store: docs/STORE.md và PROGRESS '0.5.1-store-nộp' ghi đã gửi duyệt ngày 13/10/2026, trạng thái 'In certification', giữ lại tới khi bấm Publish now
 
-### 0.5.0 — Đã phát hành
+### 0.5.0 (Đã phát hành)
 
 App đổi tên thành SimLab, 'Thầy AI' thành AI Teacher. AI Teacher giảng trên bảng trắng và đọc bằng giọng tiếng Việt; chọn được card đồ họa cho Gemma; trí nhớ hội thoại dài hơn.
 
@@ -346,7 +346,7 @@ App đổi tên thành SimLab, 'Thầy AI' thành AI Teacher. AI Teacher giảng
 - Kích thước tài sản Release: bộ cài .exe 21 645 425 byte (v0.4.1) → 11 707 857 byte; web-bundle.zip 32 130 306 → 18 231 166 byte
 - Một tệp ZIP mang tên v0.5.0 được tạo lúc 2026-10-12 23:43 (+07), trước khi gộp PR #8: khác bản phát hành (chưa mở)
 
-### 0.4.3 — Chưa xác minh
+### 0.4.3 (Chưa xác minh)
 
 Bước phát triển nội bộ theo yêu cầu người dùng: trí nhớ hội thoại dài hơn, nút 'Viết tiếp', bỏ ẩn/hiện khung. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.
 
@@ -397,7 +397,7 @@ Bước phát triển nội bộ theo yêu cầu người dùng: trí nhớ hộ
 - merged: PR #8 gộp lúc 2026-10-13T00:25:20Z (vào nhánh bảng trắng, commit gộp 7a127ae)
 - Bảng giảng LessonBoard.tsx bị xóa khi gộp, thay bằng bảng trắng (PROGRESS '0.5.0-gộp')
 
-### 0.4.2 — Chưa xác minh
+### 0.4.2 (Chưa xác minh)
 
 Bước phát triển nội bộ: chọn card đồ họa cho Gemma trên Windows. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.
 
@@ -439,7 +439,7 @@ Bước phát triển nội bộ: chọn card đồ họa cho Gemma trên Window
 - merged: PR #8 gộp lúc 2026-10-13T00:25:20Z
 - Đo thật trên laptop AMD Radeon 610M + NVIDIA RTX 5070: bản 0.4.1 luôn chạy trên card tích hợp; chọn card rời nhanh khoảng 10 lần ở phép tính mẫu (PROGRESS 'fork-0.4.2', docs/AI\_TUTOR.md)
 
-### 0.4.1 — Đã phát hành
+### 0.4.1 (Đã phát hành)
 
 Ra mắt Thầy AI (nay là AI Teacher): trang trò chuyện riêng, Think kiểm tra chéo bằng một AI thứ hai, Gemma chạy ngay trên máy, thư viện kiến thức STEM và ô 'Dữ liệu của em đi đâu?'.
 
@@ -509,7 +509,7 @@ Ra mắt Thầy AI (nay là AI Teacher): trang trò chuyện riêng, Think kiể
 - git diff cea9d93 e342263: gồm trang mở đầu, chat, khuôn mặt thầy, thư viện kiến thức, camera, giọng đọc và engineChoice — tức cả công việc của bản fork 09–12/10
 - Release v0.4.1 vẫn có bộ cài THPT (STEM.Sim.Lab.THPT\_0.4.1)
 
-### 0.4.0 — Chưa xác minh
+### 0.4.0 (Chưa xác minh)
 
 Bản thử 'Thầy AI' gửi dạng tệp ZIP: trang mở đầu hai lối vào, chat, Think, Gemma chạy trên máy, thư viện kiến thức. Chưa xác minh được nội dung chính xác của ZIP; các tính năng này được phát hành chính thức ở 0.4.1.
 
@@ -563,7 +563,7 @@ Bản thử 'Thầy AI' gửi dạng tệp ZIP: trang mở đầu hai lối vào
 - docs/PROGRESS.md hàng '2026-10-12 \| fork-0.4.0'; CLAUDE.md: 'the old gemma.rs was removed in 0.4.0'
 - Không có tag hay Release v0.4.0 (git tag, git ls-remote origin, gh api …/releases)
 
-### 0.3.0 — Đã phát hành
+### 0.3.0 (Đã phát hành)
 
 Học dễ hơn với trang chủ 'Hôm nay học gì?', chế độ Cơ bản/Nâng cao, Dự đoán trước và Thử thách; thêm Claude bên cạnh Gemini, dự phòng Groq và các lớp an toàn khi dùng AI.
 
@@ -632,7 +632,7 @@ Học dễ hơn với trang chủ 'Hôm nay học gì?', chế độ Cơ bản/N
 - released: GitHub Release v0.3.0 'STEM Sim Lab 0.3.0', published\_at 2026-10-06T15:51:58Z, target 1e7029a (gh api …/releases)
 - tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag
 
-### 0.2.0 — Đã phát hành
+### 0.2.0 (Đã phát hành)
 
 Cập nhật ngay trong ứng dụng, không cần cài lại; AI đọc đề chuyển sang Gemini (có gói miễn phí) kèm hướng dẫn lấy khóa API.
 
@@ -683,7 +683,7 @@ Cập nhật ngay trong ứng dụng, không cần cài lại; AI đọc đề c
 - released: GitHub Release v0.2.0 'STEM Sim Lab 0.2.0', published\_at 2026-10-05T03:07:21Z, target 7d32305 (gh api …/releases)
 - tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag
 
-### 0.1.0 — Bản phát triển, không phát hành
+### 0.1.0 (Bản phát triển, không phát hành)
 
 Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật lý, Hóa học và Sinh học chạy ngay trên máy. Bản này chỉ được dựng thử, chưa phát hành.
 

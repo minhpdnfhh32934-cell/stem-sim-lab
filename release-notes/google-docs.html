@@ -12,7 +12,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 </head>
 <body>
 <h1>SimLab — Version History &amp; Release Notes</h1>
-<p>Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ <code>release-notes/versions.json</code> bằng <code>npm run release-notes</code> — đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 14/10/2026.</p>
+<p>Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ <code>release-notes/versions.json</code> bằng <code>npm run release-notes</code>. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 14/10/2026.</p>
 <h2>I. Tổng quan lịch sử SimLab</h2>
 <p>SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.</p>
 <p>Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.</p>
@@ -76,7 +76,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 </tbody>
 </table>
 <h2>III. Chi tiết từng phiên bản</h2>
-<h3>0.6.0 — Đang xét duyệt</h3>
+<h3>0.6.0 (Đang xét duyệt)</h3>
 <p>Bản lớn sau đợt rà soát toàn diện: AI Teacher giảng có câu hỏi kiểm tra và dùng kết quả do SimLab tính, Gemma an toàn hơn trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.</p>
 <ul>
 <li>Trạng thái: Đang xét duyệt.</li>
@@ -161,7 +161,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0</li>
 <li>Mô tả PR #20: chưa dựng bộ cài Windows; bản Store cần nộp lại gói mới</li>
 </ul>
-<h3>0.5.2 — Đã phát hành</h3>
+<h3>0.5.2 (Đã phát hành)</h3>
 <p>Giao diện đẹp và dễ dùng hơn: tìm nhanh bằng Ctrl+K, Gemma trả lời hiện dần từng chữ, ghim quỹ đạo để so sánh. Đây là bản cập nhật phần giao diện; bộ cài đi kèm mang số 0.5.1.</p>
 <ul>
 <li>Trạng thái: Đã phát hành.</li>
@@ -233,7 +233,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
 <li>AUDIT G0: 'main @ c25ad9d (PR #19 đã merge, Release v0.5.2 đã phát hành). CI 4/4 đạt.'</li>
 </ul>
-<h3>0.5.1 — Đã gộp, chưa phát hành</h3>
+<h3>0.5.1 (Đã gộp, chưa phát hành)</h3>
 <p>Chuẩn bị đưa SimLab lên Microsoft Store và sửa vài lỗi bố cục. Bản này không có bản phát hành riêng; các sửa lỗi đến với người dùng qua bản 0.5.2.</p>
 <ul>
 <li>Trạng thái: Đã gộp, chưa phát hành.</li>
@@ -284,7 +284,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Không có tag v0.5.1 và không có Release v0.5.1 (gh api …/releases, git ls-remote origin)</li>
 <li>Microsoft Store: docs/STORE.md và PROGRESS '0.5.1-store-nộp' ghi đã gửi duyệt ngày 13/10/2026, trạng thái 'In certification', giữ lại tới khi bấm Publish now</li>
 </ul>
-<h3>0.5.0 — Đã phát hành</h3>
+<h3>0.5.0 (Đã phát hành)</h3>
 <p>App đổi tên thành SimLab, 'Thầy AI' thành AI Teacher. AI Teacher giảng trên bảng trắng và đọc bằng giọng tiếng Việt; chọn được card đồ họa cho Gemma; trí nhớ hội thoại dài hơn.</p>
 <ul>
 <li>Trạng thái: Đã phát hành.</li>
@@ -358,7 +358,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Kích thước tài sản Release: bộ cài .exe 21 645 425 byte (v0.4.1) → 11 707 857 byte; web-bundle.zip 32 130 306 → 18 231 166 byte</li>
 <li>Một tệp ZIP mang tên v0.5.0 được tạo lúc 2026-10-12 23:43 (+07), trước khi gộp PR #8: khác bản phát hành (chưa mở)</li>
 </ul>
-<h3>0.4.3 — Chưa xác minh</h3>
+<h3>0.4.3 (Chưa xác minh)</h3>
 <p>Bước phát triển nội bộ theo yêu cầu người dùng: trí nhớ hội thoại dài hơn, nút 'Viết tiếp', bỏ ẩn/hiện khung. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.</p>
 <ul>
 <li>Trạng thái: Chưa xác minh.</li>
@@ -410,7 +410,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>merged: PR #8 gộp lúc 2026-10-13T00:25:20Z (vào nhánh bảng trắng, commit gộp 7a127ae)</li>
 <li>Bảng giảng LessonBoard.tsx bị xóa khi gộp, thay bằng bảng trắng (PROGRESS '0.5.0-gộp')</li>
 </ul>
-<h3>0.4.2 — Chưa xác minh</h3>
+<h3>0.4.2 (Chưa xác minh)</h3>
 <p>Bước phát triển nội bộ: chọn card đồ họa cho Gemma trên Windows. Không phát hành riêng; nội dung đến người dùng trong 0.5.0.</p>
 <ul>
 <li>Trạng thái: Chưa xác minh.</li>
@@ -453,7 +453,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>merged: PR #8 gộp lúc 2026-10-13T00:25:20Z</li>
 <li>Đo thật trên laptop AMD Radeon 610M + NVIDIA RTX 5070: bản 0.4.1 luôn chạy trên card tích hợp; chọn card rời nhanh khoảng 10 lần ở phép tính mẫu (PROGRESS 'fork-0.4.2', docs/AI_TUTOR.md)</li>
 </ul>
-<h3>0.4.1 — Đã phát hành</h3>
+<h3>0.4.1 (Đã phát hành)</h3>
 <p>Ra mắt Thầy AI (nay là AI Teacher): trang trò chuyện riêng, Think kiểm tra chéo bằng một AI thứ hai, Gemma chạy ngay trên máy, thư viện kiến thức STEM và ô 'Dữ liệu của em đi đâu?'.</p>
 <ul>
 <li>Trạng thái: Đã phát hành.</li>
@@ -524,7 +524,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>git diff cea9d93 e342263: gồm trang mở đầu, chat, khuôn mặt thầy, thư viện kiến thức, camera, giọng đọc và engineChoice — tức cả công việc của bản fork 09–12/10</li>
 <li>Release v0.4.1 vẫn có bộ cài THPT (STEM.Sim.Lab.THPT_0.4.1)</li>
 </ul>
-<h3>0.4.0 — Chưa xác minh</h3>
+<h3>0.4.0 (Chưa xác minh)</h3>
 <p>Bản thử 'Thầy AI' gửi dạng tệp ZIP: trang mở đầu hai lối vào, chat, Think, Gemma chạy trên máy, thư viện kiến thức. Chưa xác minh được nội dung chính xác của ZIP; các tính năng này được phát hành chính thức ở 0.4.1.</p>
 <ul>
 <li>Trạng thái: Chưa xác minh.</li>
@@ -579,7 +579,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>docs/PROGRESS.md hàng '2026-10-12 | fork-0.4.0'; CLAUDE.md: 'the old gemma.rs was removed in 0.4.0'</li>
 <li>Không có tag hay Release v0.4.0 (git tag, git ls-remote origin, gh api …/releases)</li>
 </ul>
-<h3>0.3.0 — Đã phát hành</h3>
+<h3>0.3.0 (Đã phát hành)</h3>
 <p>Học dễ hơn với trang chủ 'Hôm nay học gì?', chế độ Cơ bản/Nâng cao, Dự đoán trước và Thử thách; thêm Claude bên cạnh Gemini, dự phòng Groq và các lớp an toàn khi dùng AI.</p>
 <ul>
 <li>Trạng thái: Đã phát hành.</li>
@@ -649,7 +649,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>released: GitHub Release v0.3.0 'STEM Sim Lab 0.3.0', published_at 2026-10-06T15:51:58Z, target 1e7029a (gh api …/releases)</li>
 <li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
 </ul>
-<h3>0.2.0 — Đã phát hành</h3>
+<h3>0.2.0 (Đã phát hành)</h3>
 <p>Cập nhật ngay trong ứng dụng, không cần cài lại; AI đọc đề chuyển sang Gemini (có gói miễn phí) kèm hướng dẫn lấy khóa API.</p>
 <ul>
 <li>Trạng thái: Đã phát hành.</li>
@@ -701,7 +701,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>released: GitHub Release v0.2.0 'STEM Sim Lab 0.2.0', published_at 2026-10-05T03:07:21Z, target 7d32305 (gh api …/releases)</li>
 <li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
 </ul>
-<h3>0.1.0 — Bản phát triển, không phát hành</h3>
+<h3>0.1.0 (Bản phát triển, không phát hành)</h3>
 <p>Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật lý, Hóa học và Sinh học chạy ngay trên máy. Bản này chỉ được dựng thử, chưa phát hành.</p>
 <ul>
 <li>Trạng thái: Bản phát triển, không phát hành.</li>
