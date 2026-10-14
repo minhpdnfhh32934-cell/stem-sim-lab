@@ -7,6 +7,8 @@
 //! quota or credit, a
 //! configured fallback provider answers instead (see [`is_quota_error`]).
 //!
+//! Every answer has the model's reasoning removed ([`reasoning`]) before it reaches the page.
+//!
 //! The LLM is only used to (a) extract a problem into a structured SceneSpec and
 //! (b) explain results already computed by the engine. It never computes numbers.
 
@@ -14,6 +16,7 @@ pub mod claude;
 pub mod gemini;
 pub mod groq;
 pub mod provider;
+pub mod reasoning;
 pub mod tts;
 pub mod usage;
 
@@ -298,16 +301,28 @@ async fn send(req: &ChatRequest, key: &str) -> Result<ChatResponse, AiError> {
         }
         let v: Value =
             serde_json::from_str(&text).map_err(|e| AiError::BadResponse(e.to_string()))?;
-        return Ok(ChatResponse {
-            content: p.extract_content(&v)?,
-            model: p.response_model(&v).unwrap_or_else(|| req.model.clone()),
-            duration_ms: started.elapsed().as_millis() as u64,
-            retries: attempt,
-            provider: req.provider,
-            fallback: false,
-            truncated: p.truncated(&v),
-        });
+        return chat_response(p, req, &v, started, attempt);
     }
+}
+
+/// The response for an answer: the provider's text with the model's reasoning removed (an
+/// answer that is only reasoning is a `reasoningOnly` error), for every provider.
+fn chat_response(
+    p: &dyn AIProvider,
+    req: &ChatRequest,
+    v: &Value,
+    started: Instant,
+    retries: u32,
+) -> Result<ChatResponse, AiError> {
+    Ok(ChatResponse {
+        content: reasoning::visible_answer(&p.extract_content(v)?)?,
+        model: p.response_model(v).unwrap_or_else(|| req.model.clone()),
+        duration_ms: started.elapsed().as_millis() as u64,
+        retries,
+        provider: req.provider,
+        fallback: false,
+        truncated: p.truncated(v),
+    })
 }
 
 fn usage_path(app: &tauri::AppHandle) -> Option<PathBuf> {
@@ -844,5 +859,53 @@ pub(crate) mod tests {
         let r = key_gate(|| false);
         assert!(matches!(r, Err(AiError::NotAllowed(ref s)) if s == "ageGate"));
         assert!(key_gate(|| true).is_ok());
+    }
+
+    #[test]
+    fn every_provider_answer_loses_its_reasoning() {
+        let started = Instant::now();
+        let gemini = json!({"candidates": [{"content": {"parts": [
+            {"text": "<think>nháp 3*4=12</think>Lực là đại lượng vectơ."}]},
+            "finishReason": "STOP"}]});
+        let r = chat_response(
+            provider(Provider::Gemini),
+            &req(Provider::Gemini, false),
+            &gemini,
+            started,
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "Lực là đại lượng vectơ.");
+        let claude = json!({"content": [{"type": "text", "text": "<thinking>chỉ nháp</thinking>"}],
+            "stop_reason": "end_turn"});
+        let e = chat_response(
+            provider(Provider::Claude),
+            &req(Provider::Claude, false),
+            &claude,
+            started,
+            0,
+        )
+        .unwrap_err();
+        assert!(matches!(e, AiError::BadResponse(ref m) if m == "reasoningOnly"));
+        // Answers without reasoning are unchanged.
+        let plain = json!({"content": [{"type": "text", "text": "  a = 2 m/s²  "}]});
+        let r = chat_response(
+            provider(Provider::Claude),
+            &req(Provider::Claude, false),
+            &plain,
+            started,
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "  a = 2 m/s²  ");
+        // `send` builds every response through `chat_response`.
+        let code = include_str!("mod.rs")
+            .split("#[cfg(test)]")
+            .next()
+            .unwrap_or_default();
+        let send_fn = code.split("async fn send(").nth(1).expect("send");
+        let send_fn = send_fn.split("\nfn ").next().unwrap_or_default();
+        assert!(send_fn.contains("chat_response(p, req, &v, started, attempt)"));
+        assert!(!send_fn.contains("ChatResponse {"));
     }
 }

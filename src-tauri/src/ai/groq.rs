@@ -63,14 +63,6 @@ pub fn groq_body(req: &ChatRequest) -> Value {
     body
 }
 
-/// Removes a `<think>…</think>` block some models put before the answer.
-fn strip_thinking(text: &str) -> &str {
-    match (text.find("<think>"), text.find("</think>")) {
-        (Some(start), Some(end)) if start < end => text[end + "</think>".len()..].trim_start(),
-        _ => text,
-    }
-}
-
 impl AIProvider for GroqProvider {
     fn id(&self) -> Provider {
         Provider::Groq
@@ -95,10 +87,11 @@ impl AIProvider for GroqProvider {
         v["choices"][0]["finish_reason"] == "length"
     }
 
+    /// The raw answer; reasoning blocks (`<think>…`) are removed by the gateway for every
+    /// provider (`reasoning::visible_answer`).
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
         let choice = &v["choices"][0];
         let text = choice["message"]["content"].as_str().unwrap_or_default();
-        let text = strip_thinking(text);
         if text.trim().is_empty() {
             let reason = choice["finish_reason"].as_str().unwrap_or("no text");
             return Err(AiError::BadResponse(format!("empty answer ({reason})")));
@@ -179,7 +172,30 @@ mod tests {
     fn extracts_the_answer_without_thinking() {
         let v = json!({"choices": [{"message": {"content": "<think>hmm</think>\n{\"a\":1}"}}],
             "model": "qwen/qwen3.8-27b"});
-        assert_eq!(GroqProvider.extract_content(&v).unwrap(), "{\"a\":1}");
+        // The gateway removes the reasoning for every provider.
+        let r = crate::ai::chat_response(
+            &GroqProvider,
+            &req(Provider::Groq, true),
+            &v,
+            std::time::Instant::now(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "{\"a\":1}");
+        assert_eq!(r.model, "qwen/qwen3.8-27b");
+        // An answer cut while still reasoning keeps nothing of it.
+        let cut = json!({"choices": [{"message": {"content": "Đáp số 5. <think>còn tiếp"},
+            "finish_reason": "length"}]});
+        let r = crate::ai::chat_response(
+            &GroqProvider,
+            &req(Provider::Groq, false),
+            &cut,
+            std::time::Instant::now(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(r.content, "Đáp số 5.");
+        assert!(r.truncated);
         assert_eq!(
             GroqProvider.response_model(&v).as_deref(),
             Some("qwen/qwen3.8-27b")
