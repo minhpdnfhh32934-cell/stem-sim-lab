@@ -121,6 +121,8 @@ export function stripAllReasoning(text: string): StrippedReasoning {
 /** A closed code fence (``` or ~~~ at a line start, closed by the same marker), or inline code. */
 const CODE = /^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[ \t]*$|`[^`\n]+`/gm;
 const ANY_CLOSE = new RegExp(`</${NAME}\\s*>`, 'i');
+/** Inline code that holds a closing reasoning tag and nothing else ("`</think>`"). */
+const CLOSE_ONLY_CODE = new RegExp(`^\`[ \\t]*(</${NAME}\\s*>)[ \\t]*\`$`, 'i');
 const CODE_OPEN = '\u{E002}';
 const CODE_CLOSE = '\u{E003}';
 const HELD_CODE = /\u{E002}(\d+)\u{E003}/gu;
@@ -130,18 +132,23 @@ const HELD_CODE = /\u{E002}(\d+)\u{E003}/gu;
  * fence: "Qwen dùng thẻ `<think>`") is code, not the start of hidden reasoning. A code span that
  * holds a closing reasoning tag is not set apart: a closing tag always ends a block or marks
  * reasoning whose opening tag a chat template pre-filled, so hiding it could let reasoning
- * through. Code inside a reasoning block goes with the block. What the app uses for an answer
- * (chat, voice, board); without code it gives exactly `stripAllReasoning` (tested).
+ * through; when the tag is all its code span holds ("`</think>`"), the backticks go with it, so
+ * no stray "`" is left. Code inside a reasoning block goes with the block. What the app uses for
+ * an answer (chat, voice, board); without code it gives exactly `stripAllReasoning` (tested).
  */
 export function stripReasoningOutsideCode(text: string): StrippedReasoning {
   if (text.includes(CODE_OPEN) || text.includes(CODE_CLOSE)) return stripAllReasoning(text);
   const spans: string[] = [];
   const masked = text.replace(CODE, (code) => {
+    // The tag is removed in any case (orphan, end of a block or stray): so is its dressing.
+    const closeOnly = CLOSE_ONLY_CODE.exec(code)?.[1];
+    if (closeOnly) return closeOnly;
     if (!OPEN.test(code) || ANY_CLOSE.test(code)) return code;
     spans.push(code);
     return `${CODE_OPEN}${String(spans.length - 1)}${CODE_CLOSE}`;
   });
-  if (spans.length === 0) return stripAllReasoning(text);
+  // Without code set apart, `masked` is the text (or the text with "`</think>`" unwrapped).
+  if (spans.length === 0) return stripAllReasoning(masked);
   const stripped = stripAllReasoning(masked);
   if (!stripped.removed) return { text, removed: false, unclosed: false };
   return {

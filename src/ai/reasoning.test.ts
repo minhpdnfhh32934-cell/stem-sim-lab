@@ -97,6 +97,20 @@ describe('a reasoning tag written as code', () => {
     );
   });
 
+  it('a closing tag alone in a code span takes its backticks with it (review round 2)', () => {
+    expect(stripReasoningOutsideCode('`</think>` là thẻ đóng. Đáp số 12.')).toEqual({
+      text: 'là thẻ đóng. Đáp số 12.',
+      removed: true,
+      unclosed: false,
+    });
+    expect(stripReasoningOutsideCode('nháp riêng `</think>` Lực.').text).toBe('Lực.');
+    expect(stripReasoningOutsideCode('<think>nháp `</ThinK >` Đáp số 12.').text).toBe('Đáp số 12.');
+    // A span holding more than the tag is read as the plain rule reads it (its pairing is unsure).
+    expect(stripReasoningOutsideCode('<think>x ` y</think> Ta có `a` b.').text).toBe(
+      'Ta có `a` b.',
+    );
+  });
+
   it('the streaming preview shows a tag written as code once its code span is closed', () => {
     expect(hideUnfinishedReasoning('Qwen dùng thẻ `<think>` để')).toBe(
       'Qwen dùng thẻ `<think>` để',
