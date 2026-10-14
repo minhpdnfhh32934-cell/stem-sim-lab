@@ -22,6 +22,7 @@ use tauri::Url;
 
 use super::runtime::RuntimeKind;
 use super::NOT_LOOPBACK;
+use crate::ai::reasoning::js_trim;
 use crate::ai::AiError;
 
 /// Longest address accepted.
@@ -80,7 +81,8 @@ fn refuse() -> AiError {
 
 /// Checks a runtime address typed by the user or stored by the page.
 pub fn parse_loopback(input: &str) -> Result<Loopback, AiError> {
-    let s = input.trim();
+    // Trimmed as JavaScript trims, so the page's mirror of this check agrees (U+0085, U+FEFF).
+    let s = js_trim(input);
     if s.is_empty() || s.len() > MAX_URL_LEN || s.chars().any(|c| c.is_control() || c == ' ') {
         return Err(refuse());
     }

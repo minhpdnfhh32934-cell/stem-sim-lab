@@ -1,5 +1,5 @@
 {
-  "about": "Shared table for local runtime addresses (src-tauri/src/ai/local/endpoint.rs parse_loopback and the web-side mirror). After trimming whitespace at both ends, an address is accepted only when ALL hold: at most 200 characters, no space or control character; it starts with 'http://' (any case); the authority (text up to the first '/', '\\', '?' or '#') has no '@'; the host is written exactly '127.0.0.1', '[::1]' or 'localhost' (any case); an explicit port of 1 to 5 digits, no leading zero, value 1-65535; the rest is exactly '', '/', '/v1' or '/v1/'; a standard URL parser reads the same scheme, host and port and finds no user, query or fragment. 'base' is the normalised address: 'http://' + lower-case host + ':' + port, with no path.",
+  "about": "Shared table for local runtime addresses (src-tauri/src/ai/local/endpoint.rs parse_loopback and the web-side mirror). After trimming whitespace at both ends exactly as JavaScript's String.prototype.trim does (U+FEFF is trimmed, U+0085 is not; Rust uses reasoning::js_trim), an address is accepted only when ALL hold: at most 200 characters, no space or control character; it starts with 'http://' (any case); the authority (text up to the first '/', '\\', '?' or '#') has no '@'; the host is written exactly '127.0.0.1', '[::1]' or 'localhost' (any case); an explicit port of 1 to 5 digits, no leading zero, value 1-65535; the rest is exactly '', '/', '/v1' or '/v1/'; a standard URL parser reads the same scheme, host and port and finds no user, query or fragment. 'base' is the normalised address: 'http://' + lower-case host + ':' + port, with no path.",
   "accept": [
     { "input": "http://127.0.0.1:11434", "base": "http://127.0.0.1:11434" },
     { "input": "http://127.0.0.1:11434/", "base": "http://127.0.0.1:11434" },
@@ -10,7 +10,9 @@
     { "input": "  http://127.0.0.1:1234  ", "base": "http://127.0.0.1:1234" },
     { "input": "http://127.0.0.1:80", "base": "http://127.0.0.1:80" },
     { "input": "http://127.0.0.1:1", "base": "http://127.0.0.1:1" },
-    { "input": "http://127.0.0.1:65535", "base": "http://127.0.0.1:65535" }
+    { "input": "http://127.0.0.1:65535", "base": "http://127.0.0.1:65535" },
+    { "input": "\uFEFFhttp://127.0.0.1:1", "base": "http://127.0.0.1:1" },
+    { "input": "\u00A0http://localhost:1234/v1\u2028", "base": "http://localhost:1234" }
   ],
   "reject": [
     "",
@@ -56,6 +58,8 @@
     "http://127.0.0.1:+80",
     "http://127.0.0.1 :11434",
     "http://127.0.0.1:\t11434",
-    "http://127.0.0.1:11434/\u0000"
+    "http://127.0.0.1:11434/\u0000",
+    "http://127.0.0.1:1/v1\u0085",
+    "\u0085http://127.0.0.1:1"
   ]
 }
