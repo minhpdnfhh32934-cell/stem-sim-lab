@@ -22,6 +22,7 @@ struct Req {
     body: String,
 }
 
+#[derive(Clone)]
 enum Step {
     Send(Vec<u8>),
     Wait(u64),
@@ -386,9 +387,14 @@ fn openai_compatible_and_lm_studio_stream_server_sent_events() {
     assert_eq!(r.content, "Lực là đại lượng vectơ.");
     assert_eq!(events, vec![delta("Lực"), delta(" là đại lượng vectơ.")]);
     assert_eq!(r.runtime, RuntimeKind::OpenAiCompatible);
+    // Identified, checked not to be Ollama, then the question.
     assert_eq!(
         mock.seen(),
-        vec!["GET /v1/models", "POST /v1/chat/completions"]
+        vec![
+            "GET /v1/models",
+            "GET /api/version",
+            "POST /v1/chat/completions"
+        ]
     );
     assert_eq!(mock.body_of("/v1/chat/completions")["stream"], true);
 
@@ -408,7 +414,11 @@ fn openai_compatible_and_lm_studio_stream_server_sent_events() {
     assert_eq!(r.unwrap().runtime, RuntimeKind::LmStudio);
     assert_eq!(
         lm.seen(),
-        vec!["GET /api/v0/models", "POST /v1/chat/completions"]
+        vec![
+            "GET /api/v0/models",
+            "GET /api/version",
+            "POST /v1/chat/completions"
+        ]
     );
 }
 
@@ -584,7 +594,11 @@ fn http_errors_get_tags_and_never_fall_back() {
         // One attempt only: no retry.
         assert_eq!(
             mock.seen(),
-            vec!["GET /v1/models", "POST /v1/chat/completions"],
+            vec![
+                "GET /v1/models",
+                "GET /api/version",
+                "POST /v1/chat/completions"
+            ],
             "{status}"
         );
     }
@@ -676,13 +690,176 @@ fn ollama_cloud_models_never_get_the_question() {
     let (r, _) = chat(&mock, &request(RuntimeKind::Ollama, &mock), quick());
     assert!(matches!(r, Err(AiError::NotAllowed(ref t)) if t == REMOTE_MODEL));
     assert_eq!(mock.seen(), vec!["GET /api/version", "POST /api/show"]);
-    // A "-cloud" tag is refused even before asking for the model's details.
+    // A "-cloud" tag is refused before any request.
     let mock = ollama(|_| vec![ndjson_head(), line(&piece("x"))]);
     let mut req = request(RuntimeKind::Ollama, &mock);
     req.model = "gpt-oss:120b-cloud".into();
     let (r, _) = chat(&mock, &req, quick());
     assert!(matches!(r, Err(AiError::NotAllowed(ref t)) if t == REMOTE_MODEL));
-    assert_eq!(mock.seen(), vec!["GET /api/version"]);
+    assert!(mock.seen().is_empty());
+}
+
+/// Ollama also serves the OpenAI-compatible `/v1` API, where its "cloud" models look local.
+fn ollama_with_v1() -> Mock {
+    let list = json!({"object": "list", "data": [
+        {"id": "gpt-oss:120b-cloud", "object": "model", "owned_by": "library"},
+        {"id": "qwen3:8b", "object": "model", "owned_by": "library"},
+        // A copy of a cloud model keeps no "-cloud" tag.
+        {"id": "my-copy:latest", "object": "model", "owned_by": "library"}
+    ]})
+    .to_string();
+    serve(move |r| match (r.method.as_str(), r.path.as_str()) {
+        ("GET", "/api/version") => json_answer("200 OK", VERSION),
+        ("GET", "/api/tags") => json_answer("200 OK", TAGS),
+        ("POST", "/api/show") => json_answer("200 OK", SHOW_REMOTE),
+        ("GET", "/v1/models") => json_answer("200 OK", &list),
+        ("POST", "/v1/chat/completions") => vec![
+            stream_head("text/event-stream"),
+            Step::Send(SSE.as_bytes().to_vec()),
+        ],
+        _ => not_found(),
+    })
+}
+
+#[test]
+fn an_ollama_address_is_only_used_as_ollama() {
+    let posted = |m: &Mock| m.seen().iter().any(|r| r.starts_with("POST /v1/"));
+    // A cloud model under another kind: refused before any request.
+    for kind in [
+        RuntimeKind::OpenAiCompatible,
+        RuntimeKind::LmStudio,
+        RuntimeKind::LlamaCpp,
+    ] {
+        let mock = ollama_with_v1();
+        let mut req = request(kind, &mock);
+        req.model = "gpt-oss:120b-cloud".into();
+        let (r, events) = chat(&mock, &req, quick());
+        assert!(
+            matches!(r, Err(AiError::NotAllowed(ref t)) if t == REMOTE_MODEL),
+            "{kind:?}: {r:?}"
+        );
+        assert!(events.is_empty());
+        assert!(mock.seen().is_empty(), "{kind:?}: {:?}", mock.seen());
+    }
+    // Any other model: the address answers as Ollama, so it is only used as Ollama (through
+    // `/v1` a copied cloud model cannot be recognised and `num_ctx` cannot be sent).
+    for (kind, before) in [
+        (RuntimeKind::OpenAiCompatible, vec!["GET /v1/models"]),
+        // LM Studio without its REST API falls back to `/v1/models`, which Ollama answers.
+        (
+            RuntimeKind::LmStudio,
+            vec!["GET /api/v0/models", "GET /v1/models"],
+        ),
+    ] {
+        for model in ["qwen3:8b", "my-copy:latest"] {
+            let mock = ollama_with_v1();
+            let mut req = request(kind, &mock);
+            req.model = model.into();
+            let (r, events) = chat(&mock, &req, quick());
+            let e = r.unwrap_err();
+            assert_eq!(tag_of(&e), NOT_RUNTIME, "{kind:?} {model}");
+            assert_eq!(e_message(&e), format!("{NOT_RUNTIME}: {IS_OLLAMA}"));
+            assert!(events.is_empty());
+            assert!(!posted(&mock), "{kind:?} {model}: the prompt was sent");
+            let mut expected = before.clone();
+            expected.push("GET /api/version");
+            assert_eq!(mock.seen(), expected, "{kind:?} {model}");
+        }
+    }
+    // The answer test reports it too.
+    let mock = ollama_with_v1();
+    let http = loopback_client().unwrap();
+    let t = tauri::async_runtime::block_on(test_model(
+        &http,
+        RuntimeKind::OpenAiCompatible,
+        &mock.base(),
+        "qwen3:8b",
+        quick(),
+    ));
+    assert_eq!(t.status, LocalTestStatus::NotRuntime);
+    assert_eq!(t.detail, IS_OLLAMA);
+    assert!(!posted(&mock));
+    // Lists and details under another kind are refused the same way, so the page can say
+    // "this is Ollama" before a model is chosen.
+    for kind in [RuntimeKind::OpenAiCompatible, RuntimeKind::LmStudio] {
+        let mock = ollama_with_v1();
+        let list = tauri::async_runtime::block_on(list_models(
+            &http,
+            runtime(kind),
+            &mock.base(),
+            quick().precheck,
+        ));
+        assert_eq!(tag_of(&list.unwrap_err()), NOT_RUNTIME, "{kind:?}");
+        assert_eq!(mock.seen(), vec!["GET /api/version"], "{kind:?}");
+        let info = tauri::async_runtime::block_on(model_info(
+            &http,
+            runtime(kind),
+            &mock.base(),
+            "qwen3:8b",
+            quick().precheck,
+        ));
+        assert_eq!(tag_of(&info.unwrap_err()), NOT_RUNTIME, "{kind:?}");
+    }
+    // As Ollama, the same address works and its cloud models are flagged.
+    let mock = ollama_with_v1();
+    let list = tauri::async_runtime::block_on(list_models(
+        &http,
+        runtime(RuntimeKind::Ollama),
+        &mock.base(),
+        quick().precheck,
+    ))
+    .unwrap();
+    assert!(list
+        .models
+        .iter()
+        .any(|m| m.id == "gpt-oss:120b-cloud" && m.remote));
+}
+
+#[test]
+fn lm_studio_without_its_rest_api_still_answers() {
+    // `/api/v0` missing: a 404, or an error object instead of a list.
+    for missing in [
+        not_found(),
+        json_answer("200 OK", r#"{"error":"Unexpected endpoint or method."}"#),
+    ] {
+        let mock = serve(move |r| match (r.method.as_str(), r.path.as_str()) {
+            ("GET", "/api/v0/models") => missing.clone(),
+            ("GET", "/v1/models") => json_answer("200 OK", OPENAI_MODELS),
+            ("POST", "/v1/chat/completions") => vec![
+                stream_head("text/event-stream"),
+                Step::Send(SSE.as_bytes().to_vec()),
+            ],
+            _ => not_found(),
+        });
+        let mut req = request(RuntimeKind::LmStudio, &mock);
+        req.model = "qwen2.5-7b-instruct".into();
+        let (r, _) = chat(&mock, &req, quick());
+        let r = r.unwrap();
+        assert_eq!(r.content, "Lực là đại lượng vectơ.");
+        assert_eq!(r.runtime, RuntimeKind::LmStudio);
+        assert_eq!(
+            mock.seen(),
+            vec![
+                "GET /api/v0/models",
+                "GET /v1/models",
+                "GET /api/version",
+                "POST /v1/chat/completions"
+            ]
+        );
+        let http = loopback_client().unwrap();
+        let list = tauri::async_runtime::block_on(list_models(
+            &http,
+            runtime(RuntimeKind::LmStudio),
+            &mock.base(),
+            quick().precheck,
+        ))
+        .unwrap();
+        assert_eq!(list.models.len(), 2);
+    }
+    // Detection does not guess: a server with only `/v1` is reported as OpenAI-compatible
+    // (llama.cpp and many others answer `/v1/models` too).
+    let p = probe_of(&compat(|_| not_found()));
+    assert_eq!(p.kind, Some(RuntimeKind::OpenAiCompatible));
 }
 
 #[test]
@@ -834,7 +1011,10 @@ fn model_lists_and_details() {
     ))
     .unwrap();
     assert_eq!(list.models.len(), 2);
-    assert_eq!(old_lm.seen(), vec!["GET /api/v0/models", "GET /v1/models"]);
+    assert_eq!(
+        old_lm.seen(),
+        vec!["GET /api/version", "GET /api/v0/models", "GET /v1/models"]
+    );
 
     // LM Studio details come from its list.
     let lm = serve(|r| match r.path.as_str() {

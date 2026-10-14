@@ -115,8 +115,11 @@ pub struct LocalModel {
 }
 
 impl LocalModel {
+    /// A model known by its id only. A name in Ollama's cloud form is flagged `remote` whatever
+    /// the runtime: Ollama lists its cloud models in its OpenAI-compatible `/v1/models` too.
     pub fn named(id: String) -> LocalModel {
         LocalModel {
+            remote: super::ollama::is_cloud_name(&id),
             id,
             size_bytes: None,
             family: None,
@@ -125,7 +128,6 @@ impl LocalModel {
             context_length: None,
             vision: Cap::Unverified,
             loaded: None,
-            remote: false,
         }
     }
 }
@@ -215,8 +217,8 @@ pub trait LocalRuntime: Send + Sync {
 
     fn parse_models(&self, v: &Value) -> Vec<LocalModel>;
 
-    /// The runtime to ask for the model list when `models_request` gets a 404 (LM Studio
-    /// without its `/api/v0` REST API).
+    /// The runtime to ask for the model list, and to identify the server, when this runtime's own
+    /// API is missing (LM Studio without its `/api/v0` REST API).
     fn models_fallback(&self) -> Option<&'static dyn LocalRuntime> {
         None
     }

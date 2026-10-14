@@ -11,10 +11,15 @@
 //! - Detection only asks the three usual addresses ([`endpoint::DEFAULTS`]) and only when the
 //!   user presses the button: no other port, no file, no process list.
 //! - A prompt is only sent to a server that identified itself as the chosen runtime, and never
-//!   to an Ollama model that runs on ollama.com ("cloud" models).
+//!   to an Ollama model that runs on ollama.com ("cloud" models): a model named like one is
+//!   refused for every kind before any request, Ollama's own details are checked for the rest,
+//!   and an address that answers as Ollama is only used as Ollama (through its OpenAI-compatible
+//!   `/v1` API a renamed cloud model cannot be recognised and `num_ctx` cannot be sent).
 //! - Answers stream to the page through a Tauri channel as [`LocalEvent`]s, with the model's
 //!   reasoning removed ([`crate::ai::reasoning`]). A stop (`ai_cancel`) drops the request,
 //!   which closes the connection: Ollama and llama.cpp stop generating.
+//! - Streamed text is provisional (see [`LocalEvent`]): only the returned
+//!   [`LocalChatResponse::content`] is final.
 //! - Stall timers: first piece 120 s (the runtime may be loading the model), then 45 s between
 //!   pieces, at most 600 s in all. Sizes are capped ([`stream`]).
 //!
@@ -59,6 +64,8 @@ pub const STALLED: &str = "local-stalled";
 pub const REMOTE_MODEL: &str = "remote-model";
 /// Something answered, but not the chosen runtime.
 pub const NOT_RUNTIME: &str = "not-runtime";
+/// Detail of [`NOT_RUNTIME`]: the address is Ollama, chosen as another kind.
+pub const IS_OLLAMA: &str = "ollama";
 /// The address is not on this computer.
 pub const NOT_LOOPBACK: &str = "not-loopback";
 /// An answer, a line or a list over its size cap.
@@ -136,6 +143,12 @@ pub struct LocalChatResponse {
 }
 
 /// A change to the answer shown while it streams.
+///
+/// Provisional: when a chat template pre-fills the opening reasoning tag, the model's reasoning
+/// arrives first with nothing to mark it, so it is sent as `delta`s and only taken back by a
+/// `reset` when its closing tag comes (rule 3 of [`crate::ai::reasoning`]). The page may show
+/// deltas, but speech, board actions and anything that cannot be taken back wait for the final
+/// [`LocalChatResponse::content`].
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(tag = "kind", content = "text", rename_all = "camelCase")]
 pub enum LocalEvent {
@@ -211,7 +224,8 @@ pub struct LocalTest {
     pub status: LocalTestStatus,
     pub first_piece_ms: Option<u64>,
     pub streamed: bool,
-    /// Short runtime message for the "error" case.
+    /// Short runtime message for the "error" case; `ollama` for "notRuntime" when the address is
+    /// Ollama chosen as another kind.
     pub detail: String,
 }
 
@@ -427,7 +441,57 @@ pub(crate) async fn detect(http: &reqwest::Client, step: Duration) -> Vec<Runtim
     vec![a, b, c]
 }
 
+/// The API asked for is missing: a 404, or an error object where a list was expected (servers
+/// answer an unknown path in different ways).
+fn api_missing(status: u16, body: &str) -> bool {
+    status == 404
+        || (status == 200
+            && serde_json::from_str::<Value>(body)
+                .is_ok_and(|v| v.get("error").is_some() && v.get("data").is_none()))
+}
+
+/// An address chosen as another kind must not be Ollama. Ollama also serves the
+/// OpenAI-compatible `/v1` API, but there a cloud model copied under another name looks local
+/// and `num_ctx` cannot be sent (Ollama's small default context would cut the system and safety
+/// instructions from the front). So an address that answers Ollama's fingerprint is only used as
+/// Ollama, and is refused under any other kind before a list or a prompt. An error while asking
+/// is returned too: nothing is sent unless the address is known not to be Ollama.
+async fn refuse_ollama_as_other(
+    http: &reqwest::Client,
+    rt: &dyn LocalRuntime,
+    base: &Loopback,
+    limit: Duration,
+) -> Result<(), AiError> {
+    if rt.kind() == RuntimeKind::Ollama {
+        return Ok(());
+    }
+    let ollama = runtime(RuntimeKind::Ollama);
+    let (status, body) = fetch_text(
+        ollama.fingerprint_request(http, base),
+        limit,
+        PROBE_BODY_CAP,
+    )
+    .await?;
+    match ollama.parse_fingerprint(status, &body) {
+        Fingerprint::Match { .. } => {
+            Err(AiError::BadResponse(format!("{NOT_RUNTIME}: {IS_OLLAMA}")))
+        }
+        Fingerprint::NeedsAuth | Fingerprint::NotThis => Ok(()),
+    }
+}
+
 pub(crate) async fn list_models(
+    http: &reqwest::Client,
+    rt: &dyn LocalRuntime,
+    base: &Loopback,
+    limit: Duration,
+) -> Result<LocalModels, AiError> {
+    refuse_ollama_as_other(http, rt, base, limit).await?;
+    fetch_models(http, rt, base, limit).await
+}
+
+/// The model list, from the runtime's own API or its fallback (LM Studio without `/api/v0`).
+async fn fetch_models(
     http: &reqwest::Client,
     rt: &dyn LocalRuntime,
     base: &Loopback,
@@ -436,7 +500,7 @@ pub(crate) async fn list_models(
     let (mut status, mut body) =
         fetch_text(rt.models_request(http, base), limit, LIST_BODY_CAP).await?;
     let mut parser = rt;
-    if status == 404 {
+    if api_missing(status, &body) {
         if let Some(fallback) = rt.models_fallback() {
             (status, body) =
                 fetch_text(fallback.models_request(http, base), limit, LIST_BODY_CAP).await?;
@@ -462,6 +526,7 @@ pub(crate) async fn model_info(
     model: &str,
     limit: Duration,
 ) -> Result<ModelDetails, AiError> {
+    refuse_ollama_as_other(http, rt, base, limit).await?;
     let mut details = match rt.info_request(http, base, model) {
         Some(rb) => {
             let (status, body) = fetch_text(rb, limit, INFO_BODY_CAP).await?;
@@ -471,7 +536,7 @@ pub(crate) async fn model_info(
             rt.parse_info(&json_of(&body)?, model)
         }
         None => {
-            let list = list_models(http, rt, base, limit).await?;
+            let list = fetch_models(http, rt, base, limit).await?;
             let m = list
                 .models
                 .iter()
@@ -491,26 +556,47 @@ pub(crate) async fn model_info(
     Ok(details)
 }
 
-/// The chosen address must answer as the chosen runtime before it gets a prompt.
+/// The chosen address must answer as the chosen runtime, and must not be Ollama chosen as
+/// another kind ([`refuse_ollama_as_other`]), before it gets a prompt.
+///
+/// LM Studio without its `/api/v0` REST API is identified by its OpenAI-compatible model list,
+/// as its model list is. Detection ([`probe`]) does not do this: `/v1/models` alone cannot tell
+/// LM Studio from llama.cpp or any other server, so detection reports such a server as
+/// OpenAI-compatible, and both kinds work with it.
 async fn identify(
     http: &reqwest::Client,
     rt: &dyn LocalRuntime,
     base: &Loopback,
     limit: Duration,
 ) -> Result<(), AiError> {
-    let (status, body) =
+    let (mut status, body) =
         fetch_text(rt.fingerprint_request(http, base), limit, PROBE_BODY_CAP).await?;
-    match rt.parse_fingerprint(status, &body) {
-        Fingerprint::Match { loading: false, .. } => Ok(()),
-        Fingerprint::Match { loading: true, .. } => {
-            Err(AiError::Http(format!("{LOADING}: {status}")))
+    let mut print = rt.parse_fingerprint(status, &body);
+    if print == Fingerprint::NotThis && api_missing(status, &body) {
+        if let Some(fallback) = rt.models_fallback() {
+            let (fb_status, fb_body) = fetch_text(
+                fallback.fingerprint_request(http, base),
+                limit,
+                PROBE_BODY_CAP,
+            )
+            .await?;
+            status = fb_status;
+            print = fallback.parse_fingerprint(fb_status, &fb_body);
         }
-        Fingerprint::NeedsAuth => Err(AiError::Http(format!("{NEEDS_AUTH}: {status}"))),
-        Fingerprint::NotThis => Err(AiError::BadResponse(NOT_RUNTIME.into())),
     }
+    match print {
+        Fingerprint::Match { loading: false, .. } => {}
+        Fingerprint::Match { loading: true, .. } => {
+            return Err(AiError::Http(format!("{LOADING}: {status}")))
+        }
+        Fingerprint::NeedsAuth => return Err(AiError::Http(format!("{NEEDS_AUTH}: {status}"))),
+        Fingerprint::NotThis => return Err(AiError::BadResponse(NOT_RUNTIME.into())),
+    }
+    refuse_ollama_as_other(http, rt, base, limit).await
 }
 
-/// Generation settings; for Ollama also checks that the model exists and runs on this computer.
+/// Generation settings; for Ollama also checks that the model exists and runs on this computer
+/// (a cloud model may have been copied under a name without "cloud").
 async fn prepare(
     http: &reqwest::Client,
     rt: &dyn LocalRuntime,
@@ -532,9 +618,6 @@ async fn prepare(
     };
     if rt.kind() != RuntimeKind::Ollama {
         return Ok(opts);
-    }
-    if ollama::is_cloud_name(model) {
-        return Err(AiError::NotAllowed(REMOTE_MODEL.into()));
     }
     let Some(rb) = rt.info_request(http, base, model) else {
         return Ok(opts);
@@ -658,6 +741,11 @@ async fn stream_answer(
     let first_end = (started + limits.first_piece).min(overall_end);
     let model = clean_id(&req.model)
         .ok_or_else(|| AiError::Http(format!("{MODEL_MISSING}: invalid name")))?;
+    // A name in Ollama's cloud form is refused for every kind, before any request: any of these
+    // servers may be Ollama, or forward to it.
+    if ollama::is_cloud_name(&model) {
+        return Err(AiError::NotAllowed(REMOTE_MODEL.into()));
+    }
     identify(http, rt, base, limits.precheck).await?;
     let opts = prepare(http, rt, base, req, &model, limits.precheck).await?;
 
@@ -804,6 +892,11 @@ fn test_status(e: &AiError) -> LocalTestStatus {
     }
 }
 
+/// The error said the address is Ollama, chosen as another kind.
+fn is_ollama_error(e: &AiError) -> bool {
+    matches!(e, AiError::BadResponse(m) if *m == format!("{NOT_RUNTIME}: {IS_OLLAMA}"))
+}
+
 fn test_failed(e: &AiError) -> LocalTest {
     let status = test_status(e);
     LocalTest {
@@ -812,6 +905,8 @@ fn test_failed(e: &AiError) -> LocalTest {
         streamed: false,
         detail: if status == LocalTestStatus::Error {
             detail(&e.to_string())
+        } else if is_ollama_error(e) {
+            IS_OLLAMA.into()
         } else {
             String::new()
         },

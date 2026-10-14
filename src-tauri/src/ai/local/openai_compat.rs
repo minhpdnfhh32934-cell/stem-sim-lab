@@ -166,6 +166,20 @@ mod tests {
         assert_eq!(models.len(), 2);
         assert_eq!(models[1].id, "phi-4-mini");
         assert_eq!(models[1].vision, Cap::Unverified);
+        assert!(models.iter().all(|m| !m.remote));
+    }
+
+    #[test]
+    fn models_named_as_ollama_cloud_models_are_flagged_remote() {
+        // Ollama's own `/v1/models` lists its cloud models next to the local ones.
+        let models = openai_models(&json!({"object": "list", "data": [
+            {"id": "gpt-oss:120b-cloud"}, {"id": "kimi-k2:cloud"}, {"id": "qwen3:8b"}
+        ]}));
+        let remote: Vec<bool> = models.iter().map(|m| m.remote).collect();
+        assert_eq!(remote, vec![true, true, false]);
+        // The model details built from a name say the same.
+        let d = OpenAiCompat.parse_info(&json!({}), "gpt-oss:120b-cloud");
+        assert!(d.remote);
     }
 
     #[test]

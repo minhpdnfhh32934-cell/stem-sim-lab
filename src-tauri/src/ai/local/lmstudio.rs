@@ -149,6 +149,12 @@ mod tests {
         assert_eq!(vlm.loaded, Some(false));
         assert_eq!(vlm.context_length, Some(32768));
         assert_eq!(vlm.quantization.as_deref(), Some("4bit"));
+        assert!(models.iter().all(|m| !m.remote));
         assert!(LmStudio.models_fallback().is_some());
+        // A name in Ollama's cloud form is flagged in every list.
+        let cloud = LmStudio.parse_models(&serde_json::json!({"object": "list", "data": [
+            {"id": "gpt-oss:120b-cloud", "type": "llm"}
+        ]}));
+        assert!(cloud[0].remote);
     }
 }
