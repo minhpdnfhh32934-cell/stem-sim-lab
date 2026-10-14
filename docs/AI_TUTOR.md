@@ -393,8 +393,9 @@ The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate 
    values are fixed in the graph (1, 0.667, 0.8). Not checked on the stored file itself (that
    needs the model; the worker reads `session.inputNames` at load and adapts). The worker
    (`localVoiceWorker.ts`, `vitsControls.ts`) passes a value only when the graph names it, clamped
-   to 0.85–1.15 / 0.5–0.8 / 0.6–1.0, and reports which it applied; a graph that refuses a value is
-   run without it from then on. With the expected graph nothing is applied, so the noise columns
+   to 0.85–1.15 / 0.5–0.8 / 0.6–1.0, and reports which it applied; a graph that refuses a value (a
+   wrong type, rank or shape) is run without it from then on. Any other error, above all a
+   graphics-card failure, is never retried: it reaches the page, which moves the voice off the card. With the expected graph nothing is applied, so the noise columns
    above are not heard (VITS still samples its own variation at the fixed scales) and the role's
    pace is applied on the page by a pitch-keeping time stretch (WSOLA). The learner's speed (and
    the board's) stays the playback rate, the same for every chunk.

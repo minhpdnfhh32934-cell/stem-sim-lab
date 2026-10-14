@@ -6,9 +6,11 @@
  */
 /// <reference lib="webworker" />
 import { AutoTokenizer, Tensor, VitsModel, env } from '@huggingface/transformers';
+import { isGpuFailure } from '@/ai/gpuSafety';
 import { modelStore, opfsAvailable } from '@/ai/modelStore';
 import {
   controlFeeds,
+  runWithControls,
   sessionInputNames,
   supportedControls,
   type VitsControl,
@@ -154,15 +156,18 @@ async function run(msg: Job): Promise<void> {
           new Tensor('float32', Float32Array.from([v]), [1]),
         ]),
       );
-      let output: { waveform: Tensor };
-      try {
-        output = (await engine.model({ ...inputs, ...controls })) as { waveform: Tensor };
-      } catch (e) {
-        // A graph that names a control but refuses our value: speak without, and stop asking.
-        if (applied.length === 0) throw e;
+      const { model } = engine;
+      // A graph that names a control but refuses our value: speak without, and stop asking. A
+      // graphics-card failure is never retried (it must reach the page).
+      const { output, withControls } = await runWithControls(
+        async (all) => (await model(all)) as { waveform: Tensor },
+        inputs,
+        controls,
+        isGpuFailure,
+      );
+      if (!withControls && applied.length > 0) {
         engine.controls = [];
         applied = [];
-        output = (await engine.model(inputs)) as { waveform: Tensor };
       }
       const samples = new Float32Array(output.waveform.data as Float32Array);
       post({ kind: 'audio', id: msg.id, samples, sampleRate: engine.sampleRate, applied }, [

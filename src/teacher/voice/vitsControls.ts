@@ -78,3 +78,43 @@ export function controlFeeds(
   for (const c of supported) feeds[c] = value[c];
   return feeds;
 }
+
+/**
+ * ONNX Runtime or Transformers.js refusing a value fed to the graph: a wrong name, data type,
+ * rank or shape ("Invalid rank for input: noise_scale", "Unexpected input data type").
+ */
+const INPUT_REFUSED =
+  /\binputs?\b|\bfeeds?\b|\bshape\b|\bdimensions?\b|\brank\b|data type|tensor\(/i;
+
+/**
+ * Whether a run that was fed prosody controls may run again without them: only when the graph
+ * refused a value. Never on a graphics-card failure (`gpuFailure`, src/ai/gpuSafety.ts): a second
+ * run would put more work on a failing card and hide its error, which must reach the page so the
+ * voice leaves the card.
+ */
+export function retryWithoutControls(
+  error: unknown,
+  gpuFailure: (message: string) => boolean,
+): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return !gpuFailure(message) && INPUT_REFUSED.test(message);
+}
+
+/**
+ * Runs the model with the prosody controls; a graph that refuses one of them is run again
+ * without (`withControls` false: stop asking). Any other error is thrown as it is.
+ */
+export async function runWithControls<T>(
+  run: (feeds: Record<string, unknown>) => Promise<T>,
+  inputs: Record<string, unknown>,
+  controls: Record<string, unknown>,
+  gpuFailure: (message: string) => boolean,
+): Promise<{ output: T; withControls: boolean }> {
+  if (Object.keys(controls).length === 0) return { output: await run(inputs), withControls: false };
+  try {
+    return { output: await run({ ...inputs, ...controls }), withControls: true };
+  } catch (e) {
+    if (!retryWithoutControls(e, gpuFailure)) throw e;
+    return { output: await run(inputs), withControls: false };
+  }
+}
