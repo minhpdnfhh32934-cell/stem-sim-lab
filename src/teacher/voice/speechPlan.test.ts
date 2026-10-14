@@ -243,6 +243,11 @@ describe('what is not meant to be heard', () => {
     expect(plan.text).toContain('Xin chào các em!');
   });
 
+  it('keeps arrows and symbols that are also emoji characters (↔ ↗ ✔ ™), drops real emoji', () => {
+    const text = 'A ↔ B, giá ↗, đúng ✔, SimLab™ ✅ 😀 \u{2b06}\u{fe0f} ↑ ↓ → ⇌';
+    expect(stripInternalMarkup(text)).toBe('A ↔ B, giá ↗, đúng ✔, SimLab™    ↑ ↓ → ⇌');
+  });
+
   it('applies the pronunciation dictionary and keeps a reading in one chunk', () => {
     const plan = prepareSpeech('Tần số đo bằng Hertz, theo Mendeleev.');
     expect(plan.text).toBe('Tần số đo bằng Héc, theo Men-đê-lê-ép.');

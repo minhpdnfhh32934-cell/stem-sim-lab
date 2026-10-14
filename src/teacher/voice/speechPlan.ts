@@ -121,16 +121,19 @@ export interface PrepareOptions {
  * rules and emoji. Markdown itself is read by `toSpeech`.
  */
 export function stripInternalMarkup(text: string): string {
-  return text
-    .replace(/<think>[\s\S]*?<\/think>/gi, ' ')
-    .replace(/<reference\b[\s\S]*?<\/reference>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(
-      /<\/?[a-zA-Z][\w-]*(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?)*\s*\/?>/g,
-      ' ',
-    )
-    .replace(/^[ \t]*(?:[-*_][ \t]*){3,}$/gm, '')
-    .replace(/\p{Extended_Pictographic}\u{fe0f}?/gu, '');
+  return (
+    text
+      .replace(/<think>[\s\S]*?<\/think>/gi, ' ')
+      .replace(/<reference\b[\s\S]*?<\/reference>/gi, ' ')
+      .replace(/<!--[\s\S]*?-->/g, ' ')
+      .replace(
+        /<\/?[a-zA-Z][\w-]*(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?)*\s*\/?>/g,
+        ' ',
+      )
+      .replace(/^[ \t]*(?:[-*_][ \t]*){3,}$/gm, '')
+      // Emoji shown as emoji only: "↔", "↗", "✔" or "™" without the emoji selector are symbols.
+      .replace(/\p{Emoji_Presentation}\u{fe0f}?|\p{Extended_Pictographic}\u{fe0f}/gu, '')
+  );
 }
 
 // ------------------------------------------------------------ roles
