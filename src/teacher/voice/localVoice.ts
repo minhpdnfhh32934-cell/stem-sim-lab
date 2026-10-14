@@ -71,6 +71,21 @@ export function setLocalVoiceDevicePreference(preference: LocalVoiceDevicePrefer
   }
 }
 
+/** How a card fault's message starts (voiceErrors.ts maps it to "moved to the CPU"). */
+export const CARD_FAULT = 'voice-model-card-fault';
+
+/**
+ * A phrase or a load that failed because the graphics card failed: "voice-model-card-fault: <the
+ * fault as recorded>". It does not last (speak.ts): the next load runs on the CPU. A later CPU
+ * failure never carries the prefix, so Settings never mistakes it for the card's.
+ */
+export class VoiceCardFault extends Error {
+  override name = 'VoiceCardFault';
+}
+
+/** Deletions of the model so far: a phrase that started before one must not load it again. */
+let deletions = 0;
+
 /** The voice's own GPU worker failed in this session: the CPU from then on. */
 let gpuFailedHere = false;
 /** The failure that moved the voice off the card (as the page received it), for Settings. */
@@ -252,7 +267,11 @@ function ensureWorker(): Worker {
   return worker;
 }
 
-/** Stops the worker and fails whatever still waits on it. */
+/**
+ * Stops the worker and fails whatever still waits on it (a load, phrases, late audio a paused
+ * lesson keeps) with `message`. The only way the worker is dropped: a render that never settles
+ * holds the lesson for ever (the board's pen waits for its speech).
+ */
 function failAll(message: string): void {
   const pending = [...waiting.entries()];
   waiting.clear();
@@ -263,6 +282,7 @@ function failAll(message: string): void {
   for (const [id, resolve] of pending) resolve({ kind: 'error', id, message });
 }
 
+/** Only through `failAll`, which settles what waited on the worker. */
 function resetWorker(): void {
   try {
     worker?.terminate();
@@ -285,12 +305,19 @@ async function load(
   progress: (loaded: number, total: number | null) => void,
   signal?: AbortSignal,
   stallMs?: number,
+  stillWanted?: () => boolean,
 ): Promise<void> {
   const device = await localVoiceDevice();
+  // The model was deleted while this phrase waited: never start a worker that would download it
+  // again behind the learner's back.
+  if (stillWanted && !stillWanted()) throw new Error('voice-model-missing');
   // Loaded on the CPU, or on the card that is still fine: nothing to do. A card that became
-  // unsafe since (a GPU fault) means a reload on the CPU.
+  // unsafe since (a GPU fault, here or Gemma's), or the CPU forced, means a reload on the CPU.
   if (loaded && (loadedDevice === 'wasm' || loadedDevice === device)) return;
-  if (loaded) resetWorker();
+  // So the switch is always card → CPU. A phrase still rendered on the card fails with a reason
+  // that does not last (speak.ts): the Windows voice reads on from the first unheard chunk, the
+  // next sentence is on-device again, and Settings says the voice moved to the CPU.
+  if (loaded) failAll('voice-model-moved-to-cpu');
   if (signal?.aborted) throw new Error('cancelled');
   const w = ensureWorker();
   const stall: { timer?: ReturnType<typeof setTimeout> } = {};
@@ -310,7 +337,7 @@ async function load(
   const done = new Promise<WorkerOut>((resolve, reject) => {
     onLoad = resolve;
     cancel = () => {
-      resetWorker();
+      failAll('cancelled');
       reject(new Error('cancelled'));
     };
     signal?.addEventListener('abort', cancel, { once: true });
@@ -356,13 +383,19 @@ export async function downloadLocalVoice(
   localStorage.setItem(FLAG, LOCAL_VOICE.repo);
 }
 
+/**
+ * Deletes the model. A phrase still being rendered (a lesson speaking, or late audio a paused
+ * lesson waits for) fails as a missing model: the lesson reads on with the Windows voice and
+ * Settings says the voice is no longer on this computer.
+ */
 export async function deleteLocalVoice(): Promise<void> {
-  resetWorker();
+  deletions++;
   try {
     localStorage.removeItem(FLAG);
   } catch {
     /* storage blocked */
   }
+  failAll('voice-model-missing');
   await deleteRepo(LOCAL_VOICE.repo);
 }
 
@@ -420,8 +453,12 @@ function pcmFrom(out: WorkerOut): LocalPcm {
   if (out.kind !== 'audio') throw new Error('no audio');
   const applied = (out.applied ?? []).filter((c) => VITS_CONTROLS.includes(c));
   const pcm: LocalPcm = { samples: out.samples, sampleRate: out.sampleRate, applied };
-  // NaN audio from the graphics card is the card failing: off the card at once.
-  if (hasNonFinite(pcm.samples) && noteFailure('voice-model-nan')) failAll('voice-model-nan');
+  // NaN audio from the graphics card is the card failing: off the card at once, and the phrase
+  // fails with the fault as recorded (Settings then says the voice moved to the CPU).
+  if (hasNonFinite(pcm.samples) && noteFailure('voice-model-nan')) {
+    failAll('voice-model-nan');
+    throw new Error('voice-model-nan');
+  }
   // Silence is not speech: the system voice then reads the phrase instead.
   if (isSilent(pcm)) throw new Error('voice-model-silent');
   return pcm;
@@ -449,10 +486,27 @@ export async function synthesizeLocal(
   const words = textForModel(text);
   if (!words) return { samples: new Float32Array(0), sampleRate: 16000, applied: [] };
   if (signal.aborted) throw new Error('cancelled');
+  const generation = deletions;
   if ((await localVoiceStatus()) !== 'ready') throw new Error('voice-model-missing');
+  // A graphics-card failure during this call, as recorded (localVoiceGpuFault): the phrase fails
+  // with that same message (Settings: "moved to the CPU") and the next load runs on the CPU.
+  const faultBefore = gpuFailedHere;
+  const cardFault = (e: unknown): VoiceCardFault | null => {
+    const message = e instanceof Error ? e.message : String(e);
+    return !faultBefore && gpuFailedHere && message === gpuFaultMessage
+      ? new VoiceCardFault(`${CARD_FAULT}: ${message}`, { cause: e })
+      : null;
+  };
   try {
-    await load(() => undefined, signal, LOAD_STALL_MS);
+    await load(
+      () => undefined,
+      signal,
+      LOAD_STALL_MS,
+      () => generation === deletions,
+    );
   } catch (e) {
+    const fault = cardFault(e);
+    if (fault) throw fault;
     const message = e instanceof Error ? e.message : String(e);
     // Named, so a lesson knows the model will not load and stops asking for it (speak.ts).
     if (message === 'cancelled' || message.startsWith('voice-model-')) throw e;
@@ -506,10 +560,17 @@ export async function synthesizeLocal(
       ...(prosody ? { prosody: clampProsody(prosody) } : {}),
     });
   });
-  return pcmFrom(out);
+  try {
+    return pcmFrom(out);
+  } catch (e) {
+    throw cardFault(e) ?? e;
+  }
 }
 
-/** Frees the model's memory (the files stay on disk). */
+/**
+ * Frees the model's memory (the files stay on disk). A phrase still being rendered fails with a
+ * reason that does not last (not "missing": the next phrase loads the model again).
+ */
 export function unloadLocalVoice(): void {
-  resetWorker();
+  failAll('voice-model-unloaded');
 }

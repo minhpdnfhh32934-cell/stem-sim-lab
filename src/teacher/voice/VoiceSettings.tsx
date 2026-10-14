@@ -125,9 +125,14 @@ export function VoiceSettings() {
         {voice.lastError && (
           <p className="chat-settings__error" role="alert">
             <CircleAlert size={14} />
-            {t(voiceErrorKey(voice.lastError, localVoiceGpuFault()))}
+            {t(voiceErrorKey(voice.lastError))}
           </p>
         )}
+        {/* Stays for the session: the next sentence on the CPU clears lastError. */}
+        {localVoiceGpuFault() !== null &&
+          (!voice.lastError || voiceErrorKey(voice.lastError) !== 'voice.errors.gpuToCpu') && (
+            <p className="muted small">{t('voice.onCpuAfterGpuFault')}</p>
+          )}
       </fieldset>
 
       <fieldset className="settings-group">

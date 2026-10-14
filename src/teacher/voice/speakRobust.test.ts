@@ -271,11 +271,13 @@ describe('why the chosen voice was not heard (Settings)', () => {
   });
 
   it('the failure that moved the on-device voice off the graphics card says it now runs on the CPU', () => {
-    expect(voiceErrorKey('worker-crashed', 'worker-crashed')).toBe('voice.errors.gpuToCpu');
-    expect(voiceErrorKey('voice-model-timeout', 'voice-model-timeout')).toBe(
+    expect(voiceErrorKey('voice-model-card-fault: worker-crashed')).toBe('voice.errors.gpuToCpu');
+    expect(voiceErrorKey('voice-model-card-fault: voice-model-timeout')).toBe(
       'voice.errors.gpuToCpu',
     );
-    // A later failure on the CPU is told as itself.
-    expect(voiceErrorKey('voice-model-silent', 'worker-crashed')).toBe('voice.errors.lessonRest');
+    // A later failure on the CPU is told as itself, even with the same words as the card's
+    // (final review: "worker-crashed" on the CPU after a card crash is not "moved to the CPU").
+    expect(voiceErrorKey('voice-model-silent')).toBe('voice.errors.lessonRest');
+    expect(voiceErrorKey('worker-crashed')).toBe('voice.errors.lessonRest');
   });
 });

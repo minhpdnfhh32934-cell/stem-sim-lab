@@ -156,6 +156,9 @@ function lastingFailure(e: unknown): boolean {
   if (e instanceof AiError) {
     return isQuotaError(e) || ['timeout', 'network', 'dailyLimit', 'missingKey'].includes(e.code);
   }
+  // The graphics card failed (localVoice.ts VoiceCardFault): the next phrase loads on the CPU,
+  // so the on-device voice is tried again rather than given up for the lesson.
+  if (e instanceof Error && e.name === 'VoiceCardFault') return false;
   const message = e instanceof Error ? e.message : String(e);
   return (
     /^(?:gemini-tts-(?:no-key|unavailable)|voice-model-(?:missing|timeout|silent)|worker-crashed)$/.test(
