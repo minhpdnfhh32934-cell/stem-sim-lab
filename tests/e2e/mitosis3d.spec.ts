@@ -362,7 +362,7 @@ test('mitosis 3D: "Hỏi thầy về bộ phận này" opens AI Teacher with the
 
   const question = page.getByRole('textbox', { name: 'Nhập câu hỏi' });
   await expect(question).toHaveValue(
-    'Thầy giải thích giúp em: bộ phận “Tâm động” làm gì ở bước “Kì giữa” của nguyên phân (tế bào động vật) ạ?',
+    'Thầy giải thích giúp em: bộ phận “Tâm động” làm gì ở giai đoạn “Kì giữa” (mô phỏng nguyên phân, tế bào động vật) ạ?',
   );
   await expect(question).toBeFocused();
   await expect(page.getByRole('radio', { name: 'Trò chuyện' })).toHaveAttribute(

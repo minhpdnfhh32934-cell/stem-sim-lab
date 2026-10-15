@@ -1858,7 +1858,9 @@ const en: Messages = {
     askMitosisPart: 'Ask the teacher about this part',
     askMitosisPartShort: 'Ask the teacher',
     askMitosisPartQuestion:
-      'Could you explain what the “{part}” does at the “{stage}” step of mitosis ({cell})?',
+      'Could you explain what the “{part}” does at the “{stage}” stage (mitosis model, {cell})?',
+    askMitosisPartHiddenQuestion:
+      'At the “{stage}” stage (mitosis model, {cell}) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
   },
   languages: {
     vi: 'Tiếng Việt',

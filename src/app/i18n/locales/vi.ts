@@ -1856,8 +1856,14 @@ const vi = {
     notYet: 'Tính năng này sẽ được bổ sung sau',
     askMitosisPart: 'Hỏi thầy về bộ phận này',
     askMitosisPartShort: 'Hỏi thầy',
+    // The stage is named as a stage of the simulation, not as "a step of mitosis": interphase
+    // (G1, G2) is not part of mitosis, and some books count cytokinesis apart from it.
     askMitosisPartQuestion:
-      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở bước “{stage}” của nguyên phân ({cell}) ạ?',
+      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở giai đoạn “{stage}” (mô phỏng nguyên phân, {cell}) ạ?',
+    // The part cannot be seen at this stage (its card says so): the question must not assume it
+    // is there.
+    askMitosisPartHiddenQuestion:
+      'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng nguyên phân, {cell}) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
   },
   languages: {
     vi: 'Tiếng Việt',

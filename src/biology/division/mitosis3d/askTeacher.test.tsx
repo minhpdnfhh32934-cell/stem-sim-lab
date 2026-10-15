@@ -69,7 +69,7 @@ const fake: LlmTransport = {
 
 const ASK = 'Hỏi thầy về bộ phận này';
 const QUESTION =
-  'Thầy giải thích giúp em: bộ phận “Tâm động” làm gì ở bước “Kì giữa” của nguyên phân (tế bào động vật) ạ?';
+  'Thầy giải thích giúp em: bộ phận “Tâm động” làm gì ở giai đoạn “Kì giữa” (mô phỏng nguyên phân, tế bào động vật) ạ?';
 
 function renderView() {
   return render(
@@ -199,7 +199,7 @@ describe('"Hỏi thầy về bộ phận này" in the 3D mitosis view', () => {
     const box = screen.getByRole('textbox', { name: 'Nhập câu hỏi' });
     await waitFor(() => {
       expect(box).toHaveValue(
-        'Thầy giải thích giúp em: bộ phận “Thoi phân bào” làm gì ở bước “Kì giữa” của nguyên phân (tế bào động vật) ạ?',
+        'Thầy giải thích giúp em: bộ phận “Thoi phân bào” làm gì ở giai đoạn “Kì giữa” (mô phỏng nguyên phân, tế bào động vật) ạ?',
       );
     });
     const user = userEvent.setup();
@@ -224,7 +224,40 @@ describe('"Hỏi thầy về bộ phận này" in the 3D mitosis view', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Ask the teacher about this part' }));
     expect(useTeacherStore.getState().draft).toBe(
-      'Could you explain what the “Cell plate” does at the “Cytokinesis” step of mitosis (plant cell)?',
+      'Could you explain what the “Cell plate” does at the “Cytokinesis” stage (mitosis model, plant cell)?',
+    );
+    expect(calls).toHaveLength(0);
+  });
+
+  it('a part the card says cannot be seen gets a question that does not assume it is there', () => {
+    // G1: the spindle has not formed yet, and the card says so.
+    useMitosis3D.setState({ t: timelineFor(2, 'animal').keyTime('g1') });
+    renderView();
+    pick('Thoi phân bào');
+    expect(screen.getByRole('complementary')).toHaveTextContent(
+      'Bộ phận này không thấy rõ ở kì đang xem.',
+    );
+    fireEvent.click(screen.getByRole('button', { name: ASK }));
+    expect(useTeacherStore.getState().draft).toBe(
+      'Thầy ơi, ở giai đoạn “Kì trung gian (pha G1)” (mô phỏng nguyên phân, tế bào động vật) em không thấy rõ bộ phận “Thoi phân bào”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
+    );
+    expect(calls).toHaveLength(0);
+  });
+
+  it('in English too: the nucleus at metaphase (no envelope then) is not assumed to be there', () => {
+    useSettingsStore.setState({ locale: 'en' });
+    renderView();
+    fireEvent.click(
+      within(screen.getByRole('group', { name: 'Cell parts' })).getByRole('button', {
+        name: 'Nucleus',
+      }),
+    );
+    expect(screen.getByRole('complementary')).toHaveTextContent(
+      'This part is not visible at this stage.',
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Ask the teacher about this part' }));
+    expect(useTeacherStore.getState().draft).toBe(
+      'At the “Metaphase” stage (mitosis model, animal cell) I can’t clearly see the “Nucleus”. Is it there at that point, and when does it appear or disappear?',
     );
     expect(calls).toHaveLength(0);
   });

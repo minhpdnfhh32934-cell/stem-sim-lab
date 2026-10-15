@@ -189,8 +189,10 @@ function PartInfo({
   const visible = useMitosis3D((s) => componentVisible(selected.component, stateFor(tl, s.t)));
   const info = COMPONENTS[selected.component];
   const askTeacher = () => {
+    // A part the card says cannot be seen now gets a question that does not assume it is there
+    // (e.g. the spindle in G1, the nucleus at metaphase).
     openTeacherWithQuestion(
-      t('teacher.askMitosisPartQuestion', {
+      t(visible ? 'teacher.askMitosisPartQuestion' : 'teacher.askMitosisPartHiddenQuestion', {
         part: Lz(info.name),
         stage: Lz(STAGE3D_NAME[stage]),
         // Mid-sentence, as in the Science Card title.
