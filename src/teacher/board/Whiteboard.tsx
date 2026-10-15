@@ -3,6 +3,7 @@ import {
   CircleCheck,
   Eraser,
   FastForward,
+  LassoSelect,
   Pause,
   PenLine,
   Pencil,
@@ -40,11 +41,13 @@ import { BoardMinimap } from './BoardMinimap';
 import { BOARD_W, boardRules, type BoardElement, type Line, type TextElement } from './layout';
 import { clampScroll, rescaleScroll } from './minimap';
 import {
+  backToLesson,
   cancelPendingStart,
   claimStart,
   clearBoard,
   continueLesson,
   finishNow,
+  pauseForAsk,
   pauseLesson,
   playLesson,
   replayLesson,
@@ -56,6 +59,8 @@ import {
 } from './lesson';
 import { browserMeasure, prepareMeasure, renderMath } from './measure';
 import * as rough from './rough';
+import { hitTest, toBoardPoint, type Point } from './selection';
+import { SelectionBar } from './SelectionBar';
 import './board.css';
 
 /**
@@ -72,6 +77,8 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   const teacherFace = useBoardStore((s) => s.teacherFace);
   const speed = useBoardStore((s) => s.speed);
   const penMode = useBoardStore((s) => s.penMode);
+  const askMode = useBoardStore((s) => s.askMode);
+  const pausedForAsk = useBoardStore((s) => s.pausedForAsk);
   const zoom = useBoardStore((s) => s.zoom);
   const subtitle = useBoardStore((s) => s.subtitle);
   const set = useBoardStore((s) => s.set);
@@ -136,9 +143,14 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
                 {t('board.pause')}
               </button>
             ) : status === 'paused' ? (
-              <button type="button" className="btn btn--accent" onClick={resumeLesson}>
+              // Paused because the learner began circling: going back lets the selection go.
+              <button
+                type="button"
+                className="btn btn--accent"
+                onClick={pausedForAsk ? backToLesson : resumeLesson}
+              >
                 <Play size={15} aria-hidden="true" />
-                {t('board.resume')}
+                {t(pausedForAsk ? 'board.ask.resume' : 'board.resume')}
               </button>
             ) : (
               // While a new answer is being prepared, the last lesson is not the one shown.
@@ -221,12 +233,27 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
             </button>
           )}
         </div>
+        {/* Circling to ask needs something on the board; the pen and it never draw together. */}
+        {lesson && (
+          <button
+            type="button"
+            className={cx('btn', askMode && 'btn--accent')}
+            aria-pressed={askMode}
+            onClick={() => {
+              set(askMode ? { askMode: false } : { askMode: true, penMode: false });
+            }}
+            title={t('board.ask.toolHint')}
+          >
+            <LassoSelect size={15} aria-hidden="true" />
+            {t('board.ask.tool')}
+          </button>
+        )}
         <button
           type="button"
           className={cx('btn', penMode && 'btn--accent')}
           aria-pressed={penMode}
           onClick={() => {
-            set({ penMode: !penMode });
+            set(penMode ? { penMode: false } : { penMode: true, askMode: false });
           }}
           title={t('board.penHint')}
         >
@@ -276,6 +303,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
       <div className="board__area">
         <BoardSheet />
         {!lesson && <p className="board__empty">{t('board.empty')}</p>}
+        <SelectionBar />
       </div>
 
       {(lesson || status === 'preparing') && (
@@ -452,6 +480,8 @@ function BoardSheet() {
   const run = useBoardStore((s) => s.run);
   const follow = useBoardStore((s) => s.follow);
   const penMode = useBoardStore((s) => s.penMode);
+  const askMode = useBoardStore((s) => s.askMode);
+  const selection = useBoardStore((s) => s.selection);
   const strokes = useBoardStore((s) => s.strokes);
   const status = useBoardStore((s) => s.status);
   const height = layout.faces[face]?.height ?? 700;
@@ -463,20 +493,37 @@ function BoardSheet() {
     pen.run === run &&
     (status === 'playing' || status === 'paused');
 
-  /** The learner's stroke being drawn, on the face where it began (null when not drawing). */
-  const drawing = useRef<{ face: number; points: [number, number][] } | null>(null);
-  const [live, setLive] = useState<{ face: number; points: [number, number][] } | null>(null);
+  /**
+   * The learner's stroke being drawn, on the face where it began (null when not drawing): with
+   * "Bút của em" (`pen`) or "Khoanh để hỏi" (`ask`, a selection, never kept as ink).
+   */
+  const drawing = useRef<LiveStroke | null>(null);
+  const [live, setLive] = useState<LiveStroke | null>(null);
   const stroking = live !== null;
-  /** Ends the learner's stroke: kept on the face it was drawn on (a dot alone is dropped). */
-  const endStroke = () => {
+  /**
+   * Ends the learner's stroke. A pen stroke is kept on the face it was drawn on (a dot alone is
+   * dropped); a circling stroke becomes the selection (a tap too). `cancelled`: the browser took
+   * the pointer (a touch became a scroll…): a circling stroke is then dropped, never half-read.
+   */
+  const endStroke = (cancelled = false) => {
     const stroke = drawing.current;
     drawing.current = null;
     setLive(null);
-    if (stroke && stroke.points.length > 1) useBoardStore.getState().addStroke(stroke);
+    if (!stroke) return;
+    const store = useBoardStore.getState();
+    if (stroke.mode === 'ask') {
+      if (!cancelled) {
+        const locale = useSettingsStore.getState().locale;
+        store.set({ selection: hitTest(store, stroke.face, stroke.points, locale) });
+      }
+      return;
+    }
+    if (stroke.points.length > 1) store.addStroke({ face: stroke.face, points: stroke.points });
   };
-  // A stroke never moves to another face: when the face changes mid-stroke, it ends where it is.
+  // A stroke never moves to another face: when the face changes mid-stroke, it ends where it is
+  // (a circling stroke is dropped: it would read another face's writing).
   useEffect(() => {
-    if (drawing.current && drawing.current.face !== face) endStroke();
+    if (drawing.current && drawing.current.face !== face) endStroke(drawing.current.mode === 'ask');
   }, [face]);
 
   /**
@@ -583,8 +630,9 @@ function BoardSheet() {
     const learner = (e: Event) => {
       if (e.type === 'pointerdown' && e.target !== node) return;
       if (e instanceof KeyboardEvent && !SCROLL_KEYS.has(e.key)) return;
+      const s = useBoardStore.getState();
       const drawing =
-        useBoardStore.getState().penMode &&
+        (s.penMode || s.askMode) &&
         e.target instanceof Element &&
         e.target.closest('.board__student') !== null;
       if (drawing) return;
@@ -696,14 +744,18 @@ function BoardSheet() {
       aimCamera(node, aimed, { left: Math.max(0, x - width * 0.3) });
   }, [penX, penY, focus, zoom, status, follow, stroking]);
 
+  // The pen area is inside the scaled, scrolled sheet: its screen rectangle moves with the scroll.
   const toBoard = (e: PointerEvent<SVGSVGElement>): [number, number] => {
     const r = e.currentTarget.getBoundingClientRect();
-    return [(e.clientX - r.left) / scale, (e.clientY - r.top) / scale];
+    return toBoardPoint(e.clientX, e.clientY, { left: r.left, top: r.top, fit: fit ?? 0.6, zoom });
   };
+  const drawingTool = penMode || askMode;
+  const liveAsk = live && live.mode === 'ask' && live.face === face ? live.points : null;
+  const shownSelection = selection && selection.face === face ? selection : null;
 
   return (
     <>
-      <div className="board__viewport" ref={viewport} data-pen={penMode || undefined}>
+      <div className="board__viewport" ref={viewport} data-pen={drawingTool || undefined}>
         <div className="board__scaler" style={{ width: BOARD_W * scale, height: height * scale }}>
           <div
             className="board__sheet"
@@ -735,38 +787,73 @@ function BoardSheet() {
                   <MarkPath key={m.key} mark={m} />
                 ))}
             </svg>
+            {/* What the learner circled: the dashed loop and an outline around each part read. */}
+            <svg className="board__selection" width={BOARD_W} height={height} aria-hidden="true">
+              {shownSelection &&
+                (shownSelection.shape === 'closed' ? (
+                  <polygon className="board__lasso" points={pointsAttr(shownSelection.points)} />
+                ) : shownSelection.shape === 'open' ? (
+                  <polyline className="board__lasso" points={pointsAttr(shownSelection.points)} />
+                ) : null)}
+              {shownSelection?.hits.flatMap((h) =>
+                h.boxes.map((b, i) => (
+                  <rect
+                    key={`${h.id}-${String(i)}`}
+                    className="board__hit"
+                    x={b.x - 4}
+                    y={b.y - 4}
+                    width={b.w + 8}
+                    height={b.h + 8}
+                    rx={6}
+                  />
+                )),
+              )}
+              {liveAsk && <polyline className="board__lasso" points={pointsAttr(liveAsk)} />}
+            </svg>
             <svg
               className="board__student"
               width={BOARD_W}
               height={height}
-              role={penMode ? 'img' : undefined}
-              aria-label={penMode ? t('board.penArea') : undefined}
-              aria-hidden={penMode ? undefined : true}
+              role={drawingTool ? 'img' : undefined}
+              aria-label={askMode ? t('board.ask.area') : penMode ? t('board.penArea') : undefined}
+              aria-hidden={drawingTool ? undefined : true}
               onPointerDown={(e) => {
-                if (!penMode) return;
+                if (!drawingTool) return;
                 e.currentTarget.setPointerCapture(e.pointerId);
+                if (askMode) {
+                  // The teacher stops to listen (the same pause as "Tạm dừng"); a new loop
+                  // replaces what was circled before.
+                  pauseForAsk();
+                  useBoardStore.getState().set({ selection: null });
+                }
                 // The stroke belongs to the face it begins on.
-                drawing.current = { face, points: [toBoard(e)] };
+                drawing.current = { face, points: [toBoard(e)], mode: askMode ? 'ask' : 'pen' };
                 setLive(drawing.current);
               }}
               onPointerMove={(e) => {
                 // A move without a pressed button is not drawing (the press ended elsewhere).
                 if (!drawing.current || e.buttons === 0) return;
                 drawing.current = {
-                  face: drawing.current.face,
+                  ...drawing.current,
                   points: [...drawing.current.points, toBoard(e)],
                 };
                 setLive(drawing.current);
               }}
-              onPointerUp={endStroke}
-              onPointerCancel={endStroke}
-              onLostPointerCapture={endStroke}
+              onPointerUp={() => {
+                endStroke();
+              }}
+              onPointerCancel={() => {
+                endStroke(true);
+              }}
+              onLostPointerCapture={() => {
+                endStroke(true);
+              }}
             >
               {[
                 ...strokes.filter((s) => s.face === face).map((s) => s.points),
-                ...(live && live.face === face ? [live.points] : []),
+                ...(live && live.mode === 'pen' && live.face === face ? [live.points] : []),
               ].map((pts, i) => (
-                <polyline key={i} points={pts.map((p) => p.join(',')).join(' ')} />
+                <polyline key={i} points={pointsAttr(pts)} />
               ))}
             </svg>
             {showPen && (
@@ -789,6 +876,18 @@ function BoardSheet() {
       />
     </>
   );
+}
+
+/** A stroke the learner is drawing: with the pen, or circling to ask. */
+interface LiveStroke {
+  face: number;
+  points: [number, number][];
+  mode: 'pen' | 'ask';
+}
+
+/** SVG `points` of a stroke (board units). */
+function pointsAttr(points: readonly Point[]): string {
+  return points.map((p) => p.join(',')).join(' ');
 }
 
 const ROLE_CLASS: Record<TextElement['role'], string> = {
@@ -895,6 +994,7 @@ function DrawEl({ id }: { id: string }) {
     <div
       className="board__el board__drawing"
       style={{ left: e.x, top: e.y, width: e.w, height: e.h }}
+      data-draw-id={e.id}
     >
       <BoardDrawing element={e} shown={shown} />
     </div>
