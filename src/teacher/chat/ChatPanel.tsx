@@ -6,6 +6,7 @@ import {
   CircleAlert,
   CircleHelp,
   ClipboardList,
+  RotateCcw,
   FlaskConical,
   Globe,
   LoaderCircle,
@@ -24,7 +25,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
-import { useChatStore, type ChatMessageRecord } from './chatStore';
+import { useChatStore, type ChatEngine, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
 import { boardAnswerText } from '@/teacher/board/lesson';
 import { useBoardStore } from '@/teacher/board/boardStore';
@@ -38,7 +39,7 @@ import {
 import { toast } from '@/ui/toast';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
-import { AnswerStopped, askTeacher } from './chatService';
+import { AnswerStopped, TeacherError, askTeacher } from './chatService';
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
@@ -46,10 +47,27 @@ import { useT, type MessageKey } from '@/app/i18n';
 import { gemmaReady } from '@/ai/gemmaTransport';
 import { webGPUStatus } from '@/ai/webGemma';
 import { AiContentBar } from '@/safety/AiContentBar';
-import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
+import { runtimeName } from '@/app/ai/localRuntime';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { openTopic, useActiveTopic } from '@/app/topics';
 import { latestTopic } from './topicLink';
 import { chipNumbers } from './provenance';
+
+/**
+ * What went wrong with the last answer: the learner's sentence, the Settings page that helps,
+ * and "Hỏi lại" when asking again may work (one click, one new request — never automatic).
+ */
+interface ChatFailure {
+  text: string;
+  section: SettingsSection | null;
+  /** What "Hỏi lại" asks again (null: asking again would not help). */
+  retry: RetryAsk | null;
+}
+/** A failed question (it has no answer) or a failed "Viết tiếp" of an answer. */
+type RetryAsk =
+  | { kind: 'ask'; id: string; shown: string; prompt: string | undefined }
+  | { kind: 'continue'; id: string };
 
 export function ChatPanel({
   compact = false,
@@ -69,8 +87,11 @@ export function ChatPanel({
   const provider = useAiStore((s) => s.provider);
   const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const chat = useChatStore();
-  // The engine that will really answer (a pre-selected Gemma without a model → the API).
-  const engine = useAnalysisEngine() === 'cloud' ? 'cloud' : 'gemma';
+  // The engine that will really answer (a pre-selected Gemma without a model → the API; a chosen
+  // local runtime stays local, also before one is picked).
+  const chosenEngine = useAnalysisEngine();
+  const engine = engineKind(chosenEngine);
+  const localSelection = useLocalAiStore((s) => s.selected);
   const voiceEnabled = useVoiceStore((s) => s.enabled);
   const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
@@ -94,7 +115,7 @@ export function ChatPanel({
     setLocalBusy(value);
     useChatStore.setState({ answering: value });
   };
-  const [error, setError] = useState('');
+  const [error, setError] = useState<ChatFailure | null>(null);
   /** The on-device answer as it is being written (null when nothing is streaming). */
   const [streaming, setStreaming] = useState<string | null>(null);
   /** Latest cloud-key lookup, tagged so a stale answer never overrides a newer engine/provider. */
@@ -234,6 +255,13 @@ export function ChatPanel({
     return stopped;
   };
 
+  /** The failure to show; "Hỏi lại" is offered only when asking again may work. */
+  const failureOf = (e: unknown, again: RetryAsk): ChatFailure => ({
+    text: e instanceof Error ? e.message : String(e),
+    section: e instanceof TeacherError ? e.section : null,
+    retry: e instanceof TeacherError && e.retry ? again : null,
+  });
+
   /**
    * Sends a question. `prompt` is what the AI receives when it differs from what the learner
    * sees (the quick buttons show "Chậm hơn" but send a full instruction).
@@ -245,14 +273,16 @@ export function ChatPanel({
     // take over its "Dừng", so the first one could no longer be stopped.
     if (!question || busy || useChatStore.getState().answering) return;
     quietBeforeAsking();
-    setError('');
+    setError(null);
     const userMessage: ChatMessageRecord = {
       id: crypto.randomUUID(),
       role: 'user',
       content: shown,
       ...(prompt ? { prompt: question } : {}),
     };
-    const prior = chat.messages;
+    // Read now, not from the last render: "Hỏi lại" may run right after taking the failed
+    // question back.
+    const prior = useChatStore.getState().messages;
     chat.addMessage(userMessage);
     setDraft('');
     setBusy(true);
@@ -289,7 +319,9 @@ export function ChatPanel({
       endAnswer(answer);
       if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
     } catch (e) {
-      if (!endAnswer(answer, e)) setError(e instanceof Error ? e.message : String(e));
+      if (!endAnswer(answer, e)) {
+        setError(failureOf(e, { kind: 'ask', id: userMessage.id, shown, prompt }));
+      }
     } finally {
       setStreaming(null);
       setBusy(false);
@@ -301,12 +333,13 @@ export function ChatPanel({
   const continueAnswer = async (message: ChatMessageRecord) => {
     if (busy || useChatStore.getState().answering) return;
     quietBeforeAsking();
-    setError('');
+    setError(null);
     setBusy(true);
     const answer = startAnswer();
     const controller = answer.controller;
     try {
-      const upto = chat.messages.slice(0, chat.messages.indexOf(message) + 1);
+      const messages = useChatStore.getState().messages;
+      const upto = messages.slice(0, messages.findIndex((m) => m.id === message.id) + 1);
       const result = await askTeacher(CONTINUE_PROMPT[locale], locale, upto, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: false,
@@ -326,10 +359,29 @@ export function ChatPanel({
       endAnswer(answer);
       if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
     } catch (e) {
-      if (!endAnswer(answer, e)) setError(e instanceof Error ? e.message : String(e));
+      if (!endAnswer(answer, e)) {
+        setError(failureOf(e, { kind: 'continue', id: message.id }));
+      }
     } finally {
       setBusy(false);
     }
+  };
+
+  /**
+   * "Hỏi lại" (the learner's click; never automatic): a failed question, which has no answer, is
+   * taken back and asked once more, so the conversation does not show it twice; a failed
+   * "Viết tiếp" is tried once more.
+   */
+  const askAgain = (retry: RetryAsk) => {
+    const { messages } = useChatStore.getState();
+    if (retry.kind === 'continue') {
+      const message = messages.find((m) => m.id === retry.id);
+      if (message) void continueAnswer(message);
+      return;
+    }
+    if (messages.at(-1)?.id === retry.id)
+      useChatStore.setState({ messages: messages.slice(0, -1) });
+    void submit(retry.shown, retry.prompt);
   };
   const lastMessage = chat.messages[chat.messages.length - 1];
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
@@ -369,15 +421,18 @@ export function ChatPanel({
   const gemmaUnavailable = engine === 'gemma' && gemmaReadyState === false;
   const verifierMissing =
     chat.thinkEnabled && verifierLookup?.id === chat.verifierProvider && !verifierLookup.available;
-  const notice: { text: string; section: SettingsSection } | null = noApi
-    ? { text: t('chat.noApi'), section: 'ai' }
-    : noWebGpu
-      ? { text: t('chat.noWebgpuNotice'), section: 'local' }
-      : gemmaUnavailable
-        ? { text: t('chat.gemmaMissingNotice'), section: 'local' }
-        : verifierMissing
-          ? { text: t('chat.thinkNoVerifier'), section: 'teacher' }
-          : null;
+  const localMissing = chosenEngine === 'local-missing';
+  const notice: { text: string; section: SettingsSection } | null = localMissing
+    ? { text: t('chat.localMissingNotice'), section: 'runtimes' }
+    : noApi
+      ? { text: t('chat.noApi'), section: 'ai' }
+      : noWebGpu
+        ? { text: t('chat.noWebgpuNotice'), section: 'local' }
+        : gemmaUnavailable
+          ? { text: t('chat.gemmaMissingNotice'), section: 'local' }
+          : verifierMissing
+            ? { text: t('chat.thinkNoVerifier'), section: 'teacher' }
+            : null;
   // Where the next question goes, from the current settings (nothing is guessed).
   const providerName = (p: string) => t(`settings.aiProviders.${p}` as MessageKey);
   const targets = [
@@ -414,11 +469,12 @@ export function ChatPanel({
               aria-label={t('chat.engineLabel')}
               value={engine}
               onChange={(e) => {
-                chat.setEngine(e.target.value as 'cloud' | 'gemma');
+                chat.setEngine(e.target.value as ChatEngine);
               }}
             >
               <option value="cloud">{t('chat.cloud')}</option>
               <option value="gemma">{t('chat.gemma')}</option>
+              <option value="local">{t('chat.local')}</option>
             </select>
           </label>
           {speechSupported() && (
@@ -531,6 +587,15 @@ export function ChatPanel({
       {!notice && targets.length === 0 && engine === 'gemma' && gemmaReadyState === true && (
         <p className="chat-panel__local-note">
           <ShieldCheck size={14} /> {t('chat.localOnly')}
+        </p>
+      )}
+      {!notice && targets.length === 0 && engine === 'local' && localSelection && (
+        <p className="chat-panel__local-note">
+          <ShieldCheck size={14} />{' '}
+          {t('chat.localOnlyRuntime', {
+            name: runtimeName(locale, localSelection.kind),
+            address: localSelection.baseUrl.replace(/^http:\/\//, ''),
+          })}
         </p>
       )}
       {!notice && targets.length > 0 && (
@@ -699,7 +764,34 @@ export function ChatPanel({
         {error && (
           <div className="chat-panel__error" role="alert">
             <CircleAlert size={15} />
-            {error}
+            <span className="chat-panel__error-text">{error.text}</span>
+            {(error.retry || error.section) && (
+              <span className="chat-panel__error-actions">
+                {error.retry && (
+                  <button
+                    type="button"
+                    className="btn btn--small"
+                    disabled={pending}
+                    onClick={() => {
+                      if (error.retry) askAgain(error.retry);
+                    }}
+                  >
+                    <RotateCcw size={14} aria-hidden="true" /> {t('chat.retry')}
+                  </button>
+                )}
+                {error.section && (
+                  <button
+                    type="button"
+                    className="btn btn--small"
+                    onClick={() => {
+                      if (error.section) openSettingsAt(error.section);
+                    }}
+                  >
+                    <Settings2 size={14} aria-hidden="true" /> {t('chat.settings')}
+                  </button>
+                )}
+              </span>
+            )}
           </div>
         )}
         {stopped && !pending && !error && (

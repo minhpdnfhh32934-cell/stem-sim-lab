@@ -1,7 +1,8 @@
 import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
 import { lazy, Suspense, useEffect, useId } from 'react';
 import { useT } from '@/app/i18n';
-import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { useChatStore, type ChatMessageRecord } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
@@ -42,8 +43,9 @@ export default function TeacherScreen() {
   const t = useT();
   const layout = useTeacherStore((s) => s.layout);
   const setLayout = useTeacherStore((s) => s.setLayout);
-  const engine = useAnalysisEngine() === 'cloud' ? 'cloud' : 'gemma';
+  const engine = engineKind(useAnalysisEngine());
   const gemmaModel = useChatStore((s) => s.gemmaModel);
+  const localLabel = useLocalAiStore((s) => s.selected?.label ?? null);
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
@@ -155,7 +157,11 @@ export default function TeacherScreen() {
           </p>
           <span className="teacher__engine-pill">
             <span className="teacher__engine-dot" />
-            {engine === 'gemma' ? t('chat.model', { model: gemmaModel }) : t('chat.cloud')}
+            {engine === 'gemma'
+              ? t('chat.model', { model: gemmaModel })
+              : engine === 'local'
+                ? (localLabel ?? t('chat.local'))
+                : t('chat.cloud')}
           </span>
         </aside>
 

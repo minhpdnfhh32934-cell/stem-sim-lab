@@ -507,6 +507,23 @@
   color: var(--danger);
   font-size: var(--text-sm);
 }
+.chat-panel__error {
+  flex-wrap: wrap;
+}
+.chat-panel__error-text {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+/* "Hỏi lại" and "Cài đặt" under a failed answer (one click, one request). */
+.chat-panel__error-actions {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chat-panel__error-actions .btn {
+  min-height: var(--target);
+}
 .chat-panel__composer {
   margin: 0 12px;
   padding: 8px;

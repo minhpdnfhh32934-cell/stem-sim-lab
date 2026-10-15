@@ -6,8 +6,13 @@ import {
   forgetGpuFault,
   noteGpuFault,
 } from '@/ai/gpuSafety';
+import { setLocalClientForTests } from '@/ai/local/client';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { UNVERIFIED, type LocalChatResponse, type LocalRuntimeClient } from '@/ai/local/types';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
-import type { ChatRequest } from '@/ai/types';
+import { AiError, type ChatRequest } from '@/ai/types';
+import type { AnalysisEngine } from '@/app/ai/engineChoice';
+import { translate } from '@/app/i18n';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { estimateTokens } from './memory';
 
@@ -39,7 +44,9 @@ vi.mock('@/ai/gemmaTransport', () => ({
     });
   },
 }));
-vi.mock('@/app/ai/engineChoice', () => ({ analysisEngine: () => Promise.resolve('gemma') }));
+/** The engine the app picks (Settings and the chat store decide it in the app). */
+const picked = { current: 'gemma' as AnalysisEngine };
+vi.mock('@/app/ai/engineChoice', () => ({ analysisEngine: () => Promise.resolve(picked.current) }));
 // The desktop card list (src-tauri/src/gpu.rs) is replaced by a fake: no real GPU is touched.
 const desktop = { status: null as GpuStatus | null };
 vi.mock('@/ai/gpu', async (importOriginal) => {
@@ -53,7 +60,8 @@ vi.mock('@/ai/gpu', async (importOriginal) => {
   };
 });
 
-const { askTeacher, contextPrompt, gemmaErrorKey } = await import('./chatService');
+const { AnswerStopped, TeacherError, askTeacher, contextPrompt, gemmaErrorKey } =
+  await import('./chatService');
 const { loadGpuStatus, useGpuStore } = await import('@/ai/gpu');
 
 function transport(calls: ChatRequest[]): LlmTransport {
@@ -293,5 +301,230 @@ describe('a quick button after the teacher’s check question (final review)', (
       think: false,
     });
     expect(gemmaCalls.at(-1)?.system).toContain('Không khen ngay');
+  });
+});
+
+describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
+  const calls: ChatRequest[] = [];
+  const usage = vi.fn(() => Promise.resolve({ count: 0 }));
+  const local = {
+    detect: vi.fn<LocalRuntimeClient['detect']>(),
+    probe: vi.fn<LocalRuntimeClient['probe']>(),
+    models: vi.fn<LocalRuntimeClient['models']>(),
+    modelInfo: vi.fn<LocalRuntimeClient['modelInfo']>(),
+    test: vi.fn<LocalRuntimeClient['test']>(),
+    chat: vi.fn<LocalRuntimeClient['chat']>(),
+  };
+  const selection = {
+    kind: 'ollama' as const,
+    baseUrl: 'http://127.0.0.1:11434',
+    model: 'qwen3:8b',
+    label: 'Ollama · qwen3:8b',
+  };
+  const answer = (content: string): LocalChatResponse => ({
+    content,
+    model: 'qwen3:8b',
+    runtime: 'ollama',
+    durationMs: 5,
+    firstPieceMs: 1,
+    truncated: false,
+    streamed: true,
+  });
+  const ask = (question: string, extra: Partial<Parameters<typeof askTeacher>[3]> = {}) =>
+    askTeacher(question, 'vi', [], { includeScreen: false, think: false, ...extra });
+
+  beforeEach(() => {
+    calls.length = 0;
+    gemmaCalls.length = 0;
+    failure.current = null;
+    picked.current = 'local';
+    usage.mockClear();
+    for (const fn of Object.values(local)) fn.mockReset();
+    useChatStore.setState({
+      engine: 'local',
+      engineChosen: true,
+      messages: [],
+      summary: null,
+      webLookup: false,
+      memoryLength: 'medium',
+      verifierProvider: 'claude',
+      verifierModel: '',
+    });
+    useLocalAiStore.setState({ selected: selection, checks: {}, userEndpoints: [] });
+    setLocalClientForTests(local);
+    const cloud = transport(calls) as unknown as { usage: unknown };
+    cloud.usage = usage;
+    setTransportForTests(cloud as unknown as LlmTransport);
+  });
+  afterEach(() => {
+    picked.current = 'gemma';
+    setLocalClientForTests(null);
+    setTransportForTests(null);
+    useLocalAiStore.setState({ selected: null, checks: {} });
+  });
+
+  it('answers in pieces through the same filter, named after the runtime, all on this computer', async () => {
+    local.chat.mockImplementation((_req, opts) => {
+      opts?.onPartial?.('Rơi tự do ');
+      opts?.onPartial?.('Rơi tự do <thi');
+      opts?.onPartial?.('Rơi tự do <think>nháp 3 kg</think> là chuyển động.');
+      return Promise.resolve(answer('Rơi tự do là chuyển động chỉ chịu trọng lực.'));
+    });
+    const seen: string[] = [];
+    const question = 'Rơi tự do là gì?';
+    const reply = await ask(question, { onPartial: (t) => seen.push(t) });
+    expect(seen[0]).toBe('Rơi tự do ');
+    // Hidden reasoning is never shown, not even while it is being written.
+    expect(seen.filter((t) => /<|think|nháp|3 kg/u.test(t))).toEqual([]);
+    expect(reply.content).toBe('Rơi tự do là chuyển động chỉ chịu trọng lực.');
+    expect(reply.metadata.model).toBe('Ollama · qwen3:8b');
+    expect(local.chat).toHaveBeenCalledTimes(1);
+    const [req] = local.chat.mock.calls[0] ?? [];
+    // Unknown context ("Chưa xác minh"): the small on-device budget and prompt.
+    expect(req).toMatchObject({
+      kind: 'ollama',
+      baseUrl: selection.baseUrl,
+      model: 'qwen3:8b',
+      maxTokens: 1024,
+      contextLength: 4000 + 1024 + 512,
+    });
+    expect(req?.system).toBe((await contextPrompt(question, 'vi', false, false, 'compact')).system);
+    // Nothing went online and nothing counted against the daily cap.
+    expect(calls).toHaveLength(0);
+    expect(usage).not.toHaveBeenCalled();
+    expect(gemmaCalls).toHaveLength(0);
+  });
+
+  it('a model with a large context seen on this computer gets the full prompt and answer', async () => {
+    useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, {
+      model: 'qwen3:8b',
+      contextLength: 40960,
+      vision: 'no',
+      thinking: 'yes',
+      loaded: null,
+      remote: false,
+      capabilities: { ...UNVERIFIED, listModels: 'yes', contextLength: 'yes', vision: 'no' },
+      declared: UNVERIFIED,
+    });
+    local.chat.mockResolvedValue(answer('Định luật II: a = F/m.'));
+    const question = 'Định luật II Newton là gì?';
+    await ask(question);
+    const [req] = local.chat.mock.calls[0] ?? [];
+    expect(req?.maxTokens).toBe(4096);
+    // The window this request needs, not the model's whole 40k one.
+    expect(req?.contextLength).toBe(12000 + 4096 + 512);
+    expect(req?.system).toBe((await contextPrompt(question, 'vi', false, false, 'full')).system);
+    // A small window keeps the compact prompt and never asks for more than the model has.
+    local.chat.mockClear();
+    useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, {
+      model: 'qwen3:8b',
+      contextLength: 4096,
+      vision: 'no',
+      thinking: 'yes',
+      loaded: null,
+      remote: false,
+      capabilities: { ...UNVERIFIED, contextLength: 'yes' },
+      declared: UNVERIFIED,
+    });
+    await ask(question);
+    const [small] = local.chat.mock.calls[0] ?? [];
+    expect(small?.contextLength).toBeLessThanOrEqual(4096);
+    expect(small?.system).toBe(
+      (await contextPrompt(question, 'vi', false, false, 'compact')).system,
+    );
+    expect(calls).toHaveLength(0);
+  });
+
+  it.each([
+    [new AiError('network', 'local-unreachable: connection refused'), 'localDown', true],
+    [new AiError('timeout', 'local-stalled: first-piece 120000 ms'), 'localStalled', true],
+    [
+      new AiError('http', 'model-missing: 404: model "qwen3:8b" not found'),
+      'localModelMissing',
+      true,
+    ],
+    [new AiError('http', 'loading: 503: Loading model'), 'localLoading', true],
+    [new AiError('http', 'needs-auth: 401'), 'localAuth', false],
+    [new AiError('notAllowed', 'remote-model'), 'localRemote', false],
+    [new AiError('badResponse', 'not-runtime'), 'localNotRuntime', false],
+    [new AiError('unavailable', 'needs-app-update'), 'localUpdate', false],
+    [
+      new AiError('http', 'local-failed: 400: the request exceeds the available context size'),
+      'localContext',
+      false,
+    ],
+    // A busy runtime is not a provider's quota: no fallback, one request only.
+    [new AiError('http', 'local-failed: 429: busy'), 'localFailed', true],
+  ] as const)('%s → "%s", never retried, nothing sent online', async (error, key, retry) => {
+    local.chat.mockRejectedValue(error);
+    const failed = ask('Lực ma sát là gì?');
+    await expect(failed).rejects.toBeInstanceOf(TeacherError);
+    await expect(failed).rejects.toThrow(translate('vi', `chat.errors.${key}`, { name: 'Ollama' }));
+    await expect(failed).rejects.toMatchObject({ retry });
+    expect(local.chat).toHaveBeenCalledTimes(1);
+    expect(calls).toHaveLength(0);
+    expect(usage).not.toHaveBeenCalled();
+  });
+
+  it('no runtime and model chosen yet: nothing is sent anywhere, not even to Wikipedia', async () => {
+    picked.current = 'local-missing';
+    useLocalAiStore.setState({ selected: null });
+    useChatStore.setState({ webLookup: true });
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const failed = ask('Lực ma sát là gì?');
+    await expect(failed).rejects.toThrow(translate('vi', 'chat.errors.localNotSelected'));
+    await expect(failed).rejects.toMatchObject({ section: 'runtimes', retry: false });
+    expect(local.chat).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(calls).toHaveLength(0);
+    fetchSpy.mockRestore();
+  });
+
+  it('Think: the draft is written on this computer, only the review goes online (no fallback)', async () => {
+    local.chat.mockResolvedValue(answer('Bản nháp: lực ma sát cản chuyển động.'));
+    const reply = await ask('Lực ma sát là gì?', { think: true, onPartial: () => undefined });
+    expect(local.chat).toHaveBeenCalledTimes(1);
+    // The draft is not shown while it is written: it is reviewed first.
+    expect(local.chat.mock.calls[0]?.[1]?.onPartial).toBeUndefined();
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toMatchObject({ provider: 'claude', noFallback: true });
+    expect(calls[0]?.messages.at(-1)?.content).toContain('lực ma sát cản chuyển động');
+    expect(reply.metadata.model).toBe('Ollama · qwen3:8b');
+    expect(reply.metadata.checkedBy).toMatch(/^claude · /);
+  });
+
+  it('takes back streamed text as soon as a piece is unsafe, and blocks the answer', async () => {
+    local.chat.mockImplementation((_req, opts) => {
+      opts?.onPartial?.('Bài này ');
+      opts?.onPartial?.('Bài này gọi số 0912345678 ');
+      return Promise.resolve(answer('Bài này gọi số 0912345678 để nhận lời giải'));
+    });
+    const seen: string[] = [];
+    await expect(ask('Giải giúp em', { onPartial: (t) => seen.push(t) })).rejects.toThrow(
+      translate('vi', 'chat.errors.filtered'),
+    );
+    expect(seen.at(-1)).toBe('');
+    expect(seen.filter((t) => t.includes('0912345678'))).toEqual([]);
+    expect(calls).toHaveLength(0);
+  });
+
+  it('"Dừng" stops the request to the runtime and nothing else is asked', async () => {
+    local.chat.mockImplementation(
+      (_req, opts) =>
+        new Promise((_resolve, reject) => {
+          opts?.signal?.addEventListener('abort', () => {
+            reject(new AiError('cancelled', 'x'));
+          });
+        }),
+    );
+    const controller = new AbortController();
+    const answerP = ask('Lực ma sát là gì?', { signal: controller.signal });
+    await vi.waitFor(() => {
+      expect(local.chat).toHaveBeenCalledTimes(1);
+    });
+    controller.abort();
+    await expect(answerP).rejects.toBeInstanceOf(AnswerStopped);
+    expect(local.chat.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+    expect(calls).toHaveLength(0);
   });
 });

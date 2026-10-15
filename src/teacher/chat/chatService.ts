@@ -17,6 +17,11 @@ import { currentSafety } from '@/safety/safetyStore';
 import { logIncident } from '@/safety/safetyStore';
 import type { ChatMessage, Provider } from '@/ai/types';
 import { analysisEngine } from '@/app/ai/engineChoice';
+import { localFailure, localFailureText, localModelLabel } from '@/app/ai/localRuntime';
+import type { SettingsSection } from '@/app/workspaceStore';
+import { getLocalClient } from '@/ai/local/client';
+import { checkFor, useLocalAiStore } from '@/ai/local/localAiStore';
+import type { LocalSelection } from '@/ai/local/types';
 import { useProfileStore, type Level } from '@/app/learner/profileStore';
 import { screenContext } from './context';
 import { bestSentences, fetchWebKnowledge, searchKnowledge, unambiguousNote } from './knowledge';
@@ -33,9 +38,11 @@ import {
 import { questionBefore } from './topicLink';
 import { useChatStore, type ChatMessageRecord, type ChatSummary } from './chatStore';
 import {
+  FULL_PROMPT_CONTEXT,
   contextBudget,
   estimateTokens,
   fitHistory,
+  localContextWindow,
   sentText,
   summaryBlock,
   summaryRequest,
@@ -106,6 +113,22 @@ export interface ReplyMetadata {
   missingData: boolean;
   /** Values in the answer that nobody gave the AI (provenance.ts), as written: "50 km". */
   unverifiedNumbers: string[];
+}
+
+/**
+ * An answer that could not be made, in the learner's words, with the Settings page that helps and
+ * whether asking again (the learner's own click, never automatic) may work.
+ */
+export class TeacherError extends Error {
+  constructor(
+    message: string,
+    readonly section: SettingsSection | null,
+    readonly retry: boolean,
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
+    this.name = 'TeacherError';
+  }
 }
 
 /** The learner pressed "Dừng": nothing went wrong, the answer was not wanted any more. */
@@ -735,6 +758,64 @@ async function localGemma(
   }
 }
 
+/**
+ * A runtime the learner runs on this computer (Ollama, LM Studio, llama.cpp…) answers. It streams
+ * through `onPartial` (provisional text, see `askTeacher`), is never retried, never counted
+ * against the daily cap and never replaced by an online provider: a failure is the runtime's own
+ * sentence (`localFailure`) with the Settings page that helps. "Dừng" closes the connection to the
+ * runtime (desktop: `ai_cancel` in Rust, browser: fetch abort).
+ */
+async function localRuntimeChat(
+  selection: LocalSelection,
+  system: string,
+  messages: ChatMessage[],
+  locale: Locale,
+  maxTokens: number,
+  contextLength: number,
+  onPartial?: (textSoFar: string) => void,
+  signal?: AbortSignal,
+): Promise<Answer> {
+  stopIfAsked(signal);
+  try {
+    const answer = await untilStopped(
+      getLocalClient().chat(
+        {
+          requestId: requestId(),
+          kind: selection.kind,
+          baseUrl: selection.baseUrl,
+          model: selection.model,
+          system,
+          messages,
+          temperature: 0.2,
+          maxTokens,
+          contextLength,
+        },
+        {
+          ...(onPartial ? { onPartial } : {}),
+          ...(signal ? { signal } : {}),
+        },
+      ),
+      signal,
+    );
+    return {
+      content: answer.content,
+      model: localModelLabel(locale, selection.kind, answer.model || selection.model),
+      truncated: answer.truncated,
+    };
+  } catch (e) {
+    if (e instanceof AnswerStopped || signal?.aborted) throw new AnswerStopped();
+    // The runtime's own words stay in the console for troubleshooting (never a key: there is none).
+    console.warn('[teacher-local]', e instanceof Error ? e.message : String(e));
+    const failure = localFailure(e);
+    throw new TeacherError(
+      localFailureText(locale, failure, selection.kind),
+      failure.section,
+      failure.retry,
+      { cause: e },
+    );
+  }
+}
+
 /** The learner's sentence for an on-device failure (it never silently goes online instead). */
 export function gemmaErrorKey(
   message: string,
@@ -890,14 +971,33 @@ export async function askTeacher(
     }
   }
   // Gemma answers when its model is ready or when the learner picked it (a missing model is
-  // then explained); the pre-selected default never blocks a learner who connected an API.
-  const engine = (await analysisEngine()) === 'cloud' ? 'cloud' : 'gemma';
-  const compact = engine === 'gemma';
+  // then explained); the pre-selected default never blocks a learner who connected an API. A
+  // runtime on this computer answers only when the learner chose it, and without a chosen
+  // runtime and model nothing is sent anywhere (never the API instead).
+  const chosen = await analysisEngine();
+  const engine =
+    chosen === 'cloud'
+      ? 'cloud'
+      : chosen === 'local' || chosen === 'local-missing'
+        ? 'local'
+        : 'gemma';
+  const selection = engine === 'local' ? useLocalAiStore.getState().selected : null;
+  if (engine === 'local' && (chosen === 'local-missing' || selection === null)) {
+    throw new TeacherError(translate(locale, 'chat.errors.localNotSelected'), 'runtimes', false);
+  }
+  // What was seen on this computer about the chosen local model (its context window), if checked.
+  const localContext = checkFor(useLocalAiStore.getState(), selection)?.contextLength ?? null;
+  // A local model with a known, large context gets the full prompt; otherwise the on-device one.
+  const compact =
+    engine === 'gemma' ||
+    (engine === 'local' && (localContext === null || localContext < FULL_PROMPT_CONTEXT));
   const gpu = useGpuStore.getState();
   // Gemma on an integrated card: a tight prompt and input budget (audit GPU-01). The card list
   // is read at start-up; if it is not there yet, read it now rather than guess "not integrated".
-  const gpuStatus = compact && !gpu.status ? await loadGpuStatus().catch(() => null) : gpu.status;
-  const integrated = compact && gemmaOnIntegrated(gpuStatus, gpu.gemmaInfo) === true;
+  // A runtime outside the app picks its own card: SimLab cannot tell (Settings says so).
+  const onGemma = engine === 'gemma';
+  const gpuStatus = onGemma && !gpu.status ? await loadGpuStatus().catch(() => null) : gpu.status;
+  const integrated = onGemma && gemmaOnIntegrated(gpuStatus, gpu.gemmaInfo) === true;
   const prompt = await contextPrompt(
     question,
     locale,
@@ -938,7 +1038,7 @@ export async function askTeacher(
   if (engine === 'cloud' && provider === 'off')
     throw new Error(translate(locale, 'chat.errors.cloudOff'));
 
-  const fullBudget = contextBudget(engine, chat.gemmaModel, chat.memoryLength);
+  const fullBudget = contextBudget(engine, chat.gemmaModel, chat.memoryLength, localContext);
   // Gemma's answer length is the learner's choice (Settings → GPU cho Gemma); a cut answer can
   // be continued with "Viết tiếp".
   const budget =
@@ -951,6 +1051,8 @@ export async function askTeacher(
           output: ANSWER_TOKENS[useGemmaPrefs.getState().answerLength],
         }
       : fullBudget;
+  // The window asked from a local runtime (Ollama `num_ctx`): what this request needs.
+  const window = localContextWindow(budget, localContext);
   const ask = (
     system: string,
     messages: ChatMessage[],
@@ -964,16 +1066,27 @@ export async function askTeacher(
           ...(signal ? { signal } : {}),
           ...(echo ? { echo } : {}),
         })
-      : cloudChat(
-          provider as Provider,
-          modelFor(ai.models, provider as Provider),
-          system,
-          messages,
-          locale,
-          maxTokens,
-          noFallback,
-          signal,
-        );
+      : engine === 'local' && selection
+        ? localRuntimeChat(
+            selection,
+            system,
+            messages,
+            locale,
+            maxTokens,
+            window,
+            onPartial,
+            signal,
+          )
+        : cloudChat(
+            provider as Provider,
+            modelFor(ai.models, provider as Provider),
+            system,
+            messages,
+            locale,
+            maxTokens,
+            noFallback,
+            signal,
+          );
 
   // History: the newest turns that fit what is left of the budget after the instruction,
   // excerpts, the summary (≤ SUMMARY_TOKENS) and the question.
@@ -1041,7 +1154,9 @@ export async function askTeacher(
       [{ role: 'user', content: REVIEW_REQUEST[locale](question, drafted.text) }],
       locale,
       budget.output,
-      false,
+      // A draft written on this computer is reviewed by the chosen reviewer only: never handed
+      // to a third (fallback) provider, as Settings → AI Teacher says.
+      engine !== 'cloud',
       signal,
     );
     raw = review.content;
