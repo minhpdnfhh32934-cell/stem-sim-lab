@@ -16,6 +16,7 @@ import {
   summaryBlock,
   summaryRequest,
   unsummarized,
+  withoutPictureAsks,
 } from './memory';
 
 function record(id: string, role: 'user' | 'assistant', content: string): ChatMessageRecord {
@@ -240,6 +241,28 @@ describe('a question about part of the board (item 2)', () => {
     expect(fitHistory(records, 10_000).messages.at(-1)?.content).toContain('«$s = ');
     const summary = summaryRequest('vi', null, records);
     expect(summary.messages[0]?.content).toContain('«$s = ');
+  });
+
+  it('a question about a picture and its answer can be left out; circled text never is', () => {
+    const picture: ChatMessageRecord = {
+      id: 'p',
+      role: 'user',
+      content: 'Hình này là gì?',
+      boardRef: { face: 0, ids: [], excerpt: '' },
+    };
+    const records = [
+      record('q1', 'user', 'Rơi tự do là gì?'),
+      record('a1', 'assistant', 'Là…'),
+      picture,
+      record('pa', 'assistant', 'Em vẽ một tam giác có ba nét.'),
+      asked,
+      record('a2', 'assistant', 'Đây là công thức quãng đường.'),
+      // A picture question that got no answer (it failed): only it goes.
+      { ...picture, id: 'p2' },
+      record('q3', 'user', 'Còn gia tốc?'),
+    ];
+    expect(withoutPictureAsks(records).map((r) => r.id)).toEqual(['q1', 'a1', 'q2', 'a2', 'q3']);
+    expect(withoutPictureAsks([])).toEqual([]);
   });
 });
 

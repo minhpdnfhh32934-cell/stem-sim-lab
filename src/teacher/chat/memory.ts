@@ -123,6 +123,27 @@ export function sentText(record: ChatMessageRecord, question?: string): string {
   return cleaned.trim() ? cleaned : EMPTY_ANSWER;
 }
 
+/**
+ * The conversation without its questions about a picture of the circled area (a `boardRef` with
+ * no text: a drawing without labels, the learner's handwriting) and the answer right after each:
+ * that answer is the on-device model's reading of the learner's strokes. They stay on this
+ * computer: never in anything sent online (an online engine's history, Think's reviewer), and never
+ * in the summary of older turns, which travels with later questions.
+ */
+export function withoutPictureAsks(records: readonly ChatMessageRecord[]): ChatMessageRecord[] {
+  const kept: ChatMessageRecord[] = [];
+  for (let i = 0; i < records.length; i++) {
+    const r = records[i];
+    if (!r) continue;
+    if (r.role === 'user' && r.boardRef !== undefined && r.boardRef.excerpt.trim() === '') {
+      if (records[i + 1]?.role === 'assistant') i++;
+      continue;
+    }
+    kept.push(r);
+  }
+  return kept;
+}
+
 /** The learner's question the record at `index` answers (the user turn before it), or ''. */
 export function questionBefore(records: readonly ChatMessageRecord[], index: number): string {
   for (let i = index - 1; i >= 0; i--) {

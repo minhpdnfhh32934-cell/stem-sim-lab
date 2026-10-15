@@ -289,6 +289,55 @@ describe('the circled part in the prompt', () => {
     expect(reply.metadata.unverifiedNumbers).toContain('45 m');
   });
 
+  it('a short question about the circled part is never graded as an answer to the check question', async () => {
+    picked.current = 'gemma';
+    useChatStore.setState({ engine: 'gemma', gemmaModel: 'gemma3-1b' });
+    const records: ChatMessageRecord[] = [
+      { id: 'q', role: 'user', content: 'Rơi tự do là gì?' },
+      {
+        id: 'a',
+        role: 'assistant',
+        content: 'Vật chỉ chịu trọng lực. Nếu thời gian rơi tăng gấp đôi thì s thế nào?',
+        unverifiedNumbers: [],
+        mode: 'board',
+      },
+    ];
+    await ask('g ở đây', { boardSelection: { selection: formula() } }, records);
+    const system = gemmaCalls[0]?.system ?? '';
+    expect(system).not.toContain('Học sinh đang trả lời câu hỏi kiểm tra');
+    expect(system).toContain('Học sinh hỏi về phần em khoanh trên bảng');
+    // The same words without a selection are still read as the learner's answer.
+    gemmaCalls.length = 0;
+    await ask('g ở đây', {}, records);
+    expect(gemmaCalls[0]?.system).toContain('Học sinh đang trả lời câu hỏi kiểm tra');
+  });
+
+  it('a question about the circled board is never looked up on Wikipedia', async () => {
+    const fetched: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) => {
+        fetched.push(url);
+        return Promise.resolve(new Response(JSON.stringify({ query: { search: [] } })));
+      }),
+    );
+    try {
+      const question = 'Thầy giải thích giúp em chỗ em vừa khoanh với ạ.';
+      await contextPrompt(question, 'vi', false, true, false, [], {
+        boardSelection: formula(),
+      });
+      await contextPrompt(question, 'vi', false, true, 'compact', [], {
+        boardSelection: selectionOf([hit('x1', 'Một câu không có trong thư viện nào cả')]),
+      });
+      expect(fetched.filter((u) => u.includes('wikipedia.org'))).toEqual([]);
+      // Without a selection the lookup the learner turned on still runs.
+      await contextPrompt(question, 'vi', false, true, false, []);
+      expect(fetched.some((u) => u.includes('wikipedia.org'))).toBe(true);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it('Think: the online reviewer reads the circled text the on-device draft read', async () => {
     picked.current = 'gemma';
     useChatStore.setState({ engine: 'gemma', thinkEnabled: true, verifierProvider: 'claude' });
@@ -342,6 +391,108 @@ describe('a picture of the circled area', () => {
       ask('Hình này là gì?', { boardSelection: { selection: picture(), image: PNG } }),
     ).rejects.toThrow(translate('vi', 'chat.errors.boardNoPicture'));
     expect(gemmaCalls).toHaveLength(0);
+  });
+
+  it('Think never sends the on-device reading of a picture online, and says it was not reviewed', async () => {
+    picked.current = 'gemma';
+    desktop.status = RTX;
+    useGpuStore.setState({ status: RTX, gemmaInfo: { vendor: 'nvidia', architecture: '' } });
+    useChatStore.setState({
+      engine: 'gemma',
+      gemmaModel: 'gemma4-e2b',
+      thinkEnabled: true,
+      verifierProvider: 'claude',
+    });
+    const reply = await ask('Hình này là gì?', {
+      think: true,
+      boardSelection: { selection: picture(), image: PNG },
+    });
+    // The picture went to E2B on this computer, and nothing at all went online: not the draft
+    // (E2B's description of the learner's strokes), not the question.
+    expect(gemmaCalls).toHaveLength(1);
+    expect(gemmaCalls[0]?.images).toHaveLength(1);
+    expect(calls).toHaveLength(0);
+    expect(reply.content).toBe('Đây là hình em vẽ.');
+    expect(reply.metadata.checkedBy).toBeUndefined();
+    expect(reply.metadata.reviewSkipped).toBe('picture');
+    // Without a reviewer's key the picture question is still answered (nothing to review).
+    gemmaCalls.length = 0;
+    setTransportForTests({ ...transport(calls), hasKey: () => Promise.resolve(false) });
+    const again = await ask('Hình này là gì?', {
+      think: true,
+      boardSelection: { selection: picture(), image: PNG },
+    });
+    expect(again.metadata.reviewSkipped).toBe('picture');
+    expect(calls).toHaveLength(0);
+    // The circled text (no picture) is still reviewed as before.
+    setTransportForTests(transport(calls));
+    const text = await ask('Chỗ này là gì?', {
+      think: true,
+      boardSelection: { selection: formula() },
+    });
+    expect(calls).toHaveLength(1);
+    expect(text.metadata.reviewSkipped).toBeUndefined();
+    expect(text.metadata.checkedBy).toBeDefined();
+  });
+
+  it('an earlier question about a picture, and its answer, never go online later', async () => {
+    const DESCRIBED = 'Em vẽ một tam giác có ba nét.';
+    const pictureTurn: ChatMessageRecord[] = [
+      {
+        id: 'pq',
+        role: 'user',
+        content: 'Hình này là gì?',
+        boardRef: { face: 0, ids: [], excerpt: '' },
+      },
+      { id: 'pa', role: 'assistant', content: DESCRIBED, unverifiedNumbers: [], mode: 'aside' },
+    ];
+    const records: ChatMessageRecord[] = [
+      { id: 'q1', role: 'user', content: 'Rơi tự do là gì?' },
+      { id: 'a1', role: 'assistant', content: 'Là chuyển động chỉ chịu trọng lực.' },
+      ...pictureTurn,
+    ];
+    // An online engine: the history goes without the picture turn.
+    await ask('Còn gia tốc thì sao?', {}, records);
+    expect(calls).toHaveLength(1);
+    const sent = JSON.stringify(calls);
+    expect(sent).toContain('Rơi tự do là gì?');
+    expect(sent).not.toContain('tam giác');
+    expect(sent).not.toContain('Hình này là gì?');
+    // Gemma on this computer keeps it (nothing goes online).
+    picked.current = 'gemma';
+    useChatStore.setState({ engine: 'gemma' });
+    calls.length = 0;
+    await ask('Còn gia tốc thì sao?', {}, records);
+    expect(JSON.stringify(gemmaCalls[0]?.messages)).toContain('tam giác');
+    // With Think the draft is reviewed online: the draft is written without it, and the reviewer
+    // never reads it.
+    gemmaCalls.length = 0;
+    useChatStore.setState({ thinkEnabled: true });
+    await ask('Còn gia tốc thì sao?', { think: true }, records);
+    expect(JSON.stringify(gemmaCalls)).not.toContain('tam giác');
+    expect(calls).toHaveLength(1);
+    expect(JSON.stringify(calls)).not.toContain('tam giác');
+    // The summary of older turns (it travels with later questions) never holds it either.
+    picked.current = 'cloud';
+    useChatStore.setState({ engine: 'cloud', thinkEnabled: false, summary: null });
+    calls.length = 0;
+    const long = (i: number): ChatMessageRecord => ({
+      id: `l${String(i)}`,
+      role: i % 2 === 0 ? 'user' : 'assistant',
+      content: `Đoạn ${String(i)}: ${'vật rơi tự do nhanh dần đều. '.repeat(140)}`,
+      ...(i % 2 === 0 ? {} : { unverifiedNumbers: [] }),
+    });
+    const longChat = [...pictureTurn, ...Array.from({ length: 12 }, (_, i) => long(i))];
+    await ask('Tóm lại là gì ạ?', {}, longChat);
+    expect(calls.length).toBeGreaterThanOrEqual(2);
+    expect(JSON.stringify(calls)).not.toContain('tam giác');
+    // Also when Gemma writes the summary on this computer: it may go online with a later question.
+    picked.current = 'gemma';
+    useChatStore.setState({ engine: 'gemma', summary: null });
+    gemmaCalls.length = 0;
+    await ask('Tóm lại là gì ạ?', {}, longChat);
+    expect(gemmaCalls.length).toBeGreaterThanOrEqual(2);
+    expect(JSON.stringify(gemmaCalls)).not.toContain('tam giác');
   });
 
   it('a runtime on this computer: only a model seen reading pictures gets it', async () => {

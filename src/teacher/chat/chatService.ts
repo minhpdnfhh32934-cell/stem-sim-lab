@@ -43,7 +43,12 @@ import {
   SCREEN_HEADER,
 } from './promptLabels';
 import { questionBefore } from './topicLink';
-import { useChatStore, type ChatMessageRecord, type ChatSummary } from './chatStore';
+import {
+  useChatStore,
+  type ChatMessageRecord,
+  type ChatSummary,
+  type ReviewSkipped,
+} from './chatStore';
 import {
   FULL_PROMPT_CONTEXT,
   LOCAL_CONTEXT_MARGIN,
@@ -55,6 +60,7 @@ import {
   summaryBlock,
   summaryRequest,
   unsummarized,
+  withoutPictureAsks,
 } from './memory';
 
 const BASE_SYSTEM: Record<Locale, string> = {
@@ -131,6 +137,11 @@ export interface ReplyMetadata {
   /** The AI label's model: for a fallback answer, the provider that really answered too. */
   model: string;
   checkedBy?: string;
+  /**
+   * Think was on but the answer was not reviewed: `picture` = a question about a picture of the
+   * circled area, answered on this computer only (its reading of the picture never goes online).
+   */
+  reviewSkipped?: ReviewSkipped;
   /** The online provider that wrote the answer (cloud answers only). */
   provider?: Provider;
   /** The quota fallback wrote the answer: the chosen provider was out of quota or credit. */
@@ -266,6 +277,11 @@ export interface TurnOrigin {
    * never an answer to the teacher's question, whatever its text says.
    */
   quickAction?: boolean;
+  /**
+   * A question about the part of the board the learner circled ("Khoanh để hỏi"): about that
+   * part, never an answer to the teacher's question, however short it is ("g ở đây?").
+   */
+  boardAsk?: boolean;
 }
 
 /** Not followed by a letter, mark or digit: a whole word (`\b` only knows ASCII letters). */
@@ -494,6 +510,7 @@ export function turnKind(
   // a request would lose "do not praise at once" (ANSWER_OPENING.learnerReply).
   if (
     origin.quickAction !== true &&
+    origin.boardAsk !== true &&
     last?.role === 'assistant' &&
     TEACHER_ASKED.test(last.content) &&
     count <= LEARNER_REPLY_WORDS &&
@@ -689,9 +706,11 @@ export async function contextPrompt(
   // Wikipedia is opt-in (Settings → AI Teacher): it receives the question text, so it never
   // runs silently. Web excerpts come last and are always labelled: checked library first (an
   // on-device prompt that already has its one library note does not ask Wikipedia at all, nor
-  // does one for a problem without numbers: an excerpt about "ô tô" is no answer to it).
+  // does one for a problem without numbers: an excerpt about "ô tô" is no answer to it). A
+  // question about the circled board is not looked up there either: its words alone ("g ở đây?",
+  // often the default question) name no topic, and the board's text never goes to Wikipedia.
   const web =
-    webLookup && (full || (local.length === 0 && !missing))
+    webLookup && !selection && (full || (local.length === 0 && !missing))
       ? await fetchWebKnowledge(question, locale, options.signal)
       : [];
   const notes = [...local, ...web]
@@ -723,7 +742,11 @@ export async function contextPrompt(
         ? LOCAL_BOARD_SYSTEM[locale]
         : localSystem(
             locale,
-            turnKind(question, history, { quickAction: options.quickAction === true }),
+            // A question about the circled part is never an answer to the teacher's question.
+            turnKind(question, history, {
+              quickAction: options.quickAction === true,
+              boardAsk: selection !== null,
+            }),
           ),
     checkQuestion,
     block && !full ? LOCAL_BOARD_ASK[locale] : '',
@@ -1226,6 +1249,16 @@ export async function askTeacher(
   if (circled && circled.hits.length === 0 && !picture) {
     throw new TeacherError(translate(locale, 'chat.errors.boardNoPicture'), null, false);
   }
+  // Think never reviews an answer about a picture: the draft is the on-device model's reading of
+  // the learner's drawing or handwriting, and sending it to the online reviewer would put that
+  // reading online as text (the picture itself never goes online, so the reviewer could not check
+  // it either). The answer stays on this computer and says it was not reviewed.
+  const think = options.think && picture === undefined;
+  const reviewSkipped = options.think && !think;
+  // The conversation this question carries. Anything sent online (an online engine, Think's
+  // reviewer) leaves out earlier questions about a picture of the circled area and their answers:
+  // those answers are the on-device model's reading of the learner's strokes.
+  const shared = engine === 'cloud' || think ? withoutPictureAsks(records) : records;
   // A question about the board is answered in the chat, never as a new board lesson.
   const board = options.board === true && !circled;
   // What was seen on this computer about the chosen local model (its context window), if checked.
@@ -1247,7 +1280,7 @@ export async function askTeacher(
     options.includeScreen,
     chat.webLookup,
     compact ? (integrated ? 'tight' : 'compact') : 'full',
-    records.map((r) => ({
+    shared.map((r) => ({
       role: r.role,
       content: sentText(r),
       ...(r.prompt ? { prompt: r.prompt } : {}),
@@ -1269,7 +1302,7 @@ export async function askTeacher(
   const teachScript = board && !compact;
   const baseSystem = teachScript ? [core, BOARD_SYSTEM[locale]].join('\n\n') : core;
 
-  if (options.think) {
+  if (think) {
     const checker = chat.verifierProvider;
     if (engine === 'cloud' && provider === 'off')
       throw new Error(translate(locale, 'chat.errors.cloudOff'));
@@ -1300,7 +1333,7 @@ export async function askTeacher(
   const window = localContextWindow(budget, localContext);
   // Think, or a caller that asked for it ("Viết tiếp" of a reviewed answer): the answer and the
   // summary go to the chosen provider only, never to the quota fallback.
-  const noFallback = options.think || options.noFallback === true;
+  const noFallback = think || options.noFallback === true;
   const ask = (
     system: string,
     messages: ChatMessage[],
@@ -1353,7 +1386,7 @@ export async function askTeacher(
     estimateTokens(prompt.selection) +
     estimateTokens(question) +
     (chat.summary ? estimateTokens(chat.summary.text) : SUMMARY_TOKENS);
-  const fitted = fitHistory(records, Math.max(budget.input - reserved, 300));
+  const fitted = fitHistory(shared, Math.max(budget.input - reserved, 300));
   if (fitted.older.length > 0) {
     // The summary request is sent with the same window as the question (`num_ctx`): it must fit
     // there with its answer, or a runtime would cut it silently (Ollama) or refuse it.
@@ -1363,10 +1396,12 @@ export async function askTeacher(
         : integrated
           ? budget.input
           : undefined;
+    // The summary travels with later questions, also online: it never holds a question about a
+    // picture of the circled area nor its answer.
     await updateSummary(
       locale,
-      fitted.older,
-      records,
+      withoutPictureAsks(fitted.older),
+      withoutPictureAsks(shared),
       // A model that reasons first could spend the summary's short limit on its reasoning and
       // write no summary: it is asked not to (only a model seen reasoning gets the setting).
       // With Think (or `noFallback`) the summary never goes to the quota fallback either (no
@@ -1395,7 +1430,7 @@ export async function askTeacher(
   const stream = options.onPartial;
   let streamStopped = false;
   const shown =
-    stream && !options.think
+    stream && !think
       ? (text: string) => {
           if (streamStopped) return;
           if (!outputIsSafe(text)) {
@@ -1423,7 +1458,7 @@ export async function askTeacher(
   let cleaned = drafted;
   let truncated = draft.truncated;
   let checkedBy: string | undefined;
-  if (options.think) {
+  if (think) {
     // A draft that is all reasoning leaves the reviewer nothing to check.
     if (!drafted.text.trim()) throw new Error(translate(locale, 'chat.errors.noAnswer'));
     const checker = chat.verifierProvider;
@@ -1431,8 +1466,8 @@ export async function askTeacher(
     const review = await cloudChat(
       checker,
       model,
-      // The reviewer reads what the draft read: the note and the circled part (as text; a
-      // picture never goes online).
+      // The reviewer reads what the draft read: the note and the circled text (a question about
+      // a picture is never reviewed, see `think`).
       `${REVIEW_SYSTEM[locale]}\n\n${system}${noteInTurn ? prompt.note : ''}${prompt.selection ? `\n\n${prompt.selection}` : ''}`,
       [{ role: 'user', content: REVIEW_REQUEST[locale](question, drafted.text) }],
       locale,
@@ -1471,6 +1506,7 @@ export async function askTeacher(
           ? `${PROVIDER_NAME[draft.provider]} · ${draft.model}`
           : draft.model,
       ...(checkedBy ? { checkedBy } : {}),
+      ...(reviewSkipped ? { reviewSkipped: 'picture' as const } : {}),
       ...(draft.provider ? { provider: draft.provider } : {}),
       ...(fallback ? { fallback: true } : {}),
       references,

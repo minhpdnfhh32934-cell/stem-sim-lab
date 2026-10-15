@@ -30,6 +30,11 @@ export interface BoardRef {
   /** What was circled, as the board holds it (short; '' for a drawing or handwriting). */
   excerpt: string;
 }
+/**
+ * Why a Think answer was not reviewed: `picture` = a question about a picture of the circled area
+ * (answered on this computer only; its reading of the learner's drawing never goes online).
+ */
+export type ReviewSkipped = 'picture';
 /** How much of the conversation is sent with each question (Settings → "Trí nhớ hội thoại"). */
 export type MemoryLength = 'medium' | 'long';
 export interface ChatMessageRecord {
@@ -48,6 +53,8 @@ export interface ChatMessageRecord {
   fallback?: boolean;
   /** A Think answer continued with "Viết tiếp": the continued part was not reviewed. */
   continuedUnreviewed?: boolean;
+  /** Think was on but this answer was not reviewed, and why (the chat says so under it). */
+  reviewSkipped?: ReviewSkipped;
   references?: string[];
   /**
    * Results SimLab computed for this question (exact chemical balancing…), shown by the app next

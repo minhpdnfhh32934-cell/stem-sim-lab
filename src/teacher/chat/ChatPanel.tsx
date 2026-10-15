@@ -342,19 +342,27 @@ export function ChatPanel({
     // Another panel (the bubble before "Mở rộng") may still be answering: a second answer would
     // take over its "Dừng", so the first one could no longer be stopped.
     if (!question || busy || useChatStore.getState().answering) return;
+    quietBeforeAsking();
+    // Busy at once (in the store too): a second click or Enter while the picture below is made
+    // would otherwise send the same question twice.
+    setBusy(true);
     const selection = options.selection;
     // A part of the board without text goes as a picture, only to an AI on this computer that
     // reads pictures (pictureReader.ts); the picture is made before anything is sent.
     let image: ArrayBuffer | undefined;
     if (selection?.status === 'picture') {
-      const { selectionPicture } = await import('@/teacher/board/selectionImage');
-      image = (await selectionPicture(selection, useBoardStore.getState().strokes)) ?? undefined;
-      if (!image) {
+      const made = await import('@/teacher/board/selectionImage')
+        .then(({ selectionPicture }) =>
+          selectionPicture(selection, useBoardStore.getState().strokes),
+        )
+        .catch(() => null);
+      if (!made) {
+        setBusy(false);
         setError({ text: t('chat.errors.boardPicture'), section: null, retry: null });
         return;
       }
+      image = made;
     }
-    quietBeforeAsking();
     setError(null);
     const userMessage: ChatMessageRecord = {
       id: crypto.randomUUID(),
@@ -376,7 +384,6 @@ export function ChatPanel({
     const prior = useChatStore.getState().messages;
     chat.addMessage(userMessage);
     setDraft('');
-    setBusy(true);
     const answer = startAnswer();
     const controller = answer.controller;
     try {
@@ -399,6 +406,7 @@ export function ChatPanel({
         content: result.content,
         model: meta.model,
         ...(meta.checkedBy ? { checkedBy: meta.checkedBy } : {}),
+        ...(meta.reviewSkipped ? { reviewSkipped: meta.reviewSkipped } : {}),
         ...(meta.fallback ? { fallback: true } : {}),
         ...(meta.references.length ? { references: meta.references } : {}),
         ...(meta.facts.length ? { facts: meta.facts } : {}),
@@ -584,13 +592,16 @@ export function ChatPanel({
           provider: PROVIDER_NAME[provider],
         })
       : null;
+  // A question about a picture of the circled area is never reviewed online (askTeacher), and a
+  // question about the circled board is never looked up on Wikipedia.
+  const pictureAsk = boardAsk?.status === 'picture';
   const targets = [
     ...(engine === 'cloud' && provider !== 'off' ? [providerName(provider)] : []),
     ...(fallbackTarget ? [fallbackTarget] : []),
-    ...(chat.thinkEnabled
+    ...(chat.thinkEnabled && !pictureAsk
       ? [t('chat.reviewTarget', { name: providerName(chat.verifierProvider) })]
       : []),
-    ...(chat.webLookup ? ['Wikipedia'] : []),
+    ...(chat.webLookup && !withBoard ? ['Wikipedia'] : []),
   ];
   const withScreen = showScreenContext && chat.includeScreen;
   return (
@@ -892,6 +903,9 @@ export function ChatPanel({
                 )}
                 {message.role === 'assistant' && message.continuedUnreviewed && (
                   <small className="chat-message__meta">{t('chat.continuedUnreviewed')}</small>
+                )}
+                {message.role === 'assistant' && message.reviewSkipped === 'picture' && (
+                  <small className="chat-message__meta">{t('chat.reviewSkippedPicture')}</small>
                 )}
                 {message.role === 'assistant' &&
                   message.references &&

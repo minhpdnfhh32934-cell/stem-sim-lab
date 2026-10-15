@@ -987,6 +987,8 @@ const en: Messages = {
     modelMeta: 'Model: {model}',
     checkedMeta: 'Reviewed by: {model}',
     continuedUnreviewed: 'The continued part was not reviewed.',
+    reviewSkippedPicture:
+      'Not reviewed: a question about the picture you circled is answered on this computer only, never sent online to be cross-checked.',
     references: 'Knowledge sources',
     thinking: 'Thinking…',
     truncatedNote: 'This answer was long, so it stopped in the middle.',

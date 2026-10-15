@@ -982,6 +982,8 @@ const vi = {
     modelMeta: 'Mô hình: {model}',
     checkedMeta: 'Đã rà soát: {model}',
     continuedUnreviewed: 'Phần viết tiếp chưa được rà soát.',
+    reviewSkippedPicture:
+      'Chưa rà soát: câu hỏi về hình em khoanh chỉ được trả lời trên máy này, không gửi lên mạng để kiểm tra chéo.',
     references: 'Nguồn kiến thức',
     thinking: 'Thầy đang suy nghĩ…',
     truncatedNote: 'Câu trả lời dài nên đã dừng giữa chừng.',
