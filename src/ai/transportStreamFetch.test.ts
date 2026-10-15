@@ -256,3 +256,202 @@ describe('browser transport: streamed answers', () => {
     expect(body.cancelled()).toBe(true);
   });
 });
+
+/** Claude's server-sent events (`event:` names and JSON data). */
+function claudeSse(...events: Record<string, unknown>[]): string {
+  return events.map((e) => `event: ${String(e.type)}\ndata: ${JSON.stringify(e)}\n\n`).join('');
+}
+
+const claudeText = (text: string) => ({
+  type: 'content_block_delta',
+  index: 0,
+  delta: { type: 'text_delta', text },
+});
+const claudeStop = (stop_reason: string) => ({ type: 'message_delta', delta: { stop_reason } });
+
+describe('browser transport: the Rust streaming rules (review 2026-10-15)', () => {
+  it('every finish reason but the natural end marks a streamed answer incomplete', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = 'c';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    const groq = (content: string, finish: string | null) => ({
+      choices: [{ index: 0, delta: { content }, finish_reason: finish }],
+    });
+    const cases: [ChatRequest['provider'], string, boolean][] = [
+      ['gemini', sse(gemini('Bước 1', { finishReason: 'OTHER' })), true],
+      ['gemini', sse(gemini('Bước 1', { finishReason: 'LANGUAGE' })), true],
+      ['gemini', sse(gemini('Bước 1', { finishReason: 'STOP' })), false],
+      [
+        'claude',
+        claudeSse(claudeText('Bước 1'), claudeStop('model_context_window_exceeded')),
+        true,
+      ],
+      ['claude', claudeSse(claudeText('Bước 1'), claudeStop('stop_sequence')), false],
+      ['claude', claudeSse(claudeText('Bước 1'), claudeStop('end_turn')), false],
+      ['groq', sse(groq('Bước 1', 'tool_calls'), '[DONE]'), true],
+      ['groq', sse(groq('Bước 1', 'stop'), '[DONE]'), false],
+    ];
+    for (const [provider, body, truncated] of cases) {
+      vi.stubGlobal('fetch', () => Promise.resolve(streamed([enc.encode(body)]).response));
+      const r = await chatStream()({ ...base, provider, noFallback: true }, () => undefined);
+      expect(r.content, body).toBe('Bước 1');
+      expect(r.truncated, body).toBe(truncated);
+    }
+  });
+
+  it('whitespace before the first visible text is no shown answer: the fallback may answer', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    useAiStore.setState({ fallback: 'groq', models: { gemini: '', claude: '', groq: '' } });
+    const urls: string[] = [];
+    vi.stubGlobal('fetch', (url: string) => {
+      urls.push(url);
+      if (url.includes('generativelanguage')) {
+        const body = sse(gemini('\n'), {
+          error: { code: 429, status: 'RESOURCE_EXHAUSTED', message: 'Quota exceeded' },
+        });
+        return Promise.resolve(streamed([enc.encode(body)]).response);
+      }
+      return Promise.resolve(streamed(chunks(fixture('groq-stream.sse'), 9)).response);
+    });
+    const shown: string[] = [];
+    const r = await chatStream()(base, (t) => shown.push(t));
+    expect(r).toMatchObject({ provider: 'groq', fallback: true });
+    expect(r.content).toBe('Vận tốc là đại lượng vectơ.');
+    expect(urls).toHaveLength(2);
+    // The newline was never shown.
+    expect(shown.every((s) => s.trim() !== '')).toBe(true);
+  });
+
+  it('a provider error after the end mark keeps the complete answer', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = 'c';
+    const overloaded =
+      'event: error\ndata: {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"}}\n\n';
+    const run = (provider: ChatRequest['provider'], body: string) => {
+      vi.stubGlobal('fetch', () => Promise.resolve(streamed([enc.encode(body)]).response));
+      return chatStream()({ ...base, provider, noFallback: true }, () => undefined);
+    };
+    await expect(
+      run('claude', claudeSse(claudeText('Lực'), claudeStop('end_turn')) + overloaded),
+    ).resolves.toMatchObject({ content: 'Lực', truncated: false });
+    await expect(
+      run(
+        'gemini',
+        sse(gemini('Lực là vectơ.', { finishReason: 'STOP' }), {
+          error: { code: 503, status: 'UNAVAILABLE', message: 'overloaded' },
+        }),
+      ),
+    ).resolves.toMatchObject({ content: 'Lực là vectơ.', truncated: false });
+    // Before the end mark it is still the error it stands for.
+    await expect(run('claude', claudeSse(claudeText('Lực')) + overloaded)).rejects.toMatchObject({
+      code: 'http',
+      message: '529: overloaded_error: Overloaded',
+    });
+  });
+
+  it('the fallback is asked only while enough of the first-text wait is left', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    useAiStore.setState({ fallback: 'groq', models: { gemini: '', claude: '', groq: '' } });
+    const urls: string[] = [];
+    vi.stubGlobal('fetch', (url: string) => {
+      urls.push(url);
+      if (url.includes('generativelanguage')) {
+        return Promise.resolve(
+          new Response('{"error":{"status":"RESOURCE_EXHAUSTED"}}', { status: 429 }),
+        );
+      }
+      return Promise.resolve(streamed(chunks(fixture('groq-stream.sse'), 9)).response);
+    });
+    // A 5 s wait: the fallback needs a quarter of it (1,25 s) left.
+    const now = vi.spyOn(performance, 'now');
+    try {
+      now.mockReturnValueOnce(1000).mockReturnValue(1000 + 4000);
+      await expect(
+        chatStream()({ ...base, timeoutSecs: 5 }, () => undefined),
+      ).rejects.toMatchObject({ code: 'http', message: expect.stringMatching(/^429: /) as string });
+      expect(urls).toHaveLength(1);
+      urls.length = 0;
+      now.mockReset();
+      now.mockReturnValueOnce(1000).mockReturnValue(1000 + 3000);
+      const r = await chatStream()({ ...base, timeoutSecs: 5 }, () => undefined);
+      expect(r).toMatchObject({ provider: 'groq', fallback: true });
+      expect(urls).toHaveLength(2);
+    } finally {
+      now.mockRestore();
+    }
+  });
+});
+
+describe('browser transport: whole answers follow the gateway (review 2026-10-15)', () => {
+  const answer = (body: unknown) => {
+    vi.stubGlobal('fetch', () => Promise.resolve(new Response(JSON.stringify(body))));
+  };
+  const chat = (req: Partial<ChatRequest> = {}) =>
+    getTransport().chat({ ...base, noFallback: true, ...req });
+
+  it('a filter stop is no answer, even with some text', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = 'c';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    answer({
+      candidates: [{ content: { parts: [{ text: 'Một phần' }] }, finishReason: 'SAFETY' }],
+    });
+    await expect(chat()).rejects.toMatchObject({ message: 'empty answer (SAFETY)' });
+    answer({ promptFeedback: { blockReason: 'PROHIBITED_CONTENT' } });
+    await expect(chat()).rejects.toMatchObject({ message: 'empty answer (PROHIBITED_CONTENT)' });
+    answer({ content: [{ type: 'text', text: 'Một phần' }], stop_reason: 'refusal' });
+    await expect(chat({ provider: 'claude' })).rejects.toMatchObject({
+      message: 'empty answer (refusal)',
+    });
+    answer({ choices: [{ message: { content: 'Một phần' }, finish_reason: 'content_filter' }] });
+    await expect(chat({ provider: 'groq' })).rejects.toMatchObject({
+      message: 'empty answer (content_filter)',
+    });
+  });
+
+  it('every finish reason but the natural end marks a whole answer incomplete', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_CLAUDE_KEY__ = 'c';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    const gem = (finishReason: string) => ({
+      candidates: [{ content: { parts: [{ text: 'Bước 1' }] }, finishReason }],
+    });
+    for (const [reason, truncated] of [
+      ['OTHER', true],
+      ['MAX_TOKENS', true],
+      ['STOP', false],
+    ] as const) {
+      answer(gem(reason));
+      expect((await chat()).truncated, reason).toBe(truncated);
+    }
+    answer({ content: [{ type: 'text', text: 'Bước 1' }], stop_reason: 'pause_turn' });
+    expect((await chat({ provider: 'claude' })).truncated).toBe(true);
+    answer({ content: [{ type: 'text', text: 'Bước 1' }], stop_reason: 'stop_sequence' });
+    expect((await chat({ provider: 'claude' })).truncated).toBe(false);
+  });
+
+  it('reasoning is removed for every provider with the shared rule', async () => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    const gem = (text: string) => ({
+      candidates: [{ content: { parts: [{ text }] }, finishReason: 'STOP' }],
+    });
+    answer(gem('<think>thử 3 kg</think>Đáp số 12 N.'));
+    expect((await chat()).content).toBe('Đáp số 12 N.');
+    answer(gem('<think>chỉ có nháp</think>'));
+    await expect(chat()).rejects.toMatchObject({ code: 'badResponse', message: 'reasoningOnly' });
+    // A tag written as code is code (the old Groq-only rule cut it).
+    answer({
+      choices: [
+        { message: { content: 'Qwen dùng thẻ `<think>` để nháp.' }, finish_reason: 'stop' },
+      ],
+    });
+    expect((await chat({ provider: 'groq' })).content).toBe('Qwen dùng thẻ `<think>` để nháp.');
+    // A JSON answer to a schema is kept exactly, "</think>" in a value included.
+    const json = '{"note":"thẻ </think> là dữ liệu"}';
+    answer(gem(json));
+    expect((await chat({ jsonSchema: { type: 'object' } })).content).toBe(json);
+  });
+});

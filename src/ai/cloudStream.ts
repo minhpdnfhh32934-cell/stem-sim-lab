@@ -9,8 +9,11 @@
  *   reasoning rule applied to everything received.
  * - A stop by the provider's own filter (Gemini SAFETY and the like, Claude `refusal`, Groq
  *   `content_filter`) is no answer, also after text was shown: "empty answer (<reason>)".
+ * - Finish reasons: any reason but the provider's natural end (`NATURAL_END`) marks the answer
+ *   as possibly incomplete, as for a whole answer.
  * - An error inside the stream becomes the HTTP error it stands for ("529: overloaded_error: …"),
- *   so the quota rule reads it like an HTTP answer.
+ *   so the quota rule reads it like an HTTP answer. After the provider's end mark (its stop
+ *   reason) such an error ends the stream and keeps the answer, which was complete.
  * - Timers: the first answer text within the call's `timeoutSecs` (5–600 s, default 30), then at
  *   most 45 s between chunks and 600 s in all; once the provider said it finished, its closing
  *   mark is awaited for at most 2 s and a silent or broken connection after that keeps the answer.
@@ -29,6 +32,11 @@ export const END_GRACE_MS = 2_000;
 export const MAX_ANSWER_BYTES = 1 << 20;
 /** Default wait for the first text (seconds), as the gateway's DEFAULT_TIMEOUT_SECS. */
 const DEFAULT_TIMEOUT_SECS = 30;
+/**
+ * The fallback is asked only while this much of the first-text wait is left (or a quarter of that
+ * wait, when it is shorter), as Rust's FALLBACK_ROOM: less would only end in its own timeout.
+ */
+export const FALLBACK_ROOM_MS = 5_000;
 
 /** The deadlines of one streamed call (`performance.now()` times). */
 export interface StreamClock {
@@ -61,6 +69,14 @@ function secs(ms: number): string {
   return `${ms / 1000}s`;
 }
 
+/**
+ * Enough of the first-text wait is left for the fallback to answer: at least `FALLBACK_ROOM_MS`,
+ * or a quarter of the wait when that is less (Rust's `Clock::room_for_fallback`).
+ */
+export function roomForFallback(clock: StreamClock, now = performance.now()): boolean {
+  return clock.first - now >= Math.min(FALLBACK_ROOM_MS, clock.firstMs / 4);
+}
+
 /** The error for a timer that ran out (`text`: answer text had arrived), as Rust words it. */
 export function expired(clock: StreamClock, text: boolean): AiError {
   if (!text)
@@ -84,10 +100,23 @@ interface StreamState {
   closed: boolean;
 }
 
-function finished(st: StreamState, reason: string, cut: string): void {
+/**
+ * The finish reasons of an answer that ended naturally, per provider (the NATURAL_END lists in
+ * src-tauri/src/ai/{gemini,claude,groq}.rs; Claude's `tool_use` is the forced tool call of a
+ * structured answer). Any other reason (the output limit, a context limit, Gemini OTHER or
+ * LANGUAGE, a reason added later) marks the answer as possibly incomplete, streamed or not.
+ */
+export const NATURAL_END: Record<Provider, readonly string[]> = {
+  gemini: ['STOP'],
+  claude: ['end_turn', 'stop_sequence', 'tool_use'],
+  groq: ['stop'],
+};
+
+/** The provider said why it stopped; a stop by its own filter never comes here (an error). */
+function finished(st: StreamState, reason: string, natural: readonly string[]): void {
   st.finish = reason;
   st.ended = true;
-  if (reason === cut) st.truncated = true;
+  if (!natural.includes(reason)) st.truncated = true;
 }
 
 type Json = Record<string, unknown>;
@@ -188,8 +217,8 @@ export function providerError(err: unknown): AiError {
   return new AiError('http', `${status}: ${kind}: ${message}`);
 }
 
-/** Gemini finish reasons meaning its own filters stopped the answer. */
-const GEMINI_BLOCKED = new Set([
+/** Gemini finish reasons meaning its own filters stopped the answer (Rust's BLOCKED). */
+export const GEMINI_BLOCKED: ReadonlySet<string> = new Set([
   'SAFETY',
   'RECITATION',
   'PROHIBITED_CONTENT',
@@ -220,7 +249,7 @@ function onGemini(ev: SseEvent, st: StreamState): void {
       st.delta += str(part.text) ?? '';
     }
   }
-  if (finish !== undefined) finished(st, finish, 'MAX_TOKENS');
+  if (finish !== undefined) finished(st, finish, NATURAL_END.gemini);
 }
 
 function onClaude(ev: SseEvent, st: StreamState): void {
@@ -237,7 +266,7 @@ function onClaude(ev: SseEvent, st: StreamState): void {
     case 'message_delta': {
       const reason = str(obj(v.delta).stop_reason);
       if (reason === 'refusal') throw new AiError('badResponse', 'empty answer (refusal)');
-      if (reason !== undefined) finished(st, reason, 'max_tokens');
+      if (reason !== undefined) finished(st, reason, NATURAL_END.claude);
       break;
     }
     case 'message_stop':
@@ -268,7 +297,7 @@ function onGroq(ev: SseEvent, st: StreamState): void {
   }
   // A separate `reasoning` field is not answer text.
   st.delta += str(obj(choice.delta).content) ?? '';
-  if (finish !== undefined) finished(st, finish, 'length');
+  if (finish !== undefined) finished(st, finish, NATURAL_END.groq);
 }
 
 const ON_SSE: Record<Provider, (ev: SseEvent, st: StreamState) => void> = {
@@ -316,7 +345,18 @@ export async function readCloudStream(
   const progress = { gotText: false };
   let last = performance.now();
   const handle = (ev: SseEvent) => {
-    onSse(ev, st);
+    try {
+      onSse(ev, st);
+    } catch (e) {
+      // The provider already said why it stopped: the answer is complete, and an error it reports
+      // now (instead of its closing mark) ends the stream. A stop by its filter ("empty answer
+      // (…)") is still no answer.
+      if (st.ended && e instanceof AiError && e.code === 'http') {
+        st.closed = true;
+        return;
+      }
+      throw e;
+    }
     const text = st.delta;
     st.delta = '';
     if (text === '') return;
