@@ -7,6 +7,7 @@ import { SafetySettings } from '@/safety/SafetySettings';
 import { GemmaGpuSettings } from '@/teacher/chat/settings/GemmaGpuSettings';
 import { GemmaSettings } from '@/teacher/chat/settings/GemmaSettings';
 import { KnowledgeSettings } from '@/teacher/chat/settings/KnowledgeSettings';
+import { LocalRuntimeSettings } from '@/teacher/chat/settings/LocalRuntimeSettings';
 import { MemorySettings } from '@/teacher/chat/settings/MemorySettings';
 import { TeacherSettings } from '@/teacher/chat/settings/TeacherSettings';
 import { VoiceSettings } from '@/teacher/voice/VoiceSettings';
@@ -23,6 +24,7 @@ const BODIES: Record<SettingsSection, ComponentType> = {
   ai: AiSettings,
   teacher: TeacherSettings,
   local: GemmaSettings,
+  runtimes: LocalRuntimeSettings,
   gpu: GemmaGpuSettings,
   knowledge: KnowledgeSettings,
   memory: MemorySettings,

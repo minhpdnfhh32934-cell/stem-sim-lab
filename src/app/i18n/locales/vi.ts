@@ -231,6 +231,9 @@ const vi = {
       shortcutsHint: 'Các phím tắt chính khi làm mô phỏng.',
       versions: 'Lịch sử phiên bản',
       versionsHint: 'Những gì đã thay đổi qua từng phiên bản SimLab và bản nào đã phát hành.',
+      runtimes: 'AI trên máy khác (Ollama, LM Studio, llama.cpp)',
+      runtimesHint:
+        'Tìm, kiểm tra và chọn chương trình AI em đã cài trên máy này. Câu hỏi không gửi lên mạng.',
     },
     lookCard: 'Chế độ và màu sắc',
     textCard: 'Chữ và ngôn ngữ',
@@ -286,7 +289,7 @@ const vi = {
     aiTimeout: 'Thời gian chờ (giây)',
     aiDailyCap: 'Số lượt AI tối đa mỗi ngày',
     aiDailyCapHint:
-      'Mỗi lần đọc đề dùng khoảng 2–4 lượt. Đặt 0 để không giới hạn. Giới hạn giúp không dùng hết lượt miễn phí hoặc tốn tiền ngoài ý muốn.',
+      'Mỗi lần đọc đề dùng khoảng 2–4 lượt. Đặt 0 để không giới hạn. Giới hạn giúp không dùng hết lượt miễn phí hoặc tốn tiền ngoài ý muốn. AI chạy trên máy (Gemma, Ollama, LM Studio, llama.cpp) không tính vào giới hạn này.',
     aiUsageToday: 'Hôm nay đã dùng {count}/{cap} lượt.',
     aiUsageTodayNoCap: 'Hôm nay đã dùng {count} lượt.',
     aiClearCache: 'Xóa các đề đã lưu ({count})',
@@ -526,6 +529,7 @@ const vi = {
     retry: 'Thử lại',
     manual: 'Tự dựng cảnh',
     openSettings: 'Mở Kết nối AI',
+    openRuntimes: 'Mở AI trên máy khác',
     stage: {
       classify: 'Đang xác định chủ đề…',
       extract: 'Đang trích xuất dữ kiện…',
@@ -558,6 +562,7 @@ const vi = {
       dailyLimit: 'Đã dùng hết số lượt AI cho hôm nay ({detail}).',
       empty: 'Bạn nhập đề bài trước giúp mình nhé.',
       tooLong: 'Đề bài dài quá (tối đa {max} ký tự) — bạn rút gọn giúp mình nhé.',
+      local: '{detail}',
     },
     hint: {
       notAllowed: 'Phần AI cần xác nhận đủ 18 tuổi. Mở Cài đặt → An toàn & quyền riêng tư.',
@@ -580,6 +585,8 @@ const vi = {
       dailyLimit:
         'Giới hạn này đặt trong Cài đặt → Kết nối AI ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       other: 'Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
+      local:
+        'AI trên máy không tự chuyển sang API. Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
     },
     hintClaude: {
       missingKey:
@@ -879,7 +886,7 @@ const vi = {
     usePhoto: 'Lấy ảnh',
     reading: 'Đang đọc ảnh…',
     privacy:
-      'Ảnh được gửi cho AI đang dùng (Gemma trên máy hoặc API cloud) chỉ để đọc đề, không dùng việc khác.',
+      'Ảnh được gửi cho AI đang dùng (Gemma trên máy, chương trình AI em chọn trên máy này, hoặc API cloud) chỉ để đọc đề, không dùng việc khác.',
     denied: 'Không mở được camera. Hãy cho phép trình duyệt/ứng dụng dùng camera rồi thử lại.',
     retry: 'Thử lại',
     blockedHint:
@@ -891,6 +898,8 @@ const vi = {
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
     badKey: 'Khóa API bị từ chối (sai khóa hoặc hết quyền). Kiểm tra lại khóa trong Cài đặt.',
     badModel: 'Tên model API không đúng. Kiểm tra lại ô Mô hình trong Cài đặt.',
+    localNoVision:
+      'Mô hình AI trên máy em đã chọn chưa đọc được ảnh (hoặc chưa xác minh được). Để đọc ảnh cần khóa API hoặc Gemma đọc ảnh (E2B) trong ứng dụng. Khi em dùng AI trên máy, SimLab không gửi ảnh lên mạng.',
   },
   landing: {
     eyebrow: 'Học khoa học bằng khám phá',
@@ -917,6 +926,11 @@ const vi = {
     engineLabel: 'Chọn mô hình AI',
     cloud: 'API',
     gemma: 'Gemma cục bộ',
+    local: 'AI trên máy khác',
+    localMissingNotice:
+      'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
+    localOnlyRuntime:
+      'Câu hỏi được xử lý cục bộ trên máy này bởi {name} ({address}), không gửi lên mạng.',
     noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
       'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
@@ -964,6 +978,7 @@ const vi = {
     stop: 'Dừng',
     stopLabel: 'Dừng câu trả lời đang viết',
     stopped: 'Đã dừng câu trả lời. Em có thể hỏi lại hoặc hỏi câu khác.',
+    retry: 'Hỏi lại',
     missingDataTitle: 'SimLab nhắc (không phải AI)',
     missingData:
       'Đề bài có thể còn thiếu số liệu: SimLab chưa thấy con số nào trong câu hỏi. Nếu đề có cho số, em ghi thêm (kèm đơn vị) rồi gửi lại nhé.',
@@ -1004,6 +1019,27 @@ const vi = {
       screenPersonal:
         'Ngữ cảnh màn hình có thể chứa thông tin cá nhân nên chưa được gửi. Xóa thông tin đó hoặc tắt nút lấy thông tin màn hình.',
       screenUnsafe: 'Ngữ cảnh màn hình chưa vượt qua kiểm tra an toàn nên không được gửi.',
+      localDown:
+        'Mình chưa kết nối được tới {name} trên máy này: có thể chương trình chưa mở. Em mở {name} rồi hỏi lại nhé. Câu hỏi không được gửi đi nơi khác.',
+      localModelMissing:
+        '{name} chưa có mô hình em đã chọn. Tải hoặc nạp mô hình trong chính {name}, hoặc chọn mô hình khác trong Cài đặt → AI trên máy khác.',
+      localLoading: '{name} đang nạp mô hình vào bộ nhớ. Em đợi một chút rồi hỏi lại nhé.',
+      localStalled:
+        '{name} không viết thêm chữ nào trong một lúc lâu nên mình đã dừng chờ. Có thể máy đang bận hoặc mô hình quá nặng: em hỏi lại, hoặc chọn mô hình nhỏ hơn.',
+      localAuth:
+        '{name} đang bật khóa bảo vệ nên từ chối câu hỏi. SimLab không lưu khóa cho AI trên máy: nếu muốn dùng với SimLab, hãy tắt khóa trong {name}.',
+      localContext:
+        'Câu hỏi cùng phần trò chuyện trước dài quá sức chứa của mô hình. Em xóa bớt cuộc trò chuyện, chọn Trí nhớ “Vừa”, hoặc chọn mô hình có ngữ cảnh lớn hơn.',
+      localRemote:
+        'Mô hình này chạy trên mạng chứ không chạy trên máy em, nên SimLab không gửi câu hỏi tới nó. Hãy chọn một mô hình chạy trên máy.',
+      localNotRuntime:
+        'Địa chỉ đã chọn không trả lời như {name}. Bấm “Tìm trên máy này” trong Cài đặt → AI trên máy khác để chọn lại.',
+      localNotSelected:
+        'Em chưa chọn chương trình và mô hình AI trên máy, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
+      localFailed:
+        '{name} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI trên máy khác để kiểm tra.',
+      localUpdate:
+        'Ứng dụng trên máy này cần được cập nhật mới dùng được AI trên máy khác. Hãy cài bản SimLab mới.',
     },
   },
   chatSettings: {
@@ -1059,6 +1095,14 @@ const vi = {
     flowVoice: 'Đọc to bằng giọng Gemini đang bật: chữ của câu trả lời → Google.',
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',
     flowModelDownload: 'Khi bấm “Tải mô hình”: máy tải tệp từ HuggingFace (không gửi câu hỏi).',
+    flowLocalRuntime:
+      'Khi dùng AI trên máy khác ({name}, {address}): câu hỏi chỉ đi tới chương trình đó trên máy này.',
+    flowLocalRuntimeNone:
+      'Khi dùng AI trên máy khác: câu hỏi chỉ đi tới chương trình em chọn trên máy này (chưa chọn).',
+    flowNothingOnline:
+      'Không có gì được gửi lên mạng khi em hỏi AI Teacher (Think và tra Wikipedia đang tắt).',
+    flowThinkLocal:
+      'Think đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowScreen:
       'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
@@ -1171,6 +1215,168 @@ const vi = {
       integratedHint:
         'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
     },
+  },
+  localRuntime: {
+    intro:
+      'SimLab có thể dùng một chương trình AI em đã cài và đang mở trên máy này. SimLab không cài, không mở và không tải mô hình cho chương trình đó.',
+    detectTitle: 'Tìm trên máy này',
+    detect: 'Tìm trên máy này',
+    detecting: 'Đang tìm…',
+    detectPrivacy:
+      'Chỉ hỏi ba địa chỉ quen thuộc trên máy này ({addresses}) và các địa chỉ em tự thêm. Không đọc tệp nào, không quét ổ đĩa, không gửi gì ra khỏi máy.',
+    fallback:
+      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang API).',
+    corsNote:
+      'Đang chạy trên trình duyệt: chương trình AI phải cho phép trang này truy cập (CORS), nếu không SimLab sẽ báo “Không thấy”. Ứng dụng desktop không cần việc này.',
+    detectFailed: 'Chưa tìm được. Em thử lại nhé.',
+    notAllowed: 'Cần hoàn tất bước an toàn (xác nhận độ tuổi) trước khi dùng AI.',
+    needsUpdate:
+      'Ứng dụng trên máy này cần được cập nhật mới tìm được AI trên máy khác. Hãy cài bản SimLab mới.',
+    noneFound: 'Chưa thấy chương trình AI nào đang chạy. Xem “Gặp lỗi? Cách xử lý” bên dưới.',
+    kinds: {
+      ollama: 'Ollama',
+      lmStudio: 'LM Studio',
+      llamaCpp: 'llama.cpp',
+      openAiCompatible: 'Máy chủ tương thích OpenAI',
+    },
+    unknownKind: 'Chương trình chưa rõ',
+    usualFor: 'địa chỉ quen thuộc của {name}',
+    status: {
+      unreachable: 'Không thấy',
+      found: 'Đang chạy',
+      foundVersion: 'Đang chạy · phiên bản {version}',
+      loading: 'Đang nạp mô hình',
+      needsAuth: 'Cần khóa',
+      notRuntime: 'Không phải chương trình AI',
+    },
+    statusHint: {
+      unreachable: 'Chương trình chưa mở, hoặc đang dùng địa chỉ khác.',
+      loading: 'Đợi chương trình nạp xong rồi bấm “Tìm trên máy này” lần nữa.',
+      needsAuth: 'Chương trình đang bật khóa bảo vệ: SimLab không lưu khóa cho AI trên máy.',
+      notRuntime: 'Có chương trình khác đang dùng địa chỉ này.',
+    },
+    modelsTitle: 'Mô hình của {name}',
+    modelsLoading: 'Đang lấy danh sách mô hình…',
+    modelsEmpty: 'Chưa có mô hình nào. Hãy tải một mô hình trong chính chương trình đó.',
+    modelsMore: 'Chương trình có nhiều mô hình hơn; SimLab chỉ hiện {count} mô hình đầu.',
+    modelsFailed: 'Chưa lấy được danh sách mô hình: {reason}',
+    chooseModel: 'Chọn mô hình',
+    badges: {
+      detected: 'Phát hiện',
+      listed: 'Có trong danh sách',
+      loaded: 'Đang nạp sẵn trong bộ nhớ',
+      notLoaded: 'Chưa nạp vào bộ nhớ',
+      selected: 'Đang chọn cho AI Teacher',
+      tested: 'Đã thử trả lời · {time}',
+      incompatible: 'Không dùng được: {reason}',
+    },
+    reasons: {
+      remote: 'chạy trên mạng',
+      smallContext: 'ngữ cảnh quá nhỏ ({context})',
+      testFailed: 'lần thử trả lời vừa rồi không thành công',
+    },
+    facts: {
+      size: 'Dung lượng tệp: {value}',
+      context: 'Độ dài ngữ cảnh: {value}',
+      memory: 'RAM/VRAM cần: {value}',
+      vision: 'Đọc ảnh: {value}',
+      params: 'Cỡ mô hình: {value}',
+      quant: 'Mức nén: {value}',
+    },
+    contextUnit: '{count} mảnh chữ',
+    unverified: 'Chưa xác minh',
+    yes: 'Có',
+    no: 'Không',
+    memoryUnknown: 'Chưa xác minh (chương trình không cho biết)',
+    detailsTitle: 'Mô hình đang xem: {model}',
+    pickHint: 'Chọn một mô hình ở danh sách trên để kiểm tra và dùng cho AI Teacher.',
+    checkConnection: 'Kiểm tra kết nối',
+    checkingConnection: 'Đang kiểm tra kết nối…',
+    connectionOk: 'Kết nối được. Đã đọc thông tin mô hình lúc {time}.',
+    testAnswer: 'Kiểm tra trả lời',
+    testing: 'Đang chờ mô hình trả lời…',
+    testWarning:
+      'Kiểm tra trả lời nhờ chương trình viết vài chữ: nó sẽ nạp mô hình vào RAM/VRAM, có thể chậm và làm máy nóng. Chỉ chạy khi em bấm; mỗi lần bấm là một yêu cầu, không tự thử lại.',
+    test: {
+      ok: 'Mô hình đã trả lời (chữ đầu tiên sau {seconds} giây).',
+      okNoTime: 'Mô hình đã trả lời.',
+      unreachable: 'Không kết nối được: chương trình chưa mở hoặc đã tắt.',
+      notRuntime: 'Địa chỉ này không trả lời như chương trình đã chọn.',
+      needsAuth: 'Chương trình đang bật khóa bảo vệ nên từ chối.',
+      modelMissing: 'Chương trình không có mô hình này.',
+      loading: 'Chương trình đang nạp mô hình. Đợi một chút rồi thử lại.',
+      remoteModel: 'Mô hình này chạy trên mạng nên SimLab không gửi tới.',
+      stalled: 'Không có chữ nào trong thời gian chờ: máy có thể đang bận hoặc mô hình quá nặng.',
+      error: 'Chương trình báo lỗi khi trả lời: {detail}',
+      notAllowed: 'Cần hoàn tất bước an toàn trước khi dùng AI, hoặc địa chỉ không ở trên máy này.',
+    },
+    useForTeacher: 'Dùng cho AI Teacher',
+    currentTitle: 'Đang chọn cho AI Teacher',
+    currentBody: '{label} tại {address}',
+    currentLocal: 'AI Teacher đang trả lời bằng mô hình này, ngay trên máy em.',
+    currentOther:
+      'Đã chọn mô hình này, nhưng AI Teacher đang trả lời bằng {engine}. Bấm “Dùng cho AI Teacher” để chuyển.',
+    waiting:
+      'AI Teacher đang chờ em chọn một mô hình bên dưới; trong lúc đó không câu hỏi nào được gửi đi.',
+    restoredNote:
+      'SimLab chưa hỏi chương trình lần này: chỉ hỏi khi em hỏi bài hoặc bấm một nút ở trang này.',
+    neverTested: 'Chưa thử trả lời.',
+    testedAt: 'Đã thử trả lời lúc {time}.',
+    unselect: 'Bỏ chọn',
+    unselected: 'Đã bỏ chọn. AI Teacher quay lại {engine}.',
+    capsTitle: 'Khả năng (chỉ tính điều đã thấy trên máy này)',
+    capsName: 'Khả năng',
+    capsSeen: 'Trên máy này',
+    capsDeclared: 'Tài liệu của chương trình',
+    capsDeclaredYes: 'nói là có (chưa thấy trên máy này)',
+    caps: {
+      listModels: 'Liệt kê mô hình',
+      contextLength: 'Cho biết độ dài ngữ cảnh',
+      vision: 'Đọc ảnh',
+      streaming: 'Trả lời từng phần',
+      cancel: 'Dừng giữa chừng',
+      jsonSchema: 'Điền đúng mẫu khi đọc đề',
+      loadState: 'Cho biết mô hình đã nạp chưa',
+    },
+    resourcesTitle: 'Tài nguyên',
+    moreTitle: 'Hiện phần nâng cao',
+    addTitle: 'Thêm địa chỉ',
+    addLabel: 'Địa chỉ trên máy này',
+    add: 'Thêm',
+    addRefused:
+      'SimLab chỉ nhận địa chỉ trên chính máy này (127.0.0.1, localhost hoặc [::1]) có số cổng, ví dụ http://127.0.0.1:11435. Địa chỉ khác có thể đưa câu hỏi ra khỏi máy nên không được dùng.',
+    added: 'Đã thêm {address}. Bấm “Tìm trên máy này” để hỏi địa chỉ đó.',
+    addedList: 'Địa chỉ em đã thêm',
+    remove: 'Xóa {address}',
+    helpTitle: 'Gặp lỗi? Cách xử lý',
+    help: {
+      notRunning:
+        'Không thấy: mở chương trình rồi bấm “Tìm trên máy này” lần nữa. Ollama chạy nền sau khi cài; LM Studio cần bật máy chủ cục bộ (Local Server) trong tab Developer; llama.cpp cần chạy llama-server.',
+      modelMissing:
+        'Thiếu mô hình: tải mô hình trong chính chương trình đó (Ollama: lệnh “ollama pull” kèm tên mô hình; LM Studio: tải rồi nạp trong ứng dụng).',
+      loading: 'Đang nạp: đợi chương trình nạp xong mô hình rồi thử lại.',
+      needsAuth:
+        'Cần khóa: chương trình đang bật khóa bảo vệ. SimLab không lưu khóa cho AI trên máy, nên hãy tắt khóa trong chương trình đó nếu muốn dùng với SimLab.',
+      cors: 'Chỉ trên trình duyệt: chương trình phải cho phép trang này truy cập (CORS). Ứng dụng desktop không cần.',
+      notAi:
+        'Không phải chương trình AI: cổng 8080 hay bị chương trình khác dùng. Kiểm tra cổng mà llama-server đang dùng rồi thêm đúng địa chỉ.',
+    },
+    honestTitle: 'Điều SimLab không kiểm soát',
+    honest: {
+      gpu: 'SimLab không chọn card đồ họa cho chương trình đó. Trên laptop có card tích hợp, hãy chọn card rời trong cài đặt của chính chương trình.',
+      logs: 'SimLab không biết chương trình đó ghi lại những gì (nhật ký, lịch sử trò chuyện).',
+      internet:
+        'SimLab chỉ gửi tới địa chỉ trên máy này, nhưng một chương trình trung gian chạy trên máy vẫn có thể chuyển câu hỏi lên mạng. Mô hình “chạy trên mạng” luôn bị tắt ở đây.',
+    },
+    resetTitle: 'Khôi phục mặc định',
+    resetBody:
+      'Xóa các địa chỉ đã thêm, kết quả kiểm tra và mô hình đã chọn ở trang này. Các cài đặt khác giữ nguyên.',
+    reset: 'Khôi phục mặc định',
+    resetConfirm: 'Xóa hẳn',
+    resetCancel: 'Hủy',
+    resetDone: 'Đã khôi phục mặc định.',
+    resetEngineNote:
+      'AI Teacher vẫn đang chọn AI trên máy khác: chưa có câu hỏi nào được gửi đi cho tới khi em chọn lại một mô hình hoặc bấm “Bỏ chọn”.',
   },
   gpuSettings: {
     cardTitle: 'Card đồ họa (WebGPU)',

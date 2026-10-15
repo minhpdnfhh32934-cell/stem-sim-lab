@@ -21,6 +21,7 @@ export const SETTINGS_SECTIONS = [
   'ai',
   'teacher',
   'local',
+  'runtimes',
   'gpu',
   'knowledge',
   'memory',

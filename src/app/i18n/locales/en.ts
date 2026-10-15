@@ -228,6 +228,9 @@ const en: Messages = {
       shortcutsHint: 'The main keyboard shortcuts for simulations.',
       versions: 'Version history',
       versionsHint: 'What changed in each SimLab version and which versions were released.',
+      runtimes: 'AI on this computer (Ollama, LM Studio, llama.cpp)',
+      runtimesHint:
+        'Find, test and choose an AI program you installed on this computer. Questions are not sent online.',
     },
     lookCard: 'Mode and colours',
     textCard: 'Text and language',
@@ -282,7 +285,7 @@ const en: Messages = {
     aiTimeout: 'Timeout (seconds)',
     aiDailyCap: 'Maximum AI calls per day',
     aiDailyCapHint:
-      'Reading one problem uses about 2–4 calls. Set 0 for no limit. The limit avoids using up the free quota or spending money by accident.',
+      'Reading one problem uses about 2–4 calls. Set 0 for no limit. The limit avoids using up the free quota or spending money by accident. AI that runs on this computer (Gemma, Ollama, LM Studio, llama.cpp) does not count.',
     aiUsageToday: 'Used today: {count}/{cap} calls.',
     aiUsageTodayNoCap: 'Used today: {count} calls.',
     aiClearCache: 'Clear saved problems ({count})',
@@ -523,6 +526,7 @@ const en: Messages = {
     retry: 'Retry',
     manual: 'Build a scene',
     openSettings: 'Open Connect AI',
+    openRuntimes: 'Open AI on this computer',
     stage: {
       classify: 'Identifying the topic…',
       extract: 'Extracting the data…',
@@ -556,6 +560,7 @@ const en: Messages = {
       dailyLimit: 'Today’s AI calls are used up ({detail}).',
       empty: 'Please type a problem first.',
       tooLong: 'The problem is too long (at most {max} characters) — please shorten it.',
+      local: '{detail}',
     },
     hint: {
       notAllowed: 'AI needs the 18+ confirmation. Open Settings → Safety & privacy.',
@@ -578,6 +583,8 @@ const en: Messages = {
       dailyLimit:
         'This limit is set in Settings → Connect AI ("Maximum AI calls per day") to avoid wasting calls. Today you can still build scenes manually and use the sample library.',
       other: 'You can still build the scene manually or use the sample library.',
+      local:
+        'The AI on this computer never switches to an API by itself. You can still build the scene manually or use the sample library.',
     },
     hintClaude: {
       missingKey:
@@ -879,7 +886,7 @@ const en: Messages = {
     usePhoto: 'Use photo',
     reading: 'Reading the photo…',
     privacy:
-      'The photo goes to the AI in use (on-device Gemma or cloud API) only to read the problem.',
+      'The photo goes to the AI in use (on-device Gemma, the AI program you chose on this computer, or a cloud API) only to read the problem.',
     denied: 'Could not open the camera. Allow the browser/app to use the camera and try again.',
     retry: 'Try again',
     blockedHint:
@@ -891,6 +898,8 @@ const en: Messages = {
     readFailed: 'Could not read the problem in the photo. Please retake it more clearly.',
     badKey: 'The API key was refused (wrong key or no permission). Check it in Settings.',
     badModel: 'The API model name is wrong. Check the Model field in Settings.',
+    localNoVision:
+      'The AI model you chose on this computer cannot read pictures (or this could not be verified). Reading a photo needs an API key or the picture-reading Gemma (E2B) in the app. While you use the AI on this computer, SimLab sends no photo online.',
   },
   landing: {
     eyebrow: 'Explore science by doing',
@@ -919,6 +928,11 @@ const en: Messages = {
     engineLabel: 'Choose AI model',
     cloud: 'API',
     gemma: 'Local Gemma',
+    local: 'AI on this computer',
+    localMissingNotice:
+      'You chose the AI on this computer but no program and model yet, so no question was sent. Choose them in Settings → AI on this computer.',
+    localOnlyRuntime:
+      'Questions are processed locally on this computer by {name} ({address}), not sent online.',
     noApi:
       'No API key is configured. Connect an API in Settings or choose a downloaded Gemma model.',
     gemmaMissingNotice:
@@ -967,6 +981,7 @@ const en: Messages = {
     stop: 'Stop',
     stopLabel: 'Stop the answer being written',
     stopped: 'The answer was stopped. You can ask again or ask something else.',
+    retry: 'Ask again',
     missingDataTitle: 'SimLab note (not the AI)',
     missingData:
       'This problem may be missing data: SimLab found no numbers in the question. If the problem gives values, add them (with units) and send it again.',
@@ -1007,6 +1022,27 @@ const en: Messages = {
       screenPersonal:
         'The screen context may contain personal information, so it was not sent. Remove it or turn off screen context.',
       screenUnsafe: 'The screen context did not pass the safety check and was not sent.',
+      localDown:
+        'I could not reach {name} on this computer: the program may not be open. Open {name} and ask again. The question was not sent anywhere else.',
+      localModelMissing:
+        '{name} does not have the model you chose. Download or load it in {name} itself, or pick another model in Settings → AI on this computer.',
+      localLoading: '{name} is loading the model into memory. Wait a moment, then ask again.',
+      localStalled:
+        '{name} wrote nothing for a long time, so I stopped waiting. The computer may be busy or the model too heavy: ask again, or pick a smaller model.',
+      localAuth:
+        '{name} has key protection on and refused the question. SimLab stores no key for AI on this computer: turn the key off in {name} to use it with SimLab.',
+      localContext:
+        'The question with the earlier conversation is longer than the model can hold. Clear some of the conversation, choose Memory “Medium”, or pick a model with a larger context.',
+      localRemote:
+        'This model runs online, not on your computer, so SimLab does not send questions to it. Pick a model that runs on this computer.',
+      localNotRuntime:
+        'The chosen address does not answer as {name}. Press “Find on this computer” in Settings → AI on this computer to choose again.',
+      localNotSelected:
+        'You have not chosen a program and model on this computer yet, so no question was sent. Choose them in Settings → AI on this computer.',
+      localFailed:
+        '{name} reported an error while answering. Ask again; if it repeats, open Settings → AI on this computer to check.',
+      localUpdate:
+        'The app on this computer must be updated before it can use AI on this computer. Install the new SimLab version.',
     },
   },
   chatSettings: {
@@ -1066,6 +1102,14 @@ const en: Messages = {
       'When you photograph a problem (browser): the downscaled photo → {name} to read the text.',
     flowModelDownload:
       'When you press “Download model”: files come from HuggingFace (no question is sent).',
+    flowLocalRuntime:
+      'With AI on this computer ({name}, {address}): the question goes only to that program on this computer.',
+    flowLocalRuntimeNone:
+      'With AI on this computer: the question goes only to the program you choose on this computer (none chosen yet).',
+    flowNothingOnline:
+      'Nothing is sent online when you ask the AI Teacher (Think and the Wikipedia lookup are off).',
+    flowThinkLocal:
+      'Think is on: the question, the draft of the AI on this computer, related library excerpts, the summary of older turns (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to a fallback provider.',
     flowScreen:
       'Screen context is sent only when you turn on “Use screen information” in the chat bubble; it is SimLab data, not a screenshot.',
     download: 'Download model',
@@ -1178,6 +1222,167 @@ const en: Messages = {
       integratedHint:
         'Gemma runs on the integrated card, which can hang on long questions; this computer has a discrete card ({name}): pick it for Gemma.',
     },
+  },
+  localRuntime: {
+    intro:
+      'SimLab can use an AI program you installed and opened on this computer. SimLab does not install or open that program, nor download models for it.',
+    detectTitle: 'Find on this computer',
+    detect: 'Find on this computer',
+    detecting: 'Looking…',
+    detectPrivacy:
+      'Only the three usual addresses on this computer ({addresses}) and the addresses you added are asked. No file is read, no disk is scanned, nothing leaves the computer.',
+    fallback:
+      'Fallback: when the AI on this computer fails, SimLab tells you and sends nothing online (no automatic switch to an API).',
+    corsNote:
+      'Running in a browser: the AI program must allow this page (CORS), otherwise SimLab shows “Not found”. The desktop app does not need this.',
+    detectFailed: 'The search did not work. Please try again.',
+    notAllowed: 'Finish the safety step (age confirmation) before using AI.',
+    needsUpdate:
+      'The app on this computer must be updated before it can find AI on this computer. Install the new SimLab version.',
+    noneFound: 'No running AI program was found. See “Problems? What to do” below.',
+    kinds: {
+      ollama: 'Ollama',
+      lmStudio: 'LM Studio',
+      llamaCpp: 'llama.cpp',
+      openAiCompatible: 'OpenAI-compatible server',
+    },
+    unknownKind: 'Unknown program',
+    usualFor: 'usual address of {name}',
+    status: {
+      unreachable: 'Not found',
+      found: 'Running',
+      foundVersion: 'Running · version {version}',
+      loading: 'Loading a model',
+      needsAuth: 'Needs a key',
+      notRuntime: 'Not an AI program',
+    },
+    statusHint: {
+      unreachable: 'The program is not open, or uses another address.',
+      loading: 'Wait until it has loaded, then press “Find on this computer” again.',
+      needsAuth: 'The program has key protection on: SimLab stores no key for AI on this computer.',
+      notRuntime: 'Another program uses this address.',
+    },
+    modelsTitle: 'Models of {name}',
+    modelsLoading: 'Getting the model list…',
+    modelsEmpty: 'No model yet. Download one in that program itself.',
+    modelsMore: 'The program has more models; SimLab shows the first {count}.',
+    modelsFailed: 'Could not get the model list: {reason}',
+    chooseModel: 'Choose a model',
+    badges: {
+      detected: 'Detected',
+      listed: 'Listed',
+      loaded: 'Loaded in memory',
+      notLoaded: 'Not loaded in memory',
+      selected: 'Chosen for the AI Teacher',
+      tested: 'Answer tested · {time}',
+      incompatible: 'Cannot be used: {reason}',
+    },
+    reasons: {
+      remote: 'runs online',
+      smallContext: 'context too small ({context})',
+      testFailed: 'the last answer test failed',
+    },
+    facts: {
+      size: 'File size: {value}',
+      context: 'Context length: {value}',
+      memory: 'RAM/VRAM needed: {value}',
+      vision: 'Reads pictures: {value}',
+      params: 'Model size: {value}',
+      quant: 'Compression: {value}',
+    },
+    contextUnit: '{count} text pieces',
+    unverified: 'Not verified',
+    yes: 'Yes',
+    no: 'No',
+    memoryUnknown: 'Not verified (the program does not say)',
+    detailsTitle: 'Model shown: {model}',
+    pickHint: 'Pick a model in the list above to test it and use it for the AI Teacher.',
+    checkConnection: 'Check connection',
+    checkingConnection: 'Checking the connection…',
+    connectionOk: 'Connected. Model details read at {time}.',
+    testAnswer: 'Test an answer',
+    testing: 'Waiting for the model to answer…',
+    testWarning:
+      'Testing an answer makes the program write a few words: it loads the model into RAM/VRAM, which can be slow and warm the computer. It runs only when you press it; one press is one request, never retried by itself.',
+    test: {
+      ok: 'The model answered (first words after {seconds} s).',
+      okNoTime: 'The model answered.',
+      unreachable: 'No connection: the program is not open or was closed.',
+      notRuntime: 'This address does not answer as the chosen program.',
+      needsAuth: 'The program has key protection on and refused.',
+      modelMissing: 'The program does not have this model.',
+      loading: 'The program is loading the model. Wait a moment and try again.',
+      remoteModel: 'This model runs online, so SimLab does not send to it.',
+      stalled: 'No words in time: the computer may be busy or the model too heavy.',
+      error: 'The program reported an error while answering: {detail}',
+      notAllowed: 'Finish the safety step before using AI, or the address is not on this computer.',
+    },
+    useForTeacher: 'Use for the AI Teacher',
+    currentTitle: 'Chosen for the AI Teacher',
+    currentBody: '{label} at {address}',
+    currentLocal: 'The AI Teacher answers with this model, right on your computer.',
+    currentOther:
+      'This model is chosen, but the AI Teacher answers with {engine}. Press “Use for the AI Teacher” to switch.',
+    waiting: 'The AI Teacher waits for you to pick a model below; until then no question is sent.',
+    restoredNote:
+      'SimLab has not asked the program this time: it asks only when you ask a question or press a button on this page.',
+    neverTested: 'No answer tested yet.',
+    testedAt: 'Answer tested at {time}.',
+    unselect: 'Unselect',
+    unselected: 'Unselected. The AI Teacher is back on {engine}.',
+    capsTitle: 'Capabilities (only what was seen on this computer)',
+    capsName: 'Capability',
+    capsSeen: 'On this computer',
+    capsDeclared: 'Program documentation',
+    capsDeclaredYes: 'says yes (not seen on this computer)',
+    caps: {
+      listModels: 'Lists its models',
+      contextLength: 'Tells its context length',
+      vision: 'Reads pictures',
+      streaming: 'Answers piece by piece',
+      cancel: 'Stops midway',
+      jsonSchema: 'Fills the form exactly when reading a problem',
+      loadState: 'Tells whether the model is loaded',
+    },
+    resourcesTitle: 'Resources',
+    moreTitle: 'Show advanced options',
+    addTitle: 'Add an address',
+    addLabel: 'Address on this computer',
+    add: 'Add',
+    addRefused:
+      'SimLab accepts only addresses on this computer itself (127.0.0.1, localhost or [::1]) with a port, for example http://127.0.0.1:11435. Another address could take the question off the computer, so it is not used.',
+    added: 'Added {address}. Press “Find on this computer” to ask it.',
+    addedList: 'Addresses you added',
+    remove: 'Remove {address}',
+    helpTitle: 'Problems? What to do',
+    help: {
+      notRunning:
+        'Not found: open the program, then press “Find on this computer” again. Ollama runs in the background once installed; LM Studio needs its Local Server switched on in the Developer tab; llama.cpp needs llama-server running.',
+      modelMissing:
+        'Model missing: download the model in that program itself (Ollama: the “ollama pull” command with the model name; LM Studio: download and load it in the app).',
+      loading: 'Loading: wait until the program has loaded the model, then try again.',
+      needsAuth:
+        'Needs a key: the program has key protection on. SimLab stores no key for AI on this computer, so turn the key off in that program to use it with SimLab.',
+      cors: 'Browser only: the program must allow this page (CORS). The desktop app does not need this.',
+      notAi:
+        'Not an AI program: port 8080 is often used by other programs. Check the port llama-server uses and add that address.',
+    },
+    honestTitle: 'What SimLab does not control',
+    honest: {
+      gpu: 'SimLab does not choose the graphics card of that program. On a laptop with an integrated card, choose the discrete card in that program’s own settings.',
+      logs: 'SimLab does not know what that program records (logs, chat history).',
+      internet:
+        'SimLab sends only to addresses on this computer, but a relay program running on it can still forward questions online. Models that “run online” are always disabled here.',
+    },
+    resetTitle: 'Restore defaults',
+    resetBody:
+      'Removes the added addresses, the test results and the chosen model on this page. Other settings stay as they are.',
+    reset: 'Restore defaults',
+    resetConfirm: 'Remove',
+    resetCancel: 'Cancel',
+    resetDone: 'Defaults restored.',
+    resetEngineNote:
+      'The AI Teacher is still set to AI on this computer: no question is sent until you choose a model again or press “Unselect”.',
   },
   gpuSettings: {
     cardTitle: 'Graphics card (WebGPU)',

@@ -9,6 +9,7 @@ import {
   Palette,
   PlugZap,
   ScrollText,
+  ServerCog,
   ShieldCheck,
   Volume2,
   type LucideIcon,
@@ -57,6 +58,12 @@ export const SECTIONS: Record<SettingsSection, SectionMeta> = {
     icon: Cpu,
     title: 'settings.nav.local',
     hint: 'settings.nav.localHint',
+    group: 'ai',
+  },
+  runtimes: {
+    icon: ServerCog,
+    title: 'settings.nav.runtimes',
+    hint: 'settings.nav.runtimesHint',
     group: 'ai',
   },
   gpu: {

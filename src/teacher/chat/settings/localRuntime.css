@@ -1,0 +1,188 @@
+/* Settings → "AI trên máy khác" (LocalRuntimeSettings.tsx). Tokens only. */
+.local-rt__runtimes {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.local-rt__runtime {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+}
+.local-rt__runtime-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+}
+.local-rt__runtime-head code,
+.local-rt__addresses code {
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+.local-rt__runtime > p {
+  margin: 6px 0 0;
+}
+.local-rt__models h4,
+.local-rt__subtitle {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--text-sm);
+}
+.local-rt__model {
+  align-items: flex-start;
+}
+.local-rt__model .chat-settings__model-copy strong {
+  overflow-wrap: anywhere;
+}
+.local-rt__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.local-rt__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--bg-sunken);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.local-rt__badge--info {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.local-rt__badge--ok {
+  border-color: color-mix(in srgb, var(--conf-exact) 35%, transparent);
+  background: var(--conf-exact-soft);
+  color: var(--conf-exact);
+}
+.local-rt__badge--warn {
+  border-color: color-mix(in srgb, var(--conf-approx) 35%, transparent);
+  background: var(--conf-approx-soft);
+  color: var(--conf-approx);
+}
+.local-rt__badge--bad {
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
+  color: var(--danger);
+}
+.local-rt__fallback {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin: var(--space-2) 0;
+  color: var(--text);
+}
+.local-rt__fallback svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+.local-rt__warning {
+  margin: var(--space-3) 0 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--warning);
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  color: var(--text);
+}
+.local-rt__facts,
+.local-rt__help {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+.local-rt__more {
+  margin-top: var(--space-2);
+}
+.local-rt__more > summary {
+  display: flex;
+  min-height: var(--target);
+  align-items: center;
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.local-rt__caps {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  table-layout: fixed;
+}
+.local-rt__caps th,
+.local-rt__caps td {
+  padding: 6px 8px;
+  border-bottom: 1px dashed var(--border);
+  overflow-wrap: anywhere;
+  text-align: left;
+  vertical-align: top;
+}
+.local-rt__caps thead th {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+.local-rt__caps td[data-cap='yes'] {
+  color: var(--conf-exact);
+  font-weight: 600;
+}
+.local-rt__caps td[data-cap='no'] {
+  color: var(--danger);
+  font-weight: 600;
+}
+.local-rt__caps td[data-cap='unverified'] {
+  color: var(--conf-qual);
+}
+.local-rt__add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+.local-rt__add label {
+  display: grid;
+  min-width: 0;
+  flex: 1 1 240px;
+  gap: 4px;
+  font-size: var(--text-sm);
+}
+.local-rt__add input {
+  min-height: var(--target);
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+.local-rt__addresses {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.local-rt__addresses li {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
