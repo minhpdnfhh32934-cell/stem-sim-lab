@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { ChatMessageRecord } from './chatStore';
 import {
+  CLOUD_OUTPUT_TOKENS,
   contextBudget,
   EMPTY_ANSWER,
+  FULL_PROMPT_CONTEXT,
+  GEMMA_OUTPUT_TOKENS,
+  LOCAL_CONTEXT_MARGIN,
+  localContextWindow,
   joinContinuation,
   estimateTokens,
   fitHistory,
@@ -31,6 +36,45 @@ describe('AI Teacher memory', () => {
     // Gemma 3 270M/1B: 32 768 tokens, Gemma 4 E2B: 131 072 (config.json, 2026-10-12).
     expect(contextBudget('gemma', 'gemma3-1b', 'long').input + 1024).toBeLessThan(32768);
     expect(contextBudget('gemma', 'gemma4-e2b', 'long').input + 1024).toBeLessThan(131072);
+  });
+
+  it('a local runtime: its known context caps the cloud table; unknown → the small budget', () => {
+    // Unknown context ("Chưa xác minh"): the small on-device budget, whatever the length.
+    expect(contextBudget('local', 'gemma3-1b', 'medium', null)).toEqual({
+      input: 4000,
+      output: GEMMA_OUTPUT_TOKENS,
+    });
+    expect(contextBudget('local', 'gemma3-1b', 'long', null).input).toBe(4000);
+    // A large window: the cloud budget and answer length.
+    expect(contextBudget('local', 'x', 'medium', 131072)).toEqual({
+      input: 12000,
+      output: CLOUD_OUTPUT_TOKENS,
+    });
+    expect(contextBudget('local', 'x', 'long', 131072).input).toBe(32000);
+    // A 32k window with "Dài": never more than the window minus the answer and the margin.
+    const long = contextBudget('local', 'x', 'long', 32768);
+    expect(long.input).toBe(32768 - CLOUD_OUTPUT_TOKENS - LOCAL_CONTEXT_MARGIN);
+    // Small windows: the whole request (question + answer + margin) still fits.
+    for (const ctx of [2048, 4096, 8192, FULL_PROMPT_CONTEXT - 1, FULL_PROMPT_CONTEXT]) {
+      for (const length of ['medium', 'long'] as const) {
+        const b = contextBudget('local', 'x', length, ctx);
+        expect(b.input + b.output + LOCAL_CONTEXT_MARGIN, `${ctx} ${length}`).toBeLessThanOrEqual(
+          ctx,
+        );
+        expect(b.input).toBeGreaterThan(0);
+        expect(localContextWindow(b, ctx)).toBeLessThanOrEqual(ctx);
+      }
+    }
+  });
+
+  it('asks a local runtime for the window this request needs, never more than its own', () => {
+    const small = contextBudget('local', 'x', 'medium', null);
+    expect(localContextWindow(small, null)).toBe(4000 + 1024 + LOCAL_CONTEXT_MARGIN);
+    const big = contextBudget('local', 'x', 'medium', 131072);
+    // Not the model's whole 128k window (the runtime would reserve memory for all of it).
+    expect(localContextWindow(big, 131072)).toBe(12000 + 4096 + LOCAL_CONTEXT_MARGIN);
+    expect(localContextWindow({ input: 100, output: 100 }, null)).toBe(2048);
+    expect(localContextWindow({ input: 9000, output: 1024 }, 4096)).toBe(4096);
   });
 
   it('keeps far more history than the old "last 4 / last 12 messages"', () => {

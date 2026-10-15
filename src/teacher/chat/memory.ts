@@ -28,15 +28,55 @@ const BUDGETS = {
 export const GEMMA_OUTPUT_TOKENS = 1024;
 export const CLOUD_OUTPUT_TOKENS = 4096;
 
+/**
+ * A runtime on this computer (Ollama, LM Studio, llama.cpp…) whose context is known and at least
+ * this large gets the cloud budget, output and prompt; a smaller or unknown one the on-device
+ * ones.
+ */
+export const FULL_PROMPT_CONTEXT = 16_384;
+/** Context tokens a local runtime keeps free besides the question and the answer. */
+export const LOCAL_CONTEXT_MARGIN = 512;
+/** Smallest context window asked from a local runtime (as the runtime clients). */
+export const MIN_LOCAL_CONTEXT = 2048;
+
+/**
+ * The budget of one request. A local runtime (`local`) with a known context window gets the cloud
+ * table, never more than its window minus the answer and a margin; with an unknown window the
+ * small on-device budget (shown as "Chưa xác minh" in Settings). `localContext` is what was seen
+ * on this computer for the chosen model, or null.
+ */
 export function contextBudget(
-  engine: 'gemma' | 'cloud',
+  engine: 'gemma' | 'cloud' | 'local',
   gemmaModel: string,
   length: MemoryLength,
+  localContext: number | null = null,
 ): ContextBudget {
   const size = length === 'long' ? 'long' : 'medium';
   if (engine === 'cloud') return { input: BUDGETS.cloud[size], output: CLOUD_OUTPUT_TOKENS };
+  if (engine === 'local') {
+    if (localContext === null || !Number.isFinite(localContext) || localContext <= 0)
+      return { input: BUDGETS.gemmaSmall.medium, output: GEMMA_OUTPUT_TOKENS };
+    const output =
+      localContext >= FULL_PROMPT_CONTEXT
+        ? CLOUD_OUTPUT_TOKENS
+        : Math.min(GEMMA_OUTPUT_TOKENS, Math.floor(localContext / 4));
+    const room = Math.floor(localContext) - output - LOCAL_CONTEXT_MARGIN;
+    return { input: Math.max(0, Math.min(BUDGETS.cloud[size], room)), output };
+  }
   const table = gemmaModel === 'gemma4-e2b' ? BUDGETS.gemmaLarge : BUDGETS.gemmaSmall;
   return { input: table[size], output: GEMMA_OUTPUT_TOKENS };
+}
+
+/**
+ * The context window asked from a local runtime (Ollama `num_ctx`): what this request needs (its
+ * budget, answer and margin), never more than the model's own window when it is known. A window
+ * as large as the model's maximum would make the runtime reserve far more memory than needed.
+ */
+export function localContextWindow(budget: ContextBudget, known: number | null): number {
+  const needed = Math.max(MIN_LOCAL_CONTEXT, budget.input + budget.output + LOCAL_CONTEXT_MARGIN);
+  return known !== null && Number.isFinite(known) && known > 0
+    ? Math.min(Math.floor(known), needed)
+    : needed;
 }
 
 /**
