@@ -149,6 +149,11 @@ test('detect → choose → the AI Teacher answers on this computer, nothing goe
   expect(await overflow(page)).toBeLessThanOrEqual(0);
   expect(await panel.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
   await settings.getByRole('button', { name: 'Đóng' }).first().click();
+  // The top bar names the AI on this computer and never says the problem goes online.
+  const status = page.locator('.topbar .ai-status');
+  await expect(status).toHaveAttribute('data-status', 'local');
+  await expect(status).toHaveAttribute('aria-label', /^AI trên máy: Ollama\. .*không gửi lên mạng/);
+  await expect(status).not.toHaveAttribute('aria-label', /gửi lên máy chủ/);
 
   await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
   const chat = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
@@ -237,5 +242,22 @@ test('the chosen runtime is down: the learner is told, nothing goes online', asy
   // Nothing more follows by itself.
   await page.waitForTimeout(500);
   expect(counters.requests).toEqual(['GET /api/version', 'GET /api/version']);
+  expect(counters.cloud).toEqual([]);
+
+  // The top-bar pill opens the runtime's page; its search says the chosen model cannot be used
+  // now, and why (never "đang trả lời bằng mô hình này").
+  await page.locator('.topbar .ai-status').click();
+  const panel = page.locator('#settings-runtimes');
+  await expect(panel).toBeVisible();
+  await panel.getByRole('button', { name: 'Tìm trên máy này' }).click();
+  const chosen = panel.getByRole('group', { name: 'Đang chọn cho AI Teacher' });
+  await expect(chosen.getByText('Chưa dùng được', { exact: true })).toBeVisible();
+  await expect(chosen.getByRole('alert')).toContainText(
+    'Mình chưa kết nối được tới Ollama trên máy này',
+  );
+  await expect(chosen).not.toContainText('AI Teacher đang trả lời bằng mô hình này');
+  await expect(chosen.getByRole('button', { name: 'Bỏ chọn' })).toBeEnabled();
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+  expect(counters.chat).toBe(0);
   expect(counters.cloud).toEqual([]);
 });

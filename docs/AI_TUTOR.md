@@ -710,10 +710,17 @@ app, the browser client only without it).
 - Capability table: Có / Không / Chưa xác minh, only what was seen on this computer (the
   runtime's documentation is a hint). File size and context length when the runtime reports them;
   RAM/VRAM is always “Chưa xác minh”.
+- The last search, its time and the model lists stay in `localAiStore` for the session (never
+  saved): reopening Settings shows them again with “Kết quả lần tìm lúc …” (an older result adds
+  that it may be out of date); answers that arrive after “Khôi phục mặc định” are dropped.
+- The chosen model is checked against that search: a runtime not found, not this runtime, or a
+  complete model list without the model shows “Chưa dùng được” with the runtime's sentence instead
+  of “AI Teacher đang trả lời bằng mô hình này” (“Bỏ chọn” and another model stay available).
 - “Dùng cho AI Teacher” saves the choice (`stemsim.local-ai`) and the engine; “Bỏ chọn” goes back
   to the engine used before, as it was (a pre-selected Gemma stays only a suggestion). Its note and
   the “not in use” line name the engine that really answers (`analysisEngine`): a pre-selected
-  Gemma without its model means the questions now go online to the API, and the note says so.
+  Gemma without its model means the questions now go online to the API, and the note says so
+  (the provider's plain name, never the menu's “khuyên dùng”; without a key: nothing is sent yet).
   “Khôi phục mặc định” (after a confirm) forgets addresses, checks and the choice; the engine is not
   changed.
 - “Thêm địa chỉ” refuses anything off this computer and says why. In Basic mode the address form
@@ -730,11 +737,21 @@ cap, never a fallback; “Dừng” closes the connection. Failures are study-pa
 online, not this runtime, not chosen, failed, app update) with the Settings page to open and
 “Hỏi lại” when asking again may help — the learner's click, one request. The summary of older
 turns is written by the same runtime and capped to fit the window it is sent with (window − 400 −
-512 tokens), so Ollama never cuts it silently; a summary the runtime fails for a runtime reason
-(not running, stalled, loading, model missing, locked…) ends the question with that sentence
-instead of asking the runtime a second time (only a summary that did not fit, or an unsafe one, is
-skipped). The chat line “không gửi lên mạng” is shown only while nothing goes online: with the
-Gemini voice on it says that each answer's text goes to Google to be read aloud.
+512 tokens), so Ollama never cuts it silently, and sent with `think: false` (only a model seen
+reasoning first gets it). A summary the runtime fails for a runtime reason (an allow-list in
+`chatService.localSummaryFatal`: not running, stalled, loading, model missing, locked, runs
+online, not this runtime, not chosen, app update, gate closed) ends the question with that sentence
+instead of asking the runtime a second time; any other summary failure (did not fit, only
+reasoning, nothing within its 400 tokens, an unsafe text, another error) is skipped and the
+question is asked. A model that wrote no answer gets `chat.errors.localNoAnswer`. The chat line
+“không gửi lên mạng” is shown only while nothing goes online: with the Gemini voice on it says that
+each answer's text goes to Google to be read aloud. With Think on, the button counts “· 1 API rà
+soát” (only the review goes online) instead of “· 2 API”.
+
+**Top-bar AI pill** (`aiStatusView.ts`) follows the chosen engine: “AI trên máy: Ollama” (hint:
+model, address, nothing goes online; click → “AI trên máy khác”), “AI trên máy: chưa chọn”,
+“Gemma trên máy” / “Gemma: chưa tải” (click → the Gemma page); the API states only for the API
+engine, and the safety gate first.
 
 **Budget** (`memory.contextBudget('local', …, ctx)`): with a context window seen on this computer,
 the cloud table but never more than the window minus the answer and 512 tokens; unknown → the small
@@ -753,12 +770,17 @@ sentence with a Settings button, and a chosen Gemma without its model says so (n
 photo with this engine (`photoVision.readPhotoOnComputer`) is read by the runtime only when its
 model was seen reading pictures, else by the in-app Gemma, else the learner is told it needs an API
 key or the picture-reading Gemma. No runtime picked and a runtime that fails (not running, stalled,
-model missing…) each get their own sentence and Settings page instead — it never goes online.
+model missing…) each get their own sentence and Settings page instead — it never goes online. A
+runtime that refuses the picture (`no-vision`) counts as a model not seen reading pictures; a
+refused picture says to take another one. Outside the chat (`localFailure(e, use)`), a task too
+long for the model's window points to a model with a larger window on the runtime page, never to
+Trí nhớ, and an explanation the model did not write is a sentence, never a code.
 
 Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocalOnly.test.ts`
 (local cases), `ChatPanelLocal.test.tsx`, `LocalRuntimeSettings.test.tsx`,
 `TeacherSettingsDataFlow.test.tsx`, `analyze.test.ts`, `ExplainBox.test.tsx`,
-`photoVision.test.ts`, `CameraDialog.test.tsx`, `localAiStore.test.ts`, E2E
+`photoVision.test.ts`, `CameraDialog.test.tsx`, `localAiStore.test.ts`, `localRuntime.test.ts`,
+`AiStatusPill.test.tsx`, E2E
 `tests/e2e/local-ai.spec.ts` (a fake Ollama on
 127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
 runtime.
