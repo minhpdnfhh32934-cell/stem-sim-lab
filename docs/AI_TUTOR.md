@@ -20,18 +20,22 @@ applications.
 
 ## Which engine answers
 
-The chat has an engine selector (“API” or “Gemma cục bộ”). New installs pre-select Gemma, but a
-pre-selected default never blocks anyone:
+The chat has an engine selector (“API”, “Gemma cục bộ” or “AI trên máy khác”). New installs
+pre-select Gemma, but a pre-selected default never blocks anyone:
 
-| Selected | Gemma model ready | Learner picked it | Who answers (chat **and** “Phân tích đề”)             |
-| -------- | ----------------- | ----------------- | ----------------------------------------------------- |
-| API      | –                 | –                 | the provider from Settings → Kết nối AI               |
-| Gemma    | yes               | –                 | Gemma on this computer                                |
-| Gemma    | no                | no (default)      | the connected API (selector shows “API”)              |
-| Gemma    | no                | yes               | nothing is sent; a notice opens Settings → AI Teacher |
+| Selected         | Gemma model ready | Runtime + model picked  | Learner picked it | Who answers (chat, “Phân tích đề” **and** “AI diễn giải”)    |
+| ---------------- | ----------------- | ----------------------- | ----------------- | ------------------------------------------------------------ |
+| API              | –                 | –                       | –                 | the provider from Settings → Kết nối AI                      |
+| Gemma            | yes               | –                       | –                 | Gemma on this computer                                       |
+| Gemma            | no                | –                       | no (default)      | the connected API (selector shows “API”)                     |
+| Gemma            | no                | –                       | yes               | nothing is sent; a notice opens Settings → AI local          |
+| AI trên máy khác | –                 | yes                     | always            | the runtime on this computer (Ollama, LM Studio, llama.cpp…) |
+| AI trên máy khác | –                 | no (or address dropped) | always            | nothing is sent; a notice opens Settings → AI trên máy khác  |
 
 The rule lives in `src/app/ai/engineChoice.ts` (tested). Before, a fresh install with a Gemini key
-could not analyse a problem until a Gemma model was downloaded.
+could not analyse a problem until a Gemma model was downloaded. “AI trên máy khác” is only ever
+the learner's own choice (`setEngine`) and never becomes the API: a runtime that does not answer is
+reported as such when the learner asks.
 
 ## Screen context
 
@@ -544,6 +548,7 @@ the chat shows one line naming where the next question will go.
 | ----------------------------------------- | ----------------------------------------------------------------- |
 | chat history, added files, built-in notes | question + relevant excerpts → answering provider (API engine)    |
 | downloaded Gemma models; Gemma answers    | question + draft → reviewer (Think)                               |
+| questions to a runtime on this computer   | (with that engine: only Think, Wikipedia or the Gemini voice)     |
 | API keys (keychain or session memory)     | question → Wikipedia (only if the lookup is on)                   |
 |                                           | screen context (only when the bubble toggle is on)                |
 |                                           | a photographed problem → the API (browser only, downscaled)       |
@@ -677,6 +682,68 @@ pictures. A runtime that cannot tell (any other OpenAI-compatible server: its mo
 nothing about pictures) is not asked again, and a model missing from LM Studio's list is not
 known either: both are refused before the question as `vision-unverified` ("Chưa xác minh"),
 never as a missing model. A runtime that says no gives `no-vision`.
+
+## AI on this computer as the AI Teacher engine (Ollama, LM Studio, llama.cpp)
+
+User decision 2026-10-14 (recorded in `CLAUDE.md` by the lead). The runtimes are a third engine,
+`ChatEngine = 'local'` (`stemsim.teacher-chat` v6; v5 keeps its engine), never a cloud `Provider`.
+The page talks to them through `src/ai/local/client.ts` (Rust `local_ai_*` commands in the desktop
+app, the browser client only without it).
+
+**Settings → “AI trên máy khác (Ollama, LM Studio, llama.cpp)”**
+(`src/teacher/chat/settings/LocalRuntimeSettings.tsx`, after the Gemma page):
+
+- Nothing is asked when the page opens; a saved choice is shown as saved (“SimLab chưa hỏi chương
+  trình lần này”). “Tìm trên máy này” asks only 127.0.0.1:11434, :1234, :8080 and the addresses the
+  learner added (no file read, no disk scan), then lists the models of each runtime that answered.
+- Each runtime: “Phát hiện” + “Đang chạy · phiên bản …”, “Đang nạp mô hình”, “Cần khóa”, “Không
+  thấy” or “Không phải chương trình AI”. Each model: “Có trong danh sách”, loaded or not, “Đang
+  chọn cho AI Teacher”, “Đã thử trả lời · time”, “Không dùng được: reason” (runs online, context
+  under 2 048, a failed answer test). Models that run online are listed but cannot be chosen.
+- “Kiểm tra kết nối” = fingerprint + model details (nothing generates). “Kiểm tra trả lời” = one
+  tiny generation; the page warns it loads the model into RAM/VRAM; one click is one request.
+- Capability table: Có / Không / Chưa xác minh, only what was seen on this computer (the
+  runtime's documentation is a hint). File size and context length when the runtime reports them;
+  RAM/VRAM is always “Chưa xác minh”.
+- “Dùng cho AI Teacher” saves the choice (`stemsim.local-ai`) and the engine; “Bỏ chọn” goes back
+  to the engine used before, as it was (a pre-selected Gemma stays only a suggestion). “Khôi phục
+  mặc định” (after a confirm) forgets addresses, checks and the choice; the engine is not changed.
+- “Thêm địa chỉ” refuses anything off this computer and says why. In Basic mode the address form
+  and the capability table are folded behind one line.
+- Troubleshooting per status, honesty notes (SimLab does not choose the runtime's GPU, does not
+  know what it logs, a loopback relay can still forward), the browser CORS note, and the fallback
+  line: a failing local AI is reported and nothing goes online.
+
+**Answers** (`chatService.localRuntimeChat`): streamed through the same filter as Gemma (every
+piece passes `outputIsSafe`, unfinished reasoning is hidden, pieces are provisional), cleaned with
+`cleanAnswer`, labelled “Ollama · qwen3:8b” (`src/app/ai/localRuntime.ts`). No retry, no daily
+cap, never a fallback; “Dừng” closes the connection. Failures are study-partner sentences
+(`chat.errors.local*`: down, model missing, loading, stalled, needs a key, context full, runs
+online, not this runtime, not chosen, failed, app update) with the Settings page to open and
+“Hỏi lại” when asking again may help — the learner's click, one request.
+
+**Budget** (`memory.contextBudget('local', …, ctx)`): with a context window seen on this computer,
+the cloud table but never more than the window minus the answer and 512 tokens; unknown → the small
+on-device budget (4 000 / 1 024). The window sent to Ollama (`num_ctx`) is what the request needs,
+never the model's whole window. Prompt: the cloud prompt when the window is known and ≥ 16 384,
+otherwise the on-device one (no new prompt text, no decoding change).
+
+**Think**: the draft is written on this computer, then only the review goes to the chosen reviewer
+(sent with `noFallback`, so never to a third provider; also for Gemma drafts).
+
+**Analysis, explanation and photos**: “Phân tích đề” and “AI diễn giải” use the same engine
+(`resolveAiForAnalysis` → `localTransport`; JSON schema as structured output only when the check
+saw it supported, otherwise in the prompt; the draft checks are unchanged). A local failure in the
+analysis dialog is the same sentence plus “Mở AI trên máy khác”. A photo with this engine is read
+by the runtime only when its model was seen reading pictures, else by the in-app Gemma, else the
+learner is told it needs an API key or the picture-reading Gemma — it never goes online.
+
+Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocalOnly.test.ts`
+(local cases), `ChatPanelLocal.test.tsx`, `LocalRuntimeSettings.test.tsx`,
+`TeacherSettingsDataFlow.test.tsx`, `analyze.test.ts`, `ExplainBox.test.tsx`,
+`photoVision.test.ts`, `localAiStore.test.ts`, E2E `tests/e2e/local-ai.spec.ts` (a fake Ollama on
+127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
+runtime.
 
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
