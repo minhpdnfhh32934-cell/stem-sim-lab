@@ -547,6 +547,8 @@ async function speakSentence(
   entry: SentenceTiming,
 ): Promise<void> {
   for (;;) {
+    // A run that ended (a listener of the board stopped it) says nothing more.
+    if (!alive(r)) return;
     r.speechCut = false;
     const begin = performance.now();
     if (metrics) metrics.firstSpeechMs ??= Math.round(begin - metrics.startedAt);
@@ -572,6 +574,9 @@ async function playSentence(sentence: Sentence, ctx: LessonCtx): Promise<void> {
   // What is said and shown includes what is being written (audit BRD-01).
   const said = sentence.spoken || sentence.speech;
   patch(r, { subtitle: subtitleText(said) });
+  // A listener of the board may end the run as the subtitle changes (a new lesson, a stop): then
+  // the sentence is neither timed nor said.
+  ensure(r);
   if (sentence.start !== undefined) lessonLastStart = sentence.start;
   const voice = !r.instant && useVoiceStore.getState().enabled && said.trim() !== '';
   const entry: SentenceTiming = { speechMs: null, writingMs: 0 };
@@ -737,9 +742,16 @@ function untaught(sentences: readonly Sentence[], boundary: number, layout: Layo
   const upTo = Math.min(boundary, lessonTaughtTo);
   const firstTodo = sentences.find((s) => (s.end ?? Infinity) > upTo);
   // Checked again from the last sentence begun, and from the last one that wrote: the last
-  // write of a lesson may be its final check, which is a step once the answer goes on.
+  // write of a lesson may be its final check, which is a step once the answer goes on. Also from
+  // where the part first read differently from the whole answer (`firstDifference`).
   const lastWrote = lessonTrail[lessonTrail.length - 1]?.start ?? Infinity;
-  const from = Math.min(upTo, lessonLastStart, lastWrote, firstTodo?.start ?? upTo);
+  const from = Math.min(
+    upTo,
+    lessonLastStart,
+    lastWrote,
+    firstTodo?.start ?? upTo,
+    firstDifference(sentences),
+  );
   const tail = lessonTrail.filter((p) => p.end !== null && p.end > from);
   const reused = new Set<Placed>();
   /** AI ids placed anew: an old mark on them does not stand on the new element. */
@@ -808,6 +820,23 @@ function untaught(sentences: readonly Sentence[], boundary: number, layout: Layo
     if (p.id && element && !wiped.includes(p)) ids.set(p.id, element);
   }
   return { sentences: sentencesLeft, wiped, ids };
+}
+
+/**
+ * Where the part already taught first reads differently from the whole answer: the start of the
+ * first action the lesson's runs placed that the whole answer, read in the same order, does not
+ * have at that place (Infinity when they agree). A text that arrives later can change how an
+ * earlier line reads: a bare "<step>" is text until its "</step>" arrives, then markup, and every
+ * markdown id after it moves. A "Viết tiếp" earlier in the lesson may have placed things in
+ * another order: then the check starts a little early, which only re-checks what is the same.
+ */
+function firstDifference(sentences: readonly Sentence[]): number {
+  const keys = sentences.flatMap((s) => s.actions.map((t) => actionKey(t.action)));
+  for (let i = 0; i < lessonTrail.length; i++) {
+    const p = lessonTrail[i];
+    if (p && p.key !== keys[i]) return p.start ?? Infinity;
+  }
+  return Infinity;
 }
 
 /** The face `p` opened is the last one and holds only elements in `gone`. */
@@ -1093,7 +1122,12 @@ export function clearBoard(): void {
   });
 }
 
+/**
+ * "Giảng lại": the last lesson again from its start. Nothing while a new answer waits for the
+ * board's fonts (`pendingStart`): the last lesson is no longer the answer the board shows.
+ */
 export function replayLesson(): void {
+  if (pendingStart !== null) return;
   if (lastInput && lastMeasure) void playLesson(lastInput, lastMeasure);
 }
 

@@ -30,6 +30,7 @@ import {
 } from './lessonCheck';
 import {
   markupToText,
+  mathScripts,
   spokenSentence,
   type BoardAction,
   type ParsedScript,
@@ -105,8 +106,11 @@ interface Range {
   end: number;
 }
 
-/** Labels whose meaning holds for a whole list after them ("Cho:" + "- m = 2 kg" + "- F = 10 N"). */
-const LIST_MEANINGS: ReadonlySet<LabelMeaning> = new Set(['given', 'find', 'note']);
+/**
+ * Labels whose meaning holds for a whole list after them ("Cho:" + "- m = 2 kg" + "- F = 10 N";
+ * "Tài liệu tham khảo:" + its list of sources).
+ */
+const LIST_MEANINGS: ReadonlySet<LabelMeaning> = new Set(['given', 'find', 'note', 'sources']);
 
 class Builder {
   sentences: Sentence[] = [];
@@ -253,6 +257,9 @@ class Builder {
       this.setLabel(label, text);
       return;
     }
+    // The sources a "Tài liệu tham khảo:" label lists: neither said nor written (whatever is
+    // left of a source once its link goes is not lesson content).
+    if (this.context?.meaning === 'sources' && this.meaningFor(item) === 'sources') return;
     const part = learningPart(text);
     // Hidden reasoning, a prompt echo, a link: neither said nor written.
     if (part.cls === 'internal') return;
@@ -268,7 +275,9 @@ class Builder {
     // Without markdown or HTML ("<b>Lưu ý:</b> …" is a note), formulas and numbers untouched.
     const plain = sanitizeBoardText(board);
     const meaning = this.meaningFor(item);
-    const result = meaning === 'result' || RESULT.test(plain);
+    // "Vậy, đúng hay sai?", "=> Nếu F tăng gấp đôi thì a bằng bao nhiêu?": a question is never
+    // boxed as the result, whatever word opens it.
+    const result = meaning === 'result' || (RESULT.test(plain) && !/\?\s*$/u.test(plain));
     const check = meaning === 'check' || CHECK.test(plain);
     const note = meaning === 'note' || NOTE.test(plain);
     const given =
@@ -325,7 +334,9 @@ class Builder {
     this.say(text, actions);
   }
 
-  displayMath(tex: string) {
+  displayMath(display: string) {
+    // "$$m = 9,1 \cdot 10<sup>-31</sup>$$": TeX's own superscript in the formula.
+    const tex = mathScripts(display);
     const result = this.meaningFor(false) === 'result';
     const id = this.id(result ? 'r' : 'm');
     this.say(`$$${tex}$$`, [

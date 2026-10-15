@@ -257,22 +257,56 @@ function subscriptText(s: string): string {
 }
 
 /**
+ * A superscript that raises a number to a power: digits, signs and letters with a digit ("23",
+ * "−19", "n+1"). A citation "[1]" is never a power ("1687<sup>[1]</sup>" is not 1687¹).
+ */
+const EXPONENT = /^[−+-]?[\p{L}\d]+(?:[.,]\d+)?(?:[+\-−][\p{L}\d]+(?:[.,]\d+)?)*$/u;
+const isPower = (s: string): boolean => EXPONENT.test(s) && /\d/.test(s);
+
+/**
  * `<sup>…</sup>` as text. A power of a number becomes `$10^{23}$`, so its digits stay visible to
- * the number checks and the voice reads a power, never "1023"; other digits and signs become
- * superscripts ("mol⁻¹", "m/s²"), other words "^x".
+ * the number checks and the voice reads a power, never "1023"; a citation stays as written
+ * ("1687[1]"); other digits and signs become superscripts ("mol⁻¹", "m/s²"), other words "^x".
  */
 function superscriptText(base: string | undefined, s: string): string {
-  if (base && /\d/.test(s)) return `$${base}^{${s}}$`;
+  if (base && isPower(s)) return `$${base}^{${s}}$`;
+  if (/^\[[^\]]*\]$/.test(s)) return `${base ?? ''}${s}`;
   const raised = /^[0-9+\-−]+$/.test(s)
     ? Array.from(s, (c) => SUPERSCRIPTS[c] ?? c).join('')
     : `^${s}`;
   return `${base ?? ''}${raised}`;
 }
 
+/**
+ * `<sub>`/`<sup>` inside a formula: TeX's own `_{…}`/`^{…}` ("6,02 \cdot 10<sup>23</sup>" →
+ * "6,02 \cdot 10^{23}"), never a `$` inside the formula (KaTeX could not read it).
+ */
+export function mathScripts(tex: string): string {
+  return tex.replace(/<(sub|sup)>([^<>]{1,16})<\/\1>/gi, (_m, kind: string, s: string) =>
+    kind.toLowerCase() === 'sub' ? `_{${s}}` : `^{${s}}`,
+  );
+}
+
 /** A sub- or superscript written as HTML, at the start of the text. */
 const SCRIPT_TAG = /^<(sub|sup)>([^<>]{1,16})<\/\1>/i;
-/** The number a superscript raises: the digits just before it ("6,02·10" → "10"). */
-const POWER_BASE = /(\d+(?:[.,]\d+)?)$/;
+/**
+ * The number a superscript raises: the whole number just before it, with its decimal and
+ * multiplication dots ("6,02·10" → "10"; "1,6.10" → "1,6.10", the Vietnamese 1,6 × 10, never
+ * "6.10" cut out of "1,6").
+ */
+const POWER_BASE = /(?<![\d.,])(\d+(?:[.,]\d+)*)$/;
+/** The same number in a text, followed by its superscript. */
+const POWER = /((?<![\d.,])\d+(?:[.,]\d+)*)?<sup>([^<>]{1,16})<\/sup>/gi;
+/** Formulas between `$` (a display one first). */
+const MATH_SPAN = /\$\$[^$]+\$\$|\$[^$\n]+\$/g;
+/** An odd number of `$` (`$$` counts once) before: the text goes on inside a formula. */
+const inFormula = (before: string): boolean => (before.match(/\$\$|\$/g) ?? []).length % 2 === 1;
+/**
+ * Bare HTML names of one letter that are also physics notation for an average or an expectation
+ * ("<p> = 0", "<b> = 2 cm"): text when a relation follows and nothing closes them.
+ */
+const LETTER_TAGS: ReadonlySet<string> = new Set(['p', 'b', 'i', 's', 'u']);
+const RELATION_AFTER = /^\s*[=≈<>≤≥≠]/u;
 
 /** HTML that ends a line of text: removed with a space in its place. */
 const BLOCK_TAGS: ReadonlySet<string> = new Set([
@@ -288,32 +322,37 @@ const ANY_TAG =
  * `superscriptText`), and every tag removed that the reader would take for one (a TeachScript,
  * reasoning or known markup name, a closing tag, a name with `name="value"` attributes, or a bare
  * name closed later: "<step>…</step>"); its words stay. A bare unknown name that is never closed
- * is text: "<v> = s/t" (an average), "x<y và y>z" (a comparison). `after` is what follows the
- * text in the answer (a closing tag on a later line counts). Formulas between `$` are the
- * caller's to protect.
+ * is text: "<v> = s/t" (an average), "x<y và y>z" (a comparison), and so is a bare one-letter
+ * HTML name a relation follows ("<p> = 0", "<b> = 2 cm"), unless it is closed. `after` is what
+ * follows the text in the answer (a closing tag on a later line counts). Inside a formula between
+ * `$`, only `<sub>`/`<sup>` change, to TeX's `_{…}`/`^{…}` (`mathScripts`).
  */
 export function markupToText(text: string, after = ''): string {
-  return text
+  const formulas: string[] = [];
+  const masked = text.replace(MATH_SPAN, (m) => {
+    formulas.push(mathScripts(m));
+    return `\u{E000}${String(formulas.length - 1)}\u{E001}`;
+  });
+  return masked
     .replace(/<sub>([^<>]{1,16})<\/sub>/gi, (_m, s: string) => subscriptText(s))
-    .replace(/(\d+(?:[.,]\d+)?)?<sup>([^<>]{1,16})<\/sup>/gi, (_m, base: string | undefined, s) =>
-      superscriptText(base, String(s)),
-    )
+    .replace(POWER, (_m, base: string | undefined, s: string) => superscriptText(base, s))
     .replace(
       ANY_TAG,
       (m, close: string, rawName: string, attrs: string, self: string, at: number, all: string) => {
         const name = rawName.toLowerCase();
-        const markup =
-          close !== '' ||
-          attrs !== '' ||
-          self !== '' ||
-          KNOWN_TAGS.has(name) ||
-          MARKUP_TAGS.has(name) ||
-          closesLater(all, name, at + m.length) ||
-          closesLater(after, name, 0);
+        const closed = closesLater(all, name, at + m.length) || closesLater(after, name, 0);
+        const bare = close === '' && attrs === '' && self === '';
+        // "<p> = 0": an average, not a paragraph.
+        if (bare && LETTER_TAGS.has(name) && !closed) {
+          const next = all.slice(at + m.length);
+          if (RELATION_AFTER.test(next.trim() === '' ? after : next)) return m;
+        }
+        const markup = !bare || KNOWN_TAGS.has(name) || MARKUP_TAGS.has(name) || closed;
         if (!markup) return m;
         return BLOCK_TAGS.has(name) ? ' ' : '';
       },
-    );
+    )
+    .replace(/\u{E000}(\d+)\u{E001}/gu, (_m, i: string) => formulas[Number(i)] ?? '');
 }
 
 const ENTITIES: Record<string, string> = {
@@ -416,6 +455,8 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
   let i = 0;
   let text = '';
   let textSrc: number[] = [];
+  /** Inside a `<write math="true">`: its text is a formula. */
+  let mathWrite = false;
   const flush = () => {
     const start = textSrc[0];
     if (text && start !== undefined)
@@ -439,18 +480,22 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
     if (script) {
       // A sub- or superscript written as HTML: its text form, mapped to where it stood.
       const end = i + script[0].length;
+      const kind = (script[1] ?? '').toLowerCase();
       const inner = script[2] ?? '';
       let from = i;
       let out: string;
-      if ((script[1] ?? '').toLowerCase() === 'sub') out = subscriptText(inner);
+      if (mathWrite || inFormula(text)) {
+        // Inside a formula: TeX's own sub- and superscripts, never a "$" in the formula.
+        out = kind === 'sub' ? `_{${inner}}` : `^{${inner}}`;
+      } else if (kind === 'sub') out = subscriptText(inner);
       else {
-        const base = POWER_BASE.exec(text)?.[1];
-        if (base && /\d/.test(inner)) {
+        const base = isPower(inner) ? POWER_BASE.exec(text)?.[1] : undefined;
+        if (base) {
           from = textSrc[textSrc.length - base.length] ?? i;
           text = text.slice(0, -base.length);
           textSrc = textSrc.slice(0, -base.length);
         }
-        out = superscriptText(base && /\d/.test(inner) ? base : undefined, inner);
+        out = superscriptText(base, inner);
       }
       text += out;
       for (let k = 0; k < out.length; k++) textSrc.push(Math.min(end - 1, from + k));
@@ -485,6 +530,18 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
       const attrs = readAttributes(body.slice(name.length));
       const bare = attrs !== null && Object.keys(attrs).length === 0;
       if (
+        bare &&
+        !closing &&
+        !selfClosing &&
+        LETTER_TAGS.has(name) &&
+        RELATION_AFTER.test(input.slice(end + 1)) &&
+        !closesLater(input, name, end + 1)
+      ) {
+        // "<p> = 0" (an average), unless a "</p>" closes it: text.
+        literal();
+        continue;
+      }
+      if (
         !KNOWN_TAGS.has(name) &&
         (!attrs ||
           (closing && !bare) ||
@@ -513,6 +570,8 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
         start: i,
         end: end + 1,
       });
+      if (name === 'write' || name === 'correct' || name === 'ask')
+        mathWrite = name === 'write' && !closing && !selfClosing && attrs.math === 'true';
       i = end + 1;
       continue;
     }

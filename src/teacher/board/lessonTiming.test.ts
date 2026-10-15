@@ -224,6 +224,36 @@ describe('board timing: voice, subtitle and pen', () => {
     expect(voice.sessions[0]).not.toBe(firstLesson);
   });
 
+  it('"Giảng lại" while a new answer waits for the board’s fonts does nothing (A2 follow-up)', async () => {
+    await finish(lesson.playLesson(input, measure));
+    voice.log.length = 0;
+    // The whiteboard marks the new answer and waits for its fonts (Whiteboard.tsx).
+    useBoardStore.getState().set({ lessonId: 'next', lessonContent: 'Mới.', status: 'preparing' });
+    const start = lesson.reserveStart();
+    lesson.replayLesson();
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(events().filter((e) => e.startsWith('speak:') || e.startsWith('place:'))).toEqual([]);
+    expect(useBoardStore.getState().status).toBe('preparing');
+    expect(useBoardStore.getState().lessonId).toBe('next');
+    // The new answer's start is still the one allowed to begin.
+    expect(lesson.claimStart(start)).toBe(true);
+  });
+
+  it('a board listener that ends the run as the subtitle changes: that sentence is neither said nor timed (A2 follow-up)', async () => {
+    // Something listening to the board (a new lesson, a stop) ends the run on the 2nd subtitle.
+    const stopper = useBoardStore.subscribe((state, prev) => {
+      if (state.subtitle === SAID[1] && prev.subtitle !== SAID[1]) lesson.stopLesson();
+    });
+    try {
+      await finish(lesson.playLesson(input, measure));
+    } finally {
+      stopper();
+    }
+    expect(events().filter((e) => e.startsWith('speak:'))).toEqual([`speak:${SAID[0]}`]);
+    expect(lesson.lessonMetrics()?.sentences).toHaveLength(1);
+    expect(first('place:b1')).toBe(-1);
+  });
+
   it('"Viết nhanh" stops the voice, writes the rest at once and reads nothing again', async () => {
     voice.ms = 5000;
     const done = lesson.playLesson(input, measure);

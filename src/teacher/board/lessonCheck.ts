@@ -32,6 +32,7 @@ import {
 import {
   alreadySaid,
   markupToText,
+  mathScripts,
   spokenSentence,
   type BoardAction,
   type ParsedScript,
@@ -131,16 +132,63 @@ const MD_LINK = /([ \t]*)\[([^\]]*)\]\((?:[^()]|\([^()]*\))*\)/g;
 /** Link words that only name the link ("[nguồn](…)", "[link](…)"): they go with it. */
 const CITATION_WORDS =
   /^(?:nguồn|nguồn tham khảo|tham khảo|xem thêm|tại đây|liên kết|link|source|here)$/iu;
-/** A markdown link's words (with the spaces before them), or nothing when they only name it. */
-const linkWords = (space: string, words: string): string =>
-  CITATION_WORDS.test(words.trim()) ? '' : `${space}${words}`;
+/** The name of a source a link cites at the end of a sentence ("… lục lạp [Wikipedia](…)."). */
+const SOURCE_NAME = /^(?:wikipedia|wiki|sgk)$/iu;
+/** Only punctuation or brackets until the end of the line. */
+const TRAILING = /^[ \t)\].,;:!?…]*(?:\n|$)/u;
+/**
+ * A markdown link's words (with the spaces before them), or nothing when they only name it, or
+ * when they name the source it cites and the link ends its sentence ("Quang hợp diễn ra ở lục lạp
+ * [Wikipedia](…)." → "Quang hợp diễn ra ở lục lạp."; "Theo [Wikipedia](…), lực…" keeps it).
+ */
+function linkWords(m: RegExpExecArray): string {
+  const space = m[1] ?? '';
+  const words = (m[2] ?? '').trim();
+  if (CITATION_WORDS.test(words)) return '';
+  if (SOURCE_NAME.test(words) && TRAILING.test(m.input.slice(m.index + m[0].length))) return '';
+  return `${space}${m[2] ?? ''}`;
+}
+/**
+ * A link in brackets (not a markdown link's address), with the words in front of it in the
+ * brackets: "(https://…)", "(theo Wikipedia: https://…)", "(nguồn: https://…)".
+ */
+const BRACKET_LINK =
+  /[ \t]*(?<!\])\(([^()\n]*?)[ \t]*(?:\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[a-z0-9-]+\.[^\s<>()[\]]+)[ \t]*\)/giu;
+/** Words that only say where a link leads ("theo Wikipedia:", "nguồn:", "xem"), folded. */
+const SOURCE_PHRASE =
+  /^(?:(?:theo|nguon|xem|see|source|sources|via|from|tai lieu|tham khao|ref|link|lien ket|wikipedia|wiki|sgk)\b[^()]{0,40})?$/;
+/**
+ * A link in brackets whose words only say where it leads goes with them ("(theo Wikipedia:
+ * https://…)" → nothing, never "(theo Wikipedia:)"); other words in the brackets stay (the
+ * address goes later), and so do words with a formula, a quantity or a number that is not a
+ * citation's ("(theo định luật II, F = ma https://…)" keeps "theo định luật II, F = ma").
+ */
+function bracketLink(m: RegExpExecArray): string {
+  const raw = m[1] ?? '';
+  const words = fold(raw).replace(/[\s:：,.\-–—]+$/u, '');
+  if (holdsWork(raw) || (/\d/.test(words) && !CITATION.test(words))) return m[0];
+  return SOURCE_PHRASE.test(words) ? '' : m[0];
+}
 /** Brackets left empty once their address went ("m/s (https://…)." → "m/s."). */
 const EMPTY_BRACKETS = /[ \t]*\(\s*\)/g;
 
-/** The text with its web addresses removed: "[words](link)" keeps the words, a bare link goes. */
+/** `text` with every match of `re` replaced by `by(match)` (the match keeps its index and input). */
+function replaceEach(text: string, re: RegExp, by: (m: RegExpExecArray) => string): string {
+  let out = '';
+  let pos = 0;
+  for (const m of text.matchAll(re)) {
+    out += text.slice(pos, m.index) + by(m);
+    pos = m.index + m[0].length;
+  }
+  return out + text.slice(pos);
+}
+
+/**
+ * The text with its web addresses removed: "[words](link)" keeps the words, a bare link goes, and
+ * a link in brackets goes with the words that only name its source.
+ */
 export function withoutLinks(text: string): string {
-  return text
-    .replace(MD_LINK, (_m, space: string, words: string) => linkWords(space, words))
+  return replaceEach(replaceEach(text, BRACKET_LINK, bracketLink), MD_LINK, linkWords)
     .replace(URL, '')
     .replace(EMPTY_BRACKETS, '')
     .replace(/[ \t]{2,}/g, ' ');
@@ -148,18 +196,20 @@ export function withoutLinks(text: string): string {
 
 /**
  * A written text without leftover markup: bold and other markdown marks, quote marks, escapes,
- * links (their words stay, a bare address goes), HTML and other leftover tags; `\(…\)` and
- * `\[…\]` become `$…$`; `<sub>`/`<sup>` become subscripts and superscripts, except a power of a
- * number, which becomes `$10^{-3}$` so its digits stay visible to the number checks. Formulas
- * between `$` are not touched. For a math write, only `$…$` or `\(…\)` around the whole formula
- * go. Digits are never removed, except inside a web address.
+ * links (their words stay, a bare address goes; a link in brackets goes with the words that only
+ * name its source), HTML and other leftover tags; `\(…\)` and `\[…\]` become `$…$`;
+ * `<sub>`/`<sup>` become subscripts and superscripts, except a power of a number, which becomes
+ * `$10^{-3}$` so its digits stay visible to the number checks. Formulas between `$` are not
+ * touched, except that a `<sub>`/`<sup>` in them becomes TeX's `_{…}`/`^{…}`. For a math write,
+ * only `$…$` or `\(…\)` around the whole formula go. Digits are never removed, except inside a web
+ * address or a source named in a link's brackets.
  */
 export function sanitizeBoardText(text: string, math = false): string {
   let t = text.normalize('NFC').trim();
   if (math) {
     const m = /^\$\$([\s\S]+)\$\$$|^\$([^$]+)\$$|^\\\(([\s\S]+)\\\)$|^\\\[([\s\S]+)\\\]$/.exec(t);
     if (m) t = m[1] ?? m[2] ?? m[3] ?? m[4] ?? '';
-    return t.replace(/\s+/g, ' ').trim();
+    return mathScripts(t).replace(/\s+/g, ' ').trim();
   }
   t = t
     .replace(/\\\[([\s\S]+?)\\\]/g, (_m, tex: string) => `$${tex.trim()}$`)
@@ -181,7 +231,7 @@ export function sanitizeBoardText(text: string, math = false): string {
     .replace(/^\s*(?:>\s*)+/, '')
     .replace(/\s+/g, ' ')
     .trim();
-  return t.replace(HOLD, (_m, i: string) => spans[Number(i)] ?? '');
+  return t.replace(HOLD, (_m, i: string) => mathScripts(spans[Number(i)] ?? ''));
 }
 
 // ------------------------------------------------------------ classification
@@ -191,11 +241,43 @@ const MARKUP_ONLY = /^[\s\-–—*_=~#>|`.·•:]*$/u;
 const LINK = /https?:\/\/|\bwww\.[a-z0-9-]+\./i;
 /**
  * A source line: a link with only a short name around it ("Wikipedia: https://…", "Luật II
- * Newton - [https://…](…)"). Longer text around a link is content; only the link goes. So is a
- * short one that holds a formula, a quantity, or a number that is not a citation's ("g = 9,81
- * m/s² (https://…)."): its link goes, its words and numbers stay.
+ * Newton - [https://…](…)", "Nguồn: Halliday (2011) https://…"). Longer text around a link is
+ * content; only the link goes. So is a short one that holds a formula, a quantity, or a number
+ * that is not a citation's ("g = 9,81 m/s² (https://…)."), and a short sentence ("Lực hấp dẫn là
+ * lực hút giữa hai vật (https://…).", "Năm 1687, Newton công bố ba định luật (https://…)."): its
+ * link goes, its words and numbers stay (`sourceLine`).
  */
 const SOURCE_NAME_CHARS = 60;
+/** What a source line opens with (folded): a source word, a source's name. */
+const SOURCE_LEAD =
+  /^(?:nguon|tai lieu|tham khao|xem them|xem|see|source|sources|references?|ref|wikipedia|wiki|sgk|link|lien ket)\b/;
+/** A link that ends the line: only brackets and punctuation after it. */
+const LINK_LAST = /(?:\bhttps?:\/\/|\bwww\.)[^\s<>]*[\s)\].,;:!?…]*$/i;
+/** Words that make a sentence of a few words ("… là …", "… is …"), folded. */
+const COPULA = /(?:^| )(?:la|is|are|was|were)(?: |$)/;
+
+/**
+ * `text` (with a link; `plain` is it sanitized, without the link) is a source line: what is left
+ * is a source's name, not a sentence. It opens with a source word ("Nguồn:", "Wikipedia:", "SGK
+ * …"); or the link ends the line after a name and ":" or "-" ("Chu kì tế bào: https://…"); or
+ * the link ends the line and what is left is at most six words that neither end a sentence nor
+ * say what something is ("… là …"). A formula, a quantity or a number that is not a citation's is
+ * content. Only positive evidence: when unsure, the line stays and only its link goes.
+ */
+function sourceLine(text: string, plain: string): boolean {
+  const rest = plain.replace(/[\s:：\-–—|·.,]+$/u, '');
+  if (rest.length > SOURCE_NAME_CHARS) return false;
+  const f = fold(rest);
+  // "g = 9,81 m/s² (https://…)": the link goes, the content stays.
+  if (holdsWork(rest) || (/\d/.test(rest) && !CITATION.test(f))) return false;
+  // "Wikipedia là bách khoa toàn thư mở (https://…).": a sentence, also about a source.
+  if (COPULA.test(f)) return false;
+  if (SOURCE_LEAD.test(f)) return true;
+  if (!LINK_LAST.test(text)) return false;
+  if (/[:：\-–—|]\s*$/u.test(plain)) return true;
+  if (/[.!?…]["”')\]]*\s*$/u.test(plain)) return false;
+  return f.split(/[^\p{L}\p{N}]+/u).filter(Boolean).length <= 6;
+}
 /** A line that cites sources ("Tài liệu tham khảo: …", "References: …"): not lesson content. */
 const SOURCES_LINE = /^(?:tai lieu tham khao|nguon tham khao|references?|sources|bibliography)\s*:/;
 /**
@@ -245,13 +327,16 @@ const SOCIAL: readonly RegExp[] = [
   /\bla ai teacher\b/,
   /^i(?:'m| am) (?:an? )?(?:ai|assistant|tutor|language model)\b/,
   /^hy vong (?:rang|la|ban|em|cac ban|cac em|minh|toi|giai thich|bai giang|bai hoc|cau tra loi|loi giai|dieu nay|nhung|nay|se)\b/,
-  /^(?:chuc (?:ban|em|cac ban|cac em)|cam on|rat vui)\b/,
+  /^(?:chuc (?:ban|em|cac ban|cac em)|rat vui)\b/,
+  // Thanks to a person or for the question ("Cảm ơn bạn!", "Cảm ơn câu hỏi của em", "Cảm ơn sự
+  // kiên nhẫn của bạn."), never "Cảm ơn lực ma sát, xe mới dừng được." (a lesson).
+  /^cam on(?:\s*[!.,…]|\s*$| (?:ban|em|cac ban|cac em|thay|co|moi nguoi|nhieu|rat|vi|da|cau hoi|nhe|nha|a)\b)/,
+  /^cam on [^,;:]* cua (?:ban|em|cac ban|cac em|moi nguoi)\s*[!.…]*$/,
   /^(?:i )?hope (?:this|that|it)\b/,
   /^(?:good luck|feel free|let me know|thanks(?! to\b)|thank you)\b/,
   /^neu (?:(?:ban|em|cac ban|cac em) )?(?:co|con) (?:bat ky |bat cu |them )?(?:cau hoi|thac mac|gi chua ro)\b/,
   /^neu (?:ban|em) (?:can|muon) (?:them|giai thich|ho tro|tiep tuc|biet them|hoi them|tim hieu them)\b/,
   /^(?:ban|em) (?:co|con) (?:bat ky |bat cu |them )?(?:cau hoi|thac mac)\b/,
-  /^(?:toi|minh) (?:da |rat )?hieu (?:cau hoi|yeu cau|y)\b/,
   /^cau hoi (?:cua (?:ban|em) )?(?:rat |that |qua )?(?:hay|thu vi|tot)\b/,
   /^(?:dung ngan ngai|don'?t hesitate)\b/,
   /^(?:duoc|vang|da|ok|okay|oke|tuyet|tuyet voi|great|sure|of course)(?:[ ,]+(?:nhe|nha|roi|thoi|a|ban|em|nao))*\s*[!.]*$/,
@@ -299,15 +384,18 @@ const GENERIC_FOLDED = new Set([
 ]);
 /**
  * A verdict on its own, perhaps after a label: "Không.", "Có không.", "Kết quả: Có", "Được.",
- * "Không được." ("Được nhé!" is a reply, not a verdict).
+ * "Không được.", "Vâng.", "Dạ." ("Được nhé!" is a reply, not a verdict).
  */
 const VERDICT =
-  /^(?:[^:：]{1,30}[:：]\s*)?(?:(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*|(?:không )?được\s*\.?)$/iu;
+  /^(?:[^:：]{1,30}[:：]\s*)?(?:(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|vâng|dạ|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*|(?:không )?được\s*\.?)$/iu;
 /** A formula, an unknown or a symbol: never a remark. */
 const SUBJECT_MARK = /[=?≈≤≥<>$\dͰ-Ͽ₀-₉⁰-⁹²³¹√∆∑∫]/u;
 
-/** A text made only of generic words (a remark about the lesson). */
-function isGeneric(text: string): boolean {
+/**
+ * A text made only of generic words (a remark about the lesson). `extra`: more words that carry
+ * no subject matter where the caller looks.
+ */
+function isGeneric(text: string, extra: readonly string[] = []): boolean {
   if (SUBJECT_MARK.test(text) || VERDICT.test(text.trim())) return false;
   const marked = hasMarks(text);
   const words = text
@@ -320,8 +408,25 @@ function isGeneric(text: string): boolean {
     // A single letter is a symbol ("Tìm a.", "s"), except the English "I" and the particles.
     if (w.length === 1) return w === 'I' || w === 'à' || w === 'ạ';
     const lower = w.toLowerCase();
-    return marked ? GENERIC.has(lower) : GENERIC_FOLDED.has(lower);
+    return marked
+      ? GENERIC.has(lower) || extra.includes(lower)
+      : GENERIC_FOLDED.has(lower) || extra.some((e) => fold(e) === lower);
   });
+}
+
+/** "Mình hiểu ý (bạn)", "Tôi đã hiểu câu hỏi", "Tôi hiểu yêu cầu" (folded). */
+const UNDERSTOOD = /^(?:toi|minh) (?:da |rat )?hieu (?:cau hoi|yeu cau|y)\b/;
+
+/**
+ * "Mình hiểu ý bạn.", "Tôi hiểu yêu cầu của bạn.": a remark, unless something about the lesson
+ * follows ("Mình hiểu ý bạn là vật trượt không ma sát." is an assumption to write). `f` is `text`
+ * folded.
+ */
+function understood(text: string, f: string): boolean {
+  const m = UNDERSTOOD.exec(f);
+  if (!m) return false;
+  const rest = text.normalize('NFC').trim().split(/\s+/).slice(m[0].split(' ').length).join(' ');
+  return !/[\p{L}\p{N}]/u.test(rest) || isGeneric(rest, ['của']);
 }
 
 /** A computation or a quantity with its unit ("v = 20 m/s", "sau 2 s"); "3 bước" is not one. */
@@ -400,12 +505,7 @@ function classify(text: string, options: ClassifyOptions): Classified {
   const plain = sanitizeBoardText(text);
   // Bare markup, a tag, a link alone or a link with only a short name around it.
   if (MARKUP_ONLY.test(plain)) return internal;
-  if (LINK.test(text)) {
-    const rest = plain.replace(/[\s:：\-–—|·.,]+$/u, '');
-    // "g = 9,81 m/s² (https://…)": the link goes, the content stays.
-    const content = holdsWork(rest) || (/\d/.test(rest) && !CITATION.test(fold(rest)));
-    if (rest.length <= SOURCE_NAME_CHARS && !content) return internal;
-  }
+  if (LINK.test(text) && sourceLine(text, plain)) return internal;
   const stripped = stripEchoLabel(plain);
   if (!stripped.text) return stripped.echo ? internal : { cls: 'meta', board: '' };
   const f = fold(stripped.text);
@@ -414,7 +514,7 @@ function classify(text: string, options: ClassifyOptions): Classified {
   // A verdict ("Được.", "Không.") answers the question: it is content.
   if (VERDICT.test(stripped.text.trim())) return { cls: 'learning', board: text };
   const remark: TextClass | null =
-    greets(stripped.text) || SOCIAL.some((re) => re.test(f))
+    greets(stripped.text) || SOCIAL.some((re) => re.test(f)) || understood(stripped.text, f)
       ? 'social'
       : META.some((re) => re.test(f))
         ? 'meta'
@@ -455,6 +555,10 @@ export type LabelMeaning =
   | 'sources'
   | 'neutral';
 
+/** The name of a list of sources (folded). */
+const SOURCES_LABEL =
+  /^(?:tai lieu tham khao|nguon(?: tham khao)?|references?|sources?|bibliography)$/;
+
 /** A closed list (folded): a line is a label only when it is exactly one of these. */
 const LABELS: readonly (readonly [RegExp, LabelMeaning])[] = [
   [
@@ -463,7 +567,7 @@ const LABELS: readonly (readonly [RegExp, LabelMeaning])[] = [
   ],
   [/^(?:cho|tom tat(?: de(?: bai)?)?|du kien|de (?:bai )?cho|given|known)$/, 'given'],
   [/^(?:tim|hoi|yeu cau|can tim|find|unknowns?)$/, 'find'],
-  [/^(?:luu y|chu y|ghi chu|ghi nho|meo|notes?|tips?)$/, 'note'],
+  [/^(?:luu y|chu y|ghi chu|ghi nho|meo|notes?|tips?)(?: them)?$/, 'note'],
   [
     /^(?:tu kiem tra|kiem tra (?:tu|nhanh)|cau hoi (?:tu )?(?:kiem tra|cung co|on tap)|thu suc|thu thach|check yourself|quiz|try it)$/,
     'check',
@@ -474,20 +578,26 @@ const LABELS: readonly (readonly [RegExp, LabelMeaning])[] = [
     /^(?:phan tich|(?:loi |bai |cach |huong dan )?giai|tra loi|cau tra loi|giai thich(?: chi tiet(?: hon)?| them)?|tinh toan|ly do|phuong phap|cac buoc(?: giai)?|trong do|kiem tra(?: lai)?|solution|analysis|explanation|steps|working|where|check|verification)$/,
     'neutral',
   ],
-  [/^(?:tai lieu tham khao|nguon(?: tham khao)?|references?|sources?|bibliography)$/, 'sources'],
+  [SOURCES_LABEL, 'sources'],
 ];
 
 /**
  * The label's meaning when `text` is a label alone, else null: a word of the closed list, closed
  * by ":" ("Kết luận:", "**Phân tích:**") or set in bold on its own ("**Kết luận**"). A bare word
- * ("Yêu cầu", "Giải") may be content and stays.
+ * ("Yêu cầu", "Giải") may be content and stays. A label that says in brackets that sources follow
+ * ("Ghi chú thêm (tài liệu tham khảo):") names a list of sources.
  */
 export function labelOf(text: string): LabelMeaning | null {
   if (text.length > 60) return null;
   const plain = sanitizeBoardText(text);
   const bold = /^\s*(\*\*|__)[^*_]+\1\s*$/.test(text);
   if (!bold && !/[:：]\s*$/u.test(plain)) return null;
-  const core = fold(plain).replace(/[\s:：.]+$/u, '');
+  let core = fold(plain).replace(/[\s:：.]+$/u, '');
+  const bracket = /^(.+?)\s*\(([^()]{1,40})\)$/.exec(core);
+  if (bracket?.[1] && bracket[2]) {
+    if (SOURCES_LABEL.test(bracket[2].trim())) return 'sources';
+    core = bracket[1];
+  }
   if (!core) return null;
   for (const [re, meaning] of LABELS) if (re.test(core)) return meaning;
   return null;
@@ -948,13 +1058,17 @@ function replaceInSpeech(
   };
 }
 
-/** The speech without web addresses (a markdown link keeps its words); actions move with it. */
+/**
+ * The speech without web addresses, by the rules of `withoutLinks` (a markdown link keeps its
+ * words, a link in brackets goes with the words that only name its source); actions move with it.
+ */
 function speechWithoutLinks(
   speech: string,
   actions: readonly TimedAction[],
 ): { speech: string; actions: TimedAction[] } {
   if (!LINK.test(speech)) return { speech, actions: [...actions] };
-  const words = replaceInSpeech(speech, actions, MD_LINK, (m) => linkWords(m[1] ?? '', m[2] ?? ''));
+  const named = replaceInSpeech(speech, actions, BRACKET_LINK, bracketLink);
+  const words = replaceInSpeech(named.speech, named.actions, MD_LINK, linkWords);
   const bare = replaceInSpeech(words.speech, words.actions, URL, () => '');
   return replaceInSpeech(bare.speech, bare.actions, EMPTY_BRACKETS, () => '');
 }
@@ -984,20 +1098,23 @@ function capDrawing(a: Extract<BoardAction, { kind: 'draw' }>): BoardAction {
 }
 
 /**
- * A write's text as a repeat is compared: NFC, lower case, without its end punctuation. The
- * Vietnamese marks count ("Vật rơi" and "Vật rời" are two texts).
+ * A write's text as a repeat is compared: NFC, spaces collapsed, without its end punctuation. The
+ * case counts ("F = 0" and "f = 0", "T" and "t" are different symbols), and so do the Vietnamese
+ * marks ("Vật rơi" and "Vật rời" are two texts).
  */
 const sameText = (s: string) =>
   s
     .normalize('NFC')
-    .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim()
     .replace(/[\s.,;:!?…]+$/u, '');
 
-/** A sentence that opens a new part of the answer ("Ở câu b, …", "b) …", "Bài 2: …"). */
+/**
+ * A sentence that opens a new part of the answer ("Ở câu b, …", "b) …", "Bài 2: …", "Trường hợp
+ * 2: …", "TH2", "Cách 2", "Vật B …", "Lần 2").
+ */
 const NEW_PART =
-  /^(?:(?:ở|với|trong|sang|đến|còn|tiếp theo,?|for|in)\s+)?(?:câu|phần|ý|bài|part|question|problem)\s+(?:[a-h]|\d{1,2})(?![\p{L}\d])|^[a-h][).](?:\s|$)/iu;
+  /^(?:(?:ở|với|trong|sang|đến|còn|xét|tiếp theo,?|for|in)\s+)?(?:(?:câu|phần|ý|bài|trường hợp|cách|vật|lần|part|question|problem|case|method)\s+(?:[a-h]|\d{1,2})|th\s?\d{1,2})(?![\p{L}\d])|^[a-h][).](?:\s|$)/iu;
 
 /**
  * A written text without a label of the closed list in front that only names the part ("Trả
@@ -1036,10 +1153,14 @@ export function validateLesson(
   /** A split write's id → its pieces' ids (the first is the id itself). */
   const pieces = new Map<string, { ids: string[]; texts: string[] }>();
   /**
-   * Writes by their text (zone, role, math and `sameText`): where each stood. A repeat is a glitch
-   * only in the same or the next sentence, on the same face, in the same part of the answer.
+   * Writes by their text (zone, role, math and `sameText`): where each stood (sentence, offset in
+   * its speech, face). A repeat is a glitch only right after the first in the same sentence
+   * (nothing but blanks or punctuation said between them), or in the next sentence, on the same
+   * face, in the same part of the answer. An erased write is forgotten (written again, it is new).
    */
-  const seen = new Map<string, { id: string; sentence: number; face: number }>();
+  const seen = new Map<string, { id: string; sentence: number; at: number; face: number }>();
+  /** Final checks written as results: a box on them is not drawn (a question is not an answer). */
+  const unboxed = new Set<string>();
   /** Marks kept (kind, target, span): a mark moved from a dropped repeat is not drawn twice. */
   const marked = new Set<string>();
   const markKey = (a: Extract<BoardAction, { kind: 'mark' }>) =>
@@ -1183,11 +1304,21 @@ export function validateLesson(
             w = target ? { ...rest, noteFor: target } : rest;
           }
           const isFinalCheck = a.id === check && !w.math;
+          if (isFinalCheck && w.role === 'result') {
+            // The final check asks the learner ("Vậy nếu m tăng gấp đôi thì…?"): a side note,
+            // never a boxed result (a question is not the answer).
+            w = { ...w, zone: 'side_notes', role: 'note', speed: 'normal' };
+            box = false;
+            unboxed.add(a.id);
+          }
           const kind =
             forced ?? (isFinalCheck ? 'check' : kindOf(w, title === null && w.zone !== 'steps'));
           const key = `${w.zone}|${w.role}|${String(w.math)}|${sameText(w.text)}`;
           const first = seen.get(key);
-          if (first && first.face === newboards && index - first.sentence <= 1) {
+          // "Vật A có a = 2 m/s² và vật B cũng có a = 2 m/s²": words between, two writes.
+          const backToBack =
+            first?.sentence === index && !/[\p{L}\p{N}]/u.test(speech.slice(first.at, at));
+          if (first && first.face === newboards && (backToBack || first.sentence === index - 1)) {
             // The same write again right after the first (a glitch): not written twice. Its
             // marks go to the first (on the same face); a repeat in the next sentence is still
             // said where it stood.
@@ -1196,7 +1327,7 @@ export function validateLesson(
             if (first.sentence !== index) sayInstead(at, w.math ? `$${whole}$` : whole);
             break;
           }
-          seen.set(key, { id: a.id, sentence: index, face: newboards });
+          seen.set(key, { id: a.id, sentence: index, at, face: newboards });
           if (kind === 'title') title ??= w.text;
           // Only the learner's check is shortened to its question (and its sentences with data);
           // a question among the steps ("… sau 10 s dừng. Tính quãng đường?") is written whole.
@@ -1217,6 +1348,8 @@ export function validateLesson(
           break;
         }
         case 'mark': {
+          // A final check is never boxed like a result.
+          if (a.mark === 'box' && unboxed.has(alias.get(a.target) ?? a.target)) break;
           // A mark of a dropped repeat lands on the first write, unless that one has it already.
           const moved = alias.has(a.target);
           const keepMark = (target: string) => {
@@ -1277,6 +1410,8 @@ export function validateLesson(
             break;
           }
           for (const id of pieces.get(real)?.ids ?? [real]) keep(at, { kind: 'erase', target: id });
+          // Erased, it is no longer on the board: the same text written again is written.
+          for (const [k, v] of seen) if (v.id === real) seen.delete(k);
           break;
         }
         case 'newboard': {

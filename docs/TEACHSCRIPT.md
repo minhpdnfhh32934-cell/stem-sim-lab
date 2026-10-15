@@ -171,12 +171,18 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   a name with `name="value"` attributes, a closing tag, a bare name of known markup (HTML such
   as `<b>`, answer wrappers such as `<answer>`), or a bare unknown name that a matching `</name>`
   closes later in the answer (`<step>…</step>`, `<note>…</note>`: dropped, its words kept). A
-  bare unknown name that is never closed is text: `<v> = s/t` is an average.
+  bare unknown name that is never closed is text: `<v> = s/t` is an average. So is a bare
+  one-letter HTML name (`p`, `b`, `i`, `s`, `u`) that a relation follows and nothing closes:
+  `<p> = 0`, `<b> = 2 cm` (with a later `</p>` it is HTML).
 - `<sub>` and `<sup>` are written as text, never dropped: `H<sub>2</sub>O` → `H₂O`,
   `mol<sup>-1</sup>` → `mol⁻¹`, and a power of a number `6,02·10<sup>23</sup>` →
   `6,02·$10^{23}$`, so the voice reads a power (never "1023"), the subtitle shows `10²³` and the
-  board the same formula. The markdown layout says its lines with the same rules
-  (`markupToText` in `teachscript.ts`).
+  board the same formula. The power's base is the whole number before the tag, with its decimal
+  and multiplication dots: `1,6.10<sup>-19</sup>` (Vietnamese "1,6 × 10") → `$1,6.10^{-19}$`,
+  never `1,$6.10^{-19}$`. Only a superscript with a digit is a power; a citation
+  `1687<sup>[1]</sup>` stays `1687[1]`. Inside a formula (a `math="true"` write, `$…$`, `$$…$$`)
+  `<sup>`/`<sub>` become TeX's `^{…}`/`_{…}`, never a `$` inside the formula. The markdown layout
+  says its lines with the same rules (`markupToText` and `mathScripts` in `teachscript.ts`).
 - Every sentence records where it stands in the text it was read from (`start`/`end`, after the
   hidden reasoning was removed). "Viết tiếp" (the answer was cut and its rest arrives) reads the
   whole answer again and goes on from where the lesson got to: the sentences already said and
@@ -188,9 +194,14 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   inside `**`, a line that grew past the board's length or became a label, a final check that is
   a step once the answer goes on, a face whose title was cut) is wiped with its marks, and the
   whole answer's version is placed. A stump of a title is taken off the board rather than erased
-  in place, so the whole title gets the face's only title slot. The board then ends as if the
-  whole answer had been taught at once (oracle test `lessonContinue.test.ts`, also TeachScript
-  answers cut every 4 characters with marks compared with the text they stand on).
+  in place, so the whole title gets the face's only title slot. Text that arrives later can
+  change how an earlier line reads (a bare `<step>` is text until its `</step>` arrives, and the
+  markdown ids after it move), so the check starts at the first action the lesson placed that
+  the whole answer, read in the same order, does not have at that place; sentences before the
+  last one taught are never said again, only their board actions are compared. The board then
+  ends as if the whole answer had been taught at once (oracle test `lessonContinue.test.ts`, also
+  TeachScript answers cut every 4 characters with marks compared with the text they stand on, and
+  a table of markdown, TeachScript and real eval answers cut at every character).
 - Hidden reasoning (`<think>`, `<thinking>`, `<reasoning>`, `<reflection>`, any case) is the
   exception: the whole block is dropped, never spoken or written (log `reasoning_removed`). An
   unclosed block is cut to the end; a closing tag with no opening tag before it (a chat template
@@ -234,18 +245,31 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   unsure, it stays. A reasoning phrase must be about the user or the reply ("Người dùng hỏi về…",
   "Mình cần trả lời câu hỏi của người dùng", "I need to respond…"): "Người dùng muốn tiết kiệm
   điện nên dùng bóng LED.", "Mình cần suy nghĩ xem vật chịu những lực nào." and "I need to
-  answer two parts: speed and time." are lessons. A source line is a link with only a short
-  name around it ("Wikipedia: https://…", "SGK Vật lý 10, trang 45: https://…"); a short line
-  that holds a formula, a quantity or a number that is not a citation's ("g = 9,81 m/s²
-  (https://…).") keeps its content and loses only the link (link words such as "[nguồn](…)"
-  go with it).
+  answer two parts: speed and time." are lessons. A source line is a link with only a source's
+  name around it, not a sentence: it opens with a source word ("Wikipedia: https://…", "SGK Vật
+  lý 10, trang 45: https://…", "Xem thêm tại Wikipedia (https://…)."), or the link ends the line
+  after a name and ":" or "-", or after at most six words that neither end a sentence nor say
+  what something is ("Luật vạn vật hấp dẫn (https://…)"). A short line that holds a formula, a
+  quantity or a number that is not a citation's ("g = 9,81 m/s² (https://…).") and a short
+  sentence ("Lực hấp dẫn là lực hút giữa hai vật (https://…).", "Năm 1687, Newton công bố…
+  (https://…).", "Wikipedia là bách khoa toàn thư mở (https://…).") keep their words and lose
+  only the link. Link words such as "[nguồn](…)" go with it, so does a source's name in a link
+  that ends the sentence ("… lục lạp [Wikipedia](…)." → "… lục lạp."), and so do the words in
+  the brackets of a link that only name its source ("(theo Wikipedia: https://…)", "(nguồn:
+  https://…)" leave nothing, never "(theo Wikipedia:)"; a formula or number in the brackets
+  stays). A TeachScript sentence with a link is said without the link, never dropped.
 - **Social or meta text** (a greeting, "Tôi là AI…", "Hy vọng…", "Dưới đây là…", a sentence of
   generic words only such as "Mình sẽ giải từng bước"): said, never written. When a computation
   follows the greeting or the remark ("Chào em, v = gt = 9,8·2 = 19,6 m/s.", "Dưới đây là công
   thức: a = F/m = 5 m/s²"), that computation is written (the greeting is still only said).
   Generic words are compared with their Vietnamese marks ("có"/"cơ", "rồi"/"rơi", "đây"/"dây"
   are different words), a single letter is a symbol, and a verdict ("Không.", "Có.", "Được.",
-  "Kết quả: Có"), an unknown ("a = ?") or a symbol ("σ là độ đàn hồi") is never a remark. A
+  "Vâng.", "Dạ.", "Kết quả: Có"), an unknown ("a = ?") or a symbol ("σ là độ đàn hồi") is never
+  a remark. "Mình hiểu ý bạn." is a remark, "Mình hiểu ý bạn là vật trượt không ma sát." an
+  assumption to write; "Cảm ơn" is a remark only when it thanks a person or the question ("Cảm ơn
+  bạn!", "Cảm ơn câu hỏi của em", "Cảm ơn sự kiên nhẫn của bạn."), never in "Cảm ơn lực ma sát,
+  xe mới dừng được." (known limits: "Dạ." alone as a polite opener is written; "Cảm ơn sự quan
+  tâm!" without a person is written: only positive evidence drops a text). A
   greeting is compared with its marks ("Cháo là…", "Chào mào là…" are lessons), a
   self-introduction must open the sentence ("… được chứng minh là một mô hình…" is a lesson),
   "Hy vọng" is a wish only with a pronoun or "rằng/là" ("Hy vọng sống…" is a lesson), and
@@ -264,7 +288,11 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   or a formula (also "≠") stays. A last text asks the learner when its last question is its last
   sentence or only hints and data follow it; "Vì sao vật rơi nhanh dần? Vì trọng lực không
   đổi…" is a question the teacher answers: a step, written whole. A question among the steps
-  ("… 72 km/h … sau 10 s dừng. Tính quãng đường?") is written whole.
+  ("… 72 km/h … sau 10 s dừng. Tính quãng đường?") is written whole. A final check is never a
+  boxed result, whatever word opens it: the markdown layout never takes a line that ends with
+  "?" for the result ("Vậy nếu khối lượng tăng gấp đôi thì…?", "=> Nếu F tăng gấp đôi thì…?",
+  "**Vậy, đúng hay sai?**"), and a final check written as a result (a TeachScript `role="result"`
+  with its `<box>`, or after "Kết luận:") becomes a side note without the box.
 - **Length** (`PART_LIMIT`: title 60, goal 80, given 120, concept 80, definition 100, equation
   120, step 80 or 140 with numbers, example 80, note 80, result 100, check 100): words only, the
   key point is written and the whole text said; with numbers or a formula written as text (an
@@ -275,18 +303,24 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   does).
 - **Marks** (marks, arrows, points, corrections) on a write that was dropped, and underlines of
   words no longer written, are removed (a correction is still said). **The same write twice**
-  in the same or the next sentence, on the same face (a glitch): the second is not written but
-  is said where it stood, its marks go to the first (a mark the first already has is not drawn
-  twice). The same text in another part of the answer ("Ở câu b, …", "b)", "Bài 2"), further
-  on, or on another face is written again; texts are compared with their Vietnamese marks ("Vật
+  back to back in one sentence (nothing but blanks or punctuation said between them) or in the
+  next sentence, on the same face (a glitch): the second is not written but is said where it
+  stood (in the next sentence), its marks go to the first (a mark the first already has is not
+  drawn twice). With words between them in one sentence ("Vật A có a = 2 m/s² và vật B cũng có
+  a = 2 m/s²") both are written and said. The same text in another part of the answer ("Ở câu b,
+  …", "b)", "Bài 2", "Trường hợp 2", "TH2", "Cách 2", "Vật B", "Lần 2"), further on, on another
+  face, or after the first was erased is written again; texts are compared case-sensitively ("F
+  = 0" and "f = 0", "T" and "t" are different symbols) and with their Vietnamese marks ("Vật
   rơi" and "Vật rời" are two texts). On a write split into pieces, a box goes
   around the last piece, an underline, circle or highlight of the whole write under every piece,
   and a correction strikes every piece and is written after the last. A result boxed anywhere in
   the script is not boxed again.
 - **Sanitising** never eats a comparison: HTML is removed only when its attributes are
   `name="value"` pairs ("Nếu v<s và t>0" stays), a bare unknown name stays ("<v>") unless a
-  `</name>` closes it later ("<note>Lưu ý: …</note>" is a side note without its tags), `<sub>`
-  and `<sup>` become text as in §6, and a blank to fill in ("F = ____ N") keeps its underscores.
+  `</name>` closes it later ("<note>Lưu ý: …</note>" is a side note without its tags), an
+  average "<p> = 0" stays, `<sub>` and `<sup>` become text as in §6 (TeX's `^{…}`/`_{…}` inside
+  a formula, so KaTeX still renders it), and a blank to fill in ("F = ____ N") keeps its
+  underscores.
 - **Tables** at most 8 rows × 5 columns with cells ≤ 40 characters, **flows** 6 steps ≤ 40,
   **new-board titles** ≤ 40. A cell with a number is kept whole.
 - **What the teacher says** is recomputed from what is still written, so the voice never reads a

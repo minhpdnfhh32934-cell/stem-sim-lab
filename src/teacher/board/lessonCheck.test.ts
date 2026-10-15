@@ -14,6 +14,7 @@ import {
   validateLesson,
   type TextClass,
 } from './lessonCheck';
+import { checkNumbers, sourceNumbers } from './provenance';
 import { rng } from './rough';
 import { parseTeachScript, type BoardAction, type ParsedScript } from './teachscript';
 
@@ -147,6 +148,38 @@ describe('what a text is to the learner (high precision: when unsure, it stays)'
     ['Được nhé!', 'social'],
     ['Thanks for asking!', 'social'],
     ['Hi, I am an AI tutor.', 'social'],
+    // Fix round 3: a short sentence with a link is content (only the link goes); a yes verdict,
+    // an assumption after "hiểu ý", and thanks to a thing are lessons.
+    [
+      'Lực hấp dẫn là lực hút giữa hai vật (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn).',
+      'learning',
+    ],
+    [
+      'Quang hợp diễn ra ở lục lạp [Wikipedia](https://vi.wikipedia.org/wiki/Quang_hợp).',
+      'learning',
+    ],
+    ['Gravity pulls objects toward Earth (https://en.wikipedia.org/wiki/Gravity).', 'learning'],
+    [
+      'Năm 1687, Newton công bố ba định luật (https://vi.wikipedia.org/wiki/Isaac_Newton).',
+      'learning',
+    ],
+    ['Vâng.', 'learning'],
+    ['Dạ.', 'learning'],
+    ['Mình hiểu ý bạn là vật trượt không ma sát.', 'learning'],
+    ['Cảm ơn lực ma sát, xe mới dừng được.', 'learning'],
+    // A sentence about a source is a sentence ("… là …"), not a source line.
+    ['Wikipedia là bách khoa toàn thư mở (https://vi.wikipedia.org).', 'learning'],
+    // …while source lines stay internal and remarks stay social.
+    ['Xem thêm tại Wikipedia (https://vi.wikipedia.org/wiki/Lực).', 'internal'],
+    [
+      'Chu kì tế bào: [https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào](https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào)',
+      'internal',
+    ],
+    ['Luật vạn vật hấp dẫn (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)', 'internal'],
+    ['Mình hiểu ý bạn.', 'social'],
+    ['Cảm ơn bạn đã hỏi!', 'social'],
+    ['Cảm ơn sự kiên nhẫn của bạn.', 'social'],
+    ['Cảm ơn câu hỏi của em.', 'social'],
   ];
   it.each(table)('%s → %s', (text, expected) => {
     expect(classifyBoardText(text)).toBe(expected);
@@ -221,6 +254,24 @@ describe('sanitizing a written text never touches a number or an operator', () =
     // Blanks to fill in are kept; only "__bold__" loses its marks.
     ['Điền vào chỗ trống: F = ____ N', 'Điền vào chỗ trống: F = ____ N'],
     ['__Lực__ là vectơ', 'Lực là vectơ'],
+    // Fix round 3: a power keeps its whole number ("1,6.10" is 1,6 × 10, never "1," + "6.10"),
+    // a citation is never a power, a superscript inside a formula is TeX's, averages stay, and a
+    // link in brackets goes with the words that only name its source.
+    ['Điện tích 1,6.10<sup>-19</sup> C', 'Điện tích $1,6.10^{-19}$ C'],
+    ['9,1.10<sup>-31</sup> kg', '$9,1.10^{-31}$ kg'],
+    ['Năm 1687<sup>[1]</sup>', 'Năm 1687[1]'],
+    ['Có $N_A = 6,02 \\cdot 10<sup>23</sup>$ hạt', 'Có $N_A = 6,02 \\cdot 10^{23}$ hạt'],
+    ['<p> = 0 và <b> = 2 cm', '<p> = 0 và <b> = 2 cm'],
+    ['<b>Lưu ý:</b> đổi đơn vị', 'Lưu ý: đổi đơn vị'],
+    ['Lực (theo Wikipedia: https://vi.wikipedia.org/wiki/Lực) là vectơ', 'Lực là vectơ'],
+    ['Lực (nguồn: https://vi.wikipedia.org/wiki/Lực) là vectơ', 'Lực là vectơ'],
+    ['Lực (ví dụ https://example.org/a) là vectơ', 'Lực (ví dụ) là vectơ'],
+    // A formula next to the link in the brackets is never lost with the source's words.
+    [
+      'Hợp lực (theo định luật II Newton, F = ma https://vi.wikipedia.org/wiki/Lực) là vectơ',
+      'Hợp lực (theo định luật II Newton, F = ma) là vectơ',
+    ],
+    ['Gia tốc (theo SGK Vật lý 10 trang 45 https://example.org/sgk) là vectơ', 'Gia tốc là vectơ'],
   ])('%s → %s', (input, output) => {
     expect(sanitizeBoardText(input)).toBe(output);
   });
@@ -228,6 +279,11 @@ describe('sanitizing a written text never touches a number or an operator', () =
   it('a math write loses only the $ around it', () => {
     expect(sanitizeBoardText('$a = \\frac{F}{m}$', true)).toBe('a = \\frac{F}{m}');
     expect(sanitizeBoardText('\\(v = gt\\)', true)).toBe('v = gt');
+    // Fix round 3: a superscript or a subscript in it is TeX's own.
+    expect(sanitizeBoardText('N_A = 6,02 \\cdot 10<sup>23</sup>', true)).toBe(
+      'N_A = 6,02 \\cdot 10^{23}',
+    );
+    expect(sanitizeBoardText('H<sub>2</sub>O', true)).toBe('H_{2}O');
   });
 });
 
@@ -743,6 +799,229 @@ describe('fix round 2: nothing the learner needs is lost', () => {
   });
 });
 
+describe('fix round 3: nothing of the lesson is lost to a link, a repeat or a tag', () => {
+  const written = (script: ParsedScript) => writesOf(script).map((w) => w.text);
+  const boxes = (script: ParsedScript) =>
+    actionsOf(script).flatMap((a) => (a.kind === 'mark' && a.mark === 'box' ? [a.target] : []));
+
+  it('a short sentence with an inline link is said and written; only the link goes', () => {
+    const lesson = lessonFor(
+      'Lực hấp dẫn là lực hút giữa hai vật (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn).\n\nGia tốc rơi tự do không phụ thuộc khối lượng.',
+    );
+    expect(written(lesson.script)).toEqual([
+      'Lực hấp dẫn là lực hút giữa hai vật.',
+      'Gia tốc rơi tự do không phụ thuộc khối lượng.',
+    ]);
+    expect(saidOf(lesson.script)).toBe(
+      'Lực hấp dẫn là lực hút giữa hai vật. Gia tốc rơi tự do không phụ thuộc khối lượng.',
+    );
+    for (const [answer, text] of [
+      [
+        'Quang hợp diễn ra ở lục lạp [Wikipedia](https://vi.wikipedia.org/wiki/Quang_hợp).',
+        'Quang hợp diễn ra ở lục lạp.',
+      ],
+      [
+        'Gravity pulls objects toward Earth (https://en.wikipedia.org/wiki/Gravity).',
+        'Gravity pulls objects toward Earth.',
+      ],
+      [
+        'Năm 1687, Newton công bố ba định luật (https://vi.wikipedia.org/wiki/Isaac_Newton).',
+        'Năm 1687, Newton công bố ba định luật.',
+      ],
+      // The words that only name the source in the brackets go with the link.
+      [
+        'Lực hấp dẫn là lực hút giữa các vật có khối lượng (theo Wikipedia: https://vi.wikipedia.org/wiki/Lực).',
+        'Lực hấp dẫn là lực hút giữa các vật có khối lượng.',
+      ],
+      [
+        'Vận tốc là đại lượng vectơ (nguồn: https://vi.wikipedia.org/wiki/Vận_tốc).',
+        'Vận tốc là đại lượng vectơ.',
+      ],
+    ] as const) {
+      const { script } = lessonFor(answer);
+      expect(written(script), answer).toEqual([text]);
+      expect(saidOf(script), answer).toBe(text);
+    }
+    // TeachScript: the spoken sentence keeps its words, nothing is dropped.
+    const ts = lessonFor(
+      'Theo Wikipedia (https://vi.wikipedia.org/wiki/Lực), lực là đại lượng vectơ. <write id="s1" zone="steps">F = ma</write>.',
+    );
+    expect(ts.script.sentences.map((s) => s.spoken)).toEqual([
+      'Theo Wikipedia, lực là đại lượng vectơ.',
+      'F = ma.',
+    ]);
+    expect(ts.outline.dropped).toEqual([]);
+    // The sources a "(tài liệu tham khảo)" label lists are neither said nor written.
+    const listed = lessonFor(
+      '# Phân bào\n\nNguyên phân tạo 2 tế bào con.\n\n**Ghi chú thêm (tài liệu tham khảo):**\n\n* Thư viện chủ đề Sinh học · Chu kì tế bào: [https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào](https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào)\n* Nguyên phân trong sinh học phổ thông của các lớp trung học: [https://example.org/a](https://example.org/a)',
+    );
+    expect(written(listed.script)).toEqual(['Phân bào', 'Nguyên phân tạo 2 tế bào con.']);
+    expect(saidOf(listed.script)).not.toMatch(/Thư viện|tham khảo|Ghi chú|https?:/u);
+  });
+
+  it('two writes that differ only in the case of a symbol are both written (F/f, T/t, V/v)', () => {
+    for (const [answer, texts] of [
+      [
+        'Vì vật đứng yên nên hợp lực <write id="a" zone="main">F = 0</write>. Không có lực kéo nên lực ma sát nghỉ <write id="b" zone="main">f = 0</write>.',
+        ['F = 0', 'f = 0'],
+      ],
+      [
+        'Chu kỳ quay là <write id="a" zone="main">T = 2 s</write>. Thời gian rơi là <write id="b" zone="main">t = 2 s</write>.',
+        ['T = 2 s', 't = 2 s'],
+      ],
+      [
+        '<write id="a" zone="main">V = 2,0</write>. Và <write id="b" zone="main">v = 2,0</write>.',
+        ['V = 2,0', 'v = 2,0'],
+      ],
+    ] as const) {
+      const { script, outline } = checked(answer);
+      expect(written(script), answer).toEqual(texts);
+      expect(outline.dropped, answer).toEqual([]);
+    }
+  });
+
+  it('the same write with words between, or in another case, is written; back to back it is a glitch', () => {
+    const between = checked(
+      'Vật A có <write id="a" zone="main">a = 2 m/s²</write> và vật B cũng có <write id="b" zone="main">a = 2 m/s²</write>.',
+    );
+    expect(writesOf(between.script).map((w) => w.id)).toEqual(['a', 'b']);
+    expect(between.script.sentences[0]?.spoken).toBe(
+      'Vật A có a = 2 m/s² và vật B cũng có a = 2 m/s².',
+    );
+    const math = checked(
+      'Vật A có <write id="a" zone="main" math="true">a = 2</write> và vật B cũng có <write id="b" zone="main" math="true">a = 2</write>.',
+    );
+    expect(writesOf(math.script).map((w) => w.id)).toEqual(['a', 'b']);
+    expect(math.script.sentences[0]?.spoken).toBe('Vật A có $a = 2$ và vật B cũng có $a = 2$.');
+    // "Trường hợp 2", "Cách 2", "Vật B", "TH2" open a new part: the same result is written again.
+    for (const lead of ['Trường hợp 2:', 'Cách 2:', 'Vật B:', 'TH2:', 'Xét trường hợp 2,']) {
+      const cases = checked(
+        `Trường hợp 1: vật đứng yên, <write id="r1" zone="main" role="result">F = 0</write>.<box target="r1"/> ${lead} vật chuyển động thẳng đều, <write id="r2" zone="main" role="result">F = 0</write>.<box target="r2"/>`,
+      );
+      expect(
+        writesOf(cases.script).map((w) => w.id),
+        lead,
+      ).toEqual(['r1', 'r2']);
+      expect(boxes(cases.script), lead).toEqual(['r1', 'r2']);
+    }
+    // Back to back (nothing said between them): written once, said once.
+    const glitch = checked(
+      'Ta có <write id="a" zone="steps">a = 2 m/s²</write> <write id="b" zone="steps">a = 2 m/s²</write>.',
+    );
+    expect(writesOf(glitch.script).map((w) => w.id)).toEqual(['a']);
+    expect(glitch.script.sentences[0]?.spoken).toBe('Ta có a = 2 m/s².');
+  });
+
+  it('a line erased and written again with the same text is on the board', () => {
+    const { script, outline } = checked(
+      '<write id="s1" zone="steps">v = 20 m/s</write>. <erase target="s1"/><write id="s2" zone="steps">v = 20 m/s</write>.',
+    );
+    expect(writesOf(script).map((w) => w.id)).toEqual(['s1', 's2']);
+    expect(actionsOf(script).map((a) => a.kind)).toEqual(['write', 'erase', 'write']);
+    expect(outline.dropped).toEqual([]);
+  });
+
+  it('a final check that starts with "Vậy" or "=>" is a side note, never a boxed result', () => {
+    for (const md of [
+      '1. a = F/m = 2 m/s²\n2. v = at = 10 m/s\n\nVậy nếu khối lượng tăng gấp đôi thì gia tốc thay đổi thế nào?',
+      '1. a = F/m = 2 m/s²\n\n=> Nếu F tăng gấp đôi thì a bằng bao nhiêu?',
+      '1. a = F/m = 2 m/s²\n\n**Kết luận:**\n\nVậy nếu m tăng gấp đôi thì a thế nào?',
+    ]) {
+      const lesson = lessonFor(md);
+      const last = writesOf(lesson.script).at(-1);
+      expect([last?.zone, last?.role, last?.speed], md).toEqual(['side_notes', 'note', 'normal']);
+      expect(boxes(lesson.script), md).toEqual([]);
+      expect(lesson.outline.parts.at(-1)?.kind, md).toBe('check');
+    }
+    // TeachScript: a final question written as a result, with its box.
+    const ts = checked(
+      'Ta có <write id="s1" zone="steps">a = 2 m/s²</write>. Thử nhé: <write id="q1" zone="steps" role="result">Vậy nếu m tăng gấp đôi thì a thế nào?</write><box target="q1"/>',
+    );
+    expect(writesOf(ts.script).map((w) => [w.id, w.zone, w.role])).toEqual([
+      ['s1', 'steps', 'body'],
+      ['q1', 'side_notes', 'note'],
+    ]);
+    expect(boxes(ts.script)).toEqual([]);
+    // A question the teacher answers next is not a result either (eval answer P14).
+    const p14 = lessonFor(
+      '**Vậy, đúng hay sai?**\n\nGia tốc của quả bóng ở điểm cao nhất là g, không phải 0. **Sai**.',
+    );
+    expect(writesOf(p14.script).filter((w) => w.role === 'result')).toEqual([]);
+    expect(boxes(p14.script)).toEqual([]);
+  });
+
+  it('a power keeps its whole number for the voice, the board and the number check', () => {
+    const lesson = lessonFor('Điện tích electron là 1,6.10<sup>-19</sup> C.');
+    const spoken = lesson.script.sentences[0]?.spoken ?? '';
+    expect(spoken).toBe('Điện tích electron là $1,6.10^{-19}$ C.');
+    expect(written(lesson.script)).toEqual(['Điện tích electron là $1,6.10^{-19}$ C.']);
+    // Read as 1,6 × 10⁻¹⁹, never "1, 6.10…" (the plain "1,6.10^-19" is read the same way).
+    expect(toSpeech(spoken)).toBe(toSpeech('Điện tích electron là 1,6.10^-19 C.'));
+    expect(toSpeech(spoken)).toContain('một phẩy sáu nhân mười mũ trừ mười chín');
+    // A given value stays given ("1,6", "10", "19"), never an unverified "6.10".
+    const ts = lessonFor(
+      'Đề cho <write id="e1" zone="side_notes">e = 1,6.10<sup>-19</sup> C</write>.',
+    );
+    const [e1] = writesOf(ts.script);
+    const prov = checkNumbers(
+      e1?.text ?? '',
+      sourceNumbers('Cho điện tích electron 1,6.10^-19 C'),
+      [],
+    );
+    expect(prov.status).toBe('given');
+    expect(prov.numbers.map((n) => n.raw)).toEqual(['1,6', '10', '19']);
+    expect(written(lessonFor('Khối lượng 9,1.10<sup>-31</sup> kg.').script)).toEqual([
+      'Khối lượng $9,1.10^{-31}$ kg.',
+    ]);
+    // A citation is never a power.
+    expect(
+      written(lessonFor('Năm 1687<sup>[1]</sup> Newton công bố ba định luật.').script),
+    ).toEqual(['Năm 1687[1] Newton công bố ba định luật.']);
+  });
+
+  it('a superscript inside a formula is TeX: the formula renders, the voice reads one formula', async () => {
+    const { default: katex } = await import('katex');
+    const ts = lessonFor(
+      'Ta có <write id="m" zone="main" math="true">N_A = 6,02 \\cdot 10<sup>23</sup></write>.',
+    );
+    const [m] = writesOf(ts.script);
+    expect(m?.text).toBe('N_A = 6,02 \\cdot 10^{23}');
+    expect(ts.script.sentences[0]?.spoken).toBe('Ta có $N_A = 6,02 \\cdot 10^{23}$.');
+    expect(() => katex.renderToString(m?.text ?? '', { throwOnError: true })).not.toThrow();
+    // Markdown: inline and display formulas alike.
+    const md = lessonFor(
+      'Ta có $N_A = 6,02 \\cdot 10<sup>23</sup>$ hạt.\n\n$$m_e = 9,1 \\cdot 10<sup>-31</sup>\\ \\text{kg}$$',
+    );
+    const said = saidOf(md.script);
+    expect(said).toContain('$N_A = 6,02 \\cdot 10^{23}$');
+    expect(said).not.toMatch(/<\/?su[bp]>|\$\$?\d/u);
+    const display = writesOf(md.script).find((w) => w.math);
+    expect(display?.text).toBe('m_e = 9,1 \\cdot 10^{-31}\\ \\text{kg}');
+    for (const w of writesOf(md.script).filter((x) => x.math))
+      expect(() => katex.renderToString(w.text, { throwOnError: true })).not.toThrow();
+  });
+
+  it('a bare <p> or <b> before "=" is an average, written and said', () => {
+    const md = lessonFor('Trong cơ học lượng tử, <p> = 0 và <x> = 0 cho trạng thái cơ bản.');
+    expect(written(md.script)).toEqual([
+      'Trong cơ học lượng tử, <p> = 0 và <x> = 0 cho trạng thái cơ bản.',
+    ]);
+    expect(saidOf(md.script)).toContain('<p> = 0');
+    expect(written(lessonFor('Ta có giá trị trung bình <b> = 2 cm.').script)).toEqual([
+      'Ta có giá trị trung bình <b> = 2 cm.',
+    ]);
+    expect(written(scriptFor('Vậy <write id="s2" zone="steps"><p> = 0</write>.'))).toEqual([
+      '<p> = 0',
+    ]);
+    // Closed, or not before a relation, it is HTML (two paragraphs: a step and a side note).
+    expect(written(scriptFor('<p>Lực là vectơ.</p>\n\n<b>Lưu ý:</b> đổi đơn vị.'))).toEqual([
+      'Lực là vectơ.',
+      'Lưu ý: đổi đơn vị.',
+    ]);
+    expect(written(scriptFor('Trung bình <b>= 2 cm</b>.'))).toEqual(['Trung bình = 2 cm.']);
+  });
+});
+
 describe('numbers in = numbers out (property)', () => {
   const UNITS = ['m', 'kg', 'm/s', 'm/s²', 'N', 'J', 's', 'mol', '%', ''];
   const FILLER = [
@@ -762,7 +1041,11 @@ describe('numbers in = numbers out (property)', () => {
     '[nguồn](https://vi.wikipedia.org/wiki/Lực)',
     'trung bình <v>',
   ];
-  const numbers = (s: string) => s.match(/\d+(?:[.,]\d+)?/g) ?? [];
+  /**
+   * The numbers of a text, each whole with its decimal and multiplication dots ("1,6.10" in
+   * "1,6.10<sup>-19</sup>" is one number, 1,6 × 10: it must stay whole).
+   */
+  const numbers = (s: string) => s.match(/\d+(?:[.,]\d+)*/g) ?? [];
 
   it('every number of a random answer is written or said, whole; words-only parts fit', () => {
     const r = rng(7);
@@ -770,8 +1053,15 @@ describe('numbers in = numbers out (property)', () => {
     const number = () => {
       const n = (r() * 1000).toFixed(Math.floor(r() * 3));
       const shown = r() < 0.5 ? n.replace('.', ',') : n;
-      // A power written as HTML ("6,02·10<sup>23</sup>"): its digits are never lost.
-      return r() < 0.1 ? `${shown}·10<sup>${String(Math.floor(r() * 30) - 5)}</sup>` : shown;
+      // A power written as HTML ("6,02·10<sup>23</sup>", or "1,6.10<sup>-19</sup>" with the
+      // Vietnamese multiplication dot): its digits are never lost, its number never cut.
+      const power = r();
+      const exponent = String(Math.floor(r() * 30) - 5);
+      return power < 0.1
+        ? `${shown}·10<sup>${exponent}</sup>`
+        : power < 0.15
+          ? `${shown}.10<sup>${exponent}</sup>`
+          : shown;
     };
     for (let round = 0; round < 150; round++) {
       const lines: string[] = [];

@@ -183,6 +183,124 @@ describe('"Viết tiếp" equals teaching at once, wherever a TeachScript answer
   );
 });
 
+/**
+ * Fix round 3 (A3 review): the reviewer's oracle, kept as a table. Each answer is cut at every
+ * character; "Viết tiếp" (the part, then the whole answer) must leave the board as teaching the
+ * whole answer at once: each text with its face and role, each mark with the text it stands on.
+ * Markdown, TeachScript and real eval answers (copies in boardFixtures.json).
+ */
+describe('"Viết tiếp" oracle: cut at every character (fix round 3)', () => {
+  const evalAnswer = (id: string): string => {
+    const found = fixtures.answers.find((f) => f.id === id);
+    if (!found) throw new Error(`no fixture ${id}`);
+    return found.answer;
+  };
+  const table: [string, string][] = [
+    // A bare tag closed later reads as markup only once its closing tag arrives.
+    [
+      'markdown: <step>…</step> around the steps',
+      '# Bài\n<step>\n1. Đổi 72 km/h = 20 m/s\n2. a = v/t = 2 m/s²\n</step>\n\nXong rồi.',
+    ],
+    [
+      'markdown: a <note> closed three lines later',
+      '<note>Lưu ý:\nĐơn vị phải đổi về SI.\nKhông được quên.</note>\n\nv = 20 m/s',
+    ],
+    [
+      'markdown: a sentence with an inline link',
+      'Lực hấp dẫn là lực hút giữa hai vật (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn).\n\nGia tốc rơi tự do không phụ thuộc khối lượng.',
+    ],
+    [
+      'markdown: a final check that starts with "Vậy"',
+      '1. a = F/m = 2 m/s²\n2. v = at = 10 m/s\n\nVậy nếu khối lượng tăng gấp đôi thì gia tốc thay đổi thế nào?',
+    ],
+    [
+      'markdown: powers after a decimal comma, a citation superscript',
+      'Điện tích electron là 1,6.10<sup>-19</sup> C.\n\nNăm 1687<sup>[1]</sup> Newton công bố ba định luật.',
+    ],
+    [
+      'markdown: averages <p> and <b>, a verdict, an assumption, a source in brackets',
+      'Trong cơ học lượng tử, <p> = 0 và <x> = 0.\n\nVâng.\n\nMình hiểu ý bạn là vật trượt không ma sát.\n\nLực hấp dẫn là lực hút (theo Wikipedia: https://vi.wikipedia.org/wiki/Lực).',
+    ],
+    [
+      'TeachScript: a link in the spoken sentence',
+      'Theo Wikipedia (https://vi.wikipedia.org/wiki/Lực), lực là đại lượng vectơ. <write id="s1" zone="steps">F = ma</write>.',
+    ],
+    [
+      'TeachScript: F and f in two sentences',
+      'Vì vật đứng yên nên hợp lực <write id="a" zone="main">F = 0</write>. Không có lực kéo nên lực ma sát nghỉ <write id="b" zone="main">f = 0</write>.',
+    ],
+    [
+      'TeachScript: the same value twice with words between',
+      'Vật A có <write id="a" zone="main">a = 2 m/s²</write> và vật B cũng có <write id="b" zone="main">a = 2 m/s²</write>.',
+    ],
+    [
+      'TeachScript: the same result in case 1 and case 2',
+      'Trường hợp 1: vật đứng yên, <write id="r1" zone="main" role="result">F = 0</write>.<box target="r1"/> Trường hợp 2: vật chuyển động thẳng đều, <write id="r2" zone="main" role="result">F = 0</write>.<box target="r2"/>',
+    ],
+    [
+      'TeachScript: a power inside a math write',
+      'Ta có <write id="m" zone="main" math="true">N_A = 6,02 \\cdot 10<sup>23</sup></write>.',
+    ],
+    [
+      'TeachScript: erased, then written again',
+      '<write id="s1" zone="steps">v = 20 m/s</write>. <erase target="s1"/><write id="s2" zone="steps">v = 20 m/s</write>.',
+    ],
+    [
+      'markdown: short sentences ending with a link, a source name or a year',
+      'Quang hợp diễn ra ở lục lạp [Wikipedia](https://vi.wikipedia.org/wiki/Quang_hợp).\n\nGravity pulls objects toward Earth (https://en.wikipedia.org/wiki/Gravity).\n\nNăm 1687, Newton công bố ba định luật (https://vi.wikipedia.org/wiki/Isaac_Newton).\n\nVận tốc là đại lượng vectơ (nguồn: https://vi.wikipedia.org/wiki/Vận_tốc).',
+    ],
+    [
+      'TeachScript: T/t and V/v, symbols that differ only in case',
+      'Chu kỳ quay là <write id="a" zone="main">T = 2 s</write>. Thời gian rơi là <write id="b" zone="main">t = 2 s</write>. <write id="c" zone="main">V = 2,0</write>. Và <write id="d" zone="main">v = 2,0</write>.',
+    ],
+    [
+      'TeachScript: the same formula twice with words between',
+      'Vật A có <write id="a" zone="main" math="true">a = 2</write> và vật B cũng có <write id="b" zone="main" math="true">a = 2</write>.',
+    ],
+    [
+      'markdown: a final check that starts with "=>", thanks to a thing',
+      'Cảm ơn lực ma sát, xe mới dừng được.\n\n1. a = F/m = 2 m/s²\n\n=> Nếu F tăng gấp đôi thì a bằng bao nhiêu?',
+    ],
+    [
+      'markdown: superscripts inside inline and display formulas, a mantissa with a dot',
+      'Ta có $N_A = 6,02 \\cdot 10<sup>23</sup>$ hạt.\n\n$$m_e = 9,1 \\cdot 10<sup>-31</sup>\\ \\text{kg}$$\n\nKhối lượng 9,1.10<sup>-31</sup> kg.',
+    ],
+    [
+      'TeachScript and markdown: an average <p> or <b> before "="',
+      'Vậy <write id="s2" zone="steps"><p> = 0</write>. Ta có giá trị trung bình <b> = 2 cm.',
+    ],
+    [
+      'markdown: a list joined by "và" written as text',
+      '$$v_0 = 0\\ \\text{và}\\ a = 2\\ \\text{m/s}^2\\ \\text{và}\\ t = 3\\ \\text{s}$$\n\n$$m = 4\\ \\text{kg} \\ \\text{và} \\ F = 20\\ \\text{N}$$',
+    ],
+    ['eval P14 (a "Vậy …?" question line)', evalAnswer('P14')],
+    ['eval B5 (2<sup>3</sup>, a list of sources)', evalAnswer('B5')],
+    ['eval B7 (2<sup>10</sup>)', evalAnswer('B7')],
+  ];
+  it.each(table)(
+    '%s',
+    async (_name, answer) => {
+      await fresh(answer);
+      const whole = seenOnFaces();
+      const wrong: number[] = [];
+      for (let at = 1; at < answer.length; at++) {
+        await continued(answer.slice(0, at), answer);
+        if (JSON.stringify(seenOnFaces()) !== JSON.stringify(whole)) wrong.push(at);
+      }
+      const first = wrong[0];
+      if (first !== undefined) {
+        await continued(answer.slice(0, first), answer);
+        expect(
+          seenOnFaces(),
+          `${String(wrong.length)} wrong cuts, first at ${String(first)}`,
+        ).toEqual(whole);
+      }
+      expect(wrong).toEqual([]);
+    },
+    120000,
+  );
+});
+
 describe('"Viết tiếp" after a lesson that was stopped part way', () => {
   it('teaches what the stopped run never reached, once', async () => {
     useBoardStore.getState().set({ speed: 2 });
