@@ -853,3 +853,135 @@ test('item 3: faces keep their writing and the learner’s strokes; zoom scrolls
   });
   expect(fitted).toBeLessThanOrEqual(0);
 });
+
+/** A hand loop around `box` with the mouse (screen px), as a learner circles with "Khoanh để hỏi". */
+async function drawLoop(
+  page: Page,
+  box: { x: number; y: number; width: number; height: number },
+  pad = 14,
+) {
+  const cx = box.x + box.width / 2;
+  const cy = box.y + box.height / 2;
+  const rx = box.width / 2 + pad;
+  const ry = box.height / 2 + pad;
+  const at = (i: number) => {
+    const a = (2 * Math.PI * i) / 32;
+    return { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a) };
+  };
+  await page.mouse.move(at(0).x, at(0).y);
+  await page.mouse.down();
+  for (let i = 1; i <= 32; i++) await page.mouse.move(at(i).x, at(i).y, { steps: 2 });
+  await page.mouse.up();
+}
+
+test('item 2: circle a formula and ask about it; the answer is in the chat, the lesson stays', async ({
+  page,
+}) => {
+  const systems = await fakeGemini(page, [
+    { text: LESSON, finishReason: 'STOP' },
+    { text: 'Công thức này cho biết quãng đường vật rơi sau thời gian t.', finishReason: 'STOP' },
+  ]);
+  const board = await openBoard(page);
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  await expect.poll(() => systems.length).toBe(1);
+
+  await board.getByRole('button', { name: 'Khoanh để hỏi' }).click();
+  const formula = board.locator('.board__el', { has: page.locator('.katex') }).first();
+  const box = await formula.boundingBox();
+  if (!box) throw new Error('no formula on the board');
+  await drawLoop(page, box);
+  const bar = board.getByRole('group', { name: 'Chỗ em khoanh trên bảng' });
+  await expect(bar).toContainText('Em khoanh:');
+  await expect(bar).toContainText('s = 1/2 g t²');
+  // The question carries the circled part (the chip above the box says so).
+  await expect(page.locator('.chat-panel__board-chip')).toContainText('Hỏi về:');
+  await expect(page.locator('.chat-panel')).toContainText('kèm phần chữ em khoanh trên bảng');
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+
+  await bar.getByRole('button', { name: 'Hỏi thầy chỗ này' }).click();
+  await expect.poll(() => systems.length).toBe(2);
+  // The formula's LaTeX, in its fenced block; a chat answer, not a new board lesson.
+  expect(systems[1]).toContain('<board_selection>');
+  expect(systems[1]).toContain('s = \\frac{1}{2} g t^2');
+  expect(systems[1]).not.toContain('CHẾ ĐỘ BẢNG TRẮNG');
+  const chat = page.locator('.chat-panel');
+  const aside = chat.locator('article.chat-message--assistant').last();
+  await expect(aside).toContainText('Công thức này cho biết quãng đường vật rơi', {
+    timeout: 15_000,
+  });
+  await expect(aside).toContainText('Nội dung do AI hỗ trợ');
+  await expect(chat.locator('article.chat-message--user').last()).toContainText('Về chỗ em khoanh');
+  // The board keeps the original lesson; the answer is not written on it.
+  await expect(board.locator('[data-id="h1"]')).toContainText('Rơi tự do');
+  await expect(board.locator('.board__el.is-body')).toHaveCount(4);
+  await expect(board.locator('.board__sheet')).not.toContainText('Công thức này cho biết');
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+test('item 2: a loop around nothing gets the app’s own answer and asks the AI nothing', async ({
+  page,
+}) => {
+  const systems = await fakeGemini(page, [{ text: LESSON, finishReason: 'STOP' }]);
+  const board = await openBoard(page);
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  await expect.poll(() => systems.length).toBe(1);
+
+  await board.getByRole('button', { name: 'Khoanh để hỏi' }).click();
+  const sheet = await board.locator('.board__student').boundingBox();
+  if (!sheet) throw new Error('no board');
+  // The right of the board, level with the steps: nothing is written there.
+  await drawLoop(page, {
+    x: sheet.x + sheet.width * 0.82,
+    y: sheet.y + sheet.height * 0.5,
+    width: 50,
+    height: 24,
+  });
+  const bar = board.getByRole('group', { name: 'Chỗ em khoanh trên bảng' });
+  await expect(bar).toContainText('Mình chưa thấy em khoanh vào chữ hay hình nào trên bảng');
+  await expect(bar.getByRole('button', { name: 'Hỏi thầy chỗ này' })).toHaveCount(0);
+  await expect(page.locator('.chat-panel__board-chip')).toHaveCount(0);
+  expect(systems).toHaveLength(1);
+});
+
+test('item 2: circling during the lesson pauses it; "Quay lại bài giảng" teaches on to the end', async ({
+  page,
+}) => {
+  await fakeGemini(page, [{ text: LESSON, finishReason: 'STOP' }]);
+  const board = await openBoard(page);
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  const title = board.locator('[data-id="h1"]');
+  await expect(board.getByRole('button', { name: 'Tạm dừng' })).toBeVisible({ timeout: 15_000 });
+  await board.getByRole('radio', { name: '2×' }).click();
+  await expect(title).toBeVisible();
+
+  await board.getByRole('button', { name: 'Khoanh để hỏi' }).click();
+  const box = await title.boundingBox();
+  if (!box) throw new Error('no title');
+  await drawLoop(page, box, 10);
+  await expect(board.getByRole('button', { name: 'Quay lại bài giảng' })).toBeVisible();
+  await expect(board.getByRole('button', { name: 'Tạm dừng' })).toHaveCount(0);
+  await expect(board.getByRole('group', { name: 'Chỗ em khoanh trên bảng' })).toBeVisible();
+
+  await board.getByRole('button', { name: 'Quay lại bài giảng' }).click();
+  await expect(board.getByRole('group', { name: 'Chỗ em khoanh trên bảng' })).toHaveCount(0);
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 45_000 });
+  await expect(board.locator('.board__el.is-body')).toHaveCount(4);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+/** Opens AI Teacher on the board layout (the board is lazy-loaded). */
+async function openBoard(page: Page) {
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
+  return board;
+}
