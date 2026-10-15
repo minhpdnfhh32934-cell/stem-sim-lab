@@ -1,8 +1,9 @@
-import { CircleCheck, LoaderCircle, Sparkles, TriangleAlert } from 'lucide-react';
+import { CircleCheck, LoaderCircle, Settings2, Sparkles, TriangleAlert } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
 import { isLocalMessage } from '@/ai/errorKind';
 import { explainSolution, type Explanation } from '@/ai/explain';
@@ -20,7 +21,8 @@ type State =
   | { kind: 'idle' }
   | { kind: 'loading' }
   | { kind: 'done'; result: Explanation }
-  | { kind: 'error'; message: string };
+  /** `section`: the Settings page that helps (null: none does). */
+  | { kind: 'error'; message: string; section: SettingsSection | null };
 
 /**
  * "AI diễn giải" (§2.1 b): the AI explains, in words, numbers the engine computed. The
@@ -42,6 +44,7 @@ export function ExplainBox({
   const locale = useSettingsStore((s) => s.locale);
   const provider = useAiStore((s) => s.provider);
   const engine = useAnalysisEngine();
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const aiAllowed = useSafetyStore((s) => s.status?.aiAllowed ?? false);
   // The explanation belongs to one solution: a new solution shows the button again.
   const [entry, setEntry] = useState<{ solution: Solution; state: State } | null>(null);
@@ -85,14 +88,23 @@ export function ExplainBox({
     } catch (e) {
       if (ctrl.signal.aborted) return;
       const err = toAiError(e);
-      // A runtime on this computer failed: its study-partner sentence (nothing went online).
-      const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
-      setState({
-        kind: 'error',
-        message: isLocalMessage(err.message)
-          ? localFailureText(locale, localFailure(err), kind)
-          : err.message || err.code,
-      });
+      if (err.code === 'unavailable' && err.message === 'gemma') {
+        // The learner chose Gemma but its model is not downloaded: nothing was sent anywhere.
+        setState({ kind: 'error', message: t('chat.gemmaMissingNotice'), section: 'local' });
+      } else if (err.code === 'unavailable' && err.message === 'off') {
+        setState({ kind: 'error', message: t('chat.errors.cloudOff'), section: 'ai' });
+      } else if (isLocalMessage(err.message)) {
+        // A runtime on this computer failed: its study-partner sentence (nothing went online).
+        const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
+        const failure = localFailure(err);
+        setState({
+          kind: 'error',
+          message: localFailureText(locale, failure, kind),
+          section: failure.section,
+        });
+      } else {
+        setState({ kind: 'error', message: err.message || err.code, section: null });
+      }
     }
   };
 
@@ -144,9 +156,20 @@ export function ExplainBox({
         </p>
       )}
       {state.kind === 'error' && (
-        <p className="explain explain--hidden" role="alert">
-          {t('solution.explainError', { message: state.message })}
-        </p>
+        <div className="explain explain--hidden" role="alert">
+          <p className="explain__error">{t('solution.explainError', { message: state.message })}</p>
+          {state.section && (
+            <button
+              type="button"
+              className="btn explain__settings"
+              onClick={() => {
+                if (state.section) openSettingsAt(state.section);
+              }}
+            >
+              <Settings2 size={14} strokeWidth={1.75} aria-hidden="true" /> {t('chat.settings')}
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
@@ -7,11 +7,19 @@ import { useLocalAiStore } from '@/ai/local/localAiStore';
 import type { LocalRuntimeClient } from '@/ai/local/types';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError, type ChatRequest } from '@/ai/types';
+import { useWorkspaceStore } from '@/app/workspaceStore';
 import type { PhysicsScene, Solution } from '@/physics/types';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { statusOf, TERMS_VERSION } from '@/safety/safety';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { ExplainBox } from './ExplainBox';
+
+/** Whether the in-app Gemma model is downloaded (no model file is read in these tests). */
+const gemma = vi.hoisted(() => ({ ready: false }));
+vi.mock('@/ai/gemmaTransport', async (importOriginal) => {
+  const real = await importOriginal<typeof import('@/ai/gemmaTransport')>();
+  return { ...real, gemmaReady: () => Promise.resolve(gemma.ready) };
+});
 
 // The runtime on this computer and the cloud are scripted fakes.
 const local = {
@@ -50,6 +58,8 @@ describe('"AI diễn giải" with the AI on this computer', () => {
     // The online AI is off: the button stays, because the AI on this computer explains.
     useAiStore.setState({ provider: 'off' });
     useChatStore.setState({ engine: 'local', engineChosen: true });
+    useWorkspaceStore.setState({ settingsOpen: false, settingsSection: 'appearance' });
+    gemma.ready = false;
     useLocalAiStore.setState({
       selected: {
         kind: 'ollama',
@@ -93,6 +103,39 @@ describe('"AI diễn giải" with the AI on this computer', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       /Mình chưa kết nối được tới Ollama trên máy này/,
     );
+    expect(cloudCalls).toHaveLength(0);
+  });
+
+  it('a chosen Gemma without its model is said in plain words, with its Settings page', async () => {
+    const user = userEvent.setup();
+    useAiStore.setState({ provider: 'gemini' });
+    useChatStore.setState({ engine: 'gemma', engineChosen: true });
+    render(<ExplainBox scene={scene} solution={solution} problemText="" />);
+    await user.click(await screen.findByRole('button', { name: /AI diễn giải/ }));
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(
+      'Không lấy được diễn giải: Gemma chưa sẵn sàng: chưa tải mô hình này.',
+    );
+    // Never an internal code such as "gemma".
+    expect(alert.textContent).not.toMatch(/: gemma$/);
+    await user.click(within(alert).getByRole('button', { name: 'Cài đặt' }));
+    expect(useWorkspaceStore.getState()).toMatchObject({
+      settingsOpen: true,
+      settingsSection: 'local',
+    });
+    expect(local.chat).not.toHaveBeenCalled();
+    expect(cloudCalls).toHaveLength(0);
+  });
+
+  it('a failed runtime offers its Settings page too', async () => {
+    const user = userEvent.setup();
+    local.chat.mockRejectedValue(new AiError('http', 'model-missing: 404: model not found'));
+    render(<ExplainBox scene={scene} solution={solution} problemText="" />);
+    await user.click(screen.getByRole('button', { name: /AI diễn giải/ }));
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(/Ollama chưa có mô hình em đã chọn/);
+    await user.click(within(alert).getByRole('button', { name: 'Cài đặt' }));
+    expect(useWorkspaceStore.getState().settingsSection).toBe('runtimes');
     expect(cloudCalls).toHaveLength(0);
   });
 
