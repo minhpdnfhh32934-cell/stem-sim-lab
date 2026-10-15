@@ -17,10 +17,12 @@ import { parseLoopback, tryLoopback } from './endpoint';
 import { cleanId, positive } from './runtimes';
 import {
   CAPABILITY_NAMES,
+  UNVERIFIED,
   isCap,
   isRuntimeKind,
   type Capabilities,
   type LocalSelection,
+  type LocalTest,
   type ModelDetails,
   type RuntimeKind,
   type RuntimeProbe,
@@ -39,6 +41,8 @@ export interface ModelCheck {
   contextLength: number | null;
   /** When it was checked (ms since 1970). */
   checkedAt: number;
+  /** When "Kiểm tra trả lời" last got an answer from it (ms since 1970); absent: never. */
+  testedAt?: number;
 }
 
 export interface LocalStatus {
@@ -67,6 +71,23 @@ export interface LocalAiState extends Persisted {
   select: (selection: LocalSelection | null) => void;
   /** Keeps what the runtime said about a model (only values seen on this computer count). */
   recordCheck: (kind: RuntimeKind, baseUrl: string, details: ModelDetails, at?: number) => void;
+  /**
+   * Keeps the result of "Kiểm tra trả lời" when the model answered: the time, and streaming seen
+   * on this computer when the answer came in more than one piece. A failed test changes nothing
+   * saved (the page shows why).
+   */
+  recordTest: (
+    kind: RuntimeKind,
+    baseUrl: string,
+    model: string,
+    test: LocalTest,
+    at?: number,
+  ) => void;
+  /**
+   * "Khôi phục mặc định": forgets the added addresses, every check and the chosen runtime and
+   * model (the chat engine is left as it is: a chosen local engine then sends nothing).
+   */
+  reset: () => void;
   /** "Tìm trên máy này": the three usual addresses plus the ones the user added. */
   detect: () => Promise<RuntimeProbe[]>;
 }
@@ -118,7 +139,14 @@ function sanitizeCheck(v: unknown): ModelCheck | null {
   const capabilities = Object.fromEntries(
     CAPABILITY_NAMES.map((n) => [n, caps[n]]),
   ) as unknown as Capabilities;
-  return { capabilities, contextLength: positive(o.contextLength), checkedAt: o.checkedAt };
+  const tested =
+    typeof o.testedAt === 'number' && Number.isFinite(o.testedAt) ? { testedAt: o.testedAt } : {};
+  return {
+    capabilities,
+    contextLength: positive(o.contextLength),
+    checkedAt: o.checkedAt,
+    ...tested,
+  };
 }
 
 /** The newest `MAX_CHECKS` checks. */
@@ -126,6 +154,18 @@ function newest(checks: [string, ModelCheck][]): Record<string, ModelCheck> {
   return Object.fromEntries(
     checks.sort((a, b) => b[1].checkedAt - a[1].checkedAt).slice(0, MAX_CHECKS),
   );
+}
+
+/**
+ * The checks with `check` under `key`, replacing an older one (a check made again must win
+ * whatever the times say: an older entry is never kept next to it).
+ */
+function withCheck(
+  checks: Record<string, ModelCheck>,
+  key: string,
+  check: ModelCheck,
+): Record<string, ModelCheck> {
+  return newest([...Object.entries(checks).filter(([k]) => k !== key), [key, check]]);
 }
 
 /** Stored data checked again: anything invalid is dropped. */
@@ -195,17 +235,39 @@ export const useLocalAiStore = create<LocalAiState>()(
         const base = tryLoopback(baseUrl);
         const model = cleanId(details.model);
         if (!base || model === null) return;
+        const key = checkKey(kind, base.base, model);
+        const before = get().checks[key];
         const check: ModelCheck = {
-          capabilities: { ...details.capabilities },
+          capabilities: {
+            ...details.capabilities,
+            // Streaming seen by "Kiểm tra trả lời" stays seen.
+            ...(before?.capabilities.streaming === 'yes' ? { streaming: 'yes' as const } : {}),
+          },
           contextLength: positive(details.contextLength),
           checkedAt: at,
+          ...(before?.testedAt !== undefined ? { testedAt: before.testedAt } : {}),
         };
-        set({
-          checks: newest([
-            ...Object.entries(get().checks),
-            [checkKey(kind, base.base, model), check],
-          ]),
-        });
+        set({ checks: withCheck(get().checks, key, check) });
+      },
+      recordTest: (kind, baseUrl, model, test, at = Date.now()) => {
+        const base = tryLoopback(baseUrl);
+        const id = cleanId(model);
+        if (!base || id === null || test.status !== 'ok') return;
+        const key = checkKey(kind, base.base, id);
+        const before = get().checks[key];
+        const check: ModelCheck = {
+          capabilities: {
+            ...(before?.capabilities ?? UNVERIFIED),
+            ...(test.streamed ? { streaming: 'yes' as const } : {}),
+          },
+          contextLength: before?.contextLength ?? null,
+          checkedAt: before?.checkedAt ?? at,
+          testedAt: at,
+        };
+        set({ checks: withCheck(get().checks, key, check) });
+      },
+      reset: () => {
+        set({ userEndpoints: [], selected: null, checks: {}, status: IDLE });
       },
       detect: async () => {
         set({ status: { phase: 'detecting', probes: [], error: null } });

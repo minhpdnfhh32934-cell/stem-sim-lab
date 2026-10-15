@@ -214,6 +214,63 @@ describe('local runtime settings', () => {
     expect(Object.keys(useLocalAiStore.getState().checks)).toHaveLength(MAX_CHECKS);
   });
 
+  it('a model checked again keeps the new check; a test answer adds its time and streaming', () => {
+    const s = useLocalAiStore.getState();
+    const key = checkKey('ollama', 'http://127.0.0.1:11434', 'qwen3:8b');
+    s.recordCheck('ollama', 'http://127.0.0.1:11434', details('qwen3:8b'), 1000);
+    s.recordCheck(
+      'ollama',
+      'http://127.0.0.1:11434',
+      { ...details('qwen3:8b'), contextLength: 8192 },
+      2000,
+    );
+    expect(useLocalAiStore.getState().checks[key]).toMatchObject({
+      contextLength: 8192,
+      checkedAt: 2000,
+    });
+    const ok = { status: 'ok' as const, firstPieceMs: 300, streamed: true, detail: '' };
+    s.recordTest('ollama', 'http://127.0.0.1:11434', 'qwen3:8b', ok, 3000);
+    expect(useLocalAiStore.getState().checks[key]).toMatchObject({
+      contextLength: 8192,
+      checkedAt: 2000,
+      testedAt: 3000,
+      capabilities: { streaming: 'yes', contextLength: 'yes' },
+    });
+    // A later model check keeps the answer test and the streaming it saw.
+    s.recordCheck('ollama', 'http://127.0.0.1:11434', details('qwen3:8b'), 4000);
+    expect(useLocalAiStore.getState().checks[key]).toMatchObject({
+      testedAt: 3000,
+      capabilities: { streaming: 'yes' },
+    });
+    // A failed test saves nothing; a test of a model never checked starts from "Chưa xác minh".
+    s.recordTest('ollama', 'http://127.0.0.1:11434', 'other', { ...ok, status: 'loading' }, 5000);
+    expect(useLocalAiStore.getState().checks).not.toHaveProperty(
+      checkKey('ollama', 'http://127.0.0.1:11434', 'other'),
+    );
+    s.recordTest('ollama', 'http://127.0.0.1:11434', 'other', { ...ok, streamed: false }, 6000);
+    expect(
+      useLocalAiStore.getState().checks[checkKey('ollama', 'http://127.0.0.1:11434', 'other')],
+    ).toEqual({ capabilities: UNVERIFIED, contextLength: null, checkedAt: 6000, testedAt: 6000 });
+    // Saved and read back.
+    expect(sanitizeLocalAi(saved().state).checks[key]?.testedAt).toBe(3000);
+  });
+
+  it('"Khôi phục mặc định" forgets addresses, checks and the choice, and asks nothing', () => {
+    const s = useLocalAiStore.getState();
+    s.select(selection);
+    s.addEndpoint('http://127.0.0.1:11435');
+    s.recordCheck('ollama', 'http://127.0.0.1:11434', details('qwen3:8b'), 1000);
+    s.reset();
+    expect(useLocalAiStore.getState()).toMatchObject({
+      userEndpoints: [],
+      selected: null,
+      checks: {},
+      status: { phase: 'idle', probes: [], error: null },
+    });
+    expect(saved().state).toEqual({ userEndpoints: [], selected: null, checks: {} });
+    for (const fn of Object.values(client)) expect(fn).not.toHaveBeenCalled();
+  });
+
   it('detects only when asked: the usual addresses plus the added ones', async () => {
     const usual: RuntimeProbe[] = [
       {
