@@ -1165,6 +1165,12 @@ export async function askTeacher(
      * (pictureReader.ts), never online.
      */
     boardSelection?: { selection: BoardSelection; image?: ArrayBuffer };
+    /**
+     * "Viết tiếp": the question asks for the rest of the last answer in `records`. That answer
+     * must be in what is sent; an answer that stays on this computer (about a circled picture) is
+     * never continued online (the AI there would write the rest of something else).
+     */
+    continues?: boolean;
   },
 ): Promise<ReplyResult> {
   const signal = options.signal;
@@ -1259,6 +1265,10 @@ export async function askTeacher(
   // reviewer) leaves out earlier questions about a picture of the circled area and their answers:
   // those answers are the on-device model's reading of the learner's strokes.
   const shared = engine === 'cloud' || think ? withoutPictureAsks(records) : records;
+  // The answer to continue was left out of what would be sent: nothing is asked at all.
+  if (options.continues && records.length > 0 && shared.at(-1) !== records.at(-1)) {
+    throw new TeacherError(translate(locale, 'chat.errors.continuePictureLocal'), null, false);
+  }
   // A question about the board is answered in the chat, never as a new board lesson.
   const board = options.board === true && !circled;
   // What was seen on this computer about the chosen local model (its context window), if checked.

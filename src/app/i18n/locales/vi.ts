@@ -984,6 +984,11 @@ const vi = {
     continuedUnreviewed: 'Phần viết tiếp chưa được rà soát.',
     reviewSkippedPicture:
       'Chưa rà soát: câu hỏi về hình em khoanh chỉ được trả lời trên máy này, không gửi lên mạng để kiểm tra chéo.',
+    notReadAloud:
+      'Mình không đọc to câu trả lời này: giọng đọc đang chọn chạy trên mạng, còn câu trả lời về hình em khoanh chỉ ở lại trên máy này. Muốn nghe, em chọn giọng trên máy hoặc giọng Windows trong Cài đặt → Giọng nói.',
+    voiceSettings: 'Chọn giọng',
+    continuePictureLocal:
+      'Câu trả lời về hình em khoanh chỉ viết tiếp được khi em chọn “Gemma cục bộ” hoặc “AI trên máy khác”.',
     references: 'Nguồn kiến thức',
     thinking: 'Thầy đang suy nghĩ…',
     truncatedNote: 'Câu trả lời dài nên đã dừng giữa chừng.',
@@ -1057,6 +1062,8 @@ const vi = {
         'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay, nên chưa có gì được gửi đi. Em gõ điều em muốn hỏi về chỗ này nhé.',
       boardPicture:
         'Mình chưa tạo được ảnh vùng em khoanh nên chưa hỏi thầy. Em gõ điều em muốn hỏi về chỗ này nhé.',
+      continuePictureLocal:
+        'Câu trả lời về hình em khoanh chỉ viết tiếp được bằng “Gemma cục bộ” hoặc “AI trên máy khác”, nên chưa có gì được gửi đi.',
       localDown:
         'Mình chưa kết nối được tới {name} trên máy này: có thể chương trình chưa mở. Em mở {name} rồi hỏi lại nhé. Câu hỏi không được gửi đi nơi khác.',
       localModelMissing:
@@ -1572,6 +1579,8 @@ const vi = {
       all: 'Cả phần này',
       picture: 'Hình em khoanh',
       pictureLocal: 'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng.',
+      pictureLocalQuiet:
+        'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng. Giọng Gemini sẽ không đọc to câu trả lời này.',
       pictureUnreadable:
         'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé.',
       resume: 'Quay lại bài giảng',

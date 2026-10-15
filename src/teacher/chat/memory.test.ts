@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { ChatMessageRecord } from './chatStore';
 import {
+  answersPicture,
+  asksAboutPicture,
   CLOUD_OUTPUT_TOKENS,
   contextBudget,
   EMPTY_ANSWER,
@@ -263,6 +265,10 @@ describe('a question about part of the board (item 2)', () => {
     ];
     expect(withoutPictureAsks(records).map((r) => r.id)).toEqual(['q1', 'a1', 'q2', 'a2', 'q3']);
     expect(withoutPictureAsks([])).toEqual([]);
+    // The same answers are the ones the voice and "Viết tiếp" keep on this computer.
+    expect(records.flatMap((r, i) => (answersPicture(records, i) ? [r.id] : []))).toEqual(['pa']);
+    expect(records.filter((r) => asksAboutPicture(r)).map((r) => r.id)).toEqual(['p', 'p2']);
+    expect(answersPicture(records, 0)).toBe(false);
   });
 });
 

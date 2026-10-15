@@ -495,6 +495,52 @@ describe('a picture of the circled area', () => {
     expect(JSON.stringify(gemmaCalls)).not.toContain('tam giác');
   });
 
+  it('"Viết tiếp" of an answer about a picture is never asked online; on this computer it is', async () => {
+    const lesson: ChatMessageRecord[] = [
+      { id: 'q1', role: 'user', content: 'Giải bài rơi tự do' },
+      {
+        id: 'a1',
+        role: 'assistant',
+        content: 'BÀI GIẢNG RƠI TỰ DO hoàn chỉnh.',
+        unverifiedNumbers: [],
+        mode: 'board',
+      },
+    ];
+    const pictureTurn: ChatMessageRecord[] = [
+      {
+        id: 'pq',
+        role: 'user',
+        content: 'Hình này là gì?',
+        boardRef: { face: 0, ids: [], excerpt: '' },
+      },
+      {
+        id: 'pa',
+        role: 'assistant',
+        content: 'Em vẽ một tam giác có',
+        unverifiedNumbers: [],
+        mode: 'aside',
+        truncated: true,
+      },
+    ];
+    const upto = [...lesson, ...pictureTurn];
+    // Online: the AI there never sees the cut answer, so nothing is asked at all (its reply would
+    // be joined to the picture answer as if it were its rest).
+    const online = ask('Viết tiếp phần còn lại.', { continues: true }, upto);
+    await expect(online).rejects.toBeInstanceOf(TeacherError);
+    await expect(online).rejects.toThrow(translate('vi', 'chat.errors.continuePictureLocal'));
+    expect(calls).toHaveLength(0);
+    // The rest of the lesson itself is continued online as before.
+    await ask('Viết tiếp phần còn lại.', { continues: true }, lesson);
+    expect(calls).toHaveLength(1);
+    // On this computer the cut answer is in what is sent, and the rest is asked.
+    picked.current = 'gemma';
+    useChatStore.setState({ engine: 'gemma' });
+    calls.length = 0;
+    await ask('Viết tiếp phần còn lại.', { continues: true }, upto);
+    expect(JSON.stringify(gemmaCalls[0]?.messages)).toContain('Em vẽ một tam giác có');
+    expect(calls).toHaveLength(0);
+  });
+
   it('a runtime on this computer: only a model seen reading pictures gets it', async () => {
     picked.current = 'local';
     const chat = vi.fn<LocalRuntimeClient['chat']>(() =>

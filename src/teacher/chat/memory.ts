@@ -135,13 +135,31 @@ export function withoutPictureAsks(records: readonly ChatMessageRecord[]): ChatM
   for (let i = 0; i < records.length; i++) {
     const r = records[i];
     if (!r) continue;
-    if (r.role === 'user' && r.boardRef !== undefined && r.boardRef.excerpt.trim() === '') {
+    if (asksAboutPicture(r)) {
       if (records[i + 1]?.role === 'assistant') i++;
       continue;
     }
     kept.push(r);
   }
   return kept;
+}
+
+/** A question about a picture of the circled area: a `boardRef` without text. */
+export function asksAboutPicture(record: ChatMessageRecord | undefined): boolean {
+  return (
+    record?.role === 'user' &&
+    record.boardRef !== undefined &&
+    record.boardRef.excerpt.trim() === ''
+  );
+}
+
+/**
+ * The answer at `index` is the on-device model's reading of a circled picture (it follows a
+ * question about one, see `withoutPictureAsks`): it stays on this computer, also for the voice
+ * that reads it aloud and for "Viết tiếp".
+ */
+export function answersPicture(records: readonly ChatMessageRecord[], index: number): boolean {
+  return records[index]?.role === 'assistant' && asksAboutPicture(records[index - 1]);
 }
 
 /** The learner's question the record at `index` answers (the user turn before it), or ''. */

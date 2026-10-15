@@ -989,6 +989,11 @@ const en: Messages = {
     continuedUnreviewed: 'The continued part was not reviewed.',
     reviewSkippedPicture:
       'Not reviewed: a question about the picture you circled is answered on this computer only, never sent online to be cross-checked.',
+    notReadAloud:
+      'I did not read this answer aloud: the chosen voice works online, and an answer about the picture you circled stays on this computer. To hear it, pick the on-device voice or a Windows voice in Settings → Voice.',
+    voiceSettings: 'Choose a voice',
+    continuePictureLocal:
+      'An answer about the picture you circled can only be continued with “Local Gemma” or “AI on this computer”.',
     references: 'Knowledge sources',
     thinking: 'Thinking…',
     truncatedNote: 'This answer was long, so it stopped in the middle.',
@@ -1061,6 +1066,8 @@ const en: Messages = {
         "The AI you are using can't read drawings or handwriting, so nothing was sent. Type what you want to ask about this part.",
       boardPicture:
         "I couldn't make a picture of the circled area, so nothing was asked. Type what you want to ask about this part.",
+      continuePictureLocal:
+        'An answer about the picture you circled can only be continued with “Local Gemma” or “AI on this computer”, so nothing was sent.',
       localDown:
         'I could not reach {name} on this computer: the program may not be open. Open {name} and ask again. The question was not sent anywhere else.',
       localModelMissing:
@@ -1576,6 +1583,8 @@ const en: Messages = {
       picture: 'The drawing you circled',
       pictureLocal:
         'With a picture of the circled area — on this computer only, never sent online.',
+      pictureLocalQuiet:
+        'With a picture of the circled area — on this computer only, never sent online. The Gemini voice will not read this answer aloud.',
       pictureUnreadable:
         "The AI you are using can't read drawings or handwriting. Type in the chat what you want to ask about this part.",
       resume: 'Back to the lesson',

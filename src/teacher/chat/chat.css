@@ -955,8 +955,10 @@ p.gpu-notice {
   margin: 0;
 }
 
-/* An answer that stopped at the output limit ("Viết tiếp"). */
-.chat-message__continue {
+/* An answer that stopped at the output limit ("Viết tiếp"), and the note that an answer about a
+   circled picture was not read aloud. */
+.chat-message__continue,
+.chat-message__quiet {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;

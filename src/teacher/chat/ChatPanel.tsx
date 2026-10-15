@@ -34,6 +34,7 @@ import { useBoardStore } from '@/teacher/board/boardStore';
 import { askable, cut, selectionExcerpt, type BoardSelection } from '@/teacher/board/selection';
 import { BOARD_ASK_EVENT } from '@/teacher/board/boardAsk';
 import {
+  canSpeakOnDevice,
   speak,
   speechSupported,
   stopSpeaking,
@@ -45,7 +46,7 @@ import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { AnswerStopped, TeacherError, askTeacher, type ReplyMetadata } from './chatService';
 import { useTeacherStore } from '@/teacher/teacherStore';
-import { CONTINUE_PROMPT, joinContinuation } from './memory';
+import { CONTINUE_PROMPT, answersPicture, asksAboutPicture, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
 import { useT, type MessageKey } from '@/app/i18n';
 import { gemmaReady } from '@/ai/gemmaTransport';
@@ -151,6 +152,36 @@ export function ChatPanel({
   const quietBeforeAsking = () => {
     if (boardOwnsVoice() && useBoardStore.getState().status === 'playing') return;
     stopSpeaking();
+  };
+  /** Answers about a circled picture that were not read aloud (the chosen voice reads online). */
+  const [unread, setUnread] = useState<readonly string[]>([]);
+  /**
+   * Reads an answer aloud. An answer about a circled picture is the on-device model's reading of
+   * the learner's strokes and stays on this computer: only a voice that reads here says it (the
+   * on-device voice, a Windows voice that is not an online one), never the Gemini voice or an
+   * online Windows voice. Otherwise it is not read, and the chat says so under the answer.
+   */
+  const readAloud = (text: string, id: string, aside: boolean, staysHere: boolean) => {
+    if (!useVoiceStore.getState().enabled || !speaksInChat(aside)) return;
+    if (!staysHere) {
+      void speak(text);
+      return;
+    }
+    void canSpeakOnDevice().then((ok) => {
+      if (!ok) {
+        setUnread((ids) => (ids.includes(id) ? ids : [...ids, id]));
+        return;
+      }
+      // Asked again once the voice list is known (it may take a moment to load): a newer question,
+      // or the lesson that went on meanwhile, is heard instead of this answer.
+      if (
+        useVoiceStore.getState().enabled &&
+        !useChatStore.getState().answering &&
+        speaksInChat(aside)
+      ) {
+        void speak(text, { onDevice: true });
+      }
+    });
   };
   const [busy, setLocalBusy] = useState(false);
   const setBusy = (value: boolean) => {
@@ -400,8 +431,9 @@ export function ChatPanel({
         ...(selection ? { boardSelection: { selection, ...(image ? { image } : {}) } } : {}),
       });
       const meta = result.metadata;
+      const answerId = crypto.randomUUID();
       chat.addMessage({
-        id: crypto.randomUUID(),
+        id: answerId,
         role: 'assistant',
         content: result.content,
         model: meta.model,
@@ -418,8 +450,12 @@ export function ChatPanel({
         mode: selection ? 'aside' : board ? 'board' : 'talk',
       });
       endAnswer(answer);
-      if (useVoiceStore.getState().enabled && speaksInChat(selection !== undefined))
-        void speak(result.content);
+      readAloud(
+        result.content,
+        answerId,
+        selection !== undefined,
+        asksAboutPicture(userMessage) || meta.reviewSkipped === 'picture',
+      );
     } catch (e) {
       if (!endAnswer(answer, e)) {
         setError(failureOf(e, { kind: 'ask', id: userMessage.id, shown, prompt, options }));
@@ -441,10 +477,14 @@ export function ChatPanel({
     const controller = answer.controller;
     try {
       const messages = useChatStore.getState().messages;
-      const upto = messages.slice(0, messages.findIndex((m) => m.id === message.id) + 1);
+      const index = messages.findIndex((m) => m.id === message.id);
+      const upto = messages.slice(0, index + 1);
+      // The rest of an answer about a circled picture stays on this computer like its start.
+      const staysHere = answersPicture(messages, index) || message.reviewSkipped === 'picture';
       const result = await askTeacher(CONTINUE_PROMPT[locale], locale, upto, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: false,
+        continues: true,
         // The rest of a reviewed answer, or any while Think is on, goes to the answering
         // provider only, never to the quota fallback (Settings → "Dữ liệu của em đi đâu?").
         noFallback: useChatStore.getState().thinkEnabled || message.checkedBy !== undefined,
@@ -466,8 +506,7 @@ export function ChatPanel({
         ...continuationLabel(message, result.metadata),
       });
       endAnswer(answer);
-      if (useVoiceStore.getState().enabled && speaksInChat(message.mode === 'aside'))
-        void speak(result.content);
+      readAloud(result.content, message.id, message.mode === 'aside', staysHere);
     } catch (e) {
       if (!endAnswer(answer, e)) {
         setError(failureOf(e, { kind: 'continue', id: message.id }));
@@ -774,9 +813,11 @@ export function ChatPanel({
         </p>
       )}
       {!notice && boardAsk?.status === 'picture' && (
-        // A picture of the circled area: only to the AI on this computer (pictureReader.ts).
+        // A picture of the circled area: only to the AI on this computer (pictureReader.ts). Its
+        // answer stays here too, so the Gemini voice does not read it (readAloud).
         <p className="chat-panel__local-note">
-          <ShieldCheck size={14} /> {t('board.ask.pictureLocal')}
+          <ShieldCheck size={14} />{' '}
+          {t(voiceOnline ? 'board.ask.pictureLocalQuiet' : 'board.ask.pictureLocal')}
         </p>
       )}
       {!notice && voiceOnline && (
@@ -907,6 +948,21 @@ export function ChatPanel({
                 {message.role === 'assistant' && message.reviewSkipped === 'picture' && (
                   <small className="chat-message__meta">{t('chat.reviewSkippedPicture')}</small>
                 )}
+                {message.role === 'assistant' && unread.includes(message.id) && (
+                  <div className="chat-message__quiet" role="note">
+                    <VolumeX size={14} aria-hidden="true" />
+                    <small>{t('chat.notReadAloud')}</small>
+                    <button
+                      type="button"
+                      className="btn btn--small"
+                      onClick={() => {
+                        openSettingsAt('voice');
+                      }}
+                    >
+                      <Settings2 size={14} aria-hidden="true" /> {t('chat.voiceSettings')}
+                    </button>
+                  </div>
+                )}
                 {message.role === 'assistant' &&
                   message.references &&
                   message.references.length > 0 && (
@@ -914,22 +970,36 @@ export function ChatPanel({
                       {t('chat.references')}: {message.references.join(' · ')}
                     </small>
                   )}
-                {message.role === 'assistant' && message.truncated && (
-                  <div className="chat-message__continue">
-                    <small>{t('chat.truncatedNote')}</small>
-                    {(message === lastMessage || message === lastLessonAnswer) && (
-                      <button
-                        type="button"
-                        className="btn"
-                        disabled={busy}
-                        onClick={() => void continueAnswer(message)}
-                      >
-                        <ArrowDownToLine size={14} aria-hidden="true" />
-                        {t('chat.continue')}
-                      </button>
-                    )}
-                  </div>
-                )}
+                {message.role === 'assistant' &&
+                  message.truncated &&
+                  (() => {
+                    const offered = message === lastMessage || message === lastLessonAnswer;
+                    // The rest of an answer about a circled picture is written on this computer
+                    // only: an online AI never sees that answer (withoutPictureAsks), so it would
+                    // write the rest of something else.
+                    const staysHere =
+                      answersPicture(chat.messages, index) || message.reviewSkipped === 'picture';
+                    return (
+                      <div className="chat-message__continue">
+                        <small>{t('chat.truncatedNote')}</small>
+                        {offered && staysHere && engine === 'cloud' ? (
+                          <small>{t('chat.continuePictureLocal')}</small>
+                        ) : (
+                          offered && (
+                            <button
+                              type="button"
+                              className="btn"
+                              disabled={busy}
+                              onClick={() => void continueAnswer(message)}
+                            >
+                              <ArrowDownToLine size={14} aria-hidden="true" />
+                              {t('chat.continue')}
+                            </button>
+                          )
+                        )}
+                      </div>
+                    );
+                  })()}
               </div>
             </article>
           ))

@@ -100,6 +100,40 @@ export function pickVoice(
   return [...vi].sort((a, b) => score(b) - score(a))[0] ?? null;
 }
 
+/**
+ * A voice that reads on this computer: installed (`localService`) and not an online voice by its
+ * name (Edge and WebView2 list "… Online (Natural)" voices that read on Microsoft's servers).
+ */
+export function voiceStaysOnDevice(voice: SpeechSynthesisVoice): boolean {
+  return voice.localService && !/online|natural/i.test(voice.name);
+}
+
+/**
+ * The system voice for text that must stay on this computer: the voice picked in Settings when it
+ * reads here (another one picked is never swapped in silently: nothing is read then), else the
+ * best Vietnamese voice that reads here, else none.
+ */
+export function onDeviceSystemVoice(
+  voices: SpeechSynthesisVoice[],
+  wanted: string,
+): SpeechSynthesisVoice | null {
+  const picked = wanted ? voices.find((v) => v.voiceURI === wanted) : undefined;
+  if (picked) return voiceStaysOnDevice(picked) ? picked : null;
+  return pickVoice(voices.filter(voiceStaysOnDevice), '');
+}
+
+/**
+ * Whether the chosen voice can read text that must stay on this computer (`onDevice`): the
+ * on-device voice model, or a system voice that reads here. Never the Gemini voice, which sends the
+ * text to Google.
+ */
+export async function canSpeakOnDevice(): Promise<boolean> {
+  const { engine, voiceURI } = useVoiceStore.getState();
+  if (engine === 'local') return true;
+  if (engine !== 'system' || !speechSupported()) return false;
+  return onDeviceSystemVoice(await voicesWhenLoaded(), voiceURI) !== null;
+}
+
 /** Kept for callers that only want the cleaned text (the chat's copy, tests). */
 export function toSpokenText(content: string): string {
   return toSpeech(content).slice(0, MAX_SPEAK_CHARS);
@@ -143,6 +177,12 @@ export interface SpeakOptions {
   role?: SpeechRole;
   /** Key terms (the board's keywords and marked words): a short pause before each. */
   emphasis?: readonly string[];
+  /**
+   * The text must stay on this computer (the on-device reading of a circled picture): only the
+   * on-device voice model or a system voice that reads here may say it, also when the chosen voice
+   * fails; otherwise nothing is read (`canSpeakOnDevice` tells the caller beforehand).
+   */
+  onDevice?: boolean;
 }
 
 /** "code: message" for AI errors (Settings tells a timeout from a quota), else the message. */
@@ -193,6 +233,15 @@ export async function speak(text: string, opts: SpeakOptions = {}): Promise<void
   const session = opts.session ?? newVoiceSession();
   // Skipped for this lesson: the system voice reads at once, and Settings keeps the reason.
   const engine = session.skipped?.engine === store.engine ? 'system' : store.engine;
+  const onDevice = opts.onDevice === true;
+  // Text that must stay here is never handed to a voice that reads online.
+  if (
+    onDevice &&
+    engine !== 'local' &&
+    (engine !== 'system' || onDeviceSystemVoice(listVoices(), store.voiceURI) === null)
+  ) {
+    return;
+  }
   const plan = prepareSpeech(text, {
     ...(opts.role ? { role: opts.role } : {}),
     ...(opts.emphasis ? { emphasis: opts.emphasis } : {}),
@@ -210,7 +259,7 @@ export async function speak(text: string, opts: SpeakOptions = {}): Promise<void
     if (engine === 'local') {
       await speakLocal(plan.chunks, ctrl.signal, rate, progress, current, session.rendered);
     } else {
-      await speakWith(engine, chunks, ctrl.signal, rate, progress);
+      await speakWith(engine, chunks, ctrl.signal, rate, progress, onDevice);
     }
     if (!ctrl.signal.aborted && engine === store.engine) {
       useVoiceStore.getState().setLastError(null);
@@ -222,11 +271,16 @@ export async function speak(text: string, opts: SpeakOptions = {}): Promise<void
     useVoiceStore.getState().setLastError(message);
     if (engine !== 'system' && lastingFailure(e)) session.skipped = { engine, reason: message };
     // The learner still hears the answer: the operating-system voice takes over from the first
-    // phrase not yet heard, so nothing is read twice (audit VOI-01).
+    // phrase not yet heard, so nothing is read twice (audit VOI-01). Text that must stay here is
+    // taken over only by a system voice that reads here.
     if (engine !== 'system' && speechSupported()) {
-      await speakSystem(chunks.slice(progress.played), ctrl.signal, rate, {
-        played: 0,
-      }).catch((fallback: unknown) => {
+      await speakSystem(
+        chunks.slice(progress.played),
+        ctrl.signal,
+        rate,
+        { played: 0 },
+        onDevice,
+      ).catch((fallback: unknown) => {
         console.warn('[teacher-voice] fallback', errorText(fallback));
       });
     }
@@ -244,9 +298,14 @@ function speakWith(
   signal: AbortSignal,
   rate: number,
   progress: Progress,
+  onDevice: boolean,
 ) {
-  if (engine === 'gemini') return speakGemini(chunks, signal, rate, progress);
-  return speakSystem(chunks, signal, rate, progress);
+  // `speak` never gets here with text that must stay on this computer and the Gemini voice.
+  if (engine === 'gemini') {
+    if (onDevice) return Promise.resolve();
+    return speakGemini(chunks, signal, rate, progress);
+  }
+  return speakSystem(chunks, signal, rate, progress, onDevice);
 }
 
 /** Stops any ongoing teacher speech. Safe to call anytime. */
@@ -270,12 +329,18 @@ async function speakSystem(
   signal: AbortSignal,
   rate: number,
   progress: Progress,
+  /** Only a voice that reads on this computer (`SpeakOptions.onDevice`); none → nothing is read. */
+  onDevice = false,
 ): Promise<void> {
   const s = synth();
   if (!s) throw new Error('no-speech-engine');
   const store = useVoiceStore.getState();
   const preset = stylePreset(store.style);
-  const voice = pickVoice(listVoices(), store.voiceURI);
+  const voice = onDevice
+    ? onDeviceSystemVoice(listVoices(), store.voiceURI)
+    : pickVoice(listVoices(), store.voiceURI);
+  // Without a voice the engine would choose one itself, which may read online.
+  if (onDevice && !voice) return;
   for (const chunk of chunks) {
     if (signal.aborted) return;
     await new Promise<void>((resolve, reject) => {
