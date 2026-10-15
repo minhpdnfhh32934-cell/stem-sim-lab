@@ -589,7 +589,8 @@ Settings → AI Teacher shows a live “Dữ liệu của em đi đâu?” box b
 the chat shows one line naming where the next question will go: the answering provider, the quota
 fallback when it can be asked (Think off and it has a key: “Groq (dự phòng khi Gemini hết lượt)”;
 on the desktop, after a quota error the gateway asks it directly for 10 minutes), the reviewer with
-Think, and Wikipedia when the lookup is on.
+Think, and Wikipedia when the lookup is on (never for a question about the circled board; a
+question about a picture of the circled area names no reviewer either: it is not reviewed).
 
 | Stays on this computer                                                                        | May be sent online                                                                                                                                   |
 | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -597,12 +598,13 @@ Think, and Wikipedia when the lookup is on.
 | downloaded Gemma models; Gemma answers                                                        | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key)                                  |
 | questions to a runtime on this computer                                                       | question + draft + relevant excerpts + summary + screen context (if on) → reviewer (Think; never the fallback)                                       |
 | API keys (keychain or session memory)                                                         | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                                                         |
-|                                                                                               | question → Wikipedia (only if the lookup is on)                                                                                                      |
+|                                                                                               | question → Wikipedia (only if the lookup is on; never for “Khoanh để hỏi”)                                                                           |
 |                                                                                               | screen context (only when the bubble toggle is on)                                                                                                   |
 |                                                                                               | a photographed problem → the API (browser only, downscaled)                                                                                          |
 |                                                                                               | model files are downloaded from HuggingFace (nothing is uploaded)                                                                                    |
 | the learner's own strokes on the board                                                        | circled board text (“Khoanh để hỏi”: the lesson's own words, LaTeX and drawing labels, ≤ 2000 chars) → the answering provider and the Think reviewer |
 | a picture of a circled area without text (only to an AI on this computer that reads pictures) |                                                                                                                                                      |
+| the answer about that picture (never to the reviewer, an online engine or the summary)        |                                                                                                                                                      |
 
 **“Khoanh để hỏi” (item 2, `src/teacher/board/selection.ts`, `chatService.askTeacher` option
 `boardSelection`).** What the learner circled on the board is read back by code (no AI): the
@@ -621,9 +623,23 @@ area is built from the board model (pure SVG, never KaTeX/DOM text) and sent **o
 this computer that reads pictures (`pictureReader.ts`): the learner's chosen Gemma E2B on a card
 known to be discrete (never on an integrated card, never a silent switch from 1B to E2B), or a
 local runtime model whose check on this computer says vision “Có”. Never to the cloud; any other
-AI → the board says it cannot read pictures and asks the learner to type (no AI call). The PNG path
-(blob: URL → OffscreenCanvas) is **not verified in the native WebView2 build**; if it fails, the
-learner is told and nothing is sent.
+AI → the board says it cannot read pictures and asks the learner to type (no AI call). With
+Think on, a question about such a picture is **not reviewed**: the draft is the on-device model's
+description of the learner's strokes, so sending it to the online reviewer would put the strokes
+online as text (and the reviewer could not see the picture to check it). `askTeacher` answers it on
+this computer only (no reviewer key needed), the answer carries `reviewSkipped: 'picture'` and the
+chat shows "Chưa rà soát: …"; the "sent to" line leaves the reviewer out for it. Later questions
+never carry it online either (`memory.withoutPictureAsks`): the history sent to an online engine or
+used for a Think draft leaves out each picture question and the answer after it, and the summary of
+older turns is always made without them (only an on-device answer without Think still sees them in
+its history; so "Viết tiếp" or a quick button on a picture answer after switching to the API works
+without that answer). A question about the circled board is never looked up on Wikipedia (its
+words alone name no topic, and the board's text never goes there); the "sent to" line leaves
+Wikipedia out then. It is never read as an answer to the teacher's check question
+(`TurnOrigin.boardAsk`). When the circled text does not fit the block's cap, the title and the
+neighbours are left out first, then lines are cut ("…") and the parts left out are counted in a
+marked line — never dropped silently. The PNG path (blob: URL → OffscreenCanvas) is **not verified
+in the native WebView2 build**; if it fails, the learner is told and nothing is sent.
 
 ## Teacher voice (reads answers aloud)
 

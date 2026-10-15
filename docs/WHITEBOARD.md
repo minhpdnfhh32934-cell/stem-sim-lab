@@ -291,11 +291,19 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     thức dài bị cắt thành nhiều mảnh thì chọn theo cả mảnh và gửi đúng LaTeX của mảnh đó. Thứ tự đọc:
     tiêu đề → cột trái → giữa → phải, dải ngang toàn bảng đứng sau những gì nằm trên nó; hướng vẽ nét
     không ảnh hưởng. Các ngưỡng là hằng số có kiểm thử (`TOKEN_HIT`, `FIGURE_HIT`, `WHOLE_ELEMENT`…).
-  - **Thanh "Chỗ em khoanh trên bảng"** (dưới bảng): "Em khoanh: «…»" và nút chính **"Hỏi thầy chỗ
-    này"**, cùng "Khoanh lại", "Bỏ chọn". Không trúng gì: app tự nói "Mình chưa thấy em khoanh vào
-    chữ hay hình nào trên bảng…" (không hỏi AI). Khoanh quá nhiều (hơn 6 chỗ, hoặc hơn 60 % phần đã
-    viết) hay chỉ chạm một phần: học sinh chọn một chỗ hoặc "Cả phần này". Khung chat có thẻ "Hỏi về:
-    «…»" (bỏ được) nên câu gõ tay và các nút gợi ý cũng mang theo chỗ đã khoanh.
+  - **Thanh "Chỗ em khoanh trên bảng"** (nằm đè lên bảng, trong khung bảng): "Em khoanh: «…»" và
+    nút chính **"Hỏi thầy chỗ này"**, cùng "Khoanh lại", "Bỏ chọn". Không trúng gì: app tự nói "Mình
+    chưa thấy em khoanh vào chữ hay hình nào trên bảng…" (không hỏi AI). Khoanh quá nhiều (hơn 6 chỗ,
+    hoặc hơn 60 % phần đã viết) hay chỉ chạm một phần: học sinh chọn "Cả phần này" (luôn đứng đầu)
+    hoặc một chỗ; hàng lựa chọn cao tối đa hai dòng, nhiều hơn thì cuộn trong chính hàng đó. Khung
+    chat có thẻ "Hỏi về: «…»" (bỏ được) nên câu gõ tay và các nút gợi ý cũng mang theo chỗ đã khoanh.
+  - **Thanh không làm bảng đổi cỡ** (`askBarSide`): thanh nằm đè lên bảng ở phía xa chỗ vừa khoanh
+    (chỗ khoanh ở nửa dưới khung nhìn → thanh ở trên, chừa chỗ cho bản đồ nhỏ; ngược lại → ở dưới),
+    nên khung bảng không co lại, không có gì trên bảng bị cuộn đi và chỗ khoanh vẫn nhìn thấy. Thanh
+    không bao giờ che dòng phụ đề hay nhãn "Nội dung do AI hỗ trợ" bên dưới bảng. Bảng hẹp (1366×768
+    có khung chat bên cạnh, truy vấn `@container board`): các nút "Viết nhanh", "Vừa khung", "Khoanh
+    để hỏi" và "Bút của em" chỉ hiện biểu tượng (tên vẫn có cho trình đọc màn hình, chú thích khi rê
+    chuột), nên thanh công cụ luôn một hàng.
   - **Câu trả lời là câu "ngoài lề"** (`mode: 'aside'`): hiện trong khung chat, có nhãn AI và nút báo
     cáo, được đọc to trong khung chat; **không bao giờ được giảng lên bảng** — bảng giữ nguyên bài
     đang dừng (`latestLesson` bỏ qua câu trả lời ngoài lề và câu hỏi về bảng). "Viết tiếp" vẫn gắn với
@@ -305,10 +313,16 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     vẽ đọc từ chính nhãn của nó — không bao giờ là số máy tự tính), tiêu đề mặt bảng và tối đa vài
     dòng ngay trước/sau, trong một khối có rào `<board_selection>` (chữ trên bảng không thể đóng khối
     hay mở khối giả), dài tối đa 2000 ký tự (API), 600 (mô hình trên máy) hay 300 (Gemma trên card
-    tích hợp). Khối này qua kiểm tra an toàn như mọi thứ được gửi (lỗi riêng: "Phần chữ em khoanh
-    trên bảng có thể chứa thông tin cá nhân…"); nó không nằm trong câu hỏi, nên số mà bài giảng đã
-    đánh dấu "chưa kiểm chứng" vẫn bị đánh dấu trong câu trả lời. Dòng "Câu hỏi … sẽ được gửi tới"
-    trong khung chat ghi "kèm phần chữ em khoanh trên bảng".
+    tích hợp). Chỗ em khoanh được ưu tiên: dòng trước/sau rồi tiêu đề bị bỏ trước; nếu chỗ khoanh vẫn
+    không vừa thì không gửi tiêu đề, dòng bị cắt có "…" và khối ghi rõ "(… và N chỗ khác em khoanh,
+    không đủ chỗ ghi ở đây)" — không bao giờ lặng lẽ bỏ bớt. Khối này qua kiểm tra an toàn như mọi
+    thứ được gửi (lỗi riêng: "Phần chữ em khoanh trên bảng có thể chứa thông tin cá nhân…"); nó
+    không nằm trong câu hỏi, nên số mà bài giảng đã đánh dấu "chưa kiểm chứng" vẫn bị đánh dấu trong
+    câu trả lời. Câu hỏi về chỗ khoanh luôn được coi là câu hỏi (không bị chấm như câu trả lời cho
+    câu hỏi kiểm tra của thầy). Dòng "Câu hỏi … sẽ được gửi tới" trong khung chat ghi "kèm phần chữ
+    em khoanh trên bảng"; với Think, bên rà soát cũng đọc phần chữ đó. Câu hỏi về chỗ khoanh **không
+    bao giờ được tra Wikipedia** (kể cả khi em bật tra cứu): chữ trên bảng không gửi tới Wikipedia,
+    và dòng "gửi tới" khi đó không ghi Wikipedia.
   - **Nét của học sinh không bao giờ được gửi đi dưới dạng chữ hay lên mạng.** Chỉ khi chỗ khoanh
     không có chữ nào (hình không có nhãn, hoặc chỉ là nét viết tay của em) app mới vẽ một ảnh PNG của
     vùng đó từ mô hình bảng (SVG thuần: nét của em và hình vẽ, không chụp KaTeX hay chữ) và chỉ gửi
@@ -316,8 +330,18 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     (không bao giờ trên card tích hợp, không tự đổi sang E2B), hoặc mô hình của chương trình trên máy
     mà lần kiểm tra trên máy thấy "Có" đọc ảnh. Không bao giờ gửi ảnh lên mạng. AI khác: thanh nói rõ
     "AI em đang dùng chưa đọc được hình vẽ hay nét viết tay" và đề nghị em gõ câu hỏi (không gọi AI).
-    Đường tạo ảnh (blob: → OffscreenCanvas → PNG) **chưa được kiểm tra trong bản desktop (WebView2)**;
-    nếu không tạo được ảnh, em được báo và không có gì được gửi.
+    **Think không rà soát câu hỏi về ảnh:** bản nháp của AI trên máy là lời nó tả nét của em, nên gửi
+    bản nháp cho bên rà soát trên mạng là đưa nét của em lên mạng dưới dạng chữ (và bên rà soát cũng
+    không thấy ảnh để kiểm tra). Câu hỏi về ảnh chỉ được trả lời trên máy, kể cả khi Think đang bật
+    (không cần khóa của bên rà soát), dưới câu trả lời ghi "Chưa rà soát: câu hỏi về hình em khoanh
+    chỉ được trả lời trên máy này…", và dòng "gửi tới" không ghi bên rà soát. Câu hỏi về ảnh và câu
+    trả lời của nó cũng **không đi theo các câu hỏi sau lên mạng** (`withoutPictureAsks`): lịch sử gửi
+    cho API hay cho bên rà soát của Think bỏ cặp hỏi–đáp đó, và bản tóm tắt phần trò chuyện cũ không
+    bao giờ chứa nó (chỉ AI trên máy, khi Think tắt, còn thấy nó trong lịch sử). Hệ quả: nếu em đổi
+    sang API rồi bấm "Viết tiếp" hay "Giải thích lại" ngay sau câu trả lời về ảnh, API không thấy câu
+    trả lời đó. Đường tạo ảnh (blob: → OffscreenCanvas → PNG) **chưa được kiểm tra trong bản desktop
+    (WebView2)**; nếu không tạo được ảnh, em được báo và không có gì được gửi. Bấm "Hỏi thầy chỗ này"
+    hai lần (hay Enter rồi bấm) khi ảnh đang được tạo chỉ gửi một câu hỏi.
 - **Chế độ bảng với AI cloud:** lời nhắc TeachScript (`BOARD_SYSTEM` trong
   `src/teacher/chat/chatService.ts`): ví dụ mẫu, cấm tọa độ, yêu cầu viết rõ phép tính. Think giữ nguyên
   định dạng thẻ khi rà soát. Gemma (mô hình nhỏ) trả lời bình thường, bảng tự xếp.
