@@ -51,16 +51,45 @@ feedback only. Personal-data and content checks run on the context before anythi
 Cloud chat uses the provider and key configured in Settings → Kết nối AI. **Think** sends one
 draft request and then asks a second, different provider to review and rewrite the draft.
 
-- The draft is sent **without the quota fallback** (`ChatRequest.noFallback`), so the reviewer can
-  never end up checking its own answer (e.g. Gemini → Groq fallback with Groq as reviewer). Without
-  Think the usual fallback stays on.
+- With Think **every call is sent without the quota fallback** (`ChatRequest.noFallback`): the
+  draft, the summary of older turns and the review. The reviewer can never end up checking its own
+  answer (e.g. Gemini → Groq fallback with Groq as reviewer, or a reviewer whose fallback is the
+  drafter), and nothing goes to a third provider. A reviewer out of quota is reported
+  ("Bên rà soát (Groq) báo đã hết lượt dùng…"), never replaced. Without Think the usual fallback
+  stays on.
 - Missing pieces are reported before any call: provider turned off, no key for the answering
   provider, no key for the reviewer (also shown as a notice as soon as Think is switched on), same
   provider for both.
-- With Gemma as the answering engine, Think = local draft + cloud review (the question and the
-  draft go to the reviewer).
+- With Gemma as the answering engine, Think = local draft + cloud review. The reviewer gets the
+  question, the draft, the related note, the summary of older turns (if any) and the screen
+  context (if on); Settings → AI Teacher says exactly that.
 - The answer shows the “Nội dung do AI hỗ trợ” label with the model and a report button, plus
-  “Đã rà soát: …” when Think was used.
+  “Đã rà soát: <provider> · <model>” when Think was used (the provider that really reviewed,
+  from the response). An answer written by the quota fallback is labelled with the provider that
+  wrote it and “dự phòng” (“mô hình Groq · qwen/… · dự phòng”), in the chat and on the board.
+  “Viết tiếp” of a reviewed answer is written without a review: the message then says “Phần viết
+  tiếp chưa được rà soát.”; if another model wrote the rest, both are named (“a + b”).
+- **Failures in the learner's words** (`src/teacher/chat/cloudErrors.ts`): every error of an
+  online call is mapped with `aiErrorKind` to one study-partner sentence `chat.errors.cloud.*`
+  (timeout, network, quota, badKey, badModel, dailyLimit, missingKey, notAllowed, emptyAnswer,
+  reasoningOnly, tooLarge, server, other; a provider filter stop gives `chat.errors.filtered`).
+  It names who failed (the provider, “Bên rà soát (…)” for the reviewer, or “Gemini (hoặc Groq dự
+  phòng)” when the fallback may have been asked as well) and the Settings page to open, with a
+  button. No status code, JSON, key name or raw provider text reaches the learner; the console
+  gets `[teacher-cloud] <role> <provider> <kind> <code>` only. “Dừng” stays a stop. “Hỏi lại” is
+  offered where asking again may help, and it is the learner's click: the page never re-sends a
+  question by itself (the Rust gateway retries 429/5xx at most 3 times; the quota fallback is
+  asked once, only for a quota or credit error).
+- **Streaming** (`cloudChat`): a question streams through `transport.chatStream` when the
+  transport has it (desktop: `ai_chat_stream`; browser: SSE) and the chat shows it as it is
+  written; never Think's draft or review, a summary, or a JSON reading. The shown text is
+  provisional and goes through the same wrapper as Gemma's (each piece passes `outputIsSafe`, an
+  unsafe piece takes everything back, unfinished reasoning is hidden, a reset replaces the text);
+  the final answer is cleaned and checked whole, and only the completed answer is stored, read
+  aloud or taught on the board. A stream that breaks off leaves nothing behind: the partial text
+  goes and the failure sentence is shown. A desktop app older than the web part (no
+  `ai_chat_stream`: “Command … not found” / “unknown command”) answers through `ai_chat`, and the
+  missing command is remembered for the session (one failed lookup, not one per question).
 - Only learning content is kept (`src/teacher/chat/answerClean.ts`, run in `askTeacher` before
   the answer is stored, spoken, drawn or checked for numbers): hidden reasoning (`<think>`…,
   also unclosed or orphan; the streaming preview hides it while it is written), echoed
@@ -544,15 +573,16 @@ the app moves `prompt.note` in front of the last question, which the script does
 Settings → AI Teacher shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
 the chat shows one line naming where the next question will go.
 
-| Stays on this computer                    | May be sent online                                                |
-| ----------------------------------------- | ----------------------------------------------------------------- |
-| chat history, added files, built-in notes | question + relevant excerpts → answering provider (API engine)    |
-| downloaded Gemma models; Gemma answers    | question + draft → reviewer (Think)                               |
-| questions to a runtime on this computer   | (with that engine: only Think, Wikipedia or the Gemini voice)     |
-| API keys (keychain or session memory)     | question → Wikipedia (only if the lookup is on)                   |
-|                                           | screen context (only when the bubble toggle is on)                |
-|                                           | a photographed problem → the API (browser only, downscaled)       |
-|                                           | model files are downloaded from HuggingFace (nothing is uploaded) |
+| Stays on this computer                    | May be sent online                                                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| chat history, added files, built-in notes | question + recent turns + summary of older turns + relevant excerpts → answering provider (API engine)              |
+| downloaded Gemma models; Gemma answers    | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key) |
+| questions to a runtime on this computer   | question + draft + relevant excerpts + summary + screen context (if on) → reviewer (Think; never the fallback)      |
+| API keys (keychain or session memory)     | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                        |
+|                                           | question → Wikipedia (only if the lookup is on)                                                                     |
+|                                           | screen context (only when the bubble toggle is on)                                                                  |
+|                                           | a photographed problem → the API (browser only, downscaled)                                                         |
+|                                           | model files are downloaded from HuggingFace (nothing is uploaded)                                                   |
 
 ## Teacher voice (reads answers aloud)
 
