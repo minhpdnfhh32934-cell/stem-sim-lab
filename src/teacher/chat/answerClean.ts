@@ -14,14 +14,18 @@
  *   draft is correct.", "Review: The answer is correct…", "Bản trả lời ban đầu đã đúng.") and the
  *   header that introduces the revision ("Bản đã sửa:", "Revised answer:", alone on its line or
  *   closed by ":"). The scan stops at the first sentence or line that is neither, so the lesson
- *   is never cut; only a reviewer-only header alone on its line also ends a few opening
- *   sentences without learning material ("Chào em!\n\nBản đã sửa:"). A remark holding a number,
- *   a formula, a tag or code, or going on with more than a few words after "nhưng"/"rằng"/"but",
- *   stays unless a revision header follows it (it may be a correction the learner needs). A
- *   closing paragraph that opens by naming the draft goes when it holds none of these. Feedback
- *   on the learner's own draft or answer ("Bản nháp của em…", "Your answer…") is never a remark;
- *   when the question is about the learner's draft nothing of the wrapper is removed, and when it
- *   asks for a correction a header alone does not end the opening sentences.
+ *   is never cut; only a header naming the reviewer's revision of the answer ("Bản đã sửa",
+ *   "Revised answer", not "Bài giải đã sửa") alone on its line also ends a few opening sentences
+ *   without learning material ("Chào em!\n\nBản đã sửa:"). At the very start, words only a
+ *   reviewer writes ("mình giữ nguyên nội dung", "No changes needed.") are remarks too. A remark
+ *   holding a number, a formula, a tag or code, or going on with more than a few words after
+ *   "nhưng"/"rằng"/"but", stays unless a revision header follows it (it may be a correction the
+ *   learner needs). A closing paragraph that opens by naming the draft goes when it holds none of
+ *   these. Feedback on the learner's own draft or answer ("Bản nháp của em…", "Your answer…") is
+ *   never a remark; when the question is about the learner's draft nothing of the wrapper is
+ *   removed, and when it asks for a correction or a check of the learner's own work ("sửa giúp
+ *   em", "em làm … đúng không?", "is my answer right?") only words about the draft or the version
+ *   under review count and a header alone does not end the opening sentences.
  *
  * Code fences and inline code are never edited (reasoning around code excepted). Text without
  * anything to remove comes back exactly as it was; the result is idempotent. Pure: no store
@@ -219,19 +223,67 @@ function asksAboutOwnDraft(question: string): boolean {
   return /nháp|\bdrafts?\b/iu.test(question.normalize('NFC'));
 }
 
-/**
- * The learner asked for a correction or a check ("sửa giúp em", "fix this"): a teacher's
- * feedback may then come before a "Bản đã sửa:" of its own, so that header alone, without a
- * remark about the draft before it, does not mark the reviewer's notes.
- */
-function asksForCorrection(question: string): boolean {
-  return /sửa|chỉnh|viết lại|kiểm tra|xem (?:lại|giúp|hộ)|chấm|góp ý|nhận xét|\b(?:correct|fix|revise|rewrite|edit|check|review|grade|feedback|improve)/iu.test(
-    question.normalize('NFC'),
-  );
-}
-
 /** A whole Vietnamese word or phrase out of `words` (letters around it break the match). */
 const viWords = (words: string) => String.raw`(?<![\p{L}\p{M}])(?:${words})(?![\p{L}\p{M}])`;
+
+/** The learner speaking of themself ("em", "mình", "con", "tớ", "tôi"). */
+const ME = 'em|mình|con|tớ|tôi';
+/** What the learner made: "bài làm", "lời giải", "đáp án", "cách giải"… */
+const WORK = String.raw`bài\s+làm|bài\s+giải|bài|lời\s+giải|đáp\s+án|kết\s+quả|câu\s+trả\s+lời|cách\s+(?:làm|giải)|phần\s+(?:làm|giải)`;
+/** A request to correct or check (`giúp`, `hộ`…: "for me"). */
+const FOR_ME = String.raw`giúp|hộ|dùm|giùm`;
+
+/**
+ * Requests about the learner's own work, whole words only: "sửa giúp (em)", "chấm hộ", "kiểm tra
+ * giúp em", "sửa bài của em", "xem giúp bài làm của em", "em làm … đúng không?", "Đáp án A đúng
+ * không thầy?", "check/fix/grade my …", "is my answer correct?", "is it right?", "am I right?",
+ * "Is answer A right?". Not "Thầy xem giúp em bài này: …" (a new exercise), "nhận xét về …",
+ * "chỉnh lưu", "điều chỉnh", "sửa sai ADN", "Which … is correct?" or "review <topic>".
+ */
+const CORRECTION_REQUESTS: readonly RegExp[] = [
+  // "sửa giúp em", "chữa lại hộ", "chấm điểm giúp", "kiểm tra lại giúp em".
+  new RegExp(
+    viWords(String.raw`(?:sửa|chữa|chấm(?:\s+điểm)?|kiểm\s+tra)(?:\s+lại)?\s+(?:${FOR_ME})`),
+    'iu',
+  ),
+  // "sửa bài của em", "xem giúp bài làm của em", "chấm bài em làm", "nhận xét lời giải của mình".
+  new RegExp(
+    viWords(
+      String.raw`(?:sửa|chữa|chấm|xem|kiểm\s+tra|nhận\s+xét|góp\s+ý|đánh\s+giá)(?:\s+lại)?(?:\s+(?:${FOR_ME}))?(?:\s+(?:${ME}))?\s+(?:${WORK})\s+(?:(?:của\s+)?(?:${ME})|(?:${ME})\s+(?:làm|giải|viết))`,
+    ),
+    'iu',
+  ),
+  // "xem giúp em bài làm này": "bài làm" is the learner's work by itself.
+  new RegExp(
+    viWords(
+      String.raw`(?:sửa|chữa|chấm|xem|kiểm\s+tra|nhận\s+xét|góp\s+ý)(?:\s+lại)?(?:\s+(?:${FOR_ME}))?(?:\s+(?:${ME}))?\s+bài\s+làm`,
+    ),
+    'iu',
+  ),
+  // A yes/no check of what the learner thinks: "… đúng không ạ?", "có đúng không", "đúng chưa
+  // thầy", "Đáp án A đúng không?". Only at the end of a sentence ("đúng không đổi" is no check).
+  new RegExp(
+    String.raw`(?<![\p{L}\p{M}])đúng\s+(?:không|chưa|ko)(?:\s+(?:ạ|à|ha|nhỉ|nhé|vậy|thế|hả|thầy|cô|anh|chị|bạn|ạ))*\s*(?:[?.!,;…]|$)`,
+    'iu',
+  ),
+  /\b(?:check|fix|grade|mark|correct|review|improve)\s+(?:my|our)\b/i,
+  /\b(?:check|fix|grade|correct)\s+(?:this|it|these)\b/i,
+  /\b(?:is|are)\s+my\s+(?:[a-z]+\s+){0,3}(?:correct|right|wrong|ok|okay)\b/i,
+  /\b(?:is|was)\s+(?:it|this|that)\s+(?:correct|right|wrong)\b/i,
+  /\bam\s+i\s+(?:right|correct|wrong)\b/i,
+  /\bdid\s+i\s+(?:get|do|solve|answer)\b[^.?!]*\b(?:right|correct|wrong)\b/i,
+  /\bis\s+(?:the\s+)?(?:answer|option|choice)\s+\(?[a-e]\)?\s+(?:correct|right|wrong)\b/i,
+];
+
+/**
+ * The learner asked for a correction or a check of their own work (`CORRECTION_REQUESTS`): a
+ * teacher's feedback may then come before a "Bản đã sửa:" of its own, and a labelled verdict
+ * ("Đánh giá: Đúng.") is the answer they asked for, so neither marks the reviewer's notes.
+ */
+function asksForCorrection(question: string): boolean {
+  const q = question.normalize('NFC');
+  return CORRECTION_REQUESTS.some((re) => re.test(q));
+}
 
 /**
  * Words about the learner's own draft or answer (feedback they asked for, never the reviewer's
@@ -241,7 +293,7 @@ const viWords = (words: string) => String.raw`(?<![\p{L}\p{M}])(?:${words})(?![\
 const LEARNER_DRAFT: readonly RegExp[] = [
   /bản\s+nháp\s+(?:của\s+)?(?:các\s+)?(?:em|bạn|con|cậu)(?![\p{L}\p{M}])/giu,
   /(?<![\p{L}\p{M}])(?:em|bạn)(?:\s+[\p{L}\p{M}]+){0,3}\s+bản\s+nháp/giu,
-  /(?:câu|bản)\s+trả\s+lời\s+(?:của\s+)?(?:các\s+)?(?:em|bạn|con|cậu)(?![\p{L}\p{M}])/giu,
+  /(?:câu|bản)\s+trả\s+lời\s+(?:(?:ban\s+đầu|gốc|trên)\s+)?(?:của\s+)?(?:các\s+)?(?:em|bạn|con|cậu)(?![\p{L}\p{M}])/giu,
   /\byour\s+(?:own\s+)?(?:[a-z]+\s+)?(?:draft|answer|response|solution)/gi,
   /\bthe\s+draft\s+you\b/gi,
 ];
@@ -278,6 +330,14 @@ const ANSWER_UNDER_REVIEW = new RegExp(
   `(?:câu|bản)\\s+trả\\s+lời\\s+${viWords('ban đầu|trên|gốc|cần rà soát|được cung cấp|được đưa ra')}|\\bthe\\s+(?:original|initial|above|given|provided|previous)\\s+(?:answer|response|solution)\\b|\\bthe\\s+(?:answer|response|solution)\\s+above\\b`,
   'iu',
 );
+/**
+ * Names only a reviewer gives the version it checks ("bản trả lời ban đầu", "the provided
+ * response"); a teacher giving feedback on a learner's answer says "câu trả lời (của em)".
+ */
+const REVIEWED_VERSION = new RegExp(
+  `bản\\s+trả\\s+lời\\s+${viWords('ban đầu|gốc|cần rà soát|được cung cấp|được đưa ra')}|\\bthe\\s+(?:provided|given|original|initial)\\s+response\\b`,
+  'iu',
+);
 /** A reviewer's label opening the sentence: "Review:", "**Đánh giá:**", "Rà soát:". */
 const REVIEW_LABEL =
   /^[\s>#*_-]*(?:review|feedback|assessment|verdict|nhận xét|đánh giá|rà soát)[*_]*\s*[:：][*_]*\s*/iu;
@@ -289,6 +349,17 @@ const BARE_VERDICT =
 /** "Rà soát xong, …", "Rà soát cho thấy …": a review reported without a label. */
 const REVIEW_DONE =
   /^[\s>#*_-]*rà\s+soát[*_]*\s+(?:xong|cho\s+thấy|không\s+(?:thấy|phát\s+hiện))/iu;
+/**
+ * Words only a reviewer writes about the answer it checked, with no label and no draft named
+ * ("Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.", "The response is accurate and
+ * complete.", "No changes needed.", "I kept the explanation."). A remark only at the very start of
+ * a reviewed answer, and not when the learner asked for a correction (the teacher may then say
+ * "em giữ nguyên nội dung, chỉ sửa đơn vị").
+ */
+const REVIEWER_ONLY = new RegExp(
+  `${viWords('giữ nguyên (?:nội dung|câu trả lời|bản nháp|lời giải|bài giảng)')}|\\bno\\s+(?:changes?|edits?|corrections?)\\s+(?:are\\s+|were\\s+|is\\s+)?(?:needed|required|necessary)\\b|\\bI\\s+(?:have\\s+)?kept\\s+the\\b|\\bthe\\s+response\\s+is\\s+(?:accurate|correct|complete)\\b`,
+  'iu',
+);
 /** A closing paragraph that opens by naming the draft as its topic. */
 const DRAFT_TOPIC =
   /^[\s>#*_-]*(?:(?:nhận xét|đánh giá|ghi chú|lưu ý)(?:\s+(?:chung|thêm))?\s+(?:về\s+|cho\s+)?bản\s+nháp|(?:notes?|comments?|review)\s+(?:on|about|of)\s+the\s+draft)/iu;
@@ -318,6 +389,9 @@ function remarkKind(text: string, correction: boolean): 'remark' | 'tentative' |
   const label = REVIEW_LABEL.exec(t);
   // "Rà soát:" names the review itself.
   if (label && /rà\s+soát/iu.test(label[0])) return 'remark';
+  // "Bản trả lời ban đầu đã đúng", "The provided response is correct": the version under review,
+  // never the learner's work, also when a correction was asked for.
+  if (REVIEWED_VERSION.test(t) && hasVerdict(t)) return 'remark';
   if (correction) return null;
   if (ANSWER_UNDER_REVIEW.test(t) && hasVerdict(t)) return 'remark';
   if (!label) return null;
@@ -355,16 +429,33 @@ function holdsMaterial(text: string): boolean {
   return MATERIAL.test(text.replace(LINE_MARKER, ''));
 }
 
-/** Only a reviewer names its text so ("Bản đã sửa", "Revised answer"). */
-const HEADER_VI = String.raw`(?:câu trả lời|lời giải|bài giảng|bài giải|bản)\s+(?:đã\s+)?(?:được\s+)?(?:chỉnh sửa|hiệu chỉnh|viết lại|sửa)|bản\s+(?:hoàn chỉnh|cuối cùng)`;
-const HEADER_EN = String.raw`(?:revised|corrected|improved|updated|rewritten|fixed)\s+(?:answer|version|response|lesson|explanation|solution)`;
+const REVISED = String.raw`\s+(?:đã\s+)?(?:được\s+)?(?:chỉnh sửa|hiệu chỉnh|viết lại|sửa)`;
+/**
+ * Only a reviewer names its revision of the ANSWER so ("Bản đã sửa", "Bản sửa", "Câu trả lời đã
+ * chỉnh sửa", "Revised answer", "Corrected version"): these alone may end opening sentences.
+ */
+const HEADER_ANSWER = String.raw`(?:câu trả lời|bản)${REVISED}|(?:revised|corrected|improved|updated|rewritten|fixed)\s+(?:answer|version|response)`;
+/**
+ * A reviewer's header too, but a teacher who sets a misconception against the corrected solution
+ * writes these as well ("Bài giải đã sửa:", "Lời giải đã sửa:", "Bản hoàn chỉnh").
+ */
+const HEADER_OTHER = String.raw`(?:lời giải|bài giảng|bài giải)${REVISED}|bản\s+(?:hoàn chỉnh|cuối cùng)|(?:revised|corrected|improved|updated|rewritten|fixed)\s+(?:lesson|explanation|solution)`;
 /** A teacher may also write these ("Câu trả lời cuối cùng: v = 20 m/s"). */
 const HEADER_WEAK = String.raw`câu trả lời\s+(?:hoàn chỉnh|cuối cùng)`;
-/** The phrase that names the revision; group 1 is set for a weak one. */
+/** The phrase that names the revision; group 1 is set for a weak one, group 2 for the answer's. */
 const HEADER_PHRASE = new RegExp(
-  String.raw`(?<![\p{L}\p{M}])(?:(${HEADER_WEAK})|${HEADER_VI}|${HEADER_EN})(?![\p{L}\p{M}])`,
+  String.raw`(?<![\p{L}\p{M}])(?:(${HEADER_WEAK})|(${HEADER_ANSWER})|${HEADER_OTHER})(?![\p{L}\p{M}])`,
   'giu',
 );
+
+/** Which revision headers count where a header is looked for. */
+type HeaderLevel =
+  /** Every header. */
+  | 'any'
+  /** Not the weak ones a teacher writes ("Câu trả lời cuối cùng:"). */
+  | 'strong'
+  /** Only the reviewer's revision of the answer (`HEADER_ANSWER`). */
+  | 'answer';
 /**
  * What may follow the phrase in a header: a few function words ("như sau", "của em", "below"), a
  * short note in brackets without numbers, then ":" (content may follow on the line) or the end of
@@ -385,18 +476,19 @@ function reviewerLead(before: string, correction: boolean): boolean {
 
 /**
  * End (within `unit`) of the last revision header that only reviewer words precede, or -1.
- * `lineEnd`: the unit ends its line, so a header without ":" may stand at its end. `strongOnly`:
- * only a phrase that a teacher never writes counts.
+ * `lineEnd`: the unit ends its line, so a header without ":" may stand at its end. `level`: which
+ * headers count.
  */
 function revisionHeaderEnd(
   unit: string,
   lineEnd: boolean,
-  strongOnly: boolean,
+  level: HeaderLevel,
   correction: boolean,
 ): number {
   let end = -1;
   for (const m of unit.matchAll(HEADER_PHRASE)) {
-    if (strongOnly && m[1] !== undefined) continue;
+    if (level !== 'any' && m[1] !== undefined) continue;
+    if (level === 'answer' && m[2] === undefined) continue;
     const after = m.index + m[0].length;
     const tail = HEADER_TAIL.exec(unit.slice(after));
     if (!tail) continue;
@@ -481,12 +573,16 @@ function removeReviewWrapper(text: string, review: ReviewMode, found: Set<CleanK
   let opened = false;
   let gap: Gap | null = null;
   let lesson = -1;
+  let headed = false;
   for (const u of units(text)) {
     const unit = text.slice(u.start, u.end);
     if (!unit.trim()) continue;
     const lineEnd = u.end === text.length || text[u.end] === '\n';
-    // A weak header ("Câu trả lời cuối cùng:") counts only right after the reviewer's remarks.
-    const header = revisionHeaderEnd(unit, lineEnd, gap !== null || !opened, correction);
+    // A weak header ("Câu trả lời cuối cùng:") counts only right after the reviewer's remarks;
+    // after opening sentences that are no remark, only the reviewer's revision of the answer
+    // ("Bản đã sửa:", not "Bài giải đã sửa:": a teacher sets a misconception against that).
+    const level: HeaderLevel = gap?.early ? 'answer' : gap !== null || !opened ? 'strong' : 'any';
+    const header = revisionHeaderEnd(unit, lineEnd, level, correction);
     if (header >= 0) {
       const after = text.slice(u.start + header, u.end).trim();
       // "Bản đã sửa: lực là vectơ." after a sentence that is no remark is a teacher's correction.
@@ -494,6 +590,7 @@ function removeReviewWrapper(text: string, review: ReviewMode, found: Set<CleanK
       cut = u.start + header;
       held = false;
       opened = true;
+      headed = true;
       gap = null;
       if (after) {
         lesson = cut;
@@ -510,7 +607,12 @@ function removeReviewWrapper(text: string, review: ReviewMode, found: Set<CleanK
       continue;
     }
     if (NEUTRAL_LABEL.test(labelCore(unit))) continue;
-    const kind = remarkKind(unit, correction);
+    let kind = remarkKind(unit, correction);
+    // At the very start (before any header), words only a reviewer writes about the answer it
+    // checked ("mình giữ nguyên nội dung", "No changes needed.") are a remark too.
+    if (kind !== 'remark' && !correction && !headed && REVIEWER_ONLY.test(reviewerWords(unit))) {
+      kind = 'remark';
+    }
     if (kind === 'remark') {
       opened = true;
       if (held || holdsMaterial(unit) || goesOn(unit)) held = true;
