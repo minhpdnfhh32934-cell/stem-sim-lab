@@ -438,6 +438,25 @@ describe('long formulas and drawings', () => {
     }
   });
 
+  it('a list joined by "và"/"hoặc" written as text: no line starts with "= value" (fix round A4)', () => {
+    // The reviewer's probe: these were cut as chains, a name over its "= value".
+    for (const tex of [
+      'v_0 = 0\\ \\text{và}\\ a = 2\\ \\text{m/s}^2\\ \\text{và}\\ t = 3\\ \\text{s}',
+      'x = 1\\;\\text{hoặc}\\; x = 2\\;\\text{hoặc}\\; x = 3\\;\\text{hoặc}\\; x = 4',
+      'm = 4\\ \\text{kg} \\ \\text{và} \\ F = 20\\ \\text{N}',
+    ]) {
+      const { element } = place(emptyLayout(), write('l', 'main', tex, { math: true }), measure);
+      if (element?.kind !== 'text') throw new Error('not placed');
+      expect(element.lines.length, tex).toBeGreaterThanOrEqual(2);
+      for (const line of element.lines) {
+        expect(line.tokens[0]?.value.trim(), tex).toMatch(/^[a-z]/i);
+        expect(line.tokens[0]?.space, tex).toBe(0);
+      }
+      expect(element.lines.flatMap((l) => l.tokens.map((t) => t.value)).join(''), tex).toBe(tex);
+      expect(element.source).toBe(tex);
+    }
+  });
+
   it('a negated relation is written whole on its line', () => {
     const tex = 'a \\not= b \\not= c \\not= d \\not= e \\not= f \\not= g \\not= h \\not= i';
     const { element } = place(emptyLayout(), write('n', 'main', tex, { math: true }), measure);

@@ -122,6 +122,39 @@ describe('splitFormula (an equality chain written on several lines)', () => {
       expect(splitFormula(tex).join('')).toBe(tex);
   });
 
+  it('a connective written as text separates two statements also after a number or a unit (fix round A4)', () => {
+    // The reviewer's inputs: before, each was cut only as a chain ("… a " over "= 2 …").
+    const lists: [string, string[]][] = [
+      [
+        'v_0 = 0\\ \\text{và}\\ a = 2\\ \\text{m/s}^2\\ \\text{và}\\ t = 3\\ \\text{s}',
+        ['v_0 = 0\\ \\text{và}\\ ', 'a = 2\\ \\text{m/s}^2\\ \\text{và}\\ ', 't = 3\\ \\text{s}'],
+      ],
+      [
+        'x = 1\\;\\text{hoặc}\\; x = 2\\;\\text{hoặc}\\; x = 3\\;\\text{hoặc}\\; x = 4',
+        [
+          'x = 1\\;\\text{hoặc}\\; ',
+          'x = 2\\;\\text{hoặc}\\; ',
+          'x = 3\\;\\text{hoặc}\\; ',
+          'x = 4',
+        ],
+      ],
+      [
+        'm = 4\\ \\text{kg} \\ \\text{và} \\ F = 20\\ \\text{N}',
+        ['m = 4\\ \\text{kg} \\ \\text{và} \\ ', 'F = 20\\ \\text{N}'],
+      ],
+    ];
+    for (const [tex, pieces] of lists) {
+      expect(splitFormula(tex)).toEqual(pieces);
+      expect(formulaPieces(tex).every((p) => !p.continues)).toBe(true);
+    }
+    // A unit after a number is still never a separator.
+    expect(splitFormula('F = 20\\ \\text{N}')).toEqual(['F = 20\\ \\text{N}']);
+    expect(splitFormula('s = 3\\ \\text{s} = 3000\\ \\text{ms}')).toEqual([
+      's = 3\\ \\text{s} ',
+      '= 3000\\ \\text{ms}',
+    ]);
+  });
+
   it('only a chain’s continuation is marked as one (it is written indented)', () => {
     const kinds = (tex: string) => formulaPieces(tex).map((p) => p.continues);
     expect(kinds('a = b = c,\\quad d = e')).toEqual([false, true, false]);

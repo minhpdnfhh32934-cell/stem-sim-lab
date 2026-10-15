@@ -13,9 +13,10 @@
  * (`\not=` is "≠"; cut after the `\not`, the next line would read "="). A list of statements
  * ("v_0 = 0,\quad a = 2") is cut after each separator and the spacing after it, so every
  * statement keeps its name with its value: a top-level `,` or `;`, `\quad`, `\qquad`, or a word
- * written as text between statements (`\text{ và }`, or `\text{và}` set apart by spacing after
- * something that is not a number). A decimal comma (`9,81`) is not a separator, and nothing is
- * cut from the exponent or subscript after it.
+ * written as text between statements (a connective such as `\text{và}`, `\text{hoặc}` wherever
+ * it stands, `\text{ và }`, or another word set apart by spacing after something that is not a
+ * number). A decimal comma (`9,81`) is not a separator, and nothing is cut from the exponent or
+ * subscript after it.
  *
  * Conservative and pure: the pieces joined give back the formula exactly (`pieces.join('') ===
  * tex`, so nothing is ever changed, rounded or dropped), nothing inside braces, brackets,
@@ -77,6 +78,26 @@ const TEXT_COMMANDS = new Set([
 
 /** Text commands whose argument may be a word between two statements ("\text{ và }"). */
 const PROSE_COMMANDS = new Set(['text', 'textrm', 'textit', 'textbf', 'textsf', 'mbox', 'hbox']);
+
+/**
+ * Words that join two statements when written as text (`\text{và}`). A unit is never one of
+ * them, so such a word is a separator wherever it stands, also right after a number or a unit's
+ * exponent (`v_0 = 0\ \text{và}\ a = 2`).
+ */
+const CONNECTIVES: ReadonlySet<string> = new Set([
+  'và',
+  'hoặc',
+  'nên',
+  'thì',
+  'khi',
+  'với',
+  'suy ra',
+  'do đó',
+  'and',
+  'or',
+  'so',
+  'where',
+]);
 
 /** Wide spaces that separate two statements of a list. */
 const WIDE_SPACES = new Set(['quad', 'qquad']);
@@ -285,14 +306,19 @@ export function formulaPieces(tex: string): FormulaPiece[] {
           const after = afterGroup(tex, j);
           if (after < 0) return whole;
           const content = tex.slice(j + 1, after - 1);
-          // A word between two statements: "\text{ và }", or "\ \text{và}\ " after something
-          // that is not a number (after a number it is the number's unit).
+          // A word between two statements: a connective ("\text{và}", "\text{hoặc}") wherever
+          // it stands, "\text{ và }", or another word set apart by spacing ("\ \text{…}\ ",
+          // whitespace allowed before the spacing after it) after something that is not a number
+          // (after a number it is the number's unit).
+          let next = after;
+          while (isWhitespace(tex[next])) next++;
           const connective =
             depth === 0 &&
             PROSE_COMMANDS.has(name) &&
             content.trim() !== '' &&
-            ((/^\s/.test(content) && /\s$/.test(content)) ||
-              (wasSpaced && !isDigit(before) && spacingAt(tex, after) > 0));
+            (CONNECTIVES.has(content.trim().normalize('NFC').toLowerCase()) ||
+              (/^\s/.test(content) && /\s$/.test(content)) ||
+              (wasSpaced && !isDigit(before) && spacingAt(tex, next) > 0));
           if (connective) {
             i = statement(i, after);
             continue;
