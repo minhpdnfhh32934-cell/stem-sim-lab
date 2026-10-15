@@ -12,12 +12,14 @@ import {
 } from '@/ai/gpuSafety';
 import { getTransport } from '@/ai/transport';
 import { aiErrorKind, type AiErrorKind } from '@/ai/errorKind';
+import { fallbackFor } from '@/ai/fallback';
 import { hideUnfinishedReasoning, stripReasoningOutsideCode } from '@/ai/reasoning';
 import { outputIsSafe, checkInput } from '@/safety/moderation';
 import { currentSafety } from '@/safety/safetyStore';
 import { logIncident } from '@/safety/safetyStore';
-import type { ChatMessage, Provider } from '@/ai/types';
+import { AiError, toAiError, type ChatMessage, type ChatRequest, type Provider } from '@/ai/types';
 import { analysisEngine } from '@/app/ai/engineChoice';
+import { PROVIDER_NAME } from '@/app/ai/aiStatusView';
 import { localFailure, localFailureText, localModelLabel } from '@/app/ai/localRuntime';
 import type { SettingsSection } from '@/app/workspaceStore';
 import { getLocalClient } from '@/ai/local/client';
@@ -30,6 +32,7 @@ import { missingNumericData, type MissingData } from './missingData';
 import { contextNumbers, sameNumber, unverifiedNumbers } from './provenance';
 import { toolBlock, toolFacts } from './tools';
 import { cleanAnswer } from './answerClean';
+import { cloudFailure, cloudFailureText, type CloudErrorKind, type CloudRole } from './cloudErrors';
 import {
   EXCERPT_HEADER,
   EXCERPT_HEADER_COMPACT,
@@ -106,8 +109,13 @@ const BOARD_STYLE: Record<Locale, (checkQuestion: boolean) => string> = {
 };
 
 export interface ReplyMetadata {
+  /** The AI label's model: for a fallback answer, the provider that really answered too. */
   model: string;
   checkedBy?: string;
+  /** The online provider that wrote the answer (cloud answers only). */
+  provider?: Provider;
+  /** The quota fallback wrote the answer: the chosen provider was out of quota or credit. */
+  fallback?: boolean;
   references: string[];
   /** Results computed by the app for this question (shown by the app, never by the AI). */
   facts: string[];
@@ -144,7 +152,11 @@ export class AnswerStopped extends Error {
 /** Rejects with AnswerStopped as soon as `signal` aborts (the work behind may still finish). */
 function untilStopped<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
   if (!signal) return work;
-  if (signal.aborted) return Promise.reject(new AnswerStopped());
+  if (signal.aborted) {
+    // The work's own failure no longer matters (and must not surface as unhandled).
+    work.catch(() => undefined);
+    return Promise.reject(new AnswerStopped());
+  }
   return new Promise<T>((resolve, reject) => {
     const stop = () => {
       reject(new AnswerStopped());
@@ -157,9 +169,8 @@ function untilStopped<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
       },
       (e: unknown) => {
         signal.removeEventListener('abort', stop);
-        reject(
-          signal.aborted ? new AnswerStopped() : e instanceof Error ? e : new Error(String(e)),
-        );
+        // Rust's errors arrive as plain `{ code, message }` objects: they keep their code.
+        reject(signal.aborted ? new AnswerStopped() : e instanceof Error ? e : toAiError(e));
       },
     );
   });
@@ -176,6 +187,10 @@ interface Answer {
   content: string;
   model: string;
   truncated: boolean;
+  /** The online provider that answered (cloud answers only). */
+  provider?: Provider;
+  /** The quota fallback answered (cloud answers only). */
+  fallback?: boolean;
 }
 
 function requestId(): string {
@@ -689,6 +704,48 @@ export async function contextPrompt(
   };
 }
 
+interface CloudOptions {
+  /**
+   * Never switch to the quota fallback. Think sets it on every call (draft, summary, review): the
+   * draft and the review come from the two providers the learner chose, never from a third one.
+   */
+  noFallback?: boolean;
+  signal?: AbortSignal;
+  /**
+   * The text so far while the answer streams (provisional: a late reasoning tag can take text
+   * back, see `StreamEvent`). Only for an answer that is shown as it is written: never for Think's
+   * draft or review, a summary, or a structured (JSON) answer.
+   */
+  onPartial?: (textSoFar: string) => void;
+  /** Who is asked, named in a failure ("Bên rà soát (Claude) …"). Default: the answering AI. */
+  role?: CloudRole;
+}
+
+/**
+ * Failure kinds that may come from the quota fallback as well, when it was asked: everything that
+ * happens once the question is on its way (the daily cap, the safety gate and the chosen
+ * provider's own key are checked before anything is sent).
+ */
+const SENT_KINDS: ReadonlySet<CloudErrorKind | 'filtered'> = new Set<CloudErrorKind | 'filtered'>([
+  'timeout',
+  'network',
+  'quota',
+  'badKey',
+  'badModel',
+  'emptyAnswer',
+  'reasoningOnly',
+  'tooLarge',
+  'server',
+  'other',
+]);
+
+/**
+ * An online provider answers. It streams through `onPartial` when the transport can
+ * (`chatStream`: `ai_chat_stream` on the desktop, SSE in the browser), otherwise the answer arrives
+ * whole. Retries happen only in the gateway (Rust: at most 3, on 429/5xx); this page never sends a
+ * question again by itself. A failure becomes a TeacherError: the learner's sentence (cloudErrors.ts)
+ * with the Settings page that helps; "Dừng" stays AnswerStopped.
+ */
 async function cloudChat(
   provider: Provider,
   model: string,
@@ -696,33 +753,72 @@ async function cloudChat(
   messages: ChatMessage[],
   locale: Locale,
   maxTokens: number,
-  noFallback = false,
-  signal?: AbortSignal,
+  options: CloudOptions = {},
 ): Promise<Answer> {
+  const { noFallback = false, signal, onPartial, role = 'answer' } = options;
   const transport = getTransport();
-  if (!(await transport.hasKey(provider)))
-    throw new Error(translate(locale, 'chat.errors.noCloudKey'));
+  if (!(await transport.hasKey(provider))) {
+    throw new TeacherError(
+      translate(locale, role === 'review' ? 'chat.errors.noVerifierKey' : 'chat.errors.noCloudKey'),
+      role === 'review' ? 'teacher' : 'ai',
+      false,
+      { cause: new AiError('missingKey', provider) },
+    );
+  }
   // Stopped while the key was looked up: send nothing (it would count and be paid for).
   stopIfAsked(signal);
-  // "Dừng" cancels the request itself (desktop: ai_cancel, browser: fetch abort).
-  const answer = await untilStopped(
-    transport.chat(
-      {
-        requestId: requestId(),
-        provider,
-        model,
-        system,
-        messages,
-        temperature: 0.2,
-        maxTokens,
-        timeoutSecs: useAiStore.getState().timeoutSecs,
-        ...(noFallback ? { noFallback } : {}),
-      },
+  const request: ChatRequest = {
+    requestId: requestId(),
+    provider,
+    model,
+    system,
+    messages,
+    temperature: 0.2,
+    maxTokens,
+    timeoutSecs: useAiStore.getState().timeoutSecs,
+    ...(noFallback ? { noFallback } : {}),
+  };
+  try {
+    // "Dừng" cancels the request itself (desktop: ai_cancel, browser: fetch abort).
+    const answer = await untilStopped(
+      onPartial && transport.chatStream
+        ? transport.chatStream(request, onPartial, signal)
+        : transport.chat(request, signal),
       signal,
-    ),
-    signal,
-  );
-  return { content: answer.content, model: answer.model, truncated: answer.truncated === true };
+    );
+    // Only the quota fallback answers for another provider (the gateway names it then); without
+    // it, the provider asked is the one that answered.
+    const fallback = answer.fallback === true && answer.provider !== undefined;
+    return {
+      content: answer.content,
+      model: answer.model,
+      truncated: answer.truncated === true,
+      provider: fallback && answer.provider ? answer.provider : provider,
+      fallback,
+    };
+  } catch (e) {
+    if (e instanceof AnswerStopped || signal?.aborted) throw new AnswerStopped();
+    const failure = cloudFailure(e, role);
+    // The kind and the code only: the provider's message may carry parts of its reply.
+    console.warn('[teacher-cloud]', role, provider, failure.kind, toAiError(e).code);
+    // The fallback may have answered this call and failed itself: then both are named.
+    const fallback =
+      noFallback || !SENT_KINDS.has(failure.kind) ? undefined : fallbackFor(provider);
+    const fallbackAsked =
+      fallback !== undefined && (await transport.hasKey(fallback.provider).catch(() => false));
+    throw new TeacherError(
+      cloudFailureText(
+        locale,
+        failure,
+        provider,
+        role,
+        fallbackAsked ? fallback.provider : undefined,
+      ),
+      failure.section,
+      failure.retry,
+      { cause: e },
+    );
+  }
 }
 
 async function localGemma(
@@ -964,9 +1060,11 @@ export async function askTeacher(
     think: boolean;
     board?: boolean;
     /**
-     * The answer so far while the on-device model writes it (gallery pattern 086). Every piece
-     * passes `outputIsSafe` before it is shown; after an unsafe piece nothing more is streamed.
-     * Not used with Think (the draft is not shown) or for cloud answers (they arrive whole).
+     * The answer so far while it is written (gallery pattern 086): Gemma, a runtime on this
+     * computer, or an online provider whose transport streams (`chatStream`). Every piece passes
+     * `outputIsSafe` before it is shown; after an unsafe piece nothing more is streamed. The text
+     * is provisional (a late reasoning tag replaces it); the answer itself is the returned
+     * content, checked whole. Not used with Think (the draft is not shown).
      */
     onPartial?: (textSoFar: string) => void;
     /** "Dừng": aborts the answer (cloud request or on-device generation) → AnswerStopped. */
@@ -1127,8 +1225,11 @@ export async function askTeacher(
             messages,
             locale,
             maxTokens,
-            noFallback,
-            signal,
+            {
+              noFallback,
+              ...(signal ? { signal } : {}),
+              ...(onPartial ? { onPartial } : {}),
+            },
           );
 
   // History: the newest turns that fit what is left of the budget after the instruction,
@@ -1154,10 +1255,11 @@ export async function askTeacher(
       records,
       // A model that reasons first could spend the summary's short limit on its reasoning and
       // write no summary: it is asked not to (only a model seen reasoning gets the setting).
+      // With Think the summary never goes to the quota fallback either (no third provider).
       (s, m, max) =>
         engine === 'local' && selection
           ? localRuntimeChat(selection, s, m, locale, max, window, undefined, signal, false)
-          : ask(s, m, max),
+          : ask(s, m, max, options.think),
       summaryCap,
       engine === 'local' ? localSummaryFatal : undefined,
     );
@@ -1211,16 +1313,20 @@ export async function askTeacher(
       [{ role: 'user', content: REVIEW_REQUEST[locale](question, drafted.text) }],
       locale,
       budget.output,
-      // A draft written on this computer is reviewed by the chosen reviewer only: never handed
-      // to a third (fallback) provider, as Settings → AI Teacher says.
-      engine !== 'cloud',
-      signal,
+      {
+        // The review comes from the chosen reviewer only: never from the quota fallback, which
+        // may be the provider that wrote the draft (it would review itself) or a third provider
+        // (Settings → AI Teacher says nothing goes there). Out of quota → the learner is told.
+        noFallback: true,
+        role: 'review',
+        ...(signal ? { signal } : {}),
+      },
     );
     raw = review.content;
     // A question about the learner's own draft keeps the answer's words about a draft.
     cleaned = cleanAnswer(review.content, { reviewed: true, question });
     truncated = review.truncated;
-    checkedBy = `${checker} · ${review.model}`;
+    checkedBy = `${review.provider ?? checker} · ${review.model}`;
   }
   // Both the text as received and what is kept must pass: an answer whose hidden part is unsafe
   // is not trusted for the rest either.
@@ -1230,11 +1336,19 @@ export async function askTeacher(
   }
   if (!cleaned.text.trim()) throw new Error(translate(locale, 'chat.errors.noAnswer'));
   const content = cleaned.text;
+  // A fallback answer names the provider that really wrote it ("Groq · qwen/…", labelled "dự
+  // phòng" in the chat), not only its model.
+  const fallback = draft.fallback === true && draft.provider !== undefined;
   return {
     content,
     metadata: {
-      model: draft.model,
+      model:
+        fallback && draft.provider
+          ? `${PROVIDER_NAME[draft.provider]} · ${draft.model}`
+          : draft.model,
       ...(checkedBy ? { checkedBy } : {}),
+      ...(draft.provider ? { provider: draft.provider } : {}),
+      ...(fallback ? { fallback: true } : {}),
       references,
       facts: toolFacts(question, locale).map((f) => f.shown),
       missingData: prompt.missingData !== null,

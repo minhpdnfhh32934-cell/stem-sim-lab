@@ -976,6 +976,7 @@ const en: Messages = {
     },
     modelMeta: 'Model: {model}',
     checkedMeta: 'Reviewed by: {model}',
+    continuedUnreviewed: 'The continued part was not reviewed.',
     references: 'Knowledge sources',
     thinking: 'Thinking…',
     truncatedNote: 'This answer was long, so it stopped in the middle.',
@@ -1065,6 +1066,36 @@ const en: Messages = {
         '{name} reported an error while answering. Ask again; if it repeats, open Settings → AI on this computer to check.',
       localUpdate:
         'The app on this computer must be updated before it can use AI on this computer. Install the new SimLab version.',
+      cloud: {
+        reviewer: 'The reviewer ({name})',
+        withFallback: '{name} (or the {fallback} fallback)',
+        timeout:
+          '{who} took too long to answer, so I stopped waiting. Please ask again; if it repeats, ask something shorter or raise the timeout in Settings → {page}.',
+        network:
+          '{who} did not get the question because the network has a problem. Check your Internet connection and ask again; if the network is fine and it repeats, open Settings → {page} to check the key.',
+        quota:
+          '{who} says its quota is used up (free limit reached or no credit left). Wait a while and ask again, or choose another provider in Settings → {page}.',
+        badKey:
+          '{who} does not accept the saved API key (it is wrong or was deleted). Open Settings → {page}, paste the right key and check it.',
+        badModel:
+          '{who} cannot find the chosen model. Open Settings → {page} and leave the model name empty to use the default model, or choose another one.',
+        dailyLimit:
+          'The maximum number of AI calls per day set on this computer is used up for today, so the question was not sent. Continue tomorrow, or raise the number in Settings → {page}.',
+        missingKey:
+          '{who} has no API key on this computer, so the question was not sent. Add the key in Settings → {page}.',
+        notAllowed:
+          'AI is not enabled for this profile, so the question was not sent. Complete the safety step in Settings → {page}, then ask again.',
+        emptyAnswer:
+          '{who} sent back no text for this question. Please ask again; if it repeats, try another model in Settings → {page}.',
+        reasoningOnly:
+          '{who} only wrote its working notes, not an answer. Please ask again; if it repeats, try another model in Settings → {page}.',
+        tooLarge:
+          '{who} says the question with the conversation sent along is too long. Clear some of the conversation or choose Memory “Medium” in Settings → {page}, then ask again.',
+        server:
+          '{who} is overloaded or has a server error. Wait a moment and ask again; if it lasts, choose another provider in Settings → {page}.',
+        other:
+          '{who} hit an error while answering. Please ask again; if it repeats, open Settings → {page} to check the connection.',
+      },
     },
   },
   chatSettings: {
@@ -1110,14 +1141,18 @@ const en: Messages = {
     flowLocalDocs: 'Files you added and the {count} built-in notes.',
     flowLocalModel: 'Downloaded Gemma models; with Gemma, answers are generated on this computer.',
     flowLocalSummary:
-      'A summary of the older conversation (written by the AI that answers, sent only to that AI with your questions).',
+      'A summary of the older conversation (written by the AI that answers; sent with your questions to that AI, and to the reviewer when Think is on).',
     flowLocalKeyDesktop: 'API keys: in the operating-system keychain.',
     flowLocalKeyBrowser: 'API keys: only in this browser session, gone on reload.',
     flowSentTitle: 'May be sent online (with the current settings)',
-    flowAnswer: 'With “API”: question + related library excerpts → {name}.',
-    flowThink: 'With Think on: question + draft → {name} for review.',
+    flowAnswer:
+      'With “API”: question, the recent conversation, the summary of the older conversation (if any) and related library excerpts → {name}.',
+    flowFallback:
+      'When {name} is out of quota and Think is off: what was sent to {name} → {fallback} (the fallback, only if its key is saved).',
+    flowThink:
+      'With Think on: question, draft, related library excerpts, the summary of the older conversation (if any) and the screen context (if you turned it on) → {name} for review. Nothing goes to the fallback provider.',
     flowThinkOnly:
-      'With Gemma: only when Think is on, the question + draft go → {name} for review.',
+      'With Gemma: only when Think is on, the question, Gemma’s draft, related library excerpts, the summary of the older conversation (if any) and the screen context (if you turned it on) go → {name} for review. Nothing goes to the fallback provider.',
     flowWiki: 'Wikipedia lookup is on: question → Wikipedia.',
     flowVoice: 'Reading aloud with the Gemini voice is on: answer text → Google.',
     flowPhoto:

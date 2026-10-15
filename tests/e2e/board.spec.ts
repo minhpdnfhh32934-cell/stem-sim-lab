@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { fulfillGemini } from './fakeAi';
 
 /**
  * "Giảng trên bảng" with a fake Gemini server (no real model): a plain markdown answer is laid
@@ -33,14 +34,8 @@ async function fakeGemini(page: Page, answers: { text: string; finishReason: str
     };
     systems.push(body.systemInstruction?.parts?.[0]?.text ?? '');
     const next = answers.shift() ?? { text: 'Xong.', finishReason: 'STOP' };
-    return route.fulfill({
-      json: {
-        candidates: [
-          { content: { parts: [{ text: next.text }] }, finishReason: next.finishReason },
-        ],
-        modelVersion: 'gemini-test',
-      },
-    });
+    // Streamed (a question) or whole (Think's draft), as the request asked.
+    return fulfillGemini(route, next.text, next.finishReason, 'gemini-test');
   });
   return systems;
 }

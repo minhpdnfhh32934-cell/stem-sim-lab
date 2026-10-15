@@ -57,6 +57,8 @@ export interface LessonInput {
   question: string;
   /** The model that answered (shown in the AI label). */
   model?: string;
+  /** The quota fallback answered: the AI label says "dự phòng". */
+  fallback?: boolean;
   /**
    * Written by the Think reviewer (the record has `checkedBy`): its notes about the draft go,
    * unless the question was about the learner's own draft (answerClean.ts).

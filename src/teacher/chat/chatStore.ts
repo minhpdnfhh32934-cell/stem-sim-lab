@@ -27,6 +27,13 @@ export interface ChatMessageRecord {
   prompt?: string;
   model?: string;
   checkedBy?: string;
+  /**
+   * The quota fallback wrote the answer (or its continued part): the chosen provider was out of
+   * quota or credit. The AI label says "dự phòng".
+   */
+  fallback?: boolean;
+  /** A Think answer continued with "Viết tiếp": the continued part was not reviewed. */
+  continuedUnreviewed?: boolean;
   references?: string[];
   /**
    * Results SimLab computed for this question (exact chemical balancing…), shown by the app next

@@ -32,6 +32,7 @@ function latestLesson(messages: ChatMessageRecord[]): LessonInput | null {
       content: m.content,
       question: question?.content ?? '',
       ...(m.model ? { model: m.model } : {}),
+      ...(m.fallback ? { fallback: true } : {}),
       // A Think answer (reviewed): an older one may still start with the reviewer's notes.
       ...(m.checkedBy ? { reviewed: true } : {}),
     };

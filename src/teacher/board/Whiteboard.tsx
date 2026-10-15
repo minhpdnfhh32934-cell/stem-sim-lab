@@ -284,7 +284,12 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
         </p>
       )}
       {/* What is on the board was written by an AI: labelled, with the report button. */}
-      {lesson && <AiContentBar {...(lesson.model ? { model: lesson.model } : {})} />}
+      {lesson && (
+        <AiContentBar
+          {...(lesson.model ? { model: lesson.model } : {})}
+          fallback={lesson.fallback === true}
+        />
+      )}
       <Legend />
     </section>
   );

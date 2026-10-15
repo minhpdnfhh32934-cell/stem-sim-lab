@@ -39,7 +39,7 @@ import {
 import { toast } from '@/ui/toast';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
-import { AnswerStopped, TeacherError, askTeacher } from './chatService';
+import { AnswerStopped, TeacherError, askTeacher, type ReplyMetadata } from './chatService';
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
@@ -310,6 +310,7 @@ export function ChatPanel({
         content: result.content,
         model: meta.model,
         ...(meta.checkedBy ? { checkedBy: meta.checkedBy } : {}),
+        ...(meta.fallback ? { fallback: true } : {}),
         ...(meta.references.length ? { references: meta.references } : {}),
         ...(meta.facts.length ? { facts: meta.facts } : {}),
         ...(result.truncated ? { truncated: true } : {}),
@@ -357,6 +358,9 @@ export function ChatPanel({
         content: joinContinuation(message.content, result.content),
         truncated: result.truncated,
         ...(unverified ? { unverifiedNumbers: unverified } : {}),
+        // The rest is written without Think: a reviewed answer says its new part was not.
+        ...(message.checkedBy ? { continuedUnreviewed: true } : {}),
+        ...continuationLabel(message, result.metadata),
       });
       endAnswer(answer);
       if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
@@ -708,12 +712,18 @@ export function ChatPanel({
                     );
                   })()}
                 {message.role === 'assistant' && (
-                  <AiContentBar {...(message.model ? { model: message.model } : {})} />
+                  <AiContentBar
+                    {...(message.model ? { model: message.model } : {})}
+                    fallback={message.fallback === true}
+                  />
                 )}
                 {message.role === 'assistant' && message.checkedBy && (
                   <small className="chat-message__meta">
                     {t('chat.checkedMeta', { model: message.checkedBy })}
                   </small>
+                )}
+                {message.role === 'assistant' && message.continuedUnreviewed && (
+                  <small className="chat-message__meta">{t('chat.continuedUnreviewed')}</small>
                 )}
                 {message.role === 'assistant' &&
                   message.references &&
@@ -743,8 +753,10 @@ export function ChatPanel({
           ))
         )}
         {busy && streaming !== null && (
-          // Text being written by the on-device model: plain text until the answer is complete
-          // (then it is laid out with formulas). Screen readers hear the finished answer only.
+          // Text being written (on this computer, or streamed by an online provider): plain text
+          // until the answer is complete (then it is laid out with formulas). It is provisional:
+          // never stored, read aloud or taught on the board; if the answer fails, it goes. Screen
+          // readers hear the finished answer only.
           <div className="chat-message chat-message--assistant chat-message--streaming">
             <span className="chat-message__avatar">
               <Bot size={15} />
@@ -909,6 +921,23 @@ export function ChatPanel({
       <footer className="chat-panel__footer">{t('chat.footer')}</footer>
     </section>
   );
+}
+
+/**
+ * The AI label of an answer after "Viết tiếp": when another model wrote the rest (the quota
+ * fallback, or a provider changed in Settings), both are named, and a fallback part keeps the
+ * "dự phòng" mark.
+ */
+function continuationLabel(
+  message: ChatMessageRecord,
+  next: Pick<ReplyMetadata, 'model' | 'fallback'>,
+): Pick<ChatMessageRecord, 'model' | 'fallback'> {
+  const models = message.model ? message.model.split(' + ') : [];
+  const model = models.includes(next.model) ? message.model : [...models, next.model].join(' + ');
+  return {
+    ...(model ? { model } : {}),
+    ...(message.fallback === true || next.fallback === true ? { fallback: true } : {}),
+  };
 }
 
 /**

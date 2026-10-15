@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { fulfillGemini, fulfillGroq, geminiQuota, groqQuota } from './fakeAi';
 import { openLab } from './nav';
 
 /** "AI Teacher": launch page entry, the full teacher page and the floating chat bubble. */
@@ -176,13 +177,7 @@ test('whiteboard: the answer is taught on the board (written, circled, boxed), t
   ].join(' ');
   await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
     bodies.push(route.request().postData() ?? '');
-    return route.fulfill({
-      json: {
-        candidates: [
-          { content: { role: 'model', parts: [{ text: lesson }] }, finishReason: 'STOP' },
-        ],
-      },
-    });
+    return fulfillGemini(route, lesson);
   });
 
   await page.goto('/');
@@ -211,4 +206,174 @@ test('whiteboard: the answer is taught on the board (written, circled, boxed), t
   await expect(panel.getByText(/<write/)).toHaveCount(0);
   await expect(panel.getByText('Định luật II Newton').first()).toBeVisible();
   expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+/** The AI Teacher page with the chat panel, in the talk or board layout. */
+async function openTeacher(page: Page, layout: 'talk' | 'board' = 'talk') {
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  if (layout === 'board') await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  return page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
+}
+
+async function send(page: Page, question: string) {
+  const panel = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
+  await panel.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill(question);
+  await panel.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+}
+
+/** Online settings saved before the app starts (Settings → Kết nối AI). */
+async function aiSettings(page: Page, state: Record<string, unknown>) {
+  await page.addInitScript((s) => {
+    localStorage.setItem('stemsim.ai', JSON.stringify({ state: s, version: 4 }));
+  }, state);
+}
+
+function streamed(body: string | null): boolean {
+  return (JSON.parse(body ?? '{}') as { stream?: unknown }).stream === true;
+}
+
+test('a streamed Gemini answer arrives whole and correct (alt=sse)', async ({ page }) => {
+  const urls: string[] = [];
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
+  });
+  const answer = 'Gia tốc rơi tự do gần mặt đất là g ≈ 9,8 m/s², hướng xuống.';
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
+    urls.push(route.request().url());
+    return fulfillGemini(route, answer, 'STOP', 'gemini-stream-test');
+  });
+  const panel = await openTeacher(page);
+  await send(page, 'Gia tốc rơi tự do là bao nhiêu?');
+  await expect(panel.getByText(answer)).toBeVisible();
+  await expect(panel.getByText(/mô hình gemini-stream-test/)).toBeVisible();
+  await expect(panel.getByText(/dự phòng/)).toHaveCount(0);
+  expect(urls).toHaveLength(1);
+  expect(urls[0]).toContain(':streamGenerateContent?alt=sse');
+});
+
+test('Gemini out of quota: Groq answers, labelled "dự phòng"', async ({ page }) => {
+  const calls = { gemini: 0, groq: 0 };
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'groq-test-key';
+  });
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
+    calls.gemini++;
+    return geminiQuota(route);
+  });
+  await page.route('https://api.groq.com/openai/v1/**', (route) => {
+    calls.groq++;
+    return fulfillGroq(route, 'Lực là đại lượng vectơ, đơn vị newton.', 'stop', 'qwen-test');
+  });
+  const panel = await openTeacher(page);
+  await send(page, 'Lực là gì?');
+  await expect(panel.getByText('Lực là đại lượng vectơ, đơn vị newton.')).toBeVisible();
+  // The label says who really answered, and that it was the fallback.
+  await expect(panel.getByText(/mô hình Groq · qwen-test · dự phòng/)).toBeVisible();
+  await expect(panel.getByRole('alert')).toHaveCount(0);
+  expect(calls).toEqual({ gemini: 1, groq: 1 });
+});
+
+test('Gemini out of quota without a Groq key: the learner reads why, no machine text', async ({
+  page,
+}) => {
+  const calls = { gemini: 0, groq: 0 };
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
+  });
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
+    calls.gemini++;
+    return geminiQuota(route);
+  });
+  await page.route('https://api.groq.com/**', (route) => {
+    calls.groq++;
+    return route.abort();
+  });
+  const panel = await openTeacher(page);
+  await send(page, 'Lực là gì?');
+  const alert = panel.getByRole('alert');
+  await expect(alert).toContainText('Gemini báo đã hết lượt dùng');
+  await expect(alert).toContainText('Cài đặt → Kết nối AI');
+  await expect(alert.getByRole('button', { name: /Hỏi lại/ })).toBeVisible();
+  const text = (await panel.textContent()) ?? '';
+  expect(text).not.toMatch(/[{}]|429|RESOURCE_EXHAUSTED|quotaId/);
+  // Nothing was sent again by itself, and nothing went to another provider.
+  expect(calls).toEqual({ gemini: 1, groq: 0 });
+});
+
+test('Think: the reviewer out of quota is named, and the draft is never reviewed by its writer', async ({
+  page,
+}) => {
+  const calls = { gemini: 0, groq: 0 };
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'test-key';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'groq-test-key';
+  });
+  // Groq reviews; its quota fallback would be Gemini, which wrote the draft.
+  await aiSettings(page, { provider: 'gemini', fallback: 'gemini' });
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
+    calls.gemini++;
+    return fulfillGemini(route, 'Bản nháp của Gemini: lực là đại lượng vectơ.');
+  });
+  await page.route('https://api.groq.com/openai/v1/**', (route) => {
+    calls.groq++;
+    return groqQuota(route);
+  });
+  const panel = await openTeacher(page);
+  await panel.getByRole('button', { name: /Think/ }).click();
+  await send(page, 'Lực là gì?');
+  const alert = panel.getByRole('alert');
+  await expect(alert).toContainText('Bên rà soát (Groq) báo đã hết lượt dùng');
+  await expect(alert).toContainText('Cài đặt → AI Teacher');
+  // The draft is not shown as if it had been reviewed.
+  await expect(panel.getByText(/Bản nháp của Gemini/)).toHaveCount(0);
+  expect((await panel.textContent()) ?? '').not.toMatch(/[{}]|429|rate_limit/);
+  expect(calls).toEqual({ gemini: 1, groq: 1 });
+});
+
+test('Groq reasoning, closed or cut off, reaches neither the chat nor the board', async ({
+  page,
+}) => {
+  const asked: boolean[] = [];
+  await page.addInitScript(() => {
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'groq-test-key';
+  });
+  await aiSettings(page, { provider: 'groq', fallback: 'off' });
+  const answers: [string, string][] = [
+    [
+      '<think>Người dùng hỏi về lực, mình nhẩm 3*4=12 trước.</think># Lực\n1. Lực là đại lượng vectơ.\n2. Đơn vị của lực là newton.',
+      'stop',
+    ],
+    [
+      '# Gia tốc\n1. Gia tốc cho biết vận tốc đổi nhanh hay chậm.\n<think>Mình cần tính a = F/m = 10/2 rồi kiểm',
+      'length',
+    ],
+  ];
+  await page.route('https://api.groq.com/openai/v1/**', (route) => {
+    asked.push(streamed(route.request().postData()));
+    const [text, finish] = answers.shift() ?? ['Xong.', 'stop'];
+    return fulfillGroq(route, text, finish, 'qwen-test');
+  });
+  const panel = await openTeacher(page, 'board');
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toBeVisible({ timeout: 20_000 });
+
+  await send(page, 'Lực là gì?');
+  await expect(panel.getByText('Lực là đại lượng vectơ.').first()).toBeVisible();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.locator('.board__el').first()).toBeVisible();
+
+  await send(page, 'Gia tốc là gì?');
+  await expect(
+    panel.getByText(/Gia tốc cho biết vận tốc đổi nhanh hay chậm/).first(),
+  ).toBeVisible();
+  // The cut answer can be continued; its unfinished reasoning is not part of it.
+  await expect(panel.getByRole('button', { name: 'Viết tiếp' })).toBeVisible();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  const reasoning = /Người dùng hỏi|nhẩm|3\*4|Mình cần tính|10\/2|<\/?think/u;
+  await expect(panel).not.toContainText(reasoning);
+  await expect(board).not.toContainText(reasoning);
+  // Both answers were streamed.
+  expect(asked).toEqual([true, true]);
 });

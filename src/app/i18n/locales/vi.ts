@@ -971,6 +971,7 @@ const vi = {
     },
     modelMeta: 'Mô hình: {model}',
     checkedMeta: 'Đã rà soát: {model}',
+    continuedUnreviewed: 'Phần viết tiếp chưa được rà soát.',
     references: 'Nguồn kiến thức',
     thinking: 'Thầy đang suy nghĩ…',
     truncatedNote: 'Câu trả lời dài nên đã dừng giữa chừng.',
@@ -1061,6 +1062,41 @@ const vi = {
         '{name} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI trên máy khác để kiểm tra.',
       localUpdate:
         'Ứng dụng trên máy này cần được cập nhật mới dùng được AI trên máy khác. Hãy cài bản SimLab mới.',
+      /**
+       * An online provider could not answer: {who} is the provider ("Gemini"), the reviewer
+       * ("Bên rà soát (Claude)") or both providers when the fallback may have answered; {page} is
+       * the Settings page that helps.
+       */
+      cloud: {
+        reviewer: 'Bên rà soát ({name})',
+        withFallback: '{name} (hoặc {fallback} dự phòng)',
+        timeout:
+          '{who} trả lời quá lâu nên mình đã thôi chờ. Em hỏi lại nhé; nếu lặp lại, hãy hỏi ngắn hơn hoặc tăng thời gian chờ trong Cài đặt → {page}.',
+        network:
+          '{who} chưa nhận được câu hỏi vì mạng đang trục trặc. Em kiểm tra kết nối Internet rồi hỏi lại nhé; nếu mạng vẫn ổn mà lỗi lặp lại, mở Cài đặt → {page} để kiểm tra khóa.',
+        quota:
+          '{who} báo đã hết lượt dùng (hết hạn mức miễn phí hoặc hết tín dụng). Em đợi một lúc rồi hỏi lại, hoặc chọn nhà cung cấp khác trong Cài đặt → {page}.',
+        badKey:
+          '{who} không nhận khóa API đã lưu (khóa sai hoặc đã bị xóa). Em mở Cài đặt → {page}, dán lại khóa đúng rồi bấm kiểm tra nhé.',
+        badModel:
+          '{who} không tìm thấy mô hình đã chọn. Em mở Cài đặt → {page}, để trống tên mô hình để dùng mô hình mặc định, hoặc chọn mô hình khác.',
+        dailyLimit:
+          'Hôm nay đã dùng hết số lượt AI tối đa mỗi ngày đặt trên máy này, nên câu hỏi chưa được gửi đi. Mai em hỏi tiếp nhé, hoặc tăng số lượt trong Cài đặt → {page}.',
+        missingKey:
+          '{who} chưa có khóa API trên máy này nên câu hỏi chưa được gửi đi. Em nhập khóa trong Cài đặt → {page} nhé.',
+        notAllowed:
+          'AI chưa được bật cho hồ sơ này nên câu hỏi chưa được gửi đi. Em hoàn tất bước an toàn trong Cài đặt → {page} rồi hỏi lại nhé.',
+        emptyAnswer:
+          '{who} không gửi lại chữ nào cho câu hỏi này. Em hỏi lại nhé; nếu lặp lại, thử mô hình khác trong Cài đặt → {page}.',
+        reasoningOnly:
+          '{who} mới chỉ suy nghĩ nháp mà chưa viết câu trả lời. Em hỏi lại nhé; nếu lặp lại, thử mô hình khác trong Cài đặt → {page}.',
+        tooLarge:
+          '{who} báo câu hỏi cùng phần trò chuyện gửi kèm quá dài. Em xóa bớt cuộc trò chuyện hoặc chọn Trí nhớ “Vừa” trong Cài đặt → {page} rồi hỏi lại nhé.',
+        server:
+          '{who} đang quá tải hoặc gặp lỗi ở máy chủ. Em đợi một lát rồi hỏi lại nhé; nếu lỗi kéo dài, chọn nhà cung cấp khác trong Cài đặt → {page}.',
+        other:
+          '{who} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → {page} để kiểm tra kết nối.',
+      },
     },
   },
   chatSettings: {
@@ -1104,14 +1140,18 @@ const vi = {
     flowLocalDocs: 'Tài liệu em tự thêm và {count} ghi chú có sẵn.',
     flowLocalModel: 'Mô hình Gemma đã tải; khi dùng Gemma, câu trả lời được tạo ngay trên máy.',
     flowLocalSummary:
-      'Bản tóm tắt phần trò chuyện cũ (do chính AI đang trả lời viết, chỉ gửi kèm câu hỏi cho AI đó).',
+      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Think).',
     flowLocalKeyDesktop: 'Khóa API: trong kho bảo mật của hệ điều hành.',
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
-    flowAnswer: 'Khi chọn “API”: câu hỏi + trích đoạn tài liệu liên quan → {name}.',
-    flowThink: 'Khi bật Think: câu hỏi + bản nháp → {name} để rà soát.',
+    flowAnswer:
+      'Khi chọn “API”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
+    flowFallback:
+      'Khi {name} hết lượt và Think đang tắt: những gì gửi cho {name} → {fallback} (dự phòng, chỉ khi đã có khóa).',
+    flowThink:
+      'Khi bật Think: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowThinkOnly:
-      'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi + bản nháp mới được gửi → {name} để rà soát.',
+      'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) mới được gửi → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowWiki: 'Tra Wikipedia đang bật: câu hỏi → Wikipedia.',
     flowVoice: 'Đọc to bằng giọng Gemini đang bật: chữ của câu trả lời → Google.',
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',

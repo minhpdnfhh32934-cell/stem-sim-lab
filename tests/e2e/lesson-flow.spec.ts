@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { fulfillGemini } from './fakeAi';
 
 /**
  * A whole learning session with the AI Teacher (audit H, 2026-10-13): question → lesson spoken
@@ -65,11 +66,7 @@ async function setUp(page: Page, opts: { down?: boolean } = {}) {
     const body = route.request().postData() ?? '';
     calls.push(body);
     const text = calls.length === 1 ? LESSON : FEEDBACK;
-    return route.fulfill({
-      json: {
-        candidates: [{ content: { role: 'model', parts: [{ text }] }, finishReason: 'STOP' }],
-      },
-    });
+    return fulfillGemini(route, text);
   });
   return calls;
 }
