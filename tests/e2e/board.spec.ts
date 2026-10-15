@@ -664,7 +664,7 @@ test('item 3: zoomed in, the camera follows the pen down and across the board wh
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải thích ném ngang');
   await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
   await expect(board.locator('.board__pen')).toHaveCount(1, { timeout: 20_000 });
-  await board.getByRole('radio', { name: '2×' }).click();
+  await board.getByRole('combobox', { name: 'Tốc độ viết' }).selectOption('2');
 
   // Where the pen tip is, seen from the viewport, every 50 ms until the lesson ends (the
   // reviewer's probe: before the fix the pen was out of view most of the time, scrollTop 0).
@@ -958,7 +958,7 @@ test('item 2: circling during the lesson pauses it; "Quay lại bài giảng" te
   await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
   const title = board.locator('[data-id="h1"]');
   await expect(board.getByRole('button', { name: 'Tạm dừng' })).toBeVisible({ timeout: 15_000 });
-  await board.getByRole('radio', { name: '2×' }).click();
+  await board.getByRole('combobox', { name: 'Tốc độ viết' }).selectOption('2');
   await expect(title).toBeVisible();
 
   await board.getByRole('button', { name: 'Khoanh để hỏi' }).click();
@@ -996,7 +996,8 @@ test('item 2: at 1366×768 the bar stays on the board: the subtitle, the AI labe
   await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
   await board.getByRole('button', { name: 'Viết nhanh' }).click();
   await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
-  // The toolbar is one row (the tools show their icon only on this narrow board).
+  // The toolbar is one row ("Bút của em" and "Vừa khung" show their icon only on this narrow
+  // board; the main tools keep their names, see the next test).
   const tool = board.getByRole('button', { name: 'Khoanh để hỏi' });
   expect((await board.locator('.board__toolbar').boundingBox())?.height).toBeLessThanOrEqual(48);
   await tool.click();
@@ -1061,6 +1062,50 @@ test('item 2: at 1366×768 the bar stays on the board: the subtitle, the AI labe
 });
 
 /** Opens AI Teacher on the board layout (the board is lazy-loaded). */
+test('item 2: at 1366×768 "Khoanh để hỏi" and "Viết nhanh" keep their names; one row while asking, zoomed in', async ({
+  page,
+}) => {
+  await fakeGemini(page, [{ text: LESSON, finishReason: 'STOP' }]);
+  const board = await openBoard(page);
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await expect(board.getByRole('button', { name: 'Tạm dừng' })).toBeVisible({ timeout: 15_000 });
+  // The slowest pen: the lesson is still being written while the learner circles.
+  await board.getByRole('combobox', { name: 'Tốc độ viết' }).selectOption('0.75');
+  /** The width of a button's own name as it is drawn (1 px or less: hidden, icon only). */
+  const labelWidth = async (name: string) =>
+    (await board.getByRole('button', { name }).locator('.board__tool-label').boundingBox())
+      ?.width ?? 0;
+  const toolbarHeight = async () =>
+    (await board.locator('.board__toolbar').boundingBox())?.height ?? 0;
+  const check = async () => {
+    // On touch there is no tooltip: the main tools show their names.
+    expect(await labelWidth('Khoanh để hỏi')).toBeGreaterThan(40);
+    expect(await labelWidth('Viết nhanh')).toBeGreaterThan(40);
+    expect(await labelWidth('Bút của em')).toBeLessThanOrEqual(1);
+    expect(await toolbarHeight()).toBeLessThanOrEqual(48);
+    // Every control is at least as tall as a touch target.
+    const heights = await board
+      .locator('.board__toolbar button, .board__toolbar select')
+      .evaluateAll((nodes) => nodes.map((n) => n.getBoundingClientRect().height));
+    for (const h of heights) expect(h).toBeGreaterThanOrEqual(40);
+  };
+  await check();
+
+  // The widest state: zoomed in ("Vừa khung" appears) and paused to ask ("Quay lại bài giảng").
+  await board.getByRole('button', { name: 'Phóng to bảng' }).click();
+  await expect(board.getByRole('button', { name: 'Vừa khung' })).toBeVisible();
+  await board.getByRole('button', { name: 'Khoanh để hỏi' }).click();
+  const title = board.locator('[data-id="h1"]');
+  const box = await title.boundingBox();
+  if (!box) throw new Error('no title');
+  await drawLoop(page, box, 10);
+  await expect(board.getByRole('button', { name: 'Quay lại bài giảng' })).toBeVisible();
+  await check();
+  expect(await labelWidth('Vừa khung')).toBeLessThanOrEqual(1);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
 async function openBoard(page: Page) {
   await page.goto('/');
   await page.locator('.launch-card--teacher').click();

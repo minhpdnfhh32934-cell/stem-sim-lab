@@ -3,6 +3,7 @@ import {
   CircleCheck,
   Eraser,
   FastForward,
+  Gauge,
   LassoSelect,
   Pause,
   PenLine,
@@ -174,22 +175,25 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
               <FastForward size={15} aria-hidden="true" />
               <span className="board__tool-label">{t('board.finish')}</span>
             </button>
-            <div className="segmented" role="radiogroup" aria-label={t('board.speed')}>
-              {PEN_SPEEDS.map((v) => (
-                <button
-                  key={v}
-                  type="button"
-                  role="radio"
-                  aria-checked={speed === v}
-                  className="segmented__item mono"
-                  onClick={() => {
-                    set({ speed: v });
-                  }}
-                >
-                  {formatNumber(locale, v)}×
-                </button>
-              ))}
-            </div>
+            {/* The pen's pace as a short list (as tall as a button), so "Viết nhanh" and
+                "Khoanh để hỏi" keep their names on a narrow board. */}
+            <label className="board__speed" title={t('board.speed')}>
+              <Gauge size={15} aria-hidden="true" />
+              <select
+                aria-label={t('board.speed')}
+                value={String(speed)}
+                onChange={(e) => {
+                  const v = PEN_SPEEDS.find((s) => String(s) === e.target.value);
+                  if (v !== undefined) set({ speed: v });
+                }}
+              >
+                {PEN_SPEEDS.map((v) => (
+                  <option key={v} value={String(v)}>
+                    {formatNumber(locale, v)}×
+                  </option>
+                ))}
+              </select>
+            </label>
           </>
         )}
         <span className="board__toolbar-gap" />
@@ -222,7 +226,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
           {zoom !== 1 && (
             <button
               type="button"
-              className="btn board__tool"
+              className="btn board__tool board__tool--compact"
               onClick={() => {
                 set({ zoom: 1 });
               }}
@@ -250,7 +254,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
         )}
         <button
           type="button"
-          className={cx('btn board__tool', penMode && 'btn--accent')}
+          className={cx('btn board__tool board__tool--compact', penMode && 'btn--accent')}
           aria-pressed={penMode}
           onClick={() => {
             set(penMode ? { penMode: false } : { penMode: true, askMode: false });
@@ -262,7 +266,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
         </button>
         <button
           type="button"
-          className="btn"
+          className="btn board__icon-btn"
           onClick={() => {
             useBoardStore.getState().clearStrokes(face);
           }}
