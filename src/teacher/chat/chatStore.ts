@@ -16,6 +16,20 @@ export interface PreviousEngine {
   chosen: boolean;
 }
 export type ChatRole = 'user' | 'assistant';
+/**
+ * How an answer was asked for: a board lesson (`board`), a chat answer (`talk`), or a question
+ * about part of the board the learner circled (`aside`: read in the chat and aloud, never taught
+ * on the board, which keeps its lesson). Answers saved before this field have none.
+ */
+export type AnswerMode = 'board' | 'talk' | 'aside';
+/** The part of the board a question was about ("Khoanh để hỏi"). */
+export interface BoardRef {
+  face: number;
+  /** The board elements circled. */
+  ids: string[];
+  /** What was circled, as the board holds it (short; '' for a drawing or handwriting). */
+  excerpt: string;
+}
 /** How much of the conversation is sent with each question (Settings → "Trí nhớ hội thoại"). */
 export type MemoryLength = 'medium' | 'long';
 export interface ChatMessageRecord {
@@ -46,6 +60,13 @@ export interface ChatMessageRecord {
   missingData?: boolean;
   /** Values in the answer nobody gave the AI (provenance.ts), shown as "chưa kiểm chứng". */
   unverifiedNumbers?: string[];
+  /** Answers: how it was asked for (an `aside` is never taught on the board). */
+  mode?: AnswerMode;
+  /**
+   * Questions about part of the board: what was circled. Never in `content` or `prompt`: the
+   * numbers there are the board's, not the learner's (provenance), and the board flags its own.
+   */
+  boardRef?: BoardRef;
 }
 /** AI-written summary of the turns that no longer fit the context budget (kept on this computer). */
 export interface ChatSummary {

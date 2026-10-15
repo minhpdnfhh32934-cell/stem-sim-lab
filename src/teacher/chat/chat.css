@@ -1060,3 +1060,35 @@ p.gpu-notice {
   flex: none;
   color: var(--conf-approx);
 }
+
+/* "Khoanh để hỏi": the question goes with what was circled on the board (removable). */
+.chat-panel__board-chip {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  margin: 0 12px 6px;
+  padding: 0 0 0 10px;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+.chat-panel__board-chip-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat-message__board-ref {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 6px;
+  color: inherit;
+  font-size: 11px;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}

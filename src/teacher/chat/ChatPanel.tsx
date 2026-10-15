@@ -9,6 +9,7 @@ import {
   RotateCcw,
   FlaskConical,
   Globe,
+  LassoSelect,
   LoaderCircle,
   Maximize2,
   Send,
@@ -28,8 +29,10 @@ import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
 import { useChatStore, type ChatEngine, type ChatMessageRecord } from './chatStore';
 import { MessageBody } from './MessageBody';
-import { boardAnswerText } from '@/teacher/board/lesson';
+import { boardAnswerText, subtitleText } from '@/teacher/board/lesson';
 import { useBoardStore } from '@/teacher/board/boardStore';
+import { askable, cut, selectionExcerpt, type BoardSelection } from '@/teacher/board/selection';
+import { BOARD_ASK_EVENT } from '@/teacher/board/boardAsk';
 import {
   speak,
   speechSupported,
@@ -54,6 +57,7 @@ import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { openTopic, useActiveTopic } from '@/app/topics';
 import { latestTopic } from './topicLink';
 import { chipNumbers } from './provenance';
+import { usePictureReader } from './pictureReader';
 
 /**
  * What went wrong with the last answer: the learner's sentence, the Settings page that helps,
@@ -67,8 +71,20 @@ interface ChatFailure {
 }
 /** A failed question (it has no answer) or a failed "Viết tiếp" of an answer. */
 type RetryAsk =
-  | { kind: 'ask'; id: string; shown: string; prompt: string | undefined }
+  | { kind: 'ask'; id: string; shown: string; prompt: string | undefined; options: SubmitOptions }
   | { kind: 'continue'; id: string };
+
+/** How a question is sent, besides its text. */
+interface SubmitOptions {
+  /**
+   * Sent by a quick button ("Giải thích lại", "Chậm hơn"…): a request about the last answer,
+   * never an answer to the teacher's check question (turnKind). Said by the caller, never guessed
+   * from the instruction it sends.
+   */
+  quickAction?: boolean;
+  /** About part of the board the learner circled ("Khoanh để hỏi"): answered in the chat. */
+  selection?: BoardSelection;
+}
 
 export function ChatPanel({
   compact = false,
@@ -111,11 +127,22 @@ export function ChatPanel({
   const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
   const [draft, setDraft] = useState('');
+  // What the learner circled on the board, when a question can carry it (the board layout of the
+  // teacher page; readable text, or a picture for an AI on this computer that reads pictures).
+  const pictureReader = usePictureReader(chosenEngine);
+  const circled = useBoardStore((s) => s.selection);
   // On the board the lesson reads itself sentence by sentence, in step with the pen (Whiteboard).
   // `board` asks the AI for a board lesson; who reads an answer is decided when it arrives
   // (`boardOwnsVoice`), because the learner may switch layouts while the AI is answering.
   const board = useTeacherStore((s) => teacherPage && s.layout === 'board');
   const boardOwnsVoice = () => teacherPage && useTeacherStore.getState().layout === 'board';
+  /**
+   * Who reads an answer aloud, decided when it arrives: the chat, unless the board reads it as a
+   * lesson. An answer about part of the board (an aside) is never taught on the board, so the
+   * chat reads it, while the board's lesson waits (paused); not over a lesson that goes on.
+   */
+  const speaksInChat = (aside: boolean) =>
+    aside ? useBoardStore.getState().status !== 'playing' : !boardOwnsVoice();
   /**
    * Quiet before a new question. A board lesson that is speaking is left alone: the board pauses
    * it when the chat starts answering (Whiteboard), so the sentence it cuts is read again on
@@ -305,14 +332,28 @@ export function ChatPanel({
 
   /**
    * Sends a question. `prompt` is what the AI receives when it differs from what the learner
-   * sees (the quick buttons show "Chậm hơn" but send a full instruction).
+   * sees (the quick buttons show "Chậm hơn" but send a full instruction). With a selection, the
+   * question is about that part of the board: the answer is an aside (chat and voice), and the
+   * board keeps its lesson.
    */
-  const submit = async (text = draft, prompt?: string) => {
+  const submit = async (text = draft, prompt?: string, options: SubmitOptions = {}) => {
     const shown = text.trim();
     const question = (prompt ?? shown).trim();
     // Another panel (the bubble before "Mở rộng") may still be answering: a second answer would
     // take over its "Dừng", so the first one could no longer be stopped.
     if (!question || busy || useChatStore.getState().answering) return;
+    const selection = options.selection;
+    // A part of the board without text goes as a picture, only to an AI on this computer that
+    // reads pictures (pictureReader.ts); the picture is made before anything is sent.
+    let image: ArrayBuffer | undefined;
+    if (selection?.status === 'picture') {
+      const { selectionPicture } = await import('@/teacher/board/selectionImage');
+      image = (await selectionPicture(selection, useBoardStore.getState().strokes)) ?? undefined;
+      if (!image) {
+        setError({ text: t('chat.errors.boardPicture'), section: null, retry: null });
+        return;
+      }
+    }
     quietBeforeAsking();
     setError(null);
     const userMessage: ChatMessageRecord = {
@@ -320,6 +361,15 @@ export function ChatPanel({
       role: 'user',
       content: shown,
       ...(prompt ? { prompt: question } : {}),
+      ...(selection
+        ? {
+            boardRef: {
+              face: selection.face,
+              ids: selection.hits.map((h) => h.id),
+              excerpt: selectionExcerpt(selection),
+            },
+          }
+        : {}),
     };
     // Read now, not from the last render: "Hỏi lại" may run right after taking the failed
     // question back.
@@ -333,14 +383,14 @@ export function ChatPanel({
       const result = await askTeacher(question, locale, prior, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: chat.thinkEnabled,
-        board,
+        // A question about part of the board is answered in the chat, never as a new lesson.
+        board: board && !selection,
         signal: controller.signal,
-        // Only the quick buttons send a `prompt`: a request about the last answer, never an
-        // answer to the teacher's check question that the answer may end with.
-        quickAction: prompt !== undefined,
+        quickAction: options.quickAction === true,
         onPartial: (text) => {
           if (!controller.signal.aborted) setStreaming(text || null);
         },
+        ...(selection ? { boardSelection: { selection, ...(image ? { image } : {}) } } : {}),
       });
       const meta = result.metadata;
       chat.addMessage({
@@ -357,12 +407,14 @@ export function ChatPanel({
         // Always set, even empty: an answer without the field (older versions) was never checked
         // and its numbers are not taken as given later (chatService.givenNumbers).
         unverifiedNumbers: meta.unverifiedNumbers,
+        mode: selection ? 'aside' : board ? 'board' : 'talk',
       });
       endAnswer(answer);
-      if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
+      if (useVoiceStore.getState().enabled && speaksInChat(selection !== undefined))
+        void speak(result.content);
     } catch (e) {
       if (!endAnswer(answer, e)) {
-        setError(failureOf(e, { kind: 'ask', id: userMessage.id, shown, prompt }));
+        setError(failureOf(e, { kind: 'ask', id: userMessage.id, shown, prompt, options }));
       }
     } finally {
       setStreaming(null);
@@ -388,7 +440,8 @@ export function ChatPanel({
         // The rest of a reviewed answer, or any while Think is on, goes to the answering
         // provider only, never to the quota fallback (Settings → "Dữ liệu của em đi đâu?").
         noFallback: useChatStore.getState().thinkEnabled || message.checkedBy !== undefined,
-        board,
+        // The rest of an answer about part of the board stays a chat answer.
+        board: board && message.mode !== 'aside',
         signal: controller.signal,
       });
       // An answer saved before the check existed stays unchecked as a whole (it is checked again
@@ -405,7 +458,8 @@ export function ChatPanel({
         ...continuationLabel(message, result.metadata),
       });
       endAnswer(answer);
-      if (useVoiceStore.getState().enabled && !boardOwnsVoice()) void speak(result.content);
+      if (useVoiceStore.getState().enabled && speaksInChat(message.mode === 'aside'))
+        void speak(result.content);
     } catch (e) {
       if (!endAnswer(answer, e)) {
         setError(failureOf(e, { kind: 'continue', id: message.id }));
@@ -429,9 +483,41 @@ export function ChatPanel({
     }
     if (messages.at(-1)?.id === retry.id)
       useChatStore.setState({ messages: messages.slice(0, -1) });
-    void submit(retry.shown, retry.prompt);
+    void submit(retry.shown, retry.prompt, retry.options);
   };
   const lastMessage = chat.messages[chat.messages.length - 1];
+  // "Viết tiếp" belongs to the lesson's answer even after questions about the board (asides).
+  const lastLessonAnswer = chat.messages.findLast(
+    (m) => m.role === 'assistant' && m.mode !== 'aside',
+  );
+  /** The circled part a question carries now (the chip above the box), or undefined. */
+  const boardAsk =
+    teacherPage && board && askable(circled, pictureReader !== null) && circled
+      ? circled
+      : undefined;
+  const withBoard = boardAsk !== undefined;
+  // "Hỏi thầy chỗ này" on the board (BOARD_ASK_EVENT): the draft, or the default question, about
+  // what was circled. One listener at a time (React StrictMode mounts effects twice in
+  // development); it calls the latest render's question so it never sends a stale draft.
+  const askAboutBoard = useRef<() => void>(() => undefined);
+  useEffect(() => {
+    askAboutBoard.current = () => {
+      if (!boardAsk) return;
+      void submit(draft.trim() || t('board.ask.defaultQuestion'), undefined, {
+        selection: boardAsk,
+      });
+    };
+  });
+  useEffect(() => {
+    if (!teacherPage) return;
+    const onAsk = () => {
+      askAboutBoard.current();
+    };
+    window.addEventListener(BOARD_ASK_EVENT, onAsk);
+    return () => {
+      window.removeEventListener(BOARD_ASK_EVENT, onAsk);
+    };
+  }, [teacherPage]);
   const hasAnswer = chat.messages.some((m) => m.role === 'assistant');
   // The simulation the last question names (audit EDU-03): found in the catalog, not by the AI.
   const activeTopic = useActiveTopic();
@@ -444,14 +530,18 @@ export function ChatPanel({
   const stopAnswer = useChatStore((s) => s.stopAnswer);
   const stopped = useChatStore((s) => s.stopped);
 
+  /** The typed question, with the circled part when the chip is there. */
+  const submitDraft = () => {
+    void submit(draft, undefined, boardAsk ? { selection: boardAsk } : {});
+  };
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    void submit();
+    submitDraft();
   };
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      void submit();
+      submitDraft();
     }
   };
 
@@ -662,9 +752,20 @@ export function ChatPanel({
       {!notice && targets.length > 0 && (
         <p className="chat-panel__local-note chat-panel__local-note--online">
           <Globe size={14} />{' '}
-          {t(withScreen ? 'chat.sentToWithScreen' : 'chat.sentTo', {
-            targets: targets.join(', '),
-          })}
+          {t(
+            withScreen
+              ? 'chat.sentToWithScreen'
+              : withBoard
+                ? 'chat.sentToWithBoard'
+                : 'chat.sentTo',
+            { targets: targets.join(', ') },
+          )}
+        </p>
+      )}
+      {!notice && boardAsk?.status === 'picture' && (
+        // A picture of the circled area: only to the AI on this computer (pictureReader.ts).
+        <p className="chat-panel__local-note">
+          <ShieldCheck size={14} /> {t('board.ask.pictureLocal')}
         </p>
       )}
       {!notice && voiceOnline && (
@@ -722,7 +823,20 @@ export function ChatPanel({
                     })}
                   />
                 ) : (
-                  <p>{message.content}</p>
+                  <>
+                    <p>{message.content}</p>
+                    {message.boardRef && (
+                      // What the question was about: the board's own text, as it was circled.
+                      <small className="chat-message__board-ref">
+                        <LassoSelect size={13} aria-hidden="true" />{' '}
+                        {message.boardRef.excerpt
+                          ? t('chat.boardRef', {
+                              excerpt: cut(subtitleText(message.boardRef.excerpt), 120),
+                            })
+                          : t('chat.boardRefPicture')}
+                      </small>
+                    )}
+                  </>
                 )}
                 {message.role === 'assistant' && message.facts && message.facts.length > 0 && (
                   <div className="chat-message__facts" role="note">
@@ -789,7 +903,7 @@ export function ChatPanel({
                 {message.role === 'assistant' && message.truncated && (
                   <div className="chat-message__continue">
                     <small>{t('chat.truncatedNote')}</small>
-                    {message === lastMessage && (
+                    {(message === lastMessage || message === lastLessonAnswer) && (
                       <button
                         type="button"
                         className="btn"
@@ -904,6 +1018,7 @@ export function ChatPanel({
                 void submit(
                   t(`teacher.chips.${key}` as MessageKey),
                   t(`teacher.chipPrompts.${key}` as MessageKey),
+                  { quickAction: true, ...(boardAsk ? { selection: boardAsk } : {}) },
                 );
               }}
               disabled={busy}
@@ -911,6 +1026,30 @@ export function ChatPanel({
               {t(`teacher.chips.${key}` as MessageKey)}
             </button>
           ))}
+        </div>
+      )}
+      {boardAsk && (
+        // The question goes with what was circled; the learner can take it off.
+        <div className="chat-panel__board-chip">
+          <LassoSelect size={14} aria-hidden="true" />
+          <span className="chat-panel__board-chip-text">
+            {boardAsk.status === 'picture'
+              ? t('chat.boardChipPicture')
+              : t('chat.boardChip', {
+                  excerpt: cut(subtitleText(selectionExcerpt(boardAsk, 160)), 60),
+                })}
+          </span>
+          <button
+            type="button"
+            className="chat-panel__icon-button"
+            onClick={() => {
+              useBoardStore.getState().set({ selection: null });
+            }}
+            aria-label={t('chat.boardChipRemove')}
+            title={t('chat.boardChipRemove')}
+          >
+            <X size={15} />
+          </button>
         </div>
       )}
       <form className="chat-panel__composer" onSubmit={onSubmit}>

@@ -109,7 +109,13 @@ const MESSAGE_OVERHEAD = 6;
  * `EMPTY_ANSWER`: hidden reasoning never goes back to the AI, and no turn is empty.
  */
 export function sentText(record: ChatMessageRecord, question?: string): string {
-  if (record.role !== 'assistant') return record.prompt ?? record.content;
+  if (record.role !== 'assistant') {
+    const asked = record.prompt ?? record.content;
+    // A question about part of the board keeps what was circled, so a follow-up ("còn chỗ
+    // kia?") still knows what "chỗ này" was.
+    const excerpt = record.boardRef?.excerpt.trim();
+    return excerpt ? `${asked}\n«${excerpt}»` : asked;
+  }
   const saved = record.prompt ?? record.content;
   const options =
     record.checkedBy !== undefined && question !== undefined ? { reviewed: true, question } : {};

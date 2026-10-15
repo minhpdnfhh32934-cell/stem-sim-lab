@@ -215,6 +215,34 @@ describe('answers saved by an older version are sent back cleaned (review 2026-1
   });
 });
 
+describe('a question about part of the board (item 2)', () => {
+  const asked: ChatMessageRecord = {
+    id: 'q2',
+    role: 'user',
+    content: 'Chỗ này nghĩa là gì ạ?',
+    boardRef: { face: 0, ids: ['f1'], excerpt: '$s = \\frac{1}{2} g t^2$' },
+  };
+  it('goes back to the AI with what was circled, so a follow-up knows what "chỗ này" was', () => {
+    expect(sentText(asked)).toBe('Chỗ này nghĩa là gì ạ?\n«$s = \\frac{1}{2} g t^2$»');
+    // A picture (nothing to quote) and an ordinary question go as typed.
+    expect(sentText({ ...asked, boardRef: { face: 0, ids: [], excerpt: '' } })).toBe(
+      'Chỗ này nghĩa là gì ạ?',
+    );
+    expect(sentText(record('q', 'user', 'Rơi tự do là gì?'))).toBe('Rơi tự do là gì?');
+  });
+
+  it('the history and the summary of older turns carry it too', () => {
+    const records = [
+      record('q1', 'user', 'Rơi tự do là gì?'),
+      record('a1', 'assistant', 'Là…'),
+      asked,
+    ];
+    expect(fitHistory(records, 10_000).messages.at(-1)?.content).toContain('«$s = ');
+    const summary = summaryRequest('vi', null, records);
+    expect(summary.messages[0]?.content).toContain('«$s = ');
+  });
+});
+
 describe('"Viết tiếp" joins the rest of a cut answer', () => {
   it('a new list item, heading or formula starts a new line; a cut sentence continues', () => {
     expect(joinContinuation('3. Thay số.', '4. Kết luận.')).toBe('3. Thay số.\n4. Kết luận.');

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { latestTopic, topicForText } from './topicLink';
+import type { ChatMessageRecord } from './chatStore';
+import { latestTopic, questionBefore, topicForText } from './topicLink';
 
 const user = (content: string, prompt?: string) => ({
   role: 'user',
@@ -91,6 +92,28 @@ describe('which question the link follows', () => {
       teacher('Ví dụ…'),
     ];
     expect(latestTopic(messages, 'vi')?.id).toBe('freeFall');
+  });
+
+  it('a question about part of the board is the learner’s own words, never a quick button', () => {
+    // ChatPanel keeps what was circled in `boardRef`, never in `prompt`: the question is judged by
+    // what the learner wrote, like any other.
+    const lesson: ChatMessageRecord[] = [
+      { id: 'q', role: 'user', content: 'Rơi tự do là gì?' },
+      { id: 'a', role: 'assistant', content: 'Là chuyển động chỉ chịu trọng lực.' },
+    ];
+    const aboutBoard: ChatMessageRecord = {
+      id: 'b',
+      role: 'user',
+      content: 'Vì sao ở đây lại có một phần hai vậy thầy?',
+      boardRef: { face: 0, ids: ['f1'], excerpt: '$s = \\frac{1}{2} g t^2$' },
+    };
+    expect(aboutBoard.prompt).toBeUndefined();
+    expect(latestTopic([...lesson, aboutBoard], 'vi')).toBeNull();
+    expect(questionBefore(aboutBoard.content, lesson)).toBeNull();
+    // The same words sent by a quick button would rework the lesson's question.
+    expect(latestTopic([...lesson, { ...aboutBoard, prompt: 'Giải thích lại' }], 'vi')?.id).toBe(
+      'freeFall',
+    );
   });
 
   it('the newest question that names a topic wins', () => {
