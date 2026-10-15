@@ -568,6 +568,8 @@ const vi = {
       keychain: 'Không đọc được kho khóa của hệ điều hành.',
       invalidJson: 'AI trả lời sai khuôn mẫu 3 lần liền nên mình dừng lại.',
       unavailable: 'Chức năng AI này chưa dùng được ở đây.',
+      internal:
+        'Ứng dụng gặp trục trặc khi hỏi AI (không phải do mạng). Bạn thử lại nhé; nếu vẫn vậy, hãy cài lại bản mới nhất của ứng dụng.',
       quota: 'AI đang hết lượt dùng miễn phí trong lúc này (giới hạn của nhà cung cấp).',
       badKey: 'Nhà cung cấp AI từ chối khóa API (khóa sai, đã bị xóa hoặc bị tắt).',
       badModel: 'Không tìm thấy mô hình AI đã chọn.',
@@ -1072,6 +1074,8 @@ const vi = {
         withFallback: '{name} (hoặc {fallback} dự phòng)',
         timeout:
           '{who} trả lời quá lâu nên mình đã thôi chờ. Em hỏi lại nhé; nếu lặp lại, hãy hỏi ngắn hơn hoặc tăng thời gian chờ trong Cài đặt → {page}.',
+        stalled:
+          '{who} đang viết thì chậm hẳn lại nên mình đã dừng giữa chừng. Em bấm “Hỏi lại” nhé, hoặc xin một câu trả lời ngắn hơn.',
         network:
           '{who} chưa trả lời được vì kết nối mạng bị gián đoạn. Em kiểm tra kết nối Internet rồi hỏi lại nhé; nếu mạng vẫn ổn mà lỗi lặp lại, mở Cài đặt → {page} để kiểm tra khóa.',
         quota:

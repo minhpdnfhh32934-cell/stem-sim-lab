@@ -231,4 +231,21 @@ describe('desktop streamed cloud answer', () => {
     await stream()({ ...request, jsonSchema: { type: 'object' } }, () => undefined);
     expect(tauri.calls.map((c) => c.cmd)).toEqual(['ai_chat']);
   });
+
+  it('a failure of the desktop bridge itself is the app’s, not the network’s (W2 fix round 2)', async () => {
+    // Neither command answers: Tauri rejects with plain strings, never Rust's { code } objects.
+    tauri.handler = (cmd) =>
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      Promise.reject(`Command ${cmd} not found`);
+    await expect(stream()(request, () => undefined)).rejects.toMatchObject({
+      name: 'AiError',
+      code: 'internal',
+      message: 'Command ai_chat not found',
+    });
+    // Rust's own network error keeps its code.
+    tauri.handler = () =>
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      Promise.reject({ code: 'network', message: 'error sending request' });
+    await expect(getTransport().chat(request)).rejects.toMatchObject({ code: 'network' });
+  });
 });

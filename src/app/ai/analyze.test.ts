@@ -110,6 +110,15 @@ describe('AI controller', () => {
     expect(useAnalyzeStore.getState().error?.code).toBe('network');
   });
 
+  it('a failure of the desktop bridge is the app’s own, not the network’s', async () => {
+    // Tauri rejects a missing command with a plain string (never Rust's { code } object).
+    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    setTransportForTests(transport({ chat: () => Promise.reject('Command ai_chat not found') }));
+    await analyze('Một vật rơi tự do từ độ cao 20 m.');
+    expect(useAnalyzeStore.getState().error?.code).toBe('internal');
+    expect(translate('vi', 'analyze.error.internal')).toMatch(/không phải do mạng/);
+  });
+
   it('rejects an empty problem without calling the AI', async () => {
     let called = false;
     setTransportForTests(

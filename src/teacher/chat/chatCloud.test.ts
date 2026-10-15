@@ -101,7 +101,8 @@ afterEach(() => {
 const GATEWAY_ERRORS: [AiError | { code: string; message: string }, string][] = [
   [new AiError('dailyLimit', '100/100'), 'dailyLimit'],
   [new AiError('timeout', '30s'), 'timeout'],
-  [new AiError('timeout', 'gap: 45s'), 'timeout'],
+  // A streamed answer that waited for its first text: the wait in Settings does help.
+  [new AiError('timeout', 'first-delta: 30s'), 'timeout'],
   [
     new AiError(
       'http',
@@ -188,6 +189,65 @@ describe('a failed online answer, in the learner’s words', () => {
     expect(retry(new AiError('http', '401 Unauthorized'))).toBe(false);
     expect(retry(new AiError('http', '404 Not Found'))).toBe(false);
     expect(retry(new AiError('missingKey', 'gemini'))).toBe(false);
+  });
+
+  it.each([
+    [new AiError('timeout', 'gap: 45s')],
+    [new AiError('timeout', 'overall: 600s')],
+    // Rust's error object, as `invoke` rejects with it.
+    [{ code: 'timeout', message: 'gap: 45s' }],
+  ])(
+    'a streamed answer that stalled (%o) is not sent to Settings: no setting lengthens that wait',
+    async (raw) => {
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      setTransportForTests(fake(() => Promise.reject(raw)));
+      const e = await failure(ask('Lực là gì?'));
+      expect(e.message).toBe(translate('vi', 'chat.errors.cloud.stalled', { who: 'Gemini' }));
+      expect(e.message).not.toMatch(/Cài đặt|thời gian chờ|\d+s\b|gap|overall/);
+      expect(e.section).toBeNull();
+      expect(e.retry).toBe(true);
+      expect(calls).toHaveLength(1);
+    },
+  );
+
+  it.each([
+    // The desktop bridge itself (an older or mismatched app), or a programming error.
+    ['Command ai_chat not found'],
+    ['invalid args `request` for command `ai_chat`: missing field `provider`'],
+    [new Error('boom')],
+    [new TypeError("Cannot read properties of undefined (reading 'content')")],
+  ])(
+    'a failure that is not the network (%o) never sends the learner to check the Internet',
+    async (raw) => {
+      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+      setTransportForTests(fake(() => Promise.reject(raw)));
+      const e = await failure(ask('Lực là gì?'));
+      expect(e.message).toBe(
+        translate('vi', 'chat.errors.cloud.other', {
+          who: 'Gemini',
+          page: translate('vi', 'settings.ai'),
+        }),
+      );
+      expect(e.message).not.toMatch(/mạng|Internet|Command|ai_chat|boom|undefined/);
+      expect(calls).toHaveLength(1);
+    },
+  );
+
+  it.each([
+    [new TypeError('Failed to fetch')],
+    [new TypeError('NetworkError when attempting to fetch resource.')],
+    [new TypeError('Load failed')],
+    [{ code: 'network', message: 'error sending request for url (https://example.invalid/)' }],
+  ])('a real network failure (%o) is called one', async (raw) => {
+    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    setTransportForTests(fake(() => Promise.reject(raw)));
+    const e = await failure(ask('Lực là gì?'));
+    expect(e.message).toBe(
+      translate('vi', 'chat.errors.cloud.network', {
+        who: 'Gemini',
+        page: translate('vi', 'settings.ai'),
+      }),
+    );
   });
 
   it('a Rust error object keeps its code while the answer can be stopped (the chat panel)', async () => {
@@ -401,7 +461,8 @@ describe('a streamed online answer', () => {
     const seen: string[] = [];
     const e = await failure(ask('Lực là gì?', { onPartial: (t) => seen.push(t) }));
     expect(seen).toEqual(['Lực là đại']);
-    expect(e.message).toMatch(/^Gemini trả lời quá lâu/);
+    // The gap between two pieces is fixed: no advice to raise the wait in Settings.
+    expect(e.message).toBe(translate('vi', 'chat.errors.cloud.stalled', { who: 'Gemini' }));
     expect(e.retry).toBe(true);
     expect(streamed).toHaveLength(1);
     expect(calls).toHaveLength(0);

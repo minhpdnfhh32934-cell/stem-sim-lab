@@ -566,6 +566,8 @@ const en: Messages = {
       keychain: 'Could not read the system keychain.',
       invalidJson: 'The AI answered in the wrong format three times in a row, so I stopped.',
       unavailable: 'This AI feature is not available here.',
+      internal:
+        'The app ran into a problem while asking the AI (not the connection). Please try again; if it keeps happening, install the latest version of the app.',
       quota: 'The free AI quota is used up for now (provider limit).',
       badKey: 'The AI provider refused the API key (wrong, deleted or disabled).',
       badModel: 'The selected AI model was not found.',
@@ -1071,6 +1073,8 @@ const en: Messages = {
         withFallback: '{name} (or the {fallback} fallback)',
         timeout:
           '{who} took too long to answer, so I stopped waiting. Please ask again; if it repeats, ask something shorter or raise the timeout in Settings → {page}.',
+        stalled:
+          '{who} slowed right down while writing, so I stopped the answer part-way. Press “Ask again”, or ask for a shorter answer.',
         network:
           '{who} could not answer because the network connection was interrupted. Check your Internet connection and ask again; if the network is fine and it repeats, open Settings → {page} to check the key.',
         quota:

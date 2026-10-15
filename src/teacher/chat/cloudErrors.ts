@@ -12,11 +12,13 @@ import { PROVIDER_NAME } from '@/app/ai/aiStatusView';
 import { SECTIONS } from '@/app/settings/sectionMeta';
 import type { SettingsSection } from '@/app/workspaceStore';
 import { aiErrorKind } from '@/ai/errorKind';
-import type { Provider } from '@/ai/types';
+import { toAiError, type Provider } from '@/ai/types';
 
 /** The kinds AI Teacher explains for an online provider (`chat.errors.cloud.*`). */
 export type CloudErrorKind =
   | 'timeout'
+  /** A streamed answer stopped coming mid-way, or ran past the overall cap. */
+  | 'stalled'
   | 'network'
   | 'quota'
   | 'badKey'
@@ -50,11 +52,23 @@ function pageOf(role: CloudRole): SettingsSection {
   return role === 'review' ? 'teacher' : 'ai';
 }
 
+/**
+ * A streamed answer's timer that ran out after the answer had started (src-tauri/src/ai/stream.rs
+ * `Clock::expired`, src/ai/cloudStream.ts `expired`): the gap between two pieces (`gap: 45s`) or
+ * the whole call (`overall: 600s`). Both are fixed; the wait in Settings → Kết nối AI covers only
+ * the first text (`first-delta: …`) and a whole (non-streamed) answer (`30s`).
+ */
+const STREAM_STALL = /^(?:gap|overall):/;
+
 /** What to tell the learner about whatever an online provider's call threw. */
 export function cloudFailure(e: unknown, role: CloudRole): CloudFailure {
   const page = pageOf(role);
   switch (aiErrorKind(e)) {
     case 'timeout':
+      // No setting can lengthen these: ask again, or for a shorter answer.
+      if (STREAM_STALL.test(toAiError(e).message)) {
+        return { kind: 'stalled', section: null, retry: true };
+      }
       // The wait is set in Settings → Kết nối AI for every call, the review's too.
       return { kind: 'timeout', section: 'ai', retry: true };
     case 'network':

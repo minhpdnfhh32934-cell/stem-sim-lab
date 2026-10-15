@@ -121,7 +121,13 @@ export type AiErrorCode =
   /** Blocked by the safety gates in Rust (age confirmation / consent / supervisor PIN). */
   | 'notAllowed'
   | 'invalidJson'
-  | 'unavailable';
+  | 'unavailable'
+  /**
+   * The app itself failed, not the network and not the provider: a desktop command that is
+   * missing or got the wrong arguments ("Command ai_chat not found"), or a programming error.
+   * Page-only (Rust never sends it); see `toAiError`.
+   */
+  | 'internal';
 
 export class AiError extends Error {
   override name = 'AiError';
@@ -133,15 +139,38 @@ export class AiError extends Error {
   }
 }
 
-/** Converts whatever the transport threw into an AiError. */
+/**
+ * How `fetch` reports that no answer came (the Fetch standard's network error is a TypeError):
+ * Chromium/WebView2 "Failed to fetch" and, while a body is read, "network error"; Firefox
+ * "NetworkError when attempting to fetch resource." / "Error in body stream"; Safari "Load
+ * failed"; Node "fetch failed".
+ */
+const FETCH_FAILURE = /fetch|network|load failed|body stream/i;
+
+/** `fetch` (or a body read) failed because no answer came: a network problem. */
+function isFetchFailure(e: unknown): boolean {
+  if (e instanceof DOMException) return e.name === 'NetworkError';
+  return e instanceof TypeError && FETCH_FAILURE.test(e.message);
+}
+
+/**
+ * Converts whatever the transport threw into an AiError. Only a failure that really is the
+ * network's is called `network`: Rust's own network error (`{code: 'network'}`) or `fetch`'s
+ * TypeError. Anything else that is not already an AiError — a plain string or Error from the
+ * desktop bridge ("Command ai_chat not found", wrong arguments) or a programming error — is
+ * `internal`, so the learner is not sent to check an Internet connection that works.
+ */
 export function toAiError(e: unknown): AiError {
   if (e instanceof AiError) return e;
   // Before the `code` check: a DOMException has a numeric `code` (20 for an AbortError).
   if (e instanceof DOMException && e.name === 'AbortError') return new AiError('cancelled', '');
+  // `fetch` stopped by an `AbortSignal.timeout`.
+  if (e instanceof DOMException && e.name === 'TimeoutError') return new AiError('timeout', '');
   // Rust's AiError arrives as { code, message }.
   if (typeof e === 'object' && e !== null && 'code' in e && typeof e.code === 'string') {
     const o = e as { code: string; message?: unknown };
     return new AiError(o.code as AiErrorCode, typeof o.message === 'string' ? o.message : '');
   }
-  return new AiError('network', e instanceof Error ? e.message : String(e));
+  const message = e instanceof Error ? e.message : String(e);
+  return new AiError(isFetchFailure(e) ? 'network' : 'internal', message);
 }

@@ -154,7 +154,11 @@ function errorText(e: unknown): string {
 /** A failure that will not pass within a lesson: trying that voice again only adds waiting. */
 function lastingFailure(e: unknown): boolean {
   if (e instanceof AiError) {
-    return isQuotaError(e) || ['timeout', 'network', 'dailyLimit', 'missingKey'].includes(e.code);
+    // `internal`: the desktop bridge itself failed (toAiError); it will not pass either.
+    return (
+      isQuotaError(e) ||
+      ['timeout', 'network', 'dailyLimit', 'missingKey', 'internal'].includes(e.code)
+    );
   }
   // The graphics card failed (localVoice.ts VoiceCardFault): the next phrase loads on the CPU,
   // so the on-device voice is tried again rather than given up for the lesson.

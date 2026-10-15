@@ -729,6 +729,7 @@ interface CloudOptions {
  */
 const SENT_KINDS: ReadonlySet<CloudErrorKind | 'filtered'> = new Set<CloudErrorKind | 'filtered'>([
   'timeout',
+  'stalled',
   'network',
   'quota',
   'badKey',

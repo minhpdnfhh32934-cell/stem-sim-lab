@@ -273,6 +273,9 @@ function display(e: AiError): string {
       return `not allowed: ${e.message}`;
     case 'unavailable':
       return `unavailable: ${e.message}`;
+    // Page-only: Rust has no such error.
+    case 'internal':
+      return `internal error: ${e.message}`;
   }
 }
 

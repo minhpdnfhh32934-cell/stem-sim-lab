@@ -25,7 +25,7 @@ import {
   UNREACHABLE,
   VISION_UNVERIFIED,
 } from './local/types';
-import { AiError, type AiErrorCode } from './types';
+import { AiError, toAiError, type AiErrorCode } from './types';
 
 /** Message shapes of the Rust gateway (usage.rs, mod.rs, stream.rs, local/mod.rs) and the page. */
 const TABLE: [AiErrorCode, string, AiErrorKind][] = [
@@ -120,6 +120,38 @@ describe('what went wrong with an AI call', () => {
   it('reads a stop and an unknown failure', () => {
     expect(aiErrorKind(new DOMException('Aborted', 'AbortError'))).toBe('cancelled');
     expect(aiErrorKind(new TypeError('Failed to fetch'))).toBe('network');
+  });
+
+  it('calls only a real network failure "network" (W2 fix round 2)', () => {
+    // fetch's own TypeError, in each browser's words (WebView2/Chromium, Firefox, Safari, Node),
+    // a body read that broke, and Rust's network error.
+    for (const message of [
+      'Failed to fetch',
+      'NetworkError when attempting to fetch resource.',
+      'Load failed',
+      'fetch failed',
+      'network error',
+      'Error in body stream',
+    ]) {
+      expect(toAiError(new TypeError(message)).code, message).toBe('network');
+    }
+    expect(toAiError(new DOMException('offline', 'NetworkError')).code).toBe('network');
+    expect(toAiError({ code: 'network', message: 'connection reset' }).code).toBe('network');
+    // fetch stopped by an AbortSignal.timeout.
+    expect(toAiError(new DOMException('signal timed out', 'TimeoutError')).code).toBe('timeout');
+    // The desktop bridge (a plain string from `invoke`) or a programming error is the app's own.
+    for (const raw of [
+      'Command ai_chat not found',
+      'invalid args `request` for command `ai_chat`: missing field `provider`',
+      new Error('boom'),
+      new TypeError("Cannot read properties of undefined (reading 'content')"),
+      new SyntaxError('Unexpected token < in JSON'),
+    ]) {
+      expect(toAiError(raw).code, String(raw)).toBe('internal');
+      expect(aiErrorKind(raw), String(raw)).toBe('other');
+    }
+    // The message is kept for the console and Settings, never shown to a learner as is.
+    expect(toAiError('Command ai_chat not found').message).toBe('Command ai_chat not found');
   });
 
   it('agrees with the fallback rule on every cloud HTTP case', () => {
