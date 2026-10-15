@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { useAiStore } from '@/ai/aiStore';
 import { setLocalClientForTests } from '@/ai/local/client';
 import { checkKey, useLocalAiStore } from '@/ai/local/localAiStore';
 import {
@@ -19,6 +20,13 @@ const desktop = vi.hoisted(() => ({ current: false }));
 vi.mock('@tauri-apps/api/core', async (importOriginal) => {
   const real = await importOriginal<typeof import('@tauri-apps/api/core')>();
   return { ...real, isTauri: () => desktop.current };
+});
+
+/** Whether the in-app Gemma model is downloaded (no model file is read in these tests). */
+const gemma = vi.hoisted(() => ({ ready: false }));
+vi.mock('@/ai/gemmaTransport', async (importOriginal) => {
+  const real = await importOriginal<typeof import('@/ai/gemmaTransport')>();
+  return { ...real, gemmaReady: () => Promise.resolve(gemma.ready) };
 });
 
 const { LocalRuntimeSettings } = await import('./LocalRuntimeSettings');
@@ -100,6 +108,8 @@ async function detectAndPick(user: ReturnType<typeof userEvent.setup>) {
 
 beforeEach(() => {
   desktop.current = false;
+  gemma.ready = false;
+  useAiStore.setState({ provider: 'gemini' });
   for (const fn of Object.values(client)) fn.mockReset();
   client.detect.mockResolvedValue(PROBES);
   client.models.mockResolvedValue(MODELS);
@@ -265,7 +275,98 @@ describe('Settings → AI trên máy khác', () => {
     await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
     expect(useLocalAiStore.getState().selected).toBeNull();
     expect(useChatStore.getState().engine).toBe('cloud');
-    expect(screen.getByText('Đã bỏ chọn. AI Teacher quay lại API.')).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        'Đã bỏ chọn. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini (khuyên dùng).',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('"Bỏ chọn" names the engine that really answers: a pre-selected Gemma without its model is the API', async () => {
+    const user = userEvent.setup();
+    // A fresh install: Gemma is only pre-selected, and its model was never downloaded.
+    useChatStore.setState({
+      engine: 'gemma',
+      engineChosen: false,
+      previousEngine: { engine: 'gemma', chosen: false },
+    });
+    renderPage();
+    await detectAndPick(user);
+    await user.click(screen.getByRole('button', { name: 'Dùng cho AI Teacher' }));
+    expect(useChatStore.getState().engine).toBe('local');
+    await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
+    expect(useChatStore.getState()).toMatchObject({ engine: 'gemma', engineChosen: false });
+    const note = await screen.findByText(/^Đã bỏ chọn\./);
+    // The next question goes online: the learner is told so, never "back to local Gemma".
+    expect(note).toHaveTextContent(
+      'Đã bỏ chọn. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini (khuyên dùng).',
+    );
+    expect(note).not.toHaveTextContent(/Gemma/);
+  });
+
+  it('"Bỏ chọn" back to a downloaded Gemma, or to a chosen Gemma without its model', async () => {
+    const user = userEvent.setup();
+    gemma.ready = true;
+    useChatStore.setState({
+      engine: 'gemma',
+      engineChosen: true,
+      previousEngine: { engine: 'gemma', chosen: true },
+    });
+    renderPage();
+    await detectAndPick(user);
+    await user.click(screen.getByRole('button', { name: 'Dùng cho AI Teacher' }));
+    await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
+    expect(
+      await screen.findByText(
+        'Đã bỏ chọn. AI Teacher đang trả lời bằng Gemma cục bộ, ngay trên máy em.',
+      ),
+    ).toBeInTheDocument();
+
+    gemma.ready = false;
+    await detectAndPick(user);
+    await user.click(screen.getByRole('button', { name: 'Dùng cho AI Teacher' }));
+    await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
+    expect(
+      await screen.findByText(
+        'Đã bỏ chọn. AI Teacher đang chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có câu hỏi nào được gửi đi.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('a saved model the AI Teacher does not use is never shown as in use', async () => {
+    const user = userEvent.setup();
+    useLocalAiStore.setState({
+      selected: { kind: 'ollama', baseUrl: OLLAMA, model: 'qwen3:8b', label: 'Ollama · qwen3:8b' },
+    });
+    // The learner switched the chat back to the pre-selected Gemma, which has no model.
+    useChatStore.setState({ engine: 'gemma', engineChosen: false });
+    renderPage();
+    expect(screen.queryByText('Đang chọn cho AI Teacher')).not.toBeInTheDocument();
+    expect(screen.getByText('Mô hình đã chọn ở trang này')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini (khuyên dùng). Bấm “Dùng cho AI Teacher” để chuyển.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Đã chọn · AI Teacher đang dùng API · Gemini (khuyên dùng)'),
+    ).toBeInTheDocument();
+    // The model's own row says the same after "Tìm trên máy này".
+    await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
+    const row = (await screen.findByRole('radio', { name: /qwen3:8b/ })).closest('article');
+    expect(row).not.toBeNull();
+    expect(
+      within(row as HTMLElement).getByText(
+        'Đã chọn · AI Teacher đang dùng API · Gemini (khuyên dùng)',
+      ),
+    ).toBeInTheDocument();
+    expect(within(row as HTMLElement).queryByText('Đang chọn cho AI Teacher')).toBeNull();
+    // A downloaded Gemma answers: the badge names it.
+    gemma.ready = true;
+    window.dispatchEvent(new Event('stemsim:gemma-changed'));
+    expect(
+      await within(row as HTMLElement).findByText('Đã chọn · AI Teacher đang dùng Gemma cục bộ'),
+    ).toBeInTheDocument();
   });
 
   it('"Khôi phục mặc định" asks first, then forgets this page’s data only', async () => {
@@ -306,6 +407,20 @@ describe('Settings → AI trên máy khác', () => {
     // Under "Tìm trên máy này" and in the troubleshooting list.
     expect(screen.getAllByText(/phải cho phép trang này truy cập \(CORS\)/)).toHaveLength(2);
     expect(screen.getByText(/SimLab không chọn card đồ họa/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/SimLab không biết chương trình đó ghi lại những gì/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /một chương trình trung gian chạy trên máy vẫn có thể chuyển câu hỏi lên mạng/,
+      ),
+    ).toBeInTheDocument();
+    // "Phương án dự phòng": under "Tìm trên máy này" and in the honesty notes.
+    const fallback = screen.getAllByText(
+      /Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng/,
+    );
+    expect(fallback).toHaveLength(2);
+    for (const line of fallback) expect(line).toBeVisible();
     expect(screen.getByText(/SimLab không lưu khóa cho AI trên máy/)).toBeInTheDocument();
     expect(screen.getByText(/cổng 8080 hay bị chương trình khác dùng/)).toBeInTheDocument();
   });

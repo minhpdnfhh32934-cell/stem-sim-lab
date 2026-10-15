@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useRef, useState, type SyntheticEvent, type ReactNode } from 'react';
 import { formatNumber, useT, type Locale, type MessageKey, type TFunction } from '@/app/i18n';
+import { analysisEngine, useAnalysisEngine, type AnalysisEngine } from '@/app/ai/engineChoice';
 import {
   localFailure,
   localFailureText,
@@ -23,6 +24,7 @@ import {
   runtimeName,
 } from '@/app/ai/localRuntime';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useAiStore, type ProviderChoice } from '@/ai/aiStore';
 import { aiErrorKind } from '@/ai/errorKind';
 import { getLocalClient } from '@/ai/local/client';
 import { DEFAULTS, loopbackV4 } from '@/ai/local/endpoint';
@@ -41,7 +43,7 @@ import {
   type RuntimeProbe,
 } from '@/ai/local/types';
 import { cx } from '@/ui/cx';
-import { useChatStore, type ChatEngine } from '../chatStore';
+import { useChatStore } from '../chatStore';
 import { MIN_LOCAL_CONTEXT } from '../memory';
 import '../chat.css';
 import './localRuntime.css';
@@ -198,6 +200,10 @@ export function LocalRuntimeSettings() {
   const status = useLocalAiStore((s) => s.status);
   const userEndpoints = useLocalAiStore((s) => s.userEndpoints);
   const engine = useChatStore((s) => s.engine);
+  const provider = useAiStore((s) => s.provider);
+  // The engine that really answers while the local runtime is not in use: a pre-selected Gemma
+  // without its model is the API. Every sentence below names this one, never only the setting.
+  const effective = useAnalysisEngine();
   const [lists, setLists] = useState<Record<string, ModelList>>({});
   const [focus, setFocus] = useState<Target | null>(null);
   const [connection, setConnection] = useState<Record<string, Step>>({});
@@ -211,8 +217,38 @@ export function LocalRuntimeSettings() {
   const run = useRef(0);
   const browser = !isTauri();
 
-  const engineName = (e: ChatEngine) =>
-    e === 'cloud' ? t('chat.cloud') : e === 'gemma' ? t('chat.gemma') : t('chat.local');
+  const providerName = (p: ProviderChoice) => t(`settings.aiProviders.${p}` as MessageKey);
+  /** Where the AI Teacher's questions go now, in one sentence. */
+  const nowText = (e: AnalysisEngine, p: ProviderChoice): string => {
+    switch (e) {
+      case 'gemma':
+        return t('localRuntime.now.gemma');
+      case 'gemma-missing':
+        return t('localRuntime.now.gemmaMissing');
+      case 'local':
+        return t('localRuntime.currentLocal');
+      case 'local-missing':
+        return t('localRuntime.waiting');
+      case 'cloud':
+        return p === 'off'
+          ? t('localRuntime.now.cloudOff')
+          : t('localRuntime.now.cloud', { provider: providerName(p) });
+    }
+  };
+  /** The short name of the engine that answers now (badges). */
+  const engineShort =
+    effective === 'gemma' || effective === 'gemma-missing'
+      ? t('chat.gemma')
+      : provider === 'off'
+        ? t('chat.cloud')
+        : `${t('chat.cloud')} · ${providerName(provider)}`;
+  /** "Đang chọn cho AI Teacher" only while it really answers; otherwise who does. */
+  const selectedBadge =
+    engine === 'local' ? (
+      <Badge tone="info">{t('localRuntime.badges.selected')}</Badge>
+    ) : (
+      <Badge tone="neutral">{t('localRuntime.badges.selectedIdle', { engine: engineShort })}</Badge>
+    );
   const usual = DEFAULTS.map((d) => hostPort(loopbackV4(d.port).base)).join(', ');
 
   const listedModel = (x: Target): LocalModel | null => {
@@ -360,11 +396,15 @@ export function LocalRuntimeSettings() {
     setNote('');
   };
 
-  const unselect = () => {
+  const unselect = async () => {
     useLocalAiStore.getState().select(null);
     useChatStore.getState().leaveLocal();
     setFocus(null);
-    setNote(t('localRuntime.unselected', { engine: engineName(useChatStore.getState().engine) }));
+    setNote('');
+    // Read after the change: the engine that answers now, not only the one set (a pre-selected
+    // Gemma without its model sends the questions to the API, and the learner is told so).
+    const now = await analysisEngine();
+    setNote(t('localRuntime.unselected', { now: nowText(now, useAiStore.getState().provider) }));
   };
 
   const addAddress = (e: SyntheticEvent) => {
@@ -461,7 +501,7 @@ export function LocalRuntimeSettings() {
           <Badge tone="neutral">{t('localRuntime.badges.listed')}</Badge>
           {m.loaded === true && <Badge tone="info">{t('localRuntime.badges.loaded')}</Badge>}
           {m.loaded === false && <Badge tone="neutral">{t('localRuntime.badges.notLoaded')}</Badge>}
-          {isSelected && <Badge tone="info">{t('localRuntime.badges.selected')}</Badge>}
+          {isSelected && selectedBadge}
           {check?.testedAt !== undefined && (
             <Badge tone="ok">
               {t('localRuntime.badges.tested', { time: timeText(locale, check.testedAt) })}
@@ -545,7 +585,7 @@ export function LocalRuntimeSettings() {
         <fieldset className="settings-group">
           <legend>
             <PlugZap size={15} aria-hidden="true" />
-            {t('localRuntime.currentTitle')}
+            {engine === 'local' ? t('localRuntime.currentTitle') : t('localRuntime.savedTitle')}
           </legend>
           {selected ? (
             <>
@@ -558,7 +598,7 @@ export function LocalRuntimeSettings() {
                 </strong>
               </p>
               <ul className="local-rt__badges">
-                <Badge tone="info">{t('localRuntime.badges.selected')}</Badge>
+                {selectedBadge}
                 {checkFor({ checks }, selected)?.testedAt !== undefined ? (
                   <Badge tone="ok">
                     {t('localRuntime.badges.tested', {
@@ -572,7 +612,7 @@ export function LocalRuntimeSettings() {
               <p className="muted small">
                 {engine === 'local'
                   ? t('localRuntime.currentLocal')
-                  : t('localRuntime.currentOther', { engine: engineName(engine) })}
+                  : t('localRuntime.currentOther', { now: nowText(effective, provider) })}
               </p>
               {!asked && <p className="muted small">{t('localRuntime.restoredNote')}</p>}
             </>
@@ -594,7 +634,7 @@ export function LocalRuntimeSettings() {
                 {t('localRuntime.useForTeacher')}
               </button>
             )}
-            <button type="button" className="btn" onClick={unselect}>
+            <button type="button" className="btn" onClick={() => void unselect()}>
               <Unplug size={14} aria-hidden="true" />
               {t('localRuntime.unselect')}
             </button>

@@ -900,6 +900,8 @@ const en: Messages = {
     badModel: 'The API model name is wrong. Check the Model field in Settings.',
     localNoVision:
       'The AI model you chose on this computer cannot read pictures (or this could not be verified). Reading a photo needs an API key or the picture-reading Gemma (E2B) in the app. While you use the AI on this computer, SimLab sends no photo online.',
+    localNotSelected:
+      'You chose the AI on this computer but no program and model yet, so the photo was not sent anywhere. Choose them in Settings → AI on this computer.',
   },
   landing: {
     eyebrow: 'Explore science by doing',
@@ -933,6 +935,9 @@ const en: Messages = {
       'You chose the AI on this computer but no program and model yet, so no question was sent. Choose them in Settings → AI on this computer.',
     localOnlyRuntime:
       'Questions are processed locally on this computer by {name} ({address}), not sent online.',
+    localRuntimeHere: 'Questions are processed locally on this computer by {name} ({address}).',
+    voiceOnline:
+      'The Gemini voice is on: the text of each answer is sent to Google to be read aloud.',
     noApi:
       'No API key is configured. Connect an API in Settings or choose a downloaded Gemma model.',
     gemmaMissingNotice:
@@ -1274,6 +1279,7 @@ const en: Messages = {
       loaded: 'Loaded in memory',
       notLoaded: 'Not loaded in memory',
       selected: 'Chosen for the AI Teacher',
+      selectedIdle: 'Chosen · the AI Teacher uses {engine}',
       tested: 'Answer tested · {time}',
       incompatible: 'Cannot be used: {reason}',
     },
@@ -1319,17 +1325,25 @@ const en: Messages = {
     },
     useForTeacher: 'Use for the AI Teacher',
     currentTitle: 'Chosen for the AI Teacher',
+    savedTitle: 'Model chosen on this page',
     currentBody: '{label} at {address}',
     currentLocal: 'The AI Teacher answers with this model, right on your computer.',
     currentOther:
-      'This model is chosen, but the AI Teacher answers with {engine}. Press “Use for the AI Teacher” to switch.',
+      'This model is chosen, but the AI Teacher does not use it. {now} Press “Use for the AI Teacher” to switch.',
+    now: {
+      cloud: 'Questions for the AI Teacher are sent online to {provider}.',
+      cloudOff: 'The AI Teacher is set to the API, but the API is off, so no question is sent.',
+      gemma: 'The AI Teacher answers with local Gemma, right on your computer.',
+      gemmaMissing:
+        'The AI Teacher is set to local Gemma, but its model is not downloaded, so no question is sent.',
+    },
     waiting: 'The AI Teacher waits for you to pick a model below; until then no question is sent.',
     restoredNote:
       'SimLab has not asked the program this time: it asks only when you ask a question or press a button on this page.',
     neverTested: 'No answer tested yet.',
     testedAt: 'Answer tested at {time}.',
     unselect: 'Unselect',
-    unselected: 'Unselected. The AI Teacher is back on {engine}.',
+    unselected: 'Unselected. {now}',
     capsTitle: 'Capabilities (only what was seen on this computer)',
     capsName: 'Capability',
     capsSeen: 'On this computer',

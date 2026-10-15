@@ -900,6 +900,8 @@ const vi = {
     badModel: 'Tên model API không đúng. Kiểm tra lại ô Mô hình trong Cài đặt.',
     localNoVision:
       'Mô hình AI trên máy em đã chọn chưa đọc được ảnh (hoặc chưa xác minh được). Để đọc ảnh cần khóa API hoặc Gemma đọc ảnh (E2B) trong ứng dụng. Khi em dùng AI trên máy, SimLab không gửi ảnh lên mạng.',
+    localNotSelected:
+      'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên ảnh chưa được gửi đi đâu. Chọn trong Cài đặt → AI trên máy khác.',
   },
   landing: {
     eyebrow: 'Học khoa học bằng khám phá',
@@ -931,6 +933,8 @@ const vi = {
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
     localOnlyRuntime:
       'Câu hỏi được xử lý cục bộ trên máy này bởi {name} ({address}), không gửi lên mạng.',
+    localRuntimeHere: 'Câu hỏi được xử lý cục bộ trên máy này bởi {name} ({address}).',
+    voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
     noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
       'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
@@ -1267,6 +1271,7 @@ const vi = {
       loaded: 'Đang nạp sẵn trong bộ nhớ',
       notLoaded: 'Chưa nạp vào bộ nhớ',
       selected: 'Đang chọn cho AI Teacher',
+      selectedIdle: 'Đã chọn · AI Teacher đang dùng {engine}',
       tested: 'Đã thử trả lời · {time}',
       incompatible: 'Không dùng được: {reason}',
     },
@@ -1312,10 +1317,18 @@ const vi = {
     },
     useForTeacher: 'Dùng cho AI Teacher',
     currentTitle: 'Đang chọn cho AI Teacher',
+    savedTitle: 'Mô hình đã chọn ở trang này',
     currentBody: '{label} tại {address}',
     currentLocal: 'AI Teacher đang trả lời bằng mô hình này, ngay trên máy em.',
     currentOther:
-      'Đã chọn mô hình này, nhưng AI Teacher đang trả lời bằng {engine}. Bấm “Dùng cho AI Teacher” để chuyển.',
+      'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. {now} Bấm “Dùng cho AI Teacher” để chuyển.',
+    now: {
+      cloud: 'Câu hỏi cho AI Teacher đang được gửi lên mạng tới {provider}.',
+      cloudOff: 'AI Teacher đang chọn API nhưng API đang tắt, nên chưa có câu hỏi nào được gửi đi.',
+      gemma: 'AI Teacher đang trả lời bằng Gemma cục bộ, ngay trên máy em.',
+      gemmaMissing:
+        'AI Teacher đang chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có câu hỏi nào được gửi đi.',
+    },
     waiting:
       'AI Teacher đang chờ em chọn một mô hình bên dưới; trong lúc đó không câu hỏi nào được gửi đi.',
     restoredNote:
@@ -1323,7 +1336,7 @@ const vi = {
     neverTested: 'Chưa thử trả lời.',
     testedAt: 'Đã thử trả lời lúc {time}.',
     unselect: 'Bỏ chọn',
-    unselected: 'Đã bỏ chọn. AI Teacher quay lại {engine}.',
+    unselected: 'Đã bỏ chọn. {now}',
     capsTitle: 'Khả năng (chỉ tính điều đã thấy trên máy này)',
     capsName: 'Khả năng',
     capsSeen: 'Trên máy này',
