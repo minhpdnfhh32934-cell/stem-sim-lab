@@ -2,10 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setLocalClientForTests } from '@/ai/local/client';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { UNVERIFIED, type LocalRuntimeClient, type ModelDetails } from '@/ai/local/types';
+import { setTransportForTests, type LlmTransport } from '@/ai/transport';
+import { AiError } from '@/ai/types';
+import { translate } from '@/app/i18n';
 import {
   PHOTO_SYSTEM,
   PHOTO_UNREADABLE,
   cleanTranscription,
+  readPhotoOnComputer,
   transcribeWithLocalRuntime,
 } from './photoVision';
 
@@ -85,5 +89,80 @@ describe('a photo read by the AI on this computer', () => {
     const [req] = local.chat.mock.calls[0] ?? [];
     expect(req).toMatchObject({ kind: 'ollama', model: selection.model, vision: true });
     expect(req?.messages[0]?.images).toEqual(['aGVsbG8=']);
+  });
+
+  describe('each cause gets its own sentence, and nothing goes online', () => {
+    const cloudCalls: unknown[] = [];
+    beforeEach(() => {
+      cloudCalls.length = 0;
+      setTransportForTests({
+        chat: (req: unknown) => {
+          cloudCalls.push(req);
+          return Promise.reject(new Error('never'));
+        },
+        transcribePhoto: (req: unknown) => {
+          cloudCalls.push(req);
+          return Promise.resolve('online');
+        },
+      } as unknown as LlmTransport);
+    });
+    afterEach(() => {
+      setTransportForTests(null);
+    });
+
+    it('no runtime and model picked: says so, opens its Settings page, sends nothing', async () => {
+      const expected = {
+        kind: 'error',
+        message: translate('vi', 'camera.localNotSelected'),
+        section: 'runtimes',
+      };
+      await expect(readPhotoOnComputer('local-missing', 'aGVsbG8=', 'vi')).resolves.toEqual(
+        expected,
+      );
+      useLocalAiStore.setState({ selected: null });
+      await expect(readPhotoOnComputer('local', 'aGVsbG8=', 'vi')).resolves.toEqual(expected);
+      // Never "the model you chose cannot read pictures": no model was chosen.
+      expect(expected.message).not.toMatch(/đã chọn chưa đọc được ảnh/);
+      expect(local.chat).not.toHaveBeenCalled();
+      expect(cloudCalls).toHaveLength(0);
+    });
+
+    it('a model not seen reading pictures here is not asked (unverified, or no)', async () => {
+      await expect(readPhotoOnComputer('local', 'aGVsbG8=', 'vi')).resolves.toEqual({
+        kind: 'noVision',
+      });
+      useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, details('unverified'));
+      await expect(readPhotoOnComputer('local', 'aGVsbG8=', 'vi')).resolves.toEqual({
+        kind: 'noVision',
+      });
+      useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, details('no'));
+      await expect(readPhotoOnComputer('local', 'aGVsbG8=', 'vi')).resolves.toEqual({
+        kind: 'noVision',
+      });
+      expect(local.chat).not.toHaveBeenCalled();
+      expect(cloudCalls).toHaveLength(0);
+    });
+
+    it.each([
+      [new AiError('network', 'local-unreachable: connection refused'), 'localDown'],
+      [new AiError('timeout', 'local-stalled: first-piece 120000 ms'), 'localStalled'],
+      [new AiError('http', 'model-missing: 404: model not found'), 'localModelMissing'],
+    ] as const)(
+      'a model that reads pictures but whose runtime fails (%s) gets "%s", once',
+      async (error, key) => {
+        useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, details('yes'));
+        local.chat.mockRejectedValue(error);
+        const reading = await readPhotoOnComputer('local', 'aGVsbG8=', 'vi');
+        expect(reading).toEqual({
+          kind: 'error',
+          message: translate('vi', `chat.errors.${key}`, { name: 'Ollama' }),
+          section: 'runtimes',
+        });
+        // Not "cannot read pictures" and not "needs an API key": the runtime is the problem.
+        expect(reading.kind === 'error' && reading.message).not.toMatch(/khóa API/);
+        expect(local.chat).toHaveBeenCalledTimes(1);
+        expect(cloudCalls).toHaveLength(0);
+      },
+    );
   });
 });

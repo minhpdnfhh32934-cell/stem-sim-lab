@@ -63,8 +63,16 @@ export const TopBar = memo(function TopBar() {
   // No key yet: the AI button leads to "Kết nối AI" instead (PROMPT_PHAN_2 A2).
   const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff && !onDevice;
   const canAnalyze = (!aiOff || onDevice) && problemText.trim().length > 0 && !running;
-  const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
-    usePhotoCapture();
+  const {
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  } = usePhotoCapture();
 
   const teacher = useIsTeacher();
   const landing = useIsLanding();
@@ -207,6 +215,7 @@ export const TopBar = memo(function TopBar() {
           open={cameraOpen}
           busy={cameraBusy}
           error={cameraError}
+          errorSection={cameraErrorSection}
           onClose={closeCamera}
           onCapture={(photo) => {
             void onPhoto(photo);

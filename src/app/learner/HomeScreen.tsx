@@ -183,8 +183,16 @@ function ProblemBox() {
   const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !onDevice;
   const canAnalyze =
     (ai.provider !== 'off' || onDevice) && !running && problemText.trim().length > 0;
-  const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
-    usePhotoCapture();
+  const {
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  } = usePhotoCapture();
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -250,6 +258,7 @@ function ProblemBox() {
           open={cameraOpen}
           busy={cameraBusy}
           error={cameraError}
+          errorSection={cameraErrorSection}
           onClose={closeCamera}
           onCapture={(photo) => {
             void onPhoto(photo);

@@ -2,6 +2,9 @@ import { modelFor, useAiStore } from '@/ai/aiStore';
 import { getLocalClient } from '@/ai/local/client';
 import { checkFor, useLocalAiStore } from '@/ai/local/localAiStore';
 import { getTransport, newRequestId } from '@/ai/transport';
+import { translate, type Locale } from '@/app/i18n';
+import type { SettingsSection } from '@/app/workspaceStore';
+import { localFailure, localFailureText } from './localRuntime';
 
 /** Sentinel the reader must return when the photo has no readable problem. */
 export const PHOTO_UNREADABLE = 'KHONG_DOC_DUOC';
@@ -57,6 +60,51 @@ export async function transcribeWithLocalRuntime(
     maxTokens: 1024,
   });
   return answer.content.trim();
+}
+
+/** What the AI on this computer did with a photo (the photo never goes online from here). */
+export type LocalPhotoReading =
+  | { kind: 'text'; text: string }
+  /**
+   * The chosen model was not seen reading pictures on this computer: nothing was sent to it. The
+   * in-app Gemma may still read it, else the learner is told what reading a photo needs.
+   */
+  | { kind: 'noVision' }
+  /** Nothing to read with (no runtime and model picked) or the runtime failed: why, and where. */
+  | { kind: 'error'; message: string; section: SettingsSection | null };
+
+/**
+ * A photo with the local runtime engine chosen (`local`, or `local-missing` when no runtime and
+ * model are picked). Each cause has its own sentence: no runtime picked, a runtime that did not
+ * answer (not running, stalled, model missing… — one request, never retried), or a model not seen
+ * reading pictures here. Nothing ever goes online.
+ */
+export async function readPhotoOnComputer(
+  engine: 'local' | 'local-missing',
+  base64: string,
+  locale: Locale,
+): Promise<LocalPhotoReading> {
+  const selection = useLocalAiStore.getState().selected;
+  if (engine === 'local-missing' || !selection) {
+    return {
+      kind: 'error',
+      message: translate(locale, 'camera.localNotSelected'),
+      section: 'runtimes',
+    };
+  }
+  try {
+    const text = await transcribeWithLocalRuntime(base64, locale);
+    return text === null ? { kind: 'noVision' } : { kind: 'text', text };
+  } catch (e) {
+    // The runtime's own words stay in the console for troubleshooting.
+    console.warn('[photo-local]', e instanceof Error ? e.message : String(e));
+    const failure = localFailure(e);
+    return {
+      kind: 'error',
+      message: localFailureText(locale, failure, selection.kind),
+      section: failure.section,
+    };
+  }
 }
 
 export function cleanTranscription(text: string): string | null {
