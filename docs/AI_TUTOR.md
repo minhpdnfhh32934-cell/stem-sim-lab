@@ -55,8 +55,9 @@ draft request and then asks a second, different provider to review and rewrite t
   draft, the summary of older turns and the review. The reviewer can never end up checking its own
   answer (e.g. Gemini → Groq fallback with Groq as reviewer, or a reviewer whose fallback is the
   drafter), and nothing goes to a third provider. A reviewer out of quota is reported
-  ("Bên rà soát (Groq) báo đã hết lượt dùng…"), never replaced. Without Think the usual fallback
-  stays on.
+  ("Bên rà soát (Groq) báo đã hết lượt dùng…"), never replaced. “Viết tiếp” is sent the same way
+  (the rest of the answer and the summary sent before it; `askTeacher({ noFallback })`) while Think
+  is on or when the answer it continues was reviewed. Without Think the usual fallback stays on.
 - Missing pieces are reported before any call: provider turned off, no key for the answering
   provider, no key for the reviewer (also shown as a notice as soon as Think is switched on), same
   provider for both.
@@ -86,8 +87,12 @@ draft request and then asks a second, different provider to review and rewrite t
   provisional and goes through the same wrapper as Gemma's (each piece passes `outputIsSafe`, an
   unsafe piece takes everything back, unfinished reasoning is hidden, a reset replaces the text);
   the final answer is cleaned and checked whole, and only the completed answer is stored, read
-  aloud or taught on the board. A stream that breaks off leaves nothing behind: the partial text
-  goes and the failure sentence is shown. A desktop app older than the web part (no
+  aloud or taught on the board. In the board layout the lesson being written (TeachScript) shows
+  as readable text, the subtitles of its sentences so far (`boardStreamPreview` in
+  `src/teacher/board/lesson.ts`): never a tag, an attribute or LaTeX, and a `<write>` still being
+  written stays out until it is whole. A stream that breaks off leaves nothing behind: the partial
+  text goes and the failure sentence is shown (for a broken connection “{who} chưa trả lời được vì
+  kết nối mạng bị gián đoạn”, true whether or not the question reached the provider). A desktop app older than the web part (no
   `ai_chat_stream`: “Command … not found” / “unknown command”) answers through `ai_chat`, and the
   missing command is remembered for the session (one failed lookup, not one per question).
 - Only learning content is kept (`src/teacher/chat/answerClean.ts`, run in `askTeacher` before
