@@ -37,7 +37,7 @@ import {
 } from './boardStore';
 import { BoardDrawing } from './BoardDrawing';
 import { BoardMinimap } from './BoardMinimap';
-import { BOARD_W, boardRules, type Line, type TextElement } from './layout';
+import { BOARD_W, boardRules, type BoardElement, type Line, type TextElement } from './layout';
 import { clampScroll, rescaleScroll } from './minimap';
 import {
   cancelPendingStart,
@@ -141,7 +141,13 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
                 {t('board.resume')}
               </button>
             ) : (
-              <button type="button" className="btn" onClick={replayLesson}>
+              // While a new answer is being prepared, the last lesson is not the one shown.
+              <button
+                type="button"
+                className="btn"
+                disabled={status === 'preparing'}
+                onClick={replayLesson}
+              >
                 <RotateCcw size={15} aria-hidden="true" />
                 {t('board.replay')}
               </button>
@@ -369,6 +375,29 @@ function aimCamera(
 
 /** What the learner does on the board to move the view themselves. */
 const LEARNER_MOVES = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+/** Keys that scroll the board (any other key moves nothing). */
+const SCROLL_KEYS: ReadonlySet<string> = new Set([
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'PageUp',
+  'PageDown',
+  'Home',
+  'End',
+  ' ',
+]);
+/**
+ * Wheel turns and key presses this close together are one move of the learner's; this long after
+ * the last one, a move that left the view where it was (at its edge) changes nothing.
+ */
+const NO_MOVE_MS = 250;
+
+/** The learner moved the view while the teacher wrote this line: the element and the line. */
+interface Held {
+  focus: string | null;
+  line: number | null;
+}
 
 /**
  * The scaled board surface for the shown face, with the camera following the pen. The sheet is
@@ -387,19 +416,28 @@ function BoardSheet() {
   const drawnScale = useRef(scale);
   /** Where the view was before the scale changed (kept on every scroll). */
   const lastView = useRef<ViewSnapshot | null>(null);
+  /**
+   * Where the board itself last put the view (a resize, a zoom): the scroll event that follows is
+   * not a move of the learner's, and comes a frame later, when the height may have changed again.
+   */
+  const placedAt = useRef<Aim | null>(null);
   /** The fit last measured (a resize that keeps it changes only the viewport's height). */
   const measuredFit = useRef<number | null>(null);
   /** Where the camera's pan under way is taking the view (null once it arrived or was stopped). */
   const aimed = useRef<Aim | null>(null);
-  /** The learner moved the view while the teacher wrote this element (null: not since). */
-  const heldOn = useRef<{ focus: string | null } | null>(null);
+  /**
+   * The learner moved the view while the teacher wrote this line (null: not since): the element
+   * and the height of the pen's line then.
+   */
+  const heldOn = useRef<Held | null>(null);
   /**
    * The learner moves the view: the pan under way is no longer the camera's, and the camera
-   * leaves the view sideways to the learner until the teacher starts the next element.
+   * leaves the view sideways to the learner until the teacher starts a new line.
    */
   const takeOver = useCallback(() => {
     aimed.current = null;
-    heldOn.current = { focus: useBoardStore.getState().focus };
+    const s = useBoardStore.getState();
+    heldOn.current = { focus: s.focus, line: s.pen?.y ?? null };
   }, []);
   const face = useBoardStore((s) => s.face);
   const layout = useBoardStore((s) => s.layout);
@@ -436,15 +474,62 @@ function BoardSheet() {
     if (drawing.current && drawing.current.face !== face) endStroke();
   }, [face]);
 
+  /**
+   * The element the teacher writes, when the view follows the teacher (the lesson plays, the
+   * learner follows on that face and is not drawing); else null.
+   */
+  const followed = (): BoardElement | null => {
+    const s = useBoardStore.getState();
+    const e = s.focus ? s.layout.elements.find((x) => x.id === s.focus) : undefined;
+    return e && e.face === s.face && s.status === 'playing' && s.follow && drawing.current === null
+      ? e
+      : null;
+  };
+
+  /**
+   * Puts the view at once where the board wants it (a resize, a zoom) and notes it as asked, not
+   * as the browser rounded it: a height that changes over several frames (a panel that slides)
+   * then never makes the middle row drift a pixel at a time.
+   */
+  const placeView = (node: HTMLElement, top: number, left: number, at: number) => {
+    const want = {
+      top: clampScroll(top, node.scrollHeight, node.clientHeight),
+      left: clampScroll(left, node.scrollWidth, node.clientWidth),
+    };
+    if (Math.abs(want.top - node.scrollTop) >= 0.5 || Math.abs(want.left - node.scrollLeft) >= 0.5)
+      scrollInstant(node, want.top, want.left);
+    placedAt.current = { top: node.scrollTop, left: node.scrollLeft };
+    lastView.current = { ...want, h: node.clientHeight, w: node.clientWidth, scale: at };
+  };
+
   useLayoutEffect(() => {
     const node = viewport.current;
     if (!node) return;
     const update = () => {
       const next = Math.max(0.3, (node.clientWidth - 2) / BOARD_W);
-      // The same scale, a new height (the window, the subtitle or the legend): the view is noted
-      // again, so the next zoom keeps in the middle the row that is in the middle now.
-      if (next === measuredFit.current && lastView.current)
-        lastView.current = snapshotOf(node, drawnScale.current);
+      const before = lastView.current;
+      if (next === measuredFit.current && before) {
+        // The same scale, a new height (the window, the subtitle or the legend): the row that
+        // was in the middle stays in the middle (unless the camera follows the teacher), and the
+        // view is noted again, so the next zoom keeps that row in the middle too.
+        if (
+          before.h !== node.clientHeight &&
+          before.scale === drawnScale.current &&
+          followed() === null
+        ) {
+          const top = rescaleScroll(
+            before.top,
+            before.h,
+            before.scale,
+            before.scale,
+            node.scrollHeight,
+            node.clientHeight,
+          );
+          // The column stays as noted (unless the browser had to move it).
+          const left = Math.abs(node.scrollLeft - before.left) < 1 ? before.left : node.scrollLeft;
+          placeView(node, top, left, before.scale);
+        } else lastView.current = snapshotOf(node, drawnScale.current);
+      }
       measuredFit.current = next;
       setFit(next);
     };
@@ -463,6 +548,12 @@ function BoardSheet() {
     const node = viewport.current;
     if (!node) return;
     const note = () => {
+      // The view arrived where the board put it: what was noted then stays (at the height then,
+      // which the next resize step needs, not the height of this later frame).
+      const own = placedAt.current;
+      placedAt.current = null;
+      if (own && Math.abs(node.scrollTop - own.top) < 1 && Math.abs(node.scrollLeft - own.left) < 1)
+        return;
       lastView.current = snapshotOf(node, drawnScale.current);
     };
     node.addEventListener('scroll', note, { passive: true });
@@ -480,17 +571,39 @@ function BoardSheet() {
     const arrived = () => {
       aimed.current = null;
     };
+    /** Checks, a moment after the learner's wheel turns or key presses, that they moved the view. */
+    let check: number | undefined;
+    /** Where the view was when those turns or presses began, and whether the camera was held. */
+    let burst: { top: number; left: number; held: Held | null } | null = null;
     const learner = (e: Event) => {
       if (e.type === 'pointerdown' && e.target !== node) return;
+      if (e instanceof KeyboardEvent && !SCROLL_KEYS.has(e.key)) return;
       const drawing =
         useBoardStore.getState().penMode &&
         e.target instanceof Element &&
         e.target.closest('.board__student') !== null;
-      if (!drawing) takeOver();
+      if (drawing) return;
+      const held = heldOn.current;
+      takeOver();
+      window.clearTimeout(check);
+      // A press on the scrollbar or a touch: the learner holds the view (a drag may begin late).
+      if (e.type === 'pointerdown' || e.type === 'touchstart') {
+        burst = null;
+        return;
+      }
+      // Wheel turns or key presses that left the view where it was (the view at its edge)
+      // change nothing: the camera goes on as before them (audit A4 follow-up).
+      burst ??= { top: node.scrollTop, left: node.scrollLeft, held };
+      check = window.setTimeout(() => {
+        const b = burst;
+        burst = null;
+        if (b && node.scrollTop === b.top && node.scrollLeft === b.left) heldOn.current = b.held;
+      }, NO_MOVE_MS);
     };
     node.addEventListener('scrollend', arrived);
     for (const type of LEARNER_MOVES) node.addEventListener(type, learner, { passive: true });
     return () => {
+      window.clearTimeout(check);
       node.removeEventListener('scrollend', arrived);
       for (const type of LEARNER_MOVES) node.removeEventListener(type, learner);
     };
@@ -507,14 +620,7 @@ function BoardSheet() {
     aimed.current = null;
     if (!node || fit === null) return;
     const before = lastView.current;
-    const s = useBoardStore.getState();
-    const e = s.focus ? s.layout.elements.find((x) => x.id === s.focus) : undefined;
-    const following =
-      e !== undefined &&
-      e.face === s.face &&
-      s.status === 'playing' &&
-      s.follow &&
-      drawing.current === null;
+    const e = followed();
     const left =
       before && before.scale !== scale
         ? rescaleScroll(
@@ -526,7 +632,7 @@ function BoardSheet() {
             node.clientWidth,
           )
         : node.scrollLeft;
-    if (following && (before === null || before.scale !== scale)) {
+    if (e && (before === null || before.scale !== scale)) {
       scrollInstant(node, Math.max(0, (e.y + e.h) * scale - node.clientHeight * 0.7), left);
     } else if (before && before.scale !== scale) {
       const top = rescaleScroll(
@@ -537,7 +643,8 @@ function BoardSheet() {
         node.scrollHeight,
         node.clientHeight,
       );
-      scrollInstant(node, top, left);
+      placeView(node, top, left, scale);
+      return;
     }
     lastView.current = snapshotOf(node, scale);
   }, [scale, fit]);
@@ -568,11 +675,13 @@ function BoardSheet() {
   // the board it is going to (never again for every letter while the pan is under way), and not
   // while the learner looks elsewhere on the line the teacher writes.
   const penX = showPen ? pen.x : null;
+  const penY = showPen ? pen.y : null;
   useEffect(() => {
     const node = viewport.current;
     if (!node || penX === null || zoom === 1 || status !== 'playing' || !follow || stroking) return;
     if (heldOn.current) {
-      if (heldOn.current.focus === focus) return;
+      // Held until the teacher starts a new line: the next element, or a new line of this one.
+      if (heldOn.current.focus === focus && heldOn.current.line === penY) return;
       heldOn.current = null;
     }
     const x = penX * drawnScale.current;
@@ -580,7 +689,7 @@ function BoardSheet() {
     const view = cameraView(node, aimed.current);
     if (x < view.left + width * 0.1 || x > view.left + width * 0.9)
       aimCamera(node, aimed, { left: Math.max(0, x - width * 0.3) });
-  }, [penX, focus, zoom, status, follow, stroking]);
+  }, [penX, penY, focus, zoom, status, follow, stroking]);
 
   const toBoard = (e: PointerEvent<SVGSVGElement>): [number, number] => {
     const r = e.currentTarget.getBoundingClientRect();

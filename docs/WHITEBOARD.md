@@ -71,18 +71,28 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - Lời chào, "Tôi là AI…", "Dưới đây là…", "Hy vọng…" được **nói** nhưng không viết lên bảng.
     Nếu ngay sau lời chào có phép tính ("Chào em, v = gt = 9,8·2 = 19,6 m/s.") hoặc một lý do
     ("Câu hỏi hay đấy, vì trọng lực…") thì phần đó vẫn được viết. Dòng ngắn của bài học không bao
-    giờ bị coi là lời nói suông: câu trả lời "Không." / "Có." / "Được.", ẩn số "a = ?", ký hiệu
-    "σ là độ đàn hồi", "Dây dẫn." (so từ có dấu: "dây" khác "đây"). Câu bài học chỉ trông giống
-    lời chào hay suy nghĩ vẫn được giữ: "Chào mào là loài chim…", "Cháo là…", "Hy vọng sống…",
-    "Người dùng muốn tiết kiệm điện…", "Mình cần suy nghĩ xem vật chịu những lực nào."
+    giờ bị coi là lời nói suông: câu trả lời "Không." / "Có." / "Được." / "Vâng." / "Dạ.", ẩn số
+    "a = ?", ký hiệu "σ là độ đàn hồi", "Dây dẫn." (so từ có dấu: "dây" khác "đây"). Câu bài học
+    chỉ trông giống lời chào hay suy nghĩ vẫn được giữ: "Chào mào là loài chim…", "Cháo là…", "Hy
+    vọng sống…", "Người dùng muốn tiết kiệm điện…", "Mình cần suy nghĩ xem vật chịu những lực
+    nào.", giả thiết "Mình hiểu ý bạn là vật trượt không ma sát." ("Mình hiểu ý bạn." một mình
+    thì chỉ nói), "Cảm ơn lực ma sát, xe mới dừng được." ("Cảm ơn bạn…", "Cảm ơn câu hỏi…",
+    "Cảm ơn sự kiên nhẫn của bạn." thì chỉ nói).
   - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, dòng nguồn ("Wikipedia:
-    https://…"), dòng "---" không được nói, cũng không được viết. Dòng ngắn có công thức hay số
-    đo kèm link ("g = 9,81 m/s² (https://…).") chỉ mất cái link, công thức và số vẫn được nói và
-    viết.
+    https://…", "Luật vạn vật hấp dẫn (https://…)", "Xem thêm tại Wikipedia (https://…).", danh
+    sách sau "Tài liệu tham khảo:"), dòng "---" không được nói, cũng không được viết. Dòng ngắn có
+    công thức hay số đo kèm link ("g = 9,81 m/s² (https://…).") và **câu** ngắn kèm link ("Lực hấp
+    dẫn là lực hút giữa hai vật (https://…).", "… ở lục lạp [Wikipedia](…).", "Năm 1687, Newton
+    công bố…", "Wikipedia là bách khoa toàn thư mở (https://…).") chỉ mất cái link: chữ, công thức
+    và số vẫn được nói và viết. Link trong ngoặc mất cùng những chữ chỉ nói nguồn ("(theo
+    Wikipedia: https://…)", "(nguồn: https://…)" → không còn "(theo Wikipedia:)"), nhưng công thức
+    hay số trong ngoặc thì ở lại. Trong lời TeachScript, link cũng chỉ mất link, câu vẫn được nói.
   - Một nhãn đứng một mình ("**Kết luận:**", "Phân tích:", "Cho:", "Ghi chú:") không được viết:
     thầy nói nhãn cùng dòng ngay sau, và ý nghĩa của nhãn đi theo dòng đó (kết luận → khung kết
     quả đúng một lần, không bao giờ có khung rỗng; dữ kiện, ghi chú → cột bên; câu hỏi kiểm tra
-    cuối bài → ghi chú ngắn ở cột bên). "Kiểm tra (lại):" là kiểm lại đáp số: phép tính sau nó
+    cuối bài → ghi chú ngắn ở cột bên, cả khi nó mở đầu bằng "Vậy" hay "=>" như một kết luận:
+    "Vậy nếu m tăng gấp đôi thì a thế nào?" không bao giờ được đóng khung như đáp số, và một dòng
+    hỏi như "**Vậy, đúng hay sai?**" không bao giờ là kết quả). "Kiểm tra (lại):" là kiểm lại đáp số: phép tính sau nó
     được viết đủ. Chỉ câu hỏi kiểm tra cuối bài mới được rút gọn còn câu hỏi, và câu nào có số
     vẫn được giữ; câu hỏi nằm trong đề bài ("… 72 km/h … Tính quãng đường?") được viết đủ; câu hỏi
     thầy tự trả lời ngay ("Vì sao vật rơi nhanh dần? Vì trọng lực…") là một bước, viết đủ.
@@ -96,12 +106,20 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - Dấu gạch chân, khung, mũi tên chỉ vào chữ đã bị bỏ thì cũng bị bỏ; lời thầy nói được tính
     lại theo những gì còn trên bảng. Dòng dài bị tách: khung ở mẩu cuối, gạch chân cả dòng thì
     gạch mọi mẩu, sửa sai thì gạch bỏ mọi mẩu rồi viết lời sửa sau mẩu cuối. Cùng một dòng viết
-    lặp ngay ở câu sau (lỗi của AI) chỉ viết một lần nhưng vẫn được đọc; cùng kết quả ở câu b, ở
-    bài khác hay ở mặt bảng khác thì vẫn được viết lại; "Vật rơi" và "Vật rời" là hai dòng khác
-    nhau. Không con số nào bị đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so sánh
-    "v<s và t>0", "<v>" không bao giờ bị xóa như thẻ HTML; thẻ lạ có thẻ đóng ("<note>…</note>",
-    "<step>…</step>") thì bỏ thẻ, giữ chữ; "10<sup>23</sup>" thành lũy thừa 10²³ (giọng đọc
-    "mười mũ hai mươi ba", không phải "một nghìn không trăm hai mươi ba"); chỗ trống "F = ____ N"
+    lặp ngay ở câu sau, hoặc viết liền hai lần trong một câu không có lời nào ở giữa (lỗi của AI),
+    chỉ viết một lần nhưng vẫn được đọc; "Vật A có a = 2 m/s² và vật B cũng có a = 2 m/s²" (có lời
+    ở giữa) viết cả hai và đọc đủ. Cùng kết quả ở câu b, ở bài khác, ở "Trường hợp 2", "Cách 2",
+    "Vật B", "TH2", "Lần 2" hay ở mặt bảng khác thì vẫn được viết lại; dòng đã bị xóa rồi viết lại
+    đúng chữ đó thì được viết. Chữ hoa và chữ thường khác nhau ("F = 0" và "f = 0", "T" và "t",
+    "V" và "v" là ký hiệu khác nhau), "Vật rơi" và "Vật rời" là hai dòng khác nhau. Không con số
+    nào bị đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so sánh "v<s và t>0", "<v>"
+    và giá trị trung bình "<p> = 0", "<b> = 2 cm" không bao giờ bị xóa như thẻ HTML (trừ khi có
+    thẻ đóng "</p>"); thẻ lạ có thẻ đóng ("<note>…</note>", "<step>…</step>") thì bỏ thẻ, giữ
+    chữ; "10<sup>23</sup>" thành lũy thừa 10²³ (giọng đọc "mười mũ hai mươi ba", không phải "một
+    nghìn không trăm hai mươi ba"); "1,6.10<sup>-19</sup>" (dấu chấm là dấu nhân) giữ nguyên cả
+    số 1,6 × 10⁻¹⁹ (đọc "một phẩy sáu nhân mười mũ trừ mười chín", không bao giờ tách "1," khỏi
+    "6.10"); chỉ số trích dẫn "1687<sup>[1]</sup>" không phải lũy thừa; `<sup>`/`<sub>` bên trong
+    công thức thành `^{…}`/`_{…}` của TeX nên công thức vẫn hiện đúng; chỗ trống "F = ____ N"
     được giữ.
   - Trình đọc TeachScript: thẻ `<write>` sai mã được sửa mã (không mất chữ), thẻ chưa đóng kết
     thúc ở cuối câu, "$x<y$ và $y>z$" là chữ chứ không phải thẻ, thẻ bị cắt ở cuối câu trả lời
@@ -113,8 +131,12 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     trả lời đầy đủ: giống hệt thì giữ, khác (mẩu cụt, dòng bị cắt trong `**`, dòng dài ra quá giới
     hạn, mẩu thành nhãn, câu hỏi cuối bài nay là một bước, mặt bảng có tiêu đề bị cắt) thì xóa
     cùng dấu đánh dấu của nó rồi viết bản đầy đủ (tiêu đề bị cắt được gỡ hẳn khỏi bảng để tiêu
-    đề đầy đủ vẫn nằm ở chỗ tiêu đề). Bảng cuối cùng giống hệt như giảng cả câu trả
-    lời một lần (kiểm thử `lessonContinue.test.ts`).
+    đề đầy đủ vẫn nằm ở chỗ tiêu đề). Chữ đến sau có thể đổi cách đọc dòng trước: một thẻ trần
+    "<step>", "<note>" chỉ là thẻ khi thẻ đóng của nó đã đến. Vì vậy phần đã giảng được so với câu
+    trả lời đầy đủ từ chỗ **đầu tiên** đọc khác đi, không chỉ từ câu cuối (không câu nào bị nói
+    lại, chỉ phần bảng khác được xóa và viết lại). Bảng cuối cùng giống hệt như giảng cả câu trả
+    lời một lần (kiểm thử `lessonContinue.test.ts`, gồm bảng cắt câu trả lời ở **mọi ký tự** cho
+    câu trả lời markdown, TeachScript và câu trả lời thật của bộ đánh giá).
 - **Dùng hết bảng (mục 3, `layout.ts`, `formulaSplit.ts`):** trước khi giảng (bài mới, "Giảng
   lại", phần mới của "Viết tiếp"), mỗi mặt bảng được chia theo những gì sẽ viết lên nó, đọc từ các
   hành động **còn phải giảng** (mặt đã có chữ giữ nguyên cách chia, nên không gì bị dời):
@@ -137,7 +159,9 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - Dấu quan hệ bị phủ định (`\not=` là "≠", `\not\equiv`) được tách **trước** `\not`, không bao
     giờ giữa `\not` và dấu nó phủ định (nếu không, dòng sau sẽ hiện "=" thay cho "≠").
   - Một danh sách nhiều mệnh đề (`v_0 = 0,\quad a = 2 m/s²,\quad t = 3 s`) được tách **sau** dấu
-    ngăn cách (dấu `,` hoặc `;` ngoài ngoặc, `\quad`, `\qquad`, chữ nối như `\text{ và }`) và
+    ngăn cách (dấu `,` hoặc `;` ngoài ngoặc, `\quad`, `\qquad`, chữ nối như `\text{ và }`; một từ
+    nối viết dạng chữ — và, hoặc, nên, thì, khi, với, suy ra, do đó, and, or, so, where — ở bất kỳ
+    chỗ nào, cả ngay sau một số hay số mũ của đơn vị: `a = 2\ \text{m/s}^2\ \text{và}\ t = 3`) và
     khoảng trắng sau nó: mỗi dòng bắt đầu bằng tên đại lượng, không bao giờ "tên" ở một dòng còn
     "= giá trị" ở dòng sau. Dòng của mệnh đề mới không thụt vào (chỉ dòng nối tiếp chuỗi bằng nhau
     mới thụt). Dấu phẩy thập phân (`9,81`) không phải dấu ngăn cách; số mũ, chỉ số dưới không bị
@@ -147,8 +171,11 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - **Đổi cỡ cửa sổ, phóng to:** bảng là tờ giấy 1200 đơn vị được co giãn theo khung nhìn; đổi cỡ
     chỉ đổi tỉ lệ, **không bao giờ dời chữ đã viết** (dấu gạch chân, nét của học sinh là tọa độ trên
     bảng). Phần bảng đang ở giữa khung nhìn vẫn ở giữa sau khi đổi cỡ (không nhảy về dòng cuối),
-    kể cả khi trước đó chỉ chiều cao khung bảng đổi (cửa sổ cao hơn, phụ đề hay chú thích hiện ra);
-    khi thầy đang viết và học sinh đang theo thì dòng đang viết vẫn trong tầm nhìn. Thanh cuộn luôn
+    kể cả khi chỉ chiều cao khung bảng đổi (cửa sổ cao hơn, phụ đề hay chú thích hiện ra) và khi
+    chiều cao đổi dần qua nhiều khung hình (một khung bên trượt ra): vị trí bảng tự đặt được ghi
+    đúng như đã tính, không theo số điểm ảnh trình duyệt làm tròn, nên hàng ở giữa không trôi dần
+    (kiểm thử E2E: lệch dưới 2 đơn vị bảng). Chỉ khi khung nhìn chạm mép bảng thì không giữ được.
+    Khi thầy đang viết và học sinh đang theo thì dòng đang viết vẫn trong tầm nhìn. Thanh cuộn luôn
     giữ chỗ (`scrollbar-gutter: stable`) để tỉ lệ không dao động.
   - Nút **Thu nhỏ / Phóng to** (100%, 125%, 150%, 200%, chỉ trong lần dùng này) và **Vừa khung**
     (hiện khi đang phóng to). Phóng to thì bảng cuộn ngang bên trong khung bảng (trang không cuộn
@@ -157,8 +184,12 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - Camera khi phóng to lia **cả hai chiều trong một lần cuộn** (trong Chromium/WebView2, đặt riêng
     một chiều sẽ dừng lần cuộn mượt của chiều kia; trước đây vì thế khung nhìn không theo thầy xuống
     dưới). Camera quyết định theo chỗ nó **đang lia tới**, không theo chỗ khung nhìn mới đi được nửa
-    đường, nên không lia lại sau mỗi chữ. Học sinh tự cuộn (lăn chuột, chạm, phím, thanh cuộn, bản
-    đồ nhỏ) thì camera để yên chiều ngang cho học sinh đến khi thầy bắt đầu dòng mới.
+    đường, nên không lia lại sau mỗi chữ. Học sinh tự cuộn (lăn chuột, chạm, phím cuộn, thanh cuộn,
+    bản đồ nhỏ) thì camera để yên chiều ngang cho học sinh đến khi thầy bắt đầu dòng mới (dòng tiếp
+    theo của cùng một phần tử cũng là dòng mới). Lăn chuột hay bấm phím mà khung nhìn không nhúc
+    nhích (đã ở mép bảng) thì không tính là tự cuộn: camera vẫn theo như trước; một lượt lăn liền
+    nhau (các lần cách nhau dưới 250 ms) được tính chung, nên lăn về mép rồi lăn thêm vẫn là tự
+    cuộn. Phím không cuộn (chữ cái…) không tính.
 - **Chữ viết tay:** phông Patrick Hand (nội dung) và Pangolin (tiêu đề), giấy phép OFL, có bộ chữ
   tiếng Việt, đóng gói sẵn trong app (không tải từ mạng). Mỗi chữ cái lệch nhẹ (xoay ±2°, lệch dòng,
   co giãn ±3%) theo seed cố định; dòng dài hơi trôi xuống như viết tay.
@@ -192,9 +223,15 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     tục". Rời màn hình AI Teacher (Quay lại, Esc, mở bài học, về trang chủ): bài dừng hẳn, kể cả bài
     đang tạm dừng lúc bảng bị ẩn.
   - Có câu trả lời mới: lượt cũ dừng ngay (không viết tiếp dưới dòng "Đang chuẩn bị bảng…"); bài mới
-    bắt đầu ở mặt 1. Học sinh gửi câu hỏi mới khi thầy đang giảng: bài tạm dừng ngay khi AI bắt đầu
+    bắt đầu ở mặt 1. Trong lúc bảng chuẩn bị câu trả lời mới, nút "Giảng lại" bị tắt và lệnh giảng
+    lại không làm gì (nếu không, bảng sẽ giảng lại câu trả lời **cũ** dưới tên câu trả lời mới).
+    Học sinh gửi câu hỏi mới khi thầy đang giảng: bài tạm dừng ngay khi AI bắt đầu
     trả lời (thầy dừng lại nghe), câu bị cắt đọc lại khi bấm "Tiếp tục". Xóa cuộc trò chuyện: bài
     dừng và bảng trống.
+  - Một lượt bị dừng đúng lúc phụ đề của câu đổi (một nơi đang nghe bảng dừng nó) thì câu đó không
+    được đọc, không được tính giờ: lượt kiểm tra lại ngay sau khi đổi phụ đề. Trong React
+    StrictMode (bản dev, mỗi hiệu ứng chạy hai lần) một câu trả lời vẫn được giảng đúng một lần, và
+    bảng quay lại từ "Trò chuyện" vẫn đang dừng đến khi bấm "Tiếp tục" (có kiểm thử).
   - Ai đọc to câu trả lời được quyết định lúc câu trả lời đến: ở "Giảng trên bảng" bảng tự đọc theo
     từng câu, ở "Trò chuyện" khung chat đọc (đổi bố cục trong lúc AI đang trả lời không làm câu trả
     lời bị đọc hai lần hay không ai đọc).
@@ -217,6 +254,19 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   Học sinh tự cuộn trên mặt bảng thầy đang viết thì khung nhìn vẫn theo bút (chưa có nút "về chỗ
   thầy đang viết").
 - Chưa có công cụ tính toán tất định cho AI gọi (T4): hiện chỉ kiểm lại phép tính AI viết ra.
+
+**Giới hạn đã biết** (chọn giữ lại, có lý do):
+
+- "Vâng." hay "Dạ." đứng một mình luôn là câu trả lời có/không và được viết lên bảng, kể cả khi
+  AI chỉ dùng nó để mở đầu lễ phép ("Dạ. Mình sẽ giúp bạn…" để lại "Dạ." trên bảng). Bảng chỉ bỏ
+  một dòng khi chắc chắn; một chữ thừa trên bảng ít hại hơn mất câu trả lời của học sinh.
+- Câu cảm ơn mở đầu bằng "Cảm ơn" chỉ được coi là lời xã giao khi nó cảm ơn người ("bạn", "em",
+  "câu hỏi", "vì…", "… của bạn"); "Cảm ơn sự quan tâm!" (không có ai) được viết lên bảng. Cùng lý
+  do: "Cảm ơn lực ma sát, xe mới dừng được." là bài học.
+- Học sinh chạm vào bảng (màn hình cảm ứng) thì camera để yên chiều ngang đến dòng mới, kể cả khi
+  chỉ là một cú chạm không cuộn: cú kéo có thể bắt đầu muộn, nên bảng không đoán là "không cuộn".
+- Một câu mở đầu bằng "Vật A/B…", "Cách 2", "Lần 2" được coi là phần mới: một dòng lặp do lỗi ngay
+  sau nó vẫn được viết lại (thà viết hai lần còn hơn mất kết quả của phần mới).
 
 ## 6. Nguồn
 

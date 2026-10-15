@@ -577,6 +577,64 @@ test('item 3: zoomed in, the camera follows the pen down and across the board wh
   expect(await overflow(page)).toBeLessThanOrEqual(0);
 });
 
+test('item 3: zoomed in, a resize keeps the part of the board in the middle of the view', async ({
+  page,
+}) => {
+  const board = await askOnBoard(page, LONG_LESSON);
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  for (let n = 0; n < 3; n++) await board.getByRole('button', { name: 'Phóng to bảng' }).click();
+  await expect(board.getByRole('button', { name: 'Phóng to bảng' })).toBeDisabled();
+  /** The board row and column (board units) in the middle of the view, and the room to scroll. */
+  const middle = () =>
+    page.evaluate(() => {
+      const v = document.querySelector<HTMLElement>('.board__viewport');
+      const scaler = document.querySelector<HTMLElement>('.board__scaler');
+      if (!v || !scaler) throw new Error('no board');
+      const scale = scaler.getBoundingClientRect().width / 1200;
+      return {
+        row: (v.scrollTop + v.clientHeight / 2) / scale,
+        column: (v.scrollLeft + v.clientWidth / 2) / scale,
+        top: v.scrollTop,
+        maxTop: v.scrollHeight - v.clientHeight,
+        left: v.scrollLeft,
+        maxLeft: v.scrollWidth - v.clientWidth,
+      };
+    });
+  // The learner looks at a part of the board away from its edges.
+  await page.evaluate(() => {
+    const v = document.querySelector<HTMLElement>('.board__viewport');
+    if (!v) return;
+    v.scrollTo({
+      top: (v.scrollHeight - v.clientHeight) * 0.4,
+      left: (v.scrollWidth - v.clientWidth) * 0.4,
+      behavior: 'instant',
+    });
+  });
+  await page.waitForTimeout(300);
+  const before = await middle();
+  expect(before.top).toBeGreaterThan(0);
+  expect(before.left).toBeGreaterThan(0);
+  // The height alone (the scale stays), then the width and the height (a new scale).
+  for (const size of [
+    { width: 1366, height: 640 },
+    { width: 1100, height: 700 },
+  ]) {
+    await page.setViewportSize(size);
+    await page.waitForTimeout(400);
+    const now = await middle();
+    // Not held at an edge: the middle could stay where it was…
+    expect(now.top).toBeGreaterThan(0);
+    expect(now.top).toBeLessThan(now.maxTop);
+    expect(now.left).toBeGreaterThan(0);
+    expect(now.left).toBeLessThan(now.maxLeft);
+    // …and it did (within 2 board units: a pixel or two of rounding).
+    expect(Math.abs(now.row - before.row), JSON.stringify(size)).toBeLessThan(2);
+    expect(Math.abs(now.column - before.column), JSON.stringify(size)).toBeLessThan(2);
+  }
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
 /** One look at the pen while the lesson plays: its tip inside the view sideways / vertically. */
 interface PenSample {
   x: boolean;

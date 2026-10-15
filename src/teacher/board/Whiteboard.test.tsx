@@ -487,6 +487,83 @@ describe('whiteboard: faces, layouts and the pen (item 5)', () => {
     expect(voice.said).toEqual(NEXT_SAID);
   });
 
+  it('"Giảng lại" is not offered while a new answer is prepared: the old answer is never replayed under it', async () => {
+    const view = render(<Page id="replay-old" />);
+    await untilDone();
+    expect(screen.getByRole('button', { name: 'Giảng lại' })).toBeEnabled();
+    let release: () => void = () => undefined;
+    fonts.ready = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    view.rerender(<Page id="replay-new" content={NEXT} />);
+    expect(useBoardStore.getState().status).toBe('preparing');
+    const replay = screen.getByRole('button', { name: 'Giảng lại' });
+    expect(replay).toBeDisabled();
+    act(() => {
+      fireEvent.click(replay);
+    });
+    await advance(3000);
+    expect(voice.said).toEqual(SAID);
+    expect(useBoardStore.getState().status).toBe('preparing');
+    expect(useBoardStore.getState().lessonId).toBe('replay-new');
+    await act(async () => {
+      release();
+      await Promise.resolve();
+    });
+    await untilDone();
+    expect(voice.said).toEqual([...SAID, ...NEXT_SAID]);
+    expect(screen.getByRole('button', { name: 'Giảng lại' })).toBeEnabled();
+  });
+
+  it('StrictMode (development), page open: an answer is taught once', async () => {
+    render(
+      <StrictMode>
+        <Page id="strict-open" />
+      </StrictMode>,
+    );
+    await untilDone();
+    expect(voice.said).toEqual(SAID);
+    expect(useBoardStore.getState().status).toBe('done');
+  });
+
+  it('StrictMode (development): back from the talk layout the lesson stays paused until "Tiếp tục"', async () => {
+    const view = render(
+      <StrictMode>
+        <Page id="strict-talk" content={TWO_FACES} />
+      </StrictMode>,
+    );
+    await advanceUntil(writingOnFace2);
+    act(() => {
+      useTeacherStore.setState({ layout: 'talk' });
+    });
+    view.unmount();
+    expect(useBoardStore.getState().status).toBe('paused');
+    const progress = { ...useBoardStore.getState().progress };
+    const said = [...voice.said];
+    act(() => {
+      useTeacherStore.setState({ layout: 'board' });
+    });
+    const again = render(
+      <StrictMode>
+        <Page id="strict-talk" content={TWO_FACES} />
+      </StrictMode>,
+    );
+    await advance(3000);
+    expect(useBoardStore.getState().status).toBe('paused');
+    expect(useBoardStore.getState().progress).toEqual(progress);
+    expect(voice.said).toEqual(said);
+    expect(penNode(again.container)).not.toBeNull();
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'Tiếp tục' }));
+    });
+    await untilDone();
+    expect(useBoardStore.getState().status).toBe('done');
+    for (const e of useBoardStore.getState().layout.elements)
+      expect(useBoardStore.getState().progress[e.id]).toBe(e.kind === 'text' ? e.length : 1);
+    // Taught once: only the sentence the pause cut is read again.
+    expect(voice.said.length - new Set(voice.said).size).toBeLessThanOrEqual(1);
+  });
+
   it('S10: clearing the chat while the teacher writes empties the board at once', async () => {
     const view = render(<Page id="faces-clear" content={TWO_FACES} />);
     await advanceUntil(writingOnFace2);
@@ -852,31 +929,147 @@ describe('whiteboard: the camera on a zoomed board (item 3)', () => {
   });
 
   it('the learner’s own scroll is left alone until the teacher starts the next line', () => {
-    const view = render(<Whiteboard lesson={null} />);
-    const { node, pos, pans } = smoothViewport(view.container);
-    act(() => {
-      useBoardStore.getState().set({ focus: 'far', pen: penAt(1000) });
-    });
-    const before = pans.length;
-    // The learner scrolls back to the start of the line with the wheel.
-    pos.top = pans.at(-1)?.top ?? 0;
-    pos.left = 0;
-    act(() => {
-      node.dispatchEvent(new Event('wheel'));
-    });
-    for (let x = 1010; x <= 1300; x += 10)
+    vi.useFakeTimers();
+    try {
+      const view = render(<Whiteboard lesson={null} />);
+      const { node, pos, pans } = smoothViewport(view.container);
       act(() => {
-        useBoardStore.getState().set({ pen: penAt(x) });
+        useBoardStore.getState().set({ focus: 'far', pen: penAt(1000) });
       });
-    expect(pans).toHaveLength(before);
-    // The next line: the camera follows again, down and sideways together.
-    act(() => {
-      useBoardStore.getState().set({ focus: 'next', pen: penAt(1000, 3330) });
-    });
-    expect(pans.length).toBeGreaterThan(before);
-    const last = pans.at(-1);
-    expect(last?.top).toBeCloseTo(topFor('next'));
-    expect(last?.left).toBeCloseTo(1000 * 0.6 - 600 * 0.3);
+      // The camera's pan arrives.
+      pos.top = pans.at(-1)?.top ?? 0;
+      pos.left = pans.at(-1)?.left ?? 0;
+      act(() => {
+        node.dispatchEvent(new Event('scrollend'));
+      });
+      const before = pans.length;
+      // The learner scrolls back to the start of the line with the wheel (the view moves).
+      act(() => {
+        node.dispatchEvent(new Event('wheel'));
+      });
+      pos.left = 0;
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      for (let x = 1010; x <= 1300; x += 10)
+        act(() => {
+          useBoardStore.getState().set({ pen: penAt(x) });
+        });
+      expect(pans).toHaveLength(before);
+      // The next line: the camera follows again, down and sideways together.
+      act(() => {
+        useBoardStore.getState().set({ focus: 'next', pen: penAt(1000, 3330) });
+      });
+      expect(pans.length).toBeGreaterThan(before);
+      const last = pans.at(-1);
+      expect(last?.top).toBeCloseTo(topFor('next'));
+      expect(last?.left).toBeCloseTo(1000 * 0.6 - 600 * 0.3);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('a new line of the same element is a new line too: the camera follows again (A4 follow-up)', () => {
+    vi.useFakeTimers();
+    try {
+      const view = render(<Whiteboard lesson={null} />);
+      const { node, pos, pans } = smoothViewport(view.container);
+      act(() => {
+        useBoardStore.getState().set({ focus: 'far', pen: penAt(1000) });
+      });
+      pos.top = pans.at(-1)?.top ?? 0;
+      pos.left = pans.at(-1)?.left ?? 0;
+      act(() => {
+        node.dispatchEvent(new Event('scrollend'));
+      });
+      const before = pans.length;
+      act(() => {
+        node.dispatchEvent(new Event('wheel'));
+      });
+      pos.left = 0;
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(1300) });
+      });
+      expect(pans).toHaveLength(before);
+      // The pen starts the second line of the same element, far to the right of the view.
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(1200, 3060) });
+      });
+      expect(pans).toHaveLength(before + 1);
+      expect(pans.at(-1)?.left).toBeCloseTo(1200 * 0.6 - 600 * 0.3);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('a wheel that moves nothing (the view at its edge) leaves the camera following (A4 follow-up)', () => {
+    vi.useFakeTimers();
+    try {
+      const view = render(<Whiteboard lesson={null} />);
+      const { node, pos, pans } = smoothViewport(view.container);
+      // The pen writes at the start of a line: in view, the view at its left edge.
+      act(() => {
+        useBoardStore.getState().set({ focus: 'far', pen: penAt(300) });
+      });
+      pos.top = pans.at(-1)?.top ?? 0;
+      pos.left = 0;
+      act(() => {
+        node.dispatchEvent(new Event('scrollend'));
+      });
+      const before = pans.length;
+      // A wheel to the left: the view is already at its edge and does not move.
+      act(() => {
+        node.dispatchEvent(new Event('wheel'));
+      });
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      // The pen goes on along the same line and leaves the view on the right: followed.
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(1000) });
+      });
+      expect(pans).toHaveLength(before + 1);
+      expect(pans.at(-1)?.left).toBeCloseTo(1000 * 0.6 - 600 * 0.3);
+      pos.left = pans.at(-1)?.left ?? 0;
+      act(() => {
+        node.dispatchEvent(new Event('scrollend'));
+      });
+
+      // Several turns of the wheel, the first ones moving the view, the last one at the edge:
+      // one move of the learner's, so the view is theirs until the next line.
+      act(() => {
+        node.dispatchEvent(new Event('wheel'));
+      });
+      pos.left = 0;
+      act(() => {
+        vi.advanceTimersByTime(100);
+        node.dispatchEvent(new Event('wheel'));
+      });
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      const held = pans.length;
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(1400) });
+      });
+      expect(pans).toHaveLength(held);
+      // The next line starts in view; a key that does not scroll takes nothing over.
+      act(() => {
+        useBoardStore.getState().set({ pen: penAt(300, 3060) });
+      });
+      expect(pans).toHaveLength(held);
+      act(() => {
+        node.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+        useBoardStore.getState().set({ pen: penAt(1500, 3060) });
+      });
+      expect(pans).toHaveLength(held + 1);
+      expect(pans.at(-1)?.left).toBeCloseTo(1500 * 0.6 - 600 * 0.3);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('a click on the writing is not a scroll; a press on the scrollbar is', () => {
@@ -959,17 +1152,76 @@ describe('whiteboard: the camera on a zoomed board (item 3)', () => {
       act(() => {
         node.dispatchEvent(new Event('scroll'));
       });
-      // The board gets taller (the window, or the subtitle went away): rows 1000…1800 are on
-      // screen now, row 1400 in the middle. The width, so the scale, did not change.
+      // The board gets taller (the window, or the subtitle went away). The width, so the scale,
+      // did not change. Fix round A4: row 1200, in the middle before, stays in the middle (rows
+      // 800…1600 on screen; the browser alone would have kept the top and shown row 1400 there).
       size.h = 800;
       act(() => {
         for (const o of observers) o();
       });
+      expect(pos.top).toBeCloseTo(1200 - 800 / 2);
       act(() => {
         fireEvent.click(screen.getByRole('button', { name: 'Phóng to bảng' }));
       });
-      // Zoom 1,25: row 1400 is still in the middle (not row 1200, the middle of the old height).
-      expect(pos.top).toBeCloseTo(1400 * 1.25 - 800 / 2);
+      // Zoom 1,25: row 1200 is still in the middle.
+      expect(pos.top).toBeCloseTo(1200 * 1.25 - 800 / 2);
+
+      // Near the top the middle row cannot stay (the view cannot go above the board): the view
+      // is noted again after the height changed, so the next zoom keeps in the middle the row
+      // that is in the middle now (row 400), not the one of the old height (row 300).
+      act(() => {
+        fireEvent.click(screen.getByRole('button', { name: 'Vừa khung' }));
+      });
+      size.h = 400;
+      act(() => {
+        for (const o of observers) o();
+      });
+      pos.top = 100;
+      act(() => {
+        node.dispatchEvent(new Event('scroll'));
+      });
+      size.h = 800;
+      act(() => {
+        for (const o of observers) o();
+      });
+      expect(pos.top).toBe(0);
+      act(() => {
+        fireEvent.click(screen.getByRole('button', { name: 'Phóng to bảng' }));
+      });
+      expect(pos.top).toBeCloseTo(400 * 1.25 - 800 / 2);
+
+      // A panel that slides open grows the board over several frames, and the scroll event of
+      // the board's own move arrives a frame late, at the next height: row 1700 stays in the
+      // middle all the way (a learner's scroll is still noted).
+      pos.top = 1700 * 1.25 - 400;
+      act(() => {
+        node.dispatchEvent(new Event('scroll'));
+      });
+      for (const h of [820, 840, 860, 880]) {
+        size.h = h;
+        act(() => {
+          for (const o of observers) o();
+        });
+        expect(pos.top, String(h)).toBeCloseTo(1700 * 1.25 - h / 2);
+        size.h = h + 10;
+        act(() => {
+          node.dispatchEvent(new Event('scroll'));
+        });
+      }
+      size.h = 900;
+      act(() => {
+        for (const o of observers) o();
+      });
+      expect(pos.top).toBeCloseTo(1700 * 1.25 - 900 / 2);
+      pos.top = 500;
+      act(() => {
+        node.dispatchEvent(new Event('scroll'));
+      });
+      size.h = 700;
+      act(() => {
+        for (const o of observers) o();
+      });
+      expect(pos.top).toBeCloseTo(500 + 900 / 2 - 700 / 2);
     } finally {
       vi.unstubAllGlobals();
     }
