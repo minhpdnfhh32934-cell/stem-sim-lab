@@ -591,6 +591,166 @@ describe('answer cleaning: which questions ask for a correction (review 2026-10-
   });
 });
 
+describe('answer cleaning: own-work requests and reviewer phrases (review fix round 1)', () => {
+  it('the usual ways to ask about one’s own work keep the verdict the learner asked for', () => {
+    // The reviewer's probes: in non-correction mode the diagnosis was deleted.
+    const probes: [string, string][] = [
+      [
+        'Chấm bài giúp em: v = 72 km/h = 20 m/s, t = 2 s.',
+        'Đánh giá: Câu trả lời sai ở bước đổi đơn vị.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Sửa bài giúp em với ạ',
+        'Nhận xét: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\nF = 20 N.',
+      ],
+      [
+        'Đây là bài làm của em: v = gt = 20. Thầy nhận xét giúp em',
+        'Nhận xét: Đúng.\n\nEm đã dùng đúng công thức v = gt.',
+      ],
+    ];
+    for (const [question, text] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+    // Every probe question, with a labelled verdict that goes when nobody asked for one.
+    const verdict = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(verdict, REVIEWED).text).toBe('Lực là đại lượng vectơ.');
+    for (const question of [
+      'Sửa bài giúp em với ạ',
+      'Chấm bài giúp em',
+      'Chữa bài giúp em',
+      'Kiểm tra bài giúp em',
+      'Thầy chữa bài cho em',
+      'Thầy sửa cho em bài này với ạ',
+      'Giúp em sửa bài này',
+      'Thầy sửa lỗi giúp em',
+      'Bài làm của em: v = 20 m/s. Thầy xem giúp',
+      'Đây là bài làm của em: v = gt = 20. Thầy nhận xét giúp em',
+      'Thầy nhận xét bài này giúp em',
+      'Em tính ra 20 m/s, thầy xem giúp em với ạ',
+      'Sửa sai giúp em',
+      'Sửa bài giúp với',
+      'Sửa lỗi sai trong bài của em',
+      'Thầy sửa lỗi sai trong bài này giúp em',
+      'Thầy kiểm tra bài em làm với',
+      'Em làm thế này có sai không ạ?',
+      'Em tính sai ở bước nào ạ?',
+      'Where did I go wrong?',
+      'Kết quả của em là 20 m/s',
+      'Bài này em làm đúng không thầy ơi?',
+      'Em làm vậy đúng không cô ơi',
+      'Em ra v = 20 m/s, đúng k ạ',
+      'Em ra v = 20 m/s, đúng hông thầy?',
+      'Did I solve this correctly?',
+      'Did I make a mistake?',
+      'Have I done this right?',
+      'v = 20 m/s, is that right?',
+      'Is this right?',
+      'Please fix this',
+      'Can you check it for me?',
+    ]) {
+      expect(cleanAnswer(verdict, { reviewed: true, question }), question).toEqual({
+        text: verdict,
+        removed: [],
+      });
+    }
+  });
+
+  it('ordinary questions that only look like a check still lose the reviewer’s notes', () => {
+    // English: a check of "this" that is a new task, or a question about why something is wrong.
+    const english =
+      'Review: The answer is correct but lacks units.\n\nRevised answer:\n# Free fall\nv = 20 m/s';
+    for (const question of [
+      'Check this: a ball falls from 20 m, find v.',
+      'How do I correct this for air resistance?',
+      'Why is it wrong to add speeds like scalars?',
+      'Fix this circuit: the bulb does not light',
+      'How do I fix this?',
+      'How to fix this?',
+      'Which of these statements about free fall is correct?',
+      'Review free fall for me',
+    ]) {
+      expect(cleanAnswer(english, { reviewed: true, question }), question).toEqual({
+        text: '# Free fall\nv = 20 m/s',
+        removed: ['review'],
+      });
+    }
+    // Vietnamese: a simulation's result, a new exercise, a question about a topic.
+    const greeting = 'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      'Em muốn xem kết quả của mình trên đồ thị',
+      'Thầy cho em xem kết quả của mình: đồ thị v-t',
+      'Enzyme sửa lỗi giúp tế bào thế nào?',
+      'Hôm nay bài của mình học gì?',
+      'Thầy xem giúp em bài này: một vật rơi từ độ cao 20 m, tính vận tốc chạm đất.',
+      'Thầy xem bài này giúp em: một vật rơi từ độ cao 20 m.',
+      'Xem đáp án giúp em',
+      'Giúp em kiểm tra điều kiện cân bằng của vật rắn',
+      'Sửa bài giúp ích gì cho việc học?',
+      'Bài này em giải không ra, thầy giải giúp em',
+      'Kiểm tra bài cũ gồm những gì?',
+      // "con người", "con lắc": not the learner; "Bài tập của em: …" is a new exercise.
+      'Thuốc kháng sinh chữa cho con người những bệnh gì?',
+      'Enzyme sửa lỗi giúp con người thế nào?',
+      'Nhận xét kết quả con lắc đơn khi tăng chiều dài dây',
+      'Bài tập của em hôm nay: một vật rơi từ 20 m, tính v.',
+      // The earlier must-not list, checked with an answer whose cleaning shows the mode.
+      'Cơ chế sửa sai ADN diễn ra thế nào?',
+      'Xem lại bài rơi tự do giúp em',
+      'Chỉnh lưu dòng điện xoay chiều là gì?',
+      'Điều chỉnh độ sáng đèn bằng biến trở thế nào?',
+      'Em có nhận xét gì về bán kính nguyên tử trong một chu kì?',
+      'Nhận xét về tính kim loại của các nguyên tố nhóm IA.',
+      'Kiểm tra điều kiện cân bằng của vật rắn như thế nào?',
+    ]) {
+      expect(cleanAnswer(greeting, { reviewed: true, question }), question).toEqual({
+        text: '# Rơi tự do\nv = gt',
+        removed: ['review'],
+      });
+    }
+  });
+
+  it('broad English and Vietnamese phrases no longer remove a lesson’s first sentence', () => {
+    for (const [text, question] of [
+      [
+        "I kept the mass constant, so the acceleration doubles when the force doubles.\n\nThis is Newton's second law.",
+        'What happens if I double the force?',
+      ],
+      [
+        'The response is complete before the brain notices the stimulus.\n\nThis is why a reflex is fast.',
+        'What is a reflex?',
+      ],
+      [
+        'ADN giữ nguyên nội dung thông tin di truyền qua các thế hệ.\n\nĐó là nhờ nhân đôi bán bảo toàn.',
+        'Vì sao ADN ổn định?',
+      ],
+    ] as const) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+    // The reviewer's own notes still go.
+    for (const [text, lesson] of [
+      ['I kept the explanation as it was.\n\nForce is a vector.', 'Force is a vector.'],
+      ['I kept the wording and the structure.\n\nForce is a vector.', 'Force is a vector.'],
+      ['The response is accurate and complete.\n\n# Free fall\nv = gt', '# Free fall\nv = gt'],
+      ['The provided response is correct.\n\nForce is a vector.', 'Force is a vector.'],
+      ['The response is correct, so no edits.\n\nForce is a vector.', 'Force is a vector.'],
+      [
+        'Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.\n\n# Rơi tự do\nv = gt',
+        '# Rơi tự do\nv = gt',
+      ],
+      ['Mình giữ nguyên nội dung ban đầu.\n\nLực là vectơ.', 'Lực là vectơ.'],
+      ['Mình giữ nguyên nội dung và chỉ sửa cách trình bày.\n\nLực là vectơ.', 'Lực là vectơ.'],
+    ] as const) {
+      expect(cleanAnswer(text, REVIEWED).text, text).toBe(lesson);
+    }
+  });
+});
+
 describe('answer cleaning: what it never touches', () => {
   it('returns text with nothing to remove exactly as it was (spaces included)', () => {
     const text = '  Rơi tự do là chuyển động chỉ chịu trọng lực.\n\n\n';

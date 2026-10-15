@@ -226,52 +226,124 @@ function asksAboutOwnDraft(question: string): boolean {
 /** A whole Vietnamese word or phrase out of `words` (letters around it break the match). */
 const viWords = (words: string) => String.raw`(?<![\p{L}\p{M}])(?:${words})(?![\p{L}\p{M}])`;
 
-/** The learner speaking of themself ("em", "mình", "con", "tớ", "tôi"). */
-const ME = 'em|mình|con|tớ|tôi';
-/** What the learner made: "bài làm", "lời giải", "đáp án", "cách giải"… */
-const WORK = String.raw`bài\s+làm|bài\s+giải|bài|lời\s+giải|đáp\s+án|kết\s+quả|câu\s+trả\s+lời|cách\s+(?:làm|giải)|phần\s+(?:làm|giải)`;
-/** A request to correct or check (`giúp`, `hộ`…: "for me"). */
-const FOR_ME = String.raw`giúp|hộ|dùm|giùm`;
+/** The learner speaking of themself ("em", "mình", "con", "tớ", "tôi"; "con người" is "humans"). */
+const ME = String.raw`em|mình|con(?!\s+người)|tớ|tôi`;
+/** "For me": `giúp`, `hộ`… ("giúp ích" is "is useful", not a request). */
+const FOR_ME = String.raw`giúp(?!\s+ích)|hộ|dùm|giùm`;
+/** Done for the learner: "giúp (em)", "hộ", or "cho em" ("cho" alone is no request). */
+const BENEFIT = String.raw`(?:${FOR_ME})(?:\s+(?:${ME}))?|cho\s+(?:${ME})`;
+/** Words that close a request: "với", "nhé", "ạ", "thầy ơi"… */
+const PARTICLES = String.raw`(?:\s+(?:với|nhé|nha|ạ|à|thầy|cô|anh|chị|bạn|ơi))*`;
+/** A sentence or the question ends: punctuation, or nothing more. */
+const ENDS = String.raw`\s*(?:[?.!,;…]|$)`;
+/**
+ * `BENEFIT` after the work it is about: "giúp em", "cho em", or a bare "giúp" that ends the
+ * request ("Sửa bài giúp với"; "Enzyme sửa lỗi giúp tế bào…" is biology).
+ */
+const BENEFIT_AFTER = String.raw`(?:${FOR_ME})\s+(?:${ME})|cho\s+(?:${ME})|(?:${FOR_ME})(?=${PARTICLES}${ENDS})`;
+/** Verbs that correct or grade: with a piece of work they always mean the learner's own. */
+const FIX = String.raw`sửa|chữa|chấm(?:\s+điểm)?|kiểm\s+tra`;
+/** Verbs that judge a piece of work ("nhận xét bài này giúp em"), not a topic. */
+const JUDGE = String.raw`nhận\s+xét|góp\s+ý|đánh\s+giá`;
+/** A piece of work: "bài (làm/giải/tập)", "lời giải", "đáp án", "kết quả", "lỗi (sai)", "sai"… */
+const WORK = String.raw`bài(?:\s+(?:làm|giải|tập))?|lời\s+giải|đáp\s+án|kết\s+quả|câu\s+trả\s+lời|cách\s+(?:làm|giải)|phần\s+(?:làm|giải)|lỗi(?:\s+sai)?|chỗ\s+sai|sai`;
+/** What the learner made, for "xem" ("xem kết quả của mình" is a simulation's result). */
+const OWN_WORK = String.raw`bài(?:\s+(?:làm|giải|tập))?|lời\s+giải|đáp\s+án|câu\s+trả\s+lời|cách\s+(?:làm|giải)|phần\s+(?:làm|giải)`;
+/**
+ * The work is the learner's: "của em", "em làm", "mình giải", a bare "em"/"mình" ("kết quả con
+ * lắc" is a pendulum's, so a bare "con" is not).
+ */
+const MINE = String.raw`của\s+(?:${ME})|(?:${ME})\s+(?:đã\s+)?(?:làm|giải|viết|tính)|em|mình|tớ|tôi`;
+/** "này", "đó": the work named before a request ("sửa bài này giúp em"). */
+const THIS = String.raw`(?:\s+(?:này|đó|ấy))?`;
+/** Where in the work: "sửa lỗi sai trong bài của em", "chỗ sai ở lời giải này giúp em". */
+const IN_WORK = String.raw`(?:\s+(?:trong|ở)\s+(?:${OWN_WORK})${THIS})?`;
 
 /**
- * Requests about the learner's own work, whole words only: "sửa giúp (em)", "chấm hộ", "kiểm tra
- * giúp em", "sửa bài của em", "xem giúp bài làm của em", "em làm … đúng không?", "Đáp án A đúng
- * không thầy?", "check/fix/grade my …", "is my answer correct?", "is it right?", "am I right?",
- * "Is answer A right?". Not "Thầy xem giúp em bài này: …" (a new exercise), "nhận xét về …",
- * "chỉnh lưu", "điều chỉnh", "sửa sai ADN", "Which … is correct?" or "review <topic>".
+ * Requests about the learner's own work, whole words only: "sửa giúp (em)", "sửa cho em",
+ * "chấm/chữa/kiểm tra bài giúp em", "sửa lỗi giúp em", "giúp em sửa bài này", "nhận xét bài này
+ * giúp em", "xem giúp bài làm của em", "bài làm của em" anywhere, "em làm … đúng không (thầy ơi)?",
+ * "đúng k ạ", "có sai không ạ?", "em sai ở đâu?", "Đáp án A đúng không thầy?", "check/fix/grade my
+ * …", "is my answer correct?", "is it right?" or "fix this" at the end of the question, "am I
+ * right?", "did I solve this correctly?", "did I make a mistake?", "where did I go wrong?", "Is
+ * answer A right?". Not "Thầy xem giúp em bài này: …" or "Bài tập của em: …" (a new exercise),
+ * "xem kết quả của mình" (a simulation's result), "con người", "con lắc", "nhận xét về …",
+ * "chỉnh lưu", "điều chỉnh", "sửa sai ADN", "Which … is correct?", "Check this: <a new task>",
+ * "Why is it wrong to …?", "How do I fix this?" or "review <topic>".
  */
 const CORRECTION_REQUESTS: readonly RegExp[] = [
-  // "sửa giúp em", "chữa lại hộ", "chấm điểm giúp", "kiểm tra lại giúp em".
-  new RegExp(
-    viWords(String.raw`(?:sửa|chữa|chấm(?:\s+điểm)?|kiểm\s+tra)(?:\s+lại)?\s+(?:${FOR_ME})`),
-    'iu',
-  ),
-  // "sửa bài của em", "xem giúp bài làm của em", "chấm bài em làm", "nhận xét lời giải của mình".
+  // "sửa giúp em", "chữa lại hộ", "chấm điểm giúp", "kiểm tra lại giúp em", "sửa cho em".
+  new RegExp(viWords(String.raw`(?:${FIX})(?:\s+lại)?\s+(?:${BENEFIT})`), 'iu'),
+  // "sửa bài giúp em", "chữa bài cho em", "sửa lỗi giúp em", "sửa sai giúp em", "sửa bài của em",
+  // "chấm bài em làm", "nhận xét bài này giúp em", "đánh giá lời giải của mình", "sửa lỗi sai
+  // trong bài của em".
   new RegExp(
     viWords(
-      String.raw`(?:sửa|chữa|chấm|xem|kiểm\s+tra|nhận\s+xét|góp\s+ý|đánh\s+giá)(?:\s+lại)?(?:\s+(?:${FOR_ME}))?(?:\s+(?:${ME}))?\s+(?:${WORK})\s+(?:(?:của\s+)?(?:${ME})|(?:${ME})\s+(?:làm|giải|viết))`,
+      String.raw`(?:${FIX}|${JUDGE})(?:\s+lại)?(?:\s+(?:${BENEFIT}))?\s+(?:${WORK})${THIS}${IN_WORK}\s+(?:${BENEFIT_AFTER}|${MINE})`,
     ),
     'iu',
   ),
-  // "xem giúp em bài làm này": "bài làm" is the learner's work by itself.
+  // "…, thầy xem giúp em", "Thầy nhận xét giúp em nhé": a look asked for at the very end, after
+  // what the learner wrote ("Thầy xem giúp em bài này: …" goes on with a new exercise).
+  new RegExp(
+    String.raw`(?<![\p{L}\p{M}])(?:xem|${JUDGE})(?:\s+lại)?\s+(?:${BENEFIT})${PARTICLES}\s*[?.!…]*\s*$`,
+    'iu',
+  ),
+  // "xem giúp bài làm của em", "xem bài em làm": "xem" only with work marked as the learner's.
   new RegExp(
     viWords(
-      String.raw`(?:sửa|chữa|chấm|xem|kiểm\s+tra|nhận\s+xét|góp\s+ý)(?:\s+lại)?(?:\s+(?:${FOR_ME}))?(?:\s+(?:${ME}))?\s+bài\s+làm`,
+      String.raw`xem(?:\s+lại)?(?:\s+(?:${BENEFIT}))?\s+(?:${OWN_WORK})${THIS}\s+(?:${MINE})`,
+    ),
+    'iu',
+  ),
+  // "xem giúp em bài làm này": "bài làm" after a request is the learner's work by itself.
+  new RegExp(
+    viWords(String.raw`(?:${FIX}|${JUDGE}|xem)(?:\s+lại)?(?:\s+(?:${BENEFIT}))?\s+bài\s+làm`),
+    'iu',
+  ),
+  // "Bài làm của em: …", "lời giải của mình", "bài em làm", "Kết quả của em là …": the learner's
+  // own work, anywhere. Not "bài (tập) của em" ("Bài tập của em hôm nay: …" is a new exercise),
+  // "bài của mình" ("our lesson") or "kết quả của mình: đồ thị" (a simulation's result).
+  new RegExp(
+    viWords(
+      String.raw`(?:bài\s+(?:làm|giải)|lời\s+giải|cách\s+(?:làm|giải)|phần\s+(?:làm|giải)|đáp\s+án|câu\s+trả\s+lời)\s+của\s+(?:${ME})|bài\s+(?:${ME})\s+(?:đã\s+)?(?:làm|giải)|kết\s+quả\s+của\s+(?:${ME})\s+là`,
+    ),
+    'iu',
+  ),
+  // "Giúp em sửa bài này", "hộ em chấm với": a correction asked for, then the work or the end.
+  new RegExp(
+    viWords(
+      String.raw`(?:giúp|hộ)\s+(?:${ME})\s+(?:${FIX})(?:\s+lại)?(?:\s+(?:${WORK})|${ENDS}|\s+(?:với|nhé|nha|ạ))`,
     ),
     'iu',
   ),
   // A yes/no check of what the learner thinks: "… đúng không ạ?", "có đúng không", "đúng chưa
-  // thầy", "Đáp án A đúng không?". Only at the end of a sentence ("đúng không đổi" is no check).
+  // thầy", "đúng không thầy ơi?", "đúng k ạ", "có sai không ạ?", "Đáp án A đúng không?". Only at
+  // the end of a sentence ("đúng không đổi", "sai không đáng kể" are no check).
   new RegExp(
-    String.raw`(?<![\p{L}\p{M}])đúng\s+(?:không|chưa|ko)(?:\s+(?:ạ|à|ha|nhỉ|nhé|vậy|thế|hả|thầy|cô|anh|chị|bạn|ạ))*\s*(?:[?.!,;…]|$)`,
+    String.raw`(?<![\p{L}\p{M}])(?:đúng|sai)\s+(?:không|chưa|ko|k|hông)(?:\s+(?:ạ|à|ha|nhỉ|nhé|nha|vậy|thế|hả|ơi|thầy|cô|anh|chị|bạn))*${ENDS}`,
+    'iu',
+  ),
+  // "Em sai ở đâu?", "em làm sai chỗ nào", "mình tính sai ở bước nào": where the learner went wrong.
+  new RegExp(
+    viWords(
+      String.raw`(?:${ME})\s+(?:đã\s+)?(?:(?:làm|tính|giải|viết)\s+)?sai\s+(?:ở\s+)?(?:đâu|chỗ|bước|phần)`,
+    ),
     'iu',
   ),
   /\b(?:check|fix|grade|mark|correct|review|improve)\s+(?:my|our)\b/i,
-  /\b(?:check|fix|grade|correct)\s+(?:this|it|these)\b/i,
+  // "Please fix this", "Can you check it for me?": at the end of the question only, and not asked
+  // with "how"/"why" ("Check this: a ball falls…" is a new task, "correct this for air
+  // resistance" is physics, "How do I fix this?" asks for a method).
+  /(?<!\b(?:how|why)\b[^.?!:]*)\b(?:check|fix|grade|mark|correct)\s+(?:this|it|that|these)(?:\s+(?:for\s+me|please|again|now))*\s*[?.!]*\s*$/i,
   /\b(?:is|are)\s+my\s+(?:[a-z]+\s+){0,3}(?:correct|right|wrong|ok|okay)\b/i,
-  /\b(?:is|was)\s+(?:it|this|that)\s+(?:correct|right|wrong)\b/i,
+  // "Is it right?", "v = 20 m/s, is that right?": a sentence of its own at the end ("Why is it
+  // wrong to add speeds…?" asks about physics).
+  /(?:^|[.?!,;:]\s*|\b(?:so|and|but)\s+)(?:is|was)\s+(?:it|this|that)\s+(?:(?:all|really|actually|still)\s+)?(?:correct|right|wrong|ok|okay)\s*[?.!]*\s*$/i,
   /\bam\s+i\s+(?:right|correct|wrong)\b/i,
-  /\bdid\s+i\s+(?:get|do|solve|answer)\b[^.?!]*\b(?:right|correct|wrong)\b/i,
+  /\b(?:did|have)\s+i\s+(?:get|got|gotten|do|done|solve|solved|answer|answered|work|worked|calculate|calculated)\b[^.?!]*\b(?:right|correct|correctly|wrong)\b/i,
+  /\bdid\s+i\s+(?:make|get)\s+(?:a\s+|any\s+)?(?:mistakes?|errors?)\b/i,
+  /\bwhere\s+did\s+i\s+go\s+wrong\b|\bwhat\s+did\s+i\s+(?:do|get)\s+wrong\b|\bwhere(?:['’]s|\s+is)\s+my\s+(?:mistake|error)\b/i,
   /\bis\s+(?:the\s+)?(?:answer|option|choice)\s+\(?[a-e]\)?\s+(?:correct|right|wrong)\b/i,
 ];
 
@@ -350,14 +422,23 @@ const BARE_VERDICT =
 const REVIEW_DONE =
   /^[\s>#*_-]*rà\s+soát[*_]*\s+(?:xong|cho\s+thấy|không\s+(?:thấy|phát\s+hiện))/iu;
 /**
+ * What may follow a reviewer-only verdict for it to stay one: a few words naming the version
+ * ("ban đầu", "như cũ", "as it was"), then the end of the sentence, a comma or "và/and …".
+ * "ADN giữ nguyên nội dung thông tin…" and "The response is complete before the brain…" go on as
+ * lesson sentences.
+ */
+const VERDICT_END = String.raw`(?:\s+(?:ban\s+đầu|gốc|cũ|như\s+cũ|như\s+trên|của\s+bản\s+nháp|as\s+it\s+was|as\s+is|of\s+the\s+draft))?(?:\s*(?:[.!…;,:]|$)|\s+(?:và|and)(?![\p{L}\p{M}]))`;
+/**
  * Words only a reviewer writes about the answer it checked, with no label and no draft named
  * ("Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.", "The response is accurate and
  * complete.", "No changes needed.", "I kept the explanation."). A remark only at the very start of
  * a reviewed answer, and not when the learner asked for a correction (the teacher may then say
- * "em giữ nguyên nội dung, chỉ sửa đơn vị").
+ * "em giữ nguyên nội dung, chỉ sửa đơn vị"). "I kept the" names the text it kept ("I kept the
+ * mass constant" is physics); "giữ nguyên nội dung" and "the response is correct" end their
+ * clause (`VERDICT_END`).
  */
 const REVIEWER_ONLY = new RegExp(
-  `${viWords('giữ nguyên (?:nội dung|câu trả lời|bản nháp|lời giải|bài giảng)')}|\\bno\\s+(?:changes?|edits?|corrections?)\\s+(?:are\\s+|were\\s+|is\\s+)?(?:needed|required|necessary)\\b|\\bI\\s+(?:have\\s+)?kept\\s+the\\b|\\bthe\\s+response\\s+is\\s+(?:accurate|correct|complete)\\b`,
+  `(?<![\\p{L}\\p{M}])giữ\\s+nguyên\\s+(?:nội\\s+dung|câu\\s+trả\\s+lời|bản\\s+nháp|lời\\s+giải|bài\\s+giảng)${VERDICT_END}|\\bno\\s+(?:changes?|edits?|corrections?)\\s+(?:are\\s+|were\\s+|is\\s+)?(?:needed|required|necessary)\\b|\\bI\\s+(?:have\\s+)?kept\\s+the\\s+(?:(?:original|same|whole)\\s+)?(?:answer|response|draft|explanation|content|wording|structure|lesson|text|solution|format|formatting)\\b|\\bthe\\s+(?:(?:provided|original|given)\\s+)?response\\s+is\\s+(?:(?:fully|largely|mostly)\\s+)?(?:accurate|correct|complete)${VERDICT_END}`,
   'iu',
 );
 /** A closing paragraph that opens by naming the draft as its topic. */
