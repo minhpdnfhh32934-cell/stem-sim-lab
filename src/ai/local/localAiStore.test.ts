@@ -9,7 +9,13 @@ import {
   sanitizeLocalAi,
   useLocalAiStore,
 } from './localAiStore';
-import { UNVERIFIED, type LocalRuntimeClient, type ModelDetails, type RuntimeProbe } from './types';
+import {
+  UNVERIFIED,
+  type LocalModels,
+  type LocalRuntimeClient,
+  type ModelDetails,
+  type RuntimeProbe,
+} from './types';
 
 const client = {
   detect: vi.fn<LocalRuntimeClient['detect']>(),
@@ -58,6 +64,8 @@ beforeEach(() => {
     selected: null,
     checks: {},
     status: { phase: 'idle', probes: [], error: null },
+    detectedAt: null,
+    lists: {},
   });
   localStorage.clear();
   vi.clearAllMocks();
@@ -306,6 +314,85 @@ describe('local runtime settings', () => {
       phase: 'error',
       probes: [],
       error: 'notAllowed',
+    });
+  });
+});
+
+describe('the last detection and its model lists (this session only)', () => {
+  const OLLAMA = 'http://127.0.0.1:11434';
+  const found: RuntimeProbe[] = [
+    { expected: 'ollama', kind: 'ollama', baseUrl: OLLAMA, status: 'found', version: '0.12.6' },
+    {
+      expected: 'lmStudio',
+      kind: null,
+      baseUrl: 'http://127.0.0.1:1234',
+      status: 'unreachable',
+      version: null,
+    },
+  ];
+  const MODELS: LocalModels = { models: [], more: false };
+
+  it('are kept with their time for the session, and never saved', async () => {
+    client.detect.mockResolvedValue(found);
+    client.models.mockResolvedValue(MODELS);
+    const s = useLocalAiStore.getState();
+    // Nothing to list before a detection.
+    await s.loadLists();
+    expect(client.models).not.toHaveBeenCalled();
+    await s.detect();
+    expect(useLocalAiStore.getState().detectedAt).toEqual(expect.any(Number));
+    await useLocalAiStore.getState().loadLists();
+    // Only the runtime that answered is listed, once.
+    expect(client.models.mock.calls).toEqual([['ollama', OLLAMA]]);
+    expect(useLocalAiStore.getState().lists).toEqual({
+      [OLLAMA]: { phase: 'done', list: MODELS },
+    });
+    s.select(selection);
+    expect(saved().state).not.toHaveProperty('lists');
+    expect(saved().state).not.toHaveProperty('detectedAt');
+    // A failed list keeps the error for the page to word.
+    client.models.mockRejectedValue(new AiError('network', 'local-unreachable: refused'));
+    await useLocalAiStore.getState().loadLists();
+    expect(useLocalAiStore.getState().lists[OLLAMA]).toMatchObject({
+      phase: 'error',
+      error: { code: 'network', message: 'local-unreachable: refused' },
+    });
+  });
+
+  it('answers that arrive after "Khôi phục mặc định" are dropped', async () => {
+    client.detect.mockResolvedValue(found);
+    let listed: (v: LocalModels) => void = () => undefined;
+    client.models.mockReturnValue(
+      new Promise((resolve) => {
+        listed = resolve;
+      }),
+    );
+    const s = useLocalAiStore.getState();
+    await s.detect();
+    const loading = s.loadLists();
+    expect(useLocalAiStore.getState().lists).toEqual({ [OLLAMA]: { phase: 'loading' } });
+    s.reset();
+    listed(MODELS);
+    await loading;
+    expect(useLocalAiStore.getState()).toMatchObject({
+      lists: {},
+      detectedAt: null,
+      status: { phase: 'idle', probes: [], error: null },
+    });
+
+    let detected: (v: RuntimeProbe[]) => void = () => undefined;
+    client.detect.mockReturnValue(
+      new Promise((resolve) => {
+        detected = resolve;
+      }),
+    );
+    const detecting = s.detect();
+    s.reset();
+    detected(found);
+    await detecting;
+    expect(useLocalAiStore.getState()).toMatchObject({
+      detectedAt: null,
+      status: { phase: 'idle', probes: [], error: null },
     });
   });
 });

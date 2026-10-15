@@ -1,7 +1,9 @@
 /**
  * Local runtimes chosen in Settings (`stemsim.local-ai`, v1). Saved: the addresses the user added,
  * the runtime and model chosen for AI Teacher, and what was checked about each model on this
- * computer. Not saved: the result of the last detection (`status`).
+ * computer. Not saved: the result of the last detection (`status`, `detectedAt`) and the model
+ * lists it led to (`lists`): they last for the session, so Settings shows them again when it is
+ * reopened, with the time they were seen.
  *
  * Nothing is asked on load: the saved choice is restored as it was, and the runtime is first
  * contacted when the learner asks something or presses a button. Stored data is never trusted:
@@ -12,6 +14,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { aiErrorKind, type AiErrorKind } from '../errorKind';
+import { toAiError, type AiError } from '../types';
 import { getLocalClient } from './client';
 import { parseLoopback, tryLoopback } from './endpoint';
 import { cleanId, positive } from './runtimes';
@@ -21,6 +24,7 @@ import {
   isCap,
   isRuntimeKind,
   type Capabilities,
+  type LocalModels,
   type LocalSelection,
   type LocalTest,
   type ModelDetails,
@@ -53,6 +57,13 @@ export interface LocalStatus {
   error: AiErrorKind | null;
 }
 
+/** The model list of a runtime found by the last detection. */
+export type LocalModelList =
+  | { phase: 'loading' }
+  | { phase: 'done'; list: LocalModels }
+  /** The error as the client threw it (the page words it). */
+  | { phase: 'error'; error: AiError };
+
 interface Persisted {
   /** Addresses the user added, normalised (`http://127.0.0.1:11435`). */
   userEndpoints: string[];
@@ -64,6 +75,10 @@ interface Persisted {
 export interface LocalAiState extends Persisted {
   /** Not saved. */
   status: LocalStatus;
+  /** When the last detection finished (ms since 1970), or null. Not saved. */
+  detectedAt: number | null;
+  /** The model lists of the runtimes the last detection found, by address. Not saved. */
+  lists: Record<string, LocalModelList>;
   /** Adds an address (normalised); throws `not-loopback` for an address off this computer. */
   addEndpoint: (input: string) => string;
   removeEndpoint: (baseUrl: string) => void;
@@ -90,9 +105,20 @@ export interface LocalAiState extends Persisted {
   reset: () => void;
   /** "Tìm trên máy này": the three usual addresses plus the ones the user added. */
   detect: () => Promise<RuntimeProbe[]>;
+  /**
+   * The model list of each runtime the last detection found (one request each, never retried).
+   * Results that arrive after a newer detection, list or `reset` are dropped.
+   */
+  loadLists: () => Promise<void>;
 }
 
 const IDLE: LocalStatus = { phase: 'idle', probes: [], error: null };
+
+/**
+ * Bumped by every detection, model listing and `reset`: an answer that arrives after a newer one
+ * (or after a reset) is not shown.
+ */
+let generation = 0;
 
 /** The key of a model's check. */
 export function checkKey(kind: RuntimeKind, baseUrl: string, model: string): string {
@@ -218,6 +244,8 @@ export const useLocalAiStore = create<LocalAiState>()(
       selected: null,
       checks: {},
       status: IDLE,
+      detectedAt: null,
+      lists: {},
       addEndpoint: (input) => {
         // The same check and error (`not-loopback`) as every client call.
         const base = parseLoopback(input);
@@ -267,10 +295,23 @@ export const useLocalAiStore = create<LocalAiState>()(
         set({ checks: withCheck(get().checks, key, check) });
       },
       reset: () => {
-        set({ userEndpoints: [], selected: null, checks: {}, status: IDLE });
+        generation++;
+        set({
+          userEndpoints: [],
+          selected: null,
+          checks: {},
+          status: IDLE,
+          detectedAt: null,
+          lists: {},
+        });
       },
       detect: async () => {
-        set({ status: { phase: 'detecting', probes: [], error: null } });
+        const id = ++generation;
+        set({
+          status: { phase: 'detecting', probes: [], error: null },
+          detectedAt: null,
+          lists: {},
+        });
         try {
           const client = getLocalClient();
           const probes = [...(await client.detect())];
@@ -278,12 +319,40 @@ export const useLocalAiStore = create<LocalAiState>()(
           for (const base of get().userEndpoints) {
             if (!usual.has(base)) probes.push(await client.probe(base));
           }
-          set({ status: { phase: 'done', probes, error: null } });
+          // Undone by "Khôi phục mặc định" meanwhile: the page stays as it was reset.
+          if (id === generation) {
+            set({ status: { phase: 'done', probes, error: null }, detectedAt: Date.now() });
+          }
           return probes;
         } catch (e) {
-          set({ status: { phase: 'error', probes: [], error: aiErrorKind(e) } });
+          if (id === generation) {
+            set({ status: { phase: 'error', probes: [], error: aiErrorKind(e) } });
+          }
           throw e;
         }
+      },
+      loadLists: async () => {
+        const { status } = get();
+        if (status.phase !== 'done') return;
+        const id = ++generation;
+        const found = status.probes.flatMap((p) =>
+          p.status === 'found' && p.kind !== null ? [{ kind: p.kind, baseUrl: p.baseUrl }] : [],
+        );
+        set({
+          lists: Object.fromEntries(found.map((p) => [p.baseUrl, { phase: 'loading' } as const])),
+        });
+        const client = getLocalClient();
+        await Promise.all(
+          found.map(async ({ kind, baseUrl }) => {
+            let next: LocalModelList;
+            try {
+              next = { phase: 'done', list: await client.models(kind, baseUrl) };
+            } catch (e) {
+              next = { phase: 'error', error: toAiError(e) };
+            }
+            if (id === generation) set({ lists: { ...get().lists, [baseUrl]: next } });
+          }),
+        );
       },
     }),
     {

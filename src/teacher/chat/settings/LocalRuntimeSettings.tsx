@@ -14,8 +14,9 @@ import {
   Trash2,
   Unplug,
 } from 'lucide-react';
-import { useRef, useState, type SyntheticEvent, type ReactNode } from 'react';
+import { useState, type SyntheticEvent, type ReactNode } from 'react';
 import { formatNumber, useT, type Locale, type MessageKey, type TFunction } from '@/app/i18n';
+import { PROVIDER_NAME } from '@/app/ai/aiStatusView';
 import { analysisEngine, useAnalysisEngine, type AnalysisEngine } from '@/app/ai/engineChoice';
 import {
   localFailure,
@@ -36,7 +37,6 @@ import {
   type Cap,
   type Capabilities,
   type LocalModel,
-  type LocalModels,
   type LocalTest,
   type ProbeStatus,
   type RuntimeKind,
@@ -54,9 +54,6 @@ interface Target {
   baseUrl: string;
   model: string;
 }
-
-type ModelList =
-  { phase: 'loading' } | { phase: 'done'; list: LocalModels } | { phase: 'error'; message: string };
 
 /** "Kiểm tra kết nối" / "Kiểm tra trả lời" of one model (this session only). */
 type Step =
@@ -198,13 +195,17 @@ export function LocalRuntimeSettings() {
   const selected = useLocalAiStore((s) => s.selected);
   const checks = useLocalAiStore((s) => s.checks);
   const status = useLocalAiStore((s) => s.status);
+  // The last detection and its model lists last for the session: reopening Settings shows them
+  // again, with the time they were seen.
+  const detectedAt = useLocalAiStore((s) => s.detectedAt);
+  const lists = useLocalAiStore((s) => s.lists);
   const userEndpoints = useLocalAiStore((s) => s.userEndpoints);
   const engine = useChatStore((s) => s.engine);
   const provider = useAiStore((s) => s.provider);
+  const noKey = useAiStore((s) => s.status === 'noKey');
   // The engine that really answers while the local runtime is not in use: a pre-selected Gemma
   // without its model is the API. Every sentence below names this one, never only the setting.
   const effective = useAnalysisEngine();
-  const [lists, setLists] = useState<Record<string, ModelList>>({});
   const [focus, setFocus] = useState<Target | null>(null);
   const [connection, setConnection] = useState<Record<string, Step>>({});
   const [tests, setTests] = useState<Record<string, Step>>({});
@@ -214,12 +215,13 @@ export function LocalRuntimeSettings() {
   const [address, setAddress] = useState('');
   const [addResult, setAddResult] = useState<{ ok: boolean; text: string } | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
-  const run = useRef(0);
   const browser = !isTauri();
 
-  const providerName = (p: ProviderChoice) => t(`settings.aiProviders.${p}` as MessageKey);
-  /** Where the AI Teacher's questions go now, in one sentence. */
-  const nowText = (e: AnalysisEngine, p: ProviderChoice): string => {
+  /**
+   * Where the AI Teacher's questions go now, in one sentence. The provider's plain name (never
+   * the menu label with its advice, such as "khuyên dùng"), and nothing "is sent" without a key.
+   */
+  const nowText = (e: AnalysisEngine, p: ProviderChoice, keyMissing: boolean): string => {
     switch (e) {
       case 'gemma':
         return t('localRuntime.now.gemma');
@@ -232,7 +234,9 @@ export function LocalRuntimeSettings() {
       case 'cloud':
         return p === 'off'
           ? t('localRuntime.now.cloudOff')
-          : t('localRuntime.now.cloud', { provider: providerName(p) });
+          : t(keyMissing ? 'localRuntime.now.cloudNoKey' : 'localRuntime.now.cloud', {
+              provider: PROVIDER_NAME[p],
+            });
     }
   };
   /** The short name of the engine that answers now (badges). */
@@ -241,7 +245,7 @@ export function LocalRuntimeSettings() {
       ? t('chat.gemma')
       : provider === 'off'
         ? t('chat.cloud')
-        : `${t('chat.cloud')} · ${providerName(provider)}`;
+        : `${t('chat.cloud')} · ${PROVIDER_NAME[provider]}`;
   /** "Đang chọn cho AI Teacher" only while it really answers; otherwise who does. */
   const selectedBadge =
     engine === 'local' ? (
@@ -257,31 +261,17 @@ export function LocalRuntimeSettings() {
   };
 
   const detect = async () => {
-    const id = ++run.current;
     setNote('');
     setAsked(true);
-    let probes: RuntimeProbe[];
+    const store = useLocalAiStore.getState();
     try {
-      probes = await useLocalAiStore.getState().detect();
+      await store.detect();
     } catch {
       // The store keeps the error kind; the page says it below.
       return;
     }
-    if (id !== run.current) return;
-    const found = probes.filter((p) => p.status === 'found' && p.kind !== null);
-    setLists(Object.fromEntries(found.map((p) => [p.baseUrl, { phase: 'loading' }])));
-    await Promise.all(
-      found.map(async (p) => {
-        const kind = p.kind as RuntimeKind;
-        let next: ModelList;
-        try {
-          next = { phase: 'done', list: await getLocalClient().models(kind, p.baseUrl) };
-        } catch (e) {
-          next = { phase: 'error', message: localFailureText(locale, localFailure(e), kind) };
-        }
-        if (id === run.current) setLists((l) => ({ ...l, [p.baseUrl]: next }));
-      }),
-    );
+    // Lists only what this detection found (nothing after a reset meanwhile).
+    await store.loadLists();
   };
 
   /** Cheap: the runtime says who it is, then what it knows about the model. Nothing generates. */
@@ -404,7 +394,10 @@ export function LocalRuntimeSettings() {
     // Read after the change: the engine that answers now, not only the one set (a pre-selected
     // Gemma without its model sends the questions to the API, and the learner is told so).
     const now = await analysisEngine();
-    setNote(t('localRuntime.unselected', { now: nowText(now, useAiStore.getState().provider) }));
+    const ai = useAiStore.getState();
+    setNote(
+      t('localRuntime.unselected', { now: nowText(now, ai.provider, ai.status === 'noKey') }),
+    );
   };
 
   const addAddress = (e: SyntheticEvent) => {
@@ -420,9 +413,8 @@ export function LocalRuntimeSettings() {
   };
 
   const reset = () => {
-    run.current++;
+    // Also forgets the detection and its model lists (answers still on their way are dropped).
     useLocalAiStore.getState().reset();
-    setLists({});
     setFocus(null);
     setConnection({});
     setTests({});
@@ -446,6 +438,25 @@ export function LocalRuntimeSettings() {
           : t('localRuntime.detectFailed')
       : null;
   const anyRunning = status.probes.some((p) => p.status !== 'unreachable');
+
+  /**
+   * Why the chosen model cannot be used, as the last detection saw it (this session), or null
+   * when it saw nothing wrong or did not ask that address. Its model list must be complete to say
+   * a model is missing.
+   */
+  const selectedProblem = ((): string | null => {
+    if (!selected || status.phase !== 'done') return null;
+    const probe = status.probes.find((p) => p.baseUrl === selected.baseUrl);
+    if (!probe) return null;
+    const name = runtimeName(locale, selected.kind);
+    if (probe.status !== 'found') return t(probeProblem(probe.status), { name });
+    if (probe.kind !== selected.kind) return t('chat.errors.localNotRuntime', { name });
+    const list = lists[selected.baseUrl];
+    if (list?.phase !== 'done') return null;
+    const listed = list.list.models.find((m) => m.id === selected.model);
+    if (!listed) return list.list.more ? null : t('chat.errors.localModelMissing', { name });
+    return listed.remote ? t('chat.errors.localRemote') : null;
+  })();
 
   const modelRow = (probe: RuntimeProbe, kind: RuntimeKind, m: LocalModel) => {
     const x: Target = { kind, baseUrl: probe.baseUrl, model: m.id };
@@ -553,9 +564,12 @@ export function LocalRuntimeSettings() {
             {list?.phase === 'error' && (
               <p className="chat-settings__error" role="alert">
                 <CircleAlert size={15} aria-hidden="true" />
-                {t('localRuntime.modelsFailed', { reason: list.message })}
+                {t('localRuntime.modelsFailed', {
+                  reason: localFailureText(locale, localFailure(list.error), probe.kind),
+                })}
               </p>
             )}
+            {list === undefined && <p className="muted small">{t('localRuntime.modelsAgain')}</p>}
             {list?.phase === 'done' && list.list.models.length === 0 && (
               <p className="muted small">{t('localRuntime.modelsEmpty')}</p>
             )}
@@ -599,6 +613,9 @@ export function LocalRuntimeSettings() {
               </p>
               <ul className="local-rt__badges">
                 {selectedBadge}
+                {selectedProblem !== null && (
+                  <Badge tone="bad">{t('localRuntime.badges.unavailable')}</Badge>
+                )}
                 {checkFor({ checks }, selected)?.testedAt !== undefined ? (
                   <Badge tone="ok">
                     {t('localRuntime.badges.tested', {
@@ -610,11 +627,21 @@ export function LocalRuntimeSettings() {
                 )}
               </ul>
               <p className="muted small">
-                {engine === 'local'
-                  ? t('localRuntime.currentLocal')
-                  : t('localRuntime.currentOther', { now: nowText(effective, provider) })}
+                {engine !== 'local'
+                  ? t('localRuntime.currentOther', { now: nowText(effective, provider, noKey) })
+                  : selectedProblem !== null
+                    ? t('localRuntime.currentLocalUnavailable')
+                    : t('localRuntime.currentLocal')}
               </p>
-              {!asked && <p className="muted small">{t('localRuntime.restoredNote')}</p>}
+              {selectedProblem !== null && (
+                <p className="chat-settings__error" role="alert">
+                  <CircleAlert size={15} aria-hidden="true" />
+                  {selectedProblem}
+                </p>
+              )}
+              {!asked && status.phase === 'idle' && (
+                <p className="muted small">{t('localRuntime.restoredNote')}</p>
+              )}
             </>
           ) : (
             <p className="muted small" role="status">
@@ -686,6 +713,13 @@ export function LocalRuntimeSettings() {
         )}
         {status.phase === 'done' && (
           <>
+            {detectedAt !== null && (
+              <p className="muted small" role="note">
+                {t('localRuntime.detectedAt', { time: timeText(locale, detectedAt) })}
+                {/* A result from before this page was opened may be out of date. */}
+                {!asked && ` ${t('localRuntime.detectedEarlier')}`}
+              </p>
+            )}
             <ul className="local-rt__runtimes">{status.probes.map(probeRow)}</ul>
             {!anyRunning && <p className="muted small">{t('localRuntime.noneFound')}</p>}
           </>

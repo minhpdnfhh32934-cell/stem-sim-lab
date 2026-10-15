@@ -109,7 +109,7 @@ async function detectAndPick(user: ReturnType<typeof userEvent.setup>) {
 beforeEach(() => {
   desktop.current = false;
   gemma.ready = false;
-  useAiStore.setState({ provider: 'gemini' });
+  useAiStore.setState({ provider: 'gemini', status: 'unknown' });
   for (const fn of Object.values(client)) fn.mockReset();
   client.detect.mockResolvedValue(PROBES);
   client.models.mockResolvedValue(MODELS);
@@ -121,6 +121,8 @@ beforeEach(() => {
     selected: null,
     checks: {},
     status: { phase: 'idle', probes: [], error: null },
+    detectedAt: null,
+    lists: {},
   });
   useChatStore.setState({
     engine: 'cloud',
@@ -277,7 +279,7 @@ describe('Settings → AI trên máy khác', () => {
     expect(useChatStore.getState().engine).toBe('cloud');
     expect(
       await screen.findByText(
-        'Đã bỏ chọn. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini (khuyên dùng).',
+        'Đã bỏ chọn. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini.',
       ),
     ).toBeInTheDocument();
   });
@@ -299,7 +301,7 @@ describe('Settings → AI trên máy khác', () => {
     const note = await screen.findByText(/^Đã bỏ chọn\./);
     // The next question goes online: the learner is told so, never "back to local Gemma".
     expect(note).toHaveTextContent(
-      'Đã bỏ chọn. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini (khuyên dùng).',
+      'Đã bỏ chọn. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini.',
     );
     expect(note).not.toHaveTextContent(/Gemma/);
   });
@@ -345,20 +347,16 @@ describe('Settings → AI trên máy khác', () => {
     expect(screen.getByText('Mô hình đã chọn ở trang này')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini (khuyên dùng). Bấm “Dùng cho AI Teacher” để chuyển.',
+        'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini. Bấm “Dùng cho AI Teacher” để chuyển.',
       ),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText('Đã chọn · AI Teacher đang dùng API · Gemini (khuyên dùng)'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Đã chọn · AI Teacher đang dùng API · Gemini')).toBeInTheDocument();
     // The model's own row says the same after "Tìm trên máy này".
     await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
     const row = (await screen.findByRole('radio', { name: /qwen3:8b/ })).closest('article');
     expect(row).not.toBeNull();
     expect(
-      within(row as HTMLElement).getByText(
-        'Đã chọn · AI Teacher đang dùng API · Gemini (khuyên dùng)',
-      ),
+      within(row as HTMLElement).getByText('Đã chọn · AI Teacher đang dùng API · Gemini'),
     ).toBeInTheDocument();
     expect(within(row as HTMLElement).queryByText('Đang chọn cho AI Teacher')).toBeNull();
     // A downloaded Gemma answers: the badge names it.
@@ -443,5 +441,119 @@ describe('Settings → AI trên máy khác', () => {
     expect(screen.getByText('Hiện phần nâng cao').tagName).toBe('SUMMARY');
     // The main action stays visible.
     expect(screen.getByRole('button', { name: 'Dùng cho AI Teacher' })).toBeVisible();
+  });
+
+  describe('the chosen model, checked against the last search', () => {
+    const LLAMA = {
+      kind: 'ollama' as const,
+      baseUrl: OLLAMA,
+      model: 'llama3:8b',
+      label: 'Ollama · llama3:8b',
+    };
+    const card = () =>
+      screen.getByText('Đang chọn cho AI Teacher', { selector: 'legend' }).closest('fieldset');
+
+    it('a runtime the search did not find: "chưa dùng được", with why, never "đang trả lời"', async () => {
+      const user = userEvent.setup();
+      useLocalAiStore.setState({ selected: LLAMA });
+      useChatStore.setState({ engine: 'local' });
+      client.detect.mockResolvedValue([
+        { ...(PROBES[0] as RuntimeProbe), kind: null, status: 'unreachable', version: null },
+        ...PROBES.slice(1),
+      ]);
+      renderPage();
+      // Nothing is asked when the page opens: the saved choice is shown as saved.
+      expect(card()).toHaveTextContent('AI Teacher đang trả lời bằng mô hình này');
+      await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
+      const chosen = await within(card() as HTMLElement).findByText('Chưa dùng được');
+      expect(chosen).toBeInTheDocument();
+      const box = card() as HTMLElement;
+      expect(within(box).getByRole('alert')).toHaveTextContent(
+        /Mình chưa kết nối được tới Ollama trên máy này/,
+      );
+      expect(box).not.toHaveTextContent('AI Teacher đang trả lời bằng mô hình này');
+      expect(box).toHaveTextContent(/không được gửi đi nơi khác/);
+      // The learner can still unselect it.
+      expect(within(box).getByRole('button', { name: 'Bỏ chọn' })).toBeEnabled();
+      expect(client.chat).not.toHaveBeenCalled();
+      expect(client.test).not.toHaveBeenCalled();
+    });
+
+    it('a model missing from the runtime’s full list: says so, and another one can be picked', async () => {
+      const user = userEvent.setup();
+      useLocalAiStore.setState({ selected: LLAMA });
+      useChatStore.setState({ engine: 'local' });
+      renderPage();
+      await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
+      const box = card() as HTMLElement;
+      expect(await within(box).findByText('Chưa dùng được')).toBeInTheDocument();
+      expect(within(box).getByRole('alert')).toHaveTextContent(/Ollama chưa có mô hình em đã chọn/);
+      await user.click(screen.getByRole('radio', { name: /qwen3:8b/ }));
+      await user.click(screen.getByRole('button', { name: 'Dùng cho AI Teacher' }));
+      expect(useLocalAiStore.getState().selected?.model).toBe('qwen3:8b');
+      expect(within(card() as HTMLElement).queryByText('Chưa dùng được')).toBeNull();
+      expect(card()).toHaveTextContent('AI Teacher đang trả lời bằng mô hình này');
+    });
+
+    it('a list that is cut short proves nothing: no "missing" claim', async () => {
+      const user = userEvent.setup();
+      useLocalAiStore.setState({ selected: LLAMA });
+      useChatStore.setState({ engine: 'local' });
+      client.models.mockResolvedValue({ ...MODELS, more: true });
+      renderPage();
+      await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
+      await screen.findByRole('radio', { name: /qwen3:8b/ });
+      expect(within(card() as HTMLElement).queryByText('Chưa dùng được')).toBeNull();
+      expect(card()).toHaveTextContent('AI Teacher đang trả lời bằng mô hình này');
+    });
+  });
+
+  it('reopened in the same session: the last search and its lists come back, with their time', async () => {
+    const user = userEvent.setup();
+    const first = renderPage();
+    await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
+    expect(await screen.findByRole('radio', { name: /qwen3:8b/ })).toBeInTheDocument();
+    expect(screen.getByText(/^Kết quả lần tìm lúc /)).not.toHaveTextContent(/có thể đã tắt/);
+    first.unmount();
+
+    renderPage();
+    expect(screen.getByText('Đang chạy · phiên bản 0.12.6')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /qwen3:8b/ })).toBeInTheDocument();
+    // An older result says when it was seen and that it may be out of date.
+    expect(screen.getByText(/^Kết quả lần tìm lúc /)).toHaveTextContent(
+      /có thể đã tắt hoặc đổi mô hình từ lúc đó/,
+    );
+    // Nothing was asked again.
+    expect(client.detect).toHaveBeenCalledTimes(1);
+    expect(client.models).toHaveBeenCalledTimes(1);
+  });
+
+  it('a found runtime without its list says how to see it again', () => {
+    useLocalAiStore.setState({
+      status: { phase: 'done', probes: PROBES, error: null },
+      detectedAt: Date.now(),
+      lists: {},
+    });
+    renderPage();
+    expect(
+      screen.getByText('Bấm “Tìm trên máy này” để xem lại danh sách mô hình.'),
+    ).toBeInTheDocument();
+    for (const fn of Object.values(client)) expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('"Bỏ chọn" without an API key says nothing can be sent yet, and never advertises', async () => {
+    const user = userEvent.setup();
+    useAiStore.setState({ provider: 'gemini', status: 'noKey' });
+    useLocalAiStore.setState({
+      selected: { kind: 'ollama', baseUrl: OLLAMA, model: 'qwen3:8b', label: 'Ollama · qwen3:8b' },
+    });
+    useChatStore.setState({ engine: 'local' });
+    renderPage();
+    await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
+    const note = await screen.findByText(/^Đã bỏ chọn\./);
+    expect(note).toHaveTextContent(
+      'Đã bỏ chọn. AI Teacher đang chọn API Gemini nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
+    );
+    expect(note).not.toHaveTextContent(/khuyên dùng|đang được gửi lên mạng/);
   });
 });
