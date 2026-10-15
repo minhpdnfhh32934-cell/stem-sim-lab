@@ -963,7 +963,13 @@ async function run(
     board().layout,
     script.sentences.flatMap((s) => s.actions.map((a) => a.action)),
   );
-  board().set({ lessonId: input.id, status: 'playing', run: r.id, layout: { ...layout } });
+  board().set({
+    lessonId: input.id,
+    status: 'playing',
+    run: r.id,
+    layout: { ...layout },
+    pausedForAsk: false,
+  });
   const ctx: LessonCtx = {
     r,
     measure,
@@ -1001,6 +1007,9 @@ export async function playLesson(input: LessonInput, measure: Measure): Promise<
     pen: null,
     subtitle: '',
     strokes: [],
+    // What the learner circled belongs to the lesson that was on the board.
+    selection: null,
+    pausedForAsk: false,
   });
   await run(lessonFor(input.content, scriptOptions(input)).script, input, measure);
 }
@@ -1091,15 +1100,41 @@ export function pauseLesson(): void {
   board().set({ status: 'paused' });
 }
 
-/** "Tiếp tục": the view goes back to the face the teacher writes on, and the lesson goes on. */
+/**
+ * "Tiếp tục": the view goes back to the face the teacher writes on, and the lesson goes on. An
+ * answer read aloud in the chat meanwhile (a question about what the learner circled) stops
+ * first: the lesson's voice never talks over it, and the sentence the pause cut is read again.
+ */
 export function resumeLesson(): void {
   const r = current;
   const g = r?.gate;
   if (!r || !g) return;
   r.gate = null;
+  stopSpeaking();
   const store = board();
-  store.set({ status: 'playing', follow: true, face: store.teacherFace });
+  store.set({ status: 'playing', follow: true, face: store.teacherFace, pausedForAsk: false });
   g.open();
+}
+
+/**
+ * The learner begins circling part of the board ("Khoanh để hỏi"): the teacher stops to listen,
+ * through the same pause as "Tạm dừng" (the sentence it cuts is read again on resuming). Also
+ * noted when the lesson was already paused (another face, the talk layout): the resume button
+ * then says "Quay lại bài giảng". Nothing on the board changes: layout, marks, what is written
+ * and the learner's strokes stay as they are. A lesson that is over has nothing to pause.
+ */
+export function pauseForAsk(): void {
+  if (board().status === 'playing') pauseLesson();
+  if (board().status === 'paused' && current?.gate) board().set({ pausedForAsk: true });
+}
+
+/**
+ * "Quay lại bài giảng": the circled part is let go (with the circling tool), and the lesson goes
+ * on where it stopped. Leaving a selection ("Bỏ chọn") does not resume by itself.
+ */
+export function backToLesson(): void {
+  board().set({ selection: null, askMode: false });
+  resumeLesson();
 }
 
 /** Writes everything that is left at once (no animation, no voice), in view. */
@@ -1143,6 +1178,7 @@ export function stopLesson(): void {
   board().set({
     pen: null,
     run: 0,
+    pausedForAsk: false,
     ...(status === 'playing' || status === 'paused' ? { status: 'done' as const } : {}),
   });
 }
@@ -1195,6 +1231,8 @@ export function clearBoard(): void {
     provenance: {},
     marks: [],
     strokes: [],
+    selection: null,
+    pausedForAsk: false,
     subtitle: '',
     status: 'idle',
     face: 0,

@@ -963,6 +963,13 @@ const vi = {
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     sentToWithScreen:
       'Câu hỏi, ngữ cảnh màn hình và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
+    sentToWithBoard:
+      'Câu hỏi kèm phần chữ em khoanh trên bảng và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
+    boardChip: 'Hỏi về: «{excerpt}»',
+    boardChipPicture: 'Hỏi về: hình em khoanh trên bảng',
+    boardChipRemove: 'Bỏ chỗ đã khoanh',
+    boardRef: 'Về chỗ em khoanh: «{excerpt}»',
+    boardRefPicture: 'Về hình em khoanh trên bảng',
     welcomeTitle: 'Hỏi bài theo cách của em',
     welcomeBody: 'Bật “Lấy thông tin từ màn hình” nếu câu hỏi liên quan đến mô phỏng đang mở.',
     welcomeBodyTeacher:
@@ -1040,6 +1047,14 @@ const vi = {
       screenPersonal:
         'Ngữ cảnh màn hình có thể chứa thông tin cá nhân nên chưa được gửi. Xóa thông tin đó hoặc tắt nút lấy thông tin màn hình.',
       screenUnsafe: 'Ngữ cảnh màn hình chưa vượt qua kiểm tra an toàn nên không được gửi.',
+      boardPersonal:
+        'Phần chữ em khoanh trên bảng có thể chứa thông tin cá nhân nên chưa được gửi. Em khoanh chỗ khác hoặc gõ câu hỏi nhé.',
+      boardUnsafe:
+        'Phần chữ em khoanh trên bảng chưa vượt qua kiểm tra an toàn nên chưa được gửi. Em khoanh chỗ khác hoặc gõ câu hỏi nhé.',
+      boardNoPicture:
+        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay, nên chưa có gì được gửi đi. Em gõ điều em muốn hỏi về chỗ này nhé.',
+      boardPicture:
+        'Mình chưa tạo được ảnh vùng em khoanh nên chưa hỏi thầy. Em gõ điều em muốn hỏi về chỗ này nhé.',
       localDown:
         'Mình chưa kết nối được tới {name} trên máy này: có thể chương trình chưa mở. Em mở {name} rồi hỏi lại nhé. Câu hỏi không được gửi đi nơi khác.',
       localModelMissing:
@@ -1540,6 +1555,35 @@ const vi = {
     plotOf: 'Đồ thị của {fn}',
     plotUnreadable: 'Chưa đọc được biểu thức để vẽ',
     codeInMessage: '(đoạn mã trong tin nhắn)',
+    ask: {
+      tool: 'Khoanh để hỏi',
+      toolHint: 'Bật rồi khoanh, gạch chân hoặc chạm vào chỗ trên bảng em muốn hỏi thầy',
+      area: 'Vùng khoanh để hỏi',
+      barLabel: 'Chỗ em khoanh trên bảng',
+      excerpt: 'Em khoanh:',
+      ask: 'Hỏi thầy chỗ này',
+      again: 'Khoanh lại',
+      clear: 'Bỏ chọn',
+      none: 'Mình chưa thấy em khoanh vào chữ hay hình nào trên bảng. Em khoanh sát chỗ cần hỏi, hoặc gõ câu hỏi nhé.',
+      many: 'Em khoanh khá nhiều chỗ: em hỏi cả phần này hay một chỗ?',
+      unsure: 'Em khoanh vào một phần của chỗ này. Ý em là…?',
+      all: 'Cả phần này',
+      picture: 'Hình em khoanh',
+      pictureLocal: 'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng.',
+      pictureUnreadable:
+        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé.',
+      resume: 'Quay lại bài giảng',
+      defaultQuestion: 'Thầy giải thích giúp em chỗ em vừa khoanh với ạ.',
+      describe: {
+        plot: 'đồ thị {label}',
+        plotOn: 'đồ thị {label} trên [{from}; {to}]',
+        axes: 'hệ trục ({labels})',
+        freeBody: 'sơ đồ lực: {body}; các lực: {forces}',
+        flow: 'sơ đồ: {steps}',
+        table: 'bảng: {cells}',
+        vector: 'véc-tơ {label}',
+      },
+    },
   },
   voice: {
     readAloudCard: 'Đọc to',

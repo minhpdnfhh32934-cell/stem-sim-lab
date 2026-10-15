@@ -967,6 +967,13 @@ const en: Messages = {
     sentTo: 'Your question and related library excerpts will be sent to: {targets}.',
     sentToWithScreen:
       'Your question, the screen context and related library excerpts will be sent to: {targets}.',
+    sentToWithBoard:
+      'Your question with the board text you circled and related library excerpts will be sent to: {targets}.',
+    boardChip: 'About: «{excerpt}»',
+    boardChipPicture: 'About: the drawing you circled on the board',
+    boardChipRemove: 'Remove what you circled',
+    boardRef: 'About what you circled: «{excerpt}»',
+    boardRefPicture: 'About the drawing you circled on the board',
     welcomeTitle: 'Ask questions your way',
     welcomeBody:
       'Turn on “Use current screen information” if your question is about the open simulation.',
@@ -1044,6 +1051,14 @@ const en: Messages = {
       screenPersonal:
         'The screen context may contain personal information, so it was not sent. Remove it or turn off screen context.',
       screenUnsafe: 'The screen context did not pass the safety check and was not sent.',
+      boardPersonal:
+        'The board text you circled may contain personal information, so it was not sent. Circle another part or type your question.',
+      boardUnsafe:
+        'The board text you circled did not pass the safety check, so it was not sent. Circle another part or type your question.',
+      boardNoPicture:
+        "The AI you are using can't read drawings or handwriting, so nothing was sent. Type what you want to ask about this part.",
+      boardPicture:
+        "I couldn't make a picture of the circled area, so nothing was asked. Type what you want to ask about this part.",
       localDown:
         'I could not reach {name} on this computer: the program may not be open. Open {name} and ask again. The question was not sent anywhere else.',
       localModelMissing:
@@ -1542,6 +1557,37 @@ const en: Messages = {
     plotOf: 'Graph of {fn}',
     plotUnreadable: 'Could not read the expression to plot',
     codeInMessage: '(code in the message)',
+    ask: {
+      tool: 'Circle to ask',
+      toolHint:
+        'Turn on, then circle, underline or tap the part of the board to ask the teacher about',
+      area: 'Area to circle and ask',
+      barLabel: 'What you circled on the board',
+      excerpt: 'You circled:',
+      ask: 'Ask about this',
+      again: 'Circle again',
+      clear: 'Clear',
+      none: "I can't see any writing or drawing inside what you circled. Circle closer to what you want to ask about, or type your question.",
+      many: 'You circled quite a lot: ask about all of it, or one part?',
+      unsure: 'You circled part of this. Did you mean…?',
+      all: 'All of it',
+      picture: 'The drawing you circled',
+      pictureLocal:
+        'With a picture of the circled area — on this computer only, never sent online.',
+      pictureUnreadable:
+        "The AI you are using can't read drawings or handwriting. Type in the chat what you want to ask about this part.",
+      resume: 'Back to the lesson',
+      defaultQuestion: 'Could you explain the part I just circled, please?',
+      describe: {
+        plot: 'graph of {label}',
+        plotOn: 'graph of {label} on [{from}; {to}]',
+        axes: 'axes ({labels})',
+        freeBody: 'free-body diagram: {body}; forces: {forces}',
+        flow: 'diagram: {steps}',
+        table: 'table: {cells}',
+        vector: 'vector {label}',
+      },
+    },
   },
   voice: {
     readAloudCard: 'Read aloud',

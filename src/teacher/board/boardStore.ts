@@ -1,12 +1,15 @@
 /**
  * The live whiteboard: what is written (with how much of it the pen has drawn), the marks, the
- * pen tip, the subtitle, the faces (board history) and the learner's own pen strokes.
- * Session state only; nothing here is saved or sent.
+ * pen tip, the subtitle, the faces (board history), the learner's own pen strokes and what the
+ * learner circled to ask about. Session state only; nothing here is saved, and the strokes are
+ * never sent. Only when the learner asks about what they circled is its text sent with the
+ * question (a picture only to an AI on this computer: selection.ts, pictureReader.ts).
  */
 import { create } from 'zustand';
 import type { Box, Layout } from './layout';
 import { emptyLayout } from './layout';
 import type { Provenance } from './provenance';
+import type { BoardSelection } from './selection';
 
 export type MarkKind = 'underline' | 'circle' | 'box' | 'highlight' | 'strike' | 'arrow';
 
@@ -68,6 +71,15 @@ interface BoardState {
   speed: number;
   /** The learner is drawing with their own pen. */
   penMode: boolean;
+  /** "Khoanh để hỏi": the learner's stroke selects part of the board (never with `penMode`). */
+  askMode: boolean;
+  /**
+   * What the learner circled to ask about (selection.ts): a snapshot, kept until "Bỏ chọn",
+   * "Khoanh lại", "Quay lại bài giảng" or a new lesson. It never changes the board itself.
+   */
+  selection: BoardSelection | null;
+  /** The lesson was paused because the learner began circling (the resume button says so). */
+  pausedForAsk: boolean;
   /**
    * How much larger than "fit to width" the board is shown (1 = the whole width in view; see
    * ZOOMS). A view setting of this session only: kept across lessons, never saved.
@@ -104,6 +116,9 @@ export const useBoardStore = create<BoardState>()((set, get) => ({
   status: 'idle',
   speed: 1,
   penMode: false,
+  askMode: false,
+  selection: null,
+  pausedForAsk: false,
   zoom: 1,
   strokes: [],
   set: (patch) => {
