@@ -5,227 +5,207 @@
  * a stream itself (the browser transport and the browser client for local runtimes); in the
  * desktop app Rust has already filtered the text.
  *
- * The rule is the shared one, pinned by tests/fixtures/reasoning-strip.json (src/ai/reasoning.ts
- * and src-tauri/src/ai/reasoning.rs test the same vectors):
+ * The rule is the one of src/ai/reasoning.ts (tags, code, rules 1–4; pinned by
+ * tests/fixtures/reasoning-strip.json on both sides). This file only applies it piece by piece:
  *
- * Tag names: `think`, `thinking`, `reasoning`, `reflection`, ASCII case-insensitive, with optional
- * attributes (`<think type="x">`). A name followed by more letters (`<thinker>`) is not a tag, and
- * neither is `<y` in `$x<y$`.
+ * - the final text (`finish`) is `stripReasoning` of everything received;
+ * - before that, what is shown is always `hideUnfinishedReasoning` of what was received (tested
+ *   after every piece): reasoning inside a block is never shown, a piece that may be the start of
+ *   a tag is held back until it is complete, and a tag that may still turn out to be code (inside
+ *   a fence or after a backtick still waiting for their end, `CodeTracker`) holds back everything
+ *   from it until that is decided;
+ * - rule 3 cannot be applied before its closing tag arrives, so streamed text is provisional: a
+ *   late closing tag takes back what was shown with a `reset` event.
  *
- * 1. Every closed block `<name …>…</name>` (same name) is removed, together with the spaces or
- *    tabs right after its closing tag.
- * 2. An opening tag left without its closing tag: everything from it to the end is removed.
- * 3. A closing tag with no opening tag before it: everything up to and including the LAST such
- *    closing tag is removed, plus the spaces or tabs after it.
- * 4. When anything was removed, leading and trailing whitespace is trimmed; when nothing was
- *    removed the text is returned unchanged.
- *
- * While streaming, reasoning inside a block is never shown, a piece that may be the start of a
- * tag is held back until it is complete, and the final text is always exactly the rule applied to
- * everything received. Rule 3 cannot be applied before its closing tag arrives, so streamed text
- * is provisional: a late closing tag takes back what was shown with a `reset` event.
- *
- * Linear time: the scan resumes where it stopped, only the possibly unfinished tag at the end is
- * kept for the next piece, and the whole answer is read only at the end (JavaScript strings built
- * with `+=` are copied when read, so nothing here reads the growing answer while it streams).
+ * Linear time: the scan resumes where it stopped, only the undecided tail is kept for the next
+ * piece, and the whole answer is read only at the end (JavaScript strings built with `+=` are
+ * copied when read, so nothing here reads the growing answer while it streams).
  */
+import {
+  nextTag,
+  partialWait,
+  skipBlanks,
+  stripReasoning,
+  TagPlacer,
+  type CodeSpan,
+  type ReasoningName,
+  type StrippedReasoning,
+  type Wait,
+} from './reasoning';
 import type { StreamEvent } from './types';
 
-/** Reasoning tag names (lower case). */
-const NAMES = ['think', 'thinking', 'reasoning', 'reflection'] as const;
-type Name = (typeof NAMES)[number];
+export { partialTagStart } from './reasoning';
 
-/** Length of the longest name: a longer run of letters after '<' is never a tag. */
-const MAX_NAME = 10;
+const NL = 10;
+const CR = 13;
+const SPACE = 32;
+const TAB = 9;
+const BACKTICK = 96;
+const TILDE = 126;
 
-const LT = 60;
-const GT = 62;
-const SLASH = 47;
-
-function isAsciiLetter(c: number): boolean {
-  return (c >= 65 && c <= 90) || (c >= 97 && c <= 122);
-}
-
-/** Rust's `u8::is_ascii_whitespace`: space, \t, \n, \f and \r (not \v). */
 function isAsciiSpace(c: number): boolean {
-  return c === 32 || c === 9 || c === 10 || c === 12 || c === 13;
-}
-
-/** End of the letters of a possible tag name from `i` (at most one more than MAX_NAME). */
-function nameEnd(s: string, i: number, end: number): number {
-  const start = i;
-  while (i < end && i - start <= MAX_NAME && isAsciiLetter(s.charCodeAt(i))) i++;
-  return i;
-}
-
-/** The tag name written at `s[from..to]` (ASCII letters only), if it is one. */
-function nameAt(s: string, from: number, to: number): Name | undefined {
-  const word = s.slice(from, to).toLowerCase();
-  return NAMES.find((n) => n === word);
-}
-
-interface Tag {
-  /** Index of its '<'. */
-  start: number;
-  /** Index just after its '>'. */
-  end: number;
-  name: Name;
-  closing: boolean;
-}
-
-/** The reasoning tag starting at `at` (which holds '<'), reading no further than `end`. */
-function tagAt(s: string, at: number, end: number): Tag | null {
-  let i = at + 1;
-  const closing = i < end && s.charCodeAt(i) === SLASH;
-  if (closing) i++;
-  const nameStart = i;
-  i = nameEnd(s, i, end);
-  const name = nameAt(s, nameStart, i);
-  if (name === undefined) return null;
-  if (closing) {
-    while (i < end && isAsciiSpace(s.charCodeAt(i))) i++;
-    return i < end && s.charCodeAt(i) === GT ? { start: at, end: i + 1, name, closing } : null;
-  }
-  if (i >= end) return null;
-  const c = s.charCodeAt(i);
-  if (c === GT) return { start: at, end: i + 1, name, closing };
-  if (!isAsciiSpace(c)) return null;
-  // Attributes run to the next '>'; another '<' first means this is not a tag.
-  for (let k = i; k < end; k++) {
-    const b = s.charCodeAt(k);
-    if (b === GT) return { start: at, end: k + 1, name, closing };
-    if (b === LT) return null;
-  }
-  return null;
-}
-
-/** The next reasoning tag in `s[from..end]`. */
-function nextTag(s: string, from: number, end: number): Tag | null {
-  let pos = from;
-  while (pos < end) {
-    const k = s.indexOf('<', pos);
-    if (k < 0 || k >= end) return null;
-    const tag = tagAt(s, k, end);
-    if (tag) return tag;
-    pos = k + 1;
-  }
-  return null;
-}
-
-/** The first closing tag named `name` in `s[from..end]`. */
-function closingTag(s: string, from: number, end: number, name: Name): Tag | null {
-  let pos = from;
-  for (;;) {
-    const tag = nextTag(s, pos, end);
-    if (!tag) return null;
-    if (tag.closing && tag.name === name) return tag;
-    pos = tag.start + 1;
-  }
-}
-
-/** Skips the spaces and tabs at `from`. */
-function skipBlanks(s: string, from: number, end: number): number {
-  while (from < end) {
-    const c = s.charCodeAt(from);
-    if (c !== 32 && c !== 9) break;
-    from++;
-  }
-  return from;
-}
-
-/** The result of the rule applied to a whole answer. */
-export interface Stripped {
-  text: string;
-  /** Something was removed. */
-  removed: boolean;
-  /** An opening tag had no closing tag (the answer was probably cut while reasoning). */
-  unclosed: boolean;
-}
-
-/**
- * The rule applied to a whole answer: what `ThinkFilter.finish` returns for everything received,
- * and the same result as `stripReasoning` in src/ai/reasoning.ts (both are pinned by
- * tests/fixtures/reasoning-strip.json). Kept here so the stream filter stands on its own.
- */
-export function stripWhole(text: string): Stripped {
-  const end = text.length;
-  let kept = '';
-  let seg = 0;
-  let pos = 0;
-  let removed = false;
-  let unclosed = false;
-  for (;;) {
-    const tag = nextTag(text, pos, end);
-    if (!tag) break;
-    removed = true;
-    if (tag.closing) {
-      // Rule 3: an orphan closing tag removes everything before it.
-      kept = '';
-    } else {
-      kept += text.slice(seg, tag.start);
-      const close = closingTag(text, tag.end, end, tag.name);
-      if (!close) {
-        // Rule 2: unclosed, everything to the end goes.
-        unclosed = true;
-        break;
-      }
-      // Rule 1: a closed block.
-      seg = skipBlanks(text, close.end, end);
-      pos = seg;
-      continue;
-    }
-    seg = skipBlanks(text, tag.end, end);
-    pos = seg;
-  }
-  if (!removed) return { text, removed: false, unclosed: false };
-  if (!unclosed) kept += text.slice(seg);
-  return { text: kept.trim(), removed: true, unclosed };
-}
-
-/** What a possible tag at the end of a streamed text still waits for. */
-type Wait =
-  /** "<", "</", "<thi", "</think": the name may still grow. */
-  | 'name'
-  /** "<think type=\"x": an opening tag waiting for its '>'. */
-  | 'attrs'
-  /** "</think  ": a closing tag waiting for its '>'. */
-  | 'closeSpace';
-
-/**
- * `s[start]` is '<' and `s[start+1..]` holds no other '<': what it waits for while it may still
- * become a reasoning tag, or null when it is already a whole tag or can never be one. Either
- * answer is final once null: more text cannot make it a possible tag again.
- */
-function partialWait(s: string, start: number): Wait | null {
-  const end = s.length;
-  let i = start + 1;
-  const closing = i < end && s.charCodeAt(i) === SLASH;
-  if (closing) i++;
-  const nameStart = i;
-  i = nameEnd(s, i, end);
-  const word = s.slice(nameStart, i).toLowerCase();
-  if (i === end) {
-    return NAMES.some((n) => n.startsWith(word)) ? 'name' : null;
-  }
-  if (!NAMES.some((n) => n === word)) return null;
-  if (closing) {
-    for (let k = i; k < end; k++) if (!isAsciiSpace(s.charCodeAt(k))) return null;
-    return 'closeSpace';
-  }
-  if (!isAsciiSpace(s.charCodeAt(i))) return null;
-  for (let k = i; k < end; k++) if (s.charCodeAt(k) === GT) return null;
-  return 'attrs';
-}
-
-/** Index of a possible tag held back at the end of `raw`, or `raw.length` (tests). */
-export function partialTagStart(raw: string): number {
-  const lt = raw.lastIndexOf('<');
-  return lt >= 0 && partialWait(raw, lt) !== null ? lt : raw.length;
+  return c === SPACE || c === TAB || c === NL || c === 12 || c === CR;
 }
 
 function allAsciiSpace(s: string): boolean {
   for (let k = 0; k < s.length; k++) if (!isAsciiSpace(s.charCodeAt(k))) return false;
   return true;
+}
+
+function isContentSpace(c: number): boolean {
+  return c === SPACE || c === TAB || c === NL || c === CR;
+}
+
+/** Where the current line stands for a fence: blanks only, a run of one mark, its trail, other. */
+type Phase = 'indent' | 'run' | 'trail' | 'rest';
+
+/**
+ * `codeSpans(text, true)` of src/ai/reasoning.ts kept up to date as text arrives, reading each
+ * character once: the closed code spans so far, and where undecided code starts (`open`).
+ */
+export class CodeTracker {
+  /** Closed spans, in order (shared with a `TagPlacer`). */
+  readonly spans: CodeSpan[] = [];
+  private pos = 0;
+  private lineStart = 0;
+  private phase: Phase = 'indent';
+  private mark = 0;
+  private run = 0;
+  /** The current line opens a fence (a run of three or more marks after blanks). */
+  private opening = false;
+  /** A backtick on this line waiting for its pair, and the content's bounds after it. */
+  private tick = -1;
+  private tickFirst = -1;
+  private tickLast = -1;
+  /** An opened fence waiting for its closing line. */
+  private fence: { mark: number; run: number; start: number; first: number; last: number } | null =
+    null;
+  /** In a fence: the content bounds of the current line (content unless it closes the fence). */
+  private lineFirst = -1;
+  private lineLast = -1;
+
+  /** Start of the first code that is not decided yet (the text's length when none). */
+  get open(): number {
+    if (this.fence) return this.fence.start;
+    if (this.opening) return this.lineStart;
+    if (this.tick >= 0) return this.tick;
+    return this.pos;
+  }
+
+  push(piece: string): void {
+    for (let k = 0; k < piece.length; k++) this.char(piece.charCodeAt(k), this.pos + k);
+    this.pos += piece.length;
+  }
+
+  private newLine(p: number): void {
+    this.lineStart = p + 1;
+    this.phase = 'indent';
+    this.run = 0;
+    this.lineFirst = -1;
+    this.lineLast = -1;
+  }
+
+  private char(c: number, p: number): void {
+    if (this.fence) {
+      this.inFence(c, p, this.fence);
+      return;
+    }
+    if (c === NL) {
+      if (this.opening) {
+        this.fence = { mark: this.mark, run: this.run, start: this.lineStart, first: -1, last: -1 };
+        this.opening = false;
+      }
+      this.tick = -1;
+      this.newLine(p);
+      return;
+    }
+    // A fence opening: blanks, then three or more of one mark (the rest of the line is its info).
+    if (this.phase === 'indent') {
+      if (c === BACKTICK || c === TILDE) {
+        this.phase = 'run';
+        this.mark = c;
+        this.run = 1;
+      } else if (c !== SPACE && c !== TAB) {
+        this.phase = 'rest';
+      }
+    } else if (this.phase === 'run') {
+      if (c === this.mark) {
+        this.run++;
+        if (this.run === 3) {
+          this.opening = true;
+          this.tick = -1;
+        }
+      } else {
+        this.phase = 'rest';
+      }
+    }
+    if (this.opening) return;
+    // Inline code: a backtick, then the next one on the same line with something between.
+    if (c === BACKTICK) {
+      if (this.tick >= 0 && p > this.tick + 1) {
+        this.spans.push({
+          start: this.tick,
+          end: p + 1,
+          from: this.tick + 1,
+          to: p,
+          first: this.tickFirst,
+          last: this.tickLast,
+        });
+        this.tick = -1;
+      } else {
+        this.tick = p;
+        this.tickFirst = -1;
+        this.tickLast = -1;
+      }
+    } else if (this.tick >= 0 && !isContentSpace(c)) {
+      if (this.tickFirst < 0) this.tickFirst = p;
+      this.tickLast = p;
+    }
+  }
+
+  private inFence(
+    c: number,
+    p: number,
+    fence: { mark: number; run: number; start: number; first: number; last: number },
+  ): void {
+    if (c === NL) {
+      const closes = (this.phase === 'run' || this.phase === 'trail') && this.run >= fence.run;
+      if (closes) {
+        this.spans.push({
+          start: fence.start,
+          end: p,
+          from: fence.start,
+          to: p,
+          first: fence.first,
+          last: fence.last,
+        });
+        this.fence = null;
+      } else if (this.lineFirst >= 0) {
+        if (fence.first < 0) fence.first = this.lineFirst;
+        fence.last = this.lineLast;
+      }
+      this.newLine(p);
+      return;
+    }
+    // The closing line: blanks, at least as many of the mark, then spaces, tabs or a CR.
+    if (this.phase === 'indent') {
+      if (c === fence.mark) {
+        this.phase = 'run';
+        this.run = 1;
+      } else if (c !== SPACE && c !== TAB) {
+        this.phase = 'rest';
+      }
+    } else if (this.phase === 'run') {
+      if (c === fence.mark) this.run++;
+      else this.phase = c === SPACE || c === TAB || c === CR ? 'trail' : 'rest';
+    } else if (this.phase === 'trail' && c !== SPACE && c !== TAB && c !== CR) {
+      this.phase = 'rest';
+    }
+    if (!isContentSpace(c)) {
+      if (this.lineFirst < 0) this.lineFirst = p;
+      this.lineLast = p;
+    }
+  }
 }
 
 /**
@@ -291,9 +271,17 @@ class Kept {
 }
 
 /** The end of a filtered stream. */
-export interface Finished extends Stripped {
+export interface Finished extends StrippedReasoning {
   /** The last change to what is shown, if any. */
   change: StreamEvent | null;
+}
+
+/** A possible tag at the end of what was received, and its text while its name may grow. */
+interface Held {
+  lt: number;
+  wait: Wait;
+  /** The tag so far (only kept while its name may still grow: a few characters). */
+  text: string;
 }
 
 /** The reasoning rule for an answer that arrives in pieces (see the module documentation). */
@@ -303,7 +291,7 @@ export class ThinkFilter {
   /** `raw` from `base` on: the only part the scan may still read. */
   private window = '';
   private base = 0;
-  /** `raw[..scanned]` is scanned; the rest is a possible tag held back. */
+  /** `raw[..scanned]` is scanned; the rest is held back. */
   private scanned = 0;
   /** Where the scan looks for the next tag (index into `raw`). */
   private pos = 0;
@@ -312,11 +300,16 @@ export class ThinkFilter {
   /** `seg` follows a closing tag: spaces and tabs there are still removed. */
   private blanks = false;
   /** Inside a block opened with this name, waiting for its closing tag. */
-  private block: Name | null = null;
+  private block: ReasoningName | null = null;
   private kept = new Kept();
   private removed = false;
   /** The last '<' of `raw` and what it waits for, while it may still become a tag. */
-  private held: { lt: number; wait: Wait } | null = null;
+  private held: Held | null = null;
+  /** Code spans as text arrives, and the tags placed against them. */
+  private readonly code = new CodeTracker();
+  private readonly placer = new TagPlacer(this.code.spans);
+  /** The scan stopped at this tag: it may still turn out to be code. */
+  private stop: number | null = null;
   /** What the learner sees. */
   private shownText = '';
   /** `shown` may no longer be the start of the visible text: the next change compares all. */
@@ -338,48 +331,77 @@ export class ThinkFilter {
     const before = this.raw.length;
     this.raw += piece;
     this.window += piece;
-    const k = piece.lastIndexOf('<');
-    if (k >= 0) {
-      const lt = before + k;
-      const wait = partialWait(this.window, lt - this.base);
-      this.held = wait ? { lt, wait } : null;
-    } else if (this.held) {
-      // The held tag is still the last '<': only the new piece can change it.
-      const { lt, wait } = this.held;
-      if (wait === 'name') {
-        const next = partialWait(this.window, lt - this.base);
-        this.held = next ? { lt, wait: next } : null;
-      } else if (wait === 'attrs') {
-        if (piece.includes('>')) this.held = null;
-      } else if (!allAsciiSpace(piece)) {
-        this.held = null;
-      }
+    this.code.push(piece);
+    this.held = this.nextHeld(piece, before);
+    // A stop waits until the code before its tag is decided.
+    if (this.stop === null || this.code.open > this.stop) {
+      this.advance(this.held ? this.held.lt : this.raw.length);
     }
-    this.advance(this.held ? this.held.lt : this.raw.length);
     return this.change();
   }
 
-  /** Continues the scan up to index `upto` of `raw`. */
+  /** The possible tag at the end after `piece` (read from the piece alone). */
+  private nextHeld(piece: string, before: number): Held | null {
+    const k = piece.lastIndexOf('<');
+    if (k >= 0) {
+      const wait = partialWait(piece, k);
+      return wait ? { lt: before + k, wait, text: wait === 'name' ? piece.slice(k) : '' } : null;
+    }
+    const held = this.held;
+    if (!held) return null;
+    // The held tag is still the last '<': only the new piece can change it.
+    switch (held.wait) {
+      case 'name': {
+        const text = held.text + piece;
+        const wait = partialWait(text, 0);
+        return wait ? { lt: held.lt, wait, text: wait === 'name' ? text : '' } : null;
+      }
+      case 'attrs':
+        return piece.includes('>') ? null : held;
+      case 'closeSpace':
+        return allAsciiSpace(piece) ? held : null;
+      case 'slash':
+        // Its '>' completes it, anything else ends it: either way it is decided.
+        return null;
+    }
+  }
+
+  /** Continues the scan up to index `upto` of `raw`, stopping at a tag that may be code. */
   private advance(upto: number): void {
-    if (upto <= this.scanned) return;
+    if (this.stop === null && upto <= this.scanned) return;
+    this.stop = null;
     const w = this.window;
     const b = this.base;
     const end = upto - b;
+    const open = this.code.open;
     let pos = this.pos - b;
     let seg = this.seg - b;
-    for (;;) {
+    let stop: number | null = null;
+    scan: for (;;) {
       if (this.block !== null) {
-        const close = closingTag(w, pos, end, this.block);
-        if (!close) {
+        let closed = false;
+        for (let tag = nextTag(w, pos, end); tag; tag = nextTag(w, tag.end, end)) {
+          if (tag.start + b >= open) {
+            stop = tag.start;
+            pos = tag.start;
+            break scan;
+          }
+          const t = this.placer.place(tag, b);
+          pos = tag.end;
+          if (t.inert || t.kind !== 'close' || t.name !== this.block) continue;
+          // Rule 1: the block is closed.
+          this.block = null;
+          seg = t.cutEnd - b;
+          pos = seg;
+          this.blanks = true;
+          closed = true;
+          break;
+        }
+        if (!closed) {
           // Rule 2 so far: everything from the opening tag is left out.
           pos = end;
           break;
         }
-        // Rule 1: the block is closed.
-        this.block = null;
-        seg = close.end;
-        pos = close.end;
-        this.blanks = true;
       }
       if (this.blanks) {
         seg = skipBlanks(w, seg, end);
@@ -394,28 +416,46 @@ export class ThinkFilter {
         pos = end;
         break;
       }
+      if (tag.start + b >= open) {
+        this.kept.push(w.slice(seg, tag.start));
+        seg = tag.start;
+        pos = tag.start;
+        stop = tag.start;
+        break;
+      }
+      const t = this.placer.place(tag, b);
+      if (t.inert) {
+        pos = tag.end;
+        continue;
+      }
       if (!this.removed) {
         this.removed = true;
         this.reset = true;
       }
-      if (tag.closing) {
+      if (t.kind === 'close') {
         // Rule 3: an orphan closing tag removes everything before it.
         this.kept.clear();
         this.reset = true;
         this.blanks = true;
+        seg = t.cutEnd - b;
       } else {
         this.kept.push(w.slice(seg, tag.start));
-        this.block = tag.name;
+        if (t.kind === 'empty') this.blanks = true;
+        else this.block = t.name;
+        seg = tag.end;
       }
-      seg = tag.end;
-      pos = tag.end;
+      pos = seg;
     }
-    this.scanned = upto;
+    const done = stop ?? end;
+    this.stop = stop === null ? null : stop + b;
+    this.scanned = done + b;
     this.pos = pos + b;
     this.seg = seg + b;
-    // Everything before `upto` is decided: only the held tail is read again.
-    this.window = w.slice(end);
-    this.base = upto;
+    // Everything before `done` is decided: only the undecided tail is read again.
+    if (done > 0) {
+      this.window = w.slice(done);
+      this.base = done + b;
+    }
   }
 
   /** The change to what is shown since the last piece. */
@@ -444,7 +484,7 @@ export class ThinkFilter {
 
   /** The end of the answer: the final text (the rule applied to everything received). */
   finish(): Finished {
-    const all = stripWhole(this.raw);
+    const all = stripReasoning(this.raw);
     return { ...all, change: this.show(all.text) };
   }
 }

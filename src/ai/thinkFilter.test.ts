@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { partialTagStart, stripWhole, ThinkFilter } from './thinkFilter';
+import { codeSpans, hideUnfinishedReasoning, stripReasoning } from './reasoning';
+import { CodeTracker, partialTagStart, ThinkFilter } from './thinkFilter';
 import { applyStreamEvent } from './types';
 
 interface Case {
@@ -13,20 +14,21 @@ interface Case {
 }
 
 /** The vectors shared with src-tauri/src/ai/reasoning.rs (and src/ai/reasoning.ts). */
-const cases = (
-  JSON.parse(
-    readFileSync(resolve(import.meta.dirname, '../../tests/fixtures/reasoning-strip.json'), 'utf8'),
-  ) as { cases: Case[] }
-).cases;
+const fixture = JSON.parse(
+  readFileSync(resolve(import.meta.dirname, '../../tests/fixtures/reasoning-strip.json'), 'utf8'),
+) as { cases: Case[]; code: Case[]; after_block: Case[] };
+const cases = fixture.cases;
+/** Every vector: the rule, code and self-closing tags, closing tags after a block. */
+const allCases = [...fixture.cases, ...fixture.code, ...fixture.after_block];
 
 /** What the stream must show for `raw`, computed the slow way (the whole text every time). */
 function slowVisible(raw: string): string {
-  return stripWhole(raw.slice(0, partialTagStart(raw))).text;
+  return hideUnfinishedReasoning(raw);
 }
 
-/** A complete reasoning tag, or the start of one at the end. */
+/** A complete reasoning tag (not written as code), or the start of one at the end. */
 function reasoningTagIn(s: string): boolean {
-  return stripWhole(s).removed || partialTagStart(s) < s.length;
+  return stripReasoning(s).removed || partialTagStart(s) < s.length;
 }
 
 /** Feeds `pieces`; returns every text the learner saw, then the final text. */
@@ -53,8 +55,8 @@ const chars = (s: string) => Array.from(s);
 describe('reasoning filter for streamed answers (same rule as Rust)', () => {
   it('passes every shared vector on the whole text', () => {
     expect(cases.length).toBeGreaterThanOrEqual(19);
-    for (const c of cases) {
-      expect(stripWhole(c.input), c.name).toEqual({
+    for (const c of allCases) {
+      expect(stripReasoning(c.input), c.name).toEqual({
         text: c.text,
         removed: c.removed,
         unclosed: c.unclosed,
@@ -71,7 +73,7 @@ describe('reasoning filter for streamed answers (same rule as Rust)', () => {
   });
 
   it('gives the same final text at every split, and never shows a tag', () => {
-    for (const c of cases) {
+    for (const c of allCases) {
       const { seen, last } = play(chars(c.input));
       expect(last, `char by char: ${c.name}`).toBe(c.text);
       for (let i = 1; i < c.input.length; i++) {
@@ -153,7 +155,7 @@ describe('reasoning filter for streamed answers (same rule as Rust)', () => {
       const fin = f.finish();
       if (fin.change) screen = applyStreamEvent(screen, fin.change);
       expect(screen).toBe(fin.text);
-      expect(fin.text).toBe(stripWhole(f.received).text);
+      expect(fin.text).toBe(stripReasoning(f.received).text);
       return performance.now() - started;
     };
     const rep = function* (p: string, n: number) {
@@ -221,7 +223,157 @@ describe('reasoning filter for streamed answers (same rule as Rust)', () => {
         }
       }
       pieces.push(text.slice(from));
-      expect(play(pieces).last, JSON.stringify(text)).toBe(stripWhole(text).text);
+      expect(play(pieces).last, JSON.stringify(text)).toBe(stripReasoning(text).text);
+    }
+  });
+
+  it('holds back a tag that may still be code until its code is decided', () => {
+    const f = new ThinkFilter();
+    expect(f.push('Qwen viết `')).toEqual({ kind: 'delta', text: 'Qwen viết `' });
+    // The backtick waits for its pair: the tag after it may be code.
+    expect(f.push('<think>')).toBeNull();
+    expect(f.push(' nhé')).toBeNull();
+    expect(f.push('` rồi')).toEqual({ kind: 'delta', text: '<think> nhé` rồi' });
+    expect(f.shown).toBe('Qwen viết `<think> nhé` rồi');
+    // A fence holds its tags back until its closing line arrives.
+    const g = new ThinkFilter();
+    g.push('Ví dụ:\n```html\n');
+    expect(g.shown).toBe('Ví dụ:\n```html\n');
+    g.push('<think>\n');
+    g.push('```');
+    expect(g.shown).toBe('Ví dụ:\n```html\n');
+    g.push('\nHết.');
+    expect(g.shown).toBe('Ví dụ:\n```html\n<think>\n```\nHết.');
+    expect(g.finish().text).toBe('Ví dụ:\n```html\n<think>\n```\nHết.');
+    // A line ends a backtick's wait: the tag was no code after all, and opens a block.
+    const h = new ThinkFilter();
+    h.push('Đáp số 4. `<think>nháp');
+    expect(h.shown).toBe('Đáp số 4. `');
+    h.push('\nvẫn nháp');
+    expect(h.shown).toBe('Đáp số 4. `');
+    expect(h.finish()).toMatchObject({ text: 'Đáp số 4. `', unclosed: true });
+  });
+
+  it('a self-closing tag is an empty block, also when cut between pieces', () => {
+    for (const pieces of [
+      ['Dùng <think', '/', '> để đánh dấu.'],
+      ['Dùng <think /', '> để đánh dấu.'],
+      ['Dùng <think/>', ' để đánh dấu.'],
+    ]) {
+      const { seen, last } = play(pieces);
+      expect(last).toBe('Dùng để đánh dấu.');
+      for (const s of seen) expect(s).not.toContain('<');
+    }
+  });
+
+  it('the code tracker agrees with codeSpans of the text received, after every character', () => {
+    const parts = [
+      '`',
+      '``',
+      '```',
+      '~~~',
+      '~',
+      ' ',
+      '\t',
+      '\r',
+      '\n',
+      'a',
+      'ố',
+      '<think>',
+      '</think>',
+    ];
+    let seed = 0xc0den;
+    const below = (n: number) => {
+      seed = (seed * 6364136223846793005n + 1442695040888963407n) & 0xffffffffffffffffn;
+      return Number((seed >> 33n) % BigInt(n));
+    };
+    for (let k = 0; k < 400; k++) {
+      const len = 1 + below(30);
+      let text = '';
+      for (let i = 0; i < len; i++) text += parts[below(parts.length)] ?? '';
+      const tracker = new CodeTracker();
+      for (let i = 0; i < text.length; i++) {
+        tracker.push(text[i] ?? '');
+        const whole = codeSpans(text.slice(0, i + 1), true);
+        const at = JSON.stringify(text.slice(0, i + 1));
+        expect(tracker.open, at).toBe(whole.open);
+        expect(tracker.spans, at).toEqual(whole.spans);
+      }
+    }
+  });
+
+  it('matches a full rescan after every piece of random streams with code', () => {
+    const parts = [
+      '<think>',
+      '</think>',
+      '<reasoning>',
+      '</reasoning>',
+      '<think/>',
+      '<think />',
+      '<',
+      '/',
+      '>',
+      'think',
+      '`',
+      '```',
+      '~~~',
+      ' ',
+      '\n',
+      'a',
+      'Lực',
+      '$x<y$',
+    ];
+    let seed = 0xf00dn;
+    const below = (n: number) => {
+      seed = (seed * 6364136223846793005n + 1442695040888963407n) & 0xffffffffffffffffn;
+      return Number((seed >> 33n) % BigInt(n));
+    };
+    for (let k = 0; k < 1500; k++) {
+      const len = 1 + below(24);
+      let text = '';
+      for (let i = 0; i < len; i++) text += parts[below(parts.length)] ?? '';
+      const pieces: string[] = [];
+      let from = 0;
+      for (let i = 1; i < text.length; i++) {
+        if (below(3) === 0) {
+          pieces.push(text.slice(from, i));
+          from = i;
+        }
+      }
+      pieces.push(text.slice(from));
+      expect(play(pieces).last, JSON.stringify(text)).toBe(stripReasoning(text).text);
+    }
+  });
+
+  it('streams answers with code in linear time', () => {
+    const run = (pieces: Iterable<string>) => {
+      const f = new ThinkFilter();
+      let screen = '';
+      const started = performance.now();
+      for (const p of pieces) {
+        const change = f.push(p);
+        if (change) screen = applyStreamEvent(screen, change);
+      }
+      const fin = f.finish();
+      if (fin.change) screen = applyStreamEvent(screen, fin.change);
+      expect(screen).toBe(fin.text);
+      return performance.now() - started;
+    };
+    const rep = function* (p: string, n: number) {
+      for (let i = 0; i < n; i++) yield p;
+    };
+    const n = 16_384;
+    for (const pieces of [
+      // Inline code holding a tag in every piece.
+      [...rep('`<think>` a ', n)],
+      // A backtick waiting for its pair, with a tag held back behind a long line.
+      ['`<think>', ...rep('a<b ', n), '`'],
+      // A fence that never closes, holding a tag.
+      ['```\n<think>\n', ...rep('x <div>\n', n)],
+      // Lines that look like fences.
+      [...rep('```x\n', n)],
+    ]) {
+      expect(run(pieces)).toBeLessThan(2000);
     }
   });
 });
