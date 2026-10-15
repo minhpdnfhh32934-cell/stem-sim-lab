@@ -129,6 +129,76 @@ test('"Viết tiếp" keeps the steps in order when "<step>" opens on the first 
   for (const text of texts) expect(text).not.toContain('step');
 });
 
+test('"Viết tiếp" of an answer that ran onto a second face keeps every line there', async ({
+  page,
+}) => {
+  // Fix round 2 of step F1a: the first line reads differently once "</step>" arrives, so
+  // everything after it is placed again, and the second face is opened again. Its lines took
+  // their old ids back and stayed hidden as erased stumps (only the face's title and "Xong." were
+  // left on "Bảng 2").
+  const steps = (a: number, b: number) =>
+    Array.from(
+      { length: b - a + 1 },
+      (_, i) => `Bước ${String(a + i)}: x${String(a + i)} = ${String(a + i)} m`,
+    ).join('\n');
+  await fakeGemini(page, [
+    {
+      text: `# Bài\n<step>${steps(1, 11)}\n## Phần 2\n${steps(12, 13)}\n`,
+      finishReason: 'MAX_TOKENS',
+    },
+    { text: `${steps(14, 14)}</step>\n\nXong.`, finishReason: 'STOP' },
+  ]);
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Tính quãng đường');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board).toContainText('x13 = 13 m', { timeout: 15_000 });
+
+  await page.getByRole('button', { name: 'Viết tiếp' }).click();
+  await expect(page.getByRole('button', { name: 'Viết tiếp' })).toHaveCount(0);
+  // Eleven lines are written again: at once, not at the pen's pace.
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  const face1 = board.getByRole('tab', { name: /^Bảng 1/ });
+  const face2 = board.getByRole('tab', { name: /^Bảng 2/ });
+  await expect(face2).toHaveAttribute('aria-selected', 'true');
+  await expect(board.getByRole('tab', { name: /^Bảng 3/ })).toHaveCount(0);
+  const second = await textsTopDown(page);
+  const at = (needle: string) => second.findIndex((t) => t.includes(needle));
+  expect(second.filter((t) => t === 'Phần 2').length).toBeGreaterThan(0);
+  for (const needle of ['x12 = 12 m', 'x13 = 13 m', 'x14 = 14 m', 'Xong'])
+    expect(
+      second.filter((t) => t.includes(needle)),
+      needle,
+    ).toHaveLength(1);
+  expect(at('x12 = 12 m')).toBeLessThan(at('x13 = 13 m'));
+  expect(at('x13 = 13 m')).toBeLessThan(at('x14 = 14 m'));
+  expect(at('x14 = 14 m')).toBeLessThan(at('Xong'));
+
+  // The first face: every step once, in order, none of them on the second face.
+  await face1.click();
+  await expect(face1).toHaveAttribute('aria-selected', 'true');
+  const first = await textsTopDown(page);
+  for (let i = 1; i <= 11; i++) {
+    const needle = `x${String(i)} = ${String(i)} m`;
+    expect(
+      first.filter((t) => t.endsWith(needle)),
+      needle,
+    ).toHaveLength(1);
+    if (i > 1) {
+      const prev = `x${String(i - 1)} = ${String(i - 1)} m`;
+      expect(first.findIndex((t) => t.endsWith(prev))).toBeLessThan(
+        first.findIndex((t) => t.endsWith(needle)),
+      );
+    }
+  }
+  for (const text of [...first, ...second]) expect(text).not.toContain('step');
+});
+
 test('a sentence that opens like a source line ("Nguồn điện…", "Liên kết…") stays; only its link goes', async ({
   page,
 }) => {

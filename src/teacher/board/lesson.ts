@@ -38,7 +38,7 @@ import {
   type TextElement,
 } from './layout';
 import { useBoardStore, type BoardMark, type BoardPatch } from './boardStore';
-import { checkNumbers, sourceNumbers } from './provenance';
+import { checkNumbers, sourceNumbers, type Provenance } from './provenance';
 import { seedOf } from './rough';
 import {
   parseTeachScript,
@@ -812,16 +812,25 @@ function untaught(sentences: readonly Sentence[], boundary: number, layout: Layo
   const wiped = tail.filter(
     (p) => !reused.has(p) && (p.elements.length > 0 || p.marks.length > 0 || p.face !== null),
   );
-  // A face opened by the taught part goes when nothing on it stays (it is the last face, and
-  // all it holds is wiped): the whole answer opens it again. Otherwise it stays, and is not
-  // opened twice.
-  const gone = new Set(wiped.flatMap((p) => p.elements));
+  // A face opened by the taught part goes when nothing on it stays (all it holds is wiped) and
+  // every face after it goes too: the whole answer opens them again, in order. Otherwise it stays,
+  // and is not opened twice. Checked from the last face back, so an answer that ran onto several
+  // faces loses them all (two faces "Hai" and "Ba" opened after the first line read differently).
+  const gone = new Set([...wiped, ...faces.map((f) => f.p)].flatMap((p) => p.elements));
+  const opened = new Map<number, Placed>();
+  for (const p of [...wiped, ...faces.map((f) => f.p)]) if (p.face !== null) opened.set(p.face, p);
+  const dropped = new Set<Placed>();
+  for (let i = layout.faces.length - 1; i > 0; i--) {
+    const p = opened.get(i);
+    if (!p || !layout.elements.every((e) => e.face !== i || gone.has(e.id))) break;
+    dropped.add(p);
+  }
   const unopened = new Set<TimedAction>();
   for (const p of [...wiped.filter((x) => x.face !== null && !faces.some((f) => f.p === x))]) {
-    if (!droppable(p, layout, gone)) wiped.splice(wiped.indexOf(p), 1);
+    if (!dropped.has(p)) wiped.splice(wiped.indexOf(p), 1);
   }
   for (const { p, action } of faces) {
-    if (droppable(p, layout, new Set([...gone, ...p.elements]))) wiped.push(p);
+    if (dropped.has(p)) wiped.push(p);
     else unopened.add(action);
   }
   const sentencesLeft =
@@ -853,16 +862,6 @@ function firstDifference(sentences: readonly Sentence[]): number {
     if (p && p.key !== keys[i]) return p.start ?? Infinity;
   }
   return Infinity;
-}
-
-/** The face `p` opened is the last one and holds only elements in `gone`. */
-function droppable(p: Placed, layout: Layout, gone: ReadonlySet<string>): boolean {
-  return (
-    p.face !== null &&
-    p.face === layout.faces.length - 1 &&
-    p.face > 0 &&
-    layout.elements.every((e) => e.face !== p.face || gone.has(e.id))
-  );
 }
 
 /** Ends the current run: its waiting steps stop, and a pause it waits on opens (to stop it). */
@@ -973,9 +972,6 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
       wipedIds.has(e.id) && e.kind === 'text' && e.role === 'title' ? [e.id] : [],
     ),
   );
-  const erased: Record<string, boolean> = {};
-  for (const [id, value] of Object.entries(store.erased)) if (!titles.has(id)) erased[id] = value;
-  for (const id of wipedIds) if (!titles.has(id)) erased[id] = true;
   const unmarked = new Set(rest.wiped.flatMap((p) => p.marks));
   const dropped = new Set(rest.wiped.flatMap((p) => (p.face === null ? [] : [p.face])));
   const faces = store.layout.faces.filter((_, i) => !dropped.has(i));
@@ -987,10 +983,18 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
           elements: store.layout.elements.filter((e) => !dropped.has(e.face) && !titles.has(e.id)),
           upcoming: [],
         };
+  // What an element left behind (erased, written so far, its numbers' check) goes with it when
+  // it leaves the board with its face or its title: the whole answer places it again under the
+  // same id (layout.freeId), and an old "erased" would hide the line it places.
+  const kept = new Set(layout.elements.map((e) => e.id));
+  const erased: Record<string, boolean> = {};
+  for (const [id, value] of Object.entries(store.erased)) if (kept.has(id)) erased[id] = value;
+  for (const id of wipedIds) if (kept.has(id)) erased[id] = true;
   const progress: Record<string, number> = {};
-  for (const [id, value] of Object.entries(store.progress))
-    if (!titles.has(id)) progress[id] = value;
   for (const e of layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
+  const provenance: Record<string, Provenance> = {};
+  for (const [id, value] of Object.entries(store.provenance))
+    if (kept.has(id)) provenance[id] = value;
   lessonTrail = lessonTrail.filter((p) => !rest.wiped.includes(p));
   const teacherFace = Math.min(store.teacherFace, faces.length - 1);
   // The new part is written where the teacher is, in view.
@@ -998,6 +1002,7 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
     layout,
     progress,
     erased,
+    provenance,
     marks: store.marks
       .filter((m) => !unmarked.has(m.key) && !dropped.has(m.face))
       .map((m) => ({ ...m, shown: true })),

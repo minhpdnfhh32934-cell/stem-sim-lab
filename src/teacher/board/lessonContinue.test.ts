@@ -208,6 +208,12 @@ describe('"Viết tiếp" oracle: cut at every character (fix round 3)', () => {
     if (!found) throw new Error(`no fixture ${id}`);
     return found.answer;
   };
+  /** "Bước a: xa = a m" … "Bước b: xb = b m", one per line. */
+  const steps = (a: number, b: number): string =>
+    Array.from(
+      { length: b - a + 1 },
+      (_, i) => `Bước ${String(a + i)}: x${String(a + i)} = ${String(a + i)} m`,
+    ).join('\n');
   const table: [string, string][] = [
     // A bare tag closed later reads as markup only once its closing tag arrives.
     [
@@ -315,6 +321,25 @@ describe('"Viết tiếp" oracle: cut at every character (fix round 3)', () => {
     [
       'TeachScript: a link inside a sentence that opens with "Nguồn"',
       'Nguồn điện (https://vi.wikipedia.org/wiki/Nguồn_điện) tạo ra hiệu điện thế. <write id="s1" zone="steps">U = 12 V</write>.',
+    ],
+    // Fix round 2 of step F1a: an answer that runs onto a second face. The part's second face
+    // holds only lines placed again, so it goes, and the whole answer opens it again: the lines
+    // placed there take their old ids back and must not stay hidden as erased stumps.
+    [
+      'markdown: ≥ 10 lines and a "## " heading after an inline <step>',
+      `# Bài\n<step>${steps(1, 11)}\n## Phần 2\n${steps(12, 14)}</step>\n\nXong.`,
+    ],
+    [
+      'TeachScript: two <newboard/> after an early difference',
+      'Ta có <write id="s1" zone="steps"><b> = 2 cm</write>. <newboard title="Hai"/><write id="s2" zone="steps">v = 3 m/s</write>. <newboard title="Ba"/><write id="s3" zone="steps">t = 4 s</write>. Xong </b>.',
+    ],
+    [
+      'markdown: a "## " heading on a second face, after a final check',
+      `# Bài\n${steps(1, 10)}\nTính quãng đường?\n## Phần 2\n${steps(11, 13)}`,
+    ],
+    [
+      'markdown: a <note>, then a "## " heading on a second face',
+      `# Bài\n<note>Lưu ý: đổi đơn vị về SI.</note>\n${steps(1, 10)}\nTính quãng đường?\n## Phần 2\n${steps(11, 13)}`,
     ],
     ['eval P14 (a "Vậy …?" question line)', evalAnswer('P14')],
     ['eval B5 (2<sup>3</sup>, a list of sources)', evalAnswer('B5')],
