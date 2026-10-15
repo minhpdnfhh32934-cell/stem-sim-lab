@@ -329,6 +329,22 @@ export function ChatPanel({
   // Never keep reading after the panel goes away.
   useEffect(() => stopSpeaking, []);
 
+  // A question another screen wrote for the learner (openTeacherWithQuestion, e.g. "Hỏi thầy về
+  // bộ phận này" in the 3D mitosis view): put into the teacher page's box once, never sent here.
+  // The learner reads it, may change it, and presses send. The box takes it while rendering (a
+  // change of the store's value), then the store forgets it so it is not offered twice.
+  const offered = useTeacherStore((s) => (teacherPage ? s.draft : null));
+  const [lastOffered, setLastOffered] = useState<string | null>(null);
+  if (offered !== lastOffered) {
+    setLastOffered(offered);
+    if (offered !== null) setDraft(offered);
+  }
+  useEffect(() => {
+    if (offered === null) return;
+    useTeacherStore.setState({ draft: null });
+    input.current?.focus();
+  }, [offered]);
+
   /**
    * "Dừng": one controller per answer, reachable from any open panel through the store (the
    * bubble may have asked before the learner expanded it). A stopped answer leaves no message,

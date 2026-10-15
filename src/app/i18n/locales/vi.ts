@@ -1854,6 +1854,10 @@ const vi = {
     connectBody: 'AI Teacher cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',
     connect: 'Mở Kết nối AI',
     notYet: 'Tính năng này sẽ được bổ sung sau',
+    askMitosisPart: 'Hỏi thầy về bộ phận này',
+    askMitosisPartShort: 'Hỏi thầy',
+    askMitosisPartQuestion:
+      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở bước “{stage}” của nguyên phân ({cell}) ạ?',
   },
   languages: {
     vi: 'Tiếng Việt',

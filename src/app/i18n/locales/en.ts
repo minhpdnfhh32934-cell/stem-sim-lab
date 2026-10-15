@@ -1855,6 +1855,10 @@ const en: Messages = {
       'The AI teacher needs an AI key. It takes about 2 minutes, with step-by-step help.',
     connect: 'Open Connect AI',
     notYet: 'This feature will be added later',
+    askMitosisPart: 'Ask the teacher about this part',
+    askMitosisPartShort: 'Ask the teacher',
+    askMitosisPartQuestion:
+      'Could you explain what the “{part}” does at the “{stage}” step of mitosis ({cell})?',
   },
   languages: {
     vi: 'Tiếng Việt',

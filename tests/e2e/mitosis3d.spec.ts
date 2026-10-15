@@ -178,6 +178,8 @@ async function layout(page: Page) {
         info: box('.m3d__info'),
         bottom: box('.m3d__bottom'),
       },
+      /** "Hỏi thầy về bộ phận này", inside the part's card. */
+      ask: box('.m3d__ask'),
       small,
       scroll: root.scrollWidth - root.clientWidth,
     };
@@ -221,11 +223,64 @@ test('mitosis 3D at 1366 × 768: with a part picked, the boxes never overlap at 
           const h = Math.min(a!.bottom, b!.bottom) - Math.max(a!.top, b!.top);
           expect(w > 0.5 && h > 0.5, `${where}: ${an} overlaps ${bn}`).toBe(false);
         }
+      // The ask button is always in view inside the card (only the part's text scrolls).
+      const card = l.parts.info!;
+      expect(l.ask, `${where}: ask`).not.toBeNull();
+      expect(l.ask!.left, `${where}: ask left`).toBeGreaterThanOrEqual(card.left - 0.5);
+      expect(l.ask!.top, `${where}: ask top`).toBeGreaterThanOrEqual(card.top - 0.5);
+      expect(l.ask!.right, `${where}: ask right`).toBeLessThanOrEqual(card.right + 0.5);
+      expect(l.ask!.bottom, `${where}: ask bottom`).toBeLessThanOrEqual(card.bottom + 0.5);
       expect(l.small, `${where}: buttons and radios under 40 px`).toEqual([]);
       expect(l.scroll, `${where}: horizontal scroll`).toBeLessThanOrEqual(0);
     }
   }
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-layout.png` });
+});
+
+test('mitosis 3D: "Hỏi thầy về bộ phận này" opens AI Teacher with the question, sends nothing', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  // Any AI the app could ask (online providers, a runtime on this computer): nothing may be
+  // asked before the learner presses send.
+  const asked: string[] = [];
+  page.on('request', (r) => {
+    const url = new URL(r.url());
+    if (
+      /generativelanguage\.googleapis\.com|api\.anthropic\.com|api\.groq\.com/.test(url.hostname) ||
+      ['11434', '1234', '8080'].includes(url.port)
+    )
+      asked.push(r.url());
+  });
+  await openMitosis(page);
+  await strip(page).getByRole('button', { name: 'Kì giữa' }).click();
+  await page
+    .getByRole('group', { name: 'Bộ phận tế bào' })
+    .getByRole('button', { name: 'Tâm động' })
+    .click();
+  const ask = page.locator('.m3d__info').getByRole('button', { name: 'Hỏi thầy về bộ phận này' });
+  // A full-size target inside the part's card.
+  const box = await ask.boundingBox();
+  expect(box?.height).toBeGreaterThanOrEqual(39.5);
+  await ask.click();
+
+  const question = page.getByRole('textbox', { name: 'Nhập câu hỏi' });
+  await expect(question).toHaveValue(
+    'Thầy giải thích giúp em: bộ phận “Tâm động” làm gì ở bước “Kì giữa” của nguyên phân (tế bào động vật) ạ?',
+  );
+  await expect(question).toBeFocused();
+  await expect(page.getByRole('radio', { name: 'Trò chuyện' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await page.waitForTimeout(500);
+  expect(asked).toEqual([]);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-ask.png` });
+
+  // Back to the simulation: the part is still picked; nothing was asked on the way.
+  await page.locator('.teacher').getByRole('button', { name: 'Về trang chủ' }).click();
+  await expect(page.locator('.m3d__info')).toContainText('Tâm động', { timeout: 20_000 });
+  expect(asked).toEqual([]);
 });
 
 declare global {

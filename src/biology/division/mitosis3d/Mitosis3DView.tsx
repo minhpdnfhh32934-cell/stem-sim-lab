@@ -1,9 +1,19 @@
-import { ChevronLeft, ChevronRight, Focus, Pause, Play, RotateCcw, X } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Focus,
+  GraduationCap,
+  Pause,
+  Play,
+  RotateCcw,
+  X,
+} from 'lucide-react';
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useLocalized } from '@/app/i18n/localized';
-import { formatNumber } from '@/app/i18n';
+import { formatNumber, useT } from '@/app/i18n';
+import { openTeacherWithQuestion } from '@/teacher/teacherStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { FrameMonitor } from '@/perf/frameMonitor';
@@ -158,35 +168,76 @@ function StageStrip({ tl }: { tl: Timeline }) {
   );
 }
 
-/** Name + function of the picked part (and whether it can be seen at this moment). */
-function PartInfo({ tl, selected }: { tl: Timeline; selected: Selection }) {
+/**
+ * Name + function of the picked part (and whether it can be seen at this moment), and
+ * "Hỏi thầy về bộ phận này": AI Teacher opens with a question written from this module's own
+ * texts (part, stage, cell type), never an AI's; the learner sends it (no picture goes with it).
+ */
+function PartInfo({
+  tl,
+  selected,
+  stage,
+  cellType,
+}: {
+  tl: Timeline;
+  selected: Selection;
+  stage: Stage3D;
+  cellType: CellType;
+}) {
   const Lz = useLocalized();
+  const t = useT();
   const visible = useMitosis3D((s) => componentVisible(selected.component, stateFor(tl, s.t)));
   const info = COMPONENTS[selected.component];
+  const askTeacher = () => {
+    openTeacherWithQuestion(
+      t('teacher.askMitosisPartQuestion', {
+        part: Lz(info.name),
+        stage: Lz(STAGE3D_NAME[stage]),
+        // Mid-sentence, as in the Science Card title.
+        cell: Lz(CELL_TYPE_NAME[cellType]).toLowerCase(),
+      }),
+    );
+  };
   return (
     <aside className="m3d__info" aria-live="polite">
+      {/* Name and actions stay in view (they cost no extra row); only the text below scrolls. */}
       <div className="m3d__info-head">
         <strong>{Lz(info.name)}</strong>
-        <IconButton
-          icon={X}
-          size="lg"
-          label={Lz(L('Bỏ chọn', 'Clear selection'))}
-          onClick={() => {
-            useMitosis3D.setState({ selected: null });
-          }}
-        />
+        <div className="m3d__info-actions">
+          <button
+            type="button"
+            className="btn m3d__ask"
+            aria-label={t('teacher.askMitosisPart')}
+            data-tip={t('teacher.askMitosisPart')}
+            data-tip-side="top"
+            onClick={askTeacher}
+          >
+            <GraduationCap size={16} aria-hidden="true" />
+            {t('teacher.askMitosisPartShort')}
+          </button>
+          <IconButton
+            icon={X}
+            size="lg"
+            label={Lz(L('Bỏ chọn', 'Clear selection'))}
+            onClick={() => {
+              useMitosis3D.setState({ selected: null });
+            }}
+          />
+        </div>
       </div>
-      <p>{Lz(info.role)}</p>
-      {!visible && (
-        <p className="small muted">
-          {Lz(
-            L(
-              'Bộ phận này không thấy rõ ở kì đang xem.',
-              'This part is not visible at this stage.',
-            ),
-          )}
-        </p>
-      )}
+      <div className="m3d__info-body">
+        <p>{Lz(info.role)}</p>
+        {!visible && (
+          <p className="small muted">
+            {Lz(
+              L(
+                'Bộ phận này không thấy rõ ở kì đang xem.',
+                'This part is not visible at this stage.',
+              ),
+            )}
+          </p>
+        )}
+      </div>
     </aside>
   );
 }
@@ -619,7 +670,7 @@ export function Mitosis3DView({
             }}
           />
         </div>
-        {selected && <PartInfo tl={tl} selected={selected} />}
+        {selected && <PartInfo tl={tl} selected={selected} stage={stage} cellType={cellType} />}
         <div className="m3d__bottom">
           <StageStrip tl={tl} />
           <p className="m3d__caption">
