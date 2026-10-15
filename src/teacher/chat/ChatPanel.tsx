@@ -604,6 +604,10 @@ export function ChatPanel({
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
+      // Only a fresh press sends. A held Enter repeats: one that opened this page from a button
+      // (e.g. "Hỏi thầy về bộ phận này", which writes a question into this box and focuses it)
+      // must not send that question on its own; a held key never sends twice either.
+      if (e.repeat) return;
       submitDraft();
     }
   };

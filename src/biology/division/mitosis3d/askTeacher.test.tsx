@@ -229,6 +229,40 @@ describe('"Hỏi thầy về bộ phận này" in the 3D mitosis view', () => {
     expect(calls).toHaveLength(0);
   });
 
+  it('a held Enter that pressed "Hỏi thầy" never sends the question in the box', async () => {
+    renderView();
+    pick('Tâm động');
+    const user = userEvent.setup();
+    screen.getByRole('button', { name: ASK }).focus();
+    // Enter goes down on the button (which clicks it) and stays down.
+    await user.keyboard('{Enter>}');
+    expect(useTeacherStore.getState().draft).toBe(QUESTION);
+    render(<TeacherScreen />);
+    const box = screen.getByRole('textbox', { name: 'Nhập câu hỏi' });
+    await waitFor(() => {
+      expect(box).toHaveFocus();
+    });
+    expect(box).toHaveValue(QUESTION);
+    // The key repeats while it is held: the repeats land in the box, which now has the focus.
+    fireEvent.keyDown(box, { key: 'Enter', repeat: true });
+    fireEvent.keyDown(box, { key: 'Enter', repeat: true });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 50));
+    });
+    expect(calls).toHaveLength(0);
+    expect(asked.options).toHaveLength(0);
+    expect(useChatStore.getState().messages).toHaveLength(0);
+    expect(box).toHaveValue(QUESTION);
+    // Released and pressed again on purpose: the question goes, once.
+    await user.keyboard('{/Enter}');
+    fireEvent.keyDown(box, { key: 'Enter' });
+    await waitFor(() => {
+      expect(useChatStore.getState().messages).toHaveLength(2);
+    });
+    expect(calls).toHaveLength(1);
+    expect(useChatStore.getState().messages[0]).toMatchObject({ role: 'user', content: QUESTION });
+  });
+
   it('only the teacher page takes the question; the chat bubble leaves it alone', () => {
     useTeacherStore.setState({ draft: QUESTION });
     render(<ChatPanel compact />);
