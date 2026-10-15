@@ -132,13 +132,27 @@ describe('"Viết tiếp" equals teaching the whole answer at once', () => {
 });
 
 /**
- * What the learner sees, face by face: each text with its face and role, and each mark with the
- * text it stands on (an arrow: both ends). Positions may differ (an erased stump leaves a gap);
- * what is written, where, and what is marked may not.
+ * What the learner sees, face by face: each text with its face and role, in the order it was
+ * placed, and each mark with the text it stands on (an arrow: both ends). `misordered`: the
+ * columns whose texts, top to bottom, are not in the order they were placed (a line placed again
+ * below a later line that stayed). Positions may differ (an erased stump leaves a gap, and a face
+ * already written keeps its plan, so a note may stand in a band instead of a side column); what is
+ * written, on which face, in which order, and what is marked may not.
  */
-function seenOnFaces(): { texts: string[]; marks: string[] } {
+function seenOnFaces(): { texts: string[]; misordered: string[][]; marks: string[] } {
   const { layout, erased, marks } = useBoardStore.getState();
   const shown = layout.elements.filter((e) => !erased[e.id]);
+  const label = (e: (typeof shown)[number]) =>
+    e.kind === 'text' ? `${String(e.face)}|${e.role}|${e.source}` : `${String(e.face)}|draw`;
+  const columns = new Map<string, typeof shown>();
+  for (const e of shown) {
+    const key = `${String(e.face)}|${e.column}`;
+    columns.set(key, [...(columns.get(key) ?? []), e]);
+  }
+  const misordered = [...columns.values()].flatMap((placed) => {
+    const top = [...placed].sort((a, b) => a.y - b.y || a.x - b.x);
+    return top.every((e, i) => e === placed[i]) ? [] : [top.map(label)];
+  });
   const on = (face: number, b: { x: number; y: number; w: number; h: number }): string => {
     const cx = b.x + b.w / 2;
     const cy = b.y + b.h / 2;
@@ -148,9 +162,8 @@ function seenOnFaces(): { texts: string[]; marks: string[] } {
     return e ? (e.kind === 'text' ? e.source : `draw:${e.type}`) : '?';
   };
   return {
-    texts: shown.map((e) =>
-      e.kind === 'text' ? `${String(e.face)}|${e.role}|${e.source}` : `${String(e.face)}|draw`,
-    ),
+    texts: shown.map(label),
+    misordered,
     marks: marks
       .map(
         (m) =>
@@ -272,6 +285,36 @@ describe('"Viết tiếp" oracle: cut at every character (fix round 3)', () => {
     [
       'markdown: a list joined by "và" written as text',
       '$$v_0 = 0\\ \\text{và}\\ a = 2\\ \\text{m/s}^2\\ \\text{và}\\ t = 3\\ \\text{s}$$\n\n$$m = 4\\ \\text{kg} \\ \\text{và} \\ F = 20\\ \\text{N}$$',
+    ],
+    // Fix round 1 of step F1a: an opening tag on the same line as content ("<step>Bước 1: …")
+    // makes "Viết tiếp" read the first line again; it must stay above the lines after it.
+    [
+      'markdown: <step> on the line of the first step',
+      '<step>Bước 1: m = 2 kg\nBước 2: F = 10 N\nBước 3: a = F/m = 5 m/s²</step>',
+    ],
+    [
+      'markdown: a heading, then <step> on the line of the first step',
+      '# Bài\n<step>1. Đổi 72 km/h = 20 m/s\n2. a = v/t = 2 m/s²</step>\n\nXong rồi.',
+    ],
+    [
+      'markdown: <note> on the line of its label',
+      '<note>Lưu ý: đổi đơn vị về SI.\nKhông được quên đơn vị.\nVí dụ 72 km/h = 20 m/s.</note>\n\nv = 20 m/s',
+    ],
+    [
+      'markdown: an average <p>, then a paragraph <p>…</p>',
+      'Ta có <p> = 0.\n\n<p>Lực là vectơ.</p>',
+    ],
+    [
+      'markdown: an average <b>, then a bold label',
+      'Ta có giá trị trung bình <b> = 2 cm.\n\n<b>Lưu ý:</b> đổi đơn vị.',
+    ],
+    [
+      'markdown and TeachScript: sentences that open like a source line',
+      'Nguồn điện tạo ra hiệu điện thế giữa hai cực (https://vi.wikipedia.org/wiki/Nguồn_điện).\n\nLiên kết ion hình thành giữa kim loại và phi kim (https://vi.wikipedia.org/wiki/Liên_kết_ion).\n\nU = 12 V.',
+    ],
+    [
+      'TeachScript: a link inside a sentence that opens with "Nguồn"',
+      'Nguồn điện (https://vi.wikipedia.org/wiki/Nguồn_điện) tạo ra hiệu điện thế. <write id="s1" zone="steps">U = 12 V</write>.',
     ],
     ['eval P14 (a "Vậy …?" question line)', evalAnswer('P14')],
     ['eval B5 (2<sup>3</sup>, a list of sources)', evalAnswer('B5')],

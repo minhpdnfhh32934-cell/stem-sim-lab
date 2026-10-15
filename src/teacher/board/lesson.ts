@@ -732,11 +732,12 @@ function needs(a: BoardAction): string[] {
  * stop, a new part while the old one was still being taught): teaching goes on from where they
  * got to. The sentence cut there is said again whole.
  *
- * What the runs placed from the last sentence they began on is checked against the whole answer:
- * an action that comes again, exactly, on elements that stay, is not placed twice; anything else
- * they placed (a stump of a line cut mid-word, a line that became a label, a check that is now a
- * step…) is wiped, and the whole answer's version is placed. So the board ends as if the whole
- * answer had been taught at once. Taught sentences before that are skipped by position.
+ * What the runs placed from the last sentence they began on is checked against the whole answer,
+ * in order: an action that comes again, exactly, on elements that stay, before anything is placed
+ * anew, is not placed twice; anything else they placed (a stump of a line cut mid-word, a line
+ * that became a label, a check that is now a step, a line after one placed anew…) is wiped, and
+ * the whole answer's version is placed. So the board ends as if the whole answer had been taught
+ * at once, in the same order. Taught sentences before that are skipped by position.
  */
 function untaught(sentences: readonly Sentence[], boundary: number, layout: Layout): Continuation {
   const upTo = Math.min(boundary, lessonTaughtTo);
@@ -767,6 +768,19 @@ function untaught(sentences: readonly Sentence[], boundary: number, layout: Layo
   /** A face the taught part opened under another title (a heading cut mid-word). */
   const faces: { p: Placed; action: TimedAction }[] = [];
   const out: Sentence[] = [];
+  // What stays keeps its order: an action reuses only a placed one after the last reused, and
+  // once something is placed anew on the board (a text, a drawing, a correction, a face), nothing
+  // after it is reused: it is wiped and placed again below, so a line placed again never stands
+  // under a later line that stayed ("<step>Bước 1: …" read again once "</step>" arrives).
+  let next = 0;
+  let placedAnew = false;
+  const reuse = (match: (p: Placed) => boolean): Placed | undefined => {
+    if (placedAnew) return undefined;
+    const i = tail.findIndex((p, j) => j >= next && match(p));
+    if (i < 0) return undefined;
+    next = i + 1;
+    return tail[i];
+  };
   for (const s of sentences) {
     const end = s.end ?? Infinity;
     if (end <= from) continue;
@@ -774,19 +788,21 @@ function untaught(sentences: readonly Sentence[], boundary: number, layout: Layo
     for (const t of s.actions) {
       const a = t.action;
       const key = actionKey(a);
-      const same = tail.find((p) => !reused.has(p) && p.key === key && stays(p, a));
+      const same = reuse((p) => p.key === key && stays(p, a));
       if (same) {
         reused.add(same);
         continue;
       }
       if (a.kind === 'newboard') {
-        const face = tail.find((p) => !reused.has(p) && p.kind === 'newboard' && p.face !== null);
+        const face = reuse((p) => p.kind === 'newboard' && p.face !== null);
         if (face) {
           reused.add(face);
           faces.push({ p: face, action: t });
-        }
+        } else placedAnew = true;
       }
       if (a.kind === 'write' || a.kind === 'draw' || a.kind === 'plot') fresh.add(a.id);
+      if (a.kind === 'write' || a.kind === 'draw' || a.kind === 'plot' || a.kind === 'correct')
+        placedAnew = true;
       actions.push(t);
     }
     if (end > upTo) out.push({ ...s, actions });

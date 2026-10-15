@@ -84,6 +84,77 @@ test('a markdown answer is laid out on the board, and a cut answer is continued 
   await expect(board.locator('[data-id="h1"]')).toContainText('Rơi tự do');
 });
 
+/** The texts on the board that are not erased, top to bottom (then left to right). */
+const textsTopDown = (page: Page) =>
+  page.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>('.board__sheet .board__el[data-id]')]
+      .filter((e) => !e.classList.contains('is-erased'))
+      .map((e) => ({
+        box: e.getBoundingClientRect(),
+        text: e.querySelector('.sr-only')?.textContent ?? '',
+      }))
+      .sort((a, b) => a.box.top - b.box.top || a.box.left - b.box.left)
+      .map((e) => e.text.trim()),
+  );
+
+test('"Viết tiếp" keeps the steps in order when "<step>" opens on the first step’s line', async ({
+  page,
+}) => {
+  // The opening tag is text until its closing tag arrives with the rest of the answer: then the
+  // first line reads differently and is written again, above the lines after it (fix round 1 of
+  // step F1a: it was written again below "2.", with a gap where "1." had been).
+  await fakeGemini(page, [
+    { text: '<step>1. m = 2 kg\n2. F = 10 N', finishReason: 'MAX_TOKENS' },
+    { text: '3. a = F/m = 5 m/s²</step>', finishReason: 'STOP' },
+  ]);
+  await page.goto('/');
+  await page.locator('.launch-card--teacher').click();
+  await page.getByRole('radio', { name: 'Giảng trên bảng' }).click();
+  const board = page.getByRole('region', { name: 'Bảng trắng của AI Teacher' });
+  await expect(board).toContainText('Hỏi AI Teacher một câu', { timeout: 20_000 });
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Tính gia tốc');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board).toContainText('F = 10 N', { timeout: 15_000 });
+
+  await page.getByRole('button', { name: 'Viết tiếp' }).click();
+  await expect(page.getByRole('button', { name: 'Viết tiếp' })).toHaveCount(0);
+  await expect(board).toContainText('a = F/m = 5 m/s²', { timeout: 15_000 });
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  const texts = await textsTopDown(page);
+  expect(texts).toHaveLength(3);
+  expect(texts[0]).toContain('m = 2 kg');
+  expect(texts[1]).toContain('F = 10 N');
+  expect(texts[2]).toContain('a = F/m = 5 m/s²');
+  for (const text of texts) expect(text).not.toContain('step');
+});
+
+test('a sentence that opens like a source line ("Nguồn điện…", "Liên kết…") stays; only its link goes', async ({
+  page,
+}) => {
+  const board = await askOnBoard(
+    page,
+    [
+      '# Dòng điện',
+      '',
+      'Nguồn điện tạo ra hiệu điện thế giữa hai cực (https://vi.wikipedia.org/wiki/Nguồn_điện).',
+      '',
+      'Liên kết ion hình thành giữa kim loại và phi kim (https://vi.wikipedia.org/wiki/Liên_kết_ion).',
+      '',
+      'U = 12 V.',
+    ].join('\n'),
+  );
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  const texts = await textsTopDown(page);
+  expect(texts).toHaveLength(4);
+  expect(texts[0]).toContain('Dòng điện');
+  expect(texts[1]).toContain('Nguồn điện tạo ra hiệu điện thế giữa hai cực');
+  expect(texts[2]).toContain('Liên kết ion hình thành giữa kim loại và phi kim');
+  expect(texts[3]).toContain('U = 12 V');
+  for (const text of texts) expect(text).not.toMatch(/https?:|wikipedia/iu);
+});
+
 test('the board shows learning content only: no greeting, reasoning, echo, rule or empty box', async ({
   page,
 }) => {
