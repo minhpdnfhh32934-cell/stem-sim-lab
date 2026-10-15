@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { goHome, openTopic } from '@/app/topics';
@@ -9,6 +9,15 @@ import { useToastStore } from '@/ui/toast';
 import { useVoiceStore } from './voice/voiceStore';
 import TeacherScreen from './screen/TeacherScreen';
 import { closeTeacher, openTeacher, useTeacherStore } from './teacherStore';
+
+// The board measures text on a canvas, which jsdom does not have: a fixed width per character.
+vi.mock('@/teacher/board/measure', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/teacher/board/measure')>()),
+  browserMeasure: {
+    text: (s: string, px: number) => s.length * px * 0.5,
+    math: (tex: string, px: number) => ({ w: tex.length * px * 0.6, h: px * 1.3 }),
+  },
+}));
 
 describe('"Dạy học bằng AI" screen', () => {
   beforeEach(() => {
@@ -55,6 +64,36 @@ describe('"Dạy học bằng AI" screen', () => {
       await screen.findByRole('region', { name: 'Bảng trắng của AI Teacher' }, { timeout: 5000 }),
     ).toBeInTheDocument();
     expect(screen.getByRole('region', { name: 'Trò chuyện với AI Teacher' })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['a fallback answer', true, /^mô hình Groq · qwen-t · dự phòng$/],
+    ['an ordinary answer', false, /^mô hình gemini-model$/],
+  ])('the board labels %s with the model that wrote it', async (_case, fallback, label) => {
+    useChatStore.setState({
+      messages: [
+        { id: 'q1', role: 'user', content: 'Lực là gì?' },
+        {
+          id: 'a1',
+          role: 'assistant',
+          content: 'Lực là đại lượng vectơ.',
+          model: fallback ? 'Groq · qwen-t' : 'gemini-model',
+          ...(fallback ? { fallback: true } : {}),
+        },
+      ],
+    });
+    openTeacher();
+    useTeacherStore.setState({ layout: 'board' });
+    render(<TeacherScreen />);
+    // The board is a lazy chunk (fonts, KaTeX): give the import time when the suite is busy.
+    const board = await screen.findByRole(
+      'region',
+      { name: 'Bảng trắng của AI Teacher' },
+      { timeout: 5000 },
+    );
+    // The board's own "Nội dung do AI hỗ trợ" label (TeacherScreen → Whiteboard), not the chat's.
+    expect(within(board).getByText(label)).toBeInTheDocument();
+    if (!fallback) expect(within(board).queryByText(/dự phòng/)).not.toBeInTheDocument();
   });
 
   it('without a cloud key: a notice that opens Settings (never a fake reply)', async () => {
