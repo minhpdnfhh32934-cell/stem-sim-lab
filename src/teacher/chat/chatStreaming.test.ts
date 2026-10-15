@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { setTransportForTests } from '@/ai/transport';
+import type { ChatRequest } from '@/ai/types';
 import { useChatStore } from './chatStore';
 
 // The on-device model is replaced by a fake that streams the given pieces, then answers.
@@ -25,6 +27,9 @@ const { askTeacher } = await import('./chatService');
 describe('streamed on-device answers', () => {
   beforeEach(() => {
     useChatStore.setState({ engine: 'gemma', engineChosen: true, messages: [], summary: null });
+  });
+  afterEach(() => {
+    setTransportForTests(null);
   });
 
   it('shows the answer as it is written', async () => {
@@ -73,12 +78,26 @@ describe('streamed on-device answers', () => {
 
   it('Think never streams the draft (it is reviewed before anyone sees it)', async () => {
     pieces.current = ['Bản nháp'];
+    // The reviewer has a key, so the review is really asked (the call does not stop early).
+    const sent: ChatRequest[] = [];
+    setTransportForTests({
+      hasKey: () => Promise.resolve(true),
+      setKey: () => Promise.resolve(),
+      deleteKey: () => Promise.resolve(),
+      models: () => Promise.resolve([]),
+      chat: (req: ChatRequest) => {
+        sent.push(req);
+        return Promise.resolve({ content: 'Câu trả lời đã rà soát.', model: 'r', durationMs: 1 });
+      },
+    });
     const seen: string[] = [];
-    await askTeacher('Hỏi', 'vi', [], {
+    const reply = await askTeacher('Hỏi', 'vi', [], {
       includeScreen: false,
       think: true,
       onPartial: (t) => seen.push(t),
-    }).catch(() => undefined);
+    });
     expect(seen).toEqual([]);
+    expect(sent).toHaveLength(1);
+    expect(reply.content).toBe('Câu trả lời đã rà soát.');
   });
 });

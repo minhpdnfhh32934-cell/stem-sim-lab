@@ -72,12 +72,18 @@ draft request and then asks a second, different provider to review and rewrite t
   tiếp chưa được rà soát.”; if another model wrote the rest, both are named (“a + b”).
 - **Failures in the learner's words** (`src/teacher/chat/cloudErrors.ts`): every error of an
   online call is mapped with `aiErrorKind` to one study-partner sentence `chat.errors.cloud.*`
-  (timeout, network, quota, badKey, badModel, dailyLimit, missingKey, notAllowed, emptyAnswer,
-  reasoningOnly, tooLarge, server, other; a provider filter stop gives `chat.errors.filtered`).
-  It names who failed (the provider, “Bên rà soát (…)” for the reviewer, or “Gemini (hoặc Groq dự
-  phòng)” when the fallback may have been asked as well) and the Settings page to open, with a
-  button. No status code, JSON, key name or raw provider text reaches the learner; the console
-  gets `[teacher-cloud] <role> <provider> <kind> <code>` only. “Dừng” stays a stop. “Hỏi lại” is
+  (timeout, stalled, network, quota, badKey, badModel, dailyLimit, missingKey, notAllowed,
+  emptyAnswer, reasoningOnly, tooLarge, server, other; a provider filter stop gives
+  `chat.errors.filtered`). It names who failed (the provider, “Bên rà soát (…)” for the reviewer,
+  or “Gemini (hoặc Groq dự phòng)” when the fallback may have been asked as well) and the Settings
+  page to open, with a button. A streamed answer that stalls between two pieces (`gap: …`) or runs
+  past the overall cap (`overall: …`) gets `stalled`, without that advice: those limits are fixed
+  and the wait in Settings → Kết nối AI covers only the first text and whole answers. Only a real
+  network failure is called one (`toAiError`: Rust's `{code: 'network'}` or `fetch`'s TypeError);
+  a plain string or Error from the desktop bridge (“Command ai_chat not found”, wrong arguments) or
+  a programming error is `internal` and gets the `other` sentence, never “check your Internet”.
+  No status code, JSON, key name or raw provider text reaches the learner; the console gets
+  `[teacher-cloud] <role> <provider> <kind> <code>` only. “Dừng” stays a stop. “Hỏi lại” is
   offered where asking again may help, and it is the learner's click: the page never re-sends a
   question by itself (the Rust gateway retries 429/5xx at most 3 times; the quota fallback is
   asked once, only for a quota or credit error).
@@ -90,11 +96,15 @@ draft request and then asks a second, different provider to review and rewrite t
   aloud or taught on the board. In the board layout the lesson being written (TeachScript) shows
   as readable text, the subtitles of its sentences so far (`boardStreamPreview` in
   `src/teacher/board/lesson.ts`): never a tag, an attribute or LaTeX, and a `<write>` still being
-  written stays out until it is whole. A stream that breaks off leaves nothing behind: the partial
-  text goes and the failure sentence is shown (for a broken connection “{who} chưa trả lời được vì
-  kết nối mạng bị gián đoạn”, true whether or not the question reached the provider). A desktop app older than the web part (no
-  `ai_chat_stream`: “Command … not found” / “unknown command”) answers through `ai_chat`, and the
-  missing command is remembered for the session (one failed lookup, not one per question).
+  written stays out until it is whole. A lesson asked in TeachScript (a cloud board lesson) reads
+  so from its first word, before any tag has come, so a formula in its first sentence never shows
+  as LaTeX; a decimal comma written `9{,}8` stays the number 9,8 inside a root or a fraction, and
+  a fraction of sums keeps its brackets (`(s₁ + s₂)/t`). A stream that breaks off leaves nothing
+  behind: the partial text goes and the failure sentence is shown (for a broken connection “{who}
+  chưa trả lời được vì kết nối mạng bị gián đoạn”, true whether or not the question reached the
+  provider). A desktop app older than the web part (no `ai_chat_stream`: “Command … not found” /
+  “unknown command”) answers through `ai_chat`, and the missing command is remembered for the
+  session (one failed lookup, not one per question).
 - Only learning content is kept (`src/teacher/chat/answerClean.ts`, run in `askTeacher` before
   the answer is stored, spoken, drawn or checked for numbers): hidden reasoning (`<think>`…,
   also unclosed or orphan; the streaming preview hides it while it is written), echoed
@@ -576,7 +586,10 @@ the app moves `prompt.note` in front of the last question, which the script does
 ## Where data goes
 
 Settings → AI Teacher shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
-the chat shows one line naming where the next question will go.
+the chat shows one line naming where the next question will go: the answering provider, the quota
+fallback when it can be asked (Think off and it has a key: “Groq (dự phòng khi Gemini hết lượt)”;
+on the desktop, after a quota error the gateway asks it directly for 10 minutes), the reviewer with
+Think, and Wikipedia when the lookup is on.
 
 | Stays on this computer                    | May be sent online                                                                                                  |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |

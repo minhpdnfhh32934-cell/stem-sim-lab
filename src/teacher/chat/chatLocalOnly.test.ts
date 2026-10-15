@@ -18,8 +18,11 @@ import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError, type ChatRequest } from '@/ai/types';
 import type { AnalysisEngine } from '@/app/ai/engineChoice';
 import { translate } from '@/app/i18n';
+import { useAiStore } from '@/ai/aiStore';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
+import { screenContext } from './context';
 import { LOCAL_CONTEXT_MARGIN, estimateTokens } from './memory';
+import { SCREEN_HEADER } from './promptLabels';
 
 /**
  * Local-only stays local (audit G2): when the learner's chosen on-device Gemma fails, the app
@@ -690,5 +693,108 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     await expect(answerP).rejects.toBeInstanceOf(AnswerStopped);
     expect(local.chat.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
     expect(calls).toHaveLength(0);
+  });
+});
+
+describe('Think with Gemma: the draft on this computer, one review online', () => {
+  const calls: ChatRequest[] = [];
+  /** 30 turns of ~1 200 characters: older turns are summarised before the question. */
+  const history: ChatMessageRecord[] = Array.from({ length: 60 }, (_, i) => ({
+    id: `m${i}`,
+    role: i % 2 === 0 ? 'user' : 'assistant',
+    content: `Lượt ${i}: `.padEnd(1200, 'a'),
+  }));
+  const REVIEWED = 'Lực ma sát cản trở chuyển động tương đối giữa hai mặt tiếp xúc.';
+  const review = { current: null as AiError | null };
+
+  beforeEach(() => {
+    calls.length = 0;
+    gemmaCalls.length = 0;
+    failure.current = null;
+    review.current = null;
+    picked.current = 'gemma';
+    desktop.status = RTX_ONLY;
+    useGpuStore.setState({ status: RTX_ONLY, gemmaInfo: null });
+    // A quota fallback is set and has a key: Think must still never use it.
+    useAiStore.setState({ provider: 'gemini', fallback: 'groq' });
+    useChatStore.setState({
+      engine: 'gemma',
+      engineChosen: true,
+      gemmaModel: 'gemma3-1b',
+      memoryLength: 'medium',
+      messages: [],
+      summary: null,
+      webLookup: false,
+      verifierProvider: 'claude',
+      verifierModel: '',
+    });
+    setTransportForTests({
+      ...transport(calls),
+      chat: (req: ChatRequest) => {
+        calls.push(req);
+        if (review.current) return Promise.reject(review.current);
+        return Promise.resolve({
+          content: REVIEWED,
+          model: 'claude-x',
+          provider: req.provider,
+          durationMs: 1,
+        });
+      },
+    });
+  });
+  afterEach(() => {
+    setTransportForTests(null);
+    useAiStore.setState({ fallback: 'off' });
+  });
+
+  it('sends one request online, to the chosen reviewer only, with what Settings says it sends', async () => {
+    const question = 'Lực ma sát là gì?';
+    const reply = await askTeacher(question, 'vi', history, { includeScreen: true, think: true });
+    // The summary of older turns and the draft were both written on this computer.
+    expect(gemmaCalls).toHaveLength(2);
+    expect(gemmaCalls[1]?.messages.at(-1)?.content).toContain(question);
+    // Exactly one cloud request: the review, by the chosen reviewer, never by the fallback.
+    expect(calls).toHaveLength(1);
+    const [sent] = calls;
+    expect(sent?.provider).toBe(useChatStore.getState().verifierProvider);
+    expect(sent?.noFallback).toBe(true);
+    expect(calls.map((c) => c.provider)).not.toContain('groq');
+    // "Dữ liệu của em đi đâu?" (flowThinkOnly): the question, Gemma's draft, the related note,
+    // the summary of older turns and the screen context (switched on here).
+    expect(sent?.messages.at(-1)?.content).toContain(question);
+    expect(sent?.messages.at(-1)?.content).toContain('Câu trả lời của Gemma');
+    const summary = useChatStore.getState().summary?.text ?? '';
+    expect(summary).toBe('- Đang học lực ma sát.');
+    expect(sent?.system).toContain(summary);
+    const prompt = await contextPrompt(
+      question,
+      'vi',
+      true,
+      false,
+      'compact',
+      history.map((r) => ({ role: r.role, content: r.content })),
+    );
+    expect(prompt.note).not.toBe('');
+    expect(sent?.system).toContain(prompt.note.trim());
+    expect(sent?.system).toContain(SCREEN_HEADER);
+    expect(sent?.system).toContain(screenContext('vi'));
+    // The answer is the review; both writers are named.
+    expect(reply.content).toBe(REVIEWED);
+    expect(reply.metadata.model).toBe('gemma3-1b');
+    expect(reply.metadata.checkedBy).toBe('claude · claude-x');
+    expect(reply.metadata.fallback).toBeUndefined();
+  });
+
+  it('without the screen context switched on, none is sent for review', async () => {
+    await askTeacher('Lực ma sát là gì?', 'vi', [], { includeScreen: false, think: true });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.system).not.toContain(SCREEN_HEADER);
+  });
+
+  it('the reviewer out of quota is named; nothing goes to the fallback', async () => {
+    review.current = new AiError('http', '429 Too Many Requests: {"error":{}}');
+    const failed = askTeacher('Lực ma sát là gì?', 'vi', [], { includeScreen: false, think: true });
+    await expect(failed).rejects.toThrow(/^Bên rà soát \(Claude\) báo đã hết lượt dùng/);
+    expect(calls.map((c) => [c.provider, c.noFallback])).toEqual([['claude', true]]);
   });
 });
