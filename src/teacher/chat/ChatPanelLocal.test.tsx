@@ -8,6 +8,7 @@ import type { LocalChatResponse, LocalRuntimeClient } from '@/ai/local/types';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError, type ChatRequest } from '@/ai/types';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from './ChatPanel';
 import { useChatStore } from './chatStore';
 
@@ -66,10 +67,12 @@ describe('AI Teacher chat with the AI on this computer', () => {
     });
     useLocalAiStore.setState({ selected: null, checks: {}, userEndpoints: [] });
     useWorkspaceStore.setState({ settingsOpen: false, settingsSection: 'appearance' });
+    useVoiceStore.setState({ enabled: false, engine: 'system' });
   });
   afterEach(() => {
     setLocalClientForTests(null);
     setTransportForTests(null);
+    useVoiceStore.setState({ enabled: false, engine: 'system' });
   });
 
   it('the engine menu offers it; chosen without a runtime, the notice opens its page and nothing is sent', async () => {
@@ -119,6 +122,27 @@ describe('AI Teacher chat with the AI on this computer', () => {
     expect(screen.getByText(/Ollama · qwen3:8b/)).toBeInTheDocument();
     expect(useChatStore.getState().messages[1]?.model).toBe('Ollama · qwen3:8b');
     expect(cloudCalls).toHaveLength(0);
+  });
+
+  it('with the Gemini voice on, the local line never says that nothing goes online', () => {
+    useLocalAiStore.setState({ selected: selection });
+    useChatStore.setState({ engine: 'local' });
+    useVoiceStore.setState({ enabled: true, engine: 'gemini' });
+    const { unmount } = render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(
+      screen.getByText('Câu hỏi được xử lý cục bộ trên máy này bởi Ollama (127.0.0.1:11434).'),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/không gửi lên mạng/)).not.toBeInTheDocument();
+    expect(
+      screen.getByText('Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.'),
+    ).toBeInTheDocument();
+    unmount();
+
+    // The device's own voice reads on this computer: nothing goes online.
+    useVoiceStore.setState({ enabled: true, engine: 'system' });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.getByText(/không gửi lên mạng\.$/)).toBeInTheDocument();
+    expect(screen.queryByText(/Giọng Gemini đang bật/)).not.toBeInTheDocument();
   });
 
   it('a failed answer says why, and "Hỏi lại" asks once more without repeating the question', async () => {

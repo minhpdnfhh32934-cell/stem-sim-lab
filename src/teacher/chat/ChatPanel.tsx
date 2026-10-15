@@ -93,6 +93,8 @@ export function ChatPanel({
   const engine = engineKind(chosenEngine);
   const localSelection = useLocalAiStore((s) => s.selected);
   const voiceEnabled = useVoiceStore((s) => s.enabled);
+  // The Gemini voice reads every answer (chat and board) through Google: the text goes online.
+  const voiceOnline = useVoiceStore((s) => s.enabled && s.engine === 'gemini');
   const setVoiceEnabled = useVoiceStore((s) => s.setEnabled);
   const voiceSpeaking = useVoiceStore((s) => s.speaking);
   const [draft, setDraft] = useState('');
@@ -592,7 +594,8 @@ export function ChatPanel({
       {!notice && targets.length === 0 && engine === 'local' && localSelection && (
         <p className="chat-panel__local-note">
           <ShieldCheck size={14} />{' '}
-          {t('chat.localOnlyRuntime', {
+          {/* "không gửi lên mạng" only while nothing else goes online (the voice below). */}
+          {t(voiceOnline ? 'chat.localRuntimeHere' : 'chat.localOnlyRuntime', {
             name: runtimeName(locale, localSelection.kind),
             address: localSelection.baseUrl.replace(/^http:\/\//, ''),
           })}
@@ -604,6 +607,11 @@ export function ChatPanel({
           {t(withScreen ? 'chat.sentToWithScreen' : 'chat.sentTo', {
             targets: targets.join(', '),
           })}
+        </p>
+      )}
+      {!notice && voiceOnline && (
+        <p className="chat-panel__local-note chat-panel__local-note--online">
+          <Volume2 size={14} /> {t('chat.voiceOnline')}
         </p>
       )}
 
