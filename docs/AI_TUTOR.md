@@ -86,30 +86,54 @@ draft request and then asks a second, different provider to review and rewrite t
   chỉnh” never end opening sentences: a teacher writes them after a misconception (“Nhiều bạn
   nghĩ vật nặng rơi nhanh hơn…”). At the very start, before any header, words only a reviewer
   writes about the answer it checked are remarks too, without a label: “giữ nguyên nội
-  dung/câu trả lời/bản nháp/lời giải/bài giảng”, “No changes needed”, “I kept the …”, “The
-  response is accurate/correct/complete”. “Câu trả lời cuối cùng:” counts as a header only right
-  after a remark. Feedback on the learner’s own draft or answer (“Bản nháp của em…”, “Câu trả lời
-  ban đầu của em…”, “Your answer…”) is never a remark; when the question mentions
-  “nháp”/“draft” no wrapper is removed at all. When the question asks for a correction or a
-  check of the learner’s **own** work (whole words: “sửa/chữa/chấm/kiểm tra (lại) giúp/hộ”,
-  “sửa/xem/chấm bài (làm) của em”, “bài làm”, a yes/no check at the end of a sentence “… đúng
-  không ạ?”, “có đúng không”, “đúng chưa thầy”, “check/fix/grade my …”, “fix this”, “is my
-  answer correct?”, “is it right?”, “am I right?”, “Is answer A right?”), the verdict the
-  learner asked for stays: only words about the draft or the version under review (“bản trả lời
-  ban đầu”, “the provided response”) count, and a header alone ends nothing. Ordinary questions
-  never turn this on (“Thầy xem giúp em bài này: …”, “Em có nhận xét gì về …”, “chỉnh lưu”,
-  “điều chỉnh”, “sửa sai ADN”, “Which … is correct?”, “review free fall”). Known limits (shapes
-  still not recognised, so the text stays — nothing is dropped on a guess): a sentence that is
-  both a short remark and a fact without any number or formula (“Bản nháp đúng: lực là đại lượng
-  vectơ.”) goes as a remark; a remark in the middle of the lesson stays; reviewer notes with a
-  number that are not recognised as a remark stay (“Câu trả lời dùng g = 10, nên đổi thành 9,8.”
-  followed by a “Bản đã sửa:” line keeps both); an unlabelled verdict without a reviewer-only phrase
-  stays (“Câu trả lời đúng và đầy đủ.”, “The answer is correct.”); reviewer-only phrases after
-  the first header, or when the learner asked for a correction, stay; a lesson that opens with
-  one of those phrases as a fact (“ADN giữ nguyên nội dung thông tin…” at the very start of a
-  Think answer) loses that sentence when it holds no number or formula; a yes/no check phrased
-  otherwise (“phải không?”, “đúng hông”) is read as an ordinary question. The lasting fix is a
-  structured review output (`{answer, notes[]}`), still an open question.
+  dung/câu trả lời/bản nháp/lời giải/bài giảng” and “the (provided/original/given) response is
+  accurate/correct/complete” when they end their clause (only “ban đầu”, “như cũ”, “as it
+  was”…, then the end of the sentence, a comma or “và/and …” may follow), “No changes needed”,
+  and “I kept the answer/response/draft/explanation/content/wording/structure/lesson/text/
+  solution/format”. “Câu trả lời cuối cùng:” counts as a header only right after a remark.
+  Feedback on the learner’s own draft or answer (“Bản nháp của em…”, “Câu trả lời ban đầu của
+  em…”, “Your answer…”) is never a remark; when the question mentions “nháp”/“draft” no wrapper
+  is removed at all. When the question asks for a correction or a check of the learner’s **own**
+  work, the verdict the learner asked for stays: only words about the draft or the version under
+  review (“bản trả lời ban đầu”, “the provided response”) count, and a header alone ends nothing.
+  Such questions (whole words): “sửa/chữa/chấm/kiểm tra (lại) giúp/hộ (em)”, “sửa cho em”;
+  “sửa/chữa/chấm/kiểm tra/nhận xét/góp ý/đánh giá” + a piece of work (“bài (làm/giải/tập)”, “lời
+  giải”, “đáp án”, “kết quả”, “lỗi (sai)”, “sai”…, maybe “trong bài này”) + “giúp em”/“cho
+  em”/“của em”/“em làm” or a bare “giúp” that ends the request (“Sửa bài giúp em với ạ”, “Thầy
+  chữa bài cho em”, “Thầy sửa lỗi giúp em”, “Sửa lỗi sai trong bài của em”); “xem” + the
+  learner’s work (“xem giúp bài làm của em”, “xem bài em làm”, “xem giúp em bài làm này”); “giúp
+  em sửa/chữa/chấm/kiểm tra” + a piece of work or the end of the request; “xem/nhận xét giúp em”
+  at the very end of the question (“Em tính ra 20 m/s, thầy xem giúp em”); “bài làm/bài
+  giải/lời giải/đáp án/câu trả lời của em”, “bài em làm”, “Kết quả của em là …” anywhere; “em
+  (làm/tính) sai ở đâu/chỗ nào/bước nào”; a yes/no check at the end of a sentence (“… đúng không
+  ạ?”, “có đúng không”, “có sai không ạ?”, “đúng chưa thầy”, “đúng không thầy ơi?”, “đúng k ạ”,
+  “đúng hông”); in English “check/fix/grade/correct my …”, “is my … correct?”, “fix this”/“check
+  it for me” and “is it/this/that right?” only at the end of the question and not after
+  “how”/“why”, “am I right?”, “did I solve this correctly?”, “have I done this right?”, “did I
+  make a mistake?”, “where did I go wrong?”, “Is answer A right?”. Ordinary questions never turn
+  it on (“Thầy xem giúp em bài này: …”, “Thầy xem bài này giúp em: …”, “Bài tập của em hôm nay:
+  …”, “xem kết quả của mình trên đồ thị”, “Xem đáp án giúp em”, “Em có nhận xét gì về …”,
+  “chỉnh lưu”, “điều chỉnh”, “sửa sai ADN”, “Enzyme sửa lỗi giúp tế bào/con người…”, “chữa cho
+  con người”, “Nhận xét kết quả con lắc…”, “Giúp em kiểm tra điều kiện cân bằng…”, “Which … is
+  correct?”, “Check this: <a new task>”, “Fix this circuit: …”, “How do I correct this for air
+  resistance?”, “How do I fix this?”, “Why is it wrong to …?”, “review free fall”). Known limits
+  (shapes still not recognised, so the text stays — nothing is dropped on a guess, except where
+  said): a sentence that is both a short remark and a fact without any number or formula (“Bản
+  nháp đúng: lực là đại lượng vectơ.”) goes as a remark; a remark in the middle of the lesson
+  stays; reviewer notes with a number that are not recognised as a remark stay (“Câu trả lời dùng
+  g = 10, nên đổi thành 9,8.” followed by a “Bản đã sửa:” line keeps both); an unlabelled verdict
+  without a reviewer-only phrase stays (“Câu trả lời đúng và đầy đủ.”, “The answer is
+  correct.”); reviewer-only phrases after the first header, or when the learner asked for a
+  correction, stay; a lesson that opens with one of the reviewer-only phrases as a fact without a
+  number or formula loses that sentence (“I kept the answer short on purpose.”, “The response is
+  correct.”, “No corrections are needed at low speeds.”); a check phrased otherwise (“… phải
+  không?”, “Thầy xem bài giúp em”, “Bài của em: v = 20 m/s”, “Can you check this for me: v = 20
+  m/s?”, “Thầy xem bài này giúp em: v = 20”) is read as an ordinary question (its labelled
+  verdict may go); a question that ends with “xem giúp em” or “is that right?” after a new
+  exercise turns the correction reading on; and a request to go over a new exercise with a
+  correcting verb (“Thầy chữa bài tập này giúp em: …”, “Kiểm tra giúp em bài này: …”) turns the
+  correction reading on (a reviewer note may then stay). The lasting fix is a structured review
+  output (`{answer, notes[]}`), still an open question.
 - A reasoning tag written as code (“Qwen dùng thẻ `` `<think>` ``”, or inside a closed code
   fence) is code and stays. The same rule runs on both sides (`src/ai/reasoning.ts`,
   `src-tauri/src/ai/reasoning.rs`, their stream filters `ThinkFilter` and `ReasoningStream`, and
@@ -126,9 +150,12 @@ draft request and then asks a second, different provider to review and rewrite t
   as a tag and keeps its neighbours. While a stream arrives, a tag that may still turn out to be
   code (inside a fence or after a backtick still waiting for their end) is held back with
   everything after it until that is decided. `hideUnfinishedReasoning` is the one preview rule
-  for a whole text so far (the Gemma worker’s partial answers); `ThinkFilter` is its incremental
-  form and shows exactly the same after every piece (tested on every vector cut at every
-  character), so a stream’s shown text is never filtered twice.
+  for a whole text so far (the Gemma worker’s partial answers): the rule applied up to that
+  point, reading the code spans of everything received (a fence closed after a tag still being
+  typed keeps the tags before it as code); `ThinkFilter` and Rust’s `ReasoningStream` are its
+  incremental form and show exactly the same after every piece (tested on every vector cut at
+  every character and on random streams with code on both sides), so a stream’s shown text is
+  never filtered twice.
 - Desktop: keys are stored in the operating-system keychain (shared with the same provider in other
   AI settings). Browser/localhost: keys typed into the page live in memory for this session only.
   Claude cannot be called from a web page, so in the browser it is listed as “chỉ bản desktop” and
