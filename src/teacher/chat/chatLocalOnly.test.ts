@@ -8,13 +8,18 @@ import {
 } from '@/ai/gpuSafety';
 import { setLocalClientForTests } from '@/ai/local/client';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
-import { UNVERIFIED, type LocalChatResponse, type LocalRuntimeClient } from '@/ai/local/types';
+import {
+  UNVERIFIED,
+  type LocalChatRequest,
+  type LocalChatResponse,
+  type LocalRuntimeClient,
+} from '@/ai/local/types';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError, type ChatRequest } from '@/ai/types';
 import type { AnalysisEngine } from '@/app/ai/engineChoice';
 import { translate } from '@/app/i18n';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
-import { estimateTokens } from './memory';
+import { LOCAL_CONTEXT_MARGIN, estimateTokens } from './memory';
 
 /**
  * Local-only stays local (audit G2): when the learner's chosen on-device Gemma fails, the app
@@ -505,6 +510,124 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     );
     expect(seen.at(-1)).toBe('');
     expect(seen.filter((t) => t.includes('0912345678'))).toEqual([]);
+    expect(calls).toHaveLength(0);
+  });
+
+  /** Long earlier turns: far beyond the budget, so the older ones are summarised first. */
+  const longHistory = (turns: number): ChatMessageRecord[] =>
+    Array.from({ length: turns }, (_, i) => ({
+      id: `h${i}`,
+      role: i % 2 === 0 ? 'user' : 'assistant',
+      content: `Lượt ${i}: `.padEnd(1200, 'a'),
+    }));
+  const isSummary = (req: LocalChatRequest | undefined) =>
+    req?.system.includes('Bạn tóm tắt') === true;
+  /** What the runtime must hold for a request: its text, its answer and the margin. */
+  const needed = (req: LocalChatRequest | undefined) =>
+    estimateTokens(req?.system ?? '') +
+    (req?.messages ?? []).reduce((n, m) => n + estimateTokens(m.content), 0) +
+    (req?.maxTokens ?? 0) +
+    LOCAL_CONTEXT_MARGIN;
+  const withSummary = () => {
+    local.chat.mockImplementation((req) =>
+      Promise.resolve(
+        answer(isSummary(req) ? '- Đang học lực ma sát.' : 'Lực ma sát cản chuyển động.'),
+      ),
+    );
+  };
+
+  it('the summary of older turns fits the window sent with it (unknown context)', async () => {
+    withSummary();
+    const reply = await askTeacher('tiếp nhé', 'vi', longHistory(80), {
+      includeScreen: false,
+      think: false,
+    });
+    expect(reply.content).toBe('Lực ma sát cản chuyển động.');
+    expect(local.chat).toHaveBeenCalledTimes(2);
+    const [summary] = local.chat.mock.calls[0] ?? [];
+    expect(isSummary(summary)).toBe(true);
+    expect(summary?.maxTokens).toBe(400);
+    // Ollama would cut a longer request without a word: it must fit the window it is sent with.
+    expect(needed(summary)).toBeLessThanOrEqual(summary?.contextLength ?? 0);
+    // The newest left-out turns are still summarised.
+    expect(summary?.messages[0]?.content).toMatch(/Lượt \d+/);
+    expect(useChatStore.getState().summary?.text).toBe('- Đang học lực ma sát.');
+    expect(calls).toHaveLength(0);
+  });
+
+  it('the summary of older turns fits a small window seen on this computer', async () => {
+    useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, {
+      model: 'qwen3:8b',
+      contextLength: 4096,
+      vision: 'no',
+      thinking: 'yes',
+      loaded: null,
+      remote: false,
+      capabilities: { ...UNVERIFIED, contextLength: 'yes' },
+      declared: UNVERIFIED,
+    });
+    withSummary();
+    await askTeacher('tiếp nhé', 'vi', longHistory(30), { includeScreen: false, think: false });
+    expect(local.chat).toHaveBeenCalledTimes(2);
+    const [summary] = local.chat.mock.calls[0] ?? [];
+    expect(isSummary(summary)).toBe(true);
+    expect(summary?.contextLength).toBeLessThanOrEqual(4096);
+    expect(needed(summary)).toBeLessThanOrEqual(summary?.contextLength ?? 0);
+  });
+
+  it.each([
+    [new AiError('timeout', 'local-stalled: first-piece 120000 ms'), 'localStalled'],
+    [new AiError('network', 'local-unreachable: connection refused'), 'localDown'],
+    [new AiError('http', 'loading: 503: Loading model'), 'localLoading'],
+    [new AiError('http', 'needs-auth: 401'), 'localAuth'],
+  ] as const)(
+    'a runtime that fails the summary (%s) is not asked the question too',
+    async (error, key) => {
+      local.chat.mockRejectedValue(error);
+      const failed = askTeacher('tiếp nhé', 'vi', longHistory(30), {
+        includeScreen: false,
+        think: false,
+      });
+      await expect(failed).rejects.toBeInstanceOf(TeacherError);
+      await expect(failed).rejects.toThrow(
+        translate('vi', `chat.errors.${key}`, { name: 'Ollama' }),
+      );
+      // One request for one question: the learner never waits for a second time-out.
+      expect(local.chat).toHaveBeenCalledTimes(1);
+      expect(isSummary(local.chat.mock.calls[0]?.[0])).toBe(true);
+      expect(calls).toHaveLength(0);
+      expect(usage).not.toHaveBeenCalled();
+    },
+  );
+
+  it('a summary the model could not hold, or an unsafe one, is skipped: the question is asked', async () => {
+    local.chat.mockImplementation((req) =>
+      isSummary(req)
+        ? Promise.reject(
+            new AiError(
+              'http',
+              'local-failed: 400: the request exceeds the available context size',
+            ),
+          )
+        : Promise.resolve(answer('Lực ma sát cản chuyển động.')),
+    );
+    const reply = await askTeacher('tiếp nhé', 'vi', longHistory(30), {
+      includeScreen: false,
+      think: false,
+    });
+    expect(reply.content).toBe('Lực ma sát cản chuyển động.');
+    expect(local.chat).toHaveBeenCalledTimes(2);
+    expect(useChatStore.getState().summary).toBeNull();
+
+    local.chat.mockReset();
+    local.chat.mockImplementation((req) =>
+      Promise.resolve(
+        answer(isSummary(req) ? 'Gọi số 0912345678 nhé.' : 'Lực ma sát cản chuyển động.'),
+      ),
+    );
+    await askTeacher('tiếp nhé', 'vi', longHistory(30), { includeScreen: false, think: false });
+    expect(local.chat).toHaveBeenCalledTimes(2);
+    expect(useChatStore.getState().summary).toBeNull();
     expect(calls).toHaveLength(0);
   });
 

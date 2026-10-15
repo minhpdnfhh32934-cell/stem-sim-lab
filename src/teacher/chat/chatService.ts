@@ -39,6 +39,7 @@ import { questionBefore } from './topicLink';
 import { useChatStore, type ChatMessageRecord, type ChatSummary } from './chatStore';
 import {
   FULL_PROMPT_CONTEXT,
+  LOCAL_CONTEXT_MARGIN,
   contextBudget,
   estimateTokens,
   fitHistory,
@@ -852,9 +853,10 @@ function requestTokens(request: SummaryRequest): number {
 const MIN_SUMMARY_TURN_CHARS = 120;
 
 /**
- * The summary request within `maxTokens` (Gemma on an integrated card, audit GPU-01): it is one
- * message the worker cannot trim, so the turns are shortened evenly here and the oldest ones are
- * left out when even that is not enough. Null when nothing fits (no summary this time).
+ * The summary request within `maxTokens` (Gemma on an integrated card, audit GPU-01; the window
+ * of a runtime on this computer): it is one message nobody trims later, so the turns are shortened
+ * evenly here and the oldest ones are left out when even that is not enough. Null when nothing
+ * fits (no summary this time).
  */
 function fittedSummaryRequest(
   locale: Locale,
@@ -883,7 +885,10 @@ function fittedSummaryRequest(
  * Turns that no longer fit the budget are folded into the stored summary, written by the same
  * engine that answers (nothing goes anywhere new). A failed or unsafe summary is skipped: the
  * answer is never blocked by it, the oldest turns are then simply left out. `maxInputTokens`
- * caps the whole summary request (on-device Gemma on an integrated card).
+ * caps the whole summary request (on-device Gemma on an integrated card, a runtime on this
+ * computer: its window). `fatal` picks the failures that end the question instead: a runtime on
+ * this computer that did not answer the summary would not answer the question either, and asking
+ * it twice would only make the learner wait twice.
  */
 async function updateSummary(
   locale: Locale,
@@ -891,6 +896,7 @@ async function updateSummary(
   all: ChatMessageRecord[],
   ask: (system: string, messages: ChatMessage[], maxTokens: number) => Promise<Answer>,
   maxInputTokens?: number,
+  fatal?: (e: unknown) => boolean,
 ): Promise<void> {
   const store = useChatStore.getState();
   const pending = unsummarized(older, store.summary, all);
@@ -908,8 +914,18 @@ async function updateSummary(
     if (text && outputIsSafe(answer.content) && outputIsSafe(text))
       useChatStore.getState().setSummary({ text, upto: last.id });
   } catch (e) {
+    if (fatal?.(e)) throw e;
     console.warn('[teacher-summary]', e instanceof Error ? e.message : String(e));
   }
+}
+
+/**
+ * A runtime on this computer failed the summary in a way that the question would fail too (not
+ * running, stalled, loading, model missing, locked…): the question is not sent. Only a summary that
+ * did not fit the model's window is skipped (the question itself was fitted to it).
+ */
+function localSummaryFatal(e: unknown): boolean {
+  return e instanceof TeacherError && localFailure(e.cause).key !== 'chat.errors.localContext';
 }
 
 export async function askTeacher(
@@ -1097,12 +1113,21 @@ export async function askTeacher(
     (chat.summary ? estimateTokens(chat.summary.text) : SUMMARY_TOKENS);
   const fitted = fitHistory(records, Math.max(budget.input - reserved, 300));
   if (fitted.older.length > 0) {
+    // The summary request is sent with the same window as the question (`num_ctx`): it must fit
+    // there with its answer, or a runtime would cut it silently (Ollama) or refuse it.
+    const summaryCap =
+      engine === 'local'
+        ? Math.max(0, window - SUMMARY_TOKENS - LOCAL_CONTEXT_MARGIN)
+        : integrated
+          ? budget.input
+          : undefined;
     await updateSummary(
       locale,
       fitted.older,
       records,
       (s, m, max) => ask(s, m, max),
-      integrated ? budget.input : undefined,
+      summaryCap,
+      engine === 'local' ? localSummaryFatal : undefined,
     );
     stopIfAsked(signal);
   }
