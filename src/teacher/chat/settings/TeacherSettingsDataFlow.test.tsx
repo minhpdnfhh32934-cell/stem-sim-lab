@@ -89,3 +89,65 @@ describe('"Dữ liệu của em đi đâu?" with the AI on this computer', () =>
     expect(kept.some((k) => k.includes('(chưa chọn)'))).toBe(true);
   });
 });
+
+describe('"Dữ liệu của em đi đâu?" with an online provider', () => {
+  beforeEach(() => {
+    setTransportForTests(fake);
+    useAiStore.setState({ provider: 'gemini', fallback: 'groq' });
+    useVoiceStore.setState({ enabled: false });
+    useLocalAiStore.setState({ selected: null });
+    useChatStore.setState({
+      engine: 'cloud',
+      engineChosen: true,
+      thinkEnabled: false,
+      webLookup: false,
+      verifierProvider: 'claude',
+    });
+  });
+  afterEach(() => {
+    setTransportForTests(null);
+  });
+
+  it('names the quota fallback and says what it would receive', () => {
+    render(<TeacherSettings />);
+    const { sent } = flow();
+    expect(sent[0]).toBe(
+      'Khi chọn “API”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → Gemini (khuyên dùng).',
+    );
+    expect(sent[1]).toBe(
+      'Khi Gemini (khuyên dùng) hết lượt và Think đang tắt: những gì gửi cho Gemini (khuyên dùng) → Groq (miễn phí) (dự phòng, chỉ khi đã có khóa).',
+    );
+  });
+
+  it('no fallback line when the fallback is off or is the provider itself', () => {
+    useAiStore.setState({ fallback: 'off' });
+    const off = render(<TeacherSettings />);
+    expect(flow().sent.join(' ')).not.toMatch(/hết lượt/);
+    off.unmount();
+    useAiStore.setState({ fallback: 'gemini' });
+    render(<TeacherSettings />);
+    expect(flow().sent.join(' ')).not.toMatch(/hết lượt/);
+  });
+
+  it('the Think line lists what the review really carries, and no fallback', () => {
+    render(<TeacherSettings />);
+    const think = flow().sent.find((s) => s.startsWith('Khi bật Think'));
+    expect(think).toBe(
+      'Khi bật Think: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → Claude để rà soát. Không gửi tới nhà cung cấp dự phòng.',
+    );
+    // The summary of older turns is said to travel to the reviewer too.
+    expect(flow().kept).toContain(
+      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Think).',
+    );
+  });
+
+  it('with Gemma answering, no fallback line (nothing goes to the answering API)', () => {
+    useChatStore.setState({ engine: 'gemma', engineChosen: true });
+    render(<TeacherSettings />);
+    const { sent } = flow();
+    expect(sent.join(' ')).not.toMatch(/hết lượt/);
+    expect(sent[0]).toMatch(
+      /^Khi dùng Gemma: chỉ khi bật Think thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ \(nếu có\) và ngữ cảnh màn hình \(nếu em bật\) mới được gửi → Claude để rà soát\. Không gửi tới nhà cung cấp dự phòng\.$/,
+    );
+  });
+});

@@ -220,6 +220,7 @@ function DataFlow({ desktop }: { desktop: boolean }) {
   const locale = useSettingsStore((s) => s.locale);
   const chat = useChatStore();
   const provider = useAiStore((s) => s.provider);
+  const fallback = useAiStore((s) => s.fallback);
   const engine = engineKind(useAnalysisEngine());
   const selection = useLocalAiStore((s) => s.selected);
   const voiceEnabled = useVoiceStore((s) => s.enabled);
@@ -237,6 +238,12 @@ function DataFlow({ desktop }: { desktop: boolean }) {
   } else {
     if (engine === 'cloud' && provider !== 'off') {
       sent.push(t('chatSettings.flowAnswer', { name: name(provider) }));
+      // "Dự phòng khi hết lượt": the same request may go to a second provider (never with Think,
+      // whose calls all carry `noFallback`).
+      if (fallback !== 'off' && fallback !== provider)
+        sent.push(
+          t('chatSettings.flowFallback', { name: name(provider), fallback: name(fallback) }),
+        );
     }
     if (engine === 'gemma')
       sent.push(t('chatSettings.flowThinkOnly', { name: name(chat.verifierProvider) }));
