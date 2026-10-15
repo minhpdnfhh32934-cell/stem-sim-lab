@@ -96,7 +96,13 @@ draft request and then asks a second, different provider to review and rewrite t
   is removed at all. When the question asks for a correction or a check of the learner’s **own**
   work, the verdict the learner asked for stays: only words about the draft or the version under
   review (“bản trả lời ban đầu”, “the provided response”) count, and a header alone ends nothing.
-  Such questions (whole words): “sửa/chữa/chấm/kiểm tra (lại) giúp/hộ (em)”, “sửa cho em”;
+  Such questions (whole words): “sửa/chữa/chấm/kiểm tra/check (lại) giúp/hộ (em)”, “sửa cho em”
+  when the request ends there (“Kiểm tra lại giúp em.”, “Sửa giúp em, v = …”) or names the work
+  and then ends or opens a “:” (“Thầy chữa giúp em bài này”, “Thầy check giúp em bài này với: v
+  = 20 m/s”, “sửa giúp em chỗ này”) — a topic after it (“Thầy kiểm tra giúp em điều kiện cân
+  bằng…”, “Kiểm tra lại giúp em đơn vị của lực là gì”, “Kiểm tra giúp em xem nước có dẫn điện
+  không”, “Sửa giúp em lỗi chính tả…”, “Sửa cho em câu hỏi: …”, “Thầy chữa giúp em bài tập 5
+  trang 20”) is no such request;
   “sửa/chữa/chấm/kiểm tra/nhận xét/góp ý/đánh giá” + a piece of work (“bài (làm/giải/tập)”, “lời
   giải”, “đáp án”, “kết quả”, “lỗi (sai)”, “sai”…, maybe “trong bài này”) + “giúp em”/“cho
   em”/“của em”/“em làm” or a bare “giúp” that ends the request (“Sửa bài giúp em với ạ”, “Thầy
@@ -105,18 +111,37 @@ draft request and then asks a second, different provider to review and rewrite t
   em sửa/chữa/chấm/kiểm tra” + a piece of work or the end of the request; “xem/nhận xét giúp em”
   at the very end of the question (“Em tính ra 20 m/s, thầy xem giúp em”); “bài làm/bài
   giải/lời giải/đáp án/câu trả lời của em”, “bài em làm”, “Kết quả của em là …” anywhere; “em
-  (làm/tính) sai ở đâu/chỗ nào/bước nào”; a yes/no check at the end of a sentence (“… đúng không
-  ạ?”, “có đúng không”, “có sai không ạ?”, “đúng chưa thầy”, “đúng không thầy ơi?”, “đúng k ạ”,
-  “đúng hông”); in English “check/fix/grade/correct my …”, “is my … correct?”, “fix this”/“check
-  it for me” and “is it/this/that right?” only at the end of the question and not after
-  “how”/“why”, “am I right?”, “did I solve this correctly?”, “have I done this right?”, “did I
-  make a mistake?”, “where did I go wrong?”, “Is answer A right?”. Ordinary questions never turn
+  (làm/tính) sai ở đâu/chỗ nào/bước nào”, “(thầy) xem có sai chỗ nào không”; a yes/no check at
+  the end of a sentence (“… đúng không ạ?”, “có đúng không”, “có sai không ạ?”, “đúng chưa thầy”,
+  “đúng không thầy ơi?”, “đúng k ạ”, “đúng hông”, “đúng hk thầy”), but not after “còn”/“vẫn”
+  (“Khi có ma sát, định luật bảo toàn cơ năng còn đúng không?” asks whether a law still holds);
+  “được/ổn … không/chưa” after the learner’s way of working (“Em làm như vầy được chưa thầy?”,
+  “Em làm vậy ổn không ạ?”) or choice (“Em chọn đáp án C có được không ạ?”); in English
+  “check/fix/grade/correct my …”, “is my … correct?”, “fix this”/“check it for me” and “is
+  it/this/that right?” only at the end of the question and not after “how”/“why”, “am I right?”,
+  “did I solve this correctly?”, “have I done this right?”, “did I make a mistake?”, “where did I
+  go wrong?”, “Is answer A right?”, “Is 20 m/s correct?” (a value, judged at the end of the
+  sentence; “Is 90° a right angle?” is geometry), “I got 20 m/s, right?”. **Typed without
+  accents** (common for pilot testers): the question is also folded letter by letter (“đúng” →
+  “dung”), and a folded pattern counts only on a part of the question typed with no accent at all
+  (so a mixed “em lam dung khong ạ?” counts, and an accented “dùng không” never reads as “đúng
+  không”). Folded letters are ambiguous (“dung” is đúng/dùng/dừng, “cham” chấm/chậm/chạm, “chua”
+  chữa/chưa/chua, “sua” sửa/sữa), so each folded pattern needs a context only the learner’s own
+  work gives: “sua/chua/kiem tra (lai) giup em” that ends or names the work, “sua/chua/cham/nhan
+  xet bai … giup em/cua em”, “cham diem giup em”, “bai lam/loi giai cua em”, an own-work subject
+  before the check (“em lam/giai/tinh/ra/chon/viet … dung/sai khong/chua/k/hk”, “em lam nhu vay
+  duoc chua”, “em chon dap an C co duoc khong”), “Dap an A dung khong”, “em (lam) sai o dau”,
+  “xem co sai cho nao khong”, “xem/nhan xet giup em” at the very end. Ordinary questions never turn
   it on (“Thầy xem giúp em bài này: …”, “Thầy xem bài này giúp em: …”, “Bài tập của em hôm nay:
   …”, “xem kết quả của mình trên đồ thị”, “Xem đáp án giúp em”, “Em có nhận xét gì về …”,
   “chỉnh lưu”, “điều chỉnh”, “sửa sai ADN”, “Enzyme sửa lỗi giúp tế bào/con người…”, “chữa cho
-  con người”, “Nhận xét kết quả con lắc…”, “Giúp em kiểm tra điều kiện cân bằng…”, “Which … is
-  correct?”, “Check this: <a new task>”, “Fix this circuit: …”, “How do I correct this for air
-  resistance?”, “How do I fix this?”, “Why is it wrong to …?”, “review free fall”). Known limits
+  con người”, “Nhận xét kết quả con lắc…”, “Giúp em kiểm tra điều kiện cân bằng…”, “Em làm thí
+  nghiệm này ở nhà được không?”, “Which … is correct?”, “Check this: <a new task>”, “Fix this
+  circuit: …”, “How do I correct this for air resistance?”, “How do I fix this?”, “Why is it
+  wrong to …?”, “review free fall”; without accents “Co the dung cong thuc nay khong?”, “Vat co
+  dung yen khong?”, “Thay giang cham lai giup em”, “Thay noi cham giup em”, “Em chua hieu, giai
+  thich lai giup em”, “Qua bong to ra dung khong?”, “Kiem tra giup em dieu kien can bang…”, “Em
+  lam the nao de vat dung lai?”). Known limits
   (shapes still not recognised, so the text stays — nothing is dropped on a guess, except where
   said): a sentence that is both a short remark and a fact without any number or formula (“Bản
   nháp đúng: lực là đại lượng vectơ.”) goes as a remark; a remark in the middle of the lesson
@@ -130,10 +155,21 @@ draft request and then asks a second, different provider to review and rewrite t
   không?”, “Thầy xem bài giúp em”, “Bài của em: v = 20 m/s”, “Can you check this for me: v = 20
   m/s?”, “Thầy xem bài này giúp em: v = 20”) is read as an ordinary question (its labelled
   verdict may go); a question that ends with “xem giúp em” or “is that right?” after a new
-  exercise turns the correction reading on; and a request to go over a new exercise with a
+  exercise turns the correction reading on; a request to go over a new exercise with a
   correcting verb (“Thầy chữa bài tập này giúp em: …”, “Kiểm tra giúp em bài này: …”) turns the
-  correction reading on (a reviewer note may then stay). The lasting fix is a structured review
-  output (`{answer, notes[]}`), still an open question.
+  correction reading on (a reviewer note may then stay); a conceptual yes/no question about a
+  statement or a law (“Định luật Ôm áp dụng cho mọi vật dẫn, đúng không?”, “Lực là đại lượng
+  vectơ, có đúng không?”) turns it on too — only “còn/vẫn đúng không?” is told apart, so “Em làm
+  vậy vẫn đúng không ạ?” reads as ordinary; “được không” after the learner’s way (“Em làm vậy được
+  không?”) may be a permission question and still turns it on; “I got confused, right?” turns it
+  on. Typed without accents, these stay ordinary (the folded letters are too ambiguous, so the
+  verdict may go): a check with no own-work subject (“co dung khong?”, “dung khong thay?” after
+  an exercise — “dung” may be “dùng”), a bare “cham giup em” (“chậm” or “chấm”), “tớ” (“to” is
+  also “tô/tổ/to”), “con” as the learner, “Bai cua em: …”, and the shapes the accented list
+  leaves out; teen spellings beyond “k/ko/hk/hok/hông” (“hem”, “khum”, “j”) are not read; the
+  other way round, a folded “sua cho em.” at the end of a sentence counts even when it is “sữa”
+  (“Me mua sua cho em.”). The lasting fix is a structured review output (`{answer, notes[]}`),
+  still an open question.
 - A reasoning tag written as code (“Qwen dùng thẻ `` `<think>` ``”, or inside a closed code
   fence) is code and stays. The same rule runs on both sides (`src/ai/reasoning.ts`,
   `src-tauri/src/ai/reasoning.rs`, their stream filters `ThinkFilter` and `ReasoningStream`, and
@@ -280,8 +316,10 @@ failed or unsafe summary is skipped and never blocks the answer. Nothing goes to
 by an older version may still hold hidden reasoning, echoed prompt labels or a Think reviewer’s
 notes. The history (`fitHistory`) and the summary request (`summaryRequest`) send every answer
 cleaned with `cleanAnswer`, a Think answer (`checkedBy`) read with the learner’s question right
-before it (`questionBefore`), so feedback the learner asked for is kept. An answer that was
-nothing but reasoning is sent as saved (an empty turn breaks some providers’ requests). Known
+before it (`questionBefore`), so feedback the learner asked for is kept. An answer that cleaning
+leaves empty (nothing but reasoning, also one cut before its closing tag, or nothing but a
+reviewer’s notes) is sent as `EMPTY_ANSWER` (“…”): the saved reasoning never goes back to the AI
+or to the summary, and no turn is empty (an empty turn breaks some providers’ requests). Known
 limits until the chat wiring step (chatService.ts is not changed in this step): its own calls
 `sentText(r)` (the pending turns it shortens for the summary, the turns given to the screen
 context) have no question, so a Think answer’s reviewer notes stay there as saved (reasoning and
