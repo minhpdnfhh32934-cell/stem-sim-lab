@@ -591,16 +591,39 @@ fallback when it can be asked (Think off and it has a key: “Groq (dự phòng 
 on the desktop, after a quota error the gateway asks it directly for 10 minutes), the reviewer with
 Think, and Wikipedia when the lookup is on.
 
-| Stays on this computer                    | May be sent online                                                                                                  |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| chat history, added files, built-in notes | question + recent turns + summary of older turns + relevant excerpts → answering provider (API engine)              |
-| downloaded Gemma models; Gemma answers    | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key) |
-| questions to a runtime on this computer   | question + draft + relevant excerpts + summary + screen context (if on) → reviewer (Think; never the fallback)      |
-| API keys (keychain or session memory)     | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                        |
-|                                           | question → Wikipedia (only if the lookup is on)                                                                     |
-|                                           | screen context (only when the bubble toggle is on)                                                                  |
-|                                           | a photographed problem → the API (browser only, downscaled)                                                         |
-|                                           | model files are downloaded from HuggingFace (nothing is uploaded)                                                   |
+| Stays on this computer                                                                        | May be sent online                                                                                                                                   |
+| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| chat history, added files, built-in notes                                                     | question + recent turns + summary of older turns + relevant excerpts → answering provider (API engine)                                               |
+| downloaded Gemma models; Gemma answers                                                        | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key)                                  |
+| questions to a runtime on this computer                                                       | question + draft + relevant excerpts + summary + screen context (if on) → reviewer (Think; never the fallback)                                       |
+| API keys (keychain or session memory)                                                         | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                                                         |
+|                                                                                               | question → Wikipedia (only if the lookup is on)                                                                                                      |
+|                                                                                               | screen context (only when the bubble toggle is on)                                                                                                   |
+|                                                                                               | a photographed problem → the API (browser only, downscaled)                                                                                          |
+|                                                                                               | model files are downloaded from HuggingFace (nothing is uploaded)                                                                                    |
+| the learner's own strokes on the board                                                        | circled board text (“Khoanh để hỏi”: the lesson's own words, LaTeX and drawing labels, ≤ 2000 chars) → the answering provider and the Think reviewer |
+| a picture of a circled area without text (only to an AI on this computer that reads pictures) |                                                                                                                                                      |
+
+**“Khoanh để hỏi” (item 2, `src/teacher/board/selection.ts`, `chatService.askTeacher` option
+`boardSelection`).** What the learner circled on the board is read back by code (no AI): the
+written words, formula pieces (exact LaTeX) and drawings' own labels inside the loop, in reading
+order, with the face's title and the steps just before/after. It is sent as one fenced
+`<board_selection>` block: in the instruction with `BOARD_ASK` for a full (cloud) prompt, right
+before the question in the user turn for an on-device or small local prompt (capped at 600, or 300
+on an integrated card). It passes `checkInput` (own errors `chat.errors.boardPersonal` /
+`boardUnsafe`), is added to the knowledge query and to the missing-data check, and is never put in
+the question, its `prompt` or the prompt's `sources`: numbers the lesson flagged stay flagged. The
+answer is an aside (`ChatMessageRecord.mode: 'aside'`; the question keeps `boardRef {face, ids,
+excerpt}`, and `memory.sentText` adds the excerpt for follow-ups): shown and read aloud in the chat,
+never taught on the board, whose lesson stays paused until “Quay lại bài giảng”. Only when the
+circled part has no text at all (a drawing without labels, the learner's handwriting) a PNG of the
+area is built from the board model (pure SVG, never KaTeX/DOM text) and sent **only** to an AI on
+this computer that reads pictures (`pictureReader.ts`): the learner's chosen Gemma E2B on a card
+known to be discrete (never on an integrated card, never a silent switch from 1B to E2B), or a
+local runtime model whose check on this computer says vision “Có”. Never to the cloud; any other
+AI → the board says it cannot read pictures and asks the learner to type (no AI call). The PNG path
+(blob: URL → OffscreenCanvas) is **not verified in the native WebView2 build**; if it fails, the
+learner is told and nothing is sent.
 
 ## Teacher voice (reads answers aloud)
 

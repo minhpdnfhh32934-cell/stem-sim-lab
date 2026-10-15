@@ -274,13 +274,63 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   mình. Nét chỉ ở trên máy, không gửi đi. Nét thuộc về mặt bảng nơi bắt đầu viết: nếu mặt bảng đổi
   giữa chừng, nét kết thúc và được giữ ở mặt cũ. Thao tác bị hủy (chạm chuyển thành cuộn…) cũng kết
   thúc nét; di chuột mà không nhấn không vẽ thêm.
+- **Khoanh để hỏi (mục 2, `selection.ts`, `SelectionBar.tsx`):** nút riêng trên thanh công cụ (biểu
+  tượng LassoSelect, không bật cùng lúc với "Bút của em"). Học sinh khoanh, gạch chân hoặc chạm vào
+  chỗ trên bảng rồi hỏi thầy về đúng chỗ đó.
+  - **Bài giảng dừng lại nghe:** vừa đặt bút khoanh là bài tạm dừng bằng đúng đường tạm dừng của
+    nút "Tạm dừng" (`pauseForAsk` → `pauseLesson`), câu đang nói bị cắt sẽ được đọc lại. Bài đã đang
+    dừng (xem mặt khác, chuyển "Trò chuyện") cũng được đánh dấu là dừng để hỏi. Nút tiếp tục khi đó
+    ghi **"Quay lại bài giảng"**: bấm thì giọng trả lời trong khung chat ngừng trước, bỏ chỗ đã
+    khoanh, tắt công cụ khoanh và giảng tiếp từ chỗ dừng. "Bỏ chọn" không tự giảng tiếp.
+  - **Đọc chỗ khoanh bằng code (không AI):** nét khoanh (đơn vị bảng, tính cả tỉ lệ, phóng to và
+    cuộn) thành một vùng: vòng kín, nét hở (gạch chân: chọn cả dòng chữ ngay trên nét) hoặc chạm.
+    Vùng được so với từng chữ, từng mảnh công thức và từng hình **đã viết** trên mặt bảng đó (chưa
+    viết, đã xóa, ở mặt khác thì không tính; phần tử đang viết dở chỉ tính phần đã hiện). Một chữ
+    được chọn khi ≥ 50 % hộp của nó nằm trong vùng, một hình khi ≥ 35 % (hoặc ≥ 60 % vùng nằm trong
+    hình); chọn ≥ 80 % một dòng thì lấy cả dòng (nguyên văn nguồn, công thức là LaTeX đầy đủ). Công
+    thức dài bị cắt thành nhiều mảnh thì chọn theo cả mảnh và gửi đúng LaTeX của mảnh đó. Thứ tự đọc:
+    tiêu đề → cột trái → giữa → phải, dải ngang toàn bảng đứng sau những gì nằm trên nó; hướng vẽ nét
+    không ảnh hưởng. Các ngưỡng là hằng số có kiểm thử (`TOKEN_HIT`, `FIGURE_HIT`, `WHOLE_ELEMENT`…).
+  - **Thanh "Chỗ em khoanh trên bảng"** (dưới bảng): "Em khoanh: «…»" và nút chính **"Hỏi thầy chỗ
+    này"**, cùng "Khoanh lại", "Bỏ chọn". Không trúng gì: app tự nói "Mình chưa thấy em khoanh vào
+    chữ hay hình nào trên bảng…" (không hỏi AI). Khoanh quá nhiều (hơn 6 chỗ, hoặc hơn 60 % phần đã
+    viết) hay chỉ chạm một phần: học sinh chọn một chỗ hoặc "Cả phần này". Khung chat có thẻ "Hỏi về:
+    «…»" (bỏ được) nên câu gõ tay và các nút gợi ý cũng mang theo chỗ đã khoanh.
+  - **Câu trả lời là câu "ngoài lề"** (`mode: 'aside'`): hiện trong khung chat, có nhãn AI và nút báo
+    cáo, được đọc to trong khung chat; **không bao giờ được giảng lên bảng** — bảng giữ nguyên bài
+    đang dừng (`latestLesson` bỏ qua câu trả lời ngoài lề và câu hỏi về bảng). "Viết tiếp" vẫn gắn với
+    câu trả lời của bài giảng. Không có gì trên bảng bị thay đổi: bố cục, dấu, phần đã viết, nét của
+    học sinh giữ nguyên.
+  - **Gửi đi những gì:** chữ do bài giảng viết ở chỗ khoanh (nguyên văn, công thức là LaTeX, hình
+    vẽ đọc từ chính nhãn của nó — không bao giờ là số máy tự tính), tiêu đề mặt bảng và tối đa vài
+    dòng ngay trước/sau, trong một khối có rào `<board_selection>` (chữ trên bảng không thể đóng khối
+    hay mở khối giả), dài tối đa 2000 ký tự (API), 600 (mô hình trên máy) hay 300 (Gemma trên card
+    tích hợp). Khối này qua kiểm tra an toàn như mọi thứ được gửi (lỗi riêng: "Phần chữ em khoanh
+    trên bảng có thể chứa thông tin cá nhân…"); nó không nằm trong câu hỏi, nên số mà bài giảng đã
+    đánh dấu "chưa kiểm chứng" vẫn bị đánh dấu trong câu trả lời. Dòng "Câu hỏi … sẽ được gửi tới"
+    trong khung chat ghi "kèm phần chữ em khoanh trên bảng".
+  - **Nét của học sinh không bao giờ được gửi đi dưới dạng chữ hay lên mạng.** Chỉ khi chỗ khoanh
+    không có chữ nào (hình không có nhãn, hoặc chỉ là nét viết tay của em) app mới vẽ một ảnh PNG của
+    vùng đó từ mô hình bảng (SVG thuần: nét của em và hình vẽ, không chụp KaTeX hay chữ) và chỉ gửi
+    ảnh cho AI **trên máy này** đọc được ảnh: Gemma E2B mà em đã chọn, chạy trên card rời đã biết
+    (không bao giờ trên card tích hợp, không tự đổi sang E2B), hoặc mô hình của chương trình trên máy
+    mà lần kiểm tra trên máy thấy "Có" đọc ảnh. Không bao giờ gửi ảnh lên mạng. AI khác: thanh nói rõ
+    "AI em đang dùng chưa đọc được hình vẽ hay nét viết tay" và đề nghị em gõ câu hỏi (không gọi AI).
+    Đường tạo ảnh (blob: → OffscreenCanvas → PNG) **chưa được kiểm tra trong bản desktop (WebView2)**;
+    nếu không tạo được ảnh, em được báo và không có gì được gửi.
 - **Chế độ bảng với AI cloud:** lời nhắc TeachScript (`BOARD_SYSTEM` trong
   `src/teacher/chat/chatService.ts`): ví dụ mẫu, cấm tọa độ, yêu cầu viết rõ phép tính. Think giữ nguyên
   định dạng thẻ khi rà soát. Gemma (mô hình nhỏ) trả lời bình thường, bảng tự xếp.
 
 ## 5. Chưa làm (để lại cho các bước sau)
 
-- "Thầy xem giúp" (gửi ảnh phần bảng học sinh vẽ cho AI nhận xét) và xuất bảng thành ảnh PNG/PDF.
+- Xuất bảng thành ảnh PNG/PDF. Ảnh vùng khoanh cho AI trên mạng (cần sửa Rust: tin nhắn có ảnh,
+  tăng phiên bản native, xem lại pháp lý/quyền riêng tư) — chưa làm, ảnh chỉ đi tới AI trên máy.
+- Khoanh để hỏi: chưa có cách làm bằng bàn phím (khoanh cần chuột hoặc cảm ứng; em vẫn gõ câu hỏi
+  được). Chưa khoanh được một phần nhỏ bên trong một công thức (một số hạng của phân số): đơn vị
+  nhỏ nhất là cả công thức hoặc cả mảnh công thức. Hộp chữ tính từ số đo bố cục, có thể lệch vài
+  điểm ảnh so với chữ hiện trên màn hình; "Khoanh lại" và danh sách chọn là lưới an toàn. Mô phỏng
+  3D (nguyên phân) và vật trong mô phỏng vật lý chưa khoanh được từ trang AI Teacher.
 - Viết tay mức 2 (vẽ theo khung xương nét, dấu thanh viết sau chữ cái gốc).
 - Khẩu hình theo âm, nhận dạng giọng nói, nút "Giơ tay", ngắt lời (T3, T5).
 - Khi đang tạm dừng, khung nhìn không tự lia tới chỗ thầy dừng; "Tiếp tục" mới đưa khung nhìn về.
