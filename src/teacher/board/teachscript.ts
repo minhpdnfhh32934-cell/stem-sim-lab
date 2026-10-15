@@ -216,9 +216,26 @@ export const MARKUP_TAGS: ReadonlySet<string> = new Set([
 /** Attributes that would be coordinates or sizes: never accepted from the AI (§7). */
 const GEOMETRY = /^(x|y|x1|y1|x2|y2|left|top|right|bottom|width|height|px|size|pos|position)$/i;
 
-/** A closing `</name>` stands in `text` from `from` on: a bare unknown `<name>` before it is a tag. */
-function closesLater(text: string, name: string, from: number): boolean {
-  return new RegExp(`</${name}\\s*>`, 'i').test(text.slice(from));
+/**
+ * A `</name>` in `text` from `from` on closes a bare `<name>` that stands just before `from`: the
+ * tags pair up (another `<name>` opened between needs its own closing tag first), so a bare
+ * unknown `<name>` closed later is a tag. `paragraph`: the closing tag must stand before the next
+ * blank line ("<b> = 2 cm.\n\n<b>Lưu ý:</b>": the later "</b>" closes the later "<b>", not the
+ * average).
+ */
+function closesLater(text: string, name: string, from: number, paragraph = false): boolean {
+  let rest = text.slice(from);
+  if (paragraph) {
+    const blank = /\n[ \t]*\n/.exec(rest);
+    if (blank) rest = rest.slice(0, blank.index);
+  }
+  let depth = 1;
+  for (const m of rest.matchAll(new RegExp(`<(/?)${name}(?![\\w-])[^<>]*>`, 'gi'))) {
+    if (m[1] === '/') depth -= 1;
+    else if (!m[0].endsWith('/>')) depth += 1;
+    if (depth === 0) return true;
+  }
+  return false;
 }
 
 const SUBSCRIPTS: Record<string, string> = {
@@ -264,13 +281,24 @@ const EXPONENT = /^[−+-]?[\p{L}\d]+(?:[.,]\d+)?(?:[+\-−][\p{L}\d]+(?:[.,]\d+
 const isPower = (s: string): boolean => EXPONENT.test(s) && /\d/.test(s);
 
 /**
+ * A superscript whose characters must stay together: several characters with an operator or a
+ * digit among letters ("n+1", "2n", "-kt"); not only digits and signs ("-1"), not a citation
+ * ("[1]"), not letters only ("st", "th").
+ */
+const grouped = (s: string): boolean =>
+  s.length > 1 && /[+\-−*/·×=\d]/.test(s) && /[^0-9+\-−]/.test(s) && !/^\[[^\]]*\]$/.test(s);
+
+/**
  * `<sup>…</sup>` as text. A power of a number becomes `$10^{23}$`, so its digits stay visible to
  * the number checks and the voice reads a power, never "1023"; a citation stays as written
- * ("1687[1]"); other digits and signs become superscripts ("mol⁻¹", "m/s²"), other words "^x".
+ * ("1687[1]"); other digits and signs become superscripts ("mol⁻¹", "m/s²"); an exponent of
+ * several characters becomes TeX's `$^{n+1}$` after its base, so its grouping is kept ("x^(n+1)",
+ * never "x^n+1"); another word becomes "^x".
  */
 function superscriptText(base: string | undefined, s: string): string {
   if (base && isPower(s)) return `$${base}^{${s}}$`;
   if (/^\[[^\]]*\]$/.test(s)) return `${base ?? ''}${s}`;
+  if (grouped(s)) return `${base ?? ''}$^{${s}}$`;
   const raised = /^[0-9+\-−]+$/.test(s)
     ? Array.from(s, (c) => SUPERSCRIPTS[c] ?? c).join('')
     : `^${s}`;
@@ -292,11 +320,11 @@ const SCRIPT_TAG = /^<(sub|sup)>([^<>]{1,16})<\/\1>/i;
 /**
  * The number a superscript raises: the whole number just before it, with its decimal and
  * multiplication dots ("6,02·10" → "10"; "1,6.10" → "1,6.10", the Vietnamese 1,6 × 10, never
- * "6.10" cut out of "1,6").
+ * "6.10" cut out of "1,6"). A dot after a bracket is a multiplication sign: "(1,6 ± 0,1).10" → "10".
  */
-const POWER_BASE = /(?<![\d.,])(\d+(?:[.,]\d+)*)$/;
+const POWER_BASE = /(?<!\d[.,])(?<!\d)(\d+(?:[.,]\d+)*)$/;
 /** The same number in a text, followed by its superscript. */
-const POWER = /((?<![\d.,])\d+(?:[.,]\d+)*)?<sup>([^<>]{1,16})<\/sup>/gi;
+const POWER = /((?<!\d[.,])(?<!\d)\d+(?:[.,]\d+)*)?<sup>([^<>]{1,16})<\/sup>/gi;
 /** Formulas between `$` (a display one first). */
 const MATH_SPAN = /\$\$[^$]+\$\$|\$[^$\n]+\$/g;
 /** An odd number of `$` (`$$` counts once) before: the text goes on inside a formula. */
@@ -340,10 +368,12 @@ export function markupToText(text: string, after = ''): string {
       ANY_TAG,
       (m, close: string, rawName: string, attrs: string, self: string, at: number, all: string) => {
         const name = rawName.toLowerCase();
-        const closed = closesLater(all, name, at + m.length) || closesLater(after, name, 0);
+        const following = `${all.slice(at + m.length)}${after}`;
+        const closed = closesLater(following, name, 0);
         const bare = close === '' && attrs === '' && self === '';
-        // "<p> = 0": an average, not a paragraph.
-        if (bare && LETTER_TAGS.has(name) && !closed) {
+        // "<p> = 0": an average, not a paragraph, unless its own "</p>" closes it in the same
+        // paragraph (a "<p>…</p>" further on is another pair).
+        if (bare && LETTER_TAGS.has(name) && !closesLater(following, name, 0, true)) {
           const next = all.slice(at + m.length);
           if (RELATION_AFTER.test(next.trim() === '' ? after : next)) return m;
         }
@@ -535,7 +565,7 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
         !selfClosing &&
         LETTER_TAGS.has(name) &&
         RELATION_AFTER.test(input.slice(end + 1)) &&
-        !closesLater(input, name, end + 1)
+        !closesLater(input, name, end + 1, true)
       ) {
         // "<p> = 0" (an average), unless a "</p>" closes it: text.
         literal();

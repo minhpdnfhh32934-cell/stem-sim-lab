@@ -175,11 +175,54 @@ describe('what a text is to the learner (high precision: when unsure, it stays)'
       'Chu kì tế bào: [https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào](https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào)',
       'internal',
     ],
-    ['Luật vạn vật hấp dẫn (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)', 'internal'],
     ['Mình hiểu ý bạn.', 'social'],
     ['Cảm ơn bạn đã hỏi!', 'social'],
     ['Cảm ơn sự kiên nhẫn của bạn.', 'social'],
     ['Cảm ơn câu hỏi của em.', 'social'],
+    // Fix round 4: a sentence that merely opens with a word a source line may open with
+    // ("Nguồn", "Liên kết", "Xem", "See", "Sources") is content; so is a short sentence without
+    // a period. Only the link goes.
+    [
+      'Nguồn điện tạo ra hiệu điện thế giữa hai cực (https://vi.wikipedia.org/wiki/Nguồn_điện).',
+      'learning',
+    ],
+    [
+      'Liên kết ion hình thành giữa kim loại và phi kim (https://vi.wikipedia.org/wiki/Liên_kết_ion).',
+      'learning',
+    ],
+    [
+      'Liên kết cộng hóa trị được tạo bởi cặp electron chung [Wikipedia](https://vi.wikipedia.org/wiki/Liên_kết_cộng_hóa_trị).',
+      'learning',
+    ],
+    [
+      'Liên kết hiđro làm nước sôi ở nhiệt độ cao (https://vi.wikipedia.org/wiki/Liên_kết_hiđro).',
+      'learning',
+    ],
+    ['Nguồn sáng phát ra ánh sáng (https://vi.wikipedia.org/wiki/Nguồn_sáng).', 'learning'],
+    ['Xem xét các lực tác dụng lên vật (https://vi.wikipedia.org/wiki/Lực).', 'learning'],
+    [
+      'Sources of energy include the Sun and wind (https://en.wikipedia.org/wiki/Energy).',
+      'learning',
+    ],
+    [
+      'See how the ball speeds up as it falls (https://en.wikipedia.org/wiki/Free_fall).',
+      'learning',
+    ],
+    ['Electron mang điện tích âm (https://vi.wikipedia.org/wiki/Electron)', 'learning'],
+    ['Ribosome tổng hợp protein (https://vi.wikipedia.org/wiki/Ribosome)', 'learning'],
+    // A short name before a link is content too, unless it names the linked page (round 3
+    // dropped any six words or fewer: that also dropped the two sentences above).
+    ['Luật vạn vật hấp dẫn (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)', 'learning'],
+    // …while a source word used as a label or a pointer, a page's own name and a line that is
+    // one link stay source lines.
+    ['Lực hấp dẫn (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)', 'internal'],
+    ['Lực hấp dẫn – Wikipedia (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)', 'internal'],
+    ['Nguồn (https://vi.wikipedia.org/wiki/Lực)', 'internal'],
+    ['Xem https://vi.wikipedia.org/wiki/Lực để biết thêm.', 'internal'],
+    ['Xem thêm: https://vi.wikipedia.org/wiki/Lực', 'internal'],
+    ['Link: https://vi.wikipedia.org/wiki/Lực', 'internal'],
+    ['See also Wikipedia (https://en.wikipedia.org/wiki/Force).', 'internal'],
+    ['[Định luật II Newton](https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion)', 'internal'],
   ];
   it.each(table)('%s → %s', (text, expected) => {
     expect(classifyBoardText(text)).toBe(expected);
@@ -851,6 +894,41 @@ describe('fix round 3: nothing of the lesson is lost to a link, a repeat or a ta
       'F = ma.',
     ]);
     expect(ts.outline.dropped).toEqual([]);
+    // Fix round 4: a sentence that opens with "Nguồn" or "Liên kết" keeps its words too.
+    for (const [answer, spoken] of [
+      [
+        'Nguồn điện (https://vi.wikipedia.org/wiki/Nguồn_điện) tạo ra hiệu điện thế. <write id="s1" zone="steps">U = 12 V</write>.',
+        ['Nguồn điện tạo ra hiệu điện thế.', 'U = 12 V.'],
+      ],
+      [
+        'Liên kết ion (https://vi.wikipedia.org/wiki/Liên_kết_ion) bền vững. <write id="s1" zone="steps">NaCl</write>.',
+        ['Liên kết ion bền vững.', 'NaCl.'],
+      ],
+      // A source line said by the teacher is said without its link, never silenced.
+      [
+        'Nguồn: Wikipedia (https://vi.wikipedia.org/wiki/Lực). <write id="s1" zone="steps">F = ma</write>.',
+        ['Nguồn: Wikipedia.', 'F = ma.'],
+      ],
+    ] as const) {
+      const lesson = lessonFor(answer);
+      expect(
+        lesson.script.sentences.map((s) => s.spoken),
+        answer,
+      ).toEqual(spoken);
+      expect(lesson.outline.dropped, answer).toEqual([]);
+    }
+    const md = lessonFor(
+      '# Dòng điện\n\nNguồn điện tạo ra hiệu điện thế giữa hai cực (https://vi.wikipedia.org/wiki/Nguồn_điện).\n\nLiên kết ion hình thành giữa kim loại và phi kim (https://vi.wikipedia.org/wiki/Liên_kết_ion).\n\nU = 12 V.',
+    );
+    expect(written(md.script)).toEqual([
+      'Dòng điện',
+      'Nguồn điện tạo ra hiệu điện thế giữa hai cực.',
+      'Liên kết ion hình thành giữa kim loại và phi kim.',
+      'U = 12 V.',
+    ]);
+    expect(saidOf(md.script)).toBe(
+      'Dòng điện Nguồn điện tạo ra hiệu điện thế giữa hai cực. Liên kết ion hình thành giữa kim loại và phi kim. U = 12 V.',
+    );
     // The sources a "(tài liệu tham khảo)" label lists are neither said nor written.
     const listed = lessonFor(
       '# Phân bào\n\nNguyên phân tạo 2 tế bào con.\n\n**Ghi chú thêm (tài liệu tham khảo):**\n\n* Thư viện chủ đề Sinh học · Chu kì tế bào: [https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào](https://vi.wikipedia.org/wiki/Chu_kỳ_tế_bào)\n* Nguyên phân trong sinh học phổ thông của các lớp trung học: [https://example.org/a](https://example.org/a)',
@@ -1022,6 +1100,142 @@ describe('fix round 3: nothing of the lesson is lost to a link, a repeat or a ta
   });
 });
 
+describe('fix round 4: a correction, a part, a bracket, a tag pair, a power', () => {
+  const written = (script: ParsedScript) => writesOf(script).map((w) => w.text);
+
+  it('a line corrected to a new text: its old text written again is written', () => {
+    const { script, outline } = checked(
+      'Ta có <write id="s1" zone="steps">v = 20 m/s</write>. À nhầm <correct target="s1">v = 25 m/s</correct>, còn vật kia có <write id="s2" zone="steps">v = 20 m/s</write>.',
+    );
+    expect(writesOf(script).map((w) => `${w.id}:${w.text}`)).toEqual([
+      's1:v = 20 m/s',
+      's2:v = 20 m/s',
+    ]);
+    expect(actionsOf(script).map((a) => a.kind)).toEqual(['write', 'correct', 'write']);
+    expect(outline.dropped).toEqual([]);
+  });
+
+  it('ordinals and more part names open a new part: the same result is written again', () => {
+    for (const [first, second] of [
+      ['Lần thứ nhất', 'Lần thứ hai'],
+      ['Thí nghiệm 1:', 'Thí nghiệm 2:'],
+      ['Ở thí nghiệm thứ hai,', 'Ở thí nghiệm thứ ba,'],
+      ['Giai đoạn 1:', 'Giai đoạn 2:'],
+      ['In the first case,', 'In the second case,'],
+    ] as const) {
+      const answer = `${first} <write id="a" zone="steps" role="result">t = 2 s</write>. ${second} <write id="b" zone="steps" role="result">t = 2 s</write>.`;
+      const { script, outline } = checked(answer);
+      expect(
+        writesOf(script).map((w) => w.id),
+        answer,
+      ).toEqual(['a', 'b']);
+      expect(outline.dropped, answer).toEqual([]);
+    }
+    // "Cách một khoảng" is a distance, not a part: the glitch repeat is still written once.
+    const glitch = checked(
+      'Ta có <write id="a" zone="steps">h = 2 m</write>. Cách một khoảng như vậy <write id="b" zone="steps">h = 2 m</write>.',
+    );
+    expect(writesOf(glitch.script).map((w) => w.id)).toEqual(['a']);
+  });
+
+  it('words in a link’s brackets stay unless they only name its source', () => {
+    for (const [input, output] of [
+      [
+        'Vật chuyển động (theo phương ngang https://example.org) đều',
+        'Vật chuyển động (theo phương ngang) đều',
+      ],
+      ['Hằng số (see 6,67 https://example.org)', 'Hằng số (see 6,67)'],
+      ['Lực (xem 3 ví dụ https://example.org) là vectơ', 'Lực (xem 3 ví dụ) là vectơ'],
+      // Source names, labels, years and pages still go with the link.
+      ['Lực (theo Halliday, 2011 https://example.org) là vectơ', 'Lực là vectơ'],
+      ['Lực (xem tr. 45 https://example.org) là vectơ', 'Lực là vectơ'],
+      ['Lực (from Wikipedia https://en.wikipedia.org/wiki/Force) là vectơ', 'Lực là vectơ'],
+      ['Lực (nguồn: Halliday https://example.org) là vectơ', 'Lực là vectơ'],
+      ['Lực (xem https://example.org) là vectơ', 'Lực là vectơ'],
+    ] as const) {
+      expect(sanitizeBoardText(input), input).toBe(output);
+    }
+    const lesson = lessonFor(
+      'Vật chuyển động (theo phương ngang https://example.org/a) với vận tốc không đổi.',
+    );
+    expect(written(lesson.script)).toEqual([
+      'Vật chuyển động (theo phương ngang) với vận tốc không đổi.',
+    ]);
+    expect(saidOf(lesson.script)).toBe(
+      'Vật chuyển động (theo phương ngang) với vận tốc không đổi.',
+    );
+  });
+
+  it('a link numbered as a reference goes with its number', () => {
+    const lesson = lessonFor(
+      'Electron mang điện tích âm [1](https://vi.wikipedia.org/wiki/Electron).',
+    );
+    expect(written(lesson.script)).toEqual(['Electron mang điện tích âm.']);
+    expect(saidOf(lesson.script)).toBe('Electron mang điện tích âm.');
+    expect(sanitizeBoardText('Proton mang điện dương [12](https://example.org/p)')).toBe(
+      'Proton mang điện dương',
+    );
+    // A number that is the link's words but not a reference index stays ("[2 m/s](…)").
+    expect(sanitizeBoardText('v = [2 m/s](https://example.org/v)')).toBe('v = 2 m/s');
+  });
+
+  it('an average <b> or <p> stays when a later, unrelated pair closes another tag', () => {
+    const b = lessonFor('Ta có giá trị trung bình <b> = 2 cm.\n\n<b>Lưu ý:</b> đổi đơn vị.');
+    expect(written(b.script)).toEqual([
+      'Ta có giá trị trung bình <b> = 2 cm.',
+      'Lưu ý: đổi đơn vị.',
+    ]);
+    expect(saidOf(b.script)).toContain('<b> = 2 cm');
+    const p = lessonFor('Ta có <p> = 0.\n\n<p>Lực là vectơ.</p>');
+    expect(written(p.script)).toEqual(['Ta có <p> = 0.', 'Lực là vectơ.']);
+    // TeachScript: the same pairing.
+    const ts = lessonFor(
+      'Vậy <write id="s1" zone="steps"><b> = 2 cm</write>.\n\n<b>Lưu ý:</b> đổi đơn vị.',
+    );
+    expect(written(ts.script)).toEqual(['<b> = 2 cm']);
+    expect(saidOf(ts.script)).toContain('<b> = 2 cm');
+    // Its own closing tag in the same paragraph still makes it markup.
+    expect(written(scriptFor('Trung bình <b>= 2 cm</b>.'))).toEqual(['Trung bình = 2 cm.']);
+  });
+
+  it('a power after a bracket and a dot keeps its base and exponent visible to the checks', () => {
+    const ts = lessonFor(
+      'Đề cho <write id="e1" zone="side_notes">e = (1,6 ± 0,1).10<sup>-19</sup> C</write>.',
+    );
+    const [e1] = writesOf(ts.script);
+    expect(e1?.text).toBe('e = (1,6 ± 0,1).$10^{-19}$ C');
+    const prov = checkNumbers(e1?.text ?? '', sourceNumbers('Cho e = (1,6 ± 0,1).10^-19 C'), []);
+    expect(prov.numbers.map((n) => n.raw)).toEqual(['1,6', '0,1', '10', '19']);
+    expect(sanitizeBoardText('e = (1,6 ± 0,1).10<sup>-19</sup> C')).toBe(
+      'e = (1,6 ± 0,1).$10^{-19}$ C',
+    );
+    // The mantissa after a digit stays whole ("1,6.10" is 1,6 × 10).
+    expect(sanitizeBoardText('1,6.10<sup>-19</sup> C')).toBe('$1,6.10^{-19}$ C');
+  });
+
+  it('an exponent of several characters keeps its grouping on the board and in the subtitle', async () => {
+    const { default: katex } = await import('katex');
+    const lesson = lessonFor('x<sup>n+1</sup> và 2<sup>n</sup>.');
+    expect(written(lesson.script)).toEqual(['x$^{n+1}$ và 2^n.']);
+    const spoken = lesson.script.sentences[0]?.spoken ?? '';
+    expect(subtitleText(spoken)).toBe('x^(n+1) và 2^n.');
+    expect(toSpeech(spoken)).toContain('mũ nờ cộng một');
+    expect(() => katex.renderToString('^{n+1}', { throwOnError: true })).not.toThrow();
+    for (const [input, output] of [
+      ['(a+b)<sup>n+1</sup>', '(a+b)$^{n+1}$'],
+      ['e<sup>-kt</sup>', 'e$^{-kt}$'],
+      ['x<sup>2n</sup>', 'x$^{2n}$'],
+      // One character, digits and signs, a citation, an ordinal: as before.
+      ['x<sup>n</sup>', 'x^n'],
+      ['mol<sup>-1</sup>', 'mol⁻¹'],
+      ['Năm 1687<sup>[1]</sup>', 'Năm 1687[1]'],
+      ['the 10<sup>th</sup> grade', 'the 10^th grade'],
+    ] as const) {
+      expect(sanitizeBoardText(input), input).toBe(output);
+    }
+  });
+});
+
 describe('numbers in = numbers out (property)', () => {
   const UNITS = ['m', 'kg', 'm/s', 'm/s²', 'N', 'J', 's', 'mol', '%', ''];
   const FILLER = [
@@ -1040,7 +1254,14 @@ describe('numbers in = numbers out (property)', () => {
     '(https://vi.wikipedia.org/wiki/Lực)',
     '[nguồn](https://vi.wikipedia.org/wiki/Lực)',
     'trung bình <v>',
+    // Fix round 4: a reference number goes with its link (it is not a number of the lesson),
+    // words in a link's brackets stay, and a sentence may open with "Nguồn" or "Liên kết".
+    '[1](https://vi.wikipedia.org/wiki/Lực)',
+    '(theo phương ngang https://example.org/a)',
+    'Nguồn điện tạo ra hiệu điện thế (https://vi.wikipedia.org/wiki/Nguồn_điện).',
   ];
+  /** A link whose words are only a reference number: its number is not the lesson's. */
+  const REFERENCE = /\[\d{1,3}\]\([^)]*\)/g;
   /**
    * The numbers of a text, each whole with its decimal and multiplication dots ("1,6.10" in
    * "1,6.10<sup>-19</sup>" is one number, 1,6 × 10: it must stay whole).
@@ -1057,11 +1278,14 @@ describe('numbers in = numbers out (property)', () => {
       // Vietnamese multiplication dot): its digits are never lost, its number never cut.
       const power = r();
       const exponent = String(Math.floor(r() * 30) - 5);
+      // …and "(1,6 ± 0,1).10<sup>-19</sup>": a dot after a bracket multiplies by the power.
       return power < 0.1
         ? `${shown}·10<sup>${exponent}</sup>`
         : power < 0.15
           ? `${shown}.10<sup>${exponent}</sup>`
-          : shown;
+          : power < 0.18
+            ? `(${shown} ± 0,1).10<sup>${exponent}</sup>`
+            : shown;
     };
     for (let round = 0; round < 150; round++) {
       const lines: string[] = [];
@@ -1093,8 +1317,8 @@ describe('numbers in = numbers out (property)', () => {
         ...lesson.script.sentences.map((s) => s.spoken),
         ...writesOf(lesson.script).map((w) => w.text),
       ].join(' \n ');
-      // Numbers of the answer's text (not of its tags' ids).
-      for (const n of numbers(answer.replace(/<[^>]*>/g, ' '))) {
+      // Numbers of the answer's text (not of its tags' ids, nor a reference link's index).
+      for (const n of numbers(answer.replace(REFERENCE, ' ').replace(/<[^>]*>/g, ' '))) {
         expect(shown, `${n} lost from:\n${answer}`).toMatch(
           new RegExp(`(?<![\\d.,])${n.replace(/[.,]/g, '[.,]')}(?![\\d])`),
         );

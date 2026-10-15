@@ -129,9 +129,12 @@ const URL = /[ \t]*(?:\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[a-z0-9-]+\.[^\s<>()[\]]
 const HOLD = /\u{E010}(\d+)\u{E011}/gu;
 /** A markdown link "[words](address)", with the spaces before it. */
 const MD_LINK = /([ \t]*)\[([^\]]*)\]\((?:[^()]|\([^()]*\))*\)/g;
-/** Link words that only name the link ("[nguồn](…)", "[link](…)"): they go with it. */
+/**
+ * Link words that only name the link ("[nguồn](…)", "[link](…)") or number it as a reference
+ * ("[1](…)", "[12](…)"): they go with it.
+ */
 const CITATION_WORDS =
-  /^(?:nguồn|nguồn tham khảo|tham khảo|xem thêm|tại đây|liên kết|link|source|here)$/iu;
+  /^(?:nguồn|nguồn tham khảo|tham khảo|xem thêm|tại đây|liên kết|link|source|here|\[?\d{1,3}\]?)$/iu;
 /** The name of a source a link cites at the end of a sentence ("… lục lạp [Wikipedia](…)."). */
 const SOURCE_NAME = /^(?:wikipedia|wiki|sgk)$/iu;
 /** Only punctuation or brackets until the end of the line. */
@@ -154,19 +157,37 @@ function linkWords(m: RegExpExecArray): string {
  */
 const BRACKET_LINK =
   /[ \t]*(?<!\])\(([^()\n]*?)[ \t]*(?:\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[a-z0-9-]+\.[^\s<>()[\]]+)[ \t]*\)/giu;
-/** Words that only say where a link leads ("theo Wikipedia:", "nguồn:", "xem"), folded. */
-const SOURCE_PHRASE =
-  /^(?:(?:theo|nguon|xem|see|source|sources|via|from|tai lieu|tham khao|ref|link|lien ket|wikipedia|wiki|sgk)\b[^()]{0,40})?$/;
+/** A word that says where a link leads (folded): "theo", "nguồn", "xem", "see", "from"… */
+const SOURCE_PHRASE_LEAD = String.raw`(?:theo|according to|nguon(?: tham khao)?|xem(?: them)?|see(?: also)?|sources?|via|from|tai lieu(?: tham khao)?|tham khao|references?|ref|link|lien ket)`;
+/** The source's own name (folded): an encyclopedia or a textbook. */
+const SOURCE_PHRASE_NAME = String.raw`(?:wikipedia|wiki|sgk|sach giao khoa|britannica)`;
 /**
- * A link in brackets whose words only say where it leads goes with them ("(theo Wikipedia:
- * https://…)" → nothing, never "(theo Wikipedia:)"); other words in the brackets stay (the
- * address goes later), and so do words with a formula, a quantity or a number that is not a
- * citation's ("(theo định luật II, F = ma https://…)" keeps "theo định luật II, F = ma").
+ * Words in a link's brackets that only name its source (folded, without the closing ":"):
+ * nothing; a source word or a source's name alone ("xem", "nguồn", "Wikipedia"); a source word
+ * and ":" ("nguồn: Halliday"); a source word and a source's name ("theo Wikipedia", "xem SGK Vật
+ * lý 10 trang 45"); a source word and a citation's year or page ("theo Halliday, 2011", "xem tr.
+ * 45"). "theo phương ngang" is content.
+ */
+const SOURCE_PHRASE = new RegExp(
+  String.raw`^(?:|${SOURCE_PHRASE_LEAD}|${SOURCE_PHRASE_NAME}(?: tieng (?:viet|anh))?|${SOURCE_PHRASE_LEAD}\s*[:：][^()]{0,40}|(?:${SOURCE_PHRASE_LEAD} )?${SOURCE_PHRASE_NAME}\b[^()]{0,40}|${SOURCE_PHRASE_LEAD} [^()]{0,30}?(?:\b(?:1[5-9]|20)\d\d\b|\b(?:tr|trang|p|pp|page)\.?\s*\d{1,4})[^()]{0,10})$`,
+);
+/**
+ * A citation's numbers (folded): an index "[1]", a year, a page, a textbook's grade ("SGK Vật lý
+ * 10", "lớp 10"). Any other number is content, whatever word opens the phrase.
+ */
+const CITATION_NUMBERS =
+  /\[\d{1,3}\]|\b(?:1[5-9]|20)\d\d\b|\b(?:tr|trang|p|pp|page)\.?\s*\d{1,4}\b|\b(?:vat ly|vat li|hoa hoc|sinh hoc|toan|physics|chemistry|biology|lop|grade) \d{1,2}\b/g;
+/**
+ * A link in brackets whose words only name its source goes with them ("(theo Wikipedia:
+ * https://…)" → nothing, never "(theo Wikipedia:)"); other words in the brackets stay, only the
+ * address goes later ("(theo phương ngang https://…)" keeps "theo phương ngang"), and so do words
+ * with a formula, a quantity or a number that is not a citation's year, page, index or grade
+ * ("(theo định luật II, F = ma https://…)", "(see 6,67 https://…)").
  */
 function bracketLink(m: RegExpExecArray): string {
   const raw = m[1] ?? '';
   const words = fold(raw).replace(/[\s:：,.\-–—]+$/u, '');
-  if (holdsWork(raw) || (/\d/.test(words) && !CITATION.test(words))) return m[0];
+  if (holdsWork(raw) || /\d/.test(words.replace(CITATION_NUMBERS, ' '))) return m[0];
   return SOURCE_PHRASE.test(words) ? '' : m[0];
 }
 /** Brackets left empty once their address went ("m/s (https://…)." → "m/s."). */
@@ -202,7 +223,8 @@ export function withoutLinks(text: string): string {
  * `$10^{-3}$` so its digits stay visible to the number checks. Formulas between `$` are not
  * touched, except that a `<sub>`/`<sup>` in them becomes TeX's `_{…}`/`^{…}`. For a math write,
  * only `$…$` or `\(…\)` around the whole formula go. Digits are never removed, except inside a web
- * address or a source named in a link's brackets.
+ * address, a citation's year or page in a link's brackets that only name its source, and a
+ * reference number that is a link's only words ("[1](https://…)").
  */
 export function sanitizeBoardText(text: string, math = false): string {
   let t = text.normalize('NFC').trim();
@@ -240,29 +262,71 @@ export function sanitizeBoardText(text: string, math = false): string {
 const MARKUP_ONLY = /^[\s\-–—*_=~#>|`.·•:]*$/u;
 const LINK = /https?:\/\/|\bwww\.[a-z0-9-]+\./i;
 /**
- * A source line: a link with only a short name around it ("Wikipedia: https://…", "Luật II
- * Newton - [https://…](…)", "Nguồn: Halliday (2011) https://…"). Longer text around a link is
- * content; only the link goes. So is a short one that holds a formula, a quantity, or a number
- * that is not a citation's ("g = 9,81 m/s² (https://…)."), and a short sentence ("Lực hấp dẫn là
- * lực hút giữa hai vật (https://…).", "Năm 1687, Newton công bố ba định luật (https://…)."): its
- * link goes, its words and numbers stay (`sourceLine`).
+ * A source line: a link with only a source's label or name around it ("Wikipedia: https://…",
+ * "Luật II Newton - [https://…](…)", "Nguồn: Halliday (2011) https://…", "Xem thêm tại
+ * Wikipedia (https://…)"). Any other text around a link is content; only the link goes: a formula,
+ * a quantity, a number that is not a citation's ("g = 9,81 m/s² (https://…)."), and a sentence,
+ * also a short one or one that opens with a word a source line may open with ("Lực hấp dẫn là
+ * lực hút giữa hai vật (https://…).", "Nguồn điện tạo ra hiệu điện thế (https://…).", "Liên kết
+ * ion hình thành… (https://…).", "Electron mang điện tích âm (https://…)"): see `sourceLine`.
  */
 const SOURCE_NAME_CHARS = 60;
-/** What a source line opens with (folded): a source word, a source's name. */
-const SOURCE_LEAD =
-  /^(?:nguon|tai lieu|tham khao|xem them|xem|see|source|sources|references?|ref|wikipedia|wiki|sgk|link|lien ket)\b/;
+/** Words that only point to a source (folded). "Liên kết" is also a chemical bond: not one. */
+const SOURCE_WORD = String.raw`(?:nguon(?: tham khao)?|tai lieu(?: tham khao)?|tham khao|xem them|xem|see(?: also)?|sources?|references?|ref|link)`;
+/** The name of a source (folded): an encyclopedia, a textbook with its subject, grade and page. */
+const SOURCE_TITLE = String.raw`(?:wikipedia(?: tieng (?:viet|anh))?|wiki|(?:sgk|sach giao khoa)(?: (?:vat ly|vat li|hoa hoc|sinh hoc|toan|physics|chemistry|biology))?(?: (?:lop )?\d{1,2})?(?:,? (?:tr|trang|p|page)\.? ?\d{1,4})?)`;
+/** A source word or name used as a label: "Nguồn: …", "Xem thêm - …", "Wikipedia: …" (folded). */
+const SOURCE_LABEL = new RegExp(String.raw`^(?:${SOURCE_WORD}|${SOURCE_TITLE})\s*[:：\-–—]`);
+/**
+ * Only a pointer to a source (folded): "Nguồn", "Xem thêm", "Xem thêm tại Wikipedia", "See
+ * Wikipedia", "Theo SGK Vật lý 10", "Wikipedia".
+ */
+const SOURCE_ALONE = new RegExp(
+  String.raw`^(?:${SOURCE_WORD}(?: (?:tai|o|tren|at|on|in))?(?: ${SOURCE_TITLE})?|(?:theo|according to|from|via) ${SOURCE_TITLE}|${SOURCE_TITLE})$`,
+);
+/** A source word right before the address: "Xem https://…", "Nguồn (https://…)" (folded). */
+const SOURCE_DIRECT = new RegExp(
+  String.raw`^(?:${SOURCE_WORD}|lien ket)(?: (?:them|tai|o|tren|at|on|in))*\s*[:：\-–—]?\s*[([]?\s*(?:https?:\/\/|www\.)`,
+);
+/** A page's name, then the source it is from: "Lực hấp dẫn – Wikipedia", "… (Wikipedia)". */
+const SOURCE_AFTER = /\s*[-–—|·:(]\s*(?:wikipedia(?: tieng (?:viet|anh))?|wiki|sgk)\)?$/;
 /** A link that ends the line: only brackets and punctuation after it. */
 const LINK_LAST = /(?:\bhttps?:\/\/|\bwww\.)[^\s<>]*[\s)\].,;:!?…]*$/i;
+/** A line that is one markdown link and nothing else ("* [Định luật II Newton](https://…)"). */
+const ONLY_LINK = /^[\s*_>#•·-]*\[[^\]]+\]\((?:[^()]|\([^()]*\))*\)[\s.,;]*$/u;
 /** Words that make a sentence of a few words ("… là …", "… is …"), folded. */
 const COPULA = /(?:^| )(?:la|is|are|was|were)(?: |$)/;
 
+/** The names of the pages `text` links to: an address's last part, its words folded ("Lực_hấp_dẫn" → "luc hap dan"). */
+function pageNames(text: string): string[] {
+  const names: string[] = [];
+  for (const m of text.matchAll(/\bhttps?:\/\/[^\s<>()[\]]+|\bwww\.[^\s<>()[\]]+/gi)) {
+    const path = m[0].replace(/[?#].*$/u, '').replace(/\/+$/u, '');
+    const last = path.slice(path.lastIndexOf('/') + 1);
+    let name = last;
+    try {
+      name = decodeURIComponent(last);
+    } catch {
+      // A broken escape: the address as written.
+    }
+    names.push(fold(name.replace(/\.[a-z]{2,4}$/i, '').replace(/[_+]/g, ' ')));
+  }
+  return names;
+}
+
 /**
  * `text` (with a link; `plain` is it sanitized, without the link) is a source line: what is left
- * is a source's name, not a sentence. It opens with a source word ("Nguồn:", "Wikipedia:", "SGK
- * …"); or the link ends the line after a name and ":" or "-" ("Chu kì tế bào: https://…"); or
- * the link ends the line and what is left is at most six words that neither end a sentence nor
- * say what something is ("… là …"). A formula, a quantity or a number that is not a citation's is
- * content. Only positive evidence: when unsure, the line stays and only its link goes.
+ * points to a source or names it, and says nothing else. Positive evidence only:
+ * - a source word or a source's name as a label: "Nguồn: …", "Xem thêm: …", "Wikipedia: …";
+ * - only a pointer to a source: "Nguồn (https://…)", "Xem thêm tại Wikipedia (https://…)";
+ * - a source word right before the address: "Xem https://… để biết thêm";
+ * - the link ends the line after a name and ":" or "-" ("Chu kì tế bào: https://…"), after a
+ *   page's name and its source ("Lực hấp dẫn – Wikipedia"), or after the linked page's own name
+ *   ("Lực hấp dẫn (https://…/wiki/Lực_hấp_dẫn)");
+ * - the line is one markdown link of a few words ("* [Định luật II Newton](https://…)").
+ * A sentence that merely opens with "Nguồn", "Liên kết", "Xem" or "See" ("Nguồn điện tạo ra…",
+ * "Xem xét các lực…") is content, and so is a formula, a quantity or a number that is not a
+ * citation's: when unsure, the line stays and only its link goes.
  */
 function sourceLine(text: string, plain: string): boolean {
   const rest = plain.replace(/[\s:：\-–—|·.,]+$/u, '');
@@ -272,11 +336,16 @@ function sourceLine(text: string, plain: string): boolean {
   if (holdsWork(rest) || (/\d/.test(rest) && !CITATION.test(f))) return false;
   // "Wikipedia là bách khoa toàn thư mở (https://…).": a sentence, also about a source.
   if (COPULA.test(f)) return false;
-  if (SOURCE_LEAD.test(f)) return true;
+  if (SOURCE_LABEL.test(fold(plain)) || SOURCE_ALONE.test(f)) return true;
+  if (SOURCE_DIRECT.test(fold(text.replace(/^[\s*_>#•·-]+/u, '')))) return true;
+  if (ONLY_LINK.test(text)) {
+    const words = f.split(/[^\p{L}\p{N}]+/u).filter(Boolean).length;
+    if (words <= 6 && !/[.!?…]["”')\]]*\s*$/u.test(plain)) return true;
+  }
   if (!LINK_LAST.test(text)) return false;
   if (/[:：\-–—|]\s*$/u.test(plain)) return true;
-  if (/[.!?…]["”')\]]*\s*$/u.test(plain)) return false;
-  return f.split(/[^\p{L}\p{N}]+/u).filter(Boolean).length <= 6;
+  if (SOURCE_AFTER.test(f)) return true;
+  return f !== '' && pageNames(text).includes(f);
 }
 /** A line that cites sources ("Tài liệu tham khảo: …", "References: …"): not lesson content. */
 const SOURCES_LINE = /^(?:tai lieu tham khao|nguon tham khao|references?|sources|bibliography)\s*:/;
@@ -1111,10 +1180,11 @@ const sameText = (s: string) =>
 
 /**
  * A sentence that opens a new part of the answer ("Ở câu b, …", "b) …", "Bài 2: …", "Trường hợp
- * 2: …", "TH2", "Cách 2", "Vật B …", "Lần 2").
+ * 2: …", "TH2", "Cách 2", "Vật B …", "Lần 2", "Lần thứ hai", "Thí nghiệm 1:", "Ở thí nghiệm thứ
+ * ba, …", "Giai đoạn 2"). "Một" is not a part's number ("Cách một khoảng 2 m" is a distance).
  */
 const NEW_PART =
-  /^(?:(?:ở|với|trong|sang|đến|còn|xét|tiếp theo,?|for|in)\s+)?(?:(?:câu|phần|ý|bài|trường hợp|cách|vật|lần|part|question|problem|case|method)\s+(?:[a-h]|\d{1,2})|th\s?\d{1,2})(?![\p{L}\d])|^[a-h][).](?:\s|$)/iu;
+  /^(?:(?:ở|với|trong|sang|đến|còn|xét|tiếp theo,?|for|in)\s+)?(?:(?:câu|phần|ý|bài|trường hợp|cách|vật|lần|thí nghiệm|giai đoạn|part|question|problem|case|method|experiment|stage|trial)\s+(?:thứ\s+)?(?:[a-h]|\d{1,2}|nhất|hai|ba|bốn|tư|năm|sáu|bảy|tám|chín|mười)|(?:the\s+)?(?:first|second|third|fourth|fifth)\s+(?:part|question|problem|case|method|experiment|stage|trial|object|time)|th\s?\d{1,2})(?![\p{L}\d])|^[a-h][).](?:\s|$)/iu;
 
 /**
  * A written text without a label of the closed list in front that only names the part ("Trả
@@ -1209,16 +1279,14 @@ export function validateLesson(
     let order = 0;
     // "Ở câu b, …": the same result in another part of the answer is written again.
     if (NEW_PART.test(sanitizeBoardText(s.speech))) seen.clear();
-    // Reasoning written as plain words in the speech, or a link alone, is never said; a link
-    // inside a sentence is not read out (its words are).
-    let speech = s.speech;
-    let actions: readonly TimedAction[] = s.actions;
+    // A link is never read out (its words are), and never silences its sentence ("Nguồn điện
+    // (https://…) tạo ra hiệu điện thế." is said without the link). Reasoning written as plain
+    // words in the speech is never said.
+    let { speech, actions } = speechWithoutLinks(s.speech, s.actions);
     if (/[\p{L}\p{N}]/u.test(speech) && classifyBoardText(speech) === 'internal') {
       speech = '';
       actions = actions.map((a) => ({ ...a, at: 0 }));
       drop('internal');
-    } else {
-      ({ speech, actions } = speechWithoutLinks(speech, actions));
     }
     const kept: { at: number; order: number; action: BoardAction }[] = [];
     const inserts: Insert[] = [];
@@ -1400,6 +1468,9 @@ export function validateLesson(
             const strike = targets?.slice(0, -1) ?? [];
             const rest: BoardAction = { kind: 'correct', target, text };
             keep(at, strike.length > 0 ? { ...rest, strike } : rest);
+            // Corrected, its old text is no longer on the board: written again, it is written.
+            const real = alias.get(a.target) ?? a.target;
+            for (const [k, v] of seen) if (v.id === real) seen.delete(k);
           }
           break;
         }
