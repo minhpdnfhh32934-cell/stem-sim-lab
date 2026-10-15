@@ -346,6 +346,9 @@ export function ChatPanel({
       const result = await askTeacher(CONTINUE_PROMPT[locale], locale, upto, {
         includeScreen: showScreenContext && chat.includeScreen,
         think: false,
+        // The rest of a reviewed answer, or any while Think is on, goes to the answering
+        // provider only, never to the quota fallback (Settings → "Dữ liệu của em đi đâu?").
+        noFallback: useChatStore.getState().thinkEnabled || message.checkedBy !== undefined,
         board,
         signal: controller.signal,
       });

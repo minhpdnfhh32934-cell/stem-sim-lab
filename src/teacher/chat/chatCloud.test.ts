@@ -277,6 +277,26 @@ describe('Think and the quota fallback', () => {
     expect(calls.every((c) => c.noFallback === true)).toBe(true);
   });
 
+  it('"Viết tiếp" asking for no fallback: the answer and the summary go to the chosen provider only', async () => {
+    const history: ChatMessageRecord[] = Array.from({ length: 60 }, (_, i) => ({
+      id: `m${i}`,
+      role: i % 2 === 0 ? 'user' : 'assistant',
+      content: `Lượt ${i}: `.padEnd(1200, 'a'),
+    }));
+    setTransportForTests(fake(() => ({ content: 'Phần còn lại.' })));
+    await ask('Viết tiếp', { noFallback: true }, history);
+    // The summary of older turns, then the answer: both without the fallback, neither reviewed.
+    expect(calls.map((c) => [c.provider, c.noFallback])).toEqual([
+      ['gemini', true],
+      ['gemini', true],
+    ]);
+    // Without it (Think off, an answer that was not reviewed) the fallback stays available.
+    calls = [];
+    useChatStore.setState({ summary: null });
+    await ask('Viết tiếp', {}, history);
+    expect(calls.map((c) => c.noFallback)).toEqual([undefined, undefined]);
+  });
+
   it('checkedBy names the provider that really reviewed', async () => {
     setTransportForTests(
       fake((req) => ({
@@ -385,6 +405,36 @@ describe('a streamed online answer', () => {
     expect(e.retry).toBe(true);
     expect(streamed).toHaveLength(1);
     expect(calls).toHaveLength(0);
+  });
+
+  it('a board lesson streams as readable text: never its tags, attributes or LaTeX', async () => {
+    const lesson = String.raw`Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Định luật II Newton</write> nhé. <write id="f1" zone="steps" math="true">a = \frac{F}{m}</write><circle target="f1"/> Gia tốc tỉ lệ với lực.`;
+    let system = '';
+    setTransportForTests(
+      fake(
+        () => ({}),
+        (req, onText) => {
+          system = req.system;
+          for (let end = 8; end < lesson.length; end += 8) onText(lesson.slice(0, end));
+          onText(lesson);
+          return { content: lesson };
+        },
+      ),
+    );
+    const seen: string[] = [];
+    const reply = await ask('Định luật II là gì?', {
+      board: true,
+      onPartial: (t) => seen.push(t),
+    });
+    // The board's TeachScript prompt was used.
+    expect(system).toContain('TeachScript');
+    expect(seen.length).toBeGreaterThan(10);
+    for (const shown of seen) expect(shown).not.toMatch(/<|>|\\frac|zone=|math=|target=/);
+    expect(seen.at(-1)).toBe(
+      'Hôm nay mình xét bài Định luật II Newton nhé.\na = F/m Gia tốc tỉ lệ với lực.',
+    );
+    // The answer itself is the whole lesson: the board is built from it, not from the preview.
+    expect(reply.content).toBe(lesson);
   });
 
   it('never streams Think (draft and review), a summary, or a call without onPartial', async () => {

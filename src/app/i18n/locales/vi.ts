@@ -1073,7 +1073,7 @@ const vi = {
         timeout:
           '{who} trả lời quá lâu nên mình đã thôi chờ. Em hỏi lại nhé; nếu lặp lại, hãy hỏi ngắn hơn hoặc tăng thời gian chờ trong Cài đặt → {page}.',
         network:
-          '{who} chưa nhận được câu hỏi vì mạng đang trục trặc. Em kiểm tra kết nối Internet rồi hỏi lại nhé; nếu mạng vẫn ổn mà lỗi lặp lại, mở Cài đặt → {page} để kiểm tra khóa.',
+          '{who} chưa trả lời được vì kết nối mạng bị gián đoạn. Em kiểm tra kết nối Internet rồi hỏi lại nhé; nếu mạng vẫn ổn mà lỗi lặp lại, mở Cài đặt → {page} để kiểm tra khóa.',
         quota:
           '{who} báo đã hết lượt dùng (hết hạn mức miễn phí hoặc hết tín dụng). Em đợi một lúc rồi hỏi lại, hoặc chọn nhà cung cấp khác trong Cài đặt → {page}.',
         badKey:

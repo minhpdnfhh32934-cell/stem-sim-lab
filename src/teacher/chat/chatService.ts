@@ -26,6 +26,7 @@ import { getLocalClient } from '@/ai/local/client';
 import { checkFor, useLocalAiStore } from '@/ai/local/localAiStore';
 import type { LocalSelection } from '@/ai/local/types';
 import { useProfileStore, type Level } from '@/app/learner/profileStore';
+import { boardStreamPreview } from '@/teacher/board/lesson';
 import { screenContext } from './context';
 import { bestSentences, fetchWebKnowledge, searchKnowledge, unambiguousNote } from './knowledge';
 import { missingNumericData, type MissingData } from './missingData';
@@ -1074,6 +1075,12 @@ export async function askTeacher(
      * never an answer to the teacher's check question (turnKind).
      */
     quickAction?: boolean;
+    /**
+     * Never switch to the quota fallback, for the answer and for the summary of older turns sent
+     * before it. Think always behaves so; "Viết tiếp" asks for it while Think is on or when the
+     * answer it continues was reviewed (nothing goes to a third provider then either).
+     */
+    noFallback?: boolean;
   },
 ): Promise<ReplyResult> {
   const signal = options.signal;
@@ -1194,6 +1201,9 @@ export async function askTeacher(
       : fullBudget;
   // The window asked from a local runtime (Ollama `num_ctx`): what this request needs.
   const window = localContextWindow(budget, localContext);
+  // Think, or a caller that asked for it ("Viết tiếp" of a reviewed answer): the answer and the
+  // summary go to the chosen provider only, never to the quota fallback.
+  const noFallback = options.think || options.noFallback === true;
   const ask = (
     system: string,
     messages: ChatMessage[],
@@ -1255,11 +1265,12 @@ export async function askTeacher(
       records,
       // A model that reasons first could spend the summary's short limit on its reasoning and
       // write no summary: it is asked not to (only a model seen reasoning gets the setting).
-      // With Think the summary never goes to the quota fallback either (no third provider).
+      // With Think (or `noFallback`) the summary never goes to the quota fallback either (no
+      // third provider).
       (s, m, max) =>
         engine === 'local' && selection
           ? localRuntimeChat(selection, s, m, locale, max, window, undefined, signal, false)
-          : ask(s, m, max, options.think),
+          : ask(s, m, max, noFallback),
       summaryCap,
       engine === 'local' ? localSummaryFatal : undefined,
     );
@@ -1287,10 +1298,13 @@ export async function askTeacher(
             return;
           }
           // Hidden reasoning is never shown, not even while it is being written.
-          stream(hideUnfinishedReasoning(text));
+          const visible = hideUnfinishedReasoning(text);
+          // A board lesson (TeachScript) shows as readable text, never its tags or LaTeX: the
+          // learner reads the lesson, not its markup.
+          stream(options.board ? boardStreamPreview(visible) : visible);
         }
       : undefined;
-  const draft = await ask(system, history, budget.output, options.think, shown, question);
+  const draft = await ask(system, history, budget.output, noFallback, shown, question);
   stopIfAsked(signal);
 
   // Only learning content is kept (answerClean.ts): hidden reasoning, echoed prompt labels,

@@ -12,7 +12,7 @@ import {
   type TextElement,
 } from './layout';
 import { splitFormula } from './formulaSplit';
-import { boardAnswerText, scriptFor, subtitleText } from './lesson';
+import { boardAnswerText, boardStreamPreview, scriptFor, subtitleText } from './lesson';
 import { clampScroll, rescaleScroll, scrollForRow, visibleBand } from './minimap';
 import { compileFn, sample } from './plot';
 import { checkNumbers, evaluate, toArithmetic } from './provenance';
@@ -193,6 +193,39 @@ describe('markdown answers on the board', () => {
       'Ta có .\n$$a = 1$$',
     );
     expect(subtitleText('Ta có $a = \\frac{F}{m}$ nhé')).toBe('Ta có a = F/m nhé');
+  });
+});
+
+describe('a board lesson while it streams (the chat preview, W2 fix round 1)', () => {
+  const LESSON = String.raw`Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Định luật II Newton</write> nhé. Theo định luật II, <write id="f1" zone="steps" math="true">a = \frac{F}{m}</write><circle target="f1"/> gia tốc tỉ lệ với lực.`;
+
+  it('shows what the teacher says, with formulas in plain symbols, never tags or LaTeX', () => {
+    const shown = boardStreamPreview(LESSON);
+    expect(shown).toBe(
+      'Hôm nay mình xét bài Định luật II Newton nhé.\nTheo định luật II, a = F/m gia tốc tỉ lệ với lực.',
+    );
+    // Every prefix, as the stream delivers it: never markup, attributes or LaTeX.
+    for (let end = 1; end <= LESSON.length; end++) {
+      const piece = boardStreamPreview(LESSON.slice(0, end));
+      expect(piece).not.toMatch(/[<>]|\\frac|zone=|math=|target=|\$/);
+    }
+  });
+
+  it('leaves out what is still being written until it is whole', () => {
+    // A write whose closing tag has not come: its formula is not shown cut in the middle.
+    expect(
+      boardStreamPreview(String.raw`Theo định luật II, <write id="f1" math="true">a = \frac{F`),
+    ).toBe('Theo định luật II, ');
+    // A tag name being typed after a finished write.
+    expect(boardStreamPreview('Ta có <write id="a1">x = 1</write> và <wr')).toBe('Ta có x = 1 và');
+    // A formula in the speech whose closing "$" has not come.
+    expect(boardStreamPreview('Ta có <write id="a1">x</write> và $\\frac{F')).toBe('Ta có x và');
+  });
+
+  it('a markdown answer (no TeachScript) is shown as it is', () => {
+    expect(boardStreamPreview('# Rơi tự do\n1. Vật chỉ chịu $mg$.')).toBe(
+      '# Rơi tự do\n1. Vật chỉ chịu $mg$.',
+    );
   });
 });
 

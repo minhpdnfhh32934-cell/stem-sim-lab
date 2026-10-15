@@ -1072,7 +1072,7 @@ const en: Messages = {
         timeout:
           '{who} took too long to answer, so I stopped waiting. Please ask again; if it repeats, ask something shorter or raise the timeout in Settings → {page}.',
         network:
-          '{who} did not get the question because the network has a problem. Check your Internet connection and ask again; if the network is fine and it repeats, open Settings → {page} to check the key.',
+          '{who} could not answer because the network connection was interrupted. Check your Internet connection and ask again; if the network is fine and it repeats, open Settings → {page} to check the key.',
         quota:
           '{who} says its quota is used up (free limit reached or no credit left). Wait a while and ask again, or choose another provider in Settings → {page}.',
         badKey:

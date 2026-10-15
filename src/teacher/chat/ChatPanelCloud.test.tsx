@@ -5,6 +5,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError, type ChatRequest, type ChatResponse } from '@/ai/types';
 import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useTeacherStore } from '@/teacher/teacherStore';
 import { ChatPanel } from './ChatPanel';
 import { useChatStore } from './chatStore';
 
@@ -66,6 +67,7 @@ describe('AI Teacher chat panel with an online provider', () => {
   });
   afterEach(() => {
     setTransportForTests(null);
+    useTeacherStore.setState({ open: false, layout: 'talk' });
     vi.restoreAllMocks();
   });
 
@@ -181,6 +183,84 @@ describe('AI Teacher chat panel with an online provider', () => {
       });
     });
     expect(useChatStore.getState().messages[1]?.continuedUnreviewed).toBeUndefined();
+    // Think off and an answer that was not reviewed: the fallback stays available.
+    expect(calls[0]?.noFallback).toBeUndefined();
+  });
+
+  it.each([
+    ['Think on, a reviewed answer', true, true],
+    ['Think on, an answer from before Think', true, false],
+    ['Think off, a reviewed answer', false, true],
+  ])(
+    '"Viết tiếp" (%s) is never sent to the quota fallback',
+    async (_case, thinkEnabled, reviewed) => {
+      useAiStore.setState({ fallback: 'groq' });
+      useChatStore.setState({
+        messages: [
+          { id: 'q', role: 'user', content: 'Giải chi tiết' },
+          {
+            id: 'a',
+            role: 'assistant',
+            content: 'Bước 1: đặt trục.',
+            model: 'gemini-model',
+            ...(reviewed ? { checkedBy: 'claude · claude-model' } : {}),
+            truncated: true,
+          },
+        ],
+        thinkEnabled,
+        verifierProvider: 'claude',
+      });
+      replies = [{ content: 'Bước 2.' }];
+      setTransportForTests(fake());
+      const user = userEvent.setup();
+      render(<ChatPanel teacherPage showScreenContext={false} />);
+      await user.click(screen.getByRole('button', { name: 'Viết tiếp' }));
+      await waitFor(() => {
+        expect(useChatStore.getState().messages[1]?.content).toBe('Bước 1: đặt trục. Bước 2.');
+      });
+      // One request, to the answering provider, without the fallback (Settings → "Dữ liệu của em
+      // đi đâu?": with Think nothing goes to the fallback).
+      expect(calls.map((c) => [c.provider, c.noFallback])).toEqual([['gemini', true]]);
+    },
+  );
+
+  it('the board layout streams the lesson as readable text, never its tags or LaTeX', async () => {
+    useTeacherStore.setState({ open: true, layout: 'board' });
+    const lesson = String.raw`Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Định luật II Newton</write> nhé. <write id="f1" zone="steps" math="true">a = \frac{F}{m}</write><circle target="f1"/>`;
+    let finish: (r: ChatResponse) => void = () => undefined;
+    let push: (shown: string) => void = () => undefined;
+    stream = (_req, onText) => {
+      push = onText;
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    };
+    setTransportForTests(fake());
+    await askInPanel('Định luật II là gì?');
+    const container = document.body;
+    await waitFor(() => {
+      expect(calls).toHaveLength(1);
+    });
+    expect(calls[0]?.system).toContain('TeachScript');
+    push(lesson);
+    const bubble = await waitFor(() => {
+      const node = container.querySelector('.chat-message--streaming');
+      expect(node).not.toBeNull();
+      return node as HTMLElement;
+    });
+    expect(bubble).toHaveTextContent('Hôm nay mình xét bài Định luật II Newton nhé.');
+    expect(bubble).toHaveTextContent('a = F/m');
+    expect(bubble.textContent).not.toMatch(/<write|\\frac|zone=|<circle/);
+    // A write still being written stays out until it is whole.
+    push(`${lesson} Thay số, <write id="r1" zone="steps" math="true">a = \\frac{10`);
+    await waitFor(() => {
+      expect(bubble.textContent).toContain('Thay số,');
+    });
+    expect(bubble.textContent).not.toMatch(/\\frac|frac|<write/);
+    finish({ content: lesson, model: 'gemini-model', durationMs: 1 });
+    await waitFor(() => {
+      expect(container.querySelector('.chat-message--streaming')).toBeNull();
+    });
   });
 
   it('a streamed answer shows while it is written; an unsafe piece takes it back', async () => {
@@ -222,7 +302,10 @@ describe('AI Teacher chat panel with an online provider', () => {
     setTransportForTests(fake());
     await askInPanel('Lực là gì?');
     const alert = await screen.findByRole('alert');
-    expect(alert).toHaveTextContent(/^Gemini chưa nhận được câu hỏi vì mạng/);
+    // Gemini did get the question here (text was already shown): the sentence never says it did
+    // not; it says what is true either way.
+    expect(alert).toHaveTextContent(/^Gemini chưa trả lời được vì kết nối mạng bị gián đoạn/);
+    expect(alert.textContent).not.toMatch(/chưa nhận được câu hỏi|chưa được gửi/);
     expect(within(alert).getByRole('button', { name: /Hỏi lại/ })).toBeInTheDocument();
     expect(screen.queryByText('Lực là đại lượng')).not.toBeInTheDocument();
     // Nothing of it is stored, read aloud or taught on the board.

@@ -43,6 +43,7 @@ import { seedOf } from './rough';
 import {
   parseTeachScript,
   teachScriptSource,
+  TEACHSCRIPT_TAGS,
   type BoardAction,
   type ParsedScript,
   type Sentence,
@@ -161,6 +162,35 @@ export function subtitleText(speech: string): string {
     .replace(/[`#]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/** TeachScript markup: one of its tags, opening, closing or empty. */
+const TEACHSCRIPT_MARKUP = new RegExp(`</?(?:${TEACHSCRIPT_TAGS.join('|')})\\b`, 'i');
+/** The opening or closing tag of a container whose words are read or written. */
+const WORD_CONTAINER = /<(\/?)(?:write|correct|ask)\b/gi;
+/** A tag name still being typed at the very end ("<", "</", "<wr"). */
+const TYPING_TAG = /<\/?[a-z_]{0,12}$/i;
+
+/**
+ * A board lesson (TeachScript) while it streams, as the chat shows it before it is complete: the
+ * subtitles of the sentences so far (what the teacher says, with what is written put back where
+ * its tag stands, formulas in plain symbols), never a tag, an attribute or LaTeX. What is still
+ * being written stays out until it is whole: a `<write>`/`<correct>`/`<ask>` without its closing
+ * tag (a formula cut in the middle reads wrong), a tag name being typed, a formula whose closing
+ * `$` has not come yet. Text without TeachScript markup (a markdown answer) is returned as it is.
+ * Provisional only: the stored answer is the complete one (`boardAnswerText` in the chat).
+ */
+export function boardStreamPreview(textSoFar: string): string {
+  let open: number | null = null;
+  for (const m of textSoFar.matchAll(WORD_CONTAINER)) open = m[1] ? null : m.index;
+  const settled = (open === null ? textSoFar : textSoFar.slice(0, open)).replace(TYPING_TAG, '');
+  if (!TEACHSCRIPT_MARKUP.test(settled)) return settled;
+  const dollars = settled.split('$').length - 1;
+  const whole = dollars % 2 === 0 ? settled : settled.slice(0, settled.lastIndexOf('$'));
+  return parseTeachScript(whole)
+    .sentences.map((s) => subtitleText(s.spoken || s.speech))
+    .filter(Boolean)
+    .join('\n');
 }
 
 const UNIT_MS = { slow: 82, normal: 52, fast: 34 } as const;
