@@ -28,7 +28,7 @@ vi.mock('@tauri-apps/api/core', () => ({
   },
 }));
 
-const { getTransport } = await import('./transport');
+const { getTransport, resetStreamSupportForTests } = await import('./transport');
 
 const request: ChatRequest = {
   requestId: 'req-1',
@@ -59,6 +59,7 @@ function stream() {
 
 beforeEach(() => {
   tauri.calls.length = 0;
+  resetStreamSupportForTests();
   useAiStore.setState({ fallback: 'groq', dailyCap: 100 });
 });
 
@@ -183,6 +184,35 @@ describe('desktop streamed cloud answer', () => {
     expect(r.content).toBe(answer.content);
     expect(tauri.calls.map((c) => c.cmd)).toEqual(['ai_chat_stream', 'ai_chat']);
     expect(shown).toEqual([]);
+  });
+
+  it('asks an older desktop app for the missing command once per session, not before every answer', async () => {
+    tauri.handler = (cmd) => {
+      if (cmd === 'ai_chat_stream')
+        // Tauri 2 words it either way, as a string or inside an Error.
+        return Promise.reject(new Error('unknown command ai_chat_stream'));
+      if (cmd === 'ai_chat') return Promise.resolve(answer);
+      return Promise.resolve(null);
+    };
+    for (let i = 0; i < 3; i++) await stream()(request, () => undefined);
+    expect(tauri.calls.map((c) => c.cmd)).toEqual([
+      'ai_chat_stream',
+      'ai_chat',
+      'ai_chat',
+      'ai_chat',
+    ]);
+  });
+
+  it('any other failure of the stream is not taken for a missing command: no second request', async () => {
+    tauri.handler = (cmd) =>
+      cmd === 'ai_chat_stream'
+        ? // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+          Promise.reject({ code: 'http', message: '429 Too Many Requests: {"error":{}}' })
+        : Promise.resolve(answer);
+    await expect(stream()(request, () => undefined)).rejects.toMatchObject({ code: 'http' });
+    await expect(stream()(request, () => undefined)).rejects.toMatchObject({ code: 'http' });
+    // The page never re-sends a failed question by itself (the gateway's own retries are in Rust).
+    expect(tauri.calls.map((c) => c.cmd)).toEqual(['ai_chat_stream', 'ai_chat_stream']);
   });
 
   it('reports Rust errors and keeps JSON-schema requests on ai_chat', async () => {

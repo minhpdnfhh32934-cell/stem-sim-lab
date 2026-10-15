@@ -96,11 +96,25 @@ export async function cancelInRust(requestId: string, running: () => boolean): P
 }
 
 /**
- * Tauri's answer for a command the app does not have ("Command ai_chat_stream not found"): the web
- * part was updated without the desktop app (src-tauri/src/webupdate.rs).
+ * Tauri's answer for a command the app does not have ("Command ai_chat_stream not found", or
+ * "unknown command …"): the web part was updated without the desktop app
+ * (src-tauri/src/webupdate.rs).
  */
 export function isMissingCommand(e: unknown): boolean {
-  return typeof e === 'string' && /^command \S+ not found$/i.test(e.trim());
+  const text = typeof e === 'string' ? e : e instanceof Error ? e.message : '';
+  return /^(?:command \S+ not found|unknown command:? \S+)$/i.test(text.trim());
+}
+
+/**
+ * The desktop app turned out not to have `ai_chat_stream` (an older app under a newer web part):
+ * every later answer of this session goes straight to `ai_chat`, so a missing command is asked
+ * about once, never before each question.
+ */
+let streamCommandMissing = false;
+
+/** Tests: forget that the desktop app lacked `ai_chat_stream`. */
+export function resetStreamSupportForTests(): void {
+  streamCommandMissing = false;
 }
 
 /**
@@ -141,14 +155,15 @@ class TauriTransport implements LlmTransport {
    * returns the final answer. The deltas are provisional (`ShownText`): `onText` always gets the
    * whole text so far, a reset replaces it, and the returned content is the authority, so the
    * last text `onText` gets is the answer. Events that arrive after the call ended are ignored.
-   * An older desktop app without the command answers the whole text through `ai_chat` instead.
+   * An older desktop app without the command answers the whole text through `ai_chat` instead,
+   * for this call and the rest of the session (`streamCommandMissing`).
    */
   async chatStream(
     req: ChatRequest,
     onText: (shown: string) => void,
     signal?: AbortSignal,
   ): Promise<ChatResponse> {
-    if (req.jsonSchema !== undefined) return this.chat(req, signal);
+    if (req.jsonSchema !== undefined || streamCommandMissing) return this.chat(req, signal);
     if (signal?.aborted) throw new AiError('cancelled', req.requestId);
     let running = true;
     const onAbort = () => {
@@ -168,6 +183,7 @@ class TauriTransport implements LlmTransport {
       return answer;
     } catch (e) {
       if (shown.started || !isMissingCommand(e)) throw toAiError(e);
+      streamCommandMissing = true;
     } finally {
       running = false;
       signal?.removeEventListener('abort', onAbort);
