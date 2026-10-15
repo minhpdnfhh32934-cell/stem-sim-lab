@@ -78,23 +78,57 @@ draft request and then asks a second, different provider to review and rewrite t
   “nhưng”/“rằng”/“but”/“that” (it may state a fact), stays unless a revision header (“Bản đã
   sửa:”, “Revised answer:”, alone on its line or closed by “:”) follows it; then only what
   follows the header is kept (up to 4 sentences without lesson structure between the first
-  remark and that header go too). Before any remark, a reviewer-only header alone on its line
-  also ends up to 4 opening sentences without learning material (“Chào em!”, “Review: …”); a
-  labelled verdict on something else (“Nhận xét: bước 2 sai, g = 10.”) goes only then.
-  “Câu trả lời cuối cùng:” counts as a header only right after a remark. Feedback on the
-  learner’s own draft or answer (“Bản nháp của em…”, “Your answer…”) is never a remark; when the
-  question mentions “nháp”/“draft” no wrapper is removed at all, and when it asks for a
-  correction or a check (“sửa”, “kiểm tra”, “fix”, “check”…) only words about the draft count
-  and a header alone ends nothing. Known limits: a sentence that is both a short remark and a
-  fact without any number or formula (“Bản nháp đúng: lực là đại lượng vectơ.”) goes as a
-  remark; a remark in the middle of the lesson stays; reviewer notes with a number that are not
-  recognised as a remark stay (numbers are never dropped on a guess).
+  remark and that header go too). Before any remark, only a header that names the reviewer’s
+  revision of the answer (“Bản đã sửa”, “Bản sửa”, “Câu trả lời đã chỉnh sửa”, “Revised
+  answer”, “Corrected version”) alone on its line also ends up to 4 opening sentences without
+  learning material (“Chào em!”, “Review: …”); a labelled verdict on something else (“Nhận xét:
+  bước 2 sai, g = 10.”) goes only then. “Bài giải đã sửa”, “Lời giải đã sửa” and “Bản hoàn
+  chỉnh” never end opening sentences: a teacher writes them after a misconception (“Nhiều bạn
+  nghĩ vật nặng rơi nhanh hơn…”). At the very start, before any header, words only a reviewer
+  writes about the answer it checked are remarks too, without a label: “giữ nguyên nội
+  dung/câu trả lời/bản nháp/lời giải/bài giảng”, “No changes needed”, “I kept the …”, “The
+  response is accurate/correct/complete”. “Câu trả lời cuối cùng:” counts as a header only right
+  after a remark. Feedback on the learner’s own draft or answer (“Bản nháp của em…”, “Câu trả lời
+  ban đầu của em…”, “Your answer…”) is never a remark; when the question mentions
+  “nháp”/“draft” no wrapper is removed at all. When the question asks for a correction or a
+  check of the learner’s **own** work (whole words: “sửa/chữa/chấm/kiểm tra (lại) giúp/hộ”,
+  “sửa/xem/chấm bài (làm) của em”, “bài làm”, a yes/no check at the end of a sentence “… đúng
+  không ạ?”, “có đúng không”, “đúng chưa thầy”, “check/fix/grade my …”, “fix this”, “is my
+  answer correct?”, “is it right?”, “am I right?”, “Is answer A right?”), the verdict the
+  learner asked for stays: only words about the draft or the version under review (“bản trả lời
+  ban đầu”, “the provided response”) count, and a header alone ends nothing. Ordinary questions
+  never turn this on (“Thầy xem giúp em bài này: …”, “Em có nhận xét gì về …”, “chỉnh lưu”,
+  “điều chỉnh”, “sửa sai ADN”, “Which … is correct?”, “review free fall”). Known limits (shapes
+  still not recognised, so the text stays — nothing is dropped on a guess): a sentence that is
+  both a short remark and a fact without any number or formula (“Bản nháp đúng: lực là đại lượng
+  vectơ.”) goes as a remark; a remark in the middle of the lesson stays; reviewer notes with a
+  number that are not recognised as a remark stay (“Câu trả lời dùng g = 10, nên đổi thành 9,8.”
+  followed by a “Bản đã sửa:” line keeps both); an unlabelled verdict without a reviewer-only phrase
+  stays (“Câu trả lời đúng và đầy đủ.”, “The answer is correct.”); reviewer-only phrases after
+  the first header, or when the learner asked for a correction, stay; a lesson that opens with
+  one of those phrases as a fact (“ADN giữ nguyên nội dung thông tin…” at the very start of a
+  Think answer) loses that sentence when it holds no number or formula; a yes/no check phrased
+  otherwise (“phải không?”, “đúng hông”) is read as an ordinary question. The lasting fix is a
+  structured review output (`{answer, notes[]}`), still an open question.
 - A reasoning tag written as code (“Qwen dùng thẻ `` `<think>` ``”, or inside a closed code
-  fence) is code and stays (`stripReasoningOutsideCode`, used by the chat, the voice and the
-  board). A bare literal `<think>` outside code is hidden reasoning: unclosed, it is cut to the end
-  (the shared rule cannot tell it from a model stopped mid-reasoning). A closing tag always
-  counts, even as code; when it is all its code span holds (“`` `</think>` ``”), its backticks go
-  with it.
+  fence) is code and stays. The same rule runs on both sides (`src/ai/reasoning.ts`,
+  `src-tauri/src/ai/reasoning.rs`, their stream filters `ThinkFilter` and `ReasoningStream`, and
+  the page’s `stripReasoningOutsideCode` for the chat, the voice and the board; pinned by
+  `tests/fixtures/reasoning-strip.json`, groups `cases`, `code`, `after_block`): an opening or
+  self-closing tag in code is code; a closing tag in code is code once an opening tag of the same
+  name was written in code before it (“giữa `` `<think>` `` và `` `</think>` ``”); any other
+  closing tag counts even as code, and when it is all its code span holds (“`` `</think>` ``”,
+  or a fence holding only it) the backticks or the fence lines go with it. `<think/>` and
+  `<think />` are an empty block (removed, the rest stays). A bare literal `<think>` outside code
+  is hidden reasoning: unclosed, it is cut to the end (the shared rule cannot tell it from a model
+  stopped mid-reasoning). A closing tag left after a block is an orphan for Rust, the streams and
+  the browser transport (everything before it goes); only the page’s whole-answer pass removes it
+  as a tag and keeps its neighbours. While a stream arrives, a tag that may still turn out to be
+  code (inside a fence or after a backtick still waiting for their end) is held back with
+  everything after it until that is decided. `hideUnfinishedReasoning` is the one preview rule
+  for a whole text so far (the Gemma worker’s partial answers); `ThinkFilter` is its incremental
+  form and shows exactly the same after every piece (tested on every vector cut at every
+  character), so a stream’s shown text is never filtered twice.
 - Desktop: keys are stored in the operating-system keychain (shared with the same provider in other
   AI settings). Browser/localhost: keys typed into the page live in memory for this session only.
   Claude cannot be called from a web page, so in the browser it is listed as “chỉ bản desktop” and
@@ -215,11 +249,37 @@ and added to the instruction labelled "do AI viết". Only turns not covered yet
 failed or unsafe summary is skipped and never blocks the answer. Nothing goes to a new place
 ("Dữ liệu của em đi đâu?" lists it).
 
+**Old answers in the history** (`memory.sentText`). New answers are stored clean; an answer saved
+by an older version may still hold hidden reasoning, echoed prompt labels or a Think reviewer’s
+notes. The history (`fitHistory`) and the summary request (`summaryRequest`) send every answer
+cleaned with `cleanAnswer`, a Think answer (`checkedBy`) read with the learner’s question right
+before it (`questionBefore`), so feedback the learner asked for is kept. An answer that was
+nothing but reasoning is sent as saved (an empty turn breaks some providers’ requests). Known
+limits until the chat wiring step (chatService.ts is not changed in this step): its own calls
+`sentText(r)` (the pending turns it shortens for the summary, the turns given to the screen
+context) have no question, so a Think answer’s reviewer notes stay there as saved (reasoning and
+labels still go); and `givenNumbers` still reads an old record without `unverifiedNumbers` from
+its saved text. The numbers there that nobody gave are flagged by the same check and never count
+as given; only numbers the check does not read as stated values could.
+
 **"Viết tiếp".** The Rust gateway and the browser transport report `truncated` when the provider
-stopped at the output limit (Gemini `MAX_TOKENS`, Claude `max_tokens`, Groq `length`); the Gemma
-worker when it generated `maxTokens` tokens. The chat then shows "Câu trả lời dài nên đã dừng giữa
-chừng." and **Viết tiếp**, which asks for the rest and appends it to the same message (a new list
-item, heading or formula starts a new line).
+stopped for any reason but its natural end (Gemini `STOP`; Claude `end_turn`, `stop_sequence`,
+`tool_use`; Groq `stop`): the output limit (`MAX_TOKENS`, `max_tokens`, `length`), a context
+limit, Gemini `OTHER`/`LANGUAGE`, a reason added later; streamed or not; the Gemma worker when it
+generated `maxTokens` tokens. A stop by the provider's own filter (Gemini `SAFETY` and the like,
+Claude `refusal`, Groq `content_filter`) is no answer, also when some text came with it. The chat
+then shows "Câu trả lời dài nên đã dừng giữa chừng." and **Viết tiếp**, which asks for the rest
+and appends it to the same message (a new list item, heading or formula starts a new line).
+
+**Browser transport = Rust rules** (`src/ai/cloudStream.ts`, `FetchTransport` in
+`src/ai/transport.ts`; development and E2E only, the desktop app streams in Rust). Same natural
+ends and filter stops as above (`NATURAL_END`, `GEMINI_BLOCKED`); every whole answer goes through
+the shared reasoning rule (`visibleAnswer`: nothing but reasoning is `reasoningOnly`, a JSON
+answer to a schema is kept as sent); whitespace before the first visible text is held back, so
+it does not count as shown and the quota fallback may still answer; a provider error after the
+end mark (its stop reason) keeps the complete answer; the fallback is asked only while at least
+min(5 s, a quarter of the first-text wait) of that wait is left (`roomForFallback`), otherwise the
+provider's own quota error comes back (there is no retry in the browser).
 
 **Quick buttons** show a short label ("Chậm hơn") but send a full instruction
 (`teacher.chipPrompts`): a bare "Chậm hơn" was misread by Gemma 1B as "speak more slowly".
@@ -544,6 +604,14 @@ validates it with the same code checks as the cloud path (numbers must appear in
 failures fall back to manual scene building. The camera button reads a photographed problem with a
 vision-capable cloud API (browser key for Gemini/Groq) or the `gemma4-e2b` model, and puts the text
 in the problem box for the learner to review first.
+
+**A picture for a local runtime** (Ollama, LM Studio, llama.cpp server, other OpenAI-compatible
+servers; `check_vision` in `src-tauri/src/ai/local/mod.rs`, `visionOf` in
+`src/ai/local/fetchClient.ts`) reaches the model only when its runtime says the model reads
+pictures. A runtime that cannot tell (any other OpenAI-compatible server: its model list says
+nothing about pictures) is not asked again, and a model missing from LM Studio's list is not
+known either: both are refused before the question as `vision-unverified` ("Chưa xác minh"),
+never as a missing model. A runtime that says no gives `no-vision`.
 
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 
