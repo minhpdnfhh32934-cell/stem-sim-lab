@@ -59,7 +59,7 @@ import {
 } from './lesson';
 import { browserMeasure, prepareMeasure, renderMath } from './measure';
 import * as rough from './rough';
-import { hitTest, toBoardPoint, type Point } from './selection';
+import { askBarSide, hitTest, toBoardPoint, type AskBarSide, type Point } from './selection';
 import { SelectionBar } from './SelectionBar';
 import './board.css';
 
@@ -166,13 +166,13 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
             )}
             <button
               type="button"
-              className="btn"
+              className="btn board__tool"
               disabled={!(playing || status === 'paused')}
               onClick={finishNow}
               title={t('board.finishHint')}
             >
               <FastForward size={15} aria-hidden="true" />
-              {t('board.finish')}
+              <span className="board__tool-label">{t('board.finish')}</span>
             </button>
             <div className="segmented" role="radiogroup" aria-label={t('board.speed')}>
               {PEN_SPEEDS.map((v) => (
@@ -222,14 +222,14 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
           {zoom !== 1 && (
             <button
               type="button"
-              className="btn"
+              className="btn board__tool"
               onClick={() => {
                 set({ zoom: 1 });
               }}
               title={t('board.zoomFitHint')}
             >
               <Shrink size={15} aria-hidden="true" />
-              {t('board.zoomFit')}
+              <span className="board__tool-label">{t('board.zoomFit')}</span>
             </button>
           )}
         </div>
@@ -237,7 +237,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
         {lesson && (
           <button
             type="button"
-            className={cx('btn', askMode && 'btn--accent')}
+            className={cx('btn board__tool', askMode && 'btn--accent')}
             aria-pressed={askMode}
             onClick={() => {
               set(askMode ? { askMode: false } : { askMode: true, penMode: false });
@@ -245,12 +245,12 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
             title={t('board.ask.toolHint')}
           >
             <LassoSelect size={15} aria-hidden="true" />
-            {t('board.ask.tool')}
+            <span className="board__tool-label">{t('board.ask.tool')}</span>
           </button>
         )}
         <button
           type="button"
-          className={cx('btn', penMode && 'btn--accent')}
+          className={cx('btn board__tool', penMode && 'btn--accent')}
           aria-pressed={penMode}
           onClick={() => {
             set(penMode ? { penMode: false } : { penMode: true, askMode: false });
@@ -258,7 +258,7 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
           title={t('board.penHint')}
         >
           <Pencil size={15} aria-hidden="true" />
-          {t('board.myPen')}
+          <span className="board__tool-label">{t('board.myPen')}</span>
         </button>
         <button
           type="button"
@@ -303,7 +303,6 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
       <div className="board__area">
         <BoardSheet />
         {!lesson && <p className="board__empty">{t('board.empty')}</p>}
-        <SelectionBar />
       </div>
 
       {(lesson || status === 'preparing') && (
@@ -499,6 +498,8 @@ function BoardSheet() {
    */
   const drawing = useRef<LiveStroke | null>(null);
   const [live, setLive] = useState<LiveStroke | null>(null);
+  /** Where the selection bar goes over the board: away from what was just circled. */
+  const [barSide, setBarSide] = useState<AskBarSide>('bottom');
   const stroking = live !== null;
   /**
    * Ends the learner's stroke. A pen stroke is kept on the face it was drawn on (a dot alone is
@@ -514,7 +515,19 @@ function BoardSheet() {
     if (stroke.mode === 'ask') {
       if (!cancelled) {
         const locale = useSettingsStore.getState().locale;
-        store.set({ selection: hitTest(store, stroke.face, stroke.points, locale) });
+        const selection = hitTest(store, stroke.face, stroke.points, locale);
+        // The bar goes over the board without resizing it (nothing moves), on the side away from
+        // what was circled, so that stays in view.
+        const node = viewport.current;
+        if (node)
+          setBarSide(
+            askBarSide(selection, {
+              top: node.scrollTop,
+              height: node.clientHeight,
+              scale: drawnScale.current,
+            }),
+          );
+        store.set({ selection });
       }
       return;
     }
@@ -874,6 +887,7 @@ function BoardSheet() {
         zoomed={zoom !== 1}
         onMove={takeOver}
       />
+      <SelectionBar side={barSide} />
     </>
   );
 }

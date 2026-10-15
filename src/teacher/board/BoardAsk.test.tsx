@@ -289,6 +289,50 @@ describe('circling part of the board', () => {
     expect(useBoardStore.getState().selection?.hits.map((h) => h.id)).toEqual(['f1']);
   });
 
+  it('the bar lies over the board on the side away from the loop, with "Cả phần này" first', () => {
+    const layout = writtenBoard();
+    const view = render(<Whiteboard lesson={LESSON_INPUT} />);
+    const area = sheetAtScale1(view.container);
+    fireEvent.click(screen.getByRole('button', { name: 'Khoanh để hỏi' }));
+    const f1 = layout.elements.find((e) => e.id === 'f1');
+    if (!f1) throw new Error('no formula');
+    // The formula is in the upper half of the 600 px view: the bar goes at the bottom.
+    expect(f1.y + f1.h).toBeLessThan(300);
+    draw(area, loop(f1));
+    const bar = () => screen.getByRole('group', { name: 'Chỗ em khoanh trên bảng' });
+    expect(bar()).not.toHaveClass('is-top');
+    // Inside the board's area (over the sheet), never after it in the page.
+    expect(bar().parentElement).toBe(view.container.querySelector('.board__area'));
+    // A loop in the lower half of the view: the bar goes at the top, the loop stays in view.
+    fireEvent.click(screen.getByRole('button', { name: 'Khoanh lại' }));
+    draw(area, loop({ x: 400, y: 430, w: 200, h: 80 }));
+    expect(bar()).toHaveClass('is-top');
+    // Scrolled down 400 px, the same board row is near the top of the view: the bar goes down.
+    const node = view.container.querySelector<HTMLElement>('.board__viewport');
+    if (!node) throw new Error('no viewport');
+    node.scrollTop = 400;
+    area.getBoundingClientRect = () => ({ left: 0, top: -400 }) as DOMRect;
+    fireEvent.click(screen.getByRole('button', { name: 'Khoanh lại' }));
+    draw(
+      area,
+      loop({ x: 400, y: 430, w: 200, h: 80 }).map(([x, y]) => [x, y - 400] as const),
+    );
+    expect(bar()).not.toHaveClass('is-top');
+    // Everything circled: "Cả phần này" comes first, so it is never scrolled out of the choices.
+    fireEvent.click(screen.getByRole('button', { name: 'Khoanh lại' }));
+    node.scrollTop = 0;
+    area.getBoundingClientRect = () => ({ left: 0, top: 0 }) as DOMRect;
+    const all = layout.elements.filter((e) => e.face === 0);
+    const x = Math.min(...all.map((e) => e.x));
+    const y = Math.min(...all.map((e) => e.y));
+    const w = Math.max(...all.map((e) => e.x + e.w)) - x;
+    const h = Math.max(...all.map((e) => e.y + e.h)) - y;
+    draw(area, loop({ x, y, w, h }, 30));
+    expect(useBoardStore.getState().selection?.status).toBe('ambiguous');
+    const choices = bar().querySelector('.board__ask-choices');
+    expect(choices?.firstElementChild).toHaveTextContent('Cả phần này');
+  });
+
   it('"Hỏi thầy chỗ này" asks the chat once', () => {
     const layout = writtenBoard();
     const asked = vi.fn();

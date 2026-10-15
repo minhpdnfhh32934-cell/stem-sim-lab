@@ -59,6 +59,11 @@ export const CONTEXT_CHARS = { full: 2000, compact: 600, tight: 300 } as const;
 export type ContextSize = keyof typeof CONTEXT_CHARS;
 /** Longest excerpt kept with the question (chat history, the composer chip). */
 export const EXCERPT_CHARS = 300;
+/**
+ * Shortest cut of a circled line kept in a full block (with "…"): less says nothing, and the
+ * line is then counted among the parts left out.
+ */
+export const MIN_CUT_CHARS = 24;
 
 /** Where the sheet's origin is on screen and how it is drawn (the viewport's fit times the zoom). */
 export interface SheetView {
@@ -787,6 +792,8 @@ const LABELS: Record<
     struck: string;
     within: string;
     picture: string;
+    /** `n` circled parts that did not fit in the block (said, never dropped silently). */
+    more: (n: number) => string;
   }
 > = {
   vi: {
@@ -798,6 +805,7 @@ const LABELS: Record<
     struck: '(đã gạch, đã sửa)',
     picture:
       'Em khoanh một hình vẽ hoặc nét viết tay của em (ảnh vùng khoanh đi kèm câu hỏi, nếu có).',
+    more: (n) => `(… và ${String(n)} chỗ khác em khoanh, không đủ chỗ ghi ở đây)`,
   },
   en: {
     within: 'in the line',
@@ -808,6 +816,7 @@ const LABELS: Record<
     struck: '(struck out, corrected)',
     picture:
       'The learner circled a drawing or their own handwriting (a picture of the circled area comes with the question, if any).',
+    more: (n) => `(… and ${String(n)} more circled part${n === 1 ? '' : 's'}, left out for space)`,
   },
 };
 
@@ -860,8 +869,10 @@ export function cut(text: string, max: number): string {
 /**
  * The selection as one fenced block for the prompt, at most `CONTEXT_CHARS[size]` characters:
  * what was circled (in reading order; unverified numbers and struck lines marked as the board
- * marks them), the face's title, then the steps around it. On a small budget the neighbours go
- * first, then the title; a long selection is cut at a space, never inside a number.
+ * marks them), the face's title, then the steps around it. What was circled comes first: the
+ * neighbours, then the title, are left out before any of it. When not all of it fits, it takes
+ * the whole block (no title, no neighbours): a line is cut at a space (never inside a number) and
+ * the parts left out are counted in a marked line, never dropped silently.
  */
 export function selectionContext(
   selection: BoardSelection,
@@ -873,29 +884,46 @@ export function selectionContext(
   const room = max - OPEN.length - CLOSE.length - 2;
   const parts: string[] = [];
   let used = 0;
-  const push = (text: string): boolean => {
+  const push = (text: string, limit = room): boolean => {
     const cost = text.length + 1;
-    if (used + cost > room) return false;
+    if (used + cost > limit) return false;
     parts.push(text);
     used += cost;
     return true;
   };
   push(`${L.selected}:`);
   if (selection.hits.length === 0) push(`- ${L.picture}`);
-  for (const [i, hit] of selection.hits.entries()) {
-    const text = line(hit, locale);
-    if (push(text)) continue;
-    // The first hit always goes, cut to the room left; later ones that do not fit are left out.
-    if (i === 0) push(cut(text, room - used - 1));
-    break;
+  const lines = selection.hits.map((hit) => line(hit, locale));
+  const complete = used + lines.reduce((sum, l) => sum + l.length + 1, 0) <= room;
+  if (complete) for (const l of lines) push(l);
+  else {
+    // Room is kept for the line that says how many parts were left out (its longest form).
+    const reserve = lines.length > 1 ? L.more(lines.length - 1).length + 1 : 0;
+    const limit = room - reserve;
+    let kept = 0;
+    for (const l of lines) {
+      if (push(l, limit)) {
+        kept += 1;
+        continue;
+      }
+      // The line that no longer fits whole: cut to the room left when that still says something
+      // (the first one always goes, cut).
+      const left = limit - used - 1;
+      const piece = cut(l, left);
+      if ((kept === 0 || left >= MIN_CUT_CHARS) && piece && push(piece, limit)) kept += 1;
+      break;
+    }
+    if (kept < lines.length) push(L.more(lines.length - kept));
   }
-  // The title once: not again when it is what was circled.
-  if (selection.title && !selection.hits.some((h) => h.role === 'title'))
-    push(`${L.title}: ${cut(fenceBoardText(selection.title), 160)}`);
-  const around = selection.neighbours.map((n) => line(n, locale));
-  if (around.length > 0 && used + L.around.length + 2 + (around[0]?.length ?? 0) + 1 <= room) {
-    push(`${L.around}:`);
-    for (const n of around) if (!push(n)) break;
+  if (complete) {
+    // The title once: not again when it is what was circled.
+    if (selection.title && !selection.hits.some((h) => h.role === 'title'))
+      push(`${L.title}: ${cut(fenceBoardText(selection.title), 160)}`);
+    const around = selection.neighbours.map((n) => line(n, locale));
+    if (around.length > 0 && used + L.around.length + 2 + (around[0]?.length ?? 0) + 1 <= room) {
+      push(`${L.around}:`);
+      for (const n of around) if (!push(n)) break;
+    }
   }
   return `${OPEN}\n${parts.join('\n')}\n${CLOSE}`;
 }
@@ -921,4 +949,27 @@ export function selectionExcerpt(selection: BoardSelection, max = EXCERPT_CHARS)
 export function askable(selection: BoardSelection | null, readsPictures: boolean): boolean {
   if (!selection) return false;
   return selection.status === 'ok' || (selection.status === 'picture' && readsPictures);
+}
+
+/** Where the selection bar goes over the board. */
+export type AskBarSide = 'top' | 'bottom';
+
+/**
+ * The side of the board's view the selection bar goes on: away from what was circled (the loop and
+ * the parts it read), so that stays in view under the bar. `view`: the viewport's scroll top and
+ * height (px) and the scale the sheet is drawn at. Below the middle of the view → the top.
+ */
+export function askBarSide(
+  selection: BoardSelection,
+  view: { top: number; height: number; scale: number },
+): AskBarSide {
+  let top = selection.bbox.y;
+  let bottom = selection.bbox.y + selection.bbox.h;
+  for (const hit of selection.hits)
+    for (const box of hit.boxes) {
+      top = Math.min(top, box.y);
+      bottom = Math.max(bottom, box.y + box.h);
+    }
+  const middle = ((top + bottom) / 2) * view.scale - view.top;
+  return view.height > 0 && middle > view.height / 2 ? 'top' : 'bottom';
 }

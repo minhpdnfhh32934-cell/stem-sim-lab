@@ -1,12 +1,13 @@
 import { CircleHelp, LassoSelect, MessageCircleQuestion, X } from 'lucide-react';
 import { useT } from '@/app/i18n';
+import { cx } from '@/ui/cx';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useBoardPictureReader } from '@/teacher/chat/pictureReader';
 import { BOARD_ASK_EVENT } from './boardAsk';
 import { useBoardStore } from './boardStore';
 import { subtitleText } from './lesson';
-import { cut, pickHits, selectionExcerpt, type SelectionHit } from './selection';
+import { cut, pickHits, selectionExcerpt, type AskBarSide, type SelectionHit } from './selection';
 
 /** A hit as the learner reads it: formulas in plain symbols, short. */
 function hitLabel(hit: SelectionHit, max = 48): string {
@@ -18,9 +19,10 @@ function hitLabel(hit: SelectionHit, max = 48): string {
  * one main action, "Hỏi thầy chỗ này". When nothing was hit, or only a picture an AI on this
  * computer cannot read, the app says so itself and nothing is sent. Too much circled: the learner
  * picks one part or "Cả phần này". The selection stays until "Bỏ chọn", "Khoanh lại" or "Quay
- * lại bài giảng"; letting it go never resumes the lesson by itself.
+ * lại bài giảng"; letting it go never resumes the lesson by itself. It lies over the board, on
+ * `side` (away from what was circled), so the board never changes size when it appears.
  */
-export function SelectionBar() {
+export function SelectionBar({ side = 'bottom' }: { side?: AskBarSide }) {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const selection = useBoardStore((s) => s.selection);
@@ -44,7 +46,11 @@ export function SelectionBar() {
   const status = selection.status;
   const canAsk = status === 'ok' || (status === 'picture' && reader !== null);
   return (
-    <div className="board__ask-bar" role="group" aria-label={t('board.ask.barLabel')}>
+    <div
+      className={cx('board__ask-bar', side === 'top' && 'is-top')}
+      role="group"
+      aria-label={t('board.ask.barLabel')}
+    >
       {status === 'ok' && (
         <p className="board__ask-text" aria-live="polite">
           <strong>{t('board.ask.excerpt')}</strong>{' '}
@@ -75,7 +81,17 @@ export function SelectionBar() {
             <CircleHelp size={15} aria-hidden="true" />{' '}
             {t(selection.reason === 'unsure' ? 'board.ask.unsure' : 'board.ask.many')}
           </p>
+          {/* "Cả phần này" first: the row shows two lines of choices, more scroll inside it. */}
           <div className="board__ask-choices">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                pick('all');
+              }}
+            >
+              {t('board.ask.all')}
+            </button>
             {selection.hits.slice(0, 8).map((hit) => (
               <button
                 key={hit.id}
@@ -88,15 +104,6 @@ export function SelectionBar() {
                 {hitLabel(hit)}
               </button>
             ))}
-            <button
-              type="button"
-              className="btn"
-              onClick={() => {
-                pick('all');
-              }}
-            >
-              {t('board.ask.all')}
-            </button>
           </div>
         </>
       )}

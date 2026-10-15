@@ -976,6 +976,90 @@ test('item 2: circling during the lesson pauses it; "Quay lại bài giảng" te
   expect(await overflow(page)).toBeLessThanOrEqual(0);
 });
 
+test('item 2: at 1366×768 the bar stays on the board: the subtitle, the AI label and the loop stay in view', async ({
+  page,
+}) => {
+  const steps = [
+    '# Rơi tự do',
+    '1. Chọn chiều dương hướng xuống.',
+    '2. Viết công thức quãng đường:',
+    '$$s = \\frac{1}{2} g t^2$$',
+    '3. Thay số đã cho trong đề.',
+    '4. Tính thời gian rơi.',
+    '5. Tính vận tốc lúc chạm đất.',
+    '6. Kiểm tra đơn vị.',
+    '7. Kết luận.',
+  ].join('\n');
+  await fakeGemini(page, [{ text: steps, finishReason: 'STOP' }]);
+  const board = await openBoard(page);
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({ timeout: 15_000 });
+  // The toolbar is one row (the tools show their icon only on this narrow board).
+  const tool = board.getByRole('button', { name: 'Khoanh để hỏi' });
+  expect((await board.locator('.board__toolbar').boundingBox())?.height).toBeLessThanOrEqual(48);
+  await tool.click();
+
+  const box = async (selector: string) => {
+    const b = await board.locator(selector).first().boundingBox();
+    if (!b) throw new Error(`no ${selector}`);
+    return { top: b.y, bottom: b.y + b.height, left: b.x, right: b.x + b.width };
+  };
+  const view = await box('.board__viewport');
+  // A big loop over the visible board: many parts, the learner is asked which.
+  await drawLoop(page, {
+    x: view.left + 40,
+    y: view.top + 30,
+    width: view.right - view.left - 140,
+    height: view.bottom - view.top - 80,
+  });
+  const bar = board.getByRole('group', { name: 'Chỗ em khoanh trên bảng' });
+  await expect(bar).toContainText('Em khoanh khá nhiều chỗ');
+  await expect(bar.getByRole('button', { name: 'Cả phần này' })).toBeInViewport();
+  await expect(bar.getByRole('button', { name: 'Bỏ chọn' })).toBeInViewport({ ratio: 1 });
+  // Inside the board's area: the subtitle and the AI label below are never covered.
+  const shown = await box('.board__ask-bar');
+  const area = await box('.board__area');
+  expect(shown.bottom).toBeLessThanOrEqual(area.bottom + 0.5);
+  expect(shown.bottom).toBeLessThanOrEqual((await box('.board__subtitle')).top);
+  const covered = await page.evaluate(() => {
+    const label = document.querySelector('.board .ai-label');
+    if (!label) return 'no label';
+    const r = label.getBoundingClientRect();
+    const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return top && label.contains(top) ? null : (top?.className ?? 'nothing');
+  });
+  expect(covered).toBeNull();
+  // The board did not change size when the bar appeared.
+  expect(await box('.board__viewport')).toEqual(view);
+
+  // A loop low in the view: the bar goes above it, the board does not move, the loop stays seen.
+  await bar.getByRole('button', { name: 'Khoanh lại' }).click();
+  const low = await page.evaluate((v) => {
+    for (const el of document.querySelectorAll('.board__el.is-body')) {
+      const r = el.getBoundingClientRect();
+      const middle = r.top + r.height / 2;
+      if (middle > v.top + (v.bottom - v.top) * 0.55 && r.bottom < v.bottom - 30)
+        return { x: r.left, y: r.top, width: Math.min(r.width, 300), height: r.height };
+    }
+    return null;
+  }, view);
+  if (!low) throw new Error('no step low in the view');
+  const scrolled = () =>
+    page.evaluate(() => document.querySelector('.board__viewport')?.scrollTop ?? -1);
+  const before = await scrolled();
+  await drawLoop(page, low, 8);
+  await expect(bar).toContainText('Em khoanh:');
+  await expect(bar).toHaveClass(/is-top/);
+  expect(await scrolled()).toBe(before);
+  const hit = await box('.board__hit');
+  const top = await box('.board__ask-bar');
+  expect(top.bottom).toBeLessThanOrEqual(hit.top);
+  expect(hit.bottom).toBeLessThanOrEqual(view.bottom);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
 /** Opens AI Teacher on the board layout (the board is lazy-loaded). */
 async function openBoard(page: Page) {
   await page.goto('/');
