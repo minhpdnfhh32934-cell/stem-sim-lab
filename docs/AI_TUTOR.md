@@ -51,10 +51,15 @@ mitosis view (`Mitosis3DView.tsx` `PartInfo`, shown after a tap or a pick in “
 has a “Hỏi thầy” button. It opens AI Teacher the usual way (`openTeacherWithQuestion` →
 `openTeacher`: talk layout, screen context off) with a question written into the box from the
 module's own texts only: the part's name (`COMPONENTS`), the stage (`STAGE3D_NAME`) and the cell
-type (`teacher.askMitosisPartQuestion`). Nothing is sent until the learner presses send, and the
-learner may change the question first; it then goes like any typed question (`checkInput`,
-moderation, labels), with no picture and no screen data. The teacher page's chat takes the
-question once (`useTeacherStore.draft`, cleared when taken or when the page closes).
+type (`teacher.askMitosisPartQuestion`). The wording adds no science of its own: the stage is "a
+stage of the mitosis model", never "a step of mitosis" (interphase is not part of mitosis). When the
+card says the part cannot be seen at this moment (`componentVisible`), the question does not assume
+it is there (`teacher.askMitosisPartHiddenQuestion`: is it there, when does it appear or go).
+Nothing is sent until the learner presses send, and the learner may change the question first; it
+then goes like any typed question (`checkInput`, moderation, labels), with no picture and no screen
+data. A held Enter that pressed the button does not send it either: the box ignores repeated
+Enter keydowns (`e.repeat`). The teacher page's chat takes the question once
+(`useTeacherStore.draft`, cleared when taken or when the page closes).
 
 ## Cloud chat and Think
 
