@@ -333,6 +333,19 @@ describe('"Viết tiếp" oracle: cut at every character (fix round 3)', () => {
       'TeachScript: two <newboard/> after an early difference',
       'Ta có <write id="s1" zone="steps"><b> = 2 cm</write>. <newboard title="Hai"/><write id="s2" zone="steps">v = 3 m/s</write>. <newboard title="Ba"/><write id="s3" zone="steps">t = 4 s</write>. Xong </b>.',
     ],
+    // Fix round 2 of step F1a: the lesson check's new link rules, cut anywhere.
+    [
+      'markdown: a list of linked concepts under a content line, then a list of sources',
+      'Các giai đoạn của nguyên phân:\n- Kì đầu (https://vi.wikipedia.org/wiki/Kì_đầu)\n- Kì giữa (https://vi.wikipedia.org/wiki/Kì_giữa)\n- Kì sau\n\nXem thêm:\n- [Nguyên phân](https://vi.wikipedia.org/wiki/Nguyên_phân)',
+    ],
+    [
+      'TeachScript: a sentence that only cites a source, a pointer before an address',
+      'Nguồn: https://vi.wikipedia.org/wiki/Lực. Theo https://vi.wikipedia.org/wiki/Lực, lực là đại lượng vectơ. <write id="s1" zone="steps">F = ma</write>.',
+    ],
+    [
+      'markdown: a markdown link to a source in brackets, linked numbers, "Vâng ạ!"',
+      'Vâng ạ! Mình sẽ giải bài này.\n\nLực hấp dẫn là lực hút (xem [Wikipedia](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)).\n\nCó [3](https://vi.wikipedia.org/wiki/Định_luật_Newton) định luật Newton.\n\nv = [2](https://example.org/v) m/s',
+    ],
     [
       'markdown: a "## " heading on a second face, after a final check',
       `# Bài\n${steps(1, 10)}\nTính quãng đường?\n## Phần 2\n${steps(11, 13)}`,

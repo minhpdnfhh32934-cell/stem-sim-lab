@@ -281,7 +281,8 @@ describe('sanitizing a written text never touches a number or an operator', () =
     ['2 * 3 * 4 = 24', '2 * 3 * 4 = 24'],
     ['(6.47 * 10⁻² mol) / (65 g) * 66.36 %', '(6.47 * 10⁻² mol) / (65 g) * 66.36 %'],
     ['Xem [Wikipedia](https://vi.wikipedia.org/wiki/Lực) nhé', 'Xem Wikipedia nhé'],
-    ['Nguồn https://example.org/a.png ở đây', 'Nguồn ở đây'],
+    // A source word right before an address goes with it (fix round 2 of step F1a).
+    ['Nguồn https://example.org/a.png ở đây', 'ở đây'],
     ['<b>Lực</b> là <span class="x">vectơ</span>', 'Lực là vectơ'],
     ['$x<y$ và $y>z$', '$x<y$ và $y>z$'],
     ['x<y và y>z', 'x<y và y>z'],
@@ -904,11 +905,6 @@ describe('fix round 3: nothing of the lesson is lost to a link, a repeat or a ta
         'Liên kết ion (https://vi.wikipedia.org/wiki/Liên_kết_ion) bền vững. <write id="s1" zone="steps">NaCl</write>.',
         ['Liên kết ion bền vững.', 'NaCl.'],
       ],
-      // A source line said by the teacher is said without its link, never silenced.
-      [
-        'Nguồn: Wikipedia (https://vi.wikipedia.org/wiki/Lực). <write id="s1" zone="steps">F = ma</write>.',
-        ['Nguồn: Wikipedia.', 'F = ma.'],
-      ],
     ] as const) {
       const lesson = lessonFor(answer);
       expect(
@@ -1233,6 +1229,166 @@ describe('fix round 4: a correction, a part, a bracket, a tag pair, a power', ()
     ] as const) {
       expect(sanitizeBoardText(input), input).toBe(output);
     }
+  });
+});
+
+describe('fix round 5: lists of linked concepts, source sentences, polite words, linked numbers', () => {
+  const written = (script: ParsedScript) => writesOf(script).map((w) => w.text);
+
+  it('a list a content line opens keeps every item, also one that only names its linked page', () => {
+    for (const [answer, texts] of [
+      [
+        'Các giai đoạn của nguyên phân:\n- Kì đầu (https://vi.wikipedia.org/wiki/Kì_đầu)\n- Kì giữa (https://vi.wikipedia.org/wiki/Kì_giữa)\n- Kì sau\n- Kì cuối',
+        ['Các giai đoạn của nguyên phân:', 'Kì đầu', 'Kì giữa', 'Kì sau', 'Kì cuối'],
+      ],
+      [
+        'Các lực cơ học:\n* [Lực hấp dẫn](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)\n* [Lực đàn hồi](https://vi.wikipedia.org/wiki/Lực_đàn_hồi)\n* [Lực ma sát](https://vi.wikipedia.org/wiki/Ma_sát)',
+        ['Các lực cơ học:', 'Lực hấp dẫn', 'Lực đàn hồi', 'Lực ma sát'],
+      ],
+      [
+        'Three kinds of forces:\n- Gravity (https://en.wikipedia.org/wiki/Gravity)\n- Friction (https://en.wikipedia.org/wiki/Friction)\n- Tension',
+        ['Three kinds of forces:', 'Gravity', 'Friction', 'Tension'],
+      ],
+      // A label with a meaning opens a list of content too ("Cho:" lists the data).
+      [
+        'Cho:\n- [Gia tốc trọng trường](https://vi.wikipedia.org/wiki/Gia_tốc_trọng_trường)\n- m = 2 kg',
+        ['Gia tốc trọng trường', 'm = 2 kg'],
+      ],
+    ] as const) {
+      const lesson = lessonFor(answer);
+      expect(written(lesson.script), answer).toEqual(texts);
+      expect(saidOf(lesson.script), answer).not.toMatch(/https?:|wikipedia\.org/u);
+      for (const text of texts) expect(saidOf(lesson.script), answer).toContain(text);
+    }
+    // A list of sources or further reading is still neither written nor said.
+    for (const answer of [
+      'Lực là đại lượng vectơ.\n\nXem thêm:\n- [Lực hấp dẫn](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)\n- [Lực ma sát](https://vi.wikipedia.org/wiki/Ma_sát)',
+      'Lực là đại lượng vectơ.\n\nTài liệu tham khảo:\n- [Lực hấp dẫn](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)',
+      'Lực là đại lượng vectơ.\n\nBạn có thể đọc thêm:\n- Lực hấp dẫn (https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)',
+      'Lực là đại lượng vectơ.\n\n- [Lực hấp dẫn](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)',
+    ]) {
+      const lesson = lessonFor(answer);
+      expect(written(lesson.script)[0], answer).toBe('Lực là đại lượng vectơ.');
+      expect(written(lesson.script).join(' '), answer).not.toMatch(/Lực hấp dẫn|Lực ma sát/u);
+      expect(saidOf(lesson.script), answer).not.toMatch(/Lực hấp dẫn|Lực ma sát/u);
+    }
+  });
+
+  it('a spoken sentence that only cites a source is not said; a sentence of the lesson keeps its words', () => {
+    for (const lead of [
+      'Nguồn: https://vi.wikipedia.org/wiki/Lực.',
+      'Xem thêm tại https://vi.wikipedia.org/wiki/Lực.',
+      'Tham khảo: https://vi.wikipedia.org/wiki/Lực.',
+      'Link: https://vi.wikipedia.org/wiki/Lực.',
+      '(https://vi.wikipedia.org/wiki/Lực).',
+      'Nguồn: Wikipedia (https://vi.wikipedia.org/wiki/Lực).',
+      'Wikipedia: https://vi.wikipedia.org/wiki/Lực.',
+    ]) {
+      const lesson = lessonFor(`${lead} Ta có <write id="s1" zone="steps">F = ma</write>.`);
+      expect(
+        lesson.script.sentences.map((s) => s.spoken),
+        lead,
+      ).toEqual(['Ta có F = ma.']);
+      expect(lesson.outline.dropped, lead).toEqual([{ reason: 'internal', count: 1 }]);
+    }
+    // Without a period the pointer and its address go; the rest of the sentence is said.
+    const run = lessonFor(
+      'Xem thêm tại https://vi.wikipedia.org/wiki/Lực Ta có <write id="s1" zone="steps">F = ma</write>.',
+    );
+    expect(run.script.sentences.map((s) => s.spoken)).toEqual(['Ta có F = ma.']);
+    // "Theo <address>, …": the pointer goes with its address, the sentence keeps its meaning.
+    for (const [answer, spoken] of [
+      [
+        'Theo https://vi.wikipedia.org/wiki/Lực, lực là đại lượng vectơ. <write id="s1" zone="steps">F = ma</write>.',
+        ['lực là đại lượng vectơ.', 'F = ma.'],
+      ],
+      [
+        'Lực là đại lượng vectơ, xem https://vi.wikipedia.org/wiki/Lực. <write id="s1" zone="steps">F = ma</write>.',
+        ['Lực là đại lượng vectơ.', 'F = ma.'],
+      ],
+      [
+        'Lực là đại lượng vectơ, xem https://vi.wikipedia.org/wiki/Lực, nên ta có <write id="s1" zone="steps">F = ma</write>.',
+        ['Lực là đại lượng vectơ, nên ta có F = ma.'],
+      ],
+    ] as const) {
+      const lesson = lessonFor(answer);
+      expect(
+        lesson.script.sentences.map((s) => s.spoken),
+        answer,
+      ).toEqual(spoken);
+      expect(lesson.outline.dropped, answer).toEqual([]);
+    }
+    expect(sanitizeBoardText('Theo https://vi.wikipedia.org/wiki/Lực, F = ma')).toBe('F = ma');
+  });
+
+  it('brackets that hold only a markdown link to a source go with it', () => {
+    for (const [input, output] of [
+      [
+        'Lực hấp dẫn là lực hút (xem [Wikipedia](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)).',
+        'Lực hấp dẫn là lực hút.',
+      ],
+      [
+        'Lực hấp dẫn là lực hút (theo [Wikipedia](https://vi.wikipedia.org/wiki/Lực_hấp_dẫn)).',
+        'Lực hấp dẫn là lực hút.',
+      ],
+      ['Lực hấp dẫn là lực hút (see [1](https://example.org/a)).', 'Lực hấp dẫn là lực hút.'],
+      // Words of the lesson in the brackets stay; only the address goes.
+      [
+        'Vật đứng yên (theo [định luật I](https://vi.wikipedia.org/wiki/Định_luật_Newton)).',
+        'Vật đứng yên (theo định luật I).',
+      ],
+      ['Hằng số hấp dẫn (xem [6,67](https://example.org/g)).', 'Hằng số hấp dẫn (xem 6,67).'],
+    ] as const) {
+      expect(sanitizeBoardText(input), input).toBe(output);
+      const lesson = lessonFor(input);
+      expect(written(lesson.script), input).toEqual([output]);
+      expect(saidOf(lesson.script), input).toBe(output);
+    }
+  });
+
+  it('"Vâng ạ!", "Dạ vâng.", "Dạ, …" acknowledge a request: said, never written; "Vâng." is a verdict', () => {
+    const lesson = lessonFor('Vâng ạ! Mình sẽ giải bài này.\n\n1. a = F/m = 2 m/s²');
+    expect(written(lesson.script)).toEqual(['1. a = F/m = 2 m/s²']);
+    expect(saidOf(lesson.script)).toContain('Vâng ạ!');
+    for (const text of ['Vâng ạ!', 'Vâng ạ.', 'Dạ vâng.', 'Dạ, mình sẽ giải bài này.', 'Vâng!']) {
+      expect(classifyBoardText(text), text).not.toBe('learning');
+      expect(written(lessonFor(`${text}\n\n1. a = F/m = 2 m/s²`).script), text).toEqual([
+        '1. a = F/m = 2 m/s²',
+      ]);
+    }
+    for (const text of ['Vâng.', 'Dạ.', 'Vâng', 'Dạ dày tiêu hóa thức ăn.']) {
+      expect(classifyBoardText(text), text).toBe('learning');
+    }
+  });
+
+  it('a number the model linked is a reference only where a citation stands', () => {
+    for (const [input, output] of [
+      // Inside a formula, or before more words: the lesson's number stays.
+      ['v = [2](https://x.org) m/s', 'v = 2 m/s'],
+      [
+        'Có [3](https://vi.wikipedia.org/wiki/Định_luật_Newton) định luật Newton.',
+        'Có 3 định luật Newton.',
+      ],
+      ['[3](https://x.org) + 1 = 4', '3 + 1 = 4'],
+      // Where a citation stands: it goes.
+      ['Electron mang điện tích âm [1](https://x.org).', 'Electron mang điện tích âm.'],
+      ['Electron mang điện tích âm.[2](https://x.org)', 'Electron mang điện tích âm.'],
+      [
+        'Electron mang điện tích âm[3](https://x.org), còn proton mang điện dương.',
+        'Electron mang điện tích âm, còn proton mang điện dương.',
+      ],
+      [
+        'Electron mang điện tích âm [4](https://x.org), còn proton mang điện dương.',
+        'Electron mang điện tích âm, còn proton mang điện dương.',
+      ],
+    ] as const) {
+      expect(sanitizeBoardText(input), input).toBe(output);
+    }
+    const lesson = lessonFor(
+      'Có [3](https://vi.wikipedia.org/wiki/Định_luật_Newton) định luật Newton.',
+    );
+    expect(written(lesson.script)).toEqual(['Có 3 định luật Newton.']);
+    expect(saidOf(lesson.script)).toBe('Có 3 định luật Newton.');
   });
 });
 

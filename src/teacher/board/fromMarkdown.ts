@@ -24,6 +24,7 @@ import {
   keyPoint,
   labelOf,
   learningPart,
+  opensContentList,
   questionOf,
   sanitizeBoardText,
   type LabelMeaning,
@@ -125,6 +126,11 @@ class Builder {
   private label: { text: string; range: Range | null } | null = null;
   /** What that label means for the line(s) after it. */
   private context: { meaning: LabelMeaning; lines: number; list: boolean } | null = null;
+  /**
+   * The line before the list being read opened a list of content ("Các giai đoạn của nguyên
+   * phân:", "Cho:"): its items are content, also an item that only names the page it links to.
+   */
+  private listIntro = false;
 
   constructor(private readonly codeNote: string) {}
 
@@ -201,6 +207,7 @@ class Builder {
   heading(text: string) {
     this.flushLabel();
     this.context = null;
+    this.listIntro = false;
     const clean = stripMd(markupToText(text, this.after)).replace(/[.:!?]+$/, '');
     const part = learningPart(clean, { structural: true });
     if (part.cls === 'internal') return;
@@ -255,12 +262,14 @@ class Builder {
     const label = labelOf(text);
     if (label) {
       this.setLabel(label, text);
+      this.listIntro = label !== 'sources';
       return;
     }
     // The sources a "Tài liệu tham khảo:" label lists: neither said nor written (whatever is
     // left of a source once its link goes is not lesson content).
     if (this.context?.meaning === 'sources' && this.meaningFor(item) === 'sources') return;
-    const part = learningPart(text);
+    const part = learningPart(text, { listed: item && this.listIntro });
+    if (!item) this.listIntro = part.cls !== 'internal' && opensContentList(text);
     // Hidden reasoning, a prompt echo, a link: neither said nor written.
     if (part.cls === 'internal') return;
     // A greeting or a remark about the answer: said, never written (a label waits for content).

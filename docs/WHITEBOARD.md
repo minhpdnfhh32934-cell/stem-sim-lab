@@ -71,7 +71,8 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - Lời chào, "Tôi là AI…", "Dưới đây là…", "Hy vọng…" được **nói** nhưng không viết lên bảng.
     Nếu ngay sau lời chào có phép tính ("Chào em, v = gt = 9,8·2 = 19,6 m/s.") hoặc một lý do
     ("Câu hỏi hay đấy, vì trọng lực…") thì phần đó vẫn được viết. Dòng ngắn của bài học không bao
-    giờ bị coi là lời nói suông: câu trả lời "Không." / "Có." / "Được." / "Vâng." / "Dạ.", ẩn số
+    giờ bị coi là lời nói suông: câu trả lời "Không." / "Có." / "Được." / "Vâng." / "Dạ." (đứng
+    một mình; "Vâng ạ!", "Dạ vâng.", "Vâng!", "Dạ, mình sẽ…" là lời dạ vâng lễ phép: chỉ nói), ẩn số
     "a = ?", ký hiệu "σ là độ đàn hồi", "Dây dẫn." (so từ có dấu: "dây" khác "đây"). Câu bài học
     chỉ trông giống lời chào hay suy nghĩ vẫn được giữ: "Chào mào là loài chim…", "Cháo là…", "Hy
     vọng sống…", "Người dùng muốn tiết kiệm điện…", "Mình cần suy nghĩ xem vật chịu những lực
@@ -84,7 +85,10 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     "Wikipedia: https://…"), chỉ có lời trỏ ("Xem thêm tại Wikipedia (https://…).", "Nguồn
     (https://…)", "Xem https://… để biết thêm"), tên trang và nguồn ("Lực hấp dẫn – Wikipedia"),
     đúng tên trang mà link dẫn tới ("Lực hấp dẫn (https://…/wiki/Lực_hấp_dẫn)"), một dòng chỉ là
-    một link, hay danh sách sau "Tài liệu tham khảo:". Mọi dòng khác kèm link chỉ mất cái link:
+    một link, hay danh sách sau "Tài liệu tham khảo:" / "Xem thêm:". Riêng mục của một danh sách
+    mà dòng trước nó là nội dung bài học ("Các giai đoạn của nguyên phân:" + "- Kì đầu
+    (https://…/Kì_đầu)", "Các lực cơ học:" + "* [Lực hấp dẫn](…)", "Cho:" + …) thì tên trang
+    chính là khái niệm của bài: mục được giữ, chỉ mất link. Mọi dòng khác kèm link chỉ mất cái link:
     chữ, công thức và số vẫn được nói và viết. Kể cả câu chỉ **bắt đầu** bằng chữ giống chữ nguồn
     ("Nguồn điện tạo ra hiệu điện thế…", "Liên kết ion hình thành…", "Xem xét các lực…", "See how
     …", "Sources of energy …"), câu ngắn không có dấu chấm ("Electron mang điện tích âm
@@ -93,9 +97,17 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     bố…"). Link trong ngoặc mất cùng những chữ **chỉ** nói nguồn ("(theo Wikipedia: https://…)",
     "(nguồn: https://…)", "(theo Halliday, 2011 https://…)" → không còn "(theo Wikipedia:)");
     chữ khác trong ngoặc ở lại ("(theo phương ngang https://…)" → "(theo phương ngang)"), số
-    không phải năm, trang hay số thứ tự trích dẫn cũng ở lại ("(see 6,67 https://…)"). Link chỉ
-    là số thứ tự trích dẫn ("[1](https://…)") mất cùng con số đó. Trong lời TeachScript, link
-    không bao giờ làm mất câu: câu được nói không có link.
+    không phải năm, trang hay số thứ tự trích dẫn cũng ở lại ("(see 6,67 https://…)"); ngoặc chỉ
+    chứa link markdown tới nguồn cũng mất hẳn ("(xem [Wikipedia](…))", "(theo [Wikipedia](…))" →
+    không còn "(xem)"). Chữ trỏ nguồn đứng ngay trước địa chỉ mất cùng địa chỉ: "Theo https://…,
+    lực là đại lượng vectơ." → "lực là đại lượng vectơ." (không bao giờ "Theo lực là…"), "…, xem
+    https://…." → "….". Link chỉ là một con số mất cùng số đó **chỉ** khi nó đứng ở chỗ của chú
+    thích (dính ngay sau chữ, số hay dấu chấm câu: "lục lạp[1](…)"; cuối câu hay trước dấu phẩy:
+    "lục lạp [1](…)."); cạnh phép tính hay trước chữ khác thì đó là số của bài và được giữ ("v =
+    [2](…) m/s" → "v = 2 m/s", "Có [3](…) định luật Newton." → "Có 3 định luật Newton."). Trong
+    lời TeachScript, link không bao giờ làm mất một câu bài học (câu được nói không có link);
+    câu chỉ để dẫn nguồn ("Nguồn: https://….", "Xem thêm tại https://…", "(https://…).",
+    "Nguồn: Wikipedia (https://…).") thì không được nói, không để lại "Nguồn:" hay "." lơ lửng.
   - Một nhãn đứng một mình ("**Kết luận:**", "Phân tích:", "Cho:", "Ghi chú:") không được viết:
     thầy nói nhãn cùng dòng ngay sau, và ý nghĩa của nhãn đi theo dòng đó (kết luận → khung kết
     quả đúng một lần, không bao giờ có khung rỗng; dữ kiện, ghi chú → cột bên; câu hỏi kiểm tra
@@ -153,7 +165,11 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     viết lại không bao giờ nằm dưới "Bước 2" (bảng có thể có khoảng trống ở chỗ dòng bị xóa). Bảng
     cuối cùng có cùng các dòng, cùng thứ tự từ trên xuống, cùng dấu đánh dấu như giảng cả câu trả
     lời một lần (kiểm thử `lessonContinue.test.ts`, gồm bảng cắt câu trả lời ở **mọi ký tự** cho
-    câu trả lời markdown, TeachScript và câu trả lời thật của bộ đánh giá).
+    câu trả lời markdown, TeachScript và câu trả lời thật của bộ đánh giá). Khi câu trả lời đã
+    sang mặt bảng thứ hai (hay thứ ba) mà mọi dòng trên các mặt đó phải viết lại, các mặt ấy được
+    gỡ đi từ mặt cuối trở về, rồi câu trả lời đầy đủ mở lại chúng theo đúng thứ tự; dòng viết lại
+    trên đó lấy lại mã cũ nhưng không bao giờ bị ẩn như một mẩu đã xóa (dấu "đã xóa", tiến độ
+    viết và kiểm số của phần tử đã rời bảng đi cùng nó).
 - **Dùng hết bảng (mục 3, `layout.ts`, `formulaSplit.ts`):** trước khi giảng (bài mới, "Giảng
   lại", phần mới của "Viết tiếp"), mỗi mặt bảng được chia theo những gì sẽ viết lên nó, đọc từ các
   hành động **còn phải giảng** (mặt đã có chữ giữ nguyên cách chia, nên không gì bị dời):
@@ -274,9 +290,10 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
 
 **Giới hạn đã biết** (chọn giữ lại, có lý do):
 
-- "Vâng." hay "Dạ." đứng một mình luôn là câu trả lời có/không và được viết lên bảng, kể cả khi
-  AI chỉ dùng nó để mở đầu lễ phép ("Dạ. Mình sẽ giúp bạn…" để lại "Dạ." trên bảng). Bảng chỉ bỏ
-  một dòng khi chắc chắn; một chữ thừa trên bảng ít hại hơn mất câu trả lời của học sinh.
+- "Vâng." hay "Dạ." đứng một mình (chỉ có dấu chấm) luôn là câu trả lời có/không và được viết lên
+  bảng, kể cả khi AI chỉ dùng nó để mở đầu lễ phép ("Dạ. Mình sẽ giúp bạn…" để lại "Dạ." trên
+  bảng). Bảng chỉ bỏ một dòng khi chắc chắn; một chữ thừa trên bảng ít hại hơn mất câu trả lời
+  của học sinh. Dạng lễ phép rõ ràng ("Vâng ạ!", "Dạ vâng.", "Vâng!", "Dạ, …") thì chỉ nói.
 - Câu cảm ơn mở đầu bằng "Cảm ơn" chỉ được coi là lời xã giao khi nó cảm ơn người ("bạn", "em",
   "câu hỏi", "vì…", "… của bạn"); "Cảm ơn sự quan tâm!" (không có ai) được viết lên bảng. Cùng lý
   do: "Cảm ơn lực ma sát, xe mới dừng được." là bài học.
@@ -289,7 +306,12 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
 - Một dòng ngắn chỉ có tên kèm link mà tên không trùng tên trang ("Luật vạn vật hấp dẫn
   (https://…/Lực_hấp_dẫn)") được viết lên bảng như một ý của bài: bảng không phân biệt được nó
   với câu ngắn "Electron mang điện tích âm (https://…)", nên giữ cả hai (chỉ bỏ khi chắc chắn).
-  Một câu người dạy nói chỉ để dẫn nguồn ("Nguồn: Wikipedia (https://…).") được nói không có link.
+- Dòng mở đầu một danh sách đọc thêm mà không có chữ nguồn nào ("Bạn có thể học tiếp:") vẫn được
+  viết, dù các mục link của nó bị bỏ; dòng có chữ nguồn ("Xem thêm:", "Bạn có thể đọc thêm:",
+  "Tài liệu tham khảo:") thì danh sách sau nó là nguồn. Ngược lại, tên trang trong danh sách sau
+  một dòng nội dung luôn được giữ, kể cả khi danh sách ấy thật ra là nguồn.
+- Một link chỉ là con số đứng cuối câu sau chữ ("Có tất cả [3](…).") được coi là chú thích và
+  mất cùng con số: đó đúng là chỗ của chú thích, và bảng không phân biệt được hai cách viết.
 - Số mũ nhiều ký tự giữ nhóm trên bảng và phụ đề (x^(n+1)), nhưng giọng đọc vẫn nói "ích mũ nờ
   cộng một" như với mọi số mũ `^{…}` (cả "$2^{n+1}$"): cách đọc số mũ thuộc phần giọng nói
   (`src/teacher/voice/`), ngoài phạm vi bước này.

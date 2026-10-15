@@ -214,7 +214,11 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   whole answer had been taught at once: the same texts on the same faces, in the same order top to
   bottom in each column, with the same marks (oracle test `lessonContinue.test.ts`, also
   TeachScript answers cut every 4 characters with marks compared with the text they stand on, and
-  a table of markdown, TeachScript and real eval answers cut at every character).
+  a table of markdown, TeachScript and real eval answers cut at every character). When the answer
+  had run onto further faces and everything on them is placed again, those faces go, from the
+  last one back, and the whole answer opens them again in order; an element that leaves the board
+  with its face (or its title) takes its "erased", progress and number-check entries with it, so
+  the line the whole answer places again under the same id (`layout.freeId`) is never hidden.
 - Hidden reasoning (`<think>`, `<thinking>`, `<reasoning>`, `<reflection>`, any case) is the
   exception: the whole block is dropped, never spoken or written (log `reasoning_removed`). An
   unclosed block is cut to the end; a closing tag with no opening tag before it (a chat template
@@ -266,28 +270,40 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   that ends the line after a name and ":" or "-" ("Chu kì tế bào: https://…"), after a page's
   name and its source ("Lực hấp dẫn – Wikipedia (https://…)") or after the linked page's own name
   ("Lực hấp dẫn (https://…/wiki/Lực_hấp_dẫn)"); a line that is one markdown link of at most six
-  words. A sentence that merely opens with a word a source line may open with ("Nguồn điện tạo ra
+  words. The last two rules (a page's own name, a one-link line) do not apply to an item of a list
+  whose intro line is content ("Các giai đoạn của nguyên phân:", "Three kinds of forces:", a label
+  such as "Cho:"; not "Xem thêm:", "Bạn có thể đọc thêm:", "Tài liệu tham khảo:"), nor to the
+  teacher's speech: there the page's name is a concept of the lesson and keeps its words
+  (`opensContentList`, `ClassifyOptions.listed`). A sentence that merely opens with a word a source line may open with ("Nguồn điện tạo ra
   hiệu điện thế…", "Liên kết ion hình thành…", "Xem xét các lực…", "See how…", "Sources of
   energy…"), a short sentence without a period ("Electron mang điện tích âm (https://…)"), a short
   name that is not the page's ("Luật vạn vật hấp dẫn (https://…)"), a line that holds a formula, a
   quantity or a number that is not a citation's ("g = 9,81 m/s² (https://…).") and a sentence with
   a year ("Năm 1687, Newton công bố… (https://…).") keep their words and lose only the link. Link
-  words such as "[nguồn](…)" or a reference number "[1](…)" go with it, so does a source's name in
+  words such as "[nguồn](…)" go with it, a reference number "[1](…)" too where a citation stands
+  (attached to a word, a number or the end punctuation, or at the end of its sentence or clause;
+  never next to an operator or before more words: "v = [2](…) m/s" and "Có [3](…) định luật
+  Newton." keep their number), so does a source's name in
   a link that ends the sentence ("… lục lạp [Wikipedia](…)." → "… lục lạp."), and so do the words
   in the brackets of a link that only name its source ("(theo Wikipedia: https://…)", "(nguồn:
   https://…)", "(theo Halliday, 2011 https://…)" leave nothing, never "(theo Wikipedia:)"); other
   words in the brackets stay ("(theo phương ngang https://…)" → "(theo phương ngang)"), and so does
   a formula or a number that is not a citation's year, page, index or grade ("(see 6,67
-  https://…)"). A TeachScript sentence with a link is said without the link, never dropped: the
-  link never silences a sentence, only reasoning does (known limit: a sentence said only to cite,
-  "Nguồn: Wikipedia (https://…).", is said as "Nguồn: Wikipedia.").
+  https://…)"). Brackets that hold only a markdown link to a source go too ("(xem
+  [Wikipedia](…))", "(theo [Wikipedia](…))"). A source word right before a bare address goes with
+  it, and the punctuation around them is kept once ("Theo https://…, lực là…" → "lực là…", never
+  "Theo lực là…"; "…, xem https://…." → "…."). A TeachScript sentence of the lesson with a link is
+  said without the link; a sentence that only cites a source ("Nguồn: https://….", "Xem thêm tại
+  https://…", "(https://…).", "Nguồn: Wikipedia (https://…).") is not said (dropped as
+  `internal`): nothing such as "Nguồn:" or "." is left dangling.
 - **Social or meta text** (a greeting, "Tôi là AI…", "Hy vọng…", "Dưới đây là…", a sentence of
   generic words only such as "Mình sẽ giải từng bước"): said, never written. When a computation
   follows the greeting or the remark ("Chào em, v = gt = 9,8·2 = 19,6 m/s.", "Dưới đây là công
   thức: a = F/m = 5 m/s²"), that computation is written (the greeting is still only said).
   Generic words are compared with their Vietnamese marks ("có"/"cơ", "rồi"/"rơi", "đây"/"dây"
   are different words), a single letter is a symbol, and a verdict ("Không.", "Có.", "Được.",
-  "Vâng.", "Dạ.", "Kết quả: Có"), an unknown ("a = ?") or a symbol ("σ là độ đàn hồi") is never
+  "Vâng.", "Dạ.", "Kết quả: Có"; "Vâng"/"Dạ" only alone with at most a period: "Vâng ạ!", "Dạ
+  vâng.", "Vâng!", "Dạ, mình sẽ…" acknowledge a request and are only said), an unknown ("a = ?") or a symbol ("σ là độ đàn hồi") is never
   a remark. "Mình hiểu ý bạn." is a remark, "Mình hiểu ý bạn là vật trượt không ma sát." an
   assumption to write; "Cảm ơn" is a remark only when it thanks a person or the question ("Cảm ơn
   bạn!", "Cảm ơn câu hỏi của em", "Cảm ơn sự kiên nhẫn của bạn."), never in "Cảm ơn lực ma sát,
