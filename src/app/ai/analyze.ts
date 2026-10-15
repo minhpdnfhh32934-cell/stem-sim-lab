@@ -5,12 +5,16 @@ import { sim } from '@/app/sim/runtime';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { DEFAULT_MODELS, DEFAULT_PROVIDER, useAiStore } from '@/ai/aiStore';
 import { getReading, putReading, type Reading } from '@/ai/cache';
-import { aiErrorKind, httpErrorCode, isLocalMessage, type AiErrorKind } from '@/ai/errorKind';
+import { httpErrorCode, isLocalMessage } from '@/ai/errorKind';
 import { manualDraft, type Draft } from '@/ai/draft';
 import { analyzeProblem, type Stage } from '@/ai/pipeline';
 import { getTransport, type LlmTransport } from '@/ai/transport';
 import { gemmaTransport } from '@/ai/gemmaTransport';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { localTransport } from '@/ai/local/localTransport';
+import { NOT_SELECTED } from '@/ai/local/types';
 import { analysisEngine } from './engineChoice';
+import { localFailure, localFailureText, localModelLabel } from './localRuntime';
 import { AiError, toAiError, type AiErrorCode, type Provider } from '@/ai/types';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { CATALOG } from '@/app/catalog';
@@ -37,7 +41,12 @@ export type AnalyzeErrorCode =
   | 'unsafe'
   | 'crisis'
   /** The AI answer was hidden by the output filter. */
-  | 'outputUnsafe';
+  | 'outputUnsafe'
+  /**
+   * A runtime on this computer failed (Ollama, LM Studio, llama.cpp…): `detail` is the learner's
+   * sentence for it. Never explained as a cloud problem, and nothing went online instead.
+   */
+  | 'local';
 
 const BLOCK_INCIDENT: Record<Exclude<InputCheck, { ok: true }>['reason'], IncidentKind> = {
   personalData: 'inputPersonalData',
@@ -115,16 +124,38 @@ export function resolveAi(): Promise<ResolvedAi> {
 
 interface AnalysisEngine extends ResolvedAi {
   transport: LlmTransport;
+  /** The model as the AI label shows it ("Ollama · qwen3:8b" for a local runtime). */
+  modelLabel?: (model: string) => string;
 }
 
 /**
- * Picks the engine for "Phân tích đề": the local Gemma model when the learner chose
- * the Gemma engine (no cloud key needed), otherwise the configured cloud provider.
+ * Picks the engine for "Phân tích đề" and "Giải thích" — the same choice as AI Teacher: the
+ * in-app Gemma model when the learner chose it (no cloud key needed), the runtime on this
+ * computer the learner chose in Settings → AI trên máy khác (never the cloud instead, also when
+ * none is picked yet), otherwise the configured cloud provider. A local runtime gets the JSON
+ * schema as structured output only when its check on this computer said it supports it; otherwise
+ * the schema goes into the prompt (`LocalTransport`). The draft checks are the same for every
+ * engine: each number must be in the problem text.
  */
 export async function resolveAiForAnalysis(): Promise<AnalysisEngine> {
   const chat = useChatStore.getState();
   const engine = await analysisEngine();
   if (engine === 'gemma-missing') throw new AiError('unavailable', 'gemma');
+  if (engine === 'local-missing') throw new AiError('unavailable', NOT_SELECTED);
+  if (engine === 'local') {
+    const ai = useAiStore.getState();
+    const selection = useLocalAiStore.getState().selected;
+    if (!selection) throw new AiError('unavailable', NOT_SELECTED);
+    const locale = useSettingsStore.getState().locale;
+    return {
+      // The cloud provider is ignored by the local transport (no key, no fallback).
+      provider: ai.provider === 'off' ? DEFAULT_PROVIDER : ai.provider,
+      model: selection.model,
+      timeoutSecs: ai.timeoutSecs,
+      transport: localTransport,
+      modelLabel: (model) => localModelLabel(locale, selection.kind, model || selection.model),
+    };
+  }
   if (engine === 'gemma') {
     const ai = useAiStore.getState();
     return {
@@ -150,14 +181,14 @@ function analyzeHttpCode(message: string): AnalyzeErrorCode {
 
 /**
  * A local runtime's error (Ollama, LM Studio, llama.cpp…) is never explained as a cloud
- * provider's quota, key, model, Internet or 18+ problem, whatever status or code it carries. This
- * dialog has no sentences of its own for local runtimes yet: the general error with the runtime's
- * detail, except a stall (a timeout) and a missing choice or app update (not available here).
+ * provider's quota, key, model, Internet, timeout or 18+ problem, whatever status or code it
+ * carries: it gets the same study-partner sentence as in AI Teacher (src/app/ai/localRuntime.ts),
+ * naming the chosen runtime, and the dialog opens Settings → AI trên máy khác.
  */
-function localCode(kind: AiErrorKind): AnalyzeErrorCode {
-  if (kind === 'localStalled') return 'timeout';
-  if (kind === 'localNotSelected' || kind === 'needsAppUpdate') return 'unavailable';
-  return 'http';
+function localError(e: unknown): { code: AnalyzeErrorCode; detail: string } {
+  const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
+  const locale = useSettingsStore.getState().locale;
+  return { code: 'local', detail: localFailureText(locale, localFailure(e), kind) };
 }
 
 let controller: AbortController | null = null;
@@ -165,9 +196,7 @@ let runSeq = 0;
 
 function errorOf(e: unknown): { code: AnalyzeErrorCode; detail: string } {
   const err = toAiError(e);
-  if (err.code !== 'cancelled' && isLocalMessage(err.message)) {
-    return { code: localCode(aiErrorKind(err)), detail: err.message };
-  }
+  if (err.code !== 'cancelled' && isLocalMessage(err.message)) return localError(err);
   if (err.code === 'http') return { code: analyzeHttpCode(err.message), detail: err.message };
   if (err.code === 'badResponse' && (err.message === 'empty' || err.message === 'tooLong')) {
     return { code: err.message, detail: '' };
@@ -247,7 +276,7 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
         stage: null,
         draft: result.draft,
         scene: result.scene,
-        model: result.model,
+        model: ai.modelLabel ? ai.modelLabel(result.model) : result.model,
         reading: result.reading,
         cached: result.cached,
         fallback: result.fallback,

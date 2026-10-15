@@ -1,10 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
+import { setLocalClientForTests } from '@/ai/local/client';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
+import type { LocalRuntimeClient } from '@/ai/local/types';
+import { translate } from '@/app/i18n';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import { AiError } from '@/ai/types';
 import { BrowserSafety, setSafetyBackendForTests, type Incident } from '@/safety/safety';
 import { useChatStore } from '@/teacher/chat/chatStore';
-import { analyze, cancelAnalyze, openManual, resolveAi, useAnalyzeStore } from './analyze';
+import {
+  analyze,
+  cancelAnalyze,
+  openManual,
+  resolveAi,
+  resolveAiForAnalysis,
+  useAnalyzeStore,
+} from './analyze';
 
 function transport(over: Partial<LlmTransport> = {}): LlmTransport {
   return {
@@ -57,23 +68,34 @@ describe('AI controller', () => {
   });
 
   // A local runtime's error, whatever status or code it carries, is never explained as a cloud
-  // quota, key, model, Internet or 18+ problem: the general error with the runtime's detail.
+  // quota, key, model, Internet, timeout or 18+ problem: it gets the study-partner sentence of AI
+  // Teacher, naming the chosen runtime (src/app/ai/localRuntime.ts).
   it.each([
-    ['http', 'local-failed: 429: busy', 'http'],
-    ['http', 'local-failed: 402: x', 'http'],
-    ['http', 'needs-auth: 401', 'http'],
-    ['http', 'model-missing: 404: model "x" not found', 'http'],
-    ['http', 'loading: 503: Loading model', 'http'],
-    ['network', 'local-unreachable: error sending request', 'http'],
-    ['notAllowed', 'remote-model', 'http'],
-    ['notAllowed', 'not-loopback', 'http'],
-    ['notAllowed', 'no-vision', 'http'],
-    ['timeout', 'local-stalled: gap 45000 ms', 'timeout'],
-    ['unavailable', 'local-not-selected', 'unavailable'],
-  ] as const)('explains local runtime error %s "%s" as %s', async (code, message, shown) => {
+    ['http', 'local-failed: 429: busy', 'localFailed'],
+    ['http', 'local-failed: 402: x', 'localFailed'],
+    ['http', 'needs-auth: 401', 'localAuth'],
+    ['http', 'model-missing: 404: model "x" not found', 'localModelMissing'],
+    ['http', 'loading: 503: Loading model', 'localLoading'],
+    ['network', 'local-unreachable: error sending request', 'localDown'],
+    ['notAllowed', 'remote-model', 'localRemote'],
+    ['notAllowed', 'not-loopback', 'localNotSelected'],
+    ['notAllowed', 'no-vision', 'localFailed'],
+    ['timeout', 'local-stalled: gap 45000 ms', 'localStalled'],
+    ['unavailable', 'local-not-selected', 'localNotSelected'],
+  ] as const)('explains local runtime error %s "%s" with %s', async (code, message, key) => {
+    useLocalAiStore.getState().select({
+      kind: 'ollama',
+      baseUrl: 'http://127.0.0.1:11434',
+      model: 'qwen3:8b',
+      label: 'Ollama · qwen3:8b',
+    });
     setTransportForTests(transport({ chat: () => Promise.reject(new AiError(code, message)) }));
     await analyze('Một vật rơi tự do từ độ cao 20 m.');
-    expect(useAnalyzeStore.getState().error).toEqual({ code: shown, detail: message });
+    expect(useAnalyzeStore.getState().error).toEqual({
+      code: 'local',
+      detail: translate('vi', `chat.errors.${key}`, { name: 'Ollama' }),
+    });
+    useLocalAiStore.getState().select(null);
   });
 
   it('maps a network failure to an error the dialog can explain', async () => {
@@ -131,6 +153,93 @@ describe('AI controller', () => {
   it('refuses when AI is off', async () => {
     useAiStore.setState({ provider: 'off' });
     await expect(resolveAi()).rejects.toMatchObject({ code: 'unavailable' });
+  });
+
+  describe('with the runtime on this computer chosen', () => {
+    const selection = {
+      kind: 'ollama' as const,
+      baseUrl: 'http://127.0.0.1:11434',
+      model: 'qwen3:8b',
+      label: 'Ollama · qwen3:8b',
+    };
+    const local = {
+      detect: vi.fn<LocalRuntimeClient['detect']>(),
+      probe: vi.fn<LocalRuntimeClient['probe']>(),
+      models: vi.fn<LocalRuntimeClient['models']>(),
+      modelInfo: vi.fn<LocalRuntimeClient['modelInfo']>(),
+      test: vi.fn<LocalRuntimeClient['test']>(),
+      chat: vi.fn<LocalRuntimeClient['chat']>(),
+    };
+    let cloudCalls = 0;
+    beforeEach(() => {
+      vi.clearAllMocks();
+      cloudCalls = 0;
+      setLocalClientForTests(local);
+      setTransportForTests(
+        transport({
+          chat: () => {
+            cloudCalls++;
+            return Promise.reject(new AiError('network', 'down'));
+          },
+          hasKey: () => Promise.resolve(true),
+        }),
+      );
+      useChatStore.setState({ engine: 'local', engineChosen: true });
+    });
+    afterEach(() => {
+      setLocalClientForTests(null);
+      useLocalAiStore.getState().select(null);
+    });
+
+    it('reads the problem with the chosen runtime and names it; the cloud is never asked', async () => {
+      useLocalAiStore.getState().select(selection);
+      local.chat.mockResolvedValue({
+        content: JSON.stringify({
+          topic: 'unsupported',
+          reason: 'ngoài phạm vi',
+          unsupported_parts: [],
+        }),
+        model: 'qwen3:8b',
+        runtime: 'ollama',
+        durationMs: 5,
+        firstPieceMs: 1,
+        truncated: false,
+        streamed: true,
+      });
+      await analyze('Một vật rơi tự do từ độ cao 20 m.');
+      expect(useAnalyzeStore.getState().phase).toBe('unsupported');
+      expect(local.chat).toHaveBeenCalledTimes(1);
+      const req = local.chat.mock.calls[0]?.[0];
+      expect(req).toMatchObject({ kind: 'ollama', baseUrl: selection.baseUrl, model: 'qwen3:8b' });
+      // Not checked on this computer: the schema goes into the prompt, not as structured output.
+      expect(req?.jsonSchema).toBeUndefined();
+      expect(req?.system).toContain('"topic"');
+      expect(cloudCalls).toBe(0);
+      const ai = await resolveAiForAnalysis();
+      expect(ai.modelLabel?.('qwen3:8b')).toBe('Ollama · qwen3:8b');
+    });
+
+    it('a runtime that does not answer is reported as such, and nothing goes online', async () => {
+      useLocalAiStore.getState().select(selection);
+      local.chat.mockRejectedValue(new AiError('network', 'local-unreachable: refused'));
+      await analyze('Một vật rơi tự do từ độ cao 20 m.');
+      expect(useAnalyzeStore.getState().error).toEqual({
+        code: 'local',
+        detail: translate('vi', 'chat.errors.localDown', { name: 'Ollama' }),
+      });
+      expect(local.chat).toHaveBeenCalledTimes(1);
+      expect(cloudCalls).toBe(0);
+    });
+
+    it('no runtime and model chosen yet: nothing is sent anywhere', async () => {
+      await analyze('Một vật rơi tự do từ độ cao 20 m.');
+      expect(useAnalyzeStore.getState().error?.code).toBe('local');
+      expect(useAnalyzeStore.getState().error?.detail).toBe(
+        translate('vi', 'chat.errors.localNotSelected'),
+      );
+      expect(local.chat).not.toHaveBeenCalled();
+      expect(cloudCalls).toBe(0);
+    });
   });
 
   describe('safety before the AI', () => {

@@ -6,7 +6,13 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { CameraDialog } from '@/app/learner/CameraDialog';
-import { PHOTO_SYSTEM, cleanTranscription, transcribeWithCloud } from './photoVision';
+import { analysisEngine } from './engineChoice';
+import {
+  PHOTO_SYSTEM,
+  cleanTranscription,
+  transcribeWithCloud,
+  transcribeWithLocalRuntime,
+} from './photoVision';
 
 /** Longest photo edge: keeps captures fast and inside the models' image limits. */
 const MAX_PHOTO_EDGE = 1600;
@@ -38,7 +44,10 @@ function downscalePhoto(dataUrl: string): Promise<string> {
 /**
  * Photograph-a-problem flow shared by the home page and the simulation top bar:
  * camera dialog state plus "Lấy ảnh" transcription. Chain: cloud API (when the
- * browser has a key) → local Gemma → an honest error. The text always lands in
+ * browser has a key) → local Gemma → an honest error. With a runtime on this computer
+ * chosen as the AI (Settings → AI trên máy khác) the photo never goes online: that
+ * runtime reads it when its model reads pictures, else the in-app Gemma, else the
+ * learner is told plainly what reading a photo needs. The text always lands in
  * the problem box for review; analysis (with its safety checks) stays separate.
  */
 export function usePhotoCapture() {
@@ -71,8 +80,19 @@ export function usePhotoCapture() {
     let cloudIssue: 'badKey' | 'badModel' | null = null;
     try {
       let raw: string | null = null;
+      const engine = await analysisEngine();
+      // The learner chose AI on this computer: the photo stays on this computer.
+      const onComputer = engine === 'local' || engine === 'local-missing';
+      if (onComputer) {
+        try {
+          raw = await transcribeWithLocalRuntime(base64, locale);
+        } catch (e) {
+          console.warn('[photo-local]', e instanceof Error ? e.message : String(e));
+          raw = null;
+        }
+      }
       // Desktop builds have no cloud image endpoint: straight to the local model.
-      if (!isTauri()) {
+      if (!isTauri() && !onComputer) {
         try {
           raw = await transcribeWithCloud(base64, locale);
         } catch (e) {
@@ -86,7 +106,8 @@ export function usePhotoCapture() {
       if (raw === null || raw.trim() === '') {
         const chat = useChatStore.getState();
         if (!(await gemmaReady(chat.gemmaModel))) {
-          if (cloudIssue === 'badKey') setCameraError(t('camera.badKey'));
+          if (onComputer) setCameraError(t('camera.localNoVision'));
+          else if (cloudIssue === 'badKey') setCameraError(t('camera.badKey'));
           else if (cloudIssue === 'badModel') setCameraError(t('camera.badModel'));
           else setCameraError(t('camera.needVision'));
           return;

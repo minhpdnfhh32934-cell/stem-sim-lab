@@ -4,13 +4,16 @@ import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useAiStore } from '@/ai/aiStore';
+import { isLocalMessage } from '@/ai/errorKind';
 import { explainSolution, type Explanation } from '@/ai/explain';
-import { getTransport } from '@/ai/transport';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { toAiError } from '@/ai/types';
 import type { PhysicsScene, Solution } from '@/physics/types';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { logIncident, useSafetyStore } from '@/safety/safetyStore';
-import { resolveAi } from './analyze';
+import { resolveAiForAnalysis } from './analyze';
+import { useAnalysisEngine } from './engineChoice';
+import { localFailure, localFailureText } from './localRuntime';
 import './ai.css';
 
 type State =
@@ -21,7 +24,9 @@ type State =
 
 /**
  * "AI diễn giải" (§2.1 b): the AI explains, in words, numbers the engine computed. The
- * reply is checked and hidden when it contains a number the engine did not produce.
+ * reply is checked and hidden when it contains a number the engine did not produce. It uses the
+ * same AI as AI Teacher and "Phân tích đề" (`resolveAiForAnalysis`): a chosen Gemma or runtime on
+ * this computer explains there, and never hands the request to the cloud.
  */
 export function ExplainBox({
   scene,
@@ -36,6 +41,7 @@ export function ExplainBox({
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const provider = useAiStore((s) => s.provider);
+  const engine = useAnalysisEngine();
   const aiAllowed = useSafetyStore((s) => s.status?.aiAllowed ?? false);
   // The explanation belongs to one solution: a new solution shows the button again.
   const [entry, setEntry] = useState<{ solution: Solution; state: State } | null>(null);
@@ -52,8 +58,9 @@ export function ExplainBox({
     [solution],
   );
 
-  // AI off, or the safety gates closed (age / consent): no AI button at all.
-  if (provider === 'off' || !aiAllowed) return null;
+  // The online AI off (and no AI on this computer chosen), or the safety gates closed (age /
+  // consent): no AI button at all.
+  if ((provider === 'off' && engine === 'cloud') || !aiAllowed) return null;
 
   const run = async () => {
     abort.current?.abort();
@@ -61,18 +68,31 @@ export function ExplainBox({
     abort.current = ctrl;
     setState({ kind: 'loading' });
     try {
-      const ai = await resolveAi();
+      const ai = await resolveAiForAnalysis();
       const result = await explainSolution(L(scene.title), problemText, solution, {
-        transport: getTransport(),
-        ...ai,
+        transport: ai.transport,
+        provider: ai.provider,
+        model: ai.model,
+        timeoutSecs: ai.timeoutSecs,
         signal: ctrl.signal,
       });
       if (ctrl.signal.aborted) return;
       if (!result.safe) logIncident('outputUnsafe');
-      setState({ kind: 'done', result });
+      setState({
+        kind: 'done',
+        result: ai.modelLabel ? { ...result, model: ai.modelLabel(result.model) } : result,
+      });
     } catch (e) {
-      if (!ctrl.signal.aborted)
-        setState({ kind: 'error', message: toAiError(e).message || toAiError(e).code });
+      if (ctrl.signal.aborted) return;
+      const err = toAiError(e);
+      // A runtime on this computer failed: its study-partner sentence (nothing went online).
+      const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
+      setState({
+        kind: 'error',
+        message: isLocalMessage(err.message)
+          ? localFailureText(locale, localFailure(err), kind)
+          : err.message || err.code,
+      });
     }
   };
 

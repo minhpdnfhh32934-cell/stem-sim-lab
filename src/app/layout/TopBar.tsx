@@ -57,11 +57,12 @@ export const TopBar = memo(function TopBar() {
   const canRedo = useUndoStore((s) => s.canRedo);
   const stage = useAnalyzeStore((s) => s.stage);
   const aiOff = provider === 'off';
-  // The local model analyzes when it is ready (or when the learner chose Gemma themselves).
-  const gemmaEngine = useAnalysisEngine() !== 'cloud';
+  // The problem is read on this computer (Gemma when ready or chosen, or the runtime the learner
+  // chose): no API key is needed and an AI provider set to "off" does not block it.
+  const onDevice = useAnalysisEngine() !== 'cloud';
   // No key yet: the AI button leads to "Kết nối AI" instead (PROMPT_PHAN_2 A2).
-  const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff && !gemmaEngine;
-  const canAnalyze = (!aiOff || gemmaEngine) && problemText.trim().length > 0 && !running;
+  const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff && !onDevice;
+  const canAnalyze = (!aiOff || onDevice) && problemText.trim().length > 0 && !running;
   const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
     usePhotoCapture();
 
@@ -170,7 +171,7 @@ export const TopBar = memo(function TopBar() {
               aria-label={t('topbar.analyze')}
               disabled={!canAnalyze && !needsKey}
               data-tip={
-                aiOff && !gemmaEngine
+                aiOff && !onDevice
                   ? t('topbar.analyzeAiOff')
                   : needsKey
                     ? t('topbar.analyzeNeedsKey')

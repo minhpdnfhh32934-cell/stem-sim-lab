@@ -15,8 +15,8 @@ export function analyzeAction(text: string): 'off' | 'connect' | 'empty' | 'busy
 
 /**
  * "Phân tích đề": a crisis message gets the support card first (nothing is sent). With the
- * Gemma engine the local model analyzes the problem (no cloud key needed); otherwise no
- * key opens "Kết nối AI" and the analysis starts when ready.
+ * Gemma engine or a runtime on this computer the problem is analyzed there (no cloud key
+ * needed); otherwise no key opens "Kết nối AI" and the analysis starts when ready.
  */
 export async function submitProblem(text: string): Promise<void> {
   if (showCrisisIfNeeded(text)) return;
@@ -26,6 +26,11 @@ export async function submitProblem(text: string): Promise<void> {
     // Gemma was chosen but is not downloaded: show where to get it, send nothing online.
     if (engine === 'gemma-missing') {
       useWorkspaceStore.getState().openSettingsAt('local');
+      return;
+    }
+    // A runtime on this computer was chosen but none is picked yet: same, never the cloud.
+    if (engine === 'local-missing') {
+      useWorkspaceStore.getState().openSettingsAt('runtimes');
       return;
     }
     await analyze(text);
