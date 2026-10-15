@@ -199,46 +199,49 @@ function PartInfo({
     );
   };
   return (
-    <aside className="m3d__info" aria-live="polite">
-      {/* Name and actions stay in view (they cost no extra row); only the text below scrolls. */}
-      <div className="m3d__info-head">
-        <strong>{Lz(info.name)}</strong>
-        <div className="m3d__info-actions">
-          <button
-            type="button"
-            className="btn m3d__ask"
-            aria-label={t('teacher.askMitosisPart')}
-            data-tip={t('teacher.askMitosisPart')}
-            data-tip-side="top"
-            onClick={askTeacher}
-          >
-            <GraduationCap size={16} aria-hidden="true" />
-            {t('teacher.askMitosisPartShort')}
-          </button>
-          <IconButton
-            icon={X}
-            size="lg"
-            label={Lz(L('Bỏ chọn', 'Clear selection'))}
-            onClick={() => {
-              useMitosis3D.setState({ selected: null });
-            }}
-          />
+    // The slot is the card's grid row (its height decides whether the head can stay in view).
+    <div className="m3d__info-slot">
+      <aside className="m3d__info" aria-live="polite">
+        {/* Name and actions: in the head row (no extra height); the card scrolls as one. */}
+        <div className="m3d__info-head">
+          <strong>{Lz(info.name)}</strong>
+          <div className="m3d__info-actions">
+            <button
+              type="button"
+              className="btn m3d__ask"
+              aria-label={t('teacher.askMitosisPart')}
+              data-tip={t('teacher.askMitosisPart')}
+              data-tip-side="top"
+              onClick={askTeacher}
+            >
+              <GraduationCap size={16} aria-hidden="true" />
+              {t('teacher.askMitosisPartShort')}
+            </button>
+            <IconButton
+              icon={X}
+              size="lg"
+              label={Lz(L('Bỏ chọn', 'Clear selection'))}
+              onClick={() => {
+                useMitosis3D.setState({ selected: null });
+              }}
+            />
+          </div>
         </div>
-      </div>
-      <div className="m3d__info-body">
-        <p>{Lz(info.role)}</p>
-        {!visible && (
-          <p className="small muted">
-            {Lz(
-              L(
-                'Bộ phận này không thấy rõ ở kì đang xem.',
-                'This part is not visible at this stage.',
-              ),
-            )}
-          </p>
-        )}
-      </div>
-    </aside>
+        <div className="m3d__info-body">
+          <p>{Lz(info.role)}</p>
+          {!visible && (
+            <p className="small muted">
+              {Lz(
+                L(
+                  'Bộ phận này không thấy rõ ở kì đang xem.',
+                  'This part is not visible at this stage.',
+                ),
+              )}
+            </p>
+          )}
+        </div>
+      </aside>
+    </div>
   );
 }
 
