@@ -588,8 +588,14 @@ struct Scan {
 }
 
 fn scan(text: &str) -> Scan {
+    let (spans, _) = code_spans(text.as_bytes(), false);
+    scan_with(text, &spans)
+}
+
+/// `scan` reading the code spans `spans`: the text's own, or (for the stream tests' whole-text
+/// preview) those of a longer text that `text` starts, so code closed after it is still code.
+fn scan_with(text: &str, spans: &[CodeSpan]) -> Scan {
     let s = text.as_bytes();
-    let (spans, _) = code_spans(s, false);
     let mut placer = TagPlacer::default();
     let mut kept = String::new();
     // Start of the text currently kept.
@@ -599,7 +605,7 @@ fn scan(text: &str) -> Scan {
     let mut pos = 0;
     while let Some(tag) = next_tag(text, pos) {
         pos = tag.end;
-        let placed = placer.place(&spans, &tag);
+        let placed = placer.place(spans, &tag);
         if placed.inert {
             continue;
         }
@@ -653,7 +659,11 @@ pub(crate) fn js_trim(s: &str) -> &str {
 
 /// Removes reasoning from a whole answer (see the module documentation for the rule).
 pub fn strip_reasoning(text: &str) -> Stripped {
-    let scan = scan(text);
+    stripped(text, scan(text))
+}
+
+/// Rule 4 on a scan of `text`: trimmed when something was removed, unchanged otherwise.
+fn stripped(text: &str, scan: Scan) -> Stripped {
     if !scan.removed {
         return Stripped {
             text: text.to_string(),
@@ -1120,9 +1130,12 @@ mod tests {
     }
 
     /// What the stream must show for `raw`, computed the slow way (whole text every time): the
-    /// rule applied up to `preview_end` (`hideUnfinishedReasoning` of the web side).
+    /// rule applied up to `preview_end`, reading the code spans of everything received
+    /// (`hideUnfinishedReasoning` of the web side).
     fn slow_visible(raw: &str) -> String {
-        strip_reasoning(&raw[..preview_end(raw)]).text
+        let (spans, _) = code_spans(raw.as_bytes(), true);
+        let shown = &raw[..preview_end(raw)];
+        stripped(shown, scan_with(shown, &spans)).text
     }
 
     fn apply(change: Option<Shown>, screen: &mut String) {
@@ -1503,6 +1516,27 @@ mod tests {
     }
 
     #[test]
+    fn a_tag_being_typed_in_closed_code_shows_what_the_preview_shows() {
+        // The preview reads code from everything received (review fix round 1).
+        for raw in [
+            "```\n<think />\n<think \n```\n",
+            "```\nDùng `<think/>` hoặc <think/>.\n<think \n```\nTiếp",
+            "Dùng `<think/> <think x` nhé",
+        ] {
+            play(&[raw]);
+            play(&char_pieces(raw));
+        }
+        assert_eq!(
+            slow_visible("```\n<think />\n<think \n```\n"),
+            "```\n<think />\n"
+        );
+        assert_eq!(
+            slow_visible("Dùng `<think/> <think x` nhé"),
+            "Dùng `<think/> "
+        );
+    }
+
+    #[test]
     fn the_code_tracker_agrees_with_code_spans_after_every_byte() {
         const PARTS: [&str; 13] = [
             "`", "``", "```", "~~~", "~", " ", "\t", "\r", "\n", "a", "ố", "<think>", "</think>",
@@ -1524,7 +1558,8 @@ mod tests {
 
     #[test]
     fn random_streams_with_code_match_a_full_rescan_after_every_piece() {
-        const PARTS: [&str; 18] = [
+        // The last two: a tag still waiting for its '>' inside a fence that closes.
+        const PARTS: [&str; 20] = [
             "<think>",
             "</think>",
             "<reasoning>",
@@ -1543,6 +1578,8 @@ mod tests {
             "a",
             "Lực",
             "$x<y$",
+            "<think ",
+            "\n```\n",
         ];
         let mut rng = Lcg(0xF00D);
         for case in 0..1500 {

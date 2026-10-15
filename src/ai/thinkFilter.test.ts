@@ -254,6 +254,21 @@ describe('reasoning filter for streamed answers (same rule as Rust)', () => {
     expect(h.finish()).toMatchObject({ text: 'Đáp số 4. `', unclosed: true });
   });
 
+  it('shows what the preview shows when a tag being typed sits in closed code (review fix round 1)', () => {
+    for (const raw of [
+      '```\n<think />\n<think \n```\n',
+      '```\nDùng `<think/>` hoặc <think/>.\n<think \n```\nTiếp',
+      'Dùng `<think/> <think x` nhé',
+    ]) {
+      // Whole, and cut at every character.
+      play([raw]);
+      play(chars(raw));
+    }
+    const f = new ThinkFilter();
+    f.push('```\n<think />\n<think \n```\n');
+    expect(f.shown).toBe('```\n<think />\n');
+  });
+
   it('a self-closing tag is an empty block, also when cut between pieces', () => {
     for (const pieces of [
       ['Dùng <think', '/', '> để đánh dấu.'],
@@ -322,6 +337,9 @@ describe('reasoning filter for streamed answers (same rule as Rust)', () => {
       'a',
       'Lực',
       '$x<y$',
+      // A tag still waiting for its '>' inside a fence that closes (review fix round 1).
+      '<think ',
+      '\n```\n',
     ];
     let seed = 0xf00dn;
     const below = (n: number) => {

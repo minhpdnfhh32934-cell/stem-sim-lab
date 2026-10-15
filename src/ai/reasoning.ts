@@ -383,9 +383,9 @@ export class TagPlacer {
   }
 }
 
-/** Every tag of a text, placed. */
-function placedTags(text: string): PlacedTag[] {
-  const placer = new TagPlacer(codeSpans(text).spans);
+/** Every tag of a text, placed against `spans` (by default, the text's own code spans). */
+function placedTags(text: string, spans: readonly CodeSpan[] = codeSpans(text).spans): PlacedTag[] {
+  const placer = new TagPlacer(spans);
   const out: PlacedTag[] = [];
   for (let t = nextTag(text, 0, text.length); t; t = nextTag(text, t.end, text.length)) {
     out.push(placer.place(t));
@@ -402,11 +402,16 @@ interface ScanMode {
   strayAsTag: boolean;
   /** Code is set apart (off only for `stripAllReasoning`). */
   code: boolean;
+  /**
+   * The code spans to read, when they were found in a longer text than `text` (the preview: code
+   * closed after the point where the shown text stops is still code).
+   */
+  spans?: readonly CodeSpan[];
 }
 
 function scan(text: string, mode: ScanMode): StrippedReasoning {
   const tags = mode.code
-    ? placedTags(text)
+    ? placedTags(text, mode.spans)
     : (() => {
         const out: PlacedTag[] = [];
         for (let t = nextTag(text, 0, text.length); t; t = nextTag(text, t.end, text.length)) {
@@ -502,8 +507,12 @@ export function stripReasoningOutsideCode(text: string): StrippedReasoning {
  * or after a backtick still waiting for their end). Text without tags after that point is shown.
  */
 export function previewEnd(raw: string): number {
+  return previewCut(raw, codeSpans(raw, true).open);
+}
+
+/** `previewEnd` with the start of undecided code (`codeSpans(raw, true).open`) already known. */
+function previewCut(raw: string, open: number): number {
   let cut = partialTagStart(raw);
-  const { open } = codeSpans(raw, true);
   if (open < cut) {
     const tag = nextTag(raw, open, cut);
     if (tag) cut = tag.start;
@@ -512,18 +521,22 @@ export function previewEnd(raw: string): number {
 }
 
 /**
- * The answer so far, for a streaming preview: the shared rule applied up to `previewEnd`. An
+ * The answer so far, for a streaming preview: the shared rule applied up to `previewEnd`, with the
+ * code spans of everything received (a fence or a backtick closed after that point still makes
+ * the tags before it code: "```\n<think />\n<think \n```\n" shows "```\n<think />\n"). An
  * unfinished block hides everything after its opening tag; a closing tag left without its opening
  * tag (pre-filled template) can only be recognised once it has arrived.
  *
  * The one preview rule. This is its whole-text form, for a caller that gets the raw answer so far
  * (the Gemma worker's partial answers in chatService.ts); `ThinkFilter` (thinkFilter.ts) and
  * Rust's `ReasoningStream` are its incremental form for streams and show exactly this after every
- * piece (tested on every shared vector cut at every character). A stream's shown text is already
- * filtered: it is never passed through this again.
+ * piece (tested on every shared vector cut at every character, and on random streams with code).
+ * A stream's shown text is already filtered: it is never passed through this again.
  */
 export function hideUnfinishedReasoning(partial: string): string {
-  return stripReasoning(partial.slice(0, previewEnd(partial))).text;
+  const { spans, open } = codeSpans(partial, true);
+  const shown = partial.slice(0, previewCut(partial, open));
+  return scan(shown, { nested: false, strayAsTag: false, code: true, spans }).text;
 }
 
 /** The text is one whole JSON value (Rust's `is_json`). */

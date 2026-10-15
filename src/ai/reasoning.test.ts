@@ -193,4 +193,17 @@ describe('streaming preview', () => {
   it('leaves text without reasoning exactly as it is (spaces included)', () => {
     expect(hideUnfinishedReasoning('Rơi tự do ')).toBe('Rơi tự do ');
   });
+
+  it('reads code from everything received, like the stream filters (review fix round 1)', () => {
+    // A tag still being typed inside a fence that is already closed: the fence's tags are code.
+    // Cutting before reading code used to drop the closing line and make them reasoning.
+    expect(hideUnfinishedReasoning('```\n<think />\n<think \n```\n')).toBe('```\n<think />\n');
+    expect(hideUnfinishedReasoning('```\nDùng `<think/>` hoặc <think/>.\n<think \n```\nTiếp')).toBe(
+      '```\nDùng `<think/>` hoặc <think/>.\n',
+    );
+    // The same with inline code closed after the tag being typed.
+    expect(hideUnfinishedReasoning('Dùng `<think/> <think x` nhé')).toBe('Dùng `<think/> ');
+    // Outside code nothing changes: a tag being typed still hides what follows it.
+    expect(hideUnfinishedReasoning('Dùng <think/> <think x` nhé')).toBe('Dùng');
+  });
 });
