@@ -1171,7 +1171,8 @@ export async function askTeacher(
   // Board mode: a cloud AI writes a TeachScript lesson (BOARD_SYSTEM); a small on-device model
   // already got the short markdown layout in its prompt (BOARD_STYLE), which
   // src/teacher/board/fromMarkdown.ts lays out on the board by itself.
-  const baseSystem = options.board && !compact ? [core, BOARD_SYSTEM[locale]].join('\n\n') : core;
+  const teachScript = options.board === true && !compact;
+  const baseSystem = teachScript ? [core, BOARD_SYSTEM[locale]].join('\n\n') : core;
 
   if (options.think) {
     const checker = chat.verifierProvider;
@@ -1301,8 +1302,9 @@ export async function askTeacher(
           // Hidden reasoning is never shown, not even while it is being written.
           const visible = hideUnfinishedReasoning(text);
           // A board lesson (TeachScript) shows as readable text, never its tags or LaTeX: the
-          // learner reads the lesson, not its markup.
-          stream(options.board ? boardStreamPreview(visible) : visible);
+          // learner reads the lesson, not its markup. A lesson asked in TeachScript reads so from
+          // its first word, before any tag has come (its first sentence may hold a formula).
+          stream(options.board ? boardStreamPreview(visible, teachScript) : visible);
         }
       : undefined;
   const draft = await ask(system, history, budget.output, noFallback, shown, question);

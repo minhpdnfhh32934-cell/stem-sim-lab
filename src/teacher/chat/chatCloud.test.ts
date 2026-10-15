@@ -498,6 +498,29 @@ describe('a streamed online answer', () => {
     expect(reply.content).toBe(lesson);
   });
 
+  it('a lesson whose first sentence holds a formula never shows LaTeX while it streams', async () => {
+    // Character by character: the first `<write>` is not whole for most of the stream.
+    const lesson = String.raw`Ta có $v = \sqrt{2gh}$ nên <write id="w1" math="true">v = \sqrt{2 \cdot 9{,}8 \cdot 5}</write> và <highlight target="w1"/>.`;
+    setTransportForTests(
+      fake(
+        () => ({}),
+        (_req, onText) => {
+          for (let end = 1; end <= lesson.length; end++) onText(lesson.slice(0, end));
+          return { content: lesson };
+        },
+      ),
+    );
+    const seen: string[] = [];
+    const reply = await ask('Vận tốc khi chạm đất?', {
+      board: true,
+      onPartial: (t) => seen.push(t),
+    });
+    expect(seen.length).toBeGreaterThan(5);
+    expect(seen.filter((t) => /[<>$\\{}]|sqrt|cdot|target=|math=/.test(t))).toEqual([]);
+    expect(seen.at(-1)).toBe('Ta có v = √(2gh) nên v = √(2 · 9,8 · 5) và.');
+    expect(reply.content).toBe(lesson);
+  });
+
   it('never streams Think (draft and review), a summary, or a call without onPartial', async () => {
     setTransportForTests(
       fake(

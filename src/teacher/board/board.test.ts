@@ -212,10 +212,11 @@ describe('a board lesson while it streams (the chat preview, W2 fix round 1)', (
   });
 
   it('leaves out what is still being written until it is whole', () => {
-    // A write whose closing tag has not come: its formula is not shown cut in the middle.
+    // A write whose closing tag has not come: its formula is not shown cut in the middle (and the
+    // open `<write` already makes this a lesson: the words before it read as one).
     expect(
       boardStreamPreview(String.raw`Theo định luật II, <write id="f1" math="true">a = \frac{F`),
-    ).toBe('Theo định luật II, ');
+    ).toBe('Theo định luật II,');
     // A tag name being typed after a finished write.
     expect(boardStreamPreview('Ta có <write id="a1">x = 1</write> và <wr')).toBe('Ta có x = 1 và');
     // A formula in the speech whose closing "$" has not come.
@@ -226,6 +227,45 @@ describe('a board lesson while it streams (the chat preview, W2 fix round 1)', (
     expect(boardStreamPreview('# Rơi tự do\n1. Vật chỉ chịu $mg$.')).toBe(
       '# Rơi tự do\n1. Vật chỉ chịu $mg$.',
     );
+  });
+
+  // W2 fix round 2: the first sentence holds a formula, before the first write is whole.
+  const FORMULA_FIRST = String.raw`Ta có $v = \sqrt{2gh}$ nên <write id="w1" math="true">v = \sqrt{2 \cdot 9{,}8 \cdot 5}</write> và <highlight target="w1"/>.`;
+
+  it('a lesson asked in TeachScript never shows LaTeX, not even before its first write', () => {
+    // Every prefix, as askTeacher previews a TeachScript lesson (BOARD_SYSTEM was sent).
+    for (let end = 1; end <= FORMULA_FIRST.length; end++) {
+      const piece = boardStreamPreview(FORMULA_FIRST.slice(0, end), true);
+      expect(piece).not.toMatch(/[<>$\\{}]|sqrt|cdot|target=|math=/);
+    }
+    expect(boardStreamPreview('Ta có $v = \\sqrt{2gh}$ nên ', true)).toBe('Ta có v = √(2gh) nên');
+    // The written formula reads with its number whole (9,8, never "9" and "8").
+    expect(boardStreamPreview(FORMULA_FIRST, true)).toBe(
+      'Ta có v = √(2gh) nên v = √(2 · 9,8 · 5) và.',
+    );
+  });
+
+  it('without being told, an unfinished <write already makes it a lesson', () => {
+    const typed = FORMULA_FIRST.indexOf('<write') + '<write'.length;
+    for (let end = typed; end <= FORMULA_FIRST.length; end++) {
+      expect(boardStreamPreview(FORMULA_FIRST.slice(0, end))).not.toMatch(/[<>$\\{}]|sqrt/);
+    }
+  });
+});
+
+describe('subtitles read formulas as written', () => {
+  it('keeps a decimal comma inside a root or a fraction, and reads one inside another', () => {
+    expect(subtitleText(String.raw`$v = \sqrt{2 \cdot 9{,}8 \cdot 5}$`)).toBe('v = √(2 · 9,8 · 5)');
+    expect(subtitleText(String.raw`$v = \frac{72}{3{,}6}$`)).toBe('v = 72/3,6');
+    expect(subtitleText(String.raw`$t = \sqrt{\frac{2h}{g}}$`)).toBe('t = √(2h/g)');
+    expect(subtitleText(String.raw`$x = \frac{\sqrt{3}}{2}$`)).toBe('x = √(3)/2');
+    expect(subtitleText(String.raw`$\rho = \frac{1}{10^{-3}}$`)).toBe('rho = 1/10⁻³');
+  });
+
+  it('a fraction of sums keeps its brackets (a + b over c is not a + b/c)', () => {
+    expect(subtitleText(String.raw`$v = \frac{s_1 + s_2}{t}$`)).toBe('v = (s₁ + s₂)/t');
+    expect(subtitleText(String.raw`$t = \frac{2 \cdot 45}{10}$`)).toBe('t = (2 · 45)/10');
+    expect(subtitleText('Ta có $a = \\frac{F}{m}$ nhé')).toBe('Ta có a = F/m nhé');
   });
 });
 

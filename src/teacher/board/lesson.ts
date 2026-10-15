@@ -130,15 +130,41 @@ const SUPERSCRIPT: Record<string, string> = {
   '−': '⁻',
 };
 
+/** A fraction's part as read inline: in brackets when it has more than one term ("(2 · 45)/10"). */
+function fractionPart(part: string): string {
+  const p = part.trim();
+  return /[+\-−·\s]/.test(p) ? `(${p})` : p;
+}
+
+/**
+ * `\frac`, `\sqrt` and `\text` in plain symbols, from the inside out, so one inside another
+ * reads too (`\frac{\sqrt{x}}{2}`, `\sqrt{\frac{2h}{g}}`). Bounded: LaTeX from an AI is untrusted.
+ */
+function readableCommands(tex: string): string {
+  let out = tex;
+  for (let i = 0; i < 8; i++) {
+    const next = out
+      .replace(
+        /\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g,
+        (_m, a: string, b: string) => `${fractionPart(a)}/${fractionPart(b)}`,
+      )
+      .replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
+      .replace(/\\text\{([^{}]*)\}/g, '$1');
+    if (next === out) return out;
+    out = next;
+  }
+  return out;
+}
+
 /** Subtitle: the spoken sentence with markdown and LaTeX turned into readable text. */
 export function subtitleText(speech: string): string {
   return speech
-    .replace(/\$\$?([^$]+)\$\$?/g, (_m, tex: string) =>
-      tex
-        .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, '$1/$2')
-        .replace(/\\(cdot|times)/g, '·')
-        .replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
-        .replace(/\\text\{([^{}]*)\}/g, '$1')
+    .replace(/\$\$?([^$]+)\$\$?/g, (_m, tex: string) => {
+      // LaTeX's decimal comma "9{,}8" is the number 9,8: its braces go first, or a formula
+      // around it ("\sqrt{2 \cdot 9{,}8}") would not be read as one.
+      const plain = readableCommands(
+        tex.replace(/\{([,.])\}/g, '$1').replace(/\\(cdot|times)/g, '·'),
+      )
         // "2H_2 + O_2 \\rightarrow 2H_2O" → "2H₂ + O₂ → 2H₂O"; "m/s^2" → "m/s²"; "\\ " → space.
         .replace(/\\(?:long)?rightarrow\b|\\to\b/g, '→')
         .replace(/\\(?:rightleftharpoons|leftrightarrow)\b/g, '⇌')
@@ -154,10 +180,12 @@ export function subtitleText(speech: string): string {
         .replace(/\^(?:\{([0-9+\-−]+)\}|([0-9+\-−]))/g, (_s, a?: string, b?: string) =>
           Array.from(a ?? b ?? '', (c) => SUPERSCRIPT[c] ?? c).join(''),
         )
-        .replace(/\^\{([^{}]*)\}/g, (_s, g: string) => (g.length === 1 ? `^${g}` : `^(${g})`))
+        .replace(/\^\{([^{}]*)\}/g, (_s, g: string) => (g.length === 1 ? `^${g}` : `^(${g})`));
+      // A fraction or root whose part held a power or an index ("\frac{1}{10^{-3}}") reads now.
+      return readableCommands(plain)
         .replace(/\\([a-zA-Z]+)/g, '$1')
-        .replace(/[{}]/g, ''),
-    )
+        .replace(/[{}]/g, '');
+    })
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/[`#]/g, '')
     .replace(/\s+/g, ' ')
@@ -177,14 +205,17 @@ const TYPING_TAG = /<\/?[a-z_]{0,12}$/i;
  * its tag stands, formulas in plain symbols), never a tag, an attribute or LaTeX. What is still
  * being written stays out until it is whole: a `<write>`/`<correct>`/`<ask>` without its closing
  * tag (a formula cut in the middle reads wrong), a tag name being typed, a formula whose closing
- * `$` has not come yet. Text without TeachScript markup (a markdown answer) is returned as it is.
+ * `$` has not come yet. Text without TeachScript markup (a markdown answer) is returned as it is,
+ * unless `teachScript` says a TeachScript lesson was asked for: then the text reads as one from
+ * its first word, before any tag has come (a first sentence with a formula never shows its LaTeX).
+ * Markup is looked for in all the text so far, an unfinished `<write …` included.
  * Provisional only: the stored answer is the complete one (`boardAnswerText` in the chat).
  */
-export function boardStreamPreview(textSoFar: string): string {
+export function boardStreamPreview(textSoFar: string, teachScript = false): string {
   let open: number | null = null;
   for (const m of textSoFar.matchAll(WORD_CONTAINER)) open = m[1] ? null : m.index;
   const settled = (open === null ? textSoFar : textSoFar.slice(0, open)).replace(TYPING_TAG, '');
-  if (!TEACHSCRIPT_MARKUP.test(settled)) return settled;
+  if (!teachScript && !TEACHSCRIPT_MARKUP.test(textSoFar)) return settled;
   const dollars = settled.split('$').length - 1;
   const whole = dollars % 2 === 0 ? settled : settled.slice(0, settled.lastIndexOf('$'));
   return parseTeachScript(whole)
