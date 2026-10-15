@@ -19,6 +19,8 @@ const ANSWER = ['Lực ma sát ', 'cản trở chuyển động ', 'của vật 
 interface Counters {
   runtime: number;
   chat: number;
+  /** Every request to the runtime, answered or not, as "METHOD /path". */
+  requests: string[];
   cloud: string[];
 }
 
@@ -49,9 +51,10 @@ async function fakeOllama(page: Page, counters: Counters, down = false): Promise
   await page.route(`${OLLAMA}/**`, async (route: Route) => {
     counters.runtime++;
     const req = route.request();
+    const path = new URL(req.url()).pathname;
+    counters.requests.push(`${req.method()} ${path}`);
     if (down) return route.abort('connectionrefused');
     if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
-    const path = new URL(req.url()).pathname;
     const json = (body: unknown) => route.fulfill({ headers: CORS, json: body });
     if (path === '/api/version') return json({ version: '0.12.6' });
     if (path === '/api/tags') {
@@ -117,7 +120,7 @@ async function openRuntimesPage(page: Page) {
 test('detect → choose → the AI Teacher answers on this computer, nothing goes online', async ({
   page,
 }) => {
-  const counters: Counters = { runtime: 0, chat: 0, cloud: [] };
+  const counters: Counters = { runtime: 0, chat: 0, requests: [], cloud: [] };
   await guardOnline(page, counters);
   await fakeOllama(page, counters);
   await openLab(page);
@@ -125,6 +128,10 @@ test('detect → choose → the AI Teacher answers on this computer, nothing goe
   const { settings, panel } = await openRuntimesPage(page);
   // Nothing is asked when the page opens.
   expect(counters.runtime).toBe(0);
+  // The fallback is stated where the learner chooses: a failure is reported, nothing goes online.
+  await expect(
+    panel.getByText(/^Phương án dự phòng: khi AI trên máy gặp lỗi/).first(),
+  ).toBeVisible();
   await panel.getByRole('button', { name: 'Tìm trên máy này' }).click();
   await expect(panel.getByText('Đang chạy · phiên bản 0.12.6')).toBeVisible();
   await expect(panel.getByText('Không thấy', { exact: true })).toHaveCount(2);
@@ -169,7 +176,7 @@ test('detect → choose → the AI Teacher answers on this computer, nothing goe
 });
 
 test('the chosen runtime is down: the learner is told, nothing goes online', async ({ page }) => {
-  const counters: Counters = { runtime: 0, chat: 0, cloud: [] };
+  const counters: Counters = { runtime: 0, chat: 0, requests: [], cloud: [] };
   await guardOnline(page, counters);
   await fakeOllama(page, counters, true);
   // A choice saved earlier (as "Dùng cho AI Teacher" saves it).
@@ -215,8 +222,20 @@ test('the chosen runtime is down: the learner is told, nothing goes online', asy
     timeout: 20_000,
   });
   await expect(alert.getByRole('button', { name: /Hỏi lại/ })).toBeVisible();
-  // Only the runtime on this computer was tried, once: no retry, no cloud, no Wikipedia.
-  expect(counters.runtime).toBeGreaterThan(0);
+  // Only the runtime on this computer was tried, once: the first request (who are you?) was
+  // refused, so nothing more was asked. No retry, no cloud, no Wikipedia.
+  expect(counters.requests).toEqual(['GET /api/version']);
   expect(counters.chat).toBe(0);
+  expect(counters.cloud).toEqual([]);
+  // "Hỏi lại" is the learner's click: exactly one more request, still nothing online.
+  await alert.getByRole('button', { name: /Hỏi lại/ }).click();
+  await expect(chat.getByRole('alert')).toContainText(
+    'Mình chưa kết nối được tới Ollama trên máy này',
+    { timeout: 20_000 },
+  );
+  await expect.poll(() => counters.requests.length).toBe(2);
+  // Nothing more follows by itself.
+  await page.waitForTimeout(500);
+  expect(counters.requests).toEqual(['GET /api/version', 'GET /api/version']);
   expect(counters.cloud).toEqual([]);
 });

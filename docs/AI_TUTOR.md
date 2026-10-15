@@ -685,8 +685,11 @@ never as a missing model. A runtime that says no gives `no-vision`.
 
 ## AI on this computer as the AI Teacher engine (Ollama, LM Studio, llama.cpp)
 
-User decision 2026-10-14 (recorded in `CLAUDE.md` by the lead). The runtimes are a third engine,
-`ChatEngine = 'local'` (`stemsim.teacher-chat` v6; v5 keeps its engine), never a cloud `Provider`.
+User decision 2026-10-14 (loopback-only Ollama, LM Studio, llama.cpp and OpenAI-compatible
+servers). **Not yet recorded in `CLAUDE.md`**: its rules still say "no LM Studio/Ollama" and "do not
+add local providers back"; the lead must record this decision there before the branch is merged.
+The runtimes are a third engine, `ChatEngine = 'local'` (`stemsim.teacher-chat` v6; v5 keeps its
+engine), never a cloud `Provider`.
 The page talks to them through `src/ai/local/client.ts` (Rust `local_ai_*` commands in the desktop
 app, the browser client only without it).
 
@@ -698,16 +701,21 @@ app, the browser client only without it).
   learner added (no file read, no disk scan), then lists the models of each runtime that answered.
 - Each runtime: “Phát hiện” + “Đang chạy · phiên bản …”, “Đang nạp mô hình”, “Cần khóa”, “Không
   thấy” or “Không phải chương trình AI”. Each model: “Có trong danh sách”, loaded or not, “Đang
-  chọn cho AI Teacher”, “Đã thử trả lời · time”, “Không dùng được: reason” (runs online, context
-  under 2 048, a failed answer test). Models that run online are listed but cannot be chosen.
+  chọn cho AI Teacher” only while the chat uses it (otherwise “Đã chọn · AI Teacher đang dùng …”,
+  naming the engine that really answers), “Đã thử trả lời · time”, “Không dùng được: reason”
+  (runs online, context under 2 048, a failed answer test). Models that run online are listed but
+  cannot be chosen.
 - “Kiểm tra kết nối” = fingerprint + model details (nothing generates). “Kiểm tra trả lời” = one
   tiny generation; the page warns it loads the model into RAM/VRAM; one click is one request.
 - Capability table: Có / Không / Chưa xác minh, only what was seen on this computer (the
   runtime's documentation is a hint). File size and context length when the runtime reports them;
   RAM/VRAM is always “Chưa xác minh”.
 - “Dùng cho AI Teacher” saves the choice (`stemsim.local-ai`) and the engine; “Bỏ chọn” goes back
-  to the engine used before, as it was (a pre-selected Gemma stays only a suggestion). “Khôi phục
-  mặc định” (after a confirm) forgets addresses, checks and the choice; the engine is not changed.
+  to the engine used before, as it was (a pre-selected Gemma stays only a suggestion). Its note and
+  the “not in use” line name the engine that really answers (`analysisEngine`): a pre-selected
+  Gemma without its model means the questions now go online to the API, and the note says so.
+  “Khôi phục mặc định” (after a confirm) forgets addresses, checks and the choice; the engine is not
+  changed.
 - “Thêm địa chỉ” refuses anything off this computer and says why. In Basic mode the address form
   and the capability table are folded behind one line.
 - Troubleshooting per status, honesty notes (SimLab does not choose the runtime's GPU, does not
@@ -720,7 +728,13 @@ piece passes `outputIsSafe`, unfinished reasoning is hidden, pieces are provisio
 cap, never a fallback; “Dừng” closes the connection. Failures are study-partner sentences
 (`chat.errors.local*`: down, model missing, loading, stalled, needs a key, context full, runs
 online, not this runtime, not chosen, failed, app update) with the Settings page to open and
-“Hỏi lại” when asking again may help — the learner's click, one request.
+“Hỏi lại” when asking again may help — the learner's click, one request. The summary of older
+turns is written by the same runtime and capped to fit the window it is sent with (window − 400 −
+512 tokens), so Ollama never cuts it silently; a summary the runtime fails for a runtime reason
+(not running, stalled, loading, model missing, locked…) ends the question with that sentence
+instead of asking the runtime a second time (only a summary that did not fit, or an unsafe one, is
+skipped). The chat line “không gửi lên mạng” is shown only while nothing goes online: with the
+Gemini voice on it says that each answer's text goes to Google to be read aloud.
 
 **Budget** (`memory.contextBudget('local', …, ctx)`): with a context window seen on this computer,
 the cloud table but never more than the window minus the answer and 512 tokens; unknown → the small
@@ -734,14 +748,18 @@ otherwise the on-device one (no new prompt text, no decoding change).
 **Analysis, explanation and photos**: “Phân tích đề” and “AI diễn giải” use the same engine
 (`resolveAiForAnalysis` → `localTransport`; JSON schema as structured output only when the check
 saw it supported, otherwise in the prompt; the draft checks are unchanged). A local failure in the
-analysis dialog is the same sentence plus “Mở AI trên máy khác”. A photo with this engine is read
-by the runtime only when its model was seen reading pictures, else by the in-app Gemma, else the
-learner is told it needs an API key or the picture-reading Gemma — it never goes online.
+analysis dialog is the same sentence plus “Mở AI trên máy khác”; “AI diễn giải” shows the same
+sentence with a Settings button, and a chosen Gemma without its model says so (never a code). A
+photo with this engine (`photoVision.readPhotoOnComputer`) is read by the runtime only when its
+model was seen reading pictures, else by the in-app Gemma, else the learner is told it needs an API
+key or the picture-reading Gemma. No runtime picked and a runtime that fails (not running, stalled,
+model missing…) each get their own sentence and Settings page instead — it never goes online.
 
 Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocalOnly.test.ts`
 (local cases), `ChatPanelLocal.test.tsx`, `LocalRuntimeSettings.test.tsx`,
 `TeacherSettingsDataFlow.test.tsx`, `analyze.test.ts`, `ExplainBox.test.tsx`,
-`photoVision.test.ts`, `localAiStore.test.ts`, E2E `tests/e2e/local-ai.spec.ts` (a fake Ollama on
+`photoVision.test.ts`, `CameraDialog.test.tsx`, `localAiStore.test.ts`, E2E
+`tests/e2e/local-ai.spec.ts` (a fake Ollama on
 127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
 runtime.
 
