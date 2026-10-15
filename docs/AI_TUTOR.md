@@ -46,6 +46,16 @@ problem text, module inputs and the Science Card. The context is read from app s
 screenshot, clipboard or data from another window is collected. The blue scan band is visual
 feedback only. Personal-data and content checks run on the context before anything is sent.
 
+**“Hỏi thầy về bộ phận này” (3D mitosis, item 2 outside the board).** The part card of the 3D
+mitosis view (`Mitosis3DView.tsx` `PartInfo`, shown after a tap or a pick in “Bộ phận tế bào”)
+has a “Hỏi thầy” button. It opens AI Teacher the usual way (`openTeacherWithQuestion` →
+`openTeacher`: talk layout, screen context off) with a question written into the box from the
+module's own texts only: the part's name (`COMPONENTS`), the stage (`STAGE3D_NAME`) and the cell
+type (`teacher.askMitosisPartQuestion`). Nothing is sent until the learner presses send, and the
+learner may change the question first; it then goes like any typed question (`checkInput`,
+moderation, labels), with no picture and no screen data. The teacher page's chat takes the
+question once (`useTeacherStore.draft`, cleared when taken or when the page closes).
+
 ## Cloud chat and Think
 
 Cloud chat uses the provider and key configured in Settings → Kết nối AI. **Think** sends one
