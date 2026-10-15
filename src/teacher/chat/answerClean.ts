@@ -24,8 +24,9 @@
  *   these. Feedback on the learner's own draft or answer ("Bản nháp của em…", "Your answer…") is
  *   never a remark; when the question is about the learner's draft nothing of the wrapper is
  *   removed, and when it asks for a correction or a check of the learner's own work ("sửa giúp
- *   em", "em làm … đúng không?", "is my answer right?") only words about the draft or the version
- *   under review count and a header alone does not end the opening sentences.
+ *   em", "em làm … đúng không?", "em lam dung khong a?" typed without accents, "is my answer
+ *   right?") only words about the draft or the version under review count and a header alone
+ *   does not end the opening sentences.
  *
  * Code fences and inline code are never edited (reasoning around code excepted). Text without
  * anything to remove comes back exactly as it was; the result is idempotent. Pure: no store
@@ -242,7 +243,7 @@ const ENDS = String.raw`\s*(?:[?.!,;…]|$)`;
  */
 const BENEFIT_AFTER = String.raw`(?:${FOR_ME})\s+(?:${ME})|cho\s+(?:${ME})|(?:${FOR_ME})(?=${PARTICLES}${ENDS})`;
 /** Verbs that correct or grade: with a piece of work they always mean the learner's own. */
-const FIX = String.raw`sửa|chữa|chấm(?:\s+điểm)?|kiểm\s+tra`;
+const FIX = String.raw`sửa|chữa|chấm(?:\s+điểm)?|kiểm\s+tra|check`;
 /** Verbs that judge a piece of work ("nhận xét bài này giúp em"), not a topic. */
 const JUDGE = String.raw`nhận\s+xét|góp\s+ý|đánh\s+giá`;
 /** A piece of work: "bài (làm/giải/tập)", "lời giải", "đáp án", "kết quả", "lỗi (sai)", "sai"… */
@@ -258,22 +259,40 @@ const MINE = String.raw`của\s+(?:${ME})|(?:${ME})\s+(?:đã\s+)?(?:làm|giải
 const THIS = String.raw`(?:\s+(?:này|đó|ấy))?`;
 /** Where in the work: "sửa lỗi sai trong bài của em", "chỗ sai ở lời giải này giúp em". */
 const IN_WORK = String.raw`(?:\s+(?:trong|ở)\s+(?:${OWN_WORK})${THIS})?`;
+/**
+ * What a bare request ("sửa giúp em") may go on with: nothing (the request ends: "Kiểm tra lại
+ * giúp em.", "Sửa giúp em, v = …"), or the work it is about, then the end or ":" ("Thầy chữa giúp
+ * em bài này", "Kiểm tra giúp em bài này: v = 20 m/s", "sửa giúp em chỗ này với"). A topic after
+ * it ("kiểm tra giúp em điều kiện cân bằng…", "sửa giúp em lỗi chính tả…", "chữa giúp em bài tập
+ * 5") is no request about the learner's work.
+ */
+const REQUEST_TAIL = String.raw`(?=${PARTICLES}${ENDS})|\s+(?:(?:${WORK})${THIS}${IN_WORK}|(?:cái|chỗ|đoạn|phần|câu)\s+(?:này|đó|ấy))(?=${PARTICLES}(?:${ENDS}|\s*:))`;
+/** "không", "chưa" and their casual spellings ("k", "ko", "hông", "hk", "hok"). */
+const NOT = String.raw`không|chưa|ko|k|hông|hk|hok`;
+/** Words that may close a yes/no check: "ạ", "nhỉ", "thầy ơi"… */
+const CHECK_PARTICLES = String.raw`(?:\s+(?:ạ|à|ha|nhỉ|nhé|nha|vậy|thế|hả|ơi|thầy|cô|anh|chị|bạn))*`;
+/** "em làm vậy", "mình giải như thế này", "em tính kiểu này": the learner's own way of working. */
+const OWN_WAY = String.raw`(?:${ME})\s+(?:đã\s+)?(?:làm|giải|tính|viết)(?:\s+bài(?:\s+(?:này|đó))?)?\s+(?:như\s+)?(?:vậy|vầy|thế(?:\s+này)?|này|kiểu\s+này|cách\s+này)`;
 
 /**
- * Requests about the learner's own work, whole words only: "sửa giúp (em)", "sửa cho em",
- * "chấm/chữa/kiểm tra bài giúp em", "sửa lỗi giúp em", "giúp em sửa bài này", "nhận xét bài này
- * giúp em", "xem giúp bài làm của em", "bài làm của em" anywhere, "em làm … đúng không (thầy ơi)?",
- * "đúng k ạ", "có sai không ạ?", "em sai ở đâu?", "Đáp án A đúng không thầy?", "check/fix/grade my
- * …", "is my answer correct?", "is it right?" or "fix this" at the end of the question, "am I
- * right?", "did I solve this correctly?", "did I make a mistake?", "where did I go wrong?", "Is
- * answer A right?". Not "Thầy xem giúp em bài này: …" or "Bài tập của em: …" (a new exercise),
- * "xem kết quả của mình" (a simulation's result), "con người", "con lắc", "nhận xét về …",
- * "chỉnh lưu", "điều chỉnh", "sửa sai ADN", "Which … is correct?", "Check this: <a new task>",
- * "Why is it wrong to …?", "How do I fix this?" or "review <topic>".
+ * Requests about the learner's own work, whole words only: "sửa giúp (em)" or "sửa cho em" that
+ * ends or names the work, "chấm/chữa/kiểm tra bài giúp em", "sửa lỗi giúp em", "giúp em sửa bài
+ * này", "nhận xét bài này giúp em", "xem giúp bài làm của em", "bài làm của em" anywhere, "em làm
+ * … đúng không (thầy ơi)?", "đúng k ạ", "đúng hk thầy", "có sai không ạ?", "em sai ở đâu?", "xem
+ * có sai chỗ nào không", "Em làm vậy ổn/được không?", "Em chọn đáp án C có được không?", "Đáp án A
+ * đúng không thầy?", "check/fix/grade my …", "is my answer correct?", "is it right?" or "fix
+ * this" at the end of the question, "am I right?", "did I solve this correctly?", "did I make a
+ * mistake?", "where did I go wrong?", "Is answer A right?", "Is 20 m/s correct?", "I got 20 m/s,
+ * right?". Not "Thầy xem giúp em bài này: …" or "Bài tập của em: …" (a new exercise), "xem kết
+ * quả của mình" (a simulation's result), "con người", "con lắc", "nhận xét về …", "chỉnh lưu",
+ * "điều chỉnh", "sửa sai ADN", "kiểm tra giúp em <a topic>", "… còn đúng không?", "Which … is
+ * correct?", "Check this: <a new task>", "Why is it wrong to …?", "How do I fix this?" or "review
+ * <topic>". Typed without accents: `FOLDED_REQUESTS`.
  */
 const CORRECTION_REQUESTS: readonly RegExp[] = [
-  // "sửa giúp em", "chữa lại hộ", "chấm điểm giúp", "kiểm tra lại giúp em", "sửa cho em".
-  new RegExp(viWords(String.raw`(?:${FIX})(?:\s+lại)?\s+(?:${BENEFIT})`), 'iu'),
+  // "sửa giúp em", "chữa lại hộ", "chấm điểm giúp", "kiểm tra lại giúp em", "sửa cho em", "check
+  // giúp em bài này với: …", when the request ends or names the work (`REQUEST_TAIL`).
+  new RegExp(viWords(String.raw`(?:${FIX})(?:\s+lại)?\s+(?:${BENEFIT})(?:${REQUEST_TAIL})`), 'iu'),
   // "sửa bài giúp em", "chữa bài cho em", "sửa lỗi giúp em", "sửa sai giúp em", "sửa bài của em",
   // "chấm bài em làm", "nhận xét bài này giúp em", "đánh giá lời giải của mình", "sửa lỗi sai
   // trong bài của em".
@@ -318,10 +337,32 @@ const CORRECTION_REQUESTS: readonly RegExp[] = [
     'iu',
   ),
   // A yes/no check of what the learner thinks: "… đúng không ạ?", "có đúng không", "đúng chưa
-  // thầy", "đúng không thầy ơi?", "đúng k ạ", "có sai không ạ?", "Đáp án A đúng không?". Only at
-  // the end of a sentence ("đúng không đổi", "sai không đáng kể" are no check).
+  // thầy", "đúng không thầy ơi?", "đúng k ạ", "đúng hk thầy", "có sai không ạ?", "Đáp án A đúng
+  // không?". Only at the end of a sentence ("đúng không đổi", "sai không đáng kể" are no check),
+  // and not after "còn"/"vẫn" (whether a law still holds: "… còn đúng không?").
   new RegExp(
-    String.raw`(?<![\p{L}\p{M}])(?:đúng|sai)\s+(?:không|chưa|ko|k|hông)(?:\s+(?:ạ|à|ha|nhỉ|nhé|nha|vậy|thế|hả|ơi|thầy|cô|anh|chị|bạn))*${ENDS}`,
+    String.raw`(?<![\p{L}\p{M}])(?<!(?:còn|vẫn)\s+)(?:đúng|sai)\s+(?:${NOT})${CHECK_PARTICLES}${ENDS}`,
+    'iu',
+  ),
+  // "Em làm như vầy được chưa thầy?", "Em làm vậy ổn không ạ?": the learner's way, judged.
+  new RegExp(
+    viWords(
+      String.raw`${OWN_WAY}(?:\s+(?:thì|là))?(?:\s+có)?\s+(?:được|ổn|đúng|sai)\s+(?:${NOT})(?=${CHECK_PARTICLES}${ENDS})`,
+    ),
+    'iu',
+  ),
+  // "Em chọn đáp án C có được không ạ?", "mình chọn B đúng chưa": a choice the learner made.
+  new RegExp(
+    viWords(
+      String.raw`(?:${ME})\s+(?:đã\s+)?chọn\s+(?:(?:đáp\s+án|câu|phương\s+án|ý)\s+)?[a-e](?![\p{L}\p{M}])[^.?!\n]*?(?<![\p{L}\p{M}])(?:được|ổn|đúng|sai)\s+(?:${NOT})(?=${CHECK_PARTICLES}${ENDS})`,
+    ),
+    'iu',
+  ),
+  // "Thầy xem có sai chỗ nào không ạ?", "kiểm tra giúp em có sai ở bước nào không".
+  new RegExp(
+    viWords(
+      String.raw`(?:xem|kiểm\s+tra)(?:\s+(?:${BENEFIT}))?\s+(?:có\s+)?sai\s+(?:ở\s+)?(?:chỗ|bước|phần|đâu)`,
+    ),
     'iu',
   ),
   // "Em sai ở đâu?", "em làm sai chỗ nào", "mình tính sai ở bước nào": where the learner went wrong.
@@ -345,7 +386,87 @@ const CORRECTION_REQUESTS: readonly RegExp[] = [
   /\bdid\s+i\s+(?:make|get)\s+(?:a\s+|any\s+)?(?:mistakes?|errors?)\b/i,
   /\bwhere\s+did\s+i\s+go\s+wrong\b|\bwhat\s+did\s+i\s+(?:do|get)\s+wrong\b|\bwhere(?:['’]s|\s+is)\s+my\s+(?:mistake|error)\b/i,
   /\bis\s+(?:the\s+)?(?:answer|option|choice)\s+\(?[a-e]\)?\s+(?:correct|right|wrong)\b/i,
+  // "Is 20 m/s correct?": a value the learner found, judged at the end of the sentence ("Is 90° a
+  // right angle?" is geometry).
+  /(?:^|[.?!]\s+)is\s+[-+−]?\d[\d.,]*(?:\s*[\p{L}/²³°·^*%-]+){0,3}\s+(?:correct|right|wrong)(?=\s*(?:[?.!,]|$))/iu,
+  // "I got 20 m/s, right?"
+  /\bi\s+(?:got|get|found|calculated|obtained|chose|picked|answered|wrote)\b[^.?!]*,\s*(?:right|correct)\s*\?/i,
 ];
+
+/**
+ * A question typed without accents ("em lam dung khong a?"), folded letter by letter to its base
+ * ("đúng", "dùng" and "dừng" all give "dung"), one code unit for one so that a match maps back to
+ * the question; `accented[i]` is true where the question's letter had a mark.
+ */
+function fold(question: string): { text: string; accented: boolean[] } {
+  let text = '';
+  const accented: boolean[] = [];
+  for (const ch of question) {
+    const base = ch === 'đ' ? 'd' : ch === 'Đ' ? 'D' : ch.normalize('NFD').replace(/\p{M}/gu, '');
+    // A lone mark (decomposed typing NFC could not compose) stays, and counts as an accent.
+    const kept = base.length === ch.length ? base : ch;
+    text += kept;
+    for (let k = 0; k < ch.length; k++) accented.push(kept !== ch || base === '');
+  }
+  return { text, accented };
+}
+
+/*
+ * Folded spellings ("dung" is "đúng", "dùng" or "dừng"; "cham" is "chấm", "chậm" or "chạm"; "chua"
+ * is "chữa", "chưa" or "chua"), so each pattern needs a context only the learner's own work gives:
+ * an own-work subject ("em lam … dung khong"), a correcting verb with "giup em"/"bai", or "bai lam
+ * cua em". "tớ" is left out ("to" is also "tô", "tổ", "to"), and "chấm" counts only as "cham bai"
+ * or "cham diem" ("giang cham lai giup em" is "chậm lại").
+ */
+const F_ME = 'em|minh';
+const F_FOR = 'giup|ho|dum|gium';
+const F_BENEFIT = String.raw`(?:${F_FOR})(?:\s+(?:${F_ME}))?|cho\s+(?:${F_ME})`;
+const F_PARTICLES = String.raw`(?:\s+(?:voi|nhe|nha|a|thay|co|anh|chi|ban|oi))*`;
+const F_BENEFIT_AFTER = String.raw`(?:${F_FOR})\s+(?:${F_ME})|cho\s+(?:${F_ME})|(?:${F_FOR})(?=${F_PARTICLES}${ENDS})`;
+const F_FIX = String.raw`sua|chua|kiem\s+tra|check`;
+const F_JUDGE = String.raw`nhan\s+xet|gop\s+y|danh\s+gia`;
+const F_OWN_WORK = String.raw`bai(?:\s+(?:lam|giai|tap))?|loi\s+giai|dap\s+an|cau\s+tra\s+loi|cach\s+(?:lam|giai)`;
+const F_WORK = String.raw`${F_OWN_WORK}|ket\s+qua|loi(?:\s+sai)?|cho\s+sai`;
+const F_THIS = String.raw`(?:\s+(?:nay|do|ay))?`;
+const F_IN_WORK = String.raw`(?:\s+(?:trong|o)\s+(?:${F_OWN_WORK})${F_THIS})?`;
+const F_NOT = 'khong|chua|ko|k|hong|hk|hok';
+const F_CHECK_PARTICLES = String.raw`(?:\s+(?:a|ha|nhi|nhe|nha|vay|the|oi|thay|co|anh|chi|ban))*`;
+/** Text inside one sentence; a decimal point ("9.8") does not end it. */
+const F_SAME_SENTENCE = String.raw`(?:[^.?!\n]|\.(?=\d))*?`;
+const F_CHECK_END = String.raw`(?=${F_CHECK_PARTICLES}${ENDS})`;
+
+const FOLDED_REQUESTS: readonly RegExp[] = [
+  // "sua giup em voi", "kiem tra lai giup em", "cham diem giup em", "sua giup em cho nay".
+  String.raw`(?:(?:${F_FIX})(?:\s+lai)?|cham\s+diem)\s+(?:${F_BENEFIT})(?:(?=${F_PARTICLES}${ENDS})|\s+(?:(?:${F_WORK})${F_THIS}${F_IN_WORK}|(?:cai|cho|doan|phan|cau)\s+(?:nay|do|ay))(?=${F_PARTICLES}(?:${ENDS}|\s*:)))`,
+  // "sua bai giup em voi", "thay cham bai giup em", "sua loi sai trong bai nay giup em".
+  String.raw`(?:(?:${F_FIX})(?:\s+lai)?|cham|${F_JUDGE})(?:\s+(?:${F_BENEFIT}))?\s+(?:${F_WORK})${F_THIS}${F_IN_WORK}\s+(?:${F_BENEFIT_AFTER}|cua\s+(?:${F_ME})|em|(?:${F_ME})\s+(?:da\s+)?(?:lam|giai|viet|tinh))`,
+  // "bai lam cua em: …", "loi giai cua minh", "bai em lam", "ket qua cua em la …".
+  String.raw`(?:bai\s+(?:lam|giai)|loi\s+giai|cach\s+(?:lam|giai)|dap\s+an|cau\s+tra\s+loi)\s+cua\s+(?:${F_ME})|bai\s+(?:${F_ME})\s+(?:da\s+)?(?:lam|giai)|ket\s+qua\s+cua\s+(?:${F_ME})\s+la`,
+  // "em lam dung khong a?", "em tinh ra v = 20 m/s, dung k a", "em ra 20 m/s dung hk thay".
+  String.raw`(?:${F_ME})\s+(?:da\s+)?(?:lam|giai|tinh|ra|chon|viet)(?![\p{L}\p{M}])${F_SAME_SENTENCE}(?<![\p{L}\p{M}])(?:dung|sai)\s+(?:${F_NOT})${F_CHECK_END}`,
+  // "em lam nhu vay duoc chua thay?", "em lam vay on khong a?".
+  String.raw`(?:${F_ME})\s+(?:da\s+)?(?:lam|giai|tinh|viet)(?:\s+bai(?:\s+(?:nay|do))?)?\s+(?:nhu\s+)?(?:vay|the(?:\s+nay)?|nay|kieu\s+nay|cach\s+nay)(?:\s+(?:thi|la))?(?:\s+co)?\s+(?:duoc|on|dung|sai)\s+(?:${F_NOT})${F_CHECK_END}`,
+  // "em chon dap an C co duoc khong a?".
+  String.raw`(?:${F_ME})\s+(?:da\s+)?chon\s+(?:(?:dap\s+an|cau|phuong\s+an|y)\s+)?[a-e](?![\p{L}\p{M}])${F_SAME_SENTENCE}(?<![\p{L}\p{M}])(?:duoc|on|dung|sai)\s+(?:${F_NOT})${F_CHECK_END}`,
+  // "Dap an A dung khong thay?".
+  String.raw`dap\s+an\s+[a-e](?![\p{L}\p{M}])(?:\s+co)?\s+(?:dung|sai)\s+(?:${F_NOT})${F_CHECK_END}`,
+  // "Em lam sai o dau vay thay?", "minh tinh sai buoc nao".
+  String.raw`(?:${F_ME})\s+(?:da\s+)?(?:(?:lam|tinh|giai|viet)\s+)?sai\s+(?:o\s+)?(?:dau|cho|buoc|phan)`,
+  // "thay xem co sai cho nao khong a?".
+  String.raw`(?:xem|kiem\s+tra)(?:\s+(?:${F_BENEFIT}))?\s+(?:co\s+)?sai\s+(?:o\s+)?(?:cho|buoc|phan|dau)`,
+  // "…, thay xem giup em" at the very end of the question.
+  String.raw`(?:xem|${F_JUDGE})(?:\s+lai)?\s+(?:${F_BENEFIT})${F_PARTICLES}\s*[?.!…]*\s*$`,
+].map((source) => new RegExp(viWords(source), 'giu'));
+
+/** A folded pattern matches a part of the question typed without any accent. */
+function asksForCorrectionUnaccented(question: string): boolean {
+  const { text, accented } = fold(question);
+  return FOLDED_REQUESTS.some((re) =>
+    [...text.matchAll(re)].some(
+      (m) => !accented.slice(m.index, m.index + m[0].length).some(Boolean),
+    ),
+  );
+}
 
 /**
  * The learner asked for a correction or a check of their own work (`CORRECTION_REQUESTS`): a
@@ -354,7 +475,7 @@ const CORRECTION_REQUESTS: readonly RegExp[] = [
  */
 function asksForCorrection(question: string): boolean {
   const q = question.normalize('NFC');
-  return CORRECTION_REQUESTS.some((re) => re.test(q));
+  return CORRECTION_REQUESTS.some((re) => re.test(q)) || asksForCorrectionUnaccented(q);
 }
 
 /**

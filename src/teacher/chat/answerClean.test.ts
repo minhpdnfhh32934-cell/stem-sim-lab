@@ -751,6 +751,152 @@ describe('answer cleaning: own-work requests and reviewer phrases (review fix ro
   });
 });
 
+describe('answer cleaning: unaccented and other own-work checks (review fix round 2)', () => {
+  it('the reviewer’s probes keep the verdict and the diagnosis the learner asked for', () => {
+    const probes: [string, string][] = [
+      [
+        'em lam dung khong a? v = 72 km/h = 20 m/s',
+        'Nhận xét: Em làm đúng nhưng thiếu đơn vị ở bước cuối.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em làm đúng không ạ? v = 72 km/h = 20 m/s',
+        'Nhận xét: Em làm đúng nhưng thiếu đơn vị ở bước cuối.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em chọn đáp án C có được không ạ?',
+        'Nhận xét: Chưa đúng.\n\nBản đã sửa:\nĐáp án đúng là B vì lực là đại lượng vectơ.',
+      ],
+      [
+        'Thầy check giúp em bài này với: v = 20 m/s',
+        'Nhận xét: Câu trả lời đúng nhưng thiếu bước đổi đơn vị.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em giải thế này: a = F/m = 2 m/s². Thầy xem có sai chỗ nào không ạ?',
+        'Đánh giá: Đúng.\n\nVì a = F/m = 2 m/s².',
+      ],
+    ];
+    for (const [question, text] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+  });
+
+  it('own-work questions typed without accents, or in other common ways, are checks', () => {
+    const verdict = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    for (const question of [
+      // Without accents (the reviewer's seven, then the other request shapes).
+      'em lam dung khong a? v = 72 km/h = 20 m/s',
+      'sua bai giup em voi',
+      'thay cham bai giup em',
+      'em lam the nay dung chua thay',
+      'bai lam cua em: v = 20 m/s, thay xem giup em',
+      'Em lam sai o dau vay thay?',
+      'em tinh ra v = 20 m/s, dung k a',
+      'kiem tra lai giup em',
+      'sua giup em voi',
+      'chua bai giup em nhe',
+      'thay cham diem giup em',
+      'thay sua loi sai trong bai nay giup em',
+      'loi giai cua em the nay: v = gt = 20',
+      'em ra 20 m/s dung hk thay',
+      'Dap an A dung khong thay?',
+      'em lam nhu vay duoc chua thay?',
+      'em chon dap an C co duoc khong a?',
+      'em giai the nay: v = 20 m/s. thay xem co sai cho nao khong a?',
+      'thay xem giup em voi',
+      // Accents on part of the question only.
+      'em lam dung khong ạ?',
+      // Accented shapes that were missed.
+      'Em làm như vầy được chưa thầy?',
+      'Em làm vậy ổn không ạ?',
+      'Em ra 20 m/s đúng hk thầy',
+      'Em chọn đáp án C có được không ạ?',
+      'Thầy check giúp em bài này với: v = 20 m/s',
+      'Em giải thế này: a = F/m = 2 m/s². Thầy xem có sai chỗ nào không ạ?',
+      // English.
+      'Is 20 m/s correct?',
+      'I got 20 m/s, right?',
+    ]) {
+      expect(cleanAnswer(verdict, { reviewed: true, question }), question).toEqual({
+        text: verdict,
+        removed: [],
+      });
+    }
+  });
+
+  it('unaccented questions that only look like a check stay ordinary', () => {
+    const greeting = 'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      // "dung" is also "dùng"/"dừng", "cham" also "chậm"/"chạm", "chua" also "chưa", "sua" "sữa".
+      'Co the dung cong thuc nay khong?',
+      'Em co the dung cong thuc nay khong?',
+      'Vat co dung yen khong?',
+      'Em dung cong thuc nao de tinh van toc?',
+      'Thay giang cham lai giup em',
+      'Thay noi cham giup em',
+      'Em chua hieu, giai thich lai giup em',
+      'Qua bong to ra dung khong?',
+      'Uong sua giup em cao hon khong?',
+      // A topic, a new exercise or a simulation's result, as in the accented must-not list.
+      'Kiem tra giup em dieu kien can bang cua vat ran',
+      'Enzyme sua loi giup te bao the nao?',
+      'Thay xem giup em bai nay: mot vat roi tu do cao 20 m, tinh van toc cham dat.',
+      'Em muon xem ket qua cua minh tren do thi',
+      'Bai tap cua em hom nay: mot vat roi tu 20 m, tinh v.',
+      'Em lam the nao de vat dung lai?',
+      'Em lam thi nghiem nay o nha duoc khong?',
+      // English.
+      'Is it right to say force is a vector?',
+      'Is 0 a natural number?',
+    ]) {
+      expect(cleanAnswer(greeting, { reviewed: true, question }), question).toEqual({
+        text: '# Rơi tự do\nv = gt',
+        removed: ['review'],
+      });
+    }
+  });
+
+  it('a correcting verb before a topic, or a conceptual "còn đúng không?", is no check', () => {
+    const answer =
+      'Đánh giá: Câu trả lời đúng.\n\nBản đã sửa:\n# Điều kiện cân bằng\nTổng lực bằng 0 và tổng mômen bằng 0.';
+    const lesson = '# Điều kiện cân bằng\nTổng lực bằng 0 và tổng mômen bằng 0.';
+    for (const question of [
+      'Giúp em kiểm tra điều kiện cân bằng của vật rắn',
+      'Thầy kiểm tra giúp em điều kiện cân bằng của vật rắn',
+      'Kiểm tra lại giúp em đơn vị của lực là gì',
+      'Khi có ma sát, định luật bảo toàn cơ năng còn đúng không?',
+      'Định luật Ôm vẫn đúng không thầy?',
+      'Kiểm tra giúp em xem nước có dẫn điện không',
+      'Sửa giúp em lỗi chính tả trong câu hỏi trước',
+      'Sửa cho em câu hỏi: vật rơi 20 m thì mất bao lâu?',
+      'Thầy chữa giúp em bài tập 5 trang 20',
+      'Em làm thí nghiệm này ở nhà được không?',
+    ]) {
+      expect(cleanAnswer(answer, { reviewed: true, question }), question).toEqual({
+        text: lesson,
+        removed: ['review'],
+      });
+    }
+    // A request that ends, or names the work and then ends, is still one.
+    for (const question of [
+      'Kiểm tra lại giúp em',
+      'Sửa giúp em, v = 20 m/s',
+      'Thầy chữa giúp em bài này',
+      'Sửa cho em bài này với ạ',
+      'Kiểm tra giúp em bài này: v = 20 m/s',
+      'Thầy sửa giúp em chỗ này với',
+      'Thầy kiểm tra giúp em nhé',
+    ]) {
+      expect(cleanAnswer(answer, { reviewed: true, question }), question).toEqual({
+        text: answer,
+        removed: [],
+      });
+    }
+  });
+});
+
 describe('answer cleaning: what it never touches', () => {
   it('returns text with nothing to remove exactly as it was (spaces included)', () => {
     const text = '  Rơi tự do là chuyển động chỉ chịu trọng lực.\n\n\n';
