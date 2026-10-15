@@ -8,6 +8,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { isLocalMessage } from '@/ai/errorKind';
 import { explainSolution, type Explanation } from '@/ai/explain';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { localTransport } from '@/ai/local/localTransport';
 import { toAiError } from '@/ai/types';
 import type { PhysicsScene, Solution } from '@/physics/types';
 import { AiContentBar } from '@/safety/AiContentBar';
@@ -70,8 +71,11 @@ export function ExplainBox({
     const ctrl = new AbortController();
     abort.current = ctrl;
     setState({ kind: 'loading' });
+    // The runtime on this computer was asked: whatever fails is explained as its failure.
+    let onComputer = false;
     try {
       const ai = await resolveAiForAnalysis();
+      onComputer = ai.transport === localTransport;
       const result = await explainSolution(L(scene.title), problemText, solution, {
         transport: ai.transport,
         provider: ai.provider,
@@ -93,10 +97,12 @@ export function ExplainBox({
         setState({ kind: 'error', message: t('chat.gemmaMissingNotice'), section: 'local' });
       } else if (err.code === 'unavailable' && err.message === 'off') {
         setState({ kind: 'error', message: t('chat.errors.cloudOff'), section: 'ai' });
-      } else if (isLocalMessage(err.message)) {
-        // A runtime on this computer failed: its study-partner sentence (nothing went online).
+      } else if (onComputer || isLocalMessage(err.message)) {
+        // A runtime on this computer failed, or wrote no explanation (only its reasoning, or
+        // nothing before its limit): its study-partner sentence, never a raw code. Nothing went
+        // online.
         const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
-        const failure = localFailure(err);
+        const failure = localFailure(err, 'explain');
         setState({
           kind: 'error',
           message: localFailureText(locale, failure, kind),

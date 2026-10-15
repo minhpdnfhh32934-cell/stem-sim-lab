@@ -1,4 +1,5 @@
 import { modelFor, useAiStore } from '@/ai/aiStore';
+import { aiErrorKind } from '@/ai/errorKind';
 import { getLocalClient } from '@/ai/local/client';
 import { checkFor, useLocalAiStore } from '@/ai/local/localAiStore';
 import { getTransport, newRequestId } from '@/ai/transport';
@@ -98,7 +99,12 @@ export async function readPhotoOnComputer(
   } catch (e) {
     // The runtime's own words stay in the console for troubleshooting.
     console.warn('[photo-local]', e instanceof Error ? e.message : String(e));
-    const failure = localFailure(e);
+    // The runtime itself says the model does not read pictures: the same as a model not seen
+    // reading them here (asking it again cannot help).
+    const kind = aiErrorKind(e);
+    if (kind === 'localNoVision' || kind === 'localVisionUnverified') return { kind: 'noVision' };
+    // A picture it refused, a window too small for it…: a sentence that says what helps.
+    const failure = localFailure(e, 'photo');
     return {
       kind: 'error',
       message: localFailureText(locale, failure, selection.kind),

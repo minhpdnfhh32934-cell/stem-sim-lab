@@ -188,7 +188,7 @@ function analyzeHttpCode(message: string): AnalyzeErrorCode {
 function localError(e: unknown): { code: AnalyzeErrorCode; detail: string } {
   const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
   const locale = useSettingsStore.getState().locale;
-  return { code: 'local', detail: localFailureText(locale, localFailure(e), kind) };
+  return { code: 'local', detail: localFailureText(locale, localFailure(e, 'analysis'), kind) };
 }
 
 let controller: AbortController | null = null;

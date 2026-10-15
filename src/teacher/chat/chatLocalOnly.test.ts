@@ -460,6 +460,9 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     ],
     // A busy runtime is not a provider's quota: no fallback, one request only.
     [new AiError('http', 'local-failed: 429: busy'), 'localFailed', true],
+    // The model wrote only its reasoning, or nothing before its limit: said as such.
+    [new AiError('badResponse', 'reasoningOnly'), 'localNoAnswer', true],
+    [new AiError('badResponse', 'empty answer (length)'), 'localNoAnswer', true],
   ] as const)('%s → "%s", never retried, nothing sent online', async (error, key, retry) => {
     local.chat.mockRejectedValue(error);
     const failed = ask('Lực ma sát là gì?');
@@ -629,6 +632,44 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     expect(local.chat).toHaveBeenCalledTimes(2);
     expect(useChatStore.getState().summary).toBeNull();
     expect(calls).toHaveLength(0);
+  });
+
+  it.each([
+    // A thinking model can spend the summary's 400 tokens on its reasoning: no summary text.
+    [new AiError('badResponse', 'reasoningOnly')],
+    [new AiError('badResponse', 'empty answer (length)')],
+    [new AiError('badResponse', 'empty answer (stop)')],
+    // An error of this one request, not of the runtime: the question may still be answered.
+    [new AiError('http', 'local-failed: 500: summary failed')],
+  ])('a summary that brings no text (%s) is skipped: the question is asked', async (error) => {
+    local.chat.mockImplementation((req) =>
+      isSummary(req)
+        ? Promise.reject(error)
+        : Promise.resolve(answer('Lực ma sát cản chuyển động.')),
+    );
+    const reply = await askTeacher('tiếp nhé', 'vi', longHistory(30), {
+      includeScreen: false,
+      think: false,
+    });
+    expect(reply.content).toBe('Lực ma sát cản chuyển động.');
+    expect(local.chat).toHaveBeenCalledTimes(2);
+    expect(isSummary(local.chat.mock.calls[0]?.[0])).toBe(true);
+    expect(isSummary(local.chat.mock.calls[1]?.[0])).toBe(false);
+    expect(useChatStore.getState().summary).toBeNull();
+    expect(calls).toHaveLength(0);
+    expect(usage).not.toHaveBeenCalled();
+  });
+
+  it('the summary asks a model that reasons first not to; the question is sent as before', async () => {
+    withSummary();
+    await askTeacher('tiếp nhé', 'vi', longHistory(30), { includeScreen: false, think: false });
+    expect(local.chat).toHaveBeenCalledTimes(2);
+    const [summary] = local.chat.mock.calls[0] ?? [];
+    const [question] = local.chat.mock.calls[1] ?? [];
+    expect(isSummary(summary)).toBe(true);
+    // The clients send it only to a model seen reasoning first (Ollama `think`).
+    expect(summary?.think).toBe(false);
+    expect(question).not.toHaveProperty('think');
   });
 
   it('"Dừng" stops the request to the runtime and nothing else is asked', async () => {

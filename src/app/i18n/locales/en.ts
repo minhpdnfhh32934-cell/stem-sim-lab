@@ -44,6 +44,18 @@ const en: Messages = {
     badModelHint: 'The chosen model was not found. Open Settings → Connect AI to fix it.',
     errorHint: 'The AI server reported an error. Open Settings → Connect AI to test again.',
     badKeyHint: '{provider} refused the API key (wrong or disabled). Check it in Settings.',
+    local: 'AI on this computer: {name}',
+    localHint:
+      'Using {label} at {address}: the problem is processed right on this computer, not sent online. SimLab asks the program only when you use AI.',
+    localMissing: 'AI on this computer: not chosen',
+    localMissingHint:
+      'You chose AI on this computer but no program and model yet, so nothing is sent. Click to choose in Settings → AI on this computer.',
+    gemma: 'Gemma on this computer',
+    gemmaHint:
+      'Using local Gemma · model: {model}. The problem is processed right on this computer, not sent online.',
+    gemmaMissing: 'Gemma: not downloaded',
+    gemmaMissingHint:
+      'You chose local Gemma but its model is not downloaded, so nothing is sent. Click to download it in Settings.',
   },
   sidebar: {
     regionLabel: 'Topic library',
@@ -975,6 +987,7 @@ const en: Messages = {
     think: 'Think',
     thinkTitle: 'Use a second API to review the answer',
     twoApis: '· 2 APIs',
+    oneApiReview: '· 1 API reviews',
     enterHint: 'Enter to send · Shift+Enter for a new line',
     footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
     openSimulation: 'Open the simulation: {title}',
@@ -1038,6 +1051,10 @@ const en: Messages = {
         '{name} has key protection on and refused the question. SimLab stores no key for AI on this computer: turn the key off in {name} to use it with SimLab.',
       localContext:
         'The question with the earlier conversation is longer than the model can hold. Clear some of the conversation, choose Memory “Medium”, or pick a model with a larger context.',
+      localContextTask:
+        'This task is longer than the model you chose in {name} can hold. Pick a model with a larger context (or raise the context length in {name} itself) in Settings → AI on this computer.',
+      localNoAnswer:
+        '{name} wrote no answer: the model may have only reasoned in its notes, or stopped before writing. Please try again; if it repeats, pick another model in Settings → AI on this computer.',
       localRemote:
         'This model runs online, not on your computer, so SimLab does not send questions to it. Pick a model that runs on this computer.',
       localNotRuntime:
@@ -1245,6 +1262,9 @@ const en: Messages = {
     needsUpdate:
       'The app on this computer must be updated before it can find AI on this computer. Install the new SimLab version.',
     noneFound: 'No running AI program was found. See “Problems? What to do” below.',
+    detectedAt: 'Result of the search at {time}.',
+    detectedEarlier:
+      'The program may have stopped or changed models since then: press “Find on this computer” to look again.',
     kinds: {
       ollama: 'Ollama',
       lmStudio: 'LM Studio',
@@ -1272,6 +1292,7 @@ const en: Messages = {
     modelsEmpty: 'No model yet. Download one in that program itself.',
     modelsMore: 'The program has more models; SimLab shows the first {count}.',
     modelsFailed: 'Could not get the model list: {reason}',
+    modelsAgain: 'Press “Find on this computer” to see the model list again.',
     chooseModel: 'Choose a model',
     badges: {
       detected: 'Detected',
@@ -1282,6 +1303,7 @@ const en: Messages = {
       selectedIdle: 'Chosen · the AI Teacher uses {engine}',
       tested: 'Answer tested · {time}',
       incompatible: 'Cannot be used: {reason}',
+      unavailable: 'Not usable now',
     },
     reasons: {
       remote: 'runs online',
@@ -1328,11 +1350,15 @@ const en: Messages = {
     savedTitle: 'Model chosen on this page',
     currentBody: '{label} at {address}',
     currentLocal: 'The AI Teacher answers with this model, right on your computer.',
+    currentLocalUnavailable:
+      'The AI Teacher is still set to this model, but the last search found it cannot be used (reason below). Questions then only show an error and are not sent anywhere else. Fix it with the help below, pick another model in the list, or press “Unselect”.',
     currentOther:
       'This model is chosen, but the AI Teacher does not use it. {now} Press “Use for the AI Teacher” to switch.',
     now: {
       cloud: 'Questions for the AI Teacher are sent online to {provider}.',
       cloudOff: 'The AI Teacher is set to the API, but the API is off, so no question is sent.',
+      cloudNoKey:
+        'The AI Teacher is set to the {provider} API, but no key is saved, so no question is sent until you add one.',
       gemma: 'The AI Teacher answers with local Gemma, right on your computer.',
       gemmaMissing:
         'The AI Teacher is set to local Gemma, but its model is not downloaded, so no question is sent.',

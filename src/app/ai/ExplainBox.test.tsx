@@ -139,6 +139,35 @@ describe('"AI diễn giải" with the AI on this computer', () => {
     expect(cloudCalls).toHaveLength(0);
   });
 
+  it('a runtime that wrote only its reasoning is said in plain words, never as a code', async () => {
+    const user = userEvent.setup();
+    for (const message of ['reasoningOnly', 'empty answer (stop)']) {
+      local.chat.mockRejectedValueOnce(new AiError('badResponse', message));
+      const view = render(<ExplainBox scene={scene} solution={solution} problemText="" />);
+      await user.click(screen.getByRole('button', { name: /AI diễn giải/ }));
+      const alert = await screen.findByRole('alert');
+      expect(alert).toHaveTextContent(/Ollama chưa viết ra câu trả lời nào/);
+      expect(alert.textContent).not.toMatch(/reasoningOnly|empty answer/);
+      view.unmount();
+    }
+    expect(cloudCalls).toHaveLength(0);
+  });
+
+  it('an explanation too long for the model points to a larger model, not to Trí nhớ', async () => {
+    const user = userEvent.setup();
+    local.chat.mockRejectedValue(
+      new AiError('http', 'local-failed: 400: the request exceeds the available context size'),
+    );
+    render(<ExplainBox scene={scene} solution={solution} problemText="" />);
+    await user.click(screen.getByRole('button', { name: /AI diễn giải/ }));
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(/chọn mô hình có ngữ cảnh lớn hơn/);
+    expect(alert.textContent).not.toMatch(/Trí nhớ|xóa bớt cuộc trò chuyện/);
+    await user.click(within(alert).getByRole('button', { name: 'Cài đặt' }));
+    expect(useWorkspaceStore.getState().settingsSection).toBe('runtimes');
+    expect(cloudCalls).toHaveLength(0);
+  });
+
   it('chosen but no runtime picked: nothing is sent anywhere', async () => {
     const user = userEvent.setup();
     useLocalAiStore.setState({ selected: null });

@@ -164,5 +164,39 @@ describe('a photo read by the AI on this computer', () => {
         expect(cloudCalls).toHaveLength(0);
       },
     );
+
+    it('a runtime that says its model reads no pictures is the same as one not seen reading them', async () => {
+      useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, details('yes'));
+      for (const message of ['no-vision', 'vision-unverified']) {
+        local.chat.mockRejectedValueOnce(new AiError('notAllowed', message));
+        await expect(readPhotoOnComputer('local', 'aGVsbG8=', 'vi')).resolves.toEqual({
+          kind: 'noVision',
+        });
+      }
+      expect(cloudCalls).toHaveLength(0);
+    });
+
+    it.each([
+      // The picture itself was refused: take another one (asking again cannot help).
+      [new AiError('notAllowed', 'bad-image: over 2 MB'), 'camera.readFailed', null],
+      // One photo cannot be shortened in Trí nhớ: only a model with a larger window helps.
+      [
+        new AiError('http', 'local-failed: 400: the request exceeds the available context size'),
+        'chat.errors.localContextTask',
+        'runtimes',
+      ],
+      // The model wrote only its reasoning: never "gặp lỗi", never a raw code.
+      [new AiError('badResponse', 'reasoningOnly'), 'chat.errors.localNoAnswer', 'runtimes'],
+    ] as const)('%s gets its own sentence and page', async (error, key, section) => {
+      useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, details('yes'));
+      local.chat.mockRejectedValue(error);
+      await expect(readPhotoOnComputer('local', 'aGVsbG8=', 'vi')).resolves.toEqual({
+        kind: 'error',
+        message: translate('vi', key, { name: 'Ollama' }),
+        section,
+      });
+      expect(local.chat).toHaveBeenCalledTimes(1);
+      expect(cloudCalls).toHaveLength(0);
+    });
   });
 });

@@ -33,8 +33,25 @@ export interface LocalFailure {
 const CONTEXT_FULL =
   /context (length|size|window)|n_ctx|exceeds? (the )?(available )?context|too many tokens|prompt is too long/i;
 
+/**
+ * What the runtime was asked for: an AI Teacher question (`chat`), or one task whose length the
+ * learner cannot shorten in Settings → Trí nhớ (reading a photo, "AI diễn giải", "Phân tích đề").
+ */
+export type LocalUse = 'chat' | 'photo' | 'explain' | 'analysis';
+
+/**
+ * A question (or task) that did not fit the model's window: AI Teacher can shorten what it sends
+ * (Settings → Trí nhớ); one photo, explanation or problem cannot, only a model with a larger
+ * window helps.
+ */
+function contextFull(use: LocalUse): LocalFailure {
+  return use === 'chat'
+    ? { key: 'chat.errors.localContext', section: 'memory', retry: false }
+    : { key: 'chat.errors.localContextTask', section: 'runtimes', retry: false };
+}
+
 /** The sentence and Settings page for whatever a local runtime call threw. */
-export function localFailure(e: unknown): LocalFailure {
+export function localFailure(e: unknown, use: LocalUse = 'chat'): LocalFailure {
   const kind = aiErrorKind(e);
   const runtimes = 'runtimes' as const;
   switch (kind) {
@@ -51,7 +68,23 @@ export function localFailure(e: unknown): LocalFailure {
     case 'localNeedsAuth':
       return { key: 'chat.errors.localAuth', section: runtimes, retry: false };
     case 'tooLarge':
-      return { key: 'chat.errors.localContext', section: 'memory', retry: false };
+      return contextFull(use);
+    // The model wrote no answer (only its reasoning, or nothing before its limit): asking again,
+    // or another model, may help.
+    case 'reasoningOnly':
+    case 'emptyAnswer':
+      return { key: 'chat.errors.localNoAnswer', section: runtimes, retry: true };
+    case 'filtered':
+      return { key: 'chat.errors.filtered', section: null, retry: false };
+    // A photo refused this way: sending the same photo to the same model again cannot help. (Only
+    // a photo is sent with a picture; anywhere else this is an unexpected runtime error.)
+    case 'localNoVision':
+    case 'localVisionUnverified':
+      if (use === 'photo') return { key: 'camera.localNoVision', section: runtimes, retry: false };
+      break;
+    case 'localBadImage':
+      if (use === 'photo') return { key: 'camera.readFailed', section: null, retry: false };
+      break;
     case 'localRemoteModel':
       return { key: 'chat.errors.localRemote', section: runtimes, retry: false };
     case 'localNotRuntime':
@@ -65,11 +98,11 @@ export function localFailure(e: unknown): LocalFailure {
     case 'notAllowed':
       return { key: 'chat.errors.notAllowed', section: 'safety', retry: false };
     default:
-      // A runtime that says the question did not fit its window (llama.cpp, LM Studio).
-      if (CONTEXT_FULL.test(toAiError(e).message))
-        return { key: 'chat.errors.localContext', section: 'memory', retry: false };
-      return { key: 'chat.errors.localFailed', section: runtimes, retry: true };
+      break;
   }
+  // A runtime that says the question did not fit its window (llama.cpp, LM Studio).
+  if (CONTEXT_FULL.test(toAiError(e).message)) return contextFull(use);
+  return { key: 'chat.errors.localFailed', section: runtimes, retry: true };
 }
 
 /** The failure's sentence, naming the runtime. */

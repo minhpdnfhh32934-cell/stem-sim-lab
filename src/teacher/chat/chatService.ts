@@ -11,6 +11,7 @@ import {
   isGpuFailure,
 } from '@/ai/gpuSafety';
 import { getTransport } from '@/ai/transport';
+import { aiErrorKind, type AiErrorKind } from '@/ai/errorKind';
 import { hideUnfinishedReasoning, stripReasoningOutsideCode } from '@/ai/reasoning';
 import { outputIsSafe, checkInput } from '@/safety/moderation';
 import { currentSafety } from '@/safety/safetyStore';
@@ -775,6 +776,8 @@ async function localRuntimeChat(
   contextLength: number,
   onPartial?: (textSoFar: string) => void,
   signal?: AbortSignal,
+  /** Ollama `think` (the clients send it only to a model seen reasoning first). */
+  think?: boolean,
 ): Promise<Answer> {
   stopIfAsked(signal);
   try {
@@ -790,6 +793,7 @@ async function localRuntimeChat(
           temperature: 0.2,
           maxTokens,
           contextLength,
+          ...(think !== undefined ? { think } : {}),
         },
         {
           ...(onPartial ? { onPartial } : {}),
@@ -920,12 +924,35 @@ async function updateSummary(
 }
 
 /**
+ * Failures of the runtime itself (or of the app around it): the question would fail the same way,
+ * so it is not sent and the learner never waits twice.
+ */
+const RUNTIME_FAILURES: ReadonlySet<AiErrorKind> = new Set<AiErrorKind>([
+  'localUnreachable',
+  'network',
+  'localStalled',
+  'timeout',
+  'localLoading',
+  'localModelMissing',
+  'localNeedsAuth',
+  'localRemoteModel',
+  'localNotRuntime',
+  'localIsOllama',
+  'localNotSelected',
+  'notLoopback',
+  'needsAppUpdate',
+  'notAllowed',
+]);
+
+/**
  * A runtime on this computer failed the summary in a way that the question would fail too (not
- * running, stalled, loading, model missing, locked…): the question is not sent. Only a summary that
- * did not fit the model's window is skipped (the question itself was fitted to it).
+ * running, stalled, loading, model missing, locked…): the question is not sent. Anything else is
+ * about this one summary — it did not fit the model's window, the model wrote only its reasoning
+ * or nothing within the summary's short limit, or another error the question may not meet — so the
+ * summary is skipped and the question (fitted to the window by itself) is asked.
  */
 function localSummaryFatal(e: unknown): boolean {
-  return e instanceof TeacherError && localFailure(e.cause).key !== 'chat.errors.localContext';
+  return e instanceof TeacherError && RUNTIME_FAILURES.has(aiErrorKind(e.cause));
 }
 
 export async function askTeacher(
@@ -1125,7 +1152,12 @@ export async function askTeacher(
       locale,
       fitted.older,
       records,
-      (s, m, max) => ask(s, m, max),
+      // A model that reasons first could spend the summary's short limit on its reasoning and
+      // write no summary: it is asked not to (only a model seen reasoning gets the setting).
+      (s, m, max) =>
+        engine === 'local' && selection
+          ? localRuntimeChat(selection, s, m, locale, max, window, undefined, signal, false)
+          : ask(s, m, max),
       summaryCap,
       engine === 'local' ? localSummaryFatal : undefined,
     );

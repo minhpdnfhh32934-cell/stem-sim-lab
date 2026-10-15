@@ -82,6 +82,12 @@ describe('AI controller', () => {
     ['notAllowed', 'no-vision', 'localFailed'],
     ['timeout', 'local-stalled: gap 45000 ms', 'localStalled'],
     ['unavailable', 'local-not-selected', 'localNotSelected'],
+    // One problem cannot be shortened in Trí nhớ: only a model with a larger window helps.
+    [
+      'http',
+      'local-failed: 400: the request exceeds the available context size',
+      'localContextTask',
+    ],
   ] as const)('explains local runtime error %s "%s" with %s', async (code, message, key) => {
     useLocalAiStore.getState().select({
       kind: 'ollama',

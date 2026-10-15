@@ -47,6 +47,18 @@ const vi = {
     errorHint: 'Máy chủ AI báo lỗi. Mở Cài đặt → Kết nối AI để kiểm tra lại.',
     badKeyHint:
       '{provider} từ chối khóa API (khóa sai hoặc đã bị tắt). Kiểm tra lại trong Cài đặt.',
+    local: 'AI trên máy: {name}',
+    localHint:
+      'Dùng {label} tại {address}: đề bài được xử lý ngay trên máy này, không gửi lên mạng. SimLab chỉ hỏi chương trình khi em dùng AI.',
+    localMissing: 'AI trên máy: chưa chọn',
+    localMissingHint:
+      'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có gì được gửi đi. Bấm để chọn trong Cài đặt → AI trên máy khác.',
+    gemma: 'Gemma trên máy',
+    gemmaHint:
+      'Dùng Gemma cục bộ · mô hình: {model}. Đề bài được xử lý ngay trên máy này, không gửi lên mạng.',
+    gemmaMissing: 'Gemma: chưa tải',
+    gemmaMissingHint:
+      'Em đã chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có gì được gửi đi. Bấm để tải trong Cài đặt.',
   },
   sidebar: {
     regionLabel: 'Thư viện chủ đề',
@@ -970,6 +982,7 @@ const vi = {
     think: 'Think',
     thinkTitle: 'Dùng API thứ hai để rà soát câu trả lời',
     twoApis: '· 2 API',
+    oneApiReview: '· 1 API rà soát',
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
@@ -1034,6 +1047,10 @@ const vi = {
         '{name} đang bật khóa bảo vệ nên từ chối câu hỏi. SimLab không lưu khóa cho AI trên máy: nếu muốn dùng với SimLab, hãy tắt khóa trong {name}.',
       localContext:
         'Câu hỏi cùng phần trò chuyện trước dài quá sức chứa của mô hình. Em xóa bớt cuộc trò chuyện, chọn Trí nhớ “Vừa”, hoặc chọn mô hình có ngữ cảnh lớn hơn.',
+      localContextTask:
+        'Việc này dài quá sức chứa của mô hình em chọn trong {name}. Hãy chọn mô hình có ngữ cảnh lớn hơn (hoặc tăng độ dài ngữ cảnh trong chính {name}) ở Cài đặt → AI trên máy khác.',
+      localNoAnswer:
+        '{name} chưa viết ra câu trả lời nào: có thể mô hình chỉ suy nghĩ nháp hoặc dừng trước khi viết. Em thử lại nhé; nếu lặp lại, chọn mô hình khác trong Cài đặt → AI trên máy khác.',
       localRemote:
         'Mô hình này chạy trên mạng chứ không chạy trên máy em, nên SimLab không gửi câu hỏi tới nó. Hãy chọn một mô hình chạy trên máy.',
       localNotRuntime:
@@ -1237,6 +1254,9 @@ const vi = {
     needsUpdate:
       'Ứng dụng trên máy này cần được cập nhật mới tìm được AI trên máy khác. Hãy cài bản SimLab mới.',
     noneFound: 'Chưa thấy chương trình AI nào đang chạy. Xem “Gặp lỗi? Cách xử lý” bên dưới.',
+    detectedAt: 'Kết quả lần tìm lúc {time}.',
+    detectedEarlier:
+      'Chương trình có thể đã tắt hoặc đổi mô hình từ lúc đó: bấm “Tìm trên máy này” để xem lại.',
     kinds: {
       ollama: 'Ollama',
       lmStudio: 'LM Studio',
@@ -1264,6 +1284,7 @@ const vi = {
     modelsEmpty: 'Chưa có mô hình nào. Hãy tải một mô hình trong chính chương trình đó.',
     modelsMore: 'Chương trình có nhiều mô hình hơn; SimLab chỉ hiện {count} mô hình đầu.',
     modelsFailed: 'Chưa lấy được danh sách mô hình: {reason}',
+    modelsAgain: 'Bấm “Tìm trên máy này” để xem lại danh sách mô hình.',
     chooseModel: 'Chọn mô hình',
     badges: {
       detected: 'Phát hiện',
@@ -1274,6 +1295,7 @@ const vi = {
       selectedIdle: 'Đã chọn · AI Teacher đang dùng {engine}',
       tested: 'Đã thử trả lời · {time}',
       incompatible: 'Không dùng được: {reason}',
+      unavailable: 'Chưa dùng được',
     },
     reasons: {
       remote: 'chạy trên mạng',
@@ -1320,11 +1342,15 @@ const vi = {
     savedTitle: 'Mô hình đã chọn ở trang này',
     currentBody: '{label} tại {address}',
     currentLocal: 'AI Teacher đang trả lời bằng mô hình này, ngay trên máy em.',
+    currentLocalUnavailable:
+      'AI Teacher vẫn đang chọn mô hình này, nhưng lần tìm gần nhất thấy nó chưa dùng được (lý do bên dưới). Khi đó câu hỏi chỉ báo lỗi, không được gửi đi nơi khác. Em sửa theo hướng dẫn, chọn mô hình khác ở danh sách, hoặc bấm “Bỏ chọn”.',
     currentOther:
       'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. {now} Bấm “Dùng cho AI Teacher” để chuyển.',
     now: {
       cloud: 'Câu hỏi cho AI Teacher đang được gửi lên mạng tới {provider}.',
       cloudOff: 'AI Teacher đang chọn API nhưng API đang tắt, nên chưa có câu hỏi nào được gửi đi.',
+      cloudNoKey:
+        'AI Teacher đang chọn API {provider} nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
       gemma: 'AI Teacher đang trả lời bằng Gemma cục bộ, ngay trên máy em.',
       gemmaMissing:
         'AI Teacher đang chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có câu hỏi nào được gửi đi.',
