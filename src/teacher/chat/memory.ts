@@ -9,6 +9,7 @@
  */
 import type { Locale } from '@/app/i18n';
 import type { ChatMessage } from '@/ai/types';
+import { cleanAnswer } from './answerClean';
 import type { ChatMessageRecord, ChatSummary, MemoryLength } from './chatStore';
 
 export interface ContextBudget {
@@ -47,12 +48,52 @@ export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 3);
 }
 
+/**
+ * What is sent for an answer that cleaning leaves empty (it was nothing but hidden reasoning, or
+ * a Think reviewer's notes): never the saved text, and never an empty turn, which breaks some
+ * providers' requests. Language-neutral, so it fits both locales.
+ */
+export const EMPTY_ANSWER = '…';
+
 /** Per-message overhead of the chat template (role markers). */
 const MESSAGE_OVERHEAD = 6;
 
-/** What the AI received for a record (quick buttons store their full instruction). */
-export function sentText(record: ChatMessageRecord): string {
-  return record.prompt ?? record.content;
+/**
+ * What the AI gets for a record: a quick button's full instruction, or an answer's learning
+ * content only (answerClean.ts). New answers are stored clean; answers saved by an older version
+ * may still hold hidden reasoning, echoed prompt labels or a Think reviewer's notes, and are never
+ * sent back as they were saved. The reviewer's notes are told apart with the learner's `question`
+ * the answer replied to (`questionBefore`): without it (`undefined`) they are left as saved, since
+ * cleaning them without the question could drop feedback the learner asked for. An answer that
+ * cleaning leaves empty (nothing but reasoning, even cut before its closing tag) is sent as
+ * `EMPTY_ANSWER`: hidden reasoning never goes back to the AI, and no turn is empty.
+ */
+export function sentText(record: ChatMessageRecord, question?: string): string {
+  if (record.role !== 'assistant') return record.prompt ?? record.content;
+  const saved = record.prompt ?? record.content;
+  const options =
+    record.checkedBy !== undefined && question !== undefined ? { reviewed: true, question } : {};
+  const cleaned = cleanAnswer(saved, options).text;
+  return cleaned.trim() ? cleaned : EMPTY_ANSWER;
+}
+
+/** The learner's question the record at `index` answers (the user turn before it), or ''. */
+export function questionBefore(records: readonly ChatMessageRecord[], index: number): string {
+  for (let i = index - 1; i >= 0; i--) {
+    const r = records[i];
+    if (r?.role === 'user') return r.content;
+  }
+  return '';
+}
+
+/** `sentText` of each record, each answer cleaned with the question before it. */
+function sentTexts(records: readonly ChatMessageRecord[]): string[] {
+  let question = '';
+  return records.map((r) => {
+    const text = sentText(r, question);
+    if (r.role === 'user') question = r.content;
+    return text;
+  });
 }
 
 export interface FittedHistory {
@@ -64,18 +105,21 @@ export interface FittedHistory {
 
 /** Takes messages from the newest backwards while they fit `budget` tokens. */
 export function fitHistory(records: ChatMessageRecord[], budget: number): FittedHistory {
+  const texts = sentTexts(records);
   let used = 0;
   let start = records.length;
   for (let i = records.length - 1; i >= 0; i--) {
-    const record = records[i];
-    if (!record) break;
-    const cost = estimateTokens(sentText(record)) + MESSAGE_OVERHEAD;
+    const text = texts[i];
+    if (text === undefined) break;
+    const cost = estimateTokens(text) + MESSAGE_OVERHEAD;
     if (used + cost > budget) break;
     used += cost;
     start = i;
   }
   return {
-    messages: records.slice(start).map((r) => ({ role: r.role, content: sentText(r) })),
+    messages: records
+      .slice(start)
+      .map((r, i) => ({ role: r.role, content: texts[start + i] ?? r.content })),
     older: records.slice(0, start),
   };
 }
@@ -125,7 +169,10 @@ export function summaryRequest(
         : 'Teacher';
   // Every turn is kept (the first ones usually set the topic); long turns are shortened evenly.
   const perTurn = Math.max(200, Math.min(1500, Math.floor(SUMMARY_INPUT_CHARS / records.length)));
-  const transcript = records.map((r) => `${label(r)}: ${sentText(r).slice(0, perTurn)}`).join('\n');
+  const texts = sentTexts(records);
+  const transcript = records
+    .map((r, i) => `${label(r)}: ${(texts[i] ?? '').slice(0, perTurn)}`)
+    .join('\n');
   return {
     system: SUMMARY_SYSTEM[locale],
     messages: [

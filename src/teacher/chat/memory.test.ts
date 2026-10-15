@@ -2,9 +2,12 @@ import { describe, expect, it } from 'vitest';
 import type { ChatMessageRecord } from './chatStore';
 import {
   contextBudget,
+  EMPTY_ANSWER,
   joinContinuation,
   estimateTokens,
   fitHistory,
+  questionBefore,
+  sentText,
   summaryBlock,
   summaryRequest,
   unsummarized,
@@ -86,6 +89,85 @@ describe('AI Teacher memory', () => {
   it('the summary is labelled as AI-written when added to the instruction', () => {
     expect(summaryBlock('vi', null)).toBe('');
     expect(summaryBlock('vi', { text: '- con lắc', upto: 'm1' })).toMatch(/do AI viết/);
+  });
+});
+
+describe('answers saved by an older version are sent back cleaned (review 2026-10-15)', () => {
+  const think = (id: string, content: string): ChatMessageRecord => ({
+    id,
+    role: 'assistant',
+    content,
+    checkedBy: 'groq',
+  });
+
+  it('hidden reasoning and echoed labels never go back to the AI', () => {
+    const old = record('a', 'assistant', '<think>thử 7 kg</think>**GHI CHÚ:**\nLực là vectơ.');
+    expect(sentText(old)).toBe('Lực là vectơ.');
+    const fitted = fitHistory([record('q', 'user', 'Lực là gì?'), old], 1000);
+    expect(fitted.messages.map((m) => m.content)).toEqual(['Lực là gì?', 'Lực là vectơ.']);
+    const summary = summaryRequest('vi', null, [record('q', 'user', 'Lực là gì?'), old]);
+    expect(summary.messages[0]?.content).not.toContain('thử 7 kg');
+    expect(summary.messages[0]?.content).toContain('Thầy: Lực là vectơ.');
+  });
+
+  it("a Think answer loses the reviewer's notes, read with the question before it", () => {
+    const answer = think('a', 'Bản nháp đúng.\n\nBản đã sửa:\n# Rơi tự do\nv = gt');
+    const records = [record('q', 'user', 'Rơi tự do là gì?'), answer];
+    expect(fitHistory(records, 1000).messages[1]?.content).toBe('# Rơi tự do\nv = gt');
+    expect(summaryRequest('vi', null, records).messages[0]?.content).toContain('Thầy: # Rơi tự do');
+    // A question about the learner's own draft keeps the reviewed answer whole.
+    const own = [record('q', 'user', 'Thầy xem nháp giúp em'), answer];
+    expect(fitHistory(own, 1000).messages[1]?.content).toBe(answer.content);
+    // Without the question, the notes are left as saved (they may be feedback asked for).
+    expect(sentText(answer)).toBe(answer.content);
+    expect(sentText(answer, 'Rơi tự do là gì?')).toBe('# Rơi tự do\nv = gt');
+  });
+
+  it('the question is the user turn right before the answer', () => {
+    const records = [
+      record('q1', 'user', 'Câu 1'),
+      record('a1', 'assistant', 'Đáp 1'),
+      record('q2', 'user', 'Câu 2'),
+      record('a2', 'assistant', 'Đáp 2'),
+    ];
+    expect(questionBefore(records, 3)).toBe('Câu 2');
+    expect(questionBefore(records, 1)).toBe('Câu 1');
+    expect(questionBefore(records, 0)).toBe('');
+  });
+
+  it('a clean answer, a question and a quick button go as saved', () => {
+    const clean = record('a', 'assistant', 'Lực là đại lượng vectơ.');
+    expect(sentText(clean)).toBe(clean.content);
+    const question = record('q', 'user', '<think> trong câu hỏi');
+    expect(sentText(question)).toBe(question.content);
+    const quick = { ...record('q', 'user', 'Chậm hơn'), prompt: 'Thầy giảng lại chậm hơn…' };
+    expect(sentText(quick)).toBe('Thầy giảng lại chậm hơn…');
+  });
+
+  it('an answer that was all reasoning never goes back as reasoning, nor as an empty turn (review fix round 2)', () => {
+    for (const content of [
+      '<think>chỉ có nháp</think>',
+      // Cut in the middle of the reasoning: no closing tag.
+      '<think>chỉ có nháp, thử 7 kg',
+      '<thinking>chỉ có nháp</thinking>\n\n',
+    ]) {
+      const only = record('a', 'assistant', content);
+      expect(sentText(only), content).toBe(EMPTY_ANSWER);
+      const records = [
+        record('q', 'user', 'Lực là gì?'),
+        only,
+        record('q2', 'user', 'Còn khối lượng?'),
+      ];
+      const sent = fitHistory(records, 1000).messages.map((m) => m.content);
+      expect(sent, content).toEqual(['Lực là gì?', EMPTY_ANSWER, 'Còn khối lượng?']);
+      const summary = summaryRequest('vi', null, records).messages[0]?.content ?? '';
+      expect(summary, content).not.toMatch(/<\/?think|chỉ có nháp|7 kg/);
+      expect(summary, content).toContain(`Thầy: ${EMPTY_ANSWER}`);
+    }
+    // A Think answer that was all reviewer notes: the notes are not sent either.
+    const notes = { ...record('a', 'assistant', 'Bản nháp đã đúng.'), checkedBy: 'groq' };
+    expect(sentText(notes, 'Lực là gì?')).toBe(EMPTY_ANSWER);
+    expect(EMPTY_ANSWER.trim()).not.toBe('');
   });
 });
 

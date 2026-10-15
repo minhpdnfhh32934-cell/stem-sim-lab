@@ -431,6 +431,472 @@ describe('answer cleaning: the Think reviewer wrapper', () => {
   });
 });
 
+describe('answer cleaning: which questions ask for a correction (review 2026-10-15)', () => {
+  it("ordinary questions lose the reviewer's notes and header (the reviewer's probes)", () => {
+    const probes: [string, string, string][] = [
+      [
+        'Thầy xem giúp em bài này: một vật rơi từ độ cao 20 m, tính vận tốc chạm đất.',
+        'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt',
+        '# Rơi tự do\nv = gt',
+      ],
+      [
+        'Em có nhận xét gì về bán kính nguyên tử trong một chu kì?',
+        'Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\n# Bán kính nguyên tử\nBán kính giảm dần trong một chu kì.',
+        '# Bán kính nguyên tử\nBán kính giảm dần trong một chu kì.',
+      ],
+      [
+        'Nhận xét về tính kim loại của các nguyên tố nhóm IA.',
+        'Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\n# Kim loại kiềm\nTính kim loại tăng dần trong nhóm.',
+        '# Kim loại kiềm\nTính kim loại tăng dần trong nhóm.',
+      ],
+      [
+        'Which of these statements about free fall is correct?',
+        'Review: The answer is correct but lacks units.\n\nRevised answer:\n# Free fall\nv = gt',
+        '# Free fall\nv = gt',
+      ],
+    ];
+    for (const [question, text, lesson] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text: lesson,
+        removed: ['review'],
+      });
+    }
+    // The fourth probe, with questions that wrongly turned the correction mode on.
+    const fourth = 'Bản trả lời ban đầu đã đúng về cơ bản.\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      'Chỉnh lưu dòng điện xoay chiều là gì?',
+      'Chỉnh hợp chập 2 của 5 phần tử là bao nhiêu?',
+      'Điều chỉnh độ sáng đèn bằng biến trở thế nào?',
+      'Cơ chế sửa sai ADN diễn ra thế nào?',
+      'Xem lại bài rơi tự do giúp em',
+      'Kiểm tra điều kiện cân bằng của vật rắn như thế nào?',
+      'Review free fall for me',
+    ]) {
+      expect(cleanAnswer(fourth, { reviewed: true, question }).text, question).toBe(
+        '# Rơi tự do\nv = gt',
+      );
+    }
+    // The version under review is the draft also when a correction was asked for.
+    expect(cleanAnswer(fourth, { reviewed: true, question: 'Sửa giúp em bài này' }).text).toBe(
+      '# Rơi tự do\nv = gt',
+    );
+    // "câu trả lời ban đầu của em" is the learner's: kept.
+    const own = 'Câu trả lời ban đầu của em đúng về cơ bản.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(own, { reviewed: true, question: 'Sửa giúp em bài này' })).toEqual({
+      text: own,
+      removed: [],
+    });
+  });
+
+  it('a yes/no check of the learner’s answer keeps the verdict they asked for', () => {
+    const checks: [string, string][] = [
+      [
+        'Em làm ra v = 20 m/s, đúng không ạ?',
+        'Đánh giá: Câu trả lời đúng.\n\nVì v = gt = 9,8 · 2 ≈ 20 m/s.',
+      ],
+      [
+        'Đáp án A đúng không thầy?',
+        'Đánh giá: Đúng. Đáp án A là đáp án chính xác vì lực là đại lượng vectơ.',
+      ],
+      ['Is answer A right?', 'Review: Correct.\n\nForce is a vector, so the answer A holds.'],
+      ['Lực là đại lượng vectơ, có đúng không?', 'Đánh giá: Đúng.\n\nLực có phương và chiều.'],
+      ['Bài này em giải đúng chưa thầy', 'Nhận xét: Đúng.\n\nEm đã đổi đơn vị đúng.'],
+      ['Am I right that a = F/m?', 'Review: Correct.\n\nNewton’s second law gives a = F/m.'],
+      ['Is it right?', 'Review: Correct.\n\nThe units are right too.'],
+      ['Is my answer correct: v = 20 m/s?', 'Review: Correct.\n\nv = gt = 20 m/s.'],
+    ];
+    for (const [question, text] of checks) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+      // Without the question the verdict is the reviewer's and goes.
+      expect(cleanAnswer(text, REVIEWED).removed, question).toEqual(['review']);
+    }
+  });
+
+  it('requests about the learner’s own work keep the teacher’s feedback', () => {
+    const feedback = 'Câu gốc dùng sai đơn vị.\n\nBản đã sửa:\nLực là đại lượng vectơ.';
+    for (const question of [
+      'Sửa giúp em với',
+      'Thầy chữa giúp em bài này',
+      'Chấm điểm giúp em',
+      'Thầy sửa bài của em nhé',
+      'Xem giúp bài làm của em',
+      'Thầy xem giúp em bài làm này',
+      'Kiểm tra lại giúp em',
+      'Chấm bài em làm với',
+      'Check my answer please',
+      'Can you fix my solution?',
+      'Grade my work',
+    ]) {
+      expect(cleanAnswer(feedback, { reviewed: true, question }), question).toEqual({
+        text: feedback,
+        removed: [],
+      });
+    }
+  });
+
+  it('only a header naming the revision of the answer ends the opening sentences', () => {
+    // A teacher sets a misconception against the corrected solution: nothing goes.
+    for (const text of [
+      'Nhiều bạn nghĩ vật nặng rơi nhanh hơn vật nhẹ. Đó là quan niệm sai.\n\nBài giải đã sửa:\nHai vật rơi như nhau khi bỏ qua lực cản.',
+      'Một lỗi thường gặp: nhiều bạn quên đổi đơn vị.\n\nLời giải đã sửa:\n1. Đổi 72 km/h = 20 m/s.',
+      'Lực là đại lượng vectơ. Nó có phương, chiều và độ lớn.\n\nBản hoàn chỉnh\nLực đo bằng niutơn.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+    // The reviewer's own revision headers still do.
+    for (const header of [
+      'Bản đã sửa:',
+      'Bản sửa',
+      'Câu trả lời đã chỉnh sửa:',
+      'Revised answer:',
+      'Corrected version',
+    ]) {
+      expect(reviewed(`Chào em!\n\n${header}\nLực là đại lượng vectơ.`), header).toBe(
+        'Lực là đại lượng vectơ.',
+      );
+    }
+    // After a remark about the draft, the other headers count as before.
+    expect(reviewed('Bản nháp đúng.\n\nBài giải đã sửa:\nHai vật rơi như nhau.')).toBe(
+      'Hai vật rơi như nhau.',
+    );
+  });
+
+  it('reviewer-only words at the very start are remarks, without a label or a header', () => {
+    expect(
+      reviewed('Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.\n\n# Rơi tự do\nv = gt'),
+    ).toBe('# Rơi tự do\nv = gt');
+    expect(reviewed('The response is accurate and complete.\n\n# Free fall\nv = gt')).toBe(
+      '# Free fall\nv = gt',
+    );
+    expect(reviewed('No changes needed.\n\nForce is a vector.')).toBe('Force is a vector.');
+    expect(reviewed('I kept the explanation as it was.\n\nForce is a vector.')).toBe(
+      'Force is a vector.',
+    );
+    // Not at the very start: lesson text.
+    const later = 'Lực là đại lượng vectơ.\n\nNo changes needed.';
+    expect(cleanAnswer(later, REVIEWED)).toEqual({ text: later, removed: [] });
+    // After a header the lesson begins.
+    expect(reviewed('Bản đã sửa:\nI kept the mass in kilograms, so F = 20 N.')).toBe(
+      'I kept the mass in kilograms, so F = 20 N.',
+    );
+    // A learner who asked for a correction: the teacher may say so to them.
+    const said = 'Em giữ nguyên nội dung, chỉ sửa đơn vị.\n\nF = 20 N.';
+    expect(cleanAnswer(said, { reviewed: true, question: 'Sửa giúp em' })).toEqual({
+      text: said,
+      removed: [],
+    });
+  });
+});
+
+describe('answer cleaning: own-work requests and reviewer phrases (review fix round 1)', () => {
+  it('the usual ways to ask about one’s own work keep the verdict the learner asked for', () => {
+    // The reviewer's probes: in non-correction mode the diagnosis was deleted.
+    const probes: [string, string][] = [
+      [
+        'Chấm bài giúp em: v = 72 km/h = 20 m/s, t = 2 s.',
+        'Đánh giá: Câu trả lời sai ở bước đổi đơn vị.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Sửa bài giúp em với ạ',
+        'Nhận xét: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\nF = 20 N.',
+      ],
+      [
+        'Đây là bài làm của em: v = gt = 20. Thầy nhận xét giúp em',
+        'Nhận xét: Đúng.\n\nEm đã dùng đúng công thức v = gt.',
+      ],
+    ];
+    for (const [question, text] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+    // Every probe question, with a labelled verdict that goes when nobody asked for one.
+    const verdict = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(verdict, REVIEWED).text).toBe('Lực là đại lượng vectơ.');
+    for (const question of [
+      'Sửa bài giúp em với ạ',
+      'Chấm bài giúp em',
+      'Chữa bài giúp em',
+      'Kiểm tra bài giúp em',
+      'Thầy chữa bài cho em',
+      'Thầy sửa cho em bài này với ạ',
+      'Giúp em sửa bài này',
+      'Thầy sửa lỗi giúp em',
+      'Bài làm của em: v = 20 m/s. Thầy xem giúp',
+      'Đây là bài làm của em: v = gt = 20. Thầy nhận xét giúp em',
+      'Thầy nhận xét bài này giúp em',
+      'Em tính ra 20 m/s, thầy xem giúp em với ạ',
+      'Sửa sai giúp em',
+      'Sửa bài giúp với',
+      'Sửa lỗi sai trong bài của em',
+      'Thầy sửa lỗi sai trong bài này giúp em',
+      'Thầy kiểm tra bài em làm với',
+      'Em làm thế này có sai không ạ?',
+      'Em tính sai ở bước nào ạ?',
+      'Where did I go wrong?',
+      'Kết quả của em là 20 m/s',
+      'Bài này em làm đúng không thầy ơi?',
+      'Em làm vậy đúng không cô ơi',
+      'Em ra v = 20 m/s, đúng k ạ',
+      'Em ra v = 20 m/s, đúng hông thầy?',
+      'Did I solve this correctly?',
+      'Did I make a mistake?',
+      'Have I done this right?',
+      'v = 20 m/s, is that right?',
+      'Is this right?',
+      'Please fix this',
+      'Can you check it for me?',
+    ]) {
+      expect(cleanAnswer(verdict, { reviewed: true, question }), question).toEqual({
+        text: verdict,
+        removed: [],
+      });
+    }
+  });
+
+  it('ordinary questions that only look like a check still lose the reviewer’s notes', () => {
+    // English: a check of "this" that is a new task, or a question about why something is wrong.
+    const english =
+      'Review: The answer is correct but lacks units.\n\nRevised answer:\n# Free fall\nv = 20 m/s';
+    for (const question of [
+      'Check this: a ball falls from 20 m, find v.',
+      'How do I correct this for air resistance?',
+      'Why is it wrong to add speeds like scalars?',
+      'Fix this circuit: the bulb does not light',
+      'How do I fix this?',
+      'How to fix this?',
+      'Which of these statements about free fall is correct?',
+      'Review free fall for me',
+    ]) {
+      expect(cleanAnswer(english, { reviewed: true, question }), question).toEqual({
+        text: '# Free fall\nv = 20 m/s',
+        removed: ['review'],
+      });
+    }
+    // Vietnamese: a simulation's result, a new exercise, a question about a topic.
+    const greeting = 'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      'Em muốn xem kết quả của mình trên đồ thị',
+      'Thầy cho em xem kết quả của mình: đồ thị v-t',
+      'Enzyme sửa lỗi giúp tế bào thế nào?',
+      'Hôm nay bài của mình học gì?',
+      'Thầy xem giúp em bài này: một vật rơi từ độ cao 20 m, tính vận tốc chạm đất.',
+      'Thầy xem bài này giúp em: một vật rơi từ độ cao 20 m.',
+      'Xem đáp án giúp em',
+      'Giúp em kiểm tra điều kiện cân bằng của vật rắn',
+      'Sửa bài giúp ích gì cho việc học?',
+      'Bài này em giải không ra, thầy giải giúp em',
+      'Kiểm tra bài cũ gồm những gì?',
+      // "con người", "con lắc": not the learner; "Bài tập của em: …" is a new exercise.
+      'Thuốc kháng sinh chữa cho con người những bệnh gì?',
+      'Enzyme sửa lỗi giúp con người thế nào?',
+      'Nhận xét kết quả con lắc đơn khi tăng chiều dài dây',
+      'Bài tập của em hôm nay: một vật rơi từ 20 m, tính v.',
+      // The earlier must-not list, checked with an answer whose cleaning shows the mode.
+      'Cơ chế sửa sai ADN diễn ra thế nào?',
+      'Xem lại bài rơi tự do giúp em',
+      'Chỉnh lưu dòng điện xoay chiều là gì?',
+      'Điều chỉnh độ sáng đèn bằng biến trở thế nào?',
+      'Em có nhận xét gì về bán kính nguyên tử trong một chu kì?',
+      'Nhận xét về tính kim loại của các nguyên tố nhóm IA.',
+      'Kiểm tra điều kiện cân bằng của vật rắn như thế nào?',
+    ]) {
+      expect(cleanAnswer(greeting, { reviewed: true, question }), question).toEqual({
+        text: '# Rơi tự do\nv = gt',
+        removed: ['review'],
+      });
+    }
+  });
+
+  it('broad English and Vietnamese phrases no longer remove a lesson’s first sentence', () => {
+    for (const [text, question] of [
+      [
+        "I kept the mass constant, so the acceleration doubles when the force doubles.\n\nThis is Newton's second law.",
+        'What happens if I double the force?',
+      ],
+      [
+        'The response is complete before the brain notices the stimulus.\n\nThis is why a reflex is fast.',
+        'What is a reflex?',
+      ],
+      [
+        'ADN giữ nguyên nội dung thông tin di truyền qua các thế hệ.\n\nĐó là nhờ nhân đôi bán bảo toàn.',
+        'Vì sao ADN ổn định?',
+      ],
+    ] as const) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+    // The reviewer's own notes still go.
+    for (const [text, lesson] of [
+      ['I kept the explanation as it was.\n\nForce is a vector.', 'Force is a vector.'],
+      ['I kept the wording and the structure.\n\nForce is a vector.', 'Force is a vector.'],
+      ['The response is accurate and complete.\n\n# Free fall\nv = gt', '# Free fall\nv = gt'],
+      ['The provided response is correct.\n\nForce is a vector.', 'Force is a vector.'],
+      ['The response is correct, so no edits.\n\nForce is a vector.', 'Force is a vector.'],
+      [
+        'Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.\n\n# Rơi tự do\nv = gt',
+        '# Rơi tự do\nv = gt',
+      ],
+      ['Mình giữ nguyên nội dung ban đầu.\n\nLực là vectơ.', 'Lực là vectơ.'],
+      ['Mình giữ nguyên nội dung và chỉ sửa cách trình bày.\n\nLực là vectơ.', 'Lực là vectơ.'],
+    ] as const) {
+      expect(cleanAnswer(text, REVIEWED).text, text).toBe(lesson);
+    }
+  });
+});
+
+describe('answer cleaning: unaccented and other own-work checks (review fix round 2)', () => {
+  it('the reviewer’s probes keep the verdict and the diagnosis the learner asked for', () => {
+    const probes: [string, string][] = [
+      [
+        'em lam dung khong a? v = 72 km/h = 20 m/s',
+        'Nhận xét: Em làm đúng nhưng thiếu đơn vị ở bước cuối.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em làm đúng không ạ? v = 72 km/h = 20 m/s',
+        'Nhận xét: Em làm đúng nhưng thiếu đơn vị ở bước cuối.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em chọn đáp án C có được không ạ?',
+        'Nhận xét: Chưa đúng.\n\nBản đã sửa:\nĐáp án đúng là B vì lực là đại lượng vectơ.',
+      ],
+      [
+        'Thầy check giúp em bài này với: v = 20 m/s',
+        'Nhận xét: Câu trả lời đúng nhưng thiếu bước đổi đơn vị.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em giải thế này: a = F/m = 2 m/s². Thầy xem có sai chỗ nào không ạ?',
+        'Đánh giá: Đúng.\n\nVì a = F/m = 2 m/s².',
+      ],
+    ];
+    for (const [question, text] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+  });
+
+  it('own-work questions typed without accents, or in other common ways, are checks', () => {
+    const verdict = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    for (const question of [
+      // Without accents (the reviewer's seven, then the other request shapes).
+      'em lam dung khong a? v = 72 km/h = 20 m/s',
+      'sua bai giup em voi',
+      'thay cham bai giup em',
+      'em lam the nay dung chua thay',
+      'bai lam cua em: v = 20 m/s, thay xem giup em',
+      'Em lam sai o dau vay thay?',
+      'em tinh ra v = 20 m/s, dung k a',
+      'kiem tra lai giup em',
+      'sua giup em voi',
+      'chua bai giup em nhe',
+      'thay cham diem giup em',
+      'thay sua loi sai trong bai nay giup em',
+      'loi giai cua em the nay: v = gt = 20',
+      'em ra 20 m/s dung hk thay',
+      'Dap an A dung khong thay?',
+      'em lam nhu vay duoc chua thay?',
+      'em chon dap an C co duoc khong a?',
+      'em giai the nay: v = 20 m/s. thay xem co sai cho nao khong a?',
+      'thay xem giup em voi',
+      // Accents on part of the question only.
+      'em lam dung khong ạ?',
+      // Accented shapes that were missed.
+      'Em làm như vầy được chưa thầy?',
+      'Em làm vậy ổn không ạ?',
+      'Em ra 20 m/s đúng hk thầy',
+      'Em chọn đáp án C có được không ạ?',
+      'Thầy check giúp em bài này với: v = 20 m/s',
+      'Em giải thế này: a = F/m = 2 m/s². Thầy xem có sai chỗ nào không ạ?',
+      // English.
+      'Is 20 m/s correct?',
+      'I got 20 m/s, right?',
+    ]) {
+      expect(cleanAnswer(verdict, { reviewed: true, question }), question).toEqual({
+        text: verdict,
+        removed: [],
+      });
+    }
+  });
+
+  it('unaccented questions that only look like a check stay ordinary', () => {
+    const greeting = 'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      // "dung" is also "dùng"/"dừng", "cham" also "chậm"/"chạm", "chua" also "chưa", "sua" "sữa".
+      'Co the dung cong thuc nay khong?',
+      'Em co the dung cong thuc nay khong?',
+      'Vat co dung yen khong?',
+      'Em dung cong thuc nao de tinh van toc?',
+      'Thay giang cham lai giup em',
+      'Thay noi cham giup em',
+      'Em chua hieu, giai thich lai giup em',
+      'Qua bong to ra dung khong?',
+      'Uong sua giup em cao hon khong?',
+      // A topic, a new exercise or a simulation's result, as in the accented must-not list.
+      'Kiem tra giup em dieu kien can bang cua vat ran',
+      'Enzyme sua loi giup te bao the nao?',
+      'Thay xem giup em bai nay: mot vat roi tu do cao 20 m, tinh van toc cham dat.',
+      'Em muon xem ket qua cua minh tren do thi',
+      'Bai tap cua em hom nay: mot vat roi tu 20 m, tinh v.',
+      'Em lam the nao de vat dung lai?',
+      'Em lam thi nghiem nay o nha duoc khong?',
+      // English.
+      'Is it right to say force is a vector?',
+      'Is 0 a natural number?',
+    ]) {
+      expect(cleanAnswer(greeting, { reviewed: true, question }), question).toEqual({
+        text: '# Rơi tự do\nv = gt',
+        removed: ['review'],
+      });
+    }
+  });
+
+  it('a correcting verb before a topic, or a conceptual "còn đúng không?", is no check', () => {
+    const answer =
+      'Đánh giá: Câu trả lời đúng.\n\nBản đã sửa:\n# Điều kiện cân bằng\nTổng lực bằng 0 và tổng mômen bằng 0.';
+    const lesson = '# Điều kiện cân bằng\nTổng lực bằng 0 và tổng mômen bằng 0.';
+    for (const question of [
+      'Giúp em kiểm tra điều kiện cân bằng của vật rắn',
+      'Thầy kiểm tra giúp em điều kiện cân bằng của vật rắn',
+      'Kiểm tra lại giúp em đơn vị của lực là gì',
+      'Khi có ma sát, định luật bảo toàn cơ năng còn đúng không?',
+      'Định luật Ôm vẫn đúng không thầy?',
+      'Kiểm tra giúp em xem nước có dẫn điện không',
+      'Sửa giúp em lỗi chính tả trong câu hỏi trước',
+      'Sửa cho em câu hỏi: vật rơi 20 m thì mất bao lâu?',
+      'Thầy chữa giúp em bài tập 5 trang 20',
+      'Em làm thí nghiệm này ở nhà được không?',
+    ]) {
+      expect(cleanAnswer(answer, { reviewed: true, question }), question).toEqual({
+        text: lesson,
+        removed: ['review'],
+      });
+    }
+    // A request that ends, or names the work and then ends, is still one.
+    for (const question of [
+      'Kiểm tra lại giúp em',
+      'Sửa giúp em, v = 20 m/s',
+      'Thầy chữa giúp em bài này',
+      'Sửa cho em bài này với ạ',
+      'Kiểm tra giúp em bài này: v = 20 m/s',
+      'Thầy sửa giúp em chỗ này với',
+      'Thầy kiểm tra giúp em nhé',
+    ]) {
+      expect(cleanAnswer(answer, { reviewed: true, question }), question).toEqual({
+        text: answer,
+        removed: [],
+      });
+    }
+  });
+});
+
 describe('answer cleaning: what it never touches', () => {
   it('returns text with nothing to remove exactly as it was (spaces included)', () => {
     const text = '  Rơi tự do là chuyển động chỉ chịu trọng lực.\n\n\n';

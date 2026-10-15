@@ -534,6 +534,11 @@ async fn fetch_models(
     Ok(LocalModels { models, more })
 }
 
+/// The error message for a model the runtime's list does not hold.
+fn not_listed() -> String {
+    format!("{MODEL_MISSING}: not listed")
+}
+
 /// What the runtime says about one model: its own details request, else its model list.
 async fn details_of(
     http: &reqwest::Client,
@@ -556,7 +561,7 @@ async fn details_of(
                 .models
                 .iter()
                 .find(|m| m.id == model)
-                .ok_or_else(|| AiError::Http(format!("{MODEL_MISSING}: not listed")))?;
+                .ok_or_else(|| AiError::Http(not_listed()))?;
             Ok(ModelDetails::from_listing(m, rt.declared()))
         }
     }
@@ -666,7 +671,10 @@ async fn prepare(
 }
 
 /// A question with a picture: the model must read pictures, by what its runtime says
-/// ([`vision::allow`]). Ollama's details came with [`prepare`]; the others are asked now.
+/// ([`vision::allow`]). Ollama's details came with [`prepare`]; the others are asked now. A
+/// runtime that cannot tell (any other OpenAI-compatible server: its model list says nothing
+/// about pictures) is not asked, and a model missing from the runtime's list is not known either:
+/// both are [`VISION_UNVERIFIED`], never a missing model.
 async fn check_vision(
     http: &reqwest::Client,
     rt: &dyn LocalRuntime,
@@ -677,7 +685,12 @@ async fn check_vision(
 ) -> Result<(), AiError> {
     let vision = match known {
         Some(d) => d.vision,
-        None => details_of(http, rt, base, model, limit).await?.vision,
+        None if rt.kind() == RuntimeKind::OpenAiCompatible => Cap::Unverified,
+        None => match details_of(http, rt, base, model, limit).await {
+            Ok(d) => d.vision,
+            Err(AiError::Http(m)) if m == not_listed() => Cap::Unverified,
+            Err(e) => return Err(e),
+        },
     };
     vision::allow(vision)
 }
@@ -1154,31 +1167,188 @@ mod tests {
             .nth(1)
             .unwrap_or_default();
         assert!(client_fn.contains("Client::builder"));
-        // From the cloud stream only its event shape is used. In `mod.rs`, `super::stream` is
-        // the cloud stream; in the adapters it is the local one, and the cloud one is reached as
-        // `super::super::stream` or `crate::ai::stream`.
         for (file, code) in sources() {
-            let mut cloud = vec!["crate::ai::stream::", "super::super::stream::"];
-            if file == "mod.rs" {
-                cloud.push("super::stream::");
+            assert_eq!(
+                cloud_stream_uses(file, code),
+                Vec::<String>::new(),
+                "{file}"
+            );
+        }
+    }
+
+    /// The cloud stream module as `file` can name it. In `mod.rs`, `super::stream` is the cloud
+    /// stream; in the adapters it is the local one, and the cloud one is reached as
+    /// `super::super::stream` or `crate::ai::stream`.
+    fn cloud_paths(file: &str) -> Vec<&'static str> {
+        let mut cloud = vec!["crate::ai::stream", "super::super::stream"];
+        if file == "mod.rs" {
+            cloud.push("super::stream");
+        }
+        cloud
+    }
+
+    /// The code without `//` comments (a use statement never holds "//").
+    fn without_comments(code: &str) -> String {
+        code.lines()
+            .map(|l| l.split("//").next().unwrap_or_default())
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
+    /// Splits `s` at the commas outside braces.
+    fn split_top(s: &str) -> Vec<&str> {
+        let (mut depth, mut from, mut out) = (0usize, 0, Vec::new());
+        for (i, c) in s.char_indices() {
+            match c {
+                '{' => depth += 1,
+                '}' => depth = depth.saturating_sub(1),
+                ',' if depth == 0 => {
+                    out.push(&s[from..i]);
+                    from = i + 1;
+                }
+                _ => {}
             }
-            for path in cloud {
-                for (at, _) in code.match_indices(path) {
-                    let rest = &code[at + path.len()..];
-                    assert!(
-                        rest.starts_with("StreamEvent"),
-                        "{file} uses {path}{}",
+        }
+        out.push(&s[from..]);
+        out
+    }
+
+    /// The paths of one use tree, groups expanded ("a::{b, c::{d}}" gives a::b and a::c::d),
+    /// aliases dropped and "x::self" read as "x".
+    fn expand(prefix: &str, tree: &str, out: &mut Vec<String>) {
+        let tree = tree.trim();
+        if tree.is_empty() {
+            return;
+        }
+        let join = |a: &str, b: &str| match (a.is_empty(), b.is_empty()) {
+            (true, _) => b.to_string(),
+            (_, true) => a.to_string(),
+            _ => format!("{a}::{b}"),
+        };
+        if let (Some(open), Some(close)) = (tree.find('{'), tree.rfind('}')) {
+            let head = tree[..open].trim().trim_end_matches("::");
+            let base = join(prefix, head);
+            for part in split_top(&tree[open + 1..close]) {
+                expand(&base, part, out);
+            }
+            return;
+        }
+        let path: String = tree
+            .split(" as ")
+            .next()
+            .unwrap_or(tree)
+            .split_whitespace()
+            .collect();
+        let path = join(prefix, &path);
+        out.push(path.strip_suffix("::self").unwrap_or(&path).to_string());
+    }
+
+    /// Every path the `use` statements of `code` name, whitespace removed and groups expanded.
+    fn use_paths(code: &str) -> Vec<String> {
+        let code = without_comments(code);
+        let mut out = Vec::new();
+        for (at, _) in code.match_indices("use ") {
+            // Only the keyword: at a statement start ("pub use", "pub(crate) use" too).
+            let before = code[..at].trim_end();
+            let keyword = before.is_empty()
+                || before.ends_with([';', '{', '}', ']', ')'])
+                || before.ends_with(" pub")
+                || before.ends_with("\npub")
+                || before == "pub";
+            if !keyword {
+                continue;
+            }
+            let Some(end) = code[at..].find(';') else {
+                continue;
+            };
+            let tree = code[at + 4..at + end]
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ");
+            expand("", &tree, &mut out);
+        }
+        out
+    }
+
+    /// What `file` uses of the cloud stream module other than its event shape (`StreamEvent`):
+    /// a path into it in the code, the module itself, its parent's glob, or any such path in a
+    /// use statement, grouped imports included ("use super::{stream, …}").
+    fn cloud_stream_uses(file: &str, code: &str) -> Vec<String> {
+        let code = without_comments(code);
+        let code = code.as_str();
+        let mut found = Vec::new();
+        for cloud in cloud_paths(file) {
+            let event = format!("{cloud}::StreamEvent");
+            // Paths written out in the code.
+            let path = format!("{cloud}::");
+            for (at, _) in code.match_indices(&path) {
+                let rest = &code[at + path.len()..];
+                if !rest.starts_with("StreamEvent") {
+                    found.push(format!(
+                        "{path}{}",
                         rest.chars().take(30).collect::<String>()
-                    );
-                }
-                let whole = path.trim_end_matches("::");
-                for (at, _) in code.match_indices(whole) {
-                    assert!(
-                        code[at + whole.len()..].starts_with("::"),
-                        "{file} imports the cloud stream module itself"
-                    );
+                    ));
                 }
             }
+            for (at, _) in code.match_indices(cloud) {
+                if !code[at + cloud.len()..].starts_with("::") {
+                    found.push(format!("{cloud} (the module itself)"));
+                }
+            }
+            // Use statements, grouped or not.
+            let parent = cloud.rsplit_once("::").map_or("", |(p, _)| p);
+            for p in use_paths(code) {
+                let into = p == cloud || p.starts_with(&format!("{cloud}::"));
+                if (into && p != event) || p == parent || p == format!("{parent}::*") {
+                    found.push(format!("use {p}"));
+                }
+            }
+        }
+        found
+    }
+
+    #[test]
+    fn the_cloud_stream_check_reads_grouped_imports() {
+        let caught = |file: &str, code: &str| !cloud_stream_uses(file, code).is_empty();
+        for (file, code) in [
+            ("mod.rs", "use super::{stream, AiError};"),
+            (
+                "mod.rs",
+                "use super::{\n    reasoning::is_json,\n    stream::Timing,\n};",
+            ),
+            ("mod.rs", "use super::*;"),
+            ("mod.rs", "use super::stream::{self, StreamEvent};"),
+            ("ollama.rs", "use crate::ai::{stream::Timing};"),
+            (
+                "ollama.rs",
+                "use crate::ai::{\n    stream::{StreamEvent, Timing},\n    AiError,\n};",
+            ),
+            ("ollama.rs", "use super::super::{stream};"),
+            ("ollama.rs", "use crate::ai::*;"),
+            ("ollama.rs", "use crate::ai;"),
+            (
+                "ollama.rs",
+                "fn f() { crate::ai::stream::stream_with_fallback(); }",
+            ),
+        ] {
+            assert!(caught(file, code), "{file}: {code}");
+        }
+        for (file, code) in [
+            (
+                "mod.rs",
+                "pub use super::stream::StreamEvent as LocalEvent;",
+            ),
+            ("mod.rs", "use super::{stream::StreamEvent, AiError};"),
+            ("mod.rs", "use stream::{sse_line, Lines};"),
+            ("ollama.rs", "use super::stream::{sse_line, Lines};"),
+            ("ollama.rs", "use crate::ai::{reasoning::js_trim, AiError};"),
+            // Words in comments are no imports.
+            (
+                "ollama.rs",
+                "// We use crate::ai::stream rules here.\nfn f() {}",
+            ),
+        ] {
+            assert!(!caught(file, code), "{file}: {code}");
         }
     }
 

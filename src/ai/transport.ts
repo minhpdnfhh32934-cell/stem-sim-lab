@@ -1,8 +1,17 @@
 import { Channel, invoke, isTauri } from '@tauri-apps/api/core';
 import { localDay, useAiStore } from './aiStore';
-import { expired, readCloudStream, startClock, type StreamClock } from './cloudStream';
+import {
+  expired,
+  GEMINI_BLOCKED,
+  NATURAL_END,
+  readCloudStream,
+  roomForFallback,
+  startClock,
+  type StreamClock,
+} from './cloudStream';
 import { fallbackFor, isQuotaError } from './fallback';
 import { classifyKeyTest, maskKey, type KeyTest } from './keyTest';
+import { visibleAnswer } from './reasoning';
 import {
   AiError,
   ShownText,
@@ -299,13 +308,28 @@ async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Re
       content?: { parts?: { text?: string; thought?: boolean }[] };
       finishReason?: string;
     }[];
+    promptFeedback?: { blockReason?: string };
   };
   const first = json.candidates?.[0];
+  const finish = first?.finishReason;
+  // A stop by Gemini's own filters is no answer, even with some text (as when streamed).
+  if (finish !== undefined && GEMINI_BLOCKED.has(finish)) {
+    throw new AiError('badResponse', `empty answer (${finish})`);
+  }
   const text = (first?.content?.parts ?? [])
     .filter((p) => !p.thought)
     .map((p) => p.text ?? '')
     .join('');
-  return { text, truncated: first?.finishReason === 'MAX_TOKENS' };
+  if (!text.trim()) {
+    const reason = finish ?? json.promptFeedback?.blockReason ?? 'no text';
+    throw new AiError('badResponse', `empty answer (${reason})`);
+  }
+  return { text, truncated: incomplete(finish, 'gemini') };
+}
+
+/** Any finish reason but the provider's natural end (`NATURAL_END`), as Rust's `truncated`. */
+function incomplete(reason: string | undefined, provider: Provider): boolean {
+  return reason !== undefined && !NATURAL_END[provider].includes(reason);
 }
 
 async function geminiModels(key: string, http: Http): Promise<string[]> {
@@ -355,14 +379,18 @@ async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<Re
     content?: { type: string; text?: string; input?: unknown }[];
     stop_reason?: string;
   };
-  const truncated = json.stop_reason === 'max_tokens';
-  const blocks = json.content ?? [];
+  // A refusal is no answer, even with some text (as when streamed).
+  if (json.stop_reason === 'refusal') throw new AiError('badResponse', 'empty answer (refusal)');
+  const truncated = incomplete(json.stop_reason, 'claude');
+  const blocks = json.content;
+  if (!Array.isArray(blocks)) throw new AiError('badResponse', 'missing content');
   const tool = blocks.find((b) => b.type === 'tool_use');
   if (tool) return { text: JSON.stringify(tool.input), truncated };
-  return {
-    text: blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join(''),
-    truncated,
-  };
+  const text = blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join('');
+  if (!text.trim()) {
+    throw new AiError('badResponse', `empty answer (${json.stop_reason ?? 'no text'})`);
+  }
+  return { text, truncated };
 }
 
 /** Same request as `groq_body` in src-tauri/src/ai/groq.rs (OpenAI-compatible). */
@@ -405,10 +433,15 @@ async function groqChat(req: ChatRequest, key: string, http: Http): Promise<Repl
     choices?: { message?: { content?: string }; finish_reason?: string }[];
   };
   const choice = json.choices?.[0];
-  return {
-    text: (choice?.message?.content ?? '').replace(/^\s*<think>[\s\S]*?<\/think>\s*/, ''),
-    truncated: choice?.finish_reason === 'length',
-  };
+  const finish = choice?.finish_reason;
+  // A content-filter stop is no answer, even with some text (as when streamed).
+  if (finish === 'content_filter') {
+    throw new AiError('badResponse', 'empty answer (content_filter)');
+  }
+  // The raw answer: reasoning is removed for every provider in `chatOnce` (`visibleAnswer`).
+  const text = choice?.message?.content ?? '';
+  if (!text.trim()) throw new AiError('badResponse', `empty answer (${finish ?? 'no text'})`);
+  return { text, truncated: incomplete(finish, 'groq') };
 }
 
 export interface VisionRequest {
@@ -563,8 +596,9 @@ class FetchTransport implements LlmTransport {
   }
   /**
    * Streamed text answer (Gemini and Groq; Claude from Node only), with the gateway's rules: the
-   * fallback answers only for a quota error that came before anything was shown and before the
-   * first-text deadline; no retries (as `chat` here).
+   * fallback answers only for a quota error that came before any visible text was shown (leading
+   * whitespace is held back) and while enough of the first-text wait is left
+   * (`roomForFallback`); no retries (as `chat` here).
    */
   async chatStream(
     req: ChatRequest,
@@ -576,7 +610,10 @@ class FetchTransport implements LlmTransport {
     const fbUsable = fb && this.supported(fb.provider) && !!pageKey(fb.provider);
     const clock = startClock(req.timeoutSecs);
     const progress = { shown: false };
+    // Until the first visible text, whitespace is held back (as Rust's `Emitter`): an answer that
+    // starts with a newline has shown nothing yet, so the fallback may still answer.
     const emit = (text: string) => {
+      if (!progress.shown && text.trim() === '') return;
       progress.shown = true;
       onText(text);
     };
@@ -587,7 +624,9 @@ class FetchTransport implements LlmTransport {
         fallback: false,
       };
     } catch (e) {
-      const switchable = !progress.shown && isQuotaError(e) && performance.now() < clock.first;
+      // The fallback shares the first-text deadline: with too little of it left it could only
+      // time out, so the provider's own quota error is returned instead.
+      const switchable = !progress.shown && isQuotaError(e) && roomForFallback(clock);
       if (!fbUsable || !switchable) throw e;
       const answer = await this.streamOnce(
         { ...req, provider: fb.provider, model: fb.model },
@@ -665,9 +704,13 @@ class FetchTransport implements LlmTransport {
       if (timeout.aborted) throw new AiError('timeout', `${secs}s`);
       throw toAiError(e);
     }
-    if (!reply.text.trim()) throw new AiError('badResponse', 'missing content');
+    // As the Rust gateway: the model's reasoning is removed for every provider; an answer that
+    // was only reasoning is an error, and a JSON answer to a schema is kept exactly as sent.
+    const content = visibleAnswer(reply.text, req.jsonSchema !== undefined);
+    if (content === null) throw new AiError('badResponse', 'reasoningOnly');
+    if (!content.trim()) throw new AiError('badResponse', 'missing content');
     return {
-      content: reply.text,
+      content,
       model: req.model.trim(),
       durationMs: performance.now() - started,
       truncated: reply.truncated,
