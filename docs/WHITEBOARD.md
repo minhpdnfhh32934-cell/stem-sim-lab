@@ -300,10 +300,14 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - **Thanh không làm bảng đổi cỡ** (`askBarSide`): thanh nằm đè lên bảng ở phía xa chỗ vừa khoanh
     (chỗ khoanh ở nửa dưới khung nhìn → thanh ở trên, chừa chỗ cho bản đồ nhỏ; ngược lại → ở dưới),
     nên khung bảng không co lại, không có gì trên bảng bị cuộn đi và chỗ khoanh vẫn nhìn thấy. Thanh
-    không bao giờ che dòng phụ đề hay nhãn "Nội dung do AI hỗ trợ" bên dưới bảng. Bảng hẹp (1366×768
-    có khung chat bên cạnh, truy vấn `@container board`): các nút "Viết nhanh", "Vừa khung", "Khoanh
-    để hỏi" và "Bút của em" chỉ hiện biểu tượng (tên vẫn có cho trình đọc màn hình, chú thích khi rê
-    chuột), nên thanh công cụ luôn một hàng.
+    không bao giờ che dòng phụ đề hay nhãn "Nội dung do AI hỗ trợ" bên dưới bảng. Bảng hẹp (đến
+    960 px, như 1366×768 có khung chat bên cạnh, truy vấn `@container board`): **"Khoanh để hỏi" và
+    "Viết nhanh" luôn hiện tên** (trên màn hình cảm ứng không có chú thích khi rê chuột), còn "Bút của
+    em" và "Vừa khung" chỉ hiện biểu tượng (tên vẫn có cho trình đọc màn hình và trong chú thích).
+    Tốc độ viết là một danh sách ngắn (0,75×–2×, cao bằng một nút ≥ 40 px) thay cho dãy bốn nút, nên
+    thanh công cụ luôn một hàng, kể cả lúc rộng nhất (phóng to, đang hỏi: "Quay lại bài giảng") — bảng
+    không đổi cỡ khi thanh "Chỗ em khoanh" hiện ra. Kiểm tra: `tests/e2e/board.spec.ts` (đo bề rộng
+    tên hiện ra và chiều cao thanh công cụ ở 1366×768).
   - **Câu trả lời là câu "ngoài lề"** (`mode: 'aside'`): hiện trong khung chat, có nhãn AI và nút báo
     cáo, được đọc to trong khung chat; **không bao giờ được giảng lên bảng** — bảng giữ nguyên bài
     đang dừng (`latestLesson` bỏ qua câu trả lời ngoài lề và câu hỏi về bảng). "Viết tiếp" vẫn gắn với
@@ -337,9 +341,22 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     chỉ được trả lời trên máy này…", và dòng "gửi tới" không ghi bên rà soát. Câu hỏi về ảnh và câu
     trả lời của nó cũng **không đi theo các câu hỏi sau lên mạng** (`withoutPictureAsks`): lịch sử gửi
     cho API hay cho bên rà soát của Think bỏ cặp hỏi–đáp đó, và bản tóm tắt phần trò chuyện cũ không
-    bao giờ chứa nó (chỉ AI trên máy, khi Think tắt, còn thấy nó trong lịch sử). Hệ quả: nếu em đổi
-    sang API rồi bấm "Viết tiếp" hay "Giải thích lại" ngay sau câu trả lời về ảnh, API không thấy câu
-    trả lời đó. Đường tạo ảnh (blob: → OffscreenCanvas → PNG) **chưa được kiểm tra trong bản desktop
+    bao giờ chứa nó (chỉ AI trên máy, khi Think tắt, còn thấy nó trong lịch sử). Vì thế khi em chọn
+    API, câu trả lời về ảnh bị cắt giữa chừng **không có nút "Viết tiếp"** (chat ghi: chỉ viết tiếp
+    được khi em chọn "Gemma cục bộ" hoặc "AI trên máy khác"), và `askTeacher` cũng từ chối viết tiếp
+    một câu trả lời không nằm trong phần được gửi đi (`continues`), nên không có gì được gửi; "Giải
+    thích lại" khi đó hỏi API mà không có câu trả lời về ảnh.
+  - **Giọng đọc cũng giữ câu trả lời về ảnh trên máy** (`canSpeakOnDevice`, `speak(…, { onDevice })`
+    trong `src/teacher/voice/speak.ts`): câu trả lời về ảnh và phần "Viết tiếp" của nó chỉ được đọc
+    to bằng giọng chạy trên máy — "Giọng tiếng Việt trên máy", hoặc giọng Windows cài trên máy
+    (`localService`, tên không có "Online"/"Natural"; khi để "Tự động", app chọn giọng tiếng Việt tốt
+    nhất trong số đó, còn giọng em tự chọn thì không bị đổi ngầm). Với **giọng Gemini** (gửi chữ tới
+    Google) hay giọng Windows trực tuyến ("… Online (Natural)" của Edge/WebView2, đọc trên máy chủ
+    Microsoft), câu trả lời **không được đọc to**: dưới câu trả lời có dòng "Mình không đọc to câu
+    trả lời này…" và nút "Chọn giọng"; khi giọng Gemini đang bật, dòng "chỉ trên máy" ghi thêm "Giọng
+    Gemini sẽ không đọc to câu trả lời này". Khi giọng trên máy bị lỗi, giọng Windows chỉ đọc tiếp nếu
+    nó cũng chạy trên máy. Tên giọng là điều duy nhất app biết về nơi giọng đọc: một giọng cài trên
+    máy nhưng tự gửi chữ đi mà không ghi "Online" thì app không nhận ra. Đường tạo ảnh (blob: → OffscreenCanvas → PNG) **chưa được kiểm tra trong bản desktop
     (WebView2)**; nếu không tạo được ảnh, em được báo và không có gì được gửi. Bấm "Hỏi thầy chỗ này"
     hai lần (hay Enter rồi bấm) khi ảnh đang được tạo chỉ gửi một câu hỏi.
 - **Chế độ bảng với AI cloud:** lời nhắc TeachScript (`BOARD_SYSTEM` trong

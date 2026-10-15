@@ -592,19 +592,19 @@ on the desktop, after a quota error the gateway asks it directly for 10 minutes)
 Think, and Wikipedia when the lookup is on (never for a question about the circled board; a
 question about a picture of the circled area names no reviewer either: it is not reviewed).
 
-| Stays on this computer                                                                        | May be sent online                                                                                                                                   |
-| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| chat history, added files, built-in notes                                                     | question + recent turns + summary of older turns + relevant excerpts → answering provider (API engine)                                               |
-| downloaded Gemma models; Gemma answers                                                        | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key)                                  |
-| questions to a runtime on this computer                                                       | question + draft + relevant excerpts + summary + screen context (if on) → reviewer (Think; never the fallback)                                       |
-| API keys (keychain or session memory)                                                         | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                                                         |
-|                                                                                               | question → Wikipedia (only if the lookup is on; never for “Khoanh để hỏi”)                                                                           |
-|                                                                                               | screen context (only when the bubble toggle is on)                                                                                                   |
-|                                                                                               | a photographed problem → the API (browser only, downscaled)                                                                                          |
-|                                                                                               | model files are downloaded from HuggingFace (nothing is uploaded)                                                                                    |
-| the learner's own strokes on the board                                                        | circled board text (“Khoanh để hỏi”: the lesson's own words, LaTeX and drawing labels, ≤ 2000 chars) → the answering provider and the Think reviewer |
-| a picture of a circled area without text (only to an AI on this computer that reads pictures) |                                                                                                                                                      |
-| the answer about that picture (never to the reviewer, an online engine or the summary)        |                                                                                                                                                      |
+| Stays on this computer                                                                                  | May be sent online                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| chat history, added files, built-in notes                                                               | question + recent turns + summary of older turns + relevant excerpts → answering provider (API engine)                                               |
+| downloaded Gemma models; Gemma answers                                                                  | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key)                                  |
+| questions to a runtime on this computer                                                                 | question + draft + relevant excerpts + summary + screen context (if on) → reviewer (Think; never the fallback)                                       |
+| API keys (keychain or session memory)                                                                   | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                                                         |
+|                                                                                                         | question → Wikipedia (only if the lookup is on; never for “Khoanh để hỏi”)                                                                           |
+|                                                                                                         | screen context (only when the bubble toggle is on)                                                                                                   |
+|                                                                                                         | a photographed problem → the API (browser only, downscaled)                                                                                          |
+|                                                                                                         | model files are downloaded from HuggingFace (nothing is uploaded)                                                                                    |
+| the learner's own strokes on the board                                                                  | circled board text (“Khoanh để hỏi”: the lesson's own words, LaTeX and drawing labels, ≤ 2000 chars) → the answering provider and the Think reviewer |
+| a picture of a circled area without text (only to an AI on this computer that reads pictures)           |                                                                                                                                                      |
+| the answer about that picture (never to the reviewer, an online engine, the summary or an online voice) |                                                                                                                                                      |
 
 **“Khoanh để hỏi” (item 2, `src/teacher/board/selection.ts`, `chatService.askTeacher` option
 `boardSelection`).** What the learner circled on the board is read back by code (no AI): the
@@ -632,8 +632,17 @@ chat shows "Chưa rà soát: …"; the "sent to" line leaves the reviewer out fo
 never carry it online either (`memory.withoutPictureAsks`): the history sent to an online engine or
 used for a Think draft leaves out each picture question and the answer after it, and the summary of
 older turns is always made without them (only an on-device answer without Think still sees them in
-its history; so "Viết tiếp" or a quick button on a picture answer after switching to the API works
-without that answer). A question about the circled board is never looked up on Wikipedia (its
+its history). "Viết tiếp" of a cut picture answer is therefore not offered while the API is chosen
+(the chat says it can be continued with “Gemma cục bộ” or “AI trên máy khác”), and `askTeacher`
+refuses a continuation whose answer would be left out of what is sent (`continues`), so nothing is
+asked; a quick button after it asks the API without that answer. **The voice keeps it here too**
+(`speak.ts`: `canSpeakOnDevice`, `speak(…, { onDevice: true })`): a picture answer and its
+continuation are read aloud only by the on-device voice model or an installed Windows voice
+(`localService`, name without “Online”/“Natural”); with the Gemini voice (which sends the text to
+Google) or an online Windows voice (“… Online (Natural)” in Edge/WebView2) it is not read, and the
+chat says so under the answer with a “Chọn giọng” button. When the on-device voice fails, a Windows
+voice takes over only if it reads on this computer. The voice's name is all the app knows about
+where it reads: an installed voice that sends text away without saying “Online” is not detected. A question about the circled board is never looked up on Wikipedia (its
 words alone name no topic, and the board's text never goes there); the "sent to" line leaves
 Wikipedia out then. It is never read as an answer to the teacher's check question
 (`TurnOrigin.boardAsk`). When the circled text does not fit the block's cap, the title and the
