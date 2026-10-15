@@ -1061,6 +1061,36 @@ fn a_picture_never_reaches_a_model_that_does_not_or_may_not_read_pictures() {
 }
 
 #[test]
+fn a_runtime_that_cannot_tell_is_not_asked_and_an_unlisted_model_is_unverified() {
+    let lists = |m: &Mock, what: &str| m.seen().iter().filter(|r| *r == what).count();
+    // Any other OpenAI-compatible server: only identifying it reads its list (no second read for
+    // the picture), also for a model the list does not hold.
+    for model in ["qwen2.5-7b-instruct", "not-there"] {
+        let mock = compat(|_| vec![stream_head("text/event-stream"), Step::Send(SSE.into())]);
+        let (r, _) = chat(
+            &mock,
+            &with_picture(RuntimeKind::OpenAiCompatible, &mock, model),
+            quick(),
+        );
+        refused_with(r, VISION_UNVERIFIED);
+        assert_eq!(lists(&mock, "GET /v1/models"), 1, "{model}");
+        assert!(!mock.seen().iter().any(|r| r.contains("chat")), "{model}");
+    }
+    // LM Studio: a model missing from its list cannot be known to read pictures.
+    let mock = serve(|r| match r.path.as_str() {
+        "/api/v0/models" => json_answer("200 OK", LMSTUDIO_MODELS),
+        _ => not_found(),
+    });
+    let (r, _) = chat(
+        &mock,
+        &with_picture(RuntimeKind::LmStudio, &mock, "not-there"),
+        quick(),
+    );
+    refused_with(r, VISION_UNVERIFIED);
+    assert!(!mock.seen().iter().any(|r| r.contains("chat")));
+}
+
+#[test]
 fn lm_studio_and_llama_cpp_say_whether_their_model_reads_pictures() {
     let posted = |m: &Mock| m.seen().iter().any(|r| r.starts_with("POST /v1/chat"));
     let lm = || {

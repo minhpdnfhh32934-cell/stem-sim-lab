@@ -61,11 +61,15 @@ import {
   type LocalModels,
   type LocalRuntimeClient,
   type LocalTest,
+  type Cap,
   type LocalTestStatus,
   type ModelDetails,
   type RuntimeKind,
   type RuntimeProbe,
 } from './types';
+
+/** A model the runtime's list does not hold (Rust's `"{MODEL_MISSING}: not listed"`). */
+const NOT_LISTED = `${MODEL_MISSING}: not listed`;
 
 /** Time and size limits (as `Limits` in Rust; tests inject small ones). */
 export interface LocalLimits {
@@ -533,8 +537,30 @@ export class FetchLocalClient implements LocalRuntimeClient {
       return rt.parseInfo(jsonOf(got.body), id);
     }
     const listed = (await this.fetchModels(rt, base, limitMs)).models.find((m) => m.id === id);
-    if (!listed) throw new AiError('http', `${MODEL_MISSING}: not listed`);
+    if (!listed) throw new AiError('http', NOT_LISTED);
     return detailsFromListing(listed, rt.declared);
+  }
+
+  /**
+   * Whether the model reads pictures, when its details did not come with `prepare` (as
+   * `check_vision` in Rust). A runtime that cannot tell (any other OpenAI-compatible server: its
+   * model list says nothing about pictures) is not asked, and a model missing from the runtime's
+   * list is not known either: both are `unverified`, never a missing model.
+   */
+  private async visionOf(
+    rt: LocalRuntimeAdapter,
+    base: Loopback,
+    id: string,
+    limitMs: number,
+    signal?: AbortSignal,
+  ): Promise<Cap> {
+    if (rt.kind === 'openAiCompatible') return 'unverified';
+    try {
+      return (await this.detailsOf(rt, base, id, limitMs, signal)).vision;
+    } catch (e) {
+      if (e instanceof AiError && e.message === NOT_LISTED) return 'unverified';
+      throw e;
+    }
   }
 
   /**
@@ -620,8 +646,7 @@ export class FetchLocalClient implements LocalRuntimeClient {
     const { opts, details } = await this.prepare(rt, base, req, model, signal);
     if (pictures > 0) {
       // The model must read pictures, by what its runtime says (Ollama's details came above).
-      const d = details ?? (await this.detailsOf(rt, base, model, precheckMs, signal));
-      allowVision(d.vision);
+      allowVision(details?.vision ?? (await this.visionOf(rt, base, model, precheckMs, signal)));
     }
 
     // Sending: until the first-piece deadline. A stop closes the connection, also later.

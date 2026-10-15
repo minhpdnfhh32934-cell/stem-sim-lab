@@ -489,6 +489,30 @@ describe('browser client for local runtimes', () => {
       expect(asked(calls)).toBe(false);
     });
 
+    it('a runtime that cannot tell is not asked, and an unlisted model is unverified (review 2026-10-15)', async () => {
+      const client = new FetchLocalClient();
+      const lists = (calls: Call[], key: string) => calls.filter((c) => c.key === key).length;
+      // Any other OpenAI-compatible server: only identifying it reads its list (no second read
+      // for the picture), also for a model the list does not hold.
+      for (const model of ['gemma-3-4b-it-Q4_K_M.gguf', 'not-there.gguf']) {
+        const calls = servers(llamaRoutes(chatAnswer));
+        await expect(
+          client.chat(withPicture({ kind: 'openAiCompatible', baseUrl: LLAMA, model })),
+        ).rejects.toMatchObject({ code: 'notAllowed', message: 'vision-unverified' });
+        expect(lists(calls, `GET ${LLAMA}/v1/models`), model).toBe(1);
+        expect(asked(calls)).toBe(false);
+      }
+      // LM Studio: a model missing from its list cannot be known to read pictures.
+      const calls = servers({
+        [`GET ${LMS}/api/version`]: text('Not Found', 404),
+        [`GET ${LMS}/api/v0/models`]: text(fixture('lmstudio-models.json')),
+      });
+      await expect(
+        client.chat(withPicture({ kind: 'lmStudio', baseUrl: LMS, model: 'not-there' })),
+      ).rejects.toMatchObject({ code: 'notAllowed', message: 'vision-unverified' });
+      expect(asked(calls)).toBe(false);
+    });
+
     it('LM Studio: a `vlm` model gets the picture as an image_url part', async () => {
       const calls = servers({
         [`GET ${LMS}/api/version`]: text('Not Found', 404),
