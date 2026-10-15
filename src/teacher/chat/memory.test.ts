@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ChatMessageRecord } from './chatStore';
 import {
   contextBudget,
+  EMPTY_ANSWER,
   joinContinuation,
   estimateTokens,
   fitHistory,
@@ -141,9 +142,32 @@ describe('answers saved by an older version are sent back cleaned (review 2026-1
     expect(sentText(question)).toBe(question.content);
     const quick = { ...record('q', 'user', 'Chậm hơn'), prompt: 'Thầy giảng lại chậm hơn…' };
     expect(sentText(quick)).toBe('Thầy giảng lại chậm hơn…');
-    // An answer that was all reasoning is sent as saved, never as an empty turn.
-    const only = record('a', 'assistant', '<think>chỉ có nháp</think>');
-    expect(sentText(only)).toBe(only.content);
+  });
+
+  it('an answer that was all reasoning never goes back as reasoning, nor as an empty turn (review fix round 2)', () => {
+    for (const content of [
+      '<think>chỉ có nháp</think>',
+      // Cut in the middle of the reasoning: no closing tag.
+      '<think>chỉ có nháp, thử 7 kg',
+      '<thinking>chỉ có nháp</thinking>\n\n',
+    ]) {
+      const only = record('a', 'assistant', content);
+      expect(sentText(only), content).toBe(EMPTY_ANSWER);
+      const records = [
+        record('q', 'user', 'Lực là gì?'),
+        only,
+        record('q2', 'user', 'Còn khối lượng?'),
+      ];
+      const sent = fitHistory(records, 1000).messages.map((m) => m.content);
+      expect(sent, content).toEqual(['Lực là gì?', EMPTY_ANSWER, 'Còn khối lượng?']);
+      const summary = summaryRequest('vi', null, records).messages[0]?.content ?? '';
+      expect(summary, content).not.toMatch(/<\/?think|chỉ có nháp|7 kg/);
+      expect(summary, content).toContain(`Thầy: ${EMPTY_ANSWER}`);
+    }
+    // A Think answer that was all reviewer notes: the notes are not sent either.
+    const notes = { ...record('a', 'assistant', 'Bản nháp đã đúng.'), checkedBy: 'groq' };
+    expect(sentText(notes, 'Lực là gì?')).toBe(EMPTY_ANSWER);
+    expect(EMPTY_ANSWER.trim()).not.toBe('');
   });
 });
 

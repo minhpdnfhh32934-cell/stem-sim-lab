@@ -48,6 +48,13 @@ export function estimateTokens(text: string): number {
   return Math.ceil(text.length / 3);
 }
 
+/**
+ * What is sent for an answer that cleaning leaves empty (it was nothing but hidden reasoning, or
+ * a Think reviewer's notes): never the saved text, and never an empty turn, which breaks some
+ * providers' requests. Language-neutral, so it fits both locales.
+ */
+export const EMPTY_ANSWER = '…';
+
 /** Per-message overhead of the chat template (role markers). */
 const MESSAGE_OVERHEAD = 6;
 
@@ -58,7 +65,8 @@ const MESSAGE_OVERHEAD = 6;
  * sent back as they were saved. The reviewer's notes are told apart with the learner's `question`
  * the answer replied to (`questionBefore`): without it (`undefined`) they are left as saved, since
  * cleaning them without the question could drop feedback the learner asked for. An answer that
- * was nothing but reasoning is sent as saved: an empty turn breaks some providers' requests.
+ * cleaning leaves empty (nothing but reasoning, even cut before its closing tag) is sent as
+ * `EMPTY_ANSWER`: hidden reasoning never goes back to the AI, and no turn is empty.
  */
 export function sentText(record: ChatMessageRecord, question?: string): string {
   if (record.role !== 'assistant') return record.prompt ?? record.content;
@@ -66,7 +74,7 @@ export function sentText(record: ChatMessageRecord, question?: string): string {
   const options =
     record.checkedBy !== undefined && question !== undefined ? { reviewed: true, question } : {};
   const cleaned = cleanAnswer(saved, options).text;
-  return cleaned.trim() ? cleaned : saved;
+  return cleaned.trim() ? cleaned : EMPTY_ANSWER;
 }
 
 /** The learner's question the record at `index` answers (the user turn before it), or ''. */
