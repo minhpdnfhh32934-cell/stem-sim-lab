@@ -78,15 +78,24 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     nào.", giả thiết "Mình hiểu ý bạn là vật trượt không ma sát." ("Mình hiểu ý bạn." một mình
     thì chỉ nói), "Cảm ơn lực ma sát, xe mới dừng được." ("Cảm ơn bạn…", "Cảm ơn câu hỏi…",
     "Cảm ơn sự kiên nhẫn của bạn." thì chỉ nói).
-  - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, dòng nguồn ("Wikipedia:
-    https://…", "Luật vạn vật hấp dẫn (https://…)", "Xem thêm tại Wikipedia (https://…).", danh
-    sách sau "Tài liệu tham khảo:"), dòng "---" không được nói, cũng không được viết. Dòng ngắn có
-    công thức hay số đo kèm link ("g = 9,81 m/s² (https://…).") và **câu** ngắn kèm link ("Lực hấp
-    dẫn là lực hút giữa hai vật (https://…).", "… ở lục lạp [Wikipedia](…).", "Năm 1687, Newton
-    công bố…", "Wikipedia là bách khoa toàn thư mở (https://…).") chỉ mất cái link: chữ, công thức
-    và số vẫn được nói và viết. Link trong ngoặc mất cùng những chữ chỉ nói nguồn ("(theo
-    Wikipedia: https://…)", "(nguồn: https://…)" → không còn "(theo Wikipedia:)"), nhưng công thức
-    hay số trong ngoặc thì ở lại. Trong lời TeachScript, link cũng chỉ mất link, câu vẫn được nói.
+  - Suy nghĩ ẩn, nhận xét của người rà soát, nhãn lặp lại từ lời nhắc, dòng nguồn, dòng "---"
+    không được nói, cũng không được viết. Dòng nguồn là dòng mà phần còn lại sau khi bỏ link
+    **chỉ** trỏ tới hay gọi tên nguồn: chữ nguồn dùng như nhãn ("Nguồn: …", "Xem thêm: …",
+    "Wikipedia: https://…"), chỉ có lời trỏ ("Xem thêm tại Wikipedia (https://…).", "Nguồn
+    (https://…)", "Xem https://… để biết thêm"), tên trang và nguồn ("Lực hấp dẫn – Wikipedia"),
+    đúng tên trang mà link dẫn tới ("Lực hấp dẫn (https://…/wiki/Lực_hấp_dẫn)"), một dòng chỉ là
+    một link, hay danh sách sau "Tài liệu tham khảo:". Mọi dòng khác kèm link chỉ mất cái link:
+    chữ, công thức và số vẫn được nói và viết. Kể cả câu chỉ **bắt đầu** bằng chữ giống chữ nguồn
+    ("Nguồn điện tạo ra hiệu điện thế…", "Liên kết ion hình thành…", "Xem xét các lực…", "See how
+    …", "Sources of energy …"), câu ngắn không có dấu chấm ("Electron mang điện tích âm
+    (https://…)"), tên ngắn không phải tên trang ("Luật vạn vật hấp dẫn (https://…)"), dòng có
+    công thức hay số đo ("g = 9,81 m/s² (https://…).") và câu có năm ("Năm 1687, Newton công
+    bố…"). Link trong ngoặc mất cùng những chữ **chỉ** nói nguồn ("(theo Wikipedia: https://…)",
+    "(nguồn: https://…)", "(theo Halliday, 2011 https://…)" → không còn "(theo Wikipedia:)");
+    chữ khác trong ngoặc ở lại ("(theo phương ngang https://…)" → "(theo phương ngang)"), số
+    không phải năm, trang hay số thứ tự trích dẫn cũng ở lại ("(see 6,67 https://…)"). Link chỉ
+    là số thứ tự trích dẫn ("[1](https://…)") mất cùng con số đó. Trong lời TeachScript, link
+    không bao giờ làm mất câu: câu được nói không có link.
   - Một nhãn đứng một mình ("**Kết luận:**", "Phân tích:", "Cho:", "Ghi chú:") không được viết:
     thầy nói nhãn cùng dòng ngay sau, và ý nghĩa của nhãn đi theo dòng đó (kết luận → khung kết
     quả đúng một lần, không bao giờ có khung rỗng; dữ kiện, ghi chú → cột bên; câu hỏi kiểm tra
@@ -109,18 +118,23 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     lặp ngay ở câu sau, hoặc viết liền hai lần trong một câu không có lời nào ở giữa (lỗi của AI),
     chỉ viết một lần nhưng vẫn được đọc; "Vật A có a = 2 m/s² và vật B cũng có a = 2 m/s²" (có lời
     ở giữa) viết cả hai và đọc đủ. Cùng kết quả ở câu b, ở bài khác, ở "Trường hợp 2", "Cách 2",
-    "Vật B", "TH2", "Lần 2" hay ở mặt bảng khác thì vẫn được viết lại; dòng đã bị xóa rồi viết lại
-    đúng chữ đó thì được viết. Chữ hoa và chữ thường khác nhau ("F = 0" và "f = 0", "T" và "t",
-    "V" và "v" là ký hiệu khác nhau), "Vật rơi" và "Vật rời" là hai dòng khác nhau. Không con số
-    nào bị đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so sánh "v<s và t>0", "<v>"
-    và giá trị trung bình "<p> = 0", "<b> = 2 cm" không bao giờ bị xóa như thẻ HTML (trừ khi có
-    thẻ đóng "</p>"); thẻ lạ có thẻ đóng ("<note>…</note>", "<step>…</step>") thì bỏ thẻ, giữ
-    chữ; "10<sup>23</sup>" thành lũy thừa 10²³ (giọng đọc "mười mũ hai mươi ba", không phải "một
-    nghìn không trăm hai mươi ba"); "1,6.10<sup>-19</sup>" (dấu chấm là dấu nhân) giữ nguyên cả
-    số 1,6 × 10⁻¹⁹ (đọc "một phẩy sáu nhân mười mũ trừ mười chín", không bao giờ tách "1," khỏi
-    "6.10"); chỉ số trích dẫn "1687<sup>[1]</sup>" không phải lũy thừa; `<sup>`/`<sub>` bên trong
-    công thức thành `^{…}`/`_{…}` của TeX nên công thức vẫn hiện đúng; chỗ trống "F = ____ N"
-    được giữ.
+    "Vật B", "TH2", "Lần 2", "Lần thứ hai", "Thí nghiệm 2", "Ở thí nghiệm thứ ba", "Giai đoạn 2"
+    hay ở mặt bảng khác thì vẫn được viết lại; dòng đã bị xóa, hoặc đã được sửa sang chữ khác
+    (`<correct>`), rồi viết lại đúng chữ cũ thì được viết. Chữ hoa và chữ thường khác nhau ("F = 0"
+    và "f = 0", "T" và "t", "V" và "v" là ký hiệu khác nhau), "Vật rơi" và "Vật rời" là hai dòng
+    khác nhau. Không con số nào bị đổi, làm tròn hay thêm vào (có kiểm thử tính chất). Phép so
+    sánh "v<s và t>0", "<v>" và giá trị trung bình "<p> = 0", "<b> = 2 cm" không bao giờ bị xóa
+    như thẻ HTML, trừ khi chính thẻ đó được đóng trong cùng đoạn ("Trung bình <b>= 2 cm</b>"): một
+    cặp "<b>Lưu ý:</b>" ở đoạn sau là cặp khác, không đóng giá trị trung bình; thẻ lạ có thẻ đóng
+    ("<note>…</note>", "<step>…</step>") thì bỏ thẻ, giữ chữ; "10<sup>23</sup>" thành lũy thừa
+    10²³ (giọng đọc "mười mũ hai mươi ba", không phải "một nghìn không trăm hai mươi ba");
+    "1,6.10<sup>-19</sup>" (dấu chấm là dấu nhân) giữ nguyên cả số 1,6 × 10⁻¹⁹ (đọc "một phẩy sáu
+    nhân mười mũ trừ mười chín", không bao giờ tách "1," khỏi "6.10"), và
+    "(1,6 ± 0,1).10<sup>-19</sup>" vẫn là lũy thừa của 10 (số mũ được kiểm nguồn gốc); chỉ số
+    trích dẫn "1687<sup>[1]</sup>"
+    không phải lũy thừa; số mũ nhiều ký tự giữ nguyên nhóm trên bảng và phụ đề ("x<sup>n+1</sup>"
+    là x^(n+1), không bao giờ x^n + 1); `<sup>`/`<sub>` bên trong công thức thành `^{…}`/`_{…}`
+    của TeX nên công thức vẫn hiện đúng; chỗ trống "F = ____ N" được giữ.
   - Trình đọc TeachScript: thẻ `<write>` sai mã được sửa mã (không mất chữ), thẻ chưa đóng kết
     thúc ở cuối câu, "$x<y$ và $y>z$" là chữ chứ không phải thẻ, thẻ bị cắt ở cuối câu trả lời
     không bao giờ được đọc lên (chỉ khi cả đoạn cuối đúng là một thẻ đang viết dở: "Khi v<c thì
@@ -134,7 +148,10 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     đề đầy đủ vẫn nằm ở chỗ tiêu đề). Chữ đến sau có thể đổi cách đọc dòng trước: một thẻ trần
     "<step>", "<note>" chỉ là thẻ khi thẻ đóng của nó đã đến. Vì vậy phần đã giảng được so với câu
     trả lời đầy đủ từ chỗ **đầu tiên** đọc khác đi, không chỉ từ câu cuối (không câu nào bị nói
-    lại, chỉ phần bảng khác được xóa và viết lại). Bảng cuối cùng giống hệt như giảng cả câu trả
+    lại, chỉ phần bảng khác được xóa và viết lại). Việc so sánh đi **theo thứ tự**: một khi có
+    dòng phải viết lại, mọi dòng sau nó cũng được xóa và viết lại bên dưới, nên "<step>Bước 1: …"
+    viết lại không bao giờ nằm dưới "Bước 2" (bảng có thể có khoảng trống ở chỗ dòng bị xóa). Bảng
+    cuối cùng có cùng các dòng, cùng thứ tự từ trên xuống, cùng dấu đánh dấu như giảng cả câu trả
     lời một lần (kiểm thử `lessonContinue.test.ts`, gồm bảng cắt câu trả lời ở **mọi ký tự** cho
     câu trả lời markdown, TeachScript và câu trả lời thật của bộ đánh giá).
 - **Dùng hết bảng (mục 3, `layout.ts`, `formulaSplit.ts`):** trước khi giảng (bài mới, "Giảng
@@ -266,7 +283,18 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
 - Học sinh chạm vào bảng (màn hình cảm ứng) thì camera để yên chiều ngang đến dòng mới, kể cả khi
   chỉ là một cú chạm không cuộn: cú kéo có thể bắt đầu muộn, nên bảng không đoán là "không cuộn".
 - Một câu mở đầu bằng "Vật A/B…", "Cách 2", "Lần 2" được coi là phần mới: một dòng lặp do lỗi ngay
-  sau nó vẫn được viết lại (thà viết hai lần còn hơn mất kết quả của phần mới).
+  sau nó vẫn được viết lại (thà viết hai lần còn hơn mất kết quả của phần mới). Một phần mới mở
+  đầu bằng cách khác ("Còn bây giờ, khi vật lên dốc…") thì chưa được nhận ra: kết quả lặp lại
+  ngay câu sau chỉ được nói, không viết lần hai.
+- Một dòng ngắn chỉ có tên kèm link mà tên không trùng tên trang ("Luật vạn vật hấp dẫn
+  (https://…/Lực_hấp_dẫn)") được viết lên bảng như một ý của bài: bảng không phân biệt được nó
+  với câu ngắn "Electron mang điện tích âm (https://…)", nên giữ cả hai (chỉ bỏ khi chắc chắn).
+  Một câu người dạy nói chỉ để dẫn nguồn ("Nguồn: Wikipedia (https://…).") được nói không có link.
+- Số mũ nhiều ký tự giữ nhóm trên bảng và phụ đề (x^(n+1)), nhưng giọng đọc vẫn nói "ích mũ nờ
+  cộng một" như với mọi số mũ `^{…}` (cả "$2^{n+1}$"): cách đọc số mũ thuộc phần giọng nói
+  (`src/teacher/voice/`), ngoài phạm vi bước này.
+- "Viết tiếp" có thể để lại khoảng trống ở chỗ dòng bị xóa rồi viết lại (thứ tự và nội dung vẫn
+  đúng như giảng một lần).
 
 ## 6. Nguồn
 

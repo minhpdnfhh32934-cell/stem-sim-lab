@@ -169,20 +169,28 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   followed by more of the lesson) keeps every word.
 - `<` followed by a letter is a tag only where a tag can stand: a TeachScript or reasoning name,
   a name with `name="value"` attributes, a closing tag, a bare name of known markup (HTML such
-  as `<b>`, answer wrappers such as `<answer>`), or a bare unknown name that a matching `</name>`
-  closes later in the answer (`<step>…</step>`, `<note>…</note>`: dropped, its words kept). A
-  bare unknown name that is never closed is text: `<v> = s/t` is an average. So is a bare
-  one-letter HTML name (`p`, `b`, `i`, `s`, `u`) that a relation follows and nothing closes:
-  `<p> = 0`, `<b> = 2 cm` (with a later `</p>` it is HTML).
+  as `<b>`, answer wrappers such as `<answer>`), or a bare unknown name that its own `</name>`
+  closes later in the answer (`<step>…</step>`, `<note>…</note>`: dropped, its words kept). Tags
+  pair up: a `</name>` closes the nearest `<name>` still open, so another `<name>` opened between
+  them needs its own closing tag first. A bare unknown name that is never closed is text:
+  `<v> = s/t` is an average. So is a bare one-letter HTML name (`p`, `b`, `i`, `s`, `u`) that a
+  relation follows and that its own closing tag does not close in the same paragraph: `<p> = 0`,
+  `<b> = 2 cm` stay, also when a later paragraph holds `<b>Lưu ý:</b>` (another pair), while
+  `<b>= 2 cm</b>` is HTML.
 - `<sub>` and `<sup>` are written as text, never dropped: `H<sub>2</sub>O` → `H₂O`,
   `mol<sup>-1</sup>` → `mol⁻¹`, and a power of a number `6,02·10<sup>23</sup>` →
   `6,02·$10^{23}$`, so the voice reads a power (never "1023"), the subtitle shows `10²³` and the
   board the same formula. The power's base is the whole number before the tag, with its decimal
   and multiplication dots: `1,6.10<sup>-19</sup>` (Vietnamese "1,6 × 10") → `$1,6.10^{-19}$`,
-  never `1,$6.10^{-19}$`. Only a superscript with a digit is a power; a citation
-  `1687<sup>[1]</sup>` stays `1687[1]`. Inside a formula (a `math="true"` write, `$…$`, `$$…$$`)
-  `<sup>`/`<sub>` become TeX's `^{…}`/`_{…}`, never a `$` inside the formula. The markdown layout
-  says its lines with the same rules (`markupToText` and `mathScripts` in `teachscript.ts`).
+  never `1,$6.10^{-19}$`; a dot after a bracket is a multiplication sign, so
+  `(1,6 ± 0,1).10<sup>-19</sup>` → `(1,6 ± 0,1).$10^{-19}$` (the exponent stays visible to the
+  number checks). Only a superscript with a digit is a power; a citation `1687<sup>[1]</sup>`
+  stays `1687[1]`. An exponent of several characters with an operator or a digit keeps its
+  grouping: `x<sup>n+1</sup>` → `x$^{n+1}$` (board x^(n+1), subtitle `x^(n+1)`, never `x^n+1`);
+  one character or letters only stay `^x` (`x^n`, `10^th`). Inside a formula (a `math="true"`
+  write, `$…$`, `$$…$$`) `<sup>`/`<sub>` become TeX's `^{…}`/`_{…}`, never a `$` inside the
+  formula. The markdown layout says its lines with the same rules (`markupToText` and
+  `mathScripts` in `teachscript.ts`).
 - Every sentence records where it stands in the text it was read from (`start`/`end`, after the
   hidden reasoning was removed). "Viết tiếp" (the answer was cut and its rest arrives) reads the
   whole answer again and goes on from where the lesson got to: the sentences already said and
@@ -198,8 +206,13 @@ inside tags. A sentence longer than 300 characters is split at the next comma fo
   change how an earlier line reads (a bare `<step>` is text until its `</step>` arrives, and the
   markdown ids after it move), so the check starts at the first action the lesson placed that
   the whole answer, read in the same order, does not have at that place; sentences before the
-  last one taught are never said again, only their board actions are compared. The board then
-  ends as if the whole answer had been taught at once (oracle test `lessonContinue.test.ts`, also
+  last one taught are never said again, only their board actions are compared. The comparison
+  keeps the order: an action reuses only a placed one after the last reused, and once anything is
+  placed anew (a text, a drawing, a correction, a face), every placed action after it is wiped and
+  placed again below, so a line read again (`<step>Bước 1: …` once `</step>` arrives) never stands
+  under a later line that stayed (an erased line may leave a gap). The board then ends as if the
+  whole answer had been taught at once: the same texts on the same faces, in the same order top to
+  bottom in each column, with the same marks (oracle test `lessonContinue.test.ts`, also
   TeachScript answers cut every 4 characters with marks compared with the text they stand on, and
   a table of markdown, TeachScript and real eval answers cut at every character).
 - Hidden reasoning (`<think>`, `<thinking>`, `<reasoning>`, `<reflection>`, any case) is the
@@ -245,19 +258,29 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   unsure, it stays. A reasoning phrase must be about the user or the reply ("Người dùng hỏi về…",
   "Mình cần trả lời câu hỏi của người dùng", "I need to respond…"): "Người dùng muốn tiết kiệm
   điện nên dùng bóng LED.", "Mình cần suy nghĩ xem vật chịu những lực nào." and "I need to
-  answer two parts: speed and time." are lessons. A source line is a link with only a source's
-  name around it, not a sentence: it opens with a source word ("Wikipedia: https://…", "SGK Vật
-  lý 10, trang 45: https://…", "Xem thêm tại Wikipedia (https://…)."), or the link ends the line
-  after a name and ":" or "-", or after at most six words that neither end a sentence nor say
-  what something is ("Luật vạn vật hấp dẫn (https://…)"). A short line that holds a formula, a
-  quantity or a number that is not a citation's ("g = 9,81 m/s² (https://…).") and a short
-  sentence ("Lực hấp dẫn là lực hút giữa hai vật (https://…).", "Năm 1687, Newton công bố…
-  (https://…).", "Wikipedia là bách khoa toàn thư mở (https://…).") keep their words and lose
-  only the link. Link words such as "[nguồn](…)" go with it, so does a source's name in a link
-  that ends the sentence ("… lục lạp [Wikipedia](…)." → "… lục lạp."), and so do the words in
-  the brackets of a link that only name its source ("(theo Wikipedia: https://…)", "(nguồn:
-  https://…)" leave nothing, never "(theo Wikipedia:)"; a formula or number in the brackets
-  stays). A TeachScript sentence with a link is said without the link, never dropped.
+  answer two parts: speed and time." are lessons. A source line is a link whose rest only points
+  to a source or names it: a source word or a source's name used as a label ("Nguồn: Halliday
+  (2011) https://…", "Xem thêm: …", "Wikipedia: https://…", "SGK Vật lý 10, trang 45:
+  https://…"); only a pointer ("Nguồn (https://…)", "Xem thêm tại Wikipedia (https://…).", "See
+  also Wikipedia"); a source word right before the address ("Xem https://… để biết thêm"); a link
+  that ends the line after a name and ":" or "-" ("Chu kì tế bào: https://…"), after a page's
+  name and its source ("Lực hấp dẫn – Wikipedia (https://…)") or after the linked page's own name
+  ("Lực hấp dẫn (https://…/wiki/Lực_hấp_dẫn)"); a line that is one markdown link of at most six
+  words. A sentence that merely opens with a word a source line may open with ("Nguồn điện tạo ra
+  hiệu điện thế…", "Liên kết ion hình thành…", "Xem xét các lực…", "See how…", "Sources of
+  energy…"), a short sentence without a period ("Electron mang điện tích âm (https://…)"), a short
+  name that is not the page's ("Luật vạn vật hấp dẫn (https://…)"), a line that holds a formula, a
+  quantity or a number that is not a citation's ("g = 9,81 m/s² (https://…).") and a sentence with
+  a year ("Năm 1687, Newton công bố… (https://…).") keep their words and lose only the link. Link
+  words such as "[nguồn](…)" or a reference number "[1](…)" go with it, so does a source's name in
+  a link that ends the sentence ("… lục lạp [Wikipedia](…)." → "… lục lạp."), and so do the words
+  in the brackets of a link that only name its source ("(theo Wikipedia: https://…)", "(nguồn:
+  https://…)", "(theo Halliday, 2011 https://…)" leave nothing, never "(theo Wikipedia:)"); other
+  words in the brackets stay ("(theo phương ngang https://…)" → "(theo phương ngang)"), and so does
+  a formula or a number that is not a citation's year, page, index or grade ("(see 6,67
+  https://…)"). A TeachScript sentence with a link is said without the link, never dropped: the
+  link never silences a sentence, only reasoning does (known limit: a sentence said only to cite,
+  "Nguồn: Wikipedia (https://…).", is said as "Nguồn: Wikipedia.").
 - **Social or meta text** (a greeting, "Tôi là AI…", "Hy vọng…", "Dưới đây là…", a sentence of
   generic words only such as "Mình sẽ giải từng bước"): said, never written. When a computation
   follows the greeting or the remark ("Chào em, v = gt = 9,8·2 = 19,6 m/s.", "Dưới đây là công
@@ -308,19 +331,25 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   stood (in the next sentence), its marks go to the first (a mark the first already has is not
   drawn twice). With words between them in one sentence ("Vật A có a = 2 m/s² và vật B cũng có
   a = 2 m/s²") both are written and said. The same text in another part of the answer ("Ở câu b,
-  …", "b)", "Bài 2", "Trường hợp 2", "TH2", "Cách 2", "Vật B", "Lần 2"), further on, on another
-  face, or after the first was erased is written again; texts are compared case-sensitively ("F
-  = 0" and "f = 0", "T" and "t" are different symbols) and with their Vietnamese marks ("Vật
-  rơi" and "Vật rời" are two texts). On a write split into pieces, a box goes
+  …", "b)", "Bài 2", "Trường hợp 2", "TH2", "Cách 2", "Vật B", "Lần 2", "Lần thứ hai", "Thí
+  nghiệm 2", "Ở thí nghiệm thứ ba", "Giai đoạn 2", "In the second case"; never "Cách một khoảng…",
+  a distance), further on, on another face, or after the first was erased or corrected to another
+  text is written again (known limit: a new part opened in other words, "Còn bây giờ, khi vật lên
+  dốc…", is not recognised, so a repeat right after it is said, not written twice); texts are
+  compared case-sensitively ("F = 0" and "f = 0", "T" and "t" are different symbols) and with
+  their Vietnamese marks ("Vật rơi" and "Vật rời" are two texts). On a write split into pieces, a
+  box goes
   around the last piece, an underline, circle or highlight of the whole write under every piece,
   and a correction strikes every piece and is written after the last. A result boxed anywhere in
   the script is not boxed again.
 - **Sanitising** never eats a comparison: HTML is removed only when its attributes are
-  `name="value"` pairs ("Nếu v<s và t>0" stays), a bare unknown name stays ("<v>") unless a
-  `</name>` closes it later ("<note>Lưu ý: …</note>" is a side note without its tags), an
-  average "<p> = 0" stays, `<sub>` and `<sup>` become text as in §6 (TeX's `^{…}`/`_{…}` inside
-  a formula, so KaTeX still renders it), and a blank to fill in ("F = ____ N") keeps its
-  underscores.
+  `name="value"` pairs ("Nếu v<s và t>0" stays), a bare unknown name stays ("<v>") unless its
+  own `</name>` closes it later ("<note>Lưu ý: …</note>" is a side note without its tags), an
+  average "<p> = 0" stays (also with a later, separate "<p>…</p>"), `<sub>` and `<sup>` become
+  text as in §6 (TeX's `^{…}`/`_{…}` inside a formula, so KaTeX still renders it; a grouped
+  exponent `x$^{n+1}$`), and a blank to fill in ("F = ____ N") keeps its underscores. Known
+  limit: the voice reads any exponent `^{n+1}` as "mũ nờ cộng một" (also `$2^{n+1}$`); the
+  board and the subtitle keep the grouping, the voice's reading belongs to `src/teacher/voice/`.
 - **Tables** at most 8 rows × 5 columns with cells ≤ 40 characters, **flows** 6 steps ≤ 40,
   **new-board titles** ≤ 40. A cell with a number is kept whole.
 - **What the teacher says** is recomputed from what is still written, so the voice never reads a
