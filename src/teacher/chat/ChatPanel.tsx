@@ -871,7 +871,10 @@ export function ChatPanel({
             title={t('chat.thinkTitle')}
           >
             <Check size={14} /> {t('chat.think')}{' '}
-            {chat.thinkEnabled && <span>{t('chat.twoApis')}</span>}
+            {/* A draft written on this computer is reviewed by one API only. */}
+            {chat.thinkEnabled && (
+              <span>{engine === 'cloud' ? t('chat.twoApis') : t('chat.oneApiReview')}</span>
+            )}
           </button>
           <span className="chat-panel__composer-spacer" />
           {pending && stopAnswer ? (

@@ -51,6 +51,7 @@ export const TopBar = memo(function TopBar() {
   );
   const settingsOpen = useWorkspaceStore((s) => s.settingsOpen);
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const provider = useAiStore((s) => s.provider);
   const running = useAnalyzeStore((s) => s.phase === 'running');
   const canUndo = useUndoStore((s) => s.canUndo);
@@ -225,8 +226,9 @@ export const TopBar = memo(function TopBar() {
 
       <div className="topbar__actions">
         <AiStatusPill
-          onClick={() => {
-            setSettingsOpen(true);
+          onClick={(section) => {
+            if (section) openSettingsAt(section);
+            else setSettingsOpen(true);
           }}
         />
         <IconButton

@@ -241,6 +241,11 @@ body[data-resizing] .splitter {
   color: var(--conf-exact);
   border-color: color-mix(in srgb, var(--conf-exact) 40%, transparent);
 }
+/* The AI chosen on this computer (Gemma, Ollama…): chosen, not probed, so not the green 'connected'. */
+.ai-status[data-status='local'] {
+  color: var(--conf-qual);
+  border-color: color-mix(in srgb, var(--conf-qual) 40%, transparent);
+}
 
 /* ───────────── Left sidebar ───────────── */
 .sidebar {
