@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState, type KeyboardEvent, type SyntheticEvent } from 'react';
 import { useAiStore } from '@/ai/aiStore';
+import { PROVIDER_NAME } from '@/app/ai/aiStatusView';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { getTransport } from '@/ai/transport';
@@ -91,6 +92,18 @@ export function ChatPanel({
   // local runtime stays local, also before one is picked).
   const chosenEngine = useAnalysisEngine();
   const engine = engineKind(chosenEngine);
+  const fallbackChoice = useAiStore((s) => s.fallback);
+  // The quota fallback (Settings → Kết nối AI): while the provider is out of quota the gateway asks
+  // it instead, for a while without trying the provider first. Never with Think (every Think call
+  // is sent without it), nor for another engine.
+  const fallbackProvider =
+    engine === 'cloud' &&
+    provider !== 'off' &&
+    !chat.thinkEnabled &&
+    fallbackChoice !== 'off' &&
+    fallbackChoice !== provider
+      ? fallbackChoice
+      : null;
   const localSelection = useLocalAiStore((s) => s.selected);
   const voiceEnabled = useVoiceStore((s) => s.enabled);
   // The Gemini voice reads every answer (chat and board) through Google: the text goes online.
@@ -126,6 +139,10 @@ export function ChatPanel({
   const [gemmaLookup, setGemmaLookup] = useState<{ model: string; ready: boolean } | null>(null);
   /** Think needs a key for the reviewing provider; checked up front so the learner knows why. */
   const [verifierLookup, setVerifierLookup] = useState<{ id: string; available: boolean } | null>(
+    null,
+  );
+  /** Whether the quota fallback has a key (it can only be asked then), tagged by provider. */
+  const [fallbackLookup, setFallbackLookup] = useState<{ id: string; available: boolean } | null>(
     null,
   );
   const messagesEnd = useRef<HTMLDivElement>(null);
@@ -223,6 +240,28 @@ export function ChatPanel({
       window.removeEventListener('stemsim:credentials-changed', lookup);
     };
   }, [chat.thinkEnabled, chat.verifierProvider]);
+
+  useEffect(() => {
+    if (fallbackProvider === null) return;
+    const id = fallbackProvider;
+    let alive = true;
+    const lookup = () => {
+      void getTransport()
+        .hasKey(id)
+        .then((available) => {
+          if (alive) setFallbackLookup({ id, available });
+        })
+        .catch(() => {
+          if (alive) setFallbackLookup({ id, available: false });
+        });
+    };
+    lookup();
+    window.addEventListener('stemsim:credentials-changed', lookup);
+    return () => {
+      alive = false;
+      window.removeEventListener('stemsim:credentials-changed', lookup);
+    };
+  }, [fallbackProvider]);
 
   useEffect(() => {
     const node = messagesEnd.current;
@@ -444,8 +483,20 @@ export function ChatPanel({
             : null;
   // Where the next question goes, from the current settings (nothing is guessed).
   const providerName = (p: string) => t(`settings.aiProviders.${p}` as MessageKey);
+  // The fallback is named only when it can really be asked (it has a key).
+  const fallbackTarget =
+    fallbackProvider !== null &&
+    provider !== 'off' &&
+    fallbackLookup?.id === fallbackProvider &&
+    fallbackLookup.available
+      ? t('chat.fallbackTarget', {
+          name: PROVIDER_NAME[fallbackProvider],
+          provider: PROVIDER_NAME[provider],
+        })
+      : null;
   const targets = [
     ...(engine === 'cloud' && provider !== 'off' ? [providerName(provider)] : []),
+    ...(fallbackTarget ? [fallbackTarget] : []),
     ...(chat.thinkEnabled
       ? [t('chat.reviewTarget', { name: providerName(chat.verifierProvider) })]
       : []),

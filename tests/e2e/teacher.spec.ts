@@ -267,6 +267,10 @@ test('Gemini out of quota: Groq answers, labelled "dự phòng"', async ({ page 
     return fulfillGroq(route, 'Lực là đại lượng vectơ, đơn vị newton.', 'stop', 'qwen-test');
   });
   const panel = await openTeacher(page);
+  // Before asking, the chat says the question may go to Groq (it has a key and Think is off).
+  await expect(
+    panel.getByText(/sẽ được gửi tới: .*Groq \(dự phòng khi Gemini hết lượt\)/),
+  ).toBeVisible();
   await send(page, 'Lực là gì?');
   await expect(panel.getByText('Lực là đại lượng vectơ, đơn vị newton.')).toBeVisible();
   // The label says who really answered, and that it was the fallback.
@@ -291,6 +295,9 @@ test('Gemini out of quota without a Groq key: the learner reads why, no machine 
     return route.abort();
   });
   const panel = await openTeacher(page);
+  // Groq has no key: it can never be asked, so the chat does not name it.
+  await expect(panel.getByText(/sẽ được gửi tới: Gemini/)).toBeVisible();
+  await expect(panel.getByText(/dự phòng khi/)).toHaveCount(0);
   await send(page, 'Lực là gì?');
   const alert = panel.getByRole('alert');
   await expect(alert).toContainText('Gemini báo đã hết lượt dùng');

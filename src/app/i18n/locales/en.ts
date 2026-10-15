@@ -963,6 +963,7 @@ const en: Messages = {
     thinkNoVerifier:
       'Think needs a second API to cross-check, but it has no key yet. Choose a provider and enter its key in Settings → AI Teacher.',
     reviewTarget: '{name} (review)',
+    fallbackTarget: '{name} (fallback when {provider} runs out)',
     sentTo: 'Your question and related library excerpts will be sent to: {targets}.',
     sentToWithScreen:
       'Your question, the screen context and related library excerpts will be sent to: {targets}.',

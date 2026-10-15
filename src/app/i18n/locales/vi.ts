@@ -959,6 +959,7 @@ const vi = {
     thinkNoVerifier:
       'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
+    fallbackTarget: '{name} (dự phòng khi {provider} hết lượt)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     sentToWithScreen:
       'Câu hỏi, ngữ cảnh màn hình và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',

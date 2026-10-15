@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
@@ -116,6 +116,48 @@ describe('AI Teacher chat panel with an online provider', () => {
       fallback: true,
       model: 'Groq · qwen-t',
     });
+  });
+
+  it('the "sent to" line names the quota fallback only when it can be asked', async () => {
+    useAiStore.setState({ fallback: 'groq' });
+    let keys = ['gemini', 'groq'];
+    const hasKey = vi.fn((p: string) => Promise.resolve(keys.includes(p)));
+    setTransportForTests({ ...fake(), hasKey });
+    const line = (text: RegExp) => screen.findByText(text);
+    // Think off and Groq has a key: a question may go to Groq while Gemini is out of quota.
+    let view = render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(
+      await line(
+        /sẽ được gửi tới: Gemini \(khuyên dùng\), Groq \(dự phòng khi Gemini hết lượt\)\.$/,
+      ),
+    ).toBeInTheDocument();
+    view.unmount();
+    // Think on: every call is sent without the fallback; the reviewer is named instead.
+    useChatStore.setState({ thinkEnabled: true });
+    view = render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(
+      await line(/sẽ được gửi tới: Gemini \(khuyên dùng\), Groq \(miễn phí\) \(rà soát\)\.$/),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/dự phòng khi/)).not.toBeInTheDocument();
+    view.unmount();
+    // No key for Groq: the fallback is never asked, so it is not named.
+    useChatStore.setState({ thinkEnabled: false });
+    keys = ['gemini'];
+    hasKey.mockClear();
+    view = render(<ChatPanel teacherPage showScreenContext={false} />);
+    // Its key was looked up and the answer has landed (the line is not read before that).
+    await waitFor(() => {
+      expect(hasKey).toHaveBeenCalledWith('groq');
+    });
+    await act(() => Promise.resolve());
+    expect(screen.getByText(/sẽ được gửi tới: Gemini \(khuyên dùng\)\.$/)).toBeInTheDocument();
+    view.unmount();
+    // The fallback switched off in Settings.
+    keys = ['gemini', 'groq'];
+    useAiStore.setState({ fallback: 'off' });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(await line(/sẽ được gửi tới: Gemini \(khuyên dùng\)\.$/)).toBeInTheDocument();
+    expect(screen.queryByText(/dự phòng khi/)).not.toBeInTheDocument();
   });
 
   it('an ordinary answer has no "dự phòng" label', async () => {
