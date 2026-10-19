@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { balance, parseEquation } from '../balance';
+import { canonicalFormulaText } from '../formula';
 import {
   REACTIONS,
   bondChanges,
@@ -93,7 +94,49 @@ describe('curated reaction library', () => {
   });
 
   it('matches equations to the library regardless of order', () => {
-    expect(matchLibrary(['H2O', 'CH4', 'CO2', 'O2'])?.id).toBe('ch4-combustion');
-    expect(matchLibrary(['H2', 'N2'])).toBeUndefined();
+    expect(matchLibrary(['O2', 'CH4'], ['H2O', 'CO2'])).toMatchObject({
+      reaction: { id: 'ch4-combustion' },
+      reverse: false,
+      exact: true,
+    });
+    expect(matchLibrary(['H2', 'N2'], [])).toBeUndefined();
+  });
+
+  const eqMatch = (text: string) => {
+    const eq = parseEquation(text);
+    return matchLibrary(
+      eq.reactants.map((s) => s.text),
+      eq.products.map((s) => s.text),
+    );
+  };
+
+  it.each([
+    'H2O -> H2 + O2', // reverse of H2 + O2 → H2O (not reversible)
+    'CaO + CO2 -> CaCO3', // reverse of the decomposition
+    'C2H5OH -> C2H4 + H2O', // reverse of the hydration
+  ])('the reverse of an irreversible library reaction is not verified: %s', (text) => {
+    expect(eqMatch(text)).toBeUndefined();
+  });
+
+  it.each([
+    ['C2H4 + H2O -> CH3OCH3', 'c2h4-h2o'], // the library product is ethanol
+    ['C3H6 + HBr -> CH3CH2CH2Br', 'propene-hbr'], // the library product is C3H7Br (Markovnikov)
+  ])('same molecular formula but another written species is not exact: %s', (text, id) => {
+    expect(eqMatch(text)).toMatchObject({ reaction: { id }, exact: false });
+  });
+
+  it('the reverse of a reversible library reaction matches and says so', () => {
+    const r = REACTIONS.find((x) => x.reversible)!;
+    const m = matchLibrary(
+      r.products.map((t) => t.formula),
+      r.reactants.map((t) => t.formula),
+    );
+    expect(m).toMatchObject({ reaction: { id: r.id }, reverse: true, exact: true });
+  });
+
+  it('charge spellings do not break an exact match', () => {
+    expect(canonicalFormulaText('CH3COO-')).toBe(canonicalFormulaText('CH3COO^-'));
+    expect(canonicalFormulaText('Cu²⁺')).toBe(canonicalFormulaText('Cu^2+'));
+    expect(canonicalFormulaText('C2H5OH')).not.toBe(canonicalFormulaText('CH3OCH3'));
   });
 });

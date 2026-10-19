@@ -60,3 +60,11 @@ describe('formula parser', () => {
     }
   });
 });
+
+describe('hydrate separator', () => {
+  it('rejects a formula that starts or ends with "." (not a hydrate)', () => {
+    expect(() => parseFormula('.5O2')).toThrow();
+    expect(() => parseFormula('CuSO4.')).toThrow();
+    expect(parseFormula('CuSO4·5H2O').counts.get('H')).toBe(10);
+  });
+});

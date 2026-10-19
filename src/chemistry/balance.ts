@@ -119,9 +119,13 @@ export function parseEquation(input: string): ParsedEquation {
       .map((x) => x.trim())
       .filter(Boolean)
       .map((text) => {
+        // Coefficients are whole numbers: "0.5O2" or "1,5 O2" must not be read as "0" + ".5O2".
+        if (/^\d+\s*[.,]\s*\d/.test(text))
+          throw new EquationError(`coefficients must be whole numbers ("${text}")`);
         const m = /^(\d+)\s*(.+)$/.exec(text);
         // "2H2O" → coefficient 2 unless the whole thing is a formula starting with a digit.
         const given = m ? Number(m[1]) : null;
+        if (given === 0) throw new EquationError(`a coefficient cannot be 0 ("${text}")`);
         const body = m?.[2] ?? text;
         try {
           return { text: body, formula: parseFormula(body), given };

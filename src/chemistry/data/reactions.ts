@@ -8,7 +8,7 @@ import {
   type Source,
 } from '@/core/data/dataset';
 import { normalizeForSearch } from '@/app/catalog';
-import { parseFormula } from '../formula';
+import { canonicalFormulaText, parseFormula } from '../formula';
 
 const TermSchema = z.object({ coef: z.number().int().positive(), formula: z.string() });
 const FrameAtomSchema = z.object({
@@ -127,21 +127,61 @@ export function findReactions(query: string): Reaction[] {
   );
 }
 
-/** Library reaction with exactly the same set of species (order and coefficients ignored). */
-export function matchLibrary(formulas: string[]): Reaction | undefined {
-  const sig = (fs: string[]) =>
-    fs
-      .map((f) => {
-        const p = parseFormula(f);
-        return `${[...p.counts]
-          .sort()
-          .map(([e, n]) => `${e}${n}`)
-          .join('')}${p.charge}`;
-      })
-      .sort()
-      .join('|');
-  const target = sig(formulas);
-  return REACTIONS.find(
-    (r) => sig([...r.reactants, ...r.products].map((t) => t.formula)) === target,
+export interface LibraryMatch {
+  reaction: Reaction;
+  /** The equation is the reverse direction of a reversible library reaction. */
+  reverse: boolean;
+  /**
+   * Every species is written exactly as in the library. When false, only the molecular
+   * formulas agree (e.g. CH3OCH3 vs C2H5OH): it may be another isomer, so it is NOT verified.
+   */
+  exact: boolean;
+}
+
+/** Molecular-formula signature of one side (order and coefficients ignored). */
+function sideSignature(fs: readonly string[]): string {
+  return fs
+    .map((f) => {
+      const p = parseFormula(f);
+      return `${[...p.counts]
+        .sort()
+        .map(([e, n]) => `${e}${String(n)}`)
+        .join('')}${String(p.charge)}`;
+    })
+    .sort()
+    .join('|');
+}
+
+const sideText = (fs: readonly string[]) => fs.map(canonicalFormulaText).sort().join('|');
+
+/**
+ * Library reaction with the same reactants and the same products (each side compared on its
+ * own; order and coefficients ignored). The reverse direction matches only a reversible
+ * reaction. `exact` tells whether the species are also written the same way.
+ */
+export function matchLibrary(
+  reactants: readonly string[],
+  products: readonly string[],
+): LibraryMatch | undefined {
+  const sigR = sideSignature(reactants);
+  const sigP = sideSignature(products);
+  const found: LibraryMatch[] = [];
+  for (const r of REACTIONS) {
+    const libR = r.reactants.map((t) => t.formula);
+    const libP = r.products.map((t) => t.formula);
+    const forward = sideSignature(libR) === sigR && sideSignature(libP) === sigP;
+    const reverse =
+      !forward && r.reversible && sideSignature(libP) === sigR && sideSignature(libR) === sigP;
+    if (!forward && !reverse) continue;
+    const [wantR, wantP] = forward ? [libR, libP] : [libP, libR];
+    const exact = sideText(reactants) === sideText(wantR) && sideText(products) === sideText(wantP);
+    found.push({ reaction: r, reverse, exact });
+  }
+  // Prefer a reaction written exactly the same way, then the forward direction.
+  return (
+    found.find((m) => m.exact && !m.reverse) ??
+    found.find((m) => m.exact) ??
+    found.find((m) => !m.reverse) ??
+    found[0]
   );
 }
