@@ -306,28 +306,39 @@ test('mitosis 3D: every line of the picked part can be read, down to the smalles
     [1366, 689],
     [1024, 600],
   ] as const;
-  for (const [cell, stageButton, part, windows] of [
-    ['Động vật', 'Kì giữa', 'Tâm động', sizes],
-    // Not formed yet in G1: the card adds "không thấy rõ ở kì đang xem" under the text. Not at
-    // 1024×600: there the controls over the picture are taller than the picture in G1 even with
-    // no part picked (the stage strip itself ends up under the panel below), a separate problem.
-    ['Thực vật', 'Trung gian G1', 'Vách ngăn (tấm tế bào)', sizes.slice(0, 2)],
-  ] as const) {
-    await page.setViewportSize({ width: 1366, height: 768 });
-    await page.getByRole('radio', { name: cell }).click();
-    await strip(page).getByRole('button', { name: stageButton }).click();
-    await parts.getByRole('button', { name: part }).click();
-    await expect(page.locator('.m3d__info')).toContainText(part);
-    for (const [width, height] of windows) {
-      await page.setViewportSize({ width, height });
-      await page.waitForTimeout(250);
-      const where = `${cell}, ${part}, ${stageButton}, ${width}×${height}`;
-      const r = await partText(page);
-      expect(r, where).not.toBeNull();
-      expect(r!.total, `${where}: lines`).toBeGreaterThan(1);
-      expect(r!.seen, `${where}: lines that can be read (card ${r!.card})`).toBe(r!.total);
-      // With room for it, the name and "Hỏi thầy" stay in view while the text scrolls.
-      if (height === 768) expect(r!.askAtEnd, `${where}: ask after scrolling`).toBe(true);
+  // The UI font is wider on Linux than Segoe UI on Windows: the texts over the picture took more
+  // lines, the part's row lost its room and "Hỏi thầy" scrolled away, on CI only. Every check
+  // runs again with a wide font and wider spacing over the whole view, on every system.
+  for (const font of ['system', 'wide'] as const) {
+    if (font === 'wide')
+      await page.addStyleTag({
+        content: `.m3d, .m3d button, .m3d select {
+          font-family: Verdana, 'DejaVu Sans', sans-serif; letter-spacing: 0.05em; }`,
+      });
+    for (const [cell, stageButton, part, windows] of [
+      ['Động vật', 'Kì giữa', 'Tâm động', sizes],
+      // Not formed yet in G1: the card adds "không thấy rõ ở kì đang xem" under the text. Not at
+      // 1024×600: there the controls over the picture are taller than the picture in G1 even
+      // with no part picked (the stage strip itself ends up under the panel below), a separate
+      // problem.
+      ['Thực vật', 'Trung gian G1', 'Vách ngăn (tấm tế bào)', sizes.slice(0, 2)],
+    ] as const) {
+      await page.setViewportSize({ width: 1366, height: 768 });
+      await page.getByRole('radio', { name: cell }).click();
+      await strip(page).getByRole('button', { name: stageButton }).click();
+      await parts.getByRole('button', { name: part }).click();
+      await expect(page.locator('.m3d__info')).toContainText(part);
+      for (const [width, height] of windows) {
+        await page.setViewportSize({ width, height });
+        await page.waitForTimeout(250);
+        const where = `${font} font, ${cell}, ${part}, ${stageButton}, ${width}×${height}`;
+        const r = await partText(page);
+        expect(r, where).not.toBeNull();
+        expect(r!.total, `${where}: lines`).toBeGreaterThan(1);
+        expect(r!.seen, `${where}: lines that can be read (card ${r!.card})`).toBe(r!.total);
+        // With room for it, the name and "Hỏi thầy" stay in view while the text scrolls.
+        if (height === 768) expect(r!.askAtEnd, `${where}: ask after scrolling`).toBe(true);
+      }
     }
   }
   await expect(page.locator('.m3d__info')).toContainText('không thấy rõ ở kì đang xem');

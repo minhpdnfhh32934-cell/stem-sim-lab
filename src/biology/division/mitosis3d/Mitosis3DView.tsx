@@ -36,6 +36,7 @@ import {
 } from './components';
 import { VIEW_DIR, applyViewport, placeCamera } from './camera';
 import { buildMitosisScene, type MitosisScene, type ScenePalette } from './scene';
+import { useCardHeadFit } from './partCardHead';
 import { stateFor, timelineFor, useMitosis3D } from './store';
 import { createTapTracker } from './tap';
 import { STAGES_3D, type CellType, type Stage3D, type Timeline, type Vec3 } from './timeline';
@@ -188,6 +189,10 @@ function PartInfo({
   const t = useT();
   const visible = useMitosis3D((s) => componentVisible(selected.component, stateFor(tl, s.t)));
   const info = COMPONENTS[selected.component];
+  const slotRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
+  useCardHeadFit(slotRef, cardRef, headRef);
   const askTeacher = () => {
     // A part the card says cannot be seen now gets a question that does not assume it is there
     // (e.g. the spindle in G1, the nucleus at metaphase).
@@ -202,10 +207,10 @@ function PartInfo({
   };
   return (
     // The slot is the card's grid row (its height decides whether the head can stay in view).
-    <div className="m3d__info-slot">
-      <aside className="m3d__info" aria-live="polite">
+    <div ref={slotRef} className="m3d__info-slot">
+      <aside ref={cardRef} className="m3d__info" aria-live="polite">
         {/* Name and actions: in the head row (no extra height); the card scrolls as one. */}
-        <div className="m3d__info-head">
+        <div ref={headRef} className="m3d__info-head">
           <strong>{Lz(info.name)}</strong>
           <div className="m3d__info-actions">
             <button
@@ -642,40 +647,46 @@ export function Mitosis3DView({
             <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'the father'))}
           </span>
         </div>
+        {/* Two short rows (what is shown; how it is looked at): a stack of four would take the
+            height the picked part's card needs. */}
         <div className="m3d__side">
-          <Segmented<CellType>
-            label={L('Loại tế bào', 'Cell type')}
-            value={cellType}
-            options={[
-              { id: 'animal', label: L('Động vật', 'Animal') },
-              { id: 'plant', label: L('Thực vật', 'Plant') },
-            ]}
-            disabled={cellLocked}
-            onChange={(v) => {
-              if (!useMitosis3D.getState().cellLocked) useDivisionStore.setState({ cellType: v });
-            }}
-          />
-          <Mitosis3DSwitch />
-          <Segmented<CameraMode>
-            label={L('Góc nhìn', 'View')}
-            value={camera}
-            options={[
-              { id: 'overview', label: L('Toàn cảnh', 'Whole cell') },
-              { id: 'closeup', label: L('Cận cảnh NST', 'Chromosomes close up') },
-            ]}
-            onChange={(v) => {
-              useMitosis3D.setState((s) => ({ camera: v, viewNonce: s.viewNonce + 1 }));
-            }}
-          />
-          <IconButton
-            icon={Focus}
-            size="lg"
-            label={Lz(L('Đặt lại góc nhìn', 'Reset view'))}
-            tooltipSide="left"
-            onClick={() => {
-              useMitosis3D.setState((s) => ({ viewNonce: s.viewNonce + 1 }));
-            }}
-          />
+          <div className="m3d__side-row">
+            <Segmented<CellType>
+              label={L('Loại tế bào', 'Cell type')}
+              value={cellType}
+              options={[
+                { id: 'animal', label: L('Động vật', 'Animal') },
+                { id: 'plant', label: L('Thực vật', 'Plant') },
+              ]}
+              disabled={cellLocked}
+              onChange={(v) => {
+                if (!useMitosis3D.getState().cellLocked) useDivisionStore.setState({ cellType: v });
+              }}
+            />
+            <Mitosis3DSwitch />
+          </div>
+          <div className="m3d__side-row">
+            <Segmented<CameraMode>
+              label={L('Góc nhìn', 'View')}
+              value={camera}
+              options={[
+                { id: 'overview', label: L('Toàn cảnh', 'Whole cell') },
+                { id: 'closeup', label: L('Cận cảnh NST', 'Chromosomes close up') },
+              ]}
+              onChange={(v) => {
+                useMitosis3D.setState((s) => ({ camera: v, viewNonce: s.viewNonce + 1 }));
+              }}
+            />
+            <IconButton
+              icon={Focus}
+              size="lg"
+              label={Lz(L('Đặt lại góc nhìn', 'Reset view'))}
+              tooltipSide="left"
+              onClick={() => {
+                useMitosis3D.setState((s) => ({ viewNonce: s.viewNonce + 1 }));
+              }}
+            />
+          </div>
         </div>
         {selected && <PartInfo tl={tl} selected={selected} stage={stage} cellType={cellType} />}
         <div className="m3d__bottom">
