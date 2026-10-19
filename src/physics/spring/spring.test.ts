@@ -76,3 +76,39 @@ describe('spring engine and scenes', () => {
     }
   });
 });
+
+describe('damped spring: period only where there is an oscillation', () => {
+  const base = { vertical: 0, m: 0.25, k: 100, x0: 0.05, v0: 0, l0: 0.3, g: 9.81 };
+  const answer = (b: number, id: string) =>
+    springPendulum.solve({ ...base, b }, 'en').answers.find((a) => a.id === id);
+
+  it('underdamped (b = 8): reports the pseudo-period 2π/ω_d, cross-checked numerically', () => {
+    // ω0 = 20, γ = 16 → ω_d = 12 rad/s, T_d = 2π/12 ≈ 0.5236 s (not 2π/20 ≈ 0.3142 s).
+    const T = answer(8, 'period');
+    expect(T?.value).toBeCloseTo((2 * Math.PI) / 12, 12);
+    expect(T?.check).toBeDefined();
+    expect(T?.check ?? 0).toBeCloseTo((2 * Math.PI) / 12, 8);
+    expect(answer(8, 'frequency')?.value).toBeCloseTo(12 / (2 * Math.PI), 12);
+    expect(numericPeriod(springInput({ ...base, b: 8 }))).toBeCloseTo((2 * Math.PI) / 12, 8);
+  });
+
+  it('overdamped (b = 15) and critical: no period or frequency, ω0 stays as the natural value', () => {
+    for (const b of [15, 10]) {
+      expect(answer(b, 'period')).toBeUndefined();
+      expect(answer(b, 'frequency')).toBeUndefined();
+      expect(answer(b, 'omega')?.value).toBeCloseTo(20, 12);
+    }
+  });
+
+  it('undamped: period 2π/ω0 as before', () => {
+    expect(answer(0, 'period')?.value).toBeCloseTo((2 * Math.PI) / 20, 12);
+  });
+
+  it('the Hooke default (light damping) reports the damped period', () => {
+    const q = springInput(hookeSpring.defaults);
+    const w0 = Math.sqrt(q.k / q.m);
+    const gamma = q.b / (2 * q.m);
+    const T = hookeSpring.solve(hookeSpring.defaults, 'en').answers.find((a) => a.id === 'period');
+    expect(T?.value).toBeCloseTo((2 * Math.PI) / Math.sqrt(w0 * w0 - gamma * gamma), 12);
+  });
+});

@@ -43,7 +43,15 @@ describe('predict – observe – explain', () => {
     const ua = await pick('uniformAcceleration.vA');
     expect(ua.out.after / ua.out.before).toBeCloseTo(4, 6);
     const hk = await pick('hookeSpring.m');
-    expect(hk.out.after / hk.out.before).toBeCloseTo(2, 6);
+    // The Hooke default is lightly damped (b > 0), so the period is the damped one, 2π/ω_d:
+    // the ratio is ω_d(m)/ω_d(4m), within 0.003 % of the undamped ×2.
+    const d = (await loadScene('hookeSpring')).defaults;
+    const [m, k, b] = [d.m ?? 0, d.k ?? 0, d.b ?? 0];
+    expect(b).toBeGreaterThan(0);
+    const wd = (mm: number) => Math.sqrt(k / mm - (b / (2 * mm)) ** 2);
+    expect(hk.out.after / hk.out.before).toBeCloseTo(wd(m) / wd(4 * m), 9);
+    expect(hk.out.after / hk.out.before).toBeCloseTo(2, 4);
+    expect(hk.poe.choices[hk.out.correct]).toEqual({ kind: 'ratio', ratio: 2 });
     const ob = await pick('obliqueProjectile.m');
     expect(ob.poe.choices[ob.out.correct]).toEqual({ kind: 'ratio', ratio: 1 });
   });
