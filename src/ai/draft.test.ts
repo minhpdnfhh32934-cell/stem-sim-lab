@@ -41,6 +41,27 @@ describe('values stated in words (MASTER_PROMPT §2.1)', () => {
     }
   });
 
+  it('finds the negation in the problem even when the quote leaves it out', () => {
+    const cases: [string, number, string, string][] = [
+      ['muK', 0, 'nhẵn', 'Vật 2 kg nằm trên mặt bàn không nhẵn, nối qua ròng rọc với vật 3 kg.'],
+      ['v0', 0, 'đứng yên', 'Lúc đầu xe không đứng yên mà đang chạy.'],
+      ['e', 0, 'dính vào nhau', 'Hai vật không dính vào nhau sau va chạm.'],
+      ['e', 1, 'hoàn toàn đàn hồi', 'Va chạm giữa hai xe không hoàn toàn đàn hồi.'],
+      ['e', 1, 'Đàn hồi hoàn toàn', 'Va chạm chưa  đàn hồi hoàn toàn.'],
+      ['v0', 0, 'nghỉ', 'Xe chưa từng nghỉ trên đoạn đường đó.'],
+    ];
+    for (const [key, value, quote, text] of cases) {
+      expect(impliedByWords(key, value, quote, text), `${quote} | ${text}`).toBe(false);
+    }
+  });
+
+  it('refuses a quote that also stands in a negated sentence, accepts a precise one', () => {
+    const text = 'Vật A đứng yên, vật B không đứng yên mà chạy tới với vận tốc 2 m/s.';
+    expect(impliedByWords('vA', 0, 'đứng yên', text)).toBe(false);
+    expect(impliedByWords('vA', 0, 'Vật A đứng yên', text)).toBe(true);
+    expect(impliedByWords('vB', 0, 'vật B không đứng yên', text)).toBe(false);
+  });
+
   it('needs the whole phrase: a spring\'s "đàn hồi" is not an elastic collision', () => {
     const text = 'Lò xo có độ cứng đàn hồi tốt, hai vật va chạm với nhau.';
     expect(impliedByWords('e', 1, 'Lò xo có độ cứng đàn hồi tốt', text)).toBe(false);
@@ -58,5 +79,25 @@ describe('values stated in words (MASTER_PROMPT §2.1)', () => {
     const second = buildDraft(pulley, extraction('muK', 0, 'mặt bàn không nhẵn'), rough, 9.81);
     expect(second.sources.muK).not.toBe('problem');
     expect(second.issues.map((i) => [i.kind, i.key])).toContainEqual(['notInText', 'muK']);
+  });
+
+  it('drops a value whose bare-phrase quote comes from a negated sentence', async () => {
+    const pulley = await loadScene('pulley');
+    const rough = 'Vật 2 kg nằm trên mặt bàn không nhẵn, nối qua ròng rọc với vật 3 kg.';
+    const draft = buildDraft(pulley, extraction('muK', 0, 'nhẵn'), rough, 9.81);
+    expect(draft.sources.muK).not.toBe('problem');
+    expect(draft.issues.map((i) => [i.kind, i.key])).toContainEqual(['notInText', 'muK']);
+
+    const collisions = await loadScene('collisions');
+    const text = 'Xe 2 kg chạy với vận tốc 3 m/s tới xe 5 kg; va chạm không hoàn toàn đàn hồi.';
+    const second = buildDraft(collisions, extraction('e', 1, 'hoàn toàn đàn hồi'), text, 9.81);
+    expect(second.sources.e).not.toBe('problem');
+    expect(second.issues.map((i) => [i.kind, i.key])).toContainEqual(['notInText', 'e']);
+
+    // The same bare quote from a plain sentence is still accepted.
+    const smooth = 'Vật 2 kg nằm trên mặt bàn nhẵn, nối qua ròng rọc với vật 3 kg.';
+    const third = buildDraft(pulley, extraction('muK', 0, 'nhẵn'), smooth, 9.81);
+    expect(third.sources.muK).toBe('problem');
+    expect(third.issues.filter((i) => i.key === 'muK')).toEqual([]);
   });
 });
