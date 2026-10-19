@@ -1,6 +1,7 @@
 import type { Locale } from '@/app/i18n/types';
 import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
+import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { arrow, circle, ground, line, polygon, polyline, text, vectorScale } from '../render/draw';
 import { L, liveGravityParam, massParam, pointMassGraphs } from '../common/scene-helpers';
@@ -23,6 +24,24 @@ import { PS } from './engine';
 function launch(p: Params): ProjectileInput {
   return { v0: p.v0 ?? 0, angle: p.angle ?? 0, h0: p.h0 ?? 0, g: p.g ?? 9.81 };
 }
+
+/**
+ * A body launched from the ground (h0 = 0) without an upward velocity component lands at
+ * once: there is no flight to simulate.
+ */
+function groundStart(inp: ProjectileInput): LocalizedText[] {
+  return inp.h0 > 0 || inp.v0 * Math.sin(inp.angle) > 0
+    ? []
+    : [
+        L(
+          'Vật xuất phát từ mặt đất (h₀ = 0) mà không có vận tốc hướng lên nên chạm đất ngay — hãy cho h₀ > 0 hoặc ném chếch lên.',
+          'The body starts on the ground (h₀ = 0) with no upward velocity, so it lands at once — set h₀ > 0 or throw it upward.',
+        ),
+      ];
+}
+
+/** Largest relative deviation the card still calls agreement with the numerical check. */
+const AGREE_TOL = 1e-6;
 
 /**
  * Independent numerical cross-check of the closed-form answers: integrate
@@ -189,6 +208,8 @@ function card(p: Params, title: ScienceCardData['title']): ScienceCardData {
     Math.abs(check.flightTime - r.flightTime) / r.flightTime,
     r.range !== 0 ? Math.abs(check.range - r.range) / Math.abs(r.range) : 0,
   );
+  // Never claim agreement when the check failed or could not run (e.g. no flight at all).
+  const agrees = Number.isFinite(dev) && dev <= AGREE_TOL;
   return {
     title,
     model: L(
@@ -212,11 +233,16 @@ function card(p: Params, title: ScienceCardData['title']): ScienceCardData {
       'Tốt khi tốc độ nhỏ và vật nặng, gọn (lực cản không đáng kể) và độ cao ≪ bán kính Trái Đất.',
       "Good for low speeds and dense compact objects (negligible drag), heights ≪ Earth's radius.",
     ),
-    confidence: 'exact',
-    confidenceNote: L(
-      `Đáp số giải tích khớp với tích phân số Dormand–Prince (sai lệch tương đối ${dev.toExponential(1)}).`,
-      `Closed-form answers agree with Dormand–Prince integration (relative deviation ${dev.toExponential(1)}).`,
-    ),
+    confidence: agrees ? 'exact' : 'approx',
+    confidenceNote: agrees
+      ? L(
+          `Đáp số giải tích khớp với tích phân số Dormand–Prince (sai lệch tương đối ${dev.toExponential(1)}).`,
+          `Closed-form answers agree with Dormand–Prince integration (relative deviation ${dev.toExponential(1)}).`,
+        )
+      : L(
+          'Không kiểm chứng được đáp số giải tích bằng tích phân số Dormand–Prince cho bộ tham số này.',
+          'The closed-form answers could not be confirmed by Dormand–Prince integration for these inputs.',
+        ),
     method: L(
       'Cập nhật chính xác cho gia tốc không đổi, Δt = 1/240 s; thời điểm chạm đất được giải đúng bên trong bước.',
       'Exact constant-acceleration update, Δt = 1/240 s; landing time solved exactly inside the step.',
@@ -388,6 +414,7 @@ export const obliqueProjectile: PhysicsScene = {
     liveGravityParam,
   ],
   defaults: { v0: 15, angle: Math.PI / 4, h0: 0, m: 0.5, g: 9.81 },
+  validate: (p) => groundStart(launch(p)),
   scienceCard: (p) => card(p, L('Ném xiên', 'Oblique projectile')),
   solve: (p, locale) => solveGeneral(p, locale, 'oblique'),
 };
@@ -437,6 +464,7 @@ export const freeFall: PhysicsScene = {
   ],
   defaults: { h0: 45, v0: 0, m: 1, g: 9.81 },
   engineParams: freeFallLaunch,
+  validate: (p) => groundStart(launch(freeFallLaunch(p))),
   view: (p) => {
     const b = view(freeFallLaunch(p));
     const s = size(freeFallLaunch(p));
