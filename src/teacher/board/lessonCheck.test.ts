@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { toSpeech } from '@/teacher/voice/vietnameseText';
 import { markdownToScript } from './fromMarkdown';
-import { lessonFor, scriptFor, subtitleText, voiceCue } from './lesson';
+import { boardStreamPreview, lessonFor, scriptFor, subtitleText, voiceCue } from './lesson';
 import {
   PART_LIMIT,
   classifyBoardText,
@@ -1489,5 +1489,96 @@ describe('numbers in = numbers out (property)', () => {
           ).toBeLessThanOrEqual(PART_LIMIT[part.kind]);
       }
     }
+  });
+});
+
+describe('audit G8: links, polite verdicts, geometry, JSON, subtitles', () => {
+  const written = (script: ParsedScript) => writesOf(script).map((w) => w.text);
+
+  it('a TeachScript sentence ending with ":" and a link keeps its words in the voice', () => {
+    for (const [answer, words] of [
+      [
+        'Chu kì tế bào gồm kì trung gian và nguyên phân: https://vi.wikipedia.org/wiki/Chu_kì_tế_bào <write id="s1" zone="steps">Chu kì tế bào</write>.',
+        'gồm kì trung gian và nguyên phân',
+      ],
+      [
+        'Mọi vật có khối lượng đều hút nhau – Wikipedia https://vi.wikipedia.org/wiki/Lực_hấp_dẫn <write id="f" zone="steps">F = Gm₁m₂/r²</write>.',
+        'Mọi vật có khối lượng đều hút nhau',
+      ],
+    ] as const) {
+      const lesson = lessonFor(answer);
+      expect(saidOf(lesson.script), answer).toContain(words);
+      expect(saidOf(lesson.script)).not.toMatch(/https?:/u);
+    }
+  });
+
+  it('a markdown sentence ending with ": <link>" stays; a short name before it is a source', () => {
+    const md = lessonFor(
+      'Nguyên phân tạo hai tế bào con giống hệt nhau: https://vi.wikipedia.org/wiki/Nguyên_phân\n\nv = 20 m/s',
+    );
+    expect(written(md.script).join('|')).toContain('Nguyên phân tạo hai tế bào con giống hệt nhau');
+    expect(saidOf(md.script)).toContain('Nguyên phân tạo hai tế bào con giống hệt nhau');
+    const source = lessonFor(
+      'Chu kì tế bào: https://vi.wikipedia.org/wiki/Chu_kì_tế_bào\n\nv = 20 m/s',
+    );
+    expect(written(source.script)).toEqual(['v = 20 m/s']);
+  });
+
+  it('"Liên kết" before an address is a bond when the sentence goes on', () => {
+    expect(
+      sanitizeBoardText(
+        'Liên kết https://vi.wikipedia.org/wiki/Liên_kết_ion hình thành giữa ion dương và ion âm.',
+      ),
+    ).toBe('Liên kết hình thành giữa ion dương và ion âm.');
+    // A pointer still goes with its address.
+    expect(sanitizeBoardText('Nguồn: https://vi.wikipedia.org/wiki/Lực')).toBe('');
+  });
+
+  it('"Vâng, có." and "Vâng, không." answer a yes/no question', () => {
+    for (const text of ['Vâng, có.', 'Vâng, không.', 'Dạ, không ạ.', 'Vâng có.'])
+      expect(classifyBoardText(text), text).toBe('learning');
+    for (const text of ['Vâng ạ!', 'Dạ vâng.'])
+      expect(classifyBoardText(text), text).not.toBe('learning');
+  });
+
+  it('a geometry step keeps its relation (⊥, ∥, ∈ …)', () => {
+    const parts = limitBoardText(
+      'Vì tam giác ABC cân tại A nên đường trung tuyến AM cũng là đường cao, suy ra AM ⊥ BC',
+      'step',
+    );
+    expect(parts.join(' ')).toContain('AM ⊥ BC');
+  });
+
+  it('a JSON-shaped answer is never written on the board; an interval is', () => {
+    const json = lessonFor('{"title": "Rơi tự do", "steps": ["v = gt", "s = gt²/2"]}');
+    expect(written(json.script)).toEqual([]);
+    expect(classifyBoardText('["v = gt", "s = gt²/2"]')).toBe('internal');
+    expect(classifyBoardText('[0, 1]')).not.toBe('internal');
+  });
+
+  it('a fraction in a denominator reads with brackets in the subtitle', () => {
+    expect(subtitleText('Ta có $v = \\frac{s}{\\frac{t}{2}}$.')).toBe('Ta có v = s/(t/2).');
+    expect(subtitleText('Ta có \\(v = \\frac{s}{t}\\) và \\[a = \\frac{F}{m}\\].')).toBe(
+      'Ta có v = s/t và a = F/m.',
+    );
+  });
+
+  it('the streamed lesson never shows LaTeX of "$$" or "\\(" formulas', () => {
+    for (const stream of [
+      'Ta có $$v = \\frac{s}{t}',
+      'Ta có $$v = \\frac{s}{t}$',
+      'Ta có \\(v = \\frac{s}{t}',
+      'Ta có \\[v = \\frac{s}{t}\\',
+    ]) {
+      const shown = boardStreamPreview(stream, true);
+      expect(shown, stream).toBe('Ta có');
+    }
+    expect(
+      boardStreamPreview(
+        'Ta có \\(v = \\frac{s}{t}\\) rồi <write id="a" zone="steps">x</write>.',
+        true,
+      ),
+    ).toBe('Ta có v = s/t rồi x.');
+    expect(boardStreamPreview('Ta có $$v = \\frac{s}{t}$$ rồi.', true)).toBe('Ta có v = s/t rồi.');
   });
 });

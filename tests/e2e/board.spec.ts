@@ -194,6 +194,59 @@ test('"Viết tiếp" of an answer that ran onto a second face keeps every line 
   for (const text of [...first, ...second]) expect(text).not.toContain('step');
 });
 
+test('"Viết tiếp" twice in a row keeps both faces as teaching at once (audit G8)', async ({
+  page,
+}) => {
+  // The first "Viết tiếp" erased a stump of "Bước 14" in place; the second could not take the
+  // second face off and placed every line again on it (Bảng 1 kept only its title, Bảng 3 opened).
+  const steps = (a: number, b: number) =>
+    Array.from(
+      { length: b - a + 1 },
+      (_, i) => `Bước ${String(a + i)}: x${String(a + i)} = ${String(a + i)} m`,
+    ).join('\n');
+  await fakeGemini(page, [
+    {
+      text: `# Bài\n<step>${steps(1, 11)}\n## Phần 2\n${steps(12, 13)}\nBước 14: x14 = `,
+      finishReason: 'MAX_TOKENS',
+    },
+    // Cut after a space: the parts join without one (memory.ts `joinContinuation`).
+    { text: '14 m\n', finishReason: 'MAX_TOKENS' },
+    { text: '</step>\n\nXong.', finishReason: 'STOP' },
+  ]);
+  const board = await openBoard(page);
+  await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Tính quãng đường');
+  await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
+  await board.getByRole('button', { name: 'Viết nhanh' }).click();
+  await expect(board).toContainText('x13 = 13 m', { timeout: 15_000 });
+  for (let round = 0; round < 2; round++) {
+    await page.getByRole('button', { name: 'Viết tiếp' }).click();
+    await board.getByRole('button', { name: 'Viết nhanh' }).click();
+    await expect(board.getByRole('button', { name: 'Giảng lại' })).toBeVisible({
+      timeout: 15_000,
+    });
+  }
+  await expect(page.getByRole('button', { name: 'Viết tiếp' })).toHaveCount(0);
+  await expect(board.getByRole('tab', { name: /^Bảng 3/ })).toHaveCount(0);
+  const second = await textsTopDown(page);
+  for (const needle of ['x12 = 12 m', 'x13 = 13 m', 'x14 = 14 m', 'Xong'])
+    expect(
+      second.filter((t) => t.includes(needle)),
+      needle,
+    ).toHaveLength(1);
+  expect(second.some((t) => t.endsWith('x1 = 1 m'))).toBe(false);
+  const face1 = board.getByRole('tab', { name: /^Bảng 1/ });
+  await face1.click();
+  await expect(face1).toHaveAttribute('aria-selected', 'true');
+  const first = await textsTopDown(page);
+  for (let i = 1; i <= 11; i++) {
+    const needle = `x${String(i)} = ${String(i)} m`;
+    expect(
+      first.filter((t) => t.endsWith(needle)),
+      needle,
+    ).toHaveLength(1);
+  }
+});
+
 test('a sentence that opens like a source line ("Nguồn điện…", "Liên kết…") stays; only its link goes', async ({
   page,
 }) => {

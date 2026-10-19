@@ -270,7 +270,10 @@ of each written part (`title`, `goal`, `given`, `concept`, `definition`, `equati
   that ends the line after a name and ":" or "-" ("Chu kì tế bào: https://…"), after a page's
   name and its source ("Lực hấp dẫn – Wikipedia (https://…)") or after the linked page's own name
   ("Lực hấp dẫn (https://…/wiki/Lực_hấp_dẫn)"); a line that is one markdown link of at most six
-  words. The last two rules (a page's own name, a one-link line) do not apply to an item of a list
+  words. A name has at most six words: a longer remainder before ":" or "– Wikipedia" is a
+  sentence of the lesson ("Nguyên phân tạo hai tế bào con giống hệt nhau: https://…"), kept and
+  said without its link. "Liên kết" (or "link", "Wikipedia") right before an address in a sentence
+  that goes on is its subject: only the address goes ("Liên kết https://… hình thành…"). The last two rules (a page's own name, a one-link line) do not apply to an item of a list
   whose intro line is content ("Các giai đoạn của nguyên phân:", "Three kinds of forces:", a label
   such as "Cho:"; not "Xem thêm:", "Bạn có thể đọc thêm:", "Tài liệu tham khảo:"), nor to the
   teacher's speech: there the page's name is a concept of the lesson and keeps its words

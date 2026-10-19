@@ -240,6 +240,8 @@ const POINTER_LINK = new RegExp(
   String.raw`([,;]?)([ \t]*)(?<![\p{L}\p{N}])${POINTER_LEAD}[ \t]*[:：\-–—]?[ \t]*${ADDRESS}([ \t]*[,;:])?([ \t]*)`,
   'giu',
 );
+/** Lead words that are also nouns of a sentence, right before the address (no ":" between). */
+const NOUN_LEAD = /^(liên kết|link|wikipedia|wiki)[ \t]+(?=https?:\/\/|www\.)/iu;
 /**
  * A source word and its address go together: the words around them keep their meaning ("Theo
  * https://…, lực là đại lượng vectơ." → "lực là đại lượng vectơ.", never "Theo lực là…"), and
@@ -253,6 +255,10 @@ function pointerLink(m: RegExpExecArray): string {
   const next = m.input.slice(m.index + m[0].length);
   const atStart = m.index === 0 || m.input[m.index - 1] === '\n';
   const goesOn = /^[\p{L}\p{N}$]/u.test(next);
+  // "Liên kết https://… hình thành giữa…": the word is the sentence's subject (a bond), not a
+  // pointer; only the address goes.
+  const noun = NOUN_LEAD.exec(m[0].slice(before.length + (m[2] ?? '').length));
+  if (noun && goesOn && !before && !after) return `${m[2] ?? ''}${noun[1] ?? ''} `;
   if (before) return goesOn || after ? `${before}${trail}` : '';
   if (after) return atStart ? '' : `${after}${trail}`;
   return atStart || !goesOn ? '' : m[2] || trail || ' ';
@@ -347,6 +353,10 @@ const LINK = /https?:\/\/|\bwww\.[a-z0-9-]+\./i;
  * ion hình thành… (https://…).", "Electron mang điện tích âm (https://…)"): see `sourceLine`.
  */
 const SOURCE_NAME_CHARS = 60;
+/** At most this many words before a link make a source's name; more make a sentence. */
+const SOURCE_NAME_WORDS = 6;
+const wordCount = (folded: string): number =>
+  folded.split(/[^\p{L}\p{N}]+/u).filter(Boolean).length;
 /** Words that only point to a source (folded). "Liên kết" is also a chemical bond: not one. */
 const SOURCE_WORD = String.raw`(?:nguon(?: tham khao)?|tai lieu(?: tham khao)?|tham khao|xem them|xem|see(?: also)?|sources?|references?|ref|link)`;
 /** The name of a source (folded): an encyclopedia, a textbook with its subject, grade and page. */
@@ -419,12 +429,14 @@ function sourceLine(text: string, plain: string, named = true): boolean {
   if (SOURCE_LABEL.test(fold(plain)) || SOURCE_ALONE.test(f)) return true;
   if (SOURCE_DIRECT.test(fold(text.replace(/^[\s*_>#•·-]+/u, '')))) return true;
   if (named && ONLY_LINK.test(text)) {
-    const words = f.split(/[^\p{L}\p{N}]+/u).filter(Boolean).length;
-    if (words <= 6 && !/[.!?…]["”')\]]*\s*$/u.test(plain)) return true;
+    if (wordCount(f) <= SOURCE_NAME_WORDS && !/[.!?…]["”')\]]*\s*$/u.test(plain)) return true;
   }
   if (!LINK_LAST.test(text)) return false;
-  if (/[:：\-–—|]\s*$/u.test(plain)) return true;
-  if (SOURCE_AFTER.test(f)) return true;
+  // A name before the link ("Chu kì tế bào: https://…", "Lực hấp dẫn – Wikipedia"), not a
+  // sentence: "Nguyên phân tạo hai tế bào con giống hệt nhau: https://…" keeps its words.
+  const name = wordCount(f.replace(SOURCE_AFTER, '')) <= SOURCE_NAME_WORDS;
+  if (name && /[:：\-–—|]\s*$/u.test(plain)) return true;
+  if (name && SOURCE_AFTER.test(f)) return true;
   return named && f !== '' && pageNames(text).includes(f);
 }
 /**
@@ -556,12 +568,13 @@ const GENERIC_FOLDED = new Set([
 /**
  * A verdict on its own, perhaps after a label: "Không.", "Có không.", "Kết quả: Có", "Được.",
  * "Không được.", "Vâng.", "Dạ." ("Được nhé!" is a reply, not a verdict). "Vâng"/"Dạ" only alone,
- * with at most a period: the polite forms "Vâng ạ!", "Dạ vâng.", "Vâng!" acknowledge a request.
+ * with at most a period: the polite forms "Vâng ạ!", "Dạ vâng.", "Vâng!" acknowledge a request;
+ * followed by a verdict word they answer it ("Vâng, có.", "Dạ, không ạ.").
  */
 const VERDICT =
-  /^(?:[^:：]{1,30}[:：]\s*)?(?:(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*|(?:vâng|dạ)\s*\.?|(?:không )?được\s*\.?)$/iu;
+  /^(?:[^:：]{1,30}[:：]\s*)?(?:(?:có thể|đúng vậy|không đúng|có|không|đúng|sai|yes|no)(?:\s+(?:có|không|đâu|ạ|nhé))?\s*[.!]*|(?:vâng|dạ)[ \t,]*(?:có|không|đúng|sai)(?:\s+ạ)?\s*[.!]*|(?:vâng|dạ)\s*\.?|(?:không )?được\s*\.?)$/iu;
 /** A formula, an unknown or a symbol: never a remark. */
-const SUBJECT_MARK = /[=?≈≤≥<>$\dͰ-Ͽ₀-₉⁰-⁹²³¹√∆∑∫]/u;
+const SUBJECT_MARK = /[=?≈≤≥<>$\dͰ-Ͽ₀-₉⁰-⁹²³¹√∆∑∫⊥∥∠∈∉⊂⊆≡∼∝]/u;
 
 /**
  * A text made only of generic words (a remark about the lesson). `extra`: more words that carry
@@ -673,13 +686,32 @@ interface Classified {
  * v = gt = 19,6 m/s."): then that computation is learning content; anything else is learning
  * content.
  */
+/**
+ * A line that is one JSON object, or a JSON list holding objects or strings (a model answering in
+ * JSON out of habit): its braces, quotes and keys are not lesson text. A list of numbers ("[0, 1]")
+ * may be an interval: not this.
+ */
+function isJsonData(text: string): boolean {
+  const t = text.trim();
+  if (!/^(?:\{[\s\S]*\}|\[[\s\S]*\])$/u.test(t)) return false;
+  let value: unknown;
+  try {
+    value = JSON.parse(t);
+  } catch {
+    return false;
+  }
+  if (Array.isArray(value))
+    return value.some((v) => typeof v === 'string' || (typeof v === 'object' && v !== null));
+  return typeof value === 'object' && value !== null && Object.keys(value).length > 0;
+}
+
 export function classifyBoardText(text: string, options: ClassifyOptions = {}): TextClass {
   return classify(text, options).cls;
 }
 
 function classify(text: string, options: ClassifyOptions): Classified {
   const internal: Classified = { cls: 'internal', board: '' };
-  if (MARKUP_ONLY.test(text)) return internal;
+  if (MARKUP_ONLY.test(text) || isJsonData(text)) return internal;
   const plain = sanitizeBoardText(text);
   // Bare markup, a tag, a link alone or a link with only a short name around it.
   if (MARKUP_ONLY.test(plain)) return internal;
@@ -837,9 +869,10 @@ function stepBody(text: string): string {
 
 /**
  * A formula written as text: an equation or comparison sign, a reaction arrow, a sub- or
- * superscript digit ("a = F/m", "HCl + NaOH → NaCl + H₂O", "p = mv").
+ * superscript digit, a geometry or set relation ("a = F/m", "HCl + NaOH → NaCl + H₂O", "p = mv",
+ * "AM ⊥ BC").
  */
-const FORMULA_MARK = /[=≈≤≥≠→⇌⟶⇄↔₀-₉⁰-⁹²³¹]|\$[^$]+\$/u;
+const FORMULA_MARK = /[=≈≤≥≠→⇌⟶⇄↔₀-₉⁰-⁹²³¹⊥∥∠∈∉⊂⊆≡∼∝]|\$[^$]+\$/u;
 
 /** Digits outside the step's own numbering, or a formula (between `$` or written as text). */
 export function holdsMaterial(text: string): boolean {

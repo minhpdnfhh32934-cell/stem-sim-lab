@@ -130,10 +130,13 @@ const SUPERSCRIPT: Record<string, string> = {
   '−': '⁻',
 };
 
-/** A fraction's part as read inline: in brackets when it has more than one term ("(2 · 45)/10"). */
+/**
+ * A fraction's part as read inline: in brackets when it has more than one term ("(2 · 45)/10")
+ * or is a fraction itself ("s/(t/2)", never "s/t/2").
+ */
 function fractionPart(part: string): string {
   const p = part.trim();
-  return /[+\-−·\s]/.test(p) ? `(${p})` : p;
+  return /[+\-−·\s/]/.test(p) ? `(${p})` : p;
 }
 
 /**
@@ -159,6 +162,10 @@ function readableCommands(tex: string): string {
 /** Subtitle: the spoken sentence with markdown and LaTeX turned into readable text. */
 export function subtitleText(speech: string): string {
   return speech
+    .replace(
+      /\\\(([^$]*?)\\\)|\\\[([^$]*?)\\\]/g,
+      (_m, a?: string, b?: string) => `$${a ?? b ?? ''}$`,
+    )
     .replace(/\$\$?([^$]+)\$\$?/g, (_m, tex: string) => {
       // LaTeX's decimal comma "9{,}8" is the number 9,8: its braces go first, or a formula
       // around it ("\sqrt{2 \cdot 9{,}8}") would not be read as one.
@@ -192,6 +199,23 @@ export function subtitleText(speech: string): string {
     .trim();
 }
 
+/**
+ * Where a formula still open at the end of `text` begins (a `$`, `$$`, `\(` or `\[` whose closing
+ * delimiter has not come yet), or -1. `$$` is one delimiter, not two closed ones.
+ */
+function openFormula(text: string): number {
+  let open: { at: number; close: string } | null = null;
+  for (const m of text.matchAll(/\$\$|\$|\\\(|\\\)|\\\[|\\\]/g)) {
+    const t = m[0];
+    if (open) {
+      if (t === open.close) open = null;
+    } else if (t === '$$' || t === '$') open = { at: m.index, close: t };
+    else if (t === '\\(') open = { at: m.index, close: '\\)' };
+    else if (t === '\\[') open = { at: m.index, close: '\\]' };
+  }
+  return open ? open.at : -1;
+}
+
 /** TeachScript markup: one of its tags, opening, closing or empty. */
 const TEACHSCRIPT_MARKUP = new RegExp(`</?(?:${TEACHSCRIPT_TAGS.join('|')})\\b`, 'i');
 /** The opening or closing tag of a container whose words are read or written. */
@@ -216,8 +240,8 @@ export function boardStreamPreview(textSoFar: string, teachScript = false): stri
   for (const m of textSoFar.matchAll(WORD_CONTAINER)) open = m[1] ? null : m.index;
   const settled = (open === null ? textSoFar : textSoFar.slice(0, open)).replace(TYPING_TAG, '');
   if (!teachScript && !TEACHSCRIPT_MARKUP.test(textSoFar)) return settled;
-  const dollars = settled.split('$').length - 1;
-  const whole = dollars % 2 === 0 ? settled : settled.slice(0, settled.lastIndexOf('$'));
+  const cut = openFormula(settled);
+  const whole = cut < 0 ? settled : settled.slice(0, cut);
   return parseTeachScript(whole)
     .sentences.map((s) => subtitleText(s.spoken || s.speech))
     .filter(Boolean)
@@ -734,12 +758,18 @@ interface Placed {
 let lessonTrail: Placed[] = [];
 let lessonTaughtTo = 0;
 let lessonLastStart = Infinity;
+/**
+ * Stumps a "Viết tiếp" erased in place (their records left the trail): a later "Viết tiếp" still
+ * counts them as gone when it decides whether a face can be taken off.
+ */
+let lessonStumps = new Set<string>();
 
 const actionKey = (a: BoardAction): string => JSON.stringify(a);
 
 function forgetPlaced(): void {
   lessonKnown = [];
   lessonTrail = [];
+  lessonStumps = new Set();
   lessonTaughtTo = 0;
   lessonLastStart = Infinity;
 }
@@ -885,7 +915,9 @@ function untaught(sentences: readonly Sentence[], boundary: number, layout: Layo
   const dropped = new Set<Placed>();
   for (let i = layout.faces.length - 1; i > 0; i--) {
     const p = opened.get(i);
-    if (!p || !layout.elements.every((e) => e.face !== i || gone.has(e.id))) break;
+    const goes = (e: Layout['elements'][number]) =>
+      e.face !== i || gone.has(e.id) || lessonStumps.has(e.id);
+    if (!p || !layout.elements.every(goes)) break;
     dropped.add(p);
   }
   const unopened = new Set<TimedAction>();
@@ -1062,6 +1094,8 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
   const erased: Record<string, boolean> = {};
   for (const [id, value] of Object.entries(store.erased)) if (kept.has(id)) erased[id] = value;
   for (const id of wipedIds) if (kept.has(id)) erased[id] = true;
+  // An id that left the board may be given to a new line: it is no longer a stump.
+  lessonStumps = new Set([...lessonStumps, ...wipedIds].filter((id) => kept.has(id)));
   const progress: Record<string, number> = {};
   for (const e of layout.elements) progress[e.id] = e.kind === 'text' ? e.length : 1;
   const provenance: Record<string, Provenance> = {};

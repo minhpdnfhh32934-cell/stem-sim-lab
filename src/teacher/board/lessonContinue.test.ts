@@ -402,3 +402,61 @@ describe('"Viết tiếp" after a lesson that was stopped part way', () => {
     expect(seen()).toEqual(whole);
   });
 });
+
+/**
+ * Audit gap (G8 item 1/3): "Viết tiếp" twice in a row. The first continuation erases a stump in
+ * place; the second must still be able to take off a face that holds only that stump and lines
+ * placed again, or every line lands on the last face (Bảng 1 left with only its title).
+ */
+describe('"Viết tiếp" twice in a row equals teaching at once', () => {
+  async function continuedTwice(first: string, second: string, full: string) {
+    const a = lesson.playLesson({ id: 'cut2', content: first, question: '' }, measure);
+    lesson.finishNow();
+    await a;
+    for (const content of [second, full]) {
+      const rest = lesson.continueLesson({ id: 'cut2', content, question: '' }, measure);
+      lesson.finishNow();
+      await rest;
+    }
+    return seenOnFaces();
+  }
+  const steps = (from: number, to: number) =>
+    Array.from(
+      { length: to - from + 1 },
+      (_, i) => `Bước ${String(from + i)}: x = ${String(from + i)} m`,
+    ).join('\n');
+
+  it('an answer that ran onto a second face, cut twice inside its last step', async () => {
+    const part1 = `# Bài\n<step>${steps(1, 11)}\n## Phần 2\n${steps(12, 13)}\nBước 14: x14 = 1`;
+    const part2 = `${part1}4 m\n`;
+    const full = `${part2}</step>\n\nXong.`;
+    await fresh(full);
+    const whole = seenOnFaces();
+    expect(await continuedTwice(part1, part2, full)).toEqual(whole);
+  });
+
+  it.each([
+    ['markdown', `# Rơi tự do\n${steps(1, 12)}\n## Ví dụ\n${steps(13, 16)}\n\nVậy t = 2 s.`],
+    ['teachscript', fixtureTeachScript()],
+  ])(
+    '%s, cut twice at many places',
+    async (_name, answer) => {
+      await fresh(answer);
+      const whole = seenOnFaces();
+      const wrong: string[] = [];
+      const stride = Math.max(7, Math.floor(answer.length / 12));
+      for (let a = stride; a < answer.length; a += stride)
+        for (let b = a + 3; b < answer.length; b += stride) {
+          const got = await continuedTwice(answer.slice(0, a), answer.slice(0, b), answer);
+          if (JSON.stringify(got) !== JSON.stringify(whole))
+            wrong.push(`${String(a)}/${String(b)}`);
+        }
+      expect(wrong).toEqual([]);
+    },
+    120000,
+  );
+});
+
+function fixtureTeachScript(): string {
+  return 'Bài một <write id="t1" zone="title" role="heading">Lực ma sát</write>. <write id="s1" zone="steps">F = μmg</write><circle target="s1" span="μ"/>. <newboard title="Ví dụ"/>Với <write id="s2" zone="steps">μ = 0,2</write> thì <write id="r2" zone="steps" role="result">F = 4 N</write>.<box target="r2"/>';
+}
