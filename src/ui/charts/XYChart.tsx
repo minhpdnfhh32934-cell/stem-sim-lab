@@ -2,7 +2,7 @@ import { Download } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useT } from '@/app/i18n';
 import { exportCsv } from '@/app/project/actions';
-import { axisLabel, yTickSpace } from './axes';
+import { X_AXIS_SIZE, axisLabel, yTickSpace } from './axes';
 import { toCsv } from './csv';
 import type uPlotType from 'uplot';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -101,7 +101,9 @@ export function XYChart(props: XYChartProps) {
           {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
-            ticks: { stroke: gridStroke },
+            ticks: { stroke: gridStroke, size: 6 },
+            // Compact: uPlot's 50 + 30 px left a short chart one or two y values.
+            ...X_AXIS_SIZE,
             label: axisLabel(xLabel, xUnit),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
@@ -111,6 +113,7 @@ export function XYChart(props: XYChartProps) {
             ticks: { stroke: gridStroke },
             label: axisLabel(yLabel, yUnit),
             size: 60,
+            labelSize: 20,
             // At least about four numbers on a short chart (bottom panel), not one or two.
             space: (_u, _axis, _min, _max, plotHeight) => yTickSpace(plotHeight),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
@@ -135,6 +138,11 @@ export function XYChart(props: XYChartProps) {
         ],
         hooks: {
           draw: [
+            (u) => {
+              // How many values the y axis shows (read by tests; uPlot draws them on canvas).
+              const splits = (u.axes[1] as { _splits?: unknown[] } | undefined)?._splits;
+              host.dataset.yTicks = String(splits?.length ?? 0);
+            },
             (u) => {
               const m = markerRef.current;
               if (m === null || m === undefined) return;

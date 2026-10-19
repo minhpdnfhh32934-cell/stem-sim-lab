@@ -14,10 +14,17 @@ const MAX_SPACE = 30;
 
 /**
  * Pixels between y-axis ticks for a plot area this tall. uPlot's default (30 px) leaves a short
- * chart in the bottom panel with one or two numbers; a quarter of the height gives about four,
- * so a value can be read off the axis at any panel height.
+ * chart in the bottom panel with one or two numbers. Nice steps (1, 2, 5 × 10ᵏ) can be up to
+ * 2.5 times the smallest step that fits, so a sixth of the height still leaves at least three
+ * numbers on the bottom panel's charts (about 75 px of plot).
  */
 export function yTickSpace(plotHeight: number): number {
   if (!(plotHeight > 0)) return MAX_SPACE;
-  return Math.max(MIN_SPACE, Math.min(MAX_SPACE, plotHeight / 4));
+  return Math.max(MIN_SPACE, Math.min(MAX_SPACE, plotHeight / 6));
 }
+
+/**
+ * x axis sizes: room for the tick values (`size`) and the title (`labelSize`), in px. uPlot's
+ * defaults (50 + 30) took more than half of a chart in the bottom panel.
+ */
+export const X_AXIS_SIZE = { size: 32, labelSize: 20, gap: 4 } as const;

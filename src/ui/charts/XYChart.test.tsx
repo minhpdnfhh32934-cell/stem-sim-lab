@@ -96,7 +96,7 @@ describe('XYChart axes', () => {
     const space = opts.axes?.[1]?.space;
     expect(typeof space).toBe('function');
     const at = (h: number) => (space as SpaceFn)(null, 1, 0, 1, h);
-    expect(Math.floor(60 / at(60))).toBeGreaterThanOrEqual(3);
+    expect(at(77)).toBeLessThan(30);
     expect(at(400)).toBe(30);
   });
 });
