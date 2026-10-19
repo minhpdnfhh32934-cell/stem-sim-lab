@@ -251,6 +251,11 @@ const TWO_FACES =
 const NEXT =
   'Bài mới <write id="x1" zone="steps">xin chào các em</write>. Tiếp <write id="y1" zone="steps">yêu cầu</write>.';
 const NEXT_SAID = ['Bài mới xin chào các em.', 'Tiếp yêu cầu.'];
+const SAID_TWO_FACES = [
+  'Mở đầu alpha beta.',
+  'Phần hai rồi delta epsilon zeta eta theta iota kappa lambda.',
+  'Cuối omega.',
+];
 
 const tab = (n: number) => screen.getByRole('tab', { name: new RegExp(`^Bảng ${String(n)}`) });
 const penNode = (root: HTMLElement) => root.querySelector<HTMLElement>('.board__pen');
@@ -418,6 +423,56 @@ describe('whiteboard: faces, layouts and the pen (item 5)', () => {
     expect(oldIds).toBe(false);
     expect(new Set(pens)).toEqual(new Set([run]));
     expect(voice.said.slice(said)).toEqual(NEXT_SAID);
+  });
+
+  it('S8: "Viết tiếp" arriving while the learner browses another face waits for the fonts without writing, then one run teaches the rest (0.7 test gap)', async () => {
+    const more = `${TWO_FACES} Thêm <write id="d1" zone="steps">psi</write>.`;
+    const view = render(<Page id="faces-cont" content={TWO_FACES} />);
+    await advanceUntil(writingOnFace2);
+    act(() => {
+      fireEvent.click(tab(1));
+    });
+    expect(useBoardStore.getState().status).toBe('paused');
+    const oldRun = useBoardStore.getState().run;
+    let release: () => void = () => undefined;
+    fonts.ready = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const said = voice.said.length;
+    view.rerender(<Page id="faces-cont" content={more} />);
+    const before = {
+      progress: { ...useBoardStore.getState().progress },
+      pen: useBoardStore.getState().pen,
+      face: useBoardStore.getState().face,
+    };
+    await advance(20_000);
+    // Nothing moves on either face while the continuation waits for the fonts.
+    expect({
+      progress: useBoardStore.getState().progress,
+      pen: useBoardStore.getState().pen,
+      face: useBoardStore.getState().face,
+    }).toEqual(before);
+    expect(useBoardStore.getState().run).toBe(oldRun);
+    expect(voice.said.length).toBe(said);
+
+    const runs = new Set<number>();
+    const pens = new Set<number>();
+    const watch = useBoardStore.subscribe((s) => {
+      if (s.run !== oldRun) runs.add(s.run);
+      if (s.pen) pens.add(s.pen.run);
+    });
+    await act(async () => {
+      release();
+      await Promise.resolve();
+    });
+    await untilDone();
+    watch();
+    // Exactly one new run, and the old one never writes again.
+    expect(runs.size).toBe(1);
+    expect([...pens]).toEqual([...runs]);
+    expect(useBoardStore.getState().progress.d1).toBeGreaterThan(0);
+    // The sentence the pause cut is read again, then the rest, each once.
+    expect(voice.said.slice(said)).toEqual([...SAID_TWO_FACES.slice(1), 'Thêm psi.']);
   });
 
   it('S8: the talk layout pauses the lesson; coming back shows it as it was with "Tiếp tục"', async () => {
@@ -670,6 +725,21 @@ describe('whiteboard: faces, layouts and the pen (item 5)', () => {
       for (const o of observers) expect(o.disconnect).toBe(o.observe);
       expect(scrolls(adds)).toBeGreaterThan(0);
       expect(scrolls(removes)).toBe(scrolls(adds));
+      // Every kind of listener on the viewport is taken off as often as it was put on (the
+      // camera's 'scrollend' and the learner's own moves too; 0.7 test gap).
+      const onViewport = (spy: typeof adds) => {
+        const byType = new Map<string, number>();
+        spy.mock.calls.forEach(([type], i) => {
+          const el = spy.mock.contexts[i] as Element | undefined;
+          if (!el?.classList.contains('board__viewport')) return;
+          byType.set(type, (byType.get(type) ?? 0) + 1);
+        });
+        return Object.fromEntries([...byType].sort(([a], [b]) => a.localeCompare(b)));
+      };
+      const added = onViewport(adds);
+      for (const type of ['scroll', 'scrollend', 'wheel', 'touchstart', 'pointerdown', 'keydown'])
+        expect(added[type], type).toBeGreaterThan(0);
+      expect(onViewport(removes)).toEqual(added);
       // A lesson started without the board is not paused by the chat any more.
       useTeacherStore.setState({ open: true });
       const done = playLesson({ id: 'faces-api', content: SCRIPT, question: '' }, measure);

@@ -1011,7 +1011,10 @@ async function run(
   };
   try {
     for (const sentence of script.sentences) await playSentence(sentence, ctx);
-    patch(r, { status: 'done', pen: null, subtitle: '' });
+    // A pause during the last sentence's reading or wait holds the end too: the lesson never
+    // finishes by itself under "Tiếp tục" (no auto-resume).
+    await waitIfPaused(r);
+    patch(r, { status: 'done', pen: null, subtitle: '', pausedForAsk: false });
   } catch (e) {
     if (!(e instanceof Stopped)) throw e;
   } finally {
@@ -1112,6 +1115,14 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
     marks: store.marks
       .filter((m) => !unmarked.has(m.key) && !dropped.has(m.face))
       .map((m) => ({ ...m, shown: true })),
+    // The learner's ink and circled part go with their face too: the rest of the answer opens a
+    // new face at the same index, and old ink would lie over different writing there.
+    ...(dropped.size === 0
+      ? {}
+      : {
+          strokes: store.strokes.filter((s) => !dropped.has(s.face)),
+          ...(store.selection && dropped.has(store.selection.face) ? { selection: null } : {}),
+        }),
     follow: true,
     teacherFace,
     face: teacherFace,
