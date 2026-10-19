@@ -6,6 +6,7 @@ import {
   codingToMrna,
   codonEntry,
   complement,
+  mutatedTranslation,
   strandDirection,
   transcribeTemplate,
   translate,
@@ -123,6 +124,29 @@ describe('mutations around the start codon (default lesson sequence)', () => {
     const a = analyzeMutation(SEQ, { kind: 'insertion', pos: 3, bases: 'ATG' });
     expect(a.effect).toBe('startGain');
     expect(a.after.start).toBe(3);
+  });
+});
+
+describe('mutatedTranslation agrees with analyzeMutation', () => {
+  const SEQ = 'TACATGGCTTTCAAAGGCTGGTAAGC';
+
+  it.each([0, 1, 3])('a start gain (insert ATG at %i) is read from the new first AUG', (pos) => {
+    const m = { kind: 'insertion', pos, bases: 'ATG' } as const;
+    const a = analyzeMutation(SEQ, m);
+    const mt = mutatedTranslation(SEQ, m);
+    expect(a.effect).toBe('startGain');
+    expect(mt.t.protein).toBe(a.after.protein);
+    expect(mt.t.start).toBe(a.after.start);
+    expect(mt.mrna.slice(mt.t.start, mt.t.start + 3)).toBe('AUG');
+  });
+
+  it('insert ATG at 0 gives MYMAFKGW, at 1 gives MTWLSKAGK', () => {
+    expect(mutatedTranslation(SEQ, { kind: 'insertion', pos: 0, bases: 'ATG' }).t.protein).toBe(
+      'MYMAFKGW',
+    );
+    expect(mutatedTranslation(SEQ, { kind: 'insertion', pos: 1, bases: 'ATG' }).t.protein).toBe(
+      'MTWLSKAGK',
+    );
   });
 });
 

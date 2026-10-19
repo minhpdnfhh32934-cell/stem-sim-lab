@@ -253,15 +253,16 @@ export function analyzeMutation(coding: string, m: Mutation): MutationAnalysis {
   };
 }
 
-/** The mutated sequence and its translation in the original reading frame. */
+/**
+ * The mutated sequence and its translation, exactly as `analyzeMutation` reads it: the original
+ * reading frame for a change inside the coding region, otherwise the first AUG of the mutated
+ * mRNA (outside the CDS, start loss, start gain, no start). Reusing `after` keeps the view's
+ * "mutated protein" row and the effect note from ever disagreeing.
+ */
 export function mutatedTranslation(
   coding: string,
   m: Mutation,
 ): { coding: string; mrna: string; t: Translation } {
   const mc = mutate(coding, m);
-  const mrna = codingToMrna(mc);
-  const start = translate(codingToMrna(coding)).start;
-  const a = analyzeMutation(coding, m);
-  const inFrame = a.effect !== 'outsideCds' && a.effect !== 'startLoss' && a.effect !== 'none';
-  return { coding: mc, mrna, t: inFrame ? translateFrom(mrna, start) : translate(mrna) };
+  return { coding: mc, mrna: codingToMrna(mc), t: analyzeMutation(coding, m).after };
 }
