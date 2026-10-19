@@ -41,6 +41,32 @@ export function firstHit(s: number, v: number, a: number, target: number, max = 
   return ok.length ? Math.min(...ok) : Infinity;
 }
 
+/**
+ * Direction the body moves at this instant: the sign of v, or of a when v = 0
+ * (0 when it stays put).
+ */
+export function heading(v: number, a: number): number {
+  return v !== 0 ? Math.sign(v) : Math.sign(a);
+}
+
+/**
+ * Smallest τ in [0, max] at which the body reaches sMin or sMax, or Infinity.
+ * τ = 0 when it already sits on a limit and moves outward (firstHit skips τ = 0,
+ * which would let a body that starts on an edge pass straight through it).
+ */
+export function limitHit(
+  s: number,
+  v: number,
+  a: number,
+  sMin: number,
+  sMax: number,
+  max = Infinity,
+): number {
+  const dir = heading(v, a);
+  if ((dir < 0 && s <= sMin) || (dir > 0 && s >= sMax)) return 0;
+  return Math.min(firstHit(s, v, a, sMin, max), firstHit(s, v, a, sMax, max));
+}
+
 export interface Step1D {
   s: number;
   v: number;
@@ -77,7 +103,7 @@ export function advance1D(
     }
     let tau = h;
     if (v !== 0 && r.a !== 0 && Math.sign(r.a) !== Math.sign(v)) tau = Math.min(tau, -v / r.a);
-    const tb = Math.min(firstHit(s, v, r.a, sMin, tau), firstHit(s, v, r.a, sMax, tau));
+    const tb = limitHit(s, v, r.a, sMin, sMax, tau);
     if (tb <= tau) {
       const ns = Math.min(sMax, Math.max(sMin, s + v * tb + 0.5 * r.a * tb * tb));
       return { s: ns, v: v + r.a * tb, a, friction, hitLimit: true, rest };
