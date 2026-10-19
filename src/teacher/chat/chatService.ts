@@ -684,6 +684,20 @@ export interface TeacherPrompt {
   selection: string;
 }
 
+/**
+ * The learner's last own question in the conversation sent: a quick button's turn carries the
+ * app's instruction (`prompt`), so it is skipped. '' when there is none.
+ */
+function lastOwnQuestion(
+  history: readonly { role: string; content: string; prompt?: string }[],
+): string {
+  for (let i = history.length - 1; i >= 0; i--) {
+    const turn = history[i];
+    if (turn?.role === 'user' && turn.prompt === undefined) return turn.content;
+  }
+  return '';
+}
+
 export async function contextPrompt(
   question: string,
   locale: Locale,
@@ -698,6 +712,8 @@ export async function contextPrompt(
     signal?: AbortSignal;
     /** Sent by a quick button: never read as an answer to the teacher's question (turnKind). */
     quickAction?: boolean;
+    /** "Viết tiếp": `question` is the app's request for the rest of the last answer. */
+    continues?: boolean;
     /** The part of the board the learner circled and asks about ("Khoanh để hỏi"). */
     boardSelection?: BoardSelection;
   } = {},
@@ -716,14 +732,22 @@ export async function contextPrompt(
   );
   // A short reply ("Ở kì giữa ạ.") is looked up with the question it answers: on its own it names
   // no topic, or the wrong one. A question about the board is looked up with what was circled.
-  const previous = questionBefore(question, history);
-  const query = [previous, question, circled].filter(Boolean).join('\n');
+  // A quick button or "Viết tiếp" sends the app's own instruction, which names no topic: the
+  // library and Wikipedia are searched with the learner's last own question instead.
+  const instruction = options.quickAction === true || options.continues === true;
+  const asked = instruction ? lastOwnQuestion(history) : question;
+  const previous = instruction ? null : questionBefore(question, history);
+  const query = [previous, asked, circled].filter(Boolean).join('\n');
   // On-device models read ONE short excerpt: a second note was often a distractor the 1B model
   // copied, and long excerpts make the first wait longer (benchmark 2026-10-13: 4 × 1500
   // characters took 10–30 s on an iGPU). That one note is whole here (its best sentences are cut
   // from all of it below) and left out when two notes match alike. The cloud prompt keeps whole
   // notes with their source.
-  const local = full ? searchKnowledge(query, locale, 5) : unambiguousNote(query, locale);
+  const local = !query
+    ? []
+    : full
+      ? searchKnowledge(query, locale, 5)
+      : unambiguousNote(query, locale);
   // Wikipedia is opt-in (Settings → AI Teacher): it receives the question text, so it never
   // runs silently. Web excerpts come last and are always labelled: checked library first (an
   // on-device prompt that already has its one library note does not ask Wikipedia at all, nor
@@ -731,8 +755,8 @@ export async function contextPrompt(
   // question about the circled board is not looked up there either: its words alone ("g ở đây?",
   // often the default question) name no topic, and the board's text never goes to Wikipedia.
   const web =
-    webLookup && !selection && (full || (local.length === 0 && !missing))
-      ? await fetchWebKnowledge(question, locale, options.signal)
+    webLookup && asked && !selection && (full || (local.length === 0 && !missing))
+      ? await fetchWebKnowledge(asked, locale, options.signal)
       : [];
   const notes = [...local, ...web]
     .slice(0, full ? undefined : 1)
@@ -1381,6 +1405,7 @@ export async function askTeacher(
     {
       board,
       quickAction: options.quickAction === true,
+      continues: options.continues === true,
       ...(signal ? { signal } : {}),
       ...(circled ? { boardSelection: circled } : {}),
     },

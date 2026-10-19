@@ -97,6 +97,23 @@ describe('note retrieval', () => {
     expect(ids('Hai gen nằm trên cùng một NST di truyền thế nào?')[0]).toBe('bio-linkage');
   });
 
+  it('words about the learning step never bring a note of another subject', () => {
+    // Science Studio's "Hỏi thầy" for the free-fall lesson (studio.ask.questions): "quan trọng"
+    // brought the chromosome-mutation note, "dự đoán"/"kết luận" the organic-chemistry one.
+    const lesson = 'Thầy ơi, em đang làm bài “Rơi tự do: thả từ độ cao gấp đôi”';
+    const asked = [
+      `${lesson}, bước Dự đoán. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.`,
+      `${lesson}, bước Quan sát. Thầy giúp em đọc kết quả mô phỏng vừa có được không?`,
+      `${lesson}, bước Kết luận. Thầy giúp em so sánh dự đoán của em với kết quả mô phỏng nhé.`,
+      `${lesson}, bước Báo cáo. Báo cáo của em còn thiếu ý gì quan trọng?`,
+    ];
+    for (const q of asked) {
+      for (const id of ids(q)) expect(id, q).toMatch(/^physics-/);
+    }
+    // The topic still finds its note.
+    expect(ids('Rơi tự do là gì? Thả vật từ độ cao gấp đôi thì sao?')[0]).toMatch(/^physics-/);
+  });
+
   it('still searches the files the learner added', () => {
     useChatStore.setState({
       documents: [

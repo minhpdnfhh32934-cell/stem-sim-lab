@@ -5,6 +5,7 @@ import type { ChatRequest, ChatResponse, Provider } from '@/ai/types';
 import { askTeacher, contextPrompt, referenceBlocks } from './chatService';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
 import { downloadErrorKey } from './downloadErrors';
+import { CONTINUE_PROMPT } from './memory';
 
 function transport(keys: Provider[], calls: ChatRequest[]): LlmTransport {
   return {
@@ -39,6 +40,34 @@ describe('AI Teacher chat service', () => {
   afterEach(() => {
     setTransportForTests(null);
     vi.unstubAllGlobals();
+  });
+
+  it('"Viết tiếp" and quick buttons look up the learner\'s question, not the app\'s words', async () => {
+    const searched: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) => {
+        const query = new URL(url).searchParams.get('srsearch');
+        if (query !== null) searched.push(query);
+        return Promise.resolve(new Response(JSON.stringify({ query: { search: [] } })));
+      }),
+    );
+    const history = [
+      { role: 'user', content: 'Lực ma sát nghỉ là gì?' },
+      { role: 'assistant', content: 'Lực ma sát nghỉ giữ vật đứng yên.' },
+    ];
+    await contextPrompt(CONTINUE_PROMPT.vi, 'vi', false, true, 'full', history, {
+      continues: true,
+    });
+    const quick = [
+      ...history,
+      { role: 'user', content: 'Ví dụ', prompt: 'Cho em một ví dụ đời sống ngắn.' },
+      { role: 'assistant', content: 'Đẩy tủ mà tủ chưa chạy.' },
+    ];
+    await contextPrompt('Giảng lại chậm hơn, từng bước một.', 'vi', false, true, 'full', quick, {
+      quickAction: true,
+    });
+    expect(searched).toEqual(['Lực ma sát nghỉ là gì?', 'Lực ma sát nghỉ là gì?']);
   });
 
   it('sends screen context only when the toggle is on', async () => {
