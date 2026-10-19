@@ -136,6 +136,13 @@ describe('"Hỏi thầy về bộ phận này" in the 3D mitosis view', () => {
     expect(screen.queryByRole('button', { name: ASK })).toBeNull();
   });
 
+  it("the part's card is fitted: its head stays only when measured room allows (none here)", () => {
+    renderView();
+    pick('Tâm động');
+    // jsdom lays nothing out: no room was measured, so the head scrolls with the text.
+    expect(screen.getByRole('complementary')).toHaveAttribute('data-head', 'scrolls');
+  });
+
   it('opens AI Teacher (talk) with the part and stage written into the box, nothing sent', () => {
     useTeacherStore.setState({ layout: 'board' });
     renderView();
