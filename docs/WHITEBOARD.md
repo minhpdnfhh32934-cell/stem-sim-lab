@@ -339,7 +339,9 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
     ảnh cho AI **trên máy này** đọc được ảnh: Gemma E2B mà em đã chọn, chạy trên card rời đã biết
     (không bao giờ trên card tích hợp, không tự đổi sang E2B), hoặc mô hình của chương trình trên máy
     mà lần kiểm tra trên máy thấy "Có" đọc ảnh. Không bao giờ gửi ảnh lên mạng. AI khác: thanh nói rõ
-    "AI em đang dùng chưa đọc được hình vẽ hay nét viết tay" và đề nghị em gõ câu hỏi (không gọi AI).
+    "AI em đang dùng chưa đọc được hình vẽ hay nét viết tay" và đề nghị em gõ câu hỏi. Từ 0.7, câu em
+    gõ được gửi kèm phần chữ của bảng quanh chỗ khoanh (tiêu đề, bước trước/sau), không kèm ảnh; chưa
+    gõ gì thì không gửi gì.
     **Think không rà soát câu hỏi về ảnh:** bản nháp của AI trên máy là lời nó tả nét của em, nên gửi
     bản nháp cho bên rà soát trên mạng là đưa nét của em lên mạng dưới dạng chữ (và bên rà soát cũng
     không thấy ảnh để kiểm tra). Câu hỏi về ảnh chỉ được trả lời trên máy, kể cả khi Think đang bật

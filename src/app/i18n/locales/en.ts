@@ -1480,6 +1480,8 @@ const en: Messages = {
       'Your question with the board text you circled and related library excerpts will be sent to: {targets}.',
     boardChip: 'About: «{excerpt}»',
     boardChipPicture: 'About: the drawing you circled on the board',
+    boardChipPictureWords:
+      'Asking in words about what you circled: the teacher cannot see the picture, only the steps around it',
     boardChipRemove: 'Remove what you circled',
     boardRef: 'About what you circled: «{excerpt}»',
     boardRefPicture: 'About the drawing you circled on the board',
@@ -2104,7 +2106,7 @@ const en: Messages = {
       pictureLocalQuiet:
         'With a picture of the circled area — on this computer only, never sent online. The Gemini voice will not read this answer aloud.',
       pictureUnreadable:
-        "The AI you are using can't read drawings or handwriting. Type in the chat what you want to ask about this part.",
+        "The AI you are using can't read drawings or handwriting. Type in the chat what you want to ask about this part: the teacher only knows the steps around it, not the picture.",
       resume: 'Back to the lesson',
       defaultQuestion: 'Could you explain the part I just circled, please?',
       describe: {

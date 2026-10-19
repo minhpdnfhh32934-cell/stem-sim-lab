@@ -1274,9 +1274,10 @@ export async function askTeacher(
      * a cloud prompt has it in the instruction, an on-device one right before the question. It is
      * never put in the question itself nor counted as given numbers. `image`: a picture of an area
      * without text (PNG), sent only to an AI on this computer that reads pictures
-     * (pictureReader.ts), never online.
+     * (pictureReader.ts), never online. `inWords`: such an area asked about in the learner's own
+     * words because no AI here reads pictures: only the board's text around it is sent.
      */
-    boardSelection?: { selection: BoardSelection; image?: ArrayBuffer };
+    boardSelection?: { selection: BoardSelection; image?: ArrayBuffer; inWords?: boolean };
     /**
      * "Viết tiếp": the question asks for the rest of the last answer in `records`. That answer
      * must be in what is sent; an answer that stays on this computer (about a circled picture) is
@@ -1355,7 +1356,14 @@ export async function askTeacher(
     options.boardSelection?.image && reader !== null && reader === engine
       ? options.boardSelection.image
       : undefined;
-  if (circled && circled.hits.length === 0 && !picture) {
+  // Asked in the learner's own words (no AI here reads pictures), it goes as an ordinary question
+  // with the steps around the circled area; the default question alone would ask about nothing.
+  if (
+    circled &&
+    circled.hits.length === 0 &&
+    !picture &&
+    options.boardSelection?.inWords !== true
+  ) {
     throw new TeacherError(translate(locale, 'chat.errors.boardNoPicture'), null, false);
   }
   // Think never reviews an answer about a picture: the draft is the on-device model's reading of

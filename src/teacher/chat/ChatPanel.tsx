@@ -31,7 +31,13 @@ import { useChatStore, type ChatEngine, type ChatMessageRecord } from './chatSto
 import { MessageBody } from './MessageBody';
 import { boardAnswerText, subtitleText } from '@/teacher/board/lesson';
 import { useBoardStore } from '@/teacher/board/boardStore';
-import { askable, cut, selectionExcerpt, type BoardSelection } from '@/teacher/board/selection';
+import {
+  askable,
+  asksInWords,
+  cut,
+  selectionExcerpt,
+  type BoardSelection,
+} from '@/teacher/board/selection';
 import { BOARD_ASK_EVENT } from '@/teacher/board/boardAsk';
 import {
   canSpeakOnDevice,
@@ -408,10 +414,13 @@ export function ChatPanel({
     // would otherwise send the same question twice.
     setBusy(true);
     const selection = options.selection;
+    // A part of the board without text that no AI here reads is asked about in the learner's own
+    // words: no picture is made, only the steps around it go with the question.
+    const inWords = asksInWords(selection ?? null, pictureReader !== null);
     // A part of the board without text goes as a picture, only to an AI on this computer that
     // reads pictures (pictureReader.ts); the picture is made before anything is sent.
     let image: ArrayBuffer | undefined;
-    if (selection?.status === 'picture') {
+    if (selection?.status === 'picture' && !inWords) {
       const made = await import('@/teacher/board/selectionImage')
         .then(({ selectionPicture }) =>
           selectionPicture(selection, useBoardStore.getState().strokes),
@@ -436,6 +445,7 @@ export function ChatPanel({
               face: selection.face,
               ids: selection.hits.map((h) => h.id),
               excerpt: selectionExcerpt(selection),
+              ...(inWords ? { inWords: true as const } : {}),
             },
           }
         : {}),
@@ -461,7 +471,15 @@ export function ChatPanel({
         onPartial: (text) => {
           if (!controller.signal.aborted) setStreaming(text || null);
         },
-        ...(selection ? { boardSelection: { selection, ...(image ? { image } : {}) } } : {}),
+        ...(selection
+          ? {
+              boardSelection: {
+                selection,
+                ...(image ? { image } : {}),
+                ...(inWords ? { inWords: true } : {}),
+              },
+            }
+          : {}),
       });
       if (cleared()) {
         endAnswer(answer);
@@ -591,17 +609,24 @@ export function ChatPanel({
   );
   /** The circled part a question carries now (the chip above the box), or undefined. */
   const boardAsk =
-    teacherPage && board && askable(circled, pictureReader !== null) && circled
+    teacherPage &&
+    board &&
+    circled &&
+    (askable(circled, pictureReader !== null) || asksInWords(circled, pictureReader !== null))
       ? circled
       : undefined;
   const withBoard = boardAsk !== undefined;
+  // A picture no AI here reads: asked about in the learner's own words only.
+  const boardInWords = asksInWords(boardAsk ?? null, pictureReader !== null);
   // "Hỏi thầy chỗ này" on the board (BOARD_ASK_EVENT): the draft, or the default question, about
   // what was circled. One listener at a time (React StrictMode mounts effects twice in
   // development); it calls the latest render's question so it never sends a stale draft.
   const askAboutBoard = useRef<() => void>(() => undefined);
   useEffect(() => {
     askAboutBoard.current = () => {
-      if (!boardAsk) return;
+      // A picture no AI here reads needs the learner's own words (the default question would ask
+      // about nothing the AI receives).
+      if (!boardAsk || (boardInWords && !draft.trim())) return;
       void submit(draft.trim() || t('board.ask.defaultQuestion'), undefined, {
         selection: boardAsk,
       });
@@ -689,7 +714,7 @@ export function ChatPanel({
       : null;
   // A question about a picture of the circled area is never reviewed online (askTeacher), and a
   // question about the circled board is never looked up on Wikipedia.
-  const pictureAsk = boardAsk?.status === 'picture';
+  const pictureAsk = boardAsk?.status === 'picture' && !boardInWords;
   const targets = [
     ...(engine === 'cloud' && provider !== 'off' ? [providerName(provider)] : []),
     ...(fallbackTarget ? [fallbackTarget] : []),
@@ -873,7 +898,7 @@ export function ChatPanel({
           )}
         </p>
       )}
-      {!notice && boardAsk?.status === 'picture' && (
+      {!notice && pictureAsk && (
         // A picture of the circled area: only to the AI on this computer (pictureReader.ts). Its
         // answer stays here too, so the Gemini voice does not read it (readAloud).
         <p className="chat-panel__local-note">
@@ -1178,11 +1203,13 @@ export function ChatPanel({
         <div className="chat-panel__board-chip">
           <LassoSelect size={14} aria-hidden="true" />
           <span className="chat-panel__board-chip-text">
-            {boardAsk.status === 'picture'
-              ? t('chat.boardChipPicture')
-              : t('chat.boardChip', {
-                  excerpt: cut(subtitleText(selectionExcerpt(boardAsk, 160)), 60),
-                })}
+            {boardInWords
+              ? t('chat.boardChipPictureWords')
+              : boardAsk.status === 'picture'
+                ? t('chat.boardChipPicture')
+                : t('chat.boardChip', {
+                    excerpt: cut(subtitleText(selectionExcerpt(boardAsk, 160)), 60),
+                  })}
           </span>
           <button
             type="button"

@@ -29,6 +29,11 @@ export interface BoardRef {
   ids: string[];
   /** What was circled, as the board holds it (short; '' for a drawing or handwriting). */
   excerpt: string;
+  /**
+   * A drawing or handwriting asked about in words, because no AI here reads pictures: no picture
+   * went with the question (only the steps around it), so it is an ordinary question.
+   */
+  inWords?: true;
 }
 /**
  * Why a Think answer was not reviewed: `picture` = a question about a picture of the circled area

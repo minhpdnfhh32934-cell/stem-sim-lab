@@ -157,12 +157,16 @@ export function withoutPictureAsks(records: readonly ChatMessageRecord[]): ChatM
   return kept;
 }
 
-/** A question about a picture of the circled area: a `boardRef` without text. */
+/**
+ * A question about a picture of the circled area: a `boardRef` without text, unless it was asked
+ * in words with no picture (`inWords`: nothing of the learner's strokes went anywhere).
+ */
 export function asksAboutPicture(record: ChatMessageRecord | undefined): boolean {
   return (
     record?.role === 'user' &&
     record.boardRef !== undefined &&
-    record.boardRef.excerpt.trim() === ''
+    record.boardRef.excerpt.trim() === '' &&
+    record.boardRef.inWords !== true
   );
 }
 

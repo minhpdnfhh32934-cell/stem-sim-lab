@@ -1464,6 +1464,8 @@ const vi = {
       'Câu hỏi kèm phần chữ em khoanh trên bảng và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     boardChip: 'Hỏi về: «{excerpt}»',
     boardChipPicture: 'Hỏi về: hình em khoanh trên bảng',
+    boardChipPictureWords:
+      'Hỏi bằng lời về hình em khoanh: thầy không xem được hình, chỉ biết các bước quanh đó',
     boardChipRemove: 'Bỏ chỗ đã khoanh',
     boardRef: 'Về chỗ em khoanh: «{excerpt}»',
     boardRefPicture: 'Về hình em khoanh trên bảng',
@@ -2088,7 +2090,7 @@ const vi = {
       pictureLocalQuiet:
         'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng. Giọng Gemini sẽ không đọc to câu trả lời này.',
       pictureUnreadable:
-        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé.',
+        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé: thầy chỉ biết các bước quanh đó, không thấy hình.',
       resume: 'Quay lại bài giảng',
       defaultQuestion: 'Thầy giải thích giúp em chỗ em vừa khoanh với ạ.',
       describe: {
