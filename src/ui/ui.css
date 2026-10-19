@@ -254,6 +254,16 @@ select:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
+/* Touch screens and pens: form fields are full-size targets (>= 40px) wherever they are. */
+@media (any-pointer: coarse) {
+  select,
+  input[type='number'],
+  input[type='text'],
+  input[type='search'],
+  input[type='range'] {
+    min-height: var(--target);
+  }
+}
 @supports (appearance: base-select) {
   select,
   ::picker(select) {

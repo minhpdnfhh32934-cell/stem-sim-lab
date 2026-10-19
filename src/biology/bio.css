@@ -440,3 +440,16 @@
     justify-self: end;
   }
 }
+/* Touch screens and pens: the biology controls grow to >= 40px too (shared ones: layout.css,
+   ui.css). A table row's button fills its cell so the whole row height can be tapped. */
+@media (any-pointer: coarse) {
+  .bio-row-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--target);
+  }
+  .chem-form input[type='range'] {
+    min-height: var(--target);
+  }
+}

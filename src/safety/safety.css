@@ -52,6 +52,12 @@
   font: inherit;
   cursor: pointer;
 }
+@media (any-pointer: coarse) {
+  .ai-label__report {
+    min-height: var(--target);
+    padding: 0 10px;
+  }
+}
 .ai-label__report:hover {
   background: var(--bg-hover);
   color: var(--danger);

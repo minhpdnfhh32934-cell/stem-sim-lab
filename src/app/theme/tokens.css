@@ -41,6 +41,9 @@
   --timeline-h: 3.143rem;
   --statusbar-h: 1.715rem;
   --splitter: 6px;
+  /* "Hỏi thầy" floating button: its size and its gap to the panel edges. */
+  --chat-bubble: 52px;
+  --chat-bubble-gap: 14px;
 
   /* Motion — subtle; disabled entirely under prefers-reduced-motion. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -78,7 +81,7 @@
 
   --text: #172033;
   --text-muted: #5a6477;
-  --text-faint: #8a93a5;
+  --text-faint: #656e80;
   --text-on-accent: #ffffff;
 
   --accent: #2f62d8;
@@ -87,7 +90,7 @@
   --focus-ring: rgba(47, 98, 216, 0.45);
 
   --danger: #c93a3a;
-  --warning: #b77900;
+  --warning: #946200;
 
   /* One main color per subject (PROMPT_PHAN_2 A4.3), used on cards, headings and accents. */
   --subject-physics: #2f62d8;
@@ -145,7 +148,7 @@
 
   --text: #e4e9f1;
   --text-muted: #9aa5b8;
-  --text-faint: #6b7688;
+  --text-faint: #8590a3;
   --text-on-accent: #0b1020;
 
   --accent: #7aa2ff;

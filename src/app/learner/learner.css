@@ -568,6 +568,12 @@
 .mode-switch .segmented__item {
   min-height: 1.9rem;
 }
+/* Touch: the full target (this rule is more specific than layout.css's `.segmented__item`). */
+@media (any-pointer: coarse) {
+  .mode-switch .segmented__item {
+    min-height: var(--target);
+  }
+}
 .params__more {
   display: inline-flex;
   align-items: center;
