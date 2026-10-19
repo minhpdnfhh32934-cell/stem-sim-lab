@@ -168,6 +168,25 @@ describe('"AI diễn giải" with the AI on this computer', () => {
     expect(cloudCalls).toHaveLength(0);
   });
 
+  it('a problem text with personal data (e.g. from an opened file) is never sent', async () => {
+    const user = userEvent.setup();
+    useAiStore.setState({ provider: 'gemini' });
+    useChatStore.setState({ engine: 'cloud', engineChosen: true });
+    render(
+      <ExplainBox
+        scene={scene}
+        solution={solution}
+        problemText="Thả vật từ 20 m. Số điện thoại của em là 0912345678."
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /AI diễn giải/ }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Đề bài có vẻ chứa thông tin cá nhân (số điện thoại) nên chưa được gửi cho AI.',
+    );
+    expect(local.chat).not.toHaveBeenCalled();
+    expect(cloudCalls).toHaveLength(0);
+  });
+
   it('chosen but no runtime picked: nothing is sent anywhere', async () => {
     const user = userEvent.setup();
     useLocalAiStore.setState({ selected: null });

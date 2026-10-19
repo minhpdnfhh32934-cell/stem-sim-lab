@@ -59,9 +59,14 @@ const BLOCK_INCIDENT: Record<Exclude<InputCheck, { ok: true }>['reason'], Incide
  * contain personal data, unsuitable content or signs of a crisis. Returns the error to show, or
  * null. A blocked problem is logged as kind + time only and is never sent.
  */
+export type SafetyBlockCode = Extract<
+  AnalyzeErrorCode,
+  'notAllowed' | 'personalData' | 'unsafe' | 'crisis'
+>;
+
 export async function safetyBlock(
   text: string,
-): Promise<{ code: AnalyzeErrorCode; detail: string } | null> {
+): Promise<{ code: SafetyBlockCode; detail: string } | null> {
   const status = await currentSafety().catch(() => null);
   if (!status?.aiAllowed) return { code: 'notAllowed', detail: '' };
   const check = checkInput(text);
