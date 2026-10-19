@@ -1,6 +1,7 @@
 import type { ComponentId } from '@/biology/division/mitosis3d/components';
 import { timelineFor } from '@/biology/division/mitosis3d/store';
 import type { Stage3D } from '@/biology/division/mitosis3d/timeline';
+import type { LocalizedText } from '@/core/data/dataset';
 import type { BiologyBinding } from '../scenario';
 import { ACTIVITY_KEY, withActions, withEngine, type StudioSession } from '../session';
 import { matchEvidence, stageEvidence } from './evidence';
@@ -18,7 +19,7 @@ export function withStageObservation(
   b: BiologyBinding,
   stage: Stage3D,
   now: number,
-  labelOf: (stage: Stage3D) => string,
+  labelOf: (stage: Stage3D) => LocalizedText,
 ): StudioSession {
   const tl = timelineFor(b.pairs, b.cellType);
   const answer = answerStage(tl, b.stageQuestion);

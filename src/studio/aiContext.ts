@@ -1,7 +1,14 @@
 import { translate, type Locale, type MessageKey, type MessageParams } from '@/app/i18n';
 import { fmtQty } from '@/physics/common/tex';
 import { scenarioSteps, type StudioScenario } from './scenario';
-import { engineEvidence, learnerText, type EvidenceRecord, type StudioSession } from './session';
+import {
+  computedLabel,
+  engineEvidence,
+  learnerText,
+  predictionLabel,
+  type EvidenceRecord,
+  type StudioSession,
+} from './session';
 import { unverifiedItems, unverifiedLabel } from './unverified';
 
 /**
@@ -97,7 +104,8 @@ export function buildStudioContext(
   }
   const v = session.verdict;
   if (v) {
-    if (v.correctLabel) engine.push(tr('studio.report.computed', { label: v.correctLabel }));
+    const computed = computedLabel(v, locale);
+    if (computed) engine.push(tr('studio.report.computed', { label: computed }));
     engine.push(
       v.match === null
         ? tr('studio.report.verdictNone')
@@ -110,7 +118,7 @@ export function buildStudioContext(
   const learner = [tr('studio.ai.learner')];
   learner.push(
     session.prediction
-      ? tr('studio.ai.prediction', { label: session.prediction.label })
+      ? tr('studio.ai.prediction', { label: predictionLabel(session.prediction, locale) })
       : tr('studio.ai.noPrediction'),
   );
   for (const role of ['explanation', 'conclusion', 'note'] as const) {

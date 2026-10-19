@@ -5,7 +5,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { fromSI, toSI } from '@/core/units';
 import { useProgressStore } from '@/learn/progressStore';
-import { choiceLabel } from '@/learn/poeLabels';
+import { choiceLabel, choiceText } from '@/learn/poeLabels';
 import { fmtQty } from '@/physics/common/tex';
 import type { ParamDef, PhysicsScene } from '@/physics/types';
 import { ScienceCard } from '@/science-card/ScienceCard';
@@ -87,7 +87,14 @@ export function Predict({ scenario, session, update }: StepProps) {
               disabled={locked}
               className={cx('studio-choice', checked && 'is-checked')}
               onClick={() => {
-                update((s) => withPrediction(s, { choice: String(i), label, at: Date.now() }));
+                update((s) =>
+                  withPrediction(s, {
+                    choice: String(i),
+                    label,
+                    text: choiceText(c),
+                    at: Date.now(),
+                  }),
+                );
               }}
             >
               {label}
@@ -168,7 +175,7 @@ export function Interact({ scenario, session, update }: StepProps) {
       }
       const labelOf = (i: number) => {
         const c = poe.choices[i];
-        return c ? choiceLabel(t, locale, c) : '';
+        return c ? choiceText(c) : null;
       };
       const verdict = verdictFor(r.cmp.outcome, session.prediction, labelOf);
       update((s) =>

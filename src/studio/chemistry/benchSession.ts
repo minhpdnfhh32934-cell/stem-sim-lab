@@ -1,3 +1,4 @@
+import type { LocalizedText } from '@/core/data/dataset';
 import type { ChemistryBinding } from '../scenario';
 import { withActions, withEngine, type StudioSession } from '../session';
 import { applyAction, nextLog, replayBench, type BenchAction } from './bench';
@@ -14,7 +15,7 @@ export function withBenchAction(
   b: ChemistryBinding,
   a: BenchAction,
   now: number,
-  labelOf: (c: ChemChoice) => string,
+  labelOf: (c: ChemChoice) => LocalizedText,
 ): StudioSession {
   const step = applyAction(replayBench(s.actions, b.inventory), a, b.inventory);
   if (!step.ok) return s;

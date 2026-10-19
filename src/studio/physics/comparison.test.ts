@@ -16,6 +16,7 @@ import {
 import { runEngine } from './engineRun';
 
 const rel = (a: number, b: number) => Math.abs(a - b) / Math.abs(b);
+const text = (i: number) => ({ vi: `#${String(i)}`, en: `#${String(i)}` });
 const poe = poeById('freeFall.h0');
 const pb = (() => {
   if (sc.binding.kind !== 'physics') throw new Error('physics scenario expected');
@@ -106,22 +107,22 @@ describe('physics studio adapter (freeFall)', () => {
     // h0 = 0 lands at t = 0: the ratio is undefined, so no choice can be marked right.
     if (r.ok) {
       expect(r.cmp.ratio).toBeNull();
-      expect(verdictFor(r.cmp.outcome, null, String).match).toBeNull();
+      expect(verdictFor(r.cmp.outcome, null, text).match).toBeNull();
     }
   });
 
   it('verdictFor compares the learner choice with the computed one', () => {
     const outcome = { before: 1, after: Math.SQRT2, correct: 1 };
     const p = { choice: '1', label: '√2', at: 1 };
-    expect(verdictFor(outcome, p, (i) => `#${String(i)}`)).toEqual({
+    expect(verdictFor(outcome, p, text)).toEqual({
       correct: '1',
-      correctLabel: '#1',
+      correctText: { vi: '#1', en: '#1' },
       match: true,
     });
-    expect(verdictFor(outcome, { ...p, choice: '3' }, String).match).toBe(false);
-    expect(verdictFor({ ...outcome, correct: -1 }, p, String)).toEqual({
+    expect(verdictFor(outcome, { ...p, choice: '3' }, text).match).toBe(false);
+    expect(verdictFor({ ...outcome, correct: -1 }, p, text)).toEqual({
       correct: null,
-      correctLabel: null,
+      correctText: null,
       match: null,
     });
   });

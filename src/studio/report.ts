@@ -9,8 +9,10 @@ import type { Source } from '@/core/data/dataset';
 import { fmtQty } from '@/physics/common/tex';
 import type { StudioScenario } from './scenario';
 import {
+  computedLabel,
   engineEvidence,
   learnerText,
+  predictionLabel,
   type EngineQuantity,
   type EvidenceRecord,
   type StudioSession,
@@ -77,7 +79,7 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
   blocks.push({
     kind: 'p',
     text: session.prediction
-      ? tr('studio.report.predicted', { label: session.prediction.label })
+      ? tr('studio.report.predicted', { label: predictionLabel(session.prediction, locale) })
       : tr('studio.report.noPrediction'),
   });
 
@@ -152,7 +154,8 @@ export function reportBlocks(input: ReportInput): ReportBlock[] {
   const v = session.verdict;
   if (v) {
     const items: string[] = [];
-    if (v.correctLabel) items.push(tr('studio.report.computed', { label: v.correctLabel }));
+    const computed = computedLabel(v, locale);
+    if (computed) items.push(tr('studio.report.computed', { label: computed }));
     items.push(
       v.match === null
         ? tr('studio.report.verdictNone')

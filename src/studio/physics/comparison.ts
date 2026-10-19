@@ -292,12 +292,12 @@ export function toEvidence(
 export function verdictFor(
   outcome: PoeOutcome | null,
   prediction: Prediction | null,
-  labelOf: (choice: number) => string,
+  labelOf: (choice: number) => LocalizedText | null,
 ): Verdict {
   const correct = outcome && outcome.correct >= 0 ? outcome.correct : null;
   return {
     correct: correct === null ? null : String(correct),
-    correctLabel: correct === null ? null : labelOf(correct),
+    correctText: correct === null ? null : labelOf(correct),
     match: correct === null || !prediction ? null : prediction.choice === String(correct),
   };
 }

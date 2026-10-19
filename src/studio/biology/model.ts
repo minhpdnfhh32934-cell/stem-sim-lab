@@ -10,6 +10,7 @@ import {
   type Stage3D,
   type Timeline,
 } from '@/biology/division/mitosis3d/timeline';
+import type { LocalizedText } from '@/core/data/dataset';
 import type { BiologyBinding, StudioScenario } from '../scenario';
 import type { Prediction, Verdict } from '../session';
 
@@ -80,11 +81,11 @@ export function answerStage(tl: Timeline, q: BiologyBinding['stageQuestion']): S
 export function bioVerdict(
   answer: Stage3D | null,
   prediction: Prediction | null,
-  labelOf: (stage: Stage3D) => string,
+  labelOf: (stage: Stage3D) => LocalizedText,
 ): Verdict {
   return {
     correct: answer,
-    correctLabel: answer ? labelOf(answer) : null,
+    correctText: answer ? labelOf(answer) : null,
     match: answer === null || !prediction ? null : prediction.choice === answer,
   };
 }

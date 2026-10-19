@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Locale } from '@/app/i18n';
 import { LocalizedTextSchema, ReviewStatusSchema } from '@/core/data/dataset';
 import {
   FLOW_STEPS,
@@ -100,8 +101,10 @@ export type LearnerRole = Extract<EvidenceRecord, { kind: 'learner' }>['role'];
 export const PredictionSchema = z.object({
   /** Subject-specific choice id. */
   choice: z.string().min(1),
-  /** The choice as the learner saw it. */
+  /** The choice as the learner saw it (in the language on screen then). */
   label: z.string().min(1),
+  /** The choice in both languages, shown in the language on screen now (absent before 0.7). */
+  text: LocalizedTextSchema.optional(),
   at: Finite,
 });
 export type Prediction = z.infer<typeof PredictionSchema>;
@@ -109,10 +112,23 @@ export type Prediction = z.infer<typeof PredictionSchema>;
 /** Prediction vs. the outcome the engine computed. `match` is null when no choice fits. */
 export const VerdictSchema = z.object({
   correct: z.string().nullable(),
-  correctLabel: z.string().nullable(),
+  /** The computed choice in both languages (null when no choice fits). */
+  correctText: LocalizedTextSchema.nullable().optional(),
+  /** Sessions saved before 0.7: the computed choice in the language on screen then. */
+  correctLabel: z.string().nullable().optional(),
   match: z.boolean().nullable(),
 });
 export type Verdict = z.infer<typeof VerdictSchema>;
+
+/** The learner's choice in the language on screen (older sessions: as it was stored). */
+export function predictionLabel(p: Prediction, locale: Locale): string {
+  return p.text?.[locale] ?? p.label;
+}
+
+/** The computed choice in the language on screen, or null when no choice fits. */
+export function computedLabel(v: Verdict, locale: Locale): string | null {
+  return v.correctText?.[locale] ?? v.correctLabel ?? null;
+}
 
 export const SessionSchema = z.object({
   scenarioId: z.string().min(1),

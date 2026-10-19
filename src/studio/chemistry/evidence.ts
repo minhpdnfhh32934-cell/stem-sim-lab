@@ -47,12 +47,12 @@ export function correctChoice(o: MixOutcome): ChemChoice | null {
 export function chemVerdict(
   o: MixOutcome,
   prediction: Prediction | null,
-  labelOf: (c: ChemChoice) => string,
+  labelOf: (c: ChemChoice) => LocalizedText,
 ): Verdict {
   const correct = correctChoice(o);
   return {
     correct,
-    correctLabel: correct ? labelOf(correct) : null,
+    correctText: correct ? labelOf(correct) : null,
     match: correct === null || !prediction ? null : prediction.choice === correct,
   };
 }
