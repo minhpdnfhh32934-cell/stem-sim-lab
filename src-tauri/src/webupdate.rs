@@ -185,7 +185,13 @@ pub fn unpack(zip_bytes: &[u8], dir: &Path) -> Result<(), String> {
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).map_err(|e| e.to_string())?;
         // zip 9: `name()` can fail on a badly encoded name; the raw bytes are only shown here.
-        let Some(rel) = file.enclosed_name() else {
+        // zip 9's `enclosed_name` turns "/x" or "C:\x" into "x"; such a name is refused instead,
+        // since the release script never writes one.
+        let raw = file.name_raw();
+        let absolute = matches!(raw.first(), Some(b'/' | b'\\'))
+            || (raw.len() >= 2 && raw[0].is_ascii_alphabetic() && raw[1] == b':');
+        let rel = if absolute { None } else { file.enclosed_name() };
+        let Some(rel) = rel else {
             let name = String::from_utf8_lossy(file.name_raw());
             return Err(format!("đường dẫn không an toàn: {name}"));
         };
@@ -775,6 +781,14 @@ mod tests {
         let evil = zip_of(&[("../evil.txt", b"x")]);
         assert!(unpack(&evil, &tmp.join("bad")).is_err());
         assert!(!tmp.join("evil.txt").exists());
+
+        // Absolute and drive-prefixed names are refused, not rewritten into the folder.
+        for name in ["/abs.txt", "\\abs.txt", "C:/abs.txt", "C:\\abs.txt"] {
+            let dir = tmp.join("abs");
+            let absolute = zip_of(&[(name, b"x")]);
+            assert!(unpack(&absolute, &dir).is_err(), "{name} must be refused");
+            assert!(!dir.join("abs.txt").exists(), "{name} must write nothing");
+        }
         let _ = std::fs::remove_dir_all(&tmp);
     }
 
