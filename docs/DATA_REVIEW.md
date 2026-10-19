@@ -242,3 +242,25 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     học: "có kết tủa"; Sinh học: kì mà tâm động nằm trên mặt phẳng xích đạo) — trình soạn ghi rõ đáp
     án được tính thế nào. Nhờ giáo viên kiểm tra các câu giải thích này và từng kịch bản trước khi
     dùng với học sinh.
+24. **Vật lí: miền áp dụng mới và lời giải thích khi sửa lỗi (19/10/2026, bản 0.7).** Các câu dưới
+    đây là lời văn mới trong cảnh Vật lí; số liệu vẫn do mô hình tính, không có số viết tay.
+    `review_status: "pending"`. Nhờ giáo viên kiểm tra lời văn và điều kiện:
+    - Con lắc đơn (`src/physics/pendulum/scenes.ts`, `stringStaysTaut`): bị từ chối khi dây sẽ chùng.
+      Lực căng T(α) = m g (3 cos α − 2c), với c = cos α_bđ − l ω_bđ²/(2g); dao động giữ dây căng khi
+      biên độ ≤ 90° (c ≥ 0), quay vòng giữ dây căng khi v² > g·l ở điểm cao nhất (c < −1,5). Có lực
+      cản thì mọi trạng thái đầu trên mức 90° bị từ chối (con lắc chậm dần nên đi qua vùng dây chùng).
+    - Lò xo có lực cản (`src/physics/spring/scenes.ts`): tắt dần nhẹ → "Chu kì dao động tắt dần
+      T_d = 2π/ω_d" và "Tần số dao động tắt dần f_d"; tới hạn và quá tới hạn không còn chu kì, tần
+      số; ω₀ ghi là "Tần số góc riêng". SGK THPT không định nghĩa T_d (giả chu kì) — xin xác nhận
+      cách gọi. Nguồn: Halliday–Resnick–Walker ch. 15.
+    - Mặt phẳng nghiêng / định luật Newton (`src/physics/incline/scenes.ts`): vật bắt đầu ngay ở mép
+      (chân dốc, đỉnh dốc hoặc đầu đường) và chuyển động ra ngoài thì bị từ chối (rời mặt đỡ ngay
+      tại t = 0).
+    - Ném xiên, rơi tự do (`src/physics/projectile/scenes.ts`): xuất phát từ mặt đất (h₀ = 0) mà
+      không có vận tốc hướng lên thì bị từ chối (chạm đất ngay).
+    - Máy Atwood hai vật bằng nhau (`src/physics/pulley/scenes.ts`): "hệ cân bằng, thả từ trạng thái
+      nghỉ thì không dịch chuyển"; chỉ báo a = 0 và T = m₂g.
+    - Hai ngọn đồi (`src/physics/track/scenes.ts`, `barrierAhead`): kết luận "vượt qua đồi thứ hai"
+      so mức cơ năng với điểm cao nhất vật phải vượt qua theo chiều chuyển động (tìm số trên lưới
+      mịn rồi tinh chỉnh), thêm hai trường hợp "trượt ra khỏi đầu trái" và "không còn đồi nào phía
+      bên phải".
