@@ -17,7 +17,9 @@ const EDGE = 6;
 /**
  * One global tooltip for every element with a `data-tip` attribute.
  * Rendered with `position: fixed` so it is never clipped by scrolling panels,
- * and shown on keyboard focus as well as hover.
+ * and shown on keyboard focus as well as hover. It is a manual popover, so it joins the top
+ * layer above an open modal dialog (Settings, Update, the command palette…), whose icon-only
+ * buttons have no other visible name; without popover support it stays a plain fixed layer.
  */
 export function TooltipLayer() {
   const [tip, setTip] = useState<TipState | null>(null);
@@ -28,6 +30,13 @@ export function TooltipLayer() {
   useLayoutEffect(() => {
     const el = bubble.current;
     if (!el) return;
+    if (typeof el.showPopover === 'function' && !el.matches(':popover-open')) {
+      try {
+        el.showPopover();
+      } catch {
+        // Not connected or already shown: the fixed layer still draws it.
+      }
+    }
     el.style.translate = '0 0';
     const r = el.getBoundingClientRect();
     const dx =
@@ -103,6 +112,7 @@ export function TooltipLayer() {
     <div
       ref={bubble}
       className={`tooltip tooltip--${tip.side}`}
+      popover="manual"
       role="tooltip"
       style={{ left: tip.x, top: tip.y }}
     >

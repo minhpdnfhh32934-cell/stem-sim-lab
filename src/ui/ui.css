@@ -511,6 +511,12 @@ select:disabled {
 .tooltip {
   position: fixed;
   z-index: 1000;
+  /* Undo the popover UA box (inset: 0, margin: auto, border, overflow) */
+  inset: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  overflow: visible;
   width: max-content;
   max-width: 18rem;
   padding: 5px 9px;
