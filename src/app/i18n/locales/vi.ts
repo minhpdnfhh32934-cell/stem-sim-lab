@@ -914,6 +914,8 @@ const vi = {
     needVision:
       'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
+    outputUnsafe:
+      'Chữ đọc được từ ảnh có nội dung không phù hợp nên mình không đưa vào ô đề bài. Hãy chụp một đề bài khác.',
     badKey: 'Khóa API bị từ chối (sai khóa hoặc hết quyền). Kiểm tra lại khóa trong Cài đặt.',
     badModel: 'Tên model API không đúng. Kiểm tra lại ô Mô hình trong Cài đặt.',
     localNoVision:

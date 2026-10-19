@@ -184,6 +184,7 @@ function ProblemBox() {
   const canAnalyze =
     (ai.provider !== 'off' || onDevice) && !running && problemText.trim().length > 0;
   const {
+    cameraAllowed,
     cameraOpen,
     cameraBusy,
     cameraError,
@@ -241,17 +242,20 @@ function ProblemBox() {
           <PencilRuler size={16} strokeWidth={1.75} aria-hidden="true" />
           {t('home.manual')}
         </button>
-        <button
-          type="button"
-          className="btn"
-          aria-label={t('home.cameraButton')}
-          title={t('home.cameraButton')}
-          disabled={running || cameraBusy}
-          onClick={openCamera}
-        >
-          <Camera size={16} strokeWidth={1.75} aria-hidden="true" />
-          {t('home.cameraButton')}
-        </button>
+        {/* Reading a photo is an AI call: hidden while the safety gates are closed. */}
+        {cameraAllowed && (
+          <button
+            type="button"
+            className="btn"
+            aria-label={t('home.cameraButton')}
+            title={t('home.cameraButton')}
+            disabled={running || cameraBusy}
+            onClick={openCamera}
+          >
+            <Camera size={16} strokeWidth={1.75} aria-hidden="true" />
+            {t('home.cameraButton')}
+          </button>
+        )}
       </div>
       {cameraOpen && (
         <CameraDialog

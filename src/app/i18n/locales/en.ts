@@ -914,6 +914,8 @@ const en: Messages = {
     needVision:
       'Could not read the photo: need a cloud API (Gemini/Groq with a key) or a ready Gemma model.',
     readFailed: 'Could not read the problem in the photo. Please retake it more clearly.',
+    outputUnsafe:
+      'The text read from the photo has unsuitable content, so it was not put in the problem box. Please photograph another problem.',
     badKey: 'The API key was refused (wrong key or no permission). Check it in Settings.',
     badModel: 'The API model name is wrong. Check the Model field in Settings.',
     localNoVision:
