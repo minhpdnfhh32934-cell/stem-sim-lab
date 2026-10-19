@@ -419,6 +419,23 @@ Progress log: `docs/PROGRESS.md`.
   smooth camera moves, double-click focus, arrow-key orbit). The division store records which
   division `index` belongs to (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d`
   Playwright project (software WebGL starves parallel specs).
+- Shared division 3D pieces (`src/biology/division/division3d/`, used by mitosis and meiosis):
+  `clock.ts` (stage windows, `stageAt`, `keyTime`), `math.ts`, `types.ts` (ChromatidPose, Fibre,
+  NucleusState, Counts3D), `plate.ts`, `counts.ts` (counts from the model + telophase convention),
+  `dimensions.ts`, `chromatidShape.ts`, `sceneParts.ts`, and three.js pieces `membraneMesh.ts`
+  (two-sphere profile), `centrosomeMesh.ts`, `spindleMesh.ts`, `nucleusMesh.ts`. The mitosis3d
+  files re-export the moved names.
+- Meiosis 3D (`src/biology/division/meiosis3d/`, animal germ cell): `timeline.ts` (12 steps:
+  G1, G2, I: pro/meta/ana/telo/cytokinesis, II: the same; counts from
+  `runDivision('meiosis', pairs, meiosisOptions(pairs, crossover, seed))` — `meiosisOptions.ts` is
+  shared with the 2D `useStages`, so both show the same run; chromatids painted from the model's
+  DNA pieces, crossing over in prophase I, chiasma at the model's point, metaphase I sides =
+  `orientation`; meiosis II spindles along y in each cell's own frame), `scene.ts`, `camera.ts`
+  (overview per division, one smooth move into meiosis II), `components.ts` (texts, card,
+  `drillSelection`: a second click on a bivalent / homologue lists one chromatid's pieces),
+  `facts.ts`, `store.ts` (`useMeiosis3D`, own 3D ↔ 2D index map), `Meiosis3DView`,
+  `Meiosis3DSwitch`, `panels.tsx`. Saved: `meiosisView3d` (division store, meiosis binding).
+  Basic hides speed and camera mode. E2E `tests/e2e/meiosis3d.spec.ts` (3D project).
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -428,8 +445,8 @@ Progress log: `docs/PROGRESS.md`.
   `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
-- Biology 3D kit (`src/biology/view3d/`): every other lesson has a 3D view too (3D by default, the
-  learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
+- Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis or meiosis) has a 3D
+  view too (3D by default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
   labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
   layout) / `Bio3DFigureBody` (figure above a page of tables: Mendel, Hardy–Weinberg, dogma,
