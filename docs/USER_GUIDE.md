@@ -165,6 +165,28 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   liệt kê theo cài đặt hiện tại những gì lưu trên máy và những gì có thể gửi đi. Xem thêm
   `docs/AI_TUTOR.md`.
 
+### AI trên máy khác (Ollama, LM Studio, llama.cpp)
+
+Nếu em đã tự cài một chương trình AI trên máy (Ollama, LM Studio, `llama-server` của llama.cpp, hoặc
+máy chủ khác kiểu OpenAI), SimLab có thể dùng nó thay cho API. SimLab **không cài, không mở và không
+tải mô hình** cho chương trình đó: em mở chương trình và tải mô hình trước (với LM Studio, bật chế độ
+máy chủ của nó).
+
+1. Vào Cài đặt → **AI trên máy khác (Ollama, LM Studio, llama.cpp)**, bấm **Tìm trên máy này**. App
+   chỉ hỏi ba địa chỉ quen thuộc trên máy (cổng 11434, 1234, 8080) và các địa chỉ em tự thêm ở
+   **Thêm địa chỉ** (chỉ nhận `127.0.0.1`, `localhost` hoặc `[::1]` có số cổng). Không đọc tệp, không
+   quét ổ đĩa.
+2. App liệt kê các mô hình **chương trình đó báo có**. Bấm **Kiểm tra kết nối**, rồi **Kiểm tra trả
+   lời** để thử một câu ngắn; khả năng chương trình không cho biết thì ghi **Chưa xác minh**.
+3. Bấm **Dùng cho AI Teacher**, rồi ở AI Teacher chọn **AI trên máy khác** trong ô chọn mô hình.
+   "Phân tích đề", "AI diễn giải" và đọc ảnh chụp đề cũng dùng lựa chọn này.
+
+Câu hỏi chỉ đi tới chương trình đó trên máy em. Khi nó lỗi hoặc tắt, app nói rõ và **không tự gửi câu
+hỏi lên mạng**; chỉ khi em bật Think thì bản nháp mới được gửi tới API để rà soát. Mô hình "cloud" của
+Ollama (chạy trên ollama.com) bị từ chối. Ảnh chỉ gửi cho mô hình đã thử đọc được ảnh trên máy này.
+SimLab không chọn được card đồ họa cho chương trình đó (chỉnh trong chính chương trình). Có nút
+**Khôi phục mặc định** và mục **Gặp lỗi? Cách xử lý**.
+
 ### Giảng trên bảng
 
 Ở trang AI Teacher, chọn **Giảng trên bảng** (góc trên bên phải). Mỗi câu trả lời được giảng trên bảng
@@ -188,6 +210,25 @@ vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì. Bảng có nh
 - Khi bật giọng: thầy đọc cả nội dung đang viết đúng lúc viết (công thức đọc thành lời, ví dụ "2n"
   là "hai nờ"); bấm **Tạm dừng** giữa câu rồi **Tiếp tục** thì thầy đọc lại câu đó; tốc độ 0,75–2× của
   bảng áp cho cả giọng.
+- **Phóng to bảng / Thu nhỏ bảng** (1×, 1,25×, 1,5×, 2×) và **Vừa khung** (thấy hết bề ngang). Phóng
+  to chỉ làm bảng to ra để dễ đọc; chữ đã viết không đổi chỗ. Khi em chuyển sang xem bảng khác, bài
+  giảng tạm dừng và bút không viết sang bảng đó; quay lại thì phần đã viết vẫn còn.
+
+### Khoanh để hỏi
+
+Trên thanh công cụ của bảng, bật **Khoanh để hỏi** rồi khoanh, gạch chân hoặc chạm vào chỗ em muốn hỏi.
+Thanh **Chỗ em khoanh trên bảng** hiện "Em khoanh: …" — đúng chữ, công thức, nhãn hình đang có trên
+bảng (app tự đọc, không nhờ AI đoán). Bấm **Hỏi thầy chỗ này** (hoặc **Khoanh lại**, **Bỏ chọn**).
+
+- Khoanh trúng nhiều chỗ: app hỏi em muốn hỏi **Cả phần này** hay một chỗ. Không trúng chữ hay hình
+  nào: app nói rõ và không gửi gì.
+- Câu trả lời hiện trong khung chat (thầy đọc to nếu bật giọng), không viết đè lên bài; bài giảng tạm
+  dừng đến khi em bấm **Quay lại bài giảng**.
+- Chữ và công thức em khoanh được gửi kèm câu hỏi tới AI em đang chọn (và AI rà soát khi bật Think);
+  không bao giờ gửi tới Wikipedia.
+- Khoanh vào hình không có chữ hoặc nét viết tay của em: app chỉ gửi **ảnh vùng khoanh** cho AI đọc
+  được ảnh chạy trên máy (Gemma E2B trên card rời, hoặc mô hình của AI trên máy khác đã thử đọc được
+  ảnh), không bao giờ lên mạng. AI khác thì app nhờ em gõ câu hỏi.
 
 ### Trình độ: Nền tảng và Đại cương
 
