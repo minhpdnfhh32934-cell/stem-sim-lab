@@ -3,7 +3,7 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { arrow, circle, ground, line, polygon, polyline, text, vectorScale } from '../render/draw';
-import { L, gravityParam, massParam, pointMassGraphs } from '../common/scene-helpers';
+import { L, liveGravityParam, massParam, pointMassGraphs } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
@@ -385,7 +385,7 @@ export const obliqueProjectile: PhysicsScene = {
     },
     h0Param(),
     massParam(),
-    gravityParam,
+    liveGravityParam,
   ],
   defaults: { v0: 15, angle: Math.PI / 4, h0: 0, m: 0.5, g: 9.81 },
   scienceCard: (p) => card(p, L('Ném xiên', 'Oblique projectile')),
@@ -397,7 +397,7 @@ export const horizontalProjectile: PhysicsScene = {
   id: 'horizontalProjectile',
   required: ['v0', 'h0'],
   title: L('Ném ngang', 'Horizontal projectile'),
-  params: [v0Param(), h0Param(), massParam(), gravityParam],
+  params: [v0Param(), h0Param(), massParam(), liveGravityParam],
   defaults: { v0: 10, h0: 45, m: 0.5, g: 9.81 },
   engineParams: (p) => ({ ...p, angle: 0 }),
   validate: (p) =>
@@ -433,7 +433,7 @@ export const freeFall: PhysicsScene = {
       step: 0.1,
     },
     massParam(),
-    gravityParam,
+    liveGravityParam,
   ],
   defaults: { h0: 45, v0: 0, m: 1, g: 9.81 },
   engineParams: freeFallLaunch,

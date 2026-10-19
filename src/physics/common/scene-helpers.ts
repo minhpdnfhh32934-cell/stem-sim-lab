@@ -4,7 +4,10 @@ import type { GraphDef, ParamDef } from '../types';
 
 export const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 
-/** Gravity parameter shared by every scene that uses g (default comes from Settings). */
+/**
+ * Gravity parameter shared by every scene that uses g (default comes from Settings).
+ * Changing it restarts the run: most engines cannot apply a new g mid-run.
+ */
 export const gravityParam: ParamDef = {
   key: 'g',
   label: L('Gia tốc trọng trường', 'Gravitational acceleration'),
@@ -15,8 +18,13 @@ export const gravityParam: ParamDef = {
   min: 1,
   max: 25,
   step: 0.01,
-  live: true,
 };
+
+/**
+ * Gravity that can be changed while the simulation runs. Only for scenes whose engine
+ * applies `setParam('g')` (and reports it as an intervention): the projectile engine.
+ */
+export const liveGravityParam: ParamDef = { ...gravityParam, live: true };
 
 export const massParam = (key = 'm', max = 20, symbol = 'm'): ParamDef => ({
   key,
