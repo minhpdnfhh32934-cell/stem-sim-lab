@@ -93,6 +93,10 @@ const OSMOSIS_CARD: ScienceCardData = {
       'Tốc độ dâng (hệ số thấm Lp) chỉ để minh họa; độ cao cân bằng không phụ thuộc Lp.',
       'The rise speed (permeance Lp) is illustrative; the equilibrium height does not depend on Lp.',
     ),
+    L(
+      'Nhánh nước có hạn: nếu nhánh nước cạn (h_R = 0) khi ρgΔh vẫn nhỏ hơn Π thì mô hình dừng ở đó — ống này không đạt cân bằng (cần h₀ ≥ iC₀RT/(4ρg)).',
+      'The water arm is finite: if it runs dry (h_R = 0) while ρgΔh is still below Π, the model stops there — this tube never reaches equilibrium (that needs h₀ ≥ iC₀RT/(4ρg)).',
+    ),
   ],
   validity: L(
     'Nồng độ nhỏ (khoảng dưới 0,1 mol/L); dung dịch điện li đặc cần hệ số thẩm thấu thực nghiệm.',
@@ -247,7 +251,8 @@ function OsmosisCanvas() {
       const tSim = Math.min(tEnd, (time * tEnd) / 8);
       const idx = Math.min(traj.t.length - 1, Math.floor((tSim / tEnd) * (traj.t.length - 1)));
       const hL = traj.hL[idx] ?? p.h0;
-      const hR = 2 * p.h0 - hL;
+      // The model never lets the water arm go below empty (osmosisTrajectory stops there).
+      const hR = Math.max(0, 2 * p.h0 - hL);
       const hMax = Math.max(eq.hL, p.h0) * 1.25;
       const armW = Math.min(90, width / 8);
       const bottomH = armW * 0.8;
@@ -363,10 +368,23 @@ export function DiffusionOsmosisStage() {
         {st.mode === 'osmosis' && (
           <>
             <span className="chem-chip">Π₀ = iC₀RT = {fmt(pi0 / 1000)} kPa</span>
-            <span className="chem-chip">
-              {Lz(L('Cân bằng', 'Equilibrium'))}: Δh = {fmt(eq.dh * 100)} cm · Π ={' '}
-              {fmt(eq.pi / 1000)} kPa
-            </span>
+            {eq.dry ? (
+              <span className="chem-chip chem-chip--approx" role="status">
+                {Lz(
+                  L(
+                    'Nhánh nước cạn trước khi Π được cân bằng',
+                    'The water arm runs dry before Π is balanced',
+                  ),
+                )}
+                : Δh = {fmt(eq.dh * 100)} cm · ρgΔh = {fmt((RHO * C.gn * eq.dh) / 1000)} kPa &lt; Π
+                = {fmt(eq.pi / 1000)} kPa
+              </span>
+            ) : (
+              <span className="chem-chip">
+                {Lz(L('Cân bằng', 'Equilibrium'))}: Δh = {fmt(eq.dh * 100)} cm · Π ={' '}
+                {fmt(eq.pi / 1000)} kPa
+              </span>
+            )}
           </>
         )}
       </div>
@@ -555,6 +573,9 @@ export function DiffusionOsmosisBottom() {
       </div>
     );
   const dh = osm.traj.hL.map((h) => (2 * h - 2 * osm.p.h0) * 100);
+  const finalLabel = osm.eq.dry
+    ? L('Δh khi nhánh nước cạn (chưa cân bằng)', 'Δh when the water arm is empty (not balanced)')
+    : L('Δh cân bằng', 'Equilibrium Δh');
   return (
     <div className="gas-bottom gas-bottom--single">
       <XYChart
@@ -562,7 +583,7 @@ export function DiffusionOsmosisBottom() {
         series={[
           { label: 'Δh(t)', y: dh },
           {
-            label: Lz(L('Δh cân bằng', 'Equilibrium Δh')),
+            label: Lz(finalLabel),
             y: osm.traj.t.map(() => osm.eq.dh * 100),
             dash: true,
             color: 2,

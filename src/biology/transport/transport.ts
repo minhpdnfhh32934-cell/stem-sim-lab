@@ -41,26 +41,43 @@ export interface OsmosisParams {
  * bottom. Water flows while the osmotic pressure Π = i·c·R·T (van 't Hoff, dilute solution)
  * exceeds the hydrostatic pressure ρ·g·Δh:
  *   dh_L/dt = L_p (Π − ρ g (h_L − h_R)),  h_L + h_R = 2h₀,  c = c₀h₀/h_L.
+ * The water arm is finite: once it is empty (h_R = 0) no more water can flow into the solution
+ * arm, so the model stops there ("dry") instead of letting h_R go negative.
  */
 export function osmosisRate(p: OsmosisParams, hL: number): number {
   const hR = 2 * p.h0 - hL;
   const pi = p.i * ((p.c0 * p.h0) / hL) * C.R * p.T;
-  return p.lp * (pi - p.rho * p.g * (hL - hR));
+  const rate = p.lp * (pi - p.rho * p.g * (hL - hR));
+  return hR <= 0 && rate > 0 ? 0 : rate;
 }
 
-/** Exact equilibrium height of the solution arm (root of the quadratic). */
+/**
+ * True when the water arm runs dry before ρgΔh reaches Π, i.e. the balance root lies beyond
+ * h_L = 2h₀. With f(h) = 2ρg h² − 2ρg h₀ h − i c₀ h₀ R T, f(2h₀) < 0 ⇔ 4ρg h₀ < i c₀ R T.
+ */
+export function osmosisRunsDry(p: OsmosisParams): boolean {
+  return 4 * p.rho * p.g * p.h0 < p.i * p.c0 * C.R * p.T;
+}
+
+/**
+ * Final state of the U-tube. Normally the exact equilibrium (root of the quadratic,
+ * ρgΔh = Π). When the water arm runs dry first (`dry`), the final state is h_R = 0,
+ * Δh = 2h₀, and Π there is still larger than ρgΔh — there is no equilibrium in this tube.
+ */
 export function osmosisEquilibrium(p: OsmosisParams): {
   hL: number;
   hR: number;
   dh: number;
   pi: number;
+  dry: boolean;
 } {
   const a = 2 * p.rho * p.g;
   const b = -2 * p.rho * p.g * p.h0;
   const c = -p.i * p.c0 * p.h0 * C.R * p.T;
-  const hL = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
-  const hR = 2 * p.h0 - hL;
-  return { hL, hR, dh: hL - hR, pi: p.i * ((p.c0 * p.h0) / hL) * C.R * p.T };
+  const dry = osmosisRunsDry(p);
+  const hL = dry ? 2 * p.h0 : (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
+  const hR = dry ? 0 : 2 * p.h0 - hL;
+  return { hL, hR, dh: hL - hR, pi: p.i * ((p.c0 * p.h0) / hL) * C.R * p.T, dry };
 }
 
 export function osmosisTrajectory(
@@ -68,25 +85,39 @@ export function osmosisTrajectory(
   tEnd: number,
   samples: number,
 ): { t: number[]; hL: number[] } {
+  const full = 2 * p.h0;
   const t: number[] = [0];
   const h: number[] = [p.h0];
   let y = Float64Array.from([p.h0]);
+  let dry = false;
   for (let k = 1; k <= samples; k++) {
     const t0 = ((k - 1) * tEnd) / samples;
     const t1 = (k * tEnd) / samples;
-    y = Float64Array.from(
-      dopri5(
+    if (!dry) {
+      const r = dopri5(
         (_t, s, d) => {
           d[0] = osmosisRate(p, s[0] ?? p.h0);
         },
         y,
         t0,
         t1,
-        { rtol: 1e-10, atol: 1e-13 },
-      ).y,
-    );
+        {
+          rtol: 1e-10,
+          atol: 1e-13,
+          // Stop exactly when the water arm is empty (h_R = 2h₀ − h_L reaches 0).
+          events: [
+            { id: 'dry', g: (_t, s) => full - (s[0] ?? p.h0), direction: -1, terminal: true },
+          ],
+        },
+      );
+      y = Float64Array.from(r.y);
+      if (r.stoppedBy === 'dry') {
+        dry = true;
+        y[0] = full;
+      }
+    }
     t.push(t1);
-    h.push(y[0] ?? p.h0);
+    h.push(Math.min(full, y[0] ?? p.h0));
   }
   return { t, hL: h };
 }

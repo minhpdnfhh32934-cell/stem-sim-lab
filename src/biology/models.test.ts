@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { dopri5 } from '@/core/ode';
-import { logistic, lotkaVolterra, lvEquilibrium, lvInvariant } from './ecology/ecology';
+import {
+  LV_DRIFT_WARN,
+  logistic,
+  logisticInflection,
+  lotkaVolterra,
+  lvDrift,
+  lvEquilibrium,
+  lvInvariant,
+} from './ecology/ecology';
 import {
   apparent,
   lambertW,
@@ -60,6 +68,33 @@ describe('ecology', () => {
   });
 });
 
+describe('ecology at the edges of the sliders', () => {
+  it.each([
+    [{ alpha: 3, beta: 0.01, delta: 0.3, gamma: 0.1 }, 100, 1, 100],
+    [{ alpha: 3, beta: 0.01, delta: 0.3, gamma: 0.1 }, 100, 1, 30],
+    [{ alpha: 3, beta: 0.5, delta: 0.3, gamma: 0.1 }, 100, 50, 100],
+  ] as const)(
+    'Lotka–Volterra keeps V conserved when a population collapses (%j)',
+    (p, x0, y0, tEnd) => {
+      const traj = lotkaVolterra(p, x0, y0, tEnd, 800);
+      // The prey drops below 1e-130 here; its relative accuracy must survive.
+      expect(Math.min(...traj.x)).toBeLessThan(1e-100);
+      expect(Math.min(...traj.x)).toBeGreaterThan(0);
+      expect(lvDrift(p, traj)).toBeLessThan(1e-7);
+      expect(lvDrift(p, traj)).toBeLessThan(LV_DRIFT_WARN);
+    },
+  );
+
+  it('logistic: no inflection for t ≥ 0 when N₀ ≥ K/2', () => {
+    expect(logisticInflection(800, 0.5, 1000)).toBeNaN();
+    expect(logisticInflection(500, 0.5, 1000)).toBeNaN();
+    expect(logisticInflection(1200, 0.5, 1000)).toBeNaN();
+    const t = logisticInflection(100, 0.5, 1000);
+    expect(t).toBeGreaterThan(0);
+    expect(logistic(100, 0.5, 1000, t)).toBeCloseTo(500, 9);
+  });
+});
+
 describe('enzyme kinetics', () => {
   const base: EnzymeParams = { vmax: 10, km: 2, inhibitor: 0, ki: 1, kind: 'none' };
   it('v = Vmax/2 at [S] = Km', () => {
@@ -101,6 +136,42 @@ describe('diffusion and osmosis', () => {
     expect(traj.hL.at(-1)).toBeCloseTo(eq.hL, 6);
     // Water always moves INTO the solution arm.
     expect(eq.hL).toBeGreaterThan(p.h0);
+    expect(eq.dry).toBe(false);
+  });
+
+  it.each([
+    { c0: 1, i: 1, T: 298.15, h0: 0.05 },
+    { c0: 5, i: 3, T: 313.15, h0: 0.5 },
+    { c0: 5, i: 1, T: 298.15, h0: 0.2 },
+  ])(
+    'osmosis: the finite water arm runs dry (c0=$c0, i=$i, h0=$h0) — never a negative column',
+    ({ c0, i, T, h0 }) => {
+      const p: OsmosisParams = { c0, i, T, h0, rho: 1000, g: 9.80665, lp: 5e-6 };
+      const eq = osmosisEquilibrium(p);
+      expect(eq.dry).toBe(true);
+      expect(eq.hR).toBe(0);
+      expect(eq.hL).toBeCloseTo(2 * h0, 12);
+      // Δh can never exceed all the water that was in the right arm.
+      expect(eq.dh).toBeLessThanOrEqual(2 * h0 + 1e-12);
+      // Not balanced: Π is still larger than ρgΔh when the arm is empty.
+      expect(eq.pi).toBeGreaterThan(p.rho * p.g * eq.dh);
+      // No flow out of an empty arm.
+      expect(osmosisRate(p, 2 * h0)).toBe(0);
+      const k = p.lp * (2 * p.rho * p.g + (i * c0 * 8.314462618 * T) / h0);
+      const traj = osmosisTrajectory(p, 6 / k, 120);
+      for (const hL of traj.hL) {
+        expect(hL).toBeLessThanOrEqual(2 * h0);
+      }
+      expect(traj.hL.at(-1)).toBeCloseTo(2 * h0, 9);
+    },
+  );
+
+  it('osmosis: the default U-tube does not run dry', () => {
+    const p: OsmosisParams = { c0: 1, i: 1, T: 298.15, h0: 0.2, rho: 1000, g: 9.80665, lp: 5e-6 };
+    const eq = osmosisEquilibrium(p);
+    expect(eq.dry).toBe(false);
+    expect(eq.hR).toBeGreaterThan(0);
+    expect(p.rho * p.g * eq.dh).toBeCloseTo(eq.pi, 6);
   });
 
   it('Brownian motion: mean squared displacement = 4Dt in 2D', () => {

@@ -6,7 +6,15 @@ import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
 import { niceStep, useFmt } from '../fmt';
 import { Range } from '../ui';
-import { exponential, logistic, lotkaVolterra, lvEquilibrium, lvInvariant } from './ecology';
+import {
+  LV_DRIFT_WARN,
+  exponential,
+  logisticInflection,
+  logistic,
+  lotkaVolterra,
+  lvDrift,
+  lvEquilibrium,
+} from './ecology';
 import { useLogistic, useLv, type LogisticState, type LvState } from './store';
 import '../bio.css';
 
@@ -55,7 +63,7 @@ function useLogisticData() {
       const v = exponential(st.N0, st.r, x);
       return v > 1.3 * st.K ? null : v;
     });
-    const tStar = st.N0 < st.K ? Math.log(st.K / st.N0 - 1) / st.r : NaN;
+    const tStar = logisticInflection(st.N0, st.r, st.K);
     return { t, logi, expo, tStar };
   }, [st.N0, st.r, st.K, st.tEnd]);
 }
@@ -76,7 +84,12 @@ export function LogisticStage() {
           {Lz(L('Điểm uốn (N = K/2) tại t* = ', 'Inflection (N = K/2) at t* = '))}
           {Number.isFinite(d.tStar)
             ? fmt(d.tStar)
-            : Lz(L('— (N₀ ≥ K, không có điểm uốn)', '— (N₀ ≥ K, no inflection)'))}
+            : Lz(
+                L(
+                  '— (N₀ ≥ K/2, không có điểm uốn khi t ≥ 0)',
+                  '— (N₀ ≥ K/2, no inflection for t ≥ 0)',
+                ),
+              )}
         </span>
         <span className="chem-chip">
           {Lz(L('Tốc độ tăng lớn nhất rK/4 = ', 'Maximum growth rate rK/4 = '))}
@@ -201,8 +214,8 @@ export function LogisticBottom() {
 const LV_CARD: ScienceCardData = {
   title: L('Con mồi – vật ăn thịt (Lotka–Volterra)', 'Predator–prey (Lotka–Volterra)'),
   model: L(
-    'Mô hình Lotka–Volterra: con mồi x sinh sản theo hàm mũ và bị ăn tỉ lệ với số lần gặp xy; vật ăn thịt y tăng nhờ ăn mồi và chết với tốc độ không đổi. Hệ được giải số bằng DOPRI5 (sai số tương đối 10⁻¹⁰); đại lượng bảo toàn V được theo dõi để kiểm tra độ chính xác.',
-    'Lotka–Volterra model: prey x grows exponentially and is eaten in proportion to encounters xy; predators y grow by eating prey and die at a constant rate. Integrated with DOPRI5 (relative tolerance 10⁻¹⁰); the conserved quantity V is monitored to check accuracy.',
+    'Mô hình Lotka–Volterra: con mồi x sinh sản theo hàm mũ và bị ăn tỉ lệ với số lần gặp xy; vật ăn thịt y tăng nhờ ăn mồi và chết với tốc độ không đổi. Hệ được giải số bằng DOPRI5 theo biến ln x, ln y (sai số tương đối 10⁻¹⁰, quần thể luôn dương); đại lượng bảo toàn V được theo dõi để kiểm tra độ chính xác.',
+    'Lotka–Volterra model: prey x grows exponentially and is eaten in proportion to encounters xy; predators y grow by eating prey and die at a constant rate. Integrated with DOPRI5 in the variables ln x, ln y (relative tolerance 10⁻¹⁰, populations stay positive); the conserved quantity V is monitored to check accuracy.',
   ),
   equations: [
     {
@@ -245,13 +258,7 @@ function useLvData() {
   return useMemo(() => {
     const p = { alpha: st.alpha, beta: st.beta, delta: st.delta, gamma: st.gamma };
     const traj = lotkaVolterra(p, st.x0, st.y0, st.tEnd, 800);
-    const v0 = lvInvariant(p, st.x0, st.y0);
-    let drift = 0;
-    for (let i = 0; i < traj.t.length; i++) {
-      const v = lvInvariant(p, traj.x[i] ?? 0, traj.y[i] ?? 0);
-      drift = Math.max(drift, Math.abs(v - v0) / Math.max(1e-12, Math.abs(v0)));
-    }
-    return { p, traj, drift, eq: lvEquilibrium(p) };
+    return { p, traj, drift: lvDrift(p, traj), eq: lvEquilibrium(p) };
   }, [st.alpha, st.beta, st.delta, st.gamma, st.x0, st.y0, st.tEnd]);
 }
 
@@ -376,8 +383,19 @@ export function LotkaVolterraStage() {
         <span className="chem-chip">
           {Lz(L('Chu kì dao động nhỏ', 'Small-oscillation period'))} ≈ {fmt(eq.period)}
         </span>
-        <span className="chem-chip" title={Lz(L('Kiểm tra độ chính xác', 'Accuracy check'))}>
+        <span
+          className={drift > LV_DRIFT_WARN ? 'chem-chip chem-chip--approx' : 'chem-chip'}
+          title={Lz(L('Kiểm tra độ chính xác', 'Accuracy check'))}
+          role={drift > LV_DRIFT_WARN ? 'status' : undefined}
+        >
           {Lz(L('Sai lệch của V', 'Drift of V'))}: {fmt(drift, 2)}
+          {drift > LV_DRIFT_WARN &&
+            Lz(
+              L(
+                ' — sai số tích lũy lớn, đường đi kém tin cậy',
+                ' — large accumulated error, the trajectory is less reliable',
+              ),
+            )}
         </span>
         <span className="chem-chip">
           {Lz(L('Bấm vào đồ thị để chọn điểm bắt đầu', 'Click the plot to pick a start point'))}
