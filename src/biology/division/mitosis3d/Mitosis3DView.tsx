@@ -41,6 +41,7 @@ import { stateFor, timelineFor, useMitosis3D } from './store';
 import { createTapTracker } from './tap';
 import { STAGES_3D, type CellType, type Stage3D, type Timeline, type Vec3 } from './timeline';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
+import { measureInsets, sameInsets } from '../../view3d/insets';
 import { createEnvironment } from '../../view3d/look';
 import { webglRenderer, type RendererFactory, type RendererLike } from '../../view3d/renderer';
 import '../../bio.css';
@@ -108,50 +109,9 @@ function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStr
 /** Width / height of what the overview frames (the cell and, at the end, both daughters). */
 const FRAME_ASPECT = 1.6;
 
-/**
- * Canvas pixels covered by the controls drawn over it (elements marked `data-inset`), plus a
- * small gap: the camera keeps the cell out from under them. A box in the top-right corner
- * (`corner`) is counted from the top or from the right, whichever leaves the larger picture.
- */
-function measureInsets(host: HTMLElement, hud: HTMLElement | null): Insets {
-  const box = host.getBoundingClientRect();
-  if (!hud || box.width === 0 || box.height === 0) return defaultInsets(box.height);
-  const GAP = 8;
-  const out: Insets = { top: 0, right: 0, bottom: 0, left: 0 };
-  const corners: DOMRect[] = [];
-  for (const el of hud.querySelectorAll<HTMLElement>('[data-inset]')) {
-    const r = el.getBoundingClientRect();
-    if (r.width === 0 || r.height === 0) continue;
-    switch (el.dataset.inset) {
-      case 'top':
-        out.top = Math.max(out.top, r.bottom - box.top + GAP);
-        break;
-      case 'bottom':
-        out.bottom = Math.max(out.bottom, box.bottom - r.top + GAP);
-        break;
-      case 'right':
-        out.right = Math.max(out.right, box.right - r.left + GAP);
-        break;
-      case 'corner':
-        corners.push(r);
-        break;
-    }
-  }
-  for (const r of corners) {
-    const asTop = { ...out, top: Math.max(out.top, r.bottom - box.top + GAP) };
-    const asRight = { ...out, right: Math.max(out.right, box.right - r.left + GAP) };
-    const score = (i: Insets) =>
-      Math.min((box.width - i.left - i.right) / FRAME_ASPECT, box.height - i.top - i.bottom);
-    Object.assign(out, score(asRight) > score(asTop) ? asRight : asTop);
-  }
-  return out;
-}
-
-const sameInsets = (a: Insets, b: Insets) =>
-  Math.abs(a.top - b.top) < 2 &&
-  Math.abs(a.right - b.right) < 2 &&
-  Math.abs(a.bottom - b.bottom) < 2 &&
-  Math.abs(a.left - b.left) < 2;
+/** Controls over the canvas (`../../view3d/insets.ts`); before they are laid out, the default. */
+const insetsOf = (host: HTMLElement, hud: HTMLElement | null): Insets =>
+  measureInsets(host, hud, defaultInsets(host.clientHeight), FRAME_ASPECT);
 
 /** The learner asked the system for less motion: nothing starts moving on its own. */
 function prefersReducedMotion(): boolean {
@@ -415,7 +375,7 @@ export function Mitosis3DView({
     // Controls cover the canvas edges (chips, stage strip and caption, a picked part's card): the
     // picture is centred in the rest (camera.ts), so orbiting still turns around the target.
     const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
-    let insets: Insets = measureInsets(host, hudRef.current);
+    let insets: Insets = insetsOf(host, hudRef.current);
     applyViewport(cam, width(), height(), insets);
     const controls = new OrbitControls(cam, renderer.domElement);
     // Orbit and zoom only: the target stays on the cell (or its chromosomes), so the zoom
@@ -446,7 +406,7 @@ export function Mitosis3DView({
         place('closeup', [d.x, d.y, d.z]);
       },
       relayout: () => {
-        const next = measureInsets(host, hudRef.current);
+        const next = insetsOf(host, hudRef.current);
         if (sameInsets(next, insets)) return;
         insets = next;
         applyViewport(cam, width(), height(), insets);
@@ -513,7 +473,7 @@ export function Mitosis3DView({
         ? null
         : new ResizeObserver(() => {
             renderer.setSize(width(), height());
-            const next = measureInsets(host, hudRef.current);
+            const next = insetsOf(host, hudRef.current);
             const changed = !sameInsets(next, insets);
             insets = next;
             applyViewport(cam, width(), height(), insets);

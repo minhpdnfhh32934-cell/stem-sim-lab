@@ -461,3 +461,140 @@
     min-height: var(--target);
   }
 }
+
+/* ───── Biology 3D views (src/biology/view3d): the picture fills the stage (or a figure block
+   on a page of text); controls sit over its edges on one grid and the camera keeps the subject
+   clear of them. Labels are drawn by the page (sharp), never over the controls. ───── */
+.bio3d__gl,
+.bio3d__canvas,
+.bio3d__labels {
+  position: absolute;
+  inset: 0;
+}
+.bio3d__labels {
+  overflow: hidden;
+  pointer-events: none;
+}
+.bio3d-label {
+  padding: 1px 6px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  color: var(--text);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  white-space: nowrap;
+  backdrop-filter: var(--glass-blur);
+}
+.bio3d-label--strong {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+.bio3d-label--muted {
+  border-color: transparent;
+  background: none;
+  color: var(--text-muted);
+  backdrop-filter: none;
+}
+.bio3d__hud {
+  position: absolute;
+  inset: var(--space-3) var(--space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'top side'
+    '. .'
+    'bottom bottom';
+  gap: var(--space-2) var(--space-3);
+  pointer-events: none;
+}
+.bio3d__top {
+  position: static;
+  grid-area: top;
+  align-self: start;
+}
+.bio3d__top > *,
+.bio3d__side > *,
+.bio3d__bottom > * {
+  pointer-events: auto;
+}
+.bio3d__side {
+  grid-area: side;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.bio3d .icon-btn--lg {
+  width: var(--target);
+  height: var(--target);
+}
+.bio3d .segmented__item {
+  min-width: var(--target);
+  min-height: var(--target);
+}
+.bio3d__bottom {
+  grid-area: bottom;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+.bio3d__caption {
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-panel) 90%, transparent);
+  font-size: var(--text-sm);
+  text-align: center;
+  text-wrap: balance;
+}
+/* Playback row: play / pause, the time slider and the moment shown. */
+.bio3d__player {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  font-size: var(--text-sm);
+}
+.bio3d__player input[type='range'] {
+  flex: 1;
+  min-width: 6rem;
+  min-height: var(--target);
+}
+.bio3d__player output {
+  min-width: 7rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* A 3D figure at the top of a page of text and tables. */
+.bio3d-figure {
+  position: relative;
+  height: clamp(220px, 46vh, 380px);
+  margin: 0 0 var(--space-3);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel-2);
+}
+.bio3d-figure .bio3d__hud {
+  inset: var(--space-2);
+  grid-template-areas:
+    '. side'
+    '. .'
+    'bottom bottom';
+}
+.bio3d-figure__bar {
+  margin-bottom: var(--space-2);
+}
+@media (max-width: 1100px) {
+  .bio3d-figure {
+    height: clamp(200px, 40vh, 320px);
+  }
+}

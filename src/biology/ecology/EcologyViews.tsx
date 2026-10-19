@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { Suspense, lazy, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -6,17 +6,18 @@ import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
 import { niceStep, useFmt } from '../fmt';
 import { Range } from '../ui';
-import {
-  LV_DRIFT_WARN,
-  exponential,
-  logisticInflection,
-  logistic,
-  lotkaVolterra,
-  lvDrift,
-  lvEquilibrium,
-} from './ecology';
+import { useShow3d } from '../view3d/support';
+import { Bio3DToolbar } from '../view3d/switch';
+import { LogisticChips, LvChips } from './chips';
+import { useLogisticData, useLvData } from './data';
 import { useLogistic, useLv, type LogisticState, type LvState } from './store';
 import '../bio.css';
+
+// three.js and the 3D habitat load only when a 3D view is shown.
+const Logistic3D = lazy(() => import('./Logistic3D').then((m) => ({ default: m.Logistic3D })));
+const LotkaVolterra3D = lazy(() =>
+  import('./LotkaVolterra3D').then((m) => ({ default: m.LotkaVolterra3D })),
+);
 
 /* ───────────────────────────── Logistic growth ───────────────────────────── */
 
@@ -52,49 +53,27 @@ const LOGISTIC_CARD: ScienceCardData = {
   sources: [BSRC.sgk12, BSRC.murray, BSRC.campbell],
 };
 
-function useLogisticData() {
-  const st = useLogistic();
-  return useMemo(() => {
-    const n = 300;
-    const t = Array.from({ length: n + 1 }, (_, i) => (i * st.tEnd) / n);
-    const logi = t.map((x) => logistic(st.N0, st.r, st.K, x));
-    // The exponential curve leaves the chart quickly; cut it above 1.3 K so the axis stays readable.
-    const expo = t.map((x) => {
-      const v = exponential(st.N0, st.r, x);
-      return v > 1.3 * st.K ? null : v;
-    });
-    const tStar = logisticInflection(st.N0, st.r, st.K);
-    return { t, logi, expo, tStar };
-  }, [st.N0, st.r, st.K, st.tEnd]);
-}
-
 export function LogisticStage() {
   usePublishCard(LOGISTIC_CARD);
+  const { show3d } = useShow3d('logistic');
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Logistic3D />
+      </Suspense>
+    );
+  return <Logistic2D />;
+}
+
+function Logistic2D() {
   const Lz = useLocalized();
-  const fmt = useFmt();
   const st = useLogistic();
   const d = useLogisticData();
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <span className="chem-chip">
-          {Lz(L('Sức chứa K', 'Carrying capacity K'))} = {fmt(st.K, 4)}
-        </span>
-        <span className="chem-chip">
-          {Lz(L('Điểm uốn (N = K/2) tại t* = ', 'Inflection (N = K/2) at t* = '))}
-          {Number.isFinite(d.tStar)
-            ? fmt(d.tStar)
-            : Lz(
-                L(
-                  '— (N₀ ≥ K/2, không có điểm uốn khi t ≥ 0)',
-                  '— (N₀ ≥ K/2, no inflection for t ≥ 0)',
-                ),
-              )}
-        </span>
-        <span className="chem-chip">
-          {Lz(L('Tốc độ tăng lớn nhất rK/4 = ', 'Maximum growth rate rK/4 = '))}
-          {fmt((st.r * st.K) / 4)} {Lz(L('cá thể/đơn vị t', 'individuals/time unit'))}
-        </span>
+        <LogisticChips />
+        <Bio3DToolbar lesson="logistic" />
       </div>
       <div className="bio-stage-chart">
         <XYChart
@@ -253,22 +232,24 @@ const LV_CARD: ScienceCardData = {
   sources: [BSRC.murray, BSRC.sgk12],
 };
 
-function useLvData() {
-  const st = useLv();
-  return useMemo(() => {
-    const p = { alpha: st.alpha, beta: st.beta, delta: st.delta, gamma: st.gamma };
-    const traj = lotkaVolterra(p, st.x0, st.y0, st.tEnd, 800);
-    return { p, traj, drift: lvDrift(p, traj), eq: lvEquilibrium(p) };
-  }, [st.alpha, st.beta, st.delta, st.gamma, st.x0, st.y0, st.tEnd]);
-}
-
 const PAD = { l: 60, r: 20, t: 64, b: 48 };
 
 export function LotkaVolterraStage() {
   usePublishCard(LV_CARD);
+  const { show3d } = useShow3d('lotkaVolterra');
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <LotkaVolterra3D />
+      </Suspense>
+    );
+  return <LotkaVolterra2D />;
+}
+
+function LotkaVolterra2D() {
   const Lz = useLocalized();
   const fmt = useFmt();
-  const { traj, drift, eq } = useLvData();
+  const { traj, eq } = useLvData();
   const xMax = Math.max(...traj.x, eq.x) * 1.1;
   const yMax = Math.max(...traj.y, eq.y) * 1.1;
   const labels = {
@@ -377,26 +358,8 @@ export function LotkaVolterraStage() {
         }}
       />
       <div className="chem-overlay">
-        <span className="chem-chip">
-          {Lz(L('Cân bằng', 'Equilibrium'))} (x*, y*) = ({fmt(eq.x)}; {fmt(eq.y)})
-        </span>
-        <span className="chem-chip">
-          {Lz(L('Chu kì dao động nhỏ', 'Small-oscillation period'))} ≈ {fmt(eq.period)}
-        </span>
-        <span
-          className={drift > LV_DRIFT_WARN ? 'chem-chip chem-chip--approx' : 'chem-chip'}
-          title={Lz(L('Kiểm tra độ chính xác', 'Accuracy check'))}
-          role={drift > LV_DRIFT_WARN ? 'status' : undefined}
-        >
-          {Lz(L('Sai lệch của V', 'Drift of V'))}: {fmt(drift, 2)}
-          {drift > LV_DRIFT_WARN &&
-            Lz(
-              L(
-                ' — sai số tích lũy lớn, đường đi kém tin cậy',
-                ' — large accumulated error, the trajectory is less reliable',
-              ),
-            )}
-        </span>
+        <LvChips />
+        <Bio3DToolbar lesson="lotkaVolterra" />
         <span className="chem-chip">
           {Lz(L('Bấm vào đồ thị để chọn điểm bắt đầu', 'Click the plot to pick a start point'))}
         </span>

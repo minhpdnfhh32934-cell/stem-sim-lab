@@ -1,37 +1,23 @@
-import { RotateCcw } from 'lucide-react';
-import { useMemo, useRef } from 'react';
+import { Suspense, lazy, useMemo, useRef } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
-import { C } from '@/core/constants';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
 import { useFmt } from '../fmt';
-import { Range, Segmented } from '../ui';
-import {
-  brownianStep,
-  osmosisEquilibrium,
-  osmosisTrajectory,
-  twoCompartment,
-  type OsmosisParams,
-} from './transport';
+import { Range } from '../ui';
+import { brownianStep, twoCompartment } from './transport';
 import { useTransport, type TransportState } from './store';
+import { useShow3d } from '../view3d/support';
+import { Bio3DToolbar } from '../view3d/switch';
+import { poreIntervals } from './particles3d';
+import { TransportChips } from './chips';
+import { useOsmosis } from './osmosisData';
 import '../bio.css';
 
-/** Water density (kg/m³) and membrane permeance — the latter only sets the time scale. */
-const RHO = 1000;
-const LP = 5e-6;
-
-const osmosisParams = (st: TransportState): OsmosisParams => ({
-  c0: st.c0,
-  i: st.i,
-  T: st.tC + 273.15,
-  h0: st.h0,
-  rho: RHO,
-  g: C.gn,
-  lp: LP,
-});
+// three.js and the 3D apparatus load only when the 3D view is shown.
+const Transport3D = lazy(() => import('./Transport3D').then((m) => ({ default: m.Transport3D })));
 
 const DIFFUSION_CARD: ScienceCardData = {
   title: L('Khuếch tán qua màng', 'Diffusion across a membrane'),
@@ -116,15 +102,6 @@ const OSMOSIS_CARD: ScienceCardData = {
 interface Particle {
   x: number;
   y: number;
-}
-
-/** Box [0, 2] × [0, 1] with the membrane at x = 1. */
-function poreIntervals(n: number): [number, number][] {
-  const w = 0.05;
-  return Array.from({ length: n }, (_, k) => {
-    const c = (k + 0.5) / n;
-    return [c - w / 2, c + w / 2];
-  });
 }
 
 function stepParticles(ps: Particle[], pores: [number, number][], rand: () => number) {
@@ -219,20 +196,6 @@ function DiffusionCanvas() {
 }
 
 /* ───────────────────────────── Osmosis U-tube ───────────────────────────── */
-
-function useOsmosis() {
-  const st = useTransport();
-  return useMemo(() => {
-    const p = osmosisParams(st);
-    const eq = osmosisEquilibrium(p);
-    const pi0 = p.i * p.c0 * C.R * p.T;
-    // Relaxation rate of the linearised equation → about 6 time constants.
-    const k = LP * (2 * RHO * C.gn + pi0 / p.h0);
-    const tEnd = 6 / k;
-    const traj = osmosisTrajectory(p, tEnd, 240);
-    return { p, eq, pi0, tEnd, traj };
-  }, [st]);
-}
 
 function OsmosisCanvas() {
   const Lz = useLocalized();
@@ -338,55 +301,19 @@ function OsmosisCanvas() {
 export function DiffusionOsmosisStage() {
   const st = useTransport();
   usePublishCard(st.mode === 'diffusion' ? DIFFUSION_CARD : OSMOSIS_CARD);
-  const Lz = useLocalized();
-  const fmt = useFmt();
-  const { eq, pi0 } = useOsmosis();
+  const { show3d } = useShow3d('transport');
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Transport3D />
+      </Suspense>
+    );
   return (
     <div className="bio-view">
       {st.mode === 'diffusion' ? <DiffusionCanvas /> : <OsmosisCanvas />}
       <div className="chem-overlay">
-        <Segmented
-          label={L('Hiện tượng', 'Process')}
-          value={st.mode}
-          options={[
-            { id: 'diffusion', label: L('Khuếch tán', 'Diffusion') },
-            { id: 'osmosis', label: L('Thẩm thấu', 'Osmosis') },
-          ]}
-          onChange={(mode) => {
-            useTransport.setState({ mode });
-          }}
-        />
-        <button
-          type="button"
-          className="btn"
-          onClick={() => {
-            useTransport.setState((s) => ({ run: s.run + 1 }));
-          }}
-        >
-          <RotateCcw size={15} aria-hidden="true" /> {Lz(L('Chạy lại', 'Restart'))}
-        </button>
-        {st.mode === 'osmosis' && (
-          <>
-            <span className="chem-chip">Π₀ = iC₀RT = {fmt(pi0 / 1000)} kPa</span>
-            {eq.dry ? (
-              <span className="chem-chip chem-chip--approx" role="status">
-                {Lz(
-                  L(
-                    'Nhánh nước cạn trước khi Π được cân bằng',
-                    'The water arm runs dry before Π is balanced',
-                  ),
-                )}
-                : Δh = {fmt(eq.dh * 100)} cm · ρgΔh = {fmt((RHO * C.gn * eq.dh) / 1000)} kPa &lt; Π
-                = {fmt(eq.pi / 1000)} kPa
-              </span>
-            ) : (
-              <span className="chem-chip">
-                {Lz(L('Cân bằng', 'Equilibrium'))}: Δh = {fmt(eq.dh * 100)} cm · Π ={' '}
-                {fmt(eq.pi / 1000)} kPa
-              </span>
-            )}
-          </>
-        )}
+        <TransportChips />
+        <Bio3DToolbar lesson="transport" />
       </div>
     </div>
   );

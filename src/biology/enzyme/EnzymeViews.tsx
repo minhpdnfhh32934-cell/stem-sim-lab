@@ -1,20 +1,19 @@
-import { useMemo } from 'react';
+import { Suspense, lazy, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
-import { useFmt } from '../fmt';
-import { Range, Segmented } from '../ui';
-import { apparent, rate, substrateAt, substrateNumeric, type Inhibition } from './enzyme';
+import { Range } from '../ui';
+import { apparent, type Inhibition } from './enzyme';
 import { useEnzyme, type EnzymeState } from './store';
+import { useShow3d } from '../view3d/support';
+import { Bio3DToolbar } from '../view3d/switch';
+import { EnzymeChips } from './chips';
+import { KIND_NAME, noInhibitor, paramsOf, useEnzymeData } from './data';
 import '../bio.css';
 
-const KIND_NAME: Record<Inhibition, ReturnType<typeof L>> = {
-  none: L('Không có chất ức chế', 'No inhibitor'),
-  competitive: L('Ức chế cạnh tranh', 'Competitive'),
-  noncompetitive: L('Ức chế không cạnh tranh', 'Non-competitive'),
-  uncompetitive: L('Ức chế phi cạnh tranh (uncompetitive)', 'Uncompetitive'),
-};
+// three.js and the 3D beaker load only when the 3D view is shown.
+const Enzyme3D = lazy(() => import('./Enzyme3D').then((m) => ({ default: m.Enzyme3D })));
 
 const ENZYME_CARD: ScienceCardData = {
   title: L('Động học enzyme Michaelis–Menten', 'Michaelis–Menten enzyme kinetics'),
@@ -62,85 +61,29 @@ const ENZYME_CARD: ScienceCardData = {
   sources: [BSRC.cornish, BSRC.schnell, BSRC.sgk10],
 };
 
-const paramsOf = (st: EnzymeState) => ({
-  vmax: st.vmax,
-  km: st.km,
-  inhibitor: st.inhibitor,
-  ki: st.ki,
-  kind: st.kind,
-});
-const noInhibitor = (st: EnzymeState) => ({ ...paramsOf(st), kind: 'none' as const });
-
 export function MichaelisMentenStage() {
   usePublishCard(ENZYME_CARD);
+  const { show3d } = useShow3d('enzyme');
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Enzyme3D />
+      </Suspense>
+    );
+  return <MichaelisMenten2D />;
+}
+
+function MichaelisMenten2D() {
   const Lz = useLocalized();
-  const fmt = useFmt();
   const st = useEnzyme();
   const app = apparent(paramsOf(st));
   const inhibited = st.kind !== 'none';
-
-  const rateData = useMemo(() => {
-    const top = Math.max(10 * st.km, 20);
-    const x = Array.from({ length: 301 }, (_, i) => (i * top) / 300);
-    return {
-      x,
-      base: x.map((s) => rate(noInhibitor(st), s)),
-      inh: x.map((s) => rate(paramsOf(st), s)),
-    };
-  }, [st]);
-
-  const timeData = useMemo(() => {
-    const p = paramsOf(st);
-    const a = apparent(p);
-    // Long enough to consume most of the substrate: S0/Vmax (zero order) + a few Km/Vmax.
-    const tEnd = (st.s0 + 5 * a.km) / a.vmax;
-    const x = Array.from({ length: 201 }, (_, i) => (i * tEnd) / 200);
-    const s = x.map((t) => substrateAt(p, st.s0, t));
-    return { x, s, p: s.map((v) => st.s0 - v), tEnd };
-  }, [st]);
-
-  // Cross-check of the closed form against DOPRI5 at the half-way point.
-  const check = useMemo(() => {
-    const p = paramsOf(st);
-    const t = timeData.tEnd / 2;
-    const exact = substrateAt(p, st.s0, t);
-    const num = substrateNumeric(p, st.s0, t);
-    return Math.abs(exact - num) / Math.max(1e-12, Math.abs(exact));
-  }, [st, timeData.tEnd]);
-
+  const { rateData, timeData } = useEnzymeData();
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <Segmented
-          label={L('Đồ thị', 'Plot')}
-          value={st.view}
-          options={[
-            { id: 'rate', label: L('v theo [S]', 'v vs [S]') },
-            { id: 'time', label: L('[S] theo thời gian', '[S] over time') },
-          ]}
-          onChange={(view) => {
-            useEnzyme.setState({ view });
-          }}
-        />
-        <span className="chem-chip">
-          <span>
-            V<sub>max</sub>
-            {inhibited ? Lz(L(' (biểu kiến)', ' (apparent)')) : ''} = {fmt(app.vmax)} mM/
-            {Lz(L('phút', 'min'))}
-          </span>
-        </span>
-        <span className="chem-chip">
-          <span>
-            K<sub>m</sub>
-            {inhibited ? Lz(L(' (biểu kiến)', ' (apparent)')) : ''} = {fmt(app.km)} mM
-          </span>
-        </span>
-        {st.view === 'time' && (
-          <span className="chem-chip" title={Lz(L('Kiểm tra chéo', 'Cross-check'))}>
-            {Lz(L('Lambert W so với DOPRI5: sai lệch ', 'Lambert W vs DOPRI5: difference '))}
-            {fmt(check, 2)}
-          </span>
-        )}
+        <EnzymeChips />
+        <Bio3DToolbar lesson="enzyme" />
       </div>
       <div className="bio-stage-chart">
         {st.view === 'rate' ? (

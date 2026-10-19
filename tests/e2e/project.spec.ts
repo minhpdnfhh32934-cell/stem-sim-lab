@@ -3,6 +3,17 @@ import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { enterLab, openLab } from './nav';
 
+/**
+ * These tests open biology topics, whose 3D views draw with WebGL: in software (SwiftShader),
+ * never on the GPU (see mitosis3d.spec.ts).
+ */
+test.use({
+  launchOptions: {
+    args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
+    ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}),
+  },
+});
+
 async function openLogistic(page: Page) {
   await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
