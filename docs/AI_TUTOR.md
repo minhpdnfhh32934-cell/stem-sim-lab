@@ -46,6 +46,20 @@ problem text, module inputs and the Science Card. The context is read from app s
 screenshot, clipboard or data from another window is collected. The blue scan band is visual
 feedback only. Personal-data and content checks run on the context before anything is sent.
 
+**Science Studio.** While a Studio lesson is shown it registers itself with
+`provideScreenContext` (`src/teacher/chat/context.ts`; hook `src/studio/flow/useStudioContext.ts`),
+and its text replaces the lab's state (the lab is hidden behind the Studio). The text is built
+from the stored session only when a question is sent (`src/studio/aiContext.ts`), at most
+3600 characters, in fixed sections with their own budgets: lesson + step + rules, data not yet
+reviewed (`src/studio/unverified.ts`, the same list as the report's), facts computed by the
+engine or copied from the data library, the learner's notes (prediction, explanation,
+conclusion; each quoted at most 250 characters) and the last AI text kept in the session. The
+expected conclusion is never included. Building it never changes the session; AI text is never
+stored as engine evidence. The toggle still decides: off → nothing of the lesson is sent. The
+Studio's “Hỏi thầy” button (`AskTeacher.tsx`) opens the bubble (`askInBubble`) with a question
+about the current step in the box; the learner edits and sends it. Closing the bubble turns the
+toggle off, so it is off whenever a screen opens the bubble.
+
 **“Hỏi thầy về bộ phận này” (3D mitosis, item 2 outside the board).** The part card of the 3D
 mitosis view (`Mitosis3DView.tsx` `PartInfo`, shown after a tap or a pick in “Bộ phận tế bào”)
 has a “Hỏi thầy” button. It opens AI Teacher the usual way (`openTeacherWithQuestion` →

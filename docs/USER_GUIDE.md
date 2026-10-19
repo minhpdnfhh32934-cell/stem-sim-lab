@@ -75,9 +75,10 @@ chép qua USB và cài trước.
    sáng/tối, Cơ bản/Nâng cao, ngôn ngữ, trình chiếu, lưu/mở tệp). Mũi tên ↑ ↓ để chọn, Enter để mở,
    Esc để đóng.
 
-2. **Trang chủ SimLab** có hai lối vào:
+2. **Trang chủ SimLab** có ba lối vào:
    - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
-   - **AI Teacher** mở trang trò chuyện với trợ lý học tập.
+   - **AI Teacher** mở trang trò chuyện với trợ lý học tập;
+   - **Science Studio** mở các bài học có hướng dẫn (mục "Science Studio" bên dưới).
 
    Bấm logo **SimLab** ở góc trái để quay về trang chủ.
 
@@ -273,6 +274,40 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
   bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
 - **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
   hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
+
+## Science Studio
+
+**Mở:** ở trang chủ SimLab, bấm thẻ **Science Studio**. Chọn môn ở các thẻ **Hóa học · Sinh học ·
+Vật lí · Soạn bài**, rồi chọn bài ở **Chọn bài học**. Bấm logo **SimLab** để quay về trang chủ.
+
+Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
+chọn dự đoán, làm thí nghiệm và viết đủ phần giải thích thì mới sang bước sau. Dự đoán được giữ lại từ
+lần thí nghiệm đầu tiên; muốn đoán lại, bấm **Học lại từ đầu** ở bước Báo cáo. Mọi số đo do mô phỏng
+tính; phần chữ của bài (mục tiêu, gợi ý, kết luận tham khảo) đang ghi **"chưa được kiểm duyệt"** vì
+chưa có giáo viên duyệt.
+
+- **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
+  chọn) và B (độ cao gấp đôi), rồi hiện bảng số đo, đồ thị và phép kiểm tra chéo với công thức. Nút
+  **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
+- **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
+  trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
+  từ thư viện phản ứng của app. Cặp dung dịch không có trong thư viện chỉ hiện "chưa có trong cơ sở dữ
+  liệu đã kiểm chứng" — app không đoán. Hình kết tủa chỉ là kí hiệu, không vẽ màu hay lượng thật.
+- **Sinh học — Nguyên phân 3D:** xoay, phóng to hình và chuyển qua các kì, bấm **Ghi lại kì này** ở
+  kì em cho là trả lời câu hỏi. Sau đó làm **Tìm bộ phận theo chức năng**: chọn bộ phận trong hình
+  (hoặc trong danh sách), bấm **Trả lời** cho từng chức năng rồi **Kiểm tra**. Trong bài, loại tế bào
+  và bộ NST được giữ cố định. Máy không vẽ được 3D (hoặc đặt chất lượng Thấp) thì hiện hình 2D.
+- **Soạn bài:** **Tạo bài mới** → chọn môn → điền phần chữ (tiếng Việt bắt buộc, tiếng Anh không bắt
+  buộc) và chọn phần mô phỏng sẽ chạy → **Lưu bài**. App chỉ cho chọn những gì mô phỏng chạy được, và
+  báo những chỗ cần sửa trước khi lưu. Mỗi bài đã soạn có **Xem trước**, **Sửa**, **Nhân bản**,
+  **Xuất JSON** và **Xóa**; **Nhập tệp JSON** để mở bài người khác gửi. Bài soạn chỉ lưu trên máy này
+  và luôn ghi "chưa được kiểm duyệt" (app không kiểm tra nội dung khoa học giáo viên viết).
+- **Báo cáo:** bước cuối hiện bản xem trước, có **Lưu báo cáo (.md)** và **Sao chép báo cáo**. Số đo
+  của mô phỏng, phần em viết, kết luận tham khảo, dữ liệu chưa kiểm duyệt và nguồn nằm ở các mục
+  riêng. Báo cáo được tạo trên máy, app không gửi đi đâu. Bài đang làm dở được giữ khi mở lại app.
+- **Hỏi thầy:** nút **Hỏi thầy** mở khung AI Teacher với câu hỏi viết sẵn theo bước đang làm (em sửa
+  được trước khi gửi). Thầy chỉ thấy số đo và ghi chú của bài khi em bật **Lấy thông tin từ màn
+  hình** trong khung chat.
 
 ## Bố cục màn hình
 
