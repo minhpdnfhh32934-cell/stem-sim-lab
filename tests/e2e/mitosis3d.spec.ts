@@ -410,10 +410,11 @@ declare global {
 
 /**
  * Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test:
- * 43 calls = 11 + 4 · 2n since each chromatid is one tube plus its kinetochore; 19 970 triangles
- * measured on the CPU, + 5 %).
+ * 44 calls = 12 + 4 · 2n since each chromatid is one tube plus its kinetochore; 35 826 triangles
+ * measured on the CPU with the High details — double nuclear envelope, pores, vesicles,
+ * centriole triplets — + 5 %).
  */
-const PERF = { calls: 43, triangles: 21_000, p95Ms: 150 };
+const PERF = { calls: 44, triangles: 37_700, p95Ms: 150 };
 
 test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame budgets @perf', async ({
   page,

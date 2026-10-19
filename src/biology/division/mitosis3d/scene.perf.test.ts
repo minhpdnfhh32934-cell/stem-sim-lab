@@ -20,32 +20,36 @@ const PALETTE: ScenePalette = {
 
 /**
  * Draw-call budget: one call per drawn object, at most (formula of the scene's objects; the
- * soft contact shadow is one call, the spindle one instanced call).
+ * soft contact shadow and the cytoplasm tint are one call each, the spindle one instanced call;
+ * each chromatid is one tube plus its kinetochore). Measured maxima: animal 12 + 4 · 2n (High
+ * 11 + 4 · 2n: centrioles as two instanced meshes of triplets), plant 7 + 4 · 2n (High up to
+ * 9 + 4 · 2n: the inner nuclear membrane and the cell-plate vesicles).
  */
 const CALLS: Record<CellType, (n2: number) => number> = {
-  animal: (n2) => 11 + 4 * n2,
-  plant: (n2) => 6 + 4 * n2,
+  animal: (n2) => 12 + 4 * n2,
+  plant: (n2) => 9 + 4 * n2,
 };
 
 /**
  * Most triangles drawn at any moment of the division, per quality tier (sphere segments: Low 8,
  * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-20: each chromatid is one
- * tube — thread and rod are the same object, condensing in place — plus a kinetochore disc; the
- * two capsules, bead and see-through thread of before are gone). The budget allows 5 % more; a
- * bigger change must update this table on purpose.
+ * tube — thread and rod are the same object, condensing in place — plus a kinetochore disc;
+ * cytoplasm tint; High also draws the double nuclear envelope with pores and its vesicles,
+ * centriole triplets and the cell-plate vesicles). The budget allows 5 % more; a bigger change
+ * must update this table on purpose.
  */
 const TRIANGLES: Record<number, Record<CellType, Record<number, number>>> = {
   8: {
-    animal: { 2: 3010, 4: 4538, 6: 6034, 8: 7482 },
-    plant: { 2: 2722, 4: 4314, 6: 5810, 8: 7258 },
+    animal: { 2: 3554, 4: 5082, 6: 6578, 8: 8026 },
+    plant: { 2: 3778, 4: 5170, 6: 6466, 8: 7714 },
   },
   16: {
-    animal: { 2: 7106, 4: 8962, 6: 10690, 8: 12434 },
-    plant: { 2: 6530, 4: 8386, 6: 10338, 8: 12306 },
+    animal: { 2: 9218, 4: 11074, 6: 12802, 8: 14546 },
+    plant: { 2: 8802, 4: 10658, 6: 12386, 8: 14050 },
   },
   24: {
-    animal: { 2: 13410, 4: 15730, 6: 17890, 8: 19970 },
-    plant: { 2: 12738, 4: 15058, 6: 17218, 8: 19458 },
+    animal: { 2: 29266, 4: 31586, 6: 33746, 8: 35826 },
+    plant: { 2: 27010, 4: 29330, 6: 31490, 8: 33570 },
   },
 };
 

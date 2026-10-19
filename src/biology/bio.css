@@ -210,6 +210,12 @@
   position: absolute;
   inset: 0;
 }
+/* A soft light behind the transparent 3D canvas (both themes): the subject stands out from the
+   stage without a flat box around it. PNG export draws the plain stage colour. */
+.m3d__gl,
+.bio3d__gl {
+  background: radial-gradient(ellipse 70% 65% at 50% 45%, var(--bg-panel) 0%, var(--bg-stage) 100%);
+}
 .m3d .icon-btn--lg,
 .m3d__side .icon-btn {
   width: var(--target);

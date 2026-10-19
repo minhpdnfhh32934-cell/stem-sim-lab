@@ -29,6 +29,13 @@ import {
 } from './chromatidShape';
 import type { CameraMode, Selection } from './components';
 import {
+  centrioleTriplets,
+  envelopeBreakdown,
+  plateSlots,
+  plateVesicleSize,
+  spherePointsEven,
+} from './sceneParts';
+import {
   ANIMAL,
   PLANT,
   ROD_RADIUS,
@@ -107,6 +114,8 @@ type Part =
   | 'plate'
   | 'nucleolus'
   | 'envelope'
+  | 'vesicle'
+  | 'pore'
   | 'membrane'
   | 'wall';
 
@@ -238,7 +247,30 @@ export function buildMitosisScene(
       glass(c, { opacity: 0.75, side: THREE.DoubleSide, roughness: 0.4 }),
     ),
     spindle: look(palette.spindle, (c) => solid(c, tier, { roughness: 0.4, fades: true })),
+    // Fragments of the nuclear envelope, its pores, and the Golgi vesicles of the cell plate.
+    vesicle: look(palette.envelope, (c) =>
+      solid(c, tier, { roughness: 0.3, clearcoat: 0.4, fades: true }),
+    ),
+    pore: look(palette.envelope, firm),
+    plateVesicle: look(palette.plate, (c) =>
+      solid(c, tier, { roughness: 0.3, clearcoat: 0.4, fades: true }),
+    ),
   };
+  /**
+   * The cytoplasm (illustrative): a faint tint on the inside of the cell's far side, so the cell
+   * reads as a filled volume. Not a part of its own (never picked or highlighted).
+   */
+  const cytoplasm = keep(
+    new THREE.MeshBasicMaterial({
+      color: palette.membrane,
+      transparent: true,
+      opacity: 0.06,
+      depthWrite: false,
+      side: THREE.BackSide,
+    }),
+  );
+  /** The finer parts (double envelope, pores, vesicles, centriole triplets): High tier only. */
+  const detail = tier === 'high';
 
   // ---- shared geometries
   const sphere = keep(new THREE.SphereGeometry(1, seg, Math.round(seg * 0.75)));
@@ -253,6 +285,10 @@ export function buildMitosisScene(
   // Plant cell: a box with rounded edges (the wall's outline comes from the rim light).
   const rounded = keep(roundedBox(seg * 2, 10));
   const disc = keep(new THREE.CylinderGeometry(1, 1, 0.12, seg * 2));
+  // Small parts drawn by the dozen: few triangles each (48 and 80).
+  const poreGeo = keep(new THREE.TorusGeometry(0.075, 0.022, 3, 8));
+  const blob = keep(new THREE.IcosahedronGeometry(1, 1));
+  const tubuleGeo = keep(new THREE.CylinderGeometry(1, 1, 1, 6, 1, true));
   const fibreShape = FIBRE[tier];
   // Unit fibre: radius 1, height 1 along +y (scaled per fibre), open ends.
   const fibreGeo = keep(new THREE.CylinderGeometry(1, 1, 1, fibreShape.sides, 1, true));
@@ -317,24 +353,101 @@ export function buildMitosisScene(
   // ---- nuclei (at most two), each with a simple nucleolus (illustrative, no effect on counts)
   const envelopes = [0, 1].map(() => mesh(sphere, mats.envelope.base, { part: 'envelope' }));
   const nucleoli = [0, 1].map(() => mesh(sphere, mats.nucleolus.base, { part: 'nucleolus' }));
+  // High: the envelope is a double membrane (an inner shell too) with pores, and it breaks into
+  // vesicles in prophase (re-forming in telophase) instead of fading as one sheet.
+  const innerEnvelopes = detail
+    ? [0, 1].map(() => mesh(sphere, mats.envelope.base, { part: 'envelope' }))
+    : [];
+  const PORES = 32;
+  const VESICLES = 40;
+  const poreDirs = spherePointsEven(PORES);
+  const vesicleDirs = spherePointsEven(VESICLES);
+  const pores = detail ? new THREE.InstancedMesh(poreGeo, mats.pore.base, 2 * PORES) : null;
+  const vesicles = detail ? new THREE.InstancedMesh(blob, mats.vesicle.base, 2 * VESICLES) : null;
+  for (const im of [pores, vesicles]) {
+    if (!im) continue;
+    im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    im.count = 0;
+    im.frustumCulled = false;
+    scene.add(im);
+    keep({
+      dispose: () => {
+        im.dispose();
+      },
+    });
+  }
+  if (pores) {
+    // Pores belong to the envelope; they are not picked on their own (the envelope is).
+    pores.userData = { part: 'pore' } satisfies PartData;
+    pores.raycast = () => undefined;
+  }
+  if (vesicles) {
+    vesicles.userData = { part: 'vesicle' } satisfies PartData;
+    pickables.push(vesicles);
+  }
 
   // ---- centrosomes (animal): two centrioles at right angles + pericentriolar material
+  // The second centriole sits at a right angle to the first, near its base (an L, in depth).
+  const SECOND = new THREE.Matrix4().compose(
+    new THREE.Vector3(0, -0.12, 0.2),
+    new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2),
+    new THREE.Vector3(1, 1, 1),
+  );
+  /** High: each centriole as its nine microtubule triplets (one instanced mesh per centrosome). */
+  const tripletMatrices = (() => {
+    const out: THREE.Matrix4[] = [];
+    const tubules = centrioleTriplets(0.1);
+    for (const at of [new THREE.Matrix4(), SECOND]) {
+      for (const t of tubules) {
+        out.push(
+          at
+            .clone()
+            .multiply(
+              new THREE.Matrix4().compose(
+                new THREE.Vector3(t.x, 0, t.z),
+                new THREE.Quaternion(),
+                new THREE.Vector3(t.radius, 0.42, t.radius),
+              ),
+            ),
+        );
+      }
+    }
+    return out;
+  })();
   const centrosomes = [0, 1].map(() => {
     const g = new THREE.Group();
-    const a = new THREE.Mesh(centrioleGeo, mats.centriole.base);
-    const b = new THREE.Mesh(centrioleGeo, mats.centriole.base);
-    // The second centriole at a right angle to the first, near its base (an L, in depth).
-    b.rotation.x = Math.PI / 2;
-    b.position.set(0, -0.12, 0.2);
+    const parts: THREE.Mesh[] = [];
+    if (detail) {
+      const triplets = new THREE.InstancedMesh(
+        tubuleGeo,
+        mats.centriole.base,
+        tripletMatrices.length,
+      );
+      tripletMatrices.forEach((m, i) => {
+        triplets.setMatrixAt(i, m);
+      });
+      keep({
+        dispose: () => {
+          triplets.dispose();
+        },
+      });
+      parts.push(triplets);
+    } else {
+      const a = new THREE.Mesh(centrioleGeo, mats.centriole.base);
+      const b = new THREE.Mesh(centrioleGeo, mats.centriole.base);
+      b.applyMatrix4(SECOND);
+      parts.push(a, b);
+    }
     const halo = new THREE.Mesh(sphere, mats.pcm.base);
     halo.scale.setScalar(0.38);
-    for (const m of [a, b, halo]) {
+    parts.push(halo);
+    for (const m of parts) {
       m.userData = { part: 'centrosome' } satisfies PartData;
       g.add(m);
       pickables.push(m);
     }
     scene.add(g);
-    return { group: g, parts: [a, b, halo] };
+    return { group: g, parts, halo };
   });
 
   // ---- spindle: thin tubes, one InstancedMesh sized for the most fibres the timeline can have
@@ -409,6 +522,11 @@ export function buildMitosisScene(
     memGeo.computeBoundingSphere();
   };
   const membrane = mesh(animal ? memGeo : rounded, mats.membrane.base, { part: 'membrane' });
+  // The cytoplasm tint shares the membrane's shape (and follows its furrow), drawn first.
+  const inside = new THREE.Mesh(animal ? memGeo : rounded, cytoplasm);
+  inside.raycast = () => undefined;
+  inside.renderOrder = -0.5;
+  membrane.add(inside);
   if (animal) writeProfile(0, ANIMAL.radius);
   const ring = mesh(torus, mats.ring.base, { part: 'ring' });
   ring.rotation.y = Math.PI / 2; // axis along x
@@ -424,6 +542,26 @@ export function buildMitosisScene(
     new THREE.Plane(new THREE.Vector3(0, 0, -1), hz),
     new THREE.Plane(new THREE.Vector3(0, 0, 1), hz),
   ];
+  // Golgi vesicles gather just beyond the growing plate's edge and fuse into it (plant only).
+  const slots = animal
+    ? []
+    : plateSlots(detail ? 90 : 50, Math.hypot(PLANT.half[1], PLANT.half[2]), hy - 0.15, hz - 0.15);
+  const plateVesicles = slots.length
+    ? new THREE.InstancedMesh(blob, mats.plateVesicle.base, slots.length)
+    : null;
+  if (plateVesicles) {
+    plateVesicles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    plateVesicles.count = 0;
+    plateVesicles.frustumCulled = false;
+    plateVesicles.userData = { part: 'plate' } satisfies PartData;
+    scene.add(plateVesicles);
+    pickables.push(plateVesicles);
+    keep({
+      dispose: () => {
+        plateVesicles.dispose();
+      },
+    });
+  }
   mats.plate.base.clippingPlanes = clip;
   mats.plate.hi.clippingPlanes = clip;
   mats.plate.dim.clippingPlanes = clip;
@@ -439,6 +577,8 @@ export function buildMitosisScene(
 
   // ---- update (no allocation: temporaries live here)
   const UP = new THREE.Vector3(0, 1, 0);
+  const Z_AXIS = new THREE.Vector3(0, 0, 1);
+  const IDENTITY_Q = new THREE.Quaternion();
   const tmpDir = new THREE.Vector3();
   const tmpPos = new THREE.Vector3();
   const tmpQuat = new THREE.Quaternion();
@@ -479,9 +619,15 @@ export function buildMitosisScene(
       case 'cellWall':
         return data.part === 'wall';
       case 'nucleus':
-        return data.part === 'envelope' || data.part === 'thread' || data.part === 'nucleolus';
+        return (
+          data.part === 'envelope' ||
+          data.part === 'vesicle' ||
+          data.part === 'pore' ||
+          data.part === 'thread' ||
+          data.part === 'nucleolus'
+        );
       case 'nuclearEnvelope':
-        return data.part === 'envelope';
+        return data.part === 'envelope' || data.part === 'vesicle' || data.part === 'pore';
       case 'nucleolus':
         return data.part === 'nucleolus';
       case 'chromatin':
@@ -526,6 +672,10 @@ export function buildMitosisScene(
     }
     const pick = <M extends THREE.Material>(l: Look<M>, part: Part) => choose(l, { part }, st);
     for (const e of envelopes) e.material = pick(mats.envelope, 'envelope');
+    for (const e of innerEnvelopes) e.material = pick(mats.envelope, 'envelope');
+    if (pores) pores.material = pick(mats.pore, 'pore');
+    if (vesicles) vesicles.material = pick(mats.vesicle, 'vesicle');
+    if (plateVesicles) plateVesicles.material = pick(mats.plateVesicle, 'plate');
     for (const e of nucleoli) e.material = pick(mats.nucleolus, 'nucleolus');
     membrane.material = pick(mats.membrane, 'membrane');
     wall.material = pick(mats.wall, 'wall');
@@ -533,10 +683,8 @@ export function buildMitosisScene(
     plate.material = pick(mats.plate, 'plate');
     spindle.material = pick(mats.spindle, 'fibre');
     for (const c of centrosomes) {
-      const [a, b, halo] = c.parts;
-      if (a) a.material = pick(mats.centriole, 'centrosome');
-      if (b) b.material = pick(mats.centriole, 'centrosome');
-      if (halo) halo.material = pick(mats.pcm, 'centrosome');
+      for (const m of c.parts)
+        m.material = pick(m === c.halo ? mats.pcm : mats.centriole, 'centrosome');
     }
   };
 
@@ -643,9 +791,55 @@ export function buildMitosisScene(
       e.scale.setScalar(n.radius);
     });
     const env = st.nuclei.reduce((m, n) => Math.max(m, n.envelope), 0);
-    setOpacity(mats.envelope, 0.3 * env);
+    // High: the sheet goes first and its vesicles carry on; Medium: the sheet fades as one.
+    const sheet = detail ? envelopeBreakdown(env).shell : env;
+    setOpacity(mats.envelope, 0.3 * sheet);
     for (const m of [mats.envelope.base, mats.envelope.hi, mats.envelope.dim])
-      setRimAlpha(m, 0.45 * env);
+      setRimAlpha(m, 0.45 * sheet);
+    innerEnvelopes.forEach((e, i) => {
+      const n = st.nuclei[i];
+      e.visible = !!n && sheet > 0.01;
+      if (!n) return;
+      e.position.set(...n.center);
+      e.scale.setScalar(0.92 * n.radius);
+    });
+    if (pores && vesicles) {
+      let np = 0;
+      let nv = 0;
+      st.nuclei.forEach((n, i) => {
+        if (i > 1) return;
+        const b = envelopeBreakdown(n.envelope);
+        if (b.shell > 0.05) {
+          for (const d of poreDirs) {
+            tmpDir.set(d[0], d[1], d[2]);
+            tmpPos.set(...n.center).addScaledVector(tmpDir, n.radius * 0.96);
+            tmpQuat.setFromUnitVectors(Z_AXIS, tmpDir);
+            tmpScale.setScalar(Math.max(0.5, n.radius / ANIMAL.nucleus));
+            pores.setMatrixAt(np++, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
+          }
+        }
+        if (b.vesicles > 0.02) {
+          const size = 0.17 * b.vesicles * Math.max(0.5, n.radius / ANIMAL.nucleus);
+          for (const d of vesicleDirs) {
+            tmpDir.set(d[0], d[1], d[2]);
+            tmpPos.set(...n.center).addScaledVector(tmpDir, n.radius * (1 + b.drift));
+            // Flattened pieces of membrane, lying along the old surface.
+            tmpQuat.setFromUnitVectors(Z_AXIS, tmpDir);
+            tmpScale.set(size, size, size * 0.4);
+            vesicles.setMatrixAt(nv++, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
+          }
+        }
+      });
+      pores.count = np;
+      vesicles.count = nv;
+      pores.visible = np > 0;
+      vesicles.visible = nv > 0;
+      pores.instanceMatrix.needsUpdate = true;
+      vesicles.instanceMatrix.needsUpdate = true;
+      vesicles.boundingSphere = null;
+      setOpacity(mats.pore, Math.min(1, sheet * 1.2));
+      setOpacity(mats.vesicle, 1);
+    }
     nucleoli.forEach((e, i) => {
       const n = st.nuclei[i];
       e.visible = !!n && n.nucleolus > 0.01;
@@ -704,6 +898,21 @@ export function buildMitosisScene(
       plate.visible = sh.plate > 0.001;
       const r = Math.max(0.001, sh.plateRadius);
       plate.scale.set(r, 1, r);
+      if (plateVesicles) {
+        const growing = sh.plate > 0.001 && sh.plate < 0.999;
+        let nv = 0;
+        for (const slot of slots) {
+          const size = plateVesicleSize(slot.r, sh.plateRadius, growing);
+          if (size < 0.02) continue;
+          tmpPos.set(slot.x, slot.y, slot.z);
+          tmpScale.setScalar(0.16 * size);
+          plateVesicles.setMatrixAt(nv++, tmpMat.compose(tmpPos, IDENTITY_Q, tmpScale));
+        }
+        plateVesicles.count = nv;
+        plateVesicles.visible = nv > 0;
+        plateVesicles.instanceMatrix.needsUpdate = true;
+        plateVesicles.boundingSphere = null;
+      }
     }
     applyLooks(st);
   };
@@ -760,6 +969,8 @@ export function buildMitosisScene(
           return { component: 'cellPlate' };
         case 'nucleolus':
           return { component: 'nucleolus' };
+        case 'vesicle':
+          return { component: 'nuclearEnvelope' };
         default:
           return null;
       }
