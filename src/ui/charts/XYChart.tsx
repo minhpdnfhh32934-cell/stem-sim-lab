@@ -2,6 +2,7 @@ import { Download } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useT } from '@/app/i18n';
 import { exportCsv } from '@/app/project/actions';
+import { axisLabel, yTickSpace } from './axes';
 import { toCsv } from './csv';
 import type uPlotType from 'uplot';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -101,15 +102,17 @@ export function XYChart(props: XYChartProps) {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
             ticks: { stroke: gridStroke },
-            label: xLabel,
+            label: axisLabel(xLabel, xUnit),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
           {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
             ticks: { stroke: gridStroke },
-            label: yLabel,
+            label: axisLabel(yLabel, yUnit),
             size: 60,
+            // At least about four numbers on a short chart (bottom panel), not one or two.
+            space: (_u, _axis, _min, _max, plotHeight) => yTickSpace(plotHeight),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
         ],
