@@ -1134,6 +1134,7 @@ const en: Messages = {
       condition: 'Condition {id}',
       run: 'Run the experiment',
       running: 'Computing…',
+      ran: 'Both conditions are measured. Change the variable and run again, or go on to Observe.',
       reset: 'Reset',
       errors: {
         invalid: 'The simulation cannot run with this value yet. Try adjusting the variable.',

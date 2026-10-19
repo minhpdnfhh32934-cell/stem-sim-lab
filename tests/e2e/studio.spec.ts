@@ -293,6 +293,9 @@ test('physics: a non-default height gives the closed-form times; the lab agrees'
   await expect(page.locator('[data-condition="A"]')).toContainText('20 m');
   await expect(page.locator('[data-condition="B"]')).toContainText('40 m');
   await page.getByRole('button', { name: 'Chạy thí nghiệm' }).click();
+  // The learner stays on the experiment until "Tiếp: Quan sát".
+  await expect(page.getByText(/Đã có số đo của cả hai điều kiện/)).toBeVisible();
+  await next(page).click();
 
   const table = page.locator('table.studio-table');
   await expect(table).toBeVisible();
@@ -399,6 +402,7 @@ test('Hỏi thầy (mocked Gemini): the question carries the engine numbers only
   await page.getByRole('radio', { name: /√2/ }).click();
   await next(page).click();
   await page.getByRole('button', { name: 'Chạy thí nghiệm' }).click();
+  await next(page).click();
   const timeA = (
     await page
       .locator('table.studio-table')

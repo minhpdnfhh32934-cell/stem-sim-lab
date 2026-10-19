@@ -14,7 +14,6 @@ import { Skeleton } from '@/ui/Skeleton';
 import { cx } from '@/ui/cx';
 import {
   engineEvidence,
-  goTo,
   withEngine,
   withInputs,
   withPrediction,
@@ -178,13 +177,9 @@ export function Interact({ scenario, session, update }: StepProps) {
         return c ? choiceText(c) : null;
       };
       const verdict = verdictFor(r.cmp.outcome, session.prediction, labelOf);
-      update((s) =>
-        goTo(
-          scenario,
-          withEngine(s, ev, verdictFor(r.cmp.outcome, s.prediction, labelOf)),
-          'observe',
-        ),
-      );
+      // The learner stays here (as on the chemistry bench and the biology model): the result is
+      // announced below and "Tiếp: Quan sát" moves on.
+      update((s) => withEngine(s, ev, verdictFor(r.cmp.outcome, s.prediction, labelOf)));
       if (session.prediction && verdict.match !== null) {
         useProgressStore.getState().recordPrediction(poe.id, verdict.match);
       }
@@ -251,6 +246,12 @@ export function Interact({ scenario, session, update }: StepProps) {
       {error && (
         <p className="studio-error" role="alert">
           {t(`studio.physics.errors.${error as 'invalid' | 'unfinished' | 'binding'}`)}
+        </p>
+      )}
+      {/* Changing an input drops the engine records (withInputs), so this is the current run. */}
+      {!busy && !error && engineEvidence(session).length > 0 && (
+        <p className="muted small" role="status">
+          {t('studio.physics.ran')}
         </p>
       )}
     </div>

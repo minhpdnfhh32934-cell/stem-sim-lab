@@ -1130,6 +1130,7 @@ const vi = {
       condition: 'Điều kiện {id}',
       run: 'Chạy thí nghiệm',
       running: 'Đang tính…',
+      ran: 'Đã có số đo của cả hai điều kiện. Em có thể chỉnh biến số rồi chạy lại, hoặc sang bước Quan sát.',
       reset: 'Đặt lại',
       errors: {
         invalid: 'Giá trị này mô phỏng chưa chạy được. Em thử chỉnh lại biến số nhé.',

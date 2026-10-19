@@ -71,6 +71,12 @@ describe('POE flow with the physics slice', () => {
     expect(next()).toBeDisabled();
     expect(await screen.findByRole('slider')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Chạy thí nghiệm' }));
+    // The learner stays on the experiment (as in chemistry and biology): the result is announced
+    // and "Tiếp: Quan sát" moves on.
+    expect(await screen.findByText(/Đã có số đo của cả hai điều kiện/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Làm thí nghiệm' })).toBeVisible();
+    expect(next()).toBeEnabled();
+    await user.click(next());
 
     // Observe: the table shows the engine values (equal to solve() within 1e-9).
     expect(await screen.findByRole('heading', { name: 'Quan sát số đo và đồ thị' })).toBeVisible();
@@ -122,6 +128,8 @@ describe('POE flow with the physics slice', () => {
     await user.click(await screen.findByRole('radio', { name: /√2/ }));
     await user.click(screen.getByRole('button', { name: /^Tiếp:/ }));
     await user.click(await screen.findByRole('button', { name: 'Chạy thí nghiệm' }));
+    await screen.findByText(/Đã có số đo của cả hai điều kiện/);
+    await user.click(screen.getByRole('button', { name: /^Tiếp:/ }));
     await screen.findByRole('table');
     await user.click(screen.getByRole('button', { name: 'Quay lại' }));
     act(() => {
