@@ -1120,6 +1120,12 @@ test('item 2: at 1366×768 "Khoanh để hỏi" and "Viết nhanh" keep their na
 }) => {
   await fakeGemini(page, [{ text: LESSON, finishReason: 'STOP' }]);
   const board = await openBoard(page);
+  // The UI font is wider on Linux than Segoe UI on Windows (the toolbar wrapped on CI only): the
+  // toolbar is checked with a wide font and wider spacing on every system, so it has to fold.
+  await page.addStyleTag({
+    content: `.board__toolbar, .board__toolbar button, .board__toolbar select {
+      font-family: Verdana, 'DejaVu Sans', sans-serif; letter-spacing: 0.05em; }`,
+  });
   await page.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Giải bài rơi tự do');
   await page.getByRole('button', { name: 'Gửi câu hỏi' }).click();
   await expect(board.getByRole('button', { name: 'Tạm dừng' })).toBeVisible({ timeout: 15_000 });

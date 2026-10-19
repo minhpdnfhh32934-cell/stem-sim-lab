@@ -478,39 +478,47 @@ polyline.board__lasso {
 }
 
 /*
- * A narrow board (1366×768 with the chat beside it, up to the width where every name fits): the
- * toolbar stays one row in every state (also "Quay lại bài giảng" while zoomed in), so the board
- * keeps its height and nothing on it moves when the selection bar appears. "Viết nhanh" and
- * "Khoanh để hỏi" keep their names (on touch there is no tooltip); "Bút của em" and "Vừa khung"
- * show their icon only (the name stays for screen readers and in the tooltip), the speed list
- * drops its icon, and the buttons sit a little closer.
+ * The toolbar stays one row in every state (also "Quay lại bài giảng" while zoomed in), so the
+ * board keeps its height and nothing on it moves when the selection bar appears. toolbarFit.ts
+ * measures it and folds names level by level until it fits (`data-compact` lists the levels in
+ * force). Level 1: "Bút của em" and "Vừa khung" show their icon only (the name stays for screen
+ * readers and in the tooltip), the speed list drops its icon, and the buttons sit a little closer.
+ * Level 2 (a wider UI font, a larger font scale): the playback button shows its icon only too.
+ * "Viết nhanh" and "Khoanh để hỏi" keep their names (on touch there is no tooltip).
  */
+/* A narrow board (1366×768 with the chat beside it, up to the width where every name fits)
+   starts at level 1, so the toolbar looks the same in every state. */
 @container board (max-width: 960px) {
   .board__toolbar {
-    gap: 4px;
+    --board-compact-floor: 1;
   }
-  .board__toolbar > .btn,
-  .board__zoom > .btn {
-    padding: 0 var(--space-2);
-  }
-  .board__speed > svg {
-    display: none;
-  }
-  .board__tool--compact .board__tool-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-  .board__toolbar .board__tool--compact,
-  .board__toolbar .board__icon-btn {
-    min-width: var(--target);
-    justify-content: center;
-    padding: 0;
-  }
+}
+.board__toolbar[data-compact~='1'] {
+  gap: 4px;
+}
+.board__toolbar[data-compact~='1'] > .btn,
+.board__toolbar[data-compact~='1'] .board__zoom > .btn {
+  padding: 0 var(--space-2);
+}
+.board__toolbar[data-compact~='1'] .board__speed > svg {
+  display: none;
+}
+.board__toolbar[data-compact~='1'] [data-compact-from='1'] .board__tool-label,
+.board__toolbar[data-compact~='2'] [data-compact-from='2'] .board__tool-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.board__toolbar[data-compact~='1'] [data-compact-from='1'],
+.board__toolbar[data-compact~='2'] [data-compact-from='2'],
+.board__toolbar[data-compact~='1'] .board__icon-btn {
+  min-width: var(--target);
+  justify-content: center;
+  padding: 0;
 }
