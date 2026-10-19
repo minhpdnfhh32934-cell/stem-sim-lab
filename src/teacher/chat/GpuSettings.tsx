@@ -14,6 +14,13 @@ import {
   type GpuAdapter,
   type WebGpuInfo,
 } from '@/ai/gpu';
+import {
+  allowGemmaAgain,
+  forgetGpuFault,
+  gemmaBlockedByGpuFault,
+  gemmaOnIntegrated,
+  lastGpuFault,
+} from '@/ai/gpuSafety';
 import { webGemmaModel } from '@/ai/webGemmaModels';
 import { formatNumber, useT, type TFunction } from '@/app/i18n';
 import type { Locale } from '@/app/i18n/types';
@@ -93,6 +100,94 @@ export function GpuRestartReminder() {
   );
 }
 
+/**
+ * A GPU fault while Gemma ran (audit GPU-01): what happened, why Gemma is paused, and the safer
+ * choices. "Let it run again" is a knowing choice. While Gemma is paused the notice stays (it
+ * holds the only way to resume, even when the stored record is gone); afterwards it can be hidden.
+ */
+function GpuFaultNotice({
+  suggested,
+  onUseDiscrete,
+  saving,
+}: {
+  suggested: GpuAdapter | undefined;
+  onUseDiscrete: (id: string) => void;
+  saving: boolean;
+}) {
+  const t = useT();
+  const locale = useSettingsStore((s) => s.locale);
+  const [, refresh] = useState(0);
+  useEffect(() => {
+    const again = () => {
+      refresh((n) => n + 1);
+    };
+    window.addEventListener('stemsim:gemma-gpu-fault', again);
+    return () => {
+      window.removeEventListener('stemsim:gemma-gpu-fault', again);
+    };
+  }, []);
+  const fault = lastGpuFault();
+  const blocked = gemmaBlockedByGpuFault();
+  if (!fault && !blocked) return null;
+  return (
+    <div className="gpu-notice gpu-notice--warn" role="alert">
+      <p>
+        <TriangleAlert size={15} aria-hidden="true" />
+        <span>
+          <strong>{t('chatSettings.gpu.faultTitle')}</strong>{' '}
+          {fault &&
+            t('chatSettings.gpu.faultBody', {
+              when: new Date(fault.at).toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-GB'),
+              card: fault.adapter ?? t('chatSettings.gpu.unknownCard'),
+            })}{' '}
+          {blocked && t('chatSettings.gpu.faultBlocked')} {t('chatSettings.gpu.faultAdvice')}
+        </span>
+      </p>
+      <div className="chat-settings__actions">
+        {suggested && (
+          <button
+            type="button"
+            className="btn btn--accent"
+            disabled={saving}
+            onClick={() => {
+              onUseDiscrete(suggested.id);
+            }}
+          >
+            <Cpu size={14} />
+            {t('chatSettings.gpu.useDiscrete', { name: suggested.name })}
+          </button>
+        )}
+        {blocked && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              allowGemmaAgain();
+              refresh((n) => n + 1);
+            }}
+          >
+            <RotateCcw size={14} />
+            {t('chatSettings.gpu.allowAgain')}
+          </button>
+        )}
+        {!blocked && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              forgetGpuFault();
+              refresh((n) => n + 1);
+            }}
+          >
+            <X size={14} />
+            {t('chatSettings.gpu.dismissFault')}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /** Settings → AI Teacher: which graphics card runs Gemma (and the whole app's WebGPU). */
 export function GpuSettings() {
   const t = useT();
@@ -157,6 +252,7 @@ export function GpuSettings() {
       : 'unknown';
   const model = webGemmaModel(gemmaModel);
   const vramWarning = model && vramTooSmall(choiceAdapter, model.bytes);
+  const onIntegrated = gemmaOnIntegrated(status, gemmaInfo) === true;
 
   let picker: ReactNode;
   if (!desktop) {
@@ -230,6 +326,21 @@ export function GpuSettings() {
         {t('chatSettings.gpu.title')}
       </legend>
       <p className="muted small">{t('chatSettings.gpu.intro')}</p>
+      <GpuFaultNotice
+        suggested={suggested && status?.choice !== suggested.id ? suggested : undefined}
+        onUseDiscrete={(id) => void choose(id)}
+        saving={saving}
+      />
+      {onIntegrated &&
+        suggested &&
+        status?.choice !== suggested.id &&
+        !lastGpuFault() &&
+        !gemmaBlockedByGpuFault() && (
+          <p className="gpu-notice gpu-notice--warn" role="status">
+            <TriangleAlert size={15} aria-hidden="true" />
+            <span>{t('chatSettings.gpu.integratedHint', { name: suggested.name })}</span>
+          </p>
+        )}
       {picker}
       {saveError && (
         <p className="chat-settings__error" role="alert">

@@ -23,6 +23,19 @@ const ALLOWED_REMOTES = [
 
 const remotes = (csp: string) => [...csp.matchAll(/https:\/\/([^\s;]+)/g)].map((m) => m[1]).sort();
 
+/** The CSP as { directive: sources }, so a test can compare every source, not only https:// ones. */
+const directives = (csp: string): Record<string, string[]> =>
+  Object.fromEntries(
+    csp
+      .split(';')
+      .map((d) => d.trim().split(/\s+/))
+      .filter((parts) => parts[0])
+      .map(([name, ...sources]): [string, string[]] => [name ?? '', sources]),
+  );
+
+const MODEL_AND_WIKI = ALLOWED_REMOTES.map((h) => `https://${h}`).sort();
+const LOCAL = ["'self'", 'ipc:', 'http://ipc.localhost'];
+
 describe('tauri.conf.json security', () => {
   const sec = conf.app.security;
 
@@ -32,6 +45,35 @@ describe('tauri.conf.json security', () => {
     // CDN (e.g. us.aws.cdn.hf.co, checked 2026-10-12), plus the opt-in Wikipedia lookup.
     // These are the only remote hosts allowed — nothing else (fork exception, CLAUDE.md).
     expect(remotes(sec.csp)).toEqual(ALLOWED_REMOTES);
+  });
+
+  it('pins every production directive exactly (no https:, *, ws: or bare host can slip in)', () => {
+    const d = directives(sec.csp);
+    expect(Object.keys(d).sort()).toEqual(
+      [
+        'connect-src',
+        'default-src',
+        'font-src',
+        'img-src',
+        'script-src',
+        'style-src',
+        'worker-src',
+      ].sort(),
+    );
+    expect(d['default-src']).toEqual(["'self'"]);
+    expect(d['script-src']).toEqual(["'self'", "'wasm-unsafe-eval'"]);
+    expect(d['style-src']).toEqual(["'self'", "'unsafe-inline'"]);
+    expect(d['img-src']).toEqual(["'self'", 'data:', 'blob:']);
+    expect(d['font-src']).toEqual(["'self'", 'data:']);
+    expect(d['worker-src']).toEqual(["'self'", 'blob:']);
+    expect([...(d['connect-src'] ?? [])].sort()).toEqual([...LOCAL, ...MODEL_AND_WIKI].sort());
+  });
+
+  it('the dev CSP adds only the Vite websockets to connect-src', () => {
+    const d = directives(sec.devCsp);
+    expect([...(d['connect-src'] ?? [])].sort()).toEqual(
+      [...LOCAL, 'ws://localhost:1420', 'ws://localhost:1421', ...MODEL_AND_WIKI].sort(),
+    );
   });
 
   it('the dev CSP allows the same model hosts, so `tauri dev` can download a model', () => {

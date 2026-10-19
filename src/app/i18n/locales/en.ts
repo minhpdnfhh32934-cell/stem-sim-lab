@@ -226,6 +226,8 @@ const en: Messages = {
       voiceHint: "AI Teacher's Vietnamese reading voice and how it reads.",
       safetyHint: 'Age confirmation, terms, the privacy page and the safety log.',
       shortcutsHint: 'The main keyboard shortcuts for simulations.',
+      versions: 'Version history',
+      versionsHint: 'What changed in each SimLab version and which versions were released.',
     },
     lookCard: 'Mode and colours',
     textCard: 'Text and language',
@@ -695,6 +697,60 @@ const en: Messages = {
     available: 'Update {version} available',
     browserOnly: 'In-app updates are only available in the installed app.',
   },
+  whatsnew: {
+    title: 'SimLab has been updated',
+    intro: 'Here is what is new since you last opened SimLab.',
+    notesLabel: 'Update notes',
+    version: 'Version {version}',
+    releasedOn: 'Release date: {date}',
+    releaseDateUnknown: 'Release date: not verified',
+    highlights: 'Highlights',
+    allChanges: 'All changes',
+    where: 'You can always find this again in Settings → Version history.',
+    details: 'See details',
+    later: 'Later',
+    close: 'Close',
+    menu: "What's new",
+    menuButton: 'File (something new in SimLab)',
+    category: {
+      added: 'New features',
+      improved: 'Improvements',
+      fixed: 'Fixes',
+      security: 'Safety and security',
+      performance: 'Performance',
+      changed: 'Changes',
+      deprecated: 'Deprecated',
+      knownIssues: 'Known issues',
+    },
+    status: {
+      released: 'Released',
+      mergedNotReleased: 'Not released on its own',
+      inReview: 'In review',
+      development: 'Test build',
+      unverified: 'Unverified',
+    },
+    statusHint: {
+      mergedNotReleased:
+        'This version had no release of its own; its changes reached users in a later release.',
+      inReview: 'This version is being reviewed and has not been released.',
+      development: 'The first test build, never released.',
+      unverified:
+        'This version number appears only in documents or a ZIP file; no release confirms it.',
+    },
+    history: {
+      current: 'You are using version {version}.',
+      currentBadge: 'Your version',
+      currentHint:
+        "The version you are using. A version's release date is only recorded in the history of later versions.",
+      draft: 'These notes are a draft and have not been reviewed for publication.',
+      loading: 'Reading the version history…',
+      unavailable:
+        'The version history could not be read. Simulations and everything else still work.',
+      listLabel: 'Versions, newest first',
+      releasesPage: 'Open the releases page on GitHub',
+      showWhatsNew: 'Show the "What\'s new" box again',
+    },
+  },
   safety: {
     aiLabel: 'AI-assisted content',
     aiLabelHint: 'This part was read or written by an AI. AI can be wrong: check it.',
@@ -902,6 +958,23 @@ const en: Messages = {
     twoApis: '· 2 APIs',
     enterHint: 'Enter to send · Shift+Enter for a new line',
     footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
+    openSimulation: 'Open the simulation: {title}',
+    factsTitle: 'Computed by SimLab (exact, not the AI)',
+    facts: {
+      balanced: 'Balanced equation: {equation}',
+      unbalanced: 'SimLab could not balance “{input}”: check the formulas in the problem.',
+    },
+    stop: 'Stop',
+    stopLabel: 'Stop the answer being written',
+    stopped: 'The answer was stopped. You can ask again or ask something else.',
+    missingDataTitle: 'SimLab note (not the AI)',
+    missingData:
+      'This problem may be missing data: SimLab found no numbers in the question. If the problem gives values, add them (with units) and send it again.',
+    unverifiedTitle: 'SimLab check (not the AI)',
+    unverifiedNumbers: 'Numbers the AI brought in itself (not checked): {numbers}',
+    unverifiedMore: '… and {count} more',
+    unverifiedHint:
+      'SimLab did not find these numbers in your question, the conversation, the reference notes or SimLab’s results. A calculation the board marks as right may still use a wrong formula. Check them yourself.',
     errors: {
       cloudOff: 'Online AI is off. Enable an AI provider in Settings or choose local Gemma.',
       notAllowed:
@@ -910,6 +983,14 @@ const en: Messages = {
       gemmaMissing:
         'Gemma is not downloaded, or this browser has no WebGPU. Check Settings → AI Teacher.',
       webgpu: 'This browser or device has no WebGPU support, so Gemma cannot run on it.',
+      gemmaStalled:
+        'Gemma wrote nothing for a long time, so it was stopped and restarted. Please ask again; if it stays slow, pick "Short" answers or a smaller model in Settings.',
+      gemmaGpu:
+        'The graphics card stopped Gemma (out of memory or a driver reset). You can ask again; if it happens again, close other apps or pick a smaller model.',
+      gemmaGpuBlocked:
+        'The graphics card hung while running Gemma. So the computer does not restart, Gemma stays off until you reopen the app. Pick the discrete card in Settings → GPU for Gemma, use a smaller model, or ask through an API.',
+      gemmaFailed:
+        'Gemma hit an error while answering. Please ask again; if it repeats, open Settings → AI Teacher.',
       crisis:
         'I’m sorry you are having a hard time. Please tell a trusted adult now. If you are in immediate danger in Vietnam, call 111 or 115. This message was not sent to AI.',
       personal:
@@ -938,8 +1019,8 @@ const en: Messages = {
     flowLocalChatSession:
       'The conversation is kept only until the app closes (history saving is off).',
     gemmaModel: 'Gemma version',
-    gemma270m: '270M · smallest',
-    gemma1b: '1B · recommended',
+    gemma270m: '270M · lightest, for trying only (often off-topic, weak answers)',
+    gemma1b: '1B · recommended on-device; often wrong on facts, double-check or turn on Think',
     gemmaE2b: 'E2B · strongest, reads photos',
     modelReady: 'Gemma is ready on this computer.',
     modelMissing: 'This model is not downloaded.',
@@ -956,6 +1037,8 @@ const en: Messages = {
       'The download failed because of the network. Check the connection and press “Download model” again.',
     downloadMemory:
       'This computer does not have enough graphics memory for this model. Choose a smaller one (270M or 1B).',
+    downloadGpuBlocked:
+      'Gemma is paused because the graphics card hung while running it (so the computer does not restart). To try again: open Settings → GPU for Gemma, pick the discrete card if there is one, then press “Let Gemma run again anyway” — or reopen the app.',
     downloadFailed: 'The download did not finish ({detail}). The model is not marked as ready.',
     desktopOnly: 'desktop app only',
     webLookup: 'Also look up Wikipedia when online',
@@ -1080,6 +1163,18 @@ const en: Messages = {
       browserOnly:
         'In a browser, the browser picks the graphics card. Choosing a card is only available in the Windows desktop app.',
       unsupported: 'Choosing a graphics card is currently only available on Windows.',
+      faultTitle: 'The graphics card hung while running Gemma',
+      faultBody:
+        'At {when}, the {card} card stopped responding while Gemma was answering. Windows had to reset it; if this repeats, the computer may restart.',
+      faultBlocked: 'Gemma is paused until you reopen the app.',
+      faultAdvice:
+        'Pick the discrete card for Gemma, a smaller model, or ask through an online API.',
+      useDiscrete: 'Use the discrete card: {name}',
+      allowAgain: 'Let Gemma run again anyway',
+      dismissFault: 'Hide this notice',
+      unknownCard: 'graphics',
+      integratedHint:
+        'Gemma runs on the integrated card, which can hang on long questions; this computer has a discrete card ({name}): pick it for Gemma.',
     },
   },
   gpuSettings: {
@@ -1157,6 +1252,8 @@ const en: Messages = {
   voice: {
     readAloudCard: 'Read aloud',
     readAloud: "Read AI Teacher's answers aloud",
+    onCpuAfterGpuFault:
+      'For this session the on-device voice runs on the CPU because the graphics card failed (slower but safe for the computer).',
     readAloudHint: 'Also switched with the speaker button in the chat. No audio is recorded.',
     sourceCard: 'Voice source',
     engines: {
@@ -1174,6 +1271,8 @@ const en: Messages = {
       },
     },
     systemFound: 'Vietnamese voice found: {names}.',
+    noVietnameseOnEnable:
+      'This computer has no Vietnamese voice, so the teacher will mispronounce. Open Settings → Voice to add a Windows Vietnamese voice or pick the on-device Vietnamese voice.',
     systemMissing:
       'No Vietnamese voice on this computer, so Windows reads with an English voice and gets the tones wrong. Install the free Vietnamese voice:',
     installStep1: 'Open Windows Settings → Time & language → Speech.',
@@ -1239,10 +1338,22 @@ const en: Messages = {
       noModel:
         'The on-device Vietnamese voice is not downloaded: the Windows voice read the last answer instead.',
       quota: 'Gemini reported no quota left: the Windows voice read the last answer instead.',
+      dailyLimit:
+        "Today's AI limit (set in Settings) is used up: the Windows voice read the last answer instead.",
+      timeout:
+        'The chosen voice took too long to answer: the Windows voice read the rest of the lesson instead.',
+      systemVoice:
+        "The Windows voice could not read the last sentence (the computer's speech engine reported an error). Try another voice.",
       offline: 'No network: the Windows voice read the last answer instead.',
       notAllowed:
         'The Gemini voice needs the 18+ confirmation: the Windows voice read the last answer instead.',
       other: 'The chosen voice could not read: the Windows voice read the last answer instead.',
+      lessonRest:
+        'The on-device voice could not read: the Windows voice read the rest of the lesson instead.',
+      gpuToCpu:
+        'The graphics card failed while reading: the on-device voice now runs on the CPU (slower, but safe for the computer), and the Windows voice read what was left unread.',
+      movedToCpu:
+        'The on-device voice just moved to the CPU (slower, but safe for the computer): the Windows voice finished what it was reading.',
     },
   },
   levels: {
@@ -1371,6 +1482,7 @@ const en: Messages = {
     transcript: 'Transcript',
     chipsLabel: 'Quick requests',
     chips: {
+      hint: 'Step hint',
       again: 'Explain again',
       slower: 'Slower',
       example: 'Another example',
@@ -1378,6 +1490,7 @@ const en: Messages = {
       lost: 'I do not get this part',
     },
     chipPrompts: {
+      hint: 'Do not solve it all. Give me one small hint for the next step only (no final answer yet), then ask me to try that step.',
       again: 'Explain your last answer again in a different, easier way, keeping the same content.',
       slower:
         'Teach your last answer again more slowly: split it into small steps, one idea per step, and explain each step.',

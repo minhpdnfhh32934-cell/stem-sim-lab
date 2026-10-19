@@ -10,6 +10,7 @@ import { KnowledgeSettings } from '@/teacher/chat/settings/KnowledgeSettings';
 import { MemorySettings } from '@/teacher/chat/settings/MemorySettings';
 import { TeacherSettings } from '@/teacher/chat/settings/TeacherSettings';
 import { VoiceSettings } from '@/teacher/voice/VoiceSettings';
+import { VersionHistory } from '@/app/whatsnew/VersionHistory';
 import { IconButton } from '@/ui/IconButton';
 import { AppearanceSettings, ShortcutSettings, SimulationSettings } from './GeneralSettings';
 import { SECTIONS, type SectionMeta } from './sectionMeta';
@@ -28,6 +29,7 @@ const BODIES: Record<SettingsSection, ComponentType> = {
   voice: VoiceSettings,
   safety: SafetySettings,
   shortcuts: ShortcutSettings,
+  versions: VersionHistory,
 };
 
 const GROUPS: { id: SectionMeta['group']; title: MessageKey }[] = [

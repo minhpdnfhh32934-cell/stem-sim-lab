@@ -1,7 +1,7 @@
 {
   "name": "stem-sim-lab",
   "private": true,
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "SimLab — offline desktop simulator for Physics, Chemistry and Biology (Tauri + React)",
   "type": "module",
   "engines": {
@@ -21,7 +21,8 @@
     "test:watch": "vitest",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run test",
     "test:e2e": "playwright test",
-    "golden:llm": "vitest run --config vitest.llm.config.ts"
+    "golden:llm": "vitest run --config vitest.llm.config.ts",
+    "release-notes": "node scripts/release-notes/build.mjs"
   },
   "dependencies": {
     "@fontsource/pangolin": "5.3.0",

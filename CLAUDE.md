@@ -56,7 +56,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   refuses ~300 MB entries. The worker needs both ORT asyncify files in `public/ort/` (`.mjs` + `.wasm`)
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
-- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`.
+- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
+  of a lazy module waits up to 20 s (the dev server compiles it on first use).
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
@@ -85,6 +86,23 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
   was merged into it). Details: `docs/AI_TUTOR.md`.
+- **Gemma answer quality (0.6.0, benchmark 2026-10-14, `docs/TEACHING_EVAL.md`):** repetition rules
+  look only at the generated tokens (`webGemmaWorker.ts` `ANSWER_RULES`); never apply
+  `repetition_penalty` / `no_repeat_ngram_size` to the prompt again (it garbled every term the model
+  had to copy). The on-device prompt gets one unambiguous library note (`knowledge.ts`), an opening
+  chosen by `turnKind` (premise question / learner reply / ordinary question), the
+  `missingData.ts` notice and the `provenance.ts` "Số do AI tự đưa ra" chip. **Any change to an
+  on-device prompt or decoding is benchmarked before it ships:** `scripts/teaching/eval-gemma.mjs`
+  (discrete NVIDIA only, never the iGPU; `--variants/--decoding/--set/--improved-name/--skip`),
+  `compare.mjs`, `breakdown.mjs`, the held-out set `tests/teaching/teaching-heldout.json` and blind
+  AI judging (`judge-prep.mjs`, `judge-score.mjs`, `judge-rubric.md`). Saved results in
+  `tests/teaching/results/` are never edited.
+- **Release notes and "Có gì mới":** one source, `release-notes/versions.json`; `npm run
+release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
+  `release-notes/google-docs.html` (never edit generated files). A version's `notesReady` becomes
+  true only when its notes are reviewed for a real release; never describe an unreleased version
+  as released or invent a date. In-app box and Settings → "Lịch sử phiên bản": `src/app/whatsnew/`
+  (`stemsim.whatsnew`). Procedure: `release-notes/README.md`.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
@@ -296,6 +314,12 @@ Progress log: `docs/PROGRESS.md`.
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
+- Audit 2026-10-13 (`docs/AUDIT_2026-10-13.md`): **never run Gemma on an integrated GPU for tests or
+  benchmarks** (it crashed the lead's laptop, bugcheck 0x119); `gpuSafety.ts` stops Gemma after one
+  GPU fault. Numbers the AI explains come from app tools when one applies (`tools.ts`, shown in a
+  "Kết quả do SimLab tính" card). AI-written links are never clickable; `navigation.rs` keeps the
+  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); releases only publish
+  commits on `main`, signing in the `release` environment.
 - UI polish kit (0.5.2): `.segmented`/`.subject-switch`/`.tabs__list` get a sliding indicator
   automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
   `Skeleton` for loading, `ProgressBar` + `eta.ts` for downloads (estimate only from progress
@@ -344,6 +368,12 @@ Progress log: `docs/PROGRESS.md`.
   (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 11 ModuleViews. Small shared controls in
   `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
+- Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
+  `runDivision('mitosis')`, S phase folded into the G1→G2 boundary), `scene.ts` (three.js, nothing
+  allocated per frame, everything disposed), `Mitosis3DView`/`Mitosis3DSwitch` (falls back to 2D on
+  tier low / no WebGL2 / context lost). The division store records which division `index` belongs to
+  (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d` Playwright project (software WebGL
+  starves parallel specs).
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).

@@ -55,11 +55,77 @@ export interface TimedAction {
 }
 
 export interface Sentence {
-  /** Words the teacher says (tags removed, whitespace collapsed). */
+  /** Words outside the tags (tags removed, whitespace collapsed). */
   speech: string;
+  /**
+   * What the teacher reads aloud and the subtitle shows (audit BRD-01): `speech` with what is
+   * written on the board put back where its tag stood ("Đề cho <write>m = 2 kg</write>." is read
+   * "Đề cho m = 2 kg."), formulas as `$…$` for the speech reader. A write the sentence already
+   * says is not repeated.
+   */
+  spoken: string;
   actions: TimedAction[];
   /** Silence after the sentence (from `<pause>` tags), milliseconds. */
   pauseMs: number;
+}
+
+const fold = (s: string) =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+
+function wordsOf(s: string): string[] {
+  return fold(s)
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+/**
+ * True when most words of `text` are already in `speech` (the teacher says it anyway). A write
+ * with a number the sentence does not say ("… = 6 N" after "2 kg và 3") never is: the result
+ * must be heard.
+ */
+function alreadySaid(speech: string, text: string): boolean {
+  const said = new Set(wordsOf(speech));
+  const words = wordsOf(text);
+  if (words.length === 0) return true;
+  const saidNumbers = new Set(speech.match(/\d+/g) ?? []);
+  if ((text.match(/\d+/g) ?? []).some((n) => !saidNumbers.has(n))) return false;
+  return words.filter((w) => said.has(w)).length / words.length >= 0.6;
+}
+
+/** The sentence as read aloud: written texts spliced in at their tags. */
+export function spokenSentence(speech: string, actions: readonly TimedAction[]): string {
+  const inserts = actions
+    .filter(
+      (a): a is TimedAction & { action: Extract<BoardAction, { kind: 'write' | 'correct' }> } =>
+        a.action.kind === 'write' || a.action.kind === 'correct',
+    )
+    .filter((a) => !alreadySaid(speech, a.action.text))
+    .sort((a, b) => a.at - b.at);
+  let out = '';
+  let pos = 0;
+  for (const { at, action } of inserts) {
+    const before = speech.slice(pos, at);
+    out += before;
+    let text = action.text.trim();
+    const math = action.kind === 'write' && action.math;
+    if (!math) {
+      // "Đề cho" + "Cho: m = 2 kg" → "Đề cho m = 2 kg" (the board's label is not read twice).
+      const lastWord = /([\p{L}]+)\s*$/u.exec(out)?.[1];
+      const first = /^([\p{L}]+)\s*:?\s*/u.exec(text);
+      if (lastWord && first?.[1] && fold(first[1]) === fold(lastWord)) {
+        text = text.slice(first[0].length);
+      }
+    }
+    out += `${/\S$/.test(out) ? ' ' : ''}${math ? `$${text}$` : text}`;
+    pos = at;
+    if (/^[^\s.,;:!?…]/.test(speech.slice(pos))) out += ' ';
+  }
+  out += speech.slice(pos);
+  return out
+    .replace(/\s+([.,;:!?…])/g, '$1')
+    .replace(/([,;:])(?=[.!?…])/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export interface Diagnostic {
@@ -105,6 +171,8 @@ const EMPTY = new Set([
   'wait_student',
   'checkpoint',
 ]);
+/** Every TeachScript tag name (the voice removes these and a few HTML tags before reading). */
+export const TEACHSCRIPT_TAGS: readonly string[] = [...CONTAINERS, ...EMPTY];
 /** Attributes that would be coordinates or sizes: never accepted from the AI (§7). */
 const GEOMETRY = /^(x|y|x1|y1|x2|y2|left|top|right|bottom|width|height|px|size|pos|position)$/i;
 
@@ -317,6 +385,50 @@ function emptyAction(
   }
 }
 
+/** A "." that does not end its sentence; `before` is the sentence up to the dot. */
+function notAnEnd(before: string, after: string): boolean {
+  const word = /(\S+)$/.exec(before)?.[1] ?? '';
+  const opens = before.slice(0, before.length - word.length).trim() === '';
+  // A step "1." or an option "A." that opens the sentence.
+  if (opens && /^(?:\d{1,2}|[A-F])$/.test(word)) return true;
+  // A page "tr. 45".
+  if (/^[Tt]r$/.test(word) && /^\s*\d/.test(after)) return true;
+  // "v.v." in the middle of a sentence ("lực cản v.v. đều …").
+  if (/(?:^|[\s(])v\.v$/.test(before) && /^\s+\p{Ll}/u.test(after)) return true;
+  return false;
+}
+
+/**
+ * Index just after the end of the sentence that `text` continues (`head` is what the sentence
+ * already holds), or -1. Ends: . ! ? … followed by a space (not inside numbers like 9.81), except
+ * the dots of `notAnEnd`; a sentence that opens with an option "A." also ends before the next
+ * option ("A. 10 m/s B. 20 m/s"), and options after a colon start a sentence of their own
+ * ("Câu hỏi: A. 10 m/s B. 20 m/s" → "Câu hỏi:" | "A. 10 m/s" | "B. 20 m/s").
+ */
+function sentenceEnd(head: string, text: string): number {
+  const full = head + text;
+  const base = head.length;
+  let optionCut = -1;
+  const marker = /^\s*[A-F][.)]\s/.exec(full);
+  if (marker) {
+    const next = /\s(?=[B-F][.)]\s)/g;
+    next.lastIndex = Math.max(marker[0].length, base);
+    const o = next.exec(full);
+    if (o) optionCut = o.index - base;
+  } else {
+    // A list of options (an "A." and, later, a "B.") right after a colon.
+    const colon = /:(?=[ \t]*A[.)]\s[\s\S]*?\sB[.)]\s)/.exec(full);
+    if (colon) optionCut = Math.max(0, colon.index + 1 - base);
+  }
+  const ends = /[.!?…](?=\s|$)/g;
+  for (let m = ends.exec(text); m; m = ends.exec(text)) {
+    if (optionCut >= 0 && optionCut <= m.index) return optionCut;
+    if (m[0] === '.' && notAnEnd(full.slice(0, base + m.index), text.slice(m.index + 1))) continue;
+    return m.index + 1;
+  }
+  return optionCut;
+}
+
 /** Splits spoken text into sentences, keeping actions anchored to their sentence. */
 function sentencesOf(
   segments: { speech: string; actions: TimedAction[]; pauseMs: number }[],
@@ -329,12 +441,17 @@ function sentencesOf(
     const trimmed = speech.replace(/\s+/g, ' ').trim();
     if (trimmed || actions.length) {
       const lead = speech.length - speech.trimStart().length;
+      // Offsets follow the collapsed text: count the characters removed before each action.
+      const collapsedAt = (at: number) =>
+        speech.slice(lead, Math.max(lead, at)).replace(/\s+/g, ' ').length;
+      const timed = actions.map((a) => ({
+        at: Math.max(0, Math.min(trimmed.length, collapsedAt(a.at))),
+        action: a.action,
+      }));
       out.push({
         speech: trimmed,
-        actions: actions.map((a) => ({
-          at: Math.max(0, Math.min(trimmed.length, a.at - lead)),
-          action: a.action,
-        })),
+        spoken: spokenSentence(trimmed, timed),
+        actions: timed,
         pauseMs,
       });
     }
@@ -344,15 +461,14 @@ function sentencesOf(
   };
   for (const seg of segments) {
     pauseMs += seg.pauseMs;
-    // Sentence ends: . ! ? … followed by a space (not inside numbers like 9.81). Each action
-    // goes to the sentence in which its tag stood.
+    // Sentence ends (`sentenceEnd`). Each action goes to the sentence in which its tag stood.
     let pending = [...seg.actions];
     let consumed = 0;
     let rest = seg.speech;
     for (;;) {
-      const m = /[.!?…](?=\s|$)/.exec(rest);
-      if (!m) break;
-      const cut = m.index + 1;
+      const cut = sentenceEnd(speech, rest);
+      // An empty cut only closes a sentence that already holds words.
+      if (cut < 0 || (cut === 0 && !speech.trim())) break;
       const end = consumed + cut;
       for (const a of pending.filter((x) => x.at <= end)) {
         actions.push({ at: speech.length + a.at - consumed, action: a.action });

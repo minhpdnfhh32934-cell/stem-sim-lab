@@ -6,10 +6,41 @@
  * explanations are spoken, not copied onto the board (boards hold key points only).
  */
 import { parseMessage } from '@/teacher/chat/messageParse';
-import type { BoardAction, ParsedScript, Sentence, TimedAction } from './teachscript';
+import {
+  spokenSentence,
+  type BoardAction,
+  type ParsedScript,
+  type Sentence,
+  type TimedAction,
+} from './teachscript';
 
 /** Longest line written as it is; longer paragraphs are spoken and only their formulas written. */
 const MAX_WRITE_CHARS = 150;
+/** A board line is a key point (audit BRD-04): longer words-only lines are cut at a clause. */
+const KEY_POINT_CHARS = 80;
+
+/**
+ * The key point of a step for the board; the whole step is still read aloud. Lines with numbers
+ * are kept whole (every number on the board is checked and must not be cut).
+ */
+export function keyPoint(text: string): string {
+  // The step's own numbering ("2.", "Bước 2:", or both) is not data.
+  let body = text;
+  for (let i = 0; i < 2; i++)
+    body = body.replace(/^(?:(?:bước|step)\s*\d+|\d+[.)])\s*[:.]?\s*/i, '');
+  if (text.length <= KEY_POINT_CHARS || /\d/.test(body)) return text;
+  const head = text.slice(0, KEY_POINT_CHARS - 10);
+  const clause = Math.max(head.lastIndexOf(','), head.lastIndexOf(';'), head.lastIndexOf(':'));
+  const cut = clause >= 30 ? clause : head.lastIndexOf(' ');
+  let at = cut > 0 ? cut : head.length;
+  // Never inside a $…$ formula (an unclosed "$a =…" on the board): the formula is kept whole.
+  for (const m of text.matchAll(/\$[^$]+\$/g)) {
+    const end = m.index + m[0].length;
+    if (at > m.index && at < end) at = end;
+  }
+  if (at >= text.trimEnd().length) return text;
+  return `${text.slice(0, at).trimEnd()}…`;
+}
 
 // `\b` does not work after Vietnamese letters: a lookahead ends the word instead.
 const RESULT = /^(đáp số|đáp án|kết quả|kết luận|vậy|=>|⇒|suy ra|answer|result)(?![\p{L}\d])/iu;
@@ -50,7 +81,13 @@ class Builder {
   say(speech: string, actions: BoardAction[] = [], pauseMs = 0) {
     const timed: TimedAction[] = actions.map((action) => ({ at: 0, action }));
     if (actions.some((a) => a.kind === 'write')) this.written++;
-    this.sentences.push({ speech: speech.trim(), actions: timed, pauseMs });
+    const said = speech.trim();
+    this.sentences.push({
+      speech: said,
+      spoken: spokenSentence(said, timed),
+      actions: timed,
+      pauseMs,
+    });
   }
 
   /** A new face when the current one is already full of content (teachers wipe or move on). */
@@ -122,6 +159,8 @@ class Builder {
       return;
     }
     const id = this.id(result ? 'r' : note ? 'n' : given ? 'g' : 's');
+    // Results and given data are written whole; a long explanation step only as its key point.
+    const written = result || given ? plain : keyPoint(plain);
     const zone = note || given ? 'side_notes' : 'steps';
     const role = result ? 'result' : note ? 'note' : 'body';
     const actions: BoardAction[] = [
@@ -131,12 +170,12 @@ class Builder {
         zone,
         role,
         math: false,
-        text: plain,
+        text: written,
         speed: result ? 'slow' : 'normal',
       },
     ];
     for (const word of bold.slice(0, 2)) {
-      if (plain.includes(word))
+      if (written.includes(word))
         actions.push({ kind: 'mark', mark: 'underline', target: id, span: word });
     }
     if (result) actions.push({ kind: 'mark', mark: 'box', target: id });

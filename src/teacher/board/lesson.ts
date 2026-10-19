@@ -4,7 +4,15 @@
  * for both). Marks (underline, circle, box, highlight, arrows) are drawn when their tag comes.
  * Every number written is checked for provenance (provenance.ts).
  */
-import { speak, stopSpeaking, toSpokenText } from '@/teacher/voice/speak';
+import {
+  newVoiceSession,
+  speak,
+  stopSpeaking,
+  toSpokenText,
+  type SpeakOptions,
+  type VoiceSession,
+} from '@/teacher/voice/speak';
+import type { SpeechRole } from '@/teacher/voice/speechPlan';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { markdownToScript } from './fromMarkdown';
 import {
@@ -57,6 +65,23 @@ export function boardAnswerText(content: string): string {
     .join('\n\n');
 }
 
+const SUBSCRIPT = '₀₁₂₃₄₅₆₇₈₉';
+const SUPERSCRIPT: Record<string, string> = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+  '+': '⁺',
+  '-': '⁻',
+  '−': '⁻',
+};
+
 /** Subtitle: the spoken sentence with markdown and LaTeX turned into readable text. */
 export function subtitleText(speech: string): string {
   return speech
@@ -66,6 +91,22 @@ export function subtitleText(speech: string): string {
         .replace(/\\(cdot|times)/g, '·')
         .replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
         .replace(/\\text\{([^{}]*)\}/g, '$1')
+        // "2H_2 + O_2 \\rightarrow 2H_2O" → "2H₂ + O₂ → 2H₂O"; "m/s^2" → "m/s²"; "\\ " → space.
+        .replace(/\\(?:long)?rightarrow\b|\\to\b/g, '→')
+        .replace(/\\(?:rightleftharpoons|leftrightarrow)\b/g, '⇌')
+        .replace(/\\[ ,;:!]/g, ' ')
+        // As LaTeX reads them: without braces one character ("a^2+b^2" → "a²+b²"); a braced
+        // group only when it is all digits/signs ("10^{-3}" → "10⁻³"), else kept readable
+        // ("e^{-kt}" → "e^(-kt)", "x_{2n}" → "x_(2n)", "V_{max}" → "V_max").
+        .replace(/\^\{?\\circ\}?/g, '°')
+        .replace(/_(?:\{(\d+)\}|(\d))/g, (_s, a?: string, b?: string) =>
+          Array.from(a ?? b ?? '', (c) => SUBSCRIPT[Number(c)] ?? c).join(''),
+        )
+        .replace(/_\{([^{}]*)\}/g, (_s, g: string) => (/^[A-Za-z]+$/.test(g) ? `_${g}` : `_(${g})`))
+        .replace(/\^(?:\{([0-9+\-−]+)\}|([0-9+\-−]))/g, (_s, a?: string, b?: string) =>
+          Array.from(a ?? b ?? '', (c) => SUPERSCRIPT[c] ?? c).join(''),
+        )
+        .replace(/\^\{([^{}]*)\}/g, (_s, g: string) => (g.length === 1 ? `^${g}` : `^(${g})`))
         .replace(/\\([a-zA-Z]+)/g, '$1')
         .replace(/[{}]/g, ''),
     )
@@ -82,6 +123,8 @@ let gate: { promise: Promise<void>; open: () => void } | null = null;
 let instant = false;
 let lastInput: LessonInput | null = null;
 let lastMeasure: Measure | null = null;
+/** The lesson's voice: once the chosen voice failed for good, its later sentences do not wait. */
+let voiceSession: VoiceSession = newVoiceSession();
 
 class Stopped extends Error {}
 
@@ -291,8 +334,80 @@ async function runAction(
   }
 }
 
+/** What the voice needs to know about a sentence: its role on the board and its key terms. */
+export interface VoiceCue {
+  role?: SpeechRole;
+  emphasis: string[];
+}
+
+/**
+ * The sentence's role from what it writes (a heading, a result, a side note, a step) and its key
+ * terms (keywords written, words underlined, circled, boxed or highlighted). Without a board role
+ * the voice guesses from the words (a question, feedback…).
+ */
+export function voiceCue(sentence: Sentence): VoiceCue {
+  const writes = sentence.actions
+    .map((a) => a.action)
+    .filter((a): a is Extract<BoardAction, { kind: 'write' }> => a.kind === 'write');
+  const has = (role: string) => writes.some((w) => w.role === role);
+  const role: SpeechRole | undefined = has('heading')
+    ? 'heading'
+    : has('result')
+      ? 'result'
+      : writes.length > 0 && writes.every((w) => w.role === 'note')
+        ? 'note'
+        : writes.some((w) => w.zone === 'steps')
+          ? 'step'
+          : undefined;
+  const marked = sentence.actions
+    .map((a) => a.action)
+    .flatMap((a) => (a.kind === 'mark' && a.span ? [a.span] : []));
+  const keywords = writes.filter((w) => w.role === 'keyword' && !w.math).map((w) => w.text);
+  const emphasis = [...new Set([...keywords, ...marked])]
+    .map((t) => t.trim())
+    .filter((t) => t && !t.includes('$'))
+    .slice(0, 4);
+  return { ...(role ? { role } : {}), emphasis };
+}
+
 function readingTime(text: string): number {
   return Math.min(4200, Math.max(700, text.length * 42));
+}
+
+/** Set when a pause cut the sentence being spoken: it is read again after "Tiếp tục". */
+let speechCut = false;
+/** Read through functions: a pause or "Viết nhanh" changes these while a sentence is spoken. */
+const wasCut = () => speechCut;
+const isInstant = () => instant;
+
+/**
+ * Speaks a sentence, again from its start when a pause cut it (audit BRD-02): the learner never
+ * loses the end of a sentence. The board's speed (0,75–2×) also sets the voice's pace (BRD-03).
+ */
+async function speakSentence(
+  text: string,
+  cue: VoiceCue,
+  signal: AbortSignal,
+  entry: SentenceTiming,
+): Promise<void> {
+  for (;;) {
+    speechCut = false;
+    const begin = performance.now();
+    if (metrics) metrics.firstSpeechMs ??= Math.round(begin - metrics.startedAt);
+    const opts: SpeakOptions = {
+      rate: useBoardStore.getState().speed,
+      session: voiceSession,
+      emphasis: cue.emphasis,
+      ...(cue.role ? { role: cue.role } : {}),
+    };
+    await speak(text, opts);
+    entry.speechMs = (entry.speechMs ?? 0) + Math.round(performance.now() - begin);
+    if (!wasCut() || isAborted(signal) || isInstant()) return;
+    // Never throws: when the pen stops first (a stop during the pause), nobody awaits this
+    // promise any more, and a rejection here would be unhandled.
+    if (gate) await gate.promise;
+    if (isAborted(signal) || isInstant()) return;
+  }
 }
 
 async function playSentence(
@@ -301,22 +416,50 @@ async function playSentence(
 ): Promise<void> {
   const { signal } = ctx;
   await waitIfPaused(signal);
-  useBoardStore.getState().set({ subtitle: subtitleText(sentence.speech) });
-  const voice = !instant && useVoiceStore.getState().enabled && sentence.speech.trim() !== '';
-  const speech = voice ? speak(sentence.speech) : Promise.resolve();
+  // What is said and shown includes what is being written (audit BRD-01).
+  const said = sentence.spoken || sentence.speech;
+  useBoardStore.getState().set({ subtitle: subtitleText(said) });
+  const voice = !instant && useVoiceStore.getState().enabled && said.trim() !== '';
+  const entry: SentenceTiming = { speechMs: null, writingMs: 0 };
+  metrics?.sentences.push(entry);
+  const speech = voice ? speakSentence(said, voiceCue(sentence), signal, entry) : Promise.resolve();
   const started = performance.now();
   for (const { action } of sentence.actions) {
     await waitIfPaused(signal);
     await runAction(action, ctx);
   }
+  entry.writingMs = Math.round(performance.now() - started);
   await speech;
   if (isAborted(signal)) throw new Stopped();
   if (!voice && !instant) {
     // Without a voice the learner reads the subtitle: give them the time to.
-    const left = readingTime(toSpokenText(sentence.speech)) - (performance.now() - started);
+    const left = readingTime(toSpokenText(said)) - (performance.now() - started);
     await sleep(left / useBoardStore.getState().speed, signal);
   }
   await sleep(sentence.pauseMs + 220, signal);
+}
+
+/**
+ * Timing of the current lesson, kept on this computer only (audit G3 measurement): when the first
+ * word was heard, and for each sentence how long the voice and the pen took.
+ */
+export interface SentenceTiming {
+  /** Time the voice spoke (null without voice); a sentence read again after a pause adds up. */
+  speechMs: number | null;
+  writingMs: number;
+}
+
+export interface LessonMetrics {
+  startedAt: number;
+  firstSpeechMs: number | null;
+  sentences: SentenceTiming[];
+}
+
+let metrics: LessonMetrics | null = null;
+
+/** The timing of the lesson being taught (or the last one), for tests and diagnostics. */
+export function lessonMetrics(): LessonMetrics | null {
+  return metrics;
 }
 
 /** Results proved so far in the current lesson (a continuation may use them). */
@@ -342,8 +485,11 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
   } catch (e) {
     if (!(e instanceof Stopped)) throw e;
   } finally {
-    if (controller === ctrl) controller = null;
-    instant = false;
+    // A newer run owns `instant` ("Viết nhanh" pressed during it): only reset our own.
+    if (controller === ctrl) {
+      controller = null;
+      instant = false;
+    }
   }
 }
 
@@ -351,6 +497,9 @@ async function run(script: ParsedScript, input: LessonInput, measure: Measure): 
 export async function playLesson(input: LessonInput, measure: Measure): Promise<void> {
   stopLesson();
   lessonKnown = [];
+  // A new lesson (or "Giảng lại") tries the chosen voice again; "Viết tiếp" keeps the session.
+  voiceSession = newVoiceSession();
+  metrics = { startedAt: performance.now(), firstSpeechMs: null, sentences: [] };
   useBoardStore.getState().set({
     layout: emptyLayout(),
     progress: {},
@@ -376,9 +525,14 @@ export async function continueLesson(input: LessonInput, measure: Measure): Prom
     await playLesson(input, measure);
     return;
   }
-  // Whatever was still being written is finished at once before the new part starts.
+  // Whatever was still being written is finished at once before the new part starts. A pause
+  // ends too: the new part must not wait on the old run's gate (the board would freeze).
   controller?.abort();
   controller = null;
+  const g = gate;
+  gate = null;
+  g?.open();
+  speechCut = false;
   stopSpeaking();
   const store = useBoardStore.getState();
   const progress = { ...store.progress };
@@ -394,6 +548,8 @@ export function pauseLesson(): void {
     open = resolve;
   });
   gate = { promise, open };
+  // The sentence being spoken is cut here and read again on "Tiếp tục" (audit BRD-02).
+  if (useVoiceStore.getState().speaking) speechCut = true;
   stopSpeaking();
   useBoardStore.getState().set({ status: 'paused' });
 }
@@ -411,10 +567,17 @@ export function resumeLesson(): void {
 export function finishNow(): void {
   if (!controller) return;
   instant = true;
+  speechCut = false;
   stopSpeaking();
   resumeLesson();
 }
 
+/**
+ * Stops the lesson being taught. It never touches a start that is still waiting for the board's
+ * fonts (`cancelPendingStart` does, when the page closes): `playLesson` calls this first, and the
+ * board must not forget which answer it is about to teach (it would then take a re-render for
+ * "Viết tiếp" and cut the new lesson after its first sentence).
+ */
 export function stopLesson(): void {
   controller?.abort();
   controller = null;
@@ -422,12 +585,43 @@ export function stopLesson(): void {
   gate = null;
   g?.open();
   stopSpeaking();
-  if (
-    useBoardStore.getState().status === 'playing' ||
-    useBoardStore.getState().status === 'paused'
-  ) {
+  const status = useBoardStore.getState().status;
+  if (status === 'playing' || status === 'paused') {
     useBoardStore.getState().set({ status: 'done', pen: null });
   }
+}
+
+/** Numbers the starts the board schedules; `pendingStart` is the one still allowed to begin. */
+let startTicket = 0;
+let pendingStart: number | null = null;
+
+/**
+ * The board schedules a start (it first waits for its fonts, Whiteboard.tsx): only the latest
+ * scheduled start may begin, see `claimStart`.
+ */
+export function reserveStart(): number {
+  startTicket += 1;
+  pendingStart = startTicket;
+  return startTicket;
+}
+
+/** True, once, when this start is still the latest and the page was not closed meanwhile. */
+export function claimStart(ticket: number): boolean {
+  if (pendingStart !== ticket) return false;
+  pendingStart = null;
+  return true;
+}
+
+/**
+ * The page closes while a start waits for the fonts: it never begins, so a voice never starts on
+ * a page that is gone. The answer was not taught, so showing it again starts it afresh (also
+ * after React's StrictMode remount in development).
+ */
+export function cancelPendingStart(): void {
+  if (pendingStart === null) return;
+  pendingStart = null;
+  const store = useBoardStore.getState();
+  store.set({ lessonContent: '', ...(store.status === 'preparing' ? { status: 'idle' } : {}) });
 }
 
 export function replayLesson(): void {

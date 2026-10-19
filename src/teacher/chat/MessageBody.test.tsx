@@ -46,4 +46,12 @@ describe('MessageBody', () => {
     expect(document.body.textContent).toContain('click');
     expect(document.querySelector('.chat-message__body a')).toBeNull();
   });
+
+  it('shows where an AI-written link leads but never makes it clickable (audit SEC-03)', () => {
+    render(<MessageBody content={'Xem [bài viết này](https://evil.example/login?next=1) nhé'} />);
+    expect(document.querySelector('a')).toBeNull();
+    expect(screen.getByText('bài viết này')).toBeInTheDocument();
+    expect(screen.getByText('(evil.example)')).toBeInTheDocument();
+    expect(screen.getByTitle('https://evil.example/login?next=1')).toBeInTheDocument();
+  });
 });

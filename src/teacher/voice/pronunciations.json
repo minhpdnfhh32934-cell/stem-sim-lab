@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "about": "How the teacher's voice says a term, applied before the rule-based reader (vietnameseText.ts). Readings are the Vietnamese spellings textbooks use for these names and loanwords. Each entry waits for a teacher (review_status, docs/DATA_REVIEW.md PRON-1). Never put a number, a unit symbol or a chemical formula here.",
+  "entries": [
+    { "term": "Volta", "reading": "Vôn-ta", "subject": "physics", "review_status": "pending" },
+    { "term": "Volt", "reading": "Vôn", "subject": "physics", "review_status": "pending" },
+    { "term": "Hertz", "reading": "Héc", "subject": "physics", "review_status": "pending" },
+    { "term": "Celsius", "reading": "Xen-xi-út", "subject": "physics", "review_status": "pending" },
+    {
+      "term": "Fahrenheit",
+      "reading": "Pha-ren-hai",
+      "subject": "physics",
+      "review_status": "pending"
+    },
+    { "term": "Bohr", "reading": "Bo", "subject": "physics", "review_status": "pending" },
+    {
+      "term": "Rutherford",
+      "reading": "Rơ-dơ-pho",
+      "subject": "physics",
+      "review_status": "pending"
+    },
+    { "term": "Thomson", "reading": "Tôm-xơn", "subject": "physics", "review_status": "pending" },
+    { "term": "Maxwell", "reading": "Mác-xoen", "subject": "physics", "review_status": "pending" },
+    { "term": "Doppler", "reading": "Đốp-ple", "subject": "physics", "review_status": "pending" },
+    { "term": "Gauss", "reading": "Gao-xơ", "subject": "physics", "review_status": "pending" },
+    { "term": "Tesla", "reading": "Tét-la", "subject": "physics", "review_status": "pending" },
+    { "term": "Weber", "reading": "Vê-be", "subject": "physics", "review_status": "pending" },
+    { "term": "Henry", "reading": "Hen-ri", "subject": "physics", "review_status": "pending" },
+    { "term": "Boyle", "reading": "Bôi-lơ", "subject": "physics", "review_status": "pending" },
+    { "term": "Mariotte", "reading": "Ma-ri-ốt", "subject": "physics", "review_status": "pending" },
+    { "term": "Charles", "reading": "Sác-lơ", "subject": "physics", "review_status": "pending" },
+    {
+      "term": "Kirchhoff",
+      "reading": "Kiếc-xốp",
+      "subject": "physics",
+      "review_status": "pending"
+    },
+    {
+      "term": "Torricelli",
+      "reading": "Tô-ri-xe-li",
+      "subject": "physics",
+      "review_status": "pending"
+    },
+    {
+      "term": "Pythagoras",
+      "reading": "Py-ta-go",
+      "subject": "general",
+      "review_status": "pending"
+    },
+    { "term": "Euclid", "reading": "Ơ-clít", "subject": "general", "review_status": "pending" },
+    { "term": "Isaac", "reading": "I-xắc", "subject": "physics", "review_status": "pending" },
+    {
+      "term": "Mendeleev",
+      "reading": "Men-đê-lê-ép",
+      "subject": "chemistry",
+      "review_status": "pending"
+    },
+    {
+      "term": "Le Chatelier",
+      "reading": "Lơ Sa-tơ-li-ê",
+      "subject": "chemistry",
+      "review_status": "pending"
+    },
+    {
+      "term": "Lavoisier",
+      "reading": "La-voa-di-ê",
+      "subject": "chemistry",
+      "review_status": "pending"
+    },
+    { "term": "Dalton", "reading": "Đan-tơn", "subject": "chemistry", "review_status": "pending" },
+    {
+      "term": "Arrhenius",
+      "reading": "A-rê-ni-út",
+      "subject": "chemistry",
+      "review_status": "pending"
+    },
+    { "term": "proton", "reading": "prô-tôn", "subject": "chemistry", "review_status": "pending" },
+    { "term": "neutron", "reading": "nơ-tron", "subject": "chemistry", "review_status": "pending" },
+    { "term": "enzyme", "reading": "en-zim", "subject": "biology", "review_status": "pending" },
+    { "term": "protein", "reading": "prô-tê-in", "subject": "biology", "review_status": "pending" },
+    { "term": "virus", "reading": "vi-rút", "subject": "biology", "review_status": "pending" },
+    {
+      "term": "ribosome",
+      "reading": "ri-bô-xôm",
+      "subject": "biology",
+      "review_status": "pending"
+    },
+    {
+      "term": "nucleotide",
+      "reading": "nu-clê-ô-tit",
+      "subject": "biology",
+      "review_status": "pending"
+    },
+    { "term": "lipid", "reading": "li-pít", "subject": "biology", "review_status": "pending" },
+    { "term": "plasmid", "reading": "plát-mít", "subject": "biology", "review_status": "pending" },
+    { "term": "Golgi", "reading": "Gôn-gi", "subject": "biology", "review_status": "pending" },
+    { "term": "Morgan", "reading": "Moóc-gan", "subject": "biology", "review_status": "pending" },
+    { "term": "Watson", "reading": "Oát-xơn", "subject": "biology", "review_status": "pending" },
+    { "term": "Crick", "reading": "Crích", "subject": "biology", "review_status": "pending" },
+    { "term": "Pasteur", "reading": "Pa-xtơ", "subject": "biology", "review_status": "pending" },
+    { "term": "Lamarck", "reading": "La-mác", "subject": "biology", "review_status": "pending" }
+  ]
+}

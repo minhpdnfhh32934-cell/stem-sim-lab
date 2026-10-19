@@ -1,13 +1,18 @@
 /**
- * AI Teacher reads an answer aloud: the text is turned into Vietnamese words
- * (`vietnameseText.ts`), cut into phrases with natural pauses, and spoken by the chosen voice:
- * a voice installed in Windows, Gemini's cloud voice, or the on-device Vietnamese model.
- * When a cloud or on-device voice fails, the Windows voice takes over and Settings says why.
+ * AI Teacher reads an answer aloud: the text is prepared apart from any voice (`speechPlan.ts`:
+ * markup removed, pronunciation dictionary, Vietnamese words, chunks with planned pauses and
+ * roles) and spoken by the chosen voice: a voice installed in Windows, Gemini's cloud voice, or
+ * the on-device Vietnamese model (`naturalVoice.ts`: role prosody, same loudness, no clicks,
+ * rendered one chunk ahead). When a cloud or on-device voice fails, the Windows voice takes over
+ * and Settings says why.
  */
 import { newRequestId, getTransport } from '@/ai/transport';
 import { useAiStore } from '@/ai/aiStore';
-import { decodeAudio, pause, playPcm, stopAudio, type Pcm } from './audio';
-import { synthesizeLocal } from './localVoice';
+import { isQuotaError } from '@/ai/fallback';
+import { AiError } from '@/ai/types';
+import { decodeAudio, isSilent, pause, playPcm, stopAudio, type Pcm } from './audio';
+import { speakNatural, type RenderCache } from './naturalVoice';
+import { prepareSpeech, type PlannedChunk, type SpeechRole } from './speechPlan';
 import { splitForSpeech, toSpeech, type SpeechChunk } from './vietnameseText';
 import { GEMINI_STYLES, VOICE_PRESETS, useVoiceStore, type VoiceEngine } from './voiceStore';
 
@@ -36,6 +41,37 @@ export function listVoices(): SpeechSynthesisVoice[] {
   } catch {
     return [];
   }
+}
+
+/**
+ * The voice list once it is known: Chromium/WebView2 return [] from getVoices() until the first
+ * "voiceschanged". An empty list waits for that event (at most `timeoutMs`), then answers with
+ * whatever is known, so a caller never decides on a list that has not loaded yet.
+ */
+export function voicesWhenLoaded(timeoutMs = 1500): Promise<SpeechSynthesisVoice[]> {
+  const s = synth();
+  const known = listVoices();
+  if (!s || known.length > 0) return Promise.resolve(known);
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      try {
+        s.removeEventListener('voiceschanged', finish);
+      } catch {
+        /* engine without events */
+      }
+      resolve(listVoices());
+    };
+    const timer = window.setTimeout(finish, timeoutMs);
+    try {
+      s.addEventListener('voiceschanged', finish);
+    } catch {
+      /* engine without events: the timeout decides */
+    }
+  });
 }
 
 /** Vietnamese voices installed in Windows or offered by the browser. */
@@ -70,27 +106,125 @@ export function toSpokenText(content: string): string {
 }
 
 let controller: AbortController | null = null;
+/**
+ * Counts the speeches: every stop (and so every new speech) moves it on, and a speech whose
+ * number is no longer the current one never plays another sound (an old lesson's audio after a
+ * new lesson started, or after the learner left).
+ */
+let generation = 0;
+
+/**
+ * One lesson's voice (the board keeps one per lesson; a chat answer gets its own). After the
+ * chosen voice fails for a reason that will not pass within the lesson (a timeout, no network,
+ * no quota, the daily cap, an on-device model that is missing, will not load, hangs or speaks
+ * silence), the rest of it is read by the system voice at once instead of waiting for that voice
+ * again at every sentence. Only that voice is skipped: another one chosen meanwhile is heard.
+ */
+export interface VoiceSession {
+  /** The voice skipped for the rest of the session and why (null = the chosen voice is tried). */
+  skipped: { engine: VoiceEngine; reason: string } | null;
+  /**
+   * Chunks the on-device voice already rendered in this lesson: a sentence read again after a
+   * pause ("Tiếp tục") is heard at once.
+   */
+  rendered?: RenderCache;
+}
+
+export function newVoiceSession(): VoiceSession {
+  return { skipped: null, rendered: new Map() };
+}
+
+export interface SpeakOptions {
+  /** Pace on top of the learner's voice speed (the board's 0,75–2×). */
+  rate?: number;
+  /** Shared by the sentences of one lesson (see `VoiceSession`). */
+  session?: VoiceSession;
+  /** The sentence's role on the board (heading, step, result…); guessed from the words otherwise. */
+  role?: SpeechRole;
+  /** Key terms (the board's keywords and marked words): a short pause before each. */
+  emphasis?: readonly string[];
+}
+
+/** "code: message" for AI errors (Settings tells a timeout from a quota), else the message. */
+function errorText(e: unknown): string {
+  if (e instanceof AiError) return `${e.code}: ${e.message}`;
+  return e instanceof Error ? e.message : String(e);
+}
+
+/** A failure that will not pass within a lesson: trying that voice again only adds waiting. */
+function lastingFailure(e: unknown): boolean {
+  if (e instanceof AiError) {
+    return isQuotaError(e) || ['timeout', 'network', 'dailyLimit', 'missingKey'].includes(e.code);
+  }
+  // The graphics card failed (localVoice.ts VoiceCardFault): the next phrase loads on the CPU,
+  // so the on-device voice is tried again rather than given up for the lesson.
+  if (e instanceof Error && e.name === 'VoiceCardFault') return false;
+  const message = e instanceof Error ? e.message : String(e);
+  return (
+    /^(?:gemini-tts-(?:no-key|unavailable)|voice-model-(?:missing|timeout|silent)|worker-crashed)$/.test(
+      message,
+    ) || message.startsWith('voice-model-load-')
+  );
+}
+
+/** How far a voice got: phrases fully played (the fallback continues from there, VOI-01). */
+interface Progress {
+  played: number;
+}
+
+/** The style's pace and pitch; an unknown stored style falls back to the default (VOI-03). */
+function stylePreset(style: string): { rate: number; pitch: number } {
+  const presets: Partial<Record<string, { rate: number; pitch: number }>> = VOICE_PRESETS;
+  return presets[style] ?? VOICE_PRESETS.vui;
+}
+
+/** Read through a function: the signal is aborted while a phrase plays. */
+const stopped = (signal: AbortSignal) => signal.aborted;
 
 /** Reads text aloud with the teacher's voice. Resolves when done, stopped or unavailable. */
-export async function speak(text: string): Promise<void> {
+export async function speak(text: string, opts: SpeakOptions = {}): Promise<void> {
   stopSpeaking();
-  const chunks = splitForSpeech(toSpokenText(text));
+  const mine = generation;
+  const store = useVoiceStore.getState();
+  const session = opts.session ?? newVoiceSession();
+  // Skipped for this lesson: the system voice reads at once, and Settings keeps the reason.
+  const engine = session.skipped?.engine === store.engine ? 'system' : store.engine;
+  const plan = prepareSpeech(text, {
+    ...(opts.role ? { role: opts.role } : {}),
+    ...(opts.emphasis ? { emphasis: opts.emphasis } : {}),
+  });
+  // The on-device voice says the plan's chunks; the others keep their sentence-sized phrases.
+  const chunks: SpeechChunk[] = engine === 'local' ? plan.chunks : splitForSpeech(plan.text);
   if (chunks.length === 0) return;
   const ctrl = new AbortController();
   controller = ctrl;
-  const store = useVoiceStore.getState();
   store.setSpeaking(true);
+  const rate = Math.min(2, Math.max(0.5, opts.rate ?? 1));
+  const progress: Progress = { played: 0 };
+  const current = () => generation === mine && !ctrl.signal.aborted;
   try {
-    await speakWith(store.engine, chunks, ctrl.signal);
-    if (!ctrl.signal.aborted) useVoiceStore.getState().setLastError(null);
+    if (engine === 'local') {
+      await speakLocal(plan.chunks, ctrl.signal, rate, progress, current, session.rendered);
+    } else {
+      await speakWith(engine, chunks, ctrl.signal, rate, progress);
+    }
+    if (!ctrl.signal.aborted && engine === store.engine) {
+      useVoiceStore.getState().setLastError(null);
+    }
   } catch (e) {
     if (ctrl.signal.aborted) return;
-    const message = e instanceof Error ? e.message : String(e);
+    const message = errorText(e);
     console.warn('[teacher-voice]', message);
     useVoiceStore.getState().setLastError(message);
-    // The learner still hears the answer: the operating-system voice takes over.
-    if (store.engine !== 'system' && speechSupported()) {
-      await speakSystem(chunks, ctrl.signal).catch(() => undefined);
+    if (engine !== 'system' && lastingFailure(e)) session.skipped = { engine, reason: message };
+    // The learner still hears the answer: the operating-system voice takes over from the first
+    // phrase not yet heard, so nothing is read twice (audit VOI-01).
+    if (engine !== 'system' && speechSupported()) {
+      await speakSystem(chunks.slice(progress.played), ctrl.signal, rate, {
+        played: 0,
+      }).catch((fallback: unknown) => {
+        console.warn('[teacher-voice] fallback', errorText(fallback));
+      });
     }
   } finally {
     if (controller === ctrl) {
@@ -100,14 +234,20 @@ export async function speak(text: string): Promise<void> {
   }
 }
 
-function speakWith(engine: VoiceEngine, chunks: SpeechChunk[], signal: AbortSignal) {
-  if (engine === 'gemini') return speakGemini(chunks, signal);
-  if (engine === 'local') return speakLocal(chunks, signal);
-  return speakSystem(chunks, signal);
+function speakWith(
+  engine: Exclude<VoiceEngine, 'local'>,
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+) {
+  if (engine === 'gemini') return speakGemini(chunks, signal, rate, progress);
+  return speakSystem(chunks, signal, rate, progress);
 }
 
 /** Stops any ongoing teacher speech. Safe to call anytime. */
 export function stopSpeaking(): void {
+  generation++;
   controller?.abort();
   controller = null;
   try {
@@ -121,25 +261,33 @@ export function stopSpeaking(): void {
 
 // ------------------------------------------------------------ operating-system voice
 
-async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<void> {
+async function speakSystem(
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+): Promise<void> {
   const s = synth();
   if (!s) throw new Error('no-speech-engine');
   const store = useVoiceStore.getState();
-  const preset = VOICE_PRESETS[store.style];
+  const preset = stylePreset(store.style);
   const voice = pickVoice(listVoices(), store.voiceURI);
   for (const chunk of chunks) {
     if (signal.aborted) return;
-    await new Promise<void>((resolve) => {
+    await new Promise<void>((resolve, reject) => {
       const utterance = new SpeechSynthesisUtterance(chunk.text);
       utterance.lang = voice?.lang ?? 'vi-VN';
       if (voice) utterance.voice = voice;
-      utterance.rate = preset.rate * store.speed;
+      utterance.rate = preset.rate * store.speed * rate;
       utterance.pitch = preset.pitch;
       // Some engines never fire "end": a phrase may not hold the teacher for ever.
       const guard = window.setTimeout(done, 8000 + chunk.text.length * 150);
-      function done() {
+      function settle() {
         window.clearTimeout(guard);
         signal.removeEventListener('abort', cancel);
+      }
+      function done() {
+        settle();
         resolve();
       }
       function cancel() {
@@ -147,10 +295,22 @@ async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<
         done();
       }
       utterance.onend = done;
-      utterance.onerror = done;
+      // A stop or a new phrase interrupts or cancels: not an error. Anything else (not allowed,
+      // synthesis failed…) is reported and the phrase was not heard.
+      utterance.onerror = (event: SpeechSynthesisErrorEvent) => {
+        // Optional: some speech engines (and test doubles) call the handler without an event.
+        const error = (event as Partial<SpeechSynthesisErrorEvent> | undefined)?.error ?? 'unknown';
+        if (error === 'interrupted' || error === 'canceled' || signal.aborted) {
+          done();
+          return;
+        }
+        settle();
+        reject(new Error(`system-voice-${error}`));
+      };
       signal.addEventListener('abort', cancel, { once: true });
       s.speak(utterance);
     });
+    if (!stopped(signal)) progress.played++;
     await pause(chunk.pauseMs, signal);
   }
 }
@@ -159,19 +319,30 @@ async function speakSystem(chunks: SpeechChunk[], signal: AbortSignal): Promise<
 
 /** Phrases joined into requests of a few sentences; the pauses become Gemini pause tags. */
 export function geminiGroups(chunks: SpeechChunk[], max = GEMINI_GROUP_CHARS): string[] {
-  const groups: string[] = [];
+  return geminiGroupSizes(chunks, max).map((g) => g.text);
+}
+
+/** The groups and how many phrases each holds (so a failure knows what was already heard). */
+export function geminiGroupSizes(
+  chunks: SpeechChunk[],
+  max = GEMINI_GROUP_CHARS,
+): { text: string; phrases: number }[] {
+  const groups: { text: string; phrases: number }[] = [];
   let current = '';
+  let count = 0;
   for (const c of chunks) {
     const piece = c.pauseMs >= 450 ? `${c.text} <long pause>` : c.text;
     if (current && current.length + piece.length + 1 > max) {
-      groups.push(current);
+      groups.push({ text: current, phrases: count });
       current = piece;
+      count = 1;
     } else {
       current = current ? `${current} ${piece}` : piece;
+      count++;
     }
   }
-  if (current) groups.push(current);
-  return groups.map((g) => g.replace(/\s*<long pause>$/, ''));
+  if (current) groups.push({ text: current, phrases: count });
+  return groups.map((g) => ({ ...g, text: g.text.replace(/\s*<long pause>$/, '') }));
 }
 
 function speedWords(speed: number): string {
@@ -182,12 +353,18 @@ function speedWords(speed: number): string {
   return '';
 }
 
-async function speakGemini(chunks: SpeechChunk[], signal: AbortSignal): Promise<void> {
+async function speakGemini(
+  chunks: SpeechChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+): Promise<void> {
   const transport = getTransport();
   if (!transport.tts) throw new Error('gemini-tts-unavailable');
   if (!(await transport.hasKey('gemini'))) throw new Error('gemini-tts-no-key');
   const store = useVoiceStore.getState();
-  const style = `${GEMINI_STYLES[store.style]}${speedWords(store.speed)}`;
+  const styles: Partial<Record<string, string>> = GEMINI_STYLES;
+  const style = `${styles[store.style] ?? GEMINI_STYLES.vui}${speedWords(store.speed * rate)}`;
   const timeoutSecs = Math.max(30, useAiStore.getState().timeoutSecs);
   const tts = transport.tts.bind(transport);
   const fetchGroup = async (text: string): Promise<Pcm> => {
@@ -202,40 +379,47 @@ async function speakGemini(chunks: SpeechChunk[], signal: AbortSignal): Promise<
       },
       signal,
     );
-    return decodeAudio(audio.audio, audio.mimeType);
+    const pcm = decodeAudio(audio.audio, audio.mimeType);
+    // Empty or silent audio is not speech: the system voice then reads these phrases.
+    if (isSilent(pcm)) throw new Error('gemini-tts-silent');
+    return pcm;
   };
   // While one group plays, the next is already being made.
-  const groups = geminiGroups(chunks);
-  let next = groups[0] ? fetchGroup(groups[0]) : null;
+  const groups = geminiGroupSizes(chunks);
+  let next = groups[0] ? fetchGroup(groups[0].text) : null;
   for (let i = 0; i < groups.length && next; i++) {
     const pcm = await next;
     const after = groups[i + 1];
-    next = after ? fetchGroup(after) : null;
+    next = after ? fetchGroup(after.text) : null;
     next?.catch(() => undefined);
     if (signal.aborted) return;
     await playPcm(pcm, signal);
+    if (!stopped(signal)) progress.played += groups[i]?.phrases ?? 0;
     await pause(220, signal);
   }
 }
 
 // ------------------------------------------------------------ on-device voice
 
-async function speakLocal(chunks: SpeechChunk[], signal: AbortSignal): Promise<void> {
-  const speed = useVoiceStore.getState().speed;
-  // Commas are pauses for this model (it has no punctuation): one phrase per piece.
-  const pieces = chunks.flatMap((c) => {
-    const parts = c.text.split(/,\s*/).filter((p) => p.trim());
-    return parts.map((text, i) => ({ text, pauseMs: i === parts.length - 1 ? c.pauseMs : 140 }));
+/**
+ * The plan's chunks, each with its pause, prosody and loudness (`naturalVoice.ts`). The
+ * learner's speed is the playback rate (the same for every chunk, so the voice keeps one pitch);
+ * a role's pace is set when the chunk is rendered.
+ */
+function speakLocal(
+  chunks: PlannedChunk[],
+  signal: AbortSignal,
+  rate: number,
+  progress: Progress,
+  current: () => boolean,
+  cache: RenderCache | undefined,
+): Promise<void> {
+  return speakNatural(chunks, signal, {
+    speed: useVoiceStore.getState().speed * rate,
+    current,
+    ...(cache ? { cache } : {}),
+    played: () => {
+      progress.played++;
+    },
   });
-  let next = pieces[0] ? synthesizeLocal(pieces[0].text, signal) : null;
-  for (let i = 0; i < pieces.length && next; i++) {
-    const pcm = await next;
-    const after = pieces[i + 1];
-    next = after ? synthesizeLocal(after.text, signal) : null;
-    next?.catch(() => undefined);
-    if (signal.aborted) return;
-    // Playback rate is the only speed control this model has (it also shifts the pitch a bit).
-    await playPcm(pcm, signal, speed);
-    await pause(pieces[i]?.pauseMs ?? 0, signal);
-  }
 }

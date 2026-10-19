@@ -29,7 +29,8 @@ test('every chemistry topic opens without errors and publishes a Science Card', 
   await openChemistry(page);
   for (const name of TOPICS) {
     await page.getByRole('button', { name, exact: true }).click();
-    await expect(page.locator('.science-card')).toBeVisible();
+    // Each topic is a lazy module the dev server compiles on first use.
+    await expect(page.locator('.science-card')).toBeVisible({ timeout: 20_000 });
     await page.waitForTimeout(300);
   }
   expect(errors).toEqual([]);

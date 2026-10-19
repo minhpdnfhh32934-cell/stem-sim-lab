@@ -43,7 +43,10 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
   const resume = page.getByRole('button', { name: /Tiếp tục bài đang học/ });
   await expect(resume).toContainText('Chuyển động thẳng đều');
   await resume.click();
-  await expect(page.locator('.stage__hud-title')).toHaveText('Chuyển động thẳng đều');
+  // The dev server compiles the physics stage on first use (up to ~20 s on a busy machine).
+  await expect(page.locator('.stage__hud-title')).toHaveText('Chuyển động thẳng đều', {
+    timeout: 20_000,
+  });
 });
 
 test('subject cards and the level picker (Level → Subject → Topic)', async ({ page }) => {
@@ -76,6 +79,8 @@ test.describe('Basic / Advanced', () => {
     await expect(inspector.getByText('Đối tượng', { exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /Thước đo góc/ })).toHaveCount(0);
     const sliders = inspector.locator('.params input[type="range"]');
+    // count() does not wait: let the sliders render first (slow under a full parallel run).
+    await expect(sliders.first()).toBeVisible();
     const basicCount = await sliders.count();
     expect(basicCount).toBeGreaterThanOrEqual(3);
     expect(basicCount).toBeLessThanOrEqual(5);
@@ -85,7 +90,7 @@ test.describe('Basic / Advanced', () => {
     const more = inspector.getByRole('button', { name: /Thêm thông số/ });
     if ((await more.count()) > 0) {
       await more.click();
-      expect(await sliders.count()).toBeGreaterThan(basicCount);
+      await expect.poll(() => sliders.count()).toBeGreaterThan(basicCount);
     }
 
     await mode.getByRole('radio', { name: 'Nâng cao' }).click();

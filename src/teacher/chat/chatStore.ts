@@ -17,8 +17,17 @@ export interface ChatMessageRecord {
   model?: string;
   checkedBy?: string;
   references?: string[];
+  /**
+   * Results SimLab computed for this question (exact chemical balancing…), shown by the app next
+   * to the answer: a small model may garble them in its own text (benchmark 2026-10-13).
+   */
+  facts?: string[];
   /** The answer stopped at the output limit: the chat offers "Viết tiếp". */
   truncated?: boolean;
+  /** The app found a calculation request without numbers and shows its own notice above. */
+  missingData?: boolean;
+  /** Values in the answer nobody gave the AI (provenance.ts), shown as "chưa kiểm chứng". */
+  unverifiedNumbers?: string[];
 }
 /** AI-written summary of the turns that no longer fit the context budget (kept on this computer). */
 export interface ChatSummary {
@@ -55,6 +64,13 @@ interface ChatState {
   summary: ChatSummary | null;
   /** A question is being answered (not persisted; the board shows "preparing"). */
   answering: boolean;
+  /**
+   * Stops the answer being written ("Dừng"), from whichever panel shows it (not persisted).
+   * Set by the panel that asked; null when nothing is being answered.
+   */
+  stopAnswer: (() => void) | null;
+  /** The last answer was stopped by the learner: the chat says so (not persisted). */
+  stopped: boolean;
   /** The learner's own choice of engine (marks it as chosen). */
   setEngine: (engine: ChatEngine) => void;
   setGemmaModel: (model: string) => void;
@@ -148,6 +164,8 @@ export const useChatStore = create<ChatState>()(
       memoryLength: 'medium',
       summary: null,
       answering: false,
+      stopAnswer: null,
+      stopped: false,
       setEngine: (engine) => set({ engine, engineChosen: true }),
       setGemmaModel: (gemmaModel) => set({ gemmaModel }),
       setVerifierProvider: (verifierProvider) =>
