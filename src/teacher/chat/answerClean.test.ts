@@ -1024,3 +1024,31 @@ describe('answer cleaning: what it never touches', () => {
     }
   });
 });
+
+describe('answer cleaning: audit G8 (a request closed by ":", a cough)', () => {
+  it('a bare request closed by ":" before the work is a correction request', () => {
+    const text = 'Nhận xét: câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\nv = 20 m/s';
+    for (const question of [
+      'Sửa giúp em: v = 72 km/h = 20 m/s',
+      'Kiểm tra lại giúp em: v = 72 km/h = 20 m/s',
+      'sua giup em: v = 72 km/h = 20 m/s',
+      'kiem tra lai giup em : v = 20 m/s',
+    ]) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+  });
+
+  it('"chua ho" (curing a cough) is no correction request', () => {
+    const out = cleanAnswer(
+      'Đánh giá: câu trả lời đúng.\n\nBản đã sửa:\nHo là phản xạ bảo vệ đường thở.',
+      { reviewed: true, question: 'Lam sao de chua ho?' },
+    );
+    expect(out.text).toBe('Ho là phản xạ bảo vệ đường thở.');
+    // "hộ em" still asks for one.
+    const asked = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(asked, { reviewed: true, question: 'chua ho em voi' }).text).toBe(asked);
+  });
+});

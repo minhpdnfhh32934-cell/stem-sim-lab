@@ -261,12 +261,12 @@ const THIS = String.raw`(?:\s+(?:này|đó|ấy))?`;
 const IN_WORK = String.raw`(?:\s+(?:trong|ở)\s+(?:${OWN_WORK})${THIS})?`;
 /**
  * What a bare request ("sửa giúp em") may go on with: nothing (the request ends: "Kiểm tra lại
- * giúp em.", "Sửa giúp em, v = …"), or the work it is about, then the end or ":" ("Thầy chữa giúp
+ * giúp em.", "Sửa giúp em, v = …", "Sửa giúp em: v = …"), or the work it is about, then the end or ":" ("Thầy chữa giúp
  * em bài này", "Kiểm tra giúp em bài này: v = 20 m/s", "sửa giúp em chỗ này với"). A topic after
  * it ("kiểm tra giúp em điều kiện cân bằng…", "sửa giúp em lỗi chính tả…", "chữa giúp em bài tập
  * 5") is no request about the learner's work.
  */
-const REQUEST_TAIL = String.raw`(?=${PARTICLES}${ENDS})|\s+(?:(?:${WORK})${THIS}${IN_WORK}|(?:cái|chỗ|đoạn|phần|câu)\s+(?:này|đó|ấy))(?=${PARTICLES}(?:${ENDS}|\s*:))`;
+const REQUEST_TAIL = String.raw`(?=${PARTICLES}(?:${ENDS}|\s*:))|\s+(?:(?:${WORK})${THIS}${IN_WORK}|(?:cái|chỗ|đoạn|phần|câu)\s+(?:này|đó|ấy))(?=${PARTICLES}(?:${ENDS}|\s*:))`;
 /** "không", "chưa" and their casual spellings ("k", "ko", "hông", "hk", "hok"). */
 const NOT = String.raw`không|chưa|ko|k|hông|hk|hok`;
 /** Words that may close a yes/no check: "ạ", "nhỉ", "thầy ơi"… */
@@ -421,6 +421,8 @@ function fold(question: string): { text: string; accented: boolean[] } {
 const F_ME = 'em|minh';
 const F_FOR = 'giup|ho|dum|gium';
 const F_BENEFIT = String.raw`(?:${F_FOR})(?:\s+(?:${F_ME}))?|cho\s+(?:${F_ME})`;
+/** A request that ends right after "for me": "ho" alone is also a cough ("chua ho" = "chữa ho"). */
+const F_BENEFIT_BARE = String.raw`(?:giup|dum|gium)(?:\s+(?:${F_ME}))?|(?:ho|cho)\s+(?:${F_ME})`;
 const F_PARTICLES = String.raw`(?:\s+(?:voi|nhe|nha|a|thay|co|anh|chi|ban|oi))*`;
 const F_BENEFIT_AFTER = String.raw`(?:${F_FOR})\s+(?:${F_ME})|cho\s+(?:${F_ME})|(?:${F_FOR})(?=${F_PARTICLES}${ENDS})`;
 const F_FIX = String.raw`sua|chua|kiem\s+tra|check`;
@@ -436,8 +438,9 @@ const F_SAME_SENTENCE = String.raw`(?:[^.?!\n]|\.(?=\d))*?`;
 const F_CHECK_END = String.raw`(?=${F_CHECK_PARTICLES}${ENDS})`;
 
 const FOLDED_REQUESTS: readonly RegExp[] = [
-  // "sua giup em voi", "kiem tra lai giup em", "cham diem giup em", "sua giup em cho nay".
-  String.raw`(?:(?:${F_FIX})(?:\s+lai)?|cham\s+diem)\s+(?:${F_BENEFIT})(?:(?=${F_PARTICLES}${ENDS})|\s+(?:(?:${F_WORK})${F_THIS}${F_IN_WORK}|(?:cai|cho|doan|phan|cau)\s+(?:nay|do|ay))(?=${F_PARTICLES}(?:${ENDS}|\s*:)))`,
+  // "sua giup em voi", "kiem tra lai giup em", "cham diem giup em", "sua giup em cho nay",
+  // "sua giup em: v = …".
+  String.raw`(?:(?:${F_FIX})(?:\s+lai)?|cham\s+diem)\s+(?:(?:${F_BENEFIT_BARE})(?=${F_PARTICLES}(?:${ENDS}|\s*:))|(?:${F_BENEFIT})\s+(?:(?:${F_WORK})${F_THIS}${F_IN_WORK}|(?:cai|cho|doan|phan|cau)\s+(?:nay|do|ay))(?=${F_PARTICLES}(?:${ENDS}|\s*:)))`,
   // "sua bai giup em voi", "thay cham bai giup em", "sua loi sai trong bai nay giup em".
   String.raw`(?:(?:${F_FIX})(?:\s+lai)?|cham|${F_JUDGE})(?:\s+(?:${F_BENEFIT}))?\s+(?:${F_WORK})${F_THIS}${F_IN_WORK}\s+(?:${F_BENEFIT_AFTER}|cua\s+(?:${F_ME})|em|(?:${F_ME})\s+(?:da\s+)?(?:lam|giai|viet|tinh))`,
   // "bai lam cua em: …", "loi giai cua minh", "bai em lam", "ket qua cua em la …".
