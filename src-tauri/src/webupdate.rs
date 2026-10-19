@@ -184,8 +184,10 @@ pub fn unpack(zip_bytes: &[u8], dir: &Path) -> Result<(), String> {
     let mut total: u64 = 0;
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).map_err(|e| e.to_string())?;
+        // zip 9: `name()` can fail on a badly encoded name; the raw bytes are only shown here.
         let Some(rel) = file.enclosed_name() else {
-            return Err(format!("đường dẫn không an toàn: {}", file.name()));
+            let name = String::from_utf8_lossy(file.name_raw());
+            return Err(format!("đường dẫn không an toàn: {name}"));
         };
         let out = dir.join(rel);
         if file.is_dir() {
