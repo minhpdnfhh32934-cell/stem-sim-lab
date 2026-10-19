@@ -120,6 +120,17 @@ describe('update window at start-up (in-app updates)', () => {
     expect(screen.queryByRole('button', { name: 'Để sau' })).toBeNull();
   });
 
+  it('a mandatory download that fails offers "Thử lại" and the download page', async () => {
+    await startUpCheck({ required: true });
+    invoke.mockImplementationOnce(() => Promise.reject(new Error('mạng ngừng gửi dữ liệu')));
+    await userEvent.click(screen.getByRole('button', { name: 'Cập nhật ngay' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('mạng ngừng gửi dữ liệu');
+    expect(screen.getByRole('button', { name: 'Thử lại' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Đóng' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'Mở trang tải bộ cài' }));
+    expect(invoke).toHaveBeenCalledWith('open_releases_page');
+  });
+
   it('a Microsoft Store copy never checks GitHub: the Store updates it', async () => {
     channel.current = 'store';
     await startUpCheck({});

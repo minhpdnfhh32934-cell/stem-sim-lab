@@ -150,9 +150,17 @@ export function UpdateDialog() {
           </button>
         )}
         {locked && phase === 'error' && (
-          <button type="button" className="btn btn--accent" onClick={() => void applyUpdate()}>
-            {t('update.retry')}
-          </button>
+          <>
+            {/* A download that keeps failing must not trap the learner: the installer from the
+                releases page also brings the required version. */}
+            <button type="button" className="btn" onClick={() => void openReleasesPage()}>
+              <ExternalLink size={15} aria-hidden="true" />
+              {t('update.openReleases')}
+            </button>
+            <button type="button" className="btn btn--accent" onClick={() => void applyUpdate()}>
+              {t('update.retry')}
+            </button>
+          </>
         )}
         {!locked && (phase === 'upToDate' || phase === 'error' || phase === 'idle') && (
           <button type="button" className="btn" onClick={() => void checkForUpdate()}>

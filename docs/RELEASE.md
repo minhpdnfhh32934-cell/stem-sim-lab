@@ -98,7 +98,12 @@ menu ☰), trang Cài đặt → "Lịch sử phiên bản", `docs/VERSION_HISTO
 - **Bắt buộc cập nhật:** khi chạy Release, tích ô **"Bắt buộc cập nhật"**. Bản đó ghi
   `minRequired = <phiên bản này>` vào `web-update.json`. Máy đang chạy bản cũ hơn sẽ thấy hộp thoại
   **không có ✕, không có "Để sau", Esc không đóng** — phải cập nhật mới dùng tiếp (nếu tải lỗi có
-  nút **Thử lại**). Máy không có mạng vẫn dùng bình thường (không kiểm tra được thì không ép).
+  nút **Thử lại** và **Mở trang tải bộ cài**). Máy không có mạng vẫn dùng bình thường (không kiểm
+  tra được thì không ép).
+- **Tải và áp dụng (0.7.0+):** gói `web-bundle.zip` không bị giới hạn tổng thời gian tải (mạng chậm
+  mà đều vẫn tải xong); chỉ dừng khi không kết nối được sau 30 s hoặc mạng ngừng gửi dữ liệu 60 s.
+  Bản tải xong chỉ được dùng **sau khi khởi động lại**: trang đang mở vẫn lấy tệp của bản cũ, và
+  thư mục bản cũ chỉ bị xóa ở lần khởi động sau ("Khôi phục bản gốc" cũng vậy).
 - Các bản sau **không tích** vẫn **giữ** mức bắt buộc cũ (workflow đọc `minRequired` của bản phát
   hành mới nhất), nên không ai "nhảy qua" được một bản bắt buộc. Mức cũ chỉ được mang sang khi
   `web-update.json` của bản đó **đúng chữ ký** (kiểm tra bằng khóa công khai trong `webupdate.rs`,
