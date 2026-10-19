@@ -27,9 +27,11 @@ function contrast(a: string, b: string): number {
   return ((hi ?? 0) + 0.05) / ((lo ?? 0) + 0.05);
 }
 
+/** Tokens shared by both themes (the first `:root` block), then each theme's own. */
+const ROOT = themeTokens(':root {');
 const THEMES = {
-  light: themeTokens(":root[data-theme='light']"),
-  dark: themeTokens(":root[data-theme='dark']"),
+  light: new Map([...ROOT, ...themeTokens(":root[data-theme='light']")]),
+  dark: new Map([...ROOT, ...themeTokens(":root[data-theme='dark']")]),
 };
 const BACKGROUNDS = ['--bg-app', '--bg-panel', '--bg-panel-2'];
 /** Tokens used for readable text (dimmed codons, hints, counts, warnings). */
@@ -52,6 +54,19 @@ describe('theme tokens', () => {
         }
       }
       expect(failures).toEqual([]);
+    });
+  }
+
+  for (const [theme, tokens] of Object.entries(THEMES)) {
+    it(`${theme}: a picked 3D part glows in a colour unlike both chromosome colours`, () => {
+      const hi = tokens.get('--m3d-highlight') ?? '';
+      const chromosomes = [tokens.get('--chart-1'), tokens.get('--chart-4')];
+      for (const c of chromosomes) {
+        expect(c, 'chromosome colour').toBeTruthy();
+        expect(contrast(hi, c ?? '')).toBeGreaterThanOrEqual(2.5);
+      }
+      expect(tokens.get('--m3d-nucleolus')).toBeTruthy();
+      expect(tokens.get('--m3d-nucleolus')).not.toBe(tokens.get('--chart-6'));
     });
   }
 });

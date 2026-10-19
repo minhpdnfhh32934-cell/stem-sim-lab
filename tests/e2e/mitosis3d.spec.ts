@@ -232,6 +232,15 @@ test('mitosis 3D at 1366 × 768: with a part picked, the boxes never overlap at 
       expect(l.ask!.bottom, `${where}: ask bottom`).toBeLessThanOrEqual(card.bottom + 0.5);
       expect(l.small, `${where}: buttons and radios under 40 px`).toEqual([]);
       expect(l.scroll, `${where}: horizontal scroll`).toBeLessThanOrEqual(0);
+      // The whole cell (both daughters' room included) is drawn clear of every box: not under
+      // the chips, the stage strip, the caption or the picked part's card.
+      const drawn = await page.evaluate(() => window.__simlabMitosis3d?.cellRect() ?? null);
+      expect(drawn, `${where}: cell`).not.toBeNull();
+      for (const [name, b] of named) {
+        const w = Math.min(drawn!.right, b!.right) - Math.max(drawn!.left, b!.left);
+        const h = Math.min(drawn!.bottom, b!.bottom) - Math.max(drawn!.top, b!.top);
+        expect(w > 1 && h > 1, `${where}: the cell is drawn under ${name}`).toBe(false);
+      }
     }
   }
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-layout.png` });
@@ -396,8 +405,11 @@ declare global {
   }
 }
 
-/** Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test). */
-const PERF = { calls: 74, triangles: 46_000, p95Ms: 150 };
+/**
+ * Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test:
+ * 75 calls = 11 + 8 · 2n since the contact shadow; 38 818 triangles measured on the CPU).
+ */
+const PERF = { calls: 75, triangles: 46_000, p95Ms: 150 };
 
 test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame budgets @perf', async ({
   page,

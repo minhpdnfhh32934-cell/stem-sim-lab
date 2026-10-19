@@ -2,11 +2,21 @@
  * three.js scene of the 3D mitosis view. Built ONCE per timeline (cell type × 2n): shared
  * geometries and materials, one set of meshes per chromatid, nothing allocated per frame —
  * `update(state)` only moves, scales, re-colours and shows/hides existing objects (the animal
- * membrane and the spindle write into their existing vertex buffers). `dispose()` frees every
- * geometry and material it created. Rendering (renderer, camera, controls) lives in the view.
+ * membrane and the spindle write into their existing buffers). `dispose()` frees every
+ * geometry, material and texture it created. Rendering (renderer, camera, controls) lives in the
+ * view.
+ *
+ * Look: environment-lit physical materials and a key/fill/rim light rig (`../../view3d/look`),
+ * see-through shells outlined by a Fresnel rim, solid parts that fade with alphaHash (they never
+ * blend or sort against the glass), spindle fibres as real thin tubes (an InstancedMesh, width
+ * per quality tier), a soft contact shadow under the cell. A picked part glows in the highlight
+ * colour while the other parts are dimmed.
  */
 import * as THREE from 'three';
-import { cameraFrame, type CameraFrame } from './camera';
+import type { QualityTier } from '@/perf/tiers';
+import { contactShadow, disposeLightRig, lightRig } from '../../view3d/look';
+import { glass, roundedBox, setRimAlpha, solid } from '../../view3d/materials';
+import { cameraFrame, cellBound, type CameraFrame } from './camera';
 import type { CameraMode, Selection } from './components';
 import {
   ANIMAL,
@@ -33,12 +43,27 @@ export interface ScenePalette {
   plate: string;
   ring: string;
   highlight: string;
+  /** Colour unpicked parts fade towards while a part is picked (the stage's colour). */
+  backdrop?: string;
 }
 
 export interface SceneOptions {
   /** Sphere segments from the quality tier. */
   segments: number;
+  /** Quality tier (High: physical materials with sheen; fibre width and detail). */
+  tier?: QualityTier;
+  /** Opacity of the animal membrane (a theme token: higher in the dark theme). */
+  membraneOpacity?: number;
+  /** Strength of the Fresnel outline of see-through shells (a theme token). */
+  rimStrength?: number;
 }
+
+/** Spindle fibre radius and sides per tier (world units; the cell radius is 5). */
+const FIBRE: Record<QualityTier, { radius: number; sides: number }> = {
+  low: { radius: 0.03, sides: 5 },
+  medium: { radius: 0.034, sides: 6 },
+  high: { radius: 0.038, sides: 8 },
+};
 
 export type PickResult = Selection;
 export type { CameraFrame, CameraMode, Selection };
@@ -54,7 +79,8 @@ export interface DrawStats {
  * What three.js draws for a scene in one frame, counted on the CPU (no GPU needed). Mirrors
  * WebGLRenderer: hidden objects (or hidden parents) and empty draw ranges are skipped, and a
  * transparent double-sided material without `forceSinglePass` is drawn twice (back faces, then
- * front faces). An upper bound of `renderer.info.render`: frustum culling can only lower it.
+ * front faces), and an instanced mesh draws its `count` copies in one call. An upper bound of
+ * `renderer.info.render`: frustum culling can only lower it.
  */
 export function drawStats(root: THREE.Object3D): DrawStats {
   const out: DrawStats = { calls: 0, triangles: 0, lines: 0 };
@@ -68,11 +94,13 @@ export function drawStats(root: THREE.Object3D): DrawStats {
       const total = g.index ? g.index.count : (g.attributes.position?.count ?? 0);
       const start = Math.max(0, g.drawRange.start);
       const count = Math.max(0, Math.min(total, start + g.drawRange.count) - start);
-      if (count > 0) {
+      // An instanced mesh is one draw call of `count` copies (three.js counts every copy).
+      const copies = o instanceof THREE.InstancedMesh ? o.count : 1;
+      if (count > 0 && copies > 0) {
         const passes =
           mat.transparent && mat.side === THREE.DoubleSide && !mat.forceSinglePass ? 2 : 1;
         out.calls += passes;
-        if (isMesh) out.triangles += passes * Math.floor(count / 3);
+        if (isMesh) out.triangles += passes * copies * Math.floor(count / 3);
         else out.lines += passes * Math.floor(count / 2);
       }
     }
@@ -116,11 +144,18 @@ interface PartData {
 
 const CONTAINERS: ReadonlySet<Part> = new Set(['envelope', 'membrane', 'wall']);
 
-/** Two materials per look: normal and highlighted (swapped, never re-created). */
+/**
+ * Three materials per look, swapped and never re-created: normal, highlighted (glows in the
+ * highlight colour) and dimmed (another part is picked: greyer, see-through parts fainter).
+ */
 interface Look<M extends THREE.Material> {
   base: M;
   hi: M;
+  dim: M;
 }
+
+/** Colour unpicked parts fade towards when the palette names none. */
+const DIM_TOWARDS = '#8f949e';
 
 export function buildMitosisScene(
   tl: Timeline,
@@ -128,67 +163,81 @@ export function buildMitosisScene(
   opts: SceneOptions,
 ): MitosisScene {
   const seg = Math.max(8, Math.round(opts.segments));
+  const tier: QualityTier = opts.tier ?? (seg >= 24 ? 'high' : seg >= 16 ? 'medium' : 'low');
+  const rimStrength = opts.rimStrength ?? 0.7;
   const scene = new THREE.Scene();
   const disposables: { dispose: () => void }[] = [];
   const keep = <T extends { dispose: () => void }>(x: T): T => {
     disposables.push(x);
     return x;
   };
+  const animal = tl.cellType === 'animal';
 
-  // Lights (no shadows).
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.5));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.5);
-  sun.position.set(6, 9, 12);
-  scene.add(sun);
+  // Lights (no shadow maps: a soft contact shadow grounds the cell instead).
+  const rig = lightRig({ size: 12 });
+  scene.add(rig);
+  disposables.push({
+    dispose: () => {
+      disposeLightRig(rig);
+    },
+  });
+  const bound = cellBound(tl.cellType);
+  const shadow = contactShadow(
+    animal ? -(ANIMAL.radius + 0.9) : -(PLANT.half[1] + PLANT.wall + 0.8),
+    animal ? bound * 0.95 : bound * 0.85,
+    animal ? ANIMAL.radius * 0.9 : PLANT.half[2] * 1.1,
+    0.28,
+  );
+  scene.add(shadow.mesh);
+  disposables.push(shadow);
 
   // ---- materials
-  const std = (color: string, extra: THREE.MeshStandardMaterialParameters = {}) =>
-    keep(new THREE.MeshStandardMaterial({ color, roughness: 0.55, metalness: 0, ...extra }));
-  const look = (color: string, extra: THREE.MeshStandardMaterialParameters = {}) => ({
-    base: std(color, extra),
-    hi: std(color, { ...extra, emissive: palette.highlight, emissiveIntensity: 0.75 }),
-  });
-  const lineLook = (color: string, opacity: number): Look<THREE.LineBasicMaterial> => ({
-    base: keep(new THREE.LineBasicMaterial({ color, transparent: true, opacity })),
-    hi: keep(
-      new THREE.LineBasicMaterial({ color: palette.highlight, transparent: true, opacity: 1 }),
-    ),
-  });
-  const glass = { transparent: true, depthWrite: false };
+  const towards = new THREE.Color(palette.backdrop ?? DIM_TOWARDS);
+  const dimHex = (color: string) => `#${new THREE.Color(color).lerp(towards, 0.5).getHexString()}`;
+  const look = <M extends THREE.MeshStandardMaterial>(
+    color: string,
+    make: (c: string) => M,
+  ): Look<M> => {
+    const base = keep(make(color));
+    const hi = keep(make(color));
+    hi.emissive.set(palette.highlight);
+    hi.emissiveIntensity = 0.85;
+    hi.userData.look = 'hi';
+    const dim = keep(make(dimHex(color)));
+    dim.userData.look = 'dim';
+    const scale = dim.transparent ? 0.55 : 1;
+    dim.opacity *= scale;
+    dim.userData.opacityScale = scale;
+    return { base, hi, dim };
+  };
+  const organic = (c: string) => solid(c, tier, { roughness: 0.5, sheen: 0.6, fades: true });
+  const firm = (c: string) => solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true });
+  const shell =
+    (opacity: number, rimAlpha: number, side: THREE.Side = THREE.FrontSide) =>
+    (c: string) =>
+      glass(c, { opacity, side, rim: { color: c, strength: rimStrength, alpha: rimAlpha } });
+  const membraneOpacity = opts.membraneOpacity ?? 0.16;
   const mats = {
-    rod: {
-      M: look(palette.maternal, { transparent: true }),
-      P: look(palette.paternal, { transparent: true }),
-    },
-    thread: {
-      M: look(palette.maternal, { transparent: true }),
-      P: look(palette.paternal, { transparent: true }),
-    },
-    bead: look(palette.centromere, { transparent: true }),
+    rod: { M: look(palette.maternal, organic), P: look(palette.paternal, organic) },
+    thread: { M: look(palette.maternal, organic), P: look(palette.paternal, organic) },
+    bead: look(palette.centromere, firm),
     // One pass for the see-through double-sided parts (one draw call each, not two).
-    envelope: look(palette.envelope, {
-      ...glass,
-      opacity: 0.3,
-      side: THREE.DoubleSide,
-      forceSinglePass: true,
-    }),
-    nucleolus: look(palette.nucleolus, { transparent: true, opacity: 0.9 }),
-    membrane: look(palette.membrane, {
-      ...glass,
-      opacity: tl.cellType === 'animal' ? 0.16 : 0.08,
-    }),
-    wall: look(palette.wall, { ...glass, opacity: 0.2 }),
-    centriole: look(palette.centrosome),
-    pcm: look(palette.centrosome, { ...glass, opacity: 0.25 }),
-    ring: look(palette.ring),
-    plate: look(palette.plate, {
-      ...glass,
-      opacity: 0.75,
-      side: THREE.DoubleSide,
-      forceSinglePass: true,
-    }),
-    spindle: lineLook(palette.spindle, 0.75),
-    wallEdge: lineLook(palette.wall, 0.9),
+    envelope: look(palette.envelope, shell(0.3, 0.45, THREE.DoubleSide)),
+    nucleolus: look(palette.nucleolus, (c) =>
+      solid(c, tier, { roughness: 0.55, sheen: 0.4, fades: true }),
+    ),
+    membrane: look(palette.membrane, shell(animal ? membraneOpacity : membraneOpacity * 0.5, 0.55)),
+    wall: look(palette.wall, shell(0.16, 0.6)),
+    // Hollow barrels (seen inside from the open ends), as centrioles are drawn in textbooks.
+    centriole: look(palette.centrosome, (c) =>
+      solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true, side: THREE.DoubleSide }),
+    ),
+    pcm: look(palette.centrosome, shell(0.22, 0.35)),
+    ring: look(palette.ring, firm),
+    plate: look(palette.plate, (c) =>
+      glass(c, { opacity: 0.75, side: THREE.DoubleSide, roughness: 0.4 }),
+    ),
+    spindle: look(palette.spindle, (c) => solid(c, tier, { roughness: 0.4, fades: true })),
   };
 
   // ---- shared geometries
@@ -226,14 +275,19 @@ export function buildMitosisScene(
       pts.push(p.clone());
     }
     threads.push(
-      keep(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), seg * 5, 0.07, 5, false)),
+      keep(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), seg * 3, 0.085, 5, false)),
     );
   }
-  const centrioleGeo = keep(new THREE.CylinderGeometry(0.09, 0.09, 0.44, Math.max(6, seg / 2)));
-  const torus = keep(new THREE.TorusGeometry(1, 0.045, 6, seg * 3));
-  const box = keep(new THREE.BoxGeometry(2, 2, 2));
-  const edges = keep(new THREE.EdgesGeometry(box));
+  const centrioleGeo = keep(
+    new THREE.CylinderGeometry(0.1, 0.1, 0.42, Math.max(8, seg / 2), 1, true),
+  );
+  const torus = keep(new THREE.TorusGeometry(1, 0.06, 8, seg * 3));
+  // Plant cell: a box with rounded edges (the wall's outline comes from the rim light).
+  const rounded = keep(roundedBox(seg * 2, 10));
   const disc = keep(new THREE.CylinderGeometry(1, 1, 0.12, seg * 2));
+  const fibreShape = FIBRE[tier];
+  // Unit fibre: radius 1, height 1 along +y (scaled per fibre), open ends.
+  const fibreGeo = keep(new THREE.CylinderGeometry(1, 1, 1, fibreShape.sides, 1, true));
 
   const pickables: THREE.Object3D[] = [];
   const mesh = <M extends THREE.Material>(geo: THREE.BufferGeometry, mat: M, data: PartData) => {
@@ -277,8 +331,9 @@ export function buildMitosisScene(
     const g = new THREE.Group();
     const a = new THREE.Mesh(centrioleGeo, mats.centriole.base);
     const b = new THREE.Mesh(centrioleGeo, mats.centriole.base);
-    b.rotation.z = Math.PI / 2;
-    b.position.x = 0.16;
+    // The second centriole at a right angle to the first, near its base (an L, in depth).
+    b.rotation.x = Math.PI / 2;
+    b.position.set(0, -0.12, 0.2);
     const halo = new THREE.Mesh(sphere, mats.pcm.base);
     halo.scale.setScalar(0.38);
     for (const m of [a, b, halo]) {
@@ -290,22 +345,17 @@ export function buildMitosisScene(
     return { group: g, parts: [a, b, halo] };
   });
 
-  // ---- spindle: one LineSegments, buffer sized for the most fibres the timeline can have
+  // ---- spindle: thin tubes, one InstancedMesh sized for the most fibres the timeline can have
   const maxFibres = 12 + 16 + 2 * tl.chromatids.length;
-  const fibrePos = new Float32Array(maxFibres * 6);
-  const fibreGeo = keep(new THREE.BufferGeometry());
-  const fibreAttr = new THREE.BufferAttribute(fibrePos, 3);
-  fibreAttr.setUsage(THREE.DynamicDrawUsage);
-  fibreGeo.setAttribute('position', fibreAttr);
-  fibreGeo.setDrawRange(0, 0);
-  const spindle = new THREE.LineSegments(fibreGeo, mats.spindle.base);
+  const spindle = new THREE.InstancedMesh(fibreGeo, mats.spindle.base, maxFibres);
+  spindle.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  spindle.count = 0;
   spindle.userData = { part: 'fibre' } satisfies PartData;
   spindle.frustumCulled = false;
   scene.add(spindle);
   pickables.push(spindle);
 
   // ---- cell body
-  const animal = tl.cellType === 'animal';
   // Animal membrane: a surface of revolution about the spindle axis whose profile is the
   // union of two circles (one sphere → furrow → two daughter spheres).
   const H = seg; // profile rows per half
@@ -366,14 +416,11 @@ export function buildMitosisScene(
     memNorAttr.needsUpdate = true;
     memGeo.computeBoundingSphere();
   };
-  const membrane = mesh(animal ? memGeo : box, mats.membrane.base, { part: 'membrane' });
+  const membrane = mesh(animal ? memGeo : rounded, mats.membrane.base, { part: 'membrane' });
   if (animal) writeProfile(0, ANIMAL.radius);
   const ring = mesh(torus, mats.ring.base, { part: 'ring' });
   ring.rotation.y = Math.PI / 2; // axis along x
-  const wall = mesh(box, mats.wall.base, { part: 'wall' });
-  const wallEdges = new THREE.LineSegments(edges, mats.wallEdge.base);
-  wallEdges.userData = { part: 'wall' } satisfies PartData;
-  scene.add(wallEdges);
+  const wall = mesh(rounded, mats.wall.base, { part: 'wall' });
   const plate = mesh(disc, mats.plate.base, { part: 'plate' });
   plate.rotation.z = Math.PI / 2; // disc normal along x
   // The cell plate grows as a disc and is clipped by the side walls (needs
@@ -387,14 +434,13 @@ export function buildMitosisScene(
   ];
   mats.plate.base.clippingPlanes = clip;
   mats.plate.hi.clippingPlanes = clip;
+  mats.plate.dim.clippingPlanes = clip;
   if (animal) {
     wall.visible = false;
-    wallEdges.visible = false;
     plate.visible = false;
   } else {
     membrane.scale.set(hx, hy, hz);
     wall.scale.set(hx + PLANT.wall, hy + PLANT.wall, hz + PLANT.wall);
-    wallEdges.scale.copy(wall.scale);
     ring.visible = false;
     for (const c of centrosomes) c.group.visible = false;
   }
@@ -402,6 +448,10 @@ export function buildMitosisScene(
   // ---- update (no allocation: temporaries live here)
   const UP = new THREE.Vector3(0, 1, 0);
   const tmpDir = new THREE.Vector3();
+  const tmpPos = new THREE.Vector3();
+  const tmpQuat = new THREE.Quaternion();
+  const tmpScale = new THREE.Vector3();
+  const tmpMat = new THREE.Matrix4();
   let last: Mitosis3DState | null = null;
   let selection: Selection | null = null;
 
@@ -418,6 +468,7 @@ export function buildMitosisScene(
   const setOpacity = (l: Look<THREE.Material>, o: number) => {
     l.base.opacity = o;
     l.hi.opacity = Math.max(o, Math.min(1, o + 0.25));
+    l.dim.opacity = o * ((l.dim.userData.opacityScale as number | undefined) ?? 1);
   };
 
   const isSelected = (data: PartData, st: Mitosis3DState): boolean => {
@@ -469,33 +520,32 @@ export function buildMitosisScene(
     }
   };
 
+  /** The look's material for a part: highlighted, dimmed (another part is picked) or normal. */
+  const choose = <M extends THREE.Material>(l: Look<M>, data: PartData, st: Mitosis3DState): M =>
+    !selection ? l.base : isSelected(data, st) ? l.hi : l.dim;
+
   const applyLooks = (st: Mitosis3DState) => {
     for (const o of chromatids) {
       const origin = o.info.origin;
       const d = (m: THREE.Object3D) => m.userData as PartData;
-      o.armA.material = isSelected(d(o.armA), st) ? mats.rod[origin].hi : mats.rod[origin].base;
+      o.armA.material = choose(mats.rod[origin], d(o.armA), st);
       o.armB.material = o.armA.material;
-      o.bead.material = isSelected(d(o.bead), st) ? mats.bead.hi : mats.bead.base;
-      o.thread.material = isSelected(d(o.thread), st)
-        ? mats.thread[origin].hi
-        : mats.thread[origin].base;
+      o.bead.material = choose(mats.bead, d(o.bead), st);
+      o.thread.material = choose(mats.thread[origin], d(o.thread), st);
     }
-    const pick = <M extends THREE.Material>(l: Look<M>, part: Part) =>
-      isSelected({ part }, st) ? l.hi : l.base;
+    const pick = <M extends THREE.Material>(l: Look<M>, part: Part) => choose(l, { part }, st);
     for (const e of envelopes) e.material = pick(mats.envelope, 'envelope');
     for (const e of nucleoli) e.material = pick(mats.nucleolus, 'nucleolus');
     membrane.material = pick(mats.membrane, 'membrane');
     wall.material = pick(mats.wall, 'wall');
-    wallEdges.material = pick(mats.wallEdge, 'wall');
     ring.material = pick(mats.ring, 'ring');
     plate.material = pick(mats.plate, 'plate');
     spindle.material = pick(mats.spindle, 'fibre');
-    const cs = isSelected({ part: 'centrosome' }, st);
     for (const c of centrosomes) {
       const [a, b, halo] = c.parts;
-      if (a) a.material = cs ? mats.centriole.hi : mats.centriole.base;
-      if (b) b.material = cs ? mats.centriole.hi : mats.centriole.base;
-      if (halo) halo.material = cs ? mats.pcm.hi : mats.pcm.base;
+      if (a) a.material = pick(mats.centriole, 'centrosome');
+      if (b) b.material = pick(mats.centriole, 'centrosome');
+      if (halo) halo.material = pick(mats.pcm, 'centrosome');
     }
   };
 
@@ -535,6 +585,8 @@ export function buildMitosisScene(
     });
     const env = st.nuclei.reduce((m, n) => Math.max(m, n.envelope), 0);
     setOpacity(mats.envelope, 0.3 * env);
+    for (const m of [mats.envelope.base, mats.envelope.hi, mats.envelope.dim])
+      setRimAlpha(m, 0.45 * env);
     nucleoli.forEach((e, i) => {
       const n = st.nuclei[i];
       e.visible = !!n && n.nucleolus > 0.01;
@@ -547,8 +599,9 @@ export function buildMitosisScene(
       );
       e.scale.setScalar(0.24 * n.radius);
     });
+    // Fully there = fully opaque (a hashed fade at 0.9 looked like noise).
     const nl = st.nuclei.reduce((m, n) => Math.max(m, n.nucleolus), 0);
-    setOpacity(mats.nucleolus, 0.9 * nl);
+    setOpacity(mats.nucleolus, nl);
 
     if (animal) {
       centrosomes.forEach((c, i) => {
@@ -558,24 +611,25 @@ export function buildMitosisScene(
       });
     }
 
-    // Spindle fibres
+    // Spindle fibres: one tube per fibre (unit cylinder moved, turned and stretched).
     let n = 0;
     for (const f of st.fibres) {
       if (n >= maxFibres) break;
-      const k = n * 6;
-      fibrePos[k] = f.from[0];
-      fibrePos[k + 1] = f.from[1];
-      fibrePos[k + 2] = f.from[2];
-      fibrePos[k + 3] = f.to[0];
-      fibrePos[k + 4] = f.to[1];
-      fibrePos[k + 5] = f.to[2];
+      tmpDir.set(f.to[0] - f.from[0], f.to[1] - f.from[1], f.to[2] - f.from[2]);
+      const len = tmpDir.length();
+      if (len < 1e-6) continue;
+      tmpPos.set((f.from[0] + f.to[0]) / 2, (f.from[1] + f.to[1]) / 2, (f.from[2] + f.to[2]) / 2);
+      tmpQuat.setFromUnitVectors(UP, tmpDir.divideScalar(len));
+      tmpScale.set(fibreShape.radius, len, fibreShape.radius);
+      spindle.setMatrixAt(n, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
       n++;
     }
-    fibreGeo.setDrawRange(0, n * 2);
-    fibreAttr.needsUpdate = true;
-    fibreGeo.computeBoundingSphere();
+    spindle.count = n;
+    spindle.instanceMatrix.needsUpdate = true;
+    // Picking re-measures the moved fibres when it needs to (no work per frame).
+    spindle.boundingSphere = null;
     spindle.visible = n > 0;
-    mats.spindle.base.opacity = 0.75 * Math.min(1, st.spindle * 1.5);
+    setOpacity(mats.spindle, 0.85 * Math.min(1, st.spindle * 1.5));
 
     const sh = st.shape;
     if (sh.type === 'animal') {
@@ -598,7 +652,8 @@ export function buildMitosisScene(
     const hits = raycaster.intersectObjects(pickables, false).filter((h) => {
       if (!h.object.visible || !h.object.parent?.visible) return false;
       const mat = (h.object as THREE.Mesh).material as THREE.Material;
-      return !mat.transparent || mat.opacity > 0.05;
+      // Faded out (blended or alphaHash): not there to be picked.
+      return !(mat.transparent || mat.alphaHash) || mat.opacity > 0.05;
     });
     const inner = hits.find((h) => !CONTAINERS.has((h.object.userData as PartData).part));
     if (inner) {

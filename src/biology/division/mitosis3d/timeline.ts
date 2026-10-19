@@ -111,7 +111,11 @@ export const ROD_RADIUS = 0.15;
 export const SISTER_OFFSET = 0.17;
 /** Sister arms diverge from the centromere (the X shape of a double chromosome). */
 const SPLAY = 0.45;
-const ANIMAL_DAUGHTER_X = 1.06 * ANIMAL.daughterRadius;
+/**
+ * Centre (x) of each animal daughter cell at the end of cytokinesis: far enough apart that the
+ * two cells show a clear gap once the furrow has closed (they touched at 1.06 radii).
+ */
+export const ANIMAL_DAUGHTER_X = 1.2 * ANIMAL.daughterRadius;
 const ANIMAL_CENTROSOME_END = ANIMAL_DAUGHTER_X + 2.1;
 /** Interphase centrosome x: the G1 one sits at −x; S adds its copy at +x (both near the nucleus). */
 const CENTROSOME_GAP = 0.45;

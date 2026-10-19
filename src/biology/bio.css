@@ -212,6 +212,14 @@
   min-width: var(--target);
   min-height: var(--target);
 }
+/* Switches over a 3D picture sit on a glass track, so they read on both themes' stages (the
+   sunken track colour vanished on the dark stage). */
+.m3d .segmented,
+.bio3d .segmented {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+}
 /*
  * Controls over the picture on one grid: top bar and side column at the top, the picked part's
  * info above the bottom bar (its row shrinks first, the info then scrolls), so no two boxes ever

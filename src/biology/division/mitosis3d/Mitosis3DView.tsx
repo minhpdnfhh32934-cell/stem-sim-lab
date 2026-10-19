@@ -8,7 +8,7 @@ import {
   RotateCcw,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useLocalized } from '@/app/i18n/localized';
@@ -34,41 +34,18 @@ import {
   type CameraMode,
   type Selection,
 } from './components';
-import { VIEW_DIR, applyViewport, placeCamera } from './camera';
+import { VIEW_DIR, applyViewport, defaultInsets, placeCamera, type Insets } from './camera';
 import { buildMitosisScene, type MitosisScene, type ScenePalette } from './scene';
 import { useCardHeadFit } from './partCardHead';
 import { stateFor, timelineFor, useMitosis3D } from './store';
 import { createTapTracker } from './tap';
 import { STAGES_3D, type CellType, type Stage3D, type Timeline, type Vec3 } from './timeline';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
+import { createEnvironment } from '../../view3d/look';
+import { webglRenderer, type RendererFactory, type RendererLike } from '../../view3d/renderer';
 import '../../bio.css';
 
-/** The part of THREE.WebGLRenderer the view uses (tests pass a fake one: jsdom has no WebGL). */
-export interface RendererLike {
-  domElement: HTMLCanvasElement;
-  localClippingEnabled: boolean;
-  setPixelRatio: (ratio: number) => void;
-  setSize: (width: number, height: number) => void;
-  render: (scene: THREE.Object3D, camera: THREE.Camera) => void;
-  dispose: () => void;
-  /** Frees the GPU context at once (THREE.WebGLRenderer has it). */
-  forceContextLoss?: () => void;
-  info: {
-    memory: { geometries: number; textures: number };
-    programs: unknown[] | null;
-    render: { calls: number; triangles: number };
-  };
-}
-export type RendererFactory = (opts: { antialias: boolean }) => RendererLike;
-
-const webglRenderer: RendererFactory = ({ antialias }) =>
-  new THREE.WebGLRenderer({
-    antialias,
-    alpha: true,
-    // Keeps the last frame readable for "Xuất ảnh PNG" (the view renders on demand only).
-    preserveDrawingBuffer: true,
-    powerPreference: 'low-power',
-  });
+export type { RendererFactory, RendererLike };
 
 /** Read-only hook for end-to-end tests (dev builds only). */
 interface DebugHook {
@@ -84,6 +61,11 @@ interface DebugHook {
   stage(): Stage3D;
   /** Quality tier in effect, and whether the app lowered it by itself (overload). */
   quality(): { tier: QualityTier; degraded: boolean };
+  /**
+   * Where the whole cell (the overview frame, both daughters included) is drawn now, in page
+   * pixels: tests check it stays clear of the controls and the picked part's card.
+   */
+  cellRect(): { left: number; top: number; right: number; bottom: number } | null;
 }
 declare global {
   interface Window {
@@ -91,25 +73,85 @@ declare global {
   }
 }
 
-function readPalette(): ScenePalette {
+function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStrength: number } {
   const css = getComputedStyle(document.documentElement);
   // Theme tokens only; the neutral fallback is for environments without the stylesheet.
   const token = (name: string) => css.getPropertyValue(name).trim() || 'gray';
+  const number = (name: string, fallback: number) => {
+    const v = Number.parseFloat(css.getPropertyValue(name));
+    return Number.isFinite(v) ? v : fallback;
+  };
   return {
-    maternal: token('--chart-4'),
-    paternal: token('--chart-1'),
-    centromere: token('--text'),
-    membrane: token('--subject-biology'),
-    envelope: token('--chart-6'),
-    nucleolus: token('--chart-6'),
-    wall: token('--chart-2'),
-    spindle: token('--text-muted'),
-    centrosome: token('--chart-5'),
-    plate: token('--chart-2'),
-    ring: token('--chart-7'),
-    highlight: token('--accent'),
+    palette: {
+      maternal: token('--chart-4'),
+      paternal: token('--chart-1'),
+      centromere: token('--text'),
+      membrane: token('--subject-biology'),
+      envelope: token('--chart-6'),
+      // Its own token: the nucleolus once had the envelope's colour and vanished inside it.
+      nucleolus: token('--m3d-nucleolus'),
+      wall: token('--chart-2'),
+      spindle: token('--text-muted'),
+      centrosome: token('--chart-5'),
+      plate: token('--chart-2'),
+      ring: token('--chart-7'),
+      // Unlike both chromosome colours (the accent blue was the paternal blue).
+      highlight: token('--m3d-highlight'),
+      // Unpicked parts fade towards the stage colour (they recede in both themes).
+      backdrop: token('--bg-panel'),
+    },
+    membraneOpacity: number('--m3d-membrane-opacity', 0.16),
+    rimStrength: number('--m3d-rim', 0.7),
   };
 }
+
+/** Width / height of what the overview frames (the cell and, at the end, both daughters). */
+const FRAME_ASPECT = 1.6;
+
+/**
+ * Canvas pixels covered by the controls drawn over it (elements marked `data-inset`), plus a
+ * small gap: the camera keeps the cell out from under them. A box in the top-right corner
+ * (`corner`) is counted from the top or from the right, whichever leaves the larger picture.
+ */
+function measureInsets(host: HTMLElement, hud: HTMLElement | null): Insets {
+  const box = host.getBoundingClientRect();
+  if (!hud || box.width === 0 || box.height === 0) return defaultInsets(box.height);
+  const GAP = 8;
+  const out: Insets = { top: 0, right: 0, bottom: 0, left: 0 };
+  const corners: DOMRect[] = [];
+  for (const el of hud.querySelectorAll<HTMLElement>('[data-inset]')) {
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) continue;
+    switch (el.dataset.inset) {
+      case 'top':
+        out.top = Math.max(out.top, r.bottom - box.top + GAP);
+        break;
+      case 'bottom':
+        out.bottom = Math.max(out.bottom, box.bottom - r.top + GAP);
+        break;
+      case 'right':
+        out.right = Math.max(out.right, box.right - r.left + GAP);
+        break;
+      case 'corner':
+        corners.push(r);
+        break;
+    }
+  }
+  for (const r of corners) {
+    const asTop = { ...out, top: Math.max(out.top, r.bottom - box.top + GAP) };
+    const asRight = { ...out, right: Math.max(out.right, box.right - r.left + GAP) };
+    const score = (i: Insets) =>
+      Math.min((box.width - i.left - i.right) / FRAME_ASPECT, box.height - i.top - i.bottom);
+    Object.assign(out, score(asRight) > score(asTop) ? asRight : asTop);
+  }
+  return out;
+}
+
+const sameInsets = (a: Insets, b: Insets) =>
+  Math.abs(a.top - b.top) < 2 &&
+  Math.abs(a.right - b.right) < 2 &&
+  Math.abs(a.bottom - b.bottom) < 2 &&
+  Math.abs(a.left - b.left) < 2;
 
 /** The learner asked the system for less motion: nothing starts moving on its own. */
 function prefersReducedMotion(): boolean {
@@ -208,7 +250,7 @@ function PartInfo({
   return (
     // The slot is the card's grid row (its height decides whether the head can stay in view).
     <div ref={slotRef} className="m3d__info-slot">
-      <aside ref={cardRef} className="m3d__info" aria-live="polite">
+      <aside ref={cardRef} className="m3d__info" aria-live="polite" data-inset="right">
         {/* Name and actions: in the head row (no extra height); the card scrolls as one. */}
         <div ref={headRef} className="m3d__info-head">
           <strong>{Lz(info.name)}</strong>
@@ -305,6 +347,7 @@ export function Mitosis3DView({
   const cellType = useDivisionStore((s) => s.cellType);
   const speed = useDivisionStore((s) => s.speed);
   const tier = useTierConfig();
+  const tierName = usePerfStore(effectiveTier);
   const theme = useResolvedTheme();
   const tl = timelineFor(pairs, cellType);
   const card = useMemo(() => card3d(cellType), [cellType]);
@@ -317,6 +360,7 @@ export function Mitosis3DView({
   const cellLocked = useMitosis3D((s) => s.cellLocked);
   const stage = STAGES_3D[stageIndex] ?? 'g1';
   const hostRef = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
 
   // On screen: the bottom table and parts list follow the 3D stages.
   useEffect(() => {
@@ -340,6 +384,8 @@ export function Mitosis3DView({
     frameCamera: (mode: CameraMode) => void;
     /** Close-up: keeps the learner's direction, re-centres and fits the chromosomes now. */
     follow: () => void;
+    /** Re-measures the controls over the canvas; re-fits the view when they changed. */
+    relayout: () => void;
     scene: MitosisScene | null;
     tl: Timeline | null;
     framedFor: Timeline | null;
@@ -363,11 +409,14 @@ export function Mitosis3DView({
     renderer.setSize(width(), height());
     renderer.domElement.className = 'mol-viewer__canvas';
     host.appendChild(renderer.domElement);
+    // Studio lighting for every scene this renderer draws (none with a fake renderer).
+    const env = createEnvironment(renderer);
 
-    // The stage strip and caption cover the bottom of the canvas: the picture is drawn a little
-    // higher (camera.ts), so orbiting still turns around the target.
+    // Controls cover the canvas edges (chips, stage strip and caption, a picked part's card): the
+    // picture is centred in the rest (camera.ts), so orbiting still turns around the target.
     const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
-    applyViewport(cam, width(), height());
+    let insets: Insets = measureInsets(host, hudRef.current);
+    applyViewport(cam, width(), height(), insets);
     const controls = new OrbitControls(cam, renderer.domElement);
     // Orbit and zoom only: the target stays on the cell (or its chromosomes), so the zoom
     // limits below keep the camera outside the cell.
@@ -376,7 +425,7 @@ export function Mitosis3DView({
     /** Puts the camera at `dir` from the frame centre, at the distance that fits the frame. */
     const place = (mode: CameraMode, dir: Vec3) => {
       if (!rt.scene || !rt.tl) return;
-      const p = placeCamera(rt.scene.frame(mode), rt.tl.cellType, width(), height(), dir);
+      const p = placeCamera(rt.scene.frame(mode), rt.tl.cellType, width(), height(), dir, insets);
       controls.minDistance = p.min;
       controls.maxDistance = p.max;
       controls.target.set(...p.target);
@@ -396,13 +445,25 @@ export function Mitosis3DView({
         const d = cam.position.clone().sub(controls.target).normalize();
         place('closeup', [d.x, d.y, d.z]);
       },
+      relayout: () => {
+        const next = measureInsets(host, hudRef.current);
+        if (sameInsets(next, insets)) return;
+        insets = next;
+        applyViewport(cam, width(), height(), insets);
+        // The learner's direction is kept; the distance fits the new safe area.
+        const d = cam.position.clone().sub(controls.target).normalize();
+        place(useMitosis3D.getState().camera, [d.x, d.y, d.z]);
+        rt.request();
+      },
       scene: null as MitosisScene | null,
       tl: null as Timeline | null,
       framedFor: null as Timeline | null,
     };
     const render = () => {
       frame = 0;
-      if (rt.scene) renderer.render(rt.scene.scene, cam);
+      if (!rt.scene) return;
+      rt.scene.scene.environment = env.texture;
+      renderer.render(rt.scene.scene, cam);
     };
     controls.addEventListener('change', rt.request);
 
@@ -452,20 +513,44 @@ export function Mitosis3DView({
         ? null
         : new ResizeObserver(() => {
             renderer.setSize(width(), height());
-            applyViewport(cam, width(), height());
-            // The zoom-out limit depends on the canvas shape (a narrow canvas needs more room).
-            if (rt.tl) {
+            const next = measureInsets(host, hudRef.current);
+            const changed = !sameInsets(next, insets);
+            insets = next;
+            applyViewport(cam, width(), height(), insets);
+            if (rt.tl && rt.scene && changed) {
+              // Controls moved (wrapped onto another line, the window changed): fit again.
+              const d = cam.position.clone().sub(controls.target).normalize();
+              const p = placeCamera(
+                rt.scene.frame(useMitosis3D.getState().camera),
+                rt.tl.cellType,
+                width(),
+                height(),
+                [d.x, d.y, d.z],
+                insets,
+              );
+              controls.minDistance = p.min;
+              controls.maxDistance = p.max;
+              controls.target.set(...p.target);
+              cam.position.set(...p.position);
+              controls.update();
+            } else if (rt.tl) {
+              // The zoom-out limit depends on the canvas shape (a narrow canvas needs more room).
               const target: Vec3 = [controls.target.x, controls.target.y, controls.target.z];
               const p = placeCamera(
                 { center: target, points: [] },
                 rt.tl.cellType,
                 width(),
                 height(),
+                VIEW_DIR,
+                insets,
               );
               controls.maxDistance = p.max;
             }
             rt.request();
           });
+    ro?.observe(host);
+    // The controls over the canvas change size when they wrap (narrow window, long text).
+    for (const el of hudRef.current?.querySelectorAll('[data-inset]') ?? []) ro?.observe(el);
     ro?.observe(host);
 
     let hook: DebugHook | null = null;
@@ -487,6 +572,24 @@ export function Mitosis3DView({
           const perf = usePerfStore.getState();
           return { tier: effectiveTier(perf), degraded: perf.degraded };
         },
+        cellRect: () => {
+          if (!rt.scene) return null;
+          const f = rt.scene.frame('overview');
+          const box = host.getBoundingClientRect();
+          const v = new THREE.Vector3();
+          const r = { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity };
+          cam.updateMatrixWorld();
+          for (const p of f.points) {
+            v.set(f.center[0] + p[0], f.center[1] + p[1], f.center[2] + p[2]).project(cam);
+            const x = box.left + ((v.x + 1) / 2) * box.width;
+            const y = box.top + ((1 - v.y) / 2) * box.height;
+            r.left = Math.min(r.left, x);
+            r.right = Math.max(r.right, x);
+            r.top = Math.min(r.top, y);
+            r.bottom = Math.max(r.bottom, y);
+          }
+          return r;
+        },
       };
       window.__simlabMitosis3d = hook;
     }
@@ -503,6 +606,7 @@ export function Mitosis3DView({
       renderer.domElement.removeEventListener('pointerup', onUp);
       renderer.domElement.removeEventListener('pointercancel', onCancel);
       renderer.domElement.removeEventListener('webglcontextlost', onLost);
+      env.dispose();
       renderer.dispose();
       renderer.forceContextLoss?.();
       renderer.domElement.remove();
@@ -513,7 +617,13 @@ export function Mitosis3DView({
   useEffect(() => {
     const rt = rtRef.current;
     if (!rt) return;
-    const ms = buildMitosisScene(tl, readPalette(), { segments: tier.sphereSegments });
+    const look = readPalette();
+    const ms = buildMitosisScene(tl, look.palette, {
+      segments: tier.sphereSegments,
+      tier: tierName,
+      membraneOpacity: look.membraneOpacity,
+      rimStrength: look.rimStrength,
+    });
     rt.scene = ms;
     rt.tl = tl;
     const ui = useMitosis3D.getState();
@@ -542,7 +652,12 @@ export function Mitosis3DView({
       ms.dispose();
     };
     // createRenderer: a new renderer (tests) needs a new scene too.
-  }, [tl, tier, theme, createRenderer]);
+  }, [tl, tier, tierName, theme, createRenderer]);
+
+  // A picked part's card opens or closes over the canvas: the cell moves into the space left.
+  useLayoutEffect(() => {
+    rtRef.current?.relayout();
+  }, [selected]);
 
   // Playback loop (only while playing; frame times feed the overload ladder).
   useEffect(() => {
@@ -591,8 +706,8 @@ export function Mitosis3DView({
         aria-label={`${Lz(STAGE3D_NAME[stage])}. ${Lz(stageNote(stage, cellType))}`}
       />
       {/* Controls over the picture, laid out on a grid so no two boxes ever overlap. */}
-      <div className="m3d__hud">
-        <div className="chem-overlay m3d__top">
+      <div ref={hudRef} className="m3d__hud">
+        <div className="chem-overlay m3d__top" data-inset="top">
           <IconButton
             icon={ChevronLeft}
             size="lg"
@@ -649,7 +764,7 @@ export function Mitosis3DView({
         </div>
         {/* Two short rows (what is shown; how it is looked at): a stack of four would take the
             height the picked part's card needs. */}
-        <div className="m3d__side">
+        <div className="m3d__side" data-inset="corner">
           <div className="m3d__side-row">
             <Segmented<CellType>
               label={L('Loại tế bào', 'Cell type')}
@@ -689,7 +804,7 @@ export function Mitosis3DView({
           </div>
         </div>
         {selected && <PartInfo tl={tl} selected={selected} stage={stage} cellType={cellType} />}
-        <div className="m3d__bottom">
+        <div className="m3d__bottom" data-inset="bottom">
           <StageStrip tl={tl} />
           <p className="m3d__caption">
             <strong>{Lz(STAGE3D_NAME[stage])}.</strong> {Lz(stageNote(stage, cellType))}{' '}

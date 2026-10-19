@@ -18,29 +18,33 @@ const PALETTE: ScenePalette = {
   highlight: 'gray',
 };
 
-/** Draw-call budget: one call per drawn object, at most (formula of the scene's objects). */
+/**
+ * Draw-call budget: one call per drawn object, at most (formula of the scene's objects; the
+ * soft contact shadow is one call, the spindle one instanced call).
+ */
 const CALLS: Record<CellType, (n2: number) => number> = {
-  animal: (n2) => 10 + 8 * n2,
+  animal: (n2) => 11 + 8 * n2,
   plant: (n2) => 6 + 8 * n2,
 };
 
 /**
  * Most triangles drawn at any moment of the division, per quality tier (sphere segments: Low 8,
- * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-14). The budget allows 5 %
- * more; a bigger change must update this table on purpose.
+ * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-20: spindle fibres as tubes,
+ * rounded plant cell, contact shadow, lighter chromatin threads). The budget allows 5 % more; a
+ * bigger change must update this table on purpose.
  */
 const TRIANGLES: Record<number, Record<CellType, Record<number, number>>> = {
   8: {
-    animal: { 2: 3552, 4: 6144, 6: 8736, 8: 11328 },
-    plant: { 2: 2776, 4: 5368, 6: 7960, 8: 10552 },
+    animal: { 2: 3234, 4: 5226, 6: 7218, 8: 9210 },
+    plant: { 2: 2978, 4: 4970, 6: 6962, 8: 8954 },
   },
   16: {
-    animal: { 2: 9152, 4: 14656, 6: 20160, 8: 25664 },
-    plant: { 2: 6232, 4: 11736, 6: 17240, 8: 22744 },
+    animal: { 2: 8258, 4: 12530, 6: 16802, 8: 21074 },
+    plant: { 2: 8066, 4: 12338, 6: 16610, 8: 20882 },
   },
   24: {
-    animal: { 2: 17568, 4: 26976, 6: 36384, 8: 45792 },
-    plant: { 2: 11064, 4: 20472, 6: 29880, 8: 39288 },
+    animal: { 2: 16162, 4: 23714, 6: 31266, 8: 38818 },
+    plant: { 2: 16098, 4: 23650, 6: 31202, 8: 38754 },
   },
 };
 
@@ -73,7 +77,18 @@ describe('3D mitosis drawing budget (CPU count, no GPU)', () => {
     );
     empty.setDrawRange(0, 0);
     root.add(new THREE.LineSegments(empty, new THREE.LineBasicMaterial()));
-    expect(drawStats(root)).toEqual({ calls: 1 + 2 + 1 + 1, triangles: 12 * 4, lines: 2 });
+    // Instanced: one call for 3 drawn copies (of 5); none when no copy is drawn.
+    const inst = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial(), 5);
+    inst.count = 3;
+    root.add(inst);
+    const none = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial(), 5);
+    none.count = 0;
+    root.add(none);
+    expect(drawStats(root)).toEqual({
+      calls: 1 + 2 + 1 + 1 + 1,
+      triangles: 12 * 4 + 12 * 3,
+      lines: 2,
+    });
   });
 
   for (const segments of [8, 16, 24]) {

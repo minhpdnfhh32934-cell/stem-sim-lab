@@ -3,14 +3,25 @@
  * renderer, no DOM), shared by the view and its tests.
  *
  * The camera looks at a target (the cell centre, or the chromosomes in the close-up) from a
- * direction (VIEW_DIR when framed, the learner's orbit afterwards). The stage strip and caption
- * cover the bottom of the canvas, so the picture is drawn a little higher: the camera renders a
- * taller virtual image and only its lower part is shown (`applyViewport`). Orbiting still turns
- * around the target.
+ * direction (VIEW_DIR when framed, the learner's orbit afterwards). Controls are drawn over the
+ * canvas edges (the chips at the top, the stage strip and caption at the bottom, a picked part's
+ * card at the right): the view measures them as insets, the camera centres the picture in the
+ * rest (the safe area, `../../view3d/frame.ts`) and fits the cell inside it. Orbiting still
+ * turns around the target.
  */
 import * as THREE from 'three';
+import { safeTangents, viewWindow, type Insets } from '../../view3d/frame';
 import type { CameraMode } from './components';
-import { ANIMAL, PLANT, type CellType, type Mitosis3DState, type Vec3 } from './timeline';
+import {
+  ANIMAL,
+  ANIMAL_DAUGHTER_X,
+  PLANT,
+  type CellType,
+  type Mitosis3DState,
+  type Vec3,
+} from './timeline';
+
+export type { Insets };
 
 /** What the camera must show: points (relative to `center`) that have to be in view. */
 export interface CameraFrame {
@@ -20,10 +31,13 @@ export interface CameraFrame {
 
 /** Vertical field of view of the virtual (uncropped) image, degrees. */
 export const FOV = 38;
-/** The picture is lifted by this share of the canvas height. */
-const LIFT = 0.07;
-/** Margin for the controls drawn over the edges of the canvas. */
-const FIT_MARGIN = 1.22;
+/**
+ * Without measured controls (tests, the first frame), the bottom 14 % of the canvas is kept free
+ * for the stage strip and caption.
+ */
+const BOTTOM_SHARE = 0.14;
+/** Margin around the cell inside the safe area. */
+const FIT_MARGIN = 1.08;
 /** The camera never comes closer than this to the cell surface (the near plane is 0.1). */
 const SURFACE_GAP = 0.5;
 /** Default zoom-out limit; raised when a frame needs more (very narrow canvases). */
@@ -36,7 +50,7 @@ export const VIEW_DIR: Vec3 = (() => {
 })();
 
 /** Half length (x) of the two animal daughter cells together at the end of cytokinesis. */
-export const ANIMAL_EXTENT = 1.06 * ANIMAL.daughterRadius + ANIMAL.daughterRadius;
+export const ANIMAL_EXTENT = ANIMAL_DAUGHTER_X + ANIMAL.daughterRadius;
 
 /** 26 points on a sphere (axes, edge and corner directions of a cube). */
 export function spherePoints(c: Vec3, r: number): Vec3[] {
@@ -99,23 +113,28 @@ export function cameraFrame(
   };
 }
 
-/** Pixels the picture is lifted by on a canvas of this height. */
-const liftOf = (height: number) => Math.round(height * LIFT);
+/** Insets used before the controls are measured: room for the stage strip and caption. */
+export function defaultInsets(height: number): Insets {
+  return { top: 0, right: 0, bottom: Math.round(Math.max(1, height) * BOTTOM_SHARE), left: 0 };
+}
 
-/** Sets the camera for a canvas: aspect and the lifted, cropped view. */
-export function applyViewport(cam: THREE.PerspectiveCamera, width: number, height: number): void {
-  const w = Math.max(1, width);
-  const h = Math.max(1, height);
-  const d = liftOf(h);
+/** Sets the camera for a canvas: aspect and the window that centres the safe area. */
+export function applyViewport(
+  cam: THREE.PerspectiveCamera,
+  width: number,
+  height: number,
+  insets: Insets = defaultInsets(height),
+): void {
+  const win = viewWindow(width, height, insets);
   cam.fov = FOV;
-  cam.aspect = w / (h + 2 * d);
-  cam.setViewOffset(w, h + 2 * d, 0, 2 * d, w, h);
+  cam.aspect = win.fullWidth / win.fullHeight;
+  cam.setViewOffset(win.fullWidth, win.fullHeight, win.x, win.y, win.width, win.height);
   cam.updateProjectionMatrix();
 }
 
 /**
- * Visible extent of the cropped view as tangents of the half-angles: left/right, above and
- * below the target (the crop removes the top of the virtual image, so `up` < `down`).
+ * Visible extent of the safe area as tangents of the half-angles: left/right, above and below
+ * the target (the safe area is centred on the target, so `up` = `down`).
  */
 export interface ViewTangents {
   h: number;
@@ -123,13 +142,13 @@ export interface ViewTangents {
   down: number;
 }
 
-export function viewTangents(width: number, height: number): ViewTangents {
-  const w = Math.max(1, width);
-  const h = Math.max(1, height);
-  const d = liftOf(h);
-  const full = h + 2 * d;
-  const t = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
-  return { h: (t * w) / full, up: (t * (full - 4 * d)) / full, down: t };
+export function viewTangents(
+  width: number,
+  height: number,
+  insets: Insets = defaultInsets(height),
+): ViewTangents {
+  const t = safeTangents(FOV, width, height, insets);
+  return { h: t.h, up: t.v, down: t.v };
 }
 
 /** Right and up vectors of a camera looking along −dir (as `Object3D.lookAt` builds them). */
@@ -146,7 +165,7 @@ const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
 /**
  * Camera distance (along `dir`, from the frame centre) at which every point of the frame is
- * inside the cropped view, with a margin for the controls drawn over the canvas edges.
+ * inside the safe area, with a small margin.
  */
 export function fitDistance(f: CameraFrame, tan: ViewTangents, dir: Vec3 = VIEW_DIR): number {
   const { right, up } = viewBasis(dir);
@@ -201,8 +220,9 @@ export function placeCamera(
   width: number,
   height: number,
   dir: Vec3 = VIEW_DIR,
+  insets: Insets = defaultInsets(height),
 ): CameraPlacement {
-  const tan = viewTangents(width, height);
+  const tan = viewTangents(width, height, insets);
   const overview = fitDistance(cameraFrame('overview', null, cellType), tan);
   const { min, max } = zoomLimits(cellType, frame.center, overview);
   const distance = Math.min(max, Math.max(min, fitDistance(frame, tan, dir)));

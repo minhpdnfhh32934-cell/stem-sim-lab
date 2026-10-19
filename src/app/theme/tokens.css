@@ -121,6 +121,14 @@
   --pending: #8a5a00;
   --pending-soft: #fff1d6;
 
+  /* 3D biology views: a picked part's glow (unlike either chromosome colour, --chart-1 and
+     --chart-4), the nucleolus (unlike the nuclear envelope, --chart-6), and how strongly
+     see-through shells (membranes, envelopes) show: their opacity and Fresnel outline. */
+  --m3d-highlight: #ffd23f;
+  --m3d-nucleolus: #5b4a86;
+  --m3d-membrane-opacity: 0.14;
+  --m3d-rim: 0.7;
+
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
   --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
 
@@ -183,6 +191,12 @@
   --conf-qual-soft: #142a45;
   --pending: #f2b642;
   --pending-soft: #33260c;
+
+  --m3d-highlight: #fff0a0;
+  --m3d-nucleolus: #d2c4ff;
+  /* A dark stage needs a stronger membrane and outline to be seen at all. */
+  --m3d-membrane-opacity: 0.22;
+  --m3d-rim: 1;
 
   /* Dark-mode chart steps: same hue order, re-stepped into the OKLCH L 0.48–0.67 band
      (validated with the dataviz palette validator against --bg-panel #151b24). */

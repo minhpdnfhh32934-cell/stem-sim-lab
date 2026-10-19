@@ -109,7 +109,8 @@ describe('3D mitosis scene', () => {
           ms.setSelection(sel);
           for (const t of times) {
             ms.update(tl.stateAt(t));
-            for (const m of visibleMaterials(ms.scene)) if (!plain.has(m)) lit = true;
+            // A drawn object wears a highlight material (dimmed ones do not count).
+            for (const m of visibleMaterials(ms.scene)) if (m.userData.look === 'hi') lit = true;
             visit();
           }
         }
@@ -213,7 +214,12 @@ describe('3D mitosis scene', () => {
       expect(plant.has('wall')).toBe(true);
     }
     const tlA = buildTimeline(2, 'animal');
-    const ring = show('animal', tlA.keyTime('cytokinesis') - 1.5);
+    // Half-way through cytokinesis the furrow is still closing: the ring is there.
+    const cyto = tlA.stages.find((w) => w.id === 'cytokinesis');
+    if (!cyto) throw new Error('no cytokinesis stage');
+    const mid = cyto.start + 0.5 * (cyto.end - cyto.start);
+    expect(tlA.stateAt(mid).shape).toMatchObject({ type: 'animal', separated: false });
+    const ring = show('animal', mid);
     expect(ring.has('ring')).toBe(true);
     const tlP = buildTimeline(2, 'plant');
     expect(show('plant', tlP.total).has('plate')).toBe(true);
@@ -293,6 +299,26 @@ describe('3D mitosis scene', () => {
     const edge = new THREE.Raycaster(new THREE.Vector3(0, 4.6, 30), new THREE.Vector3(0, 0, -1));
     edge.params.Line = { threshold: 0.01 };
     expect(ms.pick(edge)?.component).toBe('membrane');
+    ms.dispose();
+  });
+
+  it('a picked part glows; every other drawn part is dimmed; nothing is dimmed without a pick', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
+    ms.update(tl.stateAt(tl.keyTime('metaphase')));
+    const looks = () =>
+      [...visibleMaterials(ms.scene)].map((m) => m.userData.look as string | undefined);
+    expect(looks().filter((l) => l === 'hi' || l === 'dim')).toEqual([]);
+    ms.setSelection({ component: 'centromere', chromosome: 0 });
+    const picked = looks();
+    expect(picked).toContain('hi');
+    // Apart from the soft shadow (not a cell part), everything else is dimmed.
+    const parts = [...visibleMaterials(ms.scene)].filter(
+      (m) => !(m instanceof THREE.MeshBasicMaterial),
+    );
+    for (const m of parts) expect(['hi', 'dim']).toContain(m.userData.look);
+    ms.setSelection(null);
+    expect(looks().filter((l) => l === 'hi' || l === 'dim')).toEqual([]);
     ms.dispose();
   });
 });
