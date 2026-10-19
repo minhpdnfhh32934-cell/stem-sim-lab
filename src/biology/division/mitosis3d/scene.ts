@@ -18,6 +18,10 @@ import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
 import { glass, roundedBox, setRimAlpha, solid, withTint } from '@/ui/three/materials';
 import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
+import { centrosomeMaker } from '../division3d/centrosomeMesh';
+import { TwoSphereProfile } from '../division3d/membraneMesh';
+import { placeNucleolus, writeEnvelopeParts } from '../division3d/nucleusMesh';
+import { FIBRE, writeFibres } from '../division3d/spindleMesh';
 import { cameraFrame, cellBound, type CameraFrame } from './camera';
 import {
   condensedShare,
@@ -28,20 +32,13 @@ import {
   type TubeProfile,
 } from './chromatidShape';
 import { componentVisible, type CameraMode, type ComponentId, type Selection } from './components';
-import {
-  centrioleTriplets,
-  envelopeBreakdown,
-  plateSlots,
-  plateVesicleSize,
-  spherePointsEven,
-} from './sceneParts';
+import { envelopeBreakdown, plateSlots, plateVesicleSize, spherePointsEven } from './sceneParts';
 import {
   ANIMAL,
   PLANT,
   ROD_RADIUS,
   ease,
   type ChromatidInfo,
-  type FibreKind,
   type Vec3,
   type Mitosis3DState,
   type Timeline,
@@ -75,16 +72,6 @@ export interface SceneOptions {
   /** Strength of the Fresnel outline of see-through shells (a theme token). */
   rimStrength?: number;
 }
-
-/** Spindle fibre radius and sides per tier (world units; the cell radius is 5). */
-const FIBRE: Record<QualityTier, { radius: number; sides: number }> = {
-  low: { radius: 0.03, sides: 5 },
-  medium: { radius: 0.034, sides: 6 },
-  high: { radius: 0.038, sides: 8 },
-};
-
-/** Fibre width per kind (shares of the tier's fibre radius). */
-const FIBRE_WIDTH: Record<FibreKind, number> = { kinetochore: 1.7, polar: 1, astral: 0.8 };
 
 export type PickResult = Selection;
 
@@ -422,67 +409,23 @@ export function buildMitosisScene(
   }
 
   // ---- centrosomes (animal): two centrioles at right angles + pericentriolar material
-  // The second centriole sits at a right angle to the first, near its base (an L, in depth).
-  const SECOND = new THREE.Matrix4().compose(
-    new THREE.Vector3(0, -0.12, 0.2),
-    new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2),
-    new THREE.Vector3(1, 1, 1),
-  );
-  /** High: each centriole as its nine microtubule triplets (one instanced mesh per centrosome). */
-  const tripletMatrices = (() => {
-    const out: THREE.Matrix4[] = [];
-    const tubules = centrioleTriplets(0.1);
-    for (const at of [new THREE.Matrix4(), SECOND]) {
-      for (const t of tubules) {
-        out.push(
-          at
-            .clone()
-            .multiply(
-              new THREE.Matrix4().compose(
-                new THREE.Vector3(t.x, 0, t.z),
-                new THREE.Quaternion(),
-                new THREE.Vector3(t.radius, 0.42, t.radius),
-              ),
-            ),
-        );
-      }
-    }
-    return out;
-  })();
+  const makeCentrosome = centrosomeMaker({
+    detail,
+    sphere,
+    centrioleGeo,
+    tubuleGeo,
+    centriole: mats.centriole.base,
+    pcm: mats.pcm.base,
+    keep,
+  });
   const centrosomes = [0, 1].map(() => {
-    const g = new THREE.Group();
-    const parts: THREE.Mesh[] = [];
-    if (detail) {
-      const triplets = new THREE.InstancedMesh(
-        tubuleGeo,
-        mats.centriole.base,
-        tripletMatrices.length,
-      );
-      tripletMatrices.forEach((m, i) => {
-        triplets.setMatrixAt(i, m);
-      });
-      keep({
-        dispose: () => {
-          triplets.dispose();
-        },
-      });
-      parts.push(triplets);
-    } else {
-      const a = new THREE.Mesh(centrioleGeo, mats.centriole.base);
-      const b = new THREE.Mesh(centrioleGeo, mats.centriole.base);
-      b.applyMatrix4(SECOND);
-      parts.push(a, b);
-    }
-    const halo = new THREE.Mesh(sphere, mats.pcm.base);
-    halo.scale.setScalar(0.38);
-    parts.push(halo);
-    for (const m of parts) {
+    const c = makeCentrosome();
+    for (const m of c.parts) {
       m.userData = { part: 'centrosome' } satisfies PartData;
-      g.add(m);
       pickables.push(m);
     }
-    scene.add(g);
-    return { group: g, parts, halo };
+    scene.add(c.group);
+    return c;
   });
 
   // ---- spindle: thin tubes, one InstancedMesh sized for the most fibres the timeline can have
@@ -498,75 +441,10 @@ export function buildMitosisScene(
   // ---- cell body
   // Animal membrane: a surface of revolution about the spindle axis whose profile is the
   // union of two circles (one sphere → furrow → two daughter spheres).
-  const H = seg; // profile rows per half
-  const A = seg * 2; // segments around the axis
-  const rows = 2 * (H + 1);
-  const memPos = new Float32Array(rows * (A + 1) * 3);
-  const memNor = new Float32Array(rows * (A + 1) * 3);
-  const memGeo = keep(new THREE.BufferGeometry());
-  const memPosAttr = new THREE.BufferAttribute(memPos, 3);
-  const memNorAttr = new THREE.BufferAttribute(memNor, 3);
-  memPosAttr.setUsage(THREE.DynamicDrawUsage);
-  memNorAttr.setUsage(THREE.DynamicDrawUsage);
-  memGeo.setAttribute('position', memPosAttr);
-  memGeo.setAttribute('normal', memNorAttr);
-  const index: number[] = [];
-  for (let r = 0; r < rows - 1; r++) {
-    for (let a = 0; a < A; a++) {
-      const i0 = r * (A + 1) + a;
-      const i1 = i0 + 1;
-      const j0 = i0 + (A + 1);
-      const j1 = j0 + 1;
-      // Counter-clockwise seen from outside (front faces point outwards).
-      index.push(i0, i1, j0, i1, j1, j0);
-    }
-  }
-  memGeo.setIndex(index);
-  // Cosines and sines around the axis (fixed), so a new profile costs no trigonometry per vertex.
-  const aroundCos = new Float32Array(A + 1);
-  const aroundSin = new Float32Array(A + 1);
-  for (let a = 0; a <= A; a++) {
-    aroundCos[a] = Math.cos((2 * Math.PI * a) / A);
-    aroundSin[a] = Math.sin((2 * Math.PI * a) / A);
-  }
-  let memOffset = Number.NaN;
-  let memRadius = Number.NaN;
+  const profile = keep(new TwoSphereProfile(seg));
+  const memGeo = profile.geometry;
   const writeProfile = (offset: number, radius: number) => {
-    if (Math.abs(offset - memOffset) < 5e-5 && Math.abs(radius - memRadius) < 5e-5) return;
-    memOffset = offset;
-    memRadius = radius;
-    const phiEnd = offset < radius ? Math.acos(offset / radius) : 0;
-    let k = 0;
-    for (let r = 0; r < rows; r++) {
-      const left = r <= H;
-      const i = left ? r : r - (H + 1);
-      // Left circle: angle π → phiEnd; right circle: π − phiEnd → 0 (both measured from +x).
-      const phi = left
-        ? Math.PI + ((phiEnd - Math.PI) * i) / H
-        : Math.PI - phiEnd - ((Math.PI - phiEnd) * i) / H;
-      const cx = left ? -offset : offset;
-      const cp = Math.cos(phi);
-      const sp = Math.sin(phi);
-      const x = cx + radius * cp;
-      const rr = radius * sp;
-      for (let a = 0; a <= A; a++) {
-        const c = aroundCos[a] ?? 1;
-        const s = aroundSin[a] ?? 0;
-        memPos[k] = x;
-        memPos[k + 1] = rr * c;
-        memPos[k + 2] = rr * s;
-        memNor[k] = cp;
-        memNor[k + 1] = sp * c;
-        memNor[k + 2] = sp * s;
-        k += 3;
-      }
-    }
-    memPosAttr.needsUpdate = true;
-    memNorAttr.needsUpdate = true;
-    // The two circles' union fits a sphere of radius offset + radius about the middle.
-    const sphere = (memGeo.boundingSphere ??= new THREE.Sphere());
-    sphere.center.set(0, 0, 0);
-    sphere.radius = offset + radius;
+    profile.write(offset, radius);
   };
   const membrane = mesh(animal ? memGeo : rounded, mats.membrane.base, { part: 'membrane' });
   // The cytoplasm tint shares the membrane's shape (and follows its furrow), drawn first.
@@ -624,11 +502,9 @@ export function buildMitosisScene(
 
   // ---- update (no allocation: temporaries live here)
   const UP = new THREE.Vector3(0, 1, 0);
-  const Z_AXIS = new THREE.Vector3(0, 0, 1);
   const IDENTITY_Q = new THREE.Quaternion();
   const tmpDir = new THREE.Vector3();
   const tmpPos = new THREE.Vector3();
-  const tmpQuat = new THREE.Quaternion();
   const tmpScale = new THREE.Vector3();
   const tmpMat = new THREE.Matrix4();
   let last: Mitosis3DState | null = null;
@@ -870,53 +746,14 @@ export function buildMitosisScene(
       e.scale.setScalar(0.92 * n.radius);
     });
     if (pores && vesicles) {
-      let np = 0;
-      let nv = 0;
-      st.nuclei.forEach((n, i) => {
-        if (i > 1) return;
-        const b = envelopeBreakdown(n.envelope);
-        if (b.shell > 0.05) {
-          for (const d of poreDirs) {
-            tmpDir.set(d[0], d[1], d[2]);
-            tmpPos.set(...n.center).addScaledVector(tmpDir, n.radius * 0.96);
-            tmpQuat.setFromUnitVectors(Z_AXIS, tmpDir);
-            tmpScale.setScalar(Math.max(0.5, n.radius / ANIMAL.nucleus));
-            pores.setMatrixAt(np++, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
-          }
-        }
-        if (b.vesicles > 0.02) {
-          const size = 0.17 * b.vesicles * Math.max(0.5, n.radius / ANIMAL.nucleus);
-          for (const d of vesicleDirs) {
-            tmpDir.set(d[0], d[1], d[2]);
-            tmpPos.set(...n.center).addScaledVector(tmpDir, n.radius * (1 + b.drift));
-            // Flattened pieces of membrane, lying along the old surface.
-            tmpQuat.setFromUnitVectors(Z_AXIS, tmpDir);
-            tmpScale.set(size, size, size * 0.4);
-            vesicles.setMatrixAt(nv++, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
-          }
-        }
-      });
-      pores.count = np;
-      vesicles.count = nv;
-      pores.visible = np > 0;
-      vesicles.visible = nv > 0;
-      pores.instanceMatrix.needsUpdate = true;
-      vesicles.instanceMatrix.needsUpdate = true;
-      vesicles.boundingSphere = null;
+      writeEnvelopeParts(pores, vesicles, st.nuclei, poreDirs, vesicleDirs, 2, ANIMAL.nucleus);
       setOpacity(mats.pore, Math.min(1, sheet * 1.2));
       setOpacity(mats.vesicle, 1);
     }
     nucleoli.forEach((e, i) => {
       const n = st.nuclei[i];
       e.visible = !!n && n.nucleolus > 0.01;
-      if (!n) return;
-      // Off-centre inside its nucleus, a quarter of its radius.
-      e.position.set(
-        n.center[0] + 0.3 * n.radius,
-        n.center[1] + 0.25 * n.radius,
-        n.center[2] - 0.2 * n.radius,
-      );
-      e.scale.setScalar(0.24 * n.radius);
+      if (n) placeNucleolus(e, n);
     });
     // Fully there = fully opaque (a hashed fade at 0.9 looked like noise).
     const nl = st.nuclei.reduce((m, n) => Math.max(m, n.nucleolus), 0);
@@ -931,25 +768,7 @@ export function buildMitosisScene(
     }
 
     // Spindle fibres: one tube per fibre (unit cylinder moved, turned and stretched).
-    let n = 0;
-    for (const f of st.fibres) {
-      if (n >= maxFibres) break;
-      tmpDir.set(f.to[0] - f.from[0], f.to[1] - f.from[1], f.to[2] - f.from[2]);
-      const len = tmpDir.length();
-      if (len < 1e-6) continue;
-      tmpPos.set((f.from[0] + f.to[0]) / 2, (f.from[1] + f.to[1]) / 2, (f.from[2] + f.to[2]) / 2);
-      tmpQuat.setFromUnitVectors(UP, tmpDir.divideScalar(len));
-      // Kinetochore fibres are bundles of microtubules: drawn thicker than the others.
-      const w = fibreShape.radius * FIBRE_WIDTH[f.kind];
-      tmpScale.set(w, len, w);
-      spindle.setMatrixAt(n, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
-      n++;
-    }
-    spindle.count = n;
-    spindle.instanceMatrix.needsUpdate = true;
-    // Picking re-measures the moved fibres when it needs to (no work per frame).
-    spindle.boundingSphere = null;
-    spindle.visible = n > 0;
+    writeFibres(spindle, st.fibres, fibreShape.radius, maxFibres);
     // Fully opaque once assembled (a hashed fade below 1 shows as grain on thin fibres).
     setOpacity(mats.spindle, Math.min(1, st.spindle * 1.5));
 

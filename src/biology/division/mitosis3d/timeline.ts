@@ -28,12 +28,53 @@
  *    plate reaches the wall (plant).
  */
 import { rng } from '../../genetics/stats';
-import { countsOf, runDivision, type Origin, type StageId, type StageState } from '../division';
+import { runDivision, type Origin, type StageId, type StageState } from '../division';
+import { stageClock, type StageWindow as Window } from '../division3d/clock';
+import { countsFromModel } from '../division3d/counts';
+import { PAIR_LENGTH, ROD_RADIUS, SISTER_OFFSET, SPLAY } from '../division3d/dimensions';
+import {
+  X,
+  add,
+  basis,
+  cross,
+  dot,
+  ease,
+  len,
+  lerp,
+  lerpV,
+  mul,
+  norm,
+  randomInBall,
+  randomUnit,
+  sub,
+  v3,
+  type Vec3,
+} from '../division3d/math';
+import { plateLayout } from '../division3d/plate';
+import type {
+  CentromereState,
+  ChromatidPose,
+  Counts3D,
+  Fibre,
+  GeometricCell,
+  NucleusState,
+} from '../division3d/types';
+
+// Shared with the meiosis view (`../division3d/`), re-exported for existing imports.
+export { ease, type Vec3 };
+export type {
+  CentromereState,
+  ChromatidPose,
+  Counts3D,
+  Fibre,
+  FibreKind,
+  GeometricCell,
+  NucleusState,
+} from '../division3d/types';
 
 export type CellType = 'animal' | 'plant';
 export type Stage3D =
   'g1' | 'g2' | 'prophase' | 'metaphase' | 'anaphase' | 'telophase' | 'cytokinesis';
-export type Vec3 = [number, number, number];
 
 export const STAGES_3D: readonly Stage3D[] = [
   'g1',
@@ -106,11 +147,7 @@ export const PLANT = {
   telNucleusR: 1.5,
 } as const;
 
-/** Condensed rod radius and the distance of each sister from the shared centromere. */
-export const ROD_RADIUS = 0.15;
-export const SISTER_OFFSET = 0.17;
-/** Sister arms diverge from the centromere (the X shape of a double chromosome). */
-const SPLAY = 0.45;
+export { ROD_RADIUS, SISTER_OFFSET };
 /**
  * Centre (x) of each animal daughter cell at the end of cytokinesis: far enough apart that the
  * two cells show a clear gap once the furrow has closed (they touched at 1.06 radii).
@@ -155,8 +192,7 @@ const PRO_SPINDLE = [0.3, 0.95] as const;
 const TEL_SPINDLE_END = 0.5;
 const TEL_NUCLEOLUS = [0.55, 0.95] as const;
 
-/** Condensed length and centromere position (fraction along the chromatid) per pair. */
-const PAIR_LENGTH = [2.2, 1.8, 1.45, 1.15];
+/** Centromere position (fraction along the chromatid) per pair; lengths: `PAIR_LENGTH`. */
 const PAIR_CENTROMERE = [0.5, 0.4, 0.45, 0.33];
 
 /** Static, per-chromatid data (built once per timeline). */
@@ -181,57 +217,6 @@ export interface ChromatidInfo {
   /** Which of the pre-built chromatin thread shapes to use, and its fixed rotation. */
   threadVariant: number;
   threadRotation: Vec3;
-}
-
-export interface ChromatidPose {
-  /** Index into `Timeline.chromatids`. */
-  id: number;
-  chromosome: number;
-  sister: 0 | 1;
-  origin: Origin;
-  /** Sister 1 does not exist before replication (G1). */
-  present: boolean;
-  /** Sisters still joined at the centromere (double chromosome). */
-  joined: boolean;
-  /** Centromere / kinetochore point of this chromatid. */
-  centromere: Vec3;
-  /** Unit directions of the two arms from the centromere. */
-  dirA: Vec3;
-  dirB: Vec3;
-  /** −1 / +1 = goes to the −x / +x pole (always known: it is fixed by the model). */
-  side: -1 | 1;
-}
-
-export interface CentromereState {
-  chromosome: number;
-  /** Sister indices sharing this centromere (2 = double chromosome, 1 = single). */
-  sisters: (0 | 1)[];
-  position: Vec3;
-}
-
-export interface NucleusState {
-  center: Vec3;
-  radius: number;
-  /** Nuclear envelope opacity 0…1 (breaks down in prophase, re-forms in telophase). */
-  envelope: number;
-  /**
-   * Nucleolus 0…1 (illustrative, no effect on any count): fades early in prophase and
-   * re-forms in late telophase.
-   */
-  nucleolus: number;
-  /** Geometric cell the nucleus belongs to. */
-  cell: number;
-}
-
-export type FibreKind = 'polar' | 'kinetochore' | 'astral';
-export interface Fibre {
-  kind: FibreKind;
-  from: Vec3;
-  to: Vec3;
-  /** Kinetochore fibres: the chromatid they pull. */
-  chromatid?: number;
-  /** 0 = −x pole, 1 = +x pole. */
-  pole: 0 | 1;
 }
 
 export interface AnimalShape {
@@ -259,26 +244,6 @@ export interface PlantShape {
 
 export type CellShape = AnimalShape | PlantShape;
 
-export interface GeometricCell {
-  center: Vec3;
-  /** Indices (into `Timeline.chromatids`) of the present chromatids inside this cell. */
-  chromatids: number[];
-}
-
-export interface Counts3D {
-  cells: number;
-  /** Nuclei per cell at the start and at the end of the stage (they change in some stages). */
-  nuclei: { from: number; to: number };
-  /** Per cell (cytokinesis: per daughter cell after division). */
-  chromosomes: number;
-  state: 'single' | 'double';
-  chromatids: number;
-  centromeres: number;
-  dnaMolecules: number;
-  /** Telophase only: chromosomes in each of the two nuclei of the one cell. */
-  perNucleus?: number;
-}
-
 export interface Mitosis3DState {
   t: number;
   stage: Stage3D;
@@ -301,11 +266,7 @@ export interface Mitosis3DState {
   cells: GeometricCell[];
 }
 
-export interface StageWindow {
-  id: Stage3D;
-  start: number;
-  end: number;
-}
+export type StageWindow = Window<Stage3D>;
 
 export interface Timeline {
   pairs: number;
@@ -320,76 +281,6 @@ export interface Timeline {
   keyTime(stage: Stage3D): number;
   stateAt(t: number): Mitosis3DState;
   counts(stage: Stage3D): Counts3D;
-}
-
-// ---------------------------------------------------------------- small vector helpers
-
-const clamp01 = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x);
-/** Smoothstep easing of u inside the window [a, b]. */
-export function ease(u: number, a = 0, b = 1): number {
-  const x = clamp01((u - a) / (b - a));
-  return x * x * (3 - 2 * x);
-}
-const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
-const v3 = (x: number, y: number, z: number): Vec3 => [x, y, z];
-const add = (a: Vec3, b: Vec3): Vec3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-const sub = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-const mul = (a: Vec3, k: number): Vec3 => [a[0] * k, a[1] * k, a[2] * k];
-const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-const cross = (a: Vec3, b: Vec3): Vec3 => [
-  a[1] * b[2] - a[2] * b[1],
-  a[2] * b[0] - a[0] * b[2],
-  a[0] * b[1] - a[1] * b[0],
-];
-const len = (a: Vec3) => Math.hypot(a[0], a[1], a[2]);
-const lerpV = (a: Vec3, b: Vec3, k: number): Vec3 => [
-  lerp(a[0], b[0], k),
-  lerp(a[1], b[1], k),
-  lerp(a[2], b[2], k),
-];
-function norm(a: Vec3, fallback: Vec3 = [0, 1, 0]): Vec3 {
-  const l = len(a);
-  return l > 1e-9 ? [a[0] / l, a[1] / l, a[2] / l] : fallback;
-}
-const X: Vec3 = [1, 0, 0];
-
-function randomUnit(rand: () => number): Vec3 {
-  for (;;) {
-    const p: Vec3 = [rand() * 2 - 1, rand() * 2 - 1, rand() * 2 - 1];
-    const l = len(p);
-    if (l > 0.2 && l <= 1) return mul(p, 1 / l);
-  }
-}
-function randomInBall(rand: () => number): Vec3 {
-  for (;;) {
-    const p: Vec3 = [rand() * 2 - 1, rand() * 2 - 1, rand() * 2 - 1];
-    if (len(p) <= 1) return p;
-  }
-}
-
-/** Metaphase plate slots: a ring for few chromosomes, a sunflower disc for many. */
-function plateLayout(n: number): { pos: Vec3; tangent: Vec3 }[] {
-  const out: { pos: Vec3; tangent: Vec3 }[] = [];
-  if (n <= 10) {
-    const r = Math.max(1.6, (n * 2.6) / (2 * Math.PI));
-    for (let i = 0; i < n; i++) {
-      const a = 0.35 + (2 * Math.PI * i) / n;
-      out.push({
-        pos: v3(0, r * Math.cos(a), r * Math.sin(a)),
-        tangent: v3(0, -Math.sin(a), Math.cos(a)),
-      });
-    }
-    return out;
-  }
-  for (let i = 0; i < n; i++) {
-    const r = 3 * Math.sqrt((i + 0.5) / n);
-    const a = i * 2.399963;
-    out.push({
-      pos: v3(0, r * Math.cos(a), r * Math.sin(a)),
-      tangent: v3(0, -Math.sin(a), Math.cos(a)),
-    });
-  }
-  return out;
 }
 
 // ---------------------------------------------------------------- timeline
@@ -444,29 +335,11 @@ export function buildTimeline(pairs: number, cellType: CellType): Timeline {
     }
   });
 
-  const stages: StageWindow[] = [];
-  let acc = 0;
-  for (const id of STAGES_3D) {
-    stages.push({ id, start: acc, end: acc + STAGE_SECONDS[id] });
-    acc += STAGE_SECONDS[id];
-  }
-  const total = acc;
-
-  const stageAt = (t: number) => {
-    const tc = Math.min(total, Math.max(0, t));
-    for (let k = 0; k < stages.length; k++) {
-      const w = stages[k];
-      if (!w) continue;
-      if (tc < w.end || k === stages.length - 1) {
-        return { stage: w.id, index: k, u: clamp01((tc - w.start) / (w.end - w.start)) };
-      }
-    }
-    return { stage: 'cytokinesis' as Stage3D, index: stages.length - 1, u: 1 };
-  };
-  const keyTime = (stage: Stage3D) => {
-    const w = stages.find((s) => s.id === stage);
-    return w ? w.start + STAGE_KEY_U[stage] * (w.end - w.start) : 0;
-  };
+  const { stages, total, stageAt, keyTime, timeAt } = stageClock(
+    STAGES_3D,
+    STAGE_SECONDS,
+    STAGE_KEY_U,
+  );
 
   const stateAt = (t: number): Mitosis3DState => {
     const { stage, index, u } = stageAt(t);
@@ -480,9 +353,7 @@ export function buildTimeline(pairs: number, cellType: CellType): Timeline {
     // Evaluated inside the stage (u = 1 is the stage's own end, not the next stage's start).
     const c = counts3d(stage, model, (s, u) => {
       const k = stages.findIndex((x) => x.id === s);
-      const w = stages[k];
-      const time = w ? w.start + u * (w.end - w.start) : 0;
-      return computeState(time, s, Math.max(0, k), u, cellType, chromatids);
+      return computeState(timeAt(s, u), s, Math.max(0, k), u, cellType, chromatids);
     });
     countsCache.set(stage, c);
     return c;
@@ -510,32 +381,8 @@ export function counts3d(
     return nuclei / Math.max(1, st.cells.length);
   };
   const nuclei = { from: nucleiPerCell(0), to: nucleiPerCell(1) };
-  if (stage === 'telophase') {
-    // One cell holding both sets (the model lists them as its two future daughter cells).
-    const sets = s.cells.map((cell) => countsOf({ stage: s.stage, cells: [cell] }));
-    const sum = (k: 'chromosomes' | 'chromatids' | 'centromeres' | 'dnaMolecules') =>
-      sets.reduce((a, c) => a + c[k], 0);
-    return {
-      cells: 1,
-      nuclei,
-      chromosomes: sum('chromosomes'),
-      state: sets.some((c) => c.state === 'double') ? 'double' : 'single',
-      chromatids: sum('chromatids'),
-      centromeres: sum('centromeres'),
-      dnaMolecules: sum('dnaMolecules'),
-      perNucleus: sets[0]?.chromosomes ?? 0,
-    };
-  }
-  const c = countsOf(s);
-  return {
-    cells: c.cells,
-    nuclei,
-    chromosomes: c.chromosomes,
-    state: c.state,
-    chromatids: c.chromatids,
-    centromeres: c.centromeres,
-    dnaMolecules: c.dnaMolecules,
-  };
+  // Telophase: one cell holding both sets (the model lists them as its two future daughters).
+  return countsFromModel(s, stage === 'telophase' ? 2 : 1, nuclei);
 }
 
 // ---------------------------------------------------------------- state at one moment
@@ -962,11 +809,6 @@ function computeState(
     shape: frame.shape,
     cells,
   };
-}
-
-function basis(d: Vec3): [Vec3, Vec3] {
-  const e1 = norm(cross(d, [0, 0, 1]), norm(cross(d, [0, 1, 0])));
-  return [e1, norm(cross(d, e1))];
 }
 
 function spindleFibres(
