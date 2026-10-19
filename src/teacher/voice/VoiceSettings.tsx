@@ -32,14 +32,7 @@ import {
   localVoiceStatus,
   type LocalVoiceStatus,
 } from './localVoice';
-import {
-  listVoices,
-  speak,
-  speechSupported,
-  stopSpeaking,
-  toSpokenText,
-  vietnameseVoices,
-} from './speak';
+import { listVoices, speechSupported, toSpokenText, vietnameseVoices } from './speak';
 import {
   GEMINI_TTS_MODELS,
   GEMINI_VOICES,
@@ -52,6 +45,7 @@ import {
   type VoiceEngine,
 } from './voiceStore';
 import { voiceChoices } from './voiceChoices';
+import { useVoicePreview } from './usePreview';
 import { voiceErrorKey } from './voiceErrors';
 import '@/teacher/chat/chat.css';
 import './voice.css';
@@ -84,8 +78,8 @@ export function VoiceSettings() {
   const speedId = useId();
   const styleId = useId();
   const [showText, setShowText] = useState(false);
-
-  useEffect(() => stopSpeaking, []);
+  // Closing Settings stops only the preview started here, never a lesson's sentence.
+  const preview = useVoicePreview(VOICE_SAMPLE);
 
   return (
     <>
@@ -188,19 +182,13 @@ export function VoiceSettings() {
         </legend>
         <p className="muted small">“{VOICE_SAMPLE}”</p>
         <div className="settings-actions">
-          {voice.speaking ? (
-            <button type="button" className="btn" onClick={stopSpeaking}>
+          {voice.speaking && preview.previewing ? (
+            <button type="button" className="btn" onClick={preview.stop}>
               <Square size={14} />
               {t('voice.stop')}
             </button>
           ) : (
-            <button
-              type="button"
-              className="btn btn--accent"
-              onClick={() => {
-                void speak(VOICE_SAMPLE);
-              }}
-            >
+            <button type="button" className="btn btn--accent" onClick={preview.start}>
               <Play size={14} />
               {t('voice.preview')}
             </button>
