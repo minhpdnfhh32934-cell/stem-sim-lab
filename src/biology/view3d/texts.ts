@@ -3,6 +3,7 @@
  * illustration and what comes from the lesson's model.
  */
 import type { LocalizedText } from '@/core/data/dataset';
+import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common';
 
 /** Shapes, positions and sizes are drawn freely; counts and ratios are the model's. */
@@ -19,4 +20,22 @@ export function perFigure(per: number, fmt: (v: number) => string): LocalizedTex
         `Mỗi hình ≈ ${fmt(per)} cá thể (làm tròn).`,
         `Each figure ≈ ${fmt(per)} individuals (rounded).`,
       );
+}
+
+/** Motion that shows a process, not a measured path (shared wording of the 3D views). */
+export const MOTION = L(
+  'Chuyển động minh họa — không phải đường đi đo được.',
+  'Illustrative motion — not a measured path.',
+);
+
+/**
+ * A lesson's 3D Science Card: its 2D card (same model, equations, sources and confidence) plus
+ * what the 3D picture adds — the illustration note and the lesson's own 3D notes. Published
+ * while the 3D view is on screen.
+ */
+export function card3dAssumptions(
+  base: ScienceCardData,
+  extra: readonly LocalizedText[] = [],
+): ScienceCardData {
+  return { ...base, assumptions: [...base.assumptions, ILLUSTRATION, ...extra] };
 }

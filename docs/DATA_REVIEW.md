@@ -348,4 +348,7 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     nguồn gốc mẹ/bố). Nhờ giáo viên kiểm tra các câu mới trong Thẻ Khoa học 3D
     (`card3d`, `components.ts`) và hình ở chất lượng Cao: màng nhân kép có lỗ, vỡ thành túi ở kì
     đầu và hợp lại ở kì cuối; trung tử 9 bộ ba vi ống; túi Golgi hợp vào tấm tế bào. Lớp màu nhạt
-    bên trong tế bào (tế bào chất) chỉ là minh họa, không phải một bộ phận được đặt tên.
+    bên trong tế bào (tế bào chất) chỉ là minh họa, không phải một bộ phận được đặt tên. Câu dùng chung
+    mới cho hình 3D các bài: "Chuyển động minh họa — không phải đường đi đo được." (`MOTION`,
+    `src/biology/view3d/texts.ts`); khi phải vẽ một hình cho nhiều cá thể, số hình của các lớp
+    được chia theo phần dư lớn nhất để tổng khớp đúng (`sampling.ts`).

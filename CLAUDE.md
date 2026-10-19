@@ -410,10 +410,24 @@ Progress log: `docs/PROGRESS.md`.
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
 - Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
   `runDivision('mitosis')`, S phase folded into the G1→G2 boundary), `scene.ts` (three.js, nothing
-  allocated per frame, everything disposed), `Mitosis3DView`/`Mitosis3DSwitch` (falls back to 2D on
-  tier low / no WebGL2 / context lost). The division store records which division `index` belongs to
-  (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d` Playwright project (software WebGL
-  starves parallel specs).
+  allocated per frame, everything disposed; each chromatid one tube from
+  `view3d/primitives/chromosomeTube.ts` painted from the model's DNA segments, centreline in
+  `chromatidShape.ts` morphing thread ↔ rod in place; High tier adds the double nuclear envelope
+  with pores breaking into vesicles, centriole triplets, cell-plate vesicles — maths in
+  `sceneParts.ts`; budget tables in `scene.perf.test.ts` are measured values), `Mitosis3DView`/
+  `Mitosis3DSwitch` (falls back to 2D on tier low / no WebGL2 / context lost; "Hiện tên" labels,
+  smooth camera moves, double-click focus, arrow-key orbit). The division store records which
+  division `index` belongs to (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d`
+  Playwright project (software WebGL starves parallel specs).
+- Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
+  shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
+  label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
+  taps/double taps, arrow keys, `place(…, {animate})` tweens — instant with reduced motion,
+  lost-context fallback, `window.__simlab3d[key]` debug hooks), `loop.ts` (`useFrameLoop`,
+  `usePlayback`: frame monitor + overload ladder), `camera.ts`, `frame.ts`, `insets.ts`,
+  `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
+  `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
+  disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
 - Biology 3D kit (`src/biology/view3d/`): every other lesson has a 3D view too (3D by default, the
   learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
@@ -423,6 +437,10 @@ Progress log: `docs/PROGRESS.md`.
   keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
   3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
   chips are shared with the 2D view so the text is identical. New 3D text → DATA_REVIEW (#26).
+  Shared biology pieces: `lessonStore.ts` (`createLesson3DStore`; `useMitosis3D` is one),
+  `palette.ts` (one token + shape cue per role, per lesson no two roles alike), `sampling.ts`
+  (`drawScale` nice steps, `apportion` largest remainders: classes add up exactly),
+  `texts.ts` (`ILLUSTRATION`, `MOTION`, `card3dAssumptions`), `primitives/`.
   Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
   project, SwiftShader). Specs that open biology topics set SwiftShader too.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
