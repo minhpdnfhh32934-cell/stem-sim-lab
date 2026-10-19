@@ -288,8 +288,8 @@ tính; phần chữ của bài (mục tiêu, gợi ý, kết luận tham khảo)
 chưa có giáo viên duyệt.
 
 - **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
-  chọn) và B (độ cao gấp đôi), rồi tự sang bước Quan sát với bảng số đo, đồ thị và phép kiểm tra chéo
-  với công thức. Nút
+  chọn) và B (độ cao gấp đôi), rồi báo đã có số đo; bấm **Tiếp: Quan sát** để xem bảng số đo, đồ thị
+  và phép kiểm tra chéo với công thức (như ở môn Hóa và Sinh, em tự quyết khi nào đi tiếp). Nút
   **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
 - **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
   trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
