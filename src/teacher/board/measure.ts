@@ -15,9 +15,17 @@ let ctx: CanvasRenderingContext2D | null = null;
 let katex: Awaited<ReturnType<typeof loadKatex>> | null = null;
 const mathCache = new Map<string, { w: number; h: number }>();
 
-/** Loads the board fonts and KaTeX before the first layout (widths depend on them). */
+/**
+ * Loads the board fonts and KaTeX before the first layout (widths depend on them). Never
+ * rejects: when KaTeX cannot load, formulas are measured with the fallback size and the lesson
+ * still starts (a later lesson tries to load it again).
+ */
 export async function prepareMeasure(): Promise<void> {
-  katex = await loadKatex();
+  try {
+    katex = await loadKatex();
+  } catch {
+    /* formulas are measured with the fallback size */
+  }
   try {
     await Promise.all([
       document.fonts.load(`30px ${HAND_FONT}`, 'Bảng trắng ẩ ữ'),

@@ -129,6 +129,14 @@ describe('whiteboard: a new answer with the voice on', () => {
     expect(voice.said).toEqual(SAID);
   });
 
+  it('a preparation that fails (KaTeX not loaded) still teaches the lesson (0.7 fix)', async () => {
+    fonts.ready = Promise.reject(new Error('Failed to fetch dynamically imported module'));
+    render(<Page id="answer-no-katex" />);
+    await untilDone();
+    expect(useBoardStore.getState().status).toBe('done');
+    expect(voice.said).toEqual(SAID);
+  });
+
   it("teaches only the lesson: hidden reasoning, the reviewer's notes and echoed labels are neither said nor written", async () => {
     const content =
       '<think>tính nháp 7 kg</think>Nhận xét về bản nháp: đúng hướng.\n\nBản đã sửa:\n**GHI CHÚ:**\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.\n2. Vậy s = 20 m.<think>kiểm tra lại';
