@@ -4,11 +4,11 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.6.0 (Đang xét duyệt)
 
-_PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5._
+_PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5. Phần G8 (bảng dạy, “Khoanh để hỏi”, AI trên máy khác, trả lời hiện dần) nằm trên nhánh feat/teacher-board-runtime chồng lên PR #20, chỉ có trên máy của người phát triển (ghi 19/10/2026): chưa đẩy lên GitHub, chưa có PR._
 
 _Ghi chú này là bản nháp, chưa được duyệt để công bố._
 
-Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật.
+Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật. Sau đó (chưa phát hành): bảng dạy chỉ trình bày nội dung bài học và dùng cả bảng, “Khoanh để hỏi” trên bảng, và dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp).
 
 ### Added
 
@@ -19,6 +19,11 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do S
 - SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).
 - Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.
 - Hộp 'SimLab đã được cập nhật' cho biết điểm mới sau khi cập nhật, và trang 'Lịch sử phiên bản' trong Cài đặt.
+- “Khoanh để hỏi” trên bảng: khoanh, gạch chân hoặc chạm vào chỗ muốn hỏi rồi bấm “Hỏi thầy chỗ này”. App đọc đúng chữ, công thức và nhãn hình đang có trên bảng; câu trả lời hiện trong khung chat và bài giảng chờ đến khi bấm “Quay lại bài giảng”. Chỗ không có chữ chỉ được gửi dạng ảnh cho AI đọc ảnh chạy trên máy, không lên mạng.
+- Cài đặt → “AI trên máy khác”: tìm, kiểm tra và chọn chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp hoặc máy chủ kiểu OpenAI) cho AI Teacher, “Phân tích đề” và “AI diễn giải”. Chỉ dùng địa chỉ trên chính máy; khi chương trình lỗi, app nói rõ và không tự gửi câu hỏi lên mạng; mô hình cloud của Ollama bị từ chối.
+- Phóng to, thu nhỏ bảng (1–2×) và nút “Vừa khung”; chữ đã viết không đổi chỗ.
+- Nguyên phân 3D: nút “Hỏi thầy về bộ phận này” mở AI Teacher với câu hỏi viết sẵn về bộ phận đang chọn.
+- Trên ứng dụng desktop, câu trả lời của AI trực tuyến (Gemini, Claude, Groq) hiện dần trong khi đang viết.
 
 ### Improved
 
@@ -29,12 +34,18 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do S
 - Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
 - Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.
 - Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, "tan" trong hòa tan.
+- Bảng chỉ trình bày nội dung bài học: phần suy nghĩ nội bộ của AI, câu lặp lại lời nhắc, dòng nguồn và ký hiệu định dạng thừa không được viết lên bảng hay đọc to; lời chào chỉ được nói, không viết.
+- Thầy dùng cả bảng: mỗi bảng được chia theo nội dung (một, hai hoặc ba cột), phần không vừa xuống một dải ngang cả bảng, công thức dài viết thành nhiều dòng; không có chữ đè lên nhau khi đổi cỡ cửa sổ hay phóng to.
+- Lỗi AI được nói bằng lời dễ hiểu (hết lượt, sai khóa, mất mạng, chương trình trên máy chưa mở…), dòng “gửi tới” nêu đúng nơi câu hỏi sẽ được gửi, và nhà cung cấp dự phòng chỉ trả lời khi nhà cung cấp chính hết lượt hoặc hết tiền.
 
 ### Fixed
 
 - Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.
 - Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.
 - Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.
+- Bút của thầy có thể vẫn viết trên bảng cũ khi chuyển sang bảng khác: nay mỗi lượt giảng chỉ viết trên bảng của nó, và quay lại bảng cũ thì phần đã viết vẫn còn.
+- “Viết tiếp” không còn ẩn hay đảo các dòng đã viết và không để lại phần dở dang.
+- Giữ phím Enter không còn gửi câu hỏi đang gõ trong ô chat.
 
 ### Security
 
@@ -62,6 +73,8 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do S
 - Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
 - Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
 - Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
+- “Khoanh để hỏi”, AI trên máy khác và câu trả lời hiện dần mới chỉ được thử với chương trình giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.
+- SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.
 
 ## [0.5.2] - 2026-10-13
 
