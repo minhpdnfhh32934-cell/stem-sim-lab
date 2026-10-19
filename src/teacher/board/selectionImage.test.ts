@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CROP_MAX, CROP_MIN, CROP_PAD, cropSvg } from './selectionImage';
+import { CROP_MAX, CROP_MIN, CROP_PAD, cropSvg, figureMarkup } from './selectionImage';
 
 /**
  * The picture of a circled area without text (item 2) is plain SVG built from the board model:
@@ -61,5 +61,46 @@ describe('the picture of a circled area', () => {
     expect(crop.svg).not.toContain('<script');
     expect(crop.svg).toContain('fill="#ffffff"');
     expect(crop.svg).toContain('stroke="#7a3fc2"');
+  });
+});
+
+/**
+ * Audit G8 (item 2): the drawing's SVG as it goes into the picture: its colours written in (the
+ * page's CSS does not reach an image), no class, and drawn whole (no "draw itself in" dashes).
+ */
+describe('a drawing’s markup for the picture', () => {
+  function host(inner: string): HTMLElement {
+    const root = document.createElement('div');
+    root.innerHTML = `<div class="board__drawing" data-draw-id="d1"><svg class="board__svg" viewBox="0 0 10 10">${inner}</svg></div><div class="board__drawing" data-draw-id="d2"><span>x</span></div>`;
+    document.body.append(root);
+    return root;
+  }
+
+  it('inlines the styles, drops the classes and draws the lines whole', () => {
+    const root = host(
+      '<path class="board__ink is-drawing" d="M0 0L10 10" style="fill: none; stroke-dasharray: 40; stroke-dashoffset: 40"/>',
+    );
+    const markup = figureMarkup('d1', root);
+    root.remove();
+    expect(markup).not.toBeNull();
+    const svg = new DOMParser().parseFromString(markup ?? '', 'image/svg+xml').documentElement;
+    expect(markup?.startsWith('<svg')).toBe(true);
+    expect(markup).toContain(`xmlns="http://www.w3.org/2000/svg"`);
+    // Declared once: a repeated attribute is invalid XML and the picture would not load.
+    expect(markup?.split('xmlns=').length).toBe(2);
+    for (const el of [svg, ...svg.querySelectorAll('*')]) {
+      expect(el.hasAttribute('class')).toBe(false);
+      const style = el.getAttribute('style') ?? '';
+      expect(style).toContain('stroke-dasharray:none');
+      expect(style).toContain('stroke-dashoffset:0');
+      expect(style).toMatch(/(?:^|;)fill:/u);
+    }
+  });
+
+  it('is null for a drawing that is not on the board or holds no SVG', () => {
+    const root = host('<line x1="0" y1="0" x2="1" y2="1"/>');
+    expect(figureMarkup('d2', root)).toBeNull();
+    expect(figureMarkup('missing', root)).toBeNull();
+    root.remove();
   });
 });

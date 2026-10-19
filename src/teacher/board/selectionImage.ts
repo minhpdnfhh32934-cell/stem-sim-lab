@@ -6,8 +6,8 @@
  * The picture is plain SVG built from the board's model: the learner's strokes (board units) and
  * the drawings' own SVG with their colours written in (the page's CSS does not reach an image).
  * KaTeX and the written words are never rasterised. The SVG becomes a PNG through a `blob:` URL
- * and an OffscreenCanvas (the CSP allows `img-src blob:`). Not yet checked in the desktop app's
- * WebView2 (a canvas tainted by an SVG image would make it fail: then the learner is told and
+ * and an OffscreenCanvas (the CSP allows `img-src blob:`). Checked in Chromium
+ * (tests/e2e/board-picture.spec.ts); not yet in the desktop app's WebView2 (a canvas tainted by an SVG image would make it fail: then the learner is told and
  * nothing is sent).
  */
 import { BOARD_W, type Box } from './layout';
@@ -106,8 +106,12 @@ export function figureMarkup(id: string, root: ParentNode = document): string | 
     target.setAttribute('style', `${inline};stroke-dasharray:none;stroke-dashoffset:0`);
     target.removeAttribute('class');
   });
-  copy.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  return new XMLSerializer().serializeToString(copy);
+  const out = new XMLSerializer().serializeToString(copy);
+  // The serializer declares the SVG namespace of an element made in it; declaring it again
+  // repeats the attribute (invalid XML: the picture would not load).
+  return /^<svg\b[^>]*\sxmlns="/u.test(out)
+    ? out
+    : out.replace(/^<svg\b/u, '<svg xmlns="http://www.w3.org/2000/svg"');
 }
 
 /** The SVG as PNG bytes (blob: URL → image → OffscreenCanvas). */

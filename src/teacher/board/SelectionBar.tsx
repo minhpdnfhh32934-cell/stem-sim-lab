@@ -92,7 +92,7 @@ export function SelectionBar({ side = 'bottom' }: { side?: AskBarSide }) {
             >
               {t('board.ask.all')}
             </button>
-            {selection.hits.slice(0, 8).map((hit) => (
+            {selection.hits.map((hit) => (
               <button
                 key={hit.id}
                 type="button"

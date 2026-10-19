@@ -471,3 +471,47 @@ describe('circling while the teacher teaches', () => {
     expect(screen.getByRole('button', { name: 'Quay lại bài giảng' })).toBeInTheDocument();
   });
 });
+
+describe('many parts circled (audit G8)', () => {
+  it('every circled line is a choice: the row scrolls, none is left out', async () => {
+    const { SelectionBar } = await import('./SelectionBar');
+    const hits = Array.from({ length: 10 }, (_, i) => ({
+      id: `s${String(i + 1)}`,
+      kind: 'text' as const,
+      column: 'center' as const,
+      role: 'body',
+      text: `Bước ${String(i + 1)}`,
+      math: false,
+      whole: true,
+      status: null,
+      struck: false,
+      coverage: 1,
+      boxes: [],
+      x: 0,
+      y: i * 40,
+      index: i,
+    }));
+    useBoardStore.getState().set({
+      selection: {
+        face: 0,
+        shape: 'closed',
+        status: 'ambiguous',
+        reason: 'many',
+        points: [],
+        bbox: { x: 0, y: 0, w: 100, h: 400 },
+        hits,
+        title: null,
+        neighbours: [],
+        strokes: 0,
+        figures: [],
+      },
+    });
+    const view = render(<SelectionBar />);
+    const choices = view.container.querySelector('.board__ask-choices');
+    // "Cả phần này", then each of the ten lines.
+    expect(choices?.querySelectorAll('button')).toHaveLength(11);
+    expect(screen.getByRole('button', { name: 'Bước 10' })).toBeInTheDocument();
+    view.unmount();
+    useBoardStore.getState().set({ selection: null });
+  });
+});

@@ -662,8 +662,10 @@ words alone name no topic, and the board's text never goes there); the "sent to"
 Wikipedia out then. It is never read as an answer to the teacher's check question
 (`TurnOrigin.boardAsk`). When the circled text does not fit the block's cap, the title and the
 neighbours are left out first, then lines are cut ("…") and the parts left out are counted in a
-marked line — never dropped silently. The PNG path (blob: URL → OffscreenCanvas) is **not verified
-in the native WebView2 build**; if it fails, the learner is told and nothing is sent.
+marked line — never dropped silently. The PNG path (blob: URL → OffscreenCanvas) runs in Chromium
+in `tests/e2e/board-picture.spec.ts` (the learner's strokes, and a drawing without labels, circled →
+a PNG to a fake Ollama with vision; nothing online); it is **not verified in the native WebView2
+build** (a user step); if it fails there, the learner is told and nothing is sent.
 
 ## Teacher voice (reads answers aloud)
 
