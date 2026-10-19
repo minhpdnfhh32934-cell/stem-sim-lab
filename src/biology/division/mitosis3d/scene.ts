@@ -276,8 +276,14 @@ export function buildMitosisScene(
   const sphere = keep(new THREE.SphereGeometry(1, seg, Math.round(seg * 0.75)));
   // Kinetochore: a small disc on the outer face of each chromatid's centromere (unit height).
   const kinetoGeo = keep(new THREE.CylinderGeometry(0.085, 0.085, 1, Math.max(10, seg)));
-  /** Sides of a chromatid tube per tier. */
-  const tubeSides = tier === 'high' ? 10 : tier === 'medium' ? 8 : 6;
+  /**
+   * Sides and ring density of a chromatid tube per tier. A big chromosome set (more than 16
+   * chromatids: 2n > 8, which the view does not offer but a timeline can hold) gets the lightest
+   * tubes, so a playback frame stays cheap however many chromatids move (smoothness first).
+   */
+  const many = tl.chromatids.length > 16;
+  const tubeSides = many ? 6 : tier === 'high' ? 10 : tier === 'medium' ? 8 : 6;
+  const ringsPerUnit = many ? 4 : 7;
   const centrioleGeo = keep(
     new THREE.CylinderGeometry(0.1, 0.1, 0.42, Math.max(8, seg / 2), 1, true),
   );
@@ -325,6 +331,7 @@ export function buildMitosisScene(
       armB: info.armB,
       radius: ROD_RADIUS,
       sides: tubeSides,
+      ringsPerUnit,
     });
     keep(tube);
     // Painted from the model's own DNA molecule, piece by piece (in mitosis one piece: no

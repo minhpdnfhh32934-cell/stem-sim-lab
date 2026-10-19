@@ -345,6 +345,19 @@ export function card3d(cellType: CellType): ScienceCardData {
         'Ở đầu kì giữa, sợi thoi đính vào tâm động trước rồi kéo các NST về mặt phẳng xích đạo (một số tài liệu tách giai đoạn này thành kì riêng: tiền kì giữa).',
         'At the start of metaphase the spindle fibres first attach to the centromeres, then pull the chromosomes to the equatorial plate (some books call this a separate stage, prometaphase).',
       ),
+      L(
+        'Mỗi crômatit vẽ thành một ống: hai đầu tròn, chỗ thắt sơ cấp ở tâm động, và thể động là đĩa nhỏ ở mặt ngoài tâm động — nơi sợi thoi đính vào; hai crômatit chị em dính nhau ở tâm động (hình chữ X). Không vẽ dải băng trên NST. Khi co xoắn, cùng một sợi chuyển dần từ dạng sợi mảnh sang dạng que (chuyển động minh họa); ở kì sau tâm động đi trước, hai cánh NST kéo theo phía sau.',
+        'Each chromatid is drawn as one tube: rounded ends, the primary constriction at the centromere, and the kinetochore as a small disc on the centromere’s outer face — where spindle fibres attach; sister chromatids are joined at the centromere (the X shape). No bands are drawn on the chromosomes. While condensing, the same strand turns gradually from a thin thread into a rod (illustrative motion); in anaphase the centromere leads and the arms trail behind.',
+      ),
+      cellType === 'animal'
+        ? L(
+            'Ở chất lượng hiển thị Cao: màng nhân là màng kép có lỗ màng nhân; ở kì đầu màng nhân vỡ thành các túi nhỏ, ở kì cuối các túi hợp lại thành màng nhân mới; mỗi trung tử vẽ bằng 9 bộ ba vi ống xếp thành vòng. Số lỗ, số túi và kích thước là minh họa.',
+            'At High display quality: the nuclear envelope is a double membrane with nuclear pores; in prophase it breaks into small vesicles, and in telophase the vesicles fuse into new envelopes; each centriole is drawn as nine microtubule triplets in a ring. The numbers of pores and vesicles and all sizes are illustrative.',
+          )
+        : L(
+            'Ở chất lượng hiển thị Cao: màng nhân là màng kép có lỗ màng nhân; ở kì đầu màng nhân vỡ thành các túi nhỏ, ở kì cuối các túi hợp lại thành màng nhân mới. Khi phân chia tế bào chất, các túi (từ bộ máy Golgi) chờ ở mép tấm tế bào rồi hợp vào khi tấm lớn tới. Số lỗ, số túi và kích thước là minh họa.',
+            'At High display quality: the nuclear envelope is a double membrane with nuclear pores; in prophase it breaks into small vesicles, and in telophase the vesicles fuse into new envelopes. During cytokinesis, vesicles (from the Golgi apparatus) wait at the edge of the cell plate and fuse into it as it grows. The numbers of pores and vesicles and all sizes are illustrative.',
+          ),
       cellType === 'animal'
         ? L(
             'Tế bào động vật: có trung thể, sao (vi ống tỏa ra từ trung thể), rãnh phân cắt; không có thành tế bào.',

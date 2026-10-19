@@ -18,6 +18,8 @@ export interface TubeShape {
   radius: number;
   /** Vertices around the tube. */
   sides: number;
+  /** Rings per unit length along the arms (default 7; fewer for big chromosome sets). */
+  ringsPerUnit?: number;
 }
 
 /** A coloured piece of the chromatid, as shares of its length from the arm A tip (0) to B (1). */
@@ -30,8 +32,8 @@ export interface ColourSegment {
 /** Waist at the centromere: radius share at its narrowest, and its half-width. */
 export const CONSTRICTION = { depth: 0.38, halfWidth: 0.2 } as const;
 
-/** Rings per unit length along an arm (between the tips and the waist). */
-const RINGS_PER_UNIT = 7;
+/** Rings per unit length along an arm (between the tips and the waist), by default. */
+export const RINGS_PER_UNIT = 7;
 /** Rings across each rounded tip and across the waist. */
 const TIP_RINGS = 6;
 const WAIST_RINGS = 8;
@@ -50,14 +52,19 @@ function tipLength(len: number, radius: number, w: number): number {
  * Where the rings sit along the chromatid, as signed distances from the centromere (−armA …
  * armB): close together over the rounded tips and the waist, evenly along the arms.
  */
-export function ringStations(armA: number, armB: number, radius: number): Float32Array {
+export function ringStations(
+  armA: number,
+  armB: number,
+  radius: number,
+  ringsPerUnit = RINGS_PER_UNIT,
+): Float32Array {
   const out: number[] = [];
   const w = waistHalf(armA, armB);
   const arm = (len: number, sign: -1 | 1) => {
     // From the waist edge (w) out to the tip (len): body rings, then the tip cap.
     const cap = tipLength(len, radius, w);
     const body = Math.max(0, len - w - cap);
-    const n = Math.max(2, Math.ceil(body * RINGS_PER_UNIT));
+    const n = Math.max(2, Math.ceil(body * ringsPerUnit));
     const pts: number[] = [];
     for (let i = 1; i <= n; i++) pts.push(w + (body * i) / n);
     for (let i = 1; i <= TIP_RINGS; i++) {
@@ -113,7 +120,7 @@ export class ChromosomeTube {
   constructor(shape: TubeShape) {
     this.shape = shape;
     this.sides = Math.max(3, Math.round(shape.sides));
-    this.stations = ringStations(shape.armA, shape.armB, shape.radius);
+    this.stations = ringStations(shape.armA, shape.armB, shape.radius, shape.ringsPerUnit);
     this.rings = this.stations.length;
     let c = 0;
     for (let i = 1; i < this.rings; i++)
