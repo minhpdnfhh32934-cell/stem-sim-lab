@@ -281,13 +281,15 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
 Vật lí · Soạn bài**, rồi chọn bài ở **Chọn bài học**. Bấm logo **SimLab** để quay về trang chủ.
 
 Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
-chọn dự đoán, làm thí nghiệm và viết đủ phần giải thích thì mới sang bước sau. Dự đoán được giữ lại từ
+chọn dự đoán, làm thí nghiệm, viết giải thích (đủ số ký tự app ghi dưới ô) và viết kết luận thì mới
+sang bước sau; dòng chữ cạnh nút **Tiếp** cho biết còn thiếu gì. Dự đoán được giữ lại từ
 lần thí nghiệm đầu tiên; muốn đoán lại, bấm **Học lại từ đầu** ở bước Báo cáo. Mọi số đo do mô phỏng
 tính; phần chữ của bài (mục tiêu, gợi ý, kết luận tham khảo) đang ghi **"chưa được kiểm duyệt"** vì
 chưa có giáo viên duyệt.
 
 - **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
-  chọn) và B (độ cao gấp đôi), rồi hiện bảng số đo, đồ thị và phép kiểm tra chéo với công thức. Nút
+  chọn) và B (độ cao gấp đôi), rồi tự sang bước Quan sát với bảng số đo, đồ thị và phép kiểm tra chéo
+  với công thức. Nút
   **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
 - **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
   trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
@@ -296,15 +298,20 @@ chưa có giáo viên duyệt.
 - **Sinh học — Nguyên phân 3D:** xoay, phóng to hình và chuyển qua các kì, bấm **Ghi lại kì này** ở
   kì em cho là trả lời câu hỏi. Sau đó làm **Tìm bộ phận theo chức năng**: chọn bộ phận trong hình
   (hoặc trong danh sách), bấm **Trả lời** cho từng chức năng rồi **Kiểm tra**. Trong bài, loại tế bào
-  và bộ NST được giữ cố định. Máy không vẽ được 3D (hoặc đặt chất lượng Thấp) thì hiện hình 2D.
+  và bộ NST được giữ cố định. Máy không vẽ được 3D (hoặc đặt chất lượng Thấp) thì hiện hình 2D: chuyển
+  kì bằng nút **Bước trước** / **Bước tiếp theo** trên hình và chọn bộ phận trong danh sách **Bộ phận
+  tế bào**. Trả lời đủ các chức năng và bấm **Kiểm tra** là sang được bước Quan sát; chức năng nào
+  chưa đúng được đánh dấu để em sửa.
 - **Soạn bài:** **Tạo bài mới** → chọn môn → điền phần chữ (tiếng Việt bắt buộc, tiếng Anh không bắt
   buộc) và chọn phần mô phỏng sẽ chạy → **Lưu bài**. App chỉ cho chọn những gì mô phỏng chạy được, và
   báo những chỗ cần sửa trước khi lưu. Mỗi bài đã soạn có **Xem trước**, **Sửa**, **Nhân bản**,
-  **Xuất JSON** và **Xóa**; **Nhập tệp JSON** để mở bài người khác gửi. Bài soạn chỉ lưu trên máy này
+  **Xuất JSON** và **Xóa** (hỏi lại trước khi xóa); **Nhập tệp JSON** để mở bài người khác gửi (tệp
+  hỏng hoặc sai mẫu thì app nói lý do và không nhập). Bài soạn chỉ lưu trên máy này
   và luôn ghi "chưa được kiểm duyệt" (app không kiểm tra nội dung khoa học giáo viên viết).
 - **Báo cáo:** bước cuối hiện bản xem trước, có **Lưu báo cáo (.md)** và **Sao chép báo cáo**. Số đo
   của mô phỏng, phần em viết, kết luận tham khảo, dữ liệu chưa kiểm duyệt và nguồn nằm ở các mục
-  riêng. Báo cáo được tạo trên máy, app không gửi đi đâu. Bài đang làm dở được giữ khi mở lại app.
+  riêng. Nếu máy không cho sao chép, app nhắc em bôi đen chữ trong bản xem trước rồi bấm Ctrl+C. Báo
+  cáo được tạo trên máy, app không gửi đi đâu. Bài đang làm dở được giữ khi mở lại app.
 - **Hỏi thầy:** nút **Hỏi thầy** mở khung AI Teacher với câu hỏi viết sẵn theo bước đang làm (em sửa
   được trước khi gửi). Thầy chỉ thấy số đo và ghi chú của bài khi em bật **Lấy thông tin từ màn
   hình** trong khung chat.

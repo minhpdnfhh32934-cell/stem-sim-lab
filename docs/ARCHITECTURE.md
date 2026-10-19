@@ -167,6 +167,29 @@ module?{state}}` (Zod schema in `src/app/project/snapshot.ts`). Only **inputs** 
 - Overload: `FrameMonitor` → `reportOverload()` lowers the drawing tier one step (`perfStore.degraded`);
   memory watchdog in `src/perf/memory.ts`. See docs/PERFORMANCE.md.
 
+## 3f. Science Studio (`src/studio/`, 0.6.0)
+
+Guided lessons (Predict → Interact → Observe → Explain → Conclude → Report) on top of the existing
+engines and data; the studio never computes a measurement of its own. Entry: the "Science Studio"
+card on the launch page → screen `'studio'` (`src/app/navigationStore.ts`) → `StudioScreen`,
+mounted by `AppShell`.
+
+| Layer            | Files                                                                                                                                                                      | Responsibility                                                                                                                                                       |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Screen           | `StudioScreen.tsx`, `studio.css`, `ReviewNote.tsx`, `TeacherNote.tsx`                                                                                                      | Subject tabs (Hóa học · Sinh học · Vật lí · Soạn bài), lesson picker, one `SubjectPlugin` per subject; labels for unreviewed and teacher-written text.               |
+| Model (pure)     | `scenario.ts`, `session.ts`, `report.ts`, `unverified.ts`, `aiContext.ts`                                                                                                  | Zod scenario schema (the binding names engines/data only); session evidence by origin (engine / learner / AI) and step blockers; Markdown report; AI screen context. |
+| State            | `studioStore.ts`                                                                                                                                                           | Zustand store persisted as `stemsim.studio` (chosen tab and lesson, one session per scenario).                                                                       |
+| Shared flow      | `flow/PoeFlow.tsx`, `flow/SharedSteps.tsx`, `flow/types.ts`, `flow/AskTeacher.tsx`, `flow/useStudioContext.ts`, `flow/clipboard.ts`                                        | Step bar, navigation and "what is missing" text, Explain / Conclude / Report steps, "Hỏi thầy" prefill and the screen context shared with AI Teacher.                |
+| Physics          | `physics/plugin.ts`, `PhysicsSteps.tsx`, `comparison.ts`, `engineRun.ts`, `openInLab.ts`, `usePhysics.ts`                                                                  | Conditions A/B run headless in the scene's own engine; `solve()` is the cross-check and the POE verdict; opens the same run in the lab.                              |
+| Chemistry        | `chemistry/plugin.ts`, `bench.ts` (pure state machine), `library.ts`, `evidence.ts`, `card.ts`, `BenchStep.tsx`, `TubeSvg.tsx`, `EvidenceFacts.tsx`                        | One tube, two solutions, mix. What a mix shows comes only from `data/reactions.json`; no record → "chưa có trong cơ sở dữ liệu đã kiểm chứng".                       |
+| Biology          | `biology/plugin.ts`, `model.ts`, `match.ts`, `evidence.ts`, `card.ts`, `bioSession.ts`, `useModel.ts`, `ModelStep.tsx`, `StageRecorder.tsx`, `FindParts.tsx`               | Reuses the mitosis 3D view (2D fallback); stage counts come from the model; the part-finding key is the model's own component data.                                  |
+| Built-in lessons | `scenarios/*.ts`, `scenarios/index.ts`                                                                                                                                     | Three scenarios, each validated at load; an invalid one is left out.                                                                                                 |
+| Authoring        | `authoring/service.ts`, `check.ts`, `choices.ts`, `draft.ts`, `bindingDraft.ts`, `collection.ts`, `fileFormat.ts`, `limits.ts`, `issueText.ts`, `authoringStore.ts`, views | "Soạn bài": every choice comes from an engine or data table; schema + size + engine checks before saving; local only (`teacher.` ids); JSON import/export.           |
+
+Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23) and is shown with
+its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E
+`tests/e2e/studio.spec.ts` and `tests/e2e/studio-biology.spec.ts`. Step records: `docs/work-log/`.
+
 ## 4. Planned modules
 
 | Phase | Module                                                                           | Key decisions                                                                                                                       |
