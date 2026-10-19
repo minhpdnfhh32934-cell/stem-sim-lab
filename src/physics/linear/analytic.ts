@@ -1,5 +1,3 @@
-import { findRoot } from '@/core/math/special';
-
 /**
  * 1D motion with constant acceleration, optionally "braking to rest": when the velocity
  * reaches zero while the acceleration opposes it (a vehicle braking), the body stays at
@@ -42,25 +40,53 @@ export function distance(m: Motion1D, t: number): number {
   return Math.abs(pos(tEnd) - m.x0);
 }
 
+/** Position polynomial x = c0 + c1·t + c2·t² (absolute t) on one piece of the motion. */
+type Poly = readonly [number, number, number];
+
+function pieceOf(m: Motion1D, before: boolean): Poly {
+  if (before) return [m.x0, m.v0, 0.5 * m.a];
+  const ts = stopTime(m);
+  return [m.x0 + m.v0 * ts + 0.5 * m.a * ts * ts, 0, 0];
+}
+
+/** Real roots of c0 + c1 t + c2 t² (numerically stable form). */
+function quadRoots(c0: number, c1: number, c2: number): number[] {
+  if (c2 === 0) return c1 === 0 ? [] : [-c0 / c1];
+  let disc = c1 * c1 - 4 * c2 * c0;
+  if (disc < 0) {
+    // A touching meeting (double root) can come out a hair below zero from round-off.
+    if (disc < -1e-12 * c1 * c1) return [];
+    disc = 0;
+  }
+  const q = -0.5 * (c1 + (c1 >= 0 ? 1 : -1) * Math.sqrt(disc));
+  if (q === 0) return [0];
+  return [q / c2, c0 / q];
+}
+
 /**
  * First time in (0, tMax] when the two bodies are at the same position, or null.
- * Piecewise motion is handled by scanning for sign changes and refining with the
- * Illinois root finder (accurate to ~1e-13 s).
+ * The gap x_A − x_B is a quadratic in t on each piece between the stop times, so every
+ * meeting is found exactly — including a start at the same place (t = 0 is not a
+ * meeting unless the bodies stay together) and two meetings close together.
  */
 export function meetingTime(a: Motion1D, b: Motion1D, tMax: number): number | null {
-  const gap = (t: number) => stateAt(a, t).x - stateAt(b, t).x;
-  const g0 = gap(0);
-  if (g0 === 0) return 0;
-  const n = 2000;
-  let prevT = 0;
-  let prevG = g0;
-  for (let i = 1; i <= n; i++) {
-    const t = (tMax * i) / n;
-    const g = gap(t);
-    if (g === 0) return t;
-    if (Math.sign(g) !== Math.sign(prevG)) return findRoot(gap, prevT, t, 1e-14);
-    prevT = t;
-    prevG = g;
+  const stops = [stopTime(a), stopTime(b)].filter((t) => t > 0 && t < tMax).sort((x, y) => x - y);
+  const bounds = [0, ...stops, tMax];
+  for (let i = 0; i + 1 < bounds.length; i++) {
+    const t0 = bounds[i] ?? 0;
+    const t1 = bounds[i + 1] ?? tMax;
+    if (t1 <= t0) continue;
+    const pa = pieceOf(a, t0 < stopTime(a));
+    const pb = pieceOf(b, t0 < stopTime(b));
+    const c0 = pa[0] - pb[0];
+    const c1 = pa[1] - pb[1];
+    const c2 = pa[2] - pb[2];
+    // Same motion on this piece: together the whole time (from the start, or since t0).
+    if (c0 === 0 && c1 === 0 && c2 === 0) return t0;
+    const tol = 1e-12 * Math.max(1, t1);
+    const lo = i === 0 ? 0 : t0 - tol;
+    const hits = quadRoots(c0, c1, c2).filter((t) => t > lo && t <= t1 + tol);
+    if (hits.length > 0) return Math.min(t1, Math.max(t0, Math.min(...hits)));
   }
   return null;
 }
