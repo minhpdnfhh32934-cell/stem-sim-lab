@@ -6,11 +6,19 @@
  * direction (VIEW_DIR when framed, the learner's orbit afterwards). Controls are drawn over the
  * canvas edges (the chips at the top, the stage strip and caption at the bottom, a picked part's
  * card at the right): the view measures them as insets, the camera centres the picture in the
- * rest (the safe area, `../../view3d/frame.ts`) and fits the cell inside it. Orbiting still
+ * rest (the safe area, `@/ui/three/frame.ts`) and fits the cell inside it. Orbiting still
  * turns around the target.
  */
 import * as THREE from 'three';
-import { safeTangents, viewWindow, type Insets } from '../../view3d/frame';
+import {
+  fitDistance as fitPoints,
+  placeCamera as placeGeneric,
+  viewBasis,
+  zoomLimits as zoomGeneric,
+  type CameraPlacement,
+  type ViewTangents,
+} from '@/ui/three/camera';
+import { safeTangents, viewWindow, type Insets } from '@/ui/three/frame';
 import type { CameraMode } from './components';
 import {
   ANIMAL,
@@ -21,7 +29,8 @@ import {
   type Vec3,
 } from './timeline';
 
-export type { Insets };
+export type { CameraPlacement, Insets, ViewTangents };
+export { viewBasis };
 
 /** What the camera must show: points (relative to `center`) that have to be in view. */
 export interface CameraFrame {
@@ -36,8 +45,6 @@ export const FOV = 38;
  * for the stage strip and caption.
  */
 const BOTTOM_SHARE = 0.14;
-/** Margin around the cell inside the safe area. */
-const FIT_MARGIN = 1.08;
 /** The camera never comes closer than this to the cell surface (the near plane is 0.1). */
 const SURFACE_GAP = 0.5;
 /** Default zoom-out limit; raised when a frame needs more (very narrow canvases). */
@@ -132,16 +139,6 @@ export function applyViewport(
   cam.updateProjectionMatrix();
 }
 
-/**
- * Visible extent of the safe area as tangents of the half-angles: left/right, above and below
- * the target (the safe area is centred on the target, so `up` = `down`).
- */
-export interface ViewTangents {
-  h: number;
-  up: number;
-  down: number;
-}
-
 export function viewTangents(
   width: number,
   height: number,
@@ -151,32 +148,12 @@ export function viewTangents(
   return { h: t.h, up: t.v, down: t.v };
 }
 
-/** Right and up vectors of a camera looking along −dir (as `Object3D.lookAt` builds them). */
-export function viewBasis(dir: Vec3): { right: Vec3; up: Vec3 } {
-  const z = new THREE.Vector3(...dir).normalize();
-  const x = new THREE.Vector3(0, 1, 0).cross(z);
-  if (x.lengthSq() < 1e-12) x.set(1, 0, 0);
-  x.normalize();
-  const y = new THREE.Vector3().crossVectors(z, x);
-  return { right: [x.x, x.y, x.z], up: [y.x, y.y, y.z] };
-}
-
-const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-
 /**
  * Camera distance (along `dir`, from the frame centre) at which every point of the frame is
  * inside the safe area, with a small margin.
  */
 export function fitDistance(f: CameraFrame, tan: ViewTangents, dir: Vec3 = VIEW_DIR): number {
-  const { right, up } = viewBasis(dir);
-  let dist = 1;
-  for (const p of f.points) {
-    const x = Math.abs(dot(p, right));
-    const y = dot(p, up);
-    const need = dot(p, dir) + Math.max(x / tan.h, y >= 0 ? y / tan.up : -y / tan.down);
-    dist = Math.max(dist, need);
-  }
-  return dist * FIT_MARGIN;
+  return fitPoints(f.points, tan, dir);
 }
 
 /** Radius of a sphere around the cell centre that holds the cell at every moment of the division. */
@@ -198,16 +175,10 @@ export function zoomLimits(
   target: Vec3,
   overviewDistance: number,
 ): { min: number; max: number } {
-  const min = cellBound(cellType) + Math.hypot(...target) + SURFACE_GAP;
-  return { min, max: Math.max(MAX_DISTANCE, overviewDistance * 1.25, min * 2) };
-}
-
-export interface CameraPlacement {
-  target: Vec3;
-  position: Vec3;
-  distance: number;
-  min: number;
-  max: number;
+  return zoomGeneric(cellBound(cellType), target, overviewDistance, {
+    gap: SURFACE_GAP,
+    maxDistance: MAX_DISTANCE,
+  });
 }
 
 /**
@@ -224,14 +195,6 @@ export function placeCamera(
 ): CameraPlacement {
   const tan = viewTangents(width, height, insets);
   const overview = fitDistance(cameraFrame('overview', null, cellType), tan);
-  const { min, max } = zoomLimits(cellType, frame.center, overview);
-  const distance = Math.min(max, Math.max(min, fitDistance(frame, tan, dir)));
-  const [cx, cy, cz] = frame.center;
-  return {
-    target: [cx, cy, cz],
-    position: [cx + dir[0] * distance, cy + dir[1] * distance, cz + dir[2] * distance],
-    distance,
-    min,
-    max,
-  };
+  const limits = zoomLimits(cellType, frame.center, overview);
+  return placeGeneric(frame.center, frame.points, tan, dir, limits);
 }

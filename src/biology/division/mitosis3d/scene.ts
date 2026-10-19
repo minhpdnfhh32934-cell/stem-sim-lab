@@ -14,8 +14,9 @@
  */
 import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
-import { contactShadow, disposeLightRig, lightRig } from '../../view3d/look';
-import { glass, roundedBox, setRimAlpha, solid } from '../../view3d/materials';
+import { drawStats, type DrawStats } from '@/ui/three/drawStats';
+import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
+import { glass, roundedBox, setRimAlpha, solid } from '@/ui/three/materials';
 import { cameraFrame, cellBound, type CameraFrame } from './camera';
 import type { CameraMode, Selection } from './components';
 import {
@@ -67,48 +68,8 @@ const FIBRE: Record<QualityTier, { radius: number; sides: number }> = {
 
 export type PickResult = Selection;
 export type { CameraFrame, CameraMode, Selection };
-
-/** Draw calls, triangles and line segments of one frame. */
-export interface DrawStats {
-  calls: number;
-  triangles: number;
-  lines: number;
-}
-
-/**
- * What three.js draws for a scene in one frame, counted on the CPU (no GPU needed). Mirrors
- * WebGLRenderer: hidden objects (or hidden parents) and empty draw ranges are skipped, and a
- * transparent double-sided material without `forceSinglePass` is drawn twice (back faces, then
- * front faces), and an instanced mesh draws its `count` copies in one call. An upper bound of
- * `renderer.info.render`: frustum culling can only lower it.
- */
-export function drawStats(root: THREE.Object3D): DrawStats {
-  const out: DrawStats = { calls: 0, triangles: 0, lines: 0 };
-  const visit = (o: THREE.Object3D) => {
-    if (!o.visible) return;
-    const isMesh = o instanceof THREE.Mesh;
-    const isLines = o instanceof THREE.LineSegments;
-    if (isMesh || isLines) {
-      const g = o.geometry as THREE.BufferGeometry;
-      const mat = o.material as THREE.Material;
-      const total = g.index ? g.index.count : (g.attributes.position?.count ?? 0);
-      const start = Math.max(0, g.drawRange.start);
-      const count = Math.max(0, Math.min(total, start + g.drawRange.count) - start);
-      // An instanced mesh is one draw call of `count` copies (three.js counts every copy).
-      const copies = o instanceof THREE.InstancedMesh ? o.count : 1;
-      if (count > 0 && copies > 0) {
-        const passes =
-          mat.transparent && mat.side === THREE.DoubleSide && !mat.forceSinglePass ? 2 : 1;
-        out.calls += passes;
-        if (isMesh) out.triangles += passes * copies * Math.floor(count / 3);
-        else out.lines += passes * Math.floor(count / 2);
-      }
-    }
-    for (const c of o.children) visit(c);
-  };
-  visit(root);
-  return out;
-}
+/** Moved to the generic 3D kit (`@/ui/three/drawStats`); re-exported for existing imports. */
+export { drawStats, type DrawStats };
 
 export interface MitosisScene {
   scene: THREE.Scene;

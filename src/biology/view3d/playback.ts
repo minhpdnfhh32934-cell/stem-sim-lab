@@ -4,9 +4,8 @@
  * frame times feed the overload ladder.
  */
 import { useEffect, useRef, useState } from 'react';
-import { FrameMonitor } from '@/perf/frameMonitor';
-import { reportOverload } from '@/perf/perfStore';
-import { prefersReducedMotion } from './support';
+import { prefersReducedMotion } from '@/ui/three/availability';
+import { useFrameLoop } from '@/ui/three/loop';
 
 export interface Playback {
   /** Model time (same unit as the lesson). */
@@ -41,37 +40,18 @@ export function usePlayback(
     }
   }, [span]);
 
-  useEffect(() => {
-    if (!playing) return;
-    let raf = 0;
-    let prev = performance.now();
-    const monitor = new FrameMonitor(1 / 30);
-    const step = (now: number) => {
-      const elapsed = Math.max(0, (now - prev) / 1000);
-      prev = now;
-      if (document.visibilityState === 'visible') {
-        monitor.record(elapsed);
-        if (monitor.overloaded) {
-          reportOverload();
-          monitor.resetOverload();
-        }
-      }
-      const next = tRef.current + (Math.min(0.1, elapsed) * spanRef.current) / seconds;
-      if (next >= spanRef.current) {
-        tRef.current = spanRef.current;
-        setTState(spanRef.current);
-        setPlaying(false);
-        return;
-      }
-      tRef.current = next;
-      setTState(next);
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => {
-      cancelAnimationFrame(raf);
-    };
-  }, [playing, seconds]);
+  useFrameLoop(playing, (dt) => {
+    const next = tRef.current + (dt * spanRef.current) / seconds;
+    if (next >= spanRef.current) {
+      tRef.current = spanRef.current;
+      setTState(spanRef.current);
+      setPlaying(false);
+      return false;
+    }
+    tRef.current = next;
+    setTState(next);
+    return true;
+  });
 
   return {
     t,

@@ -10,15 +10,19 @@ import {
 } from 'lucide-react';
 import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useLocalized } from '@/app/i18n/localized';
 import { formatNumber, useT } from '@/app/i18n';
 import { openTeacherWithQuestion } from '@/teacher/teacherStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
-import { FrameMonitor } from '@/perf/frameMonitor';
-import { effectiveTier, reportOverload, usePerfStore, useTierConfig } from '@/perf/perfStore';
+import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import type { QualityTier } from '@/perf/tiers';
+import { prefersReducedMotion } from '@/ui/three/availability';
+import { measureInsets } from '@/ui/three/insets';
+import { usePlayback } from '@/ui/three/loop';
+import { quality3d } from '@/ui/three/quality3d';
+import { webglRenderer, type RendererFactory, type RendererLike } from '@/ui/three/renderer';
+import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
@@ -34,16 +38,12 @@ import {
   type CameraMode,
   type Selection,
 } from './components';
-import { VIEW_DIR, applyViewport, defaultInsets, placeCamera, type Insets } from './camera';
+import { FOV, VIEW_DIR, defaultInsets, placeCamera, type Insets } from './camera';
 import { buildMitosisScene, type MitosisScene, type ScenePalette } from './scene';
 import { useCardHeadFit } from './partCardHead';
 import { stateFor, timelineFor, useMitosis3D } from './store';
-import { createTapTracker } from './tap';
 import { STAGES_3D, type CellType, type Stage3D, type Timeline, type Vec3 } from './timeline';
 import { Mitosis3DSwitch } from './Mitosis3DSwitch';
-import { measureInsets, sameInsets } from '../../view3d/insets';
-import { createEnvironment } from '../../view3d/look';
-import { webglRenderer, type RendererFactory, type RendererLike } from '../../view3d/renderer';
 import '../../bio.css';
 
 export type { RendererFactory, RendererLike };
@@ -109,17 +109,9 @@ function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStr
 /** Width / height of what the overview frames (the cell and, at the end, both daughters). */
 const FRAME_ASPECT = 1.6;
 
-/** Controls over the canvas (`../../view3d/insets.ts`); before they are laid out, the default. */
+/** Controls over the canvas (`@/ui/three/insets.ts`); before they are laid out, the default. */
 const insetsOf = (host: HTMLElement, hud: HTMLElement | null): Insets =>
   measureInsets(host, hud, defaultInsets(host.clientHeight), FRAME_ASPECT);
-
-/** The learner asked the system for less motion: nothing starts moving on its own. */
-function prefersReducedMotion(): boolean {
-  return (
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-}
 
 const SHORT: Record<Stage3D, ReturnType<typeof L>> = {
   g1: L('Trung gian G1', 'Interphase G1'),
@@ -337,116 +329,81 @@ export function Mitosis3DView({
       useMitosis3D.setState({ selected: null });
   }, [cellType]);
 
-  /** Renderer, camera and controls shared by the two effects below. */
-  const rtRef = useRef<{
-    request: () => void;
-    /** Frames the camera from the default direction (new cell, view switch, "Đặt lại góc nhìn"). */
-    frameCamera: (mode: CameraMode) => void;
-    /** Close-up: keeps the learner's direction, re-centres and fits the chromosomes now. */
-    follow: () => void;
-    /** Re-measures the controls over the canvas; re-fits the view when they changed. */
-    relayout: () => void;
-    scene: MitosisScene | null;
-    tl: Timeline | null;
-    framedFor: Timeline | null;
-  } | null>(null);
+  /** The scene drawn now and the timeline it shows. */
+  const sceneRef = useRef<{ scene: MitosisScene; tl: Timeline } | null>(null);
+  /** The host and timeline the camera was framed for (a new cell, 2n or renderer: frame again). */
+  const framedRef = useRef<{ host: ThreeHost | null; tl: Timeline | null }>({
+    host: null,
+    tl: null,
+  });
+
+  /** Where the camera goes to show `mode` from `dir` (null before a scene exists). */
+  const placementFor = (h: ThreeHost, mode: CameraMode, dir: Vec3) => {
+    const cur = sceneRef.current;
+    if (!cur) return null;
+    return placeCamera(
+      cur.scene.frame(mode),
+      cur.tl.cellType,
+      h.width(),
+      h.height(),
+      dir,
+      h.currentInsets(),
+    );
+  };
+  /** Frames the camera from the default direction (new cell, view switch, "Đặt lại góc nhìn"). */
+  const frameCamera = (h: ThreeHost, mode: CameraMode) => {
+    const p = placementFor(h, mode, VIEW_DIR);
+    if (p) h.place(p);
+  };
+  /** Keeps the learner's direction; re-centres and fits `mode` (the close-up follows). */
+  const refit = (h: ThreeHost, mode: CameraMode) => {
+    const p = placementFor(h, mode, h.direction(VIEW_DIR));
+    if (p) h.place(p);
+  };
 
   // Renderer, camera and controls: one WebGL context per quality tier (not per cell type).
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
-    let renderer: RendererLike;
-    try {
-      renderer = createRenderer({ antialias: tier.antialias });
-    } catch {
+  const quality = quality3d(tierName, tier);
+  const hostRt = useThreeHost(hostRef, {
+    createRenderer,
+    quality,
+    fov: FOV,
+    near: 0.1,
+    far: 400,
+    canvasClass: 'mol-viewer__canvas',
+    // Controls cover the canvas edges (chips, stage strip and caption, a picked part's card):
+    // the picture is centred in the rest (camera.ts), so orbiting still turns around the target.
+    insets: () => (hostRef.current ? insetsOf(hostRef.current, hudRef.current) : defaultInsets(1)),
+    // The controls over the canvas change size when they wrap (narrow window, long text).
+    observe: () => hudRef.current?.querySelectorAll('[data-inset]') ?? [],
+    onLayout: (h, insetsChanged) => {
+      const cur = sceneRef.current;
+      if (!cur) return;
+      if (insetsChanged) {
+        // Controls moved (wrapped onto another line, the window changed, a card opened): the
+        // learner's direction is kept, the distance fits the new safe area.
+        refit(h, useMitosis3D.getState().camera);
+      } else {
+        // The zoom-out limit depends on the canvas shape (a narrow canvas needs more room).
+        const t = h.controls.target;
+        const p = placeCamera(
+          { center: [t.x, t.y, t.z], points: [] },
+          cur.tl.cellType,
+          h.width(),
+          h.height(),
+          VIEW_DIR,
+          h.currentInsets(),
+        );
+        h.controls.maxDistance = p.max;
+      }
+    },
+    onFail: () => {
       useMitosis3D.setState({ webglFailed: true, playing: false });
-      return;
-    }
-    const width = () => Math.max(1, host.clientWidth);
-    const height = () => Math.max(1, host.clientHeight);
-    renderer.localClippingEnabled = true;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier.pixelRatioCap));
-    renderer.setSize(width(), height());
-    renderer.domElement.className = 'mol-viewer__canvas';
-    host.appendChild(renderer.domElement);
-    // Studio lighting for every scene this renderer draws (none with a fake renderer).
-    const env = createEnvironment(renderer);
-
-    // Controls cover the canvas edges (chips, stage strip and caption, a picked part's card): the
-    // picture is centred in the rest (camera.ts), so orbiting still turns around the target.
-    const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
-    let insets: Insets = insetsOf(host, hudRef.current);
-    applyViewport(cam, width(), height(), insets);
-    const controls = new OrbitControls(cam, renderer.domElement);
-    // Orbit and zoom only: the target stays on the cell (or its chromosomes), so the zoom
-    // limits below keep the camera outside the cell.
-    controls.enablePan = false;
-
-    /** Puts the camera at `dir` from the frame centre, at the distance that fits the frame. */
-    const place = (mode: CameraMode, dir: Vec3) => {
-      if (!rt.scene || !rt.tl) return;
-      const p = placeCamera(rt.scene.frame(mode), rt.tl.cellType, width(), height(), dir, insets);
-      controls.minDistance = p.min;
-      controls.maxDistance = p.max;
-      controls.target.set(...p.target);
-      cam.position.set(...p.position);
-      cam.lookAt(controls.target);
-      controls.update();
-    };
-    let frame = 0;
-    const rt = {
-      request: () => {
-        if (!frame) frame = requestAnimationFrame(render);
-      },
-      frameCamera: (mode: CameraMode) => {
-        place(mode, VIEW_DIR);
-      },
-      follow: () => {
-        const d = cam.position.clone().sub(controls.target).normalize();
-        place('closeup', [d.x, d.y, d.z]);
-      },
-      relayout: () => {
-        const next = insetsOf(host, hudRef.current);
-        if (sameInsets(next, insets)) return;
-        insets = next;
-        applyViewport(cam, width(), height(), insets);
-        // The learner's direction is kept; the distance fits the new safe area.
-        const d = cam.position.clone().sub(controls.target).normalize();
-        place(useMitosis3D.getState().camera, [d.x, d.y, d.z]);
-        rt.request();
-      },
-      scene: null as MitosisScene | null,
-      tl: null as Timeline | null,
-      framedFor: null as Timeline | null,
-    };
-    const render = () => {
-      frame = 0;
-      if (!rt.scene) return;
-      rt.scene.scene.environment = env.texture;
-      renderer.render(rt.scene.scene, cam);
-    };
-    controls.addEventListener('change', rt.request);
-
+    },
     // Picking: a tap (not a drag, not a pinch) selects the part under the pointer.
-    const ray = new THREE.Raycaster();
-    ray.params.Line = { threshold: 0.12 };
-    const ndc = new THREE.Vector2();
-    const tap = createTapTracker();
-    const onDown = (e: PointerEvent) => {
-      tap.down(e);
-    };
-    const onCancel = (e: PointerEvent) => {
-      tap.cancel(e);
-    };
-    const onUp = (e: PointerEvent) => {
-      if (!tap.up(e) || !rt.scene) return;
-      const rect = renderer.domElement.getBoundingClientRect();
-      ndc.set(
-        ((e.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1,
-        -((e.clientY - rect.top) / Math.max(1, rect.height)) * 2 + 1,
-      );
-      ray.setFromCamera(ndc, cam);
-      const hit = rt.scene.pick(ray);
+    onTap: (ray) => {
+      const cur = sceneRef.current;
+      if (!cur) return;
+      const hit = cur.scene.pick(ray);
       const prev = useMitosis3D.getState().selected;
       // A second click on the same double chromosome drills down to the clicked sister.
       const next: Selection | null =
@@ -456,91 +413,36 @@ export function Mitosis3DView({
           ? { ...hit, component: 'sisterChromatid' }
           : hit;
       useMitosis3D.setState({ selected: next });
-    };
-    renderer.domElement.addEventListener('pointerdown', onDown);
-    renderer.domElement.addEventListener('pointerup', onUp);
-    renderer.domElement.addEventListener('pointercancel', onCancel);
-
-    // A lost GPU context (driver reset) never retries: the 2D view takes over.
-    const onLost = (e: Event) => {
-      e.preventDefault();
-      useMitosis3D.setState({ webglFailed: true, playing: false });
-    };
-    renderer.domElement.addEventListener('webglcontextlost', onLost);
-
-    const ro =
-      typeof ResizeObserver === 'undefined'
-        ? null
-        : new ResizeObserver(() => {
-            renderer.setSize(width(), height());
-            const next = insetsOf(host, hudRef.current);
-            const changed = !sameInsets(next, insets);
-            insets = next;
-            applyViewport(cam, width(), height(), insets);
-            if (rt.tl && rt.scene && changed) {
-              // Controls moved (wrapped onto another line, the window changed): fit again.
-              const d = cam.position.clone().sub(controls.target).normalize();
-              const p = placeCamera(
-                rt.scene.frame(useMitosis3D.getState().camera),
-                rt.tl.cellType,
-                width(),
-                height(),
-                [d.x, d.y, d.z],
-                insets,
-              );
-              controls.minDistance = p.min;
-              controls.maxDistance = p.max;
-              controls.target.set(...p.target);
-              cam.position.set(...p.position);
-              controls.update();
-            } else if (rt.tl) {
-              // The zoom-out limit depends on the canvas shape (a narrow canvas needs more room).
-              const target: Vec3 = [controls.target.x, controls.target.y, controls.target.z];
-              const p = placeCamera(
-                { center: target, points: [] },
-                rt.tl.cellType,
-                width(),
-                height(),
-                VIEW_DIR,
-                insets,
-              );
-              controls.maxDistance = p.max;
-            }
-            rt.request();
-          });
-    ro?.observe(host);
-    // The controls over the canvas change size when they wrap (narrow window, long text).
-    for (const el of hudRef.current?.querySelectorAll('[data-inset]') ?? []) ro?.observe(el);
-    ro?.observe(host);
-
-    let hook: DebugHook | null = null;
-    if (import.meta.env.DEV) {
-      hook = {
-        info: () => ({
-          geometries: renderer.info.memory.geometries,
-          textures: renderer.info.memory.textures,
-          programs: renderer.info.programs?.length ?? 0,
-          objects: rt.scene?.stats().objects ?? 0,
-          calls: renderer.info.render.calls,
-          triangles: renderer.info.render.triangles,
-        }),
+    },
+    debug: (h) => {
+      const host = hostRef.current;
+      const hook: DebugHook = {
+        info: () => {
+          const i = h.info();
+          return {
+            geometries: i.geometries,
+            textures: i.textures,
+            programs: i.programs,
+            objects: sceneRef.current?.scene.stats().objects ?? 0,
+            calls: i.calls,
+            triangles: i.triangles,
+          };
+        },
         stage: () => {
           const d = useDivisionStore.getState();
           return timelineFor(d.pairs, d.cellType).stageAt(useMitosis3D.getState().t).stage;
         },
-        quality: () => {
-          const perf = usePerfStore.getState();
-          return { tier: effectiveTier(perf), degraded: perf.degraded };
-        },
+        quality: () => ThreeHost.tierInEffect(),
         cellRect: () => {
-          if (!rt.scene) return null;
-          const f = rt.scene.frame('overview');
+          const cur = sceneRef.current;
+          if (!cur || !host) return null;
+          const f = cur.scene.frame('overview');
           const box = host.getBoundingClientRect();
           const v = new THREE.Vector3();
           const r = { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity };
-          cam.updateMatrixWorld();
+          h.camera.updateMatrixWorld();
           for (const p of f.points) {
-            v.set(f.center[0] + p[0], f.center[1] + p[1], f.center[2] + p[2]).project(cam);
+            v.set(f.center[0] + p[0], f.center[1] + p[1], f.center[2] + p[2]).project(h.camera);
             const x = box.left + ((v.x + 1) / 2) * box.width;
             const y = box.top + ((1 - v.y) / 2) * box.height;
             r.left = Math.min(r.left, x);
@@ -551,32 +453,20 @@ export function Mitosis3DView({
           return r;
         },
       };
+      // `__simlabMitosis3d` is kept as an alias for the existing end-to-end tests.
       window.__simlabMitosis3d = hook;
-    }
-    rtRef.current = rt;
-
-    return () => {
-      rtRef.current = null;
-      if (hook && window.__simlabMitosis3d === hook) delete window.__simlabMitosis3d;
-      ro?.disconnect();
-      if (frame) cancelAnimationFrame(frame);
-      controls.removeEventListener('change', rt.request);
-      controls.dispose();
-      renderer.domElement.removeEventListener('pointerdown', onDown);
-      renderer.domElement.removeEventListener('pointerup', onUp);
-      renderer.domElement.removeEventListener('pointercancel', onCancel);
-      renderer.domElement.removeEventListener('webglcontextlost', onLost);
-      env.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss?.();
-      renderer.domElement.remove();
-    };
-  }, [tier, createRenderer]);
+      const unregister = ThreeHost.registerDebug('mitosis', hook);
+      return () => {
+        unregister();
+        if (window.__simlabMitosis3d === hook) delete window.__simlabMitosis3d;
+      };
+    },
+  });
 
   // Scene: rebuilt when the cell type, 2n, tier or theme change; the renderer stays.
   useEffect(() => {
-    const rt = rtRef.current;
-    if (!rt) return;
+    const h = hostRt.current;
+    if (!h) return;
     const look = readPalette();
     const ms = buildMitosisScene(tl, look.palette, {
       segments: tier.sphereSegments,
@@ -584,73 +474,49 @@ export function Mitosis3DView({
       membraneOpacity: look.membraneOpacity,
       rimStrength: look.rimStrength,
     });
-    rt.scene = ms;
-    rt.tl = tl;
+    sceneRef.current = { scene: ms, tl };
+    h.setScene(ms.scene);
     const ui = useMitosis3D.getState();
     ms.update(stateFor(tl, ui.t));
     ms.setSelection(ui.selected);
-    // A theme change keeps the learner's camera; a new cell or 2n is framed again.
-    if (rt.framedFor !== tl) {
-      rt.frameCamera(ui.camera);
-      rt.framedFor = tl;
+    // A theme change keeps the learner's camera; a new cell, 2n or renderer is framed again.
+    const framed = framedRef.current;
+    if (framed.host !== h || framed.tl !== tl) {
+      frameCamera(h, ui.camera);
+      framedRef.current = { host: h, tl };
     }
-    rt.request();
+    h.request();
     const unsub = useMitosis3D.subscribe((s, prev) => {
       const reframe = s.camera !== prev.camera || s.viewNonce !== prev.viewNonce;
       if (s.t !== prev.t) {
         ms.update(stateFor(tl, s.t));
         // The close-up follows the chromosomes as they move and spread out.
-        if (s.camera === 'closeup' && !reframe) rt.follow();
+        if (s.camera === 'closeup' && !reframe) refit(h, 'closeup');
       }
       if (s.selected !== prev.selected) ms.setSelection(s.selected);
-      if (reframe) rt.frameCamera(s.camera);
-      rt.request();
+      if (reframe) frameCamera(h, s.camera);
+      h.request();
     });
     return () => {
       unsub();
-      if (rt.scene === ms) rt.scene = null;
+      if (sceneRef.current?.scene === ms) {
+        sceneRef.current = null;
+        h.setScene(null);
+      }
       ms.dispose();
     };
-    // createRenderer: a new renderer (tests) needs a new scene too.
+    // createRenderer: a new renderer (tests) needs a new scene too. frameCamera and refit only
+    // read refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tl, tier, tierName, theme, createRenderer]);
 
   // A picked part's card opens or closes over the canvas: the cell moves into the space left.
   useLayoutEffect(() => {
-    rtRef.current?.relayout();
-  }, [selected]);
+    hostRt.current?.relayout();
+  }, [selected, hostRt]);
 
-  // Playback loop (only while playing; frame times feed the overload ladder).
-  useEffect(() => {
-    if (!playing) return;
-    let raf = 0;
-    let prev = performance.now();
-    const monitor = new FrameMonitor(1 / 30);
-    const step = (now: number) => {
-      const elapsed = Math.max(0, (now - prev) / 1000);
-      prev = now;
-      // The monitor gets the raw frame time (it skips pauses itself); hidden tabs are not frames.
-      if (document.visibilityState === 'visible') {
-        monitor.record(elapsed);
-        if (monitor.overloaded) {
-          reportOverload();
-          monitor.resetOverload();
-        }
-      }
-      // Playback moves at most 0.1 s per frame (no jump after a pause or a hidden tab).
-      const dt = Math.min(0.1, elapsed);
-      const next = useMitosis3D.getState().t + dt * speed;
-      if (next >= tl.total) {
-        useMitosis3D.setState({ t: tl.total, playing: false });
-        return;
-      }
-      useMitosis3D.setState({ t: next });
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => {
-      cancelAnimationFrame(raf);
-    };
-  }, [playing, speed, tl]);
+  // Playback (only while playing; frame times feed the overload ladder).
+  usePlayback(useMitosis3D, tl.total, speed);
 
   const fmtSpeed = (v: number) => `${formatNumber(locale, v)}×`;
   const play = () => {
