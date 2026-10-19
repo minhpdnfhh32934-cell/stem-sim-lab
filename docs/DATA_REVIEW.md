@@ -300,3 +300,37 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     - Lotka–Volterra (`src/biology/ecology/ecology.ts`): giải theo ln x, ln y; chip báo "sai số tích
       lũy lớn, đường đi kém tin cậy" khi V lệch quá 10⁻⁶. Logistic: không có điểm uốn khi t ≥ 0 nếu
       N₀ ≥ K/2.
+26. **Sinh học 3D: hình 3D cho mọi bài và lời văn đi kèm (20/10/2026, bản 0.7).** Mọi số đếm, tỉ lệ,
+    trình tự trong hình 3D lấy từ mô hình của bài; hình dạng, vị trí, kích thước là minh họa và
+    hình nào cũng ghi "Minh họa — hình dạng, vị trí và kích thước không theo tỉ lệ thật; số lượng
+    và tỉ lệ lấy từ mô hình của bài." (`src/biology/view3d/texts.ts`). `review_status: "pending"`.
+    Nhờ giáo viên kiểm tra:
+    - Thẻ Khoa học Nguyên phân (`src/biology/division/state.ts`, `cardFor`): mô hình chỉ còn quy tắc
+      của nguyên phân ("nhân đôi ở pha S, tách crômatit chị em ở kì sau"); thẻ Giảm phân giữ quy
+      tắc kì đầu I, kì sau I, kì sau II.
+    - Động học enzyme (`src/biology/enzyme/enzymeShares.ts`): chia enzyme thành các dạng E, ES, EI,
+      ESI theo giả thiết cân bằng nhanh của bài — không ức chế 1 : s; cạnh tranh 1 : s : i; không
+      cạnh tranh 1 : s : i : s·i; phi cạnh tranh 1 : s : s·i (s = [S]/Km, i = [I]/Ki). Test tự động:
+      phần ES đúng bằng v/Vmax của công thức trong bài. Hình vẽ 24 phân tử enzyme (số minh họa),
+      làm tròn theo phương pháp phần dư lớn nhất; chất ức chế cạnh tranh nằm ở trung tâm hoạt
+      động, chất ức chế không cạnh tranh/phi cạnh tranh nằm ở vị trí khác. Mỗi hạt tự do ≈ [S]max/80.
+    - Khuếch tán 3D (`src/biology/transport/particles3d.ts`): hạt Brown minh họa như hình 2D, thêm
+      chiều sâu; lỗ màng là khe xuyên suốt chiều sâu (đúng quy tắc của hình 2D). Đồ thị vẫn dùng
+      định luật Fick.
+    - Phiêu bạt di truyền 3D (`src/biology/genetics/scenes3d.ts`): mỗi ống là một quần thể với 2N
+      bản sao gen; số hạt A = 2N·p của lần chạy Wright–Fisher; khi quá nhiều hạt, mỗi hạt ≈ m bản
+      sao (làm tròn, có ghi chú).
+    - Hardy–Weinberg 3D: vốn gen A = 2·AA + Aa, a = Aa + 2·aa; mỗi cá thể một hình (hoặc mỗi hình ≈ m
+      cá thể, làm tròn, có ghi chú).
+    - ADN → mARN → Protein và Đột biến điểm 3D (`src/biology/central/scene3d.ts`): chuỗi xoắn kép
+      vẽ 10,5 cặp nuclêôtit/vòng, hai mạch lệch nhau một góc để thấy rãnh lớn/rãnh nhỏ (góc minh
+      họa); màu bazơ: A lục, T đỏ cam, U hồng, G cam, C lam (quy ước của app, không phải màu thật);
+      hình ribôxôm hai tiểu phần là minh họa; chỉ vẽ tối đa 60 cặp nuclêôtit đầu (có ghi chú).
+    - Giảm phân 3D (`src/biology/division/meiosisLayout.ts`): kì giữa I mỗi NST tương đồng quay về
+      cực mà mô hình gửi nó tới; trao đổi chéo hiện đúng chỗ mô hình đặt (đổi màu dọc crômatit);
+      thoi phân bào và vị trí NST là minh họa.
+    - Hình quần thể (logistic, Lotka–Volterra): mỗi hình là một cá thể (hoặc ≈ m cá thể, làm tròn);
+      số cá thể là nghiệm chính xác N(t) hoặc điểm đã tính của quỹ đạo Lotka–Volterra (không nội
+      suy). Hình con vật là minh họa chung, không phải loài cụ thể.
+    - Nguyên phân 3D: tế bào con cuối kì phân chia tế bào chất cách nhau rõ hơn (tâm cách 1,2 lần
+      bán kính thay vì 1,06) — vị trí minh họa.

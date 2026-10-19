@@ -414,6 +414,17 @@ Progress log: `docs/PROGRESS.md`.
   tier low / no WebGL2 / context lost). The division store records which division `index` belongs to
   (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d` Playwright project (software WebGL
   starves parallel specs).
+- Biology 3D kit (`src/biology/view3d/`): every other lesson has a 3D view too (3D by default, the
+  learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
+  `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
+  labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
+  layout) / `Bio3DFigureBody` (figure above a page of tables: Mendel, Hardy–Weinberg, dogma,
+  mutation), `SceneKit` (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
+  keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
+  3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
+  chips are shared with the 2D view so the text is identical. New 3D text → DATA_REVIEW (#26).
+  Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
+  project, SwiftShader). Specs that open biology topics set SwiftShader too.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).

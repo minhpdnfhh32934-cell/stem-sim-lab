@@ -152,7 +152,8 @@ function chain(
     if (o.labels !== false && residues.length <= 30)
       kit.label(
         r.name,
-        [start[0] + k * sp, start[1] + 0.25 * Math.sin(k * 0.9) - 0.6, start[2]],
+        // Above and below in turn, so neighbouring names do not overlap.
+        [start[0] + k * sp, start[1] + 0.25 * Math.sin(k * 0.9) + (k % 2 ? 0.62 : -0.62), start[2]],
         'muted',
       );
   });
@@ -241,17 +242,17 @@ export function buildMutationScene(kit: SceneKit, input: MutationSceneInput): Bi
   const xTop = helix(
     kit,
     bases,
-    { coding: input.coding, y: 4.2, labels: input.texts },
+    { coding: input.coding, y: 3.3, labels: input.texts },
     shift(input.coding.length),
   );
   const xBot = helix(
     kit,
     bases,
-    { coding: input.mutated, y: -2.2, glow: input.changed, glowColor: glow, labels: input.texts },
+    { coding: input.mutated, y: -1.9, glow: input.changed, glowColor: glow, labels: input.texts },
     shift(input.mutated.length),
   );
-  kit.label(input.texts.normal, [xTop(0) - 1.6, 6.2, 0], 'strong');
-  kit.label(input.texts.mutant, [xBot(0) - 1.6, -0.2, 0], 'strong');
+  kit.label(input.texts.normal, [xTop(0) - 2.4, 3.3, 0], 'strong');
+  kit.label(input.texts.mutant, [xBot(0) - 2.4, -1.9, 0], 'strong');
   if (input.deletedAt >= 0) {
     const x = xBot(input.deletedAt) - RISE / 2;
     const ring = kit.mesh(
@@ -259,15 +260,15 @@ export function buildMutationScene(kit: SceneKit, input: MutationSceneInput): Bi
       kit.solid(glow, { emissive: glow, emissiveIntensity: 0.9 }),
     );
     ring.rotation.y = Math.PI / 2;
-    ring.position.set(x, -2.2, 0);
+    ring.position.set(x, -1.9, 0);
   }
   const accent = kit.color('--chart-2');
-  chain(kit, input.normal, [xTop(0), 1.6, 1.6], { color: accent, glowColor: glow });
-  chain(kit, input.mutant, [xBot(0), -4.8, 1.6], { color: accent, glowColor: glow });
-  const halfX = (n * RISE) / 2 + 2.2;
+  chain(kit, input.normal, [xTop(0), 0.75, 1.4], { color: accent, glowColor: glow });
+  chain(kit, input.mutant, [xBot(0), -4.45, 1.4], { color: accent, glowColor: glow });
+  const halfX = (n * RISE) / 2 + 3.4;
   const pts: Vec3[] = [];
   for (const x of [-halfX, halfX])
-    for (const y of [-6, 6.8]) for (const z of [-1.4, 2]) pts.push([x, y, z]);
+    for (const y of [-5.3, 4.6]) for (const z of [-1.2, 1.8]) pts.push([x, y, z]);
   return {
     kit,
     bounds: { center: [0, 0.4, 0], radius: Math.hypot(halfX, 6.5), points: pts },
