@@ -14,7 +14,10 @@
     <main>
       <p class="brand"><a href="./">SimLab</a></p>
       <h1>Chính sách quyền riêng tư</h1>
-      <p class="muted">Cập nhật ngày 13/10/2026 · áp dụng cho SimLab 0.5.1 trở lên trên Windows.</p>
+      <p class="muted">
+        Cập nhật ngày 19/10/2026 · áp dụng cho SimLab 0.5.1 trở lên trên Windows (mục ghi “từ 0.6.0”
+        chỉ có từ bản 0.6.0).
+      </p>
       <p class="lang"><a href="#en">English version below</a></p>
 
       <h2>Tóm tắt</h2>
@@ -81,8 +84,19 @@
           </tr>
           <tr>
             <td>Bật “Think”</td>
-            <td>Câu hỏi và bản nháp câu trả lời</td>
+            <td>
+              Câu hỏi và bản nháp câu trả lời (cả bản nháp của Gemma hoặc của AI trên máy khác, từ
+              0.6.0)
+            </td>
             <td>Nhà cung cấp AI thứ hai bạn chọn để rà soát</td>
+          </tr>
+          <tr>
+            <td>“Khoanh để hỏi” trên bảng (từ 0.6.0)</td>
+            <td>Chữ và công thức trong vùng khoanh, kèm câu hỏi</td>
+            <td>
+              AI bạn đang chọn (nhà cung cấp trực tuyến nếu bạn dùng API; nếu chọn AI trên máy thì
+              không rời máy, trừ khi bật Think: khi đó cả AI rà soát)
+            </td>
           </tr>
           <tr>
             <td>Bật đọc to bằng giọng Gemini</td>
@@ -108,7 +122,17 @@
       </table>
       <p>
         Dùng Gemma chạy trên máy (không bật Think) thì câu hỏi không rời máy. Ảnh chụp đề bài trong
-        ứng dụng desktop được đọc bằng Gemma ngay trên máy và không được lưu lại.
+        ứng dụng desktop được đọc ngay trên máy (bằng Gemma, hoặc từ 0.6.0 bằng mô hình đọc ảnh của
+        AI trên máy khác nếu bạn chọn) và không được lưu lại.
+      </p>
+      <p>
+        <strong>AI trên máy khác (từ 0.6.0):</strong> nếu bạn tự cài Ollama, LM Studio hoặc
+        llama.cpp và chọn nó trong Cài đặt → AI trên máy khác, SimLab chỉ gửi câu hỏi tới địa chỉ
+        trên chính máy (127.0.0.1, [::1], localhost) và không bao giờ tự chuyển sang AI trực tuyến;
+        chỉ khi bật Think, bản nháp mới được gửi đi để xem lại. Chương trình đó có chính sách riêng;
+        tính năng cloud của nó có thể đưa dữ liệu ra ngoài (SimLab từ chối mô hình cloud của
+        Ollama). Ảnh vùng bảng được khoanh chỉ được tạo khi vùng đó không có chữ, và chỉ gửi cho mô
+        hình đọc ảnh trên máy, không bao giờ lên mạng.
       </p>
       <p>
         App không gửi họ tên, tài khoản hay tệp của bạn. Đề bài có dấu hiệu thông tin cá nhân (số
@@ -146,7 +170,10 @@
 
       <section id="en" lang="en">
         <h1>Privacy policy</h1>
-        <p class="muted">Updated 13 October 2026 · SimLab 0.5.1 and later on Windows.</p>
+        <p class="muted">
+          Updated 19 October 2026 · SimLab 0.5.1 and later on Windows (items marked “from 0.6.0”
+          only from version 0.6.0).
+        </p>
         <h2>Summary</h2>
         <ul>
           <li>
@@ -179,7 +206,13 @@
             Online AI (problem analysis, explanations, AI Teacher): your question or problem, the
             results the app computed, related library excerpts and, if you switch it on, the state
             of the open simulation → the provider you chose (Google Gemini, Anthropic Claude or
-            Groq). “Think” also sends the draft answer to a second provider.
+            Groq). “Think” also sends the draft answer to a second provider (also the draft of Gemma
+            or of an AI on this computer, from 0.6.0).
+          </li>
+          <li>
+            “Khoanh để hỏi” (Circle to ask) on the board, from 0.6.0: the words and formulas inside
+            the circle, with your question → the AI you chose (it stays on the computer when that AI
+            runs on it, unless Think is on: then also the reviewer).
           </li>
           <li>
             Gemini voice: the answer text → Google. Wikipedia lookup: the question → Wikipedia.
@@ -192,9 +225,16 @@
         </ul>
         <p>
           With on-device Gemma (without Think) questions stay on the computer. Photos of a problem
-          are read on the computer by Gemma and not kept. Personal data patterns (phone, email,
-          address, ID numbers) are blocked before sending. The camera turns on only when you press
-          “Chụp đề bài” (Take a photo); the microphone is not used.
+          are read on the computer (by Gemma or, from 0.6.0, by a picture-reading model of an AI on
+          this computer you chose) and not kept. From 0.6.0, if you install Ollama, LM Studio or
+          llama.cpp and choose it in Settings, SimLab sends questions only to an address on this
+          computer (127.0.0.1, [::1], localhost) and never switches to an online AI by itself; only
+          Think sends the draft for review. That program has its own policy, and its cloud features
+          can take data off the computer (SimLab refuses Ollama cloud models). A picture of a
+          circled board area is made only when it holds no text and goes only to a picture-reading
+          model on this computer, never online. Personal data patterns (phone, email, address, ID
+          numbers) are blocked before sending. The camera turns on only when you press “Chụp đề bài”
+          (Take a photo); the microphone is not used.
         </p>
         <p>
           Providers' policies apply to what you send them with your own key:

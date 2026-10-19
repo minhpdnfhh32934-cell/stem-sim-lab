@@ -142,12 +142,47 @@ máy (kiểm tra giấy phép trước). Kết quả tra:
   **nghiên cứu**; Piper còn cần bộ phiên âm espeak-ng (GPL-3). Nguồn: thảo luận
   github.com/rhasspy/piper/discussions/271 và huggingface.co/vnhellboy/vietnamese-piper-voices.
 
+## 2f. AI chạy bằng chương trình khác trên máy: Ollama, LM Studio, llama.cpp (tra 2026-10-19)
+
+**Quyết định của người dùng ngày 2026-10-14** (bản yêu cầu G8, mục 4) bỏ quy tắc cũ "không AI cục bộ
+nào" cho các chương trình người dùng **tự cài**. Sự thật kỹ thuật (theo mã `src-tauri/src/ai/local/`):
+
+- SimLab **không kèm, không cài, không khởi động** các chương trình này và không tải mô hình cho
+  chúng; người dùng tự cài, tự tải mô hình, tự chạy. SimLab chỉ gửi yêu cầu tới địa chỉ trên chính
+  máy (`127.0.0.1`, `[::1]`, `localhost`; kiểm tra trong Rust ở mỗi lần gọi), không qua proxy, không
+  theo chuyển hướng. Nút "Tìm trên máy này" chỉ hỏi ba cổng quen thuộc (11434, 1234, 8080) và các địa chỉ trên máy mà người dùng tự thêm, khi người dùng bấm; không quét ổ đĩa, không đọc danh sách tiến trình.
+- Câu hỏi gửi tới chương trình đó ở lại trên máy **trừ khi chính chương trình đó chuyển đi** (ví dụ
+  tính năng cloud của nó). SimLab từ chối các mô hình "cloud" của Ollama (chạy trên ollama.com)
+  trước khi gửi. Không tính vào giới hạn lượt/ngày, không thử lại, không bao giờ tự chuyển sang API
+  trên mạng. Ảnh chỉ gửi cho mô hình mà chương trình đó báo là đọc được ảnh.
+- **Ollama**: mã nguồn giấy phép **MIT** (github.com/ollama/ollama, tệp LICENSE). Chính sách quyền
+  riêng tư (ollama.com/privacy, cập nhật 03/2026) nói khi chạy trên máy, Ollama không thu thập câu
+  hỏi/câu trả lời; mô hình cloud thì có xử lý trên máy chủ của họ. Điều khoản (ollama.com/terms, cập
+  nhật 05/2026) yêu cầu **từ 18 tuổi** và định nghĩa "Service" gồm cả phần mềm; riêng trang quyền
+  riêng tư vừa ghi dành cho người 18+ vừa có câu về người từ 13 tuổi — **hai câu này mâu thuẫn**.
+- **LM Studio**: phần mềm **độc quyền** (không phải mã nguồn mở). Điều khoản (lmstudio.ai/app-terms,
+  bản 23/08/2026): giấy phép dùng cho mục đích cá nhân và/hoặc nội bộ doanh nghiệp; người dùng tự
+  chịu trách nhiệm tuân thủ giấy phép của mô hình bên thứ ba; không thấy điều khoản về độ tuổi.
+  Chính sách quyền riêng tư (lmstudio.ai/app-privacy, hiệu lực 06/2026): khi chạy trên máy, tin nhắn
+  và tài liệu không được gửi đi; kiểm tra cập nhật gửi phiên bản app, hệ điều hành, địa chỉ IP; tìm
+  và tải mô hình gửi từ khóa tìm kiếm (ẩn danh).
+- **llama.cpp** (`llama-server`): mã nguồn giấy phép **MIT** (github.com/ggml-org/llama.cpp, tệp
+  LICENSE, "The ggml authors"); là phần mềm, không có điều khoản dịch vụ hay chính sách quyền riêng tư
+  riêng.
+- Mỗi **mô hình** (Llama, Qwen, Gemma, Mistral…) có giấy phép riêng, khác với giấy phép của chương
+  trình chạy nó. SimLab không kiểm tra giấy phép mô hình người dùng tải.
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng
   bấm), kiểm tra cập nhật trên GitHub, tải mô hình Gemma (người dùng bấm "Tải mô hình", chỉ tải
   xuống) và tra Wikipedia (chỉ khi người dùng bật). Cài đặt → AI Teacher có ô "Dữ liệu của em đi
   đâu?" liệt kê theo cài đặt hiện tại.
+- Chương trình AI trên máy (mục 2f): câu hỏi gửi tới địa chỉ trên chính máy, không qua mạng. Khi bật
+  Think, bản nháp của AI trên máy được gửi tới AI trên mạng để xem lại. "Khoanh để hỏi": chữ/công
+  thức được khoanh đi kèm câu hỏi tới AI đang chọn (trên mạng nếu chọn API; cả AI rà soát khi bật Think); ảnh vùng khoanh chỉ
+  được tạo khi không có chữ, và chỉ gửi cho mô hình đọc ảnh trên máy (Gemma trong app hoặc chương
+  trình trên máy), không bao giờ lên mạng.
 - Gửi cho nhà cung cấp AI: nội dung đề bài và kết quả đã tính. Đề có dấu hiệu thông tin cá nhân,
   nội dung không phù hợp, hoặc dấu hiệu khủng hoảng **không được gửi** (`src/safety/moderation.ts`).
 - Khóa API: kho khóa của hệ điều hành (Rust), trang web không bao giờ thấy khóa.
@@ -199,3 +234,13 @@ máy (kiểm tra giấy phép trước). Kết quả tra:
     hiện tại, **không phải ý kiến pháp lý**. Chưa tìm thấy văn bản chính sách Store nói rõ app trên
     Store có được tự tải phần web không; vì vậy bản Store tắt cập nhật trong app (quyết định
     2026-10-13).
+19. AI trên máy (mục 2f): người dùng đã đọc và chấp nhận điều khoản của chương trình mình cài (Ollama
+    yêu cầu 18+; LM Studio là phần mềm độc quyền, giấy phép "cá nhân và/hoặc nội bộ doanh nghiệp") và
+    xác nhận cách dùng ở trường/lớp có nằm trong giấy phép đó không.
+20. Giấy phép của từng mô hình người dùng tải về (Llama, Qwen, Gemma…) có cho phép dùng để học tập
+    như trong SimLab không — SimLab không kiểm tra.
+21. Câu mâu thuẫn về độ tuổi trong chính sách quyền riêng tư của Ollama (18+ và 13+): người dùng tự
+    xác nhận câu nào áp dụng cho mình.
+22. Người dùng biết: nếu chính chương trình AI trên máy có tính năng cloud hay chuyển tiếp (ví dụ mô
+    hình cloud của Ollama, dịch vụ cloud của LM Studio), dữ liệu có thể rời máy qua chương trình đó —
+    SimLab chỉ chặn được mô hình cloud của Ollama mà nó nhận ra.

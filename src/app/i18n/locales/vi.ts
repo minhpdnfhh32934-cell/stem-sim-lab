@@ -823,10 +823,14 @@ const vi = {
       title: 'Quyền riêng tư & dùng AI an toàn',
       sendTitle: 'Ứng dụng gửi gì ra ngoài?',
       send1:
-        'Chỉ khi bạn bấm "Phân tích đề" hoặc "AI diễn giải": nội dung đề bài và các kết quả đã tính được gửi đến nhà cung cấp AI đang chọn. Không gửi tên, tài khoản hay tệp của bạn.',
+        'Chỉ khi bạn bấm "Phân tích đề", "AI diễn giải" hoặc hỏi AI Teacher bằng AI trực tuyến: đề bài hoặc câu hỏi và các kết quả đã tính được gửi đến nhà cung cấp AI đang chọn. Không gửi tên, tài khoản hay tệp của bạn. Ô "Dữ liệu của em đi đâu?" trong Cài đặt liệt kê theo cài đặt hiện tại.',
       send2:
         'Kiểm tra cập nhật: ứng dụng hỏi trang phát hành của dự án trên GitHub xem có bản mới không (không gửi dữ liệu học tập).',
       send3: 'Ứng dụng không có quảng cáo, không có tài khoản, không gửi thống kê sử dụng.',
+      send4:
+        'AI trên máy khác (Ollama, LM Studio, llama.cpp — bạn tự cài): câu hỏi chỉ được gửi tới chương trình đó trên chính máy này, không bao giờ tự chuyển sang AI trực tuyến. Chỉ khi bạn bật Think, bản nháp mới được gửi tới AI trực tuyến để xem lại (tra Wikipedia và giọng Gemini cũng chỉ gửi khi bạn bật). Chương trình đó có chính sách riêng; tính năng cloud của nó có thể đưa dữ liệu ra ngoài (ứng dụng từ chối mô hình cloud của Ollama).',
+      send5:
+        '"Khoanh để hỏi" trên bảng: chữ và công thức trong vùng khoanh được gửi kèm câu hỏi tới AI đang chọn (và AI rà soát khi bật Think). Ảnh vùng khoanh chỉ được tạo khi vùng đó không có chữ, và chỉ gửi cho AI đọc ảnh chạy trên máy này — không bao giờ lên mạng.',
       storeTitle: 'Lưu gì trên máy này?',
       store1: 'Khóa API: trong kho khóa của hệ điều hành; màn hình chỉ hiện 4 ký tự cuối.',
       store2:

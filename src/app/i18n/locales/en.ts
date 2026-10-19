@@ -823,10 +823,14 @@ const en: Messages = {
       title: 'Privacy & safe AI use',
       sendTitle: 'What does the app send?',
       send1:
-        'Only when you press "Analyse" or "AI explanation": the problem text and the computed results go to the selected AI provider. No name, account or files are sent.',
+        'Only when you press "Analyse" or "AI explanation", or ask AI Teacher with an online AI: the problem or question and the computed results go to the selected AI provider. No name, account or files are sent. The "Where does your data go?" box in Settings lists it for your current settings.',
       send2:
         'Update check: the app asks the project release page on GitHub whether a new version exists (no learning data is sent).',
       send3: 'No ads, no accounts, no usage statistics.',
+      send4:
+        'AI on this computer (Ollama, LM Studio, llama.cpp — installed by you): questions go only to that program on this computer, never automatically to an online AI. Only with Think on is the draft sent to an online AI for review (Wikipedia lookup and the Gemini voice also send only when you switch them on). That program has its own policy; its cloud features can take data off the computer (the app refuses Ollama cloud models).',
+      send5:
+        '"Circle to ask" on the board: the words and formulas inside the circle are sent with your question to the selected AI (and to the reviewer when Think is on). A picture of the circled area is made only when it holds no text, and goes only to a picture-reading AI running on this computer — never online.',
       storeTitle: 'What is stored on this computer?',
       store1: 'API key: in the operating system keychain; only the last 4 characters are shown.',
       store2:
