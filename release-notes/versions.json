@@ -133,6 +133,11 @@
       "date": "2026-10-14T07:14:01+07:00",
       "text": "Đánh giá cách giảng 168/168 lượt trên Gemma 1B (nhánh local)",
       "evidence": "commit 4f1e2c7; docs/TEACHING_EVAL.md"
+    },
+    {
+      "date": "2026-10-19T03:48:53Z",
+      "text": "Mở PR #21 — G8: bảng dạy, “Khoanh để hỏi”, AI trên máy khác (0.6.0)",
+      "evidence": "PR #21 createdAt 2026-10-19T03:48:53Z (gh pr list); đầu nhánh abc9e0c"
     }
   ],
   "openQuestions": [
@@ -142,19 +147,19 @@
     "0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.",
     "0.5.0: tệp ZIP mang tên v0.5.0 được tạo trước khi gộp PR #8, nên khác bản phát hành v0.5.0.",
     "0.5.1: chưa biết trạng thái hiện tại của gói Microsoft Store (đã qua duyệt chưa, đã bấm Publish now chưa) và gói MSIX đã nộp được dựng ở đâu.",
-    "0.6.0: các commit đến 8a3c48d ở trên PR #20; phần G8 (đến 051816b và các commit tài liệu kèm theo) chỉ ở nhánh feat/teacher-board-runtime trên máy, chưa có PR; số liệu test ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7 và 0.6.0-g8), phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.",
+    "0.6.0: các commit đến 8a3c48d ở trên PR #20; phần G8 (đến abc9e0c) ở PR #21; Science Studio chỉ ở nhánh feat/science-studio trên máy, chưa commit, chưa có PR; số liệu test ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7, 0.6.0-g8 và 0.6.0-studio), phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.",
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
     {
       "version": "0.6.0",
       "status": "in-review",
-      "statusNote": "PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5. Phần G8 (bảng dạy, “Khoanh để hỏi”, AI trên máy khác, trả lời hiện dần) nằm trên nhánh feat/teacher-board-runtime chồng lên PR #20, chỉ có trên máy của người phát triển (ghi 19/10/2026): chưa đẩy lên GitHub, chưa có PR.",
+      "statusNote": "Bản ứng viên phát hành 0.6.0, chưa phát hành. PR #20 (feat/audit-g0-g5) và PR #21 (G8, feat/teacher-board-runtime, đầu abc9e0c) đang mở, chưa gộp. Science Studio (các bước S1–S5 và bước chuẩn bị phát hành, 19/10/2026) nằm trên nhánh feat/science-studio chồng lên PR #21, chỉ có trên máy người phát triển: thay đổi đã stage, chưa commit, chưa có PR. Chưa có tag, GitHub Release hay lượt Release trên GitHub Actions; bộ cài chỉ được dựng thử trên máy người phát triển. Ghi chú công khai đã đặt notesReady: true để chuẩn bị phát hành — chủ dự án đọc lại trước khi chạy Release. Trước khi phát hành: gộp vào main; kiểm tra các cài đặt an toàn phát hành chỉ chủ repo bật được (docs/RELEASE.md, mục “An toàn khi phát hành”: environment release, secret ký chỉ ở environment, ruleset cho tag, kiểm tra bắt buộc, Immutable releases); không tích “Bắt buộc cập nhật” (bản này nâng phiên bản lõi). Sau khi gộp: status merged-not-released; sau khi publish: released.",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-13T22:42:01+07:00",
         "firstCommit": "2026-10-13T22:42:01+07:00",
-        "lastCommit": "2026-10-19T10:02:17+07:00",
+        "lastCommit": "2026-10-19T10:25:02+07:00",
         "merged": null,
         "built": null,
         "released": null,
@@ -163,7 +168,7 @@
       "evidence": [
         "firstCommit: 511345d 2026-10-13T22:42:01+07:00 'fix(security): release integrity…' (G1), commit đầu sau tag v0.5.2 (c25ad9d)",
         "Nâng phiên bản: 0ec0577 2026-10-14T00:14:16+07:00 'chore(release): 0.6.0 (web + native)' — package.json 0.5.2 → 0.6.0; tauri.conf.json, Cargo.toml 0.5.1 → 0.6.0",
-        "lastCommit: 051816b 2026-10-19T10:02:17+07:00 'fix(ai): honest local-AI states, runtime before Wikipedia, app errors' trên nhánh feat/teacher-board-runtime (chỉ có trên máy người phát triển); đầu PR #20 trên GitHub vẫn là 8a3c48d 2026-10-14T14:54:05+07:00",
+        "lastCommit: abc9e0c 2026-10-19T10:25:02+07:00 'docs(release-notes): unreleased 0.6.0 notes for the G8 work; PROGRESS row with test numbers' = đầu PR #21 (origin/feat/teacher-board-runtime); commit mã cuối của G8: 051816b 2026-10-19T10:02:17+07:00. Science Studio chưa được commit nên không có trong lastCommit",
         "PR #20 'Audit G0–G5: security, GPU safety, AI Teacher teaching, 3D mitosis (0.6.0)' mở lúc 2026-10-13T19:05:41Z, chưa gộp",
         "Các commit f527f18..8a3c48d (98 commit, gồm commit gộp phần giọng đọc 10d35e0 và các sửa lỗi rà soát cuối) đã được đẩy lên PR #20 ngày 14/10/2026",
         "built: không có lượt release.yml nào cho nhánh này; chỉ có lượt 'Security checks' trên PR (2026-10-13T19:05:44Z). AUDIT ghi bản release dựng trên máy người phát triển báo app_info = 0.6.0",
@@ -172,7 +177,9 @@
         "Voice: docs/VOICE_BENCHMARK.md §6 (2026-10-14): 19 sentences on the CPU, legacy vs natural pipeline: loudness spread 2.47 -> 0 dB, first sound 4.07 -> 3.22 s, waits between pieces per sentence (median) 7.3 -> 8.4 s, no dropped/reordered words in either; RTF about 2 on the CPU in both modes. Nobody has listened to it yet (no naturalness rating).",
         "Gemma safeguards on integrated graphics (GPU-01): not retested on an integrated card after the fix (docs/AUDIT_2026-10-13.md G2, 1B on AMD 780M: 'Không đo lại').",
         "G8: 120 commit 895ecf6..051816b (14/10–19/10/2026) trên feat/teacher-board-runtime, gồm nhánh gộp feat/local-ai-runtime (9a49b83, aac007a); đường dẫn dữ liệu mới và điều cần xác nhận: docs/AI_TUTOR.md 'Where data goes', docs/LEGAL_COMPLIANCE.md mục 2f",
-        "G8 AI paths: docs/AI_COMPATIBILITY.md (checked 2026-10-19) — every row is unit/E2E-tested against fakes or implemented only; none verified with a real provider key or a real local runtime"
+        "G8 AI paths: docs/AI_COMPATIBILITY.md (checked 2026-10-19) — every row is unit/E2E-tested against fakes or implemented only; none verified with a real provider key or a real local runtime",
+        "PR #21 'G8: board shows only lessons, circle to ask, whole board, local AI runtimes, pen fix, honest AI connections' mở lúc 2026-10-19T03:48:53Z, nhánh feat/teacher-board-runtime, đầu abc9e0c, chưa gộp (gh pr list, 19/10/2026)",
+        "Science Studio: docs/work-log/2026-10-19-S1-core-physics.md, -S2-chemistry, -S3-biology, -S3b-biology-finish, -S4-authoring, -S5-ai-report và -release-prep; nhánh feat/science-studio trên máy người phát triển (đã stage, chưa commit); nội dung khoa học mới: docs/DATA_REVIEW.md mục 20–23 (đang chờ duyệt)"
       ],
       "tests": [
         "format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)",
@@ -181,14 +188,15 @@
         "Benchmark 168/168 lượt, 42 câu, Gemma 1B: cách sinh văn bản mới tăng ý chính đúng 13,4 điểm với prompt cũ (kiểm định dấu p = 0,007; câu đúng, McNemar p = 0,031); lời nhắc của PR #20 (f527f18) không đúng hơn prompt cũ; nhánh local dùng lời nhắc v2, đo được ý chính đúng 31,3 % (prompt và cách sinh cũ) → 47,7 % (docs/TEACHING_EVAL.md)",
         "Workflow 'Security checks' đạt trên PR #20 (2026-10-13T19:05:44Z)",
         "Số test của các commit sau đầu PR f527f18: xem docs/PROGRESS.md hàng '0.6.0-g6-g7' (số cuối cùng được ghi ở đó)",
-        "Số test sau phần G8 (051816b và commit tài liệu kèm theo): xem docs/PROGRESS.md hàng '0.6.0-g8'"
+        "Số test sau phần G8 (051816b và commit tài liệu kèm theo): xem docs/PROGRESS.md hàng '0.6.0-g8'",
+        "Science Studio + chuẩn bị phát hành (19/10/2026, nhánh feat/science-studio): xem docs/PROGRESS.md hàng '0.6.0-studio' và docs/work-log/2026-10-19-release-prep.md"
       ],
       "refs": {
         "tag": null,
         "tagSha": null,
         "releaseUrl": null,
-        "prs": [20],
-        "commits": ["511345d", "f527f18", "8a3c48d"],
+        "prs": [20, 21],
+        "commits": ["511345d", "f527f18", "8a3c48d", "abc9e0c"],
         "branches": [
           "feat/audit-g0-g5",
           "feat/mitosis-3d",
@@ -196,15 +204,31 @@
           "feat/voice-natural",
           "feat/release-history",
           "feat/local-ai-runtime",
-          "feat/teacher-board-runtime"
+          "feat/teacher-board-runtime",
+          "feat/science-studio"
         ]
       },
       "publicNotes": {
         "summary": {
-          "vi": "Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật. Sau đó (chưa phát hành): bảng dạy chỉ trình bày nội dung bài học và dùng cả bảng, “Khoanh để hỏi” trên bảng, và dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp).",
-          "en": "A large update after a full audit: AI Teacher uses results computed by SimLab and is asked to end concept answers with a check question (except Gemma on integrated graphics), Gemma gets new safeguards on integrated graphics, a new 3D mitosis simulation and many security fixes. Since then (not released): the board shows only lesson content and uses its whole width, “Khoanh để hỏi” (circle to ask) on the board, and AI programs you installed on your computer (Ollama, LM Studio, llama.cpp) can be used."
+          "vi": "Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa học, Sinh học, Vật lí và trang Soạn bài. AI Teacher giảng trên cả bảng, có “Khoanh để hỏi”, dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp), dùng kết quả do SimLab tính và nói rõ điều gì chưa kiểm chứng. Ngoài ra có mô phỏng Nguyên phân 3D, Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp và nhiều sửa lỗi bảo mật.",
+          "en": "A large update: the new Science Studio with guided lessons for Chemistry, Biology and Physics and an Authoring page. AI Teacher uses the whole board, has “Khoanh để hỏi” (circle to ask), can use AI programs you installed on your computer (Ollama, LM Studio, llama.cpp), uses results computed by SimLab and says clearly what is not verified. Also a 3D mitosis simulation, new Gemma safeguards on integrated graphics and many security fixes."
         },
         "added": [
+          {
+            "vi": "Science Studio (trang mở đầu → thẻ “Science Studio”): bài học có hướng dẫn theo các bước Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Vật lí: rơi tự do, thả từ độ cao gấp đôi và so sánh hai lần chạy A và B. Hóa học: bàn thí nghiệm ảo nhận biết ion Cl⁻ bằng dung dịch AgNO₃. Sinh học: Nguyên phân 3D, tìm kì mà NST kép xếp hàng ở mặt phẳng xích đạo và tìm bộ phận tế bào theo chức năng. Mọi số đo do mô phỏng tính; hiện tượng và phương trình hóa học chép từ thư viện phản ứng của SimLab.",
+            "en": "Science Studio (launch page → “Science Studio” card): guided lessons in the steps Predict → Experiment → Observe → Explain → Conclude → Report. Physics: free fall, dropping from twice the height and comparing runs A and B. Chemistry: a virtual bench that tests for Cl⁻ ions with silver nitrate (AgNO₃) solution. Biology: 3D mitosis, finding the stage where the double chromosomes line up on the equator and finding cell parts from their function. Every measurement is computed by the simulation; chemical observations and equations are copied from SimLab’s reaction library.",
+            "area": "ui"
+          },
+          {
+            "vi": "Soạn bài trong Science Studio: tạo, sửa, nhân bản, xóa và xem trước bài học cho ba môn; nhập và xuất tệp bài học. Chỉ chọn được những gì mô phỏng chạy được; bài soạn lưu trên máy này và luôn ghi “chưa được kiểm duyệt”.",
+            "en": "Authoring in Science Studio: create, edit, duplicate, delete and preview lessons for the three subjects; import and export lesson files. Only what the simulations can run can be chosen; lessons are stored on this computer and are always marked as not yet reviewed.",
+            "area": "ui"
+          },
+          {
+            "vi": "Báo cáo bài học trong Science Studio: xem trước, sao chép hoặc lưu thành tệp, với số đo của mô phỏng tách riêng khỏi phần em viết; bài đang làm được giữ lại khi mở lại app. Nút “Hỏi thầy” mở AI Teacher với câu hỏi viết sẵn; thầy chỉ thấy số đo và ghi chú của bài khi em bật “Lấy thông tin từ màn hình”.",
+            "en": "Lesson reports in Science Studio: preview, copy or save to a file, with the simulation’s measurements kept apart from what you wrote; a lesson in progress is kept when the app is reopened. The “Ask the teacher” button opens AI Teacher with a ready-written question; the teacher sees the lesson’s measurements and notes only when you turn on “Use current screen information”.",
+            "area": "ui"
+          },
           {
             "vi": "Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.",
             "en": "3D mitosis simulation for animal and plant cells: 7 steps, play/pause/step, rotate, pick a cell part to read what it does, with its own Science Card.",
@@ -408,13 +432,8 @@
             "area": "bio3d"
           },
           {
-            "vi": "Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.",
-            "en": "The official Windows installers are not built yet; the Microsoft Store copy needs a new package."
-          },
-          {
-            "vi": "Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.",
-            "en": "Before release, the project owner still has to turn on some extra protections for the GitHub release process.",
-            "area": "security"
+            "vi": "Bản Microsoft Store cần nộp gói mới và chờ Microsoft duyệt, nên người dùng Store nhận bản này muộn hơn người dùng bản tải từ GitHub.",
+            "en": "The Microsoft Store copy needs a new package and Microsoft’s review, so Store users get this version later than users of the GitHub download."
           },
           {
             "vi": "Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.",
@@ -432,43 +451,51 @@
             "area": "voice"
           },
           {
-            "vi": "“Khoanh để hỏi”, AI trên máy khác và câu trả lời hiện dần mới chỉ được thử với chương trình giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.",
-            "en": "“Khoanh để hỏi”, AI on this computer and answers that appear while written were tried only against simulated services: not yet with real API keys or a real Ollama, LM Studio or llama.cpp; the circled-area picture is not yet tried in the desktop app.",
+            "vi": "“Khoanh để hỏi”, AI trên máy khác, câu trả lời hiện dần và nút “Hỏi thầy” của Science Studio mới chỉ được thử với dịch vụ giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.",
+            "en": "“Khoanh để hỏi” (circle to ask), AI on this computer, answers that appear while written and the Science Studio “Ask the teacher” button were tried only against simulated services: not yet with real API keys or a real Ollama, LM Studio or llama.cpp; the circled-area picture is not yet tried in the desktop app.",
             "area": "teacher"
           },
           {
             "vi": "SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.",
             "en": "SimLab cannot choose the graphics card used by an AI program on this computer; set it in that program.",
             "area": "teacher"
+          },
+          {
+            "vi": "Nội dung bài học của Science Studio (mục tiêu, câu hỏi, gợi ý, kết luận tham khảo), thư viện phản ứng hóa học và mô tả kì, bộ phận tế bào của Nguyên phân 3D đang chờ giáo viên duyệt; Studio ghi “chưa được kiểm duyệt” cạnh những phần này.",
+            "en": "Science Studio lesson text (objectives, questions, hints, reference conclusions), the chemical reaction library and the 3D mitosis stage and cell-part descriptions are waiting for teacher review; the Studio marks these parts as not yet reviewed."
+          },
+          {
+            "vi": "Science Studio mới có một bài cho mỗi môn, và Soạn bài chỉ tạo được bài trên các mô phỏng đó: rơi tự do (Vật lí), các phản ứng tạo kết tủa có trong thư viện (Hóa học), Nguyên phân 3D (Sinh học).",
+            "en": "Science Studio has one lesson per subject so far, and Authoring can build lessons only on those simulations: free fall (Physics), the precipitation reactions in the library (Chemistry) and 3D mitosis (Biology)."
           }
         ]
       },
-      "notesReady": false,
+      "notesReady": true,
       "learnerHighlights": [
         {
-          "area": "bio3d",
-          "vi": "Mô phỏng Nguyên phân 3D: xem từng kì ở tế bào động vật và thực vật.",
-          "en": "3D mitosis: follow each stage in animal and plant cells."
+          "area": "ui",
+          "vi": "Science Studio mới: mỗi môn Hóa học, Sinh học, Vật lí có một bài học có hướng dẫn (dự đoán, thí nghiệm, quan sát, giải thích, báo cáo), và trang Soạn bài để tự tạo thêm bài.",
+          "en": "New Science Studio: one guided lesson each for Chemistry, Biology and Physics (predict, experiment, observe, explain, report), and an Authoring page to make more lessons."
         },
         {
           "area": "teacher",
-          "vi": "AI Teacher dùng kết quả do SimLab tính cho phương trình hóa học và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp).",
-          "en": "AI Teacher uses SimLab's own result for chemical equations and is asked to end concept answers with a check question (except Gemma on integrated graphics)."
+          "vi": "“Khoanh để hỏi”: khoanh chỗ em chưa hiểu trên bảng rồi hỏi thầy đúng chỗ đó.",
+          "en": "“Khoanh để hỏi” (circle to ask): circle the part of the board you do not understand and ask about exactly that."
         },
         {
           "area": "teacher",
-          "vi": "Nút 'Dừng' và lời nhắc khi đề bài có thể thiếu số liệu.",
-          "en": "A 'Stop' button and a reminder when a problem may be missing data."
+          "vi": "Thầy dùng cả bảng: bảng chia cột theo nội dung, công thức dài viết thành nhiều dòng, chữ không đè lên nhau.",
+          "en": "The teacher uses the whole board: columns that follow the content, long formulas on several lines, no overlapping text."
         },
         {
-          "area": "gemma",
-          "vi": "Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp (chưa thử lại trên card tích hợp thật).",
-          "en": "Gemma gets new safeguards on integrated graphics cards (not yet retested on a real integrated card)."
+          "area": "teacher",
+          "vi": "Dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp); khi chương trình lỗi, câu hỏi không tự bị gửi lên mạng.",
+          "en": "You can use an AI program installed on your computer (Ollama, LM Studio, llama.cpp); when it fails, your question is never sent online by itself."
         },
         {
-          "area": "security",
-          "vi": "Liên kết do AI viết không còn bấm được.",
-          "en": "Links written by the AI are no longer clickable."
+          "area": "teacher",
+          "vi": "AI trả lời trung thực hơn: con số do SimLab tính, số AI tự đưa ra được ghi là chưa kiểm chứng, và lỗi được nói bằng lời dễ hiểu.",
+          "en": "More honest AI answers: numbers come from SimLab, numbers the AI brings in are marked unverified, and errors are explained in plain words."
         }
       ]
     },

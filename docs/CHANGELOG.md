@@ -4,14 +4,15 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.6.0 (Đang xét duyệt)
 
-_PR #20 đang mở, đã đẩy lên GitHub (đầu PR 8a3c48d lúc ghi): chưa gộp, chưa có tag, chưa có GitHub Release và chưa có lượt Release trên GitHub Actions. Bản release mới chỉ được dựng trên máy của người phát triển. PR gồm cả các nhánh feat/teacher-quality, feat/voice-natural và feat/release-history đã gộp vào feat/audit-g0-g5. Phần G8 (bảng dạy, “Khoanh để hỏi”, AI trên máy khác, trả lời hiện dần) nằm trên nhánh feat/teacher-board-runtime chồng lên PR #20, chỉ có trên máy của người phát triển (ghi 19/10/2026): chưa đẩy lên GitHub, chưa có PR._
+_Bản ứng viên phát hành 0.6.0, chưa phát hành. PR #20 (feat/audit-g0-g5) và PR #21 (G8, feat/teacher-board-runtime, đầu abc9e0c) đang mở, chưa gộp. Science Studio (các bước S1–S5 và bước chuẩn bị phát hành, 19/10/2026) nằm trên nhánh feat/science-studio chồng lên PR #21, chỉ có trên máy người phát triển: thay đổi đã stage, chưa commit, chưa có PR. Chưa có tag, GitHub Release hay lượt Release trên GitHub Actions; bộ cài chỉ được dựng thử trên máy người phát triển. Ghi chú công khai đã đặt notesReady: true để chuẩn bị phát hành — chủ dự án đọc lại trước khi chạy Release. Trước khi phát hành: gộp vào main; kiểm tra các cài đặt an toàn phát hành chỉ chủ repo bật được (docs/RELEASE.md, mục “An toàn khi phát hành”: environment release, secret ký chỉ ở environment, ruleset cho tag, kiểm tra bắt buộc, Immutable releases); không tích “Bắt buộc cập nhật” (bản này nâng phiên bản lõi). Sau khi gộp: status merged-not-released; sau khi publish: released._
 
-_Ghi chú này là bản nháp, chưa được duyệt để công bố._
-
-Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do SimLab tính và được dặn kết thúc câu trả lời về khái niệm bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp), Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp, có mô phỏng Nguyên phân 3D và nhiều sửa lỗi bảo mật. Sau đó (chưa phát hành): bảng dạy chỉ trình bày nội dung bài học và dùng cả bảng, “Khoanh để hỏi” trên bảng, và dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp).
+Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa học, Sinh học, Vật lí và trang Soạn bài. AI Teacher giảng trên cả bảng, có “Khoanh để hỏi”, dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp), dùng kết quả do SimLab tính và nói rõ điều gì chưa kiểm chứng. Ngoài ra có mô phỏng Nguyên phân 3D, Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp và nhiều sửa lỗi bảo mật.
 
 ### Added
 
+- Science Studio (trang mở đầu → thẻ “Science Studio”): bài học có hướng dẫn theo các bước Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Vật lí: rơi tự do, thả từ độ cao gấp đôi và so sánh hai lần chạy A và B. Hóa học: bàn thí nghiệm ảo nhận biết ion Cl⁻ bằng dung dịch AgNO₃. Sinh học: Nguyên phân 3D, tìm kì mà NST kép xếp hàng ở mặt phẳng xích đạo và tìm bộ phận tế bào theo chức năng. Mọi số đo do mô phỏng tính; hiện tượng và phương trình hóa học chép từ thư viện phản ứng của SimLab.
+- Soạn bài trong Science Studio: tạo, sửa, nhân bản, xóa và xem trước bài học cho ba môn; nhập và xuất tệp bài học. Chỉ chọn được những gì mô phỏng chạy được; bài soạn lưu trên máy này và luôn ghi “chưa được kiểm duyệt”.
+- Báo cáo bài học trong Science Studio: xem trước, sao chép hoặc lưu thành tệp, với số đo của mô phỏng tách riêng khỏi phần em viết; bài đang làm được giữ lại khi mở lại app. Nút “Hỏi thầy” mở AI Teacher với câu hỏi viết sẵn; thầy chỉ thấy số đo và ghi chú của bài khi em bật “Lấy thông tin từ màn hình”.
 - Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.
 - Thẻ 'Kết quả do SimLab tính' khi câu hỏi có phương trình hóa học: bộ cân bằng của SimLab giải phương trình, AI chỉ giải thích.
 - Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.
@@ -68,13 +69,14 @@ Bản lớn sau đợt rà soát toàn diện: AI Teacher dùng kết quả do S
 - Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.
 - Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).
 - Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.
-- Chưa dựng bộ cài Windows chính thức; bản Microsoft Store cần nộp gói mới.
-- Trước khi phát hành, chủ dự án còn phải bật thêm một số lớp bảo vệ cho quy trình phát hành trên GitHub.
+- Bản Microsoft Store cần nộp gói mới và chờ Microsoft duyệt, nên người dùng Store nhận bản này muộn hơn người dùng bản tải từ GitHub.
 - Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
 - Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
 - Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
-- “Khoanh để hỏi”, AI trên máy khác và câu trả lời hiện dần mới chỉ được thử với chương trình giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.
+- “Khoanh để hỏi”, AI trên máy khác, câu trả lời hiện dần và nút “Hỏi thầy” của Science Studio mới chỉ được thử với dịch vụ giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.
 - SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.
+- Nội dung bài học của Science Studio (mục tiêu, câu hỏi, gợi ý, kết luận tham khảo), thư viện phản ứng hóa học và mô tả kì, bộ phận tế bào của Nguyên phân 3D đang chờ giáo viên duyệt; Studio ghi “chưa được kiểm duyệt” cạnh những phần này.
+- Science Studio mới có một bài cho mỗi môn, và Soạn bài chỉ tạo được bài trên các mô phỏng đó: rơi tự do (Vật lí), các phản ứng tạo kết tủa có trong thư viện (Hóa học), Nguyên phân 3D (Sinh học).
 
 ## [0.5.2] - 2026-10-13
 
