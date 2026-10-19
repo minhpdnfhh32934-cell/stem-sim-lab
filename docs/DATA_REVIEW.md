@@ -264,3 +264,31 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
       so mức cơ năng với điểm cao nhất vật phải vượt qua theo chiều chuyển động (tìm số trên lưới
       mịn rồi tinh chỉnh), thêm hai trường hợp "trượt ra khỏi đầu trái" và "không còn đồi nào phía
       bên phải".
+25. **Hóa học – Sinh học: lời văn mới khi sửa lỗi mô hình (19/10/2026, bản 0.7).** Số liệu vẫn do
+    mô hình tính, không có số viết tay. `review_status: "pending"`. Nhờ giáo viên kiểm tra:
+    - Thẩm thấu, ống chữ U (`src/biology/transport/transport.ts`, `osmosisRunsDry`): nhánh nước có
+      hạn; khi h₀ < iC₀RT/(4ρg) nhánh nước cạn (h_R = 0) trước khi ρgΔh bằng Π. Mô hình dừng ở đó,
+      chip báo "Nhánh nước cạn trước khi Π được cân bằng" và đường "Δh khi nhánh nước cạn (chưa cân
+      bằng)"; Thẻ Khoa học thêm giả thiết "Nhánh nước có hạn…". Mô hình không mô tả tiếp phần nước
+      trong ống nối nằm ngang.
+    - Đột biến điểm (`src/biology/central/dogma.ts`, `analyzeMutation`): thêm loại "Tạo bộ ba mở
+      đầu mới phía trước" (`startGain`) cho đột biến ở vùng 5′ tạo ra AUG trước AUG cũ, theo giả
+      thiết của bài "dịch mã từ AUG đầu tiên". SGK không có loại này — xin xác nhận cách gọi. Thêm/
+      mất nuclêôtit ở vùng 5′ chỉ làm dịch vị trí AUG thì là "Ngoài vùng mã hóa"; thay thế tạo bộ ba
+      kết thúc sớm trong khung đọc không có bộ ba kết thúc ban đầu là "vô nghĩa".
+    - Trình tự ADN (`strandDirection`, `parseInput`): đọc dấu 5′/3′ ở hai đầu (cả ’ ‘ ` ´); mạch nhập
+      ngược chiều với mạch đã chọn được đảo lại, kèm lời báo cho người học.
+    - Cân bằng hóa học (`src/chemistry/particles/equilibrium.ts`, `extentSolution`): nồng độ tính
+      bằng nghiệm giải tích chính xác của phương trình tốc độ theo độ tiến phản ứng ξ (phương trình
+      Riccati, mọi hệ có bậc mỗi vế ≤ 2); DOPRI5/TR-BDF2 chỉ dùng cho hệ bậc cao hơn. Giới hạn ô
+      nhập: k ≤ 10⁶, Eₐ ≤ 300 kJ/mol (chọn để mô phỏng chạy được, không phải số liệu chất thật).
+    - Đối chiếu thư viện phản ứng (`matchLibrary`): so riêng từng vế; chiều nghịch chỉ khớp với phản
+      ứng thuận nghịch; cùng công thức phân tử nhưng viết khác (có thể là đồng phân khác) thì báo
+      "chưa được kiểm chứng".
+    - Nguyên tử trung tâm VSEPR (`src/chemistry/data/molecules.ts`, `centralAtom`,
+      `hasSeveralCentres`): chọn nguyên tử không phải H liên kết với nhiều nguyên tử nặng nhất (hòa
+      thì nhiều liên kết hơn, rồi độ âm điện nhỏ hơn). Phân tử có nhiều nguyên tử trung tâm không
+      tương đương (etyl axetat, glyxin, toluen, glucozơ) không hiện một kiểu AXₙEₘ chung.
+    - Lotka–Volterra (`src/biology/ecology/ecology.ts`): giải theo ln x, ln y; chip báo "sai số tích
+      lũy lớn, đường đi kém tin cậy" khi V lệch quá 10⁻⁶. Logistic: không có điểm uốn khi t ≥ 0 nếu
+      N₀ ≥ K/2.
