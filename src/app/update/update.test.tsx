@@ -89,6 +89,31 @@ describe('update window at start-up (in-app updates)', () => {
     expect(screen.getByRole('button', { name: 'Cập nhật ngay' })).toBeInTheDocument();
   });
 
+  it('a mandatory update closed by a non-cancelable Esc comes straight back', async () => {
+    await startUpCheck({ required: true });
+    const dialog = document.querySelector('dialog');
+    if (!dialog) throw new Error('no dialog');
+    // Chromium: the first Esc before any click is not cancelable and closes the dialog.
+    fireEvent(dialog, new Event('cancel', { cancelable: false }));
+    act(() => {
+      dialog.close();
+    });
+    expect(dialog.open).toBe(true);
+    expect(useUpdateStore.getState().dialogOpen).toBe(true);
+  });
+
+  it('a dialog closed behind the store is shown again by "Có bản mới"', async () => {
+    await startUpCheck({});
+    const dialog = document.querySelector('dialog');
+    if (!dialog) throw new Error('no dialog');
+    // Closed without its close event (as a browser may do): the store still says open.
+    dialog.removeAttribute('open');
+    act(() => {
+      useUpdateStore.setState({ dialogOpen: true });
+    });
+    expect(dialog.open).toBe(true);
+  });
+
   it('mandatory and a new installer: only the download page', async () => {
     await startUpCheck({ available: false, needsInstaller: true, required: true });
     expect(screen.getByRole('button', { name: 'Mở trang tải bộ cài' })).toBeInTheDocument();

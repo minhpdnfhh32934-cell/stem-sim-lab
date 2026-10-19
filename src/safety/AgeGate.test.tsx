@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { AgeGate } from './AgeGate';
@@ -29,5 +29,18 @@ describe('first-run age gate', () => {
     await waitFor(() => {
       expect(useSafetyStore.getState().status).toMatchObject({ answered: true, aiAllowed: false });
     });
+  });
+
+  it('an unanswered gate closed by a non-cancelable Esc comes straight back', async () => {
+    setSafetyBackendForTests(new BrowserSafety());
+    render(<AgeGate />);
+    await screen.findByRole('button', { name: 'Tôi chưa đủ 18 tuổi' });
+    const dialog = document.querySelector('dialog');
+    if (!dialog) throw new Error('no dialog');
+    fireEvent(dialog, new Event('cancel', { cancelable: false }));
+    act(() => {
+      dialog.close();
+    });
+    expect(dialog.open).toBe(true);
   });
 });
