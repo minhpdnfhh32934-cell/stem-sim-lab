@@ -10,6 +10,7 @@ import {
   centralAtom,
   deltaEn,
   distance,
+  hasSeveralCentres,
   lonePairs,
   moleculeById,
   neighbors,
@@ -32,6 +33,7 @@ export function MoleculePanel({ topic }: { topic: MoleculeTopic }) {
   const c = centralAtom(m);
   const v = vsepr(m, c);
   const pol = polarity(m);
+  const several = hasSeveralCentres(m);
 
   return (
     <div className="chem-form">
@@ -56,7 +58,7 @@ export function MoleculePanel({ topic }: { topic: MoleculeTopic }) {
               <code>{m.smiles}</code>
             </td>
           </tr>
-          {v.n >= 2 && (
+          {v.n >= 2 && !several && (
             <>
               <tr>
                 <th scope="row">
@@ -92,8 +94,18 @@ export function MoleculePanel({ topic }: { topic: MoleculeTopic }) {
           )}
         </tbody>
       </table>
+      {several && (
+        <p className="muted small">
+          {Lz(
+            L(
+              'Phân tử có nhiều nguyên tử trung tâm khác nhau, nên không có một kiểu AXₙEₘ chung: VSEPR áp dụng cho từng nguyên tử. Shift+nhấp 3 nguyên tử để đo góc quanh nguyên tử ở giữa.',
+              'This molecule has several different central atoms, so there is no single AXₙEₘ type: VSEPR applies to each atom. Shift+click 3 atoms to measure the angle around the middle one.',
+            ),
+          )}
+        </p>
+      )}
       <Selection m={m} atoms={atoms} bond={bond} />
-      {topic === 'vsepr' && m.atoms[c] && (
+      {topic === 'vsepr' && !several && m.atoms[c] && (
         <p className="muted small">
           {Lz(
             L(
