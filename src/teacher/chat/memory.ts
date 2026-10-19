@@ -296,9 +296,15 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
 /**
  * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
  * a new line (so the board keeps it as its own step); text cut mid-sentence goes on the same line.
+ * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
+ * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
  */
 export function joinContinuation(previous: string, rest: string): string {
   const next = rest.trimStart();
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
-  return /\s$/.test(previous) ? `${previous}${next}` : `${previous} ${next}`;
+  if (/\s$/.test(previous)) return `${previous}${next}`;
+  const insideNumber =
+    next === rest &&
+    (/\d$/.test(previous) ? /^[.,]?\d/.test(next) : /\d[.,]$/.test(previous) && /^\d/.test(next));
+  return insideNumber ? `${previous}${next}` : `${previous} ${next}`;
 }

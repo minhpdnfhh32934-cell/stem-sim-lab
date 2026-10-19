@@ -280,4 +280,14 @@ describe('"Viết tiếp" joins the rest of a cut answer', () => {
     expect(joinContinuation('Vật rơi với gia', 'tốc g.')).toBe('Vật rơi với gia tốc g.');
     expect(joinContinuation('Vật rơi với ', 'gia tốc g.')).toBe('Vật rơi với gia tốc g.');
   });
+
+  it('a cut inside a number never splits the number (0.7 fix)', () => {
+    expect(joinContinuation('Bước 14: x14 = 1', '4 m')).toBe('Bước 14: x14 = 14 m');
+    expect(joinContinuation('g = 9,', '81 m/s²')).toBe('g = 9,81 m/s²');
+    expect(joinContinuation('m = 2', '.5 kg')).toBe('m = 2.5 kg');
+    // A rest that starts with its own space, or a unit after the number, keeps the space.
+    expect(joinContinuation('Các số 1,', ' 2, 3')).toBe('Các số 1, 2, 3');
+    expect(joinContinuation('t = 2', 's')).toBe('t = 2 s');
+    expect(joinContinuation('x = 1', ' 4 m')).toBe('x = 1 4 m');
+  });
 });
