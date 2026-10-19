@@ -85,16 +85,29 @@ export type { DownloadProgress };
  * pipeline's repair loop (which feeds validation errors back) does the rest.
  */
 class GemmaTransport implements LlmTransport {
-  async chat(req: ChatRequest): Promise<ChatResponse> {
+  /**
+   * `signal` stops the generation on the GPU ("Hủy" in "Phân tích đề", leaving "Giải thích"):
+   * without it the cancelled work would keep the serialized Gemma queue busy.
+   */
+  async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
     const started = performance.now();
     const system = req.jsonSchema ? schemaInSystem(req.system, req.jsonSchema) : req.system;
-    const answer = await gemmaChatText({
-      model: req.model.trim(),
-      system,
-      messages: req.messages.map((m) => ({ role: m.role, content: m.content })),
-      ...(req.temperature !== undefined ? { temperature: req.temperature } : {}),
-      ...(req.maxTokens !== undefined ? { maxTokens: req.maxTokens } : {}),
-    });
+    let answer: Awaited<ReturnType<typeof gemmaChatText>>;
+    try {
+      answer = await gemmaChatText({
+        model: req.model.trim(),
+        system,
+        messages: req.messages.map((m) => ({ role: m.role, content: m.content })),
+        ...(req.temperature !== undefined ? { temperature: req.temperature } : {}),
+        ...(req.maxTokens !== undefined ? { maxTokens: req.maxTokens } : {}),
+        ...(signal ? { signal } : {}),
+      });
+    } catch (e) {
+      if (signal?.aborted || (e instanceof Error && e.message === 'cancelled')) {
+        throw new AiError('cancelled', 'cancelled');
+      }
+      throw e;
+    }
     if (!answer.content.trim()) throw new AiError('badResponse', 'missing content');
     return {
       content: answer.content,
