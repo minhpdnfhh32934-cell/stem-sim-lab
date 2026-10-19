@@ -11,9 +11,18 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 - **Users:** university students **18+** (bring their own Gemini key). **User decision 2026-10-12:**
   the supervised high-school **pilot edition was removed** (0.5.0) — there is one build only. Do not
   add editions, `VITE_EDITION`, Cargo edition features, PIN/consent flows or a second installer back.
-- **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model) —
-  **except** the in-app Gemma and Vietnamese voice of AI Teacher (see "AI Teacher exceptions"
-  below). All AI goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
+- **Local AI.** Until 2026-10-14 the rule was "no local AI of any kind" (no LM Studio/Ollama, no
+  local TTS/ASR/LLM/VAD/vision model), with the in-app Gemma and Vietnamese voice as the
+  2026-10-12 exceptions ("AI Teacher exceptions" below). **User decision 2026-10-14 (G8 brief,
+  item 4):** runtimes the user installs — Ollama, LM Studio, llama.cpp server, other
+  OpenAI-compatible local endpoints — are allowed, only through the loopback-only Rust route
+  (`src-tauri/src/ai/local/*`, `local_ai_*` commands, safety gate on every command): never in the
+  daily cap, never retried, never falling back to a cloud API; detection only on a button (the
+  three usual addresses; other addresses only when the user types them; no disk scan, no process
+  list); a picture only
+  to a model its runtime reports as reading pictures; Ollama cloud models refused. Legal notes:
+  `docs/LEGAL_COMPLIANCE.md` §2f. Cloud AI goes through the Rust `AIProvider` interface:
+  `GeminiProvider`, `ClaudeProvider`, `GroqProvider`.
   **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
   as a free fallback when paid tokens run out, but only after their terms (age,
   data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §2b. First candidate:
@@ -23,7 +32,7 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
   be saved before it; "under 18" keeps the simulations, AI off); "AI-assisted" labels, two-way
   moderation, incident log without private content, report button, minimal data.
 - Never commit API keys (`.env` is git-ignored); never embed a project key in an installer.
-- AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
+- Cloud AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
   problem readings; app fully usable without a key and offline (simulations, samples, manual mode).
 - UI for learners (A4): one main action per screen, Basic/Advanced modes, Level → Subject → Topic →
   Lesson, predict–observe–explain, challenges, step hints, no streaks/leaderboards, 1366×768,
@@ -43,7 +52,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
 - **Local AI:** Gemma runs inside the app (Transformers.js + ONNX Runtime Web on WebGPU, worker in
   `src/ai/webGemma*.ts`). Ollama is not used (the old `gemma.rs` was removed in 0.4.0). A local
   Vietnamese voice model (e.g. Piper) is allowed after its licence is checked and recorded in
-  `docs/THIRD_PARTY.md`. No other local model may be added without asking.
+  `docs/THIRD_PARTY.md`. No other model may be bundled or run inside the app without asking
+  (runtimes the user installs: the 2026-10-14 decision above).
 - **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
   (`tests/tauri-config.test.ts` pins the list). Nothing else.
 - Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
@@ -61,7 +71,9 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
-  `settings.nav.*`); other screens open a page with `openSettingsAt(id)`.
+  `settings.nav.*`); other screens open a page with `openSettingsAt(id)`. Page `runtimes` ("AI trên
+  máy khác", `src/teacher/chat/settings/LocalRuntimeSettings.tsx`): find, add an address, list the
+  runtime's real models, check connection / answer, choose, reset.
 - **Voice** (`src/teacher/voice/`): every spoken text goes through `toSpeech` + `splitForSpeech`
   (`vietnameseText.ts`, Vietnamese numbers/units/LaTeX/chemistry, tested) — never send raw text to a
   voice. Engines in `speak.ts`: Windows/Web Speech, Gemini TTS (Rust `ai/tts.rs` → `ai_tts`: model
@@ -69,9 +81,20 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   (`localVoice*.ts`, CC BY-NC 4.0, WebGPU else WASM, OPFS). A failing voice falls back to Windows
   and sets `lastError`. Licences: `docs/THIRD_PARTY.md`, `docs/LEGAL_COMPLIANCE.md` §2e.
 - **Whiteboard** (`src/teacher/board/`, design `docs/WHITEBOARD.md`): `teachscript.ts` (fault
-  tolerant, strips coordinates), `fromMarkdown.ts` (any answer → board), `layout.ts` (3 columns,
-  deterministic, property test: no overlap), `provenance.ts` (given / checked / unverified numbers),
-  `plot.ts` (safe expression reader, no `eval`), `lesson.ts` (voice and pen in step), `Whiteboard.tsx`.
+  tolerant, strips coordinates), `fromMarkdown.ts` (any answer → board), `layout.ts` (deterministic,
+  property test: no overlap; each face gets a template `wide`/`sideMain`/`mainRight`/`three` from
+  `planFaces`; what has no region or is too wide goes to a full-width band, shrunk only when the
+  whole board is too narrow), `formulaSplit.ts` (long equality chains on several lines),
+  `lessonCheck.ts` (every answer becomes a checked lesson: reasoning, prompt echoes, source lines
+  and bare markup are neither written nor said; greetings are said, not written; only positive
+  evidence drops a text), `provenance.ts` (given / checked / unverified numbers), `plot.ts` (safe
+  expression reader, no `eval`), `lesson.ts` (voice and pen in step; each run owns the board — a
+  stopped or replaced run can no longer `patch`, so an old pen never writes on another face),
+  `Whiteboard.tsx` (zoom steps `ZOOMS` 1–2× only scale the sheet). Answers are cleaned first by
+  `src/teacher/chat/answerClean.ts` + `src/ai/reasoning.ts`. "Khoanh để hỏi": `selection.ts` (pure
+  geometry; reads back the text/LaTeX/labels really on the board), `SelectionBar.tsx`,
+  `boardAsk.ts`; a picture (`selectionImage.ts`) only when no text was circled, and only to a
+  picture-reading model on this computer (`src/teacher/chat/pictureReader.ts`), never online.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
   integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (LUIDs change per
@@ -284,8 +307,24 @@ Progress log: `docs/PROGRESS.md`.
   Test key `__STEMSIM_TEST_GROQ_KEY__`; `open_groq_key_page`.
 - Default provider is **Gemini** (free tier, key from Google AI Studio; the key's creator must be
   18+, which the in-app guide says). Default model `DEFAULT_MODELS.gemini` in `src/ai/aiStore.ts`
-  (checked 2026-10; update when Google retires it). LM Studio was removed on request (2026-10):
-  it is the user's separate local tool, unrelated to this app. Do not add local providers back.
+  (checked 2026-10; update when Google retires it). LM Studio was removed as a provider on request
+  (2026-10). Since the 2026-10-14 decision, local runtimes (LM Studio included) come back only
+  through the separate loopback route below — never as an `AIProvider` or a fallback target.
+- **Streaming and errors (0.6.0):** `ai_chat_stream` (`stream.rs`) streams text answers with the
+  same gate, key check, daily cap, cancel and fallback rule; retries and the fallback happen only
+  before anything was shown. Every provider's answer loses its hidden reasoning in `reasoning.rs`
+  (twin `src/ai/reasoning.ts` + `thinkFilter.ts`, shared vectors `tests/fixtures/reasoning-strip.json`).
+  A call is registered for `ai_cancel` first (`InflightGuard`), so a stop during the checks is
+  never counted or sent. The fallback answers only on exhausted quota/credit (`is_quota_error`).
+  Learner-facing error kinds: `src/ai/errorKind.ts` (one rule for "Phân tích đề", AI Teacher and
+  Settings).
+- **Local runtimes (2026-10-14):** Rust `src-tauri/src/ai/local/` (`endpoint.rs` loopback parsing +
+  client without proxy/redirects, one adapter each in `ollama.rs`, `lmstudio.rs`, `llamacpp.rs`,
+  `openai_compat.rs`, `vision.rs`, `stream.rs` stall timers); commands `local_ai_detect`, `_probe`,
+  `_models`, `_model_info`, `_test`, `_chat` (streamed through a channel, reasoning removed). Page
+  side `src/ai/local/*`, store `stemsim.local-ai` (addresses re-checked on load, nothing contacted
+  on load). AI Teacher's third engine `local`; it never falls back online — only Think (on) sends
+  the local draft to the cloud reviewer, and Wikipedia / the Gemini voice only when turned on.
 - `src/ai/pipeline.ts` classify → extract → `buildDraft` (`src/ai/draft.ts`): numbers must appear
   in the text (`src/ai/numbers.ts`) or be implied by a phrase in `IMPLIED` with a real quote.
   Defaults are filled in code. `explain.ts` hides explanations containing foreign numbers.
