@@ -96,6 +96,11 @@ export function AppShell() {
   );
   const { presentation } = layout;
   const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
+  // A topic without a table or chart of its own (Mendel, Hardy–Weinberg) gives that height to
+  // the stage instead of an empty "no extra panel" box.
+  const moduleWithoutBottom = useModuleStore(
+    (s) => s.active !== null && s.active.view.Bottom === undefined,
+  );
   const teacher = useIsTeacher();
   const studio = useIsStudio() && !teacher;
   const landing = useIsLanding();
@@ -107,7 +112,7 @@ export function AppShell() {
   const showLeft = !presentation && !fullPage && !landing;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
   const showRight = !presentation && !home && !fullPage;
-  const showBottom = !presentation && !home && !fullPage;
+  const showBottom = !presentation && !home && !fullPage && !moduleWithoutBottom;
 
   const style = {
     '--left-w': `${layout.leftWidth}px`,
