@@ -27,6 +27,10 @@ export const stageKey = (stage: Stage3D) => `stage:${stage}`;
  * carries one status for all of them (the same for both cell types).
  */
 const DESCRIPTIONS_REVIEW = card3d('animal').reviewStatus;
+/** The visible review fact says what the data says; without a status it is never "verified". */
+const REVIEW_TEXT = both(
+  DESCRIPTIONS_REVIEW === 'verified' ? 'studio.bio.verified' : 'studio.bio.pending',
+);
 
 /** Inverse of `stageKey` (null for any other record). */
 export function stageOfKey(key: string): Stage3D | null {
@@ -66,7 +70,7 @@ export function stageEvidence(
     facts: [
       { id: 'cell', label: both('studio.bio.facts.cell'), text: CELL_TYPE_NAME[cellType] },
       { id: 'note', label: both('studio.bio.facts.note'), text: stageNote(stage, cellType) },
-      { id: 'review', label: both('studio.bio.facts.review'), text: both('studio.bio.pending') },
+      { id: 'review', label: both('studio.bio.facts.review'), text: REVIEW_TEXT },
     ],
     review_status: DESCRIPTIONS_REVIEW,
   };

@@ -1251,6 +1251,7 @@ const vi = {
       binding:
         'Bài học này chưa khớp với mô hình nguyên phân 3D hiện có. Nhờ giáo viên kiểm tra kịch bản.',
       pending: 'Mô tả kì và chức năng bộ phận chưa được kiểm duyệt.',
+      verified: 'Mô tả kì và chức năng bộ phận đã được kiểm duyệt.',
       sources: 'Nguồn: {list}',
       q: {
         diploid: 'Bộ NST 2n',

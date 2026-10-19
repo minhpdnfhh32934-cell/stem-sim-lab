@@ -1258,6 +1258,7 @@ const en: Messages = {
       binding:
         'This lesson does not match the current 3D mitosis model. Ask a teacher to check the scenario.',
       pending: 'Stage descriptions and part functions have not been reviewed yet.',
+      verified: 'Stage descriptions and part functions have been reviewed.',
       sources: 'Sources: {list}',
       q: {
         diploid: 'Chromosome set 2n',
