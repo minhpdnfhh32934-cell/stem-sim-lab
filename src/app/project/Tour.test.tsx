@@ -1,8 +1,10 @@
 import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { useNavigationStore } from '@/app/navigationStore';
 import { loadSafety } from '@/safety/safetyStore';
+import { FileMenu } from './FileMenu';
 import { Tour } from './Tour';
 import { startTour, useProjectUi } from './uiStore';
 
@@ -40,4 +42,26 @@ describe('first-run tour', () => {
     esc();
     expect(useProjectUi.getState().tourStep).toBeNull();
   });
+
+  it.each(['home', 'studio', 'teacher'] as const)(
+    '"Hướng dẫn nhanh" in the menu on the %s screen opens the lab and shows the tour there',
+    async (from) => {
+      useProjectUi.setState({ tourStep: null });
+      useNavigationStore.setState({ screen: from });
+      const user = userEvent.setup();
+      const { container } = render(
+        <>
+          <FileMenu />
+          <Tour />
+        </>,
+      );
+      const menu = container.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]');
+      if (!menu) throw new Error('no menu button');
+      await user.click(menu);
+      await user.click(screen.getByRole('menuitem', { name: 'Hướng dẫn nhanh' }));
+      expect(useNavigationStore.getState().screen).toBe('lab');
+      expect(useProjectUi.getState().tourStep).toBe(0);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    },
+  );
 });

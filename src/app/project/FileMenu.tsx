@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
+import { openLab } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
 import { IconButton } from '@/ui/IconButton';
@@ -75,7 +76,15 @@ export function FileMenu() {
       },
     },
     { icon: BookOpenCheck, label: t('project.privacy'), run: openPrivacy },
-    { icon: CircleHelp, label: t('project.tour'), run: startTour },
+    {
+      icon: CircleHelp,
+      label: t('project.tour'),
+      // The tour points at the lab: from the launch page, Studio or AI Teacher, go there first.
+      run: () => {
+        openLab();
+        startTour();
+      },
+    },
   ];
 
   return (
