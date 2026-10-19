@@ -11,12 +11,11 @@ Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán
 Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.
 
 - Số phiên bản ghi nhận: 11 (0.1.0 → 0.6.0).
-- Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026).
+- Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026).
 - Đã gộp, chưa phát hành: 0.5.1.
-- Đang xét duyệt: 0.6.0.
 - Bản phát triển, không phát hành: 0.1.0.
 - Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.
-- Phiên bản mới nhất trong dữ liệu: 0.6.0 (Đang xét duyệt).
+- Phiên bản mới nhất trong dữ liệu: 0.6.0 (Đã phát hành).
 
 ## II. Dòng thời gian phát triển từ bản gốc
 
@@ -34,7 +33,7 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 0.5.0 | Đã phát hành | 13/10/2026 (đã xác minh) | [#8](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8), [#11](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11), [#12](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12), [#13](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13), [#14](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14) | [v0.5.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0) |
 | 0.5.1 | Đã gộp, chưa phát hành | Chưa phát hành | [#15](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15), [#16](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16), [#17](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17) | — |
 | 0.5.2 | Đã phát hành | 13/10/2026 (đã xác minh) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | [v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) |
-| 0.6.0 | Đang xét duyệt | Chưa phát hành | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21) | — |
+| 0.6.0 | Đã phát hành | 19/10/2026 (đã xác minh) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | [v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) |
 
 ### Các mốc phát triển
 
@@ -69,13 +68,13 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 
 ## III. Chi tiết từng phiên bản
 
-### 0.6.0 (Đang xét duyệt)
+### 0.6.0 (Đã phát hành)
 
 Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa học, Sinh học, Vật lí và trang Soạn bài. AI Teacher giảng trên cả bảng, có “Khoanh để hỏi”, dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp), dùng kết quả do SimLab tính và nói rõ điều gì chưa kiểm chứng. Ngoài ra có mô phỏng Nguyên phân 3D, Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp và nhiều sửa lỗi bảo mật.
 
-- Trạng thái: Đang xét duyệt.
+- Trạng thái: Đã phát hành.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: Bản ứng viên phát hành 0.6.0, chưa phát hành. PR #20 (feat/audit-g0-g5) và PR #21 (G8, feat/teacher-board-runtime, đầu abc9e0c) đang mở, chưa gộp. Science Studio (các bước S1–S5 và bước chuẩn bị phát hành, 19/10/2026) nằm trên nhánh feat/science-studio chồng lên PR #21, chỉ có trên máy người phát triển: thay đổi đã stage, chưa commit, chưa có PR. Chưa có tag, GitHub Release hay lượt Release trên GitHub Actions; bộ cài chỉ được dựng thử trên máy người phát triển. Ghi chú công khai đã đặt notesReady: true để chuẩn bị phát hành — chủ dự án đọc lại trước khi chạy Release. Trước khi phát hành: gộp vào main; kiểm tra các cài đặt an toàn phát hành chỉ chủ repo bật được (docs/RELEASE.md, mục “An toàn khi phát hành”: environment release, secret ký chỉ ở environment, ruleset cho tag, kiểm tra bắt buộc, Immutable releases); không tích “Bắt buộc cập nhật” (bản này nâng phiên bản lõi). Sau khi gộp: status merged-not-released; sau khi publish: released.
+- Ghi chú trạng thái: Phát hành 19/10/2026 từ main @ feab5a8 (lượt Release 39246720932). Phần web và phần lõi cùng số 0.6.0, nên ứng dụng 0.5.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống).
 - Ghi chú công khai: đã duyệt để công bố (hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
@@ -83,9 +82,9 @@ Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa h
 | Bắt đầu phát triển | 13/10/2026 22:42 | `2026-10-13T22:42:01+07:00` |
 | Commit đầu tiên | 13/10/2026 22:42 | `2026-10-13T22:42:01+07:00` |
 | Commit cuối cùng | 19/10/2026 10:25 | `2026-10-19T10:25:02+07:00` |
-| Gộp vào nhánh (merge) | Chưa xác minh được | — |
-| Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
-| Phát hành (GitHub Release) | Chưa xác minh được | — |
+| Gộp vào nhánh (merge) | 19/10/2026 17:30 | `2026-10-19T10:30:25Z` |
+| Dựng bộ cài (GitHub Actions) | 19/10/2026 18:58 | `2026-10-19T11:58:19Z` |
+| Phát hành (GitHub Release) | 19/10/2026 18:58 | `2026-10-19T11:58:38Z` |
 | Tạo tag | Chưa xác minh được | — |
 
 **Tính năng mới**
@@ -182,6 +181,11 @@ Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa h
 - G8 AI paths: docs/AI\_COMPATIBILITY.md (checked 2026-10-19) — every row is unit/E2E-tested against fakes or implemented only; none verified with a real provider key or a real local runtime
 - PR #21 'G8: board shows only lessons, circle to ask, whole board, local AI runtimes, pen fix, honest AI connections' mở lúc 2026-10-19T03:48:53Z, nhánh feat/teacher-board-runtime, đầu abc9e0c, chưa gộp (gh pr list, 19/10/2026)
 - Science Studio: docs/work-log/2026-10-19-S1-core-physics.md, -S2-chemistry, -S3-biology, -S3b-biology-finish, -S4-authoring, -S5-ai-report và -release-prep; nhánh feat/science-studio trên máy người phát triển (đã stage, chưa commit); nội dung khoa học mới: docs/DATA\_REVIEW.md mục 20–23 (đang chờ duyệt)
+- PR #20 gộp 2026-10-19T09:14:09Z (a3b832d); PR #22 gộp 2026-10-19T09:45:44Z (c051a5e, kéo theo #21); PR #29 gộp 2026-10-19T10:00:56Z (cae3487); PR #30 gộp 2026-10-19T10:30:25Z (feab5a8), CI 8/8 đạt trên PR và trên main @ feab5a8
+- built: lượt Release 39246720932 (workflow\_dispatch, main, feab5a8), job 'Build Windows installers' xong 2026-10-19T11:58:19Z
+- released: GitHub Release v0.6.0 'SimLab 0.6.0', published\_at 2026-10-19T11:58:38Z, target feab5a8 (gh api …/releases/latest)
+- web-update.json: webVersion 0.6.0, minNative 0.6.0, minRequired "" (không bắt buộc), có signature và signatureV2
+- tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag
 
 ### 0.5.2 (Đã phát hành)
 
@@ -796,36 +800,36 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.5.2** (Đã phát hành, tính năng mới): Bản đồ nhỏ của bảng trắng.
 - **0.5.2** (Đã phát hành, sửa lỗi): Nút AI Teacher không còn che cột cuối của bảng; nay nằm ở góc vùng mô phỏng (sửa từ 0.5.1).
 - **0.5.2** (Đã phát hành, sửa lỗi): Khung chat không còn mở cao hết màn hình (sửa từ 0.5.1).
-- **0.6.0** (Đang xét duyệt, tính năng mới): Thẻ 'Kết quả do SimLab tính' khi câu hỏi có phương trình hóa học: bộ cân bằng của SimLab giải phương trình, AI chỉ giải thích.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.
-- **0.6.0** (Đang xét duyệt, tính năng mới): SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).
-- **0.6.0** (Đang xét duyệt, tính năng mới): “Khoanh để hỏi” trên bảng: khoanh, gạch chân hoặc chạm vào chỗ muốn hỏi rồi bấm “Hỏi thầy chỗ này”. App đọc đúng chữ, công thức và nhãn hình đang có trên bảng; câu trả lời hiện trong khung chat và bài giảng chờ đến khi bấm “Quay lại bài giảng”. Chỗ không có chữ chỉ được gửi dạng ảnh cho AI đọc ảnh chạy trên máy, không lên mạng.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Cài đặt → “AI trên máy khác”: tìm, kiểm tra và chọn chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp hoặc máy chủ kiểu OpenAI) cho AI Teacher, “Phân tích đề” và “AI diễn giải”. Chỉ dùng địa chỉ trên chính máy; khi chương trình lỗi, app nói rõ và không tự gửi câu hỏi lên mạng; mô hình cloud của Ollama bị từ chối.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Phóng to, thu nhỏ bảng (1–2×) và nút “Vừa khung”; chữ đã viết không đổi chỗ.
-- **0.6.0** (Đang xét duyệt, cải tiến): Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).
-- **0.6.0** (Đang xét duyệt, cải tiến): Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
-- **0.6.0** (Đang xét duyệt, cải tiến): Bảng chỉ trình bày nội dung bài học: phần suy nghĩ nội bộ của AI, câu lặp lại lời nhắc, dòng nguồn và ký hiệu định dạng thừa không được viết lên bảng hay đọc to; lời chào chỉ được nói, không viết.
-- **0.6.0** (Đang xét duyệt, cải tiến): Thầy dùng cả bảng: mỗi bảng được chia theo nội dung (một, hai hoặc ba cột), phần không vừa xuống một dải ngang cả bảng, công thức dài viết thành nhiều dòng; không có chữ đè lên nhau khi đổi cỡ cửa sổ hay phóng to.
-- **0.6.0** (Đang xét duyệt, sửa lỗi): Bút của thầy có thể vẫn viết trên bảng cũ khi chuyển sang bảng khác: nay mỗi lượt giảng chỉ viết trên bảng của nó, và quay lại bảng cũ thì phần đã viết vẫn còn.
-- **0.6.0** (Đang xét duyệt, sửa lỗi): “Viết tiếp” không còn ẩn hay đảo các dòng đã viết và không để lại phần dở dang.
-- **0.6.0** (Đang xét duyệt, sửa lỗi): Giữ phím Enter không còn gửi câu hỏi đang gõ trong ô chat.
-- **0.6.0** (Đang xét duyệt, bảo mật): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): “Khoanh để hỏi”, AI trên máy khác, câu trả lời hiện dần và nút “Hỏi thầy” của Science Studio mới chỉ được thử với dịch vụ giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.
+- **0.6.0** (Đã phát hành, tính năng mới): Thẻ 'Kết quả do SimLab tính' khi câu hỏi có phương trình hóa học: bộ cân bằng của SimLab giải phương trình, AI chỉ giải thích.
+- **0.6.0** (Đã phát hành, tính năng mới): Nút 'Gợi ý từng bước', và nút 'Xem mô phỏng' dưới câu trả lời khi câu hỏi nêu đúng tên một chủ đề có mô phỏng.
+- **0.6.0** (Đã phát hành, tính năng mới): Nút 'Dừng' để dừng câu trả lời đang viết, với Gemma lẫn AI trực tuyến.
+- **0.6.0** (Đã phát hành, tính năng mới): SimLab nhắc khi đề bài có thể còn thiếu số liệu, và liệt kê các con số AI tự đưa ra mà chưa ai cho (chưa kiểm chứng).
+- **0.6.0** (Đã phát hành, tính năng mới): “Khoanh để hỏi” trên bảng: khoanh, gạch chân hoặc chạm vào chỗ muốn hỏi rồi bấm “Hỏi thầy chỗ này”. App đọc đúng chữ, công thức và nhãn hình đang có trên bảng; câu trả lời hiện trong khung chat và bài giảng chờ đến khi bấm “Quay lại bài giảng”. Chỗ không có chữ chỉ được gửi dạng ảnh cho AI đọc ảnh chạy trên máy, không lên mạng.
+- **0.6.0** (Đã phát hành, tính năng mới): Cài đặt → “AI trên máy khác”: tìm, kiểm tra và chọn chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp hoặc máy chủ kiểu OpenAI) cho AI Teacher, “Phân tích đề” và “AI diễn giải”. Chỉ dùng địa chỉ trên chính máy; khi chương trình lỗi, app nói rõ và không tự gửi câu hỏi lên mạng; mô hình cloud của Ollama bị từ chối.
+- **0.6.0** (Đã phát hành, tính năng mới): Phóng to, thu nhỏ bảng (1–2×) và nút “Vừa khung”; chữ đã viết không đổi chỗ.
+- **0.6.0** (Đã phát hành, cải tiến): Với AI trực tuyến, AI Teacher được hướng dẫn giảng theo trình tự: mục tiêu, giải thích đơn giản, ví dụ, các bước có lý do, một lỗi hay gặp. Gemma được dặn trả lời thẳng câu hỏi trước rồi giải thích ngắn, có lý do. Câu trả lời về khái niệm được dặn kết thúc bằng một câu hỏi kiểm tra (trừ Gemma trên card đồ họa tích hợp, để câu trả lời ngắn); Gemma 1B thường chưa làm theo (khoảng 1/5 câu trả lời khi đo).
+- **0.6.0** (Đã phát hành, cải tiến): Tìm ghi chú kiến thức hợp với câu hỏi tốt hơn; ghi chú lạc đề không được gửi cho AI.
+- **0.6.0** (Đã phát hành, cải tiến): Bảng chỉ trình bày nội dung bài học: phần suy nghĩ nội bộ của AI, câu lặp lại lời nhắc, dòng nguồn và ký hiệu định dạng thừa không được viết lên bảng hay đọc to; lời chào chỉ được nói, không viết.
+- **0.6.0** (Đã phát hành, cải tiến): Thầy dùng cả bảng: mỗi bảng được chia theo nội dung (một, hai hoặc ba cột), phần không vừa xuống một dải ngang cả bảng, công thức dài viết thành nhiều dòng; không có chữ đè lên nhau khi đổi cỡ cửa sổ hay phóng to.
+- **0.6.0** (Đã phát hành, sửa lỗi): Bút của thầy có thể vẫn viết trên bảng cũ khi chuyển sang bảng khác: nay mỗi lượt giảng chỉ viết trên bảng của nó, và quay lại bảng cũ thì phần đã viết vẫn còn.
+- **0.6.0** (Đã phát hành, sửa lỗi): “Viết tiếp” không còn ẩn hay đảo các dòng đã viết và không để lại phần dở dang.
+- **0.6.0** (Đã phát hành, sửa lỗi): Giữ phím Enter không còn gửi câu hỏi đang gõ trong ô chat.
+- **0.6.0** (Đã phát hành, bảo mật): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
+- **0.6.0** (Đã phát hành, vấn đề đã biết): “Khoanh để hỏi”, AI trên máy khác, câu trả lời hiện dần và nút “Hỏi thầy” của Science Studio mới chỉ được thử với dịch vụ giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.
+- **0.6.0** (Đã phát hành, vấn đề đã biết): SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.
 
 ### Giọng nói
 
 - **0.5.0** (Đã phát hành, tính năng mới): Giọng đọc tiếng Việt với 3 nguồn: giọng Windows, Gemini TTS (trực tuyến) và giọng MMS chạy ngay trên máy.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.
-- **0.6.0** (Đang xét duyệt, cải tiến): Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, \[S\], (aq), mũi tên phản ứng).
-- **0.6.0** (Đang xét duyệt, cải tiến): Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.
-- **0.6.0** (Đang xét duyệt, cải tiến): Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.
-- **0.6.0** (Đang xét duyệt, cải tiến): Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, "tan" trong hòa tan.
-- **0.6.0** (Đang xét duyệt, sửa lỗi): Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.
-- **0.6.0** (Đang xét duyệt, sửa lỗi): Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
+- **0.6.0** (Đã phát hành, tính năng mới): Cảnh báo khi bật giọng đọc mà máy không có giọng tiếng Việt.
+- **0.6.0** (Đã phát hành, cải tiến): Thầy đọc đúng chữ đang viết trên bảng; tạm dừng giữa câu thì đọc lại câu đó; đọc ký hiệu đúng hơn (2n, \[S\], (aq), mũi tên phản ứng).
+- **0.6.0** (Đã phát hành, cải tiến): Khi giọng đọc gặp lỗi, giọng dự phòng đọc tiếp từ đoạn chưa nghe, không đọc lặp.
+- **0.6.0** (Đã phát hành, cải tiến): Giọng đọc trên máy: âm lượng giữa các đoạn như nhau, tiếng đầu tiên đến sớm hơn, ngắt nghỉ theo câu và mệnh đề, không cắt giữa số và đơn vị; trước ý chính có một quãng nghỉ ngắn.
+- **0.6.0** (Đã phát hành, cải tiến): Đọc đúng hơn nhiều ký hiệu khoa học: MeV, MPa, đơn vị mét vuông/mét khối, cấu hình electron, mũi tên phản ứng, "tan" trong hòa tan.
+- **0.6.0** (Đã phát hành, sửa lỗi): Khi bật giọng đọc, bài giảng trên bảng có thể dừng sau câu đầu tiên.
+- **0.6.0** (Đã phát hành, sửa lỗi): Giọng đọc chạy trên máy không bao giờ nạp lại vào card đồ họa vừa gặp lỗi; khi card lỗi, giọng chuyển sang CPU.
+- **0.6.0** (Đã phát hành, vấn đề đã biết): Trên máy không có card đồ họa rời, giọng đọc trên máy chạy bằng CPU và chậm hơn lời nói nên có quãng chờ giữa các đoạn; ở bản này quãng chờ còn dài hơn trước (trung vị 7,3 s → 8,4 s mỗi câu, đo trên 19 câu).
+- **0.6.0** (Đã phát hành, vấn đề đã biết): Giọng MMS không có ngữ điệu, cảm xúc thật; chưa có người nghe chấm độ tự nhiên.
 
 ### Gemma chạy trên máy (local)
 
@@ -845,12 +849,12 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.5.0** (Đã phát hành, sửa lỗi): Gemma luôn chạy trên card tích hợp dù máy có card rời.
 - **0.5.2** (Đã phát hành, tính năng mới): Câu trả lời của Gemma hiện dần từng chữ.
 - **0.5.2** (Đã phát hành, bảo mật): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.
-- **0.6.0** (Đang xét duyệt, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).
-- **0.6.0** (Đang xét duyệt, sửa lỗi): Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.
-- **0.6.0** (Đang xét duyệt, bảo mật): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
-- **0.6.0** (Đang xét duyệt, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
+- **0.6.0** (Đã phát hành, cải tiến): Gemma trả lời đúng ý hơn và bắt đầu nhanh hơn; câu trả lời lẫn chữ nước ngoài ít hơn hẳn (50 % → 7 %) và viết méo thuật ngữ cũng ít hơn (19 % → 4,8 %), nhưng vẫn còn (đo với Gemma 1B trên 42 câu hỏi; câu trả lời dài hơn trước).
+- **0.6.0** (Đã phát hành, sửa lỗi): Gemma có thể làm treo card đồ họa tích hợp và khiến máy khởi động lại: nay sau một lỗi card, Gemma dừng tới khi mở lại app; card tích hợp dùng lời nhắc ngắn hơn; câu trả lời bị treo được tự dừng.
+- **0.6.0** (Đã phát hành, bảo mật): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
+- **0.6.0** (Đã phát hành, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.
+- **0.6.0** (Đã phát hành, vấn đề đã biết): Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.
+- **0.6.0** (Đã phát hành, vấn đề đã biết): Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.
 
 ### AI qua API (Gemini, Claude, Groq)
 
@@ -868,18 +872,18 @@ Gom từ các ghi chú có area teacher, voice, gemma và api, cũ nhất ở tr
 - **0.4.0** (Chưa xác minh, sửa lỗi): Think với Gemini và dự phòng Groq luôn bị từ chối.
 - **0.4.1** (Đã phát hành, tính năng mới): Think: một nhà cung cấp AI thứ hai rà soát và viết lại câu trả lời.
 - **0.4.1** (Đã phát hành, sửa lỗi): Think không còn bị từ chối khi dùng Gemini kèm dự phòng Groq.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Trên ứng dụng desktop, câu trả lời của AI trực tuyến (Gemini, Claude, Groq) hiện dần trong khi đang viết.
-- **0.6.0** (Đang xét duyệt, cải tiến): Lỗi AI được nói bằng lời dễ hiểu (hết lượt, sai khóa, mất mạng, chương trình trên máy chưa mở…), dòng “gửi tới” nêu đúng nơi câu hỏi sẽ được gửi, và nhà cung cấp dự phòng chỉ trả lời khi nhà cung cấp chính hết lượt hoặc hết tiền.
-- **0.6.0** (Đang xét duyệt, bảo mật): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).
+- **0.6.0** (Đã phát hành, tính năng mới): Trên ứng dụng desktop, câu trả lời của AI trực tuyến (Gemini, Claude, Groq) hiện dần trong khi đang viết.
+- **0.6.0** (Đã phát hành, cải tiến): Lỗi AI được nói bằng lời dễ hiểu (hết lượt, sai khóa, mất mạng, chương trình trên máy chưa mở…), dòng “gửi tới” nêu đúng nơi câu hỏi sẽ được gửi, và nhà cung cấp dự phòng chỉ trả lời khi nhà cung cấp chính hết lượt hoặc hết tiền.
+- **0.6.0** (Đã phát hành, bảo mật): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
+- **0.6.0** (Đã phát hành, vấn đề đã biết): Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).
 
 ## V. Cải tiến mô phỏng 3D Sinh học
 
-Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đang xét duyệt); các phiên bản trước không có ghi chú nào về mô phỏng 3D Sinh học.
+Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đã phát hành); các phiên bản trước không có ghi chú nào về mô phỏng 3D Sinh học.
 
-- **0.6.0** (Đang xét duyệt, tính năng mới): Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.
-- **0.6.0** (Đang xét duyệt, tính năng mới): Nguyên phân 3D: nút “Hỏi thầy về bộ phận này” mở AI Teacher với câu hỏi viết sẵn về bộ phận đang chọn.
-- **0.6.0** (Đang xét duyệt, vấn đề đã biết): Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.
+- **0.6.0** (Đã phát hành, tính năng mới): Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.
+- **0.6.0** (Đã phát hành, tính năng mới): Nguyên phân 3D: nút “Hỏi thầy về bộ phận này” mở AI Teacher với câu hỏi viết sẵn về bộ phận đang chọn.
+- **0.6.0** (Đã phát hành, vấn đề đã biết): Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.
 
 **Kiểm thử liên quan**
 
@@ -897,17 +901,17 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 - **0.4.1** (Đã phát hành): Tra Wikipedia thành tùy chọn, mặc định tắt (bản fork trước đó gửi câu hỏi tới Wikipedia mỗi lần mà không báo).
 - **0.4.1** (Đã phát hành): Trang ngoài chỉ mở được từ một danh sách cố định.
 - **0.5.2** (Đã phát hành): Mỗi đoạn trả lời hiện dần của Gemma đều qua bộ lọc an toàn; có đoạn không an toàn thì cả câu trả lời bị thu lại.
-- **0.6.0** (Đang xét duyệt): Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.
-- **0.6.0** (Đang xét duyệt): Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.
-- **0.6.0** (Đang xét duyệt): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
-- **0.6.0** (Đang xét duyệt): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
-- **0.6.0** (Đang xét duyệt): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
+- **0.6.0** (Đã phát hành): Quy trình phát hành chặt hơn: chỉ phát hành mã đã có trên nhánh chính, bước ký số chạy riêng, mọi công cụ tự động được ghim đúng phiên bản; bật quét bí mật và cảnh báo thư viện có lỗ hổng.
+- **0.6.0** (Đã phát hành): Liên kết do AI viết không còn bấm được, và cửa sổ app không mở trang web lạ bên trong.
+- **0.6.0** (Đã phát hành): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.
+- **0.6.0** (Đã phát hành): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).
+- **0.6.0** (Đã phát hành): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.
 
 ### Hiệu năng
 
 - **0.5.0** (Đã phát hành): Bộ cài và gói cập nhật nhỏ hơn: bộ cài 21,6 MB (0.4.1) → 11,7 MB, gói cập nhật 32,1 MB → 18,2 MB.
 - **0.5.2** (Đã phát hành): Tìm nhanh chỉ được tải khi dùng lần đầu (gói 6 kB), nên app mở vẫn nhẹ.
-- **0.6.0** (Đang xét duyệt): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.
+- **0.6.0** (Đã phát hành): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.
 
 ### Kết quả kiểm thử
 
@@ -967,7 +971,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 - Job 'Tests before packaging' đạt (run 38415240996)
 - Hai E2E mở module Sinh học lần đầu có thể hết giờ khi chạy song song trên Windows; lần chạy đầu của PR #19 có 4 lần hết giờ khi máy tải nặng, chạy lại thì qua
 
-**0.6.0** (Đang xét duyệt)
+**0.6.0** (Đã phát hành)
 
 - format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT\_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)
 - App desktop bản release dựng trên máy người phát triển: chặn điều hướng ra trang ngoài, công thức KaTeX đúng vị trí, mô phỏng 3D mở được (AUDIT)
@@ -980,7 +984,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 
 ## VII. Những vấn đề chưa hoàn thành
 
-### Vấn đề đã biết của bản mới nhất (0.6.0, Đang xét duyệt)
+### Vấn đề đã biết của bản mới nhất (0.6.0, Đã phát hành)
 
 - Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.
 - Chưa đánh giá cách giảng với Gemini, Claude hoặc Groq thật (chưa có khóa để thử).
@@ -996,7 +1000,6 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đa
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.6.0** (Đang xét duyệt): Bản ứng viên phát hành 0.6.0, chưa phát hành. PR #20 (feat/audit-g0-g5) và PR #21 (G8, feat/teacher-board-runtime, đầu abc9e0c) đang mở, chưa gộp. Science Studio (các bước S1–S5 và bước chuẩn bị phát hành, 19/10/2026) nằm trên nhánh feat/science-studio chồng lên PR #21, chỉ có trên máy người phát triển: thay đổi đã stage, chưa commit, chưa có PR. Chưa có tag, GitHub Release hay lượt Release trên GitHub Actions; bộ cài chỉ được dựng thử trên máy người phát triển. Ghi chú công khai đã đặt notesReady: true để chuẩn bị phát hành — chủ dự án đọc lại trước khi chạy Release. Trước khi phát hành: gộp vào main; kiểm tra các cài đặt an toàn phát hành chỉ chủ repo bật được (docs/RELEASE.md, mục “An toàn khi phát hành”: environment release, secret ký chỉ ở environment, ruleset cho tag, kiểm tra bắt buộc, Immutable releases); không tích “Bắt buộc cập nhật” (bản này nâng phiên bản lõi). Sau khi gộp: status merged-not-released; sau khi publish: released.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
 - **0.4.2** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.
@@ -1020,7 +1023,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0.6.0 | — | — | — | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21) | `511345d` → `f527f18` → `8a3c48d` → `abc9e0c` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history`, `feat/local-ai-runtime`, `feat/teacher-board-runtime`, `feat/science-studio` |
+| 0.6.0 | `v0.6.0` | `feab5a8eec14e7ac728a0b5ca75629259ed87a3f` | [Release v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | `511345d` → `f527f18` → `8a3c48d` → `abc9e0c` → `c051a5e` → `cae3487` → `feab5a8` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history`, `feat/local-ai-runtime`, `feat/teacher-board-runtime`, `feat/science-studio`, `fix/release-0.6.0`, `fix/mitosis-card-linux` |
 | 0.5.2 | `v0.5.2` | `c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da` | [Release v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | `f25e3ae` → `c25ad9d` | `feat/ui-polish`, `release/0.5.2` |
 | 0.5.1 | — | — | — | [#15](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15), [#16](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16), [#17](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17) | `2d506e7` → `069df6c` | `feat/microsoft-store`, `chore/store-identity`, `chore/store-manual-submit` |
 | 0.5.0 | `v0.5.0` | `c6d01f4081eee86e244136074e6997dd64bebe3f` | [Release v0.5.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0) | [#8](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/8), [#11](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/11), [#12](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/12), [#13](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/13), [#14](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/14) | `cbb176a` → `c6d01f4` | `feat/simlab-ai-teacher-board`, `feat/v0.5.0-gpu-thay-ai`, `fix/knowledge-review-status`, `perf/ort-asyncify-only`, `chore/message-parse-module` |

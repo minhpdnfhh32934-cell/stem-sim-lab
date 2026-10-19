@@ -153,16 +153,16 @@
   "versions": [
     {
       "version": "0.6.0",
-      "status": "in-review",
-      "statusNote": "Bản ứng viên phát hành 0.6.0, chưa phát hành. PR #20 (feat/audit-g0-g5) và PR #21 (G8, feat/teacher-board-runtime, đầu abc9e0c) đang mở, chưa gộp. Science Studio (các bước S1–S5 và bước chuẩn bị phát hành, 19/10/2026) nằm trên nhánh feat/science-studio chồng lên PR #21, chỉ có trên máy người phát triển: thay đổi đã stage, chưa commit, chưa có PR. Chưa có tag, GitHub Release hay lượt Release trên GitHub Actions; bộ cài chỉ được dựng thử trên máy người phát triển. Ghi chú công khai đã đặt notesReady: true để chuẩn bị phát hành — chủ dự án đọc lại trước khi chạy Release. Trước khi phát hành: gộp vào main; kiểm tra các cài đặt an toàn phát hành chỉ chủ repo bật được (docs/RELEASE.md, mục “An toàn khi phát hành”: environment release, secret ký chỉ ở environment, ruleset cho tag, kiểm tra bắt buộc, Immutable releases); không tích “Bắt buộc cập nhật” (bản này nâng phiên bản lõi). Sau khi gộp: status merged-not-released; sau khi publish: released.",
+      "status": "released",
+      "statusNote": "Phát hành 19/10/2026 từ main @ feab5a8 (lượt Release 39246720932). Phần web và phần lõi cùng số 0.6.0, nên ứng dụng 0.5.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống).",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-13T22:42:01+07:00",
         "firstCommit": "2026-10-13T22:42:01+07:00",
         "lastCommit": "2026-10-19T10:25:02+07:00",
-        "merged": null,
-        "built": null,
-        "released": null,
+        "merged": "2026-10-19T10:30:25Z",
+        "built": "2026-10-19T11:58:19Z",
+        "released": "2026-10-19T11:58:38Z",
         "tagged": null
       },
       "evidence": [
@@ -179,7 +179,12 @@
         "G8: 120 commit 895ecf6..051816b (14/10–19/10/2026) trên feat/teacher-board-runtime, gồm nhánh gộp feat/local-ai-runtime (9a49b83, aac007a); đường dẫn dữ liệu mới và điều cần xác nhận: docs/AI_TUTOR.md 'Where data goes', docs/LEGAL_COMPLIANCE.md mục 2f",
         "G8 AI paths: docs/AI_COMPATIBILITY.md (checked 2026-10-19) — every row is unit/E2E-tested against fakes or implemented only; none verified with a real provider key or a real local runtime",
         "PR #21 'G8: board shows only lessons, circle to ask, whole board, local AI runtimes, pen fix, honest AI connections' mở lúc 2026-10-19T03:48:53Z, nhánh feat/teacher-board-runtime, đầu abc9e0c, chưa gộp (gh pr list, 19/10/2026)",
-        "Science Studio: docs/work-log/2026-10-19-S1-core-physics.md, -S2-chemistry, -S3-biology, -S3b-biology-finish, -S4-authoring, -S5-ai-report và -release-prep; nhánh feat/science-studio trên máy người phát triển (đã stage, chưa commit); nội dung khoa học mới: docs/DATA_REVIEW.md mục 20–23 (đang chờ duyệt)"
+        "Science Studio: docs/work-log/2026-10-19-S1-core-physics.md, -S2-chemistry, -S3-biology, -S3b-biology-finish, -S4-authoring, -S5-ai-report và -release-prep; nhánh feat/science-studio trên máy người phát triển (đã stage, chưa commit); nội dung khoa học mới: docs/DATA_REVIEW.md mục 20–23 (đang chờ duyệt)",
+        "PR #20 gộp 2026-10-19T09:14:09Z (a3b832d); PR #22 gộp 2026-10-19T09:45:44Z (c051a5e, kéo theo #21); PR #29 gộp 2026-10-19T10:00:56Z (cae3487); PR #30 gộp 2026-10-19T10:30:25Z (feab5a8), CI 8/8 đạt trên PR và trên main @ feab5a8",
+        "built: lượt Release 39246720932 (workflow_dispatch, main, feab5a8), job 'Build Windows installers' xong 2026-10-19T11:58:19Z",
+        "released: GitHub Release v0.6.0 'SimLab 0.6.0', published_at 2026-10-19T11:58:38Z, target feab5a8 (gh api …/releases/latest)",
+        "web-update.json: webVersion 0.6.0, minNative 0.6.0, minRequired \"\" (không bắt buộc), có signature và signatureV2",
+        "tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag"
       ],
       "tests": [
         "format, lint, typecheck sạch; 792/792 unit test (106 tệp); E2E 52/52 hai lần liên tiếp; Rust fmt + clippy -D warnings + 71 test; npm audit 0; cargo audit 0 lỗ hổng (2 cảnh báo cũ); build web (docs/AUDIT_2026-10-13.md 'Kiểm tra cuối (14/10)', đầu PR #20)",
@@ -192,11 +197,11 @@
         "Science Studio + chuẩn bị phát hành (19/10/2026, nhánh feat/science-studio): xem docs/PROGRESS.md hàng '0.6.0-studio' và docs/work-log/2026-10-19-release-prep.md"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
-        "prs": [20, 21],
-        "commits": ["511345d", "f527f18", "8a3c48d", "abc9e0c"],
+        "tag": "v0.6.0",
+        "tagSha": "feab5a8eec14e7ac728a0b5ca75629259ed87a3f",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0",
+        "prs": [20, 21, 22, 29, 30],
+        "commits": ["511345d", "f527f18", "8a3c48d", "abc9e0c", "c051a5e", "cae3487", "feab5a8"],
         "branches": [
           "feat/audit-g0-g5",
           "feat/mitosis-3d",
@@ -205,7 +210,9 @@
           "feat/release-history",
           "feat/local-ai-runtime",
           "feat/teacher-board-runtime",
-          "feat/science-studio"
+          "feat/science-studio",
+          "fix/release-0.6.0",
+          "fix/mitosis-card-linux"
         ]
       },
       "publicNotes": {
