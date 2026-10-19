@@ -2,6 +2,7 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
+import { normalize, WORD_END, WORD_START } from '@/safety/moderation';
 import { mentions, quoteInText } from './numbers';
 import { allowedUnits, type Extraction } from './spec';
 
@@ -45,7 +46,8 @@ const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 /**
  * Values that Vietnamese problems state in words rather than digits. The AI may return
  * them only together with a quote containing one of these phrases (checked against the
- * problem text), so no number is ever invented.
+ * problem text), so no number is ever invented. A phrase counts only as a whole phrase and
+ * only when it is not negated ("không đàn hồi", "không nhẵn", "không đứng yên").
  */
 const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
   {
@@ -77,19 +79,49 @@ const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
     value: 0,
     phrases: ['mặt đất', 'gốc tọa độ', 'chân dốc', 'từ a', 'tại a'],
   },
-  { keys: /^e$/, value: 1, phrases: ['đàn hồi'] },
+  // "đàn hồi" alone is not enough: "lò xo đàn hồi", "va chạm không đàn hồi".
+  {
+    keys: /^e$/,
+    value: 1,
+    phrases: ['va chạm đàn hồi', 'hoàn toàn đàn hồi', 'đàn hồi hoàn toàn', 'đàn hồi tuyệt đối'],
+  },
   { keys: /^e$/, value: 0, phrases: ['va chạm mềm', 'dính vào nhau', 'dính nhau', 'dính liền'] },
   { keys: /^angle$/, value: 0, phrases: ['ném ngang', 'phương ngang', 'nằm ngang'] },
   { keys: /^beta$/, value: 0, phrases: ['phương ngang', 'nằm ngang', 'song song', 'dọc theo'] },
 ];
 
+/** Words that turn the phrase after them around ("không khí"/"không gian" are nouns, not "not"). */
+const NEGATION = new RegExp(
+  `${WORD_START}(?:không(?! (?:khí|gian))|chưa|chẳng|chả|not|never)${WORD_END}`,
+  'u',
+);
+/** How many words before a phrase may negate it, within the same clause. */
+const NEGATION_REACH = 3;
+
+/** True when `phrase` stands in `q` as a whole phrase with no negation shortly before it. */
+function statedPlainly(q: string, phrase: string): boolean {
+  const re = new RegExp(`${WORD_START}${phrase}${WORD_END}`, 'gu');
+  for (const m of q.matchAll(re)) {
+    const clause =
+      q
+        .slice(0, m.index)
+        .split(/[,;:.!?()]/)
+        .pop() ?? '';
+    const before = clause.trim().split(' ').slice(-NEGATION_REACH).join(' ');
+    if (!NEGATION.test(before)) return true;
+  }
+  return false;
+}
+
 /** True when `value` for `key` is stated in words by a phrase inside a genuine quote. */
 export function impliedByWords(key: string, value: number, quote: string, text: string): boolean {
   if (!quote || !quoteInText(text, quote)) return false;
-  const q = quote.toLowerCase();
+  const q = normalize(quote);
   return IMPLIED.some(
     (rule) =>
-      rule.keys.test(key) && rule.value === value && rule.phrases.some((ph) => q.includes(ph)),
+      rule.keys.test(key) &&
+      rule.value === value &&
+      rule.phrases.some((ph) => statedPlainly(q, ph)),
   );
 }
 

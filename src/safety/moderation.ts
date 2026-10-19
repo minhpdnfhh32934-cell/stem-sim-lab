@@ -21,8 +21,10 @@ export function normalize(text: string): string {
 }
 
 /** Word-ish boundary that also works with Vietnamese letters (JS `\b` is ASCII only). */
-const B = String.raw`(?<![\p{L}\p{N}])`;
-const E = String.raw`(?![\p{L}\p{N}])`;
+export const WORD_START = String.raw`(?<![\p{L}\p{N}])`;
+export const WORD_END = String.raw`(?![\p{L}\p{N}])`;
+const B = WORD_START;
+const E = WORD_END;
 const anyOf = (phrases: readonly string[]) => new RegExp(`${B}(?:${phrases.join('|')})${E}`, 'u');
 
 /** Signs that someone may be in crisis: show the support card, do not send to the AI. */

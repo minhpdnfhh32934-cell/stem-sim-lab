@@ -53,10 +53,17 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
    theo mặc định luôn được gắn nhãn "mặc định". Khi đề bài cho g, app luôn dùng giá trị của đề.
 
 2. **Bảng cụm từ "nói bằng lời" của AI đọc đề** (`src/ai/draft.ts`, hằng `IMPLIED`). Ví dụ: "thả
-   nhẹ", "từ trạng thái nghỉ" → vận tốc đầu = 0; "không ma sát", "nhẵn" → μ = 0; "đàn hồi" → e = 1;
-   "va chạm mềm", "dính vào nhau" → e = 0; "ném ngang" → góc = 0. Đây là quy ước ngôn ngữ trong đề
-   Vật lí THPT, cần giáo viên xác nhận. Lưu ý: "va chạm đàn hồi" trong SGK THPT hiểu là hoàn toàn
-   đàn hồi (e = 1). `review_status: "pending"`.
+   nhẹ", "từ trạng thái nghỉ" → vận tốc đầu = 0; "không ma sát", "nhẵn" → μ = 0; "va chạm đàn
+   hồi", "hoàn toàn đàn hồi", "đàn hồi hoàn toàn", "đàn hồi tuyệt đối" → e = 1; "va chạm mềm",
+   "dính vào nhau" → e = 0; "ném ngang" → góc = 0. Đây là quy ước ngôn ngữ trong đề Vật lí THPT,
+   cần giáo viên xác nhận. Lưu ý: "va chạm đàn hồi" trong SGK THPT hiểu là hoàn toàn đàn hồi
+   (e = 1). `review_status: "pending"`.
+   - 0.7 (sửa lỗi): chữ "đàn hồi" đứng một mình không còn được hiểu là e = 1 ("lò xo đàn hồi",
+     "va chạm không đàn hồi"). Một cụm từ chỉ được tính khi đứng nguyên cụm và **không** có từ phủ
+     định ("không", "chưa", "chẳng", "chả", "not", "never") trong 3 từ đứng trước nó, cùng mệnh đề
+     ("không khí", "không gian" không phải phủ định). Ví dụ "mặt bàn không nhẵn" không còn cho
+     μ = 0, "không đứng yên" không còn cho v₀ = 0. Nhờ giáo viên xem danh sách cụm từ e = 1 mới và
+     cách nhận phủ định. `review_status: "pending"`.
 
 3. **Dữ liệu 118 nguyên tố** (`data/elements.json`, sinh từ `mendeleev`): nguyên tử khối,
    độ âm điện, bán kính, cấu hình electron, năng lượng ion hóa. Nhờ giáo viên đối chiếu các nguyên
