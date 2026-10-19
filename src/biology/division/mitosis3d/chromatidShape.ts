@@ -77,6 +77,11 @@ export function tubeProfile(info: ChromatidInfo, stations: ArrayLike<number>): T
     tip[i] = plain;
     waist[i] = plain > 0 ? 1 - rodRadius(s, info.armA, info.armB, ROD_RADIUS, 1) / plain : 0;
   }
+  // The end rings are the tips themselves (no float rounding leaves a sliver of radius there).
+  if (tip.length > 0) {
+    tip[0] = 0;
+    tip[tip.length - 1] = 0;
+  }
   // The waist share never exceeds the constriction depth.
   for (let i = 0; i < waist.length; i++)
     waist[i] = Math.min(CONSTRICTION.depth, Math.max(0, waist[i] ?? 0));
@@ -120,7 +125,10 @@ export function writeCentreline(
   const [ax, ay, az] = o.dirA;
   const [bx, by, bz] = o.dirB;
   const m = o.m;
-  const w = CORNER;
+  // Short arms (big chromosome sets) keep the corner and the pinch off their tips.
+  const shorter = Math.min(info.armA, info.armB);
+  const w = Math.min(CORNER, 0.45 * shorter);
+  const reach = Math.min(PINCH_REACH, 0.7 * shorter);
   // The waists touch: each sister moves its waist by the gap between the two waist surfaces.
   const waistR = rodRadius(0, info.armA, info.armB, ROD_RADIUS, 1);
   const shift = Math.max(0, SISTER_OFFSET - waistR) * o.pinch * m;
@@ -148,7 +156,7 @@ export function writeCentreline(
       rz = cz + az * p0 + bz * p2;
     }
     if (shift > 0) {
-      const x = Math.min(1, Math.abs(s) / PINCH_REACH);
+      const x = Math.min(1, Math.abs(s) / reach);
       const k = shift * (1 - x * x * (3 - 2 * x));
       rx += o.towardSister[0] * k;
       ry += o.towardSister[1] * k;

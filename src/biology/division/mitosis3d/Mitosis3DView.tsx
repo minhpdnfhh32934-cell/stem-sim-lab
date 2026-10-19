@@ -6,6 +6,7 @@ import {
   Pause,
   Play,
   RotateCcw,
+  Tags,
   X,
 } from 'lucide-react';
 import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties } from 'react';
@@ -19,6 +20,7 @@ import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
+import { LabelLayer } from '@/ui/three/labelLayer';
 import { usePlayback } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory, type RendererLike } from '@/ui/three/renderer';
@@ -38,7 +40,7 @@ import {
   type CameraMode,
   type Selection,
 } from './components';
-import { FOV, VIEW_DIR, defaultInsets, placeCamera, type Insets } from './camera';
+import { FOV, VIEW_DIR, defaultInsets, placeCamera, spherePoints, type Insets } from './camera';
 import { buildMitosisScene, type MitosisScene, type ScenePalette } from './scene';
 import { useCardHeadFit } from './partCardHead';
 import { stateFor, timelineFor, useMitosis3D } from './store';
@@ -230,6 +232,7 @@ function PartInfo({
         </div>
         <div className="m3d__info-body">
           <p>{Lz(info.role)}</p>
+          <ChromosomeFacts tl={tl} selected={selected} />
           {!visible && (
             <p className="small muted">
               {Lz(
@@ -240,9 +243,51 @@ function PartInfo({
               )}
             </p>
           )}
+          <p className="small muted m3d__sources">
+            {Lz(
+              L(
+                'Nguồn: SGK Sinh học 10; Campbell Biology · nội dung đang chờ giáo viên duyệt.',
+                'Sources: Vietnamese Biology 10 textbook; Campbell Biology · awaiting teacher review.',
+              ),
+            )}
+          </p>
         </div>
       </aside>
     </div>
+  );
+}
+
+/**
+ * What the model says about the picked chromosome now: its pair, where it came from (mother or
+ * father) and how many chromatids (DNA molecules) it has at this moment.
+ */
+function ChromosomeFacts({ tl, selected }: { tl: Timeline; selected: Selection }) {
+  const Lz = useLocalized();
+  const facts = useMitosis3D((s) => {
+    if (selected.chromosome === undefined) return null;
+    const st = stateFor(tl, s.t);
+    const mine = st.chromatids.filter(
+      (c) =>
+        c.present &&
+        c.chromosome === selected.chromosome &&
+        (c.joined || selected.sister === undefined || c.sister === selected.sister),
+    );
+    const info = tl.chromatids.find((c) => c.chromosome === selected.chromosome);
+    if (!info || mine.length === 0) return null;
+    return `${String(info.pair + 1)}|${info.origin}|${String(mine.length)}`;
+  });
+  if (!facts) return null;
+  const [pair, origin, count] = facts.split('|');
+  const from = origin === 'M' ? L('từ mẹ', 'the mother') : L('từ bố', 'the father');
+  return (
+    <p className="small">
+      {Lz(
+        L(
+          `Theo mô hình: cặp NST số ${pair ?? ''}, nguồn gốc ${from.vi}; lúc này có ${count ?? ''} crômatit (${count ?? ''} phân tử ADN).`,
+          `From the model: chromosome pair ${pair ?? ''}, from ${from.en}; it has ${count ?? ''} chromatid(s) (${count ?? ''} DNA molecule(s)) now.`,
+        ),
+      )}
+    </p>
   );
 }
 
@@ -310,6 +355,11 @@ export function Mitosis3DView({
   const selected = useMitosis3D((s) => s.selected);
   const camera = useMitosis3D((s) => s.camera);
   const cellLocked = useMitosis3D((s) => s.cellLocked);
+  const uiMode = useSettingsStore((s) => s.uiMode);
+  const labelsChoice = useMitosis3D((s) => s.labels);
+  // "Hiện tên": on by default in Basic mode, off while a lesson holds the model (it may ask the
+  // learner to find a part by its function).
+  const labelsOn = labelsChoice ?? (uiMode === 'basic' && !cellLocked);
   const stage = STAGES_3D[stageIndex] ?? 'g1';
   const hostRef = useRef<HTMLDivElement>(null);
   const hudRef = useRef<HTMLDivElement>(null);
@@ -350,11 +400,41 @@ export function Mitosis3DView({
       h.currentInsets(),
     );
   };
-  /** Frames the camera from the default direction (new cell, view switch, "Đặt lại góc nhìn"). */
-  const frameCamera = (h: ThreeHost, mode: CameraMode) => {
+  /**
+   * Frames the camera from the default direction (new cell, view switch, "Đặt lại góc nhìn"):
+   * a smooth move when asked (at once with reduced motion, and for the first frame).
+   */
+  const frameCamera = (h: ThreeHost, mode: CameraMode, animate = false) => {
     const p = placementFor(h, mode, VIEW_DIR);
-    if (p) h.place(p);
+    if (p) h.place(p, { animate });
   };
+  /** Name labels of the parts that can be seen now, drawn after each frame. */
+  const labelsRef = useRef<LabelLayer | null>(null);
+  const drawLabels = (h: ThreeHost) => {
+    const layer = labelsRef.current;
+    const cur = sceneRef.current;
+    if (!layer || !cur) return;
+    if (!labelsOnRef.current) {
+      layer.clear();
+      return;
+    }
+    const i = h.currentInsets();
+    const w = h.width();
+    const hh = h.height();
+    layer.update(
+      cur.scene.labelAnchors().map((a) => ({
+        id: a.id,
+        text: Lz(COMPONENTS[a.id].name),
+        point: a.point,
+      })),
+      h.camera,
+      w,
+      hh,
+      { left: i.left, top: i.top, right: w - i.right, bottom: hh - i.bottom },
+      h.quality.labelCap,
+    );
+  };
+  const labelsOnRef = useRef(labelsOn);
   /** Keeps the learner's direction; re-centres and fits `mode` (the close-up follows). */
   const refit = (h: ThreeHost, mode: CameraMode) => {
     const p = placementFor(h, mode, h.direction(VIEW_DIR));
@@ -398,6 +478,33 @@ export function Mitosis3DView({
     },
     onFail: () => {
       useMitosis3D.setState({ webglFailed: true, playing: false });
+    },
+    onFrame: (h) => {
+      // A big chromosome set spreads its shape updates over frames: finish them.
+      const cur = sceneRef.current;
+      if (cur?.scene.pending()) {
+        cur.scene.update(stateFor(cur.tl, useMitosis3D.getState().t));
+        h.request();
+      }
+      drawLabels(h);
+    },
+    // Double click (or double tap) on a part: the camera turns to it (closest allowed view).
+    onDoubleTap: (ray) => {
+      const cur = sceneRef.current;
+      const h = hostRt.current;
+      if (!cur || !h) return;
+      const hit = cur.scene.pick(ray);
+      const center = cur.scene.pickedPoint();
+      if (!hit || !center) return;
+      const p = placeCamera(
+        { center, points: spherePoints([0, 0, 0], 1.2) },
+        cur.tl.cellType,
+        h.width(),
+        h.height(),
+        h.direction(VIEW_DIR),
+        h.currentInsets(),
+      );
+      h.place(p, { animate: true });
     },
     // Picking: a tap (not a drag, not a pinch) selects the part under the pointer.
     onTap: (ray) => {
@@ -494,7 +601,7 @@ export function Mitosis3DView({
         if (s.camera === 'closeup' && !reframe) refit(h, 'closeup');
       }
       if (s.selected !== prev.selected) ms.setSelection(s.selected);
-      if (reframe) frameCamera(h, s.camera);
+      if (reframe) frameCamera(h, s.camera, true);
       h.request();
     });
     return () => {
@@ -515,6 +622,23 @@ export function Mitosis3DView({
     hostRt.current?.relayout();
   }, [selected, hostRt]);
 
+  // Name labels: one page-drawn layer per renderer, redrawn with every frame.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || !hostRt.current) return;
+    const layer = new LabelLayer(host, 'm3d__labels');
+    labelsRef.current = layer;
+    hostRt.current.request();
+    return () => {
+      if (labelsRef.current === layer) labelsRef.current = null;
+      layer.dispose();
+    };
+  }, [hostRt, tierName, createRenderer]);
+  useEffect(() => {
+    labelsOnRef.current = labelsOn;
+    hostRt.current?.request();
+  }, [labelsOn, Lz, hostRt]);
+
   // Playback (only while playing; frame times feed the overload ladder).
   usePlayback(useMitosis3D, tl.total, speed);
 
@@ -529,6 +653,8 @@ export function Mitosis3DView({
         ref={hostRef}
         className="m3d__gl"
         role="img"
+        // Keyboard users turn the cell with the arrow keys.
+        tabIndex={0}
         aria-label={`${Lz(STAGE3D_NAME[stage])}. ${Lz(stageNote(stage, cellType))}`}
       />
       {/* Controls over the picture, laid out on a grid so no two boxes ever overlap. */}
@@ -616,6 +742,16 @@ export function Mitosis3DView({
               ]}
               onChange={(v) => {
                 useMitosis3D.setState((s) => ({ camera: v, viewNonce: s.viewNonce + 1 }));
+              }}
+            />
+            <IconButton
+              icon={Tags}
+              size="lg"
+              active={labelsOn}
+              label={Lz(L('Hiện tên các bộ phận', 'Show part names'))}
+              tooltipSide="left"
+              onClick={() => {
+                useMitosis3D.setState({ labels: !labelsOn });
               }}
             />
             <IconButton

@@ -27,7 +27,7 @@ import {
   type CentrelineInput,
   type TubeProfile,
 } from './chromatidShape';
-import type { CameraMode, Selection } from './components';
+import { componentVisible, type CameraMode, type ComponentId, type Selection } from './components';
 import {
   centrioleTriplets,
   envelopeBreakdown,
@@ -42,6 +42,7 @@ import {
   ease,
   type ChromatidInfo,
   type FibreKind,
+  type Vec3,
   type Mitosis3DState,
   type Timeline,
 } from './timeline';
@@ -86,6 +87,12 @@ const FIBRE: Record<QualityTier, { radius: number; sides: number }> = {
 const FIBRE_WIDTH: Record<FibreKind, number> = { kinetochore: 1.7, polar: 1, astral: 0.8 };
 
 export type PickResult = Selection;
+
+/** A part to name on the picture and a point on it (world units). */
+export interface LabelAnchor3D {
+  id: ComponentId;
+  point: Vec3;
+}
 export type { CameraFrame, CameraMode, Selection };
 /** Moved to the generic 3D kit (`@/ui/three/drawStats`); re-exported for existing imports. */
 export { drawStats, type DrawStats };
@@ -96,8 +103,17 @@ export interface MitosisScene {
   setSelection(sel: Selection | null): void;
   /** The cell part under a ray (inner parts win over the membranes they sit in). */
   pick(raycaster: THREE.Raycaster): PickResult | null;
+  /** Where the last `pick` ray met the part it picked (null when it picked nothing). */
+  pickedPoint(): Vec3 | null;
+  /** Some chromatids still wait for their new shape: update again with the same state. */
+  pending(): boolean;
   /** Box to frame with the camera: the whole cell (after division too), or the chromosomes now. */
   frame(mode: CameraMode): CameraFrame;
+  /**
+   * Points of the parts that can be named at this moment, most important first (one per part:
+   * a chromosome, a centromere, the spindle…), for the name labels.
+   */
+  labelAnchors(): LabelAnchor3D[];
   stats(): { objects: number; meshes: number; geometries: number; materials: number };
   /** Draw calls and triangles of the current moment (see `drawStats`). */
   drawStats(): DrawStats;
@@ -129,6 +145,16 @@ const CONTAINERS: ReadonlySet<Part> = new Set(['envelope', 'membrane', 'wall']);
 /** Parts of a chromosome, and how far behind a fibre one may be and still be picked. */
 const CHROMOSOME_PARTS: ReadonlySet<Part> = new Set(['arm', 'bead', 'thread']);
 const FIBRE_SLACK = 0.35;
+
+/**
+ * A tube is rewritten only when its shape changes by more than can be seen: an arm turning by
+ * more than about 0.4° (cosine), or a share (condensation, pinch, scale) changing by more than
+ * 0.2 %. Settled poses are always drawn exactly.
+ */
+const SAME_DIRECTION = 0.999975;
+const SAME_SHARE = 0.002;
+/** Most tube rewrites in one update (every chromatid of the sets the view offers: 2n ≤ 8). */
+const WRITE_BUDGET = 24;
 
 /** A click this close to a condensed chromatid's centromere picks the centromere. */
 const CENTROMERE_PICK = 0.26;
@@ -283,7 +309,9 @@ export function buildMitosisScene(
    */
   const many = tl.chromatids.length > 16;
   const tubeSides = many ? 6 : tier === 'high' ? 10 : tier === 'medium' ? 8 : 6;
-  const ringsPerUnit = many ? 4 : 7;
+  const rings = many
+    ? { ringsPerUnit: 4, tipRings: 3, waistRings: 4 }
+    : { ringsPerUnit: 7, tipRings: 6, waistRings: 8 };
   const centrioleGeo = keep(
     new THREE.CylinderGeometry(0.1, 0.1, 0.42, Math.max(8, seg / 2), 1, true),
   );
@@ -319,7 +347,7 @@ export function buildMitosisScene(
     profile: TubeProfile;
     centre: Float32Array;
     radii: Float32Array;
-    /** Inputs of the last write (a tube is rewritten only when they change). */
+    /** Shape inputs of the last write: arm directions, shares, towards the sister. */
     key: Float64Array;
   }
   const originColour = { M: palette.maternal, P: palette.paternal };
@@ -331,7 +359,7 @@ export function buildMitosisScene(
       armB: info.armB,
       radius: ROD_RADIUS,
       sides: tubeSides,
-      ringsPerUnit,
+      ...rings,
     });
     keep(tube);
     // Painted from the model's own DNA molecule, piece by piece (in mitosis one piece: no
@@ -494,11 +522,19 @@ export function buildMitosisScene(
     }
   }
   memGeo.setIndex(index);
-  let memKey = '';
+  // Cosines and sines around the axis (fixed), so a new profile costs no trigonometry per vertex.
+  const aroundCos = new Float32Array(A + 1);
+  const aroundSin = new Float32Array(A + 1);
+  for (let a = 0; a <= A; a++) {
+    aroundCos[a] = Math.cos((2 * Math.PI * a) / A);
+    aroundSin[a] = Math.sin((2 * Math.PI * a) / A);
+  }
+  let memOffset = Number.NaN;
+  let memRadius = Number.NaN;
   const writeProfile = (offset: number, radius: number) => {
-    const key = `${offset.toFixed(4)}|${radius.toFixed(4)}`;
-    if (key === memKey) return;
-    memKey = key;
+    if (Math.abs(offset - memOffset) < 5e-5 && Math.abs(radius - memRadius) < 5e-5) return;
+    memOffset = offset;
+    memRadius = radius;
     const phiEnd = offset < radius ? Math.acos(offset / radius) : 0;
     let k = 0;
     for (let r = 0; r < rows; r++) {
@@ -509,24 +545,28 @@ export function buildMitosisScene(
         ? Math.PI + ((phiEnd - Math.PI) * i) / H
         : Math.PI - phiEnd - ((Math.PI - phiEnd) * i) / H;
       const cx = left ? -offset : offset;
-      const x = cx + radius * Math.cos(phi);
-      const rr = radius * Math.sin(phi);
+      const cp = Math.cos(phi);
+      const sp = Math.sin(phi);
+      const x = cx + radius * cp;
+      const rr = radius * sp;
       for (let a = 0; a <= A; a++) {
-        const th = (2 * Math.PI * a) / A;
-        const c = Math.cos(th);
-        const s = Math.sin(th);
+        const c = aroundCos[a] ?? 1;
+        const s = aroundSin[a] ?? 0;
         memPos[k] = x;
         memPos[k + 1] = rr * c;
         memPos[k + 2] = rr * s;
-        memNor[k] = Math.cos(phi);
-        memNor[k + 1] = Math.sin(phi) * c;
-        memNor[k + 2] = Math.sin(phi) * s;
+        memNor[k] = cp;
+        memNor[k + 1] = sp * c;
+        memNor[k + 2] = sp * s;
         k += 3;
       }
     }
     memPosAttr.needsUpdate = true;
     memNorAttr.needsUpdate = true;
-    memGeo.computeBoundingSphere();
+    // The two circles' union fits a sphere of radius offset + radius about the middle.
+    const sphere = (memGeo.boundingSphere ??= new THREE.Sphere());
+    sphere.center.set(0, 0, 0);
+    sphere.radius = offset + radius;
   };
   const membrane = mesh(animal ? memGeo : rounded, mats.membrane.base, { part: 'membrane' });
   // The cytoplasm tint shares the membrane's shape (and follows its furrow), drawn first.
@@ -592,8 +632,15 @@ export function buildMitosisScene(
   const tmpScale = new THREE.Vector3();
   const tmpMat = new THREE.Matrix4();
   let last: Mitosis3DState | null = null;
+  /** Tubes whose new shape waits for the next update (a big set over its writing budget). */
+  let pendingWrites = false;
+  let writeCursor = 0;
+  /** The direction `d` turned away from the one stored at `k[at…at+2]` by more than can be seen. */
+  const turned = (k: Float64Array, d: Vec3, at: number) =>
+    d[0] * (k[at] ?? 0) + d[1] * (k[at + 1] ?? 0) + d[2] * (k[at + 2] ?? 0) < SAME_DIRECTION;
   /** Inputs of one tube write, reused for every chromatid (no allocation per frame). */
   const lineInput: CentrelineInput = {
+    // Tubes are written around their centromere (the mesh is moved there).
     centromere: [0, 0, 0],
     dirA: [1, 0, 0],
     dirB: [-1, 0, 0],
@@ -708,12 +755,18 @@ export function buildMitosisScene(
     const threadScale = 0.75 * (late ? telR / nucleusR : 1);
     // Joined sisters touch at the centromere; after the split the pinch lets go early in anaphase.
     const letGo = st.stage === 'anaphase' ? 1 - ease(st.u, 0, 0.12) : 0;
-    chromatids.forEach((o, i) => {
+    let writes = 0;
+    pendingWrites = false;
+    const count = chromatids.length;
+    for (let step = 0; step < count; step++) {
+      const i = (writeCursor + step) % count;
+      const o = chromatids[i];
+      if (!o) continue;
       const p = st.chromatids[i];
       const show = !!p?.present;
       o.mesh.visible = show;
       o.kineto.visible = show && kinetoO > 0.01;
-      if (!p || !show) return;
+      if (!p || !show) continue;
       (o.mesh.userData as PartData).part = tubePart;
       const sister = st.chromatids[i ^ 1];
       const c = p.centromere;
@@ -727,52 +780,56 @@ export function buildMitosisScene(
         if (tmpDir.lengthSq() > 1e-9) tmpDir.normalize();
       }
       const pinch = sister?.present ? (p.joined ? 1 : letGo) : 0;
-      // Rewrite the tube only when its inputs changed (no allocation: shared scratch).
+      // The tube is written around its centromere (local coordinates) and moved there: a
+      // chromatid that only moves is never rewritten. Its shape is rewritten when it changes by
+      // more than can be seen (a fraction of a degree, a fraction of a percent).
+      o.mesh.position.set(c[0], c[1], c[2]);
       const k = o.key;
-      const inp = lineInput;
-      inp.centromere[0] = c[0];
-      inp.centromere[1] = c[1];
-      inp.centromere[2] = c[2];
-      inp.dirA[0] = p.dirA[0];
-      inp.dirA[1] = p.dirA[1];
-      inp.dirA[2] = p.dirA[2];
-      inp.dirB[0] = p.dirB[0];
-      inp.dirB[1] = p.dirB[1];
-      inp.dirB[2] = p.dirB[2];
-      inp.towardSister[0] = tmpDir.x;
-      inp.towardSister[1] = tmpDir.y;
-      inp.towardSister[2] = tmpDir.z;
-      inp.thread = o.thread;
-      inp.profile = o.profile;
-      inp.threadScale = threadScale;
-      inp.m = m;
-      inp.pinch = pinch;
-      const same =
-        k[0] === c[0] &&
-        k[1] === c[1] &&
-        k[2] === c[2] &&
-        k[3] === p.dirA[0] &&
-        k[4] === p.dirA[1] &&
-        k[5] === p.dirA[2] &&
-        k[6] === p.dirB[0] &&
-        k[7] === p.dirB[1] &&
-        k[8] === p.dirB[2] &&
-        k[9] === m &&
-        k[10] === threadScale &&
-        k[11] === pinch;
-      if (!same) {
-        k[0] = c[0];
-        k[1] = c[1];
-        k[2] = c[2];
-        k[3] = p.dirA[0];
-        k[4] = p.dirA[1];
-        k[5] = p.dirA[2];
-        k[6] = p.dirB[0];
-        k[7] = p.dirB[1];
-        k[8] = p.dirB[2];
-        k[9] = m;
-        k[10] = threadScale;
-        k[11] = pinch;
+      const changed =
+        Number.isNaN(k[0]) ||
+        turned(k, p.dirA, 0) ||
+        turned(k, p.dirB, 3) ||
+        Math.abs(m - (k[6] ?? 0)) > SAME_SHARE ||
+        Math.abs(threadScale - (k[7] ?? 0)) > SAME_SHARE ||
+        Math.abs(pinch - (k[8] ?? 0)) > SAME_SHARE ||
+        (pinch > 0 &&
+          tmpDir.x * (k[9] ?? 0) + tmpDir.y * (k[10] ?? 0) + tmpDir.z * (k[11] ?? 0) <
+            SAME_DIRECTION) ||
+        // A settled pose is drawn exactly.
+        (m === 1 && k[6] !== 1) ||
+        (m === 0 && k[6] !== 0);
+      // At most WRITE_BUDGET tubes per update, taken in turn (a big set spreads its rewrites
+      // over a few frames; the view keeps updating until none is left).
+      if (changed && writes >= WRITE_BUDGET) pendingWrites = true;
+      if (changed && writes < WRITE_BUDGET) {
+        writes++;
+        k[0] = p.dirA[0];
+        k[1] = p.dirA[1];
+        k[2] = p.dirA[2];
+        k[3] = p.dirB[0];
+        k[4] = p.dirB[1];
+        k[5] = p.dirB[2];
+        k[6] = m;
+        k[7] = threadScale;
+        k[8] = pinch;
+        k[9] = tmpDir.x;
+        k[10] = tmpDir.y;
+        k[11] = tmpDir.z;
+        const inp = lineInput;
+        inp.dirA[0] = p.dirA[0];
+        inp.dirA[1] = p.dirA[1];
+        inp.dirA[2] = p.dirA[2];
+        inp.dirB[0] = p.dirB[0];
+        inp.dirB[1] = p.dirB[1];
+        inp.dirB[2] = p.dirB[2];
+        inp.towardSister[0] = tmpDir.x;
+        inp.towardSister[1] = tmpDir.y;
+        inp.towardSister[2] = tmpDir.z;
+        inp.thread = o.thread;
+        inp.profile = o.profile;
+        inp.threadScale = threadScale;
+        inp.m = m;
+        inp.pinch = pinch;
         writeCentreline(o.info, o.tube.stations, inp, o.centre, o.radii);
         o.tube.write(o.centre, o.radii);
       }
@@ -782,13 +839,15 @@ export function buildMitosisScene(
       const r = o.radii[o.tube.centromereRing] ?? ROD_RADIUS;
       const w = o.tube.centromereRing;
       o.kineto.position.set(
-        (o.centre[3 * w] ?? c[0]) + tmpDir.x * r,
-        (o.centre[3 * w + 1] ?? c[1]) + tmpDir.y * r,
-        (o.centre[3 * w + 2] ?? c[2]) + tmpDir.z * r,
+        c[0] + (o.centre[3 * w] ?? 0) + tmpDir.x * r,
+        c[1] + (o.centre[3 * w + 1] ?? 0) + tmpDir.y * r,
+        c[2] + (o.centre[3 * w + 2] ?? 0) + tmpDir.z * r,
       );
       o.kineto.quaternion.setFromUnitVectors(UP, tmpDir);
       o.kineto.scale.set(1, 0.035, 1);
-    });
+    }
+    // The next update starts where this one's writing budget ran out.
+    if (pendingWrites) writeCursor = (writeCursor + WRITE_BUDGET) % Math.max(1, count);
 
     envelopes.forEach((e, i) => {
       const n = st.nuclei[i];
@@ -924,8 +983,10 @@ export function buildMitosisScene(
     applyLooks(st);
   };
 
+  let lastPoint: Vec3 | null = null;
   const pick = (raycaster: THREE.Raycaster): PickResult | null => {
     const st = last;
+    lastPoint = null;
     if (!st) return null;
     const hits = raycaster.intersectObjects(pickables, false).filter((h) => {
       if (!h.object.visible || !h.object.parent?.visible) return false;
@@ -944,6 +1005,9 @@ export function buildMitosisScene(
           )
         : undefined;
     const inner = chromosome ?? nearest;
+    // Where the ray met the part that is picked (the camera can turn to it).
+    const chosen = inner ?? hits[0];
+    lastPoint = chosen ? [chosen.point.x, chosen.point.y, chosen.point.z] : null;
     if (inner) {
       const data = inner.object.userData as PartData;
       const c = data.chromatid !== undefined ? st.chromatids[data.chromatid] : undefined;
@@ -999,6 +1063,75 @@ export function buildMitosisScene(
 
   const frame = (mode: CameraMode): CameraFrame => cameraFrame(mode, last, tl.cellType);
 
+  /** A point on the surface of a sphere (centre, radius) in a direction (normalised here). */
+  const onSphere = (c: Vec3, r: number, d: Vec3): Vec3 => {
+    const l = Math.hypot(...d) || 1;
+    return [c[0] + (r * d[0]) / l, c[1] + (r * d[1]) / l, c[2] + (r * d[2]) / l];
+  };
+  /** Centre-line point of a chromatid's tube at ring `k`. */
+  const ringPoint = (o: ChromatidObjects, k: number): Vec3 => [
+    o.mesh.position.x + (o.centre[3 * k] ?? 0),
+    o.mesh.position.y + (o.centre[3 * k + 1] ?? 0),
+    o.mesh.position.z + (o.centre[3 * k + 2] ?? 0),
+  ];
+  const labelAnchors = (): LabelAnchor3D[] => {
+    const st = last;
+    if (!st) return [];
+    const out: LabelAnchor3D[] = [];
+    const add = (id: ComponentId, point: Vec3 | null) => {
+      if (point && componentVisible(id, st)) out.push({ id, point });
+    };
+    // A chromosome: the middle of the first present chromatid's longer arm.
+    const firstIdx = st.chromatids.findIndex((c) => c.present);
+    const first = chromatids[firstIdx];
+    const pose = st.chromatids[firstIdx];
+    if (first && pose) {
+      const k = Math.max(0, Math.floor(first.tube.centromereRing / 2));
+      const id: ComponentId =
+        st.condensation < 0.5 ? 'chromatin' : pose.joined ? 'doubleChromosome' : 'singleChromosome';
+      add(id, ringPoint(first, k));
+    }
+    // A centromere of another chromosome (labels spread over the picture).
+    const cen = st.centromeres[st.centromeres.length - 1];
+    if (cen) add('centromere', cen.position);
+    const fibre = st.fibres.find((f) => f.kind === 'polar') ?? st.fibres[0];
+    // A spindle fibre near its pole (clear of the chromosomes in the middle).
+    if (fibre)
+      add('spindle', [
+        fibre.from[0] + 0.28 * (fibre.to[0] - fibre.from[0]),
+        fibre.from[1] + 0.28 * (fibre.to[1] - fibre.from[1]),
+        fibre.from[2] + 0.28 * (fibre.to[2] - fibre.from[2]),
+      ]);
+    if (animal) add('centrosome', st.centrosomes[st.centrosomes.length - 1] ?? null);
+    const n0 = st.nuclei[0];
+    if (n0) {
+      add('nucleus', onSphere(n0.center, n0.radius, [-0.6, 0.65, 0.45]));
+      add('nucleolus', nucleoli[0]?.position.toArray() ?? null);
+      if (detail) add('nuclearEnvelope', onSphere(n0.center, n0.radius, [0.55, -0.6, 0.6]));
+    }
+    const sh = st.shape;
+    if (sh.type === 'animal') {
+      if (sh.ring) add('cleavageFurrow', [0, sh.ringRadius * 0.72, sh.ringRadius * 0.69]);
+      const e = 1 + sh.elongation;
+      add('membrane', [
+        -0.35 * ANIMAL.radius * e,
+        (0.86 * ANIMAL.radius) / Math.sqrt(e),
+        0.36 * ANIMAL.radius,
+      ]);
+    } else {
+      const [px, py, pz] = PLANT.half;
+      if (sh.plate > 0.001)
+        add('cellPlate', [
+          0,
+          Math.min(sh.plateRadius, py) * 0.62,
+          Math.min(sh.plateRadius, pz) * 0.5,
+        ]);
+      add('membrane', [-0.45 * px, 0.98 * py, 0.4 * pz]);
+      add('cellWall', [px + PLANT.wall, -0.35 * py, 0.45 * pz]);
+    }
+    return out;
+  };
+
   const stats = () => {
     let objects = 0;
     let meshes = 0;
@@ -1024,6 +1157,9 @@ export function buildMitosisScene(
     },
     pick,
     frame,
+    labelAnchors,
+    pickedPoint: () => lastPoint,
+    pending: () => pendingWrites,
     stats,
     drawStats: () => drawStats(scene),
     dispose() {

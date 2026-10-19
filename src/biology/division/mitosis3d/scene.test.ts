@@ -290,6 +290,43 @@ describe('3D mitosis scene', () => {
     ms.dispose();
   });
 
+  it('a big set spreads tube rewrites over updates and settles exactly; small sets never wait', () => {
+    const small = buildTimeline(4, 'animal');
+    const ms = buildMitosisScene(small, PALETTE, { segments: 16 });
+    ms.update(small.stateAt(small.keyTime('metaphase')));
+    expect(ms.pending()).toBe(false);
+    ms.dispose();
+    const big = buildTimeline(23, 'animal');
+    const mb = buildMitosisScene(big, PALETTE, { segments: 16 });
+    const st = big.stateAt(big.keyTime('metaphase'));
+    mb.update(st);
+    expect(mb.pending()).toBe(true);
+    let rounds = 1;
+    while (mb.pending() && rounds < 10) {
+      mb.update(st);
+      rounds++;
+    }
+    expect(mb.pending()).toBe(false);
+    expect(rounds).toBeLessThanOrEqual(Math.ceil(big.chromatids.length / 24));
+    // Every tube now ends at its arm tips: the centromere plus the model's arm lengths.
+    mb.scene.updateMatrixWorld(true);
+    mb.scene.traverse((o) => {
+      const data = o.userData as { part?: string; chromatid?: number };
+      if (data.chromatid === undefined || data.part === 'bead' || !(o instanceof THREE.Mesh))
+        return;
+      const pose = st.chromatids[data.chromatid]!;
+      const info = big.chromatids[data.chromatid]!;
+      const pos = (o.geometry as THREE.BufferGeometry).getAttribute('position');
+      // The first ring is the tip of arm A (radius 0: all its vertices on the line).
+      const tip = new THREE.Vector3(pos.getX(0), pos.getY(0), pos.getZ(0)).applyMatrix4(
+        o.matrixWorld,
+      );
+      for (let k = 0; k < 3; k++)
+        expect(tip.getComponent(k)).toBeCloseTo(pose.centromere[k]! + pose.dirA[k]! * info.armA, 4);
+    });
+    mb.dispose();
+  });
+
   it('picking a split centromere names its sister', () => {
     const tl = buildTimeline(2, 'animal');
     const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });

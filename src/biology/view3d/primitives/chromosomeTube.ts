@@ -20,6 +20,9 @@ export interface TubeShape {
   sides: number;
   /** Rings per unit length along the arms (default 7; fewer for big chromosome sets). */
   ringsPerUnit?: number;
+  /** Rings across each rounded tip and across the waist (defaults 6 and 8). */
+  tipRings?: number;
+  waistRings?: number;
 }
 
 /** A coloured piece of the chromatid, as shares of its length from the arm A tip (0) to B (1). */
@@ -57,6 +60,8 @@ export function ringStations(
   armB: number,
   radius: number,
   ringsPerUnit = RINGS_PER_UNIT,
+  tipRings = TIP_RINGS,
+  waistRings = WAIST_RINGS,
 ): Float32Array {
   const out: number[] = [];
   const w = waistHalf(armA, armB);
@@ -67,14 +72,14 @@ export function ringStations(
     const n = Math.max(2, Math.ceil(body * ringsPerUnit));
     const pts: number[] = [];
     for (let i = 1; i <= n; i++) pts.push(w + (body * i) / n);
-    for (let i = 1; i <= TIP_RINGS; i++) {
-      const th = (Math.PI / 2) * (i / TIP_RINGS);
+    for (let i = 1; i <= tipRings; i++) {
+      const th = (Math.PI / 2) * (i / tipRings);
       pts.push(len - cap + cap * Math.sin(th));
     }
     return pts.map((d) => sign * d);
   };
   out.push(...arm(armA, -1).reverse());
-  for (let i = 0; i <= WAIST_RINGS; i++) out.push(-w + (2 * w * i) / WAIST_RINGS);
+  for (let i = 0; i <= waistRings; i++) out.push(-w + (2 * w * i) / waistRings);
   out.push(...arm(armB, 1));
   return Float32Array.from(out);
 }
@@ -120,7 +125,14 @@ export class ChromosomeTube {
   constructor(shape: TubeShape) {
     this.shape = shape;
     this.sides = Math.max(3, Math.round(shape.sides));
-    this.stations = ringStations(shape.armA, shape.armB, shape.radius, shape.ringsPerUnit);
+    this.stations = ringStations(
+      shape.armA,
+      shape.armB,
+      shape.radius,
+      shape.ringsPerUnit,
+      shape.tipRings,
+      shape.waistRings,
+    );
     this.rings = this.stations.length;
     let c = 0;
     for (let i = 1; i < this.rings; i++)

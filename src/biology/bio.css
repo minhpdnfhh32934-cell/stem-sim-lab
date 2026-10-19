@@ -210,6 +210,12 @@
   position: absolute;
   inset: 0;
 }
+/* The picture takes the keyboard focus (arrow keys turn it). */
+.m3d__gl:focus-visible,
+.bio3d__gl:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
 /* A soft light behind the transparent 3D canvas (both themes): the subject stands out from the
    stage without a flat box around it. PNG export draws the plain stage colour. */
 .m3d__gl,
