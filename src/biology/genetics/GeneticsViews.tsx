@@ -18,6 +18,7 @@ import {
 } from './population';
 import { chiSquare, rng } from './stats';
 import { LETTERS, useDrift, useHw, useMendel, type DriftState, type MendelState } from './store';
+import { MoreInBasic } from '../ui';
 import { useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
@@ -289,26 +290,6 @@ export function MendelPanel() {
           </button>
         ))}
       </div>
-      {LETTERS.slice(0, st.loci).map((letter, i) => (
-        <label key={letter}>
-          <span>
-            {Lz(L('Gen', 'Gene'))} {letter}/{letter.toLowerCase()}
-          </span>
-          <select
-            value={st.dominance[i]}
-            onChange={(e) => {
-              const d = [...st.dominance] as [Dominance, Dominance];
-              d[i] = e.target.value as Dominance;
-              useMendel.setState({ dominance: d, ran: false });
-            }}
-          >
-            <option value="complete">{Lz(L('Trội hoàn toàn', 'Complete dominance'))}</option>
-            <option value="incomplete">
-              {Lz(L('Trội không hoàn toàn', 'Incomplete dominance'))}
-            </option>
-          </select>
-        </label>
-      ))}
       {(['p1', 'p2'] as const).map((k, i) => (
         <label key={k}>
           <span>
@@ -328,6 +309,32 @@ export function MendelPanel() {
           </select>
         </label>
       ))}
+      {/* Basic: complete dominance (the textbook case) unless the learner changed it. */}
+      <MoreInBasic
+        count={st.loci}
+        changed={st.dominance.slice(0, st.loci).some((d) => d !== 'complete')}
+      >
+        {LETTERS.slice(0, st.loci).map((letter, i) => (
+          <label key={letter}>
+            <span>
+              {Lz(L('Gen', 'Gene'))} {letter}/{letter.toLowerCase()}
+            </span>
+            <select
+              value={st.dominance[i]}
+              onChange={(e) => {
+                const d = [...st.dominance] as [Dominance, Dominance];
+                d[i] = e.target.value as Dominance;
+                useMendel.setState({ dominance: d, ran: false });
+              }}
+            >
+              <option value="complete">{Lz(L('Trội hoàn toàn', 'Complete dominance'))}</option>
+              <option value="incomplete">
+                {Lz(L('Trội không hoàn toàn', 'Incomplete dominance'))}
+              </option>
+            </select>
+          </label>
+        ))}
+      </MoreInBasic>
       <label>
         <span>{Lz(L('Số con lai (Monte Carlo)', 'Offspring (Monte Carlo)'))}</span>
         <select

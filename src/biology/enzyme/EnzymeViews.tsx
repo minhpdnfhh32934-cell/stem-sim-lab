@@ -3,7 +3,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
-import { Range } from '../ui';
+import { MoreInBasic, Range } from '../ui';
 import { apparent, type Inhibition } from './enzyme';
 import { useEnzyme, type EnzymeState } from './store';
 import { useShow3d } from '../view3d/support';
@@ -151,6 +151,7 @@ function MichaelisMenten2D() {
 export function MichaelisMentenPanel() {
   const Lz = useLocalized();
   const st = useEnzyme();
+  const initial = useEnzyme.getInitialState();
   const set = (patch: Partial<EnzymeState>) => {
     useEnzyme.setState(patch);
   };
@@ -194,18 +195,24 @@ export function MichaelisMentenPanel() {
         </select>
       </label>
       {st.kind !== 'none' && (
-        <>
-          <Range
-            label={L('Nồng độ chất ức chế [I]', 'Inhibitor [I]')}
-            unit="mM"
-            value={st.inhibitor}
-            min={0}
-            max={20}
-            step={0.1}
-            onChange={(inhibitor) => {
-              set({ inhibitor });
-            }}
-          />
+        <Range
+          label={L('Nồng độ chất ức chế [I]', 'Inhibitor [I]')}
+          unit="mM"
+          value={st.inhibitor}
+          min={0}
+          max={20}
+          step={0.1}
+          onChange={(inhibitor) => {
+            set({ inhibitor });
+          }}
+        />
+      )}
+      {/* Basic: Kᵢ and the time course's [S]₀ keep their defaults. */}
+      <MoreInBasic
+        count={st.kind !== 'none' ? 2 : 1}
+        changed={st.ki !== initial.ki || st.s0 !== initial.s0}
+      >
+        {st.kind !== 'none' && (
           <Range
             label={L('Hằng số ức chế Kᵢ', 'Inhibition constant Kᵢ')}
             unit="mM"
@@ -217,19 +224,19 @@ export function MichaelisMentenPanel() {
               set({ ki });
             }}
           />
-        </>
-      )}
-      <Range
-        label={L('[S]₀ cho đồ thị thời gian', '[S]₀ for the time course')}
-        unit="mM"
-        value={st.s0}
-        min={0.5}
-        max={100}
-        step={0.5}
-        onChange={(s0) => {
-          set({ s0 });
-        }}
-      />
+        )}
+        <Range
+          label={L('[S]₀ cho đồ thị thời gian', '[S]₀ for the time course')}
+          unit="mM"
+          value={st.s0}
+          min={0.5}
+          max={100}
+          step={0.5}
+          onChange={(s0) => {
+            set({ s0 });
+          }}
+        />
+      </MoreInBasic>
       <p className="small muted">
         {Lz(
           L(

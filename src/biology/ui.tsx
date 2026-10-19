@@ -1,6 +1,9 @@
-import type { KeyboardEvent } from 'react';
+import { ChevronsUpDown } from 'lucide-react';
+import { useState, type KeyboardEvent, type ReactNode } from 'react';
 import type { LocalizedText } from '@/core/data/dataset';
+import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useFmt } from './fmt';
 
 /** Labelled slider that shows its current value with the user's locale. */
@@ -101,5 +104,43 @@ export function Segmented<T extends string>(props: {
         </button>
       ))}
     </div>
+  );
+}
+
+/**
+ * Basic mode (PROMPT_PHAN_2 A4.2, as in the physics panel): a lesson's secondary controls wait
+ * behind "Thêm thông số". They are always shown in Advanced mode, and in Basic mode as soon as
+ * one of them is not at its default (a changed value is never hidden).
+ */
+export function MoreInBasic({
+  count,
+  changed,
+  children,
+}: {
+  /** Controls inside (for the button's text). */
+  count: number;
+  /** One of them differs from the lesson's default. */
+  changed: boolean;
+  children: ReactNode;
+}) {
+  const t = useT();
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const [open, setOpen] = useState(false);
+  if (advanced || changed) return <>{children}</>;
+  return (
+    <>
+      {open && children}
+      <button
+        type="button"
+        className="params__more"
+        aria-expanded={open}
+        onClick={() => {
+          setOpen(!open);
+        }}
+      >
+        <ChevronsUpDown size={14} strokeWidth={1.75} aria-hidden="true" />
+        {open ? t('mode.fewerParams') : t('mode.moreParams', { count })}
+      </button>
+    </>
   );
 }

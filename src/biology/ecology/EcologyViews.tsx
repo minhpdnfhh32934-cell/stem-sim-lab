@@ -5,7 +5,7 @@ import { useCanvas } from '@/ui/canvas/useCanvas';
 import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
 import { niceStep, useFmt } from '../fmt';
-import { Range } from '../ui';
+import { MoreInBasic, Range } from '../ui';
 import { useShow3d } from '../view3d/support';
 import { Bio3DToolbar } from '../view3d/switch';
 import { LogisticChips, LvChips } from './chips';
@@ -370,6 +370,7 @@ function LotkaVolterra2D() {
 
 export function LotkaVolterraPanel() {
   const st = useLv();
+  const initial = useLv.getInitialState();
   const set = (patch: Partial<LvState>) => {
     useLv.setState(patch);
   };
@@ -416,26 +417,6 @@ export function LotkaVolterraPanel() {
         }}
       />
       <Range
-        label={L('Con mồi ban đầu x₀', 'Initial prey x₀')}
-        value={st.x0}
-        min={1}
-        max={100}
-        step={1}
-        onChange={(x0) => {
-          set({ x0 });
-        }}
-      />
-      <Range
-        label={L('Vật ăn thịt ban đầu y₀', 'Initial predators y₀')}
-        value={st.y0}
-        min={1}
-        max={50}
-        step={1}
-        onChange={(y0) => {
-          set({ y0 });
-        }}
-      />
-      <Range
         label={L('Thời gian mô phỏng', 'Time span')}
         value={st.tEnd}
         min={5}
@@ -445,6 +426,29 @@ export function LotkaVolterraPanel() {
           set({ tEnd });
         }}
       />
+      {/* Basic: the start point can still be picked by clicking the 2D phase plot. */}
+      <MoreInBasic count={2} changed={st.x0 !== initial.x0 || st.y0 !== initial.y0}>
+        <Range
+          label={L('Con mồi ban đầu x₀', 'Initial prey x₀')}
+          value={st.x0}
+          min={1}
+          max={100}
+          step={1}
+          onChange={(x0) => {
+            set({ x0 });
+          }}
+        />
+        <Range
+          label={L('Vật ăn thịt ban đầu y₀', 'Initial predators y₀')}
+          value={st.y0}
+          min={1}
+          max={50}
+          step={1}
+          onChange={(y0) => {
+            set({ y0 });
+          }}
+        />
+      </MoreInBasic>
     </div>
   );
 }

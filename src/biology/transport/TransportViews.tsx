@@ -6,7 +6,7 @@ import { XYChart } from '@/ui/charts/XYChart';
 import { BSRC, L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
 import { useFmt } from '../fmt';
-import { Range } from '../ui';
+import { MoreInBasic, Range } from '../ui';
 import { brownianStep, twoCompartment } from './transport';
 import { useTransport, type TransportState } from './store';
 import { useShow3d } from '../view3d/support';
@@ -322,6 +322,7 @@ export function DiffusionOsmosisStage() {
 export function DiffusionOsmosisPanel() {
   const Lz = useLocalized();
   const st = useTransport();
+  const initial = useTransport.getInitialState();
   const set = (patch: Partial<TransportState>) => {
     useTransport.setState(patch);
   };
@@ -372,39 +373,45 @@ export function DiffusionOsmosisPanel() {
             set({ c2 });
           }}
         />
-        <Range
-          label={L('Thể tích ngăn 1, V₁', 'Volume V₁')}
-          unit="mL"
-          value={st.v1}
-          min={0.5}
-          max={5}
-          step={0.5}
-          onChange={(v1) => {
-            set({ v1 });
-          }}
-        />
-        <Range
-          label={L('Thể tích ngăn 2, V₂', 'Volume V₂')}
-          unit="mL"
-          value={st.v2}
-          min={0.5}
-          max={5}
-          step={0.5}
-          onChange={(v2) => {
-            set({ v2 });
-          }}
-        />
-        <Range
-          label={L('Độ thấm × diện tích, PA', 'Permeability × area, PA')}
-          unit="mL/min"
-          value={st.pa}
-          min={0.02}
-          max={1}
-          step={0.02}
-          onChange={(pa) => {
-            set({ pa });
-          }}
-        />
+        {/* Basic: the volumes and the membrane's permeability keep their defaults. */}
+        <MoreInBasic
+          count={3}
+          changed={st.v1 !== initial.v1 || st.v2 !== initial.v2 || st.pa !== initial.pa}
+        >
+          <Range
+            label={L('Thể tích ngăn 1, V₁', 'Volume V₁')}
+            unit="mL"
+            value={st.v1}
+            min={0.5}
+            max={5}
+            step={0.5}
+            onChange={(v1) => {
+              set({ v1 });
+            }}
+          />
+          <Range
+            label={L('Thể tích ngăn 2, V₂', 'Volume V₂')}
+            unit="mL"
+            value={st.v2}
+            min={0.5}
+            max={5}
+            step={0.5}
+            onChange={(v2) => {
+              set({ v2 });
+            }}
+          />
+          <Range
+            label={L('Độ thấm × diện tích, PA', 'Permeability × area, PA')}
+            unit="mL/min"
+            value={st.pa}
+            min={0.02}
+            max={1}
+            step={0.02}
+            onChange={(pa) => {
+              set({ pa });
+            }}
+          />
+        </MoreInBasic>
       </div>
     );
   return (
