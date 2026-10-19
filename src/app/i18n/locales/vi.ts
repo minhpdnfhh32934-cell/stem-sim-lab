@@ -2374,6 +2374,11 @@ const vi = {
     // is there.
     askMitosisPartHiddenQuestion:
       'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng nguyên phân, {cell}) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
+    // Meiosis 3D view (animal germ cell): the same two questions, for meiosis.
+    askMeiosisPartQuestion:
+      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) ạ?',
+    askMeiosisPartHiddenQuestion:
+      'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
   },
   languages: {
     vi: 'Tiếng Việt',

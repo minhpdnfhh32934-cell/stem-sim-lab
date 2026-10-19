@@ -366,9 +366,10 @@
 .m3d__bottom > * {
   pointer-events: auto;
 }
+/* One column per stage: seven in mitosis, twelve in meiosis (`--stage-count` on the strip). */
 .m3d__stages {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--stage-count, 7), minmax(0, 1fr));
   gap: 4px;
 }
 .m3d__stage {

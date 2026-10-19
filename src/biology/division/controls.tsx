@@ -1,6 +1,6 @@
 /**
- * Stage stepping of the division lessons, shared by the 2D picture and the meiosis 3D view: the
- * previous / play / next buttons and the chips (stage name, counts per cell, colour legend).
+ * Stage stepping of the division lessons' 2D pictures: the previous / play / next buttons and the
+ * chips (stage name, counts per cell, colour legend). The 3D views have their own playback.
  */
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { useLocalized } from '@/app/i18n/localized';

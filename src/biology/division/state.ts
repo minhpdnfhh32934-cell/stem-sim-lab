@@ -3,8 +3,8 @@ import { create } from 'zustand';
 import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { BSRC, L } from '../common';
-import { rng } from '../genetics/stats';
 import { runDivision, type Division, type StageId, type StageState } from './division';
+import { meiosisOptions } from './meiosisOptions';
 import type { CellType } from './mitosis3d/timeline';
 
 export const STAGE_NAME: Record<StageId, LocalizedText> = {
@@ -93,6 +93,8 @@ export interface DivisionState {
   cellType: CellType;
   view3d: boolean;
   speed: number;
+  /** Meiosis 3D view on/off (its own choice; the speed is shared with mitosis). */
+  meiosisView3d: boolean;
 }
 
 /** Playback speeds offered by the 3D view. */
@@ -113,17 +115,16 @@ export const useDivisionStore = create<DivisionState>()(() => ({
   cellType: 'animal',
   view3d: true,
   speed: 1,
+  meiosisView3d: true,
 }));
 
 /** Stages of the current division (deterministic for a given seed). */
 export function useStages(kind: Division): StageState[] {
   const { pairs, crossover, seed } = useDivisionStore();
-  return useMemo(() => {
-    const rand = rng(seed);
-    const orientation = Array.from({ length: pairs }, () => rand() < 0.5);
-    const crossovers = crossover ? [{ pair: 0, point: 0.35 + 0.3 * rand() }] : [];
-    return runDivision(kind, pairs, { orientation, crossovers });
-  }, [kind, pairs, crossover, seed]);
+  return useMemo(
+    () => runDivision(kind, pairs, meiosisOptions(pairs, crossover, seed)),
+    [kind, pairs, crossover, seed],
+  );
 }
 
 export function cardFor(kind: Division): ScienceCardData {

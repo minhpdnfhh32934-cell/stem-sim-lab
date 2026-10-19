@@ -70,12 +70,20 @@ function restoreDivision(kind: Division, patch: Partial<DivisionState>): void {
     delete clean.cellType;
   if (clean.speed !== undefined && !(SPEEDS as readonly number[]).includes(clean.speed))
     delete clean.speed;
+  const notBoolean = (v: unknown) => v !== undefined && typeof v !== 'boolean';
+  if (notBoolean(clean.view3d)) delete clean.view3d;
+  if (notBoolean(clean.meiosisView3d)) delete clean.meiosisView3d;
+  if (notBoolean(clean.crossover)) delete clean.crossover;
   setDivisionState(kind, clean);
 }
 
-const division = bindStore(useDivisionStore, ['pairs', 'crossover', 'seed', 'index'], (patch) => {
-  restoreDivision('meiosis', patch);
-});
+const division = bindStore(
+  useDivisionStore,
+  ['pairs', 'crossover', 'seed', 'index', 'meiosisView3d', 'speed'],
+  (patch) => {
+    restoreDivision('meiosis', patch);
+  },
+);
 const mitosisState = bindStore(
   useDivisionStore,
   ['pairs', 'crossover', 'seed', 'index', 'cellType', 'view3d', 'speed'],

@@ -2383,6 +2383,10 @@ const en: Messages = {
       'Could you explain what the “{part}” does at the “{stage}” stage (mitosis model, {cell})?',
     askMitosisPartHiddenQuestion:
       'At the “{stage}” stage (mitosis model, {cell}) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
+    askMeiosisPartQuestion:
+      'Could you explain what the “{part}” does at the “{stage}” stage (meiosis model, animal cell)?',
+    askMeiosisPartHiddenQuestion:
+      'At the “{stage}” stage (meiosis model, animal cell) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
   },
   languages: {
     vi: 'Tiếng Việt',

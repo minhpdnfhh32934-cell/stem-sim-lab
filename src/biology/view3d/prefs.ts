@@ -6,9 +6,11 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-/** Biology lessons with a 3D view besides mitosis. */
+/**
+ * Biology lessons whose 3D view uses this kit's 3D / 2D choice. Mitosis and meiosis keep theirs in
+ * the division store (saved in .stemsim files): `view3d` and `meiosisView3d`.
+ */
 export type Bio3DLesson =
-  | 'meiosis'
   | 'centralDogma'
   | 'pointMutation'
   | 'mendel'
@@ -20,7 +22,6 @@ export type Bio3DLesson =
   | 'transport';
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
-  'meiosis',
   'centralDogma',
   'pointMutation',
   'mendel',
