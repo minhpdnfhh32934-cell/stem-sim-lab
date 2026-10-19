@@ -1227,3 +1227,29 @@ describe('whiteboard: the camera on a zoomed board (item 3)', () => {
     }
   });
 });
+
+describe('whiteboard: an answer with nothing to write (audit G8)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    fonts.ready = Promise.resolve();
+    useVoiceStore.setState({ enabled: false, speaking: false });
+    useBoardStore.getState().set({ status: 'idle', lessonId: null, lessonContent: '', speed: 1 });
+  });
+  afterEach(() => {
+    stopLesson();
+    vi.useRealTimers();
+  });
+
+  it('says the board stays blank and where to read the answer', async () => {
+    render(<Page id="social" content="Chào bạn! Mình sẽ giúp bạn. Hy vọng bạn hiểu." />);
+    await untilDone();
+    expect(useBoardStore.getState().layout.elements).toHaveLength(0);
+    expect(screen.getByText(/không có gì để viết lên bảng/u)).toBeInTheDocument();
+  });
+
+  it('a lesson that wrote something shows no such line', async () => {
+    render(<Page id="written" />);
+    await untilDone();
+    expect(screen.queryByText(/không có gì để viết lên bảng/u)).toBeNull();
+  });
+});

@@ -1558,6 +1558,7 @@ const vi = {
     preparing: 'Đang chuẩn bị bảng…',
     empty:
       'Hỏi AI Teacher một câu: thầy sẽ vừa giảng vừa viết công thức, gạch chân, khoanh tròn và vẽ hình lên bảng này.',
+    nothingToWrite: 'Câu trả lời này không có gì để viết lên bảng — em đọc trong khung chat nhé.',
     checked: 'Phép tính đã được máy kiểm lại',
     unverified: 'Có số do AI tự tính, chưa kiểm chứng: em hãy tính lại',
     axes: 'Hệ trục tọa độ',

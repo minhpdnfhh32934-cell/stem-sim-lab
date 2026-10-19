@@ -1560,6 +1560,7 @@ const en: Messages = {
     preparing: 'Preparing the board…',
     empty:
       'Ask AI Teacher a question: it will explain while writing formulas, underlining, circling and drawing on this board.',
+    nothingToWrite: 'This answer has nothing to write on the board — read it in the chat.',
     checked: 'Arithmetic re-checked by the app',
     unverified: 'Contains numbers the AI computed itself, not verified: check them yourself',
     axes: 'Coordinate axes',

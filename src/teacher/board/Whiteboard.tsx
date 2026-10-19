@@ -73,6 +73,7 @@ import './board.css';
 export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
   const t = useT();
   const status = useBoardStore((s) => s.status);
+  const blank = useBoardStore((s) => s.status === 'done' && s.layout.elements.length === 0);
   const faces = useBoardStore((s) => s.layout.faces);
   const face = useBoardStore((s) => s.face);
   const teacherFace = useBoardStore((s) => s.teacherFace);
@@ -307,6 +308,8 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
       <div className="board__area">
         <BoardSheet />
         {!lesson && <p className="board__empty">{t('board.empty')}</p>}
+        {/* A lesson that wrote nothing (only a greeting or a remark): say why the board is blank. */}
+        {lesson && blank && <p className="board__empty">{t('board.nothingToWrite')}</p>}
       </div>
 
       {(lesson || status === 'preparing') && (
