@@ -123,6 +123,19 @@ const CENTROSOME_GAP = 0.45;
 const META_ATTACH_END = 0.15;
 const META_MOVE_START = META_ATTACH_END;
 const META_MOVE_END = 0.45;
+/** How far the kinetochore fibres have pulled the chromosomes to the plate (0…1). */
+const metaphasePull = (u: number) => ease(u, META_MOVE_START, META_MOVE_END);
+
+/**
+ * Stage meaning of the equatorial plate in this model, not a reading of the drawn positions:
+ * the double chromosomes are held on the plate by kinetochore fibres from both poles once the
+ * metaphase pull is complete (u ≥ META_MOVE_END) and until metaphase ends. Before that, and in
+ * every other stage, no chromosome is held there (anaphase starts by pulling the sisters
+ * apart). The poses use the same pull, so the drawn centromeres sit on x = 0 exactly then.
+ */
+export function heldOnPlate(stage: Stage3D, u: number): boolean {
+  return stage === 'metaphase' && metaphasePull(u) === 1;
+}
 /**
  * Prophase timing (fractions of the stage). The nucleolus fades first; the nuclear envelope
  * breaks down (opacity below 0.5 from u = 0.375) before the spindle has grown far enough to
@@ -863,11 +876,7 @@ function computeState(
         break;
       case 'metaphase':
         // Pulled to the plate by the kinetochore fibres, which are attached by META_MOVE_START.
-        pose = mix(
-          prophasePose(info, side),
-          platePose(info, side),
-          ease(u, META_MOVE_START, META_MOVE_END),
-        );
+        pose = mix(prophasePose(info, side), platePose(info, side), metaphasePull(u));
         break;
       case 'anaphase':
         joined = false;

@@ -20,6 +20,8 @@ export interface XYSeries {
   color?: number;
   /** Draw as bars (histograms). */
   bars?: boolean;
+  /** Join the line across nulls (series sampled on a different time grid than `x`). */
+  spanGaps?: boolean;
 }
 
 export interface XYChartProps {
@@ -120,6 +122,7 @@ export function XYChart(props: XYChartProps) {
               stroke,
               width: s.points ? 0 : 2,
               ...(s.dash ? { dash: [6, 4] } : {}),
+              ...(s.spanGaps ? { spanGaps: true } : {}),
               ...(bars ? { fill: `${stroke}59`, paths: bars } : {}),
               points: s.points ? { show: true, size: 5, fill: stroke } : { show: false },
               value: (_u: uPlotType, v: number | null) => fmt(v, yUnit),

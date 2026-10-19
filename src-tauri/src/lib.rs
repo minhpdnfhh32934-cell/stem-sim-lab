@@ -2,7 +2,10 @@
 //!
 //! - `app_info`: build information
 //! - `ai_*`: AI gateway (`AIProvider`: Gemini, Claude, Groq; keys in the OS keychain; retry,
-//!   timeout, cancel, daily cap)
+//!   timeout, cancel, daily cap); `ai_chat_stream` streams text answers through a channel
+//! - `local_ai_*`: language models run by another program on this computer (Ollama, LM Studio,
+//!   llama.cpp, OpenAI-compatible): loopback only, streamed, cancellable, never counted and
+//!   never sent to the cloud
 //!
 //! - `safety_*`: 18+ confirmation and incident log (PROMPT_PHAN_2 A3)
 //! - `save_file` / `open_text_file`: native Save/Open dialogs (`.stemsim`, PNG, CSV)
@@ -49,6 +52,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             app_info,
             ai::ai_chat,
+            ai::ai_chat_stream,
             ai::tts::ai_tts,
             ai::ai_cancel,
             ai::ai_models,
@@ -61,6 +65,12 @@ pub fn run() {
             ai::ai_edition,
             ai::open_gemini_key_page,
             ai::open_groq_key_page,
+            ai::local::local_ai_detect,
+            ai::local::local_ai_probe,
+            ai::local::local_ai_models,
+            ai::local::local_ai_model_info,
+            ai::local::local_ai_test,
+            ai::local::local_ai_chat,
             safety::safety_status,
             safety::safety_answer_adult,
             safety::safety_log_incident,

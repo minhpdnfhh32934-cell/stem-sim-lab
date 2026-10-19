@@ -1,8 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { markdownToScript } from './fromMarkdown';
-import { BOARD_W, COLUMNS, emptyLayout, overlaps, place, spanBox, type Measure } from './layout';
-import { boardAnswerText, scriptFor, subtitleText } from './lesson';
-import { scrollForRow, visibleBand } from './minimap';
+import {
+  BOARD_W,
+  COLUMNS,
+  FONT,
+  emptyLayout,
+  overlaps,
+  place,
+  spanBox,
+  type Measure,
+  type TextElement,
+} from './layout';
+import { splitFormula } from './formulaSplit';
+import { boardAnswerText, boardStreamPreview, scriptFor, subtitleText } from './lesson';
+import { clampScroll, rescaleScroll, scrollForRow, visibleBand } from './minimap';
 import { compileFn, sample } from './plot';
 import { checkNumbers, evaluate, toArithmetic } from './provenance';
 import { circle, rng } from './rough';
@@ -14,6 +25,16 @@ const measure: Measure = {
   text: (s, px) => s.length * px * 0.5,
   math: (tex, px) => ({ w: tex.length * px * 0.6, h: px * 1.3 }),
 };
+
+/**
+ * The widest piece of an element at its smallest normal size (formulas at 60 %, a formula chain
+ * by its pieces; words as they are), at the largest font its role may have.
+ */
+function widestAtSmallest(e: TextElement): number {
+  const px = e.role === 'title' ? FONT.title : FONT[e.role];
+  if (e.math) return Math.max(...splitFormula(e.source).map((p) => measure.math(p, px).w * 0.6));
+  return Math.max(...e.source.split(/\s+/).map((word) => measure.text(word, px, false)));
+}
 
 describe('TeachScript reader', () => {
   it('separates speech from board actions and anchors them in their sentence', () => {
@@ -47,6 +68,39 @@ describe('TeachScript reader', () => {
     expect(kept.diagnostics.some((d) => d.code === 'unknown_tag')).toBe(true);
     const fallback = parseTeachScript('<write zone="nowhere" id="w2" role="weird">ok</write>');
     expect(fallback.sentences[0]?.actions[0]?.action).toMatchObject({ zone: 'main', role: 'body' });
+  });
+
+  it('drops hidden reasoning whole: none of it is spoken or written (unlike other unknown tags)', () => {
+    const everything = (input: string) => {
+      const r = parseTeachScript(input);
+      return {
+        r,
+        text: r.sentences
+          .flatMap((s) => [s.speech, s.spoken, ...s.actions.map((a) => JSON.stringify(a.action))])
+          .join(' '),
+        ids: r.sentences.flatMap((s) =>
+          s.actions.flatMap((a) => (a.action.kind === 'write' ? [a.action.id] : [])),
+        ),
+      };
+    };
+    const closed = everything(
+      '<think>tính nháp</think> Ta có <write id="f1" math="true">a=1</write>.',
+    );
+    expect(closed.text).not.toContain('tính nháp');
+    expect(closed.ids).toEqual(['f1']);
+    expect(closed.r.diagnostics).toContainEqual({ code: 'reasoning_removed' });
+    for (const input of [
+      // Cut at the output limit inside the reasoning.
+      'Ta có <write id="f1" zone="steps">a = 1</write>. <think>còn nháp <write id="x1">b = 2</write>',
+      // The chat template pre-filled the opening tag.
+      'nháp <write id="x1">b = 2</write> hết</think>Ta có <write id="f1" zone="steps">a = 1</write>.',
+      // Other names, any case.
+      '<REASONING>nháp</REASONING><reflection>b = 2</reflection>Ta có <write id="f1" zone="steps">a = 1</write>.',
+    ]) {
+      const { text, ids } = everything(input);
+      expect(text).not.toMatch(/nháp|b = 2|hết/u);
+      expect(ids).toEqual(['f1']);
+    }
   });
 
   it('removes coordinates the AI might try to give', () => {
@@ -142,6 +196,162 @@ describe('markdown answers on the board', () => {
   });
 });
 
+describe('a board lesson while it streams (the chat preview, W2 fix round 1)', () => {
+  const LESSON = String.raw`Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Định luật II Newton</write> nhé. Theo định luật II, <write id="f1" zone="steps" math="true">a = \frac{F}{m}</write><circle target="f1"/> gia tốc tỉ lệ với lực.`;
+
+  it('shows what the teacher says, with formulas in plain symbols, never tags or LaTeX', () => {
+    const shown = boardStreamPreview(LESSON);
+    expect(shown).toBe(
+      'Hôm nay mình xét bài Định luật II Newton nhé.\nTheo định luật II, a = F/m gia tốc tỉ lệ với lực.',
+    );
+    // Every prefix, as the stream delivers it: never markup, attributes or LaTeX.
+    for (let end = 1; end <= LESSON.length; end++) {
+      const piece = boardStreamPreview(LESSON.slice(0, end));
+      expect(piece).not.toMatch(/[<>]|\\frac|zone=|math=|target=|\$/);
+    }
+  });
+
+  it('leaves out what is still being written until it is whole', () => {
+    // A write whose closing tag has not come: its formula is not shown cut in the middle (and the
+    // open `<write` already makes this a lesson: the words before it read as one).
+    expect(
+      boardStreamPreview(String.raw`Theo định luật II, <write id="f1" math="true">a = \frac{F`),
+    ).toBe('Theo định luật II,');
+    // A tag name being typed after a finished write.
+    expect(boardStreamPreview('Ta có <write id="a1">x = 1</write> và <wr')).toBe('Ta có x = 1 và');
+    // A formula in the speech whose closing "$" has not come.
+    expect(boardStreamPreview('Ta có <write id="a1">x</write> và $\\frac{F')).toBe('Ta có x và');
+  });
+
+  it('a markdown answer (no TeachScript) is shown as it is', () => {
+    expect(boardStreamPreview('# Rơi tự do\n1. Vật chỉ chịu $mg$.')).toBe(
+      '# Rơi tự do\n1. Vật chỉ chịu $mg$.',
+    );
+  });
+
+  // W2 fix round 2: the first sentence holds a formula, before the first write is whole.
+  const FORMULA_FIRST = String.raw`Ta có $v = \sqrt{2gh}$ nên <write id="w1" math="true">v = \sqrt{2 \cdot 9{,}8 \cdot 5}</write> và <highlight target="w1"/>.`;
+
+  it('a lesson asked in TeachScript never shows LaTeX, not even before its first write', () => {
+    // Every prefix, as askTeacher previews a TeachScript lesson (BOARD_SYSTEM was sent).
+    for (let end = 1; end <= FORMULA_FIRST.length; end++) {
+      const piece = boardStreamPreview(FORMULA_FIRST.slice(0, end), true);
+      expect(piece).not.toMatch(/[<>$\\{}]|sqrt|cdot|target=|math=/);
+    }
+    expect(boardStreamPreview('Ta có $v = \\sqrt{2gh}$ nên ', true)).toBe('Ta có v = √(2gh) nên');
+    // The written formula reads with its number whole (9,8, never "9" and "8").
+    expect(boardStreamPreview(FORMULA_FIRST, true)).toBe(
+      'Ta có v = √(2gh) nên v = √(2 · 9,8 · 5) và.',
+    );
+  });
+
+  it('without being told, an unfinished <write already makes it a lesson', () => {
+    const typed = FORMULA_FIRST.indexOf('<write') + '<write'.length;
+    for (let end = typed; end <= FORMULA_FIRST.length; end++) {
+      expect(boardStreamPreview(FORMULA_FIRST.slice(0, end))).not.toMatch(/[<>$\\{}]|sqrt/);
+    }
+  });
+});
+
+describe('subtitles read formulas as written', () => {
+  it('keeps a decimal comma inside a root or a fraction, and reads one inside another', () => {
+    expect(subtitleText(String.raw`$v = \sqrt{2 \cdot 9{,}8 \cdot 5}$`)).toBe('v = √(2 · 9,8 · 5)');
+    expect(subtitleText(String.raw`$v = \frac{72}{3{,}6}$`)).toBe('v = 72/3,6');
+    expect(subtitleText(String.raw`$t = \sqrt{\frac{2h}{g}}$`)).toBe('t = √(2h/g)');
+    expect(subtitleText(String.raw`$x = \frac{\sqrt{3}}{2}$`)).toBe('x = √(3)/2');
+    expect(subtitleText(String.raw`$\rho = \frac{1}{10^{-3}}$`)).toBe('rho = 1/10⁻³');
+  });
+
+  it('a fraction of sums keeps its brackets (a + b over c is not a + b/c)', () => {
+    expect(subtitleText(String.raw`$v = \frac{s_1 + s_2}{t}$`)).toBe('v = (s₁ + s₂)/t');
+    expect(subtitleText(String.raw`$t = \frac{2 \cdot 45}{10}$`)).toBe('t = (2 · 45)/10');
+    expect(subtitleText('Ta có $a = \\frac{F}{m}$ nhé')).toBe('Ta có a = F/m nhé');
+  });
+});
+
+describe('answers are cleaned before the board and the chat copy', () => {
+  const written = (content: string, reviewed = false) =>
+    scriptFor(content, { reviewed }).sentences.flatMap((s) =>
+      s.actions.flatMap((a) => (a.action.kind === 'write' ? [a.action.text] : [])),
+    );
+  const said = (content: string, reviewed = false) =>
+    scriptFor(content, { reviewed })
+      .sentences.map((s) => s.spoken)
+      .join(' ');
+
+  it('an answer saved with hidden reasoning and an echoed label shows neither', () => {
+    const content =
+      '<think>thử m = 7 kg</think>**GHI CHÚ:**\n# Định luật II\n1. Cho m = 2 kg, F = 10 N\n2. Vậy a = 5 m/s²';
+    const all = [...written(content), said(content), boardAnswerText(content)].join(' ');
+    expect(all).not.toMatch(/think|thử|7 kg|GHI CHÚ/u);
+    expect(written(content)[0]).toBe('Định luật II');
+    expect(written(content).join(' ')).toContain('Vậy a = 5 m/s²');
+    // TeachScript answers too.
+    const script = 'Ta có <write id="f1" zone="steps">a = 1</write>.<think>nháp</think>';
+    expect(boardAnswerText(script)).not.toContain('nháp');
+  });
+
+  it('a Think answer saved with the reviewer notes teaches only the lesson', () => {
+    const content =
+      'Nhận xét về bản nháp: đúng hướng.\n\nBản đã sửa:\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.';
+    expect(written(content, true)[0]).toBe('Rơi tự do');
+    const all = [...written(content, true), said(content, true)].join(' ');
+    expect(all).not.toMatch(/bản nháp|Bản đã sửa/u);
+    expect(boardAnswerText(content, { reviewed: true })).toBe(
+      '# Rơi tự do\n1. Vật chỉ chịu trọng lực.',
+    );
+  });
+});
+
+describe('Think answers on the board (review round 1)', () => {
+  const written = (content: string, question = '') =>
+    scriptFor(content, { reviewed: true, question }).sentences.flatMap((s) =>
+      s.actions.flatMap((a) => (a.action.kind === 'write' ? [a.action.text] : [])),
+    );
+  const said = (content: string, question = '') =>
+    scriptFor(content, { reviewed: true, question })
+      .sentences.map((s) => s.spoken)
+      .join(' ');
+
+  it('a one-paragraph TeachScript lesson with a remark in front keeps every write', () => {
+    for (const remark of ['Bản nháp đã đúng.', 'The draft is correct.']) {
+      const content = `${remark} Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.`;
+      expect(written(content)).toEqual(['Rơi tự do', 'h = 20 m', 'v = 20 m/s']);
+      expect(said(content)).not.toMatch(/nháp|draft/iu);
+      expect(boardAnswerText(content, { reviewed: true })).toContain('v = 20 m/s');
+    }
+  });
+
+  it('a remark in the middle of the lesson is not cut, nor anything around it', () => {
+    const content =
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Bản nháp dùng g = 10, mình sửa thành <write id="s1" zone="steps">g = 9,8 m/s²</write>.';
+    expect(written(content)).toEqual(['Rơi tự do', 'g = 9,8 m/s²']);
+  });
+
+  it("the learner's own draft: the feedback stays when the question asks about it", () => {
+    const content =
+      'Bản nháp đúng hướng nhưng thiếu đơn vị.\n\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.';
+    expect(said(content)).not.toContain('Bản nháp');
+    expect(said(content, 'Xem giúp em bản nháp này')).toContain('Bản nháp đúng hướng');
+    expect(boardAnswerText(content, { reviewed: true, question: 'check my draft' })).toBe(content);
+  });
+
+  it('a reasoning tag between backticks is code; a bare literal one is reasoning (pinned)', () => {
+    const coded = parseTeachScript(
+      'Thẻ `<think>` là mã. Ta viết <write id="s1" zone="steps">a = 2</write>.',
+    );
+    expect(coded.diagnostics.map((d) => d.code)).not.toContain('reasoning_removed');
+    expect(coded.sentences.flatMap((s) => s.actions.map((a) => a.action.kind))).toEqual(['write']);
+    // Without backticks "<think>" opens hidden reasoning, cut to the end when unclosed: the
+    // shared rule (src/ai/reasoning.ts) cannot tell it from a model stopped mid-reasoning.
+    const bare = parseTeachScript(
+      'Ta viết <write id="s1">so sánh <think> trong code</write> và tiếp tục.',
+    );
+    expect(bare.diagnostics.map((d) => d.code)).toContain('reasoning_removed');
+    expect(bare.sentences.map((s) => s.spoken).join(' ')).not.toContain('tiếp tục');
+  });
+});
+
 describe('board layout (deterministic, never overlapping)', () => {
   it('places a long random lesson without any overlap and inside the board', () => {
     const r = rng(42);
@@ -182,10 +392,15 @@ describe('board layout (deterministic, never overlapping)', () => {
     expect(els.length).toBeGreaterThan(300);
     for (const e of els) {
       expect(e.x).toBeGreaterThanOrEqual(0);
-      expect(e.x + e.w).toBeLessThanOrEqual(BOARD_W);
+      // The box is the true width of the ink (item 3: no clamping), inside the margins.
+      expect(e.x + e.w).toBeLessThanOrEqual(BOARD_W - 40);
       expect(e.y).toBeGreaterThanOrEqual(0);
       expect(e.y + e.h).toBeLessThanOrEqual(layout.faces[e.face]?.height ?? 0);
-      if (e.kind === 'text') expect(e.fontSize * e.scale).toBeGreaterThanOrEqual(25 * 0.6);
+      if (e.kind !== 'text') continue;
+      for (const line of e.lines) expect(line.w).toBeLessThanOrEqual(e.w);
+      // Written smaller than usual only when even the whole board is too narrow for it.
+      if (e.squeezed) expect(widestAtSmallest(e)).toBeGreaterThan(BOARD_W - 80);
+      else expect(e.fontSize * e.scale).toBeGreaterThanOrEqual(25 * 0.6);
     }
     for (let i = 0; i < els.length; i++) {
       for (let j = i + 1; j < els.length; j++) {
@@ -307,5 +522,40 @@ describe('board minimap geometry', () => {
     // Clamped at both ends.
     expect(scrollForRow(0, 0.5, 400, 2000)).toBe(0);
     expect(scrollForRow(5000, 0.5, 400, 2000)).toBe(1600);
+  });
+
+  it('a new scale keeps the board row in the middle of the view (resize, zoom), clamped', () => {
+    const height = 4000; // board units
+    const middle = (top: number, client: number, scale: number) => (top + client / 2) / scale;
+    for (const start of [0, 350, 900, 1700]) {
+      const row = middle(start, 400, 0.6);
+      const bigger = rescaleScroll(start, 400, 0.6, 0.9, height * 0.9, 400);
+      // Clamped at the top when the row is too close to it.
+      if (row * 0.9 >= 200) expect(Math.abs(middle(bigger, 400, 0.9) - row) * 0.9).toBeLessThan(1);
+      else expect(bigger).toBe(0);
+      const back = rescaleScroll(bigger, 400, 0.9, 0.6, height * 0.6, 400);
+      expect(Math.abs(back - start)).toBeLessThan(1);
+    }
+    // A taller view after the resize keeps the same row in its middle.
+    const taller = rescaleScroll(900, 400, 0.6, 0.6, height * 0.6, 600);
+    expect(middle(taller, 600, 0.6)).toBeCloseTo(middle(900, 400, 0.6));
+    // Never past the end of the board, never above its top.
+    expect(rescaleScroll(2000, 400, 0.6, 0.3, height * 0.3, 400)).toBe(height * 0.3 - 400);
+    expect(rescaleScroll(10, 400, 0.9, 0.3, height * 0.3, 400)).toBe(0);
+    // Sideways when zoomed: the same rule on the other axis.
+    expect(rescaleScroll(0, 700, 0.6, 0.75, 1200 * 0.75, 700)).toBeCloseTo(
+      (350 / 0.6) * 0.75 - 350,
+    );
+  });
+
+  it('a camera target stays inside the content (as asked when nothing is laid out)', () => {
+    expect(clampScroll(500, 2000, 400)).toBe(500);
+    expect(clampScroll(1900, 2000, 400)).toBe(1600);
+    expect(clampScroll(-20, 2000, 400)).toBe(0);
+    // Content that fits: nowhere to scroll.
+    expect(clampScroll(300, 400, 400)).toBe(0);
+    // An engine without layout (content 0): kept as asked, never negative.
+    expect(clampScroll(300, 0, 400)).toBe(300);
+    expect(clampScroll(-5, 0, 400)).toBe(0);
   });
 });

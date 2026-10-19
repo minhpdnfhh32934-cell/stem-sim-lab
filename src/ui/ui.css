@@ -636,6 +636,13 @@ select:disabled {
   color: var(--text);
   box-shadow: var(--shadow-sm);
 }
+/* Held by a lesson: the chosen value stays readable, the others look unavailable. */
+.segmented__item:disabled {
+  cursor: not-allowed;
+}
+.segmented__item:disabled:not([aria-checked='true']) {
+  opacity: 0.55;
+}
 
 /* Sliding indicator (src/ui/slidingIndicator.ts, gallery pattern 039): the checked pill glides
    between items. Without the script the checked item keeps its own background (above). */

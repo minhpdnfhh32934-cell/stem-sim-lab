@@ -1,27 +1,35 @@
-import { CircleCheck, LoaderCircle, Sparkles, TriangleAlert } from 'lucide-react';
+import { CircleCheck, LoaderCircle, Settings2, Sparkles, TriangleAlert } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
+import { isLocalMessage } from '@/ai/errorKind';
 import { explainSolution, type Explanation } from '@/ai/explain';
-import { getTransport } from '@/ai/transport';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { localTransport } from '@/ai/local/localTransport';
 import { toAiError } from '@/ai/types';
 import type { PhysicsScene, Solution } from '@/physics/types';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { logIncident, useSafetyStore } from '@/safety/safetyStore';
-import { resolveAi } from './analyze';
+import { resolveAiForAnalysis } from './analyze';
+import { useAnalysisEngine } from './engineChoice';
+import { localFailure, localFailureText } from './localRuntime';
 import './ai.css';
 
 type State =
   | { kind: 'idle' }
   | { kind: 'loading' }
   | { kind: 'done'; result: Explanation }
-  | { kind: 'error'; message: string };
+  /** `section`: the Settings page that helps (null: none does). */
+  | { kind: 'error'; message: string; section: SettingsSection | null };
 
 /**
  * "AI diễn giải" (§2.1 b): the AI explains, in words, numbers the engine computed. The
- * reply is checked and hidden when it contains a number the engine did not produce.
+ * reply is checked and hidden when it contains a number the engine did not produce. It uses the
+ * same AI as AI Teacher and "Phân tích đề" (`resolveAiForAnalysis`): a chosen Gemma or runtime on
+ * this computer explains there, and never hands the request to the cloud.
  */
 export function ExplainBox({
   scene,
@@ -36,6 +44,8 @@ export function ExplainBox({
   const L = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const provider = useAiStore((s) => s.provider);
+  const engine = useAnalysisEngine();
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const aiAllowed = useSafetyStore((s) => s.status?.aiAllowed ?? false);
   // The explanation belongs to one solution: a new solution shows the button again.
   const [entry, setEntry] = useState<{ solution: Solution; state: State } | null>(null);
@@ -52,27 +62,55 @@ export function ExplainBox({
     [solution],
   );
 
-  // AI off, or the safety gates closed (age / consent): no AI button at all.
-  if (provider === 'off' || !aiAllowed) return null;
+  // The online AI off (and no AI on this computer chosen), or the safety gates closed (age /
+  // consent): no AI button at all.
+  if ((provider === 'off' && engine === 'cloud') || !aiAllowed) return null;
 
   const run = async () => {
     abort.current?.abort();
     const ctrl = new AbortController();
     abort.current = ctrl;
     setState({ kind: 'loading' });
+    // The runtime on this computer was asked: whatever fails is explained as its failure.
+    let onComputer = false;
     try {
-      const ai = await resolveAi();
+      const ai = await resolveAiForAnalysis();
+      onComputer = ai.transport === localTransport;
       const result = await explainSolution(L(scene.title), problemText, solution, {
-        transport: getTransport(),
-        ...ai,
+        transport: ai.transport,
+        provider: ai.provider,
+        model: ai.model,
+        timeoutSecs: ai.timeoutSecs,
         signal: ctrl.signal,
       });
       if (ctrl.signal.aborted) return;
       if (!result.safe) logIncident('outputUnsafe');
-      setState({ kind: 'done', result });
+      setState({
+        kind: 'done',
+        result: ai.modelLabel ? { ...result, model: ai.modelLabel(result.model) } : result,
+      });
     } catch (e) {
-      if (!ctrl.signal.aborted)
-        setState({ kind: 'error', message: toAiError(e).message || toAiError(e).code });
+      if (ctrl.signal.aborted) return;
+      const err = toAiError(e);
+      if (err.code === 'unavailable' && err.message === 'gemma') {
+        // The learner chose Gemma but its model is not downloaded: nothing was sent anywhere.
+        setState({ kind: 'error', message: t('chat.gemmaMissingNotice'), section: 'local' });
+      } else if (err.code === 'unavailable' && err.message === 'off') {
+        setState({ kind: 'error', message: t('chat.errors.cloudOff'), section: 'ai' });
+      } else if (onComputer || isLocalMessage(err.message)) {
+        // A runtime on this computer failed, or wrote no explanation (only its reasoning, or
+        // nothing before its limit): its study-partner sentence, never a raw code. Nothing went
+        // online.
+        const kind = useLocalAiStore.getState().selected?.kind ?? 'openAiCompatible';
+        const failure = localFailure(err, 'explain');
+        setState({
+          kind: 'error',
+          message: localFailureText(locale, failure, kind),
+          section: failure.section,
+        });
+      } else {
+        setState({ kind: 'error', message: err.message || err.code, section: null });
+      }
     }
   };
 
@@ -124,9 +162,20 @@ export function ExplainBox({
         </p>
       )}
       {state.kind === 'error' && (
-        <p className="explain explain--hidden" role="alert">
-          {t('solution.explainError', { message: state.message })}
-        </p>
+        <div className="explain explain--hidden" role="alert">
+          <p className="explain__error">{t('solution.explainError', { message: state.message })}</p>
+          {state.section && (
+            <button
+              type="button"
+              className="btn explain__settings"
+              onClick={() => {
+                if (state.section) openSettingsAt(state.section);
+              }}
+            >
+              <Settings2 size={14} strokeWidth={1.75} aria-hidden="true" /> {t('chat.settings')}
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

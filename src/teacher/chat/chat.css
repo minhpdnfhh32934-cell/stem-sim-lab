@@ -507,6 +507,23 @@
   color: var(--danger);
   font-size: var(--text-sm);
 }
+.chat-panel__error {
+  flex-wrap: wrap;
+}
+.chat-panel__error-text {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+/* "Hỏi lại" and "Cài đặt" under a failed answer (one click, one request). */
+.chat-panel__error-actions {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chat-panel__error-actions .btn {
+  min-height: var(--target);
+}
 .chat-panel__composer {
   margin: 0 12px;
   padding: 8px;
@@ -938,8 +955,10 @@ p.gpu-notice {
   margin: 0;
 }
 
-/* An answer that stopped at the output limit ("Viết tiếp"). */
-.chat-message__continue {
+/* An answer that stopped at the output limit ("Viết tiếp"), and the note that an answer about a
+   circled picture was not read aloud. */
+.chat-message__continue,
+.chat-message__quiet {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1042,4 +1061,36 @@ p.gpu-notice {
 .chat-message__unverified svg {
   flex: none;
   color: var(--conf-approx);
+}
+
+/* "Khoanh để hỏi": the question goes with what was circled on the board (removable). */
+.chat-panel__board-chip {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  margin: 0 12px 6px;
+  padding: 0 0 0 10px;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+.chat-panel__board-chip-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat-message__board-ref {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 6px;
+  color: inherit;
+  font-size: 11px;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
 }

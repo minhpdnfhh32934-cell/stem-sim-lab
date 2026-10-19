@@ -607,6 +607,7 @@ const HINTED = [
   'personalData',
   'unsafe',
   'outputUnsafe',
+  'local',
 ] as const satisfies readonly AnalyzeErrorCode[];
 /** Retrying the same text would give the same answer: the student has to change something. */
 const NO_RETRY: readonly AnalyzeErrorCode[] = [
@@ -626,6 +627,7 @@ function ErrorView() {
   const error = useAnalyzeStore((s) => s.error);
   const problemText = useWorkspaceStore((s) => s.problemText);
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const provider = useAiStore((s) => s.provider);
   if (!error) return null;
   const code = error.code;
@@ -695,6 +697,20 @@ function ErrorView() {
           >
             <Settings size={15} strokeWidth={1.75} aria-hidden="true" />
             {t('safety.settings.title')}
+          </button>
+        )}
+        {code === 'local' && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              closeAnalyze();
+              // The runtime on this computer is fixed there; nothing goes online instead.
+              openSettingsAt('runtimes');
+            }}
+          >
+            <Settings size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('analyze.openRuntimes')}
           </button>
         )}
         {settingsFix && (

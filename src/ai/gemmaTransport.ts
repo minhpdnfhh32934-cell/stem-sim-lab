@@ -5,6 +5,7 @@
  */
 import { useChatStore } from '@/teacher/chat/chatStore';
 import type { KeyTest } from './keyTest';
+import { schemaInSystem } from './prompts';
 import type { LlmTransport } from './transport';
 import {
   webGemmaChat,
@@ -86,9 +87,7 @@ export type { DownloadProgress };
 class GemmaTransport implements LlmTransport {
   async chat(req: ChatRequest): Promise<ChatResponse> {
     const started = performance.now();
-    const system = req.jsonSchema
-      ? `${req.system}\n\nTrả về DUY NHẤT một JSON đúng schema sau, không giải thích, không dùng code fence:\n${JSON.stringify(req.jsonSchema)}`
-      : req.system;
+    const system = req.jsonSchema ? schemaInSystem(req.system, req.jsonSchema) : req.system;
     const answer = await gemmaChatText({
       model: req.model.trim(),
       system,

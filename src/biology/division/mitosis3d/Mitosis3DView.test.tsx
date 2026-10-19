@@ -88,6 +88,7 @@ beforeEach(() => {
     viewNonce: 0,
     webglFailed: false,
     active: false,
+    cellLocked: false,
   });
 });
 
@@ -211,6 +212,26 @@ describe('Mitosis3DView', () => {
     // Picking a part from the list shows its name and function.
     fireEvent.click(within(parts()).getByRole('button', { name: 'Thành tế bào' }));
     expect(screen.getByRole('complementary')).toHaveTextContent(/cellulose/);
+  });
+
+  it('a lesson that holds the cell locks the cell type control', () => {
+    const { factory } = fakeRenderer();
+    useMitosis3D.setState({ cellLocked: true });
+    render(<Mitosis3DView createRenderer={factory} />);
+    const animal = screen.getByRole('radio', { name: 'Động vật' });
+    const plant = screen.getByRole('radio', { name: 'Thực vật' });
+    expect(animal).toBeDisabled();
+    expect(animal).toHaveAttribute('aria-checked', 'true');
+    expect(plant).toBeDisabled();
+    fireEvent.click(plant);
+    expect(useDivisionStore.getState().cellType).toBe('animal');
+    // Released: the learner can switch again.
+    act(() => {
+      useMitosis3D.setState({ cellLocked: false });
+    });
+    expect(plant).toBeEnabled();
+    fireEvent.click(plant);
+    expect(useDivisionStore.getState().cellType).toBe('plant');
   });
 
   it('cleans up the renderer and the debug hook on unmount', () => {

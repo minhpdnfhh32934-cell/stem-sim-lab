@@ -1,0 +1,291 @@
+{
+  "about": "Shared vectors for stripReasoning (src/ai/reasoning.ts and src-tauri/src/ai/reasoning.rs). Rule: tag names think, thinking, reasoning, reflection, case-insensitive, optional attributes (<think type=\"x\">); a name followed by more letters (<thinker>) is not a tag. 1) Every closed block <name ...>...</name> (same name) is removed together with the spaces or tabs right after its closing tag. 2) An opening tag left without its closing tag: everything from it to the end is removed (unclosed = true). 3) A closing tag left with no opening tag before it (a template that pre-filled the opening tag): everything up to and including the LAST such closing tag is removed, plus the spaces or tabs after it. 4) When anything was removed, leading and trailing whitespace is trimmed; when nothing was removed the text is returned unchanged. removed = something was removed.",
+  "cases": [
+    {
+      "name": "no tags",
+      "input": "  Lực là đại lượng vectơ.  ",
+      "text": "  Lực là đại lượng vectơ.  ",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "leading closed block",
+      "input": "<think>tính nháp 3*4=12</think>Đáp số: 12 N.",
+      "text": "Đáp số: 12 N.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "block with newlines after",
+      "input": "<think>\nx\n</think>\n\nGia tốc a = 2 m/s².",
+      "text": "Gia tốc a = 2 m/s².",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "block in the middle keeps text on both sides",
+      "input": "Ta có <think>nháp</think> a = F/m.",
+      "text": "Ta có a = F/m.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "several blocks",
+      "input": "<think>a</think>Một. <think>b</think>Hai.",
+      "text": "Một. Hai.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "case and attributes",
+      "input": "<THINK type=\"x\">nháp</THINK>Kết quả.",
+      "text": "Kết quả.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "thinking and reasoning tags",
+      "input": "<thinking>a</thinking><reasoning>b</reasoning>Câu trả lời.",
+      "text": "Câu trả lời.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "reflection tag",
+      "input": "Bài giải.<reflection>kiểm tra lại</reflection>",
+      "text": "Bài giải.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "unclosed block cut at max tokens",
+      "input": "Vậy a = 5 m/s². <think>Mình cần kiểm tra lại đơn vị",
+      "text": "Vậy a = 5 m/s².",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "unclosed block at the start",
+      "input": "<think>Người dùng hỏi về lực…",
+      "text": "",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "orphan closing tag",
+      "input": "Người dùng hỏi về lực, mình trả lời ngắn.</think>\nLực là tác dụng đẩy hoặc kéo.",
+      "text": "Lực là tác dụng đẩy hoặc kéo.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "two orphan closing tags",
+      "input": "a</think>b</think> Kết luận.",
+      "text": "Kết luận.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "not a tag: thinker",
+      "input": "Nhà <thinker> nổi tiếng",
+      "text": "Nhà <thinker> nổi tiếng",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "not a tag: inequality",
+      "input": "Nếu $x<y$ và $y>z$ thì $x<z$.",
+      "text": "Nếu $x<y$ và $y>z$ thì $x<z$.",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "teachscript survives",
+      "input": "<think>x</think>Ta viết <write id=\"s1\" zone=\"steps\">a = F/m</write>.",
+      "text": "Ta viết <write id=\"s1\" zone=\"steps\">a = F/m</write>.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "numbers outside blocks unchanged",
+      "input": "m = 2 kg <think>thử 3 kg</think>F = 10 N",
+      "text": "m = 2 kg F = 10 N",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "only reasoning",
+      "input": "<think>chỉ có nháp</think>",
+      "text": "",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "closed block then unclosed",
+      "input": "<think>a</think>Đáp số 5. <thinking>còn tiếp",
+      "text": "Đáp số 5.",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "mismatched names do not close each other",
+      "input": "<think>a</thinking>b",
+      "text": "",
+      "removed": true,
+      "unclosed": true
+    }
+  ],
+  "about_code": "Added 2026-10-15 (both sides pass them; the rule is unchanged on 'cases'). Code: a closed code fence (a line of three or more backticks or tildes, closed by a later line of only at least as many of the same mark, spaces, tabs or a CR) and inline code (a backtick, then the next backtick on the same line with something between) are found first; an unclosed fence is no code. An opening or self-closing tag in code is code, not reasoning; so is a closing tag in code after an opening tag of the same name in code. Any other closing tag counts even in code, and when its code span holds only it (blanks aside) the backticks or fence lines go with it. <think/> and <think /> (a '/' right before the '>') are self-closing: an empty block, removed with the spaces or tabs after it.",
+  "code": [
+    {
+      "name": "an opening tag in inline code is code",
+      "input": "Qwen dùng thẻ `<think>` để suy nghĩ. Bước 1: a = 2 m/s².",
+      "text": "Qwen dùng thẻ `<think>` để suy nghĩ. Bước 1: a = 2 m/s².",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "an opening tag in a closed fence is code",
+      "input": "```html\n<think>\n```\nVậy a = 2.",
+      "text": "```html\n<think>\n```\nVậy a = 2.",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "a tilde fence with attributes",
+      "input": "~~~\n<reasoning type=\"x\">\n~~~\nHết.",
+      "text": "~~~\n<reasoning type=\"x\">\n~~~\nHết.",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "a closing tag in code after an opening tag in code is code",
+      "input": "Qwen viết suy nghĩ giữa `<think>` và `</think>`. Đáp số 12.",
+      "text": "Qwen viết suy nghĩ giữa `<think>` và `</think>`. Đáp số 12.",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "a self-closing tag in code is code",
+      "input": "Thẻ `<think/>` là thẻ rỗng.",
+      "text": "Thẻ `<think/>` là thẻ rỗng.",
+      "removed": false,
+      "unclosed": false
+    },
+    {
+      "name": "orphan closing tag alone in inline code takes its backticks",
+      "input": "`</think>` là thẻ đóng. Đáp số 12.",
+      "text": "là thẻ đóng. Đáp số 12.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "orphan closing tag alone in a fence takes the fence",
+      "input": "Ví dụ:\n```\n</think>\n```\nĐáp số 12.",
+      "text": "Đáp số 12.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "orphan closing tag outside code after an opening tag in code",
+      "input": "Thẻ `<think>` rồi </think> Hết.",
+      "text": "Hết.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a block around code goes with its code",
+      "input": "<think>dùng `<think>` nhé</think>Đáp số 4.",
+      "text": "Đáp số 4.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a block holding a closing tag in code after an opening tag in code",
+      "input": "<think>viết `<think>` rồi `</think>` nhé</think>Đáp số 7.",
+      "text": "Đáp số 7.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "code before a block stays",
+      "input": "Viết `<think>` thế này. <think>nháp</think>Hết.",
+      "text": "Viết `<think>` thế này. Hết.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a block ends at a closing tag alone in code",
+      "input": "<think>nháp `</ThinK >` Đáp số 12.",
+      "text": "Đáp số 12.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a code span holding more than a closing tag keeps its backtick",
+      "input": "<think>x ` y</think> Ta có `a` b.",
+      "text": "Ta có `a` b.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "an unclosed block with code in it",
+      "input": "Đáp số 4. <think>thử `x` và",
+      "text": "Đáp số 4.",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "an unclosed fence is no code",
+      "input": "Đáp số 4.\n```\n<think>\nnháp",
+      "text": "Đáp số 4.\n```",
+      "removed": true,
+      "unclosed": true
+    },
+    {
+      "name": "a self-closing tag is an empty block",
+      "input": "Dùng <think /> để đánh dấu. Đáp số 12.",
+      "text": "Dùng để đánh dấu. Đáp số 12.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a self-closing tag without a space",
+      "input": "Dùng <Think/> để đánh dấu.",
+      "text": "Dùng để đánh dấu.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a self-closing tag inside a block",
+      "input": "<think>a <think/> b</think>Kết quả.",
+      "text": "Kết quả.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "a slash before attributes is no self-closing tag",
+      "input": "Đáp số 5. <think / x>nháp",
+      "text": "Đáp số 5.",
+      "removed": true,
+      "unclosed": true
+    }
+  ],
+  "about_after_block": "Added 2026-10-15: a closing tag outside a block is rule 3 also after a block (an orphan; Rust and the stream filters always read it so). The page's own pass on a whole answer (stripReasoningOutsideCode in src/ai/reasoning.ts) differs here on purpose: it balances nested blocks and removes a stray closing tag after a block as a tag, its neighbours kept.",
+  "after_block": [
+    {
+      "name": "orphan closing tag after a block",
+      "input": "Đáp số 4. <think>x</think> Thêm </think> Hết.",
+      "text": "Hết.",
+      "removed": true,
+      "unclosed": false
+    },
+    {
+      "name": "nested blocks: the second closing tag is an orphan",
+      "input": "<think>a<think>b</think>c</think>d",
+      "text": "d",
+      "removed": true,
+      "unclosed": false
+    }
+  ]
+}

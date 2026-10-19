@@ -27,6 +27,77 @@ describe('conversation memory settings', () => {
     expect(fresh.memoryLength).toBe('medium');
   });
 
+  it('migrating from v5 keeps the engine and remembers it as the one to go back to', async () => {
+    const migrate = useChatStore.persist.getOptions().migrate;
+    if (!migrate) throw new Error('migrate missing');
+    for (const [engine, chosen] of [
+      ['cloud', true],
+      ['gemma', false],
+      ['gemma', true],
+    ] as const) {
+      const migrated = (await migrate(
+        { engine, engineChosen: chosen, gemmaModel: 'gemma3-1b', memoryLength: 'long' },
+        5,
+      )) as Record<string, unknown>;
+      expect(migrated).toMatchObject({
+        engine,
+        engineChosen: chosen,
+        memoryLength: 'long',
+        previousEngine: { engine, chosen },
+      });
+    }
+    // An engine this version does not know is not trusted.
+    const odd = (await migrate({ engine: 'ollama', engineChosen: true }, 5)) as Record<
+      string,
+      unknown
+    >;
+    expect(odd).toMatchObject({ engine: 'gemma', engineChosen: false });
+    expect(useChatStore.persist.getOptions().version).toBe(6);
+  });
+
+  it('the local engine is saved and restored as it was (no check on load)', async () => {
+    useChatStore.getState().setEngine('local');
+    const raw = JSON.parse(localStorage.getItem('stemsim.teacher-chat') ?? '{}') as {
+      state: { engine: string; engineChosen: boolean };
+      version: number;
+    };
+    expect(raw.version).toBe(6);
+    expect(raw.state).toMatchObject({ engine: 'local', engineChosen: true });
+    useChatStore.setState({ engine: 'cloud' });
+    localStorage.setItem('stemsim.teacher-chat', JSON.stringify(raw));
+    await useChatStore.persist.rehydrate();
+    expect(useChatStore.getState().engine).toBe('local');
+  });
+
+  it('"Bỏ chọn" goes back to the engine used before the local runtime, as it was', () => {
+    // A pre-selected (not chosen) Gemma stays only a suggestion after going back.
+    useChatStore.setState({
+      engine: 'gemma',
+      engineChosen: false,
+      previousEngine: { engine: 'gemma', chosen: false },
+    });
+    const s = useChatStore.getState();
+    s.setEngine('local');
+    expect(useChatStore.getState()).toMatchObject({
+      engine: 'local',
+      engineChosen: true,
+      previousEngine: { engine: 'gemma', chosen: false },
+    });
+    // Choosing local again keeps what to go back to.
+    s.setEngine('local');
+    expect(useChatStore.getState().previousEngine).toEqual({ engine: 'gemma', chosen: false });
+    s.leaveLocal();
+    expect(useChatStore.getState()).toMatchObject({ engine: 'gemma', engineChosen: false });
+
+    s.setEngine('cloud');
+    s.setEngine('local');
+    s.leaveLocal();
+    expect(useChatStore.getState()).toMatchObject({ engine: 'cloud', engineChosen: true });
+    // Nothing happens when the local runtime is not the engine.
+    s.leaveLocal();
+    expect(useChatStore.getState().engine).toBe('cloud');
+  });
+
   it('"Không lưu lịch sử" keeps the conversation and its summary out of storage', () => {
     const partialize = useChatStore.persist.getOptions().partialize;
     if (!partialize) throw new Error('partialize missing');

@@ -178,12 +178,21 @@ function ProblemBox() {
   );
   const running = useAnalyzeStore((s) => s.phase === 'running');
   const ai = useAiStore(useShallow((s) => ({ provider: s.provider, status: s.status })));
-  const gemmaEngine = useAnalysisEngine() !== 'cloud';
-  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !gemmaEngine;
+  // Read on this computer (Gemma or a chosen local runtime): no API key needed.
+  const onDevice = useAnalysisEngine() !== 'cloud';
+  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !onDevice;
   const canAnalyze =
-    (ai.provider !== 'off' || gemmaEngine) && !running && problemText.trim().length > 0;
-  const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
-    usePhotoCapture();
+    (ai.provider !== 'off' || onDevice) && !running && problemText.trim().length > 0;
+  const {
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  } = usePhotoCapture();
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -249,6 +258,7 @@ function ProblemBox() {
           open={cameraOpen}
           busy={cameraBusy}
           error={cameraError}
+          errorSection={cameraErrorSection}
           onClose={closeCamera}
           onCapture={(photo) => {
             void onPhoto(photo);

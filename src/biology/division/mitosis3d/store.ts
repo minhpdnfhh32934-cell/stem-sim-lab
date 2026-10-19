@@ -28,6 +28,11 @@ export interface Mitosis3DUi {
   webglFailed: boolean;
   /** The 3D view is on screen (the bottom table and the parts list follow it). */
   active: boolean;
+  /**
+   * A lesson (Science Studio) holds the cell type and 2n while it shows the model: the view's
+   * cell type control is disabled until the lesson gives the model back.
+   */
+  cellLocked: boolean;
 }
 
 export const useMitosis3D = create<Mitosis3DUi>()(() => ({
@@ -38,6 +43,7 @@ export const useMitosis3D = create<Mitosis3DUi>()(() => ({
   viewNonce: 0,
   webglFailed: false,
   active: false,
+  cellLocked: false,
 }));
 
 const cache = new Map<string, Timeline>();

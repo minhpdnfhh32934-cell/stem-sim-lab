@@ -20,7 +20,7 @@ import { cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
 import { submitProblem } from '@/app/ai/submit';
 import { usePhotoCapture } from '@/app/ai/usePhotoCapture';
 import { useT } from '@/app/i18n';
-import { goHome, useIsHome, useIsLanding, useIsTeacher } from '@/app/topics';
+import { goHome, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useAiStore } from '@/ai/aiStore';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
@@ -51,21 +51,32 @@ export const TopBar = memo(function TopBar() {
   );
   const settingsOpen = useWorkspaceStore((s) => s.settingsOpen);
   const setSettingsOpen = useWorkspaceStore((s) => s.setSettingsOpen);
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const provider = useAiStore((s) => s.provider);
   const running = useAnalyzeStore((s) => s.phase === 'running');
   const canUndo = useUndoStore((s) => s.canUndo);
   const canRedo = useUndoStore((s) => s.canRedo);
   const stage = useAnalyzeStore((s) => s.stage);
   const aiOff = provider === 'off';
-  // The local model analyzes when it is ready (or when the learner chose Gemma themselves).
-  const gemmaEngine = useAnalysisEngine() !== 'cloud';
+  // The problem is read on this computer (Gemma when ready or chosen, or the runtime the learner
+  // chose): no API key is needed and an AI provider set to "off" does not block it.
+  const onDevice = useAnalysisEngine() !== 'cloud';
   // No key yet: the AI button leads to "Kết nối AI" instead (PROMPT_PHAN_2 A2).
-  const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff && !gemmaEngine;
-  const canAnalyze = (!aiOff || gemmaEngine) && problemText.trim().length > 0 && !running;
-  const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
-    usePhotoCapture();
+  const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff && !onDevice;
+  const canAnalyze = (!aiOff || onDevice) && problemText.trim().length > 0 && !running;
+  const {
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  } = usePhotoCapture();
 
   const teacher = useIsTeacher();
+  const studio = useIsStudio();
   const landing = useIsLanding();
   const home = (useIsHome() || landing) && !teacher;
 
@@ -96,7 +107,7 @@ export const TopBar = memo(function TopBar() {
       </button>
 
       {/* Subjects and undo/redo belong to the lab; the AI Teacher page does not use them. */}
-      {!landing && !teacher && (
+      {!landing && !teacher && !studio && (
         <div
           className="subject-switch"
           role="radiogroup"
@@ -126,7 +137,7 @@ export const TopBar = memo(function TopBar() {
       )}
 
       {/* On the home screen the big problem box is the main action; no second one up here. */}
-      {home || teacher ? (
+      {home || teacher || studio ? (
         <div className="topbar__spacer" />
       ) : (
         <div className="problem-input" data-tour="problem">
@@ -170,7 +181,7 @@ export const TopBar = memo(function TopBar() {
               aria-label={t('topbar.analyze')}
               disabled={!canAnalyze && !needsKey}
               data-tip={
-                aiOff && !gemmaEngine
+                aiOff && !onDevice
                   ? t('topbar.analyzeAiOff')
                   : needsKey
                     ? t('topbar.analyzeNeedsKey')
@@ -206,6 +217,7 @@ export const TopBar = memo(function TopBar() {
           open={cameraOpen}
           busy={cameraBusy}
           error={cameraError}
+          errorSection={cameraErrorSection}
           onClose={closeCamera}
           onCapture={(photo) => {
             void onPhoto(photo);
@@ -215,8 +227,9 @@ export const TopBar = memo(function TopBar() {
 
       <div className="topbar__actions">
         <AiStatusPill
-          onClick={() => {
-            setSettingsOpen(true);
+          onClick={(section) => {
+            if (section) openSettingsAt(section);
+            else setSettingsOpen(true);
           }}
         />
         <IconButton

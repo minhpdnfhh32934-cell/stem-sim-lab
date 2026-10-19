@@ -15,6 +15,7 @@
 import { translate, type Locale } from '@/app/i18n';
 import { balance, EquationError, parseEquation, type ParsedEquation } from '@/chemistry/balance';
 import { FormulaError, parseFormula } from '@/chemistry/formula';
+import { TOOL_HEADER } from './promptLabels';
 
 const SUBSCRIPTS: Record<string, string> = {
   '₀': '0',
@@ -198,13 +199,10 @@ export function toolFacts(question: string, locale: Locale): ToolFact[] {
   return facts;
 }
 
-const HEADER: Record<Locale, string> = {
-  vi: 'KẾT QUẢ DO SIMLAB TÍNH (dùng đúng các kết quả này, không tự tính lại hay đổi số):',
-  en: 'RESULTS COMPUTED BY SIMLAB (use exactly these results, do not recompute or change numbers):',
-};
-
 /** The block appended to the instruction, or '' when the question needs no tool. */
 export function toolBlock(question: string, locale: Locale): string {
   const facts = toolFacts(question, locale);
-  return facts.length ? `\n\n${HEADER[locale]}\n${facts.map((f) => `- ${f.text}`).join('\n')}` : '';
+  return facts.length
+    ? `\n\n${TOOL_HEADER[locale]}\n${facts.map((f) => `- ${f.text}`).join('\n')}`
+    : '';
 }

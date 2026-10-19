@@ -1,10 +1,10 @@
-import { ArrowRight, GraduationCap, PencilRuler, ShieldCheck, Sparkles } from 'lucide-react';
-import { openLab } from '@/app/topics';
+import { ArrowRight, Atom, GraduationCap, PencilRuler, ShieldCheck, Sparkles } from 'lucide-react';
+import { openLab, openStudio } from '@/app/topics';
 import { useT } from '@/app/i18n';
 import { openTeacher } from '@/teacher/teacherStore';
 import './learner.css';
 
-/** A simple launch page that separates the simulator from the AI tutor. */
+/** A simple launch page: the simulator, the AI tutor and the guided Science Studio. */
 export function LandingScreen() {
   const t = useT();
   return (
@@ -43,6 +43,16 @@ export function LandingScreen() {
             <span className="launch-card__copy">
               <strong>{t('landing.teacherTitle')}</strong>
               <span>{t('landing.teacherBody')}</span>
+            </span>
+            <ArrowRight className="launch-card__arrow" size={20} aria-hidden="true" />
+          </button>
+          <button type="button" className="launch-card launch-card--studio" onClick={openStudio}>
+            <span className="launch-card__icon">
+              <Atom size={26} strokeWidth={1.8} />
+            </span>
+            <span className="launch-card__copy">
+              <strong>{t('landing.studioTitle')}</strong>
+              <span>{t('landing.studioBody')}</span>
             </span>
             <ArrowRight className="launch-card__arrow" size={20} aria-hidden="true" />
           </button>

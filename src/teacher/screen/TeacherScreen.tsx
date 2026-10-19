@@ -1,14 +1,15 @@
 import { ArrowLeft, Info, MessageCircle, Presentation } from 'lucide-react';
 import { lazy, Suspense, useEffect, useId } from 'react';
 import { useT } from '@/app/i18n';
-import { useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useChatStore, type ChatMessageRecord } from '@/teacher/chat/chatStore';
+import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { useChatStore } from '@/teacher/chat/chatStore';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { ChatPanel } from '@/teacher/chat/ChatPanel';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { closeTeacher, useTeacherStore, type TeacherLayout } from '@/teacher/teacherStore';
-import type { LessonInput } from '@/teacher/board/lesson';
 import { Skeleton } from '@/ui/Skeleton';
+import { latestLesson } from './latestLesson';
 import './teacher.css';
 
 // The board (fonts, KaTeX, layout) loads only when the learner opens the board layout.
@@ -18,36 +19,19 @@ const Whiteboard = lazy(() =>
 
 const LAYOUTS: TeacherLayout[] = ['talk', 'board'];
 
-function latestLesson(messages: ChatMessageRecord[]): LessonInput | null {
-  for (let i = messages.length - 1; i >= 0; i--) {
-    const m = messages[i];
-    if (m?.role !== 'assistant') continue;
-    const question = messages
-      .slice(0, i)
-      .reverse()
-      .find((q) => q.role === 'user');
-    return {
-      id: m.id,
-      content: m.content,
-      question: question?.content ?? '',
-      ...(m.model ? { model: m.model } : {}),
-    };
-  }
-  return null;
-}
-
 export default function TeacherScreen() {
   const t = useT();
   const layout = useTeacherStore((s) => s.layout);
   const setLayout = useTeacherStore((s) => s.setLayout);
-  const engine = useAnalysisEngine() === 'cloud' ? 'cloud' : 'gemma';
+  const engine = engineKind(useAnalysisEngine());
   const gemmaModel = useChatStore((s) => s.gemmaModel);
+  const localLabel = useLocalAiStore((s) => s.selected?.label ?? null);
   const messages = useChatStore((s) => s.messages);
   const speaking = useVoiceStore((s) => s.speaking);
   // The face shows what the teacher is doing: speaking, waiting for the AI, or listening.
   const answering = useChatStore((s) => s.answering);
   const layoutId = useId();
-  // The board teaches the latest answer, with the question it answers (its numbers are given).
+  // The board teaches the latest answer that is not about part of the board (latestLesson.ts).
   const lesson = latestLesson(messages);
   // What the page is and what may leave the computer: one tooltip instead of two lines of text.
   const about = `${t('teacher.sketchNote')} ${t('landing.privacy')}`;
@@ -153,7 +137,11 @@ export default function TeacherScreen() {
           </p>
           <span className="teacher__engine-pill">
             <span className="teacher__engine-dot" />
-            {engine === 'gemma' ? t('chat.model', { model: gemmaModel }) : t('chat.cloud')}
+            {engine === 'gemma'
+              ? t('chat.model', { model: gemmaModel })
+              : engine === 'local'
+                ? (localLabel ?? t('chat.local'))
+                : t('chat.cloud')}
           </span>
         </aside>
 

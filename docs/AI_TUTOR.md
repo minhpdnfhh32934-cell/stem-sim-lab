@@ -20,18 +20,22 @@ applications.
 
 ## Which engine answers
 
-The chat has an engine selector (“API” or “Gemma cục bộ”). New installs pre-select Gemma, but a
-pre-selected default never blocks anyone:
+The chat has an engine selector (“API”, “Gemma cục bộ” or “AI trên máy khác”). New installs
+pre-select Gemma, but a pre-selected default never blocks anyone:
 
-| Selected | Gemma model ready | Learner picked it | Who answers (chat **and** “Phân tích đề”)             |
-| -------- | ----------------- | ----------------- | ----------------------------------------------------- |
-| API      | –                 | –                 | the provider from Settings → Kết nối AI               |
-| Gemma    | yes               | –                 | Gemma on this computer                                |
-| Gemma    | no                | no (default)      | the connected API (selector shows “API”)              |
-| Gemma    | no                | yes               | nothing is sent; a notice opens Settings → AI Teacher |
+| Selected         | Gemma model ready | Runtime + model picked  | Learner picked it | Who answers (chat, “Phân tích đề” **and** “AI diễn giải”)    |
+| ---------------- | ----------------- | ----------------------- | ----------------- | ------------------------------------------------------------ |
+| API              | –                 | –                       | –                 | the provider from Settings → Kết nối AI                      |
+| Gemma            | yes               | –                       | –                 | Gemma on this computer                                       |
+| Gemma            | no                | –                       | no (default)      | the connected API (selector shows “API”)                     |
+| Gemma            | no                | –                       | yes               | nothing is sent; a notice opens Settings → AI local          |
+| AI trên máy khác | –                 | yes                     | always            | the runtime on this computer (Ollama, LM Studio, llama.cpp…) |
+| AI trên máy khác | –                 | no (or address dropped) | always            | nothing is sent; a notice opens Settings → AI trên máy khác  |
 
 The rule lives in `src/app/ai/engineChoice.ts` (tested). Before, a fresh install with a Gemini key
-could not analyse a problem until a Gemma model was downloaded.
+could not analyse a problem until a Gemma model was downloaded. “AI trên máy khác” is only ever
+the learner's own choice (`setEngine`) and never becomes the API: a runtime that does not answer is
+reported as such when the learner asks.
 
 ## Screen context
 
@@ -42,21 +46,229 @@ problem text, module inputs and the Science Card. The context is read from app s
 screenshot, clipboard or data from another window is collected. The blue scan band is visual
 feedback only. Personal-data and content checks run on the context before anything is sent.
 
+**Science Studio.** While a Studio lesson is shown it registers itself with
+`provideScreenContext` (`src/teacher/chat/context.ts`; hook `src/studio/flow/useStudioContext.ts`),
+and its text replaces the lab's state (the lab is hidden behind the Studio). The text is built
+from the stored session only when a question is sent (`src/studio/aiContext.ts`), at most
+3600 characters, in fixed sections with their own budgets: lesson + step + rules, data not yet
+reviewed (`src/studio/unverified.ts`, the same list as the report's), facts computed by the
+engine or copied from the data library, the learner's notes (prediction, explanation,
+conclusion; each quoted at most 250 characters) and the last AI text kept in the session. The
+expected conclusion is never included. Building it never changes the session; AI text is never
+stored as engine evidence. The toggle still decides: off → nothing of the lesson is sent. The
+Studio's “Hỏi thầy” button (`AskTeacher.tsx`) opens the bubble (`askInBubble`) with a question
+about the current step in the box; the learner edits and sends it. Closing the bubble turns the
+toggle off, so it is off whenever a screen opens the bubble.
+
+**“Hỏi thầy về bộ phận này” (3D mitosis, item 2 outside the board).** The part card of the 3D
+mitosis view (`Mitosis3DView.tsx` `PartInfo`, shown after a tap or a pick in “Bộ phận tế bào”)
+has a “Hỏi thầy” button. It opens AI Teacher the usual way (`openTeacherWithQuestion` →
+`openTeacher`: talk layout, screen context off) with a question written into the box from the
+module's own texts only: the part's name (`COMPONENTS`), the stage (`STAGE3D_NAME`) and the cell
+type (`teacher.askMitosisPartQuestion`). The wording adds no science of its own: the stage is "a
+stage of the mitosis model", never "a step of mitosis" (interphase is not part of mitosis). When the
+card says the part cannot be seen at this moment (`componentVisible`), the question does not assume
+it is there (`teacher.askMitosisPartHiddenQuestion`: is it there, when does it appear or go).
+Nothing is sent until the learner presses send, and the learner may change the question first; it
+then goes like any typed question (`checkInput`, moderation, labels), with no picture and no screen
+data. A held Enter that pressed the button does not send it either: the box ignores repeated
+Enter keydowns (`e.repeat`). The teacher page's chat takes the question once
+(`useTeacherStore.draft`, cleared when taken or when the page closes).
+
 ## Cloud chat and Think
 
 Cloud chat uses the provider and key configured in Settings → Kết nối AI. **Think** sends one
 draft request and then asks a second, different provider to review and rewrite the draft.
 
-- The draft is sent **without the quota fallback** (`ChatRequest.noFallback`), so the reviewer can
-  never end up checking its own answer (e.g. Gemini → Groq fallback with Groq as reviewer). Without
-  Think the usual fallback stays on.
+- With Think **every call is sent without the quota fallback** (`ChatRequest.noFallback`): the
+  draft, the summary of older turns and the review. The reviewer can never end up checking its own
+  answer (e.g. Gemini → Groq fallback with Groq as reviewer, or a reviewer whose fallback is the
+  drafter), and nothing goes to a third provider. A reviewer out of quota is reported
+  ("Bên rà soát (Groq) báo đã hết lượt dùng…"), never replaced. “Viết tiếp” is sent the same way
+  (the rest of the answer and the summary sent before it; `askTeacher({ noFallback })`) while Think
+  is on or when the answer it continues was reviewed. Without Think the usual fallback stays on.
 - Missing pieces are reported before any call: provider turned off, no key for the answering
   provider, no key for the reviewer (also shown as a notice as soon as Think is switched on), same
   provider for both.
-- With Gemma as the answering engine, Think = local draft + cloud review (the question and the
-  draft go to the reviewer).
+- With Gemma as the answering engine, Think = local draft + cloud review. The reviewer gets the
+  question, the draft, the related note, the summary of older turns (if any) and the screen
+  context (if on); Settings → AI Teacher says exactly that.
 - The answer shows the “Nội dung do AI hỗ trợ” label with the model and a report button, plus
-  “Đã rà soát: …” when Think was used.
+  “Đã rà soát: <provider> · <model>” when Think was used (the provider that really reviewed,
+  from the response). An answer written by the quota fallback is labelled with the provider that
+  wrote it and “dự phòng” (“mô hình Groq · qwen/… · dự phòng”), in the chat and on the board.
+  “Viết tiếp” of a reviewed answer is written without a review: the message then says “Phần viết
+  tiếp chưa được rà soát.”; if another model wrote the rest, both are named (“a + b”).
+- **Failures in the learner's words** (`src/teacher/chat/cloudErrors.ts`): every error of an
+  online call is mapped with `aiErrorKind` to one study-partner sentence `chat.errors.cloud.*`
+  (timeout, stalled, network, quota, badKey, badModel, dailyLimit, missingKey, notAllowed,
+  emptyAnswer, reasoningOnly, tooLarge, server, other; a provider filter stop gives
+  `chat.errors.filtered`). It names who failed (the provider, “Bên rà soát (…)” for the reviewer,
+  or “Gemini (hoặc Groq dự phòng)” when the fallback may have been asked as well) and the Settings
+  page to open, with a button. A streamed answer that stalls between two pieces (`gap: …`) or runs
+  past the overall cap (`overall: …`) gets `stalled`, without that advice: those limits are fixed
+  and the wait in Settings → Kết nối AI covers only the first text and whole answers. Only a real
+  network failure is called one (`toAiError`: Rust's `{code: 'network'}` or `fetch`'s TypeError);
+  a plain string or Error from the desktop bridge (“Command ai_chat not found”, wrong arguments) or
+  a programming error is `internal` and gets the `other` sentence, never “check your Internet”.
+  No status code, JSON, key name or raw provider text reaches the learner; the console gets
+  `[teacher-cloud] <role> <provider> <kind> <code>` only. “Dừng” stays a stop. “Hỏi lại” is
+  offered where asking again may help, and it is the learner's click: the page never re-sends a
+  question by itself (the Rust gateway retries 429/5xx at most 3 times; the quota fallback is
+  asked once, only for a quota or credit error).
+- **Streaming** (`cloudChat`): a question streams through `transport.chatStream` when the
+  transport has it (desktop: `ai_chat_stream`; browser: SSE) and the chat shows it as it is
+  written; never Think's draft or review, a summary, or a JSON reading. The shown text is
+  provisional and goes through the same wrapper as Gemma's (each piece passes `outputIsSafe`, an
+  unsafe piece takes everything back, unfinished reasoning is hidden, a reset replaces the text);
+  the final answer is cleaned and checked whole, and only the completed answer is stored, read
+  aloud or taught on the board. In the board layout the lesson being written (TeachScript) shows
+  as readable text, the subtitles of its sentences so far (`boardStreamPreview` in
+  `src/teacher/board/lesson.ts`): never a tag, an attribute or LaTeX, and a `<write>` still being
+  written stays out until it is whole. A lesson asked in TeachScript (a cloud board lesson) reads
+  so from its first word, before any tag has come, so a formula in its first sentence never shows
+  as LaTeX; a decimal comma written `9{,}8` stays the number 9,8 inside a root or a fraction, and
+  a fraction of sums keeps its brackets (`(s₁ + s₂)/t`). A stream that breaks off leaves nothing
+  behind: the partial text goes and the failure sentence is shown (for a broken connection “{who}
+  chưa trả lời được vì kết nối mạng bị gián đoạn”, true whether or not the question reached the
+  provider). A desktop app older than the web part (no `ai_chat_stream`: “Command … not found” /
+  “unknown command”) answers through `ai_chat`, and the missing command is remembered for the
+  session (one failed lookup, not one per question).
+- Only learning content is kept (`src/teacher/chat/answerClean.ts`, run in `askTeacher` before
+  the answer is stored, spoken, drawn or checked for numbers): hidden reasoning (`<think>`…,
+  also unclosed or orphan; the streaming preview hides it while it is written), echoed
+  `<reference>` blocks, HTML comments, lines that only repeat a prompt label (“GHI CHÚ”, “KẾT QUẢ
+  DO SIMLAB TÍNH”…, `promptLabels.ts`) and, for a Think answer, the reviewer’s notes about the
+  draft (“Nhận xét về bản nháp…”, “Bản đã sửa:”). The reviewer gets the cleaned draft. The safety
+  filter checks the text as received and the cleaned text; an answer with nothing left shows
+  `chat.errors.noAnswer`. The board and the chat copy clean answers saved by older versions
+  too (`lesson.scriptFor`, `boardAnswerText`). Nothing is rewritten and no number is changed.
+- The reviewer’s notes are removed sentence by sentence from the start, never by whole
+  paragraph: the scan stops at the first sentence or line that is not about the draft (a
+  TeachScript sentence, a heading, a lesson line), so a lesson that shares its paragraph with a
+  remark is kept. A remark names the draft with a verdict (“Bản nháp đúng.”, “The draft is
+  correct.”; “Bản nháp báo cáo…” or “the draft of a ship” without a verdict is lesson text), the
+  answer under review (“Bản trả lời ban đầu đã đúng.”, “The original answer is correct.”), or
+  opens with a reviewer’s label (“Rà soát:”, or “Review:”/“Đánh giá:”/“Nhận xét:” followed by a
+  verdict on “câu trả lời”/“the answer” or by a bare verdict such as “Đúng.”). A remark that
+  holds a number, a formula, a tag or code, or that goes on with more than 6 words after
+  “nhưng”/“rằng”/“but”/“that” (it may state a fact), stays unless a revision header (“Bản đã
+  sửa:”, “Revised answer:”, alone on its line or closed by “:”) follows it; then only what
+  follows the header is kept (up to 4 sentences without lesson structure between the first
+  remark and that header go too). Before any remark, only a header that names the reviewer’s
+  revision of the answer (“Bản đã sửa”, “Bản sửa”, “Câu trả lời đã chỉnh sửa”, “Revised
+  answer”, “Corrected version”) alone on its line also ends up to 4 opening sentences without
+  learning material (“Chào em!”, “Review: …”); a labelled verdict on something else (“Nhận xét:
+  bước 2 sai, g = 10.”) goes only then. “Bài giải đã sửa”, “Lời giải đã sửa” and “Bản hoàn
+  chỉnh” never end opening sentences: a teacher writes them after a misconception (“Nhiều bạn
+  nghĩ vật nặng rơi nhanh hơn…”). At the very start, before any header, words only a reviewer
+  writes about the answer it checked are remarks too, without a label: “giữ nguyên nội
+  dung/câu trả lời/bản nháp/lời giải/bài giảng” and “the (provided/original/given) response is
+  accurate/correct/complete” when they end their clause (only “ban đầu”, “như cũ”, “as it
+  was”…, then the end of the sentence, a comma or “và/and …” may follow), “No changes needed”,
+  and “I kept the answer/response/draft/explanation/content/wording/structure/lesson/text/
+  solution/format”. “Câu trả lời cuối cùng:” counts as a header only right after a remark.
+  Feedback on the learner’s own draft or answer (“Bản nháp của em…”, “Câu trả lời ban đầu của
+  em…”, “Your answer…”) is never a remark; when the question mentions “nháp”/“draft” no wrapper
+  is removed at all. When the question asks for a correction or a check of the learner’s **own**
+  work, the verdict the learner asked for stays: only words about the draft or the version under
+  review (“bản trả lời ban đầu”, “the provided response”) count, and a header alone ends nothing.
+  Such questions (whole words): “sửa/chữa/chấm/kiểm tra/check (lại) giúp/hộ (em)”, “sửa cho em”
+  when the request ends there (“Kiểm tra lại giúp em.”, “Sửa giúp em, v = …”) or names the work
+  and then ends or opens a “:” (“Thầy chữa giúp em bài này”, “Thầy check giúp em bài này với: v
+  = 20 m/s”, “sửa giúp em chỗ này”) — a topic after it (“Thầy kiểm tra giúp em điều kiện cân
+  bằng…”, “Kiểm tra lại giúp em đơn vị của lực là gì”, “Kiểm tra giúp em xem nước có dẫn điện
+  không”, “Sửa giúp em lỗi chính tả…”, “Sửa cho em câu hỏi: …”, “Thầy chữa giúp em bài tập 5
+  trang 20”) is no such request;
+  “sửa/chữa/chấm/kiểm tra/nhận xét/góp ý/đánh giá” + a piece of work (“bài (làm/giải/tập)”, “lời
+  giải”, “đáp án”, “kết quả”, “lỗi (sai)”, “sai”…, maybe “trong bài này”) + “giúp em”/“cho
+  em”/“của em”/“em làm” or a bare “giúp” that ends the request (“Sửa bài giúp em với ạ”, “Thầy
+  chữa bài cho em”, “Thầy sửa lỗi giúp em”, “Sửa lỗi sai trong bài của em”); “xem” + the
+  learner’s work (“xem giúp bài làm của em”, “xem bài em làm”, “xem giúp em bài làm này”); “giúp
+  em sửa/chữa/chấm/kiểm tra” + a piece of work or the end of the request; “xem/nhận xét giúp em”
+  at the very end of the question (“Em tính ra 20 m/s, thầy xem giúp em”); “bài làm/bài
+  giải/lời giải/đáp án/câu trả lời của em”, “bài em làm”, “Kết quả của em là …” anywhere; “em
+  (làm/tính) sai ở đâu/chỗ nào/bước nào”, “(thầy) xem có sai chỗ nào không”; a yes/no check at
+  the end of a sentence (“… đúng không ạ?”, “có đúng không”, “có sai không ạ?”, “đúng chưa thầy”,
+  “đúng không thầy ơi?”, “đúng k ạ”, “đúng hông”, “đúng hk thầy”), but not after “còn”/“vẫn”
+  (“Khi có ma sát, định luật bảo toàn cơ năng còn đúng không?” asks whether a law still holds);
+  “được/ổn … không/chưa” after the learner’s way of working (“Em làm như vầy được chưa thầy?”,
+  “Em làm vậy ổn không ạ?”) or choice (“Em chọn đáp án C có được không ạ?”); in English
+  “check/fix/grade/correct my …”, “is my … correct?”, “fix this”/“check it for me” and “is
+  it/this/that right?” only at the end of the question and not after “how”/“why”, “am I right?”,
+  “did I solve this correctly?”, “have I done this right?”, “did I make a mistake?”, “where did I
+  go wrong?”, “Is answer A right?”, “Is 20 m/s correct?” (a value, judged at the end of the
+  sentence; “Is 90° a right angle?” is geometry), “I got 20 m/s, right?”. **Typed without
+  accents** (common for pilot testers): the question is also folded letter by letter (“đúng” →
+  “dung”), and a folded pattern counts only on a part of the question typed with no accent at all
+  (so a mixed “em lam dung khong ạ?” counts, and an accented “dùng không” never reads as “đúng
+  không”). Folded letters are ambiguous (“dung” is đúng/dùng/dừng, “cham” chấm/chậm/chạm, “chua”
+  chữa/chưa/chua, “sua” sửa/sữa), so each folded pattern needs a context only the learner’s own
+  work gives: “sua/chua/kiem tra (lai) giup em” that ends or names the work, “sua/chua/cham/nhan
+  xet bai … giup em/cua em”, “cham diem giup em”, “bai lam/loi giai cua em”, an own-work subject
+  before the check (“em lam/giai/tinh/ra/chon/viet … dung/sai khong/chua/k/hk”, “em lam nhu vay
+  duoc chua”, “em chon dap an C co duoc khong”), “Dap an A dung khong”, “em (lam) sai o dau”,
+  “xem co sai cho nao khong”, “xem/nhan xet giup em” at the very end. Ordinary questions never turn
+  it on (“Thầy xem giúp em bài này: …”, “Thầy xem bài này giúp em: …”, “Bài tập của em hôm nay:
+  …”, “xem kết quả của mình trên đồ thị”, “Xem đáp án giúp em”, “Em có nhận xét gì về …”,
+  “chỉnh lưu”, “điều chỉnh”, “sửa sai ADN”, “Enzyme sửa lỗi giúp tế bào/con người…”, “chữa cho
+  con người”, “Nhận xét kết quả con lắc…”, “Giúp em kiểm tra điều kiện cân bằng…”, “Em làm thí
+  nghiệm này ở nhà được không?”, “Which … is correct?”, “Check this: <a new task>”, “Fix this
+  circuit: …”, “How do I correct this for air resistance?”, “How do I fix this?”, “Why is it
+  wrong to …?”, “review free fall”; without accents “Co the dung cong thuc nay khong?”, “Vat co
+  dung yen khong?”, “Thay giang cham lai giup em”, “Thay noi cham giup em”, “Em chua hieu, giai
+  thich lai giup em”, “Qua bong to ra dung khong?”, “Kiem tra giup em dieu kien can bang…”, “Em
+  lam the nao de vat dung lai?”). Known limits
+  (shapes still not recognised, so the text stays — nothing is dropped on a guess, except where
+  said): a sentence that is both a short remark and a fact without any number or formula (“Bản
+  nháp đúng: lực là đại lượng vectơ.”) goes as a remark; a remark in the middle of the lesson
+  stays; reviewer notes with a number that are not recognised as a remark stay (“Câu trả lời dùng
+  g = 10, nên đổi thành 9,8.” followed by a “Bản đã sửa:” line keeps both); an unlabelled verdict
+  without a reviewer-only phrase stays (“Câu trả lời đúng và đầy đủ.”, “The answer is
+  correct.”); reviewer-only phrases after the first header, or when the learner asked for a
+  correction, stay; a lesson that opens with one of the reviewer-only phrases as a fact without a
+  number or formula loses that sentence (“I kept the answer short on purpose.”, “The response is
+  correct.”, “No corrections are needed at low speeds.”); a check phrased otherwise (“… phải
+  không?”, “Thầy xem bài giúp em”, “Bài của em: v = 20 m/s”, “Can you check this for me: v = 20
+  m/s?”, “Thầy xem bài này giúp em: v = 20”) is read as an ordinary question (its labelled
+  verdict may go); a question that ends with “xem giúp em” or “is that right?” after a new
+  exercise turns the correction reading on; a request to go over a new exercise with a
+  correcting verb (“Thầy chữa bài tập này giúp em: …”, “Kiểm tra giúp em bài này: …”) turns the
+  correction reading on (a reviewer note may then stay); a conceptual yes/no question about a
+  statement or a law (“Định luật Ôm áp dụng cho mọi vật dẫn, đúng không?”, “Lực là đại lượng
+  vectơ, có đúng không?”) turns it on too — only “còn/vẫn đúng không?” is told apart, so “Em làm
+  vậy vẫn đúng không ạ?” reads as ordinary; “được không” after the learner’s way (“Em làm vậy được
+  không?”) may be a permission question and still turns it on; “I got confused, right?” turns it
+  on. Typed without accents, these stay ordinary (the folded letters are too ambiguous, so the
+  verdict may go): a check with no own-work subject (“co dung khong?”, “dung khong thay?” after
+  an exercise — “dung” may be “dùng”), a bare “cham giup em” (“chậm” or “chấm”), “tớ” (“to” is
+  also “tô/tổ/to”), “con” as the learner, “Bai cua em: …”, and the shapes the accented list
+  leaves out; teen spellings beyond “k/ko/hk/hok/hông” (“hem”, “khum”, “j”) are not read; the
+  other way round, a folded “sua cho em.” at the end of a sentence counts even when it is “sữa”
+  (“Me mua sua cho em.”). The lasting fix is a structured review output (`{answer, notes[]}`),
+  still an open question.
+- A reasoning tag written as code (“Qwen dùng thẻ `` `<think>` ``”, or inside a closed code
+  fence) is code and stays. The same rule runs on both sides (`src/ai/reasoning.ts`,
+  `src-tauri/src/ai/reasoning.rs`, their stream filters `ThinkFilter` and `ReasoningStream`, and
+  the page’s `stripReasoningOutsideCode` for the chat, the voice and the board; pinned by
+  `tests/fixtures/reasoning-strip.json`, groups `cases`, `code`, `after_block`): an opening or
+  self-closing tag in code is code; a closing tag in code is code once an opening tag of the same
+  name was written in code before it (“giữa `` `<think>` `` và `` `</think>` ``”); any other
+  closing tag counts even as code, and when it is all its code span holds (“`` `</think>` ``”,
+  or a fence holding only it) the backticks or the fence lines go with it. `<think/>` and
+  `<think />` are an empty block (removed, the rest stays). A bare literal `<think>` outside code
+  is hidden reasoning: unclosed, it is cut to the end (the shared rule cannot tell it from a model
+  stopped mid-reasoning). A closing tag left after a block is an orphan for Rust, the streams and
+  the browser transport (everything before it goes); only the page’s whole-answer pass removes it
+  as a tag and keeps its neighbours. While a stream arrives, a tag that may still turn out to be
+  code (inside a fence or after a backtick still waiting for their end) is held back with
+  everything after it until that is decided. `hideUnfinishedReasoning` is the one preview rule
+  for a whole text so far (the Gemma worker’s partial answers): the rule applied up to that
+  point, reading the code spans of everything received (a fence closed after a tag still being
+  typed keeps the tags before it as code); `ThinkFilter` and Rust’s `ReasoningStream` are its
+  incremental form and show exactly the same after every piece (tested on every vector cut at
+  every character and on random streams with code on both sides), so a stream’s shown text is
+  never filtered twice.
 - Desktop: keys are stored in the operating-system keychain (shared with the same provider in other
   AI settings). Browser/localhost: keys typed into the page live in memory for this session only.
   Claude cannot be called from a web page, so in the browser it is listed as “chỉ bản desktop” and
@@ -177,11 +389,39 @@ and added to the instruction labelled "do AI viết". Only turns not covered yet
 failed or unsafe summary is skipped and never blocks the answer. Nothing goes to a new place
 ("Dữ liệu của em đi đâu?" lists it).
 
+**Old answers in the history** (`memory.sentText`). New answers are stored clean; an answer saved
+by an older version may still hold hidden reasoning, echoed prompt labels or a Think reviewer’s
+notes. The history (`fitHistory`) and the summary request (`summaryRequest`) send every answer
+cleaned with `cleanAnswer`, a Think answer (`checkedBy`) read with the learner’s question right
+before it (`questionBefore`), so feedback the learner asked for is kept. An answer that cleaning
+leaves empty (nothing but reasoning, also one cut before its closing tag, or nothing but a
+reviewer’s notes) is sent as `EMPTY_ANSWER` (“…”): the saved reasoning never goes back to the AI
+or to the summary, and no turn is empty (an empty turn breaks some providers’ requests). Known
+limits until the chat wiring step (chatService.ts is not changed in this step): its own calls
+`sentText(r)` (the pending turns it shortens for the summary, the turns given to the screen
+context) have no question, so a Think answer’s reviewer notes stay there as saved (reasoning and
+labels still go); and `givenNumbers` still reads an old record without `unverifiedNumbers` from
+its saved text. The numbers there that nobody gave are flagged by the same check and never count
+as given; only numbers the check does not read as stated values could.
+
 **"Viết tiếp".** The Rust gateway and the browser transport report `truncated` when the provider
-stopped at the output limit (Gemini `MAX_TOKENS`, Claude `max_tokens`, Groq `length`); the Gemma
-worker when it generated `maxTokens` tokens. The chat then shows "Câu trả lời dài nên đã dừng giữa
-chừng." and **Viết tiếp**, which asks for the rest and appends it to the same message (a new list
-item, heading or formula starts a new line).
+stopped for any reason but its natural end (Gemini `STOP`; Claude `end_turn`, `stop_sequence`,
+`tool_use`; Groq `stop`): the output limit (`MAX_TOKENS`, `max_tokens`, `length`), a context
+limit, Gemini `OTHER`/`LANGUAGE`, a reason added later; streamed or not; the Gemma worker when it
+generated `maxTokens` tokens. A stop by the provider's own filter (Gemini `SAFETY` and the like,
+Claude `refusal`, Groq `content_filter`) is no answer, also when some text came with it. The chat
+then shows "Câu trả lời dài nên đã dừng giữa chừng." and **Viết tiếp**, which asks for the rest
+and appends it to the same message (a new list item, heading or formula starts a new line).
+
+**Browser transport = Rust rules** (`src/ai/cloudStream.ts`, `FetchTransport` in
+`src/ai/transport.ts`; development and E2E only, the desktop app streams in Rust). Same natural
+ends and filter stops as above (`NATURAL_END`, `GEMINI_BLOCKED`); every whole answer goes through
+the shared reasoning rule (`visibleAnswer`: nothing but reasoning is `reasoningOnly`, a JSON
+answer to a schema is kept as sent); whitespace before the first visible text is held back, so
+it does not count as shown and the quota fallback may still answer; a provider error after the
+end mark (its stop reason) keeps the complete answer; the fallback is asked only while at least
+min(5 s, a quarter of the first-text wait) of that wait is left (`roomForFallback`), otherwise the
+provider's own quota error comes back (there is no retry in the browser).
 
 **Quick buttons** show a short label ("Chậm hơn") but send a full instruction
 (`teacher.chipPrompts`): a bare "Chậm hơn" was misread by Gemma 1B as "speak more slowly".
@@ -375,16 +615,71 @@ the app moves `prompt.note` in front of the last question, which the script does
 ## Where data goes
 
 Settings → AI Teacher shows a live “Dữ liệu của em đi đâu?” box built from the current settings, and
-the chat shows one line naming where the next question will go.
+the chat shows one line naming where the next question will go: the answering provider, the quota
+fallback when it can be asked (Think off and it has a key: “Groq (dự phòng khi Gemini hết lượt)”;
+on the desktop, after a quota error the gateway asks it directly for 10 minutes), the reviewer with
+Think, and Wikipedia when the lookup is on (never for a question about the circled board; a
+question about a picture of the circled area names no reviewer either: it is not reviewed).
 
-| Stays on this computer                    | May be sent online                                                |
-| ----------------------------------------- | ----------------------------------------------------------------- |
-| chat history, added files, built-in notes | question + relevant excerpts → answering provider (API engine)    |
-| downloaded Gemma models; Gemma answers    | question + draft → reviewer (Think)                               |
-| API keys (keychain or session memory)     | question → Wikipedia (only if the lookup is on)                   |
-|                                           | screen context (only when the bubble toggle is on)                |
-|                                           | a photographed problem → the API (browser only, downscaled)       |
-|                                           | model files are downloaded from HuggingFace (nothing is uploaded) |
+| Stays on this computer                                                                                                                  | May be sent online                                                                                                                                                |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| chat history, added files, built-in notes                                                                                               | question + recent turns + summary of older turns + relevant excerpts → answering provider (API engine)                                                            |
+| downloaded Gemma models; Gemma answers                                                                                                  | the same → the quota fallback provider, when the chosen one is out of quota and Think is off (only if it has a key)                                               |
+| questions to a runtime on this computer (loopback addresses only; leaves only if that program forwards it; Ollama cloud models refused) | question + draft (also a Gemma or local-runtime draft) + relevant excerpts + summary + screen context (if on) → reviewer (only with Think on; never the fallback) |
+| API keys (keychain or session memory)                                                                                                   | (with a runtime on this computer: only Think, Wikipedia or the Gemini voice)                                                                                      |
+|                                                                                                                                         | question → Wikipedia (only if the lookup is on; never for “Khoanh để hỏi”)                                                                                        |
+|                                                                                                                                         | screen context (only when the bubble toggle is on)                                                                                                                |
+|                                                                                                                                         | a photographed problem → the API (browser only, downscaled)                                                                                                       |
+|                                                                                                                                         | model files are downloaded from HuggingFace (nothing is uploaded)                                                                                                 |
+| the learner's own strokes on the board                                                                                                  | circled board text (“Khoanh để hỏi”: the lesson's own words, LaTeX and drawing labels, ≤ 2000 chars) → the answering provider and the Think reviewer              |
+| a picture of a circled area without text (only to an AI on this computer that reads pictures)                                           |                                                                                                                                                                   |
+| the answer about that picture (never to the reviewer, an online engine, the summary or an online voice)                                 |                                                                                                                                                                   |
+
+**“Khoanh để hỏi” (item 2, `src/teacher/board/selection.ts`, `chatService.askTeacher` option
+`boardSelection`).** What the learner circled on the board is read back by code (no AI): the
+written words, formula pieces (exact LaTeX) and drawings' own labels inside the loop, in reading
+order, with the face's title and the steps just before/after. It is sent as one fenced
+`<board_selection>` block: in the instruction with `BOARD_ASK` for a full (cloud) prompt, right
+before the question in the user turn for an on-device or small local prompt (capped at 600, or 300
+on an integrated card). It passes `checkInput` (own errors `chat.errors.boardPersonal` /
+`boardUnsafe`), is added to the knowledge query and to the missing-data check, and is never put in
+the question, its `prompt` or the prompt's `sources`: numbers the lesson flagged stay flagged. The
+answer is an aside (`ChatMessageRecord.mode: 'aside'`; the question keeps `boardRef {face, ids,
+excerpt}`, and `memory.sentText` adds the excerpt for follow-ups): shown and read aloud in the chat,
+never taught on the board, whose lesson stays paused until “Quay lại bài giảng”. Only when the
+circled part has no text at all (a drawing without labels, the learner's handwriting) a PNG of the
+area is built from the board model (pure SVG, never KaTeX/DOM text) and sent **only** to an AI on
+this computer that reads pictures (`pictureReader.ts`): the learner's chosen Gemma E2B on a card
+known to be discrete (never on an integrated card, never a silent switch from 1B to E2B), or a
+local runtime model whose check on this computer says vision “Có”. Never to the cloud; any other
+AI → the board says it cannot read pictures and asks the learner to type (no AI call). With
+Think on, a question about such a picture is **not reviewed**: the draft is the on-device model's
+description of the learner's strokes, so sending it to the online reviewer would put the strokes
+online as text (and the reviewer could not see the picture to check it). `askTeacher` answers it on
+this computer only (no reviewer key needed), the answer carries `reviewSkipped: 'picture'` and the
+chat shows "Chưa rà soát: …"; the "sent to" line leaves the reviewer out for it. Later questions
+never carry it online either (`memory.withoutPictureAsks`): the history sent to an online engine or
+used for a Think draft leaves out each picture question and the answer after it, and the summary of
+older turns is always made without them (only an on-device answer without Think still sees them in
+its history). "Viết tiếp" of a cut picture answer is therefore not offered while the API is chosen
+(the chat says it can be continued with “Gemma cục bộ” or “AI trên máy khác”), and `askTeacher`
+refuses a continuation whose answer would be left out of what is sent (`continues`), so nothing is
+asked; a quick button after it asks the API without that answer. **The voice keeps it here too**
+(`speak.ts`: `canSpeakOnDevice`, `speak(…, { onDevice: true })`): a picture answer and its
+continuation are read aloud only by the on-device voice model or an installed Windows voice
+(`localService`, name without “Online”/“Natural”); with the Gemini voice (which sends the text to
+Google) or an online Windows voice (“… Online (Natural)” in Edge/WebView2) it is not read, and the
+chat says so under the answer with a “Chọn giọng” button. When the on-device voice fails, a Windows
+voice takes over only if it reads on this computer. The voice's name is all the app knows about
+where it reads: an installed voice that sends text away without saying “Online” is not detected. A question about the circled board is never looked up on Wikipedia (its
+words alone name no topic, and the board's text never goes there); the "sent to" line leaves
+Wikipedia out then. It is never read as an answer to the teacher's check question
+(`TurnOrigin.boardAsk`). When the circled text does not fit the block's cap, the title and the
+neighbours are left out first, then lines are cut ("…") and the parts left out are counted in a
+marked line — never dropped silently. The PNG path (blob: URL → OffscreenCanvas) runs in Chromium
+in `tests/e2e/board-picture.spec.ts` (the learner's strokes, and a drawing without labels, circled →
+a PNG to a fake Ollama with vision; nothing online); it is **not verified in the native WebView2
+build** (a user step); if it fails there, the learner is told and nothing is sent.
 
 ## Teacher voice (reads answers aloud)
 
@@ -398,7 +693,8 @@ new question, clearing history, leaving the page or closing the panel stops the 
 The engine stays MMS-TTS (`Xenova/mms-tts-vie`, VITS). Text editing is separate from synthesis:
 
 1. **Speech plan** (`src/teacher/voice/speechPlan.ts`, pure). `prepareSpeech(text, {role, emphasis})`
-   removes what is not meant to be heard (`<think>` blocks, `<reference>` blocks, comments,
+   removes what is not meant to be heard (hidden reasoning — `<think>` and friends, also unclosed
+   or orphan, `src/ai/reasoning.ts` —, `<reference>` blocks, comments,
    known tags only — TeachScript, SSML and a short HTML list (`markup.ts`), even with `>` inside an
    attribute; a comparison without spaces such as "x<y khi y>0" stays and is read "nhỏ hơn" /
    "lớn hơn" —, horizontal rules, emoji), applies the
@@ -505,6 +801,116 @@ validates it with the same code checks as the cloud path (numbers must appear in
 failures fall back to manual scene building. The camera button reads a photographed problem with a
 vision-capable cloud API (browser key for Gemini/Groq) or the `gemma4-e2b` model, and puts the text
 in the problem box for the learner to review first.
+
+**A picture for a local runtime** (Ollama, LM Studio, llama.cpp server, other OpenAI-compatible
+servers; `check_vision` in `src-tauri/src/ai/local/mod.rs`, `visionOf` in
+`src/ai/local/fetchClient.ts`) reaches the model only when its runtime says the model reads
+pictures. A runtime that cannot tell (any other OpenAI-compatible server: its model list says
+nothing about pictures) is not asked again, and a model missing from LM Studio's list is not
+known either: both are refused before the question as `vision-unverified` ("Chưa xác minh"),
+never as a missing model. A runtime that says no gives `no-vision`.
+
+## AI on this computer as the AI Teacher engine (Ollama, LM Studio, llama.cpp)
+
+User decision 2026-10-14 (loopback-only Ollama, LM Studio, llama.cpp and OpenAI-compatible
+servers). **Not yet recorded in `CLAUDE.md`**: its rules still say "no LM Studio/Ollama" and "do not
+add local providers back"; the lead must record this decision there before the branch is merged.
+The runtimes are a third engine, `ChatEngine = 'local'` (`stemsim.teacher-chat` v6; v5 keeps its
+engine), never a cloud `Provider`.
+The page talks to them through `src/ai/local/client.ts` (Rust `local_ai_*` commands in the desktop
+app, the browser client only without it).
+
+**Settings → “AI trên máy khác (Ollama, LM Studio, llama.cpp)”**
+(`src/teacher/chat/settings/LocalRuntimeSettings.tsx`, after the Gemma page):
+
+- Nothing is asked when the page opens; a saved choice is shown as saved (“SimLab chưa hỏi chương
+  trình lần này”). “Tìm trên máy này” asks only 127.0.0.1:11434, :1234, :8080 and the addresses the
+  learner added (no file read, no disk scan), then lists the models of each runtime that answered.
+- Each runtime: “Phát hiện” + “Đang chạy · phiên bản …”, “Đang nạp mô hình”, “Cần khóa”, “Không
+  thấy” or “Không phải chương trình AI”. Each model: “Có trong danh sách”, loaded or not, “Đang
+  chọn cho AI Teacher” only while the chat uses it (otherwise “Đã chọn · AI Teacher đang dùng …”,
+  naming the engine that really answers), “Đã thử trả lời · time”, “Không dùng được: reason”
+  (runs online, context under 2 048, a failed answer test). Models that run online are listed but
+  cannot be chosen.
+- “Kiểm tra kết nối” = fingerprint + model details (nothing generates). “Kiểm tra trả lời” = one
+  tiny generation; the page warns it loads the model into RAM/VRAM; one click is one request.
+- Capability table: Có / Không / Chưa xác minh, only what was seen on this computer (the
+  runtime's documentation is a hint). File size and context length when the runtime reports them;
+  RAM/VRAM is always “Chưa xác minh”.
+- The last search, its time and the model lists stay in `localAiStore` for the session (never
+  saved): reopening Settings shows them again with “Kết quả lần tìm lúc …” (an older result adds
+  that it may be out of date); answers that arrive after “Khôi phục mặc định” are dropped.
+- The chosen model is checked against that search: a runtime not found, not this runtime, or a
+  complete model list without the model shows “Chưa dùng được” with the runtime's sentence instead
+  of “AI Teacher đang trả lời bằng mô hình này” (“Bỏ chọn” and another model stay available).
+- “Dùng cho AI Teacher” saves the choice (`stemsim.local-ai`) and the engine; “Bỏ chọn” goes back
+  to the engine used before, as it was (a pre-selected Gemma stays only a suggestion). Its note and
+  the “not in use” line name the engine that really answers (`analysisEngine`): a pre-selected
+  Gemma without its model means the questions now go online to the API, and the note says so
+  (the provider's plain name, never the menu's “khuyên dùng”; without a key: nothing is sent yet).
+  “Khôi phục mặc định” (after a confirm) forgets addresses, checks and the choice; the engine is not
+  changed.
+- “Thêm địa chỉ” refuses anything off this computer and says why. In Basic mode the address form
+  and the capability table are folded behind one line.
+- Troubleshooting per status, honesty notes (SimLab does not choose the runtime's GPU, does not
+  know what it logs, a loopback relay can still forward), the browser CORS note, and the fallback
+  line: a failing local AI is reported and nothing goes online.
+
+**Answers** (`chatService.localRuntimeChat`): streamed through the same filter as Gemma (every
+piece passes `outputIsSafe`, unfinished reasoning is hidden, pieces are provisional), cleaned with
+`cleanAnswer`, labelled “Ollama · qwen3:8b” (`src/app/ai/localRuntime.ts`). No retry, no daily
+cap, never a fallback; “Dừng” closes the connection. Failures are study-partner sentences
+(`chat.errors.local*`: down, model missing, loading, stalled, needs a key, context full, runs
+online, not this runtime, not chosen, failed, app update) with the Settings page to open and
+“Hỏi lại” when asking again may help — the learner's click, one request. The summary of older
+turns is written by the same runtime and capped to fit the window it is sent with (window − 400 −
+512 tokens), so Ollama never cuts it silently, and sent with `think: false` (only a model seen
+reasoning first gets it). A summary the runtime fails for a runtime reason (an allow-list in
+`chatService.localSummaryFatal`: not running, stalled, loading, model missing, locked, runs
+online, not this runtime, not chosen, app update, gate closed) ends the question with that sentence
+instead of asking the runtime a second time; any other summary failure (did not fit, only
+reasoning, nothing within its 400 tokens, an unsafe text, another error) is skipped and the
+question is asked. A model that wrote no answer gets `chat.errors.localNoAnswer`. The chat line
+“không gửi lên mạng” is shown only while nothing goes online: with the Gemini voice on it says that
+each answer's text goes to Google to be read aloud. With Think on, the button counts “· 1 API rà
+soát” (only the review goes online) instead of “· 2 API”.
+
+**Top-bar AI pill** (`aiStatusView.ts`) follows the chosen engine: “AI trên máy: Ollama” (hint:
+model, address, nothing goes online; click → “AI trên máy khác”), “AI trên máy: chưa chọn”,
+“Gemma trên máy” / “Gemma: chưa tải” (click → the Gemma page); the API states only for the API
+engine, and the safety gate first.
+
+**Budget** (`memory.contextBudget('local', …, ctx)`): with a context window seen on this computer,
+the cloud table but never more than the window minus the answer and 512 tokens; unknown → the small
+on-device budget (4 000 / 1 024). The window sent to Ollama (`num_ctx`) is what the request needs,
+never the model's whole window. Prompt: the cloud prompt when the window is known and ≥ 16 384,
+otherwise the on-device one (no new prompt text, no decoding change).
+
+**Think**: the draft is written on this computer, then only the review goes to the chosen reviewer
+(sent with `noFallback`, so never to a third provider; also for Gemma drafts).
+
+**Analysis, explanation and photos**: “Phân tích đề” and “AI diễn giải” use the same engine
+(`resolveAiForAnalysis` → `localTransport`; JSON schema as structured output only when the check
+saw it supported, otherwise in the prompt; the draft checks are unchanged). A local failure in the
+analysis dialog is the same sentence plus “Mở AI trên máy khác”; “AI diễn giải” shows the same
+sentence with a Settings button, and a chosen Gemma without its model says so (never a code). A
+photo with this engine (`photoVision.readPhotoOnComputer`) is read by the runtime only when its
+model was seen reading pictures, else by the in-app Gemma, else the learner is told it needs an API
+key or the picture-reading Gemma. No runtime picked and a runtime that fails (not running, stalled,
+model missing…) each get their own sentence and Settings page instead — it never goes online. A
+runtime that refuses the picture (`no-vision`) counts as a model not seen reading pictures; a
+refused picture says to take another one. Outside the chat (`localFailure(e, use)`), a task too
+long for the model's window points to a model with a larger window on the runtime page, never to
+Trí nhớ, and an explanation the model did not write is a sentence, never a code.
+
+Tests: `engineChoice.test.ts`, `chatStore.test.ts`, `memory.test.ts`, `chatLocalOnly.test.ts`
+(local cases), `ChatPanelLocal.test.tsx`, `LocalRuntimeSettings.test.tsx`,
+`TeacherSettingsDataFlow.test.tsx`, `analyze.test.ts`, `ExplainBox.test.tsx`,
+`photoVision.test.ts`, `CameraDialog.test.tsx`, `localAiStore.test.ts`, `localRuntime.test.ts`,
+`AiStatusPill.test.tsx`, E2E
+`tests/e2e/local-ai.spec.ts` (a fake Ollama on
+127.0.0.1:11434; every cloud host and Wikipedia counted and refused). Not tested against a real
+runtime.
 
 ## Tested on real hardware (2026-10-12, AMD RDNA 3 GPU, built-in browser)
 

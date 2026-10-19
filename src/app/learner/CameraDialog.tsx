@@ -1,11 +1,14 @@
-import { Camera, FlipHorizontal2, RefreshCw, X } from 'lucide-react';
+import { Camera, FlipHorizontal2, RefreshCw, Settings2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 
 interface CameraDialogProps {
   open: boolean;
   busy: boolean;
   error: string;
+  /** The Settings page that helps with `error` (null or absent: none does). */
+  errorSection?: SettingsSection | null;
   onClose: () => void;
   onCapture: (photo: string) => void;
 }
@@ -22,8 +25,16 @@ function stopStream(stream: MediaStream | null): void {
  * retake, or on unmount. Nothing is uploaded by the dialog itself: the photo only
  * goes to an AI reader after "Lấy ảnh".
  */
-export function CameraDialog({ open, busy, error, onClose, onCapture }: CameraDialogProps) {
+export function CameraDialog({
+  open,
+  busy,
+  error,
+  errorSection = null,
+  onClose,
+  onCapture,
+}: CameraDialogProps) {
   const t = useT();
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
   const video = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [live, setLive] = useState(false);
@@ -181,6 +192,20 @@ export function CameraDialog({ open, busy, error, onClose, onCapture }: CameraDi
           <p className="camera-dialog__error" role="alert">
             {error}
           </p>
+        )}
+        {error && errorSection && (
+          <button
+            type="button"
+            className="btn"
+            disabled={busy}
+            onClick={() => {
+              onClose();
+              openSettingsAt(errorSection);
+            }}
+          >
+            <Settings2 size={15} aria-hidden="true" />
+            {t('chat.settings')}
+          </button>
         )}
         <p className="muted small">{t('camera.privacy')}</p>
         <footer className="camera-dialog__footer">

@@ -1,6 +1,8 @@
 /* AI Teacher's whiteboard (PROMPT_PHAN_2 B7). Board units = CSS px of the unscaled sheet. */
 
 .board {
+  /* The toolbar's labels follow the board's own width (container query below), not the window's. */
+  container: board / inline-size;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -15,13 +17,23 @@
 .board__toolbar-gap {
   flex: 1;
 }
+/* Zoom: two icon buttons (and "Vừa khung" while zoomed in). */
+.board__zoom {
+  display: flex;
+  gap: 4px;
+}
+.board__icon-btn {
+  min-width: var(--target);
+  justify-content: center;
+  padding: 0;
+}
 .board__faces {
   display: flex;
   gap: 4px;
   overflow-x: auto;
 }
 .board__face-tab {
-  min-height: 32px;
+  min-height: var(--target);
   padding: 0 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -35,12 +47,22 @@
   color: var(--text);
   font-weight: 600;
 }
+/* The face the teacher writes on, while the learner may look at another one. */
+.board__face-teacher {
+  display: inline-flex;
+  margin-left: 6px;
+  color: var(--accent);
+  vertical-align: -2px;
+}
 
 .board__viewport {
   position: relative;
   flex: 1;
   min-height: 260px;
   overflow: auto;
+  /* The scrollbar's room is always kept: it appearing would change the width, so the scale,
+     so the height, so the scrollbar again (a resize loop). */
+  scrollbar-gutter: stable;
   scroll-behavior: smooth;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -218,6 +240,11 @@
 .board__draw .board__curve-label {
   fill: var(--board-blue);
 }
+/* A table too wide for its place is drawn smaller, like its box (layout.ts). */
+.board__table-scale {
+  width: max-content;
+  transform-origin: 0 0;
+}
 .board__table {
   border-collapse: collapse;
   font-size: 24px;
@@ -354,4 +381,136 @@
   fill: color-mix(in srgb, var(--accent) 14%, transparent);
   stroke: var(--accent);
   stroke-width: 18;
+}
+
+/* "Khoanh để hỏi": the learner's loop and what it selected (never ink on the board). */
+.board__selection {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.board__lasso {
+  fill: color-mix(in srgb, var(--accent) 8%, transparent);
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-dasharray: 10 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+polyline.board__lasso {
+  fill: none;
+}
+.board__hit {
+  fill: color-mix(in srgb, var(--board-student) 10%, transparent);
+  stroke: var(--board-student);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+/*
+ * What the app read in the loop, with the one main action: over the board, inside its area, on
+ * the side away from what was circled (`askBarSide`). It never changes the board's size (nothing
+ * on the board moves when it appears) and never covers the subtitle or the AI label below.
+ */
+.board__ask-bar {
+  position: absolute;
+  right: 22px;
+  bottom: 10px;
+  left: 10px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-height: calc(100% - 20px);
+  overflow-y: auto;
+  padding: 8px 12px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-md);
+}
+/* At the top it leaves the minimap of a long face (top right) uncovered. */
+.board__ask-bar.is-top {
+  top: 10px;
+  right: 112px;
+  bottom: auto;
+}
+.board__ask-text {
+  display: flex;
+  flex: 1 1 260px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-content);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.board__ask-choices {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+  /* Two rows of choices at most; more scroll inside the bar's own row. */
+  max-height: calc(var(--target) * 2 + 6px);
+  overflow-y: auto;
+}
+.board__ask-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* The pen's pace: an icon and a short list, as tall as the buttons (A4 target). */
+.board__speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+}
+.board__speed select {
+  min-height: var(--target);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * A narrow board (1366×768 with the chat beside it, up to the width where every name fits): the
+ * toolbar stays one row in every state (also "Quay lại bài giảng" while zoomed in), so the board
+ * keeps its height and nothing on it moves when the selection bar appears. "Viết nhanh" and
+ * "Khoanh để hỏi" keep their names (on touch there is no tooltip); "Bút của em" and "Vừa khung"
+ * show their icon only (the name stays for screen readers and in the tooltip), the speed list
+ * drops its icon, and the buttons sit a little closer.
+ */
+@container board (max-width: 960px) {
+  .board__toolbar {
+    gap: 4px;
+  }
+  .board__toolbar > .btn,
+  .board__zoom > .btn {
+    padding: 0 var(--space-2);
+  }
+  .board__speed > svg {
+    display: none;
+  }
+  .board__tool--compact .board__tool-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .board__toolbar .board__tool--compact,
+  .board__toolbar .board__icon-btn {
+    min-width: var(--target);
+    justify-content: center;
+    padding: 0;
+  }
 }

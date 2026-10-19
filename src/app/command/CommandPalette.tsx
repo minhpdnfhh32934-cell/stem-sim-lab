@@ -70,8 +70,8 @@ export function CommandPalette() {
         keywords: 'chat hoi bai',
         icon: GraduationCap,
         run: () => {
-          useTeacherStore.getState().setLayout('talk');
           openTeacher();
+          useTeacherStore.getState().setLayout('talk');
         },
       },
       {
@@ -81,8 +81,9 @@ export function CommandPalette() {
         keywords: 'whiteboard bang trang giang',
         icon: Presentation,
         run: () => {
-          useTeacherStore.getState().setLayout('board');
+          // After openTeacher(), which always opens the talk layout.
           openTeacher();
+          useTeacherStore.getState().setLayout('board');
         },
       },
     ];

@@ -307,6 +307,12 @@
   background: var(--conf-approx-soft);
   color: var(--text);
 }
+.explain__error {
+  margin: 0;
+}
+.explain__settings {
+  margin-top: var(--space-2);
+}
 .asked-chip {
   margin-left: 6px;
   padding: 0 6px;

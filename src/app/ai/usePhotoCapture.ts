@@ -3,10 +3,16 @@ import { useState } from 'react';
 import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
 import { useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { CameraDialog } from '@/app/learner/CameraDialog';
-import { PHOTO_SYSTEM, cleanTranscription, transcribeWithCloud } from './photoVision';
+import { analysisEngine } from './engineChoice';
+import {
+  PHOTO_SYSTEM,
+  cleanTranscription,
+  readPhotoOnComputer,
+  transcribeWithCloud,
+} from './photoVision';
 
 /** Longest photo edge: keeps captures fast and inside the models' image limits. */
 const MAX_PHOTO_EDGE = 1600;
@@ -38,8 +44,13 @@ function downscalePhoto(dataUrl: string): Promise<string> {
 /**
  * Photograph-a-problem flow shared by the home page and the simulation top bar:
  * camera dialog state plus "Lấy ảnh" transcription. Chain: cloud API (when the
- * browser has a key) → local Gemma → an honest error. The text always lands in
- * the problem box for review; analysis (with its safety checks) stays separate.
+ * browser has a key) → local Gemma → an honest error. With a runtime on this computer
+ * chosen as the AI (Settings → AI trên máy khác) the photo never goes online: that
+ * runtime reads it when its model was seen reading pictures here, else the in-app
+ * Gemma, else the learner is told plainly what reading a photo needs. A runtime that
+ * does not answer, or no runtime picked, gets its own sentence and Settings page. The
+ * text always lands in the problem box for review; analysis (with its safety checks)
+ * stays separate.
  */
 export function usePhotoCapture() {
   const t = useT();
@@ -47,7 +58,13 @@ export function usePhotoCapture() {
   const setProblemText = useWorkspaceStore((s) => s.setProblemText);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [cameraBusy, setCameraBusy] = useState(false);
-  const [cameraError, setCameraError] = useState('');
+  const [cameraError, setError] = useState('');
+  /** The Settings page that helps with the error shown (null: none does). */
+  const [cameraErrorSection, setErrorSection] = useState<SettingsSection | null>(null);
+  const setCameraError = (message: string, section: SettingsSection | null = null) => {
+    setError(message);
+    setErrorSection(message ? section : null);
+  };
 
   const openCamera = () => {
     setCameraError('');
@@ -71,8 +88,29 @@ export function usePhotoCapture() {
     let cloudIssue: 'badKey' | 'badModel' | null = null;
     try {
       let raw: string | null = null;
+      const engine = await analysisEngine();
+      // The learner chose AI on this computer: the photo stays on this computer.
+      const onComputer = engine === 'local' || engine === 'local-missing';
+      if (onComputer) {
+        const local = await readPhotoOnComputer(engine, base64, locale);
+        if (local.kind === 'error') {
+          setCameraError(local.message, local.section);
+          return;
+        }
+        if (local.kind === 'text') {
+          // The runtime read it (an empty reading: "chụp lại rõ hơn"); Gemma is not asked too.
+          const text = cleanTranscription(local.text);
+          if (!text) {
+            setCameraError(t('camera.readFailed'));
+            return;
+          }
+          setProblemText(text);
+          setCameraOpen(false);
+          return;
+        }
+      }
       // Desktop builds have no cloud image endpoint: straight to the local model.
-      if (!isTauri()) {
+      if (!isTauri() && !onComputer) {
         try {
           raw = await transcribeWithCloud(base64, locale);
         } catch (e) {
@@ -86,8 +124,9 @@ export function usePhotoCapture() {
       if (raw === null || raw.trim() === '') {
         const chat = useChatStore.getState();
         if (!(await gemmaReady(chat.gemmaModel))) {
-          if (cloudIssue === 'badKey') setCameraError(t('camera.badKey'));
-          else if (cloudIssue === 'badModel') setCameraError(t('camera.badModel'));
+          if (onComputer) setCameraError(t('camera.localNoVision'), 'runtimes');
+          else if (cloudIssue === 'badKey') setCameraError(t('camera.badKey'), 'ai');
+          else if (cloudIssue === 'badModel') setCameraError(t('camera.badModel'), 'ai');
           else setCameraError(t('camera.needVision'));
           return;
         }
@@ -116,5 +155,14 @@ export function usePhotoCapture() {
     }
   };
 
-  return { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog };
+  return {
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  };
 }

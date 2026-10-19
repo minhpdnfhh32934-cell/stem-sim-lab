@@ -87,4 +87,52 @@ describe('fallback when the chosen provider runs out of quota', () => {
       'api.groq.com',
     ]);
   });
+
+  const request: ChatRequest = {
+    requestId: 'r',
+    provider: 'gemini',
+    model: 'gemini-x',
+    system: 's',
+    messages: [{ role: 'user', content: 'hi' }],
+  };
+
+  it.each([401, 404, 413, 500, 503])(
+    'the page sends a question once: a %i is neither retried nor sent to the fallback',
+    async (status) => {
+      useAiStore.setState({ fallback: 'groq', models: { gemini: '', claude: '', groq: '' } });
+      globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+      globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+      const calls: string[] = [];
+      vi.stubGlobal('fetch', (url: string) => {
+        calls.push(new URL(url).host);
+        return Promise.resolve(new Response('{"error":{}}', { status }));
+      });
+      const t = getTransport();
+      await expect(t.chat(request)).rejects.toMatchObject({ code: 'http' });
+      expect(calls).toEqual(['generativelanguage.googleapis.com']);
+      calls.length = 0;
+      await expect(t.chatStream?.(request, () => undefined)).rejects.toMatchObject({
+        code: 'http',
+      });
+      expect(calls).toEqual(['generativelanguage.googleapis.com']);
+    },
+  );
+
+  it('a quota error goes to the fallback once, never round again', async () => {
+    useAiStore.setState({ fallback: 'groq', models: { gemini: '', claude: '', groq: '' } });
+    globalThis.__STEMSIM_TEST_GEMINI_KEY__ = 'g';
+    globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'q';
+    const calls: string[] = [];
+    // Both providers are out of quota.
+    vi.stubGlobal('fetch', (url: string) => {
+      calls.push(new URL(url).host);
+      return Promise.resolve(new Response('{"error":"rate_limit"}', { status: 429 }));
+    });
+    const t = getTransport();
+    await expect(t.chat(request)).rejects.toMatchObject({ code: 'http' });
+    expect(calls).toEqual(['generativelanguage.googleapis.com', 'api.groq.com']);
+    calls.length = 0;
+    await expect(t.chatStream?.(request, () => undefined)).rejects.toMatchObject({ code: 'http' });
+    expect(calls).toEqual(['generativelanguage.googleapis.com', 'api.groq.com']);
+  });
 });

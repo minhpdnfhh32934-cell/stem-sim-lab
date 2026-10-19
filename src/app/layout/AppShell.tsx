@@ -22,7 +22,7 @@ import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
-import { useIsHome, useIsLanding, useIsTeacher } from '@/app/topics';
+import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
@@ -52,6 +52,7 @@ import { loadGpuStatus } from '@/ai/gpu';
 const SourcesDialog = lazy(() => import('@/app/project/SourcesDialog'));
 // The AI teacher is its own chunk (PROMPT_PHAN_2 B0: separate from the simulations).
 const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
+const StudioScreen = lazy(() => import('@/studio/StudioScreen'));
 // Quick search (Ctrl+K) loads on first use; the shortcut and the top-bar button only flip a flag.
 const CommandPalette = lazy(() =>
   import('@/app/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
@@ -96,14 +97,17 @@ export function AppShell() {
   const { presentation } = layout;
   const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
   const teacher = useIsTeacher();
+  const studio = useIsStudio() && !teacher;
   const landing = useIsLanding();
   const labHome = useIsHome() && !teacher;
   const home = landing || labHome;
+  // Science Studio, like AI Teacher, owns the whole centre: no lab panels around it.
+  const fullPage = teacher || studio;
 
-  const showLeft = !presentation && !teacher && !landing;
+  const showLeft = !presentation && !fullPage && !landing;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
-  const showRight = !presentation && !home && !teacher;
-  const showBottom = !presentation && !home && !teacher;
+  const showRight = !presentation && !home && !fullPage;
+  const showBottom = !presentation && !home && !fullPage;
 
   const style = {
     '--left-w': `${layout.leftWidth}px`,
@@ -117,7 +121,7 @@ export function AppShell() {
       data-presentation={presentation || undefined}
       data-inspector={showRight || undefined}
       data-bottom={showBottom || undefined}
-      data-timeline={(!moduleActive && !home && !teacher) || undefined}
+      data-timeline={(!moduleActive && !home && !fullPage) || undefined}
       style={style}
     >
       {!presentation && <TopBar />}
@@ -165,6 +169,10 @@ export function AppShell() {
             <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
               <TeacherScreen />
             </Suspense>
+          ) : studio ? (
+            <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
+              <StudioScreen />
+            </Suspense>
           ) : landing ? (
             <LandingScreen />
           ) : labHome ? (
@@ -172,7 +180,7 @@ export function AppShell() {
           ) : (
             <Stage />
           )}
-          {!moduleActive && !home && !teacher && <Timeline />}
+          {!moduleActive && !home && !fullPage && <Timeline />}
           {showBottom && (
             <>
               <Splitter

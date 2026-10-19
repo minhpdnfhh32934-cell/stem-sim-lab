@@ -1,7 +1,7 @@
 import { CheckCircle2, Flag, Lightbulb, Play, RotateCcw, Sparkles, Target } from 'lucide-react';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { formatNumber, useT } from '@/app/i18n';
+import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { sim } from '@/app/sim/runtime';
@@ -12,7 +12,8 @@ import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { Celebrate } from '@/ui/Celebrate';
 import { cx } from '@/ui/cx';
 import { challengesFor, evaluate, optimum, startParams, type Challenge } from './challenges';
-import { changedValue, observe, poeFor, type Poe, type PoeChoice } from './poe';
+import { changedValue, observe, poeFor, type Poe } from './poe';
+import { choiceLabel } from './poeLabels';
 import { useProgressStore } from './progressStore';
 import './learn.css';
 
@@ -53,14 +54,6 @@ function useCurrentG(): number | undefined {
 }
 
 /* ---------------- Predict – Observe – Explain ---------------- */
-
-function choiceLabel(t: ReturnType<typeof useT>, locale: 'vi' | 'en', c: PoeChoice): string {
-  if (c.kind === 'direction') return t(`learn.dir.${c.dir}`);
-  if (Math.abs(c.ratio - 1) < 1e-9) return t('learn.ratio.same');
-  if (Math.abs(c.ratio - 0.5) < 1e-9) return t('learn.ratio.half');
-  if (Math.abs(c.ratio - Math.SQRT2) < 1e-9) return t('learn.ratio.sqrt2');
-  return t('learn.ratio.times', { n: formatNumber(locale, c.ratio, { maximumFractionDigits: 2 }) });
-}
 
 function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
   const t = useT();

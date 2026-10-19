@@ -1,9 +1,19 @@
-import { ChevronLeft, ChevronRight, Focus, Pause, Play, RotateCcw, X } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Focus,
+  GraduationCap,
+  Pause,
+  Play,
+  RotateCcw,
+  X,
+} from 'lucide-react';
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { useLocalized } from '@/app/i18n/localized';
-import { formatNumber } from '@/app/i18n';
+import { formatNumber, useT } from '@/app/i18n';
+import { openTeacherWithQuestion } from '@/teacher/teacherStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { FrameMonitor } from '@/perf/frameMonitor';
@@ -158,36 +168,82 @@ function StageStrip({ tl }: { tl: Timeline }) {
   );
 }
 
-/** Name + function of the picked part (and whether it can be seen at this moment). */
-function PartInfo({ tl, selected }: { tl: Timeline; selected: Selection }) {
+/**
+ * Name + function of the picked part (and whether it can be seen at this moment), and
+ * "Hỏi thầy về bộ phận này": AI Teacher opens with a question written from this module's own
+ * texts (part, stage, cell type), never an AI's; the learner sends it (no picture goes with it).
+ */
+function PartInfo({
+  tl,
+  selected,
+  stage,
+  cellType,
+}: {
+  tl: Timeline;
+  selected: Selection;
+  stage: Stage3D;
+  cellType: CellType;
+}) {
   const Lz = useLocalized();
+  const t = useT();
   const visible = useMitosis3D((s) => componentVisible(selected.component, stateFor(tl, s.t)));
   const info = COMPONENTS[selected.component];
+  const askTeacher = () => {
+    // A part the card says cannot be seen now gets a question that does not assume it is there
+    // (e.g. the spindle in G1, the nucleus at metaphase).
+    openTeacherWithQuestion(
+      t(visible ? 'teacher.askMitosisPartQuestion' : 'teacher.askMitosisPartHiddenQuestion', {
+        part: Lz(info.name),
+        stage: Lz(STAGE3D_NAME[stage]),
+        // Mid-sentence, as in the Science Card title.
+        cell: Lz(CELL_TYPE_NAME[cellType]).toLowerCase(),
+      }),
+    );
+  };
   return (
-    <aside className="m3d__info" aria-live="polite">
-      <div className="m3d__info-head">
-        <strong>{Lz(info.name)}</strong>
-        <IconButton
-          icon={X}
-          size="lg"
-          label={Lz(L('Bỏ chọn', 'Clear selection'))}
-          onClick={() => {
-            useMitosis3D.setState({ selected: null });
-          }}
-        />
-      </div>
-      <p>{Lz(info.role)}</p>
-      {!visible && (
-        <p className="small muted">
-          {Lz(
-            L(
-              'Bộ phận này không thấy rõ ở kì đang xem.',
-              'This part is not visible at this stage.',
-            ),
+    // The slot is the card's grid row (its height decides whether the head can stay in view).
+    <div className="m3d__info-slot">
+      <aside className="m3d__info" aria-live="polite">
+        {/* Name and actions: in the head row (no extra height); the card scrolls as one. */}
+        <div className="m3d__info-head">
+          <strong>{Lz(info.name)}</strong>
+          <div className="m3d__info-actions">
+            <button
+              type="button"
+              className="btn m3d__ask"
+              aria-label={t('teacher.askMitosisPart')}
+              data-tip={t('teacher.askMitosisPart')}
+              data-tip-side="top"
+              onClick={askTeacher}
+            >
+              <GraduationCap size={16} aria-hidden="true" />
+              {t('teacher.askMitosisPartShort')}
+            </button>
+            <IconButton
+              icon={X}
+              size="lg"
+              label={Lz(L('Bỏ chọn', 'Clear selection'))}
+              onClick={() => {
+                useMitosis3D.setState({ selected: null });
+              }}
+            />
+          </div>
+        </div>
+        <div className="m3d__info-body">
+          <p>{Lz(info.role)}</p>
+          {!visible && (
+            <p className="small muted">
+              {Lz(
+                L(
+                  'Bộ phận này không thấy rõ ở kì đang xem.',
+                  'This part is not visible at this stage.',
+                ),
+              )}
+            </p>
           )}
-        </p>
-      )}
-    </aside>
+        </div>
+      </aside>
+    </div>
   );
 }
 
@@ -253,6 +309,7 @@ export function Mitosis3DView({
   const atEnd = useMitosis3D((s) => s.t >= tl.total);
   const selected = useMitosis3D((s) => s.selected);
   const camera = useMitosis3D((s) => s.camera);
+  const cellLocked = useMitosis3D((s) => s.cellLocked);
   const stage = STAGES_3D[stageIndex] ?? 'g1';
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -593,8 +650,9 @@ export function Mitosis3DView({
               { id: 'animal', label: L('Động vật', 'Animal') },
               { id: 'plant', label: L('Thực vật', 'Plant') },
             ]}
+            disabled={cellLocked}
             onChange={(v) => {
-              useDivisionStore.setState({ cellType: v });
+              if (!useMitosis3D.getState().cellLocked) useDivisionStore.setState({ cellType: v });
             }}
           />
           <Mitosis3DSwitch />
@@ -619,7 +677,7 @@ export function Mitosis3DView({
             }}
           />
         </div>
-        {selected && <PartInfo tl={tl} selected={selected} />}
+        {selected && <PartInfo tl={tl} selected={selected} stage={stage} cellType={cellType} />}
         <div className="m3d__bottom">
           <StageStrip tl={tl} />
           <p className="m3d__caption">

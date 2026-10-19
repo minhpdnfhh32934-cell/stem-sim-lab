@@ -1,0 +1,7 @@
+{
+  "remote_model": "gpt-oss:120b",
+  "remote_host": "https://ollama.com:443",
+  "details": { "family": "gptoss", "parameter_size": "116.8B" },
+  "model_info": { "general.architecture": "gptoss", "gptoss.context_length": 131072 },
+  "capabilities": ["completion", "tools", "thinking"]
+}

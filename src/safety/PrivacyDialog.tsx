@@ -13,7 +13,13 @@ interface Section {
 const SECTIONS: Section[] = [
   {
     title: 'safety.privacy.sendTitle',
-    items: ['safety.privacy.send1', 'safety.privacy.send2', 'safety.privacy.send3'],
+    items: [
+      'safety.privacy.send1',
+      'safety.privacy.send4',
+      'safety.privacy.send5',
+      'safety.privacy.send2',
+      'safety.privacy.send3',
+    ],
   },
   {
     title: 'safety.privacy.storeTitle',

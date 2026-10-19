@@ -186,3 +186,59 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     hai cách đọc trong `docs/VOICE_BENCHMARK.md` §6 (không phải dữ liệu khoa học dạy cho học sinh,
     nhưng có công thức, đơn vị, phương trình hóa học). Cách đọc từng câu vẫn cần người nghe xác nhận
     (gói nghe thử mù A/B do người dùng tự nghe; chưa có kết quả nghe).
+20. **Kịch bản Science Studio "Rơi tự do: thả từ độ cao gấp đôi"**
+    (`src/studio/scenarios/physicsFreeFall.ts`, id `physics.free-fall-height`, 19/10/2026):
+    mục tiêu, gợi ý, câu hỏi, giả định, giới hạn và **kết luận tham khảo** ("thời gian rơi tỉ lệ với
+    căn bậc hai của độ cao: độ cao gấp đôi thì thời gian tăng √2 lần"). Do Claude viết,
+    `review_status: "pending"`; giao diện và báo cáo ghi "chưa được kiểm duyệt". Mọi số đo (thời
+    gian, tốc độ chạm đất, tỉ số B/A) do engine `phys.projectile` tính và được kiểm tra chéo với
+    `solve()` trong `src/studio/physics/comparison.test.ts`; kịch bản không chứa số đo nào. Nhờ
+    giáo viên kiểm tra lời văn và kết luận tham khảo.
+21. **Kịch bản Science Studio "Nhận biết ion Cl⁻ bằng dung dịch AgNO₃" và bàn thí nghiệm Hóa học**
+    (`src/studio/scenarios/chemistryChlorideTest.ts`, id `chemistry.chloride-silver-nitrate`;
+    `src/studio/chemistry/card.ts`; chuỗi `studio.chem.*` trong `src/app/i18n/locales/vi.ts`,
+    19/10/2026): mục tiêu, câu hỏi dự đoán, các bước làm, gợi ý, câu hỏi, giả định, giới hạn của
+    bàn thí nghiệm, lời nhắc an toàn chung và **kết luận tham khảo** (chép lại bản ghi `agcl` của
+    thư viện). Do Claude viết, `review_status: "pending"`; giao diện và báo cáo ghi "chưa được kiểm
+    duyệt". Hiện tượng, điều kiện, phương trình và nguồn lấy nguyên văn từ `data/reactions.json`
+    (bản ghi `agcl`, `baso4` — cũng đang `pending`); phương trình được kiểm tra bằng `balance.ts`
+    trong `src/studio/chemistry/library.test.ts`. Cặp dung dịch không có bản ghi (ví dụ AgNO₃ +
+    BaCl₂) chỉ hiện "chưa có trong cơ sở dữ liệu đã kiểm chứng" — ứng dụng không đoán. "Có kết
+    tủa" chỉ được xác nhận khi bản ghi có `category: "precipitation"`; thư viện không ghi trường
+    hợp "không có kết tủa". Lớp kết tủa trong hình là kí hiệu trung tính (không vẽ màu, không vẽ
+    lượng). Nhờ giáo viên kiểm tra lời văn, các bước làm, lời nhắc an toàn và kết luận tham khảo.
+22. **Kịch bản Science Studio "Nguyên phân 3D: khi nào NST kép xếp hàng ở mặt phẳng xích đạo?" và
+    hoạt động "Tìm bộ phận theo chức năng"** (`src/studio/scenarios/biologyMitosisMetaphase.ts`, id
+    `biology.mitosis-equator`; `src/studio/biology/card.ts`; chuỗi `studio.bio.*` trong
+    `src/app/i18n/locales/vi.ts`, 19/10/2026): câu hỏi dự đoán, mục tiêu, gợi ý, câu hỏi, giả định,
+    giới hạn, hai giả thiết thêm vào Thẻ Khoa học 3D và **kết luận tham khảo**. Do Claude viết,
+    `review_status: "pending"`; giao diện và báo cáo ghi "chưa được kiểm duyệt". Đáp án của câu hỏi
+    dự đoán không viết tay: ứng dụng đọc mô hình 3D tại thời điểm đặc trưng của từng kì
+    (`STAGE_KEY_U`) và tìm kì duy nhất mà mọi NST đều là NST kép và mọi tâm động được mô hình giữ
+    trên mặt phẳng xích đạo (`src/studio/biology/model.ts`). Số NST và số NST kép lấy từ mô hình
+    đếm; "trên mặt phẳng" lấy theo ý nghĩa của kì trong mô hình (`heldOnPlate` trong
+    `src/biology/division/mitosis3d/timeline.ts`: kì giữa, khi sợi thoi đã kéo xong) — không đọc từ
+    vị trí minh họa (ở G2 và kì đầu có tâm động được vẽ cách x = 0 chỉ 0,004 đơn vị). Test
+    `model.test.ts` kiểm tra với 2n = 2, 4, 6, 8, tế bào động vật và thực vật, rằng chỉ đúng một kì
+    thỏa mãn và đó là kì giữa (khớp mô tả kì M3D-4), và đối chiếu: khi mô hình giữ NST ở mặt phẳng
+    thì hình vẽ đặt mọi tâm động đúng x = 0. Trong bài học, loại tế bào và 2n bị khoá theo kịch bản
+    (tế bào động vật, 2n = 4); bản ghi kì luôn là của tế bào này. Kết luận tham khảo và câu hỏi
+    ("2n = 4") được test đối chiếu với mô hình. Tên kì, mô tả
+    kì, tên và chức năng bộ phận trong hoạt động lấy nguyên văn từ `components.ts` (các mục M3D-1 …
+    M3D-23, cũng đang chờ duyệt); đáp án đúng của hoạt động là chính bộ phận mà chức năng thuộc về.
+    Nhờ giáo viên kiểm tra lời văn, cách chọn 5 bộ phận (màng tế bào, nhân, màng nhân, nhân con, thoi
+    phân bào) và kết luận tham khảo.
+23. **Soạn bài (Science Studio): kịch bản do giáo viên viết và lời giải thích của trình soạn**
+    (`src/studio/authoring/`; chuỗi `studio.teacher`, `studio.authoring.*` trong
+    `src/app/i18n/locales/vi.ts`, 19/10/2026). Mọi kịch bản soạn hoặc nhập (`author: "teacher"`)
+    luôn được lưu với `review_status: "pending"`, kể cả khi tệp nhập ghi `verified`; Studio ghi
+    "Nội dung do giáo viên soạn — không phải kết quả của mô phỏng" cạnh mục tiêu, gợi ý, câu hỏi,
+    kết luận mong đợi và trong báo cáo. Ứng dụng không kiểm tra nội dung khoa học của chữ giáo viên
+    viết; nó chỉ kiểm tra rằng kịch bản chạy được: Vật lí dùng đúng bộ đo của một kịch bản có sẵn
+    (hiện chỉ Rơi tự do), giá trị ban đầu nằm trong thang đo của cảnh và lần B (nhân hệ số POE) vẫn
+    trong thang đo; Hóa học chỉ chọn phản ứng `precipitation` của thư viện và dung dịch là chất đầu
+    của các bản ghi đó (hiện AgNO₃, NaCl, BaCl₂, H₂SO₄); Sinh học chỉ chọn bộ phận mô hình 3D có cho
+    loại tế bào, 2n = 2…8. Câu hỏi giáo viên viết có thể không khớp với đáp án mà mô hình tính (Hóa
+    học: "có kết tủa"; Sinh học: kì mà tâm động nằm trên mặt phẳng xích đạo) — trình soạn ghi rõ đáp
+    án được tính thế nào. Nhờ giáo viên kiểm tra các câu giải thích này và từng kịch bản trước khi
+    dùng với học sinh.

@@ -1,12 +1,41 @@
-import { invoke, isTauri } from '@tauri-apps/api/core';
+import { Channel, invoke, isTauri } from '@tauri-apps/api/core';
 import { localDay, useAiStore } from './aiStore';
+import {
+  expired,
+  GEMINI_BLOCKED,
+  NATURAL_END,
+  readCloudStream,
+  roomForFallback,
+  startClock,
+  type StreamClock,
+} from './cloudStream';
 import { fallbackFor, isQuotaError } from './fallback';
 import { classifyKeyTest, maskKey, type KeyTest } from './keyTest';
-import { AiError, toAiError, type ChatRequest, type ChatResponse, type Provider } from './types';
+import { visibleAnswer } from './reasoning';
+import {
+  AiError,
+  ShownText,
+  toAiError,
+  type ChatRequest,
+  type ChatResponse,
+  type Provider,
+  type StreamEvent,
+} from './types';
 
 /** How the app talks to an LLM. The desktop app always goes through Rust (`AIProvider`). */
 export interface LlmTransport {
   chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse>;
+  /**
+   * A text answer that streams while it is written: `onText` gets the text shown so far after
+   * every change (provisional: a late reasoning tag can take text back, see `StreamEvent`); the
+   * returned `content` is the final text. Requests with a JSON schema are not streamed (they are
+   * answered as by `chat`, without `onText`). Optional: callers use `chat` when it is absent.
+   */
+  chatStream?(
+    req: ChatRequest,
+    onText: (shown: string) => void,
+    signal?: AbortSignal,
+  ): Promise<ChatResponse>;
   /** The provider's models; also tells whether the stored key works. */
   models(provider: Provider): Promise<string[]>;
   setKey(provider: Provider, key: string): Promise<void>;
@@ -50,12 +79,12 @@ export interface TtsAudio {
 }
 
 /**
- * Asks Rust to cancel `requestId` ("Dừng"). Rust registers a request only after its safety, key
- * and daily-cap checks, so a stop sent in that window finds nothing (`ai_cancel` → false): it is
- * sent again every 50 ms while the call still runs, for up to 2 s. Known limit (Rust side,
- * src-tauri/src/ai/mod.rs `ai_chat`): such a call is already counted against the daily cap.
+ * Asks Rust to cancel `requestId` ("Dừng"), for cloud calls and local runtimes alike. Rust
+ * registers a call before any check (src-tauri/src/ai/mod.rs `InflightGuard`), but the stop can
+ * still reach Rust before the call itself does (`ai_cancel` → false): it is sent again every 50 ms
+ * while the call still runs, for up to 2 s.
  */
-async function cancelInRust(requestId: string, running: () => boolean): Promise<void> {
+export async function cancelInRust(requestId: string, running: () => boolean): Promise<void> {
   for (let attempt = 0; attempt < 40 && running(); attempt++) {
     try {
       if (await invoke<boolean>('ai_cancel', { requestId })) return;
@@ -64,6 +93,43 @@ async function cancelInRust(requestId: string, running: () => boolean): Promise<
     }
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
+}
+
+/**
+ * Tauri's answer for a command the app does not have ("Command ai_chat_stream not found", or
+ * "unknown command …"): the web part was updated without the desktop app
+ * (src-tauri/src/webupdate.rs).
+ */
+export function isMissingCommand(e: unknown): boolean {
+  const text = typeof e === 'string' ? e : e instanceof Error ? e.message : '';
+  return /^(?:command \S+ not found|unknown command:? \S+)$/i.test(text.trim());
+}
+
+/**
+ * The desktop app turned out not to have `ai_chat_stream` (an older app under a newer web part):
+ * every later answer of this session goes straight to `ai_chat`, so a missing command is asked
+ * about once, never before each question.
+ */
+let streamCommandMissing = false;
+
+/** Tests: forget that the desktop app lacked `ai_chat_stream`. */
+export function resetStreamSupportForTests(): void {
+  streamCommandMissing = false;
+}
+
+/**
+ * What the Rust gateway gets: the call is counted against the user's daily cap, and the fallback
+ * provider answers when the chosen one is out of quota/credit (unless `noFallback`).
+ */
+function gatewayRequest(req: ChatRequest): Omit<ChatRequest, 'noFallback'> {
+  const { noFallback, ...rest } = req;
+  const fallback = noFallback ? undefined : fallbackFor(req.provider);
+  return {
+    day: localDay(),
+    dailyCap: useAiStore.getState().dailyCap,
+    ...(fallback ? { fallback } : {}),
+    ...rest,
+  };
 }
 
 class TauriTransport implements LlmTransport {
@@ -75,24 +141,54 @@ class TauriTransport implements LlmTransport {
       void cancelInRust(req.requestId, () => running);
     };
     signal?.addEventListener('abort', onAbort, { once: true });
-    // The Rust gateway counts the call against the user's daily cap and switches to the
-    // fallback provider when the chosen one is out of quota/credit.
-    const { noFallback, ...rest } = req;
-    const fallback = noFallback ? undefined : fallbackFor(req.provider);
-    const request = {
-      day: localDay(),
-      dailyCap: useAiStore.getState().dailyCap,
-      ...(fallback ? { fallback } : {}),
-      ...rest,
-    };
     try {
-      return await invoke<ChatResponse>('ai_chat', { request });
+      return await invoke<ChatResponse>('ai_chat', { request: gatewayRequest(req) });
     } catch (e) {
       throw toAiError(e);
     } finally {
       running = false;
       signal?.removeEventListener('abort', onAbort);
     }
+  }
+  /**
+   * `ai_chat_stream`: Rust streams the answer through a channel (reasoning already removed) and
+   * returns the final answer. The deltas are provisional (`ShownText`): `onText` always gets the
+   * whole text so far, a reset replaces it, and the returned content is the authority, so the
+   * last text `onText` gets is the answer. Events that arrive after the call ended are ignored.
+   * An older desktop app without the command answers the whole text through `ai_chat` instead,
+   * for this call and the rest of the session (`streamCommandMissing`).
+   */
+  async chatStream(
+    req: ChatRequest,
+    onText: (shown: string) => void,
+    signal?: AbortSignal,
+  ): Promise<ChatResponse> {
+    if (req.jsonSchema !== undefined || streamCommandMissing) return this.chat(req, signal);
+    if (signal?.aborted) throw new AiError('cancelled', req.requestId);
+    let running = true;
+    const onAbort = () => {
+      void cancelInRust(req.requestId, () => running);
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+    const shown = new ShownText(onText);
+    const onEvent = new Channel<StreamEvent>((e) => {
+      if (running) shown.apply(e);
+    });
+    try {
+      const answer = await invoke<ChatResponse>('ai_chat_stream', {
+        request: gatewayRequest(req),
+        onEvent,
+      });
+      shown.settle(answer.content);
+      return answer;
+    } catch (e) {
+      if (shown.started || !isMissingCommand(e)) throw toAiError(e);
+      streamCommandMissing = true;
+    } finally {
+      running = false;
+      signal?.removeEventListener('abort', onAbort);
+    }
+    return this.chat(req, signal);
   }
   async models(provider: Provider): Promise<string[]> {
     try {
@@ -187,9 +283,16 @@ interface Reply {
 
 const nodeOnly = typeof window === 'undefined';
 
-/** Same request as `gemini_body` in src-tauri/src/ai/gemini.rs. */
-async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
-  const url = 'https://generativelanguage.googleapis.com/v1beta';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta';
+const CLAUDE_URL = 'https://api.anthropic.com/v1/messages';
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+function geminiModel(model: string): string {
+  return model.trim().replace(/^models\//, '');
+}
+
+/** Same body as `gemini_body` in src-tauri/src/ai/gemini.rs. */
+function geminiBody(req: ChatRequest): Record<string, unknown> {
   const generationConfig: Record<string, unknown> = {
     temperature: req.temperature ?? 0,
     maxOutputTokens: Math.max(req.maxTokens ?? 2048, 8192),
@@ -198,7 +301,7 @@ async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Re
     generationConfig.responseMimeType = 'application/json';
     generationConfig.responseJsonSchema = req.jsonSchema;
   }
-  const body = {
+  return {
     systemInstruction: { parts: [{ text: req.system }] },
     contents: req.messages.map((m) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -206,11 +309,14 @@ async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Re
     })),
     generationConfig,
   };
-  const model = req.model.trim().replace(/^models\//, '');
-  const resp = await http(`${url}/models/${model}:generateContent`, {
+}
+
+/** Same request as `GeminiProvider::chat_request` in src-tauri/src/ai/gemini.rs. */
+async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
+  const resp = await http(`${GEMINI_URL}/models/${geminiModel(req.model)}:generateContent`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-    body: JSON.stringify(body),
+    body: JSON.stringify(geminiBody(req)),
   });
   if (!resp.ok) throw await httpError(resp);
   const json = (await resp.json()) as {
@@ -218,13 +324,28 @@ async function geminiChat(req: ChatRequest, key: string, http: Http): Promise<Re
       content?: { parts?: { text?: string; thought?: boolean }[] };
       finishReason?: string;
     }[];
+    promptFeedback?: { blockReason?: string };
   };
   const first = json.candidates?.[0];
+  const finish = first?.finishReason;
+  // A stop by Gemini's own filters is no answer, even with some text (as when streamed).
+  if (finish !== undefined && GEMINI_BLOCKED.has(finish)) {
+    throw new AiError('badResponse', `empty answer (${finish})`);
+  }
   const text = (first?.content?.parts ?? [])
     .filter((p) => !p.thought)
     .map((p) => p.text ?? '')
     .join('');
-  return { text, truncated: first?.finishReason === 'MAX_TOKENS' };
+  if (!text.trim()) {
+    const reason = finish ?? json.promptFeedback?.blockReason ?? 'no text';
+    throw new AiError('badResponse', `empty answer (${reason})`);
+  }
+  return { text, truncated: incomplete(finish, 'gemini') };
+}
+
+/** Any finish reason but the provider's natural end (`NATURAL_END`), as Rust's `truncated`. */
+function incomplete(reason: string | undefined, provider: Provider): boolean {
+  return reason !== undefined && !NATURAL_END[provider].includes(reason);
 }
 
 async function geminiModels(key: string, http: Http): Promise<string[]> {
@@ -236,8 +357,16 @@ async function geminiModels(key: string, http: Http): Promise<string[]> {
   return (j.models ?? []).map((m) => m.name.replace(/^models\//, ''));
 }
 
-/** Same request as `claude_body` in src-tauri/src/ai/claude.rs (golden runs from Node). */
-async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
+function claudeHeaders(key: string): Record<string, string> {
+  return {
+    'Content-Type': 'application/json',
+    'x-api-key': key,
+    'anthropic-version': '2023-06-01',
+  };
+}
+
+/** Same body as `claude_body` in src-tauri/src/ai/claude.rs. */
+function claudeBody(req: ChatRequest): Record<string, unknown> {
   const name = req.schemaName ?? 'result';
   const body: Record<string, unknown> = {
     model: req.model.trim(),
@@ -251,28 +380,33 @@ async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<Re
     ];
     body.tool_choice = { type: 'tool', name };
   }
-  const resp = await http('https://api.anthropic.com/v1/messages', {
+  return body;
+}
+
+/** Same request as `ClaudeProvider::chat_request` (golden runs from Node). */
+async function claudeChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
+  const resp = await http(CLAUDE_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify(body),
+    headers: claudeHeaders(key),
+    body: JSON.stringify(claudeBody(req)),
   });
   if (!resp.ok) throw await httpError(resp);
   const json = (await resp.json()) as {
     content?: { type: string; text?: string; input?: unknown }[];
     stop_reason?: string;
   };
-  const truncated = json.stop_reason === 'max_tokens';
-  const blocks = json.content ?? [];
+  // A refusal is no answer, even with some text (as when streamed).
+  if (json.stop_reason === 'refusal') throw new AiError('badResponse', 'empty answer (refusal)');
+  const truncated = incomplete(json.stop_reason, 'claude');
+  const blocks = json.content;
+  if (!Array.isArray(blocks)) throw new AiError('badResponse', 'missing content');
   const tool = blocks.find((b) => b.type === 'tool_use');
   if (tool) return { text: JSON.stringify(tool.input), truncated };
-  return {
-    text: blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join(''),
-    truncated,
-  };
+  const text = blocks.map((b) => (b.type === 'text' ? (b.text ?? '') : '')).join('');
+  if (!text.trim()) {
+    throw new AiError('badResponse', `empty answer (${json.stop_reason ?? 'no text'})`);
+  }
+  return { text, truncated };
 }
 
 /** Same request as `groq_body` in src-tauri/src/ai/groq.rs (OpenAI-compatible). */
@@ -305,7 +439,7 @@ export function groqBody(req: ChatRequest): Record<string, unknown> {
 }
 
 async function groqChat(req: ChatRequest, key: string, http: Http): Promise<Reply> {
-  const resp = await http('https://api.groq.com/openai/v1/chat/completions', {
+  const resp = await http(GROQ_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
     body: JSON.stringify(groqBody(req)),
@@ -315,10 +449,15 @@ async function groqChat(req: ChatRequest, key: string, http: Http): Promise<Repl
     choices?: { message?: { content?: string }; finish_reason?: string }[];
   };
   const choice = json.choices?.[0];
-  return {
-    text: (choice?.message?.content ?? '').replace(/^\s*<think>[\s\S]*?<\/think>\s*/, ''),
-    truncated: choice?.finish_reason === 'length',
-  };
+  const finish = choice?.finish_reason;
+  // A content-filter stop is no answer, even with some text (as when streamed).
+  if (finish === 'content_filter') {
+    throw new AiError('badResponse', 'empty answer (content_filter)');
+  }
+  // The raw answer: reasoning is removed for every provider in `chatOnce` (`visibleAnswer`).
+  const text = choice?.message?.content ?? '';
+  if (!text.trim()) throw new AiError('badResponse', `empty answer (${finish ?? 'no text'})`);
+  return { text, truncated: incomplete(finish, 'groq') };
 }
 
 export interface VisionRequest {
@@ -342,6 +481,41 @@ function visionParts(json: unknown): string {
       return '';
     })
     .join('');
+}
+
+/**
+ * The streamed request of a provider, as `stream_request` in src-tauri/src/ai/{gemini,claude,
+ * groq}.rs: Gemini `streamGenerateContent?alt=sse`, Claude and Groq with `"stream": true`.
+ */
+function streamRequest(req: ChatRequest, key: string): { url: string; init: RequestInit } {
+  if (req.provider === 'gemini') {
+    return {
+      url: `${GEMINI_URL}/models/${geminiModel(req.model)}:streamGenerateContent?alt=sse`,
+      init: {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+        body: JSON.stringify(geminiBody(req)),
+      },
+    };
+  }
+  if (req.provider === 'claude') {
+    return {
+      url: CLAUDE_URL,
+      init: {
+        method: 'POST',
+        headers: claudeHeaders(key),
+        body: JSON.stringify({ ...claudeBody(req), stream: true }),
+      },
+    };
+  }
+  return {
+    url: GROQ_URL,
+    init: {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+      body: JSON.stringify({ ...groqBody(req), stream: true }),
+    },
+  };
 }
 
 /** Gemini photo reading (inlineData part). Browser/localhost only. */
@@ -436,6 +610,99 @@ class FetchTransport implements LlmTransport {
       return { ...answer, provider: fb.provider, fallback: true };
     }
   }
+  /**
+   * Streamed text answer (Gemini and Groq; Claude from Node only), with the gateway's rules: the
+   * fallback answers only for a quota error that came before any visible text was shown (leading
+   * whitespace is held back) and while enough of the first-text wait is left
+   * (`roomForFallback`); no retries (as `chat` here).
+   */
+  async chatStream(
+    req: ChatRequest,
+    onText: (shown: string) => void,
+    signal?: AbortSignal,
+  ): Promise<ChatResponse> {
+    if (req.jsonSchema !== undefined) return this.chat(req, signal);
+    const fb = req.noFallback ? undefined : fallbackFor(req.provider);
+    const fbUsable = fb && this.supported(fb.provider) && !!pageKey(fb.provider);
+    const clock = startClock(req.timeoutSecs);
+    const progress = { shown: false };
+    // Until the first visible text, whitespace is held back (as Rust's `Emitter`): an answer that
+    // starts with a newline has shown nothing yet, so the fallback may still answer.
+    const emit = (text: string) => {
+      if (!progress.shown && text.trim() === '') return;
+      progress.shown = true;
+      onText(text);
+    };
+    try {
+      return {
+        ...(await this.streamOnce(req, clock, emit, signal)),
+        provider: req.provider,
+        fallback: false,
+      };
+    } catch (e) {
+      // The fallback shares the first-text deadline: with too little of it left it could only
+      // time out, so the provider's own quota error is returned instead.
+      const switchable = !progress.shown && isQuotaError(e) && roomForFallback(clock);
+      if (!fbUsable || !switchable) throw e;
+      const answer = await this.streamOnce(
+        { ...req, provider: fb.provider, model: fb.model },
+        clock,
+        emit,
+        signal,
+      );
+      return { ...answer, provider: fb.provider, fallback: true };
+    }
+  }
+  private async streamOnce(
+    req: ChatRequest,
+    clock: StreamClock,
+    emit: (shown: string) => void,
+    signal?: AbortSignal,
+  ): Promise<ChatResponse> {
+    if (!this.supported(req.provider)) throw new AiError('unavailable', 'desktop app only');
+    const key = this.key(req.provider);
+    if (signal?.aborted) throw new AiError('cancelled', req.requestId);
+    const started = performance.now();
+    // Aborting closes the connection: on a stop, and when no answer starts before the deadline.
+    const ctl = new AbortController();
+    const onAbort = () => {
+      ctl.abort();
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+    const deadline = { passed: false };
+    const timer = setTimeout(
+      () => {
+        deadline.passed = true;
+        ctl.abort();
+      },
+      Math.max(0, clock.first - performance.now()),
+    );
+    try {
+      const { url, init } = streamRequest(req, key);
+      let resp: Response;
+      try {
+        resp = await fetch(url, { ...init, signal: ctl.signal });
+      } finally {
+        clearTimeout(timer);
+      }
+      if (!resp.ok) throw await httpError(resp);
+      if (!resp.body) throw new AiError('badResponse', 'missing content');
+      const answer = await readCloudStream(resp.body, req.provider, clock, emit, signal);
+      return {
+        content: answer.content,
+        model: answer.model ?? req.model.trim(),
+        durationMs: performance.now() - started,
+        truncated: answer.truncated,
+      };
+    } catch (e) {
+      if (signal?.aborted) throw new AiError('cancelled', req.requestId);
+      if (deadline.passed) throw expired(clock, false);
+      throw toAiError(e);
+    } finally {
+      signal?.removeEventListener('abort', onAbort);
+      ctl.abort();
+    }
+  }
   private async chatOnce(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
     if (!this.supported(req.provider)) throw new AiError('unavailable', 'desktop app only');
     const key = this.key(req.provider);
@@ -453,9 +720,13 @@ class FetchTransport implements LlmTransport {
       if (timeout.aborted) throw new AiError('timeout', `${secs}s`);
       throw toAiError(e);
     }
-    if (!reply.text.trim()) throw new AiError('badResponse', 'missing content');
+    // As the Rust gateway: the model's reasoning is removed for every provider; an answer that
+    // was only reasoning is an error, and a JSON answer to a schema is kept exactly as sent.
+    const content = visibleAnswer(reply.text, req.jsonSchema !== undefined);
+    if (content === null) throw new AiError('badResponse', 'reasoningOnly');
+    if (!content.trim()) throw new AiError('badResponse', 'missing content');
     return {
-      content: reply.text,
+      content,
       model: req.model.trim(),
       durationMs: performance.now() - started,
       truncated: reply.truncated,

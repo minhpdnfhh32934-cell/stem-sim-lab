@@ -87,6 +87,58 @@ describe('AI Teacher chat panel', () => {
     expect(messages[1]?.truncated).toBe(false);
   });
 
+  it('stores and shows an answer without its hidden reasoning or echoed prompt labels', async () => {
+    const user = userEvent.setup();
+    replies = [{ content: '<think>thử 7 kg</think>**GHI CHÚ:**\nLực là đại lượng vectơ.' }];
+    const view = render(<ChatPanel teacherPage showScreenContext={false} />);
+    await user.type(screen.getByRole('textbox', { name: 'Nhập câu hỏi' }), 'Lực là gì?{Enter}');
+    expect(await screen.findByText('Lực là đại lượng vectơ.')).toBeInTheDocument();
+    expect(useChatStore.getState().messages[1]?.content).toBe('Lực là đại lượng vectơ.');
+    expect(view.container.textContent).not.toMatch(/thử 7 kg|GHI CHÚ/u);
+  });
+
+  it('an older saved Think answer is shown without the reviewer notes or hidden reasoning', () => {
+    useChatStore.setState({
+      messages: [
+        { id: 'q', role: 'user', content: 'Lực là gì?' },
+        {
+          id: 'a',
+          role: 'assistant',
+          content:
+            '<think>nháp riêng</think>Nhận xét về bản nháp: đúng hướng.\n\nBản đã sửa:\nLực là đại lượng vectơ.',
+          checkedBy: 'groq · groq-model',
+        },
+      ],
+    });
+    const view = render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.getByText('Lực là đại lượng vectơ.')).toBeInTheDocument();
+    expect(view.container.textContent).not.toMatch(/nháp riêng|Nhận xét về bản nháp|Bản đã sửa/u);
+  });
+
+  it('an older saved Think answer in one paragraph keeps its lesson; one about the learner’s draft keeps the feedback', () => {
+    useChatStore.setState({
+      messages: [
+        { id: 'q1', role: 'user', content: 'Lực là gì?' },
+        {
+          id: 'a1',
+          role: 'assistant',
+          content: 'Bản nháp đã đúng. Lực là đại lượng vectơ, đo bằng newton (N).',
+          checkedBy: 'groq · groq-model',
+        },
+        { id: 'q2', role: 'user', content: 'Kiểm tra nháp lời giải giúp em' },
+        {
+          id: 'a2',
+          role: 'assistant',
+          content: 'Bản nháp đúng hướng.\n\nNhớ ghi đơn vị.',
+          checkedBy: 'groq · groq-model',
+        },
+      ],
+    });
+    render(<ChatPanel teacherPage showScreenContext={false} />);
+    expect(screen.getByText('Lực là đại lượng vectơ, đo bằng newton (N).')).toBeInTheDocument();
+    expect(screen.getByText('Bản nháp đúng hướng.')).toBeInTheDocument();
+  });
+
   it('"Xem mô phỏng" follows the latest question, not an older one', () => {
     useChatStore.setState({
       messages: [

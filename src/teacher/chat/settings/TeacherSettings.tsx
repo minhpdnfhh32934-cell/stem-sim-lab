@@ -6,7 +6,9 @@ import type { Provider } from '@/ai/types';
 import { getTransport } from '@/ai/transport';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useAnalysisEngine } from '@/app/ai/engineChoice';
+import { engineKind, useAnalysisEngine } from '@/app/ai/engineChoice';
+import { runtimeName } from '@/app/ai/localRuntime';
+import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { useChatStore } from '../chatStore';
 import { builtinKnowledge } from '../knowledge';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
@@ -218,23 +220,41 @@ function DataFlow({ desktop }: { desktop: boolean }) {
   const locale = useSettingsStore((s) => s.locale);
   const chat = useChatStore();
   const provider = useAiStore((s) => s.provider);
-  const engine = useAnalysisEngine() === 'cloud' ? 'cloud' : 'gemma';
+  const fallback = useAiStore((s) => s.fallback);
+  const engine = engineKind(useAnalysisEngine());
+  const selection = useLocalAiStore((s) => s.selected);
   const voiceEnabled = useVoiceStore((s) => s.enabled);
   const voiceEngine = useVoiceStore((s) => s.engine);
   const name = (p: string) => t(`settings.aiProviders.${p}` as MessageKey);
   const sent: string[] = [];
-  if (engine === 'cloud' && provider !== 'off') {
-    sent.push(t('chatSettings.flowAnswer', { name: name(provider) }));
+  if (engine === 'local') {
+    // A runtime on this computer answers: only what the learner switched on leaves the computer,
+    // each with what is sent and where (the review goes to the chosen reviewer only).
+    if (chat.thinkEnabled)
+      sent.push(t('chatSettings.flowThinkLocal', { name: name(chat.verifierProvider) }));
+    if (chat.webLookup) sent.push(t('chatSettings.flowWiki'));
+    if (voiceEnabled && voiceEngine === 'gemini') sent.push(t('chatSettings.flowVoice'));
+    if (sent.length === 0) sent.push(t('chatSettings.flowNothingOnline'));
+  } else {
+    if (engine === 'cloud' && provider !== 'off') {
+      sent.push(t('chatSettings.flowAnswer', { name: name(provider) }));
+      // "Dự phòng khi hết lượt": the same request may go to a second provider (never with Think,
+      // whose calls all carry `noFallback`).
+      if (fallback !== 'off' && fallback !== provider)
+        sent.push(
+          t('chatSettings.flowFallback', { name: name(provider), fallback: name(fallback) }),
+        );
+    }
+    if (engine === 'gemma')
+      sent.push(t('chatSettings.flowThinkOnly', { name: name(chat.verifierProvider) }));
+    else sent.push(t('chatSettings.flowThink', { name: name(chat.verifierProvider) }));
+    if (chat.webLookup) sent.push(t('chatSettings.flowWiki'));
+    if (voiceEnabled && voiceEngine === 'gemini') sent.push(t('chatSettings.flowVoice'));
+    // The camera reads photos with the cloud API only in the browser (see photoVision.ts).
+    if (!desktop && provider !== 'off')
+      sent.push(t('chatSettings.flowPhoto', { name: name(provider) }));
+    sent.push(t('chatSettings.flowModelDownload'));
   }
-  if (engine === 'gemma')
-    sent.push(t('chatSettings.flowThinkOnly', { name: name(chat.verifierProvider) }));
-  else sent.push(t('chatSettings.flowThink', { name: name(chat.verifierProvider) }));
-  if (chat.webLookup) sent.push(t('chatSettings.flowWiki'));
-  if (voiceEnabled && voiceEngine === 'gemini') sent.push(t('chatSettings.flowVoice'));
-  // The camera reads photos with the cloud API only in the browser (see photoVision.ts).
-  if (!desktop && provider !== 'off')
-    sent.push(t('chatSettings.flowPhoto', { name: name(provider) }));
-  sent.push(t('chatSettings.flowModelDownload'));
   return (
     <section className="chat-settings__flow" aria-label={t('chatSettings.flowTitle')}>
       <div className="chat-settings__flow-grid">
@@ -251,6 +271,16 @@ function DataFlow({ desktop }: { desktop: boolean }) {
             <li>{t('chatSettings.flowLocalSummary')}</li>
             <li>{t('chatSettings.flowLocalDocs', { count: builtinKnowledge(locale).length })}</li>
             <li>{t('chatSettings.flowLocalModel')}</li>
+            {engine === 'local' && (
+              <li>
+                {selection
+                  ? t('chatSettings.flowLocalRuntime', {
+                      name: runtimeName(locale, selection.kind),
+                      address: selection.baseUrl.replace(/^http:\/\//, ''),
+                    })
+                  : t('chatSettings.flowLocalRuntimeNone')}
+              </li>
+            )}
             <li>
               {desktop
                 ? t('chatSettings.flowLocalKeyDesktop')

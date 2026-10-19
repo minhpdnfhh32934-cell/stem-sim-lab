@@ -178,6 +178,8 @@ async function layout(page: Page) {
         info: box('.m3d__info'),
         bottom: box('.m3d__bottom'),
       },
+      /** "Hỏi thầy về bộ phận này", inside the part's card. */
+      ask: box('.m3d__ask'),
       small,
       scroll: root.scrollWidth - root.clientWidth,
     };
@@ -221,11 +223,160 @@ test('mitosis 3D at 1366 × 768: with a part picked, the boxes never overlap at 
           const h = Math.min(a!.bottom, b!.bottom) - Math.max(a!.top, b!.top);
           expect(w > 0.5 && h > 0.5, `${where}: ${an} overlaps ${bn}`).toBe(false);
         }
+      // The ask button is in view inside the card (the card shows its top first).
+      const card = l.parts.info!;
+      expect(l.ask, `${where}: ask`).not.toBeNull();
+      expect(l.ask!.left, `${where}: ask left`).toBeGreaterThanOrEqual(card.left - 0.5);
+      expect(l.ask!.top, `${where}: ask top`).toBeGreaterThanOrEqual(card.top - 0.5);
+      expect(l.ask!.right, `${where}: ask right`).toBeLessThanOrEqual(card.right + 0.5);
+      expect(l.ask!.bottom, `${where}: ask bottom`).toBeLessThanOrEqual(card.bottom + 0.5);
       expect(l.small, `${where}: buttons and radios under 40 px`).toEqual([]);
       expect(l.scroll, `${where}: horizontal scroll`).toBeLessThanOrEqual(0);
     }
   }
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-layout.png` });
+});
+
+/**
+ * Which lines of the picked part's text can be read: every scroll position of the card (and of any
+ * box inside it that scrolls) is tried, and a line counts when its top and bottom are both shown
+ * and not covered by anything (the card's head, say). Also whether "Hỏi thầy" is still inside the
+ * card once the card is scrolled to its end.
+ */
+async function partText(page: Page) {
+  return page.evaluate(() => {
+    const card = document.querySelector<HTMLElement>('.m3d__info');
+    const body = document.querySelector<HTMLElement>('.m3d__info-body');
+    const ask = document.querySelector<HTMLElement>('.m3d__ask');
+    if (!card || !body || !ask) return null;
+    const scrollers = [card, ...card.querySelectorAll<HTMLElement>('*')].filter(
+      (el) =>
+        el.scrollHeight > el.clientHeight + 1 &&
+        ['auto', 'scroll'].includes(getComputedStyle(el).overflowY),
+    );
+    const seen = new Set<number>();
+    let total = 0;
+    const look = () => {
+      const lines = [...body.querySelectorAll('p')].flatMap((p) => {
+        const range = document.createRange();
+        range.selectNodeContents(p);
+        return [...range.getClientRects()].map((rect) => ({ p, rect }));
+      });
+      total = lines.length;
+      lines.forEach(({ p, rect }, i) => {
+        const x = rect.left + Math.min(8, rect.width / 2);
+        const shown = (y: number) => {
+          const hit = document.elementFromPoint(x, y);
+          return hit !== null && p.contains(hit);
+        };
+        if (shown(rect.top + 1) && shown(rect.bottom - 1)) seen.add(i);
+      });
+    };
+    const walk = (k: number) => {
+      const el = scrollers[k];
+      if (!el) {
+        look();
+        return;
+      }
+      for (let top = 0; top <= el.scrollHeight - el.clientHeight + 1; top++) {
+        el.scrollTop = top;
+        walk(k + 1);
+      }
+      el.scrollTop = 0;
+    };
+    walk(0);
+    card.scrollTop = card.scrollHeight;
+    const c = card.getBoundingClientRect();
+    const a = ask.getBoundingClientRect();
+    const askAtEnd = a.top >= c.top - 0.5 && a.bottom <= c.bottom + 0.5;
+    card.scrollTop = 0;
+    return { total, seen: seen.size, askAtEnd, card: `${card.clientHeight}/${card.scrollHeight}` };
+  });
+}
+
+test('mitosis 3D: every line of the picked part can be read, down to the smallest window', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await openMitosis(page);
+  const parts = page.getByRole('group', { name: 'Bộ phận tế bào' });
+  // The test window; a maximized, decorated window on a 1366×768 screen; the app's minimum.
+  const sizes = [
+    [1366, 768],
+    [1366, 689],
+    [1024, 600],
+  ] as const;
+  for (const [cell, stageButton, part, windows] of [
+    ['Động vật', 'Kì giữa', 'Tâm động', sizes],
+    // Not formed yet in G1: the card adds "không thấy rõ ở kì đang xem" under the text. Not at
+    // 1024×600: there the controls over the picture are taller than the picture in G1 even with
+    // no part picked (the stage strip itself ends up under the panel below), a separate problem.
+    ['Thực vật', 'Trung gian G1', 'Vách ngăn (tấm tế bào)', sizes.slice(0, 2)],
+  ] as const) {
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.getByRole('radio', { name: cell }).click();
+    await strip(page).getByRole('button', { name: stageButton }).click();
+    await parts.getByRole('button', { name: part }).click();
+    await expect(page.locator('.m3d__info')).toContainText(part);
+    for (const [width, height] of windows) {
+      await page.setViewportSize({ width, height });
+      await page.waitForTimeout(250);
+      const where = `${cell}, ${part}, ${stageButton}, ${width}×${height}`;
+      const r = await partText(page);
+      expect(r, where).not.toBeNull();
+      expect(r!.total, `${where}: lines`).toBeGreaterThan(1);
+      expect(r!.seen, `${where}: lines that can be read (card ${r!.card})`).toBe(r!.total);
+      // With room for it, the name and "Hỏi thầy" stay in view while the text scrolls.
+      if (height === 768) expect(r!.askAtEnd, `${where}: ask after scrolling`).toBe(true);
+    }
+  }
+  await expect(page.locator('.m3d__info')).toContainText('không thấy rõ ở kì đang xem');
+});
+
+test('mitosis 3D: "Hỏi thầy về bộ phận này" opens AI Teacher with the question, sends nothing', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  // Any AI the app could ask (online providers, a runtime on this computer): nothing may be
+  // asked before the learner presses send.
+  const asked: string[] = [];
+  page.on('request', (r) => {
+    const url = new URL(r.url());
+    if (
+      /generativelanguage\.googleapis\.com|api\.anthropic\.com|api\.groq\.com/.test(url.hostname) ||
+      ['11434', '1234', '8080'].includes(url.port)
+    )
+      asked.push(r.url());
+  });
+  await openMitosis(page);
+  await strip(page).getByRole('button', { name: 'Kì giữa' }).click();
+  await page
+    .getByRole('group', { name: 'Bộ phận tế bào' })
+    .getByRole('button', { name: 'Tâm động' })
+    .click();
+  const ask = page.locator('.m3d__info').getByRole('button', { name: 'Hỏi thầy về bộ phận này' });
+  // A full-size target inside the part's card.
+  const box = await ask.boundingBox();
+  expect(box?.height).toBeGreaterThanOrEqual(39.5);
+  await ask.click();
+
+  const question = page.getByRole('textbox', { name: 'Nhập câu hỏi' });
+  await expect(question).toHaveValue(
+    'Thầy giải thích giúp em: bộ phận “Tâm động” làm gì ở giai đoạn “Kì giữa” (mô phỏng nguyên phân, tế bào động vật) ạ?',
+  );
+  await expect(question).toBeFocused();
+  await expect(page.getByRole('radio', { name: 'Trò chuyện' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await page.waitForTimeout(500);
+  expect(asked).toEqual([]);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-ask.png` });
+
+  // Back to the simulation: the part is still picked; nothing was asked on the way.
+  await page.locator('.teacher').getByRole('button', { name: 'Về trang chủ' }).click();
+  await expect(page.locator('.m3d__info')).toContainText('Tâm động', { timeout: 20_000 });
+  expect(asked).toEqual([]);
 });
 
 declare global {

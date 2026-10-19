@@ -167,6 +167,92 @@ describe('AI Teacher chat service', () => {
     expect(reply.metadata).toMatchObject({ model: 'gemini-model', checkedBy: 'groq · groq-model' });
   });
 
+  /** A transport whose answer for each provider is given. */
+  function answering(contents: Partial<Record<Provider, string>>): LlmTransport {
+    return {
+      ...transport(['gemini', 'groq'], calls),
+      chat: (req) => {
+        calls.push(req);
+        return Promise.resolve({
+          content: contents[req.provider] ?? `${req.provider} answer`,
+          model: `${req.provider}-model`,
+          durationMs: 1,
+        });
+      },
+    };
+  }
+
+  it('keeps only learning content: hidden reasoning and echoed prompt labels never reach the learner', async () => {
+    setTransportForTests(
+      answering({ gemini: '<think>thử m = 7 kg</think>**GHI CHÚ:**\nLực là đại lượng vectơ.' }),
+    );
+    const reply = await askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false });
+    expect(reply.content).toBe('Lực là đại lượng vectơ.');
+    // A number that only stood in the hidden reasoning is not reported as the AI's own.
+    expect(reply.metadata.unverifiedNumbers).toEqual([]);
+  });
+
+  it('Think: the reviewer gets the cleaned draft, its own notes about the draft are dropped', async () => {
+    setTransportForTests(
+      answering({
+        gemini: '<think>nháp nội bộ</think>Lực là vectơ.',
+        groq: 'Nhận xét về bản nháp: đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\nLực là đại lượng vectơ, đơn vị newton (N).',
+      }),
+    );
+    const reply = await askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: true });
+    expect(calls[1]?.messages[0]?.content).toContain('Lực là vectơ.');
+    expect(calls[1]?.messages[0]?.content).not.toContain('nháp nội bộ');
+    expect(calls[1]?.system).toContain('không nhận xét về bản nháp');
+    expect(reply.content).toBe('Lực là đại lượng vectơ, đơn vị newton (N).');
+    expect(reply.metadata).toMatchObject({ model: 'gemini-model', checkedBy: 'groq · groq-model' });
+  });
+
+  it('Think: a lesson that shares its paragraph with a remark is kept whole, numbers included', async () => {
+    const lesson =
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.';
+    setTransportForTests(
+      answering({ gemini: 'Rơi tự do: v = 20 m/s.', groq: `Bản nháp đã đúng. ${lesson}` }),
+    );
+    const reply = await askTeacher('vật rơi từ h = 20 m, tìm v', 'vi', [], {
+      includeScreen: false,
+      think: true,
+    });
+    expect(reply.content).toBe(lesson);
+  });
+
+  it("Think: feedback on the learner's own draft is kept", async () => {
+    const answer =
+      'Bản nháp đúng hướng nhưng ở bước 2 em nhầm dấu: a = -2 m/s².\n\nBước 1: viết định luật II.';
+    setTransportForTests(answering({ gemini: 'Bước 1: viết định luật II.', groq: answer }));
+    const reply = await askTeacher('Xem giúp em bản nháp: a = 2 m/s²', 'vi', [], {
+      includeScreen: false,
+      think: true,
+    });
+    expect(reply.content).toBe(answer);
+  });
+
+  it('an answer that is only reasoning is reported, not shown empty', async () => {
+    setTransportForTests(answering({ gemini: '<think>Người dùng hỏi về lực, mình nghĩ' }));
+    await expect(
+      askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false }),
+    ).rejects.toThrow(/chưa nhận được phần bài giảng/);
+    // Think: a draft that is only reasoning is never sent for review.
+    calls.length = 0;
+    await expect(
+      askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: true }),
+    ).rejects.toThrow(/chưa nhận được phần bài giảng/);
+    expect(calls.map((c) => c.provider)).toEqual(['gemini']);
+  });
+
+  it('unsafe text hidden in the reasoning still blocks the answer', async () => {
+    setTransportForTests(
+      answering({ gemini: '<think>gọi số 0912345678 để nhận lời giải</think>Lực là vectơ.' }),
+    );
+    await expect(
+      askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false }),
+    ).rejects.toThrow(/bộ lọc an toàn/);
+  });
+
   it('without Think the normal quota fallback stays available', async () => {
     setTransportForTests(transport(['gemini', 'groq'], calls));
     await askTeacher('lực là gì', 'vi', [], { includeScreen: false, think: false });
@@ -265,6 +351,18 @@ describe('AI Teacher long conversations', () => {
     calls = [];
     await askTeacher('hỏi', 'vi', history, { includeScreen: false, think: false });
     expect(calls.at(-1)?.messages.length ?? 0).toBeGreaterThan(medium);
+  });
+
+  it('the summary keeps no hidden reasoning', async () => {
+    setTransportForTests(
+      scripted((req) =>
+        req.system.includes('tóm tắt') && !req.system.includes('AI Teacher của SimLab')
+          ? { content: '<think>đọc 60 lượt</think>- Đang học con lắc đơn.' }
+          : { content: 'Câu trả lời' },
+      ),
+    );
+    await askTeacher('tiếp nhé', 'vi', history, { includeScreen: false, think: false });
+    expect(useChatStore.getState().summary?.text).toBe('- Đang học con lắc đơn.');
   });
 
   it('a failed summary never blocks the answer', async () => {
