@@ -1262,7 +1262,7 @@ const vi = {
       },
       stages: {
         title: 'Quan sát các kì',
-        help: 'Chuyển kì bằng nút ‹ › hoặc dải kì dưới hình 3D. Mỗi lần ghi lại, mô hình đếm số NST kép và số tâm động nằm trên mặt phẳng xích đạo.',
+        help: 'Chuyển kì bằng nút ‹ › hoặc dải kì dưới hình 3D (ở hình 2D: nút "Bước trước", "Bước tiếp theo" trên hình). Mỗi lần ghi lại, mô hình đếm số NST kép và số tâm động nằm trên mặt phẳng xích đạo.',
         current: 'Kì đang xem: {stage}',
         record: 'Ghi lại kì này',
         answered: 'Đã có quan sát trả lời câu hỏi dự đoán. Em có thể ghi thêm kì khác để so sánh.',

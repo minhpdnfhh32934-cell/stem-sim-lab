@@ -1269,7 +1269,7 @@ const en: Messages = {
       },
       stages: {
         title: 'Observe the stages',
-        help: 'Change the stage with the ‹ › buttons or the stage strip under the 3D picture. Each time you record, the model counts the double chromosomes and the centromeres on the equatorial plane.',
+        help: 'Change the stage with the ‹ › buttons or the stage strip under the 3D picture (in the 2D picture: "Previous step", "Next step" on the picture). Each time you record, the model counts the double chromosomes and the centromeres on the equatorial plane.',
         current: 'Stage shown: {stage}',
         record: 'Record this stage',
         answered:

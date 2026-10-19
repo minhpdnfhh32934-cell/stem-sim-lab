@@ -368,7 +368,12 @@ test.describe('first run (age question not answered yet)', () => {
       origins: [
         {
           origin: 'http://localhost:1420',
-          localStorage: [{ name: 'stemsim.tourDone', value: '1' }],
+          // Notes already seen, as in storage-state.json: otherwise "Có gì mới" may open on the
+          // launch page as soon as the age question closes, depending on timing.
+          localStorage: [
+            { name: 'stemsim.tourDone', value: '1' },
+            { name: 'stemsim.whatsnew', value: '{"lastSeen": "999.0.0"}' },
+          ],
         },
       ],
     },

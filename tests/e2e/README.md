@@ -17,3 +17,11 @@ Real model accuracy (not mocked): `GEMINI_API_KEY=… npm run golden:llm` (uses 
 "Có gì mới" (`whatsnew.spec.ts`): `storage-state.json` records `stemsim.whatsnew` as
 `{"lastSeen": "999.0.0"}` (every version already seen), so the box never covers the other
 specs once a version's notes are marked ready. The spec itself sets an older `lastSeen`.
+
+Science Studio (`studio.spec.ts`): launch page → Studio tabs; chemistry bench against
+`data/reactions.json` (no-record pair, another record, the question's pair), POE, report sources,
+reload; biology stages in the 2D picture (low quality); physics at a non-default height against
+√(2h/g) and the lab's own solution; authoring a chemistry lesson → preview → reload; "Hỏi thầy"
+with a fake Gemini (lesson numbers sent only when the screen is shared). Acceptance criteria:
+`docs/work-log/2026-10-19-S6-tests-skills.md`. The 3D path of the biology lesson is
+`studio-biology.spec.ts` (project `chromium-3d`).
