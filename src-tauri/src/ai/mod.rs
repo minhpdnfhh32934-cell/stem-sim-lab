@@ -367,13 +367,31 @@ pub fn retry_delay(
 }
 
 async fn send(req: &ChatRequest, key: &str) -> Result<ChatResponse, AiError> {
-    let started = Instant::now();
     let http = client()?;
+    let base = provider(req.provider).base_url();
+    send_to(&http, base, req, key, tokio::time::sleep).await
+}
+
+/// One whole answer from `base` (the provider's address in the app, a mock server in tests):
+/// 429 and 5xx are retried as [`retry_delay`] says, waiting through `pause`
+/// (`tokio::time::sleep` in the app; tests record the waits instead of sleeping).
+async fn send_to<P, W>(
+    http: &reqwest::Client,
+    base: &str,
+    req: &ChatRequest,
+    key: &str,
+    pause: P,
+) -> Result<ChatResponse, AiError>
+where
+    P: Fn(Duration) -> W,
+    W: Future<Output = ()>,
+{
+    let started = Instant::now();
     let p = provider(req.provider);
     let mut attempt = 0;
     loop {
         let resp = p
-            .chat_request(&http, key, req)
+            .chat_request(http, base, key, req)
             .send()
             .await
             .map_err(|e| AiError::Network(e.to_string()))?;
@@ -391,7 +409,7 @@ async fn send(req: &ChatRequest, key: &str) -> Result<ChatResponse, AiError> {
             if let Some(wait) = retry_delay(status.as_u16(), retry_after.as_deref(), &text, attempt)
             {
                 attempt += 1;
-                tokio::time::sleep(wait).await;
+                pause(wait).await;
                 continue;
             }
             let snippet: String = text.chars().take(400).collect();
@@ -796,8 +814,9 @@ pub async fn ai_test_key(app: tauri::AppHandle, provider: Provider, model: Strin
         Ok(h) => h,
         Err(e) => return done(KeyStatus::Error, e.to_string()),
     };
-    let sent = self::provider(provider)
-        .chat_request(&http, &key, &req)
+    let p = self::provider(provider);
+    let sent = p
+        .chat_request(&http, p.base_url(), &key, &req)
         .timeout(Duration::from_secs(20))
         .send()
         .await;
@@ -1417,3 +1436,7 @@ pub(crate) mod tests {
 // Below the tests on purpose: wiring tests read only the source above the first test attribute.
 #[cfg(test)]
 pub(crate) mod mock_server;
+
+#[cfg(test)]
+#[path = "send_tests.rs"]
+mod send_tests;

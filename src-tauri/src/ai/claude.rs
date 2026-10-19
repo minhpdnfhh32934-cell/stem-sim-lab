@@ -68,10 +68,11 @@ impl AIProvider for ClaudeProvider {
     fn chat_request(
         &self,
         http: &reqwest::Client,
+        base: &str,
         key: &str,
         req: &ChatRequest,
     ) -> reqwest::RequestBuilder {
-        http.post(format!("{}/messages", self.base_url()))
+        http.post(format!("{base}/messages"))
             .header("x-api-key", key)
             .header("anthropic-version", ANTHROPIC_VERSION)
             .json(&claude_body(req))
@@ -271,7 +272,12 @@ mod tests {
         );
         let http = reqwest::Client::new();
         let built = ClaudeProvider
-            .chat_request(&http, "k", &req(Provider::Claude, true))
+            .chat_request(
+                &http,
+                ClaudeProvider.base_url(),
+                "k",
+                &req(Provider::Claude, true),
+            )
             .build()
             .unwrap();
         assert_eq!(built.url().as_str(), format!("{CLAUDE_URL}/messages"));

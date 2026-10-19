@@ -15,10 +15,12 @@ pub trait AIProvider: Send + Sync {
     /// API base URL.
     fn base_url(&self) -> &'static str;
 
-    /// HTTP request for one chat call (not sent yet).
+    /// HTTP request for one chat call (not sent yet), sent to `base`: the provider's
+    /// [`base_url`](Self::base_url) in the app, a mock server in tests.
     fn chat_request(
         &self,
         http: &reqwest::Client,
+        base: &str,
         key: &str,
         req: &ChatRequest,
     ) -> reqwest::RequestBuilder;

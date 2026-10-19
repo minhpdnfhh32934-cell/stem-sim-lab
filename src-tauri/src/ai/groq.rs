@@ -81,10 +81,11 @@ impl AIProvider for GroqProvider {
     fn chat_request(
         &self,
         http: &reqwest::Client,
+        base: &str,
         key: &str,
         req: &ChatRequest,
     ) -> reqwest::RequestBuilder {
-        http.post(format!("{}/chat/completions", self.base_url()))
+        http.post(format!("{base}/chat/completions"))
             .bearer_auth(key)
             .json(&groq_body(req))
     }
@@ -309,7 +310,12 @@ mod tests {
         );
         let http = reqwest::Client::new();
         let built = GroqProvider
-            .chat_request(&http, "k", &req(Provider::Groq, true))
+            .chat_request(
+                &http,
+                GroqProvider.base_url(),
+                "k",
+                &req(Provider::Groq, true),
+            )
             .build()
             .unwrap();
         assert_eq!(built.url().as_str(), format!("{GROQ_URL}/chat/completions"));

@@ -96,12 +96,12 @@ impl AIProvider for GeminiProvider {
     fn chat_request(
         &self,
         http: &reqwest::Client,
+        base: &str,
         key: &str,
         req: &ChatRequest,
     ) -> reqwest::RequestBuilder {
         http.post(format!(
-            "{}/models/{}:generateContent",
-            self.base_url(),
+            "{base}/models/{}:generateContent",
             gemini_model(&req.model)
         ))
         .header("x-goog-api-key", key)
@@ -327,7 +327,12 @@ mod tests {
         );
         let http = reqwest::Client::new();
         let built = GeminiProvider
-            .chat_request(&http, "k", &req(Provider::Gemini, false))
+            .chat_request(
+                &http,
+                GeminiProvider.base_url(),
+                "k",
+                &req(Provider::Gemini, false),
+            )
             .build()
             .unwrap();
         assert_eq!(
