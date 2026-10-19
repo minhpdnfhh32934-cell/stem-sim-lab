@@ -451,6 +451,16 @@ function readAttributes(rest: string): Record<string, string> | null {
   return attrs;
 }
 
+/** A whole tag with quoted attributes, from its "<": a ">" inside a value ("a > 0") is text. */
+const WHOLE_TAG = /<\/?[a-z][a-z0-9_-]*(?:\s+[a-zA-Z_-]+\s*=\s*(?:"[^"]*"|'[^']*'))*\s*\/?>/y;
+
+/** Index of the ">" that ends the tag starting at `i` (quote-aware), or -1. */
+function tagEnd(input: string, i: number): number {
+  WHOLE_TAG.lastIndex = i;
+  const m = WHOLE_TAG.exec(input);
+  return m ? i + m[0].length - 1 : input.indexOf('>', i);
+}
+
 /**
  * A cut tag: a name being typed, or a whole name, complete `name="value"` attributes and at most
  * one attribute being typed (`zone`, `zone=`, `zone="ste`), then perhaps the "/" of an empty tag.
@@ -533,7 +543,7 @@ function tokenize(input: string, diags: Diagnostic[]): Token[] {
       continue;
     }
     if (input[i] === '<' && /[a-z/]/.test(input[i + 1] ?? '')) {
-      const end = input.indexOf('>', i);
+      const end = tagEnd(input, i);
       if (end < 0) {
         const cut = cutTag(input.slice(i));
         if (cut !== null) {
@@ -864,7 +874,6 @@ function sentencesOf(segments: Segment[]): Sentence[] {
     pauseMs = 0;
   };
   for (const seg of segments) {
-    pauseMs += seg.pauseMs;
     // Sentence ends (`sentenceEnd`). Each action goes to the sentence in which its tag stood.
     let pending = [...seg.actions];
     let consumed = 0;
@@ -889,6 +898,12 @@ function sentencesOf(segments: Segment[]): Sentence[] {
     for (const a of pending) actions.push({ ...a, at: speech.length + a.at - consumed });
     speech += rest;
     src = src.concat(restSrc);
+    // The pause stood right after this segment's last word: after the last sentence already cut
+    // when nothing is left waiting, else after the sentence still being read ("Câu một. Câu
+    // hai.<pause/>" pauses after "Câu hai.", never after "Câu một.").
+    const last = out.at(-1);
+    if (last && !speech.trim() && !actions.length) last.pauseMs += seg.pauseMs;
+    else pauseMs += seg.pauseMs;
   }
   push();
   return out;

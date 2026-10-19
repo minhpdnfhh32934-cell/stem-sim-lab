@@ -125,6 +125,33 @@ describe('TeachScript reader', () => {
     const kinds = r.sentences.flatMap((s) => s.actions.map((a) => a.action.kind));
     expect(kinds).toEqual(['plot', 'correct', 'newboard']);
   });
+
+  it('a ">" inside a quoted attribute does not end the tag (0.7 fix)', () => {
+    const arrow = parseTeachScript(
+      'Ta có <write id="s1">a</write> và <write id="s2">b</write>. Rồi <arrow from="s1" to="s2" label="vì a > 0"/> Xong.',
+    );
+    expect(arrow.diagnostics.filter((d) => d.code === 'bad_attribute')).toEqual([]);
+    const spoken = arrow.sentences.map((s) => s.speech).join(' ');
+    expect(spoken).not.toContain('"/>');
+    expect(spoken).not.toContain('0"');
+    const action = arrow.sentences.flatMap((s) => s.actions).find((a) => a.action.kind === 'arrow');
+    expect(action?.action).toMatchObject({ from: 's1', to: 's2', label: 'vì a > 0' });
+    const under = parseTeachScript(
+      '<write id="s1">F > 0</write>. Rồi <underline target="s1" span=\'F > 0\'/> xong.',
+    );
+    expect(under.diagnostics.filter((d) => d.code === 'bad_attribute')).toEqual([]);
+    expect(under.sentences.map((s) => s.speech).join(' ')).not.toContain("0'/>");
+    expect(under.sentences.flatMap((s) => s.actions).map((a) => a.action.kind)).toContain('mark');
+  });
+
+  it('a pause after two sentences goes after the second one (0.7 fix)', () => {
+    const r = parseTeachScript('Câu một. Câu hai.<pause ms="1500"/> Câu ba.');
+    expect(r.sentences.map((s) => [s.speech, s.pauseMs])).toEqual([
+      ['Câu một.', 0],
+      ['Câu hai.', 1500],
+      ['Câu ba.', 0],
+    ]);
+  });
 });
 
 describe('markdown answers on the board', () => {
