@@ -26,9 +26,18 @@ export interface EqState {
   history: { t: number[]; c: Record<string, number[]> };
   events: EqEvent[];
   version: number;
+  /** The kinetics could not be computed (paused); cleared by Restart or Run. */
+  stalled: boolean;
 }
 
 const DEFAULT_KINETICS: Kinetics = { kf0: 1, kr0: 0.25, eaf: 50e3, ear: 70e3, T0: 298.15 };
+
+/** Input limits for the rate constants (at 298 K) and the activation energies. */
+export const K_MAX = 1e6;
+export const EA_MAX_KJ = 300;
+
+/** Wall-clock budget of one animation tick; the numerical path stops early after it. */
+const STEP_BUDGET_MS = 25;
 
 export function systemOf(id: string): EquilibriumSystem {
   return SYSTEMS.find((s) => s.id === id) ?? (SYSTEMS[0] as EquilibriumSystem);
@@ -59,6 +68,7 @@ export const useEqStore = create<EqState>()(() => {
     history: emptyHistory(s, init),
     events: [],
     version: 0,
+    stalled: false,
   };
 });
 
@@ -79,15 +89,23 @@ export function resetEq(
     events: [],
     version: st.version + 1,
     running: true,
+    stalled: false,
   });
 }
 
-/** Advances the kinetics by `dt` (seconds of simulated time). */
+/**
+ * Advances the kinetics by up to `dt` seconds of simulated time. Within the time budget the
+ * full step is taken; a slow numerical step stops early (the animation slows down, accuracy is
+ * kept). Throws IntegrationError when the kinetics cannot be computed.
+ */
 export function stepEq(dt: number): void {
   const st = useEqStore.getState();
   const s = systemOf(st.systemId);
-  const r = integrate(s, st.kinetics, st.T, st.c, st.t, dt, dt);
-  const t = st.t + dt;
+  const r = integrate(s, st.kinetics, st.T, st.c, st.t, dt, dt, {
+    deadline: performance.now() + STEP_BUDGET_MS,
+  });
+  const t = r.t[r.t.length - 1] ?? st.t;
+  if (!(t > st.t)) return;
   const history = st.history;
   history.t.push(t);
   for (const sp of speciesOf(s)) (history.c[sp] ??= []).push(r.final[sp] ?? 0);
