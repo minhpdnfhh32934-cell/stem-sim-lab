@@ -90,7 +90,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   evidence drops a text), `provenance.ts` (given / checked / unverified numbers), `plot.ts` (safe
   expression reader, no `eval`), `lesson.ts` (voice and pen in step; each run owns the board — a
   stopped or replaced run can no longer `patch`, so an old pen never writes on another face),
-  `Whiteboard.tsx` (zoom steps `ZOOMS` 1–2× only scale the sheet). Answers are cleaned first by
+  `Whiteboard.tsx` (zoom steps `ZOOMS` 1–2× only scale the sheet), `BoardToolbar.tsx` +
+  `toolbarFit.ts` (one row whatever the UI font: names fold by level). Answers are cleaned first by
   `src/teacher/chat/answerClean.ts` + `src/ai/reasoning.ts`. "Khoanh để hỏi": `selection.ts` (pure
   geometry; reads back the text/LaTeX/labels really on the board), `SelectionBar.tsx`,
   `boardAsk.ts`; a picture (`selectionImage.ts`) only when no text was circled, and only to a

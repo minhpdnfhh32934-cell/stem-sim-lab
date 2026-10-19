@@ -300,14 +300,20 @@ Câu trả lời AI ──► answerClean.ts (bỏ suy nghĩ ẩn, nhãn lời n
   - **Thanh không làm bảng đổi cỡ** (`askBarSide`): thanh nằm đè lên bảng ở phía xa chỗ vừa khoanh
     (chỗ khoanh ở nửa dưới khung nhìn → thanh ở trên, chừa chỗ cho bản đồ nhỏ; ngược lại → ở dưới),
     nên khung bảng không co lại, không có gì trên bảng bị cuộn đi và chỗ khoanh vẫn nhìn thấy. Thanh
-    không bao giờ che dòng phụ đề hay nhãn "Nội dung do AI hỗ trợ" bên dưới bảng. Bảng hẹp (đến
-    960 px, như 1366×768 có khung chat bên cạnh, truy vấn `@container board`): **"Khoanh để hỏi" và
-    "Viết nhanh" luôn hiện tên** (trên màn hình cảm ứng không có chú thích khi rê chuột), còn "Bút của
-    em" và "Vừa khung" chỉ hiện biểu tượng (tên vẫn có cho trình đọc màn hình và trong chú thích).
-    Tốc độ viết là một danh sách ngắn (0,75×–2×, cao bằng một nút ≥ 40 px) thay cho dãy bốn nút, nên
-    thanh công cụ luôn một hàng, kể cả lúc rộng nhất (phóng to, đang hỏi: "Quay lại bài giảng") — bảng
-    không đổi cỡ khi thanh "Chỗ em khoanh" hiện ra. Kiểm tra: `tests/e2e/board.spec.ts` (đo bề rộng
-    tên hiện ra và chiều cao thanh công cụ ở 1366×768).
+    không bao giờ che dòng phụ đề hay nhãn "Nội dung do AI hỗ trợ" bên dưới bảng. **Thanh công cụ luôn một hàng**, kể cả lúc rộng
+    nhất (phóng to, đang hỏi: "Quay lại bài giảng") và với mọi phông chữ giao diện (phông trên Linux
+    rộng hơn Segoe UI trên Windows; cỡ chữ lớn) — bảng không đổi cỡ khi thanh "Chỗ em khoanh" hiện
+    ra. `toolbarFit.ts` đo thanh (`BoardToolbar.tsx`) sau mỗi lần đổi nút và khi thanh đổi cỡ, rồi
+    gấp tên từng bậc cho đến khi vừa: bậc 1 — "Bút của em" và "Vừa khung" chỉ hiện biểu tượng, danh
+    sách tốc độ bỏ biểu tượng, các nút sát hơn; bậc 2 — nút phát ("Tạm dừng", "Tiếp tục", "Quay lại
+    bài giảng", "Giảng lại") cũng chỉ hiện biểu tượng. Tên bị gấp vẫn có cho trình đọc màn hình và
+    trong chú thích. Bảng hẹp (đến 960 px, như 1366×768 có khung chat bên cạnh, truy vấn
+    `@container board`) bắt đầu từ bậc 1, nên thanh trông như nhau ở mọi trạng thái. **"Khoanh để
+    hỏi" và "Viết nhanh" luôn hiện tên** (trên màn hình cảm ứng không có chú thích khi rê chuột);
+    bảng hẹp đến mức hai nút này cũng không vừa thì thanh xuống hai hàng. Tốc độ viết là một danh
+    sách ngắn (0,75×–2×, cao bằng một nút ≥ 40 px) thay cho dãy bốn nút. Kiểm tra:
+    `toolbarFit.test.ts`, `BoardToolbar.test.tsx`, `tests/e2e/board.spec.ts` (đo bề rộng tên hiện ra
+    và chiều cao thanh công cụ ở 1366×768, với một phông rộng giả lập để lỗi hiện ra trên mọi máy).
   - **Câu trả lời là câu "ngoài lề"** (`mode: 'aside'`): hiện trong khung chat, có nhãn AI và nút báo
     cáo, được đọc to trong khung chat; **không bao giờ được giảng lên bảng** — bảng giữ nguyên bài
     đang dừng (`latestLesson` bỏ qua câu trả lời ngoài lề và câu hỏi về bảng). "Viết tiếp" vẫn gắn với
