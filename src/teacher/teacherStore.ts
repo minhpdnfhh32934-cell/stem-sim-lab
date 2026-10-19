@@ -15,6 +15,11 @@ interface TeacherState {
    * chat puts it into the box once and clears it. It is never sent by itself.
    */
   draft: string | null;
+  /**
+   * The same for the chat bubble (askInBubble): it opens the bubble, where the learner decides
+   * whether screen context goes with the question. Also never sent by itself.
+   */
+  bubbleDraft: string | null;
   setLayout: (layout: TeacherLayout) => void;
 }
 
@@ -22,6 +27,7 @@ export const useTeacherStore = create<TeacherState>()((set) => ({
   open: false,
   layout: 'talk',
   draft: null,
+  bubbleDraft: null,
   setLayout: (layout) => {
     set({ layout });
   },
@@ -40,6 +46,14 @@ export function openTeacher(): void {
 export function openTeacherWithQuestion(question: string): void {
   openTeacher();
   useTeacherStore.setState({ draft: question });
+}
+
+/**
+ * Opens the chat bubble with `question` written into its box (e.g. "Hỏi thầy" in Science Studio).
+ * Screen context stays as the learner set it: off whenever the bubble was closed.
+ */
+export function askInBubble(question: string): void {
+  useTeacherStore.setState({ bubbleDraft: question });
 }
 
 export function closeTeacher(): void {

@@ -59,6 +59,8 @@ export function Segmented<T extends string>(props: {
   value: T;
   options: { id: T; label: LocalizedText }[];
   onChange: (v: T) => void;
+  /** Shown but not changeable (e.g. a lesson holds the value). */
+  disabled?: boolean;
 }) {
   const Lz = useLocalized();
   const { options, value } = props;
@@ -87,6 +89,7 @@ export function Segmented<T extends string>(props: {
           aria-checked={value === o.id}
           tabIndex={i === tabStop ? 0 : -1}
           className="segmented__item"
+          disabled={props.disabled}
           onClick={() => {
             props.onChange(o.id);
           }}

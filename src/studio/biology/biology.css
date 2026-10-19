@@ -1,0 +1,156 @@
+/* Biology Studio: the mitosis model with the stage recorder and the part-finding activity. */
+.bio-studio__model {
+  position: relative;
+  /* The 3D view fills its box; this keeps its controls and the panels below on a 1366×768 screen. */
+  height: clamp(340px, 56vh, 560px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-stage);
+}
+.bio-studio__panels {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .bio-studio__panels {
+    grid-template-columns: 1fr;
+  }
+}
+.bio-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+}
+.bio-panel h4,
+.bio-panel p {
+  margin: 0;
+}
+.bio-panel__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+.bio-panel__current {
+  font-weight: 600;
+}
+.bio-panel__lock {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  color: var(--text-muted);
+}
+.bio-panel__lock svg {
+  flex: none;
+  margin-top: 2px;
+}
+.bio-tasks {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bio-task {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.bio-task.is-right {
+  border-left-color: var(--conf-exact);
+}
+.bio-task.is-wrong {
+  border-left-color: var(--danger);
+}
+.bio-task__n {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+.bio-task__role {
+  font-size: var(--text-content);
+}
+.bio-task__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+.bio-task__result {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: var(--space-2);
+}
+.bio-task.is-right .bio-task__result {
+  color: var(--conf-exact);
+}
+.bio-task.is-wrong .bio-task__result {
+  color: var(--danger);
+}
+.bio-runs {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bio-run {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.bio-run.is-answer {
+  border-color: var(--subject-biology);
+}
+.bio-run h5 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0;
+}
+.bio-run__tag {
+  padding: 0 var(--space-2);
+  border: 1px solid var(--subject-biology);
+  border-radius: var(--radius-full);
+  color: var(--subject-biology);
+  font-size: var(--text-xs);
+}
+.bio-facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+}
+.bio-facts__row {
+  display: grid;
+  grid-template-columns: minmax(140px, 240px) 1fr;
+  gap: var(--space-3);
+}
+.bio-facts__row dt {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.bio-facts__row dd {
+  margin: 0;
+  font-size: var(--text-content);
+}
+@media (max-width: 560px) {
+  .bio-facts__row {
+    grid-template-columns: 1fr;
+  }
+}

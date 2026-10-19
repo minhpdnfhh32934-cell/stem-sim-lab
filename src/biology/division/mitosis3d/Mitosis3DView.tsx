@@ -309,6 +309,7 @@ export function Mitosis3DView({
   const atEnd = useMitosis3D((s) => s.t >= tl.total);
   const selected = useMitosis3D((s) => s.selected);
   const camera = useMitosis3D((s) => s.camera);
+  const cellLocked = useMitosis3D((s) => s.cellLocked);
   const stage = STAGES_3D[stageIndex] ?? 'g1';
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -649,8 +650,9 @@ export function Mitosis3DView({
               { id: 'animal', label: L('Động vật', 'Animal') },
               { id: 'plant', label: L('Thực vật', 'Plant') },
             ]}
+            disabled={cellLocked}
             onChange={(v) => {
-              useDivisionStore.setState({ cellType: v });
+              if (!useMitosis3D.getState().cellLocked) useDivisionStore.setState({ cellType: v });
             }}
           />
           <Mitosis3DSwitch />

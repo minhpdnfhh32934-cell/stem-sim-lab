@@ -20,7 +20,7 @@ import { cancelAnalyze, openManual, useAnalyzeStore } from '@/app/ai/analyze';
 import { submitProblem } from '@/app/ai/submit';
 import { usePhotoCapture } from '@/app/ai/usePhotoCapture';
 import { useT } from '@/app/i18n';
-import { goHome, useIsHome, useIsLanding, useIsTeacher } from '@/app/topics';
+import { goHome, useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useAiStore } from '@/ai/aiStore';
 import { FileMenu } from '@/app/project/FileMenu';
 import { redo, undo, useUndoStore } from '@/app/project/undo';
@@ -76,6 +76,7 @@ export const TopBar = memo(function TopBar() {
   } = usePhotoCapture();
 
   const teacher = useIsTeacher();
+  const studio = useIsStudio();
   const landing = useIsLanding();
   const home = (useIsHome() || landing) && !teacher;
 
@@ -106,7 +107,7 @@ export const TopBar = memo(function TopBar() {
       </button>
 
       {/* Subjects and undo/redo belong to the lab; the AI Teacher page does not use them. */}
-      {!landing && !teacher && (
+      {!landing && !teacher && !studio && (
         <div
           className="subject-switch"
           role="radiogroup"
@@ -136,7 +137,7 @@ export const TopBar = memo(function TopBar() {
       )}
 
       {/* On the home screen the big problem box is the main action; no second one up here. */}
-      {home || teacher ? (
+      {home || teacher || studio ? (
         <div className="topbar__spacer" />
       ) : (
         <div className="problem-input" data-tour="problem">

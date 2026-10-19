@@ -932,7 +932,510 @@ const en: Messages = {
     teacherTitle: 'AI Teacher',
     teacherBody:
       'Ask questions, get hints and check your understanding with an AI study assistant.',
+    studioTitle: 'Science Studio',
+    studioBody:
+      'Guided lessons: predict, experiment, observe measurements, then explain and save a report.',
     privacy: 'You choose when to share screen context or use an online AI service.',
+  },
+  studio: {
+    title: 'Science Studio',
+    subtitle:
+      'Guided lessons: predict, experiment, observe measurements, explain and conclude. Every number is computed by the simulation.',
+    tabsLabel: 'Choose a Studio subject',
+    tabs: {
+      chemistry: 'Chemistry',
+      biology: 'Biology',
+      physics: 'Physics',
+      authoring: 'Authoring',
+    },
+    pick: 'Choose a lesson',
+    difficulty: {
+      intro: 'Getting started',
+      core: 'Core',
+      stretch: 'Stretch',
+    },
+    review: {
+      pending:
+        'This lesson’s text has not been reviewed by a teacher yet — the numbers still come from the simulation.',
+      verified: 'This lesson’s text has been reviewed by a teacher.',
+    },
+    preparing: {
+      title: 'In preparation',
+      chemistry:
+        'The Chemistry Studio is being prepared. Meanwhile, you can use the Chemistry topics in the Laboratory.',
+      biology:
+        'The Biology Studio is being prepared. Meanwhile, you can use the Biology topics in the Laboratory.',
+      physics: 'There is no Physics lesson in the Studio yet.',
+      openLab: 'Open the Laboratory',
+    },
+    notes: {
+      private:
+        'Your notes stay on this computer. They are sent along only when you turn on “Use current screen information” in the AI Teacher chat and send a question yourself.',
+    },
+    flow: {
+      label: 'Lesson steps',
+      back: 'Back',
+      next: 'Next: {step}',
+      steps: {
+        predict: 'Predict',
+        interact: 'Experiment',
+        observe: 'Observe',
+        explain: 'Explain',
+        conclude: 'Conclude',
+        report: 'Report',
+      },
+      titles: {
+        predict: 'What do you think will happen?',
+        interact: 'Run the experiment',
+        observe: 'Observe the measurements and the graph',
+        explain: 'Explain with the data',
+        conclude: 'Conclusion',
+        report: 'Save and report',
+      },
+      leads: {
+        predict: 'Choose a prediction before running the experiment. It is fine to be wrong.',
+        interact:
+          'Adjust the variable, then run the experiment. The simulation computes both conditions A and B.',
+        observe: 'Every number and curve below is computed by the simulation.',
+        explain: 'Use the measurements you just observed to explain in your own words.',
+        conclude: 'Compare your prediction with the simulation result.',
+        report: 'The report is built from this session. You can save it as a file or copy it.',
+      },
+      blockers: {
+        prediction: 'Choose a prediction to continue.',
+        observation: 'Run the experiment to get measurements.',
+        explanation: 'Write an explanation of at least {n} characters.',
+        activity: 'Finish the lesson activity to continue.',
+        conclusion: 'Write your conclusion to continue.',
+      },
+    },
+    explain: {
+      label: 'Your explanation',
+      placeholder: 'For example: The measurements show… so…',
+      count: '{n}/{min} characters written (minimum).',
+      hintN: 'Hint {n}:',
+      showHint: 'Show hint {n}',
+    },
+    conclude: {
+      predicted: 'You predicted: {label}',
+      computed: 'Simulation result: {label}',
+      match: 'Your prediction matches the simulation result.',
+      miss: 'Your prediction does not match yet — this is where the most learning happens. Look at the measurements again.',
+      none: 'The simulation result matches none of the choices, so they cannot be compared.',
+      label: 'Your conclusion',
+      placeholder: 'What did you learn from the experiment?',
+      expected: 'Reference conclusion',
+    },
+    report: {
+      done: 'You have completed this lesson.',
+      preview: 'Report preview',
+      save: 'Save report (.md)',
+      restart: 'Start over',
+      copy: 'Copy report',
+      copied: 'Report copied.',
+      copyFailed: 'Could not copy. Select the text in the preview and press Ctrl+C.',
+      generated: 'Updated {time}',
+      review: {
+        pending: 'This scenario has not been reviewed by a teacher yet.',
+        verified: 'This scenario has been reviewed by a teacher.',
+      },
+      objectives: 'Objectives',
+      prediction: 'Prediction',
+      predicted: 'The learner chose: {label}',
+      noPrediction: 'No prediction yet.',
+      engine: 'Measurements from the simulation',
+      engineNote:
+        'Every number in this section was computed by the "{title}" simulation (engine {model}); none was entered by an AI or the learner.',
+      engineFacts: 'Results from the app’s data library',
+      libraryNote:
+        'Everything in this section is copied from the data library ("{title}", {model}) or is an automatic check made by the app; nothing was written by an AI or the learner, and there are no measurements.',
+      noEngine: 'The experiment has not been run yet.',
+      condition: 'Condition {id}: {inputs}',
+      col: {
+        quantity: 'Quantity',
+        condition: 'Condition',
+        value: 'Value (simulation)',
+        check: 'Cross-check (analytic solution)',
+      },
+      checkOk: '{value} (matches)',
+      checkDiff: '{value} (differs by {diff})',
+      explanation: 'The learner’s explanation',
+      empty: '(not written yet)',
+      ai: 'Text written by AI',
+      aiNote: 'AI-generated — not a measurement; check it against the data above.',
+      conclusion: 'Conclusion',
+      computed: 'Simulation result: {label}',
+      verdictMatch: 'The prediction matches the simulation result.',
+      verdictMiss: 'The prediction does not match the simulation result.',
+      verdictNone: 'The simulation result matches none of the choices.',
+      yourConclusion: 'The learner’s conclusion:',
+      expected: 'The scenario’s reference conclusion: {text}',
+      assumptions: 'Assumptions and limits',
+      sources: 'Sources',
+      noSources: 'No sources yet.',
+      footer:
+        'This report was made on this computer from the session; the app does not send it anywhere.',
+      unverified: 'Data not yet reviewed',
+      unverifiedNote:
+        'The items below have not been reviewed yet; their sources are listed under “Sources”. Numbers computed by the simulation are not in this list.',
+    },
+    unverified: {
+      scenario:
+        'Lesson text of “{title}” (objectives, questions, hints, reference conclusion) — not yet reviewed',
+      teacher: 'Lesson text of “{title}”, written by a teacher — not yet reviewed',
+      record: 'Data “{title}” ({model}) — not yet reviewed',
+    },
+    ask: {
+      button: 'Ask the teacher',
+      hint: 'AI Teacher sees this lesson’s results and notes only when you turn on “{toggle}” in the chat.',
+      questions: {
+        predict:
+          'I am doing the lesson “{title}”, Predict step. Can you help me think it through, without telling me the answer?',
+        interact:
+          'I am doing the lesson “{title}”, Experiment step. What should I do and what should I watch for?',
+        observe:
+          'I am doing the lesson “{title}”, Observe step. Can you help me read the simulation results I just got?',
+        explain:
+          'I am doing the lesson “{title}”, Explain step. Which results should I use in my explanation?',
+        conclude:
+          'I am doing the lesson “{title}”, Conclude step. Can you help me compare my prediction with the simulation result?',
+        report:
+          'I am doing the lesson “{title}”, Report step. Is anything important missing from my report?',
+      },
+    },
+    ai: {
+      header: '[Science Studio — data provided by the SimLab app]',
+      lesson: 'Lesson: {title} — {subject}, {level}',
+      step: 'The learner is at step {n}/{total}: {step}',
+      rules:
+        'Use only numbers from the FACTS COMPUTED BY THE SIMULATION section. The learner’s notes and AI text are not measurements. If data is missing, say so; never make up measurements, reactions or phenomena. Never present unreviewed data as verified.',
+      unverified: 'DATA NOT YET REVIEWED:',
+      engine: 'FACTS COMPUTED BY THE SIMULATION (or copied from the app’s data library):',
+      noEngine: 'None yet: the learner has not run the experiment.',
+      record: '- {title} (model {model}):',
+      quantity: '{label} [{condition}] = {value}',
+      learner: 'LEARNER’S NOTES (not facts):',
+      prediction: 'Chosen prediction: {label}',
+      noPrediction: 'Prediction: not chosen yet.',
+      explanation: 'Explanation: “{text}”',
+      conclusion: 'Conclusion: “{text}”',
+      note: 'Note: “{text}”',
+      aiText: 'TEXT AN AI WROTE EARLIER (not measurements, not checked):',
+      cut: '(…shortened)',
+    },
+    physics: {
+      conditions:
+        'Condition A: the value you choose. Condition B: the same as A but with {param} multiplied by {factor}.',
+      predictLabel: 'Your prediction',
+      locked:
+        'Your prediction was recorded when the experiment ran. To predict again, choose "Start over" in the Report step.',
+      condition: 'Condition {id}',
+      run: 'Run the experiment',
+      running: 'Computing…',
+      reset: 'Reset',
+      errors: {
+        invalid: 'The simulation cannot run with this value yet. Try adjusting the variable.',
+        unfinished:
+          'The simulation did not finish within the allowed time, so there are no measurements.',
+        binding:
+          'This lesson does not match the available simulation. Ask a teacher to check the scenario.',
+      },
+      loadFailed: 'This simulation could not be opened. Please try again later.',
+      noRun: 'No measurements yet. Go back to the Experiment step and run it.',
+      tableCaption: 'Measurements computed by the simulation (engine {model})',
+      col: {
+        quantity: 'Quantity',
+      },
+      input: 'input',
+      crossCheck: 'Cross-check with the analytic solution: largest difference {gap}.',
+      timeAxis: 'Time t',
+      openInLab: 'Run {id} in the Laboratory',
+      fact: '{q} (simulation {model}): {value}',
+      ratioOf: 'B/A ratio — {q}',
+    },
+    chem: {
+      choices: {
+        precipitate: 'A precipitate forms',
+        noPrecipitate: 'No precipitate is seen',
+      },
+      predictLabel: 'Your prediction',
+      locked:
+        'Your prediction was recorded when you first mixed solutions. To predict again, choose "Start over" in the Report step.',
+      leads: {
+        interact:
+          'Pour solutions from the rack into the test tube, then shake to mix. The observation comes from the reaction library.',
+        observe:
+          'The observation, equation and sources below are copied from the reaction library — not written by AI, with no measurements.',
+        explain: 'Use the observation and equation you just saw to explain in your own words.',
+      },
+      blockers: {
+        observation: 'Mix the two solutions of the question to get an observation.',
+      },
+      rack: 'Reagent rack',
+      solution: '{formula} solution',
+      add: 'Add {formula} solution',
+      mix: 'Shake to mix',
+      empty: 'Wash the test tube',
+      tube: 'Test tube',
+      tubeEmpty: 'The test tube is empty.',
+      tubeHas: 'In the tube: {list}.',
+      tubeMixed: 'Mixed.',
+      tubePrecipitate:
+        'The library records a precipitate (the picture is only a symbol; colour and amount are not drawn).',
+      procedureTitle: 'Steps',
+      procedure: {
+        first: 'Pour {formula} solution into the test tube.',
+        second: 'Add {formula} solution.',
+        mix: 'Shake gently to mix, then observe.',
+        wash: 'Wash the tube before trying another pair of solutions.',
+      },
+      safety:
+        'This is a virtual bench. Do not repeat it with real chemicals without a teacher and protective equipment.',
+      errors: {
+        unknownReagent: 'This substance is not on the lesson’s reagent rack.',
+        sameReagent: 'The tube already holds {formula} solution — choose another solution.',
+        tubeFull: 'The tube already holds two solutions. Shake to mix, or wash it to start again.',
+        alreadyMixed: 'The tube is already mixed. Wash it before trying another pair.',
+        emptyTube: 'The test tube is empty — add a solution first.',
+        needTwo: 'The tube needs two solutions before they can be mixed.',
+      },
+      orderDiffers:
+        'You added the solutions in a different order from the lesson’s steps. The library record does not state an order of addition.',
+      targetDone:
+        'You now have the observation for the prediction question. Try other pairs or go on to Observe.',
+      notTarget:
+        'This is not the pair of the prediction question — the result is still recorded so you can compare.',
+      unsupported:
+        'The bench does not compute amounts, concentrations, precipitate mass, limiting or excess reagent, pH, temperature, heat, gas volume or yield — the app gives none of these numbers.',
+      mixes: 'Recorded mixes',
+      targetTag: 'Pair of the question',
+      noMix: 'No pair of solutions mixed yet. Go back to the Experiment step.',
+      facts: {
+        order: 'Order of addition',
+        equation: 'Equation (library)',
+        balance: 'Balance check',
+        observation: 'Observation (library)',
+        conditions: 'Conditions (library)',
+        review: 'Review status',
+        result: 'Result',
+      },
+      orderText: 'Added in turn: {list}',
+      balanceOk: 'Elements and charge conserved: yes (automatic check).',
+      balanceBad:
+        'The library equation is not balanced ({list}) — a teacher must check it; do not use it for a conclusion.',
+      review: {
+        pending: 'The library record has not been reviewed yet.',
+        verified: 'The library record has been reviewed.',
+      },
+      unknown:
+        'This pair of solutions is not yet in the verified database — the app does not guess what happens. That does not mean they do not react.',
+      ambiguous:
+        'The library has {n} records for these substances that differ in their conditions. The bench cannot choose the conditions, so no observation is shown.',
+      sources: 'Sources of the record',
+      binding:
+        'This lesson does not match the available reaction library. Ask a teacher to check the scenario.',
+      factLine: 'Observation in the library: {text}',
+    },
+    bio: {
+      predictLabel: 'Your prediction',
+      locked:
+        'Your prediction was recorded when you started working with the model. To predict again, choose "Start over" in the Report step.',
+      leads: {
+        interact:
+          'Rotate and zoom the 3D picture and step through the stages. Record the stage you observe, then find the parts from their functions.',
+        observe:
+          'The counts below are made by the 3D model; stage descriptions and part functions are copied from the app’s data — not written by an AI.',
+        explain:
+          'Use the number of centromeres on the equatorial plane and the stage description to explain in your own words.',
+      },
+      blockers: {
+        observation: 'Record the stage that answers the prediction question to get an observation.',
+        activity: 'Answer every function, then press "Check".',
+      },
+      binding:
+        'This lesson does not match the current 3D mitosis model. Ask a teacher to check the scenario.',
+      pending: 'Stage descriptions and part functions have not been reviewed yet.',
+      sources: 'Sources: {list}',
+      q: {
+        diploid: 'Chromosome set 2n',
+        chromosomes: 'Chromosomes in the picture (one centromere each)',
+        double: 'Double chromosomes',
+        onPlane: 'Centromeres on the equatorial plane',
+      },
+      facts: {
+        cell: 'Cell type',
+        note: 'Stage description (data)',
+        review: 'Review status',
+      },
+      stages: {
+        title: 'Observe the stages',
+        help: 'Change the stage with the ‹ › buttons or the stage strip under the 3D picture. Each time you record, the model counts the double chromosomes and the centromeres on the equatorial plane.',
+        current: 'Stage shown: {stage}',
+        record: 'Record this stage',
+        answered:
+          'You have an observation that answers the prediction question. You can record other stages to compare.',
+        notAnswer:
+          'This stage does not answer the prediction question — the result is still recorded so you can compare.',
+        lockedCell:
+          'This lesson keeps the model on the {cell}, 2n = {diploid}: the "Cell type" control is locked during the lesson. When you leave this step, the model goes back to your own settings.',
+        otherCell:
+          'The model is showing a different cell from the lesson, so this stage cannot be recorded.',
+      },
+      match: {
+        title: 'Find the part from its function',
+        help: 'Read each function, select that part in the 3D picture (or in the "Cell parts" list), then press the button of that function.',
+        selected: 'Selected part: {name}',
+        noSelection: 'No part of the model is selected.',
+        task: 'Function {n}',
+        assign: 'Answer: {name}',
+        assignLabel: 'Answer function {n} with the selected part ({name})',
+        answer: 'Your answer: {name}',
+        unanswered: 'not answered',
+        check: 'Check',
+        score: '{correct}/{total} right.',
+        retry: 'You can change your answers and check again.',
+        right: 'Right',
+        wrong: 'Not right',
+        fact: '{result}. Your answer: {chosen}. Function in the data: {role}',
+      },
+      observe: {
+        stages: 'Recorded stages',
+        none: 'No stage recorded yet. Go back to the Experiment step.',
+        answerTag: 'Answers the question',
+        illustrative:
+          'Sizes, positions and timing in the 3D picture are illustrative, not to scale. The numbers of chromosomes and of double chromosomes are counted by the model (exact). Centromeres on the equatorial plane follow what each stage means in the model (in metaphase, once the spindle has finished pulling, every double chromosome is held on the plane) — they are not measured from the picture.',
+      },
+      factLine:
+        'In the model, in {stage}: {onPlane}/{total} centromeres are on the equatorial plane.',
+    },
+    teacher: 'Written by a teacher — not a result of the simulation.',
+    authoring: {
+      intro:
+        'Create a learning scenario for a Studio. You can only pick what the simulations can run; every measurement is still computed by the simulation. Scenarios are stored on this computer only.',
+      create: 'New scenario',
+      pickSubject: 'Choose the subject of the new scenario',
+      import: 'Import JSON file',
+      empty: 'No scenarios yet. Press "New scenario" and choose a subject to start.',
+      listLabel: 'Your scenarios',
+      fileFilter: 'Science Studio scenario',
+      saved: 'Saved "{title}".',
+      imported: 'Imported "{title}".',
+      exported: 'Exported {name}.',
+      importFailed: 'This file could not be imported:',
+      actionFailed: 'This could not be done:',
+      actions: {
+        preview: 'Preview',
+        edit: 'Edit',
+        duplicate: 'Duplicate',
+        export: 'Export JSON',
+        delete: 'Delete',
+        confirmDelete: 'Delete this scenario',
+        cancel: 'Cancel',
+      },
+      editor: {
+        newTitle: 'New scenario — {subject}',
+        editTitle: 'Edit scenario — {subject}',
+        teacherPart: 'Text written by the teacher',
+        teacherHint:
+          'Objectives, hints, questions, the expected conclusion, sources and assumptions are teacher content: the Studio labels them as such and never presents them as simulation results.',
+        enginePart: 'What the simulation will run',
+        engineHint:
+          'Only what the models already support can be picked, so the scenario always runs in the Studio.',
+        vi: 'Vietnamese',
+        en: 'English (optional)',
+        perLine: 'One item per line.',
+        save: 'Save scenario',
+        saving: 'Checking…',
+        cancel: 'Cancel',
+        issues: 'Fix these before saving:',
+        fields: {
+          title: 'Title',
+          objectives: 'Objectives',
+          hints: 'Step-by-step hints',
+          questions: 'Guiding questions',
+          assumptions: 'Assumptions',
+          limits: 'Limits of the simulation',
+          expectedConclusion: 'Expected conclusion',
+          question: 'Prediction question',
+          sources: 'Scientific sources',
+          sourcesHint: 'One source per line: "Title | https://…" (the link is optional).',
+          level: 'Level',
+          difficulty: 'Difficulty',
+          minChars: 'Minimum characters of the explanation',
+        },
+        physics: {
+          preset: 'Prediction question of the simulation scene',
+          presetHint:
+            'Only scenes whose engine measurements the Studio has checked. Run B = run A with {param} multiplied by {factor}.',
+          loading: 'Loading the simulation scene…',
+          failed: 'The simulation scene could not be loaded.',
+          params: 'Scene quantities',
+          control: 'Learner may change',
+          start: 'Start value',
+          range: 'From {min} to {max} {unit}',
+          sceneDefault: 'Scene default: {value} {unit}',
+        },
+        chemistry: {
+          target: 'Reaction of the question',
+          targetHint:
+            'Only precipitation reactions of the cited library: only they can confirm the answer "precipitate".',
+          order: 'Order in the tube: {first} first, then {second}.',
+          swap: 'Swap order',
+          rack: 'Solutions on the rack',
+          rackHint: '2 to 8 solutions; the two solutions of the question are always there.',
+        },
+        biology: {
+          cellType: 'Cell type',
+          pairs: 'Chromosome pairs',
+          pairsValue: 'n = {n} (2n = {twoN})',
+          parts: 'Parts the learner must find',
+          partsHint: '2 to 8 parts that the 3D model has for this cell type.',
+          answerNote:
+            'The answer is computed from the model: the stage whose centromeres lie on the equatorial plane.',
+        },
+      },
+      errors: {
+        titleRequired: 'Give the scenario a title (Vietnamese).',
+        objectiveRequired: 'Write at least one objective.',
+        conclusionRequired: 'Write the expected conclusion (Vietnamese).',
+        questionRequired: 'Write the prediction question (Vietnamese).',
+        enLines: 'The English box of "{field}" has more lines than the Vietnamese one.',
+        minChars: 'The minimum number of characters must be a whole number from 0 to {max}.',
+        sourceUrl: 'The source on line {line} has an invalid link.',
+        controlsRequired: 'Let the learner change at least one quantity.',
+        initialNumber: 'The start value of {param} is not a number.',
+        initialRange:
+          '{param} must be from {min} to {max} {unit} (so run B stays within the scene range).',
+        unknownParam: 'The scene has no adjustable quantity "{key}".',
+        notPreset:
+          'This scene and measurement set are not in the Physics Studio, so the scenario cannot run.',
+        sceneMissing: 'The simulation scene of the scenario could not be loaded.',
+        binding: 'The simulation scene does not match the scenario: {detail}',
+        inventorySize: 'The rack needs 2 to 8 solutions.',
+        reagentNotAllowed: '"{formula}" is not a library solution for the bench.',
+        targetInInventory: 'The question must use two different solutions from the rack.',
+        targetNotAllowed: 'The reaction of the question must be a precipitation in the library.',
+        targetMismatch:
+          'The two solutions of the question do not match the chosen library reaction.',
+        partsSize: 'Choose 2 to 8 parts.',
+        bioUnknownPart: 'A part is not in the 3D model.',
+        bioWrongCell: 'A part does not belong to the chosen cell type.',
+        bioNoAnswer: 'No stage of the model answers this question.',
+        schema: 'The data does not have the right structure: {detail}',
+        badJson: 'The file is not valid JSON.',
+        notScenarioFile: 'The file is not a Science Studio scenario (version 1).',
+        tooLarge: 'The file is too large: a scenario file can be at most {kb} KB.',
+        readFailed: 'The file could not be read (it may be too large or locked).',
+        lessonTooLarge:
+          'The lesson is too long to store in the app (at most {kb} KB). Please shorten the texts.',
+        textTooLong: '"{field}" has a passage longer than {max} characters. Please shorten it.',
+        listTooLong: '"{field}" has more than {max} items.',
+        tooMany:
+          'The app already stores {max} authored lessons, the maximum. Export old lessons to files, then delete some.',
+        storageFull:
+          'The app storage could not be written (it may be full or blocked), so this change was not saved. Export old lessons to files, delete some, then try again.',
+      },
+    },
   },
   chat: {
     label: 'Chat with the AI teacher',

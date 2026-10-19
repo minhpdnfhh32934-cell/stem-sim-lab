@@ -330,10 +330,11 @@ export function ChatPanel({
   useEffect(() => stopSpeaking, []);
 
   // A question another screen wrote for the learner (openTeacherWithQuestion, e.g. "Hỏi thầy về
-  // bộ phận này" in the 3D mitosis view): put into the teacher page's box once, never sent here.
+  // bộ phận này" in the 3D mitosis view; askInBubble for the bubble, e.g. "Hỏi thầy" in Science
+  // Studio): put into this panel's box once, never sent here.
   // The learner reads it, may change it, and presses send. The box takes it while rendering (a
   // change of the store's value), then the store forgets it so it is not offered twice.
-  const offered = useTeacherStore((s) => (teacherPage ? s.draft : null));
+  const offered = useTeacherStore((s) => (teacherPage ? s.draft : s.bubbleDraft));
   const [lastOffered, setLastOffered] = useState<string | null>(null);
   if (offered !== lastOffered) {
     setLastOffered(offered);
@@ -341,9 +342,9 @@ export function ChatPanel({
   }
   useEffect(() => {
     if (offered === null) return;
-    useTeacherStore.setState({ draft: null });
+    useTeacherStore.setState(teacherPage ? { draft: null } : { bubbleDraft: null });
     input.current?.focus();
-  }, [offered]);
+  }, [offered, teacherPage]);
 
   /**
    * "Dừng": one controller per answer, reachable from any open panel through the store (the

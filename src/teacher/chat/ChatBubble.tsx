@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { openTeacher } from '@/teacher/teacherStore';
+import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
 import { ScreenScan } from './ScreenScan';
 import { useChatStore } from './chatStore';
@@ -11,6 +11,13 @@ export function ChatBubble() {
   const t = useT();
   const setIncludeScreen = useChatStore((s) => s.setIncludeScreen);
   const [open, setOpen] = useState(false);
+  // A question another screen wrote (askInBubble) opens the bubble; the panel takes the text.
+  const asked = useTeacherStore((s) => s.bubbleDraft !== null);
+  const [wasAsked, setWasAsked] = useState(false);
+  if (asked !== wasAsked) {
+    setWasAsked(asked);
+    if (asked && !open) setOpen(true);
+  }
   const expand = () => {
     setIncludeScreen(false);
     setOpen(false);
@@ -23,6 +30,8 @@ export function ChatBubble() {
         <ChatPanel
           compact
           onClose={() => {
+            // Screen context is opt-in every time the bubble opens, also when a screen opens it.
+            setIncludeScreen(false);
             setOpen(false);
           }}
           onExpand={expand}
