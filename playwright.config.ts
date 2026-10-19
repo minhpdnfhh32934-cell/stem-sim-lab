@@ -15,9 +15,10 @@ const chromium = {
  * The 3D mitosis spec renders WebGL in software for about a minute; next to the other specs it
  * starved them while the dev server was still compiling (seen 2026-10-14: chemistry and learner
  * specs timed out only in the full parallel run). It runs on its own, after the others — so does
- * the Biology Studio spec, which shows the same 3D view in software.
+ * the Biology Studio spec, which shows the same 3D view in software, and the other biology lessons'
+ * 3D views (bio3d.spec.ts).
  */
-const HEAVY_3D = /(mitosis3d|studio-biology)\.spec\.ts$/;
+const HEAVY_3D = /(mitosis3d|studio-biology|bio3d)\.spec\.ts$/;
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */

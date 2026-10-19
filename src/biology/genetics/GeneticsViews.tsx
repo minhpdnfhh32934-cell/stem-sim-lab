@@ -1,5 +1,5 @@
 import { Dices } from 'lucide-react';
-import { useMemo } from 'react';
+import { Suspense, lazy, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -15,11 +15,21 @@ import {
   hardyWeinberg,
   randomMating,
   testHardyWeinberg,
-  wrightFisher,
 } from './population';
 import { chiSquare, rng } from './stats';
 import { LETTERS, useDrift, useHw, useMendel, type DriftState, type MendelState } from './store';
+import { useShow3d } from '../view3d/support';
+import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
+import { DriftChips } from './driftChips';
+import { useDriftRuns } from './driftData';
 import '../bio.css';
+
+// three.js and the 3D pictures load only when a 3D view is shown.
+const Drift3D = lazy(() => import('./Drift3D').then((m) => ({ default: m.Drift3D })));
+const Mendel3D = lazy(() => import('./Mendel3D').then((m) => ({ default: m.Mendel3D })));
+const HardyWeinberg3D = lazy(() =>
+  import('./HardyWeinberg3D').then((m) => ({ default: m.HardyWeinberg3D })),
+);
 
 /* ───────────────────────────── Mendel ───────────────────────────── */
 
@@ -90,6 +100,7 @@ export function MendelStage() {
 
   return (
     <div className="bio-scroll">
+      <Bio3DFigure lesson="mendel" figure={<Mendel3D />} />
       <p className="rx-eq rx-eq--big">
         P: {st.p1} × {st.p2}
       </p>
@@ -395,6 +406,7 @@ export function HardyWeinbergStage() {
   }, []);
   return (
     <div className="bio-scroll">
+      <Bio3DFigure lesson="hardyWeinberg" figure={<HardyWeinberg3D />} />
       <div className="bio-grid">
         <div className="bio-chart">
           <XYChart
@@ -565,16 +577,19 @@ const DRIFT_CARD: ScienceCardData = {
   sources: [BSRC.hartl, BSRC.sgk12],
 };
 
-function useDriftRuns() {
-  const st = useDrift();
-  return useMemo(() => {
-    const rand = rng(st.seed);
-    return Array.from({ length: st.runs }, () => wrightFisher(st.N, st.p0, st.generations, rand));
-  }, [st.N, st.p0, st.generations, st.runs, st.seed]);
-}
-
 export function DriftStage() {
   usePublishCard(DRIFT_CARD);
+  const { show3d } = useShow3d('drift');
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Drift3D />
+      </Suspense>
+    );
+  return <Drift2D />;
+}
+
+function Drift2D() {
   const Lz = useLocalized();
   const fmt = useFmt();
   const runs = useDriftRuns();
@@ -625,31 +640,12 @@ export function DriftStage() {
     false,
     [runs, st.generations, fmt],
   );
-  const fixed = runs.filter((r) => r.at(-1) === 1).length;
-  const lost = runs.filter((r) => r.at(-1) === 0).length;
   return (
     <div className="bio-view">
       <canvas ref={canvasRef} className="chem-canvas" aria-label={Lz(DRIFT_CARD.title)} />
       <div className="chem-overlay">
-        <button
-          type="button"
-          className="btn btn--accent"
-          onClick={() => {
-            useDrift.setState((s) => ({ seed: s.seed + 1 }));
-          }}
-        >
-          <Dices size={15} aria-hidden="true" /> {Lz(L('Chạy lại', 'Run again'))}
-        </button>
-        <span className="chem-chip">
-          {Lz(L('Cố định A', 'A fixed'))}: {fixed} · {Lz(L('mất A', 'A lost'))}: {lost} ·{' '}
-          {Lz(L('còn đa hình', 'still polymorphic'))}: {runs.length - fixed - lost}
-        </span>
-        <span className="chem-chip">
-          {Lz(
-            L('Lí thuyết: xác suất cố định A = p₀ = ', 'Theory: fixation probability of A = p₀ = '),
-          )}
-          {fmt(st.p0)}
-        </span>
+        <DriftChips />
+        <Bio3DToolbar lesson="drift" />
       </div>
     </div>
   );

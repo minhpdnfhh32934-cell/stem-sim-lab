@@ -15,6 +15,12 @@ import type { Vec3 } from './numbers';
 
 export type { Vec3 };
 
+/**
+ * White: the base colour of a material whose instances carry their own colours (theme tokens set
+ * per instance multiply it). Not a design colour.
+ */
+export const NEUTRAL = '#ffffff';
+
 export interface KitOptions {
   tier: QualityTier;
   /** Sphere segments of the tier. */

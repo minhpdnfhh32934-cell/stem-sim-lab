@@ -6,7 +6,7 @@ import {
   Play,
   TriangleAlert,
 } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { lazy, useEffect, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { cx } from '@/ui/cx';
 import { IconButton } from '@/ui/IconButton';
@@ -23,7 +23,11 @@ import {
   type Translation,
 } from './dogma';
 import { EFFECT, dogmaCard, mutationOf, parseInput, useDogmaStore } from './state';
+import { Bio3DFigure } from '../view3d/switch';
 import '../bio.css';
+
+// three.js and the 3D helix load only when the 3D figure is shown.
+const Dogma3D = lazy(() => import('./Dogma3D').then((m) => ({ default: m.Dogma3D })));
 
 function CodonTrack({
   mrna,
@@ -137,6 +141,7 @@ export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
     const mutated = mt ? mt.t : null;
     return (
       <div className="bio-scroll">
+        <Bio3DFigure lesson="pointMutation" figure={<Dogma3D mode="mutation" />} />
         <div className="seq-row">
           <span className="seq-row__label">
             {Lz(L('ADN bình thường (mạch bổ sung)', 'Normal DNA (coding strand)'))}
@@ -225,6 +230,7 @@ export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
             : Lz(L('Không có bộ ba mở đầu AUG', 'No AUG start codon'))}
         </span>
       </div>
+      <Bio3DFigure lesson="centralDogma" figure={<Dogma3D mode="dogma" />} />
       <div className="seq-row">
         <span className="seq-row__label">
           {Lz(L('Mạch bổ sung (5′→3′)', 'Coding strand (5′→3′)'))}

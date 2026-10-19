@@ -140,7 +140,7 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   if (process.env.SHOTS)
     await page.screenshot({ path: `${process.env.SHOTS}/m3d-animal-meta.png` });
 
-  // 2D view still available; meiosis keeps the 2D picture.
+  // 2D view still available; meiosis shows its own 3D view (not the mitosis one), and its 2D.
   await page.getByRole('radio', { name: '2D' }).click();
   await expect(page.locator('.m3d')).toHaveCount(0);
   await expect(page.locator('canvas.chem-canvas')).toBeVisible();
@@ -148,6 +148,9 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   await expect(page.locator('.m3d canvas')).toBeVisible();
   await page.getByRole('button', { name: 'Giảm phân', exact: true }).click();
   await expect(page.locator('.m3d')).toHaveCount(0);
+  await expect(page.locator('.bio3d[data-lesson="meiosis"] canvas')).toBeVisible();
+  await page.getByRole('radio', { name: '2D' }).click();
+  await expect(page.locator('.bio3d')).toHaveCount(0);
   await expect(page.locator('canvas.chem-canvas')).toBeVisible();
 
   expect(errors).toEqual([]);

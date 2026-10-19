@@ -1,8 +1,7 @@
-import { ChevronLeft, ChevronRight, Pause, Play, Shuffle } from 'lucide-react';
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { Shuffle } from 'lucide-react';
+import { useMemo, type ReactNode } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useCanvas, type DrawContext } from '@/ui/canvas/useCanvas';
-import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
@@ -14,7 +13,9 @@ import {
   useDivisionStore,
   useStages,
 } from './state';
-import { claimStageIndex, setDivisionState } from './stageIndex';
+import { setDivisionState } from './stageIndex';
+import { DivisionControls } from './controls';
+import { useDivisionPlay } from './useDivisionPlay';
 import {
   STAGES,
   countsOf,
@@ -210,27 +211,10 @@ export function DivisionStage({
   const card = useMemo(() => cardFor(kind), [kind]);
   usePublishCard(card);
   const stages = useStages(kind);
-  const { index, playing } = useDivisionStore();
+  const index = useDivisionStore((st) => st.index);
+  useDivisionPlay(kind, stages.length);
   const i = Math.min(index, stages.length - 1);
   const s = stages[i];
-
-  useEffect(() => {
-    // Keeps the stage when it is this division's (back from the 3D view, a restored file);
-    // an index written for the other division starts again at the first stage.
-    claimStageIndex(kind);
-    useDivisionStore.setState({ playing: false });
-  }, [kind]);
-  useEffect(() => {
-    if (!playing) return;
-    const id = window.setInterval(() => {
-      const st = useDivisionStore.getState();
-      if (st.index >= stages.length - 1) useDivisionStore.setState({ playing: false });
-      else setDivisionState(kind, { index: st.index + 1 });
-    }, 1600);
-    return () => {
-      window.clearInterval(id);
-    };
-  }, [playing, stages.length, kind]);
 
   const canvasRef = useCanvas(
     (d) => {
@@ -240,57 +224,11 @@ export function DivisionStage({
     [s, kind],
   );
   if (!s) return null;
-  const c = countsOf(s);
   return (
     <div className="bio-view">
       <canvas ref={canvasRef} className="chem-canvas" aria-label={Lz(STAGE_NAME[s.stage])} />
       <div className="chem-overlay">
-        <IconButton
-          icon={ChevronLeft}
-          label={Lz(L('Bước trước', 'Previous step'))}
-          disabled={i === 0}
-          onClick={() => {
-            setDivisionState(kind, { index: Math.max(0, i - 1), playing: false });
-          }}
-        />
-        <IconButton
-          icon={playing ? Pause : Play}
-          label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-          variant="solid"
-          onClick={() => {
-            const x = useDivisionStore.getState();
-            setDivisionState(kind, {
-              playing: !x.playing,
-              index: x.index >= stages.length - 1 ? 0 : x.index,
-            });
-          }}
-        />
-        <IconButton
-          icon={ChevronRight}
-          label={Lz(L('Bước tiếp theo', 'Next step'))}
-          disabled={i >= stages.length - 1}
-          onClick={() => {
-            setDivisionState(kind, { index: Math.min(stages.length - 1, i + 1), playing: false });
-          }}
-        />
-        <span className="chem-chip">
-          <strong>{Lz(STAGE_NAME[s.stage])}</strong>
-        </span>
-        <span className="chem-chip">
-          {c.cells} {Lz(L('tế bào', c.cells > 1 ? 'cells' : 'cell'))} · {c.chromosomes}{' '}
-          {Lz(
-            L(
-              c.state === 'double' ? 'NST kép' : 'NST đơn',
-              c.state === 'double' ? 'double chromosomes' : 'single chromosomes',
-            ),
-          )}
-          {Lz(L(' / tế bào', ' / cell'))}
-        </span>
-        <span className="chem-chip bio-legend">
-          {Lz(L('NST nguồn gốc', 'Chromosomes from'))}
-          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'the mother'))}
-          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'the father'))}
-        </span>
+        <DivisionControls kind={kind} stages={stages} index={i} />
         {toolbar}
         {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>

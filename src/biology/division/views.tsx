@@ -1,5 +1,6 @@
 import { Suspense, lazy, useLayoutEffect, useRef } from 'react';
-import { useNo3dNotice, useNo3dReason } from '../view3d/support';
+import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
+import { Bio3DToolbar } from '../view3d/switch';
 import { DivisionBottom, DivisionPanel, DivisionStage } from './DivisionViews';
 import { Mitosis3DSwitch } from './mitosis3d/Mitosis3DSwitch';
 import { Mitosis3DBottom, Mitosis3DParts } from './mitosis3d/panels';
@@ -7,10 +8,11 @@ import { index2dOf, timelineFor, useMitosis3D } from './mitosis3d/store';
 import { setDivisionState } from './stageIndex';
 import { useDivisionStore } from './state';
 
-// three.js is loaded only when the 3D view is shown.
+// three.js is loaded only when a 3D view is shown.
 const Mitosis3DView = lazy(() =>
   import('./mitosis3d/Mitosis3DView').then((m) => ({ default: m.Mitosis3DView })),
 );
+const Meiosis3D = lazy(() => import('./Meiosis3D').then((m) => ({ default: m.Meiosis3D })));
 
 /** The 2D stage that shows what the 3D view was showing (3D time → 2D stage index). */
 function show3dStageIn2d(): void {
@@ -57,6 +59,15 @@ export const MitosisPanel = () => {
 };
 export const MitosisBottom = () =>
   use3dActive() ? <Mitosis3DBottom /> : <DivisionBottom kind="mitosis" />;
-export const MeiosisStage = () => <DivisionStage kind="meiosis" />;
+export function MeiosisStage() {
+  const { show3d } = useShow3d('meiosis');
+  if (show3d)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Meiosis3D />
+      </Suspense>
+    );
+  return <DivisionStage kind="meiosis" toolbar={<Bio3DToolbar lesson="meiosis" />} />;
+}
 export const MeiosisPanel = () => <DivisionPanel kind="meiosis" />;
 export const MeiosisBottom = () => <DivisionBottom kind="meiosis" />;

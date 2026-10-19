@@ -142,3 +142,21 @@ test.describe('touch screen', () => {
     expect(await smallTargets(page, ['.inspector input[type="range"]'])).toEqual([]);
   });
 });
+
+test('the short charts of the bottom panel show at least three y values', async ({ page }) => {
+  await openBiology(page);
+  for (const name of [
+    'Tăng trưởng logistic',
+    'Con mồi – vật ăn thịt (Lotka–Volterra)',
+    'Phiêu bạt di truyền',
+    'Động học enzyme (Michaelis–Menten)',
+    'Khuếch tán & thẩm thấu',
+  ]) {
+    await page.getByRole('button', { name, exact: true }).click();
+    const plot = page.locator('.bottom-panel .chart__plot[data-y-ticks]');
+    await expect(plot).toHaveCount(1, { timeout: 20_000 });
+    await expect
+      .poll(async () => Number(await plot.getAttribute('data-y-ticks')), { message: name })
+      .toBeGreaterThanOrEqual(3);
+  }
+});

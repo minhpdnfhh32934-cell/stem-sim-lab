@@ -31,6 +31,13 @@
 .bio-swatch--p {
   background: var(--chart-1);
 }
+/* Alleles A and a in the 3D genetics views (as AA and aa in the Hardy–Weinberg chart). */
+.bio-swatch--allele-A {
+  background: var(--chart-1);
+}
+.bio-swatch--allele-a {
+  background: var(--chart-3);
+}
 .bio-legend {
   gap: 4px;
 }
@@ -576,7 +583,8 @@
 /* A 3D figure at the top of a page of text and tables. */
 .bio3d-figure {
   position: relative;
-  height: clamp(220px, 46vh, 380px);
+  /* A share of the stage (the scroll box has a definite height), so the page under it shows. */
+  height: clamp(220px, 58%, 420px);
   margin: 0 0 var(--space-3);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -592,9 +600,4 @@
 }
 .bio3d-figure__bar {
   margin-bottom: var(--space-2);
-}
-@media (max-width: 1100px) {
-  .bio3d-figure {
-    height: clamp(200px, 40vh, 320px);
-  }
 }
