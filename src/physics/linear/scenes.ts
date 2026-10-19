@@ -62,6 +62,8 @@ function bodies(accel: boolean): BodyDef[] {
     position: (s, p) => ({ x: s[3 * k] ?? 0, y: laneY(k, extent(p, accel).w) }),
     radius: (p) => 0.02 * extent(p, accel).w,
     draggable: true,
+    // Body B exists only in two-body mode.
+    ...(k === 1 ? { active: two } : {}),
     properties: (s) => [
       { label: L('Tọa độ', 'Position'), symbol: 'x', value: s[3 * k] ?? 0, unit: 'm' },
       { label: L('Vận tốc', 'Velocity'), symbol: 'v', value: s[3 * k + 1] ?? 0, unit: 'm/s' },

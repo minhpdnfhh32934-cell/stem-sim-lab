@@ -10,6 +10,7 @@ import { Camera } from '@/physics/render/camera';
 import { drawGrid, line, polyline, text } from '@/physics/render/draw';
 import type { PhysicsScene, ThemeColors } from '@/physics/types';
 import { useCompareStore } from './compare';
+import { pickBody } from './pick';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 import { readThemeColors } from './themeColors';
@@ -230,15 +231,7 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       const state = sim.renderState;
       if (!state) return null;
       const p = useSimStore.getState().params;
-      let best: { id: string; index: number; d: number } | null = null;
-      scene.bodies.forEach((b, index) => {
-        const pos = b.position(state, p);
-        const s = cam.toScreen(pos.x, pos.y);
-        const d = Math.hypot(s.sx - sx, s.sy - sy);
-        const r = Math.max(14, b.radius(p) * cam.scale + 6);
-        if (d <= r && (!best || d < best.d)) best = { id: b.id, index, d };
-      });
-      return best as { id: string; index: number; d: number } | null;
+      return pickBody(scene.bodies, state, p, (x, y) => cam.toScreen(x, y), cam.scale, sx, sy);
     };
 
     const down = (e: PointerEvent) => {
