@@ -29,11 +29,54 @@ export class SequenceError extends Error {
 const DNA_PAIR: Record<string, string> = { A: 'T', T: 'A', G: 'C', C: 'G' };
 const RNA_OF_TEMPLATE: Record<string, string> = { A: 'U', T: 'A', G: 'C', C: 'G' };
 
+/**
+ * Prime marks accepted after 5/3: ASCII ' and `, the prime ′, the typographic quotes ’ ‘ that
+ * Word and phone keyboards insert, and the acute accent ´.
+ */
+const PRIMES = "'′’‘`´";
+const END_MARK = new RegExp(`([53])[${PRIMES}]`, 'g');
+const BASE_CHAR = /[ATGCUX]/i;
+
+export type StrandDirection = '5to3' | '3to5';
+
+/**
+ * Direction of a typed strand from its 5′/3′ end marks ("5'-ATG-3'" → 5to3), or null when it
+ * has none. A single mark is enough (a leading 5′ or a trailing 3′ means 5′→3′). Marks inside
+ * the sequence or two marks with the same number are rejected instead of being guessed.
+ */
+export function strandDirection(input: string): StrandDirection | null {
+  const first = input.search(BASE_CHAR);
+  let last = -1;
+  for (let i = input.length - 1; i >= 0; i--) {
+    if (BASE_CHAR.test(input[i] ?? '')) {
+      last = i;
+      break;
+    }
+  }
+  let lead: string | null = null;
+  let trail: string | null = null;
+  for (const m of input.matchAll(END_MARK)) {
+    const at = m.index;
+    if (first < 0 || at < first) {
+      if (lead !== null) throw new SequenceError('two 5′/3′ marks at the start');
+      lead = m[1] ?? null;
+    } else if (at > last) {
+      if (trail !== null) throw new SequenceError('two 5′/3′ marks at the end');
+      trail = m[1] ?? null;
+    } else throw new SequenceError('5′/3′ marks must be at the ends of the strand');
+  }
+  if (lead !== null && lead === trail) throw new SequenceError('conflicting 5′/3′ marks');
+  if (lead === '5' || trail === '3') return '5to3';
+  if (lead === '3' || trail === '5') return '3to5';
+  return null;
+}
+
 /** Keeps A, T, G, C (case-insensitive); spaces, digits and "5'…3'" marks are ignored. */
 export function cleanDna(input: string): string {
   const s = input
     .toUpperCase()
-    .replace(/5['′]|3['′]|[-\s\d,.]/g, '')
+    .replace(END_MARK, '')
+    .replace(/[-\s\d,.]/g, '')
     .replace(/X/g, 'C') // Vietnamese texts write cytosine as X (xitôzin)
     .replace(/U/g, 'T');
   const bad = /[^ATGC]/.exec(s);
@@ -126,6 +169,7 @@ export type MutationEffect =
   | 'nonsense'
   | 'stopLoss'
   | 'startLoss'
+  | 'startGain'
   | 'frameshift'
   | 'inFrameIndel'
   | 'outsideCds'
@@ -153,15 +197,33 @@ export function analyzeMutation(coding: string, m: Mutation): MutationAnalysis {
     for (let i = 0; i < Math.max(a.length, b.length); i++) if (a[i] !== b[i]) return i;
     return -1;
   })();
-  if (before.start < 0) return { effect: 'none', before, after: afterFull, firstChange };
-  const cdsEnd = before.stopIndex >= 0 ? before.start + 3 * (before.stopIndex + 1) : coding.length;
-  if (m.pos < before.start || m.pos >= cdsEnd) {
-    // Outside the coding region, unless it destroys/creates the start codon.
-    const effect = afterFull.start !== before.start ? 'startLoss' : 'outsideCds';
+  const S = before.start;
+  if (S < 0) return { effect: 'none', before, after: afterFull, firstChange };
+  const cdsEnd = before.stopIndex >= 0 ? S + 3 * (before.stopIndex + 1) : coding.length;
+  // Does the mutation hit the bases of the start codon [S, S+3)? An insertion exactly at S goes
+  // in front of the A and leaves the ATG intact.
+  const touchesStart =
+    m.kind === 'substitution'
+      ? m.pos >= S && m.pos < S + 3
+      : m.kind === 'insertion'
+        ? m.pos > S && m.pos < S + 3
+        : m.pos < S + 3 && m.pos + m.count > S;
+  if (touchesStart && mutated.slice(S, S + 3) !== 'ATG')
+    return { effect: 'startLoss', before, after: afterFull, firstChange };
+  const upstream = !touchesStart && (m.kind === 'insertion' ? m.pos <= S : m.pos < S);
+  if (upstream || m.pos >= cdsEnd) {
+    // An upstream indel only moves the AUG: it is now expected at S + shift. A different first
+    // AUG means the change created a new start codon in front of the old one.
+    const shift = !upstream
+      ? 0
+      : m.kind === 'insertion'
+        ? m.bases.length
+        : m.kind === 'deletion'
+          ? -m.count
+          : 0;
+    const effect = afterFull.start === S + shift ? 'outsideCds' : 'startGain';
     return { effect, before, after: afterFull, firstChange };
   }
-  if (m.pos < before.start + 3)
-    return { effect: 'startLoss', before, after: afterFull, firstChange };
   // Keep the original reading frame for the mutated sequence.
   const after = translateFrom(codingToMrna(mutated), before.start);
   const shifted = m.kind === 'insertion' ? m.bases.length : m.kind === 'deletion' ? m.count : 0;
@@ -170,7 +232,8 @@ export function analyzeMutation(coding: string, m: Mutation): MutationAnalysis {
   else if (shifted !== 0) effect = 'inFrameIndel';
   else if (after.protein === before.protein && after.stopIndex === before.stopIndex)
     effect = 'silent';
-  else if (after.stopIndex >= 0 && after.stopIndex < before.stopIndex) effect = 'nonsense';
+  else if (after.stopIndex >= 0 && (before.stopIndex < 0 || after.stopIndex < before.stopIndex))
+    effect = 'nonsense';
   else if (
     before.stopIndex >= 0 &&
     after.stopIndex !== before.stopIndex &&

@@ -7,6 +7,7 @@ import {
   SequenceError,
   cleanDna,
   complement,
+  strandDirection,
   type Mutation,
   type MutationEffect,
 } from './dogma';
@@ -34,17 +35,29 @@ export const useDogmaStore = create<DogmaState>()(() => ({
   count: 1,
 }));
 
-/** User input → coding strand (5′→3′). A template strand is complemented (and reversed-order aware). */
+/**
+ * User input → coding strand (5′→3′). The selected coding strand is expected 5′→3′ and the
+ * template strand 3′→5′ (aligned under the coding strand). When the learner's own 5′/3′ marks say
+ * the strand was typed the other way round, it is reversed first and `reversed` is set so the
+ * view can say so.
+ */
 export function parseInput(
   input: string,
   strand: 'coding' | 'template',
-): { ok: true; coding: string } | { ok: false; error: string } {
+): { ok: true; coding: string; reversed: boolean } | { ok: false; error: string } {
   try {
+    const typed = strandDirection(input);
     const dna = cleanDna(input);
     if (!dna) return { ok: false, error: 'empty' };
-    // The template is typed 3′→5′ aligned under the coding strand, so its complement is the
-    // coding strand read 5′→3′.
-    return { ok: true, coding: strand === 'coding' ? dna : complement(dna) };
+    const expected = strand === 'coding' ? '5to3' : '3to5';
+    const reversed = typed !== null && typed !== expected;
+    let aligned = dna;
+    if (reversed) {
+      aligned = '';
+      for (let i = dna.length - 1; i >= 0; i--) aligned += dna[i] ?? '';
+    }
+    // The template, read 3′→5′ under the coding strand, complements to the coding strand 5′→3′.
+    return { ok: true, coding: strand === 'coding' ? aligned : complement(aligned), reversed };
   } catch (e) {
     return { ok: false, error: e instanceof SequenceError ? e.message : String(e) };
   }
@@ -94,6 +107,13 @@ export const EFFECT: Record<MutationEffect, { name: LocalizedText; desc: Localiz
     desc: L(
       'Bộ ba mở đầu AUG bị thay đổi: dịch mã không bắt đầu đúng vị trí.',
       'The AUG start codon is changed: translation does not start correctly.',
+    ),
+  },
+  startGain: {
+    name: L('Tạo bộ ba mở đầu mới phía trước', 'New upstream start codon'),
+    desc: L(
+      'Một bộ ba AUG mới xuất hiện trước AUG cũ. Theo mô hình của bài (dịch mã từ AUG đầu tiên), dịch mã bắt đầu sớm hơn nên protein có thể thay đổi.',
+      'A new AUG appears in front of the old one. In this model (translation from the first AUG), translation starts earlier, so the protein may change.',
     ),
   },
   frameshift: {

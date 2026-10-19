@@ -1,4 +1,11 @@
-import { ChevronLeft, ChevronRight, Pause, Play, TriangleAlert } from 'lucide-react';
+import {
+  ArrowLeftRight,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+  TriangleAlert,
+} from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { cx } from '@/ui/cx';
@@ -369,6 +376,19 @@ export function DogmaPanel({ mode }: { mode: 'dogma' | 'mutation' }) {
           </button>
         ))}
       </div>
+      {parsed.ok && parsed.reversed && (
+        <p className="chem-note" role="status">
+          <ArrowLeftRight size={15} aria-hidden="true" />
+          <span>
+            {Lz(
+              L(
+                'Theo dấu 5′/3′ bạn ghi, mạch được nhập theo chiều ngược với mạch đã chọn, nên mình đã đảo trình tự lại trước khi đọc.',
+                'Your 5′/3′ marks show the strand was typed in the opposite direction to the selected strand, so it was reversed before reading.',
+              ),
+            )}
+          </span>
+        </p>
+      )}
       {mode === 'mutation' && (
         <>
           <label>
