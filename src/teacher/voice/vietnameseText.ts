@@ -102,8 +102,8 @@ export function readNumber(raw: string): string {
   }
   let intPart = s;
   let frac = '';
-  if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) {
-    // Vietnamese grouping: 1.250.000,5
+  if (/^[1-9]\d{0,2}(\.\d{3})+(,\d+)?$/.test(s)) {
+    // Vietnamese grouping: 1.250.000,5 (never "0.125", a decimal)
     const [i = '', f = ''] = s.split(',');
     intPart = i.replace(/\./g, '');
     frac = f;
@@ -781,7 +781,8 @@ const SYMBOLS: [RegExp, string][] = [
 ];
 
 // Grouping by a space ("1 000 kg", the Vietnamese standard), a dot or a comma; then decimals.
-const NUMBER = String.raw`\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?!\d)(?:,\d+)?|\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d{1,3}(?:,\d{3}){2,}(?:\.\d+)?|\d+[.,]\d+|\d+`;
+// A dot group starts with 1-9: "0.125" is a decimal, never 125.
+const NUMBER = String.raw`\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?!\d)(?:,\d+)?|[1-9]\d{0,2}(?:\.\d{3})+(?:,\d+)?|\d{1,3}(?:,\d{3}){2,}(?:\.\d+)?|\d+[.,]\d+|\d+`;
 const UNIT_CANDIDATE = String.raw`(?:°[CF]?|%|[A-Za-zµμΩ][A-Za-zµμΩ²³⁻¹·⋅./()^{}\d−-]*)`;
 // Never inside an exponent: in "2^{-3}" the "3" is left to POWER ("mũ trừ ba"), not read alone.
 // A bare power of ten ("10^{-3} m", "10^-7") is a quantity of its own, so its unit is read.
@@ -820,8 +821,20 @@ function count(s: string, ch: string): number {
   return s.split(ch).length - 1;
 }
 
+/**
+ * Glued lowercase letters after a coefficient that are a product of symbols even though the unit
+ * reader could join them: not one unit of the table ("gh" = g·h, "mgh" = mg·h), or "mg" inside an
+ * equation ("F = 2mg"; "500mg vitamin C" stays milligrams). "2kg", "3cm", "5ms" stay units.
+ */
+function symbolProduct(letters: string, equation: boolean): boolean {
+  if (!/^[a-z]+$/.test(letters)) return false;
+  if (!Object.hasOwn(BASE_UNITS, letters)) return true;
+  return equation && letters === 'mg';
+}
+
 function quantity(
   opts: UnitOptions,
+  equation: boolean,
   minus: string | undefined,
   num: string,
   exp1: string | undefined,
@@ -837,8 +850,10 @@ function quantity(
   // "10^{-3}": the number is 10 itself, raised to the power ("mười mũ trừ ba").
   if (tenPower) words += ` mũ ${exponentWords(tenPower)}`;
   const after = unitAfter(unit, opts);
-  // Letters glued to a coefficient are a product of symbols: "4ac" → "bốn a xê".
-  const product = !after && !space ? /^([A-Za-z]{2,3})([^\p{L}\d]*)$/u.exec(unit ?? '') : null;
+  // Letters glued to a coefficient are a product of symbols: "4ac" → "bốn a xê", and "2gh",
+  // "2mgh" are never gram-hours or milligram-hours (a unit read only by joining unit symbols).
+  const glued = !space ? /^([A-Za-z]{2,3})([^\p{L}\d]*)$/u.exec(unit ?? '') : null;
+  const product = glued && (!after || symbolProduct(glued[1] ?? '', equation)) ? glued : null;
   if (product) return ` ${words} ${spell(product[1] ?? '')}${product[2] ?? ''}`;
   // Not a unit: give the letters back untouched ("3 con" stays "ba con"), always after a space
   // so a coefficient is not glued to its letter ("2n" → "hai nờ", not "hain"; audit VOI-02).
@@ -1111,7 +1126,60 @@ const TAN_FUNCTION = new RegExp(
 );
 
 /** Mathematical functions written in plain text (LaTeX has its own words in LATEX_WORDS). */
+const INDEXED = /(?<![\p{L}\d])([A-Za-z])(\d{1,2}|[₀-₉]{1,2})(?![\p{L}\d.,])/gu;
+
+/** "m3" in "1 m3" or "kg/m3", "s2" in "2 m/s2": a unit squared or cubed, written as a digit. */
+function unitPower(letter: string, digits: string, before: string): boolean {
+  return (
+    /^[ms]$/.test(letter) &&
+    /^[23]$/.test(digits) &&
+    (/\d[ \t]*$/.test(before) || /\d[ \t]*[A-Za-zµμΩ][A-Za-zµμΩ²³·.]*\/$/u.test(before))
+  );
+}
+
+/**
+ * A range between two numbers: "35–40 °C", "pH 6-8", "10–20 µm" → "… đến …". An en dash is
+ * always a range; a hyphen only outside an equation ("x = 5-3", "5-3 = 2" stay "trừ"). Chains
+ * such as dates ("19-10-2026") are not ranges.
+ */
+const RANGE = new RegExp(
+  String.raw`(?<![\p{L}\d.,^{_/\-−–])(${NUMBER})([ \t]*–[ \t]*|-)(${NUMBER})(?!\d|[.,]\d|[ \t]*[\-–/^]\d)`,
+  'gu',
+);
+
+function readRanges(s: string): string {
+  return s.replace(RANGE, (all, a: string, dash: string, b: string, offset: number) => {
+    const after = s.slice(offset + all.length);
+    if (/^[ \t]*[=<>≈]/u.test(after)) return all;
+    if (dash === '-') {
+      const before = s.slice(Math.max(0, offset - 8), offset);
+      if (/[=+×·*/(]\s*$/u.test(before) || /^[ \t]*[+×·*/]/u.test(after)) return all;
+    }
+    return ` ${a} đến ${b}`;
+  });
+}
+
+/**
+ * DNA strand ends: "5' → 3'" (also "$5' \to 3'$") is "năm phẩy đến ba phẩy", never "5 therefore
+ * 3" (reading to confirm with a teacher, DATA_REVIEW). A lone "3'" is read "ba phẩy" only in a
+ * text about nucleic acids.
+ */
+const STRAND_ARROW = String.raw`\s*(?:→|⟶|->|\\to(?![a-zA-Z])|\\(?:long)?rightarrow)\s*`;
+const STRAND = new RegExp(String.raw`(?<![\d'′])([35])['′]${STRAND_ARROW}([35])['′]`, 'g');
+const STRAND_MATH = new RegExp(String.raw`\$\s*([35])['′]${STRAND_ARROW}([35])['′]\s*\$`, 'g');
+const STRAND_END = /(?<![\d°'′.,])([35])['′](?![\d'′\p{L}])/gu;
+const NUCLEIC = /ADN|DNA|ARN|RNA|mạch|nucleotit|nuclêôtit/iu;
+
+function readStrands(s: string): string {
+  const t = s
+    .replace(STRAND_MATH, ' $1 phẩy đến $2 phẩy ')
+    .replace(STRAND, ' $1 phẩy đến $2 phẩy ');
+  return NUCLEIC.test(t) ? t.replace(STRAND_END, '$1 phẩy') : t;
+}
+
 const FUNCTIONS: [RegExp, string][] = [
+  // "sqrt(2gh)" as typed in plain text (never spelled "ét quy rờ tê").
+  [/(?<![\p{L}\\])sqrt\s*(?=\()/gu, ' căn bậc hai của '],
   [/(?<![\p{L}\\])(?:cotg|cot)(?![\p{L}])/gu, ' cô-tang '],
   [/(?<![\p{L}\\])cos(?![\p{L}])/gu, ' cốt '],
   [/(?<![\p{L}\\])tg(?![\p{L}])/gu, ' tang '],
@@ -1139,7 +1207,7 @@ export function toSpeech(content: string, context: SpeechContext = {}): string {
   const chemContext = Boolean(context.chemistry) || CHEM_WORDS.test(content);
   // Concentrations "[S]", "[H⁺]" → "nồng độ S" (audit VOI-02), in text and in LaTeX alike; an
   // interval "[a, b]" or a citation "[1]", "[Wikipedia]" is not a species and is left.
-  let s = concentrations(stripMarkdown(content));
+  let s = readStrands(concentrations(stripMarkdown(content)));
   // Math segments first: they use their own grammar.
   s = s
     .replace(/\$\$([\s\S]+?)\$\$/g, (_m, m: string) => `\n${latexSpeech(m)}.\n`)
@@ -1273,10 +1341,18 @@ export function toSpeech(content: string, context: SpeechContext = {}): string {
       },
     );
   }
-  // Indexed symbols: v0, t₁, F12.
-  s = s.replace(
-    /(?<![\p{L}\d])([A-Za-z])(\d{1,2}|[₀-₉]{1,2})(?![\p{L}\d.,])/gu,
-    (_m, l: string, d: string) => ` ${letterName(l)} ${readInteger(fromScript(d))} `,
+  // Indexed symbols: v0, t₁, F12. A unit power written as a digit after a number ("1 m3",
+  // "1000 kg/m3", "2 m/s2") is left to the unit reader, unless the letter is an indexed symbol
+  // elsewhere in the text ("m1 = 2 m2": two masses).
+  const symbolLetters = new Set<string>();
+  for (const m of s.matchAll(INDEXED)) {
+    const [, l = '', d = ''] = m;
+    if (!unitPower(l, d, s.slice(0, m.index))) symbolLetters.add(l);
+  }
+  s = s.replace(INDEXED, (all, l: string, d: string, offset: number, text: string) =>
+    !symbolLetters.has(l) && unitPower(l, d, text.slice(0, offset))
+      ? all
+      : ` ${letterName(l)} ${readInteger(fromScript(d))} `,
   );
   // Products of symbols right after an operator: "F = ma", "v0 + at", "A = Fs" → letter names;
   // before the numbers become words, so "= 3" ("= ba") is never spelled.
@@ -1289,6 +1365,7 @@ export function toSpeech(content: string, context: SpeechContext = {}): string {
   s = s.replace(/(\d)\.(?=10(?:\^\{?[+\-−]?\d|[⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]))/g, '$1·');
   // "220 . 2": a dot between spaces is never a decimal point either.
   s = s.replace(/(\d)[ \t]+\.[ \t]+(?=\d)/g, '$1 · ');
+  s = readRanges(s);
   // Numbers, with their unit and powers of ten ("0,1 M" is mol per litre only about solutions).
   const units: UnitOptions = {
     molar: chemistry || Boolean(context.molar) || MOLAR_WORDS.test(content),
@@ -1305,7 +1382,22 @@ export function toSpeech(content: string, context: SpeechContext = {}): string {
       tenPower: string | undefined,
       space: string | undefined,
       unit: string | undefined,
-    ) => quantity(units, minus, num, exp1, exp2, exp3, tenPower, space, unit),
+      offset: number,
+      text: string,
+    ) =>
+      quantity(
+        units,
+        // Right after "=", an operator or an opening bracket: part of an equation.
+        /(?:[=+×·*(√]|\s[-−])\s*$/u.test(text.slice(Math.max(0, offset - 8), offset)),
+        minus,
+        num,
+        exp1,
+        exp2,
+        exp3,
+        tenPower,
+        space,
+        unit,
+      ),
   );
   // A unit on its own: "đơn vị kg/m³", "km/h", "N/m²" (a part of two letters, a power, or the
   // word "đơn vị" before it); "F/m", "s/t" stay formulas.
@@ -1340,8 +1432,10 @@ export function toSpeech(content: string, context: SpeechContext = {}): string {
       return read ? `${w} trên ${read} ` : all;
     },
   );
-  // Powers left over: x², 10^{-3} (numbers are words by now), with a unit after them.
+  // Powers left over: x², 10^{-3} (numbers are words by now), with a unit after them. An
+  // unspaced "+" right after a power ("x²+y²", "a^2+b^2") is spaced first, so it reads "cộng".
   s = s
+    .replace(/([⁰¹²³⁴⁵⁶⁷⁸⁹]|\^\{?[+\-−]?[\p{L}\d]+\}?)\+(?=[\p{L}\d(])/gu, '$1 + ')
     .replace(
       POWER,
       (_m, a: string | undefined, b: string | undefined, space?: string, unit?: string) => {
