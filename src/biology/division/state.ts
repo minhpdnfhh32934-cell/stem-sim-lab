@@ -129,10 +129,17 @@ export function useStages(kind: Division): StageState[] {
 export function cardFor(kind: Division): ScienceCardData {
   return {
     title: kind === 'mitosis' ? L('Nguyên phân', 'Mitosis') : L('Giảm phân', 'Meiosis'),
-    model: L(
-      'Mô hình đếm NST: mỗi kì được suy ra từ kì trước theo quy tắc (nhân đôi ở pha S, tiếp hợp và trao đổi chéo ở kì đầu I, phân li cặp tương đồng ở kì sau I, tách cromatit chị em ở kì sau nguyên phân và kì sau II). Số liệu trong bảng được đếm từ mô hình.',
-      'Chromosome bookkeeping: every stage is derived from the previous one (replication in S, synapsis and crossing over in prophase I, homologues separate in anaphase I, sister chromatids separate in mitotic anaphase and anaphase II). The table counts the model.',
-    ),
+    // Each division states only its own rules (the mitosis card once listed meiosis I's too).
+    model:
+      kind === 'mitosis'
+        ? L(
+            'Mô hình đếm NST: mỗi kì được suy ra từ kì trước theo quy tắc (nhân đôi ở pha S, tách crômatit chị em ở kì sau). Số liệu trong bảng được đếm từ mô hình.',
+            'Chromosome bookkeeping: every stage is derived from the previous one (replication in S, sister chromatids separate in anaphase). The table counts the model.',
+          )
+        : L(
+            'Mô hình đếm NST: mỗi kì được suy ra từ kì trước theo quy tắc (nhân đôi ở pha S, tiếp hợp và trao đổi chéo ở kì đầu I, phân li cặp tương đồng ở kì sau I, tách crômatit chị em ở kì sau II). Số liệu trong bảng được đếm từ mô hình.',
+            'Chromosome bookkeeping: every stage is derived from the previous one (replication in S, synapsis and crossing over in prophase I, homologues separate in anaphase I, sister chromatids separate in anaphase II). The table counts the model.',
+          ),
     equations:
       kind === 'meiosis'
         ? [

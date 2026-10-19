@@ -23,6 +23,7 @@ import {
   type Division,
   type StageState,
 } from './division';
+import { scatterLayout } from './layout2d';
 import '../bio.css';
 
 const CHROMO_LEN = [0.36, 0.28, 0.22, 0.18];
@@ -160,15 +161,36 @@ function drawStage(d: DrawContext, s: StageState) {
       });
       return;
     }
-    const inRow = s.stage === 'metaphase' || s.stage === 'metaphase2';
+    const n = cell.chromosomes.length;
+    if (s.stage === 'metaphase' || s.stage === 'metaphase2') {
+      cell.chromosomes.forEach((c, i) => {
+        const y = cy + ((i - (n - 1) / 2) * (ry * 1.5)) / Math.max(1, n);
+        drawChromosome(d, c, cx, y, scale * 0.7, colors);
+      });
+      return;
+    }
+    // Prophase, telophase: one slot each inside the cell, so no two chromosomes overlap.
+    const sc = scale * 0.8;
+    const itemH = Math.max(
+      ...cell.chromosomes.map((c) => (CHROMO_LEN[c.pair % CHROMO_LEN.length] ?? 0.2) * sc),
+    );
+    const width = Math.max(4, sc * 0.045);
+    const double = cell.chromosomes.some((c) => c.chromatids.length === 2);
+    // A double chromosome is two chromatids side by side (drawChromosome), plus a gap.
+    const itemW = (double ? 2.1 : 1) * width * 1.6;
+    const lay = scatterLayout(
+      n,
+      cx,
+      cy,
+      rx * 0.62,
+      ry * 0.62,
+      itemW,
+      itemH * 1.1,
+      rng(31 + k * 17),
+    );
     cell.chromosomes.forEach((c, i) => {
-      const n = cell.chromosomes.length;
-      const rand = rng(31 + i + k * 17);
-      const x = inRow ? cx : cx + (rand() - 0.5) * rx * 1.1;
-      const y = inRow
-        ? cy + ((i - (n - 1) / 2) * (ry * 1.5)) / Math.max(1, n)
-        : cy + (rand() - 0.5) * ry * 1.1;
-      drawChromosome(d, c, x, y, scale * (inRow ? 0.7 : 0.8), colors);
+      const p = lay.slots[i];
+      if (p) drawChromosome(d, c, p.x, p.y, sc * lay.fit, colors);
     });
   });
 }
