@@ -53,6 +53,40 @@ export function withRim<M extends THREE.MeshStandardMaterial>(material: M, rim: 
   return material;
 }
 
+/**
+ * Mixes a material's surface colour (after vertex colours) towards `color` by `amount` (0…1),
+ * before lighting: a picked part stands out while the others fade towards the stage colour,
+ * even when each vertex carries its own colour. Runs in the material's own shader.
+ */
+export function withTint<M extends THREE.MeshStandardMaterial>(
+  material: M,
+  color: THREE.ColorRepresentation,
+  amount: number,
+): M {
+  const uniforms = {
+    uTintColor: { value: new THREE.Color(color) },
+    uTintAmount: { value: amount },
+  };
+  material.userData.tint = uniforms;
+  const previous = material.onBeforeCompile.bind(material);
+  material.onBeforeCompile = (shader, renderer) => {
+    previous(shader, renderer);
+    Object.assign(shader.uniforms, uniforms);
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        'void main() {',
+        'uniform vec3 uTintColor;\nuniform float uTintAmount;\nvoid main() {',
+      )
+      .replace(
+        '#include <color_fragment>',
+        '#include <color_fragment>\ndiffuseColor.rgb = mix(diffuseColor.rgb, uTintColor, uTintAmount);',
+      );
+  };
+  const key = material.customProgramCacheKey.bind(material);
+  material.customProgramCacheKey = () => `${key()}|simlab-tint`;
+  return material;
+}
+
 /** Updates a rim's opacity term (e.g. a membrane that fades). */
 export function setRimAlpha(material: THREE.Material, alpha: number): void {
   const u = material.userData.rim as { uRimAlpha: { value: number } } | undefined;

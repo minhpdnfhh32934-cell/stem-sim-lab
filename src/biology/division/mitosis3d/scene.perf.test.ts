@@ -23,28 +23,29 @@ const PALETTE: ScenePalette = {
  * soft contact shadow is one call, the spindle one instanced call).
  */
 const CALLS: Record<CellType, (n2: number) => number> = {
-  animal: (n2) => 11 + 8 * n2,
-  plant: (n2) => 6 + 8 * n2,
+  animal: (n2) => 11 + 4 * n2,
+  plant: (n2) => 6 + 4 * n2,
 };
 
 /**
  * Most triangles drawn at any moment of the division, per quality tier (sphere segments: Low 8,
- * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-20: spindle fibres as tubes,
- * rounded plant cell, contact shadow, lighter chromatin threads). The budget allows 5 % more; a
+ * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-20: each chromatid is one
+ * tube — thread and rod are the same object, condensing in place — plus a kinetochore disc; the
+ * two capsules, bead and see-through thread of before are gone). The budget allows 5 % more; a
  * bigger change must update this table on purpose.
  */
 const TRIANGLES: Record<number, Record<CellType, Record<number, number>>> = {
   8: {
-    animal: { 2: 3234, 4: 5226, 6: 7218, 8: 9210 },
-    plant: { 2: 2978, 4: 4970, 6: 6962, 8: 8954 },
+    animal: { 2: 3010, 4: 4538, 6: 6034, 8: 7482 },
+    plant: { 2: 2722, 4: 4314, 6: 5810, 8: 7258 },
   },
   16: {
-    animal: { 2: 8258, 4: 12530, 6: 16802, 8: 21074 },
-    plant: { 2: 8066, 4: 12338, 6: 16610, 8: 20882 },
+    animal: { 2: 7106, 4: 8962, 6: 10690, 8: 12434 },
+    plant: { 2: 6530, 4: 8386, 6: 10338, 8: 12306 },
   },
   24: {
-    animal: { 2: 16162, 4: 23714, 6: 31266, 8: 38818 },
-    plant: { 2: 16098, 4: 23650, 6: 31202, 8: 38754 },
+    animal: { 2: 13410, 4: 15730, 6: 17890, 8: 19970 },
+    plant: { 2: 12738, 4: 15058, 6: 17218, 8: 19458 },
   },
 };
 

@@ -261,6 +261,35 @@ describe('3D mitosis scene', () => {
     ms.dispose();
   });
 
+  it('each chromatid tube is painted from the model, piece by piece', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });
+    ms.update(tl.stateAt(tl.keyTime('metaphase')));
+    const g2 = tl.model.find((m) => m.stage === 'g2')?.cells[0];
+    const colour = { M: new THREE.Color(PALETTE.maternal), P: new THREE.Color(PALETTE.paternal) };
+    let tubes = 0;
+    ms.scene.traverse((o) => {
+      const data = o.userData as { part?: string; chromatid?: number };
+      if (data.chromatid === undefined || data.part === 'bead' || !(o instanceof THREE.Mesh))
+        return;
+      const info = tl.chromatids[data.chromatid]!;
+      const segments = g2?.chromosomes[info.chromosome]?.chromatids[info.sister];
+      expect(segments, 'model DNA molecule').toBeDefined();
+      // Mitosis has no crossing over: one piece, the colour of its origin, on every vertex.
+      expect(segments).toHaveLength(1);
+      const want = colour[segments![0]!.origin];
+      const col = (o.geometry as THREE.BufferGeometry).getAttribute('color');
+      for (let k = 0; k < col.count; k++) {
+        expect(col.getX(k)).toBeCloseTo(want.r, 5);
+        expect(col.getY(k)).toBeCloseTo(want.g, 5);
+        expect(col.getZ(k)).toBeCloseTo(want.b, 5);
+      }
+      tubes++;
+    });
+    expect(tubes).toBe(tl.chromatids.length);
+    ms.dispose();
+  });
+
   it('picking a split centromere names its sister', () => {
     const tl = buildTimeline(2, 'animal');
     const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });

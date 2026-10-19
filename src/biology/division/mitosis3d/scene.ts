@@ -16,8 +16,17 @@ import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
-import { glass, roundedBox, setRimAlpha, solid } from '@/ui/three/materials';
+import { glass, roundedBox, setRimAlpha, solid, withTint } from '@/ui/three/materials';
+import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
 import { cameraFrame, cellBound, type CameraFrame } from './camera';
+import {
+  condensedShare,
+  threadSamples,
+  tubeProfile,
+  writeCentreline,
+  type CentrelineInput,
+  type TubeProfile,
+} from './chromatidShape';
 import type { CameraMode, Selection } from './components';
 import {
   ANIMAL,
@@ -25,9 +34,9 @@ import {
   ROD_RADIUS,
   ease,
   type ChromatidInfo,
+  type FibreKind,
   type Mitosis3DState,
   type Timeline,
-  type Vec3,
 } from './timeline';
 
 /** CSS colour strings (read from theme tokens by the view). */
@@ -65,6 +74,9 @@ const FIBRE: Record<QualityTier, { radius: number; sides: number }> = {
   medium: { radius: 0.034, sides: 6 },
   high: { radius: 0.038, sides: 8 },
 };
+
+/** Fibre width per kind (shares of the tier's fibre radius). */
+const FIBRE_WIDTH: Record<FibreKind, number> = { kinetochore: 1.7, polar: 1, astral: 0.8 };
 
 export type PickResult = Selection;
 export type { CameraFrame, CameraMode, Selection };
@@ -104,6 +116,13 @@ interface PartData {
 }
 
 const CONTAINERS: ReadonlySet<Part> = new Set(['envelope', 'membrane', 'wall']);
+
+/** Parts of a chromosome, and how far behind a fibre one may be and still be picked. */
+const CHROMOSOME_PARTS: ReadonlySet<Part> = new Set(['arm', 'bead', 'thread']);
+const FIBRE_SLACK = 0.35;
+
+/** A click this close to a condensed chromatid's centromere picks the centromere. */
+const CENTROMERE_PICK = 0.26;
 
 /**
  * Three materials per look, swapped and never re-created: normal, highlighted (glows in the
@@ -178,9 +197,29 @@ export function buildMitosisScene(
     (c: string) =>
       glass(c, { opacity, side, rim: { color: c, strength: rimStrength, alpha: rimAlpha } });
   const membraneOpacity = opts.membraneOpacity ?? 0.16;
+  /**
+   * Chromatid tubes carry their colours per vertex (maternal / paternal, piece by piece): the
+   * material is white. Dimmed: the colour mixed halfway towards the stage colour in the shader,
+   * the same fade towards the backdrop as the other parts.
+   */
+  const tubeLook = (): Look<THREE.MeshStandardMaterial> => {
+    const make = () => {
+      const m = keep(organic('#ffffff'));
+      m.vertexColors = true;
+      return m;
+    };
+    const base = make();
+    const hi = make();
+    hi.emissive.set(palette.highlight);
+    hi.emissiveIntensity = 0.85;
+    hi.userData.look = 'hi';
+    // Halfway to the stage colour, as the other parts' dimmed looks.
+    const dim = withTint(make(), towards, 0.5);
+    dim.userData.look = 'dim';
+    return { base, hi, dim };
+  };
   const mats = {
-    rod: { M: look(palette.maternal, organic), P: look(palette.paternal, organic) },
-    thread: { M: look(palette.maternal, organic), P: look(palette.paternal, organic) },
+    tube: tubeLook(),
     bead: look(palette.centromere, firm),
     // One pass for the see-through double-sided parts (one draw call each, not two).
     envelope: look(palette.envelope, shell(0.3, 0.45, THREE.DoubleSide)),
@@ -203,42 +242,10 @@ export function buildMitosisScene(
 
   // ---- shared geometries
   const sphere = keep(new THREE.SphereGeometry(1, seg, Math.round(seg * 0.75)));
-  const capsules = new Map<string, THREE.CapsuleGeometry>();
-  const capsule = (length: number) => {
-    const key = length.toFixed(3);
-    let g = capsules.get(key);
-    if (!g) {
-      g = keep(
-        new THREE.CapsuleGeometry(
-          ROD_RADIUS,
-          Math.max(0.01, length - 2 * ROD_RADIUS),
-          3,
-          Math.max(6, seg / 2),
-        ),
-      );
-      capsules.set(key, g);
-    }
-    return g;
-  };
-  // Chromatin threads: four fixed random curves (illustrative), each fits in a unit ball.
-  const threads: THREE.TubeGeometry[] = [];
-  for (let v = 0; v < 4; v++) {
-    let s = 1234 + v * 977;
-    const r = () => {
-      s = (s * 16807) % 2147483647;
-      return s / 2147483647;
-    };
-    const pts: THREE.Vector3[] = [];
-    const p = new THREE.Vector3();
-    for (let i = 0; i < 14; i++) {
-      p.set(p.x + (r() - 0.5) * 0.9, p.y + (r() - 0.5) * 0.9, p.z + (r() - 0.5) * 0.9);
-      if (p.length() > 1) p.setLength(0.9);
-      pts.push(p.clone());
-    }
-    threads.push(
-      keep(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), seg * 3, 0.085, 5, false)),
-    );
-  }
+  // Kinetochore: a small disc on the outer face of each chromatid's centromere (unit height).
+  const kinetoGeo = keep(new THREE.CylinderGeometry(0.085, 0.085, 1, Math.max(10, seg)));
+  /** Sides of a chromatid tube per tier. */
+  const tubeSides = tier === 'high' ? 10 : tier === 'medium' ? 8 : 6;
   const centrioleGeo = keep(
     new THREE.CylinderGeometry(0.1, 0.1, 0.42, Math.max(8, seg / 2), 1, true),
   );
@@ -259,27 +266,51 @@ export function buildMitosisScene(
     return m;
   };
 
-  // ---- chromatids: arm A, arm B, centromere bead, chromatin thread
+  // ---- chromatids: one tube each (thread ↔ rod in place) and its kinetochore
   interface ChromatidObjects {
     info: ChromatidInfo;
-    armA: THREE.Mesh;
-    armB: THREE.Mesh;
-    bead: THREE.Mesh;
-    thread: THREE.Mesh;
+    tube: ChromosomeTube;
+    mesh: THREE.Mesh;
+    kineto: THREE.Mesh;
+    /** Thread samples and radius profile at the tube's rings (static); line / radii per update. */
+    thread: Float32Array;
+    profile: TubeProfile;
+    centre: Float32Array;
+    radii: Float32Array;
+    /** Inputs of the last write (a tube is rewritten only when they change). */
+    key: Float64Array;
   }
+  const originColour = { M: palette.maternal, P: palette.paternal };
+  /** The model's G2 cell: every chromosome with both sister chromatids (DNA molecules). */
+  const g2 = tl.model.find((m) => m.stage === 'g2')?.cells[0];
   const chromatids: ChromatidObjects[] = tl.chromatids.map((info, id) => {
-    const rod = mats.rod[info.origin].base;
-    const thread = mesh(threads[info.threadVariant] ?? sphere, mats.thread[info.origin].base, {
-      part: 'thread',
-      chromatid: id,
+    const tube = new ChromosomeTube({
+      armA: info.armA,
+      armB: info.armB,
+      radius: ROD_RADIUS,
+      sides: tubeSides,
     });
-    thread.rotation.set(...info.threadRotation);
+    keep(tube);
+    // Painted from the model's own DNA molecule, piece by piece (in mitosis one piece: no
+    // crossing over), in the colour of each piece's origin.
+    const segments = g2?.chromosomes[info.chromosome]?.chromatids[info.sister] ?? [
+      { from: 0, to: 1, origin: info.origin },
+    ];
+    tube.setColours(
+      segments.map((g) => ({ from: g.from, to: g.to, color: originColour[g.origin] })),
+    );
+    const m = mesh(tube.geometry, mats.tube.base, { part: 'thread', chromatid: id });
+    m.frustumCulled = false;
     return {
       info,
-      armA: mesh(capsule(info.armA), rod, { part: 'arm', chromatid: id }),
-      armB: mesh(capsule(info.armB), rod, { part: 'arm', chromatid: id }),
-      bead: mesh(sphere, mats.bead.base, { part: 'bead', chromatid: id }),
-      thread,
+      tube,
+      mesh: m,
+      kineto: mesh(kinetoGeo, mats.bead.base, { part: 'bead', chromatid: id }),
+      thread: threadSamples(info, tube.stations),
+      profile: tubeProfile(info, tube.stations),
+      centre: new Float32Array(tube.rings * 3),
+      radii: new Float32Array(tube.rings),
+      key: new Float64Array(12).fill(Number.NaN),
     };
   });
 
@@ -414,17 +445,19 @@ export function buildMitosisScene(
   const tmpScale = new THREE.Vector3();
   const tmpMat = new THREE.Matrix4();
   let last: Mitosis3DState | null = null;
-  let selection: Selection | null = null;
-
-  const placeArm = (m: THREE.Mesh, c: Vec3, d: Vec3, length: number) => {
-    tmpDir.set(d[0], d[1], d[2]);
-    m.position.set(
-      c[0] + (d[0] * length) / 2,
-      c[1] + (d[1] * length) / 2,
-      c[2] + (d[2] * length) / 2,
-    );
-    m.quaternion.setFromUnitVectors(UP, tmpDir);
+  /** Inputs of one tube write, reused for every chromatid (no allocation per frame). */
+  const lineInput: CentrelineInput = {
+    centromere: [0, 0, 0],
+    dirA: [1, 0, 0],
+    dirB: [-1, 0, 0],
+    thread: new Float32Array(0),
+    profile: { tip: new Float32Array(0), waist: new Float32Array(0) },
+    threadScale: 1,
+    m: 0,
+    towardSister: [0, 0, 0],
+    pinch: 0,
   };
+  let selection: Selection | null = null;
 
   const setOpacity = (l: Look<THREE.Material>, o: number) => {
     l.base.opacity = o;
@@ -487,12 +520,9 @@ export function buildMitosisScene(
 
   const applyLooks = (st: Mitosis3DState) => {
     for (const o of chromatids) {
-      const origin = o.info.origin;
       const d = (m: THREE.Object3D) => m.userData as PartData;
-      o.armA.material = choose(mats.rod[origin], d(o.armA), st);
-      o.armB.material = o.armA.material;
-      o.bead.material = choose(mats.bead, d(o.bead), st);
-      o.thread.material = choose(mats.thread[origin], d(o.thread), st);
+      o.mesh.material = choose(mats.tube, d(o.mesh), st);
+      o.kineto.material = choose(mats.bead, d(o.kineto), st);
     }
     const pick = <M extends THREE.Material>(l: Look<M>, part: Part) => choose(l, { part }, st);
     for (const e of envelopes) e.material = pick(mats.envelope, 'envelope');
@@ -512,29 +542,97 @@ export function buildMitosisScene(
 
   const update = (st: Mitosis3DState) => {
     last = st;
-    const rodO = ease(st.condensation, 0.25, 0.7);
-    const threadO = 1 - ease(st.condensation, 0.15, 0.6);
-    for (const l of [mats.rod.M, mats.rod.P]) setOpacity(l, rodO);
-    for (const l of [mats.thread.M, mats.thread.P]) setOpacity(l, threadO);
-    setOpacity(mats.bead, rodO);
+    // Chromatids: one line from thread to rod (condensation), kinetochores once condensed.
+    const m = condensedShare(st.condensation);
+    const tubePart: Part = st.condensation < 0.5 ? 'thread' : 'arm';
+    const kinetoO = ease(st.condensation, 0.4, 0.7);
+    setOpacity(mats.bead, kinetoO);
     const late = st.stage === 'telophase' || st.stage === 'cytokinesis';
     const nucleusR = animal ? ANIMAL.nucleus : PLANT.nucleus;
     const telR = animal ? ANIMAL.telNucleusR : PLANT.telNucleusR;
     const threadScale = 0.75 * (late ? telR / nucleusR : 1);
+    // Joined sisters touch at the centromere; after the split the pinch lets go early in anaphase.
+    const letGo = st.stage === 'anaphase' ? 1 - ease(st.u, 0, 0.12) : 0;
     chromatids.forEach((o, i) => {
       const p = st.chromatids[i];
       const show = !!p?.present;
-      o.armA.visible = show && rodO > 0.01;
-      o.armB.visible = o.armA.visible;
-      o.bead.visible = o.armA.visible;
-      o.thread.visible = show && threadO > 0.01;
+      o.mesh.visible = show;
+      o.kineto.visible = show && kinetoO > 0.01;
       if (!p || !show) return;
-      placeArm(o.armA, p.centromere, p.dirA, o.info.armA);
-      placeArm(o.armB, p.centromere, p.dirB, o.info.armB);
-      o.bead.position.set(...p.centromere);
-      o.bead.scale.setScalar(ROD_RADIUS * 1.25);
-      o.thread.position.set(...p.centromere);
-      o.thread.scale.setScalar(threadScale);
+      (o.mesh.userData as PartData).part = tubePart;
+      const sister = st.chromatids[i ^ 1];
+      const c = p.centromere;
+      tmpDir.set(0, 0, 0);
+      if (sister?.present) {
+        tmpDir.set(
+          sister.centromere[0] - c[0],
+          sister.centromere[1] - c[1],
+          sister.centromere[2] - c[2],
+        );
+        if (tmpDir.lengthSq() > 1e-9) tmpDir.normalize();
+      }
+      const pinch = sister?.present ? (p.joined ? 1 : letGo) : 0;
+      // Rewrite the tube only when its inputs changed (no allocation: shared scratch).
+      const k = o.key;
+      const inp = lineInput;
+      inp.centromere[0] = c[0];
+      inp.centromere[1] = c[1];
+      inp.centromere[2] = c[2];
+      inp.dirA[0] = p.dirA[0];
+      inp.dirA[1] = p.dirA[1];
+      inp.dirA[2] = p.dirA[2];
+      inp.dirB[0] = p.dirB[0];
+      inp.dirB[1] = p.dirB[1];
+      inp.dirB[2] = p.dirB[2];
+      inp.towardSister[0] = tmpDir.x;
+      inp.towardSister[1] = tmpDir.y;
+      inp.towardSister[2] = tmpDir.z;
+      inp.thread = o.thread;
+      inp.profile = o.profile;
+      inp.threadScale = threadScale;
+      inp.m = m;
+      inp.pinch = pinch;
+      const same =
+        k[0] === c[0] &&
+        k[1] === c[1] &&
+        k[2] === c[2] &&
+        k[3] === p.dirA[0] &&
+        k[4] === p.dirA[1] &&
+        k[5] === p.dirA[2] &&
+        k[6] === p.dirB[0] &&
+        k[7] === p.dirB[1] &&
+        k[8] === p.dirB[2] &&
+        k[9] === m &&
+        k[10] === threadScale &&
+        k[11] === pinch;
+      if (!same) {
+        k[0] = c[0];
+        k[1] = c[1];
+        k[2] = c[2];
+        k[3] = p.dirA[0];
+        k[4] = p.dirA[1];
+        k[5] = p.dirA[2];
+        k[6] = p.dirB[0];
+        k[7] = p.dirB[1];
+        k[8] = p.dirB[2];
+        k[9] = m;
+        k[10] = threadScale;
+        k[11] = pinch;
+        writeCentreline(o.info, o.tube.stations, inp, o.centre, o.radii);
+        o.tube.write(o.centre, o.radii);
+      }
+      // Kinetochore on the waist's outer face (away from the sister, or towards its pole).
+      if (sister?.present && tmpDir.lengthSq() > 0) tmpDir.negate();
+      else tmpDir.set(p.side, 0, 0);
+      const r = o.radii[o.tube.centromereRing] ?? ROD_RADIUS;
+      const w = o.tube.centromereRing;
+      o.kineto.position.set(
+        (o.centre[3 * w] ?? c[0]) + tmpDir.x * r,
+        (o.centre[3 * w + 1] ?? c[1]) + tmpDir.y * r,
+        (o.centre[3 * w + 2] ?? c[2]) + tmpDir.z * r,
+      );
+      o.kineto.quaternion.setFromUnitVectors(UP, tmpDir);
+      o.kineto.scale.set(1, 0.035, 1);
     });
 
     envelopes.forEach((e, i) => {
@@ -581,7 +679,9 @@ export function buildMitosisScene(
       if (len < 1e-6) continue;
       tmpPos.set((f.from[0] + f.to[0]) / 2, (f.from[1] + f.to[1]) / 2, (f.from[2] + f.to[2]) / 2);
       tmpQuat.setFromUnitVectors(UP, tmpDir.divideScalar(len));
-      tmpScale.set(fibreShape.radius, len, fibreShape.radius);
+      // Kinetochore fibres are bundles of microtubules: drawn thicker than the others.
+      const w = fibreShape.radius * FIBRE_WIDTH[f.kind];
+      tmpScale.set(w, len, w);
       spindle.setMatrixAt(n, tmpMat.compose(tmpPos, tmpQuat, tmpScale));
       n++;
     }
@@ -590,7 +690,8 @@ export function buildMitosisScene(
     // Picking re-measures the moved fibres when it needs to (no work per frame).
     spindle.boundingSphere = null;
     spindle.visible = n > 0;
-    setOpacity(mats.spindle, 0.85 * Math.min(1, st.spindle * 1.5));
+    // Fully opaque once assembled (a hashed fade below 1 shows as grain on thin fibres).
+    setOpacity(mats.spindle, Math.min(1, st.spindle * 1.5));
 
     const sh = st.shape;
     if (sh.type === 'animal') {
@@ -616,11 +717,26 @@ export function buildMitosisScene(
       // Faded out (blended or alphaHash): not there to be picked.
       return !(mat.transparent || mat.alphaHash) || mat.opacity > 0.05;
     });
-    const inner = hits.find((h) => !CONTAINERS.has((h.object.userData as PartData).part));
+    const partOf = (h: THREE.Intersection) => (h.object.userData as PartData).part;
+    const inners = hits.filter((h) => !CONTAINERS.has(partOf(h)));
+    const nearest = inners[0];
+    // A spindle fibre ends at each centromere: a chromosome just behind a thin fibre wins.
+    const chromosome =
+      nearest && partOf(nearest) === 'fibre'
+        ? inners.find(
+            (h) => CHROMOSOME_PARTS.has(partOf(h)) && h.distance - nearest.distance < FIBRE_SLACK,
+          )
+        : undefined;
+    const inner = chromosome ?? nearest;
     if (inner) {
       const data = inner.object.userData as PartData;
       const c = data.chromatid !== undefined ? st.chromatids[data.chromatid] : undefined;
-      switch (data.part) {
+      // The waist of a condensed chromatid is its centromere.
+      const atWaist =
+        data.part === 'arm' &&
+        !!c &&
+        inner.point.distanceTo(tmpPos.set(...c.centromere)) < CENTROMERE_PICK;
+      switch (atWaist ? 'bead' : data.part) {
         case 'arm':
           if (!c) return null;
           return c.joined
@@ -695,7 +811,6 @@ export function buildMitosisScene(
     dispose() {
       for (const d of disposables) d.dispose();
       disposables.length = 0;
-      capsules.clear();
       pickables.length = 0;
       scene.clear();
       last = null;

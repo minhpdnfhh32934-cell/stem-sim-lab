@@ -410,9 +410,10 @@ declare global {
 
 /**
  * Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test:
- * 75 calls = 11 + 8 · 2n since the contact shadow; 38 818 triangles measured on the CPU).
+ * 43 calls = 11 + 4 · 2n since each chromatid is one tube plus its kinetochore; 19 970 triangles
+ * measured on the CPU, + 5 %).
  */
-const PERF = { calls: 75, triangles: 46_000, p95Ms: 150 };
+const PERF = { calls: 43, triangles: 21_000, p95Ms: 150 };
 
 test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame budgets @perf', async ({
   page,
@@ -425,7 +426,7 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
     tier: 'high',
     degraded: false,
   });
-  // From the end of prophase through telophase (the most triangles: the rod → thread fade).
+  // From the end of prophase through telophase (every chromatid condensing and moving).
   await page.getByRole('radio', { name: '2×' }).click();
   await strip(page).getByRole('button', { name: 'Kì đầu' }).click();
   await page.getByRole('button', { name: 'Phát', exact: true }).click();
