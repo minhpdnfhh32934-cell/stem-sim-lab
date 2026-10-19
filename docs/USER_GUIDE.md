@@ -514,7 +514,8 @@ Khi dùng AI:
 - **Hoàn tác / Làm lại (Ctrl+Z / Ctrl+Y):** áp dụng cho thông số của chủ đề đang mở. Kéo thanh trượt
   liên tục được tính là một bước.
 - **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
-  CSV. Rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải.
+  CSV. Ở chế độ **Nâng cao**, rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải (trên màn
+  hình cảm ứng nút luôn hiện).
 - **Lịch sử** (tab ở cột trái): mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm
   thùng rác để xóa.
 - **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục

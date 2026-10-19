@@ -51,6 +51,7 @@ export function XYChart(props: XYChartProps) {
     props;
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const theme = useResolvedTheme();
   const hostRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<uPlotType | null>(null);
@@ -179,7 +180,8 @@ export function XYChart(props: XYChartProps) {
   return (
     <div className="chart">
       <div ref={hostRef} className="chart__plot" />
-      {x.length > 0 && (
+      {/* CSV export is an Advanced-mode tool (Basic: no data tab/CSV). */}
+      {advanced && x.length > 0 && (
         <button
           type="button"
           className="chart__csv"

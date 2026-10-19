@@ -406,6 +406,14 @@
 .chart__csv:focus-visible {
   opacity: 1;
 }
+/* Touch screens have no hover: the button stays visible at the full target size. */
+@media (any-pointer: coarse) {
+  .chart__csv {
+    width: var(--target);
+    height: var(--target);
+    opacity: 1;
+  }
+}
 
 /* Presentation: keep the HUD clear of the exit button. */
 .shell[data-presentation] .stage__hud {
