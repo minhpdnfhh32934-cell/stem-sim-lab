@@ -487,6 +487,29 @@ describe('number provenance', () => {
     // A result proved earlier may be used later.
     expect(checkNumbers('s = 20 \\cdot 5', [], [20]).status).toBe('checked');
   });
+
+  it('an unspaced division or a ^ power is arithmetic, not a unit (0.7 fix)', () => {
+    const power = checkNumbers('N = 2^5 = 32', [5], []);
+    expect(power.status).toBe('checked');
+    expect(power.results).toContain(32);
+    expect(checkNumbers('$2^5 = 32$', [5], []).status).toBe('checked');
+    const speed = checkNumbers('v = 100/4 = 25 m/s', [100, 4], []);
+    expect(speed.status).toBe('checked');
+    expect(speed.results).toContain(25);
+    expect(checkNumbers('a = 60/4 = 15', [60, 4], []).status).toBe('checked');
+    expect(checkNumbers('t = 1/8 = 0,125 s', [1, 8], []).status).toBe('checked');
+    // A unit after the number still counts as that number.
+    expect(checkNumbers('a = 10/2 = 5 m/s^2', [10, 2], []).results).toContain(5);
+  });
+
+  it('a dot decimal with a leading zero is a decimal, never grouped thousands (0.7 fix)', () => {
+    const check = checkNumbers('t = 1/8 = 0.125 s', [1, 8], []);
+    expect(check.numbers.find((n) => n.raw === '0.125')?.value).toBe(0.125);
+    expect(check.status).toBe('checked');
+    expect(evaluate('0.500*2')).toBe(1);
+    // Vietnamese grouped thousands still read as thousands.
+    expect(evaluate('1.000/4')).toBe(250);
+  });
 });
 
 describe('plots and drawings', () => {
