@@ -21,6 +21,7 @@ import {
   asksLearner,
   extractEquations,
   holdsMaterial,
+  isJsonData,
   keyPoint,
   labelOf,
   learningPart,
@@ -430,6 +431,24 @@ function tableRows(lines: string[]): string[][] {
  * Lays out a markdown answer as a board lesson (always succeeds). `locale` is the language of
  * what the board says in place of a code block.
  */
+/** Longest JSON block looked for (lines). */
+const JSON_BLOCK_LINES = 60;
+
+/**
+ * The last line of a JSON object or list that starts at `lines[i]` and spans several lines, or -1
+ * (a line that is JSON on its own is checked as it is).
+ */
+function jsonBlockEnd(lines: readonly string[], i: number): number {
+  const first = lines[i]?.trim() ?? '';
+  if (!/^[{[]/.test(first) || isJsonData(first)) return -1;
+  let text = first;
+  for (let k = i + 1; k < Math.min(lines.length, i + JSON_BLOCK_LINES); k++) {
+    text += `\n${lines[k] ?? ''}`;
+    if (/^\s*[}\]]/.test(lines[k] ?? '') && isJsonData(text)) return k;
+  }
+  return -1;
+}
+
 export function markdownToScript(markdown: string, locale: Locale = 'vi'): ParsedScript {
   const source = displayDelimiters(markdown);
   const b = new Builder(CODE_NOTE[locale]);
@@ -474,7 +493,22 @@ export function markdownToScript(markdown: string, locale: Locale = 'vi'): Parse
       }
       table = [];
     };
-    for (const line of block.lines) {
+    for (let i = 0; i < block.lines.length; i++) {
+      const line = block.lines[i] ?? '';
+      // A JSON object or list written over several lines ("{", '"title": …', "}"): one text, so
+      // the check sees it whole and leaves its braces, quotes and keys off the board.
+      const json = jsonBlockEnd(block.lines, i);
+      if (json > i) {
+        flushTable();
+        const first = locate(line);
+        let last = first;
+        for (let k = i + 1; k <= json; k++) last = locate(block.lines[k] ?? '');
+        b.range = { start: first.start, end: last.end };
+        b.after = source.slice(last.end);
+        b.line(block.lines.slice(i, json + 1).join('\n'), false);
+        i = json;
+        continue;
+      }
       const range = locate(line);
       if (/^\s*\|.*\|\s*$/.test(line)) {
         table.push({ line, range });

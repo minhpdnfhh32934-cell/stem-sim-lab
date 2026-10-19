@@ -691,7 +691,7 @@ interface Classified {
  * JSON out of habit): its braces, quotes and keys are not lesson text. A list of numbers ("[0, 1]")
  * may be an interval: not this.
  */
-function isJsonData(text: string): boolean {
+export function isJsonData(text: string): boolean {
   const t = text.trim();
   if (!/^(?:\{[\s\S]*\}|\[[\s\S]*\])$/u.test(t)) return false;
   let value: unknown;
@@ -905,12 +905,31 @@ function formulaEnd(text: string): number {
  */
 export function keyPoint(text: string, limit = PART_LIMIT.step): string {
   if (text.length <= limit || /\d/.test(stepBody(text))) return text;
+  // A proof step's conclusion ("…, suy ra hai tam giác đồng dạng") is its key point: the reasons
+  // before it are read aloud and shown as "…" (never in a text that holds a formula).
+  const conclusion = formulaEnd(text) === 0 ? lastConclusion(text) : -1;
+  if (conclusion > 0) {
+    const rest = text.slice(conclusion).trim();
+    return rest.length + 2 <= limit ? `… ${rest}` : `… ${keyPoint(rest, limit - 2)}`;
+  }
   const head = text.slice(0, limit - 10);
   const clause = Math.max(head.lastIndexOf(','), head.lastIndexOf(';'), head.lastIndexOf(':'));
   const cut = clause >= Math.min(30, limit / 2) ? clause : head.lastIndexOf(' ');
   const at = Math.max(cut > 0 ? cut : head.length, formulaEnd(text));
   if (at >= text.replace(/[\s.!?…]+$/u, '').length) return text;
   return `${text.slice(0, at).trimEnd()}…`;
+}
+
+/** Where the last conclusion of a text starts ("suy ra", "do đó", "⇒" …, outside brackets), or -1. */
+function lastConclusion(text: string): number {
+  let at = -1;
+  const re = /(?<=^|[\s,;])(?:suy ra|do đó|vì vậy|vì thế|therefore|hence)(?=\s)|[⇒⟹]/giu;
+  for (const m of text.matchAll(re)) {
+    const before = text.slice(0, m.index);
+    const depth = (before.match(/[([{]/g) ?? []).length - (before.match(/[)\]}]/g) ?? []).length;
+    if (depth === 0) at = m.index;
+  }
+  return at;
 }
 
 /** Where a long text may be cut: after ", " or "; ", before "nên", "suy ra"… (never in $…$ or brackets). */

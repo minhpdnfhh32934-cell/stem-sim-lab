@@ -1556,6 +1556,34 @@ describe('audit G8: links, polite verdicts, geometry, JSON, subtitles', () => {
     expect(classifyBoardText('[0, 1]')).not.toBe('internal');
   });
 
+  it('a JSON block over several lines is not written either; the lesson around it is (0.7 fix)', () => {
+    const md = lessonFor(
+      'Rơi tự do là chuyển động chỉ dưới tác dụng của trọng lực.\n\n{\n  "title": "Rơi tự do",\n  "steps": ["v = gt", "s = gt²/2"]\n}\n\nVậy gia tốc là g.',
+    );
+    const texts = written(md.script);
+    expect(texts.join(' ')).not.toMatch(/[{}"]|title/);
+    expect(texts).toContain('Rơi tự do là chuyển động chỉ dưới tác dụng của trọng lực.');
+    expect(texts.join(' ')).toContain('Vậy gia tốc là g.');
+    // A list over several lines too; an unclosed brace is text, never dropped silently.
+    expect(written(lessonFor('[\n  "v = gt",\n  "s = gt²/2"\n]').script)).toEqual([]);
+    expect(written(lessonFor('Tập hợp {\na, b\n} gồm hai phần tử.').script).join(' ')).toContain(
+      'a, b',
+    );
+  });
+
+  it('a words-only proof step keeps its conclusion when cut to its key point (0.7 fix)', () => {
+    const step =
+      'Vì hai góc so le trong bằng nhau và hai đường thẳng đã cho song song với nhau, suy ra hai tam giác đồng dạng.';
+    expect(step.length).toBeGreaterThan(PART_LIMIT.step);
+    const point = keyPoint(step);
+    expect(point).toContain('suy ra hai tam giác đồng dạng');
+    expect(point.length).toBeLessThanOrEqual(PART_LIMIT.step);
+    // Without a conclusion the start is kept, as before.
+    const plain =
+      'Nguyên phân là hình thức phân chia tế bào mà từ một tế bào mẹ tạo ra hai tế bào con giống hệt nhau và giống mẹ';
+    expect(keyPoint(plain).startsWith('Nguyên phân là hình thức')).toBe(true);
+  });
+
   it('a fraction in a denominator reads with brackets in the subtitle', () => {
     expect(subtitleText('Ta có $v = \\frac{s}{\\frac{t}{2}}$.')).toBe('Ta có v = s/(t/2).');
     expect(subtitleText('Ta có \\(v = \\frac{s}{t}\\) và \\[a = \\frac{F}{m}\\].')).toBe(
