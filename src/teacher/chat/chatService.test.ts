@@ -365,6 +365,36 @@ describe('AI Teacher long conversations', () => {
     expect(useChatStore.getState().summary?.text).toBe('- Đang học con lắc đơn.');
   });
 
+  it('a conversation cleared while its summary is written keeps no summary of it', async () => {
+    setTransportForTests(
+      scripted((req) => {
+        if (req.system.includes('tóm tắt') && !req.system.includes('AI Teacher của SimLab')) {
+          // "Xóa cuộc trò chuyện" while the summary is being written.
+          useChatStore.getState().clearMessages();
+          return { content: '- Đang học con lắc đơn.' };
+        }
+        return { content: 'Câu trả lời' };
+      }),
+    );
+    await askTeacher('tiếp nhé', 'vi', history, { includeScreen: false, think: false });
+    expect(useChatStore.getState().summary).toBeNull();
+  });
+
+  it('a question the input check blocks never travels as history', async () => {
+    setTransportForTests(scripted(() => ({ content: 'Câu trả lời' })));
+    // Saved by an older version, which kept blocked questions in the chat.
+    const saved: ChatMessageRecord[] = [
+      { id: 'b1', role: 'user', content: 'Số điện thoại của em là 0912345678, lực là gì?' },
+      { id: 'a1', role: 'user', content: 'Lực là gì?' },
+      { id: 'a2', role: 'assistant', content: 'Lực là đại lượng vectơ.' },
+    ];
+    await askTeacher('Gia tốc là gì?', 'vi', saved, { includeScreen: false, think: false });
+    const sent = calls.at(-1)?.messages.map((m) => m.content) ?? [];
+    expect(sent.join(' ')).not.toContain('0912345678');
+    expect(sent.at(-1)).toContain('Gia tốc là gì?');
+    expect(sent).toHaveLength(3);
+  });
+
   it('a failed summary never blocks the answer', async () => {
     let first = true;
     setTransportForTests({

@@ -9,6 +9,7 @@
  */
 import type { Locale } from '@/app/i18n';
 import type { ChatMessage } from '@/ai/types';
+import { checkInput } from '@/safety/moderation';
 import { cleanAnswer } from './answerClean';
 import type { ChatMessageRecord, ChatSummary, MemoryLength } from './chatStore';
 
@@ -108,6 +109,18 @@ const MESSAGE_OVERHEAD = 6;
  * cleaning leaves empty (nothing but reasoning, even cut before its closing tag) is sent as
  * `EMPTY_ANSWER`: hidden reasoning never goes back to the AI, and no turn is empty.
  */
+/**
+ * The conversation without the learner's turns that the input check blocks (personal data, a
+ * crisis, unsuitable content). A blocked question is never kept in the chat, but a conversation
+ * saved by an older version may still hold one: it must never be sent again as history, nor
+ * count as numbers the learner gave.
+ */
+export function withoutBlockedQuestions(
+  records: readonly ChatMessageRecord[],
+): ChatMessageRecord[] {
+  return records.filter((r) => r.role !== 'user' || checkInput(sentText(r)).ok);
+}
+
 export function sentText(record: ChatMessageRecord, question?: string): string {
   if (record.role !== 'assistant') {
     const asked = record.prompt ?? record.content;

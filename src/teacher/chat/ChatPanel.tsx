@@ -44,7 +44,13 @@ import {
 import { toast } from '@/ui/toast';
 import { useVoiceStore } from '@/teacher/voice/voiceStore';
 import { TeacherFace } from '@/teacher/face/TeacherFace';
-import { AnswerStopped, TeacherError, askTeacher, type ReplyMetadata } from './chatService';
+import {
+  AnswerStopped,
+  TeacherError,
+  askTeacher,
+  questionBlock,
+  type ReplyMetadata,
+} from './chatService';
 import { useTeacherStore } from '@/teacher/teacherStore';
 import { CONTINUE_PROMPT, answersPicture, asksAboutPicture, joinContinuation } from './memory';
 import { cx } from '@/ui/cx';
@@ -390,6 +396,13 @@ export function ChatPanel({
     // Another panel (the bubble before "Mở rộng") may still be answering: a second answer would
     // take over its "Dừng", so the first one could no longer be stopped.
     if (!question || busy || useChatStore.getState().answering) return;
+    // A question the input check blocks is never put in the chat: it would be sent later as
+    // history and saved with the conversation. It stays in the box, so it can be changed.
+    const blocked = questionBlock(question, locale);
+    if (blocked) {
+      setError({ text: blocked.message, section: null, retry: null });
+      return;
+    }
     quietBeforeAsking();
     // Busy at once (in the store too): a second click or Enter while the picture below is made
     // would otherwise send the same question twice.
@@ -430,6 +443,9 @@ export function ChatPanel({
     // Read now, not from the last render: "Hỏi lại" may run right after taking the failed
     // question back.
     const prior = useChatStore.getState().messages;
+    // "Xóa cuộc trò chuyện" while this is answered: the answer belongs to the cleared one.
+    const epoch = useChatStore.getState().epoch;
+    const cleared = () => useChatStore.getState().epoch !== epoch;
     chat.addMessage(userMessage);
     setDraft('');
     const answer = startAnswer();
@@ -447,6 +463,10 @@ export function ChatPanel({
         },
         ...(selection ? { boardSelection: { selection, ...(image ? { image } : {}) } } : {}),
       });
+      if (cleared()) {
+        endAnswer(answer);
+        return;
+      }
       const meta = result.metadata;
       const answerId = crypto.randomUUID();
       chat.addMessage({
@@ -474,6 +494,11 @@ export function ChatPanel({
         asksAboutPicture(userMessage) || meta.reviewSkipped === 'picture',
       );
     } catch (e) {
+      if (cleared()) {
+        // Stopped by the clear: no error and no "đã dừng" line in the new, empty conversation.
+        endAnswer(answer);
+        return;
+      }
       if (!endAnswer(answer, e)) {
         setError(failureOf(e, { kind: 'ask', id: userMessage.id, shown, prompt, options }));
       }
@@ -492,6 +517,8 @@ export function ChatPanel({
     setBusy(true);
     const answer = startAnswer();
     const controller = answer.controller;
+    const epoch = useChatStore.getState().epoch;
+    const cleared = () => useChatStore.getState().epoch !== epoch;
     try {
       const messages = useChatStore.getState().messages;
       const index = messages.findIndex((m) => m.id === message.id);
@@ -509,6 +536,10 @@ export function ChatPanel({
         board: board && message.mode !== 'aside',
         signal: controller.signal,
       });
+      if (cleared()) {
+        endAnswer(answer);
+        return;
+      }
       // An answer saved before the check existed stays unchecked as a whole (it is checked again
       // when it is used as history); otherwise both parts' lists are kept.
       const unverified = message.unverifiedNumbers && [
@@ -525,6 +556,10 @@ export function ChatPanel({
       endAnswer(answer);
       readAloud(result.content, message.id, message.mode === 'aside', staysHere);
     } catch (e) {
+      if (cleared()) {
+        endAnswer(answer);
+        return;
+      }
       if (!endAnswer(answer, e)) {
         setError(failureOf(e, { kind: 'continue', id: message.id }));
       }
@@ -736,9 +771,12 @@ export function ChatPanel({
             type="button"
             className="chat-panel__icon-button"
             onClick={() => {
+              // An answer being written belongs to this conversation: it stops with it.
+              useChatStore.getState().stopAnswer?.();
               stopSpeaking();
               chat.clearMessages();
               useChatStore.setState({ stopped: false });
+              setError(null);
             }}
             aria-label={t('chat.clear')}
             title={t('chat.clear')}

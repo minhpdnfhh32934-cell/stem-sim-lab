@@ -124,6 +124,11 @@ interface ChatState {
   stopAnswer: (() => void) | null;
   /** The last answer was stopped by the learner: the chat says so (not persisted). */
   stopped: boolean;
+  /**
+   * Which conversation this is: "Xóa cuộc trò chuyện" moves to the next one (not persisted). An
+   * answer or summary that was being written for an earlier conversation is dropped.
+   */
+  epoch: number;
   /** The learner's own choice of engine (marks it as chosen). */
   setEngine: (engine: ChatEngine) => void;
   /**
@@ -140,7 +145,7 @@ interface ChatState {
   setSaveHistory: (enabled: boolean) => void;
   addMessage: (message: ChatMessageRecord) => void;
   updateMessage: (id: string, patch: Partial<Omit<ChatMessageRecord, 'id' | 'role'>>) => void;
-  /** Also forgets the summary (it describes the cleared messages). */
+  /** Also forgets the summary (it describes the cleared messages) and starts a new epoch. */
   clearMessages: () => void;
   setMemoryLength: (length: MemoryLength) => void;
   setSummary: (summary: ChatSummary | null) => void;
@@ -257,6 +262,7 @@ export const useChatStore = create<ChatState>()(
       answering: false,
       stopAnswer: null,
       stopped: false,
+      epoch: 0,
       setEngine: (engine) => {
         const s = get();
         set({
@@ -286,7 +292,8 @@ export const useChatStore = create<ChatState>()(
         set({ messages: [...get().messages, message].slice(-STORED_MESSAGES) }),
       updateMessage: (id, patch) =>
         set({ messages: get().messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) }),
-      clearMessages: () => set({ messages: [], summary: null, summarySkip: null }),
+      clearMessages: () =>
+        set({ messages: [], summary: null, summarySkip: null, epoch: get().epoch + 1 }),
       setMemoryLength: (memoryLength) =>
         set({ memoryLength: memoryLength === 'long' ? 'long' : 'medium' }),
       setSummary: (summary) => set({ summary }),

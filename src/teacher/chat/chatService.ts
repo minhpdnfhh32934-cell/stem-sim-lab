@@ -57,6 +57,7 @@ import {
   fitHistory,
   localContextWindow,
   sentText,
+  withoutBlockedQuestions,
   summaryBlock,
   summaryRequest,
   unsummarized,
@@ -169,6 +170,26 @@ export class TeacherError extends Error {
     super(message, options);
     this.name = 'TeacherError';
   }
+}
+
+/**
+ * The question itself did not pass the input check (crisis, personal data, unsuitable): it is
+ * logged as kind + time only and never sent. The chat does not keep a blocked question, so it is
+ * never sent later as history either. Returns the learner's message, or null when it may be sent.
+ */
+export function questionBlock(question: string, locale: Locale): TeacherError | null {
+  const moderation = checkInput(question);
+  if (moderation.ok) return null;
+  if (moderation.reason === 'crisis') {
+    logIncident('inputCrisis');
+    return new TeacherError(translate(locale, 'chat.errors.crisis'), null, false);
+  }
+  if (moderation.reason === 'personalData') {
+    logIncident('inputPersonalData');
+    return new TeacherError(translate(locale, 'chat.errors.personal'), null, false);
+  }
+  logIncident('inputUnsafe');
+  return new TeacherError(translate(locale, 'chat.errors.unsafe'), null, false);
 }
 
 /** The learner pressed "Dừng": nothing went wrong, the answer was not wanted any more. */
@@ -1122,6 +1143,8 @@ async function updateSummary(
   writer?: string,
 ): Promise<void> {
   const store = useChatStore.getState();
+  // "Xóa cuộc trò chuyện" while the summary is written: it describes a conversation that is gone.
+  const cleared = () => useChatStore.getState().epoch !== store.epoch;
   const pending = unsummarized(older, store.summary, all);
   const last = pending[pending.length - 1];
   if (!last) return;
@@ -1137,6 +1160,7 @@ async function updateSummary(
         : fittedSummaryRequest(locale, store.summary, pending, maxInputTokens);
     if (!request) return;
     const answer = await ask(request.system, request.messages, SUMMARY_TOKENS);
+    if (cleared()) return;
     // The summary travels with later questions: hidden reasoning is not part of it.
     const text = stripReasoningOutsideCode(answer.content).text.trim();
     if (text && outputIsSafe(answer.content) && outputIsSafe(text))
@@ -1240,19 +1264,10 @@ export async function askTeacher(
   const signal = options.signal;
   const safety = await currentSafety();
   if (!safety.aiAllowed) throw new Error(translate(locale, 'chat.errors.notAllowed'));
-  const moderation = checkInput(question);
-  if (!moderation.ok) {
-    if (moderation.reason === 'crisis') {
-      logIncident('inputCrisis');
-      throw new Error(translate(locale, 'chat.errors.crisis'));
-    }
-    if (moderation.reason === 'personalData') {
-      logIncident('inputPersonalData');
-      throw new Error(translate(locale, 'chat.errors.personal'));
-    }
-    logIncident('inputUnsafe');
-    throw new Error(translate(locale, 'chat.errors.unsafe'));
-  }
+  const blocked = questionBlock(question, locale);
+  if (blocked) throw blocked;
+  // Second layer: a blocked question saved by an older version never travels as history.
+  const sendable = withoutBlockedQuestions(records);
   const circled = options.boardSelection?.selection ?? null;
   if (circled) {
     // The board's text is the AI's, but it is sent again: it is checked like anything sent.
@@ -1328,9 +1343,9 @@ export async function askTeacher(
   // The conversation this question carries. Anything sent online (an online engine, Think's
   // reviewer) leaves out earlier questions about a picture of the circled area and their answers:
   // those answers are the on-device model's reading of the learner's strokes.
-  const shared = engine === 'cloud' || think ? withoutPictureAsks(records) : records;
+  const shared = engine === 'cloud' || think ? withoutPictureAsks(sendable) : sendable;
   // The answer to continue was left out of what would be sent: nothing is asked at all.
-  if (options.continues && records.length > 0 && shared.at(-1) !== records.at(-1)) {
+  if (options.continues && sendable.length > 0 && shared.at(-1) !== sendable.at(-1)) {
     throw new TeacherError(translate(locale, 'chat.errors.continuePictureLocal'), null, false);
   }
   // A question about the board is answered in the chat, never as a new board lesson.
@@ -1597,7 +1612,7 @@ export async function askTeacher(
       missingData: prompt.missingData !== null,
       unverifiedNumbers: unverifiedNumbers(
         content,
-        givenNumbers(question, records, prompt.sources),
+        givenNumbers(question, sendable, prompt.sources),
       ),
     },
     truncated,
