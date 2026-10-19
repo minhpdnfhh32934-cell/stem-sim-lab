@@ -767,7 +767,7 @@ export async function contextPrompt(
     }))
     .filter((note) => note.text && checkInput(note.text).ok);
   const screenChars = { full: undefined, compact: 4000, tight: 1200 }[size];
-  const screen = includeScreen ? screenContext(locale).slice(0, screenChars) : '';
+  const screen = includeScreen ? screenContext(locale, screenChars).slice(0, screenChars) : '';
   const tools = toolBlock(question, locale);
   const header = full ? EXCERPT_HEADER[locale] : EXCERPT_HEADER_COMPACT[locale];
   const noteBlock = notes.length ? `\n\n${header}\n${referenceBlocks(notes)}` : '';

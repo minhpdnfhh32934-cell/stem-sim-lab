@@ -14,8 +14,10 @@ import { unverifiedItems, unverifiedLabel } from './unverified';
 /**
  * What the Science Studio shares with AI Teacher when the learner turns on screen context.
  * Engine facts, the learner's notes and earlier AI text are separate sections, each with its own
- * budget, so one long section can never push another out; the most important come first because
- * the chat may cut the screen text further from the end.
+ * budget, so one long section can never push another out. The most important come first: the
+ * head (lesson, step, rules), then the engine facts, then pending data, notes and AI text. A
+ * smaller screen budget (Gemma on an integrated card: 1200 characters) trims from the end, so
+ * after the head the engine facts are the last thing to go.
  */
 export interface StudioContext {
   head: string[];
@@ -153,22 +155,40 @@ function fit(lines: readonly string[], budget: number, cut: string): string[] {
   return out;
 }
 
-export function renderStudioContext(ctx: StudioContext, locale: Locale): string {
+/**
+ * The context text within `max` characters (at most STUDIO_CONTEXT_MAX). Each section takes up
+ * to its own budget from what the sections before it left.
+ */
+export function renderStudioContext(
+  ctx: StudioContext,
+  locale: Locale,
+  max: number = STUDIO_CONTEXT_MAX,
+): string {
   const cut = translate(locale, 'studio.ai.cut');
-  const text = [
-    ...fit(ctx.head, BUDGET.head, cut),
-    ...fit(ctx.unverified, BUDGET.unverified, cut),
-    ...fit(ctx.engine, BUDGET.engine, cut),
-    ...fit(ctx.learner, BUDGET.learner, cut),
-    ...fit(ctx.ai, BUDGET.ai, cut),
-  ].join('\n');
-  return text.slice(0, STUDIO_CONTEXT_MAX);
+  const limit = Math.max(0, Math.min(max, STUDIO_CONTEXT_MAX));
+  const out: string[] = [];
+  let left = limit;
+  const add = (lines: readonly string[], budget: number) => {
+    // Nothing fits any more (not even the cut marker): later sections are left out.
+    if (lines.length === 0 || left <= cut.length + 1) return;
+    const part = fit(lines, Math.min(budget, left), cut);
+    out.push(...part);
+    left -= part.reduce((n, line) => n + line.length + 1, 0);
+  };
+  add(ctx.head, BUDGET.head);
+  add(ctx.engine, BUDGET.engine);
+  add(ctx.unverified, BUDGET.unverified);
+  add(ctx.learner, BUDGET.learner);
+  add(ctx.ai, BUDGET.ai);
+  return out.join('\n').slice(0, limit);
 }
 
+/** The Studio's screen context; `max` is the chat's screen budget for this question. */
 export function studioContextText(
   scenario: StudioScenario,
   session: StudioSession,
   locale: Locale,
+  max?: number,
 ): string {
-  return renderStudioContext(buildStudioContext(scenario, session, locale), locale);
+  return renderStudioContext(buildStudioContext(scenario, session, locale), locale, max);
 }

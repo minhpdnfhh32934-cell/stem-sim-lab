@@ -91,7 +91,7 @@ describe('Science Studio context for AI Teacher', () => {
       expect(i, needle).toBeGreaterThanOrEqual(0);
       return i;
     };
-    // Lesson and step come first; then pending data, engine facts, learner notes, AI text.
+    // Lesson and step come first; then engine facts, pending data, learner notes, AI text.
     const head = at('[Science Studio');
     at('Bài học: Rơi tự do: thả từ độ cao gấp đôi');
     at('Học sinh đang ở bước 1/');
@@ -99,10 +99,10 @@ describe('Science Studio context for AI Teacher', () => {
     const engine = at('DỮ KIỆN DO MÔ PHỎNG TÍNH (hoặc');
     const learner = at('GHI CHÚ CỦA HỌC SINH (không phải dữ kiện):');
     const ai = at('VĂN BẢN AI ĐÃ VIẾT TRƯỚC ĐÓ');
-    expect(head < pending && pending < engine && engine < learner && learner < ai).toBe(true);
+    expect(head < engine && engine < pending && pending < learner && learner < ai).toBe(true);
 
     // Every number is the engine's, formatted as in the report; the facts are the record's.
-    const engineText = text.slice(engine, learner);
+    const engineText = text.slice(engine, pending);
     expect(engineText).toContain(`Thời gian chuyển động [A] = ${fmtQty('vi', 3.0289, 's')}`);
     expect(engineText).toContain(`Độ cao = ${fmtQty('vi', 45, 'm')}`);
     expect(engineText).toContain('Hiện tượng: Kết tủa trắng');
@@ -114,7 +114,7 @@ describe('Science Studio context for AI Teacher', () => {
     expect(text.slice(ai)).toContain('[gemma] Văn bản AI trước đó');
 
     // Pending data is flagged: the lesson text and the copied library record, not the engine run.
-    const pendingText = text.slice(pending, engine);
+    const pendingText = text.slice(pending, learner);
     expect(pendingText).toContain('Nội dung bài “Rơi tự do: thả từ độ cao gấp đôi”');
     expect(pendingText).toContain('Dữ liệu “Bạc nitrat + natri clorua” (reactions/agcl)');
     expect(pendingText).not.toContain('phys.projectile');
@@ -176,5 +176,22 @@ describe('Science Studio context for AI Teacher', () => {
     }
     // A long note is quoted only in part.
     expect(text).not.toContain('e'.repeat(300));
+  });
+
+  it('keeps the engine facts within a small screen budget (Gemma on an integrated card)', () => {
+    // The chat's 'tight' screen budget: what is past it is cut from the end.
+    const tight = 1200;
+    let s = withLearnerText(session(), 'explanation', 'e'.repeat(MAX_NOTE), 30);
+    s = withAiText(s, 'gemma', 'a'.repeat(MAX_NOTE), 31);
+    expect(studioContextText(sc, s, 'vi').length).toBeGreaterThan(tight);
+    const text = studioContextText(sc, s, 'vi', tight);
+    expect(text.length).toBeLessThanOrEqual(tight);
+    expect(text).toContain('[Science Studio');
+    expect(text).toContain('DỮ KIỆN DO MÔ PHỎNG TÍNH');
+    expect(text).toContain(`Thời gian chuyển động [A] = ${fmtQty('vi', 3.0289, 's')}`);
+    expect(text).toContain('Kết quả mô phỏng: Tăng √2 lần');
+    // The rest is trimmed after the engine facts, and the cut is marked.
+    expect(text).toContain('(…đã rút gọn)');
+    expect(text.indexOf('DỮ KIỆN DO MÔ PHỎNG TÍNH')).toBeLessThan(text.indexOf('(…đã rút gọn)'));
   });
 });
