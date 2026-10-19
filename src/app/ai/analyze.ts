@@ -15,6 +15,7 @@ import { localTransport } from '@/ai/local/localTransport';
 import { NOT_SELECTED } from '@/ai/local/types';
 import { analysisEngine } from './engineChoice';
 import { localFailure, localFailureText, localModelLabel } from './localRuntime';
+import { readingText } from '@/ai/readingText';
 import { AiError, toAiError, type AiErrorCode, type Provider } from '@/ai/types';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { CATALOG } from '@/app/catalog';
@@ -263,11 +264,12 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
       },
     });
     if (seq !== runSeq) return;
-    // Output filter: text written by the AI is shown only when it passes.
+    // Output filter: text written by the AI is shown only when it passes. Only its words are
+    // checked: serialized numbers (0.523598776) are not text, and the code checks every number.
     const aiText =
       result.kind === 'unsupported'
         ? [result.reason, ...result.parts].join('\n')
-        : JSON.stringify(result.reading);
+        : readingText(result.reading);
     if (!outputIsSafe(aiText)) {
       logIncident('outputUnsafe');
       useAnalyzeStore.setState({
