@@ -17,13 +17,6 @@ export function TrendBottom() {
   }, [p]);
   const series = useMemo(() => [{ label: Lz(p.label), y }], [Lz, p, y]);
   return (
-    <XYChart
-      x={x}
-      series={series}
-      xLabel="Z"
-      yLabel={`${p.short}${p.unit ? ` (${p.unit})` : ''}`}
-      yUnit={p.unit}
-      marker={selected}
-    />
+    <XYChart x={x} series={series} xLabel="Z" yLabel={p.short} yUnit={p.unit} marker={selected} />
   );
 }

@@ -9,6 +9,14 @@ describe('chart axes', () => {
     expect(axisLabel('Thế hệ', '')).toBe('Thế hệ');
   });
 
+  it('a label that already ends with its unit in brackets does not get it twice', () => {
+    expect(axisLabel('r (pm)', 'pm')).toBe('r (pm)');
+    expect(axisLabel('Tốc độ v (m/s) ', 'm/s')).toBe('Tốc độ v (m/s) ');
+    // A different unit in brackets is not the same unit: it is still added.
+    expect(axisLabel('f(v) (s/m)', 'm/s')).toBe('f(v) (s/m) (m/s)');
+    expect(axisLabel('f(v)', 'v')).toBe('f(v) (v)');
+  });
+
   it('a short plot still gets at least three y ticks; a tall one keeps uPlot’s spacing', () => {
     // uPlot picks the smallest nice step (1, 2, 5 × 10ᵏ) whose ticks are at least `space` apart.
     const ticks = (range: number, height: number) => {

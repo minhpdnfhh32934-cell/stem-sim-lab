@@ -2,9 +2,15 @@
  * Axis helpers for the small uPlot charts (pure, tested without a canvas).
  */
 
-/** Axis title: the quantity and, when it has one, its unit in brackets ("[S] (mM)"). */
+/**
+ * Axis title: the quantity and, when it has one, its unit in brackets ("[S] (mM)"). A label that
+ * already ends with that unit in brackets is kept as it is, so the unit never shows twice.
+ */
 export function axisLabel(label: string, unit?: string): string {
-  return unit ? `${label} (${unit})` : label;
+  if (!unit) return label;
+  const suffix = ` (${unit})`;
+  // The space matters: "f(v)" is a function of v, not a quantity already in the unit "v".
+  return label.trimEnd().endsWith(suffix) ? label : `${label}${suffix}`;
 }
 
 /** Fewest pixels between two y-axis ticks (closer, the numbers would touch). */

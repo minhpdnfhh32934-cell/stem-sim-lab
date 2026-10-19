@@ -200,10 +200,9 @@ export function XYChart(props: XYChartProps) {
           data-tip={t('project.exportCsv')}
           data-tip-side="left"
           onClick={() => {
-            const unit = (u?: string) => (u ? ` (${u})` : '');
             const header = [
-              `${xLabel}${unit(xUnit)}`,
-              ...series.map((s) => `${s.label}${unit(yUnit)}`),
+              axisLabel(xLabel, xUnit),
+              ...series.map((s) => axisLabel(s.label, yUnit)),
             ];
             const rows = x.map((xv, i) => [xv, ...series.map((s) => s.y[i] ?? null)]);
             void exportCsv(csvName ?? yLabel, toCsv(header, rows));
