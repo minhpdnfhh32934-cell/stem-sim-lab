@@ -353,6 +353,7 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
       engineChosen: true,
       messages: [],
       summary: null,
+      summarySkip: null,
       webLookup: false,
       memoryLength: 'medium',
       verifierProvider: 'claude',
@@ -491,6 +492,67 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     fetchSpy.mockRestore();
   });
 
+  describe('"Tra thêm Wikipedia" on (the full prompt looks it up for every question)', () => {
+    const probe = (status: 'found' | 'unreachable') => ({
+      expected: null,
+      kind: status === 'found' ? ('ollama' as const) : null,
+      baseUrl: selection.baseUrl,
+      status,
+      version: null,
+    });
+    beforeEach(() => {
+      useChatStore.setState({ webLookup: true });
+      useLocalAiStore.getState().recordCheck('ollama', selection.baseUrl, {
+        model: 'qwen3:8b',
+        contextLength: 32768,
+        vision: 'no',
+        thinking: 'no',
+        loaded: null,
+        remote: false,
+        capabilities: { ...UNVERIFIED, contextLength: 'yes' },
+        declared: UNVERIFIED,
+      });
+    });
+
+    it('the runtime is down: Wikipedia is never asked, so "sent nowhere else" is true', async () => {
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockRejectedValue(new TypeError('Failed to fetch'));
+      local.probe.mockResolvedValue(probe('unreachable'));
+      local.chat.mockRejectedValue(new AiError('network', 'local-unreachable: refused'));
+      const failed = ask('Lực ma sát là gì?');
+      await expect(failed).rejects.toThrow(
+        translate('vi', 'chat.errors.localDown', { name: 'Ollama' }),
+      );
+      await expect(failed).rejects.toMatchObject({ section: 'runtimes', retry: true });
+      expect(fetchSpy).not.toHaveBeenCalled();
+      expect(local.chat).not.toHaveBeenCalled();
+      expect(calls).toHaveLength(0);
+      fetchSpy.mockRestore();
+    });
+
+    it('a running runtime is reached first, then Wikipedia, then the question', async () => {
+      const order: string[] = [];
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
+        order.push('wikipedia');
+        return Promise.reject(new TypeError('Failed to fetch'));
+      });
+      local.probe.mockImplementation(() => {
+        order.push('probe');
+        return Promise.resolve(probe('found'));
+      });
+      local.chat.mockImplementation(() => {
+        order.push('chat');
+        return Promise.resolve(answer('Lực ma sát cản chuyển động.'));
+      });
+      await ask('Lực ma sát là gì?');
+      expect(order[0]).toBe('probe');
+      expect(order).toContain('wikipedia');
+      expect(order.at(-1)).toBe('chat');
+      fetchSpy.mockRestore();
+    });
+  });
+
   it('Think: the draft is written on this computer, only the review goes online (no fallback)', async () => {
     local.chat.mockResolvedValue(answer('Bản nháp: lực ma sát cản chuyển động.'));
     const reply = await ask('Lực ma sát là gì?', { think: true, onPartial: () => undefined });
@@ -624,7 +686,16 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     expect(reply.content).toBe('Lực ma sát cản chuyển động.');
     expect(local.chat).toHaveBeenCalledTimes(2);
     expect(useChatStore.getState().summary).toBeNull();
+    // The same model is not asked for that summary again in this conversation: one request.
+    local.chat.mockClear();
+    await askTeacher('tiếp nhé', 'vi', longHistory(30), { includeScreen: false, think: false });
+    expect(local.chat).toHaveBeenCalledTimes(1);
+    expect(isSummary(local.chat.mock.calls[0]?.[0])).toBe(false);
 
+    // Another model is asked again; an unsafe summary is not kept, and not asked for twice.
+    useLocalAiStore.setState({
+      selected: { ...selection, model: 'qwen3:4b', label: 'Ollama · qwen3:4b' },
+    });
     local.chat.mockReset();
     local.chat.mockImplementation((req) =>
       Promise.resolve(
@@ -634,6 +705,9 @@ describe('a runtime on this computer (Ollama, LM Studio, llama.cpp…)', () => {
     await askTeacher('tiếp nhé', 'vi', longHistory(30), { includeScreen: false, think: false });
     expect(local.chat).toHaveBeenCalledTimes(2);
     expect(useChatStore.getState().summary).toBeNull();
+    local.chat.mockClear();
+    await askTeacher('tiếp nhé', 'vi', longHistory(30), { includeScreen: false, think: false });
+    expect(local.chat).toHaveBeenCalledTimes(1);
     expect(calls).toHaveLength(0);
   });
 

@@ -194,13 +194,18 @@ function localError(e: unknown): { code: AnalyzeErrorCode; detail: string } {
 let controller: AbortController | null = null;
 let runSeq = 0;
 
-function errorOf(e: unknown): { code: AnalyzeErrorCode; detail: string } {
+/**
+ * The dialog's error. `onLocal`: a runtime on this computer was asked, so every failure (also an
+ * untagged one: only reasoning, or nothing, written) is the runtime's own sentence, never a cloud
+ * provider's. A problem that is empty or too long is the learner's text, on any engine.
+ */
+function errorOf(e: unknown, onLocal = false): { code: AnalyzeErrorCode; detail: string } {
   const err = toAiError(e);
-  if (err.code !== 'cancelled' && isLocalMessage(err.message)) return localError(err);
-  if (err.code === 'http') return { code: analyzeHttpCode(err.message), detail: err.message };
   if (err.code === 'badResponse' && (err.message === 'empty' || err.message === 'tooLong')) {
     return { code: err.message, detail: '' };
   }
+  if (err.code !== 'cancelled' && (onLocal || isLocalMessage(err.message))) return localError(err);
+  if (err.code === 'http') return { code: analyzeHttpCode(err.message), detail: err.message };
   return { code: err.code, detail: err.message };
 }
 
@@ -214,6 +219,8 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
   const seq = ++runSeq;
   const ctrl = new AbortController();
   controller = ctrl;
+  // A runtime on this computer was asked (its failures are its own sentences).
+  let onLocal = false;
   useAnalyzeStore.setState({
     phase: 'running',
     mode: 'ai',
@@ -235,6 +242,7 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
       return;
     }
     const ai = await resolveAiForAnalysis();
+    onLocal = ai.transport === localTransport;
     const topics = getDictionary('vi').topics as Record<string, string>;
     const result = await analyzeProblem(text, {
       transport: ai.transport,
@@ -284,7 +292,7 @@ export async function analyze(text: string, opts: { fresh?: boolean } = {}): Pro
     }
   } catch (e) {
     if (seq !== runSeq) return;
-    const error = errorOf(e);
+    const error = errorOf(e, onLocal);
     if (error.code === 'cancelled') {
       useAnalyzeStore.setState({ phase: 'idle', stage: null });
       return;

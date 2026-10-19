@@ -216,22 +216,20 @@ describe('a failed online answer, in the learner’s words', () => {
     ['invalid args `request` for command `ai_chat`: missing field `provider`'],
     [new Error('boom')],
     [new TypeError("Cannot read properties of undefined (reading 'content')")],
-  ])(
-    'a failure that is not the network (%o) never sends the learner to check the Internet',
-    async (raw) => {
-      // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-      setTransportForTests(fake(() => Promise.reject(raw)));
-      const e = await failure(ask('Lực là gì?'));
-      expect(e.message).toBe(
-        translate('vi', 'chat.errors.cloud.other', {
-          who: 'Gemini',
-          page: translate('vi', 'settings.ai'),
-        }),
-      );
-      expect(e.message).not.toMatch(/mạng|Internet|Command|ai_chat|boom|undefined/);
-      expect(calls).toHaveLength(1);
-    },
-  );
+    // A programming error that merely mentions fetch or network is no network failure.
+    [new TypeError("Cannot read properties of undefined (reading 'fetch')")],
+    [new TypeError('networkStatus is not a function')],
+  ])('a failure of the app itself (%o) blames no provider and never the Internet', async (raw) => {
+    // The quota fallback has a key: it is still not named, nothing reached it.
+    useAiStore.setState({ fallback: 'groq' });
+    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    setTransportForTests(fake(() => Promise.reject(raw)));
+    const e = await failure(ask('Lực là gì?'));
+    expect(e.message).toBe(translate('vi', 'chat.errors.cloud.internal'));
+    expect(e.section).toBeNull();
+    expect(e.message).not.toMatch(/mạng|Internet|Command|ai_chat|boom|undefined|Gemini|Groq/);
+    expect(calls).toHaveLength(1);
+  });
 
   it.each([
     [new TypeError('Failed to fetch')],

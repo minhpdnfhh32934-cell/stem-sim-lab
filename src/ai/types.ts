@@ -145,7 +145,8 @@ export class AiError extends Error {
  * "NetworkError when attempting to fetch resource." / "Error in body stream"; Safari "Load
  * failed"; Node "fetch failed".
  */
-const FETCH_FAILURE = /fetch|network|load failed|body stream/i;
+const FETCH_FAILURE =
+  /^(?:failed to fetch|networkerror when attempting to fetch resource|load failed|fetch failed|network error|error in body stream)\b/i;
 
 /** `fetch` (or a body read) failed because no answer came: a network problem. */
 function isFetchFailure(e: unknown): boolean {

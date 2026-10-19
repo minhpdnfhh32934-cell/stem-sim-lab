@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
+import { LOCAL_VOICE } from './localVoice';
 import { useVoiceStore } from './voiceStore';
 
 /**
@@ -88,6 +89,7 @@ afterEach(() => {
   stopSpeaking();
   setTransportForTests(null);
   vi.unstubAllGlobals();
+  localStorage.removeItem('stemsim.voice-model');
 });
 
 describe('which voices read on this computer', () => {
@@ -142,8 +144,20 @@ describe('speak(…, { onDevice: true })', () => {
     expect(ttsTexts).toEqual([]);
   });
 
+  it('a chosen on-device voice that is not downloaded: only a Windows voice that reads here counts', async () => {
+    useVoiceStore.setState({ engine: 'local' });
+    localStorage.removeItem('stemsim.voice-model');
+    fakeSystemVoice([HOAIMY]);
+    // Nothing would read it: the chat says so instead of staying silent.
+    expect(await canSpeakOnDevice()).toBe(false);
+    fakeSystemVoice([HOAIMY, AN]);
+    expect(await canSpeakOnDevice()).toBe(true);
+  });
+
   it('the on-device voice reads it; when it fails, only a Windows voice that reads here goes on', async () => {
     useVoiceStore.setState({ engine: 'local' });
+    // Downloaded (the weights' check needs storage these tests do not have).
+    localStorage.setItem('stemsim.voice-model', LOCAL_VOICE.repo);
     let spoken = fakeSystemVoice([HOAIMY]);
     expect(await canSpeakOnDevice()).toBe(true);
     await speak(TEXT, { onDevice: true });

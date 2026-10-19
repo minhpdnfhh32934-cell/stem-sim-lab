@@ -30,6 +30,8 @@ export type CloudErrorKind =
   | 'reasoningOnly'
   | 'tooLarge'
   | 'server'
+  /** The app itself failed: no provider (nor the fallback) is blamed, no Settings page helps. */
+  | 'internal'
   | 'other';
 
 /** Who was asked: the provider that answers, or the Think reviewer. */
@@ -96,6 +98,8 @@ export function cloudFailure(e: unknown, role: CloudRole): CloudFailure {
       return { kind: 'server', section: page, retry: true };
     case 'filtered':
       return { kind: 'filtered', section: null, retry: false };
+    case 'internal':
+      return { kind: 'internal', section: null, retry: true };
     default:
       return { kind: 'other', section: page, retry: true };
   }

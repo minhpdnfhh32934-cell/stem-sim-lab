@@ -1,4 +1,4 @@
-import { translate, type Locale } from '@/app/i18n';
+import { translate, type Locale, type MessageKey } from '@/app/i18n';
 import { modelFor, useAiStore } from '@/ai/aiStore';
 import { ANSWER_TOKENS, useGemmaPrefs } from '@/ai/gemmaPrefs';
 import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
@@ -24,7 +24,7 @@ import { localFailure, localFailureText, localModelLabel } from '@/app/ai/localR
 import type { SettingsSection } from '@/app/workspaceStore';
 import { getLocalClient } from '@/ai/local/client';
 import { checkFor, useLocalAiStore } from '@/ai/local/localAiStore';
-import type { LocalSelection } from '@/ai/local/types';
+import type { LocalSelection, ProbeStatus } from '@/ai/local/types';
 import { useProfileStore, type Level } from '@/app/learner/profileStore';
 import { boardStreamPreview } from '@/teacher/board/lesson';
 import { selectionContext, selectionText, type BoardSelection } from '@/teacher/board/selection';
@@ -993,6 +993,50 @@ async function localRuntimeChat(
   }
 }
 
+/** A runtime whose fingerprint shows it cannot answer now: the sentence, and whether asking again may help. */
+const PROBE_FAILURE: Record<ProbeStatus, { key: MessageKey; retry: boolean } | null> = {
+  found: null,
+  loading: { key: 'chat.errors.localLoading', retry: true },
+  needsAuth: { key: 'chat.errors.localAuth', retry: false },
+  notRuntime: { key: 'chat.errors.localNotRuntime', retry: false },
+  unreachable: { key: 'chat.errors.localDown', retry: true },
+};
+
+/**
+ * Asks the chosen runtime for its fingerprint (`local_ai_probe`: one loopback request, never a
+ * generation) and throws the runtime's own sentence when it cannot answer. Used before anything
+ * else leaves this computer for the question (the optional Wikipedia lookup), so a runtime that
+ * is not running means the question was sent nowhere, as its sentence says.
+ */
+async function reachRuntime(
+  selection: LocalSelection,
+  locale: Locale,
+  signal?: AbortSignal,
+): Promise<void> {
+  stopIfAsked(signal);
+  let status: ProbeStatus;
+  try {
+    status = (await untilStopped(getLocalClient().probe(selection.baseUrl), signal)).status;
+  } catch (e) {
+    if (e instanceof AnswerStopped || signal?.aborted) throw new AnswerStopped();
+    console.warn('[teacher-local]', e instanceof Error ? e.message : String(e));
+    const failure = localFailure(e);
+    throw new TeacherError(
+      localFailureText(locale, failure, selection.kind),
+      failure.section,
+      failure.retry,
+      { cause: e },
+    );
+  }
+  const failure = PROBE_FAILURE[status];
+  if (failure === null) return;
+  throw new TeacherError(
+    localFailureText(locale, { ...failure, section: 'runtimes' }, selection.kind),
+    'runtimes',
+    failure.retry,
+  );
+}
+
 /** The learner's sentence for an on-device failure (it never silently goes online instead). */
 export function gemmaErrorKey(
   message: string,
@@ -1064,7 +1108,9 @@ function fittedSummaryRequest(
  * caps the whole summary request (on-device Gemma on an integrated card, a runtime on this
  * computer: its window). `fatal` picks the failures that end the question instead: a runtime on
  * this computer that did not answer the summary would not answer the question either, and asking
- * it twice would only make the learner wait twice.
+ * it twice would only make the learner wait twice. A model that could not write the summary in a
+ * way it would repeat (only reasoning, nothing, too large, unsafe) is not asked again for this
+ * conversation (`writer`: who writes it; `summarySkip` in the chat store).
  */
 async function updateSummary(
   locale: Locale,
@@ -1073,11 +1119,17 @@ async function updateSummary(
   ask: (system: string, messages: ChatMessage[], maxTokens: number) => Promise<Answer>,
   maxInputTokens?: number,
   fatal?: (e: unknown) => boolean,
+  writer?: string,
 ): Promise<void> {
   const store = useChatStore.getState();
   const pending = unsummarized(older, store.summary, all);
   const last = pending[pending.length - 1];
   if (!last) return;
+  const memo = writer === undefined ? null : `${writer}|${all[0]?.id ?? ''}`;
+  if (memo !== null && store.summarySkip === memo) return;
+  const skip = () => {
+    if (memo !== null) useChatStore.setState({ summarySkip: memo });
+  };
   try {
     const request =
       maxInputTokens === undefined
@@ -1089,10 +1141,22 @@ async function updateSummary(
     const text = stripReasoningOutsideCode(answer.content).text.trim();
     if (text && outputIsSafe(answer.content) && outputIsSafe(text))
       useChatStore.getState().setSummary({ text, upto: last.id });
+    else skip();
   } catch (e) {
     if (fatal?.(e)) throw e;
     console.warn('[teacher-summary]', e instanceof Error ? e.message : String(e));
+    const cause = e instanceof Error && e.cause !== undefined ? e.cause : e;
+    if (summaryRepeats(cause)) skip();
   }
+}
+
+/**
+ * A summary failure the same model would repeat for the same conversation: it did not fit the
+ * window, or the model wrote only its reasoning or nothing (the same reading on every engine).
+ */
+function summaryRepeats(e: unknown): boolean {
+  const { key } = localFailure(e);
+  return key === 'chat.errors.localContext' || key === 'chat.errors.localNoAnswer';
 }
 
 /**
@@ -1284,6 +1348,10 @@ export async function askTeacher(
   const onGemma = engine === 'gemma';
   const gpuStatus = onGemma && !gpu.status ? await loadGpuStatus().catch(() => null) : gpu.status;
   const integrated = onGemma && gemmaOnIntegrated(gpuStatus, gpu.gemmaInfo) === true;
+  // With "Tra thêm Wikipedia" on, building the prompt may send the question to Wikipedia: the
+  // chosen runtime is reached first, so a runtime that is not running gets nothing sent anywhere.
+  if (engine === 'local' && selection && chat.webLookup)
+    await reachRuntime(selection, locale, signal);
   const prompt = await contextPrompt(
     question,
     locale,
@@ -1422,6 +1490,11 @@ export async function askTeacher(
           : ask(s, m, max, noFallback),
       summaryCap,
       engine === 'local' ? localSummaryFatal : undefined,
+      engine === 'local' && selection
+        ? `local:${selection.baseUrl}:${selection.model}`
+        : engine === 'gemma'
+          ? `gemma:${chat.gemmaModel}`
+          : `cloud:${provider}:${modelFor(ai.models, provider as Provider)}`,
     );
     stopIfAsked(signal);
   }

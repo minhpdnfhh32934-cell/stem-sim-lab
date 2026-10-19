@@ -110,6 +110,11 @@ interface ChatState {
   documents: KnowledgeDocument[];
   memoryLength: MemoryLength;
   summary: ChatSummary | null;
+  /**
+   * The model that could not write a summary of this conversation ("writer|first message id"):
+   * it is not asked again until the conversation or the model changes (not persisted).
+   */
+  summarySkip: string | null;
   /** A question is being answered (not persisted; the board shows "preparing"). */
   answering: boolean;
   /**
@@ -248,6 +253,7 @@ export const useChatStore = create<ChatState>()(
       documents: [],
       memoryLength: 'medium',
       summary: null,
+      summarySkip: null,
       answering: false,
       stopAnswer: null,
       stopped: false,
@@ -280,7 +286,7 @@ export const useChatStore = create<ChatState>()(
         set({ messages: [...get().messages, message].slice(-STORED_MESSAGES) }),
       updateMessage: (id, patch) =>
         set({ messages: get().messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) }),
-      clearMessages: () => set({ messages: [], summary: null }),
+      clearMessages: () => set({ messages: [], summary: null, summarySkip: null }),
       setMemoryLength: (memoryLength) =>
         set({ memoryLength: memoryLength === 'long' ? 'long' : 'medium' }),
       setSummary: (summary) => set({ summary }),

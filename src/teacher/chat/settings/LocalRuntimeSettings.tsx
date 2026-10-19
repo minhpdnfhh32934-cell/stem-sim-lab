@@ -172,6 +172,26 @@ function More({
   );
 }
 
+/** The latest "Kiểm tra trả lời" of a model: a failure after the last answer is shown as such. */
+function lastTest(
+  check: ModelCheck | null | undefined,
+): { tone: 'ok' | 'bad'; key: MessageKey; time: number } | null {
+  if (check?.failedAt !== undefined && (check.testedAt ?? -1) <= check.failedAt) {
+    return { tone: 'bad', key: 'localRuntime.badges.testFailed', time: check.failedAt };
+  }
+  return check?.testedAt !== undefined
+    ? { tone: 'ok', key: 'localRuntime.badges.tested', time: check.testedAt }
+    : null;
+}
+
+function TestBadge({ check, never }: { check: ModelCheck | null | undefined; never?: boolean }) {
+  const t = useT();
+  const locale = useSettingsStore((s) => s.locale);
+  const last = lastTest(check);
+  if (!last) return never ? <Badge tone="neutral">{t('localRuntime.neverTested')}</Badge> : null;
+  return <Badge tone={last.tone}>{t(last.key, { time: timeText(locale, last.time) })}</Badge>;
+}
+
 function Badge({
   tone,
   children,
@@ -347,8 +367,8 @@ export function LocalRuntimeSettings() {
       return;
     }
     const at = Date.now();
-    if (result.status === 'ok')
-      useLocalAiStore.getState().recordTest(x.kind, x.baseUrl, x.model, result, at);
+    // A failure is kept too (its time only): the latest result is never an earlier success.
+    useLocalAiStore.getState().recordTest(x.kind, x.baseUrl, x.model, result, at);
     const text =
       result.status === 'ok'
         ? result.firstPieceMs !== null
@@ -513,11 +533,7 @@ export function LocalRuntimeSettings() {
           {m.loaded === true && <Badge tone="info">{t('localRuntime.badges.loaded')}</Badge>}
           {m.loaded === false && <Badge tone="neutral">{t('localRuntime.badges.notLoaded')}</Badge>}
           {isSelected && selectedBadge}
-          {check?.testedAt !== undefined && (
-            <Badge tone="ok">
-              {t('localRuntime.badges.tested', { time: timeText(locale, check.testedAt) })}
-            </Badge>
-          )}
+          <TestBadge check={check} />
           {reason !== null && (
             <Badge tone="bad">{t('localRuntime.badges.incompatible', { reason })}</Badge>
           )}
@@ -606,7 +622,7 @@ export function LocalRuntimeSettings() {
               <p>
                 <strong>
                   {t('localRuntime.currentBody', {
-                    label: selected.label,
+                    label: localModelLabel(locale, selected.kind, selected.model),
                     address: hostPort(selected.baseUrl),
                   })}
                 </strong>
@@ -616,22 +632,17 @@ export function LocalRuntimeSettings() {
                 {selectedProblem !== null && (
                   <Badge tone="bad">{t('localRuntime.badges.unavailable')}</Badge>
                 )}
-                {checkFor({ checks }, selected)?.testedAt !== undefined ? (
-                  <Badge tone="ok">
-                    {t('localRuntime.badges.tested', {
-                      time: timeText(locale, checkFor({ checks }, selected)?.testedAt ?? 0),
-                    })}
-                  </Badge>
-                ) : (
-                  <Badge tone="neutral">{t('localRuntime.neverTested')}</Badge>
-                )}
+                <TestBadge check={checkFor({ checks }, selected)} never />
               </ul>
               <p className="muted small">
                 {engine !== 'local'
                   ? t('localRuntime.currentOther', { now: nowText(effective, provider, noKey) })
                   : selectedProblem !== null
                     ? t('localRuntime.currentLocalUnavailable')
-                    : t('localRuntime.currentLocal')}
+                    : status.phase === 'done'
+                      ? t('localRuntime.currentLocal')
+                      : // Restored or chosen without a search this session: nothing was checked yet.
+                        t('localRuntime.currentLocalUnchecked')}
               </p>
               {selectedProblem !== null && (
                 <p className="chat-settings__error" role="alert">
@@ -1021,9 +1032,11 @@ function ModelDetailsCard({
         </p>
       )}
       <p className="muted small">
-        {check?.testedAt !== undefined
-          ? t('localRuntime.testedAt', { time: timeText(locale, check.testedAt) })
-          : t('localRuntime.neverTested')}
+        {lastTest(check)?.tone === 'bad'
+          ? t('localRuntime.testFailedAt', { time: timeText(locale, check?.failedAt ?? 0) })
+          : check?.testedAt !== undefined
+            ? t('localRuntime.testedAt', { time: timeText(locale, check.testedAt) })
+            : t('localRuntime.neverTested')}
       </p>
 
       <More summary={t('localRuntime.capsTitle')} heading={t('localRuntime.capsTitle')}>

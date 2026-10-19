@@ -47,6 +47,11 @@ export interface ModelCheck {
   checkedAt: number;
   /** When "Kiểm tra trả lời" last got an answer from it (ms since 1970); absent: never. */
   testedAt?: number;
+  /**
+   * When "Kiểm tra trả lời" last failed (ms since 1970), kept until a later test succeeds: an
+   * earlier success is then never shown as the latest result.
+   */
+  failedAt?: number;
 }
 
 export interface LocalStatus {
@@ -167,11 +172,14 @@ function sanitizeCheck(v: unknown): ModelCheck | null {
   ) as unknown as Capabilities;
   const tested =
     typeof o.testedAt === 'number' && Number.isFinite(o.testedAt) ? { testedAt: o.testedAt } : {};
+  const failed =
+    typeof o.failedAt === 'number' && Number.isFinite(o.failedAt) ? { failedAt: o.failedAt } : {};
   return {
     capabilities,
     contextLength: positive(o.contextLength),
     checkedAt: o.checkedAt,
     ...tested,
+    ...failed,
   };
 }
 
@@ -274,15 +282,23 @@ export const useLocalAiStore = create<LocalAiState>()(
           contextLength: positive(details.contextLength),
           checkedAt: at,
           ...(before?.testedAt !== undefined ? { testedAt: before.testedAt } : {}),
+          ...(before?.failedAt !== undefined ? { failedAt: before.failedAt } : {}),
         };
         set({ checks: withCheck(get().checks, key, check) });
       },
       recordTest: (kind, baseUrl, model, test, at = Date.now()) => {
         const base = tryLoopback(baseUrl);
         const id = cleanId(model);
-        if (!base || id === null || test.status !== 'ok') return;
+        // A closed safety gate or an address off this computer: the model was never asked.
+        if (!base || id === null || test.status === 'notAllowed') return;
         const key = checkKey(kind, base.base, id);
         const before = get().checks[key];
+        if (test.status !== 'ok') {
+          // Only the time of the failure is kept (never the runtime's words).
+          if (!before) return;
+          set({ checks: withCheck(get().checks, key, { ...before, failedAt: at }) });
+          return;
+        }
         const check: ModelCheck = {
           capabilities: {
             ...(before?.capabilities ?? UNVERIFIED),

@@ -224,7 +224,7 @@ describe('Settings → AI trên máy khác', () => {
   it('"Kiểm tra trả lời" never runs by itself; one click is one request', async () => {
     const user = userEvent.setup();
     client.test.mockResolvedValue({ status: 'ok', firstPieceMs: 1500, streamed: true, detail: '' });
-    renderPage();
+    const page = renderPage();
     await detectAndPick(user);
     expect(screen.getByText(/nạp mô hình vào RAM\/VRAM/)).toBeInTheDocument();
     expect(client.test).not.toHaveBeenCalled();
@@ -250,6 +250,12 @@ describe('Settings → AI trên máy khác', () => {
     await user.click(screen.getByRole('button', { name: 'Kiểm tra trả lời' }));
     expect(await screen.findByText(/Chương trình đang nạp mô hình/)).toBeInTheDocument();
     expect(client.test).toHaveBeenCalledTimes(2);
+    // Reopened: the latest result is the failure, never the earlier success.
+    page.unmount();
+    renderPage();
+    await detectAndPick(user);
+    expect(screen.getAllByText(/Lần thử gần nhất chưa trả lời được/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/^Đã thử trả lời/)).toBeNull();
   });
 
   it('"Dùng cho AI Teacher" saves the choice and the engine; "Bỏ chọn" goes back', async () => {
@@ -462,8 +468,12 @@ describe('Settings → AI trên máy khác', () => {
         ...PROBES.slice(1),
       ]);
       renderPage();
-      // Nothing is asked when the page opens: the saved choice is shown as saved.
-      expect(card()).toHaveTextContent('AI Teacher đang trả lời bằng mô hình này');
+      // Nothing is asked when the page opens: the saved choice is shown as saved, and never as
+      // answering before anything was checked.
+      expect(card()).toHaveTextContent(
+        'Lần mở này SimLab chưa kiểm tra chương trình có đang chạy không',
+      );
+      expect(card()).not.toHaveTextContent('AI Teacher đang trả lời bằng mô hình này');
       await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
       const chosen = await within(card() as HTMLElement).findByText('Chưa dùng được');
       expect(chosen).toBeInTheDocument();

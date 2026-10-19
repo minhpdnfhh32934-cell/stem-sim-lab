@@ -13,9 +13,10 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import type { SettingsSection } from '@/app/workspaceStore';
 import { DEFAULT_MODELS, useAiStore } from '@/ai/aiStore';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { useAnalysisEngine } from './engineChoice';
-import { runtimeName } from './localRuntime';
+import { localModelLabel, runtimeName } from './localRuntime';
 
 export const PROVIDER_NAME = { gemini: 'Gemini', claude: 'Claude', groq: 'Groq' } as const;
 
@@ -46,8 +47,10 @@ export function useAiStatusView(): AiStatusView {
   const engine = useAnalysisEngine();
   const selected = useLocalAiStore((s) => s.selected);
   const gemmaModel = useChatStore((s) => s.gemmaModel);
-  // The safety gate closes every AI, on this computer too (the gates live in Rust).
-  if (ai.status === 'notAllowed') {
+  // The safety gate closes every AI, on this computer too (the gates live in Rust). It is read
+  // here as well: with the API off, `ai.status` never asks the gate (it is just "offline").
+  const gateClosed = useSafetyStore((s) => s.status !== null && !s.status.aiAllowed);
+  if (ai.status === 'notAllowed' || gateClosed) {
     return {
       kind: 'warn',
       label: t('ai.notAllowed'),
@@ -60,7 +63,17 @@ export function useAiStatusView(): AiStatusView {
     return {
       kind: 'local',
       label: t('ai.local', { name: runtimeName(locale, selected.kind) }),
-      hint: t('ai.localHint', { label: selected.label, address: hostPort(selected.baseUrl) }),
+      // The label in today's language (the saved one keeps the language it was chosen in). SimLab
+      // promises only what it sends itself: a generic server may relay questions online.
+      hint: [
+        t('ai.localHint', {
+          label: localModelLabel(locale, selected.kind, selected.model),
+          address: hostPort(selected.baseUrl),
+        }),
+        selected.kind === 'openAiCompatible' ? t('localRuntime.relayNote') : '',
+      ]
+        .filter(Boolean)
+        .join(' '),
       Icon: Cpu,
       section: 'runtimes',
     };

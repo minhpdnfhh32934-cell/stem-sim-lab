@@ -152,14 +152,17 @@ test('detect → choose → the AI Teacher answers on this computer, nothing goe
   // The top bar names the AI on this computer and never says the problem goes online.
   const status = page.locator('.topbar .ai-status');
   await expect(status).toHaveAttribute('data-status', 'local');
-  await expect(status).toHaveAttribute('aria-label', /^AI trên máy: Ollama\. .*không gửi lên mạng/);
+  await expect(status).toHaveAttribute(
+    'aria-label',
+    /^AI trên máy: Ollama\. .*không tự gửi lên mạng/,
+  );
   await expect(status).not.toHaveAttribute('aria-label', /gửi lên máy chủ/);
 
   await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
   const chat = page.getByRole('region', { name: 'Trò chuyện với AI Teacher' });
   await expect(
     chat.getByText(
-      'Câu hỏi được xử lý cục bộ trên máy này bởi Ollama (127.0.0.1:11434), không gửi lên mạng.',
+      'SimLab chỉ gửi câu hỏi tới Ollama trên máy này (127.0.0.1:11434), không tự gửi lên mạng.',
     ),
   ).toBeVisible();
   await chat.getByRole('textbox', { name: 'Nhập câu hỏi' }).fill('Lực ma sát là gì?');

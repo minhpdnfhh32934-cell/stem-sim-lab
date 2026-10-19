@@ -517,9 +517,9 @@ const LM_STUDIO: LocalRuntimeAdapter = {
         ...namedModel(id),
         family: cleanLabel(field(m, 'arch')),
         quantization: cleanLabel(field(m, 'quantization')),
-        // The context it was loaded with, else the model's maximum.
-        contextLength:
-          positive(field(m, 'loaded_context_length')) ?? positive(field(m, 'max_context_length')),
+        // Only the context it was loaded with: a model that is not loaded gets LM Studio's own,
+        // often much smaller, window when it is, so its maximum is no window seen here.
+        contextLength: positive(field(m, 'loaded_context_length')),
         vision: type === 'vlm' ? 'yes' : type === 'llm' ? 'no' : 'unverified',
         loaded: state === 'loaded' ? true : state === 'not-loaded' ? false : null,
       });

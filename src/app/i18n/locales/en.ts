@@ -46,7 +46,7 @@ const en: Messages = {
     badKeyHint: '{provider} refused the API key (wrong or disabled). Check it in Settings.',
     local: 'AI on this computer: {name}',
     localHint:
-      'Using {label} at {address}: the problem is processed right on this computer, not sent online. SimLab asks the program only when you use AI.',
+      'Chosen: {label} at {address}. SimLab sends the problem only to this program on your computer, never online by itself, and asks it only when you use AI.',
     localMissing: 'AI on this computer: not chosen',
     localMissingHint:
       'You chose AI on this computer but no program and model yet, so nothing is sent. Click to choose in Settings → AI on this computer.',
@@ -948,8 +948,8 @@ const en: Messages = {
     localMissingNotice:
       'You chose the AI on this computer but no program and model yet, so no question was sent. Choose them in Settings → AI on this computer.',
     localOnlyRuntime:
-      'Questions are processed locally on this computer by {name} ({address}), not sent online.',
-    localRuntimeHere: 'Questions are processed locally on this computer by {name} ({address}).',
+      'SimLab sends questions only to {name} on this computer ({address}), never online by itself.',
+    localRuntimeHere: 'SimLab sends questions to {name} on this computer ({address}).',
     voiceOnline:
       'The Gemini voice is on: the text of each answer is sent to Google to be read aloud.',
     noApi:
@@ -1124,6 +1124,8 @@ const en: Messages = {
           '{who} is overloaded or has a server error. Wait a moment and ask again; if it lasts, choose another provider in Settings → {page}.',
         other:
           '{who} hit an error while answering. Please ask again; if it repeats, open Settings → {page} to check the connection.',
+        internal:
+          'The app ran into an internal problem while asking the AI. Please ask again; if it repeats, install the latest SimLab.',
       },
     },
   },
@@ -1318,7 +1320,7 @@ const en: Messages = {
     detectPrivacy:
       'Only the three usual addresses on this computer ({addresses}) and the addresses you added are asked. No file is read, no disk is scanned, nothing leaves the computer.',
     fallback:
-      'Fallback: when the AI on this computer fails, SimLab tells you and sends nothing online (no automatic switch to an API).',
+      'Fallback: when the AI on this computer fails, SimLab tells you and sends nothing online (no automatic switch to an API). If the Wikipedia lookup is on, the question goes to Wikipedia only after SimLab has reached the AI program on this computer.',
     corsNote:
       'Running in a browser: the AI program must allow this page (CORS), otherwise SimLab shows “Not found”. The desktop app does not need this.',
     detectFailed: 'The search did not work. Please try again.',
@@ -1366,6 +1368,7 @@ const en: Messages = {
       selected: 'Chosen for the AI Teacher',
       selectedIdle: 'Chosen · the AI Teacher uses {engine}',
       tested: 'Answer tested · {time}',
+      testFailed: 'Last test got no answer · {time}',
       incompatible: 'Cannot be used: {reason}',
       unavailable: 'Not usable now',
     },
@@ -1414,6 +1417,10 @@ const en: Messages = {
     savedTitle: 'Model chosen on this page',
     currentBody: '{label} at {address}',
     currentLocal: 'The AI Teacher answers with this model, right on your computer.',
+    currentLocalUnchecked:
+      'The AI Teacher will send questions to this model, right on your computer. SimLab has not checked this session whether the program is running: press “Find on this computer” to check.',
+    relayNote:
+      'Note: an OpenAI-compatible server may be an intermediary that forwards questions online by itself; SimLab cannot control that.',
     currentLocalUnavailable:
       'The AI Teacher is still set to this model, but the last search found it cannot be used (reason below). Questions then only show an error and are not sent anywhere else. Fix it with the help below, pick another model in the list, or press “Unselect”.',
     currentOther:
@@ -1432,6 +1439,7 @@ const en: Messages = {
       'SimLab has not asked the program this time: it asks only when you ask a question or press a button on this page.',
     neverTested: 'No answer tested yet.',
     testedAt: 'Answer tested at {time}.',
+    testFailedAt: 'The last answer test (at {time}) did not succeed.',
     unselect: 'Unselect',
     unselected: 'Unselected. {now}',
     capsTitle: 'Capabilities (only what was seen on this computer)',

@@ -250,7 +250,29 @@ describe('local runtime settings', () => {
       testedAt: 3000,
       capabilities: { streaming: 'yes' },
     });
-    // A failed test saves nothing; a test of a model never checked starts from "Chưa xác minh".
+    // A failed test of a checked model keeps its time: the earlier success is not the latest.
+    s.recordTest(
+      'ollama',
+      'http://127.0.0.1:11434',
+      'qwen3:8b',
+      { ...ok, status: 'stalled' },
+      4500,
+    );
+    expect(useLocalAiStore.getState().checks[key]).toMatchObject({
+      testedAt: 3000,
+      failedAt: 4500,
+    });
+    // A closed safety gate never asked the model: nothing changes.
+    s.recordTest(
+      'ollama',
+      'http://127.0.0.1:11434',
+      'qwen3:8b',
+      { ...ok, status: 'notAllowed' },
+      4600,
+    );
+    expect(useLocalAiStore.getState().checks[key]?.failedAt).toBe(4500);
+    // A failed test of a model never checked saves nothing; a test of such a model starts from
+    // "Chưa xác minh".
     s.recordTest('ollama', 'http://127.0.0.1:11434', 'other', { ...ok, status: 'loading' }, 5000);
     expect(useLocalAiStore.getState().checks).not.toHaveProperty(
       checkKey('ollama', 'http://127.0.0.1:11434', 'other'),
@@ -261,6 +283,7 @@ describe('local runtime settings', () => {
     ).toEqual({ capabilities: UNVERIFIED, contextLength: null, checkedAt: 6000, testedAt: 6000 });
     // Saved and read back.
     expect(sanitizeLocalAi(saved().state).checks[key]?.testedAt).toBe(3000);
+    expect(sanitizeLocalAi(saved().state).checks[key]?.failedAt).toBe(4500);
   });
 
   it('"Khôi phục mặc định" forgets addresses, checks and the choice, and asks nothing', () => {

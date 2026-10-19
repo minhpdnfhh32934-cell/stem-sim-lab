@@ -174,6 +174,8 @@ export type AiErrorKind =
   | 'localVisionUnverified'
   /** The picture is not a PNG or JPEG, is too large, or there is more than one. */
   | 'localBadImage'
+  /** The app itself failed (the desktop bridge, or a programming error): no provider's fault. */
+  | 'internal'
   | 'other';
 
 /** Finish or block reasons that mean the provider's own filter stopped the answer. */
@@ -266,6 +268,8 @@ export function aiErrorKind(e: unknown): AiErrorKind {
       return 'notAllowed';
     case 'unavailable':
       return 'unavailable';
+    case 'internal':
+      return 'internal';
     case 'invalidJson':
       return 'badResponse';
     case 'badResponse':

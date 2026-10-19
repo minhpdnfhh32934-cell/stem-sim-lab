@@ -114,7 +114,7 @@ describe('AI Teacher chat with the AI on this computer', () => {
     render(<ChatPanel teacherPage showScreenContext={false} />);
     expect(
       screen.getByText(
-        'Câu hỏi được xử lý cục bộ trên máy này bởi Ollama (127.0.0.1:11434), không gửi lên mạng.',
+        'SimLab chỉ gửi câu hỏi tới Ollama trên máy này (127.0.0.1:11434), không tự gửi lên mạng.',
       ),
     ).toBeInTheDocument();
     await user.type(screen.getByRole('textbox', { name: 'Nhập câu hỏi' }), 'Lực là gì?{Enter}');
@@ -145,9 +145,9 @@ describe('AI Teacher chat with the AI on this computer', () => {
     useVoiceStore.setState({ enabled: true, engine: 'gemini' });
     const { unmount } = render(<ChatPanel teacherPage showScreenContext={false} />);
     expect(
-      screen.getByText('Câu hỏi được xử lý cục bộ trên máy này bởi Ollama (127.0.0.1:11434).'),
+      screen.getByText('SimLab gửi câu hỏi tới Ollama trên máy này (127.0.0.1:11434).'),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/không gửi lên mạng/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/không tự gửi lên mạng/)).not.toBeInTheDocument();
     expect(
       screen.getByText('Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.'),
     ).toBeInTheDocument();
@@ -156,7 +156,7 @@ describe('AI Teacher chat with the AI on this computer', () => {
     // The device's own voice reads on this computer: nothing goes online.
     useVoiceStore.setState({ enabled: true, engine: 'system' });
     render(<ChatPanel teacherPage showScreenContext={false} />);
-    expect(screen.getByText(/không gửi lên mạng\.$/)).toBeInTheDocument();
+    expect(screen.getByText(/không tự gửi lên mạng\.$/)).toBeInTheDocument();
     expect(screen.queryByText(/Giọng Gemini đang bật/)).not.toBeInTheDocument();
   });
 

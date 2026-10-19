@@ -246,6 +246,20 @@ describe('AI controller', () => {
       expect(cloudCalls).toBe(0);
     });
 
+    it.each([
+      new AiError('badResponse', 'reasoningOnly'),
+      new AiError('badResponse', 'empty answer (stop)'),
+    ])('a model that wrote no answer (%s) gets the runtime’s sentence', async (error) => {
+      useLocalAiStore.getState().select(selection);
+      local.chat.mockRejectedValue(error);
+      await analyze('Một vật rơi tự do từ độ cao 20 m.');
+      expect(useAnalyzeStore.getState().error).toEqual({
+        code: 'local',
+        detail: translate('vi', 'chat.errors.localNoAnswer', { name: 'Ollama' }),
+      });
+      expect(cloudCalls).toBe(0);
+    });
+
     it('no runtime and model chosen yet: nothing is sent anywhere', async () => {
       await analyze('Một vật rơi tự do từ độ cao 20 m.');
       expect(useAnalyzeStore.getState().error?.code).toBe('local');

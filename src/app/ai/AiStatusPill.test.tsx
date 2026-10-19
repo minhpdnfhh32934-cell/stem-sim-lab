@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
 import { useLocalAiStore } from '@/ai/local/localAiStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { AiStatusPill } from './AiStatusPill';
 
@@ -50,8 +51,10 @@ describe('AI status pill', () => {
     expect(button).toHaveAttribute('data-status', 'local');
     expect(button).toHaveTextContent('AI trên máy: Ollama');
     expect(button).toHaveAccessibleName(/Ollama · qwen3:8b tại 127\.0\.0\.1:11434/);
-    expect(button).toHaveAccessibleName(/không gửi lên mạng/);
-    expect(button.getAttribute('aria-label')).not.toMatch(/Gemini|gửi lên máy chủ/);
+    expect(button).toHaveAccessibleName(
+      /chỉ gửi đề bài tới chương trình này trên máy em, không tự gửi lên mạng/,
+    );
+    expect(button.getAttribute('aria-label')).not.toMatch(/Gemini|gửi lên máy chủ|trung gian/);
     await user.click(button);
     expect(onClick).toHaveBeenCalledWith('runtimes');
   });
@@ -90,6 +93,40 @@ describe('AI status pill', () => {
     expect(button).toHaveAccessibleName(/gemma3-1b.*không gửi lên mạng/);
     await user.click(button);
     expect(onClick).toHaveBeenCalledWith('local');
+  });
+
+  it('the model is named in today’s language; a generic server may relay online, as it says', () => {
+    useLocalAiStore.setState({
+      selected: {
+        kind: 'openAiCompatible',
+        baseUrl: 'http://127.0.0.1:8000',
+        model: 'm',
+        // Saved while the app was in English.
+        label: 'OpenAI-compatible server · m',
+      },
+    });
+    useChatStore.setState({ engine: 'local' });
+    const { button } = pill();
+    expect(button).toHaveAccessibleName(/Máy chủ tương thích OpenAI · m tại 127\.0\.0\.1:8000/);
+    expect(button.getAttribute('aria-label')).not.toMatch(/OpenAI-compatible server/);
+    expect(button).toHaveAccessibleName(/chương trình trung gian tự chuyển câu hỏi lên mạng/);
+  });
+
+  it('the safety gate closed while the API is off: the AI on this computer is closed too', () => {
+    const before = useSafetyStore.getState().status;
+    useAiStore.setState({ provider: 'off', status: 'offline' });
+    useSafetyStore.setState({
+      status: { termsVersion: 1, answered: true, aiAllowed: false, minor: true },
+    });
+    useLocalAiStore.setState({ selected: selection });
+    useChatStore.setState({ engine: 'local' });
+    try {
+      const { button } = pill();
+      expect(button).toHaveTextContent('AI: chưa mở');
+      expect(button).not.toHaveTextContent('AI trên máy');
+    } finally {
+      useSafetyStore.setState({ status: before });
+    }
   });
 
   it('the safety gate closes every AI, on this computer too', () => {

@@ -146,9 +146,13 @@ describe('what went wrong with an AI call', () => {
       new Error('boom'),
       new TypeError("Cannot read properties of undefined (reading 'content')"),
       new SyntaxError('Unexpected token < in JSON'),
+      // A programming error that merely mentions fetch or network.
+      new TypeError("Cannot read properties of undefined (reading 'fetch')"),
+      new TypeError('networkStatus is not a function'),
     ]) {
       expect(toAiError(raw).code, String(raw)).toBe('internal');
-      expect(aiErrorKind(raw), String(raw)).toBe('other');
+      // Its own kind: no provider (nor the quota fallback) is blamed for it.
+      expect(aiErrorKind(raw), String(raw)).toBe('internal');
     }
     // The message is kept for the console and Settings, never shown to a learner as is.
     expect(toAiError('Command ai_chat not found').message).toBe('Command ai_chat not found');

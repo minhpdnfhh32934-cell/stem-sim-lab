@@ -285,7 +285,8 @@ describe('local runtime adapters (same fixtures as the Rust adapters)', () => {
     expect(models[1]).toMatchObject({
       vision: 'yes',
       loaded: false,
-      contextLength: 32768,
+      // Not loaded: its maximum (32768) is not the window LM Studio will give it.
+      contextLength: null,
       quantization: '4bit',
     });
     expect(lmStudio.modelsFallback).toBe('openAiCompatible');

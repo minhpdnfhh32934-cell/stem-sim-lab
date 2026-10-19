@@ -83,9 +83,10 @@ impl LocalRuntime for LmStudio {
                 Some(LocalModel {
                     family: clean_label(&m["arch"]),
                     quantization: clean_label(&m["quantization"]),
-                    // The context it was loaded with, else the model's maximum.
-                    context_length: positive(&m["loaded_context_length"])
-                        .or_else(|| positive(&m["max_context_length"])),
+                    // Only the context it was loaded with: a model that is not loaded gets LM
+                    // Studio's own, often much smaller, window when it is, so its maximum is no
+                    // window seen here.
+                    context_length: positive(&m["loaded_context_length"]),
                     vision,
                     loaded,
                     ..LocalModel::named(id)
@@ -147,7 +148,10 @@ mod tests {
         let vlm = &models[1];
         assert_eq!(vlm.vision, Cap::Yes);
         assert_eq!(vlm.loaded, Some(false));
-        assert_eq!(vlm.context_length, Some(32768));
+        assert_eq!(
+            vlm.context_length, None,
+            "a model not loaded: its maximum is not the window it will get"
+        );
         assert_eq!(vlm.quantization.as_deref(), Some("4bit"));
         assert!(models.iter().all(|m| !m.remote));
         assert!(LmStudio.models_fallback().is_some());

@@ -817,6 +817,8 @@ export function ChatPanel({
             name: runtimeName(locale, localSelection.kind),
             address: localSelection.baseUrl.replace(/^http:\/\//, ''),
           })}
+          {/* SimLab promises only what it sends itself: a generic server may relay online. */}
+          {localSelection.kind === 'openAiCompatible' && ` ${t('localRuntime.relayNote')}`}
         </p>
       )}
       {!notice && targets.length > 0 && (

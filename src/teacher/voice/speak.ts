@@ -11,6 +11,7 @@ import { useAiStore } from '@/ai/aiStore';
 import { isQuotaError } from '@/ai/fallback';
 import { AiError } from '@/ai/types';
 import { decodeAudio, isSilent, pause, playPcm, stopAudio, type Pcm } from './audio';
+import { localVoiceStatus } from './localVoice';
 import { speakNatural, type RenderCache } from './naturalVoice';
 import { prepareSpeech, type PlannedChunk, type SpeechRole } from './speechPlan';
 import { splitForSpeech, toSpeech, type SpeechChunk } from './vietnameseText';
@@ -124,13 +125,14 @@ export function onDeviceSystemVoice(
 
 /**
  * Whether the chosen voice can read text that must stay on this computer (`onDevice`): the
- * on-device voice model, or a system voice that reads here. Never the Gemini voice, which sends the
- * text to Google.
+ * on-device voice model when it is downloaded, or a system voice that reads here (also what reads
+ * when the chosen on-device model is missing). Never the Gemini voice, which sends the text to
+ * Google.
  */
 export async function canSpeakOnDevice(): Promise<boolean> {
   const { engine, voiceURI } = useVoiceStore.getState();
-  if (engine === 'local') return true;
-  if (engine !== 'system' || !speechSupported()) return false;
+  if (engine === 'local' && (await localVoiceStatus()) === 'ready') return true;
+  if ((engine !== 'system' && engine !== 'local') || !speechSupported()) return false;
   return onDeviceSystemVoice(await voicesWhenLoaded(), voiceURI) !== null;
 }
 

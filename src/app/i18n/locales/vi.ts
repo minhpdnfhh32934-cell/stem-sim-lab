@@ -49,7 +49,7 @@ const vi = {
       '{provider} từ chối khóa API (khóa sai hoặc đã bị tắt). Kiểm tra lại trong Cài đặt.',
     local: 'AI trên máy: {name}',
     localHint:
-      'Dùng {label} tại {address}: đề bài được xử lý ngay trên máy này, không gửi lên mạng. SimLab chỉ hỏi chương trình khi em dùng AI.',
+      'Đã chọn {label} tại {address}. SimLab chỉ gửi đề bài tới chương trình này trên máy em, không tự gửi lên mạng, và chỉ hỏi nó khi em dùng AI.',
     localMissing: 'AI trên máy: chưa chọn',
     localMissingHint:
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có gì được gửi đi. Bấm để chọn trong Cài đặt → AI trên máy khác.',
@@ -946,8 +946,8 @@ const vi = {
     localMissingNotice:
       'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
     localOnlyRuntime:
-      'Câu hỏi được xử lý cục bộ trên máy này bởi {name} ({address}), không gửi lên mạng.',
-    localRuntimeHere: 'Câu hỏi được xử lý cục bộ trên máy này bởi {name} ({address}).',
+      'SimLab chỉ gửi câu hỏi tới {name} trên máy này ({address}), không tự gửi lên mạng.',
+    localRuntimeHere: 'SimLab gửi câu hỏi tới {name} trên máy này ({address}).',
     voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
     noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
@@ -1125,6 +1125,8 @@ const vi = {
           '{who} đang quá tải hoặc gặp lỗi ở máy chủ. Em đợi một lát rồi hỏi lại nhé; nếu lỗi kéo dài, chọn nhà cung cấp khác trong Cài đặt → {page}.',
         other:
           '{who} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → {page} để kiểm tra kết nối.',
+        internal:
+          'Ứng dụng gặp trục trặc bên trong khi hỏi AI. Em hỏi lại nhé; nếu vẫn vậy, hãy cài bản SimLab mới nhất.',
       },
     },
   },
@@ -1315,7 +1317,7 @@ const vi = {
     detectPrivacy:
       'Chỉ hỏi ba địa chỉ quen thuộc trên máy này ({addresses}) và các địa chỉ em tự thêm. Không đọc tệp nào, không quét ổ đĩa, không gửi gì ra khỏi máy.',
     fallback:
-      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang API).',
+      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang API). Nếu em bật “Tra thêm Wikipedia”, câu hỏi chỉ được gửi tới Wikipedia sau khi SimLab đã kết nối được tới chương trình AI trên máy.',
     corsNote:
       'Đang chạy trên trình duyệt: chương trình AI phải cho phép trang này truy cập (CORS), nếu không SimLab sẽ báo “Không thấy”. Ứng dụng desktop không cần việc này.',
     detectFailed: 'Chưa tìm được. Em thử lại nhé.',
@@ -1363,6 +1365,7 @@ const vi = {
       selected: 'Đang chọn cho AI Teacher',
       selectedIdle: 'Đã chọn · AI Teacher đang dùng {engine}',
       tested: 'Đã thử trả lời · {time}',
+      testFailed: 'Lần thử gần nhất chưa trả lời được · {time}',
       incompatible: 'Không dùng được: {reason}',
       unavailable: 'Chưa dùng được',
     },
@@ -1411,6 +1414,10 @@ const vi = {
     savedTitle: 'Mô hình đã chọn ở trang này',
     currentBody: '{label} tại {address}',
     currentLocal: 'AI Teacher đang trả lời bằng mô hình này, ngay trên máy em.',
+    currentLocalUnchecked:
+      'AI Teacher sẽ gửi câu hỏi tới mô hình này, ngay trên máy em. Lần mở này SimLab chưa kiểm tra chương trình có đang chạy không: bấm “Tìm trên máy này” để kiểm tra.',
+    relayNote:
+      'Lưu ý: máy chủ tương thích OpenAI có thể là chương trình trung gian tự chuyển câu hỏi lên mạng; SimLab không kiểm soát được việc đó.',
     currentLocalUnavailable:
       'AI Teacher vẫn đang chọn mô hình này, nhưng lần tìm gần nhất thấy nó chưa dùng được (lý do bên dưới). Khi đó câu hỏi chỉ báo lỗi, không được gửi đi nơi khác. Em sửa theo hướng dẫn, chọn mô hình khác ở danh sách, hoặc bấm “Bỏ chọn”.',
     currentOther:
@@ -1430,6 +1437,7 @@ const vi = {
       'SimLab chưa hỏi chương trình lần này: chỉ hỏi khi em hỏi bài hoặc bấm một nút ở trang này.',
     neverTested: 'Chưa thử trả lời.',
     testedAt: 'Đã thử trả lời lúc {time}.',
+    testFailedAt: 'Lần thử trả lời gần nhất (lúc {time}) chưa thành công.',
     unselect: 'Bỏ chọn',
     unselected: 'Đã bỏ chọn. {now}',
     capsTitle: 'Khả năng (chỉ tính điều đã thấy trên máy này)',
