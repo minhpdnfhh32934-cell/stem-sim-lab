@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
-import { CONSTRICTION, ChromosomeTube, ringStations, rodRadius } from './chromosomeTube';
+import {
+  CONSTRICTION,
+  ChromosomeTube,
+  TUBE_SURFACE_ATTRIBUTE,
+  ringStations,
+  rodRadius,
+} from './chromosomeTube';
 
 const SHAPE = { armA: 1.2, armB: 0.8, radius: 0.15, sides: 8 };
 
@@ -71,6 +77,25 @@ describe('chromosome tube', () => {
     expect(hit?.point.z).toBeCloseTo(SHAPE.radius, 2);
     expect(hit?.face?.normal.z).toBeGreaterThan(0);
     expect(tube.ringOfFace(hit?.faceIndex ?? -1)).toBeGreaterThan(0);
+    tube.dispose();
+  });
+
+  it('each vertex keeps a fixed place on the surface (relief stays on it as the tube moves)', () => {
+    const tube = new ChromosomeTube(SHAPE);
+    const surf = tube.geometry.getAttribute(TUBE_SURFACE_ATTRIBUTE);
+    const before = Array.from(surf.array);
+    const n = tube.rings;
+    const centre = new Float32Array(n * 3).map((_, i) => (i % 3 === 1 ? 2 : i * 0.01));
+    tube.write(centre, new Float32Array(n).fill(0.05));
+    expect(Array.from(surf.array)).toEqual(before);
+    for (let r = 0; r < n; r++) {
+      for (let a = 0; a < tube.sides; a++) {
+        const k = r * tube.sides + a;
+        // Distance along the chromatid, then around it at the condensed radius (no seam).
+        expect(surf.getX(k)).toBeCloseTo(tube.stations[r]!, 6);
+        expect(Math.hypot(surf.getY(k), surf.getZ(k))).toBeCloseTo(SHAPE.radius, 6);
+      }
+    }
     tube.dispose();
   });
 });

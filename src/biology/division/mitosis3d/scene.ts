@@ -17,7 +17,8 @@ import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
 import { glass, roundedBox, setRimAlpha, solid, withTint } from '@/ui/three/materials';
-import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
+import { withEdgeShade, withRelief } from '@/ui/three/relief';
+import { ChromosomeTube, TUBE_SURFACE_ATTRIBUTE } from '../../view3d/primitives/chromosomeTube';
 import { centrosomeMaker } from '../division3d/centrosomeMesh';
 import { TwoSphereProfile } from '../division3d/membraneMesh';
 import { placeNucleolus, writeEnvelopeParts } from '../division3d/nucleusMesh';
@@ -71,6 +72,8 @@ export interface SceneOptions {
   membraneOpacity?: number;
   /** Strength of the Fresnel outline of see-through shells (a theme token). */
   rimStrength?: number;
+  /** How much solids darken towards their silhouette (a theme token, `withEdgeShade`). */
+  edgeShade?: number;
 }
 
 export type PickResult = Selection;
@@ -167,6 +170,7 @@ export function buildMitosisScene(
   const seg = Math.max(8, Math.round(opts.segments));
   const tier: QualityTier = opts.tier ?? (seg >= 24 ? 'high' : seg >= 16 ? 'medium' : 'low');
   const rimStrength = opts.rimStrength ?? 0.7;
+  const edgeShade = opts.edgeShade ?? 0;
   const scene = new THREE.Scene();
   const disposables: { dispose: () => void }[] = [];
   const keep = <T extends { dispose: () => void }>(x: T): T => {
@@ -212,7 +216,23 @@ export function buildMitosisScene(
     dim.userData.opacityScale = scale;
     return { base, hi, dim };
   };
-  const organic = (c: string) => solid(c, tier, { roughness: 0.5, sheen: 0.6, fades: true });
+  /**
+   * Surface relief (illustration, `relief.ts`): fine grain on the chromatids (it stays on each
+   * one as it moves) and granules on the nucleolus. Light only — no shape, size or count
+   * changes. Small parts only: on the membranes, which fill much of the picture, it cost a
+   * quarter more frame time in software rendering for a barely visible ripple.
+   */
+  const RELIEF = {
+    chromatid: { frequency: 11, height: 0.028, attribute: TUBE_SURFACE_ATTRIBUTE },
+    nucleolus: { frequency: 7, height: 0.025 },
+  } as const;
+  const relief =
+    <M extends THREE.MeshStandardMaterial>(
+      o: (typeof RELIEF)[keyof typeof RELIEF],
+      make: (c: string) => M,
+    ) =>
+    (c: string) =>
+      withRelief(make(c), o);
   const firm = (c: string) => solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true });
   const shell =
     (opacity: number, rimAlpha: number, side: THREE.Side = THREE.FrontSide) =>
@@ -225,8 +245,19 @@ export function buildMitosisScene(
    * the same fade towards the backdrop as the other parts.
    */
   const tubeLook = (): Look<THREE.MeshStandardMaterial> => {
+    // The chromosome look: soft sheen, a faint clear coat, fine relief and a light darkening
+    // towards the silhouette (a rod, not a flat ribbon); the maternal / paternal colours stay
+    // exact as albedo (vertex colours) where the surface faces the viewer.
     const make = () => {
-      const m = keep(organic('#ffffff'));
+      const m = keep(
+        withEdgeShade(
+          withRelief(
+            solid('#ffffff', tier, { roughness: 0.55, sheen: 0.7, clearcoat: 0.1, fades: true }),
+            RELIEF.chromatid,
+          ),
+          { strength: 0.6 * edgeShade },
+        ),
+      );
       m.vertexColors = true;
       return m;
     };
@@ -245,8 +276,9 @@ export function buildMitosisScene(
     bead: look(palette.centromere, firm),
     // One pass for the see-through double-sided parts (one draw call each, not two).
     envelope: look(palette.envelope, shell(0.3, 0.45, THREE.DoubleSide)),
-    nucleolus: look(palette.nucleolus, (c) =>
-      solid(c, tier, { roughness: 0.55, sheen: 0.4, fades: true }),
+    nucleolus: look(
+      palette.nucleolus,
+      relief(RELIEF.nucleolus, (c) => solid(c, tier, { roughness: 0.55, sheen: 0.4, fades: true })),
     ),
     membrane: look(palette.membrane, shell(animal ? membraneOpacity : membraneOpacity * 0.5, 0.55)),
     wall: look(palette.wall, shell(0.16, 0.6)),

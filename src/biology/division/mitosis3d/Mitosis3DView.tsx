@@ -75,7 +75,12 @@ declare global {
   }
 }
 
-function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStrength: number } {
+function readPalette(): {
+  palette: ScenePalette;
+  membraneOpacity: number;
+  rimStrength: number;
+  edgeShade: number;
+} {
   const css = getComputedStyle(document.documentElement);
   // Theme tokens only; the neutral fallback is for environments without the stylesheet.
   const token = (name: string) => css.getPropertyValue(name).trim() || 'gray';
@@ -104,6 +109,7 @@ function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStr
     },
     membraneOpacity: number('--m3d-membrane-opacity', 0.16),
     rimStrength: number('--m3d-rim', 0.7),
+    edgeShade: number('--m3d-edge-shade', 0),
   };
 }
 
@@ -579,6 +585,7 @@ export function Mitosis3DView({
       tier: tierName,
       membraneOpacity: look.membraneOpacity,
       rimStrength: look.rimStrength,
+      edgeShade: look.edgeShade,
     });
     sceneRef.current = { scene: ms, tl };
     h.setScene(ms.scene);

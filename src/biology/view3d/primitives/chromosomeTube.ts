@@ -32,6 +32,13 @@ export interface ColourSegment {
   color: THREE.ColorRepresentation;
 }
 
+/**
+ * A static vec3 attribute of the tube: each vertex's place on the surface (distance along the
+ * chromatid, and around it at the condensed radius). Surface relief (`withRelief`) samples it, so
+ * the bumps stay on the chromatid while its vertices move and condense.
+ */
+export const TUBE_SURFACE_ATTRIBUTE = 'surf';
+
 /** Waist at the centromere: radius share at its narrowest, and its half-width. */
 export const CONSTRICTION = { depth: 0.38, halfWidth: 0.2 } as const;
 
@@ -153,6 +160,16 @@ export class ChromosomeTube {
     this.geometry.setAttribute('position', this.pos);
     this.geometry.setAttribute('normal', this.nor);
     this.geometry.setAttribute('color', this.col);
+    const surf = new Float32Array(n * 3);
+    for (let r = 0; r < this.rings; r++) {
+      for (let a = 0; a < this.sides; a++) {
+        const k = 3 * (r * this.sides + a);
+        surf[k] = this.stations[r] ?? 0;
+        surf[k + 1] = (this.around[2 * a] ?? 0) * shape.radius;
+        surf[k + 2] = (this.around[2 * a + 1] ?? 0) * shape.radius;
+      }
+    }
+    this.geometry.setAttribute(TUBE_SURFACE_ATTRIBUTE, new THREE.BufferAttribute(surf, 3));
     const index: number[] = [];
     const m = this.sides;
     for (let r = 0; r < this.rings - 1; r++) {
