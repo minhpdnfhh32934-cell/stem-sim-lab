@@ -21,6 +21,14 @@ export function twoCompartment(
   return { c1: ceq + (d * v2) / (v1 + v2), c2: ceq - (d * v1) / (v1 + v2) };
 }
 
+/**
+ * End of the diffusion chart's time axis (and of the 3D view's time slider): five time
+ * constants, 5/k with k = P·A·(1/V₁ + 1/V₂). Units follow the inputs (mL, mL/min → min).
+ */
+export function fickTimeEnd(v1: number, v2: number, pa: number): number {
+  return 5 / (pa * (1 / v1 + 1 / v2));
+}
+
 export interface OsmosisParams {
   /** Initial solute concentration in the left arm (mol/m³ = mM). */
   c0: number;

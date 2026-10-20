@@ -196,5 +196,6 @@ export const diffusionOsmosis: ModuleView = {
     'i',
     'tC',
     'h0',
+    'view3d',
   ]),
 };

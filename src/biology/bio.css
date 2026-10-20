@@ -796,3 +796,24 @@
 .enz3d__row > * {
   pointer-events: auto;
 }
+
+/* 3D diffusion & osmosis (src/biology/transport/transport3d): the counts and the role legend
+   under the player. */
+.tr3d__legend {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.tr3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tr3d__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.tr3d__row > * {
+  pointer-events: auto;
+}

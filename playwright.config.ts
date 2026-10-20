@@ -18,10 +18,11 @@ const chromium = {
  * the Biology Studio spec, which shows the same 3D view in software, the meiosis 3D view
  * (meiosis3d.spec.ts), the DNA → mRNA → protein 3D view (dogma3d.spec.ts), the point-mutation
  * 3D view (mutation3d.spec.ts), the Mendel 3D view (mendel3d.spec.ts), the enzyme kinetics 3D
- * view (enzyme3d.spec.ts) and the other biology lessons' 3D views (bio3d.spec.ts).
+ * view (enzyme3d.spec.ts), the diffusion & osmosis 3D view (transport3d.spec.ts) and the other
+ * biology lessons' 3D views (bio3d.spec.ts).
  */
 const HEAVY_3D =
-  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|enzyme3d|studio-biology|bio3d)\.spec\.ts$/;
+  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|enzyme3d|transport3d|studio-biology|bio3d)\.spec\.ts$/;
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */
