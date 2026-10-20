@@ -67,7 +67,9 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
-  of a lazy module waits up to 20 s (the dev server compiles it on first use).
+  of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
+  output in `test-results/` (not watched by Vite): traces written inside the watched project
+  contain `.html` files that make the dev server reload every open page mid-test.
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
@@ -98,7 +100,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   picture-reading model on this computer (`src/teacher/chat/pictureReader.ts`), never online.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
-  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (LUIDs change per
+  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (4–8 hex
+  digits: ACPI ids such as Windows-on-ARM `QCOM` are 8; LUIDs change per
   boot) and, before the window exists, adds `--use-adapter-luid=<high>,<low>` to wry's default
   WebView2 args (restart needed; the whole GPU process moves). Never use
   `--use-webgpu-power-preference=force-high-performance` (no adapter at all). UI:
@@ -190,7 +193,10 @@ src/ai/           LLM client + SceneSpec pipeline (Phase 3)
 src/core/         units, constants, integrators, fixed timestep (Phase 1)
 src/physics/      physics engine & scenes (Phase 2)
 src/chemistry/    elements, molecules, reaction library (Phase 4)
-src/biology/      biology modules (Phase 5)
+src/biology/      biology modules (Phase 5) + per-lesson 3D modules (`*/xxx3d/`, 0.7.0)
+src/studio/       Science Studio: guided lessons + authoring (0.6.0)
+src/teacher/      AI Teacher: chat, board, voice
+src/ui/three/     generic three.js kit (renderer, quality tiers, host, labels; no biology)
 src/science-card/ Science Card types + UI
 src/perf/         quality tier, frame monitor, degradation ladder
 src/workers/      Web Workers for simulation
@@ -381,6 +387,24 @@ Progress log: `docs/PROGRESS.md`.
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
 
+## Science Studio (`src/studio/`, 0.6.0)
+
+- Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Entry: the launch
+  page's "Science Studio" card → screen `'studio'` → `StudioScreen` (tabs Hóa học · Sinh học ·
+  Vật lí · Soạn bài). Layers and file map: `docs/ARCHITECTURE.md` §3f.
+- **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine
+  ids and data keys; physics runs the scene's own engine (`solve()` = cross-check and POE verdict),
+  chemistry shows only what `data/reactions.json` records (else "chưa có trong cơ sở dữ liệu đã
+  kiểm chứng"), biology reuses the mitosis 3D view (2D fallback) and the model's counts.
+- One `SubjectPlugin` per subject (`flow/types.ts`); shared steps in `flow/`; evidence keeps its
+  origin (engine / learner / AI, `session.ts`); the report is Markdown (`report.ts`); "Hỏi thầy"
+  gets the screen context from `aiContext.ts`. State: `studioStore.ts` (`stemsim.studio`).
+- Built-in scenarios in `scenarios/` (validated at load; an invalid one is left out). Authoring
+  ("Soạn bài", `authoring/`): every choice comes from an engine or data table, local only
+  (`teacher.` ids), JSON import/export, always labelled unreviewed.
+- Teaching text is `review_status: "pending"` (DATA_REVIEW 20–23). Tests next to each file,
+  E2E `tests/e2e/studio.spec.ts` and `studio-biology.spec.ts` (3D project).
+
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
 - The gate lives in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
@@ -410,10 +434,125 @@ Progress log: `docs/PROGRESS.md`.
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
 - Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
   `runDivision('mitosis')`, S phase folded into the G1→G2 boundary), `scene.ts` (three.js, nothing
-  allocated per frame, everything disposed), `Mitosis3DView`/`Mitosis3DSwitch` (falls back to 2D on
-  tier low / no WebGL2 / context lost). The division store records which division `index` belongs to
-  (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d` Playwright project (software WebGL
-  starves parallel specs).
+  allocated per frame, everything disposed; each chromatid one tube from
+  `view3d/primitives/chromosomeTube.ts` painted from the model's DNA segments, centreline in
+  `chromatidShape.ts` morphing thread ↔ rod in place; High tier adds the double nuclear envelope
+  with pores breaking into vesicles, centriole triplets, cell-plate vesicles — maths in
+  `sceneParts.ts`; budget tables in `scene.perf.test.ts` are measured values), `Mitosis3DView`/
+  `Mitosis3DSwitch` (falls back to 2D on tier low / no WebGL2 / context lost; "Hiện tên" labels,
+  smooth camera moves, double-click focus, arrow-key orbit). The division store records which
+  division `index` belongs to (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d`
+  Playwright project (software WebGL starves parallel specs).
+- Shared division 3D pieces (`src/biology/division/division3d/`, used by mitosis and meiosis):
+  `clock.ts` (stage windows, `stageAt`, `keyTime`), `math.ts`, `types.ts` (ChromatidPose, Fibre,
+  NucleusState, Counts3D), `plate.ts`, `counts.ts` (counts from the model + telophase convention),
+  `dimensions.ts`, `chromatidShape.ts`, `sceneParts.ts`, and three.js pieces `membraneMesh.ts`
+  (two-sphere profile), `centrosomeMesh.ts`, `spindleMesh.ts`, `nucleusMesh.ts`. The mitosis3d
+  files re-export the moved names.
+- Meiosis 3D (`src/biology/division/meiosis3d/`, animal germ cell): `timeline.ts` (12 steps:
+  G1, G2, I: pro/meta/ana/telo/cytokinesis, II: the same; counts from
+  `runDivision('meiosis', pairs, meiosisOptions(pairs, crossover, seed))` — `meiosisOptions.ts` is
+  shared with the 2D `useStages`, so both show the same run; chromatids painted from the model's
+  DNA pieces, crossing over in prophase I, chiasma at the model's point, metaphase I sides =
+  `orientation`; meiosis II spindles along y in each cell's own frame), `scene.ts`, `camera.ts`
+  (overview per division, one smooth move into meiosis II), `components.ts` (texts, card,
+  `drillSelection`: a second click on a bivalent / homologue lists one chromatid's pieces),
+  `facts.ts`, `store.ts` (`useMeiosis3D`, own 3D ↔ 2D index map), `Meiosis3DView`,
+  `Meiosis3DSwitch`, `panels.tsx`. Saved: `meiosisView3d` (division store, meiosis binding).
+  Basic hides speed and camera mode. E2E `tests/e2e/meiosis3d.spec.ts` (3D project).
+- DNA → mRNA → protein 3D (`src/biology/central/dogma3d/`): `bdna.ts` (one cited B-DNA constant:
+  10 bp/turn, 3,4 nm/turn, 2 nm; scene unit 1 nm), `binding.ts` (pure: model from `parseInput` →
+  `complement`/`codingToMrna`/`translate`, clock: transcription positions 0…n, release, then one
+  codon per step = the dogma store's `step`; `chainAt`, `syncedTime`, `windowFor` ≤ the tier's
+  `maxInstances` bp, absolute indices), `layout.ts` (pure positions: `helixAngle` integrates the
+  twist so the bubble lies flat with no jumps — the DNA turns about its axis while the polymerase
+  stays still), `scene.ts` (SceneKit, instanced rung halves coloured/shaped by base, backbones,
+  polymerase/ribosome glass, two tRNA slots, bead chain; lays out only what moves), `facts.ts`
+  (caption, chips, part card from the model), `camera.ts` ("Theo dõi"/"Toàn cảnh"), `store.ts`
+  (`useDogma3D`), `Dogma3DView`, `Dogma3DSwitch`, `panels.tsx`. Letters, amino acid names and
+  positions: `src/ui/three/tagLayer.ts`. `anticodon()` is shared with the 2D page (`dogma.ts`).
+  Saved: `view3d` (dogma store, shared binding with pointMutation). E2E `tests/e2e/dogma3d.spec.ts`.
+  The helix primitive (palette, base shapes, `Writer`, `makeStrand`) is `dogma3d/helix.ts`.
+- Point mutation 3D (`src/biology/central/mutation3d/`): `binding.ts` (pure: `mutationOf` →
+  `mutate`/`analyzeMutation`/`mutatedTranslation`; "slots" keep the mutated helix aligned with the
+  normal one — inserted bases bulge, deleted ones leave a gap; outlines `marks`, `changedCodons`
+  from `firstChange`, `beadNames`, window around the site), `layout.ts` (rows: normal mRNA, normal
+  helix, ruler, mutated helix, mutated mRNA, both chains side by side), `scene.ts` (static, laid out
+  once; accent outlines with `setPulse`, gap markers, brackets coloured start/stop/changed;
+  `drawn()` for tests), `facts.ts`, `camera.ts` ("Toàn cảnh"/"Vị trí đột biến"), `store.ts`
+  (`useMutation3D`, `applyPick`: a normal base pair sets the saved `pos`), `Mutation3DView`,
+  `Mutation3DSwitch`. 3D/2D is the dogma store's `view3d`. The outlines pulse a few times after a
+  change, never with reduced motion. E2E `tests/e2e/mutation3d.spec.ts`.
+- Mendel 3D (`src/biology/genetics/mendel3d/`): `binding.ts` (pure: `mendelModel3d` from
+  `parseGenotype`/`gametes`/`cross`/`phenotype`/`ratio`; `fraction`; the four illustrative steps
+  meiosis → gametes → fertilisation → offspring, `stepEnd(k)` = a step complete; `fieldOf` = a
+  draw's counts scaled by `drawScale`/`apportion`, `FIELD_CAP` 400 on every tier), `layout.ts`
+  (board flat: rows = ♀ gametes, columns = ♂; parents left/behind, pedestals right — bar height =
+  probability × `barH`; `motionAt`, `overviewPoints`), `look.ts` (class colours: the 2D table's five
+  first, a shape cue each, no (colour, shape) repeat), `scene.ts`, `facts.ts` (cards: genotype,
+  probability as a fraction, phenotype), `camera.ts` ("Toàn cảnh"/"Bảng Punnett"; `pointsFrame`
+  centres the outline on screen), `store.ts` (`useMendel3D`, opens on the outcome; `currentMendel`
+  → the model's `GenotypeError` message), `Mendel3DView`, `Mendel3DSwitch`. The Monte Carlo run is
+  `genetics/mendelRun.ts` (`mendelDraw`, shared with the 2D table: same seed, same counts); texts
+  shared by both views in `mendelCard.ts`, the invalid-genotype notice in `MendelNotice.tsx`.
+  Saved: `view3d` (Mendel store). Shape geometries of the palette's cues:
+  `view3d/primitives/classShape.ts`. E2E `tests/e2e/mendel3d.spec.ts`.
+- Enzyme kinetics 3D (`src/biology/enzyme/enzyme3d/`): model `enzymeSpecies` (rapid-equilibrium
+  fractions of E/ES/EI/ESI) and `timeCourseEnd` (the 2D plot's t range) in `enzyme/enzyme.ts`;
+  `binding.ts` (pure: `ENZYMES_DRAWN` 24, ES drawn = round(24·rate/Vmax), the rest by largest
+  remainders `splitTotal`; `particleScale` nice step "1 hạt = x mM", cap 150 on every tier; rate
+  view = [S] cursor (opens at the apparent Km), time view: S and P particles shared out of
+  round([S]₀/x) so S + P is conserved; `formsOf` fixed order), `layout.ts` (glass box, jittered
+  6 × 2 × 2 enzymes with the active site up-front, seeded particle pools, illustrative drift),
+  `scene.ts` (lumpy enzyme blob with a pocket — lock-and-key cartoon, shaded hollows — and a
+  second site for non-/uncompetitive inhibition; bound S/I, free S/P/I instanced; `drawn()` for
+  tests), `facts.ts` (readout, counts, scale chip, cards), `components.ts` (texts, `enzymeCard3d`),
+  `camera.ts` ("Toàn cảnh"/"Cận cảnh enzyme"), `store.ts` (`useEnzyme3D`: `t`, cursor `s`),
+  `Enzyme3DView`, `Enzyme3DSwitch`. Science Card texts of the 2D page: `enzyme/enzymeCard.ts`.
+  Saved: `view3d` (enzyme store). E2E `tests/e2e/enzyme3d.spec.ts`.
+- Diffusion & osmosis 3D (`src/biology/transport/transport3d/`): `diffusion.ts` (pure: N₁(t) =
+  apportion(particles · c₁(t)V₁ / (c₁⁰V₁ + c₂⁰V₂)) from `twoCompartment`, crossing schedule — the
+  m-th crossing when N₁ has moved by m, net only; no pore → counts stay), `diffusionLayout.ts`
+  (box widths V₁ : V₂, pores as round channels, `brownianWalks` seeded by `run`, `particleAt`:
+  a crossing walks to a pore's mouth and along its axis, never through the slab), `osmosis.ts`
+  (pure: the 2D chart's samples — at or before t —, one vertical scale + cm ruler, 60 solute
+  particles spread over h_L, illustrative water moved by h_L − h₀), `diffusionScene.ts` /
+  `osmosisScene.ts` (static glass and liquid bottoms merged, marks instanced), `facts.ts`,
+  `components.ts` (texts, `diffusionCard3d`/`osmosisCard3d`), `camera.ts`, `store.ts`
+  (`useTransport3D`), `Transport3DView`, `Transport3DSwitch`. Shared with the 2D page:
+  `fickTimeEnd` (transport.ts), `osmosisData` (osmosisData.ts), cards in `transportCards.ts`.
+  Saved: `view3d` (transport store). E2E `tests/e2e/transport3d.spec.ts`.
+- Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
+  shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
+  label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
+  taps/double taps, arrow keys, `place(…, {animate})` tweens — instant with reduced motion,
+  lost-context fallback, `window.__simlab3d[key]` debug hooks), `loop.ts` (`useFrameLoop`,
+  `usePlayback`: frame monitor + overload ladder), `camera.ts`, `frame.ts`, `insets.ts`,
+  `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
+  `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
+  disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
+- **Biology 3D status (0.7.0):** all 11 lessons open in 3D. Seven have a dedicated module (above):
+  mitosis, meiosis, DNA → mRNA → protein, point mutations, Mendel, enzyme kinetics, diffusion &
+  osmosis. The four population lessons (Hardy–Weinberg, drift, logistic, predator–prey) still use
+  the simple kit views below (`genetics/{HardyWeinberg3D,Drift3D}.tsx`,
+  `ecology/{Logistic3D,LotkaVolterra3D}.tsx`); their dedicated 3D views are promised for a later
+  update (0.7.0 known issues).
+- Biology 3D kit (`src/biology/view3d/`): the four population lessons draw with it directly (3D by
+  default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a
+  lost context, `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`,
+  page-drawn CSS2D labels, render on demand, `FrameMonitor` while animating, dispose on unmount),
+  `Bio3DView` (stage layout) / `Bio3DFigureBody` (figure above a page of tables: Hardy–Weinberg), `SceneKit`
+  (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
+  keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
+  3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
+  chips are shared with the 2D view so the text is identical. New 3D text → DATA_REVIEW (#26).
+  Shared biology pieces: `lessonStore.ts` (`createLesson3DStore`; `useMitosis3D` is one),
+  `palette.ts` (one token + shape cue per role, per lesson no two roles alike), `sampling.ts`
+  (`drawScale` nice steps, `apportion` largest remainders: classes add up exactly),
+  `texts.ts` (`ILLUSTRATION`, `MOTION`, `card3dAssumptions`), `primitives/`.
+  Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
+  project, SwiftShader). Specs that open biology topics set SwiftShader too and run in the
+  `chromium-3d` project (`HEAVY_3D` in `playwright.config.ts`, after the light specs).
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
@@ -446,6 +585,9 @@ Progress log: `docs/PROGRESS.md`.
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
   - [~] T0 specs (`docs/TEACHSCRIPT.md`, `docs/AI_TEACHER_ARCHITECTURE.md`, `docs/VOICE_BENCHMARK.md`),
     sketch route `src/teacher/` (dev builds only) — **waiting for user approval**
+- [x] 0.6.0 released 2026-10-19 (v0.6.0): audit G0–G8, Science Studio, AI Teacher board, mitosis 3D
+- [~] 0.7.0 (`feat/0.7`, in review, not released): bug-fix sweep + dedicated 3D for seven biology
+  lessons, shared 3D kit; the four population lessons' dedicated 3D views remain (see above)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
@@ -468,6 +610,10 @@ Progress log: `docs/PROGRESS.md`.
   told to reinstall. Never break Rust command signatures without bumping the native version.
 - The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
   `webupdate.rs`. The repo must be public for the app to download releases.
+- **Applying a web update (0.7.0):** `web_update_apply` only unpacks the new version folder and
+  writes `active.json`; the running version's folder stays until the restart (its lazy chunks,
+  CSS and fonts are still served), and unused folders / `.partial` unpacks are deleted at start-up.
+  The zip download has no total timeout (stall timeout only).
 - **One installer / one update channel** (productName "SimLab", `vn.stemsimlab.desktop`,
   `web-update.json`; the pilot
   installer and channel were removed in 0.5.0). The signed message still names `edition:main` and

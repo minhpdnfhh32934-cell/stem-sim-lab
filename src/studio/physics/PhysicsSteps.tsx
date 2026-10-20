@@ -5,7 +5,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { fromSI, toSI } from '@/core/units';
 import { useProgressStore } from '@/learn/progressStore';
-import { choiceLabel } from '@/learn/poeLabels';
+import { choiceLabel, choiceText } from '@/learn/poeLabels';
 import { fmtQty } from '@/physics/common/tex';
 import type { ParamDef, PhysicsScene } from '@/physics/types';
 import { ScienceCard } from '@/science-card/ScienceCard';
@@ -14,7 +14,6 @@ import { Skeleton } from '@/ui/Skeleton';
 import { cx } from '@/ui/cx';
 import {
   engineEvidence,
-  goTo,
   withEngine,
   withInputs,
   withPrediction,
@@ -87,7 +86,14 @@ export function Predict({ scenario, session, update }: StepProps) {
               disabled={locked}
               className={cx('studio-choice', checked && 'is-checked')}
               onClick={() => {
-                update((s) => withPrediction(s, { choice: String(i), label, at: Date.now() }));
+                update((s) =>
+                  withPrediction(s, {
+                    choice: String(i),
+                    label,
+                    text: choiceText(c),
+                    at: Date.now(),
+                  }),
+                );
               }}
             >
               {label}
@@ -168,16 +174,12 @@ export function Interact({ scenario, session, update }: StepProps) {
       }
       const labelOf = (i: number) => {
         const c = poe.choices[i];
-        return c ? choiceLabel(t, locale, c) : '';
+        return c ? choiceText(c) : null;
       };
       const verdict = verdictFor(r.cmp.outcome, session.prediction, labelOf);
-      update((s) =>
-        goTo(
-          scenario,
-          withEngine(s, ev, verdictFor(r.cmp.outcome, s.prediction, labelOf)),
-          'observe',
-        ),
-      );
+      // The learner stays here (as on the chemistry bench and the biology model): the result is
+      // announced below and "Tiếp: Quan sát" moves on.
+      update((s) => withEngine(s, ev, verdictFor(r.cmp.outcome, s.prediction, labelOf)));
       if (session.prediction && verdict.match !== null) {
         useProgressStore.getState().recordPrediction(poe.id, verdict.match);
       }
@@ -244,6 +246,12 @@ export function Interact({ scenario, session, update }: StepProps) {
       {error && (
         <p className="studio-error" role="alert">
           {t(`studio.physics.errors.${error as 'invalid' | 'unfinished' | 'binding'}`)}
+        </p>
+      )}
+      {/* Changing an input drops the engine records (withInputs), so this is the current run. */}
+      {!busy && !error && engineEvidence(session).length > 0 && (
+        <p className="muted small" role="status">
+          {t('studio.physics.ran')}
         </p>
       )}
     </div>

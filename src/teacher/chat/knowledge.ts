@@ -685,12 +685,17 @@ const GLUE_WORDS = `là và của các những cho thì mà với về để nà
 /**
  * Words that frame a question rather than name its topic ("phụ thuộc vào những đại lượng nào",
  * "cần điều kiện gì", "công thức nào"): left out as a whole, while their syllables still count in
- * other words ("động" in "động lượng", "ứng" in "phản ứng").
+ * other words ("động" in "động lượng", "ứng" in "phản ứng"). The second line names the learning
+ * step itself (Science Studio's "Hỏi thầy": "bước Dự đoán", "kết quả mô phỏng", "báo cáo còn
+ * thiếu ý gì quan trọng"): a free-fall lesson's question once brought the chromosome-mutation
+ * note through "quan trọng".
  */
 const FRAME_WORDS =
   `hiện tượng|phụ thuộc|xảy ra|đặc biệt|ra sao|thế nào|như thế|hoạt động|công thức|
   đại lượng|điều kiện|đặc điểm|ý nghĩa|vai trò|định nghĩa|khái niệm|nguyên nhân|ứng dụng|
-  phương pháp|trường hợp|người ta|tác dụng|thay đổi`
+  phương pháp|trường hợp|người ta|tác dụng|thay đổi|
+  dự đoán|thí nghiệm|quan sát|kết luận|báo cáo|gợi ý|suy nghĩ|đáp án|kết quả|mô phỏng|
+  so sánh|quan trọng`
     .split('|')
     .map((w) => w.trim())
     .filter(Boolean);

@@ -27,14 +27,14 @@ export function StageRecorder({ scenario, session, update, b }: StepProps & { b:
   const shown = useShowsLessonCell(b);
   const stage = useShownStage(tl);
   const answer = answerStage(tl, b.stageQuestion);
-  const labelOf = (s: Stage3D) => L(STAGE3D_NAME[s]);
+  const textOf = (s: Stage3D) => STAGE3D_NAME[s];
   const rec = shown ? engineEvidence(session).find((e) => e.key === stageKey(stage)) : undefined;
 
   const record = () => {
     if (!shown) return;
-    update((s) => withStageObservation(s, b, stage, Date.now(), labelOf));
+    update((s) => withStageObservation(s, b, stage, Date.now(), textOf));
     if (stage === answer) {
-      const v = bioVerdict(answer, session.prediction, labelOf);
+      const v = bioVerdict(answer, session.prediction, textOf);
       if (v.match !== null) {
         useProgressStore.getState().recordPrediction(`studio:${scenario.id}`, v.match);
       }
@@ -54,7 +54,7 @@ export function StageRecorder({ scenario, session, update, b }: StepProps & { b:
       </p>
       <div className="bio-panel__row">
         <p className="bio-panel__current">
-          {t('studio.bio.stages.current', { stage: labelOf(stage) })}
+          {t('studio.bio.stages.current', { stage: L(textOf(stage)) })}
         </p>
         <button type="button" className="btn btn--accent" onClick={record} disabled={!shown}>
           <Camera size={16} aria-hidden="true" />

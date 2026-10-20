@@ -288,8 +288,8 @@ tính; phần chữ của bài (mục tiêu, gợi ý, kết luận tham khảo)
 chưa có giáo viên duyệt.
 
 - **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
-  chọn) và B (độ cao gấp đôi), rồi tự sang bước Quan sát với bảng số đo, đồ thị và phép kiểm tra chéo
-  với công thức. Nút
+  chọn) và B (độ cao gấp đôi), rồi báo đã có số đo; bấm **Tiếp: Quan sát** để xem bảng số đo, đồ thị
+  và phép kiểm tra chéo với công thức (như ở môn Hóa và Sinh, em tự quyết khi nào đi tiếp). Nút
   **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
 - **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
   trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
@@ -490,7 +490,9 @@ Khi dùng AI:
   xoay, bấm vào một bộ phận (NST kép, tâm động, thoi phân bào, trung thể, thành tế bào…) để đọc chức
   năng của nó. Số NST, cromatit, ADN luôn do mô hình đếm; kích thước, vị trí, thời gian chỉ là minh
   họa. Pha S không vẽ thành bước riêng (G2 đã có NST kép). Khi chất lượng hiển thị là Thấp hoặc máy
-  không có WebGL2, app dùng hình 2D và ghi rõ lý do.
+  không có WebGL2, app dùng hình 2D và ghi rõ lý do. Từ bản 0.7, mỗi crômatit co xoắn dần ngay tại
+  chỗ; ở chất lượng **Cao** có thêm màng nhân kép có lỗ (vỡ thành túi nhỏ ở kì đầu), trung tử 9 bộ
+  ba vi ống và các túi tạo tấm tế bào ở thực vật.
 - **ADN → mARN → Protein / Đột biến điểm:** dán trình tự ADN (có thể có khoảng trắng, 5′/3′), chọn
   mạch bổ sung hay mạch gốc. Ở Đột biến điểm, chọn dạng đột biến, vị trí và nuclêôtit mới — app so
   sánh protein trước/sau và gọi tên kiểu đột biến.
@@ -505,6 +507,43 @@ Khi dùng AI:
 - **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
   ρgΔh = iCRT.
 
+### Hình 3D trong Sinh học (bản 0.7)
+
+Cả 11 bài Sinh học mở bằng hình 3D. Cách dùng chung:
+
+- Nút **3D / 2D** để đổi hình; app nhớ lựa chọn của từng bài. Kéo chuột để xoay, lăn chuột để
+  phóng to, phím mũi tên cũng xoay được; **Góc nhìn** đổi giữa **Toàn cảnh** và cận cảnh.
+- Bật **Hiện tên** để thấy tên các phần ngay trên hình (chế độ Cơ bản bật sẵn).
+- Mọi con số trên hình (số NST, số hạt, tỉ lệ con lai, chữ cái của trình tự…) do mô hình của bài
+  tính, giống hình 2D. Hình dạng, kích thước, vị trí và chuyển động chỉ là **minh họa** — hình nào
+  cũng ghi câu này. Khi phải vẽ một hình cho nhiều cá thể hoặc nhiều hạt, hình có ghi chú mỗi hình ứng với bao nhiêu.
+- Chất lượng hiển thị Thấp, máy không có WebGL2 hoặc card đồ họa gặp lỗi → app tự dùng hình 2D và
+  ghi lý do. Máy chậm thì chuyển động bớt mượt, số liệu không đổi.
+
+Từng bài:
+
+- **Giảm phân 3D:** 12 bước của tế bào động vật, từ G1 tới phân chia tế bào chất II. Ở kì đầu I
+  thấy trao đổi chéo và điểm bắt chéo; màu từng đoạn crômatit cho biết phần từ mẹ, phần từ bố. Hình
+  3D dùng đúng lần sắp xếp ngẫu nhiên của hình 2D. Bấm lần thứ hai vào một NST để xem các đoạn ADN của một crômatit.
+  Chưa vẽ giảm phân ở thực vật.
+- **ADN → mARN → Protein 3D:** chuỗi xoắn kép mở ra, mARN được tổng hợp, rồi ribôxôm dịch mỗi bước
+  một bộ ba. Góc nhìn **Theo dõi** (đi theo chỗ đang làm việc) hoặc **Toàn cảnh**; **Hiện tên và
+  chữ cái** để đọc bazơ và axit amin.
+- **Đột biến điểm 3D:** ADN bình thường và ADN đột biến xếp song song, kèm mARN và chuỗi axit amin
+  của cả hai. Chỗ thay đổi được viền nổi. Góc nhìn **Vị trí đột biến** đưa máy ảnh tới đúng chỗ đó;
+  bấm vào một cặp bazơ của ADN bình thường để chọn vị trí đột biến.
+- **Di truyền Mendel 3D:** bố mẹ, giao tử, bảng Punnett và các cột con lai cao theo xác suất. Đi
+  qua bốn bước **Giảm phân → Giao tử → Thụ tinh → Con lai**; góc nhìn **Bảng Punnett** để nhìn
+  thẳng vào bảng. Phần **Con lai ngẫu nhiên** dùng cùng lần tạo ngẫu nhiên với bảng 2D.
+- **Động học enzyme 3D:** số enzyme đang gắn cơ chất theo v/Vmax của công thức trong bài (làm tròn);
+  chất ức chế gắn đúng chỗ theo kiểu ức chế đã chọn; thang "1 hạt = … mM". Góc nhìn **Cận cảnh
+  enzyme** để nhìn một enzyme.
+- **Khuếch tán & thẩm thấu 3D:** số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua
+  lỗ màng. Thẩm thấu: ống chữ U có thước cm, mực nước lấy từ đồ thị của bài.
+- **Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt:** hiện có hình
+  3D đơn giản (mỗi hình là một cá thể hoặc một nhóm cá thể). Hình 3D riêng, chi tiết cho bốn bài
+  này sẽ có trong một bản cập nhật sau.
+
 ## Lưu, mở, xuất và lịch sử
 
 - **Menu Tệp** (nút ☰ ở thanh trên): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Nguồn & Giả
@@ -514,7 +553,8 @@ Khi dùng AI:
 - **Hoàn tác / Làm lại (Ctrl+Z / Ctrl+Y):** áp dụng cho thông số của chủ đề đang mở. Kéo thanh trượt
   liên tục được tính là một bước.
 - **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
-  CSV. Rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải.
+  CSV. Ở chế độ **Nâng cao**, rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải (trên màn
+  hình cảm ứng nút luôn hiện).
 - **Lịch sử** (tab ở cột trái): mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm
   thùng rác để xóa.
 - **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục

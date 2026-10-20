@@ -4,6 +4,7 @@ import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import type { ChatRequest } from '@/ai/types';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { useChatStore, type ChatMessageRecord } from './chatStore';
+import { provideScreenContext } from './context';
 
 /**
  * Teaching quality (2026-10-14): the small on-device prompt, the note right before the question,
@@ -236,6 +237,23 @@ describe('the on-device prompt after review 2', () => {
     });
     expect(tight.system).toContain('dòng đầu là tiêu đề');
     expect(tight.system).not.toContain('tự kiểm tra');
+  });
+
+  it('a full-page screen gets the screen budget of the prompt size, to fit its own facts', async () => {
+    const seen: (number | undefined)[] = [];
+    const stop = provideScreenContext((_locale, maxChars) => {
+      seen.push(maxChars);
+      return 'Studio facts';
+    });
+    try {
+      await contextPrompt('Lực ma sát là gì?', 'vi', true, false, 'tight');
+      await contextPrompt('Lực ma sát là gì?', 'vi', true, false, 'compact');
+      const full = await contextPrompt('Lực ma sát là gì?', 'vi', true, false, 'full');
+      expect(seen).toEqual([1200, 4000, undefined]);
+      expect(full.system).toContain('Studio facts');
+    } finally {
+      stop();
+    }
   });
 
   it('"Dừng" during the Wikipedia lookup stops it and asks the model nothing', async () => {

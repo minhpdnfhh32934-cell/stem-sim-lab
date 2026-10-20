@@ -261,24 +261,39 @@ describe('the pen and the lesson belong to one face and one run', () => {
   });
 
   it('S5: flipping faces quickly pauses once, says nothing and keeps the run', async () => {
-    const done = lesson.playLesson(A, measure);
-    await until(writingOnFace2);
-    const run = board().run;
-    const at = voice.log.length;
-    for (let i = 0; i < 30; i++) {
-      lesson.showFace(i % 2);
-      await vi.advanceTimersByTimeAsync(10);
+    // The run's waits listen on its abort signal: every listener put on is taken off again.
+    const adds = vi.spyOn(AbortSignal.prototype, 'addEventListener');
+    const removes = vi.spyOn(AbortSignal.prototype, 'removeEventListener');
+    const aborts = (spy: typeof adds) => spy.mock.calls.filter(([type]) => type === 'abort').length;
+    try {
+      const done = lesson.playLesson(A, measure);
+      await until(writingOnFace2);
+      const run = board().run;
+      const at = voice.log.length;
+      for (let i = 0; i < 30; i++) {
+        lesson.showFace(i % 2);
+        await vi.advanceTimersByTimeAsync(10);
+      }
+      expect(board().status).toBe('paused');
+      expect(board().run).toBe(run);
+      expect(count('stop-voice', at)).toBe(1);
+      expect(said(at)).toEqual([]);
+      const ids = board().layout.elements.map((e) => e.id);
+      expect(new Set(ids).size).toBe(ids.length);
+      // Once the step under way is over, thirty flips leave no timer behind (0.7 test gap).
+      await vi.advanceTimersByTimeAsync(5000);
+      expect(vi.getTimerCount()).toBe(0);
+      lesson.resumeLesson();
+      await finish(done);
+      expect(count('status:done')).toBe(1);
+      for (const id of A_IDS) expect(count(`place:${id}`)).toBe(1);
+      expect(vi.getTimerCount()).toBe(0);
+      expect(aborts(adds)).toBeGreaterThan(0);
+      expect(aborts(removes)).toBe(aborts(adds));
+    } finally {
+      adds.mockRestore();
+      removes.mockRestore();
     }
-    expect(board().status).toBe('paused');
-    expect(board().run).toBe(run);
-    expect(count('stop-voice', at)).toBe(1);
-    expect(said(at)).toEqual([]);
-    const ids = board().layout.elements.map((e) => e.id);
-    expect(new Set(ids).size).toBe(ids.length);
-    lesson.resumeLesson();
-    await finish(done);
-    expect(count('status:done')).toBe(1);
-    for (const id of A_IDS) expect(count(`place:${id}`)).toBe(1);
   });
 
   it('S7: a pause holds the pen where it is; "Tiếp tục" goes on from that letter', async () => {
@@ -297,6 +312,39 @@ describe('the pen and the lesson belong to one face and one run', () => {
     expect(board().progress.b1).toBe(textOf('b1').length);
     expect(count('written:b1')).toBe(1);
   });
+
+  it.each([
+    ['voice off', false],
+    ['voice on', true],
+  ])(
+    'S7: a pause after the last line is written holds the end of the lesson too (%s, 0.7 fix)',
+    async (_name, on) => {
+      useVoiceStore.setState({ enabled: on });
+      voice.ms = 10;
+      const done = lesson.playLesson(A, measure);
+      // The last line is written and said: only the lesson's closing wait is left.
+      const c1Written = () => {
+        const c1 = board().layout.elements.find((e) => e.id === 'c1');
+        return c1?.kind === 'text' && (board().progress.c1 ?? 0) >= c1.length;
+      };
+      await until(() => c1Written() && !useVoiceStore.getState().speaking);
+      expect(board().status).toBe('playing');
+      lesson.showFace(0);
+      lesson.pauseForAsk();
+      const before = snapshot();
+      expect(board().status).toBe('paused');
+      await vi.advanceTimersByTimeAsync(20_000);
+      expect(board().status).toBe('paused');
+      expect(board().pausedForAsk).toBe(true);
+      expect(snapshot()).toEqual(before);
+      expect(count('status:done')).toBe(0);
+      lesson.resumeLesson();
+      await finish(done);
+      expect(count('status:done')).toBe(1);
+      expect(board().pausedForAsk).toBe(false);
+      expect(board().pen).toBeNull();
+    },
+  );
 
   it('S7/S9: a stop ends every write and every timer at once', async () => {
     const adds = vi.spyOn(AbortSignal.prototype, 'addEventListener');

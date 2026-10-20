@@ -125,6 +125,33 @@ describe('TeachScript reader', () => {
     const kinds = r.sentences.flatMap((s) => s.actions.map((a) => a.action.kind));
     expect(kinds).toEqual(['plot', 'correct', 'newboard']);
   });
+
+  it('a ">" inside a quoted attribute does not end the tag (0.7 fix)', () => {
+    const arrow = parseTeachScript(
+      'Ta có <write id="s1">a</write> và <write id="s2">b</write>. Rồi <arrow from="s1" to="s2" label="vì a > 0"/> Xong.',
+    );
+    expect(arrow.diagnostics.filter((d) => d.code === 'bad_attribute')).toEqual([]);
+    const spoken = arrow.sentences.map((s) => s.speech).join(' ');
+    expect(spoken).not.toContain('"/>');
+    expect(spoken).not.toContain('0"');
+    const action = arrow.sentences.flatMap((s) => s.actions).find((a) => a.action.kind === 'arrow');
+    expect(action?.action).toMatchObject({ from: 's1', to: 's2', label: 'vì a > 0' });
+    const under = parseTeachScript(
+      '<write id="s1">F > 0</write>. Rồi <underline target="s1" span=\'F > 0\'/> xong.',
+    );
+    expect(under.diagnostics.filter((d) => d.code === 'bad_attribute')).toEqual([]);
+    expect(under.sentences.map((s) => s.speech).join(' ')).not.toContain("0'/>");
+    expect(under.sentences.flatMap((s) => s.actions).map((a) => a.action.kind)).toContain('mark');
+  });
+
+  it('a pause after two sentences goes after the second one (0.7 fix)', () => {
+    const r = parseTeachScript('Câu một. Câu hai.<pause ms="1500"/> Câu ba.');
+    expect(r.sentences.map((s) => [s.speech, s.pauseMs])).toEqual([
+      ['Câu một.', 0],
+      ['Câu hai.', 1500],
+      ['Câu ba.', 0],
+    ]);
+  });
 });
 
 describe('markdown answers on the board', () => {
@@ -486,6 +513,29 @@ describe('number provenance', () => {
     expect(checkNumbers('m = 2 kg, F = 10 N', [2, 10], []).status).toBe('given');
     // A result proved earlier may be used later.
     expect(checkNumbers('s = 20 \\cdot 5', [], [20]).status).toBe('checked');
+  });
+
+  it('an unspaced division or a ^ power is arithmetic, not a unit (0.7 fix)', () => {
+    const power = checkNumbers('N = 2^5 = 32', [5], []);
+    expect(power.status).toBe('checked');
+    expect(power.results).toContain(32);
+    expect(checkNumbers('$2^5 = 32$', [5], []).status).toBe('checked');
+    const speed = checkNumbers('v = 100/4 = 25 m/s', [100, 4], []);
+    expect(speed.status).toBe('checked');
+    expect(speed.results).toContain(25);
+    expect(checkNumbers('a = 60/4 = 15', [60, 4], []).status).toBe('checked');
+    expect(checkNumbers('t = 1/8 = 0,125 s', [1, 8], []).status).toBe('checked');
+    // A unit after the number still counts as that number.
+    expect(checkNumbers('a = 10/2 = 5 m/s^2', [10, 2], []).results).toContain(5);
+  });
+
+  it('a dot decimal with a leading zero is a decimal, never grouped thousands (0.7 fix)', () => {
+    const check = checkNumbers('t = 1/8 = 0.125 s', [1, 8], []);
+    expect(check.numbers.find((n) => n.raw === '0.125')?.value).toBe(0.125);
+    expect(check.status).toBe('checked');
+    expect(evaluate('0.500*2')).toBe(1);
+    // Vietnamese grouped thousands still read as thousands.
+    expect(evaluate('1.000/4')).toBe(250);
   });
 });
 

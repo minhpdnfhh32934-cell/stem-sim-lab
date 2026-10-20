@@ -16,7 +16,7 @@ import type { Source } from '@/core/data/dataset';
 import { toast } from '@/ui/toast';
 import { buildReport } from '../report';
 import { ReviewNote } from '../ReviewNote';
-import { learnerText, MAX_NOTE, withLearnerText } from '../session';
+import { computedLabel, learnerText, MAX_NOTE, predictionLabel, withLearnerText } from '../session';
 import { useStudioStore } from '../studioStore';
 import { TeacherNote } from '../TeacherNote';
 import { copyText } from './clipboard';
@@ -108,9 +108,11 @@ export function ExplainStep(props: StepProps) {
 /** Conclude: the prediction next to what the engine computed, then the learner's conclusion. */
 export function ConcludeStep({ plugin, ...props }: WithPlugin) {
   const t = useT();
+  const locale = useSettingsStore((s) => s.locale);
   const L = useLocalized();
   const { scenario, session } = props;
   const v = session.verdict;
+  const computed = v ? computedLabel(v, locale) : null;
   const result =
     !v || v.match === null
       ? t('studio.conclude.none')
@@ -122,8 +124,12 @@ export function ConcludeStep({ plugin, ...props }: WithPlugin) {
   return (
     <div className="studio-stack">
       <div className="studio-verdict" data-match={v?.match ?? 'none'}>
-        <p>{t('studio.conclude.predicted', { label: session.prediction?.label ?? '—' })}</p>
-        {v?.correctLabel && <p>{t('studio.conclude.computed', { label: v.correctLabel })}</p>}
+        <p>
+          {t('studio.conclude.predicted', {
+            label: session.prediction ? predictionLabel(session.prediction, locale) : '—',
+          })}
+        </p>
+        {computed && <p>{t('studio.conclude.computed', { label: computed })}</p>}
         <p className="studio-verdict__result">
           <Sparkles size={16} aria-hidden="true" />
           {result}

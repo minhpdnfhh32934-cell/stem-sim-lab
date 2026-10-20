@@ -310,6 +310,15 @@ function speakWith(
   return speakSystem(chunks, signal, rate, progress, onDevice);
 }
 
+/**
+ * Which speech is the latest: it changes when a new speech starts or speech stops. Read right
+ * after `speak(...)` (its first step runs at once), it names that speech, so a caller can stop
+ * its own speech later without cutting someone else's (`VoiceSettings`' preview).
+ */
+export function speechId(): number {
+  return generation;
+}
+
 /** Stops any ongoing teacher speech. Safe to call anytime. */
 export function stopSpeaking(): void {
   generation++;

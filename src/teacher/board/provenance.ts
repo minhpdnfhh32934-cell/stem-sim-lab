@@ -27,10 +27,11 @@ export interface Provenance {
 /** Standard values a teacher may use without them being in the problem. */
 const STANDARD = [9.8, 9.81, 10, 3.14, 3.1416, 3.6, 1000, 100, 60, 3600, 273, 273.15];
 
-const NUMBER = /\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+[.,]\d+|\d+/g;
+// A dot-grouped number starts with 1-9: "0.125" is a decimal, never 125 (grouped thousands).
+const NUMBER = /[1-9]\d{0,2}(?:\.\d{3})+(?:,\d+)?|\d+[.,]\d+|\d+/g;
 
 function value(raw: string): number {
-  if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(raw))
+  if (/^[1-9]\d{0,2}(\.\d{3})+(,\d+)?$/.test(raw))
     return Number(raw.replace(/\./g, '').replace(',', '.'));
   return Number(raw.replace(',', '.'));
 }
@@ -45,6 +46,8 @@ function close(a: number, b: number): boolean {
 /** LaTeX / board notation → plain arithmetic ("\frac{10}{2}" → "(10)/(2)"). */
 export function toArithmetic(s: string): string {
   let t = s
+    // Inline-math delimiters ("$2^5 = 32$") are not arithmetic.
+    .replace(/\$/g, ' ')
     .replace(/\\text\{[^}]*\}|\\mathrm\{[^}]*\}/g, ' ')
     .replace(/\\left|\\right|\\,|\\;|\\!/g, ' ')
     .replace(/\{,\}/g, ',')
@@ -72,7 +75,7 @@ export function evaluate(expr: string): number | null {
   let i = 0;
   const peek = () => src[i] ?? '';
   const num = (): number | null => {
-    const m = /^(\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+[.,]\d+|\d+)/.exec(src.slice(i));
+    const m = /^([1-9]\d{0,2}(?:\.\d{3})+(?:,\d+)?|\d+[.,]\d+|\d+)/.exec(src.slice(i));
     if (!m) return null;
     i += m[0].length;
     return value(m[0]);
@@ -139,10 +142,13 @@ export function evaluate(expr: string): number | null {
   return result !== null && i === src.length && Number.isFinite(result) ? result : null;
 }
 
-/** "5 m/s²" → "5": a lone number followed by its unit counts as that number. */
+/**
+ * "5 m/s²" → "5": a lone number followed by its unit counts as that number. The unit must start
+ * with a letter (or °, %, Ω): "100/4" and "2^5" are arithmetic, not "100" or "2" with a unit.
+ */
 function stripUnit(part: string): string {
   const m =
-    /^\s*(-?\s*(?:\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+[.,]\d+|\d+))\s*[a-zA-Zµμ°%Ω/²³]*[a-zA-Zµμ°%Ω²³/^0-9-]*\s*$/.exec(
+    /^\s*(-?\s*(?:[1-9]\d{0,2}(?:\.\d{3})+(?:,\d+)?|\d+[.,]\d+|\d+))\s*(?:[a-zA-Zµμ°%Ω][a-zA-Zµμ°%Ω²³/^0-9-]*)?\s*$/.exec(
       part,
     );
   return m ? (m[1] ?? part) : part;

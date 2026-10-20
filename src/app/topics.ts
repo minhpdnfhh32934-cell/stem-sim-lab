@@ -56,6 +56,10 @@ export function goHome(): void {
 /** Opens the existing topic browser and simulation workspace from the new landing page. */
 export function openLab(): void {
   closeTeacher();
+  // Nothing open in the lab: no Science Card may linger from another screen's model.
+  if (!useSimStore.getState().scene && !useModuleStore.getState().active) {
+    useWorkspaceStore.setState({ scienceCard: null });
+  }
   useNavigationStore.getState().setScreen('lab');
 }
 

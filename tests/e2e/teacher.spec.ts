@@ -81,6 +81,31 @@ test('knowledge library: add a .txt file, refuse a .pdf, Wikipedia stays off', a
   await settings.getByRole('tab', { name: 'Thư viện kiến thức' }).click();
   const teacher = page.locator('#settings-knowledge');
   await expect(teacher.getByRole('checkbox', { name: /Tra thêm Wikipedia/ })).not.toBeChecked();
+  // The upload row lies inside its card, under the legend: the button whole, the hint on one
+  // line (it was once squeezed beside the full-width legend, out of the card and the dialog).
+  const add = teacher.getByRole('button', { name: 'Thêm tệp kiến thức' });
+  const card = teacher.locator('fieldset', {
+    has: page.getByRole('button', { name: 'Thêm tệp kiến thức' }),
+  });
+  const hint = card.getByText('Hỗ trợ .txt, .md, .csv, .json', { exact: true });
+  const [addBox, cardBox, hintBox, legendBox] = await Promise.all([
+    add.boundingBox(),
+    card.boundingBox(),
+    hint.boundingBox(),
+    card.locator('legend').boundingBox(),
+  ]);
+  if (!addBox || !cardBox || !hintBox || !legendBox) throw new Error('upload row not laid out');
+  for (const box of [addBox, hintBox]) {
+    expect(box.x).toBeGreaterThanOrEqual(cardBox.x);
+    expect(box.x + box.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 0.5);
+    expect(box.y).toBeGreaterThanOrEqual(legendBox.y + legendBox.height - 0.5);
+  }
+  // One line of small text (one word per line would be several times taller).
+  expect(hintBox.height).toBeLessThan(30);
+  expect(
+    await teacher.evaluate((el) => el.scrollWidth - el.clientWidth),
+    'no sideways scrolling in the panel',
+  ).toBeLessThanOrEqual(0);
   const input = teacher.locator('input[type="file"]');
   await input.setInputFiles({
     name: 'dong-luc-hoc.txt',

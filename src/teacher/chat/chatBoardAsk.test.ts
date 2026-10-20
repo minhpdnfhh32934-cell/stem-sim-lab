@@ -364,6 +364,15 @@ describe('a picture of the circled area', () => {
     expect(calls).toHaveLength(0);
   });
 
+  it('asked in words (no AI here reads pictures): the question goes with the steps around it, never a picture (0.7 fix)', async () => {
+    await ask('Hình này vẽ lực nào ạ?', {
+      boardSelection: { selection: picture(), inWords: true },
+    });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.system).toContain('<board_selection>');
+    expect(JSON.stringify(calls)).not.toMatch(/images|iVBOR/);
+  });
+
   it('Gemma: only the chosen picture model on a known discrete card gets it, never 1B', async () => {
     picked.current = 'gemma';
     desktop.status = RTX;

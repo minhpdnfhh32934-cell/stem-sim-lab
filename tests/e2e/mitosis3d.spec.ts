@@ -57,7 +57,9 @@ const info = (page: Page) => page.evaluate(() => window.__simlabMitosis3d?.info(
 test('mitosis 3D: plays through every stage, switches cell type, no leaks on replay', async ({
   page,
 }) => {
-  test.setTimeout(120_000);
+  // A full division, ten replays, the plant cell and meiosis, all drawn in software: about 1 min
+  // locally, but past 2 min on the 4-vCPU CI runner (PR #32), where it was cut off at 2 min.
+  test.setTimeout(300_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => {
@@ -103,6 +105,9 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   const pass = async () => {
     await page.getByRole('button', { name: 'Phát lại từ đầu' }).click();
     await page.getByRole('button', { name: 'Tạm dừng' }).click();
+    // On a loaded machine the replay can leave G1 before the pause lands (seen 2026-10-20: the
+    // sixth step then waited on a disabled button): the steps always start from G1.
+    await strip(page).getByRole('button', { name: 'Trung gian G1' }).click();
     for (let k = 0; k < STAGES.length - 1; k++) {
       await next.click();
       await page.waitForTimeout(60);
@@ -140,13 +145,16 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   if (process.env.SHOTS)
     await page.screenshot({ path: `${process.env.SHOTS}/m3d-animal-meta.png` });
 
-  // 2D view still available; meiosis keeps the 2D picture.
+  // 2D view still available; meiosis shows its own 3D view (not the mitosis one), and its 2D.
   await page.getByRole('radio', { name: '2D' }).click();
   await expect(page.locator('.m3d')).toHaveCount(0);
   await expect(page.locator('canvas.chem-canvas')).toBeVisible();
   await page.getByRole('radio', { name: '3D' }).click();
   await expect(page.locator('.m3d canvas')).toBeVisible();
   await page.getByRole('button', { name: 'Giảm phân', exact: true }).click();
+  await expect(page.locator('.m3d:not(.mei3d)')).toHaveCount(0);
+  await expect(page.locator('.mei3d canvas')).toBeVisible();
+  await page.getByRole('radio', { name: '2D' }).click();
   await expect(page.locator('.m3d')).toHaveCount(0);
   await expect(page.locator('canvas.chem-canvas')).toBeVisible();
 
@@ -232,6 +240,15 @@ test('mitosis 3D at 1366 × 768: with a part picked, the boxes never overlap at 
       expect(l.ask!.bottom, `${where}: ask bottom`).toBeLessThanOrEqual(card.bottom + 0.5);
       expect(l.small, `${where}: buttons and radios under 40 px`).toEqual([]);
       expect(l.scroll, `${where}: horizontal scroll`).toBeLessThanOrEqual(0);
+      // The whole cell (both daughters' room included) is drawn clear of every box: not under
+      // the chips, the stage strip, the caption or the picked part's card.
+      const drawn = await page.evaluate(() => window.__simlabMitosis3d?.cellRect() ?? null);
+      expect(drawn, `${where}: cell`).not.toBeNull();
+      for (const [name, b] of named) {
+        const w = Math.min(drawn!.right, b!.right) - Math.max(drawn!.left, b!.left);
+        const h = Math.min(drawn!.bottom, b!.bottom) - Math.max(drawn!.top, b!.top);
+        expect(w > 1 && h > 1, `${where}: the cell is drawn under ${name}`).toBe(false);
+      }
     }
   }
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/m3d-layout.png` });
@@ -396,8 +413,13 @@ declare global {
   }
 }
 
-/** Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test). */
-const PERF = { calls: 74, triangles: 46_000, p95Ms: 150 };
+/**
+ * Budgets of the perf project (2n = 8, High quality: 24 sphere segments, see scene.perf.test:
+ * 44 calls = 12 + 4 · 2n since each chromatid is one tube plus its kinetochore; 35 826 triangles
+ * measured on the CPU with the High details — double nuclear envelope, pores, vesicles,
+ * centriole triplets — + 5 %).
+ */
+const PERF = { calls: 44, triangles: 37_700, p95Ms: 150 };
 
 test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame budgets @perf', async ({
   page,
@@ -410,7 +432,7 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
     tier: 'high',
     degraded: false,
   });
-  // From the end of prophase through telophase (the most triangles: the rod → thread fade).
+  // From the end of prophase through telophase (every chromatid condensing and moving).
   await page.getByRole('radio', { name: '2×' }).click();
   await strip(page).getByRole('button', { name: 'Kì đầu' }).click();
   await page.getByRole('button', { name: 'Phát', exact: true }).click();

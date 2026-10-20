@@ -2,6 +2,7 @@ import { Download } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useT } from '@/app/i18n';
 import { exportCsv } from '@/app/project/actions';
+import { X_AXIS_SIZE, axisLabel, yTickSpace } from './axes';
 import { toCsv } from './csv';
 import type uPlotType from 'uplot';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -51,6 +52,7 @@ export function XYChart(props: XYChartProps) {
     props;
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
   const theme = useResolvedTheme();
   const hostRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<uPlotType | null>(null);
@@ -99,16 +101,21 @@ export function XYChart(props: XYChartProps) {
           {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
-            ticks: { stroke: gridStroke },
-            label: xLabel,
+            ticks: { stroke: gridStroke, size: 6 },
+            // Compact: uPlot's 50 + 30 px left a short chart one or two y values.
+            ...X_AXIS_SIZE,
+            label: axisLabel(xLabel, xUnit),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
           {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
             ticks: { stroke: gridStroke },
-            label: yLabel,
+            label: axisLabel(yLabel, yUnit),
             size: 60,
+            labelSize: 20,
+            // At least about four numbers on a short chart (bottom panel), not one or two.
+            space: (_u, _axis, _min, _max, plotHeight) => yTickSpace(plotHeight),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
         ],
@@ -131,6 +138,11 @@ export function XYChart(props: XYChartProps) {
         ],
         hooks: {
           draw: [
+            (u) => {
+              // How many values the y axis shows (read by tests; uPlot draws them on canvas).
+              const splits = (u.axes[1] as { _splits?: unknown[] } | undefined)?._splits;
+              host.dataset.yTicks = String(splits?.length ?? 0);
+            },
             (u) => {
               const m = markerRef.current;
               if (m === null || m === undefined) return;
@@ -179,7 +191,8 @@ export function XYChart(props: XYChartProps) {
   return (
     <div className="chart">
       <div ref={hostRef} className="chart__plot" />
-      {x.length > 0 && (
+      {/* CSV export is an Advanced-mode tool (Basic: no data tab/CSV). */}
+      {advanced && x.length > 0 && (
         <button
           type="button"
           className="chart__csv"
@@ -187,10 +200,9 @@ export function XYChart(props: XYChartProps) {
           data-tip={t('project.exportCsv')}
           data-tip-side="left"
           onClick={() => {
-            const unit = (u?: string) => (u ? ` (${u})` : '');
             const header = [
-              `${xLabel}${unit(xUnit)}`,
-              ...series.map((s) => `${s.label}${unit(yUnit)}`),
+              axisLabel(xLabel, xUnit),
+              ...series.map((s) => axisLabel(s.label, yUnit)),
             ];
             const rows = x.map((xv, i) => [xv, ...series.map((s) => s.y[i] ?? null)]);
             void exportCsv(csvName ?? yLabel, toCsv(header, rows));

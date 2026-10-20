@@ -13,10 +13,10 @@ import { useStudioStore } from '../studioStore';
 export function useStudioContext(scenario: StudioScenario): void {
   useEffect(
     () =>
-      provideScreenContext((locale) => {
+      provideScreenContext((locale, maxChars) => {
         const session =
           useStudioStore.getState().sessions[scenario.id] ?? createSession(scenario, 0);
-        return studioContextText(scenario, session, locale);
+        return studioContextText(scenario, session, locale, maxChars);
       }),
     [scenario],
   );

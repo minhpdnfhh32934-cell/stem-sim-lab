@@ -652,7 +652,11 @@ area is built from the board model (pure SVG, never KaTeX/DOM text) and sent **o
 this computer that reads pictures (`pictureReader.ts`): the learner's chosen Gemma E2B on a card
 known to be discrete (never on an integrated card, never a silent switch from 1B to E2B), or a
 local runtime model whose check on this computer says vision “Có”. Never to the cloud; any other
-AI → the board says it cannot read pictures and asks the learner to type (no AI call). With
+AI → the board says it cannot read pictures and asks the learner to type: the chip above the chat
+box then says the question is asked in words (0.7), and the typed question goes with the board's own
+text around the circled area (title, steps before/after) and no picture (`asksInWords`,
+`boardSelection.inWords`, `BoardRef.inWords`: an ordinary question afterwards). "Hỏi thầy chỗ này"
+without words sends nothing. With
 Think on, a question about such a picture is **not reviewed**: the draft is the on-device model's
 description of the learner's strokes, so sending it to the online reviewer would put the strokes
 online as text (and the reviewer could not see the picture to check it). `askTeacher` answers it on

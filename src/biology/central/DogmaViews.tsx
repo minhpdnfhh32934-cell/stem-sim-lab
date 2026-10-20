@@ -1,5 +1,12 @@
-import { ChevronLeft, ChevronRight, Pause, Play, TriangleAlert } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import {
+  ArrowLeftRight,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+  TriangleAlert,
+} from 'lucide-react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { cx } from '@/ui/cx';
 import { IconButton } from '@/ui/IconButton';
@@ -7,6 +14,7 @@ import { L, usePublishCard } from '../common';
 import {
   GENETIC_CODE,
   analyzeMutation,
+  anticodon,
   codingToMrna,
   codonEntry,
   complement,
@@ -85,7 +93,31 @@ function ProteinChain({ t, upTo }: { t: Translation; upTo?: number | undefined }
   );
 }
 
-export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
+/** The notice of a sequence the model cannot read (2D and 3D views show the same one). */
+export function InvalidSequence({ error }: { error: string }) {
+  const Lz = useLocalized();
+  return (
+    <p className="chem-note chem-note--warn" role="alert">
+      <TriangleAlert size={15} aria-hidden="true" />
+      <span>
+        {Lz(L('Trình tự không hợp lệ: ', 'Invalid sequence: '))}
+        {error}
+      </span>
+    </p>
+  );
+}
+
+export function DogmaStage({
+  mode,
+  toolbar,
+  notice,
+}: {
+  mode: 'dogma' | 'mutation';
+  /** Extra controls at the end of the toolbar (the lesson's 3D / 2D switch). */
+  toolbar?: ReactNode;
+  /** Why this 2D page is shown instead of the 3D view, when it is not the learner's choice. */
+  notice?: string | undefined;
+}) {
   const Lz = useLocalized();
   const card = useMemo(() => dogmaCard(mode), [mode]);
   usePublishCard(card);
@@ -112,13 +144,8 @@ export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
   if (!parsed.ok) {
     return (
       <div className="bio-scroll">
-        <p className="chem-note chem-note--warn" role="alert">
-          <TriangleAlert size={15} aria-hidden="true" />
-          <span>
-            {Lz(L('Trình tự không hợp lệ: ', 'Invalid sequence: '))}
-            {parsed.error}
-          </span>
-        </p>
+        {toolbar && <div className="chem-toolbar">{toolbar}</div>}
+        <InvalidSequence error={parsed.error} />
       </div>
     );
   }
@@ -130,6 +157,12 @@ export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
     const mutated = mt ? mt.t : null;
     return (
       <div className="bio-scroll">
+        {(toolbar ?? notice) && (
+          <div className="chem-toolbar">
+            {toolbar}
+            {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+          </div>
+        )}
         <div className="seq-row">
           <span className="seq-row__label">
             {Lz(L('ADN bình thường (mạch bổ sung)', 'Normal DNA (coding strand)'))}
@@ -217,6 +250,8 @@ export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
               )
             : Lz(L('Không có bộ ba mở đầu AUG', 'No AUG start codon'))}
         </span>
+        {toolbar}
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
       <div className="seq-row">
         <span className="seq-row__label">
@@ -259,14 +294,14 @@ export function DogmaStage({ mode }: { mode: 'dogma' | 'mutation' }) {
                 ),
               )
             : `${t.codons[active].entry?.three ?? '?'} (${t.codons[active].entry?.name ?? ''})`}
-          {'. '}
-          {Lz(L('Anticodon của tARN: ', 'tRNA anticodon: '))}
-          <span className="mono">
-            {t.codons[active].codon.replace(
-              /./g,
-              (b) => ({ A: 'U', U: 'A', G: 'C', C: 'G' })[b] ?? b,
-            )}
-          </span>
+          {/* No tRNA reads a stop codon: no anticodon then. */}
+          {!t.codons[active].entry?.stop && (
+            <>
+              {'. '}
+              {Lz(L('Anticodon của tARN: ', 'tRNA anticodon: '))}
+              <span className="mono">{anticodon(t.codons[active].codon)}</span>
+            </>
+          )}
         </p>
       )}
     </div>
@@ -369,6 +404,19 @@ export function DogmaPanel({ mode }: { mode: 'dogma' | 'mutation' }) {
           </button>
         ))}
       </div>
+      {parsed.ok && parsed.reversed && (
+        <p className="chem-note" role="status">
+          <ArrowLeftRight size={15} aria-hidden="true" />
+          <span>
+            {Lz(
+              L(
+                'Theo dấu 5′/3′ bạn ghi, mạch được nhập theo chiều ngược với mạch đã chọn, nên mình đã đảo trình tự lại trước khi đọc.',
+                'Your 5′/3′ marks show the strand was typed in the opposite direction to the selected strand, so it was reversed before reading.',
+              ),
+            )}
+          </span>
+        </p>
+      )}
       {mode === 'mutation' && (
         <>
           <label>

@@ -12,8 +12,10 @@ import { localTransport } from '@/ai/local/localTransport';
 import { toAiError } from '@/ai/types';
 import type { PhysicsScene, Solution } from '@/physics/types';
 import { AiContentBar } from '@/safety/AiContentBar';
+import { CrisisCard } from '@/safety/CrisisCard';
+import type { PersonalKind } from '@/safety/moderation';
 import { logIncident, useSafetyStore } from '@/safety/safetyStore';
-import { resolveAiForAnalysis } from './analyze';
+import { resolveAiForAnalysis, safetyBlock, type SafetyBlockCode } from './analyze';
 import { useAnalysisEngine } from './engineChoice';
 import { localFailure, localFailureText } from './localRuntime';
 import './ai.css';
@@ -22,6 +24,11 @@ type State =
   | { kind: 'idle' }
   | { kind: 'loading' }
   | { kind: 'done'; result: Explanation }
+  /**
+   * The problem text did not pass the input check (it may come from an opened .stemsim file or
+   * from history, not only from a checked "Phân tích đề"): nothing was sent.
+   */
+  | { kind: 'blocked'; code: SafetyBlockCode; found: string }
   /** `section`: the Settings page that helps (null: none does). */
   | { kind: 'error'; message: string; section: SettingsSection | null };
 
@@ -74,6 +81,14 @@ export function ExplainBox({
     // The runtime on this computer was asked: whatever fails is explained as its failure.
     let onComputer = false;
     try {
+      // Same input check as "Phân tích đề" (logged as kind + time only); a block sends nothing.
+      const blocked = await safetyBlock(problemText);
+      if (blocked) {
+        if (!ctrl.signal.aborted) {
+          setState({ kind: 'blocked', code: blocked.code, found: blocked.detail });
+        }
+        return;
+      }
       const ai = await resolveAiForAnalysis();
       onComputer = ai.transport === localTransport;
       const result = await explainSolution(L(scene.title), problemText, solution, {
@@ -160,6 +175,24 @@ export function ExplainBox({
               .join('; '),
           })}
         </p>
+      )}
+      {state.kind === 'blocked' && (
+        <div className="explain explain--hidden" role="alert">
+          <p className="explain__error">
+            {state.code === 'personalData'
+              ? t('analyze.error.personalData', {
+                  detail: state.found
+                    .split(',')
+                    .filter((k): k is PersonalKind =>
+                      ['phone', 'email', 'idNumber', 'nameOrAddress'].includes(k),
+                    )
+                    .map((k) => t(`analyze.personal.${k}`))
+                    .join(', '),
+                })
+              : t(`analyze.error.${state.code}`)}
+          </p>
+          {state.code === 'crisis' && <CrisisCard />}
+        </div>
       )}
       {state.kind === 'error' && (
         <div className="explain explain--hidden" role="alert">

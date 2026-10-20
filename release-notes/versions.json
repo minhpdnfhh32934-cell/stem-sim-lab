@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-10-19",
+  "evidenceCheckedAt": "2026-10-20",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.",
@@ -151,6 +151,257 @@
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
+    {
+      "version": "0.7.0",
+      "status": "in-review",
+      "statusNote": "Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-10-19T20:08:43+07:00",
+        "firstCommit": "2026-10-19T20:08:43+07:00",
+        "lastCommit": "2026-10-20T18:35:27+07:00",
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "firstCommit: d86c099 2026-10-19T20:08:43+07:00 'fix(physics): restart the run when g changes…', commit mã đầu tiên sau af13bc4 (ghi chú phát hành 0.6.0, sau tag v0.6.0 = feab5a8)",
+        "lastCommit: b59cc1a 2026-10-20T18:35:27+07:00 'test(e2e): stable full runs with every biology lesson in 3D' (trước đó 825a08f: bài test hạt khuếch tán quá giờ khi chạy song song); sau đó là 745c913 'chore(lint): skip the git-ignored .agent-logs folder', 3fd363b 'chore(release): 0.7.0' (nâng phiên bản, ghi chú này) và 7f616cd 'docs(0.7.0)' (CLAUDE.md, ARCHITECTURE, USER_GUIDE, DATA_REVIEW, PROGRESS)",
+        "feab5a8..b59cc1a: 87 commit trên nhánh feat/0.7, 402 tệp thay đổi (git diff --stat). Nhánh trên GitHub (origin/feat/0.7) đã tới 3773296; 825a08f, b59cc1a và commit phát hành sau chúng mới có trên máy người phát triển (20/10/2026)",
+        "Sửa lỗi Vật lí d86c099 … 97029c9, Hóa học – Sinh học c52cd58 … 4c9fb7f, AI / bảng dạy / giọng đọc dc3112e … 25834a9, giao diện và dự án 52e0ecf … de16278, Rust 9e005c8 (gpu.rs) và b990432 (webupdate.rs); lời văn khoa học mới: docs/DATA_REVIEW.md mục 24 và 25 (đang chờ duyệt)",
+        "Sinh học 3D: bộ công cụ 3D dùng chung ff4f63f, d1de33b (src/ui/three, src/biology/view3d); Nguyên phân 3D 14f9423, 276656a, 6dadbd7, 353813a; Giảm phân 15ae66c; ADN → mARN → Protein 2ea45a6; Đột biến điểm 745dea0, 1a8f717; Mendel b361e3c; Động học enzyme 1c00c7c; Khuếch tán & thẩm thấu f302cff. Lời văn và hình mới: docs/DATA_REVIEW.md mục 26–28 và các dòng M3D-25 … 32, MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D (đang chờ duyệt)",
+        "Bốn bài quần thể (Hardy–Weinberg, phiêu bạt di truyền, tăng trưởng logistic, con mồi – vật ăn thịt) có hình 3D đơn giản từ bộ công cụ chung (6a49c5d, bd23ab3); hình 3D riêng như bảy bài kia chưa làm",
+        "GitHub: không có PR nào từ nhánh feat/0.7 (gh pr list --head feat/0.7, 20/10/2026); chưa có lượt Release, tag hay GitHub Release cho 0.7.0"
+      ],
+      "tests": [
+        "20/10/2026 trên b59cc1a: format, lint, typecheck sạch (prettier chỉ báo hai tệp ngoài kho, không được theo dõi: AGENTS.md, bench.json); 3933/3933 unit test (272 tệp); E2E 102/102 (chromium 72, chromium-3d 29, chromium-3d-perf 1); Rust fmt + clippy -D warnings + 221 test",
+        "Lần chạy E2E đầu tiên có lỗi ngẫu nhiên do thư mục kết quả Playwright nằm trong vùng Vite theo dõi (tệp .html của trace làm trang tải lại giữa chừng) và do chờ quá ngắn khi mở mô-đun lần đầu; đã sửa ở b59cc1a (không bỏ bài kiểm tra nào, không đổi điều được kiểm; lần mở mô-đun đầu tiên được chờ tới 20 s như các bài khác, dự án 3D chạy tối đa 4 luồng)",
+        "Build web, bộ cài Windows (NSIS + MSI, npm run tauri build) và kiểm tra app thật: xem docs/PROGRESS.md hàng '0.7.0'"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [],
+        "commits": [
+          "d86c099",
+          "ff4f63f",
+          "15ae66c",
+          "2ea45a6",
+          "745dea0",
+          "b361e3c",
+          "1c00c7c",
+          "f302cff",
+          "3773296",
+          "825a08f",
+          "b59cc1a"
+        ],
+        "branches": ["feat/0.7"]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản cập nhật cho Sinh học 3D và sửa lỗi. Giảm phân, ADN → mARN → Protein, Đột biến điểm, Di truyền Mendel, Động học enzyme và Khuếch tán & thẩm thấu có hình 3D riêng; Nguyên phân 3D rõ và đẹp hơn. Mọi con số trong hình 3D do mô hình của bài tính. Ngoài ra sửa nhiều lỗi ở mô phỏng Vật lí, Hóa học, Sinh học, AI Teacher, bảng dạy, giọng đọc và phần cập nhật trong app.",
+          "en": "An update for 3D Biology and bug fixes. Meiosis, DNA → mRNA → protein, point mutations, Mendelian genetics, enzyme kinetics and diffusion & osmosis have their own 3D views; 3D mitosis is clearer and better looking. Every number in a 3D view is computed by the lesson’s model. Also many fixes in the Physics, Chemistry and Biology simulations, AI Teacher, the board, the voice and in-app updates."
+        },
+        "added": [
+          {
+            "vi": "Giảm phân 3D: 12 bước từ G1 tới phân chia tế bào chất II ở tế bào động vật, có trao đổi chéo và điểm bắt chéo. Số NST, crômatit, ADN do mô hình đếm; hình 3D và hình 2D dùng cùng một lần sắp xếp ngẫu nhiên.",
+            "en": "Meiosis in 3D: 12 steps from G1 to cytokinesis II in an animal cell, with crossing over and chiasmata. Chromosome, chromatid and DNA counts come from the model; the 3D and 2D pictures use the same random arrangement.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "ADN → mARN → Protein 3D: chuỗi xoắn kép mở ra, mARN được tổng hợp rồi ribôxôm dịch từng bộ ba. Chữ cái, bộ ba và axit amin lấy từ trình tự em nhập và bảng mã di truyền.",
+            "en": "DNA → mRNA → protein in 3D: the double helix opens, mRNA is made and the ribosome translates codon by codon. Letters, codons and amino acids come from the sequence you type and the genetic code table.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Đột biến điểm 3D: ADN bình thường và ADN đột biến đặt cạnh nhau, kèm mARN và chuỗi axit amin trước và sau đột biến; chỗ nuclêôtit thay đổi và các axit amin khác nhau được tô nổi.",
+            "en": "Point mutations in 3D: normal and mutated DNA side by side, with the mRNA and amino acid chain before and after; the changed nucleotides and the amino acids that differ are outlined.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Di truyền Mendel 3D: bố mẹ, giao tử, bảng Punnett và cột con lai cao theo xác suất; phần con lai ngẫu nhiên dùng cùng lần tạo ngẫu nhiên với bảng 2D.",
+            "en": "Mendelian genetics in 3D: parents, gametes, the Punnett square and offspring columns whose heights are the probabilities; the random offspring use the same random draw as the 2D table.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Động học enzyme 3D: tỉ lệ enzyme đang gắn cơ chất theo v/Vmax của công thức trong bài (làm tròn); có các dạng enzyme gắn chất ức chế và thang “1 hạt = … mM”.",
+            "en": "Enzyme kinetics in 3D: the share of enzymes holding a substrate follows v/Vmax from the lesson’s formula (rounded); enzyme forms with an inhibitor and a “1 particle = … mM” scale are shown.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Khuếch tán & thẩm thấu 3D: số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua lỗ màng; ống chữ U có thước cm và mực nước lấy từ đồ thị của bài.",
+            "en": "Diffusion & osmosis in 3D: the particles on each side follow Fick’s law at every moment and cross through the membrane pores; the U-tube has a cm ruler and water levels taken from the lesson’s chart.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic và Con mồi – vật ăn thịt có hình 3D đơn giản: mỗi hình là một cá thể hoặc một nhóm cá thể (có ghi chú), số lượng lấy từ mô hình.",
+            "en": "Hardy–Weinberg, genetic drift, logistic growth and predator–prey have a simple 3D view: each figure is one individual or a group of individuals (with a note), and the numbers come from the model.",
+            "area": "bio3d"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Nguyên phân 3D: mỗi crômatit co xoắn dần ngay tại chỗ, ánh sáng mới, tên bộ phận hiện trên hình, máy ảnh chuyển cảnh mượt; ở chất lượng Cao có màng nhân kép vỡ thành túi nhỏ, trung tử 9 bộ ba vi ống và túi tạo tấm tế bào.",
+            "en": "3D mitosis: each chromatid condenses in place, new lighting, part names on the picture, smooth camera moves; on High quality the double nuclear envelope breaks into vesicles, centrioles show nine microtubule triplets and vesicles build the cell plate.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Mỗi bài Sinh học có nút 3D / 2D và nhớ lựa chọn; khi chất lượng hiển thị là Thấp, máy không có WebGL hoặc card đồ họa gặp lỗi, bài tự dùng hình 2D và nói lý do.",
+            "en": "Every Biology lesson has a 3D / 2D switch and remembers the choice; on Low display quality, without WebGL or after a graphics error the lesson uses the 2D picture and says why.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Đồ thị ghi đơn vị ở tên trục và có đủ vạch chia; công thức dài trong Thẻ Khoa học tự thu nhỏ cho vừa khung thay vì phải cuộn ngang.",
+            "en": "Charts show units in the axis titles and enough tick marks; long equations in the Science Card shrink to fit instead of scrolling sideways.",
+            "area": "ui"
+          },
+          {
+            "vi": "Nút “Hỏi thầy” không còn che khung mô phỏng; nút bấm trên màn hình cảm ứng đủ lớn (≥ 40 px); chữ mờ dễ đọc hơn ở cả giao diện sáng và tối.",
+            "en": "The “Hỏi thầy” button no longer covers the simulation; buttons on touch screens are large enough (≥ 40 px); faint text is easier to read in light and dark themes.",
+            "area": "ui"
+          },
+          {
+            "vi": "Chế độ Cơ bản của các bài Sinh học giữ các thông số phụ sau nút “Thêm thông số”.",
+            "en": "Basic mode in the Biology lessons keeps the secondary settings behind “Thêm thông số” (more settings).",
+            "area": "ui"
+          }
+        ],
+        "fixed": [
+          {
+            "vi": "Vật lí: đổi g khi đang chạy nay chạy lại đúng ở con lắc, lò xo, mặt phẳng nghiêng, ròng rọc và đường ray (trước đây vẫn chạy theo g cũ). Sửa thêm: thời điểm gặp nhau ở chuyển động thẳng, báo lỗi khi dây con lắc sẽ bị chùng hoặc ném từ mặt đất mà không có vận tốc hướng lên, chu kì lò xo có tắt dần, máy Atwood cân bằng và kết luận của bài hạt qua hai đỉnh dốc.",
+            "en": "Physics: changing g during a run now restarts it correctly for the pendulum, spring, incline, pulley and track (they kept the old g). Also fixed: meeting times in linear motion, an error when a pendulum string would go slack or a launch from the ground has no upward velocity, the period of a damped spring, a balanced Atwood machine and the two-hill bead verdict."
+          },
+          {
+            "vi": "Sinh học: ống thẩm thấu báo đúng khi nhánh nước cạn, con mồi – vật ăn thịt giữ chính xác khi quần thể rất nhỏ, điểm uốn của đường logistic, tên đột biến quanh bộ ba mở đầu và chuỗi protein khi đột biến tạo bộ ba mở đầu mới.",
+            "en": "Biology: the osmosis tube says so when the water arm runs dry, predator–prey stays accurate when a population gets very small, the logistic inflection point, mutation names around the start codon and the protein when a mutation creates a new start codon."
+          },
+          {
+            "vi": "Hóa học: động học cân bằng tính chính xác và hình động không còn đứng hình; phương trình viết khác với phản ứng trong thư viện không còn bị gắn nhãn đã kiểm chứng; hệ số thập phân bị báo lỗi; nguyên tử trung tâm VSEPR và cấu trúc SMILES hiển thị đúng chất đang tìm.",
+            "en": "Chemistry: equilibrium kinetics are computed exactly and the animation no longer freezes; an equation written differently from a library reaction is no longer marked as verified; decimal coefficients are reported as errors; the VSEPR central atom and the SMILES structure show the substance you searched for."
+          },
+          {
+            "vi": "AI: “Giải thích” chấp nhận các số do SimLab tính; cụm từ phủ định (“không có ma sát”…) không bị đọc thành một giá trị; nút dừng dừng được câu trả lời của Gemma trong app.",
+            "en": "AI: “Giải thích” (explain) accepts the numbers SimLab computed; negated phrases (“no friction”…) are never read as a value; the stop button now stops the in-app Gemma’s answer."
+          },
+          {
+            "vi": "AI Teacher, bảng dạy và giọng đọc: xóa trò chuyện thì dừng câu trả lời; tra thư viện và Wikipedia dùng đúng lời em hỏi; bảng giữ đúng phép chia, lũy thừa và số thập phân; giọng đọc đọc đúng 2gh, khoảng giá trị, 0,125, đơn vị m³/s² và 5′→3′; công thức tải lỗi không làm bảng treo.",
+            "en": "AI Teacher, the board and the voice: clearing the chat stops the answer; library and Wikipedia lookups use your own words; the board keeps divisions, powers and decimals; the voice reads 2gh, ranges, 0.125, m³/s² units and 5′→3′ correctly; a formula that fails to load no longer freezes the board.",
+            "area": "teacher"
+          },
+          {
+            "vi": "Các từ sinh học như “túi tự sát” (lizôxôm), “tế bào tự sát”, từ tiếng Anh “sex chromosomes” và các dãy số liệu không còn bị chặn nhầm.",
+            "en": "Biology terms such as “túi tự sát” (lysosome), “cell suicide” and “sex chromosomes”, and rows of numeric data, are no longer blocked by mistake.",
+            "area": "security"
+          },
+          {
+            "vi": "Cập nhật trong app: bản đang mở không còn bị xóa trước khi khởi động lại (trước đây các chủ đề chưa mở có thể không tải được); tải gói cập nhật lớn không còn bị ngắt vì quá giờ.",
+            "en": "In-app updates: the open version is no longer deleted before a restart (topics not yet opened could fail to load); downloading a large update is no longer cut off by a total time limit."
+          },
+          {
+            "vi": "Card đồ họa có mã nhận dạng dài (ví dụ máy Windows chạy chip ARM) nay chọn được trong Cài đặt.",
+            "en": "Graphics cards with long identifiers (for example Windows on ARM computers) can now be chosen in Settings.",
+            "area": "gemma"
+          },
+          {
+            "vi": "Mở tệp .stemsim từ bất kỳ màn hình nào cũng hiện đúng chủ đề; phím tắt của phòng thí nghiệm chỉ hoạt động khi đang ở phòng thí nghiệm; chú thích nổi hiện trên hộp thoại; xuất CSV chỉ có ở chế độ Nâng cao; g chuẩn hiện là 9,80665; “Hướng dẫn nhanh” từ menu mở đúng phòng thí nghiệm.",
+            "en": "Opening a .stemsim file from any screen shows its topic; lab shortcuts only work in the lab; tooltips show above dialogs; CSV export is only in Advanced mode; standard gravity shows as 9.80665; “Hướng dẫn nhanh” (quick tour) from the menu opens the lab.",
+            "area": "ui"
+          },
+          {
+            "vi": "Science Studio: dự đoán và kết luận theo đúng ngôn ngữ đang chọn; bài Vật lí ở lại bước thí nghiệm sau khi chạy như hai môn kia.",
+            "en": "Science Studio: predictions and verdicts follow the language on screen; the Physics lesson stays on the experiment step after a run, like the other two subjects.",
+            "area": "ui"
+          }
+        ],
+        "security": [
+          {
+            "vi": "Chụp ảnh đề bài nay cũng theo cổng an toàn và bộ lọc nội dung; khi em chọn Gemma, ảnh không bao giờ được gửi lên mạng.",
+            "en": "Taking a photo of a problem now follows the safety gates and the content filter; when you choose Gemma, the photo is never sent online.",
+            "area": "security"
+          },
+          {
+            "vi": "Hộp cập nhật bắt buộc và câu hỏi về tuổi hiện lại nếu bị đóng bằng phím Esc.",
+            "en": "The mandatory update dialog and the age question come back if they are closed with the Esc key.",
+            "area": "security"
+          },
+          {
+            "vi": "Câu hỏi bị chặn ở lại ô nhập để em sửa, không còn bị lưu hay gửi đi sau đó.",
+            "en": "A blocked question stays in the input box to be changed and is no longer saved or sent later.",
+            "area": "security"
+          }
+        ],
+        "performance": [
+          {
+            "vi": "Hình 3D chỉ vẽ lại khi có thay đổi, chia mức chi tiết theo chất lượng hiển thị và giải phóng bộ nhớ khi rời bài; khi máy chậm, chuyển động bớt mượt nhưng số liệu vẫn giữ nguyên độ chính xác.",
+            "en": "3D views redraw only when something changes, scale their detail with the display quality and free their memory when you leave the lesson; on a slow computer motion gets less smooth but the numbers keep their accuracy.",
+            "area": "performance"
+          }
+        ],
+        "changed": [
+          {
+            "vi": "Các bài Sinh học mở bằng hình 3D; bấm 2D để quay lại hình cũ.",
+            "en": "Biology lessons open in 3D; choose 2D to go back to the previous picture.",
+            "area": "bio3d"
+          }
+        ],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Bốn bài về quần thể (Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt) mới có hình 3D đơn giản; hình 3D riêng, chi tiết như các bài khác sẽ có trong một bản cập nhật sau.",
+            "en": "The four population lessons (Hardy–Weinberg, genetic drift, logistic growth, predator–prey) only have a simple 3D view for now; their own detailed 3D view, like the other lessons, comes in a later update.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Lời văn và cách vẽ của các hình 3D mới đang chờ giáo viên duyệt. Hình dạng, kích thước, vị trí và chuyển động trong hình 3D chỉ là minh họa; chỉ số lượng và tỉ lệ lấy từ mô hình.",
+            "en": "The texts and drawings of the new 3D views are awaiting teacher review. Shapes, sizes, positions and motion in 3D are illustrations; only counts and ratios come from the model.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Giảm phân 3D chỉ vẽ tế bào động vật và bốn tế bào con bằng nhau (phân chia không đều ở con cái chỉ được ghi chú); chưa có giảm phân ở thực vật.",
+            "en": "Meiosis in 3D only shows an animal cell and four equal daughter cells (the unequal division in females is only noted); plant meiosis is not drawn yet.",
+            "area": "bio3d"
+          },
+          {
+            "vi": "Các vấn đề đã biết của bản 0.6.0 về Gemma và AI qua API vẫn còn (xem ghi chú 0.6.0).",
+            "en": "The known issues of version 0.6.0 about Gemma and online AI still apply (see the 0.6.0 notes)."
+          },
+          {
+            "vi": "Bản Microsoft Store cần nộp gói mới và chờ Microsoft duyệt, nên người dùng Store nhận bản này muộn hơn người dùng bản tải từ GitHub.",
+            "en": "The Microsoft Store copy needs a new package and Microsoft’s review, so Store users get this version later than users of the GitHub download."
+          }
+        ]
+      },
+      "notesReady": true,
+      "learnerHighlights": [
+        {
+          "area": "bio3d",
+          "vi": "Hình 3D mới cho Giảm phân, ADN → mARN → Protein, Đột biến điểm, Di truyền Mendel, Động học enzyme và Khuếch tán & thẩm thấu: xoay, phóng to và xem từng bước.",
+          "en": "New 3D views for meiosis, DNA → mRNA → protein, point mutations, Mendelian genetics, enzyme kinetics and diffusion & osmosis: turn, zoom and go step by step."
+        },
+        {
+          "area": "bio3d",
+          "vi": "Nguyên phân 3D rõ và đẹp hơn: NST co xoắn dần, tên các bộ phận hiện ngay trên hình.",
+          "en": "3D mitosis is clearer and better looking: chromosomes condense step by step and part names appear on the picture."
+        },
+        {
+          "area": "bio3d",
+          "vi": "Số NST, số hạt, tỉ lệ con lai… trong hình 3D đều do mô hình của bài tính; hình dạng và chuyển động chỉ là minh họa. Máy yếu thì tự dùng hình 2D.",
+          "en": "Chromosome counts, particle counts, offspring ratios… in 3D are computed by the lesson’s model; shapes and motion are illustrations. A slow computer uses the 2D picture."
+        },
+        {
+          "area": "ui",
+          "vi": "Sửa nhiều lỗi ở mô phỏng Vật lí, Hóa học và Sinh học, ví dụ đổi g giữa chừng nay chạy lại đúng.",
+          "en": "Many fixes in the Physics, Chemistry and Biology simulations, for example changing g during a run now works correctly."
+        },
+        {
+          "area": "teacher",
+          "vi": "AI Teacher, bảng dạy và giọng đọc ít lỗi hơn: đọc đúng đơn vị, xóa trò chuyện là dừng câu trả lời.",
+          "en": "Fewer problems in AI Teacher, the board and the voice: units are read correctly and clearing the chat stops the answer."
+        }
+      ]
+    },
     {
       "version": "0.6.0",
       "status": "released",

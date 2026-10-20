@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 80;
   right: 20px;
-  bottom: calc(var(--statusbar-h) + 14px);
+  bottom: calc(var(--statusbar-h) + var(--chat-bubble-gap));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -12,19 +12,15 @@
 .chat-bubble-root > * {
   pointer-events: auto;
 }
-/* With the Inspector open, the bubble sits left of it so it never covers the Science Card. */
-/* In a topic the button sits in the stage's bottom-right corner: left of the Inspector and
-   above the graphs/tables and the timeline, so it never hides data. */
+/* In a lab topic the button sits in the Inspector's bottom-right corner, never over the stage:
+   pictures, 3D views, charts and captions there cannot scroll out from under it. The Inspector
+   keeps room for it under its last line (layout.css), so it never hides a line there either. */
 .shell[data-inspector] .chat-bubble-root {
+  right: var(--chat-bubble-gap);
+}
+/* The open chat stays over the stage, left of the Inspector (the Science Card stays readable). */
+.shell[data-inspector] .chat-bubble-root > .chat-panel {
   right: calc(var(--right-w) + var(--splitter) + 16px);
-}
-.shell[data-bottom] .chat-bubble-root {
-  bottom: calc(var(--statusbar-h) + min(var(--bottom-h), 38vh) + var(--splitter) + 14px);
-}
-.shell[data-bottom][data-timeline] .chat-bubble-root {
-  bottom: calc(
-    var(--statusbar-h) + min(var(--bottom-h), 38vh) + var(--splitter) + var(--timeline-h) + 14px
-  );
 }
 /* The open chat uses the full height between the top bar and the status bar; the round button
    hides meanwhile (the panel has its own close button). */
@@ -39,8 +35,8 @@
 /* A round button with the teacher's face; its name is the tooltip and the accessible name. */
 .chat-bubble {
   display: inline-grid;
-  width: 52px;
-  height: 52px;
+  width: var(--chat-bubble);
+  height: var(--chat-bubble);
   padding: 0;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--accent) 60%, white);
@@ -1093,4 +1089,13 @@ p.gpu-notice {
   font-size: 11px;
   opacity: 0.85;
   overflow-wrap: anywhere;
+}
+/* Touch screens and pens: the chat's smaller controls grow to >= 40px. */
+@media (any-pointer: coarse) {
+  .chat-toggle,
+  .chat-engine,
+  .chat-message__continue,
+  .chat-settings__actions .btn {
+    min-height: var(--target);
+  }
 }

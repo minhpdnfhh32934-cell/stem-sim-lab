@@ -128,7 +128,10 @@ export function BalanceStage() {
 function ResultView({ eq, result }: { eq: ParsedEquation; result: BalanceResult }) {
   const Lz = useLocalized();
   const species = [...eq.reactants, ...eq.products];
-  const match = matchLibrary(species.map((s) => s.text));
+  const match = matchLibrary(
+    eq.reactants.map((s) => s.text),
+    eq.products.map((s) => s.text),
+  );
   if (result.kind !== 'balanced') {
     return (
       <p className="chem-note chem-note--warn" role="alert">
@@ -216,21 +219,40 @@ function ResultView({ eq, result }: { eq: ParsedEquation; result: BalanceResult 
           })}
         </tbody>
       </table>
-      {match ? (
+      {match?.exact ? (
         <p className="chem-note" role="note">
           <BookCheck size={15} strokeWidth={1.75} aria-hidden="true" />
           <span>
-            {Lz(L('Có trong thư viện đã kiểm chứng: ', 'In the verified library: '))}
+            {match.reverse
+              ? Lz(
+                  L(
+                    'Có trong thư viện đã kiểm chứng (chiều nghịch của phản ứng thuận nghịch): ',
+                    'In the verified library (reverse direction of a reversible reaction): ',
+                  ),
+                )
+              : Lz(L('Có trong thư viện đã kiểm chứng: ', 'In the verified library: '))}
             <button
               type="button"
               className="link-button"
               onClick={() => {
-                selectReaction(match.id);
+                selectReaction(match.reaction.id);
                 void openTopic('reactionLibrary');
               }}
             >
-              {Lz(match.name)}
+              {Lz(match.reaction.name)}
             </button>
+          </span>
+        </p>
+      ) : match ? (
+        <p className="chem-note chem-note--warn" role="note">
+          <TriangleAlert size={15} strokeWidth={1.75} aria-hidden="true" />
+          <span>
+            {Lz(
+              L(
+                `Cùng công thức phân tử với phản ứng “${match.reaction.name.vi}” trong thư viện, nhưng có chất được viết khác (có thể là đồng phân khác) — chưa được kiểm chứng, không hiển thị cơ chế.`,
+                `Same molecular formulas as “${match.reaction.name.en}” in the library, but a species is written differently (it may be another isomer) — not verified, no mechanism is shown.`,
+              ),
+            )}
           </span>
         </p>
       ) : (

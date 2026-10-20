@@ -46,6 +46,63 @@ export function lowestPoint(tr: Track): { x: number; y: number } {
   return { x, y: tr.f(x) };
 }
 
+/**
+ * The highest point a bead leaving x0 in direction `dir` must climb over before reaching
+ * the end of the track, or null when the track only goes down that way. The descent from
+ * the start is skipped (a bead moving away from a peak is not blocked by it); the maximum
+ * of the rest is found on a fine grid and refined by golden-section search.
+ */
+export function barrierAhead(
+  tr: Track,
+  x0: number,
+  dir: 1 | -1,
+  n = 4000,
+): { x: number; y: number } | null {
+  const h = ((dir > 0 ? tr.xMax : tr.xMin) - x0) / n;
+  if (!(Math.abs(h) > 0)) return null;
+  const at = (i: number) => x0 + i * h;
+  let i = 0;
+  while (i < n && tr.f(at(i + 1)) <= tr.f(at(i))) i++;
+  if (i >= n) return null;
+  let best = i;
+  for (let j = i + 1; j <= n; j++) if (tr.f(at(j)) > tr.f(at(best))) best = j;
+  let lo = at(Math.max(i, best - 1));
+  let hi = at(Math.min(n, best + 1));
+  if (lo > hi) [lo, hi] = [hi, lo];
+  const phi = (Math.sqrt(5) - 1) / 2;
+  for (let k = 0; k < 80; k++) {
+    const c = hi - phi * (hi - lo);
+    const d = lo + phi * (hi - lo);
+    if (tr.f(c) > tr.f(d)) hi = d;
+    else lo = c;
+  }
+  const xm = (lo + hi) / 2;
+  const xb = tr.f(xm) >= tr.f(at(best)) ? xm : at(best);
+  return { x: xb, y: tr.f(xb) };
+}
+
+type HillVerdict =
+  | { kind: 'exitLeft' | 'none' | 'rest' }
+  | { kind: 'over' | 'back'; peak: { x: number; y: number } };
+
+/**
+ * Does a bead released at x0 with signed velocity v0 (energy level hMax) get over the
+ * hills to its right? It first moves in the direction of v0 (downhill when v0 = 0). Moving
+ * left, it either runs off the left end or is turned back and returns through x0 with the
+ * same speed; then the highest point ahead on the right decides.
+ */
+function hillVerdict(tr: Track, x0: number, v0: number, hMax: number): HillVerdict {
+  const dir = Math.sign(v0) || -Math.sign(tr.df(x0));
+  if (dir === 0) return { kind: 'rest' };
+  if (dir < 0) {
+    const left = barrierAhead(tr, x0, -1);
+    if (left === null || hMax > left.y) return { kind: 'exitLeft' };
+  }
+  const right = barrierAhead(tr, x0, 1);
+  if (right === null) return { kind: 'none' };
+  return { kind: hMax > right.y ? 'over' : 'back', peak: right };
+}
+
 function view(p: Params): WorldBounds {
   const tr = trackFor(p);
   const ys = sample(tr).map((q) => q.y);
@@ -257,28 +314,46 @@ function solve(p: Params, locale: Locale): Solution {
     },
   ];
   if (Math.round(p.shape ?? 0) === 1) {
-    const peak2 = tr.f(p.a ?? 4);
-    const passes = y0 + (v0 * v0) / (2 * g) > peak2;
-    steps.push({
-      text: passes
-        ? L(
-            'Mức cơ năng cao hơn đỉnh đồi thứ hai nên vật vượt qua được đồi.',
-            'The energy level is above the second hill, so the bead gets over it.',
-          )
-        : L(
-            'Mức cơ năng thấp hơn đỉnh đồi thứ hai nên vật không vượt qua, sẽ trượt ngược lại.',
-            'The energy level is below the second hill, so the bead rolls back.',
-          ),
-      tex: `h_{max} = ${Q(y0 + (v0 * v0) / (2 * g), 'm')}\\; ${passes ? '>' : '<'} \\; h_{đỉnh 2} \\approx ${Q(peak2, 'm')}`,
-    });
-    const vTop = speedAt(g, y0, v0, peak2);
-    if (passes && vTop !== null) {
-      answers.push({
-        id: 'v_top2',
-        label: L('Tốc độ tại đỉnh đồi thứ hai', 'Speed on top of the second hill'),
-        value: vTop,
-        unit: 'm/s',
+    const hMax = y0 + (v0 * v0) / (2 * g);
+    const verdict = hillVerdict(tr, x0, p.v0 ?? 0, hMax);
+    if (verdict.kind === 'exitLeft') {
+      steps.push({
+        text: L(
+          'Vật đi sang trái và cao hơn mọi điểm phía bên trái nên trượt ra khỏi đầu trái của máng — không tới đồi thứ hai.',
+          'The bead moves left and is above every point on that side, so it runs off the left end — it never reaches the second hill.',
+        ),
       });
+    } else if (verdict.kind === 'none') {
+      steps.push({
+        text: L(
+          'Phía bên phải vị trí thả không còn đồi nào cao hơn: vật trượt tới cuối máng.',
+          'There is no higher hill to the right of the release point: the bead slides to the end of the track.',
+        ),
+      });
+    } else if (verdict.kind === 'over' || verdict.kind === 'back') {
+      const passes = verdict.kind === 'over';
+      const peak = verdict.peak;
+      steps.push({
+        text: passes
+          ? L(
+              'Mức cơ năng cao hơn đỉnh cao nhất vật phải vượt qua ở phía trước (đỉnh đồi thứ hai) nên vật vượt qua được.',
+              'The energy level is above the highest point the bead must cross ahead (the top of the second hill), so it gets over.',
+            )
+          : L(
+              'Mức cơ năng không cao hơn đỉnh cao nhất phía trước (đỉnh đồi thứ hai) nên vật không vượt qua, sẽ trượt ngược lại.',
+              'The energy level is not above the highest point ahead (the top of the second hill), so the bead rolls back.',
+            ),
+        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_{đỉnh 2} \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
+      });
+      const vTop = speedAt(g, y0, v0, peak.y);
+      if (passes && vTop !== null) {
+        answers.push({
+          id: 'v_top2',
+          label: L('Tốc độ tại đỉnh đồi thứ hai', 'Speed on top of the second hill'),
+          value: vTop,
+          unit: 'm/s',
+        });
+      }
     }
   }
   return { answers, steps };

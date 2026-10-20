@@ -37,7 +37,14 @@ export function Predict({ scenario, session, update }: StepProps) {
               disabled={locked}
               className={cx('studio-choice', checked && 'is-checked')}
               onClick={() => {
-                update((s) => withPrediction(s, { choice: stage, label, at: Date.now() }));
+                update((s) =>
+                  withPrediction(s, {
+                    choice: stage,
+                    label,
+                    text: STAGE3D_NAME[stage],
+                    at: Date.now(),
+                  }),
+                );
               }}
             >
               {label}

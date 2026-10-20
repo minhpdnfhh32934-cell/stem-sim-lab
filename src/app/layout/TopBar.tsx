@@ -65,6 +65,7 @@ export const TopBar = memo(function TopBar() {
   const needsKey = useAiStore((s) => s.status === 'noKey') && !aiOff && !onDevice;
   const canAnalyze = (!aiOff || onDevice) && problemText.trim().length > 0 && !running;
   const {
+    cameraAllowed,
     cameraOpen,
     cameraBusy,
     cameraError,
@@ -204,12 +205,15 @@ export const TopBar = memo(function TopBar() {
               void openManual();
             }}
           />
-          <IconButton
-            icon={Camera}
-            label={t('home.cameraButton')}
-            disabled={running || cameraBusy}
-            onClick={openCamera}
-          />
+          {/* Reading a photo is an AI call: hidden while the safety gates are closed. */}
+          {cameraAllowed && (
+            <IconButton
+              icon={Camera}
+              label={t('home.cameraButton')}
+              disabled={running || cameraBusy}
+              onClick={openCamera}
+            />
+          )}
         </div>
       )}
       {cameraOpen && (

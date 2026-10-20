@@ -19,7 +19,7 @@ import {
 } from './model';
 
 const CELLS = ['animal', 'plant'] as const;
-const label = (s: keyof typeof STAGE3D_NAME) => STAGE3D_NAME[s].vi;
+const label = (s: keyof typeof STAGE3D_NAME) => STAGE3D_NAME[s];
 
 describe('stage prediction checked against the 3D model', () => {
   it('the model singles out exactly one stage for "double chromosomes in one row at the equator"', () => {
@@ -104,14 +104,14 @@ describe('stage prediction checked against the 3D model', () => {
     const wrong = { choice: 'anaphase', label: 'y', at: 1 };
     expect(bioVerdict(answer, right, label)).toEqual({
       correct: answer,
-      correctLabel: label(answer!),
+      correctText: label(answer!),
       match: true,
     });
     expect(bioVerdict(answer, wrong, label).match).toBe(false);
     expect(bioVerdict(answer, null, label).match).toBeNull();
     expect(bioVerdict(null, right, label)).toEqual({
       correct: null,
-      correctLabel: null,
+      correctText: null,
       match: null,
     });
   });

@@ -17,7 +17,7 @@ import { biologyOf, taskParts } from './model';
 
 const b = biologyOf(scenario)!;
 const tasks = taskParts(b);
-const label = (s: string) => s;
+const label = (s: string) => ({ vi: s, en: s });
 
 function answerAll(s: StudioSession, pick: (task: ComponentId) => ComponentId): StudioSession {
   return tasks.reduce((acc, task, i) => withAnswer(acc, tasks, task, pick(task), 10 + i), s);

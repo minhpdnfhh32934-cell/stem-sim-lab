@@ -426,6 +426,43 @@ describe('"Viết tiếp" twice in a row equals teaching at once', () => {
       (_, i) => `Bước ${String(from + i)}: x = ${String(from + i)} m`,
     ).join('\n');
 
+  it("the learner's ink on a face the continuation takes off goes with that face (0.7 fix)", async () => {
+    const full = `# Bài\n<step>${steps(1, 11)}\n## Phần 2\n${steps(12, 14)}</step>\n\nXong.`;
+    const heading = full.indexOf('## Phần 2');
+    let dropped = 0;
+    for (let cut = heading + 1; cut <= heading + 12; cut++) {
+      const first = lesson.playLesson(
+        { id: 'ink', content: full.slice(0, cut), question: '' },
+        measure,
+      );
+      lesson.finishNow();
+      await first;
+      const faces = useBoardStore.getState().layout.faces.length;
+      if (faces < 2) continue;
+      useBoardStore.getState().set({ strokes: [] });
+      useBoardStore.getState().addStroke({
+        face: faces - 1,
+        points: [
+          [1, 1],
+          [2, 2],
+        ],
+      });
+      const seen = { shrank: false };
+      const off = useBoardStore.subscribe((s) => {
+        if (s.layout.faces.length < faces) seen.shrank = true;
+      });
+      const rest = lesson.continueLesson({ id: 'ink', content: full, question: '' }, measure);
+      lesson.finishNow();
+      await rest;
+      off();
+      const ink = useBoardStore.getState().strokes.filter((s) => s.face === faces - 1);
+      if (seen.shrank) dropped++;
+      // Ink stays only while its face stays.
+      expect(ink).toHaveLength(seen.shrank ? 0 : 1);
+    }
+    expect(dropped).toBeGreaterThan(0);
+  });
+
   it('an answer that ran onto a second face, cut twice inside its last step', async () => {
     const part1 = `# Bài\n<step>${steps(1, 11)}\n## Phần 2\n${steps(12, 13)}\nBước 14: x14 = 1`;
     const part2 = `${part1}4 m\n`;

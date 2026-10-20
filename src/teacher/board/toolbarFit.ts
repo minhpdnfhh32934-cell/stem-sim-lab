@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 
 /**
  * The board's toolbar stays on one row whatever the width of the UI font (Segoe UI on Windows,
@@ -63,34 +63,43 @@ export function fitToolbar(toolbar: HTMLElement): number {
 }
 
 /**
- * Keeps the toolbar in `ref` fitted. After every render of its owner (a button appears, a name
- * changes) it is fitted before the frame is drawn, and before the board below it measures
- * itself (the toolbar comes first in the tree). After a change of its size (a narrower window,
- * a wider font) it is fitted on the next frame: fitting inside the ResizeObserver would change
- * the size it has just reported, which the browser reports as a resize loop.
+ * Keeps the toolbar in `ref` fitted. After a render of its owner that changed it (a button
+ * appears, a name changes) it is fitted before the frame is drawn, and before the board below it
+ * measures itself (the toolbar comes first in the tree); a render that changed nothing measures
+ * nothing. After a change of its size (a narrower window, a wider font) or a font that finished
+ * loading (names narrower or wider at the same size) it is fitted on the next frame: fitting
+ * inside the ResizeObserver would change the size it has just reported, which the browser reports
+ * as a resize loop.
  */
 export function useToolbarFit(ref: RefObject<HTMLElement | null>): void {
+  const last = useRef('');
   useLayoutEffect(() => {
-    if (ref.current) fitToolbar(ref.current);
+    const toolbar = ref.current;
+    if (!toolbar) return;
+    // The same buttons with the same names at the same width fit as they did.
+    const key = `${String(toolbar.clientWidth)}|${toolbar.innerHTML}`;
+    if (key === last.current) return;
+    last.current = key;
+    fitToolbar(toolbar);
   });
   useEffect(() => {
     const toolbar = ref.current;
-    if (
-      !toolbar ||
-      typeof ResizeObserver === 'undefined' ||
-      typeof requestAnimationFrame === 'undefined'
-    )
-      return;
+    if (!toolbar || typeof requestAnimationFrame === 'undefined') return;
     let frame = 0;
-    const observer = new ResizeObserver(() => {
+    const refit = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         fitToolbar(toolbar);
       });
-    });
-    observer.observe(toolbar);
+    };
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(refit);
+    observer?.observe(toolbar);
+    // A web font that arrives late changes the names' width, not the toolbar's size.
+    const fonts = 'fonts' in document ? document.fonts : null;
+    fonts?.addEventListener('loadingdone', refit);
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
+      fonts?.removeEventListener('loadingdone', refit);
       cancelAnimationFrame(frame);
     };
   }, [ref]);

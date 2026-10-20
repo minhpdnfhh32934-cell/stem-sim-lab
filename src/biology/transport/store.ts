@@ -16,6 +16,8 @@ export interface TransportState {
   i: number;
   tC: number;
   h0: number;
+  /** Shows the 3D view (saved in .stemsim files, like mitosis and enzyme kinetics). */
+  view3d: boolean;
 }
 
 export const useTransport = create<TransportState>()(() => ({
@@ -32,4 +34,5 @@ export const useTransport = create<TransportState>()(() => ({
   i: 1,
   tC: 25,
   h0: 0.2,
+  view3d: true,
 }));

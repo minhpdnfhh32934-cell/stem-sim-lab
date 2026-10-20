@@ -109,7 +109,8 @@ describe('3D mitosis scene', () => {
           ms.setSelection(sel);
           for (const t of times) {
             ms.update(tl.stateAt(t));
-            for (const m of visibleMaterials(ms.scene)) if (!plain.has(m)) lit = true;
+            // A drawn object wears a highlight material (dimmed ones do not count).
+            for (const m of visibleMaterials(ms.scene)) if (m.userData.look === 'hi') lit = true;
             visit();
           }
         }
@@ -213,7 +214,12 @@ describe('3D mitosis scene', () => {
       expect(plant.has('wall')).toBe(true);
     }
     const tlA = buildTimeline(2, 'animal');
-    const ring = show('animal', tlA.keyTime('cytokinesis') - 1.5);
+    // Half-way through cytokinesis the furrow is still closing: the ring is there.
+    const cyto = tlA.stages.find((w) => w.id === 'cytokinesis');
+    if (!cyto) throw new Error('no cytokinesis stage');
+    const mid = cyto.start + 0.5 * (cyto.end - cyto.start);
+    expect(tlA.stateAt(mid).shape).toMatchObject({ type: 'animal', separated: false });
+    const ring = show('animal', mid);
     expect(ring.has('ring')).toBe(true);
     const tlP = buildTimeline(2, 'plant');
     expect(show('plant', tlP.total).has('plate')).toBe(true);
@@ -255,6 +261,72 @@ describe('3D mitosis scene', () => {
     ms.dispose();
   });
 
+  it('each chromatid tube is painted from the model, piece by piece', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });
+    ms.update(tl.stateAt(tl.keyTime('metaphase')));
+    const g2 = tl.model.find((m) => m.stage === 'g2')?.cells[0];
+    const colour = { M: new THREE.Color(PALETTE.maternal), P: new THREE.Color(PALETTE.paternal) };
+    let tubes = 0;
+    ms.scene.traverse((o) => {
+      const data = o.userData as { part?: string; chromatid?: number };
+      if (data.chromatid === undefined || data.part === 'bead' || !(o instanceof THREE.Mesh))
+        return;
+      const info = tl.chromatids[data.chromatid]!;
+      const segments = g2?.chromosomes[info.chromosome]?.chromatids[info.sister];
+      expect(segments, 'model DNA molecule').toBeDefined();
+      // Mitosis has no crossing over: one piece, the colour of its origin, on every vertex.
+      expect(segments).toHaveLength(1);
+      const want = colour[segments![0]!.origin];
+      const col = (o.geometry as THREE.BufferGeometry).getAttribute('color');
+      for (let k = 0; k < col.count; k++) {
+        expect(col.getX(k)).toBeCloseTo(want.r, 5);
+        expect(col.getY(k)).toBeCloseTo(want.g, 5);
+        expect(col.getZ(k)).toBeCloseTo(want.b, 5);
+      }
+      tubes++;
+    });
+    expect(tubes).toBe(tl.chromatids.length);
+    ms.dispose();
+  });
+
+  it('a big set spreads tube rewrites over updates and settles exactly; small sets never wait', () => {
+    const small = buildTimeline(4, 'animal');
+    const ms = buildMitosisScene(small, PALETTE, { segments: 16 });
+    ms.update(small.stateAt(small.keyTime('metaphase')));
+    expect(ms.pending()).toBe(false);
+    ms.dispose();
+    const big = buildTimeline(23, 'animal');
+    const mb = buildMitosisScene(big, PALETTE, { segments: 16 });
+    const st = big.stateAt(big.keyTime('metaphase'));
+    mb.update(st);
+    expect(mb.pending()).toBe(true);
+    let rounds = 1;
+    while (mb.pending() && rounds < 10) {
+      mb.update(st);
+      rounds++;
+    }
+    expect(mb.pending()).toBe(false);
+    expect(rounds).toBeLessThanOrEqual(Math.ceil(big.chromatids.length / 24));
+    // Every tube now ends at its arm tips: the centromere plus the model's arm lengths.
+    mb.scene.updateMatrixWorld(true);
+    mb.scene.traverse((o) => {
+      const data = o.userData as { part?: string; chromatid?: number };
+      if (data.chromatid === undefined || data.part === 'bead' || !(o instanceof THREE.Mesh))
+        return;
+      const pose = st.chromatids[data.chromatid]!;
+      const info = big.chromatids[data.chromatid]!;
+      const pos = (o.geometry as THREE.BufferGeometry).getAttribute('position');
+      // The first ring is the tip of arm A (radius 0: all its vertices on the line).
+      const tip = new THREE.Vector3(pos.getX(0), pos.getY(0), pos.getZ(0)).applyMatrix4(
+        o.matrixWorld,
+      );
+      for (let k = 0; k < 3; k++)
+        expect(tip.getComponent(k)).toBeCloseTo(pose.centromere[k]! + pose.dirA[k]! * info.armA, 4);
+    });
+    mb.dispose();
+  });
+
   it('picking a split centromere names its sister', () => {
     const tl = buildTimeline(2, 'animal');
     const ms = buildMitosisScene(tl, PALETTE, { segments: 16 });
@@ -293,6 +365,26 @@ describe('3D mitosis scene', () => {
     const edge = new THREE.Raycaster(new THREE.Vector3(0, 4.6, 30), new THREE.Vector3(0, 0, -1));
     edge.params.Line = { threshold: 0.01 };
     expect(ms.pick(edge)?.component).toBe('membrane');
+    ms.dispose();
+  });
+
+  it('a picked part glows; every other drawn part is dimmed; nothing is dimmed without a pick', () => {
+    const tl = buildTimeline(2, 'animal');
+    const ms = buildMitosisScene(tl, PALETTE, { segments: 12 });
+    ms.update(tl.stateAt(tl.keyTime('metaphase')));
+    const looks = () =>
+      [...visibleMaterials(ms.scene)].map((m) => m.userData.look as string | undefined);
+    expect(looks().filter((l) => l === 'hi' || l === 'dim')).toEqual([]);
+    ms.setSelection({ component: 'centromere', chromosome: 0 });
+    const picked = looks();
+    expect(picked).toContain('hi');
+    // Apart from the soft shadow (not a cell part), everything else is dimmed.
+    const parts = [...visibleMaterials(ms.scene)].filter(
+      (m) => !(m instanceof THREE.MeshBasicMaterial),
+    );
+    for (const m of parts) expect(['hi', 'dim']).toContain(m.userData.look);
+    ms.setSelection(null);
+    expect(looks().filter((l) => l === 'hi' || l === 'dim')).toEqual([]);
     ms.dispose();
   });
 });

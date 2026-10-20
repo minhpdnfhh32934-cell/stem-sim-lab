@@ -70,12 +70,20 @@ function restoreDivision(kind: Division, patch: Partial<DivisionState>): void {
     delete clean.cellType;
   if (clean.speed !== undefined && !(SPEEDS as readonly number[]).includes(clean.speed))
     delete clean.speed;
+  const notBoolean = (v: unknown) => v !== undefined && typeof v !== 'boolean';
+  if (notBoolean(clean.view3d)) delete clean.view3d;
+  if (notBoolean(clean.meiosisView3d)) delete clean.meiosisView3d;
+  if (notBoolean(clean.crossover)) delete clean.crossover;
   setDivisionState(kind, clean);
 }
 
-const division = bindStore(useDivisionStore, ['pairs', 'crossover', 'seed', 'index'], (patch) => {
-  restoreDivision('meiosis', patch);
-});
+const division = bindStore(
+  useDivisionStore,
+  ['pairs', 'crossover', 'seed', 'index', 'meiosisView3d', 'speed'],
+  (patch) => {
+    restoreDivision('meiosis', patch);
+  },
+);
 const mitosisState = bindStore(
   useDivisionStore,
   ['pairs', 'crossover', 'seed', 'index', 'cellType', 'view3d', 'speed'],
@@ -83,7 +91,15 @@ const mitosisState = bindStore(
     restoreDivision('mitosis', patch);
   },
 );
-const dogma = bindStore(useDogmaStore, ['input', 'strand', 'kind', 'pos', 'bases', 'count']);
+const dogma = bindStore(useDogmaStore, [
+  'input',
+  'strand',
+  'kind',
+  'pos',
+  'bases',
+  'count',
+  'view3d',
+]);
 
 export const mitosis: ModuleView = {
   title: L('Nguyên phân', 'Mitosis'),
@@ -121,7 +137,7 @@ export const mendel: ModuleView = {
   title: L('Di truyền Mendel', 'Mendelian genetics'),
   Stage: MendelStage,
   Panel: MendelPanel,
-  state: bindStore(useMendel, ['loci', 'dominance', 'p1', 'p2', 'n']),
+  state: bindStore(useMendel, ['loci', 'dominance', 'p1', 'p2', 'n', 'view3d']),
 };
 export const hardyWeinberg: ModuleView = {
   title: L('Định luật Hardy–Weinberg', 'Hardy–Weinberg principle'),
@@ -159,7 +175,7 @@ export const michaelisMenten: ModuleView = {
   Panel: MichaelisMentenPanel,
   Bottom: MichaelisMentenBottom,
   bottomTitle: L('Đồ thị Lineweaver–Burk', 'Lineweaver–Burk plot'),
-  state: bindStore(useEnzyme, ['vmax', 'km', 'kind', 'inhibitor', 'ki', 's0', 'view']),
+  state: bindStore(useEnzyme, ['vmax', 'km', 'kind', 'inhibitor', 'ki', 's0', 'view', 'view3d']),
 };
 export const diffusionOsmosis: ModuleView = {
   title: L('Khuếch tán & thẩm thấu', 'Diffusion & osmosis'),
@@ -180,5 +196,6 @@ export const diffusionOsmosis: ModuleView = {
     'i',
     'tC',
     'h0',
+    'view3d',
   ]),
 };

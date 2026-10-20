@@ -1,8 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { L } from './common';
+import { LotkaVolterraPanel } from './ecology/EcologyViews';
+import { useLv } from './ecology/store';
+import { MichaelisMentenPanel } from './enzyme/EnzymeViews';
+import { MendelPanel } from './genetics/GeneticsViews';
+import { DiffusionOsmosisPanel } from './transport/TransportViews';
 import { Segmented } from './ui';
 
 const OPTIONS = [
@@ -84,5 +90,53 @@ describe('Segmented (radio group)', () => {
     await user.click(screen.getByRole('radio', { name: 'Ba' }));
     expect(onChange).toHaveBeenCalledWith('c');
     expect(screen.getByRole('radio', { name: 'Ba' })).toHaveAttribute('aria-checked', 'true');
+  });
+});
+
+describe('Basic mode in the biology panels', () => {
+  afterEach(() => {
+    useSettingsStore.setState({ uiMode: 'basic' });
+    useLv.setState(useLv.getInitialState());
+  });
+
+  it('secondary controls wait behind "Thêm thông số"; Advanced shows them all', async () => {
+    const user = userEvent.setup();
+    useSettingsStore.setState({ uiMode: 'basic' });
+    const view = render(<LotkaVolterraPanel />);
+    expect(screen.queryByText(/Con mồi ban đầu x₀/)).toBeNull();
+    expect(screen.queryByText(/Vật ăn thịt ban đầu y₀/)).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Thêm thông số (2)' }));
+    expect(screen.getByText(/Con mồi ban đầu x₀/)).toBeInTheDocument();
+    view.unmount();
+    act(() => {
+      useSettingsStore.setState({ uiMode: 'advanced' });
+    });
+    render(<LotkaVolterraPanel />);
+    expect(screen.getByText(/Vật ăn thịt ban đầu y₀/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Thêm thông số/ })).toBeNull();
+  });
+
+  it('a value the learner changed is never hidden in Basic mode', () => {
+    useSettingsStore.setState({ uiMode: 'basic' });
+    act(() => {
+      useLv.setState({ x0: 40 });
+    });
+    render(<LotkaVolterraPanel />);
+    expect(screen.getByText(/Con mồi ban đầu x₀/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Thêm thông số/ })).toBeNull();
+  });
+
+  it('every biology panel with more than five controls has a Basic view', () => {
+    useSettingsStore.setState({ uiMode: 'basic' });
+    for (const Panel of [
+      LotkaVolterraPanel,
+      MichaelisMentenPanel,
+      DiffusionOsmosisPanel,
+      MendelPanel,
+    ]) {
+      const view = render(<Panel />);
+      expect(screen.getByRole('button', { name: /Thêm thông số/ })).toBeInTheDocument();
+      view.unmount();
+    }
   });
 });

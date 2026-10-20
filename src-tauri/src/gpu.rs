@@ -96,15 +96,24 @@ pub fn adapter_id(vendor_id: u32, device_id: u32, sub_sys_id: u32) -> String {
     format!("{vendor_id:04x}:{device_id:04x}:{sub_sys_id:08x}")
 }
 
-/// Accepts only ids produced by [`adapter_id`].
+/// Accepts only ids produced by [`adapter_id`]: vendor and device take 4 to 8 lowercase hex
+/// digits (PCI ids have 4; ACPI ids such as Qualcomm's "QCOM" = 0x4D4F4351 need 8), with no
+/// leading zero beyond the 4-digit padding; the subsystem always takes 8.
 pub fn valid_id(id: &str) -> bool {
-    let parts: Vec<&str> = id.split(':').collect();
-    parts.len() == 3
-        && [4, 4, 8].iter().zip(&parts).all(|(len, p)| {
-            p.len() == *len
-                && p.chars()
-                    .all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase())
-        })
+    let hex = |p: &str| {
+        p.chars()
+            .all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase())
+    };
+    let id_part = |p: &str| p.len() == 4 || (p.len() > 4 && p.len() <= 8 && !p.starts_with('0'));
+    match id.split(':').collect::<Vec<_>>().as_slice() {
+        [vendor, device, sub] => {
+            id_part(vendor)
+                && id_part(device)
+                && sub.len() == 8
+                && [vendor, device, sub].iter().all(|p| hex(p))
+        }
+        _ => false,
+    }
 }
 
 /// WebView2 arguments for a chosen adapter (Chromium expects `high,low` in decimal).
@@ -342,9 +351,35 @@ mod tests {
             "10de:2d58:1074104",
             "zz10:2d58:10741043",
             "10de:2d58:10741043:00",
+            "010de:2d58:10741043",
+            "10de:123456789:10741043",
         ] {
             assert!(!valid_id(bad), "{bad}");
         }
+    }
+
+    #[test]
+    fn every_adapter_id_can_be_chosen() {
+        // Qualcomm Adreno on Windows-on-ARM reports the ACPI vendor id "QCOM".
+        let qcom = adapter_id(0x4D4F_4351, 0x3633_4330, 0);
+        assert_eq!(qcom, "4d4f4351:36334330:00000000");
+        let samples = [0, 1, 0xFFFF, 0x1_0000, 0x0012_3456, 0x4D4F_4351, u32::MAX];
+        for v in samples {
+            for d in samples {
+                let id = adapter_id(v, d, 0x1234_abcd);
+                assert!(valid_id(&id), "{id}");
+            }
+        }
+        // A saved choice for such a card survives a restart.
+        let path = temp_file("acpi");
+        let file = ChoiceFile {
+            version: FILE_VERSION,
+            choice: Some(qcom.clone()),
+            name: Some("Qualcomm Adreno".to_string()),
+        };
+        write_choice(&path, &file).expect("write");
+        assert_eq!(read_choice(&path), file);
+        let _ = std::fs::remove_dir_all(path.parent().unwrap());
     }
 
     #[test]

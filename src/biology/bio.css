@@ -31,6 +31,13 @@
 .bio-swatch--p {
   background: var(--chart-1);
 }
+/* Alleles A and a in the 3D genetics views (as AA and aa in the Hardy–Weinberg chart). */
+.bio-swatch--allele-A {
+  background: var(--chart-1);
+}
+.bio-swatch--allele-a {
+  background: var(--chart-3);
+}
 .bio-legend {
   gap: 4px;
 }
@@ -197,11 +204,28 @@
 .bio-stage-chart .chart {
   height: 100%;
 }
+/* The controls over a 2D plot stay on top when they wrap onto a second row (the time course adds
+   a chip): the plot below must never take their clicks. */
+.bio-view > .chem-overlay {
+  z-index: 1;
+}
 
 /* Mitosis 3D view (src/biology/division/mitosis3d). Controls are at least --target (40 px). */
 .m3d__gl {
   position: absolute;
   inset: 0;
+}
+/* The picture takes the keyboard focus (arrow keys turn it). */
+.m3d__gl:focus-visible,
+.bio3d__gl:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+/* A soft light behind the transparent 3D canvas (both themes): the subject stands out from the
+   stage without a flat box around it. PNG export draws the plain stage colour. */
+.m3d__gl,
+.bio3d__gl {
+  background: radial-gradient(ellipse 70% 65% at 50% 45%, var(--bg-panel) 0%, var(--bg-stage) 100%);
 }
 .m3d .icon-btn--lg,
 .m3d__side .icon-btn {
@@ -211,6 +235,14 @@
 .m3d .segmented__item {
   min-width: var(--target);
   min-height: var(--target);
+}
+/* Switches over a 3D picture sit on a glass track, so they read on both themes' stages (the
+   sunken track colour vanished on the dark stage). */
+.m3d .segmented,
+.bio3d .segmented {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
 }
 /*
  * Controls over the picture on one grid: top bar and side column at the top, the picked part's
@@ -339,9 +371,10 @@
 .m3d__bottom > * {
   pointer-events: auto;
 }
+/* One column per stage: seven in mitosis, twelve in meiosis (`--stage-count` on the strip). */
 .m3d__stages {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--stage-count, 7), minmax(0, 1fr));
   gap: 4px;
 }
 .m3d__stage {
@@ -439,4 +472,348 @@
   .m3d__side {
     justify-self: end;
   }
+}
+/* Touch screens and pens: the biology controls grow to >= 40px too (shared ones: layout.css,
+   ui.css). A table row's button fills its cell so the whole row height can be tapped. */
+@media (any-pointer: coarse) {
+  .bio-row-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--target);
+  }
+  .chem-form input[type='range'] {
+    min-height: var(--target);
+  }
+}
+
+/* ───── Biology 3D views (src/biology/view3d): the picture fills the stage (or a figure block
+   on a page of text); controls sit over its edges on one grid and the camera keeps the subject
+   clear of them. Labels are drawn by the page (sharp), never over the controls. ───── */
+.bio3d__gl,
+.bio3d__canvas,
+.bio3d__labels {
+  position: absolute;
+  inset: 0;
+}
+.bio3d__labels {
+  overflow: hidden;
+  pointer-events: none;
+}
+.bio3d-label {
+  padding: 1px 6px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  color: var(--text);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  white-space: nowrap;
+  backdrop-filter: var(--glass-blur);
+}
+.bio3d-label--strong {
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+.bio3d-label--muted {
+  border-color: transparent;
+  background: none;
+  color: var(--text-muted);
+  backdrop-filter: none;
+}
+.bio3d__hud {
+  position: absolute;
+  inset: var(--space-3) var(--space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'top side'
+    '. .'
+    'bottom bottom';
+  gap: var(--space-2) var(--space-3);
+  pointer-events: none;
+}
+.bio3d__top {
+  position: static;
+  grid-area: top;
+  align-self: start;
+}
+.bio3d__top > *,
+.bio3d__side > *,
+.bio3d__bottom > * {
+  pointer-events: auto;
+}
+.bio3d__side {
+  grid-area: side;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+.bio3d .icon-btn--lg {
+  width: var(--target);
+  height: var(--target);
+}
+.bio3d .segmented__item {
+  min-width: var(--target);
+  min-height: var(--target);
+}
+.bio3d__bottom {
+  grid-area: bottom;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+.bio3d__caption {
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-panel) 90%, transparent);
+  font-size: var(--text-sm);
+  text-align: center;
+  text-wrap: balance;
+}
+/* 3D DNA → mRNA → protein (src/biology/central/dogma3d). */
+/* The two phases and the time slider share one row under the picture. */
+.dogma3d__timeline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 0 0;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+}
+.dogma3d__timeline .m3d__stages {
+  flex: none;
+  grid-template-columns: repeat(var(--stage-count, 2), minmax(6.5rem, auto));
+}
+.dogma3d__scrub {
+  flex: 1;
+  min-width: 6rem;
+  min-height: var(--target);
+  margin: 0;
+  accent-color: var(--accent);
+}
+.dogma3d__legend {
+  gap: var(--space-2);
+}
+.dogma3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.dogma3d__key .rx-swatch {
+  width: 10px;
+  height: 10px;
+  margin-left: 0;
+}
+.dogma3d__swatch--A {
+  background: var(--chart-3);
+}
+.dogma3d__swatch--T {
+  background: var(--chart-4);
+}
+.dogma3d__swatch--U {
+  background: var(--chart-5);
+}
+.dogma3d__swatch--G {
+  background: var(--chart-2);
+}
+.dogma3d__swatch--C {
+  background: var(--chart-1);
+}
+/* 3D point mutations (src/biology/central/mutation3d): both proteins, one row each. */
+.mut3d__proteins {
+  display: grid;
+  gap: 2px;
+  padding: 6px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+}
+.mut3d__protein {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.mut3d__protein-label {
+  flex: none;
+  width: 9.5rem;
+  color: var(--text-muted);
+}
+/* A long protein keeps one line (the 2D page shows it in full). */
+.mut3d__protein .seq {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Playback row: play / pause, the time slider and the moment shown. */
+.bio3d__player {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  font-size: var(--text-sm);
+}
+.bio3d__player input[type='range'] {
+  flex: 1;
+  min-width: 6rem;
+  min-height: var(--target);
+}
+.bio3d__player output {
+  min-width: 7rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* A 3D figure at the top of a page of text and tables. */
+.bio3d-figure {
+  position: relative;
+  /* A share of the stage (the scroll box has a definite height), so the page under it shows. */
+  height: clamp(220px, 58%, 420px);
+  margin: 0 0 var(--space-3);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel-2);
+}
+.bio3d-figure .bio3d__hud {
+  inset: var(--space-2);
+  grid-template-areas:
+    '. side'
+    '. .'
+    'bottom bottom';
+}
+.bio3d-figure__bar {
+  margin-bottom: var(--space-2);
+}
+/* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the
+   phenotype classes share one wrapping row under the step strip. */
+.men3d__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.men3d__row > * {
+  pointer-events: auto;
+}
+.men3d__legend {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.men3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+/* A class's (or a role's) colour and its shape cue, as in the picture (Mendel, enzyme 3D). */
+.men3d__swatch,
+.bio3d-swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--swatch);
+}
+.men3d__swatch--sphere,
+.bio3d-swatch--sphere,
+.men3d__swatch--ring,
+.bio3d-swatch--ring {
+  border-radius: 50%;
+}
+.men3d__swatch--ring,
+.bio3d-swatch--ring {
+  border: 3px solid var(--swatch);
+  background: transparent;
+}
+.men3d__swatch--cube,
+.bio3d-swatch--cube {
+  border-radius: 2px;
+}
+.men3d__swatch--diamond,
+.bio3d-swatch--diamond {
+  transform: rotate(45deg) scale(0.85);
+}
+.men3d__swatch--cone,
+.bio3d-swatch--cone {
+  border: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.men3d__swatch--capsule,
+.bio3d-swatch--capsule {
+  width: 7px;
+  border-radius: 4px;
+}
+.men3d__swatch--star,
+.bio3d-swatch--star {
+  border: 0;
+  clip-path: polygon(
+    50% 0,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+/* 3D enzyme kinetics (src/biology/enzyme/enzyme3d): the role legend with the particle scale, and
+   the enzyme counts under the player. */
+.enz3d__legend {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.enz3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.enz3d__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.enz3d__row > * {
+  pointer-events: auto;
+}
+
+/* 3D diffusion & osmosis (src/biology/transport/transport3d): the counts and the role legend
+   under the player. */
+.tr3d__legend {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.tr3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tr3d__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.tr3d__row > * {
+  pointer-events: auto;
 }

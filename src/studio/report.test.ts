@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fmtQty } from '@/physics/common/tex';
+import { studioContextText } from './aiContext';
 import { buildReport, renderMarkdown, reportBlocks } from './report';
 import { physicsFreeFall as sc } from './scenarios/physicsFreeFall';
 import {
@@ -141,6 +142,36 @@ describe('studio report builder', () => {
     expect(md).toContain('reactions/agcl');
     expect(md).not.toContain('## Số đo từ mô phỏng');
     expect(md).not.toContain('| Đại lượng |');
+  });
+
+  it('shows the prediction and the computed choice in the language on screen now', () => {
+    let s = createSession(sc, 1);
+    const both = label('Tăng √2 ≈ 1,41 lần', 'Increases √2 ≈ 1.41 times');
+    s = withPrediction(s, { choice: '1', label: both.vi, text: both, at: 2 });
+    s = withEngine(s, engine, { correct: '1', correctText: both, match: true });
+    const en = buildReport({
+      scenario: sc,
+      session: s,
+      locale: 'en',
+      modelSources: [],
+      generatedAt: 0,
+    });
+    expect(en).toContain('Increases √2 ≈ 1.41 times');
+    expect(en).not.toContain('Tăng √2');
+    const ctx = studioContextText(sc, s, 'en');
+    expect(ctx).toContain('Increases √2 ≈ 1.41 times');
+    expect(ctx).not.toContain('Tăng √2');
+  });
+
+  it('a session saved before 0.7 still shows its stored labels', () => {
+    const en = buildReport({
+      scenario: sc,
+      session: fullSession(),
+      locale: 'en',
+      modelSources: [],
+      generatedAt: 0,
+    });
+    expect(en).toContain('Tăng √2 ≈ 1,41 lần');
   });
 
   it('an empty session says what is missing instead of inventing results', () => {

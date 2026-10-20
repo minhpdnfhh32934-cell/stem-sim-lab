@@ -951,6 +951,15 @@ export function askable(selection: BoardSelection | null, readsPictures: boolean
   return selection.status === 'ok' || (selection.status === 'picture' && readsPictures);
 }
 
+/**
+ * A picture (a drawing without labels, the learner's handwriting) that no AI here reads: the
+ * learner may still ask about it in their own words. Only the board's text around it (title,
+ * steps before/after) goes with the question, never a picture.
+ */
+export function asksInWords(selection: BoardSelection | null, readsPictures: boolean): boolean {
+  return selection?.status === 'picture' && !readsPictures;
+}
+
 /** Where the selection bar goes over the board. */
 export type AskBarSide = 'top' | 'bottom';
 

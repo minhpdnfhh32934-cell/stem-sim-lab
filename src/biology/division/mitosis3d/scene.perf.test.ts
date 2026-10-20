@@ -18,29 +18,38 @@ const PALETTE: ScenePalette = {
   highlight: 'gray',
 };
 
-/** Draw-call budget: one call per drawn object, at most (formula of the scene's objects). */
+/**
+ * Draw-call budget: one call per drawn object, at most (formula of the scene's objects; the
+ * soft contact shadow and the cytoplasm tint are one call each, the spindle one instanced call;
+ * each chromatid is one tube plus its kinetochore). Measured maxima: animal 12 + 4 · 2n (High
+ * 11 + 4 · 2n: centrioles as two instanced meshes of triplets), plant 7 + 4 · 2n (High up to
+ * 9 + 4 · 2n: the inner nuclear membrane and the cell-plate vesicles).
+ */
 const CALLS: Record<CellType, (n2: number) => number> = {
-  animal: (n2) => 10 + 8 * n2,
-  plant: (n2) => 6 + 8 * n2,
+  animal: (n2) => 12 + 4 * n2,
+  plant: (n2) => 9 + 4 * n2,
 };
 
 /**
  * Most triangles drawn at any moment of the division, per quality tier (sphere segments: Low 8,
- * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-14). The budget allows 5 %
- * more; a bigger change must update this table on purpose.
+ * Medium 16, High 24), measured on the CPU with `drawStats` (2026-10-20: each chromatid is one
+ * tube — thread and rod are the same object, condensing in place — plus a kinetochore disc;
+ * cytoplasm tint; High also draws the double nuclear envelope with pores and its vesicles,
+ * centriole triplets and the cell-plate vesicles). The budget allows 5 % more; a bigger change
+ * must update this table on purpose.
  */
 const TRIANGLES: Record<number, Record<CellType, Record<number, number>>> = {
   8: {
-    animal: { 2: 3552, 4: 6144, 6: 8736, 8: 11328 },
-    plant: { 2: 2776, 4: 5368, 6: 7960, 8: 10552 },
+    animal: { 2: 3554, 4: 5082, 6: 6578, 8: 8026 },
+    plant: { 2: 3778, 4: 5170, 6: 6466, 8: 7714 },
   },
   16: {
-    animal: { 2: 9152, 4: 14656, 6: 20160, 8: 25664 },
-    plant: { 2: 6232, 4: 11736, 6: 17240, 8: 22744 },
+    animal: { 2: 9218, 4: 11074, 6: 12802, 8: 14546 },
+    plant: { 2: 8802, 4: 10658, 6: 12386, 8: 14050 },
   },
   24: {
-    animal: { 2: 17568, 4: 26976, 6: 36384, 8: 45792 },
-    plant: { 2: 11064, 4: 20472, 6: 29880, 8: 39288 },
+    animal: { 2: 29266, 4: 31586, 6: 33746, 8: 35826 },
+    plant: { 2: 27010, 4: 29330, 6: 31490, 8: 33570 },
   },
 };
 
@@ -73,7 +82,18 @@ describe('3D mitosis drawing budget (CPU count, no GPU)', () => {
     );
     empty.setDrawRange(0, 0);
     root.add(new THREE.LineSegments(empty, new THREE.LineBasicMaterial()));
-    expect(drawStats(root)).toEqual({ calls: 1 + 2 + 1 + 1, triangles: 12 * 4, lines: 2 });
+    // Instanced: one call for 3 drawn copies (of 5); none when no copy is drawn.
+    const inst = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial(), 5);
+    inst.count = 3;
+    root.add(inst);
+    const none = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial(), 5);
+    none.count = 0;
+    root.add(none);
+    expect(drawStats(root)).toEqual({
+      calls: 1 + 2 + 1 + 1 + 1,
+      triangles: 12 * 4 + 12 * 3,
+      lines: 2,
+    });
   });
 
   for (const segments of [8, 16, 24]) {

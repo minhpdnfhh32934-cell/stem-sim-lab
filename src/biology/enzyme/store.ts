@@ -9,6 +9,8 @@ export interface EnzymeState {
   ki: number;
   s0: number;
   view: 'rate' | 'time';
+  /** Shows the 3D view (saved in .stemsim files, like mitosis and Mendel). */
+  view3d: boolean;
 }
 
 export const useEnzyme = create<EnzymeState>()(() => ({
@@ -19,4 +21,5 @@ export const useEnzyme = create<EnzymeState>()(() => ({
   ki: 1,
   s0: 10,
   view: 'rate',
+  view3d: true,
 }));

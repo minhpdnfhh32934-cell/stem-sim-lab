@@ -8,7 +8,7 @@ import { MAX_ZOOM, useBoardStore } from './boardStore';
  * has no layout, so the page is laid out here as `flex-wrap` would: a name costs `CHAR` px a
  * character, an icon-only button 40 px, items 4 px apart, a toolbar `width` px wide.
  */
-const CHAR = 8;
+let CHAR = 8;
 let width = 2000;
 
 function itemWidth(el: Element, level: number): number {
@@ -21,7 +21,11 @@ function itemWidth(el: Element, level: number): number {
   return level >= from || name === '' ? 40 : 40 + CHAR * name.length;
 }
 
+/** How many times an item was measured. */
+let measured = 0;
+
 function layout(this: Element): DOMRect {
+  measured += 1;
   const toolbar = this.parentElement;
   const none = { top: 0, bottom: 0 } as DOMRect;
   if (!toolbar?.classList.contains('board__toolbar')) return none;
@@ -49,6 +53,7 @@ const level = () => toolbar()?.dataset.compact;
 
 beforeEach(() => {
   width = 2000;
+  CHAR = 8;
   vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(layout);
   // The widest state: zoomed in ("Vừa khung") and paused to ask ("Quay lại bài giảng").
   useBoardStore.setState({ status: 'paused', pausedForAsk: true, zoom: MAX_ZOOM });
@@ -158,5 +163,38 @@ describe('board toolbar: one row whatever the font', () => {
     view.unmount();
     expect(frames.size).toBe(0);
     for (const o of observers) expect(o.disconnected).toBe(o.observed);
+  });
+
+  it('a render that changes nothing measures nothing (0.7 fix)', () => {
+    const view = render(<BoardToolbar hasLesson />);
+    const before = measured;
+    expect(before).toBeGreaterThan(0);
+    view.rerender(<BoardToolbar hasLesson />);
+    view.rerender(<BoardToolbar hasLesson />);
+    expect(measured).toBe(before);
+  });
+
+  it('names that get narrower once a font has loaded unfold again at the same size (0.7 fix)', () => {
+    const fonts = new EventTarget();
+    Object.defineProperty(document, 'fonts', { value: fonts, configurable: true });
+    const frames: (() => void)[] = [];
+    vi.stubGlobal('requestAnimationFrame', (run: () => void) => frames.push(run));
+    vi.stubGlobal('cancelAnimationFrame', () => undefined);
+    try {
+      width = 680;
+      const view = render(<BoardToolbar hasLesson />);
+      expect(level()).toBe('1 2');
+      // The board font arrives: every name is narrower, the toolbar keeps its size.
+      CHAR = 5;
+      act(() => {
+        fonts.dispatchEvent(new Event('loadingdone'));
+      });
+      for (const run of frames.splice(0)) run();
+      // The playback button has room for its name again.
+      expect(level()).toBe('1');
+      view.unmount();
+    } finally {
+      Reflect.deleteProperty(document, 'fonts');
+    }
   });
 });

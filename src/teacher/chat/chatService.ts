@@ -57,6 +57,7 @@ import {
   fitHistory,
   localContextWindow,
   sentText,
+  withoutBlockedQuestions,
   summaryBlock,
   summaryRequest,
   unsummarized,
@@ -169,6 +170,26 @@ export class TeacherError extends Error {
     super(message, options);
     this.name = 'TeacherError';
   }
+}
+
+/**
+ * The question itself did not pass the input check (crisis, personal data, unsuitable): it is
+ * logged as kind + time only and never sent. The chat does not keep a blocked question, so it is
+ * never sent later as history either. Returns the learner's message, or null when it may be sent.
+ */
+export function questionBlock(question: string, locale: Locale): TeacherError | null {
+  const moderation = checkInput(question);
+  if (moderation.ok) return null;
+  if (moderation.reason === 'crisis') {
+    logIncident('inputCrisis');
+    return new TeacherError(translate(locale, 'chat.errors.crisis'), null, false);
+  }
+  if (moderation.reason === 'personalData') {
+    logIncident('inputPersonalData');
+    return new TeacherError(translate(locale, 'chat.errors.personal'), null, false);
+  }
+  logIncident('inputUnsafe');
+  return new TeacherError(translate(locale, 'chat.errors.unsafe'), null, false);
 }
 
 /** The learner pressed "Dừng": nothing went wrong, the answer was not wanted any more. */
@@ -663,6 +684,20 @@ export interface TeacherPrompt {
   selection: string;
 }
 
+/**
+ * The learner's last own question in the conversation sent: a quick button's turn carries the
+ * app's instruction (`prompt`), so it is skipped. '' when there is none.
+ */
+function lastOwnQuestion(
+  history: readonly { role: string; content: string; prompt?: string }[],
+): string {
+  for (let i = history.length - 1; i >= 0; i--) {
+    const turn = history[i];
+    if (turn?.role === 'user' && turn.prompt === undefined) return turn.content;
+  }
+  return '';
+}
+
 export async function contextPrompt(
   question: string,
   locale: Locale,
@@ -677,6 +712,8 @@ export async function contextPrompt(
     signal?: AbortSignal;
     /** Sent by a quick button: never read as an answer to the teacher's question (turnKind). */
     quickAction?: boolean;
+    /** "Viết tiếp": `question` is the app's request for the rest of the last answer. */
+    continues?: boolean;
     /** The part of the board the learner circled and asks about ("Khoanh để hỏi"). */
     boardSelection?: BoardSelection;
   } = {},
@@ -695,14 +732,22 @@ export async function contextPrompt(
   );
   // A short reply ("Ở kì giữa ạ.") is looked up with the question it answers: on its own it names
   // no topic, or the wrong one. A question about the board is looked up with what was circled.
-  const previous = questionBefore(question, history);
-  const query = [previous, question, circled].filter(Boolean).join('\n');
+  // A quick button or "Viết tiếp" sends the app's own instruction, which names no topic: the
+  // library and Wikipedia are searched with the learner's last own question instead.
+  const instruction = options.quickAction === true || options.continues === true;
+  const asked = instruction ? lastOwnQuestion(history) : question;
+  const previous = instruction ? null : questionBefore(question, history);
+  const query = [previous, asked, circled].filter(Boolean).join('\n');
   // On-device models read ONE short excerpt: a second note was often a distractor the 1B model
   // copied, and long excerpts make the first wait longer (benchmark 2026-10-13: 4 × 1500
   // characters took 10–30 s on an iGPU). That one note is whole here (its best sentences are cut
   // from all of it below) and left out when two notes match alike. The cloud prompt keeps whole
   // notes with their source.
-  const local = full ? searchKnowledge(query, locale, 5) : unambiguousNote(query, locale);
+  const local = !query
+    ? []
+    : full
+      ? searchKnowledge(query, locale, 5)
+      : unambiguousNote(query, locale);
   // Wikipedia is opt-in (Settings → AI Teacher): it receives the question text, so it never
   // runs silently. Web excerpts come last and are always labelled: checked library first (an
   // on-device prompt that already has its one library note does not ask Wikipedia at all, nor
@@ -710,8 +755,8 @@ export async function contextPrompt(
   // question about the circled board is not looked up there either: its words alone ("g ở đây?",
   // often the default question) name no topic, and the board's text never goes to Wikipedia.
   const web =
-    webLookup && !selection && (full || (local.length === 0 && !missing))
-      ? await fetchWebKnowledge(question, locale, options.signal)
+    webLookup && asked && !selection && (full || (local.length === 0 && !missing))
+      ? await fetchWebKnowledge(asked, locale, options.signal)
       : [];
   const notes = [...local, ...web]
     .slice(0, full ? undefined : 1)
@@ -722,7 +767,7 @@ export async function contextPrompt(
     }))
     .filter((note) => note.text && checkInput(note.text).ok);
   const screenChars = { full: undefined, compact: 4000, tight: 1200 }[size];
-  const screen = includeScreen ? screenContext(locale).slice(0, screenChars) : '';
+  const screen = includeScreen ? screenContext(locale, screenChars).slice(0, screenChars) : '';
   const tools = toolBlock(question, locale);
   const header = full ? EXCERPT_HEADER[locale] : EXCERPT_HEADER_COMPACT[locale];
   const noteBlock = notes.length ? `\n\n${header}\n${referenceBlocks(notes)}` : '';
@@ -1122,6 +1167,8 @@ async function updateSummary(
   writer?: string,
 ): Promise<void> {
   const store = useChatStore.getState();
+  // "Xóa cuộc trò chuyện" while the summary is written: it describes a conversation that is gone.
+  const cleared = () => useChatStore.getState().epoch !== store.epoch;
   const pending = unsummarized(older, store.summary, all);
   const last = pending[pending.length - 1];
   if (!last) return;
@@ -1137,6 +1184,7 @@ async function updateSummary(
         : fittedSummaryRequest(locale, store.summary, pending, maxInputTokens);
     if (!request) return;
     const answer = await ask(request.system, request.messages, SUMMARY_TOKENS);
+    if (cleared()) return;
     // The summary travels with later questions: hidden reasoning is not part of it.
     const text = stripReasoningOutsideCode(answer.content).text.trim();
     if (text && outputIsSafe(answer.content) && outputIsSafe(text))
@@ -1226,9 +1274,10 @@ export async function askTeacher(
      * a cloud prompt has it in the instruction, an on-device one right before the question. It is
      * never put in the question itself nor counted as given numbers. `image`: a picture of an area
      * without text (PNG), sent only to an AI on this computer that reads pictures
-     * (pictureReader.ts), never online.
+     * (pictureReader.ts), never online. `inWords`: such an area asked about in the learner's own
+     * words because no AI here reads pictures: only the board's text around it is sent.
      */
-    boardSelection?: { selection: BoardSelection; image?: ArrayBuffer };
+    boardSelection?: { selection: BoardSelection; image?: ArrayBuffer; inWords?: boolean };
     /**
      * "Viết tiếp": the question asks for the rest of the last answer in `records`. That answer
      * must be in what is sent; an answer that stays on this computer (about a circled picture) is
@@ -1240,19 +1289,10 @@ export async function askTeacher(
   const signal = options.signal;
   const safety = await currentSafety();
   if (!safety.aiAllowed) throw new Error(translate(locale, 'chat.errors.notAllowed'));
-  const moderation = checkInput(question);
-  if (!moderation.ok) {
-    if (moderation.reason === 'crisis') {
-      logIncident('inputCrisis');
-      throw new Error(translate(locale, 'chat.errors.crisis'));
-    }
-    if (moderation.reason === 'personalData') {
-      logIncident('inputPersonalData');
-      throw new Error(translate(locale, 'chat.errors.personal'));
-    }
-    logIncident('inputUnsafe');
-    throw new Error(translate(locale, 'chat.errors.unsafe'));
-  }
+  const blocked = questionBlock(question, locale);
+  if (blocked) throw blocked;
+  // Second layer: a blocked question saved by an older version never travels as history.
+  const sendable = withoutBlockedQuestions(records);
   const circled = options.boardSelection?.selection ?? null;
   if (circled) {
     // The board's text is the AI's, but it is sent again: it is checked like anything sent.
@@ -1316,7 +1356,14 @@ export async function askTeacher(
     options.boardSelection?.image && reader !== null && reader === engine
       ? options.boardSelection.image
       : undefined;
-  if (circled && circled.hits.length === 0 && !picture) {
+  // Asked in the learner's own words (no AI here reads pictures), it goes as an ordinary question
+  // with the steps around the circled area; the default question alone would ask about nothing.
+  if (
+    circled &&
+    circled.hits.length === 0 &&
+    !picture &&
+    options.boardSelection?.inWords !== true
+  ) {
     throw new TeacherError(translate(locale, 'chat.errors.boardNoPicture'), null, false);
   }
   // Think never reviews an answer about a picture: the draft is the on-device model's reading of
@@ -1328,9 +1375,9 @@ export async function askTeacher(
   // The conversation this question carries. Anything sent online (an online engine, Think's
   // reviewer) leaves out earlier questions about a picture of the circled area and their answers:
   // those answers are the on-device model's reading of the learner's strokes.
-  const shared = engine === 'cloud' || think ? withoutPictureAsks(records) : records;
+  const shared = engine === 'cloud' || think ? withoutPictureAsks(sendable) : sendable;
   // The answer to continue was left out of what would be sent: nothing is asked at all.
-  if (options.continues && records.length > 0 && shared.at(-1) !== records.at(-1)) {
+  if (options.continues && sendable.length > 0 && shared.at(-1) !== sendable.at(-1)) {
     throw new TeacherError(translate(locale, 'chat.errors.continuePictureLocal'), null, false);
   }
   // A question about the board is answered in the chat, never as a new board lesson.
@@ -1366,6 +1413,7 @@ export async function askTeacher(
     {
       board,
       quickAction: options.quickAction === true,
+      continues: options.continues === true,
       ...(signal ? { signal } : {}),
       ...(circled ? { boardSelection: circled } : {}),
     },
@@ -1597,7 +1645,7 @@ export async function askTeacher(
       missingData: prompt.missingData !== null,
       unverifiedNumbers: unverifiedNumbers(
         content,
-        givenNumbers(question, records, prompt.sources),
+        givenNumbers(question, sendable, prompt.sources),
       ),
     },
     truncated,

@@ -914,6 +914,8 @@ const en: Messages = {
     needVision:
       'Could not read the photo: need a cloud API (Gemini/Groq with a key) or a ready Gemma model.',
     readFailed: 'Could not read the problem in the photo. Please retake it more clearly.',
+    outputUnsafe:
+      'The text read from the photo has unsuitable content, so it was not put in the problem box. Please photograph another problem.',
     badKey: 'The API key was refused (wrong key or no permission). Check it in Settings.',
     badModel: 'The API model name is wrong. Check the Model field in Settings.',
     localNoVision:
@@ -1132,6 +1134,7 @@ const en: Messages = {
       condition: 'Condition {id}',
       run: 'Run the experiment',
       running: 'Computing…',
+      ran: 'Both conditions are measured. Change the variable and run again, or go on to Observe.',
       reset: 'Reset',
       errors: {
         invalid: 'The simulation cannot run with this value yet. Try adjusting the variable.',
@@ -1255,6 +1258,7 @@ const en: Messages = {
       binding:
         'This lesson does not match the current 3D mitosis model. Ask a teacher to check the scenario.',
       pending: 'Stage descriptions and part functions have not been reviewed yet.',
+      verified: 'Stage descriptions and part functions have been reviewed.',
       sources: 'Sources: {list}',
       q: {
         diploid: 'Chromosome set 2n',
@@ -1478,6 +1482,8 @@ const en: Messages = {
       'Your question with the board text you circled and related library excerpts will be sent to: {targets}.',
     boardChip: 'About: «{excerpt}»',
     boardChipPicture: 'About: the drawing you circled on the board',
+    boardChipPictureWords:
+      'Asking in words about what you circled: the teacher cannot see the picture, only the steps around it',
     boardChipRemove: 'Remove what you circled',
     boardRef: 'About what you circled: «{excerpt}»',
     boardRefPicture: 'About the drawing you circled on the board',
@@ -2102,7 +2108,7 @@ const en: Messages = {
       pictureLocalQuiet:
         'With a picture of the circled area — on this computer only, never sent online. The Gemini voice will not read this answer aloud.',
       pictureUnreadable:
-        "The AI you are using can't read drawings or handwriting. Type in the chat what you want to ask about this part.",
+        "The AI you are using can't read drawings or handwriting. Type in the chat what you want to ask about this part: the teacher only knows the steps around it, not the picture.",
       resume: 'Back to the lesson',
       defaultQuestion: 'Could you explain the part I just circled, please?',
       describe: {
@@ -2377,6 +2383,10 @@ const en: Messages = {
       'Could you explain what the “{part}” does at the “{stage}” stage (mitosis model, {cell})?',
     askMitosisPartHiddenQuestion:
       'At the “{stage}” stage (mitosis model, {cell}) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
+    askMeiosisPartQuestion:
+      'Could you explain what the “{part}” does at the “{stage}” stage (meiosis model, animal cell)?',
+    askMeiosisPartHiddenQuestion:
+      'At the “{stage}” stage (meiosis model, animal cell) I can’t clearly see the “{part}”. Is it there at that point, and when does it appear or disappear?',
   },
   languages: {
     vi: 'Tiếng Việt',

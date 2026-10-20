@@ -16,7 +16,8 @@ import {
 } from '../data/molecules';
 import { METHOD_LABEL } from './labels';
 import { MoleculeViewer } from './MoleculeViewer';
-import { inspectSmiles, type SmilesInfo } from './rdkit';
+import { inspectSmiles } from './rdkit';
+import { lookupFor, type SmilesLookup } from './smilesLookup';
 import { pickAtom, pickBond, selectMolecule, useMoleculeStore, type MoleculeTopic } from './store';
 import '../chem.css';
 
@@ -157,11 +158,10 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
   const card = useMemo(() => (molecule ? cardFor(topic, molecule) : null), [topic, molecule]);
   usePublishCard(card);
   const [open, setOpen] = useState(false);
-  const [smiles, setSmiles] = useState<
-    { state: 'idle' | 'loading' | 'invalid' } | { state: 'ok'; info: SmilesInfo }
-  >({
-    state: 'idle',
-  });
+  const [lookup, setSmiles] = useState<SmilesLookup>({ state: 'idle' });
+  // Only a lookup made for the CURRENT query is shown (the query can also change through
+  // undo/redo or an opened file, without a keystroke that resets the lookup).
+  const smiles = lookupFor(lookup, st.query);
   const results = useMemo(() => findMolecules(st.query).slice(0, 40), [st.query]);
   const looksLikeSmiles =
     /^[A-Za-z0-9@+\-[\]()=#$/\\%.]+$/.test(st.query.trim()) && st.query.trim().length > 1;
@@ -170,14 +170,15 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
   useEffect(() => {
     if (!st.query.trim() || results.length > 0 || !looksLikeSmiles) return;
     let alive = true;
+    const query = st.query.trim();
     const t = window.setTimeout(() => {
-      setSmiles({ state: 'loading' });
-      void inspectSmiles(st.query.trim())
+      setSmiles({ state: 'loading', query });
+      void inspectSmiles(query)
         .then((info) => {
-          if (alive) setSmiles(info ? { state: 'ok', info } : { state: 'invalid' });
+          if (alive) setSmiles(info ? { state: 'ok', query, info } : { state: 'invalid', query });
         })
         .catch(() => {
-          if (alive) setSmiles({ state: 'invalid' });
+          if (alive) setSmiles({ state: 'invalid', query });
         });
     }, 400);
     return () => {
@@ -321,11 +322,7 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
   );
 }
 
-function SmilesView({
-  state,
-}: {
-  state: { state: 'idle' | 'loading' | 'invalid' } | { state: 'ok'; info: SmilesInfo };
-}) {
+function SmilesView({ state }: { state: SmilesLookup }) {
   const Lz = useLocalized();
   return (
     <div className="mol-2d">

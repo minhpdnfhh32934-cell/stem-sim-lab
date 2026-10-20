@@ -9,6 +9,7 @@
  */
 import type { Locale } from '@/app/i18n';
 import type { ChatMessage } from '@/ai/types';
+import { checkInput } from '@/safety/moderation';
 import { cleanAnswer } from './answerClean';
 import type { ChatMessageRecord, ChatSummary, MemoryLength } from './chatStore';
 
@@ -108,6 +109,18 @@ const MESSAGE_OVERHEAD = 6;
  * cleaning leaves empty (nothing but reasoning, even cut before its closing tag) is sent as
  * `EMPTY_ANSWER`: hidden reasoning never goes back to the AI, and no turn is empty.
  */
+/**
+ * The conversation without the learner's turns that the input check blocks (personal data, a
+ * crisis, unsuitable content). A blocked question is never kept in the chat, but a conversation
+ * saved by an older version may still hold one: it must never be sent again as history, nor
+ * count as numbers the learner gave.
+ */
+export function withoutBlockedQuestions(
+  records: readonly ChatMessageRecord[],
+): ChatMessageRecord[] {
+  return records.filter((r) => r.role !== 'user' || checkInput(sentText(r)).ok);
+}
+
 export function sentText(record: ChatMessageRecord, question?: string): string {
   if (record.role !== 'assistant') {
     const asked = record.prompt ?? record.content;
@@ -144,12 +157,16 @@ export function withoutPictureAsks(records: readonly ChatMessageRecord[]): ChatM
   return kept;
 }
 
-/** A question about a picture of the circled area: a `boardRef` without text. */
+/**
+ * A question about a picture of the circled area: a `boardRef` without text, unless it was asked
+ * in words with no picture (`inWords`: nothing of the learner's strokes went anywhere).
+ */
 export function asksAboutPicture(record: ChatMessageRecord | undefined): boolean {
   return (
     record?.role === 'user' &&
     record.boardRef !== undefined &&
-    record.boardRef.excerpt.trim() === ''
+    record.boardRef.excerpt.trim() === '' &&
+    record.boardRef.inWords !== true
   );
 }
 
@@ -283,9 +300,15 @@ export const CONTINUE_PROMPT: Record<Locale, string> = {
 /**
  * Appends the rest of a cut answer. A part that starts a list item, heading or formula goes on
  * a new line (so the board keeps it as its own step); text cut mid-sentence goes on the same line.
+ * A cut inside a number is joined without a space: "x = 1" + "4 m" is "x = 14 m", "9," + "81" is
+ * "9,81" (numbers never change), unless the rest itself starts with a space ("1," + " 2, 3").
  */
 export function joinContinuation(previous: string, rest: string): string {
   const next = rest.trimStart();
   if (/^(#{1,4}\s|\d+[.)]\s|[-*]\s|\$\$)/.test(next)) return `${previous.trimEnd()}\n${next}`;
-  return /\s$/.test(previous) ? `${previous}${next}` : `${previous} ${next}`;
+  if (/\s$/.test(previous)) return `${previous}${next}`;
+  const insideNumber =
+    next === rest &&
+    (/\d$/.test(previous) ? /^[.,]?\d/.test(next) : /\d[.,]$/.test(previous) && /^\d/.test(next));
+  return insideNumber ? `${previous}${next}` : `${previous} ${next}`;
 }

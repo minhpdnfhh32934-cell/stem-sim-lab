@@ -92,7 +92,11 @@ async function watch(page: Page, quality: 'low' | 'medium' = 'medium'): Promise<
 
 async function openStudio(page: Page, tab?: 'Hóa học' | 'Sinh học' | 'Vật lí' | 'Soạn bài') {
   await page.getByRole('button', { name: /Science Studio/ }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible();
+  // The studio screen is a lazy module, compiled by the dev server on first use (seen
+  // 2026-10-20: still "Đang tải mô phỏng…" after 5 s in the full parallel run).
+  await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible({
+    timeout: 20_000,
+  });
   if (tab) await page.getByRole('tab', { name: tab }).click();
 }
 
@@ -293,6 +297,9 @@ test('physics: a non-default height gives the closed-form times; the lab agrees'
   await expect(page.locator('[data-condition="A"]')).toContainText('20 m');
   await expect(page.locator('[data-condition="B"]')).toContainText('40 m');
   await page.getByRole('button', { name: 'Chạy thí nghiệm' }).click();
+  // The learner stays on the experiment until "Tiếp: Quan sát".
+  await expect(page.getByText(/Đã có số đo của cả hai điều kiện/)).toBeVisible();
+  await next(page).click();
 
   const table = page.locator('table.studio-table');
   await expect(table).toBeVisible();
@@ -399,6 +406,7 @@ test('Hỏi thầy (mocked Gemini): the question carries the engine numbers only
   await page.getByRole('radio', { name: /√2/ }).click();
   await next(page).click();
   await page.getByRole('button', { name: 'Chạy thí nghiệm' }).click();
+  await next(page).click();
   const timeA = (
     await page
       .locator('table.studio-table')

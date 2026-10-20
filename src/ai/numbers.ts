@@ -47,23 +47,47 @@ function readings(token: string): number[] {
   return [...out];
 }
 
+/** Scientific notation: a [.×x*] 10 ^? b */
+const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
+const PLAIN = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
+
+/**
+ * Every number written in the text, one entry per written token, each with all its possible
+ * readings ("2,5" → [2.5, 25], "1.200" → [1200, 1.2]). A token is known when ANY reading is:
+ * checking each reading on its own always flags the reading the writer did not mean. Digits that
+ * are part of a scientific-notation token ("6,67.10^-11") are not counted again on their own.
+ */
+export function numberTokens(text: string): number[][] {
+  const t = normalizeText(text);
+  const tokens: number[][] = [];
+  const spans: [number, number][] = [];
+  for (const m of t.matchAll(SCI)) {
+    const exp = Number(m[2]);
+    const sci = readings(m[1] ?? '').map((r) => r * 10 ** exp);
+    // "1.106" may be 1·10^6 or a plain decimal: digits and separators alone keep both readings.
+    const written = m[0].trim();
+    tokens.push(/^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci);
+    spans.push([m.index, m.index + m[0].length]);
+  }
+  for (const m of t.matchAll(PLAIN)) {
+    const start = m.index;
+    const end = start + m[0].length;
+    if (spans.some(([s, e]) => start >= s && end <= e)) continue;
+    tokens.push(readings(m[0].replace(/\s/g, '')));
+  }
+  return tokens;
+}
+
 /** All numbers mentioned in the text (absolute values; signs are interpretation). */
 export function numbersIn(text: string): number[] {
   const t = normalizeText(text);
   const found: number[] = [];
-  // Scientific notation first: a [.×x*] 10 ^? b
-  const sci = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
-  let m: RegExpExecArray | null;
-  while ((m = sci.exec(t))) {
-    const mant = m[1] ?? '';
+  // Scientific notation first, then every plain token (a problem may write either reading).
+  for (const m of t.matchAll(SCI)) {
     const exp = Number(m[2]);
-    for (const r of readings(mant)) found.push(r * 10 ** exp);
+    for (const r of readings(m[1] ?? '')) found.push(r * 10 ** exp);
   }
-  const plain = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
-  while ((m = plain.exec(t))) {
-    const tok = m[0].replace(/\s/g, '');
-    found.push(...readings(tok));
-  }
+  for (const m of t.matchAll(PLAIN)) found.push(...readings(m[0].replace(/\s/g, '')));
   return found;
 }
 

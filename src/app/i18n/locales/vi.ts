@@ -914,6 +914,8 @@ const vi = {
     needVision:
       'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
+    outputUnsafe:
+      'Chữ đọc được từ ảnh có nội dung không phù hợp nên mình không đưa vào ô đề bài. Hãy chụp một đề bài khác.',
     badKey: 'Khóa API bị từ chối (sai khóa hoặc hết quyền). Kiểm tra lại khóa trong Cài đặt.',
     badModel: 'Tên model API không đúng. Kiểm tra lại ô Mô hình trong Cài đặt.',
     localNoVision:
@@ -1128,6 +1130,7 @@ const vi = {
       condition: 'Điều kiện {id}',
       run: 'Chạy thí nghiệm',
       running: 'Đang tính…',
+      ran: 'Đã có số đo của cả hai điều kiện. Em có thể chỉnh biến số rồi chạy lại, hoặc sang bước Quan sát.',
       reset: 'Đặt lại',
       errors: {
         invalid: 'Giá trị này mô phỏng chưa chạy được. Em thử chỉnh lại biến số nhé.',
@@ -1248,6 +1251,7 @@ const vi = {
       binding:
         'Bài học này chưa khớp với mô hình nguyên phân 3D hiện có. Nhờ giáo viên kiểm tra kịch bản.',
       pending: 'Mô tả kì và chức năng bộ phận chưa được kiểm duyệt.',
+      verified: 'Mô tả kì và chức năng bộ phận đã được kiểm duyệt.',
       sources: 'Nguồn: {list}',
       q: {
         diploid: 'Bộ NST 2n',
@@ -1462,6 +1466,8 @@ const vi = {
       'Câu hỏi kèm phần chữ em khoanh trên bảng và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     boardChip: 'Hỏi về: «{excerpt}»',
     boardChipPicture: 'Hỏi về: hình em khoanh trên bảng',
+    boardChipPictureWords:
+      'Hỏi bằng lời về hình em khoanh: thầy không xem được hình, chỉ biết các bước quanh đó',
     boardChipRemove: 'Bỏ chỗ đã khoanh',
     boardRef: 'Về chỗ em khoanh: «{excerpt}»',
     boardRefPicture: 'Về hình em khoanh trên bảng',
@@ -2086,7 +2092,7 @@ const vi = {
       pictureLocalQuiet:
         'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng. Giọng Gemini sẽ không đọc to câu trả lời này.',
       pictureUnreadable:
-        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé.',
+        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé: thầy chỉ biết các bước quanh đó, không thấy hình.',
       resume: 'Quay lại bài giảng',
       defaultQuestion: 'Thầy giải thích giúp em chỗ em vừa khoanh với ạ.',
       describe: {
@@ -2368,6 +2374,11 @@ const vi = {
     // is there.
     askMitosisPartHiddenQuestion:
       'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng nguyên phân, {cell}) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
+    // Meiosis 3D view (animal germ cell): the same two questions, for meiosis.
+    askMeiosisPartQuestion:
+      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) ạ?',
+    askMeiosisPartHiddenQuestion:
+      'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
   },
   languages: {
     vi: 'Tiếng Việt',

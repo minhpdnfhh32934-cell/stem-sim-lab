@@ -52,6 +52,14 @@ export function AgeGate({ hold = false }: { hold?: boolean }) {
         e.preventDefault();
         if (status?.answered) closeGate();
       }}
+      onClose={() => {
+        // Chromium (WebView2) closes a modal dialog on Esc even when its cancel event was
+        // prevented: an unanswered gate comes straight back, an answered one is put away.
+        const d = ref.current;
+        if (!visible || !d) return;
+        if (status?.answered) closeGate();
+        else if (!d.open) d.showModal();
+      }}
     >
       <header className="dialog__header">
         <h2 id="age-gate-title">

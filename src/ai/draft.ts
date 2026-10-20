@@ -2,7 +2,8 @@ import type { LocalizedText } from '@/core/data/dataset';
 import { toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
-import { mentions, quoteInText } from './numbers';
+import { WORD_END, WORD_START } from '@/safety/moderation';
+import { mentions, normalizeText, quoteInText } from './numbers';
 import { allowedUnits, type Extraction } from './spec';
 
 export type IssueKind =
@@ -45,7 +46,9 @@ const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 /**
  * Values that Vietnamese problems state in words rather than digits. The AI may return
  * them only together with a quote containing one of these phrases (checked against the
- * problem text), so no number is ever invented.
+ * problem text), so no number is ever invented. A phrase counts only as a whole phrase and
+ * only when the problem text does not negate it ("không đàn hồi", "không nhẵn", "không đứng
+ * yên"), even when the quote leaves the negation out.
  */
 const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
   {
@@ -77,19 +80,78 @@ const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
     value: 0,
     phrases: ['mặt đất', 'gốc tọa độ', 'chân dốc', 'từ a', 'tại a'],
   },
-  { keys: /^e$/, value: 1, phrases: ['đàn hồi'] },
+  // "đàn hồi" alone is not enough: "lò xo đàn hồi", "va chạm không đàn hồi".
+  {
+    keys: /^e$/,
+    value: 1,
+    phrases: ['va chạm đàn hồi', 'hoàn toàn đàn hồi', 'đàn hồi hoàn toàn', 'đàn hồi tuyệt đối'],
+  },
   { keys: /^e$/, value: 0, phrases: ['va chạm mềm', 'dính vào nhau', 'dính nhau', 'dính liền'] },
   { keys: /^angle$/, value: 0, phrases: ['ném ngang', 'phương ngang', 'nằm ngang'] },
   { keys: /^beta$/, value: 0, phrases: ['phương ngang', 'nằm ngang', 'song song', 'dọc theo'] },
 ];
 
-/** True when `value` for `key` is stated in words by a phrase inside a genuine quote. */
+/** Words that turn the phrase after them around ("không khí"/"không gian" are nouns, not "not"). */
+const NEGATION = new RegExp(
+  `${WORD_START}(?:không(?! (?:khí|gian))|chưa|chẳng|chả|not|never)${WORD_END}`,
+  'u',
+);
+/** How many words before a phrase may negate it, within the same clause. */
+const NEGATION_REACH = 3;
+
+/** NFC, lower case, single spaces; punctuation is kept because it ends a clause. */
+const flat = (s: string): string => normalizeText(s).toLowerCase();
+
+/**
+ * Where the words of `quote` stand in `text` (both flattened), as [start, end) ranges.
+ * Any punctuation may separate the words: `quoteInText` already decided that the quote is
+ * genuine, this only finds every place it could come from.
+ */
+function quoteSpans(text: string, quote: string): [number, number][] {
+  const words = quote.match(/[\p{L}\p{N}]+/gu) ?? [];
+  if (words.length === 0) return [];
+  // Words hold letters and digits only, so they need no escaping.
+  const re = new RegExp(`${WORD_START}${words.join(String.raw`[^\p{L}\p{N}]+`)}${WORD_END}`, 'gu');
+  return [...text.matchAll(re)].map((m) => [m.index, m.index + m[0].length]);
+}
+
+/**
+ * True when `phrase` stands as a whole phrase inside text[from, to) with no negation
+ * shortly before it in the problem text itself — the negation may sit just outside the
+ * quote ("mặt bàn không nhẵn" quoted as "nhẵn").
+ */
+function statedPlainly(text: string, from: number, to: number, phrase: string): boolean {
+  const re = new RegExp(`${WORD_START}${phrase}${WORD_END}`, 'gu');
+  for (const m of text.matchAll(re)) {
+    if (m.index < from || m.index + m[0].length > to) continue;
+    const clause =
+      text
+        .slice(0, m.index)
+        .split(/[,;:.!?()]/)
+        .pop() ?? '';
+    const before = clause.trim().split(' ').slice(-NEGATION_REACH).join(' ');
+    if (!NEGATION.test(before)) return true;
+  }
+  return false;
+}
+
+/**
+ * True when `value` for `key` is stated in words by a phrase inside a genuine quote.
+ * Every place the quote stands in the problem must state the value plainly: a quote that
+ * also stands in a negated sentence ("Vật A đứng yên, vật B không đứng yên." quoted as
+ * "đứng yên") does not say which one is meant, so the value is not taken from it.
+ */
 export function impliedByWords(key: string, value: number, quote: string, text: string): boolean {
   if (!quote || !quoteInText(text, quote)) return false;
-  const q = quote.toLowerCase();
-  return IMPLIED.some(
-    (rule) =>
-      rule.keys.test(key) && rule.value === value && rule.phrases.some((ph) => q.includes(ph)),
+  const rules = IMPLIED.filter((rule) => rule.keys.test(key) && rule.value === value);
+  if (rules.length === 0) return false;
+  const t = flat(text);
+  const spans = quoteSpans(t, flat(quote));
+  return (
+    spans.length > 0 &&
+    spans.every(([from, to]) =>
+      rules.some((rule) => rule.phrases.some((ph) => statedPlainly(t, from, to, ph))),
+    )
   );
 }
 

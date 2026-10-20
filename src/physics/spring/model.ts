@@ -66,3 +66,17 @@ export function amplitudePhase(o: Oscillator, x0: number, v0: number) {
 }
 
 export const period = (o: Oscillator) => (2 * Math.PI) / omega0(o);
+
+/**
+ * Time between successive same-direction zero crossings: 2π/ω0 without damping,
+ * the pseudo-period 2π/ω_d (ω_d = √(ω0² − γ²)) when underdamped, and null when
+ * critically or overdamped (no oscillation).
+ */
+export function oscillationPeriod(o: Oscillator): number | null {
+  const r = regime(o);
+  if (r === 'none') return period(o);
+  if (r !== 'under') return null;
+  const w = omega0(o);
+  const g = gammaOf(o);
+  return (2 * Math.PI) / Math.sqrt(w * w - g * g);
+}

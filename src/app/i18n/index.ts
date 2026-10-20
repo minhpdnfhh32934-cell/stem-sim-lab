@@ -46,6 +46,16 @@ export function formatNumber(
 
 export type TFunction = (key: MessageKey, params?: MessageParams) => string;
 
+/** A `t()` bound to one locale, outside React (e.g. to store a text in both languages). */
+export function tFor(locale: Locale): TFunction {
+  return (key, params) => translate(locale, key, params);
+}
+
+/** A message in both languages, for records that are shown later in the language on screen. */
+export function translateBoth(key: MessageKey, params?: MessageParams): Record<Locale, string> {
+  return { vi: translate('vi', key, params), en: translate('en', key, params) };
+}
+
 /** React hook returning a `t()` bound to the current UI locale. */
 export function useT(): TFunction {
   const locale = useSettingsStore((s) => s.locale);

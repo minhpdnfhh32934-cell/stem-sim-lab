@@ -20,6 +20,7 @@ import { Mitosis3DParts } from './panels';
 import { buildMitosisScene, type ScenePalette } from './scene';
 import { index2dOf, stage3dOf, timelineFor, useMitosis3D } from './store';
 import { STAGES_3D, type CellType } from './timeline';
+import { withReducedMotion } from '@/ui/three/testing';
 
 /**
  * The view's own renderer factory calls `new THREE.WebGLRenderer(…)`, and jsdom has no WebGL.
@@ -489,8 +490,20 @@ describe('Mitosis3DView', () => {
       expect(cam.position.length()).toBeLessThanOrEqual(limits.max + 1e-6);
     }
     expect(cam.position.length()).toBeCloseTo(limits.max, 6);
+    // The camera glides back (a short smooth move), then is exactly where it was framed.
     fireEvent.click(screen.getByRole('button', { name: 'Đặt lại góc nhìn' }));
-    expect(cam.position.distanceTo(framed)).toBeLessThan(1e-9);
+    await waitFor(() => {
+      expect(cam.position.distanceTo(framed)).toBeLessThan(1e-9);
+    });
+    // With reduced motion the view is restored at once.
+    const restore = withReducedMotion();
+    try {
+      for (let k = 0; k < 20; k++) wheel(120);
+      fireEvent.click(screen.getByRole('button', { name: 'Đặt lại góc nhìn' }));
+      expect(cam.position.distanceTo(framed)).toBeLessThan(1e-9);
+    } finally {
+      restore();
+    }
   });
 
   it('close-up: the camera follows the chromosomes as they spread out', async () => {

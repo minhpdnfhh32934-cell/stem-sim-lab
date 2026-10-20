@@ -62,3 +62,17 @@ describe('pulley engine and scene', () => {
     for (const a of sol.answers) if (a.check !== undefined) expect(a.check).toBeCloseTo(a.value, 8);
   });
 });
+
+describe('Atwood machine with equal masses', () => {
+  it('stays balanced: a = 0, T = m g, no infinite travel time or NaN speed', () => {
+    const p = { ...pulley.defaults, config: 0, m1: 2, m2: 2, g };
+    expect(pulley.validate?.(p) ?? []).toEqual([]);
+    const sol = pulley.solve(p, 'en');
+    const ans = (id: string) => sol.answers.find((a) => a.id === id);
+    expect(ans('acceleration')?.value).toBe(0);
+    expect(ans('tension')?.value).toBeCloseTo(2 * g, 12);
+    expect(ans('travel_time')).toBeUndefined();
+    expect(ans('travel_speed')).toBeUndefined();
+    for (const a of sol.answers) expect(Number.isFinite(a.value), a.id).toBe(true);
+  });
+});

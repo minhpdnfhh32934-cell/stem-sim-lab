@@ -9,6 +9,7 @@ import {
   placeCamera,
   viewTangents,
   type CameraFrame,
+  type Insets,
 } from './camera';
 import type { CameraMode } from './components';
 import { STAGES_3D, buildTimeline, insideCell, type CellType, type Vec3 } from './timeline';
@@ -22,10 +23,17 @@ const CANVASES: [number, number][] = [
 ];
 
 /** A camera set up exactly as the view sets it up. */
-function cameraFor(frame: CameraFrame, type: CellType, w: number, h: number, dir = VIEW_DIR) {
-  const placed = placeCamera(frame, type, w, h, dir);
+function cameraFor(
+  frame: CameraFrame,
+  type: CellType,
+  w: number,
+  h: number,
+  dir = VIEW_DIR,
+  insets?: Insets,
+) {
+  const placed = placeCamera(frame, type, w, h, dir, insets);
   const cam = new THREE.PerspectiveCamera(38, 1, 0.1, 400);
-  applyViewport(cam, w, h);
+  applyViewport(cam, w, h, insets);
   cam.position.set(...placed.position);
   cam.lookAt(...placed.target);
   cam.updateMatrixWorld(true);
@@ -162,5 +170,57 @@ describe('3D mitosis camera framing', () => {
       const { cam } = cameraFor(frame, 'animal', 760, 430, [d.x, d.y, d.z]);
       expect(outside(frame, cam)).toEqual([]);
     }
+  });
+
+  it('with the controls measured, every frame point stays in the safe area (none under them)', () => {
+    // Chips at the top and the stage strip + caption at the bottom; then a part's card too.
+    const layouts: Insets[] = [
+      { top: 92, right: 0, bottom: 112, left: 0 },
+      { top: 92, right: 340, bottom: 112, left: 0 },
+    ];
+    const errors: string[] = [];
+    for (const type of CELL_TYPES) {
+      const { tl, times } = moments(type, 4);
+      for (const t of times) {
+        const state = tl.stateAt(t);
+        for (const mode of MODES) {
+          const frame = cameraFrame(mode, state, type);
+          for (const [w, h] of [
+            [760, 430],
+            [1100, 560],
+          ] as [number, number][]) {
+            for (const insets of layouts) {
+              const { cam } = cameraFor(frame, type, w, h, VIEW_DIR, insets);
+              const v = new THREE.Vector3();
+              for (const p of frame.points) {
+                v.set(frame.center[0] + p[0], frame.center[1] + p[1], frame.center[2] + p[2]);
+                v.project(cam);
+                const x = ((v.x + 1) / 2) * w;
+                const y = ((1 - v.y) / 2) * h;
+                const ok =
+                  x >= insets.left - 0.5 &&
+                  x <= w - insets.right + 0.5 &&
+                  y >= insets.top - 0.5 &&
+                  y <= h - insets.bottom + 0.5;
+                if (!ok)
+                  errors.push(
+                    `${type} ${state.stage} ${mode} ${String(w)}×${String(h)} right=${String(insets.right)}: (${x.toFixed(0)}, ${y.toFixed(0)})`,
+                  );
+              }
+            }
+          }
+        }
+      }
+    }
+    expect(errors.slice(0, 10), `${String(errors.length)} points under the controls`).toEqual([]);
+  });
+
+  it('the two animal daughter cells end apart, with a visible gap between them', () => {
+    const tl = buildTimeline(2, 'animal');
+    const end = tl.stateAt(tl.total).shape;
+    if (end.type !== 'animal') throw new Error('animal shape expected');
+    expect(end.separated).toBe(true);
+    // Gap between the two spheres, as a share of a daughter's radius.
+    expect((2 * end.offset - 2 * end.radius) / end.radius).toBeGreaterThanOrEqual(0.3);
   });
 });

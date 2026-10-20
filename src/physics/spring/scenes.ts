@@ -27,7 +27,7 @@ import type {
   WorldBounds,
 } from '../types';
 import { SP, springInput, staticExtension, type SpringInput } from './engine';
-import { amplitudePhase, gammaOf, omega0, period, regime } from './model';
+import { amplitudePhase, gammaOf, omega0, oscillationPeriod, regime } from './model';
 
 const blockSize = (q: SpringInput) => Math.max(0.04, 0.25 * q.l0);
 
@@ -198,22 +198,26 @@ function graphs(): GraphDef[] {
   ];
 }
 
-/** Period measured independently: time between successive upward zero crossings (DOPRI5). */
+/**
+ * Period measured independently with DOPRI5: twice the time between the first two zero
+ * crossings (they are exactly half a period apart, with or without damping). Null when
+ * there is no oscillation (critically or overdamped) or no motion.
+ */
 export function numericPeriod(q: SpringInput): number | null {
-  if (q.b > 0 || (q.x0 === 0 && q.v0 === 0)) return null;
-  const w = omega0(q);
+  const T = oscillationPeriod(q);
+  if (T === null || (q.x0 === 0 && q.v0 === 0)) return null;
   const r = dopri5(
     (_t, y, d) => {
       d[0] = y[1] ?? 0;
-      d[1] = -(q.k / q.m) * (y[0] ?? 0);
+      d[1] = -(q.k / q.m) * (y[0] ?? 0) - (q.b / q.m) * (y[1] ?? 0);
     },
     [q.x0, q.v0],
     0,
-    (3 * 2 * Math.PI) / w,
-    { rtol: 1e-12, atol: 1e-14, events: [{ id: 'up', g: (_t, y) => y[0] ?? 0, direction: 1 }] },
+    2 * T,
+    { rtol: 1e-12, atol: 1e-14, events: [{ id: 'zero', g: (_t, y) => y[0] ?? 0 }] },
   );
   const [a, b] = r.events;
-  return a && b ? b.t - a.t : null;
+  return a && b ? 2 * (b.t - a.t) : null;
 }
 
 function solve(hooke: boolean) {
@@ -222,7 +226,7 @@ function solve(hooke: boolean) {
     const n = (v: number) => texNum(locale, v);
     const Q = (v: number, u: string) => texQty(locale, v, u);
     const w = omega0(q);
-    const T = period(q);
+    const T = oscillationPeriod(q);
     const { A, phi } = amplitudePhase(q, q.x0, q.v0);
     const steps: SolutionStep[] = [];
     const answers: Answer[] = [];
@@ -260,22 +264,52 @@ function solve(hooke: boolean) {
         },
       );
     }
-    steps.push({
-      text: L('Tần số góc và chu kì dao động:', 'Angular frequency and period:'),
-      tex: `\\omega = \\sqrt{\\frac{k}{m}} = \\sqrt{\\frac{${n(q.k)}}{${n(q.m)}}} = ${Q(w, 'rad/s')},\\qquad T = \\frac{2\\pi}{\\omega} = ${Q(T, 's')}`,
-    });
+    const damped = q.b > 0;
+    if (!damped) {
+      steps.push({
+        text: L('Tần số góc và chu kì dao động:', 'Angular frequency and period:'),
+        tex: `\\omega = \\sqrt{\\frac{k}{m}} = \\sqrt{\\frac{${n(q.k)}}{${n(q.m)}}} = ${Q(w, 'rad/s')},\\qquad T = \\frac{2\\pi}{\\omega} = ${Q(T ?? 0, 's')}`,
+      });
+    } else {
+      steps.push({
+        text: L(
+          'Tần số góc riêng (của hệ khi không có lực cản):',
+          'Natural angular frequency (of the undamped system):',
+        ),
+        tex: `\\omega_0 = \\sqrt{\\frac{k}{m}} = \\sqrt{\\frac{${n(q.k)}}{${n(q.m)}}} = ${Q(w, 'rad/s')}`,
+      });
+    }
     const chk = numericPeriod(q);
-    answers.push(
-      { id: 'omega', label: L('Tần số góc', 'Angular frequency'), value: w, unit: 'rad/s' },
-      {
-        id: 'period',
-        label: L('Chu kì', 'Period'),
-        value: T,
-        unit: 's',
-        ...(chk ? { check: chk } : {}),
-      },
-      { id: 'frequency', label: L('Tần số', 'Frequency'), value: 1 / T, unit: 'Hz' },
-    );
+    answers.push({
+      id: 'omega',
+      label: damped
+        ? L('Tần số góc riêng ω₀', 'Natural angular frequency ω₀')
+        : L('Tần số góc', 'Angular frequency'),
+      value: w,
+      unit: 'rad/s',
+    });
+    // Critically or overdamped motion does not oscillate: no period or frequency.
+    if (T !== null) {
+      answers.push(
+        {
+          id: 'period',
+          label: damped
+            ? L('Chu kì dao động tắt dần T_d = 2π/ω_d', 'Damped period T_d = 2π/ω_d')
+            : L('Chu kì', 'Period'),
+          value: T,
+          unit: 's',
+          ...(chk ? { check: chk } : {}),
+        },
+        {
+          id: 'frequency',
+          label: damped
+            ? L('Tần số dao động tắt dần f_d = 1/T_d', 'Damped frequency f_d = 1/T_d')
+            : L('Tần số', 'Frequency'),
+          value: 1 / T,
+          unit: 'Hz',
+        },
+      );
+    }
     if (q.b === 0) {
       steps.push({
         text: L(
@@ -327,7 +361,7 @@ function solve(hooke: boolean) {
                   'Tắt dần mạnh (quá tới hạn): vật trở về VTCB từ từ, không dao động.',
                   'Overdamped: creeps back without oscillating.',
                 ),
-        tex: `\\gamma = \\frac{b}{2m} = ${Q(g, 'Hz')}${reg === 'under' ? `,\\quad \\omega_d = \\sqrt{\\omega^2 - \\gamma^2} = ${Q(Math.sqrt(w * w - g * g), 'rad/s')}` : ''}`,
+        tex: `\\gamma = \\frac{b}{2m} = ${Q(g, 'Hz')}${reg === 'under' && T !== null ? `,\\quad \\omega_d = \\sqrt{\\omega_0^2 - \\gamma^2} = ${Q(Math.sqrt(w * w - g * g), 'rad/s')},\\quad T_d = \\frac{2\\pi}{\\omega_d} = ${Q(T, 's')}` : ''}`,
       });
       answers.push({
         id: 'gamma',
@@ -366,6 +400,17 @@ function card(hooke: boolean) {
               ? 'm\\ddot{x} + b\\dot{x} + kx = 0'
               : 'x = A\\cos(\\omega t + \\varphi),\\quad \\omega = \\sqrt{k/m}',
         },
+        ...(q.b > 0
+          ? [
+              {
+                tex: '\\gamma = \\frac{b}{2m},\\quad \\omega_d = \\sqrt{\\omega_0^2 - \\gamma^2},\\quad T_d = \\frac{2\\pi}{\\omega_d}',
+                label: L(
+                  'Dao động tắt dần khi γ < ω₀ (không dao động khi γ ≥ ω₀)',
+                  'Damped oscillation when γ < ω₀ (no oscillation when γ ≥ ω₀)',
+                ),
+              },
+            ]
+          : []),
         { tex: 'W = \\tfrac{1}{2} m v^2 + \\tfrac{1}{2} k x^2' },
       ],
       assumptions: [

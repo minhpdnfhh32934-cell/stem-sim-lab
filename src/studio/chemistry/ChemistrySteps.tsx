@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useT } from '@/app/i18n';
+import { translateBoth, useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { ScienceCard } from '@/science-card/ScienceCard';
 import { cx } from '@/ui/cx';
@@ -44,7 +44,14 @@ export function Predict({ scenario, session, update }: StepProps) {
               disabled={locked}
               className={cx('studio-choice', checked && 'is-checked')}
               onClick={() => {
-                update((s) => withPrediction(s, { choice: c, label, at: Date.now() }));
+                update((s) =>
+                  withPrediction(s, {
+                    choice: c,
+                    label,
+                    text: translateBoth(`studio.chem.choices.${c}`),
+                    at: Date.now(),
+                  }),
+                );
               }}
             >
               {label}

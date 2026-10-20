@@ -129,3 +129,55 @@ describe('incline scenes', () => {
     ).toHaveLength(1);
   });
 });
+
+describe('a block that starts on an edge and moves outward', () => {
+  const run = (p: Record<string, number>, seconds: number) => {
+    const e = new InclineEngine();
+    e.reset(p);
+    const s = new Float64Array(6);
+    let sMin = Infinity;
+    let sMax = -Infinity;
+    for (let i = 0; i < seconds * 240; i++) {
+      e.step();
+      e.readState(s);
+      sMin = Math.min(sMin, s[IS.s] ?? 0);
+      sMax = Math.max(sMax, s[IS.s] ?? 0);
+    }
+    return { sMin, sMax, off: s[IS.off] ?? 0 };
+  };
+  const plane = { ...inclinedPlane.defaults };
+
+  it('at the foot, sliding down: leaves at once instead of passing through the foot', () => {
+    const p = { ...plane, s0: 0, v0: 0 };
+    const segs = segments(inclineInput(p));
+    expect(segs[0]?.end).toBe('bottom');
+    expect(segs[0]?.t1).toBe(0);
+    const r = run(p, 3);
+    expect(r.sMin).toBeGreaterThanOrEqual(0);
+    expect(r.off).toBe(1);
+    expect(inclinedPlane.validate?.(p).length).toBeGreaterThan(0);
+  });
+
+  it('at the top, thrown upward: leaves at once instead of rising above the top', () => {
+    const p = { ...plane, s0: 5, v0: 2 };
+    const segs = segments(inclineInput(p));
+    expect(segs[0]?.end).toBe('top');
+    expect(segs[0]?.t1).toBe(0);
+    const r = run(p, 2);
+    expect(r.sMax).toBeLessThanOrEqual(5);
+    expect(r.off).toBe(1);
+    expect(inclinedPlane.validate?.(p).length).toBeGreaterThan(0);
+  });
+
+  it('on the road, pushed backwards from the start: rejected, and the engine never goes behind it', () => {
+    const p = { ...newtonLaws.defaults, v0: -5 };
+    expect(newtonLaws.validate?.(p).length).toBeGreaterThan(0);
+    const r = run(newtonLaws.engineParams?.(p) ?? p, 3);
+    expect(r.sMin).toBeGreaterThanOrEqual(0);
+  });
+
+  it('released at the top and sliding down is still a normal start', () => {
+    expect(inclinedPlane.validate?.(plane)).toEqual([]);
+    expect(newtonLaws.validate?.(newtonLaws.defaults)).toEqual([]);
+  });
+});

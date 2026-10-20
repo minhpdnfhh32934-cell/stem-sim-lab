@@ -72,11 +72,14 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
     store.set({ lessonId: lesson.id, lessonContent: lesson.content });
     if (!append) store.set({ status: 'preparing' });
     const ticket = reserveStart();
-    void prepareMeasure().then(() => {
+    const start = () => {
       // Skipped when a newer answer arrived, or the page closed, while the fonts were loading.
       if (!claimStart(ticket)) return;
       void (append ? continueLesson : playLesson)(lesson, browserMeasure);
-    });
+    };
+    // A failed preparation (KaTeX or a font that could not load) still starts the lesson, with
+    // fallback sizes: the board never stays on "Đang chuẩn bị bảng…".
+    void prepareMeasure().then(start, start);
   }, [lesson]);
 
   // Hiding the board ("Trò chuyện") pauses the lesson, so coming back shows "Tiếp tục"; leaving

@@ -5,7 +5,7 @@ import { mitosis } from '../modules';
 import { DivisionBottom, DivisionPanel } from './DivisionViews';
 import { STAGES } from './division';
 import { setDivisionState } from './stageIndex';
-import { PAIR_CHOICES, useDivisionStore } from './state';
+import { PAIR_CHOICES, cardFor, useDivisionStore } from './state';
 
 beforeEach(() => {
   setDivisionState('mitosis', { pairs: 2, index: 0, playing: false });
@@ -49,5 +49,20 @@ describe('2D counts table', () => {
     await user.keyboard('{Enter}');
     expect(useDivisionStore.getState()).toMatchObject({ index: 3, playing: false });
     expect(buttons[3]).toHaveAttribute('aria-current', 'step');
+  });
+});
+
+describe('Science Card of a division', () => {
+  it('mitosis states only mitotic rules; meiosis keeps its own', () => {
+    const mitosisCard = cardFor('mitosis');
+    for (const text of [mitosisCard.model.vi, mitosisCard.model.en]) {
+      expect(text).not.toMatch(/kì đầu I|kì sau I|kì sau II|trao đổi chéo|tiếp hợp/);
+      expect(text).not.toMatch(/prophase I|anaphase I|crossing over|synapsis/);
+    }
+    expect(mitosisCard.model.vi).toContain('tách crômatit chị em ở kì sau');
+    const meiosisCard = cardFor('meiosis');
+    expect(meiosisCard.model.vi).toContain('trao đổi chéo ở kì đầu I');
+    expect(meiosisCard.model.vi).toContain('kì sau II');
+    expect(meiosisCard.model.vi).not.toContain('nguyên phân');
   });
 });

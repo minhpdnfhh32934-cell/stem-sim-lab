@@ -159,6 +159,53 @@ describe('toSpeech', () => {
   });
 });
 
+describe('formulas a teacher reads aloud (0.7 fixes)', () => {
+  it.each([
+    // Letters glued to a coefficient are a product of symbols, not a unit (gram-hours, milligrams).
+    ['v = √(2gh)', 'vê bằng căn bậc hai của (hai gờ hát)'],
+    ['v = sqrt(2gh)', 'vê bằng căn bậc hai của (hai gờ hát)'],
+    ['F = 2mg', 'ép bằng hai mờ gờ'],
+    ['W = 2mgh', 'vê kép bằng hai mờ gờ hát'],
+    // A real unit glued to its number stays a unit.
+    ['Uống 500mg vitamin C', 'Uống năm trăm mi-li-gam vitamin xê'],
+    ['m = 2kg', 'mờ bằng hai ki-lô-gam'],
+    // A dash between two numbers is a range ("đến"); a spaced minus in an equation stays "trừ".
+    [
+      'Enzyme hoạt động mạnh nhất ở 35–40 °C',
+      'Enzyme hoạt động mạnh nhất ở ba mươi lăm đến bốn mươi độ xê',
+    ],
+    ['pH 6-8', 'pê hát sáu đến tám'],
+    ['Tế bào dài 10–20 µm', 'Tế bào dài mười đến hai mươi mi-crô-mét'],
+    ['5 - 3 = 2', 'năm trừ ba bằng hai'],
+    ['5-3 = 2', 'năm trừ ba bằng hai'],
+    // A dot decimal with a leading zero is never grouped thousands.
+    ['0.125 s', 'không phẩy một hai năm giây'],
+    ['x = 0.250', 'ích bằng không phẩy hai năm không'],
+    // A unit power written as a plain digit.
+    ['V = 1 m3', 'vê bằng một mét khối'],
+    ['D = 1000 kg/m3', 'đê bằng một nghìn ki-lô-gam trên mét khối'],
+    ['p = 10 N/m2', 'pê bằng mười niu-tơn trên mét vuông'],
+    ['a = 2 m/s2', 'a bằng hai mét trên giây bình phương'],
+    // …but an index of a symbol used as such stays an index.
+    ['m1 = 2 m2', 'mờ một bằng hai mờ hai'],
+    // An unspaced plus after a power.
+    ['x²+y²', 'ích bình phương cộng i bình phương'],
+    ['a²+b²=c²', 'a bình phương cộng bê bình phương bằng xê bình phương'],
+    ['x^2+y^2', 'ích bình phương cộng i bình phương'],
+    // DNA strand direction (reading to confirm, DATA_REVIEW).
+    ["Mạch ADN chạy theo chiều 5' → 3'", 'Mạch a đê nờ chạy theo chiều năm phẩy đến ba phẩy'],
+    ["$5' \\to 3'$", 'năm phẩy đến ba phẩy'],
+    ["đầu 3' của mạch", 'đầu ba phẩy của mạch'],
+  ])('%s → %s', (text, reading) => {
+    expect(toSpeech(text)).toBe(reading);
+  });
+
+  it('reads a leading-zero dot decimal as a decimal', () => {
+    expect(readNumber('0.125')).toBe('không phẩy một hai năm');
+    expect(readNumber('0.500')).toBe('không phẩy năm không không');
+  });
+});
+
 describe('splitForSpeech', () => {
   it('cuts into phrases with longer pauses between paragraphs than sentences', () => {
     const chunks = splitForSpeech('Câu một. Câu hai!\nĐoạn mới: ý đầu; ý sau');

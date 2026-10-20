@@ -52,7 +52,7 @@ export function GasBottom() {
             { label: Lz(L('Mô phỏng', 'Simulation')), y: histogram.y, bars: true },
             { label: Lz(L('Lý thuyết 2D', '2D theory')), y: histogram.theory, color: 3 },
           ]}
-          xLabel={Lz(L('Tốc độ v (m/s)', 'Speed v (m/s)'))}
+          xLabel={Lz(L('Tốc độ v', 'Speed v'))}
           yLabel="f(v) (s/m)"
           xUnit="m/s"
           version={version}

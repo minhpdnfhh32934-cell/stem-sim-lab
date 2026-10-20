@@ -1,6 +1,6 @@
 import { Droplets, FlaskConical, ShieldAlert, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useT } from '@/app/i18n';
+import { translateBoth, useT } from '@/app/i18n';
 import { formatFormula } from '@/chemistry/formula';
 import { useProgressStore } from '@/learn/progressStore';
 import type { StepProps } from '../flow/types';
@@ -49,7 +49,7 @@ export function Bench({ scenario, session, update }: StepProps) {
     );
   }
 
-  const labelOf = (c: ChemChoice) => t(`studio.chem.choices.${c}`);
+  const textOf = (c: ChemChoice) => translateBoth(`studio.chem.choices.${c}`);
 
   const act = (a: BenchAction) => {
     const step = applyAction(state, a, inventory);
@@ -58,9 +58,9 @@ export function Bench({ scenario, session, update }: StepProps) {
       return;
     }
     setProblem(null);
-    update((s: StudioSession) => withBenchAction(s, b, a, Date.now(), labelOf));
+    update((s: StudioSession) => withBenchAction(s, b, a, Date.now(), textOf));
     if (a.op === 'mix' && isTargetMix(b, step.state.contents)) {
-      const v = chemVerdict(mixOutcome(step.state.contents), session.prediction, labelOf);
+      const v = chemVerdict(mixOutcome(step.state.contents), session.prediction, textOf);
       if (v.match !== null) {
         useProgressStore.getState().recordPrediction(`studio:${scenario.id}`, v.match);
       }

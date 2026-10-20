@@ -19,7 +19,7 @@ const b = (() => {
   if (!binding) throw new Error('chemistry scenario expected');
   return binding;
 })();
-const label = (c: string) => `label:${c}`;
+const label = (c: string) => ({ vi: `nhãn:${c}`, en: `label:${c}` });
 
 describe('bench evidence', () => {
   it('copies the library record verbatim and holds no quantity', () => {
@@ -65,13 +65,13 @@ describe('verdict', () => {
     const no = { choice: 'noPrecipitate', label: 'y', at: 1 };
     expect(chemVerdict(agcl, yes, label)).toEqual({
       correct: 'precipitate',
-      correctLabel: 'label:precipitate',
+      correctText: { vi: 'nhãn:precipitate', en: 'label:precipitate' },
       match: true,
     });
     expect(chemVerdict(agcl, no, label).match).toBe(false);
     expect(chemVerdict(mixOutcome(['NaCl', 'BaCl2']), yes, label)).toEqual({
       correct: null,
-      correctLabel: null,
+      correctText: null,
       match: null,
     });
   });

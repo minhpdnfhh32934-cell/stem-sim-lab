@@ -211,7 +211,8 @@ export function SimulationSettings() {
                   settings.setDefaultGravity(g);
                 }}
               >
-                {formatNumber(settings.locale, g)}
+                {/* Exact digits: 9,80665 is standard gravity by definition, never 9,807. */}
+                {formatNumber(settings.locale, g, { maximumFractionDigits: 5 })}
                 {g === 9.80665 ? ` (${t('physicsSettings.standard')})` : ''}
               </button>
             ))}
