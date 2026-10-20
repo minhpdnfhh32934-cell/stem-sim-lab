@@ -6,23 +6,36 @@
  * geometry, material and texture it created. Rendering (renderer, camera, controls) lives in the
  * view.
  *
- * Look: environment-lit physical materials and a key/fill/rim light rig (`../../view3d/look`),
- * see-through shells outlined by a Fresnel rim, solid parts that fade with alphaHash (they never
- * blend or sort against the glass), spindle fibres as real thin tubes (an InstancedMesh, width
- * per quality tier), a soft contact shadow under the cell. A picked part glows in the highlight
- * colour while the other parts are dimmed.
+ * Look (shared with meiosis, `../division3d/looks.ts`): environment-lit physical materials and a
+ * key/fill/rim light rig, see-through shells outlined by a Fresnel rim over a faint lit back face
+ * (the cell's volume), a membrane that undulates a little (always inwards), solid parts that fade
+ * with alphaHash (they never blend or sort against the glass), light see-through spindle fibres
+ * fading towards the poles (an InstancedMesh on the FX layer), chromatids shaded where sisters
+ * touch, a soft contact shadow under the cell. In metaphase a faint dashed ring marks the
+ * (imaginary) equatorial plane. A picked part glows in the highlight colour while the other parts
+ * are dimmed.
  */
 import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
+import { LAYER } from '@/ui/three/layers';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
-import { glass, roundedBox, setRimAlpha, solid, withTint } from '@/ui/three/materials';
-import { withEdgeShade, withRelief } from '@/ui/three/relief';
-import { ChromosomeTube, TUBE_SURFACE_ATTRIBUTE } from '../../view3d/primitives/chromosomeTube';
+import { roundedBox, setRimAlpha } from '@/ui/three/materials';
+import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
 import { centrosomeMaker } from '../division3d/centrosomeMesh';
+import { ILLUSTRATIVE_SCALE } from '../division3d/dimensions';
+import { dashedRing } from '../division3d/guides';
+import {
+  SPINDLE_OPACITY,
+  divisionLooks,
+  setLookOpacity,
+  type DivisionPalette,
+  type Look,
+} from '../division3d/looks';
 import { TwoSphereProfile } from '../division3d/membraneMesh';
 import { placeNucleolus, writeEnvelopeParts } from '../division3d/nucleusMesh';
-import { FIBRE, writeFibres } from '../division3d/spindleMesh';
+import { FIBRE, fibreGeometry, writeFibres } from '../division3d/spindleMesh';
+import { CONTACT_SHADE, KINETOCHORE_RADIUS, tubeDetail } from '../division3d/tubes';
 import { cameraFrame, cellBound, type CameraFrame } from './camera';
 import {
   condensedShare,
@@ -32,7 +45,13 @@ import {
   type CentrelineInput,
   type TubeProfile,
 } from './chromatidShape';
-import { componentVisible, type CameraMode, type ComponentId, type Selection } from './components';
+import {
+  componentVisible,
+  type CameraMode,
+  type ComponentId,
+  type LabelId,
+  type Selection,
+} from './components';
 import { envelopeBreakdown, plateSlots, plateVesicleSize, spherePointsEven } from './sceneParts';
 import {
   ANIMAL,
@@ -41,26 +60,17 @@ import {
   ease,
   type ChromatidInfo,
   type Vec3,
+  type CellType,
   type Mitosis3DState,
   type Timeline,
 } from './timeline';
 
 /** CSS colour strings (read from theme tokens by the view). */
-export interface ScenePalette {
+export interface ScenePalette extends DivisionPalette {
   maternal: string;
   paternal: string;
-  centromere: string;
-  membrane: string;
-  envelope: string;
-  nucleolus: string;
   wall: string;
-  spindle: string;
-  centrosome: string;
   plate: string;
-  ring: string;
-  highlight: string;
-  /** Colour unpicked parts fade towards while a part is picked (the stage's colour). */
-  backdrop?: string;
 }
 
 export interface SceneOptions {
@@ -74,14 +84,18 @@ export interface SceneOptions {
   rimStrength?: number;
   /** How much solids darken towards their silhouette (a theme token, `withEdgeShade`). */
   edgeShade?: number;
+  /** HDR path (High tier on a discrete GPU): glowing centrosome cores, the wall's fibres. */
+  hdr?: boolean;
 }
 
 export type PickResult = Selection;
 
-/** A part to name on the picture and a point on it (world units). */
+/** A part (or the metaphase guide) to name on the picture, a point on it and its colour. */
 export interface LabelAnchor3D {
-  id: ComponentId;
+  id: LabelId;
   point: Vec3;
+  /** The part's colour (the label's anchor ring). */
+  color: string;
 }
 export type { CameraFrame, CameraMode, Selection };
 /** Moved to the generic 3D kit (`@/ui/three/drawStats`); re-exported for existing imports. */
@@ -147,20 +161,17 @@ const SAME_SHARE = 0.002;
 const WRITE_BUDGET = 24;
 
 /** A click this close to a condensed chromatid's centromere picks the centromere. */
-const CENTROMERE_PICK = 0.26;
+const CENTROMERE_PICK = 0.26 * ILLUSTRATIVE_SCALE;
 
-/**
- * Three materials per look, swapped and never re-created: normal, highlighted (glows in the
- * highlight colour) and dimmed (another part is picked: greyer, see-through parts fainter).
- */
-interface Look<M extends THREE.Material> {
-  base: M;
-  hi: M;
-  dim: M;
-}
+/** Depth of the membrane's undulation (share of its radius; illustrative, always inwards). */
+const MEMBRANE_WAVE = 0.015;
 
-/** Colour unpicked parts fade towards when the palette names none. */
-const DIM_TOWARDS = '#8f949e';
+/** The dashed equatorial-plate ring: radius (inside the cell, around the plate) and opacity. */
+const GUIDE_RADIUS: Record<CellType, number> = {
+  animal: 0.9 * ANIMAL.radius,
+  plant: 0.92 * Math.min(PLANT.half[1], PLANT.half[2]),
+};
+const GUIDE_OPACITY = 0.6;
 
 export function buildMitosisScene(
   tl: Timeline,
@@ -197,122 +208,19 @@ export function buildMitosisScene(
   scene.add(shadow.mesh);
   disposables.push(shadow);
 
-  // ---- materials
-  const towards = new THREE.Color(palette.backdrop ?? DIM_TOWARDS);
-  const dimHex = (color: string) => `#${new THREE.Color(color).lerp(towards, 0.5).getHexString()}`;
-  const look = <M extends THREE.MeshStandardMaterial>(
-    color: string,
-    make: (c: string) => M,
-  ): Look<M> => {
-    const base = keep(make(color));
-    const hi = keep(make(color));
-    hi.emissive.set(palette.highlight);
-    hi.emissiveIntensity = 0.85;
-    hi.userData.look = 'hi';
-    const dim = keep(make(dimHex(color)));
-    dim.userData.look = 'dim';
-    const scale = dim.transparent ? 0.55 : 1;
-    dim.opacity *= scale;
-    dim.userData.opacityScale = scale;
-    return { base, hi, dim };
-  };
-  /**
-   * Surface relief (illustration, `relief.ts`): fine grain on the chromatids (it stays on each
-   * one as it moves) and granules on the nucleolus. Light only — no shape, size or count
-   * changes. Small parts only: on the membranes, which fill much of the picture, it cost a
-   * quarter more frame time in software rendering for a barely visible ripple.
-   */
-  const RELIEF = {
-    chromatid: { frequency: 11, height: 0.028, attribute: TUBE_SURFACE_ATTRIBUTE },
-    nucleolus: { frequency: 7, height: 0.025 },
-  } as const;
-  const relief =
-    <M extends THREE.MeshStandardMaterial>(
-      o: (typeof RELIEF)[keyof typeof RELIEF],
-      make: (c: string) => M,
-    ) =>
-    (c: string) =>
-      withRelief(make(c), o);
-  const firm = (c: string) => solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true });
-  const shell =
-    (opacity: number, rimAlpha: number, side: THREE.Side = THREE.FrontSide) =>
-    (c: string) =>
-      glass(c, { opacity, side, rim: { color: c, strength: rimStrength, alpha: rimAlpha } });
-  const membraneOpacity = opts.membraneOpacity ?? 0.16;
-  /**
-   * Chromatid tubes carry their colours per vertex (maternal / paternal, piece by piece): the
-   * material is white. Dimmed: the colour mixed halfway towards the stage colour in the shader,
-   * the same fade towards the backdrop as the other parts.
-   */
-  const tubeLook = (): Look<THREE.MeshStandardMaterial> => {
-    // The chromosome look: soft sheen, fine relief and a light darkening
-    // towards the silhouette (a rod, not a flat ribbon); the maternal / paternal colours stay
-    // exact as albedo (vertex colours) where the surface faces the viewer.
-    const make = () => {
-      const m = keep(
-        withEdgeShade(
-          withRelief(
-            solid('#ffffff', tier, { roughness: 0.55, sheen: 0.7, fades: true }),
-            RELIEF.chromatid,
-          ),
-          { strength: 0.6 * edgeShade },
-        ),
-      );
-      m.vertexColors = true;
-      return m;
-    };
-    const base = make();
-    const hi = make();
-    hi.emissive.set(palette.highlight);
-    hi.emissiveIntensity = 0.85;
-    hi.userData.look = 'hi';
-    // Halfway to the stage colour, as the other parts' dimmed looks.
-    const dim = withTint(make(), towards, 0.5);
-    dim.userData.look = 'dim';
-    return { base, hi, dim };
-  };
-  const mats = {
-    tube: tubeLook(),
-    bead: look(palette.centromere, firm),
-    // One pass for the see-through double-sided parts (one draw call each, not two).
-    envelope: look(palette.envelope, shell(0.3, 0.45, THREE.DoubleSide)),
-    nucleolus: look(
-      palette.nucleolus,
-      relief(RELIEF.nucleolus, (c) => solid(c, tier, { roughness: 0.55, sheen: 0.4, fades: true })),
-    ),
-    membrane: look(palette.membrane, shell(animal ? membraneOpacity : membraneOpacity * 0.5, 0.55)),
-    wall: look(palette.wall, shell(0.16, 0.6)),
-    // Hollow barrels (seen inside from the open ends), as centrioles are drawn in textbooks.
-    centriole: look(palette.centrosome, (c) =>
-      solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true, side: THREE.DoubleSide }),
-    ),
-    pcm: look(palette.centrosome, shell(0.22, 0.35)),
-    ring: look(palette.ring, firm),
-    plate: look(palette.plate, (c) =>
-      glass(c, { opacity: 0.75, side: THREE.DoubleSide, roughness: 0.4 }),
-    ),
-    spindle: look(palette.spindle, (c) => solid(c, tier, { roughness: 0.4, fades: true })),
-    // Fragments of the nuclear envelope, its pores, and the Golgi vesicles of the cell plate.
-    vesicle: look(palette.envelope, (c) =>
-      solid(c, tier, { roughness: 0.3, clearcoat: 0.4, fades: true }),
-    ),
-    pore: look(palette.envelope, firm),
-    plateVesicle: look(palette.plate, (c) =>
-      solid(c, tier, { roughness: 0.3, clearcoat: 0.4, fades: true }),
-    ),
-  };
-  /**
-   * The cytoplasm (illustrative): a faint tint on the inside of the cell's far side, so the cell
-   * reads as a filled volume. Not a part of its own (never picked or highlighted).
-   */
-  const cytoplasm = keep(
-    new THREE.MeshBasicMaterial({
-      color: palette.membrane,
-      transparent: true,
-      opacity: 0.06,
-      depthWrite: false,
-      side: THREE.BackSide,
-    }),
+  // ---- materials (shared with meiosis: `../division3d/looks.ts`)
+  const hdr = opts.hdr ?? false;
+  const mats = divisionLooks(
+    palette,
+    {
+      tier,
+      membraneOpacity: opts.membraneOpacity ?? 0.16,
+      rimStrength,
+      edgeShade,
+      hdr,
+      plant: !animal,
+    },
+    keep,
   );
   /** The finer parts (double envelope, pores, vesicles, centriole triplets): High tier only. */
   const detail = tier === 'high';
@@ -320,17 +228,10 @@ export function buildMitosisScene(
   // ---- shared geometries
   const sphere = keep(new THREE.SphereGeometry(1, seg, Math.round(seg * 0.75)));
   // Kinetochore: a small disc on the outer face of each chromatid's centromere (unit height).
-  const kinetoGeo = keep(new THREE.CylinderGeometry(0.085, 0.085, 1, Math.max(10, seg)));
-  /**
-   * Sides and ring density of a chromatid tube per tier. A big chromosome set (more than 16
-   * chromatids: 2n > 8, which the view does not offer but a timeline can hold) gets the lightest
-   * tubes, so a playback frame stays cheap however many chromatids move (smoothness first).
-   */
-  const many = tl.chromatids.length > 16;
-  const tubeSides = many ? 6 : tier === 'high' ? 10 : tier === 'medium' ? 8 : 6;
-  const rings = many
-    ? { ringsPerUnit: 4, tipRings: 3, waistRings: 4 }
-    : { ringsPerUnit: 7, tipRings: 6, waistRings: 8 };
+  const kinetoGeo = keep(
+    new THREE.CylinderGeometry(KINETOCHORE_RADIUS, KINETOCHORE_RADIUS, 1, Math.max(10, seg)),
+  );
+  const { sides: tubeSides, ...rings } = tubeDetail(tier, tl.chromatids.length);
   const centrioleGeo = keep(
     new THREE.CylinderGeometry(0.1, 0.1, 0.42, Math.max(8, seg / 2), 1, true),
   );
@@ -343,8 +244,12 @@ export function buildMitosisScene(
   const blob = keep(new THREE.IcosahedronGeometry(1, 1));
   const tubuleGeo = keep(new THREE.CylinderGeometry(1, 1, 1, 6, 1, true));
   const fibreShape = FIBRE[tier];
-  // Unit fibre: radius 1, height 1 along +y (scaled per fibre), open ends.
-  const fibreGeo = keep(new THREE.CylinderGeometry(1, 1, 1, fibreShape.sides, 1, true));
+  // Unit fibre: radius 1, height 1 along +y (scaled per fibre), open ends, fading to its pole.
+  const fibreGeo = keep(
+    fibreGeometry(fibreShape.sides, SPINDLE_OPACITY.pole / SPINDLE_OPACITY.far),
+  );
+  // The imaginary equatorial plate (metaphase): a dashed ring, scaled to the cell.
+  const guideGeo = keep(dashedRing(0.008));
 
   const pickables: THREE.Object3D[] = [];
   const mesh = <M extends THREE.Material>(geo: THREE.BufferGeometry, mat: M, data: PartData) => {
@@ -448,6 +353,7 @@ export function buildMitosisScene(
     tubuleGeo,
     centriole: mats.centriole.base,
     pcm: mats.pcm.base,
+    ...(hdr ? { core: mats.core.base } : {}),
     keep,
   });
   const centrosomes = [0, 1].map(() => {
@@ -465,7 +371,10 @@ export function buildMitosisScene(
   const spindle = new THREE.InstancedMesh(fibreGeo, mats.spindle.base, maxFibres);
   spindle.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   spindle.count = 0;
-  spindle.userData = { part: 'fibre' } satisfies PartData;
+  // See-through fibres: blended after the cytoplasm, before the membrane's front face, and kept
+  // out of ambient occlusion (FX layer).
+  spindle.userData = { part: 'fibre', layer: LAYER.FX };
+  spindle.renderOrder = -0.25;
   spindle.frustumCulled = false;
   scene.add(spindle);
   pickables.push(spindle);
@@ -473,14 +382,14 @@ export function buildMitosisScene(
   // ---- cell body
   // Animal membrane: a surface of revolution about the spindle axis whose profile is the
   // union of two circles (one sphere → furrow → two daughter spheres).
-  const profile = keep(new TwoSphereProfile(seg));
+  const profile = keep(new TwoSphereProfile(seg, { amplitude: MEMBRANE_WAVE, seed: 7 }));
   const memGeo = profile.geometry;
   const writeProfile = (offset: number, radius: number) => {
     profile.write(offset, radius);
   };
   const membrane = mesh(animal ? memGeo : rounded, mats.membrane.base, { part: 'membrane' });
-  // The cytoplasm tint shares the membrane's shape (and follows its furrow), drawn first.
-  const inside = new THREE.Mesh(animal ? memGeo : rounded, cytoplasm);
+  // The cell's volume: the membrane's lit back face (follows its furrow), drawn first.
+  const inside = new THREE.Mesh(animal ? memGeo : rounded, mats.cytoplasm.base);
   inside.raycast = () => undefined;
   inside.renderOrder = -0.5;
   membrane.add(inside);
@@ -490,6 +399,14 @@ export function buildMitosisScene(
   const wall = mesh(rounded, mats.wall.base, { part: 'wall' });
   const plate = mesh(disc, mats.plate.base, { part: 'plate' });
   plate.rotation.z = Math.PI / 2; // disc normal along x
+  // The equatorial plate guide: never picked, on the FX layer (no occlusion), shown in metaphase.
+  const guide = new THREE.Mesh(guideGeo, mats.guide);
+  guide.userData = { layer: LAYER.FX };
+  guide.raycast = () => undefined;
+  guide.renderOrder = -0.2;
+  guide.visible = false;
+  guide.scale.setScalar(GUIDE_RADIUS[tl.cellType]);
+  scene.add(guide);
   // The cell plate grows as a disc and is clipped by the side walls (needs
   // renderer.localClippingEnabled; without it the disc simply shows unclipped).
   const [hx, hy, hz] = PLANT.half;
@@ -559,13 +476,15 @@ export function buildMitosisScene(
     towardSister: [0, 0, 0],
     pinch: 0,
   };
+  /** Contact shade of one tube write (reused: no allocation per frame). */
+  const contact = {
+    towards: new Float32Array(3),
+    strength: 0,
+    reach: CONTACT_SHADE.reach,
+  };
   let selection: Selection | null = null;
 
-  const setOpacity = (l: Look<THREE.Material>, o: number) => {
-    l.base.opacity = o;
-    l.hi.opacity = Math.max(o, Math.min(1, o + 0.25));
-    l.dim.opacity = o * ((l.dim.userData.opacityScale as number | undefined) ?? 1);
-  };
+  const setOpacity = setLookOpacity;
 
   const isSelected = (data: PartData, st: Mitosis3DState): boolean => {
     if (!selection) return false;
@@ -640,13 +559,17 @@ export function buildMitosisScene(
     if (plateVesicles) plateVesicles.material = pick(mats.plateVesicle, 'plate');
     for (const e of nucleoli) e.material = pick(mats.nucleolus, 'nucleolus');
     membrane.material = pick(mats.membrane, 'membrane');
+    inside.material = pick(mats.cytoplasm, 'membrane');
     wall.material = pick(mats.wall, 'wall');
     ring.material = pick(mats.ring, 'ring');
     plate.material = pick(mats.plate, 'plate');
     spindle.material = pick(mats.spindle, 'fibre');
     for (const c of centrosomes) {
       for (const m of c.parts)
-        m.material = pick(m === c.halo ? mats.pcm : mats.centriole, 'centrosome');
+        m.material = pick(
+          m === c.halo ? mats.pcm : m === c.core ? mats.core : mats.centriole,
+          'centrosome',
+        );
     }
   };
 
@@ -739,7 +662,13 @@ export function buildMitosisScene(
         inp.m = m;
         inp.pinch = pinch;
         writeCentreline(o.info, o.tube.stations, inp, o.centre, o.radii);
-        o.tube.write(o.centre, o.radii);
+        // Sisters still touching: the facing sides are shaded near the centromere.
+        const touch = pinch * m;
+        contact.towards[0] = tmpDir.x;
+        contact.towards[1] = tmpDir.y;
+        contact.towards[2] = tmpDir.z;
+        contact.strength = CONTACT_SHADE.strength * touch;
+        o.tube.write(o.centre, o.radii, touch > 0.05 ? contact : undefined);
       }
       // Kinetochore on the waist's outer face (away from the sister, or towards its pole).
       if (sister?.present && tmpDir.lengthSq() > 0) tmpDir.negate();
@@ -799,10 +728,15 @@ export function buildMitosisScene(
       });
     }
 
-    // Spindle fibres: one tube per fibre (unit cylinder moved, turned and stretched).
+    // Spindle fibres: one tube per fibre (unit cylinder moved, turned and stretched); light and
+    // see-through once assembled.
     writeFibres(spindle, st.fibres, fibreShape.radius, maxFibres);
-    // Fully opaque once assembled (a hashed fade below 1 shows as grain on thin fibres).
-    setOpacity(mats.spindle, Math.min(1, st.spindle * 1.5));
+    setOpacity(mats.spindle, SPINDLE_OPACITY.far * Math.min(1, st.spindle * 1.5));
+
+    // The imaginary equatorial plate: in metaphase, while the chromosomes line up on it.
+    const guideOn = st.stage === 'metaphase' ? Math.min(1, st.u / 0.3) : 0;
+    guide.visible = guideOn > 0.01;
+    mats.guide.opacity = GUIDE_OPACITY * guideOn;
 
     const sh = st.shape;
     if (sh.type === 'animal') {
@@ -929,8 +863,8 @@ export function buildMitosisScene(
     const st = last;
     if (!st) return [];
     const out: LabelAnchor3D[] = [];
-    const add = (id: ComponentId, point: Vec3 | null) => {
-      if (point && componentVisible(id, st)) out.push({ id, point });
+    const add = (id: ComponentId, point: Vec3 | null, color: string) => {
+      if (point && componentVisible(id, st)) out.push({ id, point, color });
     };
     // A chromosome: the middle of the first present chromatid's longer arm.
     const firstIdx = st.chromatids.findIndex((c) => c.present);
@@ -940,45 +874,61 @@ export function buildMitosisScene(
       const k = Math.max(0, Math.floor(first.tube.centromereRing / 2));
       const id: ComponentId =
         st.condensation < 0.5 ? 'chromatin' : pose.joined ? 'doubleChromosome' : 'singleChromosome';
-      add(id, ringPoint(first, k));
+      add(id, ringPoint(first, k), originColour[pose.origin]);
     }
     // A centromere of another chromosome (labels spread over the picture).
     const cen = st.centromeres[st.centromeres.length - 1];
-    if (cen) add('centromere', cen.position);
+    if (cen) add('centromere', cen.position, palette.centromere);
+    // The imaginary equatorial plate, while its ring is drawn (metaphase).
+    if (guide.visible) {
+      const r = GUIDE_RADIUS[tl.cellType];
+      out.push({
+        id: 'equator',
+        point: [0, 0.74 * r, 0.67 * r],
+        color: palette.guide ?? palette.spindle,
+      });
+    }
     const fibre = st.fibres.find((f) => f.kind === 'polar') ?? st.fibres[0];
     // A spindle fibre near its pole (clear of the chromosomes in the middle).
     if (fibre)
-      add('spindle', [
-        fibre.from[0] + 0.28 * (fibre.to[0] - fibre.from[0]),
-        fibre.from[1] + 0.28 * (fibre.to[1] - fibre.from[1]),
-        fibre.from[2] + 0.28 * (fibre.to[2] - fibre.from[2]),
-      ]);
-    if (animal) add('centrosome', st.centrosomes[st.centrosomes.length - 1] ?? null);
+      add(
+        'spindle',
+        [
+          fibre.from[0] + 0.28 * (fibre.to[0] - fibre.from[0]),
+          fibre.from[1] + 0.28 * (fibre.to[1] - fibre.from[1]),
+          fibre.from[2] + 0.28 * (fibre.to[2] - fibre.from[2]),
+        ],
+        palette.spindle,
+      );
+    if (animal)
+      add('centrosome', st.centrosomes[st.centrosomes.length - 1] ?? null, palette.centrosome);
     const n0 = st.nuclei[0];
     if (n0) {
-      add('nucleus', onSphere(n0.center, n0.radius, [-0.6, 0.65, 0.45]));
-      add('nucleolus', nucleoli[0]?.position.toArray() ?? null);
-      if (detail) add('nuclearEnvelope', onSphere(n0.center, n0.radius, [0.55, -0.6, 0.6]));
+      add('nucleus', onSphere(n0.center, n0.radius, [-0.6, 0.65, 0.45]), palette.envelope);
+      add('nucleolus', nucleoli[0]?.position.toArray() ?? null, palette.nucleolus);
+      if (detail)
+        add('nuclearEnvelope', onSphere(n0.center, n0.radius, [0.55, -0.6, 0.6]), palette.envelope);
     }
     const sh = st.shape;
     if (sh.type === 'animal') {
-      if (sh.ring) add('cleavageFurrow', [0, sh.ringRadius * 0.72, sh.ringRadius * 0.69]);
+      if (sh.ring)
+        add('cleavageFurrow', [0, sh.ringRadius * 0.72, sh.ringRadius * 0.69], palette.ring);
       const e = 1 + sh.elongation;
-      add('membrane', [
-        -0.35 * ANIMAL.radius * e,
-        (0.86 * ANIMAL.radius) / Math.sqrt(e),
-        0.36 * ANIMAL.radius,
-      ]);
+      add(
+        'membrane',
+        [-0.35 * ANIMAL.radius * e, (0.86 * ANIMAL.radius) / Math.sqrt(e), 0.36 * ANIMAL.radius],
+        palette.membrane,
+      );
     } else {
       const [px, py, pz] = PLANT.half;
       if (sh.plate > 0.001)
-        add('cellPlate', [
-          0,
-          Math.min(sh.plateRadius, py) * 0.62,
-          Math.min(sh.plateRadius, pz) * 0.5,
-        ]);
-      add('membrane', [-0.45 * px, 0.98 * py, 0.4 * pz]);
-      add('cellWall', [px + PLANT.wall, -0.35 * py, 0.45 * pz]);
+        add(
+          'cellPlate',
+          [0, Math.min(sh.plateRadius, py) * 0.62, Math.min(sh.plateRadius, pz) * 0.5],
+          palette.plate,
+        );
+      add('membrane', [-0.45 * px, 0.98 * py, 0.4 * pz], palette.membrane);
+      add('cellWall', [px + PLANT.wall, -0.35 * py, 0.45 * pz], palette.wall);
     }
     return out;
   };

@@ -16,7 +16,26 @@ export const FIBRE: Record<QualityTier, { radius: number; sides: number }> = {
 };
 
 /** Fibre width per kind (shares of the tier's fibre radius). */
-export const FIBRE_WIDTH: Record<FibreKind, number> = { kinetochore: 1.7, polar: 1, astral: 0.8 };
+export const FIBRE_WIDTH: Record<FibreKind, number> = { kinetochore: 1.7, polar: 1, astral: 0.55 };
+
+/**
+ * The unit fibre: radius 1, height 1 along +y, open ends. Its colour attribute is white with an
+ * alpha that fades from 1 at the far end (+y) to `poleAlpha` at the pole end (−y, where every
+ * fibre starts): where dozens of fibres meet at a pole they do not pile up into a dark knot.
+ */
+export function fibreGeometry(sides: number, poleAlpha: number): THREE.CylinderGeometry {
+  const g = new THREE.CylinderGeometry(1, 1, 1, sides, 1, true);
+  const pos = g.attributes.position as THREE.BufferAttribute;
+  const colors = new Float32Array(pos.count * 4);
+  for (let i = 0; i < pos.count; i++) {
+    colors[4 * i] = 1;
+    colors[4 * i + 1] = 1;
+    colors[4 * i + 2] = 1;
+    colors[4 * i + 3] = pos.getY(i) > 0 ? 1 : poleAlpha;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(colors, 4));
+  return g;
+}
 
 const UP = new THREE.Vector3(0, 1, 0);
 const tmpDir = new THREE.Vector3();

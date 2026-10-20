@@ -28,11 +28,15 @@ import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
 import { Segmented } from '../../ui';
+import { divisionPalette } from '../division3d/palette';
 import { useCardHeadFit } from '../mitosis3d/partCardHead';
 import { SPEEDS, useDivisionStore } from '../state';
 import {
+  CHROMOSOME_FOCUS,
   FOV,
   VIEW_DIR,
+  chromosomeFocusFrame,
+  defaultDirection,
   defaultInsets,
   placeMeiosisCamera,
   spherePoints,
@@ -71,6 +75,10 @@ export interface Meiosis3DDebug {
   info(): { geometries: number; textures: number; programs: number; calls: number };
   stage(): MeiosisStage3D;
   quality(): QualityInEffect;
+  /** False while the camera glides to a new framing (anchors move until it settles). */
+  settled(): boolean;
+  /** Unit direction from the orbit target to the camera. */
+  direction(): Vec3;
   /** Page pixels of a part's name-label anchor at this moment (null when it cannot be seen). */
   anchor(id: MeiosisComponentId): { x: number; y: number } | null;
 }
@@ -79,6 +87,7 @@ function readPalette(): {
   palette: MeiosisPalette;
   membraneOpacity: number;
   rimStrength: number;
+  edgeShade: number;
 } {
   const css = getComputedStyle(document.documentElement);
   // Theme tokens only; the neutral fallback is for environments without the stylesheet.
@@ -88,23 +97,11 @@ function readPalette(): {
     return Number.isFinite(v) ? v : fallback;
   };
   return {
-    palette: {
-      maternal: token('--chart-4'),
-      paternal: token('--chart-1'),
-      centromere: token('--text'),
-      // Unlike both chromosome colours, so the X between them reads.
-      chiasma: token('--chart-3'),
-      membrane: token('--subject-biology'),
-      envelope: token('--chart-6'),
-      nucleolus: token('--m3d-nucleolus'),
-      spindle: token('--text-muted'),
-      centrosome: token('--chart-5'),
-      ring: token('--chart-7'),
-      highlight: token('--m3d-highlight'),
-      backdrop: token('--bg-panel'),
-    },
+    // The same colours as mitosis (the chiasma, --chart-3, is unlike both chromosome colours).
+    palette: divisionPalette(token),
     membraneOpacity: number('--m3d-membrane-opacity', 0.16),
     rimStrength: number('--m3d-rim', 0.7),
+    edgeShade: number('--m3d-edge-shade', 0),
   };
 }
 
@@ -311,10 +308,20 @@ export function Meiosis3DView({
       useMeiosis3D.setState({ active: false, playing: false });
     };
   }, []);
-  // Basic mode has no camera choice: always the whole set of cells.
+  // Basic mode has no camera choice: always the overview (and its chromosome framing, which
+  // Advanced mode does not use: a mode change frames the picture again).
+  const basicRef = useRef(basic);
+  const firstMode = useRef(true);
   useEffect(() => {
-    if (basic && useMeiosis3D.getState().camera !== 'overview')
-      useMeiosis3D.setState((s) => ({ camera: 'overview', viewNonce: s.viewNonce + 1 }));
+    basicRef.current = basic;
+    if (firstMode.current) {
+      firstMode.current = false;
+      if (!basic || useMeiosis3D.getState().camera === 'overview') return;
+    }
+    useMeiosis3D.setState((s) => ({
+      camera: basic ? 'overview' : s.camera,
+      viewNonce: s.viewNonce + 1,
+    }));
   }, [basic]);
 
   const sceneRef = useRef<{ scene: MeiosisScene; tl: MeiosisTimeline } | null>(null);
@@ -322,18 +329,45 @@ export function Meiosis3DView({
     host: null,
     tl: null,
   });
+  /**
+   * What the overview shows at time t: Basic mode frames the chromosomes in the stages about them
+   * (prophase I, metaphase I), otherwise the cells of the current division.
+   */
+  const focusKey = (cur: { tl: MeiosisTimeline }, t: number): string => {
+    const st = cur.tl.stageAt(t).stage;
+    return basicRef.current && CHROMOSOME_FOCUS.has(st) ? st : `division${String(divisionOf(st))}`;
+  };
   const placementFor = (h: ThreeHost, mode: MeiosisCameraMode, dir: Vec3) => {
     const cur = sceneRef.current;
     if (!cur) return null;
-    return placeMeiosisCamera(cur.scene.frame(mode), h.width(), h.height(), dir, h.currentInsets());
+    const stage = cur.tl.stageAt(useMeiosis3D.getState().t).stage;
+    const frame =
+      mode === 'overview' && basicRef.current && CHROMOSOME_FOCUS.has(stage)
+        ? chromosomeFocusFrame(cur.tl, stage)
+        : cur.scene.frame(mode);
+    return placeMeiosisCamera(frame, h.width(), h.height(), dir, h.currentInsets());
+  };
+  /** Direction of the glide in progress (a layout change while it runs keeps its aim). */
+  const aimRef = useRef<Vec3 | null>(null);
+  /** Places the camera along `dir`, at once or gliding (700 ms). */
+  const go = (h: ThreeHost, mode: MeiosisCameraMode, dir: Vec3, animate: boolean) => {
+    const p = placementFor(h, mode, dir);
+    if (!p) return;
+    aimRef.current = animate ? dir : null;
+    h.place(p, { animate });
   };
   const frameCamera = (h: ThreeHost, mode: MeiosisCameraMode, animate = false) => {
-    const p = placementFor(h, mode, VIEW_DIR);
-    if (p) h.place(p, { animate });
+    // From the current division's default direction (meiosis II: nearly from the front).
+    const stage = sceneRef.current?.tl.stageAt(useMeiosis3D.getState().t).stage ?? 'g1';
+    go(h, mode, defaultDirection(divisionOf(stage)), animate);
   };
-  const refit = (h: ThreeHost, mode: MeiosisCameraMode) => {
-    const p = placementFor(h, mode, h.direction(VIEW_DIR));
-    if (p) h.place(p);
+  /**
+   * Keeps the learner's direction and fits `mode` at once. After a layout change (`layout`), a
+   * glide in progress goes on to its aim instead, refitted to the new safe area.
+   */
+  const refit = (h: ThreeHost, mode: MeiosisCameraMode, layout = false) => {
+    const aim = layout && h.moving() ? aimRef.current : null;
+    go(h, mode, aim ?? h.direction(VIEW_DIR), aim !== null);
   };
   const labelsRef = useRef<LabelLayer | null>(null);
   const labelsOnRef = useRef(labelsOn);
@@ -353,6 +387,7 @@ export function Meiosis3DView({
         id: a.id,
         text: Lz(MEIOSIS_PARTS[a.id].name),
         point: a.point,
+        color: a.color,
       })),
       h.camera,
       w,
@@ -376,7 +411,7 @@ export function Meiosis3DView({
       const cur = sceneRef.current;
       if (!cur) return;
       if (insetsChanged) {
-        refit(h, useMeiosis3D.getState().camera);
+        refit(h, useMeiosis3D.getState().camera, true);
       } else {
         const t = h.controls.target;
         const p = placeMeiosisCamera(
@@ -435,6 +470,8 @@ export function Meiosis3DView({
             .stage;
         },
         quality: () => h.qualityInEffect(),
+        settled: () => !h.moving(),
+        direction: () => h.direction(VIEW_DIR),
         anchor: (id) => {
           const cur = sceneRef.current;
           if (!cur || !host) return null;
@@ -463,6 +500,8 @@ export function Meiosis3DView({
       tier: tierName,
       membraneOpacity: look.membraneOpacity,
       rimStrength: look.rimStrength,
+      edgeShade: look.edgeShade,
+      hdr: quality.bloom,
     });
     sceneRef.current = { scene: ms, tl };
     h.setScene(ms.scene);
@@ -480,16 +519,16 @@ export function Meiosis3DView({
       if (s.t !== prev.t) {
         ms.update(meiosisStateFor(tl, s.t));
         if (s.camera === 'closeup' && !reframe) refit(h, 'closeup');
-        // The overview holds still within a division and glides once to the other division's
-        // cells (the learner's direction is kept).
-        const division = divisionOf(tl.stageAt(s.t).stage);
-        if (
-          s.camera === 'overview' &&
-          !reframe &&
-          division !== divisionOf(tl.stageAt(prev.t).stage)
-        ) {
-          const p = placementFor(h, 'overview', h.direction(VIEW_DIR));
-          if (p) h.place(p, { animate: true });
+        // The overview holds still within a division and glides (700 ms) to the other division's
+        // cells, or in Basic mode to the chromosomes of prophase I, then of metaphase I, and back
+        // (the learner's direction is kept).
+        const cur = { tl };
+        if (s.camera === 'overview' && !reframe && focusKey(cur, s.t) !== focusKey(cur, prev.t)) {
+          // Not turned by the learner: the new division's own default direction.
+          const was = defaultDirection(divisionOf(tl.stageAt(prev.t).stage));
+          const dir = h.direction(was);
+          const own = dir[0] * was[0] + dir[1] * was[1] + dir[2] * was[2] > 0.9995;
+          go(h, 'overview', own ? defaultDirection(divisionOf(tl.stageAt(s.t).stage)) : dir, true);
         }
       }
       if (s.selected !== prev.selected) ms.setSelection(s.selected);

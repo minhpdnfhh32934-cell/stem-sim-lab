@@ -181,6 +181,23 @@ export function componentsFor(cellType: CellType): ComponentId[] {
   return ORDER.filter((id) => COMPONENTS[id].cells.includes(cellType));
 }
 
+/**
+ * Imaginary guides drawn in the 3D picture (illustration, not parts of the cell; never picked):
+ * the dashed ring of the metaphase (equatorial) plate.
+ */
+export type GuideId = 'equator';
+export const GUIDE_NAMES: Record<GuideId, LocalizedText> = {
+  equator: L('Mặt phẳng xích đạo (tưởng tượng)', 'Equatorial plane (imaginary)'),
+};
+
+/** What a name label on the 3D picture can name: a part, or a guide. */
+export type LabelId = ComponentId | GuideId;
+
+/** The name of a label's part or guide. */
+export function labelName(id: LabelId): LocalizedText {
+  return id === 'equator' ? GUIDE_NAMES.equator : COMPONENTS[id].name;
+}
+
 /** Whether a part can be seen at this moment (the info panel says so when it cannot). */
 export function componentVisible(id: ComponentId, s: Mitosis3DState): boolean {
   const condensed = s.condensation > 0.4;

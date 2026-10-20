@@ -28,6 +28,7 @@ import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
 import { Segmented } from '../../ui';
+import { divisionPalette } from '../division3d/palette';
 import { SPEEDS, useDivisionStore } from '../state';
 import {
   CELL_TYPE_NAME,
@@ -35,6 +36,7 @@ import {
   STAGE3D_NAME,
   card3d,
   componentVisible,
+  labelName,
   stageNote,
   type CameraMode,
   type Selection,
@@ -89,24 +91,8 @@ function readPalette(): {
     return Number.isFinite(v) ? v : fallback;
   };
   return {
-    palette: {
-      maternal: token('--chart-4'),
-      paternal: token('--chart-1'),
-      centromere: token('--text'),
-      membrane: token('--subject-biology'),
-      envelope: token('--chart-6'),
-      // Its own token: the nucleolus once had the envelope's colour and vanished inside it.
-      nucleolus: token('--m3d-nucleolus'),
-      wall: token('--chart-2'),
-      spindle: token('--text-muted'),
-      centrosome: token('--chart-5'),
-      plate: token('--chart-2'),
-      ring: token('--chart-7'),
-      // Unlike both chromosome colours (the accent blue was the paternal blue).
-      highlight: token('--m3d-highlight'),
-      // Unpicked parts fade towards the stage colour (they recede in both themes).
-      backdrop: token('--bg-panel'),
-    },
+    palette: divisionPalette(token),
+
     membraneOpacity: number('--m3d-membrane-opacity', 0.16),
     rimStrength: number('--m3d-rim', 0.7),
     edgeShade: number('--m3d-edge-shade', 0),
@@ -429,7 +415,8 @@ export function Mitosis3DView({
     layer.update(
       cur.scene.labelAnchors().map((a) => ({
         id: a.id,
-        text: Lz(COMPONENTS[a.id].name),
+        text: Lz(labelName(a.id)),
+        color: a.color,
         point: a.point,
       })),
       h.camera,
@@ -586,6 +573,7 @@ export function Mitosis3DView({
       membraneOpacity: look.membraneOpacity,
       rimStrength: look.rimStrength,
       edgeShade: look.edgeShade,
+      hdr: quality.bloom,
     });
     sceneRef.current = { scene: ms, tl };
     h.setScene(ms.scene);

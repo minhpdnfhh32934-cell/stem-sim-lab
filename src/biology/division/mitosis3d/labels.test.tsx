@@ -4,7 +4,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { layoutLabels, overlaps, type LabelAnchor } from '@/ui/three/labels';
 import { fakeRenderer } from '@/ui/three/testing';
 import { setDivisionState } from '../stageIndex';
-import { COMPONENTS, componentVisible } from './components';
+import { COMPONENTS, GUIDE_NAMES, componentVisible } from './components';
 import { Mitosis3DView } from './Mitosis3DView';
 import { stateFor, timelineFor, useMitosis3D } from './store';
 
@@ -54,13 +54,17 @@ describe('mitosis 3D name labels ("Hiện tên")', () => {
     });
     const layer = view.container.querySelector('.m3d__labels');
     expect(layer?.getAttribute('aria-hidden')).toBe('true');
-    // Every name is a part of the model's list that can be seen at this moment.
+    // Every name is a part of the model's list that can be seen at this moment, or (metaphase
+    // only) the imaginary equatorial plane drawn as a dashed ring.
     const st = stateFor(tl, useMitosis3D.getState().t);
+    expect(st.stage).toBe('metaphase');
     const visible = Object.entries(COMPONENTS)
       .filter(([id]) => componentVisible(id as keyof typeof COMPONENTS, st))
       .map(([, c]) => c.name.vi);
-    for (const name of shownLabels(view.container)) expect(visible).toContain(name);
+    for (const name of shownLabels(view.container))
+      expect([...visible, GUIDE_NAMES.equator.vi]).toContain(name);
     expect(shownLabels(view.container)).toContain(COMPONENTS.doubleChromosome.name.vi);
+    expect(shownLabels(view.container)).toContain(GUIDE_NAMES.equator.vi);
     // The toggle hides them (and says so).
     const toggle = screen.getByRole('button', { name: 'Hiện tên các bộ phận' });
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
