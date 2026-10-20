@@ -309,6 +309,35 @@ body[data-resizing] .splitter {
   color: var(--text-muted);
   font-size: var(--text-xs);
 }
+.topic-lessons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.topic-lessons p {
+  margin: 0;
+}
+.topic-lessons__open {
+  justify-content: flex-start;
+  height: auto;
+  min-height: var(--target);
+  text-align: left;
+  white-space: normal;
+}
+.topic-lessons__open > svg:first-child {
+  color: var(--subject-physics);
+  flex: none;
+}
+.topic-lessons__open > svg:last-child {
+  margin-left: auto;
+  color: var(--text-faint);
+  flex: none;
+}
+.topic-lessons__title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 .sidebar__search {
   display: flex;
   align-items: center;

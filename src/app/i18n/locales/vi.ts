@@ -950,6 +950,16 @@ const vi = {
     },
     pick: 'Chọn bài học',
     backToLab: 'Về Phòng thí nghiệm',
+    lessons: {
+      title: 'Science Studio',
+      intro:
+        'Học chủ đề này theo bài có hướng dẫn: dự đoán, thí nghiệm, quan sát, giải thích, kết luận và báo cáo.',
+      open: 'Học theo bài: {title}',
+      teacher: 'Bài giáo viên soạn',
+      predictMoved:
+        'Phần dự đoán của chủ đề này nằm trong bài Science Studio “{title}”, cùng các bước giải thích, kết luận và báo cáo.',
+      predictOpen: 'Dự đoán trong Science Studio',
+    },
     difficulty: {
       intro: 'Làm quen',
       core: 'Cơ bản',

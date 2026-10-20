@@ -952,6 +952,16 @@ const en: Messages = {
     },
     pick: 'Choose a lesson',
     backToLab: 'Back to the lab',
+    lessons: {
+      title: 'Science Studio',
+      intro:
+        'Learn this topic as a guided lesson: predict, experiment, observe, explain, conclude and report.',
+      open: 'Guided lesson: {title}',
+      teacher: 'Written by a teacher',
+      predictMoved:
+        'The prediction for this topic is part of the Science Studio lesson “{title}”, with the explain, conclude and report steps.',
+      predictOpen: 'Predict in Science Studio',
+    },
     difficulty: {
       intro: 'Getting started',
       core: 'Core',
