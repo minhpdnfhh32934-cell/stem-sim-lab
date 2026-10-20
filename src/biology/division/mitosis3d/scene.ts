@@ -20,6 +20,7 @@ import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { LAYER } from '@/ui/three/layers';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
+import type { Hull, LabelObstacles } from '@/ui/three/labelLayer';
 import { roundedBox, setRimAlpha } from '@/ui/three/materials';
 import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
 import { centrosomeMaker } from '../division3d/centrosomeMesh';
@@ -32,6 +33,7 @@ import {
   type DivisionPalette,
   type Look,
 } from '../division3d/looks';
+import { cellRegions, tubeHull } from '../division3d/labelObstacles';
 import { TwoSphereProfile } from '../division3d/membraneMesh';
 import { placeNucleolus, writeEnvelopeParts } from '../division3d/nucleusMesh';
 import { FIBRE, fibreGeometry, writeFibres } from '../division3d/spindleMesh';
@@ -120,6 +122,8 @@ export interface MitosisScene {
    * a chromosome, a centromere, the spindle…), for the name labels.
    */
   labelAnchors(): LabelAnchor3D[];
+  /** What the name labels keep clear of: the chromosomes, and each daughter cell (world space). */
+  labelObstacles(): LabelObstacles;
   stats(): { objects: number; meshes: number; geometries: number; materials: number };
   /** Draw calls and triangles of the current moment (see `drawStats`). */
   drawStats(): DrawStats;
@@ -936,6 +940,23 @@ export function buildMitosisScene(
     return out;
   };
 
+  const labelObstacles = (): LabelObstacles => {
+    const st = last;
+    if (!st) return {};
+    // Condensed chromosomes only (counted data); the chromatin thread fills the nucleus.
+    const avoid: Hull[] = [];
+    if (st.condensation >= 0.5)
+      chromatids.forEach((o, i) => {
+        if (!st.chromatids[i]?.present || !o.mesh.visible) return;
+        const hull = tubeHull(o.mesh.position, o.centre, o.radii);
+        if (hull) avoid.push(hull);
+      });
+    // The animal cell's daughters once its furrow shows: a leader stays on its own cell's side.
+    const sh = st.shape;
+    const cells = sh.type === 'animal' ? cellRegions({ ...sh, center: [0, 0, 0], axis: 'x' }) : [];
+    return { avoid, regions: cells.length > 1 ? cells : [] };
+  };
+
   const stats = () => {
     let objects = 0;
     let meshes = 0;
@@ -962,6 +983,7 @@ export function buildMitosisScene(
     pick,
     frame,
     labelAnchors,
+    labelObstacles,
     pickedPoint: () => lastPoint,
     pending: () => pendingWrites,
     stats,

@@ -18,7 +18,49 @@ export interface LabelItem {
   behind?: boolean;
 }
 
+/** World points whose screen bounds give a rectangle (a chromosome's or a cell's extent). */
+export type Hull = readonly (readonly [number, number, number])[];
+
+/** What the labels keep clear of (world space; projected for each frame). */
+export interface LabelObstacles {
+  /** Data a label box never covers (the chromosomes). */
+  avoid?: readonly Hull[];
+  /** Separate subjects (cells): a leader never crosses one that does not hold its part. */
+  regions?: readonly Hull[];
+}
+
 const SVG = 'http://www.w3.org/2000/svg';
+const corner = new THREE.Vector3();
+const toCorner = new THREE.Vector3();
+const lookDir = new THREE.Vector3();
+
+/**
+ * Screen bounds (px) of a hull's points seen from `camera` on a `width` × `height` canvas; null
+ * when the hull is empty or a point is behind the camera (no reliable projection).
+ */
+export function screenRect(
+  hull: Hull,
+  camera: THREE.Camera,
+  width: number,
+  height: number,
+): Rect | null {
+  if (hull.length === 0) return null;
+  camera.updateMatrixWorld();
+  camera.getWorldDirection(lookDir);
+  const r = { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity };
+  for (const p of hull) {
+    corner.set(p[0], p[1], p[2]);
+    if (toCorner.copy(corner).sub(camera.position).dot(lookDir) <= 0) return null;
+    corner.project(camera);
+    const x = ((corner.x + 1) / 2) * width;
+    const y = ((1 - corner.y) / 2) * height;
+    r.left = Math.min(r.left, x);
+    r.right = Math.max(r.right, x);
+    r.top = Math.min(r.top, y);
+    r.bottom = Math.max(r.bottom, y);
+  }
+  return r;
+}
 
 export class LabelLayer {
   readonly el: HTMLDivElement;
@@ -92,7 +134,7 @@ export class LabelLayer {
 
   /**
    * Shows `items` (in priority order) for this camera on a canvas of `width` × `height` px,
-   * inside `safe` (px, canvas coordinates); at most `cap` labels.
+   * inside `safe` (px, canvas coordinates); at most `cap` labels, clear of `obstacles`.
    */
   update(
     items: readonly LabelItem[],
@@ -101,6 +143,7 @@ export class LabelLayer {
     height: number,
     safe: Rect,
     cap: number,
+    obstacles: LabelObstacles = {},
   ): void {
     const keep = new Set(items.map((i) => i.id));
     for (const [id, n] of this.nodes) {
@@ -127,7 +170,17 @@ export class LabelLayer {
         h: n.h,
       };
     });
-    const placed = new Map(layoutLabels(anchors, safe, { cap }).map((p) => [p.id, p]));
+    const rects = (hulls: readonly Hull[] | undefined) =>
+      (hulls ?? [])
+        .map((hull) => screenRect(hull, camera, width, height))
+        .filter((r): r is Rect => r !== null);
+    const placed = new Map(
+      layoutLabels(anchors, safe, {
+        cap,
+        avoid: rects(obstacles.avoid),
+        regions: rects(obstacles.regions),
+      }).map((p) => [p.id, p]),
+    );
     this.svg.setAttribute('viewBox', `0 0 ${String(width)} ${String(height)}`);
     for (const [id, n] of this.nodes) {
       const p = placed.get(id);

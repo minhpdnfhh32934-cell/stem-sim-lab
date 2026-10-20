@@ -20,6 +20,7 @@ import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { LAYER } from '@/ui/three/layers';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
+import type { Hull, LabelObstacles } from '@/ui/three/labelLayer';
 import { setRimAlpha } from '@/ui/three/materials';
 import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
 import { centrosomeMaker } from '../division3d/centrosomeMesh';
@@ -40,6 +41,7 @@ import {
   type TubeProfile,
 } from '../division3d/chromatidShape';
 import { ease } from '../division3d/math';
+import { cellRegions, tubeHull } from '../division3d/labelObstacles';
 import { TwoSphereProfile } from '../division3d/membraneMesh';
 import { placeNucleolus, writeEnvelopeParts } from '../division3d/nucleusMesh';
 import { envelopeBreakdown, spherePointsEven } from '../division3d/sceneParts';
@@ -105,6 +107,8 @@ export interface MeiosisScene {
   frame(mode: MeiosisCameraMode): CameraFrame;
   /** Points of the parts that can be named now, most important first (for the name labels). */
   labelAnchors(): MeiosisLabelAnchor[];
+  /** What the name labels keep clear of: the chromosomes, and each cell (world space). */
+  labelObstacles(): LabelObstacles;
   stats(): { objects: number; meshes: number; geometries: number; materials: number };
   drawStats(): DrawStats;
   dispose(): void;
@@ -939,6 +943,23 @@ export function buildMeiosisScene(
     return out;
   };
 
+  const labelObstacles = (): LabelObstacles => {
+    const st = last;
+    if (!st) return {};
+    // Condensed chromosomes only (counted data); the chromatin thread fills the nucleus.
+    const avoid: Hull[] = [];
+    if (st.condensation >= 0.5)
+      chromatids.forEach((o, i) => {
+        if (!st.chromatids[i]?.present || !o.mesh.visible) return;
+        const hull = tubeHull(o.mesh.position, o.centre, o.radii);
+        if (hull) avoid.push(hull);
+      });
+    // Separate cells (a furrow, or meiosis II): a leader stays on its own cell's side.
+    const cells = st.membranes.flatMap(cellRegions);
+    const regions = cells.length > 1 ? cells : [];
+    return { avoid, regions };
+  };
+
   const stats = () => {
     let objects = 0;
     let meshes = 0;
@@ -966,6 +987,7 @@ export function buildMeiosisScene(
     pickedPoint: () => lastPoint,
     frame: (mode) => meiosisFrame(mode, last),
     labelAnchors,
+    labelObstacles,
     stats,
     drawStats: () => drawStats(scene),
     dispose() {

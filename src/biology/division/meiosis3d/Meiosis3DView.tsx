@@ -396,6 +396,7 @@ export function Meiosis3DView({
       hh,
       { left: i.left, top: i.top, right: w - i.right, bottom: hh - i.bottom },
       h.quality.labelCap,
+      cur.scene.labelObstacles(),
     );
   };
 
