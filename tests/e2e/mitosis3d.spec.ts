@@ -103,6 +103,9 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
   const pass = async () => {
     await page.getByRole('button', { name: 'Phát lại từ đầu' }).click();
     await page.getByRole('button', { name: 'Tạm dừng' }).click();
+    // On a loaded machine the replay can leave G1 before the pause lands (seen 2026-10-20: the
+    // sixth step then waited on a disabled button): the steps always start from G1.
+    await strip(page).getByRole('button', { name: 'Trung gian G1' }).click();
     for (let k = 0; k < STAGES.length - 1; k++) {
       await next.click();
       await page.waitForTimeout(60);

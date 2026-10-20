@@ -92,7 +92,11 @@ async function watch(page: Page, quality: 'low' | 'medium' = 'medium'): Promise<
 
 async function openStudio(page: Page, tab?: 'Hóa học' | 'Sinh học' | 'Vật lí' | 'Soạn bài') {
   await page.getByRole('button', { name: /Science Studio/ }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible();
+  // The studio screen is a lazy module, compiled by the dev server on first use (seen
+  // 2026-10-20: still "Đang tải mô phỏng…" after 5 s in the full parallel run).
+  await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible({
+    timeout: 20_000,
+  });
   if (tab) await page.getByRole('tab', { name: tab }).click();
 }
 

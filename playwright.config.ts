@@ -19,10 +19,17 @@ const chromium = {
  * (meiosis3d.spec.ts), the DNA → mRNA → protein 3D view (dogma3d.spec.ts), the point-mutation
  * 3D view (mutation3d.spec.ts), the Mendel 3D view (mendel3d.spec.ts), the enzyme kinetics 3D
  * view (enzyme3d.spec.ts), the diffusion & osmosis 3D view (transport3d.spec.ts) and the other
- * biology lessons' 3D views (bio3d.spec.ts).
+ * biology lessons' 3D views (bio3d.spec.ts). Since 0.7.0 every biology lesson opens in 3D, so the
+ * specs that open biology topics (biology.spec.ts, project.spec.ts) draw WebGL in software too
+ * and run here as well.
+ *
+ * Keep the test output in `test-results/` (the default; Vite does not watch it). Traces written
+ * inside the watched project (e.g. `--output .agent-logs/…`) contain `.html` files, and each one
+ * makes the dev server reload every open page in the middle of a test (seen 2026-10-20: random
+ * "element not found" failures in the studio, chemistry, AI and board specs).
  */
 const HEAVY_3D =
-  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|enzyme3d|transport3d|studio-biology|bio3d)\.spec\.ts$/;
+  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|enzyme3d|transport3d|studio-biology|bio3d|biology|project)\.spec\.ts$/;
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */
@@ -52,6 +59,9 @@ export default defineConfig({
       testMatch: HEAVY_3D,
       grepInvert: PERF,
       dependencies: ['chromium'],
+      // Each worker draws WebGL in software on the CPU. With 8 at once (16-thread machine,
+      // 2026-10-20) the first mitosis view took over 20 s to get its canvas; alone it passes.
+      workers: 4,
     },
     {
       name: 'chromium-3d-perf',

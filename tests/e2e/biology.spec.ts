@@ -51,13 +51,15 @@ test('every biology topic opens without errors and publishes a Science Card', as
 test('Mendel dihybrid cross shows 9 : 3 : 3 : 1', async ({ page }) => {
   await openBiology(page);
   await page.getByRole('button', { name: 'Di truyền Mendel', exact: true }).click();
-  await expect(page.getByText('9 : 3 : 3 : 1', { exact: true })).toBeVisible();
+  // A lazy module, compiled by the dev server on first use (the stage was still empty after
+  // 5 s in the full parallel run, 2026-10-20).
+  await expect(page.getByText('9 : 3 : 3 : 1', { exact: true })).toBeVisible({ timeout: 20_000 });
 });
 
 test('point mutation: C→T at position 13 is a nonsense mutation', async ({ page }) => {
   await openBiology(page);
   await page.getByRole('button', { name: 'Đột biến điểm', exact: true }).click();
-  await expect(page.getByText('Đột biến vô nghĩa')).toBeVisible();
+  await expect(page.getByText('Đột biến vô nghĩa')).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText('Met–Ala–Phe', { exact: true })).toBeVisible();
 });
 
