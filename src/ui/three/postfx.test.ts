@@ -181,7 +181,7 @@ describe('post-processing chain (High tier, discrete GPU)', () => {
     const box = new THREE.Box3(new THREE.Vector3(-3, -4, 0), new THREE.Vector3(3, 4, 0));
     fx.setSubject(box);
     expect(gtao?.clip).toBe(box);
-    expect(gtao?.params.radius).toBeCloseTo(0.2, 6);
+    expect((gtao?.params as { radius?: number } | undefined)?.radius).toBeCloseTo(0.2, 6);
     fx.dispose();
     backdrop.dispose();
   });

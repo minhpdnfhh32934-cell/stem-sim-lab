@@ -95,9 +95,8 @@ export function createPostFx(
     aoCamera.layers.set(LAYER.OPAQUE);
   };
   syncAoCamera();
-  const gtao = new GTAOPass(scene, aoCamera, o.width, o.height, undefined, {
-    samples: POSTFX.aoSamples,
-  });
+  const gtao = new GTAOPass(scene, aoCamera, o.width, o.height);
+  gtao.updateGtaoMaterial({ samples: POSTFX.aoSamples });
   // Half resolution (the denoise pass smooths it).
   const gtaoSetSize = gtao.setSize.bind(gtao);
   gtao.setSize = (w: number, h: number) => {
