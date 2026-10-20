@@ -220,13 +220,19 @@ it without code of its own:
   `--bg-stage` (`backdrop.ts`; a sky gradient for outdoor rigs), the theme's rim and environment
   strength (`lighting.ts` presets STUDIO / OUTDOOR, `applyStageLook`) and the exposure; it puts
   objects on render layers (`layers.ts`: SHELL for see-through shells, FX for haze and contact
-  shadows) and sees/picks all of them. Tone mapping stays Khronos Neutral everywhere (ACES / AgX
+  shadows, GLASS for refracting glass; lights on every layer) and sees/picks all of them. Tone mapping stays Khronos Neutral everywhere (ACES / AgX
   would move the data colours' hue).
 - `quality3d.ts` gains the GPU class (`gpuInfo.ts`) and the post-processing flags. Only High on a
-  discrete GPU loads `postfx.ts` (lazy chunk): 4× MSAA HalfFloat target → GTAO (half resolution,
-  opaque layer only) → bloom (only while a highlight marked `userData.bloom` is visible) →
-  OutputPass; `postfxSupport.ts` turns AO, then bloom, then refraction off after 30 animated
-  frames over 20 ms. High on an integrated or software GPU draws like 0.7.0 High.
+  discrete GPU loads `postfx.ts` (lazy chunk), in two halves. HDR half: opaque + GLASS layers
+  into a 4× MSAA HalfFloat target with a depth texture → GTAO (half resolution, opaque layer
+  only) → bloom (only while a highlight marked `userData.bloom` is visible). Screen half, drawn
+  like the direct path: the backdrop (never tone-mapped) → a composite quad that tone-maps the
+  HDR surfaces with the renderer's own Neutral + sRGB functions and writes their depth → SHELL +
+  FX forward, blended in display space. So the backdrop, membranes and contact shadows have the
+  same colours on every GPU (E2E: `mitosis3d.spec.ts`, ΔE_OK ≤ 0.02 between the two paths);
+  only opaque parts gain AO and glow. `postfxSupport.ts` turns AO, then bloom, then refraction
+  off after 30 animated frames over 20 ms. High on an integrated or software GPU draws like
+  0.7.0 High.
 - Biology recipes (`view3d/recipes.ts`): membrane / shell, chromosome, backbone + base pair,
   protein blob (`proteinBlob.ts`, `noise.ts`), particles, glassware, liquid, organism, terrain,
   annotation, highlight. Rule 0 "saturation = data": data roles keep their chart token as albedo

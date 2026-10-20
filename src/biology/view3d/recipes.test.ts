@@ -113,9 +113,11 @@ describe('material recipes: tier → material class', () => {
     expect(m.ior).toBe(1.36);
     expect(m.attenuationDistance).toBe(8);
     expect(m.clearcoat).toBe(0.6);
-    // Refracting shells are opaque to three.js but still kept out of ambient occlusion.
+    // Refracting shells are drawn with the opaque scene they refract (GLASS), still kept out of
+    // ambient occlusion.
     assignLayers(kit.scene);
-    expect(outer.children[0]!.layers.mask).toBe(1 << LAYER.SHELL);
+    expect(outer.children[0]!.layers.mask).toBe(1 << LAYER.GLASS);
+    expect(outer.children[0]!.layers.isEnabled(LAYER.OPAQUE)).toBe(false);
     const inner = shell(kit, kit.sphere(), '#7fa0a0', { radius: 2 });
     expect(inner.children).toHaveLength(2);
     const glass = glassware(kit).refract;

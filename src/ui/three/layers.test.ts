@@ -46,4 +46,26 @@ describe('render layers', () => {
     geo.dispose();
     shadow.dispose();
   });
+
+  it('refracting glass on GLASS (never the AO layer); lights on every layer', () => {
+    const scene = new THREE.Scene();
+    const geo = new THREE.SphereGeometry(1, 8, 6);
+    const lens = new THREE.MeshPhysicalMaterial({ transmission: 0.9 });
+    const glassMesh = new THREE.Mesh(geo, lens);
+    // An explicit SHELL (the kit's shells) does not keep refracting glass off its layer.
+    glassMesh.userData.layer = LAYER.SHELL;
+    const light = new THREE.DirectionalLight();
+    scene.add(glassMesh, light);
+    assignLayers(scene);
+    expect(glassMesh.layers.mask).toBe(1 << LAYER.GLASS);
+    expect(glassMesh.layers.isEnabled(LAYER.OPAQUE)).toBe(false);
+    for (const l of Object.values(LAYER)) expect(light.layers.isEnabled(l), String(l)).toBe(true);
+    // Glass that stops refracting (the slow-frame guard) becomes a blended shell.
+    lens.transmission = 0;
+    lens.transparent = true;
+    assignLayers(scene);
+    expect(glassMesh.layers.mask).toBe(1 << LAYER.SHELL);
+    geo.dispose();
+    lens.dispose();
+  });
 });

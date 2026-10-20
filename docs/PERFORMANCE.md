@@ -64,12 +64,12 @@ lỗi; hệ bảo toàn theo dõi sai lệch năng lượng (Giai đoạn 1–2)
 
 **Hậu kỳ 3D theo mức chất lượng (0.7.1)** (`src/ui/three/quality3d.ts`, `postfx.ts`):
 
-| Mức                          | Vẽ thế nào                                                                                                                       |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Thấp                         | Không có 3D (hình 2D), không đổi.                                                                                                |
-| Trung bình                   | Không có hậu kỳ: khử răng cưa của canvas, Neutral, nền dải màu (+1 lệnh vẽ), môi trường, bóng giả.                               |
-| Cao, GPU tích hợp / phần mềm | Như Cao ở 0.7.0 (nhiều đoạn hơn, 10 nhãn, sheen/clear coat), không bóng thật, không hậu kỳ — không nặng hơn trước (Radeon 780M). |
-| Cao, GPU rời                 | Render target HalfFloat 4× MSAA → GTAO ½ độ phân giải → bloom (chỉ khi có vật được làm nổi) → Output; khúc xạ, bóng thật 1024².  |
+| Mức                          | Vẽ thế nào                                                                                                                                                                                           |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Thấp                         | Không có 3D (hình 2D), không đổi.                                                                                                                                                                    |
+| Trung bình                   | Không có hậu kỳ: khử răng cưa của canvas, Neutral, nền dải màu (+1 lệnh vẽ), môi trường, bóng giả.                                                                                                   |
+| Cao, GPU tích hợp / phần mềm | Như Cao ở 0.7.0 (nhiều đoạn hơn, 10 nhãn, sheen/clear coat), không bóng thật, không hậu kỳ — không nặng hơn trước (Radeon 780M).                                                                     |
+| Cao, GPU rời                 | Phần HDR (HalfFloat 4× MSAA + độ sâu): vật đặc → GTAO ½ → bloom (khi có vật làm nổi); rồi trên màn hình: nền → ghép tone map → màng/bóng giả vẽ thẳng như đường trực tiếp; khúc xạ, bóng thật 1024². |
 
 Bộ canh khung hình: 30 khung hình động liên tiếp > 20 ms thì tắt AO, rồi bloom, rồi khúc xạ — chỉ
 thay đổi hình, không đổi số hay vị trí nào.

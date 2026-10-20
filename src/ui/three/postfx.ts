@@ -1,22 +1,27 @@
 /**
  * Post-processing of the High tier on a discrete GPU (loaded on demand: Medium never downloads
- * it). One chain for every 3D view:
+ * it). One chain for every 3D view, in two halves so the picture keeps the colours of the
+ * direct path (Medium, and High on other GPUs):
  *
- *   HalfFloat render target with 4× MSAA → RenderPass → GTAO (half resolution, opaque layer only)
- *   → bloom (HDR threshold 1.15, only while a highlight is shown) → OutputPass (Neutral tone
- *   mapping + sRGB) [→ SMAA, only when the render target cannot be multisampled].
+ *   HDR half (HalfFloat target, 4× MSAA, depth texture): the opaque and refracting layers →
+ *   GTAO (half resolution, opaque layer only) → bloom (HDR threshold 1.15, only while a
+ *   highlight is shown) [→ SMAA when the target cannot be multisampled].
  *
- * The ambient occlusion pass draws normals and depth through its own camera, which skips the
- * see-through shells and glass (LAYER.SHELL) and haze (LAYER.FX): a membrane never darkens the
- * chromosomes inside it. Everything here is visual only — never a count or a position — and
- * `degrade()` turns the costly parts off one by one when frames are slow (AO, then bloom, then
- * refraction): smoothness first, accuracy never (MASTER_PROMPT §2.6).
+ *   Screen half, drawn like the direct path: the backdrop exactly as the stage made it (never
+ *   tone-mapped, so the stage keeps its token colour) → the HDR picture tone-mapped (Khronos
+ *   Neutral + sRGB, the renderer's own functions) where a surface was drawn, writing its depth →
+ *   the see-through shells and haze (LAYER.SHELL, LAYER.FX) forward, blended in display space
+ *   and tested against that depth.
+ *
+ * So a membrane, a contact shadow or the backdrop look the same on every GPU; only the opaque
+ * parts gain occlusion and glow. The ambient occlusion pass skips shells, glass and haze: a
+ * membrane never darkens the chromosomes inside it. Everything here is visual only — never a
+ * count or a position — and `degrade()` turns the costly parts off one by one when frames are
+ * slow (AO, then bloom, then refraction): smoothness first, accuracy never (MASTER_PROMPT §2.6).
  */
 import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { LAYER } from './layers';
@@ -30,6 +35,21 @@ export const POSTFX = {
   bloom: { strength: 0.35, radius: 0.4, threshold: 1.15 },
   /** Refraction renders the opaque scene again at this share of the canvas size. */
   transmissionScale: 0.5,
+} as const;
+
+/** Layers each camera of the chain draws (bit masks). */
+export const POSTFX_LAYERS = {
+  /** HDR half: opaque parts and refracting glass (refraction needs the opaque scene). */
+  hdr: (1 << LAYER.OPAQUE) | (1 << LAYER.GLASS),
+  /** Ambient occlusion: opaque parts only. */
+  ao: 1 << LAYER.OPAQUE,
+  /** Screen half, forward: see-through shells and haze. */
+  forward: (1 << LAYER.SHELL) | (1 << LAYER.FX),
+  /**
+   * Screen half, backdrop: a layer no object uses, so the renderer draws only the background
+   * (three.js draws it on every layer; a camera that sees no layer would skip it too).
+   */
+  backdrop: 1 << 31,
 } as const;
 
 export interface PostFxState {
@@ -67,6 +87,77 @@ export interface PostFx {
 /** Parts `degrade()` turns off, in order. */
 export const DEGRADE_ORDER: readonly (keyof PostFxState)[] = ['ao', 'bloom', 'transmission'];
 
+const COMPOSITE_VERTEX = /* glsl */ `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`;
+
+/**
+ * Tone-maps the HDR picture with the renderer's own tone mapping and output transfer (the same
+ * functions every material uses on the direct path) and writes the surface's depth, so the
+ * forward shells are hidden behind opaque parts exactly as on the direct path. Where no surface
+ * was drawn the backdrop already on screen stays; only a bloom halo is added there.
+ */
+const COMPOSITE_FRAGMENT = /* glsl */ `
+uniform sampler2D tColor;
+uniform sampler2D tDepth;
+uniform sampler2D tGlow;
+uniform float glow;
+varying vec2 vUv;
+
+vec3 toDisplay(vec3 c) {
+  vec4 o = vec4(c, 1.0);
+  #ifdef TONE_MAPPING
+  o.rgb = toneMapping(o.rgb);
+  #endif
+  return linearToOutputTexel(o).rgb;
+}
+
+void main() {
+  float depth = texture2D(tDepth, vUv).x;
+  vec3 c = max(texture2D(tColor, vUv).rgb, vec3(0.0));
+  if (depth >= 1.0) {
+    gl_FragDepth = 1.0;
+    if (glow < 0.5) discard;
+    vec3 g = texture2D(tGlow, vUv).rgb;
+    // Only the halo's own light, added over the backdrop on screen.
+    gl_FragColor = vec4(max(toDisplay(c) - toDisplay(max(c - g, vec3(0.0))), vec3(0.0)), 0.0);
+  } else {
+    gl_FragDepth = depth;
+    gl_FragColor = vec4(toDisplay(c), 1.0);
+  }
+}`;
+
+function compositeMaterial(depth: THREE.DepthTexture): THREE.ShaderMaterial {
+  return new THREE.ShaderMaterial({
+    name: 'simlab.postfx.composite',
+    uniforms: {
+      tColor: { value: null },
+      tDepth: { value: depth },
+      tGlow: { value: null },
+      glow: { value: 0 },
+    },
+    vertexShader: COMPOSITE_VERTEX,
+    fragmentShader: COMPOSITE_FRAGMENT,
+    // The renderer's tone mapping and sRGB output, applied once here.
+    toneMapped: true,
+    // Writes the surface depth wherever it draws.
+    depthTest: true,
+    depthWrite: true,
+    depthFunc: THREE.AlwaysDepth,
+    // Premultiplied: a surface (alpha 1) replaces the backdrop, a halo (alpha 0) adds to it.
+    blending: THREE.CustomBlending,
+    blendSrc: THREE.OneFactor,
+    blendDst: THREE.OneMinusSrcAlphaFactor,
+    blendSrcAlpha: THREE.OneFactor,
+    blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
+  });
+}
+
+const devicePx = (css: number, pixelRatio: number) => Math.max(1, Math.round(css * pixelRatio));
+
 export function createPostFx(
   renderer: THREE.WebGLRenderer,
   initialScene: THREE.Scene,
@@ -76,60 +167,72 @@ export function createPostFx(
   let scene = initialScene;
   const maxSamples = renderer.capabilities.maxSamples;
   const samples = maxSamples >= o.samples ? o.samples : 0;
-  const target = new THREE.WebGLRenderTarget(
-    Math.max(1, Math.round(o.width * o.pixelRatio)),
-    Math.max(1, Math.round(o.height * o.pixelRatio)),
-    { type: THREE.HalfFloatType, samples },
-  );
-  target.texture.name = 'simlab.postfx.rt';
-  const composer = new EffectComposer(renderer, target);
-  composer.setPixelRatio(o.pixelRatio);
-  composer.setSize(o.width, o.height);
+  let w = devicePx(o.width, o.pixelRatio);
+  let h = devicePx(o.height, o.pixelRatio);
 
-  const renderPass = new RenderPass(scene, camera);
+  // HDR half: colour + depth (the depth tells surfaces from the backdrop and hides the shells).
+  const depth = new THREE.DepthTexture(w, h);
+  const hdr = new THREE.WebGLRenderTarget(w, h, {
+    type: THREE.HalfFloatType,
+    samples,
+    depthTexture: depth,
+  });
+  hdr.texture.name = 'simlab.postfx.hdr';
+  const aoTarget = new THREE.WebGLRenderTarget(w, h, {
+    type: THREE.HalfFloatType,
+    depthBuffer: false,
+  });
+  aoTarget.texture.name = 'simlab.postfx.ao';
+  const smaaTarget =
+    samples === 0
+      ? new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, depthBuffer: false })
+      : null;
 
-  // The AO pass's own camera: the main camera's view without the see-through layers.
+  // One camera per half, copied from the main camera every frame.
+  const hdrCamera = camera.clone();
   const aoCamera = camera.clone();
-  const syncAoCamera = () => {
-    aoCamera.copy(camera, false);
-    aoCamera.layers.set(LAYER.OPAQUE);
-  };
-  syncAoCamera();
-  const gtao = new GTAOPass(scene, aoCamera, o.width, o.height);
-  gtao.updateGtaoMaterial({ samples: POSTFX.aoSamples });
-  // Half resolution (the denoise pass smooths it).
-  const gtaoSetSize = gtao.setSize.bind(gtao);
-  gtao.setSize = (w: number, h: number) => {
-    gtaoSetSize(Math.max(1, Math.round(w / 2)), Math.max(1, Math.round(h / 2)));
-  };
-  // The backdrop is not a surface: it never enters the normal/depth buffer.
-  const gtaoRender = gtao.render.bind(gtao);
-  gtao.render = (r, write, read, dt, mask) => {
-    const bg = scene.background;
-    scene.background = null;
-    try {
-      gtaoRender(r, write, read, dt, mask);
-    } finally {
-      scene.background = bg;
+  const forwardCamera = camera.clone();
+  const backdropCamera = camera.clone();
+  const syncCameras = () => {
+    for (const [c, mask] of [
+      [hdrCamera, POSTFX_LAYERS.hdr],
+      [aoCamera, POSTFX_LAYERS.ao],
+      [forwardCamera, POSTFX_LAYERS.forward],
+      [backdropCamera, POSTFX_LAYERS.backdrop],
+    ] as const) {
+      c.copy(camera, false);
+      c.layers.mask = mask;
     }
   };
+  syncCameras();
 
+  const gtao = new GTAOPass(scene, aoCamera, devicePx(w, 0.5), devicePx(h, 0.5));
+  gtao.updateGtaoMaterial({ samples: POSTFX.aoSamples });
   const bloom = new UnrealBloomPass(
-    new THREE.Vector2(o.width, o.height),
+    new THREE.Vector2(w, h),
     POSTFX.bloom.strength,
     POSTFX.bloom.radius,
     POSTFX.bloom.threshold,
   );
-  const output = new OutputPass();
-  const smaa = samples === 0 ? new SMAAPass() : null;
+  // The halo is added into the HDR colour without touching its depth.
+  bloom.blendMaterial.depthTest = false;
+  bloom.blendMaterial.depthWrite = false;
+  const smaa = smaaTarget ? new SMAAPass() : null;
+  const composite = compositeMaterial(depth);
+  const quad = new FullScreenQuad(composite);
 
-  composer.addPass(renderPass);
-  composer.addPass(gtao);
-  composer.addPass(bloom);
-  composer.addPass(output);
-  if (smaa) composer.addPass(smaa);
-  // Size every pass (GTAO at half resolution).
-  composer.setSize(o.width, o.height);
+  const setSize = (width: number, height: number, pixelRatio: number) => {
+    w = devicePx(width, pixelRatio);
+    h = devicePx(height, pixelRatio);
+    hdr.setSize(w, h);
+    aoTarget.setSize(w, h);
+    smaaTarget?.setSize(w, h);
+    // Half resolution (the denoise pass smooths it).
+    gtao.setSize(devicePx(w, 0.5), devicePx(h, 0.5));
+    bloom.setSize(w, h);
+    smaa?.setSize(w, h);
+  };
+  setSize(o.width, o.height, o.pixelRatio);
 
   const state: PostFxState = { ao: true, bloom: true, transmission: true };
   let highlight = false;
@@ -145,6 +248,61 @@ export function createPostFx(
   const previousTransmissionScale = renderer.transmissionResolutionScale;
   renderer.transmissionResolutionScale = POSTFX.transmissionScale;
 
+  const render = () => {
+    syncCameras();
+    const autoClear = renderer.autoClear;
+    const autoShadows = renderer.shadowMap.autoUpdate;
+    const autoReset = renderer.info.autoReset;
+    // One frame's draw calls add up over every step (the test hooks read the total).
+    renderer.info.reset();
+    renderer.info.autoReset = false;
+    const background = scene.background;
+    try {
+      // 1. HDR: opaque parts and glass, over the backdrop (refraction shows it).
+      renderer.autoClear = true;
+      renderer.setRenderTarget(hdr);
+      renderer.render(scene, hdrCamera);
+      // Shadow maps are drawn once per frame.
+      renderer.shadowMap.autoUpdate = false;
+      let read: THREE.WebGLRenderTarget = hdr;
+      if (gtao.enabled) {
+        // The backdrop is not a surface: it never enters the normal/depth buffer.
+        scene.background = null;
+        try {
+          gtao.render(renderer, aoTarget, hdr, 0, false);
+        } finally {
+          scene.background = background;
+        }
+        read = aoTarget;
+      }
+      // Bloom adds its halo into `read` itself (the write buffer is unused).
+      if (bloom.enabled) bloom.render(renderer, read, read, 0, false);
+      if (smaa && smaaTarget) {
+        smaa.render(renderer, smaaTarget, read, 0, false);
+        read = smaaTarget;
+      }
+
+      // 2. Screen: the backdrop exactly as the direct path draws it (no object is drawn).
+      renderer.setRenderTarget(null);
+      renderer.render(scene, backdropCamera);
+      renderer.autoClear = false;
+      // 3. The tone-mapped surfaces with their depth (+ the halo over the backdrop).
+      const u = composite.uniforms as Record<'tColor' | 'tGlow' | 'glow', THREE.IUniform>;
+      u.tColor.value = read.texture;
+      u.glow.value = bloom.enabled ? 1 : 0;
+      u.tGlow.value = bloom.enabled ? (bloom.renderTargetsHorizontal[0]?.texture ?? null) : null;
+      quad.render(renderer);
+      // 4. See-through shells and haze, blended on screen like the direct path.
+      scene.background = null;
+      renderer.render(scene, forwardCamera);
+    } finally {
+      scene.background = background;
+      renderer.autoClear = autoClear;
+      renderer.shadowMap.autoUpdate = autoShadows;
+      renderer.info.autoReset = autoReset;
+    }
+  };
+
   return {
     state,
     get highlight() {
@@ -152,7 +310,6 @@ export function createPostFx(
     },
     setScene(next) {
       scene = next;
-      renderPass.scene = next;
       gtao.scene = next;
     },
     setSubject(box) {
@@ -166,14 +323,8 @@ export function createPostFx(
       highlight = on;
       sync();
     },
-    setSize(width, height, pixelRatio) {
-      composer.setPixelRatio(pixelRatio);
-      composer.setSize(width, height);
-    },
-    render() {
-      syncAoCamera();
-      composer.render();
-    },
+    setSize,
+    render,
     degrade() {
       const next = DEGRADE_ORDER.find((k) => state[k]) ?? null;
       if (next) {
@@ -186,11 +337,13 @@ export function createPostFx(
       renderer.transmissionResolutionScale = previousTransmissionScale;
       gtao.dispose();
       bloom.dispose();
-      output.dispose();
       smaa?.dispose();
-      renderPass.dispose();
-      // Frees both of the composer's render targets (the second is a clone of `target`).
-      composer.dispose();
+      quad.dispose();
+      composite.dispose();
+      hdr.dispose();
+      depth.dispose();
+      aoTarget.dispose();
+      smaaTarget?.dispose();
     },
   };
 }

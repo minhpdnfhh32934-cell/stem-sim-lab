@@ -405,6 +405,122 @@ test('mitosis 3D: "Hỏi thầy về bộ phận này" opens AI Teacher with the
   expect(asked).toEqual([]);
 });
 
+/** sRGB (0…255) → OKLab. */
+function oklab([r, g, b]: readonly number[]): [number, number, number] {
+  const lin = (v = 0) => {
+    const c = v / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  const [R, G, B] = [lin(r), lin(g), lin(b)];
+  const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+  const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+  const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+const deltaEOk = (a: readonly number[], b: readonly number[]) => {
+  const [p, q] = [oklab(a), oklab(b)];
+  return Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+};
+
+/** Mean sRGB colour (0…255) of a 9 × 9 pixel patch of the page around each point. */
+async function patchColours(page: Page, points: { x: number; y: number }[]): Promise<number[][]> {
+  const png = await page.screenshot();
+  return page.evaluate(
+    async ([b64, pts]) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const c = document.createElement('canvas');
+      c.width = img.width;
+      c.height = img.height;
+      const g = c.getContext('2d', { willReadFrequently: true })!;
+      g.drawImage(img, 0, 0);
+      return pts.map(({ x, y }) => {
+        const d = g.getImageData(Math.round(x) - 4, Math.round(y) - 4, 9, 9).data;
+        const m = [0, 0, 0];
+        for (let i = 0; i < d.length; i += 4) for (let k = 0; k < 3; k++) m[k]! += d[i + k]! / 81;
+        return m;
+      });
+    },
+    [png.toString('base64'), points] as const,
+  );
+}
+
+/**
+ * The High tier's post-processing chain (discrete GPUs) must keep the colours of the direct
+ * path (Medium, integrated GPUs): the backdrop is never tone-mapped twice and the see-through
+ * membrane blends on screen the same way. Both paths draw the same metaphase cell; the backdrop
+ * beside the cell and the membrane's mean colour may differ by ΔE_OK 0.02 at most.
+ */
+for (const scheme of ['light', 'dark'] as const) {
+  test(`mitosis 3D: post-processing keeps the backdrop and membrane colours (${scheme})`, async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    await page.emulateMedia({ colorScheme: scheme });
+    const measure = async (postFx: 'none' | 'full') => {
+      if (postFx === 'none') await openMitosis(page, 'high');
+      else {
+        // Again from the start (the override is read when the view starts); the topic now
+        // carries its "done" mark in its name.
+        await openLab(page);
+        await page.getByRole('radio', { name: 'Sinh học' }).click();
+        await page
+          .getByRole('complementary', { name: 'Thư viện chủ đề' })
+          .getByRole('button', { name: /^Nguyên phân/ })
+          .click();
+        await expect(page.locator('.m3d canvas')).toBeVisible({ timeout: 20_000 });
+      }
+      expect(await page.evaluate(() => window.__simlabMitosis3d?.quality().postFx)).toBe(postFx);
+      await strip(page).getByRole('button', { name: 'Kì giữa' }).click();
+      await page.addStyleTag({ content: '.three-tags, .three-labels { visibility: hidden; }' });
+      await page.waitForTimeout(3000);
+      const cell = await page.evaluate(() => window.__simlabMitosis3d?.cellRect() ?? null);
+      const box = await page.locator('.m3d canvas').boundingBox();
+      expect(cell).not.toBeNull();
+      expect(box).not.toBeNull();
+      const cx = (cell!.left + cell!.right) / 2;
+      const cy = (cell!.top + cell!.bottom) / 2;
+      const d = 0.21 * (cell!.bottom - cell!.top);
+      const colours = await patchColours(page, [
+        // Backdrop beside the cell, on both sides.
+        { x: (box!.x + cell!.left) / 2, y: cy },
+        { x: (cell!.right + box!.x + box!.width) / 2, y: cy },
+        // Membrane on the four diagonals, clear of the spindle and the metaphase plate.
+        { x: cx - d, y: cy - d },
+        { x: cx + d, y: cy - d },
+        { x: cx - d, y: cy + d },
+        { x: cx + d, y: cy + d },
+      ]);
+      const membrane = [0, 1, 2].map(
+        (k) => colours.slice(2).reduce((s, c) => s + (c[k] ?? 0), 0) / 4,
+      );
+      return { backdrop: colours.slice(0, 2), membrane };
+    };
+    // SwiftShader is a software GPU: the direct path, as on integrated GPUs and Medium.
+    const direct = await measure('none');
+    // The development override runs the discrete-GPU chain (AO, HDR target, composite).
+    await page.evaluate(() => {
+      localStorage.setItem('stemsim.debug.postfx', 'on');
+    });
+    const postfx = await measure('full');
+    const report = JSON.stringify({ direct, postfx });
+    for (const [i, c] of direct.backdrop.entries()) {
+      expect(deltaEOk(c, postfx.backdrop[i]!), `backdrop ${i}: ${report}`).toBeLessThanOrEqual(
+        0.02,
+      );
+    }
+    expect(deltaEOk(direct.membrane, postfx.membrane), `membrane: ${report}`).toBeLessThanOrEqual(
+      0.02,
+    );
+  });
+}
+
 declare global {
   interface Window {
     __m3dPerf?: { frames: number[]; calls: number; triangles: number; running: boolean };
