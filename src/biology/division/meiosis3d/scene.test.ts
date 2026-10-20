@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { meiosisOptions } from '../meiosisOptions';
-import { MEIOSIS_PART_ORDER, type MeiosisSelection } from './components';
+import { MEIOSIS_PART_ORDER, homologuesTogether, type MeiosisSelection } from './components';
 import { buildMeiosisScene, type MeiosisPalette } from './scene';
 import { buildMeiosisTimeline, type MeiosisTimeline } from './timeline';
 
@@ -216,11 +216,14 @@ describe('3D meiosis scene', () => {
     ms.dispose();
   });
 
-  it('picks a single chromosome after anaphase II, a double one in metaphase II', () => {
+  it('picks a double chromosome once the homologues are apart, a single one after anaphase II', () => {
     const tl = timeline(2);
     const ms = buildMeiosisScene(tl, PALETTE, { segments: 16 });
+    // From anaphase I each group holds one chromosome of each pair: no "NST tương đồng" any more.
     for (const [stage, component] of [
-      ['metaphase2', 'homologousChromosome'],
+      ['anaphase1', 'doubleChromosome'],
+      ['prophase2', 'doubleChromosome'],
+      ['metaphase2', 'doubleChromosome'],
       ['anaphase2', 'singleChromosome'],
     ] as const) {
       const st = tl.stateAt(tl.keyTime(stage));
@@ -267,5 +270,35 @@ describe('3D meiosis scene', () => {
     expect(g1).toContain('chromatin');
     expect(g1).not.toContain('spindle');
     ms.dispose();
+  });
+
+  it('labels a chromosome "NST tương đồng" only while its homologue is in the same group', () => {
+    for (const pairs of [1, 2, 4]) {
+      const tl = timeline(pairs);
+      const ms = buildMeiosisScene(tl, PALETTE, { segments: 8 });
+      let doubles = 0;
+      for (let t = 0; t <= tl.total; t += tl.total / 240) {
+        const st = tl.stateAt(t);
+        ms.update(st);
+        const ids = ms.labelAnchors().map((a) => a.id);
+        const together = homologuesTogether(st.stage);
+        if (ids.includes('homologousChromosome'))
+          expect(together, `${pairs} pairs, ${st.stage}`).toBe(true);
+        if (ids.includes('doubleChromosome')) {
+          doubles++;
+          expect(together, `${pairs} pairs, ${st.stage}`).toBe(false);
+        }
+        // The parts list says the same: no homologue to show once the pairs have separated.
+        if (!together) {
+          ms.setSelection({ component: 'homologousChromosome' });
+          ms.update(st);
+          for (const m of visibleMaterials(ms.scene))
+            expect(m.userData.look, st.stage).not.toBe('hi');
+          ms.setSelection(null);
+        }
+      }
+      expect(doubles, `${pairs} pairs`).toBeGreaterThan(0);
+      ms.dispose();
+    }
   });
 });

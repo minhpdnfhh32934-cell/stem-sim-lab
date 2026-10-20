@@ -188,6 +188,37 @@ describe('Meiosis3DView', () => {
     expect(card).toHaveTextContent('Các đoạn ADN của crômatit này: bố 0–1.');
   });
 
+  it('after the homologues separate a picked chromosome is a double chromosome, one of its pair', () => {
+    const { factory } = fakeRenderer();
+    render(<Meiosis3DView createRenderer={factory} />);
+    const tl = tl2();
+    const info = tl.chromatids.find((c) => c.pair === 1 && c.origin === 'M' && c.sister === 0)!;
+    const selected = { component: 'doubleChromosome' as const, chromosome: info.chromosome };
+    act(() => {
+      useMeiosis3D.setState({ t: tl.keyTime('metaphase2'), selected });
+    });
+    const card = screen.getByRole('complementary');
+    expect(card).toHaveTextContent('Nhiễm sắc thể kép');
+    expect(card).toHaveTextContent(
+      'Theo mô hình: một chiếc của cặp NST số 2, nguồn gốc từ mẹ; lúc này có 2 crômatit (2 phân tử ADN).',
+    );
+    expect(card).not.toHaveTextContent('Bộ phận này không thấy rõ ở kì đang xem.');
+    // "NST tương đồng" from the parts list: no homologue is in a meiosis II cell.
+    act(() => {
+      useMeiosis3D.setState({ selected: { component: 'homologousChromosome' } });
+    });
+    expect(screen.getByRole('complementary')).toHaveTextContent(
+      'Bộ phận này không thấy rõ ở kì đang xem.',
+    );
+    // In metaphase I the pair is still together: the line names the pair.
+    act(() => {
+      useMeiosis3D.setState({ t: tl.keyTime('metaphase1'), selected });
+    });
+    expect(screen.getByRole('complementary')).toHaveTextContent(
+      'Theo mô hình: cặp NST số 2, nguồn gốc từ mẹ',
+    );
+  });
+
   it('a second tap on a picked bivalent drills into the chromatid under the pointer', () => {
     const bivalent = { component: 'bivalent' as const, pair: 0, chromosome: 1, sister: 1 as const };
     expect(drillSelection(null, bivalent)).toEqual(bivalent);
@@ -211,6 +242,14 @@ describe('Meiosis3DView', () => {
       component: 'homologousChromosome',
     });
     expect(drillSelection(bivalent, { component: 'spindle' })).toEqual({ component: 'spindle' });
+    // After the homologues separate a chromosome is picked as a double chromosome: same drill.
+    const double = { ...homologue, component: 'doubleChromosome' as const };
+    expect(drillSelection(double, double)).toEqual({
+      component: 'sisterChromatid',
+      chromosome: 2,
+      sister: 0,
+    });
+    expect(drillSelection(homologue, double)).toEqual(double);
   });
 
   it('the parts list picks a part; "Hỏi thầy" opens the teacher with a question from the texts', () => {
@@ -225,7 +264,7 @@ describe('Meiosis3DView', () => {
       useMeiosis3D.setState({ t: tl2().keyTime('metaphase1') });
     });
     const parts = screen.getByRole('group', { name: 'Bộ phận tế bào' });
-    expect(within(parts).getAllByRole('button')).toHaveLength(14);
+    expect(within(parts).getAllByRole('button')).toHaveLength(15);
     fireEvent.click(within(parts).getByRole('button', { name: 'Điểm bắt chéo (trao đổi chéo)' }));
     const card = screen.getByRole('complementary');
     const x = formatNumber('vi', tl2().options.crossovers[0]!.point, {

@@ -34,6 +34,8 @@ import { envelopeBreakdown, spherePointsEven } from '../division3d/sceneParts';
 import { FIBRE, writeFibres } from '../division3d/spindleMesh';
 import { meiosisFrame, type CameraFrame } from './camera';
 import {
+  chromosomePart,
+  homologuesTogether,
   meiosisPartVisible,
   type MeiosisCameraMode,
   type MeiosisComponentId,
@@ -500,6 +502,9 @@ export function buildMeiosisScene(
           (data.part === 'arm' && !!c?.paired && samePair) || (data.part === 'chiasma' && samePair)
         );
       case 'homologousChromosome':
+        // Only while both homologues are in one group (G1 … metaphase I).
+        return data.part === 'arm' && !!c?.joined && sameChromosome && homologuesTogether(st.stage);
+      case 'doubleChromosome':
         return data.part === 'arm' && !!c?.joined && sameChromosome;
       case 'sisterChromatid':
         return (
@@ -800,9 +805,12 @@ export function buildMeiosisScene(
               chromosome: c.chromosome,
               sister: c.sister,
             };
-          return c.joined
-            ? { component: 'homologousChromosome', chromosome: c.chromosome, sister: c.sister }
-            : { component: 'singleChromosome', chromosome: c.chromosome, sister: c.sister };
+          // A double chromosome is "NST tương đồng" only while its partner is in the same group.
+          return {
+            component: chromosomePart(c, st.stage),
+            chromosome: c.chromosome,
+            sister: c.sister,
+          };
         case 'bead':
           if (!c) return null;
           return c.joined
@@ -863,13 +871,7 @@ export function buildMeiosisScene(
     if (first && pose) {
       const k = Math.max(0, Math.floor(first.tube.centromereRing / 2));
       const id: MeiosisComponentId =
-        st.condensation < 0.5
-          ? 'chromatin'
-          : pose.paired
-            ? 'bivalent'
-            : pose.joined
-              ? 'homologousChromosome'
-              : 'singleChromosome';
+        st.condensation < 0.5 ? 'chromatin' : chromosomePart(pose, st.stage);
       add(id, ringPoint(first, k));
     }
     const x = chiasmata[0];

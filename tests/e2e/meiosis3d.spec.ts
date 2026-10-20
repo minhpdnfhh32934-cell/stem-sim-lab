@@ -115,6 +115,9 @@ test('meiosis 3D: twelve stages, a picked part shows the model’s crossover poi
   // Metaphase II: two cells, n double chromosomes each (counted from the model).
   await strip.getByRole('button', { name: 'Kì giữa II', exact: true }).click();
   await expect(page.getByText('2 tế bào · mỗi tế bào 2 NST kép')).toBeVisible();
+  // Each cell has one chromosome of each pair: a "NST kép" label, never "NST tương đồng".
+  await expect.poll(() => hook(page, 'anchor', 'doubleChromosome')).not.toBeNull();
+  expect(await hook(page, 'anchor', 'homologousChromosome')).toBeNull();
   // 2D keeps the stage (meiosis has its own index map), and 3D comes back to it.
   await page.getByRole('radio', { name: '2D' }).click();
   await expect(page.locator('.mei3d')).toHaveCount(0);

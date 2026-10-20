@@ -19,6 +19,7 @@ export type MeiosisComponentId =
   | 'chromatin'
   | 'bivalent'
   | 'homologousChromosome'
+  | 'doubleChromosome'
   | 'sisterChromatid'
   | 'chiasma'
   | 'centromere'
@@ -76,6 +77,13 @@ export const MEIOSIS_PARTS: Record<MeiosisComponentId, MeiosisPartInfo> = {
       'A homologous pair has two chromosomes alike in shape, size and gene order, one from the mother and one from the father. In meiosis I the two homologues (both double) separate into the two daughter cells.',
     ),
   },
+  doubleChromosome: {
+    name: MITOSIS_PARTS.doubleChromosome.name,
+    role: L(
+      'NST đã nhân đôi ở pha S, gồm 2 crômatit chị em dính nhau ở tâm động. Từ kì sau I, hai NST tương đồng của mỗi cặp đã tách về hai cực: mỗi cực (rồi mỗi tế bào con) chỉ có một chiếc của mỗi cặp, tức n NST kép, không còn cặp NST tương đồng. Hai crômatit chị em tách nhau ở kì sau II.',
+      'A chromosome replicated in S phase: two sister chromatids joined at the centromere. From anaphase I the two homologues of each pair have moved to opposite poles: each pole (then each daughter cell) has one chromosome of each pair, n double chromosomes and no homologous pairs. The sister chromatids separate in anaphase II.',
+    ),
+  },
   sisterChromatid: {
     name: MITOSIS_PARTS.sisterChromatid.name,
     role: L(
@@ -130,6 +138,7 @@ export const MEIOSIS_PART_ORDER: readonly MeiosisComponentId[] = [
   'chromatin',
   'bivalent',
   'homologousChromosome',
+  'doubleChromosome',
   'sisterChromatid',
   'chiasma',
   'centromere',
@@ -138,6 +147,25 @@ export const MEIOSIS_PART_ORDER: readonly MeiosisComponentId[] = [
   'centrosome',
   'cleavageFurrow',
 ];
+
+/**
+ * Whether both homologues of every pair are still in one group: G1 to metaphase I. From
+ * anaphase I the homologues have separated (the model's reduction division), so a chromosome is
+ * one of its pair — never labelled "NST tương đồng" any more.
+ */
+export function homologuesTogether(stage: MeiosisStage3D): boolean {
+  return stage === 'g1' || stage === 'g2' || stage === 'prophase1' || stage === 'metaphase1';
+}
+
+/** The part a condensed chromosome (one of its chromatids) belongs to at this stage. */
+export function chromosomePart(
+  c: { paired: boolean; joined: boolean },
+  stage: MeiosisStage3D,
+): 'bivalent' | 'homologousChromosome' | 'doubleChromosome' | 'singleChromosome' {
+  if (c.paired) return 'bivalent';
+  if (!c.joined) return 'singleChromosome';
+  return homologuesTogether(stage) ? 'homologousChromosome' : 'doubleChromosome';
+}
 
 /**
  * The selection after a tap on the picture: a second tap on the bivalent or the chromosome
@@ -151,8 +179,8 @@ export function drillSelection(
   const sameBivalent =
     hit.component === 'bivalent' && prev.component === 'bivalent' && prev.pair === hit.pair;
   const sameChromosome =
-    hit.component === 'homologousChromosome' &&
-    prev.component === 'homologousChromosome' &&
+    (hit.component === 'homologousChromosome' || hit.component === 'doubleChromosome') &&
+    prev.component === hit.component &&
     prev.chromosome === hit.chromosome;
   return sameBivalent || sameChromosome
     ? { component: 'sisterChromatid', chromosome: hit.chromosome, sister: hit.sister ?? 0 }
@@ -177,6 +205,8 @@ export function meiosisPartVisible(id: MeiosisComponentId, s: Meiosis3DState): b
     case 'bivalent':
       return condensed && some((c) => c.paired);
     case 'homologousChromosome':
+      return condensed && homologuesTogether(s.stage) && some((c) => c.joined);
+    case 'doubleChromosome':
     case 'sisterChromatid':
       return condensed && some((c) => c.joined);
     case 'chiasma':

@@ -7,7 +7,7 @@
 import type { LocalizedText } from '@/core/data/dataset';
 import { L } from '../../common';
 import type { Segment } from '../division';
-import type { MeiosisSelection } from './components';
+import { homologuesTogether, type MeiosisSelection } from './components';
 import type { Meiosis3DState, MeiosisStage3D, MeiosisTimeline } from './timeline';
 
 type Fmt = (v: number) => string;
@@ -143,10 +143,14 @@ export function selectionFacts(
   const p = info.pair + 1;
   // A double chromosome has both sisters; after the split each is its own single chromosome.
   const count = first.joined ? mine.length : 1;
+  // From anaphase I the homologues are apart: this chromosome is one of its pair.
+  const which = homologuesTogether(st.stage)
+    ? L(`cặp NST số ${p}`, `chromosome pair ${p}`)
+    : L(`một chiếc của cặp NST số ${p}`, `one chromosome of pair ${p}`);
   out.push(
     L(
-      `Theo mô hình: cặp NST số ${p}, nguồn gốc ${from.vi}; lúc này có ${count} crômatit (${count} phân tử ADN).`,
-      `From the model: chromosome pair ${p}, from ${from.en}; it has ${count} chromatid(s) (${count} DNA molecule(s)) now.`,
+      `Theo mô hình: ${which.vi}, nguồn gốc ${from.vi}; lúc này có ${count} crômatit (${count} phân tử ADN).`,
+      `From the model: ${which.en}, from ${from.en}; it has ${count} chromatid(s) (${count} DNA molecule(s)) now.`,
     ),
   );
   if (sel.component === 'sisterChromatid' || sel.component === 'singleChromosome') {
