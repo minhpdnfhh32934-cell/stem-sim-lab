@@ -135,7 +135,7 @@ export function enzymeShadeAt(x: number, y: number, z: number, otherSite: boolea
  * share of the radius, noise frequency on the unit sphere, seed, and how much darker the
  * valleys get (cavity shading).
  */
-export const ENZYME_RELIEF = { amplitude: 0.045, frequency: 2.6, seed: 23, valley: 0.35 } as const;
+export const ENZYME_RELIEF = { amplitude: 0.07, frequency: 2.6, seed: 23, valley: 0.55 } as const;
 
 /**
  * Where the fine lumps show (0…1): none in the active-site pocket and its lip, nor at the second
@@ -228,10 +228,10 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const enzymeMat = kit.own(
     withEdgeShade(
       withRelief(solid(enzymeColor, o.tier, { roughness: 0.62, sheen: 0.35, clearcoat: 0.1 }), {
-        frequency: 9,
-        height: 0.012,
+        frequency: 8,
+        height: 0.03,
       }),
-      { strength: Number.isFinite(edgeShade) ? edgeShade : 0 },
+      { strength: Number.isFinite(edgeShade) ? edgeShade : 0, power: 1.8 },
     ),
   );
   enzymeMat.vertexColors = true;

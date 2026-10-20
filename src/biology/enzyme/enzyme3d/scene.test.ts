@@ -124,7 +124,7 @@ describe('3D enzyme scene', () => {
         v.normalize();
         const plain = enzymeRadiusAt(v.x, v.y, v.z, other);
         const mask = enzymeReliefMask(v.x, v.y, v.z, other);
-        // Lumps at most ±4.5 % of the radius, and only where the mask allows them.
+        // Lumps at most ±7 % of the radius, and only where the mask allows them.
         expect(Math.abs(r / plain - 1)).toBeLessThanOrEqual(ENZYME_RELIEF.amplitude * mask + 1e-6);
         if (Math.abs(r / plain - 1) > 0.005) lumpy++;
         // Valleys and hollows are shaded darker, never lighter than the plain colour.
