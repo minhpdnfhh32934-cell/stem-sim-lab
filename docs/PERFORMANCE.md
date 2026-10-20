@@ -109,6 +109,22 @@ nguyên phân/giảm phân (hiện 2D), nên không đổi. Giao diện tối kh
 trước/sau giống hệt khi chỉ có một tế bào). Nhãn: mỗi khung chiếu hộp bao các crômatit (8 đỉnh mỗi
 crômatit) và các tế bào (6 điểm) lên màn hình.
 
+**ADN → mARN → Protein và Đột biến điểm 3D — làm đẹp (2026-10-21, bản 0.7.1).** Mạch khung là ống
+Catmull–Rom liền (`dogma3d/strandTube.ts`) thay cho một hình cầu + một ống trụ mỗi nuclêôtit: bộ đệm
+cấp một lần theo sức chứa, chỉ các đoạn đổi mới được viết lại và tải lên (`addUpdateRange`). Khi
+phiên mã, hai đoạn xoắn đứng yên hai bên bong bóng được dựng một lần ở tư thế nghỉ rồi chỉ quay
+(`rigidSpan`); chỉ bong bóng (≤ 26 nuclêôtit) dựng lại mỗi khung. Đo CPU (`drawStats`, gen 300 cặp):
+ADN → mARN → Protein Trung bình 197 388 → 158 880 tam giác, Cao 437 192 → 374 036, tối đa 20 lệnh vẽ
+(ngân sách 32); Đột biến điểm Trung bình 402 736 → 343 280 (thay thế), Cao 879 856 → 769 880, 25 lệnh
+vẽ (trước 28, ngân sách 28); dựng cảnh < 15 ms; một khung phát (thời điểm + cập nhật) vẫn < 2 ms
+(p95, `scene.perf.test`). Đo SwiftShader 1366×768, gen mặc định 26 cặp, 2 lần: ADN → mARN → Protein
+phát 8 s từ đầu — Trung bình trước 231/279 khung, p50 33 ms, p95 50–67 ms; sau 284/288 khung, p50 33
+ms, p95 50 ms; Cao trước 159/170 khung, p50 50 ms, p95 100 ms; sau 158/161 khung, p50 50 ms, p95 83
+ms. Đột biến điểm Trung bình trong 3 s viền nhấp nháy: trước 87/91 khung, sau 80/84 khung, p50 33 ms
+và p95 67 ms cả hai (hai tấm nền làn phủ thêm diện tích tô). Hậu kỳ (GTAO, tỏa sáng) chỉ ở mức Cao
+trên GPU rời như trước; tỏa sáng chỉ chạy khi khung bộ ba đang đọc / viền đột biến hiện. Mức Thấp
+không có hình 3D cho hai bài (hiện 2D), nên không đổi; máy GPU tích hợp không bị nâng mức.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

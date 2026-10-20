@@ -256,6 +256,24 @@ it without code of its own:
   label never goes to a column its leader would reach only across another cell, a box that would
   cover data moves outwards, then to the other column, else it is left out
   (`division3d/labelObstacles.ts`; tests `meiosis3d/labelLayout.test.ts`, `mitosis3d/…`).
+- DNA pictures (`src/biology/central/dogma3d/helix.ts`, shared by "ADN → mARN → Protein" and
+  "Đột biến điểm"): backbones are continuous Catmull–Rom tubes through the nucleotides'
+  positions (`strandTube.ts`: buffers sized once, `build(a, b)` rewrites and uploads only those
+  segments, `show` / `twin` draw ranges of one tube; ring frames point away from the helix axis,
+  so two tubes sharing a point and its neighbours meet without a seam); base pairs are two
+  rounded halves split at the midline (`Writer.half`, base-pair recipe, instance colour = the
+  base's token); rungs fade (`rungOpacity`, from `scene.onBeforeRender`) once neighbouring pairs
+  are under ~7 px apart. The dogma helix turns about its axis while the polymerase works: the two
+  still stretches are one resting tube drawn by two meshes, each turned by `rigidSpan`'s angle;
+  only the bubble's tube is rebuilt. Machines (`machines.ts`): RNA polymerase and the large
+  ribosome subunit are `proteinShell`s (recipes: seeded blob, opacity 0.55, rim + light-stage
+  ink, relief, cut open by a world plane with a darker inner wall); L-shaped tRNA body (one
+  merged geometry); a glowing codon frame (HDR on High). During translation the DNA sits under
+  one parent scaled/moved by `dnaPlace` (context above the ribosome); every DNA point the scene
+  reports (tags, labels, picks, `basePoint`) goes through `placeDna`. Point mutation: two lane
+  plates (`laneSpan`), HDR outline hulls (MeshBasic, colour × `highlightIntensity`, `bloom`
+  flag), gap rings, rounded brackets (bar + ticks + corner balls), an end cap for a premature
+  stop; `ThreeHost.dragging()` keeps the site camera from gliding under the learner's hand.
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
   every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
   relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
