@@ -486,6 +486,18 @@ Progress log: `docs/PROGRESS.md`.
   `camera.ts` ("Toàn cảnh"/"Cận cảnh enzyme"), `store.ts` (`useEnzyme3D`: `t`, cursor `s`),
   `Enzyme3DView`, `Enzyme3DSwitch`. Science Card texts of the 2D page: `enzyme/enzymeCard.ts`.
   Saved: `view3d` (enzyme store). E2E `tests/e2e/enzyme3d.spec.ts`.
+- Diffusion & osmosis 3D (`src/biology/transport/transport3d/`): `diffusion.ts` (pure: N₁(t) =
+  apportion(particles · c₁(t)V₁ / (c₁⁰V₁ + c₂⁰V₂)) from `twoCompartment`, crossing schedule — the
+  m-th crossing when N₁ has moved by m, net only; no pore → counts stay), `diffusionLayout.ts`
+  (box widths V₁ : V₂, pores as round channels, `brownianWalks` seeded by `run`, `particleAt`:
+  a crossing walks to a pore's mouth and along its axis, never through the slab), `osmosis.ts`
+  (pure: the 2D chart's samples — at or before t —, one vertical scale + cm ruler, 60 solute
+  particles spread over h_L, illustrative water moved by h_L − h₀), `diffusionScene.ts` /
+  `osmosisScene.ts` (static glass and liquid bottoms merged, marks instanced), `facts.ts`,
+  `components.ts` (texts, `diffusionCard3d`/`osmosisCard3d`), `camera.ts`, `store.ts`
+  (`useTransport3D`), `Transport3DView`, `Transport3DSwitch`. Shared with the 2D page:
+  `fickTimeEnd` (transport.ts), `osmosisData` (osmosisData.ts), cards in `transportCards.ts`.
+  Saved: `view3d` (transport store). E2E `tests/e2e/transport3d.spec.ts`.
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -496,7 +508,7 @@ Progress log: `docs/PROGRESS.md`.
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
 - Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis, DNA → mRNA →
-  protein, point mutations, Mendel or enzyme kinetics) has a 3D view too (3D by default, the learner's 3D/2D choice per
+  protein, point mutations, Mendel, enzyme kinetics or diffusion & osmosis) has a 3D view too (3D by default, the learner's 3D/2D choice per
   lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
   labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
