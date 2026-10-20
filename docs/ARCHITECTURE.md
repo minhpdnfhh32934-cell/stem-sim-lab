@@ -250,11 +250,22 @@ it without code of its own:
 - Tags: one look for `LabelLayer` / `TagLayer` and the kit's CSS2D labels (`ui.css`: glass pill,
   ≥ 12 px, tabular numbers, 7 px anchor ring in the part's role colour). When one label column is
   full, its least important labels move to the other column before any is left out (`labels.ts`).
+  `LabelLayer.update(…, obstacles)` takes world-space hulls: `avoid` (data a label box never
+  covers — the division views pass every condensed chromatid's box) and `regions` (separate
+  subjects — the daughter cells once a furrow shows, or the two cells of meiosis II): a part's
+  label never goes to a column its leader would reach only across another cell, a box that would
+  cover data moves outwards, then to the other column, else it is left out
+  (`division3d/labelObstacles.ts`; tests `meiosis3d/labelLayout.test.ts`, `mitosis3d/…`).
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
   every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
   relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
   `shade` attribute through `withVertexShade`: the maternal/paternal colours stay exact); membranes
-  as a rimmed front face over a faint Lambert back face (the cell's volume); spindle fibres light
+  as a rimmed front face over a faint Lambert back face (the cell's volume) — on the light stage
+  the cell, the nuclear envelope and the plant wall also get a darker outline in a deeper shade of
+  their own colour (`withRim`'s `ink`, strength `--m3d-shell-ink`: 1 in light, 0 in dark; the band
+  follows the geometric normal so bump/relief never streaks it; a faint share of it tints the
+  faces; `setRimAlpha` fades it with the shell; test `division3d/looks.test.ts` keeps the cell
+  outline ≥ 1.5 : 1 on the panel and the nucleus outline ≥ 1.5 : 1 on the cell); spindle fibres light
   and see-through on LAYER.FX, fading towards the poles (`fibreGeometry` alpha); a glowing
   centrosome core and chiasma ring (bloom in HDR); the plant wall's fibrous bump in HDR.
   `palette.ts` maps the theme tokens once for both (structures muted, data colours exact);

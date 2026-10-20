@@ -101,6 +101,14 @@ to). Giống như khi người học tự cuộn phóng to; GPU thật chưa đo
 (2n = 46): p95 0,43–0,47 ms (trước 0,56). Bài `scene.perf.test` (< 2 ms) qua khi chạy riêng; khi
 chạy cả bộ song song trên máy đang bận nó có thể vượt 2 ms — trước thay đổi cũng vậy.
 
+Vòng 2 (2026-10-21, viền đậm cho vỏ trong suốt ở giao diện sáng + nhãn tránh NST): shader viền chỉ
+thêm một phép `pow`/`mix` mỗi điểm ảnh, không thêm lệnh vẽ. Đo SwiftShader 1366×768, nguyên phân
+Trung bình 2n = 4 ở 2×, 8 s, 3 lần: trước 155/173/160 khung, p50 33 ms, p95 83–100 ms; sau
+152/161/172 khung, p50 33 ms, p95 67–100 ms; 31 lệnh vẽ cả hai. Mức Thấp không dùng hình 3D cho
+nguyên phân/giảm phân (hiện 2D), nên không đổi. Giao diện tối không đổi một điểm ảnh nào (ảnh
+trước/sau giống hệt khi chỉ có một tế bào). Nhãn: mỗi khung chiếu hộp bao các crômatit (8 đỉnh mỗi
+crômatit) và các tế bào (6 điểm) lên màn hình.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
