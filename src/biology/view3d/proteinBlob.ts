@@ -6,7 +6,6 @@
  * captions and Science Cards say so ("Minh họa — không phải tỉ lệ/hình dạng thật").
  */
 import * as THREE from 'three';
-import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { QualityTier } from '@/perf/tiers';
 import { fbm3 } from './noise';
 
@@ -26,17 +25,85 @@ export interface BlobOptions {
   cavity?: number;
 }
 
+/**
+ * An indexed unit icosphere: the icosahedron with every triangle split in four `level` times
+ * (edge midpoints shared through a cache, pushed onto the sphere). Level 3: 642 vertices, 1280
+ * triangles; level 4: 2562 and 5120 — the counts of three.js's IcosahedronGeometry at detail 7
+ * and 15, built without its unindexed copy and the vertex merge (several times faster: a scene
+ * with three blobs is built inside its time budget).
+ */
+export function icosphere(level: number): THREE.BufferGeometry {
+  const t = (1 + Math.sqrt(5)) / 2;
+  const pos: number[] = [];
+  const push = (x: number, y: number, z: number) => {
+    const l = Math.hypot(x, y, z);
+    pos.push(x / l, y / l, z / l);
+    return pos.length / 3 - 1;
+  };
+  for (const [x, y, z] of [
+    [-1, t, 0],
+    [1, t, 0],
+    [-1, -t, 0],
+    [1, -t, 0],
+    [0, -1, t],
+    [0, 1, t],
+    [0, -1, -t],
+    [0, 1, -t],
+    [t, 0, -1],
+    [t, 0, 1],
+    [-t, 0, -1],
+    [-t, 0, 1],
+  ] as const) {
+    push(x, y, z);
+  }
+  // prettier-ignore
+  let faces = [
+    0, 11, 5, 0, 5, 1, 0, 1, 7, 0, 7, 10, 0, 10, 11, 1, 5, 9, 5, 11, 4, 11, 10, 2, 10, 7, 6,
+    7, 1, 8, 3, 9, 4, 3, 4, 2, 3, 2, 6, 3, 6, 8, 3, 8, 9, 4, 9, 5, 2, 4, 11, 6, 2, 10, 8, 6, 7,
+    9, 8, 1,
+  ];
+  for (let k = 0; k < level; k++) {
+    const mid = new Map<number, number>();
+    const at = (a: number, b: number) => {
+      const key = a < b ? a * 65536 + b : b * 65536 + a;
+      const hit = mid.get(key);
+      if (hit !== undefined) return hit;
+      const i = push(
+        (pos[3 * a] ?? 0) + (pos[3 * b] ?? 0),
+        (pos[3 * a + 1] ?? 0) + (pos[3 * b + 1] ?? 0),
+        (pos[3 * a + 2] ?? 0) + (pos[3 * b + 2] ?? 0),
+      );
+      mid.set(key, i);
+      return i;
+    };
+    const next: number[] = [];
+    for (let f = 0; f < faces.length; f += 3) {
+      const a = faces[f] ?? 0;
+      const b = faces[f + 1] ?? 0;
+      const c = faces[f + 2] ?? 0;
+      const ab = at(a, b);
+      const bc = at(b, c);
+      const ca = at(c, a);
+      next.push(a, ab, ca, b, bc, ab, c, ca, bc, ab, bc, ca);
+    }
+    faces = next;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pos), 3));
+  g.setIndex(faces);
+  return g;
+}
+
+/** Recursive icosphere level of a three.js icosahedron detail (3 → 2, 7 → 3, 15 → 4). */
+const levelOf = (detail: number) => Math.round(Math.log2(detail + 1));
+
 /** The blob (radius about 1) at a tier's detail: positions, smooth normals, cavity colours. */
 export function proteinBlob(tier: QualityTier, o: BlobOptions): THREE.BufferGeometry {
   const amplitude = Math.min(0.12, Math.max(0.08, o.amplitude ?? 0.1));
   const frequency = o.frequency ?? 1.6;
   const cavity = o.cavity ?? 0.8;
-  const raw = new THREE.IcosahedronGeometry(1, BLOB_DETAIL[tier]);
-  raw.deleteAttribute('normal');
-  raw.deleteAttribute('uv');
   // Shared vertices: smooth normals and a neighbour graph for the curvature.
-  const g = mergeVertices(raw);
-  raw.dispose();
+  const g = icosphere(levelOf(BLOB_DETAIL[tier]));
   const pos = g.attributes.position as THREE.BufferAttribute;
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {

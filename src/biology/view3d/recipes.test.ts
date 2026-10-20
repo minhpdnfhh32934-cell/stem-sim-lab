@@ -8,7 +8,7 @@ import { LAYER, assignLayers } from '@/ui/three/layers';
 import { SceneKit } from './kit';
 import { NOISE_SIZE, noiseTexture } from './noise';
 import { ROLES, STRUCTURES, muted } from './palette';
-import { BLOB_DETAIL, proteinBlob } from './proteinBlob';
+import { BLOB_DETAIL, icosphere, proteinBlob } from './proteinBlob';
 import {
   annotation,
   backboneGeometry,
@@ -208,6 +208,26 @@ describe('material recipes: data colours are the tokens, unchanged', () => {
 });
 
 describe('shapes', () => {
+  it('icosphere: the counts of three.js detail 7 / 15, on the unit sphere, faces outwards', () => {
+    for (const [level, verts, tris] of [
+      [3, 642, 1280],
+      [4, 2562, 5120],
+    ] as const) {
+      const g = icosphere(level);
+      const pos = g.attributes.position as THREE.BufferAttribute;
+      expect(pos.count).toBe(verts);
+      expect((g.index?.count ?? 0) / 3).toBe(tris);
+      g.computeVertexNormals();
+      const nor = g.attributes.normal as THREE.BufferAttribute;
+      for (let i = 0; i < pos.count; i++) {
+        expect(Math.hypot(pos.getX(i), pos.getY(i), pos.getZ(i))).toBeCloseTo(1, 5);
+        const d = pos.getX(i) * nor.getX(i) + pos.getY(i) * nor.getY(i) + pos.getZ(i) * nor.getZ(i);
+        expect(d).toBeGreaterThan(0.99);
+      }
+      g.dispose();
+    }
+  });
+
   it('protein blob: deterministic, 8–12 % bumps, cavities at most 20 % darker, cached per seed', () => {
     const a = proteinBlob('medium', { seed: 3 });
     const b = proteinBlob('medium', { seed: 3 });
