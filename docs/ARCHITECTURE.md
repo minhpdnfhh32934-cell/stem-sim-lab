@@ -1,7 +1,7 @@
 # Architecture — SimLab
 
-Status: **Phase 0** (scaffold). Sections marked _(planned)_ describe the target design from
-`MASTER_PROMPT.md` and are filled in as each phase lands.
+Status: **0.7.0** (in review on `feat/0.7`). Sections marked _(planned)_ describe the target
+design from `MASTER_PROMPT.md` and are filled in as each phase lands.
 
 ## 1. Overview
 
@@ -189,6 +189,29 @@ mounted by `AppShell`.
 Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23) and is shown with
 its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E
 `tests/e2e/studio.spec.ts` and `tests/e2e/studio-biology.spec.ts`. Step records: `docs/work-log/`.
+
+## 3g. 3D views (`src/ui/three/`, `src/biology/**`, 0.6.0–0.7.0)
+
+Every biology lesson opens in 3D. A 3D view only **draws** what the lesson's model computed:
+counts, sequences, ratios and levels come from the same pure functions as the 2D page; shapes,
+sizes, positions and motion are illustrations and are labelled so (`view3d/texts.ts`:
+`ILLUSTRATION`, `MOTION`). New 3D wording goes to `docs/DATA_REVIEW.md` (items 26–28, rows M3D,
+MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D) with `review_status: "pending"`.
+
+| Layer                   | Where                                                                                                                                                       | Responsibility                                                                                                                                                 |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generic kit             | `src/ui/three/` (`renderer.ts`, `quality3d.ts`, `useThreeHost.ts`, `loop.ts`, `labels.ts`, `pick.ts`)                                                       | No biology. Quality table per tier, render on demand, damped orbit + arrow keys, tweened camera, `FrameMonitor` → `reportOverload()`, lost-context fallback.   |
+| Biology kit             | `src/biology/view3d/` (`Bio3DCanvas`, `Bio3DView`, `SceneKit`, `lessonStore.ts`, `palette.ts`, `sampling.ts`)                                               | Stage layout, 3D / 2D switch, palette with a shape cue per role, `drawScale` / `apportion` (classes add up exactly), shared texts, primitives, disposal.       |
+| Division (shared)       | `src/biology/division/division3d/`                                                                                                                          | Stage clock, counts from `runDivision`, chromatid shapes, membrane / spindle / centrosome / nucleus meshes for mitosis and meiosis.                            |
+| Dedicated lesson module | `division/mitosis3d/`, `division/meiosis3d/`, `central/dogma3d/`, `central/mutation3d/`, `genetics/mendel3d/`, `enzyme/enzyme3d/`, `transport/transport3d/` | Each: pure `binding.ts` or `timeline.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`, `camera.ts`, `store.ts`, `Xxx3DView`, `Xxx3DSwitch`. |
+| Simple kit views        | `genetics/{HardyWeinberg3D,Drift3D}.tsx`, `ecology/{Logistic3D,LotkaVolterra3D}.tsx`, `scenes3d.ts`                                                         | The four population lessons: one figure per individual or per group (noted). Their dedicated 3D modules are planned for a later update.                        |
+
+Rules: a dedicated module saves its 3D / 2D choice in the lesson store (`view3d`, also written to
+`.stemsim` files); the simple kit views keep it in `stemsim.bio3d`. Low tier, no WebGL2 or a lost
+context → the 2D page with the reason. Overload lowers smoothness, never accuracy; everything is
+disposed on unmount. Tests: pure files next to the code, `view3d/testing.ts` (`expectAllFreed`),
+E2E `*3d.spec.ts` and `bio3d.spec.ts` in the `chromium-3d` Playwright project (software WebGL),
+budgets in `chromium-3d-perf` (`@perf`).
 
 ## 4. Planned modules
 

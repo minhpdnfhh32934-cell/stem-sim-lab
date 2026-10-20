@@ -67,7 +67,9 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
-  of a lazy module waits up to 20 s (the dev server compiles it on first use).
+  of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
+  output in `test-results/` (not watched by Vite): traces written inside the watched project
+  contain `.html` files that make the dev server reload every open page mid-test.
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
@@ -98,7 +100,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   picture-reading model on this computer (`src/teacher/chat/pictureReader.ts`), never online.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
-  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (LUIDs change per
+  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (4–8 hex
+  digits: ACPI ids such as Windows-on-ARM `QCOM` are 8; LUIDs change per
   boot) and, before the window exists, adds `--use-adapter-luid=<high>,<low>` to wry's default
   WebView2 args (restart needed; the whole GPU process moves). Never use
   `--use-webgpu-power-preference=force-high-performance` (no adapter at all). UI:
@@ -190,7 +193,10 @@ src/ai/           LLM client + SceneSpec pipeline (Phase 3)
 src/core/         units, constants, integrators, fixed timestep (Phase 1)
 src/physics/      physics engine & scenes (Phase 2)
 src/chemistry/    elements, molecules, reaction library (Phase 4)
-src/biology/      biology modules (Phase 5)
+src/biology/      biology modules (Phase 5) + per-lesson 3D modules (`*/xxx3d/`, 0.7.0)
+src/studio/       Science Studio: guided lessons + authoring (0.6.0)
+src/teacher/      AI Teacher: chat, board, voice
+src/ui/three/     generic three.js kit (renderer, quality tiers, host, labels; no biology)
 src/science-card/ Science Card types + UI
 src/perf/         quality tier, frame monitor, degradation ladder
 src/workers/      Web Workers for simulation
@@ -381,6 +387,24 @@ Progress log: `docs/PROGRESS.md`.
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
 
+## Science Studio (`src/studio/`, 0.6.0)
+
+- Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Entry: the launch
+  page's "Science Studio" card → screen `'studio'` → `StudioScreen` (tabs Hóa học · Sinh học ·
+  Vật lí · Soạn bài). Layers and file map: `docs/ARCHITECTURE.md` §3f.
+- **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine
+  ids and data keys; physics runs the scene's own engine (`solve()` = cross-check and POE verdict),
+  chemistry shows only what `data/reactions.json` records (else "chưa có trong cơ sở dữ liệu đã
+  kiểm chứng"), biology reuses the mitosis 3D view (2D fallback) and the model's counts.
+- One `SubjectPlugin` per subject (`flow/types.ts`); shared steps in `flow/`; evidence keeps its
+  origin (engine / learner / AI, `session.ts`); the report is Markdown (`report.ts`); "Hỏi thầy"
+  gets the screen context from `aiContext.ts`. State: `studioStore.ts` (`stemsim.studio`).
+- Built-in scenarios in `scenarios/` (validated at load; an invalid one is left out). Authoring
+  ("Soạn bài", `authoring/`): every choice comes from an engine or data table, local only
+  (`teacher.` ids), JSON import/export, always labelled unreviewed.
+- Teaching text is `review_status: "pending"` (DATA_REVIEW 20–23). Tests next to each file,
+  E2E `tests/e2e/studio.spec.ts` and `studio-biology.spec.ts` (3D project).
+
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
 - The gate lives in Rust `src-tauri/src/safety.rs` (`safety_*` commands, `safety.json`,
@@ -507,12 +531,17 @@ Progress log: `docs/PROGRESS.md`.
   `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
-- Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis, DNA → mRNA →
-  protein, point mutations, Mendel, enzyme kinetics or diffusion & osmosis) has a 3D view too (3D by default, the learner's 3D/2D choice per
-  lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
-  `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
-  labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
-  layout) / `Bio3DFigureBody` (figure above a page of tables: Hardy–Weinberg), `SceneKit`
+- **Biology 3D status (0.7.0):** all 11 lessons open in 3D. Seven have a dedicated module (above):
+  mitosis, meiosis, DNA → mRNA → protein, point mutations, Mendel, enzyme kinetics, diffusion &
+  osmosis. The four population lessons (Hardy–Weinberg, drift, logistic, predator–prey) still use
+  the simple kit views below (`genetics/{HardyWeinberg3D,Drift3D}.tsx`,
+  `ecology/{Logistic3D,LotkaVolterra3D}.tsx`); their dedicated 3D views are promised for a later
+  update (0.7.0 known issues).
+- Biology 3D kit (`src/biology/view3d/`): the four population lessons draw with it directly (3D by
+  default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a
+  lost context, `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`,
+  page-drawn CSS2D labels, render on demand, `FrameMonitor` while animating, dispose on unmount),
+  `Bio3DView` (stage layout) / `Bio3DFigureBody` (figure above a page of tables: Hardy–Weinberg), `SceneKit`
   (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
   keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
   3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
@@ -522,7 +551,8 @@ Progress log: `docs/PROGRESS.md`.
   (`drawScale` nice steps, `apportion` largest remainders: classes add up exactly),
   `texts.ts` (`ILLUSTRATION`, `MOTION`, `card3dAssumptions`), `primitives/`.
   Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
-  project, SwiftShader). Specs that open biology topics set SwiftShader too.
+  project, SwiftShader). Specs that open biology topics set SwiftShader too and run in the
+  `chromium-3d` project (`HEAVY_3D` in `playwright.config.ts`, after the light specs).
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
@@ -555,6 +585,9 @@ Progress log: `docs/PROGRESS.md`.
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
   - [~] T0 specs (`docs/TEACHSCRIPT.md`, `docs/AI_TEACHER_ARCHITECTURE.md`, `docs/VOICE_BENCHMARK.md`),
     sketch route `src/teacher/` (dev builds only) — **waiting for user approval**
+- [x] 0.6.0 released 2026-10-19 (v0.6.0): audit G0–G8, Science Studio, AI Teacher board, mitosis 3D
+- [~] 0.7.0 (`feat/0.7`, in review, not released): bug-fix sweep + dedicated 3D for seven biology
+  lessons, shared 3D kit; the four population lessons' dedicated 3D views remain (see above)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
@@ -577,6 +610,10 @@ Progress log: `docs/PROGRESS.md`.
   told to reinstall. Never break Rust command signatures without bumping the native version.
 - The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
   `webupdate.rs`. The repo must be public for the app to download releases.
+- **Applying a web update (0.7.0):** `web_update_apply` only unpacks the new version folder and
+  writes `active.json`; the running version's folder stays until the restart (its lazy chunks,
+  CSS and fonts are still served), and unused folders / `.partial` unpacks are deleted at start-up.
+  The zip download has no total timeout (stall timeout only).
 - **One installer / one update channel** (productName "SimLab", `vn.stemsimlab.desktop`,
   `web-update.json`; the pilot
   installer and channel were removed in 0.5.0). The signed message still names `edition:main` and

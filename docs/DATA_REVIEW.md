@@ -374,10 +374,11 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
       sao (làm tròn, có ghi chú).
     - Hardy–Weinberg 3D: vốn gen A = 2·AA + Aa, a = Aa + 2·aa; mỗi cá thể một hình (hoặc mỗi hình ≈ m
       cá thể, làm tròn, có ghi chú).
-    - ADN → mARN → Protein và Đột biến điểm 3D (`src/biology/central/scene3d.ts`): chuỗi xoắn kép
-      vẽ 10,5 cặp nuclêôtit/vòng, hai mạch lệch nhau một góc để thấy rãnh lớn/rãnh nhỏ (góc minh
-      họa); màu bazơ: A lục, T đỏ cam, U hồng, G cam, C lam (quy ước của app, không phải màu thật);
-      hình ribôxôm hai tiểu phần là minh họa; chỉ vẽ tối đa 60 cặp nuclêôtit đầu (có ghi chú).
+    - ADN → mARN → Protein và Đột biến điểm 3D: hình 3D cũ (`src/biology/central/scene3d.ts`,
+      10,5 cặp nuclêôtit/vòng, tối đa 60 cặp) đã bị xóa và thay bằng hình 3D đầy đủ ở các dòng
+      DOG3D-1 … 10 (`src/biology/central/dogma3d/`, hằng số B-DNA có nguồn trong `bdna.ts`) và
+      MUT3D-1 … 4 (`src/biology/central/mutation3d/`). Duyệt theo các dòng đó.
+    - Di truyền Mendel 3D: hình 3D đầy đủ ở các dòng MEN3D-1 … 5 (`src/biology/genetics/mendel3d/`).
     - Giảm phân 3D: thay bằng hình 3D đầy đủ ở mục 28 (`src/biology/division/meiosis3d/`).
     - Hình quần thể (logistic, Lotka–Volterra): mỗi hình là một cá thể (hoặc ≈ m cá thể, làm tròn);
       số cá thể là nghiệm chính xác N(t) hoặc điểm đã tính của quỹ đạo Lotka–Volterra (không nội
@@ -408,3 +409,11 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     từ kì sau I, NST kép được gọi là "NST kép" (một chiếc của cặp NST số k), không còn gọi là "NST
     tương đồng" vì mỗi cực / mỗi tế bào con chỉ có n NST, mỗi cặp một chiếc. Chưa vẽ giảm phân ở
     thực vật (tạo bào tử).
+29. **Bản 0.7.0 — danh mục cần duyệt (20/10/2026).** Không có số liệu hay lời văn khoa học mới
+    ngoài các mục đã ghi; mục này chỉ gom lại để giáo viên duyệt một lượt. Sửa lỗi mô hình: mục 24
+    (Vật lí) và 25 (Hóa học – Sinh học). Hình 3D: mục 26 (bộ công cụ chung, bốn bài quần thể), 27 và
+    các dòng M3D-25 … M3D-32 (Nguyên phân), 28 và MEI3D-1 … 14 (Giảm phân), DOG3D-1 … 10 (ADN → mARN
+    → Protein), MUT3D-1 … 4 (Đột biến điểm), MEN3D-1 … 5 (Mendel), ENZ3D-1 … 6 (Động học enzyme),
+    TRA3D-1 … 6 (Khuếch tán & thẩm thấu). Bốn bài quần thể (Hardy–Weinberg, phiêu bạt di truyền,
+    tăng trưởng logistic, con mồi – vật ăn thịt) vẫn dùng hình 3D đơn giản của mục 26; hình 3D riêng
+    cho chúng sẽ có mục duyệt riêng khi được làm. `review_status: "pending"`.
