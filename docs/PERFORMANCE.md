@@ -80,6 +80,16 @@ thêm nền), 9 604 tam giác (+2); Cao (phần mềm, không hậu kỳ) p50 33
 66,6). Chi phí hậu kỳ trên GPU rời chưa đo trên máy thật (ước tính 2–4 ms/khung, 25–35 MB bộ nhớ
 GPU; 0 khi đứng yên).
 
+Vòng 2 (2026-10-20): hậu kỳ chia hai nửa — vật đặc qua HDR (GTAO, bloom), còn nền, màng trong suốt
+và bóng giả vẽ thẳng trên màn hình như đường trực tiếp (thêm 1 lần vẽ nền + 1 quad ghép; khi bật hậu
+kỳ khung nguyên phân 2n = 4 có 50 lệnh vẽ, gồm các bước hậu kỳ). Vân bề mặt (`relief.ts`) và tối
+viền chỉ ở các phần nhỏ (NST, nhân con, enzyme, ARN pôlimeraza/ribôxôm), không đổi số lệnh vẽ
+hay tam giác (44 lệnh, 35 828 tam giác ở 2n = 8, Cao). Bài kiểm ngân sách nguyên phân (phần mềm,
+Cao, 2n = 8, phát 2×): p50 50 ms trước và sau; p95 dao động mạnh trên máy đang bận (trước 100–167
+ms qua 11 lần, bản cuối 117–200 ms qua 3 lần; bước 16,7 ms), nên đã bỏ vân trên màng tế bào, giảm nhiễu
+còn 1 lớp và bỏ clear coat của NST. Dựng khối protein nhanh hơn nhiều lần (lưới icosphere trực
+tiếp).
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

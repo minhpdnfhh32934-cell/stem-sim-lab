@@ -238,7 +238,15 @@ it without code of its own:
   annotation, highlight. Rule 0 "saturation = data": data roles keep their chart token as albedo
   (`palette.ts` `ROLES`, aligned with the 2D charts); structures are muted (`STRUCTURES`,
   `muted()`). Primitives `habitat.ts` and `instancedTokens.ts` serve the habitats and particle
-  lessons.
+  lessons. Protein blobs are built from a direct indexed icosphere (`icosphere`, same counts as
+  three.js detail 7 / 15, several times faster to build).
+- Surface shading (`src/ui/three/relief.ts`, no texture, no draw call): `withRelief` bumps the
+  normal from one octave of 3D value noise sampled at the object-space position or at a stable
+  vertex attribute (`ChromosomeTube`'s `surf`, so the grain stays on a moving chromatid);
+  `withEdgeShade` darkens solids towards the silhouette by `--m3d-edge-shade`. Used by the
+  mitosis chromatids (+ sheen) and nucleolus, the enzyme blobs (+ seeded lumps and darker
+  valleys kept out of the binding sites) and the dogma polymerase / ribosome (protein blobs).
+  Never on the large membranes (software frame cost).
 - Tags: one look for `LabelLayer` / `TagLayer` and the kit's CSS2D labels (`ui.css`: glass pill,
   ≥ 12 px, tabular numbers, 7 px anchor ring in the part's role colour).
 
