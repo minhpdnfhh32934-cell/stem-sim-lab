@@ -1,6 +1,6 @@
 declare const process: { env: Record<string, string | undefined> };
 import { expect, test, type Page } from '@playwright/test';
-import { enterLab } from './nav';
+import { enterLab, enterStudio } from './nav';
 
 /**
  * Biology Studio, lesson "Nguyên phân 3D" on the lab's own mitosis model: predict → experiment
@@ -69,8 +69,9 @@ async function openMitosisTopic(page: Page): Promise<void> {
   await expect(page.locator('.m3d canvas')).toBeVisible({ timeout: 20_000 });
 }
 
+/** From the launch page: lab → Science Studio → Sinh học. */
 async function openStudioBiology(page: Page): Promise<void> {
-  await page.getByRole('button', { name: /Science Studio/ }).click();
+  await enterStudio(page);
   await page.getByRole('tab', { name: 'Sinh học' }).click();
   await expect(page.getByRole('heading', { name: /^Nguyên phân 3D/ })).toBeVisible();
 }

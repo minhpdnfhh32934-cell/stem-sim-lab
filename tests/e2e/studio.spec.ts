@@ -1,6 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import reactions from '../../data/reactions.json' with { type: 'json' };
 import { fulfillGemini } from './fakeAi';
+import { enterStudio } from './nav';
 
 /**
  * Science Studio end to end (brief flows 1–12; acceptance criteria in
@@ -91,7 +92,7 @@ async function watch(page: Page, quality: 'low' | 'medium' = 'medium'): Promise<
 }
 
 async function openStudio(page: Page, tab?: 'Hóa học' | 'Sinh học' | 'Vật lí' | 'Soạn bài') {
-  await page.getByRole('button', { name: /Science Studio/ }).click();
+  await enterStudio(page);
   // The studio screen is a lazy module, compiled by the dev server on first use (seen
   // 2026-10-20: still "Đang tải mô phỏng…" after 5 s in the full parallel run).
   await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible({
@@ -133,11 +134,11 @@ async function numberIn(cell: Locator): Promise<number> {
 const NOT_IN_DB = /chưa có trong cơ sở dữ liệu đã kiểm chứng/;
 const LESSON_PENDING = /Nội dung bài này chưa được kiểm duyệt/;
 
-test('opens from the launch page; each subject tab shows its own lesson', async ({ page }) => {
+test('opens from the lab; each subject tab shows its own lesson', async ({ page }) => {
   const w = await watch(page);
   await page.goto('/');
   await openStudio(page);
-  const tabs = page.getByRole('tablist').getByRole('tab');
+  const tabs = page.getByRole('tablist', { name: 'Chọn môn trong Studio' }).getByRole('tab');
   await expect(tabs).toHaveText(['Hóa học', 'Sinh học', 'Vật lí', 'Soạn bài']);
 
   const lessons: [string, RegExp][] = [

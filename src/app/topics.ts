@@ -63,7 +63,10 @@ export function openLab(): void {
   useNavigationStore.getState().setScreen('lab');
 }
 
-/** Opens Science Studio (guided Predict–Observe–Explain lessons). */
+/**
+ * Opens Science Studio (guided Predict–Observe–Explain lessons) inside the lab: the topic library
+ * stays beside it. `screen === 'studio'` keeps its meaning for every older caller.
+ */
 export function openStudio(): void {
   closeTeacher();
   sim.shutdown();

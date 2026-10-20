@@ -68,6 +68,8 @@ const en: Messages = {
     comingSoon: 'Coming soon',
     comingSoonHint: 'This topic will be built in a later phase.',
     historyEmpty: 'No simulations yet. Simulations you run will appear here.',
+    studio: 'Science Studio',
+    studioHint: 'Guided lessons',
   },
   chapters: {
     kinematics: 'Kinematics',
@@ -365,6 +367,7 @@ const en: Messages = {
     },
     home: 'Home',
     lab: 'Lab',
+    studio: 'Science Studio — guided lessons',
     teacherTalk: 'AI Teacher — chat',
     teacherBoard: 'AI Teacher — whiteboard lesson',
     theme: 'Switch light / dark theme',
@@ -934,9 +937,6 @@ const en: Messages = {
     teacherTitle: 'AI Teacher',
     teacherBody:
       'Ask questions, get hints and check your understanding with an AI study assistant.',
-    studioTitle: 'Science Studio',
-    studioBody:
-      'Guided lessons: predict, experiment, observe measurements, then explain and save a report.',
     privacy: 'You choose when to share screen context or use an online AI service.',
   },
   studio: {
@@ -951,6 +951,7 @@ const en: Messages = {
       authoring: 'Authoring',
     },
     pick: 'Choose a lesson',
+    backToLab: 'Back to the lab',
     difficulty: {
       intro: 'Getting started',
       core: 'Core',

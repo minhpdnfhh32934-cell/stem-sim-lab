@@ -106,10 +106,11 @@ export function AppShell() {
   const landing = useIsLanding();
   const labHome = useIsHome() && !teacher;
   const home = landing || labHome;
-  // Science Studio, like AI Teacher, owns the whole centre: no lab panels around it.
+  // Science Studio is part of the lab (user decision 2026-10-20): the topic library stays on the
+  // left, the lesson takes the centre. AI Teacher alone owns the whole window.
   const fullPage = teacher || studio;
 
-  const showLeft = !presentation && !fullPage && !landing;
+  const showLeft = !presentation && !teacher && !landing;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
   const showRight = !presentation && !home && !fullPage;
   const showBottom = !presentation && !home && !fullPage && !moduleWithoutBottom;

@@ -1,4 +1,5 @@
 import {
+  Atom,
   CornerDownLeft,
   Keyboard,
   CloudDownload,
@@ -23,7 +24,7 @@ import { SECTIONS } from '@/app/settings/sectionMeta';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
-import { goHome, openLab, openTopic } from '@/app/topics';
+import { goHome, openLab, openStudio, openTopic } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
 import { SETTINGS_SECTIONS, SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { openTeacher, useTeacherStore } from '@/teacher/teacherStore';
@@ -62,6 +63,14 @@ export function CommandPalette() {
         label: t('command.lab'),
         icon: FlaskConical,
         run: openLab,
+      },
+      {
+        id: 'go.studio',
+        group: 'go',
+        label: t('command.studio'),
+        keywords: 'bai hoc huong dan du doan bao cao soan bai guided lesson',
+        icon: Atom,
+        run: openStudio,
       },
       {
         id: 'go.teacher',

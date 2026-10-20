@@ -1,8 +1,17 @@
-import { Dna, FlaskConical, Hammer, Orbit, PencilLine, type LucideIcon } from 'lucide-react';
-import { useMemo } from 'react';
+import {
+  ArrowLeft,
+  Dna,
+  FlaskConical,
+  Hammer,
+  Orbit,
+  PencilLine,
+  type LucideIcon,
+} from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { openLab } from '@/app/topics';
+import { useWorkspaceStore } from '@/app/workspaceStore';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
 import { AuthoringPane } from './authoring/AuthoringPane';
@@ -102,11 +111,18 @@ function SubjectPane({ subject }: { subject: StudioSubject }) {
   );
 }
 
-/** Science Studio: guided lessons per subject on top of the existing engines. */
+/**
+ * Science Studio: guided lessons per subject on top of the existing engines. It is shown inside
+ * the lab, next to the topic library (user decision 2026-10-20).
+ */
 export default function StudioScreen() {
   const t = useT();
   const tab = useStudioStore((s) => s.tab);
   const setTab = useStudioStore((s) => s.setTab);
+  // The library beside the lesson lists the same subject as the studio tab.
+  useEffect(() => {
+    if (tab !== 'authoring') useWorkspaceStore.getState().setSubject(tab);
+  }, [tab]);
   const items = STUDIO_TABS.map((id) => ({
     id,
     label: t(`studio.tabs.${id}`),
@@ -115,8 +131,14 @@ export default function StudioScreen() {
   return (
     <section className="studio" aria-labelledby="studio-title">
       <div className="studio__head">
-        <h1 id="studio-title">{t('studio.title')}</h1>
-        <p className="muted">{t('studio.subtitle')}</p>
+        <div className="studio__head-copy">
+          <h1 id="studio-title">{t('studio.title')}</h1>
+          <p className="muted">{t('studio.subtitle')}</p>
+        </div>
+        <button type="button" className="btn btn--ghost" onClick={openLab}>
+          <ArrowLeft size={15} strokeWidth={1.75} aria-hidden="true" />
+          {t('studio.backToLab')}
+        </button>
       </div>
       <Tabs items={items} value={tab} onChange={setTab} label={t('studio.tabsLabel')} />
       <div className="studio__panel" role="tabpanel" aria-label={t(`studio.tabs.${tab}`)}>
