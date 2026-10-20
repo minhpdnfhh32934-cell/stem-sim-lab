@@ -128,8 +128,24 @@
   --m3d-nucleolus: #5b4a86;
   --m3d-membrane-opacity: 0.14;
   --m3d-rim: 0.7;
-  /* Ground of the 3D habitats (ecology lessons). */
+  /* Ground of the 3D habitats (ecology lessons): the meadow's base. */
   --bio3d-ground: #dde7d3;
+  /* Biology 3D structures (0.7.1 style guide, rule 0 "saturation = data"): proteins, glassware,
+     liquids, the habitat sky, terrain and water stay muted so the data colours (--chart-*) pop.
+     Each terrain/water colour is at least ΔE_OK 0.15 from every chart colour (tokens.test.ts). */
+  --bio3d-protein: #a9b2c4;
+  --bio3d-glass: #e6edf5;
+  --bio3d-liquid: #d5e9f4;
+  --bio3d-sky-top: #dbe7f3;
+  --bio3d-sky-horizon: #f3f6f9;
+  --bio3d-grass: #b5ccb0;
+  --bio3d-grass-2: #c1ceb6;
+  --bio3d-soil: #816f62;
+  --bio3d-rock: #c8cdd3;
+  --bio3d-water: #c1d3d8;
+  /* Spindle fibres (light steel) and the dark theme's rim-light tint of the 3D stage. */
+  --m3d-spindle: #8d99ab;
+  --m3d-rim-tint: var(--subject-biology);
   /* 3D DNA → mRNA → protein: the two DNA backbones, the mRNA backbone, the glass of RNA
      polymerase and the ribosome, tRNA bodies and the polypeptide beads — unlike each other and
      unlike the five base colours (--chart-1 … --chart-5). */
@@ -210,6 +226,18 @@
   --m3d-membrane-opacity: 0.22;
   --m3d-rim: 1;
   --bio3d-ground: #1f2d24;
+  --bio3d-protein: #6f7a90;
+  --bio3d-glass: #2a3646;
+  --bio3d-liquid: #16314a;
+  --bio3d-sky-top: #0d1828;
+  --bio3d-sky-horizon: #1a2838;
+  --bio3d-grass: #33402f;
+  --bio3d-grass-2: #3c4a36;
+  --bio3d-soil: #4a3e31;
+  --bio3d-rock: #4c535d;
+  --bio3d-water: #1f4b66;
+  --m3d-spindle: #b4bfcf;
+  --m3d-rim-tint: var(--subject-biology);
   --dna3d-coding: #a3acbd;
   --dna3d-template: #6fa2c4;
   --dna3d-mrna: #b48be0;
