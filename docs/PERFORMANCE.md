@@ -90,6 +90,17 @@ ms qua 11 lần, bản cuối 117–200 ms qua 3 lần; bước 16,7 ms), nên �
 còn 1 lớp và bỏ clear coat của NST. Dựng khối protein nhanh hơn nhiều lần (lưới icosphere trực
 tiếp).
 
+Làm đẹp nguyên phân/giảm phân (2026-10-21, SwiftShader 1366×768, phát 8 s, 3 lần mỗi cách): nguyên
+phân Cao 2n = 8 ở 2×: trước 125–137 khung, p50 50 ms, p95 100–117 ms; sau 114–132 khung, p50 50 ms,
+p95 100–150 ms (lần đầu mỗi loạt chậm hơn, như trước); 32 lệnh vẽ như cũ. Mặt sau màng tế bào dùng
+Lambert (chỉ ánh sáng khuếch tán) vì nó phủ cả tế bào: bản Standard đầu tiên làm chậm rõ trên phần
+mềm. Giảm phân Nâng cao (không phóng to): như trước (≈ 190–200 khung, p50 33 ms, p95 67–83 ms).
+Giảm phân Cơ bản, kì đầu I–kì giữa I: khung hình phóng vào NST nên màng tế bào phủ cả khung —
+trên phần mềm Cao 140–150 khung, p50 50 ms (trước 33); Trung bình 195 khung (285 khi không phóng
+to). Giống như khi người học tự cuộn phóng to; GPU thật chưa đo. Cập nhật một khung trên CPU
+(2n = 46): p95 0,43–0,47 ms (trước 0,56). Bài `scene.perf.test` (< 2 ms) qua khi chạy riêng; khi
+chạy cả bộ song song trên máy đang bận nó có thể vượt 2 ms — trước thay đổi cũng vậy.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

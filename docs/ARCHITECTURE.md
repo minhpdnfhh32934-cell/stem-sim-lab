@@ -248,7 +248,23 @@ it without code of its own:
   valleys kept out of the binding sites) and the dogma polymerase / ribosome (protein blobs).
   Never on the large membranes (software frame cost).
 - Tags: one look for `LabelLayer` / `TagLayer` and the kit's CSS2D labels (`ui.css`: glass pill,
-  ≥ 12 px, tabular numbers, 7 px anchor ring in the part's role colour).
+  ≥ 12 px, tabular numbers, 7 px anchor ring in the part's role colour). When one label column is
+  full, its least important labels move to the other column before any is left out (`labels.ts`).
+- Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
+  every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
+  relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
+  `shade` attribute through `withVertexShade`: the maternal/paternal colours stay exact); membranes
+  as a rimmed front face over a faint Lambert back face (the cell's volume); spindle fibres light
+  and see-through on LAYER.FX, fading towards the poles (`fibreGeometry` alpha); a glowing
+  centrosome core and chiasma ring (bloom in HDR); the plant wall's fibrous bump in HDR.
+  `palette.ts` maps the theme tokens once for both (structures muted, data colours exact);
+  `tubes.ts` (tube detail, kinetochore, contact shade), `guides.ts` (dashed metaphase-plate ring),
+  `dimensions.ts` (chromosomes drawn 1.25 × larger, same ring count). `TwoSphereProfile`
+  undulates 1.5 % inwards (seeded table, mirror-symmetric across the furrow); `ChromosomeTube`
+  `seams` give a sharp colour change at the model's crossover share. Meiosis framing
+  (`meiosis3d/camera.ts`): in Basic mode prophase I and metaphase I frame their chromosomes
+  (+25 %), meiosis II is seen nearly from the front (`MEIOSIS2_DIR`); stage-to-stage moves glide
+  700 ms and keep their aim through layout changes.
 
 ## 4. Planned modules
 
