@@ -67,7 +67,9 @@ test('save and reopen a .stemsim file', async ({ page }) => {
     mimeType: 'application/json',
     buffer: Buffer.from(text),
   });
-  await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible();
+  // Opening the file loads the biology module again on this fresh page, and its 3D view draws in
+  // software: like every first open of a lazy module, allow up to 20 s (slow CI runners).
+  await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
 });
 
