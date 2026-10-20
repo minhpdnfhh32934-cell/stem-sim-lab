@@ -10,13 +10,13 @@ Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán
 
 Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.
 
-- Số phiên bản ghi nhận: 12 (0.1.0 → 0.7.0).
+- Số phiên bản ghi nhận: 13 (0.1.0 → 0.7.1).
 - Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026).
 - Đã gộp, chưa phát hành: 0.5.1.
 - Đang xét duyệt: 0.7.0.
-- Bản phát triển, không phát hành: 0.1.0.
+- Bản phát triển, không phát hành: 0.1.0, 0.7.1.
 - Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.
-- Phiên bản mới nhất trong dữ liệu: 0.7.0 (Đang xét duyệt).
+- Phiên bản mới nhất trong dữ liệu: 0.7.1 (Bản phát triển, không phát hành).
 
 ## II. Dòng thời gian phát triển từ bản gốc
 
@@ -36,6 +36,7 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 0.5.2 | Đã phát hành | 13/10/2026 (đã xác minh) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | [v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) |
 | 0.6.0 | Đã phát hành | 19/10/2026 (đã xác minh) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | [v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) |
 | 0.7.0 | Đang xét duyệt | Chưa phát hành | — | — |
+| 0.7.1 | Bản phát triển, không phát hành | Chưa phát hành | — | — |
 
 ### Các mốc phát triển
 
@@ -69,6 +70,45 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 19/10/2026 10:48 | Mở PR #21 — G8: bảng dạy, “Khoanh để hỏi”, AI trên máy khác (0.6.0) | PR #21 createdAt 2026-10-19T03:48:53Z (gh pr list); đầu nhánh abc9e0c |
 
 ## III. Chi tiết từng phiên bản
+
+### 0.7.1 (Bản phát triển, không phát hành)
+
+Science Studio chuyển vào trong Phòng thí nghiệm: một lối vào cho mỗi chủ đề, không còn hai chỗ dự đoán cho cùng một bài.
+
+- Trạng thái: Bản phát triển, không phát hành.
+- Kênh phân phối: Không phân phối.
+- Ghi chú trạng thái: Đang làm trên nhánh claude/wizardly-galileo-k3vxcs (20/10/2026): chưa có PR, chưa gộp vào main, chưa phát hành. Chỉ đổi phần web (không đổi Rust), nên chỉ package.json lên 0.7.1; phần lõi vẫn 0.7.0.
+- Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp "Có gì mới").
+
+| Mốc | Thời điểm (giờ VN) | Giá trị gốc |
+| --- | --- | --- |
+| Bắt đầu phát triển | 21/10/2026 06:03 | `2026-10-20T23:03:28+00:00` |
+| Commit đầu tiên | 21/10/2026 06:03 | `2026-10-20T23:03:28+00:00` |
+| Commit cuối cùng | Chưa xác minh được | — |
+| Gộp vào nhánh (merge) | Chưa xác minh được | — |
+| Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
+| Phát hành (GitHub Release) | Chưa xác minh được | — |
+| Tạo tag | Chưa xác minh được | — |
+
+**Tính năng mới**
+
+- Nút Science Studio ở đầu thư viện chủ đề và trong Tìm nhanh (Ctrl+K).
+- Chủ đề có bài hướng dẫn (Rơi tự do, Thư viện phản ứng đã kiểm chứng, Nguyên phân) có nút Học theo bài ở bảng bên phải.
+
+**Thay đổi**
+
+- Trang mở đầu chỉ còn Phòng thí nghiệm và AI Teacher; Science Studio mở từ trong Phòng thí nghiệm, cạnh thư viện chủ đề.
+- Ở chủ đề Rơi tự do, Dự đoán trước dẫn sang bài Science Studio thay vì có một phần dự đoán thứ hai.
+
+**Điểm nổi bật trong app**
+
+- Science Studio nằm ngay trong Phòng thí nghiệm, mở được từ chủ đề đang học.
+
+**Bằng chứng**
+
+- Quyết định của chủ dự án 20/10/2026: giữ tên Science Studio, bỏ thẻ Science Studio ở trang mở đầu (ghi trong CLAUDE.md, docs/ARCHITECTURE.md §3f)
+- firstCommit: 61258ea 2026-10-20T23:03:28+00:00 'feat(studio): embed guided lessons in lab'; tiếp theo 9fb3061 (mở bài từ chủ đề, bỏ dự đoán trùng) và a5661cb (test)
+- lastCommit để null: commit tài liệu của bản này chưa có khi viết mục này
 
 ### 0.7.0 (Đang xét duyệt)
 
@@ -997,6 +1037,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.6.0**: App desktop bản release dựng trên máy người phát triển: chặn điều hướng ra trang ngoài, công thức KaTeX đúng vị trí, mô phỏng 3D mở được (AUDIT)
 - **0.7.0**: 20/10/2026 trên b59cc1a: format, lint, typecheck sạch (prettier chỉ báo hai tệp ngoài kho, không được theo dõi: AGENTS.md, bench.json); 3933/3933 unit test (272 tệp); E2E 102/102 (chromium 72, chromium-3d 29, chromium-3d-perf 1); Rust fmt + clippy -D warnings + 221 test
 - **0.7.0**: Lần chạy E2E đầu tiên có lỗi ngẫu nhiên do thư mục kết quả Playwright nằm trong vùng Vite theo dõi (tệp .html của trace làm trang tải lại giữa chừng) và do chờ quá ngắn khi mở mô-đun lần đầu; đã sửa ở b59cc1a (không bỏ bài kiểm tra nào, không đổi điều được kiểm; lần mở mô-đun đầu tiên được chờ tới 20 s như các bài khác, dự án 3D chạy tối đa 4 luồng)
+- **0.7.1**: E2E đầy đủ (npm run test:e2e): 100 qua, 2 hỏng, 1 không chạy (dự án chromium-3d-perf, phụ thuộc chromium-3d). Hỏng: mitosis3d.spec.ts 'plays through every stage' (hình 3D tự về 2D khi chạy phần mềm) và 'boxes never overlap' (chỉ khi chạy song song; chạy riêng thì qua). Bài đầu hỏng y hệt trên main 433c3a9 trong cùng sandbox, nên không do thay đổi này; chưa chạy trên máy Windows
 
 ## VI. Lịch sử bảo mật, hiệu năng và kết quả kiểm thử
 
@@ -1101,18 +1142,20 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - Lần chạy E2E đầu tiên có lỗi ngẫu nhiên do thư mục kết quả Playwright nằm trong vùng Vite theo dõi (tệp .html của trace làm trang tải lại giữa chừng) và do chờ quá ngắn khi mở mô-đun lần đầu; đã sửa ở b59cc1a (không bỏ bài kiểm tra nào, không đổi điều được kiểm; lần mở mô-đun đầu tiên được chờ tới 20 s như các bài khác, dự án 3D chạy tối đa 4 luồng)
 - Build web, bộ cài Windows (NSIS + MSI, npm run tauri build) và kiểm tra app thật: xem docs/PROGRESS.md hàng '0.7.0'
 
+**0.7.1** (Bản phát triển, không phát hành)
+
+- 20/10/2026 trong sandbox đám mây (Linux) trên a5661cb + tài liệu: npm run check sạch (format, lint, typecheck) và 3942/3942 unit test (274 tệp); npm run format:check sạch
+- E2E đầy đủ (npm run test:e2e): 100 qua, 2 hỏng, 1 không chạy (dự án chromium-3d-perf, phụ thuộc chromium-3d). Hỏng: mitosis3d.spec.ts 'plays through every stage' (hình 3D tự về 2D khi chạy phần mềm) và 'boxes never overlap' (chỉ khi chạy song song; chạy riêng thì qua). Bài đầu hỏng y hệt trên main 433c3a9 trong cùng sandbox, nên không do thay đổi này; chưa chạy trên máy Windows
+
 ## VII. Những vấn đề chưa hoàn thành
 
-### Vấn đề đã biết của bản mới nhất (0.7.0, Đang xét duyệt)
+### Vấn đề đã biết của bản mới nhất (0.7.1, Bản phát triển, không phát hành)
 
-- Bốn bài về quần thể (Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt) mới có hình 3D đơn giản; hình 3D riêng, chi tiết như các bài khác sẽ có trong một bản cập nhật sau.
-- Lời văn và cách vẽ của các hình 3D mới đang chờ giáo viên duyệt. Hình dạng, kích thước, vị trí và chuyển động trong hình 3D chỉ là minh họa; chỉ số lượng và tỉ lệ lấy từ mô hình.
-- Giảm phân 3D chỉ vẽ tế bào động vật và bốn tế bào con bằng nhau (phân chia không đều ở con cái chỉ được ghi chú); chưa có giảm phân ở thực vật.
-- Các vấn đề đã biết của bản 0.6.0 về Gemma và AI qua API vẫn còn (xem ghi chú 0.6.0).
-- Bản Microsoft Store cần nộp gói mới và chờ Microsoft duyệt, nên người dùng Store nhận bản này muộn hơn người dùng bản tải từ GitHub.
+Chưa có mục nào.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
+- **0.7.1** (Bản phát triển, không phát hành): Đang làm trên nhánh claude/wizardly-galileo-k3vxcs (20/10/2026): chưa có PR, chưa gộp vào main, chưa phát hành. Chỉ đổi phần web (không đổi Rust), nên chỉ package.json lên 0.7.1; phần lõi vẫn 0.7.0.
 - **0.7.0** (Đang xét duyệt): Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
@@ -1137,6 +1180,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
+| 0.7.1 | — | — | — | — | `61258ea` → `9fb3061` → `a5661cb` | `claude/wizardly-galileo-k3vxcs` |
 | 0.7.0 | — | — | — | — | `d86c099` → `ff4f63f` → `15ae66c` → `2ea45a6` → `745dea0` → `b361e3c` → `1c00c7c` → `f302cff` → `3773296` → `825a08f` → `b59cc1a` | `feat/0.7` |
 | 0.6.0 | `v0.6.0` | `feab5a8eec14e7ac728a0b5ca75629259ed87a3f` | [Release v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | `511345d` → `f527f18` → `8a3c48d` → `abc9e0c` → `c051a5e` → `cae3487` → `feab5a8` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history`, `feat/local-ai-runtime`, `feat/teacher-board-runtime`, `feat/science-studio`, `fix/release-0.6.0`, `fix/mitosis-card-linux` |
 | 0.5.2 | `v0.5.2` | `c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da` | [Release v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | `f25e3ae` → `c25ad9d` | `feat/ui-polish`, `release/0.5.2` |

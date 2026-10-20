@@ -2,6 +2,24 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## 0.7.1 - Bản phát triển, không phát hành
+
+_Đang làm trên nhánh claude/wizardly-galileo-k3vxcs (20/10/2026): chưa có PR, chưa gộp vào main, chưa phát hành. Chỉ đổi phần web (không đổi Rust), nên chỉ package.json lên 0.7.1; phần lõi vẫn 0.7.0._
+
+_Ghi chú này là bản nháp, chưa được duyệt để công bố._
+
+Science Studio chuyển vào trong Phòng thí nghiệm: một lối vào cho mỗi chủ đề, không còn hai chỗ dự đoán cho cùng một bài.
+
+### Added
+
+- Nút Science Studio ở đầu thư viện chủ đề và trong Tìm nhanh (Ctrl+K).
+- Chủ đề có bài hướng dẫn (Rơi tự do, Thư viện phản ứng đã kiểm chứng, Nguyên phân) có nút Học theo bài ở bảng bên phải.
+
+### Changed
+
+- Trang mở đầu chỉ còn Phòng thí nghiệm và AI Teacher; Science Studio mở từ trong Phòng thí nghiệm, cạnh thư viện chủ đề.
+- Ở chủ đề Rơi tự do, Dự đoán trước dẫn sang bài Science Studio thay vì có một phần dự đoán thứ hai.
+
 ## [Unreleased] - 0.7.0 (Đang xét duyệt)
 
 _Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app._
