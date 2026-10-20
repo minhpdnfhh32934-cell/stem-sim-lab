@@ -213,6 +213,29 @@ disposed on unmount. Tests: pure files next to the code, `view3d/testing.ts` (`e
 E2E `*3d.spec.ts` and `bio3d.spec.ts` in the `chromium-3d` Playwright project (software WebGL),
 budgets in `chromium-3d-perf` (`@perf`).
 
+**Art direction (0.7.1).** One look for all 3D views, applied by the shared path so a lesson gets
+it without code of its own:
+
+- `ThreeHost` puts every scene on one stage (`stage.ts`): a dithered radial backdrop from
+  `--bg-stage` (`backdrop.ts`; a sky gradient for outdoor rigs), the theme's rim and environment
+  strength (`lighting.ts` presets STUDIO / OUTDOOR, `applyStageLook`) and the exposure; it puts
+  objects on render layers (`layers.ts`: SHELL for see-through shells, FX for haze and contact
+  shadows) and sees/picks all of them. Tone mapping stays Khronos Neutral everywhere (ACES / AgX
+  would move the data colours' hue).
+- `quality3d.ts` gains the GPU class (`gpuInfo.ts`) and the post-processing flags. Only High on a
+  discrete GPU loads `postfx.ts` (lazy chunk): 4× MSAA HalfFloat target → GTAO (half resolution,
+  opaque layer only) → bloom (only while a highlight marked `userData.bloom` is visible) →
+  OutputPass; `postfxSupport.ts` turns AO, then bloom, then refraction off after 30 animated
+  frames over 20 ms. High on an integrated or software GPU draws like 0.7.0 High.
+- Biology recipes (`view3d/recipes.ts`): membrane / shell, chromosome, backbone + base pair,
+  protein blob (`proteinBlob.ts`, `noise.ts`), particles, glassware, liquid, organism, terrain,
+  annotation, highlight. Rule 0 "saturation = data": data roles keep their chart token as albedo
+  (`palette.ts` `ROLES`, aligned with the 2D charts); structures are muted (`STRUCTURES`,
+  `muted()`). Primitives `habitat.ts` and `instancedTokens.ts` serve the habitats and particle
+  lessons.
+- Tags: one look for `LabelLayer` / `TagLayer` and the kit's CSS2D labels (`ui.css`: glass pill,
+  ≥ 12 px, tabular numbers, 7 px anchor ring in the part's role colour).
+
 ## 4. Planned modules
 
 | Phase | Module                                                                           | Key decisions                                                                                                                       |

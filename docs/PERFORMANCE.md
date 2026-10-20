@@ -62,6 +62,24 @@ Nguyên tắc: hy sinh độ mượt trước, **không bao giờ âm thầm gi�
 lỗi; hệ bảo toàn theo dõi sai lệch năng lượng (Giai đoạn 1–2); Lotka–Volterra hiển thị sai lệch của
 đại lượng bảo toàn.
 
+**Hậu kỳ 3D theo mức chất lượng (0.7.1)** (`src/ui/three/quality3d.ts`, `postfx.ts`):
+
+| Mức                          | Vẽ thế nào                                                                                                                       |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Thấp                         | Không có 3D (hình 2D), không đổi.                                                                                                |
+| Trung bình                   | Không có hậu kỳ: khử răng cưa của canvas, Neutral, nền dải màu (+1 lệnh vẽ), môi trường, bóng giả.                               |
+| Cao, GPU tích hợp / phần mềm | Như Cao ở 0.7.0 (nhiều đoạn hơn, 10 nhãn, sheen/clear coat), không bóng thật, không hậu kỳ — không nặng hơn trước (Radeon 780M). |
+| Cao, GPU rời                 | Render target HalfFloat 4× MSAA → GTAO ½ độ phân giải → bloom (chỉ khi có vật được làm nổi) → Output; khúc xạ, bóng thật 1024².  |
+
+Bộ canh khung hình: 30 khung hình động liên tiếp > 20 ms thì tắt AO, rồi bloom, rồi khúc xạ — chỉ
+thay đổi hình, không đổi số hay vị trí nào.
+
+Đo 2026-10-20 (SwiftShader, 1366×768, nguyên phân đang phát, 6 s): Thấp p50 16,7 ms / p95 16,7 ms
+(trước 16,7 / 16,8); Trung bình p50 16,7 / p95 33,4 ms (trước 16,7 / 50), 20 lệnh vẽ (trước 19:
+thêm nền), 9 604 tam giác (+2); Cao (phần mềm, không hậu kỳ) p50 33,3 / p95 50,1 ms (trước 33,3 /
+66,6). Chi phí hậu kỳ trên GPU rời chưa đo trên máy thật (ước tính 2–4 ms/khung, 25–35 MB bộ nhớ
+GPU; 0 khi đứng yên).
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
