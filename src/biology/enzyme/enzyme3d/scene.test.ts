@@ -11,8 +11,15 @@ import {
   type EnzymeInputs,
   type EnzymeModel3D,
 } from './binding';
-import { ENZYME_PLACES, I_PLACES, SP_PLACES } from './layout';
-import { buildEnzymeScene, enzymeRadiusAt, type EnzymeScene } from './scene';
+import { ALLO_DIR, ENZYME_PLACES, I_PLACES, SP_PLACES } from './layout';
+import {
+  ENZYME_RELIEF,
+  buildEnzymeScene,
+  enzymeGeometry,
+  enzymeRadiusAt,
+  enzymeReliefMask,
+  type EnzymeScene,
+} from './scene';
 
 const KINDS: Inhibition[] = ['none', 'competitive', 'noncompetitive', 'uncompetitive'];
 const token = () => '#808080';
@@ -98,6 +105,34 @@ describe('3D enzyme scene', () => {
     const l = Math.hypot(...s);
     const at = (other: boolean) => enzymeRadiusAt(s[0]! / l, s[1]! / l, s[2]! / l, other);
     expect(at(true)).toBeLessThan(at(false));
+  });
+
+  it('the surface lumps never reach the pocket or the second site (bound particles keep seats)', () => {
+    const allo = ALLO_DIR;
+    expect(enzymeReliefMask(0, 1, 0, true)).toBe(0);
+    expect(enzymeReliefMask(allo[0], allo[1], allo[2], true)).toBe(0);
+    expect(enzymeReliefMask(0, -1, 0, false)).toBe(1);
+    for (const other of [false, true]) {
+      const g = enzymeGeometry(16, other);
+      const pos = g.getAttribute('position');
+      const col = g.getAttribute('color');
+      const v = new THREE.Vector3();
+      let lumpy = 0;
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        const r = v.length();
+        v.normalize();
+        const plain = enzymeRadiusAt(v.x, v.y, v.z, other);
+        const mask = enzymeReliefMask(v.x, v.y, v.z, other);
+        // Lumps at most ±4.5 % of the radius, and only where the mask allows them.
+        expect(Math.abs(r / plain - 1)).toBeLessThanOrEqual(ENZYME_RELIEF.amplitude * mask + 1e-6);
+        if (Math.abs(r / plain - 1) > 0.005) lumpy++;
+        // Valleys and hollows are shaded darker, never lighter than the plain colour.
+        expect(col.getX(i)).toBeLessThanOrEqual(1);
+      }
+      expect(lumpy).toBeGreaterThan(pos.count / 4);
+      g.dispose();
+    }
   });
 
   it('picking: an enzyme (or what it holds) names the enzyme; a particle names its pool place', () => {

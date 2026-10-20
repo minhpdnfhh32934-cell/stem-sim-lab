@@ -16,9 +16,11 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { solid } from '@/ui/three/materials';
+import { withEdgeShade, withRelief } from '@/ui/three/relief';
 import { pickFirst } from '@/ui/three/pick';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { SceneKit } from '../../view3d/kit';
+import { fbm3 } from '../../view3d/noise';
 import { ROLES } from '../../view3d/palette';
 import { shapeGeometry } from '../../view3d/primitives/classShape';
 import type { Inhibition } from '../enzyme';
@@ -128,6 +130,26 @@ export function enzymeShadeAt(x: number, y: number, z: number, otherSite: boolea
   return Math.max(0.45, c);
 }
 
+/**
+ * Fine lumps of the enzyme's surface (illustration, like the kit's protein blobs): height as a
+ * share of the radius, noise frequency on the unit sphere, seed, and how much darker the
+ * valleys get (cavity shading).
+ */
+export const ENZYME_RELIEF = { amplitude: 0.045, frequency: 2.6, seed: 23, valley: 0.35 } as const;
+
+/**
+ * Where the fine lumps show (0…1): none in the active-site pocket and its lip, nor at the second
+ * site, so a bound particle keeps its seat exactly where the binding layout puts it.
+ */
+export function enzymeReliefMask(x: number, y: number, z: number, otherSite: boolean): number {
+  let m = smooth(L.notchHalf + 0.35, L.notchHalf + 0.75, Math.acos(clamp1(y)));
+  if (otherSite) {
+    const a = Math.acos(clamp1(x * ALLO_DIR[0] + y * ALLO_DIR[1] + z * ALLO_DIR[2]));
+    m *= smooth(0.34, 0.6, a);
+  }
+  return m;
+}
+
 /** The enzyme blob (unit size; seams merged so it shades smoothly; hollows shaded darker). */
 export function enzymeGeometry(segments: number, otherSite: boolean): THREE.BufferGeometry {
   const w = Math.max(24, Math.round(segments * 2));
@@ -142,8 +164,15 @@ export function enzymeGeometry(segments: number, otherSite: boolean): THREE.Buff
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i).normalize();
-    shade.fill(enzymeShadeAt(v.x, v.y, v.z, otherSite), i * 3, i * 3 + 3);
-    v.multiplyScalar(enzymeRadiusAt(v.x, v.y, v.z, otherSite));
+    const f = ENZYME_RELIEF.frequency;
+    const lump =
+      fbm3(v.x * f + 3.1, v.y * f - 1.7, v.z * f + 5.3, ENZYME_RELIEF.seed) *
+      enzymeReliefMask(v.x, v.y, v.z, otherSite);
+    const valley = 1 - ENZYME_RELIEF.valley * Math.max(0, -lump);
+    shade.fill(enzymeShadeAt(v.x, v.y, v.z, otherSite) * valley, i * 3, i * 3 + 3);
+    v.multiplyScalar(
+      enzymeRadiusAt(v.x, v.y, v.z, otherSite) * (1 + ENZYME_RELIEF.amplitude * lump),
+    );
     pos.setXYZ(i, v.x, v.y, v.z);
   }
   g.setAttribute('color', new THREE.BufferAttribute(shade, 3));
@@ -191,9 +220,19 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   };
 
   // ── Materials (theme tokens; the palette's roles) ────────────────────────────────────
-  // Its own material: the blob's vertex shade darkens the pocket.
+  // Its own material, the kit's protein look: the blob's vertex shade darkens the pocket and the
+  // valleys, the silhouette darkens softly (--m3d-edge-shade) so each blob reads as a volume,
+  // fine grain catches the light (illustration). The role colour stays the albedo.
+  const enzymeColor = kit.color(ROLES.enzyme.token);
+  const edgeShade = parseFloat(kit.color('--m3d-edge-shade'));
   const enzymeMat = kit.own(
-    solid(kit.color(ROLES.enzyme.token), o.tier, { roughness: 0.55, sheen: 0.6, clearcoat: 0.2 }),
+    withEdgeShade(
+      withRelief(solid(enzymeColor, o.tier, { roughness: 0.62, sheen: 0.35, clearcoat: 0.1 }), {
+        frequency: 9,
+        height: 0.012,
+      }),
+      { strength: Number.isFinite(edgeShade) ? edgeShade : 0 },
+    ),
   );
   enzymeMat.vertexColors = true;
   const subMat = kit.solid(kit.color(ROLES.substrate.token), { roughness: 0.3, clearcoat: 0.5 });
