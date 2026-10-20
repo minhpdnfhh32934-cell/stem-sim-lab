@@ -1,26 +1,30 @@
 /**
  * The three.js scene of "ADN → mARN → Protein" in 3D: the learner's own DNA as a B-DNA double
- * helix (the helix primitive of `helix.ts`, shared with "Đột biến điểm": one instanced rung half
- * per base, coloured and shaped by base: purines are slabs, pyrimidines bars), the RNA polymerase opening a bubble and building the mRNA on the template
- * strand, then the mRNA (U for T) running through a ribosome while tRNAs bring the amino acids
- * and the polypeptide grows as a chain of beads.
+ * helix (the helix recipe of `helix.ts`, shared with "Đột biến điểm": continuous backbone tubes,
+ * base pairs as two rounded halves split at the midline, coloured and shaped by base: purines are
+ * slabs, pyrimidines bars), the RNA polymerase — a see-through protein cut open towards the
+ * viewer — opening a bubble and building the mRNA on the template strand while the next
+ * nucleotides the template asks for come in, then the mRNA (U for T) running through the cleft
+ * of a two-subunit ribosome while L-shaped tRNAs bring the amino acids and the polypeptide grows
+ * as a chain of beads; the DNA then steps back as context above.
  *
  * Every base, codon, anticodon and amino acid is the model's (`binding.ts`); shapes, sizes and
- * motion are illustration (`layout.ts`). Long sequences draw a window of at most
+ * motion are illustration (`layout.ts`, `machines.ts`). Long sequences draw a window of at most
  * `maxBasePairs` base pairs around the active position (absolute indices kept). One SceneKit
- * owns every geometry and material; `update` writes instance matrices in place (only the base
- * pairs that move), and nothing is allocated per frame.
+ * owns every geometry and material; `update` writes in place only what moves (the backbones of
+ * the two still stretches of the helix are drawn once and turned), and nothing is allocated per
+ * frame.
  */
 import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
+import { mixLinear, muted } from '@/ui/three/color';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { pickFirst } from '@/ui/three/pick';
-import { withRelief } from '@/ui/three/relief';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
-import { glass, setRimAlpha } from '../../view3d/materials';
-import { proteinGeometry } from '../../view3d/recipes';
-import { B_DNA, RISE } from './bdna';
+import { setRimAlpha } from '../../view3d/materials';
+import { basePairMaterial, highlightIntensity, proteinShell } from '../../view3d/recipes';
+import { B_DNA, RISE, TWIST } from './bdna';
 import {
   activeIndex,
   anticodonOf,
@@ -33,33 +37,53 @@ import {
 import type { DogmaPart, DogmaSelection } from './components';
 import {
   BAR,
-  BACKBONE_R,
   BEAD_R,
-  NODE_R,
   PURINE,
   SLAB,
   THICK,
   Writer,
+  baseWidth,
   helixShapes,
   helixSolid,
-  makeStrand,
+  pairPixels,
   readDogmaPalette,
-  type Strand,
+  rungOpacity,
+  rungs,
+  setFade,
+  strandMesh,
+  strandTwin,
+  type StrandMesh,
 } from './helix';
 import {
   LAYOUT,
   beadPose,
   bubbleSpan,
-  mrnaPose,
-  ribosomePose,
+  codonX,
+  dnaPlace,
   dnaPose,
   helixAngle,
+  mrnaPose,
+  nucleotidePose,
+  placeDna,
+  ribosomePose,
+  rigidSpan,
+  strandPose,
   trnaPoses,
   xOf,
+  type DnaPlace,
   type RibosomePose,
+  type RigidSpan,
   type TrnaPose,
   type Vec3,
 } from './layout';
+import {
+  BLOB_SEED,
+  CUT_Z,
+  RIBOSOME,
+  codonFrameGeometry,
+  cutPlane,
+  trnaBodyGeometry,
+} from './machines';
 
 export interface DogmaSceneOptions {
   tier: QualityTier;
@@ -69,6 +93,8 @@ export interface DogmaSceneOptions {
   maxBasePairs: number;
   /** Reads a CSS colour token. */
   token: (name: string) => string;
+  /** Highlights glow in HDR and bloom (High tier with post-processing). */
+  hdr?: boolean;
 }
 
 export interface DogmaLabelAnchor {
@@ -78,6 +104,8 @@ export interface DogmaLabelAnchor {
 
 /** Fewest beads drawn, whatever the window. */
 const MIN_BEADS = 12;
+/** Free nucleotides drawn on their way in (the next ones the template asks for). */
+const INCOMING = 3;
 
 interface TrnaSlot {
   group: THREE.Group;
@@ -89,6 +117,16 @@ interface TrnaSlot {
   beadMesh: THREE.Mesh;
   bead: THREE.MeshStandardMaterial;
   meshes: THREE.Mesh[];
+}
+
+/** One DNA strand's backbone: the still stretches left and right of the bubble, and the bubble. */
+interface DnaStrand {
+  /** Resting helix tube; its mesh draws the stretch left of the bubble. */
+  rest: StrandMesh;
+  /** The same tube's stretch right of the bubble (its own turn). */
+  right: THREE.Mesh;
+  /** The bubble and its edges, rebuilt as they move. */
+  open: StrandMesh;
 }
 
 export interface DogmaScene {
@@ -127,6 +165,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     segments: o.segments,
     maxParticles: o.maxBasePairs,
     token: o.token,
+    hdr: o.hdr ?? false,
   });
   const pal = readDogmaPalette(o.token);
   const n = m.coding.length;
@@ -141,7 +180,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     (pal.bases as Record<string, string | undefined>)[b ?? ''] ?? pal.trna;
   const scene = kit.scene;
 
-  // ── Shared shapes (the helix primitive, `helix.ts`) ──────────────────────────────────────
+  // ── Shared shapes (the helix recipe, `helix.ts`) ─────────────────────────────────────────
   const shapes = helixShapes(kit, o.tier);
   const halfGeo = shapes.half;
   const rodGeo = shapes.rod;
@@ -155,75 +194,83 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     return mat;
   };
 
-  // ── DNA ────────────────────────────────────────────────────────────────────────────────
-  const dnaHalves = kit.instanced(halfGeo, solidOwn(NEUTRAL), 2 * W);
-  const strandOf = (color: string): Strand => makeStrand(kit, shapes, color, o.tier, W);
-  const coding = strandOf(pal.coding);
-  const template = strandOf(pal.template);
+  // ── DNA (under one parent: it steps back as context while the ribosome works) ───────────
+  const dnaRoot = new THREE.Object3D();
+  dnaRoot.name = 'dna';
+  scene.add(dnaRoot);
+  const place: DnaPlace = { k: 1, x0: 0, dy: 0, dz: 0 };
+  const dnaHalves = rungs(kit, shapes, 2 * W, dnaRoot);
+  const AXIS = { y: 0, z: 0 };
+  /** Most nucleotides in the moving stretch (bubble, its edges and the joints). */
+  const openCap = Math.min(
+    W + 2,
+    Math.ceil(LAYOUT.hybrid + LAYOUT.behind + LAYOUT.ahead + 2 * LAYOUT.edge) + 8,
+  );
+  const dnaStrand = (role: 'coding' | 'template'): DnaStrand => {
+    const rest = strandMesh(kit, role, W, AXIS, dnaRoot);
+    return {
+      rest,
+      right: strandTwin(kit, rest, dnaRoot),
+      open: strandMesh(kit, role, openCap, AXIS, dnaRoot),
+    };
+  };
+  const coding = dnaStrand('coding');
+  const template = dnaStrand('template');
 
   // ── mRNA ───────────────────────────────────────────────────────────────────────────────
-  const mrnaHalves = kit.instanced(halfGeo, solidOwn(NEUTRAL), W);
-  const mrna = strandOf(pal.mrna);
+  const mrnaHalves = rungs(kit, shapes, W, scene);
+  const mrna = strandMesh(kit, 'mrna', W, null);
+  const rungMat = basePairMaterial(kit, NEUTRAL);
 
   // ── RNA polymerase and ribosome (see-through protein blobs, illustrative shapes) ────────
-  /**
-   * The kit's lumpy protein blob (seeded, so always the same shape) as a see-through shell: the
-   * mRNA and tRNAs inside stay visible; hollows are shaded darker (the blob's vertex colours)
-   * and fine grain catches the light. Not a real structure (the caption says so).
-   */
-  const shell = (color: string, opacity: number) => {
-    const m = own(
-      withRelief(glass(color, { opacity, rim: { color, strength: 0.55, alpha: 0.45 } }), {
-        frequency: 3.2,
-        height: 0.025,
-      }),
-    );
-    m.vertexColors = true;
-    return m;
-  };
-  const BLOB_SEED = { polymerase: 11, small: 29, large: 37 } as const;
-  const polyMat = shell(pal.polymerase, 0.2);
-  const polymerase = kit.mesh(proteinGeometry(kit, BLOB_SEED.polymerase), polyMat);
-  polymerase.renderOrder = 2;
-  const smallMat = shell(pal.ribosome, 0.2);
-  const largeMat = shell(pal.ribosome, 0.16);
-  const small = kit.mesh(proteinGeometry(kit, BLOB_SEED.small), smallMat);
-  const large = kit.mesh(proteinGeometry(kit, BLOB_SEED.large), largeMat);
-  small.renderOrder = 2;
-  large.renderOrder = 2;
+  const polymerase = proteinShell(kit, {
+    seed: BLOB_SEED.polymerase,
+    color: muted(pal.polymerase, o.token('--bg-stage'), 0.15, 0.8),
+    cut: cutPlane(CUT_Z.polymerase),
+  });
+  const polyMat = polymerase.material as THREE.MeshStandardMaterial;
+  const small = proteinShell(kit, { seed: BLOB_SEED.small, color: pal.ribosome });
+  const large = proteinShell(kit, {
+    seed: BLOB_SEED.large,
+    color: mixLinear(pal.ribosome, o.token('--text'), 0.2),
+    cut: cutPlane(CUT_Z.large),
+  });
+  const smallMat = small.material as THREE.MeshStandardMaterial;
+  const largeMat = large.material as THREE.MeshStandardMaterial;
+  const SHELL_OPACITY = 0.55;
 
-  // ── tRNA slots (at most two at once) ───────────────────────────────────────────────────
-  const capsuleArm = kit.capsule(0.11, 1.05);
-  const capsuleBody = kit.capsule(0.3, 1.95);
+  // ── Free nucleotides coming in (bases from the sequence; the path is illustration) ─────
+  const incoming = kit.instanced(
+    halfGeo,
+    solidOwn(NEUTRAL, { roughness: 0.4, clearcoat: 0.3 }),
+    INCOMING,
+  );
+  incoming.visible = false;
+
+  // ── The codon being read: a thin glowing frame (HDR, blooming on High) ──────────────────
+  const glowMat = own(new THREE.MeshBasicMaterial({ color: pal.highlight }));
+  glowMat.color.multiplyScalar(highlightIntensity(kit));
+  glowMat.userData.bloom = kit.hdr;
+  const codonFrame = kit.mesh(codonFrameGeometry(kit, RISE), glowMat);
+  codonFrame.visible = false;
+
+  // ── tRNA slots (at most two at once): an L-shaped body, its amino acid, the anticodon ───
+  const trnaBody = trnaBodyGeometry(kit);
   const makeSlot = (): TrnaSlot => {
     const group = new THREE.Group();
     scene.add(group);
-    const body = fading(solidOwn(pal.trna, { roughness: 0.5, sheen: 0.4 }));
-    const bead = fading(solidOwn(pal.peptide));
-    const arm = kit.mesh(capsuleArm, body, group);
-    arm.rotation.z = Math.PI / 2;
-    arm.position.set(0, LAYOUT.trnaArmY, 0);
-    const trunk = kit.mesh(capsuleBody, body, group);
-    trunk.position.set(0, (LAYOUT.trnaArmY + LAYOUT.trnaBodyBottom) / 2, 0);
-    trunk.scale.set(1, 1, 0.6);
-    const lobes = [-1, 1].map((side) => {
-      const lobe = kit.mesh(kit.sphere(0.6), body, group);
-      lobe.scale.set(0.26, 0.3, 0.2);
-      lobe.position.set(side * 0.42, LAYOUT.trnaArmY - 0.75, 0);
-      return lobe;
-    });
-    const stem = kit.mesh(rodGeo, body, group);
-    stem.scale.set(0.07, LAYOUT.trnaBodyBottom - LAYOUT.trnaAcceptorY, 0.07);
-    stem.position.set(0, (LAYOUT.trnaBodyBottom + LAYOUT.trnaAcceptorY) / 2 + 0.15, 0);
+    const body = fading(solidOwn(pal.trna, { roughness: 0.48, sheen: 0.4, clearcoat: 0.25 }));
+    const bead = fading(solidOwn(pal.peptide, { roughness: 0.35, clearcoat: 0.6 }));
+    const shape = kit.mesh(trnaBody, body, group);
     const beadMesh = kit.mesh(beadGeo, bead, group);
     beadMesh.scale.setScalar(BEAD_R + 0.02);
     beadMesh.position.set(0, LAYOUT.trnaAcceptorY, 0);
     const antiMats: THREE.MeshStandardMaterial[] = [];
     const anti = [-1, 0, 1].map((k) => {
-      const mat = fading(solidOwn(pal.bases.A));
+      const mat = fading(solidOwn(pal.bases.A, { roughness: 0.4, clearcoat: 0.3 }));
       antiMats.push(mat);
       const h = kit.mesh(halfGeo, mat, group);
-      // From the arm up to the codon's base tips (illustrative pairing contact).
+      // From the anticodon loop up to the codon's base tips (illustrative pairing contact).
       const len = LAYOUT.stick;
       h.position.set(k * RISE, LAYOUT.trnaArmY + len / 2, 0);
       h.rotation.z = Math.PI / 2;
@@ -239,7 +286,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       body,
       beadMesh,
       bead,
-      meshes: [arm, trunk, ...lobes, stem, beadMesh, ...anti],
+      meshes: [shape, beadMesh, ...anti],
     };
   };
   const slots: [TrnaSlot, TrnaSlot] = [makeSlot(), makeSlot()];
@@ -248,8 +295,8 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     { codon: -1, at: [0, 0, 0], opacity: 0, carries: false },
   ];
 
-  // ── Polypeptide ─────────────────────────────────────────────────────────────────────────
-  const beadMat = solidOwn(pal.peptide, { roughness: 0.35, clearcoat: 0.6 });
+  // ── Polypeptide (one colour, clear-coated beads, a gentle curve; no folding) ───────────
+  const beadMat = solidOwn(pal.peptide, { roughness: 0.32, clearcoat: 0.7 });
   const beads = kit.instanced(beadGeo, beadMat, beadCap);
   const bonds = kit.instanced(rodGeo, beadMat, Math.max(1, beadCap - 1));
 
@@ -279,6 +326,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   const tmp: Vec3 = [0, 0, 0];
   const tmp2: Vec3 = [0, 0, 0];
   const rib: RibosomePose = { x: 0, opacity: 0, smallLift: 0, largeDrop: 0 };
+  const span: RigidSpan = { left: 0, right: 0, leftTurn: 0, rightTurn: 0 };
   // Scratch of `pointOf` (it may write into the callers' scratch vectors).
   const pa: Vec3 = [0, 0, 0];
   const pb: Vec3 = [0, 0, 0];
@@ -286,8 +334,18 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   const pd: Vec3 = [0, 0, 0];
   let newest = -1;
   let shownBeads = 0;
+  /** mRNA nucleotides of the window in its tube now. */
+  let mrnaCount = 0;
 
   const local = (i: number) => i - win.from;
+
+  /** A DNA base's backbone point and tip where they are drawn now; returns how open it is. */
+  function dnaAt(i: number, strand: 'coding' | 'template', mo: DogmaMoment, b: Vec3, t: Vec3) {
+    const e = dnaPose(i, strand, mo, b, t);
+    placeDna(place, b);
+    placeDna(place, t);
+    return e;
+  }
 
   function colorWindow(): void {
     for (let i = win.from; i < win.to; i++) {
@@ -300,35 +358,74 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   }
 
+  /** The resting helix of the window (both backbone tubes; drawn once per window, then turned). */
+  function buildRest(): void {
+    for (const [strand, s] of [
+      ['coding', coding],
+      ['template', template],
+    ] as const) {
+      const t = s.rest.tube;
+      t.count = W;
+      t.caps.start = true;
+      t.caps.end = true;
+      for (let i = win.from - 1; i <= win.to; i++) {
+        strandPose(i, strand, 0, TWIST * i, back, tip);
+        t.set(i - win.from, back);
+      }
+      t.build();
+    }
+  }
+
+  /**
+   * Backbones at a moment: the still stretches turn as one piece each (`rigidSpan`); the bubble
+   * and its edges (with one joint pair on each side) are rebuilt. The joints have the same
+   * neighbours in both tubes, so they meet without a seam.
+   */
+  function layBackbones(mo: DogmaMoment): void {
+    rigidSpan(mo, span);
+    const whole = !Number.isFinite(span.left);
+    const a = whole ? win.to - 1 : Math.max(win.from, span.left - 1);
+    const b = whole ? win.to - 1 : Math.min(win.to - 1, span.right + 1);
+    for (const [strand, s] of [
+      ['coding', coding],
+      ['template', template],
+    ] as const) {
+      s.rest.mesh.rotation.x = span.leftTurn;
+      s.right.rotation.x = span.rightTurn;
+      s.rest.tube.show(0, local(a));
+      s.rest.tube.show(local(b), W - 1, s.right.geometry);
+      const t = s.open.tube;
+      if (whole || b <= a) {
+        t.count = 0;
+        t.show(0, 0);
+        continue;
+      }
+      t.count = b - a + 1;
+      t.caps.start = a === win.from;
+      t.caps.end = b === win.to - 1;
+      for (let i = a - 1; i <= b + 1; i++) {
+        dnaPose(i, strand, mo, back, tip);
+        t.set(i - a, back);
+      }
+      t.build();
+      t.show(0, t.count - 1);
+    }
+  }
+
   /** Lays out base pairs [lo, hi) of the DNA (both strands) for a moment. */
   function layDna(lo: number, hi: number, mo: DogmaMoment): void {
     const a = Math.max(win.from, lo);
     const b = Math.min(win.to, hi);
     if (a >= b) return;
-    for (const [strand, s, id] of [
-      ['coding', coding, 0],
-      ['template', template, 1],
+    for (const [strand, id] of [
+      ['coding', 0],
+      ['template', 1],
     ] as const) {
+      const seq = strand === 'coding' ? m.coding : m.template;
       for (let i = a; i < b; i++) {
         dnaPose(i, strand, mo, back, tip);
-        const k = local(i);
-        const base = (strand === 'coding' ? m.coding : m.template)[i] ?? '';
-        w.slab(dnaHalves, 2 * k + id, back, tip, PURINE.has(base) ? SLAB : BAR);
-        w.ball(s.node, k, back, NODE_R);
-        if (i > win.from) {
-          dnaPose(i - 1, strand, mo, prevBack, tmp);
-          w.rod(s.seg, k - 1, prevBack, back, BACKBONE_R);
-        }
-        // The segment to the next base pair moves with this one too.
-        if (i === b - 1 && i + 1 < win.to) {
-          dnaPose(i + 1, strand, mo, tmp, tmp2);
-          w.rod(s.seg, k, back, tmp, BACKBONE_R);
-        }
+        w.half(dnaHalves, 2 * local(i) + id, back, tip, baseWidth(seq[i]));
       }
-      s.seg.instanceMatrix.needsUpdate = true;
-      s.node.instanceMatrix.needsUpdate = true;
-      s.seg.boundingSphere = null;
-      s.node.boundingSphere = null;
     }
     dnaHalves.instanceMatrix.needsUpdate = true;
     dnaHalves.boundingSphere = null;
@@ -336,36 +433,42 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
 
   /** Lays out mRNA bases [lo, hi) for a moment (bases not made yet are hidden). */
   function layMrna(lo: number, hi: number, mo: DogmaMoment): void {
+    const t = mrna.tube;
+    const count = Math.max(0, Math.min(W, mo.made - win.from));
+    const grew = count !== mrnaCount;
+    mrnaCount = count;
+    t.count = count;
     const a = Math.max(win.from, lo);
     const b = Math.min(win.to, hi);
-    if (a >= b) return;
     for (let i = a; i < b; i++) {
       const k = local(i);
       if (!mrnaPose(i, mo, back, tip)) {
         w.hide(mrnaHalves, k);
-        w.hide(mrna.node, k);
-        if (k > 0) w.hide(mrna.seg, k - 1);
         continue;
       }
-      const base = m.mrna[i] ?? '';
-      w.slab(mrnaHalves, k, back, tip, PURINE.has(base) ? SLAB : BAR);
-      w.ball(mrna.node, k, back, NODE_R * 0.9);
-      if (i > win.from) {
-        mrnaPose(i - 1, mo, prevBack, tmp);
-        w.rod(mrna.seg, k - 1, prevBack, back, BACKBONE_R * 0.9);
-      }
-      if (i === b - 1 && i + 1 < win.to) {
-        if (mrnaPose(i + 1, mo, tmp, tmp2)) w.rod(mrna.seg, k, back, tmp, BACKBONE_R * 0.9);
-        else w.hide(mrna.seg, k);
-      }
+      w.half(mrnaHalves, k, back, tip, baseWidth(m.mrna[i]));
+      t.set(k, back);
     }
-    for (const mesh of [mrnaHalves, mrna.node, mrna.seg]) {
-      mesh.instanceMatrix.needsUpdate = true;
-      mesh.boundingSphere = null;
+    mrnaHalves.instanceMatrix.needsUpdate = true;
+    mrnaHalves.boundingSphere = null;
+    if (count < 2) {
+      t.show(0, 0);
+      return;
     }
+    // The ghosts: the base before the window, or a mirrored one; past the newest base, mirrored.
+    if (win.from > 0 && mrnaPose(win.from - 1, mo, back, tip)) t.set(-1, back);
+    else t.extrapolateStart();
+    if (win.from + count < mo.made && mrnaPose(win.from + count, mo, back, tip)) t.set(count, back);
+    else t.extrapolateEnd();
+    t.caps.start = win.from === 0;
+    t.caps.end = win.from + count === mo.made;
+    // Segments that touch the moved bases (a segment depends on four points).
+    t.build(local(a) - 2, local(b) + 1);
+    if (grew) t.build(count - 4, count - 1);
+    if (a <= win.from) t.build(0, 2);
+    t.show(0, count - 1);
   }
 
-  /** Base pairs that move with the bubble / the leaving mRNA at a moment (null: none). */
   /**
    * Base pairs that move at a moment (null: none). While the polymerase works, the whole DNA
    * turns about its axis (`helixAngle`); while the bubble closes, the DNA from the bubble on.
@@ -382,7 +485,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     const lead = mo.polymerase - LAYOUT.hybrid;
     return [Math.floor(lead - LAYOUT.exit) - 1, Math.ceil(mo.polymerase) + 2];
   }
-  const span = (
+  const span2 = (
     a: [number, number] | null,
     b: [number, number] | null,
   ): [number, number] | null => {
@@ -392,32 +495,65 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   };
 
   function placeMachines(mo: DogmaMoment): void {
-    // RNA polymerase around the bubble.
+    // The DNA steps back while the ribosome works.
+    dnaPlace(mo, xOf(win.from), place);
+    dnaRoot.position.set(place.x0 * (1 - place.k), place.dy, place.dz);
+    dnaRoot.scale.setScalar(place.k);
+    // RNA polymerase around the bubble, cut open towards the viewer.
     const on = mo.polymeraseOn;
     polymerase.visible = on > 0.01;
     if (polymerase.visible) {
       const { lo, hi } = bubbleSpan(mo);
       const cx = xOf((lo + hi) / 2);
-      polymerase.position.set(cx, -0.35 + (1 - on) * 1.2, 0);
-      polymerase.scale.set(((hi - lo + 2) * RISE) / 2 + 1, 3, 2.3);
-      polyMat.opacity = 0.2 * on;
-      setRimAlpha(polyMat, 0.45 * on);
+      polymerase.position.set(cx, -0.35 + (1 - on) * 1.2, -0.2);
+      polymerase.scale.set(((hi - lo + 2) * RISE) / 2, 2.5, 1.55);
+      polyMat.opacity = SHELL_OPACITY * on;
+      setRimAlpha(polyMat, 0.4 * on);
     }
-    // Ribosome on the codon being read.
+    // The next nucleotides the template asks for, coming in.
+    let shown = 0;
+    for (let k = 0; k < INCOMING; k++) {
+      const j = mo.made + k;
+      const d = j < n ? nucleotidePose(mo, k, back) : 0;
+      if (d <= 0) continue;
+      const s = Math.min(1, (3 - d) / 0.8) * Math.min(1, on);
+      tip[0] = back[0];
+      tip[1] = back[1] + LAYOUT.stick * 0.8 * s;
+      tip[2] = back[2];
+      const base = m.mrna[j] ?? '';
+      if (s <= 0.01) continue;
+      w.slab(incoming, shown, back, tip, baseWidth(base) * s, THICK * s);
+      incoming.setColorAt(shown, baseColor.get(base) ?? grey);
+      shown++;
+    }
+    incoming.count = shown;
+    incoming.visible = shown > 0;
+    if (shown > 0) {
+      incoming.instanceMatrix.needsUpdate = true;
+      if (incoming.instanceColor) incoming.instanceColor.needsUpdate = true;
+      incoming.boundingSphere = null;
+    }
+    // Ribosome on the codon being read: the mRNA runs through the cleft of its two subunits.
     ribosomePose(m, mo, rib);
     const ribOn = rib.opacity > 0.01;
     small.visible = ribOn;
     large.visible = ribOn;
     if (ribOn) {
-      small.position.set(rib.x, LAYOUT.mrnaLineY + 0.95 + rib.smallLift, 0);
-      small.scale.set(2, 0.78, 1.45);
-      large.position.set(rib.x, LAYOUT.mrnaLineY - 2.3 - rib.largeDrop, 0);
-      large.scale.set(2.35, 1.85, 1.7);
-      smallMat.opacity = 0.2 * rib.opacity;
-      largeMat.opacity = 0.16 * rib.opacity;
-      setRimAlpha(smallMat, 0.45 * rib.opacity);
-      setRimAlpha(largeMat, 0.45 * rib.opacity);
+      small.position.set(rib.x, LAYOUT.mrnaLineY + RIBOSOME.small.y + rib.smallLift, -0.1);
+      small.scale.set(...RIBOSOME.small.scale);
+      large.position.set(rib.x, LAYOUT.mrnaLineY + RIBOSOME.large.y - rib.largeDrop, -0.25);
+      large.scale.set(...RIBOSOME.large.scale);
+      smallMat.opacity = SHELL_OPACITY * rib.opacity;
+      largeMat.opacity = SHELL_OPACITY * rib.opacity;
+      setRimAlpha(smallMat, 0.4 * rib.opacity);
+      setRimAlpha(largeMat, 0.4 * rib.opacity);
     }
+    // The codon being read glows in a thin frame.
+    const c = mo.phase === 'translation' ? m.t.codons[mo.step] : undefined;
+    codonFrame.visible =
+      c !== undefined && rib.opacity > 0.3 && c.pos >= win.from && c.pos + 2 < win.to;
+    if (c && codonFrame.visible)
+      codonFrame.position.set(codonX(m, mo.step), LAYOUT.mrnaLineY - LAYOUT.stick / 2, 0.24);
     // tRNAs.
     trnaPoses(m, mo, poses);
     for (let k = 0; k < 2; k++) {
@@ -428,8 +564,8 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       if (!visible) continue;
       if (slot.codon !== pose.codon) {
         slot.codon = pose.codon;
-        const c = m.t.codons[pose.codon];
-        const anti = c ? (anticodonOf(c) ?? '') : '';
+        const cd = m.t.codons[pose.codon];
+        const anti = cd ? (anticodonOf(cd) ?? '') : '';
         for (let j = 0; j < 3; j++) slot.antiMats[j]?.color.set(baseHex(anti[j]));
         // Purine slabs, pyrimidine bars: the same shape cue as the bases they pair with.
         for (let j = 0; j < 3; j++)
@@ -471,12 +607,12 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     switch (sel.kind) {
       case 'base': {
         if (sel.index < win.from || sel.index >= win.to) return null;
-        dnaPose(sel.index, 'coding', mo, pa, pb);
-        dnaPose(sel.index, 'template', mo, pc, pd);
+        dnaAt(sel.index, 'coding', mo, pa, pb);
+        dnaAt(sel.index, 'template', mo, pc, pd);
         out[0] = pa[0];
         out[1] = (pa[1] + pc[1]) / 2;
         out[2] = (pa[2] + pc[2]) / 2;
-        return Math.max(1.25, Math.hypot(pa[1] - pc[1], pa[2] - pc[2]) / 2 + 0.25);
+        return Math.max(1.25 * place.k, Math.hypot(pa[1] - pc[1], pa[2] - pc[2]) / 2 + 0.25);
       }
       case 'mrnaBase': {
         if (sel.index < win.from || sel.index >= win.to || !mrnaPose(sel.index, mo, pa, pb))
@@ -511,8 +647,8 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       mat.emissive.set(on ? pal.highlight : '#000000');
       mat.emissiveIntensity = on ? 0.45 : 1;
     };
-    glow(coding.mat, part === 'coding');
-    glow(template.mat, part === 'template');
+    glow(coding.rest.mat, part === 'coding');
+    glow(template.rest.mat, part === 'template');
     glow(mrna.mat, part === 'mrna');
     glow(polyMat, part === 'polymerase');
     glow(smallMat, part === 'ribosome');
@@ -541,6 +677,8 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     win = nextWin;
     if (full) {
       colorWindow();
+      buildRest();
+      mrnaCount = -1;
       layDna(win.from, win.to, mo);
       layMrna(win.from, win.to, mo);
       dnaDirty = dnaRange(mo);
@@ -548,12 +686,13 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     } else {
       // Only what moves: the bubble and the new mRNA (and where they were last time).
       const nowDna = dnaRange(mo);
-      const d = span(dnaDirty, nowDna);
+      const d = span2(dnaDirty, nowDna);
       if (d) layDna(d[0], d[1], mo);
       dnaDirty = nowDna;
       const nowMrna = mrnaRange(mo);
-      const r = span(mrnaDirty, nowMrna);
+      const r = span2(mrnaDirty, nowMrna);
       if (r) layMrna(r[0], r[1], mo);
+      else if (mo.made - win.from !== mrnaCount) layMrna(win.to, win.to, mo);
       mrnaDirty = nowMrna;
       // A jump in time (the slider): everything between the two moments moved too.
       if (Math.abs(prev.polymerase - mo.polymerase) > 1 && mo.phase !== 'translation') {
@@ -567,9 +706,18 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
         layMrna(win.from, win.to, mo);
       }
     }
+    layBackbones(mo);
     placeMachines(mo);
     placeRing();
+    // Picking may come before the next frame: world matrices follow the moment now.
+    scene.updateMatrixWorld();
   }
+
+  // Thin rungs shimmer far away: they fade as the camera backs off (the backbones stay).
+  scene.onBeforeRender = (renderer, _scene, camera) => {
+    const d = Math.hypot(camera.position.y - place.dy, camera.position.z - place.dz);
+    setFade(rungMat, rungOpacity(pairPixels(renderer, camera, d, place.k)));
+  };
 
   function pick(ray: THREE.Raycaster): DogmaSelection | null {
     const pickables: THREE.Object3D[] = [
@@ -577,12 +725,13 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       mrnaHalves,
       beads,
       bonds,
-      coding.seg,
-      coding.node,
-      template.seg,
-      template.node,
-      mrna.seg,
-      mrna.node,
+      coding.rest.mesh,
+      coding.right,
+      coding.open.mesh,
+      template.rest.mesh,
+      template.right,
+      template.open.mesh,
+      mrna.mesh,
       polymerase,
       small,
       large,
@@ -603,9 +752,11 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     }
     if (obj === beads && id >= 0) return { kind: 'residue', codon: newest - id };
     if (obj === bonds) return { kind: 'part', part: 'polypeptide' };
-    if (obj === coding.seg || obj === coding.node) return { kind: 'part', part: 'coding' };
-    if (obj === template.seg || obj === template.node) return { kind: 'part', part: 'template' };
-    if (obj === mrna.seg || obj === mrna.node) return { kind: 'part', part: 'mrna' };
+    if (obj === coding.rest.mesh || obj === coding.right || obj === coding.open.mesh)
+      return { kind: 'part', part: 'coding' };
+    if (obj === template.rest.mesh || obj === template.right || obj === template.open.mesh)
+      return { kind: 'part', part: 'template' };
+    if (obj === mrna.mesh) return { kind: 'part', part: 'mrna' };
     if (obj === polymerase) return { kind: 'part', part: 'polymerase' };
     if (obj === small || obj === large) return { kind: 'part', part: 'ribosome' };
     for (const s of slots)
@@ -638,7 +789,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
           }
         }
         i = Math.min(win.to - 1, Math.max(win.from, i));
-        dnaPose(i, part, mo, out, tip);
+        dnaAt(i, part, mo, out, tip);
         return true;
       }
       case 'polymerase': {
@@ -697,22 +848,38 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   ): void {
     const mo = cur;
     if (!mo || n === 0) return;
-    const cx = Math.min(xOf(win.to - 1), Math.max(xOf(win.from), target.x));
+    // Base indices around the camera's target: on the mRNA (unscaled) and on the DNA (stepped
+    // back while the ribosome works).
+    const around = (x: number) => Math.min(xOf(win.to - 1), Math.max(xOf(win.from), x));
+    const cx = around(target.x);
     tmp[0] = cx;
-    tmp[1] = 0;
+    tmp[1] = LAYOUT.mrnaLineY;
     tmp[2] = 0;
     tmp2[0] = cx + RISE;
-    tmp2[1] = 0;
+    tmp2[1] = LAYOUT.mrnaLineY;
     tmp2[2] = 0;
     const px = layer.spacing(tmp, tmp2);
-    if (px <= 0) return;
-    const centre = Math.round(cx / RISE);
-    const half = Math.ceil(width / px / 2) + 4;
-    const lo = Math.max(win.from, centre - half);
-    const hi = Math.min(win.to, centre + half + 1);
+    const dxDna = around(place.x0 + (target.x - place.x0) / place.k);
+    tmp[0] = dxDna;
+    tmp[1] = 0;
+    tmp2[0] = dxDna + RISE;
+    tmp2[1] = 0;
+    placeDna(place, tmp);
+    placeDna(place, tmp2);
+    const pxDna = layer.spacing(tmp, tmp2);
+    if (px <= 0 && pxDna <= 0) return;
+    const rangeOf = (centreX: number, step: number) => {
+      const centre = Math.round(centreX / RISE);
+      const half = Math.ceil(width / Math.max(1e-6, step) / 2) + 4;
+      return {
+        lo: Math.max(win.from, centre - half),
+        hi: Math.min(win.to, centre + half + 1),
+      };
+    };
+    const rna = rangeOf(cx, px);
+    const dna = rangeOf(dxDna, pxDna);
     // Letters once neighbouring bases are a tag cell apart on screen.
-    const letters = px >= 10;
-    if (letters) {
+    if (px >= 10) {
       // tRNA anticodons and the amino acids they carry.
       for (const s of slots) {
         if (!s.group.visible || s.codon < 0) continue;
@@ -748,8 +915,8 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
         beadPose(m, mo, k, back);
         layer.add(aa.three, back[0], back[1], back[2] + 0.35, 'word', 4);
       }
-      // mRNA, then both DNA strands.
-      for (let i = lo; i < hi; i++) {
+      // The mRNA.
+      for (let i = rna.lo; i < rna.hi; i++) {
         if (!mrnaPose(i, mo, back, tip)) continue;
         layer.add(
           m.mrna[i] ?? '',
@@ -759,36 +926,62 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
           'letter',
         );
       }
+    }
+    if (pxDna >= 10) {
+      // Both DNA strands.
       for (const strand of ['coding', 'template'] as const) {
         const seq = strand === 'coding' ? m.coding : m.template;
-        for (let i = lo; i < hi; i++) {
+        for (let i = dna.lo; i < dna.hi; i++) {
           const e = dnaPose(i, strand, mo, back, tip);
           const mx = (back[0] + tip[0]) / 2;
           const my = (back[1] + tip[1]) / 2;
           const mz = (back[2] + tip[2]) / 2;
           // In the helix, only the bases on the camera's side (the far ones are behind it).
-          if (e < 0.5 && my * (eye.y - my) + mz * (eye.z - mz) < 0) continue;
-          layer.add(seq[i] ?? '', mx, my, mz, 'letter');
+          const ey = (eye.y - place.dy) / place.k;
+          const ez = (eye.z - place.dz) / place.k;
+          if (e < 0.5 && my * (ey - my) + mz * (ez - mz) < 0) continue;
+          tmp[0] = mx;
+          tmp[1] = my;
+          tmp[2] = mz;
+          placeDna(place, tmp);
+          layer.add(seq[i] ?? '', tmp[0], tmp[1], tmp[2], 'letter');
         }
       }
     }
+    const at = (x: number, y: number, z = 0): Vec3 => {
+      tmp[0] = x;
+      tmp[1] = y;
+      tmp[2] = z;
+      return placeDna(place, tmp);
+    };
     // Positions (1-based, the model's own) along a ruler above the helix.
-    const steps = [1, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
-    const every = steps.find((s) => s * px >= 34) ?? 10000;
-    const first = Math.max(every, Math.ceil((lo + 1) / every) * every);
-    if (lo === 0) layer.add(fmt(1), xOf(0), LAYOUT.rulerY, 0, 'tick', 2);
-    for (let p = first; p <= hi; p += every)
-      layer.add(fmt(p), xOf(p - 1), LAYOUT.rulerY, 0, 'tick', 3);
+    if (pxDna > 0) {
+      const steps = [1, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+      const every = steps.find((s) => s * pxDna >= 34) ?? 10000;
+      const first = Math.max(every, Math.ceil((dna.lo + 1) / every) * every);
+      if (dna.lo === 0) {
+        const p = at(xOf(0), LAYOUT.rulerY);
+        layer.add(fmt(1), p[0], p[1], p[2], 'tick', 2);
+      }
+      for (let q = first; q <= dna.hi; q += every) {
+        const p = at(xOf(q - 1), LAYOUT.rulerY);
+        layer.add(fmt(q), p[0], p[1], p[2], 'tick', 3);
+      }
+    }
     // Strand ends.
     if (win.from === 0) {
-      layer.add('5′', xOf(0) - 0.75, 1.15, 0, 'tick');
-      layer.add('3′', xOf(0) - 0.75, -1.15, 0, 'tick');
+      let p = at(xOf(0) - 0.75, 1.15);
+      layer.add('5′', p[0], p[1], p[2], 'tick');
+      p = at(xOf(0) - 0.75, -1.15);
+      layer.add('3′', p[0], p[1], p[2], 'tick');
       if (mo.made > 0 && mrnaPose(0, mo, back, tip))
         layer.add('5′', back[0] - 0.6, back[1], back[2], 'tick');
     }
     if (win.to === n) {
-      layer.add('3′', xOf(n - 1) + 0.75, 1.15, 0, 'tick');
-      layer.add('5′', xOf(n - 1) + 0.75, -1.15, 0, 'tick');
+      let p = at(xOf(n - 1) + 0.75, 1.15);
+      layer.add('3′', p[0], p[1], p[2], 'tick');
+      p = at(xOf(n - 1) + 0.75, -1.15);
+      layer.add('5′', p[0], p[1], p[2], 'tick');
     }
   }
 
@@ -822,7 +1015,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       if (!mo || i < win.from || i >= win.to) return null;
       if (strand === 'mrna') {
         if (!mrnaPose(i, mo, back, tip)) return null;
-      } else dnaPose(i, strand, mo, back, tip);
+      } else dnaAt(i, strand, mo, back, tip);
       const u = 2 / 3;
       return [
         back[0] + (tip[0] - back[0]) * u,
@@ -835,6 +1028,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     },
     drawStats: () => drawStats(scene),
     dispose: () => {
+      scene.onBeforeRender = () => undefined;
       kit.dispose();
     },
   };

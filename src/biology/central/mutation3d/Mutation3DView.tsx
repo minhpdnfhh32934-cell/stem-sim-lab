@@ -72,6 +72,12 @@ export interface Mutation3DDebug {
 /** Number of pulses of the outlines after the mutation changes. */
 const PULSES = 4;
 
+/** The two lanes of the picture (tags at their plates' corners). */
+const LANE_NAME = {
+  normal: L('Bình thường', 'Normal'),
+  mutated: L('Đột biến', 'Mutated'),
+} as const;
+
 function tokenReader(): (name: string) => string {
   const css = getComputedStyle(document.documentElement);
   // Theme tokens only; the neutral fallback is for environments without the stylesheet.
@@ -274,7 +280,10 @@ function Mutation3DScene({
     const hh = h.height();
     const safe = { left: i.left, top: i.top, right: w - i.right, bottom: hh - i.bottom };
     tags.begin(h.camera, w, hh, safe);
-    sc.tags(tags, h.camera.position, h.controls.target, w - i.left - i.right, fmt);
+    sc.tags(tags, h.camera.position, h.controls.target, w - i.left - i.right, fmt, {
+      normal: Lz(LANE_NAME.normal),
+      mutated: Lz(LANE_NAME.mutated),
+    });
     tags.end();
     layer.update(
       sc.labelAnchors().map((a) => ({ id: a.id, text: Lz(MUTATION_PARTS[a.id]), point: a.point })),
@@ -392,6 +401,7 @@ function Mutation3DScene({
       segments: tier.sphereSegments,
       maxBasePairs: quality.maxInstances,
       token: tokenReader(),
+      hdr: quality.bloom,
     });
     const before = sceneRef.current;
     sceneRef.current = sc;
@@ -403,8 +413,8 @@ function Mutation3DScene({
       frameCamera(h, ui.camera);
       framedRef.current = h;
     } else if (before && ui.camera === 'site') {
-      // The site moved: glide to it.
-      frameCamera(h, 'site', true);
+      // The site moved: glide to it (at once while the learner holds the camera).
+      frameCamera(h, 'site', !h.dragging());
     }
     h.request();
     const unsub = useMutation3D.subscribe((s, prev) => {

@@ -144,6 +144,19 @@ describe('3D point-mutation scene', () => {
     mis.dispose();
   });
 
+  it('a premature stop ends the mutated chain with a flat cap; other changes do not', () => {
+    const cases: [Mutation, boolean][] = [
+      [{ kind: 'substitution', pos: 12, base: 'T' }, true], // AAA → TAA: nonsense
+      [{ kind: 'substitution', pos: 8, base: 'C' }, false], // silent
+      [{ kind: 'substitution', pos: 15, base: 'A' }, false], // missense
+    ];
+    for (const [m, cap] of cases) {
+      const sc = build(m);
+      expect(sc.drawn().endCap, `${m.kind} at ${String(m.pos)}`).toBe(cap);
+      sc.dispose();
+    }
+  });
+
   it('picking: a base pair of either helix, a bead, a bracket; nothing off the picture', () => {
     const m: Mutation = { kind: 'substitution', pos: 12, base: 'T' };
     const sc = build(m);

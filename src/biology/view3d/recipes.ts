@@ -15,9 +15,10 @@
  */
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { mixLinear } from '@/ui/three/color';
+import { deepen, mixLinear } from '@/ui/three/color';
 import { LAYER } from '@/ui/three/layers';
 import { withRim } from '@/ui/three/materials';
+import { withRelief } from '@/ui/three/relief';
 import type { SceneKit, Vec3 } from './kit';
 import { noiseTexture, fbm3 } from './noise';
 import { ROLES, structureColor, type BioRole } from './palette';
@@ -358,6 +359,89 @@ export function protein(
     mesh.renderOrder = 3;
   }
   return mesh;
+}
+
+export interface ProteinShellOptions {
+  seed: number;
+  /** Body colour (default --bio3d-protein). */
+  color?: string;
+  /** Opacity (default 0.55: what is inside must show). */
+  opacity?: number;
+  /**
+   * Cut the shell open (world-space plane: what lies on its negative side is not drawn) so the
+   * inside faces the camera; the inner wall is drawn too, darker in its hollows.
+   */
+  cut?: THREE.Plane;
+}
+
+/**
+ * A see-through protein whose inside must show (RNA polymerase around its bubble, a ribosome
+ * subunit around its tRNAs): the seeded blob at opacity 0.55 with a rim, fine grain that catches
+ * the light, soft sheen and a faint clear coat on High. Its material is its own (the view fades
+ * it and makes it glow when picked), and it may be cut open by a plane: the inner wall is then
+ * drawn darker, so the hollow reads as a hollow. Drawn after the opaque parts, kept out of
+ * ambient occlusion. Illustration only.
+ */
+export function proteinShell(
+  kit: SceneKit,
+  o: ProteinShellOptions,
+  parent: THREE.Object3D = kit.scene,
+): THREE.Mesh {
+  const color = o.color ?? structureColor(tok.bind(null, kit), 'protein');
+  const base: THREE.MeshStandardMaterialParameters = {
+    color,
+    roughness: 0.55,
+    metalness: 0,
+    vertexColors: true,
+    transparent: true,
+    opacity: o.opacity ?? 0.55,
+    depthWrite: false,
+    ...(o.cut ? { side: THREE.DoubleSide, clippingPlanes: [o.cut] } : {}),
+  };
+  const m = physical(kit)
+    ? new THREE.MeshPhysicalMaterial({
+        ...base,
+        sheen: 0.35,
+        sheenRoughness: 0.6,
+        sheenColor: new THREE.Color(mixLinear(color, '#ffffff', 0.4)),
+        clearcoat: 0.15,
+        clearcoatRoughness: 0.45,
+      })
+    : new THREE.MeshStandardMaterial(base);
+  // On the light stage a darker outline (--m3d-shell-ink) keeps the pale shell readable.
+  const ink = themeNumber(kit, '--m3d-shell-ink', 0);
+  const rim = {
+    color,
+    strength: 0.45,
+    alpha: 0.4,
+    ...(ink > 0
+      ? {
+          ink: { color: deepen(color, 0.28, 3.4, 0.085), amount: 0.8 * ink, power: 1.8, fill: 0.4 },
+        }
+      : {}),
+  };
+  // The rim replaces the shader hook; relief and the inner wall chain onto it.
+  const mat = kit.own(withRelief(withRim(m, rim), { frequency: 5, height: 0.018 }));
+  if (o.cut) innerWall(mat, 0.45);
+  const mesh = kit.mesh(proteinGeometry(kit, o.seed), mat, parent);
+  mesh.userData.layer = LAYER.SHELL;
+  mesh.renderOrder = 3;
+  return mesh;
+}
+
+/** Darkens the back faces of a cut-open shell (its inner wall) by `shade` (lighting only). */
+function innerWall(material: THREE.MeshStandardMaterial, shade: number): void {
+  const previous = material.onBeforeCompile.bind(material);
+  material.onBeforeCompile = (shader, renderer) => {
+    previous(shader, renderer);
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <color_fragment>',
+      `#include <color_fragment>
+diffuseColor.rgb *= gl_FrontFacing ? 1.0 : ${shade.toFixed(3)};`,
+    );
+  };
+  const key = material.customProgramCacheKey.bind(material);
+  material.customProgramCacheKey = () => `${key()}|simlab-inner`;
 }
 
 /** A thin ring in a role's colour around a protein: its data state (bound substrate, inhibitor). */

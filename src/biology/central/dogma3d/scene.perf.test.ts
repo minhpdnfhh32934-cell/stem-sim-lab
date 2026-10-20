@@ -15,10 +15,12 @@ const TIERS = [
 
 /**
  * Most triangles drawn at any moment for the 300-bp gene, measured on the CPU with `drawStats`
- * (2026-10-20): all 300 base pairs, the mRNA and up to 99 beads. High draws rounder rungs,
- * nodes and beads. The budget allows 5 %; a bigger change must update this table on purpose.
+ * (2026-10-21, 0.7.1 beauty pass: continuous backbone tubes instead of a node sphere per
+ * nucleotide — fewer triangles; L-shaped tRNAs, cut-open protein shells): all 300 base pairs, the
+ * mRNA and up to 99 beads. High draws rounder rungs, tubes and beads. The budget allows 5 %; a
+ * bigger change must update this table on purpose.
  */
-const TRIANGLES: Record<string, number> = { medium: 197388, high: 437192 };
+const TRIANGLES: Record<string, number> = { medium: 158880, high: 374036 };
 /** Draw calls: one per instanced set or machine part, never one per base. */
 const CALLS = 32;
 

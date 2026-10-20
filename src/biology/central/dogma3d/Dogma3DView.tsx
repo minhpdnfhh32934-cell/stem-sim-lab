@@ -327,7 +327,10 @@ function Dogma3DScene({
     const p = placement(h, mode, VIEW_DIR);
     if (p) h.place(p, { animate });
   };
-  /** "Theo dõi": the camera moves with the machine, keeping the learner's angle and zoom. */
+  /**
+   * "Theo dõi": the camera moves with the machine, keeping the learner's angle and zoom — with the
+   * polymerase as it goes; to the ribosome with a 700 ms ease each time it settles on a codon.
+   */
   const follow = (h: ThreeHost) => {
     const sc = sceneRef.current;
     if (!sc || h.moving()) return;
@@ -338,12 +341,15 @@ function Dogma3DScene({
     const dy = f.center[1] - t.y;
     if (Math.abs(dx) < 1e-6 && Math.abs(dy) < 1e-6) return;
     const p = h.pose();
-    h.place({
-      target: f.center,
-      position: [p.position[0] + dx, p.position[1] + dy, p.position[2]],
-      min: h.controls.minDistance,
-      max: h.controls.maxDistance,
-    });
+    h.place(
+      {
+        target: f.center,
+        position: [p.position[0] + dx, p.position[1] + dy, p.position[2]],
+        min: h.controls.minDistance,
+        max: h.controls.maxDistance,
+      },
+      { animate: mo.phase === 'translation' },
+    );
   };
 
   const labelsRef = useRef<LabelLayer | null>(null);
@@ -466,6 +472,7 @@ function Dogma3DScene({
       segments: tier.sphereSegments,
       maxBasePairs: quality.maxInstances,
       token: tokenReader(),
+      hdr: quality.bloom,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);

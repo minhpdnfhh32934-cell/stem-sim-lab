@@ -109,6 +109,8 @@ export class ThreeHost {
   private insets: Insets = NO_INSETS;
   private raf = 0;
   private tween: { from: CameraPose; to: Placement; start: number } | null = null;
+  /** The learner is dragging the camera (orbit or pinch) right now. */
+  private held = false;
   private readonly cleanups: (() => void)[] = [];
   private disposed = false;
   private readonly opts: () => ThreeHostOptions;
@@ -153,9 +155,19 @@ export class ThreeHost {
     const onChange = () => {
       this.request();
     };
+    const onStart = () => {
+      this.held = true;
+    };
+    const onEnd = () => {
+      this.held = false;
+    };
     this.controls.addEventListener('change', onChange);
+    this.controls.addEventListener('start', onStart);
+    this.controls.addEventListener('end', onEnd);
     this.cleanups.push(() => {
       this.controls.removeEventListener('change', onChange);
+      this.controls.removeEventListener('start', onStart);
+      this.controls.removeEventListener('end', onEnd);
     });
     this.raycaster.params.Line = { threshold: 0.12 };
     this.listen();
@@ -269,6 +281,11 @@ export class ThreeHost {
   /** True while an animated camera move is running. */
   moving(): boolean {
     return this.tween !== null;
+  }
+
+  /** True while the learner drags the camera (a view should not glide away under their hand). */
+  dragging(): boolean {
+    return this.held;
   }
 
   /** Re-measures the controls over the canvas; tells the view when the safe area moved. */

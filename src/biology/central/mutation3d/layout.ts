@@ -1,9 +1,9 @@
 /**
  * Where things go in the 3D view of "Đột biến điểm" (pure maths, no three.js). Both helices
  * follow the B-DNA proportions of `bdna.ts` (one turn = 10 base pairs, 3,4 nm; 2 nm across; scene
- * unit 1 nm). Everything else — the rows, the bulge of an insertion, the gap of a deletion, the
- * brackets and the bead chains — is illustration (DATA_REVIEW MUT3D-*). Positions are written into
- * `out` vectors.
+ * unit 1 nm). Everything else — the two lanes (one per DNA, on faint plates), the bulge of an
+ * insertion, the gap of a deletion, the brackets and the bead chains — is illustration
+ * (DATA_REVIEW MUT3D-*). Positions are written into `out` vectors.
  *
  * Axes: the DNA runs along +x (slot s at x = s · 0,34 nm, coding strand 5′ → 3′ left to right), y
  * is up. From the top: the normal mRNA (its bases facing down to its DNA) and its codon brackets,
@@ -18,20 +18,23 @@ export type { Vec3 };
 
 /** Illustrative layout (scene units; the helices themselves are 1 unit = 1 nm). */
 export const LAYOUT = {
-  /** Axes of the two helices. */
-  helixY: { normal: 3.2, mutated: 0 } as Record<HelixId, number>,
+  /** Axes of the two helices (far enough apart that one lane's letters never meet the other's). */
+  helixY: { normal: 3.9, mutated: 0 } as Record<HelixId, number>,
   /** mRNA backbones: above the normal helix, below the mutated one. */
-  mrnaY: { normal: 5.15, mutated: -1.95 } as Record<HelixId, number>,
+  mrnaY: { normal: 5.85, mutated: -1.95 } as Record<HelixId, number>,
   /** Codon brackets beside each mRNA (away from its DNA). */
-  bracketY: { normal: 5.55, mutated: -2.35 } as Record<HelixId, number>,
+  bracketY: { normal: 6.25, mutated: -2.35 } as Record<HelixId, number>,
   /** Bracket end ticks, towards the mRNA. */
   tick: 0.22,
   /** Length of an mRNA base (a half rung). */
   stick: 0.75,
-  /** Ruler of positions, between the two helices. */
-  rulerY: 1.6,
-  /** Protein chains, side by side. */
-  chainY: { normal: -3.3, mutated: -4.25 } as Record<HelixId, number>,
+  /** Ruler of positions, between the two lanes. */
+  rulerY: 1.95,
+  /** Protein chains, side by side under the lanes. */
+  chainY: { normal: -3.75, mutated: -4.7 } as Record<HelixId, number>,
+  /** The lanes' plates: behind the helices, a margin around each lane. */
+  plateZ: -1.45,
+  plateMargin: 0.38,
   /** How far the bulge of an insertion comes out towards the viewer (z of its middle). */
   bulgeDepth: 1.85,
   /** Half width of the bulge per inserted base (it never is narrower than `bulgeMinHalf`). */
@@ -158,6 +161,14 @@ export function beadPoint(model: MutationModel3D, helix: HelixId, k: number, out
   return setVec(out, xOf(beadSlot(model, k)), LAYOUT.chainY[helix], 0);
 }
 
+/** A lane's plate (helix, mRNA and brackets of one DNA): bottom and top y. */
+export function laneSpan(helix: HelixId): { lo: number; hi: number } {
+  const m = LAYOUT.plateMargin;
+  return helix === 'normal'
+    ? { lo: LAYOUT.helixY.normal - RADIUS - m, hi: LAYOUT.bracketY.normal + m }
+    : { lo: LAYOUT.bracketY.mutated - m, hi: LAYOUT.helixY.mutated + RADIUS + m };
+}
+
 /** Top and bottom of the picture (camera framing). */
-export const PICTURE_TOP = LAYOUT.bracketY.normal + 0.4;
+export const PICTURE_TOP = LAYOUT.bracketY.normal + LAYOUT.plateMargin + 0.1;
 export const PICTURE_BOTTOM = LAYOUT.chainY.mutated - 0.9;
