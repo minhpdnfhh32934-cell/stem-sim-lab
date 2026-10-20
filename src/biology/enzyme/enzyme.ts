@@ -32,6 +32,53 @@ export function rate(p: EnzymeParams, s: number): number {
   return (vmax * s) / (km + s);
 }
 
+/** Fractions of the total enzyme in each of its forms (they add up to 1). */
+export interface EnzymeSpecies {
+  /** Free enzyme. */
+  E: number;
+  /** Enzyme–substrate complex: the only form that makes product. */
+  ES: number;
+  /** Enzyme with inhibitor bound (competitive: in the active site; non-competitive: elsewhere). */
+  EI: number;
+  /** Enzyme holding both substrate and inhibitor (non- and uncompetitive): makes no product. */
+  ESI: number;
+}
+
+/**
+ * How the enzyme is shared between its forms at a substrate concentration [S], from the same
+ * rapid-equilibrium (quasi-steady-state) assumptions as `rate` (Cornish-Bowden, Fundamentals of
+ * Enzyme Kinetics, linear inhibition with one constant Kᵢ). With s = [S]/Km and i = [I]/Kᵢ:
+ *
+ *   none:            E : ES             = 1 : s
+ *   competitive:     E : ES : EI        = 1 : s : i
+ *   non-competitive: E : ES : EI : ESI  = 1 : s : i : s·i
+ *   uncompetitive:   E : ES : ESI       = 1 : s : s·i
+ *
+ * Since v = kcat·[ES] and Vmax = kcat·[E]total, ES = v / Vmax for every type (tested).
+ */
+export function enzymeSpecies(p: EnzymeParams, S: number): EnzymeSpecies {
+  const s = Math.max(0, S) / p.km;
+  const i = p.kind === 'none' ? 0 : Math.max(0, p.inhibitor) / p.ki;
+  const w = { E: 1, ES: s, EI: 0, ESI: 0 };
+  if (p.kind === 'competitive') w.EI = i;
+  if (p.kind === 'noncompetitive') {
+    w.EI = i;
+    w.ESI = s * i;
+  }
+  if (p.kind === 'uncompetitive') w.ESI = s * i;
+  const total = w.E + w.ES + w.EI + w.ESI;
+  return { E: w.E / total, ES: w.ES / total, EI: w.EI / total, ESI: w.ESI / total };
+}
+
+/**
+ * End of the time course shown (both views): long enough to use up most of the substrate,
+ * [S]₀/Vmax (zero order) plus a few Km/Vmax, with the apparent constants.
+ */
+export function timeCourseEnd(p: EnzymeParams, s0: number): number {
+  const a = apparent(p);
+  return (s0 + 5 * a.km) / a.vmax;
+}
+
 /** Principal branch of the Lambert W function (Halley iteration), x ≥ −1/e. */
 export function lambertW(x: number): number {
   if (x < -1 / Math.E) throw new RangeError('lambertW: x < −1/e');

@@ -1,79 +1,42 @@
 import { Suspense, lazy, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
-import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
-import { BSRC, L, usePublishCard } from '../common';
+import { L, usePublishCard } from '../common';
 import { MoreInBasic, Range } from '../ui';
+import { useNo3dNotice, useNo3dReason } from '../view3d/support';
 import { apparent, type Inhibition } from './enzyme';
+import { ENZYME_CARD } from './enzymeCard';
 import { useEnzyme, type EnzymeState } from './store';
-import { useShow3d } from '../view3d/support';
-import { Bio3DToolbar } from '../view3d/switch';
 import { EnzymeChips } from './chips';
 import { KIND_NAME, noInhibitor, paramsOf, useEnzymeData } from './data';
+import { Enzyme3DSwitch } from './enzyme3d/Enzyme3DSwitch';
+import { useEnzyme3D } from './enzyme3d/store';
 import '../bio.css';
 
-// three.js and the 3D beaker load only when the 3D view is shown.
-const Enzyme3D = lazy(() => import('./Enzyme3D').then((m) => ({ default: m.Enzyme3D })));
+// three.js and the 3D reaction volume load only when the 3D view is shown.
+const Enzyme3DView = lazy(() =>
+  import('./enzyme3d/Enzyme3DView').then((m) => ({ default: m.Enzyme3DView })),
+);
 
-const ENZYME_CARD: ScienceCardData = {
-  title: L('Động học enzyme Michaelis–Menten', 'Michaelis–Menten enzyme kinetics'),
-  model: L(
-    'Tốc độ phản ứng ban đầu theo phương trình Michaelis–Menten, ảnh hưởng của chất ức chế theo các dạng chuẩn. Tiến trình [S](t) dùng nghiệm chính xác qua hàm Lambert W và được đối chiếu với tích phân số DOPRI5.',
-    'Initial rate from the Michaelis–Menten equation, with the standard inhibition forms. The time course [S](t) uses the exact Lambert W solution, cross-checked with DOPRI5.',
-  ),
-  equations: [
-    { tex: 'v = \\dfrac{V_{\\max}[S]}{K_m + [S]}' },
-    { tex: '\\dfrac{1}{v} = \\dfrac{K_m}{V_{\\max}}\\cdot\\dfrac{1}{[S]} + \\dfrac{1}{V_{\\max}}' },
-    {
-      tex: '\\alpha = 1 + \\dfrac{[I]}{K_i}',
-      label: L('Hệ số ức chế', 'Inhibition factor'),
-    },
-    {
-      tex: 'K_m^{app} = \\alpha K_m,\\quad V_{\\max}^{app} = V_{\\max}',
-      label: L('Ức chế cạnh tranh', 'Competitive inhibition'),
-    },
-    {
-      tex: 'K_m^{app} = K_m,\\quad V_{\\max}^{app} = V_{\\max}/\\alpha',
-      label: L('Ức chế không cạnh tranh', 'Non-competitive inhibition'),
-    },
-    {
-      tex: 'K_m^{app} = K_m/\\alpha,\\quad V_{\\max}^{app} = V_{\\max}/\\alpha',
-      label: L('Ức chế phi cạnh tranh', 'Uncompetitive inhibition'),
-    },
-    { tex: '[S](t) = K_m\\,W\\!\\left(\\dfrac{[S]_0}{K_m}\\,e^{([S]_0 - V_{\\max}t)/K_m}\\right)' },
-  ],
-  assumptions: [
-    L(
-      'Trạng thái giả dừng: [E] ≪ [S]; phản ứng một chiều S → P; nhiệt độ và pH không đổi.',
-      'Quasi-steady state: [E] ≪ [S]; irreversible S → P; constant temperature and pH.',
-    ),
-    L(
-      'Chất ức chế thuận nghịch, dạng tuyến tính đơn giản (một hằng số Kᵢ).',
-      'Reversible inhibitor, simple linear forms (one constant Kᵢ).',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Công thức chính xác. Test tự động: v = Vmax/2 tại [S] = Km; Km, Vmax biểu kiến; Lambert W khớp DOPRI5.',
-    'Exact formulas. Automated tests: v = Vmax/2 at [S] = Km; apparent Km, Vmax; Lambert W matches DOPRI5.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.cornish, BSRC.schnell, BSRC.sgk10],
-};
-
+/**
+ * "Động học enzyme": the 3D view (default) or the 2D plots, by the lesson store's saved
+ * `view3d`. The 2D page takes over when WebGL is missing or lost, or on the Low quality tier.
+ */
 export function MichaelisMentenStage() {
-  usePublishCard(ENZYME_CARD);
-  const { show3d } = useShow3d('enzyme');
-  if (show3d)
+  const view3d = useEnzyme((s) => s.view3d);
+  const reason = useNo3dReason(useEnzyme3D((s) => s.webglFailed));
+  const notice = useNo3dNotice(view3d, reason);
+  if (view3d && !reason)
     return (
       <Suspense fallback={<div className="bio-view" />}>
-        <Enzyme3D />
+        <Enzyme3DView />
       </Suspense>
     );
-  return <MichaelisMenten2D />;
+  return <MichaelisMenten2D notice={notice} />;
 }
 
-function MichaelisMenten2D() {
+function MichaelisMenten2D({ notice }: { notice: string | undefined }) {
+  usePublishCard(ENZYME_CARD);
   const Lz = useLocalized();
   const st = useEnzyme();
   const app = apparent(paramsOf(st));
@@ -83,7 +46,8 @@ function MichaelisMenten2D() {
     <div className="bio-view">
       <div className="chem-overlay">
         <EnzymeChips />
-        <Bio3DToolbar lesson="enzyme" />
+        <Enzyme3DSwitch />
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
       <div className="bio-stage-chart">
         {st.view === 'rate' ? (

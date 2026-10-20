@@ -175,7 +175,7 @@ export const michaelisMenten: ModuleView = {
   Panel: MichaelisMentenPanel,
   Bottom: MichaelisMentenBottom,
   bottomTitle: L('Đồ thị Lineweaver–Burk', 'Lineweaver–Burk plot'),
-  state: bindStore(useEnzyme, ['vmax', 'km', 'kind', 'inhibitor', 'ki', 's0', 'view']),
+  state: bindStore(useEnzyme, ['vmax', 'km', 'kind', 'inhibitor', 'ki', 's0', 'view', 'view3d']),
 };
 export const diffusionOsmosis: ModuleView = {
   title: L('Khuếch tán & thẩm thấu', 'Diffusion & osmosis'),

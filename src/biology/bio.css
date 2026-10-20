@@ -204,6 +204,11 @@
 .bio-stage-chart .chart {
   height: 100%;
 }
+/* The controls over a 2D plot stay on top when they wrap onto a second row (the time course adds
+   a chip): the plot below must never take their clicks. */
+.bio-view > .chem-overlay {
+  z-index: 1;
+}
 
 /* Mitosis 3D view (src/biology/division/mitosis3d). Controls are at least --target (40 px). */
 .m3d__gl {
@@ -717,8 +722,9 @@
   align-items: center;
   gap: 4px;
 }
-/* A class's colour and its shape cue (the same as its tokens and bar in the picture). */
-.men3d__swatch {
+/* A class's (or a role's) colour and its shape cue, as in the picture (Mendel, enzyme 3D). */
+.men3d__swatch,
+.bio3d-swatch {
   display: inline-block;
   width: 11px;
   height: 11px;
@@ -726,28 +732,36 @@
   background: var(--swatch);
 }
 .men3d__swatch--sphere,
-.men3d__swatch--ring {
+.bio3d-swatch--sphere,
+.men3d__swatch--ring,
+.bio3d-swatch--ring {
   border-radius: 50%;
 }
-.men3d__swatch--ring {
+.men3d__swatch--ring,
+.bio3d-swatch--ring {
   border: 3px solid var(--swatch);
   background: transparent;
 }
-.men3d__swatch--cube {
+.men3d__swatch--cube,
+.bio3d-swatch--cube {
   border-radius: 2px;
 }
-.men3d__swatch--diamond {
+.men3d__swatch--diamond,
+.bio3d-swatch--diamond {
   transform: rotate(45deg) scale(0.85);
 }
-.men3d__swatch--cone {
+.men3d__swatch--cone,
+.bio3d-swatch--cone {
   border: 0;
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
-.men3d__swatch--capsule {
+.men3d__swatch--capsule,
+.bio3d-swatch--capsule {
   width: 7px;
   border-radius: 4px;
 }
-.men3d__swatch--star {
+.men3d__swatch--star,
+.bio3d-swatch--star {
   border: 0;
   clip-path: polygon(
     50% 0,
@@ -761,4 +775,24 @@
     2% 35%,
     39% 35%
   );
+}
+/* 3D enzyme kinetics (src/biology/enzyme/enzyme3d): the role legend with the particle scale, and
+   the enzyme counts under the player. */
+.enz3d__legend {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.enz3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.enz3d__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.enz3d__row > * {
+  pointer-events: auto;
 }

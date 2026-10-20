@@ -1,7 +1,14 @@
 /** The enzyme lesson's model data, shared by the 2D and 3D views and their chips. */
 import { useMemo } from 'react';
 import { L } from '../common';
-import { apparent, rate, substrateAt, substrateNumeric, type Inhibition } from './enzyme';
+import {
+  rate,
+  substrateAt,
+  substrateNumeric,
+  timeCourseEnd,
+  type EnzymeParams,
+  type Inhibition,
+} from './enzyme';
 import { useEnzyme, type EnzymeState } from './store';
 
 export const KIND_NAME: Record<Inhibition, ReturnType<typeof L>> = {
@@ -11,7 +18,9 @@ export const KIND_NAME: Record<Inhibition, ReturnType<typeof L>> = {
   uncompetitive: L('Ức chế phi cạnh tranh (uncompetitive)', 'Uncompetitive'),
 };
 
-export const paramsOf = (st: EnzymeState) => ({
+export const paramsOf = (
+  st: Pick<EnzymeState, 'vmax' | 'km' | 'inhibitor' | 'ki' | 'kind'>,
+): EnzymeParams => ({
   vmax: st.vmax,
   km: st.km,
   inhibitor: st.inhibitor,
@@ -37,9 +46,8 @@ export function useEnzymeData() {
 
   const timeData = useMemo(() => {
     const p = paramsOf(st);
-    const a = apparent(p);
-    // Long enough to consume most of the substrate: S0/Vmax (zero order) + a few Km/Vmax.
-    const tEnd = (st.s0 + 5 * a.km) / a.vmax;
+    // Long enough to consume most of the substrate (shared with the 3D view).
+    const tEnd = timeCourseEnd(p, st.s0);
     const x = Array.from({ length: 201 }, (_, i) => (i * tEnd) / 200);
     const s = x.map((t) => substrateAt(p, st.s0, t));
     return { x, s, p: s.map((v) => st.s0 - v), tEnd };

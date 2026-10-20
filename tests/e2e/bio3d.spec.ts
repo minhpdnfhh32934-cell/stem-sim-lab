@@ -4,7 +4,7 @@ import { openLab } from './nav';
 
 /**
  * The 3D views of the biology lessons (every lesson besides mitosis, meiosis, DNA → mRNA →
- * protein, point mutations and Mendelian genetics, which have their own specs).
+ * protein, point mutations, Mendelian genetics and enzyme kinetics, which have their own specs).
  * WebGL runs in software (SwiftShader), never on the GPU (see mitosis3d.spec.ts).
  */
 test.use({
@@ -19,7 +19,6 @@ const LESSONS: [string, string][] = [
   ['Phiêu bạt di truyền', 'drift'],
   ['Tăng trưởng logistic', 'logistic'],
   ['Con mồi – vật ăn thịt (Lotka–Volterra)', 'lotkaVolterra'],
-  ['Động học enzyme (Michaelis–Menten)', 'enzyme'],
   ['Khuếch tán & thẩm thấu', 'transport'],
 ];
 

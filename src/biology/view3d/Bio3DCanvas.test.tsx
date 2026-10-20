@@ -178,12 +178,12 @@ describe('3D / 2D choice', () => {
   it('lessons open in 3D; the switch keeps the learner’s choice per lesson', async () => {
     const user = userEvent.setup();
     expect(BIO3D_LESSONS.every((l) => !useBio3DPrefs.getState().off.includes(l))).toBe(true);
-    render(<Bio3DSwitch lesson="enzyme" />);
+    render(<Bio3DSwitch lesson="transport" />);
     expect(screen.getByRole('radio', { name: '3D' })).toHaveAttribute('aria-checked', 'true');
     await user.click(screen.getByRole('radio', { name: '2D' }));
-    expect(useBio3DPrefs.getState().off).toEqual(['enzyme']);
+    expect(useBio3DPrefs.getState().off).toEqual(['transport']);
     act(() => {
-      set3d('enzyme', true);
+      set3d('transport', true);
     });
     expect(useBio3DPrefs.getState().off).toEqual([]);
   });
