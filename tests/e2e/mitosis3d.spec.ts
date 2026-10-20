@@ -57,7 +57,9 @@ const info = (page: Page) => page.evaluate(() => window.__simlabMitosis3d?.info(
 test('mitosis 3D: plays through every stage, switches cell type, no leaks on replay', async ({
   page,
 }) => {
-  test.setTimeout(120_000);
+  // A full division, ten replays, the plant cell and meiosis, all drawn in software: about 1 min
+  // locally, but past 2 min on the 4-vCPU CI runner (PR #32), where it was cut off at 2 min.
+  test.setTimeout(300_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => {
