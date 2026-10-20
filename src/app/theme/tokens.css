@@ -128,6 +128,9 @@
   --m3d-nucleolus: #5b4a86;
   --m3d-membrane-opacity: 0.14;
   --m3d-rim: 0.7;
+  /* How much a 3D solid (protein blob) darkens towards its silhouette: a pale body reads as a
+     volume on the pale stage. Lighting only, never a data colour. */
+  --m3d-edge-shade: 0.32;
   /* Ground of the 3D habitats (ecology lessons): the meadow's base. */
   --bio3d-ground: #dde7d3;
   /* Biology 3D structures (0.7.1 style guide, rule 0 "saturation = data"): proteins, glassware,
@@ -225,6 +228,7 @@
   /* A dark stage needs a stronger membrane and outline to be seen at all. */
   --m3d-membrane-opacity: 0.22;
   --m3d-rim: 1;
+  --m3d-edge-shade: 0.12;
   --bio3d-ground: #1f2d24;
   --bio3d-protein: #6f7a90;
   --bio3d-glass: #2a3646;
