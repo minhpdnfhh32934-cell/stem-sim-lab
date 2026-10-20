@@ -24,13 +24,23 @@ export function UpdateDialog() {
   const close = () => {
     if (!locked) useUpdateStore.setState({ dialogOpen: false });
   };
+  // Chromium (WebView2) closes a modal dialog on Esc even when its cancel event was prevented
+  // (the first Esc before any click, or a second Esc): a mandatory update comes straight back.
+  const onClose = () => {
+    const d = ref.current;
+    if (locked && useUpdateStore.getState().dialogOpen) {
+      if (d && !d.open) d.showModal();
+    } else close();
+  };
 
+  // On every render, not only when `dialogOpen` changes: "Kiểm tra cập nhật" and "Có bản mới"
+  // set it to true again, which must show a dialog that was closed behind the store's back.
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
     if (dialogOpen && !d.open) d.showModal();
     if (!dialogOpen && d.open) d.close();
-  }, [dialogOpen]);
+  });
   const offerLater = !locked && (phase === 'available' || phase === 'needsInstaller');
 
   const mb = (bytes: number) => formatNumber(locale, bytes / 2 ** 20, { maximumFractionDigits: 1 });
@@ -41,7 +51,7 @@ export function UpdateDialog() {
       ref={ref}
       className="dialog"
       aria-labelledby="update-title"
-      onClose={close}
+      onClose={onClose}
       onCancel={(e) => {
         if (locked) e.preventDefault();
       }}
@@ -140,9 +150,17 @@ export function UpdateDialog() {
           </button>
         )}
         {locked && phase === 'error' && (
-          <button type="button" className="btn btn--accent" onClick={() => void applyUpdate()}>
-            {t('update.retry')}
-          </button>
+          <>
+            {/* A download that keeps failing must not trap the learner: the installer from the
+                releases page also brings the required version. */}
+            <button type="button" className="btn" onClick={() => void openReleasesPage()}>
+              <ExternalLink size={15} aria-hidden="true" />
+              {t('update.openReleases')}
+            </button>
+            <button type="button" className="btn btn--accent" onClick={() => void applyUpdate()}>
+              {t('update.retry')}
+            </button>
+          </>
         )}
         {!locked && (phase === 'upToDate' || phase === 'error' || phase === 'idle') && (
           <button type="button" className="btn" onClick={() => void checkForUpdate()}>

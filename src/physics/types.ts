@@ -83,6 +83,11 @@ export interface BodyDef {
   /** Pick radius in metres. */
   radius: (p: Params) => number;
   draggable: boolean;
+  /**
+   * Whether the body is part of the scene for these params (default: always). An inactive
+   * body is neither drawn by the scene nor pickable or shown in the Inspector.
+   */
+  active?: (p: Params) => boolean;
   /** Properties listed in the Inspector while selected (SI values + display unit). */
   properties?: (
     state: Float64Array,

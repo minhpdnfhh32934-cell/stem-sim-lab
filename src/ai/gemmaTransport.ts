@@ -5,6 +5,7 @@
  */
 import { useChatStore } from '@/teacher/chat/chatStore';
 import type { KeyTest } from './keyTest';
+import { schemaInSystem } from './prompts';
 import type { LlmTransport } from './transport';
 import {
   webGemmaChat,
@@ -39,6 +40,10 @@ export async function gemmaChatText(args: {
   inputBudget?: number;
   /** The answer so far, while it is generated (see webGemmaChat). */
   onPartial?: (textSoFar: string) => void;
+  /** Stops the generation ("Dừng"); the call then rejects with "cancelled". */
+  signal?: AbortSignal;
+  /** The question a small model may repeat first (default: the last user message). */
+  echo?: string;
 }): Promise<{ content: string; model: string; truncated: boolean }> {
   if (webGPUStatus() !== 'webgpu') throw new AiError('unavailable', 'webgpu-missing');
   return webGemmaChat({
@@ -50,6 +55,8 @@ export async function gemmaChatText(args: {
     ...(args.maxTokens !== undefined ? { maxTokens: args.maxTokens } : {}),
     ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
     ...(args.onPartial ? { onPartial: args.onPartial } : {}),
+    ...(args.signal ? { signal: args.signal } : {}),
+    ...(args.echo ? { echo: args.echo } : {}),
   });
 }
 
@@ -78,18 +85,29 @@ export type { DownloadProgress };
  * pipeline's repair loop (which feeds validation errors back) does the rest.
  */
 class GemmaTransport implements LlmTransport {
-  async chat(req: ChatRequest): Promise<ChatResponse> {
+  /**
+   * `signal` stops the generation on the GPU ("Hủy" in "Phân tích đề", leaving "Giải thích"):
+   * without it the cancelled work would keep the serialized Gemma queue busy.
+   */
+  async chat(req: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
     const started = performance.now();
-    const system = req.jsonSchema
-      ? `${req.system}\n\nTrả về DUY NHẤT một JSON đúng schema sau, không giải thích, không dùng code fence:\n${JSON.stringify(req.jsonSchema)}`
-      : req.system;
-    const answer = await gemmaChatText({
-      model: req.model.trim(),
-      system,
-      messages: req.messages.map((m) => ({ role: m.role, content: m.content })),
-      ...(req.temperature !== undefined ? { temperature: req.temperature } : {}),
-      ...(req.maxTokens !== undefined ? { maxTokens: req.maxTokens } : {}),
-    });
+    const system = req.jsonSchema ? schemaInSystem(req.system, req.jsonSchema) : req.system;
+    let answer: Awaited<ReturnType<typeof gemmaChatText>>;
+    try {
+      answer = await gemmaChatText({
+        model: req.model.trim(),
+        system,
+        messages: req.messages.map((m) => ({ role: m.role, content: m.content })),
+        ...(req.temperature !== undefined ? { temperature: req.temperature } : {}),
+        ...(req.maxTokens !== undefined ? { maxTokens: req.maxTokens } : {}),
+        ...(signal ? { signal } : {}),
+      });
+    } catch (e) {
+      if (signal?.aborted || (e instanceof Error && e.message === 'cancelled')) {
+        throw new AiError('cancelled', 'cancelled');
+      }
+      throw e;
+    }
     if (!answer.content.trim()) throw new AiError('badResponse', 'missing content');
     return {
       content: answer.content,

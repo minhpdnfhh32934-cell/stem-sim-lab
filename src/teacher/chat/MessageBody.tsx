@@ -20,6 +20,15 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
   return out;
 }
 
+/** "vi.wikipedia.org" for a link, so the learner sees where it would lead. */
+function linkHost(url: string): string {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
+}
+
 function renderSpans(text: string, keyPrefix: string): ReactNode[] {
   // `code` → **bold** → *italic* → [links](http…). React escapes the text itself.
   const out: ReactNode[] = [];
@@ -43,10 +52,15 @@ function renderSpans(text: string, keyPrefix: string): ReactNode[] {
       linkSplit.forEach((piece, k) => {
         const link = /^\[([^\]]*?)\]\((https?:\/\/[^)\s]+?)\)$/.exec(piece);
         if (link) {
+          // An AI-written link is never clickable (audit SEC-03): text from Wikipedia or an
+          // imported file could make the AI point anywhere. The learner sees where it leads and
+          // can copy it; pages outside the app open only through KnownPageLink's fixed list.
+          const url = link[2] ?? '';
           out.push(
-            <a key={`${keyPrefix}-l${i}-${j}-${k}`} href={link[2]} target="_blank" rel="noreferrer">
-              {renderEmphasis(link[1] ?? '', `${keyPrefix}-l${i}-${j}-${k}`)}
-            </a>,
+            <span key={`${keyPrefix}-l${i}-${j}-${k}`} className="chat-message__link" title={url}>
+              {renderEmphasis(link[1] ?? '', `${keyPrefix}-l${i}-${j}-${k}`)}{' '}
+              <span className="chat-message__url">({linkHost(url)})</span>
+            </span>,
           );
         } else {
           out.push(

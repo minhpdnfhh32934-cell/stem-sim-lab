@@ -1,3 +1,5 @@
+import { heading } from '../common/coulomb1d';
+
 /**
  * Block on an inclined plane (θ = 0 gives a horizontal surface) with an applied force
  * and Coulomb friction (static μs, kinetic μk). One coordinate s along the surface,
@@ -103,12 +105,14 @@ export function segments(p: InclineInput, tMax = 1e4): Segment[] {
       const roots = [(-B - r) / (2 * A), (-B + r) / (2 * A)].filter((x) => x > 1e-12);
       return roots.length ? Math.min(...roots) : Infinity;
     };
-    const tb = hit(0);
+    // On an edge and moving outward: the block leaves the surface at once (τ = 0).
+    const dir = heading(v, a);
+    const tb = dir < 0 && s <= 0 ? 0 : hit(0);
     if (tb < tEnd) {
       tEnd = tb;
       end = 'bottom';
     }
-    const tt = hit(p.length);
+    const tt = dir > 0 && s >= p.length ? 0 : hit(p.length);
     if (tt < tEnd) {
       tEnd = tt;
       end = 'top';

@@ -1,0 +1,12 @@
+: Hand-written from the documented OpenAI-compatible chat.completion.chunk format, not a recording of a live call.
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen/qwen3.8-27b","system_fingerprint":"fp_1","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}],"x_groq":{"id":"req_1"}}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen/qwen3.8-27b","system_fingerprint":"fp_1","choices":[{"index":0,"delta":{"content":"Vận tốc"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen/qwen3.8-27b","system_fingerprint":"fp_1","choices":[{"index":0,"delta":{"content":" là đại lượng vectơ."},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-1","object":"chat.completion.chunk","created":1760400000,"model":"qwen/qwen3.8-27b","system_fingerprint":"fp_1","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}],"x_groq":{"id":"req_1","usage":{"prompt_tokens":20,"completion_tokens":8,"total_tokens":28}}}
+
+data: [DONE]
+

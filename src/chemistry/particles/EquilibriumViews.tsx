@@ -11,6 +11,7 @@ import {
   Plus,
   RotateCcw,
   Snowflake,
+  TriangleAlert,
 } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
@@ -22,7 +23,16 @@ import { XYChart } from '@/ui/charts/XYChart';
 import { IconButton } from '@/ui/IconButton';
 import { CSRC, L, usePublishCard } from '../common';
 import { SYSTEMS, equationOf, shiftDirection, speciesOf } from './equilibrium';
-import { currentQK, disturb, resetEq, stepEq, systemOf, useEqStore } from './eqStore';
+import {
+  EA_MAX_KJ,
+  K_MAX,
+  currentQK,
+  disturb,
+  resetEq,
+  stepEq,
+  systemOf,
+  useEqStore,
+} from './eqStore';
 import '../chem.css';
 
 const CARD: ScienceCardData = {
@@ -61,7 +71,10 @@ const CARD: ScienceCardData = {
     'Automated tests: analytic A ⇌ B, quadratic A + B ⇌ C, Q = K at equilibrium, van ’t Hoff law.',
   ),
   userIntervened: false,
-  method: L('Dormand–Prince 5(4), rtol 10⁻⁹', 'Dormand–Prince 5(4), rtol 10⁻⁹'),
+  method: L(
+    'Nghiệm giải tích chính xác theo độ tiến phản ứng ξ (phương trình Riccati); kiểm tra chéo bằng Dormand–Prince 5(4), rtol 10⁻⁹',
+    'Exact analytic solution in the reaction extent ξ (Riccati equation); cross-checked with Dormand–Prince 5(4), rtol 10⁻⁹',
+  ),
   sources: [CSRC.sgk11, CSRC.atkins],
 };
 
@@ -95,7 +108,13 @@ export function EquilibriumStage() {
       prev = now;
       // 1 simulated second per 0.5 real second, updated at ~15 Hz.
       if (acc > 1 / 15 && document.visibilityState === 'visible') {
-        stepEq(acc * 2);
+        try {
+          stepEq(acc * 2);
+        } catch {
+          // Pause with a message instead of letting the animation loop die.
+          useEqStore.setState({ running: false, stalled: true });
+          return;
+        }
         acc = 0;
       }
       raf = requestAnimationFrame(tick);
@@ -122,7 +141,7 @@ export function EquilibriumStage() {
           label={st.running ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Chạy', 'Run'))}
           variant="solid"
           onClick={() => {
-            useEqStore.setState((x) => ({ running: !x.running }));
+            useEqStore.setState((x) => ({ running: !x.running, stalled: false }));
           }}
         />
         <IconButton
@@ -136,6 +155,19 @@ export function EquilibriumStage() {
           t = {f(st.t, 4)} s · T = {f(st.T, 4)} K
         </span>
       </div>
+      {st.stalled && (
+        <p className="chem-note chem-note--warn" role="alert">
+          <TriangleAlert size={15} aria-hidden="true" />
+          <span>
+            {Lz(
+              L(
+                'Mình chưa tính kịp phản ứng với các hằng số này nên đã tạm dừng. Hãy giảm k hoặc nhiệt độ rồi bấm Làm lại.',
+                'This reaction could not be computed with these constants, so it is paused. Lower k or the temperature, then press Restart.',
+              ),
+            )}
+          </span>
+        </p>
+      )}
 
       <div className="eq-bars" role="img" aria-label={Lz(L('Nồng độ các chất', 'Concentrations'))}>
         {species.map((sp, i) => (
@@ -243,17 +275,24 @@ export function EquilibriumPanel() {
   const Lz = useLocalized();
   const st = useEqStore();
   const s = systemOf(st.systemId);
-  const num = (label: LocalizedText, value: number, onChange: (v: number) => void, step = 0.1) => (
+  const num = (
+    label: LocalizedText,
+    value: number,
+    onChange: (v: number) => void,
+    step = 0.1,
+    max = K_MAX,
+  ) => (
     <label>
       <span>{Lz(label)}</span>
       <input
         type="number"
         step={step}
         min={0}
+        max={max}
         value={value}
         onChange={(e) => {
           const v = Number(e.target.value);
-          if (Number.isFinite(v) && v >= 0) onChange(v);
+          if (Number.isFinite(v) && v >= 0) onChange(Math.min(max, v));
         }}
       />
     </label>
@@ -288,6 +327,7 @@ export function EquilibriumPanel() {
           resetEq({ kinetics: { ...st.kinetics, eaf: v * 1000 } });
         },
         5,
+        EA_MAX_KJ,
       )}
       {num(
         L('Eₐ nghịch (kJ/mol)', 'Eₐ reverse (kJ/mol)'),
@@ -296,6 +336,7 @@ export function EquilibriumPanel() {
           resetEq({ kinetics: { ...st.kinetics, ear: v * 1000 } });
         },
         5,
+        EA_MAX_KJ,
       )}
       {speciesOf(s).map((sp) => (
         <span key={sp}>

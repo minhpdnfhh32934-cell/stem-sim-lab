@@ -7,11 +7,14 @@ import {
   ImageDown,
   Menu,
   Save,
+  Sparkles,
   type LucideIcon,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '@/app/i18n';
+import { openLab } from '@/app/topics';
 import { checkForUpdate, updatesSupported } from '@/app/update/updater';
+import { openWhatsNew, useWhatsNewStore } from '@/app/whatsnew/whatsNewStore';
 import { IconButton } from '@/ui/IconButton';
 import { toast } from '@/ui/toast';
 import { exportPng, openProject, saveProject } from './actions';
@@ -25,10 +28,14 @@ interface Item {
   run: () => void;
 }
 
-/** "Tệp" menu: open / save `.stemsim`, export PNG, sources page, quick tour. */
+/**
+ * "Tệp" menu: open / save `.stemsim`, export PNG, sources page, quick tour — and "Có gì mới"
+ * (with a dot on the button) while the notes of an update are unseen, e.g. after "Để sau".
+ */
 export function FileMenu() {
   const t = useT();
   const [open, setOpen] = useState(false);
+  const unseen = useWhatsNewStore((s) => s.pending.length > 0);
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,6 +56,7 @@ export function FileMenu() {
   }, [open]);
 
   const items: Item[] = [
+    ...(unseen ? [{ icon: Sparkles, label: t('whatsnew.menu'), run: openWhatsNew }] : []),
     { icon: FolderOpen, label: t('project.open'), run: () => void openProject() },
     { icon: Save, label: t('project.save'), run: () => void saveProject() },
     { icon: ImageDown, label: t('project.exportPng'), run: () => void exportPng() },
@@ -68,14 +76,22 @@ export function FileMenu() {
       },
     },
     { icon: BookOpenCheck, label: t('project.privacy'), run: openPrivacy },
-    { icon: CircleHelp, label: t('project.tour'), run: startTour },
+    {
+      icon: CircleHelp,
+      label: t('project.tour'),
+      // The tour points at the lab: from the launch page, Studio or AI Teacher, go there first.
+      run: () => {
+        openLab();
+        startTour();
+      },
+    },
   ];
 
   return (
     <div className="file-menu" ref={root} data-tour="file">
       <IconButton
         icon={Menu}
-        label={t('project.file')}
+        label={unseen ? t('whatsnew.menuButton') : t('project.file')}
         active={open}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -83,6 +99,7 @@ export function FileMenu() {
           setOpen((o) => !o);
         }}
       />
+      {unseen && <span className="file-menu__dot" aria-hidden="true" />}
       {open && (
         <div className="file-menu__list" role="menu" aria-label={t('project.file')}>
           {items.map(({ icon: Icon, label, run }) => (

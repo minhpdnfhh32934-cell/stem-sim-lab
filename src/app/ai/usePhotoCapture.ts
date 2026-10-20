@@ -1,12 +1,10 @@
-import { isTauri } from '@tauri-apps/api/core';
 import { useState } from 'react';
-import { gemmaChatText, gemmaReady } from '@/ai/gemmaTransport';
 import { useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
-import { useChatStore } from '@/teacher/chat/chatStore';
+import { useWorkspaceStore, type SettingsSection } from '@/app/workspaceStore';
 import { CameraDialog } from '@/app/learner/CameraDialog';
-import { PHOTO_SYSTEM, cleanTranscription, transcribeWithCloud } from './photoVision';
+import { useSafetyStore } from '@/safety/safetyStore';
+import { readProblemPhoto } from './photoVision';
 
 /** Longest photo edge: keeps captures fast and inside the models' image limits. */
 const MAX_PHOTO_EDGE = 1600;
@@ -36,18 +34,26 @@ function downscalePhoto(dataUrl: string): Promise<string> {
 }
 
 /**
- * Photograph-a-problem flow shared by the home page and the simulation top bar:
- * camera dialog state plus "Lấy ảnh" transcription. Chain: cloud API (when the
- * browser has a key) → local Gemma → an honest error. The text always lands in
- * the problem box for review; analysis (with its safety checks) stays separate.
+ * Photograph-a-problem flow shared by the home page and the simulation top bar: camera dialog
+ * state plus "Lấy ảnh" transcription (`readProblemPhoto`: safety gates, the learner's own AI, the
+ * output filter). The text always lands in the problem box for review; analysis (with its input
+ * checks) stays separate. `cameraAllowed` is false while the safety gates are closed: the camera
+ * buttons are then hidden.
  */
 export function usePhotoCapture() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const setProblemText = useWorkspaceStore((s) => s.setProblemText);
+  const cameraAllowed = useSafetyStore((s) => s.status?.aiAllowed ?? false);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [cameraBusy, setCameraBusy] = useState(false);
-  const [cameraError, setCameraError] = useState('');
+  const [cameraError, setError] = useState('');
+  /** The Settings page that helps with the error shown (null: none does). */
+  const [cameraErrorSection, setErrorSection] = useState<SettingsSection | null>(null);
+  const setCameraError = (message: string, section: SettingsSection | null = null) => {
+    setError(message);
+    setErrorSection(message ? section : null);
+  };
 
   const openCamera = () => {
     setCameraError('');
@@ -67,47 +73,13 @@ export function usePhotoCapture() {
       return;
     }
     setCameraBusy(true);
-    /** Remembers a cloud failure so the final message names the real cause. */
-    let cloudIssue: 'badKey' | 'badModel' | null = null;
     try {
-      let raw: string | null = null;
-      // Desktop builds have no cloud image endpoint: straight to the local model.
-      if (!isTauri()) {
-        try {
-          raw = await transcribeWithCloud(base64, locale);
-        } catch (e) {
-          const message = e instanceof Error ? e.message : String(e);
-          const status = /^\s*(\d{3})/.exec(message)?.[1];
-          if (status === '400' || status === '401' || status === '403') cloudIssue = 'badKey';
-          else if (status === '404') cloudIssue = 'badModel';
-          raw = null;
-        }
-      }
-      if (raw === null || raw.trim() === '') {
-        const chat = useChatStore.getState();
-        if (!(await gemmaReady(chat.gemmaModel))) {
-          if (cloudIssue === 'badKey') setCameraError(t('camera.badKey'));
-          else if (cloudIssue === 'badModel') setCameraError(t('camera.badModel'));
-          else setCameraError(t('camera.needVision'));
-          return;
-        }
-        const binary = atob(base64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        const answer = await gemmaChatText({
-          model: chat.gemmaModel,
-          system: PHOTO_SYSTEM[locale],
-          messages: [{ role: 'user', content: 'Đề bài trong ảnh là gì?' }],
-          images: [bytes.buffer],
-        });
-        raw = answer.content;
-      }
-      const text = cleanTranscription(raw);
-      if (!text) {
-        setCameraError(t('camera.readFailed'));
+      const reading = await readProblemPhoto(base64, locale);
+      if (reading.kind === 'error') {
+        setCameraError(reading.message, reading.section);
         return;
       }
-      setProblemText(text);
+      setProblemText(reading.text);
       setCameraOpen(false);
     } catch {
       setCameraError(t('camera.readFailed'));
@@ -116,5 +88,15 @@ export function usePhotoCapture() {
     }
   };
 
-  return { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog };
+  return {
+    cameraAllowed,
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  };
 }

@@ -143,7 +143,8 @@ test('problem → confirmation table → simulation → solution → AI explanat
   await page.getByRole('button', { name: 'Phân tích đề' }).click();
 
   const dialog = page.getByRole('dialog', { name: 'Tôi hiểu đề như sau' });
-  await expect(dialog).toBeVisible();
+  // The dialog and the AI pipeline are lazy modules: compiled by the dev server on first use.
+  await expect(dialog).toBeVisible({ timeout: 20_000 });
   await expect(dialog.getByText('Ném ngang', { exact: true })).toBeVisible();
   // Values come from the problem, each with its quote; g is from the problem too.
   await expect(dialog.getByRole('textbox', { name: 'Vận tốc ban đầu' })).toHaveValue('15');
@@ -367,7 +368,12 @@ test.describe('first run (age question not answered yet)', () => {
       origins: [
         {
           origin: 'http://localhost:1420',
-          localStorage: [{ name: 'stemsim.tourDone', value: '1' }],
+          // Notes already seen, as in storage-state.json: otherwise "Có gì mới" may open on the
+          // launch page as soon as the age question closes, depending on timing.
+          localStorage: [
+            { name: 'stemsim.tourDone', value: '1' },
+            { name: 'stemsim.whatsnew', value: '{"lastSeen": "999.0.0"}' },
+          ],
         },
       ],
     },

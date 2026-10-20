@@ -8,6 +8,8 @@ import {
   Orbit,
   Palette,
   PlugZap,
+  ScrollText,
+  ServerCog,
   ShieldCheck,
   Volume2,
   type LucideIcon,
@@ -58,6 +60,12 @@ export const SECTIONS: Record<SettingsSection, SectionMeta> = {
     hint: 'settings.nav.localHint',
     group: 'ai',
   },
+  runtimes: {
+    icon: ServerCog,
+    title: 'settings.nav.runtimes',
+    hint: 'settings.nav.runtimesHint',
+    group: 'ai',
+  },
   gpu: {
     icon: Gpu,
     title: 'settings.nav.gpu',
@@ -92,6 +100,12 @@ export const SECTIONS: Record<SettingsSection, SectionMeta> = {
     icon: Keyboard,
     title: 'settings.shortcuts',
     hint: 'settings.nav.shortcutsHint',
+    group: 'general',
+  },
+  versions: {
+    icon: ScrollText,
+    title: 'settings.nav.versions',
+    hint: 'settings.nav.versionsHint',
     group: 'general',
   },
 };

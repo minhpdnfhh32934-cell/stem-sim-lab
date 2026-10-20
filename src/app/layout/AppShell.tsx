@@ -10,6 +10,8 @@ import { useProjectUi } from '@/app/project/uiStore';
 import { initUndo } from '@/app/project/undo';
 import { useGlobalShortcuts } from '@/app/shortcuts/useGlobalShortcuts';
 import { UpdateDialog } from '@/app/update/UpdateDialog';
+import { WhatsNewDialog } from '@/app/whatsnew/WhatsNewDialog';
+import { useWhatsNewStartup } from '@/app/whatsnew/whatsNewStore';
 import { scheduleAutoCheck } from '@/app/update/updater';
 import { installSlidingIndicators } from '@/ui/slidingIndicator';
 import { Skeleton } from '@/ui/Skeleton';
@@ -20,7 +22,7 @@ import '@/app/project/project.css';
 import { useModuleStore } from '@/modules/moduleStore';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { Onboarding } from '@/app/learner/Onboarding';
-import { useIsHome, useIsLanding, useIsTeacher } from '@/app/topics';
+import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
 import { useBreakReminder } from '@/learn/useBreakReminder';
 import { IconButton } from '@/ui/IconButton';
 import { BottomPanel } from './BottomPanel';
@@ -36,6 +38,7 @@ import { usePresentationFullscreen } from './usePresentationFullscreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { ChatBubble } from '@/teacher/chat/ChatBubble';
 import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
+import { loadGpuStatus } from '@/ai/gpu';
 
 /**
  * Main window layout (MASTER_PROMPT §7.1):
@@ -49,6 +52,7 @@ import { GpuRestartReminder } from '@/teacher/chat/GpuSettings';
 const SourcesDialog = lazy(() => import('@/app/project/SourcesDialog'));
 // The AI teacher is its own chunk (PROMPT_PHAN_2 B0: separate from the simulations).
 const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
+const StudioScreen = lazy(() => import('@/studio/StudioScreen'));
 // Quick search (Ctrl+K) loads on first use; the shortcut and the top-bar button only flip a flag.
 const CommandPalette = lazy(() =>
   import('@/app/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
@@ -60,11 +64,16 @@ export function AppShell() {
   useMemoryWatchdog();
   usePresentationFullscreen();
   useBreakReminder();
+  // "Có gì mới" after an update; it waits for the launch page or the lab home.
+  useWhatsNewStartup();
   useEffect(() => {
     const offUndo = initUndo();
     const offHistory = initHistory();
     const offUpdate = scheduleAutoCheck();
     const offIndicators = installSlidingIndicators();
+    // Desktop: which cards exist decides how short Gemma's prompt must be (audit GPU-01), so it
+    // is known before the first question, not only after Settings → GPU was opened.
+    void loadGpuStatus().catch(() => null);
     return () => {
       offUndo();
       offHistory();
@@ -87,15 +96,23 @@ export function AppShell() {
   );
   const { presentation } = layout;
   const moduleActive = useModuleStore((s) => s.active !== null || s.loading);
+  // A topic without a table or chart of its own (Mendel, Hardy–Weinberg) gives that height to
+  // the stage instead of an empty "no extra panel" box.
+  const moduleWithoutBottom = useModuleStore(
+    (s) => s.active !== null && s.active.view.Bottom === undefined,
+  );
   const teacher = useIsTeacher();
+  const studio = useIsStudio() && !teacher;
   const landing = useIsLanding();
   const labHome = useIsHome() && !teacher;
   const home = landing || labHome;
+  // Science Studio, like AI Teacher, owns the whole centre: no lab panels around it.
+  const fullPage = teacher || studio;
 
-  const showLeft = !presentation && !teacher && !landing;
+  const showLeft = !presentation && !fullPage && !landing;
   // The home screen uses the whole centre: no timeline, graphs or inspector until a topic opens.
-  const showRight = !presentation && !home && !teacher;
-  const showBottom = !presentation && !home && !teacher;
+  const showRight = !presentation && !home && !fullPage;
+  const showBottom = !presentation && !home && !fullPage && !moduleWithoutBottom;
 
   const style = {
     '--left-w': `${layout.leftWidth}px`,
@@ -109,7 +126,7 @@ export function AppShell() {
       data-presentation={presentation || undefined}
       data-inspector={showRight || undefined}
       data-bottom={showBottom || undefined}
-      data-timeline={(!moduleActive && !home && !teacher) || undefined}
+      data-timeline={(!moduleActive && !home && !fullPage) || undefined}
       style={style}
     >
       {!presentation && <TopBar />}
@@ -122,6 +139,7 @@ export function AppShell() {
       <Onboarding />
       <Tour />
       <UpdateDialog />
+      <WhatsNewDialog />
       <Toaster />
       {paletteUsed && (
         <Suspense fallback={null}>
@@ -156,6 +174,10 @@ export function AppShell() {
             <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
               <TeacherScreen />
             </Suspense>
+          ) : studio ? (
+            <Suspense fallback={<Skeleton label={t('stage.loading')} variant="lines" />}>
+              <StudioScreen />
+            </Suspense>
           ) : landing ? (
             <LandingScreen />
           ) : labHome ? (
@@ -163,7 +185,7 @@ export function AppShell() {
           ) : (
             <Stage />
           )}
-          {!moduleActive && !home && !teacher && <Timeline />}
+          {!moduleActive && !home && !fullPage && <Timeline />}
           {showBottom && (
             <>
               <Splitter

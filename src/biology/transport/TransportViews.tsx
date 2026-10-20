@@ -1,126 +1,32 @@
-import { RotateCcw } from 'lucide-react';
-import { useMemo, useRef } from 'react';
+import { Suspense, lazy, useMemo, useRef } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
-import { C } from '@/core/constants';
-import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { XYChart } from '@/ui/charts/XYChart';
-import { BSRC, L, usePublishCard } from '../common';
+import { L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
 import { useFmt } from '../fmt';
-import { Range, Segmented } from '../ui';
-import {
-  brownianStep,
-  osmosisEquilibrium,
-  osmosisTrajectory,
-  twoCompartment,
-  type OsmosisParams,
-} from './transport';
+import { MoreInBasic, Range } from '../ui';
+import { useNo3dNotice, useNo3dReason } from '../view3d/support';
+import { brownianStep, fickTimeEnd, twoCompartment } from './transport';
 import { useTransport, type TransportState } from './store';
+import { poreIntervals } from './pores';
+import { TransportChips } from './chips';
+import { useOsmosis } from './osmosisData';
+import { DIFFUSION_CARD, OSMOSIS_CARD } from './transportCards';
+import { Transport3DSwitch } from './transport3d/Transport3DSwitch';
+import { useTransport3D } from './transport3d/store';
 import '../bio.css';
 
-/** Water density (kg/m³) and membrane permeance — the latter only sets the time scale. */
-const RHO = 1000;
-const LP = 5e-6;
-
-const osmosisParams = (st: TransportState): OsmosisParams => ({
-  c0: st.c0,
-  i: st.i,
-  T: st.tC + 273.15,
-  h0: st.h0,
-  rho: RHO,
-  g: C.gn,
-  lp: LP,
-});
-
-const DIFFUSION_CARD: ScienceCardData = {
-  title: L('Khuếch tán qua màng', 'Diffusion across a membrane'),
-  model: L(
-    'Hai ngăn ngăn cách bởi màng có lỗ. Đồ thị dùng định luật Fick cho hai ngăn (nghiệm chính xác): hiệu nồng độ giảm theo hàm mũ tới khi hai bên bằng nhau. Các hạt chuyển động Brown trên hình chỉ minh họa cơ chế ngẫu nhiên.',
-    "Two compartments separated by a porous membrane. The chart uses Fick's law for two compartments (exact solution): the concentration difference decays exponentially until both sides are equal. The Brownian particles only illustrate the random mechanism.",
-  ),
-  equations: [
-    {
-      tex: '\\dfrac{dC_1}{dt} = -\\dfrac{PA}{V_1}(C_1 - C_2),\\quad \\dfrac{dC_2}{dt} = \\dfrac{PA}{V_2}(C_1 - C_2)',
-    },
-    {
-      tex: 'C_1 - C_2 = (C_1^0 - C_2^0)\\,e^{-kt},\\quad k = PA\\left(\\dfrac{1}{V_1} + \\dfrac{1}{V_2}\\right)',
-    },
-    {
-      tex: '\\langle r^2 \\rangle = 4Dt\\ \\text{(2D)}',
-      label: L('Chuyển động Brown', 'Brownian motion'),
-    },
-  ],
-  assumptions: [
-    L(
-      'Mỗi ngăn được khuấy đều (nồng độ đồng nhất); màng chỉ cho chất tan đi qua lỗ.',
-      'Each compartment is well mixed; solute crosses only through the pores.',
-    ),
-    L(
-      'Hình các hạt là minh họa định tính: số hạt không được dùng để đọc kết quả.',
-      'The particle picture is qualitative: do not read results from particle counts.',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Nghiệm chính xác của mô hình Fick hai ngăn. Test tự động: bảo toàn lượng chất, cân bằng tại nồng độ trung bình; ⟨r²⟩ = 4Dt.',
-    'Exact solution of the two-compartment Fick model. Automated tests: amount conserved, equilibrium at the mean; ⟨r²⟩ = 4Dt.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.sgk10, BSRC.campbell, BSRC.atkins],
-};
-
-const OSMOSIS_CARD: ScienceCardData = {
-  title: L('Thẩm thấu (ống chữ U)', 'Osmosis (U-tube)'),
-  model: L(
-    "Nhánh trái chứa dung dịch, nhánh phải chứa nước cất, ngăn bởi màng bán thấm. Nước đi vào nhánh dung dịch cho tới khi áp suất thủy tĩnh ρgΔh cân bằng áp suất thẩm thấu Π = iCRT (van 't Hoff, dung dịch loãng); dung dịch bị pha loãng khi mực nước dâng.",
-    "The left arm holds a solution, the right arm pure water, separated by a semipermeable membrane. Water flows into the solution until the hydrostatic pressure ρgΔh balances the osmotic pressure Π = iCRT (van 't Hoff, dilute solution); the solution is diluted as it rises.",
-  ),
-  equations: [
-    { tex: '\\Pi = iCRT' },
-    { tex: '\\rho g\\,(h_L - h_R) = i\\,\\dfrac{C_0 h_0}{h_L}\\,RT,\\quad h_L + h_R = 2h_0' },
-  ],
-  assumptions: [
-    L(
-      'Dung dịch loãng, lí tưởng; hệ số i lấy theo phân li hoàn toàn (NaCl: i = 2).',
-      'Dilute ideal solution; i assumes complete dissociation (NaCl: i = 2).',
-    ),
-    L(
-      'Hai nhánh cùng tiết diện; màng chỉ cho nước đi qua.',
-      'Arms of equal cross-section; only water crosses the membrane.',
-    ),
-    L(
-      'Tốc độ dâng (hệ số thấm Lp) chỉ để minh họa; độ cao cân bằng không phụ thuộc Lp.',
-      'The rise speed (permeance Lp) is illustrative; the equilibrium height does not depend on Lp.',
-    ),
-  ],
-  validity: L(
-    'Nồng độ nhỏ (khoảng dưới 0,1 mol/L); dung dịch điện li đặc cần hệ số thẩm thấu thực nghiệm.',
-    'Low concentrations (roughly below 0.1 mol/L); concentrated electrolytes need measured osmotic coefficients.',
-  ),
-  confidence: 'exact',
-  confidenceNote: L(
-    'Độ cao cân bằng giải chính xác (phương trình bậc hai); đường Δh(t) giải số DOPRI5. Test tự động: ρgΔh = Π tại cân bằng.',
-    'Equilibrium height solved exactly (quadratic); Δh(t) integrated with DOPRI5. Automated test: ρgΔh = Π at equilibrium.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.atkins, BSRC.sgk10],
-};
+// three.js and the 3D apparatus load only when the 3D view is shown.
+const Transport3DView = lazy(() =>
+  import('./transport3d/Transport3DView').then((m) => ({ default: m.Transport3DView })),
+);
 
 /* ───────────────────────────── Diffusion particles ───────────────────────────── */
 
 interface Particle {
   x: number;
   y: number;
-}
-
-/** Box [0, 2] × [0, 1] with the membrane at x = 1. */
-function poreIntervals(n: number): [number, number][] {
-  const w = 0.05;
-  return Array.from({ length: n }, (_, k) => {
-    const c = (k + 0.5) / n;
-    return [c - w / 2, c + w / 2];
-  });
 }
 
 function stepParticles(ps: Particle[], pores: [number, number][], rand: () => number) {
@@ -216,20 +122,6 @@ function DiffusionCanvas() {
 
 /* ───────────────────────────── Osmosis U-tube ───────────────────────────── */
 
-function useOsmosis() {
-  const st = useTransport();
-  return useMemo(() => {
-    const p = osmosisParams(st);
-    const eq = osmosisEquilibrium(p);
-    const pi0 = p.i * p.c0 * C.R * p.T;
-    // Relaxation rate of the linearised equation → about 6 time constants.
-    const k = LP * (2 * RHO * C.gn + pi0 / p.h0);
-    const tEnd = 6 / k;
-    const traj = osmosisTrajectory(p, tEnd, 240);
-    return { p, eq, pi0, tEnd, traj };
-  }, [st]);
-}
-
 function OsmosisCanvas() {
   const Lz = useLocalized();
   const fmt = useFmt();
@@ -247,7 +139,8 @@ function OsmosisCanvas() {
       const tSim = Math.min(tEnd, (time * tEnd) / 8);
       const idx = Math.min(traj.t.length - 1, Math.floor((tSim / tEnd) * (traj.t.length - 1)));
       const hL = traj.hL[idx] ?? p.h0;
-      const hR = 2 * p.h0 - hL;
+      // The model never lets the water arm go below empty (osmosisTrajectory stops there).
+      const hR = Math.max(0, 2 * p.h0 - hL);
       const hMax = Math.max(eq.hL, p.h0) * 1.25;
       const armW = Math.min(90, width / 8);
       const bottomH = armW * 0.8;
@@ -330,45 +223,33 @@ function OsmosisCanvas() {
 
 /* ───────────────────────────── Module views ───────────────────────────── */
 
+/**
+ * "Khuếch tán & thẩm thấu": the 3D view (default) or the 2D pictures, by the lesson store's saved
+ * `view3d`. The 2D pictures take over when WebGL is missing or lost, or on the Low quality tier.
+ */
 export function DiffusionOsmosisStage() {
-  const st = useTransport();
-  usePublishCard(st.mode === 'diffusion' ? DIFFUSION_CARD : OSMOSIS_CARD);
-  const Lz = useLocalized();
-  const fmt = useFmt();
-  const { eq, pi0 } = useOsmosis();
+  const view3d = useTransport((s) => s.view3d);
+  const reason = useNo3dReason(useTransport3D((s) => s.webglFailed));
+  const notice = useNo3dNotice(view3d, reason);
+  if (view3d && !reason)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Transport3DView />
+      </Suspense>
+    );
+  return <DiffusionOsmosis2D notice={notice} />;
+}
+
+function DiffusionOsmosis2D({ notice }: { notice: string | undefined }) {
+  const mode = useTransport((s) => s.mode);
+  usePublishCard(mode === 'diffusion' ? DIFFUSION_CARD : OSMOSIS_CARD);
   return (
     <div className="bio-view">
-      {st.mode === 'diffusion' ? <DiffusionCanvas /> : <OsmosisCanvas />}
+      {mode === 'diffusion' ? <DiffusionCanvas /> : <OsmosisCanvas />}
       <div className="chem-overlay">
-        <Segmented
-          label={L('Hiện tượng', 'Process')}
-          value={st.mode}
-          options={[
-            { id: 'diffusion', label: L('Khuếch tán', 'Diffusion') },
-            { id: 'osmosis', label: L('Thẩm thấu', 'Osmosis') },
-          ]}
-          onChange={(mode) => {
-            useTransport.setState({ mode });
-          }}
-        />
-        <button
-          type="button"
-          className="btn"
-          onClick={() => {
-            useTransport.setState((s) => ({ run: s.run + 1 }));
-          }}
-        >
-          <RotateCcw size={15} aria-hidden="true" /> {Lz(L('Chạy lại', 'Restart'))}
-        </button>
-        {st.mode === 'osmosis' && (
-          <>
-            <span className="chem-chip">Π₀ = iC₀RT = {fmt(pi0 / 1000)} kPa</span>
-            <span className="chem-chip">
-              {Lz(L('Cân bằng', 'Equilibrium'))}: Δh = {fmt(eq.dh * 100)} cm · Π ={' '}
-              {fmt(eq.pi / 1000)} kPa
-            </span>
-          </>
-        )}
+        <TransportChips />
+        <Transport3DSwitch />
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
     </div>
   );
@@ -377,6 +258,7 @@ export function DiffusionOsmosisStage() {
 export function DiffusionOsmosisPanel() {
   const Lz = useLocalized();
   const st = useTransport();
+  const initial = useTransport.getInitialState();
   const set = (patch: Partial<TransportState>) => {
     useTransport.setState(patch);
   };
@@ -427,39 +309,45 @@ export function DiffusionOsmosisPanel() {
             set({ c2 });
           }}
         />
-        <Range
-          label={L('Thể tích ngăn 1, V₁', 'Volume V₁')}
-          unit="mL"
-          value={st.v1}
-          min={0.5}
-          max={5}
-          step={0.5}
-          onChange={(v1) => {
-            set({ v1 });
-          }}
-        />
-        <Range
-          label={L('Thể tích ngăn 2, V₂', 'Volume V₂')}
-          unit="mL"
-          value={st.v2}
-          min={0.5}
-          max={5}
-          step={0.5}
-          onChange={(v2) => {
-            set({ v2 });
-          }}
-        />
-        <Range
-          label={L('Độ thấm × diện tích, PA', 'Permeability × area, PA')}
-          unit="mL/min"
-          value={st.pa}
-          min={0.02}
-          max={1}
-          step={0.02}
-          onChange={(pa) => {
-            set({ pa });
-          }}
-        />
+        {/* Basic: the volumes and the membrane's permeability keep their defaults. */}
+        <MoreInBasic
+          count={3}
+          changed={st.v1 !== initial.v1 || st.v2 !== initial.v2 || st.pa !== initial.pa}
+        >
+          <Range
+            label={L('Thể tích ngăn 1, V₁', 'Volume V₁')}
+            unit="mL"
+            value={st.v1}
+            min={0.5}
+            max={5}
+            step={0.5}
+            onChange={(v1) => {
+              set({ v1 });
+            }}
+          />
+          <Range
+            label={L('Thể tích ngăn 2, V₂', 'Volume V₂')}
+            unit="mL"
+            value={st.v2}
+            min={0.5}
+            max={5}
+            step={0.5}
+            onChange={(v2) => {
+              set({ v2 });
+            }}
+          />
+          <Range
+            label={L('Độ thấm × diện tích, PA', 'Permeability × area, PA')}
+            unit="mL/min"
+            value={st.pa}
+            min={0.02}
+            max={1}
+            step={0.02}
+            onChange={(pa) => {
+              set({ pa });
+            }}
+          />
+        </MoreInBasic>
       </div>
     );
   return (
@@ -529,8 +417,7 @@ export function DiffusionOsmosisBottom() {
   const st = useTransport();
   const osm = useOsmosis();
   const fick = useMemo(() => {
-    const k = st.pa * (1 / st.v1 + 1 / st.v2);
-    const tEnd = 5 / k;
+    const tEnd = fickTimeEnd(st.v1, st.v2, st.pa);
     const x = Array.from({ length: 201 }, (_, i) => (i * tEnd) / 200);
     const c = x.map((t) => twoCompartment(st.c1, st.c2, st.v1, st.v2, st.pa, t));
     const ceq = (st.c1 * st.v1 + st.c2 * st.v2) / (st.v1 + st.v2);
@@ -555,6 +442,9 @@ export function DiffusionOsmosisBottom() {
       </div>
     );
   const dh = osm.traj.hL.map((h) => (2 * h - 2 * osm.p.h0) * 100);
+  const finalLabel = osm.eq.dry
+    ? L('Δh khi nhánh nước cạn (chưa cân bằng)', 'Δh when the water arm is empty (not balanced)')
+    : L('Δh cân bằng', 'Equilibrium Δh');
   return (
     <div className="gas-bottom gas-bottom--single">
       <XYChart
@@ -562,7 +452,7 @@ export function DiffusionOsmosisBottom() {
         series={[
           { label: 'Δh(t)', y: dh },
           {
-            label: Lz(L('Δh cân bằng', 'Equilibrium Δh')),
+            label: Lz(finalLabel),
             y: osm.traj.t.map(() => osm.eq.dh * 100),
             dash: true,
             color: 2,

@@ -7,7 +7,9 @@
  */
 import { useGemmaPrefs } from './gemmaPrefs';
 import { useGpuStore, type WebGpuInfo } from './gpu';
+import { gemmaBlockedByGpuFault, isGpuFailure, noteGpuFault } from './gpuSafety';
 import { deleteRepo, opfsAvailable, repoStored } from './modelStore';
+import { GEMMA_FIRST_PIECE_MS, GEMMA_PIECE_GAP_MS, watchStall } from './stallWatch';
 import { webGemmaModel } from './webGemmaModels';
 
 export type WebGemmaStatus = 'missing' | 'ready';
@@ -171,6 +173,7 @@ type WorkerOut =
   | { kind: 'load-progress'; modelId: string; loaded: number; total: number | null }
   | { kind: 'reply'; id: number; text: string; truncated: boolean }
   | { kind: 'partial'; id: number; text: string }
+  | { kind: 'device-lost'; message: string }
   | { kind: 'error'; id: number; message: string };
 
 let worker: Worker | null = null;
@@ -206,6 +209,13 @@ function ensureWorker(): Worker {
         partials.get(out.id)?.(out.text);
         return;
       }
+      if (out.kind === 'device-lost') {
+        // The model is gone with its GPU device: fail what waits and keep Gemma off for this
+        // session, so it is never reloaded onto a card that just failed (audit GPU-01).
+        noteGpuFault('device-lost', useGpuStore.getState().gemmaInfo);
+        failAll('gpu-lost');
+        return;
+      }
       if (out.kind === 'reply' || out.kind === 'error') {
         const resolve = pending.get(out.id);
         if (resolve) {
@@ -236,15 +246,21 @@ function ensureWorker(): Worker {
     // call — init, load and chat — instead of leaving "downloading…" spinning forever.
     worker.onerror = (event) => {
       event.preventDefault();
-      const failed = [...pending.entries()];
-      pending.clear();
-      resetWorker();
-      for (const [id, resolve] of failed) {
-        resolve({ kind: 'error', id, message: 'worker-crashed' });
-      }
+      noteGpuFault('worker-crashed', useGpuStore.getState().gemmaInfo);
+      failAll('worker-crashed');
     };
   }
   return worker;
+}
+
+/** Answers every waiting call with `message` and starts a fresh worker next time. */
+function failAll(message: string): void {
+  const failed = [...pending.entries()];
+  pending.clear();
+  resetWorker();
+  for (const [id, resolve] of failed) {
+    resolve({ kind: 'error', id, message });
+  }
 }
 
 function waitFor(id: number): Promise<WorkerOut> {
@@ -294,6 +310,8 @@ async function loadIntoWorker(
   const meta = webGemmaModel(modelId);
   if (!meta) throw new Error(`unknown model ${modelId}`);
   if (webGPUStatus() !== 'webgpu') throw new Error('webgpu-missing');
+  // After a GPU fault the model is not loaded again by itself (audit GPU-01).
+  if (gemmaBlockedByGpuFault()) throw new Error('gpu-blocked');
   await ensureInited(signal);
   if (loadedId === modelId) return;
   const w = ensureWorker();
@@ -306,6 +324,7 @@ async function loadIntoWorker(
     kind: 'load',
     modelId,
     repo: meta.repo,
+    revision: meta.revision,
     modality: meta.kind,
     dtype: meta.dtype,
     device: 'webgpu',
@@ -467,10 +486,26 @@ export function webGemmaChat(args: {
   maxTokens?: number;
   /** Most prompt tokens; the worker drops the oldest turns above it (exact count). */
   inputBudget?: number;
+  /**
+   * Repetition rules (webGemmaWorker.ts `Decoding`); the worker defaults to 'app'. 'legacy'
+   * reproduces the PR #20 (f527f18) decoding (the same as 0.5.2's) for
+   * scripts/teaching/eval-gemma.mjs only: the app never sets it.
+   */
+  decoding?: 'app' | 'legacy';
   /** Called with the answer so far while it is being generated (echoed question removed). */
   onPartial?: (textSoFar: string) => void;
+  /**
+   * Stops the answer ("Dừng" in the chat): a request still waiting never starts, a running one is
+   * interrupted in the worker (InterruptableStoppingCriteria) and its partial text is dropped.
+   * The call rejects with "cancelled" at once; the queue moves on when the worker has stopped.
+   */
+  signal?: AbortSignal;
+  /** The question a small model may repeat first (default: the last user message). */
+  echo?: string;
 }): Promise<WebGemmaReply> {
+  const signal = args.signal;
   const task = async (): Promise<WebGemmaReply> => {
+    if (signal?.aborted) throw new Error('cancelled');
     const meta = webGemmaModel(args.model);
     if (!meta) throw new Error(`unknown model ${args.model}`);
     // Photos need the vision model: switch automatically when it is ready.
@@ -483,24 +518,52 @@ export function webGemmaChat(args: {
       }
     }
     if ((await webGemmaStatus(id)) !== 'ready') throw new Error('model-missing');
+    if (signal?.aborted) throw new Error('cancelled');
     clearIdleTimer();
     const wasLoaded = loadedId;
-    await loadIntoWorker(id, () => undefined);
+    try {
+      await loadIntoWorker(id, () => undefined);
+    } catch (e) {
+      // A model still in GPU memory must leave it after the idle time, whatever went wrong.
+      if (loadedId !== null) scheduleIdleUnload();
+      throw e;
+    }
     if (wasLoaded !== loadedId) memoryChanged();
+    if (signal?.aborted) {
+      // Stopped while the model was loading: it still leaves the GPU memory after the idle time.
+      scheduleIdleUnload();
+      throw new Error('cancelled');
+    }
     const w = ensureWorker();
     const chatId = nextId++;
     const waiting = waitFor(chatId);
     const lastUser = [...args.messages].reverse().find((m) => m.role !== 'assistant');
-    const echo = lastUser?.content.trim() ?? '';
+    const echo = (args.echo ?? lastUser?.content ?? '').trim();
+    const stop = () => {
+      try {
+        w.postMessage({ kind: 'stop', id: chatId });
+      } catch {
+        /* the worker is already gone */
+      }
+    };
+    signal?.addEventListener('abort', stop, { once: true });
     const onPartial = args.onPartial;
-    if (onPartial) {
-      let soFar = '';
-      partials.set(chatId, (piece) => {
-        soFar += piece;
-        const shown = withoutEcho(soFar, echo);
-        if (shown) onPartial(shown);
-      });
-    }
+    // An answer that stops coming is ended with a clear error and a fresh worker (audit AI-01).
+    const watch = watchStall({
+      firstMs: GEMMA_FIRST_PIECE_MS,
+      gapMs: GEMMA_PIECE_GAP_MS,
+      onStall: () => {
+        failAll('gemma-stalled');
+      },
+    });
+    let soFar = '';
+    partials.set(chatId, (piece) => {
+      watch.touch();
+      if (!onPartial) return;
+      soFar += piece;
+      const shown = withoutEcho(soFar, echo);
+      if (shown) onPartial(shown);
+    });
     w.postMessage({
       kind: 'chat',
       id: chatId,
@@ -510,9 +573,21 @@ export function webGemmaChat(args: {
       temperature: args.temperature ?? 0.2,
       maxTokens: args.maxTokens ?? 1024,
       ...(args.inputBudget !== undefined ? { inputBudget: args.inputBudget } : {}),
+      ...(args.decoding !== undefined ? { decoding: args.decoding } : {}),
     });
-    const out = await waiting.finally(() => partials.delete(chatId));
+    const out = await waiting.finally(() => {
+      watch.stop();
+      partials.delete(chatId);
+      signal?.removeEventListener('abort', stop);
+    });
     scheduleIdleUnload();
+    // A GPU error is handled even after "Dừng": a driver reset while the answer was being stopped
+    // must still turn Gemma off and replace the worker (audit GPU-01).
+    if (out.kind === 'error' && isGpuFailure(out.message) && !gemmaBlockedByGpuFault()) {
+      noteGpuFault('runtime-gpu-error', useGpuStore.getState().gemmaInfo);
+      resetWorker();
+    }
+    if (signal?.aborted) throw new Error('cancelled');
     if (out.kind === 'error') throw new Error(out.message);
     let text = out.kind === 'reply' ? out.text.trim() : '';
     if (!text) throw new Error('empty reply');
@@ -523,5 +598,30 @@ export function webGemmaChat(args: {
   };
   const run = queue.then(task, task);
   queue = run.catch(() => undefined);
-  return run;
+  return abortable(run, signal);
+}
+
+/** Rejects with "cancelled" as soon as `signal` aborts (the work itself may still finish). */
+export function abortable<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
+  if (!signal) return work;
+  return new Promise<T>((resolve, reject) => {
+    const cancel = () => {
+      reject(new Error('cancelled'));
+    };
+    if (signal.aborted) {
+      cancel();
+      return;
+    }
+    signal.addEventListener('abort', cancel, { once: true });
+    work.then(
+      (value) => {
+        signal.removeEventListener('abort', cancel);
+        resolve(value);
+      },
+      (e: unknown) => {
+        signal.removeEventListener('abort', cancel);
+        reject(e instanceof Error ? e : new Error(String(e)));
+      },
+    );
+  });
 }

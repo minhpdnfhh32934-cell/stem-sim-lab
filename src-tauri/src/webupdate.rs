@@ -25,6 +25,7 @@ use std::borrow::Cow;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
+use std::time::Duration;
 use tauri::utils::assets::{AssetKey, AssetsIter, CspHash};
 use tauri::{App, AppHandle, Assets, Runtime, State};
 
@@ -184,8 +185,16 @@ pub fn unpack(zip_bytes: &[u8], dir: &Path) -> Result<(), String> {
     let mut total: u64 = 0;
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).map_err(|e| e.to_string())?;
-        let Some(rel) = file.enclosed_name() else {
-            return Err(format!("đường dẫn không an toàn: {}", file.name()));
+        // zip 9: `name()` can fail on a badly encoded name; the raw bytes are only shown here.
+        // zip 9's `enclosed_name` turns "/x" or "C:\x" into "x"; such a name is refused instead,
+        // since the release script never writes one.
+        let raw = file.name_raw();
+        let absolute = matches!(raw.first(), Some(b'/' | b'\\'))
+            || (raw.len() >= 2 && raw[0].is_ascii_alphabetic() && raw[1] == b':');
+        let rel = if absolute { None } else { file.enclosed_name() };
+        let Some(rel) = rel else {
+            let name = String::from_utf8_lossy(file.name_raw());
+            return Err(format!("đường dẫn không an toàn: {name}"));
         };
         let out = dir.join(rel);
         if file.is_dir() {
@@ -243,24 +252,57 @@ impl Shared {
             .ok_or_else(|| "chưa sẵn sàng".to_string())
     }
 
-    /// Reads `active.json`; keeps it only if it is newer than the built-in web part.
+    /// Folder of the downloaded web part being served (`None`: the built-in one is served).
+    fn active_dir(&self) -> Option<PathBuf> {
+        self.active
+            .read()
+            .ok()
+            .and_then(|a| a.as_ref().map(|(_, dir)| dir.clone()))
+    }
+
+    /// Start-up: reads `active.json` and keeps it only if it is newer than the built-in web part.
+    /// This is also the only place where downloaded folders are deleted (every folder except the
+    /// one now served): an update or a reset never touches the web part of the open page, whose
+    /// lazy chunks, styles and fonts must keep loading until the restart.
     fn load(&self, root: &Path) {
         let record = std::fs::read(root.join(ACTIVE_FILE))
             .ok()
             .and_then(|b| serde_json::from_slice::<ActiveRecord>(&b).ok());
-        let Some(rec) = record else { return };
-        let dir = root.join(&rec.version);
-        let valid = parse_version(&rec.version).is_some() && dir.join("index.html").is_file();
-        if valid && newer(&rec.version, &self.embedded()) {
-            if let Ok(mut a) = self.active.write() {
-                *a = Some((rec.version, dir));
+        let mut keep = None;
+        if let Some(rec) = record {
+            let dir = root.join(&rec.version);
+            let valid = parse_version(&rec.version).is_some() && dir.join("index.html").is_file();
+            if valid && newer(&rec.version, &self.embedded()) {
+                keep = Some(dir.clone());
+                if let Ok(mut a) = self.active.write() {
+                    *a = Some((rec.version, dir));
+                }
+            } else {
+                // A newer installer (or a broken download): forget the downloaded web part.
+                let _ = std::fs::remove_file(root.join(ACTIVE_FILE));
             }
-        } else {
-            // A newer installer (or a broken download): forget the downloaded web part.
-            let _ = std::fs::remove_file(root.join(ACTIVE_FILE));
-            let _ = std::fs::remove_dir_all(&dir);
+        }
+        remove_unused_versions(root, keep.as_deref());
+    }
+}
+
+/// Deletes every folder under `root` (downloaded versions, unfinished `.partial` unpacks)
+/// except `keep`.
+fn remove_unused_versions(root: &Path, keep: Option<&Path>) {
+    let Ok(entries) = std::fs::read_dir(root) else {
+        return;
+    };
+    for e in entries.flatten() {
+        let p = e.path();
+        if p.is_dir() && Some(p.as_path()) != keep {
+            let _ = std::fs::remove_dir_all(&p);
         }
     }
+}
+
+/// File `key` of the web part unpacked in `dir`.
+fn read_asset(dir: &Path, key: &str) -> Option<Vec<u8>> {
+    std::fs::read(dir.join(safe_rel(key)?)).ok()
 }
 
 /// Serves the downloaded web part when there is one, otherwise the built-in assets.
@@ -299,10 +341,8 @@ impl<R: Runtime> Assets<R> for OverrideAssets<R> {
     }
 
     fn get(&self, key: &AssetKey) -> Option<Cow<'_, [u8]>> {
-        let active = self.shared.active.read().ok().and_then(|a| a.clone());
-        if let Some((_, dir)) = active {
-            let rel = safe_rel(key.as_ref())?;
-            return std::fs::read(dir.join(rel)).ok().map(Cow::Owned);
+        if let Some(dir) = self.shared.active_dir() {
+            return read_asset(&dir, key.as_ref()).map(Cow::Owned);
         }
         self.fallback.get(key)
     }
@@ -388,12 +428,60 @@ fn status(shared: &Shared) -> Status {
     }
 }
 
+const USER_AGENT: &str = concat!("STEM-Sim-Lab/", env!("CARGO_PKG_VERSION"));
+/// The zip download may take as long as the link needs, but it must connect in time and data
+/// must keep arriving.
+const ZIP_CONNECT_TIMEOUT: Duration = Duration::from_secs(30);
+const ZIP_IDLE_TIMEOUT: Duration = Duration::from_secs(60);
+
+/// Client for the small manifest: one total time limit.
 fn client() -> Result<reqwest::Client, String> {
     reqwest::Client::builder()
-        .user_agent(concat!("STEM-Sim-Lab/", env!("CARGO_PKG_VERSION")))
-        .timeout(std::time::Duration::from_secs(120))
+        .user_agent(USER_AGENT)
+        .timeout(Duration::from_secs(120))
         .build()
         .map_err(|e| e.to_string())
+}
+
+/// Client for the web-bundle zip (about 20 MB). No total time limit, which would also cover the
+/// body and make every download on a slow but steady link fail: only the connection and each
+/// read are limited (`idle`: the longest wait for the next bytes).
+fn zip_client_builder(idle: Duration) -> reqwest::ClientBuilder {
+    reqwest::Client::builder()
+        .user_agent(USER_AGENT)
+        .connect_timeout(ZIP_CONNECT_TIMEOUT)
+        .read_timeout(idle)
+}
+
+fn download_error(e: &reqwest::Error) -> String {
+    if e.is_timeout() {
+        "mạng ngừng gửi dữ liệu quá lâu — hãy kiểm tra kết nối rồi thử lại".into()
+    } else {
+        e.to_string()
+    }
+}
+
+/// Downloads `url`, streaming the body and stopping as soon as it grows past `limit` bytes.
+async fn download_limited(
+    client: &reqwest::Client,
+    url: &str,
+    limit: u64,
+) -> Result<Vec<u8>, String> {
+    let mut resp = client
+        .get(url)
+        .send()
+        .await
+        .map_err(|e| download_error(&e))?
+        .error_for_status()
+        .map_err(|e| download_error(&e))?;
+    let mut buf = Vec::new();
+    while let Some(chunk) = resp.chunk().await.map_err(|e| download_error(&e))? {
+        if (buf.len() + chunk.len()) as u64 > limit {
+            return Err("gói cập nhật lớn hơn dung lượng đã ký — đã dừng tải".into());
+        }
+        buf.extend_from_slice(&chunk);
+    }
+    Ok(buf)
 }
 
 async fn fetch_manifest() -> Result<Manifest, String> {
@@ -443,7 +531,35 @@ pub async fn web_update_check(state: State<'_, WebUpdateState>) -> Result<CheckR
     })
 }
 
-/// Downloads, verifies and activates the newest web part. Takes effect after a restart.
+/// Unpacks a verified zip of `version` next to the running web part and names it in
+/// `active.json` for the next start. The running web part is left alone (its folder and
+/// `Shared::active`): the open page keeps loading its own files until the restart, and
+/// [`Shared::load`] deletes the old folders then.
+fn stage_bundle(root: &Path, version: &str, zip_bytes: &[u8]) -> Result<(), String> {
+    let partial = root.join(format!("{version}.partial"));
+    let _ = std::fs::remove_dir_all(&partial);
+    unpack(zip_bytes, &partial)?;
+    let inner = std::fs::read_to_string(partial.join(VERSION_FILE)).unwrap_or_default();
+    let edition = std::fs::read_to_string(partial.join(EDITION_FILE)).unwrap_or_default();
+    if inner.trim() != version || edition.trim() != EDITION || !partial.join("index.html").is_file()
+    {
+        let _ = std::fs::remove_dir_all(&partial);
+        return Err("gói cập nhật thiếu tệp hoặc sai phiên bản".into());
+    }
+    // Never the running folder: an update is always newer than the running version.
+    let dir = root.join(version);
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::rename(&partial, &dir).map_err(|e| e.to_string())?;
+    let record = serde_json::to_vec(&ActiveRecord {
+        version: version.to_string(),
+    })
+    .map_err(|e| e.to_string())?;
+    let tmp = root.join("active.json.tmp");
+    std::fs::write(&tmp, record).map_err(|e| e.to_string())?;
+    std::fs::rename(&tmp, root.join(ACTIVE_FILE)).map_err(|e| e.to_string())
+}
+
+/// Downloads, verifies and stages the newest web part. Takes effect after a restart.
 #[tauri::command]
 pub async fn web_update_apply(state: State<'_, WebUpdateState>) -> Result<String, String> {
     if crate::channel::is_store() {
@@ -458,16 +574,10 @@ pub async fn web_update_apply(state: State<'_, WebUpdateState>) -> Result<String
     if m.size > MAX_ZIP_BYTES {
         return Err("gói cập nhật quá lớn".into());
     }
-    let bytes = client()?
-        .get(&m.url)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?
-        .error_for_status()
-        .map_err(|e| e.to_string())?
-        .bytes()
-        .await
+    let zip_client = zip_client_builder(ZIP_IDLE_TIMEOUT)
+        .build()
         .map_err(|e| e.to_string())?;
+    let bytes = download_limited(&zip_client, &m.url, m.size).await?;
     if bytes.len() as u64 != m.size {
         return Err("tải về không đủ dung lượng".into());
     }
@@ -475,60 +585,23 @@ pub async fn web_update_apply(state: State<'_, WebUpdateState>) -> Result<String
     if !hash.eq_ignore_ascii_case(&m.sha256) {
         return Err("mã kiểm tra (SHA-256) không khớp — bản tải về bị hỏng".into());
     }
-    let root = shared.root()?;
-    let partial = root.join(format!("{}.partial", m.web_version));
-    let _ = std::fs::remove_dir_all(&partial);
-    unpack(&bytes, &partial)?;
-    let inner = std::fs::read_to_string(partial.join(VERSION_FILE)).unwrap_or_default();
-    let edition = std::fs::read_to_string(partial.join(EDITION_FILE)).unwrap_or_default();
-    if inner.trim() != m.web_version
-        || edition.trim() != EDITION
-        || !partial.join("index.html").is_file()
-    {
-        let _ = std::fs::remove_dir_all(&partial);
-        return Err("gói cập nhật thiếu tệp hoặc sai phiên bản".into());
-    }
-    let dir = root.join(&m.web_version);
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::rename(&partial, &dir).map_err(|e| e.to_string())?;
-    let record = serde_json::to_vec(&ActiveRecord {
-        version: m.web_version.clone(),
-    })
-    .map_err(|e| e.to_string())?;
-    let tmp = root.join("active.json.tmp");
-    std::fs::write(&tmp, record).map_err(|e| e.to_string())?;
-    std::fs::rename(&tmp, root.join(ACTIVE_FILE)).map_err(|e| e.to_string())?;
-    // Remove older downloaded versions.
-    if let Ok(entries) = std::fs::read_dir(&root) {
-        for e in entries.flatten() {
-            let p = e.path();
-            if p.is_dir() && p != dir {
-                let _ = std::fs::remove_dir_all(p);
-            }
-        }
-    }
-    if let Ok(mut a) = shared.active.write() {
-        *a = Some((m.web_version.clone(), dir));
-    }
+    stage_bundle(&shared.root()?, &m.web_version, &bytes)?;
     Ok(m.web_version)
 }
 
-/// Removes the downloaded web part: the built-in one is used after a restart.
+/// Forgets the downloaded web part. The open page keeps being served until the restart; the
+/// built-in web part is used after it, and [`Shared::load`] deletes the downloaded folders.
+fn forget_download(root: &Path) -> Result<(), String> {
+    match std::fs::remove_file(root.join(ACTIVE_FILE)) {
+        Err(e) if e.kind() != std::io::ErrorKind::NotFound => Err(e.to_string()),
+        _ => Ok(()),
+    }
+}
+
+/// "Khôi phục bản gốc": the built-in web part is used after the restart.
 #[tauri::command]
 pub fn web_update_reset(state: State<'_, WebUpdateState>) -> Result<(), String> {
-    let root = state.0.root()?;
-    let _ = std::fs::remove_file(root.join(ACTIVE_FILE));
-    if let Ok(entries) = std::fs::read_dir(&root) {
-        for e in entries.flatten() {
-            if e.path().is_dir() {
-                let _ = std::fs::remove_dir_all(e.path());
-            }
-        }
-    }
-    if let Ok(mut a) = state.0.active.write() {
-        *a = None;
-    }
-    Ok(())
+    forget_download(&state.0.root()?)
 }
 
 #[tauri::command]
@@ -773,6 +846,14 @@ mod tests {
         let evil = zip_of(&[("../evil.txt", b"x")]);
         assert!(unpack(&evil, &tmp.join("bad")).is_err());
         assert!(!tmp.join("evil.txt").exists());
+
+        // Absolute and drive-prefixed names are refused, not rewritten into the folder.
+        for name in ["/abs.txt", "\\abs.txt", "C:/abs.txt", "C:\\abs.txt"] {
+            let dir = tmp.join("abs");
+            let absolute = zip_of(&[(name, b"x")]);
+            assert!(unpack(&absolute, &dir).is_err(), "{name} must be refused");
+            assert!(!dir.join("abs.txt").exists(), "{name} must write nothing");
+        }
         let _ = std::fs::remove_dir_all(&tmp);
     }
 
@@ -804,6 +885,151 @@ mod tests {
         s2.load(&tmp);
         assert_eq!(s2.running(), "0.3.0");
         assert!(!tmp.join(ACTIVE_FILE).exists());
+        assert!(!tmp.join("0.2.1").exists());
         let _ = std::fs::remove_dir_all(&tmp);
+    }
+
+    /// A downloaded 0.6.1 is running (built-in 0.6.0), with a lazy chunk the page has not
+    /// loaded yet.
+    fn running_download(name: &str) -> (PathBuf, Shared) {
+        let root = std::env::temp_dir().join(format!("stemsim-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(root.join("0.6.1/assets")).unwrap();
+        std::fs::write(root.join("0.6.1/index.html"), "<old>").unwrap();
+        std::fs::write(root.join("0.6.1/assets/topic-old.js"), "old chunk").unwrap();
+        std::fs::write(root.join(ACTIVE_FILE), r#"{"version":"0.6.1"}"#).unwrap();
+        let s = Shared::default();
+        *s.embedded.write().unwrap() = "0.6.0".into();
+        s.load(&root);
+        assert_eq!(s.running(), "0.6.1");
+        (root, s)
+    }
+
+    fn served(s: &Shared, key: &str) -> Option<Vec<u8>> {
+        read_asset(&s.active_dir()?, key)
+    }
+
+    #[test]
+    fn an_update_keeps_serving_the_open_page_until_the_restart() {
+        let (root, s) = running_download("stage");
+        std::fs::create_dir_all(root.join("0.5.9.partial")).unwrap();
+        let bundle = zip_of(&[
+            (VERSION_FILE, b"0.6.2"),
+            (EDITION_FILE, b"main"),
+            ("index.html", b"<new>"),
+            ("assets/topic-new.js", b"new chunk"),
+        ]);
+        stage_bundle(&root, "0.6.2", &bundle).unwrap();
+        // The open page still gets its own files (not the new index.html as a fallback).
+        assert_eq!(s.running(), "0.6.1");
+        assert_eq!(served(&s, "/assets/topic-old.js").unwrap(), b"old chunk");
+        assert_eq!(served(&s, "/index.html").unwrap(), b"<old>");
+        assert!(root.join("0.6.1/assets/topic-old.js").is_file());
+
+        // After the restart: the new part is served and the unused folders are gone.
+        let after = Shared::default();
+        *after.embedded.write().unwrap() = "0.6.0".into();
+        after.load(&root);
+        assert_eq!(after.running(), "0.6.2");
+        assert_eq!(
+            served(&after, "/assets/topic-new.js").unwrap(),
+            b"new chunk"
+        );
+        assert!(!root.join("0.6.1").exists());
+        assert!(!root.join("0.5.9.partial").exists());
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_bundle_of_another_version_is_not_staged() {
+        let (root, s) = running_download("stage-bad");
+        let bundle = zip_of(&[
+            (VERSION_FILE, b"0.6.3"),
+            (EDITION_FILE, b"main"),
+            ("index.html", b"x"),
+        ]);
+        assert!(stage_bundle(&root, "0.6.2", &bundle).is_err());
+        assert!(!root.join("0.6.2").exists() && !root.join("0.6.2.partial").exists());
+        assert_eq!(
+            std::fs::read_to_string(root.join(ACTIVE_FILE)).unwrap(),
+            r#"{"version":"0.6.1"}"#
+        );
+        assert_eq!(served(&s, "/assets/topic-old.js").unwrap(), b"old chunk");
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_reset_keeps_serving_the_open_page_until_the_restart() {
+        let (root, s) = running_download("reset");
+        forget_download(&root).unwrap();
+        forget_download(&root).unwrap(); // nothing left to forget: still fine
+        assert_eq!(served(&s, "/assets/topic-old.js").unwrap(), b"old chunk");
+
+        let after = Shared::default();
+        *after.embedded.write().unwrap() = "0.6.0".into();
+        after.load(&root);
+        assert_eq!(after.running(), "0.6.0");
+        assert!(after.active_dir().is_none());
+        assert!(!root.join("0.6.1").exists());
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// One-shot HTTP server on 127.0.0.1: answers with `head` (status line and headers), then
+    /// writes `chunks` with `pause` before each one.
+    fn slow_server(head: &'static str, chunks: Vec<Vec<u8>>, pause: Duration) -> String {
+        use std::net::TcpListener;
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        std::thread::spawn(move || {
+            let Ok((mut stream, _)) = listener.accept() else {
+                return;
+            };
+            let mut req = Vec::new();
+            let mut byte = [0u8; 1];
+            while !req.ends_with(b"\r\n\r\n") && stream.read(&mut byte).unwrap_or(0) == 1 {
+                req.push(byte[0]);
+            }
+            let _ = stream.write_all(head.as_bytes());
+            for c in chunks {
+                std::thread::sleep(pause);
+                if stream.write_all(&c).and_then(|_| stream.flush()).is_err() {
+                    return;
+                }
+            }
+        });
+        format!("http://{addr}/web-bundle.zip")
+    }
+
+    fn get_zip(url: &str, idle: Duration, limit: u64) -> Result<Vec<u8>, String> {
+        let client = zip_client_builder(idle).no_proxy().build().unwrap();
+        tauri::async_runtime::block_on(download_limited(&client, url, limit))
+    }
+
+    #[test]
+    fn a_slow_but_steady_download_is_not_cut_off() {
+        // 8 pieces, 120 ms apart: about 1 s in all, far longer than the 400 ms idle limit.
+        let head = "HTTP/1.1 200 OK\r\nContent-Length: 8192\r\nConnection: close\r\n\r\n";
+        let url = slow_server(head, vec![vec![7u8; 1024]; 8], Duration::from_millis(120));
+        let started = std::time::Instant::now();
+        let body = get_zip(&url, Duration::from_millis(400), 8192).unwrap();
+        assert_eq!(body.len(), 8192);
+        assert!(started.elapsed() > Duration::from_millis(800));
+    }
+
+    #[test]
+    fn a_stalled_download_stops_with_a_clear_message() {
+        let head = "HTTP/1.1 200 OK\r\nContent-Length: 2048\r\nConnection: close\r\n\r\n";
+        let url = slow_server(head, vec![vec![7u8; 1024]; 2], Duration::from_millis(900));
+        let err = get_zip(&url, Duration::from_millis(300), 2048).unwrap_err();
+        assert!(err.contains("ngừng gửi dữ liệu"), "{err}");
+    }
+
+    #[test]
+    fn a_body_larger_than_the_signed_size_is_not_kept() {
+        // No Content-Length: only the streamed byte count can stop it.
+        let head = "HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n";
+        let url = slow_server(head, vec![vec![7u8; 1024]; 4], Duration::from_millis(10));
+        let err = get_zip(&url, Duration::from_secs(5), 1500).unwrap_err();
+        assert!(err.contains("lớn hơn dung lượng đã ký"), "{err}");
     }
 }

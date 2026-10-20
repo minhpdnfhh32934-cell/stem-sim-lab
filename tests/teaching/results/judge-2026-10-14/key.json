@@ -1,0 +1,780 @@
+{
+ "seed": "simlab-judge-2026-10-14",
+ "groups": [
+  "gemma3-1b/legacy/legacy/0",
+  "gemma3-1b/legacy/app/0",
+  "gemma3-1b/current/legacy/0",
+  "gemma3-1b/current/app/0",
+  "gemma3-1b/improved/legacy/0",
+  "gemma3-1b/improved/app/0",
+  "gemma3-1b/improved-v2/app/0"
+ ],
+ "files": [
+  "2026-10-14-gemma3-1b-baseline-greedy.json",
+  "2026-10-14-gemma3-1b-baseline-greedy-part2.json",
+  "eval-gemma3-1b-improved-greedy.json",
+  "eval-gemma3-1b-improved-v2-greedy.json"
+ ],
+ "key": {
+  "j0": {
+   "P1": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P2": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "P3": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "P4": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "P5": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "P6": {
+    "A": "gemma3-1b/current/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "P7": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P8": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "P9": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "P10": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "P11": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved/app/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "P12": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "P13": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "P14": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "C1": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "C2": {
+    "A": "gemma3-1b/current/app/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "C3": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "C4": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "C5": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "C6": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "C7": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "C8": {
+    "A": "gemma3-1b/current/app/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "C9": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "C10": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "C11": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "C12": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "C13": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "C14": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "B1": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "B2": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "B3": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "B4": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "B5": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "B6": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "B7": {
+    "A": "gemma3-1b/current/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "B8": {
+    "A": "gemma3-1b/current/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "B9": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "B10": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "B11": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "B12": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "B13": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "B14": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/improved/app/0"
+   }
+  },
+  "j1": {
+   "P1": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P2": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "P3": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "P4": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P5": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P6": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "P7": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "P8": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "P9": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "P10": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/improved-v2/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P11": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "P12": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "P13": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "P14": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "C1": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "C2": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "C3": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "C4": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "C5": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "C6": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "C7": {
+    "A": "gemma3-1b/current/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "C8": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "C9": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "C10": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "C11": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "C12": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "C13": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "C14": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "B1": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "B2": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/current/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/legacy/app/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "B3": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/current/app/0",
+    "G": "gemma3-1b/improved/legacy/0"
+   },
+   "B4": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/improved-v2/app/0",
+    "C": "gemma3-1b/legacy/legacy/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "B5": {
+    "A": "gemma3-1b/improved-v2/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/legacy/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "B6": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/improved/legacy/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/improved/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "B7": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/improved-v2/app/0",
+    "E": "gemma3-1b/current/app/0",
+    "F": "gemma3-1b/improved/legacy/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "B8": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/app/0",
+    "C": "gemma3-1b/legacy/app/0",
+    "D": "gemma3-1b/improved/legacy/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/current/legacy/0",
+    "G": "gemma3-1b/current/app/0"
+   },
+   "B9": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/legacy/app/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/legacy/legacy/0",
+    "E": "gemma3-1b/current/legacy/0",
+    "F": "gemma3-1b/improved/app/0",
+    "G": "gemma3-1b/improved-v2/app/0"
+   },
+   "B10": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/legacy/app/0",
+    "E": "gemma3-1b/improved/app/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   },
+   "B11": {
+    "A": "gemma3-1b/legacy/app/0",
+    "B": "gemma3-1b/legacy/legacy/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved/legacy/0",
+    "F": "gemma3-1b/improved-v2/app/0",
+    "G": "gemma3-1b/improved/app/0"
+   },
+   "B12": {
+    "A": "gemma3-1b/improved/app/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/current/app/0",
+    "D": "gemma3-1b/current/legacy/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/legacy/0",
+    "G": "gemma3-1b/legacy/app/0"
+   },
+   "B13": {
+    "A": "gemma3-1b/legacy/legacy/0",
+    "B": "gemma3-1b/improved/legacy/0",
+    "C": "gemma3-1b/improved/app/0",
+    "D": "gemma3-1b/current/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/current/legacy/0"
+   },
+   "B14": {
+    "A": "gemma3-1b/improved/legacy/0",
+    "B": "gemma3-1b/current/app/0",
+    "C": "gemma3-1b/current/legacy/0",
+    "D": "gemma3-1b/improved/app/0",
+    "E": "gemma3-1b/improved-v2/app/0",
+    "F": "gemma3-1b/legacy/app/0",
+    "G": "gemma3-1b/legacy/legacy/0"
+   }
+  }
+ }
+}

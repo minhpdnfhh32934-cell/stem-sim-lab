@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLayoutStore } from '@/app/layout/layoutStore';
+import { useNavigationStore } from '@/app/navigationStore';
 import { openProject, saveProject } from '@/app/project/actions';
 import { redo, undo } from '@/app/project/undo';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -22,10 +23,31 @@ const TOOL_FOR_ACTION: Partial<Record<ShortcutAction, StageTool>> = {
 };
 
 /**
+ * Actions on the lab's open topic. The topic stays open behind the AI Teacher page, but the
+ * learner cannot see it there (or on the launch page and in Science Studio), so these keys only
+ * act while the lab is on screen. Saving, opening, the palette, font size and presentation mode
+ * work everywhere, as in the ☰ menu.
+ */
+const LAB_ONLY: ReadonlySet<ShortcutAction> = new Set<ShortcutAction>([
+  'playPause',
+  'reset',
+  'step',
+  'undo',
+  'redo',
+  'toolSelect',
+  'toolDrag',
+  'toolRuler',
+  'toolProtractor',
+  'toolStopwatch',
+  'toolFitView',
+]);
+
+/**
  * Performs a shortcut action. Returns `false` when the action did nothing, so the key event
  * keeps its default behaviour (e.g. Esc still closes an open dialog).
  */
 function runAction(action: ShortcutAction): boolean {
+  if (LAB_ONLY.has(action) && useNavigationStore.getState().screen !== 'lab') return false;
   const layout = useLayoutStore.getState();
   const workspace = useWorkspaceStore.getState();
   const settings = useSettingsStore.getState();

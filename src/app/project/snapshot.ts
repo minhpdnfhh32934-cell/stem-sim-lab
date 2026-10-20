@@ -1,9 +1,7 @@
 import { z } from 'zod';
-import { subjectOf } from '@/app/topics';
-import { sim } from '@/app/sim/runtime';
+import { openTopic } from '@/app/topics';
 import { useSimStore } from '@/app/sim/simStore';
-import { useWorkspaceStore } from '@/app/workspaceStore';
-import { closeModule, openModule, useModuleStore } from '@/modules/moduleStore';
+import { useModuleStore } from '@/modules/moduleStore';
 import { hasModule } from '@/modules/registry';
 import { hasScene } from '@/physics/registry';
 
@@ -87,20 +85,19 @@ const nextRender = () =>
     setTimeout(resolve, 60);
   });
 
-/** Opens the topic of a snapshot and restores its inputs. */
+/**
+ * Opens the topic of a snapshot in the lab, exactly as choosing it would (the AI Teacher page,
+ * Science Studio or the launch page give way to it), and restores its inputs.
+ */
 export async function restoreSnapshot(s: Snapshot): Promise<void> {
-  const subject = subjectOf(s.topicId);
-  if (subject) useWorkspaceStore.setState({ subject });
   if (hasModule(s.topicId)) {
-    sim.shutdown();
-    await openModule(s.topicId);
+    await openTopic(s.topicId);
     await nextRender();
     const view = useModuleStore.getState().active?.view;
     if (s.module && view?.state) view.state.set(s.module.state);
     return;
   }
-  closeModule();
-  await sim.open(s.topicId, {
+  await openTopic(s.topicId, {
     ...(s.physics
       ? {
           params: s.physics.params,

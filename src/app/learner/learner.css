@@ -80,7 +80,7 @@
 }
 .launch__inner {
   position: relative;
-  width: min(100%, 850px);
+  width: min(100%, 1080px);
   text-align: center;
   text-wrap: balance;
 }
@@ -106,7 +106,7 @@
 }
 .launch__cards {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
   margin-top: clamp(26px, 5vh, 48px);
 }
@@ -151,6 +151,10 @@
   background: color-mix(in srgb, var(--teacher-warm) 17%, var(--bg-panel));
   color: var(--teacher-warm);
 }
+.launch-card--studio .launch-card__icon {
+  background: color-mix(in srgb, var(--subject-physics) 15%, var(--bg-panel));
+  color: var(--subject-physics);
+}
 .launch-card__copy {
   display: flex;
   flex-direction: column;
@@ -175,6 +179,11 @@
   margin: var(--space-5) 0 0;
   color: var(--text-muted);
   font-size: var(--text-sm);
+}
+@media (max-width: 1100px) {
+  .launch__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 700px) {
   .launch__cards {
@@ -558,6 +567,12 @@
 /* ---------- Basic / Advanced switch ---------- */
 .mode-switch .segmented__item {
   min-height: 1.9rem;
+}
+/* Touch: the full target (this rule is more specific than layout.css's `.segmented__item`). */
+@media (any-pointer: coarse) {
+  .mode-switch .segmented__item {
+    min-height: var(--target);
+  }
 }
 .params__more {
   display: inline-flex;

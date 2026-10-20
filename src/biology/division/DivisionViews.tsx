@@ -1,12 +1,21 @@
-import { ChevronLeft, ChevronRight, Pause, Play, Shuffle } from 'lucide-react';
-import { useEffect, useMemo } from 'react';
+import { Shuffle } from 'lucide-react';
+import { useMemo, type ReactNode } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useCanvas, type DrawContext } from '@/ui/canvas/useCanvas';
-import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../common';
 import { rng } from '../genetics/stats';
-import { STAGE_NAME, STAGE_NOTE, cardFor, useDivisionStore, useStages } from './state';
+import {
+  PAIR_CHOICES,
+  STAGE_NAME,
+  STAGE_NOTE,
+  cardFor,
+  useDivisionStore,
+  useStages,
+} from './state';
+import { setDivisionState } from './stageIndex';
+import { DivisionControls } from './controls';
+import { useDivisionPlay } from './useDivisionPlay';
 import {
   STAGES,
   countsOf,
@@ -15,6 +24,7 @@ import {
   type Division,
   type StageState,
 } from './division';
+import { scatterLayout } from './layout2d';
 import '../bio.css';
 
 const CHROMO_LEN = [0.36, 0.28, 0.22, 0.18];
@@ -152,42 +162,59 @@ function drawStage(d: DrawContext, s: StageState) {
       });
       return;
     }
-    const inRow = s.stage === 'metaphase' || s.stage === 'metaphase2';
+    const n = cell.chromosomes.length;
+    if (s.stage === 'metaphase' || s.stage === 'metaphase2') {
+      cell.chromosomes.forEach((c, i) => {
+        const y = cy + ((i - (n - 1) / 2) * (ry * 1.5)) / Math.max(1, n);
+        drawChromosome(d, c, cx, y, scale * 0.7, colors);
+      });
+      return;
+    }
+    // Prophase, telophase: one slot each inside the cell, so no two chromosomes overlap.
+    const sc = scale * 0.8;
+    const itemH = Math.max(
+      ...cell.chromosomes.map((c) => (CHROMO_LEN[c.pair % CHROMO_LEN.length] ?? 0.2) * sc),
+    );
+    const width = Math.max(4, sc * 0.045);
+    const double = cell.chromosomes.some((c) => c.chromatids.length === 2);
+    // A double chromosome is two chromatids side by side (drawChromosome), plus a gap.
+    const itemW = (double ? 2.1 : 1) * width * 1.6;
+    const lay = scatterLayout(
+      n,
+      cx,
+      cy,
+      rx * 0.62,
+      ry * 0.62,
+      itemW,
+      itemH * 1.1,
+      rng(31 + k * 17),
+    );
     cell.chromosomes.forEach((c, i) => {
-      const n = cell.chromosomes.length;
-      const rand = rng(31 + i + k * 17);
-      const x = inRow ? cx : cx + (rand() - 0.5) * rx * 1.1;
-      const y = inRow
-        ? cy + ((i - (n - 1) / 2) * (ry * 1.5)) / Math.max(1, n)
-        : cy + (rand() - 0.5) * ry * 1.1;
-      drawChromosome(d, c, x, y, scale * (inRow ? 0.7 : 0.8), colors);
+      const p = lay.slots[i];
+      if (p) drawChromosome(d, c, p.x, p.y, sc * lay.fit, colors);
     });
   });
 }
 
-export function DivisionStage({ kind }: { kind: Division }) {
+export function DivisionStage({
+  kind,
+  toolbar,
+  notice,
+}: {
+  kind: Division;
+  /** Extra controls at the end of the toolbar (the mitosis 3D / 2D switch). */
+  toolbar?: ReactNode;
+  /** Why this 2D picture is shown instead of the 3D one, when it is not the learner's choice. */
+  notice?: string | undefined;
+}) {
   const Lz = useLocalized();
   const card = useMemo(() => cardFor(kind), [kind]);
   usePublishCard(card);
   const stages = useStages(kind);
-  const { index, playing } = useDivisionStore();
+  const index = useDivisionStore((st) => st.index);
+  useDivisionPlay(kind, stages.length);
   const i = Math.min(index, stages.length - 1);
   const s = stages[i];
-
-  useEffect(() => {
-    useDivisionStore.setState({ index: 0, playing: false });
-  }, [kind]);
-  useEffect(() => {
-    if (!playing) return;
-    const id = window.setInterval(() => {
-      const st = useDivisionStore.getState();
-      if (st.index >= stages.length - 1) useDivisionStore.setState({ playing: false });
-      else useDivisionStore.setState({ index: st.index + 1 });
-    }, 1600);
-    return () => {
-      window.clearInterval(id);
-    };
-  }, [playing, stages.length]);
 
   const canvasRef = useCanvas(
     (d) => {
@@ -197,58 +224,13 @@ export function DivisionStage({ kind }: { kind: Division }) {
     [s, kind],
   );
   if (!s) return null;
-  const c = countsOf(s);
   return (
     <div className="bio-view">
       <canvas ref={canvasRef} className="chem-canvas" aria-label={Lz(STAGE_NAME[s.stage])} />
       <div className="chem-overlay">
-        <IconButton
-          icon={ChevronLeft}
-          label={Lz(L('Kì trước', 'Previous stage'))}
-          disabled={i === 0}
-          onClick={() => {
-            useDivisionStore.setState({ index: Math.max(0, i - 1), playing: false });
-          }}
-        />
-        <IconButton
-          icon={playing ? Pause : Play}
-          label={playing ? Lz(L('Tạm dừng', 'Pause')) : Lz(L('Phát', 'Play'))}
-          variant="solid"
-          onClick={() => {
-            useDivisionStore.setState((x) => ({
-              playing: !x.playing,
-              index: x.index >= stages.length - 1 ? 0 : x.index,
-            }));
-          }}
-        />
-        <IconButton
-          icon={ChevronRight}
-          label={Lz(L('Kì sau', 'Next stage'))}
-          disabled={i >= stages.length - 1}
-          onClick={() => {
-            useDivisionStore.setState({
-              index: Math.min(stages.length - 1, i + 1),
-              playing: false,
-            });
-          }}
-        />
-        <span className="chem-chip">
-          <strong>{Lz(STAGE_NAME[s.stage])}</strong>
-        </span>
-        <span className="chem-chip">
-          {c.cells} {Lz(L('tế bào', c.cells > 1 ? 'cells' : 'cell'))} · {c.chromosomes}{' '}
-          {Lz(
-            L(
-              c.state === 'double' ? 'NST kép' : 'NST đơn',
-              c.state === 'double' ? 'double chromosomes' : 'single chromosomes',
-            ),
-          )}
-          {Lz(L(' / tế bào', ' / cell'))}
-        </span>
-        <span className="chem-chip bio-legend">
-          <span className="rx-swatch bio-swatch--m" /> {Lz(L('từ mẹ', 'maternal'))}
-          <span className="rx-swatch bio-swatch--p" /> {Lz(L('từ bố', 'paternal'))}
-        </span>
+        <DivisionControls kind={kind} stages={stages} index={i} />
+        {toolbar}
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
       <p className="bio-caption">{Lz(STAGE_NOTE[s.stage])}</p>
     </div>
@@ -265,10 +247,10 @@ export function DivisionPanel({ kind }: { kind: Division }) {
         <select
           value={pairs}
           onChange={(e) => {
-            useDivisionStore.setState({ pairs: Number(e.target.value), index: 0 });
+            setDivisionState(kind, { pairs: Number(e.target.value), index: 0 });
           }}
         >
-          {[1, 2, 3, 4].map((n) => (
+          {PAIR_CHOICES.map((n) => (
             <option key={n} value={n}>
               2n = {2 * n}
             </option>
@@ -355,10 +337,19 @@ export function DivisionBottom({ kind }: { kind: Division }) {
                 key={s.stage}
                 className={cx(k === index && 'is-active')}
                 onClick={() => {
-                  useDivisionStore.setState({ index: k, playing: false });
+                  setDivisionState(kind, { index: k, playing: false });
                 }}
               >
-                <th scope="row">{Lz(STAGE_NAME[s.stage])}</th>
+                <th scope="row">
+                  {/* Keyboard access to the row: its click bubbles up to the row's handler. */}
+                  <button
+                    type="button"
+                    className="bio-row-btn"
+                    aria-current={k === index ? 'step' : undefined}
+                  >
+                    {Lz(STAGE_NAME[s.stage])}
+                  </button>
+                </th>
                 <td className="num">{c.cells}</td>
                 <td className="num">{c.chromosomes}</td>
                 <td>{Lz(c.state === 'double' ? L('kép', 'double') : L('đơn', 'single'))}</td>

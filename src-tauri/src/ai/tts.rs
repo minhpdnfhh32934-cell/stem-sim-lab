@@ -11,11 +11,11 @@ use std::time::{Duration, Instant};
 use base64::Engine as _;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use tokio::sync::oneshot;
 
 use super::gemini::{gemini_model, GEMINI_URL};
 use super::{
-    api_key, client, count_usage, require_ai_allowed, retry_delay, AiError, AiState, Provider,
+    api_key, client, count_usage, require_ai_allowed, retry_delay, run_counted, AiError, AiState,
+    InflightGuard, Provider,
 };
 
 /// Longest text in one request (a few sentences; the page sends phrase groups).
@@ -119,12 +119,25 @@ pub fn extract_audio(v: &Value) -> Result<(String, String), AiError> {
 }
 
 async fn synthesize(req: &TtsRequest, key: &str) -> Result<TtsResponse, AiError> {
-    let started = Instant::now();
     let http = client()?;
-    let url = format!(
-        "{GEMINI_URL}/models/{}:generateContent",
-        gemini_model(&req.model)
-    );
+    synthesize_at(&http, GEMINI_URL, req, key, tokio::time::sleep).await
+}
+
+/// One spoken answer from `base` (Gemini in the app, a mock server in tests): 429 and 5xx are
+/// retried as [`retry_delay`] says, waiting through `pause` (tests record the waits).
+async fn synthesize_at<P, W>(
+    http: &reqwest::Client,
+    base: &str,
+    req: &TtsRequest,
+    key: &str,
+    pause: P,
+) -> Result<TtsResponse, AiError>
+where
+    P: Fn(std::time::Duration) -> W,
+    W: std::future::Future<Output = ()>,
+{
+    let started = Instant::now();
+    let url = format!("{base}/models/{}:generateContent", gemini_model(&req.model));
     let body = tts_body(req);
     let mut attempt = 0;
     loop {
@@ -149,7 +162,7 @@ async fn synthesize(req: &TtsRequest, key: &str) -> Result<TtsResponse, AiError>
             if let Some(wait) = retry_delay(status.as_u16(), retry_after.as_deref(), &text, attempt)
             {
                 attempt += 1;
-                tokio::time::sleep(wait).await;
+                pause(wait).await;
                 continue;
             }
             let snippet: String = text.chars().take(400).collect();
@@ -173,31 +186,25 @@ pub async fn ai_tts(
     state: tauri::State<'_, AiState>,
     request: TtsRequest,
 ) -> Result<TtsResponse, AiError> {
+    // First of all, so a stop that comes early is never counted or sent (see `run_counted`).
+    let (_inflight, stop) = InflightGuard::register(state.inner(), &request.request_id)?;
     require_ai_allowed(&app)?;
     validate(&request)?;
     let key = api_key(Provider::Gemini)?;
-    count_usage(&app, &state, request.day.as_deref(), request.daily_cap)?;
-    let (tx, rx) = oneshot::channel::<()>();
-    state
-        .inflight
-        .lock()
-        .map_err(|e| AiError::Network(e.to_string()))?
-        .insert(request.request_id.clone(), tx);
     let timeout = Duration::from_secs(
         request
             .timeout_secs
             .unwrap_or(DEFAULT_TTS_TIMEOUT_SECS)
             .clamp(5, 120),
     );
-    let result = tokio::select! {
-        r = synthesize(&request, &key) => r,
-        _ = tokio::time::sleep(timeout) => Err(AiError::Timeout(format!("{}s", timeout.as_secs()))),
-        _ = rx => Err(AiError::Cancelled(request.request_id.clone())),
-    };
-    if let Ok(mut map) = state.inflight.lock() {
-        map.remove(&request.request_id);
-    }
-    result
+    run_counted(
+        &request.request_id,
+        stop,
+        || count_usage(&app, &state, request.day.as_deref(), request.daily_cap),
+        synthesize(&request, &key),
+        timeout,
+    )
+    .await
 }
 
 #[cfg(test)]
@@ -268,5 +275,96 @@ mod tests {
             json!({"candidates":[{"content":{"parts":[{"inlineData":{"data":"<script>"}}]}}]});
         assert!(extract_audio(&bad).is_err());
         assert!(extract_audio(&json!({})).is_err());
+    }
+}
+
+/// The spoken-answer HTTP loop against mock servers on 127.0.0.1 (no provider is contacted, no
+/// test sleeps: the waits between retries are recorded).
+#[cfg(test)]
+mod server_tests {
+    use std::sync::{Arc, Mutex};
+
+    use super::*;
+    use crate::ai::mock_server::{json_answer, json_answer_with, serve, Mock, Step};
+
+    const AUDIO: &str = r#"{"candidates":[{"content":{"parts":[{"inlineData":{"mimeType":"audio/L16;rate=24000","data":"AAAA"}}]}}]}"#;
+
+    fn request() -> TtsRequest {
+        TtsRequest {
+            request_id: "r1".into(),
+            model: "gemini-3.8-flash-tts".into(),
+            voice: "Achird".into(),
+            style: String::new(),
+            text: "Xin chào".into(),
+            timeout_secs: None,
+            day: None,
+            daily_cap: None,
+        }
+    }
+
+    fn scripted(answers: Vec<Vec<Step>>) -> Mock {
+        let next = Mutex::new(0usize);
+        serve(move |_| {
+            let mut i = next.lock().unwrap();
+            let steps = answers[(*i).min(answers.len() - 1)].clone();
+            *i += 1;
+            steps
+        })
+    }
+
+    fn speak(mock: &Mock) -> (Result<TtsResponse, AiError>, Vec<Duration>) {
+        let waits = Arc::new(Mutex::new(Vec::new()));
+        let seen = waits.clone();
+        let pause = move |d: Duration| {
+            seen.lock().unwrap().push(d);
+            std::future::ready(())
+        };
+        let http = reqwest::Client::builder().no_proxy().build().unwrap();
+        let result = tauri::async_runtime::block_on(synthesize_at(
+            &http,
+            &mock.url(),
+            &request(),
+            "key",
+            pause,
+        ));
+        let waits = waits.lock().unwrap().clone();
+        (result, waits)
+    }
+
+    #[test]
+    fn a_429_is_retried_then_the_audio_is_returned() {
+        let mock = scripted(vec![
+            json_answer_with("429 Too Many Requests", "Retry-After: 2\r\n", "{}"),
+            json_answer("200 OK", AUDIO),
+        ]);
+        let (result, waits) = speak(&mock);
+        let audio = result.unwrap();
+        assert_eq!(audio.audio, "AAAA");
+        assert_eq!(audio.mime_type, "audio/L16;rate=24000");
+        assert_eq!(waits, vec![Duration::from_secs(2)]);
+        assert_eq!(mock.seen().len(), 2);
+        assert!(
+            mock.seen()[0].ends_with(":generateContent"),
+            "{:?}",
+            mock.seen()
+        );
+        assert_eq!(
+            mock.body_of(":generateContent")["contents"][0]["parts"][0]["text"]
+                .as_str()
+                .map(|t| t.contains("Xin chào")),
+            Some(true)
+        );
+    }
+
+    #[test]
+    fn a_refusal_and_an_answer_without_audio_are_reported() {
+        let refused = scripted(vec![json_answer("403 Forbidden", "no")]);
+        let (result, waits) = speak(&refused);
+        assert!(matches!(result, Err(AiError::Http(ref m)) if m.starts_with("403")));
+        assert!(waits.is_empty());
+
+        let silent = scripted(vec![json_answer("200 OK", r#"{"candidates":[]}"#)]);
+        let (result, _) = speak(&silent);
+        assert!(matches!(result, Err(AiError::BadResponse(_))), "{result:?}");
     }
 }

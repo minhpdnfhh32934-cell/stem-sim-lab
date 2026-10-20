@@ -55,6 +55,20 @@ export function decodeAudio(b64: string, mimeType: string): Pcm {
   return { samples: int16ToFloat(view, 0, bytes.length), sampleRate: rate ? Number(rate) : 24000 };
 }
 
+/**
+ * No sound a learner could hear: no samples, broken samples (NaN), or nothing above about
+ * −60 dBFS. A voice that returns this did not speak, whatever it reported.
+ */
+export function isSilent(pcm: Pcm, floor = 1e-3): boolean {
+  let peak = 0;
+  for (const v of pcm.samples) {
+    if (!Number.isFinite(v)) return true;
+    const a = Math.abs(v);
+    if (a > peak) peak = a;
+  }
+  return peak < floor;
+}
+
 let context: AudioContext | null = null;
 let current: AudioBufferSourceNode | null = null;
 
@@ -63,6 +77,9 @@ function audioContext(): AudioContext {
   return context;
 }
 
+/** Read through a function: the signal can abort while we wait. */
+const aborted = (signal: AbortSignal) => signal.aborted;
+
 /** Plays samples; resolves when they end or when `signal` aborts (the sound stops at once). */
 export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<void> {
   if (signal.aborted || pcm.samples.length === 0) return;
@@ -70,6 +87,9 @@ export async function playPcm(pcm: Pcm, signal: AbortSignal, rate = 1): Promise<
   if (ctx.state === 'suspended') {
     // Autoplay rules can keep audio off until the learner clicks: never wait for ever.
     await Promise.race([ctx.resume(), new Promise((r) => setTimeout(r, 1500))]);
+    // Stopped meanwhile (a new lesson, the learner left): its "abort" has already fired, so a
+    // source started now would play to its end.
+    if (aborted(signal)) return;
     if ((ctx.state as AudioContextState) !== 'running') throw new Error('audio-blocked');
   }
   const buffer = ctx.createBuffer(1, pcm.samples.length, pcm.sampleRate);

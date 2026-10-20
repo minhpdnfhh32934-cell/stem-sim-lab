@@ -3,6 +3,17 @@ import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { enterLab, openLab } from './nav';
 
+/**
+ * These tests open biology topics, whose 3D views draw with WebGL: in software (SwiftShader),
+ * never on the GPU (see mitosis3d.spec.ts).
+ */
+test.use({
+  launchOptions: {
+    args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
+    ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}),
+  },
+});
+
 async function openLogistic(page: Page) {
   await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
@@ -56,7 +67,9 @@ test('save and reopen a .stemsim file', async ({ page }) => {
     mimeType: 'application/json',
     buffer: Buffer.from(text),
   });
-  await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible();
+  // Opening the file loads the biology module again on this fresh page, and its 3D view draws in
+  // software: like every first open of a lazy module, allow up to 20 s (slow CI runners).
+  await expect(page.getByText('Sức chứa K = 1.500')).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
 });
 

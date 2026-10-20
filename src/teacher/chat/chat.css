@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 80;
   right: 20px;
-  bottom: calc(var(--statusbar-h) + 14px);
+  bottom: calc(var(--statusbar-h) + var(--chat-bubble-gap));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -12,19 +12,15 @@
 .chat-bubble-root > * {
   pointer-events: auto;
 }
-/* With the Inspector open, the bubble sits left of it so it never covers the Science Card. */
-/* In a topic the button sits in the stage's bottom-right corner: left of the Inspector and
-   above the graphs/tables and the timeline, so it never hides data. */
+/* In a lab topic the button sits in the Inspector's bottom-right corner, never over the stage:
+   pictures, 3D views, charts and captions there cannot scroll out from under it. The Inspector
+   keeps room for it under its last line (layout.css), so it never hides a line there either. */
 .shell[data-inspector] .chat-bubble-root {
+  right: var(--chat-bubble-gap);
+}
+/* The open chat stays over the stage, left of the Inspector (the Science Card stays readable). */
+.shell[data-inspector] .chat-bubble-root > .chat-panel {
   right: calc(var(--right-w) + var(--splitter) + 16px);
-}
-.shell[data-bottom] .chat-bubble-root {
-  bottom: calc(var(--statusbar-h) + min(var(--bottom-h), 38vh) + var(--splitter) + 14px);
-}
-.shell[data-bottom][data-timeline] .chat-bubble-root {
-  bottom: calc(
-    var(--statusbar-h) + min(var(--bottom-h), 38vh) + var(--splitter) + var(--timeline-h) + 14px
-  );
 }
 /* The open chat uses the full height between the top bar and the status bar; the round button
    hides meanwhile (the panel has its own close button). */
@@ -39,8 +35,8 @@
 /* A round button with the teacher's face; its name is the tooltip and the accessible name. */
 .chat-bubble {
   display: inline-grid;
-  width: 52px;
-  height: 52px;
+  width: var(--chat-bubble);
+  height: var(--chat-bubble);
   padding: 0;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--accent) 60%, white);
@@ -507,6 +503,23 @@
   color: var(--danger);
   font-size: var(--text-sm);
 }
+.chat-panel__error {
+  flex-wrap: wrap;
+}
+.chat-panel__error-text {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+/* "Hỏi lại" and "Cài đặt" under a failed answer (one click, one request). */
+.chat-panel__error-actions {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chat-panel__error-actions .btn {
+  min-height: var(--target);
+}
 .chat-panel__composer {
   margin: 0 12px;
   padding: 8px;
@@ -938,8 +951,10 @@ p.gpu-notice {
   margin: 0;
 }
 
-/* An answer that stopped at the output limit ("Viết tiếp"). */
-.chat-message__continue {
+/* An answer that stopped at the output limit ("Viết tiếp"), and the note that an answer about a
+   circled picture was not read aloud. */
+.chat-message__continue,
+.chat-message__quiet {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -947,4 +962,140 @@ p.gpu-notice {
   margin-top: 8px;
   color: var(--text-muted);
   font-size: var(--text-xs);
+}
+
+/* An AI-written link: readable, never clickable (audit SEC-03). */
+.chat-message__url {
+  color: var(--text-muted);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+}
+
+/* "Xem mô phỏng: …" under the last answer (audit EDU-03). */
+.chat-panel__sim-link {
+  display: flex;
+  padding: 0 12px 8px 44px;
+}
+
+/* Results the app computed for the question (audit G3): set apart from the AI's own text. */
+.chat-message__facts {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--conf-exact) 45%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--conf-exact) 8%, var(--bg-panel));
+  font-size: var(--text-sm);
+}
+.chat-message__facts strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--conf-exact);
+}
+.chat-message__facts ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* "Dừng" while an answer is being written: the main action then (same size as "Gửi"). */
+.btn.chat-panel__stop {
+  flex: none;
+  min-height: var(--target);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.chat-panel__stopped {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  align-self: center;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Written by the app, not the AI (missingData.ts): above the answer, set apart from it. */
+.chat-message__app-notice {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+  font-size: var(--text-sm);
+}
+.chat-message__app-notice strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+}
+
+/*
+ * Numbers nobody gave the AI (provenance.ts): unverified, so they get the "approx" colour. Written
+ * by the app, so it carries the app's title line like the missing-data notice.
+ */
+.chat-message__unverified {
+  display: grid;
+  gap: 3px;
+  margin: 8px 0 0;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--conf-approx) 50%, var(--border));
+  border-radius: var(--radius-md);
+  background: var(--conf-approx-soft);
+  color: var(--text);
+  font-size: var(--text-xs);
+}
+.chat-message__unverified strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chat-message__unverified svg {
+  flex: none;
+  color: var(--conf-approx);
+}
+
+/* "Khoanh để hỏi": the question goes with what was circled on the board (removable). */
+.chat-panel__board-chip {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  margin: 0 12px 6px;
+  padding: 0 0 0 10px;
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+.chat-panel__board-chip-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat-message__board-ref {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-top: 6px;
+  color: inherit;
+  font-size: 11px;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+/* Touch screens and pens: the chat's smaller controls grow to >= 40px. */
+@media (any-pointer: coarse) {
+  .chat-toggle,
+  .chat-engine,
+  .chat-message__continue,
+  .chat-settings__actions .btn {
+    min-height: var(--target);
+  }
 }

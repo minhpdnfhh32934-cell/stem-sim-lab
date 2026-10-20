@@ -28,6 +28,36 @@ export function maxAngle(q: PendulumInput): number | null {
   return Math.acos(c);
 }
 
+/**
+ * Whether the string stays taut (T ≥ 0) during the whole motion. With the energy level
+ * c = cos α_bđ − l ω_bđ² / (2g) (the cosine of the turning angle), the tension is
+ * T(α) = m g (3 cos α − 2c). An oscillation keeps T ≥ 0 iff c ≥ 0 (amplitude ≤ 90°);
+ * a loop iff T at the top, m g (−3 − 2c), is positive: c < −1.5, i.e. v_top² > g l.
+ * Damping lowers the energy through every level, so a damped start above the 90° level
+ * must pass through the slack zone. Source: Halliday–Resnick–Walker ch. 6 (circular motion).
+ */
+export function stringStaysTaut(q: PendulumInput): boolean {
+  const c = Math.cos(q.theta0) - (q.L * q.omega0 * q.omega0) / (2 * q.g);
+  if (c >= -1e-12) return true;
+  return q.c === 0 && c < -1.5;
+}
+
+function validate(p: Params): LocalizedText[] {
+  const q = pendulumInput(p);
+  if (stringStaysTaut(q)) return [];
+  return [
+    q.c > 0
+      ? L(
+          'Dây sẽ bị chùng: con lắc xuất phát với mức năng lượng trên vị trí 90°, và lực cản làm nó chậm dần nên chắc chắn đi qua vùng lực căng dây tính ra âm (dây thật không đẩy được, quả nặng rời quỹ đạo tròn). Mô hình con lắc đơn (dây luôn căng) không áp dụng — hãy giảm góc hoặc tốc độ góc ban đầu.',
+          'The string would go slack: the pendulum starts with an energy above the 90° level, and damping slows it, so it must pass where the computed tension is negative (a real string cannot push; the bob leaves the circle). The simple-pendulum model (taut string) does not apply — reduce the initial angle or angular velocity.',
+        )
+      : L(
+          'Dây sẽ bị chùng: với biên độ góc lớn hơn 90°, hoặc khi quay vòng mà ở điểm cao nhất v² < g·l, lực căng dây tính ra âm (dây thật không đẩy được, quả nặng rời quỹ đạo tròn). Mô hình con lắc đơn (dây luôn căng) không áp dụng — hãy giảm góc hoặc tốc độ góc ban đầu, hoặc cho con lắc quay vòng đủ nhanh.',
+          'The string would go slack: above a 90° amplitude, or in a loop with v² < g·l at the top, the computed tension is negative (a real string cannot push; the bob leaves the circle). The simple-pendulum model (taut string) does not apply — reduce the initial angle or angular velocity, or make the loop fast enough.',
+        ),
+  ];
+}
+
 const bob = (q: PendulumInput, th: number) => ({ x: q.L * Math.sin(th), y: -q.L * Math.cos(th) });
 
 function view(p: Params): WorldBounds {
@@ -398,6 +428,7 @@ export const simplePendulum: PhysicsScene = {
   ],
   // 60° amplitude: the small-angle formula is ~7 % off, clearly visible.
   defaults: { L: 1, theta0: Math.PI / 3, omega0: 0, m: 0.5, c: 0, showSmall: 1, g: 9.81 },
+  validate,
   scienceCard: card,
   solve,
   graphs,

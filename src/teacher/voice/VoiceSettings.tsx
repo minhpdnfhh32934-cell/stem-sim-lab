@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { getTransport } from '@/ai/transport';
-import { formatNumber, useT, type MessageKey } from '@/app/i18n';
+import { formatNumber, useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { KnownPageLink } from '@/teacher/chat/settings/KnownPageLink';
@@ -28,17 +28,11 @@ import {
   LOCAL_VOICE,
   deleteLocalVoice,
   downloadLocalVoice,
+  localVoiceGpuFault,
   localVoiceStatus,
   type LocalVoiceStatus,
 } from './localVoice';
-import {
-  listVoices,
-  speak,
-  speechSupported,
-  stopSpeaking,
-  toSpokenText,
-  vietnameseVoices,
-} from './speak';
+import { listVoices, speechSupported, toSpokenText, vietnameseVoices } from './speak';
 import {
   GEMINI_TTS_MODELS,
   GEMINI_VOICES,
@@ -51,21 +45,12 @@ import {
   type VoiceEngine,
 } from './voiceStore';
 import { voiceChoices } from './voiceChoices';
+import { useVoicePreview } from './usePreview';
+import { voiceErrorKey } from './voiceErrors';
 import '@/teacher/chat/chat.css';
 import './voice.css';
 
 const ENGINE_ICONS = { system: Monitor, gemini: Cloud, local: HardDrive } as const;
-
-/** Friendly words for the reasons a voice could not speak (`useVoiceStore.lastError`). */
-function errorKey(error: string): MessageKey {
-  if (error.includes('no-key') || error.toLowerCase().includes('missingkey'))
-    return 'voice.errors.noKey';
-  if (error.includes('voice-model-missing')) return 'voice.errors.noModel';
-  if (/quota|429|resource_exhausted/i.test(error)) return 'voice.errors.quota';
-  if (/network|offline|failed to fetch/i.test(error)) return 'voice.errors.offline';
-  if (/notallowed|agegate/i.test(error)) return 'voice.errors.notAllowed';
-  return 'voice.errors.other';
-}
 
 function useOsVoices(): SpeechSynthesisVoice[] {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(() => listVoices());
@@ -93,8 +78,8 @@ export function VoiceSettings() {
   const speedId = useId();
   const styleId = useId();
   const [showText, setShowText] = useState(false);
-
-  useEffect(() => stopSpeaking, []);
+  // Closing Settings stops only the preview started here, never a lesson's sentence.
+  const preview = useVoicePreview(VOICE_SAMPLE);
 
   return (
     <>
@@ -134,9 +119,14 @@ export function VoiceSettings() {
         {voice.lastError && (
           <p className="chat-settings__error" role="alert">
             <CircleAlert size={14} />
-            {t(errorKey(voice.lastError))}
+            {t(voiceErrorKey(voice.lastError))}
           </p>
         )}
+        {/* Stays for the session: the next sentence on the CPU clears lastError. */}
+        {localVoiceGpuFault() !== null &&
+          (!voice.lastError || voiceErrorKey(voice.lastError) !== 'voice.errors.gpuToCpu') && (
+            <p className="muted small">{t('voice.onCpuAfterGpuFault')}</p>
+          )}
       </fieldset>
 
       <fieldset className="settings-group">
@@ -192,19 +182,13 @@ export function VoiceSettings() {
         </legend>
         <p className="muted small">“{VOICE_SAMPLE}”</p>
         <div className="settings-actions">
-          {voice.speaking ? (
-            <button type="button" className="btn" onClick={stopSpeaking}>
+          {voice.speaking && preview.previewing ? (
+            <button type="button" className="btn" onClick={preview.stop}>
               <Square size={14} />
               {t('voice.stop')}
             </button>
           ) : (
-            <button
-              type="button"
-              className="btn btn--accent"
-              onClick={() => {
-                void speak(VOICE_SAMPLE);
-              }}
-            >
+            <button type="button" className="btn btn--accent" onClick={preview.start}>
               <Play size={14} />
               {t('voice.preview')}
             </button>

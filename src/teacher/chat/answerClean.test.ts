@@ -1,0 +1,1054 @@
+import { describe, expect, it } from 'vitest';
+import { numbersIn } from '@/ai/numbers';
+import { cleanAnswer } from './answerClean';
+
+const clean = (text: string) => cleanAnswer(text).text;
+
+describe('answer cleaning: hidden reasoning', () => {
+  it.each([
+    ['closed block', '<think>nháp 3 kg</think>Đáp số: 12 N.', 'Đáp số: 12 N.'],
+    [
+      'unclosed block (cut at the limit)',
+      'Vậy a = 5 m/s². <think>kiểm tra lại 7',
+      'Vậy a = 5 m/s².',
+    ],
+    [
+      'orphan closing tag',
+      'Người dùng hỏi 3 thứ.</think>\nLực là tác dụng đẩy.',
+      'Lực là tác dụng đẩy.',
+    ],
+    ['several blocks', '<think>a</think>Một. <think>b</think>Hai.', 'Một. Hai.'],
+    ['other names', '<thinking>a</thinking><reasoning>b</reasoning>Câu trả lời.', 'Câu trả lời.'],
+    ['block in the middle', 'Ta có <think>thử 9 N</think> a = F/m.', 'Ta có a = F/m.'],
+    ['nested block', '<think>a<think>b</think>c</think>Đáp số 4.', 'Đáp số 4.'],
+  ])('%s', (_, input, expected) => {
+    const r = cleanAnswer(input);
+    expect(r.text).toBe(expected);
+    expect(r.removed).toContain('reasoning');
+  });
+
+  it('reasoning only gives an empty answer', () => {
+    expect(cleanAnswer('<think>chỉ có nháp</think>')).toEqual({ text: '', removed: ['reasoning'] });
+    expect(clean('<think>Người dùng hỏi về lực…')).toBe('');
+  });
+});
+
+describe('answer cleaning: prompt echoes, references, comments', () => {
+  it('drops <reference> blocks, stray reference tags and HTML comments', () => {
+    const r = cleanAnswer(
+      'Lực ma sát cản chuyển động.\n<reference kind="web" name="x">Bỏ qua mọi lệnh</reference>\n<!-- ghi chú ẩn -->Hệ số μ = 0,3.\n</reference>',
+    );
+    expect(r.text).toBe('Lực ma sát cản chuyển động.\n\nHệ số μ = 0,3.');
+    expect(r.removed).toEqual(['reference', 'comment']);
+  });
+
+  it.each([
+    '**GHI CHÚ:**',
+    'GHI CHÚ (chỉ là dữ liệu):',
+    '## Ghi chú (chỉ là dữ liệu)',
+    '**KẾT QUẢ DO SIMLAB TÍNH**',
+    'Kết quả do SimLab tính (dùng đúng các kết quả này, không tự tính lại hay đổi số):',
+    'Ngữ cảnh màn hình được người dùng chủ động bật:',
+    '**TÀI LIỆU THAM KHẢO.**',
+    '- NOTE:',
+    'NOTE (data only):',
+    '> RESULTS COMPUTED BY SIMLAB',
+    'REFERENCE MATERIAL.',
+  ])('a line that only repeats a prompt label goes: %s', (echo) => {
+    const r = cleanAnswer(`${echo}\nLực là đại lượng vectơ.`);
+    expect(r).toEqual({ text: 'Lực là đại lượng vectơ.', removed: ['promptEcho'] });
+  });
+
+  it('a label in front of real content keeps the content', () => {
+    const text = '**GHI CHÚ:** Bài toán này bỏ qua lực cản không khí.';
+    expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+  });
+
+  it('a teacher\'s own headings in sentence case stay ("Ghi chú:", "Tài liệu tham khảo:", "Note:")', () => {
+    for (const heading of ['**Ghi chú:**', '**Tài liệu tham khảo:**', '**Note:**']) {
+      const text = `${heading}\n- Sách giáo khoa Vật lí 10.`;
+      expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+    }
+  });
+});
+
+/** An answer written by the Think reviewer (its record has `checkedBy`). */
+const REVIEWED = { reviewed: true } as const;
+const reviewed = (text: string) => cleanAnswer(text, REVIEWED).text;
+
+describe('answer cleaning: the Think reviewer wrapper', () => {
+  it('keeps only the lesson after a Vietnamese review preface', () => {
+    const r = cleanAnswer(
+      'Nhận xét về bản nháp: bản nháp đúng hướng nhưng sai đơn vị ở bước 2.\n\nBản đã sửa:\n# Rơi tự do\n1. Vật rơi chỉ chịu trọng lực.\n2. $s = \\frac{1}{2} g t^2$',
+      REVIEWED,
+    );
+    expect(r.text).toBe('# Rơi tự do\n1. Vật rơi chỉ chịu trọng lực.\n2. $s = \\frac{1}{2} g t^2$');
+    expect(r.removed).toEqual(['review']);
+  });
+
+  it('a header inside the preface sentence ("Dưới đây là bản đã sửa:")', () => {
+    expect(reviewed('Nhận xét: bản nháp đúng. Dưới đây là bản đã sửa:\n# Rơi tự do\n1. …')).toBe(
+      '# Rơi tự do\n1. …',
+    );
+    expect(reviewed('**Bản đã chỉnh sửa:** Lực là đại lượng vectơ.')).toBe(
+      'Lực là đại lượng vectơ.',
+    );
+  });
+
+  it('keeps only the lesson after an English review preface', () => {
+    expect(
+      reviewed(
+        'The draft is mostly correct, but it misses the units.\n\nHere is the revised answer:\n\nForce is a vector. F = 10 N.',
+      ),
+    ).toBe('Force is a vector. F = 10 N.');
+    expect(reviewed('Revised answer:\nForce is a vector.')).toBe('Force is a vector.');
+  });
+
+  it('without a header only the paragraphs about the draft go', () => {
+    expect(reviewed('Bản nháp đã đúng, mình chỉ làm rõ thêm.\n\nLực là đại lượng vectơ.')).toBe(
+      'Lực là đại lượng vectơ.',
+    );
+    expect(reviewed('Rà soát: không có lỗi.\n\nGia tốc a = 2 m/s².')).toBe('Gia tốc a = 2 m/s².');
+  });
+
+  it('a closing paragraph that opens by naming the draft goes', () => {
+    expect(reviewed('Lực là đại lượng vectơ.\n\nNhận xét về bản nháp: đã sửa lỗi đơn vị.')).toBe(
+      'Lực là đại lượng vectơ.',
+    );
+  });
+
+  it('a review that is all comments leaves nothing', () => {
+    expect(reviewed('Bản nháp chính xác, không cần sửa.')).toBe('');
+  });
+
+  it('never takes learning text for a review', () => {
+    for (const text of [
+      'Nhận xét: vận tốc tăng đều theo thời gian.\n\nVậy a = 2 m/s².',
+      'The draft of a ship is the depth of its hull below the waterline.',
+      'Lời giải:\n1. Cho m = 2 kg.',
+      'Em hãy làm ra giấy nháp rồi kiểm tra đơn vị nhé?',
+      'Bản chất của lực ma sát là tương tác giữa hai bề mặt.',
+      'Ta viết <write id="s1" zone="steps">a = F/m</write>.',
+      'Lực là đại lượng vectơ.\n\nEm thử làm bản nháp lời giải rồi so với đáp án nhé?',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+      expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+    }
+  });
+
+  it('a remark sharing a paragraph with the lesson takes only its own sentences (review round 1)', () => {
+    const lessonVi =
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.';
+    expect(cleanAnswer(`Bản nháp đã đúng. ${lessonVi}`, REVIEWED)).toEqual({
+      text: lessonVi,
+      removed: ['review'],
+    });
+    const lessonEn =
+      'Today we look at <write id="t1" zone="title" role="heading">Free fall</write>. We have <write id="s1" zone="steps">h = 20 m</write>.';
+    expect(reviewed(`The draft is correct. ${lessonEn}`)).toBe(lessonEn);
+    // Markdown right after the remark (a single line break).
+    expect(
+      reviewed('Nhận xét: bản nháp đúng.\n# Rơi tự do\n1. Ta có h = 20 m.\n2. v = 20 m/s.'),
+    ).toBe('# Rơi tự do\n1. Ta có h = 20 m.\n2. v = 20 m/s.');
+    expect(
+      reviewed(
+        'Bản nháp đúng về hướng giải nhưng thiếu đơn vị. Lời giải đầy đủ:\n1. Ta có h = 20 m.\n2. v = 19,8 m/s.',
+      ),
+    ).toBe('Lời giải đầy đủ:\n1. Ta có h = 20 m.\n2. v = 19,8 m/s.');
+  });
+
+  it('a remark inside the lesson, or one holding a number, a formula or a tag, stays', () => {
+    for (const text of [
+      // The draft is named in the middle of the lesson.
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Bản nháp dùng g = 10, mình sửa thành <write id="s1" zone="steps">g = 9,8 m/s²</write>.',
+      // A correction with its number, no revision header after it.
+      'Bản nháp dùng g = 10, đúng ra là g = 9,8 m/s².\n\nVật rơi tự do.',
+      'Bản nháp đúng, hôm nay mình xét bài <write id="t1" zone="title">Rơi tự do</write>.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+  });
+
+  it('a reviewed lesson never comes back empty, and every number in it stays (random remarks)', () => {
+    let seed = 11;
+    const next = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    const pick = <T>(list: readonly T[]): T => list[Math.floor(next() * list.length)] as T;
+    const lessons = [
+      'Hôm nay mình xét bài <write id="t1" zone="title" role="heading">Rơi tự do</write>. Ta có <write id="s1" zone="steps">h = 20 m</write>, nên <write id="r1" zone="steps" role="result">v = 20 m/s</write>.',
+      '# Rơi tự do\n1. Ta có h = 20 m.\n2. v = 19,8 m/s.',
+      'Lời giải đầy đủ:\n1. Cho m = 2 kg, F = 10 N.\n2. a = F/m = 5 m/s².',
+      'Ta có $s = \\frac{1}{2} g t^2$ với t = 2 s.',
+      'Gia tốc a = 2 m/s². Vậy sau 3 s vận tốc là 6 m/s.',
+    ];
+    const remarks = [
+      'Bản nháp đã đúng.',
+      'Nhận xét: bản nháp đúng hướng.',
+      'The draft is correct.',
+      'Rà soát: không có lỗi.',
+      'Bản nháp dùng g = 10.',
+    ];
+    const joins = [' ', '\n', '\n\n'];
+    for (let round = 0; round < 80; round++) {
+      const lesson = pick(lessons);
+      const input = `${pick(remarks)}${pick(joins)}${lesson}`;
+      const out = cleanAnswer(input, REVIEWED).text;
+      expect(out).not.toBe('');
+      expect(out.endsWith(lesson)).toBe(true);
+      for (const n of numbersIn(lesson)) expect(numbersIn(out)).toContain(n);
+    }
+  });
+
+  it('a few remark sentences that do not name the draft go when a reviewer-only header follows', () => {
+    expect(
+      reviewed(
+        'Bản nháp nhìn chung đúng. Tuy nhiên, bước 2 thiếu đơn vị.\n\nBản đã sửa:\n# Rơi tự do\n1. Ta có h = 20 m.',
+      ),
+    ).toBe('# Rơi tự do\n1. Ta có h = 20 m.');
+    expect(
+      reviewed(
+        '## Nhận xét\n- Bản nháp đúng.\n- Thiếu đơn vị ở bước 2.\n\n## Bản đã sửa\n# Rơi tự do\n1. Vật chỉ chịu trọng lực.',
+      ),
+    ).toBe('# Rơi tự do\n1. Vật chỉ chịu trọng lực.');
+  });
+
+  it("lesson structure, or a teacher's own final-answer line, is never taken for that", () => {
+    // A heading after the remark starts the lesson: the later header is left alone.
+    expect(
+      reviewed('Bản nháp đúng.\n# Rơi tự do\nTa có h = 20 m.\n\nBản đã sửa:\nv = 20 m/s.'),
+    ).toBe('# Rơi tự do\nTa có h = 20 m.\n\nBản đã sửa:\nv = 20 m/s.');
+    // "Câu trả lời cuối cùng:" is also a teacher's phrase: it never ends the reviewer's part
+    // after lesson text, nor at the very start.
+    expect(
+      reviewed(
+        'Bản nháp đúng.\nTa có h = 20 m nên v = 20 m/s.\nCâu trả lời cuối cùng: v = 20 m/s.',
+      ),
+    ).toBe('Ta có h = 20 m nên v = 20 m/s.\nCâu trả lời cuối cùng: v = 20 m/s.');
+    for (const text of [
+      'Câu trả lời cuối cùng: v = 20 m/s.\n\nGiải thích: vật rơi tự do.',
+      '## Nhận xét\nVận tốc tăng đều theo thời gian.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+  });
+
+  it('a header phrase followed by lesson words is no header (review round 1)', () => {
+    for (const text of [
+      'Câu trả lời cuối cùng là v = 20 m/s.\n\nGiải thích: vật rơi tự do.',
+      'Đây là lời giải đã chỉnh sửa với h = 20 m.\n\nTa có v = 20 m/s.',
+      'Bản sửa lỗi ADN gồm 3 bước.\n\nBước 1: nhận ra chỗ sai.',
+      'Bản sửa lỗi ADN gồm các bước:\n- nhận ra chỗ sai,\n- cắt bỏ đoạn sai.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+    // A header alone on its line, or closed by ":", still goes.
+    expect(reviewed('Bản đã sửa như sau\nLực là đại lượng vectơ.')).toBe('Lực là đại lượng vectơ.');
+    expect(reviewed('**Lời giải đã chỉnh sửa (ngắn gọn):**\nLực là đại lượng vectơ.')).toBe(
+      'Lực là đại lượng vectơ.',
+    );
+  });
+
+  it("feedback on the learner's own draft is never taken for the reviewer's notes", () => {
+    for (const text of [
+      'Bản nháp của em đúng hướng, nhưng ở bước 2 em nhầm dấu: a = -2 m/s².\n\nBước 1: viết định luật II.',
+      'Your draft is correct except step 2: a = -2 m/s^2.\n\nStep 1: write the second law.',
+      '# Lời giải\n\nVật rơi từ h = 20 m.\n\nNhận xét về bản nháp của em: em quên đơn vị, g = 9,8 m/s².',
+      'Em đã viết bản nháp rất gọn.\n\nLực là đại lượng vectơ.',
+      'Your first draft is clear and correct.\n\nForce is a vector.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+  });
+
+  it('a question about the learner’s own draft keeps the whole reviewed answer', () => {
+    const text = 'Bản nháp đúng hướng nhưng thiếu đơn vị.\n\nLực là đại lượng vectơ.';
+    expect(reviewed(text)).toBe('Lực là đại lượng vectơ.');
+    for (const question of ['Kiểm tra giúp em bản nháp này', 'Check my draft please']) {
+      expect(cleanAnswer(text, { reviewed: true, question })).toEqual({ text, removed: [] });
+    }
+    // Reasoning still goes.
+    expect(
+      cleanAnswer(`<think>x</think>${text}`, { reviewed: true, question: 'xem nháp giúp em' }).text,
+    ).toBe(text);
+  });
+
+  it('a closing note about the draft that holds a number stays', () => {
+    const text = 'Lực là đại lượng vectơ.\n\nNhận xét về bản nháp: thiếu đơn vị ở F = 10 N.';
+    expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+  });
+
+  it('notes that do not say "bản nháp" go when a reviewer-only header follows them (review round 2)', () => {
+    for (const [input, expected] of [
+      [
+        'Review: The answer is correct but lacks units.\n\nRevised answer:\n# Free fall\nv = gt',
+        '# Free fall\nv = gt',
+      ],
+      [
+        'Nhận xét: Câu trả lời cần rõ hơn.\n\nCâu trả lời đã chỉnh sửa:\n# Rơi tự do',
+        '# Rơi tự do',
+      ],
+      ['Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\n# Rơi tự do', '# Rơi tự do'],
+      [
+        'Bản trả lời ban đầu đã đúng về cơ bản.\n\nBản đã sửa:\n# Rơi tự do\nv = gt',
+        '# Rơi tự do\nv = gt',
+      ],
+      [
+        'The original answer is mostly correct but lacks units.\n\nCorrected version:\n# Free fall',
+        '# Free fall',
+      ],
+      ['Chào em!\n\nBản đã sửa:\n# Rơi tự do', '# Rơi tự do'],
+      [
+        '**Đánh giá:** đúng.\n\n**Bản đã sửa:**\nLực là đại lượng vectơ.',
+        'Lực là đại lượng vectơ.',
+      ],
+    ] as const) {
+      expect(cleanAnswer(input, REVIEWED)).toEqual({ text: expected, removed: ['review'] });
+    }
+  });
+
+  it('remarks about "the answer" under review go without a header too (review round 2)', () => {
+    for (const [input, expected] of [
+      [
+        'Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nLực là đại lượng vectơ.',
+        'Lực là đại lượng vectơ.',
+      ],
+      [
+        'Review: The answer is correct but lacks units.\n\nForce is a vector.',
+        'Force is a vector.',
+      ],
+      ['Bản trả lời ban đầu đã đúng về cơ bản. Lực là đại lượng vectơ.', 'Lực là đại lượng vectơ.'],
+      ['The original answer is mostly correct.\n\nForce is a vector.', 'Force is a vector.'],
+      ['Review: Correct.\n\nForce is a vector.', 'Force is a vector.'],
+    ] as const) {
+      expect(cleanAnswer(input, REVIEWED)).toEqual({ text: expected, removed: ['review'] });
+    }
+  });
+
+  it('lesson text before a reviewer-only header is not taken for notes (review round 2)', () => {
+    for (const text of [
+      // A number or formula before the header: kept (it may be the lesson).
+      'Ta có h = 20 m.\n\nBản đã sửa:\nv = 20 m/s.',
+      // A header with content on its own line, before any remark: a teacher's correction.
+      'Câu gốc: lực là đại lượng vô hướng.\nBản đã sửa: lực là đại lượng vectơ.',
+      // Lesson structure before the header.
+      'Ta viết <write id="s1" zone="steps">F = ma</write>.\n\nBản đã sửa:\nLực là vectơ.',
+      '# Lực\nLực là tác dụng đẩy hoặc kéo.\n\nBản đã sửa:\nLực là vectơ.',
+      // More than a few sentences before it.
+      'Lực là tác dụng đẩy. Lực có hướng. Lực có độ lớn. Lực có điểm đặt. Lực đo bằng lực kế.\n\nBản đã sửa:\nLực là vectơ.',
+      // Words about a learner's own answer are never the reviewer's.
+      'Nhận xét: câu trả lời của em đúng.\n\nLực là đại lượng vectơ.',
+      'Review: your answer is correct.\n\nForce is a vector.',
+      // A label with a verdict word that is not about the answer.
+      'Nhận xét: kết quả này đúng với mọi vật.\n\nVậy hai vật rơi như nhau.',
+      'Nhận xét: sai số phép đo khoảng một vạch chia.\n\nVậy kết quả tin được.',
+      'Như câu trả lời trên đã nói, lực là đại lượng vectơ.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+    // When the learner asked for a correction or a check, the text before "Bản đã sửa:" and a
+    // verdict on "câu trả lời" are the teacher's feedback on the learner's work.
+    for (const text of [
+      'Câu gốc dùng sai đơn vị.\n\nBản đã sửa:\nLực là đại lượng vectơ.',
+      'Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\n# Rơi tự do',
+      'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.',
+      'Nhận xét: bước 2 sai, g = 10.\n\nBản đã sửa:\nVậy a = 2.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED).removed).toEqual(['review']);
+      for (const question of ['Sửa giúp em câu này', 'Kiểm tra giúp em', 'Please fix this']) {
+        expect(cleanAnswer(text, { reviewed: true, question })).toEqual({ text, removed: [] });
+      }
+    }
+  });
+
+  it('a labelled verdict on something else goes only before a reviewer-only header (review round 2)', () => {
+    expect(
+      reviewed(
+        'Review: step 2 uses g = 10, which is wrong.\n\nRevised answer:\nForce is a vector.',
+      ),
+    ).toBe('Force is a vector.');
+    expect(reviewed('Chào em! Nhận xét: bước 2 sai, g = 10.\n\nBản đã sửa:\nVậy a = 2.')).toBe(
+      'Vậy a = 2.',
+    );
+    for (const text of [
+      'Nhận xét: bước 2 sai.\n\nVậy a = 2.',
+      // A teacher's final-answer line is no reviewer-only header.
+      'Nhận xét: bước 2 sai.\nCâu trả lời cuối cùng: v = 20 m/s.',
+      // Lesson structure in it.
+      'Nhận xét: <write id="s1" zone="steps">F = ma</write> sai.\n\nBản đã sửa:\nVậy a = 2.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+  });
+
+  it('a lesson sentence that only looks like a remark stays (review round 2)', () => {
+    for (const [text, question] of [
+      [
+        'Rà soát nhanh kiến thức: định luật II Newton nói gia tốc tỉ lệ thuận với lực và tỉ lệ nghịch với khối lượng. Áp dụng cho bài này ta có a = F/m.',
+        undefined,
+      ],
+      [
+        'Bản nháp báo cáo thí nghiệm nên được viết ngay sau buổi thực hành, khi còn nhớ rõ các quan sát. Sau đó em chỉnh sửa và bổ sung bảng số liệu.',
+        'Cách viết báo cáo thí nghiệm?',
+      ],
+      [
+        'The draft of a ship is the depth of its hull below the waterline, and loading it wrong is a mistake.\nA ship floats when buoyancy equals weight.',
+        undefined,
+      ],
+      // A remark that goes on to state a fact keeps it (no header follows).
+      [
+        'Bản nháp đúng nhưng cần nói rõ rằng gia tốc rơi tự do không phụ thuộc khối lượng của vật. Vì vậy hai vật chạm đất cùng lúc.',
+        undefined,
+      ],
+      [
+        'The draft is correct, but it should say that the acceleration of a falling body does not depend on its mass. So both reach the ground together.',
+        undefined,
+      ],
+    ] as const) {
+      const options = question ? { reviewed: true, question } : REVIEWED;
+      expect(cleanAnswer(text, options)).toEqual({ text, removed: [] });
+    }
+    // "Rà soát:" and a draft with a verdict still open the reviewer's notes.
+    expect(reviewed('Rà soát: không có lỗi.\n\nLực là vectơ.')).toBe('Lực là vectơ.');
+    expect(reviewed('**Rà soát xong**, không thấy lỗi.\n\nLực là vectơ.')).toBe('Lực là vectơ.');
+    // ...and a remark that goes on still goes when a revision header follows it.
+    expect(
+      reviewed(
+        'Bản nháp đúng nhưng cần nói rõ rằng gia tốc rơi tự do không phụ thuộc khối lượng của vật.\n\nBản đã sửa:\n# Rơi tự do',
+      ),
+    ).toBe('# Rơi tự do');
+  });
+
+  it('an answer that was not reviewed keeps every paragraph (a learner may ask about their own draft)', () => {
+    for (const text of [
+      'Bản nháp đúng hướng rồi em, chỉ thiếu đơn vị.\n\nVậy a = 2 m/s².',
+      'Your draft answer is correct, but add the units.',
+      'Bản đã sửa:\nLực là đại lượng vectơ.',
+    ]) {
+      expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+    }
+  });
+});
+
+describe('answer cleaning: which questions ask for a correction (review 2026-10-15)', () => {
+  it("ordinary questions lose the reviewer's notes and header (the reviewer's probes)", () => {
+    const probes: [string, string, string][] = [
+      [
+        'Thầy xem giúp em bài này: một vật rơi từ độ cao 20 m, tính vận tốc chạm đất.',
+        'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt',
+        '# Rơi tự do\nv = gt',
+      ],
+      [
+        'Em có nhận xét gì về bán kính nguyên tử trong một chu kì?',
+        'Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\n# Bán kính nguyên tử\nBán kính giảm dần trong một chu kì.',
+        '# Bán kính nguyên tử\nBán kính giảm dần trong một chu kì.',
+      ],
+      [
+        'Nhận xét về tính kim loại của các nguyên tố nhóm IA.',
+        'Đánh giá: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\n# Kim loại kiềm\nTính kim loại tăng dần trong nhóm.',
+        '# Kim loại kiềm\nTính kim loại tăng dần trong nhóm.',
+      ],
+      [
+        'Which of these statements about free fall is correct?',
+        'Review: The answer is correct but lacks units.\n\nRevised answer:\n# Free fall\nv = gt',
+        '# Free fall\nv = gt',
+      ],
+    ];
+    for (const [question, text, lesson] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text: lesson,
+        removed: ['review'],
+      });
+    }
+    // The fourth probe, with questions that wrongly turned the correction mode on.
+    const fourth = 'Bản trả lời ban đầu đã đúng về cơ bản.\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      'Chỉnh lưu dòng điện xoay chiều là gì?',
+      'Chỉnh hợp chập 2 của 5 phần tử là bao nhiêu?',
+      'Điều chỉnh độ sáng đèn bằng biến trở thế nào?',
+      'Cơ chế sửa sai ADN diễn ra thế nào?',
+      'Xem lại bài rơi tự do giúp em',
+      'Kiểm tra điều kiện cân bằng của vật rắn như thế nào?',
+      'Review free fall for me',
+    ]) {
+      expect(cleanAnswer(fourth, { reviewed: true, question }).text, question).toBe(
+        '# Rơi tự do\nv = gt',
+      );
+    }
+    // The version under review is the draft also when a correction was asked for.
+    expect(cleanAnswer(fourth, { reviewed: true, question: 'Sửa giúp em bài này' }).text).toBe(
+      '# Rơi tự do\nv = gt',
+    );
+    // "câu trả lời ban đầu của em" is the learner's: kept.
+    const own = 'Câu trả lời ban đầu của em đúng về cơ bản.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(own, { reviewed: true, question: 'Sửa giúp em bài này' })).toEqual({
+      text: own,
+      removed: [],
+    });
+  });
+
+  it('a yes/no check of the learner’s answer keeps the verdict they asked for', () => {
+    const checks: [string, string][] = [
+      [
+        'Em làm ra v = 20 m/s, đúng không ạ?',
+        'Đánh giá: Câu trả lời đúng.\n\nVì v = gt = 9,8 · 2 ≈ 20 m/s.',
+      ],
+      [
+        'Đáp án A đúng không thầy?',
+        'Đánh giá: Đúng. Đáp án A là đáp án chính xác vì lực là đại lượng vectơ.',
+      ],
+      ['Is answer A right?', 'Review: Correct.\n\nForce is a vector, so the answer A holds.'],
+      ['Lực là đại lượng vectơ, có đúng không?', 'Đánh giá: Đúng.\n\nLực có phương và chiều.'],
+      ['Bài này em giải đúng chưa thầy', 'Nhận xét: Đúng.\n\nEm đã đổi đơn vị đúng.'],
+      ['Am I right that a = F/m?', 'Review: Correct.\n\nNewton’s second law gives a = F/m.'],
+      ['Is it right?', 'Review: Correct.\n\nThe units are right too.'],
+      ['Is my answer correct: v = 20 m/s?', 'Review: Correct.\n\nv = gt = 20 m/s.'],
+    ];
+    for (const [question, text] of checks) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+      // Without the question the verdict is the reviewer's and goes.
+      expect(cleanAnswer(text, REVIEWED).removed, question).toEqual(['review']);
+    }
+  });
+
+  it('requests about the learner’s own work keep the teacher’s feedback', () => {
+    const feedback = 'Câu gốc dùng sai đơn vị.\n\nBản đã sửa:\nLực là đại lượng vectơ.';
+    for (const question of [
+      'Sửa giúp em với',
+      'Thầy chữa giúp em bài này',
+      'Chấm điểm giúp em',
+      'Thầy sửa bài của em nhé',
+      'Xem giúp bài làm của em',
+      'Thầy xem giúp em bài làm này',
+      'Kiểm tra lại giúp em',
+      'Chấm bài em làm với',
+      'Check my answer please',
+      'Can you fix my solution?',
+      'Grade my work',
+    ]) {
+      expect(cleanAnswer(feedback, { reviewed: true, question }), question).toEqual({
+        text: feedback,
+        removed: [],
+      });
+    }
+  });
+
+  it('only a header naming the revision of the answer ends the opening sentences', () => {
+    // A teacher sets a misconception against the corrected solution: nothing goes.
+    for (const text of [
+      'Nhiều bạn nghĩ vật nặng rơi nhanh hơn vật nhẹ. Đó là quan niệm sai.\n\nBài giải đã sửa:\nHai vật rơi như nhau khi bỏ qua lực cản.',
+      'Một lỗi thường gặp: nhiều bạn quên đổi đơn vị.\n\nLời giải đã sửa:\n1. Đổi 72 km/h = 20 m/s.',
+      'Lực là đại lượng vectơ. Nó có phương, chiều và độ lớn.\n\nBản hoàn chỉnh\nLực đo bằng niutơn.',
+    ]) {
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+    // The reviewer's own revision headers still do.
+    for (const header of [
+      'Bản đã sửa:',
+      'Bản sửa',
+      'Câu trả lời đã chỉnh sửa:',
+      'Revised answer:',
+      'Corrected version',
+    ]) {
+      expect(reviewed(`Chào em!\n\n${header}\nLực là đại lượng vectơ.`), header).toBe(
+        'Lực là đại lượng vectơ.',
+      );
+    }
+    // After a remark about the draft, the other headers count as before.
+    expect(reviewed('Bản nháp đúng.\n\nBài giải đã sửa:\nHai vật rơi như nhau.')).toBe(
+      'Hai vật rơi như nhau.',
+    );
+  });
+
+  it('reviewer-only words at the very start are remarks, without a label or a header', () => {
+    expect(
+      reviewed('Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.\n\n# Rơi tự do\nv = gt'),
+    ).toBe('# Rơi tự do\nv = gt');
+    expect(reviewed('The response is accurate and complete.\n\n# Free fall\nv = gt')).toBe(
+      '# Free fall\nv = gt',
+    );
+    expect(reviewed('No changes needed.\n\nForce is a vector.')).toBe('Force is a vector.');
+    expect(reviewed('I kept the explanation as it was.\n\nForce is a vector.')).toBe(
+      'Force is a vector.',
+    );
+    // Not at the very start: lesson text.
+    const later = 'Lực là đại lượng vectơ.\n\nNo changes needed.';
+    expect(cleanAnswer(later, REVIEWED)).toEqual({ text: later, removed: [] });
+    // After a header the lesson begins.
+    expect(reviewed('Bản đã sửa:\nI kept the mass in kilograms, so F = 20 N.')).toBe(
+      'I kept the mass in kilograms, so F = 20 N.',
+    );
+    // A learner who asked for a correction: the teacher may say so to them.
+    const said = 'Em giữ nguyên nội dung, chỉ sửa đơn vị.\n\nF = 20 N.';
+    expect(cleanAnswer(said, { reviewed: true, question: 'Sửa giúp em' })).toEqual({
+      text: said,
+      removed: [],
+    });
+  });
+});
+
+describe('answer cleaning: own-work requests and reviewer phrases (review fix round 1)', () => {
+  it('the usual ways to ask about one’s own work keep the verdict the learner asked for', () => {
+    // The reviewer's probes: in non-correction mode the diagnosis was deleted.
+    const probes: [string, string][] = [
+      [
+        'Chấm bài giúp em: v = 72 km/h = 20 m/s, t = 2 s.',
+        'Đánh giá: Câu trả lời sai ở bước đổi đơn vị.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Sửa bài giúp em với ạ',
+        'Nhận xét: Câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\nF = 20 N.',
+      ],
+      [
+        'Đây là bài làm của em: v = gt = 20. Thầy nhận xét giúp em',
+        'Nhận xét: Đúng.\n\nEm đã dùng đúng công thức v = gt.',
+      ],
+    ];
+    for (const [question, text] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+    // Every probe question, with a labelled verdict that goes when nobody asked for one.
+    const verdict = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(verdict, REVIEWED).text).toBe('Lực là đại lượng vectơ.');
+    for (const question of [
+      'Sửa bài giúp em với ạ',
+      'Chấm bài giúp em',
+      'Chữa bài giúp em',
+      'Kiểm tra bài giúp em',
+      'Thầy chữa bài cho em',
+      'Thầy sửa cho em bài này với ạ',
+      'Giúp em sửa bài này',
+      'Thầy sửa lỗi giúp em',
+      'Bài làm của em: v = 20 m/s. Thầy xem giúp',
+      'Đây là bài làm của em: v = gt = 20. Thầy nhận xét giúp em',
+      'Thầy nhận xét bài này giúp em',
+      'Em tính ra 20 m/s, thầy xem giúp em với ạ',
+      'Sửa sai giúp em',
+      'Sửa bài giúp với',
+      'Sửa lỗi sai trong bài của em',
+      'Thầy sửa lỗi sai trong bài này giúp em',
+      'Thầy kiểm tra bài em làm với',
+      'Em làm thế này có sai không ạ?',
+      'Em tính sai ở bước nào ạ?',
+      'Where did I go wrong?',
+      'Kết quả của em là 20 m/s',
+      'Bài này em làm đúng không thầy ơi?',
+      'Em làm vậy đúng không cô ơi',
+      'Em ra v = 20 m/s, đúng k ạ',
+      'Em ra v = 20 m/s, đúng hông thầy?',
+      'Did I solve this correctly?',
+      'Did I make a mistake?',
+      'Have I done this right?',
+      'v = 20 m/s, is that right?',
+      'Is this right?',
+      'Please fix this',
+      'Can you check it for me?',
+    ]) {
+      expect(cleanAnswer(verdict, { reviewed: true, question }), question).toEqual({
+        text: verdict,
+        removed: [],
+      });
+    }
+  });
+
+  it('ordinary questions that only look like a check still lose the reviewer’s notes', () => {
+    // English: a check of "this" that is a new task, or a question about why something is wrong.
+    const english =
+      'Review: The answer is correct but lacks units.\n\nRevised answer:\n# Free fall\nv = 20 m/s';
+    for (const question of [
+      'Check this: a ball falls from 20 m, find v.',
+      'How do I correct this for air resistance?',
+      'Why is it wrong to add speeds like scalars?',
+      'Fix this circuit: the bulb does not light',
+      'How do I fix this?',
+      'How to fix this?',
+      'Which of these statements about free fall is correct?',
+      'Review free fall for me',
+    ]) {
+      expect(cleanAnswer(english, { reviewed: true, question }), question).toEqual({
+        text: '# Free fall\nv = 20 m/s',
+        removed: ['review'],
+      });
+    }
+    // Vietnamese: a simulation's result, a new exercise, a question about a topic.
+    const greeting = 'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      'Em muốn xem kết quả của mình trên đồ thị',
+      'Thầy cho em xem kết quả của mình: đồ thị v-t',
+      'Enzyme sửa lỗi giúp tế bào thế nào?',
+      'Hôm nay bài của mình học gì?',
+      'Thầy xem giúp em bài này: một vật rơi từ độ cao 20 m, tính vận tốc chạm đất.',
+      'Thầy xem bài này giúp em: một vật rơi từ độ cao 20 m.',
+      'Xem đáp án giúp em',
+      'Giúp em kiểm tra điều kiện cân bằng của vật rắn',
+      'Sửa bài giúp ích gì cho việc học?',
+      'Bài này em giải không ra, thầy giải giúp em',
+      'Kiểm tra bài cũ gồm những gì?',
+      // "con người", "con lắc": not the learner; "Bài tập của em: …" is a new exercise.
+      'Thuốc kháng sinh chữa cho con người những bệnh gì?',
+      'Enzyme sửa lỗi giúp con người thế nào?',
+      'Nhận xét kết quả con lắc đơn khi tăng chiều dài dây',
+      'Bài tập của em hôm nay: một vật rơi từ 20 m, tính v.',
+      // The earlier must-not list, checked with an answer whose cleaning shows the mode.
+      'Cơ chế sửa sai ADN diễn ra thế nào?',
+      'Xem lại bài rơi tự do giúp em',
+      'Chỉnh lưu dòng điện xoay chiều là gì?',
+      'Điều chỉnh độ sáng đèn bằng biến trở thế nào?',
+      'Em có nhận xét gì về bán kính nguyên tử trong một chu kì?',
+      'Nhận xét về tính kim loại của các nguyên tố nhóm IA.',
+      'Kiểm tra điều kiện cân bằng của vật rắn như thế nào?',
+    ]) {
+      expect(cleanAnswer(greeting, { reviewed: true, question }), question).toEqual({
+        text: '# Rơi tự do\nv = gt',
+        removed: ['review'],
+      });
+    }
+  });
+
+  it('broad English and Vietnamese phrases no longer remove a lesson’s first sentence', () => {
+    for (const [text, question] of [
+      [
+        "I kept the mass constant, so the acceleration doubles when the force doubles.\n\nThis is Newton's second law.",
+        'What happens if I double the force?',
+      ],
+      [
+        'The response is complete before the brain notices the stimulus.\n\nThis is why a reflex is fast.',
+        'What is a reflex?',
+      ],
+      [
+        'ADN giữ nguyên nội dung thông tin di truyền qua các thế hệ.\n\nĐó là nhờ nhân đôi bán bảo toàn.',
+        'Vì sao ADN ổn định?',
+      ],
+    ] as const) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+    // The reviewer's own notes still go.
+    for (const [text, lesson] of [
+      ['I kept the explanation as it was.\n\nForce is a vector.', 'Force is a vector.'],
+      ['I kept the wording and the structure.\n\nForce is a vector.', 'Force is a vector.'],
+      ['The response is accurate and complete.\n\n# Free fall\nv = gt', '# Free fall\nv = gt'],
+      ['The provided response is correct.\n\nForce is a vector.', 'Force is a vector.'],
+      ['The response is correct, so no edits.\n\nForce is a vector.', 'Force is a vector.'],
+      [
+        'Câu trả lời đúng và đầy đủ, mình giữ nguyên nội dung.\n\n# Rơi tự do\nv = gt',
+        '# Rơi tự do\nv = gt',
+      ],
+      ['Mình giữ nguyên nội dung ban đầu.\n\nLực là vectơ.', 'Lực là vectơ.'],
+      ['Mình giữ nguyên nội dung và chỉ sửa cách trình bày.\n\nLực là vectơ.', 'Lực là vectơ.'],
+    ] as const) {
+      expect(cleanAnswer(text, REVIEWED).text, text).toBe(lesson);
+    }
+  });
+});
+
+describe('answer cleaning: unaccented and other own-work checks (review fix round 2)', () => {
+  it('the reviewer’s probes keep the verdict and the diagnosis the learner asked for', () => {
+    const probes: [string, string][] = [
+      [
+        'em lam dung khong a? v = 72 km/h = 20 m/s',
+        'Nhận xét: Em làm đúng nhưng thiếu đơn vị ở bước cuối.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em làm đúng không ạ? v = 72 km/h = 20 m/s',
+        'Nhận xét: Em làm đúng nhưng thiếu đơn vị ở bước cuối.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em chọn đáp án C có được không ạ?',
+        'Nhận xét: Chưa đúng.\n\nBản đã sửa:\nĐáp án đúng là B vì lực là đại lượng vectơ.',
+      ],
+      [
+        'Thầy check giúp em bài này với: v = 20 m/s',
+        'Nhận xét: Câu trả lời đúng nhưng thiếu bước đổi đơn vị.\n\nBản đã sửa:\nv = 72 km/h = 20 m/s.',
+      ],
+      [
+        'Em giải thế này: a = F/m = 2 m/s². Thầy xem có sai chỗ nào không ạ?',
+        'Đánh giá: Đúng.\n\nVì a = F/m = 2 m/s².',
+      ],
+    ];
+    for (const [question, text] of probes) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+  });
+
+  it('own-work questions typed without accents, or in other common ways, are checks', () => {
+    const verdict = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    for (const question of [
+      // Without accents (the reviewer's seven, then the other request shapes).
+      'em lam dung khong a? v = 72 km/h = 20 m/s',
+      'sua bai giup em voi',
+      'thay cham bai giup em',
+      'em lam the nay dung chua thay',
+      'bai lam cua em: v = 20 m/s, thay xem giup em',
+      'Em lam sai o dau vay thay?',
+      'em tinh ra v = 20 m/s, dung k a',
+      'kiem tra lai giup em',
+      'sua giup em voi',
+      'chua bai giup em nhe',
+      'thay cham diem giup em',
+      'thay sua loi sai trong bai nay giup em',
+      'loi giai cua em the nay: v = gt = 20',
+      'em ra 20 m/s dung hk thay',
+      'Dap an A dung khong thay?',
+      'em lam nhu vay duoc chua thay?',
+      'em chon dap an C co duoc khong a?',
+      'em giai the nay: v = 20 m/s. thay xem co sai cho nao khong a?',
+      'thay xem giup em voi',
+      // Accents on part of the question only.
+      'em lam dung khong ạ?',
+      // Accented shapes that were missed.
+      'Em làm như vầy được chưa thầy?',
+      'Em làm vậy ổn không ạ?',
+      'Em ra 20 m/s đúng hk thầy',
+      'Em chọn đáp án C có được không ạ?',
+      'Thầy check giúp em bài này với: v = 20 m/s',
+      'Em giải thế này: a = F/m = 2 m/s². Thầy xem có sai chỗ nào không ạ?',
+      // English.
+      'Is 20 m/s correct?',
+      'I got 20 m/s, right?',
+    ]) {
+      expect(cleanAnswer(verdict, { reviewed: true, question }), question).toEqual({
+        text: verdict,
+        removed: [],
+      });
+    }
+  });
+
+  it('unaccented questions that only look like a check stay ordinary', () => {
+    const greeting = 'Chào em!\n\nBản đã sửa:\n# Rơi tự do\nv = gt';
+    for (const question of [
+      // "dung" is also "dùng"/"dừng", "cham" also "chậm"/"chạm", "chua" also "chưa", "sua" "sữa".
+      'Co the dung cong thuc nay khong?',
+      'Em co the dung cong thuc nay khong?',
+      'Vat co dung yen khong?',
+      'Em dung cong thuc nao de tinh van toc?',
+      'Thay giang cham lai giup em',
+      'Thay noi cham giup em',
+      'Em chua hieu, giai thich lai giup em',
+      'Qua bong to ra dung khong?',
+      'Uong sua giup em cao hon khong?',
+      // A topic, a new exercise or a simulation's result, as in the accented must-not list.
+      'Kiem tra giup em dieu kien can bang cua vat ran',
+      'Enzyme sua loi giup te bao the nao?',
+      'Thay xem giup em bai nay: mot vat roi tu do cao 20 m, tinh van toc cham dat.',
+      'Em muon xem ket qua cua minh tren do thi',
+      'Bai tap cua em hom nay: mot vat roi tu 20 m, tinh v.',
+      'Em lam the nao de vat dung lai?',
+      'Em lam thi nghiem nay o nha duoc khong?',
+      // English.
+      'Is it right to say force is a vector?',
+      'Is 0 a natural number?',
+    ]) {
+      expect(cleanAnswer(greeting, { reviewed: true, question }), question).toEqual({
+        text: '# Rơi tự do\nv = gt',
+        removed: ['review'],
+      });
+    }
+  });
+
+  it('a correcting verb before a topic, or a conceptual "còn đúng không?", is no check', () => {
+    const answer =
+      'Đánh giá: Câu trả lời đúng.\n\nBản đã sửa:\n# Điều kiện cân bằng\nTổng lực bằng 0 và tổng mômen bằng 0.';
+    const lesson = '# Điều kiện cân bằng\nTổng lực bằng 0 và tổng mômen bằng 0.';
+    for (const question of [
+      'Giúp em kiểm tra điều kiện cân bằng của vật rắn',
+      'Thầy kiểm tra giúp em điều kiện cân bằng của vật rắn',
+      'Kiểm tra lại giúp em đơn vị của lực là gì',
+      'Khi có ma sát, định luật bảo toàn cơ năng còn đúng không?',
+      'Định luật Ôm vẫn đúng không thầy?',
+      'Kiểm tra giúp em xem nước có dẫn điện không',
+      'Sửa giúp em lỗi chính tả trong câu hỏi trước',
+      'Sửa cho em câu hỏi: vật rơi 20 m thì mất bao lâu?',
+      'Thầy chữa giúp em bài tập 5 trang 20',
+      'Em làm thí nghiệm này ở nhà được không?',
+    ]) {
+      expect(cleanAnswer(answer, { reviewed: true, question }), question).toEqual({
+        text: lesson,
+        removed: ['review'],
+      });
+    }
+    // A request that ends, or names the work and then ends, is still one.
+    for (const question of [
+      'Kiểm tra lại giúp em',
+      'Sửa giúp em, v = 20 m/s',
+      'Thầy chữa giúp em bài này',
+      'Sửa cho em bài này với ạ',
+      'Kiểm tra giúp em bài này: v = 20 m/s',
+      'Thầy sửa giúp em chỗ này với',
+      'Thầy kiểm tra giúp em nhé',
+    ]) {
+      expect(cleanAnswer(answer, { reviewed: true, question }), question).toEqual({
+        text: answer,
+        removed: [],
+      });
+    }
+  });
+});
+
+describe('answer cleaning: what it never touches', () => {
+  it('returns text with nothing to remove exactly as it was (spaces included)', () => {
+    const text = '  Rơi tự do là chuyển động chỉ chịu trọng lực.\n\n\n';
+    expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+  });
+
+  it('code fences, inline code and formulas stay as written', () => {
+    const fence = '```\n**GHI CHÚ:**\n<reference>x</reference>\n<!-- c -->\nBản đã sửa:\n```';
+    const text = `<think>nháp</think>Ví dụ mã:\n${fence}\nGõ \`<!-- y -->\` và $x<y$, $$a = \\frac{F}{m}$$.`;
+    const expected = `Ví dụ mã:\n${fence}\nGõ \`<!-- y -->\` và $x<y$, $$a = \\frac{F}{m}$$.`;
+    expect(clean(text)).toBe(expected);
+    expect(reviewed(text)).toBe(expected);
+  });
+
+  it('a reasoning tag written as code is code, not reasoning (review round 1)', () => {
+    for (const text of [
+      'Qwen dùng thẻ `<think>` để suy nghĩ. Bước 1: a = 2 m/s².',
+      '```html\n<think>\n```\nVậy a = 2.',
+      'Mã `<thinking type="x">` mở một khối. Vậy a = 2.',
+    ]) {
+      expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+      expect(cleanAnswer(text, REVIEWED)).toEqual({ text, removed: [] });
+    }
+    // Real reasoning around or holding code still goes.
+    expect(clean('<think>dùng `<think>` nhé</think>Đáp số 4.')).toBe('Đáp số 4.');
+    expect(clean('<think>x ` y</think> Ta có `a` b.')).toBe('Ta có `a` b.');
+    expect(clean('Đáp số 4. <think>thử `x` và')).toBe('Đáp số 4.');
+    // A closing tag always counts, even between backticks (a template's pre-filled opening tag).
+    expect(clean('nháp riêng `</think>` Lực là vectơ.')).toBe('Lực là vectơ.');
+    // Its backticks go with it: no stray "`" is left (review round 2).
+    expect(clean('`</think>` là thẻ đóng. Đáp số 12.')).toBe('là thẻ đóng. Đáp số 12.');
+    expect(clean('<think>nháp `</think>` Đáp số 12.')).toBe('Đáp số 12.');
+  });
+
+  it('upper-case section names stay as a heading or above a list ("## TÀI LIỆU THAM KHẢO")', () => {
+    for (const text of [
+      '## TÀI LIỆU THAM KHẢO\n- Halliday, Vật lý đại cương',
+      '**TÀI LIỆU THAM KHẢO:**\n- Sách giáo khoa Vật lí 10',
+      '### NOTE\nThe formula only holds for small angles.',
+    ]) {
+      expect(cleanAnswer(text)).toEqual({ text, removed: [] });
+    }
+    // The app's own section name is never a teacher's heading.
+    expect(clean('## KẾT QUẢ DO SIMLAB TÍNH\n- a = 2 m/s²')).toBe('- a = 2 m/s²');
+  });
+
+  it('is idempotent', () => {
+    for (const text of [
+      '<think>a</think>**GHI CHÚ:**\nNhận xét về bản nháp: tốt.\n\nBản sửa:\n# Lực\n1. F = 10 N',
+      'a</think>b</think> Kết luận.',
+      'Bản nháp ổn.\n\nBản nháp có lỗi nhỏ.\n\nRevised answer:\nForce.',
+      '<reference>x</reference>\n\n\n\nLực.',
+      'Bản nháp đã đúng. Bản nháp dùng g = 10.\n\nLực.',
+      'Bản nháp đúng.\nCâu trả lời cuối cùng:\nv = 20 m/s.',
+      'Bản nháp đúng. Lực là vectơ.\n\nNhận xét về bản nháp: tốt.',
+      'Qwen dùng `<think>` nhé. <think>x</think>Hết.',
+    ]) {
+      const once = clean(text);
+      expect(clean(once)).toBe(once);
+      const onceReviewed = reviewed(text);
+      expect(reviewed(onceReviewed)).toBe(onceReviewed);
+    }
+  });
+
+  it('is idempotent on random reviewed answers', () => {
+    let seed = 3;
+    const next = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    const pick = <T>(list: readonly T[]): T => list[Math.floor(next() * list.length)] as T;
+    const pieces = [
+      'Bản nháp đã đúng.',
+      'Nhận xét: bản nháp thiếu đơn vị ở bước 2.',
+      'Tuy nhiên, cần ghi giả định.',
+      '## Nhận xét',
+      'Bản đã sửa:',
+      'Câu trả lời cuối cùng:',
+      'Revised answer:',
+      '# Rơi tự do',
+      '1. Ta có h = 20 m.',
+      'Ta viết <write id="s1" zone="steps">v = 20 m/s</write>.',
+      'Nhận xét về bản nháp: tốt.',
+      '<think>nháp 7 kg</think>',
+      '`<think>` là thẻ.',
+    ];
+    for (let round = 0; round < 200; round++) {
+      const input = Array.from({ length: 2 + Math.floor(next() * 5) }, () => pick(pieces))
+        .map((p, i) => (i === 0 ? p : `${pick([' ', '\n', '\n\n'])}${p}`))
+        .join('');
+      const once = reviewed(input);
+      expect(reviewed(once)).toBe(once);
+    }
+  });
+
+  it('every number left in the answer is unchanged (random answers)', () => {
+    let seed = 7;
+    const next = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    const pick = <T>(list: readonly T[]): T => list[Math.floor(next() * list.length)] as T;
+    const lesson = [
+      'Cho m = 2 kg, F = 10 N.',
+      '1. Gia tốc a = F/m = 10/2 = 5 m/s².',
+      '$v = v_0 + a t = 3 + 2 \\cdot 4 = 11$ m/s',
+      'Vậy quãng đường s = 20 m.',
+      'Nhiệt độ 36,6 °C và áp suất 1,013 × 10^5 Pa.',
+    ];
+    const junkBefore = [
+      '<think>thử 7 kg rồi 8 kg</think>',
+      '<reasoning>99 N</reasoning>',
+      '**GHI CHÚ:**',
+      '<reference kind="library" name="a">g = 9,81 m/s²</reference>',
+      'Nhận xét về bản nháp: bước 3 sai 12 lần.\n\nBản đã sửa:',
+    ];
+    for (let round = 0; round < 60; round++) {
+      const kept = Array.from({ length: 1 + Math.floor(next() * 4) }, () => pick(lesson));
+      const input = [pick(junkBefore), ...kept, next() < 0.5 ? '<think>sau cùng 42' : ''].join(
+        '\n',
+      );
+      const out = cleanAnswer(input, REVIEWED);
+      expect(numbersIn(out.text)).toEqual(numbersIn(kept.join('\n')));
+      expect(out.text).toBe(kept.join('\n'));
+    }
+  });
+});
+
+describe('answer cleaning: audit G8 (a request closed by ":", a cough)', () => {
+  it('a bare request closed by ":" before the work is a correction request', () => {
+    const text = 'Nhận xét: câu trả lời đúng nhưng thiếu đơn vị.\n\nBản đã sửa:\nv = 20 m/s';
+    for (const question of [
+      'Sửa giúp em: v = 72 km/h = 20 m/s',
+      'Kiểm tra lại giúp em: v = 72 km/h = 20 m/s',
+      'sua giup em: v = 72 km/h = 20 m/s',
+      'kiem tra lai giup em : v = 20 m/s',
+    ]) {
+      expect(cleanAnswer(text, { reviewed: true, question }), question).toEqual({
+        text,
+        removed: [],
+      });
+    }
+  });
+
+  it('"chua ho" (curing a cough) is no correction request', () => {
+    const out = cleanAnswer(
+      'Đánh giá: câu trả lời đúng.\n\nBản đã sửa:\nHo là phản xạ bảo vệ đường thở.',
+      { reviewed: true, question: 'Lam sao de chua ho?' },
+    );
+    expect(out.text).toBe('Ho là phản xạ bảo vệ đường thở.');
+    // "hộ em" still asks for one.
+    const asked = 'Đánh giá: Đúng.\n\nLực là đại lượng vectơ.';
+    expect(cleanAnswer(asked, { reviewed: true, question: 'chua ho em voi' }).text).toBe(asked);
+  });
+});

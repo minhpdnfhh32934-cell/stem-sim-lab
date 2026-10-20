@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { EngineRunner } from '@/core/sim/runner';
 import { distance, meetingTime, stateAt, stopTime } from './analytic';
 import { LS, LinearEngine } from './engine';
-import { numericPosition, uniformAcceleration, uniformMotion } from './scenes';
+import { applyAutoDefaults } from '../autoDefaults';
+import { autoTimeSpan, numericPosition, uniformAcceleration, uniformMotion } from './scenes';
 
 describe('1D kinematics — closed form', () => {
   it('two cars 100 m apart at 10 m/s and −15 m/s meet after 4 s at x = 40 m', () => {
@@ -66,5 +67,48 @@ describe('linear scenes', () => {
     for (const a of sol.answers) {
       if (a.check !== undefined) expect(a.check).toBeCloseTo(a.value, 8);
     }
+  });
+});
+
+describe('meetings that the old scan missed', () => {
+  const chase = { twoBodies: 1, xA: 0, vA: 0, aA: 2, xB: 0, vB: 10, aB: 0, stopAtRest: 1 };
+
+  it('a chase from the same start meets later, not at t = 0', () => {
+    const a = { x0: 0, v0: 0, a: 2, stopAtRest: true };
+    const b = { x0: 0, v0: 10, a: 0, stopAtRest: true };
+    expect(meetingTime(a, b, 20)).toBeCloseTo(10, 12);
+    const sol = uniformAcceleration.solve({ ...chase, tEnd: 20 }, 'en');
+    expect(sol.answers.find((x) => x.id === 'meet_time')?.value).toBeCloseTo(10, 12);
+    expect(sol.answers.find((x) => x.id === 'meet_position')?.value).toBeCloseTo(100, 10);
+  });
+
+  it('the automatic time span covers the real meeting of a same-start chase', () => {
+    // B at 15 m/s is caught at t = 15 s, x = 225 m.
+    expect(autoTimeSpan({ ...chase, vB: 15 }, true)).toBeGreaterThanOrEqual(15);
+  });
+
+  it('finds two meetings closer together than the old 500 s scan cell', () => {
+    // gap = −180 + 15.6 t − 0.05 t²: meetings at t = 12 s and t = 300 s.
+    const a = { x0: 0, v0: 20, a: 0, stopAtRest: false };
+    const b = { x0: 180, v0: 4.4, a: 0.1, stopAtRest: false };
+    expect(meetingTime(a, b, 1e6)).toBeCloseTo(12, 9);
+    const p = { twoBodies: 1, xA: 0, vA: 20, aA: 0, xB: 180, vB: 4.4, aB: 0.1, stopAtRest: 0 };
+    const auto = applyAutoDefaults(uniformAcceleration, { ...p, tEnd: 10 }, { tEnd: 'default' });
+    expect(auto.tEnd).toBeGreaterThanOrEqual(12);
+    const sol = uniformAcceleration.solve(auto, 'en');
+    expect(sol.answers.find((x) => x.id === 'meet_time')?.value).toBeCloseTo(12, 9);
+  });
+
+  it('a meeting exactly when a braking body stops is found', () => {
+    // A brakes from 20 m/s at −2 m/s²: stops at t = 10 s, x = 100 m. B waits at x = 100 m.
+    const a = { x0: 0, v0: 20, a: -2, stopAtRest: true };
+    const b = { x0: 100, v0: 0, a: 0, stopAtRest: true };
+    expect(meetingTime(a, b, 50)).toBeCloseTo(10, 9);
+  });
+
+  it('bodies that only touch at the start and then separate never meet', () => {
+    const a = { x0: 0, v0: 5, a: 0, stopAtRest: false };
+    const b = { x0: 0, v0: -5, a: 0, stopAtRest: false };
+    expect(meetingTime(a, b, 100)).toBeNull();
   });
 });

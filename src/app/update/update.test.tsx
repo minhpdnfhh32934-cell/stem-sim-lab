@@ -89,10 +89,46 @@ describe('update window at start-up (in-app updates)', () => {
     expect(screen.getByRole('button', { name: 'Cập nhật ngay' })).toBeInTheDocument();
   });
 
+  it('a mandatory update closed by a non-cancelable Esc comes straight back', async () => {
+    await startUpCheck({ required: true });
+    const dialog = document.querySelector('dialog');
+    if (!dialog) throw new Error('no dialog');
+    // Chromium: the first Esc before any click is not cancelable and closes the dialog.
+    fireEvent(dialog, new Event('cancel', { cancelable: false }));
+    act(() => {
+      dialog.close();
+    });
+    expect(dialog.open).toBe(true);
+    expect(useUpdateStore.getState().dialogOpen).toBe(true);
+  });
+
+  it('a dialog closed behind the store is shown again by "Có bản mới"', async () => {
+    await startUpCheck({});
+    const dialog = document.querySelector('dialog');
+    if (!dialog) throw new Error('no dialog');
+    // Closed without its close event (as a browser may do): the store still says open.
+    dialog.removeAttribute('open');
+    act(() => {
+      useUpdateStore.setState({ dialogOpen: true });
+    });
+    expect(dialog.open).toBe(true);
+  });
+
   it('mandatory and a new installer: only the download page', async () => {
     await startUpCheck({ available: false, needsInstaller: true, required: true });
     expect(screen.getByRole('button', { name: 'Mở trang tải bộ cài' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Để sau' })).toBeNull();
+  });
+
+  it('a mandatory download that fails offers "Thử lại" and the download page', async () => {
+    await startUpCheck({ required: true });
+    invoke.mockImplementationOnce(() => Promise.reject(new Error('mạng ngừng gửi dữ liệu')));
+    await userEvent.click(screen.getByRole('button', { name: 'Cập nhật ngay' }));
+    expect(screen.getByRole('alert')).toHaveTextContent('mạng ngừng gửi dữ liệu');
+    expect(screen.getByRole('button', { name: 'Thử lại' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Đóng' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'Mở trang tải bộ cài' }));
+    expect(invoke).toHaveBeenCalledWith('open_releases_page');
   });
 
   it('a Microsoft Store copy never checks GitHub: the Store updates it', async () => {

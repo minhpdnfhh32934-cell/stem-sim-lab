@@ -197,6 +197,15 @@ function validate(p: Params): LocalizedText[] {
       ),
     );
   }
+  const first = segments(q)[0];
+  if (first && first.regime !== 'static' && first.end !== 'rest' && first.t1 === first.t0) {
+    errs.push(
+      L(
+        'Vật bắt đầu ngay ở mép (chân dốc, đỉnh dốc hoặc đầu đường) và chuyển động ra ngoài: vật rời mặt đỡ ngay tại t = 0, không còn chuyển động trên mặt để mô phỏng. Hãy đặt vật vào trong hoặc đổi chiều vận tốc.',
+        'The block starts right on an edge (foot or top of the incline, or start of the road) and moves outward: it leaves the surface at t = 0, so there is no motion on the surface to simulate. Start inside or reverse the velocity.',
+      ),
+    );
+  }
   if (q.muK > q.muS + 1e-12) {
     errs.push(
       L(
@@ -484,7 +493,7 @@ export const newtonLaws: PhysicsScene = {
   // m = 5 kg pulled by 20 N at 30°, μ = 0.2 (classic SGK set-up).
   defaults: { m: 5, F: 20, beta: 0, mu: 0.2, v0: 0, length: 20, g: 9.81 },
   engineParams: (p) => ({ ...p, theta: 0, muS: p.mu ?? 0, muK: p.mu ?? 0, s0: 0, tEnd: 30 }),
-  validate: (p) => validate({ ...p, theta: 0, muS: p.mu ?? 0, muK: p.mu ?? 0 }),
+  validate: (p) => validate({ ...p, theta: 0, muS: p.mu ?? 0, muK: p.mu ?? 0, s0: 0 }),
   scienceCard: card(true),
   solve: (p, locale) =>
     solve(true)({ ...p, theta: 0, muS: p.mu ?? 0, muK: p.mu ?? 0, s0: 0 }, locale),

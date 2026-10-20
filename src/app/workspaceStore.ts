@@ -21,12 +21,14 @@ export const SETTINGS_SECTIONS = [
   'ai',
   'teacher',
   'local',
+  'runtimes',
   'gpu',
   'knowledge',
   'memory',
   'voice',
   'safety',
   'shortcuts',
+  'versions',
 ] as const;
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
 

@@ -1,146 +1,53 @@
-import { useMemo } from 'react';
+import { Suspense, lazy, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
-import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
-import { BSRC, L, usePublishCard } from '../common';
-import { useFmt } from '../fmt';
-import { Range, Segmented } from '../ui';
-import { apparent, rate, substrateAt, substrateNumeric, type Inhibition } from './enzyme';
+import { L, usePublishCard } from '../common';
+import { MoreInBasic, Range } from '../ui';
+import { useNo3dNotice, useNo3dReason } from '../view3d/support';
+import { apparent, type Inhibition } from './enzyme';
+import { ENZYME_CARD } from './enzymeCard';
 import { useEnzyme, type EnzymeState } from './store';
+import { EnzymeChips } from './chips';
+import { KIND_NAME, noInhibitor, paramsOf, useEnzymeData } from './data';
+import { Enzyme3DSwitch } from './enzyme3d/Enzyme3DSwitch';
+import { useEnzyme3D } from './enzyme3d/store';
 import '../bio.css';
 
-const KIND_NAME: Record<Inhibition, ReturnType<typeof L>> = {
-  none: L('Không có chất ức chế', 'No inhibitor'),
-  competitive: L('Ức chế cạnh tranh', 'Competitive'),
-  noncompetitive: L('Ức chế không cạnh tranh', 'Non-competitive'),
-  uncompetitive: L('Ức chế phi cạnh tranh (uncompetitive)', 'Uncompetitive'),
-};
+// three.js and the 3D reaction volume load only when the 3D view is shown.
+const Enzyme3DView = lazy(() =>
+  import('./enzyme3d/Enzyme3DView').then((m) => ({ default: m.Enzyme3DView })),
+);
 
-const ENZYME_CARD: ScienceCardData = {
-  title: L('Động học enzyme Michaelis–Menten', 'Michaelis–Menten enzyme kinetics'),
-  model: L(
-    'Tốc độ phản ứng ban đầu theo phương trình Michaelis–Menten, ảnh hưởng của chất ức chế theo các dạng chuẩn. Tiến trình [S](t) dùng nghiệm chính xác qua hàm Lambert W và được đối chiếu với tích phân số DOPRI5.',
-    'Initial rate from the Michaelis–Menten equation, with the standard inhibition forms. The time course [S](t) uses the exact Lambert W solution, cross-checked with DOPRI5.',
-  ),
-  equations: [
-    { tex: 'v = \\dfrac{V_{\\max}[S]}{K_m + [S]}' },
-    { tex: '\\dfrac{1}{v} = \\dfrac{K_m}{V_{\\max}}\\cdot\\dfrac{1}{[S]} + \\dfrac{1}{V_{\\max}}' },
-    {
-      tex: '\\alpha = 1 + \\dfrac{[I]}{K_i}',
-      label: L('Hệ số ức chế', 'Inhibition factor'),
-    },
-    {
-      tex: 'K_m^{app} = \\alpha K_m,\\quad V_{\\max}^{app} = V_{\\max}',
-      label: L('Ức chế cạnh tranh', 'Competitive inhibition'),
-    },
-    {
-      tex: 'K_m^{app} = K_m,\\quad V_{\\max}^{app} = V_{\\max}/\\alpha',
-      label: L('Ức chế không cạnh tranh', 'Non-competitive inhibition'),
-    },
-    {
-      tex: 'K_m^{app} = K_m/\\alpha,\\quad V_{\\max}^{app} = V_{\\max}/\\alpha',
-      label: L('Ức chế phi cạnh tranh', 'Uncompetitive inhibition'),
-    },
-    { tex: '[S](t) = K_m\\,W\\!\\left(\\dfrac{[S]_0}{K_m}\\,e^{([S]_0 - V_{\\max}t)/K_m}\\right)' },
-  ],
-  assumptions: [
-    L(
-      'Trạng thái giả dừng: [E] ≪ [S]; phản ứng một chiều S → P; nhiệt độ và pH không đổi.',
-      'Quasi-steady state: [E] ≪ [S]; irreversible S → P; constant temperature and pH.',
-    ),
-    L(
-      'Chất ức chế thuận nghịch, dạng tuyến tính đơn giản (một hằng số Kᵢ).',
-      'Reversible inhibitor, simple linear forms (one constant Kᵢ).',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Công thức chính xác. Test tự động: v = Vmax/2 tại [S] = Km; Km, Vmax biểu kiến; Lambert W khớp DOPRI5.',
-    'Exact formulas. Automated tests: v = Vmax/2 at [S] = Km; apparent Km, Vmax; Lambert W matches DOPRI5.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.cornish, BSRC.schnell, BSRC.sgk10],
-};
-
-const paramsOf = (st: EnzymeState) => ({
-  vmax: st.vmax,
-  km: st.km,
-  inhibitor: st.inhibitor,
-  ki: st.ki,
-  kind: st.kind,
-});
-const noInhibitor = (st: EnzymeState) => ({ ...paramsOf(st), kind: 'none' as const });
-
+/**
+ * "Động học enzyme": the 3D view (default) or the 2D plots, by the lesson store's saved
+ * `view3d`. The 2D page takes over when WebGL is missing or lost, or on the Low quality tier.
+ */
 export function MichaelisMentenStage() {
+  const view3d = useEnzyme((s) => s.view3d);
+  const reason = useNo3dReason(useEnzyme3D((s) => s.webglFailed));
+  const notice = useNo3dNotice(view3d, reason);
+  if (view3d && !reason)
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Enzyme3DView />
+      </Suspense>
+    );
+  return <MichaelisMenten2D notice={notice} />;
+}
+
+function MichaelisMenten2D({ notice }: { notice: string | undefined }) {
   usePublishCard(ENZYME_CARD);
   const Lz = useLocalized();
-  const fmt = useFmt();
   const st = useEnzyme();
   const app = apparent(paramsOf(st));
   const inhibited = st.kind !== 'none';
-
-  const rateData = useMemo(() => {
-    const top = Math.max(10 * st.km, 20);
-    const x = Array.from({ length: 301 }, (_, i) => (i * top) / 300);
-    return {
-      x,
-      base: x.map((s) => rate(noInhibitor(st), s)),
-      inh: x.map((s) => rate(paramsOf(st), s)),
-    };
-  }, [st]);
-
-  const timeData = useMemo(() => {
-    const p = paramsOf(st);
-    const a = apparent(p);
-    // Long enough to consume most of the substrate: S0/Vmax (zero order) + a few Km/Vmax.
-    const tEnd = (st.s0 + 5 * a.km) / a.vmax;
-    const x = Array.from({ length: 201 }, (_, i) => (i * tEnd) / 200);
-    const s = x.map((t) => substrateAt(p, st.s0, t));
-    return { x, s, p: s.map((v) => st.s0 - v), tEnd };
-  }, [st]);
-
-  // Cross-check of the closed form against DOPRI5 at the half-way point.
-  const check = useMemo(() => {
-    const p = paramsOf(st);
-    const t = timeData.tEnd / 2;
-    const exact = substrateAt(p, st.s0, t);
-    const num = substrateNumeric(p, st.s0, t);
-    return Math.abs(exact - num) / Math.max(1e-12, Math.abs(exact));
-  }, [st, timeData.tEnd]);
-
+  const { rateData, timeData } = useEnzymeData();
   return (
     <div className="bio-view">
       <div className="chem-overlay">
-        <Segmented
-          label={L('Đồ thị', 'Plot')}
-          value={st.view}
-          options={[
-            { id: 'rate', label: L('v theo [S]', 'v vs [S]') },
-            { id: 'time', label: L('[S] theo thời gian', '[S] over time') },
-          ]}
-          onChange={(view) => {
-            useEnzyme.setState({ view });
-          }}
-        />
-        <span className="chem-chip">
-          <span>
-            V<sub>max</sub>
-            {inhibited ? Lz(L(' (biểu kiến)', ' (apparent)')) : ''} = {fmt(app.vmax)} mM/
-            {Lz(L('phút', 'min'))}
-          </span>
-        </span>
-        <span className="chem-chip">
-          <span>
-            K<sub>m</sub>
-            {inhibited ? Lz(L(' (biểu kiến)', ' (apparent)')) : ''} = {fmt(app.km)} mM
-          </span>
-        </span>
-        {st.view === 'time' && (
-          <span className="chem-chip" title={Lz(L('Kiểm tra chéo', 'Cross-check'))}>
-            {Lz(L('Lambert W so với DOPRI5: sai lệch ', 'Lambert W vs DOPRI5: difference '))}
-            {fmt(check, 2)}
-          </span>
-        )}
+        <EnzymeChips />
+        <Enzyme3DSwitch />
+        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
       </div>
       <div className="bio-stage-chart">
         {st.view === 'rate' ? (
@@ -208,6 +115,7 @@ export function MichaelisMentenStage() {
 export function MichaelisMentenPanel() {
   const Lz = useLocalized();
   const st = useEnzyme();
+  const initial = useEnzyme.getInitialState();
   const set = (patch: Partial<EnzymeState>) => {
     useEnzyme.setState(patch);
   };
@@ -251,18 +159,24 @@ export function MichaelisMentenPanel() {
         </select>
       </label>
       {st.kind !== 'none' && (
-        <>
-          <Range
-            label={L('Nồng độ chất ức chế [I]', 'Inhibitor [I]')}
-            unit="mM"
-            value={st.inhibitor}
-            min={0}
-            max={20}
-            step={0.1}
-            onChange={(inhibitor) => {
-              set({ inhibitor });
-            }}
-          />
+        <Range
+          label={L('Nồng độ chất ức chế [I]', 'Inhibitor [I]')}
+          unit="mM"
+          value={st.inhibitor}
+          min={0}
+          max={20}
+          step={0.1}
+          onChange={(inhibitor) => {
+            set({ inhibitor });
+          }}
+        />
+      )}
+      {/* Basic: Kᵢ and the time course's [S]₀ keep their defaults. */}
+      <MoreInBasic
+        count={st.kind !== 'none' ? 2 : 1}
+        changed={st.ki !== initial.ki || st.s0 !== initial.s0}
+      >
+        {st.kind !== 'none' && (
           <Range
             label={L('Hằng số ức chế Kᵢ', 'Inhibition constant Kᵢ')}
             unit="mM"
@@ -274,19 +188,19 @@ export function MichaelisMentenPanel() {
               set({ ki });
             }}
           />
-        </>
-      )}
-      <Range
-        label={L('[S]₀ cho đồ thị thời gian', '[S]₀ for the time course')}
-        unit="mM"
-        value={st.s0}
-        min={0.5}
-        max={100}
-        step={0.5}
-        onChange={(s0) => {
-          set({ s0 });
-        }}
-      />
+        )}
+        <Range
+          label={L('[S]₀ cho đồ thị thời gian', '[S]₀ for the time course')}
+          unit="mM"
+          value={st.s0}
+          min={0.5}
+          max={100}
+          step={0.5}
+          onChange={(s0) => {
+            set({ s0 });
+          }}
+        />
+      </MoreInBasic>
       <p className="small muted">
         {Lz(
           L(

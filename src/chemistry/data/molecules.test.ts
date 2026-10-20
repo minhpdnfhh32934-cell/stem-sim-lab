@@ -4,6 +4,7 @@ import {
   angle,
   bondPolarity,
   centralAtom,
+  hasSeveralCentres,
   distance,
   findMolecules,
   lonePairDirections,
@@ -184,6 +185,28 @@ describe('molecule library', () => {
     for (const id of polar) expect(['polar', 'weak'], id).toContain(polarity(mol(id)).verdict);
     for (const id of nonpolar) expect(polarity(mol(id)).verdict, id).toBe('nonpolar');
     expect(polarity(mol('no3')).verdict).toBe('ion');
+  });
+
+  it('the centre is the atom with the most heavy-atom neighbours, not a CH3/NH2 end group', () => {
+    const centre = (id: string) => {
+      const m = mol(id);
+      const c = centralAtom(m);
+      return { el: m.atoms[c]?.el, ...vsepr(m, c), several: hasSeveralCentres(m) };
+    };
+    expect(centre('urea')).toMatchObject({ el: 'C', label: 'AX₃', geometry: 'trigonalPlanar' });
+    expect(centre('acetone')).toMatchObject({ el: 'C', label: 'AX₃', geometry: 'trigonalPlanar' });
+    expect(centre('isobutene')).toMatchObject({ el: 'C', label: 'AX₃', several: false });
+    expect(centre('ch3cooh')).toMatchObject({ el: 'C', label: 'AX₃', several: false });
+    expect(centre('ch3cho')).toMatchObject({ el: 'C', label: 'AX₃', several: false });
+    expect(centre('c3h6')).toMatchObject({ el: 'C', label: 'AX₃', several: false });
+    // Ties keep the textbook answers.
+    expect(centre('hcn')).toMatchObject({ el: 'C', label: 'AX₂' });
+    expect(centre('co')).toMatchObject({ el: 'C' });
+    // Equivalent centres (benzene, butane) are one class; branched skeletons are several.
+    expect(centre('c6h6').several).toBe(false);
+    expect(centre('c4h10').several).toBe(false);
+    for (const id of ['etac', 'glycine', 'toluene', 'glucose'])
+      expect(centre(id).several, id).toBe(true);
   });
 
   it('lone pairs of water point away from the H atoms, roughly tetrahedrally', () => {

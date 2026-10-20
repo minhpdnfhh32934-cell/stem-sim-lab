@@ -1,7 +1,7 @@
 # Architecture — SimLab
 
-Status: **Phase 0** (scaffold). Sections marked _(planned)_ describe the target design from
-`MASTER_PROMPT.md` and are filled in as each phase lands.
+Status: **0.7.0** (in review on `feat/0.7`). Sections marked _(planned)_ describe the target
+design from `MASTER_PROMPT.md` and are filled in as each phase lands.
 
 ## 1. Overview
 
@@ -166,6 +166,52 @@ module?{state}}` (Zod schema in `src/app/project/snapshot.ts`). Only **inputs** 
   500 ms grouped (slider drags), 100 steps, reset when another topic opens.
 - Overload: `FrameMonitor` → `reportOverload()` lowers the drawing tier one step (`perfStore.degraded`);
   memory watchdog in `src/perf/memory.ts`. See docs/PERFORMANCE.md.
+
+## 3f. Science Studio (`src/studio/`, 0.6.0)
+
+Guided lessons (Predict → Interact → Observe → Explain → Conclude → Report) on top of the existing
+engines and data; the studio never computes a measurement of its own. Entry: the "Science Studio"
+card on the launch page → screen `'studio'` (`src/app/navigationStore.ts`) → `StudioScreen`,
+mounted by `AppShell`.
+
+| Layer            | Files                                                                                                                                                                      | Responsibility                                                                                                                                                       |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Screen           | `StudioScreen.tsx`, `studio.css`, `ReviewNote.tsx`, `TeacherNote.tsx`                                                                                                      | Subject tabs (Hóa học · Sinh học · Vật lí · Soạn bài), lesson picker, one `SubjectPlugin` per subject; labels for unreviewed and teacher-written text.               |
+| Model (pure)     | `scenario.ts`, `session.ts`, `report.ts`, `unverified.ts`, `aiContext.ts`                                                                                                  | Zod scenario schema (the binding names engines/data only); session evidence by origin (engine / learner / AI) and step blockers; Markdown report; AI screen context. |
+| State            | `studioStore.ts`                                                                                                                                                           | Zustand store persisted as `stemsim.studio` (chosen tab and lesson, one session per scenario).                                                                       |
+| Shared flow      | `flow/PoeFlow.tsx`, `flow/SharedSteps.tsx`, `flow/types.ts`, `flow/AskTeacher.tsx`, `flow/useStudioContext.ts`, `flow/clipboard.ts`                                        | Step bar, navigation and "what is missing" text, Explain / Conclude / Report steps, "Hỏi thầy" prefill and the screen context shared with AI Teacher.                |
+| Physics          | `physics/plugin.ts`, `PhysicsSteps.tsx`, `comparison.ts`, `engineRun.ts`, `openInLab.ts`, `usePhysics.ts`                                                                  | Conditions A/B run headless in the scene's own engine; `solve()` is the cross-check and the POE verdict; opens the same run in the lab.                              |
+| Chemistry        | `chemistry/plugin.ts`, `bench.ts` (pure state machine), `library.ts`, `evidence.ts`, `card.ts`, `BenchStep.tsx`, `TubeSvg.tsx`, `EvidenceFacts.tsx`                        | One tube, two solutions, mix. What a mix shows comes only from `data/reactions.json`; no record → "chưa có trong cơ sở dữ liệu đã kiểm chứng".                       |
+| Biology          | `biology/plugin.ts`, `model.ts`, `match.ts`, `evidence.ts`, `card.ts`, `bioSession.ts`, `useModel.ts`, `ModelStep.tsx`, `StageRecorder.tsx`, `FindParts.tsx`               | Reuses the mitosis 3D view (2D fallback); stage counts come from the model; the part-finding key is the model's own component data.                                  |
+| Built-in lessons | `scenarios/*.ts`, `scenarios/index.ts`                                                                                                                                     | Three scenarios, each validated at load; an invalid one is left out.                                                                                                 |
+| Authoring        | `authoring/service.ts`, `check.ts`, `choices.ts`, `draft.ts`, `bindingDraft.ts`, `collection.ts`, `fileFormat.ts`, `limits.ts`, `issueText.ts`, `authoringStore.ts`, views | "Soạn bài": every choice comes from an engine or data table; schema + size + engine checks before saving; local only (`teacher.` ids); JSON import/export.           |
+
+Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23) and is shown with
+its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E
+`tests/e2e/studio.spec.ts` and `tests/e2e/studio-biology.spec.ts`. Step records: `docs/work-log/`.
+
+## 3g. 3D views (`src/ui/three/`, `src/biology/**`, 0.6.0–0.7.0)
+
+Every biology lesson opens in 3D. A 3D view only **draws** what the lesson's model computed:
+counts, sequences, ratios and levels come from the same pure functions as the 2D page; shapes,
+sizes, positions and motion are illustrations and are labelled so (`view3d/texts.ts`:
+`ILLUSTRATION`, `MOTION`). New 3D wording goes to `docs/DATA_REVIEW.md` (items 26–28, rows M3D,
+MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D) with `review_status: "pending"`.
+
+| Layer                   | Where                                                                                                                                                       | Responsibility                                                                                                                                                 |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generic kit             | `src/ui/three/` (`renderer.ts`, `quality3d.ts`, `useThreeHost.ts`, `loop.ts`, `labels.ts`, `pick.ts`)                                                       | No biology. Quality table per tier, render on demand, damped orbit + arrow keys, tweened camera, `FrameMonitor` → `reportOverload()`, lost-context fallback.   |
+| Biology kit             | `src/biology/view3d/` (`Bio3DCanvas`, `Bio3DView`, `SceneKit`, `lessonStore.ts`, `palette.ts`, `sampling.ts`)                                               | Stage layout, 3D / 2D switch, palette with a shape cue per role, `drawScale` / `apportion` (classes add up exactly), shared texts, primitives, disposal.       |
+| Division (shared)       | `src/biology/division/division3d/`                                                                                                                          | Stage clock, counts from `runDivision`, chromatid shapes, membrane / spindle / centrosome / nucleus meshes for mitosis and meiosis.                            |
+| Dedicated lesson module | `division/mitosis3d/`, `division/meiosis3d/`, `central/dogma3d/`, `central/mutation3d/`, `genetics/mendel3d/`, `enzyme/enzyme3d/`, `transport/transport3d/` | Each: pure `binding.ts` or `timeline.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`, `camera.ts`, `store.ts`, `Xxx3DView`, `Xxx3DSwitch`. |
+| Simple kit views        | `genetics/{HardyWeinberg3D,Drift3D}.tsx`, `ecology/{Logistic3D,LotkaVolterra3D}.tsx`, `scenes3d.ts`                                                         | The four population lessons: one figure per individual or per group (noted). Their dedicated 3D modules are planned for a later update.                        |
+
+Rules: a dedicated module saves its 3D / 2D choice in the lesson store (`view3d`, also written to
+`.stemsim` files); the simple kit views keep it in `stemsim.bio3d`. Low tier, no WebGL2 or a lost
+context → the 2D page with the reason. Overload lowers smoothness, never accuracy; everything is
+disposed on unmount. Tests: pure files next to the code, `view3d/testing.ts` (`expectAllFreed`),
+E2E `*3d.spec.ts` and `bio3d.spec.ts` in the `chromium-3d` Playwright project (software WebGL),
+budgets in `chromium-3d-perf` (`@perf`).
 
 ## 4. Planned modules
 

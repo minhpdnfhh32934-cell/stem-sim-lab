@@ -11,9 +11,18 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 - **Users:** university students **18+** (bring their own Gemini key). **User decision 2026-10-12:**
   the supervised high-school **pilot edition was removed** (0.5.0) — there is one build only. Do not
   add editions, `VITE_EDITION`, Cargo edition features, PIN/consent flows or a second installer back.
-- **No local AI of any kind** (no LM Studio/Ollama, no local TTS/ASR/LLM/VAD/vision model) —
-  **except** the in-app Gemma and Vietnamese voice of AI Teacher (see "AI Teacher exceptions"
-  below). All AI goes through the Rust `AIProvider` interface: `GeminiProvider`, `ClaudeProvider`.
+- **Local AI.** Until 2026-10-14 the rule was "no local AI of any kind" (no LM Studio/Ollama, no
+  local TTS/ASR/LLM/VAD/vision model), with the in-app Gemma and Vietnamese voice as the
+  2026-10-12 exceptions ("AI Teacher exceptions" below). **User decision 2026-10-14 (G8 brief,
+  item 4):** runtimes the user installs — Ollama, LM Studio, llama.cpp server, other
+  OpenAI-compatible local endpoints — are allowed, only through the loopback-only Rust route
+  (`src-tauri/src/ai/local/*`, `local_ai_*` commands, safety gate on every command): never in the
+  daily cap, never retried, never falling back to a cloud API; detection only on a button (the
+  three usual addresses; other addresses only when the user types them; no disk scan, no process
+  list); a picture only
+  to a model its runtime reports as reading pictures; Ollama cloud models refused. Legal notes:
+  `docs/LEGAL_COMPLIANCE.md` §2f. Cloud AI goes through the Rust `AIProvider` interface:
+  `GeminiProvider`, `ClaudeProvider`, `GroqProvider`.
   **User decision 2026-10-05 (overrides PROMPT_PHAN_2 A1/A2):** other cloud providers may be added
   as a free fallback when paid tokens run out, but only after their terms (age,
   data use, Vietnam) are checked and recorded in `docs/LEGAL_COMPLIANCE.md` §2b. First candidate:
@@ -23,7 +32,7 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
   be saved before it; "under 18" keeps the simulations, AI off); "AI-assisted" labels, two-way
   moderation, incident log without private content, report button, minimal data.
 - Never commit API keys (`.env` is git-ignored); never embed a project key in an installer.
-- AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
+- Cloud AI calls: timeout, cancel, retry with backoff on 429/5xx (max 3), daily cap, cache confirmed
   problem readings; app fully usable without a key and offline (simulations, samples, manual mode).
 - UI for learners (A4): one main action per screen, Basic/Advanced modes, Level → Subject → Topic →
   Lesson, predict–observe–explain, challenges, step hints, no streaks/leaderboards, 1366×768,
@@ -43,7 +52,8 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
 - **Local AI:** Gemma runs inside the app (Transformers.js + ONNX Runtime Web on WebGPU, worker in
   `src/ai/webGemma*.ts`). Ollama is not used (the old `gemma.rs` was removed in 0.4.0). A local
   Vietnamese voice model (e.g. Piper) is allowed after its licence is checked and recorded in
-  `docs/THIRD_PARTY.md`. No other local model may be added without asking.
+  `docs/THIRD_PARTY.md`. No other model may be bundled or run inside the app without asking
+  (runtimes the user installs: the 2026-10-14 decision above).
 - **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
   (`tests/tauri-config.test.ts` pins the list). Nothing else.
 - Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
@@ -56,11 +66,16 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   refuses ~300 MB entries. The worker needs both ORT asyncify files in `public/ort/` (`.mjs` + `.wasm`)
   and `device: 'webgpu'`; worker errors must answer on the id the page waits for (-2 init, -3 load).
   HuggingFace redirects to `*.hf.co`. Real sizes: 270M ≈ 345 MB, 1B ≈ 880 MB, E2B ≈ 3,8 GB.
-- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`.
+- E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
+  of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
+  output in `test-results/` (not watched by Vite): traces written inside the watched project
+  contain `.html` files that make the dev server reload every open page mid-test.
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
-  `settings.nav.*`); other screens open a page with `openSettingsAt(id)`.
+  `settings.nav.*`); other screens open a page with `openSettingsAt(id)`. Page `runtimes` ("AI trên
+  máy khác", `src/teacher/chat/settings/LocalRuntimeSettings.tsx`): find, add an address, list the
+  runtime's real models, check connection / answer, choose, reset.
 - **Voice** (`src/teacher/voice/`): every spoken text goes through `toSpeech` + `splitForSpeech`
   (`vietnameseText.ts`, Vietnamese numbers/units/LaTeX/chemistry, tested) — never send raw text to a
   voice. Engines in `speak.ts`: Windows/Web Speech, Gemini TTS (Rust `ai/tts.rs` → `ai_tts`: model
@@ -68,12 +83,25 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   (`localVoice*.ts`, CC BY-NC 4.0, WebGPU else WASM, OPFS). A failing voice falls back to Windows
   and sets `lastError`. Licences: `docs/THIRD_PARTY.md`, `docs/LEGAL_COMPLIANCE.md` §2e.
 - **Whiteboard** (`src/teacher/board/`, design `docs/WHITEBOARD.md`): `teachscript.ts` (fault
-  tolerant, strips coordinates), `fromMarkdown.ts` (any answer → board), `layout.ts` (3 columns,
-  deterministic, property test: no overlap), `provenance.ts` (given / checked / unverified numbers),
-  `plot.ts` (safe expression reader, no `eval`), `lesson.ts` (voice and pen in step), `Whiteboard.tsx`.
+  tolerant, strips coordinates), `fromMarkdown.ts` (any answer → board), `layout.ts` (deterministic,
+  property test: no overlap; each face gets a template `wide`/`sideMain`/`mainRight`/`three` from
+  `planFaces`; what has no region or is too wide goes to a full-width band, shrunk only when the
+  whole board is too narrow), `formulaSplit.ts` (long equality chains on several lines),
+  `lessonCheck.ts` (every answer becomes a checked lesson: reasoning, prompt echoes, source lines
+  and bare markup are neither written nor said; greetings are said, not written; only positive
+  evidence drops a text), `provenance.ts` (given / checked / unverified numbers), `plot.ts` (safe
+  expression reader, no `eval`), `lesson.ts` (voice and pen in step; each run owns the board — a
+  stopped or replaced run can no longer `patch`, so an old pen never writes on another face),
+  `Whiteboard.tsx` (zoom steps `ZOOMS` 1–2× only scale the sheet), `BoardToolbar.tsx` +
+  `toolbarFit.ts` (one row whatever the UI font: names fold by level). Answers are cleaned first by
+  `src/teacher/chat/answerClean.ts` + `src/ai/reasoning.ts`. "Khoanh để hỏi": `selection.ts` (pure
+  geometry; reads back the text/LaTeX/labels really on the board), `SelectionBar.tsx`,
+  `boardAsk.ts`; a picture (`selectionImage.ts`) only when no text was circled, and only to a
+  picture-reading model on this computer (`src/teacher/chat/pictureReader.ts`), never online.
   The AI never places anything; board fonts (OFL, Vietnamese) are bundled via `@fontsource`.
 - **GPU choice (0.4.2):** WebView2 ignores the page's `powerPreference` (hybrid laptops get the
-  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (LUIDs change per
+  integrated card). `src-tauri/src/gpu.rs` saves the card as PCI ids in `gpu.json` (4–8 hex
+  digits: ACPI ids such as Windows-on-ARM `QCOM` are 8; LUIDs change per
   boot) and, before the window exists, adds `--use-adapter-luid=<high>,<low>` to wry's default
   WebView2 args (restart needed; the whole GPU process moves). Never use
   `--use-webgpu-power-preference=force-high-performance` (no adapter at all). UI:
@@ -85,6 +113,23 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
   was merged into it). Details: `docs/AI_TUTOR.md`.
+- **Gemma answer quality (0.6.0, benchmark 2026-10-14, `docs/TEACHING_EVAL.md`):** repetition rules
+  look only at the generated tokens (`webGemmaWorker.ts` `ANSWER_RULES`); never apply
+  `repetition_penalty` / `no_repeat_ngram_size` to the prompt again (it garbled every term the model
+  had to copy). The on-device prompt gets one unambiguous library note (`knowledge.ts`), an opening
+  chosen by `turnKind` (premise question / learner reply / ordinary question), the
+  `missingData.ts` notice and the `provenance.ts` "Số do AI tự đưa ra" chip. **Any change to an
+  on-device prompt or decoding is benchmarked before it ships:** `scripts/teaching/eval-gemma.mjs`
+  (discrete NVIDIA only, never the iGPU; `--variants/--decoding/--set/--improved-name/--skip`),
+  `compare.mjs`, `breakdown.mjs`, the held-out set `tests/teaching/teaching-heldout.json` and blind
+  AI judging (`judge-prep.mjs`, `judge-score.mjs`, `judge-rubric.md`). Saved results in
+  `tests/teaching/results/` are never edited.
+- **Release notes and "Có gì mới":** one source, `release-notes/versions.json`; `npm run
+release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
+  `release-notes/google-docs.html` (never edit generated files). A version's `notesReady` becomes
+  true only when its notes are reviewed for a real release; never describe an unreleased version
+  as released or invent a date. In-app box and Settings → "Lịch sử phiên bản": `src/app/whatsnew/`
+  (`stemsim.whatsnew`). Procedure: `release-notes/README.md`.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
@@ -148,7 +193,10 @@ src/ai/           LLM client + SceneSpec pipeline (Phase 3)
 src/core/         units, constants, integrators, fixed timestep (Phase 1)
 src/physics/      physics engine & scenes (Phase 2)
 src/chemistry/    elements, molecules, reaction library (Phase 4)
-src/biology/      biology modules (Phase 5)
+src/biology/      biology modules (Phase 5) + per-lesson 3D modules (`*/xxx3d/`, 0.7.0)
+src/studio/       Science Studio: guided lessons + authoring (0.6.0)
+src/teacher/      AI Teacher: chat, board, voice
+src/ui/three/     generic three.js kit (renderer, quality tiers, host, labels; no biology)
 src/science-card/ Science Card types + UI
 src/perf/         quality tier, frame monitor, degradation ladder
 src/workers/      Web Workers for simulation
@@ -266,8 +314,24 @@ Progress log: `docs/PROGRESS.md`.
   Test key `__STEMSIM_TEST_GROQ_KEY__`; `open_groq_key_page`.
 - Default provider is **Gemini** (free tier, key from Google AI Studio; the key's creator must be
   18+, which the in-app guide says). Default model `DEFAULT_MODELS.gemini` in `src/ai/aiStore.ts`
-  (checked 2026-10; update when Google retires it). LM Studio was removed on request (2026-10):
-  it is the user's separate local tool, unrelated to this app. Do not add local providers back.
+  (checked 2026-10; update when Google retires it). LM Studio was removed as a provider on request
+  (2026-10). Since the 2026-10-14 decision, local runtimes (LM Studio included) come back only
+  through the separate loopback route below — never as an `AIProvider` or a fallback target.
+- **Streaming and errors (0.6.0):** `ai_chat_stream` (`stream.rs`) streams text answers with the
+  same gate, key check, daily cap, cancel and fallback rule; retries and the fallback happen only
+  before anything was shown. Every provider's answer loses its hidden reasoning in `reasoning.rs`
+  (twin `src/ai/reasoning.ts` + `thinkFilter.ts`, shared vectors `tests/fixtures/reasoning-strip.json`).
+  A call is registered for `ai_cancel` first (`InflightGuard`), so a stop during the checks is
+  never counted or sent. The fallback answers only on exhausted quota/credit (`is_quota_error`).
+  Learner-facing error kinds: `src/ai/errorKind.ts` (one rule for "Phân tích đề", AI Teacher and
+  Settings).
+- **Local runtimes (2026-10-14):** Rust `src-tauri/src/ai/local/` (`endpoint.rs` loopback parsing +
+  client without proxy/redirects, one adapter each in `ollama.rs`, `lmstudio.rs`, `llamacpp.rs`,
+  `openai_compat.rs`, `vision.rs`, `stream.rs` stall timers); commands `local_ai_detect`, `_probe`,
+  `_models`, `_model_info`, `_test`, `_chat` (streamed through a channel, reasoning removed). Page
+  side `src/ai/local/*`, store `stemsim.local-ai` (addresses re-checked on load, nothing contacted
+  on load). AI Teacher's third engine `local`; it never falls back online — only Think (on) sends
+  the local draft to the cloud reviewer, and Wikipedia / the Gemini voice only when turned on.
 - `src/ai/pipeline.ts` classify → extract → `buildDraft` (`src/ai/draft.ts`): numbers must appear
   in the text (`src/ai/numbers.ts`) or be implied by a phrase in `IMPLIED` with a real quote.
   Defaults are filled in code. `explain.ts` hides explanations containing foreign numbers.
@@ -296,6 +360,12 @@ Progress log: `docs/PROGRESS.md`.
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
 - Learner-facing errors speak like a study partner ("Mình chưa…"); no "JSON/engine/token/LLM".
+- Audit 2026-10-13 (`docs/AUDIT_2026-10-13.md`): **never run Gemma on an integrated GPU for tests or
+  benchmarks** (it crashed the lead's laptop, bugcheck 0x119); `gpuSafety.ts` stops Gemma after one
+  GPU fault. Numbers the AI explains come from app tools when one applies (`tools.ts`, shown in a
+  "Kết quả do SimLab tính" card). AI-written links are never clickable; `navigation.rs` keeps the
+  window on the app. Workflows pin actions by SHA (`tests/workflows.test.ts`); releases only publish
+  commits on `main`, signing in the `release` environment.
 - UI polish kit (0.5.2): `.segmented`/`.subject-switch`/`.tabs__list` get a sliding indicator
   automatically (`src/ui/slidingIndicator.ts`); `IconButton altIcon/showAlt` morphs two icons;
   `Skeleton` for loading, `ProgressBar` + `eta.ts` for downloads (estimate only from progress
@@ -316,6 +386,24 @@ Progress log: `docs/PROGRESS.md`.
   no streaks or ranks), `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
+
+## Science Studio (`src/studio/`, 0.6.0)
+
+- Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Entry: the launch
+  page's "Science Studio" card → screen `'studio'` → `StudioScreen` (tabs Hóa học · Sinh học ·
+  Vật lí · Soạn bài). Layers and file map: `docs/ARCHITECTURE.md` §3f.
+- **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine
+  ids and data keys; physics runs the scene's own engine (`solve()` = cross-check and POE verdict),
+  chemistry shows only what `data/reactions.json` records (else "chưa có trong cơ sở dữ liệu đã
+  kiểm chứng"), biology reuses the mitosis 3D view (2D fallback) and the model's counts.
+- One `SubjectPlugin` per subject (`flow/types.ts`); shared steps in `flow/`; evidence keeps its
+  origin (engine / learner / AI, `session.ts`); the report is Markdown (`report.ts`); "Hỏi thầy"
+  gets the screen context from `aiContext.ts`. State: `studioStore.ts` (`stemsim.studio`).
+- Built-in scenarios in `scenarios/` (validated at load; an invalid one is left out). Authoring
+  ("Soạn bài", `authoring/`): every choice comes from an engine or data table, local only
+  (`teacher.` ids), JSON import/export, always labelled unreviewed.
+- Teaching text is `review_status: "pending"` (DATA_REVIEW 20–23). Tests next to each file,
+  E2E `tests/e2e/studio.spec.ts` and `studio-biology.spec.ts` (3D project).
 
 ## Safety (3b.3, PROMPT_PHAN_2 A3)
 
@@ -344,6 +432,127 @@ Progress log: `docs/PROGRESS.md`.
   (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 11 ModuleViews. Small shared controls in
   `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
+- Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
+  `runDivision('mitosis')`, S phase folded into the G1→G2 boundary), `scene.ts` (three.js, nothing
+  allocated per frame, everything disposed; each chromatid one tube from
+  `view3d/primitives/chromosomeTube.ts` painted from the model's DNA segments, centreline in
+  `chromatidShape.ts` morphing thread ↔ rod in place; High tier adds the double nuclear envelope
+  with pores breaking into vesicles, centriole triplets, cell-plate vesicles — maths in
+  `sceneParts.ts`; budget tables in `scene.perf.test.ts` are measured values), `Mitosis3DView`/
+  `Mitosis3DSwitch` (falls back to 2D on tier low / no WebGL2 / context lost; "Hiện tên" labels,
+  smooth camera moves, double-click focus, arrow-key orbit). The division store records which
+  division `index` belongs to (`stageIndex.ts`). Its E2E spec runs alone in the `chromium-3d`
+  Playwright project (software WebGL starves parallel specs).
+- Shared division 3D pieces (`src/biology/division/division3d/`, used by mitosis and meiosis):
+  `clock.ts` (stage windows, `stageAt`, `keyTime`), `math.ts`, `types.ts` (ChromatidPose, Fibre,
+  NucleusState, Counts3D), `plate.ts`, `counts.ts` (counts from the model + telophase convention),
+  `dimensions.ts`, `chromatidShape.ts`, `sceneParts.ts`, and three.js pieces `membraneMesh.ts`
+  (two-sphere profile), `centrosomeMesh.ts`, `spindleMesh.ts`, `nucleusMesh.ts`. The mitosis3d
+  files re-export the moved names.
+- Meiosis 3D (`src/biology/division/meiosis3d/`, animal germ cell): `timeline.ts` (12 steps:
+  G1, G2, I: pro/meta/ana/telo/cytokinesis, II: the same; counts from
+  `runDivision('meiosis', pairs, meiosisOptions(pairs, crossover, seed))` — `meiosisOptions.ts` is
+  shared with the 2D `useStages`, so both show the same run; chromatids painted from the model's
+  DNA pieces, crossing over in prophase I, chiasma at the model's point, metaphase I sides =
+  `orientation`; meiosis II spindles along y in each cell's own frame), `scene.ts`, `camera.ts`
+  (overview per division, one smooth move into meiosis II), `components.ts` (texts, card,
+  `drillSelection`: a second click on a bivalent / homologue lists one chromatid's pieces),
+  `facts.ts`, `store.ts` (`useMeiosis3D`, own 3D ↔ 2D index map), `Meiosis3DView`,
+  `Meiosis3DSwitch`, `panels.tsx`. Saved: `meiosisView3d` (division store, meiosis binding).
+  Basic hides speed and camera mode. E2E `tests/e2e/meiosis3d.spec.ts` (3D project).
+- DNA → mRNA → protein 3D (`src/biology/central/dogma3d/`): `bdna.ts` (one cited B-DNA constant:
+  10 bp/turn, 3,4 nm/turn, 2 nm; scene unit 1 nm), `binding.ts` (pure: model from `parseInput` →
+  `complement`/`codingToMrna`/`translate`, clock: transcription positions 0…n, release, then one
+  codon per step = the dogma store's `step`; `chainAt`, `syncedTime`, `windowFor` ≤ the tier's
+  `maxInstances` bp, absolute indices), `layout.ts` (pure positions: `helixAngle` integrates the
+  twist so the bubble lies flat with no jumps — the DNA turns about its axis while the polymerase
+  stays still), `scene.ts` (SceneKit, instanced rung halves coloured/shaped by base, backbones,
+  polymerase/ribosome glass, two tRNA slots, bead chain; lays out only what moves), `facts.ts`
+  (caption, chips, part card from the model), `camera.ts` ("Theo dõi"/"Toàn cảnh"), `store.ts`
+  (`useDogma3D`), `Dogma3DView`, `Dogma3DSwitch`, `panels.tsx`. Letters, amino acid names and
+  positions: `src/ui/three/tagLayer.ts`. `anticodon()` is shared with the 2D page (`dogma.ts`).
+  Saved: `view3d` (dogma store, shared binding with pointMutation). E2E `tests/e2e/dogma3d.spec.ts`.
+  The helix primitive (palette, base shapes, `Writer`, `makeStrand`) is `dogma3d/helix.ts`.
+- Point mutation 3D (`src/biology/central/mutation3d/`): `binding.ts` (pure: `mutationOf` →
+  `mutate`/`analyzeMutation`/`mutatedTranslation`; "slots" keep the mutated helix aligned with the
+  normal one — inserted bases bulge, deleted ones leave a gap; outlines `marks`, `changedCodons`
+  from `firstChange`, `beadNames`, window around the site), `layout.ts` (rows: normal mRNA, normal
+  helix, ruler, mutated helix, mutated mRNA, both chains side by side), `scene.ts` (static, laid out
+  once; accent outlines with `setPulse`, gap markers, brackets coloured start/stop/changed;
+  `drawn()` for tests), `facts.ts`, `camera.ts` ("Toàn cảnh"/"Vị trí đột biến"), `store.ts`
+  (`useMutation3D`, `applyPick`: a normal base pair sets the saved `pos`), `Mutation3DView`,
+  `Mutation3DSwitch`. 3D/2D is the dogma store's `view3d`. The outlines pulse a few times after a
+  change, never with reduced motion. E2E `tests/e2e/mutation3d.spec.ts`.
+- Mendel 3D (`src/biology/genetics/mendel3d/`): `binding.ts` (pure: `mendelModel3d` from
+  `parseGenotype`/`gametes`/`cross`/`phenotype`/`ratio`; `fraction`; the four illustrative steps
+  meiosis → gametes → fertilisation → offspring, `stepEnd(k)` = a step complete; `fieldOf` = a
+  draw's counts scaled by `drawScale`/`apportion`, `FIELD_CAP` 400 on every tier), `layout.ts`
+  (board flat: rows = ♀ gametes, columns = ♂; parents left/behind, pedestals right — bar height =
+  probability × `barH`; `motionAt`, `overviewPoints`), `look.ts` (class colours: the 2D table's five
+  first, a shape cue each, no (colour, shape) repeat), `scene.ts`, `facts.ts` (cards: genotype,
+  probability as a fraction, phenotype), `camera.ts` ("Toàn cảnh"/"Bảng Punnett"; `pointsFrame`
+  centres the outline on screen), `store.ts` (`useMendel3D`, opens on the outcome; `currentMendel`
+  → the model's `GenotypeError` message), `Mendel3DView`, `Mendel3DSwitch`. The Monte Carlo run is
+  `genetics/mendelRun.ts` (`mendelDraw`, shared with the 2D table: same seed, same counts); texts
+  shared by both views in `mendelCard.ts`, the invalid-genotype notice in `MendelNotice.tsx`.
+  Saved: `view3d` (Mendel store). Shape geometries of the palette's cues:
+  `view3d/primitives/classShape.ts`. E2E `tests/e2e/mendel3d.spec.ts`.
+- Enzyme kinetics 3D (`src/biology/enzyme/enzyme3d/`): model `enzymeSpecies` (rapid-equilibrium
+  fractions of E/ES/EI/ESI) and `timeCourseEnd` (the 2D plot's t range) in `enzyme/enzyme.ts`;
+  `binding.ts` (pure: `ENZYMES_DRAWN` 24, ES drawn = round(24·rate/Vmax), the rest by largest
+  remainders `splitTotal`; `particleScale` nice step "1 hạt = x mM", cap 150 on every tier; rate
+  view = [S] cursor (opens at the apparent Km), time view: S and P particles shared out of
+  round([S]₀/x) so S + P is conserved; `formsOf` fixed order), `layout.ts` (glass box, jittered
+  6 × 2 × 2 enzymes with the active site up-front, seeded particle pools, illustrative drift),
+  `scene.ts` (lumpy enzyme blob with a pocket — lock-and-key cartoon, shaded hollows — and a
+  second site for non-/uncompetitive inhibition; bound S/I, free S/P/I instanced; `drawn()` for
+  tests), `facts.ts` (readout, counts, scale chip, cards), `components.ts` (texts, `enzymeCard3d`),
+  `camera.ts` ("Toàn cảnh"/"Cận cảnh enzyme"), `store.ts` (`useEnzyme3D`: `t`, cursor `s`),
+  `Enzyme3DView`, `Enzyme3DSwitch`. Science Card texts of the 2D page: `enzyme/enzymeCard.ts`.
+  Saved: `view3d` (enzyme store). E2E `tests/e2e/enzyme3d.spec.ts`.
+- Diffusion & osmosis 3D (`src/biology/transport/transport3d/`): `diffusion.ts` (pure: N₁(t) =
+  apportion(particles · c₁(t)V₁ / (c₁⁰V₁ + c₂⁰V₂)) from `twoCompartment`, crossing schedule — the
+  m-th crossing when N₁ has moved by m, net only; no pore → counts stay), `diffusionLayout.ts`
+  (box widths V₁ : V₂, pores as round channels, `brownianWalks` seeded by `run`, `particleAt`:
+  a crossing walks to a pore's mouth and along its axis, never through the slab), `osmosis.ts`
+  (pure: the 2D chart's samples — at or before t —, one vertical scale + cm ruler, 60 solute
+  particles spread over h_L, illustrative water moved by h_L − h₀), `diffusionScene.ts` /
+  `osmosisScene.ts` (static glass and liquid bottoms merged, marks instanced), `facts.ts`,
+  `components.ts` (texts, `diffusionCard3d`/`osmosisCard3d`), `camera.ts`, `store.ts`
+  (`useTransport3D`), `Transport3DView`, `Transport3DSwitch`. Shared with the 2D page:
+  `fickTimeEnd` (transport.ts), `osmosisData` (osmosisData.ts), cards in `transportCards.ts`.
+  Saved: `view3d` (transport store). E2E `tests/e2e/transport3d.spec.ts`.
+- Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
+  shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
+  label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
+  taps/double taps, arrow keys, `place(…, {animate})` tweens — instant with reduced motion,
+  lost-context fallback, `window.__simlab3d[key]` debug hooks), `loop.ts` (`useFrameLoop`,
+  `usePlayback`: frame monitor + overload ladder), `camera.ts`, `frame.ts`, `insets.ts`,
+  `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
+  `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
+  disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
+- **Biology 3D status (0.7.0):** all 11 lessons open in 3D. Seven have a dedicated module (above):
+  mitosis, meiosis, DNA → mRNA → protein, point mutations, Mendel, enzyme kinetics, diffusion &
+  osmosis. The four population lessons (Hardy–Weinberg, drift, logistic, predator–prey) still use
+  the simple kit views below (`genetics/{HardyWeinberg3D,Drift3D}.tsx`,
+  `ecology/{Logistic3D,LotkaVolterra3D}.tsx`); their dedicated 3D views are promised for a later
+  update (0.7.0 known issues).
+- Biology 3D kit (`src/biology/view3d/`): the four population lessons draw with it directly (3D by
+  default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a
+  lost context, `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`,
+  page-drawn CSS2D labels, render on demand, `FrameMonitor` while animating, dispose on unmount),
+  `Bio3DView` (stage layout) / `Bio3DFigureBody` (figure above a page of tables: Hardy–Weinberg), `SceneKit`
+  (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
+  keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
+  3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
+  chips are shared with the 2D view so the text is identical. New 3D text → DATA_REVIEW (#26).
+  Shared biology pieces: `lessonStore.ts` (`createLesson3DStore`; `useMitosis3D` is one),
+  `palette.ts` (one token + shape cue per role, per lesson no two roles alike), `sampling.ts`
+  (`drawScale` nice steps, `apportion` largest remainders: classes add up exactly),
+  `texts.ts` (`ILLUSTRATION`, `MOTION`, `card3dAssumptions`), `primitives/`.
+  Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
+  project, SwiftShader). Specs that open biology topics set SwiftShader too and run in the
+  `chromium-3d` project (`HEAVY_3D` in `playwright.config.ts`, after the light specs).
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
@@ -376,6 +585,9 @@ Progress log: `docs/PROGRESS.md`.
 - [ ] AI Teacher T0–T8 (PROMPT_PHAN_2 Part B)
   - [~] T0 specs (`docs/TEACHSCRIPT.md`, `docs/AI_TEACHER_ARCHITECTURE.md`, `docs/VOICE_BENCHMARK.md`),
     sketch route `src/teacher/` (dev builds only) — **waiting for user approval**
+- [x] 0.6.0 released 2026-10-19 (v0.6.0): audit G0–G8, Science Studio, AI Teacher board, mitosis 3D
+- [~] 0.7.0 (`feat/0.7`, in review, not released): bug-fix sweep + dedicated 3D for seven biology
+  lessons, shared 3D kit; the four population lessons' dedicated 3D views remain (see above)
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
@@ -398,6 +610,10 @@ Progress log: `docs/PROGRESS.md`.
   told to reinstall. Never break Rust command signatures without bumping the native version.
 - The signing key is the GitHub secret `WEB_UPDATE_SIGNING_KEY`; the public key is in
   `webupdate.rs`. The repo must be public for the app to download releases.
+- **Applying a web update (0.7.0):** `web_update_apply` only unpacks the new version folder and
+  writes `active.json`; the running version's folder stays until the restart (its lazy chunks,
+  CSS and fonts are still served), and unused folders / `.partial` unpacks are deleted at start-up.
+  The zip download has no total timeout (stall timeout only).
 - **One installer / one update channel** (productName "SimLab", `vn.stemsimlab.desktop`,
   `web-update.json`; the pilot
   installer and channel were removed in 0.5.0). The signed message still names `edition:main` and

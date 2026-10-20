@@ -1,23 +1,8 @@
 import type { EngineInput, SimulationEngine } from '@/core/sim/engine';
+import { limitHit } from '../common/coulomb1d';
 import { dragAccel } from '../common/drag';
 import type { Params } from '../types';
 import { accelFor, forces, type InclineInput } from './model';
-
-/** Smallest τ in (0, max] with s + vτ + ½aτ² = target, or Infinity. */
-function firstHit(s: number, v: number, a: number, target: number, max: number): number {
-  const A = 0.5 * a;
-  const C = s - target;
-  let roots: number[];
-  if (Math.abs(A) < 1e-300) roots = v !== 0 ? [-C / v] : [];
-  else {
-    const disc = v * v - 4 * A * C;
-    if (disc < 0) return Infinity;
-    const r = Math.sqrt(disc);
-    roots = [(-v - r) / (2 * A), (-v + r) / (2 * A)];
-  }
-  const ok = roots.filter((t) => t > 1e-12 && t <= max);
-  return ok.length ? Math.min(...ok) : Infinity;
-}
 
 /** State: [s, v, a, friction, N, off (1 = left the surface)]. */
 export const IS = { s: 0, v: 1, a: 2, friction: 3, N: 4, off: 5 } as const;
@@ -99,11 +84,9 @@ export class InclineEngine implements SimulationEngine<Params> {
         const ts = -startV / r.a;
         if (ts < tau) tau = ts;
       }
-      // Leaving the surface (s = 0 or s = L) inside this sub-interval: stop exactly there.
-      const tb = Math.min(
-        firstHit(this.s, this.v, r.a, 0, tau),
-        firstHit(this.s, this.v, r.a, this.p.length, tau),
-      );
+      // Leaving the surface (s = 0 or s = L) inside this sub-interval — or right now, when
+      // the block sits on an edge and moves outward: stop exactly there.
+      const tb = limitHit(this.s, this.v, r.a, 0, this.p.length, tau);
       if (tb <= tau) {
         this.s = this.s + this.v * tb + 0.5 * r.a * tb * tb;
         this.s = Math.min(this.p.length, Math.max(0, this.s));

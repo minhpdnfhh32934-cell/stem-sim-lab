@@ -280,6 +280,30 @@ function solve(p: Params, locale: Locale): Solution {
       ),
       tex: `m_2 g - T = m_2 a,\\quad T - m_1 g = m_1 a \\;\\Rightarrow\\; a = \\frac{(m_2 - m_1)g}{m_1 + m_2} = \\frac{(${n(q.m2)} - ${n(q.m1)})\\cdot ${n(q.g)}}{${n(q.m1 + q.m2)}} = ${Q(r0.a, 'm/s^2')}`,
     });
+    if (r0.a === 0) {
+      // Equal masses: balanced. Starting from rest the system never moves, so there is
+      // no travel time or final speed (t = √(2d/|a|) would be infinite).
+      const T0 = tension(q, 0);
+      steps.push({
+        text: L(
+          'Hai vật có khối lượng bằng nhau nên hệ cân bằng: hợp lực bằng 0, hệ đứng yên (thả từ trạng thái nghỉ thì không dịch chuyển).',
+          'Equal masses balance: the net force is zero, so released from rest the system stays where it is.',
+        ),
+        tex: `a = 0,\\qquad T = m_2 g = ${n(q.m2)}\\cdot ${n(q.g)} = ${Q(T0, 'N')}`,
+      });
+      return {
+        answers: [
+          {
+            id: 'acceleration',
+            label: L('Gia tốc của hệ', 'Acceleration of the system'),
+            value: 0,
+            unit: 'm/s^2',
+          },
+          { id: 'tension', label: L('Lực căng dây', 'String tension'), value: T0, unit: 'N' },
+        ],
+        steps,
+      };
+    }
   } else {
     steps.push({
       text: L(

@@ -75,9 +75,10 @@ chép qua USB và cài trước.
    sáng/tối, Cơ bản/Nâng cao, ngôn ngữ, trình chiếu, lưu/mở tệp). Mũi tên ↑ ↓ để chọn, Enter để mở,
    Esc để đóng.
 
-2. **Trang chủ SimLab** có hai lối vào:
+2. **Trang chủ SimLab** có ba lối vào:
    - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
-   - **AI Teacher** mở trang trò chuyện với trợ lý học tập.
+   - **AI Teacher** mở trang trò chuyện với trợ lý học tập;
+   - **Science Studio** mở các bài học có hướng dẫn (mục "Science Studio" bên dưới).
 
    Bấm logo **SimLab** ở góc trái để quay về trang chủ.
 
@@ -129,21 +130,63 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   trước đó Gemma vẫn chạy trên card cũ. Dòng "WebGPU của ứng dụng đang chạy trên: …" cho biết card
   thật đang dùng. Nếu card rời đang tắt (chế độ Eco/tiết kiệm pin của hãng máy), app báo không thấy
   card đã chọn và tạm dùng card mặc định.
+- **Card tích hợp và Gemma (quan trọng):** trên laptop có card tích hợp, câu hỏi dài có thể làm card
+  tích hợp bị treo (Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động
+  lại — đã gặp thật với AMD Radeon 780M). Vì vậy app: rút ngắn câu hỏi gửi cho Gemma khi chạy trên
+  card tích hợp; **sau một lần card bị treo, Gemma tạm dừng tới khi em mở lại app**; Cài đặt → GPU cho
+  Gemma hiện thông báo với nút **Dùng card rời** và **Vẫn cho Gemma chạy lại** (chỉ bấm khi em hiểu
+  rủi ro). Máy có card rời thì nên chọn card rời cho Gemma.
+- **Chất lượng của Gemma trên máy:** 270M chỉ để thử (hay lạc đề); 1B nhanh nhưng **hay sai kiến
+  thức** (đánh giá 30 câu ngày 13/10/2026). Với kiến thức quan trọng, hãy kiểm tra lại với Thẻ Khoa
+  học/giáo viên, bật **Think**, hoặc dùng API trực tuyến.
 - **Trí nhớ hội thoại** (Cài đặt → Trí nhớ hội thoại): **Vừa** (mặc định) hoặc **Dài**. Thầy nhớ phần trò
   chuyện gần nhất; phần cũ hơn được chính AI đang trả lời tóm tắt ngắn (lưu trên máy) để thầy vẫn
   theo được mạch bài. "Dài" nhớ nhiều hơn nhưng chậm hơn trên máy yếu và dễ hết lượt hơn với gói API
   miễn phí.
 - Câu trả lời quá dài bị dừng giữa chừng thì dưới câu trả lời có dòng báo và nút **Viết tiếp**. Khi
   đang giảng trên bảng, phần viết tiếp được giảng tiếp ngay trên cùng bảng.
-- Các nút nhanh ở trang AI Teacher (Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn giản hơn, Em chưa hiểu
-  chỗ này) hiện sau câu trả lời đầu tiên và gửi cho AI một câu hướng dẫn đầy đủ dựa trên câu trả
-  lời vừa rồi.
+- Các nút nhanh ở trang AI Teacher (**Gợi ý từng bước**, Giải thích lại, Chậm hơn, Thêm ví dụ, Đơn
+  giản hơn, Em chưa hiểu chỗ này) hiện sau câu trả lời đầu tiên và gửi cho AI một câu hướng dẫn đầy
+  đủ dựa trên câu trả lời vừa rồi. "Gợi ý từng bước" chỉ cho một gợi ý nhỏ cho bước tiếp theo, chưa
+  nói đáp số.
+- Thầy giảng theo trình tự: điều cần hiểu → hỏi lại nếu đề thiếu dữ kiện → giải thích đơn giản → ví
+  dụ → các bước có lý do → một lỗi hay nhầm → **một câu hỏi kiểm tra**. Em trả lời câu hỏi đó, thầy
+  nói rõ đúng/sai ở đâu và giải thích theo cách khác.
+- **Kết quả do SimLab tính:** khi câu hỏi có phương trình hóa học (ví dụ "Cân bằng H2 + O2 → H2O"),
+  bộ cân bằng chính xác của SimLab giải trước; dưới câu trả lời có khung xanh **Kết quả do SimLab tính
+  (chính xác, không phải AI)**. Nếu chữ của AI khác khung này, tin khung này.
+- **Xem mô phỏng:** khi câu hỏi nêu đúng tên một chủ đề có mô phỏng (ví dụ "nguyên phân", "rơi tự
+  do"), dưới câu trả lời có nút **Xem mô phỏng: …** để mở chủ đề đó.
+- Đường link trong câu trả lời của AI chỉ hiện dưới dạng chữ (kèm tên trang), không bấm được: AI có
+  thể bị nội dung lạ đánh lừa; trang ngoài chỉ mở từ các nút của app.
 - **Thư viện kiến thức** có sẵn ghi chú Vật lý, Hóa học, Sinh học THPT và cho phép nạp tệp `.txt`,
   `.md`, `.csv`, `.json`. Tệp và lịch sử chat lưu trên máy; khi chat bằng API trực tuyến, các đoạn
   kiến thức liên quan có thể được gửi cùng câu hỏi. **Tra thêm Wikipedia** là tùy chọn (mặc định
   tắt): khi bật, câu hỏi được gửi tới Wikipedia. Ô **Dữ liệu của em đi đâu?** trong Cài đặt → AI Teacher
   liệt kê theo cài đặt hiện tại những gì lưu trên máy và những gì có thể gửi đi. Xem thêm
   `docs/AI_TUTOR.md`.
+
+### AI trên máy khác (Ollama, LM Studio, llama.cpp)
+
+Nếu em đã tự cài một chương trình AI trên máy (Ollama, LM Studio, `llama-server` của llama.cpp, hoặc
+máy chủ khác kiểu OpenAI), SimLab có thể dùng nó thay cho API. SimLab **không cài, không mở và không
+tải mô hình** cho chương trình đó: em mở chương trình và tải mô hình trước (với LM Studio, bật chế độ
+máy chủ của nó).
+
+1. Vào Cài đặt → **AI trên máy khác (Ollama, LM Studio, llama.cpp)**, bấm **Tìm trên máy này**. App
+   chỉ hỏi ba địa chỉ quen thuộc trên máy (cổng 11434, 1234, 8080) và các địa chỉ em tự thêm ở
+   **Thêm địa chỉ** (chỉ nhận `127.0.0.1`, `localhost` hoặc `[::1]` có số cổng). Không đọc tệp, không
+   quét ổ đĩa.
+2. App liệt kê các mô hình **chương trình đó báo có**. Bấm **Kiểm tra kết nối**, rồi **Kiểm tra trả
+   lời** để thử một câu ngắn; khả năng chương trình không cho biết thì ghi **Chưa xác minh**.
+3. Bấm **Dùng cho AI Teacher**, rồi ở AI Teacher chọn **AI trên máy khác** trong ô chọn mô hình.
+   "Phân tích đề", "AI diễn giải" và đọc ảnh chụp đề cũng dùng lựa chọn này.
+
+Câu hỏi chỉ đi tới chương trình đó trên máy em. Khi nó lỗi hoặc tắt, app nói rõ và **không tự gửi câu
+hỏi lên mạng**; chỉ khi em bật Think thì bản nháp mới được gửi tới API để rà soát. Mô hình "cloud" của
+Ollama (chạy trên ollama.com) bị từ chối. Ảnh chỉ gửi cho mô hình đã thử đọc được ảnh trên máy này.
+SimLab không chọn được card đồ họa cho chương trình đó (chỉnh trong chính chương trình). Có nút
+**Khôi phục mặc định** và mục **Gặp lỗi? Cách xử lý**.
 
 ### Giảng trên bảng
 
@@ -163,8 +206,30 @@ vẽ. Phụ đề dưới bảng cho biết thầy đang nói gì. Bảng có nh
   được máy tính lại (dấu ✓); số không rõ nguồn có dấu ⚠ "Có số do AI tự tính, chưa kiểm chứng" — hãy
   tự tính lại. Đồ thị do app tự tính từ biểu thức.
 - Với API trực tuyến, AI được yêu cầu trả lời dạng "kịch bản bảng" (chỉ nói ý định, không bao giờ cho
-  tọa độ; app tự xếp chỗ). Với Gemma trên máy, câu trả lời thường được app tự xếp lên bảng. Chi tiết:
-  `docs/WHITEBOARD.md`.
+  tọa độ; app tự xếp chỗ). Với Gemma trên máy, câu trả lời thường được app tự xếp lên bảng (chỉ viết ý
+  chính của bước dài, phần còn lại thầy đọc). Chi tiết: `docs/WHITEBOARD.md`.
+- Khi bật giọng: thầy đọc cả nội dung đang viết đúng lúc viết (công thức đọc thành lời, ví dụ "2n"
+  là "hai nờ"); bấm **Tạm dừng** giữa câu rồi **Tiếp tục** thì thầy đọc lại câu đó; tốc độ 0,75–2× của
+  bảng áp cho cả giọng.
+- **Phóng to bảng / Thu nhỏ bảng** (1×, 1,25×, 1,5×, 2×) và **Vừa khung** (thấy hết bề ngang). Phóng
+  to chỉ làm bảng to ra để dễ đọc; chữ đã viết không đổi chỗ. Khi em chuyển sang xem bảng khác, bài
+  giảng tạm dừng và bút không viết sang bảng đó; quay lại thì phần đã viết vẫn còn.
+
+### Khoanh để hỏi
+
+Trên thanh công cụ của bảng, bật **Khoanh để hỏi** rồi khoanh, gạch chân hoặc chạm vào chỗ em muốn hỏi.
+Thanh **Chỗ em khoanh trên bảng** hiện "Em khoanh: …" — đúng chữ, công thức, nhãn hình đang có trên
+bảng (app tự đọc, không nhờ AI đoán). Bấm **Hỏi thầy chỗ này** (hoặc **Khoanh lại**, **Bỏ chọn**).
+
+- Khoanh trúng nhiều chỗ: app hỏi em muốn hỏi **Cả phần này** hay một chỗ. Không trúng chữ hay hình
+  nào: app nói rõ và không gửi gì.
+- Câu trả lời hiện trong khung chat (thầy đọc to nếu bật giọng), không viết đè lên bài; bài giảng tạm
+  dừng đến khi em bấm **Quay lại bài giảng**.
+- Chữ và công thức em khoanh được gửi kèm câu hỏi tới AI em đang chọn (và AI rà soát khi bật Think);
+  không bao giờ gửi tới Wikipedia.
+- Khoanh vào hình không có chữ hoặc nét viết tay của em: app chỉ gửi **ảnh vùng khoanh** cho AI đọc
+  được ảnh chạy trên máy (Gemma E2B trên card rời, hoặc mô hình của AI trên máy khác đã thử đọc được
+  ảnh), không bao giờ lên mạng. AI khác thì app nhờ em gõ câu hỏi.
 
 ### Trình độ: Nền tảng và Đại cương
 
@@ -209,6 +274,47 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
   bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
 - **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
   hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
+
+## Science Studio
+
+**Mở:** ở trang chủ SimLab, bấm thẻ **Science Studio**. Chọn môn ở các thẻ **Hóa học · Sinh học ·
+Vật lí · Soạn bài**, rồi chọn bài ở **Chọn bài học**. Bấm logo **SimLab** để quay về trang chủ.
+
+Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
+chọn dự đoán, làm thí nghiệm, viết giải thích (đủ số ký tự app ghi dưới ô) và viết kết luận thì mới
+sang bước sau; dòng chữ cạnh nút **Tiếp** cho biết còn thiếu gì. Dự đoán được giữ lại từ
+lần thí nghiệm đầu tiên; muốn đoán lại, bấm **Học lại từ đầu** ở bước Báo cáo. Mọi số đo do mô phỏng
+tính; phần chữ của bài (mục tiêu, gợi ý, kết luận tham khảo) đang ghi **"chưa được kiểm duyệt"** vì
+chưa có giáo viên duyệt.
+
+- **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
+  chọn) và B (độ cao gấp đôi), rồi báo đã có số đo; bấm **Tiếp: Quan sát** để xem bảng số đo, đồ thị
+  và phép kiểm tra chéo với công thức (như ở môn Hóa và Sinh, em tự quyết khi nào đi tiếp). Nút
+  **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
+- **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
+  trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
+  từ thư viện phản ứng của app. Cặp dung dịch không có trong thư viện chỉ hiện "chưa có trong cơ sở dữ
+  liệu đã kiểm chứng" — app không đoán. Hình kết tủa chỉ là kí hiệu, không vẽ màu hay lượng thật.
+- **Sinh học — Nguyên phân 3D:** xoay, phóng to hình và chuyển qua các kì, bấm **Ghi lại kì này** ở
+  kì em cho là trả lời câu hỏi. Sau đó làm **Tìm bộ phận theo chức năng**: chọn bộ phận trong hình
+  (hoặc trong danh sách), bấm **Trả lời** cho từng chức năng rồi **Kiểm tra**. Trong bài, loại tế bào
+  và bộ NST được giữ cố định. Máy không vẽ được 3D (hoặc đặt chất lượng Thấp) thì hiện hình 2D: chuyển
+  kì bằng nút **Bước trước** / **Bước tiếp theo** trên hình và chọn bộ phận trong danh sách **Bộ phận
+  tế bào**. Trả lời đủ các chức năng và bấm **Kiểm tra** là sang được bước Quan sát; chức năng nào
+  chưa đúng được đánh dấu để em sửa.
+- **Soạn bài:** **Tạo bài mới** → chọn môn → điền phần chữ (tiếng Việt bắt buộc, tiếng Anh không bắt
+  buộc) và chọn phần mô phỏng sẽ chạy → **Lưu bài**. App chỉ cho chọn những gì mô phỏng chạy được, và
+  báo những chỗ cần sửa trước khi lưu. Mỗi bài đã soạn có **Xem trước**, **Sửa**, **Nhân bản**,
+  **Xuất JSON** và **Xóa** (hỏi lại trước khi xóa); **Nhập tệp JSON** để mở bài người khác gửi (tệp
+  hỏng hoặc sai mẫu thì app nói lý do và không nhập). Bài soạn chỉ lưu trên máy này
+  và luôn ghi "chưa được kiểm duyệt" (app không kiểm tra nội dung khoa học giáo viên viết).
+- **Báo cáo:** bước cuối hiện bản xem trước, có **Lưu báo cáo (.md)** và **Sao chép báo cáo**. Số đo
+  của mô phỏng, phần em viết, kết luận tham khảo, dữ liệu chưa kiểm duyệt và nguồn nằm ở các mục
+  riêng. Nếu máy không cho sao chép, app nhắc em bôi đen chữ trong bản xem trước rồi bấm Ctrl+C. Báo
+  cáo được tạo trên máy, app không gửi đi đâu. Bài đang làm dở được giữ khi mở lại app.
+- **Hỏi thầy:** nút **Hỏi thầy** mở khung AI Teacher với câu hỏi viết sẵn theo bước đang làm (em sửa
+  được trước khi gửi). Thầy chỉ thấy số đo và ghi chú của bài khi em bật **Lấy thông tin từ màn
+  hình** trong khung chat.
 
 ## Bố cục màn hình
 
@@ -379,6 +485,14 @@ Khi dùng AI:
 - **Nguyên phân / Giảm phân:** nhấn ▶ hoặc mũi tên để đi qua từng kì. Chọn bộ NST 2n; ở giảm phân
   bật/tắt trao đổi chéo và bấm "Sắp xếp ngẫu nhiên lại" để thấy phân li độc lập. Bảng dưới liệt kê
   số NST, cromatit, tâm động, ADN ở mọi kì.
+- **Nguyên phân 3D:** chủ đề Nguyên phân mở hình 3D (nút **3D / 2D** để đổi). Chọn tế bào **Động
+  vật** hoặc **Thực vật**, bấm Phát hoặc **Bước trước / Bước tiếp theo**, chọn tốc độ; kéo chuột để
+  xoay, bấm vào một bộ phận (NST kép, tâm động, thoi phân bào, trung thể, thành tế bào…) để đọc chức
+  năng của nó. Số NST, cromatit, ADN luôn do mô hình đếm; kích thước, vị trí, thời gian chỉ là minh
+  họa. Pha S không vẽ thành bước riêng (G2 đã có NST kép). Khi chất lượng hiển thị là Thấp hoặc máy
+  không có WebGL2, app dùng hình 2D và ghi rõ lý do. Từ bản 0.7, mỗi crômatit co xoắn dần ngay tại
+  chỗ; ở chất lượng **Cao** có thêm màng nhân kép có lỗ (vỡ thành túi nhỏ ở kì đầu), trung tử 9 bộ
+  ba vi ống và các túi tạo tấm tế bào ở thực vật.
 - **ADN → mARN → Protein / Đột biến điểm:** dán trình tự ADN (có thể có khoảng trắng, 5′/3′), chọn
   mạch bổ sung hay mạch gốc. Ở Đột biến điểm, chọn dạng đột biến, vị trí và nuclêôtit mới — app so
   sánh protein trước/sau và gọi tên kiểu đột biến.
@@ -393,6 +507,43 @@ Khi dùng AI:
 - **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
   ρgΔh = iCRT.
 
+### Hình 3D trong Sinh học (bản 0.7)
+
+Cả 11 bài Sinh học mở bằng hình 3D. Cách dùng chung:
+
+- Nút **3D / 2D** để đổi hình; app nhớ lựa chọn của từng bài. Kéo chuột để xoay, lăn chuột để
+  phóng to, phím mũi tên cũng xoay được; **Góc nhìn** đổi giữa **Toàn cảnh** và cận cảnh.
+- Bật **Hiện tên** để thấy tên các phần ngay trên hình (chế độ Cơ bản bật sẵn).
+- Mọi con số trên hình (số NST, số hạt, tỉ lệ con lai, chữ cái của trình tự…) do mô hình của bài
+  tính, giống hình 2D. Hình dạng, kích thước, vị trí và chuyển động chỉ là **minh họa** — hình nào
+  cũng ghi câu này. Khi phải vẽ một hình cho nhiều cá thể hoặc nhiều hạt, hình có ghi chú mỗi hình ứng với bao nhiêu.
+- Chất lượng hiển thị Thấp, máy không có WebGL2 hoặc card đồ họa gặp lỗi → app tự dùng hình 2D và
+  ghi lý do. Máy chậm thì chuyển động bớt mượt, số liệu không đổi.
+
+Từng bài:
+
+- **Giảm phân 3D:** 12 bước của tế bào động vật, từ G1 tới phân chia tế bào chất II. Ở kì đầu I
+  thấy trao đổi chéo và điểm bắt chéo; màu từng đoạn crômatit cho biết phần từ mẹ, phần từ bố. Hình
+  3D dùng đúng lần sắp xếp ngẫu nhiên của hình 2D. Bấm lần thứ hai vào một NST để xem các đoạn ADN của một crômatit.
+  Chưa vẽ giảm phân ở thực vật.
+- **ADN → mARN → Protein 3D:** chuỗi xoắn kép mở ra, mARN được tổng hợp, rồi ribôxôm dịch mỗi bước
+  một bộ ba. Góc nhìn **Theo dõi** (đi theo chỗ đang làm việc) hoặc **Toàn cảnh**; **Hiện tên và
+  chữ cái** để đọc bazơ và axit amin.
+- **Đột biến điểm 3D:** ADN bình thường và ADN đột biến xếp song song, kèm mARN và chuỗi axit amin
+  của cả hai. Chỗ thay đổi được viền nổi. Góc nhìn **Vị trí đột biến** đưa máy ảnh tới đúng chỗ đó;
+  bấm vào một cặp bazơ của ADN bình thường để chọn vị trí đột biến.
+- **Di truyền Mendel 3D:** bố mẹ, giao tử, bảng Punnett và các cột con lai cao theo xác suất. Đi
+  qua bốn bước **Giảm phân → Giao tử → Thụ tinh → Con lai**; góc nhìn **Bảng Punnett** để nhìn
+  thẳng vào bảng. Phần **Con lai ngẫu nhiên** dùng cùng lần tạo ngẫu nhiên với bảng 2D.
+- **Động học enzyme 3D:** số enzyme đang gắn cơ chất theo v/Vmax của công thức trong bài (làm tròn);
+  chất ức chế gắn đúng chỗ theo kiểu ức chế đã chọn; thang "1 hạt = … mM". Góc nhìn **Cận cảnh
+  enzyme** để nhìn một enzyme.
+- **Khuếch tán & thẩm thấu 3D:** số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua
+  lỗ màng. Thẩm thấu: ống chữ U có thước cm, mực nước lấy từ đồ thị của bài.
+- **Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt:** hiện có hình
+  3D đơn giản (mỗi hình là một cá thể hoặc một nhóm cá thể). Hình 3D riêng, chi tiết cho bốn bài
+  này sẽ có trong một bản cập nhật sau.
+
 ## Lưu, mở, xuất và lịch sử
 
 - **Menu Tệp** (nút ☰ ở thanh trên): Mở tệp `.stemsim`, Lưu mô phỏng, Xuất ảnh PNG, Nguồn & Giả
@@ -402,7 +553,8 @@ Khi dùng AI:
 - **Hoàn tác / Làm lại (Ctrl+Z / Ctrl+Y):** áp dụng cho thông số của chủ đề đang mở. Kéo thanh trượt
   liên tục được tính là một bước.
 - **Xuất PNG:** chụp khung mô phỏng (hình 2D, 3D hoặc đồ thị). Chủ đề hiển thị bằng bảng thì dùng Xuất
-  CSV. Rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải.
+  CSV. Ở chế độ **Nâng cao**, rê chuột lên một đồ thị để thấy nút **Xuất CSV** ở góc phải (trên màn
+  hình cảm ứng nút luôn hiện).
 - **Lịch sử** (tab ở cột trái): mọi mô phỏng đã mở, kèm thông số cuối cùng. Bấm để mở lại; bấm
   thùng rác để xóa.
 - **Nguồn & Giả định:** một trang tổng hợp nguyên tắc khoa học, nguồn của mọi bộ dữ liệu (kèm số mục

@@ -1,0 +1,38 @@
+# Dependency updates (audit SEC-02, 2026-10-13). Grouped and limited so the two-machine workflow is
+# not flooded; every Dependabot pull request still goes through CI and the owner's review.
+# Cooldown (2026-10-14): a new version is proposed only after it has been public for 7 days, so a
+# hijacked release that the registry pulls within days never reaches a pull request. It applies
+# to version updates only; security updates still come at once.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: cargo
+    directory: /src-tauri
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
+    groups:
+      cargo-minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ['*']

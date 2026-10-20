@@ -3,8 +3,9 @@ import { create } from 'zustand';
 import type { LocalizedText } from '@/core/data/dataset';
 import type { ScienceCardData } from '@/science-card/types';
 import { BSRC, L } from '../common';
-import { rng } from '../genetics/stats';
 import { runDivision, type Division, type StageId, type StageState } from './division';
+import { meiosisOptions } from './meiosisOptions';
+import type { CellType } from './mitosis3d/timeline';
 
 export const STAGE_NAME: Record<StageId, LocalizedText> = {
   g1: L('Kì trung gian (pha G1)', 'Interphase (G1)'),
@@ -88,7 +89,22 @@ export interface DivisionState {
   playing: boolean;
   crossover: boolean;
   seed: number;
+  /** Mitosis 3D view: cell type, 3D on/off (2D fallback stays available), playback speed. */
+  cellType: CellType;
+  view3d: boolean;
+  speed: number;
+  /** Meiosis 3D view on/off (its own choice; the speed is shared with mitosis). */
+  meiosisView3d: boolean;
 }
+
+/** Playback speeds offered by the 3D view. */
+export const SPEEDS = [0.5, 1, 2] as const;
+
+/**
+ * Homologous pairs offered by the 2n selector (2n = 2 … 8). The 3D picture is drawn for these
+ * only: with large sets (2n = 46) its chromosomes would overlap. Counts of any 2n are tested.
+ */
+export const PAIR_CHOICES = [1, 2, 3, 4] as const;
 
 export const useDivisionStore = create<DivisionState>()(() => ({
   pairs: 2,
@@ -96,26 +112,35 @@ export const useDivisionStore = create<DivisionState>()(() => ({
   playing: false,
   crossover: true,
   seed: 1,
+  cellType: 'animal',
+  view3d: true,
+  speed: 1,
+  meiosisView3d: true,
 }));
 
 /** Stages of the current division (deterministic for a given seed). */
 export function useStages(kind: Division): StageState[] {
   const { pairs, crossover, seed } = useDivisionStore();
-  return useMemo(() => {
-    const rand = rng(seed);
-    const orientation = Array.from({ length: pairs }, () => rand() < 0.5);
-    const crossovers = crossover ? [{ pair: 0, point: 0.35 + 0.3 * rand() }] : [];
-    return runDivision(kind, pairs, { orientation, crossovers });
-  }, [kind, pairs, crossover, seed]);
+  return useMemo(
+    () => runDivision(kind, pairs, meiosisOptions(pairs, crossover, seed)),
+    [kind, pairs, crossover, seed],
+  );
 }
 
 export function cardFor(kind: Division): ScienceCardData {
   return {
     title: kind === 'mitosis' ? L('Nguyên phân', 'Mitosis') : L('Giảm phân', 'Meiosis'),
-    model: L(
-      'Mô hình đếm NST: mỗi kì được suy ra từ kì trước theo quy tắc (nhân đôi ở pha S, tiếp hợp và trao đổi chéo ở kì đầu I, phân li cặp tương đồng ở kì sau I, tách cromatit chị em ở kì sau nguyên phân và kì sau II). Số liệu trong bảng được đếm từ mô hình.',
-      'Chromosome bookkeeping: every stage is derived from the previous one (replication in S, synapsis and crossing over in prophase I, homologues separate in anaphase I, sister chromatids separate in mitotic anaphase and anaphase II). The table counts the model.',
-    ),
+    // Each division states only its own rules (the mitosis card once listed meiosis I's too).
+    model:
+      kind === 'mitosis'
+        ? L(
+            'Mô hình đếm NST: mỗi kì được suy ra từ kì trước theo quy tắc (nhân đôi ở pha S, tách crômatit chị em ở kì sau). Số liệu trong bảng được đếm từ mô hình.',
+            'Chromosome bookkeeping: every stage is derived from the previous one (replication in S, sister chromatids separate in anaphase). The table counts the model.',
+          )
+        : L(
+            'Mô hình đếm NST: mỗi kì được suy ra từ kì trước theo quy tắc (nhân đôi ở pha S, tiếp hợp và trao đổi chéo ở kì đầu I, phân li cặp tương đồng ở kì sau I, tách crômatit chị em ở kì sau II). Số liệu trong bảng được đếm từ mô hình.',
+            'Chromosome bookkeeping: every stage is derived from the previous one (replication in S, synapsis and crossing over in prophase I, homologues separate in anaphase I, sister chromatids separate in anaphase II). The table counts the model.',
+          ),
     equations:
       kind === 'meiosis'
         ? [

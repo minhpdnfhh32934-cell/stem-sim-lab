@@ -62,6 +62,8 @@ function bodies(accel: boolean): BodyDef[] {
     position: (s, p) => ({ x: s[3 * k] ?? 0, y: laneY(k, extent(p, accel).w) }),
     radius: (p) => 0.02 * extent(p, accel).w,
     draggable: true,
+    // Body B exists only in two-body mode.
+    ...(k === 1 ? { active: two } : {}),
     properties: (s) => [
       { label: L('Tọa độ', 'Position'), symbol: 'x', value: s[3 * k] ?? 0, unit: 'm' },
       { label: L('Vận tốc', 'Velocity'), symbol: 'v', value: s[3 * k + 1] ?? 0, unit: 'm/s' },
@@ -268,7 +270,7 @@ function solve(accel: boolean) {
         steps.push({
           text: L('Hai vật gặp nhau khi x_A = x_B:', 'The bodies meet when x_A = x_B:'),
           tex:
-            !accel && simple
+            !accel && simple && a.v0 !== b.v0
               ? `t = \\frac{x_{0B} - x_{0A}}{v_A - v_B} = \\frac{${n(b.x0)} - (${n(a.x0)})}{${n(a.v0)} - (${n(b.v0)})} = ${q(tm, 's')},\\quad x = ${q(xm, 'm')}`
               : `t = ${q(tm, 's')},\\quad x = ${q(xm, 'm')}`,
         });

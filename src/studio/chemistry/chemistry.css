@@ -1,0 +1,136 @@
+/* Chemistry Studio bench. Colours come from theme tokens only; solutions share one neutral fill. */
+.chem-procedure h4,
+.chem-rack h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+}
+.chem-procedure ol {
+  margin: 0;
+  padding-left: var(--space-5);
+  font-size: var(--text-content);
+}
+.chem-bench {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(160px, 220px) minmax(160px, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .chem-bench {
+    grid-template-columns: 1fr;
+  }
+}
+.chem-rack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.chem-rack__item {
+  justify-content: flex-start;
+  min-height: var(--target);
+}
+.chem-bench__tube {
+  margin: 0;
+}
+.chem-bench__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.chem-tube {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+}
+.chem-tube__glass {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 3;
+}
+.chem-tube__liquid {
+  fill: var(--bg-active);
+}
+.chem-tube__liquid--alt {
+  fill: var(--bg-sunken);
+}
+.chem-tube__hatch {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+.chem-tube__label {
+  fill: var(--text);
+  font-size: 14px;
+}
+.chem-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.chem-facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+}
+.chem-facts__row {
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) 1fr;
+  gap: var(--space-3);
+}
+.chem-facts__row dt {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+.chem-facts__row dd {
+  margin: 0;
+  font-size: var(--text-content);
+}
+@media (max-width: 560px) {
+  .chem-facts__row {
+    grid-template-columns: 1fr;
+  }
+}
+.chem-run {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.chem-run.is-target {
+  grid-template-columns: minmax(120px, 160px) 1fr;
+  border-color: var(--subject-chemistry);
+}
+.chem-run h5 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+}
+.chem-run__tag {
+  padding: 0 var(--space-2);
+  border: 1px solid var(--subject-chemistry);
+  border-radius: var(--radius-full);
+  color: var(--subject-chemistry);
+  font-size: var(--text-xs);
+}
+.chem-note {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+@media (max-width: 560px) {
+  .chem-run.is-target {
+    grid-template-columns: 1fr;
+  }
+}
+.chem-runs {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

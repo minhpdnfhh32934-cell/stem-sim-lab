@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type AppScreen = 'home' | 'lab' | 'teacher';
+export type AppScreen = 'home' | 'lab' | 'teacher' | 'studio';
 
 interface NavigationState {
   screen: AppScreen;

@@ -106,3 +106,32 @@ describe('projectile scenes', () => {
     expect(horizontalProjectile.validate!({ v0: 5, h0: 0, g: 9.81, m: 1 })).toHaveLength(1);
   });
 });
+
+describe('a launch from the ground with no upward velocity', () => {
+  it('oblique: angle ≤ 0 from h0 = 0 is rejected (it lands at once)', () => {
+    const p = { ...obliqueProjectile.defaults, v0: 15, angle: deg(-30), h0: 0 };
+    expect(obliqueProjectile.validate?.(p).length).toBeGreaterThan(0);
+    expect(obliqueProjectile.validate?.({ ...p, angle: 0 }).length).toBeGreaterThan(0);
+    expect(obliqueProjectile.validate?.(obliqueProjectile.defaults)).toEqual([]);
+    expect(obliqueProjectile.validate?.({ ...p, h0: 2 })).toEqual([]);
+  });
+
+  it('free fall: h0 = 0 with v0 ≤ 0 is rejected; thrown up from the ground is fine', () => {
+    const p = { ...freeFall.defaults, h0: 0, v0: 0 };
+    expect(freeFall.validate?.(p).length).toBeGreaterThan(0);
+    expect(freeFall.validate?.({ ...p, v0: -3 }).length).toBeGreaterThan(0);
+    expect(freeFall.validate?.({ ...p, v0: 5 })).toEqual([]);
+    expect(freeFall.validate?.(freeFall.defaults)).toEqual([]);
+  });
+
+  it('the card never claims agreement with an infinite or large deviation', () => {
+    for (const card of [
+      obliqueProjectile.scienceCard({ ...obliqueProjectile.defaults, angle: deg(-30), h0: 0 }),
+      freeFall.scienceCard({ ...freeFall.defaults, h0: 0, v0: 0 }),
+    ]) {
+      expect(card.confidenceNote?.en ?? '').not.toMatch(/Infinity|NaN/);
+      expect(card.confidence).not.toBe('exact');
+    }
+    expect(obliqueProjectile.scienceCard(obliqueProjectile.defaults).confidence).toBe('exact');
+  });
+});

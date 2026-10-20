@@ -184,18 +184,40 @@ function sub2(n: number): string {
     .join('');
 }
 
-/** The atom with the most neighbours (first in case of a tie): the molecule's "centre". */
+const heavyNeighbors = (m: Molecule, i: number) =>
+  neighbors(m, i).filter((j) => m.atoms[j]?.el !== 'H').length;
+
+/**
+ * The molecule's "centre" for VSEPR: a non-hydrogen atom bonded to the most non-hydrogen
+ * atoms (a CH3 or NH2 end group is never the centre), then the one with the most neighbours in
+ * total, then the less electronegative element (the usual textbook rule), then the first.
+ */
 export function centralAtom(m: Molecule): number {
+  const en = (i: number) => elementBySymbol(m.atoms[i]?.el ?? '')?.en_pauling ?? Infinity;
+  const heavy = (i: number) => (m.atoms[i]?.el === 'H' ? 0 : 1);
   let best = 0;
-  let bestN = -1;
   m.atoms.forEach((_, i) => {
-    const n = neighbors(m, i).length;
-    if (n > bestN) {
-      best = i;
-      bestN = n;
-    }
+    const d =
+      heavy(i) - heavy(best) ||
+      heavyNeighbors(m, i) - heavyNeighbors(m, best) ||
+      neighbors(m, i).length - neighbors(m, best).length ||
+      en(best) - en(i);
+    if (d > 0) best = i;
   });
   return best;
+}
+
+/**
+ * True when the skeleton has branch points that are not symmetry-equivalent (e.g. ethyl
+ * acetate, glycine, toluene): no single atom describes the shape, so the panel does not show
+ * one "central atom" VSEPR class.
+ */
+export function hasSeveralCentres(m: Molecule): boolean {
+  const classes = new Set<number>();
+  m.atoms.forEach((a, i) => {
+    if (a.el !== 'H' && heavyNeighbors(m, i) >= 2) classes.add(a.sym);
+  });
+  return classes.size > 1;
 }
 
 export type BondPolarity = 'nonpolar' | 'polar' | 'ionic';

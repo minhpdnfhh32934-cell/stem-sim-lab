@@ -41,6 +41,9 @@
   --timeline-h: 3.143rem;
   --statusbar-h: 1.715rem;
   --splitter: 6px;
+  /* "Hỏi thầy" floating button: its size and its gap to the panel edges. */
+  --chat-bubble: 52px;
+  --chat-bubble-gap: 14px;
 
   /* Motion — subtle; disabled entirely under prefers-reduced-motion. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -78,7 +81,7 @@
 
   --text: #172033;
   --text-muted: #5a6477;
-  --text-faint: #8a93a5;
+  --text-faint: #656e80;
   --text-on-accent: #ffffff;
 
   --accent: #2f62d8;
@@ -87,7 +90,7 @@
   --focus-ring: rgba(47, 98, 216, 0.45);
 
   --danger: #c93a3a;
-  --warning: #b77900;
+  --warning: #946200;
 
   /* One main color per subject (PROMPT_PHAN_2 A4.3), used on cards, headings and accents. */
   --subject-physics: #2f62d8;
@@ -118,6 +121,26 @@
   --pending: #8a5a00;
   --pending-soft: #fff1d6;
 
+  /* 3D biology views: a picked part's glow (unlike either chromosome colour, --chart-1 and
+     --chart-4), the nucleolus (unlike the nuclear envelope, --chart-6), and how strongly
+     see-through shells (membranes, envelopes) show: their opacity and Fresnel outline. */
+  --m3d-highlight: #ffd23f;
+  --m3d-nucleolus: #5b4a86;
+  --m3d-membrane-opacity: 0.14;
+  --m3d-rim: 0.7;
+  /* Ground of the 3D habitats (ecology lessons). */
+  --bio3d-ground: #dde7d3;
+  /* 3D DNA → mRNA → protein: the two DNA backbones, the mRNA backbone, the glass of RNA
+     polymerase and the ribosome, tRNA bodies and the polypeptide beads — unlike each other and
+     unlike the five base colours (--chart-1 … --chart-5). */
+  --dna3d-coding: #8a93a5;
+  --dna3d-template: #3f6f8f;
+  --dna3d-mrna: #7b4fa0;
+  --dna3d-polymerase: #56b4e9;
+  --dna3d-ribosome: #8b97b8;
+  --dna3d-trna: #2a9fae;
+  --dna3d-peptide: #9a5f2e;
+
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
   --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
 
@@ -145,7 +168,7 @@
 
   --text: #e4e9f1;
   --text-muted: #9aa5b8;
-  --text-faint: #6b7688;
+  --text-faint: #8590a3;
   --text-on-accent: #0b1020;
 
   --accent: #7aa2ff;
@@ -180,6 +203,20 @@
   --conf-qual-soft: #142a45;
   --pending: #f2b642;
   --pending-soft: #33260c;
+
+  --m3d-highlight: #fff0a0;
+  --m3d-nucleolus: #d2c4ff;
+  /* A dark stage needs a stronger membrane and outline to be seen at all. */
+  --m3d-membrane-opacity: 0.22;
+  --m3d-rim: 1;
+  --bio3d-ground: #1f2d24;
+  --dna3d-coding: #a3acbd;
+  --dna3d-template: #6fa2c4;
+  --dna3d-mrna: #b48be0;
+  --dna3d-polymerase: #6cc4f5;
+  --dna3d-ribosome: #a9b4d4;
+  --dna3d-trna: #4cc3cf;
+  --dna3d-peptide: #d39a62;
 
   /* Dark-mode chart steps: same hue order, re-stepped into the OKLCH L 0.48–0.67 band
      (validated with the dataviz palette validator against --bg-panel #151b24). */

@@ -58,18 +58,41 @@ function splitCharge(s: string): { body: string; charge: number } {
   return { body: s, charge: 0 };
 }
 
+/** ASCII digits, no spaces, superscript charges as "^n±". */
+function preprocess(input: string): string {
+  return (
+    input
+      .trim()
+      // Superscript charges are unambiguous: "Fe³⁺" → "Fe^3+".
+      .replace(
+        /([⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻])$/,
+        (c) => `^${c.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]/g, (x) => SUP[x] ?? x)}`,
+      )
+      .replace(/[₀-₉]/g, (c) => SUB[c] ?? c)
+      .replace(/\s+/g, '')
+  );
+}
+
+/**
+ * The formula as WRITTEN, in one canonical spelling (no spaces, ASCII digits, charge as
+ * "^n±"), to compare two formulas as text: "CH3COO-" and "CH3COO^-" are the same text, while
+ * "C2H5OH" and "CH3OCH3" (same molecular formula, different isomers) are not.
+ */
+export function canonicalFormulaText(input: string): string {
+  const { body, charge } = splitCharge(preprocess(input));
+  return charge === 0 ? body : `${body}^${String(Math.abs(charge))}${charge < 0 ? '-' : '+'}`;
+}
+
 export function parseFormula(input: string): ParsedFormula {
-  const raw = input
-    .trim()
-    // Superscript charges are unambiguous: "Fe³⁺" → "Fe^3+".
-    .replace(/([⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻])$/, (c) => `^${c.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]/g, (x) => SUP[x] ?? x)}`)
-    .replace(/[₀-₉]/g, (c) => SUB[c] ?? c)
-    .replace(/\s+/g, '');
+  const raw = preprocess(input);
   if (!raw) throw new FormulaError('empty formula');
   if (/^e-?$/.test(raw) || raw === 'e^-') return { counts: new Map(), charge: -1 };
   const { body, charge } = splitCharge(raw);
   const clean = body.replace(/[=≡–—#]/g, '');
   const parts = clean.split(/[·*.•]/);
+  // A hydrate separator needs a formula on both sides: ".5O2" is a typo or a decimal number.
+  if (parts.length > 1 && parts.some((part) => !/[A-Za-z]/.test(part)))
+    throw new FormulaError(`misplaced "·" or "." in "${input}"`);
   const total = new Map<string, number>();
   for (const part of parts) {
     const pm = /^(\d*)(.*)$/.exec(part);

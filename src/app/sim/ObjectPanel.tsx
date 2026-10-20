@@ -4,6 +4,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { fmtQty } from '@/physics/common/tex';
 import { Equation } from '@/science-card/Equation';
+import { bodyActive } from './pick';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 
@@ -15,7 +16,7 @@ export function ObjectPanel() {
   const { scene, selected, params } = useSimStore(
     useShallow((s) => ({ scene: s.scene, selected: s.selected, params: s.params, tick: s.tick })),
   );
-  const body = scene?.bodies.find((b) => b.id === selected);
+  const body = scene?.bodies.find((b) => b.id === selected && bodyActive(b, params));
   const state = sim.renderState;
   if (!scene || !body || !state) {
     return <p className="muted small">{t('object.none')}</p>;

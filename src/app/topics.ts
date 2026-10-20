@@ -1,7 +1,7 @@
 import { closeModule, openModule, useModuleStore } from '@/modules/moduleStore';
 import { hasModule } from '@/modules/registry';
 import { hasScene } from '@/physics/registry';
-import { sim } from './sim/runtime';
+import { sim, type OpenOptions } from './sim/runtime';
 import { useSimStore } from './sim/simStore';
 import { useWorkspaceStore, type Subject } from './workspaceStore';
 import { CATALOG } from './catalog';
@@ -21,8 +21,11 @@ export function subjectOf(topicId: string): Subject | undefined {
   return undefined;
 }
 
-/** Opens any available topic (physics scenes for now; chemistry/biology modules later). */
-export async function openTopic(topicId: string): Promise<void> {
+/**
+ * Opens any available topic. `opts` (physics scenes only) starts the scene from given inputs,
+ * e.g. a Science Studio condition.
+ */
+export async function openTopic(topicId: string, opts?: OpenOptions): Promise<void> {
   closeTeacher();
   useNavigationStore.getState().setScreen('lab');
   const subject = subjectOf(topicId);
@@ -37,7 +40,7 @@ export async function openTopic(topicId: string): Promise<void> {
     await openModule(topicId);
   } else {
     closeModule();
-    await sim.open(topicId);
+    await sim.open(topicId, opts);
   }
   useProgressStore.getState().markVisited(topicId);
 }
@@ -53,7 +56,23 @@ export function goHome(): void {
 /** Opens the existing topic browser and simulation workspace from the new landing page. */
 export function openLab(): void {
   closeTeacher();
+  // Nothing open in the lab: no Science Card may linger from another screen's model.
+  if (!useSimStore.getState().scene && !useModuleStore.getState().active) {
+    useWorkspaceStore.setState({ scienceCard: null });
+  }
   useNavigationStore.getState().setScreen('lab');
+}
+
+/** Opens Science Studio (guided Predict–Observe–Explain lessons). */
+export function openStudio(): void {
+  closeTeacher();
+  sim.shutdown();
+  closeModule();
+  useNavigationStore.getState().setScreen('studio');
+}
+
+export function useIsStudio(): boolean {
+  return useNavigationStore((s) => s.screen === 'studio');
 }
 
 /** True while the "Dạy học bằng AI" screen replaces the workspace. */

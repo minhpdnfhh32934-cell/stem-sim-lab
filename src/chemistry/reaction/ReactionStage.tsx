@@ -12,49 +12,20 @@ import {
 import { useEffect, useMemo, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocalized } from '@/app/i18n/localized';
-import type { ScienceCardData } from '@/science-card/types';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
-import { CSRC, L, usePublishCard } from '../common';
+import { L, usePublishCard } from '../common';
 import { MOLECULES, prettyFormula } from '../data/molecules';
-import { REACTIONS_SOURCE, reactionById, type Reaction } from '../data/reactions';
+import { reactionById, type Reaction } from '../data/reactions';
 import { parseFormula } from '../formula';
 import { openTopic } from '@/app/topics';
 import { requestMolecule } from '../molecule/store';
+import { reactionCard } from './card';
 import { EquationText } from './Equation';
 import { FRAME_KIND, ILLUSTRATIVE } from './labels';
 import { MechanismViewer } from './MechanismViewer';
 import { useReactionStore } from './store';
 import '../chem.css';
-
-function cardFor(r: Reaction): ScienceCardData {
-  const mech = r.mechanism;
-  return {
-    title: r.name,
-    model: mech
-      ? L(
-          `Cơ chế ${mech.type.vi.toLowerCase()} theo tài liệu. Các khung chính (chất đầu, trung gian, sản phẩm) là cấu trúc tối ưu bằng trường lực; trạng thái chuyển tiếp và chuyển động giữa các khung chỉ minh họa.`,
-          `${mech.type.en} mechanism from the literature. Key frames (reactants, intermediates, products) are force-field structures; transition states and motion between frames are illustrative.`,
-        )
-      : L(
-          'Phương trình tổng đã cân bằng (kiểm tra bảo toàn nguyên tố và điện tích). Không hiển thị cơ chế.',
-          'Balanced overall equation (element and charge conservation checked). No mechanism shown.',
-        ),
-    equations: [],
-    assumptions: [
-      ...(mech ? [ILLUSTRATIVE, mech.note] : []),
-      L(`Điều kiện: ${r.conditions.vi}`, `Conditions: ${r.conditions.en}`),
-    ],
-    confidence: 'qualitative',
-    confidenceNote: L(
-      'Phương trình: đã kiểm tra bảo toàn bằng test tự động. Hình ảnh cơ chế: định tính.',
-      'Equation: conservation checked by automated tests. Mechanism pictures: qualitative.',
-    ),
-    userIntervened: false,
-    sources: [...r.sources, REACTIONS_SOURCE, ...(mech ? [CSRC.rdkit] : [])],
-    reviewStatus: r.review_status,
-  };
-}
 
 /** Species of the reaction that exist in the 3D molecule library (link to view them). */
 function libraryMolecules(r: Reaction) {
@@ -87,7 +58,7 @@ export function ReactionStage() {
     })),
   );
   const r = reactionById(st.id);
-  const card = useMemo(() => (r ? cardFor(r) : null), [r]);
+  const card = useMemo(() => (r ? reactionCard(r) : null), [r]);
   usePublishCard(card);
   const mech = r?.mechanism ?? null;
   const last = mech ? mech.frames.length - 1 : 0;

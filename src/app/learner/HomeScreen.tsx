@@ -178,12 +178,22 @@ function ProblemBox() {
   );
   const running = useAnalyzeStore((s) => s.phase === 'running');
   const ai = useAiStore(useShallow((s) => ({ provider: s.provider, status: s.status })));
-  const gemmaEngine = useAnalysisEngine() !== 'cloud';
-  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !gemmaEngine;
+  // Read on this computer (Gemma or a chosen local runtime): no API key needed.
+  const onDevice = useAnalysisEngine() !== 'cloud';
+  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !onDevice;
   const canAnalyze =
-    (ai.provider !== 'off' || gemmaEngine) && !running && problemText.trim().length > 0;
-  const { cameraOpen, cameraBusy, cameraError, openCamera, closeCamera, onPhoto, CameraDialog } =
-    usePhotoCapture();
+    (ai.provider !== 'off' || onDevice) && !running && problemText.trim().length > 0;
+  const {
+    cameraAllowed,
+    cameraOpen,
+    cameraBusy,
+    cameraError,
+    cameraErrorSection,
+    openCamera,
+    closeCamera,
+    onPhoto,
+    CameraDialog,
+  } = usePhotoCapture();
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -232,23 +242,27 @@ function ProblemBox() {
           <PencilRuler size={16} strokeWidth={1.75} aria-hidden="true" />
           {t('home.manual')}
         </button>
-        <button
-          type="button"
-          className="btn"
-          aria-label={t('home.cameraButton')}
-          title={t('home.cameraButton')}
-          disabled={running || cameraBusy}
-          onClick={openCamera}
-        >
-          <Camera size={16} strokeWidth={1.75} aria-hidden="true" />
-          {t('home.cameraButton')}
-        </button>
+        {/* Reading a photo is an AI call: hidden while the safety gates are closed. */}
+        {cameraAllowed && (
+          <button
+            type="button"
+            className="btn"
+            aria-label={t('home.cameraButton')}
+            title={t('home.cameraButton')}
+            disabled={running || cameraBusy}
+            onClick={openCamera}
+          >
+            <Camera size={16} strokeWidth={1.75} aria-hidden="true" />
+            {t('home.cameraButton')}
+          </button>
+        )}
       </div>
       {cameraOpen && (
         <CameraDialog
           open={cameraOpen}
           busy={cameraBusy}
           error={cameraError}
+          errorSection={cameraErrorSection}
           onClose={closeCamera}
           onCapture={(photo) => {
             void onPhoto(photo);

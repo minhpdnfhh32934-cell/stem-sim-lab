@@ -3,12 +3,19 @@
 use serde_json::{json, Value};
 
 use super::provider::AIProvider;
+use super::stream::{event_json, provider_error, SseEvent, StreamState};
 use super::{AiError, ChatRequest, Provider};
 
 pub const CLAUDE_URL: &str = "https://api.anthropic.com/v1";
 const ANTHROPIC_VERSION: &str = "2023-06-01";
 
 pub struct ClaudeProvider;
+
+/// Stop reasons of an answer that ended naturally (`tool_use`: the forced tool call of a
+/// structured answer). Any other reason (`max_tokens`, `model_context_window_exceeded`,
+/// `pause_turn`, a reason added later) marks the answer as possibly incomplete, streamed or not;
+/// a `refusal` is an error.
+const NATURAL_END: [&str; 3] = ["end_turn", "stop_sequence", "tool_use"];
 
 /// JSON body for the Messages API.
 ///
@@ -61,20 +68,29 @@ impl AIProvider for ClaudeProvider {
     fn chat_request(
         &self,
         http: &reqwest::Client,
+        base: &str,
         key: &str,
         req: &ChatRequest,
     ) -> reqwest::RequestBuilder {
-        http.post(format!("{}/messages", self.base_url()))
+        http.post(format!("{base}/messages"))
             .header("x-api-key", key)
             .header("anthropic-version", ANTHROPIC_VERSION)
             .json(&claude_body(req))
     }
 
+    /// Any stop reason but a natural end ([`NATURAL_END`]).
     fn truncated(&self, v: &Value) -> bool {
-        v["stop_reason"] == "max_tokens"
+        v["stop_reason"]
+            .as_str()
+            .is_some_and(|r| !NATURAL_END.contains(&r))
     }
 
+    /// The text, or the forced tool's input. A `refusal` is no answer even with text, as when
+    /// streamed.
     fn extract_content(&self, v: &Value) -> Result<String, AiError> {
+        if v["stop_reason"] == "refusal" {
+            return Err(AiError::BadResponse("empty answer (refusal)".into()));
+        }
         let blocks = v["content"]
             .as_array()
             .ok_or_else(|| AiError::BadResponse("missing content".into()))?;
@@ -92,6 +108,58 @@ impl AIProvider for ClaudeProvider {
             return Err(AiError::BadResponse(format!("empty answer ({reason})")));
         }
         Ok(text)
+    }
+
+    /// The same body with `"stream": true`.
+    fn stream_request(
+        &self,
+        http: &reqwest::Client,
+        base: &str,
+        key: &str,
+        req: &ChatRequest,
+    ) -> reqwest::RequestBuilder {
+        let mut body = claude_body(req);
+        body["stream"] = json!(true);
+        http.post(format!("{base}/messages"))
+            .header("x-api-key", key)
+            .header("anthropic-version", ANTHROPIC_VERSION)
+            .json(&body)
+    }
+
+    /// Messages API events: the model from `message_start`, text from `text_delta`s (thinking,
+    /// signature and tool deltas are not answer text), the stop reason from `message_delta`, the
+    /// end at `message_stop`. An `error` event (e.g. `overloaded_error`) is the HTTP error it
+    /// stands for. A `refusal` stop is an empty answer, as without streaming: the API leaves a
+    /// declined partial out of a whole answer, so a streamed one is not kept either.
+    fn on_sse(&self, ev: &SseEvent, st: &mut StreamState) -> Result<(), AiError> {
+        let v = event_json(ev)?;
+        match v["type"].as_str().unwrap_or(&ev.event) {
+            "message_start" => {
+                if st.model.is_none() {
+                    st.model = v["message"]["model"].as_str().map(str::to_string);
+                }
+            }
+            "content_block_delta" if v["delta"]["type"] == "text_delta" => {
+                st.delta
+                    .push_str(v["delta"]["text"].as_str().unwrap_or_default());
+            }
+            "message_delta" => {
+                if let Some(reason) = v["delta"]["stop_reason"].as_str() {
+                    if reason == "refusal" {
+                        return Err(AiError::BadResponse("empty answer (refusal)".into()));
+                    }
+                    st.finished(reason, &NATURAL_END);
+                }
+            }
+            "message_stop" => {
+                st.ended = true;
+                st.closed = true;
+            }
+            "error" => return Err(provider_error(&v["error"])),
+            // ping, content_block_start/stop, other deltas and future event types.
+            _ => {}
+        }
+        Ok(())
     }
 
     fn models_request(&self, http: &reqwest::Client, key: &str) -> reqwest::RequestBuilder {
@@ -122,6 +190,41 @@ mod tests {
     fn reports_answers_cut_at_the_output_limit() {
         assert!(ClaudeProvider.truncated(&json!({"stop_reason": "max_tokens"})));
         assert!(!ClaudeProvider.truncated(&json!({"stop_reason": "end_turn"})));
+    }
+
+    #[test]
+    fn every_stop_reason_but_a_natural_end_may_be_incomplete_streamed_or_not() {
+        use crate::ai::stream::{SseEvent, StreamState};
+        for (reason, cut) in [
+            ("end_turn", false),
+            ("stop_sequence", false),
+            ("tool_use", false),
+            ("max_tokens", true),
+            ("model_context_window_exceeded", true),
+            ("pause_turn", true),
+            ("something_new", true),
+        ] {
+            let whole =
+                json!({"content": [{"type": "text", "text": "Lực là "}], "stop_reason": reason});
+            assert_eq!(ClaudeProvider.truncated(&whole), cut, "{reason}");
+            assert_eq!(ClaudeProvider.extract_content(&whole).unwrap(), "Lực là ");
+            let mut st = StreamState::default();
+            let ev = SseEvent {
+                event: "message_delta".into(),
+                data: json!({"type": "message_delta", "delta": {"stop_reason": reason}})
+                    .to_string(),
+            };
+            ClaudeProvider.on_sse(&ev, &mut st).unwrap();
+            assert_eq!(st.truncated, cut, "{reason} streamed");
+            assert!(st.ended);
+        }
+        // A refusal is no answer, streamed or not, even with text.
+        let refused =
+            json!({"content": [{"type": "text", "text": "Phần"}], "stop_reason": "refusal"});
+        assert!(matches!(
+            ClaudeProvider.extract_content(&refused),
+            Err(AiError::BadResponse(ref m)) if m == "empty answer (refusal)"
+        ));
     }
 
     #[test]
@@ -169,7 +272,12 @@ mod tests {
         );
         let http = reqwest::Client::new();
         let built = ClaudeProvider
-            .chat_request(&http, "k", &req(Provider::Claude, true))
+            .chat_request(
+                &http,
+                ClaudeProvider.base_url(),
+                "k",
+                &req(Provider::Claude, true),
+            )
             .build()
             .unwrap();
         assert_eq!(built.url().as_str(), format!("{CLAUDE_URL}/messages"));

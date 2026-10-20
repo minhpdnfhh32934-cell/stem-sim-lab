@@ -53,3 +53,16 @@ describe('equation balancer (null space, exact arithmetic)', () => {
     expect(ns).toHaveLength(1);
   });
 });
+
+describe('decimal or zero coefficients are rejected, never misread', () => {
+  it.each(['H2 + 0.5O2 -> H2O', 'H2 + 0,5O2 -> H2O', 'H2 + 1.5 O2 -> H2O'])('%s', (text) => {
+    expect(() => parseEquation(text)).toThrow(/whole numbers/);
+  });
+  it('a coefficient of 0 is an error', () => {
+    expect(() => parseEquation('2H2 + 0O2 -> 2H2O')).toThrow(/cannot be 0/);
+  });
+  it('hydrates still parse with "." and "·"', () => {
+    const eq = parseEquation('CuSO4.5H2O -> CuSO4 + 5H2O');
+    expect(eq.reactants[0]!.formula.counts.get('O')).toBe(9);
+  });
+});

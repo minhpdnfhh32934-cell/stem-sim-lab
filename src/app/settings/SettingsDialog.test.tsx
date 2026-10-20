@@ -1,6 +1,6 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS_SECTIONS, useWorkspaceStore } from '@/app/workspaceStore';
 import { useChatStore } from '@/teacher/chat/chatStore';
 import { SettingsDialog } from './SettingsDialog';
@@ -30,6 +30,7 @@ describe('Settings: one small page per section', () => {
       'Giao diện',
       'Kết nối AI',
       'AI local (Gemma)',
+      'AI trên máy khác (Ollama, LM Studio, llama.cpp)',
       'GPU cho Gemma',
       'Trí nhớ hội thoại',
       'Giọng nói',
@@ -65,6 +66,23 @@ describe('Settings: one small page per section', () => {
     });
     expect(screen.getByRole('tabpanel')).toHaveAttribute('id', 'settings-gpu');
     expect(screen.getByText('Độ dài câu trả lời của Gemma')).toBeInTheDocument();
+  });
+
+  it('"AI trên máy khác" comes right after the Gemma page and asks no runtime when shown', () => {
+    renderOpen();
+    const names = within(screen.getByRole('tablist'))
+      .getAllByRole('tab')
+      .map((tab) => tab.textContent);
+    const gemma = names.findIndex((n) => n.includes('AI local (Gemma)'));
+    expect(names[gemma + 1]).toContain('AI trên máy khác (Ollama, LM Studio, llama.cpp)');
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    act(() => {
+      useWorkspaceStore.getState().openSettingsAt('runtimes');
+    });
+    expect(screen.getByRole('tabpanel')).toHaveAttribute('id', 'settings-runtimes');
+    expect(screen.getByRole('button', { name: 'Tìm trên máy này' })).toBeInTheDocument();
+    expect(fetchSpy).not.toHaveBeenCalled();
+    fetchSpy.mockRestore();
   });
 
   it('conversation memory: the choice and the clear button change the chat store', async () => {

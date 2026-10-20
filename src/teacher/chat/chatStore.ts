@@ -3,8 +3,43 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { DEFAULT_MODELS, DEFAULT_PROVIDER, PROVIDERS } from '@/ai/aiStore';
 import type { Provider } from '@/ai/types';
 
-export type ChatEngine = 'cloud' | 'gemma';
+/**
+ * Who answers: an online provider (`cloud`), the Gemma model inside the app (`gemma`) or a
+ * runtime the learner runs on this computer (`local`: Ollama, LM Studio, llama.cpp…; chosen in
+ * Settings → "AI trên máy khác", src/ai/local/localAiStore.ts).
+ */
+export type ChatEngine = 'cloud' | 'gemma' | 'local';
+/** The engine in use before a local runtime was chosen ("Bỏ chọn" goes back to it). */
+export interface PreviousEngine {
+  engine: Exclude<ChatEngine, 'local'>;
+  /** Whether the learner had picked it themselves (a pre-selected Gemma stays a suggestion). */
+  chosen: boolean;
+}
 export type ChatRole = 'user' | 'assistant';
+/**
+ * How an answer was asked for: a board lesson (`board`), a chat answer (`talk`), or a question
+ * about part of the board the learner circled (`aside`: read in the chat and aloud, never taught
+ * on the board, which keeps its lesson). Answers saved before this field have none.
+ */
+export type AnswerMode = 'board' | 'talk' | 'aside';
+/** The part of the board a question was about ("Khoanh để hỏi"). */
+export interface BoardRef {
+  face: number;
+  /** The board elements circled. */
+  ids: string[];
+  /** What was circled, as the board holds it (short; '' for a drawing or handwriting). */
+  excerpt: string;
+  /**
+   * A drawing or handwriting asked about in words, because no AI here reads pictures: no picture
+   * went with the question (only the steps around it), so it is an ordinary question.
+   */
+  inWords?: true;
+}
+/**
+ * Why a Think answer was not reviewed: `picture` = a question about a picture of the circled area
+ * (answered on this computer only; its reading of the learner's drawing never goes online).
+ */
+export type ReviewSkipped = 'picture';
 /** How much of the conversation is sent with each question (Settings → "Trí nhớ hội thoại"). */
 export type MemoryLength = 'medium' | 'long';
 export interface ChatMessageRecord {
@@ -16,9 +51,34 @@ export interface ChatMessageRecord {
   prompt?: string;
   model?: string;
   checkedBy?: string;
+  /**
+   * The quota fallback wrote the answer (or its continued part): the chosen provider was out of
+   * quota or credit. The AI label says "dự phòng".
+   */
+  fallback?: boolean;
+  /** A Think answer continued with "Viết tiếp": the continued part was not reviewed. */
+  continuedUnreviewed?: boolean;
+  /** Think was on but this answer was not reviewed, and why (the chat says so under it). */
+  reviewSkipped?: ReviewSkipped;
   references?: string[];
+  /**
+   * Results SimLab computed for this question (exact chemical balancing…), shown by the app next
+   * to the answer: a small model may garble them in its own text (benchmark 2026-10-13).
+   */
+  facts?: string[];
   /** The answer stopped at the output limit: the chat offers "Viết tiếp". */
   truncated?: boolean;
+  /** The app found a calculation request without numbers and shows its own notice above. */
+  missingData?: boolean;
+  /** Values in the answer nobody gave the AI (provenance.ts), shown as "chưa kiểm chứng". */
+  unverifiedNumbers?: string[];
+  /** Answers: how it was asked for (an `aside` is never taught on the board). */
+  mode?: AnswerMode;
+  /**
+   * Questions about part of the board: what was circled. Never in `content` or `prompt`: the
+   * numbers there are the board's, not the learner's (provenance), and the board flags its own.
+   */
+  boardRef?: BoardRef;
 }
 /** AI-written summary of the turns that no longer fit the context budget (kept on this computer). */
 export interface ChatSummary {
@@ -40,6 +100,8 @@ interface ChatState {
   engine: ChatEngine;
   /** True once the learner picked the engine themselves (the default is only a suggestion). */
   engineChosen: boolean;
+  /** The engine before the local runtime was chosen; restored only by "Bỏ chọn". */
+  previousEngine: PreviousEngine;
   gemmaModel: string;
   verifierProvider: Provider;
   verifierModel: string;
@@ -53,10 +115,32 @@ interface ChatState {
   documents: KnowledgeDocument[];
   memoryLength: MemoryLength;
   summary: ChatSummary | null;
+  /**
+   * The model that could not write a summary of this conversation ("writer|first message id"):
+   * it is not asked again until the conversation or the model changes (not persisted).
+   */
+  summarySkip: string | null;
   /** A question is being answered (not persisted; the board shows "preparing"). */
   answering: boolean;
+  /**
+   * Stops the answer being written ("Dừng"), from whichever panel shows it (not persisted).
+   * Set by the panel that asked; null when nothing is being answered.
+   */
+  stopAnswer: (() => void) | null;
+  /** The last answer was stopped by the learner: the chat says so (not persisted). */
+  stopped: boolean;
+  /**
+   * Which conversation this is: "Xóa cuộc trò chuyện" moves to the next one (not persisted). An
+   * answer or summary that was being written for an earlier conversation is dropped.
+   */
+  epoch: number;
   /** The learner's own choice of engine (marks it as chosen). */
   setEngine: (engine: ChatEngine) => void;
+  /**
+   * "Bỏ chọn" in Settings → AI trên máy khác: back to the engine used before the local runtime
+   * was chosen (as it was: chosen or only suggested). Never called on its own.
+   */
+  leaveLocal: () => void;
   setGemmaModel: (model: string) => void;
   setVerifierProvider: (provider: Provider) => void;
   setVerifierModel: (model: string) => void;
@@ -66,7 +150,7 @@ interface ChatState {
   setSaveHistory: (enabled: boolean) => void;
   addMessage: (message: ChatMessageRecord) => void;
   updateMessage: (id: string, patch: Partial<Omit<ChatMessageRecord, 'id' | 'role'>>) => void;
-  /** Also forgets the summary (it describes the cleared messages). */
+  /** Also forgets the summary (it describes the cleared messages) and starts a new epoch. */
   clearMessages: () => void;
   setMemoryLength: (length: MemoryLength) => void;
   setSummary: (summary: ChatSummary | null) => void;
@@ -78,6 +162,37 @@ const defaultVerifier: Provider =
   DEFAULT_PROVIDER !== 'groq' && PROVIDERS.includes('groq')
     ? 'groq'
     : (PROVIDERS.find((p) => p !== DEFAULT_PROVIDER) ?? DEFAULT_PROVIDER);
+
+const isEngine = (v: unknown): v is ChatEngine => v === 'cloud' || v === 'gemma' || v === 'local';
+
+/** The engine to go back to from `local` (the one in use before it was chosen). */
+function previousOf(engine: ChatEngine, chosen: boolean, kept: PreviousEngine): PreviousEngine {
+  return engine === 'local' ? kept : { engine, chosen };
+}
+
+function sanitizePrevious(v: unknown, engine: ChatEngine, chosen: boolean): PreviousEngine {
+  const o = (v ?? {}) as { engine?: unknown; chosen?: unknown };
+  if ((o.engine === 'cloud' || o.engine === 'gemma') && typeof o.chosen === 'boolean')
+    return { engine: o.engine, chosen: o.chosen };
+  // Older versions: the engine itself (it cannot be `local` there).
+  return engine === 'local' ? { engine: 'gemma', chosen: false } : { engine, chosen };
+}
+
+/**
+ * v6 adds the local runtime engine and the engine to go back to; v4/v5 settings are kept as they
+ * were (the engine included). An unknown engine (a newer version's) becomes the default.
+ */
+function migrateV6(state: unknown): Partial<ChatState> {
+  const o = (state ?? {}) as Partial<ChatState> & { previousEngine?: unknown };
+  const engine: ChatEngine = isEngine(o.engine) ? o.engine : 'gemma';
+  const chosen = isEngine(o.engine) && o.engineChosen === true;
+  return {
+    ...o,
+    engine,
+    engineChosen: chosen,
+    previousEngine: sanitizePrevious(o.previousEngine, engine, chosen),
+  };
+}
 
 const GEMMA_ID_MAP: Record<string, string> = {
   'gemma3:270m': 'gemma3-270m',
@@ -136,6 +251,7 @@ export const useChatStore = create<ChatState>()(
       // Gemma runs inside the app with nothing to install, so new installs start on it.
       engine: 'gemma',
       engineChosen: false,
+      previousEngine: { engine: 'gemma', chosen: false },
       gemmaModel: 'gemma3-1b',
       verifierProvider: defaultVerifier,
       verifierModel: DEFAULT_MODELS[defaultVerifier],
@@ -147,8 +263,28 @@ export const useChatStore = create<ChatState>()(
       documents: [],
       memoryLength: 'medium',
       summary: null,
+      summarySkip: null,
       answering: false,
-      setEngine: (engine) => set({ engine, engineChosen: true }),
+      stopAnswer: null,
+      stopped: false,
+      epoch: 0,
+      setEngine: (engine) => {
+        const s = get();
+        set({
+          engine,
+          engineChosen: true,
+          // Choosing the local runtime remembers what was in use before it.
+          previousEngine:
+            engine === 'local'
+              ? previousOf(s.engine, s.engineChosen, s.previousEngine)
+              : { engine, chosen: true },
+        });
+      },
+      leaveLocal: () => {
+        const s = get();
+        if (s.engine !== 'local') return;
+        set({ engine: s.previousEngine.engine, engineChosen: s.previousEngine.chosen });
+      },
       setGemmaModel: (gemmaModel) => set({ gemmaModel }),
       setVerifierProvider: (verifierProvider) =>
         set({ verifierProvider, verifierModel: DEFAULT_MODELS[verifierProvider] }),
@@ -161,7 +297,8 @@ export const useChatStore = create<ChatState>()(
         set({ messages: [...get().messages, message].slice(-STORED_MESSAGES) }),
       updateMessage: (id, patch) =>
         set({ messages: get().messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) }),
-      clearMessages: () => set({ messages: [], summary: null }),
+      clearMessages: () =>
+        set({ messages: [], summary: null, summarySkip: null, epoch: get().epoch + 1 }),
       setMemoryLength: (memoryLength) =>
         set({ memoryLength: memoryLength === 'long' ? 'long' : 'medium' }),
       setSummary: (summary) => set({ summary }),
@@ -174,14 +311,15 @@ export const useChatStore = create<ChatState>()(
     }),
     {
       name: 'stemsim.teacher-chat',
-      // v5 adds the memory length, the summary and "save history"; v4 settings are kept.
-      version: 5,
+      // v5 adds the memory length, the summary and "save history"; v6 the local runtime engine.
+      version: 6,
       storage: createJSONStorage(() => localStorage),
       migrate: (state, version) =>
-        (version >= 4 ? state : migrateChatSettings(state)) as Partial<ChatState>,
+        migrateV6(version >= 4 ? state : migrateChatSettings(state)) as ChatState,
       partialize: ({
         engine,
         engineChosen,
+        previousEngine,
         gemmaModel,
         verifierProvider,
         verifierModel,
@@ -194,6 +332,7 @@ export const useChatStore = create<ChatState>()(
       }) => ({
         engine,
         engineChosen,
+        previousEngine,
         gemmaModel,
         verifierProvider,
         verifierModel,

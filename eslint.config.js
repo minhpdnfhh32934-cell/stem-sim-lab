@@ -13,6 +13,8 @@ export default tseslint.config(
       'src-tauri/gen',
       'coverage',
       'playwright-report',
+      // Git-ignored agent scratch files and logs (CLAUDE.md "Two-machine workflow").
+      '.agent-logs',
     ],
   },
   {

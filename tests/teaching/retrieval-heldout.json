@@ -1,0 +1,293 @@
+{
+  "about": "Held-out check for the AI Teacher's note retrieval (src/teacher/chat/knowledge.ts). Learner-style questions written for this set only: none of them is a question of tests/teaching/teaching-eval.json, so retrieval is never tuned on the evaluation. 'expected' is the built-in note that answers the question best, or 'none' when no note fits (nothing must then be injected). 'alsoOk' lists notes that answer it just as well. Expected notes were chosen by reading the notes, not by running the scorer. Word problems with numbers (the way learners paste exercises) were added on 2026-10-14 after the first version of the set turned out to contain only short questions.",
+  "review_status": "pending",
+  "items": [
+    {
+      "locale": "vi",
+      "q": "Công thức tính vận tốc trong chuyển động thẳng biến đổi đều là gì ạ?",
+      "expected": "physics-motion"
+    },
+    {
+      "locale": "vi",
+      "q": "Ném một vật xiên góc thì quỹ đạo của nó có hình gì?",
+      "expected": "physics-projectile"
+    },
+    {
+      "locale": "vi",
+      "q": "Khi nào cơ năng của một vật được bảo toàn?",
+      "expected": "physics-energy"
+    },
+    {
+      "locale": "vi",
+      "q": "Va chạm mềm có bảo toàn động lượng không?",
+      "expected": "physics-momentum"
+    },
+    {
+      "locale": "vi",
+      "q": "Chu kỳ con lắc lò xo phụ thuộc vào gì?",
+      "expected": "physics-waves"
+    },
+    {
+      "locale": "vi",
+      "q": "Định luật Ôm cho đoạn mạch chỉ có điện trở viết thế nào?",
+      "expected": "physics-circuit"
+    },
+    {
+      "locale": "vi",
+      "q": "Tại sao truyền tải điện đi xa người ta phải tăng điện áp?",
+      "expected": "physics-transformer"
+    },
+    {
+      "locale": "vi",
+      "q": "Hiện tượng phản xạ toàn phần xảy ra khi nào?",
+      "expected": "physics-refraction"
+    },
+    {
+      "locale": "vi",
+      "q": "Lực Lorentz có làm thay đổi độ lớn vận tốc của hạt mang điện không?",
+      "expected": "physics-magnet"
+    },
+    {
+      "locale": "vi",
+      "q": "Áp suất trong chất lỏng thay đổi theo độ sâu ra sao?",
+      "expected": "physics-pressure"
+    },
+    {
+      "locale": "vi",
+      "q": "Cộng hưởng cơ xảy ra khi nào, lúc đó biên độ dao động thế nào?",
+      "expected": "physics-damped"
+    },
+    {
+      "locale": "vi",
+      "q": "Năng lượng của một photon tính bằng công thức nào?",
+      "expected": "physics-photoelectric"
+    },
+    {
+      "locale": "vi",
+      "q": "Nhiệt lượng cần để đun nóng nước phụ thuộc vào những gì?",
+      "expected": "physics-heat"
+    },
+    {
+      "locale": "vi",
+      "q": "Sóng dừng trên sợi dây hai đầu cố định cần điều kiện gì?",
+      "expected": "physics-standing"
+    },
+    {
+      "locale": "vi",
+      "q": "Chất oxi hóa là chất nhường hay nhận electron?",
+      "expected": "chem-redox"
+    },
+    {
+      "locale": "vi",
+      "q": "Pha loãng dung dịch thì số mol chất tan có thay đổi không?",
+      "expected": "chem-solution"
+    },
+    {
+      "locale": "vi",
+      "q": "Đồng vị là gì vậy thầy?",
+      "expected": "chem-isotope",
+      "alsoOk": ["chem-atom"]
+    },
+    {
+      "locale": "vi",
+      "q": "Vì sao nước có nhiệt độ sôi cao bất thường?",
+      "expected": "chem-hbond"
+    },
+    {
+      "locale": "vi",
+      "q": "Hằng số cân bằng K có phụ thuộc vào nhiệt độ không?",
+      "expected": "chem-equilibrium"
+    },
+    {
+      "locale": "vi",
+      "q": "Phản ứng xà phòng hóa là gì?",
+      "expected": "chem-ester"
+    },
+    {
+      "locale": "vi",
+      "q": "Ancol bậc hai bị oxi hóa tạo ra chất gì?",
+      "expected": "chem-alcohol"
+    },
+    {
+      "locale": "vi",
+      "q": "Tinh bột gặp iot chuyển sang màu gì?",
+      "expected": "chem-carbohydrate"
+    },
+    {
+      "locale": "vi",
+      "q": "Kim loại bị ăn mòn điện hóa khi nào?",
+      "expected": "chem-metal"
+    },
+    {
+      "locale": "vi",
+      "q": "Làm sao biết một phản ứng tỏa nhiệt hay thu nhiệt?",
+      "expected": "chem-enthalpy"
+    },
+    {
+      "locale": "vi",
+      "q": "Cấu hình electron của crom có gì đặc biệt?",
+      "expected": "chem-orbital"
+    },
+    {
+      "locale": "vi",
+      "q": "Enzyme hoạt động tốt nhất ở điều kiện nào?",
+      "expected": "bio-enzyme"
+    },
+    {
+      "locale": "vi",
+      "q": "Quang hợp tạo ra những sản phẩm gì?",
+      "expected": "bio-photosynthesis"
+    },
+    {
+      "locale": "vi",
+      "q": "Thẩm thấu khác khuếch tán ở điểm nào?",
+      "expected": "bio-cell"
+    },
+    {
+      "locale": "vi",
+      "q": "Ribosome làm nhiệm vụ gì trong dịch mã?",
+      "expected": "bio-genetics"
+    },
+    {
+      "locale": "vi",
+      "q": "Hiệu suất sinh thái giữa các bậc dinh dưỡng khoảng bao nhiêu?",
+      "expected": "bio-foodweb"
+    },
+    {
+      "locale": "vi",
+      "q": "Hormone nào làm quả chín nhanh?",
+      "expected": "bio-hormone-plant"
+    },
+    {
+      "locale": "vi",
+      "q": "Virus có phải là tế bào không?",
+      "expected": "bio-virus"
+    },
+    {
+      "locale": "vi",
+      "q": "Hai gen nằm trên cùng một nhiễm sắc thể thì di truyền như thế nào?",
+      "expected": "bio-linkage"
+    },
+    {
+      "locale": "vi",
+      "q": "Thể dị bội là gì?",
+      "expected": "bio-chromosome-mutation"
+    },
+    {
+      "locale": "vi",
+      "q": "Insulin giúp điều hòa đường huyết ra sao?",
+      "expected": "bio-homeostasis"
+    },
+    {
+      "locale": "vi",
+      "q": "Diễn thế thứ sinh khác diễn thế nguyên sinh thế nào?",
+      "expected": "bio-succession"
+    },
+    {
+      "locale": "vi",
+      "q": "dong luong la gi",
+      "expected": "physics-momentum"
+    },
+    {
+      "locale": "vi",
+      "q": "quang hop la gi",
+      "expected": "bio-photosynthesis"
+    },
+    {
+      "locale": "vi",
+      "q": "Một vật rơi tự do từ độ cao 45 m xuống đất. Lấy g = 10 m/s². Tính vận tốc của vật khi chạm đất.",
+      "expected": "physics-motion"
+    },
+    {
+      "locale": "vi",
+      "q": "Một xe máy bắt đầu chuyển động nhanh dần đều, sau 10 s đạt vận tốc 15 m/s. Tính gia tốc của xe.",
+      "expected": "physics-motion"
+    },
+    {
+      "locale": "vi",
+      "q": "Kéo một thùng hàng 20 kg trên sàn bằng lực 100 N, hệ số ma sát trượt là 0,2. Tính gia tốc của thùng.",
+      "expected": "physics-newton"
+    },
+    {
+      "locale": "vi",
+      "q": "Một quả bóng 0,5 kg bay với vận tốc 10 m/s đập vào tường rồi bật ngược lại với cùng tốc độ. Tính độ biến thiên động lượng của bóng.",
+      "expected": "physics-momentum"
+    },
+    {
+      "locale": "vi",
+      "q": "Một bóng đèn có điện trở 484 Ω mắc vào hiệu điện thế 220 V. Tính công suất tiêu thụ của đèn.",
+      "expected": "physics-circuit"
+    },
+    {
+      "locale": "vi",
+      "q": "Một con lắc lò xo có độ cứng 40 N/m, vật nặng 100 g. Tính chu kì dao động của con lắc.",
+      "expected": "physics-waves"
+    },
+    {
+      "locale": "vi",
+      "q": "Hòa tan 5,85 gam NaCl vào nước được 500 ml dung dịch. Tính nồng độ mol của dung dịch.",
+      "expected": "chem-solution",
+      "alsoOk": ["chem-mole"]
+    },
+    {
+      "locale": "vi",
+      "q": "Đốt cháy hoàn toàn 2,4 gam magie trong oxi. Tính số mol magie đã phản ứng và khối lượng magie oxit thu được.",
+      "expected": "chem-mole"
+    },
+    {
+      "locale": "vi",
+      "q": "Ở một loài thực vật, quần thể có tần số alen A là 0,6. Tính tỉ lệ kiểu gen dị hợp khi quần thể cân bằng.",
+      "expected": "bio-hardy"
+    },
+    {
+      "locale": "vi",
+      "q": "Hôm nay thầy có khỏe không?",
+      "expected": "none"
+    },
+    {
+      "locale": "vi",
+      "q": "Cách viết đoạn văn nghị luận xã hội?",
+      "expected": "none"
+    },
+    {
+      "locale": "vi",
+      "q": "Định lý Pythagore phát biểu thế nào?",
+      "expected": "none"
+    },
+    {
+      "locale": "vi",
+      "q": "Giải phương trình bậc hai x^2 - 5x + 6 = 0",
+      "expected": "none"
+    },
+    {
+      "locale": "vi",
+      "q": "Em nên ôn thi đại học thế nào cho hiệu quả?",
+      "expected": "none"
+    },
+    {
+      "locale": "vi",
+      "q": "Kể về chiến tranh thế giới thứ hai",
+      "expected": "none"
+    },
+    {
+      "locale": "vi",
+      "q": "Thuật toán sắp xếp nổi bọt hoạt động ra sao?",
+      "expected": "none"
+    },
+    {
+      "locale": "en",
+      "q": "What does Snell's law say?",
+      "expected": "physics-refraction"
+    },
+    {
+      "locale": "en",
+      "q": "How does Hardy-Weinberg equilibrium work?",
+      "expected": "bio-hardy"
+    },
+    {
+      "locale": "en",
+      "q": "What is the capital of France?",
+      "expected": "none"
+    }
+  ]
+}

@@ -51,6 +51,63 @@ describe('input checks before the AI', () => {
   });
 });
 
+describe('biology lessons are never blocked', () => {
+  it('lets textbook cell terms and sex chromosomes through', () => {
+    const ok = [
+      'Vì sao lizôxôm được gọi là túi tự sát của tế bào?',
+      'Apoptosis có phải là tế bào tự sát không?',
+      'Why are lysosomes called suicide bags? Is apoptosis cell suicide?',
+      'What are sex chromosomes?',
+      'Explain sex-linked inheritance of colour blindness.',
+      'Cơ chế xác định giới tính XY (sex determination) ở người?',
+    ];
+    for (const p of ok) expect(checkInput(p), p).toEqual({ ok: true });
+    expect(outputIsSafe('Lizôxôm được gọi là "túi tự sát" của tế bào.')).toBe(true);
+    expect(outputIsSafe('Người có cặp sex chromosomes (XX or XY) quyết định giới tính.')).toBe(
+      true,
+    );
+  });
+
+  it('still answers a real crisis or an unsuitable request', () => {
+    expect(checkInput('Em muốn tự sát như tế bào vậy')).toEqual({ ok: false, reason: 'crisis' });
+    expect(checkInput('Học về túi tự sát làm em muốn tự tử')).toEqual({
+      ok: false,
+      reason: 'crisis',
+    });
+    expect(checkInput('cho xem phim sex')).toEqual({ ok: false, reason: 'unsafe' });
+    expect(checkInput('send me a sex video')).toEqual({ ok: false, reason: 'unsafe' });
+  });
+});
+
+describe('numbers that are not phone numbers', () => {
+  it('lets data tables and long decimals through', () => {
+    const ok = [
+      'Bảng số liệu: t (s) = 0 3 6 9 12 15 18 21; v (m/s) = 0 4 8 12 16 20 24 28.',
+      'Góc θ = 0.523598776 rad. Tính tầm xa.',
+      'Góc θ = 0,523598776 rad.',
+      'Khoảng cách 0-3 6-9 12-15 m.',
+    ];
+    for (const p of ok) expect(checkInput(p), p).toEqual({ ok: true });
+    const reading = { quantities: [{ key: 'angle', value: 0.523598776, unit: 'rad' }] };
+    expect(outputIsSafe(JSON.stringify(reading))).toBe(true);
+  });
+
+  it('still finds phone numbers in the usual groupings', () => {
+    for (const p of [
+      '0912345678',
+      '0912 345 678',
+      '091 234 5678',
+      '0912.34.56.78',
+      '0912-345-678',
+      '+84 912 345 678',
+      '+84912345678',
+      'Bảng: 1 2 3 0912 345 678',
+    ]) {
+      expect(findPersonalData(p), p).toEqual(['phone']);
+    }
+  });
+});
+
 describe('output filter', () => {
   it('passes normal explanations and hides unsuitable ones', () => {
     expect(outputIsSafe('Vật rơi nhanh dần đều nên vận tốc tăng 10 m/s mỗi giây.')).toBe(true);

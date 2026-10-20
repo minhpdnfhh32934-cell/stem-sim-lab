@@ -241,6 +241,11 @@ body[data-resizing] .splitter {
   color: var(--conf-exact);
   border-color: color-mix(in srgb, var(--conf-exact) 40%, transparent);
 }
+/* The AI chosen on this computer (Gemma, Ollama…): chosen, not probed, so not the green 'connected'. */
+.ai-status[data-status='local'] {
+  color: var(--conf-qual);
+  border-color: color-mix(in srgb, var(--conf-qual) 40%, transparent);
+}
 
 /* ───────────── Left sidebar ───────────── */
 .sidebar {
@@ -544,6 +549,11 @@ body[data-resizing] .splitter {
   width: var(--right-w);
   flex: none;
 }
+/* Room under the last line for the "Hỏi thầy" button in the Inspector's bottom-right corner
+   (chat.css): scrolled to the end, nothing is under it. */
+.shell[data-inspector] .inspector .panel__scroll {
+  padding-bottom: calc(var(--chat-bubble) + 2 * var(--chat-bubble-gap));
+}
 .science-intro {
   margin: 0 0 var(--space-3);
   font-size: var(--text-sm);
@@ -670,6 +680,7 @@ body[data-resizing] .splitter {
     height: var(--target);
   }
   .segmented__item,
+  .subject-switch__item,
   .tree__chapter-btn,
   .tree__topic--button,
   .tabs__tab,

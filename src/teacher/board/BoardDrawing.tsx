@@ -29,28 +29,31 @@ export function BoardDrawing({ element: e, shown }: { element: DrawElement; show
 
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.map((x) => String(x)) : []);
 
+/** A table at its natural size, scaled like its box when it was too wide for its place. */
 function TableDrawing({ element: e, shown }: { element: DrawElement; shown: boolean }) {
   const header = strings(e.spec.header);
   const rows = Array.isArray(e.spec.rows) ? e.spec.rows.map(strings) : [];
   return (
-    <table className={shown ? 'board__table is-shown' : 'board__table'}>
-      <thead>
-        <tr>
-          {header.map((h, i) => (
-            <th key={i}>{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r, i) => (
-          <tr key={i}>
-            {r.map((c, j) => (
-              <td key={j}>{c}</td>
+    <div className="board__table-scale" style={{ transform: `scale(${String(e.scale)})` }}>
+      <table className={shown ? 'board__table is-shown' : 'board__table'}>
+        <thead>
+          <tr>
+            {header.map((h, i) => (
+              <th key={i}>{h}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i}>
+              {r.map((c, j) => (
+                <td key={j}>{c}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

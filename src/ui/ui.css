@@ -254,6 +254,16 @@ select:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
+/* Touch screens and pens: form fields are full-size targets (>= 40px) wherever they are. */
+@media (any-pointer: coarse) {
+  select,
+  input[type='number'],
+  input[type='text'],
+  input[type='search'],
+  input[type='range'] {
+    min-height: var(--target);
+  }
+}
 @supports (appearance: base-select) {
   select,
   ::picker(select) {
@@ -511,6 +521,12 @@ select:disabled {
 .tooltip {
   position: fixed;
   z-index: 1000;
+  /* Undo the popover UA box (inset: 0, margin: auto, border, overflow) */
+  inset: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  overflow: visible;
   width: max-content;
   max-width: 18rem;
   padding: 5px 9px;
@@ -635,6 +651,13 @@ select:disabled {
   background: var(--bg-panel);
   color: var(--text);
   box-shadow: var(--shadow-sm);
+}
+/* Held by a lesson: the chosen value stays readable, the others look unavailable. */
+.segmented__item:disabled {
+  cursor: not-allowed;
+}
+.segmented__item:disabled:not([aria-checked='true']) {
+  opacity: 0.55;
 }
 
 /* Sliding indicator (src/ui/slidingIndicator.ts, gallery pattern 039): the checked pill glides
@@ -1044,4 +1067,83 @@ kbd {
   :root {
     --glass-bg: var(--bg-panel);
   }
+}
+
+/* Name labels over a 3D picture (src/ui/three/labelLayer.ts): page-drawn, sharp, never caught
+   by the pointer (the canvas below stays draggable), leader lines from the part to the name. */
+.three-labels,
+.three-labels__lines {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.three-labels__lines {
+  width: 100%;
+  height: 100%;
+}
+.three-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2px 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  color: var(--text);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: var(--glass-blur);
+  will-change: transform;
+}
+.three-label__line {
+  stroke: var(--text-muted);
+  stroke-width: 1.25;
+}
+.three-label__dot {
+  fill: var(--text);
+  stroke: var(--bg-panel);
+  stroke-width: 1;
+}
+/* Small tags over a 3D picture (src/ui/three/tagLayer.ts): base letters, short names and
+   position numbers, page-drawn and never caught by the pointer. A halo in the stage colour keeps
+   them readable over any colour of the picture. */
+.three-tags {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.three-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow:
+    0 0 3px var(--bg-panel),
+    0 0 2px var(--bg-panel),
+    0 0 1px var(--bg-panel);
+  will-change: transform;
+}
+.three-tag--word {
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg-panel) 82%, transparent);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-shadow: none;
+}
+.three-tag--tick {
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 500;
 }

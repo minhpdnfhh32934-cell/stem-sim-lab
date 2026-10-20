@@ -5,8 +5,43 @@ import { useSimStore } from '@/app/sim/simStore';
 
 const localized = (value: { vi: string; en: string }, locale: Locale) => value[locale];
 
+/**
+ * Context text of a full-page screen (e.g. Science Studio), built when a question is sent.
+ * `maxChars` is the chat's screen budget for that question (undefined = no limit): the source
+ * fits its most important facts within it instead of being cut blindly from the end.
+ */
+export type ScreenContextSource = (locale: Locale, maxChars?: number) => string;
+
+const pageSources = new Set<ScreenContextSource>();
+
+/**
+ * A full-page screen that covers the lab describes itself while it is mounted; the lab's state
+ * is then not what the learner sees, so it is not shared. Returns the unregister function.
+ */
+export function provideScreenContext(source: ScreenContextSource): () => void {
+  pageSources.add(source);
+  return () => {
+    pageSources.delete(source);
+  };
+}
+
+function pageContext(locale: Locale, maxChars?: number): string {
+  const parts: string[] = [];
+  for (const source of pageSources) {
+    try {
+      const text = source(locale, maxChars);
+      if (text) parts.push(text);
+    } catch {
+      // A broken source shares nothing rather than stopping the question.
+    }
+  }
+  return parts.join('\n');
+}
+
 /** Context taken from app-owned state. No screenshot, clipboard or hidden window data is read. */
-export function screenContext(locale: Locale): string {
+export function screenContext(locale: Locale, maxChars?: number): string {
+  const page = pageContext(locale, maxChars);
+  if (page) return page;
   const workspace = useWorkspaceStore.getState();
   const sim = useSimStore.getState();
   const module = useModuleStore.getState().active;

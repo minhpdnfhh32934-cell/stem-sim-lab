@@ -47,6 +47,18 @@ const vi = {
     errorHint: 'Máy chủ AI báo lỗi. Mở Cài đặt → Kết nối AI để kiểm tra lại.',
     badKeyHint:
       '{provider} từ chối khóa API (khóa sai hoặc đã bị tắt). Kiểm tra lại trong Cài đặt.',
+    local: 'AI trên máy: {name}',
+    localHint:
+      'Đã chọn {label} tại {address}. SimLab chỉ gửi đề bài tới chương trình này trên máy em, không tự gửi lên mạng, và chỉ hỏi nó khi em dùng AI.',
+    localMissing: 'AI trên máy: chưa chọn',
+    localMissingHint:
+      'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có gì được gửi đi. Bấm để chọn trong Cài đặt → AI trên máy khác.',
+    gemma: 'Gemma trên máy',
+    gemmaHint:
+      'Dùng Gemma cục bộ · mô hình: {model}. Đề bài được xử lý ngay trên máy này, không gửi lên mạng.',
+    gemmaMissing: 'Gemma: chưa tải',
+    gemmaMissingHint:
+      'Em đã chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có gì được gửi đi. Bấm để tải trong Cài đặt.',
   },
   sidebar: {
     regionLabel: 'Thư viện chủ đề',
@@ -229,6 +241,11 @@ const vi = {
       voiceHint: 'Giọng đọc tiếng Việt của AI Teacher và cách đọc.',
       safetyHint: 'Xác nhận độ tuổi, điều khoản, trang quyền riêng tư và nhật ký an toàn.',
       shortcutsHint: 'Các phím tắt chính khi làm mô phỏng.',
+      versions: 'Lịch sử phiên bản',
+      versionsHint: 'Những gì đã thay đổi qua từng phiên bản SimLab và bản nào đã phát hành.',
+      runtimes: 'AI trên máy khác (Ollama, LM Studio, llama.cpp)',
+      runtimesHint:
+        'Tìm, kiểm tra và chọn chương trình AI em đã cài trên máy này. Câu hỏi không gửi lên mạng.',
     },
     lookCard: 'Chế độ và màu sắc',
     textCard: 'Chữ và ngôn ngữ',
@@ -284,7 +301,7 @@ const vi = {
     aiTimeout: 'Thời gian chờ (giây)',
     aiDailyCap: 'Số lượt AI tối đa mỗi ngày',
     aiDailyCapHint:
-      'Mỗi lần đọc đề dùng khoảng 2–4 lượt. Đặt 0 để không giới hạn. Giới hạn giúp không dùng hết lượt miễn phí hoặc tốn tiền ngoài ý muốn.',
+      'Mỗi lần đọc đề dùng khoảng 2–4 lượt. Đặt 0 để không giới hạn. Giới hạn giúp không dùng hết lượt miễn phí hoặc tốn tiền ngoài ý muốn. AI chạy trên máy (Gemma, Ollama, LM Studio, llama.cpp) không tính vào giới hạn này.',
     aiUsageToday: 'Hôm nay đã dùng {count}/{cap} lượt.',
     aiUsageTodayNoCap: 'Hôm nay đã dùng {count} lượt.',
     aiClearCache: 'Xóa các đề đã lưu ({count})',
@@ -524,6 +541,7 @@ const vi = {
     retry: 'Thử lại',
     manual: 'Tự dựng cảnh',
     openSettings: 'Mở Kết nối AI',
+    openRuntimes: 'Mở AI trên máy khác',
     stage: {
       classify: 'Đang xác định chủ đề…',
       extract: 'Đang trích xuất dữ kiện…',
@@ -550,12 +568,15 @@ const vi = {
       keychain: 'Không đọc được kho khóa của hệ điều hành.',
       invalidJson: 'AI trả lời sai khuôn mẫu 3 lần liền nên mình dừng lại.',
       unavailable: 'Chức năng AI này chưa dùng được ở đây.',
+      internal:
+        'Ứng dụng gặp trục trặc khi hỏi AI (không phải do mạng). Bạn thử lại nhé; nếu vẫn vậy, hãy cài lại bản mới nhất của ứng dụng.',
       quota: 'AI đang hết lượt dùng miễn phí trong lúc này (giới hạn của nhà cung cấp).',
       badKey: 'Nhà cung cấp AI từ chối khóa API (khóa sai, đã bị xóa hoặc bị tắt).',
       badModel: 'Không tìm thấy mô hình AI đã chọn.',
       dailyLimit: 'Đã dùng hết số lượt AI cho hôm nay ({detail}).',
       empty: 'Bạn nhập đề bài trước giúp mình nhé.',
       tooLong: 'Đề bài dài quá (tối đa {max} ký tự) — bạn rút gọn giúp mình nhé.',
+      local: '{detail}',
     },
     hint: {
       notAllowed: 'Phần AI cần xác nhận đủ 18 tuổi. Mở Cài đặt → An toàn & quyền riêng tư.',
@@ -578,6 +599,8 @@ const vi = {
       dailyLimit:
         'Giới hạn này đặt trong Cài đặt → Kết nối AI ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       other: 'Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
+      local:
+        'AI trên máy không tự chuyển sang API. Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
     },
     hintClaude: {
       missingKey:
@@ -696,6 +719,60 @@ const vi = {
     available: 'Có bản cập nhật {version}',
     browserOnly: 'Cập nhật trong app chỉ có ở bản cài trên máy.',
   },
+  whatsnew: {
+    title: 'SimLab đã được cập nhật',
+    intro: 'Đây là những điểm mới kể từ lần trước bạn mở SimLab.',
+    notesLabel: 'Ghi chú cập nhật',
+    version: 'Phiên bản {version}',
+    releasedOn: 'Ngày phát hành: {date}',
+    releaseDateUnknown: 'Ngày phát hành: chưa xác minh',
+    highlights: 'Điểm nổi bật',
+    allChanges: 'Tất cả thay đổi',
+    where: 'Bạn luôn xem lại được trong Cài đặt → Lịch sử phiên bản.',
+    details: 'Xem chi tiết',
+    later: 'Để sau',
+    close: 'Đóng',
+    menu: 'Có gì mới',
+    menuButton: 'Tệp (có điểm mới trong SimLab)',
+    category: {
+      added: 'Tính năng mới',
+      improved: 'Cải tiến',
+      fixed: 'Sửa lỗi',
+      security: 'An toàn và bảo mật',
+      performance: 'Hiệu năng',
+      changed: 'Thay đổi',
+      deprecated: 'Ngừng hỗ trợ',
+      knownIssues: 'Vấn đề đã biết',
+    },
+    status: {
+      released: 'Đã phát hành',
+      mergedNotReleased: 'Chưa phát hành riêng',
+      inReview: 'Đang xét duyệt',
+      development: 'Bản dựng thử',
+      unverified: 'Chưa xác minh',
+    },
+    statusHint: {
+      mergedNotReleased:
+        'Phiên bản này không có bản phát hành riêng; các thay đổi đến với người dùng ở bản phát hành sau.',
+      inReview: 'Phiên bản này đang được xét duyệt, chưa phát hành.',
+      development: 'Bản dựng thử đầu tiên, không phát hành.',
+      unverified:
+        'Số phiên bản này chỉ có trong tài liệu hoặc một tệp ZIP; chưa xác minh được bằng một bản phát hành.',
+    },
+    history: {
+      current: 'Bạn đang dùng phiên bản {version}.',
+      currentBadge: 'Bản đang dùng',
+      currentHint:
+        'Bạn đang dùng bản này. Ngày phát hành của một bản chỉ được ghi vào lịch sử ở các bản sau.',
+      draft: 'Ghi chú này là bản nháp, chưa được duyệt để công bố.',
+      loading: 'Đang đọc lịch sử phiên bản…',
+      unavailable:
+        'Chưa đọc được lịch sử phiên bản. Mô phỏng và các tính năng khác vẫn dùng bình thường.',
+      listLabel: 'Các phiên bản, mới nhất ở trên',
+      releasesPage: 'Mở trang phát hành trên GitHub',
+      showWhatsNew: 'Xem lại hộp "Có gì mới"',
+    },
+  },
   safety: {
     aiLabel: 'Nội dung do AI hỗ trợ',
     aiLabelHint: 'Phần này do AI đọc hoặc viết. AI có thể sai: hãy kiểm tra lại.',
@@ -746,10 +823,14 @@ const vi = {
       title: 'Quyền riêng tư & dùng AI an toàn',
       sendTitle: 'Ứng dụng gửi gì ra ngoài?',
       send1:
-        'Chỉ khi bạn bấm "Phân tích đề" hoặc "AI diễn giải": nội dung đề bài và các kết quả đã tính được gửi đến nhà cung cấp AI đang chọn. Không gửi tên, tài khoản hay tệp của bạn.',
+        'Chỉ khi bạn bấm "Phân tích đề", "AI diễn giải" hoặc hỏi AI Teacher bằng AI trực tuyến: đề bài hoặc câu hỏi và các kết quả đã tính được gửi đến nhà cung cấp AI đang chọn. Không gửi tên, tài khoản hay tệp của bạn. Ô "Dữ liệu của em đi đâu?" trong Cài đặt liệt kê theo cài đặt hiện tại.',
       send2:
         'Kiểm tra cập nhật: ứng dụng hỏi trang phát hành của dự án trên GitHub xem có bản mới không (không gửi dữ liệu học tập).',
       send3: 'Ứng dụng không có quảng cáo, không có tài khoản, không gửi thống kê sử dụng.',
+      send4:
+        'AI trên máy khác (Ollama, LM Studio, llama.cpp — bạn tự cài): câu hỏi chỉ được gửi tới chương trình đó trên chính máy này, không bao giờ tự chuyển sang AI trực tuyến. Chỉ khi bạn bật Think, bản nháp mới được gửi tới AI trực tuyến để xem lại (tra Wikipedia và giọng Gemini cũng chỉ gửi khi bạn bật). Chương trình đó có chính sách riêng; tính năng cloud của nó có thể đưa dữ liệu ra ngoài (ứng dụng từ chối mô hình cloud của Ollama).',
+      send5:
+        '"Khoanh để hỏi" trên bảng: chữ và công thức trong vùng khoanh được gửi kèm câu hỏi tới AI đang chọn (và AI rà soát khi bật Think). Ảnh vùng khoanh chỉ được tạo khi vùng đó không có chữ, và chỉ gửi cho AI đọc ảnh chạy trên máy này — không bao giờ lên mạng.',
       storeTitle: 'Lưu gì trên máy này?',
       store1: 'Khóa API: trong kho khóa của hệ điều hành; màn hình chỉ hiện 4 ký tự cuối.',
       store2:
@@ -823,7 +904,7 @@ const vi = {
     usePhoto: 'Lấy ảnh',
     reading: 'Đang đọc ảnh…',
     privacy:
-      'Ảnh được gửi cho AI đang dùng (Gemma trên máy hoặc API cloud) chỉ để đọc đề, không dùng việc khác.',
+      'Ảnh được gửi cho AI đang dùng (Gemma trên máy, chương trình AI em chọn trên máy này, hoặc API cloud) chỉ để đọc đề, không dùng việc khác.',
     denied: 'Không mở được camera. Hãy cho phép trình duyệt/ứng dụng dùng camera rồi thử lại.',
     retry: 'Thử lại',
     blockedHint:
@@ -833,8 +914,14 @@ const vi = {
     needVision:
       'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
+    outputUnsafe:
+      'Chữ đọc được từ ảnh có nội dung không phù hợp nên mình không đưa vào ô đề bài. Hãy chụp một đề bài khác.',
     badKey: 'Khóa API bị từ chối (sai khóa hoặc hết quyền). Kiểm tra lại khóa trong Cài đặt.',
     badModel: 'Tên model API không đúng. Kiểm tra lại ô Mô hình trong Cài đặt.',
+    localNoVision:
+      'Mô hình AI trên máy em đã chọn chưa đọc được ảnh (hoặc chưa xác minh được). Để đọc ảnh cần khóa API hoặc Gemma đọc ảnh (E2B) trong ứng dụng. Khi em dùng AI trên máy, SimLab không gửi ảnh lên mạng.',
+    localNotSelected:
+      'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên ảnh chưa được gửi đi đâu. Chọn trong Cài đặt → AI trên máy khác.',
   },
   landing: {
     eyebrow: 'Học khoa học bằng khám phá',
@@ -845,7 +932,500 @@ const vi = {
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
     teacherTitle: 'AI Teacher',
     teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
+    studioTitle: 'Science Studio',
+    studioBody:
+      'Bài học có hướng dẫn: dự đoán, thí nghiệm, quan sát số đo rồi giải thích và lưu báo cáo.',
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
+  },
+  studio: {
+    title: 'Science Studio',
+    subtitle:
+      'Bài học có hướng dẫn: dự đoán, làm thí nghiệm, quan sát số đo, giải thích và kết luận. Mọi số liệu đều do mô phỏng tính.',
+    tabsLabel: 'Chọn môn trong Studio',
+    tabs: {
+      chemistry: 'Hóa học',
+      biology: 'Sinh học',
+      physics: 'Vật lí',
+      authoring: 'Soạn bài',
+    },
+    pick: 'Chọn bài học',
+    difficulty: {
+      intro: 'Làm quen',
+      core: 'Cơ bản',
+      stretch: 'Nâng cao',
+    },
+    review: {
+      pending:
+        'Nội dung bài này chưa được kiểm duyệt bởi giáo viên — số liệu vẫn do mô phỏng tính.',
+      verified: 'Nội dung bài này đã được giáo viên kiểm duyệt.',
+    },
+    preparing: {
+      title: 'Đang chuẩn bị',
+      chemistry:
+        'Studio Hóa học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Hóa học trong Phòng thí nghiệm.',
+      biology:
+        'Studio Sinh học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Sinh học trong Phòng thí nghiệm.',
+      physics: 'Chưa có bài Vật lí nào trong Studio.',
+      openLab: 'Mở Phòng thí nghiệm',
+    },
+    notes: {
+      private:
+        'Ghi chú của em lưu trên máy này. Chỉ khi em bật “Lấy thông tin từ màn hình” trong khung Thầy AI và tự gửi câu hỏi, ghi chú mới được gửi kèm.',
+    },
+    flow: {
+      label: 'Các bước của bài học',
+      back: 'Quay lại',
+      next: 'Tiếp: {step}',
+      steps: {
+        predict: 'Dự đoán',
+        interact: 'Thí nghiệm',
+        observe: 'Quan sát',
+        explain: 'Giải thích',
+        conclude: 'Kết luận',
+        report: 'Báo cáo',
+      },
+      titles: {
+        predict: 'Em đoán điều gì sẽ xảy ra?',
+        interact: 'Làm thí nghiệm',
+        observe: 'Quan sát số đo và đồ thị',
+        explain: 'Giải thích bằng dữ liệu',
+        conclude: 'Kết luận',
+        report: 'Lưu và báo cáo',
+      },
+      leads: {
+        predict: 'Chọn một dự đoán trước khi chạy thí nghiệm. Không sao nếu đoán chưa đúng.',
+        interact: 'Chỉnh biến số rồi chạy thí nghiệm. Mô phỏng tính cả hai điều kiện A và B.',
+        observe: 'Mọi con số và đường đồ thị dưới đây do mô phỏng tính.',
+        explain: 'Dùng các số đo vừa quan sát để giải thích bằng lời của em.',
+        conclude: 'So sánh dự đoán của em với kết quả mô phỏng.',
+        report: 'Báo cáo được tạo từ chính phiên học này. Em có thể lưu thành tệp hoặc sao chép.',
+      },
+      blockers: {
+        prediction: 'Chọn một dự đoán để đi tiếp.',
+        observation: 'Chạy thí nghiệm để có số đo.',
+        explanation: 'Viết giải thích ít nhất {n} ký tự.',
+        activity: 'Hoàn thành hoạt động của bài để đi tiếp.',
+        conclusion: 'Viết kết luận của em để đi tiếp.',
+      },
+    },
+    explain: {
+      label: 'Giải thích của em',
+      placeholder: 'Ví dụ: Số đo cho thấy… nên…',
+      count: 'Đã viết {n}/{min} ký tự tối thiểu.',
+      hintN: 'Gợi ý {n}:',
+      showHint: 'Xem gợi ý {n}',
+    },
+    conclude: {
+      predicted: 'Em đã dự đoán: {label}',
+      computed: 'Kết quả mô phỏng: {label}',
+      match: 'Dự đoán của em khớp với kết quả mô phỏng.',
+      miss: 'Dự đoán chưa khớp — đây là lúc học được nhiều nhất. Xem lại số đo nhé.',
+      none: 'Kết quả mô phỏng không trùng với lựa chọn nào, nên không so sánh được.',
+      label: 'Kết luận của em',
+      placeholder: 'Em rút ra được điều gì từ thí nghiệm?',
+      expected: 'Kết luận tham khảo',
+    },
+    report: {
+      done: 'Em đã hoàn thành bài học này.',
+      preview: 'Bản xem trước báo cáo',
+      save: 'Lưu báo cáo (.md)',
+      restart: 'Học lại từ đầu',
+      copy: 'Sao chép báo cáo',
+      copied: 'Đã sao chép báo cáo.',
+      copyFailed: 'Chưa sao chép được. Em chọn chữ trong bản xem trước rồi bấm Ctrl+C nhé.',
+      generated: 'Cập nhật lúc {time}',
+      review: {
+        pending: 'Kịch bản chưa được kiểm duyệt bởi giáo viên.',
+        verified: 'Kịch bản đã được giáo viên kiểm duyệt.',
+      },
+      objectives: 'Mục tiêu',
+      prediction: 'Dự đoán',
+      predicted: 'Người học chọn: {label}',
+      noPrediction: 'Chưa có dự đoán.',
+      engine: 'Số đo từ mô phỏng',
+      engineNote:
+        'Mọi số trong mục này do mô phỏng "{title}" (engine {model}) tính; không có số nào do AI hay người học nhập.',
+      engineFacts: 'Kết quả từ thư viện dữ liệu của ứng dụng',
+      libraryNote:
+        'Mọi nội dung trong mục này chép từ thư viện dữ liệu ("{title}", {model}) hoặc là kết quả kiểm tra tự động của ứng dụng; không có nội dung nào do AI hay người học viết, và không có số đo nào.',
+      noEngine: 'Chưa chạy thí nghiệm.',
+      condition: 'Điều kiện {id}: {inputs}',
+      col: {
+        quantity: 'Đại lượng',
+        condition: 'Điều kiện',
+        value: 'Giá trị (mô phỏng)',
+        check: 'Kiểm tra chéo (lời giải giải tích)',
+      },
+      checkOk: '{value} (khớp)',
+      checkDiff: '{value} (lệch {diff})',
+      explanation: 'Giải thích của người học',
+      empty: '(chưa viết)',
+      ai: 'Văn bản do AI viết',
+      aiNote: 'Do AI tạo — không phải số đo; cần đối chiếu với số liệu ở trên.',
+      conclusion: 'Kết luận',
+      computed: 'Kết quả mô phỏng: {label}',
+      verdictMatch: 'Dự đoán khớp với kết quả mô phỏng.',
+      verdictMiss: 'Dự đoán chưa khớp với kết quả mô phỏng.',
+      verdictNone: 'Kết quả mô phỏng không trùng với lựa chọn nào.',
+      yourConclusion: 'Kết luận của người học:',
+      expected: 'Kết luận tham khảo của kịch bản: {text}',
+      assumptions: 'Giả định và giới hạn',
+      sources: 'Nguồn',
+      noSources: 'Chưa có nguồn.',
+      footer: 'Báo cáo được tạo trên máy này từ phiên học; ứng dụng không gửi nó đi đâu.',
+      unverified: 'Dữ liệu chưa được kiểm duyệt',
+      unverifiedNote:
+        'Các mục dưới đây chưa được kiểm duyệt; nguồn của chúng ở mục “Nguồn”. Số đo do mô phỏng tính không nằm trong danh sách này.',
+    },
+    unverified: {
+      scenario:
+        'Nội dung bài “{title}” (mục tiêu, câu hỏi, gợi ý, kết luận tham khảo) — chưa được kiểm duyệt',
+      teacher: 'Nội dung bài “{title}” do giáo viên soạn — chưa được kiểm duyệt',
+      record: 'Dữ liệu “{title}” ({model}) — chưa được kiểm duyệt',
+    },
+    ask: {
+      button: 'Hỏi thầy',
+      hint: 'Thầy AI chỉ thấy số đo và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
+      questions: {
+        predict:
+          'Thầy ơi, em đang làm bài “{title}”, bước Dự đoán. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
+        interact:
+          'Thầy ơi, em đang làm bài “{title}”, bước Thí nghiệm. Em nên làm gì và để ý điều gì?',
+        observe:
+          'Thầy ơi, em đang làm bài “{title}”, bước Quan sát. Thầy giúp em đọc kết quả mô phỏng vừa có được không?',
+        explain:
+          'Thầy ơi, em đang làm bài “{title}”, bước Giải thích. Em nên dựa vào kết quả nào để giải thích?',
+        conclude:
+          'Thầy ơi, em đang làm bài “{title}”, bước Kết luận. Thầy giúp em so sánh dự đoán của em với kết quả mô phỏng nhé.',
+        report:
+          'Thầy ơi, em đang làm bài “{title}”, bước Báo cáo. Báo cáo của em còn thiếu ý gì quan trọng?',
+      },
+    },
+    ai: {
+      header: '[Science Studio — dữ liệu do ứng dụng SimLab cung cấp]',
+      lesson: 'Bài học: {title} — môn {subject}, {level}',
+      step: 'Học sinh đang ở bước {n}/{total}: {step}',
+      rules:
+        'Chỉ dùng số trong mục DỮ KIỆN DO MÔ PHỎNG TÍNH. Ghi chú của học sinh và văn bản AI không phải số đo. Thiếu dữ liệu thì nói rõ; không tự tạo số đo, phản ứng hay hiện tượng. Không nói dữ liệu chưa kiểm duyệt là đã được kiểm chứng.',
+      unverified: 'DỮ LIỆU CHƯA ĐƯỢC KIỂM DUYỆT:',
+      engine: 'DỮ KIỆN DO MÔ PHỎNG TÍNH (hoặc chép từ thư viện dữ liệu của ứng dụng):',
+      noEngine: 'Chưa có: học sinh chưa chạy thí nghiệm.',
+      record: '- {title} (mô hình {model}):',
+      quantity: '{label} [{condition}] = {value}',
+      learner: 'GHI CHÚ CỦA HỌC SINH (không phải dữ kiện):',
+      prediction: 'Dự đoán đã chọn: {label}',
+      noPrediction: 'Dự đoán: chưa chọn.',
+      explanation: 'Giải thích: “{text}”',
+      conclusion: 'Kết luận: “{text}”',
+      note: 'Ghi chú: “{text}”',
+      aiText: 'VĂN BẢN AI ĐÃ VIẾT TRƯỚC ĐÓ (không phải số đo, chưa kiểm chứng):',
+      cut: '(…đã rút gọn)',
+    },
+    physics: {
+      conditions:
+        'Điều kiện A: giá trị em chọn. Điều kiện B: giống A nhưng {param} gấp {factor} lần.',
+      predictLabel: 'Dự đoán của em',
+      locked:
+        'Dự đoán đã được ghi lại khi chạy thí nghiệm. Muốn đoán lại, hãy chọn "Học lại từ đầu" ở bước Báo cáo.',
+      condition: 'Điều kiện {id}',
+      run: 'Chạy thí nghiệm',
+      running: 'Đang tính…',
+      ran: 'Đã có số đo của cả hai điều kiện. Em có thể chỉnh biến số rồi chạy lại, hoặc sang bước Quan sát.',
+      reset: 'Đặt lại',
+      errors: {
+        invalid: 'Giá trị này mô phỏng chưa chạy được. Em thử chỉnh lại biến số nhé.',
+        unfinished: 'Mô phỏng chưa kết thúc trong thời gian cho phép, nên chưa có số đo.',
+        binding: 'Bài học này chưa khớp với mô phỏng hiện có. Nhờ giáo viên kiểm tra kịch bản.',
+      },
+      loadFailed: 'Mình chưa mở được mô phỏng này. Em thử lại sau nhé.',
+      noRun: 'Chưa có số đo. Quay lại bước Thí nghiệm và chạy thí nghiệm.',
+      tableCaption: 'Số đo do mô phỏng tính (engine {model})',
+      col: {
+        quantity: 'Đại lượng',
+      },
+      input: 'đầu vào',
+      crossCheck: 'Kiểm tra chéo với lời giải giải tích: lệch lớn nhất {gap}.',
+      timeAxis: 'Thời gian t',
+      openInLab: 'Chạy {id} trong Phòng thí nghiệm',
+      fact: '{q} (mô phỏng {model}): {value}',
+      ratioOf: 'Tỉ số B/A — {q}',
+    },
+    chem: {
+      choices: {
+        precipitate: 'Xuất hiện kết tủa',
+        noPrecipitate: 'Không thấy kết tủa',
+      },
+      predictLabel: 'Dự đoán của em',
+      locked:
+        'Dự đoán đã được ghi lại khi em trộn dung dịch lần đầu. Muốn đoán lại, hãy chọn "Học lại từ đầu" ở bước Báo cáo.',
+      leads: {
+        interact:
+          'Lấy dung dịch từ giá cho vào ống nghiệm, rồi lắc để trộn. Hiện tượng lấy từ thư viện phản ứng.',
+        observe:
+          'Hiện tượng, phương trình và nguồn dưới đây chép từ thư viện phản ứng — không do AI viết, không có số đo.',
+        explain: 'Dùng hiện tượng và phương trình vừa quan sát để giải thích bằng lời của em.',
+      },
+      blockers: {
+        observation: 'Trộn đúng cặp dung dịch của câu hỏi để có quan sát.',
+      },
+      rack: 'Giá hóa chất',
+      solution: 'Dung dịch {formula}',
+      add: 'Thêm dung dịch {formula}',
+      mix: 'Lắc để trộn',
+      empty: 'Rửa ống nghiệm',
+      tube: 'Ống nghiệm',
+      tubeEmpty: 'Ống nghiệm trống.',
+      tubeHas: 'Trong ống: {list}.',
+      tubeMixed: 'Đã trộn.',
+      tubePrecipitate: 'Thư viện ghi có kết tủa (hình chỉ là kí hiệu, không vẽ màu và lượng thật).',
+      procedureTitle: 'Các bước làm',
+      procedure: {
+        first: 'Cho dung dịch {formula} vào ống nghiệm.',
+        second: 'Thêm dung dịch {formula}.',
+        mix: 'Lắc nhẹ để trộn rồi quan sát.',
+        wash: 'Rửa ống trước khi thử cặp dung dịch khác.',
+      },
+      safety:
+        'Đây là bàn thí nghiệm ảo. Không tự làm lại với hóa chất thật nếu không có giáo viên hướng dẫn và đồ bảo hộ.',
+      errors: {
+        unknownReagent: 'Chất này không có trên giá hóa chất của bài.',
+        sameReagent: 'Ống đã có dung dịch {formula} rồi — hãy chọn dung dịch khác.',
+        tubeFull: 'Ống đã có hai dung dịch. Lắc để trộn, hoặc rửa ống để làm lại.',
+        alreadyMixed: 'Ống đã trộn xong. Rửa ống trước khi thử cặp khác.',
+        emptyTube: 'Ống nghiệm đang trống — hãy thêm dung dịch trước.',
+        needTwo: 'Cần hai dung dịch trong ống mới trộn được.',
+      },
+      orderDiffers:
+        'Em cho chất theo thứ tự khác với các bước của bài. Bản ghi thư viện không ghi thứ tự cho chất.',
+      targetDone:
+        'Đã có quan sát cho câu hỏi dự đoán. Em có thể thử thêm cặp khác hoặc sang bước Quan sát.',
+      notTarget:
+        'Đây không phải cặp dung dịch của câu hỏi dự đoán — kết quả vẫn được ghi lại để em so sánh.',
+      unsupported:
+        'Bàn thí nghiệm không tính lượng chất, nồng độ, khối lượng kết tủa, chất dư hay chất hết, pH, nhiệt độ, nhiệt lượng, thể tích khí hay hiệu suất — ứng dụng không đưa ra các số này.',
+      mixes: 'Các lần trộn đã ghi lại',
+      targetTag: 'Cặp của câu hỏi',
+      noMix: 'Chưa trộn cặp dung dịch nào. Quay lại bước Thí nghiệm.',
+      facts: {
+        order: 'Thứ tự cho chất',
+        equation: 'Phương trình (thư viện)',
+        balance: 'Kiểm tra cân bằng',
+        observation: 'Hiện tượng (thư viện)',
+        conditions: 'Điều kiện (thư viện)',
+        review: 'Trạng thái kiểm duyệt',
+        result: 'Kết quả',
+      },
+      orderText: 'Cho lần lượt: {list}',
+      balanceOk: 'Bảo toàn nguyên tố và điện tích: đúng (kiểm tra tự động).',
+      balanceBad:
+        'Phương trình trong thư viện chưa cân bằng ({list}) — cần giáo viên kiểm tra, không dùng để kết luận.',
+      review: {
+        pending: 'Bản ghi thư viện chưa được kiểm duyệt.',
+        verified: 'Bản ghi thư viện đã được kiểm duyệt.',
+      },
+      unknown:
+        'Cặp dung dịch này chưa có trong cơ sở dữ liệu đã kiểm chứng — ứng dụng không đoán hiện tượng. Điều đó không có nghĩa là chúng không phản ứng.',
+      ambiguous:
+        'Thư viện có {n} bản ghi cho các chất này, khác nhau ở điều kiện. Bàn thí nghiệm chưa chọn được điều kiện nên không hiển thị hiện tượng.',
+      sources: 'Nguồn của bản ghi',
+      binding:
+        'Bài học này chưa khớp với thư viện phản ứng hiện có. Nhờ giáo viên kiểm tra kịch bản.',
+      factLine: 'Hiện tượng theo thư viện: {text}',
+    },
+    bio: {
+      predictLabel: 'Dự đoán của em',
+      locked:
+        'Dự đoán đã được ghi lại khi em bắt đầu làm với mô hình. Muốn đoán lại, hãy chọn "Học lại từ đầu" ở bước Báo cáo.',
+      leads: {
+        interact:
+          'Xoay, phóng to hình 3D và chuyển qua các kì. Ghi lại kì em quan sát, rồi tìm các bộ phận theo chức năng.',
+        observe:
+          'Số đếm dưới đây do mô hình 3D đếm; mô tả kì và chức năng bộ phận chép từ dữ liệu của ứng dụng — không do AI viết.',
+        explain:
+          'Dùng số tâm động trên mặt phẳng xích đạo và mô tả kì để giải thích bằng lời của em.',
+      },
+      blockers: {
+        observation: 'Ghi lại kì trả lời câu hỏi dự đoán để có quan sát.',
+        activity: 'Trả lời đủ các chức năng rồi bấm "Kiểm tra".',
+      },
+      binding:
+        'Bài học này chưa khớp với mô hình nguyên phân 3D hiện có. Nhờ giáo viên kiểm tra kịch bản.',
+      pending: 'Mô tả kì và chức năng bộ phận chưa được kiểm duyệt.',
+      verified: 'Mô tả kì và chức năng bộ phận đã được kiểm duyệt.',
+      sources: 'Nguồn: {list}',
+      q: {
+        diploid: 'Bộ NST 2n',
+        chromosomes: 'Số NST trong hình (mỗi NST một tâm động)',
+        double: 'Số NST kép',
+        onPlane: 'Số tâm động nằm trên mặt phẳng xích đạo',
+      },
+      facts: {
+        cell: 'Loại tế bào',
+        note: 'Mô tả kì (dữ liệu)',
+        review: 'Trạng thái kiểm duyệt',
+      },
+      stages: {
+        title: 'Quan sát các kì',
+        help: 'Chuyển kì bằng nút ‹ › hoặc dải kì dưới hình 3D (ở hình 2D: nút "Bước trước", "Bước tiếp theo" trên hình). Mỗi lần ghi lại, mô hình đếm số NST kép và số tâm động nằm trên mặt phẳng xích đạo.',
+        current: 'Kì đang xem: {stage}',
+        record: 'Ghi lại kì này',
+        answered: 'Đã có quan sát trả lời câu hỏi dự đoán. Em có thể ghi thêm kì khác để so sánh.',
+        notAnswer: 'Kì này chưa trả lời câu hỏi dự đoán — kết quả vẫn được ghi lại để em so sánh.',
+        lockedCell:
+          'Bài học giữ mô hình ở {cell}, 2n = {diploid}: nút "Loại tế bào" bị khoá trong bài. Khi em rời bước này, mô hình trở lại cài đặt của em.',
+        otherCell: 'Mô hình đang hiện một tế bào khác với bài học, nên chưa ghi được kì này.',
+      },
+      match: {
+        title: 'Tìm bộ phận theo chức năng',
+        help: 'Đọc từng chức năng, chọn bộ phận đó trong hình 3D (hoặc trong danh sách "Bộ phận tế bào"), rồi bấm nút của chức năng ấy.',
+        selected: 'Bộ phận đang chọn: {name}',
+        noSelection: 'Chưa chọn bộ phận nào trong mô hình.',
+        task: 'Chức năng {n}',
+        assign: 'Trả lời: {name}',
+        assignLabel: 'Trả lời chức năng {n} bằng bộ phận đang chọn ({name})',
+        answer: 'Em chọn: {name}',
+        unanswered: 'chưa trả lời',
+        check: 'Kiểm tra',
+        score: 'Đúng {correct}/{total}.',
+        retry: 'Em có thể sửa câu trả lời rồi kiểm tra lại.',
+        right: 'Đúng',
+        wrong: 'Chưa đúng',
+        fact: '{result}. Em chọn: {chosen}. Chức năng theo dữ liệu: {role}',
+      },
+      observe: {
+        stages: 'Các kì đã ghi lại',
+        none: 'Chưa ghi lại kì nào. Quay lại bước Thí nghiệm.',
+        answerTag: 'Trả lời câu hỏi',
+        illustrative:
+          'Kích thước, vị trí và thời gian trong hình 3D là minh họa, không theo tỉ lệ. Số NST và số NST kép được đếm từ mô hình (chính xác). Số tâm động trên mặt phẳng xích đạo lấy theo ý nghĩa của từng kì trong mô hình (ở kì giữa, khi thoi phân bào đã kéo xong, mọi NST kép được giữ trên mặt phẳng) — không đo từ vị trí trong hình.',
+      },
+      factLine: 'Theo mô hình, ở {stage}: {onPlane}/{total} tâm động nằm trên mặt phẳng xích đạo.',
+    },
+    teacher: 'Nội dung do giáo viên soạn — không phải kết quả của mô phỏng.',
+    authoring: {
+      intro:
+        'Tạo kịch bản học tập cho một Studio. Em chỉ chọn được những gì mô phỏng chạy được; mọi số đo vẫn do mô phỏng tính. Bài soạn chỉ lưu trên máy này.',
+      create: 'Tạo bài mới',
+      pickSubject: 'Chọn môn cho bài mới',
+      import: 'Nhập tệp JSON',
+      empty: 'Chưa có bài nào. Bấm "Tạo bài mới" và chọn môn để bắt đầu.',
+      listLabel: 'Bài đã soạn',
+      fileFilter: 'Kịch bản Science Studio',
+      saved: 'Đã lưu bài "{title}".',
+      imported: 'Đã nhập bài "{title}".',
+      exported: 'Đã xuất tệp {name}.',
+      importFailed: 'Không nhập được tệp này:',
+      actionFailed: 'Chưa làm được việc này:',
+      actions: {
+        preview: 'Xem trước',
+        edit: 'Sửa',
+        duplicate: 'Nhân bản',
+        export: 'Xuất JSON',
+        delete: 'Xóa',
+        confirmDelete: 'Xóa hẳn bài này',
+        cancel: 'Hủy',
+      },
+      editor: {
+        newTitle: 'Bài mới — {subject}',
+        editTitle: 'Sửa bài — {subject}',
+        teacherPart: 'Phần chữ do giáo viên viết',
+        teacherHint:
+          'Mục tiêu, gợi ý, câu hỏi, kết luận mong đợi, nguồn và giả định là nội dung của giáo viên: Studio ghi rõ như vậy và không trình bày chúng như kết quả mô phỏng.',
+        enginePart: 'Phần mô phỏng sẽ chạy',
+        engineHint: 'Chỉ chọn được những gì mô hình đã có, nên bài luôn chạy được trong Studio.',
+        vi: 'Tiếng Việt',
+        en: 'Tiếng Anh (không bắt buộc)',
+        perLine: 'Mỗi dòng một ý.',
+        save: 'Lưu bài',
+        saving: 'Đang kiểm tra…',
+        cancel: 'Hủy',
+        issues: 'Cần sửa trước khi lưu:',
+        fields: {
+          title: 'Tên bài',
+          objectives: 'Mục tiêu',
+          hints: 'Gợi ý từng bước',
+          questions: 'Câu hỏi gợi mở',
+          assumptions: 'Giả định',
+          limits: 'Giới hạn của mô phỏng',
+          expectedConclusion: 'Kết luận mong đợi',
+          question: 'Câu hỏi dự đoán',
+          sources: 'Nguồn khoa học',
+          sourcesHint: 'Mỗi dòng một nguồn: "Tên tài liệu | https://…" (đường dẫn không bắt buộc).',
+          level: 'Cấp học',
+          difficulty: 'Độ khó',
+          minChars: 'Số kí tự tối thiểu của phần giải thích',
+        },
+        physics: {
+          preset: 'Câu hỏi dự đoán của cảnh mô phỏng',
+          presetHint:
+            'Chỉ các cảnh đã có cách đọc số đo từ mô phỏng được kiểm tra trong Studio. Lần B = lần A với {param} nhân {factor}.',
+          loading: 'Đang tải cảnh mô phỏng…',
+          failed: 'Không tải được cảnh mô phỏng.',
+          params: 'Đại lượng của cảnh',
+          control: 'Học sinh được chỉnh',
+          start: 'Giá trị ban đầu',
+          range: 'Từ {min} đến {max} {unit}',
+          sceneDefault: 'Mặc định của cảnh: {value} {unit}',
+        },
+        chemistry: {
+          target: 'Phản ứng của câu hỏi',
+          targetHint:
+            'Chỉ các phản ứng tạo kết tủa trong thư viện đã trích nguồn: chỉ chúng mới xác nhận được câu trả lời "có kết tủa".',
+          order: 'Thứ tự cho vào ống: {first} trước, rồi {second}.',
+          swap: 'Đổi thứ tự',
+          rack: 'Dung dịch trên giá',
+          rackHint: 'Từ 2 đến 8 dung dịch; hai dung dịch của câu hỏi luôn có mặt.',
+        },
+        biology: {
+          cellType: 'Loại tế bào',
+          pairs: 'Số cặp nhiễm sắc thể',
+          pairsValue: 'n = {n} (2n = {twoN})',
+          parts: 'Bộ phận học sinh cần tìm',
+          partsHint: 'Từ 2 đến 8 bộ phận mà mô hình 3D có cho loại tế bào này.',
+          answerNote:
+            'Câu trả lời được tính từ mô hình: kì mà các tâm động nằm trên mặt phẳng xích đạo.',
+        },
+      },
+      errors: {
+        titleRequired: 'Hãy đặt tên bài (tiếng Việt).',
+        objectiveRequired: 'Hãy viết ít nhất một mục tiêu.',
+        conclusionRequired: 'Hãy viết kết luận mong đợi (tiếng Việt).',
+        questionRequired: 'Hãy viết câu hỏi dự đoán (tiếng Việt).',
+        enLines: 'Ô tiếng Anh của "{field}" có nhiều dòng hơn ô tiếng Việt.',
+        minChars: 'Số kí tự tối thiểu phải là số nguyên từ 0 đến {max}.',
+        sourceUrl: 'Nguồn ở dòng {line} có đường dẫn không hợp lệ.',
+        controlsRequired: 'Hãy cho học sinh chỉnh ít nhất một đại lượng.',
+        initialNumber: 'Giá trị ban đầu của {param} chưa phải là số.',
+        initialRange:
+          '{param} phải từ {min} đến {max} {unit} (để lần B vẫn nằm trong thang đo của cảnh).',
+        unknownParam: 'Cảnh không có đại lượng "{key}" để chỉnh.',
+        notPreset: 'Cảnh và cách đo này chưa có trong Studio Vật lí, nên bài không chạy được.',
+        sceneMissing: 'Không tải được cảnh mô phỏng của bài.',
+        binding: 'Cảnh mô phỏng không khớp với bài: {detail}',
+        inventorySize: 'Giá cần từ 2 đến 8 dung dịch.',
+        reagentNotAllowed: '"{formula}" không phải dung dịch của thư viện cho bàn thí nghiệm.',
+        targetInInventory: 'Câu hỏi phải dùng hai dung dịch khác nhau có trên giá.',
+        targetNotAllowed: 'Phản ứng của câu hỏi phải là một phản ứng tạo kết tủa trong thư viện.',
+        targetMismatch: 'Hai dung dịch của câu hỏi không khớp với phản ứng đã chọn trong thư viện.',
+        partsSize: 'Hãy chọn từ 2 đến 8 bộ phận.',
+        bioUnknownPart: 'Có bộ phận mà mô hình 3D không có.',
+        bioWrongCell: 'Có bộ phận không thuộc loại tế bào đã chọn.',
+        bioNoAnswer: 'Mô hình không có kì nào trả lời được câu hỏi này.',
+        schema: 'Dữ liệu không đúng cấu trúc: {detail}',
+        badJson: 'Tệp không phải JSON hợp lệ.',
+        notScenarioFile: 'Tệp không phải kịch bản Science Studio (phiên bản 1).',
+        tooLarge: 'Tệp quá lớn: tệp kịch bản tối đa {kb} KB.',
+        readFailed: 'Không đọc được tệp (tệp có thể quá lớn hoặc đang bị khóa).',
+        lessonTooLarge:
+          'Bài quá dài để lưu trong ứng dụng (tối đa {kb} KB). Hãy rút gọn các phần chữ.',
+        textTooLong: '"{field}" có đoạn dài quá {max} kí tự. Hãy rút gọn.',
+        listTooLong: '"{field}" có quá {max} mục.',
+        tooMany:
+          'Ứng dụng đã lưu {max} bài soạn, là số tối đa. Hãy xuất bài cũ ra tệp rồi xóa bớt.',
+        storageFull:
+          'Không ghi được vào bộ nhớ của ứng dụng (có thể đã đầy hoặc bị chặn), nên thay đổi này chưa được lưu. Hãy xuất bài cũ ra tệp, xóa bớt rồi thử lại.',
+      },
+    },
   },
   chat: {
     label: 'Trò chuyện với AI Teacher',
@@ -861,6 +1441,13 @@ const vi = {
     engineLabel: 'Chọn mô hình AI',
     cloud: 'API',
     gemma: 'Gemma cục bộ',
+    local: 'AI trên máy khác',
+    localMissingNotice:
+      'Em đã chọn AI trên máy khác nhưng chưa chọn chương trình và mô hình, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
+    localOnlyRuntime:
+      'SimLab chỉ gửi câu hỏi tới {name} trên máy này ({address}), không tự gửi lên mạng.',
+    localRuntimeHere: 'SimLab gửi câu hỏi tới {name} trên máy này ({address}).',
+    voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
     noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
       'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
@@ -871,9 +1458,19 @@ const vi = {
     thinkNoVerifier:
       'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
+    fallbackTarget: '{name} (dự phòng khi {provider} hết lượt)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
     sentToWithScreen:
       'Câu hỏi, ngữ cảnh màn hình và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
+    sentToWithBoard:
+      'Câu hỏi kèm phần chữ em khoanh trên bảng và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
+    boardChip: 'Hỏi về: «{excerpt}»',
+    boardChipPicture: 'Hỏi về: hình em khoanh trên bảng',
+    boardChipPictureWords:
+      'Hỏi bằng lời về hình em khoanh: thầy không xem được hình, chỉ biết các bước quanh đó',
+    boardChipRemove: 'Bỏ chỗ đã khoanh',
+    boardRef: 'Về chỗ em khoanh: «{excerpt}»',
+    boardRefPicture: 'Về hình em khoanh trên bảng',
     welcomeTitle: 'Hỏi bài theo cách của em',
     welcomeBody: 'Bật “Lấy thông tin từ màn hình” nếu câu hỏi liên quan đến mô phỏng đang mở.',
     welcomeBodyTeacher:
@@ -885,6 +1482,14 @@ const vi = {
     },
     modelMeta: 'Mô hình: {model}',
     checkedMeta: 'Đã rà soát: {model}',
+    continuedUnreviewed: 'Phần viết tiếp chưa được rà soát.',
+    reviewSkippedPicture:
+      'Chưa rà soát: câu hỏi về hình em khoanh chỉ được trả lời trên máy này, không gửi lên mạng để kiểm tra chéo.',
+    notReadAloud:
+      'Mình không đọc to câu trả lời này: giọng đọc đang chọn chạy trên mạng, còn câu trả lời về hình em khoanh chỉ ở lại trên máy này. Muốn nghe, em chọn giọng trên máy hoặc giọng Windows trong Cài đặt → Giọng nói.',
+    voiceSettings: 'Chọn giọng',
+    continuePictureLocal:
+      'Câu trả lời về hình em khoanh chỉ viết tiếp được khi em chọn “Gemma cục bộ” hoặc “AI trên máy khác”.',
     references: 'Nguồn kiến thức',
     thinking: 'Thầy đang suy nghĩ…',
     truncatedNote: 'Câu trả lời dài nên đã dừng giữa chừng.',
@@ -896,9 +1501,28 @@ const vi = {
     think: 'Think',
     thinkTitle: 'Dùng API thứ hai để rà soát câu trả lời',
     twoApis: '· 2 API',
+    oneApiReview: '· 1 API rà soát',
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
+    openSimulation: 'Xem mô phỏng: {title}',
+    factsTitle: 'Kết quả do SimLab tính (chính xác, không phải AI)',
+    facts: {
+      balanced: 'Phương trình cân bằng: {equation}',
+      unbalanced: 'SimLab chưa cân bằng được “{input}”: hãy kiểm tra lại công thức trong đề.',
+    },
+    stop: 'Dừng',
+    stopLabel: 'Dừng câu trả lời đang viết',
+    stopped: 'Đã dừng câu trả lời. Em có thể hỏi lại hoặc hỏi câu khác.',
+    retry: 'Hỏi lại',
+    missingDataTitle: 'SimLab nhắc (không phải AI)',
+    missingData:
+      'Đề bài có thể còn thiếu số liệu: SimLab chưa thấy con số nào trong câu hỏi. Nếu đề có cho số, em ghi thêm (kèm đơn vị) rồi gửi lại nhé.',
+    unverifiedTitle: 'SimLab kiểm tra (không phải AI)',
+    unverifiedNumbers: 'Số do AI tự đưa ra (chưa kiểm chứng): {numbers}',
+    unverifiedMore: '… và {count} số khác',
+    unverifiedHint:
+      'SimLab không thấy các số này trong câu hỏi, cuộc trò chuyện, ghi chú tham khảo hay kết quả SimLab tính. Một phép tính được bảng giảng đánh dấu đúng vẫn có thể dùng sai công thức. Em hãy tự kiểm tra lại.',
     errors: {
       cloudOff: 'AI trực tuyến đang tắt. Bật nhà cung cấp AI trong Cài đặt hoặc chọn Gemma cục bộ.',
       notAllowed:
@@ -908,6 +1532,14 @@ const vi = {
         'Gemma chưa được tải hoặc trình duyệt chưa hỗ trợ WebGPU. Vào Cài đặt → AI Teacher để kiểm tra.',
       webgpu:
         'Trình duyệt hoặc máy này không hỗ trợ WebGPU nên chưa chạy được Gemma ngay trên máy.',
+      gemmaStalled:
+        'Gemma không viết thêm chữ nào trong một lúc lâu nên mình đã dừng và khởi động lại nó. Em hỏi lại nhé; nếu vẫn chậm, chọn câu trả lời "Ngắn" hoặc mô hình nhỏ hơn trong Cài đặt.',
+      gemmaGpu:
+        'Card đồ họa vừa ngắt Gemma (hết bộ nhớ hoặc driver khởi động lại). Em có thể hỏi lại; nếu lặp lại, hãy đóng bớt ứng dụng hoặc chọn mô hình nhỏ hơn.',
+      gemmaGpuBlocked:
+        'Card đồ họa đã bị treo khi chạy Gemma. Để máy không bị khởi động lại, Gemma tạm dừng tới khi em mở lại app. Hãy chọn card rời trong Cài đặt → GPU cho Gemma, dùng mô hình nhỏ hơn, hoặc hỏi bằng API.',
+      gemmaFailed:
+        'Gemma gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI Teacher.',
       crisis:
         'Mình rất tiếc em đang gặp khó khăn. Hãy nói ngay với người lớn em tin tưởng. Nếu em đang nguy hiểm, gọi 111 hoặc 115. Tin nhắn này không được gửi tới AI.',
       personal:
@@ -918,9 +1550,85 @@ const vi = {
         'Chưa có khóa API thứ hai. Mở Cài đặt → AI Teacher để kết nối nhà cung cấp kiểm tra.',
       filtered:
         'Câu trả lời bị ẩn vì không qua được bộ lọc an toàn. Hãy thử hỏi lại hoặc báo giáo viên.',
+      noAnswer:
+        'Mình chưa nhận được phần bài giảng nào để hiện ra: AI chỉ gửi phần nháp hoặc lời nhận xét. Em hỏi lại nhé; nếu lặp lại, thử tắt Think hoặc chọn mô hình khác trong Cài đặt.',
       screenPersonal:
         'Ngữ cảnh màn hình có thể chứa thông tin cá nhân nên chưa được gửi. Xóa thông tin đó hoặc tắt nút lấy thông tin màn hình.',
       screenUnsafe: 'Ngữ cảnh màn hình chưa vượt qua kiểm tra an toàn nên không được gửi.',
+      boardPersonal:
+        'Phần chữ em khoanh trên bảng có thể chứa thông tin cá nhân nên chưa được gửi. Em khoanh chỗ khác hoặc gõ câu hỏi nhé.',
+      boardUnsafe:
+        'Phần chữ em khoanh trên bảng chưa vượt qua kiểm tra an toàn nên chưa được gửi. Em khoanh chỗ khác hoặc gõ câu hỏi nhé.',
+      boardNoPicture:
+        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay, nên chưa có gì được gửi đi. Em gõ điều em muốn hỏi về chỗ này nhé.',
+      boardPicture:
+        'Mình chưa tạo được ảnh vùng em khoanh nên chưa hỏi thầy. Em gõ điều em muốn hỏi về chỗ này nhé.',
+      continuePictureLocal:
+        'Câu trả lời về hình em khoanh chỉ viết tiếp được bằng “Gemma cục bộ” hoặc “AI trên máy khác”, nên chưa có gì được gửi đi.',
+      localDown:
+        'Mình chưa kết nối được tới {name} trên máy này: có thể chương trình chưa mở. Em mở {name} rồi hỏi lại nhé. Câu hỏi không được gửi đi nơi khác.',
+      localModelMissing:
+        '{name} chưa có mô hình em đã chọn. Tải hoặc nạp mô hình trong chính {name}, hoặc chọn mô hình khác trong Cài đặt → AI trên máy khác.',
+      localLoading: '{name} đang nạp mô hình vào bộ nhớ. Em đợi một chút rồi hỏi lại nhé.',
+      localStalled:
+        '{name} không viết thêm chữ nào trong một lúc lâu nên mình đã dừng chờ. Có thể máy đang bận hoặc mô hình quá nặng: em hỏi lại, hoặc chọn mô hình nhỏ hơn.',
+      localAuth:
+        '{name} đang bật khóa bảo vệ nên từ chối câu hỏi. SimLab không lưu khóa cho AI trên máy: nếu muốn dùng với SimLab, hãy tắt khóa trong {name}.',
+      localContext:
+        'Câu hỏi cùng phần trò chuyện trước dài quá sức chứa của mô hình. Em xóa bớt cuộc trò chuyện, chọn Trí nhớ “Vừa”, hoặc chọn mô hình có ngữ cảnh lớn hơn.',
+      localContextTask:
+        'Việc này dài quá sức chứa của mô hình em chọn trong {name}. Hãy chọn mô hình có ngữ cảnh lớn hơn (hoặc tăng độ dài ngữ cảnh trong chính {name}) ở Cài đặt → AI trên máy khác.',
+      localNoAnswer:
+        '{name} chưa viết ra câu trả lời nào: có thể mô hình chỉ suy nghĩ nháp hoặc dừng trước khi viết. Em thử lại nhé; nếu lặp lại, chọn mô hình khác trong Cài đặt → AI trên máy khác.',
+      localRemote:
+        'Mô hình này chạy trên mạng chứ không chạy trên máy em, nên SimLab không gửi câu hỏi tới nó. Hãy chọn một mô hình chạy trên máy.',
+      localNotRuntime:
+        'Địa chỉ đã chọn không trả lời như {name}. Bấm “Tìm trên máy này” trong Cài đặt → AI trên máy khác để chọn lại.',
+      localNotSelected:
+        'Em chưa chọn chương trình và mô hình AI trên máy, nên chưa có câu hỏi nào được gửi đi. Chọn trong Cài đặt → AI trên máy khác.',
+      localFailed:
+        '{name} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → AI trên máy khác để kiểm tra.',
+      localUpdate:
+        'Ứng dụng trên máy này cần được cập nhật mới dùng được AI trên máy khác. Hãy cài bản SimLab mới.',
+      /**
+       * An online provider could not answer: {who} is the provider ("Gemini"), the reviewer
+       * ("Bên rà soát (Claude)") or both providers when the fallback may have answered; {page} is
+       * the Settings page that helps.
+       */
+      cloud: {
+        reviewer: 'Bên rà soát ({name})',
+        withFallback: '{name} (hoặc {fallback} dự phòng)',
+        timeout:
+          '{who} trả lời quá lâu nên mình đã thôi chờ. Em hỏi lại nhé; nếu lặp lại, hãy hỏi ngắn hơn hoặc tăng thời gian chờ trong Cài đặt → {page}.',
+        stalled:
+          '{who} đang viết thì chậm hẳn lại nên mình đã dừng giữa chừng. Em bấm “Hỏi lại” nhé, hoặc xin một câu trả lời ngắn hơn.',
+        network:
+          '{who} chưa trả lời được vì kết nối mạng bị gián đoạn. Em kiểm tra kết nối Internet rồi hỏi lại nhé; nếu mạng vẫn ổn mà lỗi lặp lại, mở Cài đặt → {page} để kiểm tra khóa.',
+        quota:
+          '{who} báo đã hết lượt dùng (hết hạn mức miễn phí hoặc hết tín dụng). Em đợi một lúc rồi hỏi lại, hoặc chọn nhà cung cấp khác trong Cài đặt → {page}.',
+        badKey:
+          '{who} không nhận khóa API đã lưu (khóa sai hoặc đã bị xóa). Em mở Cài đặt → {page}, dán lại khóa đúng rồi bấm kiểm tra nhé.',
+        badModel:
+          '{who} không tìm thấy mô hình đã chọn. Em mở Cài đặt → {page}, để trống tên mô hình để dùng mô hình mặc định, hoặc chọn mô hình khác.',
+        dailyLimit:
+          'Hôm nay đã dùng hết số lượt AI tối đa mỗi ngày đặt trên máy này, nên câu hỏi chưa được gửi đi. Mai em hỏi tiếp nhé, hoặc tăng số lượt trong Cài đặt → {page}.',
+        missingKey:
+          '{who} chưa có khóa API trên máy này nên câu hỏi chưa được gửi đi. Em nhập khóa trong Cài đặt → {page} nhé.',
+        notAllowed:
+          'AI chưa được bật cho hồ sơ này nên câu hỏi chưa được gửi đi. Em hoàn tất bước an toàn trong Cài đặt → {page} rồi hỏi lại nhé.',
+        emptyAnswer:
+          '{who} không gửi lại chữ nào cho câu hỏi này. Em hỏi lại nhé; nếu lặp lại, thử mô hình khác trong Cài đặt → {page}.',
+        reasoningOnly:
+          '{who} mới chỉ suy nghĩ nháp mà chưa viết câu trả lời. Em hỏi lại nhé; nếu lặp lại, thử mô hình khác trong Cài đặt → {page}.',
+        tooLarge:
+          '{who} báo câu hỏi cùng phần trò chuyện gửi kèm quá dài. Em xóa bớt cuộc trò chuyện hoặc chọn Trí nhớ “Vừa” trong Cài đặt → {page} rồi hỏi lại nhé.',
+        server:
+          '{who} đang quá tải hoặc gặp lỗi ở máy chủ. Em đợi một lát rồi hỏi lại nhé; nếu lỗi kéo dài, chọn nhà cung cấp khác trong Cài đặt → {page}.',
+        other:
+          '{who} gặp lỗi khi trả lời. Em hỏi lại nhé; nếu lặp lại, mở Cài đặt → {page} để kiểm tra kết nối.',
+        internal:
+          'Ứng dụng gặp trục trặc bên trong khi hỏi AI. Em hỏi lại nhé; nếu vẫn vậy, hãy cài bản SimLab mới nhất.',
+      },
     },
   },
   chatSettings: {
@@ -934,8 +1642,8 @@ const vi = {
     webCard: 'Tra cứu trực tuyến',
     flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
     gemmaModel: 'Phiên bản Gemma',
-    gemma270m: '270M · nhẹ nhất',
-    gemma1b: '1B · khuyên dùng',
+    gemma270m: '270M · nhẹ nhất, chỉ để thử (hay lạc đề, trả lời kém)',
+    gemma1b: '1B · khuyên dùng trên máy; hay sai kiến thức, nên kiểm tra lại hoặc bật Think',
     gemmaE2b: 'E2B · mạnh nhất, đọc được ảnh',
     modelReady: 'Gemma đã sẵn sàng trên máy.',
     modelMissing: 'Chưa tải mô hình này.',
@@ -951,6 +1659,8 @@ const vi = {
     downloadNetwork: 'Không tải được do mạng. Kiểm tra kết nối rồi bấm “Tải mô hình” lần nữa.',
     downloadMemory:
       'Máy không đủ bộ nhớ đồ họa để chạy mô hình này. Hãy chọn bản nhỏ hơn (270M hoặc 1B).',
+    downloadGpuBlocked:
+      'Gemma đang tạm dừng vì card đồ họa vừa bị treo khi chạy nó (để máy không bị khởi động lại). Muốn thử lại: vào Cài đặt → GPU cho Gemma, chọn card rời nếu có, rồi bấm “Vẫn cho Gemma chạy lại” — hoặc mở lại ứng dụng.',
     downloadFailed: 'Tải chưa thành công ({detail}). Mô hình chưa được đánh dấu là sẵn sàng.',
     desktopOnly: 'chỉ bản desktop',
     webLookup: 'Tra thêm Wikipedia khi có mạng',
@@ -962,18 +1672,30 @@ const vi = {
     flowLocalDocs: 'Tài liệu em tự thêm và {count} ghi chú có sẵn.',
     flowLocalModel: 'Mô hình Gemma đã tải; khi dùng Gemma, câu trả lời được tạo ngay trên máy.',
     flowLocalSummary:
-      'Bản tóm tắt phần trò chuyện cũ (do chính AI đang trả lời viết, chỉ gửi kèm câu hỏi cho AI đó).',
+      'Bản tóm tắt phần trò chuyện cũ (do AI đang trả lời viết; gửi kèm câu hỏi tới AI đó, và tới bên rà soát khi bật Think).',
     flowLocalKeyDesktop: 'Khóa API: trong kho bảo mật của hệ điều hành.',
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
-    flowAnswer: 'Khi chọn “API”: câu hỏi + trích đoạn tài liệu liên quan → {name}.',
-    flowThink: 'Khi bật Think: câu hỏi + bản nháp → {name} để rà soát.',
+    flowAnswer:
+      'Khi chọn “API”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
+    flowFallback:
+      'Khi {name} hết lượt và Think đang tắt: những gì gửi cho {name} → {fallback} (dự phòng, chỉ khi đã có khóa).',
+    flowThink:
+      'Khi bật Think: câu hỏi, bản nháp, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowThinkOnly:
-      'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi + bản nháp mới được gửi → {name} để rà soát.',
+      'Khi dùng Gemma: chỉ khi bật Think thì câu hỏi, bản nháp của Gemma, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) mới được gửi → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowWiki: 'Tra Wikipedia đang bật: câu hỏi → Wikipedia.',
     flowVoice: 'Đọc to bằng giọng Gemini đang bật: chữ của câu trả lời → Google.',
     flowPhoto: 'Khi chụp đề bằng camera (trên trình duyệt): ảnh đã thu nhỏ → {name} để đọc chữ.',
     flowModelDownload: 'Khi bấm “Tải mô hình”: máy tải tệp từ HuggingFace (không gửi câu hỏi).',
+    flowLocalRuntime:
+      'Khi dùng AI trên máy khác ({name}, {address}): câu hỏi chỉ đi tới chương trình đó trên máy này.',
+    flowLocalRuntimeNone:
+      'Khi dùng AI trên máy khác: câu hỏi chỉ đi tới chương trình em chọn trên máy này (chưa chọn).',
+    flowNothingOnline:
+      'Không có gì được gửi lên mạng khi em hỏi AI Teacher (Think và tra Wikipedia đang tắt).',
+    flowThinkLocal:
+      'Think đang bật: câu hỏi, bản nháp của AI trên máy, trích đoạn tài liệu liên quan, tóm tắt phần trò chuyện cũ (nếu có) và ngữ cảnh màn hình (nếu em bật) → {name} để rà soát. Không gửi tới nhà cung cấp dự phòng.',
     flowScreen:
       'Ngữ cảnh màn hình chỉ được gửi khi em bật “Lấy thông tin từ màn hình” trong bong bóng chat; đó là dữ liệu của SimLab, không phải ảnh chụp màn hình.',
     download: 'Tải mô hình',
@@ -1073,7 +1795,205 @@ const vi = {
       browserOnly:
         'Trên trình duyệt, trình duyệt tự chọn card đồ họa. Chọn card chỉ có trong ứng dụng desktop trên Windows.',
       unsupported: 'Chọn card đồ họa hiện chỉ có trên Windows.',
+      faultTitle: 'Card đồ họa đã bị treo khi chạy Gemma',
+      faultBody:
+        'Lúc {when}, card {card} ngừng phản hồi khi Gemma đang trả lời. Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động lại.',
+      faultBlocked: 'Gemma đang tạm dừng tới khi em mở lại ứng dụng.',
+      faultAdvice:
+        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng API trực tuyến.',
+      useDiscrete: 'Dùng card rời: {name}',
+      allowAgain: 'Vẫn cho Gemma chạy lại',
+      dismissFault: 'Ẩn thông báo',
+      unknownCard: 'đồ họa',
+      integratedHint:
+        'Gemma đang chạy trên card tích hợp. Card tích hợp dễ bị treo với câu hỏi dài; máy có card rời ({name}) nên chọn card rời.',
     },
+  },
+  localRuntime: {
+    intro:
+      'SimLab có thể dùng một chương trình AI em đã cài và đang mở trên máy này. SimLab không cài, không mở và không tải mô hình cho chương trình đó.',
+    detectTitle: 'Tìm trên máy này',
+    detect: 'Tìm trên máy này',
+    detecting: 'Đang tìm…',
+    detectPrivacy:
+      'Chỉ hỏi ba địa chỉ quen thuộc trên máy này ({addresses}) và các địa chỉ em tự thêm. Không đọc tệp nào, không quét ổ đĩa, không gửi gì ra khỏi máy.',
+    fallback:
+      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang API). Nếu em bật “Tra thêm Wikipedia”, câu hỏi chỉ được gửi tới Wikipedia sau khi SimLab đã kết nối được tới chương trình AI trên máy.',
+    corsNote:
+      'Đang chạy trên trình duyệt: chương trình AI phải cho phép trang này truy cập (CORS), nếu không SimLab sẽ báo “Không thấy”. Ứng dụng desktop không cần việc này.',
+    detectFailed: 'Chưa tìm được. Em thử lại nhé.',
+    notAllowed: 'Cần hoàn tất bước an toàn (xác nhận độ tuổi) trước khi dùng AI.',
+    needsUpdate:
+      'Ứng dụng trên máy này cần được cập nhật mới tìm được AI trên máy khác. Hãy cài bản SimLab mới.',
+    noneFound: 'Chưa thấy chương trình AI nào đang chạy. Xem “Gặp lỗi? Cách xử lý” bên dưới.',
+    detectedAt: 'Kết quả lần tìm lúc {time}.',
+    detectedEarlier:
+      'Chương trình có thể đã tắt hoặc đổi mô hình từ lúc đó: bấm “Tìm trên máy này” để xem lại.',
+    kinds: {
+      ollama: 'Ollama',
+      lmStudio: 'LM Studio',
+      llamaCpp: 'llama.cpp',
+      openAiCompatible: 'Máy chủ tương thích OpenAI',
+    },
+    unknownKind: 'Chương trình chưa rõ',
+    usualFor: 'địa chỉ quen thuộc của {name}',
+    status: {
+      unreachable: 'Không thấy',
+      found: 'Đang chạy',
+      foundVersion: 'Đang chạy · phiên bản {version}',
+      loading: 'Đang nạp mô hình',
+      needsAuth: 'Cần khóa',
+      notRuntime: 'Không phải chương trình AI',
+    },
+    statusHint: {
+      unreachable: 'Chương trình chưa mở, hoặc đang dùng địa chỉ khác.',
+      loading: 'Đợi chương trình nạp xong rồi bấm “Tìm trên máy này” lần nữa.',
+      needsAuth: 'Chương trình đang bật khóa bảo vệ: SimLab không lưu khóa cho AI trên máy.',
+      notRuntime: 'Có chương trình khác đang dùng địa chỉ này.',
+    },
+    modelsTitle: 'Mô hình của {name}',
+    modelsLoading: 'Đang lấy danh sách mô hình…',
+    modelsEmpty: 'Chưa có mô hình nào. Hãy tải một mô hình trong chính chương trình đó.',
+    modelsMore: 'Chương trình có nhiều mô hình hơn; SimLab chỉ hiện {count} mô hình đầu.',
+    modelsFailed: 'Chưa lấy được danh sách mô hình: {reason}',
+    modelsAgain: 'Bấm “Tìm trên máy này” để xem lại danh sách mô hình.',
+    chooseModel: 'Chọn mô hình',
+    badges: {
+      detected: 'Phát hiện',
+      listed: 'Có trong danh sách',
+      loaded: 'Đang nạp sẵn trong bộ nhớ',
+      notLoaded: 'Chưa nạp vào bộ nhớ',
+      selected: 'Đang chọn cho AI Teacher',
+      selectedIdle: 'Đã chọn · AI Teacher đang dùng {engine}',
+      tested: 'Đã thử trả lời · {time}',
+      testFailed: 'Lần thử gần nhất chưa trả lời được · {time}',
+      incompatible: 'Không dùng được: {reason}',
+      unavailable: 'Chưa dùng được',
+    },
+    reasons: {
+      remote: 'chạy trên mạng',
+      smallContext: 'ngữ cảnh quá nhỏ ({context})',
+      testFailed: 'lần thử trả lời vừa rồi không thành công',
+    },
+    facts: {
+      size: 'Dung lượng tệp: {value}',
+      context: 'Độ dài ngữ cảnh: {value}',
+      memory: 'RAM/VRAM cần: {value}',
+      vision: 'Đọc ảnh: {value}',
+      params: 'Cỡ mô hình: {value}',
+      quant: 'Mức nén: {value}',
+    },
+    contextUnit: '{count} mảnh chữ',
+    unverified: 'Chưa xác minh',
+    yes: 'Có',
+    no: 'Không',
+    memoryUnknown: 'Chưa xác minh (chương trình không cho biết)',
+    detailsTitle: 'Mô hình đang xem: {model}',
+    pickHint: 'Chọn một mô hình ở danh sách trên để kiểm tra và dùng cho AI Teacher.',
+    checkConnection: 'Kiểm tra kết nối',
+    checkingConnection: 'Đang kiểm tra kết nối…',
+    connectionOk: 'Kết nối được. Đã đọc thông tin mô hình lúc {time}.',
+    testAnswer: 'Kiểm tra trả lời',
+    testing: 'Đang chờ mô hình trả lời…',
+    testWarning:
+      'Kiểm tra trả lời nhờ chương trình viết vài chữ: nó sẽ nạp mô hình vào RAM/VRAM, có thể chậm và làm máy nóng. Chỉ chạy khi em bấm; mỗi lần bấm là một yêu cầu, không tự thử lại.',
+    test: {
+      ok: 'Mô hình đã trả lời (chữ đầu tiên sau {seconds} giây).',
+      okNoTime: 'Mô hình đã trả lời.',
+      unreachable: 'Không kết nối được: chương trình chưa mở hoặc đã tắt.',
+      notRuntime: 'Địa chỉ này không trả lời như chương trình đã chọn.',
+      needsAuth: 'Chương trình đang bật khóa bảo vệ nên từ chối.',
+      modelMissing: 'Chương trình không có mô hình này.',
+      loading: 'Chương trình đang nạp mô hình. Đợi một chút rồi thử lại.',
+      remoteModel: 'Mô hình này chạy trên mạng nên SimLab không gửi tới.',
+      stalled: 'Không có chữ nào trong thời gian chờ: máy có thể đang bận hoặc mô hình quá nặng.',
+      error: 'Chương trình báo lỗi khi trả lời: {detail}',
+      notAllowed: 'Cần hoàn tất bước an toàn trước khi dùng AI, hoặc địa chỉ không ở trên máy này.',
+    },
+    useForTeacher: 'Dùng cho AI Teacher',
+    currentTitle: 'Đang chọn cho AI Teacher',
+    savedTitle: 'Mô hình đã chọn ở trang này',
+    currentBody: '{label} tại {address}',
+    currentLocal: 'AI Teacher đang trả lời bằng mô hình này, ngay trên máy em.',
+    currentLocalUnchecked:
+      'AI Teacher sẽ gửi câu hỏi tới mô hình này, ngay trên máy em. Lần mở này SimLab chưa kiểm tra chương trình có đang chạy không: bấm “Tìm trên máy này” để kiểm tra.',
+    relayNote:
+      'Lưu ý: máy chủ tương thích OpenAI có thể là chương trình trung gian tự chuyển câu hỏi lên mạng; SimLab không kiểm soát được việc đó.',
+    currentLocalUnavailable:
+      'AI Teacher vẫn đang chọn mô hình này, nhưng lần tìm gần nhất thấy nó chưa dùng được (lý do bên dưới). Khi đó câu hỏi chỉ báo lỗi, không được gửi đi nơi khác. Em sửa theo hướng dẫn, chọn mô hình khác ở danh sách, hoặc bấm “Bỏ chọn”.',
+    currentOther:
+      'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. {now} Bấm “Dùng cho AI Teacher” để chuyển.',
+    now: {
+      cloud: 'Câu hỏi cho AI Teacher đang được gửi lên mạng tới {provider}.',
+      cloudOff: 'AI Teacher đang chọn API nhưng API đang tắt, nên chưa có câu hỏi nào được gửi đi.',
+      cloudNoKey:
+        'AI Teacher đang chọn API {provider} nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
+      gemma: 'AI Teacher đang trả lời bằng Gemma cục bộ, ngay trên máy em.',
+      gemmaMissing:
+        'AI Teacher đang chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có câu hỏi nào được gửi đi.',
+    },
+    waiting:
+      'AI Teacher đang chờ em chọn một mô hình bên dưới; trong lúc đó không câu hỏi nào được gửi đi.',
+    restoredNote:
+      'SimLab chưa hỏi chương trình lần này: chỉ hỏi khi em hỏi bài hoặc bấm một nút ở trang này.',
+    neverTested: 'Chưa thử trả lời.',
+    testedAt: 'Đã thử trả lời lúc {time}.',
+    testFailedAt: 'Lần thử trả lời gần nhất (lúc {time}) chưa thành công.',
+    unselect: 'Bỏ chọn',
+    unselected: 'Đã bỏ chọn. {now}',
+    capsTitle: 'Khả năng (chỉ tính điều đã thấy trên máy này)',
+    capsName: 'Khả năng',
+    capsSeen: 'Trên máy này',
+    capsDeclared: 'Tài liệu của chương trình',
+    capsDeclaredYes: 'nói là có (chưa thấy trên máy này)',
+    caps: {
+      listModels: 'Liệt kê mô hình',
+      contextLength: 'Cho biết độ dài ngữ cảnh',
+      vision: 'Đọc ảnh',
+      streaming: 'Trả lời từng phần',
+      cancel: 'Dừng giữa chừng',
+      jsonSchema: 'Điền đúng mẫu khi đọc đề',
+      loadState: 'Cho biết mô hình đã nạp chưa',
+    },
+    resourcesTitle: 'Tài nguyên',
+    moreTitle: 'Hiện phần nâng cao',
+    addTitle: 'Thêm địa chỉ',
+    addLabel: 'Địa chỉ trên máy này',
+    add: 'Thêm',
+    addRefused:
+      'SimLab chỉ nhận địa chỉ trên chính máy này (127.0.0.1, localhost hoặc [::1]) có số cổng, ví dụ http://127.0.0.1:11435. Địa chỉ khác có thể đưa câu hỏi ra khỏi máy nên không được dùng.',
+    added: 'Đã thêm {address}. Bấm “Tìm trên máy này” để hỏi địa chỉ đó.',
+    addedList: 'Địa chỉ em đã thêm',
+    remove: 'Xóa {address}',
+    helpTitle: 'Gặp lỗi? Cách xử lý',
+    help: {
+      notRunning:
+        'Không thấy: mở chương trình rồi bấm “Tìm trên máy này” lần nữa. Ollama chạy nền sau khi cài; LM Studio cần bật máy chủ cục bộ (Local Server) trong tab Developer; llama.cpp cần chạy llama-server.',
+      modelMissing:
+        'Thiếu mô hình: tải mô hình trong chính chương trình đó (Ollama: lệnh “ollama pull” kèm tên mô hình; LM Studio: tải rồi nạp trong ứng dụng).',
+      loading: 'Đang nạp: đợi chương trình nạp xong mô hình rồi thử lại.',
+      needsAuth:
+        'Cần khóa: chương trình đang bật khóa bảo vệ. SimLab không lưu khóa cho AI trên máy, nên hãy tắt khóa trong chương trình đó nếu muốn dùng với SimLab.',
+      cors: 'Chỉ trên trình duyệt: chương trình phải cho phép trang này truy cập (CORS). Ứng dụng desktop không cần.',
+      notAi:
+        'Không phải chương trình AI: cổng 8080 hay bị chương trình khác dùng. Kiểm tra cổng mà llama-server đang dùng rồi thêm đúng địa chỉ.',
+    },
+    honestTitle: 'Điều SimLab không kiểm soát',
+    honest: {
+      gpu: 'SimLab không chọn card đồ họa cho chương trình đó. Trên laptop có card tích hợp, hãy chọn card rời trong cài đặt của chính chương trình.',
+      logs: 'SimLab không biết chương trình đó ghi lại những gì (nhật ký, lịch sử trò chuyện).',
+      internet:
+        'SimLab chỉ gửi tới địa chỉ trên máy này, nhưng một chương trình trung gian chạy trên máy vẫn có thể chuyển câu hỏi lên mạng. Mô hình “chạy trên mạng” luôn bị tắt ở đây.',
+    },
+    resetTitle: 'Khôi phục mặc định',
+    resetBody:
+      'Xóa các địa chỉ đã thêm, kết quả kiểm tra và mô hình đã chọn ở trang này. Các cài đặt khác giữ nguyên.',
+    reset: 'Khôi phục mặc định',
+    resetConfirm: 'Xóa hẳn',
+    resetCancel: 'Hủy',
+    resetDone: 'Đã khôi phục mặc định.',
+    resetEngineNote:
+      'AI Teacher vẫn đang chọn AI trên máy khác: chưa có câu hỏi nào được gửi đi cho tới khi em chọn lại một mô hình hoặc bấm “Bỏ chọn”.',
   },
   gpuSettings: {
     cardTitle: 'Card đồ họa (WebGPU)',
@@ -1136,20 +2056,61 @@ const vi = {
     penHint: 'Bật để tự viết, vẽ lên bảng bằng chuột hoặc cảm ứng',
     penArea: 'Vùng viết của em',
     clearPen: 'Xóa nét của em trên mặt bảng này',
+    zoom: 'Cỡ bảng',
+    zoomIn: 'Phóng to bảng',
+    zoomOut: 'Thu nhỏ bảng',
+    zoomFit: 'Vừa khung',
+    zoomFitHint: 'Đưa bảng về vừa khung nhìn, thấy hết bề ngang',
     history: 'Các mặt bảng',
     face: 'Bảng {n}',
+    teacherHere: 'thầy đang viết ở mặt bảng này',
     preparing: 'Đang chuẩn bị bảng…',
     empty:
       'Hỏi AI Teacher một câu: thầy sẽ vừa giảng vừa viết công thức, gạch chân, khoanh tròn và vẽ hình lên bảng này.',
+    nothingToWrite: 'Câu trả lời này không có gì để viết lên bảng — em đọc trong khung chat nhé.',
     checked: 'Phép tính đã được máy kiểm lại',
     unverified: 'Có số do AI tự tính, chưa kiểm chứng: em hãy tính lại',
     axes: 'Hệ trục tọa độ',
     plotOf: 'Đồ thị của {fn}',
     plotUnreadable: 'Chưa đọc được biểu thức để vẽ',
+    codeInMessage: '(đoạn mã trong tin nhắn)',
+    ask: {
+      tool: 'Khoanh để hỏi',
+      toolHint: 'Bật rồi khoanh, gạch chân hoặc chạm vào chỗ trên bảng em muốn hỏi thầy',
+      area: 'Vùng khoanh để hỏi',
+      barLabel: 'Chỗ em khoanh trên bảng',
+      excerpt: 'Em khoanh:',
+      ask: 'Hỏi thầy chỗ này',
+      again: 'Khoanh lại',
+      clear: 'Bỏ chọn',
+      none: 'Mình chưa thấy em khoanh vào chữ hay hình nào trên bảng. Em khoanh sát chỗ cần hỏi, hoặc gõ câu hỏi nhé.',
+      many: 'Em khoanh khá nhiều chỗ: em hỏi cả phần này hay một chỗ?',
+      unsure: 'Em khoanh vào một phần của chỗ này. Ý em là…?',
+      all: 'Cả phần này',
+      picture: 'Hình em khoanh',
+      pictureLocal: 'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng.',
+      pictureLocalQuiet:
+        'Kèm ảnh vùng khoanh — chỉ trên máy, không gửi lên mạng. Giọng Gemini sẽ không đọc to câu trả lời này.',
+      pictureUnreadable:
+        'AI em đang dùng chưa đọc được hình vẽ hay nét viết tay. Em gõ vào ô chat điều em muốn hỏi về chỗ này nhé: thầy chỉ biết các bước quanh đó, không thấy hình.',
+      resume: 'Quay lại bài giảng',
+      defaultQuestion: 'Thầy giải thích giúp em chỗ em vừa khoanh với ạ.',
+      describe: {
+        plot: 'đồ thị {label}',
+        plotOn: 'đồ thị {label} trên [{from}; {to}]',
+        axes: 'hệ trục ({labels})',
+        freeBody: 'sơ đồ lực: {body}; các lực: {forces}',
+        flow: 'sơ đồ: {steps}',
+        table: 'bảng: {cells}',
+        vector: 'véc-tơ {label}',
+      },
+    },
   },
   voice: {
     readAloudCard: 'Đọc to',
     readAloud: 'Đọc to câu trả lời của AI Teacher',
+    onCpuAfterGpuFault:
+      'Trong lần dùng này, giọng trên máy chạy bằng CPU vì card đồ họa đã gặp lỗi (chậm hơn nhưng an toàn cho máy).',
     readAloudHint:
       'Cũng bật/tắt được bằng nút loa trong khung trò chuyện. Âm thanh không được ghi lại.',
     sourceCard: 'Nguồn giọng',
@@ -1168,6 +2129,8 @@ const vi = {
       },
     },
     systemFound: 'Đã có giọng tiếng Việt: {names}.',
+    noVietnameseOnEnable:
+      'Máy chưa có giọng đọc tiếng Việt nên thầy sẽ đọc sai dấu. Vào Cài đặt → Giọng nói để thêm giọng tiếng Việt của Windows hoặc chọn giọng tiếng Việt chạy trên máy.',
     systemMissing:
       'Máy chưa có giọng tiếng Việt, nên Windows đọc bằng giọng tiếng Anh và sai dấu. Cài giọng tiếng Việt (miễn phí):',
     installStep1: 'Mở Settings (Cài đặt) của Windows → Time & language → Speech.',
@@ -1232,10 +2195,22 @@ const vi = {
       noModel:
         'Chưa tải giọng tiếng Việt trên máy: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       quota: 'Gemini báo hết lượt: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      dailyLimit:
+        'Đã dùng hết số lượt AI trong ngày (giới hạn đặt trong Cài đặt): lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      timeout:
+        'Giọng đã chọn trả lời quá lâu: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
+      systemVoice:
+        'Giọng Windows chưa đọc được câu vừa rồi (bộ đọc của máy báo lỗi). Em thử chọn một giọng khác nhé.',
       offline: 'Không có mạng: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       notAllowed:
         'Cần xác nhận đủ 18 tuổi để dùng giọng Gemini: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
       other: 'Giọng đã chọn chưa đọc được: lần vừa rồi đã đọc bằng giọng Windows thay thế.',
+      lessonRest:
+        'Giọng trên máy chưa đọc được: phần còn lại của bài đã đọc bằng giọng Windows thay thế.',
+      gpuToCpu:
+        'Card đồ họa gặp lỗi khi đọc: giọng trên máy đã chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy), phần chưa đọc được đã do giọng Windows đọc thay.',
+      movedToCpu:
+        'Giọng trên máy vừa chuyển sang chạy bằng CPU (chậm hơn nhưng an toàn cho máy): phần đang đọc dở đã do giọng Windows đọc tiếp.',
     },
   },
   levels: {
@@ -1367,6 +2342,7 @@ const vi = {
     transcript: 'Lời thoại',
     chipsLabel: 'Yêu cầu nhanh',
     chips: {
+      hint: 'Gợi ý từng bước',
       again: 'Giải thích lại',
       slower: 'Chậm hơn',
       example: 'Thêm ví dụ',
@@ -1374,6 +2350,7 @@ const vi = {
       lost: 'Em chưa hiểu chỗ này',
     },
     chipPrompts: {
+      hint: 'Thầy đừng giải hết. Chỉ cho em một gợi ý nhỏ cho bước tiếp theo (chưa nói đáp số), rồi hỏi em thử làm bước đó.',
       again:
         'Thầy giải thích lại câu trả lời vừa rồi theo một cách khác, dễ hiểu hơn, vẫn đúng nội dung đó.',
       slower:
@@ -1387,6 +2364,21 @@ const vi = {
     connectBody: 'AI Teacher cần một khóa AI. Mất khoảng 2 phút, có hướng dẫn từng bước.',
     connect: 'Mở Kết nối AI',
     notYet: 'Tính năng này sẽ được bổ sung sau',
+    askMitosisPart: 'Hỏi thầy về bộ phận này',
+    askMitosisPartShort: 'Hỏi thầy',
+    // The stage is named as a stage of the simulation, not as "a step of mitosis": interphase
+    // (G1, G2) is not part of mitosis, and some books count cytokinesis apart from it.
+    askMitosisPartQuestion:
+      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở giai đoạn “{stage}” (mô phỏng nguyên phân, {cell}) ạ?',
+    // The part cannot be seen at this stage (its card says so): the question must not assume it
+    // is there.
+    askMitosisPartHiddenQuestion:
+      'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng nguyên phân, {cell}) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
+    // Meiosis 3D view (animal germ cell): the same two questions, for meiosis.
+    askMeiosisPartQuestion:
+      'Thầy giải thích giúp em: bộ phận “{part}” làm gì ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) ạ?',
+    askMeiosisPartHiddenQuestion:
+      'Thầy ơi, ở giai đoạn “{stage}” (mô phỏng giảm phân, tế bào động vật) em không thấy rõ bộ phận “{part}”. Lúc đó nó có không, và nó xuất hiện hay biến mất khi nào ạ?',
   },
   languages: {
     vi: 'Tiếng Việt',
