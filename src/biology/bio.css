@@ -500,27 +500,6 @@
   overflow: hidden;
   pointer-events: none;
 }
-.bio3d-label {
-  padding: 1px 6px;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  background: var(--glass-bg);
-  color: var(--text);
-  font-size: var(--text-xs);
-  line-height: 1.35;
-  white-space: nowrap;
-  backdrop-filter: var(--glass-blur);
-}
-.bio3d-label--strong {
-  font-size: var(--text-sm);
-  font-weight: 650;
-}
-.bio3d-label--muted {
-  border-color: transparent;
-  background: none;
-  color: var(--text-muted);
-  backdrop-filter: none;
-}
 .bio3d__hud {
   position: absolute;
   inset: var(--space-3) var(--space-4);
@@ -700,6 +679,12 @@
     'bottom bottom';
 }
 .bio3d-figure__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* The switch sits top right, where the 3D figure's corner puts it. */
+  justify-content: flex-end;
+  gap: var(--space-2);
   margin-bottom: var(--space-2);
 }
 /* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the

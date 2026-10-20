@@ -4,7 +4,8 @@
  * - `Bio3DView`: the 3D picture fills the stage; the lesson's chips and controls sit over its
  *   top edge, the 3D/2D switch and "Đặt lại góc nhìn" in the top-right corner, a caption and
  *   any playback controls at the bottom. The camera keeps the subject clear of all of them.
- * - `Bio3DFigureBody`: a 3D figure block at the top of a lesson's page of text and tables.
+ * - `Bio3DFigureBody`: a 3D figure block at the top of a lesson's page of text and tables, with
+ *   the same top-right corner as every 3D view: the 3D/2D switch, then "Đặt lại góc nhìn".
  */
 import { Focus } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
@@ -119,6 +120,7 @@ export function Bio3DFigureBody({
       />
       <div ref={hudRef} className="bio3d__hud">
         <div className="bio3d__side" data-inset="corner">
+          <Bio3DSwitch lesson={lesson} />
           <ResetView
             onReset={() => {
               setReset((n) => n + 1);

@@ -12,6 +12,10 @@ export interface LabelItem {
   text: string;
   /** World position of the part the label names. */
   point: readonly [number, number, number];
+  /** Fill of the anchor ring: the part's role colour (CSS colour; default muted text). */
+  color?: string;
+  /** The part is behind the subject now: anchor and leader dim to 45 %. */
+  behind?: boolean;
 }
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -26,6 +30,8 @@ export class LabelLayer {
       line: SVGLineElement;
       dot: SVGCircleElement;
       text: string;
+      color: string;
+      behind: boolean;
       /** Size of the box, measured once per text (no layout reads on every frame). */
       w: number;
       h: number;
@@ -55,10 +61,11 @@ export class LabelLayer {
       line.setAttribute('class', 'three-label__line');
       const dot = document.createElementNS(SVG, 'circle');
       dot.setAttribute('class', 'three-label__dot');
-      dot.setAttribute('r', '2.5');
+      // A 7 px ring (style guide): filled with the role colour, a panel-coloured border.
+      dot.setAttribute('r', '3.5');
       this.svg.append(line, dot);
       this.el.appendChild(box);
-      n = { box, line, dot, text: '', w: 0, h: 0 };
+      n = { box, line, dot, text: '', color: '', behind: false, w: 0, h: 0 };
       this.nodes.set(item.id, n);
     }
     if (n.text !== item.text || n.w === 0) {
@@ -67,6 +74,18 @@ export class LabelLayer {
       n.box.hidden = false;
       n.w = n.box.offsetWidth;
       n.h = n.box.offsetHeight;
+    }
+    const color = item.color ?? '';
+    if (n.color !== color) {
+      n.color = color;
+      if (color) n.dot.style.setProperty('--label-anchor', color);
+      else n.dot.style.removeProperty('--label-anchor');
+    }
+    const behind = item.behind ?? false;
+    if (n.behind !== behind) {
+      n.behind = behind;
+      n.dot.classList.toggle('is-behind', behind);
+      n.line.classList.toggle('is-behind', behind);
     }
     return n;
   }

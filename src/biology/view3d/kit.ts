@@ -59,6 +59,13 @@ export interface Bio3DScene {
   tick?: (dt: number) => void;
 }
 
+/** CSS classes of the kit's labels: the same tag look as every other 3D view. */
+const LABEL_CLASS = {
+  plain: 'three-label',
+  strong: 'three-label three-label--title',
+  muted: 'three-tag three-tag--tick',
+} as const;
+
 export class SceneKit {
   readonly scene = new THREE.Scene();
   readonly tier: QualityTier;
@@ -234,7 +241,8 @@ export class SceneKit {
    */
   label(text: string, at: Vec3, variant: 'plain' | 'strong' | 'muted' = 'plain'): CSS2DObject {
     const el = document.createElement('div');
-    el.className = `bio3d-label bio3d-label--${variant}`;
+    // The shared 3D tag look (ui.css): a glass pill, a heading pill, or a muted tick.
+    el.className = LABEL_CLASS[variant];
     el.textContent = text;
     const o = new CSS2DObject(el);
     o.position.set(...at);
