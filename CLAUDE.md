@@ -448,6 +448,17 @@ Progress log: `docs/PROGRESS.md`.
   (`useDogma3D`), `Dogma3DView`, `Dogma3DSwitch`, `panels.tsx`. Letters, amino acid names and
   positions: `src/ui/three/tagLayer.ts`. `anticodon()` is shared with the 2D page (`dogma.ts`).
   Saved: `view3d` (dogma store, shared binding with pointMutation). E2E `tests/e2e/dogma3d.spec.ts`.
+  The helix primitive (palette, base shapes, `Writer`, `makeStrand`) is `dogma3d/helix.ts`.
+- Point mutation 3D (`src/biology/central/mutation3d/`): `binding.ts` (pure: `mutationOf` →
+  `mutate`/`analyzeMutation`/`mutatedTranslation`; "slots" keep the mutated helix aligned with the
+  normal one — inserted bases bulge, deleted ones leave a gap; outlines `marks`, `changedCodons`
+  from `firstChange`, `beadNames`, window around the site), `layout.ts` (rows: normal mRNA, normal
+  helix, ruler, mutated helix, mutated mRNA, both chains side by side), `scene.ts` (static, laid out
+  once; accent outlines with `setPulse`, gap markers, brackets coloured start/stop/changed;
+  `drawn()` for tests), `facts.ts`, `camera.ts` ("Toàn cảnh"/"Vị trí đột biến"), `store.ts`
+  (`useMutation3D`, `applyPick`: a normal base pair sets the saved `pos`), `Mutation3DView`,
+  `Mutation3DSwitch`. 3D/2D is the dogma store's `view3d`. The outlines pulse a few times after a
+  change, never with reduced motion. E2E `tests/e2e/mutation3d.spec.ts`.
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -457,13 +468,13 @@ Progress log: `docs/PROGRESS.md`.
   `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
-- Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis or DNA →
-  mRNA → protein) has a 3D
-  view too (3D by default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
+- Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis, DNA → mRNA →
+  protein or point mutations) has a 3D view too (3D by default, the learner's 3D/2D choice per
+  lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
   labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
-  layout) / `Bio3DFigureBody` (figure above a page of tables: Mendel, Hardy–Weinberg, dogma,
-  mutation), `SceneKit` (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
+  layout) / `Bio3DFigureBody` (figure above a page of tables: Mendel, Hardy–Weinberg), `SceneKit`
+  (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
   keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
   3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
   chips are shared with the 2D view so the text is identical. New 3D text → DATA_REVIEW (#26).
