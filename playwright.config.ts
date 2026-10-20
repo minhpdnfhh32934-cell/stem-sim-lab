@@ -62,6 +62,10 @@ export default defineConfig({
       // Each worker draws WebGL in software on the CPU. With 8 at once (16-thread machine,
       // 2026-10-20) the first mitosis view took over 20 s to get its canvas; alone it passes.
       workers: 4,
+      // Every lesson here opens a lazy module whose 3D view draws in software. On the CI runner
+      // (few CPU cores) a first open can take longer than the 5 s default, so waits here are
+      // 15 s; what is checked does not change.
+      expect: { timeout: 15_000 },
     },
     {
       name: 'chromium-3d-perf',
