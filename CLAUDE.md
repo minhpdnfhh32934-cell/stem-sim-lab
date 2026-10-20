@@ -436,6 +436,18 @@ Progress log: `docs/PROGRESS.md`.
   `facts.ts`, `store.ts` (`useMeiosis3D`, own 3D ↔ 2D index map), `Meiosis3DView`,
   `Meiosis3DSwitch`, `panels.tsx`. Saved: `meiosisView3d` (division store, meiosis binding).
   Basic hides speed and camera mode. E2E `tests/e2e/meiosis3d.spec.ts` (3D project).
+- DNA → mRNA → protein 3D (`src/biology/central/dogma3d/`): `bdna.ts` (one cited B-DNA constant:
+  10 bp/turn, 3,4 nm/turn, 2 nm; scene unit 1 nm), `binding.ts` (pure: model from `parseInput` →
+  `complement`/`codingToMrna`/`translate`, clock: transcription positions 0…n, release, then one
+  codon per step = the dogma store's `step`; `chainAt`, `syncedTime`, `windowFor` ≤ the tier's
+  `maxInstances` bp, absolute indices), `layout.ts` (pure positions: `helixAngle` integrates the
+  twist so the bubble lies flat with no jumps — the DNA turns about its axis while the polymerase
+  stays still), `scene.ts` (SceneKit, instanced rung halves coloured/shaped by base, backbones,
+  polymerase/ribosome glass, two tRNA slots, bead chain; lays out only what moves), `facts.ts`
+  (caption, chips, part card from the model), `camera.ts` ("Theo dõi"/"Toàn cảnh"), `store.ts`
+  (`useDogma3D`), `Dogma3DView`, `Dogma3DSwitch`, `panels.tsx`. Letters, amino acid names and
+  positions: `src/ui/three/tagLayer.ts`. `anticodon()` is shared with the 2D page (`dogma.ts`).
+  Saved: `view3d` (dogma store, shared binding with pointMutation). E2E `tests/e2e/dogma3d.spec.ts`.
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -445,7 +457,8 @@ Progress log: `docs/PROGRESS.md`.
   `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
-- Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis or meiosis) has a 3D
+- Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis or DNA →
+  mRNA → protein) has a 3D
   view too (3D by default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
   labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
