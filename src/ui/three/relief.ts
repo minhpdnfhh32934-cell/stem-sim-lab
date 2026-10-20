@@ -23,7 +23,7 @@ export interface ReliefOptions {
   attribute?: string;
 }
 
-/** GLSL: hashed value noise and two octaves of it (values 0…1). */
+/** GLSL: hashed value noise, one octave (values 0…1; cheap enough for software rendering). */
 const NOISE = /* glsl */ `
 float simlabReliefHash(vec3 p) {
   p = fract(p * 0.3183099 + 0.1);
@@ -42,7 +42,7 @@ float simlabReliefNoise(vec3 x) {
     f.z);
 }
 float simlabRelief(vec3 p) {
-  return 0.7 * simlabReliefNoise(p) + 0.3 * simlabReliefNoise(p * 2.13 + 7.1);
+  return simlabReliefNoise(p);
 }`;
 
 /** GLSL: the bump, as three.js's perturbNormalArb with a procedural height. */

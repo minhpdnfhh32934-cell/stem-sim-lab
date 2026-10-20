@@ -245,14 +245,14 @@ export function buildMitosisScene(
    * the same fade towards the backdrop as the other parts.
    */
   const tubeLook = (): Look<THREE.MeshStandardMaterial> => {
-    // The chromosome look: soft sheen, a faint clear coat, fine relief and a light darkening
+    // The chromosome look: soft sheen, fine relief and a light darkening
     // towards the silhouette (a rod, not a flat ribbon); the maternal / paternal colours stay
     // exact as albedo (vertex colours) where the surface faces the viewer.
     const make = () => {
       const m = keep(
         withEdgeShade(
           withRelief(
-            solid('#ffffff', tier, { roughness: 0.55, sheen: 0.7, clearcoat: 0.1, fades: true }),
+            solid('#ffffff', tier, { roughness: 0.55, sheen: 0.7, fades: true }),
             RELIEF.chromatid,
           ),
           { strength: 0.6 * edgeShade },
