@@ -27,7 +27,6 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
@@ -35,7 +34,7 @@ import { usePlayback } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
 import { TagLayer } from '@/ui/three/tagLayer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
@@ -85,7 +84,7 @@ export interface Mendel3DDebug {
   step(): number;
   /** Figures of the offspring field drawn now. */
   field(): number;
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /** Page pixels of a picked thing's centre now (a cell, a gamete…), or null. */
   focus(sel: MendelSelection): { x: number; y: number } | null;
   /** A camera move (glide, damping) is still running. */
@@ -472,7 +471,7 @@ function Mendel3DScene({
         ratio: () => modelRef.current.ratioText,
         step: () => stepIndexAt(useMendel3D.getState().t),
         field: () => sceneRef.current?.fieldShown() ?? 0,
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         focus: (sel) => toPage(sceneRef.current?.focusPoint(sel) ?? null),
         moving: () => h.moving(),
       };

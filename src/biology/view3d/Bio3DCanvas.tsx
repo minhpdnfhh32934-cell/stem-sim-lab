@@ -17,7 +17,7 @@ import { measureInsets } from '@/ui/three/insets';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { SceneKit, type Bio3DScene, type Vec3 } from './kit';
 import { useBio3DHealth, type Bio3DLesson } from './prefs';
 
@@ -32,6 +32,8 @@ export interface Bio3DDebug {
   subjectRect(): { left: number; top: number; right: number; bottom: number } | null;
   /** Number of frames drawn so far. */
   frames(): number;
+  /** Quality tier in effect and what the host draws with (post-processing, GPU class). */
+  quality(): QualityInEffect;
 }
 declare global {
   interface Window {
@@ -200,6 +202,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
             return r;
           },
           frames: () => h.frames,
+          quality: () => h.qualityInEffect(),
         };
         // `__simlabBio3d` is kept as an alias for the existing end-to-end tests.
         window.__simlabBio3d = hook;

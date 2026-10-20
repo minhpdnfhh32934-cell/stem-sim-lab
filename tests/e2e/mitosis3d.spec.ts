@@ -426,9 +426,13 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   const renderer = await openMitosis(page, 'high');
   await page.getByLabel('Bộ NST lưỡng bội 2n').selectOption('4');
   await expect(page.getByText('1 tế bào · 8 NST đơn')).toBeVisible();
+  // Software WebGL (SwiftShader): High draws without the post-processing chain (discrete GPUs
+  // only), so this budget is the integrated-GPU budget too.
   expect(await page.evaluate(() => window.__simlabMitosis3d?.quality() ?? null)).toEqual({
     tier: 'high',
     degraded: false,
+    postFx: 'none',
+    gpu: 'software',
   });
   // From the end of prophase through telophase (every chromatid condensing and moving).
   await page.getByRole('radio', { name: '2×' }).click();
@@ -483,5 +487,10 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   expect(result.maxTriangles).toBeLessThanOrEqual(PERF.triangles);
   expect(result.p95Ms).toBeLessThanOrEqual(PERF.p95Ms);
   // The app did not have to lower the quality while playing.
-  expect(result.quality).toEqual({ tier: 'high', degraded: false });
+  expect(result.quality).toEqual({
+    tier: 'high',
+    degraded: false,
+    postFx: 'none',
+    gpu: 'software',
+  });
 });

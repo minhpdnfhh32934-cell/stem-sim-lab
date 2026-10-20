@@ -16,7 +16,6 @@ import { formatNumber, useT } from '@/app/i18n';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { openTeacherWithQuestion } from '@/teacher/teacherStore';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
@@ -24,7 +23,7 @@ import { LabelLayer } from '@/ui/three/labelLayer';
 import { usePlayback } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory, type RendererLike } from '@/ui/three/renderer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
@@ -71,7 +70,7 @@ export type { RendererFactory, RendererLike };
 export interface Meiosis3DDebug {
   info(): { geometries: number; textures: number; programs: number; calls: number };
   stage(): MeiosisStage3D;
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /** Page pixels of a part's name-label anchor at this moment (null when it cannot be seen). */
   anchor(id: MeiosisComponentId): { x: number; y: number } | null;
 }
@@ -435,7 +434,7 @@ export function Meiosis3DView({
           return meiosisTimelineFor(d.pairs, d.crossover, d.seed).stageAt(useMeiosis3D.getState().t)
             .stage;
         },
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         anchor: (id) => {
           const cur = sceneRef.current;
           if (!cur || !host) return null;

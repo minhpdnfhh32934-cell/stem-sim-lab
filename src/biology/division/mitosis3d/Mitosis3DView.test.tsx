@@ -243,9 +243,12 @@ describe('Mitosis3DView', () => {
     made[0]!.info.render.calls = 26;
     made[0]!.info.render.triangles = 9152;
     expect(window.__simlabMitosis3d?.info()).toMatchObject({ calls: 26, triangles: 9152 });
+    // A fake renderer (no WebGL, GPU unknown) never runs the post-processing chain.
     expect(window.__simlabMitosis3d?.quality()).toEqual({
       tier: effectiveTier(usePerfStore.getState()),
       degraded: false,
+      postFx: 'none',
+      gpu: 'unknown',
     });
     view.unmount();
     expect(made[0]?.dispose).toHaveBeenCalled();

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   KEY_ORBIT_STEP,
   easeInOut,
+  easeInOutCubic,
   fitDistance,
   orbitForKey,
   placeCamera,
@@ -78,6 +79,12 @@ describe('camera maths', () => {
     expect(easeInOut(0)).toBe(0);
     expect(easeInOut(1)).toBe(1);
     expect(easeInOut(0.5)).toBe(0.5);
+    expect(easeInOutCubic(0)).toBe(0);
+    expect(easeInOutCubic(0.5)).toBe(0.5);
+    expect(easeInOutCubic(1)).toBe(1);
+    // Slower start than the smoothstep, symmetric.
+    expect(easeInOutCubic(0.2)).toBeLessThan(easeInOut(0.2));
+    expect(easeInOutCubic(0.8)).toBeCloseTo(1 - easeInOutCubic(0.2), 12);
     expect(easeInOut(-1)).toBe(0);
   });
 

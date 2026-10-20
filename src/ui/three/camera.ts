@@ -110,6 +110,12 @@ export function easeInOut(u: number): number {
   return x * x * (3 - 2 * x);
 }
 
+/** Ease-in-out cubic (0 → 0, ½ → ½, 1 → 1): the camera's moves between stages and parts. */
+export function easeInOutCubic(u: number): number {
+  const x = Math.min(1, Math.max(0, u));
+  return x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
+}
+
 /** A camera pose: where it looks and where it is. */
 export interface CameraPose {
   target: Vec3;
@@ -129,7 +135,7 @@ const _qa = new THREE.Quaternion();
  */
 export function tweenCamera(from: CameraPose, to: CameraPose, u: number): CameraPose {
   if (u >= 1) return { target: [...to.target], position: [...to.position] };
-  const k = easeInOut(u);
+  const k = easeInOutCubic(u);
   const target: Vec3 = [
     from.target[0] + (to.target[0] - from.target[0]) * k,
     from.target[1] + (to.target[1] - from.target[1]) * k,

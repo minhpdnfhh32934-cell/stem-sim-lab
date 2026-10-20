@@ -43,17 +43,22 @@ export function rendererString(gl: WebGLRenderingContext | WebGL2RenderingContex
 /** Development builds only: `stemsim.debug.postfx` = on | off forces the post-processing. */
 export const POSTFX_OVERRIDE_KEY = 'stemsim.debug.postfx';
 
-function devOverride(): GpuClass | null {
+/** The development override in force ('on' | 'off'), or null (always null in production). */
+export function postFxOverride(): 'on' | 'off' | null {
   if (!import.meta.env.DEV) return null;
   try {
     const v = localStorage.getItem(POSTFX_OVERRIDE_KEY);
-    // 'on': probe the art pipeline (e.g. under SwiftShader); 'off': the integrated-GPU look.
-    if (v === 'on') return 'discrete';
-    if (v === 'off') return 'integrated';
+    return v === 'on' || v === 'off' ? v : null;
   } catch {
     // Storage blocked: no override.
+    return null;
   }
-  return null;
+}
+
+function devOverride(): GpuClass | null {
+  // 'on': probe the art pipeline (e.g. under SwiftShader); 'off': the integrated-GPU look.
+  const v = postFxOverride();
+  return v === 'on' ? 'discrete' : v === 'off' ? 'integrated' : null;
 }
 
 let cached: GpuClass | null = null;
