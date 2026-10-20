@@ -126,8 +126,10 @@
      see-through shells (membranes, envelopes) show: their opacity and Fresnel outline. */
   --m3d-highlight: #ffd23f;
   --m3d-nucleolus: #5b4a86;
-  --m3d-membrane-opacity: 0.14;
+  --m3d-membrane-opacity: 0.2;
   --m3d-rim: 0.7;
+  /* A pale shell on a pale stage needs a darker outline (a deeper shade of its own colour). */
+  --m3d-shell-ink: 1;
   /* How much a 3D solid (protein blob) darkens towards its silhouette: a pale body reads as a
      volume on the pale stage. Lighting only, never a data colour. */
   --m3d-edge-shade: 0.32;
@@ -228,6 +230,7 @@
   /* A dark stage needs a stronger membrane and outline to be seen at all. */
   --m3d-membrane-opacity: 0.22;
   --m3d-rim: 1;
+  --m3d-shell-ink: 0;
   --m3d-edge-shade: 0.12;
   --bio3d-ground: #1f2d24;
   --bio3d-protein: #6f7a90;

@@ -106,6 +106,19 @@ export function muted(color: string, towards: string, amount = 0.35, chroma = 0.
 }
 
 /**
+ * A deeper shade of a colour, same hue (OKLCH): lightness lowered by `darker`, chroma scaled by
+ * `chroma` but never above `maxChroma` (an outline of a muted structure stays less saturated
+ * than the data colours).
+ */
+export function deepen(color: string, darker: number, chroma: number, maxChroma: number): string {
+  const p = oklab(color);
+  if (!p) return color;
+  const c = Math.hypot(p[1], p[2]);
+  const k = c > 1e-6 ? Math.min(c * chroma, maxChroma) / c : 0;
+  return fromOklab([Math.max(0, p[0] - darker), p[1] * k, p[2] * k]);
+}
+
+/**
  * Linear RGB (max channel 1) of a black-body light at `kelvin` (Tanner Helland's fit of the
  * CIE data, 1000–40000 K): warm key light 5200 K, cool fill 7500 K.
  */

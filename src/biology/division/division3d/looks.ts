@@ -9,7 +9,9 @@
  *   silhouette (a rod, not a ribbon); the maternal / paternal colours stay exact as albedo
  *   (vertex colours, piece by piece);
  * - membranes: a faint lit back face (the cell's volume) under a front face with a Fresnel rim,
- *   in the muted structure colour (rule 0: saturation = data);
+ *   in the muted structure colour (rule 0: saturation = data); on a light stage the cell, the
+ *   nuclear envelope and the wall also get a darker outline in a deeper shade of their own colour
+ *   (`--m3d-shell-ink`: a pale rim vanishes on a pale stage);
  * - spindle fibres: light, see-through (`SPINDLE_OPACITY`), fading towards the poles, drawn on the
  *   FX layer (no ambient occlusion around them, no dark wires);
  * - centrosomes: a soft emissive core; on the HDR path (High tier on a discrete GPU) the core
@@ -18,7 +20,7 @@
  */
 import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
-import { mixLinear } from '@/ui/three/color';
+import { deepen, mixLinear } from '@/ui/three/color';
 import { glass, solid, withRim, withTint } from '@/ui/three/materials';
 import { withEdgeShade, withRelief, withVertexShade } from '@/ui/three/relief';
 import { noiseTexture } from '../../view3d/noise';
@@ -65,6 +67,11 @@ export interface DivisionLookOptions {
   edgeShade: number;
   /** HDR path (High tier on a discrete GPU): emissive cores bloom, the wall gets its bump. */
   hdr: boolean;
+  /**
+   * How strongly see-through shells get a darker outline (a theme token: on in the light theme,
+   * 0 = off in the dark theme, where the added rim light already outlines them).
+   */
+  shellInk?: number;
   /** Plant cell: the membrane lines the wall (fainter). */
   plant?: boolean;
 }
@@ -78,6 +85,17 @@ const HI_EMISSIVE = 0.85;
 const CORE_EMISSIVE = { direct: 0.45, hdr: 2.4 } as const;
 /** Emissive strength of the chiasma ring (meiosis): as the centrosome core. */
 const CHIASMA_RING_EMISSIVE = { direct: 0.5, hdr: 2.6 } as const;
+
+/**
+ * The darker outline of a shell (`shellInk`): its colour is a deeper shade of the shell's own
+ * (OKLCH lightness − `darker`, chroma × `chroma` up to `maxChroma`: less saturated than the
+ * chromosomes), in a band of falloff `power`; `INK_FILL` spreads a faint tint of it over the
+ * face (the cell and the nucleus read as tinted bodies, not milky ghosts).
+ */
+const SHELL_INK = { darker: 0.28, chroma: 3.4, maxChroma: 0.085, power: 1.8 } as const;
+const INK_FILL = { membrane: 0.3, envelope: 0.3 } as const;
+/** The plant wall is a large box: a lighter outline (a full one reads as a heavy frame). */
+const WALL_INK = 0.6;
 
 /** Colour unpicked parts fade towards when the palette names none. */
 const DIM_TOWARDS = '#8f949e';
@@ -160,10 +178,36 @@ export function divisionLooks(
     (c: string) =>
       withRelief(make(c), r);
   const firm = (c: string) => solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true });
+  const inkAmount = o.shellInk ?? 0;
+  /** The darker outline of a shell in colour `c` (none when the theme turns it off). */
+  const inkOf = (c: string, fill = 0, share = 1) =>
+    inkAmount > 0
+      ? {
+          ink: {
+            color: deepen(c, SHELL_INK.darker, SHELL_INK.chroma, SHELL_INK.maxChroma),
+            amount: inkAmount * share,
+            power: SHELL_INK.power,
+            fill,
+          },
+        }
+      : {};
   const shell =
-    (opacity: number, rimAlpha: number, side: THREE.Side = THREE.FrontSide) =>
+    (
+      opacity: number,
+      rimAlpha: number,
+      side: THREE.Side = THREE.FrontSide,
+      inkFill = 0,
+      inkShare = 1,
+    ) =>
     (c: string) =>
-      glass(c, { opacity, side, rim: { color: c, strength: rimStrength, alpha: rimAlpha } });
+      glass(c, {
+        opacity,
+        side,
+        rim: { color: c, strength: rimStrength, alpha: rimAlpha, ...inkOf(c, inkFill, inkShare) },
+      });
+  /** A small shell without the outline (the centrosome's halo). */
+  const halo = (opacity: number, rimAlpha: number) => (c: string) =>
+    glass(c, { opacity, rim: { color: c, strength: rimStrength, alpha: rimAlpha } });
   /** A part that glows from inside (bloom in HDR); its dimmed look does not glow. */
   const glowing = (strength: { direct: number; hdr: number }) => (c: string) => {
     const m = solid(c, tier, {
@@ -212,8 +256,8 @@ export function divisionLooks(
   const fibres = hdr && palette.wall ? keep(noiseTexture(11, 8)) : null;
   if (fibres) fibres.repeat.set(10, 2.5);
   const wallMaterial = (c: string): THREE.MeshStandardMaterial => {
-    const rim = { color: c, strength: rimStrength, alpha: 0.6 };
-    if (!fibres) return shell(0.16, 0.6)(c);
+    const rim = { color: c, strength: rimStrength, alpha: 0.6, ...inkOf(c, 0, WALL_INK) };
+    if (!fibres) return shell(0.16, 0.6, THREE.FrontSide, 0, WALL_INK)(c);
     const m = new THREE.MeshPhysicalMaterial({
       color: c,
       roughness: 0.45,
@@ -269,14 +313,17 @@ export function divisionLooks(
     envelope: look(
       palette.envelope,
       hdr
-        ? relief(RELIEF.envelope, shell(0.3, 0.45, THREE.DoubleSide))
-        : shell(0.3, 0.45, THREE.DoubleSide),
+        ? relief(RELIEF.envelope, shell(0.3, 0.45, THREE.DoubleSide, INK_FILL.envelope))
+        : shell(0.3, 0.45, THREE.DoubleSide, INK_FILL.envelope),
     ),
     nucleolus: look(
       palette.nucleolus,
       relief(RELIEF.nucleolus, (c) => solid(c, tier, { roughness: 0.55, sheen: 0.4, fades: true })),
     ),
-    membrane: look(palette.membrane, shell(membraneOpacity, 0.55)),
+    membrane: look(
+      palette.membrane,
+      shell(membraneOpacity, 0.55, THREE.FrontSide, INK_FILL.membrane),
+    ),
     cytoplasm: (() => {
       const l = look(mixLinear(palette.membrane, '#000000', 0.3), backFace);
       // Highlighted with the membrane, the volume keeps its normal look (no yellow fill).
@@ -290,7 +337,7 @@ export function divisionLooks(
       solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true, side: THREE.DoubleSide }),
     ),
     pcm: look(palette.centrosome, (c) => {
-      const m = shell(0.18, 0.3)(c);
+      const m = halo(0.18, 0.3)(c);
       // A faint glow of its own: the halo reads as soft material around a bright core.
       m.emissive.set(c);
       m.emissiveIntensity = 0.25;

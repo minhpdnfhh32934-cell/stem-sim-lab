@@ -17,6 +17,60 @@ export interface RimOptions {
   strength?: number;
   /** Opacity added at the edge (0…1): the outline of a faint shell. */
   alpha?: number;
+  /**
+   * A darker outline (light stage: added light alone cannot outline a pale shell on a pale
+   * stage). Towards the silhouette the surface mixes into the ink colour by up to `amount`
+   * (0 = off) and becomes at least as opaque as that mix. It fades with the rim (`setRimAlpha`).
+   */
+  ink?: RimInk;
+}
+
+export interface RimInk {
+  color: string;
+  amount: number;
+  /** Falloff of the ink band (lower = wider); default: the rim's power. */
+  power?: number;
+  /** Share of the mix spread over the whole face (a faint tint of the ink colour), 0…1. */
+  fill?: number;
+}
+
+/** Shader uniforms of a rim (kept in `material.userData.rim`). */
+interface RimUniforms {
+  uRimColor: { value: THREE.Color };
+  uRimPower: { value: number };
+  uRimStrength: { value: number };
+  uRimAlpha: { value: number };
+  uRimInk: { value: THREE.Color };
+  uRimInkAmount: { value: number };
+  uRimInkPower: { value: number };
+  uRimInkFill: { value: number };
+}
+
+/**
+ * The colour (linear RGB, 0…1) and opacity a rim material gives a fragment, as its shader does.
+ * The lit surface colour is the material's own colour (light of about 1 on it) unless `lit` is
+ * given; `edge` = 1 − |n · v| (0 facing the camera, 1 at the silhouette). For tests of the
+ * outline's contrast (jsdom never runs the shader); null for a material without a rim.
+ */
+export function rimFragment(
+  material: THREE.MeshStandardMaterial,
+  edge: number,
+  lit: readonly [number, number, number] = [material.color.r, material.color.g, material.color.b],
+): { rgb: [number, number, number]; alpha: number } | null {
+  const u = material.userData.rim as RimUniforms | undefined;
+  if (!u) return null;
+  const rimF = edge ** u.uRimPower.value;
+  const amount = u.uRimInkAmount.value;
+  const inkW = Math.min(1, Math.max(0, amount * edge ** u.uRimInkPower.value));
+  const mixW = Math.max(inkW, amount * u.uRimInkFill.value);
+  const add = u.uRimColor.value;
+  const ink = u.uRimInk.value;
+  const rgb = (['r', 'g', 'b'] as const).map((k, i) => {
+    const lighted = (lit[i] ?? 0) + add[k] * rimF * u.uRimStrength.value;
+    return lighted + (ink[k] - lighted) * mixW;
+  }) as [number, number, number];
+  const alpha = Math.min(1, Math.max(material.opacity + rimF * u.uRimAlpha.value, inkW));
+  return { rgb, alpha };
 }
 
 /**
@@ -24,26 +78,52 @@ export interface RimOptions {
  * call). Runs in the material's own shader; jsdom never compiles it, which is fine.
  */
 export function withRim<M extends THREE.MeshStandardMaterial>(material: M, rim: RimOptions): M {
-  const uniforms = {
+  const power = rim.power ?? 2.6;
+  const uniforms: RimUniforms = {
     uRimColor: { value: new THREE.Color(rim.color) },
-    uRimPower: { value: rim.power ?? 2.6 },
+    uRimPower: { value: power },
     uRimStrength: { value: rim.strength ?? 0.6 },
     uRimAlpha: { value: rim.alpha ?? 0.5 },
+    uRimInk: { value: new THREE.Color(rim.ink?.color ?? rim.color) },
+    uRimInkAmount: { value: rim.ink?.amount ?? 0 },
+    uRimInkPower: { value: rim.ink?.power ?? power },
+    uRimInkFill: { value: rim.ink?.fill ?? 0 },
   };
   material.userData.rim = uniforms;
+  // What `setRimAlpha` scales the ink by (a fading shell takes its outline with it).
+  material.userData.rimBase = {
+    alpha: uniforms.uRimAlpha.value,
+    ink: uniforms.uRimInkAmount.value,
+  };
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.fragmentShader = shader.fragmentShader
       .replace(
         'void main() {',
-        'uniform vec3 uRimColor;\nuniform float uRimPower;\nuniform float uRimStrength;\nuniform float uRimAlpha;\nvoid main() {',
+        [
+          'uniform vec3 uRimColor;',
+          'uniform float uRimPower;',
+          'uniform float uRimStrength;',
+          'uniform float uRimAlpha;',
+          'uniform vec3 uRimInk;',
+          'uniform float uRimInkAmount;',
+          'uniform float uRimInkPower;',
+          'uniform float uRimInkFill;',
+          'void main() {',
+        ].join('\n'),
       )
       .replace(
         '#include <opaque_fragment>',
         [
-          'float rimF = pow(1.0 - clamp(abs(dot(normal, normalize(vViewPosition))), 0.0, 1.0), uRimPower);',
+          'float rimEdge = 1.0 - clamp(abs(dot(normal, normalize(vViewPosition))), 0.0, 1.0);',
+          'float rimF = pow(rimEdge, uRimPower);',
           'outgoingLight += uRimColor * rimF * uRimStrength;',
-          'diffuseColor.a = clamp(diffuseColor.a + rimF * uRimAlpha, 0.0, 1.0);',
+          // Ink off (amount 0): the mix and the max leave colour and opacity as they were. Its
+          // band follows the geometric normal: a bumpy surface keeps a clean outline.
+          'float rimInkEdge = 1.0 - clamp(abs(dot(nonPerturbedNormal, normalize(vViewPosition))), 0.0, 1.0);',
+          'float rimInkW = clamp(uRimInkAmount * pow(rimInkEdge, uRimInkPower), 0.0, 1.0);',
+          'outgoingLight = mix(outgoingLight, uRimInk, max(rimInkW, uRimInkAmount * uRimInkFill));',
+          'diffuseColor.a = clamp(max(diffuseColor.a + rimF * uRimAlpha, rimInkW), 0.0, 1.0);',
           '#include <opaque_fragment>',
         ].join('\n'),
       );
@@ -87,10 +167,14 @@ export function withTint<M extends THREE.MeshStandardMaterial>(
   return material;
 }
 
-/** Updates a rim's opacity term (e.g. a membrane that fades). */
+/** Updates a rim's opacity term (e.g. a membrane that fades); its ink outline fades along. */
 export function setRimAlpha(material: THREE.Material, alpha: number): void {
-  const u = material.userData.rim as { uRimAlpha: { value: number } } | undefined;
-  if (u) u.uRimAlpha.value = alpha;
+  const u = material.userData.rim as RimUniforms | undefined;
+  if (!u) return;
+  u.uRimAlpha.value = alpha;
+  const base = material.userData.rimBase as { alpha: number; ink: number } | undefined;
+  if (base && base.alpha > 0)
+    u.uRimInkAmount.value = base.ink * Math.min(1, Math.max(0, alpha / base.alpha));
 }
 
 export interface SolidOptions {

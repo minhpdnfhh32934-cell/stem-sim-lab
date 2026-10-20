@@ -88,6 +88,7 @@ function readPalette(): {
   membraneOpacity: number;
   rimStrength: number;
   edgeShade: number;
+  shellInk: number;
 } {
   const css = getComputedStyle(document.documentElement);
   // Theme tokens only; the neutral fallback is for environments without the stylesheet.
@@ -102,6 +103,7 @@ function readPalette(): {
     membraneOpacity: number('--m3d-membrane-opacity', 0.16),
     rimStrength: number('--m3d-rim', 0.7),
     edgeShade: number('--m3d-edge-shade', 0),
+    shellInk: number('--m3d-shell-ink', 0),
   };
 }
 
@@ -501,6 +503,7 @@ export function Meiosis3DView({
       membraneOpacity: look.membraneOpacity,
       rimStrength: look.rimStrength,
       edgeShade: look.edgeShade,
+      shellInk: look.shellInk,
       hdr: quality.bloom,
     });
     sceneRef.current = { scene: ms, tl };

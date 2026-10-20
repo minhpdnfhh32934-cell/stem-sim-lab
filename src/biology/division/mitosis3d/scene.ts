@@ -84,6 +84,8 @@ export interface SceneOptions {
   rimStrength?: number;
   /** How much solids darken towards their silhouette (a theme token, `withEdgeShade`). */
   edgeShade?: number;
+  /** Darker outline of see-through shells (a theme token: on in light, 0 in dark). */
+  shellInk?: number;
   /** HDR path (High tier on a discrete GPU): glowing centrosome cores, the wall's fibres. */
   hdr?: boolean;
 }
@@ -217,6 +219,7 @@ export function buildMitosisScene(
       membraneOpacity: opts.membraneOpacity ?? 0.16,
       rimStrength,
       edgeShade,
+      shellInk: opts.shellInk ?? 0,
       hdr,
       plant: !animal,
     },

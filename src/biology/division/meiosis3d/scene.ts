@@ -81,6 +81,8 @@ export interface MeiosisSceneOptions {
   rimStrength?: number;
   /** How much solids darken towards their silhouette (a theme token, `withEdgeShade`). */
   edgeShade?: number;
+  /** Darker outline of see-through shells (a theme token: on in light, 0 in dark). */
+  shellInk?: number;
   /** HDR path (High tier on a discrete GPU): glowing centrosome cores and chiasma ring. */
   hdr?: boolean;
 }
@@ -195,6 +197,7 @@ export function buildMeiosisScene(
       membraneOpacity: opts.membraneOpacity ?? 0.16,
       rimStrength,
       edgeShade: opts.edgeShade ?? 0,
+      shellInk: opts.shellInk ?? 0,
       hdr,
     },
     keep,

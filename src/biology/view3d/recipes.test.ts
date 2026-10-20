@@ -83,8 +83,8 @@ describe('material recipes: tier → material class', () => {
     expect((back!.material as THREE.Material).side).toBe(THREE.BackSide);
     expect((back!.material as THREE.Material).opacity).toBeCloseTo(0.07, 6);
     expect((front!.material as THREE.Material).side).toBe(THREE.FrontSide);
-    // The theme's membrane opacity (light: 0.14).
-    expect((front!.material as THREE.Material).opacity).toBeCloseTo(0.14, 6);
+    // The theme's membrane opacity (light: 0.2).
+    expect((front!.material as THREE.Material).opacity).toBeCloseTo(0.2, 6);
     assignLayers(kit.scene);
     for (const m of g.children) expect(m.layers.mask).toBe(1 << LAYER.SHELL);
     kit.dispose();
