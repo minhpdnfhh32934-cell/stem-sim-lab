@@ -9,13 +9,13 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 /**
  * Biology lessons whose 3D view uses this kit's 3D / 2D choice. Mitosis and meiosis keep theirs in
  * the division store (saved in .stemsim files): `view3d` and `meiosisView3d`; "ADN → mARN →
- * Protein" and "Đột biến điểm" in the dogma store (`view3d`).
+ * Protein" and "Đột biến điểm" in the dogma store (`view3d`); "Di truyền Mendel" in its own
+ * store (`view3d`).
  */
 export type Bio3DLesson =
-  'mendel' | 'hardyWeinberg' | 'drift' | 'logistic' | 'lotkaVolterra' | 'enzyme' | 'transport';
+  'hardyWeinberg' | 'drift' | 'logistic' | 'lotkaVolterra' | 'enzyme' | 'transport';
 
 export const BIO3D_LESSONS: readonly Bio3DLesson[] = [
-  'mendel',
   'hardyWeinberg',
   'drift',
   'logistic',

@@ -697,3 +697,68 @@
 .bio3d-figure__bar {
   margin-bottom: var(--space-2);
 }
+/* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the
+   phenotype classes share one wrapping row under the step strip. */
+.men3d__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.men3d__row > * {
+  pointer-events: auto;
+}
+.men3d__legend {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.men3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+/* A class's colour and its shape cue (the same as its tokens and bar in the picture). */
+.men3d__swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--border-strong);
+  background: var(--swatch);
+}
+.men3d__swatch--sphere,
+.men3d__swatch--ring {
+  border-radius: 50%;
+}
+.men3d__swatch--ring {
+  border: 3px solid var(--swatch);
+  background: transparent;
+}
+.men3d__swatch--cube {
+  border-radius: 2px;
+}
+.men3d__swatch--diamond {
+  transform: rotate(45deg) scale(0.85);
+}
+.men3d__swatch--cone {
+  border: 0;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.men3d__swatch--capsule {
+  width: 7px;
+  border-radius: 4px;
+}
+.men3d__swatch--star {
+  border: 0;
+  clip-path: polygon(
+    50% 0,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}

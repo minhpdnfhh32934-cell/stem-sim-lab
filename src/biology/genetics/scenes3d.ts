@@ -6,8 +6,7 @@
  *   empty tube a fixed or lost allele.
  * - Hardy–Weinberg: the population's individuals coloured by genotype, and its gene pool
  *   (2·AA + Aa copies of A, Aa + 2·aa of a) in a jar.
- * - Mendel: the Punnett square as a board of tiles coloured by phenotype, the gametes along its
- *   edges, and a bar per phenotype as tall as its exact probability.
+ * (Mendel has its own 3D view: `mendel3d/`.)
  */
 import * as THREE from 'three';
 import { discPoints, type Bio3DScene, type SceneKit, type Vec3 } from '../view3d/kit';
@@ -238,99 +237,6 @@ export function buildHwScene(kit: SceneKit, input: HwSceneInput): Bio3DScene {
       center: [(left + right) / 2, top / 3, 0.8],
       radius: Math.hypot((right - left) / 2, R + 2),
       points: pts3,
-    },
-  };
-}
-
-export interface MendelSceneInput {
-  rows: string[];
-  cols: string[];
-  cells: string[][];
-  /** Phenotype class (0…4) of each cell, as the Punnett table colours it. */
-  hue: number[][];
-  bars: { key: string; count: string; probability: number; hue: number }[];
-  texts: { female: string; male: string };
-}
-
-/** The Punnett table's colours, in the same order (bio.css .punnett-cell--n). */
-const HUE_TOKEN = ['--chart-1', '--chart-2', '--chart-3', '--chart-5', '--chart-6'];
-
-export function buildMendelScene(kit: SceneKit, input: MendelSceneInput): Bio3DScene {
-  const n = input.rows.length;
-  const mCols = input.cols.length;
-  const tile = 2;
-  const gap = 0.22;
-  const step = tile + gap;
-  // Tiles: columns along x, rows along z (the first row at the back, like the table's top).
-  const x0 = -((mCols - 1) * step) / 2;
-  const z0 = -((n - 1) * step) / 2;
-  const hueMat = (h: number) =>
-    kit.solid(kit.color(HUE_TOKEN[h % HUE_TOKEN.length] ?? '--chart-1'), {
-      roughness: 0.5,
-      clearcoat: 0.3,
-    });
-  const board = kit.mesh(
-    kit.roundedBox(12),
-    kit.solid(kit.color('--bg-panel-2'), { roughness: 0.8 }),
-  );
-  const bw = ((mCols + 1) * step) / 2 + 0.3;
-  const bd = ((n + 1) * step) / 2 + 0.3;
-  board.scale.set(bw, 0.12, bd);
-  board.position.set(
-    x0 - step / 2 + ((mCols - 1) * step) / 2,
-    -0.2,
-    z0 - step / 2 + ((n - 1) * step) / 2,
-  );
-  kit.shadow(-0.5, bw + 1, bd + 1, 0.2);
-  input.cells.forEach((row, i) => {
-    row.forEach((genotype, j) => {
-      const t = kit.mesh(kit.roundedBox(10), hueMat(input.hue[i]?.[j] ?? 0));
-      t.scale.set(tile / 2, 0.18, tile / 2);
-      t.position.set(x0 + j * step, 0.1, z0 + i * step);
-      kit.label(genotype, [x0 + j * step, 0.35, z0 + i * step], 'plain');
-    });
-  });
-  // Gametes: spheres along the left edge (♀, rows) and the back edge (♂, columns).
-  const gameteMat = kit.solid(kit.color('--text-muted'), { roughness: 0.35, clearcoat: 0.5 });
-  const gamete = (g: string, x: number, z: number) => {
-    const s = kit.mesh(kit.sphere(), gameteMat);
-    s.scale.setScalar(0.45);
-    s.position.set(x, 0.45, z);
-    kit.label(g, [x, 1.25, z], 'strong');
-  };
-  input.rows.forEach((g, i) => {
-    gamete(g, x0 - step, z0 + i * step);
-  });
-  input.cols.forEach((g, j) => {
-    gamete(g, x0 + j * step, z0 - step);
-  });
-  kit.label(`${input.texts.female} \\ ${input.texts.male}`, [x0 - step, 1.25, z0 - step], 'muted');
-
-  // Bars: one per phenotype, height ∝ exact probability; the count on top, the class below.
-  const H = Math.max(4, n * step * 0.75);
-  const bx0 = x0 + mCols * step + 1.6;
-  input.bars.forEach((b, k) => {
-    const bar = kit.mesh(kit.roundedBox(10), hueMat(b.hue));
-    const h = Math.max(0.06, b.probability * H);
-    const x = bx0 + k * 2;
-    bar.scale.set(0.7, h / 2, 0.7);
-    bar.position.set(x, h / 2, 0);
-    kit.label(b.count, [x, h + 0.7, 0], 'strong');
-    kit.label(b.key, [x, -0.5, 1.6], 'plain');
-  });
-  const right = bx0 + Math.max(1, input.bars.length) * 2 - 0.8;
-  const left = x0 - step - 0.8;
-  const back = z0 - step - 0.6;
-  const front = z0 + n * step + 0.6;
-  const pts: Vec3[] = [];
-  for (const x of [left, right]) for (const z of [back, front]) pts.push([x, -0.3, z], [x, 1.4, z]);
-  pts.push([right, H + 1.2, 0], [bx0, H + 1.2, 0]);
-  return {
-    kit,
-    bounds: {
-      center: [(left + right) / 2, H / 4, (back + front) / 2],
-      radius: Math.hypot((right - left) / 2, (front - back) / 2),
-      points: pts,
     },
   };
 }

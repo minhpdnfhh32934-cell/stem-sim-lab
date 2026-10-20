@@ -3,23 +3,14 @@ import { describe, expect, it } from 'vitest';
 import type { SceneKit } from '../view3d/kit';
 import { expectAllFreed, testKit } from '../view3d/testing';
 import { allelePool, driftAt, fateOf, genotypeFigures } from './genetics3d';
-import { cross, phenotype, type Locus } from './mendel';
 import { wrightFisher } from './population';
-import { buildDriftScene, buildHwScene, buildMendelScene } from './scenes3d';
+import { buildDriftScene, buildHwScene } from './scenes3d';
 import { rng } from './stats';
 
 const instancedCounts = (kit: SceneKit) => {
   const out: number[] = [];
   kit.scene.traverse((o) => {
     if (o instanceof THREE.InstancedMesh) out.push(o.visible ? o.count : 0);
-  });
-  return out;
-};
-const labels = (kit: SceneKit) => {
-  const out: string[] = [];
-  kit.scene.traverse((o) => {
-    const el = (o as { element?: HTMLElement }).element;
-    if (el) out.push(el.textContent);
   });
   return out;
 };
@@ -78,34 +69,6 @@ describe('genetics 3D scenes', () => {
       texts: { A: 'A', a: 'a', pool: 'pool', AA: 'AA', Aa: 'Aa', aa: 'aa' },
     });
     expect(instancedCounts(kit)).toEqual([36, 48, 16, 120, 80]);
-    expectAllFreed(kit, track, start);
-  });
-
-  it('Mendel: one tile per Punnett cell, labelled with its genotype; bars of every phenotype', () => {
-    const { kit, track, start } = testKit();
-    const loci: Locus[] = [
-      { letter: 'A', dominance: 'complete' },
-      { letter: 'B', dominance: 'complete' },
-    ];
-    const r = cross('AaBb', 'AaBb', loci);
-    const keys = [...r.phenotypes.keys()].sort();
-    buildMendelScene(kit, {
-      rows: r.punnett.rows,
-      cols: r.punnett.cols,
-      cells: r.punnett.cells,
-      hue: r.punnett.cells.map((row) => row.map((c) => keys.indexOf(phenotype(c, loci)))),
-      bars: keys.map((k, i) => ({
-        key: k,
-        count: String(i),
-        probability: r.phenotypes.get(k) ?? 0,
-        hue: i,
-      })),
-      texts: { female: '♀', male: '♂' },
-    });
-    const text = labels(kit);
-    for (const row of r.punnett.cells) for (const c of row) expect(text).toContain(c);
-    for (const k of keys) expect(text).toContain(k);
-    expect(text.filter((t) => /^[A-Za-z]{4}$/.test(t))).toHaveLength(16);
     expectAllFreed(kit, track, start);
   });
 });

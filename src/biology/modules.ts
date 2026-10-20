@@ -137,7 +137,7 @@ export const mendel: ModuleView = {
   title: L('Di truyền Mendel', 'Mendelian genetics'),
   Stage: MendelStage,
   Panel: MendelPanel,
-  state: bindStore(useMendel, ['loci', 'dominance', 'p1', 'p2', 'n']),
+  state: bindStore(useMendel, ['loci', 'dominance', 'p1', 'p2', 'n', 'view3d']),
 };
 export const hardyWeinberg: ModuleView = {
   title: L('Định luật Hardy–Weinberg', 'Hardy–Weinberg principle'),

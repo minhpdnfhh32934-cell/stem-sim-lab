@@ -9,17 +9,22 @@ import { XYChart } from '@/ui/charts/XYChart';
 import { cx } from '@/ui/cx';
 import { BSRC, L, usePublishCard } from '../common';
 import { useFmt } from '../fmt';
-import { cross, ratio, sampleOffspring, type Dominance, type Locus } from './mendel';
+import { cross, phenotype, ratio, type Dominance, type Locus } from './mendel';
+import { CHI_VERDICT, MENDEL_CARD, drawLabel } from './mendelCard';
+import { mendelDraw } from './mendelRun';
+import { InvalidGenotype } from './MendelNotice';
+import { Mendel3DSwitch } from './mendel3d/Mendel3DSwitch';
+import { useMendel3D } from './mendel3d/store';
 import {
   expectedHeterozygosity,
   hardyWeinberg,
   randomMating,
   testHardyWeinberg,
 } from './population';
-import { chiSquare, rng } from './stats';
-import { LETTERS, useDrift, useHw, useMendel, type DriftState, type MendelState } from './store';
+import { rng } from './stats';
+import { LETTERS, lociOf, useDrift, useHw, useMendel, type DriftState } from './store';
 import { MoreInBasic } from '../ui';
-import { useShow3d } from '../view3d/support';
+import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
 import { useDriftRuns } from './driftData';
@@ -27,19 +32,14 @@ import '../bio.css';
 
 // three.js and the 3D pictures load only when a 3D view is shown.
 const Drift3D = lazy(() => import('./Drift3D').then((m) => ({ default: m.Drift3D })));
-const Mendel3D = lazy(() => import('./Mendel3D').then((m) => ({ default: m.Mendel3D })));
+const Mendel3DView = lazy(() =>
+  import('./mendel3d/Mendel3DView').then((m) => ({ default: m.Mendel3DView })),
+);
 const HardyWeinberg3D = lazy(() =>
   import('./HardyWeinberg3D').then((m) => ({ default: m.HardyWeinberg3D })),
 );
 
 /* ───────────────────────────── Mendel ───────────────────────────── */
-
-function lociOf(st: MendelState): Locus[] {
-  return LETTERS.slice(0, st.loci).map((letter, i) => ({
-    letter,
-    dominance: st.dominance[i] ?? 'complete',
-  }));
-}
 
 function genotypeOptions(loci: Locus[]): string[] {
   let out = [''];
@@ -51,45 +51,55 @@ function genotypeOptions(loci: Locus[]): string[] {
   return out;
 }
 
-const MENDEL_CARD: ScienceCardData = {
-  title: L('Di truyền Mendel', 'Mendelian genetics'),
-  model: L(
-    'Các gen phân li độc lập (không liên kết), giao tử có xác suất bằng nhau; tỉ lệ kiểu gen, kiểu hình tính chính xác bằng phân số. Mô phỏng Monte Carlo tạo ngẫu nhiên con lai và so sánh bằng kiểm định χ².',
-    'Independently assorting genes (no linkage) and equally likely gametes; genotype/phenotype ratios are exact fractions. A Monte Carlo run draws random offspring and compares with a χ² test.',
-  ),
-  equations: [{ tex: '\\chi^2 = \\sum \\dfrac{(O - E)^2}{E},\\quad df = k - 1' }],
-  assumptions: [
-    L(
-      'Trội hoàn toàn hoặc trội không hoàn toàn; không đột biến, không gây chết.',
-      'Complete or incomplete dominance; no mutation or lethality.',
-    ),
-    L('Các cặp gen nằm trên các cặp NST khác nhau.', 'Genes on different chromosome pairs.'),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Test tự động: 3 : 1, 1 : 1, 9 : 3 : 3 : 1, 1 : 2 : 1; χ² tới hạn 3,841 / 5,991 / 7,815 ở α = 0,05.',
-    'Automated tests: 3:1, 1:1, 9:3:3:1, 1:2:1; χ² critical values 3.841 / 5.991 / 7.815 at α = 0.05.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.sgk12, BSRC.campbell],
-};
-
+/**
+ * "Di truyền Mendel": the 3D view (default) or the 2D page, by the lesson store's saved
+ * `view3d`. The 2D page takes over when WebGL is missing or lost, or on the Low quality tier.
+ */
 export function MendelStage() {
+  const view3d = useMendel((s) => s.view3d);
+  const reason = useNo3dReason(useMendel3D((s) => s.webglFailed));
+  const notice = useNo3dNotice(view3d, reason);
+  if (view3d && !reason) {
+    return (
+      <Suspense fallback={<div className="bio-view" />}>
+        <Mendel3DView />
+      </Suspense>
+    );
+  }
+  return <MendelPage notice={notice} />;
+}
+
+/** The 2D page: the Punnett table, the ratios and the Monte Carlo table. */
+function MendelPage({ notice }: { notice: string | undefined }) {
   usePublishCard(MENDEL_CARD);
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const st = useMendel();
   const loci = lociOf(st);
-  const result = useMemo(() => {
+  const read = useMemo(() => {
     try {
-      return cross(st.p1, st.p2, loci);
-    } catch {
-      return null;
+      return { ok: true as const, result: cross(st.p1, st.p2, loci) };
+    } catch (e) {
+      return { ok: false as const, error: e instanceof Error ? e.message : String(e) };
     }
     // loci derives from st
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [st.p1, st.p2, st.loci, st.dominance]);
-  if (!result) return null;
+  const toolbar = (
+    <div className="chem-toolbar">
+      <Mendel3DSwitch />
+      {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+    </div>
+  );
+  if (!read.ok) {
+    return (
+      <div className="bio-scroll">
+        {toolbar}
+        <InvalidGenotype error={read.error} />
+      </div>
+    );
+  }
+  const { result } = read;
   const phenKeys = [...result.phenotypes.keys()].sort();
   const phenRatio = ratio(phenKeys.map((k) => result.phenotypes.get(k) ?? 0));
   const genKeys = [...result.genotypes.keys()].sort();
@@ -101,7 +111,7 @@ export function MendelStage() {
 
   return (
     <div className="bio-scroll">
-      <Bio3DFigure lesson="mendel" figure={<Mendel3D />} />
+      {toolbar}
       <p className="rx-eq rx-eq--big">
         P: {st.p1} × {st.p2}
       </p>
@@ -123,17 +133,11 @@ export function MendelStage() {
               {result.punnett.rows.map((g, i) => (
                 <tr key={i}>
                   <th scope="row">{g}</th>
-                  {result.punnett.cells[i]?.map((c, j) => {
-                    const ph =
-                      phenKeys.find(
-                        (k) => result.phenotypes.has(k) && phenotypeOfCell(c, loci) === k,
-                      ) ?? '';
-                    return (
-                      <td key={j} className={`punnett-cell punnett-cell--${hue(ph)}`}>
-                        {c}
-                      </td>
-                    );
-                  })}
+                  {result.punnett.cells[i]?.map((c, j) => (
+                    <td key={j} className={`punnett-cell punnett-cell--${hue(phenotype(c, loci))}`}>
+                      {c}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -163,35 +167,16 @@ export function MendelStage() {
   );
 }
 
-function phenotypeOfCell(genotype: string, loci: Locus[]): string {
-  return loci
-    .map((l, i) => {
-      const pair = genotype.slice(2 * i, 2 * i + 2);
-      if (l.dominance === 'incomplete') return pair;
-      return /[A-Z]/.test(pair) ? `${l.letter}_` : pair;
-    })
-    .join(' ');
-}
-
 function MonteCarlo() {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const st = useMendel();
-  const loci = lociOf(st);
-  const data = useMemo(() => {
-    if (!st.ran) return null;
-    try {
-      const theory = cross(st.p1, st.p2, loci).phenotypes;
-      const keys = [...theory.keys()].sort();
-      const counts = sampleOffspring(st.p1, st.p2, loci, st.n, rng(st.seed));
-      const obs = keys.map((k) => counts.get(k) ?? 0);
-      const exp = keys.map((k) => (theory.get(k) ?? 0) * st.n);
-      return { keys, obs, exp, test: chiSquare(obs, exp) };
-    } catch {
-      return null;
-    }
+  // The same draw as the 3D offspring field (same function, same seed).
+  const data = useMemo(
+    () => mendelDraw(st),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [st.ran, st.seed, st.n, st.p1, st.p2, st.loci, st.dominance]);
+    [st.ran, st.seed, st.n, st.p1, st.p2, st.loci, st.dominance],
+  );
   // |v| < 1e-12 is floating-point noise (e.g. χ² of a perfect fit), shown as 0.
   const f = (v: number, d = 3) =>
     formatNumber(locale, Math.abs(v) < 1e-12 ? 0 : v, { maximumSignificantDigits: d });
@@ -205,8 +190,7 @@ function MonteCarlo() {
           useMendel.setState((s) => ({ ran: true, seed: s.seed + 1 }));
         }}
       >
-        <Dices size={15} aria-hidden="true" />{' '}
-        {Lz(L(`Tạo ngẫu nhiên ${st.n} con lai`, `Draw ${st.n} random offspring`))}
+        <Dices size={15} aria-hidden="true" /> {Lz(drawLabel(formatNumber(locale, st.n)))}
       </button>
       {data && (
         <table className="chem-table">
@@ -227,7 +211,7 @@ function MonteCarlo() {
                 <th scope="row" className="mono">
                   {k}
                 </th>
-                <td className="num">{data.obs[i]}</td>
+                <td className="num">{formatNumber(locale, data.obs[i] ?? 0)}</td>
                 <td className="num">{f(data.exp[i] ?? 0, 5)}</td>
               </tr>
             ))}
@@ -241,9 +225,7 @@ function MonteCarlo() {
                     data.test.p >= 0.05 ? 'bio-verdict--ok' : 'bio-verdict--bad',
                   )}
                 >
-                  {data.test.p >= 0.05
-                    ? Lz(L('phù hợp lí thuyết (α = 0,05)', 'consistent with theory (α = 0.05)'))
-                    : Lz(L('khác lí thuyết (α = 0,05)', 'differs from theory (α = 0.05)'))}
+                  {Lz(data.test.p >= 0.05 ? CHI_VERDICT.ok : CHI_VERDICT.bad)}
                 </span>
               </td>
             </tr>
