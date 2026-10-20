@@ -459,6 +459,20 @@ Progress log: `docs/PROGRESS.md`.
   (`useMutation3D`, `applyPick`: a normal base pair sets the saved `pos`), `Mutation3DView`,
   `Mutation3DSwitch`. 3D/2D is the dogma store's `view3d`. The outlines pulse a few times after a
   change, never with reduced motion. E2E `tests/e2e/mutation3d.spec.ts`.
+- Mendel 3D (`src/biology/genetics/mendel3d/`): `binding.ts` (pure: `mendelModel3d` from
+  `parseGenotype`/`gametes`/`cross`/`phenotype`/`ratio`; `fraction`; the four illustrative steps
+  meiosis → gametes → fertilisation → offspring, `stepEnd(k)` = a step complete; `fieldOf` = a
+  draw's counts scaled by `drawScale`/`apportion`, `FIELD_CAP` 400 on every tier), `layout.ts`
+  (board flat: rows = ♀ gametes, columns = ♂; parents left/behind, pedestals right — bar height =
+  probability × `barH`; `motionAt`, `overviewPoints`), `look.ts` (class colours: the 2D table's five
+  first, a shape cue each, no (colour, shape) repeat), `scene.ts`, `facts.ts` (cards: genotype,
+  probability as a fraction, phenotype), `camera.ts` ("Toàn cảnh"/"Bảng Punnett"; `pointsFrame`
+  centres the outline on screen), `store.ts` (`useMendel3D`, opens on the outcome; `currentMendel`
+  → the model's `GenotypeError` message), `Mendel3DView`, `Mendel3DSwitch`. The Monte Carlo run is
+  `genetics/mendelRun.ts` (`mendelDraw`, shared with the 2D table: same seed, same counts); texts
+  shared by both views in `mendelCard.ts`, the invalid-genotype notice in `MendelNotice.tsx`.
+  Saved: `view3d` (Mendel store). Shape geometries of the palette's cues:
+  `view3d/primitives/classShape.ts`. E2E `tests/e2e/mendel3d.spec.ts`.
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -469,11 +483,11 @@ Progress log: `docs/PROGRESS.md`.
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
 - Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis, DNA → mRNA →
-  protein or point mutations) has a 3D view too (3D by default, the learner's 3D/2D choice per
+  protein, point mutations or Mendel) has a 3D view too (3D by default, the learner's 3D/2D choice per
   lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
   labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
-  layout) / `Bio3DFigureBody` (figure above a page of tables: Mendel, Hardy–Weinberg), `SceneKit`
+  layout) / `Bio3DFigureBody` (figure above a page of tables: Hardy–Weinberg), `SceneKit`
   (owns and frees every geometry/material), `frame.ts` + `insets.ts` (camera
   keeps the subject clear of controls marked `data-inset`), `playback.ts`/`player.tsx`. A lesson's
   3D = pure numbers file (tested against its model) + `scene3d.ts` builder + lazy `Xxx3D.tsx`;
