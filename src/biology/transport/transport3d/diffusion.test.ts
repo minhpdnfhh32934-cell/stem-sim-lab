@@ -116,23 +116,31 @@ describe('diffusion in 3D: places (illustration)', () => {
       const plan = diffusionPlan(m);
       const lay = plan.layout;
       const p: Vec3 = [0, 0, 0];
+      // Every particle of every sampled frame is checked; failures are collected and asserted
+      // once (about a million expect() calls made this test time out in the full parallel run).
+      const bad: string[] = [];
       for (let s = 0; s <= 300; s++) {
         const f = diffusionFrameAt(m, (s / 300) * m.tEnd);
         let left = 0;
         for (let j = 0; j < m.total; j++) {
           particleAt(plan, f, j, true, p);
           if (p[0] < lay.xm) left++;
-          expect(p[0] < lay.xm ? 1 : 2).toBe(sideOf(m, f, j));
+          const at = `step ${s} particle ${j}`;
+          if ((p[0] < lay.xm ? 1 : 2) !== sideOf(m, f, j)) bad.push(`${at}: wrong side`);
           // Inside the box …
-          expect(p[0]).toBeGreaterThanOrEqual(lay.x0 + BOX.r - 1e-9);
-          expect(p[0]).toBeLessThanOrEqual(lay.x1 - BOX.r + 1e-9);
-          expect(Math.abs(p[1])).toBeLessThanOrEqual(BOX.hy - BOX.r + 1e-9);
-          expect(Math.abs(p[2])).toBeLessThanOrEqual(BOX.hz - BOX.r + 1e-9);
+          if (
+            p[0] < lay.x0 + BOX.r - 1e-9 ||
+            p[0] > lay.x1 - BOX.r + 1e-9 ||
+            Math.abs(p[1]) > BOX.hy - BOX.r + 1e-9 ||
+            Math.abs(p[2]) > BOX.hz - BOX.r + 1e-9
+          )
+            bad.push(`${at}: outside the box at ${p.join(', ')}`);
           // … and in the slab only inside a pore's channel.
-          if (inSlab(lay, p)) expect(poreHolding(lay, p)).toBeGreaterThanOrEqual(0);
+          if (inSlab(lay, p) && poreHolding(lay, p) < 0) bad.push(`${at}: in the membrane`);
         }
-        expect(left).toBe(f.n1);
+        if (left !== f.n1) bad.push(`step ${s}: ${left} on the left, N₁ = ${f.n1}`);
       }
+      expect(bad.slice(0, 5), JSON.stringify(over)).toEqual([]);
     }
   });
 
