@@ -12,6 +12,7 @@ import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import type { QualityTier } from '@/perf/tiers';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
+import { GROUND_POLAR_LIMITS, VIEW_FOV } from '@/ui/three/camera';
 import { DEFAULT_VIEW, NO_INSETS, fitPointsDistance, fitSphereDistance } from '@/ui/three/frame';
 import { measureInsets } from '@/ui/three/insets';
 import { useFrameLoop } from '@/ui/three/loop';
@@ -21,8 +22,8 @@ import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThr
 import { SceneKit, type Bio3DScene, type Vec3 } from './kit';
 import { useBio3DHealth, type Bio3DLesson } from './prefs';
 
-/** Vertical field of view (degrees). */
-const FOV = 36;
+/** Vertical field of view (degrees): the style guide's, like every 3D view. */
+const FOV = VIEW_FOV;
 
 /** Read-only hook for end-to-end tests (dev builds only). */
 export interface Bio3DDebug {
@@ -149,6 +150,8 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       near: 0.05,
       far: 2000,
       canvasClass: 'bio3d__canvas',
+      // Every population lives on the ground: the orbit never goes under it.
+      polarLimits: GROUND_POLAR_LIMITS,
       insets: () =>
         hostRef.current
           ? measureInsets(hostRef.current, hudRef?.current ?? null, NO_INSETS, aspect)

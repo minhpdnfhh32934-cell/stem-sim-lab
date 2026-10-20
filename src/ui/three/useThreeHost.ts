@@ -65,6 +65,11 @@ export interface ThreeHostOptions {
   onFrame?: (host: ThreeHost) => void;
   /** Elements whose size changes re-measure the insets (in addition to the host). */
   observe?: () => Iterable<Element>;
+  /**
+   * Orbit limits from straight above (degrees from +y): a habitat on the ground uses [10, 85] so
+   * the camera never goes under the ground. Default: free.
+   */
+  polarLimits?: readonly [number, number];
   /** Development builds: registers read-only test hooks; returns their cleanup. */
   debug?: (host: ThreeHost) => () => void;
 }
@@ -141,6 +146,10 @@ export class ThreeHost {
     this.controls.enablePan = false;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.14;
+    if (o.polarLimits) {
+      this.controls.minPolarAngle = THREE.MathUtils.degToRad(o.polarLimits[0]);
+      this.controls.maxPolarAngle = THREE.MathUtils.degToRad(o.polarLimits[1]);
+    }
     const onChange = () => {
       this.request();
     };

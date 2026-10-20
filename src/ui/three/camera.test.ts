@@ -4,6 +4,7 @@ import {
   KEY_ORBIT_STEP,
   easeInOut,
   easeInOutCubic,
+  viewDirection,
   fitDistance,
   orbitForKey,
   placeCamera,
@@ -94,5 +95,12 @@ describe('camera maths', () => {
     expect(orbitForKey('ArrowUp')).toEqual({ left: 0, up: KEY_ORBIT_STEP });
     expect(orbitForKey('ArrowDown')).toEqual({ left: 0, up: -KEY_ORBIT_STEP });
     expect(orbitForKey('Enter')).toBeNull();
+  });
+
+  it('viewDirection: the three-quarter view (azimuth 30°, elevation 20°) is a unit vector', () => {
+    const [x, y, z] = viewDirection();
+    expect(Math.hypot(x, y, z)).toBeCloseTo(1, 12);
+    expect((Math.atan2(x, z) * 180) / Math.PI).toBeCloseTo(30, 9);
+    expect((Math.asin(y) * 180) / Math.PI).toBeCloseTo(20, 9);
   });
 });

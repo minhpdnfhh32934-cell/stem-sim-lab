@@ -19,6 +19,22 @@ export interface ViewTangents {
 /** Margin around the subject inside the safe area. */
 export const FIT_MARGIN = 1.08;
 
+/** Style guide: the 3D views' vertical field of view (degrees). */
+export const VIEW_FOV = 34;
+
+/** Orbit limits of a subject on the ground (degrees from straight above): never under it. */
+export const GROUND_POLAR_LIMITS: readonly [number, number] = [10, 85];
+
+/**
+ * Unit direction from the target to the camera at `azimuth` (degrees, from +z towards +x) and
+ * `elevation` (degrees above the horizon). The default three-quarter view is 30° / 20°.
+ */
+export function viewDirection(azimuth = 30, elevation = 20): Vec3 {
+  const a = THREE.MathUtils.degToRad(azimuth);
+  const e = THREE.MathUtils.degToRad(elevation);
+  return [Math.sin(a) * Math.cos(e), Math.sin(e), Math.cos(a) * Math.cos(e)];
+}
+
 /** Right and up vectors of a camera looking along −dir (as `Object3D.lookAt` builds them). */
 export function viewBasis(dir: Vec3): { right: Vec3; up: Vec3 } {
   const z = new THREE.Vector3(...dir).normalize();
