@@ -3,7 +3,10 @@
  * constriction (narrower waist) at the centromere. Its centreline is written by the caller every
  * time the chromatid moves or condenses (no allocation: the buffers are made once), so a
  * decondensed thread can turn into a condensed rod in place. Colours are per segment along the
- * chromatid (one segment in mitosis; maternal/paternal pieces after a crossover in meiosis).
+ * chromatid (one segment in mitosis; maternal/paternal pieces after a crossover in meiosis); a
+ * colour change can be made sharp (`seams`: two rings close together), and the side that touches
+ * a sister chromatid can be shaded darker (contact occlusion in its own vertex attribute,
+ * `TUBE_SHADE_ATTRIBUTE`, applied by `withVertexShade`: the colours stay exact).
  *
  * Shape only — no banding pattern is drawn (bands would be invented anatomy). Sizes are
  * illustrative, not to scale.
@@ -23,6 +26,21 @@ export interface TubeShape {
   /** Rings across each rounded tip and across the waist (defaults 6 and 8). */
   tipRings?: number;
   waistRings?: number;
+  /**
+   * Shares of the length (0 = arm A tip … 1 = arm B tip) where the colour changes: a pair of
+   * rings is put very close on each side, so the change is a sharp line, not a blend.
+   */
+  seams?: readonly number[];
+}
+
+/** Soft occlusion where a chromatid touches its sister (written with the tube). */
+export interface ContactShade {
+  /** Unit direction towards the sister (the tube's local space). */
+  towards: ArrayLike<number>;
+  /** Darkening at the contact (0 … 1; 0.2 = down to 80 % brightness). */
+  strength: number;
+  /** Distance from the centromere over which the contact fades (sisters diverge along their arms). */
+  reach: number;
 }
 
 /** A coloured piece of the chromatid, as shares of its length from the arm A tip (0) to B (1). */
@@ -39,6 +57,9 @@ export interface ColourSegment {
  */
 export const TUBE_SURFACE_ATTRIBUTE = 'surf';
 
+/** A float attribute of the tube: each vertex's contact shade (1 = unshaded; `ContactShade`). */
+export const TUBE_SHADE_ATTRIBUTE = 'shade';
+
 /** Waist at the centromere: radius share at its narrowest, and its half-width. */
 export const CONSTRICTION = { depth: 0.38, halfWidth: 0.2 } as const;
 
@@ -47,6 +68,8 @@ export const RINGS_PER_UNIT = 7;
 /** Rings across each rounded tip and across the waist. */
 const TIP_RINGS = 6;
 const WAIST_RINGS = 8;
+/** Half the gap between the two rings of a sharp colour seam (world units). */
+const SEAM_HALF = 0.004;
 
 /** Half-width of the waist (never more than 40 % of the shorter arm). */
 function waistHalf(armA: number, armB: number): number {
@@ -69,6 +92,7 @@ export function ringStations(
   ringsPerUnit = RINGS_PER_UNIT,
   tipRings = TIP_RINGS,
   waistRings = WAIST_RINGS,
+  seams: readonly number[] = [],
 ): Float32Array {
   const out: number[] = [];
   const w = waistHalf(armA, armB);
@@ -88,6 +112,15 @@ export function ringStations(
   out.push(...arm(armA, -1).reverse());
   for (let i = 0; i <= waistRings; i++) out.push(-w + (2 * w * i) / waistRings);
   out.push(...arm(armB, 1));
+  // Sharp colour seams: a ring just before and just after each (never at a tip or the waist).
+  const total = armA + armB;
+  for (const u of seams) {
+    const at = u * total - armA;
+    if (u <= 0 || u >= 1 || Math.abs(at) < w + SEAM_HALF) continue;
+    if (at - SEAM_HALF <= -armA || at + SEAM_HALF >= armB) continue;
+    out.push(at - SEAM_HALF, at + SEAM_HALF);
+  }
+  out.sort((a, b) => a - b);
   return Float32Array.from(out);
 }
 
@@ -126,6 +159,9 @@ export class ChromosomeTube {
   private readonly pos: THREE.BufferAttribute;
   private readonly nor: THREE.BufferAttribute;
   private readonly col: THREE.BufferAttribute;
+  /** Each vertex's contact shade (1 = unshaded). */
+  private readonly shadeAttr: THREE.BufferAttribute;
+  private shaded = false;
   // Cosines and sines around the tube.
   private readonly around: Float32Array;
 
@@ -139,6 +175,7 @@ export class ChromosomeTube {
       shape.ringsPerUnit,
       shape.tipRings,
       shape.waistRings,
+      shape.seams,
     );
     this.rings = this.stations.length;
     let c = 0;
@@ -152,6 +189,8 @@ export class ChromosomeTube {
       this.around[2 * a + 1] = Math.sin(phi);
     }
     const n = this.rings * this.sides;
+    this.shadeAttr = new THREE.BufferAttribute(new Float32Array(n).fill(1), 1);
+    this.shadeAttr.setUsage(THREE.DynamicDrawUsage);
     this.pos = new THREE.BufferAttribute(new Float32Array(n * 3), 3);
     this.nor = new THREE.BufferAttribute(new Float32Array(n * 3), 3);
     this.col = new THREE.BufferAttribute(new Float32Array(n * 3).fill(1), 3);
@@ -160,6 +199,7 @@ export class ChromosomeTube {
     this.geometry.setAttribute('position', this.pos);
     this.geometry.setAttribute('normal', this.nor);
     this.geometry.setAttribute('color', this.col);
+    this.geometry.setAttribute(TUBE_SHADE_ATTRIBUTE, this.shadeAttr);
     const surf = new Float32Array(n * 3);
     for (let r = 0; r < this.rings; r++) {
       for (let a = 0; a < this.sides; a++) {
@@ -221,9 +261,17 @@ export class ChromosomeTube {
   /**
    * Writes the tube around a centreline: `centre` holds one point per ring (x, y, z), `radii` one
    * radius per ring. Frames are carried along the line (no twisting); normals follow the radius
-   * changes (round tips, waist).
+   * changes (round tips, waist). With `contact`, the side facing the sister is shaded darker near
+   * the centromere (where the two touch); without it, any earlier shade is cleared.
    */
-  write(centre: ArrayLike<number>, radii: ArrayLike<number>): void {
+  write(centre: ArrayLike<number>, radii: ArrayLike<number>, contact?: ContactShade): void {
+    const shadeOn = !!contact && contact.strength > 0;
+    const sx = shadeOn ? (contact.towards[0] as number) : 0;
+    const sy = shadeOn ? (contact.towards[1] as number) : 0;
+    const sz = shadeOn ? (contact.towards[2] as number) : 0;
+    const strength = shadeOn ? contact.strength : 0;
+    const reach = shadeOn ? Math.max(1e-3, contact.reach) : 1;
+    const shade = this.shadeAttr.array as Float32Array;
     const p = this.pos.array as Float32Array;
     const nn = this.nor.array as Float32Array;
     const m = this.sides;
@@ -288,6 +336,8 @@ export class ChromosomeTube {
       const cx = centre[3 * r] as number;
       const cy = centre[3 * r + 1] as number;
       const cz = centre[3 * r + 2] as number;
+      const along = (this.stations[r] as number) / reach;
+      const near = shadeOn ? strength / (1 + along * along) : 0;
       let k = 3 * r * m;
       for (let s = 0; s < m; s++) {
         const co = around[2 * s] as number;
@@ -301,8 +351,18 @@ export class ChromosomeTube {
         nn[k] = rx * inv - st * tx;
         nn[k + 1] = ry * inv - st * ty;
         nn[k + 2] = rz * inv - st * tz;
+        if (shadeOn) {
+          // Facing the sister: smoothstep of the cosine, strongest at the centromere.
+          const f = Math.max(0, rx * sx + ry * sy + rz * sz);
+          shade[r * m + s] = 1 - near * f * f * (3 - 2 * f);
+        }
         k += 3;
       }
+    }
+    if (shadeOn || this.shaded) {
+      if (!shadeOn) shade.fill(1);
+      this.shaded = shadeOn;
+      this.shadeAttr.needsUpdate = true;
     }
     this.pos.needsUpdate = true;
     this.nor.needsUpdate = true;

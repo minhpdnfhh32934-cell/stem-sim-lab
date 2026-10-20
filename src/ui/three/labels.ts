@@ -3,7 +3,8 @@
  * or right of the subject, joined to its part by a leader line, never on another label and never
  * outside the safe area (the canvas minus the controls over it). Parts behind the camera or off
  * screen get no label; beyond `cap` labels the rest are left out (a crowd of labels hides the
- * picture).
+ * picture). When one column is full, its least important labels move to the other column (if it
+ * has room) before any label is left out.
  */
 
 export interface Rect {
@@ -93,6 +94,28 @@ export function layoutLabels(
   };
   balance(left, right);
   balance(right, left);
+  const order = anchors.map((a) => a.id);
+  const rank = (a: LabelAnchor) => order.indexOf(a.id);
+  /** Whether a column of these labels fits the safe area's height. */
+  const fits = (group: readonly LabelAnchor[]) =>
+    group.length === 0 ||
+    stack(
+      [...group].sort((a, b) => a.y - b.y).map((a) => ({ y: a.y - a.h / 2, h: a.h })),
+      safe.top,
+      safe.bottom,
+      gap,
+    ) !== null;
+  /** A full column hands its least important labels to the other one while that has room. */
+  const spill = (from: LabelAnchor[], to: LabelAnchor[]) => {
+    while (from.length > 1 && !fits(from)) {
+      const worst = from.reduce((w, a) => (rank(a) > rank(w) ? a : w));
+      if (!fits([...to, worst])) break;
+      from.splice(from.indexOf(worst), 1);
+      to.push(worst);
+    }
+  };
+  spill(left, right);
+  spill(right, left);
   const out: PlacedLabel[] = [];
   const place = (group: LabelAnchor[], side: 'left' | 'right') => {
     if (group.length === 0) return;

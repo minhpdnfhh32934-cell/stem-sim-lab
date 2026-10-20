@@ -139,3 +139,33 @@ export function withEdgeShade<M extends THREE.MeshStandardMaterial>(
   material.customProgramCacheKey = () => `${key()}|simlab-edge`;
   return material;
 }
+
+/**
+ * Darkens the albedo by a per-vertex factor (a float attribute, 1 = unshaded): baked occlusion,
+ * e.g. where two touching parts face each other. The colour attribute (data colours) stays exact;
+ * only the lit result is darker. Lighting only, no draw call.
+ */
+export function withVertexShade<M extends THREE.MeshStandardMaterial>(
+  material: M,
+  attribute: string,
+): M {
+  const previous = material.onBeforeCompile.bind(material);
+  material.onBeforeCompile = (shader, renderer) => {
+    previous(shader, renderer);
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        'void main() {',
+        `attribute float ${attribute};\nvarying float vSimlabShade;\nvoid main() {`,
+      )
+      .replace('#include <begin_vertex>', `#include <begin_vertex>\nvSimlabShade = ${attribute};`);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('void main() {', 'varying float vSimlabShade;\nvoid main() {')
+      .replace(
+        '#include <color_fragment>',
+        '#include <color_fragment>\ndiffuseColor.rgb *= vSimlabShade;',
+      );
+  };
+  const key = material.customProgramCacheKey.bind(material);
+  material.customProgramCacheKey = () => `${key()}|simlab-shade-${attribute}`;
+  return material;
+}
