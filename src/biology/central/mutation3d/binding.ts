@@ -151,12 +151,18 @@ export function proteinText(t: Translation): string {
   return beadNames(t).join('–');
 }
 
-/** Amino acids of a helix's chain (0-based) that differ from the other chain: from firstChange on. */
+/**
+ * Amino acids of a helix's chain (0-based) that differ from the other chain at the same number,
+ * from firstChange on. A bead the other chain does not have (a lost or extra tail) differs.
+ */
 export function changedBeads(model: MutationModel3D, helix: HelixId): number[] {
-  const n = beadNames(strandOf(model, helix).t).length;
   const from = model.firstChange;
   if (from < 0) return [];
-  return Array.from({ length: Math.max(0, n - from) }, (_, k) => from + k);
+  const own = beadNames(strandOf(model, helix).t);
+  const other = beadNames(strandOf(model, helix === 'normal' ? 'mutated' : 'normal').t);
+  const out: number[] = [];
+  for (let k = from; k < own.length; k++) if (own[k] !== other[k]) out.push(k);
+  return out;
 }
 
 /**

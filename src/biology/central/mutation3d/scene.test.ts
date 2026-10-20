@@ -135,6 +135,13 @@ describe('3D point-mutation scene', () => {
     // The normal chain's lost tail is outlined.
     expect(d.beads.normal.filter((b) => b.outlined).map((b) => b.index)).toEqual([3, 4, 5]);
     sc.dispose();
+    // Missense (GGC → AGC, Gly → Ser): only that bead is drawn as changed; the Trp after it is not.
+    const mis = build({ kind: 'substitution', pos: 15, base: 'A' });
+    const e = mis.drawn();
+    expect(e.beads.mutated.filter((b) => b.changed).map((b) => b.index)).toEqual([4]);
+    expect(e.beads.mutated.filter((b) => b.outlined).map((b) => b.index)).toEqual([4]);
+    expect(e.beads.normal.filter((b) => b.outlined).map((b) => b.index)).toEqual([4]);
+    mis.dispose();
   });
 
   it('picking: a base pair of either helix, a bead, a bracket; nothing off the picture', () => {

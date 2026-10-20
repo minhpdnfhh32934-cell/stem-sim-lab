@@ -104,6 +104,36 @@ describe('3D point-mutation model', () => {
     expect(changedBeads(model, 'mutated')).toEqual([]);
   });
 
+  it('missense: only the swapped amino acid is marked, on both chains', () => {
+    // GGC → AGC at position 16 (Gly → Ser); Trp after it is the same on both chains.
+    const model = mutationModel3d(CODING, sub(15, 'A'));
+    expect(model.effect).toBe('missense');
+    expect(proteinText(model.normal.t)).toBe('Met–Ala–Phe–Lys–Gly–Trp');
+    expect(proteinText(model.mutated.t)).toBe('Met–Ala–Phe–Lys–Ser–Trp');
+    expect(changedBeads(model, 'normal')).toEqual([model.firstChange]);
+    expect(changedBeads(model, 'mutated')).toEqual([model.firstChange]);
+    expect(model.firstChange).toBe(4);
+  });
+
+  it('marked beads are exactly those that differ from the other chain at the same number', () => {
+    for (const m of [
+      sub(12, 'T'),
+      sub(15, 'A'),
+      del(9, 1),
+      del(9, 3),
+      ins(9, 'G'),
+      ins(10, 'AT'),
+    ]) {
+      const model = mutationModel3d(CODING, m);
+      const a = beadNames(model.normal.t);
+      const b = beadNames(model.mutated.t);
+      const diff = (own: string[], other: string[]): number[] =>
+        own.flatMap((x, k) => (k >= model.firstChange && x !== other[k] ? [k] : []));
+      expect(changedBeads(model, 'normal')).toEqual(diff(a, b));
+      expect(changedBeads(model, 'mutated')).toEqual(diff(b, a));
+    }
+  });
+
   it('frameshift: brackets after the first change sit elsewhere than the normal ones', () => {
     for (const m of [del(9, 1), ins(9, 'G'), ins(10, 'AT')]) {
       const model = mutationModel3d(CODING, m);

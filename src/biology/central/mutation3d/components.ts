@@ -73,7 +73,7 @@ export function mutationCard3d(): ScienceCardData {
       ),
       L(
         'Hai chuỗi axit amin xếp cạnh nhau theo số thứ tự axit amin; các hạt khác nhau từ axit amin đầu tiên bị đổi trở đi được tô nổi.',
-        'The two amino acid chains are lined up by amino acid number; the beads from the first changed amino acid on are highlighted.',
+        'The two amino acid chains are lined up by amino acid number; from the first changed amino acid on, the beads that differ are highlighted.',
       ),
       L(
         'Trình tự dài: hình chỉ vẽ một đoạn quanh vị trí đột biến; số thứ tự trên hình là vị trí thật trên trình tự.',
