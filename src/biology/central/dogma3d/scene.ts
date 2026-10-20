@@ -15,9 +15,11 @@ import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { pickFirst } from '@/ui/three/pick';
+import { withRelief } from '@/ui/three/relief';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
 import { glass, setRimAlpha } from '../../view3d/materials';
+import { proteinGeometry } from '../../view3d/recipes';
 import { B_DNA, RISE } from './bdna';
 import {
   activeIndex,
@@ -163,16 +165,30 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   const mrnaHalves = kit.instanced(halfGeo, solidOwn(NEUTRAL), W);
   const mrna = strandOf(pal.mrna);
 
-  // ── RNA polymerase and ribosome (glass shells, illustrative shapes) ─────────────────────
-  const shell = (color: string, opacity: number) =>
-    own(glass(color, { opacity, rim: { color, strength: 0.55, alpha: 0.45 } }));
+  // ── RNA polymerase and ribosome (see-through protein blobs, illustrative shapes) ────────
+  /**
+   * The kit's lumpy protein blob (seeded, so always the same shape) as a see-through shell: the
+   * mRNA and tRNAs inside stay visible; hollows are shaded darker (the blob's vertex colours)
+   * and fine grain catches the light. Not a real structure (the caption says so).
+   */
+  const shell = (color: string, opacity: number) => {
+    const m = own(
+      withRelief(glass(color, { opacity, rim: { color, strength: 0.55, alpha: 0.45 } }), {
+        frequency: 3.2,
+        height: 0.025,
+      }),
+    );
+    m.vertexColors = true;
+    return m;
+  };
+  const BLOB_SEED = { polymerase: 11, small: 29, large: 37 } as const;
   const polyMat = shell(pal.polymerase, 0.2);
-  const polymerase = kit.mesh(kit.sphere(1.4), polyMat);
+  const polymerase = kit.mesh(proteinGeometry(kit, BLOB_SEED.polymerase), polyMat);
   polymerase.renderOrder = 2;
   const smallMat = shell(pal.ribosome, 0.2);
   const largeMat = shell(pal.ribosome, 0.16);
-  const small = kit.mesh(kit.sphere(1.2), smallMat);
-  const large = kit.mesh(kit.sphere(1.2), largeMat);
+  const small = kit.mesh(proteinGeometry(kit, BLOB_SEED.small), smallMat);
+  const large = kit.mesh(proteinGeometry(kit, BLOB_SEED.large), largeMat);
   small.renderOrder = 2;
   large.renderOrder = 2;
 
