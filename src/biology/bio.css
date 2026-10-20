@@ -624,6 +624,36 @@
 .dogma3d__swatch--C {
   background: var(--chart-1);
 }
+/* 3D point mutations (src/biology/central/mutation3d): both proteins, one row each. */
+.mut3d__proteins {
+  display: grid;
+  gap: 2px;
+  padding: 6px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+}
+.mut3d__protein {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.mut3d__protein-label {
+  flex: none;
+  width: 9.5rem;
+  color: var(--text-muted);
+}
+/* A long protein keeps one line (the 2D page shows it in full). */
+.mut3d__protein .seq {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* Playback row: play / pause, the time slider and the moment shown. */
 .bio3d__player {
   display: flex;

@@ -6,7 +6,7 @@ import {
   Play,
   TriangleAlert,
 } from 'lucide-react';
-import { lazy, useEffect, useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { cx } from '@/ui/cx';
 import { IconButton } from '@/ui/IconButton';
@@ -24,11 +24,7 @@ import {
   type Translation,
 } from './dogma';
 import { EFFECT, dogmaCard, mutationOf, parseInput, useDogmaStore } from './state';
-import { Bio3DFigure } from '../view3d/switch';
 import '../bio.css';
-
-// three.js and the 3D helices load only when the mutation's 3D figure is shown.
-const Dogma3D = lazy(() => import('./Dogma3D').then((m) => ({ default: m.Dogma3D })));
 
 function CodonTrack({
   mrna,
@@ -117,7 +113,7 @@ export function DogmaStage({
   notice,
 }: {
   mode: 'dogma' | 'mutation';
-  /** Extra controls at the end of the toolbar (the DNA → protein 3D / 2D switch). */
+  /** Extra controls at the end of the toolbar (the lesson's 3D / 2D switch). */
   toolbar?: ReactNode;
   /** Why this 2D page is shown instead of the 3D view, when it is not the learner's choice. */
   notice?: string | undefined;
@@ -148,7 +144,7 @@ export function DogmaStage({
   if (!parsed.ok) {
     return (
       <div className="bio-scroll">
-        {mode === 'dogma' && toolbar && <div className="chem-toolbar">{toolbar}</div>}
+        {toolbar && <div className="chem-toolbar">{toolbar}</div>}
         <InvalidSequence error={parsed.error} />
       </div>
     );
@@ -161,7 +157,12 @@ export function DogmaStage({
     const mutated = mt ? mt.t : null;
     return (
       <div className="bio-scroll">
-        <Bio3DFigure lesson="pointMutation" figure={<Dogma3D />} />
+        {(toolbar ?? notice) && (
+          <div className="chem-toolbar">
+            {toolbar}
+            {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+          </div>
+        )}
         <div className="seq-row">
           <span className="seq-row__label">
             {Lz(L('ADN bình thường (mạch bổ sung)', 'Normal DNA (coding strand)'))}

@@ -16,10 +16,10 @@ const chromium = {
  * starved them while the dev server was still compiling (seen 2026-10-14: chemistry and learner
  * specs timed out only in the full parallel run). It runs on its own, after the others — so does
  * the Biology Studio spec, which shows the same 3D view in software, the meiosis 3D view
- * (meiosis3d.spec.ts), the DNA → mRNA → protein 3D view (dogma3d.spec.ts) and the other biology
- * lessons' 3D views (bio3d.spec.ts).
+ * (meiosis3d.spec.ts), the DNA → mRNA → protein 3D view (dogma3d.spec.ts), the point-mutation
+ * 3D view (mutation3d.spec.ts) and the other biology lessons' 3D views (bio3d.spec.ts).
  */
-const HEAVY_3D = /(mitosis3d|meiosis3d|dogma3d|studio-biology|bio3d)\.spec\.ts$/;
+const HEAVY_3D = /(mitosis3d|meiosis3d|dogma3d|mutation3d|studio-biology|bio3d)\.spec\.ts$/;
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */

@@ -66,7 +66,10 @@ export function parseInput(
   }
 }
 
-export function mutationOf(st: DogmaState, length: number): Mutation | null {
+export function mutationOf(
+  st: Pick<DogmaState, 'kind' | 'pos' | 'bases' | 'count'>,
+  length: number,
+): Mutation | null {
   const pos = Math.min(Math.max(1, st.pos), length) - 1;
   if (length === 0) return null;
   if (st.kind === 'substitution')

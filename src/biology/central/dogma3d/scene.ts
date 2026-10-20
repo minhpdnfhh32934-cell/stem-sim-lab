@@ -1,7 +1,7 @@
 /**
  * The three.js scene of "ADN → mARN → Protein" in 3D: the learner's own DNA as a B-DNA double
- * helix (one instanced rung half per base, coloured and shaped by base: purines are slabs,
- * pyrimidines bars), the RNA polymerase opening a bubble and building the mRNA on the template
+ * helix (the helix primitive of `helix.ts`, shared with "Đột biến điểm": one instanced rung half
+ * per base, coloured and shaped by base: purines are slabs, pyrimidines bars), the RNA polymerase opening a bubble and building the mRNA on the template
  * strand, then the mRNA (U for T) running through a ribosome while tRNAs bring the amino acids
  * and the polypeptide grows as a chain of beads.
  *
@@ -17,8 +17,7 @@ import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { pickFirst } from '@/ui/three/pick';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
-import { glass, roundedBox, setRimAlpha, solid } from '../../view3d/materials';
-import { ROLES } from '../../view3d/palette';
+import { glass, setRimAlpha } from '../../view3d/materials';
 import { B_DNA, RISE } from './bdna';
 import {
   activeIndex,
@@ -30,6 +29,21 @@ import {
   type DogmaMoment,
 } from './binding';
 import type { DogmaPart, DogmaSelection } from './components';
+import {
+  BAR,
+  BACKBONE_R,
+  BEAD_R,
+  NODE_R,
+  PURINE,
+  SLAB,
+  THICK,
+  Writer,
+  helixShapes,
+  helixSolid,
+  makeStrand,
+  readDogmaPalette,
+  type Strand,
+} from './helix';
 import {
   LAYOUT,
   beadPose,
@@ -44,40 +58,6 @@ import {
   type TrnaPose,
   type Vec3,
 } from './layout';
-
-/** Theme colours of the picture (values of CSS tokens). */
-export interface DogmaPalette {
-  bases: Record<'A' | 'T' | 'G' | 'C' | 'U', string>;
-  coding: string;
-  template: string;
-  mrna: string;
-  polymerase: string;
-  ribosome: string;
-  trna: string;
-  peptide: string;
-  highlight: string;
-}
-
-/** Reads the palette from the theme (base colours are the lesson's, `palette.ts` roles). */
-export function readDogmaPalette(token: (name: string) => string): DogmaPalette {
-  return {
-    bases: {
-      A: token(ROLES.baseA.token),
-      T: token(ROLES.baseT.token),
-      G: token(ROLES.baseG.token),
-      C: token(ROLES.baseC.token),
-      U: token(ROLES.baseU.token),
-    },
-    coding: token('--dna3d-coding'),
-    template: token('--dna3d-template'),
-    mrna: token('--dna3d-mrna'),
-    polymerase: token('--dna3d-polymerase'),
-    ribosome: token('--dna3d-ribosome'),
-    trna: token('--dna3d-trna'),
-    peptide: token('--dna3d-peptide'),
-    highlight: token('--m3d-highlight'),
-  };
-}
 
 export interface DogmaSceneOptions {
   tier: QualityTier;
@@ -94,113 +74,8 @@ export interface DogmaLabelAnchor {
   point: Vec3;
 }
 
-/** Purines (two rings) are drawn as wide slabs, pyrimidines as bars (shape cue, `palette.ts`). */
-const PURINE = new Set(['A', 'G']);
-const SLAB = 0.36;
-const BAR = 0.2;
-const THICK = 0.13;
-const BACKBONE_R = 0.1;
-const NODE_R = 0.15;
-const BEAD_R = 0.3;
 /** Fewest beads drawn, whatever the window. */
 const MIN_BEADS = 12;
-
-const X_AXIS = new THREE.Vector3(1, 0, 0);
-
-/** Writes instance matrices from end points (scratch objects only). */
-class Writer {
-  private readonly m = new THREE.Matrix4();
-  private readonly u = new THREE.Vector3();
-  private readonly w = new THREE.Vector3();
-  private readonly a = new THREE.Vector3();
-  private readonly b = new THREE.Vector3();
-
-  /** A base: a rounded box from `p` (backbone) to `q` (tip), `thick` along x, `width` across. */
-  slab(mesh: THREE.InstancedMesh, id: number, p: Vec3, q: Vec3, width: number): void {
-    const u = this.u.set(q[0] - p[0], q[1] - p[1], q[2] - p[2]);
-    const len = u.length();
-    if (len < 1e-6) {
-      this.hide(mesh, id);
-      return;
-    }
-    u.divideScalar(len);
-    const w = this.w.crossVectors(u, X_AXIS);
-    if (w.lengthSq() < 1e-9) w.set(0, 0, 1);
-    w.normalize();
-    const sx = len / 2;
-    const sy = THICK / 2;
-    const sz = width / 2;
-    this.m.set(
-      u.x * sx,
-      sy,
-      w.x * sz,
-      (p[0] + q[0]) / 2,
-      u.y * sx,
-      0,
-      w.y * sz,
-      (p[1] + q[1]) / 2,
-      u.z * sx,
-      0,
-      w.z * sz,
-      (p[2] + q[2]) / 2,
-      0,
-      0,
-      0,
-      1,
-    );
-    mesh.setMatrixAt(id, this.m);
-  }
-
-  /** A unit cylinder (radius 1, height 1 along y) stretched from p to q. */
-  rod(mesh: THREE.InstancedMesh, id: number, p: Vec3, q: Vec3, r: number): void {
-    const d = this.u.set(q[0] - p[0], q[1] - p[1], q[2] - p[2]);
-    const len = d.length();
-    if (len < 1e-6) {
-      this.hide(mesh, id);
-      return;
-    }
-    d.divideScalar(len);
-    const helper = Math.abs(d.y) < 0.9 ? this.w.set(0, 1, 0) : this.w.set(0, 0, 1);
-    const a = this.a.crossVectors(d, helper).normalize();
-    const b = this.b.crossVectors(a, d);
-    this.m.set(
-      a.x * r,
-      d.x * len,
-      b.x * r,
-      (p[0] + q[0]) / 2,
-      a.y * r,
-      d.y * len,
-      b.y * r,
-      (p[1] + q[1]) / 2,
-      a.z * r,
-      d.z * len,
-      b.z * r,
-      (p[2] + q[2]) / 2,
-      0,
-      0,
-      0,
-      1,
-    );
-    mesh.setMatrixAt(id, this.m);
-  }
-
-  ball(mesh: THREE.InstancedMesh, id: number, p: Vec3, r: number): void {
-    this.m.makeScale(r, r, r).setPosition(p[0], p[1], p[2]);
-    mesh.setMatrixAt(id, this.m);
-  }
-
-  hide(mesh: THREE.InstancedMesh, id: number): void {
-    this.m.makeScale(0, 0, 0);
-    mesh.setMatrixAt(id, this.m);
-  }
-}
-
-/** One strand's backbone: segments between neighbouring nucleotides and a node at each. */
-interface Strand {
-  seg: THREE.InstancedMesh;
-  node: THREE.InstancedMesh;
-  mat: THREE.MeshStandardMaterial;
-}
 
 interface TrnaSlot {
   group: THREE.Group;
@@ -255,7 +130,6 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   const n = m.coding.length;
   const W = Math.max(1, Math.min(n, Math.floor(o.maxBasePairs)));
   const beadCap = Math.max(MIN_BEADS, Math.ceil(W / 3));
-  const detail = o.tier === 'high';
   const w = new Writer();
   const baseColor = new Map<string, THREE.Color>(
     Object.entries(pal.bases).map(([b, c]) => [b, new THREE.Color(c)]),
@@ -265,14 +139,14 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     (pal.bases as Record<string, string | undefined>)[b ?? ''] ?? pal.trna;
   const scene = kit.scene;
 
-  // ── Shared shapes ──────────────────────────────────────────────────────────────────────
-  const halfGeo = kit.geometry(roundedBox(detail ? 12 : 8, 6));
-  const rodGeo = kit.cylinder(detail ? 10 : 8);
-  const nodeGeo = kit.sphere(0.5);
-  const beadGeo = kit.sphere(0.75);
+  // ── Shared shapes (the helix primitive, `helix.ts`) ──────────────────────────────────────
+  const shapes = helixShapes(kit, o.tier);
+  const halfGeo = shapes.half;
+  const rodGeo = shapes.rod;
+  const beadGeo = shapes.bead;
   const own = <M extends THREE.Material>(mat: M) => kit.own(mat);
-  const solidOwn = (color: string, extra: Parameters<typeof solid>[2] = {}) =>
-    own(solid(color, o.tier, { roughness: 0.42, clearcoat: 0.45, ...extra }));
+  const solidOwn = (color: string, extra: Parameters<typeof helixSolid>[3] = {}) =>
+    helixSolid(kit, color, o.tier, extra);
   /** A part that fades in and out (blended: smooth, unlike a dithered alpha hash). */
   const fading = <M extends THREE.Material>(mat: M): M => {
     mat.transparent = true;
@@ -281,14 +155,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
 
   // ── DNA ────────────────────────────────────────────────────────────────────────────────
   const dnaHalves = kit.instanced(halfGeo, solidOwn(NEUTRAL), 2 * W);
-  const strandOf = (color: string): Strand => {
-    const mat = solidOwn(color, { roughness: 0.5, sheen: 0.3 });
-    return {
-      mat,
-      seg: kit.instanced(rodGeo, mat, Math.max(1, W - 1)),
-      node: kit.instanced(nodeGeo, mat, W),
-    };
-  };
+  const strandOf = (color: string): Strand => makeStrand(kit, shapes, color, o.tier, W);
   const coding = strandOf(pal.coding);
   const template = strandOf(pal.template);
 
