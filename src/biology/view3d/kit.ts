@@ -8,6 +8,7 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import type { QualityTier } from '@/perf/tiers';
+import type { LookPreset } from '@/ui/three/lighting';
 import { contactShadow, disposeLightRig, lightRig } from './look';
 import { glass, roundedBox, solid, type GlassOptions, type SolidOptions } from './materials';
 
@@ -29,6 +30,14 @@ export interface KitOptions {
   maxParticles: number;
   /** Reads a CSS colour token (e.g. '--chart-1'). */
   token: (name: string) => string;
+  /** Light preset: studio (cells, molecules, lab objects; default) or outdoor (habitats). */
+  look?: LookPreset;
+  /** The outermost shell and glassware may refract (High tier on a discrete GPU). */
+  transmission?: boolean;
+  /** Highlights glow in HDR and bloom (High tier on a discrete GPU). */
+  hdr?: boolean;
+  /** Shadow maps for grounded opaque subjects (High tier on a discrete GPU). */
+  shadows?: boolean;
 }
 
 /**
@@ -55,6 +64,12 @@ export class SceneKit {
   readonly tier: QualityTier;
   readonly seg: number;
   readonly maxParticles: number;
+  readonly look: LookPreset;
+  readonly transmission: boolean;
+  readonly hdr: boolean;
+  readonly shadows: boolean;
+  /** The scene's light rig (`fitShadow` frames its sun on a habitat). */
+  readonly rig: THREE.Group;
   private readonly token: (name: string) => string;
   private readonly owned: { dispose: () => void }[] = [];
   private readonly materials = new Map<string, THREE.Material>();
@@ -65,7 +80,18 @@ export class SceneKit {
     this.seg = Math.max(8, Math.round(o.segments));
     this.maxParticles = Math.max(1, Math.floor(o.maxParticles));
     this.token = o.token;
-    const rig = lightRig({ size: 12 });
+    this.look = o.look ?? 'studio';
+    this.transmission = o.transmission ?? false;
+    this.hdr = o.hdr ?? false;
+    this.shadows = o.shadows ?? false;
+    const outdoor = this.look === 'outdoor';
+    const rig = lightRig({
+      preset: this.look,
+      size: 12,
+      shadows: outdoor && this.shadows,
+      ...(outdoor ? { sky: o.token('--bio3d-sky-top'), ground: o.token('--bio3d-soil') } : {}),
+    });
+    this.rig = rig;
     this.scene.add(rig);
     this.owned.push({
       dispose: () => {
@@ -83,6 +109,16 @@ export class SceneKit {
     this.owned.push(x);
     return x;
   }
+
+  /**
+   * A material or geometry made once per scene under `key` (recipes share them; the kit frees
+   * them).
+   */
+  shared<T extends THREE.Material | THREE.BufferGeometry>(key: string, make: () => T): T {
+    return this.cached(this.sharedStore, key, make);
+  }
+
+  private readonly sharedStore = new Map<string, THREE.Material | THREE.BufferGeometry>();
 
   private cached<T extends THREE.Material | THREE.BufferGeometry>(
     map: Map<string, THREE.Material | THREE.BufferGeometry>,
@@ -210,6 +246,8 @@ export class SceneKit {
   dispose(): void {
     for (const m of this.materials.values()) m.dispose();
     for (const g of this.geometries.values()) g.dispose();
+    for (const x of this.sharedStore.values()) x.dispose();
+    this.sharedStore.clear();
     for (const o of this.owned) o.dispose();
     this.materials.clear();
     this.geometries.clear();

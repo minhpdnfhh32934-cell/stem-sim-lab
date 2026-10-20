@@ -84,6 +84,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
   const tier = useTierConfig();
   const tierName: QualityTier = usePerfStore(effectiveTier);
   const theme = useResolvedTheme();
+  const quality = quality3d(tierName, tier);
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<Bio3DScene | null>(null);
   const labelsRef = useRef<CSS2DRenderer | null>(null);
@@ -143,7 +144,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
     hostRef,
     {
       createRenderer,
-      quality: quality3d(tierName, tier),
+      quality,
       fov: FOV,
       near: 0.05,
       far: 2000,
@@ -243,6 +244,9 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       segments: tier.sphereSegments,
       maxParticles: tier.maxParticles,
       token: tokenReader(),
+      transmission: quality.transmission,
+      hdr: quality.bloom,
+      shadows: quality.shadowScenes,
     });
     let built: Bio3DScene;
     try {
@@ -276,7 +280,19 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       }
       kit.dispose();
     };
-  }, [buildKey, tier, tierName, theme, createRenderer, lesson, aspect, hostRt]);
+  }, [
+    buildKey,
+    tier,
+    tierName,
+    theme,
+    createRenderer,
+    lesson,
+    aspect,
+    hostRt,
+    quality.transmission,
+    quality.bloom,
+    quality.shadowScenes,
+  ]);
 
   // A new moment of the lesson: the scene moves, nothing is rebuilt.
   useEffect(() => {
