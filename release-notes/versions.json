@@ -373,7 +373,7 @@
           }
         ]
       },
-      "notesReady": false,
+      "notesReady": true,
       "learnerHighlights": [
         {
           "area": "bio3d",

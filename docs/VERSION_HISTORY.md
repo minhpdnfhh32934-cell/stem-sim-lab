@@ -77,7 +77,7 @@ Bản cập nhật cho Sinh học 3D và sửa lỗi. Giảm phân, ADN → mARN
 - Trạng thái: Đang xét duyệt.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
 - Ghi chú trạng thái: Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.
-- Ghi chú công khai: bản nháp, chưa duyệt để công bố (không hiện trong hộp "Có gì mới").
+- Ghi chú công khai: đã duyệt để công bố (hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
 | --- | --- | --- |
