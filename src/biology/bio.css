@@ -571,6 +571,59 @@
   text-align: center;
   text-wrap: balance;
 }
+/* 3D DNA → mRNA → protein (src/biology/central/dogma3d). */
+/* The two phases and the time slider share one row under the picture. */
+.dogma3d__timeline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 0 0;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+}
+.dogma3d__timeline .m3d__stages {
+  flex: none;
+  grid-template-columns: repeat(var(--stage-count, 2), minmax(6.5rem, auto));
+}
+.dogma3d__scrub {
+  flex: 1;
+  min-width: 6rem;
+  min-height: var(--target);
+  margin: 0;
+  accent-color: var(--accent);
+}
+.dogma3d__legend {
+  gap: var(--space-2);
+}
+.dogma3d__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.dogma3d__key .rx-swatch {
+  width: 10px;
+  height: 10px;
+  margin-left: 0;
+}
+.dogma3d__swatch--A {
+  background: var(--chart-3);
+}
+.dogma3d__swatch--T {
+  background: var(--chart-4);
+}
+.dogma3d__swatch--U {
+  background: var(--chart-5);
+}
+.dogma3d__swatch--G {
+  background: var(--chart-2);
+}
+.dogma3d__swatch--C {
+  background: var(--chart-1);
+}
 /* Playback row: play / pause, the time slider and the moment shown. */
 .bio3d__player {
   display: flex;

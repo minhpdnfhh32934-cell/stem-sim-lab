@@ -3,8 +3,8 @@ import { expect, test, type Page } from '@playwright/test';
 import { openLab } from './nav';
 
 /**
- * The 3D views of the biology lessons (every lesson besides mitosis and meiosis, which have their
- * own specs).
+ * The 3D views of the biology lessons (every lesson besides mitosis, meiosis and DNA → mRNA →
+ * protein, which have their own specs).
  * WebGL runs in software (SwiftShader), never on the GPU (see mitosis3d.spec.ts).
  */
 test.use({
@@ -15,7 +15,6 @@ test.use({
 });
 
 const LESSONS: [string, string][] = [
-  ['ADN → mARN → Protein', 'centralDogma'],
   ['Đột biến điểm', 'pointMutation'],
   ['Di truyền Mendel', 'mendel'],
   ['Định luật Hardy–Weinberg', 'hardyWeinberg'],

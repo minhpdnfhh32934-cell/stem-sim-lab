@@ -91,7 +91,15 @@ const mitosisState = bindStore(
     restoreDivision('mitosis', patch);
   },
 );
-const dogma = bindStore(useDogmaStore, ['input', 'strand', 'kind', 'pos', 'bases', 'count']);
+const dogma = bindStore(useDogmaStore, [
+  'input',
+  'strand',
+  'kind',
+  'pos',
+  'bases',
+  'count',
+  'view3d',
+]);
 
 export const mitosis: ModuleView = {
   title: L('Nguyên phân', 'Mitosis'),

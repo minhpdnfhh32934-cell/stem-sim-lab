@@ -22,6 +22,8 @@ export interface DogmaState {
   pos: number;
   bases: string;
   count: number;
+  /** "ADN → mARN → Protein" shows its 3D view (saved in .stemsim files, like mitosis). */
+  view3d: boolean;
 }
 
 export const useDogmaStore = create<DogmaState>()(() => ({
@@ -33,6 +35,7 @@ export const useDogmaStore = create<DogmaState>()(() => ({
   pos: 13,
   bases: 'T',
   count: 1,
+  view3d: true,
 }));
 
 /**

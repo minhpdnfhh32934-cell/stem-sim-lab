@@ -1,16 +1,13 @@
 /**
- * 3D figures of "ADN → mARN → Protein" and "Đột biến điểm". The sequences, base pairs, codons and
- * amino acids are the lesson's (the learner's DNA, its complement, the mRNA, the translation by
- * the standard code); the helix shape, the ribosome and the bead chain are illustration.
- *
- * - Dogma: the double helix (coding strand on top), the mRNA under it, the ribosome on the
- *   active codon and the polypeptide grown so far.
- * - Mutation: the normal and the mutated double helix one above the other, the changed bases
- *   glowing, and under each its protein as a chain of beads (changed residues glowing).
+ * 3D figure of "Đột biến điểm" ("ADN → mARN → Protein" has its own view in `dogma3d/`). The
+ * sequences, base pairs and amino acids are the lesson's (the learner's DNA, the mutated DNA, the
+ * translations by the standard code); the helix shape and the bead chain are illustration: the
+ * normal and the mutated double helix one above the other, the changed bases glowing, and under
+ * each its protein as a chain of beads (changed residues glowing).
  */
 import * as THREE from 'three';
 import type { Bio3DScene, SceneKit, Vec3 } from '../view3d/kit';
-import type { Translation } from './dogma';
+import { B_DNA } from './dogma3d/bdna';
 
 /** Most base pairs drawn (the view says when a longer sequence is cut). */
 export const MAX_BP = 60;
@@ -27,8 +24,8 @@ const COMPLEMENT: Record<string, string> = { A: 'T', T: 'A', G: 'C', C: 'G' };
 
 const RISE = 0.5;
 const RADIUS = 1;
-/** Base pairs per turn of B-DNA (≈ 10.5). */
-const PER_TURN = 10.5;
+/** Base pairs per turn: the B-DNA constant the lesson's 3D views share (DATA_REVIEW DOG3D-1). */
+const PER_TURN = B_DNA.bpPerTurn;
 
 /** One shared material per base, and the rung shape. */
 class Bases {
@@ -157,68 +154,6 @@ function chain(
         'muted',
       );
   });
-}
-
-export interface DogmaSceneInput {
-  coding: string;
-  mrna: string;
-  t: Translation;
-  /** Active codon (index in `t.codons`), or −1 without a start codon. */
-  active: number;
-  texts: { five: string; three: string; stop: string; ribosome: string };
-}
-
-export function buildDogmaScene(kit: SceneKit, input: DogmaSceneInput): Bio3DScene {
-  const bases = new Bases(kit);
-  const n = Math.min(MAX_BP, input.coding.length);
-  const xOf = helix(kit, bases, { coding: input.coding, y: 1.6, labels: input.texts }, 0);
-  // mRNA under the DNA: a backbone and one stick per base.
-  const mY = -1.4;
-  const rna = input.mrna.slice(0, MAX_BP);
-  const back: Vec3[] = [];
-  for (let i = 0; i < rna.length; i++) {
-    const x = xOf(i);
-    back.push([x, mY, 0]);
-    rod(kit, bases.mat(rna[i] ?? 'N'), [x, mY, 0], [x, mY + 0.75, 0], 0.12);
-  }
-  backbone(kit, back, kit.color('--chart-5'), 0.1);
-  kit.label('mRNA 5′', [xOf(0) - 1.4, mY, 0], 'muted');
-
-  const codon = input.t.codons[input.active];
-  const top = 3.2;
-  if (codon && codon.pos + 2 < n) {
-    const cx = (xOf(codon.pos) + xOf(codon.pos + 2)) / 2;
-    // Ribosome on the active codon (two subunits, illustrative shape).
-    const glassy = kit.glass(kit.color('--chart-7'), {
-      opacity: 0.32,
-      rim: { color: kit.color('--chart-7'), strength: 0.6, alpha: 0.4 },
-    });
-    const big = kit.mesh(kit.sphere(), glassy);
-    big.scale.set(1.15, 0.85, 0.95);
-    big.position.set(cx, mY + 1.0, 0);
-    const small = kit.mesh(kit.sphere(), glassy);
-    small.scale.set(0.95, 0.5, 0.8);
-    small.position.set(cx, mY - 0.45, 0);
-    kit.label(input.texts.ribosome, [cx, mY - 1.4, 0], 'muted');
-    // The polypeptide made so far (stop codons add nothing), leaving the ribosome.
-    const made = input.t.codons
-      .slice(0, input.active + 1)
-      .filter((c) => !c.entry?.stop)
-      .map((c, k, all) => ({ name: c.entry?.three ?? '?', glow: k === all.length - 1 }));
-    if (codon.entry?.stop) kit.label(input.texts.stop, [cx, mY + 2.3, 0], 'strong');
-    chain(kit, made, [cx - (made.length - 1) * 1, -3.4, 1.2], {
-      color: kit.color('--chart-2'),
-      glowColor: kit.color('--m3d-highlight'),
-    });
-  }
-  const halfX = (n * RISE) / 2 + 1.6;
-  const pts: Vec3[] = [];
-  for (const x of [-halfX, halfX])
-    for (const y of [-4.6, top]) for (const z of [-1.4, 1.6]) pts.push([x, y, z]);
-  return {
-    kit,
-    bounds: { center: [0, -0.6, 0], radius: Math.hypot(halfX, 4), points: pts },
-  };
 }
 
 export interface MutationSceneInput {

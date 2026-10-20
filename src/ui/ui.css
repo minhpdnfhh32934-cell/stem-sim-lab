@@ -1107,3 +1107,43 @@ kbd {
   stroke: var(--bg-panel);
   stroke-width: 1;
 }
+/* Small tags over a 3D picture (src/ui/three/tagLayer.ts): base letters, short names and
+   position numbers, page-drawn and never caught by the pointer. A halo in the stage colour keeps
+   them readable over any colour of the picture. */
+.three-tags {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.three-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow:
+    0 0 3px var(--bg-panel),
+    0 0 2px var(--bg-panel),
+    0 0 1px var(--bg-panel);
+  will-change: transform;
+}
+.three-tag--word {
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg-panel) 82%, transparent);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-shadow: none;
+}
+.three-tag--tick {
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 500;
+}

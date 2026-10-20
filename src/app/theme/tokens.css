@@ -130,6 +130,16 @@
   --m3d-rim: 0.7;
   /* Ground of the 3D habitats (ecology lessons). */
   --bio3d-ground: #dde7d3;
+  /* 3D DNA → mRNA → protein: the two DNA backbones, the mRNA backbone, the glass of RNA
+     polymerase and the ribosome, tRNA bodies and the polypeptide beads — unlike each other and
+     unlike the five base colours (--chart-1 … --chart-5). */
+  --dna3d-coding: #8a93a5;
+  --dna3d-template: #3f6f8f;
+  --dna3d-mrna: #7b4fa0;
+  --dna3d-polymerase: #56b4e9;
+  --dna3d-ribosome: #8b97b8;
+  --dna3d-trna: #2a9fae;
+  --dna3d-peptide: #9a5f2e;
 
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
   --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
@@ -200,6 +210,13 @@
   --m3d-membrane-opacity: 0.22;
   --m3d-rim: 1;
   --bio3d-ground: #1f2d24;
+  --dna3d-coding: #a3acbd;
+  --dna3d-template: #6fa2c4;
+  --dna3d-mrna: #b48be0;
+  --dna3d-polymerase: #6cc4f5;
+  --dna3d-ribosome: #a9b4d4;
+  --dna3d-trna: #4cc3cf;
+  --dna3d-peptide: #d39a62;
 
   /* Dark-mode chart steps: same hue order, re-stepped into the OKLCH L 0.48–0.67 band
      (validated with the dataviz palette validator against --bg-panel #151b24). */

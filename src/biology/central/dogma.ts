@@ -102,6 +102,17 @@ export function codingToMrna(coding5to3: string): string {
   return coding5to3.replace(/T/g, 'U');
 }
 
+const RNA_PAIR: Record<string, string> = { A: 'U', U: 'A', G: 'C', C: 'G' };
+
+/**
+ * The tRNA anticodon that pairs with an mRNA codon, base by base (A–U, G–C), written in the
+ * codon's order (the anticodon itself runs 3′→5′ under the codon's 5′→3′). Wobble pairing is
+ * not modelled: this is the strictly complementary anticodon.
+ */
+export function anticodon(codon: string): string {
+  return codon.replace(/./g, (b) => RNA_PAIR[b] ?? b);
+}
+
 export interface Codon {
   index: number;
   /** Position of the first base in the mRNA (0-based). */
