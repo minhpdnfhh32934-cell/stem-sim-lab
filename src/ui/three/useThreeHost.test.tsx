@@ -213,4 +213,38 @@ describe('useThreeHost', () => {
     glass.dispose();
     solid.dispose();
   });
+
+  it('the backdrop: one per theme, freed on a theme switch and on unmount', () => {
+    const root = document.documentElement;
+    const set = (theme: 'light' | 'dark', stage: string, sunken: string, app: string) => {
+      root.dataset.theme = theme;
+      root.style.setProperty('--bg-stage', stage);
+      root.style.setProperty('--bg-sunken', sunken);
+      root.style.setProperty('--bg-app', app);
+    };
+    try {
+      set('light', '#fbfcfe', '#e7ebf2', '#eef1f6');
+      const { factory } = fakeRenderer();
+      const out = outBox();
+      const view = render(<Host factory={factory} out={out} />);
+      const h = out.host!;
+      const a = new THREE.Scene();
+      h.setScene(a);
+      const light = a.background as THREE.DataTexture;
+      expect(light).toBeInstanceOf(THREE.DataTexture);
+      const freedLight = vi.spyOn(light, 'dispose');
+      // The view rebuilds its scene after a theme switch: a new backdrop, the old one freed.
+      set('dark', '#10151d', '#0f141c', '#0d1117');
+      const b = new THREE.Scene();
+      h.setScene(b);
+      expect(b.background).not.toBe(light);
+      expect(freedLight).toHaveBeenCalledTimes(1);
+      const freedDark = vi.spyOn(b.background as THREE.DataTexture, 'dispose');
+      view.unmount();
+      expect(freedDark).toHaveBeenCalledTimes(1);
+    } finally {
+      root.removeAttribute('style');
+      delete root.dataset.theme;
+    }
+  });
 });
