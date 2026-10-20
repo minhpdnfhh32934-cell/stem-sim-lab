@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.6.0 (Đang xét duyệt)
+## [0.6.0] - 2026-10-19
 
-_Bản ứng viên phát hành 0.6.0, chưa phát hành. PR #20 (feat/audit-g0-g5) và PR #21 (G8, feat/teacher-board-runtime, đầu abc9e0c) đang mở, chưa gộp. Science Studio (các bước S1–S5 và bước chuẩn bị phát hành, 19/10/2026) nằm trên nhánh feat/science-studio chồng lên PR #21, chỉ có trên máy người phát triển: thay đổi đã stage, chưa commit, chưa có PR. Chưa có tag, GitHub Release hay lượt Release trên GitHub Actions; bộ cài chỉ được dựng thử trên máy người phát triển. Ghi chú công khai đã đặt notesReady: true để chuẩn bị phát hành — chủ dự án đọc lại trước khi chạy Release. Trước khi phát hành: gộp vào main; kiểm tra các cài đặt an toàn phát hành chỉ chủ repo bật được (docs/RELEASE.md, mục “An toàn khi phát hành”: environment release, secret ký chỉ ở environment, ruleset cho tag, kiểm tra bắt buộc, Immutable releases); không tích “Bắt buộc cập nhật” (bản này nâng phiên bản lõi). Sau khi gộp: status merged-not-released; sau khi publish: released._
+_Phát hành 19/10/2026 từ main @ feab5a8 (lượt Release 39246720932). Phần web và phần lõi cùng số 0.6.0, nên ứng dụng 0.5.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống)._
 
 Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa học, Sinh học, Vật lí và trang Soạn bài. AI Teacher giảng trên cả bảng, có “Khoanh để hỏi”, dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp), dùng kết quả do SimLab tính và nói rõ điều gì chưa kiểm chứng. Ngoài ra có mô phỏng Nguyên phân 3D, Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp và nhiều sửa lỗi bảo mật.
 
@@ -390,7 +390,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20
+[0.6.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0
 [0.5.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2
 [0.5.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.0
 [0.4.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.4.1
