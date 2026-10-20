@@ -473,6 +473,19 @@ Progress log: `docs/PROGRESS.md`.
   shared by both views in `mendelCard.ts`, the invalid-genotype notice in `MendelNotice.tsx`.
   Saved: `view3d` (Mendel store). Shape geometries of the palette's cues:
   `view3d/primitives/classShape.ts`. E2E `tests/e2e/mendel3d.spec.ts`.
+- Enzyme kinetics 3D (`src/biology/enzyme/enzyme3d/`): model `enzymeSpecies` (rapid-equilibrium
+  fractions of E/ES/EI/ESI) and `timeCourseEnd` (the 2D plot's t range) in `enzyme/enzyme.ts`;
+  `binding.ts` (pure: `ENZYMES_DRAWN` 24, ES drawn = round(24·rate/Vmax), the rest by largest
+  remainders `splitTotal`; `particleScale` nice step "1 hạt = x mM", cap 150 on every tier; rate
+  view = [S] cursor (opens at the apparent Km), time view: S and P particles shared out of
+  round([S]₀/x) so S + P is conserved; `formsOf` fixed order), `layout.ts` (glass box, jittered
+  6 × 2 × 2 enzymes with the active site up-front, seeded particle pools, illustrative drift),
+  `scene.ts` (lumpy enzyme blob with a pocket — lock-and-key cartoon, shaded hollows — and a
+  second site for non-/uncompetitive inhibition; bound S/I, free S/P/I instanced; `drawn()` for
+  tests), `facts.ts` (readout, counts, scale chip, cards), `components.ts` (texts, `enzymeCard3d`),
+  `camera.ts` ("Toàn cảnh"/"Cận cảnh enzyme"), `store.ts` (`useEnzyme3D`: `t`, cursor `s`),
+  `Enzyme3DView`, `Enzyme3DSwitch`. Science Card texts of the 2D page: `enzyme/enzymeCard.ts`.
+  Saved: `view3d` (enzyme store). E2E `tests/e2e/enzyme3d.spec.ts`.
 - Generic 3D kit (`src/ui/three/`, no biology inside): `renderer.ts` (sRGB, Neutral tone mapping,
   shadow maps only on request), `quality3d.ts` (one table per tier: segments, shadows, instances,
   label cap), `useThreeHost.ts` (renderer + camera + damped OrbitControls, render on demand,
@@ -483,7 +496,7 @@ Progress log: `docs/PROGRESS.md`.
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
 - Biology 3D kit (`src/biology/view3d/`): every other lesson (not mitosis, meiosis, DNA → mRNA →
-  protein, point mutations or Mendel) has a 3D view too (3D by default, the learner's 3D/2D choice per
+  protein, point mutations, Mendel or enzyme kinetics) has a 3D view too (3D by default, the learner's 3D/2D choice per
   lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a lost context,
   `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`, page-drawn CSS2D
   labels, render on demand, `FrameMonitor` while animating, dispose on unmount), `Bio3DView` (stage
