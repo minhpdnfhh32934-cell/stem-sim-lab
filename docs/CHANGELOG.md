@@ -2,6 +2,67 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## [Unreleased] - 0.7.0 (Đang xét duyệt)
+
+_Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app._
+
+_Ghi chú này là bản nháp, chưa được duyệt để công bố._
+
+Bản cập nhật cho Sinh học 3D và sửa lỗi. Giảm phân, ADN → mARN → Protein, Đột biến điểm, Di truyền Mendel, Động học enzyme và Khuếch tán & thẩm thấu có hình 3D riêng; Nguyên phân 3D rõ và đẹp hơn. Mọi con số trong hình 3D do mô hình của bài tính. Ngoài ra sửa nhiều lỗi ở mô phỏng Vật lí, Hóa học, Sinh học, AI Teacher, bảng dạy, giọng đọc và phần cập nhật trong app.
+
+### Added
+
+- Giảm phân 3D: 12 bước từ G1 tới phân chia tế bào chất II ở tế bào động vật, có trao đổi chéo và điểm bắt chéo. Số NST, crômatit, ADN do mô hình đếm; hình 3D và hình 2D dùng cùng một lần sắp xếp ngẫu nhiên.
+- ADN → mARN → Protein 3D: chuỗi xoắn kép mở ra, mARN được tổng hợp rồi ribôxôm dịch từng bộ ba. Chữ cái, bộ ba và axit amin lấy từ trình tự em nhập và bảng mã di truyền.
+- Đột biến điểm 3D: ADN bình thường và ADN đột biến đặt cạnh nhau, kèm mARN và chuỗi axit amin trước và sau đột biến; chỗ nuclêôtit thay đổi và các axit amin khác nhau được tô nổi.
+- Di truyền Mendel 3D: bố mẹ, giao tử, bảng Punnett và cột con lai cao theo xác suất; phần con lai ngẫu nhiên dùng cùng lần tạo ngẫu nhiên với bảng 2D.
+- Động học enzyme 3D: tỉ lệ enzyme đang gắn cơ chất theo v/Vmax của công thức trong bài (làm tròn); có các dạng enzyme gắn chất ức chế và thang “1 hạt = … mM”.
+- Khuếch tán & thẩm thấu 3D: số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua lỗ màng; ống chữ U có thước cm và mực nước lấy từ đồ thị của bài.
+- Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic và Con mồi – vật ăn thịt có hình 3D đơn giản: mỗi hình là một cá thể hoặc một nhóm cá thể (có ghi chú), số lượng lấy từ mô hình.
+
+### Improved
+
+- Nguyên phân 3D: mỗi crômatit co xoắn dần ngay tại chỗ, ánh sáng mới, tên bộ phận hiện trên hình, máy ảnh chuyển cảnh mượt; ở chất lượng Cao có màng nhân kép vỡ thành túi nhỏ, trung tử 9 bộ ba vi ống và túi tạo tấm tế bào.
+- Mỗi bài Sinh học có nút 3D / 2D và nhớ lựa chọn; khi chất lượng hiển thị là Thấp, máy không có WebGL hoặc card đồ họa gặp lỗi, bài tự dùng hình 2D và nói lý do.
+- Đồ thị ghi đơn vị ở tên trục và có đủ vạch chia; công thức dài trong Thẻ Khoa học tự thu nhỏ cho vừa khung thay vì phải cuộn ngang.
+- Nút “Hỏi thầy” không còn che khung mô phỏng; nút bấm trên màn hình cảm ứng đủ lớn (≥ 40 px); chữ mờ dễ đọc hơn ở cả giao diện sáng và tối.
+- Chế độ Cơ bản của các bài Sinh học giữ các thông số phụ sau nút “Thêm thông số”.
+
+### Fixed
+
+- Vật lí: đổi g khi đang chạy nay chạy lại đúng ở con lắc, lò xo, mặt phẳng nghiêng, ròng rọc và đường ray (trước đây vẫn chạy theo g cũ). Sửa thêm: thời điểm gặp nhau ở chuyển động thẳng, báo lỗi khi dây con lắc sẽ bị chùng hoặc ném từ mặt đất mà không có vận tốc hướng lên, chu kì lò xo có tắt dần, máy Atwood cân bằng và kết luận của bài hạt qua hai đỉnh dốc.
+- Sinh học: ống thẩm thấu báo đúng khi nhánh nước cạn, con mồi – vật ăn thịt giữ chính xác khi quần thể rất nhỏ, điểm uốn của đường logistic, tên đột biến quanh bộ ba mở đầu và chuỗi protein khi đột biến tạo bộ ba mở đầu mới.
+- Hóa học: động học cân bằng tính chính xác và hình động không còn đứng hình; phương trình viết khác với phản ứng trong thư viện không còn bị gắn nhãn đã kiểm chứng; hệ số thập phân bị báo lỗi; nguyên tử trung tâm VSEPR và cấu trúc SMILES hiển thị đúng chất đang tìm.
+- AI: “Giải thích” chấp nhận các số do SimLab tính; cụm từ phủ định (“không có ma sát”…) không bị đọc thành một giá trị; nút dừng dừng được câu trả lời của Gemma trong app.
+- AI Teacher, bảng dạy và giọng đọc: xóa trò chuyện thì dừng câu trả lời; tra thư viện và Wikipedia dùng đúng lời em hỏi; bảng giữ đúng phép chia, lũy thừa và số thập phân; giọng đọc đọc đúng 2gh, khoảng giá trị, 0,125, đơn vị m³/s² và 5′→3′; công thức tải lỗi không làm bảng treo.
+- Các từ sinh học như “túi tự sát” (lizôxôm), “tế bào tự sát”, từ tiếng Anh “sex chromosomes” và các dãy số liệu không còn bị chặn nhầm.
+- Cập nhật trong app: bản đang mở không còn bị xóa trước khi khởi động lại (trước đây các chủ đề chưa mở có thể không tải được); tải gói cập nhật lớn không còn bị ngắt vì quá giờ.
+- Card đồ họa có mã nhận dạng dài (ví dụ máy Windows chạy chip ARM) nay chọn được trong Cài đặt.
+- Mở tệp .stemsim từ bất kỳ màn hình nào cũng hiện đúng chủ đề; phím tắt của phòng thí nghiệm chỉ hoạt động khi đang ở phòng thí nghiệm; chú thích nổi hiện trên hộp thoại; xuất CSV chỉ có ở chế độ Nâng cao; g chuẩn hiện là 9,80665; “Hướng dẫn nhanh” từ menu mở đúng phòng thí nghiệm.
+- Science Studio: dự đoán và kết luận theo đúng ngôn ngữ đang chọn; bài Vật lí ở lại bước thí nghiệm sau khi chạy như hai môn kia.
+
+### Security
+
+- Chụp ảnh đề bài nay cũng theo cổng an toàn và bộ lọc nội dung; khi em chọn Gemma, ảnh không bao giờ được gửi lên mạng.
+- Hộp cập nhật bắt buộc và câu hỏi về tuổi hiện lại nếu bị đóng bằng phím Esc.
+- Câu hỏi bị chặn ở lại ô nhập để em sửa, không còn bị lưu hay gửi đi sau đó.
+
+### Performance
+
+- Hình 3D chỉ vẽ lại khi có thay đổi, chia mức chi tiết theo chất lượng hiển thị và giải phóng bộ nhớ khi rời bài; khi máy chậm, chuyển động bớt mượt nhưng số liệu vẫn giữ nguyên độ chính xác.
+
+### Changed
+
+- Các bài Sinh học mở bằng hình 3D; bấm 2D để quay lại hình cũ.
+
+### Known Issues
+
+- Bốn bài về quần thể (Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt) mới có hình 3D đơn giản; hình 3D riêng, chi tiết như các bài khác sẽ có trong một bản cập nhật sau.
+- Lời văn và cách vẽ của các hình 3D mới đang chờ giáo viên duyệt. Hình dạng, kích thước, vị trí và chuyển động trong hình 3D chỉ là minh họa; chỉ số lượng và tỉ lệ lấy từ mô hình.
+- Giảm phân 3D chỉ vẽ tế bào động vật và bốn tế bào con bằng nhau (phân chia không đều ở con cái chỉ được ghi chú); chưa có giảm phân ở thực vật.
+- Các vấn đề đã biết của bản 0.6.0 về Gemma và AI qua API vẫn còn (xem ghi chú 0.6.0).
+- Bản Microsoft Store cần nộp gói mới và chờ Microsoft duyệt, nên người dùng Store nhận bản này muộn hơn người dùng bản tải từ GitHub.
+
 ## [0.6.0] - 2026-10-19
 
 _Phát hành 19/10/2026 từ main @ feab5a8 (lượt Release 39246720932). Phần web và phần lõi cùng số 0.6.0, nên ứng dụng 0.5.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống)._
