@@ -28,8 +28,10 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import { prefersReducedMotion } from '@/ui/three/availability';
+import { easeInOut } from '@/ui/three/camera';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { usePlayback } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
@@ -56,7 +58,15 @@ import {
   type Field3D,
   type MendelModel3D,
 } from './binding';
-import { FOV, VIEW_DIR, boxFrame, defaultInsets, mendelFrame, placeMendelCamera } from './camera';
+import {
+  FOV,
+  VIEW_DIR,
+  boxFrame,
+  defaultInsets,
+  mendelFrame,
+  placeMendelCamera,
+  stepFrame,
+} from './camera';
 import {
   CAMERA_NAME,
   COLOUR_NOTE,
@@ -76,6 +86,9 @@ import { currentMendel, useMendel3D, type MendelCameraMode } from './store';
 import '../../bio.css';
 
 export type { RendererFactory };
+
+/** A jump between steps (a step button, Next, Previous) glides the picture this long (ms). */
+export const STEP_GLIDE_MS = 700;
 
 /** Read-only hook for end-to-end tests (dev builds only), as `window.__simlab3d.mendel`. */
 export interface Mendel3DDebug {
@@ -348,14 +361,19 @@ function Mendel3DScene({
     if (sel && !selectionValid(model, sel)) useMendel3D.setState({ selected: null });
   }, [model]);
 
+  // The bench is about 1.75 times as wide as it looks deep: the corner controls count from the
+  // top, so the picture uses the stage's full width.
   const insetsOf = (host: HTMLElement) =>
-    measureInsets(host, hudRef.current, defaultInsets(host.clientHeight), 1.1);
+    measureInsets(host, hudRef.current, defaultInsets(host.clientHeight), 1.75);
   const fieldShown = () => sceneRef.current?.fieldShown() ?? 0;
+  /** "Toàn cảnh" after a jump to a step: that step's closer frame (null: the whole picture). */
+  const stepViewRef = useRef<number | null>(null);
   const placement = (h: ThreeHost, mode: MendelCameraMode, dir: Vec3) => {
     const sc = sceneRef.current;
     if (!sc) return null;
+    const step = mode === 'overview' && stepViewRef.current !== null ? stepViewRef.current : null;
     return placeMendelCamera(
-      mendelFrame(mode, sc.dims, fieldShown()),
+      (step !== null ? stepFrame(step, sc.dims) : null) ?? mendelFrame(mode, sc.dims, fieldShown()),
       mendelFrame('overview', sc.dims, fieldShown()),
       h.width(),
       h.height(),
@@ -368,6 +386,8 @@ function Mendel3DScene({
     if (p) h.place(p, { animate });
   };
 
+  /** The picture is gliding between two steps (tests wait for it). */
+  const glidingRef = useRef(false);
   const labelsRef = useRef<LabelLayer | null>(null);
   const tagsRef = useRef<TagLayer | null>(null);
   const labelsOnRef = useRef(labelsOn);
@@ -399,6 +419,7 @@ function Mendel3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      { rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -473,7 +494,7 @@ function Mendel3DScene({
         field: () => sceneRef.current?.fieldShown() ?? 0,
         quality: () => h.qualityInEffect(),
         focus: (sel) => toPage(sceneRef.current?.focusPoint(sel) ?? null),
-        moving: () => h.moving(),
+        moving: () => h.moving() || glidingRef.current,
       };
       return ThreeHost.registerDebug('mendel', hook);
     },
@@ -488,12 +509,45 @@ function Mendel3DScene({
       segments: tier.sphereSegments,
       maxInstances: quality.maxInstances,
       token: tokenReader(),
+      shadows: quality.shadowScenes,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);
     const ui = useMendel3D.getState();
     sc.setField(fieldRef.current);
     shownField.current = fieldRef.current;
+    // The time the picture shows: a jump between steps glides there (illustration; the step,
+    // caption and every number follow the store at once), playing moves it directly.
+    let shown = ui.t;
+    let glide: { from: number; to: number; start: number } | null = null;
+    let raf = 0;
+    const stopGlide = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      glide = null;
+      glidingRef.current = false;
+    };
+    const glideFrame = (now: number) => {
+      raf = 0;
+      if (!glide) return;
+      const u = Math.min(1, (now - glide.start) / STEP_GLIDE_MS);
+      shown = glide.from + (glide.to - glide.from) * easeInOut(u);
+      sc.setTime(shown);
+      h.request();
+      if (u < 1) raf = requestAnimationFrame(glideFrame);
+      else stopGlide();
+    };
+    const showTime = (target: number, jump: boolean) => {
+      if (jump || prefersReducedMotion() || Math.abs(target - shown) < 1e-6) {
+        stopGlide();
+        shown = target;
+        sc.setTime(target);
+        return;
+      }
+      glide = { from: shown, to: target, start: performance.now() };
+      glidingRef.current = true;
+      if (!raf) raf = requestAnimationFrame(glideFrame);
+    };
     sc.setTime(ui.t);
     sc.setSelection(ui.selected && selectionValid(model, ui.selected) ? ui.selected : null);
     if (framedRef.current !== h) {
@@ -506,15 +560,29 @@ function Mendel3DScene({
     framedModel.current = model;
     h.request();
     const unsub = useMendel3D.subscribe((s, prev) => {
-      if (s.t !== prev.t) sc.setTime(s.t);
+      if (s.t !== prev.t) showTime(s.t, s.playing || prev.playing);
+      // A jump to another step (not playing) in "Toàn cảnh": the camera glides to that step's
+      // frame; playing, another mode or "Đặt lại góc nhìn" go back to the mode's own frame.
+      const jumped = s.t !== prev.t && !s.playing && !prev.playing;
+      const k = stepIndexAt(s.t);
+      const want = k >= MENDEL_STEPS.length - 1 ? null : k;
+      const reframe = s.camera !== prev.camera || s.viewNonce !== prev.viewNonce;
+      if (reframe || (s.playing && !prev.playing)) {
+        const was = stepViewRef.current;
+        stepViewRef.current = null;
+        if (was !== null && !reframe) frameCamera(h, s.camera, true);
+      } else if (jumped && s.camera === 'overview' && want !== stepViewRef.current) {
+        stepViewRef.current = want;
+        frameCamera(h, s.camera, true);
+      }
       if (s.selected !== prev.selected)
         sc.setSelection(s.selected && selectionValid(model, s.selected) ? s.selected : null);
-      if (s.camera !== prev.camera || s.viewNonce !== prev.viewNonce)
-        frameCamera(h, s.camera, true);
+      if (reframe) frameCamera(h, s.camera, true);
       h.request();
     });
     return () => {
       unsub();
+      stopGlide();
       if (sceneRef.current === sc) {
         sceneRef.current = null;
         h.setScene(null);
@@ -672,8 +740,8 @@ function Mendel3DScene({
               {Lz(COLOUR_NOTE)} {Lz(MENDEL_ILLUSTRATION)}{' '}
               {Lz(
                 L(
-                  'Bấm vào bố mẹ, một giao tử, một ô hay một cột để xem chi tiết. Kéo để xoay, cuộn để phóng to.',
-                  'Click a parent, a gamete, a cell or a bar for details. Drag to rotate, scroll to zoom.',
+                  'Bấm vào bố mẹ, một giao tử, một ô hay một ống để xem chi tiết; phóng to để đọc kiểu gen trong ô. Kéo để xoay, cuộn để phóng to.',
+                  'Click a parent, a gamete, a cell or a cylinder for details; zoom in to read the genotypes in the cells. Drag to rotate, scroll to zoom.',
                 ),
               )}
             </span>

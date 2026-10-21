@@ -221,6 +221,52 @@ describe('3D Mendel scene', () => {
     sc.dispose();
   });
 
+  it('genotypes show in the slots only at close zoom or on the picked cell; no tag overlaps', () => {
+    const m = dihybrid();
+    const sc = build(m);
+    sc.setTime(MENDEL_TOTAL);
+    const host = document.createElement('div');
+    const layer = new TagLayer(host);
+    const shownFrom = (height: number, size: number) => {
+      const cam = new THREE.PerspectiveCamera(34, 1, 0.1, 500);
+      cam.position.set(1, height, height * 0.9);
+      cam.lookAt(1, 0, 0);
+      layer.begin(cam, size, size, { left: 0, top: 0, right: size, bottom: size });
+      sc.tags(layer, String);
+      layer.end();
+      return layer.shown();
+    };
+    const genotypes = m.punnett.cells.flat();
+    // Far (cells ~30 px apart): no genotype in the slots; the gametes, ratio marks and keys stay.
+    const far = shownFrom(30, 800);
+    for (const g of genotypes) expect(far).not.toContain(g);
+    expect(far).toContain('9/16');
+    for (const c of m.classes) expect(far).toContain(c.key);
+    // A picked cell shows its genotype even far away.
+    sc.setSelection({ kind: 'cell', row: 0, col: 1 });
+    expect(shownFrom(30, 800)).toContain(m.punnett.cells[0]?.[1]);
+    sc.setSelection(null);
+    // Close: every slot's genotype.
+    const close = shownFrom(12, 3000);
+    for (const g of genotypes) expect(close).toContain(g);
+    // The tags shown never overlap on screen.
+    const boxes = layer.rects();
+    for (let i = 0; i < boxes.length; i++)
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i];
+        const b = boxes[j];
+        if (!a || !b) continue;
+        const overlap =
+          a.left < b.right - 4 &&
+          b.left < a.right - 4 &&
+          a.top < b.bottom - 4 &&
+          b.top < a.bottom - 4;
+        expect(overlap, `tags ${String(i)} and ${String(j)}`).toBe(false);
+      }
+    layer.dispose();
+    sc.dispose();
+  });
+
   it('quality tiers change how things look, never what is drawn', () => {
     const m = dihybrid();
     const field = fieldOf(m, mendelDraw(state()));
@@ -259,10 +305,12 @@ describe('3D Mendel scene', () => {
     sc.setTime(MENDEL_TOTAL);
     expect(m.classes).toHaveLength(9);
     expect(sc.fieldShown()).toBe(200);
-    // Measured 2026-10-20 (CPU count, no GPU): 37 calls, about 119 000 triangles on Medium for
-    // nine classes and 200 figures. A bigger change must update this budget on purpose.
+    // Measured 2026-10-21 (CPU count, no GPU) after the lab-bench pass (bench, tray with slots
+    // and channels, pedestals, glass cylinders with liquid, meniscus and marks; see-through
+    // parts in two draws): 44 calls, about 92 000 triangles on Medium for nine classes and 200
+    // figures (was 37 calls, 119 000). A bigger change must update this budget on purpose.
     const stats = sc.drawStats();
-    expect(stats.calls).toBeLessThanOrEqual(38);
+    expect(stats.calls).toBeLessThanOrEqual(44);
     expect(stats.triangles).toBeLessThan(125_000);
     sc.dispose();
   });

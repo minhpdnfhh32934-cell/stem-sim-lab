@@ -12,7 +12,7 @@ import {
   type ViewTangents,
 } from '@/ui/three/camera';
 import { safeTangents, type Insets } from '@/ui/three/frame';
-import { boardPoints, overviewPoints, type BoardDims, type Vec3 } from './layout';
+import { boardPoints, overviewPoints, parentsPoints, type BoardDims, type Vec3 } from './layout';
 import type { MendelCameraMode } from './store';
 
 export const FOV = 34;
@@ -82,6 +82,17 @@ export function boxFrame(lo: Vec3, hi: Vec3): CameraFrame {
 /** What the camera frames for a mode (`fieldTotal`: figures of a draw shown, 0 for none). */
 export function mendelFrame(mode: MendelCameraMode, d: BoardDims, fieldTotal: number): CameraFrame {
   return pointsFrame(mode === 'board' ? boardPoints(d) : overviewPoints(d, fieldTotal));
+}
+
+/**
+ * What "Toàn cảnh" frames after a jump to step k (a step button, Next, Previous): meiosis and the
+ * gametes come closer to the parents and the tray, fertilisation to the board, the offspring
+ * show everything. Null: the mode's own frame.
+ */
+export function stepFrame(k: number, d: BoardDims): CameraFrame | null {
+  if (k <= 1) return pointsFrame(parentsPoints(d));
+  if (k === 2) return pointsFrame(boardPoints(d));
+  return null;
 }
 
 export function viewTangents(width: number, height: number, insets: Insets): ViewTangents {
