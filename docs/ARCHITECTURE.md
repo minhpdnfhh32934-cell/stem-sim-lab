@@ -419,18 +419,28 @@ it without code of its own:
   with soil fading into the grass) and a fence of instanced posts and plain-box rails
   (`--bio3d-bark`). `gauge.ts`: stone plinth, glass tube (`jarGeometry`, `glassMeshes`), liquid in
   `--chart-1`, rings at K (`--chart-3`, the 2D K line) and K/2, an ink arrow on the surface, labels
-  K, K/2, N and dN/dt. `scene.ts`: terrain (`habitat`, outdoor look), `setTime` without rebuilding, callouts
-  (figure, fence, clover; regions keep leaders on their side), picks (figure / gauge / food). The
-  view (`Logistic3DView.tsx`) draws the time slider over the N(t) curve (SVG, K dashed, t* dotted, a
-  playhead thumb), "Tới t*", the readout and the cards (`facts.ts`); `logisticCard.ts` holds the
-  Science Card and its 3D notes (`LOGISTIC_CARD_3D`). Medium: 19 draw calls, ~103k triangles (High
-  ~121k), 0 frames at rest.
+  K, K/2, N and dN/dt; the glass uses `glassware({ ink, edge })` and lip rings at its top and foot
+  (`--bio3d-glass-edge`) so it reads as a vessel on both themes; `showLabels` hides its labels while
+  an animal's or the clover's card is open. `scene.ts`: terrain (`habitat`, outdoor look), `setTime`
+  without rebuilding, callouts (figure, fence, clover; regions keep leaders on their side; in a
+  close-up only the named figure is avoided), picks (figure / gauge / food) and `frames`: 'closeup'
+  ("Cận cảnh đàn", `closeupPoints`, `LOGI_CLOSE_VIEW`) and one close-up per pick keyed by its
+  selection id (`figure:<slot>` from `figurePoints` seen from above, `LOGI_PICK_VIEW`; 'gauge' from
+  `gaugePoints`, labels included; 'food' from `foodPoints`). The view (`Logistic3DView.tsx`) draws
+  the time slider over the N(t) curve (SVG, K dashed, t* dotted, a playhead thumb), "Tới t*", the
+  readout, the framing (`Segmented` "Toàn cảnh / Cận cảnh đàn"; neither checked while a pick is
+  framed, either one closes the card; `view` = the pick's id, else `useLogistic3D.camera`) and the
+  cards (`facts.ts`; `arrowScale` names the arrow's real reference, `arrowBasis` rK/4 or |dN/dt| at
+  t = 0); `logisticCard.ts` holds the Science Card and its 3D notes (`LOGISTIC_CARD_3D`). Medium: 21
+  draw calls, ~104k triangles (High 22, ~122k), 0 frames at rest.
 - Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
   as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
   unlit; `alpha` bottom/top, default `LIQUID_ALPHA`), `liquidSurface`, `waterLineGeometry` (a
   thin tube round a rounded rectangle, corners sampled like edges) + `waterLine` (the liquid drawn
   towards `--text` by `--m3d-water-line`: 0.5 light, 0.12 dark, about ΔE_OK 0.3 from the stage),
-  `shellInkColor` (the light stage's darker outline, also `proteinShell`'s), and `fibrousMembrane`
+  `shellInkColor` (the light stage's darker outline, also `proteinShell`'s), `glassware`'s `edge`
+  (the dark stage's light silhouette in `--bio3d-glass-edge` by `--m3d-glass-edge`, on every tier;
+  off on the light stage, where the ink outline stays), and `fibrousMembrane`
   (muted membrane colour, stretched-noise bump, one-pass two-sided blending, sheen on High;
   optional `emphasis` and `ink`). The enzyme tank uses the same recipes (without the ink, the
   denser liquid or the water line).
