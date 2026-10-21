@@ -5,7 +5,8 @@
  *   top edge, the 3D/2D switch and "Đặt lại góc nhìn" in the top-right corner, a caption and
  *   any playback controls at the bottom. The camera keeps the subject clear of all of them.
  * - `Bio3DFigureBody`: a 3D figure block at the top of a lesson's page of text and tables, with
- *   the same top-right corner as every 3D view: the 3D/2D switch, then "Đặt lại góc nhìn".
+ *   the same top-right corner as every 3D view: the 3D/2D switch, the lesson's tools (the name
+ *   labels' toggle), then "Đặt lại góc nhìn".
  */
 import { Focus } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
@@ -36,6 +37,10 @@ export interface SceneSpec {
   onPick?: (id: string | null) => void;
   /** The picked part's id (the scene marks it). */
   selected?: string | null;
+  /** The scene's named framing (`Bio3DScene.frames`, e.g. a close-up); default: the whole subject. */
+  view?: string;
+  /** Texts of the scene's name callouts by id; null or absent: none drawn. */
+  callouts?: Readonly<Record<string, string>> | null;
 }
 
 function ResetView({ onReset }: { onReset: () => void }) {
@@ -111,12 +116,15 @@ export function Bio3DFigureBody({
   info,
   caption,
   className,
+  tools,
   createRenderer,
 }: {
   lesson: Bio3DLesson;
   scene: SceneSpec;
   /** Chips over the figure's top edge (left of the switch). */
   top?: ReactNode;
+  /** The lesson's buttons in the corner, between the switch and "Đặt lại góc nhìn". */
+  tools?: ReactNode;
   /** Playback or step controls under the picture. */
   bottom?: ReactNode;
   /** The picked part's card (right, between the top and the bottom rows). */
@@ -145,6 +153,7 @@ export function Bio3DFigureBody({
         )}
         <div className="bio3d__side" data-inset="corner">
           <Bio3DSwitch lesson={lesson} />
+          {tools}
           <ResetView
             onReset={() => {
               setReset((n) => n + 1);

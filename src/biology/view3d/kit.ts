@@ -8,6 +8,7 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import type { QualityTier } from '@/perf/tiers';
+import type { LabelObstacles } from '@/ui/three/labelLayer';
 import { enableKeyShadow, type LookPreset } from '@/ui/three/lighting';
 import { contactShadow, disposeLightRig, lightRig } from './look';
 import { glass, roundedBox, solid, type GlassOptions, type SolidOptions } from './materials';
@@ -50,9 +51,33 @@ export interface Bounds {
   points?: Vec3[];
 }
 
+/** A named framing of a scene besides the whole subject (a close-up). */
+export interface SceneFrame {
+  bounds: Bounds;
+  /** Direction from the subject towards the camera (default: the view's own). */
+  dir?: Vec3;
+}
+
+/** Where a name callout points: a part's world point (the page draws the name and its leader). */
+export interface Callout {
+  id: string;
+  point: Vec3;
+  /** Fill of the anchor ring: the part's colour (CSS colour; default muted text). */
+  color?: string;
+}
+
 export interface Bio3DScene {
   kit: SceneKit;
   bounds: Bounds;
+  /** Named framings (`Bio3DCanvas`'s `view`); the whole subject is `bounds`. */
+  frames?: Readonly<Record<string, SceneFrame>>;
+  /** The name callouts' anchors seen from `camera`, in priority order (none: no callouts). */
+  callouts?: (camera: THREE.Camera) => Callout[];
+  /**
+   * What the callouts keep clear of (world hulls; asked right after `callouts`) in the framing
+   * shown (`frames` key; undefined: the whole subject).
+   */
+  calloutObstacles?: (view: string | undefined) => Pick<LabelObstacles, 'avoid' | 'regions'>;
   /** Moves the scene to time t (s, the lesson's own time); no allocation. */
   setTime?: (t: number) => void;
   /** Illustrative motion (Brownian particles): advances by dt seconds of animation. */
