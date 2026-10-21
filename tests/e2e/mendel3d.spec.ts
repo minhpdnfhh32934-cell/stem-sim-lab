@@ -39,6 +39,14 @@ const hook = (page: Page, fn: 'ratio' | 'step' | 'field' | 'focus' | 'moving', a
     [fn, arg] as const,
   );
 
+/** Texts of the 3D tags shown over the picture now. */
+const shownTags = (page: Page) =>
+  page.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>('.men3d .three-tag')]
+      .filter((el) => !el.hidden)
+      .map((el) => el.textContent.trim()),
+  );
+
 async function openMendel(page: Page) {
   // A slow test machine may measure as "low" quality, where the lesson uses the 2D page.
   await page.addInitScript(() => {
@@ -138,6 +146,17 @@ test('Mendel 3D: the ratio from the model, a picked cell’s card, a draw, the 2
   await expect(card).toContainText('Xác suất: 1/4 (từ bố AaBb).');
   await card.getByRole('button', { name: 'Bỏ chọn' }).click();
 
+  // "Bảng Punnett" (Advanced mode) at 1366 × 768: every one of the 16 slots shows its genotype.
+  await page.getByRole('radio', { name: 'Nâng cao' }).click();
+  await page.getByRole('radio', { name: 'Bảng Punnett' }).click();
+  await expect.poll(() => hook(page, 'moving')).toBe(false);
+  await expect
+    .poll(async () => (await shownTags(page)).filter((t) => /^[Aa]{2}[Bb]{2}$/.test(t)).length)
+    .toBe(16);
+  await page.getByRole('radio', { name: 'Toàn cảnh' }).click();
+  await page.getByRole('radio', { name: 'Cơ bản' }).click();
+  await expect.poll(() => hook(page, 'moving')).toBe(false);
+
   // A random draw: 1000 offspring, one figure per 5; the 2D table shows the same counts.
   await page.getByRole('button', { name: 'Tạo ngẫu nhiên 1.000 con lai' }).click();
   await expect(page.getByText('Mỗi hình ≈ 5 cá thể (làm tròn).')).toBeVisible();
@@ -146,6 +165,15 @@ test('Mendel 3D: the ratio from the model, a picked cell’s card, a draw, the 2
     ?.split(' : ')
     .map((s) => s.trim());
   expect(observed).toHaveLength(4);
+  // Every class's count is on the picture, named by its class (never a bare number).
+  await expect.poll(() => hook(page, 'moving')).toBe(false);
+  const keys = ['A_ B_', 'A_ bb', 'aa B_', 'aa bb'];
+  await expect
+    .poll(async () => {
+      const tags = await shownTags(page);
+      return keys.filter((k, i) => tags.includes(`${k} · ${observed?.[i] ?? '?'}`)).length;
+    })
+    .toBe(4);
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/mendel3d-draw.png` });
 
   await page.getByRole('radio', { name: '2D' }).click();

@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
+import { viewWindow } from '@/ui/three/frame';
 import { TagLayer } from '@/ui/three/tagLayer';
 import { expectDisposes } from '@/ui/three/testing';
 import { cross, gametes, parseGenotype, type Locus } from '../mendel';
 import { mendelDraw } from '../mendelRun';
 import type { MendelState } from '../store';
 import { MENDEL_TOTAL, fieldOf, mendelModel3d, stepEnd, type MendelModel3D } from './binding';
-import { LAYOUT } from './layout';
+import { FOV, VIEW_DIR, mendelFrame, placeMendelCamera } from './camera';
+import { LAYOUT, cellPoint } from './layout';
 import { MENDEL_CLASS_TOKENS } from './look';
-import { buildMendelScene, type MendelScene } from './scene';
+import { buildMendelScene, genotypeSpacingPx, type MendelScene } from './scene';
 
 const A: Locus = { letter: 'A', dominance: 'complete' };
 const B: Locus = { letter: 'B', dominance: 'complete' };
@@ -207,7 +209,11 @@ describe('3D Mendel scene', () => {
     for (const c of m.classes) expect(shown).toContain(c.key);
     expect(shown).toContain('♀ AaBb');
     const draw = mendelDraw(state());
-    for (const o of draw?.obs ?? []) expect(shown).toContain(String(o));
+    // Each count names its class (never a bare number beside another class's rows).
+    (draw?.obs ?? []).forEach((o, i) => {
+      expect(shown).toContain(`${m.classes[i]?.key ?? '?'} · ${String(o)}`);
+    });
+    for (const o of draw?.obs ?? []) expect(shown).not.toContain(String(o));
     layer.dispose();
     expect(sc.labelAnchors().map((a) => a.id)).toEqual([
       'mother',
@@ -314,6 +320,138 @@ describe('3D Mendel scene', () => {
     expect(stats.calls).toBeLessThanOrEqual(43);
     expect(stats.triangles).toBeLessThan(125_000);
     sc.dispose();
+  });
+});
+
+/**
+ * The canvas and controls of the lesson at 1366 × 768 (measured in the browser: canvas 808 × 692,
+ * corner controls on top, step strip and caption at the bottom).
+ */
+const STAGE = { w: 808, h: 692, insets: { top: 120, right: 0, bottom: 176, left: 0 } };
+
+/** A camera placed like the view's: the mode's frame, the safe area's centre as the target. */
+function viewCamera(sc: MendelScene, mode: 'overview' | 'board'): THREE.PerspectiveCamera {
+  const p = placeMendelCamera(
+    mendelFrame(mode, sc.dims, sc.fieldShown()),
+    mendelFrame('overview', sc.dims, sc.fieldShown()),
+    STAGE.w,
+    STAGE.h,
+    VIEW_DIR,
+    STAGE.insets,
+    mode === 'board',
+  );
+  const win = viewWindow(STAGE.w, STAGE.h, STAGE.insets);
+  const cam = new THREE.PerspectiveCamera(FOV, win.fullWidth / win.fullHeight, 0.05, 800);
+  cam.setViewOffset(win.fullWidth, win.fullHeight, win.x, win.y, win.width, win.height);
+  cam.updateProjectionMatrix();
+  cam.position.set(...p.position);
+  cam.lookAt(...p.target);
+  return cam;
+}
+
+/** Tags shown by a camera over the lesson's stage (safe area = canvas minus the controls). */
+function tagsFrom(sc: MendelScene, cam: THREE.Camera): { shown: string[]; layer: TagLayer } {
+  const layer = new TagLayer(document.createElement('div'));
+  const i = STAGE.insets;
+  layer.begin(cam, STAGE.w, STAGE.h, {
+    left: i.left,
+    top: i.top,
+    right: STAGE.w - i.right,
+    bottom: STAGE.h - i.bottom,
+  });
+  sc.tags(layer, String);
+  layer.end();
+  return { shown: layer.shown(), layer };
+}
+
+describe('3D Mendel tags at 1366 × 768', () => {
+  it('"Bảng Punnett" shows every slot’s genotype (all 16 of the dihybrid, all 4 of 2 × 2)', () => {
+    const cases: [string, string, Locus[]][] = [
+      ['AaBb', 'AaBb', [A, B]],
+      ['AaBb', 'AaBb', [Ai, Bi]],
+      ['Aa', 'Aa', [A]],
+    ];
+    for (const [p1, p2, loci] of cases) {
+      const m = mendelModel3d(p1, p2, loci);
+      const sc = build(m);
+      sc.setTime(MENDEL_TOTAL);
+      const { shown, layer } = tagsFrom(sc, viewCamera(sc, 'board'));
+      const cells = m.punnett.cells.flat();
+      const left = [...shown];
+      for (const g of cells) {
+        const at = left.indexOf(g);
+        expect(at, `${p1} × ${p2}: ${g}`).toBeGreaterThanOrEqual(0);
+        left.splice(at, 1);
+      }
+      layer.dispose();
+      sc.dispose();
+    }
+  });
+
+  it('"Bảng Punnett" frames the board closer than the plain centre: slots clearly wide enough', () => {
+    const m = dihybrid();
+    const sc = build(m);
+    sc.setTime(MENDEL_TOTAL);
+    const frame = mendelFrame('board', sc.dims, 0);
+    const at = (balance: boolean) =>
+      placeMendelCamera(frame, frame, STAGE.w, STAGE.h, VIEW_DIR, STAGE.insets, balance).distance;
+    expect(at(true)).toBeLessThan(at(false) * 0.95);
+    // Neighbouring slots are at least 8 px further apart than the genotype tags need.
+    const { layer } = tagsFrom(sc, viewCamera(sc, 'board'));
+    const a = cellPoint(sc.dims, 0, 0, [0, 0, 0]);
+    const b = cellPoint(sc.dims, 0, 1, [0, 0, 0]);
+    expect(layer.spacing(a, b)).toBeGreaterThanOrEqual(genotypeSpacingPx(m) + 8);
+    layer.dispose();
+    sc.dispose();
+  });
+
+  it('a draw: every class with a figure has its own count tag, named, none over another', () => {
+    const cases: Partial<MendelState>[] = [
+      {},
+      { n: 16 },
+      { n: 10000, seed: 11 },
+      { dominance: ['incomplete', 'incomplete'] },
+      { loci: 1, p1: 'Aa', p2: 'Aa', dominance: ['complete', 'complete'] },
+      { p2: 'aabb' },
+    ];
+    for (const over of cases) {
+      const st = state(over);
+      const loci = (st.loci === 1 ? [st.dominance[0]] : st.dominance).map((d, k) => ({
+        letter: k === 0 ? 'A' : 'B',
+        dominance: d,
+      })) as Locus[];
+      const m = mendelModel3d(st.p1, st.p2, loci);
+      const field = fieldOf(m, mendelDraw(st));
+      expect(field, JSON.stringify(over)).not.toBeNull();
+      const sc = build(m);
+      sc.setField(field);
+      sc.setTime(MENDEL_TOTAL);
+      const { shown, layer } = tagsFrom(sc, viewCamera(sc, 'overview'));
+      const want = m.classes
+        .map((cls, i) =>
+          (field?.figures[i] ?? 0) > 0 ? `${cls.key} · ${String(field?.counts[i])}` : '',
+        )
+        .filter(Boolean);
+      expect(want.length, JSON.stringify(over)).toBeGreaterThan(0);
+      for (const t of want) expect(shown, `${JSON.stringify(over)} ${t}`).toContain(t);
+      // The count tags (laid out first) never touch each other or any other tag on screen.
+      const boxes = layer.rects();
+      expect(shown.slice(0, want.length)).toEqual(want);
+      for (let i = 0; i < want.length; i++)
+        for (let j = i + 1; j < boxes.length; j++) {
+          const a = boxes[i];
+          const b = boxes[j];
+          if (!a || !b) continue;
+          const overlap =
+            a.left < b.right - 4 &&
+            b.left < a.right - 4 &&
+            a.top < b.bottom - 4 &&
+            b.top < a.bottom - 4;
+          expect(overlap, `${JSON.stringify(over)} tags ${String(i)} and ${String(j)}`).toBe(false);
+        }
+      layer.dispose();
+      sc.dispose();
+    }
   });
 });
 

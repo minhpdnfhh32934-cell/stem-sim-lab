@@ -18,7 +18,7 @@ import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { roundedBox } from '@/ui/three/materials';
 import { pickFirst } from '@/ui/three/pick';
-import type { TagLayer } from '@/ui/three/tagLayer';
+import type { TagLayer, TagPlacement } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
 import { ROLES, structureColor } from '../../view3d/palette';
 import { shapeGeometry, shapeHalfHeight } from '../../view3d/primitives/classShape';
@@ -132,8 +132,19 @@ const L = LAYOUT;
 const TOP_SCALE = 0.24;
 /** Screen pixels between the two rows of class keys (a tag is about 18 px high). */
 const KEY_ROW_PX = 22;
-/** Screen pixels between two neighbouring cells from which the slots show their genotypes. */
-export const GENOTYPE_PX = 58;
+/**
+ * Room (px) kept between two neighbouring genotype tags: the slots show their genotypes once the
+ * cells are at least the widest tag plus this apart on screen (rows: a tag's height apart).
+ */
+export const GENOTYPE_GAP_PX = 12;
+/** Screen pixels between neighbouring cells from which the slots show their genotypes. */
+export const genotypeSpacingPx = (model: MendelModel3D): number =>
+  tagPx(model.punnett.cells.reduce((w, row) => Math.max(w, ...row.map((g) => g.length)), 1)) +
+  GENOTYPE_GAP_PX;
+/** Screen pixels between a draw's count tags and the field's plate. */
+const COUNT_GAP_PX = 8;
+/** A draw's count tags: right-aligned on the column, kept clear by every later tag. */
+const COUNT_TAG: TagPlacement = { end: true, solid: true };
 /** Approximate width (px) of a tag of `n` characters (the 3D tag pills, 12 px font). */
 const tagPx = (n: number) => 7 * n + 14;
 
@@ -453,6 +464,11 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
   /** First figure (running index) of each class in the field. */
   const fieldStart = new Array<number>(nClasses).fill(0);
   let fieldTotal = 0;
+  /** A draw's count tags laid out on screen (reused): wanted and placed y, class, plate edge. */
+  const countWant = new Float64Array(nClasses);
+  const countY = new Float64Array(nClasses);
+  const countClass = new Int16Array(nClasses);
+  const sp = [0, 0];
 
   // ── Shadow maps (High on a discrete GPU): the bench and the tray receive ────────────────
   const shadowed = kit.groundShadows(
@@ -790,7 +806,63 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
     return layer.spacing(p, c);
   };
 
+  const genotypePx = genotypeSpacingPx(model);
+
+  /**
+   * A draw's counts, first (they must never give way to another tag): a column just left of the
+   * field's plate, each tag naming its class ("A_ B_ · 564") and level with that class's rows,
+   * moved apart on screen only as far as needed for no two to touch.
+   */
+  function countTags(layer: TagLayer, fmt: (n: number) => string): void {
+    if (!field || motion.rise < 0.5 || fieldTotal === 0) return;
+    const edge = -((fieldCols(fieldTotal) * L.fieldStep) / 2 + 0.25);
+    // The plate's left edge on screen, front and back (the front looks wider).
+    let right = Infinity;
+    for (let e = 0; e < 2; e++) {
+      fieldSlot(dims, fieldTotal, e === 0 ? 0 : fieldTotal - 1, a);
+      const z = a[2] + (e === 0 ? -1 : 1) * (L.fieldStep / 2 + 0.25);
+      if (layer.toScreen(edge, 0, z, sp)) right = Math.min(right, sp[0] ?? Infinity);
+    }
+    if (!Number.isFinite(right)) return;
+    let n = 0;
+    for (let i = 0; i < nClasses; i++) {
+      const shown = fieldMeshes[i]?.count ?? 0;
+      if (shown === 0 || field.counts[i] === undefined) continue;
+      const first = fieldStart[i] ?? 0;
+      fieldSlot(dims, fieldTotal, first, a);
+      fieldSlot(dims, fieldTotal, first + shown - 1, b);
+      if (!layer.toScreen(edge, 0, (a[2] + b[2]) / 2, sp)) continue;
+      countWant[n] = sp[1] ?? 0;
+      countClass[n] = i;
+      n++;
+    }
+    // Down the column in class order (the field fills from the back row), a tag's height apart;
+    // then up by half the largest push, so the column stays centred on the rows it names.
+    let push = 0;
+    for (let k = 0; k < n; k++) {
+      const want = countWant[k] ?? 0;
+      countY[k] = k === 0 ? want : Math.max(want, (countY[k - 1] ?? 0) + KEY_ROW_PX);
+      push = Math.max(push, (countY[k] ?? 0) - want);
+    }
+    for (let k = 0; k < n; k++) {
+      const i = countClass[k] ?? 0;
+      const cls = model.classes[i];
+      const count = field.counts[i];
+      if (!cls || count === undefined) continue;
+      const text = `${cls.key} · ${fmt(count)}`;
+      layer.addAt(
+        text,
+        right - COUNT_GAP_PX,
+        (countY[k] ?? 0) - push / 2,
+        'word',
+        text.length,
+        COUNT_TAG,
+      );
+    }
+  }
+
   function tags(layer: TagLayer, fmt: (n: number) => string): void {
+    countTags(layer, fmt);
     // Each gamete in its channel carries its gamete and exact probability, never two tags over
     // each other: the mother's as one tag left of her row (the gamete alone when the full tag has
     // no room); the father's as a column header: the gamete over its bead and the probability
@@ -814,11 +886,16 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
         }
       }
     layer.add('♀ \\ ♂', -h.x - L.headerGap, L.floorY + L.wallH, -h.z - L.headerGap, 'tick', 4);
-    // Genotypes in the slots: at close zoom, or the picked cell's.
+    // Genotypes in the slots: when the cells are far enough apart on screen for every tag to fit
+    // beside the next (as in "Bảng Punnett"), or the picked cell's.
     if (motion.grow >= 0.5) {
       cellPoint(dims, 0, 0, a);
       cellPoint(dims, 0, Math.min(1, dims.cols - 1), b);
-      const close = dims.cols > 1 && layer.spacing(a, b) >= GENOTYPE_PX;
+      cellPoint(dims, Math.min(1, dims.rows - 1), 0, c);
+      const close =
+        dims.cols > 1 &&
+        layer.spacing(a, b) >= genotypePx &&
+        (dims.rows < 2 || layer.spacing(a, c) >= KEY_ROW_PX);
       for (let i = 0; i < dims.rows; i++)
         for (let j = 0; j < dims.cols; j++) {
           const here = selected?.kind === 'cell' && selected.row === i && selected.col === j;
@@ -882,15 +959,6 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
         'letter',
       );
     }
-    // A draw's counts, over each class's first figure.
-    if (field && motion.rise >= 0.5)
-      fieldMeshes.forEach((mesh, i) => {
-        const count = field?.counts[i];
-        if (mesh.count === 0 || count === undefined) return;
-        fieldSlot(dims, fieldTotal, fieldStart[i] ?? 0, a);
-        const text = fmt(count);
-        layer.add(text, a[0], a[1] + 0.35, a[2], 'word', text.length + 1);
-      });
   }
 
   setTime(time);

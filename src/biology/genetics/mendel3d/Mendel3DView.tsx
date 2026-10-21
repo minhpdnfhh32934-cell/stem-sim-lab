@@ -379,6 +379,7 @@ function Mendel3DScene({
       h.height(),
       dir,
       h.currentInsets(),
+      mode === 'board',
     );
   };
   const frameCamera = (h: ThreeHost, mode: MendelCameraMode, animate = false) => {
