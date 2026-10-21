@@ -1,4 +1,4 @@
-import { binomial, chiSquare, type ChiSquare } from './stats';
+import { binomial, chiSquare, rng, type ChiSquare } from './stats';
 
 /** Hardy–Weinberg genotype frequencies from the allele frequency p (q = 1 − p). */
 export function hardyWeinberg(p: number): { AA: number; Aa: number; aa: number } {
@@ -95,6 +95,25 @@ export function wrightFisher(
     traj.push(p);
   }
   return traj;
+}
+
+/** Inputs of the genetic drift lesson's runs (`useDrift`). */
+export interface DriftInputs {
+  N: number;
+  p0: number;
+  generations: number;
+  runs: number;
+  seed: number;
+}
+
+/**
+ * The drift lesson's populations: `runs` Wright–Fisher trajectories drawn one after another from
+ * one random stream `rng(seed)`. The 2D chart, the chips and the 3D view all read these, so a
+ * seed gives the same runs in every picture.
+ */
+export function driftRuns(st: DriftInputs): number[][] {
+  const rand = rng(st.seed);
+  return Array.from({ length: st.runs }, () => wrightFisher(st.N, st.p0, st.generations, rand));
 }
 
 /** Expected heterozygosity after t generations of drift: H₀·(1 − 1/2N)^t. */

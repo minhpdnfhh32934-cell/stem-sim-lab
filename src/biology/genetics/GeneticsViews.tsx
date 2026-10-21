@@ -3,11 +3,10 @@ import { Suspense, lazy, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { XYChart } from '@/ui/charts/XYChart';
 import { cx } from '@/ui/cx';
-import { BSRC, L, usePublishCard } from '../common';
+import { L, usePublishCard } from '../common';
 import { useFmt } from '../fmt';
 import { cross, phenotype, ratio, type Dominance, type Locus } from './mendel';
 import { CHI_VERDICT, MENDEL_CARD, drawLabel } from './mendelCard';
@@ -27,12 +26,16 @@ import { MoreInBasic } from '../ui';
 import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
+import { DRIFT_CARD, DRIFT_CARD_3D } from './driftCard';
+import { useDrift3D } from './drift3d/store';
 import { HW_CARD, HW_CARD_3D } from './hwCard';
 import { useDriftRuns } from './driftData';
 import '../bio.css';
 
 // three.js and the 3D pictures load only when a 3D view is shown.
-const Drift3D = lazy(() => import('./Drift3D').then((m) => ({ default: m.Drift3D })));
+const Drift3DView = lazy(() =>
+  import('./drift3d/Drift3DView').then((m) => ({ default: m.Drift3DView })),
+);
 const Mendel3DView = lazy(() =>
   import('./mendel3d/Mendel3DView').then((m) => ({ default: m.Mendel3DView })),
 );
@@ -533,41 +536,14 @@ export function HardyWeinbergPanel() {
 
 /* ───────────────────────────── Genetic drift ───────────────────────────── */
 
-const DRIFT_CARD: ScienceCardData = {
-  title: L('Phiêu bạt di truyền (Wright–Fisher)', 'Genetic drift (Wright–Fisher)'),
-  model: L(
-    'Mỗi thế hệ, 2N bản sao gen được lấy ngẫu nhiên (phân phối nhị thức) từ thế hệ trước; không chọn lọc, không đột biến.',
-    'Each generation, 2N gene copies are drawn binomially from the previous one; no selection or mutation.',
-  ),
-  equations: [
-    {
-      tex: 'P_{\\text{fix}}(A) = p_0',
-      label: L('Xác suất alen A được cố định', 'Fixation probability of allele A'),
-    },
-    { tex: 'H_t = H_0\\left(1 - \\tfrac{1}{2N}\\right)^t' },
-  ],
-  assumptions: [
-    L(
-      'Quần thể lưỡng bội kích thước N không đổi, thế hệ không gối nhau.',
-      'Diploid population of constant size N, non-overlapping generations.',
-    ),
-  ],
-  confidence: 'approx',
-  confidenceNote: L(
-    'Test tự động (3000 lần chạy): tỉ lệ cố định ≈ p₀ trong ±0,03; dị hợp trung bình khớp (1 − 1/2N)ᵗ.',
-    'Automated test (3000 runs): fixation fraction ≈ p₀ within ±0.03; mean heterozygosity follows (1 − 1/2N)ᵗ.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.hartl, BSRC.sgk12],
-};
-
 export function DriftStage() {
-  usePublishCard(DRIFT_CARD);
   const { show3d } = useShow3d('drift');
+  // The 3D archipelago adds its notes to the card while it is on screen.
+  usePublishCard(show3d ? DRIFT_CARD_3D : DRIFT_CARD);
   if (show3d)
     return (
       <Suspense fallback={<div className="bio-view" />}>
-        <Drift3D />
+        <Drift3DView />
       </Suspense>
     );
   return <Drift2D />;
@@ -684,6 +660,8 @@ export function DriftBottom() {
   const Lz = useLocalized();
   const runs = useDriftRuns();
   const st = useDrift();
+  // The generation the 3D archipelago shows (marked on the chart while it is on screen).
+  const shown = useDrift3D((s) => (s.active ? s.t : null));
   const data = useMemo(() => {
     const x = Array.from({ length: st.generations + 1 }, (_, t) => t);
     const mean = x.map(
@@ -712,6 +690,7 @@ export function DriftBottom() {
         series={data.series}
         xLabel={Lz(L('Thế hệ', 'Generation'))}
         yLabel="H = 2pq"
+        marker={shown}
         yMin={0}
         yMax={0.5}
       />

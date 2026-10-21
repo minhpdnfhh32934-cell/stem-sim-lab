@@ -2,8 +2,8 @@
  * Layouts of a biology lesson's 3D view (three.js side: loaded with the lesson's 3D module).
  *
  * - `Bio3DView`: the 3D picture fills the stage; the lesson's chips and controls sit over its
- *   top edge, the 3D/2D switch and "Đặt lại góc nhìn" in the top-right corner, a caption and
- *   any playback controls at the bottom. The camera keeps the subject clear of all of them.
+ *   top edge, the 3D/2D switch, the lesson's tools and "Đặt lại góc nhìn" in the top-right
+ *   corner, a picked part's card on the right, a caption and any playback controls at the bottom. The camera keeps the subject clear of all of them.
  * - `Bio3DFigureBody`: a 3D figure block at the top of a lesson's page of text and tables, with
  *   the same top-right corner as every 3D view: the 3D/2D switch, the lesson's tools (the name
  *   labels' toggle), then "Đặt lại góc nhìn".
@@ -60,16 +60,25 @@ export function Bio3DView({
   lesson,
   scene,
   top,
+  tools,
   bottom,
+  info,
   caption,
+  className,
   createRenderer,
 }: {
   lesson: Bio3DLesson;
   scene: SceneSpec;
   /** The lesson's chips and buttons (the same as over its 2D picture). */
   top?: ReactNode;
+  /** The lesson's buttons in the corner, between the switch and "Đặt lại góc nhìn". */
+  tools?: ReactNode;
   /** Playback or step controls under the picture. */
   bottom?: ReactNode;
+  /** The picked part's card (right, between the top and the bottom rows). */
+  info?: ReactNode;
+  /** Extra class of the view (a lesson's own layout). */
+  className?: string;
   /** What the picture shows and what in it is illustration. */
   caption?: ReactNode;
   createRenderer?: RendererFactory;
@@ -77,7 +86,7 @@ export function Bio3DView({
   const hudRef = useRef<HTMLDivElement>(null);
   const [reset, setReset] = useState(0);
   return (
-    <div className="bio-view bio3d" data-lesson={lesson}>
+    <div className={`bio-view bio3d${className ? ` ${className}` : ''}`} data-lesson={lesson}>
       <Bio3DCanvas
         lesson={lesson}
         {...scene}
@@ -91,12 +100,14 @@ export function Bio3DView({
         </div>
         <div className="bio3d__side" data-inset="corner">
           <Bio3DSwitch lesson={lesson} />
+          {tools}
           <ResetView
             onReset={() => {
               setReset((n) => n + 1);
             }}
           />
         </div>
+        {info}
         {(bottom !== undefined || caption !== undefined) && (
           <div className="bio3d__bottom" data-inset="bottom">
             {bottom}

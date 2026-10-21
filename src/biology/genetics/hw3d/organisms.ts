@@ -156,6 +156,11 @@ export function herd(
   heightAt: (x: number, z: number) => number,
   /** Where a new generation hatches from first (the gene pool). */
   from: readonly [number, number] = [0, 0],
+  /**
+   * One body colour for every figure (a CSS colour; default: the genotype's chart colour). Genetic
+   * drift's model counts gene copies only, so its figures carry the data on their beads alone.
+   */
+  bodyColor?: string,
 ): Herd {
   const cap = Math.max(1, slots.length);
   const material = kit.shared(
@@ -218,7 +223,7 @@ export function herd(
   const ground = slots.map((s) => heightAt(s.x, s.z));
   const away = (s: Slot) => Math.hypot(s.x - from[0], s.z - from[1]);
   const maxR = Math.max(1e-6, ...slots.map(away));
-  const colors = GENOTYPES.map((g) => new THREE.Color(kit.color(genotypeToken(g))));
+  const colors = GENOTYPES.map((g) => new THREE.Color(bodyColor ?? kit.color(genotypeToken(g))));
   let classes: Uint8Array = new Uint8Array(0);
   let clock = 0;
   let hatchAt = Infinity;
