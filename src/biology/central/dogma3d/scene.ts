@@ -21,7 +21,7 @@ import { mixLinear, muted } from '@/ui/three/color';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { LAYER } from '@/ui/three/layers';
 import { pickFirst } from '@/ui/three/pick';
-import type { Hull, LabelObstacles } from '@/ui/three/labelLayer';
+import type { LabelObstacles } from '@/ui/three/labelLayer';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
 import { setRimAlpha } from '../../view3d/materials';
