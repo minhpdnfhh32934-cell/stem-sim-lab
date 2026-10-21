@@ -17,7 +17,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { deepen, mixLinear } from '@/ui/three/color';
 import { LAYER } from '@/ui/three/layers';
-import { withRim } from '@/ui/three/materials';
+import { roundedBox, withRim } from '@/ui/three/materials';
 import { withRelief } from '@/ui/three/relief';
 import type { SceneKit, Vec3 } from './kit';
 import { noiseTexture, fbm3 } from './noise';
@@ -554,6 +554,168 @@ export function meniscusGeometry(
   }
   const bowl = new THREE.LatheGeometry(profile, sides);
   return kit.geometry(bowl);
+}
+
+/**
+ * A see-through look as plain meshes of `geometry` (one refracting draw, or back + front), none
+ * of them pickable. `backFaces` false drops the faint back face: one see-through layer fewer over
+ * the whole vessel, which software rendering and integrated GPUs pay for (Medium).
+ */
+export function glassMeshes(
+  kit: SceneKit,
+  look: ShellLook,
+  geometry: THREE.BufferGeometry,
+  order: number,
+  backFaces: boolean,
+  parent: THREE.Object3D = kit.scene,
+): THREE.Mesh[] {
+  const out: THREE.Mesh[] = [];
+  for (const [m, extra] of [
+    [look.refract, 0],
+    [backFaces ? look.back : null, -1],
+    [look.front, 3],
+  ] as const) {
+    if (!m) continue;
+    const mesh = kit.mesh(geometry, m, parent);
+    mesh.renderOrder = order + extra;
+    mesh.raycast = () => undefined;
+    out.push(mesh);
+  }
+  return out;
+}
+
+/** A rounded rectangle in the xz plane at y = 0, facing up (a liquid's flat surface). */
+export function roundedPlane(
+  hx: number,
+  hz: number,
+  r: number,
+  segments: number,
+): THREE.ShapeGeometry {
+  const s = new THREE.Shape();
+  s.moveTo(-hx + r, -hz);
+  s.lineTo(hx - r, -hz);
+  s.quadraticCurveTo(hx, -hz, hx, -hz + r);
+  s.lineTo(hx, hz - r);
+  s.quadraticCurveTo(hx, hz, hx - r, hz);
+  s.lineTo(-hx + r, hz);
+  s.quadraticCurveTo(-hx, hz, -hx, hz - r);
+  s.lineTo(-hx, -hz + r);
+  s.quadraticCurveTo(-hx, -hz, -hx + r, -hz);
+  const g = new THREE.ShapeGeometry(s, Math.max(2, Math.round(segments)));
+  g.rotateX(-Math.PI / 2);
+  return g;
+}
+
+/**
+ * A liquid's body in a tank: a rounded box spanning [−1, 1]³ whose RGBA vertex colours carry a
+ * soft vertical gradient — a little deeper and denser at the bottom, almost clear at the top
+ * (the material's colour is the theme's liquid token, `liquidBody`).
+ */
+export function liquidBodyGeometry(segments: number): THREE.BufferGeometry {
+  const g = roundedBox(segments, 14);
+  const pos = g.getAttribute('position');
+  const rgba = new Float32Array(pos.count * 4);
+  for (let i = 0; i < pos.count; i++) {
+    const t = (pos.getY(i) + 1) / 2;
+    const shade = 0.84 + 0.16 * t;
+    rgba[i * 4] = shade;
+    rgba[i * 4 + 1] = shade;
+    rgba[i * 4 + 2] = shade;
+    rgba[i * 4 + 3] = 0.15 - 0.11 * t;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(rgba, 4));
+  return g;
+}
+
+/**
+ * The material of `liquidBodyGeometry`: --bio3d-liquid, blended by the vertex alpha. `unlit`: no
+ * lighting (the faint gradient carries the look) — a large see-through layer that software
+ * rendering and integrated GPUs pay for on every pixel.
+ */
+export function liquidBody(
+  kit: SceneKit,
+  o: { unlit?: boolean } = {},
+): THREE.MeshStandardMaterial | THREE.MeshBasicMaterial {
+  const color = structureColor(tok.bind(null, kit), 'liquid');
+  const params = { color, vertexColors: true, transparent: true, depthWrite: false };
+  return o.unlit
+    ? kit.shared(`liquid-body-unlit|${color}`, () => new THREE.MeshBasicMaterial(params))
+    : kit.shared(
+        `liquid-body|${color}`,
+        () => new THREE.MeshStandardMaterial({ ...params, roughness: 0.3 }),
+      );
+}
+
+/** A liquid's flat, glossy surface (clear coat on High). */
+export function liquidSurface(kit: SceneKit): THREE.MeshStandardMaterial {
+  const color = structureColor(tok.bind(null, kit), 'liquid');
+  return kit.shared(`liquid-surface|${color}`, () =>
+    physical(kit)
+      ? new THREE.MeshPhysicalMaterial({
+          color,
+          roughness: 0.06,
+          clearcoat: 1,
+          clearcoatRoughness: 0.05,
+          transparent: true,
+          opacity: 0.3,
+          depthWrite: false,
+        })
+      : new THREE.MeshStandardMaterial({
+          color,
+          roughness: 0.1,
+          transparent: true,
+          opacity: 0.26,
+          depthWrite: false,
+        }),
+  );
+}
+
+export interface FibrousMembraneOptions {
+  /** Opacity (below 1: blended, so what is behind the membrane shows through). */
+  opacity: number;
+  /** Repeats of the noise tile along u and v: unequal repeats stretch it into fibres. */
+  repeat: readonly [number, number];
+  side?: THREE.Side;
+}
+
+/**
+ * A porous or semipermeable membrane drawn as a sheet (the transport lessons' abstract
+ * membranes — no lipid bilayer, which would claim a structure those lessons do not model):
+ * muted --subject-biology, semi-translucent, a fibrous bump (the noise tile stretched along one
+ * direction; illustration), a soft rim, and a cloth-like sheen on High. Its own material and
+ * bump texture (freed with the kit).
+ */
+export function fibrousMembrane(
+  kit: SceneKit,
+  o: FibrousMembraneOptions,
+): THREE.MeshStandardMaterial {
+  const color = structureColor(tok.bind(null, kit), 'membrane');
+  const fibres = kit.keep(noiseTexture(13, 8));
+  fibres.repeat.set(o.repeat[0], o.repeat[1]);
+  const see = o.opacity < 1;
+  const base: THREE.MeshStandardMaterialParameters = {
+    color,
+    roughness: 0.72,
+    metalness: 0,
+    bumpMap: fibres,
+    bumpScale: 1.2,
+    side: o.side ?? THREE.DoubleSide,
+    // A thin sheet: both faces in one pass (a blended two-sided material is otherwise drawn
+    // twice).
+    ...(see
+      ? { transparent: true, opacity: o.opacity, depthWrite: false, forceSinglePass: true }
+      : {}),
+  };
+  const m = physical(kit)
+    ? new THREE.MeshPhysicalMaterial({
+        ...base,
+        sheen: 0.6,
+        sheenRoughness: 0.7,
+        sheenColor: new THREE.Color(mixLinear(color, '#ffffff', 0.5)),
+      })
+    : new THREE.MeshStandardMaterial(base);
+  const rim = { color: deepen(color, 0.25, 1, 0.2), strength: 0.45, alpha: see ? 0.5 : 0 };
+  return kit.own(withRim(m, rim));
 }
 
 // ── Organisms and terrain (habitats) ──────────────────────────────────────────────────────

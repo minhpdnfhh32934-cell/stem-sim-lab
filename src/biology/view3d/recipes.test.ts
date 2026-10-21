@@ -17,10 +17,15 @@ import {
   basePairHalfGeometry,
   basePairMaterial,
   chromosome,
+  fibrousMembrane,
+  glassMeshes,
   glassware,
   highlight,
   kinetochore,
   liquid,
+  liquidBody,
+  liquidBodyGeometry,
+  liquidSurface,
   membrane,
   meniscusGeometry,
   organismGeometry,
@@ -28,6 +33,7 @@ import {
   particleMaterial,
   protein,
   proteinMaterial,
+  roundedPlane,
   shell,
   stateRing,
   terrain,
@@ -335,6 +341,56 @@ describe('shapes', () => {
   });
 });
 
+describe('glassware, liquids and membrane sheets', () => {
+  it('glass meshes are never picked; Medium may drop the back face', () => {
+    const kit = kitFor('medium');
+    const geo = kit.roundedBox(14);
+    const both = glassMeshes(kit, glassware(kit), geo, 4, true);
+    const front = glassMeshes(kit, glassware(kit), geo, 4, false);
+    expect(both).toHaveLength(2);
+    expect(front).toHaveLength(1);
+    expect(front[0]?.renderOrder).toBe(7);
+    const ray = new THREE.Raycaster(new THREE.Vector3(0, 0, 5), new THREE.Vector3(0, 0, -1));
+    expect(ray.intersectObjects([...both, ...front])).toEqual([]);
+    kit.dispose();
+  });
+
+  it('a liquid body fades from the bottom to almost clear at the top; unlit on request', () => {
+    const g = liquidBodyGeometry(16);
+    const pos = g.getAttribute('position');
+    const rgba = g.getAttribute('color');
+    expect(rgba.itemSize).toBe(4);
+    for (let i = 0; i < pos.count; i++) {
+      const t = (pos.getY(i) + 1) / 2;
+      expect(rgba.getW(i)).toBeCloseTo(0.15 - 0.11 * t, 6);
+    }
+    g.dispose();
+    const kit = kitFor('medium');
+    expect(liquidBody(kit)).toBeInstanceOf(THREE.MeshStandardMaterial);
+    expect(liquidBody(kit, { unlit: true })).toBeInstanceOf(THREE.MeshBasicMaterial);
+    expect(hex(liquidBody(kit))).toBe(hex(liquid(kit)));
+    kit.dispose();
+  });
+
+  for (const theme of ['light', 'dark'] as const)
+    it(`${theme}: a fibrous membrane is the muted membrane colour, see-through, bumped in fibres`, () => {
+      for (const tier of ['medium', 'high'] as const) {
+        const kit = kitFor(tier, { theme });
+        const m = fibrousMembrane(kit, { opacity: 0.6, repeat: [2, 0.25] });
+        expect(hex(m)).toBe(muted(tokenOf(theme), '--subject-biology'));
+        expect(hex(m)).not.toBe(tokenOf(theme)('--subject-biology'));
+        expect(m.transparent).toBe(true);
+        expect(m.opacity).toBe(0.6);
+        // One pass for both faces of the thin sheet.
+        expect(m.forceSinglePass).toBe(true);
+        // Stretched noise: fibres run along one direction.
+        expect(m.bumpMap?.repeat.toArray()).toEqual([2, 0.25]);
+        expect(m instanceof THREE.MeshPhysicalMaterial).toBe(tier === 'high');
+        kit.dispose();
+      }
+    });
+});
+
 describe('recipes free everything with the kit', () => {
   for (const tier of ['medium', 'high'] as const) {
     it(`${tier}: geometries, materials and the noise tile`, () => {
@@ -363,6 +419,11 @@ describe('recipes free everything with the kit', () => {
       particleMaterial(kit, 'water');
       glassware(kit);
       kit.mesh(meniscusGeometry(kit, 1, 0.1), liquid(kit));
+      glassMeshes(kit, glassware(kit), kit.roundedBox(14), 4, true);
+      kit.mesh(kit.geometry(liquidBodyGeometry(16)), liquidBody(kit));
+      kit.mesh(kit.geometry(liquidBodyGeometry(16)), liquidBody(kit, { unlit: true }));
+      kit.mesh(kit.geometry(roundedPlane(1, 1, 0.1, 4)), liquidSurface(kit));
+      kit.mesh(kit.sphere(), fibrousMembrane(kit, { opacity: 0.6, repeat: [2, 0.25] }));
       kit.instanced(organismGeometry(kit, 'prey'), organismMaterial(kit), 3);
       const ground = terrain(kit, { radius: 5, seed: 1 });
       kit.mesh(ground.geometry, ground.material);

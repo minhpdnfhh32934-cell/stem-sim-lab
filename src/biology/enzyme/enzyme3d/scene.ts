@@ -26,11 +26,15 @@ import { fbm3 } from '../../view3d/noise';
 import { ROLES, structureColor } from '../../view3d/palette';
 import { shapeGeometry } from '../../view3d/primitives/classShape';
 import {
+  glassMeshes,
   glassware,
   highlightIntensity,
+  liquidBody,
+  liquidBodyGeometry,
+  liquidSurface,
   particleMaterial,
+  roundedPlane,
   shellLook,
-  type ShellLook,
 } from '../../view3d/recipes';
 import type { Inhibition } from '../enzyme';
 import {
@@ -225,44 +229,6 @@ const easeOut = (u: number) => {
   return 1 - (1 - x) ** 3;
 };
 
-/** A rounded rectangle in the xz plane at y = 0, facing up. */
-function roundedPlane(hx: number, hz: number, r: number, segments: number): THREE.ShapeGeometry {
-  const s = new THREE.Shape();
-  s.moveTo(-hx + r, -hz);
-  s.lineTo(hx - r, -hz);
-  s.quadraticCurveTo(hx, -hz, hx, -hz + r);
-  s.lineTo(hx, hz - r);
-  s.quadraticCurveTo(hx, hz, hx - r, hz);
-  s.lineTo(-hx + r, hz);
-  s.quadraticCurveTo(-hx, hz, -hx, hz - r);
-  s.lineTo(-hx, -hz + r);
-  s.quadraticCurveTo(-hx, -hz, -hx + r, -hz);
-  const g = new THREE.ShapeGeometry(s, Math.max(2, Math.round(segments)));
-  g.rotateX(-Math.PI / 2);
-  return g;
-}
-
-/**
- * The liquid's body: a rounded box spanning [−1, 1]³ whose vertex colours carry a soft vertical
- * gradient — a little deeper and denser at the bottom, almost clear at the top (RGBA; the
- * material's colour is the theme's liquid token).
- */
-function liquidGeometry(segments: number): THREE.BufferGeometry {
-  const g = roundedBox(segments, 14);
-  const pos = g.getAttribute('position');
-  const rgba = new Float32Array(pos.count * 4);
-  for (let i = 0; i < pos.count; i++) {
-    const t = (pos.getY(i) + 1) / 2;
-    const shade = 0.84 + 0.16 * t;
-    rgba[i * 4] = shade;
-    rgba[i * 4 + 1] = shade;
-    rgba[i * 4 + 2] = shade;
-    rgba[i * 4 + 3] = 0.15 - 0.11 * t;
-  }
-  g.setAttribute('color', new THREE.BufferAttribute(rgba, 4));
-  return g;
-}
-
 export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const kit = new SceneKit({
     tier: o.tier,
@@ -301,28 +267,6 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     mesh.boundingSphere = null;
     mesh.visible = mesh.count > 0;
   };
-  /** A see-through look as plain meshes of `geometry` (refracting, or back + front). */
-  const glassMeshes = (
-    look: ShellLook,
-    geometry: THREE.BufferGeometry,
-    order: number,
-    backFaces: boolean,
-  ) => {
-    const out: THREE.Mesh[] = [];
-    for (const [m, extra] of [
-      [look.refract, 0],
-      [backFaces ? look.back : null, -1],
-      [look.front, 3],
-    ] as const) {
-      if (!m) continue;
-      const mesh = kit.mesh(geometry, m);
-      mesh.renderOrder = order + extra;
-      mesh.raycast = () => undefined;
-      out.push(mesh);
-    }
-    return out;
-  };
-
   // ── Materials (theme tokens; the palette's roles) ────────────────────────────────────
   // Its own material, the kit's protein look: the blob's vertex shade darkens the pocket and the
   // valleys, the silhouette darkens softly (--m3d-edge-shade) so each blob reads as a volume,
@@ -366,42 +310,15 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   hullMat.color.multiplyScalar(highlightIntensity(kit));
   hullMat.userData.bloom = kit.hdr;
   const baseMat = kit.solid(tok('--border-strong'), { roughness: 0.6, clearcoat: 0.2 });
-  const liquidColor = structureColor(tok, 'liquid');
-  const liquidMat = kit.own(
-    new THREE.MeshStandardMaterial({
-      color: liquidColor,
-      vertexColors: true,
-      transparent: true,
-      depthWrite: false,
-      roughness: 0.3,
-    }),
-  );
-  const surfaceMat = kit.own(
-    kit.tier === 'high'
-      ? new THREE.MeshPhysicalMaterial({
-          color: liquidColor,
-          roughness: 0.06,
-          clearcoat: 1,
-          clearcoatRoughness: 0.05,
-          transparent: true,
-          opacity: 0.3,
-          depthWrite: false,
-        })
-      : new THREE.MeshStandardMaterial({
-          color: liquidColor,
-          roughness: 0.1,
-          transparent: true,
-          opacity: 0.26,
-          depthWrite: false,
-        }),
-  );
+  const liquidMat = liquidBody(kit);
+  const surfaceMat = liquidSurface(kit);
 
   // ── The tank: muted base, glass walls with a thickness, the liquid and its surface ─────
   const tankSegments = Math.round(kit.seg * 1.5);
   const wall = kit.shared('enzyme-tank-wall', () => roundedBox(tankSegments, 14));
   // The far walls' faint back faces (one more see-through layer over the whole tank) on High
   // only; the liquid and the near walls' rim still show the box.
-  const outer = glassMeshes(glassware(kit), wall, 4, kit.tier === 'high');
+  const outer = glassMeshes(kit, glassware(kit), wall, 4, kit.tier === 'high');
   for (const m of outer) m.scale.set(L.hx + TANK.outer, L.hy + TANK.outer, L.hz + TANK.outer);
   // The wall's inner face: a second faint rim inside the first, so the glass reads thick (High
   // only: one more see-through layer over the whole tank costs software and integrated GPUs).
@@ -418,7 +335,7 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   }
   const liquidTop = L.hy + TANK.headroom;
   const liquidBottom = -L.hy - TANK.liquid;
-  const liquid = kit.mesh(kit.geometry(liquidGeometry(tankSegments)), liquidMat);
+  const liquid = kit.mesh(kit.geometry(liquidBodyGeometry(tankSegments)), liquidMat);
   liquid.scale.set(L.hx + TANK.liquid, (liquidTop - liquidBottom) / 2, L.hz + TANK.liquid);
   liquid.position.y = (liquidTop + liquidBottom) / 2;
   liquid.renderOrder = 4;
