@@ -388,13 +388,20 @@ it without code of its own:
   a fixed per-island key, so one bead more moves one bead; illustration). `layout.ts`: a
   staggered grid numbered row by row from the back, each island a low dome (`islandHeight`, coast
   wobble `coastAt`) holding the Hardy–Weinberg sunflower slots, trees on its back half, a tag on
-  the water in front. `island.ts`: one merged ground mesh (recoloured towards A's or a's colour,
-  `FATE_TINT`, when the run fixes or loses A), an opaque sea (bump ripples on High, a roughness map
-  below) with sand-tinted shallows (vertex alpha), and one merged p : q band per coast rewritten
-  in place. `scene.ts` reuses the Hardy–Weinberg `herd` (one neutral body colour,
-  `--bio3d-creature`: the model has no genotypes) and `plants`; frames `island:<i>` (close-up of
-  the picked island, else the front one), callouts (island, band, two beads, figure, a fixed and a
-  lost island). Medium: 15 draw calls, ~155k triangles, 0 frames at rest.
+  the water in front. `island.ts`: one merged ground mesh with the same grass on every island
+  (`--bio3d-island-grass`, never a fate colour), a sea darkening towards the far side and out past
+  the islands (vertex colours, `--bio3d-sea-depth`; `--bio3d-sea-sheen` = how much sky it mirrors;
+  bump ripples on High, a roughness map below) with bright sand-tinted shallows (vertex alpha), and
+  one merged p : q band per coast rewritten in place. `flags.ts`: when a run fixes or loses A, a
+  flag on the island's back shore (instanced poles, banners and finials, one draw call per kind and
+  allele: the banner in the allele's colour, the finial its bead shape, sized by the coast).
+  `scene.ts` reuses the Hardy–Weinberg `herd` (one neutral body colour, `--bio3d-creature`: the
+  model has no genotypes) and `plants` (tufts from the islands' grass); frames `island:<i>` (the
+  island and its flag's top; close-up of the picked island, else the front one), a glowing pointer
+  over a picked animal, callouts (island, band, the beads at the drawing scale — `calloutTexts` —,
+  figure, a fixed and a lost island at their flags). A pick frames its island close up beside the
+  card (`useScrollMore` fades the card's last line while more is below); "Toàn cảnh" closes it.
+  Medium: 15 draw calls (+ up to 5 for flags), ~155k triangles, 0 frames at rest.
 - Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
   as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
   unlit; `alpha` bottom/top, default `LIQUID_ALPHA`), `liquidSurface`, `waterLineGeometry` (a
