@@ -292,8 +292,13 @@ it without code of its own:
   frames); `scene.ts` draws see-through parts as instanced `ShellSet`s (refract / back / front;
   the cylinders' back faces on High only) and the liquid as an open unit cylinder scaled to the
   exact height plus a meniscus cap (instance colour = class token). Tags follow a text rule:
-  genotypes in the slots only when neighbouring cells are ≥ `GENOTYPE_PX` apart on screen or for
-  the picked cell; the mother's gametes one tag each (short form when the full one has no room),
+  genotypes in the slots only when neighbouring cells are far enough apart on screen for the
+  widest tag (`genotypeSpacingPx` = tag width + `GENOTYPE_GAP_PX`) or for the picked cell
+  ("Bảng Punnett" is placed with `balancedFrame`, which moves the frame's centre to where the
+  camera can come closest, so all 16 dihybrid genotypes read at 1366 × 768); a draw's counts come
+  first, as a right-aligned column left of the field's plate (`TagLayer.addAt` with `end` and
+  `solid`), each named by its class ("A_ B_ · 564") and level with its rows, pushed apart on screen
+  only as far as needed; the mother's gametes one tag each (short form when the full one has no room),
   the father's a two-line column header; keys on a second row a whole tag lower only when they
   would touch. The view glides the shown time 700 ms on a step jump (`STEP_GLIDE_MS`; the store,
   captions and numbers change at once) and, in "Toàn cảnh", frames that step (`stepFrame`).
