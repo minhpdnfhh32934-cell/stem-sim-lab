@@ -155,8 +155,17 @@ export function placeIn(lay: DiffusionLayout, s: 1 | 2, u: Vec3, out: Vec3): Vec
   return out;
 }
 
-const knotOf = (m: DiffusionModel3D, t: number) =>
+/** Knot position of time t on the walks (0 … WALK_KNOTS). */
+export const knotOf = (m: DiffusionModel3D, t: number): number =>
   (Math.max(0, Math.min(m.tEnd, t)) / m.tEnd) * WALK_KNOTS;
+
+/**
+ * Faint water dots (High tier, illustration, never counted): how many of `count` stay in
+ * compartment 1 — its share of the width, so both sides look equally full of water.
+ */
+export function waterSplit(lay: DiffusionLayout, count: number): number {
+  return Math.round((count * lay.w1) / (lay.w1 + lay.w2));
+}
 
 /** The plan of a model: layout, walks and the pore each crossing uses (nearest at its time). */
 export function diffusionPlan(m: DiffusionModel3D): DiffusionPlan {

@@ -59,6 +59,12 @@ export const NET_NOTE = L(
   'Particles really cross both ways; the picture draws only the net crossings (one way minus the other).',
 );
 
+/** The faint water dots of the High tier. */
+export const WATER_DOTS_NOTE = L(
+  'Ở chất lượng hiển thị Cao, các chấm nhỏ mờ là phân tử nước — chỉ là minh họa: không đếm, không theo số lượng thật.',
+  'On High display quality the small faint dots are water molecules — illustration only: not counted, not their real number.',
+);
+
 /** A membrane without pores. */
 export const BLOCKED_NOTE = L(
   'Màng không có lỗ: trên hình không hạt nào qua được, số hạt giữ như lúc đầu. Đồ thị vẫn theo định luật Fick với PA đã chọn.',
@@ -127,6 +133,7 @@ export function diffusionCard3d(): ScienceCardData {
       VOLUME_NOTE,
       PORES_NOTE,
       NET_NOTE,
+      WATER_DOTS_NOTE,
       MOTION,
       L(
         'N hạt là lượng chất tan C₁⁰V₁ + C₂⁰V₂ (mM × mL = µmol), không đổi; mỗi hạt ứng với lượng đó chia cho N. Số hạt hai ngăn chia theo phần dư lớn nhất nên luôn cộng lại đúng N; mỗi lần N₁ đổi 1 thì đúng 1 hạt đi qua một lỗ.',

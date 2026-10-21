@@ -22,6 +22,7 @@ import { IconButton } from '@/ui/IconButton';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
@@ -48,6 +49,7 @@ import {
   PART_NAMES,
   SCALE_NOTE,
   VOLUME_NOTE,
+  WATER_DOTS_NOTE,
   WATER_NOTE,
   diffusionCard3d,
   osmosisCard3d,
@@ -341,6 +343,8 @@ function Transport3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      // Names keep clear of the counts, Δh and ruler numbers, and of the stage's edge.
+      { rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -443,7 +447,12 @@ function Transport3DScene({
   useEffect(() => {
     const h = hostRt.current;
     if (!h) return;
-    const opts = { tier: tierName, segments: tier.sphereSegments, token: tokenReader() };
+    const opts = {
+      tier: tierName,
+      segments: tier.sphereSegments,
+      token: tokenReader(),
+      shadows: quality.shadowScenes,
+    };
     const sc: TransportScene =
       mode === 'diffusion'
         ? buildDiffusionScene(diffusion, opts)
@@ -646,6 +655,7 @@ function Transport3DScene({
               <>
                 <strong>{Lz(L('Khuếch tán.', 'Diffusion.'))}</strong> {Lz(DIFFUSION_ILLUSTRATION)}{' '}
                 <span className="muted">
+                  {tierName === 'high' && <>{Lz(WATER_DOTS_NOTE)} </>}
                   {Lz(VOLUME_NOTE)} {Lz(SCALE_NOTE)}{' '}
                   {Lz(
                     L(

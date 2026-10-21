@@ -185,3 +185,17 @@ export function rulerTicks(m: OsmosisModel3D): number[] {
   const n = Math.round(m.rulerCm / m.tickCm);
   return Array.from({ length: n + 1 }, (_, k) => k * m.tickCm);
 }
+
+/**
+ * Small ruler marks (cm) between the numbered ticks: the tick step split in 4 (a step of 2·10ᵏ)
+ * or 5 (1·10ᵏ, 5·10ᵏ) — only the ruler's own scale, no value of the model.
+ */
+export function rulerMinorTicks(m: OsmosisModel3D): number[] {
+  const lead = m.tickCm / 10 ** Math.floor(Math.log10(m.tickCm) + 1e-9);
+  const parts = Math.round(lead) === 2 ? 4 : 5;
+  const step = m.tickCm / parts;
+  const n = Math.round(m.rulerCm / step);
+  const out: number[] = [];
+  for (let k = 1; k < n; k++) if (k % parts !== 0) out.push(k * step);
+  return out;
+}

@@ -1,21 +1,46 @@
 /**
- * The three.js scene of the diffusion half of "Khuếch tán & thẩm thấu" in 3D: a glass box split
- * into two compartments (widths V₁ : V₂) by a membrane slab with `pores` round channels, and the
- * solute particles (the palette's solute cube) on the side the model puts them, crossing only
- * through a channel (`diffusionLayout.ts`). `setFrame` allocates nothing; one SceneKit owns every
- * geometry and material.
+ * The three.js scene of the diffusion half of "Khuếch tán & thẩm thấu" in 3D: a two-chamber
+ * glass tank on a base — glass walls with a thickness, a liquid in each compartment (widths
+ * V₁ : V₂) — split by a fibrous membrane sheet held in a frame, with `pores` real holes (a rim
+ * on each face and a lined channel), and the solute particles (the particle recipe's cube) on the
+ * side the model puts them, crossing only through a channel (`diffusionLayout.ts`). On High,
+ * faint small water dots wander in both compartments (illustration, never counted). `setFrame`
+ * allocates nothing; one SceneKit owns every geometry and material.
  */
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { QualityTier } from '@/perf/tiers';
+import { mixLinear } from '@/ui/three/color';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { roundedBox } from '@/ui/three/materials';
 import { visibleHits } from '@/ui/three/pick';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { SceneKit } from '../../view3d/kit';
-import { ROLES } from '../../view3d/palette';
+import { structureColor } from '../../view3d/palette';
+import {
+  fibrousMembrane,
+  glassMeshes,
+  glassware,
+  liquidBody,
+  liquidBodyGeometry,
+  liquidSurface,
+  particleMaterial,
+  roundedPlane,
+} from '../../view3d/recipes';
 import type { TransportPart, TransportSelection } from './components';
 import type { DiffusionFrame, DiffusionModel3D } from './diffusion';
-import { BOX, diffusionPlan, particleAt, type DiffusionPlan, type Vec3 } from './diffusionLayout';
+import {
+  BOX,
+  brownianWalks,
+  diffusionPlan,
+  knotOf,
+  particleAt,
+  placeIn,
+  waterSplit,
+  walkAt,
+  type DiffusionPlan,
+  type Vec3,
+} from './diffusionLayout';
 
 export interface SceneOptions {
   tier: QualityTier;
@@ -23,6 +48,8 @@ export interface SceneOptions {
   segments: number;
   /** Reads a CSS colour token. */
   token: (name: string) => string;
+  /** Shadow maps onto the base (High tier on a discrete GPU). */
+  shadows?: boolean;
 }
 
 export interface LabelAnchor {
@@ -57,9 +84,27 @@ export interface DiffusionScene {
   tags(layer: TagLayer, text: TagText): void;
   /** Particles drawn left and right of the membrane now (counted from their places). */
   sides(): { left: number; right: number };
+  /** Faint water dots drawn (High only; illustration, never counted). */
+  waterDots(): number;
   drawStats(): DrawStats;
   dispose(): void;
 }
+
+/**
+ * The tank around the compartments (scene units): the glass's outer face beyond the liquid, room
+ * above the liquid, the membrane frame's width, the base slab and its margin.
+ */
+export const TANK = {
+  outer: 0.18,
+  headroom: 0.5,
+  frame: 0.24,
+  slab: 0.26,
+  margin: 0.5,
+} as const;
+
+/** Faint water dots on High (illustration) and their radius. */
+export const WATER_DOTS = 160;
+const WATER_DOT_R = 0.06;
 
 /** A shape in the membrane's plane (X = −z, Y = y) with a round hole per pore. */
 function membraneGeometry(plan: DiffusionPlan, seg: number): THREE.BufferGeometry {
@@ -87,6 +132,10 @@ function membraneGeometry(plan: DiffusionPlan, seg: number): THREE.BufferGeometr
   return g;
 }
 
+/** A box from its centre and half sizes. */
+const block = (x: number, y: number, z: number, hx: number, hy: number, hz: number) =>
+  new THREE.BoxGeometry(2 * hx, 2 * hy, 2 * hz).translate(x, y, z);
+
 export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): DiffusionScene {
   const plan = diffusionPlan(m);
   const lay = plan.layout;
@@ -95,75 +144,128 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     segments: o.segments,
     maxParticles: Math.max(1, m.total),
     token: o.token,
+    // No refraction: the particles behind the glass are data and keep their colour.
+    shadows: o.shadows ?? false,
   });
   const { scene } = kit;
+  const high = kit.tier === 'high';
   const nPores = lay.pores.length;
+  const tok = (name: string) => kit.color(name);
 
-  // ── Materials (theme tokens; the palette's roles) ────────────────────────────────────
-  const muted = kit.color('--text-muted');
-  const boxMat = kit.glass(muted, {
-    opacity: 0.05,
-    rim: { color: kit.color('--text'), alpha: 0.22, strength: 0.35, power: 2.4 },
-  });
-  const edgeMat = kit.own(
-    new THREE.LineBasicMaterial({ color: muted, transparent: true, opacity: 0.6 }),
-  );
-  const membraneColor = kit.color(ROLES.membrane.token);
-  const membraneMat = kit.glass(membraneColor, {
-    opacity: 0.5,
-    roughness: 0.5,
+  // ── Materials (theme tokens; the palette's roles and structures) ────────────────────
+  const ink = tok('--text');
+  const membraneColor = structureColor(tok, 'membrane');
+  const membraneMat = fibrousMembrane(kit, { opacity: 0.56, repeat: [1.6, 0.22] });
+  // Pore rims and linings: the membrane's colour drawn towards the text colour (contrast on both
+  // themes), so each hole reads as a hole.
+  const rimMat = kit.solid(mixLinear(membraneColor, ink, 0.5), { roughness: 0.45 });
+  const liningMat = kit.solid(mixLinear(membraneColor, ink, 0.3), {
+    roughness: 0.6,
     side: THREE.DoubleSide,
-    rim: { color: membraneColor, alpha: 0.75, strength: 0.6, power: 1.8 },
   });
-  const rimMat = kit.solid(kit.color('--text'), { roughness: 0.45 });
-  const liningMat = kit.own(
-    new THREE.MeshStandardMaterial({
-      color: membraneColor,
-      roughness: 0.6,
-      side: THREE.DoubleSide,
-    }),
-  );
-  const soluteMat = kit.solid(kit.color(ROLES.solute.token), { roughness: 0.3, clearcoat: 0.5 });
-  const haloMat = kit.glass(kit.color('--accent'), {
+  // The base and frame: diffuse only below High, no clear coat on High (a broad surface that
+  // software rendering and integrated GPUs pay for on every pixel).
+  const standColor = tok('--border-strong');
+  const standMat = high
+    ? kit.solid(standColor, { roughness: 0.6 })
+    : kit.own(new THREE.MeshLambertMaterial({ color: standColor }));
+  const soluteMat = particleMaterial(kit, 'solute');
+  const haloMat = kit.glass(tok('--accent'), {
     opacity: 0.1,
-    rim: { color: kit.color('--accent'), alpha: 0.95, strength: 1, power: 1.6 },
+    rim: { color: tok('--accent'), alpha: 0.95, strength: 1, power: 1.6 },
   });
   const outlineMat = kit.own(
-    new THREE.LineBasicMaterial({ color: kit.color('--accent'), transparent: true, opacity: 0.95 }),
+    new THREE.LineBasicMaterial({ color: tok('--accent'), transparent: true, opacity: 0.95 }),
   );
 
-  // ── Box: two compartments (pickable glass) and the outline ──────────────────────────
-  const unitBox = kit.geometry(new THREE.BoxGeometry(1, 1, 1));
+  // ── Tank: glass walls with a thickness around both compartments ─────────────────────
+  const cx = (lay.x0 + lay.x1) / 2;
+  const hx = (lay.x1 - lay.x0) / 2;
+  const glassTop = BOX.hy + TANK.outer + TANK.headroom;
+  const tankSegments = Math.round(kit.seg * 1.5);
+  const wall = kit.shared('diffusion-tank-wall', () => roundedBox(tankSegments, 14));
+  // The glass reaches from below the liquid to the room above it.
+  const fit = (mesh: THREE.Object3D, out: number) => {
+    mesh.scale.set(hx + out, BOX.hy + out + TANK.headroom / 2, BOX.hz + out);
+    mesh.position.set(cx, TANK.headroom / 2, 0);
+  };
+  // The far walls' faint back faces on High only (one more see-through layer over the whole
+  // tank costs software and integrated GPUs); the near walls' rim still draws the tank.
+  for (const g of glassMeshes(kit, glassware(kit), wall, 5, high)) fit(g, TANK.outer);
+
+  // ── Liquid: one body per compartment (pickable), a glossy surface on each ──────────
+  const liquidGeo = kit.geometry(liquidBodyGeometry(tankSegments));
+  const centreOf = (s: 1 | 2) => (s === 1 ? lay.x0 + lay.w1 / 2 : lay.x1 - lay.w2 / 2);
+  const widthOf = (s: 1 | 2) => (s === 1 ? lay.w1 : lay.w2);
   const compartment = (s: 1 | 2) => {
-    const mesh = kit.mesh(unitBox, boxMat);
-    const w = s === 1 ? lay.w1 : lay.w2;
-    const x = s === 1 ? lay.x0 + w / 2 : lay.xm + BOX.mh + w / 2;
-    mesh.scale.set(w, 2 * BOX.hy, 2 * BOX.hz);
-    mesh.position.set(x, 0, 0);
+    const mesh = kit.mesh(liquidGeo, liquidBody(kit, { unlit: !high }));
+    mesh.scale.set(widthOf(s) / 2, BOX.hy, BOX.hz);
+    mesh.position.set(centreOf(s), 0, 0);
     mesh.renderOrder = 2;
     return mesh;
   };
   const comp1 = compartment(1);
   const comp2 = compartment(2);
-  const outerW = lay.x1 - lay.x0;
-  const boxGeo = new THREE.BoxGeometry(outerW, 2 * BOX.hy, 2 * BOX.hz);
-  const edges = new THREE.LineSegments(kit.geometry(new THREE.EdgesGeometry(boxGeo)), edgeMat);
-  boxGeo.dispose();
-  edges.position.set((lay.x0 + lay.x1) / 2, 0, 0);
-  scene.add(edges);
-  kit.shadow(-BOX.hy - 0.3, outerW / 2 + 1, BOX.hz + 1.2, 0.2);
-
-  // ── Membrane slab with round channels ────────────────────────────────────────────────
-  const membrane = kit.mesh(kit.geometry(membraneGeometry(plan, kit.seg)), membraneMat);
-  membrane.renderOrder = 3;
-  const sides = Math.max(12, kit.seg);
-  const ringGeo = kit.geometry(new THREE.TorusGeometry(BOX.poreR, 0.035, 6, sides));
-  const rims = kit.instanced(ringGeo, rimMat, 2 * nPores);
-  const linings = kit.instanced(kit.cylinder(sides, true), liningMat, nPores);
+  const surfaces = kit.instanced(kit.geometry(roundedPlane(1, 1, 0.06, 4)), liquidSurface(kit), 2);
+  surfaces.renderOrder = 3;
+  surfaces.raycast = () => undefined;
   const m4 = new THREE.Matrix4();
   const pos = new THREE.Vector3();
   const scl = new THREE.Vector3();
   const rot = new THREE.Quaternion();
+  ([1, 2] as const).forEach((s, k) => {
+    m4.compose(
+      pos.set(centreOf(s), BOX.hy - 0.005, 0),
+      rot.identity(),
+      scl.set(widthOf(s) / 2 - 0.03, 1, BOX.hz - 0.03),
+    );
+    surfaces.setMatrixAt(k, m4);
+  });
+  surfaces.instanceMatrix.needsUpdate = true;
+
+  // ── The stand: base slab and the membrane's frame (one merged mesh) ─────────────────
+  const baseTop = -BOX.hy - TANK.outer;
+  const baseBottom = baseTop - TANK.slab;
+  const baseHx = hx + TANK.outer + TANK.margin;
+  const baseHz = BOX.hz + TANK.outer + TANK.margin;
+  const fw = TANK.frame;
+  // Half thickness of the frame along x: a little more than the membrane's.
+  const fx = BOX.mh + 0.08;
+  // The frame runs round the membrane's edge (outside the liquid), through the glass walls and
+  // up to the glass top; it is apparatus, not part of the membrane.
+  const frameTop = glassTop + 0.04;
+  const standParts: THREE.BufferGeometry[] = [
+    roundedBox(Math.max(8, kit.seg), 6)
+      .scale(baseHx, TANK.slab / 2, baseHz)
+      .translate(cx, (baseTop + baseBottom) / 2, 0),
+    // Top bar: from the liquid's top up to the glass top.
+    block(lay.xm, (BOX.hy + frameTop) / 2, 0, fx, (frameTop - BOX.hy) / 2, BOX.hz + fw),
+    // Bottom bar: from the base up to the liquid's bottom.
+    block(lay.xm, (baseTop - BOX.hy) / 2, 0, fx, (-BOX.hy - baseTop) / 2, BOX.hz + fw),
+    // Side bars along the front and back walls.
+    ...[-1, 1].map((s) =>
+      block(
+        lay.xm,
+        (frameTop + baseTop) / 2,
+        s * (BOX.hz + fw / 2),
+        fx,
+        (frameTop - baseTop) / 2,
+        fw / 2,
+      ),
+    ),
+  ];
+  const stand = kit.mesh(kit.geometry(mergeGeometries(standParts)), standMat);
+  for (const g of standParts) g.dispose();
+  stand.raycast = () => undefined;
+  kit.shadow(baseBottom - 0.02, baseHx + 1, baseHz + 1, 0.24).position.x = cx;
+
+  // ── Membrane sheet with round channels (pores: holes with rims and a lining) ────────
+  const membrane = kit.mesh(kit.geometry(membraneGeometry(plan, kit.seg)), membraneMat);
+  membrane.renderOrder = 4;
+  const poreSides = Math.max(12, kit.seg);
+  const ringGeo = kit.geometry(new THREE.TorusGeometry(BOX.poreR, 0.035, 6, poreSides));
+  const rims = kit.instanced(ringGeo, rimMat, 2 * nPores);
+  const linings = kit.instanced(kit.cylinder(poreSides, true), liningMat, nPores);
   const faceX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
   const alongX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
   lay.pores.forEach((p, k) => {
@@ -190,12 +292,40 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
   /** Places now (x, y, z per particle) for picking, focus and counting. */
   const places = new Float32Array(m.total * 3);
   const at: Vec3 = [0, 0, 0];
+  const unitAt: Vec3 = [0, 0, 0];
   const euler = new THREE.Euler();
+
+  // ── Faint water dots (High only; illustration, never counted, never crossing) ───────
+  const nWater = high ? WATER_DOTS : 0;
+  const water1 = waterSplit(lay, nWater);
+  const waterWalks = nWater > 0 ? brownianWalks(nWater, m.inputs.run + 31) : null;
+  // The particle recipe's water colour (muted --chart-6) drawn halfway into the liquid's: faint
+  // by colour, not by blending (opaque, diffuse, 20 faces: a dot a few pixels wide).
+  const waterMat = kit.own(
+    new THREE.MeshLambertMaterial({
+      color: mixLinear(structureColor(tok, 'nucleus'), structureColor(tok, 'liquid'), 0.45),
+    }),
+  );
+  const waterDots = kit.instanced(
+    kit.geometry(new THREE.IcosahedronGeometry(1, 0)),
+    waterMat,
+    Math.max(1, nWater),
+  );
+  waterDots.count = nWater;
+  waterDots.visible = nWater > 0;
+  waterDots.raycast = () => undefined;
+
+  // ── Shadow maps (High on a discrete GPU): particles and the frame onto the base ──────
+  if (kit.groundShadows([cx, baseTop, 0], Math.hypot(baseHx, glassTop - baseTop, baseHz))) {
+    stand.receiveShadow = true;
+    stand.castShadow = true;
+    particles.castShadow = true;
+  }
 
   // ── Selection: a halo (particle, pore) or an outline (compartment, membrane) ─────────
   const halo = kit.mesh(kit.sphere(), haloMat);
   halo.visible = false;
-  halo.renderOrder = 4;
+  halo.renderOrder = 8;
   const outlineBox = new THREE.BoxGeometry(1, 1, 1);
   const outline = new THREE.LineSegments(
     kit.geometry(new THREE.EdgesGeometry(outlineBox)),
@@ -229,9 +359,8 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
       return BOX.hy;
     }
     if (sel.kind === 'compartment') {
-      const mesh = sel.side === 1 ? comp1 : comp2;
-      out.copy(mesh.position);
-      return Math.max(mesh.scale.x, BOX.hy * 2) / 2;
+      out.set(centreOf(sel.side), 0, 0);
+      return Math.max(widthOf(sel.side), BOX.hy * 2) / 2;
     }
     return null;
   }
@@ -250,9 +379,8 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
       return;
     }
     if (selected.kind === 'compartment') {
-      const mesh = selected.side === 1 ? comp1 : comp2;
-      outline.position.copy(mesh.position);
-      outline.scale.copy(mesh.scale).multiplyScalar(1.01);
+      outline.position.set(centreOf(selected.side), 0, 0);
+      outline.scale.set(widthOf(selected.side), 2 * BOX.hy, 2 * BOX.hz).multiplyScalar(1.01);
       outline.visible = true;
     } else if (selected.kind === 'membrane') {
       outline.position.set(lay.xm, 0, 0);
@@ -277,6 +405,18 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     particles.instanceMatrix.needsUpdate = true;
     particles.boundingSphere = null;
     particles.visible = m.total > 0;
+    if (waterWalks) {
+      const knot = jitter ? knotOf(m, f.t) : 0;
+      rot.identity();
+      for (let j = 0; j < nWater; j++) {
+        walkAt(waterWalks, j, knot, unitAt);
+        placeIn(lay, j < water1 ? 1 : 2, unitAt, at);
+        m4.compose(pos.set(at[0], at[1], at[2]), rot, scl.setScalar(WATER_DOT_R));
+        waterDots.setMatrixAt(j, m4);
+      }
+      waterDots.instanceMatrix.needsUpdate = true;
+      waterDots.boundingSphere = null;
+    }
     placeSelection();
   }
 
@@ -337,9 +477,8 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
       [1, f.n1],
       [2, f.n2],
     ] as const) {
-      const mesh = s === 1 ? comp1 : comp2;
       const words = text.count(n);
-      layer.add(words, mesh.position.x, BOX.hy + 0.45, 0, 'word', words.length);
+      layer.add(words, centreOf(s), glassTop + 0.4, 0, 'word', words.length);
     }
   }
 
@@ -360,9 +499,9 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     },
     framePoints() {
       const pts: Vec3[] = [];
-      for (const x of [lay.x0, lay.x1])
-        for (const y of [-BOX.hy, BOX.hy + 0.6])
-          for (const z of [-BOX.hz, BOX.hz]) pts.push([x, y, z]);
+      for (const x of [cx - baseHx, cx + baseHx])
+        for (const y of [baseBottom, glassTop + 0.6])
+          for (const z of [-BOX.hz - TANK.outer, BOX.hz + TANK.outer]) pts.push([x, y, z]);
       return pts;
     },
     labelAnchors,
@@ -372,6 +511,7 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
       for (let j = 0; j < m.total; j++) if ((places[3 * j] ?? 0) < lay.xm) left++;
       return { left, right: m.total - left };
     },
+    waterDots: () => (waterDots.visible ? waterDots.count : 0),
     drawStats: () => drawStats(scene),
     dispose: () => {
       kit.dispose();

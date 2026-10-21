@@ -8,6 +8,7 @@ import {
   levelY,
   osmosisFrameAt,
   osmosisModel3d,
+  rulerMinorTicks,
   rulerTicks,
   sampleIndex,
   soluteAt,
@@ -118,5 +119,20 @@ describe('osmosis in 3D', () => {
     // At the end the level has settled: the molecules stand still.
     const last = d.traj.t.at(-1) ?? d.tEnd;
     expect(xs(last)).toEqual(xs(last + d.tEnd));
+  });
+
+  it('small ruler marks split each numbered step evenly, never on a numbered mark', () => {
+    for (const over of CASES) {
+      const m = osmosisModel3d(data(over));
+      const major = rulerTicks(m);
+      const minor = rulerMinorTicks(m);
+      const lead = Math.round(m.tickCm / 10 ** Math.floor(Math.log10(m.tickCm) + 1e-9));
+      const parts = lead === 2 ? 4 : 5;
+      expect(minor).toHaveLength((major.length - 1) * (parts - 1));
+      const all = [...major, ...minor].sort((a, b) => a - b);
+      for (let k = 1; k < all.length; k++)
+        expect((all[k] ?? 0) - (all[k - 1] ?? 0)).toBeCloseTo(m.tickCm / parts, 9);
+      for (const cm of minor) expect(major.some((t) => Math.abs(t - cm) < 1e-9)).toBe(false);
+    }
   });
 });
