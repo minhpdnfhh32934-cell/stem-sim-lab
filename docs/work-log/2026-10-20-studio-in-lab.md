@@ -69,4 +69,5 @@ Failures, classified:
   difference, not changed here).
 - `release-notes/versions.json` still lists 0.7.0 as `in-review` although `main` has PR #32 and tag
   v0.7.0 (pre-existing; not changed here).
-- Nothing pushed; no PR.
+- 2026-10-21: pushed to `claude/wizardly-galileo-k3vxcs` (3b2d0b8) and opened PR #35 into `main`
+  (the user merges). Still to do: try it on Windows and run the E2E suite there.
