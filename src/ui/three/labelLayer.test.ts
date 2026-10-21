@@ -44,4 +44,31 @@ describe('LabelLayer: one tag look', () => {
     layer.dispose();
     host.remove();
   });
+
+  it('a label box keeps clear of the screen boxes it is given (tags drawn over the picture)', () => {
+    const host = document.createElement('div');
+    document.body.appendChild(host);
+    const layer = new LabelLayer(host);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0, 10);
+    camera.lookAt(0, 0, 0);
+    const safe = { left: 0, top: 0, right: 400, bottom: 400 };
+    const item = { id: 'a', text: 'mARN', point: [0, 0, 0] as const };
+    const x = () => {
+      const m = /translate\(([\d.]+)px/.exec(
+        host.querySelector<HTMLElement>('.three-label')!.style.transform,
+      );
+      return Number(m?.[1]);
+    };
+    // Alone, the label stands just right of its part (200 px) …
+    layer.update([item], camera, 400, 400, safe, 6);
+    expect(x()).toBeCloseTo(228, 5);
+    // … and past a tag that sits there.
+    layer.update([item], camera, 400, 400, safe, 6, {
+      rects: [{ left: 220, top: 190, right: 300, bottom: 210 }],
+    });
+    expect(x()).toBeGreaterThanOrEqual(300);
+    layer.dispose();
+    host.remove();
+  });
 });

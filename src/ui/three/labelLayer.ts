@@ -27,6 +27,10 @@ export interface LabelObstacles {
   avoid?: readonly Hull[];
   /** Separate subjects (cells): a leader never crosses one that does not hold its part. */
   regions?: readonly Hull[];
+  /** Screen boxes (px, canvas coordinates) a label box never covers (tags over the picture). */
+  rects?: readonly Rect[];
+  /** Pixels a label box keeps inside the safe area (clear of the stage's edge). */
+  edge?: number;
 }
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -177,8 +181,9 @@ export class LabelLayer {
     const placed = new Map(
       layoutLabels(anchors, safe, {
         cap,
-        avoid: rects(obstacles.avoid),
+        avoid: [...rects(obstacles.avoid), ...(obstacles.rects ?? [])],
         regions: rects(obstacles.regions),
+        edge: obstacles.edge ?? 0,
       }).map((p) => [p.id, p]),
     );
     this.svg.setAttribute('viewBox', `0 0 ${String(width)} ${String(height)}`);

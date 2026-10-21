@@ -36,6 +36,20 @@ describe('layoutLabels', () => {
     }
   });
 
+  it('edge: boxes stay a few pixels inside the stage; parts at its border still get a label', () => {
+    const safe = { left: 0, top: 0, right: 400, bottom: 200 };
+    // A part 2 px under the top edge whose label would go off the left edge.
+    const all = [anchor('a', 30, 2), anchor('b', 380, 198)];
+    const placed = layoutLabels(all, safe, { edge: 4 });
+    expect(placed.map((p) => p.id).sort()).toEqual(['a', 'b']);
+    for (const p of placed) {
+      expect(p.x).toBeGreaterThanOrEqual(4);
+      expect(p.x + 80).toBeLessThanOrEqual(396);
+      expect(p.y).toBeGreaterThanOrEqual(4);
+      expect(p.y + 20).toBeLessThanOrEqual(196);
+    }
+  });
+
   it('two cells: a part keeps its label on its own cell side, clear of every chromosome', () => {
     // Meiosis II from the front, as on screen: a chromosome of the RIGHT cell near that cell's
     // left edge (left of the parts' mean x). Its label must not go over the left cell.

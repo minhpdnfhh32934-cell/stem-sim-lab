@@ -55,6 +55,11 @@ export interface LayoutOptions {
    * subject that does not hold its part, so a part's label stays on its own subject's side.
    */
   regions?: readonly Rect[];
+  /**
+   * Pixels a box keeps inside the safe area (its border never meets the stage's edge); a part
+   * anywhere in the safe area still gets its label.
+   */
+  edge?: number;
 }
 
 type Side = 'left' | 'right';
@@ -100,14 +105,16 @@ function stack(
 
 export function layoutLabels(
   anchors: readonly LabelAnchor[],
-  safe: Rect,
+  area: Rect,
   o: LayoutOptions = {},
 ): PlacedLabel[] {
   const gap = o.gap ?? 6;
   const reach = o.reach ?? 28;
   const avoid = o.avoid ?? [];
   const regions = o.regions ?? [];
-  const shown = anchors.filter((a) => a.visible && inside(a, safe)).slice(0, o.cap ?? Infinity);
+  const shown = anchors.filter((a) => a.visible && inside(a, area)).slice(0, o.cap ?? Infinity);
+  /** Where the boxes go: the safe area, `edge` px inside its border. */
+  const safe = o.edge ? insetRect(area, o.edge) : area;
   if (shown.length === 0) return [];
   const other = (side: Side): Side => (side === 'left' ? 'right' : 'left');
   /** A part may be labelled from `side` unless its leader would cross another subject. */
@@ -237,6 +244,14 @@ export function layoutLabels(
     place(nextRight, 'right');
   }
   return out;
+}
+
+/** Pixels a label box keeps from the stage's edge (its border never meets the edge). */
+export const LABEL_EDGE = 4;
+
+/** `r` shrunk by `by` px on every side (labels kept a few pixels inside the stage's edge). */
+export function insetRect(r: Rect, by: number): Rect {
+  return { left: r.left + by, top: r.top + by, right: r.right - by, bottom: r.bottom - by };
 }
 
 /** True when two placed labels' boxes overlap (for tests and checks). */

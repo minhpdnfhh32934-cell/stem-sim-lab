@@ -21,6 +21,9 @@ interface Node {
   variant: TagVariant | '';
 }
 
+/** Room kept around a tag's box for the name labels (px). */
+const BOX_PAD = 2;
+
 export class TagLayer {
   readonly el: HTMLDivElement;
   private readonly nodes: Node[] = [];
@@ -31,6 +34,11 @@ export class TagLayer {
   private width = 1;
   private height = 1;
   private safe: Rect = { left: 0, top: 0, right: 1, bottom: 1 };
+  /** Screen boxes of the tags shown this frame (the first `boxCount`; reused objects). */
+  private readonly boxes: Rect[] = [];
+  private boxCount = 0;
+  /** Size of each text in each look, measured once (no layout reads on every frame). */
+  private readonly sizes = new Map<string, { w: number; h: number }>();
   private readonly vp = new THREE.Matrix4();
   private readonly v = new THREE.Vector3();
   private readonly w = new THREE.Vector3();
@@ -56,6 +64,7 @@ export class TagLayer {
     this.cols = cols;
     this.rows = rows;
     this.used = 0;
+    this.boxCount = 0;
   }
 
   /** Screen point (px) of a world point, or null behind the camera. */
@@ -104,7 +113,40 @@ export class TagLayer {
     }
     n.el.hidden = false;
     n.el.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) translate(-50%, -50%)`;
+    const size = this.sizeOf(n, cells);
+    let box = this.boxes[this.boxCount];
+    if (!box) {
+      box = { left: 0, top: 0, right: 0, bottom: 0 };
+      this.boxes.push(box);
+    }
+    this.boxCount++;
+    box.left = p.x - size.w / 2 - BOX_PAD;
+    box.right = p.x + size.w / 2 + BOX_PAD;
+    box.top = p.y - size.h / 2 - BOX_PAD;
+    box.bottom = p.y + size.h / 2 + BOX_PAD;
     return true;
+  }
+
+  /** A shown tag's size (px): measured once per text and look, at least its cells. */
+  private sizeOf(n: Node, cells: number): { w: number; h: number } {
+    const key = `${n.variant}|${n.text}`;
+    let size = this.sizes.get(key);
+    if (!size) {
+      size = {
+        w: Math.max(n.el.offsetWidth, cells * CELL),
+        h: Math.max(n.el.offsetHeight, CELL),
+      };
+      this.sizes.set(key, size);
+    }
+    return size;
+  }
+
+  /**
+   * Screen boxes (px, canvas coordinates) of the tags shown this frame — the strand ends,
+   * positions, letters and names that the name labels keep clear of.
+   */
+  rects(): Rect[] {
+    return this.boxes.slice(0, this.boxCount);
   }
 
   private node(): Node {
@@ -134,6 +176,7 @@ export class TagLayer {
 
   clear(): void {
     this.used = 0;
+    this.boxCount = 0;
     this.end();
   }
 
