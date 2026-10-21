@@ -3,8 +3,9 @@ import { resolve } from 'node:path';
 import * as THREE from 'three';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { QualityTier } from '@/perf/tiers';
-import { oklch } from '@/ui/three/color';
+import { deltaEOK, mixLinear, oklch } from '@/ui/three/color';
 import { LAYER, assignLayers } from '@/ui/three/layers';
+import { rimFragment } from '@/ui/three/materials';
 import { SceneKit } from './kit';
 import { NOISE_SIZE, noiseTexture } from './noise';
 import { ROLES, STRUCTURES, muted } from './palette';
@@ -35,8 +36,13 @@ import {
   proteinMaterial,
   roundedPlane,
   shell,
+  shellInkColor,
   stateRing,
   terrain,
+  VISIBLE_LIQUID_ALPHA,
+  waterLine,
+  waterLineColor,
+  waterLineGeometry,
 } from './recipes';
 import { expectAllFreed, testKit } from './testing';
 
@@ -372,6 +378,97 @@ describe('glassware, liquids and membrane sheets', () => {
     kit.dispose();
   });
 
+  it('a liquid body can be denser (a liquid whose extent is data): its own bottom/top alpha', () => {
+    const g = liquidBodyGeometry(16, VISIBLE_LIQUID_ALPHA);
+    const pos = g.getAttribute('position');
+    const rgba = g.getAttribute('color');
+    for (let i = 0; i < pos.count; i++) {
+      const t = (pos.getY(i) + 1) / 2;
+      const want =
+        VISIBLE_LIQUID_ALPHA.bottom + (VISIBLE_LIQUID_ALPHA.top - VISIBLE_LIQUID_ALPHA.bottom) * t;
+      expect(rgba.getW(i)).toBeCloseTo(want, 6);
+    }
+    g.dispose();
+  });
+
+  it('light stage: the liquid, its water line and the glass outline stand apart from the stage', () => {
+    // ΔE_OK against the stage colour (0.02 is about the smallest visible step).
+    const light = tokenOf('light');
+    const stage = light('--bg-stage');
+    const liq = light('--bio3d-liquid');
+    expect(deltaEOK(liq, stage)).toBeGreaterThanOrEqual(0.12);
+    // Even the faintest part of a data-carrying liquid (its top) still tints the stage.
+    expect(deltaEOK(mixLinear(stage, liq, VISIBLE_LIQUID_ALPHA.top), stage)).toBeGreaterThanOrEqual(
+      0.015,
+    );
+    expect(deltaEOK(shellInkColor(light('--bio3d-glass')), stage)).toBeGreaterThanOrEqual(0.25);
+    for (const theme of ['light', 'dark'] as const) {
+      const t = tokenOf(theme);
+      const line = waterLineColor(t('--bio3d-liquid'), t('--text'), Number(t('--m3d-water-line')));
+      expect(deltaEOK(line, t('--bg-stage')), theme).toBeGreaterThanOrEqual(0.25);
+      expect(deltaEOK(line, t('--bio3d-liquid')), theme).toBeGreaterThanOrEqual(0.1);
+    }
+  });
+
+  it('glassware: an ink outline only on request and only on the light stage', () => {
+    type Rim = { uRimInkAmount: { value: number }; uRimInk: { value: THREE.Color } };
+    const rim = (look: ReturnType<typeof glassware>) => look.front?.userData.rim as Rim | undefined;
+    const ink = (look: ReturnType<typeof glassware>) => rim(look)?.uRimInkAmount.value ?? 0;
+    const light = kitFor('medium', { theme: 'light' });
+    const dark = kitFor('medium', { theme: 'dark' });
+    expect(ink(glassware(light))).toBe(0);
+    const inked = glassware(light, { ink: true });
+    const front = inked.front as THREE.MeshStandardMaterial;
+    expect(ink(inked)).toBeGreaterThan(0);
+    expect(`#${rim(inked)?.uRimInk.value.getHexString() ?? ''}`).toBe(shellInkColor(hex(front)));
+    // At the silhouette the glass, laid over the stage, is plainly darker than the stage.
+    const stage = tokenOf('light')('--bg-stage');
+    const edge = rimFragment(front, 1);
+    expect(edge).not.toBeNull();
+    const c = new THREE.Color().setRGB(...(edge?.rgb ?? [1, 1, 1]));
+    const over = mixLinear(stage, `#${c.getHexString()}`, edge?.alpha ?? 0);
+    expect(deltaEOK(over, stage)).toBeGreaterThanOrEqual(0.2);
+    expect(ink(glassware(dark, { ink: true }))).toBe(0);
+    light.dispose();
+    dark.dispose();
+  });
+
+  it('a water line: a closed thin loop round a rounded rectangle at y = 0', () => {
+    const [hx, hz, r, th] = [3, 2, 0.12, 0.035];
+    const g = waterLineGeometry(hx, hz, r, th);
+    g.computeBoundingBox();
+    const b = g.boundingBox as THREE.Box3;
+    expect(b.max.x).toBeLessThanOrEqual(hx + th + 1e-6);
+    expect(b.max.x).toBeGreaterThan(hx);
+    expect(b.min.z).toBeGreaterThanOrEqual(-hz - th - 1e-6);
+    expect(b.max.y - b.min.y).toBeLessThanOrEqual(2 * th + 1e-6);
+    // Every vertex lies on the tube round the rim (straight edges, corner arcs of radius r).
+    const pos = g.getAttribute('position');
+    for (let i = 0; i < pos.count; i++) {
+      const x = Math.abs(pos.getX(i));
+      const z = Math.abs(pos.getZ(i));
+      const corner = x > hx - r && z > hz - r;
+      const flat = corner
+        ? Math.hypot(x - (hx - r), z - (hz - r)) - r
+        : Math.min(Math.abs(x - hx), Math.abs(z - hz));
+      expect(Math.hypot(flat, pos.getY(i))).toBeCloseTo(th, 4);
+    }
+    g.dispose();
+  });
+
+  for (const theme of ['light', 'dark'] as const)
+    it(`${theme}: a key membrane can be emphasised (half way back to the subject colour), inked on light`, () => {
+      const kit = kitFor('medium', { theme });
+      const m = fibrousMembrane(kit, { opacity: 0.9, repeat: [3, 0.45], emphasis: 0.5, ink: true });
+      const plain = muted(tokenOf(theme), '--subject-biology');
+      expect(hex(m)).toBe(mixLinear(plain, tokenOf(theme)('--subject-biology'), 0.5));
+      const amount =
+        (m.userData.rim as { uRimInkAmount: { value: number } } | undefined)?.uRimInkAmount.value ??
+        0;
+      expect(amount > 0).toBe(theme === 'light');
+      kit.dispose();
+    });
+
   for (const theme of ['light', 'dark'] as const)
     it(`${theme}: a fibrous membrane is the muted membrane colour, see-through, bumped in fibres`, () => {
       for (const tier of ['medium', 'high'] as const) {
@@ -423,6 +520,8 @@ describe('recipes free everything with the kit', () => {
       kit.mesh(kit.geometry(liquidBodyGeometry(16)), liquidBody(kit));
       kit.mesh(kit.geometry(liquidBodyGeometry(16)), liquidBody(kit, { unlit: true }));
       kit.mesh(kit.geometry(roundedPlane(1, 1, 0.1, 4)), liquidSurface(kit));
+      kit.mesh(kit.geometry(waterLineGeometry(1, 1, 0.1, 0.02)), waterLine(kit));
+      glassMeshes(kit, glassware(kit, { ink: true }), kit.roundedBox(14), 4, true);
       kit.mesh(kit.sphere(), fibrousMembrane(kit, { opacity: 0.6, repeat: [2, 0.25] }));
       kit.instanced(organismGeometry(kit, 'prey'), organismMaterial(kit), 3);
       const ground = terrain(kit, { radius: 5, seed: 1 });

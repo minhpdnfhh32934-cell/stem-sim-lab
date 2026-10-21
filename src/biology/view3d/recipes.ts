@@ -17,7 +17,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { deepen, mixLinear } from '@/ui/three/color';
 import { LAYER } from '@/ui/three/layers';
-import { roundedBox, withRim } from '@/ui/three/materials';
+import { roundedBox, withRim, type RimInk } from '@/ui/three/materials';
 import { withRelief } from '@/ui/three/relief';
 import type { SceneKit, Vec3 } from './kit';
 import { noiseTexture, fbm3 } from './noise';
@@ -51,6 +51,8 @@ export interface ShellOptions {
   opacity?: number;
   /** Fresnel rim strength (default: the theme's --m3d-rim). */
   rim?: number;
+  /** A darker outline on the front face (light stage; `withRim`'s ink). */
+  ink?: RimInk;
 }
 
 export interface ShellLook {
@@ -68,6 +70,14 @@ function themeNumber(kit: SceneKit, name: string, fallback: number): number {
 }
 
 /**
+ * The darker outline of a pale structure on the light stage (--m3d-shell-ink): a deeper shade of
+ * its own colour, never as saturated as a data colour.
+ */
+export function shellInkColor(color: string): string {
+  return deepen(color, 0.28, 3.4, 0.085);
+}
+
+/**
  * Materials of a see-through shell in `color` (already a structure colour). High tier on a
  * discrete GPU, outermost shell: one physical refracting material (transmission 0.9, thickness
  * 0.15 R, IOR 1.36, attenuation over 2 R, clear coat, Fresnel rim). Otherwise two draws: back
@@ -77,7 +87,12 @@ function themeNumber(kit: SceneKit, name: string, fallback: number): number {
 export function shellLook(kit: SceneKit, color: string, o: ShellOptions): ShellLook {
   const rimStrength = o.rim ?? themeNumber(kit, '--m3d-rim', 0.7);
   const opacity = o.opacity ?? themeNumber(kit, '--m3d-membrane-opacity', 0.14);
-  const rim = { color, strength: 0.55 * rimStrength, alpha: 0.45 * rimStrength };
+  const rim = {
+    color,
+    strength: 0.55 * rimStrength,
+    alpha: 0.45 * rimStrength,
+    ...(o.ink ? { ink: o.ink } : {}),
+  };
   if (o.outermost && kit.transmission) {
     const m = new THREE.MeshPhysicalMaterial({
       color,
@@ -424,7 +439,7 @@ export function proteinShell(
     alpha: 0.4,
     ...(ink > 0
       ? {
-          ink: { color: deepen(color, 0.28, 3.4, 0.085), amount: 0.8 * ink, power: 1.8, fill: 0.4 },
+          ink: { color: shellInkColor(color), amount: 0.8 * ink, power: 1.8, fill: 0.4 },
         }
       : {}),
   };
@@ -499,9 +514,11 @@ export function particleMaterial(kit: SceneKit, role: ParticleRole): THREE.MeshS
 /**
  * Glass (tubes, jar, tank walls with real thickness — no wire-box edges). High on a discrete GPU:
  * physical transmission 1, thickness 0.05, roughness 0.05, IOR 1.5 (one draw). Otherwise the
- * see-through look of a shell (back face + rimmed front).
+ * see-through look of a shell (back face + rimmed front). `ink`: on the light stage
+ * (--m3d-shell-ink) the front face also darkens towards its silhouette and edges
+ * (`shellInkColor`), so pale glass on the pale stage still shows where the vessel is.
  */
-export function glassware(kit: SceneKit): ShellLook {
+export function glassware(kit: SceneKit, o: { ink?: boolean } = {}): ShellLook {
   const color = structureColor(tok.bind(null, kit), 'glass');
   if (kit.transmission) {
     const m = new THREE.MeshPhysicalMaterial({
@@ -515,8 +532,13 @@ export function glassware(kit: SceneKit): ShellLook {
     });
     return { refract: kit.own(m), back: null, front: null };
   }
-  const look = shellLook(kit, color, { radius: 1, opacity: 0.12, rim: 0.8 });
-  return look;
+  const ink = o.ink ? themeNumber(kit, '--m3d-shell-ink', 0) : 0;
+  return shellLook(kit, color, {
+    radius: 1,
+    opacity: 0.12,
+    rim: 0.8,
+    ...(ink > 0 ? { ink: { color: shellInkColor(color), amount: ink, power: 2.2 } } : {}),
+  });
 }
 
 /** A liquid in glassware: --bio3d-liquid at opacity 0.85. */
@@ -606,12 +628,27 @@ export function roundedPlane(
   return g;
 }
 
+/** The vertex alpha of a liquid body at its bottom and its top (default: almost clear on top). */
+export interface LiquidAlpha {
+  bottom: number;
+  top: number;
+}
+export const LIQUID_ALPHA: LiquidAlpha = { bottom: 0.15, top: 0.04 };
+/**
+ * Denser, for a liquid whose extent carries data (the transport tank's compartments, V₁ : V₂):
+ * it must still tint the pale light stage, on Medium's unlit body too.
+ */
+export const VISIBLE_LIQUID_ALPHA: LiquidAlpha = { bottom: 0.26, top: 0.14 };
+
 /**
  * A liquid's body in a tank: a rounded box spanning [−1, 1]³ whose RGBA vertex colours carry a
- * soft vertical gradient — a little deeper and denser at the bottom, almost clear at the top
- * (the material's colour is the theme's liquid token, `liquidBody`).
+ * soft vertical gradient — a little deeper and denser at the bottom, clearer at the top (the
+ * material's colour is the theme's liquid token, `liquidBody`).
  */
-export function liquidBodyGeometry(segments: number): THREE.BufferGeometry {
+export function liquidBodyGeometry(
+  segments: number,
+  alpha: LiquidAlpha = LIQUID_ALPHA,
+): THREE.BufferGeometry {
   const g = roundedBox(segments, 14);
   const pos = g.getAttribute('position');
   const rgba = new Float32Array(pos.count * 4);
@@ -621,7 +658,7 @@ export function liquidBodyGeometry(segments: number): THREE.BufferGeometry {
     rgba[i * 4] = shade;
     rgba[i * 4 + 1] = shade;
     rgba[i * 4 + 2] = shade;
-    rgba[i * 4 + 3] = 0.15 - 0.11 * t;
+    rgba[i * 4 + 3] = alpha.bottom + (alpha.top - alpha.bottom) * t;
   }
   g.setAttribute('color', new THREE.BufferAttribute(rgba, 4));
   return g;
@@ -670,12 +707,110 @@ export function liquidSurface(kit: SceneKit): THREE.MeshStandardMaterial {
   );
 }
 
+/**
+ * The colour of a liquid's water line: the liquid's colour drawn towards the text colour by
+ * `amount` (the theme's --m3d-water-line), so the edge of a pale (light theme) or deep (dark
+ * theme) liquid stands out from the stage.
+ */
+export function waterLineColor(liquid: string, text: string, amount: number): string {
+  return mixLinear(liquid, text, amount);
+}
+
+/** The material of a water line (`waterLineGeometry`): lit on High, diffuse only below. */
+export function waterLine(kit: SceneKit): THREE.MeshStandardMaterial | THREE.MeshLambertMaterial {
+  const color = waterLineColor(
+    structureColor(tok.bind(null, kit), 'liquid'),
+    tok(kit, '--text'),
+    themeNumber(kit, '--m3d-water-line', 0.4),
+  );
+  return physical(kit)
+    ? kit.solid(color, { roughness: 0.35 })
+    : kit.shared(`water-line|${color}`, () => new THREE.MeshLambertMaterial({ color }));
+}
+
+/**
+ * The rim of a rounded rectangle (half sizes hx × hz, corner radius r) in the xz plane at y = 0,
+ * an edge then a corner four times, each an equal share of t (the corners get as many samples
+ * as the edges; a tube along it needs no arc-length walk).
+ */
+class RoundedRectLoop extends THREE.Curve<THREE.Vector3> {
+  constructor(
+    private readonly hx: number,
+    private readonly hz: number,
+    private readonly r: number,
+  ) {
+    super();
+  }
+
+  /** Piece k (0…7) and the fraction along it; side s = k >> 1 faces the angle s·π/2. */
+  private piece(t: number): { side: number; corner: boolean; f: number; phi: number } {
+    const u = (((t % 1) + 1) % 1) * 8;
+    const k = Math.min(7, Math.floor(u));
+    const side = k >> 1;
+    return { side, corner: (k & 1) === 1, f: u - k, phi: (side * Math.PI) / 2 };
+  }
+
+  override getPoint(t: number, target = new THREE.Vector3()): THREE.Vector3 {
+    const { side, corner, f, phi } = this.piece(t);
+    const nx = Math.cos(phi);
+    const nz = Math.sin(phi);
+    // Distance of this side from the centre, and half the length of its straight part.
+    const d = side % 2 === 0 ? this.hx : this.hz;
+    const half = (side % 2 === 0 ? this.hz : this.hx) - this.r;
+    if (!corner) {
+      const along = -half + 2 * half * f;
+      return target.set(nx * d - nz * along, 0, nz * d + nx * along);
+    }
+    const cx = nx * (d - this.r) - nz * half;
+    const cz = nz * (d - this.r) + nx * half;
+    const a = phi + (f * Math.PI) / 2;
+    return target.set(cx + this.r * Math.cos(a), 0, cz + this.r * Math.sin(a));
+  }
+
+  override getTangent(t: number, target = new THREE.Vector3()): THREE.Vector3 {
+    const { corner, f, phi } = this.piece(t);
+    const a = corner ? phi + (f * Math.PI) / 2 : phi;
+    return target.set(-Math.sin(a), 0, Math.cos(a));
+  }
+
+  override getPointAt(u: number, target?: THREE.Vector3): THREE.Vector3 {
+    return this.getPoint(u, target);
+  }
+
+  override getTangentAt(u: number, target?: THREE.Vector3): THREE.Vector3 {
+    return this.getTangent(u, target);
+  }
+}
+
+/**
+ * A liquid's water line: a thin round line of `thickness` (radius) along the rim of its rounded
+ * rectangular surface (half sizes hx × hz, corner radius r) in the xz plane at y = 0 — where the
+ * surface meets the glass, so each body of liquid shows its extent on a pale stage.
+ */
+export function waterLineGeometry(
+  hx: number,
+  hz: number,
+  r: number,
+  thickness: number,
+  sides = 6,
+): THREE.BufferGeometry {
+  const corner = Math.min(r, hx, hz);
+  return new THREE.TubeGeometry(new RoundedRectLoop(hx, hz, corner), 8 * 4, thickness, sides, true);
+}
+
 export interface FibrousMembraneOptions {
   /** Opacity (below 1: blended, so what is behind the membrane shows through). */
   opacity: number;
   /** Repeats of the noise tile along u and v: unequal repeats stretch it into fibres. */
   repeat: readonly [number, number];
   side?: THREE.Side;
+  /**
+   * Share (0…1) of the muted colour mixed back towards the full --subject-biology: a small key
+   * part (the osmosis disc) that must stand out from the liquids and the stand. Default 0.
+   */
+  emphasis?: number;
+  /** On the light stage (--m3d-shell-ink), a darker outline towards the silhouette. */
+  ink?: boolean;
 }
 
 /**
@@ -689,7 +824,11 @@ export function fibrousMembrane(
   kit: SceneKit,
   o: FibrousMembraneOptions,
 ): THREE.MeshStandardMaterial {
-  const color = structureColor(tok.bind(null, kit), 'membrane');
+  const mutedColor = structureColor(tok.bind(null, kit), 'membrane');
+  const color =
+    o.emphasis && o.emphasis > 0
+      ? mixLinear(mutedColor, tok(kit, '--subject-biology'), Math.min(1, o.emphasis))
+      : mutedColor;
   const fibres = kit.keep(noiseTexture(13, 8));
   fibres.repeat.set(o.repeat[0], o.repeat[1]);
   const see = o.opacity < 1;
@@ -714,7 +853,13 @@ export function fibrousMembrane(
         sheenColor: new THREE.Color(mixLinear(color, '#ffffff', 0.5)),
       })
     : new THREE.MeshStandardMaterial(base);
-  const rim = { color: deepen(color, 0.25, 1, 0.2), strength: 0.45, alpha: see ? 0.5 : 0 };
+  const ink = o.ink ? themeNumber(kit, '--m3d-shell-ink', 0) : 0;
+  const rim = {
+    color: deepen(color, 0.25, 1, 0.2),
+    strength: 0.45,
+    alpha: see ? 0.5 : 0,
+    ...(ink > 0 ? { ink: { color: shellInkColor(color), amount: 0.9 * ink, power: 1.6 } } : {}),
+  };
   return kit.own(withRim(m, rim));
 }
 
