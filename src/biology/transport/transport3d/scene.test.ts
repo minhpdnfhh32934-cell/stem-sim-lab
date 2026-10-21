@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
+import { mixLinear } from '@/ui/three/color';
 import { TagLayer } from '@/ui/three/tagLayer';
 import { expectDisposes } from '@/ui/three/testing';
 import { muted } from '../../view3d/palette';
+import { VISIBLE_LIQUID_ALPHA, waterLineColor } from '../../view3d/recipes';
 import { osmosisData } from '../osmosisData';
 import { diffusionFrameAt, diffusionModel3d, type DiffusionInputs } from './diffusion';
 import { BOX, waterSplit } from './diffusionLayout';
-import { WATER_DOTS, buildDiffusionScene } from './diffusionScene';
+import { TANK, WATER_DOTS, WATER_LINE_R, buildDiffusionScene } from './diffusionScene';
 import {
   SOLUTE_DRAWN,
   TUBE,
@@ -18,7 +20,7 @@ import {
   rulerTicks,
   tubeTop,
 } from './osmosis';
-import { buildOsmosisScene } from './osmosisScene';
+import { MENISCUS, buildOsmosisScene } from './osmosisScene';
 import { ARM_START } from './uTube';
 
 const token = () => '#808080';
@@ -41,6 +43,11 @@ const inputs = (over: Partial<DiffusionInputs> = {}): DiffusionInputs => ({
 const osmosis = (over: Partial<{ c0: number; i: number; tC: number; h0: number }> = {}) =>
   osmosisModel3d(osmosisData({ c0: 1, i: 1, tC: 25, h0: 0.2, ...over }));
 
+/** How strongly a material's rim darkens its outline (0: no ink). */
+const inkOf = (m: THREE.Material) =>
+  (m.userData.rim as { uRimInkAmount: { value: number } } | undefined)?.uRimInkAmount.value ?? 0;
+/** Straight down. */
+const DOWN = new THREE.Vector3(0, -1, 0);
 /** A ray from the front (+z) straight onto a point. */
 const frontRay = (x: number, y: number) =>
   new THREE.Raycaster(new THREE.Vector3(x, y, 40), new THREE.Vector3(0, 0, -1));
@@ -201,6 +208,89 @@ describe('3D diffusion scene', () => {
     }
   });
 
+  it('light stage: each compartment shows its extent (water line, denser liquid, inked glass)', () => {
+    const light: Record<string, string> = {
+      ...COLOURS,
+      '--text': '#172033',
+      '--bio3d-liquid': '#b8d6ea',
+      '--bio3d-glass': '#e6edf5',
+      '--m3d-shell-ink': '1',
+      '--m3d-water-line': '0.5',
+    };
+    for (const theme of ['light', 'dark'] as const)
+      for (const tier of ['medium', 'high'] as const)
+        for (const over of [
+          { v1: 1, v2: 1 },
+          { v1: 3, v2: 0.5 },
+        ]) {
+          const dark: Record<string, string> = {
+            '--m3d-shell-ink': '0',
+            '--m3d-water-line': '0.12',
+          };
+          const token = (n: string) =>
+            (theme === 'dark' ? dark[n] : undefined) ?? light[n] ?? '#808080';
+          const m = diffusionModel3d(inputs(over));
+          const sc = buildDiffusionScene(m, { ...opts(tier), token });
+          const lay = sc.plan.layout;
+          const all = meshes(sc.scene);
+          // The water line: one mesh, not pickable, at the surface, in the line colour.
+          const lines = all.filter((x) => {
+            x.geometry.computeBoundingBox();
+            const b = x.geometry.boundingBox;
+            return (
+              !(x instanceof THREE.InstancedMesh) &&
+              b !== null &&
+              Math.abs((b.min.y + b.max.y) / 2 - (BOX.hy - 0.005)) < 1e-4 &&
+              b.max.y - b.min.y < 3 * WATER_LINE_R
+            );
+          });
+          expect(lines).toHaveLength(1);
+          const line = lines[0] as THREE.Mesh;
+          const hits: THREE.Intersection[] = [];
+          line.raycast(new THREE.Raycaster(new THREE.Vector3(lay.x0 + 0.1, 10, 0), DOWN), hits);
+          expect(hits).toEqual([]);
+          expect(`#${(line.material as THREE.MeshStandardMaterial).color.getHexString()}`).toBe(
+            waterLineColor('#b8d6ea', '#172033', theme === 'light' ? 0.5 : 0.12),
+          );
+          // Two loops, one round each compartment's surface: their widths follow V₁ : V₂.
+          const xs = line.geometry.getAttribute('position');
+          const span = (left: boolean) => {
+            let lo = Infinity;
+            let hi = -Infinity;
+            for (let i = 0; i < xs.count; i++) {
+              const x = xs.getX(i);
+              if (x < lay.xm === left) [lo, hi] = [Math.min(lo, x), Math.max(hi, x)];
+            }
+            return hi - lo;
+          };
+          // (The tube's six-sided section reaches its radius R, or R cos 30° between corners.)
+          for (const [left, w] of [
+            [true, lay.w1],
+            [false, lay.w2],
+          ] as const) {
+            const extra = span(left) - (w - 0.06);
+            expect(extra).toBeLessThanOrEqual(2 * WATER_LINE_R + 1e-5);
+            expect(extra).toBeGreaterThanOrEqual(2 * WATER_LINE_R * Math.cos(Math.PI / 6) - 1e-5);
+          }
+          // The liquid bodies never fade below the visible minimum.
+          const bodies = all.filter((x) => x.geometry.hasAttribute('color'));
+          expect(bodies).toHaveLength(2);
+          for (const b of bodies) {
+            const a = b.geometry.getAttribute('color');
+            let min = 1;
+            for (let i = 0; i < a.count; i++) min = Math.min(min, a.getW(i));
+            expect(min).toBeCloseTo(VISIBLE_LIQUID_ALPHA.top, 6);
+          }
+          // The glass's front face darkens towards its edges on the light stage only.
+          const inked = all.filter((x) => inkOf(x.material as THREE.Material) > 0);
+          if (theme === 'light') {
+            expect(inked).toHaveLength(1);
+            expect(inked[0]?.scale.z).toBeCloseTo(BOX.hz + TANK.outer, 9);
+          } else expect(inked).toEqual([]);
+          sc.dispose();
+        }
+  });
+
   it('High: faint water dots in both sides, never counted, never crossing; none on Medium', () => {
     const m = diffusionModel3d(inputs({ v1: 3, v2: 1 }));
     const hi = buildDiffusionScene(m, opts('high'));
@@ -269,10 +359,11 @@ describe('3D diffusion scene', () => {
     sc.setFrame(diffusionFrameAt(m, m.tEnd / 2), true);
     sc.setSelection({ kind: 'particle', index: 0 });
     const stats = sc.drawStats();
-    // Measured 2026-10-21 (CPU count, no GPU) after the glass tank (0.7.1): 11 calls, about
-    // 39 000 triangles on Medium (High: 13 calls, about 95 000). Was 9 calls / 36 000 with the
-    // wire box. A bigger change must update this budget on purpose.
-    expect(stats.calls).toBeLessThanOrEqual(11);
+    // Measured 2026-10-21 (CPU count, no GPU) after the light-stage pass (0.7.1 round 2): 12
+    // calls, about 39 900 triangles on Medium (High: 14 calls, about 95 800) — one more call
+    // for the water lines (both loops in one mesh). Was 11 calls with the first glass tank, 9
+    // with the wire box. A bigger change must update this budget on purpose.
+    expect(stats.calls).toBeLessThanOrEqual(12);
     expect(stats.triangles).toBeLessThan(45_000);
     // Medium's 3D instance budget is 600 (quality3d: 4000 × 15 %).
     expect(instances(sc.scene)).toBeLessThanOrEqual(600);
@@ -321,7 +412,7 @@ describe('3D osmosis scene', () => {
     sc.dispose();
   });
 
-  it('one glass tube along the U; each liquid ends at its exact level under a meniscus', () => {
+  it('one glass tube along the U; each liquid’s meniscus bottoms out at its exact level', () => {
     for (const over of [{}, { c0: 5, i: 3, h0: 0.05 }]) {
       const m = osmosis(over);
       const sc = buildOsmosisScene(m, opts());
@@ -342,21 +433,18 @@ describe('3D osmosis scene', () => {
       });
       expect(spans).toHaveLength(1);
       const menisci = instancedOf(sc.scene, THREE.LatheGeometry)[0] as THREE.InstancedMesh;
+      // The bowl in its own frame: lowest point (its centre) at 0, rim MENISCUS above it.
+      menisci.geometry.computeBoundingBox();
+      const bowl = menisci.geometry.boundingBox as THREE.Box3;
+      expect(bowl.min.y).toBeCloseTo(0, 6);
+      expect(bowl.max.y).toBeCloseTo(MENISCUS, 6);
       for (const k of [0, 30, 120, 239]) {
         const f = osmosisFrameAt(m, m.traj.t[k] ?? 0);
         sc.setFrame(f);
         const yl = levelY(m, f.hL);
         const yr = levelY(m, f.hR);
-        // The clipping planes are the levels.
-        const planes = meshes(sc.scene)
-          .flatMap((x) => (x.material as THREE.Material).clippingPlanes ?? [])
-          .map((p) => p.constant)
-          .sort((a, b) => a - b);
-        expect(planes).toHaveLength(2);
-        expect(planes[0]).toBeCloseTo(Math.min(yl, yr), 12);
-        expect(planes[1]).toBeCloseTo(Math.max(yl, yr), 12);
-        // The meniscus' rim sits at the level, in its arm (hidden only inside a bend).
-        // (Instance matrices are float32.)
+        // The meniscus' lowest point sits at the level (the standard reading), in its arm
+        // (hidden only inside a bend). (Instance matrices are float32.)
         const want: [number, number][] = [
           [-TUBE.a, yl],
           [TUBE.a, yr],
@@ -364,10 +452,48 @@ describe('3D osmosis scene', () => {
         want.forEach(([x, y], i) => {
           const { p, s } = at(menisci, i);
           expect(p.x).toBeCloseTo(x, 5);
-          expect(p.y).toBeCloseTo(y, 5);
+          expect(p.y + bowl.min.y).toBeCloseTo(y, 5);
           expect(s.x).toBe(y >= ARM_START ? 1 : 0);
         });
+        // Each liquid is cut where its meniscus' rim meets the glass (at the level in a bend).
+        const cut = (y: number) => (y >= ARM_START ? y + MENISCUS : y);
+        const planes = meshes(sc.scene)
+          .flatMap((x) => (x.material as THREE.Material).clippingPlanes ?? [])
+          .map((p) => p.constant)
+          .sort((a, b) => a - b);
+        expect(planes).toHaveLength(2);
+        expect(planes[0]).toBeCloseTo(Math.min(cut(yl), cut(yr)), 12);
+        expect(planes[1]).toBeCloseTo(Math.max(cut(yl), cut(yr)), 12);
+        // The levels the scene reports are still the model's.
+        expect(sc.levels()).toEqual({ left: yl, right: yr });
       }
+      sc.dispose();
+    }
+  });
+
+  it('the membrane disc stands out (stronger tint, outline on the light stage); its label sits on it', () => {
+    const m = osmosis();
+    for (const ink of ['1', '0']) {
+      const token = (n: string) => (n === '--m3d-shell-ink' ? ink : tinted(n));
+      const sc = buildOsmosisScene(m, { ...opts(), token });
+      sc.setFrame(osmosisFrameAt(m, m.tEnd));
+      const disc = meshes(sc.scene).find(
+        (x) => x.position.x === 0 && x.position.y === -TUBE.r && x.rotation.z === Math.PI / 2,
+      );
+      const mat = disc?.material as THREE.MeshStandardMaterial;
+      const plain = muted(tinted, '--subject-biology');
+      // Half way from the plain muted colour back to the subject colour (both themes).
+      expect(`#${mat.color.getHexString()}`).toBe(mixLinear(plain, '#2e9e5b', 0.5));
+      expect(mat.bumpMap).not.toBeNull();
+      expect(inkOf(mat) > 0).toBe(ink === '1');
+      // The label's point: on the disc's front, above its centre (not its lowest point).
+      const p = sc.labelAnchors().find((a) => a.id === 'semipermeable')?.point;
+      expect(p).toBeDefined();
+      const [x, y, z] = p ?? [9, 9, 9];
+      expect(x).toBe(0);
+      expect(y).toBeGreaterThan(-TUBE.r);
+      expect(z).toBeGreaterThan(0);
+      expect(Math.hypot(y + TUBE.r, z)).toBeLessThanOrEqual(TUBE.r * 1.05);
       sc.dispose();
     }
   });

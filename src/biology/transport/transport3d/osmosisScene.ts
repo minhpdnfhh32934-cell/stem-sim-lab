@@ -2,8 +2,9 @@
  * The three.js scene of the osmosis half of "Khuếch tán & thẩm thấu" in 3D: a glass U-tube (one
  * continuous tube along the U, `uTube.ts`) on a stand, a semipermeable membrane disc at the
  * bottom junction, the solution (left) and pure water (right) at the model's heights — each
- * liquid one tube clipped at its surface, capped by a concave meniscus whose rim is the exact
- * level — on one vertical scale with a cm ruler (a plate with engraved marks; numbers drawn by the
+ * liquid one tube capped by a concave meniscus whose lowest point is the exact level (the standard
+ * reading; the rim rising to the glass is illustration), clipped where that rim meets the wall —
+ * on one vertical scale with a cm ruler (a plate with engraved marks; numbers drawn by the
  * page), the Δh bracket, the starting level, the solute sample (the particle recipe's cube) spread
  * over the solution column and illustrative water molecules crossing the membrane (`osmosis.ts`).
  * `setFrame`/`setPhase` allocate nothing; one SceneKit owns every geometry and material.
@@ -67,8 +68,13 @@ export interface OsmosisScene {
 const { a: A, r: R } = TUBE;
 /** Liquid radius inside the glass. */
 const LR = R * LIQUID_SHARE;
-/** How far the meniscus dips in the middle (illustration; its rim is the model's level). */
-const MENISCUS = 0.07;
+/** The membrane disc's radius (a little wider than the glass). */
+const MEMBRANE_R = R * 1.05;
+/**
+ * How far the meniscus' rim rises above its lowest point (illustration). The lowest point is the
+ * model's level — where a learner reads a concave water meniscus.
+ */
+export const MENISCUS = 0.07;
 /** The stand: saddles under the channel, the base slab, room around the subject. */
 export const STAND = { saddle: 0.2, slab: 0.24, margin: 0.55 } as const;
 /** The ruler plate: half width and depth, room above its top mark, mark lengths. */
@@ -159,7 +165,9 @@ export function buildOsmosisScene(m: OsmosisModel3D, o: SceneOptions): OsmosisSc
   }
 
   // ── Liquids: each side one tube from the membrane up its arm, clipped at its surface ──
+  // The model's level of each side, and where its liquid is cut (the meniscus' rim).
   const surfaces: Record<Side, number> = { solution: 0, water: 0 };
+  const cuts: Record<Side, number> = { solution: 0, water: 0 };
   const liquidTube = (s: -1 | 1, side: Side, opacity: number) => {
     const geo = kit.geometry(sweepTube(halfAxis(s, top, bendSteps), LR, sides));
     const mesh = kit.mesh(geo, liquidMat(side, opacity));
@@ -169,26 +177,39 @@ export function buildOsmosisScene(m: OsmosisModel3D, o: SceneOptions): OsmosisSc
       const n = hits.length;
       THREE.Mesh.prototype.raycast.call(mesh, rc, hits);
       for (let i = hits.length - 1; i >= n; i--)
-        if ((hits[i]?.point.y ?? 0) > surfaces[side] + 1e-6) hits.splice(i, 1);
+        if ((hits[i]?.point.y ?? 0) > cuts[side] + 1e-6) hits.splice(i, 1);
     };
     return mesh;
   };
   const leftLiquid = liquidTube(-1, 'solution', 0.26);
   const rightLiquid = liquidTube(1, 'water', 0.22);
-  const menisci = kit.instanced(meniscusGeometry(kit, LR, MENISCUS), meniscusMat, 2);
+  // The recipe's bowl has its rim at y = 0; lifted so its lowest point is at y = 0 (the level).
+  const menisci = kit.instanced(
+    meniscusGeometry(kit, LR, MENISCUS).translate(0, MENISCUS, 0),
+    meniscusMat,
+    2,
+  );
   menisci.renderOrder = 3;
   menisci.setColorAt(0, new THREE.Color(tints.solution));
   menisci.setColorAt(1, new THREE.Color(tints.water));
   if (menisci.instanceColor) menisci.instanceColor.needsUpdate = true;
 
   // ── Semipermeable membrane: a thin fibrous disc across the bottom junction ──────────
+  // The lesson's key part: its muted colour half way back to --subject-biology and, on the light
+  // stage, a darker outline, so it stands apart from both liquids and the stand. A little wider
+  // than the glass with a round bead at its edge, as if held between the two halves of the tube
+  // (one merged geometry: disc + bead; illustration).
+  const discParts = [
+    new THREE.CylinderGeometry(MEMBRANE_R, MEMBRANE_R, 0.1, sides),
+    new THREE.TorusGeometry(MEMBRANE_R, 0.05, 6, sides).rotateX(Math.PI / 2),
+  ];
+  const discGeo = kit.geometry(mergeGeometries(discParts));
+  for (const g of discParts) g.dispose();
   const membrane = kit.mesh(
-    kit.cylinder(sides),
-    fibrousMembrane(kit, { opacity: 0.9, repeat: [3, 0.45] }),
+    discGeo,
+    fibrousMembrane(kit, { opacity: 0.9, repeat: [3, 0.45], emphasis: 0.5, ink: true }),
   );
   membrane.rotation.z = Math.PI / 2;
-  // A little wider than the glass, as if held between the two halves of the tube.
-  membrane.scale.set(R * 1.05, 0.1, R * 1.05);
   membrane.position.set(0, -R, 0);
   membrane.renderOrder = 4;
 
@@ -377,18 +398,24 @@ export function buildOsmosisScene(m: OsmosisModel3D, o: SceneOptions): OsmosisSc
       mark.visible = true;
     } else if (selected.kind === 'membrane') {
       mark.rotation.set(0, Math.PI / 2, 0);
-      mark.scale.setScalar(R * 1.16);
+      // Outside the disc's bead.
+      mark.scale.setScalar(MEMBRANE_R + 0.12);
       mark.position.set(0, -R, 0);
       mark.visible = true;
     }
   }
 
-  /** One side's surface at y: its clipping plane, and its meniscus where the arm is straight. */
+  /**
+   * One side's level y: its meniscus (lowest point at y) where the arm is straight, and the
+   * clipping plane at the meniscus' rim (at y itself in a bend, where no meniscus is drawn).
+   */
   function setSurface(side: Side, k: 0 | 1, x: number, y: number): void {
-    surfaces[side] = y;
-    surfacePlanes[side].constant = y;
     // In a bend (only an arm nearly emptied) the cut is not a circle: no meniscus then.
-    m4.compose(pos.set(x, y, 0), upright, scl.setScalar(y >= ARM_START - 1e-9 ? 1 : 0));
+    const straight = y >= ARM_START - 1e-9;
+    surfaces[side] = y;
+    cuts[side] = straight ? y + MENISCUS : y;
+    surfacePlanes[side].constant = cuts[side];
+    m4.compose(pos.set(x, y, 0), upright, scl.setScalar(straight ? 1 : 0));
     menisci.setMatrixAt(k, m4);
   }
 
@@ -454,7 +481,8 @@ export function buildOsmosisScene(m: OsmosisModel3D, o: SceneOptions): OsmosisSc
     const out: LabelAnchor[] = [
       { id: 'solution', point: [-A - R, Math.max(yl * 0.75, 0), R] },
       { id: 'water', point: [A + R, Math.max(yr * 0.6, 0), R] },
-      { id: 'semipermeable', point: [0, -2 * R, R] },
+      // On the disc's upper front (not its lowest point, which sits over the stand).
+      { id: 'semipermeable', point: [0, -R + 0.45 * MEMBRANE_R, 0.75 * MEMBRANE_R] },
       { id: 'ruler', point: [TUBE.rulerX, plateTop, PLATE.hd] },
       { id: 'startLevel', point: [-A + R, startY, R] },
     ];

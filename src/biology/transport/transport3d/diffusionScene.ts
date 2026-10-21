@@ -26,6 +26,9 @@ import {
   liquidSurface,
   particleMaterial,
   roundedPlane,
+  waterLine,
+  waterLineGeometry,
+  VISIBLE_LIQUID_ALPHA,
 } from '../../view3d/recipes';
 import type { TransportPart, TransportSelection } from './components';
 import type { DiffusionFrame, DiffusionModel3D } from './diffusion';
@@ -101,6 +104,9 @@ export const TANK = {
   slab: 0.26,
   margin: 0.5,
 } as const;
+
+/** Radius of the water line along each compartment's surface. */
+export const WATER_LINE_R = 0.05;
 
 /** Faint water dots on High (illustration) and their radius. */
 export const WATER_DOTS = 160;
@@ -190,11 +196,13 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     mesh.position.set(cx, TANK.headroom / 2, 0);
   };
   // The far walls' faint back faces on High only (one more see-through layer over the whole
-  // tank costs software and integrated GPUs); the near walls' rim still draws the tank.
-  for (const g of glassMeshes(kit, glassware(kit), wall, 5, high)) fit(g, TANK.outer);
+  // tank costs software and integrated GPUs); the near walls' rim still draws the tank, and on
+  // the light stage its darker outline (ink) keeps the pale glass apart from the pale stage.
+  for (const g of glassMeshes(kit, glassware(kit, { ink: true }), wall, 5, high))
+    fit(g, TANK.outer);
 
-  // ── Liquid: one body per compartment (pickable), a glossy surface on each ──────────
-  const liquidGeo = kit.geometry(liquidBodyGeometry(tankSegments));
+  // ── Liquid: one body per compartment (pickable), a glossy surface and a water line on each
+  const liquidGeo = kit.geometry(liquidBodyGeometry(tankSegments, VISIBLE_LIQUID_ALPHA));
   const centreOf = (s: 1 | 2) => (s === 1 ? lay.x0 + lay.w1 / 2 : lay.x1 - lay.w2 / 2);
   const widthOf = (s: 1 | 2) => (s === 1 ? lay.w1 : lay.w2);
   const compartment = (s: 1 | 2) => {
@@ -222,6 +230,20 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     surfaces.setMatrixAt(k, m4);
   });
   surfaces.instanceMatrix.needsUpdate = true;
+  // Where each surface meets the glass: one thin line round each compartment (one merged mesh,
+  // not pickable), the liquid's colour drawn towards the text colour (`waterLine`, both
+  // themes). Its two loops show the compartments' widths V₁ : V₂ even where the liquid is faint.
+  const lineParts = ([1, 2] as const).map((s) =>
+    waterLineGeometry(widthOf(s) / 2 - 0.03, BOX.hz - 0.03, 0.12, WATER_LINE_R).translate(
+      centreOf(s),
+      BOX.hy - 0.005,
+      0,
+    ),
+  );
+  const waterLines = kit.mesh(kit.geometry(mergeGeometries(lineParts)), waterLine(kit));
+  for (const g of lineParts) g.dispose();
+  waterLines.renderOrder = 3;
+  waterLines.raycast = () => undefined;
 
   // ── The stand: base slab and the membrane's frame (one merged mesh) ─────────────────
   const baseTop = -BOX.hy - TANK.outer;
