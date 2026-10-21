@@ -170,9 +170,19 @@ module?{state}}` (Zod schema in `src/app/project/snapshot.ts`). Only **inputs** 
 ## 3f. Science Studio (`src/studio/`, 0.6.0)
 
 Guided lessons (Predict → Interact → Observe → Explain → Conclude → Report) on top of the existing
-engines and data; the studio never computes a measurement of its own. Entry: the "Science Studio"
-card on the launch page → screen `'studio'` (`src/app/navigationStore.ts`) → `StudioScreen`,
-mounted by `AppShell`.
+engines and data; the studio never computes a measurement of its own.
+
+**Inside the lab (user decisions 2026-10-20):** the name stays "Science Studio"; the launch page has
+only Phòng thí nghiệm + AI Teacher — do not add a Science Studio card back there. Entries, all in the
+lab: the "Science Studio" button at the top of the topic library (`LeftSidebar.tsx`, also Ctrl+K
+`go.studio`) → `openStudio()` → screen `'studio'` (`src/app/navigationStore.ts`; the value is kept, so
+every older caller lands in the new place) → `StudioScreen`, mounted by `AppShell` beside the
+library (no inspector, timeline or bottom panel; "Về Phòng thí nghiệm" goes back). The studio's
+subject tab sets the library's subject. From an open topic: the inspector card `TopicLessons.tsx`
+lists the topic's lessons, and in the "Thử thách" tab a lab POE that a lesson runs (`binding.poe`)
+becomes a link to that lesson instead of a second prediction (`ChallengePanel.tsx`). Both use
+`lessons.ts` (`lessonsForTopic`, `lessonForPoe`, `openLesson`): built-in + teacher lessons matched by
+`scenario.topic`, never a copied list. `stemsim.studio` (tab, picks, sessions) is unchanged.
 
 | Layer            | Files                                                                                                                                                                      | Responsibility                                                                                                                                                       |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -183,6 +193,7 @@ mounted by `AppShell`.
 | Physics          | `physics/plugin.ts`, `PhysicsSteps.tsx`, `comparison.ts`, `engineRun.ts`, `openInLab.ts`, `usePhysics.ts`                                                                  | Conditions A/B run headless in the scene's own engine; `solve()` is the cross-check and the POE verdict; opens the same run in the lab.                              |
 | Chemistry        | `chemistry/plugin.ts`, `bench.ts` (pure state machine), `library.ts`, `evidence.ts`, `card.ts`, `BenchStep.tsx`, `TubeSvg.tsx`, `EvidenceFacts.tsx`                        | One tube, two solutions, mix. What a mix shows comes only from `data/reactions.json`; no record → "chưa có trong cơ sở dữ liệu đã kiểm chứng".                       |
 | Biology          | `biology/plugin.ts`, `model.ts`, `match.ts`, `evidence.ts`, `card.ts`, `bioSession.ts`, `useModel.ts`, `ModelStep.tsx`, `StageRecorder.tsx`, `FindParts.tsx`               | Reuses the mitosis 3D view (2D fallback); stage counts come from the model; the part-finding key is the model's own component data.                                  |
+| Lab entry        | `lessons.ts`, `TopicLessons.tsx` (+ `LeftSidebar.tsx`, `Inspector.tsx`, `ChallengePanel.tsx` outside `src/studio`)                                                         | Which lessons belong to a topic / hold a lab POE; opens one lesson with its saved session.                                                                           |
 | Built-in lessons | `scenarios/*.ts`, `scenarios/index.ts`                                                                                                                                     | Three scenarios, each validated at load; an invalid one is left out.                                                                                                 |
 | Authoring        | `authoring/service.ts`, `check.ts`, `choices.ts`, `draft.ts`, `bindingDraft.ts`, `collection.ts`, `fileFormat.ts`, `limits.ts`, `issueText.ts`, `authoringStore.ts`, views | "Soạn bài": every choice comes from an engine or data table; schema + size + engine checks before saving; local only (`teacher.` ids); JSON import/export.           |
 

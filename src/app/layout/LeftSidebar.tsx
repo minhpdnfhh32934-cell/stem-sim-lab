@@ -1,4 +1,13 @@
-import { BookOpen, CheckCircle2, ChevronRight, History, Search, SearchX, X } from 'lucide-react';
+import {
+  Atom,
+  BookOpen,
+  CheckCircle2,
+  ChevronRight,
+  History,
+  Search,
+  SearchX,
+  X,
+} from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import { chapterProgress, topicProgress } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
@@ -6,7 +15,7 @@ import { memo, useMemo, useState } from 'react';
 import { normalizeForSearch, type ChapterEntry } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
-import { openTopic, useActiveTopic } from '@/app/topics';
+import { openStudio, openTopic, useActiveTopic, useIsStudio } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { HistoryList } from '@/app/project/HistoryList';
 import { useProfileStore } from '@/app/learner/profileStore';
@@ -32,10 +41,31 @@ export const LeftSidebar = memo(function LeftSidebar() {
           { id: 'history', label: t('sidebar.history'), icon: History },
         ]}
       />
+      <StudioEntry t={t} />
       {tab === 'library' ? <Library t={t} /> : <HistoryList />}
     </aside>
   );
 });
+
+/** The lab's one way into Science Studio: every lesson, built-in or written by a teacher. */
+function StudioEntry({ t }: { t: TFunction }) {
+  const studio = useIsStudio();
+  return (
+    <button
+      type="button"
+      className="sidebar__studio"
+      aria-current={studio ? 'page' : undefined}
+      onClick={openStudio}
+    >
+      <Atom size={18} strokeWidth={1.75} aria-hidden="true" />
+      <span className="sidebar__studio-copy">
+        <strong>{t('sidebar.studio')}</strong>
+        <span>{t('sidebar.studioHint')}</span>
+      </span>
+      <ChevronRight size={15} strokeWidth={1.75} aria-hidden="true" />
+    </button>
+  );
+}
 
 /** Chapters whose title or topics match the query (accent- and case-insensitive). */
 function searchChapters(all: ChapterEntry[], query: string, t: TFunction): ChapterEntry[] {

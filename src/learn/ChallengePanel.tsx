@@ -1,4 +1,13 @@
-import { CheckCircle2, Flag, Lightbulb, Play, RotateCcw, Sparkles, Target } from 'lucide-react';
+import {
+  Atom,
+  CheckCircle2,
+  Flag,
+  Lightbulb,
+  Play,
+  RotateCcw,
+  Sparkles,
+  Target,
+} from 'lucide-react';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useT } from '@/app/i18n';
@@ -9,6 +18,8 @@ import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { fmtQty } from '@/physics/common/tex';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
+import { lessonForPoe, openLesson, useLessonsForTopic } from '@/studio/lessons';
+import type { StudioScenario } from '@/studio/scenario';
 import { Celebrate } from '@/ui/Celebrate';
 import { cx } from '@/ui/cx';
 import { challengesFor, evaluate, optimum, startParams, type Challenge } from './challenges';
@@ -34,14 +45,18 @@ function answerMeta(scene: PhysicsScene, params: Params, id: string) {
 export function ChallengePanel() {
   const t = useT();
   const scene = useSimStore((s) => s.scene);
+  const lessons = useLessonsForTopic(scene?.id ?? null);
   if (!scene) return <p className="learn__empty muted">{t('learn.empty')}</p>;
   const poe = poeFor(scene.id);
   const challenges = challengesFor(scene.id);
+  // One prediction per topic: a POE that a Science Studio lesson runs is done there, not twice.
+  const lesson = lessonForPoe(poe?.id, lessons);
   if (!poe && challenges.length === 0)
     return <p className="learn__empty muted">{t('learn.none')}</p>;
   return (
     <div className="learn" key={scene.id}>
-      {poe && <PredictCard scene={scene} poe={poe} />}
+      {poe &&
+        (lesson ? <PredictInStudio lesson={lesson} /> : <PredictCard scene={scene} poe={poe} />)}
       {challenges.map((c) => (
         <ChallengeCard key={c.id} scene={scene} challenge={c} />
       ))}
@@ -54,6 +69,35 @@ function useCurrentG(): number | undefined {
 }
 
 /* ---------------- Predict – Observe – Explain ---------------- */
+
+/** "Dự đoán trước" of a topic whose prediction is a Science Studio lesson's first step. */
+function PredictInStudio({ lesson }: { lesson: StudioScenario }) {
+  const t = useT();
+  const L = useLocalized();
+  const titleId = useId();
+  return (
+    <section className="learn-card" aria-labelledby={titleId}>
+      <header className="learn-card__head">
+        <Lightbulb size={16} strokeWidth={1.75} aria-hidden="true" />
+        <h3 id={titleId}>{t('learn.predictTitle')}</h3>
+        <span className="learn-card__steps">{t('learn.poeSteps')}</span>
+      </header>
+      <p className="learn-card__task">
+        {t('studio.lessons.predictMoved', { title: L(lesson.title) })}
+      </p>
+      <button
+        type="button"
+        className="btn btn--accent"
+        onClick={() => {
+          openLesson(lesson);
+        }}
+      >
+        <Atom size={15} strokeWidth={1.75} aria-hidden="true" />
+        {t('studio.lessons.predictOpen')}
+      </button>
+    </section>
+  );
+}
 
 function PredictCard({ scene, poe }: { scene: PhysicsScene; poe: Poe }) {
   const t = useT();

@@ -389,9 +389,16 @@ Progress log: `docs/PROGRESS.md`.
 
 ## Science Studio (`src/studio/`, 0.6.0)
 
-- Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Entry: the launch
-  page's "Science Studio" card → screen `'studio'` → `StudioScreen` (tabs Hóa học · Sinh học ·
-  Vật lí · Soạn bài). Layers and file map: `docs/ARCHITECTURE.md` §3f.
+- Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Layers and file map:
+  `docs/ARCHITECTURE.md` §3f.
+- **User decisions 2026-10-20:** (1) the guided-lesson mode keeps the name **Science Studio**;
+  (2) the launch page has only **Phòng thí nghiệm** + **AI Teacher**:
+  **không thêm lại thẻ Science Studio ở trang mở đầu**. Science Studio lives inside the lab: the
+  "Science Studio" button at the top of the topic library (and Ctrl+K) → `openStudio()` → screen `'studio'` (kept for older callers) →
+  `StudioScreen` beside the library (tabs Hóa học · Sinh học · Vật lí · Soạn bài; "Về Phòng thí
+  nghiệm"). An open topic lists its lessons in the inspector (`TopicLessons.tsx`); a lab POE that a
+  lesson runs (`binding.poe`) is a link to the lesson in "Thử thách", never a second prediction.
+  Lookups only through `src/studio/lessons.ts`.
 - **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine
   ids and data keys; physics runs the scene's own engine (`solve()` = cross-check and POE verdict),
   chemistry shows only what `data/reactions.json` records (else "chưa có trong cơ sở dữ liệu đã
