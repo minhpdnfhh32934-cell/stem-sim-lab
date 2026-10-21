@@ -144,11 +144,14 @@ describe('3D point-mutation scene', () => {
     mis.dispose();
   });
 
-  it('a premature stop ends the mutated chain with a flat cap; other changes do not', () => {
+  it('a premature stop codon ends the mutated chain with a flat cap; other changes do not', () => {
     const cases: [Mutation, boolean][] = [
       [{ kind: 'substitution', pos: 12, base: 'T' }, true], // AAA → TAA: nonsense
       [{ kind: 'substitution', pos: 8, base: 'C' }, false], // silent
       [{ kind: 'substitution', pos: 15, base: 'A' }, false], // missense
+      [{ kind: 'deletion', pos: 9, count: 3 }, false], // in-frame deletion: shorter, no early stop
+      [{ kind: 'deletion', pos: 6, count: 6 }, false],
+      [{ kind: 'insertion', pos: 12, bases: 'TAA' }, true], // in-frame insertion of a stop
     ];
     for (const [m, cap] of cases) {
       const sc = build(m);

@@ -6,6 +6,7 @@ import {
   changedCodons,
   codonSpan,
   mutationModel3d,
+  prematureStop,
   proteinText,
   windowFor,
 } from './binding';
@@ -153,6 +154,32 @@ describe('3D point-mutation model', () => {
     const inFrame = mutationModel3d(CODING, del(9, 3));
     expect(inFrame.effect).toBe('inFrameIndel');
     expect(codonSpan(inFrame, 'mutated', 3)).toEqual(codonSpan(inFrame, 'normal', 4));
+  });
+
+  it('premature stop: decided by where the stop codon sits, not by the chain length', () => {
+    const cases: [Mutation, string, boolean][] = [
+      [sub(12, 'T'), 'nonsense', true], // AAA → TAA
+      [sub(8, 'C'), 'silent', false],
+      [sub(15, 'A'), 'missense', false],
+      [del(9, 3), 'inFrameIndel', false], // TTC removed: shorter chain, same stop
+      [del(6, 6), 'inFrameIndel', false], // GCT TTC removed
+      [del(19, 3), 'inFrameIndel', false], // TGG + TAA joined into TAA: Trp lost, same stop
+      [ins(12, 'TAA'), 'inFrameIndel', true], // a stop codon inserted in frame
+      [ins(21, 'TGA'), 'inFrameIndel', false], // stop right in front of TAA: same protein
+      [ins(12, 'TA'), 'frameshift', true], // … TTC TAA: the new frame stops at once
+      [del(7, 1), 'frameshift', false], // the new frame has no stop
+    ];
+    for (const [m, effect, cut] of cases) {
+      const model = mutationModel3d(CODING, m);
+      const tag = `${m.kind} at ${String(m.pos)}`;
+      expect(model.effect, tag).toBe(effect);
+      expect(prematureStop(model), tag).toBe(cut);
+      // A cut chain never keeps every amino acid of the normal one.
+      if (cut) expect(model.mutated.t.protein.startsWith(model.normal.t.protein), tag).toBe(false);
+    }
+    // ins(21, 'TGA') keeps the normal protein: nothing is cut.
+    const same = mutationModel3d(CODING, ins(21, 'TGA'));
+    expect(same.mutated.t.protein).toBe(same.normal.t.protein);
   });
 
   it('a long sequence draws a window around the site', () => {

@@ -177,6 +177,30 @@ export function changedCodons(model: MutationModel3D): number[] {
     .map((c) => c.index);
 }
 
+/**
+ * Whether the mutated chain is cut short by a premature stop codon (the chain's end cap). Only
+ * changes read in the original frame count (nonsense, frameshift, in-frame indel). Positions are
+ * compared as slots, so the normal stop is already moved by the inserted/deleted bases:
+ * (a) the mutated stop codon ends before the normal stop codon ends, and (b) it starts before the
+ * normal chain's last amino acid is complete. (a) rules out an in-frame deletion that only removes
+ * codons (or joins the last codon with the stop); (b) rules out a stop inserted right in front of
+ * the normal stop (the chain keeps every normal amino acid).
+ */
+export function prematureStop(model: MutationModel3D): boolean {
+  const e = model.effect;
+  if (e !== 'nonsense' && e !== 'frameshift' && e !== 'inFrameIndel') return false;
+  const t = model.mutated.t;
+  const stop = t.stopIndex >= 0 ? t.codons[t.stopIndex] : undefined;
+  if (!stop) return false;
+  const n = model.normal.t;
+  const normalStop = n.stopIndex >= 0 ? n.codons[n.stopIndex] : undefined;
+  if (!normalStop) return true;
+  const first = model.mutated.slot[stop.pos];
+  const last = model.mutated.slot[stop.pos + 2];
+  if (first === undefined || last === undefined) return false;
+  return last < normalStop.pos + 2 && first <= normalStop.pos - 1;
+}
+
 /** Slots spanned by a codon's bracket: its first and last base. */
 export function codonSpan(
   model: MutationModel3D,

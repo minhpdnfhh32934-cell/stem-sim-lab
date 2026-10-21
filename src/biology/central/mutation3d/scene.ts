@@ -43,6 +43,7 @@ import {
   beadSlot,
   changedBeads,
   changedCodons,
+  prematureStop,
   slotShown,
   strandOf,
   windowFor,
@@ -440,13 +441,9 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
   }
   done(beadHull, outlinedBeads.length);
 
-  // A premature stop (the model's translation stops earlier than the normal one): the mutated
-  // chain ends with a flat cap just after its last amino acid.
-  const mutatedT = model.mutated.t;
-  const short =
-    mutatedT.stopIndex >= 0 &&
-    beadNames(mutatedT).length < beadNames(model.normal.t).length &&
-    parts.mutated.beadIds.length > 0;
+  // A premature stop codon (`prematureStop`: where the stop sits, not how long the chain is):
+  // the mutated chain ends with a flat cap just after its last amino acid.
+  const short = prematureStop(model) && parts.mutated.beadIds.length > 0;
   if (short) {
     const last = parts.mutated.beadIds.at(-1) ?? 0;
     beadPoint(model, 'mutated', last, back);
