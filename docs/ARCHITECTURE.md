@@ -209,13 +209,13 @@ sizes, positions and motion are illustrations and are labelled so (`view3d/texts
 `ILLUSTRATION`, `MOTION`). New 3D wording goes to `docs/DATA_REVIEW.md` (items 26–28, rows M3D,
 MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D) with `review_status: "pending"`.
 
-| Layer                   | Where                                                                                                                                                                         | Responsibility                                                                                                                                                 |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Generic kit             | `src/ui/three/` (`renderer.ts`, `quality3d.ts`, `useThreeHost.ts`, `loop.ts`, `labels.ts`, `pick.ts`)                                                                         | No biology. Quality table per tier, render on demand, damped orbit + arrow keys, tweened camera, `FrameMonitor` → `reportOverload()`, lost-context fallback.   |
-| Biology kit             | `src/biology/view3d/` (`Bio3DCanvas`, `Bio3DView`, `SceneKit`, `lessonStore.ts`, `palette.ts`, `sampling.ts`)                                                                 | Stage layout, 3D / 2D switch, palette with a shape cue per role, `drawScale` / `apportion` (classes add up exactly), shared texts, primitives, disposal.       |
-| Division (shared)       | `src/biology/division/division3d/`                                                                                                                                            | Stage clock, counts from `runDivision`, chromatid shapes, membrane / spindle / centrosome / nucleus meshes for mitosis and meiosis.                            |
-| Dedicated lesson module | `division/mitosis3d/`, `division/meiosis3d/`, `central/dogma3d/`, `central/mutation3d/`, `genetics/mendel3d/`, `genetics/hw3d/`, `enzyme/enzyme3d/`, `transport/transport3d/` | Each: pure `binding.ts` or `timeline.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`, `camera.ts`, `store.ts`, `Xxx3DView`, `Xxx3DSwitch`. |
-| Simple kit views        | `genetics/Drift3D.tsx`, `ecology/{Logistic3D,LotkaVolterra3D}.tsx`, `scenes3d.ts`                                                                                             | Three population lessons: one figure per individual or per group (noted). Their dedicated 3D modules are planned for a later update.                           |
+| Layer                   | Where                                                                                                                                                                                              | Responsibility                                                                                                                                                 |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generic kit             | `src/ui/three/` (`renderer.ts`, `quality3d.ts`, `useThreeHost.ts`, `loop.ts`, `labels.ts`, `pick.ts`)                                                                                              | No biology. Quality table per tier, render on demand, damped orbit + arrow keys, tweened camera, `FrameMonitor` → `reportOverload()`, lost-context fallback.   |
+| Biology kit             | `src/biology/view3d/` (`Bio3DCanvas`, `Bio3DView`, `SceneKit`, `lessonStore.ts`, `palette.ts`, `sampling.ts`)                                                                                      | Stage layout, 3D / 2D switch, palette with a shape cue per role, `drawScale` / `apportion` (classes add up exactly), shared texts, primitives, disposal.       |
+| Division (shared)       | `src/biology/division/division3d/`                                                                                                                                                                 | Stage clock, counts from `runDivision`, chromatid shapes, membrane / spindle / centrosome / nucleus meshes for mitosis and meiosis.                            |
+| Dedicated lesson module | `division/mitosis3d/`, `division/meiosis3d/`, `central/dogma3d/`, `central/mutation3d/`, `genetics/mendel3d/`, `genetics/hw3d/`, `genetics/drift3d/`, `enzyme/enzyme3d/`, `transport/transport3d/` | Each: pure `binding.ts` or `timeline.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`, `camera.ts`, `store.ts`, `Xxx3DView`, `Xxx3DSwitch`. |
+| Simple kit views        | `ecology/{Logistic3D,LotkaVolterra3D}.tsx`, `ecology/scenes3d.ts`                                                                                                                                  | Two population lessons: one figure per individual or per group (noted). Their dedicated 3D modules are planned for a later update.                             |
 
 Rules: a dedicated module saves its 3D / 2D choice in the lesson store (`view3d`, also written to
 `.stemsim` files); the simple kit views keep it in `stemsim.bio3d`. Low tier, no WebGL2 or a lost
@@ -376,6 +376,25 @@ it without code of its own:
     while it stays about as near), its antennae, the jar's beads and the p : q ring; "Hiện tên"
     (Tags) sits in the corner (`Bio3DFigureBody.tools`), "Toàn cảnh / Cận cảnh cá thể" in the
     generation row. The gene pool's name heads the label in front of the plinth.
+- Genetic drift archipelago (`src/biology/genetics/drift3d/`, the full stage, `Bio3DView` with
+  `top` / `tools` / `bottom` / `info`; the heterozygosity chart stays in the Bottom panel and marks
+  the generation shown through `useDrift3D` (`active`, `t`)). `driftRuns` (`population.ts`, one
+  `rng(seed)` stream, Wright–Fisher run after run) is shared by the 2D chart, its chips and the 3D
+  view. `binding.ts`: one island per run; A copies at g = p·2N (whole from generation 1; generation
+  0 is p₀, so 2N·p₀ may be a half); `absorption` = the first generation with p = 1 or 0;
+  `individualsPerFigure` = the smallest divisor k of N with N / k ≤ `islandCap` (300 figures shared
+  by the islands, 4 … 60 each), so every figure is exactly k individuals; two beads per figure,
+  the A beads by `apportion`; `pairing` deals an island's beads to its figures (slots ranked by
+  a fixed per-island key, so one bead more moves one bead; illustration). `layout.ts`: a
+  staggered grid numbered row by row from the back, each island a low dome (`islandHeight`, coast
+  wobble `coastAt`) holding the Hardy–Weinberg sunflower slots, trees on its back half, a tag on
+  the water in front. `island.ts`: one merged ground mesh (recoloured towards A's or a's colour,
+  `FATE_TINT`, when the run fixes or loses A), an opaque sea (bump ripples on High, a roughness map
+  below) with sand-tinted shallows (vertex alpha), and one merged p : q band per coast rewritten
+  in place. `scene.ts` reuses the Hardy–Weinberg `herd` (one neutral body colour,
+  `--bio3d-creature`: the model has no genotypes) and `plants`; frames `island:<i>` (close-up of
+  the picked island, else the front one), callouts (island, band, two beads, figure, a fixed and a
+  lost island). Medium: 15 draw calls, ~155k triangles, 0 frames at rest.
 - Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
   as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
   unlit; `alpha` bottom/top, default `LIQUID_ALPHA`), `liquidSurface`, `waterLineGeometry` (a
