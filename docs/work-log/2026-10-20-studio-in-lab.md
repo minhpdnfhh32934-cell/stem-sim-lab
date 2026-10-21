@@ -1,4 +1,4 @@
-# STUDIO-LAB — Science Studio moves inside the lab (0.7.1, web only)
+# STUDIO-LAB — Science Studio moves inside the lab (0.7.1)
 
 - **Goal:** one way into guided lessons. User decisions 2026-10-20: keep the name Science Studio;
   remove its card from the launch page (only Phòng thí nghiệm + AI Teacher); open the studio from
@@ -71,3 +71,9 @@ Failures, classified:
   v0.7.0 (pre-existing; not changed here).
 - 2026-10-21: pushed to `claude/wizardly-galileo-k3vxcs` (3b2d0b8) and opened PR #35 into `main`
   (the user merges). Still to do: try it on Windows and run the E2E suite there.
+- 2026-10-21, CI on PR #35: `npm audit` and `cargo audit` were red on every branch (new advisories).
+  Fixed in 9be792c (vite 8.3.4, lockfile only) and fbde966 (rustls-webpki 0.103.16,
+  webpki-root-certs 1.0.10, Cargo.lock only). The user then decided to bump the native version
+  too: `tauri.conf.json`, `Cargo.toml` and the Cargo.lock root are 0.7.1, so 0.7.0 installs are
+  told to reinstall. The E2E perf test (mitosis 3D p95 ≤ 150 ms) failed once on CI at 199.9 ms;
+  measured here it is 200–233 ms with vite 8.3.1 and 8.3.4 alike (no regression); re-run once.

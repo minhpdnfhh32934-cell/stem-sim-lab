@@ -153,9 +153,9 @@
   "versions": [
     {
       "version": "0.7.1",
-      "status": "development",
-      "statusNote": "Đang làm trên nhánh claude/wizardly-galileo-k3vxcs (20/10/2026): chưa có PR, chưa gộp vào main, chưa phát hành. Chỉ đổi phần web (không đổi Rust), nên chỉ package.json lên 0.7.1; phần lõi vẫn 0.7.0.",
-      "channel": "none",
+      "status": "in-review",
+      "statusNote": "Đang chờ duyệt ở PR #35 (nhánh claude/wizardly-galileo-k3vxcs, 21/10/2026): chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.",
+      "channel": "github",
       "dates": {
         "devStart": "2026-10-20T23:03:28+00:00",
         "firstCommit": "2026-10-20T23:03:28+00:00",
@@ -168,7 +168,8 @@
       "evidence": [
         "Quyết định của chủ dự án 20/10/2026: giữ tên Science Studio, bỏ thẻ Science Studio ở trang mở đầu (ghi trong CLAUDE.md, docs/ARCHITECTURE.md §3f)",
         "firstCommit: 61258ea 2026-10-20T23:03:28+00:00 'feat(studio): embed guided lessons in lab'; tiếp theo 9fb3061 (mở bài từ chủ đề, bỏ dự đoán trùng) và a5661cb (test)",
-        "lastCommit để null: commit tài liệu của bản này chưa có khi viết mục này"
+        "lastCommit để null: commit tài liệu của bản này chưa có khi viết mục này",
+        "PR #35 mở 21/10/2026; 9be792c: vite 8.3.4 (npm audit); fbde966: rustls-webpki 0.103.16, webpki-root-certs 1.0.10 (cargo audit); phần lõi lên 0.7.1 theo quyết định của người dùng 21/10/2026"
       ],
       "tests": [
         "20/10/2026 trong sandbox đám mây (Linux) trên a5661cb + tài liệu: npm run check sạch (format, lint, typecheck) và 3942/3942 unit test (274 tệp); npm run format:check sạch",
@@ -178,8 +179,8 @@
         "tag": null,
         "tagSha": null,
         "releaseUrl": null,
-        "prs": [],
-        "commits": ["61258ea", "9fb3061", "a5661cb"],
+        "prs": [35],
+        "commits": ["61258ea", "9fb3061", "a5661cb", "3b2d0b8", "9be792c", "fbde966"],
         "branches": ["claude/wizardly-galileo-k3vxcs"]
       },
       "publicNotes": {
@@ -201,7 +202,12 @@
         ],
         "improved": [],
         "fixed": [],
-        "security": [],
+        "security": [
+          {
+            "vi": "Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.",
+            "en": "The app's core uses an updated library for checking certificates on Internet connections."
+          }
+        ],
         "performance": [],
         "changed": [
           {
@@ -216,7 +222,12 @@
           }
         ],
         "deprecated": [],
-        "knownIssues": []
+        "knownIssues": [
+          {
+            "vi": "Bản này đổi phần lõi, nên máy đã cài 0.7.0 cần cài bộ cài mới (không cập nhật được trong app).",
+            "en": "This version changes the app's core, so computers with 0.7.0 need the new installer (it cannot update inside the app)."
+          }
+        ]
       },
       "notesReady": false,
       "learnerHighlights": [
