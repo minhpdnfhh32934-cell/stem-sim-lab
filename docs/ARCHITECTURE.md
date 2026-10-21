@@ -284,6 +284,31 @@ it without code of its own:
   chains) and of every tag shown (`TagLayer.rects()`, passed as `LabelObstacles.rects`), 4 px
   inside the stage (`edge`); the mutation lane names sit outside each plate at its helix, on the
   side its labels do not use.
+- Mendel lab bench (`src/biology/genetics/mendel3d/`): `bench.ts` builds the procedural pieces
+  — the tray (one `ExtrudeGeometry` of a rounded outline whose holes are the cell slots and the
+  two header channels, bevelled walls on a floor slab), the parents' pedestals and the phenotype
+  cylinders (lathe glass with a real wall and foot) with engraved marks (torus arcs). `layout.ts`
+  places everything (`trayEdges`, `gutterX`, `CLASS_KEY_Z`, `parentsPoints` for the step
+  frames); `scene.ts` draws see-through parts as instanced `ShellSet`s (refract / back / front;
+  the cylinders' back faces on High only) and the liquid as an open unit cylinder scaled to the
+  exact height plus a meniscus cap (instance colour = class token). Tags follow a text rule:
+  genotypes in the slots only when neighbouring cells are ≥ `GENOTYPE_PX` apart on screen or for
+  the picked cell; the mother's gametes one tag each (short form when the full one has no room),
+  the father's a two-line column header; keys on a second row a whole tag lower only when they
+  would touch. The view glides the shown time 700 ms on a step jump (`STEP_GLIDE_MS`; the store,
+  captions and numbers change at once) and, in "Toàn cảnh", frames that step (`stepFrame`).
+  `SceneKit.groundShadows` turns on the studio key light's shadow map for the bench (High on a
+  discrete GPU). No refraction (`transmission` is never passed): data sits behind the glass.
+- Enzyme tank (`src/biology/enzyme/enzyme3d/scene.ts`): glass walls (rounded box, back faces and
+  an inner face on High only), a liquid body with an RGBA vertex gradient and a flat glossy
+  surface, a base with contact shadow (shadow maps on High). Enzymes in three seeded shapes
+  (`ENZYME_SEEDS`, one instanced set each; instance k ↔ enzyme `slot × 3 + variant`); `lips`
+  (thin torus at the pocket rim) and the second-site `rings` carry per-instance role colours.
+  The form tag is drawn only for the picked enzyme, which gets an inverted-hull outline
+  (`--m3d-highlight` × `highlightIntensity`, `bloom` flag). `setFrame(frame, ease)` records, per
+  place of the S/P pool, when it turned into a product and from which substrate-holding pocket;
+  `setPhase` eases it out (`PRODUCT_EASE_S`); the view passes `ease` only while playing without
+  reduced motion and settles the frame when play stops.
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
   every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
   relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s

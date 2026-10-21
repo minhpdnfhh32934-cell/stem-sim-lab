@@ -132,6 +132,23 @@ phát); cỡ mỗi nhãn chữ nhỏ đo một lần cho mỗi chữ. Đo SwiftS
 mARN → Protein phát 8 s: 320/331 khung, p50 16,7 ms, p95 50 ms, 12 lệnh vẽ; Đột biến điểm 3 s viền
 nhấp nháy: 93/91 khung, p50 33 ms, p95 50–67 ms, 25 lệnh vẽ — không chậm hơn lần đo trước.
 
+**Di truyền Mendel và Động học enzyme 3D — làm đẹp (2026-10-21, bản 0.7.1).** Mendel thành "bàn
+thí nghiệm" (khay có ô lõm và rãnh giao tử, bệ, ống đong thủy tinh có chất lỏng, vạch khắc); enzyme
+trong bể kính có chất lỏng và đế. Đo CPU (`drawStats`): Mendel 9 nhóm + 200 hình con lai Trung bình
+37 → 43 lệnh vẽ, 119 000 → 86 000 tam giác (Cao 44 lệnh, 174 000); enzyme Trung bình 11 → 16 lệnh
+vẽ, 73 000 → 79 000 tam giác (Cao 18 lệnh, 183 000). Ngân sách trong `scene.test` cập nhật có chủ
+ý. Đo SwiftShader 1366×768 (tổng khung trong lúc phát): Mendel phát lại 10 s — Trung bình trước
+198/183 khung, p50 50 ms, p95 100 ms; bản đầu tiên sau khi làm đẹp chỉ còn 127/134 khung (mặt sau
+mờ của 4 ống kính cao thêm 2 lớp trong suốt), nên mặt sau ống kính chỉ vẽ ở mức Cao và bàn vẽ
+không chiếu sáng dưới mức có bóng (mặt phẳng, cùng màu): 175/183 khung, p50 50 ms, p95 100–117 ms;
+Cao trước 103 khung, sau 102 khung (p50 100 ms). Enzyme phát đồ thị theo thời gian 6 s — Trung bình
+trước 127/130 khung, p50 50 ms, p95 100 ms; sau (mặt trong và mặt sau bể chỉ ở mức Cao) 107/113/133
+khung, p50 50 ms, p95 100–133 ms; Cao trước 71 khung, sau 52 khung (p95 333 ms; lớp chất lỏng và
+mặt thoáng phủ cả bể — trên GPU thật không đáng kể, thang quá tải vẫn hạ mức khi chậm). Không có
+khúc xạ kính ở hai bài (dữ liệu sau kính giữ đúng màu). Bóng đổ (shadow map) trên bàn/đế, GTAO và
+tỏa sáng (viền enzyme được chọn) chỉ ở mức Cao trên GPU rời như trước. Mức Thấp không có hình 3D
+cho hai bài (hiện 2D), nên không đổi; máy GPU tích hợp không bị nâng mức.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)
