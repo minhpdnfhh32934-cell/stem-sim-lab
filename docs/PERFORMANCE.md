@@ -149,6 +149,21 @@ khúc xạ kính ở hai bài (dữ liệu sau kính giữ đúng màu). Bóng �
 tỏa sáng (viền enzyme được chọn) chỉ ở mức Cao trên GPU rời như trước. Mức Thấp không có hình 3D
 cho hai bài (hiện 2D), nên không đổi; máy GPU tích hợp không bị nâng mức.
 
+**Khuếch tán & thẩm thấu 3D — làm đẹp (2026-10-21, bản 0.7.1).** Khuếch tán: bể kính hai ngăn
+có chất lỏng, đế và khung màng (bỏ khung dây); thẩm thấu: ống chữ U liền một khối, chất lỏng cắt
+đúng mực bằng mặt phẳng cắt (`clippingPlanes`) + mặt khum, giá đỡ và thước có vạch khắc. Đo CPU
+(`drawStats`): khuếch tán 400 hạt, 8 lỗ Trung bình 9 → 11 lệnh vẽ, 36 000 → 39 000 tam giác (Cao 13
+lệnh, 95 000); thẩm thấu Trung bình 13 → 14 lệnh vẽ, khoảng 15 000 tam giác (Cao 16 lệnh, 38 000).
+Ngân sách trong `scene.test` cập nhật có chủ ý. Đo SwiftShader 1366×768, phát 6 s (tổng khung): bản
+đầu tiên của bể khuếch tán còn 212 khung ở mức Trung bình (trước 291/282) và 109 ở mức Cao (trước 199) — các lớp trong suốt mới (kính, chất lỏng, màng hai mặt vẽ hai lượt) phủ cả bể. Đã làm nhẹ:
+chất lỏng không chiếu sáng và đế/khung chỉ khuếch tán (Lambert) dưới mức Cao, màng mỏng vẽ hai mặt
+trong một lượt (`forceSinglePass`), ở mức Cao bỏ mặt trong của kính và lớp phủ bóng của đế, chấm
+nước đục 20 mặt (không trong suốt). Sau: khuếch tán Trung bình 264/267 khung (p50 16,7 ms, p95
+33–50 ms), Cao 141/143 khung (p50 50 ms, p95 100 ms); thẩm thấu Trung bình 283/288 khung (trước
+252/258, p95 50 → 33 ms), Cao 159/159 (trước 163). Không có khúc xạ kính (dữ liệu sau kính giữ đúng
+màu); bóng đổ (shadow map) lên đế chỉ ở mức Cao trên GPU rời. Mức Thấp hiện hình 2D cho bài này nên
+không đổi; máy GPU tích hợp không bị nâng mức.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

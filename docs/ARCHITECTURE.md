@@ -315,6 +315,24 @@ it without code of its own:
   ES makes product, v = kcat·[ES]; an ESI complex never releases one);
   `setPhase` eases it out (`PRODUCT_EASE_S`); the view passes `ease` only while playing without
   reduced motion and settles the frame when play stops.
+- Transport (`src/biology/transport/transport3d/`): the diffusion tank (`diffusionScene.ts`) is
+  kit glassware around both compartments (`glassMeshes`; back faces on High only), one
+  `liquidBodyGeometry` body per compartment (the pickable compartment; scale = its width, so
+  V₁ : V₂ shows) with a `liquidSurface` plane each, the `fibrousMembrane` sheet (an
+  `ExtrudeGeometry` with one hole per pore, rim tori and open lining cylinders), and one merged
+  stand mesh (base slab + the membrane's frame). Faint water dots on High only (`WATER_DOTS`,
+  seeded Brownian walks per compartment via `waterSplit`; never counted by `sides()`). The U-tube
+  (`uTube.ts`) is an axis (`halfAxis`/`uAxis`: arms straight from `ARM_START`, bends of radius
+  `U_BEND`) swept by `sweepTube` into the glass (one merged mesh with the two lip tori), its inner
+  face (High) and each side's liquid. A liquid's material clips at its level (`clippingPlanes`,
+  constant = the model's height; its raycast drops hits above it) under an instanced meniscus whose
+  rim is that height (hidden when the level lies in a bend). The ruler is a plate on the stand with
+  instanced engraved marks (`rulerTicks` + `rulerMinorTicks`); its numbers stay DOM tags, and the
+  name labels keep clear of every tag (`LabelLayer` obstacles).
+- Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
+  as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
+  unlit), `liquidSurface`, and `fibrousMembrane` (muted membrane colour, stretched-noise bump,
+  one-pass two-sided blending, sheen on High). The enzyme tank uses the same recipes.
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
   every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
   relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
