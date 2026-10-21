@@ -244,11 +244,12 @@ describe('3D enzyme scene', () => {
     sc.setFrame(frameAt(m, m.tEnd / 2));
     sc.setSelection({ kind: 'enzyme', index: 0 });
     const stats = sc.drawStats();
-    // Measured 2026-10-21 (CPU count, no GPU) after the tank pass (glass walls with an inner
-    // face, liquid and its surface, a base, three enzyme shapes, pocket rings, an outline on the
-    // picked enzyme): 18 calls, about 81 000 triangles on Medium (High: about 183 000); was 11
-    // calls, 73 000. A bigger change must update this budget on purpose.
-    expect(stats.calls).toBeLessThanOrEqual(18);
+    // Measured 2026-10-21 (CPU count, no GPU) after the tank pass (glass walls, liquid and its
+    // surface, a base, three enzyme shapes, pocket rings, an outline on the picked enzyme; the
+    // wall's inner face and far walls on High only): 16 calls, about 79 000 triangles on Medium
+    // (High: 18 calls, about 183 000); was 11 calls, 73 000. A bigger change must update this
+    // budget on purpose.
+    expect(stats.calls).toBeLessThanOrEqual(16);
     expect(stats.triangles).toBeLessThan(85_000);
     let instances = 0;
     sc.scene.traverse((o) => {

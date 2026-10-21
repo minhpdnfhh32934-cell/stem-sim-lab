@@ -306,11 +306,12 @@ describe('3D Mendel scene', () => {
     expect(m.classes).toHaveLength(9);
     expect(sc.fieldShown()).toBe(200);
     // Measured 2026-10-21 (CPU count, no GPU) after the lab-bench pass (bench, tray with slots
-    // and channels, pedestals, glass cylinders with liquid, meniscus and marks; see-through
-    // parts in two draws): 44 calls, about 92 000 triangles on Medium for nine classes and 200
-    // figures (was 37 calls, 119 000). A bigger change must update this budget on purpose.
+    // and channels, pedestals, glass cylinders with liquid, meniscus and marks; the cylinders'
+    // back faces on High only): 43 calls, about 86 000 triangles on Medium for nine classes and
+    // 200 figures (was 37 calls, 119 000; High 44 calls). A bigger change must update this budget
+    // on purpose.
     const stats = sc.drawStats();
-    expect(stats.calls).toBeLessThanOrEqual(44);
+    expect(stats.calls).toBeLessThanOrEqual(43);
     expect(stats.triangles).toBeLessThan(125_000);
     sc.dispose();
   });

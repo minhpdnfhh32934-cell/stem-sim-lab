@@ -302,11 +302,16 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     mesh.visible = mesh.count > 0;
   };
   /** A see-through look as plain meshes of `geometry` (refracting, or back + front). */
-  const glassMeshes = (look: ShellLook, geometry: THREE.BufferGeometry, order: number) => {
+  const glassMeshes = (
+    look: ShellLook,
+    geometry: THREE.BufferGeometry,
+    order: number,
+    backFaces: boolean,
+  ) => {
     const out: THREE.Mesh[] = [];
     for (const [m, extra] of [
       [look.refract, 0],
-      [look.back, -1],
+      [backFaces ? look.back : null, -1],
       [look.front, 3],
     ] as const) {
       if (!m) continue;
@@ -394,12 +399,18 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   // ── The tank: muted base, glass walls with a thickness, the liquid and its surface ─────
   const tankSegments = Math.round(kit.seg * 1.5);
   const wall = kit.shared('enzyme-tank-wall', () => roundedBox(tankSegments, 14));
-  const outer = glassMeshes(glassware(kit), wall, 4);
+  // The far walls' faint back faces (one more see-through layer over the whole tank) on High
+  // only; the liquid and the near walls' rim still show the box.
+  const outer = glassMeshes(glassware(kit), wall, 4, kit.tier === 'high');
   for (const m of outer) m.scale.set(L.hx + TANK.outer, L.hy + TANK.outer, L.hz + TANK.outer);
-  // The wall's inner face: a second faint rim inside the first, so the glass reads thick.
+  // The wall's inner face: a second faint rim inside the first, so the glass reads thick (High
+  // only: one more see-through layer over the whole tank costs software and integrated GPUs).
   const glassColor = structureColor(tok, 'glass');
-  const innerLook = shellLook(kit, glassColor, { radius: 1, opacity: 0.025, rim: 0.5 });
-  const inner = innerLook.front ? kit.mesh(wall, innerLook.front) : null;
+  const innerLook =
+    kit.tier === 'high'
+      ? shellLook(kit, glassColor, { radius: 1, opacity: 0.025, rim: 0.5 })
+      : null;
+  const inner = innerLook?.front ? kit.mesh(wall, innerLook.front) : null;
   if (inner) {
     inner.scale.set(L.hx + TANK.inner, L.hy + TANK.inner, L.hz + TANK.inner);
     inner.renderOrder = 6;

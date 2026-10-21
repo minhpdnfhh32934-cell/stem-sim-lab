@@ -202,7 +202,12 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
     mesh.instanceMatrix.needsUpdate = true;
     mesh.boundingSphere = null;
   };
-  const shellSet = (look: ShellLook, geometry: THREE.BufferGeometry, count: number): ShellSet => {
+  const shellSet = (
+    look: ShellLook,
+    geometry: THREE.BufferGeometry,
+    count: number,
+    backFaces = true,
+  ): ShellSet => {
     const all: THREE.InstancedMesh[] = [];
     const add = (m: THREE.Material | null, order: number) => {
       if (!m) return null;
@@ -212,7 +217,7 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
       return mesh;
     };
     const refract = add(look.refract, 0);
-    const back = add(look.back, 1);
+    const back = backFaces ? add(look.back, 1) : null;
     // Faint back faces are never picked (a click goes to what is in front).
     if (back) back.raycast = () => undefined;
     const front = add(look.front, 2);
@@ -232,7 +237,11 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
 
   // ── Materials (theme tokens; structures muted, data in its own colours) ────────────────
   const tok = (name: string) => kit.color(name);
-  const benchMat = kit.solid(tok('--bg-sunken'), { roughness: 0.92 });
+  // The bench is flat: lit, it shades as one colour anyway, so below the shadow-map path it is
+  // drawn unlit in its token (cheaper for a large surface on software and integrated GPUs).
+  const benchMat = kit.shadows
+    ? kit.solid(tok('--bg-sunken'), { roughness: 0.92 })
+    : kit.own(new THREE.MeshBasicMaterial({ color: tok('--bg-sunken') }));
   // The tray and the pedestals stand out from the bench in both themes; slot pads are lighter.
   const trayMat = kit.solid(tok('--border-strong'), { roughness: 0.55, clearcoat: 0.25 });
   const padMat = kit.solid(tok('--bg-panel'), { roughness: 0.62, clearcoat: 0.15 });
@@ -395,7 +404,14 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
   );
 
   // ── Phenotype cylinders: glass, the liquid (= exact probability), engraved marks ────────
-  const glass = shellSet(glassware(kit), kit.geometry(cylinderGlassGeometry(sides)), nClasses);
+  // The glass wall already shows its outer and inner faces; its faint back faces (two more
+  // see-through layers over tall cylinders) are drawn on High only.
+  const glass = shellSet(
+    glassware(kit),
+    kit.geometry(cylinderGlassGeometry(sides)),
+    nClasses,
+    kit.tier === 'high',
+  );
   const bars = kit.instanced(kit.cylinder(Math.max(12, kit.seg), true), liquidMat, nClasses);
   const menisci = kit.instanced(meniscusGeometry(kit, L.barHalf, 0.045), liquidMat, nClasses);
   const marks = kit.instanced(
