@@ -131,15 +131,28 @@ export function lightRig(opts: RigOptions = {}): THREE.Group {
     const rim = tag(new THREE.DirectionalLight(0xffffff, s.rim.intensity.light), 'rim');
     place(rim, s.key.azimuth + 180, s.rim.elevation, size);
   }
-  if (opts.shadows) {
-    key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
-    key.shadow.bias = -0.0005;
-    key.shadow.normalBias = 0.02;
-    key.shadow.radius = 4;
-    fitShadow(rig, [0, 0, 0], size);
-  }
+  if (opts.shadows) enableKeyShadow(rig, [0, 0, 0], size);
   return rig;
+}
+
+/**
+ * Lets the rig's key light cast shadow maps (1024², soft PCF) fitted to a subject's bounding
+ * sphere. Used by habitats (outdoor) and by grounded studio subjects (a bench, a tank's base);
+ * the renderer draws them only where its shadow map is on (High on a discrete GPU).
+ */
+export function enableKeyShadow(
+  rig: THREE.Object3D,
+  center: readonly [number, number, number],
+  radius: number,
+): void {
+  const key = rigLight(rig, 'key');
+  if (!(key instanceof THREE.DirectionalLight)) return;
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 4;
+  fitShadow(rig, center, radius);
 }
 
 /** The rig's light with a role, if any. */

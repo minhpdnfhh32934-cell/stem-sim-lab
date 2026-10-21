@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import type { QualityTier } from '@/perf/tiers';
-import type { LookPreset } from '@/ui/three/lighting';
+import { enableKeyShadow, type LookPreset } from '@/ui/three/lighting';
 import { contactShadow, disposeLightRig, lightRig } from './look';
 import { glass, roundedBox, solid, type GlassOptions, type SolidOptions } from './materials';
 
@@ -225,6 +225,17 @@ export class SceneKit {
       },
     });
     return m;
+  }
+
+  /**
+   * Shadow maps from the studio key light onto a grounded subject (a bench, a tank's base) held
+   * in a sphere of `radius` around `center`: only when the kit draws shadows (High tier on a
+   * discrete GPU). Returns whether they are on; callers then mark what casts and receives.
+   */
+  groundShadows(center: Vec3, radius: number): boolean {
+    if (!this.shadows) return false;
+    enableKeyShadow(this.rig, center, radius);
+    return true;
   }
 
   /** Soft shadow ellipse on the floor at height y. */
