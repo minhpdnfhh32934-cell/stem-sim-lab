@@ -19,6 +19,7 @@ import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
@@ -285,6 +286,8 @@ function Mutation3DScene({
       mutated: Lz(LANE_NAME.mutated),
     });
     tags.end();
+    // Names never cover the helices, the mRNAs, the chains or the tags over them (strand ends,
+    // lane names, positions, letters), and stay a few pixels inside the stage.
     layer.update(
       sc.labelAnchors().map((a) => ({ id: a.id, text: Lz(MUTATION_PARTS[a.id]), point: a.point })),
       h.camera,
@@ -292,6 +295,7 @@ function Mutation3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      { ...sc.labelObstacles(), rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 

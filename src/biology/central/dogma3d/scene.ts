@@ -19,11 +19,13 @@ import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
 import { mixLinear, muted } from '@/ui/three/color';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
+import { LAYER } from '@/ui/three/layers';
 import { pickFirst } from '@/ui/three/pick';
+import type { Hull, LabelObstacles } from '@/ui/three/labelLayer';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
 import { setRimAlpha } from '../../view3d/materials';
-import { basePairMaterial, highlightIntensity, proteinShell } from '../../view3d/recipes';
+import { highlightIntensity, proteinShell } from '../../view3d/recipes';
 import { B_DNA, RISE, TWIST } from './bdna';
 import {
   activeIndex,
@@ -48,6 +50,7 @@ import {
   pairPixels,
   readDogmaPalette,
   rungOpacity,
+  rungMaterial,
   rungs,
   setFade,
   strandMesh,
@@ -140,6 +143,11 @@ export interface DogmaScene {
   /** Where the picked thing is (camera focus), or null. */
   focusPoint(sel: DogmaSelection): Vec3 | null;
   labelAnchors(): DogmaLabelAnchor[];
+  /**
+   * What the name labels never cover (world hulls, a few base pairs each): both DNA strands, the
+   * mRNA, the tRNAs and the polypeptide.
+   */
+  labelObstacles(): LabelObstacles;
   /** Letters, amino acid names and position numbers for this frame (`fmt`: whole numbers). */
   tags(
     layer: TagLayer,
@@ -218,9 +226,10 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
   const template = dnaStrand('template');
 
   // ── mRNA ───────────────────────────────────────────────────────────────────────────────
-  const mrnaHalves = rungs(kit, shapes, W, scene);
+  // The mRNA's bases have their own material (never faded with the DNA's rungs).
+  const mrnaHalves = rungs(kit, shapes, W, scene, 'mrna');
   const mrna = strandMesh(kit, 'mrna', W, null);
-  const rungMat = basePairMaterial(kit, NEUTRAL);
+  const rungMat = rungMaterial(kit, 'dna');
 
   // ── RNA polymerase and ribosome (see-through protein blobs, illustrative shapes) ────────
   const polymerase = proteinShell(kit, {
@@ -270,6 +279,8 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       const mat = fading(solidOwn(pal.bases.A, { roughness: 0.4, clearcoat: 0.3 }));
       antiMats.push(mat);
       const h = kit.mesh(halfGeo, mat, group);
+      // Bases of the colour code: drawn after occlusion and bloom, like the mRNA's (`rungs`).
+      h.userData.layer = LAYER.FX;
       // From the anticodon loop up to the codon's base tips (illustrative pairing contact).
       const len = LAYOUT.stick;
       h.position.set(k * RISE, LAYOUT.trnaArmY + len / 2, 0);
@@ -839,6 +850,85 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     'template',
   ];
 
+  /** Base pairs (or nucleotides, beads) per label obstacle: short pieces follow the curves. */
+  const HULL_RUN = Math.max(4, Math.ceil(W / 40));
+
+  /**
+   * Label obstacles of the last moment asked for: points and hulls come from pools reused every
+   * frame (nothing is allocated while the animation plays; the label layer reads them at once).
+   */
+  const hullPoints: Vec3[] = [];
+  const hullPool: Vec3[][] = [];
+  const obstacleList: Vec3[][] = [];
+  let obstaclesOf: DogmaMoment | null = null;
+
+  function labelObstacles(): LabelObstacles {
+    const mo = cur;
+    if (!mo || n === 0) return {};
+    if (obstaclesOf === mo) return { avoid: obstacleList };
+    obstaclesOf = mo;
+    obstacleList.length = 0;
+    let points = 0;
+    let hull: Vec3[] | null = null;
+    const add = (x: number, y: number, z: number) => {
+      if (!hull) {
+        hull = hullPool[obstacleList.length] ?? [];
+        hullPool[obstacleList.length] = hull;
+        hull.length = 0;
+        obstacleList.push(hull);
+      }
+      let p = hullPoints[points];
+      if (!p) {
+        p = [0, 0, 0];
+        hullPoints.push(p);
+      }
+      points++;
+      p[0] = x;
+      p[1] = y;
+      p[2] = z;
+      hull.push(p);
+    };
+    const flush = () => {
+      hull = null;
+    };
+    // Both DNA strands (backbones and base tips: the bubble opens them apart).
+    for (let i = win.from; i < win.to; i++) {
+      for (const strand of ['coding', 'template'] as const) {
+        dnaAt(i, strand, mo, back, tip);
+        add(back[0], back[1], back[2]);
+        add(tip[0], tip[1], tip[2]);
+      }
+      if ((i - win.from) % HULL_RUN === HULL_RUN - 1) flush();
+    }
+    flush();
+    // The mRNA made so far.
+    let run = 0;
+    for (let i = win.from; i < win.to; i++) {
+      if (!mrnaPose(i, mo, back, tip)) continue;
+      add(back[0], back[1], back[2]);
+      add(tip[0], tip[1], tip[2]);
+      if (++run % HULL_RUN === 0) flush();
+    }
+    flush();
+    // Each tRNA: from the codon it reads down to the amino acid it carries.
+    for (const slot of slots) {
+      if (!slot.group.visible) continue;
+      const g = slot.group.position;
+      const top = g.y + LAYOUT.trnaArmY + LAYOUT.stick;
+      const bottom = g.y + LAYOUT.trnaAcceptorY - BEAD_R;
+      for (const dx of [-0.6, 0.6])
+        for (const y of [top, bottom]) for (const dz of [-0.4, 0.4]) add(g.x + dx, y, g.z + dz);
+      flush();
+    }
+    // The polypeptide.
+    for (let k = 0; k < shownBeads; k++) {
+      beadPose(m, mo, k, back);
+      add(back[0], back[1], back[2]);
+      if (k % HULL_RUN === HULL_RUN - 1) flush();
+    }
+    return { avoid: obstacleList };
+  }
+
   function tags(
     layer: TagLayer,
     eye: THREE.Vector3,
@@ -1009,6 +1099,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
       }
       return out;
     },
+    labelObstacles,
     tags,
     basePoint(strand, i) {
       const mo = cur;

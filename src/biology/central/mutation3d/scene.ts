@@ -18,10 +18,11 @@ import type { QualityTier } from '@/perf/tiers';
 import { mixLinear } from '@/ui/three/color';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
 import { pickFirst } from '@/ui/three/pick';
+import type { Hull, LabelObstacles } from '@/ui/three/labelLayer';
 import type { TagLayer } from '@/ui/three/tagLayer';
 import { NEUTRAL, SceneKit } from '../../view3d/kit';
 import { ROLES } from '../../view3d/palette';
-import { basePairMaterial, highlightIntensity } from '../../view3d/recipes';
+import { highlightIntensity } from '../../view3d/recipes';
 import { RADIUS, RISE } from '../dogma3d/bdna';
 import {
   BEAD_R,
@@ -33,6 +34,7 @@ import {
   pairPixels,
   readDogmaPalette,
   rungOpacity,
+  rungMaterial,
   rungs,
   setFade,
   strandMesh,
@@ -97,6 +99,8 @@ export interface MutationScene {
   /** The middle of the site marker (between the two helices). */
   sitePoint(): Vec3;
   labelAnchors(): MutationLabelAnchor[];
+  /** What the name labels never cover (world hulls): both DNAs, both mRNAs and both chains. */
+  labelObstacles(): LabelObstacles;
   /**
    * Letters, amino acid names, position numbers and the lanes' names (`lanes`, already in the
    * learner's language) for this frame (`fmt`: whole numbers).
@@ -127,6 +131,11 @@ export interface MutationScene {
 
 /** Period of one pulse (s). */
 export const PULSE_PERIOD = 1.2;
+/** How far a plate reaches past the first and last slots drawn. */
+const LANE_EDGE = 1.25;
+/** A lane name's half width and its gap to the plate (px): the longest name is about 64 px. */
+const LANE_TAG_HALF = 34;
+const LANE_TAG_GAP = 8;
 const HELICES: readonly HelixId[] = ['normal', 'mutated'];
 /** Radius of a deletion's gap-marker ring around the helix (just outside the backbones). */
 const GAP_RING_R = RADIUS + 0.3;
@@ -192,15 +201,15 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
   const barMat = solidOwn(NEUTRAL, { roughness: 0.5, clearcoat: 0.3 });
   const beadMat = solidOwn(NEUTRAL, { roughness: 0.32, clearcoat: 0.7 });
   const bondMat = solidOwn(pal.peptide, { roughness: 0.35, clearcoat: 0.6 });
-  const rungMat = basePairMaterial(kit, NEUTRAL);
+  const rungMat = rungMaterial(kit, 'dna');
 
   // ── Lanes: one faint plate behind each DNA with its mRNA (two worlds, side by side) ─────
   const plateColor = mixLinear(o.token('--bg-sunken'), o.token('--text-muted'), 0.12);
   const plateMat = solidOwn(plateColor, { roughness: 0.9 });
   const plates = kit.instanced(kit.roundedBox(6), plateMat, 2);
   {
-    const x0 = xOf(win.from) - 1.25;
-    const x1 = xOf(win.to - 1) + 1.25;
+    const x0 = xOf(win.from) - LANE_EDGE;
+    const x1 = xOf(win.to - 1) + LANE_EDGE;
     const m4 = new THREE.Matrix4();
     HELICES.forEach((h, k) => {
       const s = laneSpan(h);
@@ -222,7 +231,7 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
     halves: rungs(kit, shapes, 2 * capPairs),
     coding: strandMesh(kit, 'coding', capPairs + gapN, AXIS[h]),
     template: strandMesh(kit, 'template', capPairs + gapN, AXIS[h]),
-    mrnaHalves: rungs(kit, shapes, capPairs),
+    mrnaHalves: rungs(kit, shapes, capPairs, kit.scene, 'mrna'),
     mrna: strandMesh(kit, 'mrna', capPairs, null),
     bars: kit.instanced(shapes.rod, barMat, capCodons),
     ticks: kit.instanced(shapes.rod, barMat, 2 * capCodons),
@@ -644,6 +653,45 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
     return out;
   }
 
+  /** Base pairs (or beads) per label obstacle: short pieces follow the helices' turns. */
+  const HULL_RUN = Math.max(4, Math.ceil(W / 40));
+
+  /** The picture does not move: its obstacles are worked out once. */
+  let obstacles: LabelObstacles | null = null;
+
+  function labelObstacles(): LabelObstacles {
+    if (obstacles) return obstacles;
+    const avoid: Hull[] = [];
+    for (const helix of HELICES) {
+      const p = parts[helix];
+      let dna: Vec3[] = [];
+      let rna: Vec3[] = [];
+      p.pairs.forEach((i, k) => {
+        for (const strand of ['coding', 'template'] as const) {
+          pairPose(model, helix, i, strand, back, tip);
+          dna.push([back[0], back[1], back[2]], [tip[0], tip[1], tip[2]]);
+        }
+        mrnaPose(model, helix, i, back, tip);
+        rna.push([back[0], back[1], back[2]], [tip[0], tip[1], tip[2]]);
+        if (k % HULL_RUN === HULL_RUN - 1 || k === p.pairs.length - 1) {
+          avoid.push(dna, rna);
+          dna = [];
+          rna = [];
+        }
+      });
+      let chain: Vec3[] = [];
+      p.beadIds.forEach((b, k) => {
+        chain.push(beadPoint(model, helix, b, [0, 0, 0]));
+        if (k % HULL_RUN === HULL_RUN - 1 || k === p.beadIds.length - 1) {
+          avoid.push(chain);
+          chain = [];
+        }
+      });
+    }
+    obstacles = { avoid };
+    return obstacles;
+  }
+
   function tags(
     layer: TagLayer,
     eye: THREE.Vector3,
@@ -661,12 +709,18 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
     const lo = Math.max(win.from, centre - half);
     const hi = Math.min(win.to, centre + half + 1);
     const inView = (slot: number) => slot >= lo - 1 && slot < hi;
-    // The lanes' names, at the outer left corner of each plate (clear of the ruler between).
+    // The lanes' names, outside each plate at its helix, on the side its name labels do not use
+    // (normal labels stand left, mutated ones right): in front (z = 0, like the strand ends),
+    // clear of the 5′/3′ ends, the ruler between the lanes and the chains under them.
     if (lanes)
       for (const helix of HELICES) {
-        const s = laneSpan(helix);
-        const y = helix === 'normal' ? s.hi + 0.15 : s.lo - 0.15;
-        layer.add(lanes[helix], xOf(win.from) - 0.95, y, LAYOUT.plateZ + 0.1, 'word', 5);
+        const y = LAYOUT.helixY[helix];
+        const side = helix === 'normal' ? 1 : -1;
+        const edge = side > 0 ? xOf(win.to - 1) + LANE_EDGE : xOf(win.from) - LANE_EDGE;
+        const pxu = layer.spacing([edge, y, 0], [edge + 1, y, 0]);
+        if (pxu <= 0) continue;
+        const x = edge + (side * (LANE_TAG_GAP + LANE_TAG_HALF)) / pxu;
+        layer.add(lanes[helix], x, y, 0, 'word', 5);
       }
     if (px >= 10) {
       // Amino acids first (whole words), then the mRNAs, then the DNA letters.
@@ -758,6 +812,7 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
     pairPoint,
     sitePoint: () => [siteX, LAYOUT.rulerY, 0],
     labelAnchors,
+    labelObstacles,
     tags,
     setPulse,
     drawn() {

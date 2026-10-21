@@ -271,9 +271,17 @@ export function backboneGeometry(
 /** Purine bases are slabs, pyrimidines bars (the shape cue the lessons already use). */
 export type BaseShape = 'slab' | 'bar';
 
-/** A base's half of a base pair: its own base token as albedo (roughness 0.4, clear coat 0.3). */
-export function basePairMaterial(kit: SceneKit, color: string): THREE.MeshStandardMaterial {
-  return kit.shared(`basepair|${color}`, () =>
+/**
+ * A base's half of a base pair: its own base token as albedo (roughness 0.4, clear coat 0.3).
+ * `set` names a separate copy (shared within the set): a set that fades with distance never
+ * fades another one (the DNA's rungs fade at overview distance, the mRNA's never do).
+ */
+export function basePairMaterial(
+  kit: SceneKit,
+  color: string,
+  set = '',
+): THREE.MeshStandardMaterial {
+  return kit.shared(set ? `basepair|${color}|${set}` : `basepair|${color}`, () =>
     physical(kit)
       ? new THREE.MeshPhysicalMaterial({
           color,

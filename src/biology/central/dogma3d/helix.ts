@@ -222,20 +222,33 @@ export function helixSolid(
   return kit.own(solid(color, tier, { roughness: 0.42, clearcoat: 0.45, ...extra }));
 }
 
+/** Which bases a set of rung halves draws (each set has its own material). */
+export type RungSet = 'dna' | 'mrna';
+
 /**
  * The rung halves of a picture: one instanced set (instance colour = the base's token on a white
- * material), the base-pair recipe (clear coat on High). Kept on the opaque layer (ambient
- * occlusion) even while it fades.
+ * material), the base-pair recipe (clear coat on High).
+ * - `dna`: the DNA's pairs, on the opaque layer (ambient occlusion) even while they fade with
+ *   distance (`rungMaterial(kit, 'dna')` + `setFade`).
+ * - `mrna`: the mRNA's bases, the colour code the lesson reads — their own material, never
+ *   faded, and drawn after the post-processing's occlusion and bloom (LAYER.FX), so a glowing
+ *   codon frame next to them never washes their colours out (they look as in the legend).
  */
 export function rungs(
   kit: SceneKit,
   shapes: HelixShapes,
   count: number,
   parent: THREE.Object3D = kit.scene,
+  set: RungSet = 'dna',
 ): THREE.InstancedMesh {
-  const mesh = kit.instanced(shapes.half, basePairMaterial(kit, NEUTRAL), count, parent);
-  mesh.userData.layer = LAYER.OPAQUE;
+  const mesh = kit.instanced(shapes.half, rungMaterial(kit, set), count, parent);
+  mesh.userData.layer = set === 'mrna' ? LAYER.FX : LAYER.OPAQUE;
   return mesh;
+}
+
+/** The shared material of a set of rung halves (`rungs`). */
+export function rungMaterial(kit: SceneKit, set: RungSet): THREE.MeshStandardMaterial {
+  return basePairMaterial(kit, NEUTRAL, set === 'mrna' ? 'mrna' : '');
 }
 
 /** A strand's backbone tube, its mesh and material (the backbone recipe of that strand). */

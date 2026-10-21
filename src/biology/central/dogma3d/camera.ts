@@ -42,6 +42,11 @@ export interface CameraFrame {
   center: Vec3;
   /** Points (relative to `center`) that must be in view. */
   points: Vec3[];
+  /**
+   * What zooming in homes in on ("Theo dõi" in translation: the codon read, the tRNAs and where
+   * the chain leaves the ribosome); `center` at the fitted distance (`zoomedCenter`).
+   */
+  focus?: Vec3;
 }
 
 function box(center: Vec3, lo: Vec3, hi: Vec3): CameraFrame {
@@ -65,6 +70,13 @@ const TOP = LAYOUT.rulerY + 0.35;
 const TOP_TL = (LAYOUT.rulerY + 0.3) * CONTEXT.scale + CONTEXT.up;
 /** Half width (scene units) of what "Theo dõi" frames: about 12 base pairs each side. */
 const FOLLOW_HALF = 4;
+/**
+ * Height of the translation machinery's focus: halfway between the mRNA (the codon read) and the
+ * amino acids the tRNAs carry (where the chain leaves the ribosome).
+ */
+export const FOCUS_TL_Y = LAYOUT.mrnaLineY + LAYOUT.trnaAcceptorY / 2;
+/** Share of the fitted distance at which the camera looks straight at the focus. */
+export const CLOSE_SHARE = 0.55;
 
 /** Where the ribosome settles on codon `s` (between it and the codon before). */
 export const ribosomeRestX = (m: DogmaModel3D, s: number): number =>
@@ -90,11 +102,27 @@ export function dogmaFrame(
     // under it and the DNA above.
     const x = ribosomeRestX(m, Math.max(0, mo.step));
     const c: Vec3 = [x, (TOP_TL + BOTTOM_TL) / 2, 0];
-    return box(c, [x - FOLLOW_HALF, BOTTOM_TL, -1.5], [x + FOLLOW_HALF, TOP_TL, 1.5]);
+    const f = box(c, [x - FOLLOW_HALF, BOTTOM_TL, -1.5], [x + FOLLOW_HALF, TOP_TL, 1.5]);
+    f.focus = [x, FOCUS_TL_Y, 0];
+    return f;
   }
   const x = xOf(activeIndex(m, mo));
   const c: Vec3 = [x, (TOP + BOTTOM_TX) / 2, 0];
   return box(c, [x - FOLLOW_HALF, BOTTOM_TX, -1.5], [x + FOLLOW_HALF, TOP, 1.5]);
+}
+
+/**
+ * Where the camera looks for a frame when the learner has zoomed to `zoom` × the fitted distance:
+ * the frame's centre at the fitted distance (or further), sliding to its focus as the camera
+ * comes closer (reached at CLOSE_SHARE). Zooming in on the ribosome keeps the codon, the tRNAs and
+ * the chain's exit in view instead of pushing them under the controls.
+ */
+export function zoomedCenter(frame: CameraFrame, zoom: number): Vec3 {
+  const f = frame.focus;
+  if (!f || !Number.isFinite(zoom)) return frame.center;
+  const u = Math.min(1, Math.max(0, (1 - zoom) / (1 - CLOSE_SHARE)));
+  const c = frame.center;
+  return [c[0] + (f[0] - c[0]) * u, c[1] + (f[1] - c[1]) * u, c[2] + (f[2] - c[2]) * u];
 }
 
 export function viewTangents(width: number, height: number, insets: Insets): ViewTangents {
