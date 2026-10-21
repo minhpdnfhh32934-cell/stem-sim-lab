@@ -1,6 +1,6 @@
 /**
- * Numbers of the genetics 3D views (pure, tested), all read from the lessons' own models:
- * Wright–Fisher runs (drift), genotype counts (Hardy–Weinberg) and the Punnett square (Mendel).
+ * Numbers of the drift 3D view (pure, tested), read from the lesson's own Wright–Fisher runs.
+ * (Hardy–Weinberg: `hw3d/binding.ts`; Mendel: `mendel3d/binding.ts`.)
  */
 
 export type Fate = 'fixed' | 'lost' | 'polymorphic';
@@ -21,34 +21,5 @@ export function driftAt(
     p,
     fixed: p.filter((v) => v >= 1).length,
     lost: p.filter((v) => v <= 0).length,
-  };
-}
-
-export interface HwPopulation {
-  AA: number;
-  Aa: number;
-  aa: number;
-}
-
-/** Gene copies in a population of diploids: A = 2·AA + Aa, a = Aa + 2·aa (exact counts). */
-export function allelePool(g: HwPopulation): { A: number; a: number } {
-  return { A: 2 * g.AA + g.Aa, a: g.Aa + 2 * g.aa };
-}
-
-/**
- * Figures for each genotype when at most `max` can be drawn: one per individual, or one per
- * `per` individuals for all three (rounded, the view says so).
- */
-export function genotypeFigures(
-  g: HwPopulation,
-  max: number,
-): { per: number; AA: number; Aa: number; aa: number } {
-  const n = g.AA + g.Aa + g.aa;
-  const per = n <= max ? 1 : Math.ceil(n / max);
-  return {
-    per,
-    AA: Math.round(g.AA / per),
-    Aa: Math.round(g.Aa / per),
-    aa: Math.round(g.aa / per),
   };
 }

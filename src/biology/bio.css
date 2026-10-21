@@ -497,6 +497,9 @@
   inset: 0;
 }
 .bio3d__labels {
+  /* Its own stacking context: label depth order (CSS2D z-index) never lifts a label over the
+     controls and cards drawn after it. */
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
@@ -674,8 +677,8 @@
 .bio3d-figure .bio3d__hud {
   inset: var(--space-2);
   grid-template-areas:
-    '. side'
-    '. .'
+    'top side'
+    'info info'
     'bottom bottom';
 }
 .bio3d-figure__bar {
@@ -686,6 +689,66 @@
   justify-content: flex-end;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
+}
+/* 3D Hardy–Weinberg (src/biology/genetics/hw3d): genotype chips with their colour and the two
+   allele beads an animal carries (A a square, a a circle: readable without colour), a compact
+   bottom row, and a card that fits the figure's middle row. */
+.hw3d .bio3d__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--space-1);
+}
+.hw3d__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+.hw3d__swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 25%, transparent);
+}
+.hw3d__swatch--AA {
+  background: var(--chart-1);
+}
+.hw3d__swatch--Aa {
+  background: var(--chart-2);
+}
+.hw3d__swatch--aa {
+  background: var(--chart-3);
+}
+.hw3d__beads {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.hw3d__bead {
+  width: 7px;
+  height: 7px;
+}
+.hw3d__bead--A {
+  border-radius: 1px;
+  background: var(--chart-1);
+}
+.hw3d__bead--a {
+  border-radius: 50%;
+  background: var(--chart-3);
+}
+.hw3d .bio3d__bottom {
+  gap: 4px;
+}
+.hw3d .bio3d__caption {
+  padding: 3px 10px;
+}
+.hw3d__dial-label {
+  white-space: pre;
+  text-align: left;
+}
+.hw3d__card {
+  width: min(21rem, 52%);
+  font-size: var(--text-sm);
 }
 /* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the
    phenotype classes share one wrapping row under the step strip. */

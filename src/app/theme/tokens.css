@@ -151,6 +151,11 @@
   --bio3d-soil: #816f62;
   --bio3d-rock: #c8cdd3;
   --bio3d-water: #c1d3d8;
+  /* Plants of the habitats (trees, bushes, tufts): deep sages under the pale meadow and a grey-brown
+     bark, muted like the terrain (never mistaken for a data colour). */
+  --bio3d-foliage: #56614f;
+  --bio3d-foliage-2: #4f5b4b;
+  --bio3d-bark: #74665b;
   /* Spindle fibres (light steel) and the dark theme's rim-light tint of the 3D stage. */
   --m3d-spindle: #8d99ab;
   --m3d-rim-tint: var(--subject-biology);
@@ -247,6 +252,9 @@
   --bio3d-soil: #4a3e31;
   --bio3d-rock: #4c535d;
   --bio3d-water: #1f4b66;
+  --bio3d-foliage: #2b3b2c;
+  --bio3d-foliage-2: #344531;
+  --bio3d-bark: #46392e;
   --m3d-spindle: #b4bfcf;
   --m3d-rim-tint: var(--subject-biology);
   --dna3d-coding: #a3acbd;

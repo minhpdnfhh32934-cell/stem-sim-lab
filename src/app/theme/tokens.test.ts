@@ -84,7 +84,14 @@ describe('theme tokens', () => {
   for (const [theme, tokens] of Object.entries(THEMES)) {
     it(`${theme}: 3D terrain and water stay ΔE_OK ≥ 0.15 from every chart colour`, () => {
       const failures: string[] = [];
-      for (const ground of ['--bio3d-grass', '--bio3d-soil', '--bio3d-water']) {
+      for (const ground of [
+        '--bio3d-grass',
+        '--bio3d-soil',
+        '--bio3d-water',
+        '--bio3d-foliage',
+        '--bio3d-foliage-2',
+        '--bio3d-bark',
+      ]) {
         const g = tokens.get(ground);
         expect(g, ground).toBeTruthy();
         for (const chart of CHARTS) {
@@ -110,6 +117,9 @@ describe('theme tokens', () => {
         '--bio3d-soil',
         '--bio3d-rock',
         '--bio3d-water',
+        '--bio3d-foliage',
+        '--bio3d-foliage-2',
+        '--bio3d-bark',
         '--m3d-spindle',
       ]) {
         const c = oklch(tokens.get(name) ?? '');

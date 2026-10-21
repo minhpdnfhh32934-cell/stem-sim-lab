@@ -27,6 +27,7 @@ import { MoreInBasic } from '../ui';
 import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
+import { HW_CARD, HW_CARD_3D } from './hwCard';
 import { useDriftRuns } from './driftData';
 import '../bio.css';
 
@@ -35,8 +36,8 @@ const Drift3D = lazy(() => import('./Drift3D').then((m) => ({ default: m.Drift3D
 const Mendel3DView = lazy(() =>
   import('./mendel3d/Mendel3DView').then((m) => ({ default: m.Mendel3DView })),
 );
-const HardyWeinberg3D = lazy(() =>
-  import('./HardyWeinberg3D').then((m) => ({ default: m.HardyWeinberg3D })),
+const HardyWeinberg3DView = lazy(() =>
+  import('./hw3d/HardyWeinberg3DView').then((m) => ({ default: m.HardyWeinberg3DView })),
 );
 
 /* ───────────────────────────── Mendel ───────────────────────────── */
@@ -346,35 +347,9 @@ export function MendelPanel() {
 
 /* ─────────────────────────── Hardy–Weinberg ─────────────────────────── */
 
-const HW_CARD: ScienceCardData = {
-  title: L('Định luật Hardy–Weinberg', 'Hardy–Weinberg principle'),
-  model: L(
-    'Quần thể ngẫu phối, kích thước lớn, không đột biến, không chọn lọc, không di nhập gen: tần số kiểu gen đạt p², 2pq, q² sau một thế hệ.',
-    'Large random-mating population, no mutation, selection or migration: genotype frequencies reach p², 2pq, q² after one generation.',
-  ),
-  equations: [
-    { tex: 'p = \\dfrac{2N_{AA} + N_{Aa}}{2N},\\quad q = 1 - p' },
-    { tex: 'p^2 + 2pq + q^2 = 1' },
-    { tex: '\\chi^2 = \\sum \\dfrac{(O-E)^2}{E},\\ df = 1' },
-  ],
-  assumptions: [
-    L('Gen có 2 alen trên NST thường.', 'One autosomal gene with two alleles.'),
-    L(
-      'Kiểm định χ² có df = 3 − 1 − 1 = 1 vì p được ước lượng từ số liệu.',
-      'χ² has df = 3 − 1 − 1 = 1 because p is estimated from the data.',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Công thức chính xác; mô phỏng ngẫu phối có sai số thống kê.',
-    'Exact formulas; the random-mating run has statistical error.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.sgk12, BSRC.hartl],
-};
-
 export function HardyWeinbergStage() {
-  usePublishCard(HW_CARD);
+  // The 3D habitat adds its notes to the card while it is on screen.
+  usePublishCard(useShow3d('hardyWeinberg').show3d ? HW_CARD_3D : HW_CARD);
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const st = useHw();
@@ -395,7 +370,7 @@ export function HardyWeinbergStage() {
   }, []);
   return (
     <div className="bio-scroll">
-      <Bio3DFigure lesson="hardyWeinberg" figure={<HardyWeinberg3D />} />
+      <Bio3DFigure lesson="hardyWeinberg" figure={<HardyWeinberg3DView />} />
       <div className="bio-grid">
         <div className="bio-chart">
           <XYChart
@@ -526,8 +501,10 @@ export function HardyWeinbergPanel() {
           max={100000}
           value={st.N}
           onChange={(e) => {
+            // A sample drawn with another N no longer belongs to these inputs.
             useHw.setState({
               N: Math.max(10, Math.min(100000, Math.round(Number(e.target.value) || 10))),
+              sample: null,
             });
           }}
         />

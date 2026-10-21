@@ -45,6 +45,35 @@ export function randomMating(
   return { AA, Aa, aa };
 }
 
+export interface GenotypeCounts {
+  AA: number;
+  Aa: number;
+  aa: number;
+}
+
+/**
+ * Several generations of random mating from one stream of random numbers: generation 0 is
+ * `start` (the observed counts), generation g + 1 is `randomMating(N, p_g, rand)` with p_g the
+ * allele frequency of generation g, (2·AA + Aa) / 2n. Without selection, mutation or migration,
+ * p only changes by sampling error in a population of N. With `rand = rng(seed)`, generation 1
+ * is the same draw as the lesson's "Cho ngẫu phối 1 thế hệ" with that seed.
+ */
+export function matingRun(
+  start: GenotypeCounts,
+  N: number,
+  generations: number,
+  rand: () => number,
+): GenotypeCounts[] {
+  const out: GenotypeCounts[] = [{ AA: start.AA, Aa: start.Aa, aa: start.aa }];
+  let prev: GenotypeCounts = { ...start };
+  for (let g = 0; g < generations; g++) {
+    const next = randomMating(N, testHardyWeinberg(prev.AA, prev.Aa, prev.aa).p, rand);
+    out.push(next);
+    prev = next;
+  }
+  return out;
+}
+
 /**
  * Wright–Fisher genetic drift: each generation draws 2N gene copies binomially from the
  * current allele frequency. Returns the frequency trajectory (length generations + 1).

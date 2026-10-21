@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
 import type { SceneKit } from '../view3d/kit';
 import { expectAllFreed, testKit } from '../view3d/testing';
-import { allelePool, driftAt, fateOf, genotypeFigures } from './genetics3d';
+import { driftAt, fateOf } from './genetics3d';
 import { wrightFisher } from './population';
-import { buildDriftScene, buildHwScene } from './scenes3d';
+import { buildDriftScene } from './scenes3d';
 import { rng } from './stats';
 
 const instancedCounts = (kit: SceneKit) => {
@@ -16,7 +16,7 @@ const instancedCounts = (kit: SceneKit) => {
 };
 
 describe('genetics 3D numbers', () => {
-  it('fate, frequencies and counts come straight from the runs and the genotype counts', () => {
+  it('fate and frequencies come straight from the runs', () => {
     expect(fateOf([0.5, 0.7, 1])).toBe('fixed');
     expect(fateOf([0.5, 0.2, 0])).toBe('lost');
     expect(fateOf([0.5, 0.4])).toBe('polymorphic');
@@ -27,19 +27,6 @@ describe('genetics 3D numbers', () => {
     ];
     expect(driftAt(runs, 2)).toEqual({ p: [1, 0, 0.4], fixed: 1, lost: 1 });
     expect(driftAt(runs, 99).p).toEqual([1, 0, 0.45]);
-    expect(allelePool({ AA: 360, Aa: 480, aa: 160 })).toEqual({ A: 1200, a: 800 });
-    expect(genotypeFigures({ AA: 360, Aa: 480, aa: 160 }, 2000)).toEqual({
-      per: 1,
-      AA: 360,
-      Aa: 480,
-      aa: 160,
-    });
-    expect(genotypeFigures({ AA: 3600, Aa: 4800, aa: 1600 }, 2000)).toEqual({
-      per: 5,
-      AA: 720,
-      Aa: 960,
-      aa: 320,
-    });
   });
 });
 
@@ -57,18 +44,6 @@ describe('genetics 3D scenes', () => {
       expect(a).toBe(expectedA);
       expect(a + b).toBe(runs.length * 2 * N);
     }
-    expectAllFreed(kit, track, start);
-  });
-
-  it('Hardy–Weinberg: one figure per individual of each genotype, one bead per gene copy', () => {
-    const { kit, track, start } = testKit();
-    buildHwScene(kit, {
-      figures: { AA: 36, Aa: 48, aa: 16 },
-      pool: { A: 120, a: 80 },
-      perAllele: 1,
-      texts: { A: 'A', a: 'a', pool: 'pool', AA: 'AA', Aa: 'Aa', aa: 'aa' },
-    });
-    expect(instancedCounts(kit)).toEqual([36, 48, 16, 120, 80]);
     expectAllFreed(kit, track, start);
   });
 });

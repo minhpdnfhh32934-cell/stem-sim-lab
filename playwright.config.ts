@@ -29,7 +29,7 @@ const chromium = {
  * "element not found" failures in the studio, chemistry, AI and board specs).
  */
 const HEAVY_3D =
-  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|enzyme3d|transport3d|studio-biology|bio3d|biology|project)\.spec\.ts$/;
+  /(mitosis3d|meiosis3d|dogma3d|mutation3d|mendel3d|hw3d|enzyme3d|transport3d|studio-biology|bio3d|biology|project)\.spec\.ts$/;
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
 const PERF = /@perf/;
 /** Software WebGL (SwiftShader): the perf numbers are never measured on a GPU. */
