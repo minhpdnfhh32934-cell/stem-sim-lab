@@ -306,7 +306,8 @@ it without code of its own:
   (thin torus at the pocket rim) and the second-site `rings` carry per-instance role colours.
   The form tag is drawn only for the picked enzyme, which gets an inverted-hull outline
   (`--m3d-highlight` × `highlightIntensity`, `bloom` flag). `setFrame(frame, ease)` records, per
-  place of the S/P pool, when it turned into a product and from which substrate-holding pocket;
+  place of the S/P pool, when it turned into a product and from which ES complex's pocket (only
+  ES makes product, v = kcat·[ES]; an ESI complex never releases one);
   `setPhase` eases it out (`PRODUCT_EASE_S`); the view passes `ease` only while playing without
   reduced motion and settles the frame when play stops.
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds

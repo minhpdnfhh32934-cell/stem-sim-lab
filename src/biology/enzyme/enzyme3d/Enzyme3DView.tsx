@@ -463,7 +463,7 @@ function Enzyme3DScene({
   useEffect(() => {
     const sc = sceneRef.current;
     if (!sc) return;
-    // While playing, new products come out of the pockets (illustration, not when scrubbed or
+    // While playing, new products come out of ES pockets (illustration, not when scrubbed or
     // with reduced motion).
     sc.setFrame(frame, useEnzyme3D.getState().playing && !prefersReducedMotion());
     hostRt.current?.request();

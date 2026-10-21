@@ -339,7 +339,7 @@ describe('3D enzyme scene', () => {
     sc.dispose();
   });
 
-  it('a new product leaves a substrate-holding pocket while playing; never when scrubbed', () => {
+  it('a new product leaves an ES pocket while playing; never when scrubbed', () => {
     const m = enzymeModel3d(inputs({ kind: 'none', view: 'time' }));
     const sc = build(m);
     const f1 = frameAt(m, m.tEnd / 4);
@@ -374,5 +374,45 @@ describe('3D enzyme scene', () => {
     const last = f2.particles.P - 1;
     expect(productAt(last).distanceTo(place(f2.particles.S + last))).toBeLessThan(0.3);
     sc.dispose();
+  });
+
+  it('under non-competitive and uncompetitive inhibition a new product only leaves an ES pocket', () => {
+    for (const kind of ['noncompetitive', 'uncompetitive'] as const) {
+      // A high [I]: the inhibited complex ESI is common and can outnumber ES.
+      const m = enzymeModel3d(inputs({ kind, view: 'time', inhibitor: 6, ki: 0.5 }));
+      let checked = 0;
+      for (let i = 1; i <= 24; i++) {
+        const f1 = frameAt(m, (m.tEnd * (i - 1)) / 24);
+        const f2 = frameAt(m, (m.tEnd * i) / 24);
+        const born = f1.particles.S - f2.particles.S;
+        if (born <= 0 || f2.particles.P <= f1.particles.P) continue;
+        const forms = formsOf(f2.counts);
+        if (!forms.includes('ESI')) continue;
+        const sc = build(m);
+        sc.setFrame(f1);
+        sc.setFrame(f2, true);
+        let mesh: THREE.InstancedMesh | null = null;
+        sc.scene.traverse((o) => {
+          if (o instanceof THREE.InstancedMesh && o.count === f2.particles.P && o.visible) mesh = o;
+        });
+        const mat = new THREE.Matrix4();
+        for (let j = 0; j < born; j++) {
+          (mesh as unknown as THREE.InstancedMesh).getMatrixAt(j, mat);
+          const start = new THREE.Vector3().setFromMatrixPosition(mat);
+          const place = new THREE.Vector3(...(SP_PLACES[f2.particles.S + j] ?? [0, 0, 0]));
+          if (start.distanceTo(place) < 1e-6) {
+            // No ES complex: the product appears in place (never from an ESI pocket).
+            expect(forms.includes('ES'), `${kind} i=${String(i)}`).toBe(false);
+            continue;
+          }
+          const dist = ENZYME_PLACES.map((e) => start.distanceTo(new THREE.Vector3(...e.center)));
+          const near = dist.indexOf(Math.min(...dist));
+          expect(forms[near], `${kind} i=${String(i)} product ${String(j)}`).toBe('ES');
+          checked++;
+        }
+        sc.dispose();
+      }
+      expect(checked, kind).toBeGreaterThan(0);
+    }
   });
 });

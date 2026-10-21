@@ -82,8 +82,8 @@ export interface EnzymeScene {
   readonly scene: THREE.Scene;
   /**
    * Shows a moment of the model (enzyme forms, particles); no allocation. `ease`: products new
-   * since the last frame come out of a substrate-holding pocket over the next moments of
-   * `setPhase` (illustration, only while the lesson plays).
+   * since the last frame come out of the pocket of an ES complex (never ESI) over the next
+   * moments of `setPhase` (illustration, only while the lesson plays).
    */
   setFrame(frame: EnzymeFrame, ease?: boolean): void;
   /** Illustrative drift of the free particles (phase in seconds of animation); no allocation. */
@@ -694,12 +694,13 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     if (!ease) bornAt.fill(-1e9);
     else if (p > counts.P && s + p === counts.S + counts.P) {
       // The places that just turned from substrate to product: each comes out of the pocket of
-      // an enzyme holding substrate (round robin; none → it simply appears in place).
+      // an ES complex (round robin; none → it simply appears in place). Only ES makes product
+      // (v = kcat·[ES]): an ESI complex holds substrate but never releases a product.
       for (let k = s; k < counts.S; k++) {
         let src = -1;
         for (let n = 0; n < ENZYMES_DRAWN; n++) {
           const e = (nextSource + n) % ENZYMES_DRAWN;
-          if (holdsSubstrate(forms[e] ?? 'E')) {
+          if (forms[e] === 'ES') {
             src = e;
             nextSource = e + 1;
             break;
