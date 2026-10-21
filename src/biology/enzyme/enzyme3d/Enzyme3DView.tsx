@@ -19,6 +19,7 @@ import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
@@ -279,8 +280,10 @@ function Enzyme3DScene({
     if (sel && !selectionValid(model, frame, sel)) useEnzyme3D.setState({ selected: null });
   }, [model, frame]);
 
+  // The tank is about twice as wide as it is tall: the corner controls count from the top, so
+  // the picture uses the stage's full width.
   const insetsOf = (host: HTMLElement) =>
-    measureInsets(host, hudRef.current, defaultInsets(host.clientHeight), 1.1);
+    measureInsets(host, hudRef.current, defaultInsets(host.clientHeight), 2);
   const closeEnzyme = () => {
     const sel = useEnzyme3D.getState().selected;
     return sel?.kind === 'enzyme' ? sel.index : CLOSE_DEFAULT;
@@ -324,6 +327,7 @@ function Enzyme3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      { rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -410,6 +414,8 @@ function Enzyme3DScene({
       segments: tier.sphereSegments,
       kind: model.p.kind,
       token: tokenReader(),
+      hdr: quality.bloom,
+      shadows: quality.shadowScenes,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);
@@ -437,6 +443,8 @@ function Enzyme3DScene({
       }
       if (s.camera !== prev.camera || s.viewNonce !== prev.viewNonce)
         frameCamera(h, s.camera, true);
+      // Play stopped: a product still on its way out of a pocket takes its place.
+      if (prev.playing && !s.playing) sc.setFrame(frameRef.current);
       h.request();
     });
     return () => {
@@ -455,7 +463,9 @@ function Enzyme3DScene({
   useEffect(() => {
     const sc = sceneRef.current;
     if (!sc) return;
-    sc.setFrame(frame);
+    // While playing, new products come out of the pockets (illustration, not when scrubbed or
+    // with reduced motion).
+    sc.setFrame(frame, useEnzyme3D.getState().playing && !prefersReducedMotion());
     hostRt.current?.request();
   }, [frame, hostRt]);
 
