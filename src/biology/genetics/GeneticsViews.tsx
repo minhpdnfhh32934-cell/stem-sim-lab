@@ -347,6 +347,15 @@ export function MendelPanel() {
 
 /* ─────────────────────────── Hardy–Weinberg ─────────────────────────── */
 
+/**
+ * An empty population (AA = Aa = aa = 0): no gene pool, so no p, q (shown as "—": the model's
+ * p = 0 is a guard against 0 / 0), no verdict and no mating.
+ */
+const HW_EMPTY = L(
+  'Chưa có cá thể nào: nhập số cá thể AA, Aa, aa để có vốn gen rồi mới tính p, q và ngẫu phối được.',
+  'No individuals yet: enter the numbers of AA, Aa and aa to have a gene pool before p, q and random mating.',
+);
+
 export function HardyWeinbergStage() {
   // The 3D habitat adds its notes to the card while it is on screen.
   usePublishCard(useShow3d('hardyWeinberg').show3d ? HW_CARD_3D : HW_CARD);
@@ -378,7 +387,7 @@ export function HardyWeinbergStage() {
             series={curve.series}
             xLabel={Lz(L('Tần số alen A (p)', 'Allele frequency p'))}
             yLabel={Lz(L('Tần số kiểu gen', 'Genotype frequency'))}
-            marker={t.p}
+            {...(t.n > 0 ? { marker: t.p } : {})}
             yMin={0}
             yMax={1}
           />
@@ -417,33 +426,42 @@ export function HardyWeinbergStage() {
             </tbody>
           </table>
           <p>
-            p = <strong className="mono">{f(t.p)}</strong> · q ={' '}
-            <strong className="mono">{f(t.q)}</strong>
+            p = <strong className="mono">{t.n > 0 ? f(t.p) : '—'}</strong> · q ={' '}
+            <strong className="mono">{t.n > 0 ? f(t.q) : '—'}</strong>
           </p>
           <p>
-            χ² = <span className="mono">{f(t.test.chi2)}</span> (df = 1) · p-value ={' '}
-            <span className="mono">{f(t.test.p, 3)}</span>
+            χ² = <span className="mono">{t.n > 0 ? f(t.test.chi2) : '—'}</span> (df = 1) · p-value ={' '}
+            <span className="mono">{t.n > 0 ? f(t.test.p, 3) : '—'}</span>
           </p>
-          <p
-            className={cx('bio-verdict', t.test.p >= 0.05 ? 'bio-verdict--ok' : 'bio-verdict--bad')}
-          >
-            {t.test.p >= 0.05
-              ? Lz(
-                  L(
-                    'Quần thể phù hợp trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
-                    'Consistent with Hardy–Weinberg equilibrium (α = 0.05).',
-                  ),
-                )
-              : Lz(
-                  L(
-                    'Quần thể KHÔNG ở trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
-                    'NOT in Hardy–Weinberg equilibrium (α = 0.05).',
-                  ),
-                )}
-          </p>
+          {t.n === 0 ? (
+            <p className="bio-verdict">{Lz(HW_EMPTY)}</p>
+          ) : (
+            <p
+              className={cx(
+                'bio-verdict',
+                t.test.p >= 0.05 ? 'bio-verdict--ok' : 'bio-verdict--bad',
+              )}
+            >
+              {t.test.p >= 0.05
+                ? Lz(
+                    L(
+                      'Quần thể phù hợp trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
+                      'Consistent with Hardy–Weinberg equilibrium (α = 0.05).',
+                    ),
+                  )
+                : Lz(
+                    L(
+                      'Quần thể KHÔNG ở trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
+                      'NOT in Hardy–Weinberg equilibrium (α = 0.05).',
+                    ),
+                  )}
+            </p>
+          )}
           <button
             type="button"
             className="btn"
+            // No individuals, no gene pool: there is nothing to mate.
+            disabled={t.n === 0}
             onClick={() => {
               useHw.setState((s) => ({
                 seed: s.seed + 1,

@@ -9,6 +9,7 @@ import {
   ALLELES_OF,
   slotGenotype,
   type Genotype,
+  type HwGeneration,
   type HwModel3D,
   type HwSelection,
 } from './binding';
@@ -30,8 +31,27 @@ const BEADS: Record<Genotype, LocalizedText> = {
   aa: L('hai hình cầu (a, a)', 'two spheres (a, a)'),
 };
 
+/** An empty population (no individuals): no gene pool, so p and q are not defined. */
+export const NO_INDIVIDUALS = L('Chưa có cá thể nào', 'No individuals yet');
+
+/**
+ * p and q of a generation as shown: "—" when it has no individuals (the model's p = 0 there is
+ * only a guard against 0 / 0, not an allele frequency).
+ */
+export function pqText(gen: HwGeneration, fmt: Fmt): { p: string; q: string } {
+  return gen.n > 0 ? { p: fmt(gen.p, 4), q: fmt(gen.q, 4) } : { p: '—', q: '—' };
+}
+
+/** Glyphs of the allele beads' shapes (A a cube, a a sphere), as on the chips. */
+export const ALLELE_GLYPH = { A: '■', a: '●' } as const;
+
 /** Where a generation's numbers come from. */
 export function generationOrigin(model: HwModel3D, g: number, fmt: Fmt): LocalizedText {
+  if (g > 0 && (model.generations[g]?.n ?? 0) === 0)
+    return L(
+      `Thế hệ ${String(g)}: không có cá thể nào để ngẫu phối, nên quần thể vẫn trống.`,
+      `Generation ${String(g)}: there is no individual to mate, so the population stays empty.`,
+    );
   return g === 0
     ? L('Thế hệ 0: số liệu bạn nhập.', 'Generation 0: the numbers you entered.')
     : L(
@@ -54,14 +74,31 @@ export function beadScale(perBead: number, fmt: Fmt): LocalizedText {
     : L(`1 hạt = ${fmt(perBead, 6)} bản sao gen`, `1 bead = ${fmt(perBead, 6)} gene copies`);
 }
 
-/** The dial's label per generation: copies of A and p over copies of a and q. */
+/**
+ * The dial's label per generation: copies of A (■) and p over copies of a (●) and q; an empty
+ * generation has no gene pool to split ("Chưa có cá thể nào", no p or q).
+ */
 export function dialLabels(model: HwModel3D, fmt: Fmt): LocalizedText[] {
   return model.generations.map((g) => {
-    const text = `A: ${fmt(g.copies.A, 6)} · p = ${fmt(g.p, 4)}
-a: ${fmt(g.copies.a, 6)} · q = ${fmt(g.q, 4)}`;
+    if (g.n === 0) return NO_INDIVIDUALS;
+    const text = `A ${ALLELE_GLYPH.A}: ${fmt(g.copies.A, 6)} · p = ${fmt(g.p, 4)}
+a ${ALLELE_GLYPH.a}: ${fmt(g.copies.a, 6)} · q = ${fmt(g.q, 4)}`;
     return L(text, text);
   });
 }
+
+/** What the picture's name callouts point at (`scene.ts` places them). */
+export type HwCallout = 'AA' | 'Aa' | 'aa' | 'antennae' | 'beads' | 'dial';
+
+/** The callouts' names: every part of the habitat that stands for something in the model. */
+export const CALLOUTS: Record<HwCallout, LocalizedText> = {
+  AA: L('Cá thể AA', 'Individual AA'),
+  Aa: L('Cá thể Aa', 'Individual Aa'),
+  aa: L('Cá thể aa', 'Individual aa'),
+  antennae: L('Hai râu = hai alen', 'Two antennae = two alleles'),
+  beads: L('Hạt = bản sao gen', 'Bead = gene copy'),
+  dial: L('Vòng p : q', 'p : q ring'),
+};
 
 const SOURCES = L(
   'Nguồn: SGK Sinh học 12; Hartl & Clark, Principles of Population Genetics · nội dung đang chờ giáo viên duyệt.',
@@ -80,6 +117,17 @@ export function selectionCard(
   if (!gen) return null;
   const pct = (v: number) => (gen.n > 0 ? fmt((100 * v) / gen.n, 3) : '—');
   if (sel.kind === 'pool') {
+    if (gen.n === 0)
+      return {
+        title: L(`Vốn gen — thế hệ ${String(g)}`, `Gene pool — generation ${String(g)}`),
+        lines: [
+          L(
+            'Chưa có cá thể nào nên chưa có bản sao gen nào: p và q chưa xác định, lọ trống.',
+            'No individuals yet, so no gene copies: p and q are not defined and the jar is empty.',
+          ),
+          generationOrigin(model, g, fmt),
+        ],
+      };
     const c = gen.counts;
     const verdict =
       gen.n === 0

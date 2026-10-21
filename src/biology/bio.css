@@ -746,6 +746,10 @@
   white-space: pre;
   text-align: left;
 }
+.hw3d__dial-title {
+  display: block;
+  font-weight: 650;
+}
 .hw3d__card {
   width: min(21rem, 52%);
   font-size: var(--text-sm);

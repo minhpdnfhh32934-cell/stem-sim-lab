@@ -84,9 +84,10 @@ export interface HwModel3D {
 
 /**
  * Most figures drawn: the 3D quality table's instance share of the tier's particle budget, and
- * never more than a figure-sized stage shows legibly (about 250 animals of ~20 px each).
+ * never more than a figure-sized stage shows legibly with room between the animals (about 150;
+ * the default 1 000 individuals draw as 100 figures of 10).
  */
-export const LEGIBLE_FIGURES = 250;
+export const LEGIBLE_FIGURES = 150;
 export function figureCap(maxParticles: number): number {
   return Math.min(LEGIBLE_FIGURES, Math.max(60, Math.round(maxParticles * INSTANCE_SHARE)));
 }

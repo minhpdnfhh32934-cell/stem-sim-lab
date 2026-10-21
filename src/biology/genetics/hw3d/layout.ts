@@ -4,8 +4,9 @@
  * beads there are comes from the model (`binding.ts`).
  *
  * - Figures stand on a meadow, one slot per drawn figure, spread like a sunflower from the centre
- *   out at a fixed spacing (with a little jitter and a wavy edge): slot i stays where it is
- *   whatever the count.
+ *   out at a fixed spacing (with a little jitter): slot i stays where it is whatever the count,
+ *   and no two figures are closer than a figure's footprint, so they never pass through each
+ *   other. Most face the camera's side (a cone, not all round), so their antennae show.
  * - The gene pool is a glass jar on a stone plinth at the meadow's right; its beads fill it from
  *   the bottom in layers.
  * - The subject (meadow + plinth) is centred on the origin, inside a much larger terrain disc whose
@@ -15,8 +16,17 @@
 import { discPoints, type Vec3 } from '../../view3d/numbers';
 import { rng } from '../stats';
 
-/** Distance between neighbouring figures (a figure is about 1.2 long). */
-export const FIGURE_SPACING = 1.3;
+/**
+ * Spacing of the figure spiral: one figure per FIGURE_SPACING² of meadow. With the jitter below,
+ * neighbours stay at least FIGURE_CLEARANCE apart (tested), more than a figure's footprint.
+ */
+export const FIGURE_SPACING = 1.8;
+/** Diameter of the circle a figure (nose to tail, any facing) stands in: `organisms.ts`, tested. */
+export const FIGURE_CLEARANCE = 1.54;
+/** Largest shift of a slot off the spiral (each axis), so the crowd does not read as a pattern. */
+const JITTER = 0.08;
+/** Facing cone: within ±YAW_CONE of facing the camera (+z), so antennae and faces show. */
+const YAW_CONE = 1.9;
 
 export interface Slot {
   x: number;
@@ -27,13 +37,10 @@ export interface Slot {
   phase: number;
 }
 
-/** Radius the meadow needs for `slots` figures (its wavy edge reaches 10 % further). */
+/** Radius the meadow needs for `slots` figures (the last slot's ring plus half a figure). */
 export function meadowRadius(slots: number): number {
-  return Math.max(3.5, FIGURE_SPACING * Math.sqrt(Math.max(1, slots) / Math.PI) + 0.6);
+  return Math.max(3.5, FIGURE_SPACING * Math.sqrt(Math.max(1, slots) / Math.PI) + 0.8);
 }
-
-/** The meadow's wavy edge: radius factor at angle a (≤ 1.1). */
-const wavy = (a: number) => 1 + 0.06 * Math.sin(3 * a + 1) + 0.04 * Math.sin(5 * a + 2);
 
 /**
  * The first `count` figure slots around (cx, cz) (stable: slot i never moves when the count
@@ -44,17 +51,16 @@ export function figureSlots(count: number, cx = 0, cz = 0): Slot[] {
   const golden = Math.PI * (3 - Math.sqrt(5));
   const out: Slot[] = [];
   for (let i = 0; i < n; i++) {
-    // Vogel's sunflower spiral at a fixed density: slot i depends on i only.
-    const rr = FIGURE_SPACING * Math.sqrt((i + 0.5) / Math.PI);
+    // Vogel's sunflower spiral at a fixed density: slot i depends on i only (the first ring
+    // starts at i + 1, so the centre slots are not crowded closer than the rest).
+    const rr = FIGURE_SPACING * Math.sqrt((i + 1) / Math.PI);
     const a = i * golden;
     const r = rng(1 + i * 2654435761);
-    const yaw = r() * Math.PI * 2;
+    const yaw = (2 * r() - 1) * YAW_CONE;
     const phase = r();
-    // Jitter, so the crowd does not read as a pattern, and a wavy meadow edge.
-    const jx = (r() - 0.5) * FIGURE_SPACING * 0.45;
-    const jz = (r() - 0.5) * FIGURE_SPACING * 0.45;
-    const k = wavy(a);
-    out.push({ x: cx + Math.cos(a) * rr * k + jx, z: cz + Math.sin(a) * rr * k + jz, yaw, phase });
+    const jx = (2 * r() - 1) * JITTER;
+    const jz = (2 * r() - 1) * JITTER;
+    out.push({ x: cx + Math.cos(a) * rr + jx, z: cz + Math.sin(a) * rr + jz, yaw, phase });
   }
   return out;
 }
@@ -224,7 +230,10 @@ export function plantPlaces(L: HwLayout, counts: PlantCounts, seed = 5): Plant[]
   return out;
 }
 
-/** Points the camera keeps in view: the meadow's edge (ground and figure height) and the jar. */
+/**
+ * Points the camera keeps in view: the meadow's edge (ground and figure height), the jar and the
+ * label in front of its plinth.
+ */
 export function subjectPoints(L: HwLayout): Vec3[] {
   const out: Vec3[] = [];
   const { meadow, pool } = L;
@@ -242,11 +251,56 @@ export function subjectPoints(L: HwLayout): Vec3[] {
   ] as const) {
     out.push([pool.x + dx, 0, pool.z + dz], [pool.x + dx * 0.6, top, pool.z + dz * 0.6]);
   }
+  // The plinth's label in front of it (the gene pool's name, A and p, a and q).
+  out.push([pool.x, -0.3, pool.z + pool.plinthR + 1.2]);
   return out;
 }
 
 /** The view's default direction (from the subject towards the camera): about 31° above it. */
 export const HW_VIEW: Vec3 = [0.2, 0.62, 1];
+
+/** "Cận cảnh cá thể": low (about 17° above) and a little from the right, near the figures. */
+export const HW_CLOSE_VIEW: Vec3 = [0.25, 0.32, 1];
+/** Figures the close-up frames beside the jar. */
+export const CLOSEUP_FIGURES = 6;
+/** The meadow's edge the close-up looks at: facing the jar, a little towards the camera. */
+const CLOSE_EDGE = Math.PI / 9;
+
+/**
+ * Points the close-up keeps in view: the CLOSEUP_FIGURES slots nearest the meadow's edge facing
+ * the jar among the first `drawn` (slots every generation fills, so the close-up never frames an
+ * empty patch), whole figures with their antennae, and the plinth with the jar up to its bead
+ * pile beside them (the jar's rim may leave the picture: the figures' beads stay readable), with
+ * its label in front and some ground on its right for the jar's names.
+ */
+export function closeupPoints(L: HwLayout, drawn: number): Vec3[] {
+  const { meadow, pool } = L;
+  const n = Math.max(0, Math.min(L.slots.length, Math.floor(drawn)));
+  const ex = meadow.x + Math.cos(CLOSE_EDGE) * meadow.r;
+  const ez = meadow.z + Math.sin(CLOSE_EDGE) * meadow.r;
+  const near = L.slots
+    .slice(0, n)
+    .map((s) => ({ s, d: Math.hypot(s.x - ex, s.z - ez) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, CLOSEUP_FIGURES);
+  const half = FIGURE_CLEARANCE / 2;
+  const out: Vec3[] = [];
+  for (const { s } of near)
+    out.push([s.x - half, 0, s.z - half], [s.x + half, 0, s.z + half], [s.x, 1.45, s.z]);
+  // The bead pile's top (or a third of the jar when it is empty).
+  const pile = pool.beads.reduce((m, b) => Math.max(m, b[1] + pool.beadR), pool.jarH / 3);
+  const top = pool.plinthH + pile;
+  out.push(
+    [pool.x - pool.plinthR, 0, pool.z],
+    // In front of the plinth: its label (the gene pool's name, A and p, a and q) stays in view.
+    [pool.x, -0.3, pool.z + pool.plinthR + 1.2],
+    // Ground right of the plinth: room for the jar's names.
+    [pool.x + pool.plinthR + 2, 0, pool.z],
+    [pool.x - pool.jarR, top, pool.z],
+    [pool.x + pool.jarR, top, pool.z],
+  );
+  return out;
+}
 
 /**
  * The orbit centre that puts the subject in the middle of the picture seen from `dir`: the middle

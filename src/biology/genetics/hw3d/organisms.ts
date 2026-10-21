@@ -25,10 +25,11 @@ import type { Slot } from './layout';
 
 /** Where the antennae end (the allele beads), in the creature's own frame (+z forward). */
 export const TIP: readonly Vec3[] = [
-  [-0.19, 1.24, 0.5],
-  [0.19, 1.24, 0.5],
+  [-0.21, 1.24, 0.5],
+  [0.21, 1.24, 0.5],
 ];
-const TIP_SIZE = 0.1;
+/** Radius of an antenna's allele bead (large enough to read the cube / sphere up close). */
+export const TIP_SIZE = 0.15;
 /** Seconds between two hops of one creature, how long a hop lasts and how high it goes. */
 const HOP_EVERY = 2.8;
 const HOP_SHARE = 0.16;
@@ -65,7 +66,8 @@ export function creatureGeometry(): THREE.BufferGeometry {
     // Body, head, a short tail (shade 1: the instance colour shows as is).
     [ico(1), 1, [0, 0.43, -0.06], [0.44, 0.35, 0.56]],
     [ico(1), 1, [0, 0.66, 0.44], [0.29, 0.27, 0.28]],
-    [new THREE.ConeGeometry(0.1, 0.32, 5), 1, [0, 0.5, -0.66], [1, 1, 1], [-1.9, 0, 0]],
+    // (The tail stays inside the nose's reach: the footprint `layout.ts` spaces figures by.)
+    [new THREE.ConeGeometry(0.1, 0.26, 5), 1, [0, 0.5, -0.62], [1, 1, 1], [-1.9, 0, 0]],
     // Eyes and nose (dark), feet (neutral).
     [ico(0), 0.06, [-0.12, 0.72, 0.66], [0.06, 0.06, 0.05]],
     [ico(0), 0.06, [0.12, 0.72, 0.66], [0.06, 0.06, 0.05]],
@@ -138,8 +140,12 @@ export interface Herd {
   pick(ray: THREE.Raycaster): { slot: number; distance: number } | null;
   /** Figures drawn per genotype now (read back from the scene, for tests). */
   drawn(): Record<Genotype, number>;
-  /** Centre of a slot's creature (world), for tests and the info card. */
+  /** Centre of a slot's creature (world), for tests, the info card and its name callout. */
   point(slot: number): Vec3 | null;
+  /** Between the two allele beads of a slot's antennae (world, standing pose), or null. */
+  tipPoint(slot: number): Vec3 | null;
+  /** Slots drawn now and the genotype index each shows. */
+  classes(): Uint8Array;
   /** A new generation is still hatching (its figures are growing). */
   hatching(): boolean;
 }
@@ -332,5 +338,17 @@ export function herd(
       if (!s || slot >= body.count) return null;
       return [s.x, (ground[slot] ?? 0) + 0.5, s.z];
     },
+    tipPoint(slot) {
+      const s = slots[slot];
+      const t = TIP[0];
+      if (!s || !t || slot >= body.count) return null;
+      // The tips' midpoint (0, y, z) in the creature's frame, turned by its yaw about +y.
+      return [
+        s.x + Math.sin(s.yaw) * t[2],
+        (ground[slot] ?? 0) + t[1],
+        s.z + Math.cos(s.yaw) * t[2],
+      ];
+    },
+    classes: () => classes.subarray(0, body.count),
   };
 }

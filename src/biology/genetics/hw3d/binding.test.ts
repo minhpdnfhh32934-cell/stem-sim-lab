@@ -22,16 +22,20 @@ import {
   slotGenotype,
   slotKeys,
 } from './binding';
-import { dialLabels, selectionCard } from './facts';
+import { dialLabels, pqText, selectionCard } from './facts';
 import {
+  CLOSEUP_FIGURES,
+  FIGURE_CLEARANCE,
   HW_VIEW,
   balancedCenter,
+  closeupPoints,
   figureSlots,
   hwLayout,
   plantCounts,
   plantPlaces,
   subjectPoints,
 } from './layout';
+import { TIP, TIP_SIZE, creatureGeometry } from './organisms';
 
 const LESSON = { AA: 360, Aa: 480, aa: 160, N: 1000, seed: 1 };
 const fmt = (v: number) => String(Math.round(v * 1e4) / 1e4);
@@ -49,6 +53,35 @@ describe('Hardy–Weinberg 3D: the model behind the habitat', () => {
     expect(m.generations.map((x) => x.counts)).toEqual(
       matingRun(LESSON, 1000, HW_GENERATIONS, rng(7)),
     );
+  });
+
+  it('an empty population stays empty: nobody mates, no p or q, nothing drawn', () => {
+    const none = { AA: 0, Aa: 0, aa: 0 };
+    const run = matingRun(none, 50, HW_GENERATIONS, rng(2));
+    expect(run).toHaveLength(HW_GENERATIONS + 1);
+    for (const c of run) expect(c).toEqual(none);
+    const m = hwModel3d({ ...none, N: 50, seed: 2 }, 150, 200);
+    expect(m.slots).toBe(0);
+    expect(m.beadSlots).toBe(0);
+    for (const gen of m.generations) {
+      expect(gen.n).toBe(0);
+      expect(gen.figures).toEqual(none);
+      expect(gen.beads).toEqual({ A: 0, a: 0 });
+      // The model's p = 0 / q = 1 is a 0 / 0 guard: shown as "—", never as frequencies.
+      expect(pqText(gen, fmt)).toEqual({ p: '—', q: '—' });
+    }
+    for (const d of dialLabels(m, fmt)) expect(d.vi).toBe('Chưa có cá thể nào');
+    for (const g of [0, 3]) {
+      const card = selectionCard(m, g, { kind: 'pool' }, fmt);
+      const text = card?.lines.map((l) => l.vi).join(' ') ?? '';
+      expect(text).toContain('p và q chưa xác định');
+      expect(text).not.toMatch(/[pq] = \d/);
+    }
+    expect(selectionCard(m, 3, { kind: 'pool' }, fmt)?.lines[1]?.vi).toContain('vẫn trống');
+    // A population with individuals still shows its numbers.
+    const full = hwModel3d(LESSON, 150, 200).generations[0];
+    if (!full) throw new Error('no generation');
+    expect(pqText(full, fmt)).toEqual({ p: '0.6', q: '0.4' });
   });
 
   it('every generation carries the model’s p, q, expectation, χ² and gene copies', () => {
@@ -98,7 +131,7 @@ describe('Hardy–Weinberg 3D: the model behind the habitat', () => {
   });
 
   it('caps: the tier’s instance share, never more than a legible crowd', () => {
-    expect(figureCap(1500)).toBe(225);
+    expect(figureCap(800)).toBe(120);
     expect(figureCap(4000)).toBe(LEGIBLE_FIGURES);
     expect(figureCap(10000)).toBe(LEGIBLE_FIGURES);
     expect(beadCap(4000)).toBe(LEGIBLE_BEADS);
@@ -164,6 +197,53 @@ describe('Hardy–Weinberg 3D: places (illustration)', () => {
     expect(b.slice(0, 120)).toEqual(a);
   });
 
+  it('figures never pass through each other and mostly face the camera’s side', () => {
+    // A figure (nose to tail, antenna beads included) stands inside a circle of diameter
+    // FIGURE_CLEARANCE whichever way it faces…
+    const geo = creatureGeometry();
+    const pos = geo.getAttribute('position');
+    let reach = 0;
+    for (let i = 0; i < pos.count; i++)
+      reach = Math.max(reach, Math.hypot(pos.getX(i), pos.getZ(i)));
+    for (const t of TIP)
+      reach = Math.max(reach, Math.hypot(Math.abs(t[0]) + TIP_SIZE, t[2] + TIP_SIZE));
+    geo.dispose();
+    expect(2 * reach).toBeLessThanOrEqual(FIGURE_CLEARANCE);
+    // …and no two slots of the largest crowd are closer than that.
+    const slots = figureSlots(LEGIBLE_FIGURES);
+    let closest = Infinity;
+    for (let i = 0; i < slots.length; i++)
+      for (let j = 0; j < i; j++) {
+        const a = slots[i];
+        const b = slots[j];
+        if (a && b) closest = Math.min(closest, Math.hypot(a.x - b.x, a.z - b.z));
+      }
+    expect(closest).toBeGreaterThanOrEqual(FIGURE_CLEARANCE);
+    // Facing within a cone round the camera (+z): none turns its back squarely to the viewer.
+    for (const s of slots) expect(Math.abs(s.yaw)).toBeLessThan(0.65 * Math.PI);
+  });
+
+  it('the close-up frames a few figures every generation draws, beside the jar', () => {
+    const L = hwLayout(100, 200);
+    const pts = closeupPoints(L, 100);
+    // Three points per framed figure; five for the jar on its plinth, its label and the ground.
+    expect(pts).toHaveLength(3 * CLOSEUP_FIGURES + 5);
+    // The jar beside them, up to its bead pile (which stays inside the jar).
+    const jar = pts.filter((p) => p[0] === L.pool.x + L.pool.jarR && p[1] > 0);
+    expect(jar).toHaveLength(1);
+    const pile = Math.max(...L.pool.beads.map((b) => b[1] + L.pool.beadR));
+    expect(jar[0]?.[1]).toBeCloseTo(L.pool.plinthH + pile, 9);
+    expect(jar[0]?.[1] ?? Infinity).toBeLessThan(L.pool.plinthH + L.pool.jarH);
+    // Only slots every generation fills (here the first 12) are framed.
+    const few = closeupPoints(L, 12);
+    const framed = few.filter((_, i) => i < 3 * CLOSEUP_FIGURES && i % 3 === 2);
+    expect(framed).toHaveLength(CLOSEUP_FIGURES);
+    for (const p of framed)
+      expect(L.slots.slice(0, 12).some((s) => s.x === p[0] && s.z === p[2])).toBe(true);
+    // No figure drawn: just the jar.
+    expect(closeupPoints(L, 0)).toHaveLength(5);
+  });
+
   it('the subject is centred, the plinth beside the meadow, the ground far larger', () => {
     const L = hwLayout(200, 200);
     expect(L.slots).toHaveLength(200);
@@ -224,7 +304,7 @@ describe('Hardy–Weinberg 3D: texts', () => {
     expect(card?.lines[3]?.vi).toContain('5 cá thể');
     expect(selectionCard(m, 0, { kind: 'figure', slot: 9999 }, fmt)).toBeNull();
     const dial = dialLabels(m, fmt);
-    expect(dial[0]?.vi).toBe('A: 1200 · p = 0.6\na: 800 · q = 0.4');
+    expect(dial[0]?.vi).toBe('A ■: 1200 · p = 0.6\na ●: 800 · q = 0.4');
     expect(dial).toHaveLength(HW_GENERATIONS + 1);
   });
 });

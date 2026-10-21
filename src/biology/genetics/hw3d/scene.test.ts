@@ -10,7 +10,8 @@ import {
   slotKeys,
   type HwModel3D,
 } from './binding';
-import { hwLayout } from './layout';
+import { HW_CLOSE_VIEW, HW_VIEW, hwLayout } from './layout';
+import type { Bio3DScene, Vec3 } from '../../view3d/kit';
 import { buildHwHabitat, type HwScene } from './scene';
 
 const LESSON = { AA: 360, Aa: 480, aa: 160, N: 1000, seed: 1 };
@@ -77,7 +78,8 @@ describe('Hardy–Weinberg habitat scene', () => {
       const label = kit.scene.getObjectByName('hw-dial-label') as unknown as {
         element: HTMLElement;
       };
-      expect(label.element.textContent).toBe(`p ${String(gen.p)}`);
+      expect(label.element.querySelector('strong')?.textContent).toBe('Vốn gen');
+      expect(label.element.querySelector('span')?.textContent).toBe(`p ${String(gen.p)}`);
     }
     expect(scene.state().per).toBe(5);
     scene.tick?.(0.5);
@@ -127,6 +129,64 @@ describe('Hardy–Weinberg habitat scene', () => {
     // The plinth's rim (outside the jar, which is never pickable).
     expect(scene.pick?.(down(L.pool.x + L.pool.plinthR * 0.9, L.pool.z))).toBe('pool');
     expect(scene.pick?.(down(L.pool.x, L.pool.z + L.habitatR * 0.5))).toBeNull();
+    expectAllFreed(kit, track, start);
+  });
+
+  it('frames a close-up beside the jar and names one figure of each genotype, the antennae, the beads and the ring', () => {
+    const { kit, track, start } = testKit();
+    const model = hwModel3d(LESSON, 150, 200);
+    const scene = buildHwHabitat(kit, { model, texts: texts(model) });
+    kit.scene.updateMatrixWorld(true);
+    const close = scene.frames?.closeup;
+    expect(close?.dir).toEqual(HW_CLOSE_VIEW);
+    expect(close?.bounds.radius ?? Infinity).toBeLessThan(scene.bounds.radius * 0.7);
+    // The camera where the view frames the whole subject.
+    const look = (b: Bio3DScene['bounds'], dir: Vec3, k: number) => {
+      const cam = new THREE.PerspectiveCamera(34, 2.4, 0.1, 1000);
+      const d = new THREE.Vector3(...dir).normalize().multiplyScalar(b.radius * k);
+      cam.position.set(b.center[0] + d.x, b.center[1] + d.y, b.center[2] + d.z);
+      cam.lookAt(...b.center);
+      cam.updateMatrixWorld();
+      return cam;
+    };
+    const L = hwLayout(model.slots, model.beadSlots);
+    const f = model.generations[0]?.figures ?? { AA: 0, Aa: 0, aa: 0 };
+    const cls = slotClasses([f.AA, f.Aa, f.aa], slotKeys(model.slots, 0));
+    for (const [view, b, dir] of [
+      [undefined, scene.bounds, HW_VIEW],
+      ['closeup', close?.bounds ?? scene.bounds, HW_CLOSE_VIEW],
+    ] as const) {
+      const callouts = scene.callouts?.(look(b, dir, 2.2)) ?? [];
+      expect(callouts.map((c) => c.id)).toEqual(['antennae', 'AA', 'Aa', 'aa', 'beads', 'dial']);
+      // Each genotype's name points at a figure of that genotype.
+      for (const c of callouts.filter((x) => (GENOTYPES as readonly string[]).includes(x.id))) {
+        const slot = L.slots.findIndex((s) => s.x === c.point[0] && s.z === c.point[2]);
+        expect(GENOTYPES[cls[slot] ?? -1]).toBe(c.id);
+      }
+      // Names keep off the jar and, seen whole, the herd; up close, the three named figures.
+      const o = scene.calloutObstacles?.(view);
+      expect(o?.regions).toHaveLength(2);
+      expect(o?.avoid).toHaveLength(view === 'closeup' ? 4 : 2);
+    }
+    expectAllFreed(kit, track, start);
+  });
+
+  it('an empty population: no figures, no beads, no p / q ring and no callouts', () => {
+    const { kit, track, start } = testKit();
+    const model = hwModel3d({ AA: 0, Aa: 0, aa: 0, N: 50, seed: 2 }, 150, 200);
+    const scene = buildHwHabitat(kit, { model, texts: texts(model) });
+    for (const g of [0, 1, 10]) {
+      scene.setTime?.(g);
+      expect(scene.state().drawn).toEqual({ AA: 0, Aa: 0, aa: 0 });
+      expect(scene.state().beads).toEqual({ A: 0, a: 0 });
+      expect(kit.scene.getObjectByName('hw-dial-A')?.visible).toBe(false);
+      expect(kit.scene.getObjectByName('hw-dial-a')?.visible).toBe(false);
+      const cam = new THREE.PerspectiveCamera(34, 2.4, 0.1, 1000);
+      cam.position.set(0, 20, 40);
+      cam.lookAt(0, 0, 0);
+      cam.updateMatrixWorld();
+      expect(scene.callouts?.(cam)).toEqual([]);
+    }
     expectAllFreed(kit, track, start);
   });
 

@@ -2,16 +2,19 @@
  * "Định luật Hardy–Weinberg" in 3D: the population in its habitat (a figure above the lesson's
  * chart and table). Over the picture: the shown generation's genotype counts, p and q and the
  * drawing scale; under it the generation slider (0 = the learner's numbers, then simulated rounds
- * of random mating, `binding.ts`). A tap on an animal or on the gene pool opens its card. The
- * animals, plants and motion are illustration (caption); every number is the model's.
+ * of random mating, `binding.ts`). A tap on an animal or on the gene pool opens its card. In the
+ * corner: "Hiện tên" (name callouts on the picture) and the framing, the whole population or a
+ * close-up of a few animals beside the gene pool. The animals, plants and motion are
+ * illustration (caption); every number is the model's.
  */
-import { Pause, Play, RotateCcw, X } from 'lucide-react';
+import { Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import { useTierConfig } from '@/perf/perfStore';
 import { IconButton } from '@/ui/IconButton';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { L } from '../../common';
+import { Segmented } from '../../ui';
 import { useCardHeadFit } from '../../division/mitosis3d/partCardHead';
 import { useFmt } from '../../fmt';
 import { Bio3DFigureBody, type SceneSpec } from '../../view3d/Bio3DView';
@@ -30,10 +33,20 @@ import {
   type HwModel3D,
   type HwSelection,
 } from './binding';
-import { HW3D_SOURCES, beadScale, dialLabels, figureScale, selectionCard, type Fmt } from './facts';
+import {
+  CALLOUTS,
+  HW3D_SOURCES,
+  NO_INDIVIDUALS,
+  beadScale,
+  dialLabels,
+  figureScale,
+  pqText,
+  selectionCard,
+  type Fmt,
+} from './facts';
 import { HW_VIEW } from './layout';
 import { buildHwHabitat } from './scene';
-import { useHw3D } from './store';
+import { useHw3D, type HwCameraMode } from './store';
 
 /** Real seconds per generation while playing. */
 const SECONDS_PER_GENERATION = 1.6;
@@ -60,6 +73,7 @@ function Chips({ model, g, fmt }: { model: HwModel3D; g: number; fmt: Fmt }) {
   const Lz = useLocalized();
   const gen = model.generations[g];
   if (!gen) return null;
+  const pq = pqText(gen, fmt);
   return (
     <>
       {GENOTYPES.map((gt) => (
@@ -71,13 +85,34 @@ function Chips({ model, g, fmt }: { model: HwModel3D; g: number; fmt: Fmt }) {
         </span>
       ))}
       <span className="chem-chip hw3d__chip" data-chip="pq">
-        p = <strong className="mono">{fmt(gen.p, 4)}</strong> · q ={' '}
-        <strong className="mono">{fmt(gen.q, 4)}</strong>
+        p = <strong className="mono">{pq.p}</strong> · q = <strong className="mono">{pq.q}</strong>
       </span>
+      {gen.n === 0 && (
+        <span className="chem-chip" data-chip="empty">
+          {Lz(NO_INDIVIDUALS)}
+        </span>
+      )}
       <span className="chem-chip chem-chip--qual" data-chip="scale">
         {Lz(figureScale(model.per, fmt))} · {Lz(beadScale(model.perBead, fmt))}
       </span>
     </>
+  );
+}
+
+/** The framings: the whole population, or a few animals beside the gene pool (antenna beads). */
+function Framing({ camera }: { camera: HwCameraMode }) {
+  return (
+    <Segmented<HwCameraMode>
+      label={L('Góc nhìn', 'View')}
+      value={camera}
+      options={[
+        { id: 'overview', label: L('Toàn cảnh', 'Whole population') },
+        { id: 'closeup', label: L('Cận cảnh cá thể', 'Individuals close up') },
+      ]}
+      onChange={(v) => {
+        useHw3D.setState({ camera: v });
+      }}
+    />
   );
 }
 
@@ -86,11 +121,13 @@ function GenerationPlayer({
   model,
   g,
   fmt,
+  camera,
 }: {
   playback: Playback;
   model: HwModel3D;
   g: number;
   fmt: Fmt;
+  camera: HwCameraMode;
 }) {
   const Lz = useLocalized();
   const n = model.generations[g]?.n ?? 0;
@@ -129,6 +166,7 @@ function GenerationPlayer({
       <output aria-live="off">
         {Lz(L('Thế hệ', 'Generation'))} {g}/{HW_GENERATIONS} · N = {fmt(n, 6)}
       </output>
+      <Framing camera={camera} />
     </div>
   );
 }
@@ -199,6 +237,9 @@ export function HardyWeinberg3DView() {
   const g = generationAt(playback.t);
   const gen = model.generations[g];
   const selected = useHw3D((s) => s.selected);
+  const camera = useHw3D((s) => s.camera);
+  // "Hiện tên": on unless the learner turned it off.
+  const labelsOn = useHw3D((s) => s.labels) ?? true;
 
   // "Cho ngẫu phối 1 thế hệ" (under the figure) made a new generation: show it (generation 1).
   const setT = useRef(playback.setT);
@@ -241,13 +282,21 @@ export function HardyWeinberg3DView() {
     dial: labels.map((x) => Lz(x)),
   };
   const counts = gen?.counts ?? { AA: 0, Aa: 0, aa: 0 };
+  const pq = gen ? pqText(gen, fmt) : { p: '—', q: '—' };
+  const callouts = useMemo(
+    () =>
+      labelsOn
+        ? Object.fromEntries(Object.entries(CALLOUTS).map(([id, text]) => [id, Lz(text)]))
+        : null,
+    [labelsOn, Lz],
+  );
   const scene: SceneSpec = {
     build: (kit) => buildHwHabitat(kit, { model, texts }),
     buildKey: JSON.stringify([modelKey, texts]),
     label: Lz(
       L(
-        `Quần thể thế hệ ${String(g)}: AA ${fmt(counts.AA, 6)}, Aa ${fmt(counts.Aa, 6)}, aa ${fmt(counts.aa, 6)}; vốn gen p = ${fmt(gen?.p ?? 0, 4)}, q = ${fmt(gen?.q ?? 0, 4)}.`,
-        `Population, generation ${String(g)}: AA ${fmt(counts.AA, 6)}, Aa ${fmt(counts.Aa, 6)}, aa ${fmt(counts.aa, 6)}; gene pool p = ${fmt(gen?.p ?? 0, 4)}, q = ${fmt(gen?.q ?? 0, 4)}.`,
+        `Quần thể thế hệ ${String(g)}: AA ${fmt(counts.AA, 6)}, Aa ${fmt(counts.Aa, 6)}, aa ${fmt(counts.aa, 6)}; vốn gen p = ${pq.p}, q = ${pq.q}.`,
+        `Population, generation ${String(g)}: AA ${fmt(counts.AA, 6)}, Aa ${fmt(counts.Aa, 6)}, aa ${fmt(counts.aa, 6)}; gene pool p = ${pq.p}, q = ${pq.q}.`,
       ),
     ),
     time: playback.t,
@@ -259,6 +308,8 @@ export function HardyWeinberg3DView() {
     onPick: (id) => {
       useHw3D.setState({ selected: parseSelection(id) });
     },
+    view: camera,
+    callouts,
   };
   return (
     <Bio3DFigureBody
@@ -266,7 +317,21 @@ export function HardyWeinberg3DView() {
       className="hw3d"
       scene={scene}
       top={<Chips model={model} g={g} fmt={fmt} />}
-      bottom={<GenerationPlayer playback={playback} model={model} g={g} fmt={fmt} />}
+      tools={
+        <IconButton
+          icon={Tags}
+          size="lg"
+          active={labelsOn}
+          label={Lz(L('Hiện tên các phần', 'Show the names of the parts'))}
+          tooltipSide="left"
+          onClick={() => {
+            useHw3D.setState({ labels: !labelsOn });
+          }}
+        />
+      }
+      bottom={
+        <GenerationPlayer playback={playback} model={model} g={g} fmt={fmt} camera={camera} />
+      }
       info={selected ? <PartCard model={model} g={g} selected={selected} fmt={fmt} /> : undefined}
       caption={Lz(CAPTION)}
     />

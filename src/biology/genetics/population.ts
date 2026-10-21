@@ -56,7 +56,8 @@ export interface GenotypeCounts {
  * `start` (the observed counts), generation g + 1 is `randomMating(N, p_g, rand)` with p_g the
  * allele frequency of generation g, (2·AA + Aa) / 2n. Without selection, mutation or migration,
  * p only changes by sampling error in a population of N. With `rand = rng(seed)`, generation 1
- * is the same draw as the lesson's "Cho ngẫu phối 1 thế hệ" with that seed.
+ * is the same draw as the lesson's "Cho ngẫu phối 1 thế hệ" with that seed. An empty population
+ * (n = 0) has no gene pool to draw from and stays empty in every later generation.
  */
 export function matingRun(
   start: GenotypeCounts,
@@ -67,7 +68,10 @@ export function matingRun(
   const out: GenotypeCounts[] = [{ AA: start.AA, Aa: start.Aa, aa: start.aa }];
   let prev: GenotypeCounts = { ...start };
   for (let g = 0; g < generations; g++) {
-    const next = randomMating(N, testHardyWeinberg(prev.AA, prev.Aa, prev.aa).p, rand);
+    const t = testHardyWeinberg(prev.AA, prev.Aa, prev.aa);
+    // No individuals, no gene pool: nobody mates, so an empty population stays empty (its p = 0
+    // is only a guard against 0 / 0, not an allele frequency to breed from).
+    const next = t.n > 0 ? randomMating(N, t.p, rand) : { AA: 0, Aa: 0, aa: 0 };
     out.push(next);
     prev = next;
   }

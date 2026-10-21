@@ -8,7 +8,8 @@ import { openLab } from './nav';
 /**
  * The 3D habitat of "Định luật Hardy–Weinberg": the generation slider shows the model's run of
  * random mating (generation 0 = the learner's counts), the scene draws exactly the model's
- * figures, the panel's "Cho ngẫu phối 1 thế hệ" is generation 1, and a tap opens a card.
+ * figures, the panel's "Cho ngẫu phối 1 thế hệ" is generation 1, and a tap opens a card. Name
+ * callouts and a close-up beside the gene pool; an empty population stays empty.
  * WebGL runs in software (SwiftShader), never on the GPU (see mitosis3d.spec.ts).
  */
 test.use({
@@ -34,6 +35,7 @@ interface Hook {
   frames(): number;
   state(): HwState | null;
   project(p: Vec3): [number, number] | null;
+  callouts(): string[];
 }
 
 const state = (page: Page) =>
@@ -45,6 +47,16 @@ const project = (page: Page, p: Vec3) =>
     (q) => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.project(q) ?? null,
     p,
   );
+const callouts = (page: Page) =>
+  page.evaluate(
+    () => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.callouts() ?? [],
+  );
+/** Pixels per world unit around a point (how close the camera is to it). */
+async function scaleAt(page: Page, p: Vec3): Promise<number> {
+  const a = await settled(page, [p[0] - 1, p[1], p[2]]);
+  const b = await project(page, [p[0] + 1, p[1], p[2]]);
+  return b ? Math.hypot(b[0] - a[0], b[1] - a[1]) / 2 : 0;
+}
 /** Where a world point is on the page once the camera has stopped moving (it re-frames when the
  * chips or a card change size). */
 async function settled(page: Page, p: Vec3): Promise<[number, number]> {
@@ -61,7 +73,8 @@ async function settled(page: Page, p: Vec3): Promise<[number, number]> {
 /** The lesson's defaults (store.ts) and the view's figure cap on the Medium tier. */
 const START = { AA: 360, Aa: 480, aa: 160 };
 const N = 1000;
-const MEDIUM_CAP = 250;
+/** `figureCap` of the Medium tier: LEGIBLE_FIGURES (binding.ts). */
+const MEDIUM_CAP = 150;
 const vi = (v: number, d = 6) =>
   new Intl.NumberFormat('vi-VN', { maximumSignificantDigits: d }).format(v);
 
@@ -97,16 +110,36 @@ test('Hardy–Weinberg 3D: the habitat follows the model through the generations
   const chip = (g: string) => view.locator(`[data-genotype="${g}"] strong`);
   const player = view.locator('.bio3d__player');
 
-  // Generation 0: the learner's counts, drawn one figure per 5 individuals (1 000 > 250).
+  // Generation 0: the learner's counts, drawn one figure per 10 individuals (1 000 > 150).
   await expect(chip('AA')).toHaveText(vi(START.AA));
   const per = drawScale(N, MEDIUM_CAP);
-  expect(per).toBe(5);
+  expect(per).toBe(10);
   await expect(view.locator('[data-chip="scale"]')).toContainText(`1 hình = ${vi(per)} cá thể`);
   let s = await state(page);
   expect(s?.generation).toBe(0);
   expect(s?.per).toBe(per);
   const [fAA, fAa, faa] = apportion([START.AA, START.Aa, START.aa], per);
   expect(s?.drawn).toEqual({ AA: fAA, Aa: fAa, aa: faa });
+
+  // Names on the picture: a figure of each genotype, its antennae, the beads and the p : q ring;
+  // the Tags button hides them.
+  const NAMES = ['antennae', 'AA', 'Aa', 'aa', 'beads', 'dial'];
+  await expect.poll(async () => (await callouts(page)).includes('antennae')).toBe(true);
+  for (const id of await callouts(page)) expect(NAMES).toContain(id);
+  const tags = view.getByRole('button', { name: 'Hiện tên các phần' });
+  await tags.click();
+  await expect.poll(() => callouts(page)).toEqual([]);
+  await tags.click();
+  await expect.poll(async () => (await callouts(page)).length).toBeGreaterThan(0);
+
+  // "Cận cảnh cá thể": the camera glides nearer the figures beside the jar, and back.
+  const far = await scaleAt(page, s?.poolPoint ?? [0, 0, 0]);
+  await view.getByRole('radio', { name: 'Cận cảnh cá thể' }).click();
+  await expect.poll(() => scaleAt(page, s?.poolPoint ?? [0, 0, 0])).toBeGreaterThan(far * 1.4);
+  await view.getByRole('radio', { name: 'Toàn cảnh' }).click();
+  await expect
+    .poll(async () => Math.abs((await scaleAt(page, s?.poolPoint ?? [0, 0, 0])) / far - 1))
+    .toBeLessThan(0.05);
 
   // Scrub to generation 3: the model's third round of random mating (one stream, seed 1).
   const run = matingRun(START, N, 3, rng(1));
@@ -165,5 +198,19 @@ test('Hardy–Weinberg 3D: the habitat follows the model through the generations
     .first()
     .click();
   await expect(page.locator('.bio3d[data-lesson="hardyWeinberg"] canvas')).toBeVisible();
+
+  // No individuals: no p or q, nothing to mate, and every later generation stays empty.
+  for (const k of ['AA', 'Aa', 'aa'])
+    await page.getByLabel(`Số cá thể ${k}`, { exact: true }).fill('0');
+  const v3 = page.locator('.bio3d[data-lesson="hardyWeinberg"]');
+  await expect(v3.locator('[data-chip="pq"]')).toHaveText('p = — · q = —');
+  await expect(v3.locator('[data-chip="empty"]')).toHaveText('Chưa có cá thể nào');
+  await expect(page.getByRole('button', { name: 'Cho ngẫu phối 1 thế hệ' })).toBeDisabled();
+  await v3.locator('.bio3d__player').getByRole('slider', { name: 'Thế hệ' }).fill('3');
+  await expect(v3.locator('.bio3d__player output')).toContainText('Thế hệ 3/10 · N = 0');
+  await expect.poll(async () => (await state(page))?.generation).toBe(3);
+  expect((await state(page))?.drawn).toEqual({ AA: 0, Aa: 0, aa: 0 });
+  expect((await state(page))?.beads).toEqual({ A: 0, a: 0 });
+  await expect(v3.locator('[data-chip="pq"]')).toHaveText('p = — · q = —');
   expect(errors).toEqual([]);
 });

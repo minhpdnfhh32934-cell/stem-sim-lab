@@ -5,7 +5,7 @@
  * p and q of the generation. The jar, the plinth and the bead places are illustration.
  */
 import * as THREE from 'three';
-import type { SceneKit } from '../../view3d/kit';
+import type { SceneKit, Vec3 } from '../../view3d/kit';
 import { glassMeshes, glassware, highlight } from '../../view3d/recipes';
 import { alleleToken, slotClasses, type Allele, type HwModel3D } from './binding';
 import type { PoolLayout } from './layout';
@@ -53,6 +53,12 @@ export interface GenePool {
   /** Top of the plinth (world y) and the jar's top, for labels. */
   top: number;
   jarTop: number;
+  /** The jar on its plinth (world points): what name callouts keep clear of. */
+  hull: Vec3[];
+  /** Front of the bead pile in the jar (world), or null when the jar is empty. */
+  beadsPoint(): Vec3 | null;
+  /** A point on the p / q ring's front (world), or null when no ring is drawn (no individuals). */
+  dialPoint(): Vec3 | null;
 }
 
 export function genePool(
@@ -92,7 +98,9 @@ export function genePool(
   // The p / q dial: one arc per allele for every generation, made once (setTime only swaps).
   const arcSeg = Math.max(32, kit.seg * 3);
   const arcs = model.generations.map((gen) => {
-    const p = gen.n > 0 ? gen.p : 0;
+    // An empty generation has no gene pool to split: no arcs (its p = 0 is a 0 / 0 guard).
+    if (gen.n === 0) return { A: null, a: null };
+    const { p } = gen;
     const make = (start: number, len: number) =>
       len > 1e-9
         ? kit.geometry(
@@ -174,11 +182,21 @@ export function genePool(
   const v = new THREE.Vector3();
   const s = new THREE.Vector3(L.beadR, L.beadR, L.beadR);
   let shown = { A: 0, a: 0 };
+  /** Height of the bead pile now (above the jar's floor) and whether the ring is drawn. */
+  let pile = 0;
+  let ringShown = false;
+  const jarTop = jarBase + L.jarH;
 
   return {
     pickables: [plinth, ...dial],
     top,
-    jarTop: jarBase + L.jarH,
+    jarTop,
+    hull: [
+      [L.x - L.plinthR, base, L.z - L.plinthR],
+      [L.x + L.plinthR, base, L.z + L.plinthR],
+      [L.x - L.jarR, jarTop, L.z - L.jarR],
+      [L.x + L.jarR, jarTop, L.z + L.jarR],
+    ],
     show(g) {
       const gen = model.generations[g];
       if (!gen) return;
@@ -190,12 +208,15 @@ export function genePool(
         mesh.geometry = geo ?? empty;
         mesh.visible = geo !== null;
       }
+      ringShown = dial.some((m) => m.visible);
       const cls = slotClasses([gen.beads.A, gen.beads.a], keys[g] ?? new Float64Array(0));
       let nA = 0;
       let na = 0;
+      pile = 0;
       for (let i = 0; i < cls.length; i++) {
         const b = L.beads[i];
         if (!b) continue;
+        pile = Math.max(pile, b[1] + L.beadR);
         // Each bead lies at its own angle (seeded by its place), as poured.
         e.set(i * 1.7, i * 2.3, i * 0.9);
         q.setFromEuler(e);
@@ -214,5 +235,12 @@ export function genePool(
       ring.visible = on;
     },
     drawn: () => ({ ...shown }),
+    beadsPoint: () =>
+      shown.A + shown.a > 0 ? [L.x, jarBase + floor + pile / 2, L.z + L.jarR * 0.8] : null,
+    // Front right on the ring: clear of its two-line label in front of the plinth.
+    dialPoint: () => {
+      const mid = ((L.dialIn + L.dialOut) / 2) * Math.SQRT1_2;
+      return ringShown ? [L.x + mid, top + 0.02, L.z + mid] : null;
+    },
   };
 }
