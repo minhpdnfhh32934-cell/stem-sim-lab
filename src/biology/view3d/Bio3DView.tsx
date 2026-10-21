@@ -13,6 +13,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { IconButton } from '@/ui/IconButton';
 import { L } from '../common';
 import { Bio3DCanvas } from './Bio3DCanvas';
+import type { LookPreset } from '@/ui/three/lighting';
 import type { Bio3DScene, SceneKit, Vec3 } from './kit';
 import type { Bio3DLesson } from './prefs';
 import type { RendererFactory } from './renderer';
@@ -29,6 +30,12 @@ export interface SceneSpec {
   running?: boolean;
   viewDir?: Vec3;
   aspect?: number;
+  /** Light preset (habitats: outdoor). */
+  look?: LookPreset;
+  /** A tap on the picture: the id of what the scene's `pick` hit, or null. */
+  onPick?: (id: string | null) => void;
+  /** The picked part's id (the scene marks it). */
+  selected?: string | null;
 }
 
 function ResetView({ onReset }: { onReset: () => void }) {
@@ -99,18 +106,30 @@ export function Bio3DView({
 export function Bio3DFigureBody({
   lesson,
   scene,
+  top,
+  bottom,
+  info,
   caption,
+  className,
   createRenderer,
 }: {
   lesson: Bio3DLesson;
   scene: SceneSpec;
+  /** Chips over the figure's top edge (left of the switch). */
+  top?: ReactNode;
+  /** Playback or step controls under the picture. */
+  bottom?: ReactNode;
+  /** The picked part's card (right, between the top and the bottom rows). */
+  info?: ReactNode;
   caption?: ReactNode;
+  /** Extra class of the figure block (a lesson's own height). */
+  className?: string;
   createRenderer?: RendererFactory;
 }) {
   const hudRef = useRef<HTMLDivElement>(null);
   const [reset, setReset] = useState(0);
   return (
-    <div className="bio3d-figure bio3d" data-lesson={lesson}>
+    <div className={`bio3d-figure bio3d${className ? ` ${className}` : ''}`} data-lesson={lesson}>
       <Bio3DCanvas
         lesson={lesson}
         {...scene}
@@ -119,6 +138,11 @@ export function Bio3DFigureBody({
         {...(createRenderer ? { createRenderer } : {})}
       />
       <div ref={hudRef} className="bio3d__hud">
+        {top !== undefined && (
+          <div className="chem-overlay bio3d__top" data-inset="top">
+            {top}
+          </div>
+        )}
         <div className="bio3d__side" data-inset="corner">
           <Bio3DSwitch lesson={lesson} />
           <ResetView
@@ -127,9 +151,11 @@ export function Bio3DFigureBody({
             }}
           />
         </div>
-        {caption !== undefined && (
+        {info}
+        {(bottom !== undefined || caption !== undefined) && (
           <div className="bio3d__bottom" data-inset="bottom">
-            <p className="bio3d__caption">{caption}</p>
+            {bottom}
+            {caption !== undefined && <p className="bio3d__caption">{caption}</p>}
           </div>
         )}
       </div>

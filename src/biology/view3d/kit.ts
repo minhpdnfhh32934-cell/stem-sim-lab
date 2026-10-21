@@ -31,7 +31,7 @@ export interface KitOptions {
   /** Reads a CSS colour token (e.g. '--chart-1'). */
   token: (name: string) => string;
   /** Light preset: studio (cells, molecules, lab objects; default) or outdoor (habitats). */
-  look?: LookPreset;
+  look?: LookPreset | undefined;
   /** The outermost shell and glassware may refract (High tier on a discrete GPU). */
   transmission?: boolean;
   /** Highlights glow in HDR and bloom (High tier on a discrete GPU). */
@@ -57,6 +57,14 @@ export interface Bio3DScene {
   setTime?: (t: number) => void;
   /** Illustrative motion (Brownian particles): advances by dt seconds of animation. */
   tick?: (dt: number) => void;
+  /** The motion stopped: show the resting picture (transitions finished). */
+  rest?: () => void;
+  /** What a tap's ray hits: an id the lesson defines, or null (nothing pickable). */
+  pick?: (ray: THREE.Raycaster) => string | null;
+  /** Marks the picked part (null: none). */
+  select?: (id: string | null) => void;
+  /** What the scene draws now, read back from it (development test hooks). */
+  state?: () => unknown;
 }
 
 /** CSS classes of the kit's labels: the same tag look as every other 3D view. */

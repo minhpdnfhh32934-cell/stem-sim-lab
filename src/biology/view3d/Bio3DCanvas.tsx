@@ -11,6 +11,7 @@ import * as THREE from 'three';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
 import type { QualityTier } from '@/perf/tiers';
+import type { LookPreset } from '@/ui/three/lighting';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { GROUND_POLAR_LIMITS, VIEW_FOV } from '@/ui/three/camera';
 import { DEFAULT_VIEW, NO_INSETS, fitPointsDistance, fitSphereDistance } from '@/ui/three/frame';
@@ -35,6 +36,10 @@ export interface Bio3DDebug {
   frames(): number;
   /** Quality tier in effect and what the host draws with (post-processing, GPU class). */
   quality(): QualityInEffect;
+  /** What the scene draws now (its own `state()`), or null. */
+  state(): unknown;
+  /** Page point (CSS px) of a world point, or null when no scene is drawn. */
+  project(p: Vec3): [number, number] | null;
 }
 declare global {
   interface Window {
@@ -61,6 +66,12 @@ export interface Bio3DCanvasProps {
   /** HUD whose `data-inset` children cover the canvas edges. */
   hudRef?: RefObject<HTMLElement | null>;
   createRenderer?: RendererFactory;
+  /** Light preset of the scene (habitats: outdoor sky and sun). */
+  look?: LookPreset;
+  /** A tap on the picture: the scene's id of what it hit (`Bio3DScene.pick`), or null. */
+  onPick?: (id: string | null) => void;
+  /** The picked part's id (the scene marks it). */
+  selected?: string | null;
 }
 
 function tokenReader(): (name: string) => string {
@@ -81,6 +92,8 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
     resetNonce = 0,
     hudRef,
     createRenderer = webglRenderer,
+    look,
+    selected = null,
   } = props;
   const tier = useTierConfig();
   const tierName: QualityTier = usePerfStore(effectiveTier);
@@ -92,6 +105,8 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
   const buildRef = useRef(props.build);
   const timeRef = useRef(time);
   const viewRef = useRef(viewDir);
+  const pickRef = useRef(props.onPick);
+  const selectedRef = useRef(selected);
   /** What the camera framed last (a new subject size is framed again). */
   const framedRef = useRef<{ radius: number; center: Vec3 } | null>(null);
   // The latest props for the effects below (layout effects run before them).
@@ -99,6 +114,8 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
     buildRef.current = props.build;
     timeRef.current = time;
     viewRef.current = viewDir;
+    pickRef.current = props.onPick;
+    selectedRef.current = selected;
   });
 
   /** Fits the subject from `dir` (null: keep the learner's direction). */
@@ -167,6 +184,11 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       onFrame: (h) => {
         if (h.scene) labelsRef.current?.render(h.scene, h.camera);
       },
+      onTap: (ray) => {
+        const s = sceneRef.current;
+        if (!s?.pick || !pickRef.current) return;
+        pickRef.current(s.pick(ray));
+      },
       debug: (h) => {
         const host = hostRef.current;
         const hook: Bio3DDebug = {
@@ -207,6 +229,14 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
           },
           frames: () => h.frames,
           quality: () => h.qualityInEffect(),
+          state: () => sceneRef.current?.state?.() ?? null,
+          project: (p) => {
+            if (!sceneRef.current || !host) return null;
+            const box = host.getBoundingClientRect();
+            h.camera.updateMatrixWorld();
+            const v = new THREE.Vector3(...p).project(h.camera);
+            return [box.left + ((v.x + 1) / 2) * box.width, box.top + ((1 - v.y) / 2) * box.height];
+          },
         };
         // `__simlabBio3d` is kept as an alias for the existing end-to-end tests.
         window.__simlabBio3d = hook;
@@ -250,6 +280,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       transmission: quality.transmission,
       hdr: quality.bloom,
       shadows: quality.shadowScenes,
+      look,
     });
     let built: Bio3DScene;
     try {
@@ -259,6 +290,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       throw e;
     }
     if (timeRef.current !== undefined) built.setTime?.(timeRef.current);
+    built.select?.(selectedRef.current);
     sceneRef.current = built;
     h.setScene(built.kit.scene);
     const prev = framedRef.current;
@@ -295,6 +327,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
     quality.transmission,
     quality.bloom,
     quality.shadowScenes,
+    look,
   ]);
 
   // A new moment of the lesson: the scene moves, nothing is rebuilt.
@@ -305,12 +338,29 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
     hostRt.current?.request();
   }, [time, hostRt]);
 
+  // The picked part: the scene marks it; its card (a `data-inset` box) may have come or gone.
+  useEffect(() => {
+    const s = sceneRef.current;
+    if (!s?.select) return;
+    s.select(selected);
+    hostRt.current?.relayout();
+    hostRt.current?.request();
+  }, [selected, hostRt]);
+
   // "Đặt lại góc nhìn".
   useEffect(() => {
     const h = hostRt.current;
     if (resetNonce && h) frame(h, viewRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetNonce]);
+
+  // The motion stopped: the scene settles into its resting picture (nothing left half-grown).
+  useEffect(() => {
+    const s = sceneRef.current;
+    if (running || !s?.rest) return;
+    s.rest();
+    hostRt.current?.request();
+  }, [running, hostRt]);
 
   // Illustrative motion: every frame while running (frame times feed the overload ladder).
   useFrameLoop(running, (dt) => {
