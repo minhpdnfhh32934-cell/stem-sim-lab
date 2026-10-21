@@ -3,7 +3,9 @@
  * filled in the population's colour to N(t) on a scale whose top is 1.08 × max(K, the run's
  * peak) (`binding.ts`), with two rings — the carrying capacity K (the 2D chart's K-line colour)
  * and K/2, where growth is fastest — and an arrow on the liquid's surface whose length is |dN/dt|
- * over the run's largest |dN/dt| (pointing down while the population shrinks, N > K). The column,
+ * over the model's arrowRef = max(rK/4, |dN/dt| at N₀) (pointing down while the population
+ * shrinks, N > K). The glass has lip rings at its top and foot and, on the dark stage, a light
+ * silhouette (`glassware` edge), so it reads as a vessel being filled on both themes. The column,
  * the plinth and the arrow's look are illustration; its levels and length are the model's.
  */
 import * as THREE from 'three';
@@ -36,6 +38,8 @@ export interface GaugeColumn {
   pickables: THREE.Object3D[];
   set(m: LogisticMoment): void;
   select(on: boolean): void;
+  /** Shows or hides the column's labels (title, K, K/2 and the moment's N, dN/dt). */
+  showLabels(on: boolean): void;
   /** Top of the plinth (world y): the column's zero. */
   base: number;
   /** World height of the column's full scale (`model.top`). */
@@ -94,15 +98,29 @@ export function gauge(
   const H = L.tubeH;
   const height = H;
 
-  // The glass tube (see-through, never pickable), a little taller than the full scale.
+  // The glass tube (see-through, never pickable), a little taller than the full scale, with a
+  // light silhouette on the dark stage and lip rings at its top and foot (both themes).
   const glass = glassMeshes(
     kit,
-    glassware(kit, { ink: true }),
+    glassware(kit, { ink: true, edge: true }),
     kit.geometry(jarGeometry(L.tubeR, H * 1.06, sides)),
     5,
     kit.tier === 'high',
   );
   for (const g of glass) g.position.set(L.x, base, L.z);
+  const rimMat = kit.solid(kit.color('--bio3d-glass-edge'), { roughness: 0.3, clearcoat: 0.4 });
+  for (const [y, thick, name] of [
+    [base + H * 1.06, Math.max(0.045, L.tubeR * 0.05), 'logi-glass-lip'],
+    [base + L.tubeR * 0.05, Math.max(0.035, L.tubeR * 0.04), 'logi-glass-foot'],
+  ] as const) {
+    const lip = kit.mesh(
+      kit.geometry(new THREE.TorusGeometry(L.tubeR * 1.0, thick, 6, sides).rotateX(Math.PI / 2)),
+      rimMat,
+    );
+    lip.name = name;
+    lip.position.set(L.x, y, L.z);
+    lip.raycast = () => undefined;
+  }
 
   // Rings at K and K/2 on the glass (K in the 2D chart's K-line colour, K/2 muted).
   const ringAt = (share: number, colorToken: string, thick: number, name: string) => {
@@ -126,7 +144,9 @@ export function gauge(
     'muted',
   );
   halfLabel.center.set(1, 0.5);
-  const title = kit.label(texts.title, [L.x, base + H * 1.06 + 0.6, L.z], 'strong');
+  for (const tag of [kLabel, halfLabel]) tag.element.classList.add('logi3d__mark');
+  // The title stands clear above the lip ring (seen from above, the lip's far half shows).
+  const title = kit.label(texts.title, [L.x, base + H * 1.06 + 1.05, L.z], 'strong');
   title.name = 'logi-gauge-title';
 
   // The growth arrow on the liquid's surface, right of the column (neutral ink: an annotation).
@@ -196,6 +216,9 @@ export function gauge(
     },
     select(on) {
       pickRing.visible = on;
+    },
+    showLabels(on) {
+      for (const l of [title, kLabel, halfLabel, momentLabel]) l.visible = on;
     },
     fillHeight: () => fillH,
     arrowLength: () => arrowLen,

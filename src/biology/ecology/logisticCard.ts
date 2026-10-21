@@ -49,7 +49,7 @@ export const LOGISTIC_CARD_3D: ScienceCardData = card3dAssumptions(LOGISTIC_CARD
     'The fence holds exactly the room for K individuals at the drawing scale; when N₀ > K the extra animals stand outside it. The logistic model has no space: the fence only illustrates the carrying capacity K.',
   ),
   L(
-    'Bãi cỏ bị gặm theo tỉ lệ N/K và cột N(t) có vòng K, K/2; mũi tên dài theo |dN/dt| (so với giá trị lớn nhất của lần chạy). Thức ăn chỉ là hình minh họa cho hệ số (1 − N/K).',
-    'The clover is grazed in proportion N/K and the N(t) column has rings at K and K/2; the arrow’s length follows |dN/dt| (relative to the run’s largest value). The food only illustrates the factor (1 − N/K).',
+    'Bãi cỏ bị gặm theo tỉ lệ N/K và cột N(t) có vòng K, K/2; mũi tên dài theo |dN/dt| so với rK/4, tốc độ lớn nhất mô hình cho phép khi N ≤ K (lúc N = K/2), hoặc so với |dN/dt| lúc t = 0 khi N₀ > K và giá trị đó lớn hơn. Thức ăn chỉ là hình minh họa cho hệ số (1 − N/K).',
+    'The clover is grazed in proportion N/K and the N(t) column has rings at K and K/2; the arrow’s length follows |dN/dt| relative to rK/4, the largest rate the model allows while N ≤ K (at N = K/2), or relative to |dN/dt| at t = 0 when N₀ > K and that is larger. The food only illustrates the factor (1 − N/K).',
   ),
 ]);

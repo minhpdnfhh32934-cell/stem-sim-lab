@@ -113,6 +113,7 @@ describe('theme tokens', () => {
       for (const name of [
         '--bio3d-protein',
         '--bio3d-glass',
+        '--bio3d-glass-edge',
         '--bio3d-liquid',
         '--bio3d-sky-top',
         '--bio3d-sky-horizon',

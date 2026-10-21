@@ -2,10 +2,12 @@
  * "Tăng trưởng logistic" in 3D: the population in its habitat filling up as N(t) of the exact
  * solution grows towards K (or falls to it when N₀ > K). Over the picture: the lesson's chips
  * (the same as over its 2D chart) and the drawing scale. Under it the time slider drawn over the
- * N(t) curve itself (on the gauge's scale, K dashed, t* marked), "Tới t*" and the moment's
- * numbers; the dN/dt chart under the stage marks the same moment. A tap on an animal, the column
- * or the clover opens its card. In the corner: "Hiện tên" (name callouts). Animals, places,
- * fence, clover, plants and motion are illustration (caption); every number is the model's.
+ * N(t) curve itself (on the gauge's scale, K dashed, t* marked), "Tới t*", the moment's numbers
+ * and the framing ("Toàn cảnh" or "Cận cảnh đàn"); the dN/dt chart under the stage marks the same
+ * moment. A tap on an animal, the column or the clover opens its card and moves in on what it
+ * picked, beside the card (either framing button closes the card). In the corner: "Hiện tên"
+ * (name callouts). Animals, places, fence, clover, plants and motion are illustration (caption);
+ * every number is the model's.
  */
 import { Crosshair, Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -16,6 +18,7 @@ import { prefersReducedMotion } from '@/ui/three/availability';
 import { L } from '../../common';
 import { useCardHeadFit } from '../../division/mitosis3d/partCardHead';
 import { useFmt } from '../../fmt';
+import { Segmented } from '../../ui';
 import { Bio3DView, type SceneSpec } from '../../view3d/Bio3DView';
 import { usePlayback, type Playback } from '../../view3d/playback';
 import { useScrollMore } from '../../view3d/useScrollMore';
@@ -46,7 +49,7 @@ import {
 } from './facts';
 import { LOGI_VIEW } from './layout';
 import { buildLogisticHabitat } from './scene';
-import { useLogistic3D } from './store';
+import { useLogistic3D, type LogiCameraMode } from './store';
 
 /** Real seconds the whole time span plays in. */
 const SECONDS = 10;
@@ -104,16 +107,40 @@ function CurveTrack({
   );
 }
 
+/**
+ * The framings: the meadow and the column, or the crowd close up. While a card is open the camera
+ * frames the picked part, so neither is checked; either one closes the card.
+ */
+function Framing({ camera, picked }: { camera: LogiCameraMode; picked: boolean }) {
+  return (
+    <Segmented<LogiCameraMode | 'pick'>
+      label={L('Góc nhìn', 'View')}
+      value={picked ? 'pick' : camera}
+      options={[
+        { id: 'overview', label: L('Toàn cảnh', 'Whole meadow') },
+        { id: 'closeup', label: L('Cận cảnh đàn', 'Herd close up') },
+      ]}
+      onChange={(v) => {
+        if (v !== 'pick') useLogistic3D.setState({ camera: v, selected: null });
+      }}
+    />
+  );
+}
+
 function TimePlayer({
   playback,
   model,
   moment,
   fmt,
+  camera,
+  picked,
 }: {
   playback: Playback;
   model: LogisticModel3D;
   moment: LogisticMoment;
   fmt: Fmt;
+  camera: LogiCameraMode;
+  picked: boolean;
 }) {
   const Lz = useLocalized();
   const canStar = tStarInRun(model);
@@ -159,6 +186,7 @@ function TimePlayer({
         label={Lz(L('Thời gian t', 'Time t'))}
       />
       <output aria-live="off">{readout(moment, fmt)}</output>
+      <Framing camera={camera} picked={picked} />
     </div>
   );
 }
@@ -225,6 +253,7 @@ export function Logistic3DView() {
   const playback = usePlayback(st.tEnd, { start: 0, autoplay: true, seconds: SECONDS });
   const moment = momentAt(model, playback.t);
   const selected = useLogistic3D((s) => s.selected);
+  const camera = useLogistic3D((s) => s.camera);
   // "Hiện tên": on unless the learner turned it off.
   const labelsOn = useLogistic3D((s) => s.labels) ?? true;
 
@@ -291,6 +320,9 @@ export function Logistic3DView() {
     onPick: (id) => {
       useLogistic3D.setState({ selected: parseSelection(id) });
     },
+    // A pick moves in on what it picked (the scene's frame of that id), beside its card; else the
+    // learner's framing ('overview' is no frame: the whole subject).
+    view: selectionId(selected) ?? camera,
     callouts,
   };
   return (
@@ -318,7 +350,16 @@ export function Logistic3DView() {
           }}
         />
       }
-      bottom={<TimePlayer playback={playback} model={model} moment={moment} fmt={fmt} />}
+      bottom={
+        <TimePlayer
+          playback={playback}
+          model={model}
+          moment={moment}
+          fmt={fmt}
+          camera={camera}
+          picked={selected !== null}
+        />
+      }
       info={
         selected ? (
           <PartCard model={model} moment={moment} selected={selected} fmt={fmt} />

@@ -112,6 +112,23 @@ function inflection(model: LogisticModel3D, fmt: Fmt): LocalizedText {
       );
 }
 
+/**
+ * What the growth arrow's full length stands for (binding's arrowRef): rK/4, the largest rate the
+ * model allows while N ≤ K — not this run's largest |dN/dt| when the run never reaches K/2 — or,
+ * when N₀ is far enough above K, |dN/dt| at t = 0.
+ */
+export function arrowScale(model: LogisticModel3D, fmt: Fmt): LocalizedText {
+  return model.arrowBasis === 'start'
+    ? L(
+        `Mũi tên dài theo |dN/dt| so với |dN/dt| lúc t = 0 = ${fmt(model.arrowRef, 3)} (N₀ > K: quần thể giảm nhanh nhất lúc đầu, nhanh hơn rK/4 = ${fmt(model.maxRate, 3)}).`,
+        `The arrow's length is |dN/dt| relative to |dN/dt| at t = 0 = ${fmt(model.arrowRef, 3)} (N₀ > K: the population shrinks fastest at the start, faster than rK/4 = ${fmt(model.maxRate, 3)}).`,
+      )
+    : L(
+        `Mũi tên dài theo |dN/dt| so với rK/4 = ${fmt(model.maxRate, 3)}: tốc độ lớn nhất mô hình cho phép khi N ≤ K (lúc N = K/2); lần chạy không qua K/2 thì mũi tên không dài hết cỡ.`,
+        `The arrow's length is |dN/dt| relative to rK/4 = ${fmt(model.maxRate, 3)}: the largest rate the model allows while N ≤ K (at N = K/2); a run that never reaches K/2 never draws a full arrow.`,
+      );
+}
+
 /** The picked part's card at moment m, or null when the pick no longer exists. */
 export function selectionCard(
   model: LogisticModel3D,
@@ -156,10 +173,7 @@ export function selectionCard(
           `Upper ring: carrying capacity K = ${fmt(model.K, 4)}; lower ring: K/2 = ${fmt(model.K / 2, 4)}.`,
         ),
         trend(m, fmt),
-        L(
-          `Mũi tên dài theo |dN/dt| so với giá trị lớn nhất của lần chạy (${fmt(model.arrowRef, 3)}).`,
-          `The arrow's length is |dN/dt| relative to the run's largest value (${fmt(model.arrowRef, 3)}).`,
-        ),
+        arrowScale(model, fmt),
         inflection(model, fmt),
       ],
     };

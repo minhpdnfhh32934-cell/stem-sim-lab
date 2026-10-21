@@ -68,6 +68,13 @@ async function settled(page: Page, p: Vec3): Promise<[number, number]> {
   throw new Error('the camera never settled');
 }
 
+/** Pixels per world unit around a point (how close the camera is to it). */
+async function scaleAt(page: Page, p: Vec3): Promise<number> {
+  const a = await settled(page, [p[0] - 1, p[1], p[2]]);
+  const b = await project(page, [p[0] + 1, p[1], p[2]]);
+  return b ? Math.hypot(b[0] - a[0], b[1] - a[1]) / 2 : 0;
+}
+
 /** The lesson's defaults (store.ts), the Medium tier's figure cap (binding.ts) and its clover. */
 const LESSON = { N0: 10, r: 0.5, K: 1000, tEnd: 30 };
 const MEDIUM_CAP = 200;
@@ -129,25 +136,59 @@ test('logistic growth 3D: the habitat follows N(t) of the exact solution', async
   s = await state(page);
   expect(s?.arrow).toBeCloseTo(0.34 * (s?.column ?? 0), 6);
 
-  // A tap on an animal opens its card with the moment's numbers.
+  // "Cận cảnh đàn": the camera moves in on the crowd (about 2.5×), and back.
   await expect.poll(async () => (await state(page))?.settling, { timeout: 30_000 }).toBe(false);
   const fp = s?.figurePoint;
   expect(fp).toBeTruthy();
+  const far = await scaleAt(page, fp as Vec3);
+  const overview = player.getByRole('radio', { name: 'Toàn cảnh' });
+  const herd = player.getByRole('radio', { name: 'Cận cảnh đàn' });
+  await expect(overview).toBeChecked();
+  await herd.click();
+  await expect(herd).toBeChecked();
+  await expect.poll(() => scaleAt(page, fp as Vec3)).toBeGreaterThan(far * 1.8);
+  await overview.click();
+  await expect
+    .poll(async () => Math.abs((await scaleAt(page, fp as Vec3)) / far - 1))
+    .toBeLessThan(0.05);
+
+  // A tap on an animal opens its card with the moment's numbers and moves in on it; neither
+  // framing is checked while the camera frames the pick.
   const at = await settled(page, fp as Vec3);
   await page.mouse.click(at[0], at[1]);
   const card = view.locator('.logi3d__card');
   await expect(card).toContainText('Một cá thể của quần thể');
   await expect(card).toContainText(`đại diện cho ${vi(per, 6)} cá thể`);
   await expect(card).toContainText(`N = ${vi(500, 4)} cá thể = ${vi(50, 3)} % sức chứa K`);
+  await expect(overview).not.toBeChecked();
+  await expect(herd).not.toBeChecked();
+  await expect.poll(() => scaleAt(page, fp as Vec3)).toBeGreaterThan(far * 1.8);
+  // The column's moment label waits while the animal's card is open.
+  const moment = view.locator('.logi3d__moment');
+  await expect(moment).toBeHidden();
   await card.getByRole('button', { name: 'Bỏ chọn' }).click();
   await expect(card).toHaveCount(0);
+  await expect(overview).toBeChecked();
 
-  // A tap on the column: its card.
+  // A tap on the column: its card, the column nearer beside it, its label clear of the card.
   const gp = await settled(page, s?.gaugePoint ?? [0, 0, 0]);
+  const gaugeFar = await scaleAt(page, s?.gaugePoint ?? [0, 0, 0]);
   await page.mouse.click(gp[0], gp[1] + 12);
   await expect(card).toContainText('Cột N(t)');
   await expect(card).toContainText(`rK/4 = ${vi(125, 3)}`);
-  await card.getByRole('button', { name: 'Bỏ chọn' }).click();
+  await expect(card).toContainText(`so với rK/4 = ${vi(125, 3)}`);
+  // The whole column with its title and labels beside the card: nearer, never farther.
+  await expect
+    .poll(() => scaleAt(page, s?.gaugePoint ?? [0, 0, 0]))
+    .toBeGreaterThan(gaugeFar * 1.15);
+  await expect(moment).toBeVisible();
+  const mb = await moment.boundingBox();
+  const cb = await card.boundingBox();
+  expect(mb).not.toBeNull();
+  expect((mb?.x ?? Infinity) + (mb?.width ?? 0)).toBeLessThanOrEqual(cb?.x ?? 0);
+  // Either framing closes the card.
+  await overview.click();
+  await expect(card).toHaveCount(0);
 
   // Names on the picture; the Tags button hides them.
   await expect.poll(async () => (await callouts(page)).length).toBeGreaterThan(0);

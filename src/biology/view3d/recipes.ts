@@ -516,10 +516,17 @@ export function particleMaterial(kit: SceneKit, role: ParticleRole): THREE.MeshS
  * physical transmission 1, thickness 0.05, roughness 0.05, IOR 1.5 (one draw). Otherwise the
  * see-through look of a shell (back face + rimmed front). `ink`: on the light stage
  * (--m3d-shell-ink) the front face also darkens towards its silhouette and edges
- * (`shellInkColor`), so pale glass on the pale stage still shows where the vessel is.
+ * (`shellInkColor`), so pale glass on the pale stage still shows where the vessel is. `edge`: on
+ * the dark stage (--m3d-glass-edge > 0) the silhouette turns towards a light --bio3d-glass-edge
+ * instead (dark glass on a dark stage would vanish), on every tier.
  */
-export function glassware(kit: SceneKit, o: { ink?: boolean } = {}): ShellLook {
+export function glassware(kit: SceneKit, o: { ink?: boolean; edge?: boolean } = {}): ShellLook {
   const color = structureColor(tok.bind(null, kit), 'glass');
+  const edgeAmount = o.edge ? themeNumber(kit, '--m3d-glass-edge', 0) : 0;
+  const edge: RimInk | null =
+    edgeAmount > 0
+      ? { color: tok(kit, '--bio3d-glass-edge'), amount: edgeAmount, power: 2.4 }
+      : null;
   if (kit.transmission) {
     const m = new THREE.MeshPhysicalMaterial({
       color,
@@ -530,14 +537,19 @@ export function glassware(kit: SceneKit, o: { ink?: boolean } = {}): ShellLook {
       metalness: 0,
       specularIntensity: 1,
     });
-    return { refract: kit.own(m), back: null, front: null };
+    const look = edge ? withRim(m, { color, strength: 0, alpha: 0, ink: edge }) : m;
+    return { refract: kit.own(look), back: null, front: null };
   }
   const ink = o.ink ? themeNumber(kit, '--m3d-shell-ink', 0) : 0;
   return shellLook(kit, color, {
     radius: 1,
     opacity: 0.12,
     rim: 0.8,
-    ...(ink > 0 ? { ink: { color: shellInkColor(color), amount: ink, power: 2.2 } } : {}),
+    ...(edge
+      ? { ink: edge }
+      : ink > 0
+        ? { ink: { color: shellInkColor(color), amount: ink, power: 2.2 } }
+        : {}),
   });
 }
 

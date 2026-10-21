@@ -143,6 +143,10 @@
      Each terrain/water colour is at least ΔE_OK 0.15 from every chart colour (tokens.test.ts). */
   --bio3d-protein: #a9b2c4;
   --bio3d-glass: #e6edf5;
+  /* Glassware's lip rings, and (dark stage only, by --m3d-glass-edge) its silhouette: a column
+     of glass still reads as a vessel against the sky. A muted steel, never a data colour. */
+  --bio3d-glass-edge: #9aa7b6;
+  --m3d-glass-edge: 0;
   --bio3d-liquid: #b8d6ea;
   --bio3d-sky-top: #dbe7f3;
   --bio3d-sky-horizon: #f3f6f9;
@@ -255,6 +259,8 @@
   --bio3d-ground: #1f2d24;
   --bio3d-protein: #6f7a90;
   --bio3d-glass: #2a3646;
+  --bio3d-glass-edge: #a7b6c8;
+  --m3d-glass-edge: 0.55;
   --bio3d-liquid: #16314a;
   --bio3d-sky-top: #0d1828;
   --bio3d-sky-horizon: #1a2838;

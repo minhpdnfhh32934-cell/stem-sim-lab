@@ -939,6 +939,13 @@
   text-align: left;
   font-variant-numeric: tabular-nums;
 }
+/* The column's K and K/2 marks on a soft chip: legible over trees and hills in a close-up. */
+.three-tag.logi3d__mark {
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg-panel) 80%, transparent);
+  text-shadow: none;
+}
 .logi3d__card {
   width: min(22rem, 46%);
   font-size: var(--text-sm);

@@ -17,11 +17,23 @@ import {
   selectionId,
   tStarInRun,
 } from './binding';
-import { CALLOUTS, gaugeMarks, momentLabel, readout, scaleText, selectionCard } from './facts';
 import {
+  CALLOUTS,
+  arrowScale,
+  gaugeMarks,
+  momentLabel,
+  readout,
+  scaleText,
+  selectionCard,
+} from './facts';
+import {
+  closeupPoints,
   crowdSlots,
   fenceRadius,
+  figurePoints,
   foodCount,
+  foodPoints,
+  gaugePoints,
   logiLayout,
   logiPlants,
   subjectPoints,
@@ -177,6 +189,64 @@ describe('logistic 3D: model → scene numbers', () => {
   });
 });
 
+describe('logistic 3D: the growth arrow’s scale', () => {
+  /** The run's own largest |dN/dt| (dense sampling of the exact solution). */
+  const runMax = (st: typeof LESSON) => {
+    let best = 0;
+    for (let i = 0; i <= 4000; i++) {
+      const N = logistic(st.N0, st.r, st.K, (i / 4000) * st.tEnd);
+      best = Math.max(best, Math.abs(growthRate(st.r, st.K, N)));
+    }
+    return best;
+  };
+  const cardText = (st: typeof LESSON) => {
+    const m = logisticModel3d(st, 200);
+    return selectionCard(m, momentAt(m, 0), { kind: 'gauge' }, fmt)
+      ?.lines.map((l) => l.vi)
+      .join('\n');
+  };
+
+  it('r = 0.1: the run never reaches K/2, so the arrow is scaled by rK/4, never full', () => {
+    const st = { ...LESSON, r: 0.1 };
+    const m = logisticModel3d(st, 200);
+    expect(tStarInRun(m)).toBe(false);
+    expect(m.arrowBasis).toBe('maxRate');
+    expect(m.arrowRef).toBe(25);
+    expect(runMax(st)).toBeLessThan(m.arrowRef * 0.6);
+    expect(Math.abs(momentAt(m, st.tEnd).arrow)).toBeLessThan(0.6);
+    const text = cardText(st) ?? '';
+    expect(text).toContain(`so với rK/4 = ${fmt(25, 3)}`);
+    expect(text).toContain('không dài hết cỡ');
+    expect(text).not.toContain('lớn nhất của lần chạy');
+  });
+
+  it('N₀ = 600 > K/2: the run is fastest at t = 0 (120), still scaled by rK/4 = 125', () => {
+    const st = { ...LESSON, N0: 600 };
+    const m = logisticModel3d(st, 200);
+    expect(m.arrowBasis).toBe('maxRate');
+    expect(m.arrowRef).toBe(125);
+    expect(runMax(st)).toBeCloseTo(120, 6);
+    expect(momentAt(m, 0).arrow).toBeCloseTo(120 / 125, 9);
+    expect(cardText(st)).toContain(`so với rK/4 = ${fmt(125, 3)}`);
+  });
+
+  it('N₀ far above K: scaled by |dN/dt| at t = 0, the run’s largest; just above K: rK/4', () => {
+    const m = logisticModel3d(FALLING, 200);
+    expect(m.arrowBasis).toBe('start');
+    expect(m.arrowRef).toBe(1500);
+    expect(runMax(FALLING)).toBeCloseTo(1500, 6);
+    expect(momentAt(m, 0).arrow).toBeCloseTo(-1, 12);
+    const text = arrowScale(m, fmt);
+    expect(text.vi).toContain(`so với |dN/dt| lúc t = 0 = ${fmt(1500, 3)}`);
+    expect(text.vi).toContain(`rK/4 = ${fmt(62.5, 3)}`);
+    expect(text.en).toContain('at t = 0');
+    // N₀ = 1,1 K: |dN/dt| at t = 0 (27,5) is below rK/4 (62,5), the scale stays rK/4.
+    const near = logisticModel3d({ ...FALLING, N0: 550 }, 200);
+    expect(near.arrowBasis).toBe('maxRate');
+    expect(near.arrowRef).toBe(62.5);
+  });
+});
+
 describe('logistic 3D: layout (illustration)', () => {
   const dist = (a: { x: number; z: number }, b: { x: number; z: number }) =>
     Math.hypot(a.x - b.x, a.z - b.z);
@@ -230,6 +300,50 @@ describe('logistic 3D: layout (illustration)', () => {
       expect(dist(p, L.gauge)).toBeGreaterThan(L.gauge.plinthR);
     }
     expect(subjectPoints(L).length).toBeGreaterThan(30);
+  });
+
+  it('close-ups: the herd strip, a picked animal with its neighbours, the column’s labels', () => {
+    const spread = (pts: [number, number, number][]) => {
+      const xs = pts.map((p) => p[0]);
+      const zs = pts.map((p) => p[2]);
+      return Math.hypot(Math.max(...xs) - Math.min(...xs), Math.max(...zs) - Math.min(...zs));
+    };
+    for (const [slots, kSlots] of [
+      [200, 200],
+      [150, 50],
+    ] as const) {
+      const L = logiLayout(slots, kSlots, 28);
+      const whole = spread(subjectPoints(L));
+      // "Cận cảnh đàn": from the meadow's centre (the first animals) to the front of the crowd
+      // and the fence; much narrower than the whole subject.
+      const close = closeupPoints(L);
+      const zs = close.map((p) => p[2]);
+      const xs = close.map((p) => p[0]);
+      const first = L.slots[0];
+      const edge = Math.max(L.meadow.r, L.fenceR);
+      expect(Math.min(...zs)).toBeLessThanOrEqual(L.meadow.z + 0.12 * edge);
+      expect(Math.max(...zs)).toBeGreaterThanOrEqual(L.meadow.z + Math.max(L.meadow.r, L.fenceR));
+      expect(Math.min(...xs)).toBeLessThan(first?.x ?? 0);
+      expect(Math.max(...xs)).toBeGreaterThan(first?.x ?? 0);
+      expect(spread(close)).toBeLessThan(whole * 0.62);
+      // The clover's: the outer, last-grazed part of the meadow up to the fence.
+      const food = foodPoints(L);
+      expect(Math.max(...food.map((p) => p[2]))).toBeGreaterThanOrEqual(L.meadow.z + edge);
+      expect(spread(food)).toBeLessThan(whole * 0.62);
+      // A picked animal: centred on its slot, a few figures wide.
+      const slot = L.slots[slots - 1];
+      const fig = figurePoints(L, slots - 1);
+      const cx = fig.reduce((a, p) => a + p[0], 0) / fig.length;
+      const cz = fig.reduce((a, p) => a + p[2], 0) / fig.length;
+      expect(Math.hypot(cx - (slot?.x ?? 0), cz - (slot?.z ?? 0))).toBeLessThan(1e-9);
+      expect(spread(fig)).toBeLessThan(whole * 0.3);
+      expect(figurePoints(L, slots)).toEqual([]);
+      // The column: its K / K/2 tags on the left and the moment's label on the right.
+      const g = gaugePoints(L).map((p) => p[0]);
+      expect(Math.min(...g)).toBeLessThan(L.gauge.x - L.gauge.tubeR - 3);
+      expect(Math.max(...g)).toBeGreaterThan(L.gauge.x + L.gauge.plinthR + 2.2);
+      expect(spread(gaugePoints(L))).toBeLessThan(whole * 0.45);
+    }
   });
 });
 

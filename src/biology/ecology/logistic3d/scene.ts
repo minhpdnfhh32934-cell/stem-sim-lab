@@ -4,12 +4,15 @@
  * at time t (one grazer per drawn slot, in the N(t) curve's colour) and the gauge column with its
  * K and K/2 rings and the dN/dt arrow. `setTime` moves to another moment of the exact solution
  * without rebuilding; `tick` plays the illustrative idle motion and newcomers growing in. Name
- * callouts: a figure, the fence and the clover (the column carries its own labels).
+ * callouts: a figure, the fence and the clover (the column carries its own labels). Besides the
+ * whole subject, the scene frames close-ups (`frames`): 'closeup' ("Cận cảnh đàn": the meadow
+ * from its centre to the fence facing the camera) and one per pick, keyed by its selection id
+ * (`figure:<slot>`, 'gauge', 'food'), so a tap moves in on what it picked.
  */
 import * as THREE from 'three';
-import type { Bio3DScene, Callout, SceneKit, Vec3 } from '../../view3d/kit';
+import type { Bio3DScene, Callout, SceneFrame, SceneKit, Vec3 } from '../../view3d/kit';
 import { habitat } from '../../view3d/primitives/habitat';
-import { balancedCenter, plantCounts } from '../../genetics/hw3d/layout';
+import { FIGURE_CLEARANCE, balancedCenter, plantCounts } from '../../genetics/hw3d/layout';
 import { plants } from '../../genetics/hw3d/vegetation';
 import {
   CAPACITY_TOKEN,
@@ -17,12 +20,25 @@ import {
   grazedPatches,
   momentAt,
   parseSelection,
+  selectionId,
   type LogisticModel3D,
   type LogisticMoment,
 } from './binding';
 import type { LogiCallout } from './facts';
 import { gauge, type GaugeTexts } from './gauge';
-import { LOGI_VIEW, foodCount, logiLayout, logiPlants, subjectPoints } from './layout';
+import {
+  LOGI_CLOSE_VIEW,
+  LOGI_PICK_VIEW,
+  LOGI_VIEW,
+  closeupPoints,
+  figurePoints,
+  foodCount,
+  foodPoints,
+  gaugePoints,
+  logiLayout,
+  logiPlants,
+  subjectPoints,
+} from './layout';
 import { meadow } from './meadow';
 import { flock } from './organisms';
 
@@ -47,9 +63,10 @@ export interface LogiSceneState {
   /** The arrow's signed length (world units, 0: hidden). */
   arrow: number;
   food: { lush: number; grazed: number };
-  /** A figure near the crowd's front, the column's liquid surface (world). */
+  /** A figure near the crowd's front, the column's liquid surface, a lush clover patch (world). */
   figurePoint: Vec3 | null;
   gaugePoint: Vec3;
+  foodPoint: Vec3 | null;
   /** Newcomers still growing in, or leavers shrinking. */
   settling: boolean;
 }
@@ -95,6 +112,24 @@ export function buildLogisticHabitat(kit: SceneKit, input: LogiSceneInput): Logi
   if (/^#[0-9a-f]{3,6}$/i.test(horizon)) {
     const camera = radius * 2.6;
     kit.scene.fog = new THREE.Fog(horizon, camera + radius * 0.6, camera + L.habitatR * 1.25);
+  }
+
+  // Close-ups (on the ground's relief): "Cận cảnh đàn" and one per pick, keyed by its id.
+  const lift = (p: Vec3): Vec3 => [p[0], p[1] + heightAt(p[0], p[2]), p[2]];
+  const framing = (points: Vec3[], dir: Vec3): SceneFrame => {
+    const p = points.map(lift);
+    const c = balancedCenter(p, dir);
+    const r = Math.max(1, ...p.map((q) => Math.hypot(q[0] - c[0], q[1] - c[1], q[2] - c[2])));
+    return { bounds: { center: c, radius: r, points: p }, dir };
+  };
+  const frames: Record<string, SceneFrame> = {
+    closeup: framing(closeupPoints(L), LOGI_CLOSE_VIEW),
+    food: framing(foodPoints(L), LOGI_VIEW),
+    gauge: framing(gaugePoints(L), LOGI_CLOSE_VIEW),
+  };
+  for (let i = 0; i < L.slots.length; i++) {
+    const id = selectionId({ kind: 'figure', slot: i });
+    if (id) frames[id] = framing(figurePoints(L, i), LOGI_PICK_VIEW);
   }
 
   // Name callouts: the drawn figure nearest the camera in view (kept while it stays about as
@@ -162,8 +197,26 @@ export function buildLogisticHabitat(kit: SceneKit, input: LogiSceneInput): Logi
   return {
     kit,
     bounds: { center, radius, points: pts },
+    frames,
     callouts,
-    calloutObstacles: () => ({ avoid: [column.hull, crowdHull], regions: [meadowSide, gaugeSide] }),
+    // Seen whole, a name never covers the crowd (names stand beside it); up close, where the
+    // crowd fills the picture, only the figure it names. Never the column.
+    calloutObstacles: (view) => {
+      if (!view || !frames[view])
+        return { avoid: [column.hull, crowdHull], regions: [meadowSide, gaugeSide] };
+      const p = named >= 0 ? figures.point(named) : null;
+      const r = FIGURE_CLEARANCE / 2;
+      const figure: Vec3[][] = p
+        ? [
+            [
+              [p[0] - r, p[1] - 0.4, p[2]],
+              [p[0] + r, p[1] - 0.4, p[2]],
+              [p[0], p[1] + 1.1, p[2]],
+            ],
+          ]
+        : [];
+      return { avoid: [column.hull, ...figure], regions: [meadowSide, gaugeSide] };
+    },
     setTime(t) {
       show(t);
     },
@@ -191,6 +244,10 @@ export function buildLogisticHabitat(kit: SceneKit, input: LogiSceneInput): Logi
       figures.select(s?.kind === 'figure' ? s.slot : null);
       column.select(s?.kind === 'gauge');
       field.select(s?.kind === 'food');
+      // An animal's or the clover's card (and the player's readout) carry the moment's numbers
+      // beside its close-up: the column's labels, off to the side and maybe under the card, wait
+      // until the card closes.
+      column.showLabels(!s || s.kind === 'gauge');
     },
     state: () => {
       // The front-most standing figure (largest z), for tests and the screenshot probes.
@@ -216,6 +273,7 @@ export function buildLogisticHabitat(kit: SceneKit, input: LogiSceneInput): Logi
         food: field.drawn(),
         figurePoint: figures.point(front),
         gaugePoint: column.surfacePoint(),
+        foodPoint: field.foodPoint(),
         settling: figures.settling(),
       };
     },

@@ -9,7 +9,9 @@
  *   shared by the whole run, so the figures always mean the same number; drawn = round(N(t) / per)
  *   (the chip says "làm tròn");
  * - the gauge column: filled to N / top, marks at K and K/2; the growth arrow's length is
- *   |dN/dt| over the largest |dN/dt| of the run (rK/4 when N₀ ≤ K);
+ *   |dN/dt| over arrowRef = max(rK/4, |dN/dt| at N₀). rK/4 is the largest rate the model allows
+ *   while N ≤ K (at N = K/2), so a run that never reaches K/2 never draws a full arrow: arrowRef
+ *   is the run's own largest |dN/dt| only when the run passes K/2 or starts high above K;
  * - the food patches (illustration of the share of the carrying capacity already used): of
  *   `patches` patches, round(patches · min(1, N/K)) are drawn grazed.
  *
@@ -55,8 +57,16 @@ export interface LogisticModel3D {
   tStar: number;
   /** rK/4: the largest growth rate the logistic model allows for N between 0 and K. */
   maxRate: number;
-  /** The largest |dN/dt| of the run: the growth arrow's full length. */
+  /**
+   * The growth arrow's full length: max(rK/4, |dN/dt| at N₀). Not the run's own largest |dN/dt|
+   * in general (a run that stays below K/2 never reaches rK/4).
+   */
   arrowRef: number;
+  /**
+   * What arrowRef is: 'maxRate' (rK/4) or 'start' (|dN/dt| at t = 0, larger than rK/4 only when
+   * N₀ > K(1 + √2)/2, the population then shrinks fastest at the start).
+   */
+  arrowBasis: 'maxRate' | 'start';
 }
 
 export interface LogisticMoment {
@@ -91,6 +101,8 @@ export function logisticModel3d(
   // One scale for the run and the fence: K figures fit too, even when the run stays far below K.
   const per = drawScale(Math.max(peak, K), cap);
   const maxRate = (r * K) / 4;
+  // Below K, |dN/dt| never exceeds rK/4 (the parabola's top); above K it is largest at N₀.
+  const start = Math.abs(growthRate(r, K, N0));
   return {
     N0,
     r,
@@ -103,8 +115,8 @@ export function logisticModel3d(
     top: 1.08 * Math.max(K, peak),
     tStar: logisticInflection(N0, r, K),
     maxRate,
-    // Below K, |dN/dt| never exceeds rK/4 (the parabola's top); above K it is largest at N₀.
-    arrowRef: Math.max(maxRate, Math.abs(growthRate(r, K, N0))),
+    arrowRef: Math.max(maxRate, start),
+    arrowBasis: start > maxRate ? 'start' : 'maxRate',
   };
 }
 

@@ -197,7 +197,7 @@ export function subjectPoints(L: LogiLayout): Vec3[] {
     const z = meadow.z + Math.sin(a) * r;
     out.push([x, 0, z], [x, 1.4, z]);
   }
-  const top = gauge.plinthH + gauge.tubeH * 1.12;
+  const top = gauge.plinthH + gauge.tubeH * 1.06 + 1.05;
   for (const [dx, dz] of [
     [gauge.plinthR, 0],
     [0, gauge.plinthR],
@@ -212,3 +212,58 @@ export function subjectPoints(L: LogiLayout): Vec3[] {
 
 /** The view's default direction (from the subject towards the camera): about 28° above it. */
 export const LOGI_VIEW: Vec3 = [0.2, 0.56, 1];
+/** "Cận cảnh đàn" and the column's close-up: lower and nearer, the animals seen from the side. */
+export const LOGI_CLOSE_VIEW: Vec3 = [0.22, 0.27, 1];
+/** A picked animal: from higher up, so the animals in front never hide it. */
+export const LOGI_PICK_VIEW: Vec3 = [0.16, 0.9, 1];
+
+/** Points of a strip of the ground (ground and figure height) from z0 to z1, half-width w. */
+function strip(cx: number, cz: number, z0: number, z1: number, w: number): Vec3[] {
+  const out: Vec3[] = [];
+  for (const z of [z0, (z0 + z1) / 2, z1])
+    for (const x of [-w, 0, w]) out.push([cx + x, 0, cz + z], [cx + x, 1.4, cz + z]);
+  return out;
+}
+
+/**
+ * "Cận cảnh đàn": the strip of the meadow from just in front of its
+ * centre, where the first animals stand (so the close-up is never empty), to the crowd's front
+ * edge and the fence facing the camera, about a third of the crowd's radius either side.
+ */
+export function closeupPoints(L: LogiLayout): Vec3[] {
+  const edge = Math.max(L.meadow.r, L.fenceR);
+  return strip(L.meadow.x, L.meadow.z, 0.1 * edge, edge * 1.04, edge * 0.36);
+}
+
+/**
+ * The clover's close-up (seen from the overview's height, so the bare and the lush patches show
+ * between the animals): the outer part of the meadow facing the camera, where the patches grazed
+ * last stand, with the inner ring above it.
+ */
+export function foodPoints(L: LogiLayout): Vec3[] {
+  const edge = Math.max(L.meadow.r, L.fenceR);
+  return strip(L.meadow.x, L.meadow.z, 0.3 * edge, edge * 1.04, edge * 0.36);
+}
+
+/** A picked animal's close-up: its slot and the neighbours about two figures away. */
+export function figurePoints(L: LogiLayout, slot: number): Vec3[] {
+  const s = L.slots[slot];
+  if (!s) return [];
+  const r = FIGURE_SPACING * 2.2;
+  return strip(s.x, s.z, -r, r, r);
+}
+
+/**
+ * The column's close-up: the plinth, the tube with its title, the K and K/2 tags on its left and
+ * the moment's label (N, dN/dt) on its right — so a card beside it never covers a label.
+ */
+export function gaugePoints(L: LogiLayout): Vec3[] {
+  const g = L.gauge;
+  const top = g.plinthH + g.tubeH * 1.06 + 1.75;
+  const left = g.x - g.tubeR * 1.1 - 0.55 - 3.4;
+  const right = g.x + g.tubeR + 0.9 + 4.4;
+  const out: Vec3[] = [];
+  for (const x of [left, g.x - g.plinthR, g.x + g.plinthR, right])
+    out.push([x, 0, g.z + g.plinthR], [x, top, g.z], [x, 0, g.z - g.plinthR]);
+  return out;
+}

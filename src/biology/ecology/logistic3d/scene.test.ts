@@ -188,4 +188,47 @@ describe('logistic growth habitat scene', () => {
     expect(ids).toEqual(expect.arrayContaining(['figure', 'fence', 'food']));
     expectAllFreed(kit, track, start);
   });
+
+  it('frames a herd close-up and one close-up per pick; the column’s labels wait for its card', () => {
+    const { kit, track, start } = testKit();
+    const model = logisticModel3d(LESSON, 200);
+    const scene = buildLogisticHabitat(kit, { model, texts });
+    scene.setTime?.(12);
+    const L = logiLayout(model.slots, model.kSlots, foodCount('medium'));
+    const frames = scene.frames ?? {};
+    // "Cận cảnh đàn", the column, the clover and every slot the run can draw.
+    expect(Object.keys(frames)).toEqual(
+      expect.arrayContaining(['closeup', 'gauge', 'food', 'figure:0']),
+    );
+    expect(Object.keys(frames)).toHaveLength(3 + model.slots);
+    expect(frames[`figure:${String(model.slots)}`]).toBeUndefined();
+    // Close-ups are much tighter than the whole subject (the camera moves in, never out).
+    const whole = scene.bounds.radius;
+    for (const id of ['closeup', 'gauge', 'food', 'figure:0', `figure:${String(model.slots - 1)}`])
+      expect(frames[id]?.bounds.radius ?? Infinity, id).toBeLessThan(whole * 0.62);
+    // A picked animal's close-up is centred near its slot; the column's on the column.
+    const slot = L.slots[model.slots - 1];
+    const fc = frames[`figure:${String(model.slots - 1)}`]?.bounds.center ?? [0, 0, 0];
+    expect(Math.hypot(fc[0] - (slot?.x ?? 0), fc[2] - (slot?.z ?? 0))).toBeLessThan(2);
+    const gc = frames.gauge?.bounds.center ?? [0, 0, 0];
+    expect(Math.abs(gc[0] - L.gauge.x)).toBeLessThan(L.gauge.tubeR + 1.5);
+    // The column's labels hide while an animal's or the clover's card is open.
+    const label = kit.scene.getObjectByName('logi-moment-label');
+    const title = kit.scene.getObjectByName('logi-gauge-title');
+    expect(label?.visible).toBe(true);
+    scene.select?.('figure:2');
+    expect(label?.visible).toBe(false);
+    scene.select?.('food');
+    expect(label?.visible).toBe(false);
+    expect(title?.visible).toBe(false);
+    scene.select?.('gauge');
+    expect(label?.visible).toBe(true);
+    expect(title?.visible).toBe(true);
+    scene.select?.(null);
+    expect(label?.visible).toBe(true);
+    // The glass has lip rings at its top and foot.
+    expect(kit.scene.getObjectByName('logi-glass-lip')).toBeTruthy();
+    expect(kit.scene.getObjectByName('logi-glass-foot')).toBeTruthy();
+    expectAllFreed(kit, track, start);
+  });
 });

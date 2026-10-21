@@ -433,6 +433,40 @@ describe('glassware, liquids and membrane sheets', () => {
     dark.dispose();
   });
 
+  it('glassware edge: a light silhouette on the dark stage only, on every tier', () => {
+    type Rim = { uRimInkAmount: { value: number }; uRimInk: { value: THREE.Color } };
+    const rim = (m: THREE.Material | null | undefined) => m?.userData.rim as Rim | undefined;
+    const light = kitFor('medium', { theme: 'light' });
+    const dark = kitFor('medium', { theme: 'dark' });
+    const t = tokenOf('dark');
+    // Light stage: the edge changes nothing (the dark ink outline stays).
+    const l = glassware(light, { ink: true, edge: true });
+    expect(`#${rim(l.front)?.uRimInk.value.getHexString() ?? ''}`).toBe(
+      shellInkColor(hex(l.front as THREE.MeshStandardMaterial)),
+    );
+    // Dark stage: the silhouette turns towards --bio3d-glass-edge, plainly lighter than the sky
+    // and the ground behind a vessel standing on a habitat.
+    const d = glassware(dark, { ink: true, edge: true });
+    const front = d.front as THREE.MeshStandardMaterial;
+    expect(rim(front)?.uRimInkAmount.value).toBe(Number(t('--m3d-glass-edge')));
+    expect(`#${rim(front)?.uRimInk.value.getHexString() ?? ''}`).toBe(t('--bio3d-glass-edge'));
+    const edge = rimFragment(front, 1);
+    const c = `#${new THREE.Color().setRGB(...(edge?.rgb ?? [0, 0, 0])).getHexString()}`;
+    for (const behind of ['--bio3d-sky-horizon', '--bio3d-sky-top', '--bio3d-grass']) {
+      const over = mixLinear(t(behind), c, edge?.alpha ?? 0);
+      expect(deltaEOK(over, t(behind)), behind).toBeGreaterThanOrEqual(0.2);
+    }
+    // Without `edge`, the dark glass keeps no outline (other glassware is unchanged).
+    expect(rim(glassware(dark, { ink: true }).front)?.uRimInkAmount.value).toBe(0);
+    // High on a discrete GPU: the refracting glass gets the same light silhouette.
+    const hi = kitFor('high', { transmission: true, theme: 'dark' });
+    expect(rim(glassware(hi, { edge: true }).refract)?.uRimInkAmount.value).toBeGreaterThan(0);
+    expect(rim(glassware(hi).refract)).toBeUndefined();
+    light.dispose();
+    dark.dispose();
+    hi.dispose();
+  });
+
   it('a water line: a closed thin loop round a rounded rectangle at y = 0', () => {
     const [hx, hz, r, th] = [3, 2, 0.12, 0.035];
     const g = waterLineGeometry(hx, hz, r, th);
