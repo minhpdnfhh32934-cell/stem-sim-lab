@@ -125,6 +125,13 @@ và p95 67 ms cả hai (hai tấm nền làn phủ thêm diện tích tô). Hậ
 trên GPU rời như trước; tỏa sáng chỉ chạy khi khung bộ ba đang đọc / viền đột biến hiện. Mức Thấp
 không có hình 3D cho hai bài (hiện 2D), nên không đổi; máy GPU tích hợp không bị nâng mức.
 
+**Vòng 2 (2026-10-21).** Bazơ mARN có vật liệu riêng (thêm 1 chương trình shader, không thêm lệnh vẽ)
+và được vẽ sau AO/tỏa sáng trên mức Cao. Vật cản của nhãn: "Đột biến điểm" tính một lần cho mỗi
+cảnh; "ADN → mARN → Protein" tính lại chỉ khi thời điểm đổi, dùng lại mảng điểm (không cấp phát khi
+phát); cỡ mỗi nhãn chữ nhỏ đo một lần cho mỗi chữ. Đo SwiftShader 1366×768, Trung bình, 2 lần: ADN →
+mARN → Protein phát 8 s: 320/331 khung, p50 16,7 ms, p95 50 ms, 12 lệnh vẽ; Đột biến điểm 3 s viền
+nhấp nháy: 93/91 khung, p50 33 ms, p95 50–67 ms, 25 lệnh vẽ — không chậm hơn lần đo trước.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

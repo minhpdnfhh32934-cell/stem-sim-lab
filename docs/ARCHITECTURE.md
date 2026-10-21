@@ -274,6 +274,16 @@ it without code of its own:
   plates (`laneSpan`), HDR outline hulls (MeshBasic, colour × `highlightIntensity`, `bloom`
   flag), gap rings, rounded brackets (bar + ticks + corner balls), an end cap for a premature
   stop; `ThreeHost.dragging()` keeps the site camera from gliding under the learner's hand.
+  Round 2: the end cap follows `prematureStop` (binding.ts: where the stop codon sits, not the
+  chain length). The mRNA's bases are their own rung set (`rungs(…, 'mrna')`: own material, never
+  faded, LAYER.FX so post-processing AO/bloom never washes out the colour code; the tRNA
+  anticodons too); only the DNA's rungs fade. "Theo dõi" in translation zooms towards the
+  machinery's focus (`camera.ts` `zoomedCenter`: frame centre at the fitted distance, focus from
+  0.55× of it; the view only adjusts while the camera is on the follow track). Name labels keep
+  clear of each scene's `labelObstacles()` (world hulls of a few base pairs: strands, mRNA, tRNAs,
+  chains) and of every tag shown (`TagLayer.rects()`, passed as `LabelObstacles.rects`), 4 px
+  inside the stage (`edge`); the mutation lane names sit outside each plate at its helix, on the
+  side its labels do not use.
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
   every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
   relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
