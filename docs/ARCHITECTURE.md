@@ -351,11 +351,12 @@ it without code of its own:
   table, `Bio3DFigureBody` with `top` / `bottom` / `info`): `binding.ts` runs the model
   (`matingRun` in `population.ts`: generation 0 = the learner's counts, generation g + 1 =
   `randomMating(N, p_g)` from one `rng(seed)` stream, so generation 1 is the panel's "Cho ngẫu
-  phối 1 thế hệ"), one `drawScale` for the whole run (at most `LEGIBLE_FIGURES` = 250 figures and
-  200 beads), `apportion` per class, and `slotClasses` (slots ranked by seeded keys take the
+  phối 1 thế hệ"; an empty population stays empty), one `drawScale` for the whole run (at most
+  `LEGIBLE_FIGURES` = 150 figures and 200 beads), `apportion` per class, and `slotClasses` (slots ranked by seeded keys take the
   classes in order: a count change of one moves at most two figures). `layout.ts` centres the
-  subject (a sunflower meadow at a fixed spacing, slot i never moves; the jar's plinth at its
-  right) in a terrain disc ~1.45× its width, trees only behind it; `balancedCenter` is the orbit
+  subject (a sunflower meadow at a fixed spacing, slot i never moves, neighbours at least
+  `FIGURE_CLEARANCE` apart, which a creature's footprint fits in whatever its facing, so figures
+  never pass through each other; the jar's plinth at its right) in a terrain disc ~1.45× its width, trees only behind it; `balancedCenter` is the orbit
   centre that balances the subject on screen from `HW_VIEW`. `scene.ts` = `habitat` (outdoor
   look, fog from just beyond the subject to the terrain's edge) + `vegetation.ts` (instanced
   conifers, broadleaf trees, bushes, rocks, tufts with baked vertex colours, tokens
@@ -367,6 +368,14 @@ it without code of its own:
     `look`, `onPick` / `selected` (`Bio3DScene.pick` / `select`; a pick re-measures the insets so
     the card never covers the subject), `rest()` (the resting picture when the motion stops) and
     the debug hooks `state()` / `project()`. The 2D page keeps the chart, table and button.
+    Round 2: `Bio3DScene.frames` (named framings: `frames.closeup` = `closeupPoints`, a few
+    figures every generation draws beside the jar, seen from `HW_CLOSE_VIEW`; `Bio3DCanvas`'s
+    `view` glides there) and name callouts (`Bio3DScene.callouts(camera)` + `calloutObstacles(view)`,
+    drawn by a `LabelLayer` in `Bio3DCanvas` from the lesson's `callouts` texts; they keep clear of
+    the kit's own labels). Hardy–Weinberg names one figure per genotype (the nearest in view, kept
+    while it stays about as near), its antennae, the jar's beads and the p : q ring; "Hiện tên"
+    (Tags) sits in the corner (`Bio3DFigureBody.tools`), "Toàn cảnh / Cận cảnh cá thể" in the
+    generation row. The gene pool's name heads the label in front of the plinth.
 - Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
   as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
   unlit; `alpha` bottom/top, default `LIQUID_ALPHA`), `liquidSurface`, `waterLineGeometry` (a
