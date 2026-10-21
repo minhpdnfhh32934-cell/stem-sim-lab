@@ -1,12 +1,11 @@
 /**
- * Numbers of the ecology 3D views (pure, tested): how many individuals the habitat shows at a
- * moment, read from the lesson's own model (the exact logistic solution, the Lotka–Volterra
- * trajectory). When more individuals exist than the quality tier draws, one figure stands for
+ * Numbers of the Lotka–Volterra 3D view (pure, tested): how many individuals the habitat shows at
+ * a moment, read from the lesson's own model (the trajectory; logistic growth has its own habitat,
+ * `logistic3d/`). When more individuals exist than the quality tier draws, one figure stands for
  * a fixed number of them for the whole run (the view says how many).
  */
 import { representative } from '../view3d/numbers';
-import { logistic, type LvParams } from './ecology';
-import type { LogisticState } from './store';
+import type { LvParams } from './ecology';
 
 export interface PopulationMoment {
   /** The model's value at t (continuous). */
@@ -15,20 +14,10 @@ export interface PopulationMoment {
   shown: number;
 }
 
-/** Largest N the logistic curve reaches on [0, tEnd] (it is monotone: an end point). */
-export function logisticPeak(st: LogisticState): number {
-  return Math.max(st.N0, logistic(st.N0, st.r, st.K, st.tEnd));
-}
-
 /** Individuals per figure, the same for every moment of the run. */
 export function figuresFor(peak: number, maxFigures: number): { per: number; capacity: number } {
   const { per } = representative(peak, maxFigures);
   return { per, capacity: Math.max(1, Math.round(peak / per)) };
-}
-
-export function logisticMoment(st: LogisticState, t: number, per: number): PopulationMoment {
-  const value = logistic(st.N0, st.r, st.K, Math.max(0, Math.min(st.tEnd, t)));
-  return { value, shown: Math.max(0, Math.round(value / per)) };
 }
 
 export interface LvTrajectory {

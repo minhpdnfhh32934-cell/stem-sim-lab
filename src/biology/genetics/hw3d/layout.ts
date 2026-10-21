@@ -172,8 +172,20 @@ export function plantCounts(tier: 'low' | 'medium' | 'high'): PlantCounts {
   return { trees: 10, bushes: 10, rocks: 5, tufts: 80 };
 }
 
+/**
+ * What plant placement keeps clear (a round meadow and a round plinth beside it) inside a
+ * habitat of radius `habitatR`; `halfWidth` is half the subject's width (tall plants never stand
+ * in front of it). Every habitat layout with a meadow and a plinth fits (`HwLayout`, logistic).
+ */
+export interface PlantSite {
+  meadow: { x: number; z: number; r: number };
+  pool: { x: number; z: number; plinthR: number };
+  habitatR: number;
+  halfWidth: number;
+}
+
 /** Plants of the habitat: seeded, so the same habitat always grows the same plants. */
-export function plantPlaces(L: HwLayout, counts: PlantCounts, seed = 5): Plant[] {
+export function plantPlaces(L: PlantSite, counts: PlantCounts, seed = 5): Plant[] {
   const r = rng(seed);
   const out: Plant[] = [];
   const R = L.habitatR * 0.9;

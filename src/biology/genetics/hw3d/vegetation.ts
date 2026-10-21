@@ -25,8 +25,9 @@ function merged(pieces: Piece[], jitter = 0, seed = 1): THREE.BufferGeometry {
     return s / 2147483647;
   };
   const flat = pieces.map(({ g, color, at, scale, rot }) => {
-    const f = g.toNonIndexed();
-    g.dispose();
+    // Icosahedra and dodecahedra are already non-indexed (no copy, no three.js warning).
+    const f = g.index ? g.toNonIndexed() : g;
+    if (f !== g) g.dispose();
     f.deleteAttribute('uv');
     if (jitter > 0) {
       // Uneven, hand-made surfaces: move every vertex a little (same seed, same plant).

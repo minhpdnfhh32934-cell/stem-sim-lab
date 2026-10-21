@@ -1,16 +1,14 @@
 /**
- * 3D scenes of the ecology lessons. Every count comes from the lesson's model (`eco3d.ts`); the
- * habitat, the figures and where they stand are illustration.
+ * 3D scene of the Lotka–Volterra lesson (logistic growth has its own habitat: `logistic3d/`).
+ * Every count comes from the lesson's model (`eco3d.ts`); the habitat, the figures and where they
+ * stand are illustration.
  *
- * - Logistic growth: one population in a round habitat that fills up as N(t) grows, and a
- *   column filled to N(t) with marks at K and K/2.
  * - Lotka–Volterra: prey (small figures) and predators (larger figures) in one habitat, each
  *   with a column filled to its share of the run's peak.
  */
 import type { Bio3DScene, SceneKit, Vec3 } from '../view3d/kit';
-import { logisticMoment, lvMoment, lvSampleAt, type LvTrajectory } from './eco3d';
+import { lvMoment, lvSampleAt, type LvTrajectory } from './eco3d';
 import { gauge, ground, population } from '../view3d/creatures';
-import type { LogisticState } from './store';
 
 /** Outline of a round habitat of radius r (and the columns up to height h beside it). */
 function habitatOutline(r: number, h: number, extraX: number): Vec3[] {
@@ -26,56 +24,6 @@ function habitatOutline(r: number, h: number, extraX: number): Vec3[] {
 /** Habitat radius for `capacity` figures of size `size` (about 1.6 size apart). */
 const habitatRadius = (capacity: number, size: number) =>
   Math.max(6, Math.sqrt(Math.max(1, capacity)) * 0.95 * size);
-
-export interface LogisticSceneInput {
-  st: LogisticState;
-  per: number;
-  capacity: number;
-  /** Page labels (the view's localized text with the model's values). */
-  texts: { k: string; half: string; title: string };
-}
-
-export function buildLogisticScene(kit: SceneKit, input: LogisticSceneInput): Bio3DScene {
-  const { st, per, capacity } = input;
-  const size = 1;
-  const R = habitatRadius(capacity, size);
-  ground(kit, R + 1.5, kit.color('--bio3d-ground'));
-  const pop = population(kit, {
-    capacity,
-    radius: R,
-    color: kit.color('--chart-1'),
-    kind: 'small',
-    seed: 1,
-    size,
-  });
-  // The column's top is a little above the larger of K and the run's peak.
-  const top = Math.max(st.K, st.N0) * 1.08;
-  const height = Math.max(6, R * 0.9);
-  const g = gauge(kit, {
-    at: [R + 4, 0],
-    height,
-    radius: Math.max(0.8, R * 0.06),
-    color: kit.color('--chart-1'),
-    marks: [
-      { share: st.K / top, text: input.texts.k },
-      { share: st.K / 2 / top, text: input.texts.half },
-    ],
-    title: input.texts.title,
-  });
-  return {
-    kit,
-    bounds: {
-      center: [2, height * 0.25, 0],
-      radius: R + 5,
-      points: habitatOutline(R + 1.5, height, R + 5),
-    },
-    setTime: (t) => {
-      const m = logisticMoment(st, t, per);
-      pop.setCount(m.shown);
-      g.set(m.value / top);
-    },
-  };
-}
 
 export interface LvSceneInput {
   traj: LvTrajectory;

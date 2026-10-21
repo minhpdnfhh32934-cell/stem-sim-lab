@@ -10,56 +10,30 @@ import { useShow3d } from '../view3d/support';
 import { Bio3DToolbar } from '../view3d/switch';
 import { LogisticChips, LvChips } from './chips';
 import { useLogisticData, useLvData } from './data';
+import { logistic } from './ecology';
+import { useLogistic3D } from './logistic3d/store';
+import { LOGISTIC_CARD, LOGISTIC_CARD_3D } from './logisticCard';
 import { useLogistic, useLv, type LogisticState, type LvState } from './store';
 import '../bio.css';
 
 // three.js and the 3D habitat load only when a 3D view is shown.
-const Logistic3D = lazy(() => import('./Logistic3D').then((m) => ({ default: m.Logistic3D })));
+const Logistic3DView = lazy(() =>
+  import('./logistic3d/Logistic3DView').then((m) => ({ default: m.Logistic3DView })),
+);
 const LotkaVolterra3D = lazy(() =>
   import('./LotkaVolterra3D').then((m) => ({ default: m.LotkaVolterra3D })),
 );
 
 /* ───────────────────────────── Logistic growth ───────────────────────────── */
 
-const LOGISTIC_CARD: ScienceCardData = {
-  title: L('Tăng trưởng quần thể (logistic)', 'Population growth (logistic)'),
-  model: L(
-    'Quần thể tăng theo phương trình logistic: tốc độ tăng giảm dần khi số cá thể tiến tới sức chứa K của môi trường. Nghiệm được tính chính xác bằng công thức; đường hàm mũ (không giới hạn) vẽ để so sánh.',
-    'The population follows the logistic equation: growth slows as N approaches the carrying capacity K. The curve uses the exact solution; unlimited exponential growth is drawn for comparison.',
-  ),
-  equations: [
-    { tex: '\\dfrac{dN}{dt} = rN\\left(1 - \\dfrac{N}{K}\\right)' },
-    { tex: 'N(t) = \\dfrac{K}{1 + \\left(\\dfrac{K}{N_0} - 1\\right)e^{-rt}}' },
-    {
-      tex: 't^{*} = \\dfrac{1}{r}\\ln\\!\\left(\\dfrac{K}{N_0} - 1\\right),\\quad \\left(\\dfrac{dN}{dt}\\right)_{\\max} = \\dfrac{rK}{4}',
-    },
-  ],
-  assumptions: [
-    L(
-      'r và K không đổi theo thời gian; không có di cư, không có độ trễ.',
-      'Constant r and K; no migration, no time lag.',
-    ),
-    L(
-      'N là biến liên tục (thích hợp cho quần thể lớn).',
-      'N is treated as continuous (suitable for large populations).',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Công thức nghiệm chính xác; test tự động so sánh với DOPRI5 và kiểm tra điểm uốn tại N = K/2.',
-    'Exact closed form; automated tests compare with DOPRI5 and check the inflection at N = K/2.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.sgk12, BSRC.murray, BSRC.campbell],
-};
-
 export function LogisticStage() {
-  usePublishCard(LOGISTIC_CARD);
   const { show3d } = useShow3d('logistic');
+  // The 3D habitat adds its notes to the card while it is on screen.
+  usePublishCard(show3d ? LOGISTIC_CARD_3D : LOGISTIC_CARD);
   if (show3d)
     return (
       <Suspense fallback={<div className="bio-view" />}>
-        <Logistic3D />
+        <Logistic3DView />
       </Suspense>
     );
   return <Logistic2D />;
@@ -169,18 +143,25 @@ export function LogisticPanel() {
 export function LogisticBottom() {
   const Lz = useLocalized();
   const st = useLogistic();
+  // The moment the 3D habitat shows (its N(t) is marked on the chart while it is on screen);
+  // the 2D page marks K/2, where growth is fastest.
+  const shown = useLogistic3D((s) => (s.active ? s.t : null));
   const data = useMemo(() => {
     const n = 200;
     const top = Math.max(st.K, st.N0) * 1.1;
     const x = Array.from({ length: n + 1 }, (_, i) => (i * top) / n);
     return { x, y: x.map((N) => st.r * N * (1 - N / st.K)) };
   }, [st.K, st.N0, st.r]);
+  const label = Lz(L('dN/dt = rN(1 − N/K)', 'dN/dt = rN(1 − N/K)'));
+  const series = useMemo(() => [{ label, y: data.y }], [label, data.y]);
+  const marker =
+    shown === null ? st.K / 2 : logistic(st.N0, st.r, st.K, Math.max(0, Math.min(st.tEnd, shown)));
   return (
     <div className="gas-bottom gas-bottom--single">
       <XYChart
         x={data.x}
-        series={[{ label: Lz(L('dN/dt = rN(1 − N/K)', 'dN/dt = rN(1 − N/K)')), y: data.y }]}
-        marker={st.K / 2}
+        series={series}
+        marker={marker}
         xLabel={Lz(L('Số cá thể N', 'Population size N'))}
         yLabel="dN/dt"
       />

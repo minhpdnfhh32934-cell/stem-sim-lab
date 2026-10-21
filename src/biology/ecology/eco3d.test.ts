@@ -2,12 +2,9 @@ import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
 import { SceneKit } from '../view3d/kit';
 import { expectAllFreed, testKit } from '../view3d/testing';
-import { logistic, lotkaVolterra } from './ecology';
-import { figuresFor, logisticMoment, logisticPeak, lvMoment, lvPeaks, lvSampleAt } from './eco3d';
-import { buildLogisticScene, buildLvScene } from './scenes3d';
-import type { LogisticState } from './store';
-
-const LOGI: LogisticState = { N0: 10, r: 0.5, K: 1000, tEnd: 30 };
+import { lotkaVolterra } from './ecology';
+import { figuresFor, lvMoment, lvPeaks, lvSampleAt } from './eco3d';
+import { buildLvScene } from './scenes3d';
 
 /** Figures drawn by the scene's instanced meshes. */
 function drawnFigures(kit: SceneKit): number[] {
@@ -18,25 +15,12 @@ function drawnFigures(kit: SceneKit): number[] {
   return out;
 }
 
-describe('ecology 3D numbers', () => {
-  it('the logistic peak is an end point of the run (the curve is monotone)', () => {
-    expect(logisticPeak(LOGI)).toBeCloseTo(logistic(10, 0.5, 1000, 30), 9);
-    const falling = { ...LOGI, N0: 1500 };
-    expect(logisticPeak(falling)).toBe(1500);
-  });
-
+describe('Lotka–Volterra 3D numbers', () => {
   it('one figure per individual when the tier can draw them all; else a fixed share, rounded', () => {
     expect(figuresFor(1000, 4000)).toEqual({ per: 1, capacity: 1000 });
     const big = figuresFor(9000, 1500);
     expect(big.per).toBe(6);
     expect(big.capacity).toBe(1500);
-    // Every moment of a run uses the same share.
-    const per = figuresFor(logisticPeak(LOGI), 300).per;
-    for (const t of [0, 5, 10, 30]) {
-      const m = logisticMoment(LOGI, t, per);
-      expect(m.value).toBeCloseTo(logistic(10, 0.5, 1000, t), 9);
-      expect(m.shown).toBe(Math.round(m.value / per));
-    }
   });
 
   it('Lotka–Volterra numbers are computed trajectory points, never interpolated', () => {
@@ -58,23 +42,7 @@ describe('ecology 3D numbers', () => {
   });
 });
 
-describe('ecology 3D scenes', () => {
-  it('logistic: the habitat shows round(N(t)) figures at every moment; dispose frees all', () => {
-    const { kit, track, start } = testKit();
-    const { per, capacity } = figuresFor(logisticPeak(LOGI), 4000);
-    const s = buildLogisticScene(kit, {
-      st: LOGI,
-      per,
-      capacity,
-      texts: { k: 'K = 1.000', half: 'K/2', title: 'N(t)' },
-    });
-    for (const t of [0, 5, 9.19, 20, 30]) {
-      s.setTime?.(t);
-      expect(drawnFigures(kit)).toEqual([Math.round(logistic(10, 0.5, 1000, t))]);
-    }
-    expectAllFreed(kit, track, start);
-  });
-
+describe('Lotka–Volterra 3D scene', () => {
   it('Lotka–Volterra: prey and predator figures follow the trajectory', () => {
     const { kit, track, start } = testKit();
     const traj = lotkaVolterra({ alpha: 1, beta: 0.1, delta: 0.075, gamma: 1.5 }, 10, 5, 30, 800);
