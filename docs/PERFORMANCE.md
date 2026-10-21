@@ -164,6 +164,8 @@ nước đục 20 mặt (không trong suốt). Sau: khuếch tán Trung bình 26
 màu); bóng đổ (shadow map) lên đế chỉ ở mức Cao trên GPU rời. Mức Thấp hiện hình 2D cho bài này nên
 không đổi; máy GPU tích hợp không bị nâng mức.
 
+**Khuếch tán & thẩm thấu 3D — vòng 2 (2026-10-21, bản 0.7.1).** Nền sáng: kính bể có viền đậm hơn (chỉ thêm phép tính trong shader của mặt trước), chất lỏng đậm hơn (độ trong suốt đỉnh/đáy 0,14/0,26 thay vì 0,04/0,15) và một đường viền mặt nước cho hai ngăn (một lệnh vẽ, khoảng 770 tam giác). Đĩa màng thẩm thấu thêm viền tròn gộp vào cùng một lưới (không thêm lệnh vẽ). Đo CPU (`drawStats`): khuếch tán 400 hạt, 8 lỗ Trung bình 11 → 12 lệnh vẽ, khoảng 39 900 tam giác (Cao 14 lệnh, 95 800); thẩm thấu không đổi (14 lệnh Trung bình). Ngân sách trong `scene.test` cập nhật có chủ ý. SwiftShader 1366×768, phát 6 s: khuếch tán Trung bình 256/255 khung (trước 264/267, p50 16,7 ms, p95 50 ms), Cao 138 (trước 141/143); thẩm thấu Trung bình 283/283 (trước 283/288), Cao 159 (trước 159). Mức Thấp vẫn hiện 2D cho bài này; máy GPU tích hợp không bị nâng mức.
+
 **Watchdog bộ nhớ** (`src/perf/memory.ts`): 10 giây đọc heap JS một lần (WebView2/Chromium). Khi vượt
 80 % ngân sách 300 MB (hoặc 80 % giới hạn heap), app giải phóng bộ nhớ đệm đã đăng ký (ví dụ: bản
 ghi đồ thị vật lý giữ lại một nửa số mẫu — chỉ giảm độ phân giải đồ thị, không ảnh hưởng mô phỏng)

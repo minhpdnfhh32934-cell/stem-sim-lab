@@ -316,23 +316,35 @@ it without code of its own:
   `setPhase` eases it out (`PRODUCT_EASE_S`); the view passes `ease` only while playing without
   reduced motion and settles the frame when play stops.
 - Transport (`src/biology/transport/transport3d/`): the diffusion tank (`diffusionScene.ts`) is
-  kit glassware around both compartments (`glassMeshes`; back faces on High only), one
-  `liquidBodyGeometry` body per compartment (the pickable compartment; scale = its width, so
-  V₁ : V₂ shows) with a `liquidSurface` plane each, the `fibrousMembrane` sheet (an
+  kit glassware around both compartments (`glassMeshes`; back faces on High only; `glassware(kit,
+{ ink: true })` darkens the front face towards its edges on the light stage), one
+  `liquidBodyGeometry` body per compartment (`VISIBLE_LIQUID_ALPHA`: denser than the default so the
+  pale light stage still shows it; the pickable compartment; scale = its width, so V₁ : V₂ shows)
+  with a `liquidSurface` plane and a water line (`waterLineGeometry` + `waterLine`, both loops in
+  one unpickable mesh) each, the `fibrousMembrane` sheet (an
   `ExtrudeGeometry` with one hole per pore, rim tori and open lining cylinders), and one merged
   stand mesh (base slab + the membrane's frame). Faint water dots on High only (`WATER_DOTS`,
   seeded Brownian walks per compartment via `waterSplit`; never counted by `sides()`). The U-tube
   (`uTube.ts`) is an axis (`halfAxis`/`uAxis`: arms straight from `ARM_START`, bends of radius
   `U_BEND`) swept by `sweepTube` into the glass (one merged mesh with the two lip tori), its inner
-  face (High) and each side's liquid. A liquid's material clips at its level (`clippingPlanes`,
-  constant = the model's height; its raycast drops hits above it) under an instanced meniscus whose
-  rim is that height (hidden when the level lies in a bend). The ruler is a plate on the stand with
+  face (High) and each side's liquid. Each side has an instanced concave meniscus whose lowest
+  point is the model's height (the standard reading of a water meniscus; `MENISCUS` = how far its
+  rim rises, illustration; hidden when the level lies in a bend), and its liquid's material clips
+  where that rim meets the glass (`clippingPlanes`, constant = height + `MENISCUS`, or the height
+  in a bend; its raycast drops hits above the cut; `levels()` still reports the model's heights).
+  The membrane disc is a merged cylinder + bead torus with `fibrousMembrane`'s `emphasis` (half way
+  back to `--subject-biology`) and `ink`; its label point is on the disc's upper front. The ruler is a plate on the stand with
   instanced engraved marks (`rulerTicks` + `rulerMinorTicks`); its numbers stay DOM tags, and the
   name labels keep clear of every tag (`LabelLayer` obstacles).
 - Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
   as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
-  unlit), `liquidSurface`, and `fibrousMembrane` (muted membrane colour, stretched-noise bump,
-  one-pass two-sided blending, sheen on High). The enzyme tank uses the same recipes.
+  unlit; `alpha` bottom/top, default `LIQUID_ALPHA`), `liquidSurface`, `waterLineGeometry` (a
+  thin tube round a rounded rectangle, corners sampled like edges) + `waterLine` (the liquid drawn
+  towards `--text` by `--m3d-water-line`: 0.5 light, 0.12 dark, about ΔE_OK 0.3 from the stage),
+  `shellInkColor` (the light stage's darker outline, also `proteinShell`'s), and `fibrousMembrane`
+  (muted membrane colour, stretched-noise bump, one-pass two-sided blending, sheen on High;
+  optional `emphasis` and `ink`). The enzyme tank uses the same recipes (without the ink, the
+  denser liquid or the water line).
 - Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
   every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
   relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
