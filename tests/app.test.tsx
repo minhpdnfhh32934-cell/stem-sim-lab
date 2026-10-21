@@ -6,7 +6,7 @@ import { useCommandPalette } from '@/app/command/commands';
 import { Inspector } from '@/app/layout/Inspector';
 import { useLayoutStore } from '@/app/layout/layoutStore';
 import { Timeline } from '@/app/layout/Timeline';
-import { openLab } from '@/app/topics';
+import { openLab, openStudio } from '@/app/topics';
 import { useNavigationStore } from '@/app/navigationStore';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
@@ -60,6 +60,36 @@ describe('App shell (Phase 0)', () => {
     expect(
       await screen.findByRole('heading', { name: 'Dạy học bằng AI' }, { timeout: 5000 }),
     ).toBeInTheDocument();
+  });
+
+  it('Science Studio shows inside the lab (screen "studio"), beside the topic library', async () => {
+    const user = userEvent.setup();
+    // openStudio() is what every older caller uses (it also closes AI Teacher).
+    act(() => {
+      openStudio();
+    });
+    expect(useNavigationStore.getState().screen).toBe('studio');
+    render(<App />);
+    // The studio screen is a lazy module: its first import is slow when the whole suite runs.
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Science Studio' }, { timeout: 5000 }),
+    ).toBeInTheDocument();
+    const library = screen.getByRole('complementary', { name: 'Thư viện chủ đề' });
+    expect(within(library).getByRole('button', { name: /^Science Studio/ })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    // A lesson takes the centre: no inspector, timeline or launch page around it.
+    expect(
+      screen.queryByRole('complementary', { name: 'Bảng thuộc tính' }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Điều khiển thời gian' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'Chào mừng đến với SimLab' }),
+    ).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Về Phòng thí nghiệm' }));
+    expect(useNavigationStore.getState().screen).toBe('lab');
+    expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
   });
 
   it('shows the three Science Card confidence levels', () => {
