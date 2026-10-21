@@ -1,6 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import reactions from '../../data/reactions.json' with { type: 'json' };
 import { fulfillGemini } from './fakeAi';
+import { enterLab, enterStudio } from './nav';
 
 /**
  * Science Studio end to end (brief flows 1–12; acceptance criteria in
@@ -91,7 +92,7 @@ async function watch(page: Page, quality: 'low' | 'medium' = 'medium'): Promise<
 }
 
 async function openStudio(page: Page, tab?: 'Hóa học' | 'Sinh học' | 'Vật lí' | 'Soạn bài') {
-  await page.getByRole('button', { name: /Science Studio/ }).click();
+  await enterStudio(page);
   // The studio screen is a lazy module, compiled by the dev server on first use (seen
   // 2026-10-20: still "Đang tải mô phỏng…" after 5 s in the full parallel run).
   await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible({
@@ -133,11 +134,11 @@ async function numberIn(cell: Locator): Promise<number> {
 const NOT_IN_DB = /chưa có trong cơ sở dữ liệu đã kiểm chứng/;
 const LESSON_PENDING = /Nội dung bài này chưa được kiểm duyệt/;
 
-test('opens from the launch page; each subject tab shows its own lesson', async ({ page }) => {
+test('opens from the lab; each subject tab shows its own lesson', async ({ page }) => {
   const w = await watch(page);
   await page.goto('/');
   await openStudio(page);
-  const tabs = page.getByRole('tablist').getByRole('tab');
+  const tabs = page.getByRole('tablist', { name: 'Chọn môn trong Studio' }).getByRole('tab');
   await expect(tabs).toHaveText(['Hóa học', 'Sinh học', 'Vật lí', 'Soạn bài']);
 
   const lessons: [string, RegExp][] = [
@@ -154,6 +155,67 @@ test('opens from the launch page; each subject tab shows its own lesson', async 
   }
   await page.getByRole('tab', { name: 'Soạn bài' }).click();
   await expect(page.getByRole('button', { name: 'Tạo bài mới' })).toBeVisible();
+  await expectClean(page, w);
+});
+
+test('the launch page has two entries; a lab topic opens its lesson; the session is kept', async ({
+  page,
+}) => {
+  const w = await watch(page);
+  await page.goto('/');
+  // User decision 2026-10-20: Phòng thí nghiệm and AI Teacher only; Science Studio is in the lab.
+  await expect(page.locator('.launch-card strong')).toHaveText(['Phòng thí nghiệm', 'AI Teacher']);
+  await expect(page.getByRole('button', { name: /Science Studio/ })).toHaveCount(0);
+  await enterLab(page);
+
+  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
+  const entry = library.getByRole('button', { name: /^Science Studio/ });
+  await expect(entry).toBeVisible();
+  expect((await entry.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(40);
+
+  // Chemistry topic → its lesson from the inspector card.
+  await page.getByRole('radio', { name: 'Hóa học' }).click();
+  await library.getByRole('button', { name: /^Thư viện phản ứng đã kiểm chứng( |$)/ }).click();
+  const inspector = page.getByRole('complementary', { name: 'Bảng thuộc tính' });
+  const openChem = inspector.getByRole('button', {
+    name: /^Học theo bài: Nhận biết ion Cl⁻ bằng dung dịch AgNO₃/,
+  });
+  await expect(openChem).toBeVisible({ timeout: 20_000 });
+  expect((await openChem.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(40);
+  await openChem.click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible({
+    timeout: 20_000,
+  });
+  await expect(page.getByRole('tab', { name: 'Hóa học' })).toHaveAttribute('aria-selected', 'true');
+  await expect(
+    page.getByRole('heading', { level: 2, name: /^Nhận biết ion Cl⁻ bằng dung dịch AgNO₃/ }),
+  ).toBeVisible();
+  // The lab's library stays beside the lesson.
+  await expect(entry).toHaveAttribute('aria-current', 'page');
+
+  // One step of the lesson, then back to the lab and in again: the session is where it was.
+  await page.getByRole('radio', { name: 'Xuất hiện kết tủa' }).click();
+  await next(page).click();
+  await expect(page.locator('.studio-steps [aria-current="step"]')).toContainText('Thí nghiệm');
+  await page.getByRole('button', { name: 'Về Phòng thí nghiệm' }).click();
+  await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible();
+  await library.getByRole('button', { name: /^Thư viện phản ứng đã kiểm chứng( |$)/ }).click();
+  await openChem.click();
+  await expect(page.locator('.studio-steps [aria-current="step"]')).toContainText('Thí nghiệm');
+
+  // The studio tab chooses the subject the library lists. Rơi tự do: "Dự đoán trước" is the
+  // lesson's prediction, not a second one in the lab.
+  await page.getByRole('tab', { name: 'Vật lí' }).click();
+  await expect(library.getByRole('list', { name: 'Vật lý' })).toBeVisible();
+  await library.getByRole('button', { name: 'Rơi tự do', exact: true }).click();
+  await page.getByRole('tab', { name: 'Thử thách' }).click();
+  const predict = page.getByRole('region', { name: 'Dự đoán trước' });
+  await expect(predict.getByRole('radio')).toHaveCount(0);
+  await predict.getByRole('button', { name: 'Dự đoán trong Science Studio' }).click();
+  await expect(page.getByRole('tab', { name: 'Vật lí' })).toHaveAttribute('aria-selected', 'true');
+  await expect(
+    page.getByRole('heading', { level: 2, name: /^Rơi tự do: thả từ độ cao gấp đôi/ }),
+  ).toBeVisible();
   await expectClean(page, w);
 });
 

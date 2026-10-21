@@ -18,7 +18,8 @@ Real model accuracy (not mocked): `GEMINI_API_KEY=… npm run golden:llm` (uses 
 `{"lastSeen": "999.0.0"}` (every version already seen), so the box never covers the other
 specs once a version's notes are marked ready. The spec itself sets an older `lastSeen`.
 
-Science Studio (`studio.spec.ts`): launch page → Studio tabs; chemistry bench against
+Science Studio (`studio.spec.ts`): the launch page has two cards only; lab → Studio tabs (sidebar
+entry, a topic's inspector card, Rơi tự do's "Dự đoán trước"), a session kept after going back; chemistry bench against
 `data/reactions.json` (no-record pair, another record, the question's pair), POE, report sources,
 reload; biology stages in the 2D picture (low quality); physics at a non-default height against
 √(2h/g) and the lab's own solution; authoring a chemistry lesson → preview → reload; "Hỏi thầy"

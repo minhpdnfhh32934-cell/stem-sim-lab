@@ -71,6 +71,8 @@ const vi = {
     comingSoon: 'Sắp có',
     comingSoonHint: 'Chủ đề này sẽ được xây dựng ở các giai đoạn sau.',
     historyEmpty: 'Chưa có mô phỏng nào. Các mô phỏng bạn chạy sẽ xuất hiện ở đây.',
+    studio: 'Science Studio',
+    studioHint: 'Bài học có hướng dẫn',
   },
   chapters: {
     kinematics: 'Động học',
@@ -368,6 +370,7 @@ const vi = {
     },
     home: 'Trang chủ',
     lab: 'Phòng thí nghiệm',
+    studio: 'Science Studio — bài học có hướng dẫn',
     teacherTalk: 'AI Teacher — trò chuyện',
     teacherBoard: 'AI Teacher — giảng trên bảng',
     theme: 'Đổi giao diện sáng / tối',
@@ -932,9 +935,6 @@ const vi = {
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
     teacherTitle: 'AI Teacher',
     teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
-    studioTitle: 'Science Studio',
-    studioBody:
-      'Bài học có hướng dẫn: dự đoán, thí nghiệm, quan sát số đo rồi giải thích và lưu báo cáo.',
     privacy: 'Em chọn khi nào chia sẻ ngữ cảnh màn hình hoặc dùng dịch vụ AI trực tuyến.',
   },
   studio: {
@@ -949,6 +949,17 @@ const vi = {
       authoring: 'Soạn bài',
     },
     pick: 'Chọn bài học',
+    backToLab: 'Về Phòng thí nghiệm',
+    lessons: {
+      title: 'Science Studio',
+      intro:
+        'Học chủ đề này theo bài có hướng dẫn: dự đoán, thí nghiệm, quan sát, giải thích, kết luận và báo cáo.',
+      open: 'Học theo bài: {title}',
+      teacher: 'Bài giáo viên soạn',
+      predictMoved:
+        'Phần dự đoán của chủ đề này nằm trong bài Science Studio “{title}”, cùng các bước giải thích, kết luận và báo cáo.',
+      predictOpen: 'Dự đoán trong Science Studio',
+    },
     difficulty: {
       intro: 'Làm quen',
       core: 'Cơ bản',

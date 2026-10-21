@@ -14,6 +14,8 @@ import { useModuleStore } from '@/modules/moduleStore';
 import { ScienceCard } from '@/science-card/ScienceCard';
 import { ModeSwitch } from '@/app/learner/ModeSwitch';
 import { useSettingsStore } from '@/app/settings/settingsStore';
+import { useActiveTopic } from '@/app/topics';
+import { TopicLessons } from '@/studio/TopicLessons';
 
 /** Right-hand panel: selected object, parameters, and the Science Card. */
 export const Inspector = memo(function Inspector() {
@@ -24,6 +26,7 @@ export const Inspector = memo(function Inspector() {
   const L = useLocalized();
   const ModulePanel = mod?.view.Panel;
   const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const topicId = useActiveTopic();
 
   return (
     <aside
@@ -37,6 +40,7 @@ export const Inspector = memo(function Inspector() {
       </header>
 
       <div className="panel__scroll">
+        <TopicLessons topicId={topicId} />
         {mod ? (
           <Section title={L(mod.view.title)}>
             {ModulePanel ? (

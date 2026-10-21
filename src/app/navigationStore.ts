@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+/** `studio` is Science Studio shown inside the lab (beside the topic library), not a page of its own. */
 export type AppScreen = 'home' | 'lab' | 'teacher' | 'studio';
 
 interface NavigationState {

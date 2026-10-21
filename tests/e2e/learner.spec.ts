@@ -137,26 +137,28 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   page,
 }) => {
   await openLab(page);
-  await page.getByRole('button', { name: 'Rơi tự do', exact: true }).click();
+  // Ném ngang: its prediction lives in the lab (Rơi tự do's is a Science Studio lesson).
+  await page.getByRole('button', { name: 'Ném ngang', exact: true }).click();
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
-  // Predict – observe – explain: the right answer is computed by the engine (√2 here).
+  // Predict – observe – explain: the right answer is computed by the engine. Doubling v₀ leaves
+  // the fall time t = √(2h₀/g) unchanged.
   const predict = page.getByRole('region', { name: 'Dự đoán trước' });
   const run = predict.getByRole('button', { name: 'Chạy để kiểm tra' });
   await expect(run).toBeDisabled();
   await predict.getByRole('radio', { name: 'Tăng 2 lần' }).click();
   await run.click();
   await expect(predict.getByRole('status')).toContainText('Kết quả khác với dự đoán');
-  await expect(predict.getByRole('radio', { name: /√2/ })).toHaveClass(/is-correct/);
+  await expect(predict.getByRole('radio', { name: 'Không đổi' })).toHaveClass(/is-correct/);
   await expect(predict.getByRole('textbox', { name: 'Bạn giải thích thế nào?' })).toBeVisible();
 
-  // Challenge: fall for 2 s → h ≈ 19,62 m.
-  const challenge = page.getByRole('region', { name: /Thử thách: Rơi đúng 2 giây/ });
+  // Challenge: land 40 m away from h₀ = 45 m (scene default, g = 9,81 m/s²) → v₀ = 40 / t.
+  const challenge = page.getByRole('region', { name: /Thử thách: Ném trúng đích 40 m/ });
   await challenge.getByRole('button', { name: 'Bắt đầu thử thách' }).click();
   await expect(challenge).toContainText('Hiện tại');
-  const h0 = page.getByRole('spinbutton', { name: /Độ cao ban đầu/ });
-  await h0.fill('19.62');
-  await h0.press('Enter');
+  const v0 = page.getByRole('spinbutton', { name: /Vận tốc ban đầu/ });
+  await v0.fill((40 / Math.sqrt((2 * 45) / 9.81)).toFixed(2));
+  await v0.press('Enter');
   await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');
   await expect(challenge).toContainText('Đã hoàn thành');
 

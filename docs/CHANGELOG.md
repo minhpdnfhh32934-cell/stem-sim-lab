@@ -2,6 +2,32 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## [Unreleased] - 0.7.1 (Đang xét duyệt)
+
+_Đang chờ duyệt ở PR #35 (nhánh claude/wizardly-galileo-k3vxcs, 21/10/2026): chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app._
+
+_Ghi chú này là bản nháp, chưa được duyệt để công bố._
+
+Science Studio chuyển vào trong Phòng thí nghiệm: một lối vào cho mỗi chủ đề, không còn hai chỗ dự đoán cho cùng một bài.
+
+### Added
+
+- Nút Science Studio ở đầu thư viện chủ đề và trong Tìm nhanh (Ctrl+K).
+- Chủ đề có bài hướng dẫn (Rơi tự do, Thư viện phản ứng đã kiểm chứng, Nguyên phân) có nút Học theo bài ở bảng bên phải.
+
+### Security
+
+- Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.
+
+### Changed
+
+- Trang mở đầu chỉ còn Phòng thí nghiệm và AI Teacher; Science Studio mở từ trong Phòng thí nghiệm, cạnh thư viện chủ đề.
+- Ở chủ đề Rơi tự do, Dự đoán trước dẫn sang bài Science Studio thay vì có một phần dự đoán thứ hai.
+
+### Known Issues
+
+- Bản này đổi phần lõi, nên máy đã cài 0.7.0 cần cài bộ cài mới (không cập nhật được trong app).
+
 ## [0.7.0] - 2026-10-20
 
 _Phát hành 20/10/2026 từ main @ 433c3a9 (lượt Release 39444423723). Phần web và phần lõi cùng số 0.7.0, nên ứng dụng 0.6.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống)._
@@ -449,6 +475,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35
 [0.7.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0
 [0.6.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0
 [0.5.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2

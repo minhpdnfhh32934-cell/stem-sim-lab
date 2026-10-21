@@ -75,10 +75,10 @@ chép qua USB và cài trước.
    sáng/tối, Cơ bản/Nâng cao, ngôn ngữ, trình chiếu, lưu/mở tệp). Mũi tên ↑ ↓ để chọn, Enter để mở,
    Esc để đóng.
 
-2. **Trang chủ SimLab** có ba lối vào:
-   - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử và trang "Hôm nay học gì?" hiện có;
-   - **AI Teacher** mở trang trò chuyện với trợ lý học tập;
-   - **Science Studio** mở các bài học có hướng dẫn (mục "Science Studio" bên dưới).
+2. **Trang chủ SimLab** có hai lối vào:
+   - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử, trang "Hôm nay học gì?" và **Science Studio**
+     (các bài học có hướng dẫn, mục "Science Studio" bên dưới);
+   - **AI Teacher** mở trang trò chuyện với trợ lý học tập.
 
    Bấm logo **SimLab** ở góc trái để quay về trang chủ.
 
@@ -277,8 +277,19 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
 
 ## Science Studio
 
-**Mở:** ở trang chủ SimLab, bấm thẻ **Science Studio**. Chọn môn ở các thẻ **Hóa học · Sinh học ·
-Vật lí · Soạn bài**, rồi chọn bài ở **Chọn bài học**. Bấm logo **SimLab** để quay về trang chủ.
+**Mở:** Science Studio nằm trong **Phòng thí nghiệm** (trang chủ SimLab không còn thẻ riêng). Có ba
+cách mở:
+
+- bấm nút **Science Studio** ở đầu thư viện chủ đề (bên trái) để xem mọi bài, kể cả bài giáo viên đã
+  soạn và thẻ **Soạn bài**;
+- khi đang mở một chủ đề có bài hướng dẫn (hiện có: Rơi tự do, Thư viện phản ứng đã kiểm chứng,
+  Nguyên phân), bấm **Học theo bài: …** ở thẻ **Science Studio** trong bảng bên phải;
+- ở chủ đề Rơi tự do, phần **Dự đoán trước** (thẻ **Thử thách**) dẫn sang bài Science Studio của chủ
+  đề, nên em chỉ dự đoán một lần, trong bài đó. Các thử thách nhỏ vẫn ở trong Phòng thí nghiệm.
+
+Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí · Soạn bài** (thư viện bên trái đổi
+theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Phòng thí nghiệm** để quay lại; bài đang làm
+dở được giữ nguyên. Bấm logo **SimLab** để về trang chủ.
 
 Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
 chọn dự đoán, làm thí nghiệm, viết giải thích (đủ số ký tự app ghi dưới ô) và viết kết luận thì mới
