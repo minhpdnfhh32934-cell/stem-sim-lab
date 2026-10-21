@@ -172,14 +172,18 @@ export interface Plants {
   meshes: THREE.InstancedMesh[];
 }
 
-/** Grows the habitat's plants (illustration) on the ground at `heightAt`. */
+/**
+ * Grows the habitat's plants (illustration) on the ground at `heightAt`; tufts take their colour
+ * from the grass they grow on (`grassToken`).
+ */
 export function plants(
   kit: SceneKit,
   list: readonly Plant[],
   heightAt: (x: number, z: number) => number,
+  grassToken = '--bio3d-grass',
 ): Plants {
   const col = (name: string) => new THREE.Color(kit.color(name));
-  const grass = col('--bio3d-grass');
+  const grass = col(grassToken);
   const palette: Palette = {
     foliage: col('--bio3d-foliage'),
     foliage2: col('--bio3d-foliage-2'),

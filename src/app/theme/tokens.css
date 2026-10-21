@@ -150,7 +150,15 @@
   --bio3d-grass-2: #c1ceb6;
   --bio3d-soil: #816f62;
   --bio3d-rock: #c8cdd3;
-  --bio3d-water: #c1d3d8;
+  /* The drift lesson's sea: a light aqua that deepens (darker by --bio3d-sea-depth) towards the
+     far side, mirroring the pale sky only a little (--bio3d-sea-sheen) so it never reads as fog. */
+  --bio3d-water: #a5e5e7;
+  --bio3d-sea-depth: 0.3;
+  --bio3d-sea-sheen: 0.4;
+  /* Grass of the drift islands: one natural green on every island whatever its fate (a flag
+     marks the fate). As green as the chart colours allow (ΔE_OK ≥ 0.15 from chart-3's green). */
+  --bio3d-island-grass: #3e623f;
+  --bio3d-island-grass-2: #4e6640;
   /* Beaches of the drift islands and the drift lesson's animals (their data is on their beads). */
   --bio3d-sand: #dcd3c0;
   --bio3d-creature: #ebe4d6;
@@ -255,6 +263,10 @@
   --bio3d-soil: #4a3e31;
   --bio3d-rock: #4c535d;
   --bio3d-water: #1f4b66;
+  --bio3d-sea-depth: 0.35;
+  --bio3d-sea-sheen: 0.75;
+  --bio3d-island-grass: #3e623f;
+  --bio3d-island-grass-2: #4e6640;
   --bio3d-sand: #5b5446;
   --bio3d-creature: #cdc8be;
   --bio3d-foliage: #2b3b2c;

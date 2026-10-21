@@ -3,8 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { SceneKit } from '../../view3d/kit';
 import { expectAllFreed, testKit } from '../../view3d/testing';
 import { driftRuns } from '../population';
-import { driftModel3d, figureBudget, islandAt, islandCap, type DriftModel3D } from './binding';
-import { FATE_TINT } from './island';
+import {
+  driftModel3d,
+  figureBudget,
+  islandAt,
+  islandCap,
+  summaryAt,
+  type DriftModel3D,
+} from './binding';
 import { driftLayout } from './layout';
 import { FATE_GLYPH, buildDriftArchipelago, islandFrame } from './scene';
 
@@ -13,7 +19,8 @@ const TOKENS: Record<string, string> = {
   '--chart-1': '#0072b2',
   '--chart-3': '#009e73',
   '--bio3d-grass': '#b5ccb0',
-  '--bio3d-grass-2': '#b5ccb0',
+  '--bio3d-island-grass': '#4e6640',
+  '--bio3d-island-grass-2': '#4e6640',
   '--bio3d-sand': '#dcd3c0',
   '--bio3d-creature': '#ebe4d6',
 };
@@ -65,36 +72,85 @@ describe('genetic drift archipelago scene', () => {
     expectAllFreed(kit, track, start);
   });
 
-  it('a fixed island’s grass takes A’s colour, a lost one a’s; the others stay grass', () => {
+  it('every island keeps the same grass; a fixed island flies A’s flag, a lost one a’s', () => {
     const kit = kitWithTokens();
     const m = model();
     const scene = buildDriftArchipelago(kit, { model: m });
+    const L = driftLayout(m.runs.length, m.figures);
+    const mesh = (name: string) => kit.scene.getObjectByName(name) as THREE.InstancedMesh;
+    const islandAtPoint = (x: number, z: number) =>
+      L.islands.reduce(
+        (best, is) =>
+          Math.hypot(x - is.x, z - is.z) <
+          Math.hypot(x - (L.islands[best]?.x ?? 0), z - (L.islands[best]?.z ?? 0))
+            ? is.index
+            : best,
+        0,
+      );
+    const m4 = new THREE.Matrix4();
+    const p = new THREE.Vector3();
+    const flagged = (name: string) => {
+      const f = mesh(name);
+      return Array.from({ length: f.count }, (_, j) => {
+        f.getMatrixAt(j, m4);
+        p.setFromMatrixPosition(m4);
+        return islandAtPoint(p.x, p.z);
+      }).sort((a, b) => a - b);
+    };
+    const ids = (fate: string, fates: readonly string[]) =>
+      fates.flatMap((f, i) => (f === fate ? [i] : []));
+
     scene.setTime?.(m.generations);
     const s = scene.state();
-    const fixed = s.fates.indexOf('fixed');
-    const lost = s.fates.indexOf('lost');
-    const both = s.fates.indexOf('polymorphic');
-    expect(fixed).toBeGreaterThanOrEqual(0);
-    expect(lost).toBeGreaterThanOrEqual(0);
-    expect(both).toBeGreaterThanOrEqual(0);
+    const sum = summaryAt(m, m.generations);
+    expect(ids('fixed', s.fates)).toHaveLength(sum.fixed);
+    expect(ids('lost', s.fates)).toHaveLength(sum.lost);
+    expect(sum.fixed).toBeGreaterThan(0);
+    expect(sum.lost).toBeGreaterThan(0);
+    expect(sum.polymorphic).toBeGreaterThan(0);
+    // One flag per fixed / lost island, on that island: banner and finial in the allele's colour,
+    // the finial in its bead's shape (A a cube, a a sphere).
+    expect(flagged('drift-flags-A')).toEqual(ids('fixed', s.fates));
+    expect(flagged('drift-finials-A')).toEqual(ids('fixed', s.fates));
+    expect(flagged('drift-flags-a')).toEqual(ids('lost', s.fates));
+    expect(flagged('drift-finials-a')).toEqual(ids('lost', s.fates));
+    expect(mesh('drift-flag-poles').count).toBe(sum.fixed + sum.lost);
+    const color = (name: string) =>
+      (mesh(name).material as THREE.MeshStandardMaterial).color.getHexString();
+    expect(color('drift-flags-A')).toBe(new THREE.Color(TOKENS['--chart-1']).getHexString());
+    expect(color('drift-finials-A')).toBe(new THREE.Color(TOKENS['--chart-1']).getHexString());
+    expect(color('drift-flags-a')).toBe(new THREE.Color(TOKENS['--chart-3']).getHexString());
+    expect(color('drift-finials-a')).toBe(new THREE.Color(TOKENS['--chart-3']).getHexString());
+    // A cube reaches its corners (|x| + |y| + |z| ≈ 3), a sphere never past √3.
+    const reach = (name: string) => {
+      const q = mesh(name).geometry.getAttribute('position');
+      let r = 0;
+      for (let i = 0; i < q.count; i++)
+        r = Math.max(r, Math.abs(q.getX(i)) + Math.abs(q.getY(i)) + Math.abs(q.getZ(i)));
+      return r;
+    };
+    expect(reach('drift-finials-A')).toBeGreaterThan(2.2);
+    expect(reach('drift-finials-a')).toBeLessThan(1.75);
+
+    // The ground never takes a fate's colour: each island's grassy centre is the islands' grass.
     const ground = kit.scene.getObjectByName('drift-islands') as THREE.Mesh;
     const colors = ground.geometry.getAttribute('color');
     const perIsland = colors.count / m.runs.length;
-    // The first vertex of an island is its grassy centre: grass lerped FATE_TINT towards the allele.
-    const grass = new THREE.Color(TOKENS['--bio3d-grass']);
+    const grass = new THREE.Color(TOKENS['--bio3d-island-grass']).getHexString();
     const at = (r: number) =>
       new THREE.Color(
         colors.getX(r * perIsland),
         colors.getY(r * perIsland),
         colors.getZ(r * perIsland),
-      );
-    const want = (to: string) => grass.clone().lerp(new THREE.Color(to), FATE_TINT);
-    expect(at(fixed).getHexString()).toBe(want(TOKENS['--chart-1'] ?? '').getHexString());
-    expect(at(lost).getHexString()).toBe(want(TOKENS['--chart-3'] ?? '').getHexString());
-    expect(at(both).getHexString()).toBe(grass.getHexString());
-    // Back at generation 0 every island is grass again.
+      ).getHexString();
+    for (let r = 0; r < m.runs.length; r++) expect(at(r)).toBe(grass);
+
+    // Back at generation 0 both alleles are on every island: no flags.
     scene.setTime?.(0);
-    expect(at(fixed).getHexString()).toBe(grass.getHexString());
+    expect(scene.state().fates.every((f) => f === 'polymorphic')).toBe(true);
+    for (const name of ['drift-flag-poles', 'drift-flags-A', 'drift-flags-a'])
+      expect(mesh(name).count).toBe(0);
+    for (let r = 0; r < m.runs.length; r++) expect(at(r)).toBe(grass);
     // The animals all wear one neutral colour: the model counts gene copies, not genotypes.
     const body = kit.scene.getObjectByName('drift-figures') as THREE.InstancedMesh;
     const c = new THREE.Color();
@@ -128,8 +184,16 @@ describe('genetic drift archipelago scene', () => {
     expect(scene.pick?.(from(L.extent + 4, 0))).toBeNull();
     scene.select?.('island:5');
     expect(kit.scene.getObjectByName('drift-pick-island')?.visible).toBe(true);
+    expect(kit.scene.getObjectByName('drift-pick-figure')?.visible).toBe(false);
     scene.select?.('figure:3');
     expect(kit.scene.getObjectByName('drift-pick-island')?.visible).toBe(false);
+    // The picked animal gets a pointer over its antennae.
+    const mark = kit.scene.getObjectByName('drift-pick-figure');
+    const fig = scene.state().figurePoint;
+    expect(mark?.visible).toBe(true);
+    expect(mark?.position.y ?? 0).toBeGreaterThan((fig?.[1] ?? 0) + 0.5);
+    scene.select?.(null);
+    expect(mark?.visible).toBe(false);
     expectAllFreed(kit, track, start);
   });
 

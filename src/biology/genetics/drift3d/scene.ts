@@ -2,8 +2,9 @@
  * The genetic drift archipelago in 3D: one island per Wright–Fisher run of the lesson, on a calm
  * sea under the outdoor light. Each island holds its population (N / k figures, two allele beads
  * each on their antennae: A a cube, a a sphere), a band round its coast split exactly p : q, and a
- * numbered tag on the water in front. When the model fixes or loses A on an island, its grass
- * turns towards that allele's colour and the tag shows the allele left (■ A, ● a).
+ * numbered tag on the water in front. When the model fixes or loses A on an island, a flag in the
+ * colour of the allele left stands on its shore (its pole topped by that allele's bead shape) and
+ * the tag shows it (■ A, ● a); the grass is the same on every island.
  *
  * `setTime` moves to another generation of the model's runs without rebuilding; `tick` plays the
  * illustrative idle hops. Besides the whole archipelago, the scene frames a close-up of each
@@ -25,6 +26,7 @@ import {
   type Fate,
 } from './binding';
 import type { DriftCallout } from './facts';
+import { fateFlags } from './flags';
 import { islandGround, pqBands, sea } from './island';
 import {
   BAND_GAP,
@@ -59,7 +61,7 @@ export interface DriftSceneState {
   beadsA: number[];
   /** Allele beads drawn in all (the two instanced bead meshes). */
   tips: { A: number; a: number };
-  /** Per island: the p its band is split at, and the fate its grass is coloured for. */
+  /** Per island: the p its band is split at, and the fate its flag shows. */
   bands: number[];
   fates: Fate[];
   /** Per island: its tag's text. */
@@ -82,11 +84,12 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
   const runs = model.runs.length;
   const L = driftLayout(runs, model.figures);
   const colors = { A: kit.color(alleleToken('A')), a: kit.color(alleleToken('a')) };
-  const ground = islandGround(kit, L, colors);
+  const ground = islandGround(kit, L);
   sea(kit, L.extent * 4 + 60, L);
   const bands = pqBands(kit, L, colors);
   const heightAt = (x: number, z: number) => ground.heightAt(x, z);
-  plants(kit, islandPlants(L, islandPlantCounts(kit.tier)), heightAt);
+  plants(kit, islandPlants(L, islandPlantCounts(kit.tier)), heightAt, '--bio3d-island-grass');
+  const flags = fateFlags(kit, L, colors, heightAt);
   // One body colour for all: the model counts gene copies, not genotypes (data on the beads).
   const figures = herd(kit, L.slots, heightAt, [0, 0], kit.color('--bio3d-creature'));
   figures.body.name = 'drift-figures';
@@ -116,9 +119,18 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
   pickRing.name = 'drift-pick-island';
   pickRing.visible = false;
   pickRing.raycast = () => undefined;
+  // The picked animal: a glowing pointer over its antennae (besides the herd's ring at its feet).
+  const pickMark = kit.mesh(
+    kit.geometry(new THREE.ConeGeometry(0.26, 0.55, Math.max(8, kit.seg)).rotateX(Math.PI)),
+    ringMat,
+  );
+  pickMark.name = 'drift-pick-figure';
+  pickMark.visible = false;
+  pickMark.raycast = () => undefined;
 
   const keys = L.islands.map((is) => beadKeys(is.index, 2 * model.figures));
   const classes = new Uint8Array(runs * model.figures);
+  const fatesNow: Fate[] = L.islands.map(() => 'polymorphic');
   const G = model.generations;
   let shown = -1;
 
@@ -128,7 +140,7 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
       const x = islandAt(model, i, g);
       if (!x) continue;
       bands.set(i, x.p);
-      ground.setFate(i, x.fate);
+      fatesNow[i] = x.fate;
       classes.set(pairing(x.beads.A, model.figures, keys[i] ?? []), i * model.figures);
       const text = `${String(i + 1)}${FATE_GLYPH[x.fate] ? ` ${FATE_GLYPH[x.fate]}` : ''}`;
       const tag = tags[i];
@@ -138,6 +150,7 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
         tag.element.dataset.fate = x.fate;
       }
     }
+    flags.show(fatesNow);
     figures.show(classes, false);
     shown = g;
   };
@@ -158,7 +171,9 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
 
   const frames = Object.fromEntries(
     L.islands.map((is) => {
-      const p = islandPoints(is);
+      // The island and its flag's top (the flag stands only when A is fixed or lost, but the
+      // framing stays the same whatever the generation).
+      const p = [...islandPoints(is), flags.top(is.index)];
       const c = balancedCenter(p, DRIFT_CLOSE_VIEW);
       const r = Math.max(1, ...p.map((q) => Math.hypot(q[0] - c[0], q[1] - c[1], q[2] - c[2])));
       return [
@@ -173,6 +188,7 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
   const proj = new THREE.Vector3();
   const at = new THREE.Vector3();
   let picked: number | null = null;
+  let pickedSlot: number | null = null;
   let named = -1;
   let namedFigure = -1;
   const inView = (camera: THREE.Camera, p: Vec3) => {
@@ -228,7 +244,7 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
   };
 
   const callouts = (camera: THREE.Camera): Callout[] => {
-    const fates = ground.fates();
+    const fates = flags.shown();
     const i =
       picked !== null && inView(camera, islandTop(picked))
         ? picked
@@ -241,9 +257,12 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
     if (i >= 0) {
       out.push({ id: 'island', point: onCoast(i, (3 * Math.PI) / 4, 0.9) });
       out.push({ id: 'band', point: onBand(i, Math.PI / 4), color: colors.A });
-      // The figure of that island nearest the camera: its antennae carry its two gene copies.
-      let best = -1;
-      let d = Infinity;
+      // The picked figure, else the figure of that island nearest the camera: its antennae carry
+      // its two gene copies.
+      const mine = (s: number) => s >= i * model.figures && s < (i + 1) * model.figures;
+      const pp = pickedSlot !== null && mine(pickedSlot) ? figures.point(pickedSlot) : null;
+      let best = pp && inView(camera, pp) ? (pickedSlot ?? -1) : -1;
+      let d = best >= 0 ? -Infinity : Infinity;
       for (let s = i * model.figures; s < (i + 1) * model.figures; s++) {
         const p = figures.point(s);
         if (!p || !inView(camera, p)) continue;
@@ -259,10 +278,13 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
       const body = best >= 0 ? figures.point(best) : null;
       if (body) out.push({ id: 'figure', point: body });
     }
-    const fixed = nearest(camera, (k) => k !== i && fates[k] === 'fixed');
-    if (fixed >= 0) out.push({ id: 'fixed', point: islandTop(fixed), color: colors.A });
-    const lost = nearest(camera, (k) => k !== i && fates[k] === 'lost');
-    if (lost >= 0) out.push({ id: 'lost', point: islandTop(lost), color: colors.a });
+    // A fixed / lost island's name points at its flag (the named island's own flag first).
+    const fate = (want: Fate) =>
+      i >= 0 && fates[i] === want ? i : nearest(camera, (k) => k !== i && fates[k] === want);
+    const fixed = fate('fixed');
+    if (fixed >= 0) out.push({ id: 'fixed', point: flags.top(fixed), color: colors.A });
+    const lost = fate('lost');
+    if (lost >= 0) out.push({ id: 'lost', point: flags.top(lost), color: colors.a });
     return out;
   };
 
@@ -310,7 +332,11 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
     },
     select(id) {
       const s = parseSelection(id);
-      figures.select(s?.kind === 'figure' ? s.slot : null);
+      pickedSlot = s?.kind === 'figure' ? s.slot : null;
+      figures.select(pickedSlot);
+      const tip = pickedSlot !== null ? figures.tipPoint(pickedSlot) : null;
+      pickMark.visible = !!tip;
+      if (tip) pickMark.position.set(tip[0], tip[1] + 0.85, tip[2]);
       picked =
         s?.kind === 'island'
           ? s.island
@@ -345,7 +371,7 @@ export function buildDriftArchipelago(kit: SceneKit, input: DriftSceneInput): Dr
         beadsA,
         tips: { A: count('hw-allele-A'), a: count('hw-allele-a') },
         bands: [...bands.shown()],
-        fates: [...ground.fates()],
+        fates: [...flags.shown()],
         tags: [...tagText],
         figurePoint: figures.point(0),
         islandPoints: L.islands.map((_, i) => islandTop(i)),

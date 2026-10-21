@@ -34,14 +34,14 @@ export const DRIFT_CARD: ScienceCardData = {
   sources: [BSRC.hartl, BSRC.sgk12],
 };
 
-/** What the 3D archipelago adds to the card (DATA_REVIEW DRF3D-1 … DRF3D-5). */
+/** What the 3D archipelago adds to the card (DATA_REVIEW DRF3D-1 … DRF3D-7). */
 export const DRIFT_CARD_3D: ScienceCardData = card3dAssumptions(DRIFT_CARD, [
   L(
-    'Hình 3D: mỗi đảo là một quần thể (một lần chạy của bài, cùng hạt giống với biểu đồ 2D), các đảo độc lập, không di nhập gen; dải quanh bờ chia đúng p : q; khi A cố định (p = 1) hay mất (p = 0), cỏ của đảo đổi sang màu của alen còn lại (chỉ là dấu hiệu, môi trường không đổi).',
-    '3D picture: each island is one population (one run of the lesson, the same seed as the 2D chart); the islands are independent, with no migration; the band round its coast is split exactly p : q; when A is fixed (p = 1) or lost (p = 0), the island’s grass takes the colour of the allele left (only a marker: the environment does not change).',
+    'Hình 3D: mỗi đảo là một quần thể (một lần chạy của bài, cùng hạt giống với biểu đồ 2D), các đảo độc lập, không di nhập gen; dải quanh bờ chia đúng p : q; khi A cố định (p = 1) hay mất (p = 0), một lá cờ màu của alen còn lại (đỉnh cột ■ = A, ● = a) cắm trên đảo — chỉ là dấu hiệu: cỏ của mọi đảo như nhau, môi trường không đổi.',
+    '3D picture: each island is one population (one run of the lesson, the same seed as the 2D chart); the islands are independent, with no migration; the band round its coast is split exactly p : q; when A is fixed (p = 1) or lost (p = 0), a flag in the colour of the allele left (■ = A, ● = a on its pole) stands on the island — only a marker: every island has the same grass, the environment does not change.',
   ),
   L(
-    'Mỗi con vật là một cá thể (hoặc một nhóm, theo thang ghi trên hình); hai hạt trên râu là hai bản sao gen (khối vuông = A, hình cầu = a). Mô hình chỉ đếm bản sao gen của cả quần thể: con vật nào mang hai bản sao nào là minh họa.',
-    'Each animal is one individual (or a group, at the scale shown); the two beads on its antennae are two gene copies (cube = A, sphere = a). The model only counts the gene copies of the whole population: which animal carries which two copies is illustration.',
+    'Mỗi con vật là một cá thể, hai hạt trên râu là hai bản sao gen của nó (khối vuông = A, hình cầu = a); khi số lớn, mỗi con vật là một nhóm k cá thể và mỗi hạt là k bản sao gen (thang ghi trên hình). Mô hình chỉ đếm bản sao gen của cả quần thể: con vật nào mang hai bản sao nào là minh họa.',
+    'Each animal is one individual and the two beads on its antennae are its two gene copies (cube = A, sphere = a); with large numbers each animal is a group of k individuals and each bead k gene copies (the scale shown on the picture). The model only counts the gene copies of the whole population: which animal carries which two copies is illustration.',
   ),
 ]);

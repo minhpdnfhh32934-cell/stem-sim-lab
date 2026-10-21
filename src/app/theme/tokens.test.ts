@@ -86,6 +86,8 @@ describe('theme tokens', () => {
       const failures: string[] = [];
       for (const ground of [
         '--bio3d-grass',
+        '--bio3d-island-grass',
+        '--bio3d-island-grass-2',
         '--bio3d-soil',
         '--bio3d-water',
         '--bio3d-sand',
@@ -116,6 +118,8 @@ describe('theme tokens', () => {
         '--bio3d-sky-horizon',
         '--bio3d-grass',
         '--bio3d-grass-2',
+        '--bio3d-island-grass',
+        '--bio3d-island-grass-2',
         '--bio3d-soil',
         '--bio3d-rock',
         '--bio3d-water',

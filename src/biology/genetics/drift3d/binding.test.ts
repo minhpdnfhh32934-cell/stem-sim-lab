@@ -21,7 +21,7 @@ import {
   summaryAt,
   type DriftModel3D,
 } from './binding';
-import { scaleText, selectionCard, summaryText } from './facts';
+import { calloutTexts, scaleText, selectionCard, summaryText } from './facts';
 import {
   coastAt,
   coastMax,
@@ -243,13 +243,45 @@ describe('drift 3D: cards and chips say the model’s numbers', () => {
     const card = selectionCard(m, 30, { kind: 'figure', slot: 0 }, fmt);
     const text = card?.lines.map((l) => l.vi).join('\n') ?? '';
     expect(card?.title.vi).toBe('Cá thể trên đảo 1');
-    expect(text).toContain('Hình này đại diện cho 5 cá thể; mỗi hạt = 5 bản sao gen (làm tròn)');
+    expect(text).toContain('Hai hạt trên râu (mỗi hạt = 5 bản sao gen): ');
+    expect(text).toContain('Hình này đại diện cho 5 cá thể; số hạt được làm tròn.');
     const x = islandAt(m, 0, 30);
     expect(text).toContain(`A có ${fmt(x?.copies.A ?? -1)}`);
     expect(scaleText(m, fmt).vi).toBe('1 hình = 5 cá thể · 1 hạt = 5 bản sao gen (làm tròn)');
     expect(scaleText(model({ ...LESSON, runs: 1 }), fmt).vi).toBe(
       '1 hình = 1 cá thể · 1 hạt = 1 bản sao gen',
     );
+  });
+
+  it('chip, callout and figure card give one scale: one bead = k gene copies', () => {
+    for (const st of [LESSON, { ...LESSON, N: 500, runs: 30 }, { ...LESSON, runs: 1 }]) {
+      const m = model(st);
+      const k = fmt(m.per, 6);
+      const chip = scaleText(m, fmt);
+      const genes = calloutTexts(m, fmt).genes;
+      const card = selectionCard(m, 12, { kind: 'figure', slot: 0 }, fmt);
+      const text = (lang: 'vi' | 'en') => card?.lines.map((l) => l[lang]).join(' ') ?? '';
+      if (m.per > 1) {
+        // Never "two beads = two gene copies" when a bead stands for k > 1 copies.
+        expect(chip.vi).toContain(`1 hạt = ${k} bản sao gen`);
+        expect(genes.vi).toBe(`Mỗi hạt = ${k} bản sao gen`);
+        expect(genes.en).toBe(`Each bead = ${k} gene copies`);
+        expect(text('vi')).toContain(`(mỗi hạt = ${k} bản sao gen)`);
+        expect(text('en')).toContain(`(each bead = ${k} gene copies)`);
+        for (const t of [genes.vi, text('vi')]) expect(t).not.toMatch(/hai hạt = hai bản sao/i);
+        expect(text('vi')).not.toContain('là hai bản sao gen');
+        expect(text('en')).not.toContain('are two gene copies');
+      } else {
+        expect(chip.vi).toContain('1 hạt = 1 bản sao gen');
+        expect(genes.vi).toBe('Hai hạt = hai bản sao gen');
+        expect(text('vi')).toContain('Hai hạt trên râu là hai bản sao gen: ');
+        expect(text('vi')).toContain('Hình này là 1 cá thể.');
+      }
+    }
+    // The lesson's default (N = 50, 20 islands) draws 1 figure = 5 individuals.
+    expect(model().per).toBe(5);
+    expect(model({ ...LESSON, N: 500, runs: 30 }).per).toBeGreaterThan(1);
+    expect(model({ ...LESSON, runs: 1 }).per).toBe(1);
   });
 });
 

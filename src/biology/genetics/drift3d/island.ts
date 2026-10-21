@@ -2,11 +2,11 @@
  * The ground, sea and p : q bands of the genetic drift archipelago (one draw call each):
  *
  * - `islandGround`: every island's low-poly dome (grass on top, a sand beach, wet sand under the
- *   water), flat shaded with vertex colours from the habitat tokens. When the model fixes or loses
- *   A on an island, its grass is recoloured towards that allele's colour (A or a): the habitat
- *   changes colour with the island's fate. The beaches keep their sand.
- * - `sea`: a translucent water surface over a darker sea floor, so the shallows round each island
- *   read lighter; fog hides its far edge.
+ *   water), flat shaded with vertex colours from the islands' tokens. Every island has the same
+ *   natural grass whatever its fate (the fate is a flag, `flags.ts`): a marker on the land, never
+ *   a change of habitat.
+ * - `sea`: the water darkening towards the far side and out past the islands, with bright
+ *   shallows round each coast; fog hides its far edge.
  * - `pqBands`: one band round each coast split exactly p : q at the generation shown (A's arc
  *   from the front, clockwise seen from above), rewritten in place without allocation.
  *
@@ -17,7 +17,6 @@ import type { QualityTier } from '@/perf/tiers';
 import type { SceneKit } from '../../view3d/kit';
 import { fbm3 } from '../../view3d/noise';
 import { noiseTile } from '../../view3d/recipes';
-import type { Fate } from './binding';
 import {
   BAND_GAP,
   BAND_HEIGHT,
@@ -28,9 +27,6 @@ import {
   type DriftLayout,
   type IslandPlace,
 } from './layout';
-
-/** How far a fixed island's grass is drawn towards the allele's colour. */
-export const FATE_TINT = 0.58;
 
 /** Radii (share of the coast at each angle) of the ground rings per tier: denser at the beach. */
 const RINGS: Record<QualityTier, readonly number[]> = {
@@ -49,29 +45,20 @@ export interface IslandGround {
   mesh: THREE.Mesh;
   /** Ground height at (x, z) on the nearest island (world). */
   heightAt(x: number, z: number): number;
-  /** Recolours an island's grass for its fate (no change when the fate is the same). */
-  setFate(island: number, fate: Fate): void;
-  /** The fate each island is drawn with now (read back for tests). */
-  fates(): readonly Fate[];
   /** The island a ray hit on the ground (`faceIndex` of the hit), or null. */
   islandOfFace(face: number): number | null;
   /** An island's mean grass colour now (r, g, b in 0…1; for tests). */
   grassColor(island: number): [number, number, number];
 }
 
-export function islandGround(
-  kit: SceneKit,
-  L: DriftLayout,
-  colors: { A: string; a: string },
-): IslandGround {
+export function islandGround(kit: SceneKit, L: DriftLayout): IslandGround {
   const rings = RINGS[kit.tier];
   const sides = SIDES[kit.tier];
   const col = (name: string) => new THREE.Color(kit.color(name));
-  const grass = col('--bio3d-grass');
-  const grass2 = col('--bio3d-grass-2');
+  const grass = col('--bio3d-island-grass');
+  const grass2 = col('--bio3d-island-grass-2');
   const sand = col('--bio3d-sand');
   const wet = sand.clone().lerp(col('--bio3d-soil'), 0.35);
-  const fateColor = { A: new THREE.Color(colors.A), a: new THREE.Color(colors.a) };
 
   // Triangles per island: a fan round the centre, then two per quad of each further ring.
   const tris = sides * (1 + 2 * (rings.length - 1));
@@ -79,7 +66,6 @@ export function islandGround(
   const n = perIsland * L.islands.length;
   const pos = new Float32Array(n * 3);
   const base = new Float32Array(n * 3);
-  const weight = new Float32Array(n);
   const tmp = new THREE.Color();
 
   const point = (is: IslandPlace, ring: number, side: number): [number, number, number] => {
@@ -105,7 +91,6 @@ export function islandGround(
     base[v * 3] = tmp.r;
     base[v * 3 + 1] = tmp.g;
     base[v * 3 + 2] = tmp.b;
-    weight[v] = 1 - beach;
     v++;
   };
   for (const is of L.islands) {
@@ -131,7 +116,7 @@ export function islandGround(
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const colorAttr = new THREE.BufferAttribute(base.slice(), 3);
+  const colorAttr = new THREE.BufferAttribute(base, 3);
   g.setAttribute('color', colorAttr);
   g.computeVertexNormals();
   g.computeBoundingSphere();
@@ -143,14 +128,13 @@ export function islandGround(
         vertexColors: true,
         flatShading: true,
         roughness: 0.95,
-        envMapIntensity: 0.3,
+        envMapIntensity: 0.45,
       }),
   );
   const mesh = kit.mesh(kit.geometry(g), material);
   mesh.name = 'drift-islands';
   mesh.receiveShadow = kit.shadows;
 
-  const fates: Fate[] = L.islands.map(() => 'polymorphic');
   const near = (x: number, z: number) => {
     let best = L.islands[0];
     let d = Infinity;
@@ -163,7 +147,6 @@ export function islandGround(
     }
     return best;
   };
-  const colorsOf = colorAttr.array as Float32Array;
 
   return {
     mesh,
@@ -171,21 +154,6 @@ export function islandGround(
       const is = near(x, z);
       return is ? islandHeight(is, x, z) : 0;
     },
-    setFate(island, fate) {
-      if (fates[island] === fate || island < 0 || island >= fates.length) return;
-      fates[island] = fate;
-      const to = fate === 'fixed' ? fateColor.A : fate === 'lost' ? fateColor.a : null;
-      for (let i = island * perIsland; i < (island + 1) * perIsland; i++) {
-        const k = to ? FATE_TINT * (weight[i] ?? 0) : 0;
-        for (let c = 0; c < 3; c++) {
-          const b = base[i * 3 + c] ?? 0;
-          const t = to ? (c === 0 ? to.r : c === 1 ? to.g : to.b) : b;
-          colorsOf[i * 3 + c] = b + (t - b) * k;
-        }
-      }
-      colorAttr.needsUpdate = true;
-    },
-    fates: () => fates,
     islandOfFace(face) {
       const i = Math.floor((face * 3) / perIsland);
       return i >= 0 && i < L.islands.length ? i : null;
@@ -194,33 +162,62 @@ export function islandGround(
       // The island's centre fan (all grass).
       const out: [number, number, number] = [0, 0, 0];
       const start = island * perIsland;
-      for (let c = 0; c < 3; c++) out[c] = colorsOf[start * 3 + c] ?? 0;
+      for (let c = 0; c < 3; c++) out[c] = base[start * 3 + c] ?? 0;
       return out;
     },
   };
 }
 
+/** A number token (a share), or `fallback` when the theme has none. */
+function share(kit: SceneKit, name: string, fallback: number): number {
+  const v = Number.parseFloat(kit.color(name));
+  return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : fallback;
+}
+
 /**
- * The sea (illustration): an opaque surface with soft ripples out to `radius`, and round each
- * island a halo of shallow water fading from the beach's sand into the sea.
+ * The sea (illustration): a surface with soft ripples out to `radius`, its colour deepening
+ * (darker, lighting only: `--bio3d-sea-depth`) towards the far side and out past the islands,
+ * and round each island a halo of bright shallow water fading from the beach into the sea.
  */
 export function sea(kit: SceneKit, radius: number, L: DriftLayout): THREE.Mesh {
   const water = new THREE.Color(kit.color('--bio3d-water'));
   const sand = new THREE.Color(kit.color('--bio3d-sand'));
+  const depth = share(kit, '--bio3d-sea-depth', 0.3);
+  const sheen = share(kit, '--bio3d-sea-sheen', 0.75);
   const segs = Math.max(48, kit.seg * 4);
   const ripples = kit.keep(noiseTile(kit).clone());
   ripples.wrapS = THREE.RepeatWrapping;
   ripples.wrapT = THREE.RepeatWrapping;
   ripples.repeat.set(radius / 3, radius / 3);
   ripples.needsUpdate = true;
+  // Rings (not a fan) so the depth can vary across the surface.
+  const plane = new THREE.RingGeometry(0, radius, segs, 18).rotateX(-Math.PI / 2);
+  const p = plane.getAttribute('position');
+  const tint = new Float32Array(p.count * 3);
+  const deep = new THREE.Color();
+  const e = Math.max(1, L.extent);
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i);
+    const z = p.getZ(i);
+    // Far side: from the middle row back (−z); out past the archipelago: every way.
+    const far = smooth(0.1 * e, -1.4 * e, z);
+    const out = smooth(1.05 * e, 2.6 * e, Math.hypot(x, z));
+    deep.copy(water).multiplyScalar(1 - depth * Math.max(far, 0.7 * out));
+    tint[i * 3] = deep.r;
+    tint[i * 3 + 1] = deep.g;
+    tint[i * 3 + 2] = deep.b;
+  }
+  plane.setAttribute('color', new THREE.BufferAttribute(tint, 3));
   const surface = kit.mesh(
-    kit.geometry(new THREE.CircleGeometry(radius, segs).rotateX(-Math.PI / 2)),
+    kit.geometry(plane),
     kit.own(
       new THREE.MeshStandardMaterial({
-        color: water,
+        color: 0xffffff,
+        vertexColors: true,
         roughness: 0.2,
         metalness: 0,
-        envMapIntensity: 0.75,
+        // How much of the sky the water mirrors (a pale sky washes a light sea out).
+        envMapIntensity: sheen,
         // Ripples: a bump map on High; below it (integrated GPUs) only the sheen varies (one
         // texture read per pixel instead of the bump map's three and their derivatives).
         ...(kit.tier === 'high'
@@ -233,9 +230,9 @@ export function sea(kit: SceneKit, radius: number, L: DriftLayout): THREE.Mesh {
   surface.raycast = () => undefined;
   surface.receiveShadow = kit.shadows;
 
-  // Shallows: an annulus per island from under the beach out into the sea, sand-tinted water
-  // fading to clear (vertex alpha), drawn just over the surface.
-  const shallow = water.clone().lerp(sand, 0.5);
+  // Shallows: an annulus per island from under the beach out into the sea, brighter, sand-tinted
+  // water fading to clear (vertex alpha), drawn just over the surface: the coasts read.
+  const shallow = water.clone().offsetHSL(0, 0.04, 0.14).lerp(sand, 0.3);
   const sides = SIDES[kit.tier];
   const radii = [0.9, 1.08, 1.2, 1.36];
   const alpha = [0.9, 0.75, 0.35, 0];

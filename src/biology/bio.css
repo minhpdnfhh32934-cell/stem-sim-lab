@@ -784,8 +784,15 @@
 .drift3d__player output {
   min-width: 10rem;
 }
-.drift3d__tag {
+/* Island numbers: a light chip like the fate tags, full-contrast text (the sea is pale in light). */
+.three-tag.drift3d__tag {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bg-panel) 88%, transparent);
+  color: var(--text);
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
+  text-shadow: none;
 }
 .drift3d__tag[data-fate='fixed'] {
   color: var(--text);
@@ -798,6 +805,21 @@
 .drift3d__card {
   width: min(22rem, 46%);
   font-size: var(--text-sm);
+}
+/* More text below the card's edge (useScrollMore sets data-more): the last line fades out. */
+.drift3d__card::after {
+  content: '';
+  position: sticky;
+  bottom: calc(-1 * var(--space-3));
+  display: block;
+  height: 2.25rem;
+  margin: -2.25rem calc(-1 * var(--space-3)) calc(-1 * var(--space-3));
+  background: linear-gradient(to bottom, transparent, var(--glass-bg) 80%);
+  opacity: 0;
+  pointer-events: none;
+}
+.drift3d__card[data-more]::after {
+  opacity: 1;
 }
 /* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the
    phenotype classes share one wrapping row under the step strip. */

@@ -163,18 +163,30 @@ test('genetic drift 3D: the archipelago follows the model’s runs through the g
     .poll(async () => Math.abs((await scaleAt(page, front)) / far - 1))
     .toBeLessThan(0.05);
 
-  // A tap on island 1's first figure: its card, with the island's copies at generation 150.
+  // A tap on island 1's first figure: its card, with the island's copies at generation 150 and
+  // the drawing scale (one bead = 5 copies); island 1 comes close up beside the card.
   s = await state(page);
+  const island1 = s?.islandPoints[0] ?? front;
+  const island1Far = await scaleAt(page, island1);
   const at = await settled(page, s?.figurePoint as Vec3);
   await page.mouse.click(at[0], at[1]);
   const card = view.locator('.drift3d__card');
   await expect(card).toContainText('Cá thể trên đảo 1');
+  await expect(card).toContainText('Hai hạt trên râu (mỗi hạt = 5 bản sao gen)');
+  await expect(card).not.toContainText('là hai bản sao gen');
   const A1 = Math.round((runs[0]?.[150] ?? 0) * 2 * LESSON.N);
   await expect(card).toContainText(
     `A có ${vi(A1)}, a có ${vi(2 * LESSON.N - A1)} trong 100 bản sao`,
   );
+  await expect(player.getByRole('radio', { name: 'Cận cảnh một đảo' })).toBeChecked();
+  await expect.poll(() => scaleAt(page, island1)).toBeGreaterThan(island1Far * 1.5);
   await card.getByRole('button', { name: 'Bỏ chọn' }).click();
   await expect(card).toHaveCount(0);
+  // Back to the whole archipelago (the view the learner had chosen).
+  await expect(player.getByRole('radio', { name: 'Toàn cảnh' })).toBeChecked();
+  await expect
+    .poll(async () => Math.abs((await scaleAt(page, front)) / far - 1))
+    .toBeLessThan(0.05);
 
   // A tap on the front of island 3's band: the island's card.
   s = await state(page);
@@ -182,7 +194,9 @@ test('genetic drift 3D: the archipelago follows the model’s runs through the g
   await page.mouse.click(band[0], band[1]);
   await expect(card).toContainText('Đảo 3 — thế hệ 150');
   await expect(card).toContainText('p₀ = 0,5');
-  await card.getByRole('button', { name: 'Bỏ chọn' }).click();
+  // "Toàn cảnh" closes the card (the whole archipelago has no room beside it).
+  await player.getByRole('radio', { name: 'Toàn cảnh' }).click();
+  await expect(card).toHaveCount(0);
 
   // "Chạy lại" draws new runs (seed 2): the islands follow them.
   await view.getByRole('button', { name: 'Chạy lại' }).click();

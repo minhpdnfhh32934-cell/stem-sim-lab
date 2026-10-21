@@ -29,19 +29,29 @@ export const GLYPH = { A: '■', a: '●' } as const;
 /** What the picture's name callouts point at (`scene.ts` places them). */
 export type DriftCallout = 'island' | 'band' | 'genes' | 'figure' | 'fixed' | 'lost';
 
-export const CALLOUTS: Record<DriftCallout, LocalizedText> = {
-  island: L('Đảo = 1 quần thể (1 lần chạy)', 'Island = 1 population (1 run)'),
-  band: L('Dải p : q', 'p : q band'),
-  genes: L('Hai hạt = hai bản sao gen', 'Two beads = two gene copies'),
-  figure: L('Cá thể', 'Individual'),
-  fixed: L(`A cố định ${GLYPH.A}`, `A fixed ${GLYPH.A}`),
-  lost: L(`A mất ${GLYPH.a}`, `A lost ${GLYPH.a}`),
-};
+/** The beads' callout: with figures of k individuals, each bead is k gene copies (as the chip). */
+function genesCallout(model: DriftModel3D, fmt: Fmt): LocalizedText {
+  if (model.per <= 1) return L('Hai hạt = hai bản sao gen', 'Two beads = two gene copies');
+  const k = fmt(model.per, 6);
+  return L(`Mỗi hạt = ${k} bản sao gen`, `Each bead = ${k} gene copies`);
+}
+
+/** The callouts' names; the beads' one follows the drawing scale (`scaleText`). */
+export function calloutTexts(model: DriftModel3D, fmt: Fmt): Record<DriftCallout, LocalizedText> {
+  return {
+    island: L('Đảo = 1 quần thể (1 lần chạy)', 'Island = 1 population (1 run)'),
+    band: L('Dải p : q', 'p : q band'),
+    genes: genesCallout(model, fmt),
+    figure: L('Cá thể', 'Individual'),
+    fixed: L(`A cố định ${GLYPH.A}`, `A fixed ${GLYPH.A}`),
+    lost: L(`A mất ${GLYPH.a}`, `A lost ${GLYPH.a}`),
+  };
+}
 
 /** Short honest caption (the Science Card has the full note). */
 export const CAPTION = L(
-  'Minh họa: đảo, con vật, chỗ đứng, cây cỏ, cử động và cách ghép hai bản sao gen vào một con vật; số bản sao A, a, p và số đảo cố định hay mất A theo mô hình.',
-  'Illustration: islands, animals, places, plants, motion and which two gene copies an animal carries; copies of A and a, p and how many islands fixed or lost A follow the model.',
+  'Minh họa: đảo, con vật, chỗ đứng, cây cỏ, lá cờ, cử động và cách ghép hai bản sao gen vào một con vật; số bản sao A, a, p và số đảo cố định hay mất A theo mô hình.',
+  'Illustration: islands, animals, places, plants, flags, motion and which two gene copies an animal carries; copies of A and a, p and how many islands fixed or lost A follow the model.',
 );
 
 export const SOURCES = L(
@@ -104,8 +114,8 @@ function fateLine(model: DriftModel3D, island: number, g: number, fmt: Fmt): Loc
   if (end.fate === 'fixed')
     return g >= end.generation
       ? L(
-          `A cố định từ thế hệ ${at}: cả đảo chỉ còn A (cỏ đổi sang màu của A để đánh dấu).`,
-          `A fixed from generation ${at}: only A is left on the island (its grass takes A's colour as a marker).`,
+          `A cố định từ thế hệ ${at}: cả đảo chỉ còn A (lá cờ màu A, đỉnh cột ■, đánh dấu đảo).`,
+          `A fixed from generation ${at}: only A is left on the island (a flag in A's colour, a ■ on its pole, marks it).`,
         )
       : L(
           `Ở thế hệ này còn cả A và a; về sau A cố định ở thế hệ ${at}.`,
@@ -113,8 +123,8 @@ function fateLine(model: DriftModel3D, island: number, g: number, fmt: Fmt): Loc
         );
   return g >= end.generation
     ? L(
-        `A mất từ thế hệ ${at}: cả đảo chỉ còn a (cỏ đổi sang màu của a để đánh dấu).`,
-        `A lost from generation ${at}: only a is left on the island (its grass takes a's colour as a marker).`,
+        `A mất từ thế hệ ${at}: cả đảo chỉ còn a (lá cờ màu a, đỉnh cột ●, đánh dấu đảo).`,
+        `A lost from generation ${at}: only a is left on the island (a flag in a's colour, a ● on its pole, marks it).`,
       )
     : L(
         `Ở thế hệ này còn cả A và a; về sau A mất ở thế hệ ${at}.`,
@@ -147,12 +157,8 @@ export function selectionCard(
       title: L(`Đảo ${n} — thế hệ ${String(x.g)}`, `Island ${n} — generation ${String(x.g)}`),
       lines: [
         L(
-          `Một lần chạy Wright–Fisher của bài: N = ${fmt(model.N, 6)} cá thể, 2N = ${twoN} bản sao gen.`,
-          `One Wright–Fisher run of the lesson: N = ${fmt(model.N, 6)} individuals, 2N = ${twoN} gene copies.`,
-        ),
-        L(
-          'Các đảo độc lập: không có di nhập gen giữa chúng, mỗi đảo phiêu bạt theo đường riêng.',
-          'The islands are independent: no migration between them, each drifts its own way.',
+          `Một lần chạy Wright–Fisher của bài: N = ${fmt(model.N, 6)} cá thể, 2N = ${twoN} bản sao gen. Các đảo độc lập, không có di nhập gen giữa chúng.`,
+          `One Wright–Fisher run of the lesson: N = ${fmt(model.N, 6)} individuals, 2N = ${twoN} gene copies. The islands are independent, with no migration between them.`,
         ),
         copiesLine(model, x, fmt),
         fateLine(model, island, x.g, fmt),
@@ -174,30 +180,23 @@ export function selectionCard(
   const pair = figureAlleles(model, sel.slot, x.g);
   if (pair === null) return null;
   const beads = BEADS[pair] ?? BEADS[0];
+  const k = fmt(model.per, 6);
   return {
     title: L(`Cá thể trên đảo ${n}`, `An individual on island ${n}`),
     lines: [
-      L(
-        `Hai hạt trên râu là hai bản sao gen: ${beads?.vi ?? ''}.`,
-        `The two beads on its antennae are two gene copies: ${beads?.en ?? ''}.`,
-      ),
-      copiesLine(model, x, fmt),
-      L(
-        'Mô hình Wright–Fisher chỉ đếm bản sao gen của cả quần thể; con vật nào mang hai bản sao nào là minh họa.',
-        'The Wright–Fisher model only counts the gene copies of the whole population; which animal carries which two copies is illustration.',
-      ),
       model.per <= 1
         ? L(
-            'Hình này là 1 cá thể; mỗi hạt là 1 bản sao gen.',
-            'This figure is 1 individual; each bead is 1 gene copy.',
+            `Hai hạt trên râu là hai bản sao gen: ${beads?.vi ?? ''}. Hình này là 1 cá thể.`,
+            `The two beads on its antennae are two gene copies: ${beads?.en ?? ''}. This figure is 1 individual.`,
           )
         : L(
-            `Hình này đại diện cho ${fmt(model.per, 6)} cá thể; mỗi hạt = ${fmt(model.per, 6)} bản sao gen (làm tròn).`,
-            `This figure stands for ${fmt(model.per, 6)} individuals; each bead = ${fmt(model.per, 6)} gene copies (rounded).`,
+            `Hai hạt trên râu (mỗi hạt = ${k} bản sao gen): ${beads?.vi ?? ''}. Hình này đại diện cho ${k} cá thể; số hạt được làm tròn.`,
+            `The two beads on its antennae (each bead = ${k} gene copies): ${beads?.en ?? ''}. This figure stands for ${k} individuals; bead counts are rounded.`,
           ),
+      copiesLine(model, x, fmt),
       L(
-        'Mỗi thế hệ là một lứa cá thể mới, lấy ngẫu nhiên 2N bản sao từ thế hệ trước; chỗ đứng giữ nguyên chỉ để dễ so sánh.',
-        'Each generation is a new set of individuals drawing 2N copies at random from the one before; places stay the same only to compare.',
+        'Mô hình chỉ đếm bản sao gen của cả quần thể: con vật nào mang bản sao nào là minh họa, chỗ đứng giữ nguyên qua các thế hệ để dễ so sánh.',
+        'The model only counts the gene copies of the whole population: which animal carries which copies is illustration, and places stay the same across generations to compare.',
       ),
     ],
   };

@@ -3,8 +3,8 @@
  * (the same seed as the 2D chart). Over the picture: "Chạy lại", how many islands have fixed or
  * lost A at the generation shown, the theory P(fix) = p₀, the beads' key and the drawing scale.
  * Under it the generation slider (0 … the lesson's generations) and the framing (every island, or
- * one island close up). A tap on an island or an animal opens its card. In the corner: "Hiện tên"
- * (name callouts). Islands, animals, plants and motion are illustration (caption); every number
+ * one island close up). A tap on an island or an animal opens its card and frames that island
+ * close up beside it ("Toàn cảnh" closes the card). In the corner: "Hiện tên" (name callouts). Islands, animals, plants and motion are illustration (caption); every number
  * is the model's.
  */
 import { Dices, Pause, Play, RotateCcw, Tags, X } from 'lucide-react';
@@ -19,6 +19,7 @@ import { useFmt } from '../../fmt';
 import { Segmented } from '../../ui';
 import { Bio3DView, type SceneSpec } from '../../view3d/Bio3DView';
 import { usePlayback, type Playback } from '../../view3d/playback';
+import { useScrollMore } from '../../view3d/useScrollMore';
 import { useDriftRuns } from '../driftData';
 import { useDrift } from '../store';
 import {
@@ -34,9 +35,9 @@ import {
   type DriftSelection,
 } from './binding';
 import {
-  CALLOUTS,
   CAPTION,
   SOURCES,
+  calloutTexts,
   scaleText,
   selectionCard,
   summaryText,
@@ -149,7 +150,8 @@ function GenerationPlayer({
           { id: 'closeup', label: L('Cận cảnh một đảo', 'One island close up') },
         ]}
         onChange={(v) => {
-          useDrift3D.setState({ camera: v });
+          // The whole archipelago has no room beside a card: "Toàn cảnh" closes it.
+          useDrift3D.setState(v === 'overview' ? { camera: v, selected: null } : { camera: v });
         }}
       />
     </div>
@@ -173,6 +175,8 @@ function PartCard({
   const headRef = useRef<HTMLDivElement>(null);
   useCardHeadFit(slotRef, cardRef, headRef);
   const card = selectionCard(model, g, selected, fmt);
+  // A card taller than the stage's middle row fades out at the bottom while there is more.
+  useScrollMore(cardRef, card ? card.lines.map((l) => l.vi).join('|') : '');
   if (!card) return null;
   return (
     <div ref={slotRef} className="m3d__info-slot">
@@ -273,15 +277,18 @@ export function Drift3DView() {
   }, [liveKey]);
   const lively = restingKey !== liveKey && !prefersReducedMotion();
 
-  const callouts = useMemo(
-    () =>
-      labelsOn
-        ? Object.fromEntries(Object.entries(CALLOUTS).map(([id, text]) => [id, Lz(text)]))
-        : null,
-    [labelsOn, Lz],
-  );
+  // The names follow the drawing scale (the beads' callout says what one bead stands for).
+  const callouts = labelsOn
+    ? Object.fromEntries(
+        Object.entries(calloutTexts(model, fmt)).map(([id, text]) => [id, Lz(text)]),
+      )
+    : null;
   const s = summaryAt(model, g);
-  const closeIsland = focus ?? frontIsland(model.runs.length);
+  // A picked island or animal: its island close up beside the card (the whole archipelago would
+  // shrink into the half of the stage the card leaves).
+  const pickedIsland = selected ? islandOf(model, selected) : null;
+  const closeIsland = pickedIsland ?? focus ?? frontIsland(model.runs.length);
+  const shownCamera: DriftCameraMode = pickedIsland !== null ? 'closeup' : camera;
   const scene: SceneSpec = {
     build: (kit) => buildDriftArchipelago(kit, { model }),
     buildKey: modelKey,
@@ -303,7 +310,7 @@ export function Drift3DView() {
         sel ? { selected: sel, focus: islandOf(model, sel) } : { selected: null },
       );
     },
-    ...(camera === 'closeup' ? { view: islandFrame(closeIsland) } : {}),
+    ...(shownCamera === 'closeup' ? { view: islandFrame(closeIsland) } : {}),
     callouts,
   };
   return (
@@ -325,7 +332,7 @@ export function Drift3DView() {
         />
       }
       bottom={
-        <GenerationPlayer playback={playback} model={model} g={g} fmt={fmt} camera={camera} />
+        <GenerationPlayer playback={playback} model={model} g={g} fmt={fmt} camera={shownCamera} />
       }
       info={selected ? <PartCard model={model} g={g} selected={selected} fmt={fmt} /> : undefined}
       caption={Lz(CAPTION)}
