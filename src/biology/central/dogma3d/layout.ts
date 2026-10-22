@@ -95,6 +95,91 @@ export function helixAngle(i: number, mo: DogmaMoment): number {
   return TWIST * (i - open - (lo - LAYOUT.edge / 2));
 }
 
+/**
+ * The parts of the helix that turn as one rigid piece at a moment (the backbone tubes are drawn
+ * once at rest and turned): every base pair i ≤ `left` sits where the resting helix (pair i at
+ * angle TWIST · i, closed) puts it, turned by `leftTurn` about the axis; every pair i ≥ `right`
+ * likewise by `rightTurn`. The pairs between move on their own (the bubble and its edges).
+ * Without a bubble the whole helix is one piece (`left` = +∞).
+ */
+export interface RigidSpan {
+  left: number;
+  right: number;
+  leftTurn: number;
+  rightTurn: number;
+}
+
+export function rigidSpan(mo: DogmaMoment, out: RigidSpan): RigidSpan {
+  const { lo, hi } = bubbleSpan(mo);
+  if (mo.bubble <= 0) {
+    out.left = Infinity;
+    out.right = Infinity;
+    out.leftTurn = helixAngle(0, mo);
+    out.rightTurn = out.leftTurn;
+    return out;
+  }
+  out.left = Math.floor(lo - LAYOUT.edge);
+  out.right = Math.ceil(hi + LAYOUT.edge);
+  out.leftTurn = helixAngle(out.left, mo) - TWIST * out.left;
+  out.rightTurn = helixAngle(out.right, mo) - TWIST * out.right;
+  return out;
+}
+
+/**
+ * The DNA steps back while the ribosome works (illustration, DATA_REVIEW DOG3D-11): smaller,
+ * higher and further back, so the ribosome holds the middle of the picture and the DNA stays in
+ * view as context above it. Scaled about the left end of the drawn stretch.
+ */
+export const CONTEXT = { scale: 0.5, up: -0.35, back: -1.8 } as const;
+
+/** 0 … 1: how far the DNA has stepped back (over the first codon's arrival; 0 before). */
+export function recede(mo: DogmaMoment): number {
+  if (mo.phase !== 'translation') return 0;
+  if (mo.step > 0) return 1;
+  return smooth(mo.f / STEP.ARRIVE);
+}
+
+/** Where the DNA is drawn: world = (x0 + (x − x0) · k, y · k + dy, z · k + dz). */
+export interface DnaPlace {
+  k: number;
+  x0: number;
+  dy: number;
+  dz: number;
+}
+
+export function dnaPlace(mo: DogmaMoment, x0: number, out: DnaPlace): DnaPlace {
+  const r = recede(mo);
+  out.k = 1 - (1 - CONTEXT.scale) * r;
+  out.x0 = x0;
+  out.dy = CONTEXT.up * r;
+  out.dz = CONTEXT.back * r;
+  return out;
+}
+
+/** A DNA point (layout coordinates) where it is drawn now (in place). */
+export function placeDna(p: DnaPlace, v: Vec3): Vec3 {
+  v[0] = p.x0 + (v[0] - p.x0) * p.k;
+  v[1] = v[1] * p.k + p.dy;
+  v[2] = v[2] * p.k + p.dz;
+  return v;
+}
+
+/**
+ * The k-th free nucleotide on its way to the active site (k = 0 is the next one; illustration of
+ * the order only, DATA_REVIEW DOG3D-12): it reaches the site just as the polymerase adds it.
+ * Returns how far it still is (in steps, > 0), or 0 when it is not drawn.
+ */
+export function nucleotidePose(mo: DogmaMoment, k: number, out: Vec3): number {
+  if (mo.phase !== 'transcription' || mo.bubble <= 0) return 0;
+  const j = mo.made + k;
+  const d = k + 1 - (mo.polymerase - mo.made);
+  if (d <= 0 || d > 3) return 0;
+  const x = xOf(j);
+  const y = LAYOUT.mrnaHybridY + LAYOUT.stick * 0.35;
+  setVec(out, x + 0.22 * d, y - 0.3 * d, 0.7 * d);
+  return d;
+}
+
 function setVec(out: Vec3, x: number, y: number, z: number): Vec3 {
   out[0] = x;
   out[1] = y;
@@ -252,11 +337,14 @@ export function acceptorAt(m: DogmaModel3D, c: number, out: Vec3): Vec3 {
   return setVec(out, codonX(m, c), LAYOUT.mrnaLineY + LAYOUT.trnaAcceptorY, 0);
 }
 
-/** Offset of the chain's m-th bead (0 = newest) from the newest one: down, then trailing left. */
+/**
+ * Offset of the chain's k-th bead (0 = newest) from the newest one: a gentle curve down and to
+ * the left, out of the large subunit (no folding).
+ */
 export function chainOffset(k: number, out: Vec3): Vec3 {
   if (k <= 0) return setVec(out, 0, 0, 0);
-  const y = -0.5 * Math.min(k, 3) + (k > 3 ? 0.22 * Math.sin(0.85 * (k - 3)) : 0);
-  return setVec(out, -0.48 * k, y, 0.35 * Math.sin(0.7 * k));
+  const y = -0.4 * Math.min(k, 2) + (k > 2 ? 0.16 * Math.sin(0.85 * (k - 2)) - 0.05 * (k - 2) : 0);
+  return setVec(out, -0.5 * k, y, 0.3 * Math.sin(0.7 * k));
 }
 
 const _a: Vec3 = [0, 0, 0];

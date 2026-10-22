@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
+import { LAYER } from '@/ui/three/layers';
 import { expectDisposes } from '@/ui/three/testing';
 import { ROLES } from '../../view3d/palette';
 import { anticodon } from '../dogma';
@@ -70,6 +71,62 @@ describe('3D dogma scene', () => {
     for (let i = 0; i < n; i++) {
       rna!.getColorAt(i, col);
       expect(col.getHexString()).toBe(colourOf(m.mrna[i]!).getHexString());
+    }
+    sc.dispose();
+  });
+
+  it('far away the DNA rungs fade; the mRNA bases keep their colours (own material, after bloom)', () => {
+    const sc = build(m);
+    sc.update(momentAt(c, c.total));
+    const n = CODING.length;
+    const meshes = instanced(sc);
+    const dna = meshes.find((x) => x.count === 2 * n && x.instanceColor)!;
+    const rna = meshes.find((x) => x !== dna && x.count === n && x.instanceColor)!;
+    expect(rna.material).not.toBe(dna.material);
+    // A camera far enough that neighbouring pairs are ~1 px apart.
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 2000);
+    camera.position.set(0, 0, 900);
+    const renderer = {
+      getSize: (v: THREE.Vector2) => v.set(800, 600),
+    } as unknown as THREE.WebGLRenderer;
+    sc.scene.onBeforeRender(
+      renderer,
+      sc.scene,
+      camera,
+      null as never,
+      null as never,
+      null as never,
+    );
+    const dnaMat = dna.material as THREE.Material;
+    const rnaMat = rna.material as THREE.Material;
+    expect(dnaMat.opacity).toBeLessThan(1);
+    expect(rnaMat.opacity).toBe(1);
+    expect(rnaMat.transparent).toBe(false);
+    // Drawn after occlusion and bloom (a glowing codon frame never washes them out).
+    expect(rna.userData.layer).toBe(LAYER.FX);
+    expect(dna.userData.layer).toBe(LAYER.OPAQUE);
+    sc.dispose();
+  });
+
+  it('label obstacles hold every base drawn of both DNA strands and of the mRNA', () => {
+    const sc = build(m);
+    const inside = (p: readonly number[]) =>
+      sc
+        .labelObstacles()
+        .avoid!.some((hull) =>
+          [0, 1, 2].every(
+            (k) =>
+              Math.min(...hull.map((q) => q[k]!)) - 1e-9 <= p[k]! &&
+              p[k]! <= Math.max(...hull.map((q) => q[k]!)) + 1e-9,
+          ),
+        );
+    for (const t of [c.total * 0.3, c.total]) {
+      sc.update(momentAt(c, t));
+      for (let i = 0; i < CODING.length; i++)
+        for (const strand of ['coding', 'template', 'mrna'] as const) {
+          const p = sc.basePoint(strand, i);
+          if (p) expect(inside(p), `${strand} ${String(i)} at ${String(t)}`).toBe(true);
+        }
     }
     sc.dispose();
   });

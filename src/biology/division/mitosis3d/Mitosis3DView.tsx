@@ -17,18 +17,18 @@ import { openTeacherWithQuestion } from '@/teacher/teacherStore';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
 import { usePlayback } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory, type RendererLike } from '@/ui/three/renderer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
 import { Segmented } from '../../ui';
+import { divisionPalette } from '../division3d/palette';
 import { SPEEDS, useDivisionStore } from '../state';
 import {
   CELL_TYPE_NAME,
@@ -36,6 +36,7 @@ import {
   STAGE3D_NAME,
   card3d,
   componentVisible,
+  labelName,
   stageNote,
   type CameraMode,
   type Selection,
@@ -63,7 +64,7 @@ interface DebugHook {
   };
   stage(): Stage3D;
   /** Quality tier in effect, and whether the app lowered it by itself (overload). */
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /**
    * Where the whole cell (the overview frame, both daughters included) is drawn now, in page
    * pixels: tests check it stays clear of the controls and the picked part's card.
@@ -76,7 +77,13 @@ declare global {
   }
 }
 
-function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStrength: number } {
+function readPalette(): {
+  palette: ScenePalette;
+  membraneOpacity: number;
+  rimStrength: number;
+  edgeShade: number;
+  shellInk: number;
+} {
   const css = getComputedStyle(document.documentElement);
   // Theme tokens only; the neutral fallback is for environments without the stylesheet.
   const token = (name: string) => css.getPropertyValue(name).trim() || 'gray';
@@ -85,26 +92,12 @@ function readPalette(): { palette: ScenePalette; membraneOpacity: number; rimStr
     return Number.isFinite(v) ? v : fallback;
   };
   return {
-    palette: {
-      maternal: token('--chart-4'),
-      paternal: token('--chart-1'),
-      centromere: token('--text'),
-      membrane: token('--subject-biology'),
-      envelope: token('--chart-6'),
-      // Its own token: the nucleolus once had the envelope's colour and vanished inside it.
-      nucleolus: token('--m3d-nucleolus'),
-      wall: token('--chart-2'),
-      spindle: token('--text-muted'),
-      centrosome: token('--chart-5'),
-      plate: token('--chart-2'),
-      ring: token('--chart-7'),
-      // Unlike both chromosome colours (the accent blue was the paternal blue).
-      highlight: token('--m3d-highlight'),
-      // Unpicked parts fade towards the stage colour (they recede in both themes).
-      backdrop: token('--bg-panel'),
-    },
+    palette: divisionPalette(token),
+
     membraneOpacity: number('--m3d-membrane-opacity', 0.16),
     rimStrength: number('--m3d-rim', 0.7),
+    edgeShade: number('--m3d-edge-shade', 0),
+    shellInk: number('--m3d-shell-ink', 0),
   };
 }
 
@@ -424,7 +417,8 @@ export function Mitosis3DView({
     layer.update(
       cur.scene.labelAnchors().map((a) => ({
         id: a.id,
-        text: Lz(COMPONENTS[a.id].name),
+        text: Lz(labelName(a.id)),
+        color: a.color,
         point: a.point,
       })),
       h.camera,
@@ -432,6 +426,7 @@ export function Mitosis3DView({
       hh,
       { left: i.left, top: i.top, right: w - i.right, bottom: hh - i.bottom },
       h.quality.labelCap,
+      cur.scene.labelObstacles(),
     );
   };
   const labelsOnRef = useRef(labelsOn);
@@ -539,7 +534,7 @@ export function Mitosis3DView({
           const d = useDivisionStore.getState();
           return timelineFor(d.pairs, d.cellType).stageAt(useMitosis3D.getState().t).stage;
         },
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         cellRect: () => {
           const cur = sceneRef.current;
           if (!cur || !host) return null;
@@ -580,6 +575,10 @@ export function Mitosis3DView({
       tier: tierName,
       membraneOpacity: look.membraneOpacity,
       rimStrength: look.rimStrength,
+      edgeShade: look.edgeShade,
+      shellInk: look.shellInk,
+      hdr: quality.bloom,
+      accents: quality.accents,
     });
     sceneRef.current = { scene: ms, tl };
     h.setScene(ms.scene);

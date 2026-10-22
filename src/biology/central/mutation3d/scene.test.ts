@@ -144,6 +144,42 @@ describe('3D point-mutation scene', () => {
     mis.dispose();
   });
 
+  it('a premature stop codon ends the mutated chain with a flat cap; other changes do not', () => {
+    const cases: [Mutation, boolean][] = [
+      [{ kind: 'substitution', pos: 12, base: 'T' }, true], // AAA → TAA: nonsense
+      [{ kind: 'substitution', pos: 8, base: 'C' }, false], // silent
+      [{ kind: 'substitution', pos: 15, base: 'A' }, false], // missense
+      [{ kind: 'deletion', pos: 9, count: 3 }, false], // in-frame deletion: shorter, no early stop
+      [{ kind: 'deletion', pos: 6, count: 6 }, false],
+      [{ kind: 'insertion', pos: 12, bases: 'TAA' }, true], // in-frame insertion of a stop
+    ];
+    for (const [m, cap] of cases) {
+      const sc = build(m);
+      expect(sc.drawn().endCap, `${m.kind} at ${String(m.pos)}`).toBe(cap);
+      sc.dispose();
+    }
+  });
+
+  it('label obstacles hold every base pair and bead drawn, on both helices', () => {
+    const sc = build({ kind: 'insertion', pos: 12, bases: 'TA' });
+    const avoid = sc.labelObstacles().avoid!;
+    const inside = (p: readonly number[]) =>
+      avoid.some((hull) =>
+        [0, 1, 2].every(
+          (k) =>
+            Math.min(...hull.map((q) => q[k]!)) - 1e-9 <= p[k]! &&
+            p[k]! <= Math.max(...hull.map((q) => q[k]!)) + 1e-9,
+        ),
+      );
+    const d = sc.drawn();
+    for (const helix of ['normal', 'mutated'] as const) {
+      for (const h of d.halves[helix]) expect(inside(sc.pairPoint(helix, h.index)!)).toBe(true);
+      for (const b of d.beads[helix])
+        expect(inside(sc.focusPoint({ kind: 'bead', helix, index: b.index })!)).toBe(true);
+    }
+    sc.dispose();
+  });
+
   it('picking: a base pair of either helix, a bead, a bracket; nothing off the picture', () => {
     const m: Mutation = { kind: 'substitution', pos: 12, base: 'T' };
     const sc = build(m);

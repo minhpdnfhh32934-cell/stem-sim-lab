@@ -8,6 +8,8 @@
 import * as THREE from 'three';
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import type { QualityTier } from '@/perf/tiers';
+import type { LabelObstacles } from '@/ui/three/labelLayer';
+import { enableKeyShadow, type LookPreset } from '@/ui/three/lighting';
 import { contactShadow, disposeLightRig, lightRig } from './look';
 import { glass, roundedBox, solid, type GlassOptions, type SolidOptions } from './materials';
 
@@ -29,6 +31,16 @@ export interface KitOptions {
   maxParticles: number;
   /** Reads a CSS colour token (e.g. '--chart-1'). */
   token: (name: string) => string;
+  /** Light preset: studio (cells, molecules, lab objects; default) or outdoor (habitats). */
+  look?: LookPreset | undefined;
+  /** The outermost shell and glassware may refract (High tier on a discrete GPU). */
+  transmission?: boolean;
+  /** Highlights glow in HDR and bloom (High tier on a discrete GPU). */
+  hdr?: boolean;
+  /** Shadow maps for grounded opaque subjects (High tier on a discrete GPU). */
+  shadows?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 /**
@@ -41,20 +53,66 @@ export interface Bounds {
   points?: Vec3[];
 }
 
+/** A named framing of a scene besides the whole subject (a close-up). */
+export interface SceneFrame {
+  bounds: Bounds;
+  /** Direction from the subject towards the camera (default: the view's own). */
+  dir?: Vec3;
+}
+
+/** Where a name callout points: a part's world point (the page draws the name and its leader). */
+export interface Callout {
+  id: string;
+  point: Vec3;
+  /** Fill of the anchor ring: the part's colour (CSS colour; default muted text). */
+  color?: string;
+}
+
 export interface Bio3DScene {
   kit: SceneKit;
   bounds: Bounds;
+  /** Named framings (`Bio3DCanvas`'s `view`); the whole subject is `bounds`. */
+  frames?: Readonly<Record<string, SceneFrame>>;
+  /** The name callouts' anchors seen from `camera`, in priority order (none: no callouts). */
+  callouts?: (camera: THREE.Camera) => Callout[];
+  /**
+   * What the callouts keep clear of (world hulls; asked right after `callouts`) in the framing
+   * shown (`frames` key; undefined: the whole subject).
+   */
+  calloutObstacles?: (view: string | undefined) => Pick<LabelObstacles, 'avoid' | 'regions'>;
   /** Moves the scene to time t (s, the lesson's own time); no allocation. */
   setTime?: (t: number) => void;
   /** Illustrative motion (Brownian particles): advances by dt seconds of animation. */
   tick?: (dt: number) => void;
+  /** The motion stopped: show the resting picture (transitions finished). */
+  rest?: () => void;
+  /** What a tap's ray hits: an id the lesson defines, or null (nothing pickable). */
+  pick?: (ray: THREE.Raycaster) => string | null;
+  /** Marks the picked part (null: none). */
+  select?: (id: string | null) => void;
+  /** What the scene draws now, read back from it (development test hooks). */
+  state?: () => unknown;
 }
+
+/** CSS classes of the kit's labels: the same tag look as every other 3D view. */
+const LABEL_CLASS = {
+  plain: 'three-label',
+  strong: 'three-label three-label--title',
+  muted: 'three-tag three-tag--tick',
+} as const;
 
 export class SceneKit {
   readonly scene = new THREE.Scene();
   readonly tier: QualityTier;
   readonly seg: number;
   readonly maxParticles: number;
+  readonly look: LookPreset;
+  readonly transmission: boolean;
+  readonly hdr: boolean;
+  readonly shadows: boolean;
+  readonly accents: boolean;
+  /** The scene's light rig (`fitShadow` frames its sun on a habitat). */
+  readonly rig: THREE.Group;
   private readonly token: (name: string) => string;
   private readonly owned: { dispose: () => void }[] = [];
   private readonly materials = new Map<string, THREE.Material>();
@@ -65,7 +123,20 @@ export class SceneKit {
     this.seg = Math.max(8, Math.round(o.segments));
     this.maxParticles = Math.max(1, Math.floor(o.maxParticles));
     this.token = o.token;
-    const rig = lightRig({ size: 12 });
+    this.look = o.look ?? 'studio';
+    this.transmission = o.transmission ?? false;
+    this.hdr = o.hdr ?? false;
+    this.shadows = o.shadows ?? false;
+    this.accents = o.accents ?? true;
+    const outdoor = this.look === 'outdoor';
+    const rig = lightRig({
+      preset: this.look,
+      size: 12,
+      shadows: outdoor && this.shadows,
+      accents: this.accents,
+      ...(outdoor ? { sky: o.token('--bio3d-sky-top'), ground: o.token('--bio3d-soil') } : {}),
+    });
+    this.rig = rig;
     this.scene.add(rig);
     this.owned.push({
       dispose: () => {
@@ -83,6 +154,16 @@ export class SceneKit {
     this.owned.push(x);
     return x;
   }
+
+  /**
+   * A material or geometry made once per scene under `key` (recipes share them; the kit frees
+   * them).
+   */
+  shared<T extends THREE.Material | THREE.BufferGeometry>(key: string, make: () => T): T {
+    return this.cached(this.sharedStore, key, make);
+  }
+
+  private readonly sharedStore = new Map<string, THREE.Material | THREE.BufferGeometry>();
 
   private cached<T extends THREE.Material | THREE.BufferGeometry>(
     map: Map<string, THREE.Material | THREE.BufferGeometry>,
@@ -184,6 +265,17 @@ export class SceneKit {
     return m;
   }
 
+  /**
+   * Shadow maps from the studio key light onto a grounded subject (a bench, a tank's base) held
+   * in a sphere of `radius` around `center`: only when the kit draws shadows (High tier on a
+   * discrete GPU). Returns whether they are on; callers then mark what casts and receives.
+   */
+  groundShadows(center: Vec3, radius: number): boolean {
+    if (!this.shadows) return false;
+    enableKeyShadow(this.rig, center, radius);
+    return true;
+  }
+
   /** Soft shadow ellipse on the floor at height y. */
   shadow(y: number, rx: number, rz: number, opacity = 0.28): THREE.Mesh {
     const s = contactShadow(y, rx, rz, opacity);
@@ -198,7 +290,8 @@ export class SceneKit {
    */
   label(text: string, at: Vec3, variant: 'plain' | 'strong' | 'muted' = 'plain'): CSS2DObject {
     const el = document.createElement('div');
-    el.className = `bio3d-label bio3d-label--${variant}`;
+    // The shared 3D tag look (ui.css): a glass pill, a heading pill, or a muted tick.
+    el.className = LABEL_CLASS[variant];
     el.textContent = text;
     const o = new CSS2DObject(el);
     o.position.set(...at);
@@ -210,6 +303,8 @@ export class SceneKit {
   dispose(): void {
     for (const m of this.materials.values()) m.dispose();
     for (const g of this.geometries.values()) g.dispose();
+    for (const x of this.sharedStore.values()) x.dispose();
+    this.sharedStore.clear();
     for (const o of this.owned) o.dispose();
     this.materials.clear();
     this.geometries.clear();

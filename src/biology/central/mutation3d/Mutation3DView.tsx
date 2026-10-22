@@ -16,15 +16,15 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
 import { TagLayer } from '@/ui/three/tagLayer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
@@ -61,7 +61,7 @@ export interface Mutation3DDebug {
   info(): { geometries: number; textures: number; programs: number; calls: number };
   effect(): string;
   window(): { from: number; to: number } | null;
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /** Page pixels of a base pair's coding half (0-based index), or null when not in view. */
   pairPoint(helix: HelixId, i: number): { x: number; y: number } | null;
   /** Page pixels of a picked thing's centre now (a bead, a codon…), or null. */
@@ -72,6 +72,12 @@ export interface Mutation3DDebug {
 
 /** Number of pulses of the outlines after the mutation changes. */
 const PULSES = 4;
+
+/** The two lanes of the picture (tags at their plates' corners). */
+const LANE_NAME = {
+  normal: L('Bình thường', 'Normal'),
+  mutated: L('Đột biến', 'Mutated'),
+} as const;
 
 function tokenReader(): (name: string) => string {
   const css = getComputedStyle(document.documentElement);
@@ -275,8 +281,13 @@ function Mutation3DScene({
     const hh = h.height();
     const safe = { left: i.left, top: i.top, right: w - i.right, bottom: hh - i.bottom };
     tags.begin(h.camera, w, hh, safe);
-    sc.tags(tags, h.camera.position, h.controls.target, w - i.left - i.right, fmt);
+    sc.tags(tags, h.camera.position, h.controls.target, w - i.left - i.right, fmt, {
+      normal: Lz(LANE_NAME.normal),
+      mutated: Lz(LANE_NAME.mutated),
+    });
     tags.end();
+    // Names never cover the helices, the mRNAs, the chains or the tags over them (strand ends,
+    // lane names, positions, letters), and stay a few pixels inside the stage.
     layer.update(
       sc.labelAnchors().map((a) => ({ id: a.id, text: Lz(MUTATION_PARTS[a.id]), point: a.point })),
       h.camera,
@@ -284,6 +295,7 @@ function Mutation3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      { ...sc.labelObstacles(), rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -356,7 +368,7 @@ function Mutation3DScene({
         },
         effect: () => modelRef.current.effect,
         window: () => sceneRef.current?.window() ?? null,
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         pairPoint: (helix, i) => toPage(sceneRef.current?.pairPoint(helix, i) ?? null),
         focus: (sel) => toPage(sceneRef.current?.focusPoint(sel) ?? null),
         moving: () => h.moving(),
@@ -393,6 +405,8 @@ function Mutation3DScene({
       segments: tier.sphereSegments,
       maxBasePairs: quality.maxInstances,
       token: tokenReader(),
+      hdr: quality.bloom,
+      accents: quality.accents,
     });
     const before = sceneRef.current;
     sceneRef.current = sc;
@@ -404,8 +418,8 @@ function Mutation3DScene({
       frameCamera(h, ui.camera);
       framedRef.current = h;
     } else if (before && ui.camera === 'site') {
-      // The site moved: glide to it.
-      frameCamera(h, 'site', true);
+      // The site moved: glide to it (at once while the learner holds the camera).
+      frameCamera(h, 'site', !h.dragging());
     }
     h.request();
     const unsub = useMutation3D.subscribe((s, prev) => {

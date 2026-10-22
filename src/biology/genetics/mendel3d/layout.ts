@@ -1,13 +1,13 @@
 /**
- * Where everything of the 3D Mendel view stands (pure maths, scene units, y up). Seen from the
- * front and above, the picture reads like the 2D table: the Punnett board lies flat in the
- * middle (rows = the mother's gametes along z, columns = the father's along x, the first row at
- * the back like a table's top row), the mother ♀ stands left of it with her gametes along the
- * left edge, the father ♂ behind it with his gametes along the back edge, the phenotype
- * pedestals stand right of it and a random draw's offspring field lies in front of it.
+ * Where everything of the 3D Mendel view stands (pure maths, scene units, y up), composed as a lab
+ * bench seen from the front and above, read like the 2D table: the Punnett board is a tray with
+ * one recessed slot per cell (rows = the mother's gametes along z, columns = the father's along
+ * x, the first row at the back like a table's top row) and two header channels where the
+ * gametes rest; the mother ♀ stands on a pedestal left of it, the father ♂ behind it, the
+ * phenotype cylinders stand right of it and a random draw's offspring field lies in front of it.
  *
- * Shapes, sizes and paths are illustration. The only sizes that carry a number are the
- * pedestal bars: height = exact probability × `barH`.
+ * Shapes, sizes and paths are illustration. The only sizes that carry a number are the liquid
+ * columns in the cylinders: height = exact probability × `barH` (engraved marks at 1/4 … 1).
  */
 import { easeInOut } from '@/ui/three/camera';
 import { stepProgress, type ParentId } from './binding';
@@ -17,27 +17,51 @@ export type Vec3 = [number, number, number];
 export const LAYOUT = {
   /** Spacing of the board's cells. */
   cell: 1.3,
-  tileHalf: 0.56,
-  /** Height of a tile's top face (tokens stand on it). */
-  tileTop: 0.12,
+  /** Half width of a cell's slot in the tray (the walls between slots fill the rest). */
+  slotHalf: 0.55,
+  /** Half width of the pad at the bottom of a slot (picked as the cell). */
+  tileHalf: 0.5,
+  /** Top of the tray's floor (the slots' and channels' bottom). */
+  floorY: 0.05,
+  /** Height of a pad's top face (tokens stand on it). */
+  tileTop: 0.1,
+  /** Height of the tray's walls above the floor. */
+  wallH: 0.26,
+  /** Tray rim beyond the outermost slot or channel. */
+  trayRim: 0.28,
   tokenR: 0.34,
   gameteR: 0.42,
-  gameteY: 0.62,
-  /** Board edge → the gametes' centres. */
-  headerGap: 1.0,
+  /** Gametes rest on the channel floor. */
+  gameteY: 0.47,
+  /** Board edge → the gametes' centres (the header channels). */
+  headerGap: 1.02,
+  /** Half width of a header channel. */
+  channelHalf: 0.5,
   parentR: 1.35,
-  parentY: 1.5,
-  /** Board edge → a parent's centre. */
-  parentGap: 3.3,
-  /** Board's right edge → the first bar's centre. */
-  pedestalGap: 1.9,
+  /** Parents rest on a low pedestal. */
+  pedestalH: 0.3,
+  pedestalR: 1.05,
+  parentY: 1.65,
+  /** Board edge → the father's centre (behind the board). */
+  parentGap: 3.45,
+  /** Board edge → the mother's centre (left of it; room for her gametes' tags). */
+  motherGap: 4.75,
+  /** Board's right edge → the first cylinder's centre. */
+  pedestalGap: 2.35,
   pedestalStep: 1.25,
+  /** Radius of a cylinder's liquid column. */
   barHalf: 0.32,
-  /** Height of a bar for probability 1. */
+  /** Inner and outer radius of a cylinder's glass wall. */
+  tubeIn: 0.345,
+  tubeOut: 0.4,
+  /** Height of the liquid for probability 1. */
   barH: 4.4,
+  /** The cylinder's foot: the liquid starts on it. */
   plinthH: 0.14,
+  /** Glass above the mark "1". */
+  tubeHead: 0.32,
   /** Board's front edge → the first row of the offspring field. */
-  fieldGap: 1.5,
+  fieldGap: 1.55,
   fieldStep: 0.3,
   fieldR: 0.11,
   /** Gamete copies travelling to the cells at fertilisation. */
@@ -53,7 +77,17 @@ export const LAYOUT = {
   markerR: 0.13,
   /** Size of a gamete's chromosomes relative to the parent's. */
   gameteScale: 0.36,
+  /** Offspring tokens drop into their slots from this height (illustration). */
+  dropH: 0.9,
 } as const;
+
+/** In front of the cylinders: the class tokens, then the class keys (a second row up to KEYS_FRONT). */
+export const CLASS_TOKEN_Z = LAYOUT.tubeOut + 0.5;
+export const CLASS_KEY_Z = CLASS_TOKEN_Z + 0.62;
+export const KEYS_FRONT = CLASS_KEY_Z + 1.3;
+
+/** Marks engraved on every cylinder: probability 1/4, 1/2, 3/4 and 1. */
+export const QUARTERS = [0.25, 0.5, 0.75, 1] as const;
 
 export interface BoardDims {
   rows: number;
@@ -95,7 +129,7 @@ export function gameteSlot(d: BoardDims, parent: ParentId, k: number, out: Vec3)
 
 export function parentCenter(d: BoardDims, parent: ParentId, out: Vec3): Vec3 {
   const h = half(d);
-  out[0] = parent === 0 ? -h.x - L.parentGap : 0;
+  out[0] = parent === 0 ? -h.x - L.motherGap : 0;
   out[1] = L.parentY;
   out[2] = parent === 0 ? 0 : -h.z - L.parentGap;
   return out;
@@ -200,28 +234,58 @@ export function lerp3(a: Vec3, b: Vec3, u: number, out: Vec3): Vec3 {
   return out;
 }
 
+/** The tray's outline on the floor (absolute): left, right, back and front edges. */
+export function trayEdges(d: BoardDims): { x0: number; x1: number; z0: number; z1: number } {
+  const h = half(d);
+  // The outermost slot's outer edge lies (cell / 2 − slotHalf) inside the board's half size.
+  const inner = L.cell / 2 - L.slotHalf;
+  const header = L.headerGap + L.channelHalf + L.trayRim;
+  return {
+    x0: -h.x - header,
+    x1: h.x - inner + L.trayRim,
+    z0: -h.z - header,
+    z1: h.z - inner + L.trayRim,
+  };
+}
+
+/** Top of a cylinder's glass (probability 1 plus some head room). */
+export function tubeTop(): number {
+  return L.plinthH + L.barH + L.tubeHead;
+}
+
+/** x of the gutter left of the cylinders, where the marks' numbers stand. */
+export function gutterX(d: BoardDims): number {
+  return pedestalX(d, 0) - L.tubeOut - 0.42;
+}
+
 /**
  * Points the overview camera must show (absolute): the floor's footprint (parents, gametes,
- * board, pedestals, a draw's field) and the tall things — the parents with their genotypes and
- * the pedestals' probability scale up to 1. Only real outlines, so the picture fills the view.
+ * tray, cylinders, a draw's field) and the tall things — the parents with their genotypes and
+ * the cylinders up to the mark "1". Only real outlines, so the picture fills the view.
  */
 export function overviewPoints(d: BoardDims, fieldTotal: number): Vec3[] {
   const h = half(d);
-  const x0 = pedestalX(d, 0) - L.barHalf - 0.45;
-  const x1 = pedestalX(d, Math.max(0, d.classes - 1)) + L.barHalf + 0.45;
+  const tray = trayEdges(d);
+  const x0 = gutterX(d) - 0.25;
+  const x1 = pedestalX(d, Math.max(0, d.classes - 1)) + L.tubeOut + 0.2;
   const fieldHalf = fieldTotal > 0 ? (fieldCols(fieldTotal) * L.fieldStep) / 2 : 0;
-  const front = fieldTotal > 0 ? h.z + L.fieldGap + fieldRows(fieldTotal) * L.fieldStep : h.z + 0.9;
-  const left = Math.min(-h.x - L.parentGap - L.parentR, -fieldHalf);
-  const right = Math.max(x1, fieldHalf);
+  const front = Math.max(
+    KEYS_FRONT,
+    fieldTotal > 0 ? h.z + L.fieldGap + fieldRows(fieldTotal) * L.fieldStep : tray.z1 + 0.2,
+  );
+  const left = Math.min(-h.x - L.motherGap - L.parentR, tray.x0, -fieldHalf);
+  // Room right of the cylinders for their name label.
+  const right = Math.max(x1 + 1.2, fieldHalf);
   const back = -h.z - L.parentGap - L.parentR;
+  const top = tubeTop() + 0.2;
   const out: Vec3[] = [
     [left, 0, back],
     [right, 0, back],
     [left, 0, front],
     [right, 0, front],
-    // The pedestals' scale, up to probability 1.
-    [x0, L.plinthH + L.barH + 0.3, -0.6],
-    [x1, L.plinthH + L.barH + 0.3, -0.6],
+    // The cylinders and the marks' numbers, up to probability 1.
+    [x0, top, 0],
+    [x1, top, 0],
   ];
   const c: Vec3 = [0, 0, 0];
   for (const p of [0, 1] as const) {
@@ -232,19 +296,42 @@ export function overviewPoints(d: BoardDims, fieldTotal: number): Vec3[] {
   return out;
 }
 
-/** Points of the board and both rows of gametes with their labels ("Bảng Punnett"). */
+/**
+ * Points of the parents (on their pedestals, with their genotypes) and the tray with its header
+ * channels: what meiosis and the gametes' step show (the cylinders and a draw come later).
+ */
+export function parentsPoints(d: BoardDims): Vec3[] {
+  const tray = trayEdges(d);
+  const out: Vec3[] = [
+    [tray.x0 - 0.6, 0, tray.z0],
+    [tray.x1, 0, tray.z0],
+    [tray.x0 - 0.6, 0, tray.z1],
+    [tray.x1, 0, tray.z1],
+  ];
+  const c: Vec3 = [0, 0, 0];
+  for (const p of [0, 1] as const) {
+    parentCenter(d, p, c);
+    out.push([c[0] - L.parentR, 0, c[2] - L.parentR], [c[0] + L.parentR, 0, c[2] + L.parentR]);
+    out.push([c[0], c[1] + L.parentR + 0.5, c[2]]);
+  }
+  return out;
+}
+
+/**
+ * Points of the tray with both header channels and their tags ("Bảng Punnett"): room on the left
+ * for the mother's gamete tags, above the back channel for the father's.
+ */
 export function boardPoints(d: BoardDims): Vec3[] {
-  const h = half(d);
-  const x0 = -h.x - L.headerGap - L.gameteR - 0.2;
-  const z0 = -h.z - L.headerGap - L.gameteR - 0.2;
-  const top = L.gameteY + L.gameteR + 0.45;
+  const tray = trayEdges(d);
+  const top = L.gameteY + L.gameteR + 0.95;
+  const left = tray.x0 - 1.7;
   return [
-    [x0, 0, z0],
-    [h.x + 0.2, 0, z0],
-    [x0, 0, h.z + 0.2],
-    [h.x + 0.2, 0, h.z + 0.2],
-    [x0, top, z0],
-    [h.x + 0.2, top, z0],
-    [x0, top, h.z],
+    [left, 0, tray.z0],
+    [tray.x1, 0, tray.z0],
+    [left, 0, tray.z1],
+    [tray.x1, 0, tray.z1],
+    [tray.x0, top, tray.z0],
+    [tray.x1, top, tray.z0],
+    [tray.x0, top, tray.z1],
   ];
 }

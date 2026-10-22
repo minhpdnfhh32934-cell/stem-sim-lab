@@ -14,15 +14,15 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { usePlayback } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
 import { TagLayer } from '@/ui/three/tagLayer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { cx } from '@/ui/cx';
 import { L, usePublishCard } from '../../common';
@@ -44,6 +44,7 @@ import {
   defaultInsets,
   dogmaFrame,
   placeDogmaCamera,
+  zoomedCenter,
   type DogmaCameraMode,
 } from './camera';
 import {
@@ -68,7 +69,7 @@ export interface Dogma3DDebug {
   phase(): string;
   step(): number;
   window(): { from: number; to: number } | null;
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /** Page pixels of a base (0-based index) now, or null when it is not drawn / not in view. */
   basePoint(strand: 'coding' | 'template' | 'mrna', i: number): { x: number; y: number } | null;
   /** Page pixels of a picked thing's centre now (a bead, a codon…), or null. */
@@ -328,23 +329,79 @@ function Dogma3DScene({
     const p = placement(h, mode, VIEW_DIR);
     if (p) h.place(p, { animate });
   };
-  /** "Theo dõi": the camera moves with the machine, keeping the learner's angle and zoom. */
+  /**
+   * How far the learner zoomed: the camera's distance over the distance that fits the follow
+   * frame from the same angle (1 = as framed, below 1 = closer).
+   */
+  const zoomShare = (h: ThreeHost): number => {
+    const p = placement(h, 'follow', h.direction(VIEW_DIR));
+    if (!p) return 1;
+    const fit = Math.hypot(
+      p.position[0] - p.target[0],
+      p.position[1] - p.target[1],
+      p.position[2] - p.target[2],
+    );
+    return fit > 0 ? h.camera.position.distanceTo(h.controls.target) / fit : 1;
+  };
+  /** Moves the camera and its target by (dx, dy): same angle, same zoom. */
+  const shift = (h: ThreeHost, dx: number, dy: number, animate: boolean) => {
+    const p = h.pose();
+    h.place(
+      {
+        target: [p.target[0] + dx, p.target[1] + dy, p.target[2]],
+        position: [p.position[0] + dx, p.position[1] + dy, p.position[2]],
+        min: h.controls.minDistance,
+        max: h.controls.maxDistance,
+      },
+      { animate },
+    );
+  };
+  /**
+   * "Theo dõi": the camera moves with the machine, keeping the learner's angle and zoom — with the
+   * polymerase as it goes; to the ribosome with a 700 ms ease each time it settles on a codon.
+   * Zoomed in during translation, it looks lower, at the codon, the tRNAs and the chain's exit
+   * (`zoomedCenter`), so they stay above the controls.
+   */
   const follow = (h: ThreeHost) => {
     const sc = sceneRef.current;
     if (!sc || h.moving()) return;
     const mo = momentAt(clock, useDogma3D.getState().t);
     const f = dogmaFrame('follow', model, mo, sc.window());
+    const c = zoomedCenter(f, zoomShare(h));
     const t = h.controls.target;
-    const dx = f.center[0] - t.x;
-    const dy = f.center[1] - t.y;
+    const dx = c[0] - t.x;
+    const dy = c[1] - t.y;
     if (Math.abs(dx) < 1e-6 && Math.abs(dy) < 1e-6) return;
-    const p = h.pose();
-    h.place({
-      target: f.center,
-      position: [p.position[0] + dx, p.position[1] + dy, p.position[2]],
-      min: h.controls.minDistance,
-      max: h.controls.maxDistance,
-    });
+    shift(h, dx, dy, mo.phase === 'translation');
+  };
+  /** Zoom share at the last frame in follow + translation (null: not following then). */
+  const lastZoomRef = useRef<number | null>(null);
+  /**
+   * While following the ribosome, a zoom moves the view towards (or back from) the machinery's
+   * focus (`zoomedCenter`) — only while the camera still looks where the follow put it, so a part
+   * the learner double-clicked, or a fresh framing, stays put. Returns whether the camera moved
+   * (the next frame draws it).
+   */
+  const followZoom = (h: ThreeHost): boolean => {
+    const ui = useDogma3D.getState();
+    const sc = sceneRef.current;
+    const mo = momentAt(clock, ui.t);
+    if (!sc || ui.camera !== 'follow' || mo.phase !== 'translation') {
+      lastZoomRef.current = null;
+      return false;
+    }
+    const z = zoomShare(h);
+    const prev = lastZoomRef.current;
+    lastZoomRef.current = z;
+    if (prev === null || h.moving() || Math.abs(z - prev) < 1e-4) return false;
+    const f = dogmaFrame('follow', model, mo, sc.window());
+    const was = zoomedCenter(f, prev);
+    const t = h.controls.target;
+    if (Math.abs(t.x - was[0]) > 1e-3 || Math.abs(t.y - was[1]) > 1e-3) return false;
+    const dy = zoomedCenter(f, z)[1] - t.y;
+    if (Math.abs(dy) < 1e-6) return false;
+    shift(h, 0, dy, false);
+    return true;
   };
 
   const labelsRef = useRef<LabelLayer | null>(null);
@@ -367,6 +424,8 @@ function Dogma3DScene({
     tags.begin(h.camera, w, hh, safe);
     sc.tags(tags, h.camera.position, h.controls.target, w - i.left - i.right, fmt);
     tags.end();
+    // Names never cover the strands, the tRNAs, the chain or the tags drawn over them (strand
+    // ends, positions, letters), and stay a few pixels inside the stage.
     layer.update(
       sc
         .labelAnchors()
@@ -376,6 +435,7 @@ function Dogma3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      { ...sc.labelObstacles(), rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -397,6 +457,8 @@ function Dogma3DScene({
       useDogma3D.setState({ webglFailed: true, playing: false });
     },
     onFrame: (h) => {
+      // A zoom that moved the view: the labels follow on the next frame (drawn from that pose).
+      if (followZoom(h)) return;
       drawLabels(h);
     },
     onTap: (ray) => {
@@ -449,7 +511,7 @@ function Dogma3DScene({
         phase: () => momentAt(clock, useDogma3D.getState().t).phase,
         step: () => useDogmaStore.getState().step,
         window: () => sceneRef.current?.window() ?? null,
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         basePoint: (s, i) => toPage(sceneRef.current?.basePoint(s, i) ?? null),
         focus: (sel) => toPage(sceneRef.current?.focusPoint(sel) ?? null),
         moving: () => h.moving(),
@@ -467,6 +529,8 @@ function Dogma3DScene({
       segments: tier.sphereSegments,
       maxBasePairs: quality.maxInstances,
       token: tokenReader(),
+      hdr: quality.bloom,
+      accents: quality.accents,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);

@@ -3,11 +3,10 @@ import { Suspense, lazy, useMemo } from 'react';
 import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
-import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { XYChart } from '@/ui/charts/XYChart';
 import { cx } from '@/ui/cx';
-import { BSRC, L, usePublishCard } from '../common';
+import { L, usePublishCard } from '../common';
 import { useFmt } from '../fmt';
 import { cross, phenotype, ratio, type Dominance, type Locus } from './mendel';
 import { CHI_VERDICT, MENDEL_CARD, drawLabel } from './mendelCard';
@@ -27,16 +26,21 @@ import { MoreInBasic } from '../ui';
 import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
+import { DRIFT_CARD, DRIFT_CARD_3D } from './driftCard';
+import { useDrift3D } from './drift3d/store';
+import { HW_CARD, HW_CARD_3D } from './hwCard';
 import { useDriftRuns } from './driftData';
 import '../bio.css';
 
 // three.js and the 3D pictures load only when a 3D view is shown.
-const Drift3D = lazy(() => import('./Drift3D').then((m) => ({ default: m.Drift3D })));
+const Drift3DView = lazy(() =>
+  import('./drift3d/Drift3DView').then((m) => ({ default: m.Drift3DView })),
+);
 const Mendel3DView = lazy(() =>
   import('./mendel3d/Mendel3DView').then((m) => ({ default: m.Mendel3DView })),
 );
-const HardyWeinberg3D = lazy(() =>
-  import('./HardyWeinberg3D').then((m) => ({ default: m.HardyWeinberg3D })),
+const HardyWeinberg3DView = lazy(() =>
+  import('./hw3d/HardyWeinberg3DView').then((m) => ({ default: m.HardyWeinberg3DView })),
 );
 
 /* ───────────────────────────── Mendel ───────────────────────────── */
@@ -346,35 +350,18 @@ export function MendelPanel() {
 
 /* ─────────────────────────── Hardy–Weinberg ─────────────────────────── */
 
-const HW_CARD: ScienceCardData = {
-  title: L('Định luật Hardy–Weinberg', 'Hardy–Weinberg principle'),
-  model: L(
-    'Quần thể ngẫu phối, kích thước lớn, không đột biến, không chọn lọc, không di nhập gen: tần số kiểu gen đạt p², 2pq, q² sau một thế hệ.',
-    'Large random-mating population, no mutation, selection or migration: genotype frequencies reach p², 2pq, q² after one generation.',
-  ),
-  equations: [
-    { tex: 'p = \\dfrac{2N_{AA} + N_{Aa}}{2N},\\quad q = 1 - p' },
-    { tex: 'p^2 + 2pq + q^2 = 1' },
-    { tex: '\\chi^2 = \\sum \\dfrac{(O-E)^2}{E},\\ df = 1' },
-  ],
-  assumptions: [
-    L('Gen có 2 alen trên NST thường.', 'One autosomal gene with two alleles.'),
-    L(
-      'Kiểm định χ² có df = 3 − 1 − 1 = 1 vì p được ước lượng từ số liệu.',
-      'χ² has df = 3 − 1 − 1 = 1 because p is estimated from the data.',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Công thức chính xác; mô phỏng ngẫu phối có sai số thống kê.',
-    'Exact formulas; the random-mating run has statistical error.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.sgk12, BSRC.hartl],
-};
+/**
+ * An empty population (AA = Aa = aa = 0): no gene pool, so no p, q (shown as "—": the model's
+ * p = 0 is a guard against 0 / 0), no verdict and no mating.
+ */
+const HW_EMPTY = L(
+  'Chưa có cá thể nào: nhập số cá thể AA, Aa, aa để có vốn gen rồi mới tính p, q và ngẫu phối được.',
+  'No individuals yet: enter the numbers of AA, Aa and aa to have a gene pool before p, q and random mating.',
+);
 
 export function HardyWeinbergStage() {
-  usePublishCard(HW_CARD);
+  // The 3D habitat adds its notes to the card while it is on screen.
+  usePublishCard(useShow3d('hardyWeinberg').show3d ? HW_CARD_3D : HW_CARD);
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
   const st = useHw();
@@ -395,7 +382,7 @@ export function HardyWeinbergStage() {
   }, []);
   return (
     <div className="bio-scroll">
-      <Bio3DFigure lesson="hardyWeinberg" figure={<HardyWeinberg3D />} />
+      <Bio3DFigure lesson="hardyWeinberg" figure={<HardyWeinberg3DView />} />
       <div className="bio-grid">
         <div className="bio-chart">
           <XYChart
@@ -403,7 +390,7 @@ export function HardyWeinbergStage() {
             series={curve.series}
             xLabel={Lz(L('Tần số alen A (p)', 'Allele frequency p'))}
             yLabel={Lz(L('Tần số kiểu gen', 'Genotype frequency'))}
-            marker={t.p}
+            {...(t.n > 0 ? { marker: t.p } : {})}
             yMin={0}
             yMax={1}
           />
@@ -442,33 +429,42 @@ export function HardyWeinbergStage() {
             </tbody>
           </table>
           <p>
-            p = <strong className="mono">{f(t.p)}</strong> · q ={' '}
-            <strong className="mono">{f(t.q)}</strong>
+            p = <strong className="mono">{t.n > 0 ? f(t.p) : '—'}</strong> · q ={' '}
+            <strong className="mono">{t.n > 0 ? f(t.q) : '—'}</strong>
           </p>
           <p>
-            χ² = <span className="mono">{f(t.test.chi2)}</span> (df = 1) · p-value ={' '}
-            <span className="mono">{f(t.test.p, 3)}</span>
+            χ² = <span className="mono">{t.n > 0 ? f(t.test.chi2) : '—'}</span> (df = 1) · p-value ={' '}
+            <span className="mono">{t.n > 0 ? f(t.test.p, 3) : '—'}</span>
           </p>
-          <p
-            className={cx('bio-verdict', t.test.p >= 0.05 ? 'bio-verdict--ok' : 'bio-verdict--bad')}
-          >
-            {t.test.p >= 0.05
-              ? Lz(
-                  L(
-                    'Quần thể phù hợp trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
-                    'Consistent with Hardy–Weinberg equilibrium (α = 0.05).',
-                  ),
-                )
-              : Lz(
-                  L(
-                    'Quần thể KHÔNG ở trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
-                    'NOT in Hardy–Weinberg equilibrium (α = 0.05).',
-                  ),
-                )}
-          </p>
+          {t.n === 0 ? (
+            <p className="bio-verdict">{Lz(HW_EMPTY)}</p>
+          ) : (
+            <p
+              className={cx(
+                'bio-verdict',
+                t.test.p >= 0.05 ? 'bio-verdict--ok' : 'bio-verdict--bad',
+              )}
+            >
+              {t.test.p >= 0.05
+                ? Lz(
+                    L(
+                      'Quần thể phù hợp trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
+                      'Consistent with Hardy–Weinberg equilibrium (α = 0.05).',
+                    ),
+                  )
+                : Lz(
+                    L(
+                      'Quần thể KHÔNG ở trạng thái cân bằng Hardy–Weinberg (α = 0,05).',
+                      'NOT in Hardy–Weinberg equilibrium (α = 0.05).',
+                    ),
+                  )}
+            </p>
+          )}
           <button
             type="button"
             className="btn"
+            // No individuals, no gene pool: there is nothing to mate.
+            disabled={t.n === 0}
             onClick={() => {
               useHw.setState((s) => ({
                 seed: s.seed + 1,
@@ -526,8 +522,10 @@ export function HardyWeinbergPanel() {
           max={100000}
           value={st.N}
           onChange={(e) => {
+            // A sample drawn with another N no longer belongs to these inputs.
             useHw.setState({
               N: Math.max(10, Math.min(100000, Math.round(Number(e.target.value) || 10))),
+              sample: null,
             });
           }}
         />
@@ -538,41 +536,14 @@ export function HardyWeinbergPanel() {
 
 /* ───────────────────────────── Genetic drift ───────────────────────────── */
 
-const DRIFT_CARD: ScienceCardData = {
-  title: L('Phiêu bạt di truyền (Wright–Fisher)', 'Genetic drift (Wright–Fisher)'),
-  model: L(
-    'Mỗi thế hệ, 2N bản sao gen được lấy ngẫu nhiên (phân phối nhị thức) từ thế hệ trước; không chọn lọc, không đột biến.',
-    'Each generation, 2N gene copies are drawn binomially from the previous one; no selection or mutation.',
-  ),
-  equations: [
-    {
-      tex: 'P_{\\text{fix}}(A) = p_0',
-      label: L('Xác suất alen A được cố định', 'Fixation probability of allele A'),
-    },
-    { tex: 'H_t = H_0\\left(1 - \\tfrac{1}{2N}\\right)^t' },
-  ],
-  assumptions: [
-    L(
-      'Quần thể lưỡng bội kích thước N không đổi, thế hệ không gối nhau.',
-      'Diploid population of constant size N, non-overlapping generations.',
-    ),
-  ],
-  confidence: 'approx',
-  confidenceNote: L(
-    'Test tự động (3000 lần chạy): tỉ lệ cố định ≈ p₀ trong ±0,03; dị hợp trung bình khớp (1 − 1/2N)ᵗ.',
-    'Automated test (3000 runs): fixation fraction ≈ p₀ within ±0.03; mean heterozygosity follows (1 − 1/2N)ᵗ.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.hartl, BSRC.sgk12],
-};
-
 export function DriftStage() {
-  usePublishCard(DRIFT_CARD);
   const { show3d } = useShow3d('drift');
+  // The 3D archipelago adds its notes to the card while it is on screen.
+  usePublishCard(show3d ? DRIFT_CARD_3D : DRIFT_CARD);
   if (show3d)
     return (
       <Suspense fallback={<div className="bio-view" />}>
-        <Drift3D />
+        <Drift3DView />
       </Suspense>
     );
   return <Drift2D />;
@@ -689,6 +660,8 @@ export function DriftBottom() {
   const Lz = useLocalized();
   const runs = useDriftRuns();
   const st = useDrift();
+  // The generation the 3D archipelago shows (marked on the chart while it is on screen).
+  const shown = useDrift3D((s) => (s.active ? s.t : null));
   const data = useMemo(() => {
     const x = Array.from({ length: st.generations + 1 }, (_, t) => t);
     const mean = x.map(
@@ -717,6 +690,7 @@ export function DriftBottom() {
         series={data.series}
         xLabel={Lz(L('Thế hệ', 'Generation'))}
         yLabel="H = 2pq"
+        marker={shown}
         yMin={0}
         yMax={0.5}
       />

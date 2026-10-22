@@ -19,6 +19,22 @@ export interface ViewTangents {
 /** Margin around the subject inside the safe area. */
 export const FIT_MARGIN = 1.08;
 
+/** Style guide: the 3D views' vertical field of view (degrees). */
+export const VIEW_FOV = 34;
+
+/** Orbit limits of a subject on the ground (degrees from straight above): never under it. */
+export const GROUND_POLAR_LIMITS: readonly [number, number] = [10, 85];
+
+/**
+ * Unit direction from the target to the camera at `azimuth` (degrees, from +z towards +x) and
+ * `elevation` (degrees above the horizon). The default three-quarter view is 30° / 20°.
+ */
+export function viewDirection(azimuth = 30, elevation = 20): Vec3 {
+  const a = THREE.MathUtils.degToRad(azimuth);
+  const e = THREE.MathUtils.degToRad(elevation);
+  return [Math.sin(a) * Math.cos(e), Math.sin(e), Math.cos(a) * Math.cos(e)];
+}
+
 /** Right and up vectors of a camera looking along −dir (as `Object3D.lookAt` builds them). */
 export function viewBasis(dir: Vec3): { right: Vec3; up: Vec3 } {
   const z = new THREE.Vector3(...dir).normalize();
@@ -110,6 +126,12 @@ export function easeInOut(u: number): number {
   return x * x * (3 - 2 * x);
 }
 
+/** Ease-in-out cubic (0 → 0, ½ → ½, 1 → 1): the camera's moves between stages and parts. */
+export function easeInOutCubic(u: number): number {
+  const x = Math.min(1, Math.max(0, u));
+  return x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
+}
+
 /** A camera pose: where it looks and where it is. */
 export interface CameraPose {
   target: Vec3;
@@ -129,7 +151,7 @@ const _qa = new THREE.Quaternion();
  */
 export function tweenCamera(from: CameraPose, to: CameraPose, u: number): CameraPose {
   if (u >= 1) return { target: [...to.target], position: [...to.position] };
-  const k = easeInOut(u);
+  const k = easeInOutCubic(u);
   const target: Vec3 = [
     from.target[0] + (to.target[0] - from.target[0]) * k,
     from.target[1] + (to.target[1] - from.target[1]) * k,

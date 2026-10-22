@@ -38,24 +38,32 @@ export function Bio3DToolbar({ lesson }: { lesson: Bio3DLesson }) {
 }
 
 /**
- * For lessons whose stage is a page of text and tables (genetic code, Punnett square): the
- * switch, and above the page a 3D figure of the same model when 3D is on. `figure` is the
- * (lazy) 3D body; the page below never changes.
+ * For lessons whose stage is a page of text and tables (genetic code, Punnett square): above the
+ * page a 3D figure of the same model when 3D is on, with the 3D/2D switch in its top-right
+ * corner (like every 3D view's toolbar); in 2D the switch stays in that place, in a bar over the
+ * page. `figure` is the (lazy) 3D body; the page below never changes.
  */
 export function Bio3DFigure({ lesson, figure }: { lesson: Bio3DLesson; figure: ReactNode }) {
   const Lz = useLocalized();
   const { show3d, notice } = useShow3d(lesson);
   return (
     <>
-      <div className="chem-toolbar bio3d-figure__bar">
-        <Bio3DSwitch lesson={lesson} />
-        {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
-      </div>
+      {!show3d && (
+        <div className="chem-toolbar bio3d-figure__bar">
+          {notice && <span className="chem-chip chem-chip--qual">{notice}</span>}
+          <Bio3DSwitch lesson={lesson} />
+        </div>
+      )}
       {show3d && (
         <Suspense
           fallback={
             <div className="bio3d-figure" aria-busy="true">
               <span className="sr-only">{Lz(L('Đang tải hình 3D', 'Loading the 3D picture'))}</span>
+              <div className="bio3d__hud">
+                <div className="bio3d__side">
+                  <Bio3DSwitch lesson={lesson} />
+                </div>
+              </div>
             </div>
           }
         >

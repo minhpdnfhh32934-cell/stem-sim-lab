@@ -77,8 +77,8 @@ export const STEP_NOTE: Record<MendelStep, LocalizedText> = {
     'Each cell of the Punnett square is one ♀ gamete × ♂ gamete pair at fertilisation; its probability is the product of the two.',
   ),
   offspring: L(
-    'Con lai tô màu theo nhóm kiểu hình; chiều cao mỗi cột bằng xác suất chính xác của kiểu hình đó.',
-    'Offspring are coloured by phenotype class; each bar is as tall as the exact probability of its phenotype.',
+    'Con lai tô màu theo nhóm kiểu hình; mức chất lỏng trong mỗi ống bằng xác suất chính xác của kiểu hình đó (vạch khắc ở 1/4, 1/2, 3/4 và 1).',
+    'Offspring are coloured by phenotype class; the liquid in each cylinder stands as high as the exact probability of its phenotype (marks at 1/4, 1/2, 3/4 and 1).',
   ),
 };
 
@@ -104,6 +104,10 @@ export function mendelCard3d(): ScienceCardData {
       COLOUR_NOTE,
       ABSTRACT_NOTE,
       L(
+        'Bàn thí nghiệm, khay có ô lõm, bệ đỡ, ống đong và cách con lai rơi vào ô chỉ là hình minh họa để sắp xếp; trong các ống chỉ mức chất lỏng mang số liệu. Kiểu gen trong ô hiện khi phóng to hoặc khi bấm vào ô.',
+        'The bench, the tray with its slots, the pedestals, the cylinders and the way the offspring drop into the cells are only an illustrative arrangement; in the cylinders only the liquid level carries a number. The genotypes in the cells show when you zoom in or click a cell.',
+      ),
+      L(
         'Mỗi gen được vẽ trên một cặp NST tương đồng riêng, đúng giả thiết phân li độc lập (không liên kết) của bài. Giảm phân vẽ giản lược: chỉ các cặp NST mang gen; không vẽ sự nhân đôi NST, trao đổi chéo hay thoi phân bào.',
         'Each gene is drawn on its own pair of homologous chromosomes, matching the lesson’s independent assortment (no linkage). Meiosis is simplified: only the chromosome pairs carrying the genes; chromosome replication, crossing over and the spindle are not drawn.',
       ),
@@ -112,8 +116,8 @@ export function mendelCard3d(): ScienceCardData {
         'Incomplete dominance: the heterozygote is its own phenotype class with its own colour — not a blend of the two homozygotes.',
       ),
       L(
-        'Chính xác (lấy từ mô hình): giao tử và xác suất của chúng, các ô của bảng Punnett, kiểu gen, kiểu hình, chiều cao cột = xác suất, tỉ lệ rút gọn, và số con lai ngẫu nhiên (cùng lần tạo như trang 2D).',
-        'Exact (from the model): the gametes and their probabilities, the cells of the Punnett square, genotypes, phenotypes, bar height = probability, the reduced ratio, and the random offspring counts (the same draw as the 2D page).',
+        'Chính xác (lấy từ mô hình): giao tử và xác suất của chúng, các ô của bảng Punnett, kiểu gen, kiểu hình, mức chất lỏng trong ống = xác suất, tỉ lệ rút gọn, và số con lai ngẫu nhiên (cùng lần tạo như trang 2D).',
+        'Exact (from the model): the gametes and their probabilities, the cells of the Punnett square, genotypes, phenotypes, liquid level in each cylinder = probability, the reduced ratio, and the random offspring counts (the same draw as the 2D page).',
       ),
       L(
         'Khi số con lai lớn, mỗi hình đại diện cho k con lai (k = 1, 2 hoặc 5 × 10ⁿ); số hình của các nhóm được làm tròn theo phần dư lớn nhất nên cộng lại đúng tổng. Số chính xác ở chip và thẻ chi tiết.',

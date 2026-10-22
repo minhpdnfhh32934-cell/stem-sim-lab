@@ -12,6 +12,13 @@ import type { Rect } from './labels';
 /** Looks of a tag (CSS modifier): a base letter, a short word, a position number. */
 export type TagVariant = 'letter' | 'word' | 'tick';
 
+/** How `addAt` places a tag (see there). */
+export interface TagPlacement {
+  end?: boolean;
+  solid?: boolean;
+}
+const CENTRED: TagPlacement = {};
+
 /** Screen cell (px): one letter per cell. */
 const CELL = 10;
 
@@ -20,6 +27,9 @@ interface Node {
   text: string;
   variant: TagVariant | '';
 }
+
+/** Room kept around a tag's box for the name labels (px). */
+const BOX_PAD = 2;
 
 export class TagLayer {
   readonly el: HTMLDivElement;
@@ -31,6 +41,11 @@ export class TagLayer {
   private width = 1;
   private height = 1;
   private safe: Rect = { left: 0, top: 0, right: 1, bottom: 1 };
+  /** Screen boxes of the tags shown this frame (the first `boxCount`; reused objects). */
+  private readonly boxes: Rect[] = [];
+  private boxCount = 0;
+  /** Size of each text in each look, measured once (no layout reads on every frame). */
+  private readonly sizes = new Map<string, { w: number; h: number }>();
   private readonly vp = new THREE.Matrix4();
   private readonly v = new THREE.Vector3();
   private readonly w = new THREE.Vector3();
@@ -56,6 +71,7 @@ export class TagLayer {
     this.cols = cols;
     this.rows = rows;
     this.used = 0;
+    this.boxCount = 0;
   }
 
   /** Screen point (px) of a world point, or null behind the camera. */
@@ -77,16 +93,48 @@ export class TagLayer {
   }
 
   /**
+   * Screen point (px, canvas coordinates) of a world point, written to `out` as [x, y]; false
+   * behind the camera. For a view that lays some tags out on screen itself (`addAt`).
+   */
+  toScreen(x: number, y: number, z: number, out: number[]): boolean {
+    const p = this.project(x, y, z, this.v);
+    if (!p) return false;
+    out[0] = p.x;
+    out[1] = p.y;
+    return true;
+  }
+
+  /**
    * Places a tag at a world point if its cells are free (`cells` wide). Returns whether it was
    * shown.
    */
   add(text: string, x: number, y: number, z: number, variant: TagVariant, cells = 1): boolean {
     const p = this.project(x, y, z, this.v);
-    if (!p) return false;
+    return p ? this.addAt(text, p.x, p.y, variant, cells) : false;
+  }
+
+  /**
+   * Places a tag at a screen point (px, canvas coordinates) if its cells are free.
+   * `end`: the point is the tag's right end (a column of tags aligned on the right) instead of
+   * its centre. `solid`: once shown, the tag also takes every cell its box covers (not only its
+   * middle row), so no tag added later can touch it.
+   */
+  addAt(
+    text: string,
+    px: number,
+    py: number,
+    variant: TagVariant,
+    cells = 1,
+    o: TagPlacement = CENTRED,
+  ): boolean {
     const s = this.safe;
-    if (p.x < s.left || p.x > s.right || p.y < s.top || p.y > s.bottom) return false;
-    const cy = Math.floor(p.y / CELL);
-    const c0 = Math.floor(p.x / CELL) - Math.floor((cells - 1) / 2);
+    if (!Number.isFinite(px) || !Number.isFinite(py)) return false;
+    if (px < s.left || px > s.right || py < s.top || py > s.bottom) return false;
+    const end = o.end === true;
+    const cy = Math.floor(py / CELL);
+    const c0 = end
+      ? Math.ceil(px / CELL) - cells
+      : Math.floor(px / CELL) - Math.floor((cells - 1) / 2);
     if (cy < 0 || cy >= this.rows) return false;
     for (let c = c0; c < c0 + cells; c++) {
       if (c < 0 || c >= this.cols) return false;
@@ -103,8 +151,51 @@ export class TagLayer {
       n.el.className = `three-tag three-tag--${variant}`;
     }
     n.el.hidden = false;
-    n.el.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) translate(-50%, -50%)`;
+    n.el.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px) translate(${end ? '-100%' : '-50%'}, -50%)`;
+    const size = this.sizeOf(n, cells);
+    let box = this.boxes[this.boxCount];
+    if (!box) {
+      box = { left: 0, top: 0, right: 0, bottom: 0 };
+      this.boxes.push(box);
+    }
+    this.boxCount++;
+    box.left = (end ? px - size.w : px - size.w / 2) - BOX_PAD;
+    box.right = (end ? px : px + size.w / 2) + BOX_PAD;
+    box.top = py - size.h / 2 - BOX_PAD;
+    box.bottom = py + size.h / 2 + BOX_PAD;
+    if (o.solid === true) this.take(box);
     return true;
+  }
+
+  /** Marks the grid cells under a screen box as taken. */
+  private take(box: Rect): void {
+    const r0 = Math.max(0, Math.floor(box.top / CELL));
+    const r1 = Math.min(this.rows - 1, Math.floor(box.bottom / CELL));
+    const c0 = Math.max(0, Math.floor(box.left / CELL));
+    const c1 = Math.min(this.cols - 1, Math.floor(box.right / CELL));
+    for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) this.grid[r * this.cols + c] = 1;
+  }
+
+  /** A shown tag's size (px): measured once per text and look, at least its cells. */
+  private sizeOf(n: Node, cells: number): { w: number; h: number } {
+    const key = `${n.variant}|${n.text}`;
+    let size = this.sizes.get(key);
+    if (!size) {
+      size = {
+        w: Math.max(n.el.offsetWidth, cells * CELL),
+        h: Math.max(n.el.offsetHeight, CELL),
+      };
+      this.sizes.set(key, size);
+    }
+    return size;
+  }
+
+  /**
+   * Screen boxes (px, canvas coordinates) of the tags shown this frame — the strand ends,
+   * positions, letters and names that the name labels keep clear of.
+   */
+  rects(): Rect[] {
+    return this.boxes.slice(0, this.boxCount);
   }
 
   private node(): Node {
@@ -134,6 +225,7 @@ export class TagLayer {
 
   clear(): void {
     this.used = 0;
+    this.boxCount = 0;
     this.end();
   }
 

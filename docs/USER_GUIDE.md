@@ -518,7 +518,7 @@ Khi dùng AI:
 - **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
   ρgΔh = iCRT.
 
-### Hình 3D trong Sinh học (bản 0.7)
+### Hình 3D trong Sinh học (bản 0.7, làm đẹp ở 0.7.1)
 
 Cả 11 bài Sinh học mở bằng hình 3D. Cách dùng chung:
 
@@ -530,6 +530,11 @@ Cả 11 bài Sinh học mở bằng hình 3D. Cách dùng chung:
   cũng ghi câu này. Khi phải vẽ một hình cho nhiều cá thể hoặc nhiều hạt, hình có ghi chú mỗi hình ứng với bao nhiêu.
 - Chất lượng hiển thị Thấp, máy không có WebGL2 hoặc card đồ họa gặp lỗi → app tự dùng hình 2D và
   ghi lý do. Máy chậm thì chuyển động bớt mượt, số liệu không đổi.
+- Từ 0.7.1 mọi bài có cùng một "sân khấu": nền dải màu, ánh sáng kiểu phòng chụp (bốn bài quần thể
+  dùng ánh sáng ngoài trời), vật liệu riêng cho màng, NST, ADN, protein, thủy tinh và chất lỏng. Chỉ
+  ở chất lượng **Cao** trên máy có card đồ họa rời mới có thêm bóng ở chỗ khuất và ánh sáng nổi;
+  máy dùng đồ họa tích hợp vẫn vẽ như mức Cao của 0.7.0. Nếu máy không theo kịp, app tự tắt dần các
+  hiệu ứng này, số liệu không đổi.
 
 Từng bài:
 
@@ -551,9 +556,24 @@ Từng bài:
   enzyme** để nhìn một enzyme.
 - **Khuếch tán & thẩm thấu 3D:** số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua
   lỗ màng. Thẩm thấu: ống chữ U có thước cm, mực nước lấy từ đồ thị của bài.
-- **Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt:** hiện có hình
-  3D đơn giản (mỗi hình là một cá thể hoặc một nhóm cá thể). Hình 3D riêng, chi tiết cho bốn bài
-  này sẽ có trong một bản cập nhật sau.
+- **Bốn bài quần thể (0.7.1)** mỗi bài có một khung cảnh ngoài trời riêng. Con vật, cây cỏ, đảo,
+  hàng rào và cách chúng di chuyển chỉ là minh họa; số con vẽ ra lấy từ mô hình của bài. Khi quần
+  thể lớn hơn số hình vẽ được, góc hình ghi tỉ lệ, ví dụ "1 hình = 5 cá thể (làm tròn)". Bấm vào một
+  con vật, cột đo hoặc bảng để xem thẻ giải thích (ba bài sau còn đưa hình tới gần chỗ đã bấm);
+  **Toàn cảnh** đưa về hình cả quần thể.
+  - **Hardy–Weinberg 3D:** hình nằm trên đồ thị và bảng của bài. Màu thân con vật là kiểu gen, hai
+    hạt trên râu là hai alen; hũ thủy tinh "vốn gen" chứa hạt alen và vòng p : q. Đổi thế hệ: thế
+    hệ 0 là số em nhập, thế hệ 1 đúng là lần **Cho ngẫu phối 1 thế hệ**. Góc nhìn **Cận cảnh cá thể**.
+  - **Phiêu bạt di truyền 3D:** mỗi lần chạy của mô hình là một hòn đảo, dải màu quanh bờ cho p : q
+    của thế hệ đang xem; đảo chỉ còn một alen (A cố định hoặc mất hẳn) có cờ màu alen còn lại. Đồ
+    thị dị hợp tử bên dưới đánh dấu cùng thế hệ. Góc nhìn **Cận cảnh một đảo**.
+  - **Tăng trưởng logistic 3D:** đàn con vật trong hàng rào trên đồng cỏ ba lá, số con theo N(t) của
+    công thức; cột thủy tinh có vạch K và K/2 và mũi tên dN/dt (thẻ ghi mũi tên dài nhất ứng với
+    bao nhiêu). Thanh thời gian vẽ sẵn đường N(t); **Tới t\*** nhảy tới điểm uốn. Góc nhìn **Cận
+    cảnh đàn**.
+  - **Con mồi – vật ăn thịt 3D:** con mồi và vật ăn thịt trên đồng cỏ, số con theo điểm đã tính gần
+    nhất của quỹ đạo (không nội suy); hai ống thủy tinh cho x và y có vạch x\*, y\*, mũi tên dx/dt,
+    dy/dt và biển ghi số; bảng bên phải vẽ quỹ đạo pha như hình 2D, có hạt sáng ở thời điểm đang xem.
 
 ## Lưu, mở, xuất và lịch sử
 

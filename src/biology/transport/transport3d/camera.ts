@@ -1,7 +1,8 @@
 /**
- * Camera framing of the "Khuếch tán & thẩm thấu" 3D view (pure maths). The diffusion box is seen
- * from the front, above and from the right, so the membrane's face with its pores shows; the
- * U-tube from the front, a little above and right, so both columns and the ruler read.
+ * Camera framing of the "Khuếch tán & thẩm thấu" 3D view (pure maths). The diffusion tank is seen
+ * from the front, a little above and from the right, so the membrane's face with its pores shows
+ * and the tank's top stays shallow (a wide subject in a short stage); the U-tube from the front,
+ * a little above and right, so both columns and the ruler read.
  */
 import {
   fitDistance,
@@ -22,7 +23,7 @@ const unit = (v: Vec3): Vec3 => {
 
 /** Viewing direction of each process (from the target towards the camera). */
 export const VIEW_DIR = {
-  diffusion: unit([0.62, 0.48, 1]),
+  diffusion: unit([0.62, 0.4, 1]),
   osmosis: unit([0.22, 0.2, 1]),
 } as const;
 

@@ -19,14 +19,15 @@ const KINDS: Mutation[] = [
 ];
 
 /**
- * Triangles drawn for the 300-bp gene, measured on the CPU with `drawStats` (2026-10-20): both
- * helices, both mRNAs with their brackets and both chains (the scene does not move: one layout).
- * High draws rounder rungs, nodes and beads. The budget allows 5 %; a bigger change must update
- * this table on purpose.
+ * Triangles drawn for the 300-bp gene, measured on the CPU with `drawStats` (2026-10-21, 0.7.1
+ * beauty pass: continuous backbone tubes instead of node spheres, two lane plates, gap rings,
+ * rounded bracket corners): both helices, both mRNAs with their brackets and both chains (the
+ * scene does not move: one layout). High draws rounder rungs, tubes and beads. The budget allows
+ * 5 %; a bigger change must update this table on purpose.
  */
 const TRIANGLES: Record<string, Record<Mutation['kind'], number>> = {
-  medium: { substitution: 402736, insertion: 406448, deletion: 425728 },
-  high: { substitution: 879856, insertion: 888080, deletion: 928920 },
+  medium: { substitution: 343280, insertion: 346432, deletion: 376320 },
+  high: { substitution: 769880, insertion: 777064, deletion: 836248 },
 };
 /** Draw calls: one per instanced set, never one per base. */
 const CALLS = 28;

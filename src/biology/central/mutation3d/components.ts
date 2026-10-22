@@ -56,8 +56,8 @@ export function mutationCard3d(): ScienceCardData {
     assumptions: [
       ...base.assumptions,
       L(
-        `${MUTATION_ILLUSTRATION.vi} Hình dạng chuỗi xoắn, chỗ phình (thêm nuclêôtit), khoảng trống (mất nuclêôtit), dấu ngoặc bộ ba và chuỗi hạt axit amin là hình vẽ để so sánh.`,
-        `${MUTATION_ILLUSTRATION.en} The helix shape, the bulge (inserted bases), the gap (deleted bases), the codon brackets and the bead chains are drawings made for comparison.`,
+        `${MUTATION_ILLUSTRATION.vi} Hình dạng chuỗi xoắn, chỗ phình (thêm nuclêôtit), khoảng trống (mất nuclêôtit) và vòng mảnh đánh dấu nó, hai làn nền mờ, dấu ngoặc bộ ba, chuỗi hạt axit amin và nắp phẳng ở cuối chuỗi bị kết thúc sớm là hình vẽ để so sánh.`,
+        `${MUTATION_ILLUSTRATION.en} The helix shape, the bulge (inserted bases), the gap (deleted bases) and the thin ring marking it, the two faint lanes, the codon brackets, the bead chains and the flat cap ending a chain cut short are drawings made for comparison.`,
       ),
       L(
         'ADN đột biến được vẽ thẳng hàng với ADN bình thường: mỗi cặp nuclêôtit không đổi nằm đúng dưới cặp tương ứng. Vì vậy các cặp được thêm vào vẽ phình ra khỏi chuỗi xoắn và chỗ các cặp bị mất để trống; ADN thật vẫn là một chuỗi xoắn kép liền mạch.',

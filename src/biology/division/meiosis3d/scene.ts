@@ -9,16 +9,29 @@
  * from the model (a recombinant chromatid shows exactly its maternal / paternal pieces, from the
  * crossing over on), two-sphere membranes (one per dividing cell: one in meiosis I, two in
  * meiosis II — four cells at the end), centrosomes, spindles and nuclei. The chiasma is drawn as
- * a small X between the two inner chromatids, at the model's crossover point (its shape is
- * illustrative). A picked part glows in the highlight colour while the other parts are dimmed.
+ * a small X between the two inner chromatids, at the model's crossover point, ringed by a small
+ * glowing ring (shape and glow are illustrative); the change from maternal to paternal colour on a
+ * recombinant chromatid is a sharp seam at the model's own crossover share. Materials, membranes
+ * and spindles look exactly as in mitosis (`../division3d/looks.ts`). A picked part glows in the
+ * highlight colour while the other parts are dimmed.
  */
 import * as THREE from 'three';
 import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
+import { LAYER } from '@/ui/three/layers';
 import { contactShadow, disposeLightRig, lightRig } from '@/ui/three/lighting';
-import { glass, setRimAlpha, solid, withTint } from '@/ui/three/materials';
+import type { Hull, LabelObstacles } from '@/ui/three/labelLayer';
+import { setRimAlpha } from '@/ui/three/materials';
 import { ChromosomeTube } from '../../view3d/primitives/chromosomeTube';
 import { centrosomeMaker } from '../division3d/centrosomeMesh';
+import { ILLUSTRATIVE_SCALE } from '../division3d/dimensions';
+import {
+  SPINDLE_OPACITY,
+  divisionLooks,
+  setLookOpacity,
+  type DivisionPalette,
+  type Look,
+} from '../division3d/looks';
 import {
   condensedShare,
   threadSamples,
@@ -28,10 +41,12 @@ import {
   type TubeProfile,
 } from '../division3d/chromatidShape';
 import { ease } from '../division3d/math';
+import { cellRegions, tubeHull } from '../division3d/labelObstacles';
 import { TwoSphereProfile } from '../division3d/membraneMesh';
 import { placeNucleolus, writeEnvelopeParts } from '../division3d/nucleusMesh';
 import { envelopeBreakdown, spherePointsEven } from '../division3d/sceneParts';
-import { FIBRE, writeFibres } from '../division3d/spindleMesh';
+import { FIBRE, fibreGeometry, writeFibres } from '../division3d/spindleMesh';
+import { CONTACT_SHADE, KINETOCHORE_RADIUS, tubeDetail } from '../division3d/tubes';
 import { meiosisFrame, type CameraFrame } from './camera';
 import {
   chromosomePart,
@@ -52,20 +67,10 @@ import {
 } from './timeline';
 
 /** CSS colour strings (read from theme tokens by the view). */
-export interface MeiosisPalette {
+export interface MeiosisPalette extends DivisionPalette {
   maternal: string;
   paternal: string;
-  centromere: string;
   chiasma: string;
-  membrane: string;
-  envelope: string;
-  nucleolus: string;
-  spindle: string;
-  centrosome: string;
-  ring: string;
-  highlight: string;
-  /** Colour unpicked parts fade towards while a part is picked (the stage's colour). */
-  backdrop?: string;
 }
 
 export interface MeiosisSceneOptions {
@@ -76,12 +81,21 @@ export interface MeiosisSceneOptions {
   membraneOpacity?: number;
   /** Strength of the Fresnel outline of see-through shells (a theme token). */
   rimStrength?: number;
+  /** How much solids darken towards their silhouette (a theme token, `withEdgeShade`). */
+  edgeShade?: number;
+  /** Darker outline of see-through shells (a theme token: on in light, 0 in dark). */
+  shellInk?: number;
+  /** HDR path (High tier on a discrete GPU): glowing centrosome cores and chiasma ring. */
+  hdr?: boolean;
+  /** Fill and rim lights, the cell's lit back face, clear coat (off with software WebGL). */
+  accents?: boolean;
 }
 
-/** A part to name on the picture and a point on it (world units). */
+/** A part to name on the picture, a point on it (world units) and its colour (anchor ring). */
 export interface MeiosisLabelAnchor {
   id: MeiosisComponentId;
   point: Vec3;
+  color: string;
 }
 
 export interface MeiosisScene {
@@ -95,6 +109,8 @@ export interface MeiosisScene {
   frame(mode: MeiosisCameraMode): CameraFrame;
   /** Points of the parts that can be named now, most important first (for the name labels). */
   labelAnchors(): MeiosisLabelAnchor[];
+  /** What the name labels keep clear of: the chromosomes, and each cell (world space). */
+  labelObstacles(): LabelObstacles;
   stats(): { objects: number; meshes: number; geometries: number; materials: number };
   drawStats(): DrawStats;
   dispose(): void;
@@ -105,6 +121,8 @@ type Part =
   | 'bead'
   | 'thread'
   | 'chiasma'
+  /** The glowing ring around a chiasma (picks and highlights as the chiasma). */
+  | 'chiasmaRing'
   | 'fibre'
   | 'centrosome'
   | 'ring'
@@ -121,27 +139,33 @@ interface PartData {
 }
 
 const CONTAINERS: ReadonlySet<Part> = new Set(['envelope', 'membrane']);
-const CHROMOSOME_PARTS: ReadonlySet<Part> = new Set(['arm', 'bead', 'thread', 'chiasma']);
+const CHROMOSOME_PARTS: ReadonlySet<Part> = new Set([
+  'arm',
+  'bead',
+  'thread',
+  'chiasma',
+  'chiasmaRing',
+]);
 /** How far behind a thin fibre a chromosome may be and still be picked. */
 const FIBRE_SLACK = 0.35;
 /** A tube is rewritten only when its shape changes by more than can be seen (as in mitosis). */
 const SAME_DIRECTION = 0.999975;
 const SAME_SHARE = 0.002;
 /** A click this close to a condensed chromatid's centromere picks the centromere. */
-const CENTROMERE_PICK = 0.26;
+const CENTROMERE_PICK = 0.26 * ILLUSTRATIVE_SCALE;
 /** Half the length of each bar of the chiasma's X, along the chromatids. */
-const CHIASMA_HALF = 0.26;
-const DIM_TOWARDS = '#8f949e';
+const CHIASMA_HALF = 0.26 * ILLUSTRATIVE_SCALE;
+/**
+ * The glowing ring around a chiasma (illustrative): radius, tube, and how far it is drawn towards
+ * the viewer (it always faces the camera and sits just in front of the chromatids it rings).
+ */
+const CHIASMA_RING = { radius: 0.36 * ILLUSTRATIVE_SCALE, tube: 0.028, lift: 0.35 } as const;
+/** Depth of the membranes' undulation (share of the radius; illustrative, always inwards). */
+const MEMBRANE_WAVE = 0.015;
 /** Nuclei at once (telophase II: two in each of two cells). */
 const NUCLEI = 4;
 const PORES = 32;
 const VESICLES = 40;
-
-interface Look<M extends THREE.Material> {
-  base: M;
-  hi: M;
-  dim: M;
-}
 
 export function buildMeiosisScene(
   tl: MeiosisTimeline,
@@ -158,7 +182,7 @@ export function buildMeiosisScene(
     return x;
   };
 
-  const rig = lightRig({ size: 14 });
+  const rig = lightRig({ size: 14, accents: opts.accents ?? true });
   scene.add(rig);
   disposables.push({
     dispose: () => {
@@ -170,88 +194,28 @@ export function buildMeiosisScene(
   scene.add(shadow.mesh);
   disposables.push(shadow);
 
-  // ---- materials
-  const towards = new THREE.Color(palette.backdrop ?? DIM_TOWARDS);
-  const dimHex = (color: string) => `#${new THREE.Color(color).lerp(towards, 0.5).getHexString()}`;
-  const look = <M extends THREE.MeshStandardMaterial>(
-    color: string,
-    make: (c: string) => M,
-  ): Look<M> => {
-    const base = keep(make(color));
-    const hi = keep(make(color));
-    hi.emissive.set(palette.highlight);
-    hi.emissiveIntensity = 0.85;
-    hi.userData.look = 'hi';
-    const dim = keep(make(dimHex(color)));
-    dim.userData.look = 'dim';
-    const scale = dim.transparent ? 0.55 : 1;
-    dim.opacity *= scale;
-    dim.userData.opacityScale = scale;
-    return { base, hi, dim };
-  };
-  const organic = (c: string) => solid(c, tier, { roughness: 0.5, sheen: 0.6, fades: true });
-  const firm = (c: string) => solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true });
-  const shell =
-    (opacity: number, rimAlpha: number, side: THREE.Side = THREE.FrontSide) =>
-    (c: string) =>
-      glass(c, { opacity, side, rim: { color: c, strength: rimStrength, alpha: rimAlpha } });
-  const membraneOpacity = opts.membraneOpacity ?? 0.16;
-  /** Chromatid tubes carry their colours per vertex (piece by piece): the material is white. */
-  const tubeLook = (): Look<THREE.MeshStandardMaterial> => {
-    const make = () => {
-      const m = keep(organic('#ffffff'));
-      m.vertexColors = true;
-      return m;
-    };
-    const base = make();
-    const hi = make();
-    hi.emissive.set(palette.highlight);
-    hi.emissiveIntensity = 0.85;
-    hi.userData.look = 'hi';
-    const dim = withTint(make(), towards, 0.5);
-    dim.userData.look = 'dim';
-    return { base, hi, dim };
-  };
-  const mats = {
-    tube: tubeLook(),
-    bead: look(palette.centromere, firm),
-    chiasma: look(palette.chiasma, firm),
-    envelope: look(palette.envelope, shell(0.3, 0.45, THREE.DoubleSide)),
-    nucleolus: look(palette.nucleolus, (c) =>
-      solid(c, tier, { roughness: 0.55, sheen: 0.4, fades: true }),
-    ),
-    membrane: look(palette.membrane, shell(membraneOpacity, 0.55)),
-    centriole: look(palette.centrosome, (c) =>
-      solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true, side: THREE.DoubleSide }),
-    ),
-    pcm: look(palette.centrosome, shell(0.22, 0.35)),
-    ring: look(palette.ring, firm),
-    spindle: look(palette.spindle, (c) => solid(c, tier, { roughness: 0.4, fades: true })),
-    vesicle: look(palette.envelope, (c) =>
-      solid(c, tier, { roughness: 0.3, clearcoat: 0.4, fades: true }),
-    ),
-    pore: look(palette.envelope, firm),
-  };
-  /** The cytoplasm (illustrative): a faint tint inside each cell, never picked. */
-  const cytoplasm = keep(
-    new THREE.MeshBasicMaterial({
-      color: palette.membrane,
-      transparent: true,
-      opacity: 0.06,
-      depthWrite: false,
-      side: THREE.BackSide,
-    }),
+  // ---- materials (shared with mitosis: `../division3d/looks.ts`)
+  const hdr = opts.hdr ?? false;
+  const mats = divisionLooks(
+    palette,
+    {
+      tier,
+      membraneOpacity: opts.membraneOpacity ?? 0.16,
+      rimStrength,
+      edgeShade: opts.edgeShade ?? 0,
+      shellInk: opts.shellInk ?? 0,
+      hdr,
+    },
+    keep,
   );
   const detail = tier === 'high';
 
   // ---- shared geometries
   const sphere = keep(new THREE.SphereGeometry(1, seg, Math.round(seg * 0.75)));
-  const kinetoGeo = keep(new THREE.CylinderGeometry(0.085, 0.085, 1, Math.max(10, seg)));
-  const many = tl.chromatids.length > 16;
-  const tubeSides = many ? 6 : tier === 'high' ? 10 : tier === 'medium' ? 8 : 6;
-  const rings = many
-    ? { ringsPerUnit: 4, tipRings: 3, waistRings: 4 }
-    : { ringsPerUnit: 7, tipRings: 6, waistRings: 8 };
+  const kinetoGeo = keep(
+    new THREE.CylinderGeometry(KINETOCHORE_RADIUS, KINETOCHORE_RADIUS, 1, Math.max(10, seg)),
+  );
+  const { sides: tubeSides, ...rings } = tubeDetail(tier, tl.chromatids.length);
   const centrioleGeo = keep(
     new THREE.CylinderGeometry(0.1, 0.1, 0.42, Math.max(8, seg / 2), 1, true),
   );
@@ -260,9 +224,15 @@ export function buildMeiosisScene(
   const blob = keep(new THREE.IcosahedronGeometry(1, 1));
   const tubuleGeo = keep(new THREE.CylinderGeometry(1, 1, 1, 6, 1, true));
   const fibreShape = FIBRE[tier];
-  const fibreGeo = keep(new THREE.CylinderGeometry(1, 1, 1, fibreShape.sides, 1, true));
+  const fibreGeo = keep(
+    fibreGeometry(fibreShape.sides, SPINDLE_OPACITY.pole / SPINDLE_OPACITY.far),
+  );
   // A bar of the chiasma's X: a unit capsule-like cylinder (radius 1, height 1 along +y).
   const barGeo = keep(new THREE.CylinderGeometry(1, 1, 1, Math.max(8, seg / 2)));
+  // The ring around a chiasma (axis z before it is turned).
+  const chiasmaRingGeo = keep(
+    new THREE.TorusGeometry(CHIASMA_RING.radius, CHIASMA_RING.tube, 6, Math.max(16, seg)),
+  );
 
   const pickables: THREE.Object3D[] = [];
   const mesh = <M extends THREE.Material>(geo: THREE.BufferGeometry, mat: M, data: PartData) => {
@@ -303,6 +273,8 @@ export function buildMeiosisScene(
         radius: ROD_RADIUS,
         sides: tubeSides,
         ...rings,
+        // Where the model's pieces meet (after the crossing over): a sharp colour seam.
+        seams: info.after.slice(1).map((g) => g.from),
       }),
     );
     const m = mesh(tube.geometry, mats.tube.base, { part: 'thread', chromatid: id });
@@ -356,8 +328,23 @@ export function buildMeiosisScene(
         [ringNear(b, at - CHIASMA_HALF), ringNear(a, at + CHIASMA_HALF)],
       ] as const,
       bars: [0, 1].map(() => mesh(barGeo, mats.chiasma.base, { part: 'chiasma', pair: x.pair })),
+      /** The crossover rings of both chromatids (the X's centre lies between them). */
+      at: [ringNear(a, at), ringNear(b, at)] as const,
+      ring: mesh(chiasmaRingGeo, mats.chiasmaRing.base, { part: 'chiasmaRing', pair: x.pair }),
+      /** The X's centre (world), written by update. */
+      centre: new THREE.Vector3(),
     };
   });
+  // Each ring faces the camera, lifted towards it (set just before it is drawn: no allocation).
+  const toViewer = new THREE.Vector3();
+  for (const x of chiasmata) {
+    x.ring.onBeforeRender = (_renderer, _scene, camera) => {
+      x.ring.quaternion.copy(camera.quaternion);
+      toViewer.set(0, 0, 1).applyQuaternion(camera.quaternion);
+      x.ring.position.copy(x.centre).addScaledVector(toViewer, CHIASMA_RING.lift);
+      x.ring.updateMatrixWorld();
+    };
+  }
 
   // ---- nuclei (up to four), each with a nucleolus
   const envelopes = Array.from({ length: NUCLEI }, () =>
@@ -404,6 +391,7 @@ export function buildMeiosisScene(
     tubuleGeo,
     centriole: mats.centriole.base,
     pcm: mats.pcm.base,
+    ...(hdr ? { core: mats.core.base } : {}),
     keep,
   });
   const centrosomes = [0, 1, 2, 3].map(() => {
@@ -421,22 +409,25 @@ export function buildMeiosisScene(
   const spindle = new THREE.InstancedMesh(fibreGeo, mats.spindle.base, maxFibres);
   spindle.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   spindle.count = 0;
-  spindle.userData = { part: 'fibre' } satisfies PartData;
+  // See-through fibres on the FX layer (no ambient occlusion), before the membranes' front faces.
+  spindle.userData = { part: 'fibre', layer: LAYER.FX };
+  spindle.renderOrder = -0.25;
   spindle.frustumCulled = false;
   scene.add(spindle);
   pickables.push(spindle);
 
   // ---- membranes: one two-sphere profile per dividing cell, and its contractile ring
-  const membranes = [0, 1].map(() => {
-    const profile = keep(new TwoSphereProfile(seg));
+  const membranes = [0, 1].map((i) => {
+    const profile = keep(new TwoSphereProfile(seg, { amplitude: MEMBRANE_WAVE, seed: 7 + 4 * i }));
     profile.write(0, MEIOSIS.radius);
     const m = mesh(profile.geometry, mats.membrane.base, { part: 'membrane' });
-    const inside = new THREE.Mesh(profile.geometry, cytoplasm);
+    // The cell's volume: the membrane's lit back face, drawn first.
+    const inside = new THREE.Mesh(profile.geometry, mats.cytoplasm.base);
     inside.raycast = () => undefined;
     inside.renderOrder = -0.5;
     m.add(inside);
     const ring = mesh(torus, mats.ring.base, { part: 'ring' });
-    return { profile, mesh: m, ring };
+    return { profile, mesh: m, inside, ring };
   });
 
   // ---- update (no allocation: temporaries live here)
@@ -463,13 +454,15 @@ export function buildMeiosisScene(
     towardSister: [0, 0, 0],
     pinch: 0,
   };
+  /** Contact shade of one tube write (reused: no allocation per frame). */
+  const contact = {
+    towards: new Float32Array(3),
+    strength: 0,
+    reach: CONTACT_SHADE.reach,
+  };
   let selection: MeiosisSelection | null = null;
 
-  const setOpacity = (l: Look<THREE.Material>, o: number) => {
-    l.base.opacity = o;
-    l.hi.opacity = Math.max(o, Math.min(1, o + 0.25));
-    l.dim.opacity = o * ((l.dim.userData.opacityScale as number | undefined) ?? 1);
-  };
+  const setOpacity = setLookOpacity;
 
   const isSelected = (data: PartData, st: Meiosis3DState): boolean => {
     if (!selection) return false;
@@ -499,7 +492,8 @@ export function buildMeiosisScene(
       case 'bivalent':
         // The four chromatids of the pair and its chiasma.
         return (
-          (data.part === 'arm' && !!c?.paired && samePair) || (data.part === 'chiasma' && samePair)
+          (data.part === 'arm' && !!c?.paired && samePair) ||
+          ((data.part === 'chiasma' || data.part === 'chiasmaRing') && samePair)
         );
       case 'homologousChromosome':
         // Only while both homologues are in one group (G1 … metaphase I).
@@ -519,7 +513,7 @@ export function buildMeiosisScene(
           sameSister
         );
       case 'chiasma':
-        return data.part === 'chiasma' && samePair;
+        return (data.part === 'chiasma' || data.part === 'chiasmaRing') && samePair;
       case 'centromere':
         return data.part === 'bead' && sameChromosome && (!!c?.joined || sameSister);
       case 'spindle':
@@ -540,7 +534,10 @@ export function buildMeiosisScene(
       o.mesh.material = choose(mats.tube, d(o.mesh), st);
       o.kineto.material = choose(mats.bead, d(o.kineto), st);
     }
-    for (const x of chiasmata) for (const b of x.bars) b.material = choose(mats.chiasma, d(b), st);
+    for (const x of chiasmata) {
+      for (const b of x.bars) b.material = choose(mats.chiasma, d(b), st);
+      x.ring.material = choose(mats.chiasmaRing, d(x.ring), st);
+    }
     const pick = <M extends THREE.Material>(l: Look<M>, part: Part) => choose(l, { part }, st);
     for (const e of envelopes) e.material = pick(mats.envelope, 'envelope');
     for (const e of innerEnvelopes) e.material = pick(mats.envelope, 'envelope');
@@ -549,12 +546,16 @@ export function buildMeiosisScene(
     for (const e of nucleoli) e.material = pick(mats.nucleolus, 'nucleolus');
     for (const m of membranes) {
       m.mesh.material = pick(mats.membrane, 'membrane');
+      m.inside.material = pick(mats.cytoplasm, 'membrane');
       m.ring.material = pick(mats.ring, 'ring');
     }
     spindle.material = pick(mats.spindle, 'fibre');
     for (const c of centrosomes)
       for (const m of c.parts)
-        m.material = pick(m === c.halo ? mats.pcm : mats.centriole, 'centrosome');
+        m.material = pick(
+          m === c.halo ? mats.pcm : m === c.core ? mats.core : mats.centriole,
+          'centrosome',
+        );
   };
 
   /** Centre-line point of a chromatid's tube at ring k (world units). */
@@ -656,7 +657,13 @@ export function buildMeiosisScene(
         inp.m = m;
         inp.pinch = pinch;
         writeCentreline(o.info, o.tube.stations, inp, o.centre, o.radii);
-        o.tube.write(o.centre, o.radii);
+        // Sisters still touching: the facing sides are shaded near the centromere.
+        const touch = pinch * m;
+        contact.towards[0] = tmpDir.x;
+        contact.towards[1] = tmpDir.y;
+        contact.towards[2] = tmpDir.z;
+        contact.strength = CONTACT_SHADE.strength * touch;
+        o.tube.write(o.centre, o.radii, touch > 0.05 ? contact : undefined);
       }
       // Kinetochore on the waist. Meiosis I: on the face towards the pole the homologue goes to
       // (both sisters face the same pole); meiosis II: away from its sister (or to its pole).
@@ -681,20 +688,27 @@ export function buildMeiosisScene(
       const b = chromatids[x.b];
       const on = !!now && now.weight > 0.01 && !!a && !!b && a.mesh.visible && b.mesh.visible;
       for (const bm of x.bars) bm.visible = on;
+      x.ring.visible = on;
       if (!on) continue;
-      const r = 0.065 * Math.max(0.4, m);
+      const r = 0.065 * ILLUSTRATIVE_SCALE * Math.max(0.4, m);
       const [b0, b1] = x.bars;
       const [[a0, b0r], [b1r, a1]] = x.ends;
       if (b0) bar(b0, pointAt(a, a0, tmpA), pointAt(b, b0r, tmpB), r);
       if (b1) bar(b1, pointAt(b, b1r, tmpA), pointAt(a, a1, tmpB), r);
+      // The ring: centred between the two chromatids' crossover points (it turns to the camera
+      // when drawn).
+      pointAt(a, x.at[0], tmpA);
+      pointAt(b, x.at[1], tmpB);
+      x.centre.addVectors(tmpA, tmpB).multiplyScalar(0.5);
+      x.ring.position.copy(x.centre);
+      x.ring.scale.setScalar(Math.max(0.4, m));
     }
-    setOpacity(
-      mats.chiasma,
-      Math.min(
-        1,
-        st.chiasmata.reduce((w, c) => Math.max(w, c.weight), 0),
-      ),
+    const chiasmaOn = Math.min(
+      1,
+      st.chiasmata.reduce((w, c) => Math.max(w, c.weight), 0),
     );
+    setOpacity(mats.chiasma, chiasmaOn);
+    setOpacity(mats.chiasmaRing, chiasmaOn);
 
     // Nuclei.
     envelopes.forEach((e, i) => {
@@ -746,7 +760,7 @@ export function buildMeiosisScene(
     });
 
     writeFibres(spindle, st.fibres, fibreShape.radius, maxFibres);
-    setOpacity(mats.spindle, Math.min(1, st.spindle * 1.5));
+    setOpacity(mats.spindle, SPINDLE_OPACITY.far * Math.min(1, st.spindle * 1.5));
 
     membranes.forEach((mm, i) => {
       const sh = st.membranes[i];
@@ -819,6 +833,7 @@ export function buildMeiosisScene(
         case 'thread':
           return { component: 'chromatin' };
         case 'chiasma':
+        case 'chiasmaRing':
           return data.pair === undefined
             ? { component: 'chiasma' }
             : { component: 'chiasma', pair: data.pair };
@@ -861,8 +876,8 @@ export function buildMeiosisScene(
     const st = last;
     if (!st) return [];
     const out: MeiosisLabelAnchor[] = [];
-    const add = (id: MeiosisComponentId, point: Vec3 | null) => {
-      if (point && meiosisPartVisible(id, st)) out.push({ id, point });
+    const add = (id: MeiosisComponentId, point: Vec3 | null, color: string) => {
+      if (point && meiosisPartVisible(id, st)) out.push({ id, point, color });
     };
     // A chromosome: the middle of the first present chromatid's longer arm.
     const firstIdx = st.chromatids.findIndex((c) => c.present);
@@ -872,26 +887,32 @@ export function buildMeiosisScene(
       const k = Math.max(0, Math.floor(first.tube.centromereRing / 2));
       const id: MeiosisComponentId =
         st.condensation < 0.5 ? 'chromatin' : chromosomePart(pose, st.stage);
-      add(id, ringPoint(first, k));
+      const piece = first.info.before[0]?.origin ?? pose.origin;
+      add(id, ringPoint(first, k), originColour[piece]);
     }
     const x = chiasmata[0];
     const b0 = x?.bars[0];
-    if (b0?.visible) add('chiasma', [b0.position.x, b0.position.y, b0.position.z]);
+    if (b0?.visible) add('chiasma', [b0.position.x, b0.position.y, b0.position.z], palette.chiasma);
     const cen = st.centromeres[st.centromeres.length - 1];
-    if (cen) add('centromere', cen.position);
+    if (cen) add('centromere', cen.position, palette.centromere);
     const fibre = st.fibres.find((f) => f.kind === 'polar') ?? st.fibres[0];
     if (fibre)
-      add('spindle', [
-        fibre.from[0] + 0.28 * (fibre.to[0] - fibre.from[0]),
-        fibre.from[1] + 0.28 * (fibre.to[1] - fibre.from[1]),
-        fibre.from[2] + 0.28 * (fibre.to[2] - fibre.from[2]),
-      ]);
-    add('centrosome', st.centrosomes[st.centrosomes.length - 1] ?? null);
+      add(
+        'spindle',
+        [
+          fibre.from[0] + 0.28 * (fibre.to[0] - fibre.from[0]),
+          fibre.from[1] + 0.28 * (fibre.to[1] - fibre.from[1]),
+          fibre.from[2] + 0.28 * (fibre.to[2] - fibre.from[2]),
+        ],
+        palette.spindle,
+      );
+    add('centrosome', st.centrosomes[st.centrosomes.length - 1] ?? null, palette.centrosome);
     const n0 = st.nuclei[0];
     if (n0) {
-      add('nucleus', onSphere(n0.center, n0.radius, [-0.6, 0.65, 0.45]));
-      add('nucleolus', nucleoli[0]?.position.toArray() ?? null);
-      if (detail) add('nuclearEnvelope', onSphere(n0.center, n0.radius, [0.55, -0.6, 0.6]));
+      add('nucleus', onSphere(n0.center, n0.radius, [-0.6, 0.65, 0.45]), palette.envelope);
+      add('nucleolus', nucleoli[0]?.position.toArray() ?? null, palette.nucleolus);
+      if (detail)
+        add('nuclearEnvelope', onSphere(n0.center, n0.radius, [0.55, -0.6, 0.6]), palette.envelope);
     }
     const ringed = st.membranes.findIndex((mm) => mm.ring);
     const ring = st.membranes[ringed];
@@ -902,6 +923,7 @@ export function buildMeiosisScene(
         ring.axis === 'x'
           ? [ring.center[0], r * 0.72, r * 0.69]
           : [ring.center[0] + r * 0.72, ring.center[1], r * 0.69],
+        palette.ring,
       );
     }
     const mem = st.membranes[st.membranes.length - 1];
@@ -917,9 +939,27 @@ export function buildMeiosisScene(
               mem.center[1] + 0.35 * R * e,
               0.36 * mem.radius,
             ],
+        palette.membrane,
       );
     }
     return out;
+  };
+
+  const labelObstacles = (): LabelObstacles => {
+    const st = last;
+    if (!st) return {};
+    // Condensed chromosomes only (counted data); the chromatin thread fills the nucleus.
+    const avoid: Hull[] = [];
+    if (st.condensation >= 0.5)
+      chromatids.forEach((o, i) => {
+        if (!st.chromatids[i]?.present || !o.mesh.visible) return;
+        const hull = tubeHull(o.mesh.position, o.centre, o.radii);
+        if (hull) avoid.push(hull);
+      });
+    // Separate cells (a furrow, or meiosis II): a leader stays on its own cell's side.
+    const cells = st.membranes.flatMap(cellRegions);
+    const regions = cells.length > 1 ? cells : [];
+    return { avoid, regions };
   };
 
   const stats = () => {
@@ -949,6 +989,7 @@ export function buildMeiosisScene(
     pickedPoint: () => lastPoint,
     frame: (mode) => meiosisFrame(mode, last),
     labelAnchors,
+    labelObstacles,
     stats,
     drawStats: () => drawStats(scene),
     dispose() {

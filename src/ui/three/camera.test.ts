@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
   KEY_ORBIT_STEP,
   easeInOut,
+  easeInOutCubic,
+  viewDirection,
   fitDistance,
   orbitForKey,
   placeCamera,
@@ -78,6 +80,12 @@ describe('camera maths', () => {
     expect(easeInOut(0)).toBe(0);
     expect(easeInOut(1)).toBe(1);
     expect(easeInOut(0.5)).toBe(0.5);
+    expect(easeInOutCubic(0)).toBe(0);
+    expect(easeInOutCubic(0.5)).toBe(0.5);
+    expect(easeInOutCubic(1)).toBe(1);
+    // Slower start than the smoothstep, symmetric.
+    expect(easeInOutCubic(0.2)).toBeLessThan(easeInOut(0.2));
+    expect(easeInOutCubic(0.8)).toBeCloseTo(1 - easeInOutCubic(0.2), 12);
     expect(easeInOut(-1)).toBe(0);
   });
 
@@ -87,5 +95,12 @@ describe('camera maths', () => {
     expect(orbitForKey('ArrowUp')).toEqual({ left: 0, up: KEY_ORBIT_STEP });
     expect(orbitForKey('ArrowDown')).toEqual({ left: 0, up: -KEY_ORBIT_STEP });
     expect(orbitForKey('Enter')).toBeNull();
+  });
+
+  it('viewDirection: the three-quarter view (azimuth 30°, elevation 20°) is a unit vector', () => {
+    const [x, y, z] = viewDirection();
+    expect(Math.hypot(x, y, z)).toBeCloseTo(1, 12);
+    expect((Math.atan2(x, z) * 180) / Math.PI).toBeCloseTo(30, 9);
+    expect((Math.asin(y) * 180) / Math.PI).toBeCloseTo(20, 9);
   });
 });

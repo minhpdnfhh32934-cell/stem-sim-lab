@@ -1,65 +1,38 @@
 import { Suspense, lazy, useMemo } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
-import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
 import { XYChart } from '@/ui/charts/XYChart';
-import { BSRC, L, usePublishCard } from '../common';
+import { L, usePublishCard } from '../common';
 import { niceStep, useFmt } from '../fmt';
 import { MoreInBasic, Range } from '../ui';
 import { useShow3d } from '../view3d/support';
 import { Bio3DToolbar } from '../view3d/switch';
 import { LogisticChips, LvChips } from './chips';
 import { useLogisticData, useLvData } from './data';
+import { logistic } from './ecology';
+import { useLogistic3D } from './logistic3d/store';
+import { LOGISTIC_CARD, LOGISTIC_CARD_3D } from './logisticCard';
+import { useLv3D } from './lv3d/store';
+import { LV_CARD, LV_CARD_3D } from './lvCard';
 import { useLogistic, useLv, type LogisticState, type LvState } from './store';
 import '../bio.css';
 
 // three.js and the 3D habitat load only when a 3D view is shown.
-const Logistic3D = lazy(() => import('./Logistic3D').then((m) => ({ default: m.Logistic3D })));
-const LotkaVolterra3D = lazy(() =>
-  import('./LotkaVolterra3D').then((m) => ({ default: m.LotkaVolterra3D })),
+const Logistic3DView = lazy(() =>
+  import('./logistic3d/Logistic3DView').then((m) => ({ default: m.Logistic3DView })),
 );
+const Lv3DView = lazy(() => import('./lv3d/Lv3DView').then((m) => ({ default: m.Lv3DView })));
 
 /* ───────────────────────────── Logistic growth ───────────────────────────── */
 
-const LOGISTIC_CARD: ScienceCardData = {
-  title: L('Tăng trưởng quần thể (logistic)', 'Population growth (logistic)'),
-  model: L(
-    'Quần thể tăng theo phương trình logistic: tốc độ tăng giảm dần khi số cá thể tiến tới sức chứa K của môi trường. Nghiệm được tính chính xác bằng công thức; đường hàm mũ (không giới hạn) vẽ để so sánh.',
-    'The population follows the logistic equation: growth slows as N approaches the carrying capacity K. The curve uses the exact solution; unlimited exponential growth is drawn for comparison.',
-  ),
-  equations: [
-    { tex: '\\dfrac{dN}{dt} = rN\\left(1 - \\dfrac{N}{K}\\right)' },
-    { tex: 'N(t) = \\dfrac{K}{1 + \\left(\\dfrac{K}{N_0} - 1\\right)e^{-rt}}' },
-    {
-      tex: 't^{*} = \\dfrac{1}{r}\\ln\\!\\left(\\dfrac{K}{N_0} - 1\\right),\\quad \\left(\\dfrac{dN}{dt}\\right)_{\\max} = \\dfrac{rK}{4}',
-    },
-  ],
-  assumptions: [
-    L(
-      'r và K không đổi theo thời gian; không có di cư, không có độ trễ.',
-      'Constant r and K; no migration, no time lag.',
-    ),
-    L(
-      'N là biến liên tục (thích hợp cho quần thể lớn).',
-      'N is treated as continuous (suitable for large populations).',
-    ),
-  ],
-  confidence: 'exact',
-  confidenceNote: L(
-    'Công thức nghiệm chính xác; test tự động so sánh với DOPRI5 và kiểm tra điểm uốn tại N = K/2.',
-    'Exact closed form; automated tests compare with DOPRI5 and check the inflection at N = K/2.',
-  ),
-  userIntervened: false,
-  sources: [BSRC.sgk12, BSRC.murray, BSRC.campbell],
-};
-
 export function LogisticStage() {
-  usePublishCard(LOGISTIC_CARD);
   const { show3d } = useShow3d('logistic');
+  // The 3D habitat adds its notes to the card while it is on screen.
+  usePublishCard(show3d ? LOGISTIC_CARD_3D : LOGISTIC_CARD);
   if (show3d)
     return (
       <Suspense fallback={<div className="bio-view" />}>
-        <Logistic3D />
+        <Logistic3DView />
       </Suspense>
     );
   return <Logistic2D />;
@@ -169,18 +142,25 @@ export function LogisticPanel() {
 export function LogisticBottom() {
   const Lz = useLocalized();
   const st = useLogistic();
+  // The moment the 3D habitat shows (its N(t) is marked on the chart while it is on screen);
+  // the 2D page marks K/2, where growth is fastest.
+  const shown = useLogistic3D((s) => (s.active ? s.t : null));
   const data = useMemo(() => {
     const n = 200;
     const top = Math.max(st.K, st.N0) * 1.1;
     const x = Array.from({ length: n + 1 }, (_, i) => (i * top) / n);
     return { x, y: x.map((N) => st.r * N * (1 - N / st.K)) };
   }, [st.K, st.N0, st.r]);
+  const label = Lz(L('dN/dt = rN(1 − N/K)', 'dN/dt = rN(1 − N/K)'));
+  const series = useMemo(() => [{ label, y: data.y }], [label, data.y]);
+  const marker =
+    shown === null ? st.K / 2 : logistic(st.N0, st.r, st.K, Math.max(0, Math.min(st.tEnd, shown)));
   return (
     <div className="gas-bottom gas-bottom--single">
       <XYChart
         x={data.x}
-        series={[{ label: Lz(L('dN/dt = rN(1 − N/K)', 'dN/dt = rN(1 − N/K)')), y: data.y }]}
-        marker={st.K / 2}
+        series={series}
+        marker={marker}
         xLabel={Lz(L('Số cá thể N', 'Population size N'))}
         yLabel="dN/dt"
       />
@@ -190,57 +170,16 @@ export function LogisticBottom() {
 
 /* ───────────────────────────── Lotka–Volterra ───────────────────────────── */
 
-const LV_CARD: ScienceCardData = {
-  title: L('Con mồi – vật ăn thịt (Lotka–Volterra)', 'Predator–prey (Lotka–Volterra)'),
-  model: L(
-    'Mô hình Lotka–Volterra: con mồi x sinh sản theo hàm mũ và bị ăn tỉ lệ với số lần gặp xy; vật ăn thịt y tăng nhờ ăn mồi và chết với tốc độ không đổi. Hệ được giải số bằng DOPRI5 theo biến ln x, ln y (sai số tương đối 10⁻¹⁰, quần thể luôn dương); đại lượng bảo toàn V được theo dõi để kiểm tra độ chính xác.',
-    'Lotka–Volterra model: prey x grows exponentially and is eaten in proportion to encounters xy; predators y grow by eating prey and die at a constant rate. Integrated with DOPRI5 in the variables ln x, ln y (relative tolerance 10⁻¹⁰, populations stay positive); the conserved quantity V is monitored to check accuracy.',
-  ),
-  equations: [
-    {
-      tex: '\\dfrac{dx}{dt} = \\alpha x - \\beta xy,\\qquad \\dfrac{dy}{dt} = \\delta xy - \\gamma y',
-    },
-    { tex: 'V = \\delta x - \\gamma\\ln x + \\beta y - \\alpha \\ln y = \\text{const}' },
-    {
-      tex: '(x^{*}, y^{*}) = \\left(\\dfrac{\\gamma}{\\delta}, \\dfrac{\\alpha}{\\beta}\\right),\\quad T \\approx \\dfrac{2\\pi}{\\sqrt{\\alpha\\gamma}}',
-    },
-  ],
-  assumptions: [
-    L(
-      'Con mồi có thức ăn không giới hạn; vật ăn thịt chỉ ăn loài mồi này.',
-      'Prey have unlimited food; predators eat only this prey.',
-    ),
-    L(
-      'Các hệ số không đổi; không có tuổi, không có độ trễ, không có yếu tố ngẫu nhiên.',
-      'Constant coefficients; no age structure, delays or randomness.',
-    ),
-    L(
-      'Chu kì T = 2π/√(αγ) chỉ đúng với dao động nhỏ quanh điểm cân bằng.',
-      'The period T = 2π/√(αγ) holds only for small oscillations around the equilibrium.',
-    ),
-  ],
-  validity: L(
-    'Mô hình định tính kinh điển; quần thể thật chịu thêm nhiều yếu tố khác.',
-    'A classic qualitative model; real populations are affected by many other factors.',
-  ),
-  confidence: 'approx',
-  confidenceNote: L(
-    'Nghiệm số (DOPRI5). Test tự động: V bảo toàn tới 10⁻⁷, điểm cân bằng đứng yên, chu kì dao động nhỏ khớp 2π/√(αγ).',
-    'Numerical solution (DOPRI5). Automated tests: V conserved to 10⁻⁷, equilibrium stays put, small-oscillation period matches 2π/√(αγ).',
-  ),
-  userIntervened: false,
-  sources: [BSRC.murray, BSRC.sgk12],
-};
-
 const PAD = { l: 60, r: 20, t: 64, b: 48 };
 
 export function LotkaVolterraStage() {
-  usePublishCard(LV_CARD);
   const { show3d } = useShow3d('lotkaVolterra');
+  // The 3D habitat adds its notes to the card while it is on screen.
+  usePublishCard(show3d ? LV_CARD_3D : LV_CARD);
   if (show3d)
     return (
       <Suspense fallback={<div className="bio-view" />}>
-        <LotkaVolterra3D />
+        <Lv3DView />
       </Suspense>
     );
   return <LotkaVolterra2D />;
@@ -456,6 +395,9 @@ export function LotkaVolterraPanel() {
 export function LotkaVolterraBottom() {
   const Lz = useLocalized();
   const { traj } = useLvData();
+  // The moment the 3D habitat shows (the computed sample nearest its time) is marked while the
+  // 3D view is on screen.
+  const shown = useLv3D((s) => (s.active ? s.t : null));
   return (
     <div className="gas-bottom gas-bottom--single">
       <XYChart
@@ -464,6 +406,7 @@ export function LotkaVolterraBottom() {
           { label: Lz(L('Con mồi x', 'Prey x')), y: traj.x },
           { label: Lz(L('Vật ăn thịt y', 'Predators y')), y: traj.y, color: 3 },
         ]}
+        marker={shown}
         xLabel={Lz(L('Thời gian t', 'Time t'))}
         yLabel={Lz(L('Số cá thể', 'Population'))}
         yMin={0}

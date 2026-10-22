@@ -11,8 +11,18 @@ import {
   type EnzymeInputs,
   type EnzymeModel3D,
 } from './binding';
-import { ENZYME_PLACES, I_PLACES, SP_PLACES } from './layout';
-import { buildEnzymeScene, enzymeRadiusAt, type EnzymeScene } from './scene';
+import { ALLO_DIR, ENZYME_PLACES, I_PLACES, SP_PLACES } from './layout';
+import { ROLES } from '../../view3d/palette';
+import {
+  ENZYME_RELIEF,
+  ENZYME_SEEDS,
+  PRODUCT_EASE_S,
+  buildEnzymeScene,
+  enzymeGeometry,
+  enzymeRadiusAt,
+  enzymeReliefMask,
+  type EnzymeScene,
+} from './scene';
 
 const KINDS: Inhibition[] = ['none', 'competitive', 'noncompetitive', 'uncompetitive'];
 const token = () => '#808080';
@@ -100,6 +110,34 @@ describe('3D enzyme scene', () => {
     expect(at(true)).toBeLessThan(at(false));
   });
 
+  it('the surface lumps never reach the pocket or the second site (bound particles keep seats)', () => {
+    const allo = ALLO_DIR;
+    expect(enzymeReliefMask(0, 1, 0, true)).toBe(0);
+    expect(enzymeReliefMask(allo[0], allo[1], allo[2], true)).toBe(0);
+    expect(enzymeReliefMask(0, -1, 0, false)).toBe(1);
+    for (const other of [false, true]) {
+      const g = enzymeGeometry(16, other);
+      const pos = g.getAttribute('position');
+      const col = g.getAttribute('color');
+      const v = new THREE.Vector3();
+      let lumpy = 0;
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        const r = v.length();
+        v.normalize();
+        const plain = enzymeRadiusAt(v.x, v.y, v.z, other);
+        const mask = enzymeReliefMask(v.x, v.y, v.z, other);
+        // Lumps at most ±7 % of the radius, and only where the mask allows them.
+        expect(Math.abs(r / plain - 1)).toBeLessThanOrEqual(ENZYME_RELIEF.amplitude * mask + 1e-6);
+        if (Math.abs(r / plain - 1) > 0.005) lumpy++;
+        // Valleys and hollows are shaded darker, never lighter than the plain colour.
+        expect(col.getX(i)).toBeLessThanOrEqual(1);
+      }
+      expect(lumpy).toBeGreaterThan(pos.count / 4);
+      g.dispose();
+    }
+  });
+
   it('picking: an enzyme (or what it holds) names the enzyme; a particle names its pool place', () => {
     const m = enzymeModel3d(inputs({ kind: 'none', view: 'rate' }));
     const sc = build(m);
@@ -132,7 +170,7 @@ describe('3D enzyme scene', () => {
     si.dispose();
   });
 
-  it('tags name each enzyme’s form; labels anchor the parts shown', () => {
+  it('only the picked enzyme names its form (the chip and legend give the rest); labels anchor the parts shown', () => {
     const m = enzymeModel3d(inputs({ kind: 'uncompetitive' }));
     const sc = build(m);
     const f = frameAt(m, 6);
@@ -147,10 +185,21 @@ describe('3D enzyme scene', () => {
     };
     const cam = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
     cam.position.set(0, 0, 40);
-    layer.begin(cam, 800, 600, { left: 0, top: 0, right: 800, bottom: 600 });
-    sc.tags(layer, (form) => form);
-    layer.end();
-    expect(seen).toEqual(formsOf(f.counts));
+    const frameTags = () => {
+      seen.length = 0;
+      layer.begin(cam, 800, 600, { left: 0, top: 0, right: 800, bottom: 600 });
+      sc.tags(layer, (form) => form);
+      layer.end();
+      return [...seen];
+    };
+    expect(frameTags()).toEqual([]);
+    const forms = formsOf(f.counts);
+    for (const index of [0, 5, 17]) {
+      sc.setSelection({ kind: 'enzyme', index });
+      expect(frameTags()).toEqual([forms[index]]);
+    }
+    sc.setSelection({ kind: 'particle', pool: 'sp', index: 0 });
+    expect(frameTags()).toEqual([]);
     const ids = sc.labelAnchors().map((a) => a.id);
     expect(ids).toEqual(expect.arrayContaining(['complex', 'substrate', 'inhibitor', 'otherSite']));
     layer.dispose();
@@ -195,10 +244,13 @@ describe('3D enzyme scene', () => {
     sc.setFrame(frameAt(m, m.tEnd / 2));
     sc.setSelection({ kind: 'enzyme', index: 0 });
     const stats = sc.drawStats();
-    // Measured 2026-10-20 (CPU count, no GPU): 11 calls, about 73 000 triangles on Medium (High:
-    // about 166 000). A bigger change must update this budget on purpose.
-    expect(stats.calls).toBeLessThanOrEqual(12);
-    expect(stats.triangles).toBeLessThan(80_000);
+    // Measured 2026-10-21 (CPU count, no GPU) after the tank pass (glass walls, liquid and its
+    // surface, a base, three enzyme shapes, pocket rings, an outline on the picked enzyme; the
+    // wall's inner face and far walls on High only): 16 calls, about 79 000 triangles on Medium
+    // (High: 18 calls, about 183 000); was 11 calls, 73 000. A bigger change must update this
+    // budget on purpose.
+    expect(stats.calls).toBeLessThanOrEqual(16);
+    expect(stats.triangles).toBeLessThan(85_000);
     let instances = 0;
     sc.scene.traverse((o) => {
       if (o instanceof THREE.InstancedMesh && o.visible) instances += o.count;
@@ -206,5 +258,161 @@ describe('3D enzyme scene', () => {
     // Medium's 3D instance budget is 600 (quality3d: 4000 × 15 %).
     expect(instances).toBeLessThanOrEqual(600);
     sc.dispose();
+  });
+
+  it('an occupied active site wears a thin ring in its ligand’s role colour; free sites none', () => {
+    const tokens: Record<string, string> = {
+      [ROLES.substrate.token]: '#00ff00',
+      [ROLES.inhibitor.token]: '#ff0000',
+      '--text-muted': '#777777',
+    };
+    for (const kind of KINDS) {
+      const m = enzymeModel3d(inputs({ kind }));
+      const sc = buildEnzymeScene({
+        tier: 'medium',
+        segments: 16,
+        kind,
+        token: (n) => tokens[n] ?? '#808080',
+      });
+      const f = frameAt(m, 4);
+      sc.setFrame(f);
+      const thin = (o: THREE.Object3D): o is THREE.InstancedMesh =>
+        o instanceof THREE.InstancedMesh &&
+        o.geometry instanceof THREE.TorusGeometry &&
+        o.geometry.parameters.tube < 0.1;
+      let lips: THREE.InstancedMesh | null = null;
+      sc.scene.traverse((o) => {
+        if (thin(o)) lips = o;
+      });
+      const mesh = lips as unknown as THREE.InstancedMesh;
+      const occupied = f.counts.ES + f.counts.ESI + (kind === 'competitive' ? f.counts.EI : 0);
+      expect(mesh.visible ? mesh.count : 0, kind).toBe(occupied);
+      const c = new THREE.Color();
+      const colours = new Set<string>();
+      for (let i = 0; i < mesh.count; i++) {
+        mesh.getColorAt(i, c);
+        colours.add(`#${c.getHexString()}`);
+      }
+      const want = new Set<string>();
+      if (f.counts.ES + f.counts.ESI > 0) want.add('#00ff00');
+      if (kind === 'competitive' && f.counts.EI > 0) want.add('#ff0000');
+      expect(colours, kind).toEqual(want);
+      sc.dispose();
+    }
+  });
+
+  it('three seeded enzyme shapes, every pocket at the same place (bound particles keep seats)', () => {
+    const shapes = ENZYME_SEEDS.map((seed) => enzymeGeometry(16, false, seed));
+    const top = (g: THREE.BufferGeometry) => {
+      const p = g.getAttribute('position');
+      let best = -Infinity;
+      for (let i = 0; i < p.count; i++) {
+        const x = p.getX(i);
+        const z = p.getZ(i);
+        if (Math.hypot(x, z) < 1e-6) best = Math.max(best, p.getY(i));
+      }
+      return best;
+    };
+    const signature = (g: THREE.BufferGeometry) => {
+      const p = g.getAttribute('position');
+      let sum = 0;
+      for (let i = 0; i < p.count; i++) sum += Math.hypot(p.getX(i), p.getY(i), p.getZ(i));
+      return sum.toFixed(4);
+    };
+    expect(new Set(shapes.map(signature)).size).toBe(3);
+    for (const g of shapes) expect(top(g)).toBeCloseTo(enzymeRadiusAt(0, 1, 0, false), 6);
+    for (const g of shapes) g.dispose();
+    const m = enzymeModel3d(inputs({ kind: 'none' }));
+    const sc = build(m);
+    sc.setFrame(frameAt(m, 0));
+    let drawn = 0;
+    let sets = 0;
+    sc.scene.traverse((o) => {
+      const g = o instanceof THREE.InstancedMesh ? (o.geometry as THREE.BufferGeometry) : null;
+      if (o instanceof THREE.InstancedMesh && g?.getAttribute('color') && o.visible) {
+        drawn += o.count;
+        sets++;
+      }
+    });
+    expect(sets).toBe(3);
+    expect(drawn).toBe(ENZYMES_DRAWN);
+    sc.dispose();
+  });
+
+  it('a new product leaves an ES pocket while playing; never when scrubbed', () => {
+    const m = enzymeModel3d(inputs({ kind: 'none', view: 'time' }));
+    const sc = build(m);
+    const f1 = frameAt(m, m.tEnd / 4);
+    const f2 = frameAt(m, m.tEnd / 3);
+    expect(f2.particles.P).toBeGreaterThan(f1.particles.P);
+    const productAt = (j: number) => {
+      let mesh: THREE.InstancedMesh | null = null;
+      sc.scene.traverse((o) => {
+        if (o instanceof THREE.InstancedMesh && o.count === f2.particles.P && o.visible) mesh = o;
+      });
+      const mat = new THREE.Matrix4();
+      (mesh as unknown as THREE.InstancedMesh).getMatrixAt(j, mat);
+      return new THREE.Vector3().setFromMatrixPosition(mat);
+    };
+    const place = (k: number) => new THREE.Vector3(...(SP_PLACES[k] ?? [0, 0, 0]));
+    // Scrubbed: every product at its own place.
+    sc.setFrame(f1);
+    sc.setFrame(f2);
+    expect(productAt(0).distanceTo(place(f2.particles.S))).toBeLessThan(1e-6);
+    // Playing: the newest product starts in a pocket, away from its place, and gets there.
+    sc.setFrame(f1);
+    sc.setFrame(f2, true);
+    const start = productAt(0);
+    expect(start.distanceTo(place(f2.particles.S))).toBeGreaterThan(0.5);
+    const nearest = Math.min(
+      ...ENZYME_PLACES.map((e) => start.distanceTo(new THREE.Vector3(...e.center))),
+    );
+    expect(nearest).toBeLessThan(1.2);
+    sc.setPhase(PRODUCT_EASE_S + 0.01);
+    expect(productAt(0).distanceTo(place(f2.particles.S))).toBeLessThan(0.3);
+    // The oldest products never moved.
+    const last = f2.particles.P - 1;
+    expect(productAt(last).distanceTo(place(f2.particles.S + last))).toBeLessThan(0.3);
+    sc.dispose();
+  });
+
+  it('under non-competitive and uncompetitive inhibition a new product only leaves an ES pocket', () => {
+    for (const kind of ['noncompetitive', 'uncompetitive'] as const) {
+      // A high [I]: the inhibited complex ESI is common and can outnumber ES.
+      const m = enzymeModel3d(inputs({ kind, view: 'time', inhibitor: 6, ki: 0.5 }));
+      let checked = 0;
+      for (let i = 1; i <= 24; i++) {
+        const f1 = frameAt(m, (m.tEnd * (i - 1)) / 24);
+        const f2 = frameAt(m, (m.tEnd * i) / 24);
+        const born = f1.particles.S - f2.particles.S;
+        if (born <= 0 || f2.particles.P <= f1.particles.P) continue;
+        const forms = formsOf(f2.counts);
+        if (!forms.includes('ESI')) continue;
+        const sc = build(m);
+        sc.setFrame(f1);
+        sc.setFrame(f2, true);
+        let mesh: THREE.InstancedMesh | null = null;
+        sc.scene.traverse((o) => {
+          if (o instanceof THREE.InstancedMesh && o.count === f2.particles.P && o.visible) mesh = o;
+        });
+        const mat = new THREE.Matrix4();
+        for (let j = 0; j < born; j++) {
+          (mesh as unknown as THREE.InstancedMesh).getMatrixAt(j, mat);
+          const start = new THREE.Vector3().setFromMatrixPosition(mat);
+          const place = new THREE.Vector3(...(SP_PLACES[f2.particles.S + j] ?? [0, 0, 0]));
+          if (start.distanceTo(place) < 1e-6) {
+            // No ES complex: the product appears in place (never from an ESI pocket).
+            expect(forms.includes('ES'), `${kind} i=${String(i)}`).toBe(false);
+            continue;
+          }
+          const dist = ENZYME_PLACES.map((e) => start.distanceTo(new THREE.Vector3(...e.center)));
+          const near = dist.indexOf(Math.min(...dist));
+          expect(forms[near], `${kind} i=${String(i)} product ${String(j)}`).toBe('ES');
+          checked++;
+        }
+        sc.dispose();
+      }
+      expect(checked, kind).toBeGreaterThan(0);
+    }
   });
 });

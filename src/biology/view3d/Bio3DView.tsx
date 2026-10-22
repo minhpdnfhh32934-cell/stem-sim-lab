@@ -2,9 +2,11 @@
  * Layouts of a biology lesson's 3D view (three.js side: loaded with the lesson's 3D module).
  *
  * - `Bio3DView`: the 3D picture fills the stage; the lesson's chips and controls sit over its
- *   top edge, the 3D/2D switch and "Đặt lại góc nhìn" in the top-right corner, a caption and
- *   any playback controls at the bottom. The camera keeps the subject clear of all of them.
- * - `Bio3DFigureBody`: a 3D figure block at the top of a lesson's page of text and tables.
+ *   top edge, the 3D/2D switch, the lesson's tools and "Đặt lại góc nhìn" in the top-right
+ *   corner, a picked part's card on the right, a caption and any playback controls at the bottom. The camera keeps the subject clear of all of them.
+ * - `Bio3DFigureBody`: a 3D figure block at the top of a lesson's page of text and tables, with
+ *   the same top-right corner as every 3D view: the 3D/2D switch, the lesson's tools (the name
+ *   labels' toggle), then "Đặt lại góc nhìn".
  */
 import { Focus } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
@@ -12,6 +14,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { IconButton } from '@/ui/IconButton';
 import { L } from '../common';
 import { Bio3DCanvas } from './Bio3DCanvas';
+import type { LookPreset } from '@/ui/three/lighting';
 import type { Bio3DScene, SceneKit, Vec3 } from './kit';
 import type { Bio3DLesson } from './prefs';
 import type { RendererFactory } from './renderer';
@@ -28,6 +31,16 @@ export interface SceneSpec {
   running?: boolean;
   viewDir?: Vec3;
   aspect?: number;
+  /** Light preset (habitats: outdoor). */
+  look?: LookPreset;
+  /** A tap on the picture: the id of what the scene's `pick` hit, or null. */
+  onPick?: (id: string | null) => void;
+  /** The picked part's id (the scene marks it). */
+  selected?: string | null;
+  /** The scene's named framing (`Bio3DScene.frames`, e.g. a close-up); default: the whole subject. */
+  view?: string;
+  /** Texts of the scene's name callouts by id; null or absent: none drawn. */
+  callouts?: Readonly<Record<string, string>> | null;
 }
 
 function ResetView({ onReset }: { onReset: () => void }) {
@@ -47,16 +60,25 @@ export function Bio3DView({
   lesson,
   scene,
   top,
+  tools,
   bottom,
+  info,
   caption,
+  className,
   createRenderer,
 }: {
   lesson: Bio3DLesson;
   scene: SceneSpec;
   /** The lesson's chips and buttons (the same as over its 2D picture). */
   top?: ReactNode;
+  /** The lesson's buttons in the corner, between the switch and "Đặt lại góc nhìn". */
+  tools?: ReactNode;
   /** Playback or step controls under the picture. */
   bottom?: ReactNode;
+  /** The picked part's card (right, between the top and the bottom rows). */
+  info?: ReactNode;
+  /** Extra class of the view (a lesson's own layout). */
+  className?: string;
   /** What the picture shows and what in it is illustration. */
   caption?: ReactNode;
   createRenderer?: RendererFactory;
@@ -64,7 +86,7 @@ export function Bio3DView({
   const hudRef = useRef<HTMLDivElement>(null);
   const [reset, setReset] = useState(0);
   return (
-    <div className="bio-view bio3d" data-lesson={lesson}>
+    <div className={`bio-view bio3d${className ? ` ${className}` : ''}`} data-lesson={lesson}>
       <Bio3DCanvas
         lesson={lesson}
         {...scene}
@@ -78,12 +100,14 @@ export function Bio3DView({
         </div>
         <div className="bio3d__side" data-inset="corner">
           <Bio3DSwitch lesson={lesson} />
+          {tools}
           <ResetView
             onReset={() => {
               setReset((n) => n + 1);
             }}
           />
         </div>
+        {info}
         {(bottom !== undefined || caption !== undefined) && (
           <div className="bio3d__bottom" data-inset="bottom">
             {bottom}
@@ -98,18 +122,33 @@ export function Bio3DView({
 export function Bio3DFigureBody({
   lesson,
   scene,
+  top,
+  bottom,
+  info,
   caption,
+  className,
+  tools,
   createRenderer,
 }: {
   lesson: Bio3DLesson;
   scene: SceneSpec;
+  /** Chips over the figure's top edge (left of the switch). */
+  top?: ReactNode;
+  /** The lesson's buttons in the corner, between the switch and "Đặt lại góc nhìn". */
+  tools?: ReactNode;
+  /** Playback or step controls under the picture. */
+  bottom?: ReactNode;
+  /** The picked part's card (right, between the top and the bottom rows). */
+  info?: ReactNode;
   caption?: ReactNode;
+  /** Extra class of the figure block (a lesson's own height). */
+  className?: string;
   createRenderer?: RendererFactory;
 }) {
   const hudRef = useRef<HTMLDivElement>(null);
   const [reset, setReset] = useState(0);
   return (
-    <div className="bio3d-figure bio3d" data-lesson={lesson}>
+    <div className={`bio3d-figure bio3d${className ? ` ${className}` : ''}`} data-lesson={lesson}>
       <Bio3DCanvas
         lesson={lesson}
         {...scene}
@@ -118,16 +157,25 @@ export function Bio3DFigureBody({
         {...(createRenderer ? { createRenderer } : {})}
       />
       <div ref={hudRef} className="bio3d__hud">
+        {top !== undefined && (
+          <div className="chem-overlay bio3d__top" data-inset="top">
+            {top}
+          </div>
+        )}
         <div className="bio3d__side" data-inset="corner">
+          <Bio3DSwitch lesson={lesson} />
+          {tools}
           <ResetView
             onReset={() => {
               setReset((n) => n + 1);
             }}
           />
         </div>
-        {caption !== undefined && (
+        {info}
+        {(bottom !== undefined || caption !== undefined) && (
           <div className="bio3d__bottom" data-inset="bottom">
-            <p className="bio3d__caption">{caption}</p>
+            {bottom}
+            {caption !== undefined && <p className="bio3d__caption">{caption}</p>}
           </div>
         )}
       </div>

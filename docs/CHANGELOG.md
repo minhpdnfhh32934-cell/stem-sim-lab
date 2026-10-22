@@ -4,20 +4,40 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.7.1 (Đang xét duyệt)
 
-_Đang chờ duyệt ở PR #35 (nhánh claude/wizardly-galileo-k3vxcs, 21/10/2026): chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app._
+_Chưa phát hành. PR #35 (Science Studio trong Phòng thí nghiệm, vá thư viện) đã gộp vào main 21/10/2026 (b6d7298); phần Sinh học 3D của 0.7.1 (làm đẹp bảy bài, bốn bài quần thể có hình 3D riêng) xong trên nhánh feat/0.7.1 (đã gộp main ở 3bdb73a; tới 22/10/2026 main không có commit mới), chưa có PR. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app._
 
-_Ghi chú này là bản nháp, chưa được duyệt để công bố._
-
-Science Studio chuyển vào trong Phòng thí nghiệm: một lối vào cho mỗi chủ đề, không còn hai chỗ dự đoán cho cùng một bài.
+Science Studio chuyển vào trong Phòng thí nghiệm (một lối vào cho mỗi chủ đề). Cả 11 bài Sinh học 3D đẹp và rõ hơn: bảy bài được vẽ lại, bốn bài quần thể có khung cảnh 3D riêng; không số liệu nào của mô hình bị đổi.
 
 ### Added
 
 - Nút Science Studio ở đầu thư viện chủ đề và trong Tìm nhanh (Ctrl+K).
 - Chủ đề có bài hướng dẫn (Rơi tự do, Thư viện phản ứng đã kiểm chứng, Nguyên phân) có nút Học theo bài ở bảng bên phải.
+- Bốn bài quần thể có khung cảnh 3D ngoài trời riêng: Hardy–Weinberg (con vật mang màu kiểu gen, hũ vốn gen, đi qua từng thế hệ), Phiêu bạt di truyền (mỗi lần chạy là một hòn đảo, có cờ khi chỉ còn một alen), Tăng trưởng logistic (đàn trong hàng rào, cột đo có vạch K, thanh thời gian vẽ đường N(t)), Con mồi – vật ăn thịt (hai loài trên đồng cỏ, hai ống đo và bảng quỹ đạo pha). Bấm vào con vật hay cột đo để xem thẻ giải thích; ba bài sau còn đưa hình tới gần chỗ đã bấm.
+
+### Improved
+
+- Mọi bài Sinh học 3D có sân khấu mới: nền dải màu, ánh sáng kiểu phòng chụp, vật liệu riêng cho màng, nhiễm sắc thể, ADN, protein, thủy tinh và chất lỏng. Ở chất lượng Cao trên máy có card đồ họa rời còn có bóng đổ thật, bóng ở chỗ khuất và ánh sáng nổi.
+- Nguyên phân và Giảm phân 3D: nhiễm sắc thể to và có khối hơn, thoi phân bào trong mờ, màng tế bào và màng nhân có viền rõ trên nền sáng; nhãn không bao giờ đè lên nhiễm sắc thể.
+- ADN → mARN → Protein và Đột biến điểm 3D: chuỗi xoắn có mạch khung liền và cặp bazơ bo tròn, ARN pôlimeraza và ribôxôm trong suốt, tARN hình chữ L; khi Theo dõi dịch mã, máy quay tới gần ribôxôm.
+- Di truyền Mendel 3D thành bàn thí nghiệm: khay Punnett có ô, ống đong cho tỉ lệ kiểu hình, đủ 16 kiểu gen ở góc nhìn Bảng Punnett, mỗi số đếm của lần tạo ngẫu nhiên có ghi tên nhóm. Động học enzyme 3D đặt trong bể kính.
+- Khuếch tán & thẩm thấu 3D: bể kính hai ngăn có màng và lỗ thật, ống chữ U có mặt khum, thước có vạch khắc; bể và màng dễ thấy trên nền sáng.
+
+### Fixed
+
+- Thẩm thấu 3D: đáy mặt khum nay đúng bằng mực chất lỏng của mô hình, nên đọc ở đáy mặt khum ra đúng số.
+- Động học enzyme 3D: hạt sản phẩm mới chỉ đi ra từ phức hợp enzyme–cơ chất (ES), không bao giờ từ phức hợp có chất ức chế (ESI).
+- Đột biến điểm 3D: dấu “chuỗi kết thúc sớm” chỉ hiện khi bộ ba kết thúc thật sự đến sớm, không hiện khi chỉ mất trọn một bộ ba.
+- Dịch mã 3D: màu bazơ của mARN và tARN không còn nhạt đi.
+- Ở chất lượng Cao trên máy có card đồ họa rời, nền, màng tế bào và bóng dưới tế bào có đúng màu như ở các mức khác.
+- Science Studio: tab môn Vật lý nay ghi “Vật lý” như tên môn ở mọi chỗ khác trong app (trước đây ghi “Vật lí”).
 
 ### Security
 
 - Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.
+
+### Performance
+
+- Các hiệu ứng ánh sáng nặng chỉ bật ở chất lượng Cao trên máy có card đồ họa rời; máy dùng đồ họa tích hợp không bị nâng mức và không có các hiệu ứng này, mức Thấp vẫn dùng hình 2D.
 
 ### Changed
 
@@ -27,6 +47,8 @@ Science Studio chuyển vào trong Phòng thí nghiệm: một lối vào cho m�
 ### Known Issues
 
 - Bản này đổi phần lõi, nên máy đã cài 0.7.0 cần cài bộ cài mới (không cập nhật được trong app).
+- Khi quần thể đông hơn số hình vẽ được, mỗi hình ứng với nhiều cá thể và số hình được làm tròn; góc hình ghi rõ “1 hình = … cá thể”. Con vật, cây cỏ và chuyển động chỉ là minh họa.
+- Lời giải thích mới đi kèm các hình 3D đang chờ giáo viên duyệt; số liệu vẫn do mô hình của bài tính.
 
 ## [0.7.0] - 2026-10-20
 

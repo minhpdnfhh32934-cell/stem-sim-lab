@@ -126,10 +126,54 @@
      see-through shells (membranes, envelopes) show: their opacity and Fresnel outline. */
   --m3d-highlight: #ffd23f;
   --m3d-nucleolus: #5b4a86;
-  --m3d-membrane-opacity: 0.14;
+  --m3d-membrane-opacity: 0.2;
   --m3d-rim: 0.7;
-  /* Ground of the 3D habitats (ecology lessons). */
+  /* A pale shell on a pale stage needs a darker outline (a deeper shade of its own colour). */
+  --m3d-shell-ink: 1;
+  /* How far a liquid's water line is drawn towards the text colour: about ΔE_OK 0.3 from the
+     stage on both themes (the line shows where each body of liquid ends). */
+  --m3d-water-line: 0.5;
+  /* How much a 3D solid (protein blob) darkens towards its silhouette: a pale body reads as a
+     volume on the pale stage. Lighting only, never a data colour. */
+  --m3d-edge-shade: 0.32;
+  /* Ground of the 3D habitats (ecology lessons): the meadow's base. */
   --bio3d-ground: #dde7d3;
+  /* Biology 3D structures (0.7.1 style guide, rule 0 "saturation = data"): proteins, glassware,
+     liquids, the habitat sky, terrain and water stay muted so the data colours (--chart-*) pop.
+     Each terrain/water colour is at least ΔE_OK 0.15 from every chart colour (tokens.test.ts). */
+  --bio3d-protein: #a9b2c4;
+  --bio3d-glass: #e6edf5;
+  /* Glassware's lip rings, and (dark stage only, by --m3d-glass-edge) its silhouette: a column
+     of glass still reads as a vessel against the sky. A muted steel, never a data colour. */
+  --bio3d-glass-edge: #9aa7b6;
+  --m3d-glass-edge: 0;
+  --bio3d-liquid: #b8d6ea;
+  --bio3d-sky-top: #dbe7f3;
+  --bio3d-sky-horizon: #f3f6f9;
+  --bio3d-grass: #b5ccb0;
+  --bio3d-grass-2: #c1ceb6;
+  --bio3d-soil: #816f62;
+  --bio3d-rock: #c8cdd3;
+  /* The drift lesson's sea: a light aqua that deepens (darker by --bio3d-sea-depth) towards the
+     far side, mirroring the pale sky only a little (--bio3d-sea-sheen) so it never reads as fog. */
+  --bio3d-water: #a5e5e7;
+  --bio3d-sea-depth: 0.3;
+  --bio3d-sea-sheen: 0.4;
+  /* Grass of the drift islands: one natural green on every island whatever its fate (a flag
+     marks the fate). As green as the chart colours allow (ΔE_OK ≥ 0.15 from chart-3's green). */
+  --bio3d-island-grass: #3e623f;
+  --bio3d-island-grass-2: #4e6640;
+  /* Beaches of the drift islands and the drift lesson's animals (their data is on their beads). */
+  --bio3d-sand: #dcd3c0;
+  --bio3d-creature: #ebe4d6;
+  /* Plants of the habitats (trees, bushes, tufts): deep sages under the pale meadow and a grey-brown
+     bark, muted like the terrain (never mistaken for a data colour). */
+  --bio3d-foliage: #56614f;
+  --bio3d-foliage-2: #4f5b4b;
+  --bio3d-bark: #74665b;
+  /* Spindle fibres (light steel) and the dark theme's rim-light tint of the 3D stage. */
+  --m3d-spindle: #8d99ab;
+  --m3d-rim-tint: var(--subject-biology);
   /* 3D DNA → mRNA → protein: the two DNA backbones, the mRNA backbone, the glass of RNA
      polymerase and the ribosome, tRNA bodies and the polypeptide beads — unlike each other and
      unlike the five base colours (--chart-1 … --chart-5). */
@@ -209,7 +253,33 @@
   /* A dark stage needs a stronger membrane and outline to be seen at all. */
   --m3d-membrane-opacity: 0.22;
   --m3d-rim: 1;
+  --m3d-shell-ink: 0;
+  --m3d-water-line: 0.12;
+  --m3d-edge-shade: 0.12;
   --bio3d-ground: #1f2d24;
+  --bio3d-protein: #6f7a90;
+  --bio3d-glass: #2a3646;
+  --bio3d-glass-edge: #a7b6c8;
+  --m3d-glass-edge: 0.55;
+  --bio3d-liquid: #16314a;
+  --bio3d-sky-top: #0d1828;
+  --bio3d-sky-horizon: #1a2838;
+  --bio3d-grass: #33402f;
+  --bio3d-grass-2: #3c4a36;
+  --bio3d-soil: #4a3e31;
+  --bio3d-rock: #4c535d;
+  --bio3d-water: #1f4b66;
+  --bio3d-sea-depth: 0.35;
+  --bio3d-sea-sheen: 0.75;
+  --bio3d-island-grass: #3e623f;
+  --bio3d-island-grass-2: #4e6640;
+  --bio3d-sand: #5b5446;
+  --bio3d-creature: #cdc8be;
+  --bio3d-foliage: #2b3b2c;
+  --bio3d-foliage-2: #344531;
+  --bio3d-bark: #46392e;
+  --m3d-spindle: #b4bfcf;
+  --m3d-rim-tint: var(--subject-biology);
   --dna3d-coding: #a3acbd;
   --dna3d-template: #6fa2c4;
   --dna3d-mrna: #b48be0;

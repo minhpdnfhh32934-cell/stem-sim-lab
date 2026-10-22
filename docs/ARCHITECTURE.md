@@ -186,7 +186,7 @@ becomes a link to that lesson instead of a second prediction (`ChallengePanel.ts
 
 | Layer            | Files                                                                                                                                                                      | Responsibility                                                                                                                                                       |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Screen           | `StudioScreen.tsx`, `studio.css`, `ReviewNote.tsx`, `TeacherNote.tsx`                                                                                                      | Subject tabs (Hóa học · Sinh học · Vật lí · Soạn bài), lesson picker, one `SubjectPlugin` per subject; labels for unreviewed and teacher-written text.               |
+| Screen           | `StudioScreen.tsx`, `studio.css`, `ReviewNote.tsx`, `TeacherNote.tsx`                                                                                                      | Subject tabs (Hóa học · Sinh học · Vật lý · Soạn bài), lesson picker, one `SubjectPlugin` per subject; labels for unreviewed and teacher-written text.               |
 | Model (pure)     | `scenario.ts`, `session.ts`, `report.ts`, `unverified.ts`, `aiContext.ts`                                                                                                  | Zod scenario schema (the binding names engines/data only); session evidence by origin (engine / learner / AI) and step blockers; Markdown report; AI screen context. |
 | State            | `studioStore.ts`                                                                                                                                                           | Zustand store persisted as `stemsim.studio` (chosen tab and lesson, one session per scenario).                                                                       |
 | Shared flow      | `flow/PoeFlow.tsx`, `flow/SharedSteps.tsx`, `flow/types.ts`, `flow/AskTeacher.tsx`, `flow/useStudioContext.ts`, `flow/clipboard.ts`                                        | Step bar, navigation and "what is missing" text, Explain / Conclude / Report steps, "Hỏi thầy" prefill and the screen context shared with AI Teacher.                |
@@ -201,28 +201,309 @@ Teaching text is `review_status: "pending"` (`docs/DATA_REVIEW.md` items 20–23
 its label. Tests: unit tests next to each file (`src/studio/**/*.test.ts(x)`), E2E
 `tests/e2e/studio.spec.ts` and `tests/e2e/studio-biology.spec.ts`. Step records: `docs/work-log/`.
 
-## 3g. 3D views (`src/ui/three/`, `src/biology/**`, 0.6.0–0.7.0)
+## 3g. 3D views (`src/ui/three/`, `src/biology/**`, 0.6.0–0.7.1)
 
 Every biology lesson opens in 3D. A 3D view only **draws** what the lesson's model computed:
 counts, sequences, ratios and levels come from the same pure functions as the 2D page; shapes,
 sizes, positions and motion are illustrations and are labelled so (`view3d/texts.ts`:
-`ILLUSTRATION`, `MOTION`). New 3D wording goes to `docs/DATA_REVIEW.md` (items 26–28, rows M3D,
-MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D) with `review_status: "pending"`.
+`ILLUSTRATION`, `MOTION`). New 3D wording goes to `docs/DATA_REVIEW.md` (items 26–28 and 30–43,
+rows M3D, MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D, HW3D, DRF3D, LOG3D, LV3D) with
+`review_status: "pending"`.
 
-| Layer                   | Where                                                                                                                                                       | Responsibility                                                                                                                                                 |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Generic kit             | `src/ui/three/` (`renderer.ts`, `quality3d.ts`, `useThreeHost.ts`, `loop.ts`, `labels.ts`, `pick.ts`)                                                       | No biology. Quality table per tier, render on demand, damped orbit + arrow keys, tweened camera, `FrameMonitor` → `reportOverload()`, lost-context fallback.   |
-| Biology kit             | `src/biology/view3d/` (`Bio3DCanvas`, `Bio3DView`, `SceneKit`, `lessonStore.ts`, `palette.ts`, `sampling.ts`)                                               | Stage layout, 3D / 2D switch, palette with a shape cue per role, `drawScale` / `apportion` (classes add up exactly), shared texts, primitives, disposal.       |
-| Division (shared)       | `src/biology/division/division3d/`                                                                                                                          | Stage clock, counts from `runDivision`, chromatid shapes, membrane / spindle / centrosome / nucleus meshes for mitosis and meiosis.                            |
-| Dedicated lesson module | `division/mitosis3d/`, `division/meiosis3d/`, `central/dogma3d/`, `central/mutation3d/`, `genetics/mendel3d/`, `enzyme/enzyme3d/`, `transport/transport3d/` | Each: pure `binding.ts` or `timeline.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`, `camera.ts`, `store.ts`, `Xxx3DView`, `Xxx3DSwitch`. |
-| Simple kit views        | `genetics/{HardyWeinberg3D,Drift3D}.tsx`, `ecology/{Logistic3D,LotkaVolterra3D}.tsx`, `scenes3d.ts`                                                         | The four population lessons: one figure per individual or per group (noted). Their dedicated 3D modules are planned for a later update.                        |
+| Layer                   | Where                                                                                                                                                                                                                                      | Responsibility                                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generic kit             | `src/ui/three/` (`renderer.ts`, `quality3d.ts`, `gpuInfo.ts`, `useThreeHost.ts`, `stage.ts`, `backdrop.ts`, `lighting.ts`, `layers.ts`, `postfx.ts`, `postfxSupport.ts`, `relief.ts`, `loop.ts`, `labels.ts`, `pick.ts`)                   | No biology. Quality table per tier, render on demand, damped orbit + arrow keys, tweened camera, `FrameMonitor` → `reportOverload()`, lost-context fallback.   |
+| Biology kit             | `src/biology/view3d/` (`Bio3DCanvas`, `Bio3DView`, `SceneKit`, `look.ts`, `recipes.ts`, `lessonStore.ts`, `palette.ts`, `sampling.ts`, `primitives/habitat.ts`, `primitives/instancedTokens.ts`)                                           | Stage layout, 3D / 2D switch, palette with a shape cue per role, `drawScale` / `apportion` (classes add up exactly), shared texts, primitives, disposal.       |
+| Division (shared)       | `src/biology/division/division3d/`                                                                                                                                                                                                         | Stage clock, counts from `runDivision`, chromatid shapes, membrane / spindle / centrosome / nucleus meshes for mitosis and meiosis.                            |
+| Dedicated lesson module | `division/mitosis3d/`, `division/meiosis3d/`, `central/dogma3d/`, `central/mutation3d/`, `genetics/mendel3d/`, `genetics/hw3d/`, `genetics/drift3d/`, `ecology/logistic3d/`, `ecology/lv3d/`, `enzyme/enzyme3d/`, `transport/transport3d/` | Each: pure `binding.ts` or `timeline.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`, `camera.ts`, `store.ts`, `Xxx3DView`, `Xxx3DSwitch`. |
 
 Rules: a dedicated module saves its 3D / 2D choice in the lesson store (`view3d`, also written to
-`.stemsim` files); the simple kit views keep it in `stemsim.bio3d`. Low tier, no WebGL2 or a lost
+`.stemsim` files) or, for the population lessons (Hardy–Weinberg, drift, logistic,
+Lotka–Volterra), in `stemsim.bio3d`. Low tier, no WebGL2 or a lost
 context → the 2D page with the reason. Overload lowers smoothness, never accuracy; everything is
 disposed on unmount. Tests: pure files next to the code, `view3d/testing.ts` (`expectAllFreed`),
 E2E `*3d.spec.ts` and `bio3d.spec.ts` in the `chromium-3d` Playwright project (software WebGL),
 budgets in `chromium-3d-perf` (`@perf`).
+
+**Art direction (0.7.1).** One look for all 3D views, applied by the shared path so a lesson gets
+it without code of its own:
+
+- `ThreeHost` puts every scene on one stage (`stage.ts`): a dithered radial backdrop from
+  `--bg-stage` (`backdrop.ts`; a sky gradient for outdoor rigs), the theme's rim and environment
+  strength (`lighting.ts` presets STUDIO / OUTDOOR, `applyStageLook`) and the exposure; it puts
+  objects on render layers (`layers.ts`: SHELL for see-through shells, FX for haze and contact
+  shadows, GLASS for refracting glass; lights on every layer) and sees/picks all of them. Tone mapping stays Khronos Neutral everywhere (ACES / AgX
+  would move the data colours' hue).
+- `quality3d.ts` gains the GPU class (`gpuInfo.ts`) and the post-processing flags. Only High on a
+  discrete GPU loads `postfx.ts` (lazy chunk), in two halves. HDR half: opaque + GLASS layers
+  into a 4× MSAA HalfFloat target with a depth texture → GTAO (half resolution, opaque layer
+  only) → bloom (only while a highlight marked `userData.bloom` is visible). Screen half, drawn
+  like the direct path: the backdrop (never tone-mapped) → a composite quad that tone-maps the
+  HDR surfaces with the renderer's own Neutral + sRGB functions and writes their depth → SHELL +
+  FX forward, blended in display space. So the backdrop, membranes and contact shadows have the
+  same colours on every GPU (E2E: `mitosis3d.spec.ts`, ΔE_OK ≤ 0.02 between the two paths);
+  only opaque parts gain AO and glow. `postfxSupport.ts` turns AO, then bloom, then refraction
+  off after 30 animated frames over 20 ms. High on an integrated or software GPU draws like
+  0.7.0 High. Software WebGL (no GPU: SwiftShader, WARP) also leaves out the look's accents
+  (`Quality3D.accents`: fill and rim lights, the lit back face of see-through shells, the
+  division solids' clear coat), which cost +24 % per mitosis frame there; every real GPU keeps
+  them.
+- Biology recipes (`view3d/recipes.ts`): membrane / shell, chromosome, backbone + base pair,
+  protein blob (`proteinBlob.ts`, `noise.ts`), particles, glassware, liquid, organism, terrain,
+  annotation, highlight. Rule 0 "saturation = data": data roles keep their chart token as albedo
+  (`palette.ts` `ROLES`, aligned with the 2D charts); structures are muted (`STRUCTURES`,
+  `muted()`). Primitives `habitat.ts` and `instancedTokens.ts` serve the habitats and particle
+  lessons. Protein blobs are built from a direct indexed icosphere (`icosphere`, same counts as
+  three.js detail 7 / 15, several times faster to build).
+- Surface shading (`src/ui/three/relief.ts`, no texture, no draw call): `withRelief` bumps the
+  normal from one octave of 3D value noise sampled at the object-space position or at a stable
+  vertex attribute (`ChromosomeTube`'s `surf`, so the grain stays on a moving chromatid);
+  `withEdgeShade` darkens solids towards the silhouette by `--m3d-edge-shade`. Used by the
+  mitosis chromatids (+ sheen) and nucleolus, the enzyme blobs (+ seeded lumps and darker
+  valleys kept out of the binding sites) and the dogma polymerase / ribosome (protein blobs).
+  Never on the large membranes (software frame cost).
+- Tags: one look for `LabelLayer` / `TagLayer` and the kit's CSS2D labels (`ui.css`: glass pill,
+  ≥ 12 px, tabular numbers, 7 px anchor ring in the part's role colour). When one label column is
+  full, its least important labels move to the other column before any is left out (`labels.ts`).
+  `LabelLayer.update(…, obstacles)` takes world-space hulls: `avoid` (data a label box never
+  covers — the division views pass every condensed chromatid's box) and `regions` (separate
+  subjects — the daughter cells once a furrow shows, or the two cells of meiosis II): a part's
+  label never goes to a column its leader would reach only across another cell, a box that would
+  cover data moves outwards, then to the other column, else it is left out
+  (`division3d/labelObstacles.ts`; tests `meiosis3d/labelLayout.test.ts`, `mitosis3d/…`).
+- DNA pictures (`src/biology/central/dogma3d/helix.ts`, shared by "ADN → mARN → Protein" and
+  "Đột biến điểm"): backbones are continuous Catmull–Rom tubes through the nucleotides'
+  positions (`strandTube.ts`: buffers sized once, `build(a, b)` rewrites and uploads only those
+  segments, `show` / `twin` draw ranges of one tube; ring frames point away from the helix axis,
+  so two tubes sharing a point and its neighbours meet without a seam); base pairs are two
+  rounded halves split at the midline (`Writer.half`, base-pair recipe, instance colour = the
+  base's token); rungs fade (`rungOpacity`, from `scene.onBeforeRender`) once neighbouring pairs
+  are under ~7 px apart. The dogma helix turns about its axis while the polymerase works: the two
+  still stretches are one resting tube drawn by two meshes, each turned by `rigidSpan`'s angle;
+  only the bubble's tube is rebuilt. Machines (`machines.ts`): RNA polymerase and the large
+  ribosome subunit are `proteinShell`s (recipes: seeded blob, opacity 0.55, rim + light-stage
+  ink, relief, cut open by a world plane with a darker inner wall); L-shaped tRNA body (one
+  merged geometry); a glowing codon frame (HDR on High). During translation the DNA sits under
+  one parent scaled/moved by `dnaPlace` (context above the ribosome); every DNA point the scene
+  reports (tags, labels, picks, `basePoint`) goes through `placeDna`. Point mutation: two lane
+  plates (`laneSpan`), HDR outline hulls (MeshBasic, colour × `highlightIntensity`, `bloom`
+  flag), gap rings, rounded brackets (bar + ticks + corner balls), an end cap for a premature
+  stop; `ThreeHost.dragging()` keeps the site camera from gliding under the learner's hand.
+  Round 2: the end cap follows `prematureStop` (binding.ts: where the stop codon sits, not the
+  chain length). The mRNA's bases are their own rung set (`rungs(…, 'mrna')`: own material, never
+  faded, LAYER.FX so post-processing AO/bloom never washes out the colour code; the tRNA
+  anticodons too); only the DNA's rungs fade. "Theo dõi" in translation zooms towards the
+  machinery's focus (`camera.ts` `zoomedCenter`: frame centre at the fitted distance, focus from
+  0.55× of it; the view only adjusts while the camera is on the follow track). Name labels keep
+  clear of each scene's `labelObstacles()` (world hulls of a few base pairs: strands, mRNA, tRNAs,
+  chains) and of every tag shown (`TagLayer.rects()`, passed as `LabelObstacles.rects`), 4 px
+  inside the stage (`edge`); the mutation lane names sit outside each plate at its helix, on the
+  side its labels do not use.
+- Mendel lab bench (`src/biology/genetics/mendel3d/`): `bench.ts` builds the procedural pieces
+  — the tray (one `ExtrudeGeometry` of a rounded outline whose holes are the cell slots and the
+  two header channels, bevelled walls on a floor slab), the parents' pedestals and the phenotype
+  cylinders (lathe glass with a real wall and foot) with engraved marks (torus arcs). `layout.ts`
+  places everything (`trayEdges`, `gutterX`, `CLASS_KEY_Z`, `parentsPoints` for the step
+  frames); `scene.ts` draws see-through parts as instanced `ShellSet`s (refract / back / front;
+  the cylinders' back faces on High only) and the liquid as an open unit cylinder scaled to the
+  exact height plus a meniscus cap (instance colour = class token). Tags follow a text rule:
+  genotypes in the slots only when neighbouring cells are far enough apart on screen for the
+  widest tag (`genotypeSpacingPx` = tag width + `GENOTYPE_GAP_PX`) or for the picked cell
+  ("Bảng Punnett" is placed with `balancedFrame`, which moves the frame's centre to where the
+  camera can come closest, so all 16 dihybrid genotypes read at 1366 × 768); a draw's counts come
+  first, as a right-aligned column left of the field's plate (`TagLayer.addAt` with `end` and
+  `solid`), each named by its class ("A_ B_ · 564") and level with its rows, pushed apart on screen
+  only as far as needed; the mother's gametes one tag each (short form when the full one has no room),
+  the father's a two-line column header; keys on a second row a whole tag lower only when they
+  would touch. The view glides the shown time 700 ms on a step jump (`STEP_GLIDE_MS`; the store,
+  captions and numbers change at once) and, in "Toàn cảnh", frames that step (`stepFrame`).
+  `SceneKit.groundShadows` turns on the studio key light's shadow map for the bench (High on a
+  discrete GPU). No refraction (`transmission` is never passed): data sits behind the glass.
+- Enzyme tank (`src/biology/enzyme/enzyme3d/scene.ts`): glass walls (rounded box, back faces and
+  an inner face on High only), a liquid body with an RGBA vertex gradient and a flat glossy
+  surface, a base with contact shadow (shadow maps on High). Enzymes in three seeded shapes
+  (`ENZYME_SEEDS`, one instanced set each; instance k ↔ enzyme `slot × 3 + variant`); `lips`
+  (thin torus at the pocket rim) and the second-site `rings` carry per-instance role colours.
+  The form tag is drawn only for the picked enzyme, which gets an inverted-hull outline
+  (`--m3d-highlight` × `highlightIntensity`, `bloom` flag). `setFrame(frame, ease)` records, per
+  place of the S/P pool, when it turned into a product and from which ES complex's pocket (only
+  ES makes product, v = kcat·[ES]; an ESI complex never releases one);
+  `setPhase` eases it out (`PRODUCT_EASE_S`); the view passes `ease` only while playing without
+  reduced motion and settles the frame when play stops.
+- Transport (`src/biology/transport/transport3d/`): the diffusion tank (`diffusionScene.ts`) is
+  kit glassware around both compartments (`glassMeshes`; back faces on High only; `glassware(kit,
+{ ink: true })` darkens the front face towards its edges on the light stage), one
+  `liquidBodyGeometry` body per compartment (`VISIBLE_LIQUID_ALPHA`: denser than the default so the
+  pale light stage still shows it; the pickable compartment; scale = its width, so V₁ : V₂ shows)
+  with a `liquidSurface` plane and a water line (`waterLineGeometry` + `waterLine`, both loops in
+  one unpickable mesh) each, the `fibrousMembrane` sheet (an
+  `ExtrudeGeometry` with one hole per pore, rim tori and open lining cylinders), and one merged
+  stand mesh (base slab + the membrane's frame). Faint water dots on High only (`WATER_DOTS`,
+  seeded Brownian walks per compartment via `waterSplit`; never counted by `sides()`). The U-tube
+  (`uTube.ts`) is an axis (`halfAxis`/`uAxis`: arms straight from `ARM_START`, bends of radius
+  `U_BEND`) swept by `sweepTube` into the glass (one merged mesh with the two lip tori), its inner
+  face (High) and each side's liquid. Each side has an instanced concave meniscus whose lowest
+  point is the model's height (the standard reading of a water meniscus; `MENISCUS` = how far its
+  rim rises, illustration; hidden when the level lies in a bend), and its liquid's material clips
+  where that rim meets the glass (`clippingPlanes`, constant = height + `MENISCUS`, or the height
+  in a bend; its raycast drops hits above the cut; `levels()` still reports the model's heights).
+  The membrane disc is a merged cylinder + bead torus with `fibrousMembrane`'s `emphasis` (half way
+  back to `--subject-biology`) and `ink`; its label point is on the disc's upper front. The ruler is a plate on the stand with
+  instanced engraved marks (`rulerTicks` + `rulerMinorTicks`); its numbers stay DOM tags, and the
+  name labels keep clear of every tag (`LabelLayer` obstacles).
+- Hardy–Weinberg habitat (`src/biology/genetics/hw3d/`, a figure above the lesson's chart and
+  table, `Bio3DFigureBody` with `top` / `bottom` / `info`): `binding.ts` runs the model
+  (`matingRun` in `population.ts`: generation 0 = the learner's counts, generation g + 1 =
+  `randomMating(N, p_g)` from one `rng(seed)` stream, so generation 1 is the panel's "Cho ngẫu
+  phối 1 thế hệ"; an empty population stays empty), one `drawScale` for the whole run (at most
+  `LEGIBLE_FIGURES` = 150 figures and 200 beads), `apportion` per class, and `slotClasses` (slots ranked by seeded keys take the
+  classes in order: a count change of one moves at most two figures). `layout.ts` centres the
+  subject (a sunflower meadow at a fixed spacing, slot i never moves, neighbours at least
+  `FIGURE_CLEARANCE` apart, which a creature's footprint fits in whatever its facing, so figures
+  never pass through each other; the jar's plinth at its right) in a terrain disc ~1.45× its width, trees only behind it; `balancedCenter` is the orbit
+  centre that balances the subject on screen from `HW_VIEW`. `scene.ts` = `habitat` (outdoor
+  look, fog from just beyond the subject to the terrain's edge) + `vegetation.ts` (instanced
+  conifers, broadleaf trees, bushes, rocks, tufts with baked vertex colours, tokens
+  `--bio3d-foliage(-2)`, `--bio3d-bark`) + `organisms.ts` (one merged low-poly creature,
+  instance colour = genotype token; allele beads on its antennae, one instanced draw per allele;
+  instanced contact shadows; hops, and a hatch from the gene pool outwards only while ticking)
+  - `genePool.ts` (lathe glass jar, layered beads, a p / q dial whose arc geometries are made
+    per generation at build). `setTime` swaps generations without rebuilding. The kit gained
+    `look`, `onPick` / `selected` (`Bio3DScene.pick` / `select`; a pick re-measures the insets so
+    the card never covers the subject), `rest()` (the resting picture when the motion stops) and
+    the debug hooks `state()` / `project()`. The 2D page keeps the chart, table and button.
+    Round 2: `Bio3DScene.frames` (named framings: `frames.closeup` = `closeupPoints`, a few
+    figures every generation draws beside the jar, seen from `HW_CLOSE_VIEW`; `Bio3DCanvas`'s
+    `view` glides there) and name callouts (`Bio3DScene.callouts(camera)` + `calloutObstacles(view)`,
+    drawn by a `LabelLayer` in `Bio3DCanvas` from the lesson's `callouts` texts; they keep clear of
+    the kit's own labels). Hardy–Weinberg names one figure per genotype (the nearest in view, kept
+    while it stays about as near), its antennae, the jar's beads and the p : q ring; "Hiện tên"
+    (Tags) sits in the corner (`Bio3DFigureBody.tools`), "Toàn cảnh / Cận cảnh cá thể" in the
+    generation row. The gene pool's name heads the label in front of the plinth.
+- Genetic drift archipelago (`src/biology/genetics/drift3d/`, the full stage, `Bio3DView` with
+  `top` / `tools` / `bottom` / `info`; the heterozygosity chart stays in the Bottom panel and marks
+  the generation shown through `useDrift3D` (`active`, `t`)). `driftRuns` (`population.ts`, one
+  `rng(seed)` stream, Wright–Fisher run after run) is shared by the 2D chart, its chips and the 3D
+  view. `binding.ts`: one island per run; A copies at g = p·2N (whole from generation 1; generation
+  0 is p₀, so 2N·p₀ may be a half); `absorption` = the first generation with p = 1 or 0;
+  `individualsPerFigure` = the smallest divisor k of N with N / k ≤ `islandCap` (300 figures shared
+  by the islands, 4 … 60 each), so every figure is exactly k individuals; two beads per figure,
+  the A beads by `apportion`; `pairing` deals an island's beads to its figures (slots ranked by
+  a fixed per-island key, so one bead more moves one bead; illustration). `layout.ts`: a
+  staggered grid numbered row by row from the back, each island a low dome (`islandHeight`, coast
+  wobble `coastAt`) holding the Hardy–Weinberg sunflower slots, trees on its back half, a tag on
+  the water in front. `island.ts`: one merged ground mesh with the same grass on every island
+  (`--bio3d-island-grass`, never a fate colour), a sea darkening towards the far side and out past
+  the islands (vertex colours, `--bio3d-sea-depth`; `--bio3d-sea-sheen` = how much sky it mirrors;
+  bump ripples on High, a roughness map below) with bright sand-tinted shallows (vertex alpha), and
+  one merged p : q band per coast rewritten in place. `flags.ts`: when a run fixes or loses A, a
+  flag on the island's back shore (instanced poles, banners and finials, one draw call per kind and
+  allele: the banner in the allele's colour, the finial its bead shape, sized by the coast).
+  `scene.ts` reuses the Hardy–Weinberg `herd` (one neutral body colour, `--bio3d-creature`: the
+  model has no genotypes) and `plants` (tufts from the islands' grass); frames `island:<i>` (the
+  island and its flag's top; close-up of the picked island, else the front one), a glowing pointer
+  over a picked animal, callouts (island, band, the beads at the drawing scale — `calloutTexts` —,
+  figure, a fixed and a lost island at their flags). A pick frames its island close up beside the
+  card (`useScrollMore` fades the card's last line while more is below); "Toàn cảnh" closes it.
+  Medium: 15 draw calls (+ up to 5 for flags), ~155k triangles, 0 frames at rest.
+- Logistic growth habitat (`src/biology/ecology/logistic3d/`, the full stage, `Bio3DView` with
+  `top` / `tools` / `bottom` / `info`; the dN/dt chart stays in the Bottom panel and marks N(t) of
+  the moment shown through `useLogistic3D` (`active`, `t`)). `binding.ts`: the exact solution
+  `logistic` of `ecology.ts` at time t; one figure per `per` individuals, `drawScale(max(peak, K),
+200)` for the whole run (`figureCap`: the tier's instance share, at most `LEGIBLE_FIGURES`), drawn
+  = round(N / per); the column's fill N / top (top = 1.08 · max(K, peak)); the arrow dN/dt over
+  max(rK/4, |dN/dt(N₀)|); `grazedPatches` = round(patches · min(1, N/K)); `curvePoints` (the
+  slider's curve on the column's scale). `layout.ts`: `crowdSlots` (slot i < kSlots = the
+  Hardy–Weinberg sunflower slot i inside the fence `fenceRadius(kSlots)`; slot i ≥ kSlots in a
+  ring outside it at the same density — only when N₀ > K), clover patches inside the fence nearest
+  the centre first, the column's plinth on the right, plants from `plantPlaces` (now typed by
+  `PlantSite`). `organisms.ts`: a merged low-poly grazer (one draw call, tinted `--chart-1` like the
+  2D N(t) series), instanced contact shadows, births grow in and leavers shrink while animating
+  (`settling`), hops / nibbles / looks (illustration). `meadow.ts`: instanced clover (lush / grazed
+  with soil fading into the grass) and a fence of instanced posts and plain-box rails
+  (`--bio3d-bark`). `gauge.ts`: stone plinth, glass tube (`jarGeometry`, `glassMeshes`), liquid in
+  `--chart-1`, rings at K (`--chart-3`, the 2D K line) and K/2, an ink arrow on the surface, labels
+  K, K/2, N and dN/dt; the glass uses `glassware({ ink, edge })` and lip rings at its top and foot
+  (`--bio3d-glass-edge`) so it reads as a vessel on both themes; `showLabels` hides its labels while
+  an animal's or the clover's card is open. `scene.ts`: terrain (`habitat`, outdoor look), `setTime`
+  without rebuilding, callouts (figure, fence, clover; regions keep leaders on their side; in a
+  close-up only the named figure is avoided), picks (figure / gauge / food) and `frames`: 'closeup'
+  ("Cận cảnh đàn", `closeupPoints`, `LOGI_CLOSE_VIEW`) and one close-up per pick keyed by its
+  selection id (`figure:<slot>` from `figurePoints` seen from above, `LOGI_PICK_VIEW`; 'gauge' from
+  `gaugePoints`, labels included; 'food' from `foodPoints`). The view (`Logistic3DView.tsx`) draws
+  the time slider over the N(t) curve (SVG, K dashed, t* dotted, a playhead thumb), "Tới t*", the
+  readout, the framing (`Segmented` "Toàn cảnh / Cận cảnh đàn"; neither checked while a pick is
+  framed, either one closes the card; `view` = the pick's id, else `useLogistic3D.camera`) and the
+  cards (`facts.ts`; `arrowScale` names the arrow's real reference, `arrowBasis` rK/4 or |dN/dt| at
+  t = 0); `logisticCard.ts` holds the Science Card and its 3D notes (`LOGISTIC_CARD_3D`). Medium: 21
+  draw calls, ~104k triangles (High 22, ~122k), 0 frames at rest.
+- Predator–prey habitat (`src/biology/ecology/lv3d/`, same shell as logistic; the x(t), y(t)
+  chart in the Bottom panel marks the sample shown through `useLv3D` (`active`, `t`)).
+  `binding.ts`: the moment is the computed sample nearest t (`sampleAt`, never interpolated) of
+  the 801-point DOPRI5 trajectory from `useLvData`; one figure per `per` individuals for both
+  species, `drawScale(peak x + peak y, figureCap)`; drawn = round(x / per), round(y / per); the
+  columns' shared scale `top` = 1.08 · max(peaks, x*, y*); arrows dx/dt, dy/dt over `rateRef` (the
+  largest computed |rate|); the board's axes `xMax`, `yMax` as the 2D phase plot; `curvePoints`
+  (the slider's two curves, samples only), `orbitPoints`, `playSeconds`. `layout.ts`:
+  `speciesSlots` (one Hardy–Weinberg sunflower spiral, predators' slots spread evenly by a
+  Bresenham split, each species filling its own slots from the centre out), lush clover, then
+  left to right the meadow, the oval plinth with the prey and predator tubes, and the board
+  (`boardPoint`: feet, lean back, yaw; Euler 'YXZ' in `board.ts`); room left of the meadow for the
+  names' column (`CALLOUT_ROOM`). `organisms.ts`: the prey reuse the logistic grazer; the
+  predators are a merged low-poly prowler (`prowlerGeometry`, within the shared footprint at
+  `PREDATOR_SIZE`); both are logistic `flock`s, which now take `FlockOptions` (mesh name prefix,
+  shape, 'hop' / 'prowl' gait, size) and share `mergeFigure`. `columns.ts`: plinth, two glass
+  tubes (`glassware({ ink, edge })`, lip rings), liquids in `--chart-1` / `--chart-4` (the 2D
+  chart's x and y series), rings at x* and y*; each tube owns its outer side (the prey's left,
+  the predators' right): its rate arrow in a deeper shade of its species' colour (hidden below
+  `ARROW_MIN` of the full length, a short arrow keeps `SHAFT_MIN` of its length as shaft and a
+  head at least twice the shaft's width), then its ring's tag; a plaque under each tube gives
+  "x = …, dx/dt = …" / "y = …, dy/dt = …" (`columnValue` in `facts.ts`). The gap from the plinth to
+  the board is `BOARD_GAP_SHARE` of the subject's width (the tags are fixed-size page text, so the
+  gap grows with the width). `board.ts`: the plot's margins (`PLOT`) hold its letters (x, x* under
+  the x axis, y* left of the y axis, y beside its arrowhead), the title stands on the roof.
+  An instanced wooden frame (back, posts, roof), a panel in the page's panel colour, axes
+  in the species' colours, dashed nullclines (one instanced draw), the orbit as an ink tube through
+  the samples, an equilibrium ring, a glowing bead with drop lines in the two colours. `scene.ts`:
+  terrain, plants, clover, both flocks, columns, board; `setTime` without rebuilding; callouts
+  (prey, predator, clover); picks `prey:<slot>`, `predator:<slot>`, 'columns', 'board' with a
+  close-up frame each, plus 'closeup' ("Cận cảnh đàn"); an animal's pick hides the columns' and
+  the board's labels. `Lv3DView.tsx`: chips + scale chip, the slider over x(t), y(t) (it steps
+  through the samples), readout, framing, cards (`facts.ts`); `lvCard.ts` holds `LV_CARD` and
+  `LV_CARD_3D`. The old simple view (`LotkaVolterra3D.tsx`, `scenes3d.ts`, `eco3d.ts`,
+  `view3d/creatures.ts`) is gone. Medium: 41 draw calls, ~57k triangles (High 43, ~86k), 0 frames
+  at rest.
+- Kit recipes added for glassware (`src/biology/view3d/recipes.ts`): `glassMeshes` (a `ShellLook`
+  as plain, unpickable meshes), `roundedPlane`, `liquidBodyGeometry` + `liquidBody` (optionally
+  unlit; `alpha` bottom/top, default `LIQUID_ALPHA`), `liquidSurface`, `waterLineGeometry` (a
+  thin tube round a rounded rectangle, corners sampled like edges) + `waterLine` (the liquid drawn
+  towards `--text` by `--m3d-water-line`: 0.5 light, 0.12 dark, about ΔE_OK 0.3 from the stage),
+  `shellInkColor` (the light stage's darker outline, also `proteinShell`'s), `glassware`'s `edge`
+  (the dark stage's light silhouette in `--bio3d-glass-edge` by `--m3d-glass-edge`, on every tier;
+  off on the light stage, where the ink outline stays), and `fibrousMembrane`
+  (muted membrane colour, stretched-noise bump, one-pass two-sided blending, sheen on High;
+  optional `emphasis` and `ink`). The enzyme tank uses the same recipes (without the ink, the
+  denser liquid or the water line).
+- Cell division (mitosis + meiosis share `src/biology/division/division3d/`): `looks.ts` builds
+  every part's three looks (normal / highlighted / dimmed) for both lessons — chromatids with
+  relief, sheen, darker silhouette and a contact shade where sisters touch (`ChromosomeTube`'s
+  `shade` attribute through `withVertexShade`: the maternal/paternal colours stay exact); membranes
+  as a rimmed front face over a faint Lambert back face (the cell's volume) — on the light stage
+  the cell, the nuclear envelope and the plant wall also get a darker outline in a deeper shade of
+  their own colour (`withRim`'s `ink`, strength `--m3d-shell-ink`: 1 in light, 0 in dark; the band
+  follows the geometric normal so bump/relief never streaks it; a faint share of it tints the
+  faces; `setRimAlpha` fades it with the shell; test `division3d/looks.test.ts` keeps the cell
+  outline ≥ 1.5 : 1 on the panel and the nucleus outline ≥ 1.5 : 1 on the cell); spindle fibres light
+  and see-through on LAYER.FX, fading towards the poles (`fibreGeometry` alpha); a glowing
+  centrosome core and chiasma ring (bloom in HDR); the plant wall's fibrous bump in HDR.
+  `palette.ts` maps the theme tokens once for both (structures muted, data colours exact);
+  `tubes.ts` (tube detail, kinetochore, contact shade), `guides.ts` (dashed metaphase-plate ring),
+  `dimensions.ts` (chromosomes drawn 1.25 × larger, same ring count). `TwoSphereProfile`
+  undulates 1.5 % inwards (seeded table, mirror-symmetric across the furrow); `ChromosomeTube`
+  `seams` give a sharp colour change at the model's crossover share. Meiosis framing
+  (`meiosis3d/camera.ts`): in Basic mode prophase I and metaphase I frame their chromosomes
+  (+25 %), meiosis II is seen nearly from the front (`MEIOSIS2_DIR`); stage-to-stage moves glide
+  700 ms and keep their aim through layout changes.
 
 ## 4. Planned modules
 

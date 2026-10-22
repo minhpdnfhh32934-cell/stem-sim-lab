@@ -50,7 +50,7 @@ describe('Science Studio entry', () => {
     expect(screen.getAllByRole('tab').map((t) => t.textContent)).toEqual([
       'Hóa học',
       'Sinh học',
-      'Vật lí',
+      'Vật lý',
       'Soạn bài',
     ]);
     await user.click(screen.getByRole('tab', { name: 'Soạn bài' }));

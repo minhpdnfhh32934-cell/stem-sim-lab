@@ -2,8 +2,14 @@
  * One palette for every biology 3D view: each role (a base, an allele, prey, an enzyme…) maps to
  * one theme token (Okabe–Ito chart colours, validated for colour vision deficiency) and one shape
  * cue, so colour is never the only way to tell two things apart, and the same thing looks the
- * same in every lesson. Theme tokens only — the values change with the theme.
+ * same in every lesson — and in the lesson's 2D charts. Theme tokens only — the values change
+ * with the theme.
+ *
+ * Rule 0 of the 0.7.1 style guide: saturation = data. Roles whose colour carries model data use
+ * the full chart tokens; structures (membranes, nucleus, proteins, glass, spindle) are muted
+ * (`muted`, `STRUCTURES`) so the data pops.
  */
+import { muted as mutedColor } from '@/ui/three/color';
 
 export type Shape =
   'sphere' | 'cube' | 'cone' | 'ring' | 'diamond' | 'capsule' | 'bar' | 'slab' | 'star';
@@ -18,6 +24,9 @@ export type BioRole =
   | 'baseC'
   | 'alleleA'
   | 'allelea'
+  | 'genotypeAA'
+  | 'genotypeAa'
+  | 'genotypeaa'
   | 'prey'
   | 'predator'
   | 'enzyme'
@@ -31,7 +40,9 @@ export type BioRole =
 
 /**
  * Token and shape cue of each role. Bases follow the colours the DNA → mRNA → protein lesson
- * already uses (DATA_REVIEW #26); the other lessons move to these roles as they adopt the kit.
+ * already uses (DATA_REVIEW #26). Alleles and genotypes follow the Hardy–Weinberg chart (AA, Aa,
+ * aa = series 1, 2, 3; allele A as AA, a as aa); prey and predators follow the Lotka–Volterra
+ * chart (series 1 and the predator series, --chart-4).
  */
 export const ROLES: Record<BioRole, { token: string; shape: Shape }> = {
   maternal: { token: '--chart-4', shape: 'capsule' },
@@ -43,8 +54,11 @@ export const ROLES: Record<BioRole, { token: string; shape: Shape }> = {
   baseG: { token: '--chart-2', shape: 'slab' },
   baseC: { token: '--chart-1', shape: 'bar' },
   alleleA: { token: '--chart-1', shape: 'cube' },
-  allelea: { token: '--chart-2', shape: 'sphere' },
-  prey: { token: '--chart-3', shape: 'sphere' },
+  allelea: { token: '--chart-3', shape: 'sphere' },
+  genotypeAA: { token: '--chart-1', shape: 'capsule' },
+  genotypeAa: { token: '--chart-2', shape: 'capsule' },
+  genotypeaa: { token: '--chart-3', shape: 'capsule' },
+  prey: { token: '--chart-1', shape: 'sphere' },
   predator: { token: '--chart-4', shape: 'cone' },
   enzyme: { token: '--chart-6', shape: 'ring' },
   substrate: { token: '--chart-2', shape: 'sphere' },
@@ -103,8 +117,39 @@ export function readBioPalette(token: (name: string) => string): BioPalette {
 export const LESSON_ROLES: Record<string, readonly BioRole[]> = {
   division: ['maternal', 'paternal', 'highlight'],
   dna: ['baseA', 'baseT', 'baseU', 'baseG', 'baseC', 'highlight'],
-  genetics: ['alleleA', 'allelea', 'highlight'],
+  genetics: ['alleleA', 'allelea', 'genotypeAA', 'genotypeAa', 'genotypeaa', 'highlight'],
   ecology: ['prey', 'predator', 'highlight'],
   enzyme: ['enzyme', 'substrate', 'product', 'inhibitor', 'highlight'],
   transport: ['water', 'solute', 'membrane', 'highlight'],
 };
+
+/**
+ * Structures (no data in their colour): the token each is muted from, or a token that is already
+ * muted. Membrane = muted(--subject-biology), nucleus = muted(--chart-6); spindle, proteins, glass
+ * and liquids have their own low-chroma tokens.
+ */
+export const STRUCTURES = {
+  membrane: { token: '--subject-biology', mute: true },
+  nucleus: { token: '--chart-6', mute: true },
+  spindle: { token: '--m3d-spindle', mute: false },
+  protein: { token: '--bio3d-protein', mute: false },
+  glass: { token: '--bio3d-glass', mute: false },
+  liquid: { token: '--bio3d-liquid', mute: false },
+  annotation: { token: '--text-muted', mute: false },
+} as const;
+
+export type Structure = keyof typeof STRUCTURES;
+
+/**
+ * A structure colour: mixed 35 % towards the stage colour in linear light, then OKLCH chroma ×
+ * 0.6 (style guide). `token` reads a CSS custom property.
+ */
+export function muted(token: (name: string) => string, name: string): string {
+  return mutedColor(token(name), token('--bg-stage'));
+}
+
+/** The colour of a structure in the current theme. */
+export function structureColor(token: (name: string) => string, s: Structure): string {
+  const def = STRUCTURES[s];
+  return def.mute ? muted(token, def.token) : token(def.token);
+}

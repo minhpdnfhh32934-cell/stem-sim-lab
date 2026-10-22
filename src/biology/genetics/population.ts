@@ -1,4 +1,4 @@
-import { binomial, chiSquare, type ChiSquare } from './stats';
+import { binomial, chiSquare, rng, type ChiSquare } from './stats';
 
 /** Hardy–Weinberg genotype frequencies from the allele frequency p (q = 1 − p). */
 export function hardyWeinberg(p: number): { AA: number; Aa: number; aa: number } {
@@ -45,6 +45,39 @@ export function randomMating(
   return { AA, Aa, aa };
 }
 
+export interface GenotypeCounts {
+  AA: number;
+  Aa: number;
+  aa: number;
+}
+
+/**
+ * Several generations of random mating from one stream of random numbers: generation 0 is
+ * `start` (the observed counts), generation g + 1 is `randomMating(N, p_g, rand)` with p_g the
+ * allele frequency of generation g, (2·AA + Aa) / 2n. Without selection, mutation or migration,
+ * p only changes by sampling error in a population of N. With `rand = rng(seed)`, generation 1
+ * is the same draw as the lesson's "Cho ngẫu phối 1 thế hệ" with that seed. An empty population
+ * (n = 0) has no gene pool to draw from and stays empty in every later generation.
+ */
+export function matingRun(
+  start: GenotypeCounts,
+  N: number,
+  generations: number,
+  rand: () => number,
+): GenotypeCounts[] {
+  const out: GenotypeCounts[] = [{ AA: start.AA, Aa: start.Aa, aa: start.aa }];
+  let prev: GenotypeCounts = { ...start };
+  for (let g = 0; g < generations; g++) {
+    const t = testHardyWeinberg(prev.AA, prev.Aa, prev.aa);
+    // No individuals, no gene pool: nobody mates, so an empty population stays empty (its p = 0
+    // is only a guard against 0 / 0, not an allele frequency to breed from).
+    const next = t.n > 0 ? randomMating(N, t.p, rand) : { AA: 0, Aa: 0, aa: 0 };
+    out.push(next);
+    prev = next;
+  }
+  return out;
+}
+
 /**
  * Wright–Fisher genetic drift: each generation draws 2N gene copies binomially from the
  * current allele frequency. Returns the frequency trajectory (length generations + 1).
@@ -62,6 +95,25 @@ export function wrightFisher(
     traj.push(p);
   }
   return traj;
+}
+
+/** Inputs of the genetic drift lesson's runs (`useDrift`). */
+export interface DriftInputs {
+  N: number;
+  p0: number;
+  generations: number;
+  runs: number;
+  seed: number;
+}
+
+/**
+ * The drift lesson's populations: `runs` Wright–Fisher trajectories drawn one after another from
+ * one random stream `rng(seed)`. The 2D chart, the chips and the 3D view all read these, so a
+ * seed gives the same runs in every picture.
+ */
+export function driftRuns(st: DriftInputs): number[][] {
+  const rand = rng(st.seed);
+  return Array.from({ length: st.runs }, () => wrightFisher(st.N, st.p0, st.generations, rand));
 }
 
 /** Expected heterozygosity after t generations of drift: H₀·(1 − 1/2N)^t. */

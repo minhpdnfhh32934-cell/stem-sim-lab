@@ -6,7 +6,7 @@
  * colour alone never tells two classes apart. Colours only tell classes apart: they are not the
  * real colour of any trait (COLOUR_NOTE). Theme tokens only.
  */
-import { CLASS_SHAPES, type Shape } from '../../view3d/palette';
+import { CLASS_SHAPES, ROLES, type Shape } from '../../view3d/palette';
 
 export const MENDEL_CLASS_TOKENS = [
   '--chart-1',
@@ -18,11 +18,21 @@ export const MENDEL_CLASS_TOKENS = [
   '--chart-4',
 ] as const;
 
+/** Looks of the allele beads (dominant, recessive): no phenotype class may take one of them. */
+const ALLELE_LOOKS = new Set([ROLES.alleleA, ROLES.allelea].map((r) => `${r.token}|${r.shape}`));
+
 export function classLook(i: number): { token: string; shape: Shape } {
   const n = MENDEL_CLASS_TOKENS.length;
   const k = Math.max(0, Math.floor(i));
-  return {
-    token: MENDEL_CLASS_TOKENS[k % n] ?? '--chart-1',
-    shape: CLASS_SHAPES[(k + Math.floor(k / n)) % CLASS_SHAPES.length] ?? 'sphere',
-  };
+  const token = MENDEL_CLASS_TOKENS[k % n] ?? '--chart-1';
+  let s = (k + Math.floor(k / n)) % CLASS_SHAPES.length;
+  // The eighth class would be a cube in --chart-1, like a dominant allele bead: next shape.
+  for (
+    let t = 0;
+    t < CLASS_SHAPES.length && ALLELE_LOOKS.has(`${token}|${CLASS_SHAPES[s] ?? ''}`);
+    t++
+  ) {
+    s = (s + 1) % CLASS_SHAPES.length;
+  }
+  return { token, shape: CLASS_SHAPES[s] ?? 'sphere' };
 }

@@ -945,7 +945,7 @@ const vi = {
     tabs: {
       chemistry: 'Hóa học',
       biology: 'Sinh học',
-      physics: 'Vật lí',
+      physics: 'Vật lý',
       authoring: 'Soạn bài',
     },
     pick: 'Chọn bài học',
@@ -976,7 +976,7 @@ const vi = {
         'Studio Hóa học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Hóa học trong Phòng thí nghiệm.',
       biology:
         'Studio Sinh học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Sinh học trong Phòng thí nghiệm.',
-      physics: 'Chưa có bài Vật lí nào trong Studio.',
+      physics: 'Chưa có bài Vật lý nào trong Studio.',
       openLab: 'Mở Phòng thí nghiệm',
     },
     notes: {
@@ -1410,7 +1410,7 @@ const vi = {
         initialRange:
           '{param} phải từ {min} đến {max} {unit} (để lần B vẫn nằm trong thang đo của cảnh).',
         unknownParam: 'Cảnh không có đại lượng "{key}" để chỉnh.',
-        notPreset: 'Cảnh và cách đo này chưa có trong Studio Vật lí, nên bài không chạy được.',
+        notPreset: 'Cảnh và cách đo này chưa có trong Studio Vật lý, nên bài không chạy được.',
         sceneMissing: 'Không tải được cảnh mô phỏng của bài.',
         binding: 'Cảnh mô phỏng không khớp với bài: {detail}',
         inventorySize: 'Giá cần từ 2 đến 8 dung dịch.',

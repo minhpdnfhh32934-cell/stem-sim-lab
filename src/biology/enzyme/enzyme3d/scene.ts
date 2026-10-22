@@ -1,26 +1,41 @@
 /**
- * The three.js scene of "Động học enzyme" in 3D: a glass reaction volume with the representative
- * enzymes (lumpy blobs, each with an active-site pocket — a lock-and-key cartoon — and, for non-
- * and uncompetitive inhibition, a second binding site on its side), the substrate held in the
- * pocket of ES and ESI complexes, the inhibitor in the pocket (competitive EI) or at the second
- * site (EI, ESI), and the free substrate, product and inhibitor particles.
+ * The three.js scene of "Động học enzyme" in 3D: a glass tank (walls with a visible thickness)
+ * filled with a faintly tinted liquid on a muted base, holding the representative enzymes —
+ * lumpy protein blobs in three seeded shapes, each with an active-site pocket (a lock-and-key
+ * cartoon) and, for non- and uncompetitive inhibition, a second binding site on its side — the
+ * substrate held in the pocket of ES and ESI complexes, the inhibitor in the pocket (competitive
+ * EI) or at the second site (EI, ESI), a thin ring in the role's colour around each occupied
+ * site, and the free substrate, product and inhibitor particles.
  *
  * Which enzyme is in which form and how many particles show come from the model (`binding.ts`,
- * `setFrame`); shapes, places and the particles' drift are illustration (`layout.ts`). Roles keep
- * the palette's colour and shape cue (substrate sphere, product diamond, inhibitor cube, the
- * enzyme's ring = the second site). `setFrame` and `setPhase` allocate nothing; one SceneKit owns
- * every geometry and material.
+ * `setFrame`); shapes, places, the liquid, the particles' drift and a new product's way out of
+ * a pocket are illustration (`layout.ts`). Roles keep the palette's colour and shape cue
+ * (substrate sphere, product diamond, inhibitor cube). `setFrame` and `setPhase` allocate
+ * nothing; one SceneKit owns every geometry and material.
  */
 import * as THREE from 'three';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type { QualityTier } from '@/perf/tiers';
 import { drawStats, type DrawStats } from '@/ui/three/drawStats';
-import { solid } from '@/ui/three/materials';
+import { roundedBox, solid } from '@/ui/three/materials';
+import { withEdgeShade, withRelief } from '@/ui/three/relief';
 import { pickFirst } from '@/ui/three/pick';
 import type { TagLayer } from '@/ui/three/tagLayer';
-import { SceneKit } from '../../view3d/kit';
-import { ROLES } from '../../view3d/palette';
+import { NEUTRAL, SceneKit } from '../../view3d/kit';
+import { fbm3 } from '../../view3d/noise';
+import { ROLES, structureColor } from '../../view3d/palette';
 import { shapeGeometry } from '../../view3d/primitives/classShape';
+import {
+  glassMeshes,
+  glassware,
+  highlightIntensity,
+  liquidBody,
+  liquidBodyGeometry,
+  liquidSurface,
+  particleMaterial,
+  roundedPlane,
+  shellLook,
+} from '../../view3d/recipes';
 import type { Inhibition } from '../enzyme';
 import {
   ENZYMES_DRAWN,
@@ -42,6 +57,12 @@ export interface EnzymeSceneOptions {
   kind: Inhibition;
   /** Reads a CSS colour token. */
   token: (name: string) => string;
+  /** The picked enzyme's outline glows and blooms (High tier on a discrete GPU). */
+  hdr?: boolean;
+  /** The base gets shadow maps (High tier on a discrete GPU). */
+  shadows?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 export interface EnzymeLabelAnchor {
@@ -65,8 +86,12 @@ export interface EnzymeDrawn {
 export interface EnzymeScene {
   readonly kit: SceneKit;
   readonly scene: THREE.Scene;
-  /** Shows a moment of the model (enzyme forms, particles); no allocation. */
-  setFrame(frame: EnzymeFrame): void;
+  /**
+   * Shows a moment of the model (enzyme forms, particles); no allocation. `ease`: products new
+   * since the last frame come out of the pocket of an ES complex (never ESI) over the next
+   * moments of `setPhase` (illustration, only while the lesson plays).
+   */
+  setFrame(frame: EnzymeFrame, ease?: boolean): void;
   /** Illustrative drift of the free particles (phase in seconds of animation); no allocation. */
   setPhase(phase: number): void;
   setSelection(sel: EnzymeSelection | null): void;
@@ -76,7 +101,7 @@ export interface EnzymeScene {
   /** The form of each drawn enzyme now. */
   forms(): readonly EnzymeForm[];
   labelAnchors(): EnzymeLabelAnchor[];
-  /** The form of each enzyme over it ("ES", "EI"…; `name` gives the short names). */
+  /** The picked enzyme's form over it ("ES", "EI"…; `name` gives the short names). */
   tags(layer: TagLayer, name: (f: EnzymeForm) => string): void;
   drawn(): EnzymeDrawn;
   drawStats(): DrawStats;
@@ -128,8 +153,38 @@ export function enzymeShadeAt(x: number, y: number, z: number, otherSite: boolea
   return Math.max(0.45, c);
 }
 
-/** The enzyme blob (unit size; seams merged so it shades smoothly; hollows shaded darker). */
-export function enzymeGeometry(segments: number, otherSite: boolean): THREE.BufferGeometry {
+/**
+ * Fine lumps of the enzyme's surface (illustration, like the kit's protein blobs): height as a
+ * share of the radius, noise frequency on the unit sphere, seed, and how much darker the
+ * valleys get (cavity shading).
+ */
+export const ENZYME_RELIEF = { amplitude: 0.07, frequency: 2.6, seed: 23, valley: 0.55 } as const;
+
+/**
+ * Where the fine lumps show (0…1): none in the active-site pocket and its lip, nor at the second
+ * site, so a bound particle keeps its seat exactly where the binding layout puts it.
+ */
+export function enzymeReliefMask(x: number, y: number, z: number, otherSite: boolean): number {
+  let m = smooth(L.notchHalf + 0.35, L.notchHalf + 0.75, Math.acos(clamp1(y)));
+  if (otherSite) {
+    const a = Math.acos(clamp1(x * ALLO_DIR[0] + y * ALLO_DIR[1] + z * ALLO_DIR[2]));
+    m *= smooth(0.34, 0.6, a);
+  }
+  return m;
+}
+
+/** Seeds of the three enzyme shapes (enzyme k takes shape k mod 3; illustration). */
+export const ENZYME_SEEDS = [ENZYME_RELIEF.seed, 61, 97] as const;
+
+/**
+ * The enzyme blob (unit size; seams merged so it shades smoothly; hollows shaded darker); `seed`
+ * picks the fine lumps (never in the pocket or at the second site).
+ */
+export function enzymeGeometry(
+  segments: number,
+  otherSite: boolean,
+  seed: number = ENZYME_RELIEF.seed,
+): THREE.BufferGeometry {
   const w = Math.max(24, Math.round(segments * 2));
   const h = Math.max(18, Math.round(segments * 1.5));
   const sphere = new THREE.SphereGeometry(1, w, h);
@@ -142,8 +197,15 @@ export function enzymeGeometry(segments: number, otherSite: boolean): THREE.Buff
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i).normalize();
-    shade.fill(enzymeShadeAt(v.x, v.y, v.z, otherSite), i * 3, i * 3 + 3);
-    v.multiplyScalar(enzymeRadiusAt(v.x, v.y, v.z, otherSite));
+    const f = ENZYME_RELIEF.frequency;
+    const lump =
+      fbm3(v.x * f + 3.1, v.y * f - 1.7, v.z * f + 5.3, seed) *
+      enzymeReliefMask(v.x, v.y, v.z, otherSite);
+    const valley = 1 - ENZYME_RELIEF.valley * Math.max(0, -lump);
+    shade.fill(enzymeShadeAt(v.x, v.y, v.z, otherSite) * valley, i * 3, i * 3 + 3);
+    v.multiplyScalar(
+      enzymeRadiusAt(v.x, v.y, v.z, otherSite) * (1 + ENZYME_RELIEF.amplitude * lump),
+    );
     pos.setXYZ(i, v.x, v.y, v.z);
   }
   g.setAttribute('color', new THREE.BufferAttribute(shade, 3));
@@ -158,12 +220,28 @@ const POCKET_AT = 1 - L.notchDepth + (L.particleR / L.enzymeR) * 0.95;
 const OTHER_AT = 0.93;
 const OTHER_INHIBITOR_AT = 1.2;
 
+/** How long (s of animation) a new product takes to leave its pocket (illustration). */
+export const PRODUCT_EASE_S = 0.8;
+/** The tank: glass outside / inside the liquid, liquid level above the volume (scene units). */
+const TANK = { outer: 0.44, inner: 0.32, liquid: 0.28, headroom: 0.16 } as const;
+
+/** Ease-out (cubic) on 0 … 1. */
+const easeOut = (u: number) => {
+  const x = Math.max(0, Math.min(1, u));
+  return 1 - (1 - x) ** 3;
+};
+
 export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const kit = new SceneKit({
     tier: o.tier,
     segments: o.segments,
     maxParticles: PARTICLE_CAP,
     token: o.token,
+    // No refraction on any tier: the enzymes and particles behind the glass are data and keep
+    // their exact colours.
+    hdr: o.hdr ?? false,
+    shadows: o.shadows ?? false,
+    accents: o.accents ?? true,
   });
   const { scene } = kit;
   const kind = o.kind;
@@ -171,10 +249,12 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const siteOnAll = kind === 'noncompetitive';
   const siteWithS = kind === 'uncompetitive';
   const hasOtherSite = siteOnAll || siteWithS;
+  const tok = (name: string) => kit.color(name);
 
   // ── Scratch (no allocation in setFrame / setPhase) ───────────────────────────────────
   const m4 = new THREE.Matrix4();
   const pos = new THREE.Vector3();
+  const from = new THREE.Vector3();
   const scl = new THREE.Vector3();
   const rot = new THREE.Quaternion();
   const tmpQ = new THREE.Quaternion();
@@ -186,49 +266,108 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const Z = new THREE.Vector3(0, 0, 1);
   const done = (mesh: THREE.InstancedMesh) => {
     mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
     mesh.boundingSphere = null;
     mesh.visible = mesh.count > 0;
   };
-
   // ── Materials (theme tokens; the palette's roles) ────────────────────────────────────
-  // Its own material: the blob's vertex shade darkens the pocket.
+  // Its own material, the kit's protein look: the blob's vertex shade darkens the pocket and the
+  // valleys, the silhouette darkens softly (--m3d-edge-shade) so each blob reads as a volume,
+  // fine grain catches the light (illustration). The role colour stays the albedo.
+  const enzymeColor = tok(ROLES.enzyme.token);
+  const edgeShade = parseFloat(tok('--m3d-edge-shade'));
   const enzymeMat = kit.own(
-    solid(kit.color(ROLES.enzyme.token), o.tier, { roughness: 0.55, sheen: 0.6, clearcoat: 0.2 }),
+    withEdgeShade(
+      withRelief(solid(enzymeColor, o.tier, { roughness: 0.62, sheen: 0.35, clearcoat: 0.1 }), {
+        frequency: 8,
+        height: 0.03,
+      }),
+      { strength: Number.isFinite(edgeShade) ? edgeShade : 0, power: 1.8 },
+    ),
   );
   enzymeMat.vertexColors = true;
-  const subMat = kit.solid(kit.color(ROLES.substrate.token), { roughness: 0.3, clearcoat: 0.5 });
-  const prodMat = kit.solid(kit.color(ROLES.product.token), { roughness: 0.3, clearcoat: 0.5 });
-  const inhMat = kit.solid(kit.color(ROLES.inhibitor.token), { roughness: 0.3, clearcoat: 0.5 });
-  const siteMat = kit.solid(kit.color('--text-muted'), { roughness: 0.5 });
-  const boxMat = kit.glass(kit.color('--text-muted'), {
-    opacity: 0.05,
-    rim: { color: kit.color('--text'), alpha: 0.28, strength: 0.4, power: 2.4 },
-  });
-  const haloMat = kit.glass(kit.color('--accent'), {
+  const subMat = particleMaterial(kit, 'substrate');
+  const prodMat = particleMaterial(kit, 'product');
+  const inhMat = particleMaterial(kit, 'inhibitor');
+  // Site rings carry their colour per instance: muted for an empty second site, the role's
+  // token for an occupied site (substrate or inhibitor).
+  const ringMat = kit.solid(NEUTRAL, { roughness: 0.42, clearcoat: 0.3 });
+  const mutedRing = new THREE.Color(tok('--text-muted'));
+  const substrateRing = new THREE.Color(tok(ROLES.substrate.token));
+  const inhibitorRing = new THREE.Color(tok(ROLES.inhibitor.token));
+  const haloMat = kit.glass(tok('--accent'), {
     opacity: 0.08,
-    rim: { color: kit.color('--accent'), alpha: 0.95, strength: 1, power: 1.6 },
+    rim: { color: tok('--accent'), alpha: 0.95, strength: 1, power: 1.6 },
   });
-  const edgeMat = kit.own(
-    new THREE.LineBasicMaterial({
-      color: kit.color('--text-muted'),
+  // The picked enzyme: a glowing outline behind it (HDR on High: brighter than white, so the
+  // bloom picks it up — and only it).
+  const hullMat = kit.own(
+    new THREE.MeshBasicMaterial({
+      color: tok('--m3d-highlight'),
+      side: THREE.BackSide,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.9,
+      depthWrite: false,
     }),
   );
+  hullMat.color.multiplyScalar(highlightIntensity(kit));
+  hullMat.userData.bloom = kit.hdr;
+  const baseMat = kit.solid(tok('--border-strong'), { roughness: 0.6, clearcoat: 0.2 });
+  const liquidMat = liquidBody(kit);
+  const surfaceMat = liquidSurface(kit);
 
-  // ── Reaction volume ──────────────────────────────────────────────────────────────────
-  const box = kit.mesh(kit.roundedBox(14), boxMat);
-  box.scale.set(L.hx + 0.2, L.hy + 0.2, L.hz + 0.2);
-  box.renderOrder = 2;
-  const boxGeo = new THREE.BoxGeometry(2 * (L.hx + 0.2), 2 * (L.hy + 0.2), 2 * (L.hz + 0.2));
-  const edges = new THREE.LineSegments(kit.geometry(new THREE.EdgesGeometry(boxGeo)), edgeMat);
-  boxGeo.dispose();
-  scene.add(edges);
-  kit.shadow(-L.hy - 0.3, L.hx + 1.2, L.hz + 1.2, 0.2);
+  // ── The tank: muted base, glass walls with a thickness, the liquid and its surface ─────
+  const tankSegments = Math.round(kit.seg * 1.5);
+  const wall = kit.shared('enzyme-tank-wall', () => roundedBox(tankSegments, 14));
+  // The far walls' faint back faces (one more see-through layer over the whole tank) on High
+  // only; the liquid and the near walls' rim still show the box.
+  const outer = glassMeshes(kit, glassware(kit), wall, 4, kit.tier === 'high');
+  for (const m of outer) m.scale.set(L.hx + TANK.outer, L.hy + TANK.outer, L.hz + TANK.outer);
+  // The wall's inner face: a second faint rim inside the first, so the glass reads thick (High
+  // only: one more see-through layer over the whole tank costs software and integrated GPUs).
+  const glassColor = structureColor(tok, 'glass');
+  const innerLook =
+    kit.tier === 'high'
+      ? shellLook(kit, glassColor, { radius: 1, opacity: 0.025, rim: 0.5 })
+      : null;
+  const inner = innerLook?.front ? kit.mesh(wall, innerLook.front) : null;
+  if (inner) {
+    inner.scale.set(L.hx + TANK.inner, L.hy + TANK.inner, L.hz + TANK.inner);
+    inner.renderOrder = 6;
+    inner.raycast = () => undefined;
+  }
+  const liquidTop = L.hy + TANK.headroom;
+  const liquidBottom = -L.hy - TANK.liquid;
+  const liquid = kit.mesh(kit.geometry(liquidBodyGeometry(tankSegments)), liquidMat);
+  liquid.scale.set(L.hx + TANK.liquid, (liquidTop - liquidBottom) / 2, L.hz + TANK.liquid);
+  liquid.position.y = (liquidTop + liquidBottom) / 2;
+  liquid.renderOrder = 4;
+  liquid.raycast = () => undefined;
+  const surface = kit.mesh(
+    kit.geometry(roundedPlane(L.hx + TANK.liquid - 0.04, L.hz + TANK.liquid - 0.04, 0.5, 4)),
+    surfaceMat,
+  );
+  surface.position.y = liquidTop - 0.02;
+  surface.renderOrder = 5;
+  surface.raycast = () => undefined;
+  const baseTop = -L.hy - TANK.outer;
+  const base = kit.mesh(kit.roundedBox(6), baseMat);
+  base.scale.set(L.hx + TANK.outer + 0.5, 0.2, L.hz + TANK.outer + 0.5);
+  base.position.y = baseTop - 0.2;
+  kit.shadow(baseTop - 0.42, L.hx + 1.6, L.hz + 1.6, 0.24);
 
-  // ── Enzymes ──────────────────────────────────────────────────────────────────────────
-  const enzymeGeo = kit.geometry(enzymeGeometry(kit.seg, siteOnAll));
-  const enzymes = kit.instanced(enzymeGeo, enzymeMat, ENZYMES_DRAWN);
+  // ── Enzymes: three seeded shapes, one instanced set each ──────────────────────────────
+  const enzymeGeos = ENZYME_SEEDS.map((seed) =>
+    kit.geometry(enzymeGeometry(kit.seg, siteOnAll, seed)),
+  );
+  /** Shape of enzyme k, and its instance in that shape's set. */
+  const variantOf = (k: number) => k % ENZYME_SEEDS.length;
+  const slotOf = (k: number) => Math.floor(k / ENZYME_SEEDS.length);
+  const enzymes = enzymeGeos.map((g, v) => {
+    let n = 0;
+    for (let k = 0; k < ENZYMES_DRAWN; k++) if (variantOf(k) === v) n++;
+    return kit.instanced(g, enzymeMat, n);
+  });
   const quats = ENZYME_PLACES.map((p) => {
     const q = new THREE.Quaternion().setFromUnitVectors(Y, dirV.set(...p.site).normalize());
     return q.multiply(tmpQ.setFromAxisAngle(Y, p.spin));
@@ -238,9 +377,9 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   ENZYME_PLACES.forEach((p, k) => {
     pos.set(...p.center);
     m4.compose(pos, quats[k] ?? rot, squash);
-    enzymes.setMatrixAt(k, m4);
+    enzymes[variantOf(k)]?.setMatrixAt(slotOf(k), m4);
   });
-  done(enzymes);
+  for (const m of enzymes) done(m);
 
   /** A point of enzyme k at `along` (relative) in its own direction d (scene units). */
   const onEnzyme = (k: number, d: readonly number[], along: number, out: THREE.Vector3) => {
@@ -266,18 +405,44 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const ringGeo = kit.geometry(
     new THREE.TorusGeometry(1, 0.22, Math.max(6, Math.round(kit.seg / 3)), Math.max(12, kit.seg)),
   );
-  const rings = kit.instanced(ringGeo, siteMat, ENZYMES_DRAWN);
+  const rings = kit.instanced(ringGeo, ringMat, ENZYMES_DRAWN);
   const ringR = 0.22 * L.enzymeR;
+  // The thin ring around an occupied active-site pocket (its lip), in the ligand's role colour.
+  const lipGeo = kit.geometry(
+    new THREE.TorusGeometry(1, 0.07, Math.max(5, Math.round(kit.seg / 4)), Math.max(16, kit.seg)),
+  );
+  const lips = kit.instanced(lipGeo, ringMat, ENZYMES_DRAWN);
+  const lipR = Math.sin(L.notchHalf) * L.enzymeR * 1.03;
+  const lipAt = Math.cos(L.notchHalf) * 1.01;
+  /** Turns a torus (normal z) so that its normal is the enzyme's own y (the site's axis). */
+  const lipTurn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 
   // ── Free particles: the substrate/product pool and the inhibitor pool ────────────────
   const freeS = kit.instanced(sphereGeo, subMat, PARTICLE_CAP);
   const freeP = kit.instanced(diamondGeo, prodMat, PARTICLE_CAP);
   const freeI = kit.instanced(cubeGeo, inhMat, PARTICLE_CAP);
 
-  // ── Selection halo ───────────────────────────────────────────────────────────────────
+  // ── Selection: an outline glow on an enzyme, a halo on a particle ──────────────────────
   const halo = kit.mesh(kit.sphere(), haloMat);
   halo.visible = false;
-  halo.renderOrder = 3;
+  halo.renderOrder = 8;
+  halo.raycast = () => undefined;
+  const hull = kit.mesh(enzymeGeos[0] ?? kit.sphere(), hullMat);
+  hull.visible = false;
+  hull.matrixAutoUpdate = false;
+  hull.renderOrder = 1;
+  hull.raycast = () => undefined;
+
+  // ── Shadow maps (High on a discrete GPU): enzymes and particles onto the base ──────────
+  const shadowed = kit.groundShadows(
+    [0, baseTop, 0],
+    Math.hypot(L.hx + TANK.outer, L.hy + TANK.outer, L.hz + TANK.outer) + 0.5,
+  );
+  if (shadowed) {
+    base.receiveShadow = true;
+    for (const m of [...enzymes, boundS, boundIInSite, boundIElsewhere, freeS, freeP, freeI])
+      m.castShadow = true;
+  }
 
   let forms: EnzymeForm[] = formsOf({ E: ENZYMES_DRAWN, ES: 0, EI: 0, ESI: 0 });
   const counts = { S: 0, P: 0, I: 0 };
@@ -288,6 +453,11 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   const inSiteOwner = new Int16Array(ENZYMES_DRAWN);
   const elsewhereOwner = new Int16Array(ENZYMES_DRAWN);
   const ringOwner = new Int16Array(ENZYMES_DRAWN);
+  const lipOwner = new Int16Array(ENZYMES_DRAWN);
+  /** Per place of the substrate/product pool: when it became a product, and from which enzyme. */
+  const bornAt = new Float32Array(PARTICLE_CAP).fill(-1e9);
+  const bornFrom = new Int16Array(PARTICLE_CAP).fill(-1);
+  let nextSource = 0;
 
   function placeBound(): void {
     const sS = L.particleR;
@@ -295,9 +465,11 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     let nIn = 0;
     let nEl = 0;
     let nRing = 0;
+    let nLip = 0;
     for (let k = 0; k < ENZYMES_DRAWN; k++) {
       const f = forms[k] ?? 'E';
       const q = quats[k] ?? rot;
+      const competitiveI = f === 'EI' && kind === 'competitive';
       if (holdsSubstrate(f)) {
         pocketPoint(k, pos);
         scl.setScalar(sS);
@@ -305,12 +477,21 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
         boundS.setMatrixAt(nS, m4);
         boundSOwner[nS++] = k;
       }
-      if (f === 'EI' && kind === 'competitive') {
+      if (competitiveI) {
         pocketPoint(k, pos);
         scl.setScalar(sS);
         m4.compose(pos, q, scl);
         boundIInSite.setMatrixAt(nIn, m4);
         inSiteOwner[nIn++] = k;
+      }
+      if (holdsSubstrate(f) || competitiveI) {
+        onEnzyme(k, [0, 1, 0], lipAt, pos);
+        tmpQ.copy(q).multiply(lipTurn);
+        scl.setScalar(lipR);
+        m4.compose(pos, tmpQ, scl);
+        lips.setMatrixAt(nLip, m4);
+        lips.setColorAt(nLip, competitiveI ? inhibitorRing : substrateRing);
+        lipOwner[nLip++] = k;
       }
       const showSite = siteOnAll || (siteWithS && holdsSubstrate(f));
       if (showSite) {
@@ -325,6 +506,7 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
         scl.setScalar(ringR);
         m4.compose(pos, tmpQ, scl);
         rings.setMatrixAt(nRing, m4);
+        rings.setColorAt(nRing, holdsInhibitor(f) ? inhibitorRing : mutedRing);
         ringOwner[nRing++] = k;
         if (holdsInhibitor(f)) {
           otherPoint(k, OTHER_INHIBITOR_AT, pos);
@@ -339,10 +521,12 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     boundIInSite.count = nIn;
     boundIElsewhere.count = nEl;
     rings.count = hasOtherSite ? nRing : 0;
+    lips.count = nLip;
     done(boundS);
     done(boundIInSite);
     done(boundIElsewhere);
     done(rings);
+    done(lips);
   }
 
   /** A fixed tilt per particle (illustration): diamonds and cubes do not all line up. */
@@ -362,6 +546,13 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
       const k = counts.S + j;
       particleAt('sp', k, phase, a);
       pos.set(a[0], a[1], a[2]);
+      // A new product leaves the pocket it was made in (illustration).
+      const u = (phase - (bornAt[k] ?? -1e9)) / PRODUCT_EASE_S;
+      const src = bornFrom[k] ?? -1;
+      if (u >= 0 && u < 1 && src >= 0) {
+        pocketPoint(src, from);
+        pos.lerpVectors(from, pos, easeOut(u));
+      }
       m4.compose(pos, tiltOf(k, phase), scl);
       freeP.setMatrixAt(j, m4);
     }
@@ -398,31 +589,63 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
   }
 
   const haloAt = new THREE.Vector3();
-  function placeHalo(): void {
-    const r = selected ? pointOf(selected, haloAt) : null;
+  function placeSelection(): void {
+    const enzyme = selected?.kind === 'enzyme' ? selected.index : -1;
+    const place = ENZYME_PLACES[enzyme];
+    hull.visible = !!place;
+    if (place) {
+      hull.geometry = enzymeGeos[variantOf(enzyme)] ?? hull.geometry;
+      pos.set(...place.center);
+      scl.copy(squash).multiplyScalar(1.12);
+      hull.matrix.compose(pos, quats[enzyme] ?? rot, scl);
+      hull.matrixWorldNeedsUpdate = true;
+    }
+    const r = selected && !place ? pointOf(selected, haloAt) : null;
     halo.visible = r !== null;
     if (r === null) return;
     halo.position.copy(haloAt);
     halo.scale.setScalar(r);
   }
 
-  function setFrame(frame: EnzymeFrame): void {
+  function setFrame(frame: EnzymeFrame, ease = false): void {
     forms = formsOf(frame.counts, forms);
-    counts.S = Math.min(PARTICLE_CAP, frame.particles.S);
-    counts.P = Math.min(PARTICLE_CAP - counts.S, frame.particles.P);
+    const s = Math.min(PARTICLE_CAP, frame.particles.S);
+    const p = Math.min(PARTICLE_CAP - s, frame.particles.P);
+    if (!ease) bornAt.fill(-1e9);
+    else if (p > counts.P && s + p === counts.S + counts.P) {
+      // The places that just turned from substrate to product: each comes out of the pocket of
+      // an ES complex (round robin; none → it simply appears in place). Only ES makes product
+      // (v = kcat·[ES]): an ESI complex holds substrate but never releases a product.
+      for (let k = s; k < counts.S; k++) {
+        let src = -1;
+        for (let n = 0; n < ENZYMES_DRAWN; n++) {
+          const e = (nextSource + n) % ENZYMES_DRAWN;
+          if (forms[e] === 'ES') {
+            src = e;
+            nextSource = e + 1;
+            break;
+          }
+        }
+        bornAt[k] = phase;
+        bornFrom[k] = src;
+      }
+    }
+    counts.S = s;
+    counts.P = p;
     counts.I = kind === 'none' ? 0 : Math.min(PARTICLE_CAP, frame.particles.I);
     placeBound();
     placeParticles();
-    placeHalo();
+    placeSelection();
   }
 
   // ── Picking ──────────────────────────────────────────────────────────────────────────
   const pickables: THREE.Object3D[] = [
-    enzymes,
+    ...enzymes,
     boundS,
     boundIInSite,
     boundIElsewhere,
     rings,
+    lips,
     freeS,
     freeP,
     freeI,
@@ -435,12 +658,17 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     if (id < 0) return null;
     const enzyme = (index: number | undefined): EnzymeSelection | null =>
       index === undefined || index < 0 ? null : { kind: 'enzyme', index };
-    if (obj === enzymes) return enzyme(id < ENZYMES_DRAWN ? id : undefined);
+    const v = enzymes.indexOf(obj as THREE.InstancedMesh);
+    if (v >= 0) {
+      const k = id * ENZYME_SEEDS.length + v;
+      return enzyme(k < ENZYMES_DRAWN ? k : undefined);
+    }
     if (obj === boundS) return enzyme(id < boundS.count ? boundSOwner[id] : undefined);
     if (obj === boundIInSite) return enzyme(id < boundIInSite.count ? inSiteOwner[id] : undefined);
     if (obj === boundIElsewhere)
       return enzyme(id < boundIElsewhere.count ? elsewhereOwner[id] : undefined);
     if (obj === rings) return enzyme(id < rings.count ? ringOwner[id] : undefined);
+    if (obj === lips) return enzyme(id < lips.count ? lipOwner[id] : undefined);
     if (obj === freeS) return id < counts.S ? { kind: 'particle', pool: 'sp', index: id } : null;
     if (obj === freeP)
       return id < counts.P ? { kind: 'particle', pool: 'sp', index: counts.S + id } : null;
@@ -478,24 +706,18 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
       if (withSite >= 0)
         out.push({ id: 'otherSite', point: vec(otherPoint(withSite, OTHER_AT, v3)) });
     }
-    out.push({ id: 'volume', point: [-L.hx, L.hy, L.hz] });
+    out.push({ id: 'volume', point: [-L.hx - TANK.outer, L.hy, L.hz + TANK.outer] });
     return out;
   }
 
   function tags(layer: TagLayer, name: (f: EnzymeForm) => string): void {
-    for (let k = 0; k < ENZYMES_DRAWN; k++) {
-      const p = ENZYME_PLACES[k];
-      if (!p) continue;
-      const text = name(forms[k] ?? 'E');
-      layer.add(
-        text,
-        p.center[0],
-        p.center[1] + L.enzymeR * 1.25,
-        p.center[2],
-        'word',
-        text.length,
-      );
-    }
+    // Only the picked enzyme says its form: the counts chip and the legend give the rest.
+    if (selected?.kind !== 'enzyme') return;
+    const k = selected.index;
+    const p = ENZYME_PLACES[k];
+    if (!p) return;
+    const text = name(forms[k] ?? 'E');
+    layer.add(text, p.center[0], p.center[1] + L.enzymeR * 1.35, p.center[2], 'word', text.length);
   }
 
   setFrame({
@@ -517,11 +739,11 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
       if (next === phase) return;
       phase = next;
       placeParticles();
-      placeHalo();
+      placeSelection();
     },
     setSelection(sel) {
       selected = sel;
-      placeHalo();
+      placeSelection();
     },
     pick,
     focusPoint(sel) {

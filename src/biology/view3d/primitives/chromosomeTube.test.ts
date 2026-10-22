@@ -1,6 +1,13 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
-import { CONSTRICTION, ChromosomeTube, ringStations, rodRadius } from './chromosomeTube';
+import {
+  CONSTRICTION,
+  ChromosomeTube,
+  TUBE_SHADE_ATTRIBUTE,
+  TUBE_SURFACE_ATTRIBUTE,
+  ringStations,
+  rodRadius,
+} from './chromosomeTube';
 
 const SHAPE = { armA: 1.2, armB: 0.8, radius: 0.15, sides: 8 };
 
@@ -71,6 +78,87 @@ describe('chromosome tube', () => {
     expect(hit?.point.z).toBeCloseTo(SHAPE.radius, 2);
     expect(hit?.face?.normal.z).toBeGreaterThan(0);
     expect(tube.ringOfFace(hit?.faceIndex ?? -1)).toBeGreaterThan(0);
+    tube.dispose();
+  });
+
+  it('each vertex keeps a fixed place on the surface (relief stays on it as the tube moves)', () => {
+    const tube = new ChromosomeTube(SHAPE);
+    const surf = tube.geometry.getAttribute(TUBE_SURFACE_ATTRIBUTE);
+    const before = Array.from(surf.array);
+    const n = tube.rings;
+    const centre = new Float32Array(n * 3).map((_, i) => (i % 3 === 1 ? 2 : i * 0.01));
+    tube.write(centre, new Float32Array(n).fill(0.05));
+    expect(Array.from(surf.array)).toEqual(before);
+    for (let r = 0; r < n; r++) {
+      for (let a = 0; a < tube.sides; a++) {
+        const k = r * tube.sides + a;
+        // Distance along the chromatid, then around it at the condensed radius (no seam).
+        expect(surf.getX(k)).toBeCloseTo(tube.stations[r]!, 6);
+        expect(Math.hypot(surf.getY(k), surf.getZ(k))).toBeCloseTo(SHAPE.radius, 6);
+      }
+    }
+    tube.dispose();
+  });
+  it('a seam makes the colour change sharp: two rings 8 thousandths apart around it', () => {
+    const plain = new ChromosomeTube(SHAPE);
+    const tube = new ChromosomeTube({ ...SHAPE, seams: [0.3] });
+    expect(tube.rings).toBe(plain.rings + 2);
+    const at = 0.3 * (SHAPE.armA + SHAPE.armB) - SHAPE.armA;
+    const s = Array.from(tube.stations);
+    for (let i = 1; i < s.length; i++) expect(s[i]!).toBeGreaterThan(s[i - 1]!);
+    const before = s.filter((x) => x < at).pop()!;
+    const after = s.find((x) => x > at)!;
+    expect(after - before).toBeLessThan(0.01);
+    // The centromere ring is still the waist (s = 0).
+    expect(tube.stations[tube.centromereRing]).toBeCloseTo(0, 9);
+    const a = new THREE.Color('#d55e00');
+    const b = new THREE.Color('#0072b2');
+    tube.setColours([
+      { from: 0, to: 0.3, color: a },
+      { from: 0.3, to: 1, color: b },
+    ]);
+    const i = s.indexOf(before);
+    expect(tube.colourAt(i)[0]).toBeCloseTo(a.r, 6);
+    expect(tube.colourAt(i + 1)[2]).toBeCloseTo(b.b, 6);
+    plain.dispose();
+    tube.dispose();
+  });
+
+  it('contact shade: darker towards the sister near the centromere, colours exact, cleared after', () => {
+    const tube = new ChromosomeTube(SHAPE);
+    const n = tube.rings;
+    const centre = new Float32Array(n * 3);
+    const radii = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      centre[3 * i] = tube.stations[i]!;
+      radii[i] = rodRadius(tube.stations[i]!, SHAPE.armA, SHAPE.armB, SHAPE.radius);
+    }
+    const c = new THREE.Color('#0072b2');
+    tube.setColours([{ from: 0, to: 1, color: c }]);
+    tube.write(centre, radii, { towards: [0, 1, 0], strength: 0.2, reach: 0.5 });
+    const pos = tube.geometry.getAttribute('position');
+    const col = tube.geometry.getAttribute(TUBE_SHADE_ATTRIBUTE);
+    const w = tube.centromereRing;
+    let towards = 1;
+    let away = 0;
+    for (let k = 0; k < tube.sides; k++) {
+      const v = w * tube.sides + k;
+      const y = pos.getY(v);
+      const shade = col.getX(v);
+      expect(shade).toBeGreaterThanOrEqual(0.8 - 1e-6);
+      expect(shade).toBeLessThanOrEqual(1 + 1e-6);
+      if (y > 0) towards = Math.min(towards, shade);
+      else away = Math.max(away, shade);
+    }
+    expect(towards).toBeLessThan(0.85);
+    expect(away).toBeCloseTo(1, 6);
+    // Far along the arm the sisters have diverged: barely shaded.
+    for (let k = 0; k < tube.sides; k++) expect(col.getX(k)).toBeGreaterThan(0.95);
+    // The painted colours stay exact on every vertex; a write without contact clears the shade.
+    const colour = tube.geometry.getAttribute('color');
+    for (let v = 0; v < colour.count; v++) expect(colour.getZ(v)).toBeCloseTo(c.b, 6);
+    tube.write(centre, radii);
+    for (let k = 0; k < tube.sides; k++) expect(col.getX(w * tube.sides + k)).toBe(1);
     tube.dispose();
   });
 });

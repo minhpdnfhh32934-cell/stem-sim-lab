@@ -16,15 +16,15 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
 import { TagLayer } from '@/ui/three/tagLayer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { IconButton } from '@/ui/IconButton';
 import { L, usePublishCard } from '../../common';
 import { useCardHeadFit } from '../../division/mitosis3d/partCardHead';
@@ -91,7 +91,7 @@ export interface Enzyme3DDebug {
   particles(): { S: number; P: number; I: number };
   /** Particles standing for [S]₀ in the time view. */
   pool0(): number;
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /** Page pixels of a picked thing's centre now, or null. */
   focus(sel: EnzymeSelection): { x: number; y: number } | null;
   /** A camera move (glide, damping) is still running. */
@@ -280,8 +280,10 @@ function Enzyme3DScene({
     if (sel && !selectionValid(model, frame, sel)) useEnzyme3D.setState({ selected: null });
   }, [model, frame]);
 
+  // The tank is about twice as wide as it is tall: the corner controls count from the top, so
+  // the picture uses the stage's full width.
   const insetsOf = (host: HTMLElement) =>
-    measureInsets(host, hudRef.current, defaultInsets(host.clientHeight), 1.1);
+    measureInsets(host, hudRef.current, defaultInsets(host.clientHeight), 2);
   const closeEnzyme = () => {
     const sel = useEnzyme3D.getState().selected;
     return sel?.kind === 'enzyme' ? sel.index : CLOSE_DEFAULT;
@@ -325,6 +327,7 @@ function Enzyme3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      { rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -394,7 +397,7 @@ function Enzyme3DScene({
         forms: () => [...(sceneRef.current?.forms() ?? [])],
         particles: () => sceneRef.current?.drawn().particles ?? { S: 0, P: 0, I: 0 },
         pool0: () => modelRef.current.pool0,
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         focus: (sel) => toPage(sceneRef.current?.focusPoint(sel) ?? null),
         moving: () => h.moving(),
       };
@@ -411,6 +414,9 @@ function Enzyme3DScene({
       segments: tier.sphereSegments,
       kind: model.p.kind,
       token: tokenReader(),
+      hdr: quality.bloom,
+      shadows: quality.shadowScenes,
+      accents: quality.accents,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);
@@ -438,6 +444,8 @@ function Enzyme3DScene({
       }
       if (s.camera !== prev.camera || s.viewNonce !== prev.viewNonce)
         frameCamera(h, s.camera, true);
+      // Play stopped: a product still on its way out of a pocket takes its place.
+      if (prev.playing && !s.playing) sc.setFrame(frameRef.current);
       h.request();
     });
     return () => {
@@ -456,7 +464,9 @@ function Enzyme3DScene({
   useEffect(() => {
     const sc = sceneRef.current;
     if (!sc) return;
-    sc.setFrame(frame);
+    // While playing, new products come out of ES pockets (illustration, not when scrubbed or
+    // with reduced motion).
+    sc.setFrame(frame, useEnzyme3D.getState().playing && !prefersReducedMotion());
     hostRt.current?.request();
   }, [frame, hostRt]);
 

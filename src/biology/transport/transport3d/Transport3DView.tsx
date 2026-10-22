@@ -18,16 +18,16 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useResolvedTheme } from '@/app/theme/useApplyTheme';
 import type { LocalizedText } from '@/core/data/dataset';
 import { effectiveTier, usePerfStore, useTierConfig } from '@/perf/perfStore';
-import type { QualityTier } from '@/perf/tiers';
 import { IconButton } from '@/ui/IconButton';
 import { prefersReducedMotion } from '@/ui/three/availability';
 import { measureInsets } from '@/ui/three/insets';
 import { LabelLayer } from '@/ui/three/labelLayer';
+import { LABEL_EDGE } from '@/ui/three/labels';
 import { useFrameLoop } from '@/ui/three/loop';
 import { quality3d } from '@/ui/three/quality3d';
 import { webglRenderer, type RendererFactory } from '@/ui/three/renderer';
 import { TagLayer } from '@/ui/three/tagLayer';
-import { ThreeHost, useThreeHost } from '@/ui/three/useThreeHost';
+import { ThreeHost, useThreeHost, type QualityInEffect } from '@/ui/three/useThreeHost';
 import { L, usePublishCard } from '../../common';
 import { useCardHeadFit } from '../../division/mitosis3d/partCardHead';
 import { ROLES, type BioRole } from '../../view3d/palette';
@@ -49,6 +49,7 @@ import {
   PART_NAMES,
   SCALE_NOTE,
   VOLUME_NOTE,
+  WATER_DOTS_NOTE,
   WATER_NOTE,
   diffusionCard3d,
   osmosisCard3d,
@@ -102,7 +103,7 @@ export interface Transport3DDebug {
     /** Scene height of the solution's surface. */
     sceneL: number;
   } | null;
-  quality(): { tier: QualityTier; degraded: boolean };
+  quality(): QualityInEffect;
   /** Page pixels of a picked thing's centre now, or null. */
   focus(sel: TransportSelection): { x: number; y: number } | null;
   /** Page pixels of a scene point now, or null when it is off screen. */
@@ -342,6 +343,8 @@ function Transport3DScene({
       hh,
       safe,
       h.quality.labelCap,
+      // Names keep clear of the counts, Δh and ruler numbers, and of the stage's edge.
+      { rects: tags.rects(), edge: LABEL_EDGE },
     );
   };
 
@@ -430,7 +433,7 @@ function Transport3DScene({
             sceneL: lv.left,
           };
         },
-        quality: () => ThreeHost.tierInEffect(),
+        quality: () => h.qualityInEffect(),
         focus: (sel) => toPage(sceneRef.current?.focusPoint(sel) ?? null),
         point: (p) => toPage(p),
         moving: () => h.moving(),
@@ -444,7 +447,13 @@ function Transport3DScene({
   useEffect(() => {
     const h = hostRt.current;
     if (!h) return;
-    const opts = { tier: tierName, segments: tier.sphereSegments, token: tokenReader() };
+    const opts = {
+      tier: tierName,
+      segments: tier.sphereSegments,
+      token: tokenReader(),
+      shadows: quality.shadowScenes,
+      accents: quality.accents,
+    };
     const sc: TransportScene =
       mode === 'diffusion'
         ? buildDiffusionScene(diffusion, opts)
@@ -647,6 +656,7 @@ function Transport3DScene({
               <>
                 <strong>{Lz(L('Khuếch tán.', 'Diffusion.'))}</strong> {Lz(DIFFUSION_ILLUSTRATION)}{' '}
                 <span className="muted">
+                  {tierName === 'high' && <>{Lz(WATER_DOTS_NOTE)} </>}
                   {Lz(VOLUME_NOTE)} {Lz(SCALE_NOTE)}{' '}
                   {Lz(
                     L(

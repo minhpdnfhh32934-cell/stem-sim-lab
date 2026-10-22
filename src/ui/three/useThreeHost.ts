@@ -8,6 +8,12 @@
  * Rendering on demand: `request()` draws one frame; the frame asks for another only while the
  * camera is still moving (damping after a drag, a camera move in progress) — an idle view costs
  * nothing.
+ *
+ * Every scene goes on the same stage (`stage.ts`: backdrop, theme-dependent light, exposure) and
+ * its objects on their render layers (`layers.ts`). On the High tier with a discrete GPU the
+ * frames go through the post-processing chain (`postfx.ts`, loaded on demand); a guard turns its
+ * costly parts off when animated frames are slow. Without a real WebGL renderer (tests) there is
+ * no environment and no post-processing.
  */
 import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import * as THREE from 'three';
@@ -17,11 +23,16 @@ import type { QualityTier } from '@/perf/tiers';
 import { prefersReducedMotion } from './availability';
 import { orbitForKey, tweenCamera, type CameraPose, type Vec3 } from './camera';
 import { NO_INSETS, viewWindow, type Insets } from './frame';
+import { gpuClass, postFxOverride, rendererString, type GpuClass } from './gpuInfo';
 import { sameInsets } from './insets';
+import { assignLayers, seeAllLayers } from './layers';
 import { createEnvironment, type Environment } from './lighting';
 import { createTapTracker, ndcFromEvent } from './pick';
+import type { PostFx } from './postfx';
+import { PostFxGuard, disableTransmission, sceneWantsBloom } from './postfxSupport';
 import type { Quality3D } from './quality3d';
-import type { RendererFactory, RendererLike } from './renderer';
+import { isWebGLRenderer, type RendererFactory, type RendererLike } from './renderer';
+import { StageKeeper, currentTheme } from './stage';
 
 /** Where the camera goes and how far it may zoom from there. */
 export interface Placement extends CameraPose {
@@ -29,8 +40,8 @@ export interface Placement extends CameraPose {
   max: number;
 }
 
-/** Duration of an animated camera move (ms). */
-export const CAMERA_MOVE_MS = 450;
+/** Duration of an animated camera move (ms; style guide: 700 ms, ease-in-out cubic). */
+export const CAMERA_MOVE_MS = 700;
 
 export interface ThreeHostOptions {
   createRenderer: RendererFactory;
@@ -54,8 +65,22 @@ export interface ThreeHostOptions {
   onFrame?: (host: ThreeHost) => void;
   /** Elements whose size changes re-measure the insets (in addition to the host). */
   observe?: () => Iterable<Element>;
+  /**
+   * Orbit limits from straight above (degrees from +y): a habitat on the ground uses [10, 85] so
+   * the camera never goes under the ground. Default: free.
+   */
+  polarLimits?: readonly [number, number];
   /** Development builds: registers read-only test hooks; returns their cleanup. */
   debug?: (host: ThreeHost) => () => void;
+}
+
+/** What the host draws with now (debug hooks: end-to-end tests assert what ran). */
+export interface QualityInEffect {
+  tier: QualityTier;
+  degraded: boolean;
+  /** 'full' once the post-processing chain draws the frames. */
+  postFx: 'none' | 'full';
+  gpu: GpuClass;
 }
 
 /** Read-only hooks of the 3D views for end-to-end tests (dev builds only). */
@@ -77,10 +102,15 @@ export class ThreeHost {
   frames = 0;
   private readonly el: HTMLElement;
   private readonly env: Environment;
+  private readonly stage = new StageKeeper();
+  private postfx: PostFx | null = null;
+  private readonly guard = new PostFxGuard();
   private readonly fov: number;
   private insets: Insets = NO_INSETS;
   private raf = 0;
   private tween: { from: CameraPose; to: Placement; start: number } | null = null;
+  /** The learner is dragging the camera (orbit or pinch) right now. */
+  private held = false;
   private readonly cleanups: (() => void)[] = [];
   private disposed = false;
   private readonly opts: () => ThreeHostOptions;
@@ -107,6 +137,9 @@ export class ThreeHost {
       ? createEnvironment(this.renderer)
       : { texture: null, dispose: () => undefined };
     this.camera = new THREE.PerspectiveCamera(o.fov, 1, o.near ?? 0.1, o.far ?? 400);
+    // The camera draws every layer; picking rays test every layer (shells can be picked).
+    seeAllLayers(this.camera);
+    seeAllLayers(this.raycaster);
     this.insets = o.insets?.() ?? NO_INSETS;
     this.applyViewport();
     this.controls = new OrbitControls(this.camera, this.canvas);
@@ -115,15 +148,63 @@ export class ThreeHost {
     this.controls.enablePan = false;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.14;
+    if (o.polarLimits) {
+      this.controls.minPolarAngle = THREE.MathUtils.degToRad(o.polarLimits[0]);
+      this.controls.maxPolarAngle = THREE.MathUtils.degToRad(o.polarLimits[1]);
+    }
     const onChange = () => {
       this.request();
     };
+    const onStart = () => {
+      this.held = true;
+    };
+    const onEnd = () => {
+      this.held = false;
+    };
     this.controls.addEventListener('change', onChange);
+    this.controls.addEventListener('start', onStart);
+    this.controls.addEventListener('end', onEnd);
     this.cleanups.push(() => {
       this.controls.removeEventListener('change', onChange);
+      this.controls.removeEventListener('start', onStart);
+      this.controls.removeEventListener('end', onEnd);
     });
     this.raycaster.params.Line = { threshold: 0.12 };
     this.listen();
+    this.startPostFx();
+  }
+
+  /**
+   * Loads the post-processing chain when the quality table asks for it and the renderer really
+   * runs on a discrete GPU (the development override may force it for art probes).
+   */
+  private startPostFx(): void {
+    const r = this.renderer;
+    if (this.quality.postFx !== 'full' || !isWebGLRenderer(r)) return;
+    const actual = gpuClass(rendererString(r.getContext()));
+    if (postFxOverride() !== 'on' && actual !== 'discrete' && actual !== 'unknown') return;
+    void import('./postfx').then(({ createPostFx }) => {
+      if (this.disposed) return;
+      this.postfx = createPostFx(r, this.scene ?? new THREE.Scene(), this.camera, {
+        width: this.width(),
+        height: this.height(),
+        pixelRatio: r.getPixelRatio(),
+        theme: currentTheme(),
+        samples: this.quality.msaaSamples,
+      });
+      if (this.scene) this.preparePostFx(this.scene);
+      this.request();
+    });
+  }
+
+  /** A new scene for the chain: its bounds (AO clip box and radius), theme and refraction. */
+  private preparePostFx(scene: THREE.Scene): void {
+    const fx = this.postfx;
+    if (!fx) return;
+    fx.setScene(scene);
+    fx.setTheme(currentTheme());
+    fx.setSubject(new THREE.Box3().setFromObject(scene));
+    if (!fx.state.transmission) disableTransmission(scene);
   }
 
   width(): number {
@@ -146,6 +227,11 @@ export class ThreeHost {
 
   setScene(scene: THREE.Scene | null): void {
     this.scene = scene;
+    if (scene) {
+      assignLayers(scene);
+      this.stage.apply(scene, this.renderer, this.quality.envIntensity);
+      this.preparePostFx(scene);
+    }
     this.request();
   }
 
@@ -197,6 +283,11 @@ export class ThreeHost {
     return this.tween !== null;
   }
 
+  /** True while the learner drags the camera (a view should not glide away under their hand). */
+  dragging(): boolean {
+    return this.held;
+  }
+
   /** Re-measures the controls over the canvas; tells the view when the safe area moved. */
   relayout(): void {
     const next = this.opts().insets?.() ?? NO_INSETS;
@@ -233,6 +324,20 @@ export class ThreeHost {
     return { tier: effectiveTier(perf), degraded: perf.degraded };
   }
 
+  /** The tier in effect plus what this host draws with (post-processing, GPU class). */
+  qualityInEffect(): QualityInEffect {
+    return {
+      ...ThreeHost.tierInEffect(),
+      postFx: this.postfx ? 'full' : 'none',
+      gpu: this.quality.gpu,
+    };
+  }
+
+  /** The post-processing parts still running (null without the chain). */
+  postFxState(): { ao: boolean; bloom: boolean; transmission: boolean } | null {
+    return this.postfx ? { ...this.postfx.state } : null;
+  }
+
   /** Registers a test hook as `window.__simlab3d[key]`; returns its removal. */
   static registerDebug(key: string, hook: object): () => void {
     const all = (window.__simlab3d ??= {});
@@ -249,6 +354,9 @@ export class ThreeHost {
     this.raf = 0;
     for (const c of this.cleanups.splice(0)) c();
     this.controls.dispose();
+    this.postfx?.dispose();
+    this.postfx = null;
+    this.stage.dispose();
     this.env.dispose();
     this.renderer.dispose();
     this.renderer.forceContextLoss?.();
@@ -289,10 +397,30 @@ export class ThreeHost {
     const scene = this.scene;
     if (!scene) return;
     scene.environment = this.env.texture;
-    this.renderer.render(scene, this.camera);
+    const fx = this.postfx;
+    if (fx) {
+      // Parts may have turned see-through since the last frame (fades): keep them out of AO.
+      assignLayers(scene);
+      fx.setHighlight(sceneWantsBloom(scene));
+      fx.render();
+      this.watchPostFx(scene, fx);
+    } else {
+      this.renderer.render(scene, this.camera);
+    }
     this.frames++;
     this.opts().onFrame?.(this);
   };
+
+  /** Slow animated frames turn off one costly part at a time (visual only, never a number). */
+  private watchPostFx(scene: THREE.Scene, fx: PostFx): void {
+    if (!this.guard.frame(performance.now())) return;
+    const off = fx.degrade();
+    if (off === 'transmission') disableTransmission(scene);
+    // One line for whoever looks at the console; the learner sees no notice (nothing they read
+    // changed).
+    // eslint-disable-next-line no-console
+    if (off) console.debug(`[3d] post-processing: ${off} turned off (slow frames)`);
+  }
 
   private listen(): void {
     const canvas = this.canvas;
@@ -331,6 +459,8 @@ export class ThreeHost {
     // A lost GPU context (driver reset) never retries: the 2D view takes over.
     const onLost = (e: Event) => {
       e.preventDefault();
+      this.postfx?.dispose();
+      this.postfx = null;
       this.opts().onFail();
     };
     canvas.addEventListener('pointerdown', onDown);
@@ -351,6 +481,10 @@ export class ThreeHost {
     if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => {
       this.renderer.setSize(this.width(), this.height());
+      const r = this.renderer;
+      if (this.postfx && isWebGLRenderer(r)) {
+        this.postfx.setSize(this.width(), this.height(), r.getPixelRatio());
+      }
       const next = this.opts().insets?.() ?? NO_INSETS;
       const changed = !sameInsets(next, this.insets);
       this.insets = next;

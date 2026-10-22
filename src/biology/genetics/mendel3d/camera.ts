@@ -12,7 +12,7 @@ import {
   type ViewTangents,
 } from '@/ui/three/camera';
 import { safeTangents, type Insets } from '@/ui/three/frame';
-import { boardPoints, overviewPoints, type BoardDims, type Vec3 } from './layout';
+import { boardPoints, overviewPoints, parentsPoints, type BoardDims, type Vec3 } from './layout';
 import type { MendelCameraMode } from './store';
 
 export const FOV = 34;
@@ -84,12 +84,67 @@ export function mendelFrame(mode: MendelCameraMode, d: BoardDims, fieldTotal: nu
   return pointsFrame(mode === 'board' ? boardPoints(d) : overviewPoints(d, fieldTotal));
 }
 
+/**
+ * What "Toàn cảnh" frames after a jump to step k (a step button, Next, Previous): meiosis and the
+ * gametes come closer to the parents and the tray, fertilisation to the board, the offspring
+ * show everything. Null: the mode's own frame.
+ */
+export function stepFrame(k: number, d: BoardDims): CameraFrame | null {
+  if (k <= 1) return pointsFrame(parentsPoints(d));
+  if (k === 2) return pointsFrame(boardPoints(d));
+  return null;
+}
+
 export function viewTangents(width: number, height: number, insets: Insets): ViewTangents {
   const t = safeTangents(FOV, width, height, insets);
   return { h: t.h, up: t.v, down: t.v };
 }
 
-/** Where the camera goes to show a frame; it may zoom in close and out past the overview. */
+/**
+ * The same points with the centre moved across the view (along `right` and `up`) to where the
+ * camera can come closest: the parts nearer the camera look larger, so the middle of the points'
+ * span is not the best centre (the near edge would touch the safe area while a band stays empty
+ * at the far edge). For each axis the farthest need above and below the centre are made equal.
+ */
+export function balancedFrame(
+  frame: CameraFrame,
+  tan: ViewTangents,
+  dir: Vec3 = VIEW_DIR,
+): CameraFrame {
+  const { right, up } = viewBasis(dir);
+  const dot = (p: Vec3, v: Vec3) => p[0] * v[0] + p[1] * v[1] + p[2] * v[2];
+  // need(u) = max over points of a + (s − u)/t⁺ (s ≥ u) or a + (u − s)/t⁻: equal at u below.
+  const shift = (axis: Vec3, plus: number, minus: number) => {
+    let hi = -Infinity;
+    let lo = -Infinity;
+    for (const p of frame.points) {
+      const a = dot(p, dir);
+      const s = dot(p, axis);
+      hi = Math.max(hi, a * plus + s);
+      lo = Math.max(lo, a * minus - s);
+    }
+    return Number.isFinite(hi) && Number.isFinite(lo)
+      ? (hi * minus - lo * plus) / (plus + minus)
+      : 0;
+  };
+  const sx = shift(right, tan.h, tan.h);
+  const sy = shift(up, tan.up, tan.down);
+  const d: Vec3 = [
+    right[0] * sx + up[0] * sy,
+    right[1] * sx + up[1] * sy,
+    right[2] * sx + up[2] * sy,
+  ];
+  return {
+    center: [frame.center[0] + d[0], frame.center[1] + d[1], frame.center[2] + d[2]],
+    points: frame.points.map((p) => [p[0] - d[0], p[1] - d[1], p[2] - d[2]]),
+  };
+}
+
+/**
+ * Where the camera goes to show a frame; it may zoom in close and out past the overview.
+ * `balance`: centre the frame where the camera can come closest (`balancedFrame`; "Bảng Punnett",
+ * so the board's genotypes are large enough to read).
+ */
 export function placeMendelCamera(
   frame: CameraFrame,
   overview: CameraFrame,
@@ -97,9 +152,11 @@ export function placeMendelCamera(
   height: number,
   dir: Vec3 = VIEW_DIR,
   insets: Insets = defaultInsets(height),
+  balance = false,
 ): CameraPlacement {
   const tan = viewTangents(width, height, insets);
   const far = fitDistance(overview.points, tan, dir);
   const limits = { min: MIN_DISTANCE, max: Math.max(MAX_DISTANCE, far * 1.5) };
-  return placeCamera(frame.center, frame.points, tan, dir, limits);
+  const f = balance ? balancedFrame(frame, tan, dir) : frame;
+  return placeCamera(f.center, f.points, tan, dir, limits);
 }

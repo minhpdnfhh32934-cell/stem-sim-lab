@@ -2,11 +2,22 @@ import { act, fireEvent, render } from '@testing-library/react';
 import { useEffect, useRef } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TIERS } from '@/perf/tiers';
-import { quality3d } from './quality3d';
+import { LAYER } from './layers';
+import { lightRig } from './lighting';
+import { quality3d, type Quality3D } from './quality3d';
 import type { RendererFactory } from './renderer';
 import { fakeRenderer, withReducedMotion } from './testing';
 import { CAMERA_MOVE_MS, useThreeHost, type ThreeHost } from './useThreeHost';
 import * as THREE from 'three';
+
+/** The post-processing chain must never load for a fake renderer (no WebGL). */
+const postfx = vi.hoisted(() => ({ created: 0 }));
+vi.mock('./postfx', () => ({
+  createPostFx: () => {
+    postfx.created++;
+    throw new Error('post-processing needs WebGL');
+  },
+}));
 
 const frames: FrameRequestCallback[] = [];
 let now = 1000;
@@ -48,11 +59,16 @@ const outBox = (): Out => {
   return o;
 };
 
-function Host(props: { factory: RendererFactory; onFail?: () => void; out: Out }) {
+function Host(props: {
+  factory: RendererFactory;
+  onFail?: () => void;
+  out: Out;
+  quality?: Quality3D;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const host = useThreeHost(ref, {
     createRenderer: props.factory,
-    quality: quality3d('medium', TIERS.medium),
+    quality: props.quality ?? quality3d('medium', TIERS.medium),
     fov: 40,
     canvasClass: 'test-canvas',
     onFail: props.onFail ?? (() => undefined),
@@ -153,5 +169,82 @@ describe('useThreeHost', () => {
     for (let k = 0; k < 60; k++) flush();
     expect(Math.abs(h.camera.position.x)).toBeGreaterThan(0.5);
     expect(h.camera.position.length()).toBeCloseTo(10, 6);
+  });
+
+  it('a fake renderer gets no post-processing, even when High on a discrete GPU asks for it', async () => {
+    const { factory, made } = fakeRenderer();
+    const out = outBox();
+    const view = render(
+      <Host factory={factory} out={out} quality={quality3d('high', TIERS.high, 'discrete')} />,
+    );
+    const h = out.host!;
+    h.setScene(new THREE.Scene());
+    flush();
+    await Promise.resolve();
+    expect(postfx.created).toBe(0);
+    // Frames go straight to the renderer, as on the Medium tier.
+    expect(made[0]?.render).toHaveBeenCalledTimes(1);
+    expect(h.qualityInEffect()).toMatchObject({ postFx: 'none', gpu: 'discrete' });
+    expect(h.postFxState()).toBeNull();
+    view.unmount();
+  });
+
+  it('every scene goes on its render layers; the camera and picking rays see all of them', () => {
+    const { factory } = fakeRenderer();
+    const out = outBox();
+    render(<Host factory={factory} out={out} />);
+    const h = out.host!;
+    const scene = new THREE.Scene();
+    scene.add(lightRig());
+    const geo = new THREE.SphereGeometry(1, 8, 6);
+    const glass = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.2 });
+    const solid = new THREE.MeshStandardMaterial();
+    const shell = new THREE.Mesh(geo, glass);
+    const body = new THREE.Mesh(geo, solid);
+    scene.add(shell, body);
+    h.setScene(scene);
+    expect(shell.layers.mask).toBe(1 << LAYER.SHELL);
+    expect(body.layers.mask).toBe(1 << LAYER.OPAQUE);
+    expect(shell.layers.test(h.camera.layers)).toBe(true);
+    expect(shell.layers.test(h.raycaster.layers)).toBe(true);
+    // The studio's environment strength is applied (light theme, Medium tier).
+    expect(scene.environmentIntensity).toBe(0.7);
+    geo.dispose();
+    glass.dispose();
+    solid.dispose();
+  });
+
+  it('the backdrop: one per theme, freed on a theme switch and on unmount', () => {
+    const root = document.documentElement;
+    const set = (theme: 'light' | 'dark', stage: string, sunken: string, app: string) => {
+      root.dataset.theme = theme;
+      root.style.setProperty('--bg-stage', stage);
+      root.style.setProperty('--bg-sunken', sunken);
+      root.style.setProperty('--bg-app', app);
+    };
+    try {
+      set('light', '#fbfcfe', '#e7ebf2', '#eef1f6');
+      const { factory } = fakeRenderer();
+      const out = outBox();
+      const view = render(<Host factory={factory} out={out} />);
+      const h = out.host!;
+      const a = new THREE.Scene();
+      h.setScene(a);
+      const light = a.background as THREE.DataTexture;
+      expect(light).toBeInstanceOf(THREE.DataTexture);
+      const freedLight = vi.spyOn(light, 'dispose');
+      // The view rebuilds its scene after a theme switch: a new backdrop, the old one freed.
+      set('dark', '#10151d', '#0f141c', '#0d1117');
+      const b = new THREE.Scene();
+      h.setScene(b);
+      expect(b.background).not.toBe(light);
+      expect(freedLight).toHaveBeenCalledTimes(1);
+      const freedDark = vi.spyOn(b.background as THREE.DataTexture, 'dispose');
+      view.unmount();
+      expect(freedDark).toHaveBeenCalledTimes(1);
+    } finally {
+      root.removeAttribute('style');
+      delete root.dataset.theme;
+    }
   });
 });

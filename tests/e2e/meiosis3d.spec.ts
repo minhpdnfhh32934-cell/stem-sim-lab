@@ -16,6 +16,7 @@ test.use({
 
 interface Debug {
   stage(): string;
+  settled(): boolean;
   anchor(id: string): { x: number; y: number } | null;
   info(): { geometries: number; programs: number };
 }
@@ -27,6 +28,7 @@ const hook = (page: Page, fn: string, arg?: string) =>
       if (!d) return null;
       if (f === 'anchor') return d.anchor(a ?? '');
       if (f === 'stage') return d.stage();
+      if (f === 'settled') return d.settled();
       return d.info();
     },
     [fn, arg] as const,
@@ -74,6 +76,8 @@ test('meiosis 3D: twelve stages, a picked part shows the model’s crossover poi
   // Metaphase I: pick the chiasma (or the bivalent in front of it) on the picture.
   await strip.getByRole('button', { name: 'Kì giữa I', exact: true }).click();
   await expect.poll(() => hook(page, 'stage')).toBe('metaphase1');
+  // Basic mode glides (700 ms) to the chromosomes of metaphase I: pick once the camera is still.
+  await expect.poll(() => hook(page, 'settled')).toBe(true);
   await expect(page.getByText('1 tế bào · 4 NST kép')).toBeVisible();
   const at = (await hook(page, 'anchor', 'chiasma')) as { x: number; y: number } | null;
   expect(at, 'the chiasma can be seen in metaphase I').not.toBeNull();

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { deltaEOK, oklch } from '@/ui/three/color';
 
 /** The theme stylesheet, read as text (no browser needed). */
 const CSS = readFileSync(resolve(__dirname, 'tokens.css'), 'utf8');
@@ -69,4 +70,83 @@ describe('theme tokens', () => {
       expect(tokens.get('--m3d-nucleolus')).not.toBe(tokens.get('--chart-6'));
     });
   }
+
+  /** Chart colours carry data in the 3D views; terrain and water must never look like one. */
+  const CHARTS = [
+    '--chart-1',
+    '--chart-2',
+    '--chart-3',
+    '--chart-4',
+    '--chart-5',
+    '--chart-6',
+    '--chart-7',
+  ];
+  for (const [theme, tokens] of Object.entries(THEMES)) {
+    it(`${theme}: 3D terrain and water stay ΔE_OK ≥ 0.15 from every chart colour`, () => {
+      const failures: string[] = [];
+      for (const ground of [
+        '--bio3d-grass',
+        '--bio3d-island-grass',
+        '--bio3d-island-grass-2',
+        '--bio3d-soil',
+        '--bio3d-water',
+        '--bio3d-sand',
+        '--bio3d-creature',
+        '--bio3d-foliage',
+        '--bio3d-foliage-2',
+        '--bio3d-bark',
+      ]) {
+        const g = tokens.get(ground);
+        expect(g, ground).toBeTruthy();
+        for (const chart of CHARTS) {
+          const c = tokens.get(chart);
+          expect(c, chart).toBeTruthy();
+          const d = deltaEOK(g ?? '', c ?? '');
+          if (d < 0.15)
+            failures.push(`${ground} ${g ?? ''} vs ${chart} ${c ?? ''}: ${d.toFixed(3)}`);
+        }
+      }
+      expect(failures).toEqual([]);
+    });
+
+    it(`${theme}: 3D structures are muted (grass is a low-chroma sage)`, () => {
+      for (const name of [
+        '--bio3d-protein',
+        '--bio3d-glass',
+        '--bio3d-glass-edge',
+        '--bio3d-liquid',
+        '--bio3d-sky-top',
+        '--bio3d-sky-horizon',
+        '--bio3d-grass',
+        '--bio3d-grass-2',
+        '--bio3d-island-grass',
+        '--bio3d-island-grass-2',
+        '--bio3d-soil',
+        '--bio3d-rock',
+        '--bio3d-water',
+        '--bio3d-sand',
+        '--bio3d-creature',
+        '--bio3d-foliage',
+        '--bio3d-foliage-2',
+        '--bio3d-bark',
+        '--m3d-spindle',
+      ]) {
+        const c = oklch(tokens.get(name) ?? '');
+        expect(c, name).not.toBeNull();
+        // Far less saturated than the least saturated chart colour (chart-6, C ≈ 0.11).
+        expect(c?.C ?? 1, name).toBeLessThanOrEqual(0.07);
+      }
+      expect(oklch(tokens.get('--bio3d-grass') ?? '')?.C ?? 1).toBeLessThanOrEqual(0.05);
+    });
+  }
+
+  it('spindle: light steel, lighter than the old muted-text grey in light, softer than white in dark', () => {
+    const lightSpindle = oklch(THEMES.light.get('--m3d-spindle') ?? '');
+    const oldLight = oklch(THEMES.light.get('--text-muted') ?? '');
+    expect(lightSpindle && oldLight).toBeTruthy();
+    expect(lightSpindle!.L).toBeGreaterThan(oldLight!.L);
+    const darkSpindle = oklch(THEMES.dark.get('--m3d-spindle') ?? '');
+    expect(darkSpindle!.L).toBeLessThan(0.9);
+    expect(darkSpindle!.L).toBeGreaterThan(oklch(THEMES.dark.get('--bg-stage') ?? '')!.L + 0.4);
+  });
 });
