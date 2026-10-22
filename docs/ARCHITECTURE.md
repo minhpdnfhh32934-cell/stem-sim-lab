@@ -450,8 +450,15 @@ it without code of its own:
   `PREDATOR_SIZE`); both are logistic `flock`s, which now take `FlockOptions` (mesh name prefix,
   shape, 'hop' / 'prowl' gait, size) and share `mergeFigure`. `columns.ts`: plinth, two glass
   tubes (`glassware({ ink, edge })`, lip rings), liquids in `--chart-1` / `--chart-4` (the 2D
-  chart's x and y series), rings and tags at x* and y*, ink arrows on the tubes' inner sides.
-  `board.ts`: an instanced wooden frame (back, posts, roof), a panel in the page's panel colour, axes
+  chart's x and y series), rings at x* and y*; each tube owns its outer side (the prey's left,
+  the predators' right): its rate arrow in a deeper shade of its species' colour (hidden below
+  `ARROW_MIN` of the full length, a short arrow keeps `SHAFT_MIN` of its length as shaft and a
+  head at least twice the shaft's width), then its ring's tag; a plaque under each tube gives
+  "x = …, dx/dt = …" / "y = …, dy/dt = …" (`columnValue` in `facts.ts`). The gap from the plinth to
+  the board is `BOARD_GAP_SHARE` of the subject's width (the tags are fixed-size page text, so the
+  gap grows with the width). `board.ts`: the plot's margins (`PLOT`) hold its letters (x, x* under
+  the x axis, y* left of the y axis, y beside its arrowhead), the title stands on the roof.
+  An instanced wooden frame (back, posts, roof), a panel in the page's panel colour, axes
   in the species' colours, dashed nullclines (one instanced draw), the orbit as an ink tube through
   the samples, an equilibrium ring, a glowing bead with drop lines in the two colours. `scene.ts`:
   terrain, plants, clover, both flocks, columns, board; `setTime` without rebuilding; callouts
