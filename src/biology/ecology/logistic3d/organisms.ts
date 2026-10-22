@@ -24,7 +24,47 @@ const NIBBLE_SHARE = 0.3;
 export const BIRTH = 0.45;
 export const LEAVE = 0.35;
 
-type Part = [THREE.BufferGeometry, number, Vec3, Vec3, Vec3?];
+/**
+ * A part of a merged figure: shape, shade (1: the instance tint, a little darker underneath; below
+ * 1 a fixed dark shade such as eyes or feet; above 1 a fixed pale shade of the tint), position,
+ * scale and rotation (Euler).
+ */
+export type Part = [THREE.BufferGeometry, number, Vec3, Vec3, Vec3?];
+
+/** Merges `parts` into one flat-shaded, vertex-coloured figure (white tinted per instance). */
+export function mergeFigure(parts: readonly Part[]): THREE.BufferGeometry {
+  const flat = parts.map(([g, shade, at, scale, rot]) => {
+    // Icosahedra are already non-indexed (no copy, no three.js warning).
+    const f = g.index ? g.toNonIndexed() : g;
+    if (f !== g) g.dispose();
+    f.deleteAttribute('uv');
+    f.applyMatrix4(
+      new THREE.Matrix4().compose(
+        new THREE.Vector3(...at),
+        new THREE.Quaternion().setFromEuler(new THREE.Euler(...(rot ?? [0, 0, 0]))),
+        new THREE.Vector3(...scale),
+      ),
+    );
+    f.computeVertexNormals();
+    const nor = f.attributes.normal as THREE.BufferAttribute;
+    const n = nor.count;
+    const colors = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      // Tinted parts are a little darker underneath (a belly in shade, not a second colour).
+      const k =
+        shade === 1 ? 0.78 + 0.22 * Math.min(1, Math.max(0, 0.5 + 0.5 * nor.getY(i))) : shade;
+      colors[i * 3] = k;
+      colors[i * 3 + 1] = k;
+      colors[i * 3 + 2] = k;
+    }
+    f.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    return f;
+  });
+  const merged = mergeGeometries(flat);
+  for (const f of flat) f.dispose();
+  merged.computeBoundingSphere();
+  return merged;
+}
 
 /**
  * One merged grazer, standing at the origin facing +z: body, head, ears (tinted per instance),
@@ -60,37 +100,7 @@ export function grazerGeometry(): THREE.BufferGeometry {
       ]),
     ),
   ];
-  const flat = parts.map(([g, shade, at, scale, rot]) => {
-    // Icosahedra are already non-indexed (no copy, no three.js warning).
-    const f = g.index ? g.toNonIndexed() : g;
-    if (f !== g) g.dispose();
-    f.deleteAttribute('uv');
-    f.applyMatrix4(
-      new THREE.Matrix4().compose(
-        new THREE.Vector3(...at),
-        new THREE.Quaternion().setFromEuler(new THREE.Euler(...(rot ?? [0, 0, 0]))),
-        new THREE.Vector3(...scale),
-      ),
-    );
-    f.computeVertexNormals();
-    const nor = f.attributes.normal as THREE.BufferAttribute;
-    const n = nor.count;
-    const colors = new Float32Array(n * 3);
-    for (let i = 0; i < n; i++) {
-      // Tinted parts are a little darker underneath (a belly in shade, not a second colour).
-      const k =
-        shade === 1 ? 0.78 + 0.22 * Math.min(1, Math.max(0, 0.5 + 0.5 * nor.getY(i))) : shade;
-      colors[i * 3] = k;
-      colors[i * 3 + 1] = k;
-      colors[i * 3 + 2] = k;
-    }
-    f.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    return f;
-  });
-  const merged = mergeGeometries(flat);
-  for (const f of flat) f.dispose();
-  merged.computeBoundingSphere();
-  return merged;
+  return mergeFigure(parts);
 }
 
 export interface Flock {
@@ -112,13 +122,30 @@ export interface Flock {
   settling(): boolean;
 }
 
+/**
+ * How a flock looks and moves (defaults: the logistic habitat's grazers). `prefix` names its
+ * meshes (`<prefix>-figures`, `<prefix>-shadows`, `<prefix>-pick-ring`); `shape` is its merged
+ * figure (shared by `key`); `gait` 'hop' hops and nibbles, 'prowl' never hops, sniffs the ground
+ * and looks round more slowly; `size` scales every figure (illustration).
+ */
+export interface FlockOptions {
+  prefix?: string;
+  shape?: { key: string; make: () => THREE.BufferGeometry };
+  gait?: 'hop' | 'prowl';
+  size?: number;
+}
+
 export function flock(
   kit: SceneKit,
   slots: readonly Slot[],
   heightAt: (x: number, z: number) => number,
   color: string,
+  o: FlockOptions = {},
 ): Flock {
   const cap = Math.max(1, slots.length);
+  const prefix = o.prefix ?? 'logi';
+  const prowl = o.gait === 'prowl';
+  const base = o.size ?? 1;
   const material = kit.shared(
     'logi-grazer-mat',
     () =>
@@ -129,8 +156,9 @@ export function flock(
         vertexColors: true,
       }),
   );
-  const body = kit.instanced(kit.shared('logi-grazer', grazerGeometry), material, cap);
-  body.name = 'logi-figures';
+  const shape = o.shape ?? { key: 'logi-grazer', make: grazerGeometry };
+  const body = kit.instanced(kit.shared(shape.key, shape.make), material, cap);
+  body.name = `${prefix}-figures`;
   body.castShadow = kit.shadows;
   body.count = 0;
   const tint = new THREE.Color(color);
@@ -144,7 +172,7 @@ export function flock(
     shadowLook.mesh.material as THREE.Material,
     cap,
   );
-  shadows.name = 'logi-shadows';
+  shadows.name = `${prefix}-shadows`;
   shadows.userData.layer = LAYER.FX;
   shadows.renderOrder = -1;
   shadows.raycast = () => undefined;
@@ -152,7 +180,9 @@ export function flock(
 
   const ring = kit.mesh(
     kit.geometry(
-      new THREE.RingGeometry(0.62, 0.8, Math.max(24, kit.seg * 2)).rotateX(-Math.PI / 2),
+      new THREE.RingGeometry(0.62 * base, 0.8 * base, Math.max(24, kit.seg * 2)).rotateX(
+        -Math.PI / 2,
+      ),
     ),
     kit.own(
       highlight(
@@ -161,7 +191,7 @@ export function flock(
       ),
     ),
   );
-  ring.name = 'logi-pick-ring';
+  ring.name = `${prefix}-pick-ring`;
   ring.visible = false;
   ring.raycast = () => undefined;
 
@@ -205,14 +235,19 @@ export function flock(
       const inK = b === -Infinity ? 1 : grow(Math.min(1, Math.max(0, (clock - b) / BIRTH)));
       const outK = i < target || g === Infinity ? 1 : Math.max(0, 1 - (clock - g) / LEAVE);
       const size = inK * outK;
-      // A short hop now and then, a nibble (head down), a slow look around.
+      // A short hop now and then, a nibble (head down), a slow look around; a prowler never
+      // hops, sniffs the ground longer and looks round more widely and slowly.
       const w = (clock / HOP_EVERY + s.phase) % 1;
-      const hop = !resting && w < HOP_SHARE ? Math.sin((Math.PI * w) / HOP_SHARE) : 0;
-      const v = (clock / NIBBLE_EVERY + s.phase * 1.7) % 1;
+      const hop = !prowl && !resting && w < HOP_SHARE ? Math.sin((Math.PI * w) / HOP_SHARE) : 0;
+      const every = prowl ? NIBBLE_EVERY * 1.4 : NIBBLE_EVERY;
+      const v = (clock / every + s.phase * 1.7) % 1;
       const bite =
         !resting && hop === 0 && v < NIBBLE_SHARE ? Math.sin((Math.PI * v) / NIBBLE_SHARE) : 0;
-      const yaw = s.yaw + (resting ? 0 : 0.18 * Math.sin((clock / 6 + s.phase) * Math.PI * 2));
-      const k = i === picked ? 1.15 : 1;
+      const look = prowl
+        ? 0.34 * Math.sin((clock / 9 + s.phase) * Math.PI * 2)
+        : 0.18 * Math.sin((clock / 6 + s.phase) * Math.PI * 2);
+      const yaw = s.yaw + (resting ? 0 : look);
+      const k = (i === picked ? 1.15 : 1) * base;
       pos.set(s.x, y0 + HOP_HEIGHT * hop, s.z);
       quat.setFromAxisAngle(up, yaw).multiply(nod.setFromAxisAngle(side, 0.22 * bite));
       scl.set(k * size, k * size * (1 + 0.06 * hop), k * size);
@@ -282,7 +317,7 @@ export function flock(
     point(slot) {
       const s = slots[slot];
       if (!s || slot >= target) return null;
-      return [s.x, (ground[slot] ?? 0) + 0.5, s.z];
+      return [s.x, (ground[slot] ?? 0) + 0.5 * base, s.z];
     },
     settling() {
       for (let i = 0; i < posed; i++) {

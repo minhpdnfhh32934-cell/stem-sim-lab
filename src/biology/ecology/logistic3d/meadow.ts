@@ -45,7 +45,7 @@ function merged(parts: Part[]): THREE.BufferGeometry {
 }
 
 /** A clover clump: rounded leaves in a ring round a centre, a few small flowers on top. */
-function cloverGeometry(leaf: THREE.Color, leaf2: THREE.Color, flower: THREE.Color) {
+export function cloverGeometry(leaf: THREE.Color, leaf2: THREE.Color, flower: THREE.Color) {
   const parts: Part[] = [];
   const ico = (d: number) => new THREE.IcosahedronGeometry(1, d);
   for (let k = 0; k < 9; k++) {

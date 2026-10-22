@@ -809,7 +809,8 @@
 /* More text below the card's edge (useScrollMore sets data-more): the last line fades out
    (genetic drift and logistic growth cards). */
 .drift3d__card::after,
-.logi3d__card::after {
+.logi3d__card::after,
+.lv3d__card::after {
   content: '';
   position: sticky;
   bottom: calc(-1 * var(--space-3));
@@ -821,23 +822,27 @@
   pointer-events: none;
 }
 .drift3d__card[data-more]::after,
-.logi3d__card[data-more]::after {
+.logi3d__card[data-more]::after,
+.lv3d__card[data-more]::after {
   opacity: 1;
 }
 /* 3D logistic growth (src/biology/ecology/logistic3d): wrapping chips, the time slider drawn over
    the N(t) curve (the gauge column's scale, K dashed in the K-line colour, t* dotted, the moment a
    dot on the curve; the thumb is a see-through playhead), the moment's label beside the column and
    a card that fits the stage's middle row. */
-.logi3d .bio3d__top {
+.logi3d .bio3d__top,
+.lv3d .bio3d__top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px var(--space-1);
 }
-.logi3d .bio3d__bottom {
+.logi3d .bio3d__bottom,
+.lv3d .bio3d__bottom {
   gap: 4px;
 }
-.logi3d .bio3d__caption {
+.logi3d .bio3d__caption,
+.lv3d .bio3d__caption {
   padding: 3px 10px;
 }
 .logi3d__player output {
@@ -847,7 +852,8 @@
   flex: none;
   white-space: nowrap;
 }
-.logi3d__track {
+.logi3d__track,
+.lv3d__track {
   position: relative;
   flex: 1;
   min-width: 8rem;
@@ -856,12 +862,14 @@
   background: color-mix(in srgb, var(--bg-panel) 55%, transparent);
 }
 /* Inset by half the playhead's width: the playhead's centre and the curve share one time axis. */
-.logi3d__curve {
+.logi3d__curve,
+.lv3d__curve {
   position: absolute;
   inset: 5px 7px;
   pointer-events: none;
 }
-.logi3d__curve svg {
+.logi3d__curve svg,
+.lv3d__curve svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -894,7 +902,8 @@
   background: var(--chart-1);
   box-shadow: 0 0 0 2px var(--bg-panel);
 }
-.logi3d__track input[type='range'] {
+.logi3d__track input[type='range'],
+.lv3d__track input[type='range'] {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -905,19 +914,23 @@
   background: transparent;
   cursor: pointer;
 }
-.logi3d__track input[type='range']:focus-visible {
+.logi3d__track input[type='range']:focus-visible,
+.lv3d__track input[type='range']:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.logi3d__track input[type='range']::-webkit-slider-runnable-track {
+.logi3d__track input[type='range']::-webkit-slider-runnable-track,
+.lv3d__track input[type='range']::-webkit-slider-runnable-track {
   height: 100%;
   background: transparent;
 }
-.logi3d__track input[type='range']::-moz-range-track {
+.logi3d__track input[type='range']::-moz-range-track,
+.lv3d__track input[type='range']::-moz-range-track {
   height: 100%;
   background: transparent;
 }
-.logi3d__track input[type='range']::-webkit-slider-thumb {
+.logi3d__track input[type='range']::-webkit-slider-thumb,
+.lv3d__track input[type='range']::-webkit-slider-thumb {
   width: 14px;
   height: calc(var(--target) - 4px);
   margin-top: 2px;
@@ -926,7 +939,8 @@
   background: color-mix(in srgb, var(--accent) 16%, transparent);
   appearance: none;
 }
-.logi3d__track input[type='range']::-moz-range-thumb {
+.logi3d__track input[type='range']::-moz-range-thumb,
+.lv3d__track input[type='range']::-moz-range-thumb {
   box-sizing: border-box;
   width: 14px;
   height: calc(var(--target) - 4px);
@@ -940,15 +954,55 @@
   font-variant-numeric: tabular-nums;
 }
 /* The column's K and K/2 marks on a soft chip: legible over trees and hills in a close-up. */
-.three-tag.logi3d__mark {
+.three-tag.logi3d__mark,
+.three-tag.lv3d__mark {
   padding: 1px 4px;
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--bg-panel) 80%, transparent);
   text-shadow: none;
 }
-.logi3d__card {
+.logi3d__card,
+.lv3d__card {
   width: min(22rem, 46%);
   font-size: var(--text-sm);
+}
+/* 3D predator–prey (src/biology/ecology/lv3d): the time slider drawn over the x(t) and y(t)
+   curves in the 2D chart's colours (the columns' scale; a dot per species at the moment), the
+   longer readout, and the columns' titles underlined in their species' colour. The track, the
+   chips row, the marks and the card share the logistic view's rules above. */
+.lv3d__player output {
+  min-width: 13.5rem;
+}
+.lv3d__path {
+  fill: none;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.lv3d__path--prey {
+  stroke: var(--chart-1);
+}
+.lv3d__path--predators {
+  stroke: var(--chart-4);
+}
+.lv3d__dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--bg-panel);
+}
+.lv3d__dot--prey {
+  background: var(--chart-1);
+}
+.lv3d__dot--predators {
+  background: var(--chart-4);
+}
+.three-label.lv3d__title--prey {
+  box-shadow: inset 0 -3px 0 var(--chart-1);
+}
+.three-label.lv3d__title--predators {
+  box-shadow: inset 0 -3px 0 var(--chart-4);
 }
 /* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the
    phenotype classes share one wrapping row under the step strip. */
