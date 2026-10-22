@@ -190,7 +190,7 @@
         "tag": null,
         "tagSha": null,
         "releaseUrl": null,
-        "prs": [35],
+        "prs": [35, 38],
         "commits": [
           "61258ea",
           "9fb3061",
