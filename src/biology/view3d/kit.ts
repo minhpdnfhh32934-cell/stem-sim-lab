@@ -39,6 +39,8 @@ export interface KitOptions {
   hdr?: boolean;
   /** Shadow maps for grounded opaque subjects (High tier on a discrete GPU). */
   shadows?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 /**
@@ -108,6 +110,7 @@ export class SceneKit {
   readonly transmission: boolean;
   readonly hdr: boolean;
   readonly shadows: boolean;
+  readonly accents: boolean;
   /** The scene's light rig (`fitShadow` frames its sun on a habitat). */
   readonly rig: THREE.Group;
   private readonly token: (name: string) => string;
@@ -124,11 +127,13 @@ export class SceneKit {
     this.transmission = o.transmission ?? false;
     this.hdr = o.hdr ?? false;
     this.shadows = o.shadows ?? false;
+    this.accents = o.accents ?? true;
     const outdoor = this.look === 'outdoor';
     const rig = lightRig({
       preset: this.look,
       size: 12,
       shadows: outdoor && this.shadows,
+      accents: this.accents,
       ...(outdoor ? { sky: o.token('--bio3d-sky-top'), ground: o.token('--bio3d-soil') } : {}),
     });
     this.rig = rig;

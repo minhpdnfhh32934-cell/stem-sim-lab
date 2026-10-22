@@ -87,6 +87,8 @@ export interface MeiosisSceneOptions {
   shellInk?: number;
   /** HDR path (High tier on a discrete GPU): glowing centrosome cores and chiasma ring. */
   hdr?: boolean;
+  /** Fill and rim lights, the cell's lit back face, clear coat (off with software WebGL). */
+  accents?: boolean;
 }
 
 /** A part to name on the picture, a point on it (world units) and its colour (anchor ring). */
@@ -180,7 +182,7 @@ export function buildMeiosisScene(
     return x;
   };
 
-  const rig = lightRig({ size: 14 });
+  const rig = lightRig({ size: 14, accents: opts.accents ?? true });
   scene.add(rig);
   disposables.push({
     dispose: () => {

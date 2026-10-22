@@ -75,6 +75,8 @@ export interface MutationSceneOptions {
   token: (name: string) => string;
   /** Highlights glow in HDR and bloom (High tier with post-processing). */
   hdr?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 export interface MutationLabelAnchor {
@@ -171,6 +173,7 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
     maxParticles: W,
     token: o.token,
     hdr: o.hdr ?? false,
+    accents: o.accents ?? true,
   });
   const pal = readDogmaPalette(o.token);
   const accent = o.token(ROLES.highlight.token);

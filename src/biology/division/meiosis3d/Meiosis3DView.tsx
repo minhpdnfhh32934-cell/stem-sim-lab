@@ -506,6 +506,7 @@ export function Meiosis3DView({
       edgeShade: look.edgeShade,
       shellInk: look.shellInk,
       hdr: quality.bloom,
+      accents: quality.accents,
     });
     sceneRef.current = { scene: ms, tl };
     h.setScene(ms.scene);

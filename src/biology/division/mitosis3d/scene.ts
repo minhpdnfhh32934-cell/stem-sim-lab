@@ -90,6 +90,8 @@ export interface SceneOptions {
   shellInk?: number;
   /** HDR path (High tier on a discrete GPU): glowing centrosome cores, the wall's fibres. */
   hdr?: boolean;
+  /** Fill and rim lights, the cell's lit back face, clear coat (off with software WebGL). */
+  accents?: boolean;
 }
 
 export type PickResult = Selection;
@@ -197,7 +199,7 @@ export function buildMitosisScene(
   const animal = tl.cellType === 'animal';
 
   // Lights (no shadow maps: a soft contact shadow grounds the cell instead).
-  const rig = lightRig({ size: 12 });
+  const rig = lightRig({ size: 12, accents: opts.accents ?? true });
   scene.add(rig);
   disposables.push({
     dispose: () => {
@@ -226,6 +228,7 @@ export function buildMitosisScene(
       shellInk: opts.shellInk ?? 0,
       hdr,
       plant: !animal,
+      accents: opts.accents ?? true,
     },
     keep,
   );

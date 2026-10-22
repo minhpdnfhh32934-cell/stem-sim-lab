@@ -374,6 +374,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
       transmission: quality.transmission,
       hdr: quality.bloom,
       shadows: quality.shadowScenes,
+      accents: quality.accents,
       look,
     });
     let built: Bio3DScene;

@@ -74,6 +74,8 @@ export interface DivisionLookOptions {
   shellInk?: number;
   /** Plant cell: the membrane lines the wall (fainter). */
   plant?: boolean;
+  /** The cell's lit back face and the solids' clear coat; default true (`Quality3D.accents`). */
+  accents?: boolean;
 }
 
 /** Spindle fibres: opacity at the far end and at the pole (they fade towards the poles). */
@@ -150,6 +152,9 @@ export function divisionLooks(
   keep: <T extends { dispose: () => void }>(x: T) => T,
 ): DivisionLooks {
   const { tier, rimStrength, hdr } = o;
+  const accents = o.accents ?? true;
+  /** A solid's clear coat, left out without the accents. */
+  const coat = (x: number) => (accents ? x : 0);
   const towards = new THREE.Color(palette.backdrop ?? DIM_TOWARDS);
   const dimHex = (color: string) => `#${new THREE.Color(color).lerp(towards, 0.5).getHexString()}`;
   const look = <M extends THREE.MeshStandardMaterial | THREE.MeshLambertMaterial>(
@@ -177,7 +182,8 @@ export function divisionLooks(
     ) =>
     (c: string) =>
       withRelief(make(c), r);
-  const firm = (c: string) => solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true });
+  const firm = (c: string) =>
+    solid(c, tier, { roughness: 0.35, clearcoat: coat(0.3), fades: true });
   const inkAmount = o.shellInk ?? 0;
   /** The darker outline of a shell in colour `c` (none when the theme turns it off). */
   const inkOf = (c: string, fill = 0, share = 1) =>
@@ -286,6 +292,7 @@ export function divisionLooks(
       opacity: 0.07,
       depthWrite: false,
       side: THREE.BackSide,
+      visible: accents,
     });
 
   const spindleMaterial = (c: string) =>
@@ -334,7 +341,12 @@ export function divisionLooks(
     wall: look(wallColour, wallMaterial),
     // Hollow barrels (seen inside from the open ends), as centrioles are drawn in textbooks.
     centriole: look(palette.centrosome, (c) =>
-      solid(c, tier, { roughness: 0.35, clearcoat: 0.3, fades: true, side: THREE.DoubleSide }),
+      solid(c, tier, {
+        roughness: 0.35,
+        clearcoat: coat(0.3),
+        fades: true,
+        side: THREE.DoubleSide,
+      }),
     ),
     pcm: look(palette.centrosome, (c) => {
       const m = halo(0.18, 0.3)(c);

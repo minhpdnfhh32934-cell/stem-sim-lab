@@ -530,6 +530,7 @@ function Dogma3DScene({
       maxBasePairs: quality.maxInstances,
       token: tokenReader(),
       hdr: quality.bloom,
+      accents: quality.accents,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);

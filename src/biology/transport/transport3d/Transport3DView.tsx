@@ -452,6 +452,7 @@ function Transport3DScene({
       segments: tier.sphereSegments,
       token: tokenReader(),
       shadows: quality.shadowScenes,
+      accents: quality.accents,
     };
     const sc: TransportScene =
       mode === 'diffusion'

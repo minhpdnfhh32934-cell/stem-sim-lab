@@ -98,6 +98,8 @@ export interface DogmaSceneOptions {
   token: (name: string) => string;
   /** Highlights glow in HDR and bloom (High tier with post-processing). */
   hdr?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 export interface DogmaLabelAnchor {
@@ -174,6 +176,7 @@ export function buildDogmaScene(m: DogmaModel3D, o: DogmaSceneOptions): DogmaSce
     maxParticles: o.maxBasePairs,
     token: o.token,
     hdr: o.hdr ?? false,
+    accents: o.accents ?? true,
   });
   const pal = readDogmaPalette(o.token);
   const n = m.coding.length;

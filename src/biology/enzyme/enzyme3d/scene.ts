@@ -61,6 +61,8 @@ export interface EnzymeSceneOptions {
   hdr?: boolean;
   /** The base gets shadow maps (High tier on a discrete GPU). */
   shadows?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 export interface EnzymeLabelAnchor {
@@ -239,6 +241,7 @@ export function buildEnzymeScene(o: EnzymeSceneOptions): EnzymeScene {
     // their exact colours.
     hdr: o.hdr ?? false,
     shadows: o.shadows ?? false,
+    accents: o.accents ?? true,
   });
   const { scene } = kit;
   const kind = o.kind;

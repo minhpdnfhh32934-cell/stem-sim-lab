@@ -89,6 +89,14 @@ describe('quality3d', () => {
     expect(quality3d('high', TIERS.high, 'integrated').shadows).toBe(false);
   });
 
+  it('software WebGL leaves out the accents (fill/rim lights, back faces); a real GPU keeps them', () => {
+    for (const tier of ['medium', 'high'] as const) {
+      expect(quality3d(tier, TIERS[tier], 'software').accents).toBe(false);
+      for (const gpu of ['integrated', 'discrete', 'unknown'] as const)
+        expect(quality3d(tier, TIERS[tier], gpu).accents).toBe(true);
+    }
+  });
+
   it('jsdom: the GPU is unknown, so tests get no post-processing', () => {
     expect(quality3d('high', TIERS.high).postFx).toBe('none');
     expect(quality3d('high', TIERS.high).gpu).toBe('unknown');

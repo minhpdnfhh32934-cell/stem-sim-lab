@@ -81,8 +81,8 @@ export function shellInkColor(color: string): string {
  * Materials of a see-through shell in `color` (already a structure colour). High tier on a
  * discrete GPU, outermost shell: one physical refracting material (transmission 0.9, thickness
  * 0.15 R, IOR 1.36, attenuation over 2 R, clear coat, Fresnel rim). Otherwise two draws: back
- * faces at opacity 0.07 in a darker tint, front faces at the theme's membrane opacity with the
- * rim.
+ * faces at opacity 0.07 in a darker tint (not drawn without the kit's accents), front faces at
+ * the theme's membrane opacity with the rim.
  */
 export function shellLook(kit: SceneKit, color: string, o: ShellOptions): ShellLook {
   const rimStrength = o.rim ?? themeNumber(kit, '--m3d-rim', 0.7);
@@ -116,6 +116,7 @@ export function shellLook(kit: SceneKit, color: string, o: ShellOptions): ShellL
     opacity: 0.07,
     depthWrite: false,
     side: THREE.BackSide,
+    visible: kit.accents,
   });
   const front = new THREE.MeshStandardMaterial({
     color,

@@ -126,3 +126,39 @@ describe('division 3D shells: outlines read on both stages', () => {
       expect((m.userData.rim as { uRimInkAmount: { value: number } }).uRimInkAmount.value).toBe(0);
   });
 });
+
+describe('division 3D looks without accents (software WebGL)', () => {
+  const token = (name: string): string => {
+    const v = THEMES.light.get(name) ?? '';
+    const ref = /^var\((--[\w-]+)\)$/.exec(v);
+    return ref?.[1] ? token(ref[1]) : v;
+  };
+  const make = (accents?: boolean) =>
+    divisionLooks(
+      divisionPalette(token),
+      {
+        tier: 'high',
+        membraneOpacity: 0.16,
+        rimStrength: 0.7,
+        edgeShade: 0.3,
+        hdr: false,
+        ...(accents === undefined ? {} : { accents }),
+      },
+      (x) => x,
+    );
+
+  it('the lit back face is not drawn and the solids lose their clear coat; colours stay', () => {
+    const full = make();
+    const lean = make(false);
+    expect(full.cytoplasm.base.visible).toBe(true);
+    for (const l of [lean.cytoplasm.base, lean.cytoplasm.hi, lean.cytoplasm.dim])
+      expect(l.visible).toBe(false);
+    const coat = (m: THREE.Material) => (m as THREE.MeshPhysicalMaterial).clearcoat;
+    expect(coat(full.bead.base)).toBe(0.3);
+    expect(coat(lean.bead.base)).toBe(0);
+    expect(coat(lean.centriole.base)).toBe(0);
+    // Look only: every colour (a data colour for the chromosomes' parts) is unchanged.
+    for (const part of ['bead', 'membrane', 'envelope', 'nucleolus', 'centriole'] as const)
+      expect(lean[part].base.color.getHex()).toBe(full[part].base.color.getHex());
+  });
+});

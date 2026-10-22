@@ -578,7 +578,10 @@ for (const scheme of ['light', 'dark'] as const) {
           .click();
         await expect(page.locator('.m3d canvas')).toBeVisible({ timeout: 20_000 });
       }
-      expect(await page.evaluate(() => window.__simlabMitosis3d?.quality().postFx)).toBe(postFx);
+      // The chain is loaded on demand: the view starts drawing directly until it is ready.
+      await expect
+        .poll(() => page.evaluate(() => window.__simlabMitosis3d?.quality().postFx ?? null))
+        .toBe(postFx);
       await strip(page).getByRole('button', { name: 'Kì giữa' }).click();
       await page.addStyleTag({ content: '.three-tags, .three-labels { visibility: hidden; }' });
       await page.waitForTimeout(3000);
@@ -604,7 +607,13 @@ for (const scheme of ['light', 'dark'] as const) {
       );
       return { backdrop: colours.slice(0, 2), membrane };
     };
-    // SwiftShader is a software GPU: the direct path, as on integrated GPUs and Medium.
+    // SwiftShader is a software GPU, which also leaves out the look's accents (fill/rim lights,
+    // the cell's lit back face): the development override 'off' gives the integrated-GPU look,
+    // the direct path with the same accents as the chain (read when the view starts).
+    await openLab(page);
+    await page.evaluate(() => {
+      localStorage.setItem('stemsim.debug.postfx', 'off');
+    });
     const direct = await measure('none');
     // The development override runs the discrete-GPU chain (AO, HDR target, composite).
     await page.evaluate(() => {
@@ -705,7 +714,9 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   await page.getByLabel('Bộ NST lưỡng bội 2n').selectOption('4');
   await expect(page.getByText('1 tế bào · 8 NST đơn')).toBeVisible();
   // Software WebGL (SwiftShader): High draws without the post-processing chain (discrete GPUs
-  // only), so this budget is the integrated-GPU budget too.
+  // only) and without the look's accents (software only: fill/rim lights, the cell's lit back
+  // face, clear coat; `Quality3D.accents`). This is the software-rendering budget; an integrated
+  // GPU draws like this plus the accents.
   expect(await page.evaluate(() => window.__simlabMitosis3d?.quality() ?? null)).toEqual({
     tier: 'high',
     degraded: false,

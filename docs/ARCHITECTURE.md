@@ -244,7 +244,10 @@ it without code of its own:
   same colours on every GPU (E2E: `mitosis3d.spec.ts`, ΔE_OK ≤ 0.02 between the two paths);
   only opaque parts gain AO and glow. `postfxSupport.ts` turns AO, then bloom, then refraction
   off after 30 animated frames over 20 ms. High on an integrated or software GPU draws like
-  0.7.0 High.
+  0.7.0 High. Software WebGL (no GPU: SwiftShader, WARP) also leaves out the look's accents
+  (`Quality3D.accents`: fill and rim lights, the lit back face of see-through shells, the
+  division solids' clear coat), which cost +24 % per mitosis frame there; every real GPU keeps
+  them.
 - Biology recipes (`view3d/recipes.ts`): membrane / shell, chromosome, backbone + base pair,
   protein blob (`proteinBlob.ts`, `noise.ts`), particles, glassware, liquid, organism, terrain,
   annotation, highlight. Rule 0 "saturation = data": data roles keep their chart token as albedo

@@ -546,7 +546,9 @@ Progress log: `docs/PROGRESS.md`.
   `postfx.ts` (MSAA HDR target → GTAO → bloom on `userData.bloom` highlights; backdrop, shells and
   FX drawn in display space so colours match the direct path, E2E ΔE_OK ≤ 0.02);
   `postfxSupport.ts` drops AO, then bloom, then refraction when frames run slow. Integrated or
-  software GPUs never start higher than before and draw like 0.7.0 High. Procedural surface
+  software GPUs never start higher than before and draw like 0.7.0 High; software WebGL also
+  drops the accents (`Quality3D.accents`: fill/rim lights, shells' lit back face, division clear
+  coat; every scene passes `accents: quality.accents`). Procedural surface
   detail only (`relief.ts`: noise bump + edge shade, no textures, never on large membranes).
   Biology recipes `src/biology/view3d/recipes.ts` (membrane, chromosome, backbone/base pair,
   protein blob, particles, glassware, liquid, organism, terrain, annotation, highlight). Rule 0

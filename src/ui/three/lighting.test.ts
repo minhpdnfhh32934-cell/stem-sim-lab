@@ -61,6 +61,29 @@ describe('light rig presets', () => {
     disposeLightRig(rig);
   });
 
+  it('without accents (software WebGL): hemisphere and key only, the key unchanged', () => {
+    for (const preset of ['studio', 'outdoor'] as const) {
+      const full = lightRig({ preset, size: 12 });
+      const lean = lightRig({ preset, size: 12, accents: false });
+      expect(lean.children.map((l) => l.userData.role as string).sort()).toEqual([
+        'hemisphere',
+        'key',
+      ]);
+      const key = rigLight(lean, 'key') as THREE.DirectionalLight;
+      expect(key.intensity).toBe((rigLight(full, 'key') as THREE.DirectionalLight).intensity);
+      expect(key.position.toArray()).toEqual(rigLight(full, 'key')?.position.toArray());
+      expect(full.children.length).toBeGreaterThan(lean.children.length);
+      disposeLightRig(full);
+      disposeLightRig(lean);
+    }
+    // applyStageLook copes with a rig that has no rim light.
+    const scene = new THREE.Scene();
+    scene.add(lightRig({ accents: false }));
+    expect(() => {
+      applyStageLook(scene, { theme: 'dark', rimTint: '#88aaff', envScale: 1 });
+    }).not.toThrow();
+  });
+
   it('applyStageLook: environment per preset and theme, the dark rim stronger and tinted', () => {
     const scene = new THREE.Scene();
     scene.add(lightRig());

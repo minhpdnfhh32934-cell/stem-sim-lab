@@ -416,6 +416,7 @@ function Enzyme3DScene({
       token: tokenReader(),
       hdr: quality.bloom,
       shadows: quality.shadowScenes,
+      accents: quality.accents,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);

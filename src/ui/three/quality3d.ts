@@ -6,6 +6,7 @@
  * The High tier's post-processing (ambient occlusion, bloom, see-through glass with refraction,
  * shadow maps) runs only on a discrete GPU. High on an integrated or software GPU draws the
  * Medium look with High's extra detail (segments, labels, sheen): no heavier than before.
+ * Software WebGL (no GPU: SwiftShader, WARP) also leaves out the look's accents (`accents`).
  */
 import type { QualityTier, TierConfig } from '@/perf/tiers';
 import { detectGpuClass, type GpuClass } from './gpuInfo';
@@ -45,6 +46,13 @@ export interface Quality3D {
   msaaSamples: 0 | 4;
   /** The outermost shell / glassware refracts (MeshPhysicalMaterial transmission). */
   transmission: boolean;
+  /**
+   * The look's per-pixel accents: fill and rim lights, the lit back face of see-through shells,
+   * the clear coat of the cell-division solids. Off only with software WebGL, where every pixel
+   * costs CPU time (+24 % per mitosis frame at High, `mitosis3d.spec.ts` @perf); any real GPU
+   * keeps them. Look only: never a count, a position or a number shown.
+   */
+  accents: boolean;
 }
 
 /**
@@ -88,5 +96,6 @@ export function quality3d(
     bloom: full,
     msaaSamples: full ? 4 : 0,
     transmission: full,
+    accents: gpu !== 'software',
   };
 }

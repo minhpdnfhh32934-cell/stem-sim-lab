@@ -86,6 +86,8 @@ export interface MendelSceneOptions {
   token: (name: string) => string;
   /** The bench, tray and cylinders get shadow maps (High tier on a discrete GPU). */
   shadows?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 export interface MendelLabelAnchor {
@@ -177,6 +179,7 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
     // No refraction on any tier: the alleles inside the parents and the liquid levels behind the
     // glass are data and keep their exact colours.
     shadows: o.shadows ?? false,
+    accents: o.accents ?? true,
   });
   const { scene } = kit;
   const h = half(dims);

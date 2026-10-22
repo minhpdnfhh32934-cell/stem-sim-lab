@@ -90,6 +90,7 @@ export function buildOsmosisScene(m: OsmosisModel3D, o: SceneOptions): OsmosisSc
     token: o.token,
     // No refraction: the liquids and molecules behind the glass are data and keep their colours.
     shadows: o.shadows ?? false,
+    accents: o.accents ?? true,
   });
   const { scene } = kit;
   const high = kit.tier === 'high';

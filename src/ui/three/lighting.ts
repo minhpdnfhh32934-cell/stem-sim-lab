@@ -85,6 +85,8 @@ export interface RigOptions {
   /** Outdoor hemisphere colours (theme tokens: sky above, soil below). */
   sky?: string;
   ground?: string;
+  /** Fill and rim lights (studio) / the back light (outdoor); default true (`Quality3D.accents`). */
+  accents?: boolean;
 }
 
 /** Roles of the rig's lights (userData.role), for `applyStageLook` and tests. */
@@ -96,11 +98,12 @@ function place(light: THREE.DirectionalLight, az: number, el: number, size: numb
 
 /**
  * The preset's lights as one group (`light-rig`). Studio: hemisphere, key, fill, rim. Outdoor:
- * hemisphere (sky / soil), sun (key) and a weak back light.
+ * hemisphere (sky / soil), sun (key) and a weak back light. Without accents: hemisphere and key.
  */
 export function lightRig(opts: RigOptions = {}): THREE.Group {
   const preset = opts.preset ?? 'studio';
   const size = opts.size ?? 10;
+  const accents = opts.accents ?? true;
   const rig = new THREE.Group();
   rig.name = 'light-rig';
   rig.userData.preset = preset;
@@ -118,18 +121,22 @@ export function lightRig(opts: RigOptions = {}): THREE.Group {
     );
     key = tag(new THREE.DirectionalLight(kelvin(o.key.kelvin), o.key.intensity), 'key');
     place(key, o.key.azimuth, o.key.elevation, size);
-    const back = tag(new THREE.DirectionalLight(0xffffff, o.back.intensity), 'back');
-    place(back, o.back.azimuth, o.back.elevation, size);
+    if (accents) {
+      const back = tag(new THREE.DirectionalLight(0xffffff, o.back.intensity), 'back');
+      place(back, o.back.azimuth, o.back.elevation, size);
+    }
   } else {
     const s = LOOK.studio;
     tag(new THREE.HemisphereLight(0xf4f7ff, 0x3a3f4a, s.hemisphere), 'hemisphere');
     key = tag(new THREE.DirectionalLight(kelvin(s.key.kelvin), s.key.intensity), 'key');
     place(key, s.key.azimuth, s.key.elevation, size);
-    const fill = tag(new THREE.DirectionalLight(kelvin(s.fill.kelvin), s.fill.intensity), 'fill');
-    place(fill, s.fill.azimuth, s.fill.elevation, size);
-    // Opposite the key, from behind.
-    const rim = tag(new THREE.DirectionalLight(0xffffff, s.rim.intensity.light), 'rim');
-    place(rim, s.key.azimuth + 180, s.rim.elevation, size);
+    if (accents) {
+      const fill = tag(new THREE.DirectionalLight(kelvin(s.fill.kelvin), s.fill.intensity), 'fill');
+      place(fill, s.fill.azimuth, s.fill.elevation, size);
+      // Opposite the key, from behind.
+      const rim = tag(new THREE.DirectionalLight(0xffffff, s.rim.intensity.light), 'rim');
+      place(rim, s.key.azimuth + 180, s.rim.elevation, size);
+    }
   }
   if (opts.shadows) enableKeyShadow(rig, [0, 0, 0], size);
   return rig;

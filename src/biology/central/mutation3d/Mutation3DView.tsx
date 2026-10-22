@@ -406,6 +406,7 @@ function Mutation3DScene({
       maxBasePairs: quality.maxInstances,
       token: tokenReader(),
       hdr: quality.bloom,
+      accents: quality.accents,
     });
     const before = sceneRef.current;
     sceneRef.current = sc;

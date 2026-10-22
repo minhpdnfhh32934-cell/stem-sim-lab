@@ -511,6 +511,7 @@ function Mendel3DScene({
       maxInstances: quality.maxInstances,
       token: tokenReader(),
       shadows: quality.shadowScenes,
+      accents: quality.accents,
     });
     sceneRef.current = sc;
     h.setScene(sc.scene);

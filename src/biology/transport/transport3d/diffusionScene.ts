@@ -53,6 +53,8 @@ export interface SceneOptions {
   token: (name: string) => string;
   /** Shadow maps onto the base (High tier on a discrete GPU). */
   shadows?: boolean;
+  /** Fill and rim lights, lit back faces of see-through shells (off with software WebGL). */
+  accents?: boolean;
 }
 
 export interface LabelAnchor {
@@ -152,6 +154,7 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     token: o.token,
     // No refraction: the particles behind the glass are data and keep their colour.
     shadows: o.shadows ?? false,
+    accents: o.accents ?? true,
   });
   const { scene } = kit;
   const high = kit.tier === 'high';
