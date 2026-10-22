@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-10-21",
+  "evidenceCheckedAt": "2026-10-22",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
-    "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.",
+    "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.",
     "Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json."
   ],
   "milestones": [
@@ -138,16 +138,35 @@
       "date": "2026-10-19T03:48:53Z",
       "text": "Mở PR #21 — G8: bảng dạy, “Khoanh để hỏi”, AI trên máy khác (0.6.0)",
       "evidence": "PR #21 createdAt 2026-10-19T03:48:53Z (gh pr list); đầu nhánh abc9e0c"
+    },
+    {
+      "date": "2026-10-19T11:58:38Z",
+      "text": "Phát hành 0.6.0 (v0.6.0): Science Studio, AI Teacher giảng trên bảng, Nguyên phân 3D",
+      "evidence": "GitHub Release v0.6.0, published_at 2026-10-19T11:58:38Z (mục 0.6.0, dates.released)"
+    },
+    {
+      "date": "2026-10-20T15:22:50Z",
+      "text": "Phát hành 0.7.0 (v0.7.0): bảy bài Sinh học có hình 3D riêng, sửa nhiều lỗi",
+      "evidence": "GitHub Release v0.7.0, published_at 2026-10-20T15:22:50Z, lượt Release 39444423723"
+    },
+    {
+      "date": "2026-10-21T03:35:48Z",
+      "text": "Science Studio vào trong Phòng thí nghiệm (PR #35)",
+      "evidence": "PR #35 mergedAt 2026-10-21T03:35:48Z (gh pr view 35), merge commit b6d7298"
+    },
+    {
+      "date": "2026-10-22T11:40:31Z",
+      "text": "Phát hành 0.7.1 (v0.7.1): cả 11 bài Sinh học có hình 3D, bốn bài quần thể có khung cảnh riêng",
+      "evidence": "GitHub Release v0.7.1, published_at 2026-10-22T11:40:31Z, lượt Release 39769849056"
     }
   ],
   "openQuestions": [
-    "Ngày tạo tag: cả 5 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.",
+    "Ngày tạo tag: cả 8 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2, v0.6.0, v0.7.0, v0.7.1) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.",
     "0.1.0: có hai bản dựng thử (artifact) ngày 29/09/2026 nhưng không có tag hay GitHub Release; cần quyết định có nhắc bản này trong ghi chú phát hành công khai hay không.",
     "0.4.0: chỉ có tên tệp ZIP, hàng PROGRESS 'fork-0.4.0' và CLAUDE.md; chưa mở ZIP để xem package.json, và chưa biết ZIP được gửi cho ai, ngày nào (ngày sửa tệp không phải ngày phân phối).",
     "0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.",
     "0.5.0: tệp ZIP mang tên v0.5.0 được tạo trước khi gộp PR #8, nên khác bản phát hành v0.5.0.",
     "0.5.1: chưa biết trạng thái hiện tại của gói Microsoft Store (đã qua duyệt chưa, đã bấm Publish now chưa) và gói MSIX đã nộp được dựng ở đâu.",
-    "0.6.0: các commit đến 8a3c48d ở trên PR #20; phần G8 (đến abc9e0c) ở PR #21; Science Studio chỉ ở nhánh feat/science-studio trên máy, chưa commit, chưa có PR; số liệu test ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7, 0.6.0-g8 và 0.6.0-studio), phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.",
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [

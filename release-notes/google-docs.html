@@ -12,10 +12,10 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 </head>
 <body>
 <h1>SimLab — Version History &amp; Release Notes</h1>
-<p>Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ <code>release-notes/versions.json</code> bằng <code>npm run release-notes</code>. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 21/10/2026.</p>
+<p>Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ <code>release-notes/versions.json</code> bằng <code>npm run release-notes</code>. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 22/10/2026.</p>
 <h2>I. Tổng quan lịch sử SimLab</h2>
 <p>SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.</p>
-<p>Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.</p>
+<p>Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.</p>
 <p>Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.</p>
 <ul>
 <li>Số phiên bản ghi nhận: 13 (0.1.0 → 0.7.1).</li>
@@ -75,6 +75,10 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <tr><td>14/10/2026 02:05</td><td>Mở PR #20 — rà soát G0–G5 (0.6.0)</td><td>PR #20 createdAt 2026-10-13T19:05:41Z; commit đầu 511345d</td></tr>
 <tr><td>14/10/2026 07:14</td><td>Đánh giá cách giảng 168/168 lượt trên Gemma 1B (nhánh local)</td><td>commit 4f1e2c7; docs/TEACHING_EVAL.md</td></tr>
 <tr><td>19/10/2026 10:48</td><td>Mở PR #21 — G8: bảng dạy, “Khoanh để hỏi”, AI trên máy khác (0.6.0)</td><td>PR #21 createdAt 2026-10-19T03:48:53Z (gh pr list); đầu nhánh abc9e0c</td></tr>
+<tr><td>19/10/2026 18:58</td><td>Phát hành 0.6.0 (v0.6.0): Science Studio, AI Teacher giảng trên bảng, Nguyên phân 3D</td><td>GitHub Release v0.6.0, published_at 2026-10-19T11:58:38Z (mục 0.6.0, dates.released)</td></tr>
+<tr><td>20/10/2026 22:22</td><td>Phát hành 0.7.0 (v0.7.0): bảy bài Sinh học có hình 3D riêng, sửa nhiều lỗi</td><td>GitHub Release v0.7.0, published_at 2026-10-20T15:22:50Z, lượt Release 39444423723</td></tr>
+<tr><td>21/10/2026 10:35</td><td>Science Studio vào trong Phòng thí nghiệm (PR #35)</td><td>PR #35 mergedAt 2026-10-21T03:35:48Z (gh pr view 35), merge commit b6d7298</td></tr>
+<tr><td>22/10/2026 18:40</td><td>Phát hành 0.7.1 (v0.7.1): cả 11 bài Sinh học có hình 3D, bốn bài quần thể có khung cảnh riêng</td><td>GitHub Release v0.7.1, published_at 2026-10-22T11:40:31Z, lượt Release 39769849056</td></tr>
 </tbody>
 </table>
 <h2>III. Chi tiết từng phiên bản</h2>
@@ -1256,13 +1260,12 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 </ul>
 <h3>Điểm chưa xác minh được</h3>
 <ul>
-<li>Ngày tạo tag: cả 5 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.</li>
+<li>Ngày tạo tag: cả 8 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2, v0.6.0, v0.7.0, v0.7.1) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.</li>
 <li>0.1.0: có hai bản dựng thử (artifact) ngày 29/09/2026 nhưng không có tag hay GitHub Release; cần quyết định có nhắc bản này trong ghi chú phát hành công khai hay không.</li>
 <li>0.4.0: chỉ có tên tệp ZIP, hàng PROGRESS 'fork-0.4.0' và CLAUDE.md; chưa mở ZIP để xem package.json, và chưa biết ZIP được gửi cho ai, ngày nào (ngày sửa tệp không phải ngày phân phối).</li>
 <li>0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.</li>
 <li>0.5.0: tệp ZIP mang tên v0.5.0 được tạo trước khi gộp PR #8, nên khác bản phát hành v0.5.0.</li>
 <li>0.5.1: chưa biết trạng thái hiện tại của gói Microsoft Store (đã qua duyệt chưa, đã bấm Publish now chưa) và gói MSIX đã nộp được dựng ở đâu.</li>
-<li>0.6.0: các commit đến 8a3c48d ở trên PR #20; phần G8 (đến abc9e0c) ở PR #21; Science Studio chỉ ở nhánh feat/science-studio trên máy, chưa commit, chưa có PR; số liệu test ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7, 0.6.0-g8 và 0.6.0-studio), phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.</li>
 <li>Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu.</li>
 </ul>
 <h2>VIII. Tham chiếu commit, PR, tag và GitHub Release</h2>
