@@ -123,7 +123,11 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
     await page.waitForTimeout(300);
   }
   await expect(page.getByText('Sức chứa K = 1.000')).toBeVisible();
-  await page.waitForTimeout(300);
+  // The scene is rebuilt for the new inputs; on a slow runner the rebuild can still be running
+  // a fixed wait later, so wait until it holds as many geometries as before (none leaked).
+  await expect
+    .poll(async () => (await page.evaluate(() => window.__simlabBio3d?.info() ?? null))?.geometries)
+    .toBe(before?.geometries);
   const after = await page.evaluate(() => window.__simlabBio3d?.info() ?? null);
   expect(after?.geometries).toBe(before?.geometries);
   expect(after?.textures).toBe(before?.textures);
