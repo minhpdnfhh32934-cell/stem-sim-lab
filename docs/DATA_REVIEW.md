@@ -587,3 +587,13 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
     logistic. Không có số mới: số trên nhãn là của mô hình. Nhờ giáo viên xem: (a) ngưỡng 12 % có
     làm học sinh nghĩ tốc độ bằng 0 khi không thấy mũi tên không (nhãn dưới cột vẫn ghi giá trị);
     (b) hai dòng số dưới cột có quá nhiều chữ cho học sinh THPT không. `review_status: "pending"`.
+43. **Bản 0.7.1 — danh mục cần duyệt (22/10/2026).** Không có số liệu khoa học mới ngoài các mục đã
+    ghi; mục này gom lại để giáo viên duyệt một lượt. Làm đẹp bảy bài 3D (số liệu không đổi): mục 30
+    (M3D-33, M3D-34, MEI3D-15), 31 (DOG3D-11, DOG3D-12, sửa DOG3D-8), 32 (MUT3D-5), 33 (MEN3D-6, MEN3D-7,
+    ENZ3D-7, ENZ3D-8), 34 (TRA3D-7 … TRA3D-11). Bốn bài quần thể có hình 3D riêng thay cho hình đơn
+    giản của mục 26: Hardy–Weinberg mục 35, 36 (HW3D-1 … HW3D-8), phiêu bạt di truyền mục 37, 38
+    (DRF3D-1 … DRF3D-7), tăng trưởng logistic mục 39, 40 (LOG3D-1 … LOG3D-6), con mồi – vật ăn thịt
+    mục 41, 42 (LV3D-1 … LV3D-5). Lời văn mới trong `docs/USER_GUIDE.md` (mục "Hình 3D trong Sinh
+    học", đoạn bốn bài quần thể) chỉ tả lại những gì các mục trên đã ghi. Nhãn tab "Vật lí" của
+    Science Studio đổi thành "Vật lý" cho giống tên môn trong app (không phải nội dung khoa học).
+    `review_status: "pending"`.

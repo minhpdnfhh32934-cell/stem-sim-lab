@@ -193,10 +193,10 @@ src/ai/           LLM client + SceneSpec pipeline (Phase 3)
 src/core/         units, constants, integrators, fixed timestep (Phase 1)
 src/physics/      physics engine & scenes (Phase 2)
 src/chemistry/    elements, molecules, reaction library (Phase 4)
-src/biology/      biology modules (Phase 5) + per-lesson 3D modules (`*/xxx3d/`, 0.7.0)
+src/biology/      biology modules (Phase 5) + per-lesson 3D modules (`*/xxx3d/`, 0.7.0–0.7.1)
 src/studio/       Science Studio: guided lessons + authoring (0.6.0)
 src/teacher/      AI Teacher: chat, board, voice
-src/ui/three/     generic three.js kit (renderer, quality tiers, host, labels; no biology)
+src/ui/three/     generic three.js kit (renderer, quality tiers, stage look, post-processing, host, labels; no biology)
 src/science-card/ Science Card types + UI
 src/perf/         quality tier, frame monitor, degradation ladder
 src/workers/      Web Workers for simulation
@@ -538,12 +538,35 @@ Progress log: `docs/PROGRESS.md`.
   `pick.ts`, `labels.ts` + `labelLayer.ts` (name labels with leader lines, aria-hidden),
   `materials.ts`, `lighting.ts`, `drawStats.ts`, `availability.ts`, `testing.ts` (fake renderer,
   disposal check, reduced motion). Old paths in `view3d/` and `mitosis3d/tap.ts` re-export them.
-- **Biology 3D status (0.7.0):** all 11 lessons open in 3D. Seven have a dedicated module (above):
+- 3D render pipeline (0.7.1, details `docs/ARCHITECTURE.md` §3g "Art direction"): one stage for
+  every scene (`stage.ts`: `backdrop.ts` dithered radial / sky gradient from `--bg-stage`,
+  `lighting.ts` presets STUDIO / OUTDOOR, render layers `layers.ts` SHELL / FX / GLASS), Khronos
+  Neutral tone mapping everywhere (ACES / AgX would shift data colours). `quality3d.ts` + `gpuInfo.ts`
+  (GPU class) decide the post-processing flags: **only High on a discrete GPU** lazy-loads
+  `postfx.ts` (MSAA HDR target → GTAO → bloom on `userData.bloom` highlights; backdrop, shells and
+  FX drawn in display space so colours match the direct path, E2E ΔE_OK ≤ 0.02);
+  `postfxSupport.ts` drops AO, then bloom, then refraction when frames run slow. Integrated or
+  software GPUs never start higher than before and draw like 0.7.0 High. Procedural surface
+  detail only (`relief.ts`: noise bump + edge shade, no textures, never on large membranes).
+  Biology recipes `src/biology/view3d/recipes.ts` (membrane, chromosome, backbone/base pair,
+  protein blob, particles, glassware, liquid, organism, terrain, annotation, highlight). Rule 0
+  "saturation = data": data roles keep their chart token (`palette.ts` `ROLES`), structures are
+  muted. Measured budgets per tier: `docs/PERFORMANCE.md`.
+- **Biology 3D status (0.7.1):** all 11 lessons have a dedicated 3D module. Seven (above):
   mitosis, meiosis, DNA → mRNA → protein, point mutations, Mendel, enzyme kinetics, diffusion &
-  osmosis. The four population lessons (Hardy–Weinberg, drift, logistic, predator–prey) still use
-  the simple kit views below (`genetics/{HardyWeinberg3D,Drift3D}.tsx`,
-  `ecology/{Logistic3D,LotkaVolterra3D}.tsx`); their dedicated 3D views are promised for a later
-  update (0.7.0 known issues).
+  osmosis. The four population lessons are outdoor habitats built on the kit below (OUTDOOR look,
+  `primitives/habitat.ts`, instanced vegetation and animals): `genetics/hw3d/` (Hardy–Weinberg:
+  figure above the chart, generations from `matingRun`, gene-pool jar), `genetics/drift3d/` (one
+  island per `driftRuns` run, p : q band on each coast, fate flags), `ecology/logistic3d/` (herd
+  in a fence, exact N(t), K gauge, dN/dt arrow, time slider over N(t)), `ecology/lv3d/` (prey and
+  predators at the nearest computed DOPRI5 sample, never interpolated; two tubes, phase board).
+  Each: pure `binding.ts` (tested against the model), `layout.ts`, `scene.ts`, `facts.ts`,
+  `store.ts`, `Xxx3DView.tsx`. Counts are drawn at one `drawScale` per run (`apportion`: classes
+  add up exactly) and the scale chip says "1 hình = N cá thể"; animals, plants, motion =
+  illustration. Pick → card (drift, logistic, predator–prey also frame it close up via
+  `Bio3DScene.frames`), name callouts
+  (`Bio3DScene.callouts`). The old simple views (`HardyWeinberg3D.tsx`, `LotkaVolterra3D.tsx`, …)
+  are gone. Wording: DATA_REVIEW items 35–42 (HW3D, DRF3D, LOG3D, LV3D, pending).
 - Biology 3D kit (`src/biology/view3d/`): the four population lessons draw with it directly (3D by
   default, the learner's 3D/2D choice per lesson in `stemsim.bio3d`; 2D on Low tier, no WebGL or a
   lost context, `support.ts`). `Bio3DCanvas` (one renderer per tier, studio look from `look.ts`,
@@ -593,8 +616,10 @@ Progress log: `docs/PROGRESS.md`.
   - [~] T0 specs (`docs/TEACHSCRIPT.md`, `docs/AI_TEACHER_ARCHITECTURE.md`, `docs/VOICE_BENCHMARK.md`),
     sketch route `src/teacher/` (dev builds only) — **waiting for user approval**
 - [x] 0.6.0 released 2026-10-19 (v0.6.0): audit G0–G8, Science Studio, AI Teacher board, mitosis 3D
-- [~] 0.7.0 (`feat/0.7`, in review, not released): bug-fix sweep + dedicated 3D for seven biology
-  lessons, shared 3D kit; the four population lessons' dedicated 3D views remain (see above)
+- [x] 0.7.0 released 2026-10-20 (v0.7.0): bug-fix sweep + dedicated 3D for seven biology lessons,
+      shared 3D kit (release-notes entry updated by PR #34)
+- [~] 0.7.1 (`feat/0.7.1`, not released): Science Studio inside the lab (PR #35), 3D render
+  pipeline, the seven 3D lessons polished, the four population lessons as 3D habitats
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release
