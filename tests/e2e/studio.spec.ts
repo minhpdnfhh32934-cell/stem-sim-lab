@@ -91,7 +91,7 @@ async function watch(page: Page, quality: 'low' | 'medium' = 'medium'): Promise<
   return w;
 }
 
-async function openStudio(page: Page, tab?: 'Hóa học' | 'Sinh học' | 'Vật lí' | 'Soạn bài') {
+async function openStudio(page: Page, tab?: 'Hóa học' | 'Sinh học' | 'Vật lý' | 'Soạn bài') {
   await enterStudio(page);
   // The studio screen is a lazy module, compiled by the dev server on first use (seen
   // 2026-10-20: still "Đang tải mô phỏng…" after 5 s in the full parallel run).
@@ -139,12 +139,12 @@ test('opens from the lab; each subject tab shows its own lesson', async ({ page 
   await page.goto('/');
   await openStudio(page);
   const tabs = page.getByRole('tablist', { name: 'Chọn môn trong Studio' }).getByRole('tab');
-  await expect(tabs).toHaveText(['Hóa học', 'Sinh học', 'Vật lí', 'Soạn bài']);
+  await expect(tabs).toHaveText(['Hóa học', 'Sinh học', 'Vật lý', 'Soạn bài']);
 
   const lessons: [string, RegExp][] = [
     ['Hóa học', /^Nhận biết ion Cl⁻ bằng dung dịch AgNO₃/],
     ['Sinh học', /^Nguyên phân 3D/],
-    ['Vật lí', /^Rơi tự do: thả từ độ cao gấp đôi/],
+    ['Vật lý', /^Rơi tự do: thả từ độ cao gấp đôi/],
   ];
   for (const [tab, heading] of lessons) {
     await page.getByRole('tab', { name: tab }).click();
@@ -205,14 +205,14 @@ test('the launch page has two entries; a lab topic opens its lesson; the session
 
   // The studio tab chooses the subject the library lists. Rơi tự do: "Dự đoán trước" is the
   // lesson's prediction, not a second one in the lab.
-  await page.getByRole('tab', { name: 'Vật lí' }).click();
+  await page.getByRole('tab', { name: 'Vật lý' }).click();
   await expect(library.getByRole('list', { name: 'Vật lý' })).toBeVisible();
   await library.getByRole('button', { name: 'Rơi tự do', exact: true }).click();
   await page.getByRole('tab', { name: 'Thử thách' }).click();
   const predict = page.getByRole('region', { name: 'Dự đoán trước' });
   await expect(predict.getByRole('radio')).toHaveCount(0);
   await predict.getByRole('button', { name: 'Dự đoán trong Science Studio' }).click();
-  await expect(page.getByRole('tab', { name: 'Vật lí' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: 'Vật lý' })).toHaveAttribute('aria-selected', 'true');
   await expect(
     page.getByRole('heading', { level: 2, name: /^Rơi tự do: thả từ độ cao gấp đôi/ }),
   ).toBeVisible();
@@ -350,7 +350,7 @@ test('physics: a non-default height gives the closed-form times; the lab agrees'
   const g = 9.81;
   const h = 20;
   await page.goto('/');
-  await openStudio(page, 'Vật lí');
+  await openStudio(page, 'Vật lý');
   await page.getByRole('radio', { name: /√2/ }).click();
   await next(page).click();
 
@@ -464,7 +464,7 @@ test('Hỏi thầy (mocked Gemini): the question carries the engine numbers only
     return fulfillGemini(route, answer);
   });
   await page.goto('/');
-  await openStudio(page, 'Vật lí');
+  await openStudio(page, 'Vật lý');
   await page.getByRole('radio', { name: /√2/ }).click();
   await next(page).click();
   await page.getByRole('button', { name: 'Chạy thí nghiệm' }).click();

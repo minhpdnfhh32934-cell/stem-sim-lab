@@ -86,7 +86,7 @@ describe('Soạn bài', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
 
     await user.click(screen.getByRole('button', { name: 'Xem trước' }));
-    expect(screen.getByRole('tab', { name: 'Vật lí' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Vật lý' })).toHaveAttribute('aria-selected', 'true');
     expect(useStudioStore.getState().picked.physics).toBe(s.id);
     expect(screen.getByRole('list', { name: 'Các bước của bài học' })).toBeVisible();
   });
