@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-10-21",
+  "evidenceCheckedAt": "2026-10-22",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
-    "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.",
+    "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.",
     "Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json."
   ],
   "milestones": [
@@ -138,31 +138,50 @@
       "date": "2026-10-19T03:48:53Z",
       "text": "Mở PR #21 — G8: bảng dạy, “Khoanh để hỏi”, AI trên máy khác (0.6.0)",
       "evidence": "PR #21 createdAt 2026-10-19T03:48:53Z (gh pr list); đầu nhánh abc9e0c"
+    },
+    {
+      "date": "2026-10-19T11:58:38Z",
+      "text": "Phát hành 0.6.0 (v0.6.0): Science Studio, AI Teacher giảng trên bảng, Nguyên phân 3D",
+      "evidence": "GitHub Release v0.6.0, published_at 2026-10-19T11:58:38Z (mục 0.6.0, dates.released)"
+    },
+    {
+      "date": "2026-10-20T15:22:50Z",
+      "text": "Phát hành 0.7.0 (v0.7.0): bảy bài Sinh học có hình 3D riêng, sửa nhiều lỗi",
+      "evidence": "GitHub Release v0.7.0, published_at 2026-10-20T15:22:50Z, lượt Release 39444423723"
+    },
+    {
+      "date": "2026-10-21T03:35:48Z",
+      "text": "Science Studio vào trong Phòng thí nghiệm (PR #35)",
+      "evidence": "PR #35 mergedAt 2026-10-21T03:35:48Z (gh pr view 35), merge commit b6d7298"
+    },
+    {
+      "date": "2026-10-22T11:40:31Z",
+      "text": "Phát hành 0.7.1 (v0.7.1): cả 11 bài Sinh học có hình 3D, bốn bài quần thể có khung cảnh riêng",
+      "evidence": "GitHub Release v0.7.1, published_at 2026-10-22T11:40:31Z, lượt Release 39769849056"
     }
   ],
   "openQuestions": [
-    "Ngày tạo tag: cả 5 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.",
+    "Ngày tạo tag: cả 8 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2, v0.6.0, v0.7.0, v0.7.1) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.",
     "0.1.0: có hai bản dựng thử (artifact) ngày 29/09/2026 nhưng không có tag hay GitHub Release; cần quyết định có nhắc bản này trong ghi chú phát hành công khai hay không.",
     "0.4.0: chỉ có tên tệp ZIP, hàng PROGRESS 'fork-0.4.0' và CLAUDE.md; chưa mở ZIP để xem package.json, và chưa biết ZIP được gửi cho ai, ngày nào (ngày sửa tệp không phải ngày phân phối).",
     "0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.",
     "0.5.0: tệp ZIP mang tên v0.5.0 được tạo trước khi gộp PR #8, nên khác bản phát hành v0.5.0.",
     "0.5.1: chưa biết trạng thái hiện tại của gói Microsoft Store (đã qua duyệt chưa, đã bấm Publish now chưa) và gói MSIX đã nộp được dựng ở đâu.",
-    "0.6.0: các commit đến 8a3c48d ở trên PR #20; phần G8 (đến abc9e0c) ở PR #21; Science Studio chỉ ở nhánh feat/science-studio trên máy, chưa commit, chưa có PR; số liệu test ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7, 0.6.0-g8 và 0.6.0-studio), phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.",
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
     {
       "version": "0.7.1",
-      "status": "in-review",
-      "statusNote": "Chưa phát hành. PR #35 (Science Studio trong Phòng thí nghiệm, vá thư viện) đã gộp vào main 21/10/2026 (b6d7298); phần Sinh học 3D của 0.7.1 (làm đẹp bảy bài, bốn bài quần thể có hình 3D riêng) xong trên nhánh feat/0.7.1 (đã gộp main ở 3bdb73a; tới 22/10/2026 main không có commit mới), chưa có PR. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.",
+      "status": "released",
+      "statusNote": "Phát hành 22/10/2026 từ main @ 49c4d6a (lượt Release 39769849056). Phần web và phần lõi cùng số 0.7.1, nên ứng dụng 0.7.0 được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống).",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-20T20:12:42+07:00",
         "firstCommit": "2026-10-20T20:12:42+07:00",
-        "lastCommit": "2026-10-22T11:45:04+07:00",
-        "merged": null,
-        "built": null,
-        "released": null,
+        "lastCommit": "2026-10-22T14:11:19+07:00",
+        "merged": "2026-10-22T09:57:27Z",
+        "built": "2026-10-22T11:40:17Z",
+        "released": "2026-10-22T11:40:31Z",
         "tagged": null
       },
       "evidence": [
@@ -174,8 +193,15 @@
         "Sinh học 3D: bộ công cụ c3cab4c, 5a3ddaf, c4decca, 01b1ef3, 1afbcbd; Nguyên phân và Giảm phân 9de55fc, 7079dd0; ADN → mARN → Protein và Đột biến điểm 0adba18, 4d6769b, b74758d; Mendel b97b2b5, 12f6fc1; Động học enzyme 3e3115c, 24ac90b; Khuếch tán & thẩm thấu 304ef28, ee773a0. Lời văn và hình mới: docs/DATA_REVIEW.md mục 30–34 (M3D-33/34, MEI3D-15, DOG3D-11/12, MUT3D-5, MEN3D-6/7, ENZ3D-7/8, TRA3D-7 … 11, đang chờ duyệt); số đo từng mức chất lượng: docs/PERFORMANCE.md; nhật ký: docs/PROGRESS.md các hàng 0.7.1-*",
         "Bốn bài quần thể 3D trên nhánh feat/0.7.1: bộ công cụ 0b4970f (chọn hình, dáng nghỉ, ánh sáng ngoài trời), 2f135f1 (cận cảnh, nhãn gọi tên); Hardy–Weinberg 1f51d5d, 5b9efef; Phiêu bạt di truyền fdfeecb, 6232792; Tăng trưởng logistic b5852b5, ccfc01e; Con mồi – vật ăn thịt 6a8b391, a3d8a97. Lời văn mới: docs/DATA_REVIEW.md mục 35–42 (HW3D-1 … 8, DRF3D-1 … 7, LOG3D-1 … 6, LV3D-1 … 5, đang chờ duyệt); mục 43 gom danh mục duyệt của 0.7.1",
         "bd95467: E2E Nguyên phân 3D bền hơn khi máy chạy thử bận, ngân sách hiệu năng không đổi",
-        "lastCommit: 7f35c78 2026-10-22T11:45:04+07:00 'fix(studio): subject tab says \"Vật lý\" like the rest of the app', commit mã cuối của bản; commit tài liệu ghi mục này đến sau",
-        "PR #34 (ghi 0.7.0 đã phát hành, published_at 2026-10-20T15:22:50Z theo mô tả PR) còn mở ngày 22/10/2026; mục 0.7.0 ở đây chưa đổi. Gộp #34 xong thì chạy lại npm run release-notes, không sửa tay các tệp sinh ra"
+        "lastCommit: 2b069b6 2026-10-22T14:11:19+07:00 'perf(3d): software WebGL leaves out the look's accents', commit mã cuối của bản (sau 7f35c78 'fix(studio): subject tab says \"Vật lý\"…' và dafff80); commit tài liệu và gộp đến sau",
+        "PR #34 (ghi 0.7.0 đã phát hành) gộp vào main 2026-10-22T09:18:07Z (0a89fa5); gộp main vào feat/0.7.1 ở 357e866, các tệp sinh ra được tạo lại bằng npm run release-notes, không sửa tay",
+        "dafff80: E2E bốn bài quần thể 3D chỉ đọc vị trí khi camera đã dừng (hook moving() của Bio3DCanvas); lỗi CI lv3d \"Mặt phẳng pha\" và logistic3d 17,27 < 19,17 tái hiện được trên máy khi làm chậm khung hình 400 ms; không điều kiện kiểm tra nào bị nới",
+        "Bài đo @perf nguyên phân 3D trên CI (dafff80): p95 200 / 216,7 / 216,6 ms > 150. Đo trên cùng một máy (SwiftShader, máy chủ dev chạy sẵn): 0.7.0 p95 66,7 ms, 0.7.1 83,3 ms. 2b069b6: Quality3D.accents — chỉ khi WebGL chạy bằng phần mềm mới bỏ đèn phụ + đèn viền, mặt sau sáng mờ của vỏ trong suốt và clear coat của bài phân bào; sau đó p95 66,6–66,7 ms (docs/PERFORMANCE.md). GPU tích hợp và GPU rời giữ nguyên vẻ 0.7.1",
+        "PR #38 gộp 2026-10-22T09:57:27Z (49c4d6a), CI 8/8 đạt trên PR ở 357e866; CI trên main ở 49c4d6a: job E2E lần 1 hỏng ở bài @perf (p95 216,6 / 216,7 / 216,7 ms, máy CI dùng chung chậm hơn), chạy lại lần 2 đạt 8/8",
+        "built: lượt Release 39769849056 (workflow_dispatch, main, 49c4d6a), job 'Build Windows installers' xong 2026-10-22T11:40:17Z",
+        "released: GitHub Release v0.7.1 'SimLab 0.7.1', published_at 2026-10-22T11:40:31Z, target 49c4d6a, latest; tệp: SimLab_0.7.1_x64-setup.exe, SimLab_0.7.1_x64_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt",
+        "web-update.json: webVersion 0.7.1, minNative 0.7.1, minRequired \"\" (không bắt buộc), có signature và signatureV2",
+        "tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag"
       ],
       "tests": [
         "20/10/2026 trong sandbox đám mây (Linux) trên a5661cb + tài liệu: npm run check sạch (format, lint, typecheck) và 3942/3942 unit test (274 tệp); npm run format:check sạch",
@@ -184,12 +210,13 @@
         "E2E trên cổng 1421 (một worktree khác có thể dùng 1420; trạng thái lưu của E2E được viết lại cho cổng 1421): dự án chromium 70/73; 3 bài hỏng vì tự ghi gốc http://localhost:1420 (ai-flow.spec.ts \"first run\" ×2, learner.spec.ts \"touch screens get 40px targets\"), bản sao chỉ đổi gốc sang 1421 thì qua 3/3. Hai trong bốn lần chạy dự án chromium còn hỏng thêm studio.spec.ts:137, chemistry.spec.ts:24, lesson-flow.spec.ts:74: quá giờ khi 8 luồng cùng mở mô-đun lần đầu lúc dev server còn lạnh (chạy riêng thì qua; ở lần qua mất 17,9 s, 39,6 s, 43,0 s). chromium-3d 31/31 và chromium-3d-perf 1/1 (chạy với --no-deps vì dự án chromium hỏng 3 bài do cổng)",
         "22/10/2026 trên máy Windows (16 luồng), nhánh feat/0.7.1 ở 7f35c78 cùng tài liệu của bước hoàn tất: npm run format:check, lint, typecheck sạch; 4200 unit test qua (307 tệp), 1 bỏ qua có điều kiện (src/ui/three/postfx.gpu.test.ts chỉ chạy khi có WebGL 2 thật); npm run build qua; npm run tauri build qua (Rust release 4 phút 26 giây, 0 cảnh báo): SimLab_0.7.1_x64-setup.exe 11,73 MiB và SimLab_0.7.1_x64_en-US.msi 12,49 MiB. Phần Rust không đổi so với main b6d7298 nên không chạy lại cargo fmt/clippy/test (21/10/2026: cargo test 221 qua)",
         "E2E 22/10/2026 trên cổng 1421 (trạng thái lưu viết cho 1421): dự án chromium 71/74 với 4 luồng; 3 bài hỏng chỉ vì tự ghi gốc http://localhost:1420 (ai-flow.spec.ts \"first run\" ×2, learner.spec.ts \"touch screens get 40px targets\"), bản sao chỉ đổi gốc và đường dẫn import thì qua (24/24 bài của hai tệp). Lần chạy 8 luồng trước đó còn 4 bài quá giờ 60 s khi chờ trang mở đầu (chemistry.spec.ts:83, studio.spec.ts:346, teacher.spec.ts:190, board.spec.ts:656); chạy riêng qua 4/4 trong 8,7 s. chromium-3d 34/34 và chromium-3d-perf 1/1 (chạy với --no-deps). studio.spec.ts 7/7 sau khi tab đổi thành “Vật lý”",
-        "Chưa kiểm bản dựng thật bằng exe + CDP: ngày 22/10/2026 SimLab đã cài (D:/SimLab/stem-sim-lab.exe) đang mở trên máy, nên bước này bỏ qua để không đụng tới tiến trình đó"
+        "Chưa kiểm bản dựng thật bằng exe + CDP: ngày 22/10/2026 SimLab đã cài (D:/SimLab/stem-sim-lab.exe) đang mở trên máy, nên bước này bỏ qua để không đụng tới tiến trình đó",
+        "22/10/2026 trên máy Windows, feat/0.7.1 ở 2b069b6: format, lint, typecheck sạch; 4203 unit test qua (307 tệp), 1 bỏ qua có điều kiện (postfx.gpu.test.ts); E2E chromium-3d 34/34 và @perf 7/7 lần chạy riêng (p95 66,6–66,7 ms) trên cổng 1421; dự án chromium vẫn có 3 bài chỉ hỏng vì tự ghi gốc http://localhost:1420 như các dòng trên"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
+        "tag": "v0.7.1",
+        "tagSha": "49c4d6a513ae452a5290d5f49359a4b243db911a",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1",
         "prs": [35, 38],
         "commits": [
           "61258ea",
@@ -222,7 +249,10 @@
           "6a8b391",
           "a3d8a97",
           "bd95467",
-          "7f35c78"
+          "7f35c78",
+          "dafff80",
+          "2b069b6",
+          "49c4d6a"
         ],
         "branches": ["claude/wizardly-galileo-k3vxcs", "feat/0.7.1"]
       },

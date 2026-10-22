@@ -2,9 +2,9 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
-## [Unreleased] - 0.7.1 (Đang xét duyệt)
+## [0.7.1] - 2026-10-22
 
-_Chưa phát hành. PR #35 (Science Studio trong Phòng thí nghiệm, vá thư viện) đã gộp vào main 21/10/2026 (b6d7298); phần Sinh học 3D của 0.7.1 (làm đẹp bảy bài, bốn bài quần thể có hình 3D riêng) xong trên nhánh feat/0.7.1 (đã gộp main ở 3bdb73a; tới 22/10/2026 main không có commit mới), chưa có PR. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app._
+_Phát hành 22/10/2026 từ main @ 49c4d6a (lượt Release 39769849056). Phần web và phần lõi cùng số 0.7.1, nên ứng dụng 0.7.0 được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống)._
 
 Science Studio chuyển vào trong Phòng thí nghiệm (một lối vào cho mỗi chủ đề). Cả 11 bài Sinh học 3D đẹp và rõ hơn: bảy bài được vẽ lại, bốn bài quần thể có khung cảnh 3D riêng; không số liệu nào của mô hình bị đổi.
 
@@ -497,7 +497,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
-[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35
+[0.7.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1
 [0.7.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0
 [0.6.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0
 [0.5.2]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2

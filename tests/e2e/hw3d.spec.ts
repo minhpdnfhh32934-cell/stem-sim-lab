@@ -191,7 +191,10 @@ test('Hardy–Weinberg 3D: the habitat follows the model through the generations
     page.getByText(`AA ${String(sample.AA)} · Aa ${String(sample.Aa)} · aa ${String(sample.aa)}`),
   ).toBeVisible();
 
-  // A tap on the plinth: the gene pool's card (copies of A = 2·AA + Aa).
+  // A tap on the plinth: the gene pool's card (copies of A = 2·AA + Aa), once the 3D shows
+  // generation 1 and its figures have hatched (as for the figure tap above).
+  await expect.poll(async () => (await state(page))?.generation).toBe(1);
+  await expect.poll(async () => (await state(page))?.hatching, { timeout: 30_000 }).toBe(false);
   s = await state(page);
   const pool = await settled(page, s?.poolPoint ?? [0, 0, 0]);
   await page.mouse.click(pool[0], pool[1] + 4);

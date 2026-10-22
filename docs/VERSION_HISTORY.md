@@ -1,22 +1,21 @@
 # SimLab — Version History & Release Notes
 
-Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 21/10/2026.
+Lịch sử phiên bản và ghi chú phát hành của SimLab (tên cũ: STEM Sim Lab). Tạo tự động từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Bằng chứng được kiểm lần cuối ngày 22/10/2026.
 
 ## I. Tổng quan lịch sử SimLab
 
 SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.
 
-Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0.
+Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.
 
 Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.
 
 - Số phiên bản ghi nhận: 13 (0.1.0 → 0.7.1).
-- Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026), 0.7.0 (20/10/2026).
+- Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026), 0.7.0 (20/10/2026), 0.7.1 (22/10/2026).
 - Đã gộp, chưa phát hành: 0.5.1.
-- Đang xét duyệt: 0.7.1.
 - Bản phát triển, không phát hành: 0.1.0.
 - Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.
-- Phiên bản mới nhất trong dữ liệu: 0.7.1 (Đang xét duyệt).
+- Phiên bản mới nhất trong dữ liệu: 0.7.1 (Đã phát hành).
 
 ## II. Dòng thời gian phát triển từ bản gốc
 
@@ -36,7 +35,7 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 0.5.2 | Đã phát hành | 13/10/2026 (đã xác minh) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | [v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) |
 | 0.6.0 | Đã phát hành | 19/10/2026 (đã xác minh) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | [v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) |
 | 0.7.0 | Đã phát hành | 20/10/2026 (đã xác minh) | [#32](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/32) | [v0.7.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0) |
-| 0.7.1 | Đang xét duyệt | Chưa phát hành | [#35](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35), [#38](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38) | — |
+| 0.7.1 | Đã phát hành | 22/10/2026 (đã xác minh) | [#35](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35), [#38](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38) | [v0.7.1](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1) |
 
 ### Các mốc phát triển
 
@@ -68,26 +67,30 @@ Cũ nhất ở trên. Cột "Ngày phát hành" chỉ ghi ngày khi có GitHub R
 | 14/10/2026 02:05 | Mở PR #20 — rà soát G0–G5 (0.6.0) | PR #20 createdAt 2026-10-13T19:05:41Z; commit đầu 511345d |
 | 14/10/2026 07:14 | Đánh giá cách giảng 168/168 lượt trên Gemma 1B (nhánh local) | commit 4f1e2c7; docs/TEACHING\_EVAL.md |
 | 19/10/2026 10:48 | Mở PR #21 — G8: bảng dạy, “Khoanh để hỏi”, AI trên máy khác (0.6.0) | PR #21 createdAt 2026-10-19T03:48:53Z (gh pr list); đầu nhánh abc9e0c |
+| 19/10/2026 18:58 | Phát hành 0.6.0 (v0.6.0): Science Studio, AI Teacher giảng trên bảng, Nguyên phân 3D | GitHub Release v0.6.0, published\_at 2026-10-19T11:58:38Z (mục 0.6.0, dates.released) |
+| 20/10/2026 22:22 | Phát hành 0.7.0 (v0.7.0): bảy bài Sinh học có hình 3D riêng, sửa nhiều lỗi | GitHub Release v0.7.0, published\_at 2026-10-20T15:22:50Z, lượt Release 39444423723 |
+| 21/10/2026 10:35 | Science Studio vào trong Phòng thí nghiệm (PR #35) | PR #35 mergedAt 2026-10-21T03:35:48Z (gh pr view 35), merge commit b6d7298 |
+| 22/10/2026 18:40 | Phát hành 0.7.1 (v0.7.1): cả 11 bài Sinh học có hình 3D, bốn bài quần thể có khung cảnh riêng | GitHub Release v0.7.1, published\_at 2026-10-22T11:40:31Z, lượt Release 39769849056 |
 
 ## III. Chi tiết từng phiên bản
 
-### 0.7.1 (Đang xét duyệt)
+### 0.7.1 (Đã phát hành)
 
 Science Studio chuyển vào trong Phòng thí nghiệm (một lối vào cho mỗi chủ đề). Cả 11 bài Sinh học 3D đẹp và rõ hơn: bảy bài được vẽ lại, bốn bài quần thể có khung cảnh 3D riêng; không số liệu nào của mô hình bị đổi.
 
-- Trạng thái: Đang xét duyệt.
+- Trạng thái: Đã phát hành.
 - Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.
-- Ghi chú trạng thái: Chưa phát hành. PR #35 (Science Studio trong Phòng thí nghiệm, vá thư viện) đã gộp vào main 21/10/2026 (b6d7298); phần Sinh học 3D của 0.7.1 (làm đẹp bảy bài, bốn bài quần thể có hình 3D riêng) xong trên nhánh feat/0.7.1 (đã gộp main ở 3bdb73a; tới 22/10/2026 main không có commit mới), chưa có PR. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.
+- Ghi chú trạng thái: Phát hành 22/10/2026 từ main @ 49c4d6a (lượt Release 39769849056). Phần web và phần lõi cùng số 0.7.1, nên ứng dụng 0.7.0 được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống).
 - Ghi chú công khai: đã duyệt để công bố (hiện trong hộp "Có gì mới").
 
 | Mốc | Thời điểm (giờ VN) | Giá trị gốc |
 | --- | --- | --- |
 | Bắt đầu phát triển | 20/10/2026 20:12 | `2026-10-20T20:12:42+07:00` |
 | Commit đầu tiên | 20/10/2026 20:12 | `2026-10-20T20:12:42+07:00` |
-| Commit cuối cùng | 22/10/2026 11:45 | `2026-10-22T11:45:04+07:00` |
-| Gộp vào nhánh (merge) | Chưa xác minh được | — |
-| Dựng bộ cài (GitHub Actions) | Chưa xác minh được | — |
-| Phát hành (GitHub Release) | Chưa xác minh được | — |
+| Commit cuối cùng | 22/10/2026 14:11 | `2026-10-22T14:11:19+07:00` |
+| Gộp vào nhánh (merge) | 22/10/2026 16:57 | `2026-10-22T09:57:27Z` |
+| Dựng bộ cài (GitHub Actions) | 22/10/2026 18:40 | `2026-10-22T11:40:17Z` |
+| Phát hành (GitHub Release) | 22/10/2026 18:40 | `2026-10-22T11:40:31Z` |
 | Tạo tag | Chưa xác minh được | — |
 
 **Tính năng mới**
@@ -150,8 +153,15 @@ Science Studio chuyển vào trong Phòng thí nghiệm (một lối vào cho m�
 - Sinh học 3D: bộ công cụ c3cab4c, 5a3ddaf, c4decca, 01b1ef3, 1afbcbd; Nguyên phân và Giảm phân 9de55fc, 7079dd0; ADN → mARN → Protein và Đột biến điểm 0adba18, 4d6769b, b74758d; Mendel b97b2b5, 12f6fc1; Động học enzyme 3e3115c, 24ac90b; Khuếch tán & thẩm thấu 304ef28, ee773a0. Lời văn và hình mới: docs/DATA\_REVIEW.md mục 30–34 (M3D-33/34, MEI3D-15, DOG3D-11/12, MUT3D-5, MEN3D-6/7, ENZ3D-7/8, TRA3D-7 … 11, đang chờ duyệt); số đo từng mức chất lượng: docs/PERFORMANCE.md; nhật ký: docs/PROGRESS.md các hàng 0.7.1-\*
 - Bốn bài quần thể 3D trên nhánh feat/0.7.1: bộ công cụ 0b4970f (chọn hình, dáng nghỉ, ánh sáng ngoài trời), 2f135f1 (cận cảnh, nhãn gọi tên); Hardy–Weinberg 1f51d5d, 5b9efef; Phiêu bạt di truyền fdfeecb, 6232792; Tăng trưởng logistic b5852b5, ccfc01e; Con mồi – vật ăn thịt 6a8b391, a3d8a97. Lời văn mới: docs/DATA\_REVIEW.md mục 35–42 (HW3D-1 … 8, DRF3D-1 … 7, LOG3D-1 … 6, LV3D-1 … 5, đang chờ duyệt); mục 43 gom danh mục duyệt của 0.7.1
 - bd95467: E2E Nguyên phân 3D bền hơn khi máy chạy thử bận, ngân sách hiệu năng không đổi
-- lastCommit: 7f35c78 2026-10-22T11:45:04+07:00 'fix(studio): subject tab says "Vật lý" like the rest of the app', commit mã cuối của bản; commit tài liệu ghi mục này đến sau
-- PR #34 (ghi 0.7.0 đã phát hành, published\_at 2026-10-20T15:22:50Z theo mô tả PR) còn mở ngày 22/10/2026; mục 0.7.0 ở đây chưa đổi. Gộp #34 xong thì chạy lại npm run release-notes, không sửa tay các tệp sinh ra
+- lastCommit: 2b069b6 2026-10-22T14:11:19+07:00 'perf(3d): software WebGL leaves out the look's accents', commit mã cuối của bản (sau 7f35c78 'fix(studio): subject tab says "Vật lý"…' và dafff80); commit tài liệu và gộp đến sau
+- PR #34 (ghi 0.7.0 đã phát hành) gộp vào main 2026-10-22T09:18:07Z (0a89fa5); gộp main vào feat/0.7.1 ở 357e866, các tệp sinh ra được tạo lại bằng npm run release-notes, không sửa tay
+- dafff80: E2E bốn bài quần thể 3D chỉ đọc vị trí khi camera đã dừng (hook moving() của Bio3DCanvas); lỗi CI lv3d "Mặt phẳng pha" và logistic3d 17,27 \< 19,17 tái hiện được trên máy khi làm chậm khung hình 400 ms; không điều kiện kiểm tra nào bị nới
+- Bài đo @perf nguyên phân 3D trên CI (dafff80): p95 200 / 216,7 / 216,6 ms \> 150. Đo trên cùng một máy (SwiftShader, máy chủ dev chạy sẵn): 0.7.0 p95 66,7 ms, 0.7.1 83,3 ms. 2b069b6: Quality3D.accents — chỉ khi WebGL chạy bằng phần mềm mới bỏ đèn phụ + đèn viền, mặt sau sáng mờ của vỏ trong suốt và clear coat của bài phân bào; sau đó p95 66,6–66,7 ms (docs/PERFORMANCE.md). GPU tích hợp và GPU rời giữ nguyên vẻ 0.7.1
+- PR #38 gộp 2026-10-22T09:57:27Z (49c4d6a), CI 8/8 đạt trên PR ở 357e866; CI trên main ở 49c4d6a: job E2E lần 1 hỏng ở bài @perf (p95 216,6 / 216,7 / 216,7 ms, máy CI dùng chung chậm hơn), chạy lại lần 2 đạt 8/8
+- built: lượt Release 39769849056 (workflow\_dispatch, main, 49c4d6a), job 'Build Windows installers' xong 2026-10-22T11:40:17Z
+- released: GitHub Release v0.7.1 'SimLab 0.7.1', published\_at 2026-10-22T11:40:31Z, target 49c4d6a, latest; tệp: SimLab\_0.7.1\_x64-setup.exe, SimLab\_0.7.1\_x64\_en-US.msi, web-bundle.zip, web-update.json, SHA256SUMS.txt
+- web-update.json: webVersion 0.7.1, minNative 0.7.1, minRequired "" (không bắt buộc), có signature và signatureV2
+- tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag
 
 ### 0.7.0 (Đã phát hành)
 
@@ -1079,17 +1089,17 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.7.0** (Đã phát hành, vấn đề đã biết): Bốn bài về quần thể (Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt) mới có hình 3D đơn giản; hình 3D riêng, chi tiết như các bài khác sẽ có trong một bản cập nhật sau.
 - **0.7.0** (Đã phát hành, vấn đề đã biết): Lời văn và cách vẽ của các hình 3D mới đang chờ giáo viên duyệt. Hình dạng, kích thước, vị trí và chuyển động trong hình 3D chỉ là minh họa; chỉ số lượng và tỉ lệ lấy từ mô hình.
 - **0.7.0** (Đã phát hành, vấn đề đã biết): Giảm phân 3D chỉ vẽ tế bào động vật và bốn tế bào con bằng nhau (phân chia không đều ở con cái chỉ được ghi chú); chưa có giảm phân ở thực vật.
-- **0.7.1** (Đang xét duyệt, tính năng mới): Bốn bài quần thể có khung cảnh 3D ngoài trời riêng: Hardy–Weinberg (con vật mang màu kiểu gen, hũ vốn gen, đi qua từng thế hệ), Phiêu bạt di truyền (mỗi lần chạy là một hòn đảo, có cờ khi chỉ còn một alen), Tăng trưởng logistic (đàn trong hàng rào, cột đo có vạch K, thanh thời gian vẽ đường N(t)), Con mồi – vật ăn thịt (hai loài trên đồng cỏ, hai ống đo và bảng quỹ đạo pha). Bấm vào con vật hay cột đo để xem thẻ giải thích; ba bài sau còn đưa hình tới gần chỗ đã bấm.
-- **0.7.1** (Đang xét duyệt, cải tiến): Mọi bài Sinh học 3D có sân khấu mới: nền dải màu, ánh sáng kiểu phòng chụp, vật liệu riêng cho màng, nhiễm sắc thể, ADN, protein, thủy tinh và chất lỏng. Ở chất lượng Cao trên máy có card đồ họa rời còn có bóng đổ thật, bóng ở chỗ khuất và ánh sáng nổi.
-- **0.7.1** (Đang xét duyệt, cải tiến): Nguyên phân và Giảm phân 3D: nhiễm sắc thể to và có khối hơn, thoi phân bào trong mờ, màng tế bào và màng nhân có viền rõ trên nền sáng; nhãn không bao giờ đè lên nhiễm sắc thể.
-- **0.7.1** (Đang xét duyệt, cải tiến): ADN → mARN → Protein và Đột biến điểm 3D: chuỗi xoắn có mạch khung liền và cặp bazơ bo tròn, ARN pôlimeraza và ribôxôm trong suốt, tARN hình chữ L; khi Theo dõi dịch mã, máy quay tới gần ribôxôm.
-- **0.7.1** (Đang xét duyệt, cải tiến): Di truyền Mendel 3D thành bàn thí nghiệm: khay Punnett có ô, ống đong cho tỉ lệ kiểu hình, đủ 16 kiểu gen ở góc nhìn Bảng Punnett, mỗi số đếm của lần tạo ngẫu nhiên có ghi tên nhóm. Động học enzyme 3D đặt trong bể kính.
-- **0.7.1** (Đang xét duyệt, cải tiến): Khuếch tán & thẩm thấu 3D: bể kính hai ngăn có màng và lỗ thật, ống chữ U có mặt khum, thước có vạch khắc; bể và màng dễ thấy trên nền sáng.
-- **0.7.1** (Đang xét duyệt, sửa lỗi): Thẩm thấu 3D: đáy mặt khum nay đúng bằng mực chất lỏng của mô hình, nên đọc ở đáy mặt khum ra đúng số.
-- **0.7.1** (Đang xét duyệt, sửa lỗi): Động học enzyme 3D: hạt sản phẩm mới chỉ đi ra từ phức hợp enzyme–cơ chất (ES), không bao giờ từ phức hợp có chất ức chế (ESI).
-- **0.7.1** (Đang xét duyệt, sửa lỗi): Đột biến điểm 3D: dấu “chuỗi kết thúc sớm” chỉ hiện khi bộ ba kết thúc thật sự đến sớm, không hiện khi chỉ mất trọn một bộ ba.
-- **0.7.1** (Đang xét duyệt, sửa lỗi): Dịch mã 3D: màu bazơ của mARN và tARN không còn nhạt đi.
-- **0.7.1** (Đang xét duyệt, sửa lỗi): Ở chất lượng Cao trên máy có card đồ họa rời, nền, màng tế bào và bóng dưới tế bào có đúng màu như ở các mức khác.
+- **0.7.1** (Đã phát hành, tính năng mới): Bốn bài quần thể có khung cảnh 3D ngoài trời riêng: Hardy–Weinberg (con vật mang màu kiểu gen, hũ vốn gen, đi qua từng thế hệ), Phiêu bạt di truyền (mỗi lần chạy là một hòn đảo, có cờ khi chỉ còn một alen), Tăng trưởng logistic (đàn trong hàng rào, cột đo có vạch K, thanh thời gian vẽ đường N(t)), Con mồi – vật ăn thịt (hai loài trên đồng cỏ, hai ống đo và bảng quỹ đạo pha). Bấm vào con vật hay cột đo để xem thẻ giải thích; ba bài sau còn đưa hình tới gần chỗ đã bấm.
+- **0.7.1** (Đã phát hành, cải tiến): Mọi bài Sinh học 3D có sân khấu mới: nền dải màu, ánh sáng kiểu phòng chụp, vật liệu riêng cho màng, nhiễm sắc thể, ADN, protein, thủy tinh và chất lỏng. Ở chất lượng Cao trên máy có card đồ họa rời còn có bóng đổ thật, bóng ở chỗ khuất và ánh sáng nổi.
+- **0.7.1** (Đã phát hành, cải tiến): Nguyên phân và Giảm phân 3D: nhiễm sắc thể to và có khối hơn, thoi phân bào trong mờ, màng tế bào và màng nhân có viền rõ trên nền sáng; nhãn không bao giờ đè lên nhiễm sắc thể.
+- **0.7.1** (Đã phát hành, cải tiến): ADN → mARN → Protein và Đột biến điểm 3D: chuỗi xoắn có mạch khung liền và cặp bazơ bo tròn, ARN pôlimeraza và ribôxôm trong suốt, tARN hình chữ L; khi Theo dõi dịch mã, máy quay tới gần ribôxôm.
+- **0.7.1** (Đã phát hành, cải tiến): Di truyền Mendel 3D thành bàn thí nghiệm: khay Punnett có ô, ống đong cho tỉ lệ kiểu hình, đủ 16 kiểu gen ở góc nhìn Bảng Punnett, mỗi số đếm của lần tạo ngẫu nhiên có ghi tên nhóm. Động học enzyme 3D đặt trong bể kính.
+- **0.7.1** (Đã phát hành, cải tiến): Khuếch tán & thẩm thấu 3D: bể kính hai ngăn có màng và lỗ thật, ống chữ U có mặt khum, thước có vạch khắc; bể và màng dễ thấy trên nền sáng.
+- **0.7.1** (Đã phát hành, sửa lỗi): Thẩm thấu 3D: đáy mặt khum nay đúng bằng mực chất lỏng của mô hình, nên đọc ở đáy mặt khum ra đúng số.
+- **0.7.1** (Đã phát hành, sửa lỗi): Động học enzyme 3D: hạt sản phẩm mới chỉ đi ra từ phức hợp enzyme–cơ chất (ES), không bao giờ từ phức hợp có chất ức chế (ESI).
+- **0.7.1** (Đã phát hành, sửa lỗi): Đột biến điểm 3D: dấu “chuỗi kết thúc sớm” chỉ hiện khi bộ ba kết thúc thật sự đến sớm, không hiện khi chỉ mất trọn một bộ ba.
+- **0.7.1** (Đã phát hành, sửa lỗi): Dịch mã 3D: màu bazơ của mARN và tARN không còn nhạt đi.
+- **0.7.1** (Đã phát hành, sửa lỗi): Ở chất lượng Cao trên máy có card đồ họa rời, nền, màng tế bào và bóng dưới tế bào có đúng màu như ở các mức khác.
 
 **Kiểm thử liên quan**
 
@@ -1099,6 +1109,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.7.1**: E2E đầy đủ (npm run test:e2e): 100 qua, 2 hỏng, 1 không chạy (dự án chromium-3d-perf, phụ thuộc chromium-3d). Hỏng: mitosis3d.spec.ts 'plays through every stage' (hình 3D tự về 2D khi chạy phần mềm) và 'boxes never overlap' (chỉ khi chạy song song; chạy riêng thì qua). Bài đầu hỏng y hệt trên main 433c3a9 trong cùng sandbox, nên không do thay đổi này; chưa chạy trên máy Windows
 - **0.7.1**: E2E trên cổng 1421 (một worktree khác có thể dùng 1420; trạng thái lưu của E2E được viết lại cho cổng 1421): dự án chromium 70/73; 3 bài hỏng vì tự ghi gốc http://localhost:1420 (ai-flow.spec.ts "first run" ×2, learner.spec.ts "touch screens get 40px targets"), bản sao chỉ đổi gốc sang 1421 thì qua 3/3. Hai trong bốn lần chạy dự án chromium còn hỏng thêm studio.spec.ts:137, chemistry.spec.ts:24, lesson-flow.spec.ts:74: quá giờ khi 8 luồng cùng mở mô-đun lần đầu lúc dev server còn lạnh (chạy riêng thì qua; ở lần qua mất 17,9 s, 39,6 s, 43,0 s). chromium-3d 31/31 và chromium-3d-perf 1/1 (chạy với --no-deps vì dự án chromium hỏng 3 bài do cổng)
 - **0.7.1**: E2E 22/10/2026 trên cổng 1421 (trạng thái lưu viết cho 1421): dự án chromium 71/74 với 4 luồng; 3 bài hỏng chỉ vì tự ghi gốc http://localhost:1420 (ai-flow.spec.ts "first run" ×2, learner.spec.ts "touch screens get 40px targets"), bản sao chỉ đổi gốc và đường dẫn import thì qua (24/24 bài của hai tệp). Lần chạy 8 luồng trước đó còn 4 bài quá giờ 60 s khi chờ trang mở đầu (chemistry.spec.ts:83, studio.spec.ts:346, teacher.spec.ts:190, board.spec.ts:656); chạy riêng qua 4/4 trong 8,7 s. chromium-3d 34/34 và chromium-3d-perf 1/1 (chạy với --no-deps). studio.spec.ts 7/7 sau khi tab đổi thành “Vật lý”
+- **0.7.1**: 22/10/2026 trên máy Windows, feat/0.7.1 ở 2b069b6: format, lint, typecheck sạch; 4203 unit test qua (307 tệp), 1 bỏ qua có điều kiện (postfx.gpu.test.ts); E2E chromium-3d 34/34 và @perf 7/7 lần chạy riêng (p95 66,6–66,7 ms) trên cổng 1421; dự án chromium vẫn có 3 bài chỉ hỏng vì tự ghi gốc http://localhost:1420 như các dòng trên
 
 ## VI. Lịch sử bảo mật, hiệu năng và kết quả kiểm thử
 
@@ -1120,7 +1131,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.7.0** (Đã phát hành): Chụp ảnh đề bài nay cũng theo cổng an toàn và bộ lọc nội dung; khi em chọn Gemma, ảnh không bao giờ được gửi lên mạng.
 - **0.7.0** (Đã phát hành): Hộp cập nhật bắt buộc và câu hỏi về tuổi hiện lại nếu bị đóng bằng phím Esc.
 - **0.7.0** (Đã phát hành): Câu hỏi bị chặn ở lại ô nhập để em sửa, không còn bị lưu hay gửi đi sau đó.
-- **0.7.1** (Đang xét duyệt): Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.
+- **0.7.1** (Đã phát hành): Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.
 
 ### Hiệu năng
 
@@ -1128,7 +1139,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - **0.5.2** (Đã phát hành): Tìm nhanh chỉ được tải khi dùng lần đầu (gói 6 kB), nên app mở vẫn nhẹ.
 - **0.6.0** (Đã phát hành): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.
 - **0.7.0** (Đã phát hành): Hình 3D chỉ vẽ lại khi có thay đổi, chia mức chi tiết theo chất lượng hiển thị và giải phóng bộ nhớ khi rời bài; khi máy chậm, chuyển động bớt mượt nhưng số liệu vẫn giữ nguyên độ chính xác.
-- **0.7.1** (Đang xét duyệt): Các hiệu ứng ánh sáng nặng chỉ bật ở chất lượng Cao trên máy có card đồ họa rời; máy dùng đồ họa tích hợp không bị nâng mức và không có các hiệu ứng này, mức Thấp vẫn dùng hình 2D.
+- **0.7.1** (Đã phát hành): Các hiệu ứng ánh sáng nặng chỉ bật ở chất lượng Cao trên máy có card đồ họa rời; máy dùng đồ họa tích hợp không bị nâng mức và không có các hiệu ứng này, mức Thấp vẫn dùng hình 2D.
 
 ### Kết quả kiểm thử
 
@@ -1205,7 +1216,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - Lần chạy E2E đầu tiên có lỗi ngẫu nhiên do thư mục kết quả Playwright nằm trong vùng Vite theo dõi (tệp .html của trace làm trang tải lại giữa chừng) và do chờ quá ngắn khi mở mô-đun lần đầu; đã sửa ở b59cc1a (không bỏ bài kiểm tra nào, không đổi điều được kiểm; lần mở mô-đun đầu tiên được chờ tới 20 s như các bài khác, dự án 3D chạy tối đa 4 luồng)
 - Build web, bộ cài Windows (NSIS + MSI, npm run tauri build) và kiểm tra app thật: xem docs/PROGRESS.md hàng '0.7.0'
 
-**0.7.1** (Đang xét duyệt)
+**0.7.1** (Đã phát hành)
 
 - 20/10/2026 trong sandbox đám mây (Linux) trên a5661cb + tài liệu: npm run check sạch (format, lint, typecheck) và 3942/3942 unit test (274 tệp); npm run format:check sạch
 - E2E đầy đủ (npm run test:e2e): 100 qua, 2 hỏng, 1 không chạy (dự án chromium-3d-perf, phụ thuộc chromium-3d). Hỏng: mitosis3d.spec.ts 'plays through every stage' (hình 3D tự về 2D khi chạy phần mềm) và 'boxes never overlap' (chỉ khi chạy song song; chạy riêng thì qua). Bài đầu hỏng y hệt trên main 433c3a9 trong cùng sandbox, nên không do thay đổi này; chưa chạy trên máy Windows
@@ -1214,10 +1225,11 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 - 22/10/2026 trên máy Windows (16 luồng), nhánh feat/0.7.1 ở 7f35c78 cùng tài liệu của bước hoàn tất: npm run format:check, lint, typecheck sạch; 4200 unit test qua (307 tệp), 1 bỏ qua có điều kiện (src/ui/three/postfx.gpu.test.ts chỉ chạy khi có WebGL 2 thật); npm run build qua; npm run tauri build qua (Rust release 4 phút 26 giây, 0 cảnh báo): SimLab\_0.7.1\_x64-setup.exe 11,73 MiB và SimLab\_0.7.1\_x64\_en-US.msi 12,49 MiB. Phần Rust không đổi so với main b6d7298 nên không chạy lại cargo fmt/clippy/test (21/10/2026: cargo test 221 qua)
 - E2E 22/10/2026 trên cổng 1421 (trạng thái lưu viết cho 1421): dự án chromium 71/74 với 4 luồng; 3 bài hỏng chỉ vì tự ghi gốc http://localhost:1420 (ai-flow.spec.ts "first run" ×2, learner.spec.ts "touch screens get 40px targets"), bản sao chỉ đổi gốc và đường dẫn import thì qua (24/24 bài của hai tệp). Lần chạy 8 luồng trước đó còn 4 bài quá giờ 60 s khi chờ trang mở đầu (chemistry.spec.ts:83, studio.spec.ts:346, teacher.spec.ts:190, board.spec.ts:656); chạy riêng qua 4/4 trong 8,7 s. chromium-3d 34/34 và chromium-3d-perf 1/1 (chạy với --no-deps). studio.spec.ts 7/7 sau khi tab đổi thành “Vật lý”
 - Chưa kiểm bản dựng thật bằng exe + CDP: ngày 22/10/2026 SimLab đã cài (D:/SimLab/stem-sim-lab.exe) đang mở trên máy, nên bước này bỏ qua để không đụng tới tiến trình đó
+- 22/10/2026 trên máy Windows, feat/0.7.1 ở 2b069b6: format, lint, typecheck sạch; 4203 unit test qua (307 tệp), 1 bỏ qua có điều kiện (postfx.gpu.test.ts); E2E chromium-3d 34/34 và @perf 7/7 lần chạy riêng (p95 66,6–66,7 ms) trên cổng 1421; dự án chromium vẫn có 3 bài chỉ hỏng vì tự ghi gốc http://localhost:1420 như các dòng trên
 
 ## VII. Những vấn đề chưa hoàn thành
 
-### Vấn đề đã biết của bản mới nhất (0.7.1, Đang xét duyệt)
+### Vấn đề đã biết của bản mới nhất (0.7.1, Đã phát hành)
 
 - Bản này đổi phần lõi, nên máy đã cài 0.7.0 cần cài bộ cài mới (không cập nhật được trong app).
 - Khi quần thể đông hơn số hình vẽ được, mỗi hình ứng với nhiều cá thể và số hình được làm tròn; góc hình ghi rõ “1 hình = … cá thể”. Con vật, cây cỏ và chuyển động chỉ là minh họa.
@@ -1225,7 +1237,6 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
-- **0.7.1** (Đang xét duyệt): Chưa phát hành. PR #35 (Science Studio trong Phòng thí nghiệm, vá thư viện) đã gộp vào main 21/10/2026 (b6d7298); phần Sinh học 3D của 0.7.1 (làm đẹp bảy bài, bốn bài quần thể có hình 3D riêng) xong trên nhánh feat/0.7.1 (đã gộp main ở 3bdb73a; tới 22/10/2026 main không có commit mới), chưa có PR. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.
 - **0.5.1** (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.
 - **0.4.3** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.
 - **0.4.2** (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.
@@ -1234,13 +1245,12 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 
 ### Điểm chưa xác minh được
 
-- Ngày tạo tag: cả 5 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.
+- Ngày tạo tag: cả 8 tag (v0.2.0, v0.3.0, v0.4.1, v0.5.0, v0.5.2, v0.6.0, v0.7.0, v0.7.1) là tag nhẹ (lightweight), nên git không lưu thời điểm tạo tag; dates.tagged để trống. Cần audit log của GitHub, log của bước phát hành hoặc chủ repo xác nhận.
 - 0.1.0: có hai bản dựng thử (artifact) ngày 29/09/2026 nhưng không có tag hay GitHub Release; cần quyết định có nhắc bản này trong ghi chú phát hành công khai hay không.
 - 0.4.0: chỉ có tên tệp ZIP, hàng PROGRESS 'fork-0.4.0' và CLAUDE.md; chưa mở ZIP để xem package.json, và chưa biết ZIP được gửi cho ai, ngày nào (ngày sửa tệp không phải ngày phân phối).
 - 0.4.2 và 0.4.3: chỉ là nhãn trong tài liệu, chưa bao giờ là số phiên bản thật. Số test của 0.4.3 mâu thuẫn: PROGRESS ghi 491 unit, 48 E2E, Rust 63 + 57; mô tả PR #8 ghi 484 test, E2E 48/48, Rust 58 test.
 - 0.5.0: tệp ZIP mang tên v0.5.0 được tạo trước khi gộp PR #8, nên khác bản phát hành v0.5.0.
 - 0.5.1: chưa biết trạng thái hiện tại của gói Microsoft Store (đã qua duyệt chưa, đã bấm Publish now chưa) và gói MSIX đã nộp được dựng ở đâu.
-- 0.6.0: các commit đến 8a3c48d ở trên PR #20; phần G8 (đến abc9e0c) ở PR #21; Science Studio chỉ ở nhánh feat/science-studio trên máy, chưa commit, chưa có PR; số liệu test ghi ở docs/PROGRESS.md (hàng 0.6.0-g6-g7, 0.6.0-g8 và 0.6.0-studio), phải chạy lại trên commit gộp; ngày phát hành chỉ được điền sau khi GitHub Release thật được publish.
 - Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu.
 
 ## VIII. Tham chiếu commit, PR, tag và GitHub Release
@@ -1249,7 +1259,7 @@ Kho mã: [https://github.com/minhpdnfhh32934-cell/stem-sim-lab](https://github.c
 
 | Phiên bản | Tag | Commit của tag | GitHub Release | PR | Commit (đầu → cuối) | Nhánh |
 | --- | --- | --- | --- | --- | --- | --- |
-| 0.7.1 | — | — | — | [#35](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35), [#38](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38) | `61258ea` → `9fb3061` → `a5661cb` → `3b2d0b8` → `9be792c` → `fbde966` → `c3cab4c` → `5a3ddaf` → `9de55fc` → `0adba18` → `4d6769b` → `b97b2b5` → `3e3115c` → `24ac90b` → `12f6fc1` → `304ef28` → `ee773a0` → `8b6cc69` → `3bdb73a` → `0b4970f` → `1f51d5d` → `2f135f1` → `5b9efef` → `fdfeecb` → `6232792` → `b5852b5` → `ccfc01e` → `6a8b391` → `a3d8a97` → `bd95467` → `7f35c78` | `claude/wizardly-galileo-k3vxcs`, `feat/0.7.1` |
+| 0.7.1 | `v0.7.1` | `49c4d6a513ae452a5290d5f49359a4b243db911a` | [Release v0.7.1](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1) | [#35](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35), [#38](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38) | `61258ea` → `9fb3061` → `a5661cb` → `3b2d0b8` → `9be792c` → `fbde966` → `c3cab4c` → `5a3ddaf` → `9de55fc` → `0adba18` → `4d6769b` → `b97b2b5` → `3e3115c` → `24ac90b` → `12f6fc1` → `304ef28` → `ee773a0` → `8b6cc69` → `3bdb73a` → `0b4970f` → `1f51d5d` → `2f135f1` → `5b9efef` → `fdfeecb` → `6232792` → `b5852b5` → `ccfc01e` → `6a8b391` → `a3d8a97` → `bd95467` → `7f35c78` → `dafff80` → `2b069b6` → `49c4d6a` | `claude/wizardly-galileo-k3vxcs`, `feat/0.7.1` |
 | 0.7.0 | `v0.7.0` | `433c3a91b481e4ba9dabf593d2a6cb8b113ee8bf` | [Release v0.7.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0) | [#32](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/32) | `d86c099` → `ff4f63f` → `15ae66c` → `2ea45a6` → `745dea0` → `b361e3c` → `1c00c7c` → `f302cff` → `3773296` → `825a08f` → `b59cc1a` → `433c3a9` | `feat/0.7` |
 | 0.6.0 | `v0.6.0` | `feab5a8eec14e7ac728a0b5ca75629259ed87a3f` | [Release v0.6.0](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0) | [#20](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20), [#21](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21), [#22](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22), [#29](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29), [#30](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30) | `511345d` → `f527f18` → `8a3c48d` → `abc9e0c` → `c051a5e` → `cae3487` → `feab5a8` | `feat/audit-g0-g5`, `feat/mitosis-3d`, `feat/teacher-quality`, `feat/voice-natural`, `feat/release-history`, `feat/local-ai-runtime`, `feat/teacher-board-runtime`, `feat/science-studio`, `fix/release-0.6.0`, `fix/mitosis-card-linux` |
 | 0.5.2 | `v0.5.2` | `c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da` | [Release v0.5.2](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2) | [#18](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18), [#19](https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19) | `f25e3ae` → `c25ad9d` | `feat/ui-polish`, `release/0.5.2` |
