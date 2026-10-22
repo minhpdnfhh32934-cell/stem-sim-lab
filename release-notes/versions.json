@@ -379,16 +379,16 @@
     },
     {
       "version": "0.7.0",
-      "status": "in-review",
-      "statusNote": "Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.",
+      "status": "released",
+      "statusNote": "Phát hành 20/10/2026 từ main @ 433c3a9 (lượt Release 39444423723). Phần web và phần lõi cùng số 0.7.0, nên ứng dụng 0.6.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống).",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-19T20:08:43+07:00",
         "firstCommit": "2026-10-19T20:08:43+07:00",
         "lastCommit": "2026-10-20T18:35:27+07:00",
-        "merged": null,
-        "built": null,
-        "released": null,
+        "merged": "2026-10-20T14:59:56Z",
+        "built": "2026-10-20T15:22:28Z",
+        "released": "2026-10-20T15:22:50Z",
         "tagged": null
       },
       "evidence": [
@@ -398,7 +398,12 @@
         "Sửa lỗi Vật lí d86c099 … 97029c9, Hóa học – Sinh học c52cd58 … 4c9fb7f, AI / bảng dạy / giọng đọc dc3112e … 25834a9, giao diện và dự án 52e0ecf … de16278, Rust 9e005c8 (gpu.rs) và b990432 (webupdate.rs); lời văn khoa học mới: docs/DATA_REVIEW.md mục 24 và 25 (đang chờ duyệt)",
         "Sinh học 3D: bộ công cụ 3D dùng chung ff4f63f, d1de33b (src/ui/three, src/biology/view3d); Nguyên phân 3D 14f9423, 276656a, 6dadbd7, 353813a; Giảm phân 15ae66c; ADN → mARN → Protein 2ea45a6; Đột biến điểm 745dea0, 1a8f717; Mendel b361e3c; Động học enzyme 1c00c7c; Khuếch tán & thẩm thấu f302cff. Lời văn và hình mới: docs/DATA_REVIEW.md mục 26–28 và các dòng M3D-25 … 32, MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D (đang chờ duyệt)",
         "Bốn bài quần thể (Hardy–Weinberg, phiêu bạt di truyền, tăng trưởng logistic, con mồi – vật ăn thịt) có hình 3D đơn giản từ bộ công cụ chung (6a49c5d, bd23ab3); hình 3D riêng như bảy bài kia chưa làm",
-        "GitHub: không có PR nào từ nhánh feat/0.7 (gh pr list --head feat/0.7, 20/10/2026); chưa có lượt Release, tag hay GitHub Release cho 0.7.0"
+        "GitHub: không có PR nào từ nhánh feat/0.7 (gh pr list --head feat/0.7, 20/10/2026); chưa có lượt Release, tag hay GitHub Release cho 0.7.0",
+        "PR #32 gộp 2026-10-20T14:59:56Z (433c3a9), CI 8/8 đạt trên PR (job E2E chạy lại một lần: bài đo hiệu năng @perf dao động trên máy CI dùng chung)",
+        "built: lượt Release 39444423723 (workflow_dispatch, main, 433c3a9), job 'Build Windows installers' xong 2026-10-20T15:22:28Z",
+        "released: GitHub Release v0.7.0 'SimLab 0.7.0', published_at 2026-10-20T15:22:50Z, target 433c3a9 (gh api …/releases/latest)",
+        "web-update.json: webVersion 0.7.0, minNative 0.7.0, minRequired \"\" (không bắt buộc), có signature và signatureV2",
+        "tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag"
       ],
       "tests": [
         "20/10/2026 trên b59cc1a: format, lint, typecheck sạch (prettier chỉ báo hai tệp ngoài kho, không được theo dõi: AGENTS.md, bench.json); 3933/3933 unit test (272 tệp); E2E 102/102 (chromium 72, chromium-3d 29, chromium-3d-perf 1); Rust fmt + clippy -D warnings + 221 test",
@@ -406,10 +411,10 @@
         "Build web, bộ cài Windows (NSIS + MSI, npm run tauri build) và kiểm tra app thật: xem docs/PROGRESS.md hàng '0.7.0'"
       ],
       "refs": {
-        "tag": null,
-        "tagSha": null,
-        "releaseUrl": null,
-        "prs": [],
+        "tag": "v0.7.0",
+        "tagSha": "433c3a91b481e4ba9dabf593d2a6cb8b113ee8bf",
+        "releaseUrl": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0",
+        "prs": [32],
         "commits": [
           "d86c099",
           "ff4f63f",
@@ -421,7 +426,8 @@
           "f302cff",
           "3773296",
           "825a08f",
-          "b59cc1a"
+          "b59cc1a",
+          "433c3a9"
         ],
         "branches": ["feat/0.7"]
       },

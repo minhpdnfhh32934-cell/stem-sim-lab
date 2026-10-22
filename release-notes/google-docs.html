@@ -19,9 +19,9 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <p>Tài liệu này được tạo tự động từ release-notes/versions.json (npm run release-notes). Mọi mốc thời gian lấy từ git, GitHub (PR, Actions, Releases) và tài liệu trong repo; ô ghi 'Chưa xác minh được' nghĩa là chưa có bằng chứng, không có nghĩa là việc đó không xảy ra. Giờ được đổi sang giờ Việt Nam (UTC+7); giá trị gốc nằm trong versions.json.</p>
 <ul>
 <li>Số phiên bản ghi nhận: 13 (0.1.0 → 0.7.1).</li>
-<li>Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026).</li>
+<li>Đã phát hành trên GitHub: 0.2.0 (05/10/2026), 0.3.0 (06/10/2026), 0.4.1 (12/10/2026), 0.5.0 (13/10/2026), 0.5.2 (13/10/2026), 0.6.0 (19/10/2026), 0.7.0 (20/10/2026).</li>
 <li>Đã gộp, chưa phát hành: 0.5.1.</li>
-<li>Đang xét duyệt: 0.7.0, 0.7.1.</li>
+<li>Đang xét duyệt: 0.7.1.</li>
 <li>Bản phát triển, không phát hành: 0.1.0.</li>
 <li>Chưa xác minh: 0.4.0, 0.4.2, 0.4.3.</li>
 <li>Phiên bản mới nhất trong dữ liệu: 0.7.1 (Đang xét duyệt).</li>
@@ -42,7 +42,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <tr><td>0.5.1</td><td>Đã gộp, chưa phát hành</td><td>Chưa phát hành</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15">#15</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16">#16</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17">#17</a></td><td>—</td></tr>
 <tr><td>0.5.2</td><td>Đã phát hành</td><td>13/10/2026 (đã xác minh)</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18">#18</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19">#19</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2">v0.5.2</a></td></tr>
 <tr><td>0.6.0</td><td>Đã phát hành</td><td>19/10/2026 (đã xác minh)</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20">#20</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21">#21</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22">#22</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29">#29</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30">#30</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0">v0.6.0</a></td></tr>
-<tr><td>0.7.0</td><td>Đang xét duyệt</td><td>Chưa phát hành</td><td>—</td><td>—</td></tr>
+<tr><td>0.7.0</td><td>Đã phát hành</td><td>20/10/2026 (đã xác minh)</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/32">#32</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0">v0.7.0</a></td></tr>
 <tr><td>0.7.1</td><td>Đang xét duyệt</td><td>Chưa phát hành</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35">#35</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38">#38</a></td><td>—</td></tr>
 </tbody>
 </table>
@@ -162,12 +162,12 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>lastCommit: 7f35c78 2026-10-22T11:45:04+07:00 'fix(studio): subject tab says &quot;Vật lý&quot; like the rest of the app', commit mã cuối của bản; commit tài liệu ghi mục này đến sau</li>
 <li>PR #34 (ghi 0.7.0 đã phát hành, published_at 2026-10-20T15:22:50Z theo mô tả PR) còn mở ngày 22/10/2026; mục 0.7.0 ở đây chưa đổi. Gộp #34 xong thì chạy lại npm run release-notes, không sửa tay các tệp sinh ra</li>
 </ul>
-<h3>0.7.0 (Đang xét duyệt)</h3>
+<h3>0.7.0 (Đã phát hành)</h3>
 <p>Bản cập nhật cho Sinh học 3D và sửa lỗi. Giảm phân, ADN → mARN → Protein, Đột biến điểm, Di truyền Mendel, Động học enzyme và Khuếch tán &amp; thẩm thấu có hình 3D riêng; Nguyên phân 3D rõ và đẹp hơn. Mọi con số trong hình 3D do mô hình của bài tính. Ngoài ra sửa nhiều lỗi ở mô phỏng Vật lí, Hóa học, Sinh học, AI Teacher, bảng dạy, giọng đọc và phần cập nhật trong app.</p>
 <ul>
-<li>Trạng thái: Đang xét duyệt.</li>
+<li>Trạng thái: Đã phát hành.</li>
 <li>Kênh phân phối: GitHub Releases: bộ cài Windows và cập nhật trong app.</li>
-<li>Ghi chú trạng thái: Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.</li>
+<li>Ghi chú trạng thái: Phát hành 20/10/2026 từ main @ 433c3a9 (lượt Release 39444423723). Phần web và phần lõi cùng số 0.7.0, nên ứng dụng 0.6.x được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống).</li>
 <li>Ghi chú công khai: đã duyệt để công bố (hiện trong hộp &quot;Có gì mới&quot;).</li>
 </ul>
 <table>
@@ -176,9 +176,9 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <tr><td>Bắt đầu phát triển</td><td>19/10/2026 20:08</td><td><code>2026-10-19T20:08:43+07:00</code></td></tr>
 <tr><td>Commit đầu tiên</td><td>19/10/2026 20:08</td><td><code>2026-10-19T20:08:43+07:00</code></td></tr>
 <tr><td>Commit cuối cùng</td><td>20/10/2026 18:35</td><td><code>2026-10-20T18:35:27+07:00</code></td></tr>
-<tr><td>Gộp vào nhánh (merge)</td><td>Chưa xác minh được</td><td>—</td></tr>
-<tr><td>Dựng bộ cài (GitHub Actions)</td><td>Chưa xác minh được</td><td>—</td></tr>
-<tr><td>Phát hành (GitHub Release)</td><td>Chưa xác minh được</td><td>—</td></tr>
+<tr><td>Gộp vào nhánh (merge)</td><td>20/10/2026 21:59</td><td><code>2026-10-20T14:59:56Z</code></td></tr>
+<tr><td>Dựng bộ cài (GitHub Actions)</td><td>20/10/2026 22:22</td><td><code>2026-10-20T15:22:28Z</code></td></tr>
+<tr><td>Phát hành (GitHub Release)</td><td>20/10/2026 22:22</td><td><code>2026-10-20T15:22:50Z</code></td></tr>
 <tr><td>Tạo tag</td><td>Chưa xác minh được</td><td>—</td></tr>
 </tbody>
 </table>
@@ -252,6 +252,11 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Sinh học 3D: bộ công cụ 3D dùng chung ff4f63f, d1de33b (src/ui/three, src/biology/view3d); Nguyên phân 3D 14f9423, 276656a, 6dadbd7, 353813a; Giảm phân 15ae66c; ADN → mARN → Protein 2ea45a6; Đột biến điểm 745dea0, 1a8f717; Mendel b361e3c; Động học enzyme 1c00c7c; Khuếch tán &amp; thẩm thấu f302cff. Lời văn và hình mới: docs/DATA_REVIEW.md mục 26–28 và các dòng M3D-25 … 32, MEI3D, DOG3D, MUT3D, MEN3D, ENZ3D, TRA3D (đang chờ duyệt)</li>
 <li>Bốn bài quần thể (Hardy–Weinberg, phiêu bạt di truyền, tăng trưởng logistic, con mồi – vật ăn thịt) có hình 3D đơn giản từ bộ công cụ chung (6a49c5d, bd23ab3); hình 3D riêng như bảy bài kia chưa làm</li>
 <li>GitHub: không có PR nào từ nhánh feat/0.7 (gh pr list --head feat/0.7, 20/10/2026); chưa có lượt Release, tag hay GitHub Release cho 0.7.0</li>
+<li>PR #32 gộp 2026-10-20T14:59:56Z (433c3a9), CI 8/8 đạt trên PR (job E2E chạy lại một lần: bài đo hiệu năng @perf dao động trên máy CI dùng chung)</li>
+<li>built: lượt Release 39444423723 (workflow_dispatch, main, 433c3a9), job 'Build Windows installers' xong 2026-10-20T15:22:28Z</li>
+<li>released: GitHub Release v0.7.0 'SimLab 0.7.0', published_at 2026-10-20T15:22:50Z, target 433c3a9 (gh api …/releases/latest)</li>
+<li>web-update.json: webVersion 0.7.0, minNative 0.7.0, minRequired &quot;&quot; (không bắt buộc), có signature và signatureV2</li>
+<li>tagged: tag nhẹ (lightweight), git không lưu ngày tạo tag</li>
 </ul>
 <h3>0.6.0 (Đã phát hành)</h3>
 <p>Bản lớn: Science Studio mới với bài học có hướng dẫn cho Hóa học, Sinh học, Vật lí và trang Soạn bài. AI Teacher giảng trên cả bảng, có “Khoanh để hỏi”, dùng được chương trình AI em tự cài trên máy (Ollama, LM Studio, llama.cpp), dùng kết quả do SimLab tính và nói rõ điều gì chưa kiểm chứng. Ngoài ra có mô phỏng Nguyên phân 3D, Gemma có thêm lớp bảo vệ trên card đồ họa tích hợp và nhiều sửa lỗi bảo mật.</p>
@@ -1011,7 +1016,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.6.0</strong> (Đã phát hành, bảo mật): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.</li>
 <li><strong>0.6.0</strong> (Đã phát hành, vấn đề đã biết): “Khoanh để hỏi”, AI trên máy khác, câu trả lời hiện dần và nút “Hỏi thầy” của Science Studio mới chỉ được thử với dịch vụ giả lập: chưa thử với khóa API thật hay Ollama, LM Studio, llama.cpp thật; ảnh vùng khoanh chưa được thử trên ứng dụng desktop.</li>
 <li><strong>0.6.0</strong> (Đã phát hành, vấn đề đã biết): SimLab không chọn được card đồ họa cho chương trình AI trên máy khác; chọn trong chính chương trình đó.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, sửa lỗi): AI Teacher, bảng dạy và giọng đọc: xóa trò chuyện thì dừng câu trả lời; tra thư viện và Wikipedia dùng đúng lời em hỏi; bảng giữ đúng phép chia, lũy thừa và số thập phân; giọng đọc đọc đúng 2gh, khoảng giá trị, 0,125, đơn vị m³/s² và 5′→3′; công thức tải lỗi không làm bảng treo.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, sửa lỗi): AI Teacher, bảng dạy và giọng đọc: xóa trò chuyện thì dừng câu trả lời; tra thư viện và Wikipedia dùng đúng lời em hỏi; bảng giữ đúng phép chia, lũy thừa và số thập phân; giọng đọc đọc đúng 2gh, khoảng giá trị, 0,125, đơn vị m³/s² và 5′→3′; công thức tải lỗi không làm bảng treo.</li>
 </ul>
 <h3>Giọng nói</h3>
 <ul>
@@ -1050,7 +1055,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.6.0</strong> (Đã phát hành, hiệu năng): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.</li>
 <li><strong>0.6.0</strong> (Đã phát hành, vấn đề đã biết): Gemma 1B vẫn hay sai kiến thức và có lúc khen câu trả lời sai của học sinh; hãy kiểm tra lại bằng mô phỏng hoặc sách.</li>
 <li><strong>0.6.0</strong> (Đã phát hành, vấn đề đã biết): Các lớp bảo vệ mới cho Gemma trên card đồ họa tích hợp chưa được thử lại trên một card tích hợp thật.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, sửa lỗi): Card đồ họa có mã nhận dạng dài (ví dụ máy Windows chạy chip ARM) nay chọn được trong Cài đặt.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, sửa lỗi): Card đồ họa có mã nhận dạng dài (ví dụ máy Windows chạy chip ARM) nay chọn được trong Cài đặt.</li>
 </ul>
 <h3>AI qua API (Gemini, Claude, Groq)</h3>
 <ul>
@@ -1079,19 +1084,19 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.6.0</strong> (Đã phát hành, tính năng mới): Mô phỏng Nguyên phân 3D cho tế bào động vật và thực vật: 7 bước, phát/tạm dừng/từng bước, xoay, chọn một bộ phận để đọc chức năng, có Thẻ Khoa học riêng.</li>
 <li><strong>0.6.0</strong> (Đã phát hành, tính năng mới): Nguyên phân 3D: nút “Hỏi thầy về bộ phận này” mở AI Teacher với câu hỏi viết sẵn về bộ phận đang chọn.</li>
 <li><strong>0.6.0</strong> (Đã phát hành, vấn đề đã biết): Mô tả các kì của Nguyên phân 3D đang chờ giáo viên duyệt.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): Giảm phân 3D: 12 bước từ G1 tới phân chia tế bào chất II ở tế bào động vật, có trao đổi chéo và điểm bắt chéo. Số NST, crômatit, ADN do mô hình đếm; hình 3D và hình 2D dùng cùng một lần sắp xếp ngẫu nhiên.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): ADN → mARN → Protein 3D: chuỗi xoắn kép mở ra, mARN được tổng hợp rồi ribôxôm dịch từng bộ ba. Chữ cái, bộ ba và axit amin lấy từ trình tự em nhập và bảng mã di truyền.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): Đột biến điểm 3D: ADN bình thường và ADN đột biến đặt cạnh nhau, kèm mARN và chuỗi axit amin trước và sau đột biến; chỗ nuclêôtit thay đổi và các axit amin khác nhau được tô nổi.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): Di truyền Mendel 3D: bố mẹ, giao tử, bảng Punnett và cột con lai cao theo xác suất; phần con lai ngẫu nhiên dùng cùng lần tạo ngẫu nhiên với bảng 2D.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): Động học enzyme 3D: tỉ lệ enzyme đang gắn cơ chất theo v/Vmax của công thức trong bài (làm tròn); có các dạng enzyme gắn chất ức chế và thang “1 hạt = … mM”.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): Khuếch tán &amp; thẩm thấu 3D: số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua lỗ màng; ống chữ U có thước cm và mực nước lấy từ đồ thị của bài.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, tính năng mới): Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic và Con mồi – vật ăn thịt có hình 3D đơn giản: mỗi hình là một cá thể hoặc một nhóm cá thể (có ghi chú), số lượng lấy từ mô hình.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, cải tiến): Nguyên phân 3D: mỗi crômatit co xoắn dần ngay tại chỗ, ánh sáng mới, tên bộ phận hiện trên hình, máy ảnh chuyển cảnh mượt; ở chất lượng Cao có màng nhân kép vỡ thành túi nhỏ, trung tử 9 bộ ba vi ống và túi tạo tấm tế bào.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, cải tiến): Mỗi bài Sinh học có nút 3D / 2D và nhớ lựa chọn; khi chất lượng hiển thị là Thấp, máy không có WebGL hoặc card đồ họa gặp lỗi, bài tự dùng hình 2D và nói lý do.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, thay đổi): Các bài Sinh học mở bằng hình 3D; bấm 2D để quay lại hình cũ.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, vấn đề đã biết): Bốn bài về quần thể (Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt) mới có hình 3D đơn giản; hình 3D riêng, chi tiết như các bài khác sẽ có trong một bản cập nhật sau.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, vấn đề đã biết): Lời văn và cách vẽ của các hình 3D mới đang chờ giáo viên duyệt. Hình dạng, kích thước, vị trí và chuyển động trong hình 3D chỉ là minh họa; chỉ số lượng và tỉ lệ lấy từ mô hình.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt, vấn đề đã biết): Giảm phân 3D chỉ vẽ tế bào động vật và bốn tế bào con bằng nhau (phân chia không đều ở con cái chỉ được ghi chú); chưa có giảm phân ở thực vật.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): Giảm phân 3D: 12 bước từ G1 tới phân chia tế bào chất II ở tế bào động vật, có trao đổi chéo và điểm bắt chéo. Số NST, crômatit, ADN do mô hình đếm; hình 3D và hình 2D dùng cùng một lần sắp xếp ngẫu nhiên.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): ADN → mARN → Protein 3D: chuỗi xoắn kép mở ra, mARN được tổng hợp rồi ribôxôm dịch từng bộ ba. Chữ cái, bộ ba và axit amin lấy từ trình tự em nhập và bảng mã di truyền.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): Đột biến điểm 3D: ADN bình thường và ADN đột biến đặt cạnh nhau, kèm mARN và chuỗi axit amin trước và sau đột biến; chỗ nuclêôtit thay đổi và các axit amin khác nhau được tô nổi.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): Di truyền Mendel 3D: bố mẹ, giao tử, bảng Punnett và cột con lai cao theo xác suất; phần con lai ngẫu nhiên dùng cùng lần tạo ngẫu nhiên với bảng 2D.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): Động học enzyme 3D: tỉ lệ enzyme đang gắn cơ chất theo v/Vmax của công thức trong bài (làm tròn); có các dạng enzyme gắn chất ức chế và thang “1 hạt = … mM”.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): Khuếch tán &amp; thẩm thấu 3D: số hạt mỗi ngăn theo định luật Fick ở mọi thời điểm, hạt đi qua lỗ màng; ống chữ U có thước cm và mực nước lấy từ đồ thị của bài.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, tính năng mới): Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic và Con mồi – vật ăn thịt có hình 3D đơn giản: mỗi hình là một cá thể hoặc một nhóm cá thể (có ghi chú), số lượng lấy từ mô hình.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, cải tiến): Nguyên phân 3D: mỗi crômatit co xoắn dần ngay tại chỗ, ánh sáng mới, tên bộ phận hiện trên hình, máy ảnh chuyển cảnh mượt; ở chất lượng Cao có màng nhân kép vỡ thành túi nhỏ, trung tử 9 bộ ba vi ống và túi tạo tấm tế bào.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, cải tiến): Mỗi bài Sinh học có nút 3D / 2D và nhớ lựa chọn; khi chất lượng hiển thị là Thấp, máy không có WebGL hoặc card đồ họa gặp lỗi, bài tự dùng hình 2D và nói lý do.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, thay đổi): Các bài Sinh học mở bằng hình 3D; bấm 2D để quay lại hình cũ.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, vấn đề đã biết): Bốn bài về quần thể (Hardy–Weinberg, Phiêu bạt di truyền, Tăng trưởng logistic, Con mồi – vật ăn thịt) mới có hình 3D đơn giản; hình 3D riêng, chi tiết như các bài khác sẽ có trong một bản cập nhật sau.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, vấn đề đã biết): Lời văn và cách vẽ của các hình 3D mới đang chờ giáo viên duyệt. Hình dạng, kích thước, vị trí và chuyển động trong hình 3D chỉ là minh họa; chỉ số lượng và tỉ lệ lấy từ mô hình.</li>
+<li><strong>0.7.0</strong> (Đã phát hành, vấn đề đã biết): Giảm phân 3D chỉ vẽ tế bào động vật và bốn tế bào con bằng nhau (phân chia không đều ở con cái chỉ được ghi chú); chưa có giảm phân ở thực vật.</li>
 <li><strong>0.7.1</strong> (Đang xét duyệt, tính năng mới): Bốn bài quần thể có khung cảnh 3D ngoài trời riêng: Hardy–Weinberg (con vật mang màu kiểu gen, hũ vốn gen, đi qua từng thế hệ), Phiêu bạt di truyền (mỗi lần chạy là một hòn đảo, có cờ khi chỉ còn một alen), Tăng trưởng logistic (đàn trong hàng rào, cột đo có vạch K, thanh thời gian vẽ đường N(t)), Con mồi – vật ăn thịt (hai loài trên đồng cỏ, hai ống đo và bảng quỹ đạo pha). Bấm vào con vật hay cột đo để xem thẻ giải thích; ba bài sau còn đưa hình tới gần chỗ đã bấm.</li>
 <li><strong>0.7.1</strong> (Đang xét duyệt, cải tiến): Mọi bài Sinh học 3D có sân khấu mới: nền dải màu, ánh sáng kiểu phòng chụp, vật liệu riêng cho màng, nhiễm sắc thể, ADN, protein, thủy tinh và chất lỏng. Ở chất lượng Cao trên máy có card đồ họa rời còn có bóng đổ thật, bóng ở chỗ khuất và ánh sáng nổi.</li>
 <li><strong>0.7.1</strong> (Đang xét duyệt, cải tiến): Nguyên phân và Giảm phân 3D: nhiễm sắc thể to và có khối hơn, thoi phân bào trong mờ, màng tế bào và màng nhân có viền rõ trên nền sáng; nhãn không bao giờ đè lên nhiễm sắc thể.</li>
@@ -1129,9 +1134,9 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.6.0</strong> (Đã phát hành): Tài liệu và ghi chú đưa cho AI được đánh dấu là dữ liệu tham khảo, không phải lệnh.</li>
 <li><strong>0.6.0</strong> (Đã phát hành): Giới hạn lượt AI mỗi ngày chắc chắn hơn (mặc định 100 lượt).</li>
 <li><strong>0.6.0</strong> (Đã phát hành): Mô hình Gemma và giọng đọc trên máy luôn tải đúng một phiên bản đã ghim.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt): Chụp ảnh đề bài nay cũng theo cổng an toàn và bộ lọc nội dung; khi em chọn Gemma, ảnh không bao giờ được gửi lên mạng.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt): Hộp cập nhật bắt buộc và câu hỏi về tuổi hiện lại nếu bị đóng bằng phím Esc.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt): Câu hỏi bị chặn ở lại ô nhập để em sửa, không còn bị lưu hay gửi đi sau đó.</li>
+<li><strong>0.7.0</strong> (Đã phát hành): Chụp ảnh đề bài nay cũng theo cổng an toàn và bộ lọc nội dung; khi em chọn Gemma, ảnh không bao giờ được gửi lên mạng.</li>
+<li><strong>0.7.0</strong> (Đã phát hành): Hộp cập nhật bắt buộc và câu hỏi về tuổi hiện lại nếu bị đóng bằng phím Esc.</li>
+<li><strong>0.7.0</strong> (Đã phát hành): Câu hỏi bị chặn ở lại ô nhập để em sửa, không còn bị lưu hay gửi đi sau đó.</li>
 <li><strong>0.7.1</strong> (Đang xét duyệt): Phần lõi của ứng dụng dùng bản mới của thư viện kiểm tra chứng chỉ khi kết nối Internet.</li>
 </ul>
 <h3>Hiệu năng</h3>
@@ -1139,7 +1144,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li><strong>0.5.0</strong> (Đã phát hành): Bộ cài và gói cập nhật nhỏ hơn: bộ cài 21,6 MB (0.4.1) → 11,7 MB, gói cập nhật 32,1 MB → 18,2 MB.</li>
 <li><strong>0.5.2</strong> (Đã phát hành): Tìm nhanh chỉ được tải khi dùng lần đầu (gói 6 kB), nên app mở vẫn nhẹ.</li>
 <li><strong>0.6.0</strong> (Đã phát hành): Không tra Wikipedia khi Gemma đã có ghi chú phù hợp trong thư viện.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt): Hình 3D chỉ vẽ lại khi có thay đổi, chia mức chi tiết theo chất lượng hiển thị và giải phóng bộ nhớ khi rời bài; khi máy chậm, chuyển động bớt mượt nhưng số liệu vẫn giữ nguyên độ chính xác.</li>
+<li><strong>0.7.0</strong> (Đã phát hành): Hình 3D chỉ vẽ lại khi có thay đổi, chia mức chi tiết theo chất lượng hiển thị và giải phóng bộ nhớ khi rời bài; khi máy chậm, chuyển động bớt mượt nhưng số liệu vẫn giữ nguyên độ chính xác.</li>
 <li><strong>0.7.1</strong> (Đang xét duyệt): Các hiệu ứng ánh sáng nặng chỉ bật ở chất lượng Cao trên máy có card đồ họa rời; máy dùng đồ họa tích hợp không bị nâng mức và không có các hiệu ứng này, mức Thấp vẫn dùng hình 2D.</li>
 </ul>
 <h3>Kết quả kiểm thử</h3>
@@ -1210,7 +1215,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <li>Số test sau phần G8 (051816b và commit tài liệu kèm theo): xem docs/PROGRESS.md hàng '0.6.0-g8'</li>
 <li>Science Studio + chuẩn bị phát hành (19/10/2026, nhánh feat/science-studio): xem docs/PROGRESS.md hàng '0.6.0-studio' và docs/work-log/2026-10-19-release-prep.md</li>
 </ul>
-<p><strong>0.7.0</strong> (Đang xét duyệt)</p>
+<p><strong>0.7.0</strong> (Đã phát hành)</p>
 <ul>
 <li>20/10/2026 trên b59cc1a: format, lint, typecheck sạch (prettier chỉ báo hai tệp ngoài kho, không được theo dõi: AGENTS.md, bench.json); 3933/3933 unit test (272 tệp); E2E 102/102 (chromium 72, chromium-3d 29, chromium-3d-perf 1); Rust fmt + clippy -D warnings + 221 test</li>
 <li>Lần chạy E2E đầu tiên có lỗi ngẫu nhiên do thư mục kết quả Playwright nằm trong vùng Vite theo dõi (tệp .html của trace làm trang tải lại giữa chừng) và do chờ quá ngắn khi mở mô-đun lần đầu; đã sửa ở b59cc1a (không bỏ bài kiểm tra nào, không đổi điều được kiểm; lần mở mô-đun đầu tiên được chờ tới 20 s như các bài khác, dự án 3D chạy tối đa 4 luồng)</li>
@@ -1236,7 +1241,6 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <h3>Phiên bản chưa phát hành hoặc chưa xác minh</h3>
 <ul>
 <li><strong>0.7.1</strong> (Đang xét duyệt): Chưa phát hành. PR #35 (Science Studio trong Phòng thí nghiệm, vá thư viện) đã gộp vào main 21/10/2026 (b6d7298); phần Sinh học 3D của 0.7.1 (làm đẹp bảy bài, bốn bài quần thể có hình 3D riêng) xong trên nhánh feat/0.7.1 (đã gộp main ở 3bdb73a; tới 22/10/2026 main không có commit mới), chưa có PR. Phần web và phần lõi cùng lên 0.7.1 (người dùng quyết định 21/10/2026) vì Cargo.lock đổi để vá hai thư viện chứng chỉ (RUSTSEC-2026-0382, RUSTSEC-2026-0383); khi phát hành, ứng dụng 0.7.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.</li>
-<li><strong>0.7.0</strong> (Đang xét duyệt): Đang chờ duyệt trên nhánh feat/0.7: chưa có PR, chưa gộp vào main, chưa phát hành. Phần web và phần lõi cùng lên 0.7.0 vì có thay đổi Rust (gpu.rs, webupdate.rs), nên khi phát hành, ứng dụng 0.6.0 sẽ được báo cài bộ cài mới thay vì cập nhật trong app.</li>
 <li><strong>0.5.1</strong> (Đã gộp, chưa phát hành): Không có tag v0.5.1 và không có GitHub Release riêng; bộ cài lõi 0.5.1 được phát hành lần đầu kèm Release v0.5.2. Gói Microsoft Store 0.5.1.0 đã gửi duyệt ngày 13/10/2026 và được chọn giữ lại; chưa có tài liệu nào cho thấy app đã lên Store.</li>
 <li><strong>0.4.3</strong> (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json (commit cbb176a nâng thẳng 0.4.1 → 0.5.0). Không có tag, Release hay ZIP. Nội dung, trừ bảng giảng LessonBoard đã bị thay, đến với người dùng trong 0.5.0.</li>
 <li><strong>0.4.2</strong> (Chưa xác minh): Nhãn nội bộ, chưa bao giờ là số phiên bản trong package.json. Không có tag, Release hay ZIP. Nội dung đến với người dùng trong 0.5.0.</li>
@@ -1260,7 +1264,7 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
 <thead><tr><th>Phiên bản</th><th>Tag</th><th>Commit của tag</th><th>GitHub Release</th><th>PR</th><th>Commit (đầu → cuối)</th><th>Nhánh</th></tr></thead>
 <tbody>
 <tr><td>0.7.1</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/35">#35</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/38">#38</a></td><td><code>61258ea</code> → <code>9fb3061</code> → <code>a5661cb</code> → <code>3b2d0b8</code> → <code>9be792c</code> → <code>fbde966</code> → <code>c3cab4c</code> → <code>5a3ddaf</code> → <code>9de55fc</code> → <code>0adba18</code> → <code>4d6769b</code> → <code>b97b2b5</code> → <code>3e3115c</code> → <code>24ac90b</code> → <code>12f6fc1</code> → <code>304ef28</code> → <code>ee773a0</code> → <code>8b6cc69</code> → <code>3bdb73a</code> → <code>0b4970f</code> → <code>1f51d5d</code> → <code>2f135f1</code> → <code>5b9efef</code> → <code>fdfeecb</code> → <code>6232792</code> → <code>b5852b5</code> → <code>ccfc01e</code> → <code>6a8b391</code> → <code>a3d8a97</code> → <code>bd95467</code> → <code>7f35c78</code></td><td><code>claude/wizardly-galileo-k3vxcs</code>, <code>feat/0.7.1</code></td></tr>
-<tr><td>0.7.0</td><td>—</td><td>—</td><td>—</td><td>—</td><td><code>d86c099</code> → <code>ff4f63f</code> → <code>15ae66c</code> → <code>2ea45a6</code> → <code>745dea0</code> → <code>b361e3c</code> → <code>1c00c7c</code> → <code>f302cff</code> → <code>3773296</code> → <code>825a08f</code> → <code>b59cc1a</code></td><td><code>feat/0.7</code></td></tr>
+<tr><td>0.7.0</td><td><code>v0.7.0</code></td><td><code>433c3a91b481e4ba9dabf593d2a6cb8b113ee8bf</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0">Release v0.7.0</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/32">#32</a></td><td><code>d86c099</code> → <code>ff4f63f</code> → <code>15ae66c</code> → <code>2ea45a6</code> → <code>745dea0</code> → <code>b361e3c</code> → <code>1c00c7c</code> → <code>f302cff</code> → <code>3773296</code> → <code>825a08f</code> → <code>b59cc1a</code> → <code>433c3a9</code></td><td><code>feat/0.7</code></td></tr>
 <tr><td>0.6.0</td><td><code>v0.6.0</code></td><td><code>feab5a8eec14e7ac728a0b5ca75629259ed87a3f</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0">Release v0.6.0</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/20">#20</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/21">#21</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/22">#22</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/29">#29</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/30">#30</a></td><td><code>511345d</code> → <code>f527f18</code> → <code>8a3c48d</code> → <code>abc9e0c</code> → <code>c051a5e</code> → <code>cae3487</code> → <code>feab5a8</code></td><td><code>feat/audit-g0-g5</code>, <code>feat/mitosis-3d</code>, <code>feat/teacher-quality</code>, <code>feat/voice-natural</code>, <code>feat/release-history</code>, <code>feat/local-ai-runtime</code>, <code>feat/teacher-board-runtime</code>, <code>feat/science-studio</code>, <code>fix/release-0.6.0</code>, <code>fix/mitosis-card-linux</code></td></tr>
 <tr><td>0.5.2</td><td><code>v0.5.2</code></td><td><code>c25ad9d37cc27efb6e9ad4cc8a7dd45f5256c0da</code></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.5.2">Release v0.5.2</a></td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/18">#18</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/19">#19</a></td><td><code>f25e3ae</code> → <code>c25ad9d</code></td><td><code>feat/ui-polish</code>, <code>release/0.5.2</code></td></tr>
 <tr><td>0.5.1</td><td>—</td><td>—</td><td>—</td><td><a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/15">#15</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/16">#16</a>, <a href="https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/17">#17</a></td><td><code>2d506e7</code> → <code>069df6c</code></td><td><code>feat/microsoft-store</code>, <code>chore/store-identity</code>, <code>chore/store-manual-submit</code></td></tr>
