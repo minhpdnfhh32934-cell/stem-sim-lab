@@ -3,21 +3,25 @@
  * meadow's right, filled to x(t) (the prey's chart colour, left) and y(t) (the predators', right)
  * on ONE scale whose top is 1.08 × the largest of the run's peaks, x* and y* (`binding.ts`), like
  * the 2D time chart's single axis. A ring marks the equilibrium on each: x* = γ/δ on the prey
- * tube (above it the predators grow), y* = α/β on the predator tube (below it the prey grow). An
- * ink arrow on each liquid's surface shows dx/dt or dy/dt over `rateRef` (down while shrinking).
- * The tubes, the plinth and the arrows' look are illustration; levels and lengths are the model's.
+ * tube (above it the predators grow), y* = α/β on the predator tube (below it the prey grow).
+ * Each tube owns its outer side: an arrow on its liquid's surface in a deeper shade of its
+ * species' colour shows dx/dt or dy/dt over `rateRef` (down while shrinking), and the ring's tag
+ * stands beyond it. A plaque under each tube gives the moment's value and rate in numbers. The
+ * tubes, the plinth and the arrows' look are illustration; levels, lengths and numbers are the
+ * model's.
  */
 import * as THREE from 'three';
 import type { SceneKit, Vec3 } from '../../view3d/kit';
 import { glassMeshes, glassware, highlight } from '../../view3d/recipes';
 import { jarGeometry } from '../../genetics/hw3d/genePool';
-import { PREDATOR_TOKEN, PREY_TOKEN, type LvModel3D, type LvMoment } from './binding';
+import { ARROW_MIN, PREDATOR_TOKEN, PREY_TOKEN, type LvModel3D, type LvMoment } from './binding';
 import type { ColumnsLayout } from './layout';
 
-/** Below this share of its full length an arrow is not drawn (the rate ≈ 0). */
-export const ARROW_MIN = 0.02;
-/** An arrow's full length as a share of the tubes' height. */
-export const ARROW_SHARE = 0.3;
+export { ARROW_MIN } from './binding';
+/** An arrow's full length as a share of the tubes' height (as the logistic column's). */
+export const ARROW_SHARE = 0.34;
+/** A short arrow keeps at least this share of its length as shaft (never a lone head). */
+export const SHAFT_MIN = 0.5;
 
 export interface ColumnsTexts {
   prey: string;
@@ -25,9 +29,11 @@ export interface ColumnsTexts {
   /** "x* = …", "y* = …". */
   xStar: string;
   yStar: string;
+  /** The plaque under a tube at a moment: "x = …\ndx/dt = …" (`facts.ts`, the model's numbers). */
+  value: (s: Species, m: LvMoment) => string;
 }
 
-type Species = 'prey' | 'predators';
+export type Species = 'prey' | 'predators';
 
 export interface Columns {
   /** What a tap on the columns can hit (plinth, liquids; the glass is not pickable). */
@@ -45,6 +51,10 @@ export interface Columns {
   fillHeight(s: Species): number;
   /** Signed arrow length now (world units; 0 when hidden). */
   arrowLength(s: Species): number;
+  /** x of an arrow (world): on its own tube's outer side. */
+  arrowX(s: Species): number;
+  /** The plaque's text now. */
+  valueText(s: Species): string;
   /** World y of the equilibrium ring on a tube. */
   ringHeight(s: Species): number;
   /** Front of a liquid's surface (world). */
@@ -95,11 +105,18 @@ export function columns(
   const glassLook = glassware(kit, { ink: true, edge: true });
   const jar = kit.geometry(jarGeometry(L.tubeR, H * 1.06, sides));
   const rimMat = kit.solid(kit.color('--bio3d-glass-edge'), { roughness: 0.3, clearcoat: 0.4 });
-  const ink = kit.solid(kit.color('--text'), { roughness: 0.5 });
-  const shaftR = Math.max(0.05, L.tubeR * 0.1);
-  const headH = Math.max(0.3, L.tubeR * 0.5);
+  // The arrows: thick enough to read at the overview; the head shrinks with a short arrow.
+  const shaftR = Math.max(0.06, L.tubeR * 0.12);
+  const headR = shaftR * 2.6;
+  const headH = Math.max(0.32, L.tubeR * 0.5);
+  /** From a tube's centre: its arrow, then its ring's tag (each tube owns its outer side). */
+  const arrowOff = L.tubeR + 0.14 + headR;
+  const tagOff = arrowOff + headR + 0.22;
+  const inkColor = new THREE.Color(kit.color('--text'));
+  const darkStage = inkColor.getHSL({ h: 0, s: 0, l: 0 }).l > 0.5;
   const tubes = (['prey', 'predators'] as const).map((s) => {
     const x = s === 'prey' ? L.preyX : L.predatorX;
+    const token = s === 'prey' ? PREY_TOKEN : PREDATOR_TOKEN;
     for (const g of glassMeshes(kit, glassLook, jar, 5, kit.tier === 'high'))
       g.position.set(x, base, L.z);
     for (const [y, thick, name] of [
@@ -116,10 +133,7 @@ export function columns(
     }
     const liquid = kit.mesh(
       kit.cylinder(sides),
-      kit.solid(kit.color(s === 'prey' ? PREY_TOKEN : PREDATOR_TOKEN), {
-        roughness: 0.28,
-        clearcoat: 0.5,
-      }),
+      kit.solid(kit.color(token), { roughness: 0.28, clearcoat: 0.5 }),
     );
     liquid.name = `lv-liquid-${s}`;
     // The equilibrium ring: x* on the prey tube, y* on the predator tube (neutral ink).
@@ -132,38 +146,49 @@ export function columns(
     ring.name = `lv-ring-${s}`;
     ring.position.set(x, ringY, L.z);
     ring.raycast = () => undefined;
-    // Tags on the outer sides; titles above the lips.
+    // The tube's outer side: the prey's left, the predators' right.
     const outer = s === 'prey' ? -1 : 1;
     const tag = kit.label(
       s === 'prey' ? texts.xStar : texts.yStar,
-      [x + outer * (L.tubeR * 1.1 + 0.5), ringY, L.z],
+      [x + outer * tagOff, ringY, L.z],
       'muted',
     );
     tag.center.set(s === 'prey' ? 1 : 0, 0.5);
+    tag.name = `lv-ring-tag-${s}`;
     tag.element.classList.add('lv3d__mark');
-    // Titles above the lips, spreading outwards (the prey's to the left, the predators' right).
+    // Titles just above the lips, spreading outwards (the prey's to the left, the predators'
+    // right).
     const title = kit.label(
       s === 'prey' ? texts.prey : texts.predators,
-      [x - outer * L.tubeR * 0.35, base + H * 1.06 + 0.95, L.z],
+      [x - outer * L.tubeR * 0.35, base + H * 1.06 + 0.5, L.z],
       'strong',
     );
-    title.center.set(s === 'prey' ? 1 : 0, 0.5);
+    title.center.set(s === 'prey' ? 1 : 0, 1);
     title.name = `lv-title-${s}`;
     title.element.classList.add('lv3d__title', `lv3d__title--${s}`);
-    // The arrow sits on the tubes' inner sides (between them).
-    const ax = x - outer * (L.tubeR + 0.12 + shaftR * 2.6);
+    // The plaque under the tube, hanging from the plinth's front and spreading outwards.
+    const value = kit.label(
+      '',
+      [x - outer * L.tubeR * 0.5, ground + ph * 0.5, L.z + L.plinthRz],
+      'plain',
+    );
+    value.center.set(s === 'prey' ? 1 : 0, 0);
+    value.name = `lv-value-${s}`;
+    value.element.classList.add('lv3d__value', `lv3d__value--${s}`);
+    // The arrow in a deeper shade of the species' colour (towards the ink: darker on the light
+    // theme, a little lighter on the dark one, where the species' colour already stands out and
+    // a stronger pull would wash it to white), so it reads on any ground and as this tube's own.
+    const shade = new THREE.Color(kit.color(token)).lerp(inkColor, darkStage ? 0.15 : 0.38);
+    const arrowMat = kit.solid(`#${shade.getHexString()}`, { roughness: 0.45 });
+    const ax = x + outer * arrowOff;
     const arrow = new THREE.Group();
     arrow.name = `lv-arrow-${s}`;
     kit.scene.add(arrow);
-    const shaft = kit.mesh(kit.cylinder(10), ink, arrow);
-    const head = kit.mesh(
-      kit.geometry(new THREE.ConeGeometry(shaftR * 2.6, headH, 14)),
-      ink,
-      arrow,
-    );
+    const shaft = kit.mesh(kit.cylinder(10), arrowMat, arrow);
+    const head = kit.mesh(kit.geometry(new THREE.ConeGeometry(1, 1, 14)), arrowMat, arrow);
     shaft.raycast = () => undefined;
     head.raycast = () => undefined;
-    return { s, x, liquid, ringY, tag, title, arrow, shaft, head, ax, fill: 0, len: 0 };
+    return { s, x, liquid, ringY, tag, title, value, arrow, shaft, head, ax, fill: 0, len: 0 };
   });
 
   const pickRing = kit.mesh(
@@ -205,25 +230,31 @@ export function columns(
         t.arrow.visible = len !== 0;
         if (len !== 0) {
           const up = len > 0 ? 1 : -1;
-          const shaftL = Math.max(0.01, Math.abs(len) - headH);
+          const total = Math.abs(len);
+          // A short arrow keeps its shaft: the head gets shorter instead, and never narrower
+          // than twice the shaft (so it still reads as a head, not a stub).
+          const hh = Math.min(headH, total * (1 - SHAFT_MIN));
+          const shaftL = total - hh;
+          const hr = Math.max(shaftR * 2, (headR * hh) / headH);
           t.shaft.scale.set(shaftR, shaftL, shaftR);
           t.shaft.position.set(t.ax, base + t.fill + (up * shaftL) / 2, L.z);
-          t.head.position.set(t.ax, base + t.fill + up * (shaftL + headH / 2), L.z);
+          t.head.scale.set(hr, hh, hr);
+          t.head.position.set(t.ax, base + t.fill + up * (shaftL + hh / 2), L.z);
           t.head.rotation.set(up > 0 ? 0 : Math.PI, 0, 0);
         }
+        t.value.element.textContent = texts.value(t.s, m);
       }
     },
     select(on) {
       pickRing.visible = on;
     },
     showLabels(on) {
-      for (const t of tubes) {
-        t.tag.visible = on;
-        t.title.visible = on;
-      }
+      for (const t of tubes) for (const l of [t.tag, t.title, t.value]) l.visible = on;
     },
     fillHeight: (s) => tube(s)?.fill ?? 0,
     arrowLength: (s) => tube(s)?.len ?? 0,
+    arrowX: (s) => tube(s)?.ax ?? L.x,
+    valueText: (s) => tube(s)?.value.element.textContent ?? '',
     ringHeight: (s) => tube(s)?.ringY ?? base,
     surfacePoint: (s) => {
       const t = tube(s);

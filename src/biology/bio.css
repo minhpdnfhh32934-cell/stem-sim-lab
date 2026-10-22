@@ -998,11 +998,19 @@
 .lv3d__dot--predators {
   background: var(--chart-4);
 }
-.three-label.lv3d__title--prey {
+.three-label.lv3d__title--prey,
+.three-label.lv3d__value--prey {
   box-shadow: inset 0 -3px 0 var(--chart-1);
 }
-.three-label.lv3d__title--predators {
+.three-label.lv3d__title--predators,
+.three-label.lv3d__value--predators {
   box-shadow: inset 0 -3px 0 var(--chart-4);
+}
+/* The plaque under each column: the moment's value and rate, two lines in tabular figures. */
+.three-label.lv3d__value {
+  padding-bottom: 4px;
+  white-space: pre;
+  text-align: left;
 }
 /* 3D Mendelian genetics (src/biology/genetics/mendel3d): the draw button, what it gave and the
    phenotype classes share one wrapping row under the step strip. */

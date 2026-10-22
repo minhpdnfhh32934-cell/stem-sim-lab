@@ -23,6 +23,12 @@ import { lvEquilibrium, lvInvariantLog, type LvParams } from '../ecology';
 
 export { figureCap } from '../logistic3d/binding';
 
+/**
+ * Below this share of its full length a rate arrow is not drawn (too short to read as an arrow;
+ * the plaque under the column still gives the rate). The arrows' scale itself is `rateRef`.
+ */
+export const ARROW_MIN = 0.12;
+
 /** Prey: the 2D time chart's first series. Predators: its series colour 4 (`color: 3`). */
 export const PREY_TOKEN = SERIES_VARS[0] ?? '--chart-1';
 export const PREDATOR_TOKEN = SERIES_VARS[3] ?? '--chart-4';

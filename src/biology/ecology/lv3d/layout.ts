@@ -78,11 +78,17 @@ export interface LvLayout {
 }
 
 /**
- * Gap between the meadow's edge and the plinth, and from the plinth to the board (room for the
- * y* tag on the predator tube's right).
+ * Gap between the meadow's edge and the plinth: the prey's plaque under its tube reaches left of
+ * the plinth and must not cover the crowd's front.
  */
-const GAP = 2;
-const BOARD_GAP = 2.6;
+const GAP = 3;
+/**
+ * The gap from the plinth to the board as a share of the subject's whole width. Right of the
+ * predator tube stand its arrow and its y* tag; the tag is page text of a fixed size, so at the
+ * overview (which fits the whole width) it takes about a tenth of the width whatever the
+ * populations, and the gap grows with the width to keep it clear of the board.
+ */
+export const BOARD_GAP_SHARE = 0.13;
 
 /** Clover patches per quality tier (illustration). */
 export function cloverCount(tier: 'low' | 'medium' | 'high'): number {
@@ -141,7 +147,8 @@ export function lvLayout(prey: number, predators: number, patches: number): LvLa
   const bs = boardShape(r);
   // The board's footprint across the view, turned by its yaw.
   const boardW = bs.width * Math.cos(bs.yaw);
-  const width = 2 * r + GAP + 2 * shape.plinthRx + BOARD_GAP + boardW;
+  const rest = 2 * r + GAP + 2 * shape.plinthRx + boardW;
+  const width = rest / (1 - BOARD_GAP_SHARE);
   const mx = -width / 2 + r;
   const cx = mx + r + GAP + shape.plinthRx;
   const offset = shape.tubeR * 2;
@@ -248,8 +255,10 @@ export function subjectPoints(L: LvLayout): Vec3[] {
   const top = c.plinthH + c.tubeH * 1.06 + 1.1;
   for (const dx of [-c.plinthRx, c.plinthRx])
     out.push([c.x + dx, 0, c.z], [c.x + dx * 0.7, top, c.z], [c.x + dx * 0.6, 0, c.z + c.plinthRz]);
-  // The x* tag left of the prey tube (the y* tag stands between the plinth and the board).
+  // The x* tag left of the prey tube (the y* tag stands between the plinth and the board), and
+  // the plaques hanging under the plinth's front.
   out.push([c.x - c.plinthRx - 1.6, c.plinthH + c.tubeH * 0.5, c.z]);
+  out.push([c.x, 0, c.z + c.plinthRz + 3]);
   const L0 = b.lift / Math.cos(b.lean);
   // Room left of the meadow for the name callouts' column (they never cover the animals).
   out.push([meadow.x - meadow.r - CALLOUT_ROOM, 0.7, meadow.z]);
@@ -290,13 +299,16 @@ export function figurePoints(L: LvLayout, kind: 'prey' | 'predator', slot: numbe
   return strip(s.x, s.z, -r, r, r);
 }
 
-/** The columns' close-up: the plinth, both tubes with their titles and the tags either side. */
+/**
+ * The columns' close-up: the plinth, both tubes with their titles, the tags either side and the
+ * plaques under the plinth's front.
+ */
 export function columnsPoints(L: LvLayout): Vec3[] {
   const c = L.columns;
   const top = c.plinthH + c.tubeH * 1.06 + 1.6;
   const out: Vec3[] = [];
   for (const x of [c.x - c.plinthRx - 2.6, c.x, c.x + c.plinthRx + 2.6])
-    out.push([x, 0, c.z + c.plinthRz], [x, top, c.z], [x, 0, c.z - c.plinthRz]);
+    out.push([x, 0, c.z + c.plinthRz + 1.6], [x, top, c.z], [x, 0, c.z - c.plinthRz]);
   return out;
 }
 

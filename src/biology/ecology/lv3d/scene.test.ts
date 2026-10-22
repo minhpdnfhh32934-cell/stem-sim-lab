@@ -1,10 +1,12 @@
 import * as THREE from 'three';
+import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { describe, expect, it } from 'vitest';
 import { SceneKit } from '../../view3d/kit';
 import { expectAllFreed, testKit } from '../../view3d/testing';
 import { lotkaVolterra, lvDrift } from '../ecology';
 import { PREDATOR_TOKEN, PREY_TOKEN, lvModel3d, momentAt, type LvModel3D } from './binding';
-import { ARROW_MIN, ARROW_SHARE } from './columns';
+import { ARROW_MIN, ARROW_SHARE, SHAFT_MIN } from './columns';
+import { columnValue } from './facts';
 import { buildLvHabitat } from './scene';
 
 const P = { alpha: 1, beta: 0.1, delta: 0.075, gamma: 1.5 };
@@ -12,8 +14,16 @@ const model = (): LvModel3D => {
   const traj = lotkaVolterra(P, 10, 5, 30, 800);
   return lvModel3d({ p: P, traj, tEnd: 30, drift: lvDrift(P, traj) }, 200);
 };
+const fmt = (v: number, d = 3) => String(Number(v.toPrecision(d)));
 const texts = {
-  columns: { prey: 'x', predators: 'y', xStar: 'x* = 20', yStar: 'y* = 10' },
+  columns: {
+    prey: 'x',
+    predators: 'y',
+    xStar: 'x* = 20',
+    yStar: 'y* = 10',
+    value: (s: 'prey' | 'predators', m: Parameters<typeof columnValue>[1]) =>
+      columnValue(s, m, fmt),
+  },
   board: { title: 'pha', x: 'x', y: 'y', xStar: 'x*', yStar: 'y*' },
 };
 const TOKENS: Record<string, string> = {
@@ -77,6 +87,52 @@ describe('predator–prey habitat scene', () => {
     const ring = (n: string) => kit.scene.getObjectByName(n)?.position.y ?? 0;
     expect((ring('lv-ring-prey') - base) / s.column).toBeCloseTo(m.eq.x / m.top, 9);
     expect((ring('lv-ring-predators') - base) / s.column).toBeCloseTo(m.eq.y / m.top, 9);
+    expectAllFreed(kit, track, start);
+  });
+
+  it('each tube owns its outer side: its arrow, its ring tag; a plaque gives the numbers', () => {
+    const { kit, track, start } = testKit();
+    const m = model();
+    const scene = buildLvHabitat(kit, { model: m, texts });
+    const x = (n: string) => kit.scene.getObjectByName(n)?.position.x ?? NaN;
+    const prey = x('lv-liquid-prey');
+    const pred = x('lv-liquid-predators');
+    let shortSeen = false;
+    for (let k = 0; k < m.traj.t.length; k += 7) {
+      const t = m.traj.t[k] ?? 0;
+      scene.setTime?.(t);
+      const want = momentAt(m, t);
+      for (const s of ['prey', 'predators'] as const) {
+        const arrow = kit.scene.getObjectByName(`lv-arrow-${s}`);
+        const head = arrow?.children[1];
+        const shaft = arrow?.children[0];
+        const len = Math.abs(want.arrow[s]) * ARROW_SHARE * scene.state().column;
+        expect(arrow?.visible).toBe(Math.abs(want.arrow[s]) >= ARROW_MIN);
+        if (arrow?.visible && head && shaft) {
+          // Shaft + head = the honest length; the shaft is never shorter than SHAFT_MIN of it.
+          expect(shaft.scale.y + head.scale.y).toBeCloseTo(len, 9);
+          expect(shaft.scale.y).toBeGreaterThanOrEqual(len * SHAFT_MIN - 1e-9);
+          // The head stays wider than the shaft (a head, not a stub).
+          expect(head.scale.x).toBeGreaterThanOrEqual(shaft.scale.x * 2 - 1e-9);
+          if (head.scale.y < 0.32 - 1e-9) shortSeen = true;
+          // On its own tube's outer side: the prey's left of the prey tube, the predators'
+          // right of the predator tube.
+          const ax = shaft.position.x;
+          if (s === 'prey') expect(ax).toBeLessThan(prey);
+          else expect(ax).toBeGreaterThan(pred);
+        }
+        // The plaque under the tube shows this sample's value and rate.
+        const plaque = kit.scene.getObjectByName(`lv-value-${s}`);
+        expect(plaque instanceof CSS2DObject ? plaque.element.textContent : null).toBe(
+          columnValue(s, want, fmt),
+        );
+      }
+    }
+    expect(shortSeen).toBe(true);
+    // The ring tags stand outside their own tube (and beyond its arrow).
+    const tagX = (s: string) => x(`lv-ring-tag-${s}`);
+    expect(tagX('prey')).toBeLessThan(prey - 1.2);
+    expect(tagX('predators')).toBeGreaterThan(pred + 1.2);
     expectAllFreed(kit, track, start);
   });
 
@@ -156,9 +212,11 @@ describe('predator–prey habitat scene', () => {
     expect(frames).toContain(`predator:${String(m.slots.predators - 1)}`);
     const title = kit.scene.getObjectByName('lv-title-prey');
     const boardTitle = kit.scene.getObjectByName('lv-board-title');
+    const plaque = kit.scene.getObjectByName('lv-value-predators');
     scene.select?.('prey:0');
     expect(kit.scene.getObjectByName('lv-prey-pick-ring')?.visible).toBe(true);
     expect(title?.visible).toBe(false);
+    expect(plaque?.visible).toBe(false);
     expect(boardTitle?.visible).toBe(false);
     scene.select?.('board');
     expect(kit.scene.getObjectByName('lv-board-pick')?.visible).toBe(true);
@@ -166,6 +224,7 @@ describe('predator–prey habitat scene', () => {
     scene.select?.('columns');
     expect(kit.scene.getObjectByName('lv-columns-ring')?.visible).toBe(true);
     expect(title?.visible).toBe(true);
+    expect(plaque?.visible).toBe(true);
     scene.select?.(null);
     expect(kit.scene.getObjectByName('lv-columns-ring')?.visible).toBe(false);
     expect(title?.visible).toBe(true);

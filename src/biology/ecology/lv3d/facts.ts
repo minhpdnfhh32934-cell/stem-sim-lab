@@ -7,7 +7,7 @@
 import type { LocalizedText } from '@/core/data/dataset';
 import { L } from '../../common';
 import { signed, type Card, type Fmt } from '../logistic3d/facts';
-import type { LvModel3D, LvMoment, LvSelection } from './binding';
+import { ARROW_MIN, type LvModel3D, type LvMoment, type LvSelection } from './binding';
 import type { BoardTexts } from './board';
 import type { ColumnsTexts } from './columns';
 
@@ -27,6 +27,13 @@ export const SOURCES = L(
 /** The player's readout: the sample's time, x and y (the same text as before, and as the 2D). */
 export function readout(m: LvMoment, fmt: Fmt): string {
   return `t = ${fmt(m.t, 3)} · x = ${fmt(m.x, 4)} · y = ${fmt(m.y, 4)}`;
+}
+
+/** The plaque under a column at moment m: its value and its rate (two lines, the model's). */
+export function columnValue(s: 'prey' | 'predators', m: LvMoment, fmt: Fmt): string {
+  return s === 'prey'
+    ? `x = ${fmt(m.x, 4)}\ndx/dt = ${signed(m.dxdt, fmt)}`
+    : `y = ${fmt(m.y, 4)}\ndy/dt = ${signed(m.dydt, fmt)}`;
 }
 
 /** Names on the picture (`scene.ts` places them). */
@@ -52,6 +59,7 @@ export function sceneTexts(
       predators: Lz(L('Vật ăn thịt y', 'Predators y')),
       xStar,
       yStar,
+      value: (s, m) => columnValue(s, m, fmt),
     },
     board: {
       title: Lz(L('Mặt phẳng pha (x, y)', 'Phase plane (x, y)')),
@@ -121,8 +129,8 @@ function predatorTrend(model: LvModel3D, m: LvMoment, fmt: Fmt): LocalizedText {
 /** What an arrow's full length stands for. */
 export function arrowScale(model: LvModel3D, fmt: Fmt): LocalizedText {
   return L(
-    `Mũi tên dài theo dx/dt, dy/dt so với tốc độ lớn nhất (giá trị tuyệt đối) trên các điểm đã tính của lần chạy = ${fmt(model.rateRef, 3)} cá thể/đơn vị t.`,
-    `Arrow lengths follow dx/dt, dy/dt relative to the largest rate (in absolute value) among the run's computed points = ${fmt(model.rateRef, 3)} individuals per time unit.`,
+    `Mũi tên dài theo dx/dt, dy/dt so với tốc độ lớn nhất (giá trị tuyệt đối) trên các điểm đã tính của lần chạy = ${fmt(model.rateRef, 3)} cá thể/đơn vị t; ngắn hơn ${fmt(ARROW_MIN * 100, 2)} % độ dài đầy đủ thì không vẽ (nhãn dưới cột vẫn ghi giá trị).`,
+    `Arrow lengths follow dx/dt, dy/dt relative to the largest rate (in absolute value) among the run's computed points = ${fmt(model.rateRef, 3)} individuals per time unit; below ${fmt(ARROW_MIN * 100, 2)} % of the full length no arrow is drawn (the plaque under the column still gives the value).`,
   );
 }
 

@@ -23,8 +23,12 @@ export interface BoardTexts {
   yStar: string;
 }
 
-/** The plot inside the panel, as shares of its width (left, right) and height (bottom, top). */
-export const PLOT = { left: 0.12, right: 0.05, bottom: 0.13, top: 0.08 };
+/**
+ * The plot inside the panel, as shares of its width (left, right) and height (bottom, top): the
+ * margins hold the letters (x and x* under the x axis, y* left of the y axis, y beside its
+ * arrowhead), so no letter sits on the frame.
+ */
+export const PLOT = { left: 0.15, right: 0.05, bottom: 0.18, top: 0.1 };
 
 export interface Board {
   pickables: THREE.Object3D[];
@@ -213,19 +217,27 @@ export function board(
   const dropX = bar([0, 0, Z], [0, 1, Z], unit * 0.035, preyMat, 'lv-board-drop-prey');
   const dropY = bar([0, 0, Z], [1, 0, Z], unit * 0.035, predMat, 'lv-board-drop-predators');
 
-  // Labels: the title above the roof, the axes' names at their ends, x* and y* at the dashes.
-  const title = kit.label(texts.title, world(0, H + 0.95), 'strong');
+  // Labels: the title standing on the roof (its chip clear of the frame and the y letter), then
+  // the plot's letters in the panel's margins, plain ink on the panel (no chips: the panel is
+  // their ground). x and x* hang under the x axis, y* stands left of the y axis, y right of its
+  // arrowhead.
+  const title = kit.label(texts.title, world(0, H + 0.33, -0.3), 'strong');
+  title.center.set(0.5, 1.2);
   title.name = 'lv-board-title';
-  // The axes' letters past their arrowheads.
-  const xName = kit.label(texts.x, world(x1 + unit * 0.42, PLOT.bottom * H), 'muted');
-  xName.center.set(0, 0.5);
-  const yName = kit.label(texts.y, world(x0 + unit * 0.22, y1 + unit * 0.3 - L0), 'muted');
+  const below = y0 - L0 - unit * 0.08;
+  const xName = kit.label(texts.x, world(x1 + unit * 0.35, below), 'muted');
+  xName.center.set(1, 0);
+  xName.name = 'lv-board-x';
+  const yName = kit.label(texts.y, world(x0 + unit * 0.2, y1 + unit * 0.22 - L0), 'muted');
   yName.center.set(0, 0.5);
-  const xStar = kit.label(texts.xStar, world(px(eqU), PLOT.bottom * H - unit * 0.42), 'muted');
-  const yStar = kit.label(texts.yStar, world(x0 - unit * 0.25, py(eqV) - L0), 'muted');
+  yName.name = 'lv-board-y';
+  const xStar = kit.label(texts.xStar, world(px(eqU), below), 'muted');
+  xStar.center.set(0.5, 0);
+  xStar.name = 'lv-board-xstar';
+  const yStar = kit.label(texts.yStar, world(x0 - unit * 0.12, py(eqV) - L0), 'muted');
   yStar.center.set(1, 0.5);
+  yStar.name = 'lv-board-ystar';
   const labels = [title, xName, yName, xStar, yStar];
-  for (const l of labels.slice(1)) l.element.classList.add('lv3d__mark');
 
   // The picked board: a glowing outline round its frame.
   const pick = kit.mesh(

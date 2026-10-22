@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { lotkaVolterra, lvDrift } from '../ecology';
 import { lvModel3d, momentAt, momentOf, type LvModel3D } from './binding';
-import { CALLOUTS, CAPTION, readout, sceneTexts, selectionCard } from './facts';
+import { CALLOUTS, CAPTION, columnValue, readout, sceneTexts, selectionCard } from './facts';
 
 const P = { alpha: 1, beta: 0.1, delta: 0.075, gamma: 1.5 };
 const model = (): LvModel3D => {
@@ -16,6 +16,19 @@ describe('predator–prey 3D texts', () => {
     const m = model();
     const s = momentAt(m, 12);
     expect(readout(s, fmt)).toBe(`t = 12 · x = ${fmt(s.x, 4)} · y = ${fmt(s.y, 4)}`);
+  });
+
+  it('each column’s plaque is its sample’s value and rate (true minus sign)', () => {
+    const m = model();
+    for (const k of [0, 200, 400, 650]) {
+      const s = momentOf(m, k);
+      const sign = (v: number) => (v < 0 ? `−${fmt(-v, 3)}` : fmt(v, 3));
+      expect(columnValue('prey', s, fmt)).toBe(`x = ${fmt(s.x, 4)}\ndx/dt = ${sign(s.dxdt)}`);
+      expect(columnValue('predators', s, fmt)).toBe(`y = ${fmt(s.y, 4)}\ndy/dt = ${sign(s.dydt)}`);
+      expect(sceneTexts(m, fmt, (t) => t.vi).columns.value('prey', s)).toBe(
+        columnValue('prey', s, fmt),
+      );
+    }
   });
 
   it('cards carry the model’s numbers and the right reason for each trend', () => {

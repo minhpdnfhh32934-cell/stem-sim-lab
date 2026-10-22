@@ -56,8 +56,8 @@ export const LV_CARD_3D: ScienceCardData = card3dAssumptions(LV_CARD, [
     '3D picture: each animal is one individual (or a group, at the scale shown, the same for both species, rounded); at t the prey figures are x/scale and the predator figures y/scale, read at the computed point nearest t (no interpolation).',
   ),
   L(
-    'Hai cột cùng một thang cho x(t) và y(t), vòng ở x* = γ/δ và y* = α/β; mũi tên dài theo dx/dt, dy/dt so với tốc độ lớn nhất trên các điểm đã tính. Bảng mặt phẳng pha vẽ đường (x, y) qua các điểm đã tính, hai đường x = x*, y = y* và điểm cân bằng; hạt sáng là lúc đang xem.',
-    'The two columns share one scale for x(t) and y(t), with rings at x* = γ/δ and y* = α/β; the arrows follow dx/dt, dy/dt relative to the largest rate among the computed points. The phase-plane board draws the (x, y) path through the computed points, the lines x = x*, y = y* and the equilibrium; the bead is the moment shown.',
+    'Hai cột cùng một thang cho x(t) và y(t), vòng ở x* = γ/δ và y* = α/β; mũi tên bên ngoài mỗi ống (màu đậm của loài đó) dài theo dx/dt, dy/dt so với tốc độ lớn nhất trên các điểm đã tính, tốc độ rất nhỏ thì không vẽ mũi tên; nhãn dưới mỗi cột ghi x, dx/dt và y, dy/dt lúc đang xem. Bảng mặt phẳng pha vẽ đường (x, y) qua các điểm đã tính, hai đường x = x*, y = y* và điểm cân bằng; hạt sáng là lúc đang xem.',
+    'The two columns share one scale for x(t) and y(t), with rings at x* = γ/δ and y* = α/β; the arrow beside each tube (a deeper shade of that species’ colour) follows dx/dt, dy/dt relative to the largest rate among the computed points, and a very small rate draws no arrow; the plaque under each column gives x, dx/dt and y, dy/dt at the moment shown. The phase-plane board draws the (x, y) path through the computed points, the lines x = x*, y = y* and the equilibrium; the bead is the moment shown.',
   ),
   L(
     'Mô hình không có không gian và không theo từng cá thể: chỗ đứng, cử động, việc không có cảnh săn mồi, đồng cỏ luôn xanh (giả thiết con mồi có thức ăn không giới hạn) và cây cối chỉ là minh họa.',
