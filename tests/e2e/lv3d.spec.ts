@@ -36,6 +36,7 @@ interface LvState {
 }
 interface Hook {
   frames(): number;
+  moving(): boolean;
   state(): LvState | null;
   project(p: Vec3): [number, number] | null;
   callouts(): string[];
@@ -46,21 +47,25 @@ const state = (page: Page) =>
   page.evaluate(
     () => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.state() ?? null,
   );
-const project = (page: Page, p: Vec3) =>
-  page.evaluate(
-    (q) => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.project(q) ?? null,
-    p,
-  );
 const callouts = (page: Page) =>
   page.evaluate(
     () => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.callouts() ?? [],
   );
 
-/** Where a world point is on the page once the camera has stopped moving. */
+/**
+ * Where a world point is on the page once the camera has stopped: no framing glide running and
+ * two reads in a row agree. The glide moves the camera only when a frame is drawn; with software
+ * WebGL on the busy CI runner a frame can take longer than the 250 ms between reads, so two
+ * equal reads alone could be taken mid-glide (a tap aimed where the target no longer was, a
+ * scale measured before the camera had pulled back).
+ */
 async function settled(page: Page, p: Vec3): Promise<[number, number]> {
   let last: [number, number] | null = null;
   for (let k = 0; k < 40; k++) {
-    const now = await project(page, p);
+    const now = await page.evaluate((q) => {
+      const h = (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d;
+      return h && !h.moving() ? h.project(q) : null;
+    }, p);
     if (now && last && Math.hypot(now[0] - last[0], now[1] - last[1]) < 0.5) return now;
     last = now;
     await page.waitForTimeout(250);

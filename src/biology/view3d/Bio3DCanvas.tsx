@@ -37,6 +37,11 @@ export interface Bio3DDebug {
   subjectRect(): { left: number; top: number; right: number; bottom: number } | null;
   /** Number of frames drawn so far. */
   frames(): number;
+  /**
+   * True while an animated camera move (a framing glide) is running. The camera only moves when
+   * a frame is drawn, so on a slow machine two reads of `project` can agree mid-glide.
+   */
+  moving(): boolean;
   /** Quality tier in effect and what the host draws with (post-processing, GPU class). */
   quality(): QualityInEffect;
   /** What the scene draws now (its own `state()`), or null. */
@@ -310,6 +315,7 @@ export function Bio3DCanvas(props: Bio3DCanvasProps) {
             return r;
           },
           frames: () => h.frames,
+          moving: () => h.moving(),
           quality: () => h.qualityInEffect(),
           state: () => sceneRef.current?.state?.() ?? null,
           project: (p) => {

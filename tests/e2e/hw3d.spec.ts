@@ -33,6 +33,7 @@ interface HwState {
 interface Hook {
   lesson: string;
   frames(): number;
+  moving(): boolean;
   state(): HwState | null;
   project(p: Vec3): [number, number] | null;
   callouts(): string[];
@@ -57,12 +58,21 @@ async function scaleAt(page: Page, p: Vec3): Promise<number> {
   const b = await project(page, [p[0] + 1, p[1], p[2]]);
   return b ? Math.hypot(b[0] - a[0], b[1] - a[1]) / 2 : 0;
 }
-/** Where a world point is on the page once the camera has stopped moving (it re-frames when the
- * chips or a card change size). */
+/**
+ * Where a world point is on the page once the camera has stopped: no framing glide running and
+ * two reads in a row agree. The glide moves the camera only when a frame is drawn; with software
+ * WebGL on the busy CI runner a frame can take longer than the 250 ms between reads, so two
+ * equal reads alone could be taken mid-glide (a tap aimed where the target no longer was, a
+ * scale measured before the camera had pulled back). It re-frames when the chips or a card
+ * change size.
+ */
 async function settled(page: Page, p: Vec3): Promise<[number, number]> {
   let last: [number, number] | null = null;
   for (let k = 0; k < 40; k++) {
-    const now = await project(page, p);
+    const now = await page.evaluate((q) => {
+      const h = (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d;
+      return h && !h.moving() ? h.project(q) : null;
+    }, p);
     if (now && last && Math.hypot(now[0] - last[0], now[1] - last[1]) < 0.5) return now;
     last = now;
     await page.waitForTimeout(250);
