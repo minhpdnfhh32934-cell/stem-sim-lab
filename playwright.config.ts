@@ -62,8 +62,10 @@ export default defineConfig({
       // Each worker draws WebGL in software on the CPU. With 8 at once (16-thread machine,
       // 2026-10-20) the first mitosis view took over 20 s to get its canvas; alone it passes.
       // The CI runner has 4 vCPUs: 4 software renderers at once left mitosis 3D without a
-      // renderer for over 40 s (PR #32), so CI runs 2 at a time.
-      workers: process.env.CI ? 2 : 4,
+      // renderer for over 40 s (PR #32). With 2 the page still froze for 20 s or more while
+      // the other worker drew (traces of 2026-10-23: a lesson switch, a 4 s toast missed by the
+      // test runner itself), so CI runs one at a time.
+      workers: process.env.CI ? 1 : 4,
       // Every lesson here opens a lazy module whose 3D view draws in software. On the CI runner
       // (few CPU cores) a first open can take longer than the 5 s default, so waits here are
       // 15 s; what is checked does not change.
