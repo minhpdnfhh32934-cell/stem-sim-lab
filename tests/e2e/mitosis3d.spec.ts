@@ -710,6 +710,11 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   page,
 }, testInfo) => {
   test.setTimeout(180_000);
+  // The overload ladder stays on here (storage-state.json turns it off for the other specs): the
+  // last check below is that playing never made the app lower the quality.
+  await page.addInitScript(() => {
+    localStorage.removeItem('stemsim.e2e.noOverload');
+  });
   const renderer = await openMitosis(page, 'high');
   await page.getByLabel('Bộ NST lưỡng bội 2n').selectOption('4');
   await expect(page.getByText('1 tế bào · 8 NST đơn')).toBeVisible();

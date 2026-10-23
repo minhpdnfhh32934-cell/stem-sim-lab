@@ -15,6 +15,10 @@
         {
           "name": "stemsim.whatsnew",
           "value": "{\"lastSeen\": \"999.0.0\"}"
+        },
+        {
+          "name": "stemsim.e2e.noOverload",
+          "value": "1"
         }
       ]
     }

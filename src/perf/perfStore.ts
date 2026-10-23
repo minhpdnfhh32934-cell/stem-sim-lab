@@ -80,8 +80,16 @@ export function effectiveTier(
   return s.degraded ? lowerTier(tier) : tier;
 }
 
+/**
+ * localStorage key the end-to-end tests set (tests/e2e/storage-state.json): the CI runner draws
+ * WebGL in software, so the ladder would swap 3D views for their 2D pictures mid-test. Read only
+ * by the dev server; a build never skips the ladder.
+ */
+export const E2E_NO_OVERLOAD_KEY = 'stemsim.e2e.noOverload';
+
 /** Called by render loops when a FrameMonitor reports sustained overload. */
 export function reportOverload(): void {
+  if (import.meta.env.DEV && localStorage.getItem(E2E_NO_OVERLOAD_KEY) === '1') return;
   const s = usePerfStore.getState();
   if (!s.degraded && effectiveTier(s) !== 'low') usePerfStore.setState({ degraded: true });
 }

@@ -70,6 +70,10 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
   of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
   output in `test-results/` (not watched by Vite): traces written inside the watched project
   contain `.html` files that make the dev server reload every open page mid-test.
+  `tests/e2e/storage-state.json` sets `stemsim.e2e.noOverload`: on the dev server only,
+  `reportOverload()` then never lowers the tier, so a slow CI runner (software WebGL) cannot swap
+  a 3D view for its 2D picture mid-test. The ladder is unit-tested (`src/perf/perf.test.ts`); the
+  mitosis `@perf` test removes the key, since it checks that playing never lowered the quality.
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
