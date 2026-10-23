@@ -757,6 +757,12 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
     body: JSON.stringify(result, null, 2),
     contentType: 'application/json',
   });
+  // Also in the log of every run (the attachment survives only a failed CI run): frame times
+  // depend on the runner's CPU, and the job prints its model just before the tests.
+  // eslint-disable-next-line no-console
+  console.log(
+    `mitosis 3D @perf: ${JSON.stringify(plays.map(({ frames, p50Ms, p95Ms }) => ({ frames, p50Ms, p95Ms })))}`,
+  );
   for (const [k, play] of plays.entries()) {
     expect(play.frames, `play ${k + 1}: frames timed`).toBeGreaterThan(20);
     expect(play.stageAtEnd, `play ${k + 1}: stage reached`).not.toBe('prophase');
