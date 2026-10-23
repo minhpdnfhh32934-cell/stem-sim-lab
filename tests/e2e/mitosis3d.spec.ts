@@ -702,9 +702,8 @@ async function timedPlay(page: Page) {
 /**
  * A fixed WebGL 2 workload with no app code (a 1 800-triangle grid drawn in LAYERS overlapping
  * layers, each fragment a short loop of sines), drawn in a page of its own in the same browser,
- * so on the same software renderer: how fast this runner draws, to compare the scene with. Frame
- * times as `timedPlay` measures them, and the median time of one forced, finished render (not
- * rounded to the 16.7 ms frame grid).
+ * so on the same software renderer: how fast this runner draws, to compare the scene with. The
+ * median and p95 time of one forced, finished render (not rounded to the 16.7 ms frame grid).
  */
 async function referencePlay(page: Page) {
   const ref = await page.context().newPage();
@@ -712,7 +711,7 @@ async function referencePlay(page: Page) {
     await ref.setContent(
       '<body style="margin:0"><canvas width="1366" height="768" style="display:block"></canvas></body>',
     );
-    return await ref.evaluate(async () => {
+    return await ref.evaluate(() => {
       const LAYERS = 6;
       const GRID = 30;
       const gl = document.querySelector('canvas')!.getContext('webgl2')!;
@@ -774,37 +773,22 @@ async function referencePlay(page: Page) {
         }
       };
       const px = new Uint8Array(4);
-      // Forced, finished renders (the first two build the shaders), then 4 s of frames.
+      // Forced, finished renders only (the first two build the shaders): frame intervals of an
+      // unforced loop say little here, since the browser queues frames ahead and then stalls
+      // (CI 2026-10-23: p50 16.7 ms, p95 333 ms for this same workload).
       const renders: number[] = [];
-      for (let n = 0; n < 12; n++) {
+      for (let n = 0; n < 22; n++) {
         const t0 = performance.now();
         draw(n * 0.1);
         gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
         if (n >= 2) renders.push(performance.now() - t0);
       }
-      const frames: number[] = [];
-      await new Promise<void>((done) => {
-        const start = performance.now();
-        let prev = start;
-        const tick = (now: number) => {
-          frames.push(now - prev);
-          prev = now;
-          draw(now / 1000);
-          if (now - start < 4000) requestAnimationFrame(tick);
-          else done();
-        };
-        requestAnimationFrame(tick);
-      });
-      const sorted = (v: number[]) => [...v].sort((a, b) => a - b);
-      const pct = (v: number[], q: number) =>
-        v[Math.min(v.length - 1, Math.floor(q * v.length))] ?? 0;
-      const f = sorted(frames.slice(1));
-      const r = sorted(renders);
+      const r = [...renders].sort((a, b) => a - b);
+      const pct = (q: number) => r[Math.min(r.length - 1, Math.floor(q * r.length))] ?? 0;
       return {
-        frames: f.length,
-        p50Ms: Number(pct(f, 0.5).toFixed(1)),
-        p95Ms: Number(pct(f, 0.95).toFixed(1)),
-        renderMs: Number(pct(r, 0.5).toFixed(1)),
+        renders: r.length,
+        renderMs: Number(pct(0.5).toFixed(1)),
+        renderP95Ms: Number(pct(0.95).toFixed(1)),
       };
     });
   } finally {
