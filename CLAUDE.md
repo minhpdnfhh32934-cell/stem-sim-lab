@@ -168,7 +168,8 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
 | E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)                  |
 | Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm`; `LLM_PROVIDER=claude ANTHROPIC_API_KEY=…` / `=groq GROQ_API_KEY=…` |
 
-CI (`.github/workflows/ci.yml`) runs all of the above on every push.
+CI (`.github/workflows/ci.yml`) runs all of the above on every push. A failed E2E job uploads
+`test-results/` as the artifact `e2e-traces` (7 days; open with `npx playwright show-trace trace.zip`).
 
 ## Conventions
 
