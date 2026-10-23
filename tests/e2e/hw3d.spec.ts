@@ -11,8 +11,16 @@ import { openLab } from './nav';
  * figures, the panel's "Cho ngẫu phối 1 thế hệ" is generation 1, and a tap opens a card. Name
  * callouts and a close-up beside the gene pool; an empty population stays empty.
  * WebGL runs in software (SwiftShader), never on the GPU (see mitosis3d.spec.ts).
+ *
+ * Reduced motion: after each change the animals move for 6 s (illustration), and those frames
+ * feed the overload ladder. On the busy CI runner software frames take ~50–130 ms, so 45 slow
+ * frames in a row fit in that window: the app lowered Medium to Low and swapped the lesson for
+ * its 2D picture ("Máy đang chạy chậm…"), taking the 3D view and its card away (seen on CI
+ * 2026-10-22 at the plinth tap; reproduced locally with 80 ms frames). With reduced motion no
+ * frame is timed and camera moves are instant; every number, pick and framing is the same.
  */
 test.use({
+  reducedMotion: 'reduce',
   launchOptions: {
     args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
     ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}),

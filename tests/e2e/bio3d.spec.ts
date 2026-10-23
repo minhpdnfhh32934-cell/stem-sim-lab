@@ -34,6 +34,25 @@ async function openBiology(page: Page) {
   await page.getByRole('radio', { name: 'Sinh học' }).click();
 }
 
+/**
+ * The lesson's 3D canvas is visible. If it never comes, the error also quotes the notice the
+ * app shows instead (Low quality, overload or no WebGL: all three say "…dùng hình 2D…") and the
+ * page's heading (the launch page's after a dev-server reload), so a CI failure tells why.
+ */
+async function expect3d(page: Page, lesson: string, timeout: number) {
+  try {
+    await expect(page.locator(`.bio3d[data-lesson="${lesson}"] canvas`)).toBeVisible({ timeout });
+  } catch (e) {
+    const notices = await page.getByText(/dùng hình 2D/).allInnerTexts();
+    const headings = await page.locator('h1').allInnerTexts();
+    throw new Error(
+      `${lesson}: no 3D canvas; notice on screen: ${notices.join(' | ') || '(none)'}; ` +
+        `page heading: ${headings.join(' | ') || '(none)'}`,
+      { cause: e },
+    );
+  }
+}
+
 test('every biology lesson opens in 3D, draws, keeps its subject clear of the controls, and has a 2D picture', async ({
   page,
 }) => {
@@ -46,8 +65,7 @@ test('every biology lesson opens in 3D, draws, keeps its subject clear of the co
   await openBiology(page);
   for (const [name, lesson] of LESSONS) {
     await page.getByRole('button', { name, exact: true }).click();
-    const view = page.locator(`.bio3d[data-lesson="${lesson}"]`);
-    await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+    await expect3d(page, lesson, 30_000);
     await expect
       .poll(() => page.evaluate(() => window.__simlabBio3d?.frames() ?? 0), { timeout: 15_000 })
       .toBeGreaterThan(0);
@@ -85,9 +103,7 @@ test('every biology lesson opens in 3D, draws, keeps its subject clear of the co
     await stage.getByRole('radio', { name: '2D', exact: true }).first().click();
     await expect(page.locator(`.bio3d[data-lesson="${lesson}"]`)).toHaveCount(0);
     await stage.getByRole('radio', { name: '3D', exact: true }).first().click();
-    await expect(page.locator(`.bio3d[data-lesson="${lesson}"] canvas`)).toBeVisible({
-      timeout: 15_000,
-    });
+    await expect3d(page, lesson, 15_000);
   }
   expect(errors).toEqual([]);
 });
@@ -98,9 +114,7 @@ test('logistic 3D: the habitat follows the model; rebuilding for new inputs free
   test.setTimeout(120_000);
   await openBiology(page);
   await page.getByRole('button', { name: 'Tăng trưởng logistic', exact: true }).click();
-  await expect(page.locator('.bio3d[data-lesson="logistic"] canvas')).toBeVisible({
-    timeout: 30_000,
-  });
+  await expect3d(page, 'logistic', 30_000);
   // The chips are the 2D view's (same text).
   await expect(page.getByText('Sức chứa K = 1.000')).toBeVisible();
   // Pause, go to the end: N(t = 30) of the exact solution.
