@@ -69,9 +69,7 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
   of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
   output in `test-results/` (not watched by Vite): traces written inside the watched project
-  contain `.html` files that make the dev server reload every open page mid-test. A failed CI
-  E2E job uploads `test-results/` as the artifact `e2e-traces` (7 days; open with
-  `npx playwright show-trace trace.zip`).
+  contain `.html` files that make the dev server reload every open page mid-test.
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
@@ -166,7 +164,8 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
 | E2E (mocked Gemini)       | `npm run test:e2e` (first time: `npx playwright install chromium`, or set `PW_CHROMIUM`)                  |
 | Golden set vs real model  | `GEMINI_API_KEY=… npm run golden:llm`; `LLM_PROVIDER=claude ANTHROPIC_API_KEY=…` / `=groq GROQ_API_KEY=…` |
 
-CI (`.github/workflows/ci.yml`) runs all of the above on every push.
+CI (`.github/workflows/ci.yml`) runs all of the above on every push. A failed E2E job uploads
+`test-results/` as the artifact `e2e-traces` (7 days; open with `npx playwright show-trace trace.zip`).
 
 ## Conventions
 
