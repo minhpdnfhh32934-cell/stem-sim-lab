@@ -699,6 +699,119 @@ async function timedPlay(page: Page) {
   };
 }
 
+/**
+ * A fixed WebGL 2 workload with no app code (a 1 800-triangle grid drawn in LAYERS overlapping
+ * layers, each fragment a short loop of sines), drawn in a page of its own in the same browser,
+ * so on the same software renderer: how fast this runner draws, to compare the scene with. Frame
+ * times as `timedPlay` measures them, and the median time of one forced, finished render (not
+ * rounded to the 16.7 ms frame grid).
+ */
+async function referencePlay(page: Page) {
+  const ref = await page.context().newPage();
+  try {
+    await ref.setContent(
+      '<body style="margin:0"><canvas width="1366" height="768" style="display:block"></canvas></body>',
+    );
+    return await ref.evaluate(async () => {
+      const LAYERS = 6;
+      const GRID = 30;
+      const gl = document.querySelector('canvas')!.getContext('webgl2')!;
+      const shader = (type: number, src: string) => {
+        const s = gl.createShader(type)!;
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      };
+      const prog = gl.createProgram();
+      gl.attachShader(
+        prog,
+        shader(
+          gl.VERTEX_SHADER,
+          `#version 300 es
+          in vec2 p; uniform float t; uniform float k; out vec2 v;
+          void main() {
+            v = p;
+            float a = t + k * 0.7;
+            gl_Position = vec4(mat2(cos(a), -sin(a), sin(a), cos(a)) * p * 1.2, k / 8.0 - 0.5, 1.0);
+          }`,
+        ),
+      );
+      gl.attachShader(
+        prog,
+        shader(
+          gl.FRAGMENT_SHADER,
+          `#version 300 es
+          precision highp float; in vec2 v; uniform float t; out vec4 c;
+          void main() {
+            float s = 0.0;
+            for (int i = 1; i <= 8; i++) s += sin(v.x * float(i) * 3.1 + t) * cos(v.y * float(i) * 2.3);
+            c = vec4(0.5 + s / 16.0, 0.4, 0.6, 1.0);
+          }`,
+        ),
+      );
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+      const pts: number[] = [];
+      for (let i = 0; i < GRID; i++)
+        for (let j = 0; j < GRID; j++) {
+          const [x0, y0] = [(2 * i) / GRID - 1, (2 * j) / GRID - 1];
+          const [x1, y1] = [x0 + 2 / GRID, y0 + 2 / GRID];
+          pts.push(x0, y0, x1, y0, x1, y1, x0, y0, x1, y1, x0, y1);
+        }
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pts), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      gl.enable(gl.DEPTH_TEST);
+      const tLoc = gl.getUniformLocation(prog, 't');
+      const kLoc = gl.getUniformLocation(prog, 'k');
+      const draw = (t: number) => {
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.uniform1f(tLoc, t);
+        for (let k = 0; k < LAYERS; k++) {
+          gl.uniform1f(kLoc, k);
+          gl.drawArrays(gl.TRIANGLES, 0, pts.length / 2);
+        }
+      };
+      const px = new Uint8Array(4);
+      // Forced, finished renders (the first two build the shaders), then 4 s of frames.
+      const renders: number[] = [];
+      for (let n = 0; n < 12; n++) {
+        const t0 = performance.now();
+        draw(n * 0.1);
+        gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        if (n >= 2) renders.push(performance.now() - t0);
+      }
+      const frames: number[] = [];
+      await new Promise<void>((done) => {
+        const start = performance.now();
+        let prev = start;
+        const tick = (now: number) => {
+          frames.push(now - prev);
+          prev = now;
+          draw(now / 1000);
+          if (now - start < 4000) requestAnimationFrame(tick);
+          else done();
+        };
+        requestAnimationFrame(tick);
+      });
+      const sorted = (v: number[]) => [...v].sort((a, b) => a - b);
+      const pct = (v: number[], q: number) =>
+        v[Math.min(v.length - 1, Math.floor(q * v.length))] ?? 0;
+      const f = sorted(frames.slice(1));
+      const r = sorted(renders);
+      return {
+        frames: f.length,
+        p50Ms: Number(pct(f, 0.5).toFixed(1)),
+        p95Ms: Number(pct(f, 0.95).toFixed(1)),
+        renderMs: Number(pct(r, 0.5).toFixed(1)),
+      };
+    });
+  } finally {
+    await ref.close();
+  }
+}
+
 /** Median of a non-empty list. */
 const median = (values: number[]) => {
   const v = [...values].sort((a, b) => a - b);
@@ -737,6 +850,8 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
     await twoFrames(page);
   }
   expect(await stage(page)).toBe('cytokinesis');
+  // This runner's own drawing speed, measured while the scene is idle (nothing is playing).
+  const reference = await referencePlay(page);
   // Frame times on a shared CI runner only ever get slower than the drawing itself (other jobs
   // take the CPU; seen: p95 266.7 ms once, 150 ms or less on the rerun). So a play within the
   // budget passes at once; one over it is played twice more and the median of the three p95
@@ -752,6 +867,7 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
     maxCalls: Math.max(...plays.map((p) => p.calls)),
     maxTriangles: Math.max(...plays.map((p) => p.triangles)),
     quality: await page.evaluate(() => window.__simlabMitosis3d?.quality() ?? null),
+    reference,
   };
   await testInfo.attach('mitosis3d-perf.json', {
     body: JSON.stringify(result, null, 2),
@@ -763,6 +879,8 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   console.log(
     `mitosis 3D @perf: ${JSON.stringify(plays.map(({ frames, p50Ms, p95Ms }) => ({ frames, p50Ms, p95Ms })))}`,
   );
+  // eslint-disable-next-line no-console
+  console.log(`mitosis 3D @perf reference: ${JSON.stringify(reference)}`);
   for (const [k, play] of plays.entries()) {
     expect(play.frames, `play ${k + 1}: frames timed`).toBeGreaterThan(20);
     expect(play.stageAtEnd, `play ${k + 1}: stage reached`).not.toBe('prophase');
