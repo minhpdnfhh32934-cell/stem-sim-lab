@@ -69,7 +69,9 @@ The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and 
 - E2E: the app opens on the launch page; specs enter the lab with `tests/e2e/nav.ts`. The first open
   of a lazy module waits up to 20 s (the dev server compiles it on first use). Keep Playwright's
   output in `test-results/` (not watched by Vite): traces written inside the watched project
-  contain `.html` files that make the dev server reload every open page mid-test.
+  contain `.html` files that make the dev server reload every open page mid-test. A failed CI
+  E2E job uploads `test-results/` as the artifact `e2e-traces` (7 days; open with
+  `npx playwright show-trace trace.zip`).
 - **Settings** (`src/app/settings/SettingsDialog.tsx`): one page per `SETTINGS_SECTIONS` id
   (`workspaceStore`), each page = small `.settings-group` cards; a visited page stays mounted.
   A new setting goes on the page it belongs to (or a new page added to `SECTIONS` + i18n
