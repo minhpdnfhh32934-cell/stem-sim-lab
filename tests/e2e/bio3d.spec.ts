@@ -104,6 +104,12 @@ test('every biology lesson opens in 3D, draws, keeps its subject clear of the co
     await expect(page.locator(`.bio3d[data-lesson="${lesson}"]`)).toHaveCount(0);
     await stage.getByRole('radio', { name: '3D', exact: true }).first().click();
     await expect3d(page, lesson, 15_000);
+    // The view builds its scene again before its first frame; on a busy CI runner that holds the
+    // page for 20 s or more (seen 2026-10-23: drift's rebuild delayed the click on the next lesson,
+    // whose 30 s then ran out while its own scene was building). The next lesson starts after it.
+    await expect
+      .poll(() => page.evaluate(() => window.__simlabBio3d?.frames() ?? 0), { timeout: 30_000 })
+      .toBeGreaterThan(0);
   }
   expect(errors).toEqual([]);
 });
