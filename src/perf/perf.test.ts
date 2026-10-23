@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { classify, cpuProbe } from './benchmark';
 import { FrameMonitor } from './frameMonitor';
-import { effectiveTier } from './perfStore';
+import { E2E_NO_OVERLOAD_KEY, effectiveTier, reportOverload, usePerfStore } from './perfStore';
 import { TIERS, lowerTier } from './tiers';
 
 describe('quality tiers', () => {
@@ -27,6 +27,17 @@ describe('quality tiers', () => {
   it('degradation lowers the drawing tier by one step, never below low', () => {
     expect(effectiveTier({ preference: 'high', benchmark: null, degraded: true })).toBe('medium');
     expect(effectiveTier({ preference: 'low', benchmark: null, degraded: true })).toBe('low');
+  });
+
+  it('sustained overload lowers the tier, unless the end-to-end tests turned the ladder off', () => {
+    usePerfStore.setState({ preference: 'medium', degraded: false });
+    localStorage.setItem(E2E_NO_OVERLOAD_KEY, '1');
+    reportOverload();
+    expect(usePerfStore.getState().degraded).toBe(false);
+    localStorage.removeItem(E2E_NO_OVERLOAD_KEY);
+    reportOverload();
+    expect(usePerfStore.getState().degraded).toBe(true);
+    usePerfStore.setState({ preference: 'auto', degraded: false });
   });
 
   it('cpu probe returns a positive score within its budget', () => {
