@@ -34,7 +34,7 @@ dirs = "7"
 # GPU list for the in-app AI (src/gpu.rs): DXGI adapters + D3D12 UMA check. Microsoft's official
 # bindings, already in the dependency tree through Tauri/WebView2 (same 0.61 version).
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.61", features = [
+windows = { version = "0.62", features = [
   "Win32_Foundation",
   "Win32_Graphics_Dxgi",
   "Win32_Graphics_Dxgi_Common",
