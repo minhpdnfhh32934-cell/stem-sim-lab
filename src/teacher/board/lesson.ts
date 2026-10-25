@@ -159,6 +159,49 @@ function readableCommands(tex: string): string {
   return out;
 }
 
+/** LaTeX names a subtitle shows as their symbol ("\alpha" → "α"); style names show nothing. */
+const TEX_SYMBOLS: Record<string, string> = {
+  alpha: 'α',
+  beta: 'β',
+  gamma: 'γ',
+  delta: 'δ',
+  Delta: 'Δ',
+  epsilon: 'ε',
+  varepsilon: 'ε',
+  eta: 'η',
+  theta: 'θ',
+  lambda: 'λ',
+  mu: 'μ',
+  nu: 'ν',
+  xi: 'ξ',
+  pi: 'π',
+  rho: 'ρ',
+  sigma: 'σ',
+  Sigma: 'Σ',
+  tau: 'τ',
+  phi: 'φ',
+  varphi: 'φ',
+  Phi: 'Φ',
+  omega: 'ω',
+  Omega: 'Ω',
+  approx: '≈',
+  neq: '≠',
+  ne: '≠',
+  leq: '≤',
+  le: '≤',
+  geq: '≥',
+  ge: '≥',
+  pm: '±',
+  infty: '∞',
+  left: '',
+  right: '',
+  displaystyle: '',
+  mathrm: '',
+  mathbf: '',
+  mathit: '',
+  operatorname: '',
+};
+
 /** Subtitle: the spoken sentence with markdown and LaTeX turned into readable text. */
 export function subtitleText(speech: string): string {
   return speech
@@ -190,13 +233,40 @@ export function subtitleText(speech: string): string {
         .replace(/\^\{([^{}]*)\}/g, (_s, g: string) => (g.length === 1 ? `^${g}` : `^(${g})`));
       // A fraction or root whose part held a power or an index ("\frac{1}{10^{-3}}") reads now.
       return readableCommands(plain)
-        .replace(/\\([a-zA-Z]+)/g, '$1')
+        .replace(
+          /\\([a-zA-Z]+)(\s*)/g,
+          (m, name: string, space: string, at: number, all: string) => {
+            const symbol = Object.hasOwn(TEX_SYMBOLS, name) ? (TEX_SYMBOLS[name] ?? '') : null;
+            const word = /[\p{L}\d]/u.test(all[at + m.length] ?? '');
+            // A letter joins the letter after it ("\Delta t" → "Δt", "\rho = 1" keeps its space);
+            // an operator keeps a space before its argument ("\sin\alpha" → "sin α").
+            if (symbol !== null) return /^\p{L}$/u.test(symbol) && word ? symbol : symbol + space;
+            return name + (space || (word || all[at + m.length] === '\\' ? ' ' : ''));
+          },
+        )
         .replace(/[{}]/g, '');
     })
     .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/(^|[^\p{L}\p{N}*])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\p{L}\p{N}*])/gu, '$1$2')
     .replace(/[`#]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/** A script `subtitleText` keeps as text after a letter, digit or bracket: "v_y", "V_max", "x_(2n)", "e^(-kt)". */
+const SCRIPT = /(?<=[\p{L}\p{N})])([_^])(?:\(([^()]{1,24})\)|([\p{L}\p{N}]+))/gu;
+
+/** A subtitle in pieces, its `_`/`^` scripts apart, so the board shows them lowered or raised. */
+export function subtitlePieces(text: string): { text: string; script: 'sub' | 'sup' | null }[] {
+  const out: { text: string; script: 'sub' | 'sup' | null }[] = [];
+  let at = 0;
+  for (const m of text.matchAll(SCRIPT)) {
+    out.push({ text: text.slice(at, m.index), script: null });
+    out.push({ text: m[2] ?? m[3] ?? '', script: m[1] === '_' ? 'sub' : 'sup' });
+    at = m.index + m[0].length;
+  }
+  out.push({ text: text.slice(at), script: null });
+  return out.filter((p) => p.text !== '');
 }
 
 /**

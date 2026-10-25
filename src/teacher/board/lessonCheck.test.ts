@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { toSpeech } from '@/teacher/voice/vietnameseText';
 import { markdownToScript } from './fromMarkdown';
-import { boardStreamPreview, lessonFor, scriptFor, subtitleText, voiceCue } from './lesson';
+import {
+  boardStreamPreview,
+  lessonFor,
+  scriptFor,
+  subtitlePieces,
+  subtitleText,
+  voiceCue,
+} from './lesson';
 import {
   PART_LIMIT,
   classifyBoardText,
@@ -1608,5 +1615,80 @@ describe('audit G8: links, polite verdicts, geometry, JSON, subtitles', () => {
       ),
     ).toBe('Ta có v = s/t rồi x.');
     expect(boardStreamPreview('Ta có $$v = \\frac{s}{t}$$ rồi.', true)).toBe('Ta có v = s/t rồi.');
+  });
+});
+
+describe('recording 2026-10-26: Gemini on projectile range (30° vs 60°)', () => {
+  // The answer as the installed 0.7.1 app showed it on the board (D:\Downloads\simlab-video-work).
+  const ANSWER = String.raw`### 1. Giả định ban đầu (Rất quan trọng)
+**Kết luận "góc $45^\circ$ cho tầm xa lớn nhất" chỉ đúng khi thỏa mãn 2 điều kiện:**
+1. Bỏ qua sức cản của không khí.
+2. Điểm ném và điểm rơi ở cùng một độ cao (ví dụ: ném trên mặt đất phẳng).
+
+*(Theo ghi chú từ: Thư viện chủ đề Vật lý · Ném xiên)*
+
+### 2. Bản chất: Sự "thương lượng" giữa hai chuyển động
+Khi một vật được ném xiên với vận tốc ban đầu $v_0$ dưới góc $\alpha$, chuyển động của nó được tách thành 2 thành phần độc lập:
+1. **Chuyển động thẳng đứng ($v_y = v_0 \sin\alpha$):** Quyết định thời gian vật ở trên không ($t$). Càng ném hướng lên cao, vật bay lên càng cao và ở trên không càng lâu.
+2. **Chuyển động nằm ngang ($v_x = v_0 \cos\alpha$):** Quyết định tốc độ tiến về phía trước. Càng ném là là sát đất, vật lao về phía trước càng nhanh.`;
+  const script = scriptFor(ANSWER);
+  const subtitles = script.sentences.map((s) => subtitleText(s.spoken || s.speech));
+
+  it('a line that only cites a library note is neither written, said nor shown', () => {
+    expect(
+      writesOf(script)
+        .map((w) => w.text)
+        .join('\n'),
+    ).not.toMatch(/Thư viện chủ đề|ghi chú từ/u);
+    expect(saidOf(script)).not.toMatch(/Thư viện chủ đề/u);
+    expect(subtitles.join('\n')).not.toMatch(/Thư viện chủ đề/u);
+    const table: [string, TextClass][] = [
+      ['(Theo ghi chú từ: Thư viện chủ đề Vật lý · Ném xiên)', 'internal'],
+      ['*(Theo ghi chú từ: Thư viện chủ đề Vật lý · Ném xiên)*', 'internal'],
+      ['Nguồn: Thư viện chủ đề Hóa học · Dung dịch.', 'internal'],
+      [
+        '(From the note: Thư viện chủ đề Sinh học · Enzyme và Thư viện chủ đề Sinh học · Tế bào)',
+        'internal',
+      ],
+      // A sentence about the lesson that names a note stays.
+      [
+        'Thư viện chủ đề Vật lý · Ném xiên giải thích vì sao tầm xa bằng nhau khi hai góc phụ nhau.',
+        'learning',
+      ],
+    ];
+    for (const [text, cls] of table) expect(classifyBoardText(text), text).toBe(cls);
+  });
+
+  it('a long step is cut between its sentences, never inside the next one', () => {
+    const steps = writesOf(script)
+      .map((w) => w.text)
+      .filter((t) => /^(?:1\. Chuyển động thẳng|2\. Chuyển động nằm|Càng ném)/u.test(t));
+    expect(steps).toEqual([
+      String.raw`1. Chuyển động thẳng đứng ($v_y = v_0 \sin\alpha$): Quyết định thời gian vật ở trên không ($t$).`,
+      'Càng ném hướng lên cao, vật bay lên càng cao và ở trên không càng lâu.',
+      String.raw`2. Chuyển động nằm ngang ($v_x = v_0 \cos\alpha$): Quyết định tốc độ tiến về phía trước.`,
+      'Càng ném là là sát đất, vật lao về phía trước càng nhanh.',
+    ]);
+  });
+
+  it('the subtitle shows symbols, not LaTeX names or markdown; the voice reads words', () => {
+    expect(subtitles.join('\n')).not.toMatch(/alpha|\\|\*|\$/u);
+    expect(subtitleText(String.raw`($v_y = v_0 \sin\alpha$)`)).toBe('(v_y = v₀ sin α)');
+    expect(subtitleText(String.raw`$\Delta t \approx 2\pi \sqrt{\frac{l}{g}}$`)).toBe(
+      'Δt ≈ 2π √(l/g)',
+    );
+    expect(subtitleText(String.raw`$\sin(\alpha)$ và $\left(x\right)$`)).toBe('sin(α) và (x)');
+    expect(subtitleText('*(chú thích)* và 2 * 3 * 4')).toBe('(chú thích) và 2 * 3 * 4');
+    // "v_y" has no subscript letter in Unicode: the board lowers it (<sub>), so no "_" is seen.
+    expect(subtitlePieces('(v_y = v₀ sin α), V_max, e^(-kt)')).toEqual([
+      { text: '(v', script: null },
+      { text: 'y', script: 'sub' },
+      { text: ' = v₀ sin α), V', script: null },
+      { text: 'max', script: 'sub' },
+      { text: ', e', script: null },
+      { text: '-kt', script: 'sup' },
+    ]);
+    for (const s of script.sentences)
+      expect(toSpeech(s.spoken || s.speech)).not.toMatch(/[_\\$*]/u);
   });
 });

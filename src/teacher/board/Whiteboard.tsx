@@ -31,6 +31,7 @@ import {
   reserveStart,
   showFace,
   stopLesson,
+  subtitlePieces,
   type LessonInput,
 } from './lesson';
 import { browserMeasure, prepareMeasure, renderMath } from './measure';
@@ -144,7 +145,17 @@ export function Whiteboard({ lesson }: { lesson: LessonInput | null }) {
 
       {(lesson || status === 'preparing') && (
         <p className="board__subtitle" aria-live="polite">
-          {status === 'preparing' ? t('board.preparing') : subtitle}
+          {status === 'preparing'
+            ? t('board.preparing')
+            : subtitlePieces(subtitle).map((p, i) =>
+                p.script === 'sub' ? (
+                  <sub key={i}>{p.text}</sub>
+                ) : p.script === 'sup' ? (
+                  <sup key={i}>{p.text}</sup>
+                ) : (
+                  p.text
+                ),
+              )}
         </p>
       )}
       {/* What is on the board was written by an AI: labelled, with the report button. */}

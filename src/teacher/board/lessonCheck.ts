@@ -462,6 +462,16 @@ export function opensContentList(text: string): boolean {
 }
 /** A line that cites sources ("Tài liệu tham khảo: …", "References: …"): not lesson content. */
 const SOURCES_LINE = /^(?:tai lieu tham khao|nguon tham khao|references?|sources|bibliography)\s*:/;
+/** One of the app's own library notes, as the prompt names it ("Thư viện chủ đề Vật lý · Ném xiên"), folded. */
+const LIBRARY_NAME = String.raw`thu vien chu de (?:vat ly|vat li|hoa hoc|sinh hoc)\s*[·•:\-–—]\s*[\p{L}\d ,–\-]{1,40}?`;
+/**
+ * A line that only cites library notes, perhaps in brackets ("(Theo ghi chú từ: Thư viện chủ đề
+ * Vật lý · Ném xiên)", "Nguồn: …"), folded: the chat already shows the note as the answer's source.
+ */
+const LIBRARY_CITATION = new RegExp(
+  String.raw`^\(?\s*(?:(?:theo|nguon|tham khao|trich|dua (?:tren|theo)|according to|based on|sources?|from)(?: the)?(?: (?:ghi chu|notes?|tai lieu|kien thuc|thong tin))?(?: (?:tu|trong|cua|from|in|of))?\s*[:：]?\s*)?${LIBRARY_NAME}(?:\s*(?:[,;]|va|and)\s*${LIBRARY_NAME})*\s*\)?\s*\.?$`,
+  'u',
+);
 /**
  * What a citation's numbers look like (folded): a source word in front, an index "[1]", a year,
  * a page, a textbook's grade ("SGK Vật lý 10").
@@ -719,7 +729,7 @@ function classify(text: string, options: ClassifyOptions): Classified {
   const stripped = stripEchoLabel(plain);
   if (!stripped.text) return stripped.echo ? internal : { cls: 'meta', board: '' };
   const f = fold(stripped.text);
-  if (SOURCES_LINE.test(f)) return internal;
+  if (SOURCES_LINE.test(f) || LIBRARY_CITATION.test(f)) return internal;
   if (INTERNAL.some((re) => re.test(f))) return internal;
   // A verdict ("Được.", "Không.") answers the question: it is content.
   if (VERDICT.test(stripped.text.trim())) return { cls: 'learning', board: text };
@@ -977,6 +987,19 @@ function splitClauses(text: string, limit: number): string[] | null {
   return pieces.filter(Boolean);
 }
 
+/** Whole sentences packed greedily into pieces of at most `limit` characters; null when one is longer. */
+function packSentences(text: string, limit: number): string[] | null {
+  const pieces: string[] = [];
+  for (const s of splitSentences(text)) {
+    const last = pieces.at(-1);
+    if (last !== undefined && last.length + 1 + s.length <= limit)
+      pieces[pieces.length - 1] = `${last} ${s}`;
+    else if (s.length <= limit) pieces.push(s);
+    else return null;
+  }
+  return pieces;
+}
+
 /**
  * A written text within its kind's limit. Math is never touched (the layout splits formulas). A
  * words-only text becomes its key point. A text with numbers or a formula is never cut inside one:
@@ -989,7 +1012,10 @@ export function limitBoardText(text: string, kind: PartKind, math = false): stri
   if (text.length <= limit) return [text];
   if (!material) return [keyPoint(text, limit)];
   if (kind === 'title') return [text];
-  const pieces = splitClauses(text, limit);
+  // Whole sentences first: a clause cut inside the next sentence would break it in two writes.
+  const sentences = packSentences(text, limit);
+  const pieces =
+    sentences && sentences.length <= MAX_PIECES ? sentences : splitClauses(text, limit);
   if (!pieces || pieces.length < 2 || pieces.length > MAX_PIECES) return [text];
   // A piece without numbers is held to the words-only limit like any other text.
   return pieces.map((p) => (holdsMaterial(p) ? p : keyPoint(p, PART_LIMIT[kind])));

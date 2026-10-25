@@ -286,7 +286,7 @@ describe('subtitles read formulas as written', () => {
     expect(subtitleText(String.raw`$v = \frac{72}{3{,}6}$`)).toBe('v = 72/3,6');
     expect(subtitleText(String.raw`$t = \sqrt{\frac{2h}{g}}$`)).toBe('t = √(2h/g)');
     expect(subtitleText(String.raw`$x = \frac{\sqrt{3}}{2}$`)).toBe('x = √(3)/2');
-    expect(subtitleText(String.raw`$\rho = \frac{1}{10^{-3}}$`)).toBe('rho = 1/10⁻³');
+    expect(subtitleText(String.raw`$\rho = \frac{1}{10^{-3}}$`)).toBe('ρ = 1/10⁻³');
   });
 
   it('a fraction of sums keeps its brackets (a + b over c is not a + b/c)', () => {
