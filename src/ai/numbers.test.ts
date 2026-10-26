@@ -60,6 +60,61 @@ describe('no laxer than before (review of #89)', () => {
   });
 });
 
+describe('a power of ten never stands for a mantissa it could not read (re-review of #89)', () => {
+  // Every way of joining a mantissa to a power of ten: the AI's bare 10ⁿ must never pass.
+  const joins = [
+    '.',
+    '×',
+    'x',
+    'X',
+    '*',
+    '·',
+    '⋅',
+    '∙',
+    '•',
+    '✕',
+    '⨯',
+    '´',
+    ' ',
+    ' lần ',
+    'х',
+    ' \\cdot ',
+    '{\\cdot}',
+    ' ×\\, ',
+    '\\!\\cdot\\!',
+    ' ×​',
+  ];
+  const mantissas = ['2', '2,5', '(2,5)', '(2,0 ± 0,1)'];
+  const powers = (e: number) => [`10^${e}`, `10^(${e})`, `(10^${e})`, `[10^${e}]`, `10^{${e}}`];
+  it('rejects 10ⁿ for every join, mantissa and form', () => {
+    for (const e of [-8, 3]) {
+      for (const m of mantissas) {
+        for (const j of joins) {
+          for (const pow of powers(e)) {
+            const text = `q = ${m}${j}${pow} C`;
+            expect(mentions(text, 10 ** e), text).toBe(false);
+          }
+        }
+      }
+    }
+  });
+
+  it('still reads a power of ten that has no mantissa', () => {
+    expect(mentions('q = 10^-8 C', 1e-8)).toBe(true);
+    expect(mentions('q2 = 10^-8 C', 1e-8)).toBe(true);
+    expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
+    // A list of powers: the previous exponent is no mantissa.
+    expect(mentions('Ba điện tích 10⁻⁸, 10⁻⁹ và 10⁻¹⁰ C.', 1e-9)).toBe(true);
+  });
+
+  it('never reads 10^0 as 1 (degrees typed with a caret)', () => {
+    for (const text of ['góc 10^0', 'góc 10 ^0', 'góc 10^(0)', 'góc 10^{0}', 't = 10^0C']) {
+      expect(mentions(text, 1), text).toBe(false);
+      expect(mentions(text, 10), text).toBe(true);
+    }
+  });
+});
+
 describe('the sign a problem gives a charge', () => {
   it('reads a minus or a plus written next to the number', () => {
     expect(writtenSign('q = −2 µC', 2)).toBe(-1);

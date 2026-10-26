@@ -97,15 +97,16 @@ const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
   {
     keys: /^yP$/,
     value: 0,
+    // M must be the subject: "cách trung điểm của AB 4 cm" or "O là trung điểm" say nothing of M.
     phrases: [
-      'trên đoạn ab',
-      'trên đoạn thẳng ab',
-      'trên đường thẳng ab',
-      'thuộc đoạn ab',
-      'thuộc đường thẳng ab',
-      'trung điểm của ab',
-      'trung điểm của đoạn ab',
-      'trung điểm ab',
+      'm nằm trên đoạn ab',
+      'm nằm trên đoạn thẳng ab',
+      'm nằm trên đường thẳng ab',
+      'm thuộc đoạn ab',
+      'm thuộc đường thẳng ab',
+      'm là trung điểm của ab',
+      'm là trung điểm của đoạn ab',
+      'm là trung điểm ab',
     ],
   },
 ];

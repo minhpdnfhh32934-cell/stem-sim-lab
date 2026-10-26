@@ -31,6 +31,9 @@ export function normalizeText(s: string): string {
       .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g, (c) => SUPER[c] ?? c)
       .replace(/\^\^/g, '^')
       .replace(/[−–—]/g, '-')
+      // Cyrillic "х" pasted for "x", zero-width spaces.
+      .replace(/х/g, 'x')
+      .replace(/[\u200b-\u200d\u2060\ufeff]/g, '')
       .replace(/[\u00a0\u202f]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim()
@@ -59,11 +62,13 @@ const SCI =
 /** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
 const POW = /(?<![\d.,])10\s*\^\s*[({]?\s*(-?\d+)\s*[)}]?/g;
 /**
- * A number (not a name such as "q2") just before a power of ten: its mantissa, joined by a sign
- * SCI does not know ("2 10^-8"). The power then is no number of its own: reading it alone would
- * accept 10⁻⁸ for a problem that says 2·10⁻⁸.
+ * Anything like a mantissa before a power of ten — a number (not a name such as "q2", not the
+ * exponent of an earlier power) followed only by signs, brackets, spaces, "x"/"lần" or LaTeX
+ * commands ("2.(10^-8)", "(2,5)·10⁻⁸", "2{\cdot}10^{-8}"). The power then is never read alone:
+ * that would accept 10⁻⁸ for a problem that says 2·10⁻⁸. Unsure means refused (§2.1).
  */
-const MANTISSA_BEFORE = /(?<![\p{L}_\d.,])\d+(?:[.,]\d+)?\s*[^\p{L}\p{N}\s]?\s*$/u;
+const MANTISSA_BEFORE =
+  /(?<![\p{L}_\d.,^])(?<!\^-)\d+(?:[.,]\d+)?(?:[^\p{L}\p{N}]|[xX]|lần|\\[a-z]+)*$/u;
 // A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
 const PLAIN = /\d+(?:[.,\s]\d{3}(?!\d))*(?:[.,]\d+)?|\d+/g;
 
@@ -90,7 +95,10 @@ function scan(t: string, keepInner = false): Token[] {
   }
   for (const m of t.matchAll(POW)) {
     const end = m.index + m[0].length;
-    if (inside(m.index, end) || MANTISSA_BEFORE.test(t.slice(0, m.index))) continue;
+    // 10^0 is never read as 1: "10^0" after a number is a degree typed with a caret.
+    if (inside(m.index, end) || Number(m[1]) === 0 || MANTISSA_BEFORE.test(t.slice(0, m.index))) {
+      continue;
+    }
     tokens.push({ start: m.index, end, readings: [10 ** Number(m[1])] });
   }
   const outer = tokens.length;

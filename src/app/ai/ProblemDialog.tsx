@@ -17,6 +17,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
 import { notUsedIssues, type Draft } from '@/ai/draft';
+import { writtenSign } from '@/ai/numbers';
 import { MAX_PROBLEM_CHARS } from '@/ai/pipeline';
 import { fromSI, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
@@ -221,10 +222,17 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   };
 
   const blocking = draft.issues.filter((i) => i.blocking);
-  // A charge whose sign the learner has set by hand is confirmed: its sign warning goes away.
+  // The sign warning stays until the learner's value has the sign the problem writes (or, when
+  // the problem leaves it open, until the learner has set the value by hand).
   const signToCheck = new Set(
     draft.issues
-      .filter((i) => i.kind === 'signMismatch' && i.key && sources[i.key] !== 'user')
+      .filter((i) => {
+        if (i.kind !== 'signMismatch' || !i.key) return false;
+        if (sources[i.key] !== 'user') return true;
+        const w = draft.written[i.key];
+        const sign = writtenSign(draft.problemText, w?.value ?? 0, w?.quote ?? '');
+        return sign !== 0 && Math.sign(params[i.key] ?? 0) !== sign;
+      })
       .map((i) => i.key),
   );
   // "Not used" follows the current choices ("Biết tần số f" hides T), not the frozen draft.

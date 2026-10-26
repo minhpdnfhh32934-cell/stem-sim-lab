@@ -110,10 +110,6 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
       }
     }
   }
-  for (const [x, y] of nullPoints) {
-    circle(ctx, cam, x, y, 0, col.panel, col.text, 4);
-    text(ctx, cam, x, y, 'E = 0', col.text);
-  }
   s.charges.forEach((c, i) => {
     // A zero charge is drawn neutral: it makes no field.
     const color = c.q > 0 ? col.acceleration : c.q < 0 ? col.velocity : col.faint;
@@ -124,6 +120,11 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
     const off = Math.max(9, r * cam.scale) + 3;
     text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: off, y: -off });
   });
+  // After the discs: a point E = 0 close to a small charge stays visible.
+  for (const [nx, ny] of nullPoints) {
+    circle(ctx, cam, nx, ny, 0, col.panel, col.text, 4);
+    text(ctx, cam, nx, ny, 'E = 0', col.text);
+  }
   const { x, y } = s.probe;
   circle(ctx, cam, x, y, 0, opts.selected === 'probe' ? col.accent : col.text, undefined, 4);
   text(ctx, cam, x, y, 'M', col.text, 'left', { x: 6, y: 14 });

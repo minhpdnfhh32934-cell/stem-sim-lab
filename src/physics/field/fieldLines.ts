@@ -87,8 +87,10 @@ export function traceFieldLines(
   const tol = TOL * size;
   const radii = discRadii(input, frame);
   const radius = (c: PointCharge) => radii[indexOf(c)] ?? 0;
-  // A step never jumps over the smallest disc.
-  const hMax = Math.min(H_MAX * size, ...charges.map(radius));
+  // A step stays under half the distance to the nearest charge: it never jumps over a disc, and
+  // far from the charges it may grow (close charges no longer slow down the whole picture).
+  const hMaxAt = (x: number, y: number) =>
+    Math.min(H_MAX * size, 0.5 * Math.min(...charges.map((c) => Math.hypot(x - c.x, y - c.y))));
   const maxLength = 3 * (frame.xMax - frame.xMin + frame.yMax - frame.yMin);
   const maxSteps = options.maxSteps ?? 4000;
   const nLargest = options.linesForLargest ?? 12;
@@ -150,8 +152,9 @@ export function traceFieldLines(
     };
     coarse[0] = x;
     coarse[1] = y;
-    let h = hMax / 4;
+    let h = radius(origin) / 4;
     for (let attempt = 0; attempt < maxSteps; attempt++) {
+      h = Math.min(h, hMaxAt(x, y));
       const [ux, uy, e0] = direction(x, y);
       // Exactly on a charge of its own sign (a field line never ends there): stop, mark nothing.
       if (!Number.isFinite(e0)) return line;
@@ -209,7 +212,7 @@ export function traceFieldLines(
       }
       x = nx;
       y = ny;
-      h = Math.min(hMax, h * Math.min(2, 0.9 * (tol / Math.max(err, 1e-30 * size)) ** 0.2));
+      h *= Math.min(2, 0.9 * (tol / Math.max(err, 1e-30 * size)) ** 0.2);
     }
     return line;
   };

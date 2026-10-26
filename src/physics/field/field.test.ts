@@ -227,6 +227,24 @@ describe('field lines (RK4 with step doubling)', () => {
     expect(lines.every((l) => l.points.every(Number.isFinite))).toBe(true);
   });
 
+  it('traces charges a millimetre apart without running out of steps', () => {
+    const square: Frame = { xMin: -0.5, xMax: 0.5, yMin: -0.5, yMax: 0.5 };
+    for (const gap of [1e-3, 1e-4]) {
+      const { lines } = traceFieldLines(
+        [
+          { q: 4e-8, x: 0, y: 0 },
+          { q: 4e-8, x: gap, y: 0 },
+        ],
+        k,
+        square,
+      );
+      expect(
+        lines.filter((l) => l.end === 'steps'),
+        `gap ${gap}`,
+      ).toEqual([]);
+    }
+  });
+
   it('cuts a line by its step budget, not by time', () => {
     const { lines } = traceFieldLines([{ q: 1e-9, x: 0, y: 0 }], k, frame, { maxSteps: 3 });
     expect(lines.every((l) => l.end === 'steps' && l.points.length <= 2 * 4)).toBe(true);

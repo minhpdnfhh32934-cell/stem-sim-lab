@@ -533,7 +533,7 @@ test('a charge whose sign the AI changed is marked on its row until the learner 
         { key: 'q2', value: 8, unit: 'uC', quote: 'q₂ = −8 µC' },
         { key: 'x2', value: 30, unit: 'cm', quote: 'cách nhau 30 cm' },
         { key: 'xP', value: 10, unit: 'cm', quote: 'cách A 10 cm' },
-        { key: 'yP', value: 0, unit: 'cm', quote: 'nằm trên đoạn AB' },
+        { key: 'yP', value: 0, unit: 'cm', quote: 'M nằm trên đoạn AB' },
       ],
       questions: [],
       assumptions: [],
@@ -548,7 +548,11 @@ test('a charge whose sign the AI changed is marked on its row until the learner 
   await expect(hint).toHaveCount(1);
   await expect(dialog.locator('.qty-card.is-check')).toHaveCount(1);
   await expect(dialog.locator('.qty-card.is-check')).toContainText('q₂');
-  await dialog.getByRole('textbox', { name: 'Điện tích q₂ (có dấu)' }).fill('-8');
+  // Typing the value again with the wrong sign does not count as a check.
+  const q2 = dialog.getByRole('textbox', { name: 'Điện tích q₂ (có dấu)' });
+  await q2.fill('9');
+  await expect(hint).toHaveCount(1);
+  await q2.fill('-8');
   await expect(hint).toHaveCount(0);
   await expect(dialog.getByText('dấu của điện tích chưa chắc khớp', { exact: false })).toHaveCount(
     0,

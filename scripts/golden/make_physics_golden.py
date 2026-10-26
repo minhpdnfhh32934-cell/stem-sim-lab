@@ -467,7 +467,7 @@ add(
         q("q2", -8, "uC", "q₂ = −8 µC"),
         q("x2", 30, "cm", "cách nhau 30 cm"),
         q("xP", 10, "cm", "cách A 10 cm"),
-        q("yP", 0, "cm", "nằm trên đoạn AB"),
+        q("yP", 0, "cm", "M nằm trên đoạn AB"),
     ],
     # M giữa A và B: E1 hướng ra xa q1 (về phía B), E2 hướng về q2 (về phía B) → cộng độ lớn.
     {"F12": K_C * 2e-6 * 8e-6 / 0.3**2, "E": K_C * (2e-6 / 0.1**2 + 8e-6 / 0.2**2)},
@@ -506,7 +506,7 @@ add(
         q("x2", 6, "cm", "AB = 6 cm"),
         # M phía A, ngoài đoạn AB: tọa độ âm (dấu là cách đặt trục, số 3 có trong đề).
         q("xP", -3, "cm", "cách A 3 cm"),
-        q("yP", 0, "cm", "nằm trên đường thẳng AB"),
+        q("yP", 0, "cm", "M nằm trên đường thẳng AB"),
     ],
     # E1 (q1 > 0) hướng ra xa A, tức về phía −x; E2 (q2 < 0) hướng về B, tức +x; |E1| > |E2|.
     {
