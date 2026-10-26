@@ -12,12 +12,22 @@ Quyết định của người dùng (13/10/2026):
 - Chính sách quyền riêng tư đặt trên GitHub Pages:
   `https://minhpdnfhh32934-cell.github.io/stem-sim-lab/privacy.html` (tệp `site/privacy.html`).
 
-## Trạng thái (13/10/2026)
+## Trạng thái (26/10/2026)
 
 - Tài khoản nhà phát triển cá nhân: **FPTTECH**. App: **SimLab**, Store ID `9P1FDCQBSDHT`,
-  trang Store (sau khi phát hành): <https://apps.microsoft.com/detail/9P1FDCQBSDHT>.
-- Bản nộp 1 (gói `SimLab_0.5.1.0_x64.msix`) đã gửi duyệt ngày 13/10/2026, chọn **giữ lại**: duyệt
-  xong, người dùng bấm **Publish now** trong Partner Center thì app mới lên Store.
+  trang Store: <https://apps.microsoft.com/detail/9P1FDCQBSDHT>.
+- Bản nộp 1 (gói `SimLab_0.5.1.0_x64.msix`): gửi duyệt ngày 13/10/2026, là bản đầu tiên lên Store.
+- Bản nộp 2 (gói `SimLab_0.7.1.0_x64.msix`, gồm cả 0.6.0 và 0.7.0): **đã lên Store** (kiểm tra trang
+  Store ngày 26/10/2026: mục "Có gì mới trong phiên bản này" ghi "Bản 0.7.1…"). Chưa ghi lại ngày
+  phát hành chính xác.
+- Bản nộp 3: **đang chuẩn bị** trong Partner Center (bản nháp, sửa lần cuối 24/10/2026), cùng gói
+  0.7.1.0, chỉ để thay ảnh chụp trên trang Store bằng 8 ảnh mới trong `store/listing/screenshots/`.
+  Chưa gửi duyệt.
+- Ảnh chụp 0.7.1 (8 ảnh PNG 1366×768, thứ tự = tên tệp): ảnh 1, 3–8 chụp từ giao diện web 0.7.1 bằng
+  Playwright, đã bỏ chữ " (chế độ trình duyệt)" ở thanh trạng thái cho giống app cài đặt; ảnh 2 là
+  một khung hình quay từ app cài đặt, câu trả lời Gemini thật, con trỏ chuột được vá bằng chính nút
+  đó chụp từ app. Ảnh 2 còn dòng "(Theo ghi chú từ: …)" mà PR #55 đã bỏ: chụp lại khi bản có sửa
+  lỗi này lên Store.
 - Tự nộp từ GitHub Actions: **không dùng** (quyết định 13/10/2026, xem bước 7).
 
 ## Cách hoạt động
