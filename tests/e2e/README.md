@@ -14,6 +14,10 @@ any AI call.
 
 Real model accuracy (not mocked): `GEMINI_API_KEY=… npm run golden:llm` (uses free-tier quota).
 
+"Cách học" (Science Studio guide): `storage-state.json` records `stemsim.studio` with
+`guideSeen: true`, so the guide does not cover the studio specs; `studio.spec.ts` clears it to test
+the first visit.
+
 "Có gì mới" (`whatsnew.spec.ts`): `storage-state.json` records `stemsim.whatsnew` as
 `{"lastSeen": "999.0.0"}` (every version already seen), so the box never covers the other
 specs once a version's notes are marked ready. The spec itself sets an older `lastSeen`.
