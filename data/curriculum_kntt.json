@@ -1,0 +1,2430 @@
+{
+ "dataset": "curriculum_kntt",
+ "version": 1,
+ "review_status": "pending",
+ "accessed": "2026-10-26",
+ "source": {
+  "id": "nxbgd-kntt-toc",
+  "citation": "SGK Vật lí, Hoá học, Sinh học 10–12 \"Kết nối tri thức với cuộc sống\" (NXB Giáo dục Việt Nam), mục lục bản đọc trên trang tập huấn NXBGD (ảnh trang tải lên tháng 4/2026)",
+  "url": "https://taphuan.nxbgd.vn/"
+ },
+ "generated_by": "scripts/data/gen_curriculum_kntt.py",
+ "books": [
+  {
+   "id": "VL10",
+   "subject": "physics",
+   "grade": 10,
+   "title": "Vật lí 10",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-vat-li-10.4700746482",
+   "tocPages": [
+    4
+   ],
+   "chapters": [
+    {
+     "label": "Chương I. Mở đầu",
+     "printed": "CHƯƠNG I. MỞ ĐẦU",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Làm quen với Vật lí",
+       "page": 7,
+       "kind": "intro"
+      },
+      {
+       "number": 2,
+       "title": "Các quy tắc an toàn trong phòng thực hành Vật lí",
+       "page": 12,
+       "kind": "intro"
+      },
+      {
+       "number": 3,
+       "title": "Thực hành tính sai số trong phép đo. Ghi kết quả đo",
+       "page": 17,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương II. Động học",
+     "printed": "CHƯƠNG II. ĐỘNG HỌC",
+     "lessons": [
+      {
+       "number": 4,
+       "title": "Độ dịch chuyển và quãng đường đi được",
+       "page": 21,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Tốc độ và vận tốc",
+       "page": 26,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Thực hành: Đo tốc độ của vật chuyển động",
+       "page": 30,
+       "kind": "practice"
+      },
+      {
+       "number": 7,
+       "title": "Đồ thị độ dịch chuyển – thời gian",
+       "page": 34,
+       "kind": "theory"
+      },
+      {
+       "number": 8,
+       "title": "Chuyển động biến đổi. Gia tốc",
+       "page": 37,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Chuyển động thẳng biến đổi đều",
+       "page": 40,
+       "kind": "theory"
+      },
+      {
+       "number": 10,
+       "title": "Sự rơi tự do",
+       "page": 44,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Thực hành: Đo gia tốc rơi tự do",
+       "page": 47,
+       "kind": "practice"
+      },
+      {
+       "number": 12,
+       "title": "Chuyển động ném",
+       "page": 49,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương III. Động lực học",
+     "printed": "CHƯƠNG III. ĐỘNG LỰC HỌC",
+     "lessons": [
+      {
+       "number": 13,
+       "title": "Tổng hợp và phân tích lực. Cân bằng lực",
+       "page": 56,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Định luật 1 Newton",
+       "page": 60,
+       "kind": "theory"
+      },
+      {
+       "number": 15,
+       "title": "Định luật 2 Newton",
+       "page": 63,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Định luật 3 Newton",
+       "page": 67,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Trọng lực và lực căng",
+       "page": 69,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Lực ma sát",
+       "page": 72,
+       "kind": "theory"
+      },
+      {
+       "number": 19,
+       "title": "Lực cản và lực nâng",
+       "page": 77,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Một số ví dụ về cách giải các bài toán thuộc phần động lực học",
+       "page": 80,
+       "kind": "exercise"
+      },
+      {
+       "number": 21,
+       "title": "Moment lực. Cân bằng của vật rắn",
+       "page": 83,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Thực hành: Tổng hợp lực",
+       "page": 86,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương IV. Năng lượng, công, công suất",
+     "printed": "CHƯƠNG IV. NĂNG LƯỢNG, CÔNG, CÔNG SUẤT",
+     "lessons": [
+      {
+       "number": 23,
+       "title": "Năng lượng. Công cơ học",
+       "page": 91,
+       "kind": "theory"
+      },
+      {
+       "number": 24,
+       "title": "Công suất",
+       "page": 96,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Động năng, thế năng",
+       "page": 99,
+       "kind": "theory"
+      },
+      {
+       "number": 26,
+       "title": "Cơ năng và định luật bảo toàn cơ năng",
+       "page": 102,
+       "kind": "theory"
+      },
+      {
+       "number": 27,
+       "title": "Hiệu suất",
+       "page": 106,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương V. Động lượng",
+     "printed": "CHƯƠNG V. ĐỘNG LƯỢNG",
+     "lessons": [
+      {
+       "number": 28,
+       "title": "Động lượng",
+       "page": 110,
+       "kind": "theory"
+      },
+      {
+       "number": 29,
+       "title": "Định luật bảo toàn động lượng",
+       "page": 113,
+       "kind": "theory"
+      },
+      {
+       "number": 30,
+       "title": "Thực hành: Xác định động lượng của vật trước và sau va chạm",
+       "page": 116,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương VI. Chuyển động tròn đều",
+     "printed": "CHƯƠNG VI. CHUYỂN ĐỘNG TRÒN ĐỀU",
+     "lessons": [
+      {
+       "number": 31,
+       "title": "Động học của chuyển động tròn đều",
+       "page": 120,
+       "kind": "theory"
+      },
+      {
+       "number": 32,
+       "title": "Lực hướng tâm và gia tốc hướng tâm",
+       "page": 123,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương VII. Biến dạng của vật rắn. Áp suất chất lỏng",
+     "printed": "CHƯƠNG VII. BIẾN DẠNG CỦA VẬT RẮN. ÁP SUẤT CHẤT LỎNG",
+     "lessons": [
+      {
+       "number": 33,
+       "title": "Biến dạng của vật rắn",
+       "page": 128,
+       "kind": "theory"
+      },
+      {
+       "number": 34,
+       "title": "Khối lượng riêng. Áp suất chất lỏng",
+       "page": 131,
+       "kind": "theory"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 34,
+    "theory": 26
+   }
+  },
+  {
+   "id": "VL11",
+   "subject": "physics",
+   "grade": 11,
+   "title": "Vật lí 11",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-vat-li-11.4701093133",
+   "tocPages": [
+    4
+   ],
+   "chapters": [
+    {
+     "label": "Chương I. Dao động",
+     "printed": "Chương I. DAO ĐỘNG",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Dao động điều hoà",
+       "page": 6,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Mô tả dao động điều hoà",
+       "page": 10,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Vận tốc, gia tốc trong dao động điều hoà",
+       "page": 14,
+       "kind": "theory"
+      },
+      {
+       "number": 4,
+       "title": "Bài tập về dao động điều hoà",
+       "page": 17,
+       "kind": "exercise"
+      },
+      {
+       "number": 5,
+       "title": "Động năng. Thế năng. Sự chuyển hoá năng lượng trong dao động điều hoà",
+       "page": 20,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Dao động tắt dần. Dao động cưỡng bức. Hiện tượng cộng hưởng",
+       "page": 24,
+       "kind": "theory"
+      },
+      {
+       "number": 7,
+       "title": "Bài tập về sự chuyển hoá năng lượng trong dao động điều hoà",
+       "page": 28,
+       "kind": "exercise"
+      }
+     ]
+    },
+    {
+     "label": "Chương II. Sóng",
+     "printed": "Chương II. SÓNG",
+     "lessons": [
+      {
+       "number": 8,
+       "title": "Mô tả sóng",
+       "page": 32,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Sóng ngang. Sóng dọc. Sự truyền năng lượng của sóng cơ",
+       "page": 37,
+       "kind": "theory"
+      },
+      {
+       "number": 10,
+       "title": "Thực hành: Đo tần số của sóng âm",
+       "page": 41,
+       "kind": "practice"
+      },
+      {
+       "number": 11,
+       "title": "Sóng điện từ",
+       "page": 44,
+       "kind": "theory"
+      },
+      {
+       "number": 12,
+       "title": "Giao thoa sóng",
+       "page": 48,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Sóng dừng",
+       "page": 52,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Bài tập về sóng",
+       "page": 55,
+       "kind": "exercise"
+      },
+      {
+       "number": 15,
+       "title": "Thực hành: Đo tốc độ truyền âm",
+       "page": 58,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương III. Điện trường",
+     "printed": "Chương III. ĐIỆN TRƯỜNG",
+     "lessons": [
+      {
+       "number": 16,
+       "title": "Lực tương tác giữa các điện tích",
+       "page": 61,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Khái niệm điện trường",
+       "page": 65,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Điện trường đều",
+       "page": 71,
+       "kind": "theory"
+      },
+      {
+       "number": 19,
+       "title": "Thế năng điện",
+       "page": 76,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Điện thế",
+       "page": 79,
+       "kind": "theory"
+      },
+      {
+       "number": 21,
+       "title": "Tụ điện",
+       "page": 83,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương IV. Dòng điện. Mạch điện",
+     "printed": "Chương IV. DÒNG ĐIỆN. MẠCH ĐIỆN",
+     "lessons": [
+      {
+       "number": 22,
+       "title": "Cường độ dòng điện",
+       "page": 91,
+       "kind": "theory"
+      },
+      {
+       "number": 23,
+       "title": "Điện trở. Định luật Ohm",
+       "page": 95,
+       "kind": "theory"
+      },
+      {
+       "number": 24,
+       "title": "Nguồn điện",
+       "page": 102,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Năng lượng và công suất điện",
+       "page": 106,
+       "kind": "theory"
+      },
+      {
+       "number": 26,
+       "title": "Thực hành: Đo suất điện động và điện trở trong của pin điện hoá",
+       "page": 111,
+       "kind": "practice"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 26,
+    "theory": 20
+   }
+  },
+  {
+   "id": "VL12",
+   "subject": "physics",
+   "grade": 12,
+   "title": "Vật lí 12",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/shs-vat-li-12.4701697631",
+   "tocPages": [
+    4
+   ],
+   "chapters": [
+    {
+     "label": "Chương I. Vật lí nhiệt",
+     "printed": "Chương I. VẬT LÍ NHIỆT",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Cấu trúc của chất. Sự chuyển thể",
+       "page": 6,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Nội năng. Định luật I của nhiệt động lực học",
+       "page": 10,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Nhiệt độ. Thang nhiệt độ – nhiệt kế",
+       "page": 15,
+       "kind": "theory"
+      },
+      {
+       "number": 4,
+       "title": "Nhiệt dung riêng",
+       "page": 20,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Nhiệt nóng chảy riêng",
+       "page": 24,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Nhiệt hoá hơi riêng",
+       "page": 27,
+       "kind": "theory"
+      },
+      {
+       "number": 7,
+       "title": "Bài tập về vật lí nhiệt",
+       "page": 30,
+       "kind": "exercise"
+      }
+     ]
+    },
+    {
+     "label": "Chương II. Khí lí tưởng",
+     "printed": "Chương II. KHÍ LÍ TƯỞNG",
+     "lessons": [
+      {
+       "number": 8,
+       "title": "Mô hình động học phân tử chất khí",
+       "page": 34,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Định luật Boyle",
+       "page": 37,
+       "kind": "theory"
+      },
+      {
+       "number": 10,
+       "title": "Định luật Charles",
+       "page": 41,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Phương trình trạng thái của khí lí tưởng",
+       "page": 45,
+       "kind": "theory"
+      },
+      {
+       "number": 12,
+       "title": "Áp suất khí theo mô hình động học phân tử. Quan hệ giữa động năng phân tử và nhiệt độ",
+       "page": 48,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Bài tập về khí lí tưởng",
+       "page": 52,
+       "kind": "exercise"
+      }
+     ]
+    },
+    {
+     "label": "Chương III. Từ trường",
+     "printed": "Chương III. TỪ TRƯỜNG",
+     "lessons": [
+      {
+       "number": 14,
+       "title": "Từ trường",
+       "page": 56,
+       "kind": "theory"
+      },
+      {
+       "number": 15,
+       "title": "Lực từ tác dụng lên dây dẫn mang dòng điện. Cảm ứng từ",
+       "page": 61,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Từ thông. Hiện tượng cảm ứng điện từ",
+       "page": 66,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Máy phát điện xoay chiều",
+       "page": 72,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Ứng dụng hiện tượng cảm ứng điện từ",
+       "page": 78,
+       "kind": "theory"
+      },
+      {
+       "number": 19,
+       "title": "Điện từ trường. Mô hình sóng điện từ",
+       "page": 82,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Bài tập về từ trường",
+       "page": 86,
+       "kind": "exercise"
+      }
+     ]
+    },
+    {
+     "label": "Chương IV. Vật lí hạt nhân",
+     "printed": "Chương IV. VẬT LÍ HẠT NHÂN",
+     "lessons": [
+      {
+       "number": 21,
+       "title": "Cấu trúc hạt nhân",
+       "page": 91,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Phản ứng hạt nhân và năng lượng liên kết",
+       "page": 96,
+       "kind": "theory"
+      },
+      {
+       "number": 23,
+       "title": "Hiện tượng phóng xạ",
+       "page": 104,
+       "kind": "theory"
+      },
+      {
+       "number": 24,
+       "title": "Công nghiệp hạt nhân",
+       "page": 114,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Bài tập về vật lí hạt nhân",
+       "page": 119,
+       "kind": "exercise"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 25,
+    "theory": 21
+   }
+  },
+  {
+   "id": "HH10",
+   "subject": "chemistry",
+   "grade": 10,
+   "title": "Hoá học 10",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-10.4700854983",
+   "tocPages": [
+    4,
+    5
+   ],
+   "chapters": [
+    {
+     "label": "Mở đầu",
+     "printed": "Mở đầu",
+     "lessons": [
+      {
+       "number": null,
+       "title": "Mở đầu",
+       "page": 6,
+       "kind": "intro"
+      }
+     ]
+    },
+    {
+     "label": "Chương 1. Cấu tạo nguyên tử",
+     "printed": "Chương 1. Cấu tạo nguyên tử",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Thành phần của nguyên tử",
+       "page": 13,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Nguyên tố hoá học",
+       "page": 17,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Cấu trúc lớp vỏ electron nguyên tử",
+       "page": 21,
+       "kind": "theory"
+      },
+      {
+       "number": 4,
+       "title": "Ôn tập chương 1",
+       "page": 26,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn",
+     "printed": "Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn",
+     "lessons": [
+      {
+       "number": 5,
+       "title": "Cấu tạo của bảng tuần hoàn các nguyên tố hoá học",
+       "page": 30,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Xu hướng biến đổi một số tính chất của nguyên tử các nguyên tố trong một chu kì và trong một nhóm",
+       "page": 34,
+       "kind": "theory"
+      },
+      {
+       "number": 7,
+       "title": "Xu hướng biến đổi thành phần và một số tính chất của hợp chất trong một chu kì",
+       "page": 40,
+       "kind": "theory"
+      },
+      {
+       "number": 8,
+       "title": "Định luật tuần hoàn. Ý nghĩa của bảng tuần hoàn các nguyên tố hoá học",
+       "page": 43,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Ôn tập chương 2",
+       "page": 45,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 3. Liên kết hoá học",
+     "printed": "Chương 3. Liên kết hoá học",
+     "lessons": [
+      {
+       "number": 10,
+       "title": "Quy tắc octet",
+       "page": 49,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Liên kết ion",
+       "page": 51,
+       "kind": "theory"
+      },
+      {
+       "number": 12,
+       "title": "Liên kết cộng hoá trị",
+       "page": 55,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Liên kết hydrogen và tương tác van der Waals",
+       "page": 64,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Ôn tập chương 3",
+       "page": 68,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 4. Phản ứng oxi hoá – khử",
+     "printed": "Chương 4. Phản ứng oxi hoá – khử",
+     "lessons": [
+      {
+       "number": 15,
+       "title": "Phản ứng oxi hoá – khử",
+       "page": 71,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Ôn tập chương 4",
+       "page": 78,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 5. Năng lượng hoá học",
+     "printed": "Chương 5. Năng lượng hoá học",
+     "lessons": [
+      {
+       "number": 17,
+       "title": "Biến thiên enthalpy trong các phản ứng hoá học",
+       "page": 81,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Ôn tập chương 5",
+       "page": 89,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 6. Tốc độ phản ứng",
+     "printed": "Chương 6. Tốc độ phản ứng",
+     "lessons": [
+      {
+       "number": 19,
+       "title": "Tốc độ phản ứng",
+       "page": 92,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Ôn tập chương 6",
+       "page": 101,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 7. Nguyên tố nhóm halogen",
+     "printed": "Chương 7. Nguyên tố nhóm halogen",
+     "lessons": [
+      {
+       "number": 21,
+       "title": "Nhóm halogen",
+       "page": 104,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Hydrogen halide · Muối halide",
+       "page": 112,
+       "kind": "theory"
+      },
+      {
+       "number": 23,
+       "title": "Ôn tập chương 7",
+       "page": 117,
+       "kind": "review"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 23,
+    "theory": 16
+   }
+  },
+  {
+   "id": "HH11",
+   "subject": "chemistry",
+   "grade": 11,
+   "title": "Hoá học 11",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-11.4701111834",
+   "tocPages": [
+    4,
+    5
+   ],
+   "chapters": [
+    {
+     "label": "Chương 1. Cân bằng hoá học",
+     "printed": "Chương 1. CÂN BẰNG HOÁ HỌC",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Khái niệm về cân bằng hoá học",
+       "page": 6,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Cân bằng trong dung dịch nước",
+       "page": 16,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Ôn tập chương 1",
+       "page": 27,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 2. Nitrogen – sulfur",
+     "printed": "Chương 2. NITROGEN – SULFUR",
+     "lessons": [
+      {
+       "number": 4,
+       "title": "Nitrogen",
+       "page": 29,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Ammonia • Muối ammonium",
+       "page": 33,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Một số hợp chất của nitrogen với oxygen",
+       "page": 38,
+       "kind": "theory"
+      },
+      {
+       "number": 7,
+       "title": "Sulfur và sulfur dioxide",
+       "page": 42,
+       "kind": "theory"
+      },
+      {
+       "number": 8,
+       "title": "Sulfuric acid và muối sulfate",
+       "page": 48,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Ôn tập chương 2",
+       "page": 55,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 3. Đại cương về hoá học hữu cơ",
+     "printed": "Chương 3. ĐẠI CƯƠNG VỀ HOÁ HỌC HỮU CƠ",
+     "lessons": [
+      {
+       "number": 10,
+       "title": "Hợp chất hữu cơ và hoá học hữu cơ",
+       "page": 57,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Phương pháp tách biệt và tinh chế hợp chất hữu cơ",
+       "page": 63,
+       "kind": "theory"
+      },
+      {
+       "number": 12,
+       "title": "Công thức phân tử hợp chất hữu cơ",
+       "page": 70,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Cấu tạo hoá học hợp chất hữu cơ",
+       "page": 74,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Ôn tập chương 3",
+       "page": 80,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 4. Hydrocarbon",
+     "printed": "Chương 4. HYDROCARBON",
+     "lessons": [
+      {
+       "number": 15,
+       "title": "Alkane",
+       "page": 82,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Hydrocarbon không no",
+       "page": 92,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Arene (Hydrocarbon thơm)",
+       "page": 102,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Ôn tập chương 4",
+       "page": 110,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 5. Dẫn xuất halogen – alcohol – phenol",
+     "printed": "Chương 5. DẪN XUẤT HALOGEN – ALCOHOL – PHENOL",
+     "lessons": [
+      {
+       "number": 19,
+       "title": "Dẫn xuất halogen",
+       "page": 112,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Alcohol",
+       "page": 119,
+       "kind": "theory"
+      },
+      {
+       "number": 21,
+       "title": "Phenol",
+       "page": 129,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Ôn tập chương 5",
+       "page": 134,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 6. Hợp chất carbonyl – carboxylic acid",
+     "printed": "Chương 6. HỢP CHẤT CARBONYL – CARBOXYLIC ACID",
+     "lessons": [
+      {
+       "number": 23,
+       "title": "Hợp chất carbonyl",
+       "page": 136,
+       "kind": "theory"
+      },
+      {
+       "number": 24,
+       "title": "Carboxylic acid",
+       "page": 145,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Ôn tập chương 6",
+       "page": 153,
+       "kind": "review"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 25,
+    "theory": 19
+   }
+  },
+  {
+   "id": "HH12",
+   "subject": "chemistry",
+   "grade": 12,
+   "title": "Hoá học 12",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-hoa-hoc-12.4701708102",
+   "tocPages": [
+    4,
+    5
+   ],
+   "chapters": [
+    {
+     "label": "Chương 1. Ester – Lipid",
+     "printed": "Chương 1. ESTER – LIPID",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Ester – Lipid",
+       "page": 6,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Xà phòng và chất giặt rửa",
+       "page": 14,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Ôn tập chương 1",
+       "page": 18,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 2. Carbohydrate",
+     "printed": "CHƯƠNG 2. CARBOHYDRATE",
+     "lessons": [
+      {
+       "number": 4,
+       "title": "Giới thiệu về carbohydrate. Glucose và fructose",
+       "page": 20,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Saccharose và maltose",
+       "page": 25,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Tinh bột và cellulose",
+       "page": 28,
+       "kind": "theory"
+      },
+      {
+       "number": 7,
+       "title": "Ôn tập chương 2",
+       "page": 33,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 3. Hợp chất chứa nitrogen",
+     "printed": "Chương 3. HỢP CHẤT CHỨA NITROGEN",
+     "lessons": [
+      {
+       "number": 8,
+       "title": "Amine",
+       "page": 35,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Amino acid và peptide",
+       "page": 41,
+       "kind": "theory"
+      },
+      {
+       "number": 10,
+       "title": "Protein và enzyme",
+       "page": 46,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Ôn tập chương 3",
+       "page": 49,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 4. Polymer",
+     "printed": "Chương 4. POLYMER",
+     "lessons": [
+      {
+       "number": 12,
+       "title": "Đại cương về polymer",
+       "page": 51,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Vật liệu polymer",
+       "page": 56,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Ôn tập chương 4",
+       "page": 65,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 5. Pin điện và điện phân",
+     "printed": "Chương 5. PIN ĐIỆN VÀ ĐIỆN PHÂN",
+     "lessons": [
+      {
+       "number": 15,
+       "title": "Thế điện cực và nguồn điện hoá học",
+       "page": 67,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Điện phân",
+       "page": 78,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Ôn tập chương 5",
+       "page": 85,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 6. Đại cương về kim loại",
+     "printed": "Chương 6. ĐẠI CƯƠNG VỀ KIM LOẠI",
+     "lessons": [
+      {
+       "number": 18,
+       "title": "Cấu tạo và liên kết trong tinh thể kim loại",
+       "page": 87,
+       "kind": "theory"
+      },
+      {
+       "number": 19,
+       "title": "Tính chất vật lí và tính chất hoá học của kim loại",
+       "page": 89,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Kim loại trong tự nhiên và phương pháp tách kim loại",
+       "page": 94,
+       "kind": "theory"
+      },
+      {
+       "number": 21,
+       "title": "Hợp kim",
+       "page": 99,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Sự ăn mòn kim loại",
+       "page": 102,
+       "kind": "theory"
+      },
+      {
+       "number": 23,
+       "title": "Ôn tập chương 6",
+       "page": 106,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 7. Nguyên tố nhóm IA và nhóm IIA",
+     "printed": "Chương 7. NGUYÊN TỐ NHÓM IA VÀ NHÓM IIA",
+     "lessons": [
+      {
+       "number": 24,
+       "title": "Nguyên tố nhóm IA",
+       "page": 108,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Nguyên tố nhóm IIA",
+       "page": 116,
+       "kind": "theory"
+      },
+      {
+       "number": 26,
+       "title": "Ôn tập chương 7",
+       "page": 126,
+       "kind": "review"
+      }
+     ]
+    },
+    {
+     "label": "Chương 8. Sơ lược về dãy kim loại chuyển tiếp thứ nhất và phức chất",
+     "printed": "Chương 8. SƠ LƯỢC VỀ DÃY KIM LOẠI CHUYỂN TIẾP THỨ NHẤT VÀ PHỨC CHẤT",
+     "lessons": [
+      {
+       "number": 27,
+       "title": "Đại cương về kim loại chuyển tiếp dãy thứ nhất",
+       "page": 128,
+       "kind": "theory"
+      },
+      {
+       "number": 28,
+       "title": "Sơ lược về phức chất",
+       "page": 134,
+       "kind": "theory"
+      },
+      {
+       "number": 29,
+       "title": "Một số tính chất và ứng dụng của phức chất",
+       "page": 138,
+       "kind": "theory"
+      },
+      {
+       "number": 30,
+       "title": "Ôn tập chương 8",
+       "page": 142,
+       "kind": "review"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 30,
+    "theory": 22
+   }
+  },
+  {
+   "id": "SH10",
+   "subject": "biology",
+   "grade": 10,
+   "title": "Sinh học 10",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-10.4700819489",
+   "tocPages": [
+    4
+   ],
+   "chapters": [
+    {
+     "label": "Phần mở đầu",
+     "printed": "PHẦN MỞ ĐẦU",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Giới thiệu khái quát môn Sinh học",
+       "page": 5,
+       "kind": "intro"
+      },
+      {
+       "number": 2,
+       "title": "Phương pháp nghiên cứu và học tập môn Sinh học",
+       "page": 12,
+       "kind": "intro"
+      },
+      {
+       "number": 3,
+       "title": "Các cấp độ tổ chức của thế giới sống",
+       "page": 18,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 1. Thành phần hoá học của tế bào",
+     "printed": "CHƯƠNG 1 THÀNH PHẦN HOÁ HỌC CỦA TẾ BÀO",
+     "part": "Phần một. Sinh học tế bào",
+     "lessons": [
+      {
+       "number": 4,
+       "title": "Các nguyên tố hoá học và nước",
+       "page": 23,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Các phân tử sinh học",
+       "page": 28,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Thực hành: Nhận biết một số phân tử sinh học",
+       "page": 41,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 2. Cấu trúc tế bào",
+     "printed": "CHƯƠNG 2 CẤU TRÚC TẾ BÀO",
+     "part": "Phần một. Sinh học tế bào",
+     "lessons": [
+      {
+       "number": 7,
+       "title": "Tế bào nhân sơ",
+       "page": 44,
+       "kind": "theory"
+      },
+      {
+       "number": 8,
+       "title": "Tế bào nhân thực",
+       "page": 48,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Thực hành: Quan sát tế bào",
+       "page": 61,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 3. Trao đổi chất qua màng và truyền tin tế bào",
+     "printed": "CHƯƠNG 3 TRAO ĐỔI CHẤT QUA MÀNG VÀ TRUYỀN TIN TẾ BÀO",
+     "part": "Phần một. Sinh học tế bào",
+     "lessons": [
+      {
+       "number": 10,
+       "title": "Trao đổi chất qua màng tế bào",
+       "page": 64,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Thực hành: Thí nghiệm co và phản co nguyên sinh",
+       "page": 71,
+       "kind": "practice"
+      },
+      {
+       "number": 12,
+       "title": "Truyền tin tế bào",
+       "page": 73,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 4. Chuyển hoá năng lượng trong tế bào",
+     "printed": "CHƯƠNG 4 CHUYỂN HOÁ NĂNG LƯỢNG TRONG TẾ BÀO",
+     "part": "Phần một. Sinh học tế bào",
+     "lessons": [
+      {
+       "number": 13,
+       "title": "Khái quát về chuyển hoá vật chất và năng lượng",
+       "page": 78,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Phân giải và tổng hợp các chất trong tế bào",
+       "page": 85,
+       "kind": "theory"
+      },
+      {
+       "number": 15,
+       "title": "Thực hành: Thí nghiệm phân tích ảnh hưởng của một số yếu tố đến hoạt tính của enzyme và kiểm tra hoạt tính của enzyme amylase",
+       "page": 94,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 5. Chu kì tế bào và phân bào",
+     "printed": "CHƯƠNG 5 CHU KÌ TẾ BÀO VÀ PHÂN BÀO",
+     "part": "Phần một. Sinh học tế bào",
+     "lessons": [
+      {
+       "number": 16,
+       "title": "Chu kì tế bào và nguyên phân",
+       "page": 97,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Giảm phân",
+       "page": 104,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Thực hành: Làm và quan sát tiêu bản quá trình nguyên phân và giảm phân",
+       "page": 108,
+       "kind": "practice"
+      },
+      {
+       "number": 19,
+       "title": "Công nghệ tế bào",
+       "page": 110,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 6. Sinh học vi sinh vật",
+     "printed": "CHƯƠNG 6 SINH HỌC VI SINH VẬT",
+     "part": "Phần hai. Sinh học vi sinh vật và virus",
+     "lessons": [
+      {
+       "number": 20,
+       "title": "Sự đa dạng và phương pháp nghiên cứu vi sinh vật",
+       "page": 116,
+       "kind": "theory"
+      },
+      {
+       "number": 21,
+       "title": "Trao đổi chất, sinh trưởng và sinh sản ở vi sinh vật",
+       "page": 122,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Vai trò và ứng dụng của vi sinh vật",
+       "page": 131,
+       "kind": "theory"
+      },
+      {
+       "number": 23,
+       "title": "Thực hành: Một số phương pháp nghiên cứu vi sinh vật thông dụng, tìm hiểu về các sản phẩm công nghệ vi sinh vật và làm một số sản phẩm lên men từ vi sinh vật",
+       "page": 138,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 7. Virus",
+     "printed": "CHƯƠNG 7 VIRUS",
+     "part": "Phần hai. Sinh học vi sinh vật và virus",
+     "lessons": [
+      {
+       "number": 24,
+       "title": "Khái quát về virus",
+       "page": 141,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Một số bệnh do virus và các thành tựu nghiên cứu ứng dụng virus",
+       "page": 145,
+       "kind": "theory"
+      },
+      {
+       "number": 26,
+       "title": "Thực hành: Điều tra một số bệnh do virus và tuyên truyền phòng chống bệnh",
+       "page": 155,
+       "kind": "practice"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 26,
+    "theory": 17
+   }
+  },
+  {
+   "id": "SH11",
+   "subject": "biology",
+   "grade": 11,
+   "title": "Sinh học 11",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-11.4701129740",
+   "tocPages": [
+    4
+   ],
+   "chapters": [
+    {
+     "label": "Chương 1. Trao đổi chất và chuyển hoá năng lượng ở sinh vật",
+     "printed": "CHƯƠNG 1 TRAO ĐỔI CHẤT VÀ CHUYỂN HOÁ NĂNG LƯỢNG Ở SINH VẬT",
+     "part": "Phần ba. Sinh học cơ thể",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "Khái quát về trao đổi chất và chuyển hoá năng lượng",
+       "page": 5,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Trao đổi nước và khoáng ở thực vật",
+       "page": 9,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Thực hành: Trao đổi nước và khoáng ở thực vật",
+       "page": 22,
+       "kind": "practice"
+      },
+      {
+       "number": 4,
+       "title": "Quang hợp ở thực vật",
+       "page": 26,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Thực hành: Quang hợp ở thực vật",
+       "page": 35,
+       "kind": "practice"
+      },
+      {
+       "number": 6,
+       "title": "Hô hấp ở thực vật",
+       "page": 38,
+       "kind": "theory"
+      },
+      {
+       "number": 7,
+       "title": "Thực hành: Hô hấp ở thực vật",
+       "page": 44,
+       "kind": "practice"
+      },
+      {
+       "number": 8,
+       "title": "Dinh dưỡng và tiêu hoá ở động vật",
+       "page": 46,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Hô hấp ở động vật",
+       "page": 54,
+       "kind": "theory"
+      },
+      {
+       "number": 10,
+       "title": "Tuần hoàn ở động vật",
+       "page": 61,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Thực hành: Một số thí nghiệm về hệ tuần hoàn",
+       "page": 69,
+       "kind": "practice"
+      },
+      {
+       "number": 12,
+       "title": "Miễn dịch ở người và động vật",
+       "page": 72,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Bài tiết và cân bằng nội môi",
+       "page": 80,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 2. Cảm ứng ở sinh vật",
+     "printed": "CHƯƠNG 2 CẢM ỨNG Ở SINH VẬT",
+     "part": "Phần ba. Sinh học cơ thể",
+     "lessons": [
+      {
+       "number": 14,
+       "title": "Khái quát về cảm ứng ở sinh vật",
+       "page": 88,
+       "kind": "theory"
+      },
+      {
+       "number": 15,
+       "title": "Cảm ứng ở thực vật",
+       "page": 90,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Thực hành: Cảm ứng ở thực vật",
+       "page": 97,
+       "kind": "practice"
+      },
+      {
+       "number": 17,
+       "title": "Cảm ứng ở động vật",
+       "page": 100,
+       "kind": "theory"
+      },
+      {
+       "number": 18,
+       "title": "Tập tính ở động vật",
+       "page": 115,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 3. Sinh trưởng và phát triển ở sinh vật",
+     "printed": "CHƯƠNG 3 SINH TRƯỞNG VÀ PHÁT TRIỂN Ở SINH VẬT",
+     "part": "Phần ba. Sinh học cơ thể",
+     "lessons": [
+      {
+       "number": 19,
+       "title": "Khái quát về sinh trưởng và phát triển ở sinh vật",
+       "page": 125,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Sinh trưởng và phát triển ở thực vật",
+       "page": 129,
+       "kind": "theory"
+      },
+      {
+       "number": 21,
+       "title": "Thực hành: Bấm ngọn, tỉa cành; xử lí kích thích tố và tính tuổi cây",
+       "page": 141,
+       "kind": "practice"
+      },
+      {
+       "number": 22,
+       "title": "Sinh trưởng và phát triển ở động vật",
+       "page": 145,
+       "kind": "theory"
+      },
+      {
+       "number": 23,
+       "title": "Thực hành: Quan sát quá trình biến thái ở động vật",
+       "page": 153,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 4. Sinh sản ở sinh vật",
+     "printed": "CHƯƠNG 4 SINH SẢN Ở SINH VẬT",
+     "part": "Phần ba. Sinh học cơ thể",
+     "lessons": [
+      {
+       "number": 24,
+       "title": "Khái quát về sinh sản ở sinh vật",
+       "page": 156,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Sinh sản ở thực vật",
+       "page": 159,
+       "kind": "theory"
+      },
+      {
+       "number": 26,
+       "title": "Thực hành: Nhân giống vô tính và thụ phấn cho cây",
+       "page": 167,
+       "kind": "practice"
+      },
+      {
+       "number": 27,
+       "title": "Sinh sản ở động vật",
+       "page": 170,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 5. Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật và một số ngành nghề liên quan đến sinh học cơ thể",
+     "printed": "CHƯƠNG 5 MỐI QUAN HỆ GIỮA CÁC QUÁ TRÌNH SINH LÍ TRONG CƠ THỂ SINH VẬT VÀ MỘT SỐ NGÀNH NGHỀ LIÊN QUAN ĐẾN SINH HỌC CƠ THỂ",
+     "part": "Phần ba. Sinh học cơ thể",
+     "lessons": [
+      {
+       "number": 28,
+       "title": "Mối quan hệ giữa các quá trình sinh lí trong cơ thể sinh vật",
+       "page": 183,
+       "kind": "theory"
+      },
+      {
+       "number": 29,
+       "title": "Một số ngành nghề liên quan đến sinh học cơ thể",
+       "page": 185,
+       "kind": "career"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 29,
+    "theory": 20
+   }
+  },
+  {
+   "id": "SH12",
+   "subject": "biology",
+   "grade": 12,
+   "title": "Sinh học 12",
+   "url": "https://taphuan.nxbgd.vn/tap-huan/doc-sach/sgk-sinh-hoc-12.4701665546",
+   "tocPages": [
+    4
+   ],
+   "chapters": [
+    {
+     "label": "Chương 1. Di truyền phân tử",
+     "printed": "Chương 1 DI TRUYỀN PHÂN TỬ",
+     "part": "Phần bốn. Di truyền học",
+     "lessons": [
+      {
+       "number": 1,
+       "title": "DNA và cơ chế tái bản DNA",
+       "page": 5,
+       "kind": "theory"
+      },
+      {
+       "number": 2,
+       "title": "Gene, hệ gene và quá trình truyền đạt thông tin di truyền",
+       "page": 9,
+       "kind": "theory"
+      },
+      {
+       "number": 3,
+       "title": "Điều hoà biểu hiện gene",
+       "page": 18,
+       "kind": "theory"
+      },
+      {
+       "number": 4,
+       "title": "Đột biến gene",
+       "page": 23,
+       "kind": "theory"
+      },
+      {
+       "number": 5,
+       "title": "Công nghệ gene",
+       "page": 27,
+       "kind": "theory"
+      },
+      {
+       "number": 6,
+       "title": "Thực hành: Tách chiết DNA",
+       "page": 32,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 2. Di truyền nhiễm sắc thể",
+     "printed": "Chương 2 DI TRUYỀN NHIỄM SẮC THỂ",
+     "part": "Phần bốn. Di truyền học",
+     "lessons": [
+      {
+       "number": 7,
+       "title": "Cấu trúc và chức năng của nhiễm sắc thể",
+       "page": 36,
+       "kind": "theory"
+      },
+      {
+       "number": 8,
+       "title": "Học thuyết di truyền Mendel",
+       "page": 40,
+       "kind": "theory"
+      },
+      {
+       "number": 9,
+       "title": "Mở rộng học thuyết Mendel",
+       "page": 46,
+       "kind": "theory"
+      },
+      {
+       "number": 10,
+       "title": "Di truyền giới tính và di truyền liên kết với giới tính",
+       "page": 50,
+       "kind": "theory"
+      },
+      {
+       "number": 11,
+       "title": "Liên kết gene và hoán vị gene",
+       "page": 54,
+       "kind": "theory"
+      },
+      {
+       "number": 12,
+       "title": "Đột biến nhiễm sắc thể",
+       "page": 60,
+       "kind": "theory"
+      },
+      {
+       "number": 13,
+       "title": "Di truyền học người và di truyền y học",
+       "page": 68,
+       "kind": "theory"
+      },
+      {
+       "number": 14,
+       "title": "Thực hành: Quan sát một số dạng đột biến nhiễm sắc thể",
+       "page": 75,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 3. Mở rộng học thuyết di truyền nhiễm sắc thể",
+     "printed": "Chương 3 MỞ RỘNG HỌC THUYẾT DI TRUYỀN NHIỄM SẮC THỂ",
+     "part": "Phần bốn. Di truyền học",
+     "lessons": [
+      {
+       "number": 15,
+       "title": "Di truyền gene ngoài nhân",
+       "page": 78,
+       "kind": "theory"
+      },
+      {
+       "number": 16,
+       "title": "Tương tác giữa kiểu gene với môi trường và thành tựu chọn giống",
+       "page": 83,
+       "kind": "theory"
+      },
+      {
+       "number": 17,
+       "title": "Thực hành: Thí nghiệm về thường biến ở cây trồng",
+       "page": 88,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 4. Di truyền quần thể",
+     "printed": "Chương 4 DI TRUYỀN QUẦN THỂ",
+     "part": "Phần bốn. Di truyền học",
+     "lessons": [
+      {
+       "number": 18,
+       "title": "Di truyền học quần thể",
+       "page": 91,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 5. Bằng chứng và các học thuyết tiến hoá",
+     "printed": "Chương 5 BẰNG CHỨNG VÀ CÁC HỌC THUYẾT TIẾN HOÁ",
+     "part": "Phần năm. Tiến hoá",
+     "lessons": [
+      {
+       "number": 19,
+       "title": "Các bằng chứng tiến hoá",
+       "page": 97,
+       "kind": "theory"
+      },
+      {
+       "number": 20,
+       "title": "Quan niệm của Darwin về chọn lọc tự nhiên và hình thành loài",
+       "page": 101,
+       "kind": "theory"
+      },
+      {
+       "number": 21,
+       "title": "Học thuyết tiến hoá tổng hợp hiện đại",
+       "page": 106,
+       "kind": "theory"
+      },
+      {
+       "number": 22,
+       "title": "Tiến hoá lớn và quá trình phát sinh chủng loại",
+       "page": 113,
+       "kind": "theory"
+      }
+     ]
+    },
+    {
+     "label": "Chương 6. Môi trường và sinh thái học quần thể",
+     "printed": "Chương 6 MÔI TRƯỜNG VÀ SINH THÁI HỌC QUẦN THỂ",
+     "part": "Phần sáu. Sinh thái học và môi trường",
+     "lessons": [
+      {
+       "number": 23,
+       "title": "Môi trường và các nhân tố sinh thái",
+       "page": 122,
+       "kind": "theory"
+      },
+      {
+       "number": 24,
+       "title": "Sinh thái học quần thể",
+       "page": 128,
+       "kind": "theory"
+      },
+      {
+       "number": 25,
+       "title": "Thực hành: Xác định một số đặc trưng của quần thể",
+       "page": 138,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 7. Sinh thái học quần xã",
+     "printed": "Chương 7 SINH THÁI HỌC QUẦN XÃ",
+     "part": "Phần sáu. Sinh thái học và môi trường",
+     "lessons": [
+      {
+       "number": 26,
+       "title": "Quần xã sinh vật",
+       "page": 141,
+       "kind": "theory"
+      },
+      {
+       "number": 27,
+       "title": "Thực hành: Tìm hiểu cấu trúc dinh dưỡng của quần xã trong tự nhiên",
+       "page": 150,
+       "kind": "practice"
+      },
+      {
+       "number": 28,
+       "title": "Hệ sinh thái",
+       "page": 152,
+       "kind": "theory"
+      },
+      {
+       "number": 29,
+       "title": "Trao đổi vật chất và chuyển hoá năng lượng trong hệ sinh thái",
+       "page": 155,
+       "kind": "theory"
+      },
+      {
+       "number": 30,
+       "title": "Diễn thế sinh thái",
+       "page": 161,
+       "kind": "theory"
+      },
+      {
+       "number": 31,
+       "title": "Sinh quyển, khu sinh học và chu trình sinh - địa - hoá",
+       "page": 165,
+       "kind": "theory"
+      },
+      {
+       "number": 32,
+       "title": "Thực hành: Thiết kế một hệ sinh thái nhân tạo",
+       "page": 172,
+       "kind": "practice"
+      }
+     ]
+    },
+    {
+     "label": "Chương 8. Sinh thái học phục hồi, bảo tồn và phát triển bền vững",
+     "printed": "Chương 8 SINH THÁI HỌC PHỤC HỒI, BẢO TỒN VÀ PHÁT TRIỂN BỀN VỮNG",
+     "part": "Phần sáu. Sinh thái học và môi trường",
+     "lessons": [
+      {
+       "number": 33,
+       "title": "Sinh thái học phục hồi và bảo tồn đa dạng sinh vật",
+       "page": 175,
+       "kind": "theory"
+      },
+      {
+       "number": 34,
+       "title": "Phát triển bền vững",
+       "page": 180,
+       "kind": "theory"
+      },
+      {
+       "number": 35,
+       "title": "Dự án: Tìm hiểu thực trạng bảo tồn hệ sinh thái tại địa phương và đề xuất giải pháp bảo tồn",
+       "page": 188,
+       "kind": "project"
+      }
+     ]
+    }
+   ],
+   "counts": {
+    "total": 35,
+    "theory": 28
+   }
+  }
+ ],
+ "items": [
+  {
+   "topic": "uniformMotion",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương II. Động học",
+   "lessons": [
+    4,
+    5,
+    7
+   ],
+   "reason": "Bài 4–5 nói về độ dịch chuyển, tốc độ, vận tốc; Bài 7 về đồ thị độ dịch chuyển – thời gian.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "uniformAcceleration",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương II. Động học",
+   "lessons": [
+    8,
+    9
+   ],
+   "reason": "Tên Bài 8–9: gia tốc và chuyển động thẳng biến đổi đều.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "freeFall",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương II. Động học",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: sự rơi tự do.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "horizontalProjectile",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương II. Động học",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: chuyển động ném.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "obliqueProjectile",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương II. Động học",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: chuyển động ném.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "newtonLaws",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương III. Động lực học",
+   "lessons": [
+    14,
+    15,
+    16,
+    18
+   ],
+   "reason": "Tên Bài 14–16: ba định luật Newton; Bài 18: lực ma sát (cảnh có hệ số ma sát).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "energyConservation",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương IV. Năng lượng, công, công suất",
+   "lessons": [
+    25,
+    26
+   ],
+   "reason": "Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "collisions",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương V. Động lượng",
+   "lessons": [
+    28,
+    29
+   ],
+   "reason": "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "springPendulum",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương I. Dao động",
+   "lessons": [
+    1,
+    2,
+    3,
+    5,
+    6
+   ],
+   "reason": "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: dao động tắt dần (cảnh có lực cản).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "simplePendulum",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương I. Dao động",
+   "lessons": [
+    1,
+    2,
+    3,
+    5,
+    6
+   ],
+   "reason": "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: dao động tắt dần.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "periodicTable",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 2. Bảng tuần hoàn các nguyên tố hoá học và định luật tuần hoàn",
+   "lessons": [
+    5,
+    6,
+    8
+   ],
+   "reason": "Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "electronConfiguration",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 1. Cấu tạo nguyên tử",
+   "lessons": [
+    3
+   ],
+   "reason": "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "orbitals",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 1. Cấu tạo nguyên tử",
+   "lessons": [
+    3
+   ],
+   "reason": "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "collisionTheory",
+   "subject": "chemistry",
+   "grade": 10,
+   "book": "HH10",
+   "chapter": "Chương 6. Tốc độ phản ứng",
+   "lessons": [
+    19
+   ],
+   "reason": "Tên Bài 19: tốc độ phản ứng.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "chemicalEquilibrium",
+   "subject": "chemistry",
+   "grade": 11,
+   "book": "HH11",
+   "chapter": "Chương 1. Cân bằng hoá học",
+   "lessons": [
+    1
+   ],
+   "reason": "Tên Bài 1: khái niệm về cân bằng hoá học.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "diffusionOsmosis",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 3. Trao đổi chất qua màng và truyền tin tế bào",
+   "lessons": [
+    10
+   ],
+   "reason": "Tên Bài 10: trao đổi chất qua màng tế bào.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "mitosis",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 5. Chu kì tế bào và phân bào",
+   "lessons": [
+    16
+   ],
+   "reason": "Tên Bài 16: chu kì tế bào và nguyên phân.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "meiosis",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 5. Chu kì tế bào và phân bào",
+   "lessons": [
+    17
+   ],
+   "reason": "Tên Bài 17: giảm phân.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "centralDogma",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    2
+   ],
+   "reason": "Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định).",
+   "review_status": "pending"
+  },
+  {
+   "topic": "pointMutation",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 1. Di truyền phân tử",
+   "lessons": [
+    4
+   ],
+   "reason": "Tên Bài 4: đột biến gene.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "mendel",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    8,
+    9
+   ],
+   "reason": "Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "hardyWeinberg",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 4. Di truyền quần thể",
+   "lessons": [
+    18
+   ],
+   "reason": "Tên Bài 18: di truyền học quần thể.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "logisticGrowth",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 6. Môi trường và sinh thái học quần thể",
+   "lessons": [
+    24
+   ],
+   "reason": "Tên Bài 24: sinh thái học quần thể.",
+   "review_status": "pending"
+  }
+ ],
+ "unplaced": [
+  {
+   "topic": "inclinedPlane",
+   "subject": "physics",
+   "reason": "Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng định luật 2 Newton và lực ma sát. Bài có thể liên quan: VL10 Bài 15, 18.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "pulley",
+   "subject": "physics",
+   "reason": "Không bài nào có tên về ròng rọc; Bài 17 (trọng lực và lực căng) chỉ liên quan một phần. Bài có thể liên quan: VL10 Bài 17.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "hookeSpring",
+   "subject": "physics",
+   "reason": "Tên Bài 33 là biến dạng của vật rắn, không nêu định luật Hooke. Bài có thể liên quan: VL10 Bài 33.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "bohrModel",
+   "subject": "chemistry",
+   "reason": "Không bài nào có tên về mô hình Bohr; chưa rõ thuộc Bài 1 hay Bài 3. Bài có thể liên quan: HH10 Bài 1 hoặc 3.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "molecule3d",
+   "subject": "chemistry",
+   "reason": "Không bài nào trong ba cuốn Hoá học có tên về hình học phân tử 3D. Bài có thể liên quan: —.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "vsepr",
+   "subject": "chemistry",
+   "reason": "Không bài nào trong ba cuốn Hoá học có tên về mô hình VSEPR. Bài có thể liên quan: —.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "bondPolarity",
+   "subject": "chemistry",
+   "reason": "Tên Bài 12 là liên kết cộng hoá trị, không nêu độ phân cực. Bài có thể liên quan: HH10 Bài 12.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "reactionLibrary",
+   "subject": "chemistry",
+   "reason": "Thư viện nhiều phản ứng, không ứng với một bài. Bài có thể liên quan: —.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "equationBalancing",
+   "subject": "chemistry",
+   "reason": "Không bài nào có tên về cân bằng phương trình; Bài 15 (phản ứng oxi hoá – khử) chỉ liên quan một phần. Bài có thể liên quan: HH10 Bài 15.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "maxwellBoltzmann",
+   "subject": "chemistry",
+   "reason": "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann. Bài có thể liên quan: —.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "michaelisMenten",
+   "subject": "biology",
+   "reason": "Không bài nào có tên về động học enzyme. Bài có thể liên quan: SH10 Bài 13–15.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "lotkaVolterra",
+   "subject": "biology",
+   "reason": "Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt. Bài có thể liên quan: SH12 Bài 26.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "geneticDrift",
+   "subject": "biology",
+   "reason": "Tên Bài 21 là học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 21.",
+   "review_status": "pending"
+  }
+ ]
+}
