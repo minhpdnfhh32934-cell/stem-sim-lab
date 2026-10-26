@@ -173,11 +173,11 @@ Guided lessons (Predict → Interact → Observe → Explain → Conclude → Re
 engines and data; the studio never computes a measurement of its own.
 
 **Inside the lab (user decisions 2026-10-20):** the name stays "Science Studio"; the launch page has
-only Phòng thí nghiệm + AI Teacher — do not add a Science Studio card back there. Entries, all in the
+only Virtual Lab + AI Teacher — do not add a Science Studio card back there. Entries, all in the
 lab: the "Science Studio" button at the top of the topic library (`LeftSidebar.tsx`, also Ctrl+K
 `go.studio`) → `openStudio()` → screen `'studio'` (`src/app/navigationStore.ts`; the value is kept, so
 every older caller lands in the new place) → `StudioScreen`, mounted by `AppShell` beside the
-library (no inspector, timeline or bottom panel; "Về Phòng thí nghiệm" goes back). The studio's
+library (no inspector, timeline or bottom panel; "Về Virtual Lab" goes back). The studio's
 subject tab sets the library's subject. From an open topic: the inspector card `TopicLessons.tsx`
 lists the topic's lessons, and in the "Thử thách" tab a lab POE that a lesson runs (`binding.poe`)
 becomes a link to that lesson instead of a second prediction (`ChallengePanel.tsx`). Both use

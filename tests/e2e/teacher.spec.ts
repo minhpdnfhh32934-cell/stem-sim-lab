@@ -175,7 +175,7 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
     globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'groq-test-key';
   });
   await page.reload();
-  await page.getByRole('button', { name: /Phòng thí nghiệm/ }).click();
+  await page.getByRole('button', { name: /Virtual Lab/ }).click();
   await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
   await panel.getByRole('button', { name: /Think/ }).click();
   await expect(panel.getByText(/Groq \(miễn phí\) \(rà soát\)/)).toBeVisible();

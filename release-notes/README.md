@@ -66,7 +66,7 @@ Mỗi phần tử của `versions`:
   (để lần cập nhật sau vẫn hiện được).
 - Hạ phiên bản (`lastSeen` hoặc `snoozed` mới hơn bản đang chạy): không hiện gì.
 - Tiêu đề hộp là "SimLab đã được cập nhật"; mục trong menu là "Có gì mới".
-- Chỉ tự hiện ở trang mở đầu hoặc trang chủ Phòng thí nghiệm, khi không có hộp thoại nào đang mở
+- Chỉ tự hiện ở trang mở đầu hoặc trang chủ Virtual Lab, khi không có hộp thoại nào đang mở
   (không chen vào giữa bài học hay mô phỏng). "Đóng" và "Xem chi tiết" ghi `lastSeen`; "Để sau" ghi
   `snoozed` (không tự hiện lại ở phiên bản này, nhưng menu ☰ còn mục "Có gì mới" có chấm báo).
 

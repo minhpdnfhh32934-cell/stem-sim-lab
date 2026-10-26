@@ -61,6 +61,8 @@ export function CommandPalette() {
         id: 'go.lab',
         group: 'go',
         label: t('command.lab'),
+        // Called "Phòng thí nghiệm" until 0.8.0: the old name still finds it.
+        keywords: 'phong thi nghiem laboratory',
         icon: FlaskConical,
         run: openLab,
       },

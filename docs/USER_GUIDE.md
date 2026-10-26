@@ -76,26 +76,26 @@ chép qua USB và cài trước.
    Esc để đóng.
 
 2. **Trang chủ SimLab** có hai lối vào:
-   - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử, trang "Hôm nay học gì?" và **Science Studio**
+   - **Virtual Lab** mở thư viện chủ đề, lịch sử, trang "Hôm nay học gì?" và **Science Studio**
      (các bài học có hướng dẫn, mục "Science Studio" bên dưới);
    - **AI Teacher** mở trang trò chuyện với trợ lý học tập.
 
    Bấm logo **SimLab** ở góc trái để quay về trang chủ.
 
-3. Trong **Phòng thí nghiệm**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
+3. Trong **Virtual Lab**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
    - nút **Tiếp tục bài đang học** (mở lại chủ đề lần trước);
    - ô **Nhập đề bài hoặc câu hỏi…** (dán được đề nhiều dòng, Ctrl+Enter để phân tích) và nút
      **Tự dựng cảnh** (không cần AI);
    - 3 thẻ môn **Vật lý · Hóa học · Sinh học** (bấm để xem các chủ đề của môn trong Thư viện);
    - **chủ đề gợi ý** theo trình độ, môn bạn quan tâm được gợi ý trước;
    - **AI Teacher** để hỏi bài trong trang chat riêng.
-4. Chọn một chủ đề (trang chủ Phòng thí nghiệm hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
+4. Chọn một chủ đề (trang chủ Virtual Lab hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
    Space) để chạy.
 5. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
 
 ### Trò chuyện với AI Teacher
 
-Trong Phòng thí nghiệm, bấm nút tròn có mặt **AI Teacher** ở góc dưới (bên trái cột Thuộc tính) để
+Trong Virtual Lab, bấm nút tròn có mặt **AI Teacher** ở góc dưới (bên trái cột Thuộc tính) để
 hỏi nhanh; ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc trò chuyện toàn màn hình. Bấm chữ **SimLab**
 ở góc trên để về trang chủ. Chọn API trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
 ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
@@ -287,7 +287,7 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
 
 ## Science Studio
 
-**Mở:** Science Studio nằm trong **Phòng thí nghiệm** (trang chủ SimLab không còn thẻ riêng). Có ba
+**Mở:** Science Studio nằm trong **Virtual Lab** (trang chủ SimLab không còn thẻ riêng). Có ba
 cách mở:
 
 - bấm nút **Science Studio** ở đầu thư viện chủ đề (bên trái) để xem mọi bài, kể cả bài giáo viên đã
@@ -295,10 +295,10 @@ cách mở:
 - khi đang mở một chủ đề có bài hướng dẫn (hiện có: Rơi tự do, Thư viện phản ứng đã kiểm chứng,
   Nguyên phân), bấm **Học theo bài: …** ở thẻ **Science Studio** trong bảng bên phải;
 - ở chủ đề Rơi tự do, phần **Dự đoán trước** (thẻ **Thử thách**) dẫn sang bài Science Studio của chủ
-  đề, nên em chỉ dự đoán một lần, trong bài đó. Các thử thách nhỏ vẫn ở trong Phòng thí nghiệm.
+  đề, nên em chỉ dự đoán một lần, trong bài đó. Các thử thách nhỏ vẫn ở trong Virtual Lab.
 
 Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí · Soạn bài** (thư viện bên trái đổi
-theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Phòng thí nghiệm** để quay lại; bài đang làm
+theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Virtual Lab** để quay lại; bài đang làm
 dở được giữ nguyên. Bấm logo **SimLab** để về trang chủ.
 
 **Cách học:** lần đầu vào Studio, một hướng dẫn ngắn tự hiện và chỉ vào từng phần của màn hình (chọn
@@ -316,7 +316,7 @@ chưa có giáo viên duyệt.
 - **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
   chọn) và B (độ cao gấp đôi), rồi báo đã có số đo; bấm **Tiếp: Quan sát** để xem bảng số đo, đồ thị
   và phép kiểm tra chéo với công thức (như ở môn Hóa và Sinh, em tự quyết khi nào đi tiếp). Nút
-  **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
+  **Chạy A trong Virtual Lab** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Virtual Lab.
 - **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
   trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
   từ thư viện phản ứng của app. Cặp dung dịch không có trong thư viện chỉ hiện "chưa có trong cơ sở dữ

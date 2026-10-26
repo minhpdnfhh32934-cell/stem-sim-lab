@@ -47,7 +47,10 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 
 The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and the app is **SimLab**
 (installer and window title). Internal identifiers stay: `vn.stemsimlab.desktop`, keychain service
-"STEM Sim Lab", `stemsim.*` storage keys. The user accepted:
+"STEM Sim Lab", `stemsim.*` storage keys. **User decision 2026-10-23 (plan #37 (k)):** the lab
+("Phòng thí nghiệm" / "Lab") is shown as **Virtual Lab** in both languages, untranslated like
+Science Studio and AI Teacher; display text only (`screen: 'lab'`, `openLab`, i18n keys `lab*` stay;
+release history and old work-logs keep the old name). The user accepted:
 
 - **Local AI:** Gemma runs inside the app (Transformers.js + ONNX Runtime Web on WebGPU, worker in
   `src/ai/webGemma*.ts`). Ollama is not used (the old `gemma.rs` was removed in 0.4.0). A local
@@ -423,11 +426,11 @@ Progress log: `docs/PROGRESS.md`.
 - Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Layers and file map:
   `docs/ARCHITECTURE.md` §3f.
 - **User decisions 2026-10-20:** (1) the guided-lesson mode keeps the name **Science Studio**;
-  (2) the launch page has only **Phòng thí nghiệm** + **AI Teacher**:
+  (2) the launch page has only **Virtual Lab** (called Phòng thí nghiệm until 0.8.0) + **AI Teacher**:
   **không thêm lại thẻ Science Studio ở trang mở đầu**. Science Studio lives inside the lab: the
   "Science Studio" button at the top of the topic library (and Ctrl+K) → `openStudio()` → screen `'studio'` (kept for older callers) →
-  `StudioScreen` beside the library (tabs Hóa học · Sinh học · Vật lí · Soạn bài; "Về Phòng thí
-  nghiệm"). An open topic lists its lessons in the inspector (`TopicLessons.tsx`); a lab POE that a
+  `StudioScreen` beside the library (tabs Hóa học · Sinh học · Vật lí · Soạn bài; "Về Virtual
+  Lab"). An open topic lists its lessons in the inspector (`TopicLessons.tsx`); a lab POE that a
   lesson runs (`binding.poe`) is a link to the lesson in "Thử thách", never a second prediction.
   Lookups only through `src/studio/lessons.ts`.
 - **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine

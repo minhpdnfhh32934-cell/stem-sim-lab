@@ -372,7 +372,7 @@ const en: Messages = {
       actions: 'Actions',
     },
     home: 'Home',
-    lab: 'Lab',
+    lab: 'Virtual Lab',
     studio: 'Science Studio — guided lessons',
     teacherTalk: 'AI Teacher — chat',
     teacherBoard: 'AI Teacher — whiteboard lesson',
@@ -937,7 +937,7 @@ const en: Messages = {
     title: 'Welcome to SimLab',
     subtitle:
       'Choose how you want to learn today. Simulations, data and learning support share one workspace.',
-    labTitle: 'Laboratory',
+    labTitle: 'Virtual Lab',
     labBody:
       'Explore Physics, Chemistry and Biology simulations, adjust parameters and inspect results.',
     teacherTitle: 'AI Teacher',
@@ -957,7 +957,7 @@ const en: Messages = {
       authoring: 'Authoring',
     },
     pick: 'Choose a lesson',
-    backToLab: 'Back to the lab',
+    backToLab: 'Back to Virtual Lab',
     lessons: {
       title: 'Science Studio',
       intro:
@@ -981,11 +981,11 @@ const en: Messages = {
     preparing: {
       title: 'In preparation',
       chemistry:
-        'The Chemistry Studio is being prepared. Meanwhile, you can use the Chemistry topics in the Laboratory.',
+        'The Chemistry Studio is being prepared. Meanwhile, you can use the Chemistry topics in Virtual Lab.',
       biology:
-        'The Biology Studio is being prepared. Meanwhile, you can use the Biology topics in the Laboratory.',
+        'The Biology Studio is being prepared. Meanwhile, you can use the Biology topics in Virtual Lab.',
       physics: 'There is no Physics lesson in the Studio yet.',
-      openLab: 'Open the Laboratory',
+      openLab: 'Open Virtual Lab',
     },
     notes: {
       private:
@@ -1169,7 +1169,7 @@ const en: Messages = {
       input: 'input',
       crossCheck: 'Cross-check with the analytic solution: largest difference {gap}.',
       timeAxis: 'Time t',
-      openInLab: 'Run {id} in the Laboratory',
+      openInLab: 'Run {id} in Virtual Lab',
       fact: '{q} (simulation {model}): {value}',
       ratioOf: 'B/A ratio — {q}',
     },
