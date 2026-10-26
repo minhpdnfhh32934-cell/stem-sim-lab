@@ -3,6 +3,7 @@ import { buildDraft } from '@/ai/draft';
 import type { Extraction } from '@/ai/spec';
 import { basicSplit } from '@/app/sim/basicParams';
 import { dopri5 } from '@/core/ode/dopri5';
+import { observe, poeFor } from '@/learn/poe';
 import { CHECK_TOL, checkAtol, forceLaw, forceLawStart, numericPeriod } from './check';
 import { CE, CircularEngine } from './engine';
 import { MODE, circular, stateAt } from './model';
@@ -184,5 +185,11 @@ describe('uniform circular motion — scene', () => {
       true,
     );
     expect(d.sources.omega).toBe('default');
+  });
+
+  it('"Dự đoán trước": with v fixed, doubling r halves a_ht (computed by solve())', () => {
+    const poe = poeFor('uniformCircularMotion')!;
+    const out = observe(scene, poe, { ...scene.defaults, ...poe.start })!;
+    expect(poe.choices[out.correct]).toEqual({ kind: 'ratio', ratio: 0.5 });
   });
 });
