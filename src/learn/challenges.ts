@@ -242,6 +242,23 @@ export const CHALLENGES: readonly Challenge[] = [
       'If the speed doubles, how many times larger is the centripetal acceleration?',
     ),
   },
+  {
+    id: 'standingWave.f50',
+    topic: 'standingWave',
+    title: L('Tần số 50 Hz', 'A frequency of 50 Hz'),
+    task: L(
+      'Giữ dây dài 1,2 m với 3 bó sóng, chỉnh lực căng dây để tần số sóng dừng đúng 50 Hz.',
+      'Keeping the 1.2 m string with 3 loops, set the tension so that the standing wave is at exactly 50 Hz.',
+    ),
+    controls: ['tension'],
+    // mode 0 = "Tìm f (biết L, v, n)"; vFrom 1 = v from the tension and the linear density.
+    start: { mode: 0, vFrom: 1 },
+    goal: { answer: 'frequency', kind: 'target', value: 50, tol: 0.5 },
+    hint: L(
+      'Tần số tỉ lệ với tốc độ truyền sóng v = √(F/μ). Muốn v gấp đôi thì lực căng F phải gấp mấy lần?',
+      'The frequency is proportional to the wave speed v = √(F/μ). To double v, how many times larger must the tension F be?',
+    ),
+  },
 ];
 
 export function challengesFor(topic: string): Challenge[] {
