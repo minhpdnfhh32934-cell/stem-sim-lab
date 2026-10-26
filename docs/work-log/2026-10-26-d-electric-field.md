@@ -233,3 +233,24 @@ src/core src/ai src/app tests/golden` → 903 passed; full `npx vitest run` → 
 - Results: `src/ai tests/golden src/app/ai src/physics/field` → 522 passed; eslint, tsc, Prettier
   clean; full `npx vitest run` → 4392 passed, 1 skipped; E2E physics + layout + ai-flow (lock) →
   39 passed.
+
+## 2026-10-27 — PR #89 round 5: both convenience readers removed (coordinator decision)
+
+- Review: PR comment 6429336427. The bugs of five rounds all sat in two conveniences, so both are
+  gone and those parts read as `main`: a bare power of ten ("10⁻⁸") is never read (the learner
+  enters it), and y_M = 0 is never taken from words ("M nằm trên đoạn AB"); `statedPlainly` and the
+  `IMPLIED` list are main's again. Kept: superscript exponents after a mantissa, relative
+  comparison, no infinite readings, integer exponents, new multiplication signs only with a caret,
+  "10⁰" as degrees, the charge sign warning. Digits of names are dropped only in
+  `numbersIn`/`mentions`; `numberTokens` (explain.ts) reads as main.
+- Tests against the frozen main reader: (a) `mentions` accepts nothing main refuses (only
+  exception: a mantissa with a superscript exponent main could not read); (b) every golden value
+  main accepts is accepted; explanations main flags stay flagged (one listed exception, "2X10^3"
+  = 2000). Words-rule cases that round 4 wrongly refused ("quả cầu 2 đứng yên", "g = 10 m/s² bỏ
+  qua ma sát", …) pass.
+- Golden: efd-02 and efd-05 now list y_M as missing; efd-03 ("Q = 10⁻⁸ C") lists q1 as missing,
+  with n = 1 from "Một điện tích điểm"; 45 problems, second run identical. Prompt: y_M only when
+  the problem writes a number.
+- Results: `src/ai tests/golden src/app/ai src/physics/field` → 518 passed; eslint, tsc, Prettier
+  clean; full `npx vitest run` → 4388 passed, 1 skipped; E2E physics + layout + ai-flow (lock) →
+  39 passed.
