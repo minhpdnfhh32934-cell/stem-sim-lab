@@ -146,6 +146,9 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
     'Đã học — xong 1/3 bước, còn: Dự đoán trước, 1 thử thách',
   );
   await expect(library.getByLabel('1/5 chủ đề đã học')).toHaveText('1/5');
+  // The visible tick and step count, not only the hidden description.
+  await expect(library.locator('.tree__mark[data-state="opened"] svg')).toHaveCount(1);
+  await expect(topic.locator('.tree__steps')).toHaveText('1/3');
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
   // Predict – observe – explain: the right answer is computed by the engine. Doubling v₀ leaves
