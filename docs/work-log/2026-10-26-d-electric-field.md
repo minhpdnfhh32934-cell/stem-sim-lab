@@ -77,7 +77,7 @@
 ## 2026-10-27 — stage 2 (scene)
 
 - **Date/time:** 2026-10-27 01:29 +0700 (start of the record)
-- **Status:** IN_PROGRESS
+- **Status:** PASS (see the end of this section)
 - **Branch / base:** `feat/76-electric-field` in `D:\Projects\stem-sim-lab\.claude\worktrees\76-phase2`;
   merged `origin/main` (41fbaee) and `origin/feat/74-uniform-circular-motion` (PR #87, not merged
   yet: this branch contains it until #87 merges). Conflict in `src/ai/draft.ts` imports only; both
@@ -108,3 +108,40 @@
   exactly three digits (`numbers.ts`), with a test.
 - Solution formulas substitute SI numbers without units (as SGK writes them) so a step fits the
   panel at 1366×768 (seen on a screenshot).
+
+### Independent review (2026-10-27)
+
+Two agents (science-reviewer; a code reviewer on this branch's own diff). Every finding was checked
+against the code before fixing; all confirmed ones fixed with a test:
+
+- `writtenSign` counted "âm"/"dương" of other nouns ("bản âm", "chiều âm", the next charge's
+  "điện tích âm"): sign words now only next to "điện tích"/"điện"/"dấu", and the window stops at
+  the next charge named.
+- "2⋅10⁻⁸" (U+22C5) let 10⁻⁸ through: "⋅"/"∙" added to the multiplication signs.
+- Where the fields cancel, E kept a rounding residue (2·10⁻¹⁰ V/m) and the −∇V check showed a huge
+  relative deviation: |E| ≤ 10⁻⁹·Σ|Eᵢ| is reported as 0 (`fieldAtPoint`), no check there.
+- A seed inside another charge's disc could mark "E = 0" on that charge: it now ends at the charge;
+  `validate` refuses separations ≤ the disc radius.
+- q = 0 / q₀ = 0 were worded and drawn as positive; plates card had the point-charge title and
+  note; "lines ∝ |q|" is "about ∝ |q| (rounded, at least one)"; k written 8,988·10⁹; DATA_REVIEW
+  EFD rows lacked six columns (status `pending` now in each row); docs say "upper estimate".
+- Kept on purpose: x_M stays required for point charges (a problem without M asks the learner,
+  rather than computing E at a default point silently).
+
+### Commands run (real results)
+
+- `npx tsc -b --noEmit` → no error. `npx eslint .` → exit 0 (one `??=` finding fixed first).
+- `npx prettier --check --ignore-unknown <files changed vs main>` → all formatted.
+- `npx vitest run` (full) → 4295 passed, 1 failed: `tests/app.test.tsx` "Science Studio shows
+  inside the lab" (5,3 s timeout under load); alone: 15/15 passed (same as on 2026-10-26).
+- Targeted after the review fixes: `src/physics/field src/ai tests/golden src/learn` → 419 passed.
+- Generators rerun: `make_physics_golden.py` (39 problems), `gen_curriculum_kntt.py` → no diff.
+- E2E under the shared lock: `physics.spec.ts` + `layout.spec.ts` → 17 passed. Full
+  `npx playwright test` → 92 passed, 2 failed (`chemistry.spec.ts` 60 s timeout, `lesson-flow.spec.ts`
+  Science Card not visible in 20 s), 35 did not run (3D projects depend on the first). The two specs
+  alone → 8 passed.
+- After merging `origin/main` (3c728d1, #87 merged; tree unchanged): full `npx playwright test`
+  again → **129 passed** (all three projects), 0 failed.
+
+**Status: PASS** (stage 2). SGK lessons added: VL11 Bài 16, 17, 18 → 39/189 theory lessons have a
+SimLab topic (`docs/CURRICULUM_KNTT.md`, pending teacher review).
