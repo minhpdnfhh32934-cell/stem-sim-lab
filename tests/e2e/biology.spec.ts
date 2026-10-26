@@ -184,6 +184,14 @@ test('cell structure: a part opens its card; targets >= 40 px, no horizontal scr
   const card = page.locator('.cell-part-card');
   await expect(card.locator('strong')).toHaveText('Lục lạp');
   await expect(card).toContainText('quang hợp');
+  // The plant has the longest list; the cell switch and "Hiện tên" are targets too.
+  const sizes = await page
+    .locator('.cell-parts .segmented__item, .cell-parts .m3d-parts__item, .cell2d .icon-btn')
+    .evaluateAll((els) =>
+      els.map((e) => Math.min(e.getBoundingClientRect().width, e.getBoundingClientRect().height)),
+    );
+  expect(sizes.length).toBe(3 + 12 + 1);
+  expect(sizes.filter((s) => s < 40)).toEqual([]);
   // The bacterium has no chloroplast: its card closes and its list shows the nucleoid.
   await page.getByRole('radio', { name: 'Vi khuẩn' }).click();
   await expect(card).toHaveCount(0);

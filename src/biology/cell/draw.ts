@@ -580,7 +580,11 @@ export const FIGURES: Record<CellKind, Figure> = {
   plant: PLANT,
 };
 
-/** Space kept free at the top (overlay chips) and bottom (caption), in CSS pixels. */
+/**
+ * Space kept free at the top (overlay chips) and bottom (caption), in CSS pixels at font scale 1;
+ * both grow with `--font-scale` (Settings → Cỡ chữ, presentation mode), like the overlays.
+ * shortcut: assumes a one-line caption; measure the caption if the stage can get narrow enough to wrap it.
+ */
 const TOP = 52;
 const BOTTOM = 52;
 const PAD = 16;
@@ -622,7 +626,11 @@ export function drawCell(
   const { ctx, width, height, css } = d;
   const fig = FIGURES[kind];
   const [x0, y0, x1, y1] = fig.box;
-  ctx.font = `13px ${css('--font-sans') || 'sans-serif'}`;
+  const k = Number(css('--font-scale')) || 1;
+  const top = TOP * k;
+  const bottom = BOTTOM * k;
+  const font = `${13 * k}px ${css('--font-sans') || 'sans-serif'}`;
+  ctx.font = font;
   const all: Label[] = [];
   for (const [id, shape] of Object.entries(fig.parts) as [PartId, Shape][]) {
     const text = names[id];
@@ -637,10 +645,10 @@ export function drawCell(
   const roomR = room(false);
   const u = Math.max(
     10,
-    Math.min((width - 2 * PAD - roomL - roomR) / (x1 - x0), (height - TOP - BOTTOM) / (y1 - y0)),
+    Math.min((width - 2 * PAD - roomL - roomR) / (x1 - x0), (height - top - bottom) / (y1 - y0)),
   );
   const cx = PAD + roomL + (width - 2 * PAD - roomL - roomR - (x1 - x0) * u) / 2 - x0 * u;
-  const cy = TOP + (height - TOP - BOTTOM - (y1 - y0) * u) / 2 - y0 * u;
+  const cy = top + (height - top - bottom - (y1 - y0) * u) / 2 - y0 * u;
 
   const base = new Pen(ctx, cx, cy, u, css, null);
   for (const shape of Object.values(fig.parts)) shape.draw(base);
@@ -652,8 +660,8 @@ export function drawCell(
     const list = labels.filter((l) => l.left === left).sort((a, b) => a.at[1] - b.at[1]);
     const ys = stack(
       list.map((l) => base.Y(l.at[1])),
-      TOP,
-      height - BOTTOM,
+      top,
+      height - bottom,
     );
     const colX = left ? base.X(x0) - GAP / 2 : base.X(x1) + GAP / 2;
     list.forEach((l, i) => {
@@ -670,7 +678,7 @@ export function drawCell(
       ctx.arc(base.X(l.at[0]), base.Y(l.at[1]), 2.5, 0, 2 * Math.PI);
       ctx.fillStyle = color;
       ctx.fill();
-      ctx.font = `${on ? '600 ' : ''}13px ${css('--font-sans') || 'sans-serif'}`;
+      ctx.font = `${on ? '600 ' : ''}${font}`;
       ctx.textAlign = left ? 'right' : 'left';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = color;

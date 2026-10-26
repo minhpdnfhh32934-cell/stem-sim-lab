@@ -1128,7 +1128,11 @@
   pointer-events: auto;
 }
 
-/* Cell structure 2D (src/biology/cell): the cell switch is a full target; the part card. */
+/* Cell structure 2D (src/biology/cell): "Hiện tên" and the cell switch are full targets; the part card. */
+.cell2d .icon-btn--lg {
+  width: var(--target);
+  height: var(--target);
+}
 .cell-parts .segmented {
   display: flex;
   margin-bottom: var(--space-3);
