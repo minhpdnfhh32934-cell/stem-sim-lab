@@ -2301,7 +2301,6 @@ const vi = {
     successTarget: 'Chính xác! {quantity} = {value}, đúng mục tiêu {goal} (chỉ lệch {diff}).',
     successBest: 'Tuyệt! {quantity} = {value} — giá trị lớn nhất có thể là {best}.',
     showHint: 'Xem gợi ý',
-    progress: 'Tiến độ: {done}/{total}',
     topicDone: 'Đã hoàn thành chủ đề',
     badgesTitle: 'Huy hiệu của bạn',
     noBadges: 'Mở một chủ đề, thử dự đoán hoặc làm thử thách để nhận huy hiệu đầu tiên.',
@@ -2321,6 +2320,11 @@ const vi = {
     },
     breakReminder:
       'Bạn đã học khoảng 45 phút liên tục. Nghỉ mắt vài phút nhé: đứng dậy, nhìn ra xa — mô phỏng vẫn chờ bạn ở đây.',
+    topicLearned: 'Đã học',
+    topicLearnedLeft: 'Đã học — xong {done}/{total} bước, còn: {left}',
+    leftPredict: 'Dự đoán trước',
+    leftChallenges: '{count} thử thách',
+    chapterLearned: '{done}/{total} chủ đề đã học',
   },
   teacher: {
     regionLabel: 'Dạy học bằng AI',
