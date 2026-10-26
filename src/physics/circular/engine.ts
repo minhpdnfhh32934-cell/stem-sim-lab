@@ -20,7 +20,8 @@ export class CircularEngine implements SimulationEngine<Params> {
 
   reset(p: Params): void {
     this.c = circular(p);
-    this.tEnd = p.tEnd ?? 60;
+    // At least three full turns, even for a period of minutes or hours.
+    this.tEnd = p.tEnd ?? Math.max(60, 3 * this.c.T);
     this.n = 0;
   }
 

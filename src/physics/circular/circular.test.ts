@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import { buildDraft } from '@/ai/draft';
+import type { Extraction } from '@/ai/spec';
+import { basicSplit } from '@/app/sim/basicParams';
 import { dopri5 } from '@/core/ode/dopri5';
 import { CHECK_TOL, checkAtol, forceLaw, forceLawStart, numericPeriod } from './check';
 import { CE, CircularEngine } from './engine';
 import { MODE, circular, stateAt } from './model';
+import { uniformCircularMotion as scene } from './scenes';
 
 const TAU = 2 * Math.PI;
 
@@ -115,5 +119,70 @@ describe('uniform circular motion — DOPRI5 cross-check of the force law', () =
     const T = numericPeriod(c);
     expect(T).not.toBeNull();
     expect(Math.abs(T! / ((2 * Math.PI * c.r) / c.v) - 1)).toBeLessThan(1e-9);
+  });
+});
+
+describe('uniform circular motion — scene', () => {
+  const answer = (p: Record<string, number>, id: string) =>
+    scene.solve(p, 'vi').answers.find((a) => a.id === id);
+
+  it('defaults: r = 1 m, v = 2 m/s → ω = 2 rad/s, T = π s, a_ht = 4 m/s², F_ht = 2 N', () => {
+    const p = scene.defaults;
+    expect(scene.validate?.(p)).toEqual([]);
+    expect(answer(p, 'omega')!.value).toBeCloseTo(2, 12);
+    expect(answer(p, 'period')!.value).toBeCloseTo(Math.PI, 12);
+    expect(answer(p, 'period')!.check).toBeCloseTo(Math.PI, 9);
+    expect(answer(p, 'frequency')!.value).toBeCloseTo(1 / Math.PI, 12);
+    expect(answer(p, 'a_c')!.value).toBeCloseTo(4, 12);
+    expect(answer(p, 'force')!.value).toBeCloseTo(2, 12);
+    expect(scene.scienceCard(p).confidence).toBe('exact');
+  });
+
+  it('the hidden quantities of the other modes describe the same motion', () => {
+    for (const mode of [MODE.omega, MODE.period, MODE.freq]) {
+      expect(answer({ ...scene.defaults, mode }, 'a_c')!.value).toBeCloseTo(4, 12);
+    }
+  });
+
+  it('validate: radius and the given quantity must be positive', () => {
+    expect(scene.validate?.({ ...scene.defaults, r: 0 })).toHaveLength(1);
+    expect(scene.validate?.({ ...scene.defaults, v: -2 })).toHaveLength(1);
+    // A non-positive value of a quantity that is not given does not matter.
+    expect(scene.validate?.({ ...scene.defaults, f: 0 })).toEqual([]);
+    expect(scene.validate?.({ ...scene.defaults, mode: MODE.freq, f: 0 })).toHaveLength(1);
+  });
+
+  it('nothing can be dragged; Basic shows the mode, r, the given quantity, m and φ₀', () => {
+    expect(scene.bodies.every((b) => !b.draggable)).toBe(true);
+    const visible = scene.params.filter((d) => !d.when || d.when(scene.defaults));
+    expect(basicSplit(visible, {}).main.map((d) => d.key)).toEqual(['mode', 'r', 'v', 'm', 'phi0']);
+  });
+
+  const text = 'Một vật quay đều trên đường tròn bán kính 50 cm với tần số 2 Hz.';
+  const extraction = (key: string, unit: string): Extraction => ({
+    quantities: [
+      { key: 'r', value: 50, unit: 'cm', quote: 'bán kính 50 cm' },
+      { key, value: 2, unit, quote: 'tần số 2 Hz' },
+    ],
+    questions: [],
+    assumptions: [],
+    unsupported_parts: [],
+    clarifications: [],
+  });
+
+  it('"2 Hz" in the f field gives ω = 4π rad/s; the mode follows the stated quantity', () => {
+    const d = buildDraft(scene, extraction('f', 'Hz'), text, 9.81);
+    expect(d.issues.filter((x) => x.blocking)).toEqual([]);
+    expect(d.params.mode).toBe(MODE.freq);
+    expect(d.missing).toEqual([]);
+    expect(answer(d.params, 'omega')!.value).toBeCloseTo(4 * Math.PI, 12);
+  });
+
+  it('"2 Hz" in the ω field is refused, never read as 2 rad/s', () => {
+    const d = buildDraft(scene, extraction('omega', 'Hz'), text, 9.81);
+    expect(d.issues.some((x) => x.kind === 'badUnit' && x.key === 'omega' && x.blocking)).toBe(
+      true,
+    );
+    expect(d.sources.omega).toBe('default');
   });
 });
