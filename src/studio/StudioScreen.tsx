@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  CircleHelp,
   Dna,
   FlaskConical,
   Hammer,
@@ -25,6 +26,7 @@ import { ReviewNote } from './ReviewNote';
 import type { StudioScenario, StudioSubject } from './scenario';
 import { scenariosFor } from './scenarios';
 import { STUDIO_TABS, type StudioTab } from './session';
+import { StudioGuide } from './StudioGuide';
 import { useStudioStore } from './studioStore';
 import { TeacherNote } from './TeacherNote';
 import './studio.css';
@@ -119,6 +121,7 @@ export default function StudioScreen() {
   const t = useT();
   const tab = useStudioStore((s) => s.tab);
   const setTab = useStudioStore((s) => s.setTab);
+  const openGuide = useStudioStore((s) => s.openGuide);
   // The library beside the lesson lists the same subject as the studio tab.
   useEffect(() => {
     if (tab !== 'authoring') useWorkspaceStore.getState().setSubject(tab);
@@ -135,15 +138,29 @@ export default function StudioScreen() {
           <h1 id="studio-title">{t('studio.title')}</h1>
           <p className="muted">{t('studio.subtitle')}</p>
         </div>
-        <button type="button" className="btn btn--ghost" onClick={openLab}>
-          <ArrowLeft size={15} strokeWidth={1.75} aria-hidden="true" />
-          {t('studio.backToLab')}
-        </button>
+        <div className="studio__head-actions">
+          <button
+            type="button"
+            className="btn btn--ghost"
+            data-tip={t('studio.guide.openHint')}
+            onClick={openGuide}
+          >
+            <CircleHelp size={16} strokeWidth={1.75} aria-hidden="true" />
+            {t('studio.guide.open')}
+          </button>
+          <button type="button" className="btn btn--ghost" onClick={openLab}>
+            <ArrowLeft size={15} strokeWidth={1.75} aria-hidden="true" />
+            {t('studio.backToLab')}
+          </button>
+        </div>
       </div>
-      <Tabs items={items} value={tab} onChange={setTab} label={t('studio.tabsLabel')} />
+      <div data-tour="studio-tabs">
+        <Tabs items={items} value={tab} onChange={setTab} label={t('studio.tabsLabel')} />
+      </div>
       <div className="studio__panel" role="tabpanel" aria-label={t(`studio.tabs.${tab}`)}>
         {tab === 'authoring' ? <AuthoringPane /> : <SubjectPane key={tab} subject={tab} />}
       </div>
+      <StudioGuide />
     </section>
   );
 }

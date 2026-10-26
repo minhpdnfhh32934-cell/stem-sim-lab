@@ -340,13 +340,15 @@ export function markComplete(
 
 /* ---------------- Persistence ---------------- */
 
-export const STUDIO_STORE_VERSION = 1;
+export const STUDIO_STORE_VERSION = 2;
 
 export interface PersistedStudio {
   tab: StudioTab;
   sessions: Record<string, StudioSession>;
   /** Lesson last shown per subject; an id that no longer exists falls back to the first one. */
   picked: Partial<Record<StudioSubject, string>>;
+  /** The "Cách học" guide opened once by itself (version 2; older data: not seen yet). */
+  guideSeen: boolean;
 }
 
 const PickedSchema = z.partialRecord(z.enum(STUDIO_SUBJECTS), z.string().min(1).max(200));
@@ -356,7 +358,7 @@ export const DEFAULT_TAB: StudioTab = 'physics';
 /**
  * Turns whatever is in storage into a valid state: unknown tabs fall back to the default and
  * sessions that do not match the schema are dropped (a broken record never crashes the app).
- * Version 0 had no `tab` and stored sessions as an array.
+ * Version 0 had no `tab` and stored sessions as an array; version 1 had no `guideSeen`.
  */
 export function migrateStudio(persisted: unknown, version: number): PersistedStudio {
   const raw = (typeof persisted === 'object' && persisted !== null ? persisted : {}) as Record<
@@ -379,5 +381,6 @@ export function migrateStudio(persisted: unknown, version: number): PersistedStu
     tab: tab.success ? tab.data : DEFAULT_TAB,
     sessions,
     picked: picked.success ? picked.data : {},
+    guideSeen: version >= 2 && raw.guideSeen === true,
   };
 }

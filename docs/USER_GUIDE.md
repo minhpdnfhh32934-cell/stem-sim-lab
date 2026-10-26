@@ -293,6 +293,11 @@ Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí
 theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Phòng thí nghiệm** để quay lại; bài đang làm
 dở được giữ nguyên. Bấm logo **SimLab** để về trang chủ.
 
+**Cách học:** lần đầu vào Studio, một hướng dẫn ngắn tự hiện và chỉ vào từng phần của màn hình (chọn
+môn và bài, nhãn "chưa được kiểm duyệt", sáu bước, nút **Tiếp**, **Hỏi thầy**, lưu báo cáo, **Soạn
+bài**). Hướng dẫn chỉ tự hiện một lần; muốn xem lại, bấm nút **Cách học** ở đầu màn Studio. Phím Esc
+hoặc **Bỏ qua** để đóng.
+
 Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
 chọn dự đoán, làm thí nghiệm, viết giải thích (đủ số ký tự app ghi dưới ô) và viết kết luận thì mới
 sang bước sau; dòng chữ cạnh nút **Tiếp** cho biết còn thiếu gì. Dự đoán được giữ lại từ
