@@ -368,8 +368,14 @@ Progress log: `docs/PROGRESS.md`.
 - `uiMode` in `settingsStore` (v2; v1 users migrate to `advanced`, new installs `basic`). Basic:
   `basicSplit` (`src/app/sim/basicParams.ts`, first 5 params + any from the problem/user), no data
   tab/CSV, no Object section, toolbar without protractor/stopwatch/trail. New panels must respect it.
-- Levels: `src/app/levels.ts` (`foundation` available, `general` planned). Curriculum mapping is
-  empty + `review_status: "pending"` (DATA_REVIEW #12) — never fill it without a teacher.
+- Levels: `src/app/levels.ts` (`foundation` available, `general` planned). **Curriculum mapping
+  (user decision 2026-10-22, plan #37 §3.3, replaces "never fill it without a teacher"):** topics are
+  placed in grades/lessons only from the official KNTT tables of contents, by the script
+  `scripts/data/gen_curriculum_kntt.py` (→ `data/curriculum_kntt.json` + `docs/CURRICULUM_KNTT.md`,
+  never edited by hand; titles verbatim, no book content), only when a lesson title clearly names the
+  topic (else unplaced with a reason), always `review_status: "pending"` and labelled "chờ giáo viên
+  duyệt" in the UI (DATA_REVIEW #12, `KNTT-*`). Read it through `src/app/curriculum.ts`
+  (`gradeView`, `lessonRange`); a test fails when a catalog topic is neither placed nor unplaced.
 - Tokens: `--subject-*` colors, `--text-content` (≥ 15px learning text), `--target` (≥ 40px; `.btn`
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
