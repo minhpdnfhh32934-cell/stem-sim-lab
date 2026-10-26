@@ -38,6 +38,8 @@ export const TOPIC_HINTS: Record<string, string> = {
   simplePendulum: 'Con lắc đơn: chu kì, biên độ góc, vận tốc, lực căng dây.',
   uniformCircularMotion:
     'Chuyển động tròn đều: bán kính, tốc độ, tốc độ góc (rad/s), chu kì, tần số (Hz, vòng/s, vòng/phút), gia tốc hướng tâm, lực hướng tâm.',
+  standingWave:
+    'Sóng dừng trên sợi dây hai đầu cố định: chiều dài dây, số bó sóng (số bụng sóng), tần số, tốc độ truyền sóng, bước sóng, lực căng dây, mật độ dài (kg/m, g/m), nút sóng, bụng sóng.',
 };
 
 export function classificationSystem(topics: { id: string; title: string }[]): string {

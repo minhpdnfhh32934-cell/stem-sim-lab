@@ -47,4 +47,14 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 4 (chuyển động tròn đều), ch. 6 (lực hướng tâm)',
   },
+  sgk11knttWaves: {
+    id: 'sgk-vl11-kntt-song',
+    citation:
+      'Sách giáo khoa Vật lí 11, bộ Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam — Sóng',
+  },
+  hallidayWaves: {
+    id: 'halliday-waves',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 16 (sóng trên dây, sóng dừng)',
+  },
 } satisfies Record<string, Source>;

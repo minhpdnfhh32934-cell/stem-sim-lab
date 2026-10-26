@@ -1,5 +1,5 @@
 import type { Locale } from '@/app/i18n/types';
-import type { LocalizedText, Source } from '@/core/data/dataset';
+import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
@@ -27,13 +27,6 @@ import {
   type StandingInput,
 } from './engine';
 import { nearestResonances, ratioDigits } from './model';
-
-// TODO(phase 2): move to SRC in common/sources.ts with the scene's registration.
-const SGK11_WAVES: Source = {
-  id: 'sgk-vl11-song',
-  citation:
-    'Sách giáo khoa Vật lí 11 — Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam — Sóng',
-};
 
 /** Amplitude at the probe, |2A·sin(k·x_P)| (0 at a node: sin(jπ) is only round-off there). */
 export function probeAmplitude(q: StandingInput): number {
@@ -107,19 +100,17 @@ function validate(p: Params): LocalizedText[] {
 
 function solve(p: Params, locale: Locale): Solution {
   const q = standingInput(p);
-  const n = (v: number) => texNum(locale, v);
   const Q = (v: number, u: string) => texQty(locale, v, u);
   const steps: SolutionStep[] = [];
   const answers: Answer[] = [];
   const notes: LocalizedText[] = [];
   if (q.fromTension) {
-    // shortcut: kg/m is written by hand until the unit is registered (phase 2).
     steps.push({
       text: L(
         'Tốc độ truyền sóng trên dây từ lực căng F và mật độ dài μ:',
         'Wave speed on the string from the tension F and the linear density μ:',
       ),
-      tex: `v = \\sqrt{\\frac{F}{\\mu}} = \\sqrt{\\frac{${Q(q.tension, 'N')}}{${n(q.muL)}\\,\\text{kg/m}}} = ${Q(q.v, 'm/s')}`,
+      tex: `v = \\sqrt{\\frac{F}{\\mu}} = \\sqrt{\\frac{${Q(q.tension, 'N')}}{${Q(q.muL, 'kg/m')}}} = ${Q(q.v, 'm/s')}`,
     });
     answers.push({
       id: 'speed',
@@ -357,7 +348,7 @@ function card(p: Params): ScienceCardData {
       `Closed form at t = i·Δt, Δt = ${fmtQty('en', stepOf(q), 's', 3)} (≤ T/200).`,
     ),
     userIntervened: false,
-    sources: [SGK11_WAVES, SRC.halliday, SRC.hairer],
+    sources: [SRC.sgk11knttWaves, SRC.hallidayWaves, SRC.hairer],
   };
 }
 
@@ -506,11 +497,11 @@ export const standingWave: PhysicsScene = {
       when: vTension,
     },
     {
-      // TODO(phase 2): dim DIM.linearDensity once kg/m and g/m are registered in core/units.
       key: 'muL',
       label: L('Mật độ dài của dây', 'Linear density'),
       symbol: '\\mu',
       kind: 'number',
+      dim: DIM.linearDensity,
       unit: 'g/m',
       min: 0.1,
       max: 50,
