@@ -299,6 +299,14 @@ Progress log: `docs/PROGRESS.md`.
   otherwise RK4 with substeps and energy monitoring. Every scene needs a test comparing the
   engine with the closed form and a DOPRI5 cross-check.
 - UI runtime: `src/app/sim/runtime.ts` (`sim` singleton), `StageCanvas`, panels in `src/app/sim`.
+- **Unit groups (0.8.0):** `UnitDef.group` `'angular'` (rad/s) / `'cycle'` (Hz, rev/s = vòng/s,
+  rev/min = vòng/phút): `convert()` throws across groups, `allowedUnits()` keeps a field's own group
+  (an ω field never takes Hz). New units of the same dimension that must not mix get a group.
+- Every scene's engine must be registered (`src/physics/registry.test.ts`). `tests/e2e/physics.spec.ts`
+  opens every physics topic (no page error, no horizontal scroll at 1366×768, right title): a new
+  topic appends its [library name, stage title] to `TOPICS`.
+- Uniform circular motion (`src/physics/circular/`, 0.8.0): `model.ts` (mode = given v / ω / T / f),
+  `engine.ts` (phase from t = n·Δt), `check.ts` (DOPRI5 on the force law), `scenes.ts`.
 
 ## AI layer (Phase 3)
 

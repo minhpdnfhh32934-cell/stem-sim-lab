@@ -78,6 +78,7 @@ thời gian thực với lời giải chính xác.
 | Con lắc đơn                           | RK4 với 8 bước con mỗi Δt (h ≈ 0,52 ms). Mô hình góc nhỏ chạy song song bằng nghiệm chính xác                      | Chính xác khi không có lực cản; gần đúng khi có lực cản | Chu kì đo trong mô phỏng khớp công thức T = 4√(l/g)K(sin(α₀/2)); ở 60° sai lệch so với công thức góc nhỏ là 7,32 %; cơ năng trôi < 10⁻¹⁰                             |
 | Bảo toàn cơ năng (vật trên đường ray) | RK4 với 8 bước con cho phương trình có ràng buộc                                                                   | Chính xác (tốc độ tính từ bảo toàn cơ năng)             | v(đáy) = √(2gH) so với DOPRI5; cơ năng trôi < 10⁻⁹ trong 20 s                                                                                                        |
 | Va chạm 1D/2D                         | Chuyển động thẳng đều giữa hai va chạm. Thời điểm va chạm giải chính xác, xung lực tính theo hệ số phục hồi e      | Chính xác                                               | Hai vật cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc; va chạm xiên hai vật cùng khối lượng thì hai hướng vuông góc; kết quả khớp cách tính trong hệ khối tâm |
+| Chuyển động tròn đều                  | Pha chính xác φ = φ₀ + ωt với t = n·Δt (không cộng dồn); không có gì kéo được                                      | Chính xác                                               | DOPRI5 tích phân r″ = −(F_ht/(m·r))·r⃗ (rtol 10⁻¹²): bán kính giữ nguyên, vị trí khớp engine ở bốn thời điểm, chu kì đo qua y = 0 (đi lên) khớp 2πr/v tới 10⁻⁹       |
 
 **Kéo và ném bằng chuột:** app nối vật với con trỏ bằng một lò xo có giảm chấn tới hạn
 (ω = 28 rad/s), nên vật không bị dịch chuyển tức thời. Khi thả chuột, vật giữ nguyên vận tốc lúc
@@ -88,6 +89,15 @@ tích được ghi rõ là chỉ áp dụng cho điều kiện ban đầu.
 khi hai sự kiện (đỉnh quỹ đạo và chạm đất) rơi vào cùng một bước tích phân dài, bộ bắt sự kiện cũ
 có thể bỏ sót lần chạm đất. Nay mọi sự kiện trong một bước được xử lý theo thứ tự thời gian, và
 trường hợp xuất phát trên mặt sự kiện được xét từ ngay sau thời điểm đầu. Có test hồi quy.
+
+**Hz và rad/s không được trộn (0.8.0, #37 §8.2 bẫy 1):** hai đơn vị cùng số mũ SI (s⁻¹) và cùng
+hệ số 1, nên trước đây "f = 2 Hz" có thể lọt vào ô tốc độ góc thành ω = 2 rad/s (sai 2π lần).
+Radian không có chiều, nên `src/core/units.ts` gắn **nhãn nhóm đơn vị**: nhóm "góc" (rad/s) và
+nhóm "chu kì" (Hz, vòng/s, vòng/phút; 1 vòng/phút = 1/60 Hz). `convert()` báo lỗi khi đổi giữa hai
+nhóm; `allowedUnits()` (`src/ai/spec.ts`) cho ô ω chỉ rad/s, ô f chỉ Hz, vòng/s, vòng/phút, nên AI
+ghi "2 Hz" vào ô ω thì bị từ chối (test). Lưu ý: ô hệ số cản `c` của con lắc đơn và đáp án γ của
+lò xo là tốc độ tắt dần (s⁻¹) nhưng xưa nay ghi "Hz"; chúng vẫn chạy như cũ (nay thuộc nhóm "chu
+kì"), xem DATA_REVIEW UCM-3.
 
 ## 5. AI đọc đề (Giai đoạn 3)
 
