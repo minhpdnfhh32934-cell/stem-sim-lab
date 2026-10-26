@@ -49,8 +49,27 @@
 
 ## Next steps and limits
 
-- Stage 2 after (a) and (b) merge: `git merge origin/main`, `engine.ts`, `scenes.ts`, register,
-  catalog, i18n, `TOPIC_HINTS`, units (V/m, kV/m, nC, kV, mN, µN, N·m²/C²), challenge, POE, golden
-  problems, `physics.spec.ts`, docs (`EFD-*`).
-- `scenes.ts` `validate()` should also refuse two charges closer than the seed circle (2 % of the
-  frame), or seeds start inside the other charge's disc.
+- **Stage 2 starts only when (a) #74 and (b) #75 are merged into `main`** (the coordinator says
+  so): (a) brings the unit-group mechanism in `src/core/units.ts` and `tests/e2e/physics.spec.ts`,
+  (b) the next topic before this one. Then `git merge origin/main` (no rebase, no force-push).
+- Stage 2 work: `engine.ts` (static scene, still steps, nothing draggable), `scenes.ts` (mode
+  "điện tích điểm / tụ phẳng" first, number of charges, q₁…q₃ signed in µC/nC, positions, probe
+  x_P/y_P by sliders, q₀, k, U, d; Science Card `exact` with the RK4 error from `maxError`, ε = 1,
+  ideal plates; ε → `unsupported_parts`), register (`physics/registry.ts`, `workers/engines.ts`),
+  catalog (chapter `electricField` at the end of Physics), i18n vi/en, `TOPIC_HINTS`, units
+  (V/m, kV/m, nC, kV, mN, µN, N·m²/C²), challenge (`start` plates, U → target E), POE (`start`
+  plates, d ×2 keeping U → E halves), golden problems in `scripts/golden/make_physics_golden.py`
+  ("lấy k = 9.10⁹" asking E, µC/nC, "10⁻⁸ C") then regenerate `tests/golden/physics.json`,
+  `tests/e2e/physics.spec.ts` (E2E lock protocol), docs (`EFD-*` before `PRON-1` in DATA_REVIEW,
+  k default like DATA_REVIEW item 1), this work log.
+- **Curriculum row (script on `main` since PR #82):** append to `PLACEMENTS` in
+  `scripts/data/gen_curriculum_kntt.py`:
+  `("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều.")`,
+  rerun the script and commit the generated files (else `src/app/curriculum.test.ts` fails).
+- `scenes.ts` `validate()` must refuse a probe on a charge, two charges at the same place, and two
+  charges closer than the seed circle (2 % of the frame), or seeds start inside the other charge's
+  disc. Graphs must keep a plot area ≥ 80 px (`tests/e2e/layout.spec.ts` from PR #81).
+- Known flaky under heavy CPU load (not this change): `tests/app.test.tsx` "Science Studio shows
+  inside the lab" timed out once in the full run (5,7 s); alone 15/15 passed.
+- The project moves to `D:\Projects\stem-sim-lab` (user decision 2026-10-26); continue there from
+  the pushed branch `feat/76-electric-field`.
