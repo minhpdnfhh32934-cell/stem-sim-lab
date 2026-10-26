@@ -198,7 +198,7 @@ describe('the sign of a charge (trap 3 of #37 §8.2)', () => {
       2e-6,
       15,
     );
-    expect(flagged('Điện tích âm q₁ có độ lớn 10⁻⁸ C.', 1e-8, 'C', '10⁻⁸ C')).toBe(true);
+    expect(flagged('Điện tích âm q₁ = 10⁻⁸ C.', 1e-8, 'C', 'q₁ = 10⁻⁸ C')).toBe(true);
     expect(flagged('Điện tích q₁ = 10⁻⁸ C.', -1e-8, 'C', 'q₁ = 10⁻⁸ C')).toBe(true);
     expect(flagged('Điện tích q₁ = 10⁻⁸ C.', 1e-8, 'C', 'q₁ = 10⁻⁸ C')).toBe(false);
   });
@@ -229,9 +229,36 @@ describe('point M on the line AB (electric field)', () => {
     ] as const) {
       expect(impliedByWords('yP', 0, quote, text), quote).toBe(true);
     }
+    // A number before "m" makes it a metre, not the point M (final review of #89).
+    const metre = 'Điểm N cách A 0,2 m nằm trên đoạn AB.';
+    expect(impliedByWords('yP', 0, '0,2 m nằm trên đoạn AB', metre)).toBe(false);
+    // "của M": M is not the subject of "là trung điểm".
+    const projection = 'Hình chiếu vuông góc của M là trung điểm của AB.';
+    expect(impliedByWords('yP', 0, 'của M là trung điểm của AB', projection)).toBe(false);
     const other = 'Gọi O là trung điểm của AB. Điểm M cách O 5 cm.';
     expect(impliedByWords('yP', 0, 'O là trung điểm của AB', other)).toBe(false);
     // Another key never takes the rule.
     expect(impliedByWords('xP', 0, 'nằm trên đoạn AB', on)).toBe(false);
+  });
+});
+
+describe('y_M = 0 only from words (final review of #89)', () => {
+  it('refuses y_M = 0 taken from a zero elsewhere in the text', async () => {
+    const scene = await loadScene('electricField');
+    const text =
+      'Hai điện tích q1 = 2 µC và q2 = 8 µC đặt tại A và B, AB = 30 cm. Tìm điểm M tại đó điện trường bằng 0.';
+    const draft = buildDraft(
+      scene,
+      {
+        quantities: [{ key: 'yP', value: 0, unit: 'cm', quote: 'bằng 0' }],
+        questions: [],
+        assumptions: [],
+        unsupported_parts: [],
+        clarifications: [],
+      },
+      text,
+      9.81,
+    );
+    expect(draft.issues.some((i) => i.kind === 'notInText' && i.key === 'yP')).toBe(true);
   });
 });

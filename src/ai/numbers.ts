@@ -56,21 +56,23 @@ function readings(token: string): number[] {
   return [...out];
 }
 
-/** Scientific notation: a × 10^b, with the multiplication signs of typed, pasted and LaTeX text. */
-// An exponent is a whole number: "10^-8,5" is no power of ten this reader knows.
+/**
+ * Scientific notation a × 10^b. The signs main always read (". × x * ·") may omit the caret; the
+ * newer ones (X ⋅ ∙ ´ • ✕ ⨯ \cdot \times) need it, so "2 X 10 N" is never read as a power.
+ * An exponent is a whole number: "10^-8,5" is no power of ten this reader knows.
+ */
 const SCI =
-  /(\d+(?:[.,]\d+)?)\s*(?:[.×xX*·⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^?\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
+  /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·]\s*10\s*\^?|(?:[X⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^)\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
 /** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
 const POW = /(?<![\d.,])10\s*\^\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
-/** Words that join a mantissa to a power ("2 lần 10⁻⁸", "2 times 10^-8"): never a lone power. */
-const TIMES_WORDS = new Set(['lần', 'nhân', 'với', 'times', 'by', 'of', 'của']);
 
 /**
- * Allow-list (third review of #89): a power of ten is read on its own only right after the start
- * of the text, "=", "≈", ":" or an ordinary word of two letters or more (spaces and opening brackets
- * skipped), and only when what follows it is the end, a unit or a word — never a multiplication or
- * a number. Anything else ("2 LẦN 10⁻⁸", "½·10⁻⁸", "10⁻⁸·2", "10⁻⁸, 10⁻⁹") may be a mantissa the
- * reader does not understand: the power is refused, the learner enters the value (§2.1).
+ * Allow-list (final review of #89, after four rounds of block-lists): a power of ten is read on its
+ * own only right after the start of the text, "=", "≈" or ":" (spaces, opening brackets and one
+ * sign skipped), and only when the rest of its clause holds no number (units such as "N.m²/C²"
+ * keep their powers). After a word ("Điện tích 10⁻⁸ C", "2 nhân cho 10⁻⁸") or with a number after
+ * it ("10⁻⁸ chia 2") it may belong to a mantissa or a factor: refused, the learner enters the value
+ * (§2.1, unsure means refused).
  */
 function standsAlone(before: string, after: string): boolean {
   // One sign may stand right before the power ("q = −10⁻⁸"); "2 − 10⁻⁸" still ends in a number.
@@ -80,22 +82,15 @@ function standsAlone(before: string, after: string): boolean {
     .replace(/[\s([{]+$/u, '')
     .replace(/[-+]$/u, '')
     .replace(/[\s([{]+$/u, '');
-  // A LaTeX command (\cdot, \times) is no ordinary word.
-  const word = /(?<![\p{L}\p{N}_\\])\p{L}+$/u.exec(b)?.[0];
-  const startOk =
-    b === '' ||
-    /[=≈:]$/u.test(b) ||
-    (word !== undefined && word.length >= 2 && !TIMES_WORDS.has(word));
-  const a = after
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(/^[\s)\]}]+/u, '');
-  const next = /^\p{L}+/u.exec(a)?.[0];
-  const endOk =
-    a === '' ||
-    /^[,;.!?](?!\s*[\p{N}(])/u.test(a) ||
-    (next !== undefined && !TIMES_WORDS.has(next) && !/^\p{L}\s*[\p{N}(]/u.test(a));
-  return startOk && endOk;
+  if (b !== '' && !/[=≈:]$/u.test(b)) return false;
+  // "10^(-8),5": a decimal part glued after the bracket.
+  if (/^[.,]\d/u.test(after)) return false;
+  const clause =
+    after
+      .normalize('NFKC')
+      .toLowerCase()
+      .split(/[,;!?]|\.(?=\s|$)/u)[0] ?? '';
+  return !/\p{N}/u.test(clause.replace(/(?<=\p{L})\^-?\d+/gu, ''));
 }
 
 /** A reading a problem can state: finite, and not a power of ten that underflowed to 0. */
@@ -147,6 +142,8 @@ function scan(t: string, keepInner = false): Token[] {
     if (!keepInner && tokens.slice(0, outer).some((k) => m.index >= k.start && end <= k.end)) {
       continue;
     }
+    // Digits of a name ("q0", "q_0", "m1") or a unit's power ("cm2") are not numbers of the problem.
+    if (/[\p{L}_]$/u.test(t.slice(0, m.index))) continue;
     tokens.push({ start: m.index, end, readings: readings(m[0].replace(/\s/g, '')) });
   }
   return tokens.sort((a, b) => a.start - b.start);
@@ -193,7 +190,7 @@ const PLURAL_SIGN = /(?<![\p{L}\p{N}])(?:hai|ba|các|những) điện tích (âm
 /** A new charge named after the number ("… cách điện tích âm q2"): its words are not this one's. */
 const NEXT_CHARGE = /(?<![\p{L}\p{N}])(?<!mang )điện tích(?![\p{L}\p{N}])/u;
 const OPEN_SIGN =
-  /(?<![\p{L}\p{N}])(?:độ lớn|trái dấu|cùng dấu|magnitude|opposite)(?![\p{L}\p{N}])/u;
+  /(?<![\p{L}\p{N}])(?:độ lớn|trái dấu|cùng dấu|khác dấu|ngược dấu|magnitude|opposite)(?![\p{L}\p{N}])/u;
 /** A sentence ends at ".;!?" followed by a space ("1,6.10-19" has none). */
 const SENTENCE_END = /[.;!?](?=\s|$)/g;
 
@@ -232,7 +229,9 @@ export function writtenSign(text: string, value: number, quote = ''): -1 | 0 | 1
     if (neg !== pos) return neg ? -1 : 1;
     if (neg || OPEN_SIGN.test(words)) return 0;
     const plural = PLURAL_SIGN.exec(t.slice(from, tok.start))?.[1];
-    return plural ? (plural === 'âm' ? -1 : 1) : 1;
+    if (plural) return plural === 'âm' ? -1 : 1;
+    // "Hai điện tích khác dấu q1 = 2 µC và q2 = 3 µC": the sentence leaves every sign open.
+    return OPEN_SIGN.test(t.slice(from, tok.start)) ? 0 : 1;
   };
   const places = tokens.flatMap((k, i) => (k.readings.some((r) => same(r, target)) ? [i] : []));
   const signs = new Set(places.map(signAt));

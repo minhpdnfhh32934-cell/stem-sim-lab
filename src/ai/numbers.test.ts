@@ -104,11 +104,9 @@ describe('a power of ten never stands for a mantissa it could not read (re-revie
     expect(mentions('q = 10^-8 C', 1e-8)).toBe(true);
     expect(mentions('q2 = 10^-8 C', 1e-8)).toBe(true);
     expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
-    // A list: only the power after the word "và" stands alone; "10⁻⁸, 10⁻⁹" could be a mantissa
-    // and its power, so they are refused (unsure means refused, §2.1).
+    // A list after words: none stands alone (unsure means refused, §2.1); the learner enters them.
     const list = 'Ba điện tích 10⁻⁸, 10⁻⁹ và 10⁻¹⁰ C.';
-    expect(mentions(list, 1e-10)).toBe(true);
-    expect(mentions(list, 1e-9)).toBe(false);
+    for (const v of [1e-8, 1e-9, 1e-10]) expect(mentions(list, v)).toBe(false);
   });
 
   it('never reads 10^0 as 1 (degrees typed with a caret)', () => {
@@ -154,13 +152,29 @@ describe('third review of #89: allow-list for a lone power of ten', () => {
     expect(mentions('q = 10^2,5 C', 100)).toBe(false);
   });
 
-  it('reads a lone power after the start, "=", "≈", ":" or an ordinary word', () => {
+  it('reads a lone power only after the start, "=", "≈" or ":", before a unit or the end', () => {
     expect(mentions('10^-8 C là điện tích của q.', 1e-8)).toBe(true);
     expect(mentions('q ≈ 10⁻⁸ C', 1e-8)).toBe(true);
     expect(mentions('Câu 1: 10^-8 C', 1e-8)).toBe(true);
-    expect(mentions('Điện tích 10⁻⁸ C đặt tại A.', 1e-8)).toBe(true);
     expect(mentions('AB = 3 cm, q = 10⁻⁸ C', 1e-8)).toBe(true);
     expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
+    expect(mentions('k = 10^9 N.m²/C².', 1e9)).toBe(true);
+    // Final review of #89: after a word (any word) the learner enters the value.
+    expect(mentions('Điện tích 10⁻⁸ C đặt tại A.', 1e-8)).toBe(false);
+    for (const text of [
+      'q = 2 nhan 10^-8 C',
+      'q = 2 NHÂN 10^-8 C',
+      'q = 2 nhân cho 10^-8 C',
+      'q = 2 cdot 10^-8 C',
+      'q = 2&middot10^-8 C',
+      'q = 2 twice 10^-8 C',
+      'q = 2 gấp đôi 10^-8 C',
+      // A number after the power, in the same clause: a factor written after it.
+      'q = 10^-8 chia 2 C',
+      'q = 10^-8 nhân cho 2 C',
+    ]) {
+      expect(mentions(text, 1e-8), text).toBe(false);
+    }
   });
 
   it('is never laxer than main: every sentence main refuses is refused, except lone powers', () => {
@@ -191,6 +205,14 @@ describe('third review of #89: allow-list for a lone power of ten', () => {
       'χ',
       ' \\cdot ',
       '{\\cdot}',
+      ' nhan ',
+      ' NHÂN ',
+      ' nhân cho ',
+      ' chia ',
+      '&middot',
+      'cdot',
+      ' twice ',
+      ' gấp đôi ',
     ];
     const powers = (e: number) => [
       `10^${e}`,
@@ -199,7 +221,7 @@ describe('third review of #89: allow-list for a lone power of ten', () => {
       `10^{${e}}`,
       `10${supOf(e)}`,
     ];
-    const suffixes = [' C', '·2 C', ' × 2,5 C', ',5 C'];
+    const suffixes = [' C', '·2 C', ' × 2,5 C', ',5 C', ' chia 2 C', ' nhân cho 2 C'];
     const laxer: string[] = [];
     for (const e of [-8, 3, 2]) {
       for (const pre of prefixes) {
@@ -220,6 +242,17 @@ describe('third review of #89: allow-list for a lone power of ten', () => {
       }
     }
     expect(laxer).toEqual([]);
+  });
+});
+
+describe('digits of names are no numbers (final review of #89)', () => {
+  it('never reads the digit of a name such as q0, q_0 or q1', () => {
+    expect(mentions('Điện tích thử q0 = 2 nC đặt tại M.', 0)).toBe(false);
+    expect(mentions('Điện tích thử q_0 = 2 nC.', 0)).toBe(false);
+    expect(numbersIn('q1 = 2 µC')).not.toContain(1);
+    expect(mentions('q1 = 2 µC', 2)).toBe(true);
+    // Units with a power keep working.
+    expect(mentions('S = 20 cm2', 20)).toBe(true);
   });
 });
 
@@ -262,6 +295,11 @@ describe('the sign a problem gives a charge', () => {
   });
 
   it('leaves the sign open when the text does', () => {
+    const differ = 'Hai điện tích khác dấu q1 = 2 µC và q2 = 3 µC đặt tại A và B.';
+    expect(writtenSign(differ, 2)).toBe(0);
+    expect(writtenSign(differ, 3)).toBe(0);
+    expect(writtenSign('Hai điện tích ngược dấu có độ lớn bằng nhau, q1 = 4 nC.', 4)).toBe(0);
+    expect(writtenSign('Hạt bụi (điện tích âm) có q = 5 nC.', 5)).toBe(-1);
     expect(writtenSign('Hai điện tích trái dấu có độ lớn 2 µC.', 2)).toBe(0);
     expect(writtenSign('Điện tích có độ lớn 5 nC.', 5)).toBe(0);
   });
