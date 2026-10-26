@@ -217,3 +217,19 @@ SimLab topic (`docs/CURRICULUM_KNTT.md`, pending teacher review).
 - Results: tsc clean; `npx eslint .` exit 0; Prettier clean; `npx vitest run src/physics src/learn
 src/core src/ai src/app tests/golden` → 903 passed; full `npx vitest run` → 4390 passed,
   1 skipped; E2E physics + layout + ai-flow + learner (lock) → 46 passed.
+
+## 2026-10-27 — PR #89 final review (3 red)
+
+- Review: PR comment 6428942355. Fourth round on the number filter, so the rule was narrowed
+  instead of extended: a lone power of ten is read only after the start, "=", "≈" or ":" and only
+  when the rest of its clause has no number (unit powers allowed). New multiplication signs need a
+  caret. Main-comparison grid extended (unaccented/capital words, "nhân cho", "chia", entities
+  without ";", words after the power): 7 620 laxer sentences before, 0 after.
+- Digits glued to a name (q0, q_0, q1, cm2) are no numbers; y_M = 0 only from the words rule
+  (`IMPLIED` `only`). A phrase right after a number ("0,2 m nằm trên…") or after "của" does not
+  count. "khác dấu"/"ngược dấu" leave the sign open. All red tests failed before the fix.
+- Consequence (on purpose): a power written after a word ("Điện tích 10⁻⁸ C", "có độ lớn 10⁻⁸ C")
+  is refused; the learner enters it. No golden problem is affected.
+- Results: `src/ai tests/golden src/app/ai src/physics/field` → 522 passed; eslint, tsc, Prettier
+  clean; full `npx vitest run` → 4392 passed, 1 skipped; E2E physics + layout + ai-flow (lock) →
+  39 passed.
