@@ -35,7 +35,7 @@ describe('App shell (Phase 0)', () => {
     const user = userEvent.setup();
     render(<App />);
     expect(screen.getByRole('heading', { name: 'Chào mừng đến với SimLab' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Phòng thí nghiệm/ }));
+    await user.click(screen.getByRole('button', { name: /Virtual Lab/ }));
     expect(screen.getByRole('radiogroup', { name: 'Môn học' })).toBeInTheDocument();
     expect(screen.getByRole('complementary', { name: 'Thư viện chủ đề' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('App shell (Phase 0)', () => {
     expect(
       screen.queryByRole('heading', { name: 'Chào mừng đến với SimLab' }),
     ).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Về Phòng thí nghiệm' }));
+    await user.click(screen.getByRole('button', { name: 'Về Virtual Lab' }));
     expect(useNavigationStore.getState().screen).toBe('lab');
     expect(screen.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeInTheDocument();
   });

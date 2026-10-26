@@ -26,3 +26,18 @@ describe('command palette: the AI Teacher pages', () => {
     expect(useTeacherStore.getState().layout).toBe(layout);
   });
 });
+
+describe('command palette: Virtual Lab', () => {
+  afterEach(() => {
+    useCommandPalette.setState({ open: false });
+  });
+
+  it('is still found by its old name "Phòng thí nghiệm"', () => {
+    render(<CommandPalette />);
+    act(() => {
+      useCommandPalette.setState({ open: true });
+    });
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'phòng thí nghiệm' } });
+    expect(screen.getByRole('option', { name: /Virtual Lab/ })).toBeVisible();
+  });
+});

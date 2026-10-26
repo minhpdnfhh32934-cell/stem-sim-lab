@@ -28,7 +28,7 @@ const GAP = 12;
 export function Tour() {
   const step = useProjectUi((s) => s.tourStep);
   // Onboarding (level, subjects), the safety question and "Kết nối AI" come first; the tour
-  // explains the lab, so it waits until the learner opens "Phòng thí nghiệm".
+  // explains the lab, so it waits until the learner opens "Virtual Lab".
   const inLab = useNavigationStore((s) => s.screen === 'lab');
   const waiting = useOnboardingPhase() !== 'tour' || !inLab;
   // While the tour waits (onboarding, launch page, teacher page) nothing is rendered, so Esc
