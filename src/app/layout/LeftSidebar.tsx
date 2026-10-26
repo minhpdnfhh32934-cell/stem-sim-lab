@@ -1,7 +1,8 @@
 import {
   Atom,
+  Award,
   BookOpen,
-  CheckCircle2,
+  Check,
   ChevronRight,
   History,
   Search,
@@ -9,7 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
-import { chapterProgress, topicProgress } from '@/learn/progress';
+import { chapterProgress, topicStatus, type TopicStatus } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
 import { memo, useId, useMemo, useRef, useState } from 'react';
 import { normalizeForSearch } from '@/app/catalog';
@@ -236,6 +237,83 @@ function Library({ t }: { t: TFunction }) {
   );
 }
 
+/** Hover text and screen-reader description of a topic's mark. */
+function statusText(s: TopicStatus, t: TFunction): string {
+  if (s.state === 'complete') return t('learn.topicDone');
+  const left = [
+    ...(s.predictLeft ? [t('learn.leftPredict')] : []),
+    ...(s.challengesLeft > 0 ? [t('learn.leftChallenges', { count: s.challengesLeft })] : []),
+  ];
+  return left.length > 0
+    ? t('learn.topicLearnedLeft', { done: s.done, total: s.total, left: left.join(', ') })
+    : t('learn.topicLearned');
+}
+
+/**
+ * A topic of the library. Opened → tick "Đã học" (every subject); a topic with steps left adds
+ * "1/3"; every step done → a different "Hoàn thành" mark. The mark is the button's description,
+ * so the button keeps the topic's name.
+ */
+function TopicButton({
+  id,
+  title,
+  lessons,
+  status,
+  current,
+  t,
+}: {
+  id: string;
+  title: string;
+  /** "Bài 4–5, 7" in a grade view. */
+  lessons?: string | undefined;
+  status: TopicStatus;
+  current: boolean;
+  t: TFunction;
+}) {
+  const text = status.state === 'new' ? null : statusText(status, t);
+  const descId = `tree-status-${id}`;
+  return (
+    <button
+      type="button"
+      className="tree__topic tree__topic--button"
+      aria-current={current ? 'true' : undefined}
+      aria-describedby={text ? descId : undefined}
+      data-tip={text ?? undefined}
+      data-tip-side={text ? 'right' : undefined}
+      onClick={() => {
+        void openTopic(id);
+      }}
+    >
+      <span className="tree__topic-title">{title}</span>
+      {lessons && (
+        <>
+          {/* The space keeps "… đều Bài 4–5" apart in the accessible name. */}{' '}
+          <span className="tree__lessons">{lessons}</span>
+        </>
+      )}
+      {text && (
+        <>
+          <span className="tree__mark" data-state={status.state} aria-hidden="true">
+            {status.state === 'opened' && status.total > 1 && (
+              <span className="tree__steps">
+                {status.done}/{status.total}
+              </span>
+            )}
+            {status.state === 'complete' ? (
+              <Award size={14} strokeWidth={2} />
+            ) : (
+              <Check size={14} strokeWidth={2.25} />
+            )}
+          </span>
+          <span id={descId} hidden>
+            {text}
+          </span>
+        </>
+      )}
+    </button>
+  );
+}
+
 function ChapterNode({
   chapter,
   t,
@@ -268,10 +346,12 @@ function ChapterNode({
       >
         <ChevronRight className="tree__chevron" size={14} strokeWidth={2} aria-hidden="true" />
         <span>{chapterTitle(chapter, t)}</span>
-        {chapterDone.done > 0 ? (
+        {/* While searching, the count is the matching topics (progress needs the whole chapter). */}
+        {chapterDone.done > 0 && !forceOpen ? (
           <span
             className="tree__count tree__count--progress"
-            aria-label={t('learn.progress', chapterDone)}
+            aria-label={t('learn.chapterLearned', chapterDone)}
+            data-tip={t('learn.chapterLearned', chapterDone)}
           >
             {chapterDone.done}/{chapterDone.total}
           </span>
@@ -284,34 +364,20 @@ function ChapterNode({
           {chapter.topics.map((topic) =>
             topic.status === 'available' ? (
               <li key={topic.id} data-status={topic.status} className="tree__topic-item">
-                <button
-                  type="button"
-                  className="tree__topic tree__topic--button"
-                  aria-current={activeTopic === topic.id ? 'true' : undefined}
-                  onClick={() => {
-                    void openTopic(topic.id);
-                  }}
-                >
-                  <span className="tree__topic-title">{t(topic.titleKey)}</span>
-                  {topic.lessons.length > 0 && (
-                    <>
-                      {/* The space keeps "… đều Bài 4–5" apart in the accessible name. */}{' '}
-                      <span className="tree__lessons">
-                        {t(topic.lessons.length === 1 ? 'levels.lessonOne' : 'levels.lessons', {
+                <TopicButton
+                  id={topic.id}
+                  title={t(topic.titleKey)}
+                  lessons={
+                    topic.lessons.length > 0
+                      ? t(topic.lessons.length === 1 ? 'levels.lessonOne' : 'levels.lessons', {
                           range: lessonRange(topic.lessons),
-                        })}
-                      </span>
-                    </>
-                  )}
-                  {topicProgress(topic.id, progress).complete && (
-                    <CheckCircle2
-                      className="tree__done"
-                      size={14}
-                      strokeWidth={2}
-                      aria-label={t('learn.topicDone')}
-                    />
-                  )}
-                </button>
+                        })
+                      : undefined
+                  }
+                  status={topicStatus(topic.id, progress)}
+                  current={activeTopic === topic.id}
+                  t={t}
+                />
               </li>
             ) : (
               <li

@@ -2322,7 +2322,6 @@ const en: Messages = {
     successTarget: 'Exactly! {quantity} = {value}, on target {goal} (only {diff} off).',
     successBest: 'Great! {quantity} = {value} — the largest possible is {best}.',
     showHint: 'Show a hint',
-    progress: 'Progress: {done}/{total}',
     topicDone: 'Topic completed',
     badgesTitle: 'Your badges',
     noBadges: 'Open a topic, try a prediction or a challenge to earn your first badge.',
@@ -2342,6 +2341,11 @@ const en: Messages = {
     },
     breakReminder:
       'You have been studying for about 45 minutes. Rest your eyes for a few minutes: stand up, look into the distance — the simulation will wait for you.',
+    topicLearned: 'Studied',
+    topicLearnedLeft: 'Studied — {done}/{total} steps done, still to do: {left}',
+    leftPredict: 'Predict first',
+    leftChallenges: '{count} challenge(s)',
+    chapterLearned: '{done}/{total} topics studied',
   },
   teacher: {
     regionLabel: 'Learn with an AI teacher',

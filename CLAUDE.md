@@ -398,7 +398,9 @@ Progress log: `docs/PROGRESS.md`.
 - `poe.ts`: one "Dự đoán trước" per physics topic; the right choice is computed from `solve()`
   before/after (`observe`). The learner writes the explanation (never stored or sent).
 - `progressStore` (`stemsim.progress`, local only), `progress.ts` (topic/chapter progress, badges —
-  no streaks or ranks), `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
+  no streaks or ranks; `topicStatus`: the library marks every opened topic "Đã học", a physics topic
+  with steps left adds "1/3", all done → "Hoàn thành"; badges keep the "complete" rule),
+  `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
 
