@@ -31,7 +31,7 @@ describe('Science Studio entry', () => {
     // User decision 2026-10-20: two entries only, Science Studio lives inside the lab.
     expect(
       screen.getAllByRole('button').map((b) => b.querySelector('strong')?.textContent),
-    ).toEqual(['Phòng thí nghiệm', 'AI Teacher']);
+    ).toEqual(['Virtual Lab', 'AI Teacher']);
     expect(screen.queryByRole('button', { name: /Science Studio/ })).toBeNull();
     landing.unmount();
     useNavigationStore.setState({ screen: 'lab' });
@@ -102,7 +102,7 @@ describe('POE flow with the physics slice', () => {
     expect(row).toHaveTextContent(fmtQty('vi', tB?.value ?? NaN, 's'));
     expect(within(table).getByRole('row', { name: /Tỉ số B\/A/ })).toHaveTextContent('1,414');
     expect(await screen.findByTestId('xy-chart')).toHaveAttribute('data-series', '2');
-    expect(screen.getByRole('button', { name: 'Chạy A trong Phòng thí nghiệm' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Chạy A trong Virtual Lab' })).toBeVisible();
     expect(useProgressStore.getState().predictions['freeFall.h0']).toBe(true);
 
     // Explain: at least 20 characters of the learner's own words.
