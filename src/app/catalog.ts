@@ -59,6 +59,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
     chapter('cellPhysiology', ['michaelisMenten', 'diffusionOsmosis']),
+    chapter('cellStructure', ['cellStructure']),
   ],
 };
 

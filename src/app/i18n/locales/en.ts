@@ -85,6 +85,7 @@ const en: Messages = {
     genetics: 'Genetics',
     ecology: 'Ecology',
     cellPhysiology: 'Cell physiology',
+    cellStructure: 'Cell structure',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -123,6 +124,7 @@ const en: Messages = {
     lotkaVolterra: 'Predator–prey (Lotka–Volterra)',
     michaelisMenten: 'Enzyme kinetics (Michaelis–Menten)',
     diffusionOsmosis: 'Diffusion & osmosis',
+    cellStructure: 'Prokaryotic and eukaryotic cells',
   },
   stage: {
     regionLabel: 'Simulation stage',

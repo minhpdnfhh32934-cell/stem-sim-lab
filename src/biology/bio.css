@@ -1127,3 +1127,21 @@
 .tr3d__row > * {
   pointer-events: auto;
 }
+
+/* Cell structure 2D (src/biology/cell): the cell switch is a full target; the part card. */
+.cell2d .segmented__item {
+  min-height: var(--target);
+}
+.cell-part-card {
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+}
+.cell-part-card p {
+  margin: var(--space-2) 0 0;
+}
+.cell-part-card > p:first-of-type {
+  font-size: var(--text-content);
+}
