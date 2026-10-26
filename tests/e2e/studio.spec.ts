@@ -163,8 +163,8 @@ test('the launch page has two entries; a lab topic opens its lesson; the session
 }) => {
   const w = await watch(page);
   await page.goto('/');
-  // User decision 2026-10-20: Phòng thí nghiệm and AI Teacher only; Science Studio is in the lab.
-  await expect(page.locator('.launch-card strong')).toHaveText(['Phòng thí nghiệm', 'AI Teacher']);
+  // User decision 2026-10-20: Virtual Lab and AI Teacher only; Science Studio is in the lab.
+  await expect(page.locator('.launch-card strong')).toHaveText(['Virtual Lab', 'AI Teacher']);
   await expect(page.getByRole('button', { name: /Science Studio/ })).toHaveCount(0);
   await enterLab(page);
 
@@ -197,7 +197,7 @@ test('the launch page has two entries; a lab topic opens its lesson; the session
   await page.getByRole('radio', { name: 'Xuất hiện kết tủa' }).click();
   await next(page).click();
   await expect(page.locator('.studio-steps [aria-current="step"]')).toContainText('Thí nghiệm');
-  await page.getByRole('button', { name: 'Về Phòng thí nghiệm' }).click();
+  await page.getByRole('button', { name: 'Về Virtual Lab' }).click();
   await expect(page.getByRole('heading', { name: 'Hôm nay học gì?' })).toBeVisible();
   await library.getByRole('button', { name: /^Thư viện phản ứng đã kiểm chứng( |$)/ }).click();
   await openChem.click();
@@ -389,7 +389,7 @@ test('physics: a non-default height gives the closed-form times; the lab agrees'
   ).trim();
 
   // Regression of an existing flow: the lab opens the same run and its own solution agrees.
-  await page.getByRole('button', { name: 'Chạy A trong Phòng thí nghiệm' }).click();
+  await page.getByRole('button', { name: 'Chạy A trong Virtual Lab' }).click();
   await page.getByRole('tab', { name: 'Lời giải' }).click();
   const answers = page.locator('.solution__answers');
   await expect(answers).toContainText(shownA);
@@ -562,7 +562,7 @@ test('"Cách học": the guide opens by itself on the first visit only; the butt
   await expect(guide).toBeVisible();
   await page.keyboard.press('Escape');
   // The lab's own first-run tour is untouched (already done in storage-state.json).
-  await page.getByRole('button', { name: 'Về Phòng thí nghiệm' }).click();
+  await page.getByRole('button', { name: 'Về Virtual Lab' }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expectClean(page, w);
 });

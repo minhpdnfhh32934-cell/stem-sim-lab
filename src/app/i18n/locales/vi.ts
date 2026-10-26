@@ -375,7 +375,7 @@ const vi = {
       actions: 'Thao tác',
     },
     home: 'Trang chủ',
-    lab: 'Phòng thí nghiệm',
+    lab: 'Virtual Lab',
     studio: 'Science Studio — bài học có hướng dẫn',
     teacherTalk: 'AI Teacher — trò chuyện',
     teacherBoard: 'AI Teacher — giảng trên bảng',
@@ -936,7 +936,7 @@ const vi = {
     title: 'Chào mừng đến với SimLab',
     subtitle:
       'Chọn cách em muốn học hôm nay. Mô phỏng, dữ liệu và trợ lý học tập nằm trong cùng một không gian.',
-    labTitle: 'Phòng thí nghiệm',
+    labTitle: 'Virtual Lab',
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
     teacherTitle: 'AI Teacher',
     teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
@@ -954,7 +954,7 @@ const vi = {
       authoring: 'Soạn bài',
     },
     pick: 'Chọn bài học',
-    backToLab: 'Về Phòng thí nghiệm',
+    backToLab: 'Về Virtual Lab',
     lessons: {
       title: 'Science Studio',
       intro:
@@ -978,11 +978,11 @@ const vi = {
     preparing: {
       title: 'Đang chuẩn bị',
       chemistry:
-        'Studio Hóa học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Hóa học trong Phòng thí nghiệm.',
+        'Studio Hóa học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Hóa học trong Virtual Lab.',
       biology:
-        'Studio Sinh học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Sinh học trong Phòng thí nghiệm.',
+        'Studio Sinh học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Sinh học trong Virtual Lab.',
       physics: 'Chưa có bài Vật lý nào trong Studio.',
-      openLab: 'Mở Phòng thí nghiệm',
+      openLab: 'Mở Virtual Lab',
     },
     notes: {
       private:
@@ -1162,7 +1162,7 @@ const vi = {
       input: 'đầu vào',
       crossCheck: 'Kiểm tra chéo với lời giải giải tích: lệch lớn nhất {gap}.',
       timeAxis: 'Thời gian t',
-      openInLab: 'Chạy {id} trong Phòng thí nghiệm',
+      openInLab: 'Chạy {id} trong Virtual Lab',
       fact: '{q} (mô phỏng {model}): {value}',
       ratioOf: 'Tỉ số B/A — {q}',
     },

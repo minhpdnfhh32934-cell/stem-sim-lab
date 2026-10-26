@@ -1,6 +1,6 @@
 # AI Teacher and local Gemma
 
-This fork adds a launch page (“Phòng thí nghiệm” / “AI Teacher”), an AI tutor page and a floating
+This fork adds a launch page (“Virtual Lab” / “AI Teacher”), an AI tutor page and a floating
 chat bubble in the lab. The chat is text-based. It never takes screenshots or inspects other
 applications.
 
@@ -11,7 +11,7 @@ applications.
 
 ## Navigation
 
-- The app opens on the launch page with two entries: **Phòng thí nghiệm** (the existing topic
+- The app opens on the launch page with two entries: **Virtual Lab** (the existing topic
   browser and simulations) and **AI Teacher** (the full tutor page).
 - The **SimLab** brand in the top bar always returns to the launch page. Esc leaves the tutor
   page.

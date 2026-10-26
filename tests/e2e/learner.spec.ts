@@ -95,7 +95,7 @@ test('the grade switch fits the narrowest library at the largest font, in Englis
     );
   });
   await page.goto('/');
-  await page.getByRole('button', { name: /Laboratory/ }).click();
+  await page.getByRole('button', { name: /Virtual Lab/ }).click();
   const grades = page.getByRole('radiogroup', { name: 'Grade' });
   await expect(grades.getByRole('radio', { name: 'Grade 10' })).toBeVisible();
   // Nothing spills out of the switch or out of an item (long names fold instead).
