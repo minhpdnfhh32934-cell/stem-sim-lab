@@ -190,6 +190,20 @@ export const POES: readonly Poe[] = [
     ),
     choices: DIRS,
   },
+  {
+    id: 'uniformCircularMotion.r',
+    topic: 'uniformCircularMotion',
+    param: 'r',
+    factor: 2,
+    answer: 'a_c',
+    question: L(
+      'Giữ nguyên tốc độ v, nếu bán kính quỹ đạo gấp đôi thì gia tốc hướng tâm thay đổi thế nào?',
+      'Keeping the speed v, if the radius doubles, how does the centripetal acceleration change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+    // mode 0 = "Biết tốc độ v": v stays fixed while r changes.
+    start: { mode: 0 },
+  },
 ];
 
 export function poeFor(topic: string): Poe | undefined {

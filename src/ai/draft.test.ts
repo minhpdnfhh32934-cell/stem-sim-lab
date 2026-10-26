@@ -14,6 +14,61 @@ function extraction(key: string, value: number, quote: string): Extraction {
   };
 }
 
+describe('stated values the chosen setup does not use', () => {
+  const ext = (quantities: Extraction['quantities']): Extraction => ({
+    quantities,
+    questions: [],
+    assumptions: [],
+    unsupported_parts: [],
+    clarifications: [],
+  });
+  const notUsed = (d: { issues: { kind: string; key?: string }[] }) =>
+    d.issues.filter((i) => i.kind === 'notUsed').map((i) => i.key);
+
+  it('a simplification stated in words is not flagged (Atwood machine, 1D collision)', async () => {
+    const pulley = await loadScene('pulley');
+    const atwood =
+      'Hai vật m1 = 2 kg và m2 = 3 kg treo ở hai đầu sợi dây vắt qua ròng rọc cố định. Bỏ qua ma sát.';
+    const d = buildDraft(
+      pulley,
+      ext([
+        { key: 'config', value: 0, unit: '1', quote: 'treo ở hai đầu sợi dây' },
+        { key: 'm1', value: 2, unit: 'kg', quote: 'm1 = 2 kg' },
+        { key: 'm2', value: 3, unit: 'kg', quote: 'm2 = 3 kg' },
+        { key: 'muS', value: 0, unit: '1', quote: 'Bỏ qua ma sát' },
+        { key: 'muK', value: 0, unit: '1', quote: 'Bỏ qua ma sát' },
+      ]),
+      atwood,
+      9.81,
+    );
+    expect(d.sources.muK).toBe('problem');
+    expect(d.fromWords).toEqual(['muS', 'muK']);
+    expect(notUsed(d)).toEqual([]);
+  });
+
+  it('a number written in digits that the setup hides is still flagged, even 0', async () => {
+    const pulley = await loadScene('pulley');
+    for (const [said, value] of [
+      ['hệ số ma sát 0,2', 0.2],
+      ['hệ số ma sát bằng 0', 0],
+    ] as const) {
+      const atwood = `Hai vật m1 = 2 kg và m2 = 3 kg treo ở hai đầu sợi dây vắt qua ròng rọc; ${said}.`;
+      const d = buildDraft(
+        pulley,
+        ext([
+          { key: 'config', value: 0, unit: '1', quote: 'treo ở hai đầu sợi dây' },
+          { key: 'muK', value, unit: '1', quote: said },
+        ]),
+        atwood,
+        9.81,
+      );
+      expect(d.sources.muK, said).toBe('problem');
+      expect(d.fromWords, said).toEqual([]);
+      expect(notUsed(d), said).toEqual(['muK']);
+    }
+  });
+});
+
 describe('values stated in words (MASTER_PROMPT §2.1)', () => {
   it('accepts a phrase that states the value', () => {
     const text = 'Vật được thả nhẹ trên mặt bàn nhẵn rồi va chạm đàn hồi với vật thứ hai.';

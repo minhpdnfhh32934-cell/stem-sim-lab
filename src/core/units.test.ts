@@ -33,4 +33,18 @@ describe('units', () => {
     expect(unitLabel('m/s^2')).toBe('m/s²');
     expect(unitLabel('degC')).toBe('°C');
   });
+
+  it('keeps angular (rad/s) and cycle (Hz, rev/s, rev/min) frequencies apart', () => {
+    // Same SI exponents and factor 1: only the unit group stops "2 Hz" becoming "2 rad/s".
+    expect(() => convert(1, 'Hz', 'rad/s')).toThrow(UnitError);
+    expect(() => convert(1, 'rad/s', 'rev/min')).toThrow(UnitError);
+    expect(convert(120, 'vòng/phút', 'Hz')).toBeCloseTo(2, 15);
+    expect(convert(3, 'rev/s', 'Hz')).toBe(3);
+    expect(getUnit('rpm').symbol).toBe('rev/min');
+    expect(unitsFor(DIM.frequency, 'angular')).toEqual(['rad/s']);
+    expect(unitsFor(DIM.frequency, 'cycle')).toEqual(['Hz', 'rev/s', 'rev/min']);
+    expect(unitsFor(DIM.frequency)).toEqual([]);
+    // Display of existing Hz answers (spring frequency, damping rate γ) is unchanged.
+    expect(fromSI(2, 'Hz')).toBe(2);
+  });
 });

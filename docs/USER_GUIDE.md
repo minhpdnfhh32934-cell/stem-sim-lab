@@ -301,6 +301,11 @@ Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí
 theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Phòng thí nghiệm** để quay lại; bài đang làm
 dở được giữ nguyên. Bấm logo **SimLab** để về trang chủ.
 
+**Cách học:** lần đầu vào Studio, một hướng dẫn ngắn tự hiện và chỉ vào từng phần của màn hình (chọn
+môn và bài, nhãn "chưa được kiểm duyệt", sáu bước, nút **Tiếp**, **Hỏi thầy**, lưu báo cáo, **Soạn
+bài**). Hướng dẫn chỉ tự hiện một lần; muốn xem lại, bấm nút **Cách học** ở đầu màn Studio. Phím Esc
+hoặc **Bỏ qua** để đóng.
+
 Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
 chọn dự đoán, làm thí nghiệm, viết giải thích (đủ số ký tự app ghi dưới ô) và viết kết luận thì mới
 sang bước sau; dòng chữ cạnh nút **Tiếp** cho biết còn thiếu gì. Dự đoán được giữ lại từ
@@ -362,9 +367,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-13 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+14 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn.
+xo, con lắc đơn, chuyển động tròn đều.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -377,8 +382,14 @@ xo, con lắc đơn.
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
   (và tua nhanh cho bài toán tính bằng giờ).
-- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
-  đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
+  để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
+  **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
+  **tốc độ góc ω**, **chu kì T** hay **tần số f**; nhập bán kính và đại lượng đó, app tính các đại
+  lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
+  tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
+  góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
 
 ## Đọc đề bằng AI
 

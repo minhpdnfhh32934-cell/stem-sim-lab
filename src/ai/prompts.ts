@@ -36,6 +36,8 @@ export const TOPIC_HINTS: Record<string, string> = {
   collisions: 'Va chạm hai vật: đàn hồi, mềm (dính nhau), bảo toàn động lượng.',
   springPendulum: 'Con lắc lò xo dao động điều hòa: chu kì, biên độ, vận tốc cực đại, cơ năng.',
   simplePendulum: 'Con lắc đơn: chu kì, biên độ góc, vận tốc, lực căng dây.',
+  uniformCircularMotion:
+    'Chuyển động tròn đều: bán kính, tốc độ, tốc độ góc (rad/s), chu kì, tần số (Hz, vòng/s, vòng/phút), gia tốc hướng tâm, lực hướng tâm.',
 };
 
 export function classificationSystem(topics: { id: string; title: string }[]): string {
