@@ -49,7 +49,7 @@
 | Unit `curriculum.test.ts` (`gradeView` theo thứ tự SGK, chủ đề ở hai lớp, lớp trống) — của (g1)                                                                                                                                                         | PASS                                                                                                                                                                             |
 | Unit i18n (đủ khoá vi/en)                                                                                                                                                                                                                               | PASS                                                                                                                                                                             |
 | E2E `learner.spec.ts` (7 test, gồm: Lớp 10 → "Chuyển động thẳng đều Bài 4–5, 7" dưới "Chương II. Động học"; Sinh học Lớp 11 → câu "chưa có" + "Xem tất cả"; nút ≥ 40 px; không cuộn ngang 1366×768; Thư viện 200 px + chữ 140 % + tiếng Anh không tràn) | PASS (sau bản sửa)                                                                                                                                                               |
-| E2E `project.spec.ts` (bước đầu: "Bạn đang học hoặc ôn lớp nào?" → Lớp 12 → Thư viện mở ở Lớp 12)                                                                                                                                                       | PASS trước bản sửa rà soát; lượt sau bản sửa: xem "Next steps"                                                                                                                   |
+| E2E `learner.spec.ts` + `project.spec.ts` sau khi merge #79 (f) (`--project=chromium --project=chromium-3d --no-deps`)                                                                                                                                  | PASS 16/16                                                                                                                                                                       |
 | E2E toàn bộ (trước bản sửa rà soát)                                                                                                                                                                                                                     | 69 đạt, 5 hỏng do máy quá tải (ai-flow:139, board-picture:190, chemistry:24, lesson-flow:74, studio:137 — chạy lại riêng 1 worker: 5/5 đạt), 9 không chạy (nhóm 3D chờ nhóm đầu) |
 
 ## Errors and fixes
@@ -65,10 +65,9 @@
 
 - Dự án chuyển sang `D:\Projects\stem-sim-lab` (quyết định của người dùng 26/10). Nhánh đã push:
   `feat/71-grade-switch`.
-- Việc còn lại: (1) chạy lại `npx playwright test project.spec.ts --project=chromium` sau bản sửa rà soát
-  nếu lượt xếp hàng chưa kịp chạy (xem mô tả PR); (2) một lượt E2E đầy đủ `npx playwright test` trước khi gộp
-  (theo giao thức khoá); (3) khi #79 (f) gộp: `git merge origin/main`, sửa xung đột ở `LeftSidebar.tsx`
-  (`ChapterNode`: giữ `TopicButton` của (f) và thêm `lessons` + tên chương `chapterTitle`) và
-  `tests/e2e/learner.spec.ts`; (4) khi Sinh (a) #77 gộp: kiểm số chủ đề Sinh và chạy lại script xếp lớp
-  nếu có dòng mới.
+- Đã merge `origin/main` sau khi #79 (f) gộp: `ChapterNode` dùng `TopicButton` của (f), thêm prop `lessons`.
+- Việc còn lại: (1) một lượt E2E đầy đủ `npx playwright test` trước khi gộp (theo giao thức khoá; CI của PR
+  #86 cũng chạy); (2) khi Sinh (a) #77 gộp: kiểm số chủ đề Sinh và chạy lại script xếp lớp nếu có dòng mới.
+- Ghi chú: `project.spec.ts` thuộc nhóm `chromium-3d`; chạy riêng bằng
+  `npx playwright test project.spec --project=chromium-3d --no-deps`.
 - Giới hạn: "Đại cương" vẫn là giá trị của trường "trình độ" trong Soạn bài (không đổi theo kế hoạch).
