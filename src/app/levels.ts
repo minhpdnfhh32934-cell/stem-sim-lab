@@ -14,17 +14,6 @@ export const LEVELS: readonly LevelInfo[] = [
   { id: 'general', status: 'planned' },
 ];
 
-/**
- * Curriculum mapping of the topics (grade / lesson in a specific programme or textbook).
- * Not filled in: it must come from a teacher, never be guessed (PROMPT_PHAN_2 A4.1,
- * MASTER_PROMPT §2.5). Listed in docs/DATA_REVIEW.md.
- */
-export const CURRICULUM_MAPPING = {
-  review_status: 'pending',
-  /** topic id → reference (e.g. "Vật lý 10, Bài …"), filled in after a teacher's review. */
-  entries: {} as Record<string, string>,
-} as const;
-
 /** Chapters of a subject at a level (every current topic is "Nền tảng"). */
 export function chaptersFor(level: Level, subject: Subject): ChapterEntry[] {
   return level === 'foundation' ? CATALOG[subject] : [];
