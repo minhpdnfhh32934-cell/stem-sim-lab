@@ -225,6 +225,23 @@ export const CHALLENGES: readonly Challenge[] = [
       'Try m₂ larger and smaller than m₁: does ball 1 bounce back or keep going?',
     ),
   },
+  {
+    id: 'uniformCircularMotion.a16',
+    topic: 'uniformCircularMotion',
+    title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),
+    task: L(
+      'Giữ bán kính 1 m, chỉnh tốc độ v để gia tốc hướng tâm đúng 16 m/s².',
+      'Keeping the 1 m radius, set the speed v so that the centripetal acceleration is exactly 16 m/s².',
+    ),
+    controls: ['v'],
+    // mode 0 = "Biết tốc độ v".
+    start: { mode: 0 },
+    goal: { answer: 'a_c', kind: 'target', value: 16, tol: 0.2 },
+    hint: L(
+      'Tốc độ tăng gấp đôi thì gia tốc hướng tâm tăng mấy lần?',
+      'If the speed doubles, how many times larger is the centripetal acceleration?',
+    ),
+  },
 ];
 
 export function challengesFor(topic: string): Challenge[] {
