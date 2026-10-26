@@ -1410,15 +1410,11 @@
           "value": 10,
           "unit": "cm",
           "quote": "cách A 10 cm"
-        },
-        {
-          "key": "yP",
-          "value": 0,
-          "unit": "cm",
-          "quote": "M nằm trên đoạn AB"
         }
       ],
-      "missing": [],
+      "missing": [
+        "yP"
+      ],
       "answers": {
         "F12": 1.5977869842081418,
         "E": 3595020.714468318
@@ -1431,10 +1427,10 @@
       "topic": "electricField",
       "quantities": [
         {
-          "key": "q1",
-          "value": 1e-08,
-          "unit": "C",
-          "quote": "Q = 10⁻⁸ C"
+          "key": "n",
+          "value": 1,
+          "unit": "1",
+          "quote": "Một điện tích điểm"
         },
         {
           "key": "q0",
@@ -1449,11 +1445,10 @@
           "quote": "cách O 5 cm"
         }
       ],
-      "missing": [],
-      "answers": {
-        "E": 35950.20714468318,
-        "F": 7.190041428936636e-05
-      },
+      "missing": [
+        "q1"
+      ],
+      "answers": {},
       "expectUnsupportedParts": false
     },
     {
@@ -1521,15 +1516,11 @@
           "value": -3,
           "unit": "cm",
           "quote": "cách A 3 cm"
-        },
-        {
-          "key": "yP",
-          "value": 0,
-          "unit": "cm",
-          "quote": "M nằm trên đường thẳng AB"
         }
       ],
-      "missing": [],
+      "missing": [
+        "yP"
+      ],
       "answers": {
         "E": 355063.77426847594,
         "Ex": -355063.77426847594

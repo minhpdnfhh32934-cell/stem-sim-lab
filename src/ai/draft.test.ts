@@ -198,9 +198,9 @@ describe('the sign of a charge (trap 3 of #37 §8.2)', () => {
       2e-6,
       15,
     );
-    expect(flagged('Điện tích âm q₁ = 10⁻⁸ C.', 1e-8, 'C', 'q₁ = 10⁻⁸ C')).toBe(true);
-    expect(flagged('Điện tích q₁ = 10⁻⁸ C.', -1e-8, 'C', 'q₁ = 10⁻⁸ C')).toBe(true);
-    expect(flagged('Điện tích q₁ = 10⁻⁸ C.', 1e-8, 'C', 'q₁ = 10⁻⁸ C')).toBe(false);
+    expect(flagged('Điện tích âm q₁ = 1.10⁻⁸ C.', 1e-8, 'C', 'q₁ = 1.10⁻⁸ C')).toBe(true);
+    expect(flagged('Điện tích q₁ = 1.10⁻⁸ C.', -1e-8, 'C', 'q₁ = 1.10⁻⁸ C')).toBe(true);
+    expect(flagged('Điện tích q₁ = 1.10⁻⁸ C.', 1e-8, 'C', 'q₁ = 1.10⁻⁸ C')).toBe(false);
   });
 
   it('asks for confirmation when the problem leaves the sign open', () => {
@@ -208,57 +208,37 @@ describe('the sign of a charge (trap 3 of #37 §8.2)', () => {
   });
 });
 
-describe('point M on the line AB (electric field)', () => {
-  it('takes y_M = 0 only from words that put M on AB, never from a negated sentence', () => {
-    const on = 'Điểm M nằm trên đoạn AB, cách A 10 cm.';
-    expect(impliedByWords('yP', 0, 'M nằm trên đoạn AB', on)).toBe(true);
-    expect(impliedByWords('yP', 0, 'M là trung điểm của AB', 'Gọi M là trung điểm của AB.')).toBe(
-      true,
-    );
-    const off = 'Điểm M không nằm trên đường thẳng AB, cách A 3 cm và cách B 4 cm.';
-    expect(impliedByWords('yP', 0, 'M không nằm trên đường thẳng AB', off)).toBe(false);
-    // Only M as the subject: "trung điểm" of another sentence says nothing about M (re-review).
-    const bisector = 'Điểm M nằm trên đường trung trực của AB, cách trung điểm của AB 4 cm.';
-    expect(impliedByWords('yP', 0, 'trung điểm của AB', bisector)).toBe(false);
-    expect(impliedByWords('yP', 0, 'M nằm trên đường trung trực của AB', bisector)).toBe(false);
-    // Common ways of putting M on AB.
-    for (const [quote, text] of [
-      ['M nằm giữa A và B', 'Điểm M nằm giữa A và B, cách A 2 cm.'],
-      ['trung điểm M của AB', 'Tính E tại trung điểm M của AB.'],
-      ['M thuộc đoạn thẳng AB', 'Điểm M thuộc đoạn thẳng AB, cách B 3 cm.'],
-    ] as const) {
-      expect(impliedByWords('yP', 0, quote, text), quote).toBe(true);
-    }
-    // A number before "m" makes it a metre, not the point M (final review of #89).
-    const metre = 'Điểm N cách A 0,2 m nằm trên đoạn AB.';
-    expect(impliedByWords('yP', 0, '0,2 m nằm trên đoạn AB', metre)).toBe(false);
-    // "của M": M is not the subject of "là trung điểm".
-    const projection = 'Hình chiếu vuông góc của M là trung điểm của AB.';
-    expect(impliedByWords('yP', 0, 'của M là trung điểm của AB', projection)).toBe(false);
-    const other = 'Gọi O là trung điểm của AB. Điểm M cách O 5 cm.';
-    expect(impliedByWords('yP', 0, 'O là trung điểm của AB', other)).toBe(false);
-    // Another key never takes the rule.
-    expect(impliedByWords('xP', 0, 'nằm trên đoạn AB', on)).toBe(false);
+describe('point M of the electric field (#89 decision: no y_M from words)', () => {
+  const extract = (value: number, quote: string): Extraction => ({
+    quantities: [{ key: 'yP', value, unit: 'cm', quote }],
+    questions: [],
+    assumptions: [],
+    unsupported_parts: [],
+    clarifications: [],
   });
-});
-
-describe('y_M = 0 only from words (final review of #89)', () => {
-  it('refuses y_M = 0 taken from a zero elsewhere in the text', async () => {
+  it('refuses y_M = 0 when the problem only says "M nằm trên đoạn AB"; reads a written 0', async () => {
     const scene = await loadScene('electricField');
-    const text =
-      'Hai điện tích q1 = 2 µC và q2 = 8 µC đặt tại A và B, AB = 30 cm. Tìm điểm M tại đó điện trường bằng 0.';
-    const draft = buildDraft(
-      scene,
-      {
-        quantities: [{ key: 'yP', value: 0, unit: 'cm', quote: 'bằng 0' }],
-        questions: [],
-        assumptions: [],
-        unsupported_parts: [],
-        clarifications: [],
-      },
-      text,
-      9.81,
-    );
-    expect(draft.issues.some((i) => i.kind === 'notInText' && i.key === 'yP')).toBe(true);
+    const onAB =
+      'Hai điện tích q1 = 2 µC, q2 = 8 µC tại A, B; AB = 30 cm. Điểm M nằm trên đoạn AB.';
+    const refused = buildDraft(scene, extract(0, 'M nằm trên đoạn AB'), onAB, 9.81);
+    expect(refused.issues.some((i) => i.kind === 'notInText' && i.key === 'yP')).toBe(true);
+    const zero =
+      'Hai điện tích q1 = 2 µC, q2 = 8 µC tại A(0; 0), B(30; 0) cm. Xét điểm M(3; 0) cm.';
+    const read = buildDraft(scene, extract(0, 'M(3; 0)'), zero, 9.81);
+    expect(read.issues.filter((i) => i.blocking)).toEqual([]);
+    expect(read.sources.yP).toBe('problem');
+  });
+
+  it('keeps every words rule of main, with a number or a name before the phrase', () => {
+    const cases: [string, number, string, string][] = [
+      ['v0', 0, 'đứng yên', 'Quả cầu 2 đứng yên trên mặt bàn.'],
+      ['v0', 0, 'đứng yên', 'Viên bi m2 đứng yên.'],
+      ['vB', 0, 'bắt đầu chuyển động', 'Xe 2 bắt đầu chuyển động từ B.'],
+      ['e', 0, 'dính vào nhau', 'Vật 1 và vật 2 dính vào nhau sau va chạm.'],
+      ['muK', 0, 'bỏ qua ma sát', 'Lấy g = 10 m/s² bỏ qua ma sát.'],
+    ];
+    for (const [key, value, quote, text] of cases) {
+      expect(impliedByWords(key, value, quote, text), text).toBe(true);
+    }
   });
 });

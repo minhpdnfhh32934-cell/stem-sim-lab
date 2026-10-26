@@ -63,36 +63,6 @@ function readings(token: string): number[] {
  */
 const SCI =
   /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·]\s*10\s*\^?|(?:[X⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^)\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
-/** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
-const POW = /(?<![\d.,])10\s*\^\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
-
-/**
- * Allow-list (final review of #89, after four rounds of block-lists): a power of ten is read on its
- * own only right after the start of the text, "=", "≈" or ":" (spaces, opening brackets and one
- * sign skipped), and only when the rest of its clause holds no number (units such as "N.m²/C²"
- * keep their powers). After a word ("Điện tích 10⁻⁸ C", "2 nhân cho 10⁻⁸") or with a number after
- * it ("10⁻⁸ chia 2") it may belong to a mantissa or a factor: refused, the learner enters the value
- * (§2.1, unsure means refused).
- */
-function standsAlone(before: string, after: string): boolean {
-  // One sign may stand right before the power ("q = −10⁻⁸"); "2 − 10⁻⁸" still ends in a number.
-  const b = before
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(/[\s([{]+$/u, '')
-    .replace(/[-+]$/u, '')
-    .replace(/[\s([{]+$/u, '');
-  if (b !== '' && !/[=≈:]$/u.test(b)) return false;
-  // "10^(-8),5": a decimal part glued after the bracket.
-  if (/^[.,]\d/u.test(after)) return false;
-  const clause =
-    after
-      .normalize('NFKC')
-      .toLowerCase()
-      .split(/[,;!?]|\.(?=\s|$)/u)[0] ?? '';
-  return !/\p{N}/u.test(clause.replace(/(?<=\p{L})\^-?\d+/gu, ''));
-}
-
 /** A reading a problem can state: finite, and not a power of ten that underflowed to 0. */
 const usable = (v: number) => Number.isFinite(v) && v !== 0;
 // A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
@@ -105,13 +75,15 @@ interface Token {
 }
 
 /**
- * Number tokens of normalized text, in reading order. Scientific notation and lone powers of ten
- * come first; plain digits inside them are left out unless `keepInner` (a problem may write either
- * reading, see `numbersIn`).
+ * Number tokens of normalized text, in reading order: scientific notation first, then plain numbers
+ * outside it — inside it too with `keepInner` (a problem may write either reading, see
+ * `numbersIn`). A power of ten without a mantissa ("10⁻⁸") is never read on its own, as on main:
+ * five review rounds showed no rule that tells it from a mantissa it cannot read (#89); the learner
+ * enters such a value. `dropNames` leaves out digits glued to a name ("q0", "q_0", "m1", "cm2") —
+ * only for "is this number in the problem", never for checking an explanation.
  */
-function scan(t: string, keepInner = false): Token[] {
+function scan(t: string, keepInner = false, dropNames = false): Token[] {
   const tokens: Token[] = [];
-  const inside = (s: number, e: number) => tokens.some((k) => s >= k.start && e <= k.end);
   for (const m of t.matchAll(SCI)) {
     // "2·10^400" is Infinity, which `same` would match with every value: such readings are dropped.
     const sci = readings(m[1] ?? '')
@@ -122,28 +94,13 @@ function scan(t: string, keepInner = false): Token[] {
     const all = /^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci;
     tokens.push({ start: m.index, end: m.index + m[0].length, readings: all });
   }
-  for (const m of t.matchAll(POW)) {
-    const end = m.index + m[0].length;
-    const value = 10 ** Number(m[1]);
-    // 10^0 is never read as 1: "10^0" after a number is a degree typed with a caret.
-    if (
-      inside(m.index, end) ||
-      Number(m[1]) === 0 ||
-      !usable(value) ||
-      !standsAlone(t.slice(0, m.index), t.slice(end))
-    ) {
-      continue;
-    }
-    tokens.push({ start: m.index, end, readings: [value] });
-  }
   const outer = tokens.length;
   for (const m of t.matchAll(PLAIN)) {
     const end = m.index + m[0].length;
     if (!keepInner && tokens.slice(0, outer).some((k) => m.index >= k.start && end <= k.end)) {
       continue;
     }
-    // Digits of a name ("q0", "q_0", "m1") or a unit's power ("cm2") are not numbers of the problem.
-    if (/[\p{L}_]$/u.test(t.slice(0, m.index))) continue;
+    if (dropNames && /[\p{L}_]$/u.test(t.slice(0, m.index))) continue;
     tokens.push({ start: m.index, end, readings: readings(m[0].replace(/\s/g, '')) });
   }
   return tokens.sort((a, b) => a.start - b.start);
@@ -161,7 +118,7 @@ export function numberTokens(text: string): number[][] {
 
 /** All numbers mentioned in the text (absolute values; signs are interpretation). */
 export function numbersIn(text: string): number[] {
-  return scan(normalizeText(text), true).flatMap((k) => k.readings);
+  return scan(normalizeText(text), true, true).flatMap((k) => k.readings);
 }
 
 /** Equal up to floating-point noise: relative, so 5·10⁻¹⁰ and 7·10⁻¹⁰ differ (an absolute 1e-9 did not). */

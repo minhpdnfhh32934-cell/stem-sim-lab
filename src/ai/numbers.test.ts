@@ -1,17 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import { mentions, numbersIn, numberTokens, writtenSign } from './numbers';
-import { mentions as mainMentions } from './numbersMain.fixture';
+import golden from '../../tests/golden/physics.json' with { type: 'json' };
+import { mentions as mainMentions, numberTokens as mainNumberTokens } from './numbersMain.fixture';
+
+const goldenItems = (
+  golden as { items: { id: string; text: string; quantities: { key: string; value: number }[] }[] }
+).items;
 
 describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
-  it('reads a power of ten written on its own', () => {
-    expect(mentions('Điện tích q = 10⁻⁸ C đặt tại A.', 1e-8)).toBe(true);
-    expect(mentions('q = 10^-8 C', 1e-8)).toBe(true);
-    expect(mentions('q = 10^(-8) C', 1e-8)).toBe(true);
-    expect(numberTokens('q = 10⁻⁸ C')).toEqual([[1e-8]]);
+  it('reads superscript exponents after a mantissa; a power alone is never read (as on main)', () => {
+    expect(mentions('Điện tích q = 4.10⁻⁸ C đặt tại A.', 4e-8)).toBe(true);
+    expect(numberTokens('q = 4.10⁻⁸ C')).toEqual([[4e-8]]);
+    expect(mentions('n = 2.10¹⁰', 2e10)).toBe(true);
+    // #89 decision after five review rounds: "10⁻⁸" without a mantissa is not read; the learner
+    // enters the value in "Tôi hiểu đề như sau".
+    for (const text of ['q = 10⁻⁸ C', 'q = 10^-8 C', 'q = 10^(-8) C', 'Điện tích 10⁻⁸ C.']) {
+      expect(mentions(text, 1e-8), text).toBe(false);
+    }
   });
 
   it('compares relatively, so a tiny invented value is caught', () => {
-    expect(mentions('q = 10⁻⁸ C', 2e-8)).toBe(false);
+    expect(mentions('q = 1.10⁻⁸ C', 2e-8)).toBe(false);
     expect(mentions('q = 5.10⁻¹⁰ C', 5e-10)).toBe(true);
     expect(mentions('q = 5.10⁻¹⁰ C', 7e-10)).toBe(false);
     expect(mentions('e = 1,6.10-19 C', 1.6e-19)).toBe(true);
@@ -24,46 +33,53 @@ describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
     // Small decimals stay whole (the thousands group used to swallow ",000").
     expect(numberTokens('F = 0,000719 N')).toEqual([[0.000719, 719]]);
     expect(numberTokens('1.200.000 N, 1 200 N')).toEqual([[1200000], [1200]]);
-    // A power of ten is not read inside a longer number or a mantissa.
-    expect(numberTokens('210^2')).not.toContainEqual([100]);
     expect(numberTokens('q = 5.10^-10 C')).toEqual([[5e-10]]);
     expect(numbersIn('q = 5.10^-10 C')).not.toContain(1e-10);
     expect(mentions('q = 5 × 10⁻¹⁰ C', 1e-10)).toBe(false);
-    // A dot operator "⋅" is a multiplication sign too: "2⋅10⁻⁸" is 2e-8, never 1e-8.
-    expect(mentions('q = 2⋅10^-8 C', 2e-8)).toBe(true);
-    expect(mentions('q = 2⋅10^-8 C', 1e-8)).toBe(false);
     expect(mentions('vật nằm yên', 0)).toBe(false);
     expect(mentions('v = 0 m/s', 0)).toBe(true);
   });
-});
 
-describe('no laxer than before (review of #89)', () => {
-  it('never reads a power of ten whose mantissa it could not read', () => {
-    for (const text of ['q = 2´10⁻⁸ C', 'q = 2 • 10⁻⁸ C', 'q = 2 10^-8 C']) {
-      expect(mentions(text, 1e-8), text).toBe(false);
-    }
-    expect(mentions('F = 2 X 10^3 N', 1000)).toBe(false);
-    // These multiplication signs are read, so the stated value passes.
+  it('reads the new multiplication signs only with a caret or a superscript exponent', () => {
     expect(mentions('q = 2´10⁻⁸ C', 2e-8)).toBe(true);
     expect(mentions('q = 2 • 10⁻⁸ C', 2e-8)).toBe(true);
+    expect(mentions('q = 2⋅10^-8 C', 2e-8)).toBe(true);
     expect(mentions('F = 2 X 10^3 N', 2000)).toBe(true);
     expect(mentions('q = 2 \\cdot 10^{-8} C', 2e-8)).toBe(true);
-    expect(mentions('q = 2 \\cdot 10^{-8} C', 1e-8)).toBe(false);
-    // A name before the power is not a mantissa.
-    expect(mentions('q2 = 10^-8 C', 1e-8)).toBe(true);
+    // Without a caret "X 10" is no power of ten.
+    expect(mentions('F = 2 X 10 3 N', 2000)).toBe(false);
   });
 
-  it('reads a superscript zero after a number as degrees, not as 10⁰ = 1', () => {
-    expect(mentions('Góc nghiêng 10⁰.', 1)).toBe(false);
-    expect(mentions('Góc nghiêng 10⁰.', 10)).toBe(true);
+  it('never reads an infinite number, a decimal exponent or 10⁰ as 1', () => {
+    for (const text of ['q = 2·10^400 C, AB = 6 cm', 'q = 10^309 C', 'E = 9·10⁹¹²³']) {
+      for (const v of [7, 123.456, 42, 5]) expect(mentions(text, v), `${text} ${v}`).toBe(false);
+    }
+    expect(mentions('q = 2.10^-8,5 C', 2e-8)).toBe(false);
+    for (const text of ['Góc nghiêng 10⁰.', 'góc 10^0', 'góc 10^(0)', 'góc 10^{0}', 't = 10^0C']) {
+      expect(mentions(text, 1), text).toBe(false);
+      expect(mentions(text, 10), text).toBe(true);
+    }
     expect(numberTokens('nhiệt độ 30⁰C')).toEqual([[30]]);
-    expect(mentions('n = 10¹⁰', 1e10)).toBe(true);
+  });
+
+  it('never reads the digit of a name such as q0, q_0 or q1 as a number of the problem', () => {
+    expect(mentions('Điện tích thử q0 = 2 nC đặt tại M.', 0)).toBe(false);
+    expect(mentions('Điện tích thử q_0 = 2 nC.', 0)).toBe(false);
+    expect(numbersIn('q1 = 2 µC')).not.toContain(1);
+    expect(mentions('q1 = 2 µC', 2)).toBe(true);
+    expect(mentions('S = 20 cm2', 20)).toBe(true);
+    expect(mentions('Điểm M(3; 0) trên trục Ox.', 0)).toBe(true);
   });
 });
 
-describe('a power of ten never stands for a mantissa it could not read (re-review of #89)', () => {
-  // Every way of joining a mantissa to a power of ten: the AI's bare 10ⁿ must never pass.
+describe('never laxer than main (#89)', () => {
+  const sup: Record<string, string> = { '-': '⁻', '0': '⁰', '2': '²', '3': '³', '8': '⁸' };
+  const supOf = (e: number) => String(e).replace(/[-0-9]/g, (c) => sup[c] ?? c);
+  const prefixes = ['q = ', 'Điện tích ', '', 'Câu 1: ', 'tăng 2 lần, ', 'AB = 3 cm, q = '];
+  const mantissas = ['', '2', '2,5', '(2,5)', '.5', '½', '２', '1.200.000'];
   const joins = [
+    '',
+    ' ',
     '.',
     '×',
     'x',
@@ -71,157 +87,36 @@ describe('a power of ten never stands for a mantissa it could not read (re-revie
     '*',
     '·',
     '⋅',
-    '∙',
     '•',
-    '✕',
-    '⨯',
     '´',
-    ' ',
     ' lần ',
-    'х',
+    ' LẦN ',
+    ' nhân ',
+    ' nhân với ',
+    ' nhan ',
+    ' nhân cho ',
+    ' chia ',
+    ' times ',
+    '&times;',
+    '&middot',
+    'cdot',
+    'Х',
+    'ｘ',
+    'χ',
+    ' twice ',
+    ' gấp đôi ',
     ' \\cdot ',
     '{\\cdot}',
     ' ×\\, ',
     '\\!\\cdot\\!',
     ' ×​',
   ];
-  const mantissas = ['2', '2,5', '(2,5)', '(2,0 ± 0,1)'];
-  const powers = (e: number) => [`10^${e}`, `10^(${e})`, `(10^${e})`, `[10^${e}]`, `10^{${e}}`];
-  it('rejects 10ⁿ for every join, mantissa and form', () => {
-    for (const e of [-8, 3]) {
-      for (const m of mantissas) {
-        for (const j of joins) {
-          for (const pow of powers(e)) {
-            const text = `q = ${m}${j}${pow} C`;
-            expect(mentions(text, 10 ** e), text).toBe(false);
-          }
-        }
-      }
-    }
-  });
+  const powers = (e: number) => [`10^${e}`, `10^(${e})`, `(10^${e})`, `10^{${e}}`, `10${supOf(e)}`];
+  const suffixes = [' C', '·2 C', ' × 2,5 C', ',5 C', ' chia 2 C', ' . 2 C', ' × ba C'];
+  // Readings main could not make at all: a superscript exponent of several characters.
+  const superscript = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]{2,}/u;
 
-  it('still reads a power of ten that has no mantissa', () => {
-    expect(mentions('q = 10^-8 C', 1e-8)).toBe(true);
-    expect(mentions('q2 = 10^-8 C', 1e-8)).toBe(true);
-    expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
-    // A list after words: none stands alone (unsure means refused, §2.1); the learner enters them.
-    const list = 'Ba điện tích 10⁻⁸, 10⁻⁹ và 10⁻¹⁰ C.';
-    for (const v of [1e-8, 1e-9, 1e-10]) expect(mentions(list, v)).toBe(false);
-  });
-
-  it('never reads 10^0 as 1 (degrees typed with a caret)', () => {
-    for (const text of ['góc 10^0', 'góc 10 ^0', 'góc 10^(0)', 'góc 10^{0}', 't = 10^0C']) {
-      expect(mentions(text, 1), text).toBe(false);
-      expect(mentions(text, 10), text).toBe(true);
-    }
-  });
-});
-
-describe('third review of #89: allow-list for a lone power of ten', () => {
-  it('never reads an infinite number (every value would then be "in the problem")', () => {
-    for (const text of ['q = 2·10^400 C, AB = 6 cm', 'q = 10^309 C', 'E = 9·10⁹¹²³']) {
-      for (const v of [7, 123.456, 42, 5]) expect(mentions(text, v), `${text} ${v}`).toBe(false);
-    }
-  });
-
-  it('refuses the review examples: unknown joins, look-alike x, odd mantissas, trailing ones', () => {
-    const texts = [
-      'q = 2 LẦN 10⁻⁸ C',
-      'q = 2 Lần 10⁻⁸ C',
-      'q = 2 nhân 10⁻⁸ C',
-      'q = 2 nhân với 10⁻⁸ C',
-      'a charge of 2 times 10^-8 C',
-      'q = 2&times;10^-8 C',
-      'q = 2 \\text{ times } 10^{-8} C',
-      'q = 2Х10^-8 C',
-      'q = 2ｘ10^-8 C',
-      'q = 2χ10^-8 C',
-      'q = 2ˣ10^-8 C',
-      'q = 2ⅹ10^-8 C',
-      'q = ½·10⁻⁸ C',
-      'q = ２×10⁻⁸ C',
-      'q = ②·10⁻⁸ C',
-      'q = .5 x (10^-8) C',
-      'q = 1.200.000 lần 10^-8 C',
-      'q = 10⁻⁸·2 C',
-      'q = 10^-8 × 2,5 C',
-    ];
-    for (const text of texts) expect(mentions(text, 1e-8), text).toBe(false);
-    // A decimal exponent is no power of ten the reader knows.
-    expect(mentions('q = 10^-8,5 C', 1e-8)).toBe(false);
-    expect(mentions('q = 10^2,5 C', 100)).toBe(false);
-  });
-
-  it('reads a lone power only after the start, "=", "≈" or ":", before a unit or the end', () => {
-    expect(mentions('10^-8 C là điện tích của q.', 1e-8)).toBe(true);
-    expect(mentions('q ≈ 10⁻⁸ C', 1e-8)).toBe(true);
-    expect(mentions('Câu 1: 10^-8 C', 1e-8)).toBe(true);
-    expect(mentions('AB = 3 cm, q = 10⁻⁸ C', 1e-8)).toBe(true);
-    expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
-    expect(mentions('k = 10^9 N.m²/C².', 1e9)).toBe(true);
-    // Final review of #89: after a word (any word) the learner enters the value.
-    expect(mentions('Điện tích 10⁻⁸ C đặt tại A.', 1e-8)).toBe(false);
-    for (const text of [
-      'q = 2 nhan 10^-8 C',
-      'q = 2 NHÂN 10^-8 C',
-      'q = 2 nhân cho 10^-8 C',
-      'q = 2 cdot 10^-8 C',
-      'q = 2&middot10^-8 C',
-      'q = 2 twice 10^-8 C',
-      'q = 2 gấp đôi 10^-8 C',
-      // A number after the power, in the same clause: a factor written after it.
-      'q = 10^-8 chia 2 C',
-      'q = 10^-8 nhân cho 2 C',
-    ]) {
-      expect(mentions(text, 1e-8), text).toBe(false);
-    }
-  });
-
-  it('is never laxer than main: every sentence main refuses is refused, except lone powers', () => {
-    const sup: Record<string, string> = { '-': '⁻', '0': '⁰', '2': '²', '3': '³', '8': '⁸' };
-    const supOf = (e: number) => String(e).replace(/[-0-9]/g, (c) => sup[c] ?? c);
-    const prefixes = ['q = ', 'Điện tích ', '', 'Câu 1: ', 'tăng 2 lần, '];
-    const mantissas = ['', '2', '2,5', '(2,5)', '.5', '½', '２', '1.200.000'];
-    const joins = [
-      '',
-      ' ',
-      '.',
-      '×',
-      'x',
-      'X',
-      '*',
-      '·',
-      '⋅',
-      '•',
-      '´',
-      ' lần ',
-      ' LẦN ',
-      ' nhân ',
-      ' nhân với ',
-      ' times ',
-      '&times;',
-      'Х',
-      'ｘ',
-      'χ',
-      ' \\cdot ',
-      '{\\cdot}',
-      ' nhan ',
-      ' NHÂN ',
-      ' nhân cho ',
-      ' chia ',
-      '&middot',
-      'cdot',
-      ' twice ',
-      ' gấp đôi ',
-    ];
-    const powers = (e: number) => [
-      `10^${e}`,
-      `10^(${e})`,
-      `(10^${e})`,
-      `10^{${e}}`,
-      `10${supOf(e)}`,
-    ];
-    const suffixes = [' C', '·2 C', ' × 2,5 C', ',5 C', ' chia 2 C', ' nhân cho 2 C'];
+  it('accepts nothing main refuses (a bare 10ⁿ above all)', () => {
     const laxer: string[] = [];
     for (const e of [-8, 3, 2]) {
       for (const pre of prefixes) {
@@ -230,29 +125,67 @@ describe('third review of #89: allow-list for a lone power of ten', () => {
             for (const pow of powers(e)) {
               for (const suf of suffixes) {
                 const text = `${pre}${m}${j}${pow}${suf}`;
-                if (!mentions(text, 10 ** e) || mainMentions(text, 10 ** e)) continue;
-                // Opened on purpose: a power standing alone (nothing before it on its side of
-                // the "=", ":" or word, nothing joined after it) is now read; main could not.
-                const alone = m === '' && j.trim() === '' && suf === ' C';
-                if (!alone) laxer.push(text);
+                for (const v of [10 ** e, 7, 1]) {
+                  if (!mentions(text, v) || mainMentions(text, v)) continue;
+                  laxer.push(`${text} | ${v}`);
+                }
               }
             }
           }
         }
       }
     }
-    expect(laxer).toEqual([]);
+    // Only a mantissa with a superscript exponent main could not read may be new (its own value).
+    expect(laxer.filter((x) => !superscript.test(x))).toEqual([]);
   });
-});
 
-describe('digits of names are no numbers (final review of #89)', () => {
-  it('never reads the digit of a name such as q0, q_0 or q1', () => {
-    expect(mentions('Điện tích thử q0 = 2 nC đặt tại M.', 0)).toBe(false);
-    expect(mentions('Điện tích thử q_0 = 2 nC.', 0)).toBe(false);
-    expect(numbersIn('q1 = 2 µC')).not.toContain(1);
-    expect(mentions('q1 = 2 µC', 2)).toBe(true);
-    // Units with a power keep working.
-    expect(mentions('S = 20 cm2', 20)).toBe(true);
+  it('accepts every value of the golden set that main accepts', () => {
+    const missed: string[] = [];
+    for (const item of goldenItems) {
+      for (const q of item.quantities) {
+        if (mainMentions(item.text, q.value) && !mentions(item.text, q.value)) {
+          missed.push(`${item.id} ${q.key}`);
+        }
+      }
+    }
+    expect(missed).toEqual([]);
+  });
+
+  it('flags in an explanation every number main flags (numberTokens as explain.ts uses it)', () => {
+    // Same rule as explain.ts `unknownNumbers`, run with each reader's tokens.
+    const flags = (tokens: number[][], allowed: number[]) =>
+      tokens.some(
+        (r) =>
+          !r.some(
+            (n) =>
+              (Number.isInteger(n) && n <= 4) ||
+              allowed.some((a) => Math.abs(a - n) <= 0.01 * Math.max(Math.abs(a), 1e-9)),
+          ),
+      );
+    const texts = [
+      'tăng x9 lần',
+      'E \\approx7200 V/m',
+      'khoảng7200',
+      'gấp9',
+      'q0 = 7 nC',
+      'E = 7200 V/m',
+      'q = 1,6.10-19 C',
+      'E1 = 9 V/m',
+      'v_0 = 9 m/s',
+      'x = 2X10^3 m',
+    ];
+    const allowedSets = [[], [9], [7200], [1.6e-19], [7], [2000]];
+    const laxer: string[] = [];
+    for (const text of texts) {
+      for (const allowed of allowedSets) {
+        if (flags(mainNumberTokens(text), allowed) && !flags(numberTokens(text), allowed)) {
+          laxer.push(`${text} | ${allowed.join(',')}`);
+        }
+      }
+    }
+    // On purpose: a new multiplication sign with a caret is read ("2X10^3" = 2000, the engine's own
+    // number); main split it into 2, 10, 3.
+    expect(laxer).toEqual(['x = 2X10^3 m | 2000']);
   });
 });
 
@@ -260,7 +193,7 @@ describe('the sign a problem gives a charge', () => {
   it('reads a minus or a plus written next to the number', () => {
     expect(writtenSign('q = −2 µC', 2)).toBe(-1);
     expect(writtenSign('q₂ = −4.10⁻⁸ C', 4e-8)).toBe(-1);
-    expect(writtenSign('q = -10⁻⁸ C', 1e-8)).toBe(-1);
+    expect(writtenSign('q = -1.10⁻⁸ C', 1e-8)).toBe(-1);
     expect(writtenSign('q = +3 nC', 3)).toBe(1);
     expect(writtenSign('q = 2 µC', 2)).toBe(1);
     // A range or a difference is not a sign.

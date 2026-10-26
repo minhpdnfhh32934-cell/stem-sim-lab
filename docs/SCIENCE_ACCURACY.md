@@ -122,18 +122,19 @@ số thập phân nhỏ ("0,000719" trước đây bị tách thành "0,000" và
 nên `src/ai/draft.ts` kiểm thêm **dấu của điện tích**: dấu AI đưa ra khác dấu trong đề (dấu "−" sát
 số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái dấu"), thì bảng "Tôi hiểu đề
 như sau" hiện cảnh báo ngay ở dòng điện tích đó; cảnh báo còn cho tới khi dấu người học đặt khớp với
-đề (đề để ngỏ dấu thì người học tự đặt lại là đủ). Bộ lọc không bao giờ lỏng hơn trước. Một lũy
-thừa 10 chỉ được đọc như một số riêng theo **danh sách cho phép**: ngay trước nó là đầu văn bản, "=",
-"≈" hoặc ":" (bỏ qua dấu cách, ngoặc mở và một dấu ±), và phần còn lại của vế câu sau nó không có
-con số nào (đơn vị như "N.m²/C²" vẫn được). Mọi cách viết khác ("Điện tích 10⁻⁸ C" giữa câu, "2 nhân
-cho 10⁻⁸", "½·10⁻⁸", "10⁻⁸ chia 2", "10⁻⁸, 10⁻⁹") đều bị chặn để người học tự nhập. Dấu nhân mới
-("X", "•", "´", "\cdot"…) chỉ được đọc khi có dấu mũ hay chữ số mũ nhỏ. Số mũ phải là số nguyên
-("10^-8,5" không được đọc); số quá lớn hay quá nhỏ so với máy tính (như 10⁴⁰⁰) bị bỏ; "10⁰", "10^0"
-không bao giờ được đọc là 1 (thường là "10 độ"); chữ số dính vào tên ("q0", "q_0", "q1") không phải là
-số của đề. Test so sánh với bản trên `main` (`numbersMain.fixture.ts`) trên lưới hệ số × cách nối ×
-dạng lũy thừa × số mũ × vị trí: câu nào `main` chặn thì bản mới cũng chặn, trừ đúng trường hợp lũy
-thừa đứng riêng (`numbers.test.ts`). y_M = 0 chỉ được nhận qua cụm từ có M làm chủ ngữ ("M nằm trên
-đoạn AB"…), không bao giờ từ một số 0 ở chỗ khác trong đề.
+đề (đề để ngỏ dấu thì người học tự đặt lại là đủ). Bộ lọc không bao giờ lỏng hơn trước. **Quyết
+định #89 (sau năm lượt duyệt):** lũy thừa 10 không có hệ số ("q = 10⁻⁸ C") không được đọc, giống
+`main`: không luật nào phân biệt chắc chắn nó với một hệ số viết lạ, nên bảng "Tôi hiểu đề như sau"
+hỏi người học nhập giá trị; viết có hệ số ("1.10⁻⁸ C", "4.10⁻⁸ C") thì đọc được. Dấu nhân mới ("X",
+"•", "´", "\cdot"…) chỉ được đọc khi có dấu mũ hay chữ số mũ nhỏ. Số mũ phải là số nguyên ("10^-8,5"
+không được đọc); số quá lớn hay quá nhỏ so với máy tính (như 10⁴⁰⁰) bị bỏ; "10⁰" sau chữ số là "10
+độ". Chữ số dính vào tên ("q0", "q_0", "q1") không được coi là số có trong đề (chỉ ở phía kiểm đề;
+phần kiểm lời giải thích đọc như `main`). Không suy y_M = 0 từ lời ("M nằm trên đoạn AB"): đề không
+ghi số thì người học nhập. Test so sánh với bản trên `main` (`numbersMain.fixture.ts`): trên lưới hệ
+số × cách nối × dạng lũy thừa × số mũ × vị trí, câu nào `main` chặn thì bản mới cũng chặn (ngoại lệ
+duy nhất: hệ số với số mũ viết bằng chữ số nhỏ mà `main` không đọc được); mọi giá trị của bộ đề
+chuẩn mà `main` nhận thì bản mới cũng nhận; lời giải thích bị `main` đánh dấu thì bản mới cũng đánh dấu
+(`numbers.test.ts`).
 
 **Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
 số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn

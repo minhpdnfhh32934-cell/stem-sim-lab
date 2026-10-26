@@ -523,21 +523,23 @@ add(
         q("q2", -8, "uC", "q₂ = −8 µC"),
         q("x2", 30, "cm", "cách nhau 30 cm"),
         q("xP", 10, "cm", "cách A 10 cm"),
-        q("yP", 0, "cm", "M nằm trên đoạn AB"),
     ],
     # M giữa A và B: E1 hướng ra xa q1 (về phía B), E2 hướng về q2 (về phía B) → cộng độ lớn.
+    # "M nằm trên đoạn AB" không ghi số: app hỏi y_M (quyết định #89), đáp án tính với y_M = 0.
     {"F12": K_C * 2e-6 * 8e-6 / 0.3**2, "E": K_C * (2e-6 / 0.1**2 + 8e-6 / 0.2**2)},
+    missing=["yP"],
 )
 add(
     "efd-03",
     "Một điện tích điểm Q = 10⁻⁸ C đặt tại điểm O trong không khí. Đặt một điện tích thử q = −2 nC tại điểm M cách O 5 cm. Tính cường độ điện trường tại M và độ lớn lực điện tác dụng lên điện tích thử.",
     "electricField",
     [
-        q("q1", 1e-8, "C", "Q = 10⁻⁸ C"),
+        q("n", 1, "1", "Một điện tích điểm"),
         q("q0", -2, "nC", "q = −2 nC"),
         q("xP", 5, "cm", "cách O 5 cm"),
     ],
-    {"E": K_C * 1e-8 / 0.05**2, "F": 2e-9 * K_C * 1e-8 / 0.05**2},
+    # "10⁻⁸" không có hệ số: app không đọc lũy thừa 10 đứng riêng (quyết định #89), nên hỏi q1.
+    missing=["q1"],
 )
 add(
     "efd-04",
@@ -562,13 +564,14 @@ add(
         q("x2", 6, "cm", "AB = 6 cm"),
         # M phía A, ngoài đoạn AB: tọa độ âm (dấu là cách đặt trục, số 3 có trong đề).
         q("xP", -3, "cm", "cách A 3 cm"),
-        q("yP", 0, "cm", "M nằm trên đường thẳng AB"),
     ],
+    # "M nằm trên đường thẳng AB" không ghi số: app hỏi y_M; đáp án tính với y_M = 0.
     # E1 (q1 > 0) hướng ra xa A, tức về phía −x; E2 (q2 < 0) hướng về B, tức +x; |E1| > |E2|.
     {
         "E": K_C * 4e-8 * (1 / 0.03**2 - 1 / 0.09**2),
         "Ex": -K_C * 4e-8 * (1 / 0.03**2 - 1 / 0.09**2),
     },
+    missing=["yP"],
 )
 add(
     "efd-06",

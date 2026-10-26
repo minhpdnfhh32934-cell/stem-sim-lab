@@ -533,7 +533,6 @@ test('a charge whose sign the AI changed is marked on its row until the learner 
         { key: 'q2', value: 8, unit: 'uC', quote: 'q₂ = −8 µC' },
         { key: 'x2', value: 30, unit: 'cm', quote: 'cách nhau 30 cm' },
         { key: 'xP', value: 10, unit: 'cm', quote: 'cách A 10 cm' },
-        { key: 'yP', value: 0, unit: 'cm', quote: 'M nằm trên đoạn AB' },
       ],
       questions: [],
       assumptions: [],

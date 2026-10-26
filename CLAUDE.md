@@ -318,8 +318,10 @@ Progress log: `docs/PROGRESS.md`.
   `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
   step doubling; the card's error is an upper estimate from a coarse copy of each line, checked
   against DOPRI5), `engine.ts` (static), `draw.ts` (lines traced once per parameter change),
-  `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` compares relatively
-  and reads "10⁻⁸"; `draft.ts` flags a charge whose sign differs from the problem (`signMismatch`).
+  `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` compares relatively,
+  reads superscript exponents after a mantissa ("4.10⁻⁸"), never a bare power ("10⁻⁸": the learner
+  enters it — #89 decision after five review rounds), never a digit of a name in `numbersIn`;
+  `draft.ts` flags a charge whose sign differs from the problem (`signMismatch`). No y_M from words.
 
 ## AI layer (Phase 3)
 

@@ -54,13 +54,7 @@ const L = (vi: string, en: string): LocalizedText => ({ vi, en });
  * only when the problem text does not negate it ("không đàn hồi", "không nhẵn", "không đứng
  * yên"), even when the quote leaves the negation out.
  */
-const IMPLIED: {
-  keys: RegExp;
-  value: number;
-  phrases: string[];
-  /** The value is accepted only from these words, never from the same digit elsewhere. */
-  only?: boolean;
-}[] = [
+const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
   {
     // initial velocities
     keys: /^(v0|vA|vB|v1|v2|v0x|omega0)$/,
@@ -99,28 +93,6 @@ const IMPLIED: {
   { keys: /^e$/, value: 0, phrases: ['va chạm mềm', 'dính vào nhau', 'dính nhau', 'dính liền'] },
   { keys: /^angle$/, value: 0, phrases: ['ném ngang', 'phương ngang', 'nằm ngang'] },
   { keys: /^beta$/, value: 0, phrases: ['phương ngang', 'nằm ngang', 'song song', 'dọc theo'] },
-  // Electric field: q₁ at A (origin) and q₂ at B on the x-axis, so M on the line AB has y_M = 0.
-  {
-    keys: /^yP$/,
-    value: 0,
-    // "bằng 0" or a "0" anywhere else says nothing about where M is.
-    only: true,
-    // M must be the subject: "cách trung điểm của AB 4 cm" or "O là trung điểm" say nothing of M.
-    phrases: [
-      'm nằm trên đoạn ab',
-      'm nằm trên đoạn thẳng ab',
-      'm nằm trên đường thẳng ab',
-      'm thuộc đoạn ab',
-      'm thuộc đường thẳng ab',
-      'm là trung điểm của ab',
-      'm là trung điểm của đoạn ab',
-      'm là trung điểm ab',
-      'm nằm giữa a và b',
-      'trung điểm m của ab',
-      'trung điểm m của đoạn ab',
-      'm thuộc đoạn thẳng ab',
-    ],
-  },
 ];
 
 /** Words that turn the phrase after them around ("không khí"/"không gian" are nouns, not "not"). */
@@ -156,8 +128,6 @@ function statedPlainly(text: string, from: number, to: number, phrase: string): 
   const re = new RegExp(`${WORD_START}${phrase}${WORD_END}`, 'gu');
   for (const m of text.matchAll(re)) {
     if (m.index < from || m.index + m[0].length > to) continue;
-    // "0,2 m nằm trên…" is a metre, not the point M; "của M là trung điểm" has another subject.
-    if (/(?:\d|của) ?$/u.test(text.slice(0, m.index))) continue;
     const clause =
       text
         .slice(0, m.index)
@@ -277,8 +247,7 @@ export function buildDraft(
     // §2.1: the number must literally appear in the problem, or be stated in words
     // ("thả nhẹ" → v₀ = 0) with a verifiable quote.
     const inWords = impliedByWords(q.key, q.value, q.quote, problemText);
-    const wordsOnly = IMPLIED.some((r) => r.only && r.keys.test(q.key) && r.value === q.value);
-    if (!inWords && (wordsOnly || !mentions(problemText, q.value))) {
+    if (!inWords && !mentions(problemText, q.value)) {
       issues.push({
         kind: 'notInText',
         key: q.key,

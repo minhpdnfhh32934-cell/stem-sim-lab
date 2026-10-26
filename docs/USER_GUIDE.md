@@ -403,9 +403,10 @@ xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây, đi
   điểm** hay **tụ điện phẳng**. Với điện tích điểm: chọn 1–3 điện tích, nhập điện tích có dấu (µC; đề
   ghi C hay nC thì app tự đổi), vị trí của chúng và điểm M bằng thanh trượt; app vẽ đường sức (mũi tên
   theo chiều E; điểm E = 0 có đường sức đi tới thì được đánh dấu), vectơ E tại M, và tính E, lực lên điện tích thử q₀, lực giữa
-  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox. Một điện tích: M nằm trên Ox. Từ hai điện tích: đề nói M
-  "trên đoạn AB" hay "trung điểm của AB" thì y_M = 0; M nằm ngoài đường AB thì bạn tự nhập tọa độ của M
-  (AI không tự tính tọa độ). Với tụ
+  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox. Một điện tích: M nằm trên Ox. Từ hai điện tích: đề không
+  ghi số cho tọa độ của M (ví dụ chỉ nói "M nằm trên đoạn AB") thì bảng "Tôi hiểu đề như sau" hỏi bạn
+  nhập y_M (thường là 0); AI không tự đặt hay tính tọa độ. Lũy thừa 10 đứng riêng ("q = 10⁻⁸ C") app
+  cũng không đọc thay bạn: bảng hỏi bạn nhập giá trị (viết "1.10⁻⁸ C" thì đọc được). Với tụ
   phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
   "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
   bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.
