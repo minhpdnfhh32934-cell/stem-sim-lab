@@ -1,5 +1,5 @@
 import type { LocalizedText } from '@/core/data/dataset';
-import { DIM, sameDimension, toSI, unitLabel } from '@/core/units';
+import { DIM, getUnit, isKnownUnit, sameDimension, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { WORD_END, WORD_START } from '@/safety/moderation';
@@ -15,7 +15,8 @@ export type IssueKind =
   | 'outOfRange'
   | 'duplicate'
   | 'badChoice'
-  | 'invalidScene';
+  | 'invalidScene'
+  | 'notUsed';
 
 export interface Issue {
   kind: IssueKind;
@@ -39,6 +40,8 @@ export interface Draft {
   clarifications: string[];
   /** Required parameters the problem did not state — the user must fill them in. */
   missing: string[];
+  /** Keys whose value the problem states in words ("bỏ qua ma sát" → μ = 0), not in digits. */
+  fromWords: string[];
   issues: Issue[];
 }
 
@@ -176,6 +179,7 @@ export function buildDraft(
   const written: Draft['written'] = {};
   const issues: Issue[] = [];
   const seen = new Set<string>();
+  const fromWords: string[] = [];
 
   for (const q of extraction.quantities) {
     const def = scene.params.find((d) => d.key === q.key);
@@ -225,7 +229,10 @@ export function buildDraft(
       written[q.key] = { value: q.value, unit: '1', quote: q.quote };
       continue;
     }
-    if (!allowedUnits(scene, q.key).includes(q.unit)) {
+    // A registered alias ("vòng/phút" for rev/min) counts as its canonical symbol: models
+    // without a schema-constrained answer may write it as the problem does.
+    const canonical = isKnownUnit(q.unit) ? getUnit(q.unit).symbol : q.unit;
+    if (!allowedUnits(scene, q.key).includes(canonical)) {
       issues.push({
         kind: 'badUnit',
         key: q.key,
@@ -299,6 +306,7 @@ export function buildDraft(
     params[q.key] = si;
     sources[q.key] = 'problem';
     written[q.key] = { value: q.value, unit: q.unit, quote: q.quote };
+    if (inWords) fromWords.push(q.key);
   }
 
   // Code-side defaults derived from the stated values (never from the AI).
@@ -313,6 +321,7 @@ export function buildDraft(
   for (const m of scene.validate?.(params) ?? []) {
     issues.push({ kind: 'invalidScene', blocking: false, message: m });
   }
+  issues.push(...notUsedIssues(scene, params, sources, fromWords));
 
   return {
     topic: scene.id,
@@ -325,8 +334,34 @@ export function buildDraft(
     unsupported: extraction.unsupported_parts,
     clarifications: extraction.clarifications,
     missing,
+    fromWords,
     issues,
   };
+}
+
+/**
+ * A value the problem states that the chosen setup hides (`when`) is flagged, never ignored
+ * silently. A value read from words only restates a simplification ("bỏ qua ma sát" in an
+ * Atwood machine), so it is not flagged. Recomputed when the learner changes a choice.
+ */
+export function notUsedIssues(
+  scene: PhysicsScene,
+  params: Params,
+  sources: Record<string, ParamSource>,
+  fromWords: readonly string[],
+): Issue[] {
+  return scene.params
+    .filter((def) => sources[def.key] === 'problem' && def.when && !def.when(params))
+    .filter((def) => !fromWords.includes(def.key))
+    .map((def) => ({
+      kind: 'notUsed',
+      key: def.key,
+      blocking: false,
+      message: L(
+        `${def.label.vi}: đề có cho giá trị này nhưng cách bố trí đang chọn không dùng tới — hãy kiểm tra lại.`,
+        `${def.label.en}: the problem states this value but the chosen setup does not use it — please check.`,
+      ),
+    }));
 }
 
 /**

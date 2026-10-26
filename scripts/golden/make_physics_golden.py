@@ -402,6 +402,46 @@ add(
     {"v1x_after": 0.0, "v2x_after": 0.0, "momentum": 0.0},
 )
 
+# --- Chuyển động tròn đều -----------------------------------------------------------
+# mode: 0 = biết v, 1 = biết ω, 2 = biết T, 3 = biết f. ω = v/r = 2π/T = 2πf, a_ht = ω²r, F_ht = m·a_ht.
+add(
+    "ucm-01",
+    "Một vật nhỏ chuyển động tròn đều trên đường tròn bán kính 2 m với tốc độ 4 m/s. Tính tốc độ góc, chu kì và gia tốc hướng tâm của vật.",
+    "uniformCircularMotion",
+    [q("mode", 0, "1", "tốc độ 4 m/s"), q("r", 2, "m", "bán kính 2 m"), q("v", 4, "m/s", "tốc độ 4 m/s")],
+    {"omega": 4 / 2, "period": 2 * math.pi * 2 / 4, "a_c": 4**2 / 2},
+)
+add(
+    "ucm-02",
+    "Một đĩa tròn quay đều với tốc độ 120 vòng/phút. Một điểm trên đĩa cách trục quay 15 cm. Tính tốc độ góc, tốc độ dài và gia tốc hướng tâm của điểm đó.",
+    "uniformCircularMotion",
+    [q("mode", 3, "1", "120 vòng/phút"), q("f", 120, "rev/min", "120 vòng/phút"), q("r", 15, "cm", "15 cm")],
+    {
+        "omega": 2 * math.pi * 120 / 60,
+        "speed": 2 * math.pi * 120 / 60 * 0.15,
+        "a_c": (2 * math.pi * 120 / 60) ** 2 * 0.15,
+    },
+)
+add(
+    "ucm-03",
+    "Một chất điểm chuyển động tròn đều với chu kì 0,5 s trên quỹ đạo bán kính 40 cm. Tính tần số, tốc độ góc và gia tốc hướng tâm của chất điểm.",
+    "uniformCircularMotion",
+    [q("mode", 2, "1", "chu kì 0,5 s"), q("T", 0.5, "s", "chu kì 0,5 s"), q("r", 40, "cm", "bán kính 40 cm")],
+    {"frequency": 1 / 0.5, "omega": 2 * math.pi / 0.5, "a_c": (2 * math.pi / 0.5) ** 2 * 0.4},
+)
+add(
+    "ucm-04",
+    "Một vật khối lượng 200 g gắn ở đầu một sợi dây, quay đều trên mặt bàn nhẵn theo đường tròn bán kính 50 cm với tốc độ góc 6 rad/s. Tính gia tốc hướng tâm và lực hướng tâm tác dụng lên vật.",
+    "uniformCircularMotion",
+    [
+        q("mode", 1, "1", "tốc độ góc 6 rad/s"),
+        q("m", 200, "g", "khối lượng 200 g"),
+        q("r", 50, "cm", "bán kính 50 cm"),
+        q("omega", 6, "rad/s", "tốc độ góc 6 rad/s"),
+    ],
+    {"a_c": 6**2 * 0.5, "force": 0.2 * 6**2 * 0.5},
+)
+
 # --- Ngoài phạm vi ------------------------------------------------------------------
 add(
     "ng-01",
