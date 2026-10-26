@@ -444,3 +444,37 @@ test('Gemini out of free quota → the free Groq fallback answers, and the label
   await expect(dialog.getByRole('textbox', { name: 'Vận tốc ban đầu' })).toHaveValue('15');
   expect(groq.calls).toBe(2);
 });
+
+test('changing "Đề bài cho biết" in the table asks for the new given quantity', async ({
+  page,
+}) => {
+  const ucm = (golden as { items: Item[] }).items.find((i) => i.id === 'ucm-02')!;
+  await mockGemini(page, {
+    classification: {
+      topic: 'uniformCircularMotion',
+      reason: 'chuyển động tròn đều',
+      unsupported_parts: [],
+    },
+    extraction: {
+      // "120 vòng/phút" put into ω is refused (a cycle unit), so the AI's draft keeps "biết v".
+      quantities: [
+        { key: 'r', value: 15, unit: 'cm', quote: '15 cm' },
+        { key: 'omega', value: 120, unit: 'rev/min', quote: '120 vòng/phút' },
+      ],
+      questions: [],
+      assumptions: [],
+      unsupported_parts: [],
+      clarifications: [],
+    },
+  });
+  await typeProblem(page, ucm.text);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', { name: 'Mô phỏng' });
+  await expect(confirm).toBeDisabled();
+  // The learner corrects the mode: f must now be asked for, not taken from its default.
+  await dialog.getByRole('radio', { name: 'Biết tần số f' }).click();
+  await expect(confirm).toBeDisabled();
+  await dialog.getByRole('textbox', { name: 'Tần số (số vòng mỗi giây)' }).fill('2');
+  await expect(confirm).toBeEnabled();
+});

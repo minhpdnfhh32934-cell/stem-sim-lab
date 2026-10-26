@@ -1,5 +1,5 @@
 import type { LocalizedText } from '@/core/data/dataset';
-import { toSI, unitLabel } from '@/core/units';
+import { getUnit, isKnownUnit, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { WORD_END, WORD_START } from '@/safety/moderation';
@@ -225,7 +225,10 @@ export function buildDraft(
       written[q.key] = { value: q.value, unit: '1', quote: q.quote };
       continue;
     }
-    if (!allowedUnits(scene, q.key).includes(q.unit)) {
+    // A registered alias ("vòng/phút" for rev/min) counts as its canonical symbol: models
+    // without a schema-constrained answer may write it as the problem does.
+    const canonical = isKnownUnit(q.unit) ? getUnit(q.unit).symbol : q.unit;
+    if (!allowedUnits(scene, q.key).includes(canonical)) {
       issues.push({
         kind: 'badUnit',
         key: q.key,

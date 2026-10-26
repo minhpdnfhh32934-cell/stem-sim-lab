@@ -36,4 +36,14 @@ describe('allowedUnits: angular and cycle frequencies never mix (#37 §8.2 trap 
     expect(d.issues.filter((x) => x.blocking)).toEqual([]);
     expect(d.params.c).toBe(0.5);
   });
+
+  it('a registered alias counts as its canonical unit (vòng/phút = rev/min), across groups still refused', async () => {
+    const s = await loadScene('uniformCircularMotion');
+    const text = 'Một đĩa quay đều với tốc độ 120 vòng/phút, bán kính 15 cm.';
+    const ok = buildDraft(s, only('f', 120, 'vòng/phút', '120 vòng/phút'), text, 9.81);
+    expect(ok.issues.filter((x) => x.blocking)).toEqual([]);
+    expect(ok.params.f).toBeCloseTo(2, 15);
+    const bad = buildDraft(s, only('omega', 120, 'vòng/phút', '120 vòng/phút'), text, 9.81);
+    expect(bad.issues.some((x) => x.kind === 'badUnit' && x.key === 'omega')).toBe(true);
+  });
 });

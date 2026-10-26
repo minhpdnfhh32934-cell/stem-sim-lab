@@ -199,7 +199,9 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   const [kept, setKept] = useState<Set<string>>(new Set());
 
   const visible = scene.params.filter((d) => !d.when || d.when(params));
-  const missing = draft.missing.filter((k) => {
+  // From the scene, not the frozen draft list: a choice changed here (e.g. "Biết tần số f")
+  // can reveal a required value the problem did not give. Manual mode has no problem text.
+  const missing = (mode === 'ai' ? scene.required : draft.missing).filter((k) => {
     const def = scene.params.find((d) => d.key === k);
     if (def?.when && !def.when(params)) return false;
     return sources[k] === 'default' && !kept.has(k);
