@@ -52,6 +52,13 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# Same as ci.yml (PR #84): onnxruntime-node (pulled in by @huggingface/transformers) downloads its
+# CUDA libraries from NuGet during `npm ci` on Linux x64, and that download times out now and then.
+# Nothing here needs them: the app runs Gemma with onnxruntime-web, and on Windows nothing is
+# downloaded anyway (the package already carries its CPU binaries).
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
+
 jobs:
   check:
     name: Tests before packaging
