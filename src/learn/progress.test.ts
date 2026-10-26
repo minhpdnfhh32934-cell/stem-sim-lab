@@ -49,6 +49,14 @@ describe('progress and badges', () => {
     });
   });
 
+  it('a prediction made in Science Studio does not mark an unopened topic learned', () => {
+    // The studio records freeFall.h0 without opening the lab topic (PhysicsSteps).
+    const p = { ...empty, predictions: { 'freeFall.h0': true } };
+    expect(topicStatus('freeFall', p).state).toBe('new');
+    const kin = CATALOG.physics.find((c) => c.id === 'kinematics');
+    expect(kin && chapterProgress(kin.topics, p)).toEqual({ done: 0, total: 5 });
+  });
+
   it('a chapter counts its opened topics', () => {
     const kin = CATALOG.physics.find((c) => c.id === 'kinematics');
     const p = { ...empty, visited: { freeFall: true, horizontalProjectile: true } as const };

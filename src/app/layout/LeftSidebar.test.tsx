@@ -22,7 +22,8 @@ describe('library marks: learned, steps left, complete', () => {
     expect(freeFall).toHaveAccessibleDescription(
       'Đã học — xong 1/3 bước, còn: Dự đoán trước, 1 thử thách',
     );
-    expect(freeFall).toHaveTextContent('1/3');
+    // The visible count itself (the hidden description also contains "1/3").
+    expect(freeFall.querySelector('.tree__steps')).toHaveTextContent('1/3');
     // The same text on hover and keyboard focus of the whole row.
     expect(freeFall).toHaveAttribute(
       'data-tip',
@@ -63,7 +64,7 @@ describe('library marks: learned, steps left, complete', () => {
     render(<LeftSidebar />);
     const freeFall = screen.getByRole('button', { name: 'Rơi tự do' });
     expect(freeFall).toHaveAccessibleDescription('Đã hoàn thành chủ đề');
-    expect(freeFall).not.toHaveTextContent('1/3');
+    expect(freeFall.querySelector('.tree__steps')).toBeNull();
     expect(freeFall.querySelector('.tree__mark')).toHaveAttribute('data-state', 'complete');
   });
 });

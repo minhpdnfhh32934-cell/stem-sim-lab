@@ -63,3 +63,15 @@
 - Đề xuất riêng (cần người dùng đồng ý vì là cấu hình công cụ): thêm `.claude/worktrees` vào
   `.prettierignore` và `ignores` của eslint để `npm run check` chạy được trên máy có worktree.
 - Kế tiếp: (i1) #69.
+
+## 26/10/2026 chiều — sửa theo so sánh mù (#79 được giữ, #78 đóng)
+
+- `LeftSidebar.test.tsx`: kiểm thẳng phần tử `.tree__steps` (mô tả ẩn cũng chứa "1/3" nên kiểm cả nút là
+  test rỗng); trạng thái "Hoàn thành" thì không có `.tree__steps`.
+- `progress.test.ts`: dự đoán làm trong Science Studio mà chưa mở chủ đề → `topicStatus` vẫn `new`,
+  chương Động học 0/5 (Studio ghi `freeFall.h0` mà không gọi `markVisited`).
+- Số trên chương có thêm `data-tip` (người dùng chuột đọc được "x/y chủ đề đã học"); E2E kiểm nhãn "1/5".
+- Sửa hai chú thích E2E cũ (`mitosis3d.spec.ts`, `studio-biology.spec.ts`): trạng thái là mô tả, không
+  nằm trong tên nút.
+- Chạy: unit `progress` + `LeftSidebar` PASS (9); ESLint, typecheck, Prettier PASS; E2E `learner.spec.ts`
+  (chromium) PASS 6/6.

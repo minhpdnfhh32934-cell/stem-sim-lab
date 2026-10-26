@@ -145,6 +145,7 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await expect(topic).toHaveAccessibleDescription(
     'Đã học — xong 1/3 bước, còn: Dự đoán trước, 1 thử thách',
   );
+  await expect(library.getByLabel('1/5 chủ đề đã học')).toHaveText('1/5');
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
   // Predict – observe – explain: the right answer is computed by the engine. Doubling v₀ leaves

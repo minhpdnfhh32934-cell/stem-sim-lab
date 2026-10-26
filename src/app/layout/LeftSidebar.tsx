@@ -308,6 +308,7 @@ function ChapterNode({
           <span
             className="tree__count tree__count--progress"
             aria-label={t('learn.chapterLearned', chapterDone)}
+            data-tip={t('learn.chapterLearned', chapterDone)}
           >
             {chapterDone.done}/{chapterDone.total}
           </span>
