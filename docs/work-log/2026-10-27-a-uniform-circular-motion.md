@@ -3,8 +3,7 @@
 - **Goal:** VL10 Bài 31–32 as a physics topic, plus the two shared pieces the next physics
   lessons reuse: unit groups (rad/s vs Hz, vòng/s, vòng/phút) and `tests/e2e/physics.spec.ts`.
 - **Date/time:** 2026-10-26, 18:40–20:15 +07:00 (machine A)
-- **Status:** PASS for unit tests, golden, lint, typecheck, Prettier, physics E2E; full E2E run
-  result in "Tests" below
+- **Status:** PASS (one timing-budget unit test fails only under machine load, see below)
 - **Branch / base:** `feat/74-uniform-circular-motion`, merged `origin/main` 70b5b7c (PR #82)
 
 ## Files
@@ -51,7 +50,8 @@
 
 ## Tests
 
-- Full `npx playwright test`: see the PR description (run started 19:45 under the E2E lock).
+- Full `npx playwright test` (19:45–19:55, under the E2E lock): 125 passed (9.2 min), all three
+  projects.
 
 ## Next steps and limits
 
