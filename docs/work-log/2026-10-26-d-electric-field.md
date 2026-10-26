@@ -190,3 +190,17 @@ SimLab topic (`docs/CURRICULUM_KNTT.md`, pending teacher review).
   `dogma3d/scene.perf.test.ts` 150 ms budget); both files alone → 17/17 passed.
 - E2E `physics.spec` + `layout.spec` + `ai-flow.spec` (chromium, shared lock, after waiting for
   the coordinator's run) → 38 passed. **Status: PASS.**
+
+## 2026-10-27 — PR #89 third review (2 red, number filter)
+
+- Review: PR comment 6427966314. Changed approach after three rounds: allow-list instead of a
+  list of bad joins. A lone power of ten is read only after the start, "=", "≈", ":" or an
+  ordinary word (NFKC, lower case; not lần/nhân/với/times/by/of/của, not a LaTeX command; one
+  sign allowed), and only before the end, a unit or a word; exponents are whole numbers.
+  Infinite or underflowed readings are dropped; `same` never matches Infinity.
+- Test against a frozen copy of main's reader (`src/ai/numbersMain.fixture.ts`): grid of
+  5 prefixes × 8 mantissas × 22 joins × 5 power forms × 3 exponents × 4 suffixes; nothing main
+  refuses is accepted except a power standing alone. Before the fix it listed 32 526 sentences.
+- Results: `src/ai tests/golden src/app/ai` → 492 passed (no golden problem refused); `npx tsc`
+  → clean; full `npx vitest run` → 4334 passed, 1 skipped; eslint → one `no-misused-spread` in
+  the new test, fixed, `npx eslint src/ai` clean; E2E physics + layout + ai-flow (lock) → 38 passed.

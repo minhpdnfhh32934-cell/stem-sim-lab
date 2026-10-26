@@ -165,7 +165,7 @@ describe('third review of #89: allow-list for a lone power of ten', () => {
 
   it('is never laxer than main: every sentence main refuses is refused, except lone powers', () => {
     const sup: Record<string, string> = { '-': '⁻', '0': '⁰', '2': '²', '3': '³', '8': '⁸' };
-    const supOf = (e: number) => [...String(e)].map((c) => sup[c] ?? c).join('');
+    const supOf = (e: number) => String(e).replace(/[-0-9]/g, (c) => sup[c] ?? c);
     const prefixes = ['q = ', 'Điện tích ', '', 'Câu 1: ', 'tăng 2 lần, '];
     const mantissas = ['', '2', '2,5', '(2,5)', '.5', '½', '２', '1.200.000'];
     const joins = [
