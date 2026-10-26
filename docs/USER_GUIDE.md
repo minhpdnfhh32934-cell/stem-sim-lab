@@ -269,9 +269,11 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
   máy đặt "giảm chuyển động").
 - **Gợi ý từng bước**: khi bạn nhập đề bài, thẻ **Lời giải** ẩn đáp số để bạn tự giải trước: bấm
   **Gợi ý 1**, **Gợi ý 2**… đến **Lời giải đầy đủ**, hoặc **Xem lời giải ngay** để đối chiếu.
-- **Tiến độ và huy hiệu**: chủ đề hoàn thành (đã mở, đã dự đoán, đã làm thử thách) có dấu ✓ trong
-  Thư viện, mỗi chương có số "đã xong/tổng". Huy hiệu hiện ở trang chủ. Không có chuỗi ngày hay
-  bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
+- **Tiến độ và huy hiệu**: mở một chủ đề (môn nào cũng vậy) là có dấu ✓ **Đã học** trong Thư viện.
+  Chủ đề Vật lí còn việc thì có thêm số nhỏ như "1/3" (di chuột vào để xem còn Dự đoán trước hay
+  thử thách nào); làm xong hết (đã mở, đã dự đoán, đã làm mọi thử thách) thì dấu ✓ đổi thành biểu
+  tượng **Hoàn thành**. Mỗi chương có số "đã học/tổng". Huy hiệu hiện ở trang chủ. Không có chuỗi
+  ngày hay bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
 - **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
   hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
 
@@ -372,8 +374,9 @@ xo, con lắc đơn.
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
   (và tua nhanh cho bài toán tính bằng giờ).
-- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
-  đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
+  để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
+  **Số liệu** (bảng giá trị, nút Xuất CSV).
 
 ## Đọc đề bằng AI
 

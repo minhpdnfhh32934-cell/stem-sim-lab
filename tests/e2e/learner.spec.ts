@@ -138,7 +138,17 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
 }) => {
   await openLab(page);
   // Ném ngang: its prediction lives in the lab (Rơi tự do's is a Science Studio lesson).
-  await page.getByRole('button', { name: 'Ném ngang', exact: true }).click();
+  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
+  const topic = library.getByRole('button', { name: 'Ném ngang', exact: true });
+  await topic.click();
+  // Opened → "Đã học" at once, in every subject; physics adds the steps still to do.
+  await expect(topic).toHaveAccessibleDescription(
+    'Đã học — xong 1/3 bước, còn: Dự đoán trước, 1 thử thách',
+  );
+  await expect(library.getByLabel('1/5 chủ đề đã học')).toHaveText('1/5');
+  // The visible tick and step count, not only the hidden description.
+  await expect(library.locator('.tree__mark[data-state="opened"] svg')).toHaveCount(1);
+  await expect(topic.locator('.tree__steps')).toHaveText('1/3');
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
   // Predict – observe – explain: the right answer is computed by the engine. Doubling v₀ leaves
@@ -162,9 +172,9 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');
   await expect(challenge).toContainText('Đã hoàn thành');
 
-  // Topic complete (opened + predicted + challenge) → check in the library; badges on home.
-  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
-  await expect(library.getByLabel('Đã hoàn thành chủ đề')).toHaveCount(1);
+  // Topic complete (opened + predicted + challenge) → "Hoàn thành" mark; badges on home.
+  await expect(topic).toHaveAccessibleDescription('Đã hoàn thành chủ đề');
+  await expect(library.locator('.tree__mark[data-state="complete"]')).toHaveCount(1);
   // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
   await expect(page.getByRole('button', { name: /AI Teacher/ }).first()).toBeVisible();
