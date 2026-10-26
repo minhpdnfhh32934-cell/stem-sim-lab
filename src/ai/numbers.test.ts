@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mentions, numbersIn, numberTokens, writtenSign } from './numbers';
+import { mentions as mainMentions } from './numbersMain.fixture';
 
 describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
   it('reads a power of ten written on its own', () => {
@@ -103,8 +104,11 @@ describe('a power of ten never stands for a mantissa it could not read (re-revie
     expect(mentions('q = 10^-8 C', 1e-8)).toBe(true);
     expect(mentions('q2 = 10^-8 C', 1e-8)).toBe(true);
     expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
-    // A list of powers: the previous exponent is no mantissa.
-    expect(mentions('Ba điện tích 10⁻⁸, 10⁻⁹ và 10⁻¹⁰ C.', 1e-9)).toBe(true);
+    // A list: only the power after the word "và" stands alone; "10⁻⁸, 10⁻⁹" could be a mantissa
+    // and its power, so they are refused (unsure means refused, §2.1).
+    const list = 'Ba điện tích 10⁻⁸, 10⁻⁹ và 10⁻¹⁰ C.';
+    expect(mentions(list, 1e-10)).toBe(true);
+    expect(mentions(list, 1e-9)).toBe(false);
   });
 
   it('never reads 10^0 as 1 (degrees typed with a caret)', () => {
@@ -112,6 +116,110 @@ describe('a power of ten never stands for a mantissa it could not read (re-revie
       expect(mentions(text, 1), text).toBe(false);
       expect(mentions(text, 10), text).toBe(true);
     }
+  });
+});
+
+describe('third review of #89: allow-list for a lone power of ten', () => {
+  it('never reads an infinite number (every value would then be "in the problem")', () => {
+    for (const text of ['q = 2·10^400 C, AB = 6 cm', 'q = 10^309 C', 'E = 9·10⁹¹²³']) {
+      for (const v of [7, 123.456, 42, 5]) expect(mentions(text, v), `${text} ${v}`).toBe(false);
+    }
+  });
+
+  it('refuses the review examples: unknown joins, look-alike x, odd mantissas, trailing ones', () => {
+    const texts = [
+      'q = 2 LẦN 10⁻⁸ C',
+      'q = 2 Lần 10⁻⁸ C',
+      'q = 2 nhân 10⁻⁸ C',
+      'q = 2 nhân với 10⁻⁸ C',
+      'a charge of 2 times 10^-8 C',
+      'q = 2&times;10^-8 C',
+      'q = 2 \\text{ times } 10^{-8} C',
+      'q = 2Х10^-8 C',
+      'q = 2ｘ10^-8 C',
+      'q = 2χ10^-8 C',
+      'q = 2ˣ10^-8 C',
+      'q = 2ⅹ10^-8 C',
+      'q = ½·10⁻⁸ C',
+      'q = ２×10⁻⁸ C',
+      'q = ②·10⁻⁸ C',
+      'q = .5 x (10^-8) C',
+      'q = 1.200.000 lần 10^-8 C',
+      'q = 10⁻⁸·2 C',
+      'q = 10^-8 × 2,5 C',
+    ];
+    for (const text of texts) expect(mentions(text, 1e-8), text).toBe(false);
+    // A decimal exponent is no power of ten the reader knows.
+    expect(mentions('q = 10^-8,5 C', 1e-8)).toBe(false);
+    expect(mentions('q = 10^2,5 C', 100)).toBe(false);
+  });
+
+  it('reads a lone power after the start, "=", "≈", ":" or an ordinary word', () => {
+    expect(mentions('10^-8 C là điện tích của q.', 1e-8)).toBe(true);
+    expect(mentions('q ≈ 10⁻⁸ C', 1e-8)).toBe(true);
+    expect(mentions('Câu 1: 10^-8 C', 1e-8)).toBe(true);
+    expect(mentions('Điện tích 10⁻⁸ C đặt tại A.', 1e-8)).toBe(true);
+    expect(mentions('AB = 3 cm, q = 10⁻⁸ C', 1e-8)).toBe(true);
+    expect(mentions('q = (10^-8) C', 1e-8)).toBe(true);
+  });
+
+  it('is never laxer than main: every sentence main refuses is refused, except lone powers', () => {
+    const sup: Record<string, string> = { '-': '⁻', '0': '⁰', '2': '²', '3': '³', '8': '⁸' };
+    const supOf = (e: number) => [...String(e)].map((c) => sup[c] ?? c).join('');
+    const prefixes = ['q = ', 'Điện tích ', '', 'Câu 1: ', 'tăng 2 lần, '];
+    const mantissas = ['', '2', '2,5', '(2,5)', '.5', '½', '２', '1.200.000'];
+    const joins = [
+      '',
+      ' ',
+      '.',
+      '×',
+      'x',
+      'X',
+      '*',
+      '·',
+      '⋅',
+      '•',
+      '´',
+      ' lần ',
+      ' LẦN ',
+      ' nhân ',
+      ' nhân với ',
+      ' times ',
+      '&times;',
+      'Х',
+      'ｘ',
+      'χ',
+      ' \\cdot ',
+      '{\\cdot}',
+    ];
+    const powers = (e: number) => [
+      `10^${e}`,
+      `10^(${e})`,
+      `(10^${e})`,
+      `10^{${e}}`,
+      `10${supOf(e)}`,
+    ];
+    const suffixes = [' C', '·2 C', ' × 2,5 C', ',5 C'];
+    const laxer: string[] = [];
+    for (const e of [-8, 3, 2]) {
+      for (const pre of prefixes) {
+        for (const m of mantissas) {
+          for (const j of joins) {
+            for (const pow of powers(e)) {
+              for (const suf of suffixes) {
+                const text = `${pre}${m}${j}${pow}${suf}`;
+                if (!mentions(text, 10 ** e) || mainMentions(text, 10 ** e)) continue;
+                // Opened on purpose: a power standing alone (nothing before it on its side of
+                // the "=", ":" or word, nothing joined after it) is now read; main could not.
+                const alone = m === '' && j.trim() === '' && suf === ' C';
+                if (!alone) laxer.push(text);
+              }
+            }
+          }
+        }
+      }
+    }
+    expect(laxer).toEqual([]);
   });
 });
 

@@ -107,6 +107,10 @@ const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
       'm là trung điểm của ab',
       'm là trung điểm của đoạn ab',
       'm là trung điểm ab',
+      'm nằm giữa a và b',
+      'trung điểm m của ab',
+      'trung điểm m của đoạn ab',
+      'm thuộc đoạn thẳng ab',
     ],
   },
 ];

@@ -57,18 +57,49 @@ function readings(token: string): number[] {
 }
 
 /** Scientific notation: a × 10^b, with the multiplication signs of typed, pasted and LaTeX text. */
+// An exponent is a whole number: "10^-8,5" is no power of ten this reader knows.
 const SCI =
-  /(\d+(?:[.,]\d+)?)\s*(?:[.×xX*·⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^?\s*[({]?\s*(-?\d+)\s*[)}]?/g;
+  /(\d+(?:[.,]\d+)?)\s*(?:[.×xX*·⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^?\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
 /** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
-const POW = /(?<![\d.,])10\s*\^\s*[({]?\s*(-?\d+)\s*[)}]?/g;
+const POW = /(?<![\d.,])10\s*\^\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
+/** Words that join a mantissa to a power ("2 lần 10⁻⁸", "2 times 10^-8"): never a lone power. */
+const TIMES_WORDS = new Set(['lần', 'nhân', 'với', 'times', 'by', 'of', 'của']);
+
 /**
- * Anything like a mantissa before a power of ten — a number (not a name such as "q2", not the
- * exponent of an earlier power) followed only by signs, brackets, spaces, "x"/"lần" or LaTeX
- * commands ("2.(10^-8)", "(2,5)·10⁻⁸", "2{\cdot}10^{-8}"). The power then is never read alone:
- * that would accept 10⁻⁸ for a problem that says 2·10⁻⁸. Unsure means refused (§2.1).
+ * Allow-list (third review of #89): a power of ten is read on its own only right after the start
+ * of the text, "=", "≈", ":" or an ordinary word of two letters or more (spaces and opening brackets
+ * skipped), and only when what follows it is the end, a unit or a word — never a multiplication or
+ * a number. Anything else ("2 LẦN 10⁻⁸", "½·10⁻⁸", "10⁻⁸·2", "10⁻⁸, 10⁻⁹") may be a mantissa the
+ * reader does not understand: the power is refused, the learner enters the value (§2.1).
  */
-const MANTISSA_BEFORE =
-  /(?<![\p{L}_\d.,^])(?<!\^-)\d+(?:[.,]\d+)?(?:[^\p{L}\p{N}]|[xX]|lần|\\[a-z]+)*$/u;
+function standsAlone(before: string, after: string): boolean {
+  // One sign may stand right before the power ("q = −10⁻⁸"); "2 − 10⁻⁸" still ends in a number.
+  const b = before
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[\s([{]+$/u, '')
+    .replace(/[-+]$/u, '')
+    .replace(/[\s([{]+$/u, '');
+  // A LaTeX command (\cdot, \times) is no ordinary word.
+  const word = /(?<![\p{L}\p{N}_\\])\p{L}+$/u.exec(b)?.[0];
+  const startOk =
+    b === '' ||
+    /[=≈:]$/u.test(b) ||
+    (word !== undefined && word.length >= 2 && !TIMES_WORDS.has(word));
+  const a = after
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/^[\s)\]}]+/u, '');
+  const next = /^\p{L}+/u.exec(a)?.[0];
+  const endOk =
+    a === '' ||
+    /^[,;.!?](?!\s*[\p{N}(])/u.test(a) ||
+    (next !== undefined && !TIMES_WORDS.has(next) && !/^\p{L}\s*[\p{N}(]/u.test(a));
+  return startOk && endOk;
+}
+
+/** A reading a problem can state: finite, and not a power of ten that underflowed to 0. */
+const usable = (v: number) => Number.isFinite(v) && v !== 0;
 // A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
 const PLAIN = /\d+(?:[.,\s]\d{3}(?!\d))*(?:[.,]\d+)?|\d+/g;
 
@@ -87,7 +118,10 @@ function scan(t: string, keepInner = false): Token[] {
   const tokens: Token[] = [];
   const inside = (s: number, e: number) => tokens.some((k) => s >= k.start && e <= k.end);
   for (const m of t.matchAll(SCI)) {
-    const sci = readings(m[1] ?? '').map((r) => r * 10 ** Number(m[2]));
+    // "2·10^400" is Infinity, which `same` would match with every value: such readings are dropped.
+    const sci = readings(m[1] ?? '')
+      .map((r) => r * 10 ** Number(m[2]))
+      .filter(usable);
     // "1.106" may be 1·10^6 or a plain decimal: digits and separators alone keep both readings.
     const written = m[0].trim();
     const all = /^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci;
@@ -95,11 +129,17 @@ function scan(t: string, keepInner = false): Token[] {
   }
   for (const m of t.matchAll(POW)) {
     const end = m.index + m[0].length;
+    const value = 10 ** Number(m[1]);
     // 10^0 is never read as 1: "10^0" after a number is a degree typed with a caret.
-    if (inside(m.index, end) || Number(m[1]) === 0 || MANTISSA_BEFORE.test(t.slice(0, m.index))) {
+    if (
+      inside(m.index, end) ||
+      Number(m[1]) === 0 ||
+      !usable(value) ||
+      !standsAlone(t.slice(0, m.index), t.slice(end))
+    ) {
       continue;
     }
-    tokens.push({ start: m.index, end, readings: [10 ** Number(m[1])] });
+    tokens.push({ start: m.index, end, readings: [value] });
   }
   const outer = tokens.length;
   for (const m of t.matchAll(PLAIN)) {
@@ -128,7 +168,11 @@ export function numbersIn(text: string): number[] {
 }
 
 /** Equal up to floating-point noise: relative, so 5·10⁻¹⁰ and 7·10⁻¹⁰ differ (an absolute 1e-9 did not). */
-const same = (a: number, b: number) => Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math.abs(b));
+const same = (a: number, b: number) =>
+  // Never Infinity: Infinity ≤ 1e-9·Infinity would make every value "in the problem".
+  Number.isFinite(a) &&
+  Number.isFinite(b) &&
+  Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math.abs(b));
 
 /** True when |value| (as written in the problem's unit) appears in the text. */
 export function mentions(text: string, value: number): boolean {

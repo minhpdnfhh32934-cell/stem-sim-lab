@@ -108,11 +108,15 @@ số thập phân nhỏ ("0,000719" trước đây bị tách thành "0,000" và
 nên `src/ai/draft.ts` kiểm thêm **dấu của điện tích**: dấu AI đưa ra khác dấu trong đề (dấu "−" sát
 số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái dấu"), thì bảng "Tôi hiểu đề
 như sau" hiện cảnh báo ngay ở dòng điện tích đó; cảnh báo còn cho tới khi dấu người học đặt khớp với
-đề (đề để ngỏ dấu thì người học tự đặt lại là đủ). Bộ lọc không bao giờ lỏng hơn trước: lũy thừa 10
-có bất cứ thứ gì giống một hệ số đứng trước (một con số rồi chỉ có dấu, ngoặc, dấu cách, "x", "lần"
-hay lệnh LaTeX, như "2.(10⁻⁸)", "(2,5)·10⁻⁸", "2{\cdot}10⁻⁸") không bao giờ được đọc như một số riêng;
-không chắc thì chặn để người học tự nhập. "10⁰", "10^0" không bao giờ được đọc là 1 (thường là "10
-độ"). Có test lưới mọi cách nối × mọi dạng lũy thừa (`numbers.test.ts`) và `draft.test.ts`.
+đề (đề để ngỏ dấu thì người học tự đặt lại là đủ). Bộ lọc không bao giờ lỏng hơn trước. Một lũy
+thừa 10 chỉ được đọc như một số riêng theo **danh sách cho phép**: ngay trước nó là đầu văn bản, "=",
+"≈", ":" hoặc một từ thường (không phải "lần", "nhân", "times"…), và ngay sau nó là hết câu, đơn vị
+hay một từ, không phải phép nhân hay một con số. Mọi cách viết khác ("2 LẦN 10⁻⁸", "½·10⁻⁸",
+"10⁻⁸·2", "10⁻⁸, 10⁻⁹") đều bị chặn để người học tự nhập. Số mũ phải là số nguyên ("10^-8,5" không
+được đọc); số quá lớn hay quá nhỏ so với máy tính (như 10⁴⁰⁰) bị bỏ, không được coi là "có trong đề";
+"10⁰", "10^0" không bao giờ được đọc là 1 (thường là "10 độ"). Test so sánh với bản trên `main`
+(`numbersMain.fixture.ts`) trên lưới hệ số × cách nối × dạng lũy thừa × số mũ × vị trí: câu nào `main`
+chặn thì bản mới cũng chặn, trừ đúng trường hợp lũy thừa đứng riêng (`numbers.test.ts`).
 
 **Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
 số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn

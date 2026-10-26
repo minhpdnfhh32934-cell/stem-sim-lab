@@ -221,6 +221,14 @@ describe('point M on the line AB (electric field)', () => {
     const bisector = 'Điểm M nằm trên đường trung trực của AB, cách trung điểm của AB 4 cm.';
     expect(impliedByWords('yP', 0, 'trung điểm của AB', bisector)).toBe(false);
     expect(impliedByWords('yP', 0, 'M nằm trên đường trung trực của AB', bisector)).toBe(false);
+    // Common ways of putting M on AB.
+    for (const [quote, text] of [
+      ['M nằm giữa A và B', 'Điểm M nằm giữa A và B, cách A 2 cm.'],
+      ['trung điểm M của AB', 'Tính E tại trung điểm M của AB.'],
+      ['M thuộc đoạn thẳng AB', 'Điểm M thuộc đoạn thẳng AB, cách B 3 cm.'],
+    ] as const) {
+      expect(impliedByWords('yP', 0, quote, text), quote).toBe(true);
+    }
     const other = 'Gọi O là trung điểm của AB. Điểm M cách O 5 cm.';
     expect(impliedByWords('yP', 0, 'O là trung điểm của AB', other)).toBe(false);
     // Another key never takes the rule.
