@@ -51,6 +51,13 @@ describe('predict – observe – explain', () => {
     const wd = (mm: number) => Math.sqrt(k / mm - (b / (2 * mm)) ** 2);
     expect(hk.out.after / hk.out.before).toBeCloseTo(wd(m) / wd(4 * m), 9);
     expect(hk.out.after / hk.out.before).toBeCloseTo(2, 4);
+    // Standing wave, v from F and μ (the POE's start): F × 4 → v × 2 → f × 2.
+    const sw = POES.find((x) => x.id === 'standingWave.tension');
+    if (!sw) throw new Error('standingWave.tension');
+    const sws = await loadScene(sw.topic);
+    const swo = observe(sws, sw, { ...sws.defaults, ...sw.start });
+    expect(swo && swo.after / swo.before).toBeCloseTo(2, 9);
+    expect(swo && sw.choices[swo.correct]).toEqual({ kind: 'ratio', ratio: 2 });
     expect(hk.poe.choices[hk.out.correct]).toEqual({ kind: 'ratio', ratio: 2 });
     const ob = await pick('obliqueProjectile.m');
     expect(ob.poe.choices[ob.out.correct]).toEqual({ kind: 'ratio', ratio: 1 });

@@ -32,7 +32,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
 | Vật lí 10 | 34 | 26 | 16 |
-| Vật lí 11 | 26 | 20 | 5 |
+| Vật lí 11 | 26 | 20 | 6 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
 | Hoá học 11 | 25 | 19 | 1 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 5 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 6 |
-| **Cộng** | **253** | **189** | **38** |
+| **Cộng** | **253** | **189** | **39** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -77,7 +77,7 @@ Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của k
 | Vật lí 11 | Chương I. Dao động | 3 | Vận tốc, gia tốc trong dao động điều hoà | 14 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 5 | Động năng. Thế năng. Sự chuyển hoá năng lượng trong dao động điều hoà | 20 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 6 | Dao động tắt dần. Dao động cưỡng bức. Hiện tượng cộng hưởng | 24 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
-| Vật lí 11 | Chương II. Sóng | 13 | Sóng dừng | 52 | Lí thuyết | chưa có — kế hoạch (b) Sóng dừng trên dây | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
+| Vật lí 11 | Chương II. Sóng | 13 | Sóng dừng | 52 | Lí thuyết | Sóng dừng trên dây | Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định). | pending |
 | Vật lí 11 | Chương III. Điện trường | 16 | Lực tương tác giữa các điện tích | 61 | Lí thuyết | chưa có — kế hoạch (d) Điện trường | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
 | Vật lí 11 | Chương III. Điện trường | 17 | Khái niệm điện trường | 65 | Lí thuyết | chưa có — kế hoạch (d) Điện trường | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
 | Vật lí 11 | Chương III. Điện trường | 18 | Điện trường đều | 71 | Lí thuyết | chưa có — kế hoạch (d) Điện trường | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |

@@ -21,6 +21,7 @@ const TOPICS: readonly (readonly [string, string])[] = [
   ['Con lắc lò xo', 'Con lắc lò xo'],
   ['Con lắc đơn', 'Con lắc đơn'],
   ['Chuyển động tròn đều', 'Chuyển động tròn đều'],
+  ['Sóng dừng trên dây', 'Sóng dừng trên dây'],
 ];
 
 async function openPhysicsLibrary(page: Page) {

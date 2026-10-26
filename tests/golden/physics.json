@@ -1204,6 +1204,155 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "swv-01",
+      "text": "Một sợi dây đàn hồi dài 1,5 m có hai đầu cố định. Sóng truyền trên dây với tốc độ 30 m/s. Khi trên dây có sóng dừng với 5 bụng sóng thì tần số dao động của dây là bao nhiêu? Tính bước sóng.",
+      "topic": "standingWave",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 0,
+          "unit": "1",
+          "quote": "tần số dao động của dây là bao nhiêu"
+        },
+        {
+          "key": "L",
+          "value": 1.5,
+          "unit": "m",
+          "quote": "dài 1,5 m"
+        },
+        {
+          "key": "v",
+          "value": 30,
+          "unit": "m/s",
+          "quote": "tốc độ 30 m/s"
+        },
+        {
+          "key": "n",
+          "value": 5,
+          "unit": "1",
+          "quote": "5 bụng sóng"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "frequency": 50.0,
+        "wavelength": 0.6,
+        "nodes": 6
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "swv-02",
+      "text": "Một sợi dây dài 80 cm, hai đầu cố định, được rung với tần số 100 Hz thì trên dây có sóng dừng với 4 bó sóng. Tính bước sóng và tốc độ truyền sóng trên dây.",
+      "topic": "standingWave",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 1,
+          "unit": "1",
+          "quote": "tốc độ truyền sóng trên dây"
+        },
+        {
+          "key": "L",
+          "value": 80,
+          "unit": "cm",
+          "quote": "dài 80 cm"
+        },
+        {
+          "key": "f",
+          "value": 100,
+          "unit": "Hz",
+          "quote": "tần số 100 Hz"
+        },
+        {
+          "key": "n",
+          "value": 4,
+          "unit": "1",
+          "quote": "4 bó sóng"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "wavelength": 0.4,
+        "speed": 40.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "swv-03",
+      "text": "Một sợi dây dài 1 m, hai đầu cố định, có mật độ dài 2 g/m và được căng bởi lực 3,2 N. Cho dây dao động với tần số 60 Hz. Tính tốc độ truyền sóng trên dây và số bó sóng quan sát được.",
+      "topic": "standingWave",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 2,
+          "unit": "1",
+          "quote": "số bó sóng"
+        },
+        {
+          "key": "vFrom",
+          "value": 1,
+          "unit": "1",
+          "quote": "được căng bởi lực 3,2 N"
+        },
+        {
+          "key": "L",
+          "value": 1,
+          "unit": "m",
+          "quote": "dài 1 m"
+        },
+        {
+          "key": "muL",
+          "value": 2,
+          "unit": "g/m",
+          "quote": "mật độ dài 2 g/m"
+        },
+        {
+          "key": "tension",
+          "value": 3.2,
+          "unit": "N",
+          "quote": "lực 3,2 N"
+        },
+        {
+          "key": "f",
+          "value": 60,
+          "unit": "Hz",
+          "quote": "tần số 60 Hz"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "speed": 40.0,
+        "harmonic": 3.0,
+        "wavelength": 0.6666666666666666
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "swv-04",
+      "text": "Một sợi dây đàn hồi dài 1,2 m treo thẳng đứng, đầu trên cố định, đầu dưới tự do. Sóng truyền trên dây với tốc độ 24 m/s. Tính tần số nhỏ nhất để trên dây có sóng dừng.",
+      "topic": "standingWave",
+      "quantities": [
+        {
+          "key": "L",
+          "value": 1.2,
+          "unit": "m",
+          "quote": "dài 1,2 m"
+        },
+        {
+          "key": "v",
+          "value": 24,
+          "unit": "m/s",
+          "quote": "tốc độ 24 m/s"
+        }
+      ],
+      "missing": [
+        "n"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": true
+    },
+    {
       "id": "ng-01",
       "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
       "topic": "unsupported",

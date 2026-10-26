@@ -87,6 +87,7 @@ const en: Messages = {
     cellPhysiology: 'Cell physiology',
     cellStructure: 'Cell structure',
     circularMotion: 'Uniform circular motion',
+    waves: 'Waves',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -127,6 +128,7 @@ const en: Messages = {
     diffusionOsmosis: 'Diffusion & osmosis',
     cellStructure: 'Prokaryotic and eukaryotic cells',
     uniformCircularMotion: 'Uniform circular motion',
+    standingWave: 'Standing waves on a string',
   },
   stage: {
     regionLabel: 'Simulation stage',

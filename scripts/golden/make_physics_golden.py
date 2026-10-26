@@ -442,6 +442,62 @@ add(
     {"a_c": 6**2 * 0.5, "force": 0.2 * 6**2 * 0.5},
 )
 
+# --- Sóng dừng trên dây ------------------------------------------------------------
+# Hai đầu cố định: L = n·λ/2, f_n = n·v/(2L), λ = v/f, v = √(F/μ).
+# mode: 0 = tìm f (biết L, v, n), 1 = tìm v (biết L, f, n), 2 = tìm n (biết L, f, v); vFrom 1 = v từ F, μ.
+add(
+    "swv-01",
+    "Một sợi dây đàn hồi dài 1,5 m có hai đầu cố định. Sóng truyền trên dây với tốc độ 30 m/s. Khi trên dây có sóng dừng với 5 bụng sóng thì tần số dao động của dây là bao nhiêu? Tính bước sóng.",
+    "standingWave",
+    [
+        q("mode", 0, "1", "tần số dao động của dây là bao nhiêu"),
+        q("L", 1.5, "m", "dài 1,5 m"),
+        q("v", 30, "m/s", "tốc độ 30 m/s"),
+        q("n", 5, "1", "5 bụng sóng"),
+    ],
+    {"frequency": 5 * 30 / (2 * 1.5), "wavelength": 2 * 1.5 / 5, "nodes": 5 + 1},
+)
+add(
+    "swv-02",
+    "Một sợi dây dài 80 cm, hai đầu cố định, được rung với tần số 100 Hz thì trên dây có sóng dừng với 4 bó sóng. Tính bước sóng và tốc độ truyền sóng trên dây.",
+    "standingWave",
+    [
+        q("mode", 1, "1", "tốc độ truyền sóng trên dây"),
+        q("L", 80, "cm", "dài 80 cm"),
+        q("f", 100, "Hz", "tần số 100 Hz"),
+        q("n", 4, "1", "4 bó sóng"),
+    ],
+    {"wavelength": 2 * 0.8 / 4, "speed": 2 * 0.8 / 4 * 100},
+)
+add(
+    "swv-03",
+    "Một sợi dây dài 1 m, hai đầu cố định, có mật độ dài 2 g/m và được căng bởi lực 3,2 N. Cho dây dao động với tần số 60 Hz. Tính tốc độ truyền sóng trên dây và số bó sóng quan sát được.",
+    "standingWave",
+    [
+        q("mode", 2, "1", "số bó sóng"),
+        q("vFrom", 1, "1", "được căng bởi lực 3,2 N"),
+        q("L", 1, "m", "dài 1 m"),
+        q("muL", 2, "g/m", "mật độ dài 2 g/m"),
+        q("tension", 3.2, "N", "lực 3,2 N"),
+        q("f", 60, "Hz", "tần số 60 Hz"),
+    ],
+    {
+        "speed": math.sqrt(3.2 / 0.002),
+        "harmonic": 2 * 1 * 60 / math.sqrt(3.2 / 0.002),
+        "wavelength": math.sqrt(3.2 / 0.002) / 60,
+    },
+)
+
+# Một đầu tự do: ngoài phạm vi của cảnh (chỉ hai đầu cố định) → unsupported_parts; số bụng không có.
+add(
+    "swv-04",
+    "Một sợi dây đàn hồi dài 1,2 m treo thẳng đứng, đầu trên cố định, đầu dưới tự do. Sóng truyền trên dây với tốc độ 24 m/s. Tính tần số nhỏ nhất để trên dây có sóng dừng.",
+    "standingWave",
+    [q("L", 1.2, "m", "dài 1,2 m"), q("v", 24, "m/s", "tốc độ 24 m/s")],
+    missing=["n"],
+    unsupported=True,
+)
+
 # --- Ngoài phạm vi ------------------------------------------------------------------
 add(
     "ng-01",

@@ -22,6 +22,7 @@ import { changedParams, recordedTracks, useCompareStore } from '@/app/sim/compar
 import { sim as runtime } from '@/app/sim/runtime';
 import { StageCanvas } from '@/app/sim/StageCanvas';
 import { Stopwatch } from '@/app/sim/Stopwatch';
+import { ValidationFixes } from '@/app/sim/ValidationFixes';
 import { useSimStore } from '@/app/sim/simStore';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { useWorkspaceStore, type StageTool } from '@/app/workspaceStore';
@@ -78,6 +79,7 @@ export const Stage = memo(function Stage() {
       vectors: s.vectors,
       trail: s.trail,
       scrubTime: s.scrubTime,
+      params: s.params,
     })),
   );
   const mod = useModuleStore(
@@ -213,6 +215,13 @@ export const Stage = memo(function Stage() {
             {sim.validation.map((v) => (
               <p key={v.vi}>{Lz(v)}</p>
             ))}
+            <ValidationFixes
+              scene={sim.scene}
+              params={sim.params}
+              onApply={(change) => {
+                for (const [k, v] of Object.entries(change)) runtime.setParam(k, v);
+              }}
+            />
           </div>
         </div>
       )}
