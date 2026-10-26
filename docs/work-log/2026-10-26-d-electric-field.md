@@ -145,3 +145,27 @@ against the code before fixing; all confirmed ones fixed with a test:
 
 **Status: PASS** (stage 2). SGK lessons added: VL11 Bài 16, 17, 18 → 39/189 theory lessons have a
 SimLab topic (`docs/CURRICULUM_KNTT.md`, pending teacher review).
+
+## 2026-10-27 — PR #89 review (4 red, yellow 1–2)
+
+- **Status:** PASS. Review: `.agent-logs/review-pr89-2026-10-27.md` (PR comment 6425438907).
+- Red 1: the number filter was laxer than `main` ("2´10⁻⁸", "2 • 10⁻⁸", "2 10^-8", "2 X 10^3" let 10ⁿ
+  through). Now those signs (and `\cdot`, `\times`) are multiplication signs, and a lone power of
+  ten right after a number (not a name such as "q2") is not read. Red 2: "10⁰" after a digit is a
+  degree sign (also fixes "30⁰" giving a 0). Both tests failed before the fix.
+- Red 3: `validate` refuses only charges at one place; disc radius per charge (≤ 0,4 × distance to
+  the nearest charge, `discRadii`), so no seed starts inside another disc. Red 4: lines end only
+  on a charge of the other sign. Tests failed before the fix; the strengthened "lone − charge" test
+  fails when − charges are seeded along E (mutation tried, code restored).
+- Yellow 1: y_M required with two or three charges (one charge: M on the x-axis); `IMPLIED`
+  y_M = 0 for "trên đoạn/đường thẳng AB", "trung điểm của AB"; prompt; golden efd-05 (M outside
+  AB on A's side, x_M < 0) and efd-06 (M off the line: x_M, y_M asked) → 41 problems.
+  Yellow 2: the sign warning marks the charge's row and disappears once the learner sets it
+  (E2E in `ai-flow.spec.ts`); "Hai điện tích âm …" covers every charge of the sentence.
+- Also: k only with point charges; plates card method; wording on lines and E = 0 markers.
+- Results: `npx vitest run src/ai tests/golden src/app/ai src/physics src/learn …` → 651 passed;
+  `npx tsc -b --noEmit` → no error; `npx eslint .` → exit 0; Prettier (files vs main) → clean;
+  `npx vitest run` → 4318 passed, 1 skipped; E2E `physics.spec` + `layout.spec` + `ai-flow.spec`
+  (chromium, shared lock) → 38 passed.
+- Not done (yellow 3, 5–8): a computed E = 0 point for any configuration, golden force tolerance,
+  cache/line-count mutation tests, CELL3D-5/KNTT-3 counts (not this PR's lines), `n` in Basic.
