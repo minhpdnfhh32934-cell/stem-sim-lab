@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { CURRICULUM } from '@/app/curriculum';
 import { LeftSidebar } from '@/app/layout/LeftSidebar';
+import { HomeScreen } from '@/app/learner/HomeScreen';
 import { availableCount, chaptersFor, suggestions } from '@/app/levels';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { basicSplit, BASIC_PARAM_COUNT } from '@/app/sim/basicParams';
@@ -92,14 +93,14 @@ describe('settings migration', () => {
 });
 
 describe('profile migration', () => {
-  it('people upgrading from v1 (no grade) see every topic, the rest kept', async () => {
+  it('people upgrading from v1 (no grade) see every topic, back on "Nền tảng", the rest kept', async () => {
     // Before writing the old save: every setState is saved too.
     useProfileStore.setState({ grade: 10, interests: [], onboarded: false, lastTopic: null });
     localStorage.setItem(
       'stemsim.profile',
       JSON.stringify({
         state: {
-          level: 'foundation',
+          level: 'general',
           interests: ['physics'],
           onboarded: true,
           lastTopic: 'freeFall',
@@ -115,6 +116,14 @@ describe('profile migration', () => {
       onboarded: true,
       lastTopic: 'freeFall',
     });
+    localStorage.removeItem('stemsim.profile');
+  });
+
+  it('a damaged saved grade falls back to "Tất cả"', async () => {
+    useProfileStore.setState({ grade: 10 });
+    localStorage.setItem('stemsim.profile', JSON.stringify({ state: { grade: 13 }, version: 2 }));
+    await useProfileStore.persist.rehydrate();
+    expect(useProfileStore.getState().grade).toBe('all');
     localStorage.removeItem('stemsim.profile');
   });
 });
@@ -135,21 +144,34 @@ describe('library grade switch', () => {
         .map((r) => r.textContent),
     ).toEqual(['Lớp 10', 'Lớp 11', 'Lớp 12', 'Tất cả']);
     expect(screen.queryByText(/Đang chờ giáo viên duyệt/)).toBeNull();
+    expect(screen.getByRole('list', { name: 'Vật lý' })).not.toHaveAttribute('aria-describedby');
     await user.click(within(grades).getByRole('radio', { name: 'Lớp 10' }));
     expect(useProfileStore.getState().grade).toBe(10);
-    expect(screen.getByText('Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt')).toBeVisible();
+    expect(screen.getByRole('list', { name: 'Vật lý' })).toHaveAccessibleDescription(
+      'Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt',
+    );
     const chapter = screen.getByRole('button', { name: /Chương II\. Động học/ }).closest('li');
     expect(
       within(chapter as HTMLElement).getByRole('button', {
         name: 'Chuyển động thẳng đều Bài 4–5, 7',
       }),
     ).toBeInTheDocument();
+    // "Có n chủ đề ở …" stays, counting that grade only: the periodic table is grade 10 chemistry.
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'tuần hoàn' } });
+    await user.click(screen.getByRole('button', { name: 'Có 1 chủ đề ở Hóa học' }));
+    expect(useWorkspaceStore.getState().subject).toBe('chemistry');
+    expect(screen.getByRole('button', { name: /^Bảng tuần hoàn Bài 5–6, 8/ })).toBeInTheDocument();
+    act(() => {
+      useWorkspaceStore.getState().setSubject('physics');
+    });
     // Unplaced topics are only under "Tất cả"; the search looks in the view shown.
     expect(screen.queryByRole('button', { name: /Mặt phẳng nghiêng/ })).toBeNull();
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'nghiêng' } });
     expect(screen.getByText('Không tìm thấy chủ đề phù hợp.')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Xem tất cả' }));
     expect(useProfileStore.getState().grade).toBe('all');
+    // The button that was clicked is gone: the focus stays in the library.
+    expect(within(grades).getByRole('radio', { name: 'Tất cả' })).toHaveFocus();
     expect(screen.getByRole('button', { name: 'Mặt phẳng nghiêng' })).toBeInTheDocument();
   });
 
@@ -158,10 +180,25 @@ describe('library grade switch', () => {
     useProfileStore.setState({ grade: 11 });
     useWorkspaceStore.setState({ subject: 'biology' });
     render(<LeftSidebar />);
-    expect(screen.getByText('Chưa có chủ đề Sinh học cho Lớp 11.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.'),
+    ).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Xóa tìm kiếm' })).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Xem tất cả' }));
     expect(screen.getByRole('button', { name: 'Nguyên phân' })).toBeInTheDocument();
+  });
+
+  it('home suggests the grade’s topics, with the pending label and per-grade counts', () => {
+    useProfileStore.setState({ grade: 12, interests: [], lastTopic: null });
+    render(<HomeScreen />);
+    expect(screen.getByRole('heading', { name: 'Gợi ý cho lớp 12' })).toBeInTheDocument();
+    expect(
+      screen.getByText('Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt'),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Sinh học/ })).toHaveTextContent(
+      `${availableCount(12, 'biology')} chủ đề lớp 12`,
+    );
+    expect(screen.getByRole('button', { name: 'ADN → mARN → Protein · Sinh học' })).toBeVisible();
   });
 });
 
@@ -186,7 +223,7 @@ describe('first-run onboarding', () => {
       screen.getByRole('heading', { name: 'Bạn đang học hoặc ôn lớp nào?' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /Tất cả/ })).toBeChecked();
-    expect(screen.getByText(/Đang chờ giáo viên duyệt/)).toBeInTheDocument();
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleDescription(/đang chờ giáo viên duyệt/);
     await user.click(screen.getByRole('radio', { name: /Lớp 12/ }));
     expect(useProfileStore.getState().grade).toBe(12);
     await user.click(screen.getByRole('button', { name: 'Tiếp' }));

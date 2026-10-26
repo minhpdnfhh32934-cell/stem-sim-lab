@@ -85,6 +85,7 @@ function ProfileSteps() {
               className="onboarding__options"
               role="radiogroup"
               aria-labelledby="onboarding-title"
+              aria-describedby="onboarding-grade-note"
             >
               {GRADE_CHOICES.map((g) => (
                 <button
@@ -106,7 +107,9 @@ function ProfileSteps() {
                 </button>
               ))}
             </div>
-            <p className="home__note">{t('levels.source')}</p>
+            <p id="onboarding-grade-note" className="home__note">
+              {t('levels.sourceNote')}
+            </p>
           </>
         ) : (
           <div className="onboarding__options onboarding__options--row">

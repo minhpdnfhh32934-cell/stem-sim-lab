@@ -130,7 +130,7 @@ test('first run: grade → subjects → age question → tour (once, can be skip
   const onboarding = page.getByRole('dialog', { name: 'Bạn đang học hoặc ôn lớp nào?' });
   await expect(onboarding).toBeVisible();
   await expect(onboarding).toContainText('Bước 1/5');
-  await expect(onboarding).toContainText('Đang chờ giáo viên duyệt');
+  await expect(onboarding).toContainText('đang chờ giáo viên duyệt');
   await expect(page.getByRole('dialog', { name: 'Trước khi bắt đầu' })).toHaveCount(0);
   await onboarding.getByRole('radio', { name: /Lớp 12/ }).click();
   await onboarding.getByRole('button', { name: 'Tiếp' }).click();

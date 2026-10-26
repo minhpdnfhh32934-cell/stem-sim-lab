@@ -11,7 +11,7 @@ import {
 import { useShallow } from 'zustand/react/shallow';
 import { chapterProgress, topicProgress } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
-import { memo, useMemo, useState } from 'react';
+import { memo, useId, useMemo, useRef, useState } from 'react';
 import { normalizeForSearch } from '@/app/catalog';
 import { lessonRange } from '@/app/curriculum';
 import { useT, type TFunction } from '@/app/i18n';
@@ -93,6 +93,10 @@ function Library({ t }: { t: TFunction }) {
   const setGrade = useProfileStore((s) => s.setGrade);
   const [query, setQuery] = useState('');
   const SubjectIcon = SUBJECT_ICON[subject];
+  const noteId = useId();
+  // The recovery buttons vanish once used: keep the keyboard focus on the library.
+  const allRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const setSubject = useWorkspaceStore((s) => s.setSubject);
   // The search looks only in the chosen view (a grade, or every topic).
@@ -122,6 +126,7 @@ function Library({ t }: { t: TFunction }) {
           {GRADE_CHOICES.map((g) => (
             <button
               key={g}
+              ref={g === 'all' ? allRef : undefined}
               type="button"
               role="radio"
               aria-checked={grade === g}
@@ -136,10 +141,15 @@ function Library({ t }: { t: TFunction }) {
           ))}
         </div>
       </div>
-      {grade !== 'all' && <p className="level-note">{t('levels.source')}</p>}
+      {grade !== 'all' && (
+        <p id={noteId} className="level-note">
+          {t('levels.source')}
+        </p>
+      )}
       <div className="sidebar__search">
         <Search size={14} strokeWidth={1.75} aria-hidden="true" />
         <input
+          ref={searchRef}
           type="search"
           placeholder={t('sidebar.search')}
           aria-label={t('sidebar.search')}
@@ -188,6 +198,7 @@ function Library({ t }: { t: TFunction }) {
                   className="btn"
                   onClick={() => {
                     setGrade('all');
+                    allRef.current?.focus();
                   }}
                 >
                   <BookOpen size={15} strokeWidth={1.75} aria-hidden="true" />
@@ -200,6 +211,7 @@ function Library({ t }: { t: TFunction }) {
                   className="btn"
                   onClick={() => {
                     setQuery('');
+                    searchRef.current?.focus();
                   }}
                 >
                   <X size={15} strokeWidth={1.75} aria-hidden="true" />
@@ -209,7 +221,11 @@ function Library({ t }: { t: TFunction }) {
             </div>
           </EmptyState>
         ) : (
-          <ul className="tree" aria-label={t(`subjects.${subject}`)}>
+          <ul
+            className="tree"
+            aria-label={t(`subjects.${subject}`)}
+            aria-describedby={grade !== 'all' ? noteId : undefined}
+          >
             {chapters.map((c) => (
               <ChapterNode key={c.id} chapter={c} t={t} forceOpen={query.length > 0} />
             ))}
@@ -281,7 +297,9 @@ function ChapterNode({
                     <>
                       {/* The space keeps "… đều Bài 4–5" apart in the accessible name. */}{' '}
                       <span className="tree__lessons">
-                        {t('levels.lessons', { range: lessonRange(topic.lessons) })}
+                        {t(topic.lessons.length === 1 ? 'levels.lessonOne' : 'levels.lessons', {
+                          range: lessonRange(topic.lessons),
+                        })}
                       </span>
                     </>
                   )}

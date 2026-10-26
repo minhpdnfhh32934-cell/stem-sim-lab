@@ -80,13 +80,11 @@ export function HomeScreen() {
         </ul>
 
         <h2 className="home__heading">
-          {t('home.suggestedTitle', {
-            view:
-              profile.grade === 'all'
-                ? t('levels.all')
-                : t('levels.grade', { grade: profile.grade }),
-          })}
+          {profile.grade === 'all'
+            ? t('home.suggestedTitle')
+            : t('levels.suggested', { grade: profile.grade })}
         </h2>
+        {profile.grade !== 'all' && <p className="home__note">{t('levels.source')}</p>}
         {picks.length > 0 ? (
           <ul className="home__topics">
             {picks.map(({ subject, topic }) => {
@@ -299,7 +297,11 @@ function SubjectCard({ subject, grade }: { subject: Subject; grade: GradeChoice 
       </span>
       <span className="home__subject-name">{t(`subjects.${subject}`)}</span>
       <span className="home__subject-desc">{t(`home.subjectDesc.${subject}`)}</span>
-      <span className="home__subject-count">{t('home.topicCount', { count })}</span>
+      <span className="home__subject-count">
+        {grade === 'all'
+          ? t('home.topicCount', { count })
+          : t('levels.topicCount', { count, grade })}
+      </span>
     </button>
   );
 }

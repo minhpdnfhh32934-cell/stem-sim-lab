@@ -75,10 +75,39 @@ test('subject cards and the grade switch (Grade → Subject → Topic)', async (
   // Biology has no grade 11 topic yet: no dead end, "Xem tất cả" goes back to every topic.
   await page.getByRole('radio', { name: 'Sinh học' }).click();
   await grades.getByRole('radio', { name: 'Lớp 11' }).click();
-  await expect(library).toContainText('Chưa có chủ đề Sinh học cho Lớp 11.');
+  await expect(library).toContainText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.');
   await library.getByRole('button', { name: 'Xem tất cả' }).click();
   await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
   await expect(library.getByRole('button', { name: 'Nguyên phân', exact: true })).toBeVisible();
+});
+
+test('the grade switch fits the narrowest library at the largest font, in English too', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.layout',
+      JSON.stringify({ state: { leftWidth: 200 }, version: 1 }),
+    );
+    localStorage.setItem(
+      'stemsim.settings',
+      JSON.stringify({ state: { locale: 'en', fontScale: 1.4 }, version: 2 }),
+    );
+  });
+  await page.goto('/');
+  await page.getByRole('button', { name: /Laboratory/ }).click();
+  const grades = page.getByRole('radiogroup', { name: 'Grade' });
+  await expect(grades.getByRole('radio', { name: 'Grade 10' })).toBeVisible();
+  // Nothing spills out of the switch or out of an item (long names fold instead).
+  const overflow = await grades.evaluate((el) =>
+    [el, ...el.querySelectorAll('button')].map((n) => n.scrollWidth - n.clientWidth),
+  );
+  expect(Math.max(...overflow)).toBeLessThanOrEqual(0);
+  for (const radio of await grades.getByRole('radio').all()) {
+    const box = await radio.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+  }
+  await expectNoHorizontalScroll(page);
 });
 
 test.describe('Basic / Advanced', () => {

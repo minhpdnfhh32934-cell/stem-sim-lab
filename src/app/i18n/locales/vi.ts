@@ -885,7 +885,7 @@ const vi = {
       biology: 'Phân bào, di truyền, sinh thái, enzyme',
     },
     topicCount: '{count} chủ đề',
-    suggestedTitle: 'Gợi ý · {view}',
+    suggestedTitle: 'Gợi ý cho bạn',
     noSuggestions: 'Lớp này chưa có chủ đề. Chọn "Tất cả" ở Thư viện để xem mọi chủ đề.',
     teacherTitle: 'AI Teacher',
     teacherBody:
@@ -2233,8 +2233,13 @@ const vi = {
     allDesc: 'Mọi chủ đề, kể cả chủ đề chưa xếp lớp.',
     source: 'Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt',
     lessons: 'Bài {range}',
-    empty: 'Chưa có chủ đề {subject} cho Lớp {grade}.',
+    empty: 'Chưa có chủ đề {subject} nào được xếp vào lớp {grade}.',
     showAll: 'Xem tất cả',
+    lessonOne: 'Bài {range}',
+    sourceNote:
+      'Cách xếp chủ đề theo lớp do SimLab đề xuất từ mục lục SGK Kết nối tri thức, đang chờ giáo viên duyệt.',
+    suggested: 'Gợi ý cho lớp {grade}',
+    topicCount: '{count} chủ đề lớp {grade}',
   },
   onboarding: {
     label: 'Làm quen với SimLab',

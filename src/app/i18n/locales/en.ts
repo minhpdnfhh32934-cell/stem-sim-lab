@@ -885,7 +885,7 @@ const en: Messages = {
       biology: 'Cell division, genetics, ecology, enzymes',
     },
     topicCount: '{count} topics',
-    suggestedTitle: 'Suggested · {view}',
+    suggestedTitle: 'Suggested for you',
     noSuggestions: 'This grade has no topics yet. Choose "All" in the Library to see every topic.',
     teacherTitle: 'AI Teacher',
     teacherBody:
@@ -2248,9 +2248,14 @@ const en: Messages = {
     gradeDesc: 'Topics arranged by the grade {grade} textbook chapters.',
     allDesc: 'Every topic, including those not placed in a grade.',
     source: 'Following the Kết nối tri thức textbooks · Waiting for a teacher’s review',
-    lessons: 'Lesson {range}',
-    empty: 'No {subject} topics for grade {grade} yet.',
+    lessons: 'Lessons {range}',
+    empty: 'No {subject} topic has been placed in grade {grade} yet.',
     showAll: 'Show all',
+    lessonOne: 'Lesson {range}',
+    sourceNote:
+      'SimLab proposes this arrangement from the Kết nối tri thức tables of contents; it is waiting for a teacher’s review.',
+    suggested: 'Suggested for grade {grade}',
+    topicCount: '{count} grade {grade} topics',
   },
   onboarding: {
     label: 'Getting started with SimLab',

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import type { Grade } from '@/app/curriculum';
+import { GRADES, type Grade } from '@/app/curriculum';
 import type { Subject } from '@/app/workspaceStore';
 
 /**
@@ -12,6 +12,8 @@ export type Level = 'foundation' | 'general';
 
 /** The library's view: one grade's textbook chapters (pending a teacher) or every topic. */
 export type GradeChoice = Grade | 'all';
+
+const isGrade = (v: unknown): v is GradeChoice => v === 'all' || GRADES.some((g) => g === v);
 
 export interface ProfileState {
   level: Level;
@@ -74,8 +76,14 @@ export const useProfileStore = create<ProfileState>()(
       name: 'stemsim.profile',
       version: 2,
       storage: createJSONStorage(() => localStorage),
-      // v1 had no grade: people who used the app before keep seeing every topic.
-      migrate: (old) => ({ grade: 'all', ...(old as object) }),
+      // v1 had no grade: people who used the app before see every topic. Nothing can change
+      // the level any more, so a v1 "Đại cương" (never available) goes back to "Nền tảng".
+      migrate: (old) => ({ ...(old as object), grade: 'all', level: 'foundation' }),
+      // A damaged save never leaves the library on a grade that does not exist.
+      merge: (saved, current) => {
+        const s = saved as Partial<ProfileState>;
+        return { ...current, ...s, grade: isGrade(s.grade) ? s.grade : 'all' };
+      },
       partialize: ({ level, grade, interests, onboarded, connectSeen, lastTopic }) => ({
         level,
         grade,

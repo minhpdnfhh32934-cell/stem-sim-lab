@@ -247,18 +247,6 @@
 .home__footnote {
   margin-top: var(--space-2);
 }
-.home__soon {
-  margin-left: var(--space-2);
-  padding: 1px 8px;
-  border-radius: var(--radius-full);
-  background: var(--bg-sunken);
-  color: var(--text-muted);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  text-transform: none;
-  letter-spacing: 0;
-  vertical-align: middle;
-}
 
 /* Continue button: the single main action when there is a lesson to go back to. */
 .btn.home__continue {
@@ -547,17 +535,21 @@
   flex: 1;
 }
 .level-switch .segmented__item {
-  flex: 1;
+  /* Equal shares that may shrink: a narrow library or a large font folds "Lớp / 10"; at the
+     narrowest library and largest font even a word breaks rather than spill out. */
+  flex: 1 1 0;
+  min-width: 0;
   min-height: var(--target);
   padding-inline: 4px;
-  white-space: nowrap;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 /* "Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt" under the switch. */
 .level-note {
   margin: 0;
   padding: var(--space-1) var(--space-3) 0;
   color: var(--text-muted);
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
 }
 /* "Bài 4–5, 7" after a topic in a grade view. */
 .tree__lessons {
