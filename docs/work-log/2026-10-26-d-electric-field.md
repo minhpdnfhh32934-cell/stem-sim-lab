@@ -204,3 +204,16 @@ SimLab topic (`docs/CURRICULUM_KNTT.md`, pending teacher review).
 - Results: `src/ai tests/golden src/app/ai` → 492 passed (no golden problem refused); `npx tsc`
   → clean; full `npx vitest run` → 4334 passed, 1 skipped; eslint → one `no-misused-spread` in
   the new test, fixed, `npx eslint src/ai` clean; E2E physics + layout + ai-flow (lock) → 38 passed.
+
+## 2026-10-27 — merge of `main` with (b) #90 (standing waves)
+
+- 21 files in conflict; every hunk was "both sides appended", resolved as (b) first, then (d).
+  The hunk boundaries cut through code blocks, so four seams needed the shared closing lines
+  back by hand (`challenges.ts`, `poe.ts`, `sources.ts`, `engines.ts`) plus `)` in the golden
+  script; one blank line between two SCIENCE_ACCURACY paragraphs; USER_GUIDE now says 16 topics
+  and lists both. Generated files rebuilt by their scripts, each run twice (second run identical):
+  `tests/golden/physics.json` (45 problems), `data/curriculum_kntt.json` and
+  `docs/CURRICULUM_KNTT.md` (27 placements, 42/189).
+- Results: tsc clean; `npx eslint .` exit 0; Prettier clean; `npx vitest run src/physics src/learn
+src/core src/ai src/app tests/golden` → 903 passed; full `npx vitest run` → 4390 passed,
+  1 skipped; E2E physics + layout + ai-flow + learner (lock) → 46 passed.
