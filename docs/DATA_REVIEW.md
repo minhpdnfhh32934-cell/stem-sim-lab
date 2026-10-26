@@ -624,7 +624,7 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   người dùng ngày 22/10/2026, kế hoạch #37 mục 3.3; cách dùng tên bài/chương: `docs/LEGAL_COMPLIANCE.md`
   mục 2g). Chỉ xếp khi tên bài nói rõ chủ đề; dòng chưa chắc để "Chưa xếp lớp" kèm lí do. Không có số
   liệu khoa học. `review_status: "pending"`.
-- **CELL3D-1 … CELL3D-4 — Tế bào nhân sơ và nhân thực, bản 2D (26/10/2026, issue #77).** Nguồn:
+- **CELL3D-1 … CELL3D-5 — Tế bào nhân sơ và nhân thực, bản 2D (26/10/2026, issue #77).** Nguồn:
   SGK Sinh học 10, bộ Kết nối tri thức với cuộc sống, đọc trên trang tập huấn taphuan.nxbgd.vn (ảnh
   trang tải ngày 26/10/2026; ảnh `page-N` ứng với trang in N − 1). Bài 7 “Tế bào nhân sơ” tr. 44–47,
   Bài 8 “Tế bào nhân thực” tr. 48–57. Danh sách bộ phận theo hình SGK: vi khuẩn theo H 7.2 (tr. 45),

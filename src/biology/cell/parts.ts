@@ -150,8 +150,8 @@ export const PARTS: Record<PartId, CellPart> = {
   prokCytoplasm: part(
     L('Tế bào chất', 'Cytoplasm'),
     L(
-      'Khối dạng keo, chủ yếu là nước, nằm giữa màng tế bào và vùng nhân; chứa ribosome và các hạt dự trữ, là nơi diễn ra các phản ứng hoá sinh của tế bào.',
-      'A gel, mostly water, between the cell membrane and the nucleoid; it holds ribosomes and storage granules and is where the cell’s biochemical reactions happen.',
+      'Khối dạng keo, chủ yếu là nước, nằm bên trong màng tế bào; chứa ribosome và các hạt dự trữ, là nơi diễn ra các phản ứng hoá sinh của tế bào.',
+      'A gel, mostly water, inside the cell membrane; it holds ribosomes and storage granules and is where the cell’s biochemical reactions happen.',
     ),
     ['bacterium'],
     false,
@@ -181,7 +181,7 @@ export const PARTS: Record<PartId, CellPart> = {
     L('Plasmid', 'Plasmid'),
     L(
       'Phân tử DNA nhỏ, dạng vòng nằm ngoài vùng nhân, thường mang gene kháng thuốc kháng sinh; vi khuẩn không có plasmid vẫn sống bình thường.',
-      'A small circular DNA molecule outside the nucleoid that often carries antibiotic-resistance genes; a bacterium without plasmids still grows normally.',
+      'A small circular DNA molecule outside the nucleoid that often carries antibiotic-resistance genes; a bacterium without plasmids still lives normally.',
     ),
     ['bacterium'],
     false,
@@ -291,7 +291,7 @@ export const PARTS: Record<PartId, CellPart> = {
     L('Trung thể', 'Centrosome'),
     L(
       'Gồm cặp trung tử xếp vuông góc với nhau; nơi lắp ráp và tổ chức vi ống, hình thành thoi phân bào khi tế bào động vật phân chia.',
-      'Centrioles set at right angles to each other; it assembles and organises microtubules and forms the spindle when an animal cell divides.',
+      'A pair of centrioles at right angles to each other; it assembles and organises microtubules and forms the spindle when an animal cell divides.',
     ),
     ['animal'],
     false,
