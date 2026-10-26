@@ -8,6 +8,8 @@ import { useLogistic, useLv } from './ecology/store';
 import { useEnzyme } from './enzyme/store';
 import { useDrift, useHw, useMendel } from './genetics/store';
 import { useTransport } from './transport/store';
+import { CellPanel, CellStage } from './cell/CellViews';
+import { restoreCell, useCell } from './cell/store';
 import {
   CentralDogmaPanel,
   CentralDogmaStage,
@@ -198,4 +200,11 @@ export const diffusionOsmosis: ModuleView = {
     'h0',
     'view3d',
   ]),
+};
+export const cellStructure: ModuleView = {
+  title: L('Tế bào nhân sơ và nhân thực', 'Prokaryotic and eukaryotic cells'),
+  Stage: CellStage,
+  Panel: CellPanel,
+  // Files are untrusted: restoreCell ignores a `kind` that is not one of the three cells.
+  state: bindStore(useCell, ['kind'], restoreCell),
 };

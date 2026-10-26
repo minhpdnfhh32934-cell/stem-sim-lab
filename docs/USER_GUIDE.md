@@ -538,10 +538,15 @@ Khi dùng AI:
   Lineweaver–Burk.
 - **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
   ρgΔh = iCRT.
+- **Tế bào nhân sơ và nhân thực** (chương “Cấu trúc tế bào”): chọn **Vi khuẩn**, **Động vật** hoặc
+  **Thực vật**; bấm tên một bộ phận ở khung bên phải để đọc chức năng của nó (diễn đạt theo SGK Sinh
+  học 10). Nút **Hiện tên** ghi tên mọi bộ phận lên hình (chế độ Cơ bản bật sẵn). Hình 2D chỉ là
+  minh hoạ, không theo tỉ lệ; số bào quan vẽ ra chỉ để minh hoạ.
 
 ### Hình 3D trong Sinh học (bản 0.7, làm đẹp ở 0.7.1)
 
-Cả 11 bài Sinh học mở bằng hình 3D. Cách dùng chung:
+11 trong 12 bài Sinh học mở bằng hình 3D (bài mới “Tế bào nhân sơ và nhân thực” hiện chỉ có
+hình 2D). Cách dùng chung:
 
 - Nút **3D / 2D** để đổi hình; app nhớ lựa chọn của từng bài. Kéo chuột để xoay, lăn chuột để
   phóng to, phím mũi tên cũng xoay được; **Góc nhìn** đổi giữa **Toàn cảnh** và cận cảnh.
