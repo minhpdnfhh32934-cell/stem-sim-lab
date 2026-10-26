@@ -26,3 +26,8 @@ reload; biology stages in the 2D picture (low quality); physics at a non-default
 with a fake Gemini (lesson numbers sent only when the screen is shared). Acceptance criteria:
 `docs/work-log/2026-10-19-S6-tests-skills.md`. The 3D path of the biology lesson is
 `studio-biology.spec.ts` (project `chromium-3d`).
+
+Layout (`layout.spec.ts`, issue #58): every physics topic at 1366×768 with the default bottom
+panel, before and after Run, every graph: the plot area is at least 80 px tall, the legend stays
+inside the panel, the "Nhấn Chạy…" note stays inside the plot area (never on the axis numbers),
+nothing overflows the graphs tab and the page has no horizontal scroll.

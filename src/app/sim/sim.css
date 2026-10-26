@@ -234,16 +234,45 @@
 }
 
 /* Graphs */
+/* The bottom panel is short (220 px by default at 1366×768): every pixel goes to the plot. */
 .graph-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--space-2) var(--space-3);
-  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  gap: var(--space-1);
 }
 .graph-panel__picker {
   align-self: flex-start;
   flex-wrap: wrap;
+}
+.graph-panel__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: var(--space-2);
+}
+.graph-panel__body .chart {
+  min-width: 0;
+}
+/* uPlot's live legend, mounted beside the plot: one series per line. A fixed width: the live
+   values change length as the cursor moves, and a content-sized column would resize the plot. */
+.graph-panel__legend {
+  flex: none;
+  width: 13rem;
+  padding-top: var(--space-1);
+  overflow-y: auto;
+}
+.graph-panel__legend .u-legend {
+  margin: 0;
+  text-align: left;
+}
+.graph-panel__legend .u-legend tr {
+  display: block;
+  margin-right: 0;
+}
+.graph-panel__legend .u-series > * {
+  padding: 1px 2px;
 }
 .chart {
   position: relative;
@@ -263,11 +292,13 @@
   z-index: 1;
   pointer-events: none;
 }
-.chart .u-legend {
+.chart .u-legend,
+.graph-panel__legend .u-legend {
   font-size: var(--text-xs);
   color: var(--text-muted);
 }
-.chart .u-legend .u-value {
+.chart .u-legend .u-value,
+.graph-panel__legend .u-legend .u-value {
   color: var(--text);
   font-weight: 600;
   font-family: var(--font-mono);

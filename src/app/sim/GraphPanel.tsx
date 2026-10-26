@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type uPlotType from 'uplot';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -8,6 +8,7 @@ import { useTierConfig } from '@/perf/perfStore';
 import type { GraphDef } from '@/physics/types';
 import { EmptyState } from '@/ui/EmptyState';
 import { ChartSpline } from 'lucide-react';
+import { X_AXIS_SIZE, yTickSpace } from '@/ui/charts/axes';
 import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
 import { graphData } from './data';
 import { sim } from './runtime';
@@ -31,7 +32,8 @@ export function GraphPanel() {
     );
   }
   return (
-    <div className="graph-panel">
+    <div className="graph-panel" data-scene={scene.id}>
+      {/* Outside the keyed Chart: switching graphs keeps the focused button (and its indicator). */}
       <div
         className="graph-panel__picker segmented"
         role="radiogroup"
@@ -57,6 +59,22 @@ export function GraphPanel() {
   );
 }
 
+/** Keeps the "Nhấn Chạy…" note inside the plot area, clear of the axis numbers. */
+function placeNote(note: HTMLElement | null, u: uPlotType | null): void {
+  const box = note?.parentElement;
+  if (!note || !box || !u) return;
+  const o = u.over.getBoundingClientRect();
+  const b = box.getBoundingClientRect();
+  note.style.left = `${o.left - b.left}px`;
+  note.style.top = `${o.top - b.top}px`;
+  note.style.width = `${o.width}px`;
+  note.style.height = `${o.height}px`;
+}
+
+/**
+ * The plot with its live legend in a narrow column on the right (one series per line), so the
+ * bottom panel's height goes to the plot whatever the series names.
+ */
 function Chart({ graph }: { graph: GraphDef }) {
   const t = useT();
   const L = useLocalized();
@@ -64,6 +82,8 @@ function Chart({ graph }: { graph: GraphDef }) {
   const theme = useResolvedTheme();
   const tier = useTierConfig();
   const hostRef = useRef<HTMLDivElement>(null);
+  const legendRef = useRef<HTMLDivElement>(null);
+  const noteRef = useRef<HTMLParagraphElement>(null);
   const plotRef = useRef<uPlotType | null>(null);
   const cursorT = useRef<number | null>(null);
   const dataVersion = useSimStore((s) => s.dataVersion);
@@ -91,13 +111,22 @@ function Chart({ graph }: { graph: GraphDef }) {
         width: host.clientWidth || 600,
         height: Math.max(120, host.clientHeight || 180),
         scales: { x: { time: false } },
-        legend: { live: true },
+        // Top: room for half of the highest y value only (uPlot's automatic gap was 17 px).
+        padding: [8, null, null, null],
+        legend: {
+          live: true,
+          mount: (_u, el) => {
+            legendRef.current?.append(el);
+          },
+        },
         cursor: { drag: { x: false, y: false }, points: { size: 8 } },
         axes: [
           {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
-            ticks: { stroke: gridStroke },
+            ticks: { stroke: gridStroke, size: 6 },
+            // Compact, as in XYChart: uPlot's 50 + 30 px left the bottom panel a 35 px plot.
+            ...X_AXIS_SIZE,
             label: t('graphs.time'),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
@@ -107,6 +136,8 @@ function Chart({ graph }: { graph: GraphDef }) {
             ticks: { stroke: gridStroke },
             label: L(graph.yLabel),
             size: 60,
+            labelSize: 20,
+            space: (_u, _axis, _min, _max, plotHeight) => yTickSpace(plotHeight),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
         ],
@@ -121,6 +152,11 @@ function Chart({ graph }: { graph: GraphDef }) {
           })),
         ],
         hooks: {
+          setSize: [
+            (u) => {
+              placeNote(noteRef.current, u);
+            },
+          ],
           draw: [
             (u) => {
               const tt = cursorT.current;
@@ -166,10 +202,22 @@ function Chart({ graph }: { graph: GraphDef }) {
     plotRef.current?.setData(graphData(graph, params) as uPlotType.AlignedData);
   }, [dataVersion, scrubTime, params, graph, tier.graphHz]);
 
+  // The note comes back after a reset: place it on the current plot area at once.
+  useLayoutEffect(() => {
+    if (!hasData) placeNote(noteRef.current, plotRef.current);
+  }, [hasData]);
+
   return (
-    <div className="chart">
-      {!hasData && <p className="chart__empty muted">{t('graphs.noData')}</p>}
-      <div ref={hostRef} className="chart__plot" />
+    <div className="graph-panel__body">
+      <div className="chart">
+        {!hasData && (
+          <p ref={noteRef} className="chart__empty muted">
+            {t('graphs.noData')}
+          </p>
+        )}
+        <div ref={hostRef} className="chart__plot" />
+      </div>
+      <div ref={legendRef} className="graph-panel__legend" />
     </div>
   );
 }
