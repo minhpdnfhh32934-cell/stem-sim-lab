@@ -106,3 +106,20 @@
 
 - Not run: Gemma / local-model "Phân tích đề" on the new golden problems (Máy A, discrete NVIDIA
   only, plan §16); real Gemini golden run; native build.
+
+## 2026-10-27 — PR #90 review round (2 🔴, 🟡)
+
+- 🔴1 fixed: optional `PhysicsScene.yStretch(p)` (the wave scene returns its vertical stretch S);
+  `StageCanvas` divides it out in the ruler/protractor (`src/app/sim/measure.ts`
+  `measureSegment`) and `drawGrid` y labels. Scenes without it: S = 1, unchanged.
+- 🔴2 fixed: suggested resonances printed with 10 significant digits (typing one back gives a
+  whole 2Lf/v) and kept within 20 loops (above: f₂₀).
+- 🟡 done: mode inferred in `autoDefaults` from stated values; stroboscopic and lattice-comparison
+  wording; `checkedFrequency` refuses a non-whole n; picture uses the model's y₁, y₂, y; legend;
+  English "A" for antinode; USER_GUIDE (Basic "Thêm thông số", real metres); tests for the coarse
+  lattice dispersion, POE ratio 2 with its start, Basic five params per mode. Not done: x_P slider
+  range per L (static `ParamDef`), graph axis in cm (graph values are SI).
+- Both 🔴 tests fail on the previous source (checked by restoring the old files, keeping the new
+  tests: 2 failed) and pass now.
+- Results: Prettier, `npm run lint`, `npm run typecheck` PASS; `npx vitest run` PASS — 319 files,
+  4329 tests (1 skipped, existing); `physics.spec.ts` + `layout.spec.ts` PASS 17/17.
