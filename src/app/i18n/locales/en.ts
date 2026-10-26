@@ -617,6 +617,7 @@ const en: Messages = {
     cached:
       'This problem was read and confirmed before, so the AI is not called again. Check the table as usual.',
     readAgain: 'Read again with AI',
+    signHint: 'Check the sign (+ or −) of this charge against the problem.',
   },
   project: {
     privacy: 'Privacy & safe AI use',

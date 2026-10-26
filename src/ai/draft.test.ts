@@ -207,3 +207,17 @@ describe('the sign of a charge (trap 3 of #37 §8.2)', () => {
     expect(flagged('Hai điện tích trái dấu có độ lớn 2 µC.', 2, 'uC', 'độ lớn 2 µC')).toBe(true);
   });
 });
+
+describe('point M on the line AB (electric field)', () => {
+  it('takes y_M = 0 only from words that put M on AB, never from a negated sentence', () => {
+    const on = 'Điểm M nằm trên đoạn AB, cách A 10 cm.';
+    expect(impliedByWords('yP', 0, 'nằm trên đoạn AB', on)).toBe(true);
+    expect(impliedByWords('yP', 0, 'M là trung điểm của AB', 'Gọi M là trung điểm của AB.')).toBe(
+      true,
+    );
+    const off = 'Điểm M không nằm trên đường thẳng AB, cách A 3 cm và cách B 4 cm.';
+    expect(impliedByWords('yP', 0, 'nằm trên đường thẳng AB', off)).toBe(false);
+    // Another key never takes the rule.
+    expect(impliedByWords('xP', 0, 'nằm trên đoạn AB', on)).toBe(false);
+  });
+});

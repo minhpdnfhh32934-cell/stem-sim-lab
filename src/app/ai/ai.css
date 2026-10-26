@@ -92,6 +92,9 @@
   border-left: 3px solid var(--pending);
   background: var(--pending-soft);
 }
+.qty-card.is-check {
+  border-left: 3px solid var(--warning);
+}
 .qty-card__head {
   display: flex;
   align-items: center;

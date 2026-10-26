@@ -1261,6 +1261,12 @@
           "value": 10,
           "unit": "cm",
           "quote": "cách A 10 cm"
+        },
+        {
+          "key": "yP",
+          "value": 0,
+          "unit": "cm",
+          "quote": "nằm trên đoạn AB"
         }
       ],
       "missing": [],
@@ -1336,6 +1342,80 @@
         "E": 5000.0,
         "F": 1.4999999999999999e-05
       },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-05",
+      "text": "Hai điện tích điểm q₁ = 4.10⁻⁸ C và q₂ = −4.10⁻⁸ C đặt tại A và B trong không khí, AB = 6 cm. Tính cường độ điện trường tại điểm M nằm trên đường thẳng AB, ngoài đoạn AB về phía A và cách A 3 cm.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "q1",
+          "value": 4e-08,
+          "unit": "C",
+          "quote": "q₁ = 4.10⁻⁸ C"
+        },
+        {
+          "key": "q2",
+          "value": -4e-08,
+          "unit": "C",
+          "quote": "q₂ = −4.10⁻⁸ C"
+        },
+        {
+          "key": "x2",
+          "value": 6,
+          "unit": "cm",
+          "quote": "AB = 6 cm"
+        },
+        {
+          "key": "xP",
+          "value": -3,
+          "unit": "cm",
+          "quote": "cách A 3 cm"
+        },
+        {
+          "key": "yP",
+          "value": 0,
+          "unit": "cm",
+          "quote": "nằm trên đường thẳng AB"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "E": 355063.77426847594,
+        "Ex": -355063.77426847594
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-06",
+      "text": "Hai điện tích điểm q₁ = q₂ = 2.10⁻⁸ C đặt tại A và B trong không khí, AB = 5 cm. Tính cường độ điện trường tại điểm M cách A 3 cm và cách B 4 cm.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "q1",
+          "value": 2e-08,
+          "unit": "C",
+          "quote": "q₁ = q₂ = 2.10⁻⁸ C"
+        },
+        {
+          "key": "q2",
+          "value": 2e-08,
+          "unit": "C",
+          "quote": "q₁ = q₂ = 2.10⁻⁸ C"
+        },
+        {
+          "key": "x2",
+          "value": 5,
+          "unit": "cm",
+          "quote": "AB = 5 cm"
+        }
+      ],
+      "missing": [
+        "xP",
+        "yP"
+      ],
+      "answers": {},
       "expectUnsupportedParts": false
     },
     {

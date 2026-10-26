@@ -113,7 +113,8 @@ export function fieldSetup(p: Record<string, number | undefined>): FieldSetup {
   return {
     mode: p.mode ?? MODE.points,
     charges,
-    probe: { x: p.xP ?? 0, y: p.yP ?? 0 },
+    // One charge: M lies on the x-axis (y_M is hidden then and must not move it).
+    probe: { x: p.xP ?? 0, y: n >= 2 ? (p.yP ?? 0) : 0 },
     q0: p.q0 ?? 0,
     k: p.k ?? C.kC,
     // The plates are drawn 5·d long; an ideal capacitor has no edges, so the length is only a picture.

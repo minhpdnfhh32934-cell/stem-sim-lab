@@ -221,9 +221,20 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   };
 
   const blocking = draft.issues.filter((i) => i.blocking);
+  // A charge whose sign the learner has set by hand is confirmed: its sign warning goes away.
+  const signToCheck = new Set(
+    draft.issues
+      .filter((i) => i.kind === 'signMismatch' && i.key && sources[i.key] !== 'user')
+      .map((i) => i.key),
+  );
   // "Not used" follows the current choices ("Biết tần số f" hides T), not the frozen draft.
   const warnings = [
-    ...draft.issues.filter((i) => !i.blocking && i.kind !== 'notUsed'),
+    ...draft.issues.filter(
+      (i) =>
+        !i.blocking &&
+        i.kind !== 'notUsed' &&
+        (i.kind !== 'signMismatch' || signToCheck.has(i.key)),
+    ),
     ...notUsedIssues(scene, params, sources, draft.fromWords),
   ];
 
@@ -276,6 +287,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
               source={sources[def.key] ?? 'default'}
               written={draft.written[def.key]}
               missing={missing.includes(def.key)}
+              checkSign={signToCheck.has(def.key)}
               onChange={(v) => {
                 setValue(def.key, v);
               }}
@@ -435,6 +447,7 @@ function ReviewRow({
   source,
   written,
   missing,
+  checkSign,
   onChange,
   onKeep,
 }: {
@@ -443,6 +456,7 @@ function ReviewRow({
   source: ParamSource;
   written: { value: number; unit: string; quote: string } | undefined;
   missing: boolean;
+  checkSign: boolean;
   onChange: (si: number) => void;
   onKeep: () => void;
 }) {
@@ -452,7 +466,7 @@ function ReviewRow({
   const nameId = `qty-${def.key}`;
   return (
     <li
-      className={cx('qty-card', missing && 'is-missing')}
+      className={cx('qty-card', missing && 'is-missing', checkSign && 'is-check')}
       data-source={missing ? 'missing' : source}
       aria-labelledby={nameId}
     >
@@ -520,6 +534,12 @@ function ReviewRow({
           )}
         </span>
         {written && <WrittenNote written={written} />}
+        {checkSign && (
+          <p className="problem-table__missing">
+            <CircleHelp size={12} strokeWidth={1.75} aria-hidden="true" />
+            {t('analyze.signHint')}
+          </p>
+        )}
         {missing && (
           <p className="problem-table__missing">
             <CircleHelp size={12} strokeWidth={1.75} aria-hidden="true" />

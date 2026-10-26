@@ -519,3 +519,38 @@ test("a second stated quantity is flagged, and the flag follows the learner's ch
   await expect(unused('Tần số (số vòng mỗi giây)')).toHaveCount(0);
   await expect(dialog.getByRole('textbox', { name: 'Tần số (số vòng mỗi giây)' })).toHaveValue('2');
 });
+
+test('a charge whose sign the AI changed is marked on its row until the learner sets it', async ({
+  page,
+}) => {
+  const efd = (golden as { items: Item[] }).items.find((i) => i.id === 'efd-02')!;
+  await mockGemini(page, {
+    classification: { topic: 'electricField', reason: 'điện trường', unsupported_parts: [] },
+    extraction: {
+      // The problem writes q₂ = −8 µC; the AI drops the minus.
+      quantities: [
+        { key: 'q1', value: 2, unit: 'uC', quote: 'q₁ = 2 µC' },
+        { key: 'q2', value: 8, unit: 'uC', quote: 'q₂ = −8 µC' },
+        { key: 'x2', value: 30, unit: 'cm', quote: 'cách nhau 30 cm' },
+        { key: 'xP', value: 10, unit: 'cm', quote: 'cách A 10 cm' },
+        { key: 'yP', value: 0, unit: 'cm', quote: 'nằm trên đoạn AB' },
+      ],
+      questions: [],
+      assumptions: [],
+      unsupported_parts: [],
+      clarifications: [],
+    },
+  });
+  await typeProblem(page, efd.text);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog');
+  const hint = dialog.getByText('Kiểm tra dấu (+ hoặc −) của điện tích này so với đề.');
+  await expect(hint).toHaveCount(1);
+  await expect(dialog.locator('.qty-card.is-check')).toHaveCount(1);
+  await expect(dialog.locator('.qty-card.is-check')).toContainText('q₂');
+  await dialog.getByRole('textbox', { name: 'Điện tích q₂ (có dấu)' }).fill('-8');
+  await expect(hint).toHaveCount(0);
+  await expect(dialog.getByText('dấu của điện tích chưa chắc khớp', { exact: false })).toHaveCount(
+    0,
+  );
+});

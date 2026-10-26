@@ -3,7 +3,7 @@ import { C } from '@/core/constants';
 import { dopri5 } from '@/core/ode';
 import { traceFieldLines, type FieldLine, type Frame } from './fieldLines';
 import { fmtQty } from '../common/tex';
-import { chargeRadius, linesFor } from './draw';
+import { linesFor } from './draw';
 import { FE, FieldEngine } from './engine';
 import {
   MODE,
@@ -110,13 +110,45 @@ describe('field lines (RK4 with step doubling)', () => {
   });
 
   it('points into a lone − charge (traced outwards, arrows reversed)', () => {
-    const { lines } = traceFieldLines([{ q: -1e-9, x: 0, y: 0 }], k, frame);
+    const { lines, nullPoints } = traceFieldLines([{ q: -1e-9, x: 0, y: 0 }], k, frame);
+    expect(lines).toHaveLength(12);
+    expect(nullPoints).toEqual([]);
     for (const l of lines) {
       expect(l.dir).toBe(-1);
+      expect(l.end).toBe('frame');
+      // Traced away from the charge: the distance grows at every point.
+      const r = pointsOf(l).map(([x, y]) => Math.hypot(x, y));
+      for (let i = 1; i < r.length; i++) expect(r[i] ?? 0).toBeGreaterThan(r[i - 1] ?? 0);
       const [x, y] = pointsOf(l).at(-1) ?? [0, 0];
       const [ex, ey] = fieldAt([{ q: -1e-9, x: 0, y: 0 }], k, x, y);
       expect(ex * x + ey * y).toBeLessThan(0); // E points towards the charge
     }
+  });
+
+  it('never ends a line on a charge of the sign it started from (review of #89)', () => {
+    const square: Frame = { xMin: -0.5, xMax: 0.5, yMin: -0.5, yMax: 0.5 };
+    // Two equal + charges closer than the old disc radius (2 % of the frame = 2 cm).
+    const close: PointCharge[] = [
+      { q: 4e-8, x: 0, y: 0 },
+      { q: 4e-8, x: 0.012, y: 0 },
+    ];
+    const a = traceFieldLines(close, k, square);
+    expect(a.lines.filter((l) => l.end === 'charge')).toEqual([]);
+    expect(a.nullPoints.some(([x, y]) => Math.hypot(x - 0.006, y) < 1e-4)).toBe(true);
+    // A strong and a weak + charge 20 cm apart: the weak one's disc is no end either.
+    const unequal: PointCharge[] = [
+      { q: 1e-5, x: 0, y: 0 },
+      { q: 1e-8, x: 0.2, y: 0 },
+    ];
+    expect(traceFieldLines(unequal, k, square).lines.filter((l) => l.end === 'charge')).toEqual([]);
+    // Lines do end on a charge of the other sign.
+    const dipole: PointCharge[] = [
+      { q: 4e-8, x: 0, y: 0 },
+      { q: -4e-8, x: 0.012, y: 0 },
+    ];
+    const ends = traceFieldLines(dipole, k, square).lines.filter((l) => l.end === 'charge');
+    expect(ends.length).toBeGreaterThan(0);
+    for (const l of ends) expect(l.to).toBe(l.from === 0 ? 1 : 0);
   });
 
   it('keeps Σqᵢcosθᵢ constant along every line of two charges on one axis', () => {
@@ -265,7 +297,7 @@ describe('electricField scene', () => {
   it('refuses M on a charge, charges too close, and plates without a gap', () => {
     expect(electricField.validate?.(sceneParams())).toEqual([]);
     expect(electricField.validate?.(sceneParams({ xP: 0.2 }))).toHaveLength(1);
-    expect(electricField.validate?.(sceneParams({ x2: 0.001 }))).toHaveLength(1);
+    expect(electricField.validate?.(sceneParams({ x2: 0, xP: 0.05 }))).toHaveLength(1);
     expect(electricField.validate?.(sceneParams({ mode: MODE.plates, d: 0 }))).toHaveLength(1);
   });
 
@@ -308,21 +340,21 @@ describe('electricField scene', () => {
     expect(texts).toContain('có một điện tích bằng 0');
   });
 
-  it('refuses two charges exactly one disc radius apart (a seed would sit on the other)', () => {
-    const p = sceneParams();
-    const r0 = chargeRadius(p);
-    // The view (and so r0) depends on x₂: find the separation where they meet.
-    let x2 = r0;
-    for (let i = 0; i < 50; i++) x2 = chargeRadius({ ...p, x2 });
-    expect(electricField.validate?.({ ...p, x2 })).toHaveLength(1);
+  it('accepts charges close together wherever M is; refuses only charges at one place', () => {
+    // Review of #89: q₂ at 3 cm was refused once M moved to 50 cm (a drawing radius, not physics).
+    expect(electricField.validate?.(sceneParams({ x2: 0.03, xP: 0.5 }))).toEqual([]);
+    expect(electricField.validate?.(sceneParams({ x2: 0.01 }))).toEqual([]);
+    expect(electricField.validate?.(sceneParams({ x2: 0.001, xP: 0.5 }))).toEqual([]);
+    expect(electricField.validate?.(sceneParams({ x2: 0 }))).toHaveLength(1);
   });
 
   it('shows q₁, q₂, their distance and M first in Basic mode; U, d with the plates', () => {
     const visible = (p: Record<string, number>) =>
       electricField.params.filter((d) => d.when?.(p) ?? true).map((d) => d.key);
     expect(visible(sceneParams()).slice(0, 5)).toEqual(['mode', 'q1', 'q2', 'x2', 'xP']);
-    expect(visible(sceneParams({ n: 1 })).slice(0, 5)).toEqual(['mode', 'q1', 'xP', 'n', 'yP']);
-    expect(visible(sceneParams({ mode: MODE.plates }))).toEqual(['mode', 'U', 'd', 'q0', 'k']);
+    // One charge: M on the x-axis, y_M hidden.
+    expect(visible(sceneParams({ n: 1 })).slice(0, 5)).toEqual(['mode', 'q1', 'xP', 'n', 'x1']);
+    expect(visible(sceneParams({ mode: MODE.plates }))).toEqual(['mode', 'U', 'd', 'q0']);
     expect(electricField.scienceCard(sceneParams({ mode: MODE.plates })).title.vi).toBe(
       'Điện trường đều giữa hai bản phẳng',
     );

@@ -60,6 +60,21 @@ const SEED_RADIUS = 0.02;
 const H_MAX = 0.02;
 const H_MIN = 1e-9;
 
+/**
+ * Disc radius of each charge (input order): lines start on it and end at it. At most 2 % of the
+ * frame, and at most 0,4 of the distance to the nearest other charge, so discs never overlap and
+ * no line starts inside another charge's disc, however close two charges are.
+ */
+export function discRadii(charges: readonly PointCharge[], frame: Frame): number[] {
+  const r0 = SEED_RADIUS * Math.max(frame.xMax - frame.xMin, frame.yMax - frame.yMin);
+  return charges.map((c, i) =>
+    Math.min(
+      r0,
+      ...charges.flatMap((o, j) => (j === i ? [] : [0.4 * Math.hypot(o.x - c.x, o.y - c.y)])),
+    ),
+  );
+}
+
 export function traceFieldLines(
   input: readonly PointCharge[],
   k: number,
@@ -70,7 +85,10 @@ export function traceFieldLines(
   const indexOf = (c: PointCharge) => input.indexOf(c);
   const size = Math.max(frame.xMax - frame.xMin, frame.yMax - frame.yMin);
   const tol = TOL * size;
-  const r0 = SEED_RADIUS * size;
+  const radii = discRadii(input, frame);
+  const radius = (c: PointCharge) => radii[indexOf(c)] ?? 0;
+  // A step never jumps over the smallest disc.
+  const hMax = Math.min(H_MAX * size, ...charges.map(radius));
   const maxLength = 3 * (frame.xMax - frame.xMin + frame.yMax - frame.yMin);
   const maxSteps = options.maxSteps ?? 4000;
   const nLargest = options.linesForLargest ?? 12;
@@ -92,15 +110,18 @@ export function traceFieldLines(
 
   const outside = (x: number, y: number) =>
     x < frame.xMin || x > frame.xMax || y < frame.yMin || y > frame.yMax;
-  /** A charge (other than the origin) within r0 of the segment a → b. */
-  const hitCharge = (ax: number, ay: number, bx: number, by: number, origin: PointCharge) =>
+  /**
+   * A charge whose disc the segment a → b enters, of the sign a line can end on: traced along E
+   * (dir +1) it ends on a − charge, against E (dir −1) on a + charge — never on its own sign.
+   */
+  const hitCharge = (ax: number, ay: number, bx: number, by: number, dir: 1 | -1) =>
     charges.find((c) => {
-      if (c === origin) return false;
+      if (c.q * dir > 0) return false;
       const dx = bx - ax;
       const dy = by - ay;
       const len2 = dx * dx + dy * dy;
       const t = len2 > 0 ? Math.min(1, Math.max(0, ((c.x - ax) * dx + (c.y - ay) * dy) / len2)) : 0;
-      return Math.hypot(ax + t * dx - c.x, ay + t * dy - c.y) < r0;
+      return Math.hypot(ax + t * dx - c.x, ay + t * dy - c.y) < radius(c);
     });
   const direction = (x: number, y: number): [number, number, number] => {
     const [ex, ey] = fieldAt(charges, k, x, y);
@@ -117,8 +138,8 @@ export function traceFieldLines(
 
   const trace = (origin: PointCharge, angle: number, dir: 1 | -1): FieldLine => {
     sign = dir;
-    let x = origin.x + r0 * Math.cos(angle);
-    let y = origin.y + r0 * Math.sin(angle);
+    let x = origin.x + radius(origin) * Math.cos(angle);
+    let y = origin.y + radius(origin) * Math.sin(angle);
     const line: FieldLine = {
       points: [x, y],
       dir,
@@ -127,18 +148,13 @@ export function traceFieldLines(
       length: 0,
       error: 0,
     };
-    // Two charges closer than two disc radii: a seed may start inside the other one's disc.
-    const start = hitCharge(x, y, x, y, origin);
-    if (start) {
-      line.end = 'charge';
-      line.to = indexOf(start);
-      return line;
-    }
     coarse[0] = x;
     coarse[1] = y;
-    let h = r0 / 4;
+    let h = hMax / 4;
     for (let attempt = 0; attempt < maxSteps; attempt++) {
       const [ux, uy, e0] = direction(x, y);
+      // Exactly on a charge of its own sign (a field line never ends there): stop, mark nothing.
+      if (!Number.isFinite(e0)) return line;
       if (!(e0 > eNull)) {
         markNull(x, y);
         line.end = 'null';
@@ -177,7 +193,7 @@ export function traceFieldLines(
       rk.step(0, coarse, h);
       line.error = Math.max(line.error, Math.hypot(nx - coarse[0], ny - coarse[1]));
       line.points.push(nx, ny);
-      const hit = hitCharge(x, y, nx, ny, origin);
+      const hit = hitCharge(x, y, nx, ny, dir);
       if (hit) {
         line.end = 'charge';
         line.to = indexOf(hit);
@@ -193,7 +209,7 @@ export function traceFieldLines(
       }
       x = nx;
       y = ny;
-      h = Math.min(H_MAX * size, h * Math.min(2, 0.9 * (tol / Math.max(err, 1e-30 * size)) ** 0.2));
+      h = Math.min(hMax, h * Math.min(2, 0.9 * (tol / Math.max(err, 1e-30 * size)) ** 0.2));
     }
     return line;
   };
@@ -209,8 +225,10 @@ export function traceFieldLines(
     const arrived = lines
       .filter((l) => l.end === 'charge' && l.to === indexOf(c))
       .map((l) => {
-        const px = l.points[l.points.length - 2] ?? c.x;
-        const py = l.points[l.points.length - 1] ?? c.y;
+        // The last point outside the disc (the final one may lie inside it).
+        const i = Math.max(0, l.points.length - 4);
+        const px = l.points[i] ?? c.x;
+        const py = l.points[i + 1] ?? c.y;
         return Math.atan2(py - c.y, px - c.x);
       });
     for (let i = 0; i < n; i++) {

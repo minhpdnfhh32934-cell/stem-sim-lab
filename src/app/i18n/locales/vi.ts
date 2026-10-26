@@ -619,6 +619,7 @@ const vi = {
     cached:
       'Đề này đã được đọc và xác nhận trước đây nên không cần gọi AI lại. Hãy kiểm tra bảng số liệu như thường lệ.',
     readAgain: 'Đọc lại bằng AI',
+    signHint: 'Kiểm tra dấu (+ hoặc −) của điện tích này so với đề.',
   },
   project: {
     privacy: 'Quyền riêng tư & dùng AI an toàn',

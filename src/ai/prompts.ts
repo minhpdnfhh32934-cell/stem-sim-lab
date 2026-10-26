@@ -39,7 +39,7 @@ export const TOPIC_HINTS: Record<string, string> = {
   uniformCircularMotion:
     'Chuyển động tròn đều: bán kính, tốc độ, tốc độ góc (rad/s), chu kì, tần số (Hz, vòng/s, vòng/phút), gia tốc hướng tâm, lực hướng tâm.',
   electricField:
-    'Điện trường, định luật Coulomb: 1–3 điện tích điểm (q có dấu, C/µC/nC), cường độ điện trường tại điểm M, lực điện lên điện tích thử q0, lực tương tác giữa hai điện tích; hoặc tụ phẳng: điện trường đều E = U/d. Tọa độ: q1 ở gốc O, q2 trên trục Ox (x2 = khoảng cách giữa hai điện tích), xP = khoảng cách từ q1 tới M khi M nằm trên đường nối q1, q2 về phía q2; chỉ ghi tọa độ có sẵn trong đề, không tự tính. Chân không hoặc không khí; có hằng số điện môi ε thì ghi vào unsupported_parts.',
+    'Điện trường, định luật Coulomb: 1–3 điện tích điểm (q có dấu, C/µC/nC), cường độ điện trường tại điểm M, lực điện lên điện tích thử q0, lực tương tác giữa hai điện tích; hoặc tụ phẳng: điện trường đều E = U/d. Tọa độ: q1 ở A = gốc O, q2 ở B trên trục Ox (x2 = khoảng cách AB). M trên đường thẳng AB: xP = khoảng cách AM, dương về phía B, âm khi M nằm ngoài đoạn AB về phía A; yP = 0 kèm trích dẫn "trên đoạn AB", "trên đường thẳng AB" hoặc "trung điểm của AB". M không nằm trên đường thẳng AB (ví dụ chỉ cho MA, MB): không ghi xP, yP và hỏi lại trong clarifications. Chỉ ghi tọa độ có sẵn trong đề, không tự tính. Chân không hoặc không khí; có hằng số điện môi ε thì ghi vào unsupported_parts.',
 };
 
 export function classificationSystem(topics: { id: string; title: string }[]): string {

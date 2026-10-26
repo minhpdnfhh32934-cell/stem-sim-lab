@@ -45,16 +45,14 @@ function validate(p: Params): LocalizedText[] {
     }
     return errors;
   }
-  const r0 = chargeRadius(p);
+  // Only charges at one place are refused: any distance > 0 is physics (the drawing adapts).
   s.charges.forEach((a, i) => {
     s.charges.slice(i + 1).forEach((b, j) => {
-      if (Math.hypot(a.x - b.x, a.y - b.y) <= r0) {
-        const cm = fmtQty('vi', r0, 'cm', 2);
-        const cmEn = fmtQty('en', r0, 'cm', 2);
+      if (Math.hypot(a.x - b.x, a.y - b.y) < 1e-9) {
         errors.push(
           L(
-            `Hai điện tích q${SUB[i]} và q${SUB[i + j + 1]} phải cách nhau ít nhất ${cm}.`,
-            `Charges q${SUB[i]} and q${SUB[i + j + 1]} must be at least ${cmEn} apart.`,
+            `Hai điện tích q${SUB[i]} và q${SUB[i + j + 1]} không được đặt cùng một chỗ.`,
+            `Charges q${SUB[i]} and q${SUB[i + j + 1]} cannot sit at the same place.`,
           ),
         );
       }
@@ -304,8 +302,8 @@ function card(p: Params): ScienceCardData {
       ),
       lines
         ? L(
-            'Mật độ đường sức trên hình phẳng không tỉ lệ với |E|: đây là một lát cắt của trường ba chiều. Số đường mỗi điện tích gần đúng tỉ lệ với |q| (làm tròn, ít nhất 1 đường).',
-            'The density of lines in the flat picture is not proportional to |E|: it is a slice of a 3D field. Each charge has about as many lines as its |q| allows (rounded, at least one).',
+            'Mật độ đường sức trên hình phẳng không tỉ lệ với |E|: đây là một lát cắt của trường ba chiều. Số đường đi ra từ mỗi điện tích gần đúng tỉ lệ với |q| (làm tròn, ít nhất 1 đường); điện tích âm còn nhận thêm các đường đi tới từ điện tích dương.',
+            'The density of lines in the flat picture is not proportional to |E|: it is a slice of a 3D field. The number of lines leaving each charge is about proportional to |q| (rounded, at least one); a negative charge also receives the lines arriving from positive ones.',
           )
         : L(
             'Tụ phẳng lí tưởng: E đều giữa hai bản, bằng 0 bên ngoài; bỏ qua hiệu ứng mép (độ dài bản trên hình chỉ để minh họa).',
@@ -330,10 +328,15 @@ function card(p: Params): ScienceCardData {
           'Các con số tính bằng công thức chính xác E = U/d, F = |q₀|E. Đường sức giữa hai bản là các đường thẳng song song.',
           'The numbers come from the exact formulas E = U/d, F = |q₀|E. Field lines between the plates are parallel straight lines.',
         ),
-    method: L(
-      'Đường sức: RK4 với chia đôi bước để kiểm sai số và tự chỉnh bước; tính một lần mỗi khi thông số đổi, không theo từng khung hình.',
-      'Field lines: RK4 with step doubling to control the error and adapt the step; computed once per parameter change, not per frame.',
-    ),
+    method: lines
+      ? L(
+          'Đường sức: RK4 với chia đôi bước để kiểm sai số và tự chỉnh bước; tính một lần mỗi khi thông số đổi, không theo từng khung hình.',
+          'Field lines: RK4 with step doubling to control the error and adapt the step; computed once per parameter change, not per frame.',
+        )
+      : L(
+          'Công thức E = U/d; đường sức giữa hai bản vẽ thẳng, cách đều.',
+          'Formula E = U/d; field lines between the plates are drawn straight and evenly spaced.',
+        ),
     userIntervened: false,
     sources: [SRC.sgk11kntt, SRC.hallidayElectric, SRC.codata, SRC.hairer],
   };
@@ -372,9 +375,10 @@ export const electricField: PhysicsScene = {
   engineId: 'phys.field',
   title: L('Điện trường của điện tích điểm', 'Electric field of point charges'),
   // `when` keeps only the ones the chosen mode and number of charges use. q₁ sits at the origin
-  // and q₂ on the x-axis (any two points can be placed so); q₃ and M need both coordinates,
-  // except that M on the line q₁q₂ has y_M = 0 (the default).
-  required: ['U', 'd', 'q1', 'q2', 'x2', 'q3', 'x3', 'y3', 'xP'],
+  // and q₂ on the x-axis (any two points can be placed so). One charge: M on the x-axis (x_M only).
+  // Two or three: M needs both coordinates; "trên đoạn AB" / "trung điểm của AB" state y_M = 0
+  // in words (`IMPLIED` in src/ai/draft.ts), otherwise the learner enters them.
+  required: ['U', 'd', 'q1', 'q2', 'x2', 'q3', 'x3', 'y3', 'xP', 'yP'],
   usesGravity: false,
   params: [
     {
@@ -429,7 +433,7 @@ export const electricField: PhysicsScene = {
       when: points,
     },
     charge(3),
-    position('yP', L('Điểm M: tung độ', 'Point M: y'), 'y_M'),
+    position('yP', L('Điểm M: tung độ', 'Point M: y'), 'y_M', 2),
     position('x1', L('Vị trí q₁: hoành độ', 'q₁ position: x'), 'x_1', 1),
     position('y1', L('Vị trí q₁: tung độ', 'q₁ position: y'), 'y_1', 1),
     position('y2', L('Vị trí q₂: tung độ', 'q₂ position: y'), 'y_2', 2),
@@ -456,6 +460,8 @@ export const electricField: PhysicsScene = {
       min: 8.9e9,
       max: 9.1e9,
       step: 1e6,
+      // E = U/d needs no k.
+      when: points,
     },
   ],
   // q₁ = 4·10⁻⁸ C at A(0; 0), q₂ = −4·10⁻⁸ C at B(20 cm; 0), M the midpoint of AB:

@@ -107,7 +107,10 @@ C"), đọc đúng số mũ nhiều chữ số viết bằng chữ số nhỏ ph
 số thập phân nhỏ ("0,000719" trước đây bị tách thành "0,000" và "719"). Bộ lọc so trị tuyệt đối,
 nên `src/ai/draft.ts` kiểm thêm **dấu của điện tích**: dấu AI đưa ra khác dấu trong đề (dấu "−" sát
 số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái dấu"), thì bảng "Tôi hiểu đề
-như sau" hiện cảnh báo để người học xác nhận. Có test (`numbers.test.ts`, `draft.test.ts`).
+như sau" hiện cảnh báo ngay ở dòng điện tích đó để người học xác nhận (sửa dấu thì cảnh báo mất). Bộ lọc
+không bao giờ lỏng hơn trước: lũy thừa 10 đứng ngay sau một con số mà không đọc được dấu nhân ("2
+10⁻⁸") không được tính là một số riêng; "´", "•", "X", "\cdot" được đọc là dấu nhân; "10⁰" sau chữ số
+là "10 độ", không phải 1. Có test (`numbers.test.ts`, `draft.test.ts`).
 
 **Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
 số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn

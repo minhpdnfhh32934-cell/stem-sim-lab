@@ -36,6 +36,30 @@ describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
   });
 });
 
+describe('no laxer than before (review of #89)', () => {
+  it('never reads a power of ten whose mantissa it could not read', () => {
+    for (const text of ['q = 2´10⁻⁸ C', 'q = 2 • 10⁻⁸ C', 'q = 2 10^-8 C']) {
+      expect(mentions(text, 1e-8), text).toBe(false);
+    }
+    expect(mentions('F = 2 X 10^3 N', 1000)).toBe(false);
+    // These multiplication signs are read, so the stated value passes.
+    expect(mentions('q = 2´10⁻⁸ C', 2e-8)).toBe(true);
+    expect(mentions('q = 2 • 10⁻⁸ C', 2e-8)).toBe(true);
+    expect(mentions('F = 2 X 10^3 N', 2000)).toBe(true);
+    expect(mentions('q = 2 \\cdot 10^{-8} C', 2e-8)).toBe(true);
+    expect(mentions('q = 2 \\cdot 10^{-8} C', 1e-8)).toBe(false);
+    // A name before the power is not a mantissa.
+    expect(mentions('q2 = 10^-8 C', 1e-8)).toBe(true);
+  });
+
+  it('reads a superscript zero after a number as degrees, not as 10⁰ = 1', () => {
+    expect(mentions('Góc nghiêng 10⁰.', 1)).toBe(false);
+    expect(mentions('Góc nghiêng 10⁰.', 10)).toBe(true);
+    expect(numberTokens('nhiệt độ 30⁰C')).toEqual([[30]]);
+    expect(mentions('n = 10¹⁰', 1e10)).toBe(true);
+  });
+});
+
 describe('the sign a problem gives a charge', () => {
   it('reads a minus or a plus written next to the number', () => {
     expect(writtenSign('q = −2 µC', 2)).toBe(-1);
@@ -66,6 +90,10 @@ describe('the sign a problem gives a charge', () => {
     expect(writtenSign('Một hạt bụi mang điện tích 3 nC nằm cách bản âm 1 cm.', 3)).toBe(1);
     expect(writtenSign('Điện tích q = 2 µC chuyển động theo chiều âm của trục Ox.', 2)).toBe(1);
     expect(writtenSign('Hạt bụi mang điện tích âm có độ lớn 3 nC.', 3)).toBe(-1);
+    // One plural sign word covers every charge of its sentence.
+    const both = 'Hai điện tích âm q1 = 2 µC và q2 = 3 µC đặt cách nhau 10 cm.';
+    expect(writtenSign(both, 2)).toBe(-1);
+    expect(writtenSign(both, 3)).toBe(-1);
     // The previous sentence does not count.
     expect(writtenSign('Hạt bụi tích điện âm. Điện tích thử q = 2 nC.', 2)).toBe(1);
   });

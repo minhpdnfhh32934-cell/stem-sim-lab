@@ -93,6 +93,21 @@ const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
   { keys: /^e$/, value: 0, phrases: ['va chạm mềm', 'dính vào nhau', 'dính nhau', 'dính liền'] },
   { keys: /^angle$/, value: 0, phrases: ['ném ngang', 'phương ngang', 'nằm ngang'] },
   { keys: /^beta$/, value: 0, phrases: ['phương ngang', 'nằm ngang', 'song song', 'dọc theo'] },
+  // Electric field: q₁ at A (origin) and q₂ at B on the x-axis, so M on the line AB has y_M = 0.
+  {
+    keys: /^yP$/,
+    value: 0,
+    phrases: [
+      'trên đoạn ab',
+      'trên đoạn thẳng ab',
+      'trên đường thẳng ab',
+      'thuộc đoạn ab',
+      'thuộc đường thẳng ab',
+      'trung điểm của ab',
+      'trung điểm của đoạn ab',
+      'trung điểm ab',
+    ],
+  },
 ];
 
 /** Words that turn the phrase after them around ("không khí"/"không gian" are nouns, not "not"). */

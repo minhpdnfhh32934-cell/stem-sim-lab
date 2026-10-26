@@ -24,6 +24,8 @@ export function normalizeText(s: string): string {
   return (
     s
       .normalize('NFC')
+      // A lone ⁰ after a number is a degree sign ("góc 10⁰", "30⁰C"), not 10⁰ = 1.
+      .replace(/(\d)⁰(?![⁰¹²³⁴⁵⁶⁷⁸⁹⁻])/g, '$1°')
       // One caret per run: "10⁻¹⁰" → "10^-10" (not "10^-^1^0", which no reader understood).
       .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, '^$&')
       .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g, (c) => SUPER[c] ?? c)
@@ -51,10 +53,17 @@ function readings(token: string): number[] {
   return [...out];
 }
 
-/** Scientific notation: a [.×x*] 10 ^? b */
-const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·⋅∙])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
+/** Scientific notation: a × 10^b, with the multiplication signs of typed, pasted and LaTeX text. */
+const SCI =
+  /(\d+(?:[.,]\d+)?)\s*(?:[.×xX*·⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^?\s*[({]?\s*(-?\d+)\s*[)}]?/g;
 /** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
-const POW = /(?<![\d.,])10\s*\^\s*\(?\s*(-?\d+)\s*\)?/g;
+const POW = /(?<![\d.,])10\s*\^\s*[({]?\s*(-?\d+)\s*[)}]?/g;
+/**
+ * A number (not a name such as "q2") just before a power of ten: its mantissa, joined by a sign
+ * SCI does not know ("2 10^-8"). The power then is no number of its own: reading it alone would
+ * accept 10⁻⁸ for a problem that says 2·10⁻⁸.
+ */
+const MANTISSA_BEFORE = /(?<![\p{L}_\d.,])\d+(?:[.,]\d+)?\s*[^\p{L}\p{N}\s]?\s*$/u;
 // A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
 const PLAIN = /\d+(?:[.,\s]\d{3}(?!\d))*(?:[.,]\d+)?|\d+/g;
 
@@ -81,7 +90,8 @@ function scan(t: string, keepInner = false): Token[] {
   }
   for (const m of t.matchAll(POW)) {
     const end = m.index + m[0].length;
-    if (!inside(m.index, end)) tokens.push({ start: m.index, end, readings: [10 ** Number(m[1])] });
+    if (inside(m.index, end) || MANTISSA_BEFORE.test(t.slice(0, m.index))) continue;
+    tokens.push({ start: m.index, end, readings: [10 ** Number(m[1])] });
   }
   const outer = tokens.length;
   for (const m of t.matchAll(PLAIN)) {
@@ -126,6 +136,8 @@ const NEGATIVE =
   /(?<![\p{L}\p{N}])(?:(?:điện(?: tích)?|dấu) âm|negative(?:ly)? charged?)(?![\p{L}\p{N}])/u;
 const POSITIVE =
   /(?<![\p{L}\p{N}])(?:(?:điện(?: tích)?|dấu) dương|positive(?:ly)? charged?)(?![\p{L}\p{N}])/u;
+/** "Hai điện tích âm q1 = 2 µC và q2 = 3 µC": one sign word for every charge of the sentence. */
+const PLURAL_SIGN = /(?<![\p{L}\p{N}])(?:hai|ba|các|những) điện tích (âm|dương)(?![\p{L}\p{N}])/u;
 /** A new charge named after the number ("… cách điện tích âm q2"): its words are not this one's. */
 const NEXT_CHARGE = /(?<![\p{L}\p{N}])(?<!mang )điện tích(?![\p{L}\p{N}])/u;
 const OPEN_SIGN =
@@ -166,7 +178,9 @@ export function writtenSign(text: string, value: number, quote = ''): -1 | 0 | 1
     const neg = NEGATIVE.test(words);
     const pos = POSITIVE.test(words);
     if (neg !== pos) return neg ? -1 : 1;
-    return neg || OPEN_SIGN.test(words) ? 0 : 1;
+    if (neg || OPEN_SIGN.test(words)) return 0;
+    const plural = PLURAL_SIGN.exec(t.slice(from, tok.start))?.[1];
+    return plural ? (plural === 'âm' ? -1 : 1) : 1;
   };
   const places = tokens.flatMap((k, i) => (k.readings.some((r) => same(r, target)) ? [i] : []));
   const signs = new Set(places.map(signAt));

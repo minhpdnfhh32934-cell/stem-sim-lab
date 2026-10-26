@@ -2,7 +2,7 @@ import { arrow, circle, line, polyline, text, vectorScale } from '../render/draw
 import { fmtQty } from '../common/tex';
 import type { DrawContext, Params, WorldBounds } from '../types';
 import { FE } from './engine';
-import { traceFieldLines, type FieldLines, type Frame } from './fieldLines';
+import { discRadii, traceFieldLines, type FieldLines, type Frame } from './fieldLines';
 import { MODE, fieldSetup, type FieldSetup } from './model';
 
 /** Region shown for these parameters: every charge and point M, or the capacitor. */
@@ -34,7 +34,7 @@ export function lineFrame(p: Params): Frame {
   };
 }
 
-/** Radius of a charge's disc, where its lines start (`fieldLines.ts` SEED_RADIUS). */
+/** Pick radius of point M: the largest disc a charge may have (`discRadii`). */
 export function chargeRadius(p: Params): number {
   const f = lineFrame(p);
   return 0.02 * Math.max(f.xMax - f.xMin, f.yMax - f.yMin);
@@ -89,7 +89,7 @@ function drawPlates({ ctx, cam, opts }: DrawContext, s: FieldSetup): void {
 
 function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): void {
   const col = opts.colors;
-  const r0 = chargeRadius(p);
+  const radii = discRadii(s.charges, lineFrame(p));
   const { lines, nullPoints } = linesFor(p);
   const px = 24 / cam.scale;
   for (const l of lines) {
@@ -117,10 +117,11 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
   s.charges.forEach((c, i) => {
     // A zero charge is drawn neutral: it makes no field.
     const color = c.q > 0 ? col.acceleration : c.q < 0 ? col.velocity : col.faint;
-    circle(ctx, cam, c.x, c.y, r0, color, col.text, 9);
+    const r = radii[i] ?? 0;
+    circle(ctx, cam, c.x, c.y, r, color, col.text, 9);
     const sign = c.q > 0 ? '+' : c.q < 0 ? '−' : '0';
     text(ctx, cam, c.x, c.y, sign, col.panel, 'center', { x: 0, y: 7 });
-    const off = Math.max(9, r0 * cam.scale) + 3;
+    const off = Math.max(9, r * cam.scale) + 3;
     text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: off, y: -off });
   });
   const { x, y } = s.probe;

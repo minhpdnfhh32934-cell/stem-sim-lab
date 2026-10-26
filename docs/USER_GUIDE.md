@@ -385,8 +385,10 @@ xo, con lắc đơn, chuyển động tròn đều, điện trường.
 - **Điện trường của điện tích điểm** (chương Điện trường, Vật lí 11): ô đầu tiên chọn **điện tích
   điểm** hay **tụ điện phẳng**. Với điện tích điểm: chọn 1–3 điện tích, nhập điện tích có dấu (µC; đề
   ghi C hay nC thì app tự đổi), vị trí của chúng và điểm M bằng thanh trượt; app vẽ đường sức (mũi tên
-  theo chiều E, điểm E = 0 được đánh dấu), vectơ E tại M, và tính E, lực lên điện tích thử q₀, lực giữa
-  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox; M nằm trên đường q₁q₂ khi y_M = 0 (mặc định). Với tụ
+  theo chiều E; điểm E = 0 có đường sức đi tới thì được đánh dấu), vectơ E tại M, và tính E, lực lên điện tích thử q₀, lực giữa
+  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox. Một điện tích: M nằm trên Ox. Từ hai điện tích: đề nói M
+  "trên đoạn AB" hay "trung điểm của AB" thì y_M = 0; M nằm ngoài đường AB thì bạn tự nhập tọa độ của M
+  (AI không tự tính tọa độ). Với tụ
   phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
   "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
   bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.

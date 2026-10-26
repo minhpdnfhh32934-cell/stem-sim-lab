@@ -467,6 +467,7 @@ add(
         q("q2", -8, "uC", "q₂ = −8 µC"),
         q("x2", 30, "cm", "cách nhau 30 cm"),
         q("xP", 10, "cm", "cách A 10 cm"),
+        q("yP", 0, "cm", "nằm trên đoạn AB"),
     ],
     # M giữa A và B: E1 hướng ra xa q1 (về phía B), E2 hướng về q2 (về phía B) → cộng độ lớn.
     {"F12": K_C * 2e-6 * 8e-6 / 0.3**2, "E": K_C * (2e-6 / 0.1**2 + 8e-6 / 0.2**2)},
@@ -493,6 +494,38 @@ add(
         q("q0", 3, "nC", "điện tích 3 nC"),
     ],
     {"E": 200 / 0.04, "F": 3e-9 * 200 / 0.04},
+)
+
+add(
+    "efd-05",
+    "Hai điện tích điểm q₁ = 4.10⁻⁸ C và q₂ = −4.10⁻⁸ C đặt tại A và B trong không khí, AB = 6 cm. Tính cường độ điện trường tại điểm M nằm trên đường thẳng AB, ngoài đoạn AB về phía A và cách A 3 cm.",
+    "electricField",
+    [
+        q("q1", 4e-8, "C", "q₁ = 4.10⁻⁸ C"),
+        q("q2", -4e-8, "C", "q₂ = −4.10⁻⁸ C"),
+        q("x2", 6, "cm", "AB = 6 cm"),
+        # M phía A, ngoài đoạn AB: tọa độ âm (dấu là cách đặt trục, số 3 có trong đề).
+        q("xP", -3, "cm", "cách A 3 cm"),
+        q("yP", 0, "cm", "nằm trên đường thẳng AB"),
+    ],
+    # E1 (q1 > 0) hướng ra xa A, tức về phía −x; E2 (q2 < 0) hướng về B, tức +x; |E1| > |E2|.
+    {
+        "E": K_C * 4e-8 * (1 / 0.03**2 - 1 / 0.09**2),
+        "Ex": -K_C * 4e-8 * (1 / 0.03**2 - 1 / 0.09**2),
+    },
+)
+add(
+    "efd-06",
+    "Hai điện tích điểm q₁ = q₂ = 2.10⁻⁸ C đặt tại A và B trong không khí, AB = 5 cm. Tính cường độ điện trường tại điểm M cách A 3 cm và cách B 4 cm.",
+    "electricField",
+    [
+        q("q1", 2e-8, "C", "q₁ = q₂ = 2.10⁻⁸ C"),
+        q("q2", 2e-8, "C", "q₁ = q₂ = 2.10⁻⁸ C"),
+        q("x2", 5, "cm", "AB = 5 cm"),
+    ],
+    # M không nằm trên đường thẳng AB: tọa độ của M phải tính (1,8 cm; 2,4 cm), AI không được tự
+    # tính nên app hỏi người học.
+    missing=["xP", "yP"],
 )
 
 # --- Ngoài phạm vi ------------------------------------------------------------------
