@@ -20,9 +20,9 @@ Quyết định của người dùng (13/10/2026):
 - Bản nộp 2 (gói `SimLab_0.7.1.0_x64.msix`, gồm cả 0.6.0 và 0.7.0): **đã lên Store** (kiểm tra trang
   Store ngày 26/10/2026: mục "Có gì mới trong phiên bản này" ghi "Bản 0.7.1…"). Chưa ghi lại ngày
   phát hành chính xác.
-- Bản nộp 3: **đang chuẩn bị** trong Partner Center (bản nháp, sửa lần cuối 24/10/2026), cùng gói
-  0.7.1.0, chỉ để thay ảnh chụp trên trang Store bằng 8 ảnh mới trong `store/listing/screenshots/`.
-  Chưa gửi duyệt.
+- Bản nộp 3 (cùng gói 0.7.1.0, chỉ thay ảnh chụp trên trang Store bằng 8 ảnh mới trong
+  `store/listing/screenshots/`, cho cả tiếng Việt và tiếng Anh): **gửi duyệt ngày 26/10/2026**, chọn
+  **giữ lại**: duyệt xong, người dùng bấm **Publish now** thì ảnh mới mới hiện trên Store.
 - Ảnh chụp 0.7.1 (8 ảnh PNG 1366×768, thứ tự = tên tệp): ảnh 1, 3–8 chụp từ giao diện web 0.7.1 bằng
   Playwright, đã bỏ chữ " (chế độ trình duyệt)" ở thanh trạng thái cho giống app cài đặt; ảnh 2 là
   một khung hình quay từ app cài đặt, câu trả lời Gemini thật, con trỏ chuột được vá bằng chính nút
