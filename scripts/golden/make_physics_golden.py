@@ -14,6 +14,7 @@ import json
 import math
 import pathlib
 
+from scipy.constants import epsilon_0
 from scipy.special import ellipk
 
 OUT = pathlib.Path(__file__).resolve().parents[2] / "tests" / "golden" / "physics.json"
@@ -440,6 +441,58 @@ add(
         q("omega", 6, "rad/s", "tốc độ góc 6 rad/s"),
     ],
     {"a_c": 6**2 * 0.5, "force": 0.2 * 6**2 * 0.5},
+)
+
+# --- Điện trường của điện tích điểm --------------------------------------------------
+# q1 ở gốc O, q2 trên trục Ox, M = (xP, yP) với yP = 0 mặc định. k mặc định = 1/(4πε₀) (SciPy);
+# "lấy k = 9.10⁹" thì dùng số của đề. E = k|q|/r², F = |q0|·E, F12 = k|q1·q2|/r², tụ phẳng E = U/d.
+K_C = 1 / (4 * math.pi * epsilon_0)
+add(
+    "efd-01",
+    "Một điện tích điểm q = 4.10⁻⁸ C đặt trong không khí. Lấy k = 9.10⁹ N.m²/C². Tính cường độ điện trường tại điểm M cách điện tích 3 cm.",
+    "electricField",
+    [
+        q("q1", 4e-8, "C", "q = 4.10⁻⁸ C"),
+        q("k", 9e9, "N*m^2/C^2", "k = 9.10⁹ N.m²/C²"),
+        q("xP", 3, "cm", "cách điện tích 3 cm"),
+    ],
+    {"E": 9e9 * 4e-8 / 0.03**2},
+)
+add(
+    "efd-02",
+    "Hai điện tích điểm q₁ = 2 µC và q₂ = −8 µC đặt tại hai điểm A và B trong không khí, cách nhau 30 cm. Tính lực tương tác giữa hai điện tích và cường độ điện trường tại điểm M nằm trên đoạn AB, cách A 10 cm.",
+    "electricField",
+    [
+        q("q1", 2, "uC", "q₁ = 2 µC"),
+        q("q2", -8, "uC", "q₂ = −8 µC"),
+        q("x2", 30, "cm", "cách nhau 30 cm"),
+        q("xP", 10, "cm", "cách A 10 cm"),
+    ],
+    # M giữa A và B: E1 hướng ra xa q1 (về phía B), E2 hướng về q2 (về phía B) → cộng độ lớn.
+    {"F12": K_C * 2e-6 * 8e-6 / 0.3**2, "E": K_C * (2e-6 / 0.1**2 + 8e-6 / 0.2**2)},
+)
+add(
+    "efd-03",
+    "Một điện tích điểm Q = 10⁻⁸ C đặt tại điểm O trong không khí. Đặt một điện tích thử q = −2 nC tại điểm M cách O 5 cm. Tính cường độ điện trường tại M và độ lớn lực điện tác dụng lên điện tích thử.",
+    "electricField",
+    [
+        q("q1", 1e-8, "C", "Q = 10⁻⁸ C"),
+        q("q0", -2, "nC", "q = −2 nC"),
+        q("xP", 5, "cm", "cách O 5 cm"),
+    ],
+    {"E": K_C * 1e-8 / 0.05**2, "F": 2e-9 * K_C * 1e-8 / 0.05**2},
+)
+add(
+    "efd-04",
+    "Hai bản kim loại phẳng song song đặt cách nhau 4 cm, hiệu điện thế giữa hai bản là 200 V. Một hạt bụi mang điện tích 3 nC nằm giữa hai bản. Tính cường độ điện trường giữa hai bản và độ lớn lực điện tác dụng lên hạt bụi.",
+    "electricField",
+    [
+        q("mode", 1, "1", "Hai bản kim loại phẳng song song"),
+        q("d", 4, "cm", "cách nhau 4 cm"),
+        q("U", 200, "V", "hiệu điện thế giữa hai bản là 200 V"),
+        q("q0", 3, "nC", "điện tích 3 nC"),
+    ],
+    {"E": 200 / 0.04, "F": 3e-9 * 200 / 0.04},
 )
 
 # --- Ngoài phạm vi ------------------------------------------------------------------

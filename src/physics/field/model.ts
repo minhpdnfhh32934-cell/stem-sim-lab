@@ -1,3 +1,5 @@
+import { C } from '@/core/constants';
+
 /**
  * Electrostatics in vacuum or air (ε = 1), SI units, drawn in the plane z = 0 of the 3D field:
  *   point charges  Eᵢ = k qᵢ (r − rᵢ)/|r − rᵢ|³,  E = Σ Eᵢ (superposition),  V = Σ k qᵢ/|r − rᵢ|;
@@ -68,4 +70,38 @@ export interface Plates {
 export function plateField(p: Plates, x: number, y: number): [number, number] {
   const inside = Math.abs(y) < p.d / 2 && Math.abs(x) <= p.w / 2;
   return inside ? [0, -p.U / p.d] : [0, 0];
+}
+
+/** `mode` parameter: the scene shows point charges or a parallel-plate capacitor. */
+export const MODE = { points: 0, plates: 1 } as const;
+
+export interface FieldSetup {
+  mode: number;
+  /** Active charges q₁…qₙ (n = 1–3), in order. */
+  charges: PointCharge[];
+  /** Point M where E is asked (point charges). */
+  probe: { x: number; y: number };
+  /** Test charge q₀ (C) placed at M, or between the plates. */
+  q0: number;
+  k: number;
+  plates: Plates;
+}
+
+/** Scene parameters (SI) → charges, point M and plates. q₁ sits at the origin unless moved. */
+export function fieldSetup(p: Record<string, number | undefined>): FieldSetup {
+  const n = Math.min(3, Math.max(1, Math.round(p.n ?? 2)));
+  const charges: PointCharge[] = [];
+  for (let i = 1; i <= n; i++) {
+    charges.push({ q: p[`q${i}`] ?? 0, x: p[`x${i}`] ?? 0, y: p[`y${i}`] ?? 0 });
+  }
+  const d = p.d ?? 0.02;
+  return {
+    mode: p.mode ?? MODE.points,
+    charges,
+    probe: { x: p.xP ?? 0, y: p.yP ?? 0 },
+    q0: p.q0 ?? 0,
+    k: p.k ?? C.kC,
+    // The plates are drawn 5·d long; an ideal capacitor has no edges, so the length is only a picture.
+    plates: { U: p.U ?? 0, d, w: 5 * d },
+  };
 }

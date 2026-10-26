@@ -38,6 +38,8 @@ export const TOPIC_HINTS: Record<string, string> = {
   simplePendulum: 'Con lắc đơn: chu kì, biên độ góc, vận tốc, lực căng dây.',
   uniformCircularMotion:
     'Chuyển động tròn đều: bán kính, tốc độ, tốc độ góc (rad/s), chu kì, tần số (Hz, vòng/s, vòng/phút), gia tốc hướng tâm, lực hướng tâm.',
+  electricField:
+    'Điện trường, định luật Coulomb: 1–3 điện tích điểm (q có dấu, C/µC/nC), cường độ điện trường tại điểm M, lực điện lên điện tích thử q0, lực tương tác giữa hai điện tích; hoặc tụ phẳng: điện trường đều E = U/d. Tọa độ: q1 ở gốc O, q2 trên trục Ox (x2 = khoảng cách giữa hai điện tích), xP = khoảng cách từ q1 tới M khi M nằm trên đường nối q1, q2 về phía q2; chỉ ghi tọa độ có sẵn trong đề, không tự tính. Chân không hoặc không khí; có hằng số điện môi ε thì ghi vào unsupported_parts.',
 };
 
 export function classificationSystem(topics: { id: string; title: string }[]): string {

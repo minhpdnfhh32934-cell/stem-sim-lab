@@ -55,7 +55,8 @@ function readings(token: string): number[] {
 const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
 /** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
 const POW = /(?<![\d.,])10\s*\^\s*\(?\s*(-?\d+)\s*\)?/g;
-const PLAIN = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
+// A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
+const PLAIN = /\d+(?:[.,\s]\d{3}(?!\d))*(?:[.,]\d+)?|\d+/g;
 
 interface Token {
   start: number;

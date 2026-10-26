@@ -204,6 +204,20 @@ export const POES: readonly Poe[] = [
     // mode 0 = "Biết tốc độ v": v stays fixed while r changes.
     start: { mode: 0 },
   },
+  {
+    id: 'electricField.d',
+    topic: 'electricField',
+    param: 'd',
+    factor: 2,
+    answer: 'E',
+    question: L(
+      'Giữ nguyên hiệu điện thế U, nếu khoảng cách hai bản tụ gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
+      'Keeping the voltage U, if the plate separation doubles, how does the field between the plates change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+    // mode 1 = "Tụ điện phẳng": U stays fixed while d changes.
+    start: { mode: 1 },
+  },
 ];
 
 export function poeFor(topic: string): Poe | undefined {

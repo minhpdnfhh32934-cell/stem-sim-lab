@@ -2,7 +2,19 @@ import { describe, expect, it } from 'vitest';
 import { C } from '@/core/constants';
 import { dopri5 } from '@/core/ode';
 import { traceFieldLines, type FieldLine, type Frame } from './fieldLines';
-import { fieldAt, forceOn, plateField, potentialAt, type PointCharge } from './model';
+import { fmtQty } from '../common/tex';
+import { linesFor } from './draw';
+import { FE, FieldEngine } from './engine';
+import {
+  MODE,
+  fieldAt,
+  fieldSetup,
+  forceOn,
+  plateField,
+  potentialAt,
+  type PointCharge,
+} from './model';
+import { electricField } from './scenes';
 
 const k = C.kC;
 const frame: Frame = { xMin: -0.5, xMax: 0.5, yMin: -0.4, yMax: 0.4 };
@@ -193,5 +205,76 @@ describe('field lines (RK4 with step doubling)', () => {
       },
     );
     expect(half.lines.filter((l) => l.dir === 1)).toHaveLength(8);
+  });
+});
+
+describe('electricField scene', () => {
+  const sceneParams = (over: Record<string, number> = {}) => ({
+    ...electricField.defaults,
+    ...over,
+  });
+  const answer = (p: Record<string, number>, id: string) =>
+    electricField.solve(p, 'vi').answers.find((a) => a.id === id);
+
+  it('engine state equals the field of the model at M, and U/d between the plates', () => {
+    const engine = new FieldEngine();
+    const out = new Float64Array(engine.stateSize);
+    const p = sceneParams({ yP: 0.05 });
+    engine.reset(p);
+    engine.step();
+    engine.readState(out);
+    const s = fieldSetup(p);
+    const [ex, ey] = fieldAt(s.charges, s.k, s.probe.x, s.probe.y);
+    expect(out[FE.ex]).toBe(ex);
+    expect(out[FE.ey]).toBe(ey);
+    expect(out[FE.e]).toBe(Math.hypot(ex, ey));
+    engine.reset(sceneParams({ mode: MODE.plates }));
+    engine.readState(out);
+    expect(out[FE.e]).toBe(100 / 0.02);
+    expect(engine.finished()).toBe(false);
+  });
+
+  it('solves the default dipole: E at the midpoint, force on q₀, Coulomb force, −∇V check', () => {
+    const p = sceneParams();
+    const e = (2 * C.kC * 4e-8) / 0.1 ** 2;
+    expect(answer(p, 'E')?.value).toBeCloseTo(e, 6);
+    expect(answer(p, 'Ex')?.value).toBeCloseTo(e, 6); // towards the − charge at B
+    expect(answer(p, 'Ey')?.value).toBe(0);
+    expect(answer(p, 'F')?.value).toBeCloseTo(1e-8 * e, 15);
+    expect(answer(p, 'F12')?.value).toBeCloseTo((C.kC * 4e-8 * 4e-8) / 0.2 ** 2, 15);
+    const E = answer(p, 'E');
+    expect(Math.abs((E?.check ?? 0) - e) / e).toBeLessThan(1e-6);
+    expect(answer({ ...p, n: 1 }, 'F12')).toBeUndefined();
+    expect(answer({ ...p, mode: MODE.plates }, 'E')?.value).toBe(5000);
+  });
+
+  it('refuses M on a charge, charges too close, and plates without a gap', () => {
+    expect(electricField.validate?.(sceneParams())).toEqual([]);
+    expect(electricField.validate?.(sceneParams({ xP: 0.2 }))).toHaveLength(1);
+    expect(electricField.validate?.(sceneParams({ x2: 0.001 }))).toHaveLength(1);
+    expect(electricField.validate?.(sceneParams({ mode: MODE.plates, d: 0 }))).toHaveLength(1);
+  });
+
+  it('takes the mode and the number of charges from the problem, never from a slider', () => {
+    const auto = electricField.autoDefaults;
+    expect(auto?.(sceneParams(), { q1: 'problem', xP: 'problem' })).toEqual({
+      n: 1,
+      mode: MODE.points,
+    });
+    expect(auto?.(sceneParams(), { q1: 'problem', q3: 'problem' })).toEqual({
+      n: 3,
+      mode: MODE.points,
+    });
+    expect(auto?.(sceneParams(), { U: 'problem', d: 'problem' })).toEqual({ mode: MODE.plates });
+    // A learner moving q₁ by hand keeps the two charges on screen.
+    expect(auto?.(sceneParams(), { q1: 'user' })).toEqual({});
+  });
+
+  it('puts the field-line error the code computed on an exact Science Card', () => {
+    const c = electricField.scienceCard(sceneParams());
+    expect(c.confidence).toBe('exact');
+    const err = fmtQty('vi', linesFor(sceneParams()).maxError, 'mm', 2);
+    expect(c.confidenceNote?.vi).toContain(err);
+    expect(c.sources.length).toBeGreaterThan(0);
   });
 });

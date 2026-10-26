@@ -20,6 +20,9 @@ describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
   it('keeps ordinary numbers as they were', () => {
     expect(mentions('cách nhau 10 cm', 10)).toBe(true);
     expect(numberTokens('cách nhau 10 cm')).toEqual([[10]]);
+    // Small decimals stay whole (the thousands group used to swallow ",000").
+    expect(numberTokens('F = 0,000719 N')).toEqual([[0.000719, 719]]);
+    expect(numberTokens('1.200.000 N, 1 200 N')).toEqual([[1200000], [1200]]);
     // A power of ten is not read inside a longer number or a mantissa.
     expect(numberTokens('210^2')).not.toContainEqual([100]);
     expect(numberTokens('q = 5.10^-10 C')).toEqual([[5e-10]]);

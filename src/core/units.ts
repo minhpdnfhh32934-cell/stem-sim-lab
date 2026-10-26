@@ -44,6 +44,8 @@ export const DIM = {
   resistance: D(2, 1, -3, -2),
   molarMass: D(0, 1, 0, 0, 0, -1),
   damping: D(0, 1, -1),
+  electricField: D(1, 1, -3, -1),
+  coulombConstant: D(3, 1, -4, -2),
 } as const;
 
 /**
@@ -165,6 +167,19 @@ const UNITS: readonly UnitDef[] = [
   { symbol: 'uC', dim: DIM.charge, factor: 1e-6, aliases: ['µC', 'μC'] },
   { symbol: 'V', dim: DIM.voltage, factor: 1 },
   { symbol: 'ohm', dim: DIM.resistance, factor: 1, aliases: ['Ω'] },
+  // electric field (0.8.0, #76)
+  { symbol: 'nC', dim: DIM.charge, factor: 1e-9 },
+  { symbol: 'kV', dim: DIM.voltage, factor: 1e3 },
+  { symbol: 'V/m', dim: DIM.electricField, factor: 1, aliases: ['N/C'] },
+  { symbol: 'kV/m', dim: DIM.electricField, factor: 1e3 },
+  { symbol: 'mN', dim: DIM.force, factor: 1e-3 },
+  { symbol: 'uN', dim: DIM.force, factor: 1e-6, aliases: ['µN', 'μN'] },
+  {
+    symbol: 'N*m^2/C^2',
+    dim: DIM.coulombConstant,
+    factor: 1,
+    aliases: ['N·m²/C²', 'N.m^2/C^2', 'N.m²/C²', 'Nm^2/C^2', 'Nm²/C²'],
+  },
 ];
 
 const REGISTRY = new Map<string, UnitDef>();
@@ -234,6 +249,7 @@ export function unitLabel(symbol: string): string {
     degC: '°C',
     um: 'µm',
     uC: 'µC',
+    uN: 'µN',
     angstrom: 'Å',
     ohm: 'Ω',
     '1': '',

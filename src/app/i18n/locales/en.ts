@@ -86,6 +86,7 @@ const en: Messages = {
     ecology: 'Ecology',
     cellPhysiology: 'Cell physiology',
     circularMotion: 'Uniform circular motion',
+    electricField: 'Electric field',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -125,6 +126,7 @@ const en: Messages = {
     michaelisMenten: 'Enzyme kinetics (Michaelis–Menten)',
     diffusionOsmosis: 'Diffusion & osmosis',
     uniformCircularMotion: 'Uniform circular motion',
+    electricField: 'Electric field of point charges',
   },
   stage: {
     regionLabel: 'Simulation stage',

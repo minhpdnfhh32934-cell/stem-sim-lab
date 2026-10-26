@@ -53,3 +53,8 @@ registerEngine('phys.circular', async () => {
   const { CircularEngine } = await import('@/physics/circular/engine');
   return () => new CircularEngine();
 });
+
+registerEngine('phys.field', async () => {
+  const { FieldEngine } = await import('@/physics/field/engine');
+  return () => new FieldEngine();
+});

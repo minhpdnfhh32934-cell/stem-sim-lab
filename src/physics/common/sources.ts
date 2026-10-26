@@ -47,4 +47,14 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 4 (chuyển động tròn đều), ch. 6 (lực hướng tâm)',
   },
+  sgk11kntt: {
+    id: 'sgk-vl11-kntt',
+    citation:
+      'Sách giáo khoa Vật lí 11, bộ Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam',
+  },
+  hallidayElectric: {
+    id: 'halliday-electric',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 21 (định luật Coulomb), ch. 22 (điện trường), ch. 25 (tụ điện)',
+  },
 } satisfies Record<string, Source>;
