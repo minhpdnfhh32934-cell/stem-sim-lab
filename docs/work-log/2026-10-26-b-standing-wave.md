@@ -39,11 +39,22 @@
 
 ## Next steps and limits
 
+- **Where it stopped (2026-10-26, project moving to `D:\Projects\stem-sim-lab`):** phase 1 and the
+  science-review fixes are committed and pushed on `origin/feat/75-standing-wave`; no PR yet; no
+  E2E lock or dev server held. Phase 2 waits for PR (a) #74 on `main` (not opened yet).
+- **Resume:** in a worktree of the new checkout, `git fetch origin`,
+  `git switch feat/75-standing-wave` (tracks `origin/feat/75-standing-wave`), `npm ci`, then
+  `npx vitest run src/physics/wave --maxWorkers=1` (expect 3 files, 32 tests PASS). When (a) is
+  on `main`: `git merge origin/main` (no rebase) and do phase 2.
 - Phase 2 (after PR (a) is on `main`): `git merge origin/main`; units kg/m, g/m (+ `dim` on `muL`,
-  `texQty` for μ); SGK source in `common/sources.ts`; register scene/engine; catalog, i18n,
+  `texQty` for μ instead of the hand-written kg/m); SGK source into `common/sources.ts` (remove the
+  local `SGK11_WAVES` and both `TODO(phase 2)`); register scene/engine; catalog, i18n,
   `TOPIC_HINTS`; challenge + POE (tension ×4 → f ×2); golden problems; `physics.spec.ts`;
   DATA_REVIEW `SWV-*`; SCIENCE_ACCURACY, USER_GUIDE, CLAUDE.md, PROGRESS.
-- Curriculum row only if `scripts/data/gen_curriculum_kntt.py` is on `main` (PR #82).
+- Curriculum row: `scripts/data/gen_curriculum_kntt.py` is on `main` since PR #82 — append to
+  `PLACEMENTS`: `("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố
+định).")`, rerun the script and commit the generated files (else `src/app/curriculum.test.ts`
+  fails).
 
 ## 2026-10-26 — independent science review (science-reviewer agent)
 
