@@ -26,7 +26,7 @@ function useShowNames(): boolean {
   return choice ?? basic;
 }
 
-/** "Tế bào nhân sơ và nhân thực": the 2D picture (Cell2D) with the cell choice and "Hiện tên". */
+/** "Tế bào nhân sơ và nhân thực": the 2D picture (Cell2D) with "Hiện tên". */
 export function CellStage() {
   const Lz = useLocalized();
   const kind = useCell((s) => s.kind);
@@ -49,12 +49,6 @@ export function CellStage() {
     <div className="bio-view cell2d">
       <canvas ref={ref} className="chem-canvas" role="img" aria-label={Lz(CELL_KIND_NAME[kind])} />
       <div className="chem-overlay">
-        <Segmented<CellKind>
-          label={L('Loại tế bào', 'Cell type')}
-          value={kind}
-          options={CELL_KINDS.map((id) => ({ id, label: SHORT_NAME[id] }))}
-          onChange={setCellKind}
-        />
         <IconButton
           icon={Tags}
           size="lg"
@@ -71,7 +65,10 @@ export function CellStage() {
   );
 }
 
-/** Inspector: the cell's parts (buttons ≥ 40 px); a click opens the part's name and function. */
+/**
+ * Inspector (also the input panel of "Tự dựng cảnh"): the cell choice, then the cell's parts
+ * (buttons ≥ 40 px); a click opens the part's name and function.
+ */
 export function CellPanel() {
   const Lz = useLocalized();
   const kind = useCell((s) => s.kind);
@@ -79,7 +76,13 @@ export function CellPanel() {
   const info = selected ? PARTS[selected] : null;
   const title = Lz(L('Bộ phận tế bào', 'Cell parts'));
   return (
-    <div className="m3d-parts cell-parts">
+    <div className="cell-parts">
+      <Segmented<CellKind>
+        label={L('Loại tế bào', 'Cell type')}
+        value={kind}
+        options={CELL_KINDS.map((id) => ({ id, label: SHORT_NAME[id] }))}
+        onChange={setCellKind}
+      />
       <h4 className="m3d-parts__title">{Lz(CELL_KIND_NAME[kind])}</h4>
       <div className="m3d-parts__list" role="group" aria-label={title}>
         {partsFor(kind).map((id) => {
@@ -99,25 +102,28 @@ export function CellPanel() {
           );
         })}
       </div>
-      {info ? (
-        <aside className="cell-part-card" aria-live="polite">
-          <strong>{Lz(info.name)}</strong>
-          <p>{Lz(info.role)}</p>
+      {/* Always mounted, so a screen reader announces the card that appears inside it. */}
+      <div aria-live="polite">
+        {info ? (
+          <div className="cell-part-card">
+            <strong>{Lz(info.name)}</strong>
+            <p>{Lz(info.role)}</p>
+            <p className="small muted">
+              {Lz(L('Nguồn', 'Source'))}: {info.source.citation} ·{' '}
+              {Lz(L('chờ giáo viên duyệt', 'awaiting teacher review'))}
+            </p>
+          </div>
+        ) : (
           <p className="small muted">
-            {Lz(L('Nguồn', 'Source'))}: {info.source.citation} ·{' '}
-            {Lz(L('chờ giáo viên duyệt', 'awaiting teacher review'))}
+            {Lz(
+              L(
+                'Chọn một bộ phận để xem tên và chức năng của nó.',
+                'Pick a part to see its name and what it does.',
+              ),
+            )}
           </p>
-        </aside>
-      ) : (
-        <p className="small muted">
-          {Lz(
-            L(
-              'Chọn một bộ phận để xem tên và chức năng của nó.',
-              'Pick a part to see its name and what it does.',
-            ),
-          )}
-        </p>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -621,4 +621,8 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   ngoài” ghi “ở một số vi khuẩn (Gram âm)” — tr. 45 nói “một số loại vi khuẩn”, tr. 46 nói rõ vi
   khuẩn Gr−; (e) câu của không bào trung tâm: điều hoà áp suất thẩm thấu là của không bào trung
   tâm, còn việc chứa sắc tố, chất dự trữ, chất thải SGK nói cho “một số không bào” (tr. 51); (f) tên
-  tiếng Anh. Phần 3D của bài làm ở 0.8.1 (#54). `review_status: "pending"`.
+  tiếng Anh; (g) bốn câu giữ đúng ý SGK nhưng sách đại học nói khác hoặc kĩ hơn (rà soát độc lập
+  26/10): màng ngoài giúp vi khuẩn gây bệnh tránh bạch cầu (tr. 45; sách đại học thường gán việc này
+  chủ yếu cho vỏ nhầy), roi “làm từ bó sợi protein” (tr. 45; roi vi khuẩn là một sợi rỗng từ một loại
+  protein), ti thể là nơi “phân giải carbohydrate” (tr. 53; đường phân diễn ra ở bào tương), khung
+  xương có “sợi trung gian” ở cả tế bào thực vật (tr. 54 nói chung cho tế bào nhân thực). Phần 3D của bài làm ở 0.8.1 (#54). `review_status: "pending"`.

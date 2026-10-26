@@ -46,6 +46,10 @@ describe('Cell2D picture', () => {
     for (let i = 1; i < ys.length; i++)
       expect((ys[i] ?? 0) - (ys[i - 1] ?? 0)).toBeGreaterThanOrEqual(22);
     expect(Math.max(...ys)).toBeLessThanOrEqual(560);
+    // A stage too short for the column: labels may crowd, but never leave [lo, hi].
+    const tight = stack([10, 20, 30, 40, 50, 60], 30, 100);
+    expect(Math.min(...tight)).toBeGreaterThanOrEqual(30);
+    expect(Math.max(...tight)).toBeLessThanOrEqual(100);
   });
 });
 

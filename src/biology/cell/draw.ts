@@ -109,7 +109,8 @@ const dist = (a: V, b: V) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 function dots(g: Pen, points: readonly V[], r: number, color: string) {
   for (const [x, y] of points) {
     g.circle(x, y, r);
-    g.paint(color, null);
+    // The outline (same colour) is what the highlight pass turns into a visible accent ring.
+    g.paint(color, color, 0.004);
   }
 }
 
@@ -365,7 +366,7 @@ const ANIMAL: Figure = {
       draw: (g) => {
         for (const c of AN_CHORDS) {
           g.poly(chord(c));
-          g.paint(null, '--border-strong', 0.007);
+          g.paint(null, '--text-faint', 0.006);
         }
       },
     },
@@ -493,7 +494,7 @@ const PLANT: Figure = {
       draw: (g) => {
         for (const seg of PL_CYTO) {
           g.poly(seg);
-          g.paint(null, '--border-strong', 0.007);
+          g.paint(null, '--text-faint', 0.006);
         }
       },
     },
@@ -603,7 +604,8 @@ export function stack(want: readonly number[], lo: number, hi: number): number[]
     y[i] = Math.max(y[i] ?? lo, i === 0 ? lo : (y[i - 1] ?? lo) + LINE);
   for (let i = y.length - 1; i >= 0; i--)
     y[i] = Math.min(y[i] ?? hi, i === y.length - 1 ? hi : (y[i + 1] ?? hi) - LINE);
-  return y;
+  // Only a stage too short for the column breaks the spacing; it never leaves [lo, hi].
+  return y.map((v) => Math.max(lo, v));
 }
 
 /**
@@ -621,14 +623,15 @@ export function drawCell(
   const fig = FIGURES[kind];
   const [x0, y0, x1, y1] = fig.box;
   ctx.font = `13px ${css('--font-sans') || 'sans-serif'}`;
-  const labels: Label[] = [];
+  const all: Label[] = [];
   for (const [id, shape] of Object.entries(fig.parts) as [PartId, Shape][]) {
     const text = names[id];
-    if (text && (showNames || id === selected))
-      labels.push({ id, text, at: shape.at, left: shape.at[0] < (x0 + x1) / 2 });
+    if (text) all.push({ id, text, at: shape.at, left: shape.at[0] < (x0 + x1) / 2 });
   }
+  const labels = all.filter((l) => showNames || l.id === selected);
+  // Room for every label of this cell, so showing or picking one never moves the cell.
   const side = (left: boolean) =>
-    Math.max(0, ...labels.filter((l) => l.left === left).map((l) => ctx.measureText(l.text).width));
+    Math.max(0, ...all.filter((l) => l.left === left).map((l) => ctx.measureText(l.text).width));
   const room = (left: boolean) => (side(left) > 0 ? side(left) + GAP : 0);
   const roomL = room(true);
   const roomR = room(false);
@@ -649,8 +652,8 @@ export function drawCell(
     const list = labels.filter((l) => l.left === left).sort((a, b) => a.at[1] - b.at[1]);
     const ys = stack(
       list.map((l) => base.Y(l.at[1])),
-      TOP / 2 + LINE / 2,
-      height - BOTTOM / 2 - LINE / 2,
+      TOP,
+      height - BOTTOM,
     );
     const colX = left ? base.X(x0) - GAP / 2 : base.X(x1) + GAP / 2;
     list.forEach((l, i) => {

@@ -1129,7 +1129,12 @@
 }
 
 /* Cell structure 2D (src/biology/cell): the cell switch is a full target; the part card. */
-.cell2d .segmented__item {
+.cell-parts .segmented {
+  display: flex;
+  margin-bottom: var(--space-3);
+}
+.cell-parts .segmented__item {
+  flex: 1;
   min-height: var(--target);
 }
 .cell-part-card {

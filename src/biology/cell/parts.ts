@@ -280,8 +280,8 @@ export const PARTS: Record<PartId, CellPart> = {
   cytoskeleton: part(
     L('Khung xương tế bào', 'Cytoskeleton'),
     L(
-      'Mạng lưới vi sợi, sợi trung gian và vi ống trong bào tương; nâng đỡ, giữ hình dạng tế bào, neo giữ bào quan và giúp tế bào di chuyển.',
-      'A network of microfilaments, intermediate filaments and microtubules in the cytosol; it supports the cell, keeps its shape, anchors organelles and helps the cell move.',
+      'Mạng lưới vi sợi, sợi trung gian và vi ống trong bào tương; nâng đỡ, giữ hình dạng tế bào, neo giữ bào quan và hỗ trợ sự di chuyển của các bộ phận trong tế bào (ở một số tế bào, của cả tế bào).',
+      'A network of microfilaments, intermediate filaments and microtubules in the cytosol; it supports the cell, keeps its shape, anchors organelles and helps parts of the cell (in some cells, the whole cell) move.',
     ),
     EUK,
     false,

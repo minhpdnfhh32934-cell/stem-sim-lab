@@ -14,8 +14,8 @@ export const CELL_ILLUSTRATION = L(
 
 const MODEL: Record<CellKind, LocalizedText> = {
   bacterium: L(
-    'Sơ đồ định tính một tế bào vi khuẩn điển hình (nhân sơ): chưa có màng nhân, trong tế bào chất chỉ có ribosome, không có bào quan có màng bao bọc.',
-    'A qualitative diagram of a typical bacterial (prokaryotic) cell: no nuclear envelope, and only ribosomes in the cytoplasm — no membrane-bound organelles.',
+    'Sơ đồ định tính một tế bào vi khuẩn điển hình (nhân sơ): chưa có màng nhân; bào quan duy nhất trong tế bào chất là ribosome, không có bào quan có màng bao bọc.',
+    'A qualitative diagram of a typical bacterial (prokaryotic) cell: no nuclear envelope; the only organelles in the cytoplasm are ribosomes — no membrane-bound organelles.',
   ),
   animal: L(
     'Sơ đồ định tính một tế bào động vật (nhân thực): có nhân với màng nhân, hệ thống nội màng và các bào quan có màng bao bọc; không có thành tế bào, lục lạp.',
