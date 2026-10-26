@@ -238,8 +238,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--space-2) var(--space-3);
-  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  gap: var(--space-1);
 }
 .graph-panel__picker {
   align-self: flex-start;
@@ -254,12 +254,15 @@
   position: absolute;
   inset: 0;
 }
+/* Inside uPlot's plot area (`.u-over`), so it never covers the axes' numbers. */
 .chart__empty {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   margin: 0;
+  padding: 0 var(--space-2);
+  text-align: center;
   z-index: 1;
   pointer-events: none;
 }
@@ -271,6 +274,37 @@
   color: var(--text);
   font-weight: 600;
   font-family: var(--font-mono);
+}
+/* Physics graphs: the live legend is a column on the right, one series per line. */
+.chart--legend-side {
+  display: flex;
+  gap: var(--space-2);
+}
+.chart--legend-side .chart__plot {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+/* A fixed width: live values change length on hover (up to "-0,00001234"), and a column sized
+   by its content would resize the plot under the mouse. A long row wraps instead. */
+.chart__legend {
+  flex: 0 0 13rem;
+  max-width: 40%;
+  align-self: center;
+  max-height: 100%;
+  overflow-y: auto;
+}
+.chart__legend .u-legend {
+  margin: 0;
+  text-align: left;
+}
+.chart__legend .u-legend.u-inline tr {
+  display: block;
+  margin: 0;
+}
+.chart__legend .u-legend .u-value {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Solution */

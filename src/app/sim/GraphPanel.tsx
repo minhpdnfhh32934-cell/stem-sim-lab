@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type uPlotType from 'uplot';
 import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -8,6 +9,7 @@ import { useTierConfig } from '@/perf/perfStore';
 import type { GraphDef } from '@/physics/types';
 import { EmptyState } from '@/ui/EmptyState';
 import { ChartSpline } from 'lucide-react';
+import { X_AXIS_SIZE, yTickSpace } from '@/ui/charts/axes';
 import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
 import { graphData } from './data';
 import { sim } from './runtime';
@@ -64,7 +66,10 @@ function Chart({ graph }: { graph: GraphDef }) {
   const theme = useResolvedTheme();
   const tier = useTierConfig();
   const hostRef = useRef<HTMLDivElement>(null);
+  const legendRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<uPlotType | null>(null);
+  // uPlot's plot area: the "no data" note goes there, never over the axes.
+  const [plotArea, setPlotArea] = useState<HTMLElement | null>(null);
   const cursorT = useRef<number | null>(null);
   const dataVersion = useSimStore((s) => s.dataVersion);
   const scrubTime = useSimStore((s) => s.scrubTime);
@@ -91,13 +96,24 @@ function Chart({ graph }: { graph: GraphDef }) {
         width: host.clientWidth || 600,
         height: Math.max(120, host.clientHeight || 180),
         scales: { x: { time: false } },
-        legend: { live: true },
+        // Top: room for half the highest y value only (uPlot's automatic 17 px).
+        padding: [8, null, null, null],
+        // The live legend is a column beside the plot: the plot keeps the panel's whole height
+        // whatever the number of series (a row under or above it took 24–48 px of a 144 px box).
+        legend: {
+          live: true,
+          mount: (_u, el) => {
+            legendRef.current?.appendChild(el);
+          },
+        },
         cursor: { drag: { x: false, y: false }, points: { size: 8 } },
         axes: [
           {
             stroke: axisStroke,
             grid: { stroke: gridStroke, width: 1 },
-            ticks: { stroke: gridStroke },
+            ticks: { stroke: gridStroke, size: 6 },
+            // Compact, as in the shared XYChart: uPlot's 50 + 30 px left a 35 px plot.
+            ...X_AXIS_SIZE,
             label: t('graphs.time'),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
@@ -107,6 +123,8 @@ function Chart({ graph }: { graph: GraphDef }) {
             ticks: { stroke: gridStroke },
             label: L(graph.yLabel),
             size: 60,
+            labelSize: 20,
+            space: (_u, _axis, _min, _max, plotHeight) => yTickSpace(plotHeight),
             values: (_u, vals) => vals.map((v) => nf.format(v)),
           },
         ],
@@ -140,18 +158,18 @@ function Chart({ graph }: { graph: GraphDef }) {
         },
       };
       const data = graphData(graph, useSimStore.getState().params) as uPlotType.AlignedData;
-      plotRef.current = new UPlot(opts, data, host);
+      const plot = new UPlot(opts, data, host);
+      plotRef.current = plot;
+      setPlotArea(plot.over);
       ro = new ResizeObserver(() => {
-        plotRef.current?.setSize({
-          width: host.clientWidth,
-          height: Math.max(120, host.clientHeight),
-        });
+        plot.setSize({ width: host.clientWidth, height: Math.max(120, host.clientHeight) });
       });
       ro.observe(host);
     });
     return () => {
       disposed = true;
       ro?.disconnect();
+      setPlotArea(null);
       plotRef.current?.destroy();
       plotRef.current = null;
     };
@@ -167,9 +185,12 @@ function Chart({ graph }: { graph: GraphDef }) {
   }, [dataVersion, scrubTime, params, graph, tier.graphHz]);
 
   return (
-    <div className="chart">
-      {!hasData && <p className="chart__empty muted">{t('graphs.noData')}</p>}
+    <div className="chart chart--legend-side">
       <div ref={hostRef} className="chart__plot" />
+      <div ref={legendRef} className="chart__legend" />
+      {!hasData &&
+        plotArea &&
+        createPortal(<p className="chart__empty muted">{t('graphs.noData')}</p>, plotArea)}
     </div>
   );
 }
