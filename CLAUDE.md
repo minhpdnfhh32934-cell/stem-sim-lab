@@ -606,7 +606,7 @@ Progress log: `docs/PROGRESS.md`.
   caption `CELL_ILLUSTRATION`, not the 3D kit's sentence), `draw.ts` (canvas, token colours,
   draws exactly `partsFor(kind)` — test; name labels in a column on each side), `store.ts`
   (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
-  cell switch + "Hiện tên", on in Basic; inspector: parts list → name + function card). The 3D
+  "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
   version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
