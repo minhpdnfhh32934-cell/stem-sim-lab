@@ -39,6 +39,8 @@ export interface Draft {
   clarifications: string[];
   /** Required parameters the problem did not state — the user must fill them in. */
   missing: string[];
+  /** Keys whose value the problem states in words ("bỏ qua ma sát" → μ = 0), not in digits. */
+  fromWords: string[];
   issues: Issue[];
 }
 
@@ -176,6 +178,7 @@ export function buildDraft(
   const written: Draft['written'] = {};
   const issues: Issue[] = [];
   const seen = new Set<string>();
+  const fromWords: string[] = [];
 
   for (const q of extraction.quantities) {
     const def = scene.params.find((d) => d.key === q.key);
@@ -284,6 +287,7 @@ export function buildDraft(
     params[q.key] = si;
     sources[q.key] = 'problem';
     written[q.key] = { value: q.value, unit: q.unit, quote: q.quote };
+    if (inWords) fromWords.push(q.key);
   }
 
   // Code-side defaults derived from the stated values (never from the AI).
@@ -298,19 +302,7 @@ export function buildDraft(
   for (const m of scene.validate?.(params) ?? []) {
     issues.push({ kind: 'invalidScene', blocking: false, message: m });
   }
-  // A stated value that the chosen setup hides (`when`) is flagged, never ignored silently.
-  for (const def of scene.params) {
-    if (sources[def.key] !== 'problem' || !def.when || def.when(params)) continue;
-    issues.push({
-      kind: 'notUsed',
-      key: def.key,
-      blocking: false,
-      message: L(
-        `${def.label.vi}: đề có cho giá trị này nhưng cách bố trí đang chọn không dùng tới — hãy kiểm tra lại.`,
-        `${def.label.en}: the problem states this value but the chosen setup does not use it — please check.`,
-      ),
-    });
-  }
+  issues.push(...notUsedIssues(scene, params, sources, fromWords));
 
   return {
     topic: scene.id,
@@ -323,8 +315,34 @@ export function buildDraft(
     unsupported: extraction.unsupported_parts,
     clarifications: extraction.clarifications,
     missing,
+    fromWords,
     issues,
   };
+}
+
+/**
+ * A value the problem states that the chosen setup hides (`when`) is flagged, never ignored
+ * silently. A value read from words only restates a simplification ("bỏ qua ma sát" in an
+ * Atwood machine), so it is not flagged. Recomputed when the learner changes a choice.
+ */
+export function notUsedIssues(
+  scene: PhysicsScene,
+  params: Params,
+  sources: Record<string, ParamSource>,
+  fromWords: readonly string[],
+): Issue[] {
+  return scene.params
+    .filter((def) => sources[def.key] === 'problem' && def.when && !def.when(params))
+    .filter((def) => !fromWords.includes(def.key))
+    .map((def) => ({
+      kind: 'notUsed',
+      key: def.key,
+      blocking: false,
+      message: L(
+        `${def.label.vi}: đề có cho giá trị này nhưng cách bố trí đang chọn không dùng tới — hãy kiểm tra lại.`,
+        `${def.label.en}: the problem states this value but the chosen setup does not use it — please check.`,
+      ),
+    }));
 }
 
 /**

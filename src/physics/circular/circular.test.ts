@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDraft } from '@/ai/draft';
+import { buildDraft, notUsedIssues } from '@/ai/draft';
 import type { Extraction } from '@/ai/spec';
 import { basicSplit } from '@/app/sim/basicParams';
 import { dopri5 } from '@/core/ode/dopri5';
@@ -215,6 +215,14 @@ describe('uniform circular motion — scene', () => {
     expect(d.missing).toEqual([]);
     expect(d.issues.filter((x) => x.kind === 'notUsed').map((x) => x.key)).toEqual(['f']);
     expect(d.issues.filter((x) => x.blocking)).toEqual([]);
+    // The learner switches to "Biết tần số f" in the review: now T is the unused one.
+    const switched = notUsedIssues(
+      scene,
+      { ...d.params, mode: MODE.freq },
+      { ...d.sources, mode: 'user' },
+      d.fromWords,
+    );
+    expect(switched.map((x) => x.key)).toEqual(['T']);
   });
 
   it('the card writes the sign of ωt for the chosen sense', () => {

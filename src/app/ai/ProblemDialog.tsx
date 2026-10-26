@@ -16,7 +16,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
-import type { Draft } from '@/ai/draft';
+import { notUsedIssues, type Draft } from '@/ai/draft';
 import { MAX_PROBLEM_CHARS } from '@/ai/pipeline';
 import { fromSI, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
@@ -221,7 +221,11 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   };
 
   const blocking = draft.issues.filter((i) => i.blocking);
-  const warnings = draft.issues.filter((i) => !i.blocking);
+  // "Not used" follows the current choices ("Biết tần số f" hides T), not the frozen draft.
+  const warnings = [
+    ...draft.issues.filter((i) => !i.blocking && i.kind !== 'notUsed'),
+    ...notUsedIssues(scene, params, sources, draft.fromWords),
+  ];
 
   return (
     <>
