@@ -10,6 +10,7 @@ import { Camera } from '@/physics/render/camera';
 import { drawGrid, line, polyline, text } from '@/physics/render/draw';
 import type { PhysicsScene, ThemeColors } from '@/physics/types';
 import { useCompareStore } from './compare';
+import { measureSegment } from './measure';
 import { pickBody } from './pick';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
@@ -114,7 +115,7 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       c.setTransform(ratio, 0, 0, ratio, 0, 0);
       c.clearRect(0, 0, cam.width, cam.height);
       c.imageSmoothingEnabled = tier.antialias;
-      drawGrid(c, cam, colors, locale);
+      drawGrid(c, cam, colors, locale, scene.yStretch?.(useSimStore.getState().params));
       if (!state || sstate.validation.length > 0) return;
       const p = sstate.params;
       // Pinned run (before / after): a copy of its recorded trail, dashed and muted.
@@ -161,8 +162,9 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       if (!m) return;
       const { a, b } = m;
       line(c, cam, a.x, a.y, b.x, b.y, colors.accent, 2);
+      const real = measureSegment(a, b, scene.yStretch?.(useSimStore.getState().params));
       if (m.kind === 'ruler') {
-        const d = Math.hypot(b.x - a.x, b.y - a.y);
+        const d = real.length;
         text(
           c,
           cam,
@@ -198,7 +200,7 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
           cam,
           a.x + r * Math.cos(ang / 2),
           a.y + r * Math.sin(ang / 2),
-          `${formatNumber(locale, (Math.abs(ang) * 180) / Math.PI, { maximumFractionDigits: 1 })}°`,
+          `${formatNumber(locale, (Math.abs(real.angle) * 180) / Math.PI, { maximumFractionDigits: 1 })}°`,
           colors.accent,
           'left',
           { x: 6, y: 0 },

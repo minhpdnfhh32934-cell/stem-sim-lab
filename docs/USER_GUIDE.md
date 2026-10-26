@@ -367,9 +367,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-15 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+16 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn, chuyển động tròn đều, điện trường.
+xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây, điện trường.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -390,6 +390,15 @@ xo, con lắc đơn, chuyển động tròn đều, điện trường.
   lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
   tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
   góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
+- **Sóng dừng trên dây** (chương **Sóng**): dây có hai đầu cố định. Ô đầu tiên chọn đề hỏi gì: **tìm
+  f** (biết L, v, n), **tìm v** (biết L, f, n) hay **tìm n** (biết L, f, v). Tốc độ truyền sóng nhập
+  thẳng, hoặc chọn "Lấy tốc độ sóng từ: lực căng và mật độ dài" để app tính v = √(F/μ) (μ nhận kg/m
+  hoặc g/m; ở chế độ Cơ bản, ô này nằm trong **Thêm thông số**). Hình vẽ dây với hai sóng thành phần nét đứt (tắt được), nút **N**, bụng **B** và điểm
+  dò **P**; đồ thị vẽ y₁, y₂ và y = y₁ + y₂ tại P. App vẽ tối đa 20 bó sóng. Vị trí P chỉnh bằng thanh trượt, không kéo được.
+  A là biên độ của **mỗi** sóng thành phần, nên bụng dao động với biên độ 2A. Nếu 2Lf/v không phải
+  số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất (bấm nút **Dùng fₙ** để đặt đúng giá trị đó), không tự đổi
+  f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; lưới, thước và thước đo góc vẫn đo theo mét thật; tần số cao có thể làm hình trông
+  đứng yên (hoạt nghiệm) — chọn tốc độ phát chậm hơn.
 - **Điện trường của điện tích điểm** (chương Điện trường, Vật lí 11): ô đầu tiên chọn **điện tích
   điểm** hay **tụ điện phẳng**. Với điện tích điểm: chọn 1–3 điện tích, nhập điện tích có dấu (µC; đề
   ghi C hay nC thì app tự đổi), vị trí của chúng và điểm M bằng thanh trượt; app vẽ đường sức (mũi tên

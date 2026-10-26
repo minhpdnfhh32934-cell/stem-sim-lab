@@ -310,6 +310,10 @@ Progress log: `docs/PROGRESS.md`.
   topic appends its [library name, stage title] to `TOPICS`.
 - Uniform circular motion (`src/physics/circular/`, 0.8.0): `model.ts` (mode = given v / ω / T / f),
   `engine.ts` (phase from t = n·Δt), `check.ts` (DOPRI5 on the force law), `scenes.ts`.
+- Standing wave on a string (`src/physics/wave/`, 0.8.0): `model.ts` (both ends fixed only; `isWhole`
+  never rounds 2Lf/v beyond 1e-9·max(1, m), `ratioDigits`), `engine.ts` (mode = find f / v / n, v
+  typed or √(F/μ); closed form at t = i·Δt; DOPRI5 `latticeAt` / `latticeFrequency` on the
+  method-of-lines wave equation), `scenes.ts`, `draw.ts` (labelled vertical stretch). Units kg/m, g/m.
 - Electric field (`src/physics/field/`, 0.8.0, #76): `model.ts` (Coulomb, superposition, plates,
   `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
   step doubling; the card's error is an upper estimate from a coarse copy of each line, checked

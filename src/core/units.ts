@@ -44,6 +44,7 @@ export const DIM = {
   resistance: D(2, 1, -3, -2),
   molarMass: D(0, 1, 0, 0, 0, -1),
   damping: D(0, 1, -1),
+  linearDensity: D(-1, 1),
   electricField: D(1, 1, -3, -1),
   coulombConstant: D(3, 1, -4, -2),
 } as const;
@@ -167,6 +168,9 @@ const UNITS: readonly UnitDef[] = [
   { symbol: 'uC', dim: DIM.charge, factor: 1e-6, aliases: ['µC', 'μC'] },
   { symbol: 'V', dim: DIM.voltage, factor: 1 },
   { symbol: 'ohm', dim: DIM.resistance, factor: 1, aliases: ['Ω'] },
+  // linear density of a string (standing waves)
+  { symbol: 'kg/m', dim: DIM.linearDensity, factor: 1 },
+  { symbol: 'g/m', dim: DIM.linearDensity, factor: 1e-3 },
   // electric field (0.8.0, #76)
   { symbol: 'nC', dim: DIM.charge, factor: 1e-9 },
   { symbol: 'kV', dim: DIM.voltage, factor: 1e3 },

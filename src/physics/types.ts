@@ -172,4 +172,14 @@ export interface PhysicsScene {
   draw: (dc: DrawContext) => void;
   /** Trail point (world) for the trail tool, per body index. */
   trail?: (state: Float64Array, p: Params) => { x: number; y: number }[];
+  /**
+   * The picture's vertical axis is drawn this many times larger than world metres (e.g. a tiny
+   * wave amplitude). Grid labels, ruler and protractor divide it out. Omitted: 1.
+   */
+  yStretch?: (p: Params) => number;
+  /**
+   * One-click changes offered under the `validate` messages (e.g. "use the nearest resonance").
+   * Applied only when the learner presses one, never automatically.
+   */
+  fixes?: (p: Params) => { label: LocalizedText; params: Params }[];
 }

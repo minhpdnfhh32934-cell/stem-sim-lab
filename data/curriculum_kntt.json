@@ -2372,6 +2372,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "standingWave",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương II. Sóng",
+   "lessons": [
+    13
+   ],
+   "reason": "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định).",
+   "review_status": "pending"
+  },
+  {
    "topic": "electricField",
    "subject": "physics",
    "grade": 11,

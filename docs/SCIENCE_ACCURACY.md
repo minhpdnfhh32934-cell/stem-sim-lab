@@ -79,6 +79,7 @@ thời gian thực với lời giải chính xác.
 | Bảo toàn cơ năng (vật trên đường ray) | RK4 với 8 bước con cho phương trình có ràng buộc                                                                   | Chính xác (tốc độ tính từ bảo toàn cơ năng)             | v(đáy) = √(2gH) so với DOPRI5; cơ năng trôi < 10⁻⁹ trong 20 s                                                                                                        |
 | Va chạm 1D/2D                         | Chuyển động thẳng đều giữa hai va chạm. Thời điểm va chạm giải chính xác, xung lực tính theo hệ số phục hồi e      | Chính xác                                               | Hai vật cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc; va chạm xiên hai vật cùng khối lượng thì hai hướng vuông góc; kết quả khớp cách tính trong hệ khối tâm |
 | Chuyển động tròn đều                  | Pha chính xác φ = φ₀ ± ωt với t = n·Δt (không cộng dồn); không có gì kéo được                                      | Chính xác                                               | DOPRI5 tích phân r″ = −(F_ht/(m·r))·r⃗ (rtol 10⁻¹²): bán kính giữ nguyên, vị trí khớp engine ở bốn thời điểm, chu kì đo qua y = 0 (đi lên) khớp 2πr/v tới 10⁻⁹       |
+| Sóng dừng trên dây                    | Công thức chính xác y = 2A·sin(kx)·sin(ωt) tại t = i·Δt (Δt ≤ T/200); không có gì kéo được                         | Chính xác (độ dốc 2A·k ≤ 0,1); gần đúng khi biên độ lớn | DOPRI5 trên phương trình sóng của dây chia đoạn, hai đầu cố định: 240/480 đoạn sai số O(Δx²), hội tụ bậc 2; 200 đoạn tần số mode khớp n·v/(2L) tới 10⁻⁹              |
 | Điện trường, tụ phẳng                 | Công thức chính xác (Coulomb, chồng chất, E = U/d); đường sức RK4 chia đôi bước, sai số như nhau ở mọi mức máy     | Chính xác (các con số)                                  | E so với −∇V: lệch tương đối ≤ 10⁻⁶; đường sức nằm trong sai số app báo so với DOPRI5; Σqᵢcosθᵢ không đổi (hai điện tích cùng trục)                                  |
 
 **Kéo và ném bằng chuột:** app nối vật với con trỏ bằng một lò xo có giảm chấn tới hạn
@@ -99,6 +100,19 @@ nhóm; `allowedUnits()` (`src/ai/spec.ts`) cho ô ω chỉ rad/s, ô f chỉ Hz,
 ghi "2 Hz" vào ô ω thì bị từ chối (test). Lưu ý: ô hệ số cản `c` của con lắc đơn và đáp án γ của
 lò xo là tốc độ tắt dần (s⁻¹) nhưng xưa nay ghi "Hz"; chúng vẫn chạy như cũ (nay thuộc nhóm "chu
 kì"), xem DATA_REVIEW UCM-3.
+
+**Sóng dừng không tự làm tròn (0.8.0, #37 §8.2 bẫy 5):** dây hai đầu cố định chỉ có sóng dừng
+khi m = 2Lf/v là số nguyên. App coi m là nguyên khi khoảng cách tới số nguyên gần nhất không quá
+10⁻⁹·max(1, m) — chỉ để bỏ qua sai số làm tròn của máy tính (ví dụ 2·1,1·50/11 tính ra
+10,000000000000002). Không nguyên thì app báo "Không có sóng dừng", gợi ý tần số cộng hưởng ngay
+dưới và ngay trên (m < 1: chỉ f₁; không quá 20 bó, vượt thì gợi ý f₂₀) kèm nút **Dùng fₙ** để học
+sinh tự bấm đặt đúng giá trị, **không** tự đổi f, và hiện m đủ chữ số để không trông như số
+nguyên (1.818,2 chứ không phải 1818). Biên độ A là biên độ của mỗi sóng thành phần (bụng 2A); độ
+dốc 2A·k > 0,1 thì Thẻ Khoa học chuyển "gần đúng". Hình vẽ phóng to trục dọc (có ghi hệ số) và lấy
+một mẫu mỗi khung hình: khi f × tốc độ phát vượt khoảng 30 Hz (nửa số khung hình mỗi giây) thì
+thấy hoạt nghiệm, và muốn đường cong mượt (≥ 10 điểm mỗi chu kì) thì chỉ nên vài Hz. Lưới, thước
+và thước đo góc chia lại hệ số phóng to (`PhysicsScene.yStretch`), nên vẫn đo theo mét thật. Xem
+DATA_REVIEW SWV-1 … SWV-8.
 
 **Số rất nhỏ và dấu điện tích trong đề (0.8.0, #37 §8.2 bẫy 2 và 3):** bộ lọc "số phải có trong
 đề" (`src/ai/numbers.ts`) so **sai số tương đối** (trước đây là tuyệt đối 10⁻⁹, nên với điện tích cỡ

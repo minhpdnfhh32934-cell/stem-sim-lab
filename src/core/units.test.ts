@@ -34,6 +34,14 @@ describe('units', () => {
     expect(unitLabel('degC')).toBe('°C');
   });
 
+  it('linear density: 5 g/m = 0.005 kg/m, not a mass or a density', () => {
+    expect(toSI(5, 'g/m')).toBeCloseTo(0.005, 15);
+    expect(convert(0.005, 'kg/m', 'g/m')).toBeCloseTo(5, 12);
+    expect(unitsFor(DIM.linearDensity)).toEqual(['kg/m', 'g/m']);
+    expect(() => convert(1, 'g/m', 'g')).toThrow(UnitError);
+    expect(() => convert(1, 'kg/m', 'kg/m^3')).toThrow(UnitError);
+  });
+
   it('keeps angular (rad/s) and cycle (Hz, rev/s, rev/min) frequencies apart', () => {
     // Same SI exponents and factor 1: only the unit group stops "2 Hz" becoming "2 rad/s".
     expect(() => convert(1, 'Hz', 'rad/s')).toThrow(UnitError);

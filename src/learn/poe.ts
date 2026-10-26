@@ -205,6 +205,20 @@ export const POES: readonly Poe[] = [
     start: { mode: 0 },
   },
   {
+    id: 'standingWave.tension',
+    topic: 'standingWave',
+    param: 'tension',
+    factor: 4,
+    answer: 'frequency',
+    question: L(
+      'Giữ nguyên dây và số bó sóng, nếu lực căng dây tăng 4 lần thì tần số của sóng dừng thay đổi thế nào?',
+      'Keeping the same string and number of loops, if the tension is 4 times larger, how does the standing-wave frequency change?',
+    ),
+    choices: ratios(1, 2, 4),
+    // mode 0 = "Tìm f (biết L, v, n)"; vFrom 1 = v from the tension and the linear density.
+    start: { mode: 0, vFrom: 1 },
+  },
+  {
     id: 'electricField.d',
     topic: 'electricField',
     param: 'd',

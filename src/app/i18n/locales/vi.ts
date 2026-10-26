@@ -90,6 +90,7 @@ const vi = {
     cellPhysiology: 'Sinh lý tế bào',
     cellStructure: 'Cấu trúc tế bào',
     circularMotion: 'Chuyển động tròn đều',
+    waves: 'Sóng',
     electricField: 'Điện trường',
   },
   topics: {
@@ -131,6 +132,7 @@ const vi = {
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
     cellStructure: 'Tế bào nhân sơ và nhân thực',
     uniformCircularMotion: 'Chuyển động tròn đều',
+    standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
   },
   stage: {
