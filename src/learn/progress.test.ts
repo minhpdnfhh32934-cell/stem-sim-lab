@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { challengesFor } from './challenges';
-import { chapterProgress, earnedBadges, topicProgress } from './progress';
+import { chapterProgress, earnedBadges, topicProgress, topicStatus } from './progress';
 
 const empty = { visited: {}, challenges: {}, predictions: {} };
 
@@ -21,6 +21,39 @@ describe('progress and badges', () => {
 
   it('topics without activities count "opened"', () => {
     expect(topicProgress('mitosis', { ...empty, visited: { mitosis: true } }).complete).toBe(true);
+  });
+
+  it('opening a topic marks it learned in every subject; "complete" needs every activity', () => {
+    const visited = { freeFall: true, periodicTable: true, mitosis: true } as const;
+    for (const topic of ['periodicTable', 'mitosis'])
+      expect(topicStatus(topic, { ...empty, visited })).toMatchObject({
+        state: 'opened',
+        predictLeft: false,
+        challengesLeft: 0,
+      });
+    expect(topicStatus('freeFall', empty).state).toBe('new');
+    // Opened only: 1 of 3 steps, the prediction and one challenge left.
+    expect(topicStatus('freeFall', { ...empty, visited })).toEqual({
+      done: 1,
+      total: 3,
+      complete: false,
+      state: 'opened',
+      predictLeft: true,
+      challengesLeft: 1,
+    });
+    const all = { visited, predictions: { 'freeFall.h0': true }, challenges: { 'freeFall.t2': 1 } };
+    expect(topicStatus('freeFall', all)).toMatchObject({
+      state: 'complete',
+      predictLeft: false,
+      challengesLeft: 0,
+    });
+  });
+
+  it('a chapter counts its opened topics', () => {
+    const kin = CATALOG.physics.find((c) => c.id === 'kinematics');
+    const p = { ...empty, visited: { freeFall: true, horizontalProjectile: true } as const };
+    expect(kin && chapterProgress(kin.topics, p)).toEqual({ done: 2, total: 5 });
+    expect(kin && chapterProgress(kin.topics, empty)).toEqual({ done: 0, total: 5 });
   });
 
   it('badges reward trying and finishing — no streaks or ranks', () => {
