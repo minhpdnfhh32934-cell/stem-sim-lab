@@ -123,3 +123,17 @@
   tests: 2 failed) and pass now.
 - Results: Prettier, `npm run lint`, `npm run typecheck` PASS; `npx vitest run` PASS — 319 files,
   4329 tests (1 skipped, existing); `physics.spec.ts` + `layout.spec.ts` PASS 17/17.
+
+## 2026-10-27 — PR #90 review 2 (2 🔴)
+
+- 🔴A fixed: the parameter field keeps ~6 digits while typing, so a printed resonance could not
+  be typed back. New optional `PhysicsScene.fixes(p)`; `Stage` shows them as buttons under the
+  validation message (`src/app/sim/ValidationFixes.tsx`); the wave scene offers "Dùng fₙ" for the
+  suggested resonances (learner-pressed, f never changed alone). React test through the button.
+- 🔴B fixed: `drawGrid` picked decimals from −floor(log10(step)), so S = 2·10ᵏ (step 2,5·10ⁿ) was
+  rounded; it now adds digits until the step is exact (S = 1 unchanged). Test: S 2…200 × 4 zooms.
+- Also: mode / vFrom inferred only while still default (probe follows the applied mode); English
+  antinode label "AN"; smooth-curve note "f ≤ 60 Hz"; SWV-3, SCIENCE_ACCURACY, USER_GUIDE.
+- Both 🔴 tests fail on the previous source (old files restored, new tests kept: 2 failed).
+- Results: Prettier, lint, typecheck PASS; generators unchanged; `npx vitest run` PASS — 320
+  files, 4339 tests (1 skipped, existing); `physics.spec.ts` + `layout.spec.ts` PASS 17/17.
