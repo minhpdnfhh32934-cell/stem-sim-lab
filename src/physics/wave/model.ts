@@ -45,8 +45,7 @@ export function nearestResonances(L: number, f: number, v: number) {
 }
 
 export const incident = (w: Wave, x: number, t: number) => w.A * Math.cos(w.omega * t - w.k * x);
-export const reflected = (w: Wave, x: number, t: number) =>
-  -w.A * Math.cos(w.omega * t + w.k * x);
+export const reflected = (w: Wave, x: number, t: number) => -w.A * Math.cos(w.omega * t + w.k * x);
 export const standing = (w: Wave, x: number, t: number) =>
   2 * w.A * Math.sin(w.k * x) * Math.sin(w.omega * t);
 
