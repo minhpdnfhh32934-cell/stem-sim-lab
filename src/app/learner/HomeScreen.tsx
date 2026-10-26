@@ -24,21 +24,21 @@ import { useAiStore } from '@/ai/aiStore';
 import { cx } from '@/ui/cx';
 import { openTeacher } from '@/teacher/teacherStore';
 import { useAnalysisEngine } from '@/app/ai/engineChoice';
-import { useProfileStore } from './profileStore';
+import { useProfileStore, type GradeChoice } from './profileStore';
 import './learner.css';
 
 /**
  * Home screen "Hôm nay học gì?" (PROMPT_PHAN_2 A4.2), shown while no topic is open:
- * continue the last lesson, paste a problem, pick a subject, suggested topics for the level,
+ * continue the last lesson, paste a problem, pick a subject, suggested topics for the grade,
  * the (coming) AI teacher. The AI connection state is the pill in the top-right corner.
  */
 export function HomeScreen() {
   const t = useT();
   const profile = useProfileStore(
-    useShallow((s) => ({ level: s.level, interests: s.interests, lastTopic: s.lastTopic })),
+    useShallow((s) => ({ grade: s.grade, interests: s.interests, lastTopic: s.lastTopic })),
   );
   const lastSubject = profile.lastTopic ? subjectOf(profile.lastTopic) : undefined;
-  const picks = suggestions(profile.level, profile.interests);
+  const picks = suggestions(profile.grade, profile.interests);
 
   return (
     <section className="home" aria-labelledby="home-title">
@@ -74,14 +74,17 @@ export function HomeScreen() {
         <ul className="home__subjects">
           {SUBJECTS.map((s) => (
             <li key={s}>
-              <SubjectCard subject={s} level={profile.level} />
+              <SubjectCard subject={s} grade={profile.grade} />
             </li>
           ))}
         </ul>
 
         <h2 className="home__heading">
-          {t('home.suggestedTitle', { level: t(`levels.${profile.level}`) })}
+          {profile.grade === 'all'
+            ? t('home.suggestedTitle')
+            : t('levels.suggested', { grade: profile.grade })}
         </h2>
+        {profile.grade !== 'all' && <p className="home__note">{t('levels.source')}</p>}
         {picks.length > 0 ? (
           <ul className="home__topics">
             {picks.map(({ subject, topic }) => {
@@ -273,11 +276,11 @@ function ProblemBox() {
   );
 }
 
-function SubjectCard({ subject, level }: { subject: Subject; level: 'foundation' | 'general' }) {
+function SubjectCard({ subject, grade }: { subject: Subject; grade: GradeChoice }) {
   const t = useT();
   const Icon = SUBJECT_ICON[subject];
   const current = useWorkspaceStore((s) => s.subject);
-  const count = availableCount(level, subject);
+  const count = availableCount(grade, subject);
   return (
     <button
       type="button"
@@ -294,7 +297,11 @@ function SubjectCard({ subject, level }: { subject: Subject; level: 'foundation'
       </span>
       <span className="home__subject-name">{t(`subjects.${subject}`)}</span>
       <span className="home__subject-desc">{t(`home.subjectDesc.${subject}`)}</span>
-      <span className="home__subject-count">{t('home.topicCount', { count })}</span>
+      <span className="home__subject-count">
+        {grade === 'all'
+          ? t('home.topicCount', { count })
+          : t(count === 1 ? 'levels.topicCountOne' : 'levels.topicCount', { count, grade })}
+      </span>
     </button>
   );
 }

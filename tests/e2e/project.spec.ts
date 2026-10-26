@@ -120,17 +120,19 @@ test('in-app updates are explained as desktop-only in the browser build', async 
   await expect(page.getByText('Cập nhật trong app chỉ có ở bản cài trên máy.')).toBeVisible();
 });
 
-test('first run: level → subjects → age question → tour (once, can be skipped)', async ({
+test('first run: grade → subjects → age question → tour (once, can be skipped)', async ({
   browser,
 }) => {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   const page = await context.newPage();
   await page.goto('/');
   // Onboarding (A4.2) comes first; the safety question and the tour wait behind it.
-  const onboarding = page.getByRole('dialog', { name: 'Bạn muốn học ở trình độ nào?' });
+  const onboarding = page.getByRole('dialog', { name: 'Bạn đang học hoặc ôn lớp nào?' });
   await expect(onboarding).toBeVisible();
   await expect(onboarding).toContainText('Bước 1/5');
+  await expect(onboarding).toContainText('đang chờ giáo viên duyệt');
   await expect(page.getByRole('dialog', { name: 'Trước khi bắt đầu' })).toHaveCount(0);
+  await onboarding.getByRole('radio', { name: /Lớp 12/ }).click();
   await onboarding.getByRole('button', { name: 'Tiếp' }).click();
   const subjects = page.getByRole('dialog', { name: 'Bạn quan tâm môn nào?' });
   await subjects.getByRole('button', { name: /^Sinh học/ }).click();
@@ -145,6 +147,8 @@ test('first run: level → subjects → age question → tour (once, can be skip
   await expect(page.locator('.tour')).toHaveCount(0);
   await enterLab(page);
   await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
+  // The library opens on the grade chosen in the first step.
+  await expect(page.getByRole('radio', { name: 'Lớp 12' })).toBeChecked();
   const tour = page.getByRole('dialog', { name: 'Chào mừng đến SimLab' });
   await expect(tour).toBeVisible();
   await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();

@@ -363,12 +363,15 @@ Progress log: `docs/PROGRESS.md`.
   no stage/timeline/bottom/inspector then, and the top-bar problem box is hidden — the home box is
   the main action), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
   (only when status is `noKey`) → tour; `AgeGate hold`, the Tour waits for its phase),
-  `profileStore` (`stemsim.profile`: level, interests, lastTopic; users with `stemsim.tourDone`
+  `profileStore` (`stemsim.profile` v2: level, grade, interests, lastTopic; v1 → grade `all`; users with `stemsim.tourDone`
   skip onboarding), `ModeSwitch`.
 - `uiMode` in `settingsStore` (v2; v1 users migrate to `advanced`, new installs `basic`). Basic:
   `basicSplit` (`src/app/sim/basicParams.ts`, first 5 params + any from the problem/user), no data
   tab/CSV, no Object section, toolbar without protractor/stopwatch/trail. New panels must respect it.
-- Levels: `src/app/levels.ts` (`foundation` available, `general` planned). **Curriculum mapping
+- Library views: `src/app/levels.ts` (`chaptersFor(grade, subject)`: switch "Lớp 10 · 11 · 12 · Tất
+  cả", a grade = textbook chapters + "Bài n", empty → "Xem tất cả"; onboarding asks the grade, home
+  suggests by it). The grade never reaches the AI: `Level` stays `foundation` for `LEVEL_HINT`
+  (`chatService.ts`) and Science Studio's level field. **Curriculum mapping
   (user decision 2026-10-22, plan #37 §3.3, replaces "never fill it without a teacher"):** topics are
   placed in grades/lessons only from the official KNTT tables of contents, by the script
   `scripts/data/gen_curriculum_kntt.py` (→ `data/curriculum_kntt.json` + `docs/CURRICULUM_KNTT.md`,
