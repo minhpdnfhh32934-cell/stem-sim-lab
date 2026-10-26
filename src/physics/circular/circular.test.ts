@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildDraft, notUsedIssues } from '@/ai/draft';
 import type { Extraction } from '@/ai/spec';
 import { basicSplit } from '@/app/sim/basicParams';
+import { applyAutoDefaults } from '@/physics/autoDefaults';
 import { dopri5 } from '@/core/ode/dopri5';
 import { observe, poeFor } from '@/learn/poe';
 import { CHECK_TOL, checkAtol, forceLaw, forceLawStart, numericPeriod } from './check';
@@ -223,6 +224,54 @@ describe('uniform circular motion — scene', () => {
       d.fromWords,
     );
     expect(switched.map((x) => x.key)).toEqual(['T']);
+  });
+
+  it('correcting the given value keeps the mode (it never jumps to the other stated one)', () => {
+    const cases: [string, Extraction['quantities'], string, number, string][] = [
+      [
+        'Vật quay đều trên đường tròn bán kính 40 cm với chu kì 0,5 s, tần số 2 Hz.',
+        [
+          { key: 'T', value: 0.5, unit: 's', quote: 'chu kì 0,5 s' },
+          { key: 'f', value: 2, unit: 'Hz', quote: 'tần số 2 Hz' },
+        ],
+        'T',
+        MODE.period,
+        'f',
+      ],
+      [
+        'Vật quay đều trên đường tròn bán kính 40 cm với tốc độ 3 m/s, chu kì 0,5 s.',
+        [
+          { key: 'v', value: 3, unit: 'm/s', quote: 'tốc độ 3 m/s' },
+          { key: 'T', value: 0.5, unit: 's', quote: 'chu kì 0,5 s' },
+        ],
+        'v',
+        MODE.v,
+        'T',
+      ],
+    ];
+    for (const [text, quantities, edited, mode, unused] of cases) {
+      const d = buildDraft(
+        scene,
+        {
+          quantities: [{ key: 'r', value: 40, unit: 'cm', quote: 'bán kính 40 cm' }, ...quantities],
+          questions: [],
+          assumptions: [],
+          unsupported_parts: [],
+          clarifications: [],
+        },
+        text,
+        9.81,
+      );
+      expect(d.params.mode, text).toBe(mode);
+      // What the review dialog and the lab do when a value is typed (`setValue`, `sim.setParam`).
+      const sources = { ...d.sources, [edited]: 'user' as const };
+      const params = applyAutoDefaults(scene, { ...d.params, [edited]: 0.6 }, sources);
+      expect(params.mode, text).toBe(mode);
+      expect(params[edited], text).toBe(0.6);
+      expect(notUsedIssues(scene, params, sources, d.fromWords).map((x) => x.key)).toEqual([
+        unused,
+      ]);
+    }
   });
 
   it('the card writes the sign of ωt for the chosen sense', () => {

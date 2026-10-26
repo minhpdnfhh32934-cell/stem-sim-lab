@@ -385,9 +385,10 @@ export const uniformCircularMotion: PhysicsScene = {
     dir: 1,
   },
   // The first of v, ω, T, f the problem states is the given quantity; buildDraft flags any other
-  // stated one as not used.
+  // stated one as not used. An edited value still counts as given, so correcting it never
+  // switches to another stated quantity and hides the field being typed in.
   autoDefaults: (_p, sources) => {
-    const stated = GIVEN.find((k) => sources[k] === 'problem');
+    const stated = GIVEN.find((k) => sources[k] === 'problem' || sources[k] === 'user');
     return stated ? { mode: GIVEN.indexOf(stated) } : {};
   },
   // About four seconds per turn for slow motions (e.g. a period given in hours).

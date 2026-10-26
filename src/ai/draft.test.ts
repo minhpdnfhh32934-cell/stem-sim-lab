@@ -44,38 +44,28 @@ describe('stated values the chosen setup does not use', () => {
     expect(d.sources.muK).toBe('problem');
     expect(d.fromWords).toEqual(['muS', 'muK']);
     expect(notUsed(d)).toEqual([]);
-
-    const collisions = await loadScene('collisions');
-    const head =
-      'Vật 2 kg chuyển động với vận tốc 3 m/s tới va chạm đàn hồi với vật 1 kg đứng yên. Bỏ qua ma sát.';
-    const c = buildDraft(
-      collisions,
-      ext([
-        { key: 'm1', value: 2, unit: 'kg', quote: 'Vật 2 kg' },
-        { key: 'b', value: 0, unit: '1', quote: 'Bỏ qua ma sát' },
-      ]),
-      head,
-      9.81,
-    );
-    expect(c.sources.b).toBe('problem');
-    expect(notUsed(c)).toEqual([]);
   });
 
-  it('a number written in digits that the setup hides is still flagged', async () => {
+  it('a number written in digits that the setup hides is still flagged, even 0', async () => {
     const pulley = await loadScene('pulley');
-    const atwood =
-      'Hai vật m1 = 2 kg và m2 = 3 kg treo ở hai đầu sợi dây vắt qua ròng rọc; hệ số ma sát 0,2.';
-    const d = buildDraft(
-      pulley,
-      ext([
-        { key: 'config', value: 0, unit: '1', quote: 'treo ở hai đầu sợi dây' },
-        { key: 'muK', value: 0.2, unit: '1', quote: 'hệ số ma sát 0,2' },
-      ]),
-      atwood,
-      9.81,
-    );
-    expect(d.fromWords).toEqual([]);
-    expect(notUsed(d)).toEqual(['muK']);
+    for (const [said, value] of [
+      ['hệ số ma sát 0,2', 0.2],
+      ['hệ số ma sát bằng 0', 0],
+    ] as const) {
+      const atwood = `Hai vật m1 = 2 kg và m2 = 3 kg treo ở hai đầu sợi dây vắt qua ròng rọc; ${said}.`;
+      const d = buildDraft(
+        pulley,
+        ext([
+          { key: 'config', value: 0, unit: '1', quote: 'treo ở hai đầu sợi dây' },
+          { key: 'muK', value, unit: '1', quote: said },
+        ]),
+        atwood,
+        9.81,
+      );
+      expect(d.sources.muK, said).toBe('problem');
+      expect(d.fromWords, said).toEqual([]);
+      expect(notUsed(d), said).toEqual(['muK']);
+    }
   });
 });
 

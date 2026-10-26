@@ -478,3 +478,44 @@ test('changing "Đề bài cho biết" in the table asks for the new given quant
   await dialog.getByRole('textbox', { name: 'Tần số (số vòng mỗi giây)' }).fill('2');
   await expect(confirm).toBeEnabled();
 });
+
+test("a second stated quantity is flagged, and the flag follows the learner's choice", async ({
+  page,
+}) => {
+  await mockGemini(page, {
+    classification: {
+      topic: 'uniformCircularMotion',
+      reason: 'chuyển động tròn đều',
+      unsupported_parts: [],
+    },
+    extraction: {
+      quantities: [
+        { key: 'r', value: 40, unit: 'cm', quote: 'bán kính 40 cm' },
+        { key: 'T', value: 0.5, unit: 's', quote: 'chu kì 0,5 s' },
+        { key: 'f', value: 2, unit: 'Hz', quote: 'tần số 2 Hz' },
+      ],
+      questions: [],
+      assumptions: [],
+      unsupported_parts: [],
+      clarifications: [],
+    },
+  });
+  await typeProblem(
+    page,
+    'Vật quay đều trên đường tròn bán kính 40 cm với chu kì 0,5 s, tần số 2 Hz.',
+  );
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog');
+  const unused = (name: string) =>
+    dialog.getByText(`${name}: đề có cho giá trị này`, { exact: false });
+  await expect(unused('Tần số (số vòng mỗi giây)')).toBeVisible();
+  // Correcting T keeps "Biết chu kì T": the field stays, f is still the unused one.
+  const period = dialog.getByRole('textbox', { name: 'Chu kì' });
+  await period.fill('0,6');
+  await expect(period).toBeVisible();
+  await expect(unused('Tần số (số vòng mỗi giây)')).toBeVisible();
+  // Choosing f instead: f is used now (T was corrected by hand, so it is not flagged either).
+  await dialog.getByRole('radio', { name: 'Biết tần số f' }).click();
+  await expect(unused('Tần số (số vòng mỗi giây)')).toHaveCount(0);
+  await expect(dialog.getByRole('textbox', { name: 'Tần số (số vòng mỗi giây)' })).toHaveValue('2');
+});
