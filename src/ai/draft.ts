@@ -1,14 +1,15 @@
 import type { LocalizedText } from '@/core/data/dataset';
-import { toSI, unitLabel } from '@/core/units';
+import { DIM, sameDimension, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { WORD_END, WORD_START } from '@/safety/moderation';
-import { mentions, normalizeText, quoteInText } from './numbers';
+import { mentions, normalizeText, quoteInText, writtenSign } from './numbers';
 import { allowedUnits, type Extraction } from './spec';
 
 export type IssueKind =
   | 'notInText'
   | 'quoteMismatch'
+  | 'signMismatch'
   | 'badUnit'
   | 'unknownKey'
   | 'outOfRange'
@@ -259,6 +260,24 @@ export function buildDraft(
         message: L(
           `${name.vi}: trích dẫn của AI không khớp nguyên văn đề, hãy kiểm tra lại.`,
           `${name.en}: the AI's quote does not match the text; please check.`,
+        ),
+      });
+    }
+    // `mentions` compares absolute values: a charge whose sign is not the one the problem writes
+    // ("−2 µC", "điện tích âm") or that the problem leaves open is kept but must be confirmed.
+    if (
+      q.value !== 0 &&
+      def.dim &&
+      sameDimension(def.dim, DIM.charge) &&
+      writtenSign(problemText, q.value, q.quote) !== Math.sign(q.value)
+    ) {
+      issues.push({
+        kind: 'signMismatch',
+        key: q.key,
+        blocking: false,
+        message: L(
+          `${name.vi}: dấu của điện tích chưa chắc khớp với đề — hãy kiểm tra dấu + hoặc −.`,
+          `${name.en}: the charge's sign may not match the problem — please check + or −.`,
         ),
       });
     }

@@ -21,14 +21,17 @@ const SUPER: Record<string, string> = {
 };
 
 export function normalizeText(s: string): string {
-  return s
-    .normalize('NFC')
-    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g, (c) => `^${SUPER[c] ?? c}`)
-    .replace(/\^\^/g, '^')
-    .replace(/[−–—]/g, '-')
-    .replace(/[\u00a0\u202f]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return (
+    s
+      .normalize('NFC')
+      // One caret per run: "10⁻¹⁰" → "10^-10" (not "10^-^1^0", which no reader understood).
+      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, (run) => `^${[...run].map((c) => SUPER[c] ?? c).join('')}`)
+      .replace(/\^\^/g, '^')
+      .replace(/[−–—]/g, '-')
+      .replace(/[\u00a0\u202f]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
 }
 
 /** Candidate numeric readings of one token such as "1.200", "0,5" or "12". */
@@ -49,7 +52,45 @@ function readings(token: string): number[] {
 
 /** Scientific notation: a [.×x*] 10 ^? b */
 const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
+/** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
+const POW = /(?<![\d.,])10\s*\^\s*\(?\s*(-?\d+)\s*\)?/g;
 const PLAIN = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
+
+interface Token {
+  start: number;
+  end: number;
+  readings: number[];
+}
+
+/**
+ * Number tokens of normalized text, in reading order. Scientific notation and lone powers of ten
+ * come first; plain digits inside them are left out unless `keepInner` (a problem may write either
+ * reading, see `numbersIn`).
+ */
+function scan(t: string, keepInner = false): Token[] {
+  const tokens: Token[] = [];
+  const inside = (s: number, e: number) => tokens.some((k) => s >= k.start && e <= k.end);
+  for (const m of t.matchAll(SCI)) {
+    const sci = readings(m[1] ?? '').map((r) => r * 10 ** Number(m[2]));
+    // "1.106" may be 1·10^6 or a plain decimal: digits and separators alone keep both readings.
+    const written = m[0].trim();
+    const all = /^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci;
+    tokens.push({ start: m.index, end: m.index + m[0].length, readings: all });
+  }
+  for (const m of t.matchAll(POW)) {
+    const end = m.index + m[0].length;
+    if (!inside(m.index, end)) tokens.push({ start: m.index, end, readings: [10 ** Number(m[1])] });
+  }
+  const outer = tokens.length;
+  for (const m of t.matchAll(PLAIN)) {
+    const end = m.index + m[0].length;
+    if (!keepInner && tokens.slice(0, outer).some((k) => m.index >= k.start && end <= k.end)) {
+      continue;
+    }
+    tokens.push({ start: m.index, end, readings: readings(m[0].replace(/\s/g, '')) });
+  }
+  return tokens.sort((a, b) => a.start - b.start);
+}
 
 /**
  * Every number written in the text, one entry per written token, each with all its possible
@@ -58,43 +99,79 @@ const PLAIN = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
  * are part of a scientific-notation token ("6,67.10^-11") are not counted again on their own.
  */
 export function numberTokens(text: string): number[][] {
-  const t = normalizeText(text);
-  const tokens: number[][] = [];
-  const spans: [number, number][] = [];
-  for (const m of t.matchAll(SCI)) {
-    const exp = Number(m[2]);
-    const sci = readings(m[1] ?? '').map((r) => r * 10 ** exp);
-    // "1.106" may be 1·10^6 or a plain decimal: digits and separators alone keep both readings.
-    const written = m[0].trim();
-    tokens.push(/^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci);
-    spans.push([m.index, m.index + m[0].length]);
-  }
-  for (const m of t.matchAll(PLAIN)) {
-    const start = m.index;
-    const end = start + m[0].length;
-    if (spans.some(([s, e]) => start >= s && end <= e)) continue;
-    tokens.push(readings(m[0].replace(/\s/g, '')));
-  }
-  return tokens;
+  return scan(normalizeText(text)).map((k) => k.readings);
 }
 
 /** All numbers mentioned in the text (absolute values; signs are interpretation). */
 export function numbersIn(text: string): number[] {
-  const t = normalizeText(text);
-  const found: number[] = [];
-  // Scientific notation first, then every plain token (a problem may write either reading).
-  for (const m of t.matchAll(SCI)) {
-    const exp = Number(m[2]);
-    for (const r of readings(m[1] ?? '')) found.push(r * 10 ** exp);
-  }
-  for (const m of t.matchAll(PLAIN)) found.push(...readings(m[0].replace(/\s/g, '')));
-  return found;
+  return scan(normalizeText(text), true).flatMap((k) => k.readings);
 }
+
+/** Equal up to floating-point noise: relative, so 5·10⁻¹⁰ and 7·10⁻¹⁰ differ (an absolute 1e-9 did not). */
+const same = (a: number, b: number) => Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math.abs(b));
 
 /** True when |value| (as written in the problem's unit) appears in the text. */
 export function mentions(text: string, value: number): boolean {
   const target = Math.abs(value);
-  return numbersIn(text).some((n) => Math.abs(n - target) <= 1e-9 * Math.max(1, target));
+  return numbersIn(text).some((n) => same(n, target));
+}
+
+/** Words that give a number its sign, and words saying the sign is left open ("độ lớn 2 µC"). */
+const NEGATIVE = /(?<![\p{L}\p{N}])(?:âm|negative)(?![\p{L}\p{N}])/u;
+const POSITIVE = /(?<![\p{L}\p{N}])(?:dương|positive)(?![\p{L}\p{N}])/u;
+const OPEN_SIGN =
+  /(?<![\p{L}\p{N}])(?:độ lớn|trái dấu|cùng dấu|magnitude|opposite)(?![\p{L}\p{N}])/u;
+/** A sentence ends at ".;!?" followed by a space ("1,6.10-19" has none). */
+const SENTENCE_END = /[.;!?](?=\s|$)/g;
+
+/**
+ * The sign the problem gives |value|: −1 for "q = −2 µC" or "điện tích âm … 2 µC", +1 for a plain
+ * or "+"/"dương" number, 0 when the text leaves it open ("độ lớn", "trái dấu", both words) or
+ * writes the number with different signs and the quote does not say which one is meant.
+ * The words count within the sentence, up to the neighbouring numbers. Used to flag an AI that
+ * changed a charge's sign: `mentions` compares absolute values only.
+ */
+export function writtenSign(text: string, value: number, quote = ''): -1 | 0 | 1 {
+  const t = normalizeText(text).toLowerCase();
+  // Digits of names and unit powers ("q1", "m/s^2") are not numbers of the problem.
+  const tokens = scan(t).filter((k) => !/(?:[\p{L}_]|\^-?)$/u.test(t.slice(0, k.start)));
+  const target = Math.abs(value);
+  const ends = [...t.matchAll(SENTENCE_END)].map((m) => m.index);
+  const signAt = (i: number): -1 | 0 | 1 => {
+    const tok = tokens[i];
+    if (!tok) return 0;
+    const mark = /(?:^|[^\p{L}\p{N}.,)])([+-]) ?$/u.exec(t.slice(0, tok.start))?.[1];
+    if (mark) return mark === '-' ? -1 : 1;
+    const from = Math.max(0, ...ends.filter((e) => e < tok.start));
+    const to = Math.min(t.length, ...ends.filter((e) => e >= tok.end));
+    // Between two numbers of one sentence, a ", " gives each the words on its side.
+    const prev = tokens[i - 1];
+    let before = t.slice(prev && prev.end > from ? prev.end : from, tok.start);
+    if (prev && prev.end > from) before = before.slice(before.lastIndexOf(', ') + 1);
+    const next = tokens[i + 1];
+    let after = t.slice(tok.end, next && next.start < to ? next.start : to);
+    if (next && next.start < to && after.includes(', '))
+      after = after.slice(0, after.indexOf(', '));
+    const words = `${before} ${after}`;
+    const neg = NEGATIVE.test(words);
+    const pos = POSITIVE.test(words);
+    if (neg !== pos) return neg ? -1 : 1;
+    return neg || OPEN_SIGN.test(words) ? 0 : 1;
+  };
+  const places = tokens.flatMap((k, i) => (k.readings.some((r) => same(r, target)) ? [i] : []));
+  const signs = new Set(places.map(signAt));
+  if (signs.size === 1) return [...signs][0] ?? 0;
+  // The number is written with different signs: the quote must point at one place.
+  const q = normalizeText(quote).toLowerCase();
+  if (!q) return 0;
+  const picked = new Set<number>();
+  for (let at = t.indexOf(q); at >= 0; at = t.indexOf(q, at + 1)) {
+    for (const i of places) {
+      const k = tokens[i];
+      if (k && k.start >= at && k.end <= at + q.length) picked.add(signAt(i));
+    }
+  }
+  return picked.size === 1 ? ([...picked][0] ?? 0) : 0;
 }
 
 /** Loose "is this quote from the text" check (case, spaces and punctuation insensitive). */
