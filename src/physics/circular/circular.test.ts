@@ -192,4 +192,34 @@ describe('uniform circular motion — scene', () => {
     const out = observe(scene, poe, { ...scene.defaults, ...poe.start })!;
     expect(poe.choices[out.correct]).toEqual({ kind: 'ratio', ratio: 0.5 });
   });
+
+  it('a second stated quantity (T and f) is flagged as not used, never dropped silently', () => {
+    const both = 'Vật quay đều trên đường tròn bán kính 40 cm với chu kì 0,5 s, tần số 2 Hz.';
+    const d = buildDraft(
+      scene,
+      {
+        quantities: [
+          { key: 'r', value: 40, unit: 'cm', quote: 'bán kính 40 cm' },
+          { key: 'T', value: 0.5, unit: 's', quote: 'chu kì 0,5 s' },
+          { key: 'f', value: 2, unit: 'Hz', quote: 'tần số 2 Hz' },
+        ],
+        questions: [],
+        assumptions: [],
+        unsupported_parts: [],
+        clarifications: [],
+      },
+      both,
+      9.81,
+    );
+    expect(d.params.mode).toBe(MODE.period);
+    expect(d.missing).toEqual([]);
+    expect(d.issues.filter((x) => x.kind === 'notUsed').map((x) => x.key)).toEqual(['f']);
+    expect(d.issues.filter((x) => x.blocking)).toEqual([]);
+  });
+
+  it('the card writes the sign of ωt for the chosen sense', () => {
+    const tex = (dir: number) => scene.scienceCard({ ...scene.defaults, dir }).equations[2]!.tex;
+    expect(tex(1)).toContain('\\varphi_0 + \\omega t');
+    expect(tex(-1)).toContain('\\varphi_0 - \\omega t');
+  });
 });

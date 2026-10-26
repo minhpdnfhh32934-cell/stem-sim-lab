@@ -221,7 +221,8 @@ function solve(p: Params, locale: Locale): Solution {
   return { answers, steps };
 }
 
-function card(): ScienceCardData {
+function card(p: Params): ScienceCardData {
+  const sense = circular(p).dir > 0 ? '+' : '-';
   return {
     title: L('Chuyển động tròn đều', 'Uniform circular motion'),
     model: L(
@@ -238,8 +239,11 @@ function card(): ScienceCardData {
         label: L('Gia tốc và lực hướng tâm', 'Centripetal acceleration and force'),
       },
       {
-        tex: '\\varphi = \\varphi_0 + \\omega t,\\quad x = r\\cos\\varphi,\\quad y = r\\sin\\varphi',
-        label: L('Vị trí theo thời gian', 'Position over time'),
+        tex: `\\varphi = \\varphi_0 ${sense} \\omega t,\\quad x = r\\cos\\varphi,\\quad y = r\\sin\\varphi`,
+        label: L(
+          'Vị trí theo thời gian (dấu + khi quay ngược chiều kim đồng hồ, − khi cùng chiều)',
+          'Position over time (+ counterclockwise, − clockwise)',
+        ),
       },
     ],
     assumptions: [
@@ -266,11 +270,11 @@ function card(): ScienceCardData {
       'Positions are computed straight from t (nothing accumulates). Checked by Dormand–Prince integration of Newton’s second law with the centripetal force: the period matches 2πr/v to 10⁻⁹.',
     ),
     method: L(
-      'Nghiệm giải tích φ = φ₀ + ωt; bước Δt = 1/240 s chỉ dùng để vẽ hình.',
-      'Closed form φ = φ₀ + ωt; the step Δt = 1/240 s is only for drawing.',
+      'Nghiệm giải tích φ = φ₀ ± ωt; bước Δt = 1/240 s chỉ dùng để vẽ hình.',
+      'Closed form φ = φ₀ ± ωt; the step Δt = 1/240 s is only for drawing.',
     ),
     userIntervened: false,
-    sources: [SRC.sgk10kntt, SRC.hallidayCircular],
+    sources: [SRC.sgk10kntt, SRC.hallidayCircular, SRC.hairer],
   };
 }
 
@@ -380,10 +384,11 @@ export const uniformCircularMotion: PhysicsScene = {
     phi0: 0,
     dir: 1,
   },
-  // The problem stated exactly one of v, ω, T, f: that is the given quantity.
+  // The first of v, ω, T, f the problem states is the given quantity; buildDraft flags any other
+  // stated one as not used.
   autoDefaults: (_p, sources) => {
-    const stated = GIVEN.filter((k) => sources[k] === 'problem');
-    return stated.length === 1 && stated[0] ? { mode: GIVEN.indexOf(stated[0]) } : {};
+    const stated = GIVEN.find((k) => sources[k] === 'problem');
+    return stated ? { mode: GIVEN.indexOf(stated) } : {};
   },
   // About four seconds per turn for slow motions (e.g. a period given in hours).
   suggestedSpeed: (p) => Math.max(1, circular(p).T / 4),

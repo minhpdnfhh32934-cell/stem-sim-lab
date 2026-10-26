@@ -14,7 +14,8 @@ export type IssueKind =
   | 'outOfRange'
   | 'duplicate'
   | 'badChoice'
-  | 'invalidScene';
+  | 'invalidScene'
+  | 'notUsed';
 
 export interface Issue {
   kind: IssueKind;
@@ -293,6 +294,19 @@ export function buildDraft(
 
   for (const m of scene.validate?.(params) ?? []) {
     issues.push({ kind: 'invalidScene', blocking: false, message: m });
+  }
+  // A stated value that the chosen setup hides (`when`) is flagged, never ignored silently.
+  for (const def of scene.params) {
+    if (sources[def.key] !== 'problem' || !def.when || def.when(params)) continue;
+    issues.push({
+      kind: 'notUsed',
+      key: def.key,
+      blocking: false,
+      message: L(
+        `${def.label.vi}: đề có cho giá trị này nhưng cách bố trí đang chọn không dùng tới — hãy kiểm tra lại.`,
+        `${def.label.en}: the problem states this value but the chosen setup does not use it — please check.`,
+      ),
+    });
   }
 
   return {
