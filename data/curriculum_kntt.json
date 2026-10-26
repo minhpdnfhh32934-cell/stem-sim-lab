@@ -2062,7 +2062,7 @@
     5,
     7
    ],
-   "reason": "Bài 4–5 nói về độ dịch chuyển, tốc độ, vận tốc; Bài 7 về đồ thị độ dịch chuyển – thời gian.",
+   "reason": "Tên Bài 4–5: độ dịch chuyển, quãng đường, tốc độ, vận tốc; Tên Bài 7: đồ thị độ dịch chuyển – thời gian (cảnh vẽ đồ thị tọa độ – thời gian).",
    "review_status": "pending"
   },
   {
@@ -2123,10 +2123,9 @@
    "lessons": [
     14,
     15,
-    16,
     18
    ],
-   "reason": "Tên Bài 14–16: ba định luật Newton; Bài 18: lực ma sát (cảnh có hệ số ma sát).",
+   "reason": "Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3).",
    "review_status": "pending"
   },
   {
@@ -2168,7 +2167,7 @@
     5,
     6
    ],
-   "reason": "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: dao động tắt dần (cảnh có lực cản).",
+   "reason": "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng).",
    "review_status": "pending"
   },
   {
@@ -2184,7 +2183,7 @@
     5,
     6
    ],
-   "reason": "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: dao động tắt dần.",
+   "reason": "Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng).",
    "review_status": "pending"
   },
   {
@@ -2258,7 +2257,7 @@
    "lessons": [
     10
    ],
-   "reason": "Tên Bài 10: trao đổi chất qua màng tế bào.",
+   "reason": "Tên Bài 10: trao đổi chất qua màng tế bào. Chỉ phần vận chuyển thụ động (khuếch tán, thẩm thấu), trên mô hình hai ngăn và ống chữ U, không phải màng tế bào thật.",
    "review_status": "pending"
   },
   {
@@ -2319,7 +2318,7 @@
     8,
     9
    ],
-   "reason": "Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng.",
+   "reason": "Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn).",
    "review_status": "pending"
   },
   {
@@ -2351,19 +2350,19 @@
   {
    "topic": "inclinedPlane",
    "subject": "physics",
-   "reason": "Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng định luật 2 Newton và lực ma sát. Bài có thể liên quan: VL10 Bài 15, 18.",
+   "reason": "Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng cùng mô hình với \"Các định luật Newton\" (định luật 2 Newton, lực ma sát). Bài có thể liên quan: VL10 Bài 13, 15, 18.",
    "review_status": "pending"
   },
   {
    "topic": "pulley",
    "subject": "physics",
-   "reason": "Không bài nào có tên về ròng rọc; Bài 17 (trọng lực và lực căng) chỉ liên quan một phần. Bài có thể liên quan: VL10 Bài 17.",
+   "reason": "Không bài nào có tên về ròng rọc; tên Bài 17 có nêu lực căng (cảnh tính lực căng dây) nhưng không nêu hệ ròng rọc. Bài có thể liên quan: VL10 Bài 17.",
    "review_status": "pending"
   },
   {
    "topic": "hookeSpring",
    "subject": "physics",
-   "reason": "Tên Bài 33 là biến dạng của vật rắn, không nêu định luật Hooke. Bài có thể liên quan: VL10 Bài 33.",
+   "reason": "Tên Bài 33 là biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng), không nêu định luật Hooke. Bài có thể liên quan: VL10 Bài 33.",
    "review_status": "pending"
   },
   {
@@ -2387,7 +2386,7 @@
   {
    "topic": "bondPolarity",
    "subject": "chemistry",
-   "reason": "Tên Bài 12 là liên kết cộng hoá trị, không nêu độ phân cực. Bài có thể liên quan: HH10 Bài 12.",
+   "reason": "Tên Bài 11–12 là liên kết ion và liên kết cộng hoá trị, không nêu độ phân cực. Bài có thể liên quan: HH10 Bài 11, 12.",
    "review_status": "pending"
   },
   {
@@ -2405,7 +2404,7 @@
   {
    "topic": "maxwellBoltzmann",
    "subject": "chemistry",
-   "reason": "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann. Bài có thể liên quan: —.",
+   "reason": "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann; hai bài Vật lí 12 nói về mô hình động học phân tử chất khí. Bài có thể liên quan: VL12 Bài 8, 12 (sách Vật lí; trong app chủ đề thuộc Hoá học).",
    "review_status": "pending"
   },
   {
@@ -2423,7 +2422,7 @@
   {
    "topic": "geneticDrift",
    "subject": "biology",
-   "reason": "Tên Bài 21 là học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 21.",
+   "reason": "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền. Bài có thể liên quan: SH12 Bài 18, 21.",
    "review_status": "pending"
   }
  ]

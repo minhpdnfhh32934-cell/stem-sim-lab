@@ -454,6 +454,7 @@ KIND_BY_NUMBER = {
 }
 # Counting choices a teacher may change (plan #37 §4.3).
 COUNT_NOTES = [
+    "VL10 Bài 1 (Làm quen với Vật lí) tính là mở đầu môn học; VL10 Bài 3 (Thực hành tính sai số…, không có dấu hai chấm) tính là thực hành.",
     "VL10 Bài 2 (quy tắc an toàn) tính là mở đầu môn học; VL10 Bài 20 (Một số ví dụ về cách giải…) tính là bài tập.",
     "SH10 Bài 1–2 tính là mở đầu môn học; SH10 Bài 3 tính là lí thuyết.",
     "SH11 Bài 29 (ngành nghề) không tính là lí thuyết.",
@@ -462,46 +463,46 @@ COUNT_NOTES = [
 
 # Placed topics: (topic, book, lessons, reason). Only when the lesson titles clearly name it.
 PLACEMENTS = [
-    ("uniformMotion", "VL10", [4, 5, 7], "Bài 4–5 nói về độ dịch chuyển, tốc độ, vận tốc; Bài 7 về đồ thị độ dịch chuyển – thời gian."),
+    ("uniformMotion", "VL10", [4, 5, 7], "Tên Bài 4–5: độ dịch chuyển, quãng đường, tốc độ, vận tốc; Tên Bài 7: đồ thị độ dịch chuyển – thời gian (cảnh vẽ đồ thị tọa độ – thời gian)."),
     ("uniformAcceleration", "VL10", [8, 9], "Tên Bài 8–9: gia tốc và chuyển động thẳng biến đổi đều."),
     ("freeFall", "VL10", [10], "Tên Bài 10: sự rơi tự do."),
     ("horizontalProjectile", "VL10", [12], "Tên Bài 12: chuyển động ném."),
     ("obliqueProjectile", "VL10", [12], "Tên Bài 12: chuyển động ném."),
-    ("newtonLaws", "VL10", [14, 15, 16, 18], "Tên Bài 14–16: ba định luật Newton; Bài 18: lực ma sát (cảnh có hệ số ma sát)."),
+    ("newtonLaws", "VL10", [14, 15, 18], "Tên Bài 14–15: định luật 1, 2 Newton; Tên Bài 18: lực ma sát (cảnh có hệ số ma sát). Cảnh chỉ có một vật nên không xếp Bài 16 (định luật 3)."),
     ("energyConservation", "VL10", [25, 26], "Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng."),
     ("collisions", "VL10", [28, 29], "Tên Bài 28–29: động lượng và định luật bảo toàn động lượng."),
-    ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: dao động tắt dần (cảnh có lực cản)."),
-    ("simplePendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: dao động tắt dần."),
+    ("springPendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
+    ("simplePendulum", "VL11", [1, 2, 3, 5, 6], "Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng)."),
     ("periodicTable", "HH10", [5, 6, 8], "Tên Bài 5, 6, 8: cấu tạo bảng tuần hoàn, xu hướng biến đổi tính chất, định luật tuần hoàn."),
     ("electronConfiguration", "HH10", [3], "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử."),
     ("orbitals", "HH10", [3], "Tên Bài 3: cấu trúc lớp vỏ electron nguyên tử."),
     ("collisionTheory", "HH10", [19], "Tên Bài 19: tốc độ phản ứng."),
     ("chemicalEquilibrium", "HH11", [1], "Tên Bài 1: khái niệm về cân bằng hoá học."),
-    ("diffusionOsmosis", "SH10", [10], "Tên Bài 10: trao đổi chất qua màng tế bào."),
+    ("diffusionOsmosis", "SH10", [10], "Tên Bài 10: trao đổi chất qua màng tế bào. Chỉ phần vận chuyển thụ động (khuếch tán, thẩm thấu), trên mô hình hai ngăn và ống chữ U, không phải màng tế bào thật."),
     ("mitosis", "SH10", [16], "Tên Bài 16: chu kì tế bào và nguyên phân."),
     ("meiosis", "SH10", [17], "Tên Bài 17: giảm phân."),
     ("centralDogma", "SH12", [2], "Tên Bài 2: quá trình truyền đạt thông tin di truyền (Bài 1 về DNA và tái bản: giáo viên quyết định)."),
     ("pointMutation", "SH12", [4], "Tên Bài 4: đột biến gene."),
-    ("mendel", "SH12", [8, 9], "Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng."),
+    ("mendel", "SH12", [8, 9], "Tên Bài 8–9: học thuyết di truyền Mendel và mở rộng học thuyết Mendel (cảnh chỉ mở rộng tới trội không hoàn toàn)."),
     ("hardyWeinberg", "SH12", [18], "Tên Bài 18: di truyền học quần thể."),
     ("logisticGrowth", "SH12", [24], "Tên Bài 24: sinh thái học quần thể."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).
 UNPLACED = [
-    ("inclinedPlane", "physics", "VL10 Bài 15, 18", "Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng định luật 2 Newton và lực ma sát."),
-    ("pulley", "physics", "VL10 Bài 17", "Không bài nào có tên về ròng rọc; Bài 17 (trọng lực và lực căng) chỉ liên quan một phần."),
-    ("hookeSpring", "physics", "VL10 Bài 33", "Tên Bài 33 là biến dạng của vật rắn, không nêu định luật Hooke."),
+    ("inclinedPlane", "physics", "VL10 Bài 13, 15, 18", "Không bài nào có tên về mặt phẳng nghiêng; cảnh dùng cùng mô hình với \"Các định luật Newton\" (định luật 2 Newton, lực ma sát)."),
+    ("pulley", "physics", "VL10 Bài 17", "Không bài nào có tên về ròng rọc; tên Bài 17 có nêu lực căng (cảnh tính lực căng dây) nhưng không nêu hệ ròng rọc."),
+    ("hookeSpring", "physics", "VL10 Bài 33", "Tên Bài 33 là biến dạng của vật rắn (cảnh vẽ lực đàn hồi theo độ biến dạng), không nêu định luật Hooke."),
     ("bohrModel", "chemistry", "HH10 Bài 1 hoặc 3", "Không bài nào có tên về mô hình Bohr; chưa rõ thuộc Bài 1 hay Bài 3."),
     ("molecule3d", "chemistry", "—", "Không bài nào trong ba cuốn Hoá học có tên về hình học phân tử 3D."),
     ("vsepr", "chemistry", "—", "Không bài nào trong ba cuốn Hoá học có tên về mô hình VSEPR."),
-    ("bondPolarity", "chemistry", "HH10 Bài 12", "Tên Bài 12 là liên kết cộng hoá trị, không nêu độ phân cực."),
+    ("bondPolarity", "chemistry", "HH10 Bài 11, 12", "Tên Bài 11–12 là liên kết ion và liên kết cộng hoá trị, không nêu độ phân cực."),
     ("reactionLibrary", "chemistry", "—", "Thư viện nhiều phản ứng, không ứng với một bài."),
     ("equationBalancing", "chemistry", "HH10 Bài 15", "Không bài nào có tên về cân bằng phương trình; Bài 15 (phản ứng oxi hoá – khử) chỉ liên quan một phần."),
-    ("maxwellBoltzmann", "chemistry", "—", "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann."),
+    ("maxwellBoltzmann", "chemistry", "VL12 Bài 8, 12 (sách Vật lí; trong app chủ đề thuộc Hoá học)", "Không bài nào trong ba cuốn Hoá học có tên về phân bố Maxwell–Boltzmann; hai bài Vật lí 12 nói về mô hình động học phân tử chất khí."),
     ("michaelisMenten", "biology", "SH10 Bài 13–15", "Không bài nào có tên về động học enzyme."),
     ("lotkaVolterra", "biology", "SH12 Bài 26", "Tên Bài 26 là quần xã sinh vật, không nêu quan hệ con mồi – vật ăn thịt."),
-    ("geneticDrift", "biology", "SH12 Bài 21", "Tên Bài 21 là học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền."),
+    ("geneticDrift", "biology", "SH12 Bài 18, 21", "Tên Bài 18, 21 là di truyền học quần thể và học thuyết tiến hoá tổng hợp hiện đại, không nêu phiêu bạt di truyền."),
 ]
 
 # Lessons of 0.8.0 Part A (plan #37 §4.2): listed in the document before their topics exist.
@@ -596,13 +597,12 @@ def markdown(data: dict) -> str:
     for p in data["items"]:
         for n in p["lessons"]:
             by_lesson.setdefault((p["book"], n), []).append(names.get(p["topic"], p["topic"]))
-            if p["reason"] not in reasons.setdefault((p["book"], n), []):
-                reasons[(p["book"], n)].append(p["reason"])
+            reasons.setdefault((p["book"], n), []).append((names.get(p["topic"], p["topic"]), p["reason"]))
     out = [
         "# Đối chiếu SimLab với SGK \"Kết nối tri thức với cuộc sống\"",
         "",
         "> **Tệp sinh tự động** bởi `scripts/data/gen_curriculum_kntt.py` (cùng nguồn với",
-        "> `data/curriculum_kntt.json`, dữ liệu thanh chia lớp của thư viện). Không sửa tay: sửa script rồi chạy",
+        "> `data/curriculum_kntt.json`, dữ liệu cho thanh chia lớp của thư viện, việc (g2) của #37). Không sửa tay: sửa script rồi chạy",
         "> `python scripts/data/gen_curriculum_kntt.py`. **Mọi dòng đang chờ giáo viên duyệt** (`review_status: \"pending\"`,",
         "> DATA_REVIEW mục 12 và các dòng `KNTT-*`).",
         "",
@@ -652,13 +652,17 @@ def markdown(data: dict) -> str:
                 if key not in by_lesson and key not in PART_A:
                     continue
                 status = ", ".join(by_lesson.get(key, [])) or f"chưa có — kế hoạch {PART_A[key]}"
-                note = " ".join(reasons.get(key, [])) or "Bài của 0.8.0 Phần A (#37 mục 4.2)."
+                pairs = reasons.get(key, [])
+                if len({r for _, r in pairs}) > 1:
+                    note = " ".join(f"{name}: {r}" for name, r in pairs)
+                else:
+                    note = pairs[0][1] if pairs else "Bài của 0.8.0 Phần A (#37 mục 4.2)."
                 out.append(f"| {b['title']} | {c['label']} | {l['number']} | {l['title']} | {l['page']} | {KIND_VI[l['kind']]} | {status} | {note} | pending |")
     out += [
         "",
         "## Chủ đề chưa xếp lớp",
         "",
-        "Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để \"Chưa xếp lớp\" (chỉ hiện ở \"Tất cả\") cho tới khi giáo viên chọn.",
+        "Tên bài SGK chưa nói rõ chủ đề, hoặc không có bài nào: để \"Chưa xếp lớp\" cho tới khi giáo viên chọn (khi thư viện có thanh chia lớp, các chủ đề này chỉ hiện ở \"Tất cả\").",
         "",
         "| Môn | Chủ đề SimLab | Lí do | review_status |",
         "| --- | --- | --- | --- |",
