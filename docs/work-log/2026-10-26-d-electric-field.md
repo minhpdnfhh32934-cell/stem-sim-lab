@@ -169,3 +169,24 @@ SimLab topic (`docs/CURRICULUM_KNTT.md`, pending teacher review).
   (chromium, shared lock) → 38 passed.
 - Not done (yellow 3, 5–8): a computed E = 0 point for any configuration, golden force tolerance,
   cache/line-count mutation tests, CELL3D-5/KNTT-3 counts (not this PR's lines), `n` in Basic.
+
+## 2026-10-27 — PR #89 re-review (3 red)
+
+- Re-review: `.agent-logs/rereview-pr89-2026-10-27.md` (PR comment 6426261551).
+- A: `MANTISSA_BEFORE` allowed exactly one sign between mantissa and power, so "2.(10^-8)",
+  "(2,5)·10⁻⁸", "2{\cdot}10^{-8}", "2 ×\, 10⁻⁸" still read 10ⁿ. Now anything like a mantissa
+  (a number that is not a name or an earlier exponent, then only signs, brackets, spaces, "x",
+  "lần" or LaTeX commands) blocks the lone power; Cyrillic "х" and zero-width spaces normalised.
+  Grid test (20 joins × 4 mantissas × 5 forms × 2 exponents) and "10⁻⁸, 10⁻⁹ và 10⁻¹⁰" still read.
+- B: 10^0 in any form is never read as 1. C: `IMPLIED` y_M = 0 only with M as the subject; the
+  perpendicular-bisector problem and "O là trung điểm của AB" are refused. All four new tests
+  failed before the fix.
+- Yellow: E = 0 markers drawn after the discs; step ≤ half the distance to the nearest charge
+  (charges 0,1 mm apart: no line out of steps; test); the sign warning stays until the learner's
+  sign matches the problem (E2E types a wrong sign first).
+- Results: `npx vitest run src/ai tests/golden src/app/ai` → 488 passed (no golden problem
+  refused); `src/physics/field` → 24 passed; eslint, tsc, Prettier → clean; full `npx vitest run`
+  → 4320 passed, 2 failed on timing under load (`tests/app.test.tsx` Science Studio,
+  `dogma3d/scene.perf.test.ts` 150 ms budget); both files alone → 17/17 passed.
+- E2E `physics.spec` + `layout.spec` + `ai-flow.spec` (chromium, shared lock, after waiting for
+  the coordinator's run) → 38 passed. **Status: PASS.**
