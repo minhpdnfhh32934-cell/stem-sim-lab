@@ -88,6 +88,7 @@ const vi = {
     genetics: 'Di truyền',
     ecology: 'Sinh thái',
     cellPhysiology: 'Sinh lý tế bào',
+    circularMotion: 'Chuyển động tròn',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -126,6 +127,7 @@ const vi = {
     lotkaVolterra: 'Con mồi – vật ăn thịt (Lotka–Volterra)',
     michaelisMenten: 'Động học enzyme (Michaelis–Menten)',
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
+    uniformCircularMotion: 'Chuyển động tròn đều',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
