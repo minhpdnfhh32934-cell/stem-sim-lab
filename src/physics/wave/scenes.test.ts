@@ -113,7 +113,7 @@ describe('standing wave scene: card, picture', () => {
     expect(card.equations.length).toBeGreaterThanOrEqual(4);
     expect(card.assumptions.length).toBeGreaterThanOrEqual(5);
     expect(card.sources.length).toBeGreaterThanOrEqual(2);
-    expect(card.validity.vi.length).toBeGreaterThan(0);
+    expect(card.validity?.vi.length).toBeGreaterThan(0);
     const noVi = /\\text\{[^}]*[^\x20-\x7e}]/;
     for (const e of card.equations) expect(e.tex).not.toMatch(noVi);
     for (const p of [{}, { vFrom: 1 }, { mode: MODE.speed }, { mode: MODE.harmonic, f: 30 }])
