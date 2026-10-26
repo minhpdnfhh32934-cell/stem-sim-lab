@@ -1,26 +1,33 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { GRADES, type Grade } from '@/app/curriculum';
 import type { Subject } from '@/app/workspaceStore';
 
 /**
  * Learning levels (PROMPT_PHAN_2 A4.1): "Nền tảng" ≈ upper-secondary content (the MVP),
- * "Đại cương" = first-year university courses (later). Which topic belongs to which level is a
- * structural choice; mapping topics to a curriculum (grade, lesson) is left to teachers
- * (`src/app/levels.ts`, review_status "pending").
+ * "Đại cương" = first-year university courses (later). Only AI Teacher reads it (its prompt hint);
+ * the library is arranged by grade instead (`GradeChoice`).
  */
 export type Level = 'foundation' | 'general';
 
+/** The library's view: one grade's textbook chapters (pending a teacher) or every topic. */
+export type GradeChoice = Grade | 'all';
+
+const isGrade = (v: unknown): v is GradeChoice => v === 'all' || GRADES.some((g) => g === v);
+
 export interface ProfileState {
   level: Level;
+  /** Grade the learner studies or revises; only arranges the library and suggestions. */
+  grade: GradeChoice;
   /** Subjects chosen during onboarding (used to order the suggestions on the home screen). */
   interests: Subject[];
-  /** Level + subject steps of the first-run onboarding are done. */
+  /** Grade + subject steps of the first-run onboarding are done. */
   onboarded: boolean;
   /** The "Kết nối AI" onboarding step (main edition) was shown (connected or "Để sau"). */
   connectSeen: boolean;
   /** Last opened topic, for "Tiếp tục bài đang học". */
   lastTopic: string | null;
-  setLevel: (level: Level) => void;
+  setGrade: (grade: GradeChoice) => void;
   toggleInterest: (subject: Subject) => void;
   finishProfile: () => void;
   finishConnect: () => void;
@@ -40,12 +47,13 @@ export const useProfileStore = create<ProfileState>()(
   persist(
     (set) => ({
       level: 'foundation',
+      grade: 'all',
       interests: [],
       onboarded: usedBefore(),
       connectSeen: usedBefore(),
       lastTopic: null,
-      setLevel: (level) => {
-        set({ level });
+      setGrade: (grade) => {
+        set({ grade });
       },
       toggleInterest: (subject) => {
         set((s) => ({
@@ -66,10 +74,25 @@ export const useProfileStore = create<ProfileState>()(
     }),
     {
       name: 'stemsim.profile',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ level, interests, onboarded, connectSeen, lastTopic }) => ({
+      // v1 had no grade: people who used the app before see every topic. Nothing can change
+      // the level any more, so a v1 "Đại cương" (never available) goes back to "Nền tảng".
+      migrate: (old) => ({ ...(old as object), grade: 'all', level: 'foundation' }),
+      // A damaged save never leaves the library on a grade that does not exist. Nothing saved
+      // yet: zustand passes undefined.
+      merge: (saved, current) => {
+        const s = (saved ?? {}) as Partial<ProfileState>;
+        return {
+          ...current,
+          ...s,
+          grade: isGrade(s.grade) ? s.grade : 'all',
+          interests: Array.isArray(s.interests) ? s.interests : current.interests,
+        };
+      },
+      partialize: ({ level, grade, interests, onboarded, connectSeen, lastTopic }) => ({
         level,
+        grade,
         interests,
         onboarded,
         connectSeen,

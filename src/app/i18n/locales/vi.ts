@@ -892,9 +892,8 @@ const vi = {
       biology: 'Phân bào, di truyền, sinh thái, enzyme',
     },
     topicCount: '{count} chủ đề',
-    suggestedTitle: 'Gợi ý cho trình độ {level}',
-    noSuggestions:
-      'Trình độ này đang được xây dựng. Chọn trình độ Nền tảng ở Thư viện để học ngay.',
+    suggestedTitle: 'Gợi ý cho bạn',
+    noSuggestions: 'Lớp này chưa có chủ đề. Chọn "Tất cả" ở Thư viện để xem mọi chủ đề.',
     teacherTitle: 'AI Teacher',
     teacherBody:
       'AI Teacher hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
@@ -2260,21 +2259,30 @@ const vi = {
     },
   },
   levels: {
-    label: 'Trình độ',
+    label: 'Lớp',
     foundation: 'Nền tảng',
     general: 'Đại cương',
-    foundationDesc: 'Kiến thức gốc, tương đương chương trình THPT — ôn lại cho chắc.',
-    generalDesc: 'Vật lý, Hóa học, Sinh học đại cương năm nhất.',
-    soon: 'sắp có',
-    plannedHint: 'Trình độ Đại cương sẽ có ở giai đoạn sau.',
-    mappingPending:
-      'Việc xếp chủ đề theo bài trong chương trình/sách giáo khoa đang chờ giáo viên duyệt.',
+    grade: 'Lớp {grade}',
+    all: 'Tất cả',
+    gradeDesc: 'Chủ đề xếp theo chương sách giáo khoa lớp {grade}.',
+    allDesc: 'Mọi chủ đề, kể cả chủ đề chưa xếp lớp.',
+    source: 'Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt',
+    lessons: 'Bài {range}',
+    empty: 'Chưa có chủ đề {subject} nào được xếp vào lớp {grade}.',
+    showAll: 'Xem tất cả',
+    lessonOne: 'Bài {range}',
+    sourceNote:
+      'Cách xếp chủ đề theo lớp do SimLab đề xuất từ mục lục SGK Kết nối tri thức, đang chờ giáo viên duyệt.',
+    suggested: 'Gợi ý cho lớp {grade}',
+    topicCount: '{count} chủ đề lớp {grade}',
+    topicCountOne: '1 chủ đề lớp {grade}',
   },
   onboarding: {
     label: 'Làm quen với SimLab',
     step: 'Bước {i}/{n}',
-    levelTitle: 'Bạn muốn học ở trình độ nào?',
-    levelBody: 'Chọn một trình độ để app gợi ý chủ đề phù hợp. Bạn đổi được bất cứ lúc nào.',
+    levelTitle: 'Bạn đang học hoặc ôn lớp nào?',
+    levelBody:
+      'Thư viện sẽ xếp chủ đề theo chương sách giáo khoa của lớp đó. Bạn đổi được bất cứ lúc nào ở Thư viện.',
     subjectsTitle: 'Bạn quan tâm môn nào?',
     subjectsBody:
       'Chọn một hoặc nhiều môn — app sẽ gợi ý các môn này trước. Chưa chắc thì cứ bỏ qua.',
