@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { dopri5 } from '@/core/ode/dopri5';
+import { CHECK_TOL, checkAtol, forceLaw, forceLawStart, numericPeriod } from './check';
+import { CE, CircularEngine } from './engine';
 import { MODE, circular, stateAt } from './model';
 
 const TAU = 2 * Math.PI;
@@ -52,5 +55,65 @@ describe('uniform circular motion — model', () => {
     }
     // Clockwise: at φ₀ = 0 the body moves towards −y.
     expect(stateAt(circular({ mode: MODE.v, r: 1, v: 2, dir: -1 }), 0).vy).toBe(-2);
+  });
+});
+
+describe('uniform circular motion — engine', () => {
+  it('phase is exact in t: radius and speed constant to 1e-12 over a long run', () => {
+    const p = { mode: MODE.v, r: 1.5, v: 4, phi0: 0.3, dir: 1, m: 1 };
+    const e = new CircularEngine();
+    e.reset(p);
+    const out = new Float64Array(e.stateSize);
+    for (let i = 0; i < 240 * 60; i++) {
+      e.step();
+      if (i % 997 !== 0) continue;
+      e.readState(out);
+      const t = e.time();
+      expect(t).toBe((i + 1) / 240);
+      expect(out[CE.phi]).toBe(0.3 + (4 / 1.5) * t);
+      expect(Math.abs(Math.hypot(out[CE.x]!, out[CE.y]!) - 1.5)).toBeLessThan(1e-12);
+      expect(Math.abs(Math.hypot(out[CE.vx]!, out[CE.vy]!) - 4)).toBeLessThan(1e-12);
+    }
+    expect(e.finished()).toBe(true);
+    expect(e.input()).toBe(false);
+  });
+});
+
+describe('uniform circular motion — DOPRI5 cross-check of the force law', () => {
+  const cases = [
+    { mode: MODE.v, r: 1, v: 2, m: 0.5, phi0: 0, dir: 1 },
+    { mode: MODE.freq, r: 0.3, f: 2, m: 0.1, phi0: 1.2, dir: -1 },
+    { mode: MODE.period, r: 4, T: 7, m: 3, phi0: -2, dir: 1 },
+  ];
+
+  it.each(cases)('integrated path stays on the circle and matches the engine (%o)', (p) => {
+    const c = circular(p);
+    const e = new CircularEngine();
+    e.reset(p);
+    const out = new Float64Array(e.stateSize);
+    const f = forceLaw(c);
+    let y: ArrayLike<number> = forceLawStart(c);
+    let t0 = 0;
+    for (const k of [97, 240, 611, 1000]) {
+      // Engine time k·Δt; DOPRI5 continues from the previous checkpoint.
+      while (e.time() < k * e.dt - 1e-12) e.step();
+      const t1 = e.time();
+      const r = dopri5(f, y, t0, t1, { ...CHECK_TOL, atol: checkAtol(c) });
+      e.readState(out);
+      const tol = 1e-8 * Math.max(1, c.r);
+      expect(Math.abs(Math.hypot(r.y[0]!, r.y[1]!) - c.r)).toBeLessThan(tol);
+      expect(Math.abs(r.y[0]! - out[CE.x]!)).toBeLessThan(tol);
+      expect(Math.abs(r.y[1]! - out[CE.y]!)).toBeLessThan(tol);
+      expect(Math.abs(r.y[2]! - out[CE.vx]!)).toBeLessThan(1e-8 * Math.max(1, c.v));
+      y = r.y;
+      t0 = t1;
+    }
+  });
+
+  it.each(cases)('period from upward y = 0 crossings equals 2πr/v to 9 digits (%o)', (p) => {
+    const c = circular(p);
+    const T = numericPeriod(c);
+    expect(T).not.toBeNull();
+    expect(Math.abs(T! / ((2 * Math.PI * c.r) / c.v) - 1)).toBeLessThan(1e-9);
   });
 });
