@@ -61,7 +61,7 @@ async function expectSoftwareWebGL(page: Page): Promise<void> {
 
 async function openMitosisTopic(page: Page): Promise<void> {
   await page.getByRole('radio', { name: 'Sinh học' }).click();
-  // The topic list may add a progress note to the name ("Đã hoàn thành chủ đề").
+  // The topic list adds a progress note ("Đã học") as the button's description.
   await page
     .getByRole('list', { name: 'Sinh học' })
     .getByRole('button', { name: /^Nguyên phân( |$)/ })

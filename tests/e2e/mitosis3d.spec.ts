@@ -139,7 +139,7 @@ test('mitosis 3D: plays through every stage, switches cell type, no leaks on rep
         type: 'overload',
         description: `play-through ${play}: the app switched to the 2D picture; topic reopened`,
       });
-      // The topic in the library (its name now ends with "Đã hoàn thành chủ đề").
+      // The topic in the library (its "Đã học" note is the button's description, not its name).
       await page
         .getByRole('list', { name: 'Sinh học' })
         .getByRole('button', { name: /^Nguyên phân/ })

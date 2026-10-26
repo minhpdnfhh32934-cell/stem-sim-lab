@@ -25,11 +25,40 @@ export function topicProgress(topic: string, p: Progress): TopicProgress {
   return { done, total, complete: done === total };
 }
 
-/** Topics of a chapter that are complete, out of the available ones. */
+export interface TopicStatus extends TopicProgress {
+  /**
+   * What the library shows: `new` (nothing yet), `opened` (the "learned" tick, every subject),
+   * `complete` (every step of a topic that has activities, i.e. physics).
+   */
+  state: 'new' | 'opened' | 'complete';
+  /** Steps still to do: the prediction, and how many challenges. */
+  predictLeft: boolean;
+  challengesLeft: number;
+}
+
+/** Library status of one topic: opening it is enough for the "learned" tick in every subject. */
+export function topicStatus(topic: string, p: Progress): TopicStatus {
+  const progress = topicProgress(topic, p);
+  const poe = poeFor(topic);
+  // Only opening counts: a Science Studio lesson can record the lab prediction without opening it.
+  const state = !p.visited[topic]
+    ? 'new'
+    : progress.complete && progress.total > 1
+      ? 'complete'
+      : 'opened';
+  return {
+    ...progress,
+    state,
+    predictLeft: !!poe && p.predictions[poe.id] === undefined,
+    challengesLeft: challengesFor(topic).filter((c) => p.challenges[c.id] === undefined).length,
+  };
+}
+
+/** Topics of a chapter the learner has opened ("learned"), out of the available ones. */
 export function chapterProgress(topics: readonly { id: string; status: string }[], p: Progress) {
   const available = topics.filter((t) => t.status === 'available');
   return {
-    done: available.filter((t) => topicProgress(t.id, p).complete).length,
+    done: available.filter((t) => topicStatus(t.id, p).state !== 'new').length,
     total: available.length,
   };
 }

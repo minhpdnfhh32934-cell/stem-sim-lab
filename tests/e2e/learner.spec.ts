@@ -141,6 +141,14 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await page.getByRole('button', { name: 'Ném ngang', exact: true }).click();
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
+  // Opening is enough for the "learned" tick (every subject); physics also says what is left.
+  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
+  const topic = library.getByRole('button', { name: 'Ném ngang', exact: true });
+  await expect(topic).toHaveAccessibleDescription(
+    'Đã học · tiến độ 1/3, còn: dự đoán trước, 1 thử thách',
+  );
+  await expect(library.getByLabel('Đã học 1/5 chủ đề')).toBeVisible();
+
   // Predict – observe – explain: the right answer is computed by the engine. Doubling v₀ leaves
   // the fall time t = √(2h₀/g) unchanged.
   const predict = page.getByRole('region', { name: 'Dự đoán trước' });
@@ -162,9 +170,8 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');
   await expect(challenge).toContainText('Đã hoàn thành');
 
-  // Topic complete (opened + predicted + challenge) → check in the library; badges on home.
-  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
-  await expect(library.getByLabel('Đã hoàn thành chủ đề')).toHaveCount(1);
+  // Topic complete (opened + predicted + challenge) → its own mark in the library; badges on home.
+  await expect(topic).toHaveAccessibleDescription('Đã hoàn thành chủ đề');
   // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
   await expect(page.getByRole('button', { name: /AI Teacher/ }).first()).toBeVisible();

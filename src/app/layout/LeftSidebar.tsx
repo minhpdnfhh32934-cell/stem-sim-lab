@@ -1,5 +1,6 @@
 import {
   Atom,
+  Award,
   BookOpen,
   CheckCircle2,
   ChevronRight,
@@ -9,9 +10,9 @@ import {
   X,
 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
-import { chapterProgress, topicProgress } from '@/learn/progress';
+import { chapterProgress, topicStatus, type TopicStatus } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
-import { memo, useMemo, useState } from 'react';
+import { memo, useId, useMemo, useState } from 'react';
 import { normalizeForSearch, type ChapterEntry } from '@/app/catalog';
 import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
@@ -202,6 +203,75 @@ function Library({ t }: { t: TFunction }) {
   );
 }
 
+/** What the library says about a topic, or null before it is opened. */
+function topicNote(s: TopicStatus, t: TFunction): string | null {
+  if (s.state === 'new') return null;
+  if (s.state === 'complete') return t('learn.topicDone');
+  const left = [
+    ...(s.predictLeft ? [t('learn.leftPredict')] : []),
+    ...(s.challengesLeft > 0 ? [t('learn.leftChallenges', { n: s.challengesLeft })] : []),
+  ];
+  return left.length > 0
+    ? t('learn.topicLeft', { done: s.done, total: s.total, left: left.join(', ') })
+    : t('learn.topicLearned');
+}
+
+/**
+ * One available topic. The "learned" tick (with "1/3" while physics steps remain) or the
+ * "complete" mark is drawn inside the button; its text is the button's description, so the
+ * button's name stays the topic title.
+ */
+function TopicItem({
+  title,
+  active,
+  status,
+  t,
+  onOpen,
+}: {
+  title: string;
+  active: boolean;
+  status: TopicStatus;
+  t: TFunction;
+  onOpen: () => void;
+}) {
+  const noteId = useId();
+  const note = topicNote(status, t);
+  return (
+    <li data-status="available" className="tree__topic-item">
+      <button
+        type="button"
+        className="tree__topic tree__topic--button"
+        aria-current={active ? 'true' : undefined}
+        aria-describedby={note ? noteId : undefined}
+        data-tip={note ?? undefined}
+        data-tip-side="right"
+        onClick={onOpen}
+      >
+        <span className="tree__topic-title">{title}</span>
+        {note && (
+          <span className="tree__mark" data-state={status.state} aria-hidden="true">
+            {status.state === 'complete' ? (
+              <Award size={14} strokeWidth={2} />
+            ) : (
+              <CheckCircle2 size={14} strokeWidth={2} />
+            )}
+            {status.state === 'opened' && status.done < status.total && (
+              <span className="tree__steps">
+                {status.done}/{status.total}
+              </span>
+            )}
+          </span>
+        )}
+      </button>
+      {note && (
+        <span id={noteId} className="sr-only">
+          {note}
+        </span>
+      )}
+    </li>
+  );
+}
+
 function ChapterNode({
   chapter,
   t,
@@ -238,6 +308,7 @@ function ChapterNode({
           <span
             className="tree__count tree__count--progress"
             aria-label={t('learn.progress', chapterDone)}
+            data-tip={t('learn.progress', chapterDone)}
           >
             {chapterDone.done}/{chapterDone.total}
           </span>
@@ -249,26 +320,16 @@ function ChapterNode({
         <ul className="tree__topics">
           {chapter.topics.map((topic) =>
             topic.status === 'available' ? (
-              <li key={topic.id} data-status={topic.status} className="tree__topic-item">
-                <button
-                  type="button"
-                  className="tree__topic tree__topic--button"
-                  aria-current={activeTopic === topic.id ? 'true' : undefined}
-                  onClick={() => {
-                    void openTopic(topic.id);
-                  }}
-                >
-                  <span className="tree__topic-title">{t(topic.titleKey)}</span>
-                  {topicProgress(topic.id, progress).complete && (
-                    <CheckCircle2
-                      className="tree__done"
-                      size={14}
-                      strokeWidth={2}
-                      aria-label={t('learn.topicDone')}
-                    />
-                  )}
-                </button>
-              </li>
+              <TopicItem
+                key={topic.id}
+                title={t(topic.titleKey)}
+                active={activeTopic === topic.id}
+                status={topicStatus(topic.id, progress)}
+                t={t}
+                onOpen={() => {
+                  void openTopic(topic.id);
+                }}
+              />
             ) : (
               <li
                 key={topic.id}

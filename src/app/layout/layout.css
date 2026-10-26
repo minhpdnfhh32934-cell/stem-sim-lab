@@ -775,8 +775,16 @@ body[data-resizing] .splitter {
   color: var(--conf-exact);
   font-weight: 600;
 }
-.tree__done {
+.tree__mark {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   margin-left: auto;
   color: var(--conf-exact);
+}
+.tree__steps {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
 }

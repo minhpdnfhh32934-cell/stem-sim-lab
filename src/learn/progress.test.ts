@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CATALOG } from '@/app/catalog';
 import { challengesFor } from './challenges';
-import { chapterProgress, earnedBadges, topicProgress } from './progress';
+import { chapterProgress, earnedBadges, topicProgress, topicStatus } from './progress';
 
 const empty = { visited: {}, challenges: {}, predictions: {} };
 
@@ -21,6 +21,52 @@ describe('progress and badges', () => {
 
   it('topics without activities count "opened"', () => {
     expect(topicProgress('mitosis', { ...empty, visited: { mitosis: true } }).complete).toBe(true);
+  });
+
+  it('opening a topic marks it learned in every subject', () => {
+    for (const topic of ['freeFall', 'periodicTable', 'mitosis']) {
+      expect(topicStatus(topic, empty).state).toBe('new');
+      expect(topicStatus(topic, { ...empty, visited: { [topic]: true } }).state).toBe('opened');
+    }
+  });
+
+  it('an opened physics topic shows its steps and what is left', () => {
+    const opened = { ...empty, visited: { freeFall: true as const } };
+    expect(topicStatus('freeFall', opened)).toEqual({
+      done: 1,
+      total: 3,
+      complete: false,
+      state: 'opened',
+      predictLeft: true,
+      challengesLeft: 1,
+    });
+    const all = {
+      ...opened,
+      predictions: { 'freeFall.h0': true },
+      challenges: { 'freeFall.t2': 1 },
+    };
+    expect(topicStatus('freeFall', all)).toMatchObject({
+      state: 'complete',
+      predictLeft: false,
+      challengesLeft: 0,
+    });
+  });
+
+  it('a prediction made without opening the topic (Science Studio) is not "learned"', () => {
+    const studioOnly = { ...empty, predictions: { 'freeFall.h0': true } };
+    expect(topicStatus('freeFall', studioOnly).state).toBe('new');
+    const kin = CATALOG.physics.find((c) => c.id === 'kinematics');
+    expect(kin && chapterProgress(kin.topics, studioOnly)).toEqual({ done: 0, total: 5 });
+  });
+
+  it('the chapter count follows opened topics', () => {
+    const kin = CATALOG.physics.find((c) => c.id === 'kinematics');
+    const visited = { freeFall: true, horizontalProjectile: true } as const;
+    expect(kin && chapterProgress(kin.topics, { ...empty, visited })).toEqual({
+      done: 2,
+      total: 5,
+    });
+    expect(kin && chapterProgress(kin.topics, empty)).toEqual({ done: 0, total: 5 });
   });
 
   it('badges reward trying and finishing — no streaks or ranks', () => {
