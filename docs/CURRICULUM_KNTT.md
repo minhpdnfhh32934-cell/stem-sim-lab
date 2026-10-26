@@ -31,7 +31,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 
 | Sách | Số bài | Lí thuyết | Lí thuyết có chủ đề SimLab |
 | --- | --- | --- | --- |
-| Vật lí 10 | 34 | 26 | 14 |
+| Vật lí 10 | 34 | 26 | 16 |
 | Vật lí 11 | 26 | 20 | 5 |
 | Vật lí 12 | 25 | 21 | 0 |
 | Hoá học 10 | 23 | 16 | 5 |
@@ -40,7 +40,7 @@ Bài **lí thuyết** = mọi bài trừ mở đầu môn học, thực hành, �
 | Sinh học 10 | 26 | 17 | 3 |
 | Sinh học 11 | 29 | 20 | 0 |
 | Sinh học 12 | 35 | 28 | 6 |
-| **Cộng** | **253** | **189** | **34** |
+| **Cộng** | **253** | **189** | **36** |
 
 Các chỗ đếm có thể khác (giáo viên chọn):
 
@@ -70,8 +70,8 @@ Gồm các bài đã có chủ đề SimLab (đề xuất) và các bài của k
 | Vật lí 10 | Chương IV. Năng lượng, công, công suất | 26 | Cơ năng và định luật bảo toàn cơ năng | 102 | Lí thuyết | Bảo toàn cơ năng | Tên Bài 25–26: động năng, thế năng, cơ năng và định luật bảo toàn cơ năng. | pending |
 | Vật lí 10 | Chương V. Động lượng | 28 | Động lượng | 110 | Lí thuyết | Va chạm đàn hồi và va chạm mềm | Tên Bài 28–29: động lượng và định luật bảo toàn động lượng. | pending |
 | Vật lí 10 | Chương V. Động lượng | 29 | Định luật bảo toàn động lượng | 113 | Lí thuyết | Va chạm đàn hồi và va chạm mềm | Tên Bài 28–29: động lượng và định luật bảo toàn động lượng. | pending |
-| Vật lí 10 | Chương VI. Chuyển động tròn đều | 31 | Động học của chuyển động tròn đều | 120 | Lí thuyết | chưa có — kế hoạch (a) Chuyển động tròn đều | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
-| Vật lí 10 | Chương VI. Chuyển động tròn đều | 32 | Lực hướng tâm và gia tốc hướng tâm | 123 | Lí thuyết | chưa có — kế hoạch (a) Chuyển động tròn đều | Bài của 0.8.0 Phần A (#37 mục 4.2). | pending |
+| Vật lí 10 | Chương VI. Chuyển động tròn đều | 31 | Động học của chuyển động tròn đều | 120 | Lí thuyết | Chuyển động tròn đều | Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm. | pending |
+| Vật lí 10 | Chương VI. Chuyển động tròn đều | 32 | Lực hướng tâm và gia tốc hướng tâm | 123 | Lí thuyết | Chuyển động tròn đều | Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm. | pending |
 | Vật lí 11 | Chương I. Dao động | 1 | Dao động điều hoà | 6 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 2 | Mô tả dao động điều hoà | 10 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |
 | Vật lí 11 | Chương I. Dao động | 3 | Vận tốc, gia tốc trong dao động điều hoà | 14 | Lí thuyết | Con lắc lò xo, Con lắc đơn | Con lắc lò xo: Tên Bài 1–3, 5: dao động điều hoà, vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). Con lắc đơn: Tên Bài 1–3, 5: dao động điều hoà (con lắc đơn dao động điều hoà khi góc nhỏ), vận tốc, gia tốc, năng lượng; Bài 6: chỉ phần dao động tắt dần (cảnh có lực cản, không có dao động cưỡng bức, cộng hưởng). | pending |

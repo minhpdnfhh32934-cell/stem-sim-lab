@@ -2344,6 +2344,19 @@
    ],
    "reason": "Tên Bài 24: sinh thái học quần thể.",
    "review_status": "pending"
+  },
+  {
+   "topic": "uniformCircularMotion",
+   "subject": "physics",
+   "grade": 10,
+   "book": "VL10",
+   "chapter": "Chương VI. Chuyển động tròn đều",
+   "lessons": [
+    31,
+    32
+   ],
+   "reason": "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm.",
+   "review_status": "pending"
   }
  ],
  "unplaced": [
