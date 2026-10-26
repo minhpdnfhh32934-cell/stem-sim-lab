@@ -31,6 +31,7 @@
 
 - Chép mục lục: workflow 9 agent (mỗi cuốn một agent, tự đọc lại lần hai) → mọi cuốn liên tục 1…N, tổng khớp
   kế hoạch; Máy A tự xem ảnh mục lục VL10, VL11, HH10 (2 trang), HH11, SH10, SH12: các dòng dùng để xếp khớp.
+  Sau duyệt (26/10 tối): Máy A xem nốt VL12, HH12 (2 trang), SH11: khớp từng dòng — cả 9 cuốn đã có người thứ hai.
 - Xếp theo bảng đề xuất #37 mục 10; dòng có "?" để "Chưa xếp lớp" (câu 5). Rà soát khoa học (agent
   science-reviewer): bỏ VL10 Bài 16 khỏi "Các định luật Newton" (cảnh một vật); lí do nói rõ khi chủ đề chỉ ứng
   một phần bài (khuếch tán, dao động tắt dần, con lắc đơn góc nhỏ, Mendel); thêm bài có thể liên quan

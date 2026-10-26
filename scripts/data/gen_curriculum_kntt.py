@@ -559,6 +559,8 @@ def build():
     by_id = {b["id"]: b for b in books}
     items = []
     for topic, book_id, lessons, reason in PLACEMENTS:
+        # gradeView orders topics by their first lesson.
+        assert lessons == sorted(set(lessons)), (topic, lessons)
         book = by_id[book_id]
         chapters = {c["label"] for c in book["chapters"] for l in c["lessons"] if l["number"] in lessons}
         found = {l["number"] for c in book["chapters"] for l in c["lessons"]}
