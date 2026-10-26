@@ -46,10 +46,18 @@ export const DIM = {
   damping: D(0, 1, -1),
 } as const;
 
+/**
+ * Units that share a dimension but must never be mixed (#37 §8.2 trap 1): rad/s and Hz are
+ * both s⁻¹ with factor 1, yet f = 2 Hz is ω = 4π rad/s. A radian has no dimension, so only
+ * this label tells them apart; converting between groups throws.
+ */
+export type UnitGroup = 'angular' | 'cycle';
+
 export interface UnitDef {
   /** Canonical symbol used in data and SceneSpec. */
   symbol: string;
   dim: Dimension;
+  group?: UnitGroup;
   /** value_SI = value * factor + offset */
   factor: number;
   offset?: number;
@@ -104,8 +112,16 @@ const UNITS: readonly UnitDef[] = [
     aliases: ['m/s²', 'm.s^-2', 'm s^-2'],
   },
   { symbol: 'cm/s^2', dim: DIM.acceleration, factor: 1e-2, aliases: ['cm/s²'] },
-  { symbol: 'rad/s', dim: DIM.frequency, factor: 1 },
-  { symbol: 'Hz', dim: DIM.frequency, factor: 1 },
+  { symbol: 'rad/s', dim: DIM.frequency, factor: 1, group: 'angular' },
+  { symbol: 'Hz', dim: DIM.frequency, factor: 1, group: 'cycle' },
+  { symbol: 'rev/s', dim: DIM.frequency, factor: 1, group: 'cycle', aliases: ['vòng/s', 'rps'] },
+  {
+    symbol: 'rev/min',
+    dim: DIM.frequency,
+    factor: 1 / 60,
+    group: 'cycle',
+    aliases: ['vòng/phút', 'rpm'],
+  },
   // dynamics
   { symbol: 'N', dim: DIM.force, factor: 1 },
   { symbol: 'kN', dim: DIM.force, factor: 1e3 },
@@ -188,12 +204,15 @@ export function fromSI(valueSI: number, unit: string): number {
   return (valueSI - (u.offset ?? 0)) / u.factor;
 }
 
-/** Converts between units of the same dimension; throws on a dimension mismatch. */
+/** Converts between units of the same dimension and group; throws on a mismatch. */
 export function convert(value: number, from: string, to: string): number {
   const a = getUnit(from);
   const b = getUnit(to);
   if (!sameDimension(a.dim, b.dim)) {
     throw new UnitError(`Cannot convert "${from}" to "${to}": different dimensions`);
+  }
+  if (a.group !== b.group) {
+    throw new UnitError(`Cannot convert "${from}" to "${to}": angular and cycle frequencies`);
   }
   return fromSI(toSI(value, from), to);
 }
@@ -203,9 +222,9 @@ export function siUnitFor(dim: Dimension): string | undefined {
   return UNITS.find((u) => u.factor === 1 && !u.offset && sameDimension(u.dim, dim))?.symbol;
 }
 
-/** Units that can display a quantity of the given dimension (for unit pickers). */
-export function unitsFor(dim: Dimension): string[] {
-  return UNITS.filter((u) => sameDimension(u.dim, dim)).map((u) => u.symbol);
+/** Units that can display a quantity of the given dimension and group (for unit pickers). */
+export function unitsFor(dim: Dimension, group?: UnitGroup): string[] {
+  return UNITS.filter((u) => sameDimension(u.dim, dim) && u.group === group).map((u) => u.symbol);
 }
 
 /** Pretty label for display: "m/s^2" → "m/s²", "degC" → "°C". */
