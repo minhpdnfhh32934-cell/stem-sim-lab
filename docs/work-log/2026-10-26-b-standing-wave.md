@@ -3,7 +3,7 @@
 - **Goal:** new physics topic `standingWave` (chapter `waves`), plan #37 item 12, trap 5 (8.2),
   physics conventions 8.3.
 - **Date/time:** 2026-10-26 19:13 +07:00
-- **Status:** IN_PROGRESS — phase 1 done (new files only); phase 2 waits for PR (a) #74 on `main`.
+- **Status:** PASS — phase 1 and phase 2 done; see "2026-10-27 — phase 2" at the end (PR opened).
 - **Branch / base:** `feat/75-standing-wave` from `main` d6f9fec (Máy A takes the issue: only
   Máy A works now, see #37).
 
