@@ -104,6 +104,12 @@ describe('standing wave scene: problems read by the AI', () => {
     expect(findN.params.mode).toBe(MODE.harmonic);
     expect(findN.params.vFrom).toBe(1);
     expect(findN.missing).toEqual([]);
+    // A mode the AI stated is kept, and the probe follows that mode (n = 4: x_P = L/8).
+    const ask = { key: 'mode', value: MODE.frequency, unit: '1', quote: 'Tính tần số' };
+    const kept = draft([ask, L, f, n], `${text} Tính tần số.`);
+    expect(kept.params.mode).toBe(MODE.frequency);
+    expect(kept.params.xP).toBeCloseTo(0.1, 12);
+    expect(kept.missing).toEqual(['v']);
   });
 
   it('a default probe moves to the first antinode, so a short string still runs', () => {
@@ -126,7 +132,7 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(msg).toHaveLength(1);
     expect(msg[0]).toContain('3,6');
     expect(msg[0]).toContain('f₃ = 25 Hz');
-    expect(msg[0]).toContain('f₄ = 33,33333333 Hz');
+    expect(msg[0]).toContain('f₄ = 33,33 Hz');
     const a = answers(p);
     expect(a.harmonic).toBeUndefined();
     expect(a.f_below?.value).toBeCloseTo(harmonicFrequency(3, 20, 1.2), 12);
@@ -136,7 +142,7 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
 
   it('below the fundamental only f₁ is suggested', () => {
     const msg = messages({ mode: MODE.harmonic, f: 5 });
-    expect(msg[0]).toContain('f₁ = 8,333333333 Hz');
+    expect(msg[0]).toContain('f₁ = 8,333 Hz');
     expect(answers({ mode: MODE.harmonic, f: 5 }).f_below).toBeUndefined();
   });
 
@@ -185,32 +191,26 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(sc.params.find((d) => d.key === 'f')?.when?.({ ...sc.defaults, mode: 7 })).toBe(false);
   });
 
-  it('typing a suggested resonance back gives a standing wave (L = 1,2 m, v = 20 m/s)', () => {
-    // Vietnamese number as printed ("1.234,5") → JS number.
-    const read = (msg: string, name: string) => {
-      const m = new RegExp(`${name} = ([\\d.,]+) Hz`).exec(msg);
-      return m?.[1] ? Number(m[1].replace(/\./g, '').replace(',', '.')) : NaN;
-    };
-    // f = 26 Hz: 2Lf/v = 3,12, suggestions f₃ and f₄; f = 190 Hz: 22,8 > 20, only f₂₀.
-    for (const [f, picks] of [
-      [
-        26,
-        [
-          ['f₃', 3],
-          ['f₄', 4],
-        ],
-      ],
-      [190, [['f₂₀', 20]]],
+  it('"Dùng fₙ" buttons set a suggested resonance exactly (L = 1,2 m, v = 20 m/s)', () => {
+    // f = 26 Hz: 2Lf/v = 3,12 → f₃, f₄; 190 Hz: 22,8 > 20 loops → f₂₀; 5 Hz: below f₁.
+    for (const [f, names, ns] of [
+      [26, ['Dùng f₃', 'Dùng f₄'], [3, 4]],
+      [190, ['Dùng f₂₀'], [20]],
+      [5, ['Dùng f₁'], [1]],
     ] as const) {
-      const msg = messages({ mode: MODE.harmonic, f })[0] ?? '';
-      expect(msg).toContain('2Lf/v');
-      for (const [name, n] of picks) {
-        const typed = { mode: MODE.harmonic, f: read(msg, name) };
-        expect(standingInput({ ...sc.defaults, ...typed }).n, `${f} Hz → ${name}`).toBe(n);
-        expect(messages(typed), `${f} Hz → ${name}`).toEqual([]);
-      }
+      const p = { ...sc.defaults, mode: MODE.harmonic, f };
+      const fixes = sc.fixes?.(p) ?? [];
+      expect(fixes.map((x) => x.label.vi.split(' =')[0])).toEqual(names);
+      ns.forEach((n, i) => {
+        const applied = { ...p, ...fixes[i]?.params };
+        expect(standingInput(applied).n, `${f} Hz → n = ${n}`).toBe(n);
+        expect(sc.validate?.(applied), `${f} Hz → n = ${n}`).toEqual([]);
+      });
     }
+    expect(sc.fixes?.(sc.defaults)).toEqual([]);
+    expect(sc.fixes?.({ ...sc.defaults, mode: MODE.harmonic, f: 26, L: 0 })).toEqual([]);
     expect(messages({ mode: MODE.harmonic, f: 190 })[0]).not.toContain('f₂₂');
+    expect(messages({ mode: MODE.harmonic, f: 26 })[0]).toContain('Dùng fₙ');
   });
 
   it('other invalid inputs are reported', () => {
@@ -260,8 +260,10 @@ describe('standing wave scene: card, picture', () => {
     expect(measureSegment({ x: 0.2, y: 0 }, top, S).length).toBeCloseTo(0.01, 12);
     // The drawn string at the first node (x = λ/2 = 0,4 m) from the antinode top: real slope.
     expect(measureSegment(top, { x: 0.4, y: 0 }, S).angle).toBeCloseTo(-Math.atan(0.01 / 0.2), 12);
-    // Grid y labels (left-aligned) are divided by S; x labels are unchanged.
-    const labels = (stretch: number) => {
+  });
+
+  it('grid y labels show unstretched metres for every stretch and zoom (x labels unchanged)', () => {
+    const labels = (stretch: number, zoom: number) => {
       const out: { align: string; text: string }[] = [];
       let align = '';
       const ctx = new Proxy(
@@ -276,7 +278,8 @@ describe('standing wave scene: card, picture', () => {
         },
       ) as CanvasRenderingContext2D;
       const cam = new Camera();
-      cam.fit(sc.view(sc.defaults));
+      cam.fit(sc.view({ ...sc.defaults, L: 0.3 }));
+      cam.zoomAt(cam.width / 2, cam.height / 2, zoom);
       const colors = new Proxy({}, { get: () => '#000' }) as ThemeColors;
       drawGrid(ctx, cam, colors, 'en', stretch);
       const num = (s: string) => Number(s.replace(/,/g, ''));
@@ -285,13 +288,18 @@ describe('standing wave scene: card, picture', () => {
         y: out.filter((l) => l.align === 'left').map((l) => num(l.text)),
       };
     };
-    const plain = labels(1);
-    const real = labels(S);
-    expect(real.x).toEqual(plain.x);
-    expect(real.y.length).toBeGreaterThan(1);
-    real.y.forEach((v, i) => {
-      expect(v).toBeCloseTo((plain.y[i] ?? NaN) / S, 12);
-    });
+    // S = 2·10ᵏ makes a 2,5·10ⁿ step (L = 0,3 m, A = 5 mm gives S = 2: −0,025, not −0,03).
+    for (const S of [2, 5, 10, 20, 50, 200])
+      for (const zoom of [0.4, 1, 2.5, 7]) {
+        const plain = labels(1, zoom);
+        const real = labels(S, zoom);
+        expect(real.x).toEqual(plain.x);
+        expect(real.y.length).toBeGreaterThan(1);
+        real.y.forEach((v, i) => {
+          expect(v, `S = ${S}, zoom ${zoom}`).toBeCloseTo((plain.y[i] ?? NaN) / S, 12);
+        });
+      }
+    expect(verticalScale(standingInput({ ...sc.defaults, L: 0.3, A: 0.005 }))).toBe(2);
   });
 
   it('Basic mode shows the choice first, then the main quantities of each mode', () => {

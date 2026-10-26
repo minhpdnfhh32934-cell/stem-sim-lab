@@ -396,7 +396,7 @@ xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây.
   hoặc g/m; ở chế độ Cơ bản, ô này nằm trong **Thêm thông số**). Hình vẽ dây với hai sóng thành phần nét đứt (tắt được), nút **N**, bụng **B** và điểm
   dò **P**; đồ thị vẽ y₁, y₂ và y = y₁ + y₂ tại P. App vẽ tối đa 20 bó sóng. Vị trí P chỉnh bằng thanh trượt, không kéo được.
   A là biên độ của **mỗi** sóng thành phần, nên bụng dao động với biên độ 2A. Nếu 2Lf/v không phải
-  số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất, không tự đổi
+  số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất (bấm nút **Dùng fₙ** để đặt đúng giá trị đó), không tự đổi
   f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; lưới, thước và thước đo góc vẫn đo theo mét thật; tần số cao có thể làm hình trông
   đứng yên (hoạt nghiệm) — chọn tốc độ phát chậm hơn.
 

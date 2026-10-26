@@ -104,7 +104,8 @@ kì"), xem DATA_REVIEW UCM-3.
 khi m = 2Lf/v là số nguyên. App coi m là nguyên khi khoảng cách tới số nguyên gần nhất không quá
 10⁻⁹·max(1, m) — chỉ để bỏ qua sai số làm tròn của máy tính (ví dụ 2·1,1·50/11 tính ra
 10,000000000000002). Không nguyên thì app báo "Không có sóng dừng", gợi ý tần số cộng hưởng ngay
-dưới và ngay trên (m < 1: chỉ f₁), **không** tự đổi f, và hiện m đủ chữ số để không trông như số
+dưới và ngay trên (m < 1: chỉ f₁; không quá 20 bó, vượt thì gợi ý f₂₀) kèm nút **Dùng fₙ** để học
+sinh tự bấm đặt đúng giá trị, **không** tự đổi f, và hiện m đủ chữ số để không trông như số
 nguyên (1.818,2 chứ không phải 1818). Biên độ A là biên độ của mỗi sóng thành phần (bụng 2A); độ
 dốc 2A·k > 0,1 thì Thẻ Khoa học chuyển "gần đúng". Hình vẽ phóng to trục dọc (có ghi hệ số) và lấy
 một mẫu mỗi khung hình: khi f × tốc độ phát vượt khoảng 30 Hz (nửa số khung hình mỗi giây) thì

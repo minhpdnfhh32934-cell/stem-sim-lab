@@ -177,4 +177,9 @@ export interface PhysicsScene {
    * wave amplitude). Grid labels, ruler and protractor divide it out. Omitted: 1.
    */
   yStretch?: (p: Params) => number;
+  /**
+   * One-click changes offered under the `validate` messages (e.g. "use the nearest resonance").
+   * Applied only when the learner presses one, never automatically.
+   */
+  fixes?: (p: Params) => { label: LocalizedText; params: Params }[];
 }

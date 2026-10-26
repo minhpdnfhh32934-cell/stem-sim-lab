@@ -55,14 +55,11 @@ export function suggestions(q: StandingInput) {
   return { m: r.m, below, above: r.above.n <= MAX_LOOPS ? r.above : null };
 }
 
-// Typing a suggestion back must give a whole 2Lf/v under the 1e-9 round-off rule.
-const SUGGESTED_DIGITS = 10;
-
 /** Learner-facing text when 2Lf/v is not whole (trap 5): never rounded, nearest resonances. */
 function noResonance(q: StandingInput, locale: Locale): string {
   const s = suggestions(q);
   const m = fmtRatio(locale, s.m);
-  const fr = (r: Resonance) => `f${sub(r.n)} = ${fmtQty(locale, r.f, 'Hz', SUGGESTED_DIGITS)}`;
+  const fr = (r: Resonance) => `f${sub(r.n)} = ${fmtQty(locale, r.f, 'Hz')}`;
   if (locale === 'vi') {
     const near =
       s.below && s.above
@@ -70,7 +67,7 @@ function noResonance(q: StandingInput, locale: Locale): string {
         : s.above
           ? `Tần số này thấp hơn tần số cơ bản ${fr(s.above)}.`
           : `SimLab vẽ tối đa ${MAX_LOOPS} bó sóng; tần số cộng hưởng lớn nhất là ${s.below ? fr(s.below) : ''}.`;
-    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f và không vẽ dao động khi không có sóng dừng — hãy gõ một tần số cộng hưởng (đủ các chữ số), hoặc đổi chiều dài dây hay tốc độ truyền sóng.`;
+    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f và không vẽ dao động khi không có sóng dừng — bấm nút “Dùng fₙ” bên dưới để đặt đúng một tần số cộng hưởng, hoặc đổi chiều dài dây hay tốc độ truyền sóng.`;
   }
   const near =
     s.below && s.above
@@ -78,7 +75,7 @@ function noResonance(q: StandingInput, locale: Locale): string {
       : s.above
         ? `This is below the fundamental ${fr(s.above)}.`
         : `SimLab draws at most ${MAX_LOOPS} loops; the highest resonance is ${s.below ? fr(s.below) : ''}.`;
-  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you and draws no oscillation without a standing wave — type a resonance (all its digits), or change the string length or the wave speed.`;
+  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you and draws no oscillation without a standing wave — press a “Use fₙ” button below to set a resonance exactly, or change the string length or the wave speed.`;
 }
 
 const SUBS = '₀₁₂₃₄₅₆₇₈₉';
@@ -344,8 +341,8 @@ function card(p: Params): ScienceCardData {
         'The ratio m = 2Lf/v counts as whole when |m − round(m)| ≤ 10⁻⁹·max(1, m), only to ignore computer round-off; SimLab never rounds further.',
       ),
       L(
-        'Hình vẽ có thể phóng to trục dọc để nhìn rõ (ghi trên hình; lưới, thước và thước đo góc vẫn đo theo mét thật). Hình và đồ thị lấy một điểm mỗi khung hình (khoảng 60 lần mỗi giây): khi f × tốc độ phát vượt khoảng nửa số đó (~30 Hz) thì thấy hiệu ứng hoạt nghiệm; muốn đường cong mượt (ít nhất 10 điểm mỗi chu kì) thì f × tốc độ phát chỉ nên vài Hz — tốc độ phát app tự chọn khi mở bài đã như vậy.',
-        'The picture may stretch the vertical axis for visibility (shown on the picture; grid, ruler and protractor still measure real metres). Picture and graphs take one sample per frame (about 60 per second): when f × playback speed exceeds about half of that (~30 Hz) a stroboscopic effect appears; for a smooth curve (at least 10 points per period) keep f × playback speed to a few Hz — the speed the app picks when the topic opens does.',
+        'Hình vẽ có thể phóng to trục dọc để nhìn rõ (ghi trên hình; lưới, thước và thước đo góc vẫn đo theo mét thật). Hình và đồ thị lấy một điểm mỗi khung hình (khoảng 60 lần mỗi giây): khi f × tốc độ phát vượt khoảng nửa số đó (~30 Hz) thì thấy hiệu ứng hoạt nghiệm; muốn đường cong mượt (ít nhất 10 điểm mỗi chu kì) thì f × tốc độ phát chỉ nên vài Hz — tốc độ phát app tự chọn khi mở bài làm được điều này khi f ≤ 60 Hz.',
+        'The picture may stretch the vertical axis for visibility (shown on the picture; grid, ruler and protractor still measure real metres). Picture and graphs take one sample per frame (about 60 per second): when f × playback speed exceeds about half of that (~30 Hz) a stroboscopic effect appears; for a smooth curve (at least 10 points per period) keep f × playback speed to a few Hz — the speed the app picks when the topic opens does so for f ≤ 60 Hz.',
       ),
     ],
     validity: L(
@@ -594,13 +591,32 @@ export const standingWave: PhysicsScene = {
     const stated = (k: string) => sources[k] === 'problem' || sources[k] === 'user';
     const out: Params = {};
     const fromT = stated('tension') && stated('muL');
-    if (fromT && !stated('v')) out.vFrom = 1;
-    if (stated('f') && stated('n')) out.mode = MODE.speed;
-    else if (stated('f') && (stated('v') || fromT)) out.mode = MODE.harmonic;
+    // Only a choice still at its default is inferred (applyAutoDefaults would drop it anyway,
+    // and the probe below must follow the mode that really applies).
+    if (!stated('vFrom') && fromT && !stated('v')) out.vFrom = 1;
+    if (!stated('mode')) {
+      if (stated('f') && stated('n')) out.mode = MODE.speed;
+      else if (stated('f') && (stated('v') || fromT)) out.mode = MODE.harmonic;
+    }
     const q = standingInput({ ...p, ...out });
     return q.L > 0 ? { ...out, xP: q.L / (2 * (q.n ?? 3)) } : out;
   },
   yStretch: (p) => verticalScale(standingInput(p)),
+  // "Dùng fₙ": the learner sets a suggested resonance exactly (typing would keep ~6 digits).
+  fixes: (p) => {
+    const q = standingInput(p);
+    if (q.mode !== MODE.harmonic || q.n !== null || !(q.L > 0 && q.v > 0 && q.f > 0)) return [];
+    const s = suggestions(q);
+    return [s.below, s.above]
+      .filter((r): r is Resonance => r !== null)
+      .map((r) => ({
+        label: L(
+          `Dùng f${sub(r.n)} = ${fmtQty('vi', r.f, 'Hz')}`,
+          `Use f${sub(r.n)} = ${fmtQty('en', r.f, 'Hz')}`,
+        ),
+        params: { f: r.f },
+      }));
+  },
   // About 10 s of screen time for the 20 periods of a run (closest offered speed).
   suggestedSpeed: (p) => {
     const f = standingInput(p).f;

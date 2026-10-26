@@ -117,7 +117,8 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     circle(ctx, cam, x, 0, r, c.text, undefined, 3.5);
     text(ctx, cam, x, 0, 'N', c.text, 'center', { x: 0, y: 18 });
   }
-  const antinode = opts.locale === 'vi' ? 'B' : 'A';
+  // English "A" would read as the amplitude A.
+  const antinode = opts.locale === 'vi' ? 'B' : 'AN';
   for (const x of antinodes(q.L, n))
     text(ctx, cam, x, H, antinode, c.muted, 'center', { x: 0, y: -6 });
 

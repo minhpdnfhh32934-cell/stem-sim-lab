@@ -54,7 +54,10 @@ export function drawGrid(
   ctx.fillStyle = colors.faint;
   ctx.font = `${fontPx(11)} ui-monospace, Consolas, monospace`;
   const fmtFor = (step: number) => {
-    const digits = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+    // Enough decimals to write every multiple of `step` (a step of 2.5·10ⁿ needs one more).
+    let digits = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+    const scaled = () => step * 10 ** digits;
+    while (digits < 12 && Math.abs(scaled() - Math.round(scaled())) > 1e-6 * scaled()) digits++;
     return (n: number) =>
       formatNumber(locale, Math.abs(n) < step / 1e6 ? 0 : n, { maximumFractionDigits: digits });
   };
