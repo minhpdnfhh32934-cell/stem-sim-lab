@@ -25,7 +25,8 @@ export function normalizeText(s: string): string {
     s
       .normalize('NFC')
       // One caret per run: "10⁻¹⁰" → "10^-10" (not "10^-^1^0", which no reader understood).
-      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, (run) => `^${[...run].map((c) => SUPER[c] ?? c).join('')}`)
+      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, '^$&')
+      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g, (c) => SUPER[c] ?? c)
       .replace(/\^\^/g, '^')
       .replace(/[−–—]/g, '-')
       .replace(/[\u00a0\u202f]/g, ' ')
@@ -164,7 +165,7 @@ export function writtenSign(text: string, value: number, quote = ''): -1 | 0 | 1
   // The number is written with different signs: the quote must point at one place.
   const q = normalizeText(quote).toLowerCase();
   if (!q) return 0;
-  const picked = new Set<number>();
+  const picked = new Set<-1 | 0 | 1>();
   for (let at = t.indexOf(q); at >= 0; at = t.indexOf(q, at + 1)) {
     for (const i of places) {
       const k = tokens[i];
