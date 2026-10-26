@@ -49,19 +49,36 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
   });
 });
 
-test('subject cards and the level picker (Level → Subject → Topic)', async ({ page }) => {
+test('subject cards and the grade switch (Grade → Subject → Topic)', async ({ page }) => {
   await openLab(page);
   await page.getByRole('button', { name: /^Hóa học/ }).click();
   await expect(page.getByRole('radio', { name: 'Hóa học' })).toBeChecked();
   const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
   await expect(library.getByRole('button', { name: 'Bảng tuần hoàn', exact: true })).toBeVisible();
-  const levels = library.getByRole('radiogroup', { name: 'Trình độ' });
-  await expect(levels.getByRole('radio', { name: 'Nền tảng' })).toBeChecked();
-  await levels.getByRole('radio', { name: /Đại cương/ }).click();
-  await expect(library).toContainText('sẽ có ở giai đoạn sau');
-  await expect(library.getByRole('button', { name: 'Bảng tuần hoàn', exact: true })).toHaveCount(0);
-  await levels.getByRole('radio', { name: 'Nền tảng' }).click();
-  await expect(library.getByRole('button', { name: 'Bảng tuần hoàn', exact: true })).toBeVisible();
+  const grades = library.getByRole('radiogroup', { name: 'Lớp' });
+  await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
+  for (const radio of await grades.getByRole('radio').all()) {
+    const box = await radio.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+  }
+
+  // Grade 10: physics topics under the textbook chapters, with lessons and the pending label.
+  await page.getByRole('radio', { name: 'Vật lý' }).click();
+  await grades.getByRole('radio', { name: 'Lớp 10' }).click();
+  await expect(library).toContainText('Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt');
+  const kinematics = library.locator('.tree__chapter', { hasText: 'Chương II. Động học' });
+  await expect(
+    kinematics.getByRole('button', { name: 'Chuyển động thẳng đều Bài 4–5, 7' }),
+  ).toBeVisible();
+  await expectNoHorizontalScroll(page);
+
+  // Biology has no grade 11 topic yet: no dead end, "Xem tất cả" goes back to every topic.
+  await page.getByRole('radio', { name: 'Sinh học' }).click();
+  await grades.getByRole('radio', { name: 'Lớp 11' }).click();
+  await expect(library).toContainText('Chưa có chủ đề Sinh học cho Lớp 11.');
+  await library.getByRole('button', { name: 'Xem tất cả' }).click();
+  await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
+  await expect(library.getByRole('button', { name: 'Nguyên phân', exact: true })).toBeVisible();
 });
 
 test.describe('Basic / Advanced', () => {

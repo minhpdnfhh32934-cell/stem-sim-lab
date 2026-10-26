@@ -12,14 +12,15 @@ import { useShallow } from 'zustand/react/shallow';
 import { chapterProgress, topicProgress } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
 import { memo, useMemo, useState } from 'react';
-import { normalizeForSearch, type ChapterEntry } from '@/app/catalog';
+import { normalizeForSearch } from '@/app/catalog';
+import { lessonRange } from '@/app/curriculum';
 import { useT, type TFunction } from '@/app/i18n';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { openStudio, openTopic, useActiveTopic, useIsStudio } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { HistoryList } from '@/app/project/HistoryList';
 import { useProfileStore } from '@/app/learner/profileStore';
-import { chaptersFor, LEVELS } from '@/app/levels';
+import { chaptersFor, GRADE_CHOICES, type LibraryChapter } from '@/app/levels';
 import '@/app/learner/learner.css';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
@@ -67,8 +68,11 @@ function StudioEntry({ t }: { t: TFunction }) {
   );
 }
 
+const chapterTitle = (c: LibraryChapter, t: TFunction) =>
+  'key' in c.title ? t(c.title.key) : c.title.text;
+
 /** Chapters whose title or topics match the query (accent- and case-insensitive). */
-function searchChapters(all: ChapterEntry[], query: string, t: TFunction): ChapterEntry[] {
+function searchChapters(all: LibraryChapter[], query: string, t: TFunction): LibraryChapter[] {
   const q = normalizeForSearch(query);
   if (!q) return all;
   return all
@@ -77,7 +81,7 @@ function searchChapters(all: ChapterEntry[], query: string, t: TFunction): Chapt
       topics: c.topics.filter(
         (topic) =>
           normalizeForSearch(t(topic.titleKey)).includes(q) ||
-          normalizeForSearch(t(c.titleKey)).includes(q),
+          normalizeForSearch(chapterTitle(c, t)).includes(q),
       ),
     }))
     .filter((c) => c.topics.length > 0);
@@ -85,16 +89,15 @@ function searchChapters(all: ChapterEntry[], query: string, t: TFunction): Chapt
 
 function Library({ t }: { t: TFunction }) {
   const subject = useWorkspaceStore((s) => s.subject);
-  const level = useProfileStore((s) => s.level);
-  const setLevel = useProfileStore((s) => s.setLevel);
+  const grade = useProfileStore((s) => s.grade);
+  const setGrade = useProfileStore((s) => s.setGrade);
   const [query, setQuery] = useState('');
   const SubjectIcon = SUBJECT_ICON[subject];
 
   const setSubject = useWorkspaceStore((s) => s.setSubject);
-  const chapters = useMemo<ChapterEntry[]>(
-    () => searchChapters(chaptersFor(level, subject), query, t),
-    [query, subject, level, t],
-  );
+  // The search looks only in the chosen view (a grade, or every topic).
+  const shelf = useMemo(() => chaptersFor(grade, subject), [grade, subject]);
+  const chapters = useMemo(() => searchChapters(shelf, query, t), [shelf, query, t]);
   // Nothing here: does another subject have it? (gallery pattern 092, recover from no results)
   const elsewhere = useMemo(
     () =>
@@ -103,39 +106,37 @@ function Library({ t }: { t: TFunction }) {
         : SUBJECTS.filter((s) => s !== subject)
             .map((s) => ({
               subject: s,
-              count: searchChapters(chaptersFor(level, s), query, t).reduce(
+              count: searchChapters(chaptersFor(grade, s), query, t).reduce(
                 (n, c) => n + c.topics.length,
                 0,
               ),
             }))
             .filter((m) => m.count > 0),
-    [chapters.length, query, subject, level, t],
+    [chapters.length, query, subject, grade, t],
   );
 
   return (
     <>
       <div className="level-switch">
         <div className="segmented" role="radiogroup" aria-label={t('levels.label')}>
-          {LEVELS.map((l) => (
+          {GRADE_CHOICES.map((g) => (
             <button
-              key={l.id}
+              key={g}
               type="button"
               role="radio"
-              aria-checked={level === l.id}
+              aria-checked={grade === g}
               className="segmented__item"
-              data-tip={t(l.status === 'planned' ? 'levels.plannedHint' : 'levels.foundationDesc')}
+              data-tip={g === 'all' ? t('levels.allDesc') : t('levels.gradeDesc', { grade: g })}
               onClick={() => {
-                setLevel(l.id);
+                setGrade(g);
               }}
             >
-              {t(`levels.${l.id}`)}
-              {l.status === 'planned' && (
-                <span className="sr-only">{` (${t('levels.soon')})`}</span>
-              )}
+              {g === 'all' ? t('levels.all') : t('levels.grade', { grade: g })}
             </button>
           ))}
         </div>
       </div>
+      {grade !== 'all' && <p className="level-note">{t('levels.source')}</p>}
       <div className="sidebar__search">
         <Search size={14} strokeWidth={1.75} aria-hidden="true" />
         <input
@@ -153,11 +154,14 @@ function Library({ t }: { t: TFunction }) {
           <SubjectIcon size={14} strokeWidth={1.75} aria-hidden="true" />
           {t(`subjects.${subject}`)}
         </p>
-        {level === 'general' ? (
-          <p className="level-note">{t('levels.plannedHint')}</p>
-        ) : chapters.length === 0 ? (
-          <EmptyState icon={SearchX} compact>
-            <p>{t('sidebar.noResults')}</p>
+        {chapters.length === 0 ? (
+          // Never a dead end: a grade without topics here, or a search without results.
+          <EmptyState icon={shelf.length === 0 ? BookOpen : SearchX} compact>
+            <p>
+              {shelf.length === 0 && grade !== 'all'
+                ? t('levels.empty', { subject: t(`subjects.${subject}`), grade })
+                : t('sidebar.noResults')}
+            </p>
             <div className="sidebar__recover">
               {elsewhere.map((m) => {
                 const Icon = SUBJECT_ICON[m.subject];
@@ -178,16 +182,30 @@ function Library({ t }: { t: TFunction }) {
                   </button>
                 );
               })}
-              <button
-                type="button"
-                className="btn"
-                onClick={() => {
-                  setQuery('');
-                }}
-              >
-                <X size={15} strokeWidth={1.75} aria-hidden="true" />
-                {t('sidebar.clearSearch')}
-              </button>
+              {grade !== 'all' && (
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    setGrade('all');
+                  }}
+                >
+                  <BookOpen size={15} strokeWidth={1.75} aria-hidden="true" />
+                  {t('levels.showAll')}
+                </button>
+              )}
+              {query && (
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    setQuery('');
+                  }}
+                >
+                  <X size={15} strokeWidth={1.75} aria-hidden="true" />
+                  {t('sidebar.clearSearch')}
+                </button>
+              )}
             </div>
           </EmptyState>
         ) : (
@@ -207,7 +225,7 @@ function ChapterNode({
   t,
   forceOpen,
 }: {
-  chapter: ChapterEntry;
+  chapter: LibraryChapter;
   t: TFunction;
   forceOpen: boolean;
 }) {
@@ -233,7 +251,7 @@ function ChapterNode({
         }}
       >
         <ChevronRight className="tree__chevron" size={14} strokeWidth={2} aria-hidden="true" />
-        <span>{t(chapter.titleKey)}</span>
+        <span>{chapterTitle(chapter, t)}</span>
         {chapterDone.done > 0 ? (
           <span
             className="tree__count tree__count--progress"
@@ -259,6 +277,14 @@ function ChapterNode({
                   }}
                 >
                   <span className="tree__topic-title">{t(topic.titleKey)}</span>
+                  {topic.lessons.length > 0 && (
+                    <>
+                      {/* The space keeps "… đều Bài 4–5" apart in the accessible name. */}{' '}
+                      <span className="tree__lessons">
+                        {t('levels.lessons', { range: lessonRange(topic.lessons) })}
+                      </span>
+                    </>
+                  )}
                   {topicProgress(topic.id, progress).complete && (
                     <CheckCircle2
                       className="tree__done"
