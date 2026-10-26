@@ -1,9 +1,16 @@
+import type { Locale } from '@/app/i18n/types';
 import { formatNumber } from '@/app/i18n';
 import { fmtQty } from '../common/tex';
 import { block, circle, line, polyline, text } from '../render/draw';
 import type { DrawContext } from '../types';
 import { SW, standingInput, waveOf, type StandingInput } from './engine';
-import { antinodes, harmonicRatio, nodes } from './model';
+import { antinodes, harmonicRatio, nodes, ratioDigits } from './model';
+
+/** m = 2Lf/v with enough digits that a non-whole m never reads as whole. */
+export function fmtRatio(locale: Locale, m: number): string {
+  const d = ratioDigits(m);
+  return formatNumber(locale, Number(m.toPrecision(d)), { maximumSignificantDigits: d });
+}
 
 /** Points along the drawn string (≥ 200, plan item 12.4). */
 export const STRING_POINTS = 241;
@@ -41,9 +48,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   if (!w) {
     line(ctx, cam, 0, 0, q.L, 0, c.spring, 3);
     const m = harmonicRatio(q.L, q.f, q.v);
-    const ms = Number.isFinite(m)
-      ? formatNumber(opts.locale, Number(m.toPrecision(6)), { maximumSignificantDigits: 6 })
-      : '—';
+    const ms = Number.isFinite(m) ? fmtRatio(opts.locale, m) : '—';
     text(
       ctx,
       cam,

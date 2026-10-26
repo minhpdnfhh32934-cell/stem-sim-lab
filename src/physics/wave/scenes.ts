@@ -1,5 +1,4 @@
 import type { Locale } from '@/app/i18n/types';
-import { formatNumber } from '@/app/i18n';
 import type { LocalizedText, Source } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
@@ -17,14 +16,23 @@ import type {
   SolutionStep,
   WorldBounds,
 } from '../types';
-import { draw, verticalScale } from './draw';
-import { MODE, SW, latticeFrequency, standingInput, waveOf, type StandingInput } from './engine';
-import { nearestResonances } from './model';
+import { draw, fmtRatio, verticalScale } from './draw';
+import {
+  MODE,
+  SW,
+  latticeFrequency,
+  standingInput,
+  stepOf,
+  waveOf,
+  type StandingInput,
+} from './engine';
+import { nearestResonances, ratioDigits } from './model';
 
 // TODO(phase 2): move to SRC in common/sources.ts with the scene's registration.
 const SGK11_WAVES: Source = {
   id: 'sgk-vl11-song',
-  citation: 'Sách giáo khoa Vật lí 11 (Chương trình GDPT 2018), NXB Giáo dục Việt Nam — Sóng',
+  citation:
+    'Sách giáo khoa Vật lí 11 — Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam — Sóng',
 };
 
 /** Amplitude at the probe, |2A·sin(k·x_P)| (0 at a node: sin(jπ) is only round-off there). */
@@ -35,24 +43,27 @@ export function probeAmplitude(q: StandingInput): number {
   return Math.abs(s) < 1e-12 ? 0 : 2 * q.A * Math.abs(s);
 }
 
-const fmtM = (locale: Locale, m: number) =>
-  formatNumber(locale, Number(m.toPrecision(6)), { maximumSignificantDigits: 6 });
+/** Largest string slope 2A·k; above 0.1 the small-amplitude (linear) model is only approximate. */
+const steep = (q: StandingInput) => {
+  const w = waveOf(q);
+  return w !== null && 2 * w.A * w.k > 0.1;
+};
 
 /** Learner-facing text when 2Lf/v is not whole (trap 5): never rounded, nearest resonances. */
 function noResonance(q: StandingInput, locale: Locale): string {
   const r = nearestResonances(q.L, q.f, q.v);
-  const m = fmtM(locale, r.m);
+  const m = fmtRatio(locale, r.m);
   const fa = fmtQty(locale, r.above.f, 'Hz');
   if (locale === 'vi') {
     const near = r.below
       ? `Tần số cộng hưởng gần nhất: f${sub(r.below.n)} = ${fmtQty(locale, r.below.f, 'Hz')} (phía dưới) và f${sub(r.above.n)} = ${fa} (phía trên).`
       : `Tần số này thấp hơn tần số cơ bản f₁ = ${fa}.`;
-    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f — hãy chọn một tần số cộng hưởng hoặc đổi L, v.`;
+    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f — hãy chọn một tần số cộng hưởng, hoặc đổi chiều dài dây hay tốc độ truyền sóng.`;
   }
   const near = r.below
     ? `Nearest resonances: f${sub(r.below.n)} = ${fmtQty(locale, r.below.f, 'Hz')} (below) and f${sub(r.above.n)} = ${fa} (above).`
     : `This is below the fundamental f₁ = ${fa}.`;
-  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you — pick a resonance or change L, v.`;
+  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you — pick a resonance, or change the string length or the wave speed.`;
 }
 
 const SUBS = '₀₁₂₃₄₅₆₇₈₉';
@@ -128,12 +139,11 @@ function solve(p: Params, locale: Locale): Solution {
         'Hai đầu cố định chỉ có sóng dừng khi chiều dài dây bằng một số nguyên lần nửa bước sóng:',
         'With both ends fixed, a standing wave needs a whole number of half wavelengths:',
       ),
-      tex: `m = \\frac{L}{\\lambda/2} = \\frac{2Lf}{v} = \\frac{2\\cdot ${Q(q.L, 'm')}\\cdot ${Q(q.f, 'Hz')}}{${Q(q.v, 'm/s')}} = ${n(q.m)}`,
+      tex: `m = \\frac{L}{\\lambda/2} = \\frac{2Lf}{v} = \\frac{2\\cdot ${Q(q.L, 'm')}\\cdot ${Q(q.f, 'Hz')}}{${Q(q.v, 'm/s')}} = ${texNum(locale, q.m, ratioDigits(q.m))}`,
     });
     if (q.n === null) {
       const r = nearestResonances(q.L, q.f, q.v);
       steps.push({ text: L(noResonance(q, 'vi'), noResonance(q, 'en')) });
-      answers.push({ id: 'ratio', label: L('Tỉ số 2Lf/v', 'Ratio 2Lf/v'), value: r.m, unit: '1' });
       if (r.below)
         answers.push({
           id: 'f_below',
@@ -240,18 +250,19 @@ function solve(p: Params, locale: Locale): Solution {
       unit: 'cm',
     },
   );
-  if (2 * q.A * ((nn * Math.PI) / q.L) > 0.1)
+  if (steep(q))
     notes.push(
       L(
         'Biên độ không còn nhỏ so với bước sóng (độ dốc của dây lớn hơn 0,1): mô hình tuyến tính chỉ còn gần đúng.',
         'The amplitude is no longer small compared with the wavelength (string slope above 0.1): the linear model is only approximate.',
       ),
     );
-  if (q.f > 60)
+  // The slowest playback is ×0.1 (PLAYBACK_SPEEDS): f·0.1 ≥ 30 Hz aliases even there.
+  if (q.f >= 300)
     notes.push(
       L(
-        'Tần số trên 60 Hz: hình và đồ thị ghi một điểm mỗi khung hình, nên chuyển động trên màn hình có thể trông chậm lại hoặc đứng yên (hiệu ứng hoạt nghiệm). Các kết quả tính ở trên không bị ảnh hưởng.',
-        'Above 60 Hz the picture and graphs take one sample per frame, so the motion on screen may look slowed down or frozen (stroboscopic effect). The results above are not affected.',
+        'Tần số từ 300 Hz trở lên: kể cả ở tốc độ phát chậm nhất (×0,1), hình và đồ thị chỉ lấy một điểm mỗi khung hình nên chuyển động trên màn hình có thể trông chậm lại hoặc đứng yên (hiệu ứng hoạt nghiệm). Các kết quả tính ở trên không bị ảnh hưởng.',
+        'At 300 Hz or more, even at the slowest playback (×0.1) the picture and graphs take one sample per frame, so the motion on screen may look slowed down or frozen (stroboscopic effect). The results above are not affected.',
       ),
     );
   return { answers, steps, ...(notes.length > 0 ? { notes } : {}) };
@@ -322,22 +333,28 @@ function card(p: Params): ScienceCardData {
         'The ratio m = 2Lf/v counts as whole when |m − round(m)| ≤ 10⁻⁹·max(1, m), only to ignore computer round-off; SimLab never rounds further.',
       ),
       L(
-        'Hình vẽ có thể phóng to trục dọc để nhìn rõ (ghi trên hình); hình và đồ thị là các ảnh chụp ở mỗi khung hình.',
-        'The picture may stretch the vertical axis for visibility (shown on the picture); picture and graphs are per-frame snapshots.',
+        'Hình vẽ có thể phóng to trục dọc để nhìn rõ (ghi trên hình). Hình và đồ thị lấy một điểm mỗi khung hình (khoảng 60 lần mỗi giây), nên chỉ thấy đúng chuyển động khi f × tốc độ phát nhỏ hơn khoảng 30 Hz; nhanh hơn có thể thấy hiệu ứng hoạt nghiệm.',
+        'The picture may stretch the vertical axis for visibility (shown on the picture). Picture and graphs take one sample per frame (about 60 per second), so the motion looks right only while f × playback speed stays below about 30 Hz; faster, a stroboscopic effect may appear.',
       ),
     ],
     validity: L(
       'Dao động nhỏ (2A·k ≪ 1), không ma sát, không tắt dần; tần số đúng bằng một tần số cộng hưởng f_n.',
       'Small oscillations (2A·k ≪ 1), no friction or damping; the frequency equals a resonance f_n.',
     ),
-    confidence: 'exact',
-    confidenceNote: L(
-      'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Tần số được kiểm chứng độc lập: giải phương trình sóng trên dây chia 200 đoạn bằng Dormand–Prince.',
-      'The displacement is the exact formula at each instant (no accumulated error). The frequency is checked independently by solving the wave equation on a 200-cell string with Dormand–Prince.',
-    ),
+    // Outside the small-amplitude range the linear model itself is only approximate.
+    confidence: steep(q) ? 'approx' : 'exact',
+    confidenceNote: steep(q)
+      ? L(
+          'Độ dốc lớn nhất của dây 2A·k lớn hơn 0,1: biên độ không còn nhỏ so với bước sóng, mô hình tuyến tính chỉ còn gần đúng. Hãy giảm biên độ A.',
+          'The largest string slope 2A·k is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. Reduce the amplitude A.',
+        )
+      : L(
+          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Tần số được kiểm chứng độc lập: giải phương trình sóng trên dây chia 200 đoạn bằng Dormand–Prince.',
+          'The displacement is the exact formula at each instant (no accumulated error). The frequency is checked independently by solving the wave equation on a 200-cell string with Dormand–Prince.',
+        ),
     method: L(
-      `Công thức giải tích tại t = k·Δt, Δt = ${fmtQty('vi', Math.min(1 / 240, q.f > 0 ? 1 / (200 * q.f) : 1 / 240), 's', 3)} (≤ T/200).`,
-      `Closed form at t = k·Δt, Δt = ${fmtQty('en', Math.min(1 / 240, q.f > 0 ? 1 / (200 * q.f) : 1 / 240), 's', 3)} (≤ T/200).`,
+      `Công thức giải tích tại t = i·Δt, Δt = ${fmtQty('vi', stepOf(q), 's', 3)} (≤ T/200).`,
+      `Closed form at t = i·Δt, Δt = ${fmtQty('en', stepOf(q), 's', 3)} (≤ T/200).`,
     ),
     userIntervened: false,
     sources: [SGK11_WAVES, SRC.halliday, SRC.hairer],
@@ -508,7 +525,7 @@ export const standingWave: PhysicsScene = {
     },
     {
       key: 'vFrom',
-      label: L('Tốc độ sóng', 'Wave speed from'),
+      label: L('Lấy tốc độ sóng từ', 'Wave speed from'),
       symbol: '',
       kind: 'choice',
       choices: [
@@ -540,7 +557,7 @@ export const standingWave: PhysicsScene = {
     v: 20,
     tension: 2,
     muL: 0.005,
-    A: 0.01,
+    A: 0.005,
     vFrom: 0,
     xP: 0.2,
     showParts: 1,

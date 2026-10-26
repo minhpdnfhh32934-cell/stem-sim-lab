@@ -55,7 +55,7 @@ export function standingInput(p: Params): StandingInput {
   if (mode === MODE.harmonic) {
     const f = p.f ?? 25;
     const m = harmonicRatio(L, f, given);
-    return { ...base, f, v: given, m, n: isWhole(m) ? Math.round(m) : null };
+    return { ...base, f, v: given, m, n: isWhole(m) && Math.round(m) >= 1 ? Math.round(m) : null };
   }
   return { ...base, f: harmonicFrequency(pn, given, L), v: given, m: pn, n: nGiven };
 }
@@ -69,9 +69,13 @@ export function waveOf(q: StandingInput): Wave | null {
 /** Run length shown by default: 20 periods. */
 export const runEnd = (q: StandingInput) => (q.f > 0 ? 20 / q.f : 1);
 
+/** Fixed step Δt ≤ T/200, so slow playback still gets a new state on every frame. */
+export const stepOf = (q: StandingInput) =>
+  q.f > 0 ? Math.min(1 / 240, 1 / (200 * q.f)) : 1 / 240;
+
 /**
- * Standing wave evaluated in closed form at t = k·Δt (no accumulation, no truncation error).
- * Δt ≤ T/200 so the recorded history and graphs resolve every period. Nothing is draggable.
+ * Standing wave evaluated in closed form at t = i·Δt (no accumulation, no truncation error).
+ * Nothing is draggable.
  */
 export class StandingWaveEngine implements SimulationEngine<Params> {
   readonly id = 'phys.standingWave';
@@ -86,7 +90,7 @@ export class StandingWaveEngine implements SimulationEngine<Params> {
   reset(p: Params): void {
     this.q = standingInput(p);
     this.w = waveOf(this.q);
-    this.dt = this.q.f > 0 ? Math.min(1 / 240, 1 / (200 * this.q.f)) : 1 / 240;
+    this.dt = stepOf(this.q);
     this.t0 = 0;
     this.steps = 0;
     this.tEnd = p.tEnd ?? runEnd(this.q);

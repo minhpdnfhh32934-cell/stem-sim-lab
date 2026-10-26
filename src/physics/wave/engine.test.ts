@@ -95,6 +95,8 @@ describe('standing wave engine', () => {
     // A typed n that is not whole is not rounded either.
     expect(standingInput({ ...base, n: 2.5 }).n).toBeNull();
     expect(standingInput({ ...base, n: 3 + 1e-12 }).n).toBe(3);
+    // m ≈ 0 is whole within round-off, but there is no harmonic n = 0.
+    expect(standingInput({ ...base, mode: MODE.harmonic, f: 1e-12 }).n).toBeNull();
   });
 });
 
@@ -128,8 +130,24 @@ describe('DOPRI5 cross-check: wave equation on a lattice with both ends fixed', 
     const eps = 1 - (2 * q.v * Math.sin((k * dx) / 2)) / dx / omega;
     const { antinode, node } = errors(N);
     expect(antinode).toBeLessThan(1.1 * 2 * q.A * eps * (1 + omega * 2 * T));
-    expect(antinode).toBeGreaterThan(0.1 * 2 * q.A * eps * omega * 2 * T);
+    // At t = 2T the lattice lags by the phase ε·ω·t: the error is not smaller than predicted.
+    expect(antinode).toBeGreaterThan(0.9 * 2 * q.A * eps * omega * 2 * T);
     expect(node).toBeLessThan(1e-12);
+  });
+
+  it('DOPRI5 reproduces the exact lattice mode 2A(ω/ω_N)·sin(kxᵢ)·sin(ω_N t)', () => {
+    const N = 240;
+    const dx = q.L / N;
+    const omegaN = ((2 * q.v) / dx) * Math.sin((k * dx) / 2);
+    let worst = 0;
+    latticeAt(q, N, times).forEach((row, j) => {
+      const t = times[j] ?? 0;
+      for (let i = 0; i <= N; i++) {
+        const exact = 2 * q.A * (omega / omegaN) * Math.sin(k * i * dx) * Math.sin(omegaN * t);
+        worst = Math.max(worst, Math.abs((row[i] ?? NaN) - exact));
+      }
+    });
+    expect(worst).toBeLessThan(1e-8 * 2 * q.A);
   });
 
   it('halving Δx cuts the error about four times (second-order convergence)', () => {

@@ -31,6 +31,13 @@ export const harmonicRatio = (L: number, f: number, v: number) => (2 * L * f) / 
  */
 export const isWhole = (m: number) => Math.abs(m - Math.round(m)) <= 1e-9 * Math.max(1, m);
 
+/** Significant digits (4 … 15) that never make a non-whole m look whole on screen. */
+export function ratioDigits(m: number): number {
+  if (isWhole(m)) return 4;
+  for (let d = 4; d < 15; d++) if (!Number.isInteger(Number(m.toPrecision(d)))) return d;
+  return 15;
+}
+
 export interface Resonance {
   n: number;
   f: number;

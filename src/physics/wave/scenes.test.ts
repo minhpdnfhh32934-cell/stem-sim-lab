@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Camera } from '../render/camera';
 import type { DrawOptions, ThemeColors } from '../types';
-import { STRING_POINTS, verticalScale } from './draw';
+import { STRING_POINTS, fmtRatio, verticalScale } from './draw';
 import { MODE, SW, standingInput } from './engine';
 import { harmonicFrequency } from './model';
 import { probeAmplitude, standingWave as sc } from './scenes';
@@ -19,8 +19,8 @@ describe('standing wave scene: solution', () => {
     expect(a.nodes?.value).toBe(4);
     expect(a.antinodes?.value).toBe(3);
     expect(a.node_spacing?.value).toBeCloseTo(0.4, 12);
-    expect(a.antinode_amplitude?.value).toBeCloseTo(0.02, 12);
-    expect(a.probe_amplitude?.value).toBeCloseTo(0.02, 12);
+    expect(a.antinode_amplitude?.value).toBeCloseTo(0.01, 12);
+    expect(a.probe_amplitude?.value).toBeCloseTo(0.01, 12);
     expect(a.period?.value).toBeCloseTo(0.04, 12);
   });
 
@@ -64,7 +64,6 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(msg[0]).toContain('f₄ = 33,33 Hz');
     const a = answers(p);
     expect(a.harmonic).toBeUndefined();
-    expect(a.ratio?.value).toBeCloseTo(3.6, 12);
     expect(a.f_below?.value).toBeCloseTo(harmonicFrequency(3, 20, 1.2), 12);
     expect(a.f_above?.value).toBeCloseTo(harmonicFrequency(4, 20, 1.2), 12);
     expect(standingInput({ ...sc.defaults, ...p }).f).toBe(30);
@@ -76,10 +75,26 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(answers({ mode: MODE.harmonic, f: 5 }).f_below).toBeUndefined();
   });
 
-  it('a ratio off by round-off only is accepted (L = 0,7 m, f = 50 Hz, v = 35 m/s → n = 2)', () => {
-    const p = { mode: MODE.harmonic, L: 0.7, f: 50, v: 35, xP: 0.1 };
+  it('a ratio off by round-off only is accepted (L = 1,1 m, f = 50 Hz, v = 11 m/s → n = 10)', () => {
+    const p = { mode: MODE.harmonic, L: 1.1, f: 50, v: 11, xP: 0.055 };
+    const m = standingInput({ ...sc.defaults, ...p }).m;
+    expect(m).not.toBe(10); // 10.000000000000002 in floating point
     expect(messages(p)).toEqual([]);
-    expect(answers(p).harmonic?.value).toBe(2);
+    expect(answers(p).harmonic?.value).toBe(10);
+  });
+
+  it('a non-whole ratio is never shown as a whole number', () => {
+    // L = 5 m, v = 1,1 m/s, f = 200 Hz: m = 1818,18…; f = 25,000001 Hz: m = 3,00000012.
+    const big = { mode: MODE.harmonic, L: 5, v: 1.1, f: 200, xP: 0.1 };
+    expect(messages(big)[0]).toContain('2Lf/v = 1.818,2 ');
+    const near = { mode: MODE.harmonic, f: 25.000001 };
+    expect(messages(near)[0]).toContain('2Lf/v = 3,0000001 ');
+    expect(
+      sc
+        .solve({ ...sc.defaults, ...near }, 'vi')
+        .steps.some((s) => s.tex?.endsWith('= 3{,}0000001')),
+    ).toBe(true);
+    expect(fmtRatio('en', 3)).toBe('3');
   });
 
   it('other invalid inputs are reported', () => {
@@ -99,8 +114,19 @@ describe('standing wave scene: card, picture', () => {
     expect(card.assumptions.length).toBeGreaterThanOrEqual(5);
     expect(card.sources.length).toBeGreaterThanOrEqual(2);
     expect(card.validity.vi.length).toBeGreaterThan(0);
-    for (const e of card.equations) expect(e.tex).not.toMatch(/\\text\{[^}]*[^\x20-\x7e}]/);
+    const noVi = /\\text\{[^}]*[^\x20-\x7e}]/;
+    for (const e of card.equations) expect(e.tex).not.toMatch(noVi);
+    for (const p of [{}, { vFrom: 1 }, { mode: MODE.speed }, { mode: MODE.harmonic, f: 30 }])
+      for (const s of sc.solve({ ...sc.defaults, ...p }, 'vi').steps)
+        expect(s.tex ?? '').not.toMatch(noVi);
     expect(card.assumptions.some((a) => a.vi.includes('2A'))).toBe(true);
+  });
+
+  it('a large amplitude (slope 2A·k > 0,1) leaves the exact range: card approx, solution note', () => {
+    // A = 1 cm, k = 3π/1,2 m⁻¹: 2A·k ≈ 0,157.
+    expect(sc.scienceCard({ ...sc.defaults, A: 0.01 }).confidence).toBe('approx');
+    expect(sc.solve({ ...sc.defaults, A: 0.01 }, 'vi').notes?.length).toBe(1);
+    expect(sc.solve(sc.defaults, 'vi').notes).toBeUndefined();
   });
 
   it('nothing is draggable', () => {
@@ -109,7 +135,7 @@ describe('standing wave scene: card, picture', () => {
 
   it('draws the string with ≥ 200 points, stretched vertically by a nice factor', () => {
     expect(STRING_POINTS).toBeGreaterThanOrEqual(200);
-    expect(verticalScale(standingInput(sc.defaults))).toBe(5);
+    expect(verticalScale(standingInput(sc.defaults))).toBe(10);
     expect(verticalScale(standingInput({ ...sc.defaults, A: 0.1 }))).toBe(1);
     let lineTo = 0;
     const texts: string[] = [];
@@ -143,6 +169,6 @@ describe('standing wave scene: card, picture', () => {
     expect(lineTo).toBeGreaterThanOrEqual(4 * (STRING_POINTS - 1));
     expect(texts.filter((s) => s === 'N')).toHaveLength(4);
     expect(texts.filter((s) => s === 'B')).toHaveLength(3);
-    expect(texts.some((s) => s.includes('×5'))).toBe(true);
+    expect(texts.some((s) => s.includes('×10'))).toBe(true);
   });
 });

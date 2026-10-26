@@ -7,6 +7,7 @@ import {
   isWhole,
   nearestResonances,
   nodes,
+  ratioDigits,
   reflected,
   speedForHarmonic,
   standing,
@@ -88,13 +89,21 @@ describe('standing wave formulas', () => {
 describe('whole number of half wavelengths (trap 5: never rounded)', () => {
   it('accepts only round-off away from a whole number', () => {
     expect(isWhole(3)).toBe(true);
-    // 2·0.7·50/35 is 2 up to round-off.
-    expect(isWhole(harmonicRatio(0.7, 50, 35))).toBe(true);
+    // 2·1.1·50/11 = 10.000000000000002 in floating point.
+    expect(harmonicRatio(1.1, 50, 11)).not.toBe(10);
+    expect(isWhole(harmonicRatio(1.1, 50, 11))).toBe(true);
     expect(isWhole(3 + 2e-9)).toBe(true);
     expect(isWhole(3 + 1e-6)).toBe(false);
     expect(isWhole(2.5)).toBe(false);
     expect(isWhole(1000 + 5e-7)).toBe(true);
     expect(isWhole(1000 + 5e-6)).toBe(false);
+  });
+
+  it('shows enough digits that a non-whole m never looks whole', () => {
+    expect(ratioDigits(3)).toBe(4);
+    expect(ratioDigits(3.6)).toBe(4);
+    expect(ratioDigits(2000 / 1.1)).toBe(5); // 1818.18… → 1818.2
+    expect(ratioDigits(3.00000012)).toBe(8); // → 3.0000001
   });
 
   it('suggests the resonance just below and just above, without changing f', () => {
