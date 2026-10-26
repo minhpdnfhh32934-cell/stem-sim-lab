@@ -4,6 +4,7 @@ import {
   MODE,
   SW,
   StandingWaveEngine,
+  checkedFrequency,
   latticeAt,
   latticeFrequency,
   standingInput,
@@ -154,6 +155,16 @@ describe('DOPRI5 cross-check: wave equation on a lattice with both ends fixed', 
     const ratio = errors(480).antinode / errors(240).antinode;
     expect(ratio).toBeGreaterThan(0.2);
     expect(ratio).toBeLessThan(0.3);
+  });
+
+  it('the cached check rescales the unit lattice exactly (units of L and L/v)', () => {
+    for (const [L, v, n] of [
+      [1.2, 20, 3],
+      [0.65, 143, 1],
+    ] as const)
+      expect(Math.abs(checkedFrequency(L, v, n) / latticeFrequency(L, v, n) - 1)).toBeLessThan(
+        1e-9,
+      );
   });
 
   it('the lattice mode frequency, with its dispersion inverted, gives f_n = n·v/(2L)', () => {

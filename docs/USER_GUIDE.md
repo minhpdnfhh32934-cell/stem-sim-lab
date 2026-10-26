@@ -386,7 +386,7 @@ xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây.
   f** (biết L, v, n), **tìm v** (biết L, f, n) hay **tìm n** (biết L, f, v). Tốc độ truyền sóng nhập
   thẳng, hoặc chọn "Lấy tốc độ sóng từ: lực căng và mật độ dài" để app tính v = √(F/μ) (μ nhận kg/m
   hoặc g/m). Hình vẽ dây với hai sóng thành phần nét đứt (tắt được), nút **N**, bụng **B** và điểm
-  dò **P**; đồ thị vẽ y₁, y₂ và y = y₁ + y₂ tại P. Vị trí P chỉnh bằng thanh trượt, không kéo được.
+  dò **P**; đồ thị vẽ y₁, y₂ và y = y₁ + y₂ tại P. App vẽ tối đa 20 bó sóng. Vị trí P chỉnh bằng thanh trượt, không kéo được.
   A là biên độ của **mỗi** sóng thành phần, nên bụng dao động với biên độ 2A. Nếu 2Lf/v không phải
   số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất, không tự đổi
   f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; tần số cao có thể làm hình trông

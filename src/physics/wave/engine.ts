@@ -19,6 +19,15 @@ export const SW = { phi: 0, y1: 1, y2: 2, y: 3 } as const;
 /** What the problem asks for (the first choice of the scene). */
 export const MODE = { frequency: 0, speed: 1, harmonic: 2 } as const;
 
+/** The mode choice; anything else (e.g. from an old file) reads as "find f". */
+export function modeOf(p: Params): number {
+  const m = Math.round(p.mode ?? MODE.frequency);
+  return m === MODE.speed || m === MODE.harmonic ? m : MODE.frequency;
+}
+
+/** Most loops the picture and the lattice check handle (the n slider's maximum). */
+export const MAX_LOOPS = 20;
+
 export interface StandingInput {
   mode: number;
   L: number;
@@ -38,7 +47,7 @@ export interface StandingInput {
 }
 
 export function standingInput(p: Params): StandingInput {
-  const mode = Math.round(p.mode ?? MODE.frequency);
+  const mode = modeOf(p);
   const L = p.L ?? 1.2;
   const fromTension = mode !== MODE.speed && (p.vFrom ?? 0) > 0.5;
   const tension = p.tension ?? 2;
@@ -47,7 +56,7 @@ export function standingInput(p: Params): StandingInput {
   const pn = p.n ?? 3;
   // n given by the learner: a whole n ≥ 1 is required (validate() says so), never rounded.
   const nGiven = isWhole(pn) && Math.round(pn) >= 1 ? Math.round(pn) : null;
-  const base = { mode, L, A: p.A ?? 0.01, xP: p.xP ?? 0.2, fromTension, tension, muL };
+  const base = { mode, L, A: p.A ?? 0.005, xP: p.xP ?? 0.2, fromTension, tension, muL };
   if (mode === MODE.speed) {
     const f = p.f ?? 25;
     return { ...base, f, v: speedForHarmonic(pn, f, L), m: pn, n: nGiven };
@@ -62,16 +71,18 @@ export function standingInput(p: Params): StandingInput {
 
 /** The two travelling waves of mode n (k = nπ/L exactly, so x = L is a node), or null. */
 export function waveOf(q: StandingInput): Wave | null {
-  if (q.n === null || !(q.f > 0) || !(q.L > 0)) return null;
+  if (q.n === null || !hasFrequency(q) || !(q.L > 0)) return null;
   return { A: q.A, k: (q.n * Math.PI) / q.L, omega: 2 * Math.PI * q.f };
 }
 
+const hasFrequency = (q: StandingInput) => Number.isFinite(q.f) && q.f > 0;
+
 /** Run length shown by default: 20 periods. */
-export const runEnd = (q: StandingInput) => (q.f > 0 ? 20 / q.f : 1);
+export const runEnd = (q: StandingInput) => (hasFrequency(q) ? 20 / q.f : 1);
 
 /** Fixed step Δt ≤ T/200, so slow playback still gets a new state on every frame. */
 export const stepOf = (q: StandingInput) =>
-  q.f > 0 ? Math.min(1 / 240, 1 / (200 * q.f)) : 1 / 240;
+  hasFrequency(q) ? Math.min(1 / 240, 1 / (200 * q.f)) : 1 / 240;
 
 /**
  * Standing wave evaluated in closed form at t = i·Δt (no accumulation, no truncation error).
@@ -190,6 +201,22 @@ export function latticeFrequency(L: number, v: number, n: number, N = 200): numb
   if (!a || !b) return Number.NaN;
   const omegaN = (2 * Math.PI) / (b.t - a.t);
   return (v * (2 / dx) * Math.asin((omegaN * dx) / (2 * v))) / (2 * Math.PI);
+}
+
+const unitLattice = new Map<number, number>();
+
+/**
+ * `latticeFrequency` for the solution's check, measured once per n: in units of L and L/v the
+ * lattice equation is the same for every string, so f = (v/L)·f(L = 1, v = 1) exactly.
+ */
+export function checkedFrequency(L: number, v: number, n: number): number {
+  let f1 = unitLattice.get(n);
+  if (f1 === undefined) {
+    f1 = latticeFrequency(1, 1, n);
+    if (unitLattice.size >= 64) unitLattice.clear();
+    unitLattice.set(n, f1);
+  }
+  return (v / L) * f1;
 }
 
 /** y = [u₁ … u_M, u̇₁ … u̇_M]; ü_i = (v/Δx)²·(u_{i−1} − 2u_i + u_{i+1}), u₀ = u_N = 0. */

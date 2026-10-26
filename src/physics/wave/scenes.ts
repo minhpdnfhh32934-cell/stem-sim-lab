@@ -18,9 +18,11 @@ import type {
 } from '../types';
 import { draw, fmtRatio, verticalScale } from './draw';
 import {
+  MAX_LOOPS,
   MODE,
   SW,
-  latticeFrequency,
+  checkedFrequency,
+  modeOf,
   standingInput,
   stepOf,
   waveOf,
@@ -91,6 +93,11 @@ function validate(p: Params): LocalizedText[] {
   if (q.mode === MODE.harmonic && q.n === null)
     out.push(L(noResonance(q, 'vi'), noResonance(q, 'en')));
   pos(
+    q.n === null || q.n <= MAX_LOOPS,
+    `n = ${q.n ?? 0} bó sóng: SimLab vẽ và kiểm chứng tối đa ${MAX_LOOPS} bó — hãy chọn số liệu cho ít bó hơn.`,
+    `n = ${q.n ?? 0} loops: SimLab draws and checks at most ${MAX_LOOPS} loops — choose values with fewer loops.`,
+  );
+  pos(
     q.xP >= 0 && q.xP <= q.L,
     'Điểm dò x_P phải nằm trên dây (0 ≤ x_P ≤ L).',
     'The probe x_P must lie on the string (0 ≤ x_P ≤ L).',
@@ -112,13 +119,13 @@ function solve(p: Params, locale: Locale): Solution {
       ),
       tex: `v = \\sqrt{\\frac{F}{\\mu}} = \\sqrt{\\frac{${Q(q.tension, 'N')}}{${Q(q.muL, 'kg/m')}}} = ${Q(q.v, 'm/s')}`,
     });
-    answers.push({
-      id: 'speed',
-      label: L('Tốc độ truyền sóng', 'Wave speed'),
-      value: q.v,
-      unit: 'm/s',
-    });
   }
+  const speed: Answer = {
+    id: 'speed',
+    label: L('Tốc độ truyền sóng', 'Wave speed'),
+    value: q.v,
+    unit: 'm/s',
+  };
   if (q.mode === MODE.harmonic) {
     const lambda = q.v / q.f;
     steps.push({
@@ -135,6 +142,7 @@ function solve(p: Params, locale: Locale): Solution {
     if (q.n === null) {
       const r = nearestResonances(q.L, q.f, q.v);
       steps.push({ text: L(noResonance(q, 'vi'), noResonance(q, 'en')) });
+      if (q.fromTension) answers.push(speed);
       if (r.below)
         answers.push({
           id: 'f_below',
@@ -153,17 +161,22 @@ function solve(p: Params, locale: Locale): Solution {
   }
   const nn = q.n ?? 0;
   const lambda = (2 * q.L) / nn;
-  const fNum = latticeFrequency(q.L, q.v, nn);
-  const check = Number.isFinite(fNum) ? q.f / fNum : null;
-  if (q.mode === MODE.harmonic) {
-    answers.push({
-      id: 'harmonic',
-      label: L('Số bó sóng n', 'Number of loops n'),
-      value: nn,
-      unit: '1',
-      ...(check ? { check: nn * check } : {}),
-    });
-  } else {
+  // f measured on the DOPRI5 lattice; its ratio to f checks whichever of f, v, n was asked.
+  const fNum = checkedFrequency(q.L, q.v, nn);
+  const ratio = Number.isFinite(fNum) && fNum > 0 ? q.f / fNum : null;
+  const asked = (a: Answer): Answer =>
+    ratio === null ? a : { ...a, check: a.id === 'frequency' ? fNum : a.value * ratio };
+  const main: Answer[] = [
+    { id: 'frequency', label: L('Tần số', 'Frequency'), value: q.f, unit: 'Hz' },
+    speed,
+    { id: 'harmonic', label: L('Số bó sóng n', 'Number of loops n'), value: nn, unit: '1' },
+  ];
+  const unknown =
+    q.mode === MODE.speed ? 'speed' : q.mode === MODE.harmonic ? 'harmonic' : 'frequency';
+  // Every mode lists f, v and n (so each can be marked as asked); the unknown one comes first.
+  for (const a of main) if (a.id === unknown) answers.push(asked(a));
+  for (const a of main) if (a.id !== unknown) answers.push(a);
+  if (q.mode !== MODE.harmonic) {
     steps.push({
       text: L(
         'Hai đầu cố định: chiều dài dây bằng n lần nửa bước sóng, nên',
@@ -176,24 +189,10 @@ function solve(p: Params, locale: Locale): Solution {
         text: L('Tần số sóng:', 'Frequency:'),
         tex: `f = \\frac{v}{\\lambda} = \\frac{nv}{2L} = \\frac{${nn}\\cdot ${Q(q.v, 'm/s')}}{2\\cdot ${Q(q.L, 'm')}} = ${Q(q.f, 'Hz')}`,
       });
-      answers.unshift({
-        id: 'frequency',
-        label: L('Tần số', 'Frequency'),
-        value: q.f,
-        unit: 'Hz',
-        ...(Number.isFinite(fNum) ? { check: fNum } : {}),
-      });
     } else {
       steps.push({
         text: L('Tốc độ truyền sóng:', 'Wave speed:'),
         tex: `v = \\lambda f = ${Q(lambda, 'm')}\\cdot ${Q(q.f, 'Hz')} = ${Q(q.v, 'm/s')}`,
-      });
-      answers.unshift({
-        id: 'speed',
-        label: L('Tốc độ truyền sóng', 'Wave speed'),
-        value: q.v,
-        unit: 'm/s',
-        ...(check ? { check: q.v * check } : {}),
       });
     }
   }
@@ -407,7 +406,9 @@ const probe: BodyDef = {
 function view(p: Params): WorldBounds {
   const q = standingInput(p);
   const len = q.L > 0 ? q.L : 1;
-  return { xMin: -0.1 * len, xMax: 1.1 * len, yMin: -0.28 * len, yMax: 0.3 * len };
+  // Room for the drawn antinodes (2A × stretch) when the amplitude is large for the string.
+  const h = Math.max(0.28 * len, 1.3 * 2 * q.A * verticalScale(q));
+  return { xMin: -0.1 * len, xMax: 1.1 * len, yMin: -h, yMax: h + 0.02 * len };
 }
 
 const lengthParam = (
@@ -423,7 +424,7 @@ const lengthParam = (
   dim: DIM.length,
   unit,
 });
-const notMode = (m: number) => (p: Params) => Math.round(p.mode ?? 0) !== m;
+const notMode = (m: number) => (p: Params) => modeOf(p) !== m;
 const vGiven = (p: Params) => notMode(MODE.speed)(p) && (p.vFrom ?? 0) <= 0.5;
 const vTension = (p: Params) => notMode(MODE.speed)(p) && (p.vFrom ?? 0) > 0.5;
 
@@ -431,7 +432,8 @@ export const standingWave: PhysicsScene = {
   id: 'standingWave',
   engineId: 'phys.standingWave',
   title: L('Sóng dừng trên dây', 'Standing waves on a string'),
-  required: ['L'],
+  // Filtered by `when`: each mode asks only for what it uses (draft.ts).
+  required: ['L', 'n', 'f', 'v', 'tension', 'muL'],
   params: [
     {
       key: 'mode',
@@ -445,18 +447,23 @@ export const standingWave: PhysicsScene = {
       ],
     },
     {
-      ...lengthParam('L', L('Chiều dài dây', 'String length'), 'L', 'm'),
+      ...lengthParam(
+        'L',
+        L('Chiều dài dây (hai đầu cố định)', 'String length (both ends fixed)'),
+        'L',
+        'm',
+      ),
       min: 0.1,
       max: 5,
       step: 0.01,
     },
     {
       key: 'n',
-      label: L('Số bó sóng', 'Number of loops'),
+      label: L('Số bó sóng (= số bụng)', 'Number of loops (= antinodes)'),
       symbol: 'n',
       kind: 'number',
       min: 1,
-      max: 20,
+      max: MAX_LOOPS,
       step: 1,
       when: notMode(MODE.harmonic),
     },
@@ -509,7 +516,12 @@ export const standingWave: PhysicsScene = {
       when: vTension,
     },
     {
-      ...lengthParam('A', L('Biên độ mỗi sóng thành phần', 'Amplitude of each wave'), 'A', 'cm'),
+      ...lengthParam(
+        'A',
+        L('Biên độ mỗi sóng (bụng: 2A)', 'Amplitude of each wave (antinode: 2A)'),
+        'A',
+        'cm',
+      ),
       min: 0.1,
       max: 10,
       step: 0.1,
@@ -554,10 +566,15 @@ export const standingWave: PhysicsScene = {
     showParts: 1,
   },
   usesGravity: false,
+  // A default probe sits on the first antinode, x = λ/4 = L/(2n), so it is always on the string.
+  autoDefaults: (p) => {
+    const q = standingInput(p);
+    return q.L > 0 ? { xP: q.L / (2 * (q.n ?? 3)) } : {};
+  },
   // About 10 s of screen time for the 20 periods of a run (closest offered speed).
   suggestedSpeed: (p) => {
     const f = standingInput(p).f;
-    return f > 0 ? 2 / f : 1;
+    return Number.isFinite(f) && f > 0 ? 2 / f : 1;
   },
   validate,
   scienceCard: card,

@@ -1329,6 +1329,30 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "swv-04",
+      "text": "Một sợi dây đàn hồi dài 1,2 m treo thẳng đứng, đầu trên cố định, đầu dưới tự do. Sóng truyền trên dây với tốc độ 24 m/s. Tính tần số nhỏ nhất để trên dây có sóng dừng.",
+      "topic": "standingWave",
+      "quantities": [
+        {
+          "key": "L",
+          "value": 1.2,
+          "unit": "m",
+          "quote": "dài 1,2 m"
+        },
+        {
+          "key": "v",
+          "value": 24,
+          "unit": "m/s",
+          "quote": "tốc độ 24 m/s"
+        }
+      ],
+      "missing": [
+        "n"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": true
+    },
+    {
       "id": "ng-01",
       "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
       "topic": "unsupported",

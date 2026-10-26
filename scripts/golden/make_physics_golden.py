@@ -488,6 +488,16 @@ add(
     },
 )
 
+# Một đầu tự do: ngoài phạm vi của cảnh (chỉ hai đầu cố định) → unsupported_parts; số bụng không có.
+add(
+    "swv-04",
+    "Một sợi dây đàn hồi dài 1,2 m treo thẳng đứng, đầu trên cố định, đầu dưới tự do. Sóng truyền trên dây với tốc độ 24 m/s. Tính tần số nhỏ nhất để trên dây có sóng dừng.",
+    "standingWave",
+    [q("L", 1.2, "m", "dài 1,2 m"), q("v", 24, "m/s", "tốc độ 24 m/s")],
+    missing=["n"],
+    unsupported=True,
+)
+
 # --- Ngoài phạm vi ------------------------------------------------------------------
 add(
     "ng-01",

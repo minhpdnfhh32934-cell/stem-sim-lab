@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { buildDraft } from '@/ai/draft';
+import { applyAutoDefaults } from '../autoDefaults';
 import { Camera } from '../render/camera';
 import type { DrawOptions, ThemeColors } from '../types';
 import { STRING_POINTS, fmtRatio, verticalScale } from './draw';
-import { MODE, SW, standingInput } from './engine';
+import { MAX_LOOPS, MODE, SW, StandingWaveEngine, standingInput } from './engine';
 import { harmonicFrequency } from './model';
 import { probeAmplitude, standingWave as sc } from './scenes';
 
@@ -54,6 +56,49 @@ describe('standing wave scene: solution', () => {
   });
 });
 
+describe('standing wave scene: problems read by the AI', () => {
+  const draft = (
+    quantities: { key: string; value: number; unit: string; quote: string }[],
+    text: string,
+  ) =>
+    buildDraft(
+      sc,
+      { quantities, questions: [], assumptions: [], unsupported_parts: [], clarifications: [] },
+      text,
+      9.81,
+    );
+
+  it('asks for what the chosen mode needs instead of using a default', () => {
+    const L = { key: 'L', value: 60, unit: 'cm', quote: 'dài 60 cm' };
+    expect(draft([L], 'Một dây đàn dài 60 cm.').missing.sort()).toEqual(['n', 'v']);
+    const findN = { key: 'mode', value: MODE.harmonic, unit: '1', quote: 'bao nhiêu bó' };
+    const fromF = { key: 'vFrom', value: 1, unit: '1', quote: 'lực căng' };
+    expect(
+      draft([findN, fromF, L], 'Dây dài 60 cm chịu lực căng. Có bao nhiêu bó?').missing.sort(),
+    ).toEqual(['f', 'muL', 'tension']);
+  });
+
+  it('f, v and n are answers in every mode, so each can be marked as asked', () => {
+    for (const mode of [MODE.frequency, MODE.speed, MODE.harmonic]) {
+      const ids = sc.solve({ ...sc.defaults, mode }, 'vi').answers.map((a) => a.id);
+      expect(ids.slice(0, 1)).toEqual([['frequency', 'speed', 'harmonic'][mode]]);
+      expect(ids).toEqual(expect.arrayContaining(['frequency', 'speed', 'harmonic']));
+    }
+  });
+
+  it('a default probe moves to the first antinode, so a short string still runs', () => {
+    const sources = Object.fromEntries(
+      Object.keys(sc.defaults).map((k) => [k, 'default' as const]),
+    );
+    const p = applyAutoDefaults(sc, { ...sc.defaults, L: 0.18 }, { ...sources, L: 'problem' });
+    expect(p.xP).toBeCloseTo(0.03, 12);
+    expect(sc.validate?.(p)).toEqual([]);
+    expect(
+      applyAutoDefaults(sc, { ...sc.defaults, xP: 0.5 }, { ...sources, xP: 'problem' }).xP,
+    ).toBe(0.5);
+  });
+});
+
 describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
   it('a non-whole ratio is reported with the resonances below and above, f unchanged', () => {
     const p = { mode: MODE.harmonic, f: 30 };
@@ -97,6 +142,29 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(fmtRatio('en', 3)).toBe('3');
   });
 
+  it(`at most ${MAX_LOOPS} loops, given or computed; each one has its DOPRI5 check`, () => {
+    expect(messages({ n: MAX_LOOPS + 1 })[0]).toContain(`tối đa ${MAX_LOOPS} bó`);
+    // L = 1,2 m, v = 20 m/s, f = 200 Hz: m = 24 (whole).
+    expect(messages({ mode: MODE.harmonic, f: 200 })[0]).toContain('n = 24 bó');
+    for (let n = 1; n <= MAX_LOOPS; n++) {
+      const f = answers({ n }).frequency;
+      expect(f?.check, `n = ${n}`).toBeDefined();
+      expect(Math.abs((f?.check ?? 0) / (f?.value ?? 1) - 1), `n = ${n}`).toBeLessThan(1e-8);
+    }
+  });
+
+  it('an infinite frequency (L = 0) is reported without breaking the engine', () => {
+    expect(messages({ L: 0 }).length).toBeGreaterThan(0);
+    const e = new StandingWaveEngine();
+    e.reset({ ...sc.defaults, L: 0 });
+    expect(e.dt).toBeGreaterThan(0);
+  });
+
+  it('an unknown mode (old file) reads as "find f" everywhere', () => {
+    expect(standingInput({ ...sc.defaults, mode: 7 }).mode).toBe(MODE.frequency);
+    expect(sc.params.find((d) => d.key === 'f')?.when?.({ ...sc.defaults, mode: 7 })).toBe(false);
+  });
+
   it('other invalid inputs are reported', () => {
     expect(messages({})).toEqual([]);
     expect(messages({ n: 2.5 })[0]).toContain('số nguyên dương');
@@ -127,6 +195,12 @@ describe('standing wave scene: card, picture', () => {
     expect(sc.scienceCard({ ...sc.defaults, A: 0.01 }).confidence).toBe('approx');
     expect(sc.solve({ ...sc.defaults, A: 0.01 }, 'vi').notes?.length).toBe(1);
     expect(sc.solve(sc.defaults, 'vi').notes).toBeUndefined();
+  });
+
+  it('the view leaves room for a large amplitude', () => {
+    const b = sc.view({ ...sc.defaults, L: 0.5, A: 0.1 });
+    expect(b.yMax).toBeGreaterThanOrEqual(1.3 * 2 * 0.1);
+    expect(b.yMin).toBeLessThanOrEqual(-1.3 * 2 * 0.1);
   });
 
   it('nothing is draggable', () => {
