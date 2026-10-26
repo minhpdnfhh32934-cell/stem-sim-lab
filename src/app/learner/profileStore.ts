@@ -79,10 +79,16 @@ export const useProfileStore = create<ProfileState>()(
       // v1 had no grade: people who used the app before see every topic. Nothing can change
       // the level any more, so a v1 "Đại cương" (never available) goes back to "Nền tảng".
       migrate: (old) => ({ ...(old as object), grade: 'all', level: 'foundation' }),
-      // A damaged save never leaves the library on a grade that does not exist.
+      // A damaged save never leaves the library on a grade that does not exist. Nothing saved
+      // yet: zustand passes undefined.
       merge: (saved, current) => {
-        const s = saved as Partial<ProfileState>;
-        return { ...current, ...s, grade: isGrade(s.grade) ? s.grade : 'all' };
+        const s = (saved ?? {}) as Partial<ProfileState>;
+        return {
+          ...current,
+          ...s,
+          grade: isGrade(s.grade) ? s.grade : 'all',
+          interests: Array.isArray(s.interests) ? s.interests : current.interests,
+        };
       },
       partialize: ({ level, grade, interests, onboarded, connectSeen, lastTopic }) => ({
         level,

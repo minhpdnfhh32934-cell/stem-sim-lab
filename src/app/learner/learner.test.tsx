@@ -126,6 +126,22 @@ describe('profile migration', () => {
     expect(useProfileStore.getState().grade).toBe('all');
     localStorage.removeItem('stemsim.profile');
   });
+
+  it('nothing saved yet, or damaged interests: loading still finishes', async () => {
+    localStorage.removeItem('stemsim.profile');
+    await useProfileStore.persist.rehydrate();
+    expect(useProfileStore.persist.hasHydrated()).toBe(true);
+
+    useProfileStore.setState({ interests: ['biology'] });
+    localStorage.setItem(
+      'stemsim.profile',
+      JSON.stringify({ state: { interests: null, onboarded: true }, version: 2 }),
+    );
+    await useProfileStore.persist.rehydrate();
+    expect(useProfileStore.persist.hasHydrated()).toBe(true);
+    expect(useProfileStore.getState()).toMatchObject({ interests: ['biology'], onboarded: true });
+    localStorage.removeItem('stemsim.profile');
+  });
 });
 
 describe('library grade switch', () => {

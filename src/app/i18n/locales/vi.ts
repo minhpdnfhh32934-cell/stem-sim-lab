@@ -2240,6 +2240,7 @@ const vi = {
       'Cách xếp chủ đề theo lớp do SimLab đề xuất từ mục lục SGK Kết nối tri thức, đang chờ giáo viên duyệt.',
     suggested: 'Gợi ý cho lớp {grade}',
     topicCount: '{count} chủ đề lớp {grade}',
+    topicCountOne: '1 chủ đề lớp {grade}',
   },
   onboarding: {
     label: 'Làm quen với SimLab',

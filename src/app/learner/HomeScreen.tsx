@@ -300,7 +300,7 @@ function SubjectCard({ subject, grade }: { subject: Subject; grade: GradeChoice 
       <span className="home__subject-count">
         {grade === 'all'
           ? t('home.topicCount', { count })
-          : t('levels.topicCount', { count, grade })}
+          : t(count === 1 ? 'levels.topicCountOne' : 'levels.topicCount', { count, grade })}
       </span>
     </button>
   );

@@ -2256,6 +2256,7 @@ const en: Messages = {
       'SimLab proposes this arrangement from the Kết nối tri thức tables of contents; it is waiting for a teacher’s review.',
     suggested: 'Suggested for grade {grade}',
     topicCount: '{count} grade {grade} topics',
+    topicCountOne: '1 grade {grade} topic',
   },
   onboarding: {
     label: 'Getting started with SimLab',
