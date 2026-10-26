@@ -89,8 +89,11 @@ async function checkEveryGraph(page: Page, topic: string, expectEmpty: boolean):
       const over = page.locator('.bottom-panel .u-over');
       const before = await over.boundingBox();
       if (!before) throw new Error(`${name}: no plot area`);
+      // Without the cursor the legend shows dashes, never a made-up "0 s".
+      const time = page.locator('.bottom-panel .u-legend .u-value').first();
+      await expect(time).toHaveText('—');
       await over.hover({ position: { x: before.width * 0.6, y: before.height / 2 } });
-      await expect(page.locator('.bottom-panel .u-legend .u-value').first()).not.toHaveText('0 s');
+      await expect(time).toHaveText(/\d s$/);
       // Let the legend's new width reach the layout, the ResizeObserver and uPlot's resize.
       await page.evaluate(
         () =>

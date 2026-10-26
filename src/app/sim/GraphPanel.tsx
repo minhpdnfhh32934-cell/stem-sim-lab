@@ -129,7 +129,11 @@ function Chart({ graph }: { graph: GraphDef }) {
           },
         ],
         series: [
-          { label: 't', value: (_u, v) => `${nf.format(v)} s` },
+          // No cursor: a dash, not "0 s" (Intl formats null as 0).
+          {
+            label: 't',
+            value: (_u: uPlotType, v: number | null) => (v === null ? '—' : `${nf.format(v)} s`),
+          },
           ...graph.series.map((s, i) => ({
             label: L(s.label),
             stroke: css(SERIES_VARS[i % SERIES_VARS.length] ?? '--chart-1'),
