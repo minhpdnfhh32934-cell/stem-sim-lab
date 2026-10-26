@@ -2346,6 +2346,19 @@
    "review_status": "pending"
   },
   {
+   "topic": "cellStructure",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 2. Cấu trúc tế bào",
+   "lessons": [
+    7,
+    8
+   ],
+   "reason": "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực.",
+   "review_status": "pending"
+  },
+  {
    "topic": "uniformCircularMotion",
    "subject": "physics",
    "grade": 10,

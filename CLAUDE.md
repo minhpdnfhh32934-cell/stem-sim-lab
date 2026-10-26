@@ -460,8 +460,8 @@ Progress log: `docs/PROGRESS.md`.
 - Code: `src/chemistry/{data,atom,periodic,molecule,reaction,particles}`, `formula.ts` (parser),
   `balance.ts` (exact null-space balancer). three.js viewers render on demand; RDKit.js is lazy.
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
-- Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport}` — pure model files
-  (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 11 ModuleViews. Small shared controls in
+- Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport,cell}` — pure model
+  files (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 12 ModuleViews. Small shared controls in
   `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
 - Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
@@ -610,6 +610,15 @@ Progress log: `docs/PROGRESS.md`.
   Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
   project, SwiftShader). Specs that open biology topics set SwiftShader too and run in the
   `chromium-3d` project (`HEAVY_3D` in `playwright.config.ts`, after the light specs).
+- Cell structure 2D (`src/biology/cell/`, 0.8.0, SGK Sinh học 10 KNTT Bài 7–8; topic and chapter
+  `cellStructure`, last in Biology): `parts.ts` (bacterium / animal / plant, 21 parts: vi/en name,
+  paraphrased function, `source` + printed `pages`, `membraneBound`, pending; names follow the
+  textbook pictures; no digits — test), `card.ts` (qualitative, no equations, the lesson's own
+  caption `CELL_ILLUSTRATION`, not the 3D kit's sentence), `draw.ts` (canvas, token colours,
+  draws exactly `partsFor(kind)` — test; name labels in a column on each side), `store.ts`
+  (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
+  "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
+  version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
