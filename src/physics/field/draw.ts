@@ -115,9 +115,11 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
     text(ctx, cam, x, y, 'E = 0', col.text);
   }
   s.charges.forEach((c, i) => {
-    const color = c.q >= 0 ? col.acceleration : col.velocity;
+    // A zero charge is drawn neutral: it makes no field.
+    const color = c.q > 0 ? col.acceleration : c.q < 0 ? col.velocity : col.faint;
     circle(ctx, cam, c.x, c.y, r0, color, col.text, 9);
-    text(ctx, cam, c.x, c.y, c.q >= 0 ? '+' : '−', col.panel, 'center', { x: 0, y: 7 });
+    const sign = c.q > 0 ? '+' : c.q < 0 ? '−' : '0';
+    text(ctx, cam, c.x, c.y, sign, col.panel, 'center', { x: 0, y: 7 });
     const off = Math.max(9, r0 * cam.scale) + 3;
     text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: off, y: -off });
   });

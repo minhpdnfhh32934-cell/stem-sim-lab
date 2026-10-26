@@ -52,7 +52,7 @@ function readings(token: string): number[] {
 }
 
 /** Scientific notation: a [.×x*] 10 ^? b */
-const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
+const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·⋅∙])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
 /** A power of ten on its own ("10⁻⁸", normalized to "10^-8"); unlike SCI the caret is required. */
 const POW = /(?<![\d.,])10\s*\^\s*\(?\s*(-?\d+)\s*\)?/g;
 // A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
@@ -118,9 +118,16 @@ export function mentions(text: string, value: number): boolean {
   return numbersIn(text).some((n) => same(n, target));
 }
 
-/** Words that give a number its sign, and words saying the sign is left open ("độ lớn 2 µC"). */
-const NEGATIVE = /(?<![\p{L}\p{N}])(?:âm|negative)(?![\p{L}\p{N}])/u;
-const POSITIVE = /(?<![\p{L}\p{N}])(?:dương|positive)(?![\p{L}\p{N}])/u;
+/**
+ * Words that give a charge its sign — only next to "điện tích"/"điện"/"dấu", so "bản âm" or "chiều
+ * âm" say nothing — and words saying the sign is left open ("độ lớn 2 µC").
+ */
+const NEGATIVE =
+  /(?<![\p{L}\p{N}])(?:(?:điện(?: tích)?|dấu) âm|negative(?:ly)? charged?)(?![\p{L}\p{N}])/u;
+const POSITIVE =
+  /(?<![\p{L}\p{N}])(?:(?:điện(?: tích)?|dấu) dương|positive(?:ly)? charged?)(?![\p{L}\p{N}])/u;
+/** A new charge named after the number ("… cách điện tích âm q2"): its words are not this one's. */
+const NEXT_CHARGE = /(?<![\p{L}\p{N}])(?<!mang )điện tích(?![\p{L}\p{N}])/u;
 const OPEN_SIGN =
   /(?<![\p{L}\p{N}])(?:độ lớn|trái dấu|cùng dấu|magnitude|opposite)(?![\p{L}\p{N}])/u;
 /** A sentence ends at ".;!?" followed by a space ("1,6.10-19" has none). */
@@ -154,6 +161,7 @@ export function writtenSign(text: string, value: number, quote = ''): -1 | 0 | 1
     let after = t.slice(tok.end, next && next.start < to ? next.start : to);
     if (next && next.start < to && after.includes(', '))
       after = after.slice(0, after.indexOf(', '));
+    after = after.slice(0, NEXT_CHARGE.exec(after)?.index ?? after.length);
     const words = `${before} ${after}`;
     const neg = NEGATIVE.test(words);
     const pos = POSITIVE.test(words);

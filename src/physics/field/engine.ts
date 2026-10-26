@@ -1,6 +1,6 @@
 import type { SimulationEngine } from '@/core/sim/engine';
 import type { Params } from '../types';
-import { MODE, fieldAt, fieldSetup, plateField } from './model';
+import { MODE, fieldAtPoint, fieldSetup, plateField } from './model';
 
 /** State: field at point M (or between the plates) [Eₓ, E_y, |E|]. */
 export const FE = { ex: 0, ey: 1, e: 2 } as const;
@@ -22,7 +22,7 @@ export class FieldEngine implements SimulationEngine<Params> {
     this.e =
       s.mode === MODE.plates
         ? plateField(s.plates, 0, 0)
-        : fieldAt(s.charges, s.k, s.probe.x, s.probe.y);
+        : fieldAtPoint(s.charges, s.k, s.probe.x, s.probe.y);
     this.n = 0;
   }
 

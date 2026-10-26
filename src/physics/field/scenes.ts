@@ -1,3 +1,4 @@
+import { formatNumber } from '@/app/i18n';
 import type { Locale } from '@/app/i18n/types';
 import { C } from '@/core/constants';
 import type { LocalizedText } from '@/core/data/dataset';
@@ -19,9 +20,12 @@ import type {
 } from '../types';
 import { chargeRadius, drawField, fieldView, linesFor } from './draw';
 import { FE } from './engine';
-import { MODE, fieldAt, fieldSetup, forceOn, plateField, potentialAt } from './model';
+import { MODE, fieldAtPoint, fieldSetup, forceOn, plateField, potentialAt } from './model';
 
 const SUB = ['₁', '₂', '₃'];
+/** k = 1/(4πε₀) written as SGK does, "8,988·10⁹ N·m²/C²" (not "8.988.000.000"). */
+const kText = (locale: Locale) =>
+  `${formatNumber(locale, Number((C.kC / 1e9).toPrecision(4)))}·10⁹ N·m²/C²`;
 const points = (p: Params) => (p.mode ?? MODE.points) === MODE.points;
 const plates = (p: Params) => !points(p);
 const count = (p: Params) => Math.min(3, Math.max(1, Math.round(p.n ?? 2)));
@@ -44,7 +48,7 @@ function validate(p: Params): LocalizedText[] {
   const r0 = chargeRadius(p);
   s.charges.forEach((a, i) => {
     s.charges.slice(i + 1).forEach((b, j) => {
-      if (Math.hypot(a.x - b.x, a.y - b.y) < r0) {
+      if (Math.hypot(a.x - b.x, a.y - b.y) <= r0) {
         const cm = fmtQty('vi', r0, 'cm', 2);
         const cmEn = fmtQty('en', r0, 'cm', 2);
         errors.push(
@@ -117,6 +121,22 @@ function gradientCheck(p: Params): number {
   return Math.hypot((V(x + h, y) - V(x - h, y)) / (2 * h), (V(x, y + h) - V(x, y - h)) / (2 * h));
 }
 
+/** Direction of the field a charge makes at M; a zero charge makes none. */
+const fieldDir = (q: number, sub: string): LocalizedText =>
+  q > 0
+    ? L(`q${sub} > 0: hướng ra xa q${sub}`, `q${sub} > 0: pointing away from q${sub}`)
+    : q < 0
+      ? L(`q${sub} < 0: hướng về phía q${sub}`, `q${sub} < 0: pointing towards q${sub}`)
+      : L(`q${sub} = 0: không gây ra điện trường`, `q${sub} = 0: it makes no field`);
+
+/** Direction of the force on the test charge; q₀ = 0 feels none. */
+const forceDir = (q0: number): LocalizedText =>
+  q0 > 0
+    ? L('q₀ > 0: cùng chiều E', 'q₀ > 0: along E')
+    : q0 < 0
+      ? L('q₀ < 0: ngược chiều E', 'q₀ < 0: against E')
+      : L('q₀ = 0: không chịu lực điện', 'q₀ = 0: no electric force');
+
 function solvePlates(p: Params, locale: Locale): Solution {
   const s = fieldSetup(p);
   const Q = (v: number, u: string) => texQty(locale, v, u);
@@ -132,12 +152,8 @@ function solvePlates(p: Params, locale: Locale): Solution {
     },
     {
       text: L(
-        s.q0 >= 0
-          ? 'Lực điện lên điện tích thử q₀ (q₀ > 0: cùng chiều E):'
-          : 'Lực điện lên điện tích thử q₀ (q₀ < 0: ngược chiều E):',
-        s.q0 >= 0
-          ? 'Electric force on the test charge q₀ (q₀ > 0: along E):'
-          : 'Electric force on the test charge q₀ (q₀ < 0: against E):',
+        `Lực điện lên điện tích thử q₀ (${forceDir(s.q0).vi}):`,
+        `Electric force on the test charge q₀ (${forceDir(s.q0).en}):`,
       ),
       tex: `F = |q_0|\\,E = ${Q(Math.abs(s.q0), 'C')} \\cdot ${Q(e, 'V/m')} = ${Q(f, 'N')}`,
     },
@@ -165,17 +181,13 @@ function solve(p: Params, locale: Locale): Solution {
     const [rVi, rEn] = [fmtQty('vi', r, 'm'), fmtQty('en', r, 'm')];
     return {
       text: L(
-        c.q >= 0
-          ? `Điện trường do q${sub} gây ra tại M, cách q${sub} một khoảng r${sub} = ${rVi} (q${sub} > 0: hướng ra xa q${sub}):`
-          : `Điện trường do q${sub} gây ra tại M, cách q${sub} một khoảng r${sub} = ${rVi} (q${sub} < 0: hướng về phía q${sub}):`,
-        c.q >= 0
-          ? `Field of q${sub} at M, a distance r${sub} = ${rEn} from q${sub} (q${sub} > 0: pointing away from q${sub}):`
-          : `Field of q${sub} at M, a distance r${sub} = ${rEn} from q${sub} (q${sub} < 0: pointing towards q${sub}):`,
+        `Điện trường do q${sub} gây ra tại M, cách q${sub} một khoảng r${sub} = ${rVi} (${fieldDir(c.q, sub).vi}):`,
+        `Field of q${sub} at M, a distance r${sub} = ${rEn} from q${sub} (${fieldDir(c.q, sub).en}):`,
       ),
       tex: `E_${n} = k\\frac{|q_${n}|}{r_${n}^2} = \\frac{${N(s.k)} \\cdot ${N(Math.abs(c.q))}}{(${N(r)})^2} = ${Q(e, 'V/m')}`,
     };
   });
-  const [ex, ey] = fieldAt(s.charges, s.k, s.probe.x, s.probe.y);
+  const [ex, ey] = fieldAtPoint(s.charges, s.k, s.probe.x, s.probe.y);
   const e = Math.hypot(ex, ey);
   const f = Math.hypot(...forceOn(s.q0, [ex, ey]));
   if (s.charges.length > 1) {
@@ -194,12 +206,8 @@ function solve(p: Params, locale: Locale): Solution {
     },
     {
       text: L(
-        s.q0 >= 0
-          ? 'Lực điện lên điện tích thử q₀ đặt tại M (q₀ > 0: cùng chiều E):'
-          : 'Lực điện lên điện tích thử q₀ đặt tại M (q₀ < 0: ngược chiều E):',
-        s.q0 >= 0
-          ? 'Electric force on a test charge q₀ at M (q₀ > 0: along E):'
-          : 'Electric force on a test charge q₀ at M (q₀ < 0: against E):',
+        `Lực điện lên điện tích thử q₀ đặt tại M (${forceDir(s.q0).vi}):`,
+        `Electric force on a test charge q₀ at M (${forceDir(s.q0).en}):`,
       ),
       tex: `F = |q_0|\\,E = ${Q(Math.abs(s.q0), 'C')} \\cdot ${Q(e, 'V/m')} = ${Q(f, 'N')}`,
     },
@@ -210,7 +218,8 @@ function solve(p: Params, locale: Locale): Solution {
       label: L('Cường độ điện trường tại M', 'Field strength at M'),
       value: e,
       unit: 'V/m',
-      check: gradientCheck(p),
+      // Where the fields cancel (E = 0) a relative comparison has nothing to compare with.
+      ...(e > 0 ? { check: gradientCheck(p) } : {}),
     },
     { id: 'Ex', label: L('Thành phần Eₓ', 'Component Eₓ'), value: ex, unit: 'V/m' },
     { id: 'Ey', label: L('Thành phần E_y', 'Component E_y'), value: ey, unit: 'V/m' },
@@ -225,11 +234,16 @@ function solve(p: Params, locale: Locale): Solution {
   if (a && b) {
     const r = Math.hypot(a.x - b.x, a.y - b.y);
     const f12 = (s.k * Math.abs(a.q * b.q)) / (r * r);
-    const attract = a.q * b.q < 0;
+    const kind =
+      a.q * b.q < 0
+        ? L('trái dấu: hút nhau', 'opposite signs: attract')
+        : a.q * b.q > 0
+          ? L('cùng dấu: đẩy nhau', 'same sign: repel')
+          : L('có một điện tích bằng 0: không có lực', 'one charge is 0: no force');
     steps.push({
       text: L(
-        `Lực tương tác giữa q₁ và q₂ (định luật Coulomb; ${attract ? 'trái dấu: hút nhau' : 'cùng dấu: đẩy nhau'}):`,
-        `Force between q₁ and q₂ (Coulomb's law; ${attract ? 'opposite signs: attract' : 'same sign: repel'}):`,
+        `Lực tương tác giữa q₁ và q₂ (định luật Coulomb; ${kind.vi}):`,
+        `Force between q₁ and q₂ (Coulomb's law; ${kind.en}):`,
       ),
       tex: `F_{12} = k\\frac{|q_1 q_2|}{r_{12}^2} = \\frac{${N(s.k)} \\cdot ${N(Math.abs(a.q))} \\cdot ${N(Math.abs(b.q))}}{(${N(r)})^2} = ${Q(f12, 'N')}`,
     });
@@ -248,7 +262,9 @@ function card(p: Params): ScienceCardData {
   const errVi = lines ? fmtQty('vi', lines.maxError, 'mm', 2) : '';
   const errEn = lines ? fmtQty('en', lines.maxError, 'mm', 2) : '';
   return {
-    title: L('Điện trường của điện tích điểm', 'Electric field of point charges'),
+    title: lines
+      ? L('Điện trường của điện tích điểm', 'Electric field of point charges')
+      : L('Điện trường đều giữa hai bản phẳng', 'Uniform field between parallel plates'),
     model: L(
       'Điện tích điểm đứng yên trong chân không hoặc không khí; điện trường của nhiều điện tích là tổng vectơ (nguyên lí chồng chất). Tụ điện phẳng lí tưởng: điện trường đều giữa hai bản.',
       'Point charges at rest in vacuum or air; the field of several charges is the vector sum (superposition). Ideal parallel-plate capacitor: a uniform field between the plates.',
@@ -283,17 +299,18 @@ function card(p: Params): ScienceCardData {
         'Vacuum or air (ε = 1). A problem with a dielectric constant ε ≠ 1 is outside the model.',
       ),
       L(
-        `k mặc định = 1/(4πε₀) ≈ ${fmtQty('vi', C.kC, 'N*m^2/C^2')} (CODATA); đề ghi “lấy k = 9.10⁹” thì dùng số của đề (hai giá trị lệch 0,14 %).`,
-        `Default k = 1/(4πε₀) ≈ ${fmtQty('en', C.kC, 'N*m^2/C^2')} (CODATA); a problem saying “take k = 9·10⁹” uses its own value (the two differ by 0.14 %).`,
+        `k mặc định = 1/(4πε₀) ≈ ${kText('vi')} (CODATA); đề ghi “lấy k = 9.10⁹” thì dùng số của đề (hai giá trị lệch 0,14 %).`,
+        `Default k = 1/(4πε₀) ≈ ${kText('en')} (CODATA); a problem saying “take k = 9·10⁹” uses its own value (the two differ by 0.14 %).`,
       ),
-      L(
-        'Mật độ đường sức trên hình phẳng không tỉ lệ với |E|: đây là một lát cắt của trường ba chiều. Số đường mỗi điện tích tỉ lệ với |q|.',
-        'The density of lines in the flat picture is not proportional to |E|: it is a slice of a 3D field. Each charge has a number of lines proportional to |q|.',
-      ),
-      L(
-        'Tụ phẳng lí tưởng: E đều giữa hai bản, bằng 0 bên ngoài; bỏ qua hiệu ứng mép (độ dài bản trên hình chỉ để minh họa).',
-        'Ideal capacitor: E uniform between the plates and 0 outside; edge effects are ignored (the drawn plate length is only illustrative).',
-      ),
+      lines
+        ? L(
+            'Mật độ đường sức trên hình phẳng không tỉ lệ với |E|: đây là một lát cắt của trường ba chiều. Số đường mỗi điện tích gần đúng tỉ lệ với |q| (làm tròn, ít nhất 1 đường).',
+            'The density of lines in the flat picture is not proportional to |E|: it is a slice of a 3D field. Each charge has about as many lines as its |q| allows (rounded, at least one).',
+          )
+        : L(
+            'Tụ phẳng lí tưởng: E đều giữa hai bản, bằng 0 bên ngoài; bỏ qua hiệu ứng mép (độ dài bản trên hình chỉ để minh họa).',
+            'Ideal capacitor: E uniform between the plates and 0 outside; edge effects are ignored (the drawn plate length is only illustrative).',
+          ),
       L(
         'Không kéo được gì: điện tích và điểm M chỉnh bằng thanh trượt.',
         'Nothing can be dragged: charges and point M move with their sliders.',
@@ -394,6 +411,11 @@ export const electricField: PhysicsScene = {
       step: 0.1,
       when: plates,
     },
+    // Basic mode shows the first five visible: with two charges q₁, q₂, their distance x₂ and M.
+    charge(1),
+    charge(2),
+    position('x2', L('Vị trí q₂: hoành độ', 'q₂ position: x'), 'x_2', 2),
+    position('xP', L('Điểm M: hoành độ', 'Point M: x'), 'x_M'),
     {
       key: 'n',
       label: L('Số điện tích', 'Number of charges'),
@@ -406,14 +428,10 @@ export const electricField: PhysicsScene = {
       ],
       when: points,
     },
-    charge(1),
-    charge(2),
     charge(3),
-    position('xP', L('Điểm M: hoành độ', 'Point M: x'), 'x_M'),
     position('yP', L('Điểm M: tung độ', 'Point M: y'), 'y_M'),
     position('x1', L('Vị trí q₁: hoành độ', 'q₁ position: x'), 'x_1', 1),
     position('y1', L('Vị trí q₁: tung độ', 'q₁ position: y'), 'y_1', 1),
-    position('x2', L('Vị trí q₂: hoành độ', 'q₂ position: x'), 'x_2', 2),
     position('y2', L('Vị trí q₂: tung độ', 'q₂ position: y'), 'y_2', 2),
     position('x3', L('Vị trí q₃: hoành độ', 'q₃ position: x'), 'x_3', 3),
     position('y3', L('Vị trí q₃: tung độ', 'q₃ position: y'), 'y_3', 3),
@@ -466,12 +484,13 @@ export const electricField: PhysicsScene = {
   // moving a slider by hand never changes the mode or hides a charge.
   autoDefaults: (_p, sources) => {
     const out: Params = {};
-    if (stated(sources.U) || stated(sources.d)) out.mode = MODE.plates;
+    const platesGiven = stated(sources.U) || stated(sources.d);
+    if (platesGiven) out.mode = MODE.plates;
     const given = [3, 2, 1].find((i) => stated(sources[`q${i}`]));
     const fromProblem = ['q1', 'q2', 'q3', 'xP', 'U', 'd'].some((k) => sources[k] === 'problem');
     if (given !== undefined && fromProblem) {
       out.n = given;
-      out.mode ??= MODE.points;
+      if (!platesGiven) out.mode = MODE.points;
     }
     return out;
   },

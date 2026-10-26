@@ -309,7 +309,7 @@ Progress log: `docs/PROGRESS.md`.
   `engine.ts` (phase from t = n·Δt), `check.ts` (DOPRI5 on the force law), `scenes.ts`.
 - Electric field (`src/physics/field/`, 0.8.0, #76): `model.ts` (Coulomb, superposition, plates,
   `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
-  step doubling; the card's error is a global bound from a coarse copy of each line, checked
+  step doubling; the card's error is an upper estimate from a coarse copy of each line, checked
   against DOPRI5), `engine.ts` (static), `draw.ts` (lines traced once per parameter change),
   `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` compares relatively
   and reads "10⁻⁸"; `draft.ts` flags a charge whose sign differs from the problem (`signMismatch`).

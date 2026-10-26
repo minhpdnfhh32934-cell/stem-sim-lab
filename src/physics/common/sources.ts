@@ -55,6 +55,6 @@ export const SRC = {
   hallidayElectric: {
     id: 'halliday-electric',
     citation:
-      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 21 (định luật Coulomb), ch. 22 (điện trường), ch. 25 (tụ điện)',
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 21 (định luật Coulomb), ch. 22 (điện trường), ch. 24 (điện thế), ch. 25 (tụ điện)',
   },
 } satisfies Record<string, Source>;

@@ -3,7 +3,7 @@ import { C } from '@/core/constants';
 import { dopri5 } from '@/core/ode';
 import { traceFieldLines, type FieldLine, type Frame } from './fieldLines';
 import { fmtQty } from '../common/tex';
-import { linesFor } from './draw';
+import { chargeRadius, linesFor } from './draw';
 import { FE, FieldEngine } from './engine';
 import {
   MODE,
@@ -181,6 +181,20 @@ describe('field lines (RK4 with step doubling)', () => {
     }
   });
 
+  it('never marks E = 0 on a charge when a seed lands exactly on another charge', () => {
+    const square: Frame = { xMin: -0.5, xMax: 0.5, yMin: -0.5, yMax: 0.5 };
+    const { nullPoints, lines } = traceFieldLines(
+      [
+        { q: 1e-5, x: 0, y: 0 },
+        { q: -1e-5, x: 0.02, y: 0 },
+      ],
+      k,
+      square,
+    );
+    expect(nullPoints).toEqual([]);
+    expect(lines.every((l) => l.points.every(Number.isFinite))).toBe(true);
+  });
+
   it('cuts a line by its step budget, not by time', () => {
     const { lines } = traceFieldLines([{ q: 1e-9, x: 0, y: 0 }], k, frame, { maxSteps: 3 });
     expect(lines.every((l) => l.end === 'steps' && l.points.length <= 2 * 4)).toBe(true);
@@ -268,6 +282,50 @@ describe('electricField scene', () => {
     expect(auto?.(sceneParams(), { U: 'problem', d: 'problem' })).toEqual({ mode: MODE.plates });
     // A learner moving q₁ by hand keeps the two charges on screen.
     expect(auto?.(sceneParams(), { q1: 'user' })).toEqual({});
+  });
+
+  it('reports E = 0 where the fields cancel, without a meaningless relative check', () => {
+    // q₂ = 4·q₁ at 30 cm: E = 0 at 10 cm from q₁ (k·q/0,1² = k·4q/0,2²).
+    const p = sceneParams({ q1: 1e-6, q2: 4e-6, x2: 0.3, xP: 0.1 });
+    const E = answer(p, 'E');
+    expect(E?.value).toBe(0);
+    expect(E?.check).toBeUndefined();
+    expect(answer(p, 'Ex')?.value).toBe(0);
+    const engine = new FieldEngine();
+    const out = new Float64Array(engine.stateSize);
+    engine.reset(p);
+    engine.readState(out);
+    expect(out[FE.e]).toBe(0);
+  });
+
+  it('says a zero charge makes no field and a zero test charge feels no force', () => {
+    const texts = electricField
+      .solve(sceneParams({ q1: 0, q0: 0 }), 'vi')
+      .steps.map((st) => st.text.vi)
+      .join(' ');
+    expect(texts).toContain('q₁ = 0: không gây ra điện trường');
+    expect(texts).toContain('q₀ = 0: không chịu lực điện');
+    expect(texts).toContain('có một điện tích bằng 0');
+  });
+
+  it('refuses two charges exactly one disc radius apart (a seed would sit on the other)', () => {
+    const p = sceneParams();
+    const r0 = chargeRadius(p);
+    // The view (and so r0) depends on x₂: find the separation where they meet.
+    let x2 = r0;
+    for (let i = 0; i < 50; i++) x2 = chargeRadius({ ...p, x2 });
+    expect(electricField.validate?.({ ...p, x2 })).toHaveLength(1);
+  });
+
+  it('shows q₁, q₂, their distance and M first in Basic mode; U, d with the plates', () => {
+    const visible = (p: Record<string, number>) =>
+      electricField.params.filter((d) => d.when?.(p) ?? true).map((d) => d.key);
+    expect(visible(sceneParams()).slice(0, 5)).toEqual(['mode', 'q1', 'q2', 'x2', 'xP']);
+    expect(visible(sceneParams({ n: 1 })).slice(0, 5)).toEqual(['mode', 'q1', 'xP', 'n', 'yP']);
+    expect(visible(sceneParams({ mode: MODE.plates }))).toEqual(['mode', 'U', 'd', 'q0', 'k']);
+    expect(electricField.scienceCard(sceneParams({ mode: MODE.plates })).title.vi).toBe(
+      'Điện trường đều giữa hai bản phẳng',
+    );
   });
 
   it('puts the field-line error the code computed on an exact Science Card', () => {

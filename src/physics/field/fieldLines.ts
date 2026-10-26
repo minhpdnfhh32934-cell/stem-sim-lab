@@ -6,11 +6,11 @@ import { fieldAt, type PointCharge } from './model';
  * each step is also taken as two half steps, their difference / 15 estimates the local error
  * (Richardson, RK4 is 4th order) and sets the next step. The reported error is global: a coarse
  * copy of the line takes one full step where the drawn line takes two halves, and |drawn − coarse|
- * (≈ 15× the drawn line's own error; ≈ 11× the distance to a DOPRI5 line in the tests) bounds it, including the
- * growth of early errors as lines spread out.
- * The tolerance depends only on the frame, never on the device tier. Lines start from + charges (along E) and from − charges (against E,
- * arrows reversed) on a small circle, as many as ∝ |q|; a − charge skips the directions where a
- * line already arrived. A line stops at a charge, outside the frame, when too long, where E = 0
+ * (≈ 15× the drawn line's own error; ≈ 11× the distance to a DOPRI5 line in the tests) is an upper
+ * estimate of it, including the growth of early errors as lines spread out. The tolerance depends
+ * only on the frame, never on the device tier. Lines start from + charges (along E) and from −
+ * charges (against E, arrows reversed) on a small circle, about ∝ |q| (rounded, at least one); a −
+ * charge skips the directions where a line already arrived. A line stops at a charge, outside the frame, when too long, where E = 0
  * (the point is marked) or when its step budget runs out (`end: 'steps'`, drawn differently).
  * Computed once per parameter change, never per frame.
  */
@@ -127,6 +127,13 @@ export function traceFieldLines(
       length: 0,
       error: 0,
     };
+    // Two charges closer than two disc radii: a seed may start inside the other one's disc.
+    const start = hitCharge(x, y, x, y, origin);
+    if (start) {
+      line.end = 'charge';
+      line.to = indexOf(start);
+      return line;
+    }
     coarse[0] = x;
     coarse[1] = y;
     let h = r0 / 4;

@@ -73,3 +73,38 @@
   inside the lab" timed out once in the full run (5,7 s); alone 15/15 passed.
 - The project moves to `D:\Projects\stem-sim-lab` (user decision 2026-10-26); continue there from
   the pushed branch `feat/76-electric-field`.
+
+## 2026-10-27 — stage 2 (scene)
+
+- **Date/time:** 2026-10-27 01:29 +0700 (start of the record)
+- **Status:** IN_PROGRESS
+- **Branch / base:** `feat/76-electric-field` in `D:\Projects\stem-sim-lab\.claude\worktrees\76-phase2`;
+  merged `origin/main` (41fbaee) and `origin/feat/74-uniform-circular-motion` (PR #87, not merged
+  yet: this branch contains it until #87 merges). Conflict in `src/ai/draft.ts` imports only; both
+  sides kept (`signMismatch` and #87's `notUsed`/`fromWords`).
+
+### Files
+
+- `src/physics/field/engine.ts` (static: field at M, clock only), `scenes.ts` (mode point charges
+  / capacitor, 1–3 signed charges, positions and M by sliders, q₀, k, U, d; validate; solution;
+  Science Card), `draw.ts` (view, line frame = 2× view, field lines cached per parameter set).
+- Shared, append only: `src/core/units.ts` (nC, kV, V/m = N/C, kV/m, mN, µN, N·m²/C²),
+  `physics/registry.ts`, `workers/engines.ts`, `app/catalog.ts` (chapter `electricField`), i18n,
+  `ai/prompts.ts` (`TOPIC_HINTS`), `physics/common/sources.ts`, `learn/challenges.ts`,
+  `learn/poe.ts`, `scripts/data/gen_curriculum_kntt.py` (VL11 Bài 16–18),
+  `scripts/golden/make_physics_golden.py` (efd-01…04), `tests/e2e/physics.spec.ts`, docs.
+
+### Key decisions
+
+- Coordinates: q₁ at the origin, q₂ on the x-axis (no loss of generality for two charges), y_M = 0
+  by default (M on the line q₁q₂); x₂, x_M, q₃ and its position are required when used, so the
+  confirmation table asks instead of guessing. `autoDefaults` sets the mode and the number of
+  charges only when the problem gave something (a slider moved by hand never hides a charge).
+- No new colour tokens: + uses the vermillion and − the blue of the existing chart palette, with
+  "+"/"−" drawn on each charge (not colour alone).
+- The graph is the field at M over time (constant: electrostatics) so the bottom panel works like
+  every scene and `layout.spec.ts` covers it.
+- Found by `explain.test.ts`: "0,000719" was read as "0,000" + "719"; a thousands group is now
+  exactly three digits (`numbers.ts`), with a test.
+- Solution formulas substitute SI numbers without units (as SGK writes them) so a step fits the
+  panel at 1366×768 (seen on a screenshot).

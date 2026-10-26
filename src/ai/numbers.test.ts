@@ -28,6 +28,9 @@ describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
     expect(numberTokens('q = 5.10^-10 C')).toEqual([[5e-10]]);
     expect(numbersIn('q = 5.10^-10 C')).not.toContain(1e-10);
     expect(mentions('q = 5 × 10⁻¹⁰ C', 1e-10)).toBe(false);
+    // A dot operator "⋅" is a multiplication sign too: "2⋅10⁻⁸" is 2e-8, never 1e-8.
+    expect(mentions('q = 2⋅10^-8 C', 2e-8)).toBe(true);
+    expect(mentions('q = 2⋅10^-8 C', 1e-8)).toBe(false);
     expect(mentions('vật nằm yên', 0)).toBe(false);
     expect(mentions('v = 0 m/s', 0)).toBe(true);
   });
@@ -56,6 +59,13 @@ describe('the sign a problem gives a charge', () => {
     const after = 'q1 = 2 µC mang dấu âm, q2 = 3 µC.';
     expect(writtenSign(after, 2)).toBe(-1);
     expect(writtenSign(after, 3)).toBe(1);
+    // Sign words of another noun ("bản âm", "chiều âm") or of the next charge do not count.
+    expect(
+      writtenSign('Điện tích q1 = 2 µC đặt cách điện tích âm q2 = 3 µC một khoảng 10 cm.', 2),
+    ).toBe(1);
+    expect(writtenSign('Một hạt bụi mang điện tích 3 nC nằm cách bản âm 1 cm.', 3)).toBe(1);
+    expect(writtenSign('Điện tích q = 2 µC chuyển động theo chiều âm của trục Ox.', 2)).toBe(1);
+    expect(writtenSign('Hạt bụi mang điện tích âm có độ lớn 3 nC.', 3)).toBe(-1);
     // The previous sentence does not count.
     expect(writtenSign('Hạt bụi tích điện âm. Điện tích thử q = 2 nC.', 2)).toBe(1);
   });

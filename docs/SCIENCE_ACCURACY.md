@@ -79,7 +79,7 @@ thời gian thực với lời giải chính xác.
 | Bảo toàn cơ năng (vật trên đường ray) | RK4 với 8 bước con cho phương trình có ràng buộc                                                                   | Chính xác (tốc độ tính từ bảo toàn cơ năng)             | v(đáy) = √(2gH) so với DOPRI5; cơ năng trôi < 10⁻⁹ trong 20 s                                                                                                        |
 | Va chạm 1D/2D                         | Chuyển động thẳng đều giữa hai va chạm. Thời điểm va chạm giải chính xác, xung lực tính theo hệ số phục hồi e      | Chính xác                                               | Hai vật cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc; va chạm xiên hai vật cùng khối lượng thì hai hướng vuông góc; kết quả khớp cách tính trong hệ khối tâm |
 | Chuyển động tròn đều                  | Pha chính xác φ = φ₀ ± ωt với t = n·Δt (không cộng dồn); không có gì kéo được                                      | Chính xác                                               | DOPRI5 tích phân r″ = −(F_ht/(m·r))·r⃗ (rtol 10⁻¹²): bán kính giữ nguyên, vị trí khớp engine ở bốn thời điểm, chu kì đo qua y = 0 (đi lên) khớp 2πr/v tới 10⁻⁹       |
-| Điện trường, tụ phẳng                 | Công thức chính xác (Coulomb, chồng chất, E = U/d); đường sức RK4 chia đôi bước, sai số như nhau ở mọi mức máy     | Chính xác (các con số)                                  | E so với −∇V (sai phân trung tâm) ≤ 10⁻⁶; đường sức so với DOPRI5 nằm trong sai số app báo; Σqᵢcosθᵢ không đổi dọc đường sức                                         |
+| Điện trường, tụ phẳng                 | Công thức chính xác (Coulomb, chồng chất, E = U/d); đường sức RK4 chia đôi bước, sai số như nhau ở mọi mức máy     | Chính xác (các con số)                                  | E so với −∇V: lệch tương đối ≤ 10⁻⁶; đường sức nằm trong sai số app báo so với DOPRI5; Σqᵢcosθᵢ không đổi (hai điện tích cùng trục)                                  |
 
 **Kéo và ném bằng chuột:** app nối vật với con trỏ bằng một lò xo có giảm chấn tới hạn
 (ω = 28 rad/s), nên vật không bị dịch chuyển tức thời. Khi thả chuột, vật giữ nguyên vận tốc lúc
@@ -111,7 +111,7 @@ như sau" hiện cảnh báo để người học xác nhận. Có test (`number
 
 **Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
 số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn
-theo số bước, không đo thời gian). Sai số ghi trên Thẻ Khoa học là cận trên toàn cục do code tính:
+theo số bước, không đo thời gian). Sai số ghi trên Thẻ Khoa học là một ước lượng trên do code tính:
 mỗi đường có một bản "thô" (một bước đủ thay cho hai nửa bước), và sai số là khoảng cách lớn nhất
 giữa hai bản; trong test, số này lớn hơn khoảng cách thật tới đường tính bằng DOPRI5 (rtol 10⁻¹²)
 khoảng 11 lần. Đường dừng ở điện tích, ra khỏi khung, quá dài, hoặc ở điểm E = 0 (được đánh dấu);

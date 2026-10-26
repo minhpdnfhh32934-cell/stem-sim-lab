@@ -7,7 +7,7 @@ import { C } from '@/core/constants';
  *   ideal parallel-plate capacitor  E = U/d between the plates, 0 outside (edge effects ignored).
  * k defaults to 1/(4πε₀) (`C.kC`); a problem may state its own ("lấy k = 9.10⁹").
  * Sources: SGK Vật lí 11 (Lực tương tác giữa các điện tích, điện trường, điện trường đều);
- * Halliday–Resnick–Walker ch. 21–24.
+ * Halliday–Resnick–Walker ch. 21, 22, 24 (potential, for the −∇V check), 25.
  */
 export interface PointCharge {
   /** Charge (C), with its sign. */
@@ -34,6 +34,21 @@ export function fieldAt(
     ey += s * dy;
   }
   return [ex, ey];
+}
+
+/**
+ * E at M as the learner should read it: where the fields of the charges cancel, the sum keeps a
+ * rounding residue (≈ 10⁻¹⁶ of each field), so |E| ≤ 10⁻⁹·Σ|Eᵢ| is reported as exactly 0.
+ */
+export function fieldAtPoint(
+  charges: readonly PointCharge[],
+  k: number,
+  x: number,
+  y: number,
+): [number, number] {
+  const [ex, ey] = fieldAt(charges, k, x, y);
+  const parts = charges.reduce((s, c) => s + Math.hypot(...fieldAt([c], k, x, y)), 0);
+  return Math.hypot(ex, ey) <= 1e-9 * parts ? [0, 0] : [ex, ey];
 }
 
 /** Potential V (V) at (x, y), zero at infinity. */
