@@ -525,12 +525,28 @@ test('"Cách học": the guide opens by itself on the first visit only; the butt
   // The second step points at the subject tabs.
   await expect(page.getByRole('dialog', { name: 'Chọn môn và bài' })).toBeVisible();
   await expect(page.locator('.tour__spot')).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  // Every step's card stays inside the window, even when its target is below the fold.
+  // No horizontal scroll, neither for the page nor inside the studio (it scrolls on its own).
+  expect(
+    await page.evaluate(() => {
+      const studio = document.querySelector('.studio');
+      return (
+        document.documentElement.scrollWidth <= innerWidth &&
+        studio !== null &&
+        studio.scrollWidth <= studio.clientWidth
+      );
+    }),
+  ).toBe(true);
+  // Every step's card stays inside the window, and the spotlight is on screen (a target below
+  // the fold is scrolled into view).
   for (;;) {
     const box = await page.locator('.tour__card').boundingBox();
     const viewport = page.viewportSize();
     expect(box && viewport && box.y >= 0 && box.y + box.height <= viewport.height).toBe(true);
+    const spot = page.locator('.tour__spot');
+    if ((await spot.count()) > 0) {
+      const s = await spot.boundingBox();
+      expect(s && viewport && s.y < viewport.height && s.y + s.height > 0).toBe(true);
+    }
     const nextStep = page.getByRole('dialog').getByRole('button', { name: 'Tiếp' });
     if ((await nextStep.count()) === 0) break;
     await nextStep.click();

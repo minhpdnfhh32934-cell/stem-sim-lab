@@ -1453,7 +1453,7 @@ const en: Messages = {
     },
     guide: {
       open: 'How to learn',
-      openHint: 'See again how to learn in Science Studio',
+      openHint: 'Show how to learn in Science Studio again',
       welcomeTitle: 'Learning in Science Studio',
       welcomeBody:
         'Each lesson has six steps: you predict first, run the experiment, then explain and conclude. Every number is computed by the simulation. Press Next to see each part of the screen.',

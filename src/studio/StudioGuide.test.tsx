@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useProfileStore } from '@/app/learner/profileStore';
@@ -83,6 +83,28 @@ describe('"Cách học" guide in Science Studio', () => {
     }
     esc();
     expect(button).toHaveFocus();
+  });
+
+  it('leaves the keyboard alone outside the card (chat bubble, Ctrl+K palette)', async () => {
+    useStudioStore.setState({ guideSeen: true });
+    const user = userEvent.setup();
+    render(
+      <>
+        <StudioScreen />
+        <input aria-label="Ô chat" />
+      </>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Cách học' }));
+    const input = screen.getByRole('textbox', { name: 'Ô chat' });
+    input.focus();
+    fireEvent.keyDown(input, { key: 'Tab' });
+    expect(input).toHaveFocus();
+  });
+
+  it('opened from Soạn bài, it shows a subject tab (its steps point at a lesson)', () => {
+    useStudioStore.setState({ guideSeen: true, tab: 'authoring' });
+    useStudioStore.getState().openGuide();
+    expect(useStudioStore.getState().tab).toBe('physics');
   });
 
   it('waits for the first-run questions before opening', () => {

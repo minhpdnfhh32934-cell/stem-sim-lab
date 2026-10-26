@@ -43,7 +43,12 @@ export const useStudioStore = create<StudioState>()(
       guideSeen: false,
       guideStep: null,
       openGuide: () => {
-        set({ guideStep: 0, guideSeen: true });
+        // The guide points at a lesson's parts: Soạn bài has none, so show a subject tab.
+        set((st) => ({
+          guideStep: 0,
+          guideSeen: true,
+          tab: st.tab === 'authoring' ? DEFAULT_TAB : st.tab,
+        }));
       },
       setGuideStep: (guideStep) => {
         set({ guideStep });

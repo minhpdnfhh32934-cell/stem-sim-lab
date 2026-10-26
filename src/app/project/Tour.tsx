@@ -102,14 +102,15 @@ export function TourOverlay({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onEnd();
       if (e.key !== 'Tab') return;
-      // Modal: Tab cycles through the card's buttons only.
+      // Tab wraps around the card's buttons. Focus elsewhere (the chat bubble, the Ctrl+K
+      // palette, a dialog opened on top) is left alone.
       const buttons = [...(cardRef.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])];
       const first = buttons[0];
       const lastButton = buttons[buttons.length - 1];
       if (!first || !lastButton) return;
       const active = document.activeElement;
       const inside = cardRef.current?.contains(active) ?? false;
-      if (!inside || (e.shiftKey ? active === first : active === lastButton)) {
+      if (inside && (e.shiftKey ? active === first : active === lastButton)) {
         e.preventDefault();
         (e.shiftKey ? lastButton : first).focus();
       }
