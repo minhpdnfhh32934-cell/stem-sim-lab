@@ -25,6 +25,7 @@ const TOPICS = [
   'Con mồi – vật ăn thịt (Lotka–Volterra)',
   'Động học enzyme (Michaelis–Menten)',
   'Khuếch tán & thẩm thấu',
+  'Tế bào nhân sơ và nhân thực',
 ];
 
 async function openBiology(page: Page) {
@@ -33,7 +34,7 @@ async function openBiology(page: Page) {
 }
 
 test('every biology topic opens without errors and publishes a Science Card', async ({ page }) => {
-  // Eleven topics, each opening its 3D view in software: ~15 s on a fast CI runner, but a slow
+  // Twelve topics, eleven of them opening a 3D view in software: ~15 s on a fast CI runner, but a slow
   // one took 6-8 s per topic and ran out of the 60 s default after eight (2026-10-23, eastus).
   test.setTimeout(180_000);
   const errors: string[] = [];
@@ -164,4 +165,47 @@ test('the short charts of the bottom panel show at least three y values', async 
       .poll(async () => Number(await plot.getAttribute('data-y-ticks')), { message: name })
       .toBeGreaterThanOrEqual(3);
   }
+});
+
+test('cell structure: a part opens its card; targets >= 40 px, no horizontal scroll', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(String(e)));
+  await openBiology(page);
+  await page.getByRole('button', { name: 'Tế bào nhân sơ và nhân thực', exact: true }).click();
+  await expect(page.locator('.science-card')).toContainText('Minh hoạ — không theo tỉ lệ', {
+    timeout: 20_000,
+  });
+  await page.getByRole('radio', { name: 'Thực vật' }).click();
+  const parts = page.getByRole('group', { name: 'Bộ phận tế bào' });
+  await parts.getByRole('button', { name: 'Lục lạp', exact: true }).click();
+  const card = page.locator('.cell-part-card');
+  await expect(card.locator('strong')).toHaveText('Lục lạp');
+  await expect(card).toContainText('quang hợp');
+  // The plant has the longest list; the cell switch and "Hiện tên" are targets too.
+  const sizes = await page
+    .locator('.cell-parts .segmented__item, .cell-parts .m3d-parts__item, .cell2d .icon-btn')
+    .evaluateAll((els) =>
+      els.map((e) => Math.min(e.getBoundingClientRect().width, e.getBoundingClientRect().height)),
+    );
+  expect(sizes.length).toBe(3 + 12 + 1);
+  expect(sizes.filter((s) => s < 40)).toEqual([]);
+  // The bacterium has no chloroplast: its card closes and its list shows the nucleoid.
+  await page.getByRole('radio', { name: 'Vi khuẩn' }).click();
+  await expect(card).toHaveCount(0);
+  await expect(parts.getByRole('button', { name: 'Lục lạp', exact: true })).toHaveCount(0);
+  await parts.getByRole('button', { name: 'Vùng nhân', exact: true }).click();
+  await expect(card.locator('strong')).toHaveText('Vùng nhân');
+  const heights = await parts
+    .getByRole('button')
+    .evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
+  expect(heights.filter((h) => h < 40)).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    ),
+  ).toBe(0);
+  expect(errors).toEqual([]);
 });
