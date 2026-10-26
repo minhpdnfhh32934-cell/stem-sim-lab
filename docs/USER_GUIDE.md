@@ -369,7 +369,7 @@ xo, con lắc đơn, chuyển động tròn đều.
   (và tua nhanh cho bài toán tính bằng giờ).
 - **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
   đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
-- **Chuyển động tròn đều** (chương "Chuyển động tròn"): ô đầu tiên chọn đề cho biết **tốc độ v**,
+- **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
   **tốc độ góc ω**, **chu kì T** hay **tần số f**; nhập bán kính và đại lượng đó, app tính các đại
   lượng còn lại, gia tốc hướng tâm và lực hướng tâm (khi có khối lượng). Vectơ vận tốc luôn tiếp
   tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ

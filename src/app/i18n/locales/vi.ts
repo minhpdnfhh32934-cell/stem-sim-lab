@@ -88,7 +88,7 @@ const vi = {
     genetics: 'Di truyền',
     ecology: 'Sinh thái',
     cellPhysiology: 'Sinh lý tế bào',
-    circularMotion: 'Chuyển động tròn',
+    circularMotion: 'Chuyển động tròn đều',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',

@@ -85,7 +85,7 @@ const en: Messages = {
     genetics: 'Genetics',
     ecology: 'Ecology',
     cellPhysiology: 'Cell physiology',
-    circularMotion: 'Circular motion',
+    circularMotion: 'Uniform circular motion',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
