@@ -4,6 +4,7 @@ import { afterEach, beforeEach } from 'vitest';
 import { setSafetyBackendForTests, statusOf, TERMS_VERSION, BrowserSafety } from '@/safety/safety';
 import { useSafetyStore } from '@/safety/safetyStore';
 import { useProfileStore } from '@/app/learner/profileStore';
+import { useStudioStore } from '@/studio/studioStore';
 
 // jsdom does not implement <dialog>.showModal()/close().
 if (typeof HTMLDialogElement !== 'undefined' && !('showModal' in HTMLDialogElement.prototype)) {
@@ -37,4 +38,6 @@ beforeEach(() => {
   useSafetyStore.setState({ status: null, gateRequested: false });
   // Unit tests start after the first-run onboarding (tested in src/app/learner and E2E).
   useProfileStore.setState({ onboarded: true, connectSeen: true, lastTopic: null });
+  // Science Studio's "Cách học" guide has been seen (tested in src/studio/StudioGuide.test.tsx).
+  useStudioStore.setState({ guideSeen: true, guideStep: null });
 });
