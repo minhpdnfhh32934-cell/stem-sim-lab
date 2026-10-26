@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { checkInput, outputIsSafe } from '@/safety/moderation';
-import { cellCard } from './card';
-import { CELL_KINDS, PARTS, partsFor, type CellKind, type PartId } from './parts';
+import { CELL_ILLUSTRATION, cellCard } from './card';
+import { CELL_KINDS, CELL_KIND_NAME, PARTS, partsFor, type CellKind, type PartId } from './parts';
 
 const texts = (id: PartId) => {
   const p = PARTS[id];
   return [p.name.vi, p.name.en, p.role.vi, p.role.en];
 };
+/** Digits, including super- and subscript ones. */
+const DIGIT = /[\d¹²³⁰-⁹₀-₉]/u;
 const names = (kind: CellKind) => partsFor(kind).map((id) => PARTS[id].name.vi);
 
 describe('cell parts table (SGK Sinh học 10 KNTT, Bài 7–8)', () => {
@@ -14,9 +16,12 @@ describe('cell parts table (SGK Sinh học 10 KNTT, Bài 7–8)', () => {
     for (const p of Object.values(PARTS)) {
       for (const t of [p.name.vi, p.name.en, p.role.vi, p.role.en]) expect(t.trim()).not.toBe('');
       expect(p.source.citation).toMatch(/Sinh học 10.*Kết nối tri thức/);
-      // Printed pages of Bài 7 (44–47) and Bài 8 (48–…).
+      // Printed pages of Bài 7 (44–47) and Bài 8 (48–57).
       expect(p.pages.length).toBeGreaterThan(0);
-      for (const page of p.pages) expect(page).toBeGreaterThanOrEqual(44);
+      for (const page of p.pages) {
+        expect(page).toBeGreaterThanOrEqual(44);
+        expect(page).toBeLessThanOrEqual(57);
+      }
       expect(p.review_status).toBe('pending');
       expect(p.cells.length).toBeGreaterThan(0);
     }
@@ -24,7 +29,7 @@ describe('cell parts table (SGK Sinh học 10 KNTT, Bài 7–8)', () => {
 
   it('holds no numbers (no sizes or counts)', () => {
     for (const id of Object.keys(PARTS) as PartId[])
-      for (const t of texts(id)) expect(t, `${id}: ${t}`).not.toMatch(/[\d²³⁰-⁹₀-₉]/u);
+      for (const t of texts(id)) expect(t, `${id}: ${t}`).not.toMatch(DIGIT);
   });
 
   it('the prokaryote has no nucleus and no membrane-bound organelle', () => {
@@ -50,6 +55,27 @@ describe('cell parts table (SGK Sinh học 10 KNTT, Bài 7–8)', () => {
     // SGK: the centrosome is absent from plant cells; lysosomes are drawn in the animal cell only.
     expect(parts).not.toContain('centrosome');
     expect(parts).not.toContain('lysosome');
+  });
+
+  it('every part belongs to a cell list; the lists match the textbook pictures (DATA_REVIEW CELL3D-1)', () => {
+    expect(new Set(CELL_KINDS.flatMap(partsFor))).toEqual(new Set(Object.keys(PARTS)));
+    // H 7.2: nine parts of the bacterium; H 8.1: eleven of the animal cell, twelve of the plant cell.
+    expect(CELL_KINDS.map((k) => partsFor(k).length)).toEqual([9, 11, 12]);
+  });
+
+  it('membraneBound marks exactly the organelles with their own membrane', () => {
+    const own = [
+      'nucleus',
+      'er',
+      'golgi',
+      'lysosome',
+      'peroxysome',
+      'vacuole',
+      'mitochondrion',
+      'chloroplast',
+    ];
+    const flagged = (Object.keys(PARTS) as PartId[]).filter((id) => PARTS[id].membraneBound);
+    expect(new Set(flagged)).toEqual(new Set(own));
   });
 
   it('eukaryotes have a nucleus and membrane-bound organelles; parts are named once per cell', () => {
@@ -80,7 +106,26 @@ describe('cell Science Card', () => {
         'Minh hoạ — không theo tỉ lệ; số lượng bào quan chỉ để minh hoạ.',
       );
       // Texts only: the source names the curriculum year ("GDPT 2018").
-      expect(JSON.stringify({ ...card, sources: [] })).not.toMatch(/\d/);
+      expect(JSON.stringify({ ...card, sources: [] })).not.toMatch(DIGIT);
     }
+  });
+
+  it('no card text, cell name or caption trips the moderation', () => {
+    const all = CELL_KINDS.flatMap((kind) => {
+      const c = cellCard(kind);
+      return [
+        c.title,
+        c.model,
+        c.validity,
+        c.confidenceNote,
+        ...c.assumptions,
+        CELL_KIND_NAME[kind],
+      ];
+    });
+    for (const t of [...all, CELL_ILLUSTRATION])
+      for (const s of t ? [t.vi, t.en] : []) {
+        expect(checkInput(s), s).toEqual({ ok: true });
+        expect(outputIsSafe(s), s).toBe(true);
+      }
   });
 });
