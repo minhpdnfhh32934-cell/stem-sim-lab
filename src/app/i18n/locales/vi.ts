@@ -89,6 +89,7 @@ const vi = {
     ecology: 'Sinh thái',
     cellPhysiology: 'Sinh lý tế bào',
     cellStructure: 'Cấu trúc tế bào',
+    circularMotion: 'Chuyển động tròn đều',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -128,6 +129,7 @@ const vi = {
     michaelisMenten: 'Động học enzyme (Michaelis–Menten)',
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
     cellStructure: 'Tế bào nhân sơ và nhân thực',
+    uniformCircularMotion: 'Chuyển động tròn đều',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',

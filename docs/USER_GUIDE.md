@@ -354,9 +354,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-13 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+14 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn.
+xo, con lắc đơn, chuyển động tròn đều.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -372,6 +372,11 @@ xo, con lắc đơn.
 - **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
   để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
   **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
+  **tốc độ góc ω**, **chu kì T** hay **tần số f**; nhập bán kính và đại lượng đó, app tính các đại
+  lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
+  tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
+  góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
 
 ## Đọc đề bằng AI
 

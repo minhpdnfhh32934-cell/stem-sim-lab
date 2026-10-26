@@ -37,4 +37,14 @@ export const SRC = {
     id: 'codata',
     citation: 'CODATA 2022 (NIST) — hằng số vật lý',
   },
+  sgk10kntt: {
+    id: 'sgk-vl10-kntt',
+    citation:
+      'Sách giáo khoa Vật lí 10, bộ Kết nối tri thức với cuộc sống (Chương trình GDPT 2018), NXB Giáo dục Việt Nam',
+  },
+  hallidayCircular: {
+    id: 'halliday-circular',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 4 (chuyển động tròn đều), ch. 6 (lực hướng tâm)',
+  },
 } satisfies Record<string, Source>;

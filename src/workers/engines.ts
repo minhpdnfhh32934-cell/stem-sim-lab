@@ -48,3 +48,8 @@ registerEngine('phys.collision', async () => {
   const { CollisionEngine } = await import('@/physics/collision/engine');
   return () => new CollisionEngine();
 });
+
+registerEngine('phys.circular', async () => {
+  const { CircularEngine } = await import('@/physics/circular/engine');
+  return () => new CircularEngine();
+});

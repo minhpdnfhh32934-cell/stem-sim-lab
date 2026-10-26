@@ -46,6 +46,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('dynamics', ['newtonLaws', 'inclinedPlane', 'pulley', 'hookeSpring']),
     chapter('energyMomentum', ['energyConservation', 'collisions']),
     chapter('oscillations', ['springPendulum', 'simplePendulum']),
+    chapter('circularMotion', ['uniformCircularMotion']),
   ],
   chemistry: [
     chapter('atoms', ['periodicTable', 'electronConfiguration', 'bohrModel', 'orbitals']),

@@ -1071,6 +1071,139 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "ucm-01",
+      "text": "Một vật nhỏ chuyển động tròn đều trên đường tròn bán kính 2 m với tốc độ 4 m/s. Tính tốc độ góc, chu kì và gia tốc hướng tâm của vật.",
+      "topic": "uniformCircularMotion",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 0,
+          "unit": "1",
+          "quote": "tốc độ 4 m/s"
+        },
+        {
+          "key": "r",
+          "value": 2,
+          "unit": "m",
+          "quote": "bán kính 2 m"
+        },
+        {
+          "key": "v",
+          "value": 4,
+          "unit": "m/s",
+          "quote": "tốc độ 4 m/s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "omega": 2.0,
+        "period": 3.141592653589793,
+        "a_c": 8.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "ucm-02",
+      "text": "Một đĩa tròn quay đều với tốc độ 120 vòng/phút. Một điểm trên đĩa cách trục quay 15 cm. Tính tốc độ góc, tốc độ dài và gia tốc hướng tâm của điểm đó.",
+      "topic": "uniformCircularMotion",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 3,
+          "unit": "1",
+          "quote": "120 vòng/phút"
+        },
+        {
+          "key": "f",
+          "value": 120,
+          "unit": "rev/min",
+          "quote": "120 vòng/phút"
+        },
+        {
+          "key": "r",
+          "value": 15,
+          "unit": "cm",
+          "quote": "15 cm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "omega": 12.56637061435917,
+        "speed": 1.8849555921538754,
+        "a_c": 23.68705056261445
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "ucm-03",
+      "text": "Một chất điểm chuyển động tròn đều với chu kì 0,5 s trên quỹ đạo bán kính 40 cm. Tính tần số, tốc độ góc và gia tốc hướng tâm của chất điểm.",
+      "topic": "uniformCircularMotion",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 2,
+          "unit": "1",
+          "quote": "chu kì 0,5 s"
+        },
+        {
+          "key": "T",
+          "value": 0.5,
+          "unit": "s",
+          "quote": "chu kì 0,5 s"
+        },
+        {
+          "key": "r",
+          "value": 40,
+          "unit": "cm",
+          "quote": "bán kính 40 cm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "frequency": 2.0,
+        "omega": 12.566370614359172,
+        "a_c": 63.16546816697189
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "ucm-04",
+      "text": "Một vật khối lượng 200 g gắn ở đầu một sợi dây, quay đều trên mặt bàn nhẵn theo đường tròn bán kính 50 cm với tốc độ góc 6 rad/s. Tính gia tốc hướng tâm và lực hướng tâm tác dụng lên vật.",
+      "topic": "uniformCircularMotion",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 1,
+          "unit": "1",
+          "quote": "tốc độ góc 6 rad/s"
+        },
+        {
+          "key": "m",
+          "value": 200,
+          "unit": "g",
+          "quote": "khối lượng 200 g"
+        },
+        {
+          "key": "r",
+          "value": 50,
+          "unit": "cm",
+          "quote": "bán kính 50 cm"
+        },
+        {
+          "key": "omega",
+          "value": 6,
+          "unit": "rad/s",
+          "quote": "tốc độ góc 6 rad/s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "a_c": 18.0,
+        "force": 3.6
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-01",
       "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
       "topic": "unsupported",

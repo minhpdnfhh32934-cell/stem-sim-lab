@@ -487,6 +487,7 @@ PLACEMENTS = [
     ("hardyWeinberg", "SH12", [18], "Tên Bài 18: di truyền học quần thể."),
     ("logisticGrowth", "SH12", [24], "Tên Bài 24: sinh thái học quần thể."),
     ("cellStructure", "SH10", [7, 8], "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực."),
+    ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).
