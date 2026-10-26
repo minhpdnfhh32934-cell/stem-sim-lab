@@ -44,3 +44,18 @@
   `TOPIC_HINTS`; challenge + POE (tension ×4 → f ×2); golden problems; `physics.spec.ts`;
   DATA_REVIEW `SWV-*`; SCIENCE_ACCURACY, USER_GUIDE, CLAUDE.md, PROGRESS.
 - Curriculum row only if `scripts/data/gen_curriculum_kntt.py` is on `main` (PR #82).
+
+## 2026-10-26 — independent science review (science-reviewer agent)
+
+- No blocker. Fixed (commits d48ee9b, 83b6576): default A = 0,5 cm (slope 2A·k ≈ 0,08; above 0,1
+  the card is `approx` and the solution notes it); m = 2Lf/v shown with enough digits never to look
+  whole (`ratioDigits`), the "ratio" answer removed; stroboscopic rule "f × tốc độ phát < ~30 Hz" on
+  the card, solution note only from 300 Hz; m ≈ 0 no longer gives n = 0; source names KNTT; tests
+  use a real round-off case (L = 1,1 m, f = 50 Hz, v = 11 m/s → m = 10,000000000000002), compare
+  the lattice with its exact discrete mode (< 1e-8·2A) and tighten the lower bound to 0,9×.
+- Tests after the fixes: `npx vitest run src/physics/wave --maxWorkers=1` 32 PASS; eslint,
+  prettier, `npm run typecheck` PASS.
+- For DATA_REVIEW `SWV-*` (phase 2, pending, teacher): the 0,1 slope limit (heuristic, no source);
+  KNTT Bài 13 notation (ℓ = kλ/2 vs L = nλ/2, k = 2π/λ); whether v = √(F/μ) is in KNTT (else
+  Halliday only); convention "A = biên độ mỗi sóng, bụng 2A"; all new learner-facing text.
+- Known before registration: `g/m` and `kg/m` are not registered units yet (phase 2).
