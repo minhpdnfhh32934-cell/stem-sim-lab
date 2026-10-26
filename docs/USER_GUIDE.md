@@ -359,9 +359,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-14 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+15 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn, chuyển động tròn đều.
+xo, con lắc đơn, chuyển động tròn đều, điện trường.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -382,6 +382,14 @@ xo, con lắc đơn, chuyển động tròn đều.
   lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
   tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
   góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
+- **Điện trường của điện tích điểm** (chương Điện trường, Vật lí 11): ô đầu tiên chọn **điện tích
+  điểm** hay **tụ điện phẳng**. Với điện tích điểm: chọn 1–3 điện tích, nhập điện tích có dấu (µC; đề
+  ghi C hay nC thì app tự đổi), vị trí của chúng và điểm M bằng thanh trượt; app vẽ đường sức (mũi tên
+  theo chiều E, điểm E = 0 được đánh dấu), vectơ E tại M, và tính E, lực lên điện tích thử q₀, lực giữa
+  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox; M nằm trên đường q₁q₂ khi y_M = 0 (mặc định). Với tụ
+  phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
+  "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
+  bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.
 
 ## Đọc đề bằng AI
 
