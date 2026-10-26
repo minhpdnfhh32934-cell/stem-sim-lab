@@ -15,3 +15,5 @@ tests/voice/results
 docs/VERSION_HISTORY.md
 docs/CHANGELOG.md
 release-notes/google-docs.html
+# Generated from scripts/data/gen_curriculum_kntt.py (with data/curriculum_kntt.json)
+docs/CURRICULUM_KNTT.md
