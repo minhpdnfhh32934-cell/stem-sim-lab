@@ -59,8 +59,12 @@ describe('standing wave formulas', () => {
     const B = antinodes(L, n);
     expect(N).toHaveLength(n + 1);
     expect(B).toHaveLength(n);
-    N.forEach((x, j) => expect(x).toBeCloseTo((j * lambda) / 2, 12));
-    B.forEach((x, j) => expect(x).toBeCloseTo(((2 * j + 1) * lambda) / 4, 12));
+    N.forEach((x, j) => {
+      expect(x).toBeCloseTo((j * lambda) / 2, 12);
+    });
+    B.forEach((x, j) => {
+      expect(x).toBeCloseTo(((2 * j + 1) * lambda) / 4, 12);
+    });
     for (let j = 0; j <= 400; j++) {
       const t = (0.2 * j) / 400;
       for (const x of N) expect(Math.abs(standing(wave, x, t))).toBeLessThan(1e-12);
