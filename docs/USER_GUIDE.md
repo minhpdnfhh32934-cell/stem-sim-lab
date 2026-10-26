@@ -231,12 +231,20 @@ bảng (app tự đọc, không nhờ AI đoán). Bấm **Hỏi thầy chỗ nà
   được ảnh chạy trên máy (Gemma E2B trên card rời, hoặc mô hình của AI trên máy khác đã thử đọc được
   ảnh), không bao giờ lên mạng. AI khác thì app nhờ em gõ câu hỏi.
 
-### Trình độ: Nền tảng và Đại cương
+### Trình độ: Lớp 10 · Lớp 11 · Lớp 12 · Tất cả
 
-Thư viện sắp xếp theo **Trình độ → Môn → Chủ đề**. **Nền tảng** là kiến thức gốc, tương đương
-chương trình THPT — mọi chủ đề hiện có nằm ở đây. **Đại cương** (các môn năm nhất đại học) sẽ có ở
-giai đoạn sau. Việc ghép chủ đề với bài cụ thể trong sách giáo khoa đang chờ giáo viên duyệt
-(`docs/DATA_REVIEW.md`, mục 12).
+Thư viện sắp xếp theo **Lớp → Môn → Chủ đề**. Lần đầu mở app, SimLab hỏi "Bạn đang học hoặc ôn
+lớp nào?"; bạn đổi lại bất cứ lúc nào bằng thanh **Lớp 10 · Lớp 11 · Lớp 12 · Tất cả** ở đầu Thư
+viện.
+
+- **Một lớp:** chủ đề nằm dưới tên chương của sách giáo khoa _Kết nối tri thức với cuộc sống_ lớp đó,
+  theo thứ tự trong sách, kèm số bài (ví dụ "Bài 4–5, 7"). Dòng **"Theo SGK Kết nối tri thức · Đang
+  chờ giáo viên duyệt"** nhắc rằng cách xếp này do SimLab đề xuất từ mục lục chính thức
+  (`docs/CURRICULUM_KNTT.md`) và chưa được giáo viên duyệt (`docs/DATA_REVIEW.md`, mục 12).
+- **Tất cả:** mọi chủ đề như trước, kể cả các chủ đề chưa xếp được vào lớp nào.
+- Môn nào chưa có chủ đề ở lớp đang chọn (ví dụ Sinh học lớp 11) hiện câu "Chưa có chủ đề …" và nút
+  **Xem tất cả**. Ô tìm kiếm chỉ tìm trong lớp đang xem; nút "Có … chủ đề ở môn khác" vẫn như cũ.
+- Trang chủ gợi ý chủ đề của lớp đang chọn. Lớp chỉ dùng để xếp danh sách, không gửi cho AI.
 
 ### Chế độ Cơ bản và Nâng cao
 
