@@ -367,8 +367,9 @@ xo, con lắc đơn.
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
   (và tua nhanh cho bài toán tính bằng giờ).
-- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
-  đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
+  để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
+  **Số liệu** (bảng giá trị, nút Xuất CSV).
 
 ## Đọc đề bằng AI
 

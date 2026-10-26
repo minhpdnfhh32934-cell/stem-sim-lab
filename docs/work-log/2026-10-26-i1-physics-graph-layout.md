@@ -58,3 +58,15 @@ ba lỗi này trên code cũ.
 - Chưa đo khi kéo bảng dưới nhỏ nhất (thuộc phạm vi (i2)).
 - Ghi cho (i2): đồ thị "Năng lượng dao động" của Con lắc lò xo có đoạn đầu (≈ 0,15–0,7 s) trông như ít
   điểm nối thẳng; có từ trước PR này (không đổi dữ liệu), cần xem nguyên nhân.
+
+## 26/10/2026 chiều — sửa theo so sánh mù (#81 được giữ, #80 đóng)
+
+- `layout.spec.ts`: thẻ Đồ thị không được cuộn (`[role="tabpanel"]` scrollHeight − clientHeight ≤ 1);
+  chọn đồ thị bằng bàn phím (Enter) thì đồ thị đó được chọn và con trỏ bàn phím vẫn ở nút chọn; chờ hai
+  khung hình thay cho chờ cố định 300 ms ở bước rê chuột; chỉ lặp qua danh sách "Vật lý" (chọn môn trước).
+- Chữ "Nhấn Chạy…" dùng font của app (`--font-sans`), không dùng font của uPlot.
+- Tài liệu: `docs/USER_GUIDE.md` (Bảng dưới: chú giải ở cột phải, rê chuột để đọc giá trị),
+  `tests/e2e/README.md`, `docs/PROGRESS.md`.
+- Khác kế hoạch mục (1) ("trừ chiều cao chú giải như XYChart"): làm đúng như vậy cùng trục gọn thì vùng
+  vẽ chỉ khoảng 46–63 px (< 80), nên chú giải chuyển sang cột bên phải.
+- Chạy: ESLint, typecheck, Prettier PASS; E2E `layout.spec.ts` (chromium) PASS.

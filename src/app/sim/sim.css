@@ -263,6 +263,8 @@
   margin: 0;
   padding: 0 var(--space-2);
   text-align: center;
+  /* uPlot's root sets its own font; the note is app text. */
+  font-family: var(--font-sans);
   z-index: 1;
   pointer-events: none;
 }

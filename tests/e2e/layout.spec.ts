@@ -27,6 +27,7 @@ async function chartProblems(page: Page, expectEmpty: boolean): Promise<string[]
       return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, height: r.height };
     };
     const panel = document.querySelector('.bottom-panel');
+    const tab = panel?.querySelector('[role="tabpanel"]');
     const chart = panel?.querySelector('.chart');
     const empty = chart?.querySelector('.chart__empty');
     // The words themselves, not their (full-width) paragraph.
@@ -42,6 +43,8 @@ async function chartProblems(page: Page, expectEmpty: boolean): Promise<string[]
       legend: rect(panel?.querySelector('.u-legend')),
       text,
       hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      // The graph tab must fit the panel: anything that scrolls is hidden at first sight.
+      tabOverflow: tab ? tab.scrollHeight - tab.clientHeight : 0,
     };
   });
   const out: string[] = [];
@@ -61,6 +64,7 @@ async function chartProblems(page: Page, expectEmpty: boolean): Promise<string[]
   if (!expectEmpty && g.text) out.push('"no data" text still shown');
   if (g.text && !inside(g.text, g.over)) out.push('"no data" text outside the plot area');
   if (g.hScroll) out.push('horizontal scroll');
+  if (g.tabOverflow > 1) out.push(`graph tab scrolls by ${g.tabOverflow} px`);
   return out;
 }
 
@@ -70,7 +74,14 @@ async function checkEveryGraph(page: Page, topic: string, expectEmpty: boolean):
   expect(count, topic).toBeGreaterThan(0);
   for (let i = 0; i < count; i++) {
     const radio = radios.nth(i);
-    await radio.click();
+    if (i === 0) await radio.click();
+    else {
+      // Keyboard too: Enter picks the graph and the focus stays on the picker.
+      await radio.focus();
+      await radio.press('Enter');
+      await expect(radio).toHaveAttribute('aria-checked', 'true');
+      await expect(radio).toBeFocused();
+    }
     const name = `${topic} · ${await radio.innerText()} · ${expectEmpty ? 'before' : 'after'} Run`;
     await expect.poll(() => chartProblems(page, expectEmpty), { message: name }).toEqual([]);
     if (!expectEmpty) {
@@ -80,7 +91,17 @@ async function checkEveryGraph(page: Page, topic: string, expectEmpty: boolean):
       if (!before) throw new Error(`${name}: no plot area`);
       await over.hover({ position: { x: before.width * 0.6, y: before.height / 2 } });
       await expect(page.locator('.bottom-panel .u-legend .u-value').first()).not.toHaveText('0 s');
-      await page.waitForTimeout(300);
+      // Let the legend's new width reach the layout, the ResizeObserver and uPlot's resize.
+      await page.evaluate(
+        () =>
+          new Promise<void>((done) => {
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                done();
+              });
+            });
+          }),
+      );
       expect((await over.boundingBox())?.width, `${name}: plot width on hover`).toBeCloseTo(
         before.width,
         0,
@@ -95,8 +116,11 @@ test('every physics graph is readable at 1366 × 768, before and after running',
 }) => {
   test.setTimeout(300_000);
   await openLab(page);
-  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
-  const topics = library.locator('.tree__topic--button');
+  await page.getByRole('radio', { name: 'Vật lý' }).click();
+  const topics = page
+    .getByRole('complementary', { name: 'Thư viện chủ đề' })
+    .getByRole('list', { name: 'Vật lý' })
+    .locator('li[data-status="available"] .tree__topic--button');
   const total = await topics.count();
   expect(total).toBeGreaterThanOrEqual(13);
   const hud = page.locator('.stage__hud-title');
