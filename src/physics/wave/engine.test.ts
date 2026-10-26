@@ -5,6 +5,7 @@ import {
   SW,
   StandingWaveEngine,
   checkedFrequency,
+  latticeOmega,
   latticeAt,
   latticeFrequency,
   standingInput,
@@ -155,6 +156,18 @@ describe('DOPRI5 cross-check: wave equation on a lattice with both ends fixed', 
     const ratio = errors(480).antinode / errors(240).antinode;
     expect(ratio).toBeGreaterThan(0.2);
     expect(ratio).toBeLessThan(0.3);
+  });
+
+  it('a coarse lattice (12 cells) measures its own dispersion, 2,6 % off ω', () => {
+    const dx = q.L / 12;
+    const wN = latticeOmega(q.L, q.v, 3, 12);
+    expect(Math.abs(wN / ((2 * q.v * Math.sin((k * dx) / 2)) / dx) - 1)).toBeLessThan(1e-8);
+    expect(1 - wN / omega).toBeGreaterThan(0.02);
+    expect(1 - wN / omega).toBeLessThan(0.03);
+  });
+
+  it('the check refuses a mode number that is not a whole n ≥ 1 (no endless search)', () => {
+    for (const n of [0, -1, 2.5, Number.NaN]) expect(checkedFrequency(1.2, 20, n)).toBeNaN();
   });
 
   it('the cached check rescales the unit lattice exactly (units of L and L/v)', () => {

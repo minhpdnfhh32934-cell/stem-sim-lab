@@ -176,6 +176,13 @@ export function latticeAt(
  */
 export function latticeFrequency(L: number, v: number, n: number, N = 200): number {
   const dx = L / N;
+  const omegaN = latticeOmega(L, v, n, N);
+  return (v * (2 / dx) * Math.asin((omegaN * dx) / (2 * v))) / (2 * Math.PI);
+}
+
+/** Angular frequency ω_N of mode n measured on the N-cell lattice (no dispersion inverted). */
+export function latticeOmega(L: number, v: number, n: number, N = 200): number {
+  const dx = L / N;
   const k = (n * Math.PI) / L;
   const M = N - 1;
   const shape = Float64Array.from({ length: M }, (_, i) => Math.sin(k * (i + 1) * dx));
@@ -198,9 +205,7 @@ export function latticeFrequency(L: number, v: number, n: number, N = 200): numb
     ],
   });
   const [a, b] = r.events;
-  if (!a || !b) return Number.NaN;
-  const omegaN = (2 * Math.PI) / (b.t - a.t);
-  return (v * (2 / dx) * Math.asin((omegaN * dx) / (2 * v))) / (2 * Math.PI);
+  return a && b ? (2 * Math.PI) / (b.t - a.t) : Number.NaN;
 }
 
 const unitLattice = new Map<number, number>();
@@ -210,6 +215,8 @@ const unitLattice = new Map<number, number>();
  * lattice equation is the same for every string, so f = (v/L)·f(L = 1, v = 1) exactly.
  */
 export function checkedFrequency(L: number, v: number, n: number): number {
+  // A mode needs a whole n ≥ 1 (else DOPRI5 would search a million steps for crossings).
+  if (!(n >= 1) || !Number.isInteger(n)) return Number.NaN;
   let f1 = unitLattice.get(n);
   if (f1 === undefined) {
     f1 = latticeFrequency(1, 1, n);

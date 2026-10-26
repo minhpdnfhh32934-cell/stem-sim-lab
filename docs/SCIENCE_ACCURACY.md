@@ -107,7 +107,9 @@ khi m = 2Lf/v là số nguyên. App coi m là nguyên khi khoảng cách tới s
 dưới và ngay trên (m < 1: chỉ f₁), **không** tự đổi f, và hiện m đủ chữ số để không trông như số
 nguyên (1.818,2 chứ không phải 1818). Biên độ A là biên độ của mỗi sóng thành phần (bụng 2A); độ
 dốc 2A·k > 0,1 thì Thẻ Khoa học chuyển "gần đúng". Hình vẽ phóng to trục dọc (có ghi hệ số) và lấy
-một mẫu mỗi khung hình: chỉ thấy đúng chuyển động khi f × tốc độ phát nhỏ hơn khoảng 30 Hz. Xem
+một mẫu mỗi khung hình: khi f × tốc độ phát vượt khoảng 30 Hz (nửa số khung hình mỗi giây) thì
+thấy hoạt nghiệm, và muốn đường cong mượt (≥ 10 điểm mỗi chu kì) thì chỉ nên vài Hz. Lưới, thước
+và thước đo góc chia lại hệ số phóng to (`PhysicsScene.yStretch`), nên vẫn đo theo mét thật. Xem
 DATA_REVIEW SWV-1 … SWV-8.
 
 ## 5. AI đọc đề (Giai đoạn 3)

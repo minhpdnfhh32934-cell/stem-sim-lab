@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { buildDraft } from '@/ai/draft';
+import { basicSplit } from '@/app/sim/basicParams';
+import { measureSegment } from '@/app/sim/measure';
 import { applyAutoDefaults } from '../autoDefaults';
 import { Camera } from '../render/camera';
+import { drawGrid } from '../render/draw';
 import type { DrawOptions, ThemeColors } from '../types';
 import { STRING_POINTS, fmtRatio, verticalScale } from './draw';
 import { MAX_LOOPS, MODE, SW, StandingWaveEngine, standingInput } from './engine';
@@ -86,6 +89,23 @@ describe('standing wave scene: problems read by the AI', () => {
     }
   });
 
+  it('the mode follows what the problem states when the AI leaves it out', () => {
+    const L = { key: 'L', value: 80, unit: 'cm', quote: 'dài 80 cm' };
+    const f = { key: 'f', value: 100, unit: 'Hz', quote: 'tần số 100 Hz' };
+    const n = { key: 'n', value: 4, unit: '1', quote: '4 bó sóng' };
+    const text =
+      'Dây dài 80 cm, tần số 100 Hz, có 4 bó sóng, căng bởi lực 3,2 N, mật độ dài 2 g/m.';
+    const findV = draft([L, f, n], text);
+    expect(findV.params.mode).toBe(MODE.speed);
+    expect(findV.missing).toEqual([]);
+    const F = { key: 'tension', value: 3.2, unit: 'N', quote: 'lực 3,2 N' };
+    const mu = { key: 'muL', value: 2, unit: 'g/m', quote: 'mật độ dài 2 g/m' };
+    const findN = draft([L, f, F, mu], text);
+    expect(findN.params.mode).toBe(MODE.harmonic);
+    expect(findN.params.vFrom).toBe(1);
+    expect(findN.missing).toEqual([]);
+  });
+
   it('a default probe moves to the first antinode, so a short string still runs', () => {
     const sources = Object.fromEntries(
       Object.keys(sc.defaults).map((k) => [k, 'default' as const]),
@@ -106,7 +126,7 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(msg).toHaveLength(1);
     expect(msg[0]).toContain('3,6');
     expect(msg[0]).toContain('f₃ = 25 Hz');
-    expect(msg[0]).toContain('f₄ = 33,33 Hz');
+    expect(msg[0]).toContain('f₄ = 33,33333333 Hz');
     const a = answers(p);
     expect(a.harmonic).toBeUndefined();
     expect(a.f_below?.value).toBeCloseTo(harmonicFrequency(3, 20, 1.2), 12);
@@ -116,7 +136,7 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
 
   it('below the fundamental only f₁ is suggested', () => {
     const msg = messages({ mode: MODE.harmonic, f: 5 });
-    expect(msg[0]).toContain('f₁ = 8,333 Hz');
+    expect(msg[0]).toContain('f₁ = 8,333333333 Hz');
     expect(answers({ mode: MODE.harmonic, f: 5 }).f_below).toBeUndefined();
   });
 
@@ -165,6 +185,34 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(sc.params.find((d) => d.key === 'f')?.when?.({ ...sc.defaults, mode: 7 })).toBe(false);
   });
 
+  it('typing a suggested resonance back gives a standing wave (L = 1,2 m, v = 20 m/s)', () => {
+    // Vietnamese number as printed ("1.234,5") → JS number.
+    const read = (msg: string, name: string) => {
+      const m = new RegExp(`${name} = ([\\d.,]+) Hz`).exec(msg);
+      return m?.[1] ? Number(m[1].replace(/\./g, '').replace(',', '.')) : NaN;
+    };
+    // f = 26 Hz: 2Lf/v = 3,12, suggestions f₃ and f₄; f = 190 Hz: 22,8 > 20, only f₂₀.
+    for (const [f, picks] of [
+      [
+        26,
+        [
+          ['f₃', 3],
+          ['f₄', 4],
+        ],
+      ],
+      [190, [['f₂₀', 20]]],
+    ] as const) {
+      const msg = messages({ mode: MODE.harmonic, f })[0] ?? '';
+      expect(msg).toContain('2Lf/v');
+      for (const [name, n] of picks) {
+        const typed = { mode: MODE.harmonic, f: read(msg, name) };
+        expect(standingInput({ ...sc.defaults, ...typed }).n, `${f} Hz → ${name}`).toBe(n);
+        expect(messages(typed), `${f} Hz → ${name}`).toEqual([]);
+      }
+    }
+    expect(messages({ mode: MODE.harmonic, f: 190 })[0]).not.toContain('f₂₂');
+  });
+
   it('other invalid inputs are reported', () => {
     expect(messages({})).toEqual([]);
     expect(messages({ n: 2.5 })[0]).toContain('số nguyên dương');
@@ -201,6 +249,61 @@ describe('standing wave scene: card, picture', () => {
     const b = sc.view({ ...sc.defaults, L: 0.5, A: 0.1 });
     expect(b.yMax).toBeGreaterThanOrEqual(1.3 * 2 * 0.1);
     expect(b.yMin).toBeLessThanOrEqual(-1.3 * 2 * 0.1);
+  });
+
+  it('grid, ruler and protractor read real metres on the stretched picture', () => {
+    const S = sc.yStretch?.(sc.defaults) ?? 1;
+    expect(S).toBe(verticalScale(standingInput(sc.defaults)));
+    expect(S).toBe(10);
+    // From the string's rest line up to the drawn top of the first antinode: 2A = 1 cm.
+    const top = { x: 0.2, y: 2 * (sc.defaults.A ?? 0) * S };
+    expect(measureSegment({ x: 0.2, y: 0 }, top, S).length).toBeCloseTo(0.01, 12);
+    // The drawn string at the first node (x = λ/2 = 0,4 m) from the antinode top: real slope.
+    expect(measureSegment(top, { x: 0.4, y: 0 }, S).angle).toBeCloseTo(-Math.atan(0.01 / 0.2), 12);
+    // Grid y labels (left-aligned) are divided by S; x labels are unchanged.
+    const labels = (stretch: number) => {
+      const out: { align: string; text: string }[] = [];
+      let align = '';
+      const ctx = new Proxy(
+        {},
+        {
+          get: (_t, k) =>
+            k === 'fillText' ? (s: string) => out.push({ align, text: s }) : () => undefined,
+          set: (_t, k, v) => {
+            if (k === 'textAlign') align = String(v);
+            return true;
+          },
+        },
+      ) as CanvasRenderingContext2D;
+      const cam = new Camera();
+      cam.fit(sc.view(sc.defaults));
+      const colors = new Proxy({}, { get: () => '#000' }) as ThemeColors;
+      drawGrid(ctx, cam, colors, 'en', stretch);
+      const num = (s: string) => Number(s.replace(/,/g, ''));
+      return {
+        x: out.filter((l) => l.align === 'center').map((l) => num(l.text)),
+        y: out.filter((l) => l.align === 'left').map((l) => num(l.text)),
+      };
+    };
+    const plain = labels(1);
+    const real = labels(S);
+    expect(real.x).toEqual(plain.x);
+    expect(real.y.length).toBeGreaterThan(1);
+    real.y.forEach((v, i) => {
+      expect(v).toBeCloseTo((plain.y[i] ?? NaN) / S, 12);
+    });
+  });
+
+  it('Basic mode shows the choice first, then the main quantities of each mode', () => {
+    const keys = (p: Record<string, number>) =>
+      basicSplit(
+        sc.params.filter((d) => !d.when || d.when({ ...sc.defaults, ...p })),
+        {},
+      ).main.map((d) => d.key);
+    expect(keys({})).toEqual(['mode', 'L', 'n', 'v', 'A']);
+    expect(keys({ mode: MODE.speed })).toEqual(['mode', 'L', 'n', 'f', 'A']);
+    expect(keys({ mode: MODE.harmonic })).toEqual(['mode', 'L', 'f', 'v', 'A']);
+    expect(keys({ vFrom: 1 })).toEqual(['mode', 'L', 'n', 'tension', 'muL']);
   });
 
   it('nothing is draggable', () => {

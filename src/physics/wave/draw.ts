@@ -4,7 +4,15 @@ import { fmtQty } from '../common/tex';
 import { block, circle, line, polyline, text } from '../render/draw';
 import type { DrawContext } from '../types';
 import { SW, standingInput, waveOf, type StandingInput } from './engine';
-import { antinodes, harmonicRatio, nodes, ratioDigits } from './model';
+import {
+  antinodes,
+  harmonicRatio,
+  incident,
+  nodes,
+  ratioDigits,
+  reflected,
+  standing,
+} from './model';
 
 /** m = 2Lf/v with enough digits that a non-whole m never reads as whole. */
 export function fmtRatio(locale: Locale, m: number): string {
@@ -64,8 +72,8 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     return;
   }
 
-  const sinP = Math.sin(phi);
-  const cosP = Math.cos(phi);
+  // The model's own y₁, y₂, y at the state's instant t = φ/ω, drawn S times taller.
+  const t = phi / w.omega;
   // Envelope ±2A|sin kx| of the standing wave.
   for (const sgn of [1, -1]) {
     polyline(
@@ -81,7 +89,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     polyline(
       ctx,
       cam,
-      xs.map((x) => ({ x, y: S * q.A * (cosP * Math.cos(w.k * x) + sinP * Math.sin(w.k * x)) })),
+      xs.map((x) => ({ x, y: S * incident(w, x, t) })),
       c.velocity,
       1.5,
       [7, 5],
@@ -89,7 +97,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     polyline(
       ctx,
       cam,
-      xs.map((x) => ({ x, y: -S * q.A * (cosP * Math.cos(w.k * x) - sinP * Math.sin(w.k * x)) })),
+      xs.map((x) => ({ x, y: S * reflected(w, x, t) })),
       c.force,
       1.5,
       [3, 4],
@@ -98,7 +106,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   polyline(
     ctx,
     cam,
-    xs.map((x) => ({ x, y: H * Math.sin(w.k * x) * sinP })),
+    xs.map((x) => ({ x, y: S * standing(w, x, t) })),
     c.spring,
     3,
   );
@@ -109,7 +117,9 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     circle(ctx, cam, x, 0, r, c.text, undefined, 3.5);
     text(ctx, cam, x, 0, 'N', c.text, 'center', { x: 0, y: 18 });
   }
-  for (const x of antinodes(q.L, n)) text(ctx, cam, x, H, 'B', c.muted, 'center', { x: 0, y: -6 });
+  const antinode = opts.locale === 'vi' ? 'B' : 'A';
+  for (const x of antinodes(q.L, n))
+    text(ctx, cam, x, H, antinode, c.muted, 'center', { x: 0, y: -6 });
 
   const yP = (state[SW.y] ?? 0) * S;
   line(ctx, cam, q.xP, -H, q.xP, H, c.accent, 1, [2, 3]);
@@ -133,4 +143,33 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       'left',
       { x: 60, y: 36 },
     );
+  if ((p.showParts ?? 1) > 0.5) {
+    const vi = opts.locale === 'vi';
+    text(
+      ctx,
+      cam,
+      b.xMin,
+      b.yMax,
+      vi ? '– – y₁: sóng tới' : '– – y₁: incident',
+      c.velocity,
+      'left',
+      {
+        x: 60,
+        y: 54,
+      },
+    );
+    text(
+      ctx,
+      cam,
+      b.xMin,
+      b.yMax,
+      vi ? '· · y₂: sóng phản xạ' : '· · y₂: reflected',
+      c.force,
+      'left',
+      {
+        x: 60,
+        y: 72,
+      },
+    );
+  }
 }

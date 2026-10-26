@@ -19,7 +19,14 @@ export interface Pt {
   y: number;
 }
 
-export function drawGrid(ctx: Ctx, cam: Camera, colors: ThemeColors, locale: Locale): void {
+export function drawGrid(
+  ctx: Ctx,
+  cam: Camera,
+  colors: ThemeColors,
+  locale: Locale,
+  /** The scene's vertical stretch (`PhysicsScene.yStretch`): y labels show unstretched metres. */
+  yStretch = 1,
+): void {
   const v = cam.visible();
   const major = niceStep(cam.scale, 90);
   const minor = major / 5;
@@ -46,9 +53,13 @@ export function drawGrid(ctx: Ctx, cam: Camera, colors: ThemeColors, locale: Loc
   // Axis labels (metres) along the bottom and left edges.
   ctx.fillStyle = colors.faint;
   ctx.font = `${fontPx(11)} ui-monospace, Consolas, monospace`;
-  const digits = Math.max(0, -Math.floor(Math.log10(major) + 1e-9));
-  const fmt = (n: number) =>
-    formatNumber(locale, Math.abs(n) < major / 1e6 ? 0 : n, { maximumFractionDigits: digits });
+  const fmtFor = (step: number) => {
+    const digits = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+    return (n: number) =>
+      formatNumber(locale, Math.abs(n) < step / 1e6 ? 0 : n, { maximumFractionDigits: digits });
+  };
+  const fmt = fmtFor(major);
+  const fmtY = fmtFor(major / yStretch);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'bottom';
   for (let x = Math.ceil(v.xMin / major) * major; x <= v.xMax; x += major) {
@@ -60,7 +71,7 @@ export function drawGrid(ctx: Ctx, cam: Camera, colors: ThemeColors, locale: Loc
   for (let y = Math.ceil(v.yMin / major) * major; y <= v.yMax; y += major) {
     const { sy } = cam.toScreen(0, y);
     if (sy > cam.height - 18) continue;
-    ctx.fillText(fmt(y), 4, sy);
+    ctx.fillText(fmtY(y / yStretch), 4, sy);
   }
   ctx.restore();
 }

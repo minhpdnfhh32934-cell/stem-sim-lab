@@ -28,7 +28,7 @@ import {
   waveOf,
   type StandingInput,
 } from './engine';
-import { nearestResonances, ratioDigits } from './model';
+import { harmonicFrequency, nearestResonances, ratioDigits, type Resonance } from './model';
 
 /** Amplitude at the probe, |2A·sin(k·x_P)| (0 at a node: sin(jπ) is only round-off there). */
 export function probeAmplitude(q: StandingInput): number {
@@ -44,21 +44,41 @@ const steep = (q: StandingInput) => {
   return w !== null && 2 * w.A * w.k > 0.1;
 };
 
+/**
+ * Resonances to suggest when 2Lf/v is not whole: the nearest below and above, kept within
+ * MAX_LOOPS (above the limit, the highest one SimLab draws, f at n = MAX_LOOPS).
+ */
+export function suggestions(q: StandingInput) {
+  const r = nearestResonances(q.L, q.f, q.v);
+  const top: Resonance = { n: MAX_LOOPS, f: harmonicFrequency(MAX_LOOPS, q.v, q.L) };
+  const below = r.below && r.below.n > MAX_LOOPS ? top : r.below;
+  return { m: r.m, below, above: r.above.n <= MAX_LOOPS ? r.above : null };
+}
+
+// Typing a suggestion back must give a whole 2Lf/v under the 1e-9 round-off rule.
+const SUGGESTED_DIGITS = 10;
+
 /** Learner-facing text when 2Lf/v is not whole (trap 5): never rounded, nearest resonances. */
 function noResonance(q: StandingInput, locale: Locale): string {
-  const r = nearestResonances(q.L, q.f, q.v);
-  const m = fmtRatio(locale, r.m);
-  const fa = fmtQty(locale, r.above.f, 'Hz');
+  const s = suggestions(q);
+  const m = fmtRatio(locale, s.m);
+  const fr = (r: Resonance) => `f${sub(r.n)} = ${fmtQty(locale, r.f, 'Hz', SUGGESTED_DIGITS)}`;
   if (locale === 'vi') {
-    const near = r.below
-      ? `Tần số cộng hưởng gần nhất: f${sub(r.below.n)} = ${fmtQty(locale, r.below.f, 'Hz')} (phía dưới) và f${sub(r.above.n)} = ${fa} (phía trên).`
-      : `Tần số này thấp hơn tần số cơ bản f₁ = ${fa}.`;
-    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f — hãy chọn một tần số cộng hưởng, hoặc đổi chiều dài dây hay tốc độ truyền sóng.`;
+    const near =
+      s.below && s.above
+        ? `Tần số cộng hưởng gần nhất: ${fr(s.below)} (phía dưới) và ${fr(s.above)} (phía trên).`
+        : s.above
+          ? `Tần số này thấp hơn tần số cơ bản ${fr(s.above)}.`
+          : `SimLab vẽ tối đa ${MAX_LOOPS} bó sóng; tần số cộng hưởng lớn nhất là ${s.below ? fr(s.below) : ''}.`;
+    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f và không vẽ dao động khi không có sóng dừng — hãy gõ một tần số cộng hưởng (đủ các chữ số), hoặc đổi chiều dài dây hay tốc độ truyền sóng.`;
   }
-  const near = r.below
-    ? `Nearest resonances: f${sub(r.below.n)} = ${fmtQty(locale, r.below.f, 'Hz')} (below) and f${sub(r.above.n)} = ${fa} (above).`
-    : `This is below the fundamental f₁ = ${fa}.`;
-  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you — pick a resonance, or change the string length or the wave speed.`;
+  const near =
+    s.below && s.above
+      ? `Nearest resonances: ${fr(s.below)} (below) and ${fr(s.above)} (above).`
+      : s.above
+        ? `This is below the fundamental ${fr(s.above)}.`
+        : `SimLab draws at most ${MAX_LOOPS} loops; the highest resonance is ${s.below ? fr(s.below) : ''}.`;
+  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you and draws no oscillation without a standing wave — type a resonance (all its digits), or change the string length or the wave speed.`;
 }
 
 const SUBS = '₀₁₂₃₄₅₆₇₈₉';
@@ -140,7 +160,7 @@ function solve(p: Params, locale: Locale): Solution {
       tex: `m = \\frac{L}{\\lambda/2} = \\frac{2Lf}{v} = \\frac{2\\cdot ${Q(q.L, 'm')}\\cdot ${Q(q.f, 'Hz')}}{${Q(q.v, 'm/s')}} = ${texNum(locale, q.m, ratioDigits(q.m))}`,
     });
     if (q.n === null) {
-      const r = nearestResonances(q.L, q.f, q.v);
+      const r = suggestions(q);
       steps.push({ text: L(noResonance(q, 'vi'), noResonance(q, 'en')) });
       if (q.fromTension) answers.push(speed);
       if (r.below)
@@ -150,12 +170,13 @@ function solve(p: Params, locale: Locale): Solution {
           value: r.below.f,
           unit: 'Hz',
         });
-      answers.push({
-        id: 'f_above',
-        label: L('Tần số cộng hưởng ngay trên', 'Resonance just above'),
-        value: r.above.f,
-        unit: 'Hz',
-      });
+      if (r.above)
+        answers.push({
+          id: 'f_above',
+          label: L('Tần số cộng hưởng ngay trên', 'Resonance just above'),
+          value: r.above.f,
+          unit: 'Hz',
+        });
       return { answers, steps };
     }
   }
@@ -323,8 +344,8 @@ function card(p: Params): ScienceCardData {
         'The ratio m = 2Lf/v counts as whole when |m − round(m)| ≤ 10⁻⁹·max(1, m), only to ignore computer round-off; SimLab never rounds further.',
       ),
       L(
-        'Hình vẽ có thể phóng to trục dọc để nhìn rõ (ghi trên hình). Hình và đồ thị lấy một điểm mỗi khung hình (khoảng 60 lần mỗi giây), nên chỉ thấy đúng chuyển động khi f × tốc độ phát nhỏ hơn khoảng 30 Hz; nhanh hơn có thể thấy hiệu ứng hoạt nghiệm.',
-        'The picture may stretch the vertical axis for visibility (shown on the picture). Picture and graphs take one sample per frame (about 60 per second), so the motion looks right only while f × playback speed stays below about 30 Hz; faster, a stroboscopic effect may appear.',
+        'Hình vẽ có thể phóng to trục dọc để nhìn rõ (ghi trên hình; lưới, thước và thước đo góc vẫn đo theo mét thật). Hình và đồ thị lấy một điểm mỗi khung hình (khoảng 60 lần mỗi giây): khi f × tốc độ phát vượt khoảng nửa số đó (~30 Hz) thì thấy hiệu ứng hoạt nghiệm; muốn đường cong mượt (ít nhất 10 điểm mỗi chu kì) thì f × tốc độ phát chỉ nên vài Hz — tốc độ phát app tự chọn khi mở bài đã như vậy.',
+        'The picture may stretch the vertical axis for visibility (shown on the picture; grid, ruler and protractor still measure real metres). Picture and graphs take one sample per frame (about 60 per second): when f × playback speed exceeds about half of that (~30 Hz) a stroboscopic effect appears; for a smooth curve (at least 10 points per period) keep f × playback speed to a few Hz — the speed the app picks when the topic opens does.',
       ),
     ],
     validity: L(
@@ -339,8 +360,8 @@ function card(p: Params): ScienceCardData {
           'The largest string slope 2A·k is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. Reduce the amplitude A.',
         )
       : L(
-          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Tần số được kiểm chứng độc lập: giải phương trình sóng trên dây chia 200 đoạn bằng Dormand–Prince.',
-          'The displacement is the exact formula at each instant (no accumulated error). The frequency is checked independently by solving the wave equation on a 200-cell string with Dormand–Prince.',
+          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu số (Dormand–Prince): giải phương trình sóng trên dây chia đoạn, hai đầu cố định — li độ hội tụ về công thức khi chia nhỏ dây (sai số bậc hai, test), và dao động của dạng sóng thứ n có đúng tần số n·v/(2L).',
+          'The displacement is the exact formula at each instant (no accumulated error). Numerical comparison (Dormand–Prince): the wave equation on a string cut into cells with both ends fixed — the displacement converges to the formula as the cells shrink (second order, tested), and the n-th mode shape oscillates at n·v/(2L).',
         ),
     method: L(
       `Công thức giải tích tại t = i·Δt, Δt = ${fmtQty('vi', stepOf(q), 's', 3)} (≤ T/200).`,
@@ -567,10 +588,19 @@ export const standingWave: PhysicsScene = {
   },
   usesGravity: false,
   // A default probe sits on the first antinode, x = λ/4 = L/(2n), so it is always on the string.
-  autoDefaults: (p) => {
-    const q = standingInput(p);
-    return q.L > 0 ? { xP: q.L / (2 * (q.n ?? 3)) } : {};
+  // Mode from what the problem states (the AI may leave it out): f and n → find v; f and v
+  // (or F, μ) without n → find n; F and μ without v → v from the tension.
+  autoDefaults: (p, sources) => {
+    const stated = (k: string) => sources[k] === 'problem' || sources[k] === 'user';
+    const out: Params = {};
+    const fromT = stated('tension') && stated('muL');
+    if (fromT && !stated('v')) out.vFrom = 1;
+    if (stated('f') && stated('n')) out.mode = MODE.speed;
+    else if (stated('f') && (stated('v') || fromT)) out.mode = MODE.harmonic;
+    const q = standingInput({ ...p, ...out });
+    return q.L > 0 ? { ...out, xP: q.L / (2 * (q.n ?? 3)) } : out;
   },
+  yStretch: (p) => verticalScale(standingInput(p)),
   // About 10 s of screen time for the 20 periods of a run (closest offered speed).
   suggestedSpeed: (p) => {
     const f = standingInput(p).f;

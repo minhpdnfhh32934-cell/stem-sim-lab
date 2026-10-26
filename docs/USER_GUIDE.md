@@ -385,11 +385,11 @@ xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây.
 - **Sóng dừng trên dây** (chương **Sóng**): dây có hai đầu cố định. Ô đầu tiên chọn đề hỏi gì: **tìm
   f** (biết L, v, n), **tìm v** (biết L, f, n) hay **tìm n** (biết L, f, v). Tốc độ truyền sóng nhập
   thẳng, hoặc chọn "Lấy tốc độ sóng từ: lực căng và mật độ dài" để app tính v = √(F/μ) (μ nhận kg/m
-  hoặc g/m). Hình vẽ dây với hai sóng thành phần nét đứt (tắt được), nút **N**, bụng **B** và điểm
+  hoặc g/m; ở chế độ Cơ bản, ô này nằm trong **Thêm thông số**). Hình vẽ dây với hai sóng thành phần nét đứt (tắt được), nút **N**, bụng **B** và điểm
   dò **P**; đồ thị vẽ y₁, y₂ và y = y₁ + y₂ tại P. App vẽ tối đa 20 bó sóng. Vị trí P chỉnh bằng thanh trượt, không kéo được.
   A là biên độ của **mỗi** sóng thành phần, nên bụng dao động với biên độ 2A. Nếu 2Lf/v không phải
   số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất, không tự đổi
-  f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; tần số cao có thể làm hình trông
+  f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; lưới, thước và thước đo góc vẫn đo theo mét thật; tần số cao có thể làm hình trông
   đứng yên (hoạt nghiệm) — chọn tốc độ phát chậm hơn.
 
 ## Đọc đề bằng AI
