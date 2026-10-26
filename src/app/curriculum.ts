@@ -111,7 +111,7 @@ export function gradeView(grade: Grade, subject: Subject, data = CURRICULUM): Gr
 export function lessonRange(numbers: readonly number[]): string {
   const sorted = [...new Set(numbers)].sort((a, b) => a - b);
   const parts: string[] = [];
-  for (let i = 0; i < sorted.length; ) {
+  for (let i = 0; i < sorted.length;) {
     let j = i;
     while (j + 1 < sorted.length && sorted[j + 1] === (sorted[j] ?? 0) + 1) j++;
     parts.push(i === j ? `${sorted[i]}` : `${sorted[i]}–${sorted[j]}`);
