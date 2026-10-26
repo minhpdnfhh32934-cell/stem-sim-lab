@@ -146,9 +146,18 @@ describe('studio persistence', () => {
     const out = migrateStudio({ sessions: [good, { scenarioId: 'x', step: 'fly' }] }, 0);
     expect(out.tab).toBe('physics');
     expect(Object.keys(out.sessions)).toEqual([sc.id]);
-    expect(migrateStudio('garbage', 0)).toEqual({ tab: 'physics', sessions: {}, picked: {} });
+    expect(migrateStudio('garbage', 0)).toEqual({
+      tab: 'physics',
+      sessions: {},
+      picked: {},
+      guideSeen: false,
+    });
     expect(migrateStudio({ tab: 'biology', sessions: { [sc.id]: good } }, 1).tab).toBe('biology');
     expect(migrateStudio({ tab: 'nope' }, 1).tab).toBe('physics');
+    // "Cách học" (version 2): data saved before it existed counts as not seen yet.
+    expect(migrateStudio({ guideSeen: true }, 1).guideSeen).toBe(false);
+    expect(migrateStudio({ guideSeen: true }, 2).guideSeen).toBe(true);
+    expect(migrateStudio({ guideSeen: 'yes' }, 2).guideSeen).toBe(false);
   });
 
   it('rehydrates stemsim.studio through the store, old version and damaged data alike', async () => {
@@ -167,6 +176,14 @@ describe('studio persistence', () => {
     await useStudioStore.persist.rehydrate();
     expect(useStudioStore.getState().tab).toBe('chemistry');
     expect(useStudioStore.getState().sessions).toEqual({});
+    expect(useStudioStore.getState().guideSeen).toBe(false);
+
+    localStorage.setItem(
+      'stemsim.studio',
+      JSON.stringify({ state: { tab: 'biology', guideSeen: true }, version: 2 }),
+    );
+    await useStudioStore.persist.rehydrate();
+    expect(useStudioStore.getState().guideSeen).toBe(true);
   });
 
   it('resumes after a reload: the session, its step and evidence, and the lesson shown', async () => {
