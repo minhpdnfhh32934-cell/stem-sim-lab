@@ -1437,6 +1437,34 @@ const vi = {
           'Không ghi được vào bộ nhớ của ứng dụng (có thể đã đầy hoặc bị chặn), nên thay đổi này chưa được lưu. Hãy xuất bài cũ ra tệp, xóa bớt rồi thử lại.',
       },
     },
+    guide: {
+      open: 'Cách học',
+      openHint: 'Xem lại cách học trong Science Studio',
+      welcomeTitle: 'Học trong Science Studio',
+      welcomeBody:
+        'Mỗi bài đi qua sáu bước: em dự đoán trước, làm thí nghiệm, rồi mới giải thích và kết luận. Mọi con số do mô phỏng tính. Bấm Tiếp để xem từng phần của màn hình.',
+      subjectTitle: 'Chọn môn và bài',
+      subjectBody:
+        'Chọn môn ở thanh này. Môn có nhiều bài thì chọn bài ở hàng nút ngay bên dưới. Thẻ Soạn bài ở cuối thanh dành cho thầy cô.',
+      lessonTitle: 'Mục tiêu và nhãn kiểm duyệt',
+      lessonBody:
+        'Đầu bài ghi mục tiêu. Nhãn "chưa được kiểm duyệt" nghĩa là lời văn của bài chưa được giáo viên duyệt; số liệu vẫn do mô phỏng tính.',
+      stepsTitle: 'Sáu bước',
+      stepsBody:
+        'Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Bước đang làm được tô đậm, bước đã xong hiện dấu ✓ thay cho số.',
+      nextTitle: 'Đi tiếp',
+      nextBody:
+        'Làm xong một bước thì bấm nút Tiếp ở đây. Khi chưa đi tiếp được, dòng chữ cạnh nút cho biết em còn thiếu gì.',
+      askTitle: 'Hỏi thầy',
+      askBody:
+        'Bí ở bước nào thì bấm Hỏi thầy: AI Teacher mở ra với câu hỏi về bước đó. AI Teacher chỉ giải thích, không thay số đo của mô phỏng.',
+      reportTitle: 'Lưu báo cáo',
+      reportBody:
+        'Ở bước cuối, báo cáo được tạo từ chính phiên học của em. Bấm "Lưu báo cáo (.md)" để lưu thành tệp, hoặc sao chép.',
+      authoringTitle: 'Soạn bài',
+      authoringBody:
+        'Thầy cô soạn bài mới ở thẻ Soạn bài: mọi lựa chọn lấy từ mô phỏng hoặc bảng dữ liệu. Bài soạn chỉ lưu trên máy này và luôn ghi "chưa được kiểm duyệt".',
+    },
   },
   chat: {
     label: 'Trò chuyện với AI Teacher',
@@ -2301,7 +2329,6 @@ const vi = {
     successTarget: 'Chính xác! {quantity} = {value}, đúng mục tiêu {goal} (chỉ lệch {diff}).',
     successBest: 'Tuyệt! {quantity} = {value} — giá trị lớn nhất có thể là {best}.',
     showHint: 'Xem gợi ý',
-    progress: 'Tiến độ: {done}/{total}',
     topicDone: 'Đã hoàn thành chủ đề',
     badgesTitle: 'Huy hiệu của bạn',
     noBadges: 'Mở một chủ đề, thử dự đoán hoặc làm thử thách để nhận huy hiệu đầu tiên.',
@@ -2321,6 +2348,11 @@ const vi = {
     },
     breakReminder:
       'Bạn đã học khoảng 45 phút liên tục. Nghỉ mắt vài phút nhé: đứng dậy, nhìn ra xa — mô phỏng vẫn chờ bạn ở đây.',
+    topicLearned: 'Đã học',
+    topicLearnedLeft: 'Đã học — xong {done}/{total} bước, còn: {left}',
+    leftPredict: 'Dự đoán trước',
+    leftChallenges: '{count} thử thách',
+    chapterLearned: '{done}/{total} chủ đề đã học',
   },
   teacher: {
     regionLabel: 'Dạy học bằng AI',

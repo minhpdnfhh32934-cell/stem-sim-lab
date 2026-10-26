@@ -395,7 +395,9 @@ Progress log: `docs/PROGRESS.md`.
 - `poe.ts`: one "Dự đoán trước" per physics topic; the right choice is computed from `solve()`
   before/after (`observe`). The learner writes the explanation (never stored or sent).
 - `progressStore` (`stemsim.progress`, local only), `progress.ts` (topic/chapter progress, badges —
-  no streaks or ranks), `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
+  no streaks or ranks; `topicStatus`: the library marks every opened topic "Đã học", a physics topic
+  with steps left adds "1/3", all done → "Hoàn thành"; badges keep the "complete" rule),
+  `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
 
@@ -418,6 +420,9 @@ Progress log: `docs/PROGRESS.md`.
 - One `SubjectPlugin` per subject (`flow/types.ts`); shared steps in `flow/`; evidence keeps its
   origin (engine / learner / AI, `session.ts`); the report is Markdown (`report.ts`); "Hỏi thầy"
   gets the screen context from `aiContext.ts`. State: `studioStore.ts` (`stemsim.studio`).
+- "Cách học" guide (`StudioGuide.tsx`, plan #37 §9c): the lab tour's `TourOverlay` (`Tour.tsx`)
+  with studio steps; opens by itself once (`guideSeen` in `stemsim.studio`, store version 2), then
+  only from the button. Unit tests start with it seen (`tests/setup.ts`), E2E via `storage-state.json`.
 - Built-in scenarios in `scenarios/` (validated at load; an invalid one is left out). Authoring
   ("Soạn bài", `authoring/`): every choice comes from an engine or data table, local only
   (`teacher.` ids), JSON import/export, always labelled unreviewed.

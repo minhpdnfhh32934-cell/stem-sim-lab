@@ -19,6 +19,10 @@
         {
           "name": "stemsim.e2e.noOverload",
           "value": "1"
+        },
+        {
+          "name": "stemsim.studio",
+          "value": "{\"state\":{\"tab\":\"physics\",\"sessions\":{},\"picked\":{},\"guideSeen\":true},\"version\":2}"
         }
       ]
     }

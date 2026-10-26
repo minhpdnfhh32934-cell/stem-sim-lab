@@ -1451,6 +1451,34 @@ const en: Messages = {
           'The app storage could not be written (it may be full or blocked), so this change was not saved. Export old lessons to files, delete some, then try again.',
       },
     },
+    guide: {
+      open: 'How to learn',
+      openHint: 'Show how to learn in Science Studio again',
+      welcomeTitle: 'Learning in Science Studio',
+      welcomeBody:
+        'Each lesson has six steps: you predict first, run the experiment, then explain and conclude. Every number is computed by the simulation. Press Next to see each part of the screen.',
+      subjectTitle: 'Pick a subject and a lesson',
+      subjectBody:
+        'Pick the subject on this bar. A subject with several lessons shows them as buttons just below. The Authoring tab at the end is for teachers.',
+      lessonTitle: 'Goals and the review label',
+      lessonBody:
+        'The top of the lesson lists its goals. The "not reviewed" label means a teacher has not checked the lesson text yet; the numbers are still computed by the simulation.',
+      stepsTitle: 'Six steps',
+      stepsBody:
+        'Predict → Experiment → Observe → Explain → Conclude → Report. The current step is highlighted, a finished step shows ✓ instead of its number.',
+      nextTitle: 'Moving on',
+      nextBody:
+        'When a step is done, press Next here. When you cannot move on yet, the line next to the button says what is missing.',
+      askTitle: 'Ask the teacher',
+      askBody:
+        'Stuck on a step? Press Ask the teacher: AI Teacher opens with a question about that step. The AI only explains; it never replaces the simulation’s numbers.',
+      reportTitle: 'Save the report',
+      reportBody:
+        'In the last step the report is built from your own session. Press "Save report (.md)" to save it as a file, or copy it.',
+      authoringTitle: 'Authoring',
+      authoringBody:
+        'Teachers write new lessons in the Authoring tab: every choice comes from a simulation or a data table. Authored lessons stay on this computer and are always marked "not reviewed".',
+    },
   },
   chat: {
     label: 'Chat with the AI teacher',
@@ -2314,7 +2342,6 @@ const en: Messages = {
     successTarget: 'Exactly! {quantity} = {value}, on target {goal} (only {diff} off).',
     successBest: 'Great! {quantity} = {value} — the largest possible is {best}.',
     showHint: 'Show a hint',
-    progress: 'Progress: {done}/{total}',
     topicDone: 'Topic completed',
     badgesTitle: 'Your badges',
     noBadges: 'Open a topic, try a prediction or a challenge to earn your first badge.',
@@ -2334,6 +2361,11 @@ const en: Messages = {
     },
     breakReminder:
       'You have been studying for about 45 minutes. Rest your eyes for a few minutes: stand up, look into the distance — the simulation will wait for you.',
+    topicLearned: 'Studied',
+    topicLearnedLeft: 'Studied — {done}/{total} steps done, still to do: {left}',
+    leftPredict: 'Predict first',
+    leftChallenges: '{count} challenge(s)',
+    chapterLearned: '{done}/{total} topics studied',
   },
   teacher: {
     regionLabel: 'Learn with an AI teacher',

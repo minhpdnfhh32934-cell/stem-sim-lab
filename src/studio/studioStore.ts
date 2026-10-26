@@ -16,6 +16,13 @@ export interface StudioState {
   sessions: Record<string, StudioSession>;
   /** Scenario shown per subject tab, kept so a reload returns to the same lesson. */
   picked: Partial<Record<StudioSubject, string>>;
+  /** The "Cách học" guide has opened once by itself (persisted). */
+  guideSeen: boolean;
+  /** Step of the open guide, null when closed (not persisted). */
+  guideStep: number | null;
+  openGuide: () => void;
+  setGuideStep: (step: number) => void;
+  closeGuide: () => void;
   setTab: (tab: StudioTab) => void;
   /** Shows a scenario in its subject's studio (the authoring preview uses this). */
   openScenario: (subject: StudioSubject, id: string) => void;
@@ -33,6 +40,22 @@ export const useStudioStore = create<StudioState>()(
       tab: DEFAULT_TAB,
       sessions: {},
       picked: {},
+      guideSeen: false,
+      guideStep: null,
+      openGuide: () => {
+        // The guide points at a lesson's parts: Soạn bài has none, so show a subject tab.
+        set((st) => ({
+          guideStep: 0,
+          guideSeen: true,
+          tab: st.tab === 'authoring' ? DEFAULT_TAB : st.tab,
+        }));
+      },
+      setGuideStep: (guideStep) => {
+        set({ guideStep });
+      },
+      closeGuide: () => {
+        set({ guideStep: null });
+      },
       setTab: (tab) => {
         set({ tab });
       },
@@ -70,7 +93,7 @@ export const useStudioStore = create<StudioState>()(
       name: 'stemsim.studio',
       version: STUDIO_STORE_VERSION,
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ tab, sessions, picked }) => ({ tab, sessions, picked }),
+      partialize: ({ tab, sessions, picked, guideSeen }) => ({ tab, sessions, picked, guideSeen }),
       migrate: (persisted, version) => migrateStudio(persisted, version),
       // Same-version data is validated too: a hand-edited or damaged record is dropped.
       merge: (persisted, current) => ({
