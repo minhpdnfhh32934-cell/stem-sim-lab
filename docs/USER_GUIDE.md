@@ -369,8 +369,9 @@ xo, con lắc đơn, chuyển động tròn đều.
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
   (và tua nhanh cho bài toán tính bằng giờ).
-- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
-  đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
+  để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
+  **Số liệu** (bảng giá trị, nút Xuất CSV).
 - **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
   **tốc độ góc ω**, **chu kì T** hay **tần số f**; nhập bán kính và đại lượng đó, app tính các đại
   lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp

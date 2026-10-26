@@ -13,6 +13,12 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# onnxruntime-node (pulled in by @huggingface/transformers) downloads its CUDA libraries from NuGet
+# during `npm ci` on Linux x64, and that download times out on runners now and then. Nothing here
+# needs them: the app runs Gemma with onnxruntime-web and the unit tests mock Transformers.js.
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
+
 jobs:
   frontend:
     name: Frontend (lint · typecheck · test · build)
