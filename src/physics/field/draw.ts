@@ -91,7 +91,7 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
   const col = opts.colors;
   const r0 = chargeRadius(p);
   const { lines, nullPoints } = linesFor(p);
-  const px = 14 / cam.scale;
+  const px = 24 / cam.scale;
   for (const l of lines) {
     const pts = [];
     for (let i = 0; i + 1 < l.points.length; i += 2) {
@@ -118,7 +118,8 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
     const color = c.q >= 0 ? col.acceleration : col.velocity;
     circle(ctx, cam, c.x, c.y, r0, color, col.text, 9);
     text(ctx, cam, c.x, c.y, c.q >= 0 ? '+' : '−', col.panel, 'center', { x: 0, y: 7 });
-    text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: 12, y: -10 });
+    const off = Math.max(9, r0 * cam.scale) + 3;
+    text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: off, y: -off });
   });
   const { x, y } = s.probe;
   circle(ctx, cam, x, y, 0, opts.selected === 'probe' ? col.accent : col.text, undefined, 4);

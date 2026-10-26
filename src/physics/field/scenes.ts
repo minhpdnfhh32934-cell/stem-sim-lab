@@ -5,7 +5,7 @@ import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
 import { L } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
-import { fmtQty, texQty } from '../common/tex';
+import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
   Answer,
   BodyDef,
@@ -155,22 +155,24 @@ function solve(p: Params, locale: Locale): Solution {
   if (plates(p)) return solvePlates(p, locale);
   const s = fieldSetup(p);
   const Q = (v: number, u: string) => texQty(locale, v, u);
-  const k = Q(s.k, 'N*m^2/C^2');
+  // Substituted values in SI without units (k in N·m²/C², q in C, r in m), as SGK writes them.
+  const N = (v: number) => texNum(locale, v);
   const steps: SolutionStep[] = s.charges.map((c, i) => {
     const n = i + 1;
     const r = Math.hypot(s.probe.x - c.x, s.probe.y - c.y);
     const e = (s.k * Math.abs(c.q)) / (r * r);
     const sub = SUB[i] ?? '';
+    const [rVi, rEn] = [fmtQty('vi', r, 'm'), fmtQty('en', r, 'm')];
     return {
       text: L(
         c.q >= 0
-          ? `Điện trường do q${sub} gây ra tại M (q${sub} > 0: hướng ra xa q${sub}):`
-          : `Điện trường do q${sub} gây ra tại M (q${sub} < 0: hướng về phía q${sub}):`,
+          ? `Điện trường do q${sub} gây ra tại M, cách q${sub} một khoảng r${sub} = ${rVi} (q${sub} > 0: hướng ra xa q${sub}):`
+          : `Điện trường do q${sub} gây ra tại M, cách q${sub} một khoảng r${sub} = ${rVi} (q${sub} < 0: hướng về phía q${sub}):`,
         c.q >= 0
-          ? `Field of q${sub} at M (q${sub} > 0: pointing away from q${sub}):`
-          : `Field of q${sub} at M (q${sub} < 0: pointing towards q${sub}):`,
+          ? `Field of q${sub} at M, a distance r${sub} = ${rEn} from q${sub} (q${sub} > 0: pointing away from q${sub}):`
+          : `Field of q${sub} at M, a distance r${sub} = ${rEn} from q${sub} (q${sub} < 0: pointing towards q${sub}):`,
       ),
-      tex: `r_${n} = \\sqrt{(x_M - x_${n})^2 + (y_M - y_${n})^2} = ${Q(r, 'm')},\\quad E_${n} = k\\frac{|q_${n}|}{r_${n}^2} = ${k} \\cdot \\frac{${Q(Math.abs(c.q), 'C')}}{(${Q(r, 'm')})^2} = ${Q(e, 'V/m')}`,
+      tex: `E_${n} = k\\frac{|q_${n}|}{r_${n}^2} = \\frac{${N(s.k)} \\cdot ${N(Math.abs(c.q))}}{(${N(r)})^2} = ${Q(e, 'V/m')}`,
     };
   });
   const [ex, ey] = fieldAt(s.charges, s.k, s.probe.x, s.probe.y);
@@ -229,7 +231,7 @@ function solve(p: Params, locale: Locale): Solution {
         `Lực tương tác giữa q₁ và q₂ (định luật Coulomb; ${attract ? 'trái dấu: hút nhau' : 'cùng dấu: đẩy nhau'}):`,
         `Force between q₁ and q₂ (Coulomb's law; ${attract ? 'opposite signs: attract' : 'same sign: repel'}):`,
       ),
-      tex: `F_{12} = k\\frac{|q_1 q_2|}{r_{12}^2} = ${k} \\cdot \\frac{${Q(Math.abs(a.q), 'C')} \\cdot ${Q(Math.abs(b.q), 'C')}}{(${Q(r, 'm')})^2} = ${Q(f12, 'N')}`,
+      tex: `F_{12} = k\\frac{|q_1 q_2|}{r_{12}^2} = \\frac{${N(s.k)} \\cdot ${N(Math.abs(a.q))} \\cdot ${N(Math.abs(b.q))}}{(${N(r)})^2} = ${Q(f12, 'N')}`,
     });
     answers.push({
       id: 'F12',
