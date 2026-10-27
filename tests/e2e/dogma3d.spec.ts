@@ -80,11 +80,11 @@ test('DNA → mRNA → protein 3D: a picked base shows the model’s pair and co
   const title = page.locator('.section__title', { hasText: 'ADN → mARN → Protein' });
   await expect(title).toHaveCSS('text-transform', 'none');
   const seq = page.getByRole('textbox', { name: 'Trình tự ADN' });
-  const [box, panel] = await seq.evaluate((el) => [
-    el.getBoundingClientRect().width,
-    (el.closest('.chem-form') ?? el).getBoundingClientRect().width,
-  ]);
-  expect(box).toBeGreaterThan(0.95 * (panel ?? 0));
+  const { box, panel } = await seq.evaluate((el) => ({
+    box: el.getBoundingClientRect().width,
+    panel: (el.closest('.chem-form') ?? el).getBoundingClientRect().width,
+  }));
+  expect(box).toBeGreaterThan(0.95 * panel);
   const caption = page.locator('.m3d__caption');
   await expect(caption).toContainText('ARN pôlimeraza tháo xoắn đoạn ADN đầu tiên');
 
