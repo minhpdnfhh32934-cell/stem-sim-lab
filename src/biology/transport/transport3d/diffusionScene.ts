@@ -470,7 +470,8 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
   function labelAnchors(): LabelAnchor[] {
     const out: LabelAnchor[] = [
       { id: 'compartment1', point: [lay.x0 + lay.w1 * 0.25, BOX.hy, BOX.hz] },
-      { id: 'compartment2', point: [lay.x1 - lay.w2 * 0.25, BOX.hy, BOX.hz] },
+      // Half-way down its front: the top edge sat on the pore's leader (UI-49).
+      { id: 'compartment2', point: [lay.x1 - lay.w2 * 0.25, 0, BOX.hz] },
       { id: 'membrane', point: [lay.xm, -BOX.hy * 0.8, BOX.hz] },
     ];
     const p = lay.pores[0];
@@ -480,8 +481,10 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
     if (f && m.total > 0) {
       let j = -1;
       for (let k = 0; k < m.total; k++) {
-        const right = (places[3 * k] ?? 0) > lay.xm;
-        if (right === f.n2 > 0) {
+        const x = places[3 * k] ?? 0;
+        // Never one crossing a pore: its dot would sit on the membrane (UI-49).
+        const clear = Math.abs(x - lay.xm) > BOX.mh + 2 * BOX.r;
+        if (clear && x > lay.xm === f.n2 > 0) {
           j = k;
           break;
         }
@@ -503,7 +506,8 @@ export function buildDiffusionScene(m: DiffusionModel3D, o: SceneOptions): Diffu
       [2, f.n2],
     ] as const) {
       const words = text.count(n);
-      layer.add(words, centreOf(s), glassTop + 0.4, 0, 'word', words.length);
+      // Above the box's back top edge (its outline from above), not across it (UI-49).
+      layer.add(words, centreOf(s), glassTop + 0.4, -BOX.hz, 'word', words.length);
     }
   }
 
