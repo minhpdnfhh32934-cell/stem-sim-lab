@@ -11,24 +11,26 @@ describe('number field text (UI-17)', () => {
     expect(fieldText('vi', 1 / 3)).toBe('0,333333');
   });
 
-  it('reads either separator and keeps every typed digit', () => {
-    expect(parseField('0,25', 'vi')).toBe(0.25);
-    expect(parseField('0.25', 'vi')).toBe(0.25);
-    expect(parseField(' −0,04 ', 'vi')).toBe(-0.04);
-    expect(parseField('33,33333333', 'vi')).toBe(33.33333333);
-    expect(parseField('2e-3', 'en')).toBe(0.002);
-    expect(parseField('', 'vi')).toBeNaN();
-    expect(parseField('abc', 'vi')).toBeNaN();
+  it('one "." or "," is the decimal mark, in either language; every typed digit is kept', () => {
+    for (const [text, v] of [
+      ['0.125', 0.125],
+      ['0.005', 0.005],
+      ['-0.125', -0.125],
+      ['2.500', 2.5],
+      ['9.81', 9.81],
+      ['9,81', 9.81],
+      ['1.000', 1],
+      ['0,125', 0.125],
+      ['1,000', 1],
+      [' −0,04 ', -0.04],
+      ['33,33333333', 33.33333333],
+      ['2e-3', 0.002],
+    ] as const)
+      expect(parseField(text), text).toBe(v);
   });
 
-  it('thousands in the UI language are thousands, never a silent 1; odd forms are refused', () => {
-    expect(parseField('1.000', 'vi')).toBe(1000);
-    expect(parseField('12.345,6', 'vi')).toBe(12345.6);
-    expect(parseField('1,000', 'en')).toBe(1000);
-    expect(parseField('1.5', 'vi')).toBe(1.5);
-    expect(parseField('1,5', 'en')).toBe(1.5);
-    expect(parseField('0x10', 'vi')).toBeNaN();
-    expect(parseField('Infinity', 'en')).toBeNaN();
-    expect(parseField('1,2,3', 'vi')).toBeNaN();
+  it('two separators, hex, Infinity, out-of-range and empty text are refused', () => {
+    for (const text of ['1.000.5', '1.000,5', '0x10', 'Infinity', '1e400', '', 'abc'])
+      expect(parseField(text), text).toBeNaN();
   });
 });

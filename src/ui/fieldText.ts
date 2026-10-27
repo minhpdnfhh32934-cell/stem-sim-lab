@@ -8,15 +8,15 @@ export const fieldText = (locale: 'vi' | 'en', value: number) =>
   });
 
 /**
- * A typed number → value, or NaN. Either separator works as the decimal mark ("0,25", "0.25");
- * digits grouped by thousands in the UI language ("1.000" in Vietnamese, "1,000" in English)
- * read as thousands, never as a decimal; hex ("0x10"), "Infinity" and other forms are refused.
+ * A typed number → value, or NaN. One "." or "," is the decimal mark, in either language
+ * ("0,25" = "0.25"); a parameter never needs thousands, so two separators ("1.000.5") are refused,
+ * as are hex ("0x10"), "Infinity" and values beyond the number range ("1e400").
  */
-export function parseField(text: string, locale: 'vi' | 'en'): number {
-  let t = text.trim().replace('−', '-');
-  const group = locale === 'vi' ? '.' : ',';
-  const grouped = new RegExp(`^-?\\d{1,3}(\\${group}\\d{3})+([.,]\\d+)?$`);
-  if (grouped.test(t)) t = t.split(group).join('');
-  t = t.replace(',', '.');
-  return /^-?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? Number(t) : Number.NaN;
+export function parseField(text: string): number {
+  const t = text.trim().replace('−', '-');
+  if ((t.match(/[.,]/g) ?? []).length > 1) return Number.NaN;
+  const n = t.replace(',', '.');
+  if (!/^-?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(n)) return Number.NaN;
+  const v = Number(n);
+  return Number.isFinite(v) ? v : Number.NaN;
 }
