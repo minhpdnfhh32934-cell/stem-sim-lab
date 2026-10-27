@@ -1154,3 +1154,19 @@
 .cell-part-card > p:first-of-type {
   font-size: var(--text-content);
 }
+
+/* "Trình tự ADN" (UI-48): the panel's full width, a mono font so the bases line up, themed. */
+.chem-form .dogma-seq {
+  align-items: stretch;
+}
+.dogma-seq textarea {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  resize: vertical;
+  word-break: break-all;
+}

@@ -368,7 +368,7 @@ export function DogmaPanel({ mode }: { mode: 'dogma' | 'mutation' }) {
   const len = parsed.ok ? parsed.coding.length : 0;
   return (
     <div className="chem-form">
-      <label className="rx-input">
+      <label className="rx-input dogma-seq">
         <span className="econf__label">{Lz(L('Trình tự ADN', 'DNA sequence'))}</span>
         <textarea
           rows={3}

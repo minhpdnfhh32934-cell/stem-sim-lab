@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useLocalized } from '@/app/i18n/localized';
 import type { ScienceCardData } from '@/science-card/types';
 import { useCanvas } from '@/ui/canvas/useCanvas';
@@ -5,6 +6,7 @@ import { ELEMENTS_SOURCE, electronsPerShell, elementByZ } from '../data/elements
 import { CSRC, L, usePublishCard } from '../common';
 import { ElementPicker } from '../periodic/ElementPicker';
 import { usePeriodicStore } from '../periodic/store';
+import { bohrLayout } from './bohrLayout';
 import { useBohrStore } from './bohrStore';
 import { transitionWavelength } from './hydrogen';
 import { wavelengthColor } from './spectrumColor';
@@ -61,13 +63,15 @@ export function BohrStage() {
   const e = elementByZ(z);
   const shells = e ? electronsPerShell(e) : [];
   const hydrogen = z === 1;
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const canvasRef = useCanvas(
     ({ ctx, width, height, time, css }) => {
-      const cx = width / 2;
-      const cy = height / 2 + 16;
+      // The chip row overlays the top of the canvas: the picture starts below it.
+      const chips = overlayRef.current;
+      const top = chips ? chips.offsetTop + chips.offsetHeight + 8 : 64;
+      const { cx, cy, rMax } = bohrLayout(width, height, top);
       const count = hydrogen ? Math.max(nUpper, 4) : shells.length;
-      const rMax = Math.min(width, height) / 2 - 40;
       const r0 = Math.max(18, rMax * 0.12);
       const radius = (i: number) => r0 + ((rMax - r0) * (i + 1)) / count;
       const text = css('--text');
@@ -180,7 +184,7 @@ export function BohrStage() {
         className="chem-canvas"
         aria-label={Lz(L('Mô hình Bohr', 'Bohr model'))}
       />
-      <div className="chem-overlay">
+      <div className="chem-overlay" ref={overlayRef}>
         <ElementPicker />
         <span className="chem-chip chem-chip--qual">
           {Lz(

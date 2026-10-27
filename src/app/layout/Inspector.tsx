@@ -42,7 +42,7 @@ export const Inspector = memo(function Inspector() {
       <div className="panel__scroll">
         <TopicLessons topicId={topicId} />
         {mod ? (
-          <Section title={L(mod.view.title)}>
+          <Section title={L(mod.view.title)} keepCase>
             {ModulePanel ? (
               <ModulePanel />
             ) : (

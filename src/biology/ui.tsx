@@ -22,7 +22,8 @@ export function Range(props: {
   return (
     <label>
       <span>
-        {Lz(props.label)}{' '}
+        {/* The colon keeps the value apart from a symbol or word that wraps (UI-50). */}
+        {Lz(props.label)}:{' '}
         <strong className="mono">
           {fmt(props.value, props.digits ?? 3)}
           {props.unit ? ` ${props.unit}` : ''}

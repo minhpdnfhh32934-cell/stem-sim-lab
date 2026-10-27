@@ -791,8 +791,13 @@ export function buildMendelScene(model: MendelModel3D, o: MendelSceneOptions): M
     if (motion.emerge > 0) {
       gameteSlot(dims, 0, dims.rows - 1, a);
       out.push({ id: 'femaleGametes', point: [a[0], a[1] - L.gameteR * 0.6, a[2] + L.gameteR] });
+      // Over the father's gamete tags: at the rings' height its leader ran across the cylinders'
+      // mouths, where it read as a graduation line (UI-49).
       gameteSlot(dims, 1, dims.cols - 1, a);
-      out.push({ id: 'maleGametes', point: [a[0] + L.gameteR, a[1], a[2]] });
+      out.push({
+        id: 'maleGametes',
+        point: [a[0] + L.gameteR, L.gameteY + L.gameteR + 0.95, a[2]],
+      });
     }
     if (field && fieldTotal > 0 && motion.rise > 0) {
       fieldSlot(dims, fieldTotal, fieldTotal - 1, a);
