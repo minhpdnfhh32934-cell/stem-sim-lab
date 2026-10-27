@@ -41,6 +41,8 @@ export interface SeriesDef {
   label: LocalizedText;
   /** Value in SI from the (interpolated) state vector. */
   value: (state: Float64Array, p: Params) => number;
+  /** Shown only while true (e.g. body B's curves when "1 vật"); omitted: always shown. */
+  when?: (p: Params) => boolean;
 }
 
 export interface GraphDef {

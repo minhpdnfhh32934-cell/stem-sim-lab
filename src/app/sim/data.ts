@@ -23,12 +23,20 @@ export interface Column {
   value: (s: Float64Array, p: Params) => number;
 }
 
-/** Flattens every graph series into table columns (deduplicated by id). */
-export function columnsFor(scene: PhysicsScene, label: (t: { vi: string; en: string }) => string) {
+/** The series the parameters show (body B's curves leave the chart, table and CSV when "1 vật"). */
+export const visibleSeries = (g: GraphDef, p: Params) =>
+  g.series.filter((s) => s.when?.(p) ?? true);
+
+/** Flattens every shown graph series into table columns (deduplicated by id). */
+export function columnsFor(
+  scene: PhysicsScene,
+  label: (t: { vi: string; en: string }) => string,
+  p: Params,
+) {
   const cols: Column[] = [];
   const seen = new Set<string>();
   for (const g of scene.graphs) {
-    for (const s of g.series) {
+    for (const s of visibleSeries(g, p)) {
       if (seen.has(s.id)) continue;
       seen.add(s.id);
       const unit = /\(([^)]+)\)/.exec(label(g.yLabel))?.[1] ?? '';

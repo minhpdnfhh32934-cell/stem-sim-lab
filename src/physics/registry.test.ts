@@ -29,9 +29,9 @@ describe('physics registry', () => {
       const s = await loadScene(id);
       const p = s.usesGravity ? { ...s.defaults, g: 9.81 } : s.defaults;
       const texts = [
-        ...s.params.map((d) => ['symbol ' + d.key, d.symbol] as const),
-        ...s.scienceCard(p).equations.map((e, i) => ['card ' + i, e.tex] as const),
-        ...s.solve(p, 'vi').steps.map((st, i) => ['step ' + i, st.tex ?? ''] as const),
+        ...s.params.map((d) => [`symbol ${d.key}`, d.symbol] as const),
+        ...s.scienceCard(p).equations.map((e, i) => [`card ${i}`, e.tex] as const),
+        ...s.solve(p, 'vi').steps.map((st, i) => [`step ${i}`, st.tex ?? ''] as const),
         ...s.bodies.flatMap((b) =>
           (b.properties?.(new Float64Array(64), p) ?? []).map((pr) => ['prop', pr.symbol] as const),
         ),

@@ -70,7 +70,6 @@ describe('challenges (answers checked by the engine)', () => {
   it('texts never break inside an equation ("t = 5 s"), and a mode switch is named', async () => {
     for (const c of CHALLENGES) {
       for (const text of [c.title, c.task, c.hint]) {
-        if (!text) continue;
         // ASCII spaces around "=" let the line break inside it; use U+00A0.
         expect(text.vi, c.id).not.toMatch(/ =|= /);
         expect(text.en, c.id).not.toMatch(/ =|= /);

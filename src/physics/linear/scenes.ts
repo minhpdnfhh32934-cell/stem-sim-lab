@@ -149,6 +149,7 @@ function graphs(): GraphDef[] {
       id: `${sym}${n}`,
       label: L(`${sym} (${n})`, `${sym} (${n})`),
       value: (s: Float64Array) => s[3 * k + idx] ?? 0,
+      ...(n === 'B' ? { when: two } : {}),
     }));
   return [
     {

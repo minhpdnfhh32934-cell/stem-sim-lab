@@ -19,7 +19,7 @@ export function DataPanel() {
   );
   const table = useMemo(() => {
     if (!scene) return null;
-    const cols = columnsFor(scene, L);
+    const cols = columnsFor(scene, L, params);
     const h = sim.history;
     const total = h.length;
     const stride = Math.max(1, Math.ceil(total / 200));
@@ -44,7 +44,7 @@ export function DataPanel() {
   }
 
   const onExport = () => {
-    const cols = columnsFor(scene, L);
+    const cols = columnsFor(scene, L, params);
     const h = sim.history;
     const rows = h.states.map((s, i) => [h.times[i] ?? 0, ...cols.map((c) => c.value(s, params))]);
     const csv = toCsv(['t (s)', ...cols.map((c) => c.header)], rows);
