@@ -11,6 +11,7 @@ import type { ParamDef } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
+import { NumberField } from '@/ui/NumberField';
 
 /** Parameter sliders + numeric inputs, with the origin of each value (§2.1). */
 export function ParamsPanel() {
@@ -115,18 +116,7 @@ function ParamRow({
               set(Number(e.target.value));
             }}
           />
-          <input
-            id={id}
-            className="param__number mono"
-            type="number"
-            min={def.min}
-            max={def.max}
-            step={def.step ?? 'any'}
-            value={Number(shown.toPrecision(6))}
-            onChange={(e) => {
-              if (e.target.value !== '') set(Number(e.target.value));
-            }}
-          />
+          <NumberField id={id} label={L(def.label)} value={shown} onChange={set} />
           <span className="param__unit">{unitLabel(unit)}</span>
         </div>
       )}

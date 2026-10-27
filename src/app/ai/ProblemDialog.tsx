@@ -29,6 +29,7 @@ import { hasScene } from '@/physics/registry';
 import type { ParamDef, ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { IconButton } from '@/ui/IconButton';
+import { NumberField } from '@/ui/NumberField';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { CrisisCard } from '@/safety/CrisisCard';
 import { openGate } from '@/safety/safetyStore';
@@ -411,41 +412,6 @@ function WrittenNote({ written }: { written: { value: number; unit: string; quot
       })}
       {written.quote && <> · {t('analyze.quote', { quote: written.quote })}</>}
     </p>
-  );
-}
-
-function NumberField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  onChange: (v: number) => void;
-}) {
-  // Local text so that intermediate input ("0,", "-") is not rejected while typing.
-  const [text, setText] = useState(() => String(Number(value.toPrecision(6))));
-  const [focused, setFocused] = useState(false);
-  const shown = focused ? text : String(Number(value.toPrecision(6)));
-  return (
-    <input
-      className="param__number mono"
-      inputMode="decimal"
-      aria-label={label}
-      value={shown}
-      onFocus={() => {
-        setText(String(Number(value.toPrecision(6))));
-        setFocused(true);
-      }}
-      onBlur={() => {
-        setFocused(false);
-      }}
-      onChange={(e) => {
-        setText(e.target.value);
-        const v = Number(e.target.value.replace(',', '.').trim());
-        if (e.target.value.trim() !== '' && Number.isFinite(v)) onChange(v);
-      }}
-    />
   );
 }
 

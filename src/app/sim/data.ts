@@ -32,11 +32,11 @@ export function columnsFor(scene: PhysicsScene, label: (t: { vi: string; en: str
       if (seen.has(s.id)) continue;
       seen.add(s.id);
       const unit = /\(([^)]+)\)/.exec(label(g.yLabel))?.[1] ?? '';
-      cols.push({
-        id: s.id,
-        header: `${label(s.label)}${unit ? ` (${unit})` : ''}`,
-        value: s.value,
-      });
+      const name = label(s.label);
+      // A series label may carry its own unit ("F_ms (N)"), and a list of units from the axis
+      // ("N; m/s²") belongs to no single column: append the axis unit only when it is one unit.
+      const header = name.includes('(') || unit.includes(';') || !unit ? name : `${name} (${unit})`;
+      cols.push({ id: s.id, header, value: s.value });
     }
   }
   return cols;
