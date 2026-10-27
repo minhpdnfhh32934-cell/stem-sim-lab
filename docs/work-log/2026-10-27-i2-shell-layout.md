@@ -31,3 +31,11 @@
   `project.spec.ts` first run: the chosen grade is focused (UI-31). All 9 **fail on the old
   source** (checked by restoring it, new tests kept: 8 + 1 failed) and pass now.
 - Unit: `src/ui/useScrollCue.test.ts` (`moreBelow`).
+
+## Results (real, after merging `main` b05f0e4)
+
+| Check                                                                                | Result                                             |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| Prettier on every file that differs from `main`, `npm run lint`, `npm run typecheck` | PASS                                               |
+| `npx vitest run --maxWorkers=2`                                                      | PASS — 328 files, 4415 tests (1 skipped, existing) |
+| `npx playwright test` (all three projects, under the shared lock)                    | PASS — 141/141 (8,9 min)                           |
