@@ -318,10 +318,11 @@ Progress log: `docs/PROGRESS.md`.
   `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
   step doubling; the card's error is an upper estimate from a coarse copy of each line, checked
   against DOPRI5), `engine.ts` (static), `draw.ts` (lines traced once per parameter change),
-  `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` compares relatively,
-  reads superscript exponents after a mantissa ("4.10⁻⁸"), never a bare power ("10⁻⁸": the learner
-  enters it — #89 decision after five review rounds), never a digit of a name in `numbersIn`;
-  `draft.ts` flags a charge whose sign differs from the problem (`signMismatch`). No y_M from words.
+  `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` = main's reader
+  plus four changes only (#89 final scope): a superscript run is one exponent ("4.10⁻⁸"; "⁰" after a
+  digit is a degree), relative comparison of finite numbers (also `known` in `explain.ts`), digits
+  of a 1–2-letter symbol (q0, R1, v_0) dropped in `numbersIn`/`mentions` only, and `writtenSign` →
+  `draft.ts` `signMismatch`. A bare power ("10⁻⁸") is not read and y_M is never taken from words.
 
 ## AI layer (Phase 3)
 

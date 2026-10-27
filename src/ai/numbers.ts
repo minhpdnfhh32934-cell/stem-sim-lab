@@ -24,16 +24,12 @@ export function normalizeText(s: string): string {
   return (
     s
       .normalize('NFC')
-      // A lone ⁰ after a number is a degree sign ("góc 10⁰", "30⁰C"), not 10⁰ = 1.
+      // A lone ⁰ right after a digit is a degree sign ("góc 10⁰", "30⁰C"), not 10⁰ = 1.
       .replace(/(\d)⁰(?![⁰¹²³⁴⁵⁶⁷⁸⁹⁻])/g, '$1°')
-      // One caret per run: "10⁻¹⁰" → "10^-10" (not "10^-^1^0", which no reader understood).
-      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, '^$&')
-      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g, (c) => SUPER[c] ?? c)
+      // One caret per run: "10⁻¹⁹" → "10^-19" (one caret per character gave "10^-^1^9", unread).
+      .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, (run) => `^${run.replace(/./gu, (c) => SUPER[c] ?? c)}`)
       .replace(/\^\^/g, '^')
       .replace(/[−–—]/g, '-')
-      // Cyrillic "х" pasted for "x", zero-width spaces.
-      .replace(/х/g, 'x')
-      .replace(/[\u200b-\u200d\u2060\ufeff]/g, '')
       .replace(/[\u00a0\u202f]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim()
@@ -56,55 +52,9 @@ function readings(token: string): number[] {
   return [...out];
 }
 
-/**
- * Scientific notation a × 10^b. The signs main always read (". × x * ·") may omit the caret; the
- * newer ones (X ⋅ ∙ ´ • ✕ ⨯ \cdot \times) need it, so "2 X 10 N" is never read as a power.
- * An exponent is a whole number: "10^-8,5" is no power of ten this reader knows.
- */
-const SCI =
-  /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·]\s*10\s*\^?|(?:[X⋅∙´•✕⨯]|\\cdot|\\times)\s*10\s*\^)\s*[({]?\s*(-?\d+)(?![.,]?\d)\s*[)}]?/g;
-/** A reading a problem can state: finite, and not a power of ten that underflowed to 0. */
-const usable = (v: number) => Number.isFinite(v) && v !== 0;
-// A thousands group is exactly three digits: "0,000719" is one decimal, not "0,000" and "719".
-const PLAIN = /\d+(?:[.,\s]\d{3}(?!\d))*(?:[.,]\d+)?|\d+/g;
-
-interface Token {
-  start: number;
-  end: number;
-  readings: number[];
-}
-
-/**
- * Number tokens of normalized text, in reading order: scientific notation first, then plain numbers
- * outside it — inside it too with `keepInner` (a problem may write either reading, see
- * `numbersIn`). A power of ten without a mantissa ("10⁻⁸") is never read on its own, as on main:
- * five review rounds showed no rule that tells it from a mantissa it cannot read (#89); the learner
- * enters such a value. `dropNames` leaves out digits glued to a name ("q0", "q_0", "m1", "cm2") —
- * only for "is this number in the problem", never for checking an explanation.
- */
-function scan(t: string, keepInner = false, dropNames = false): Token[] {
-  const tokens: Token[] = [];
-  for (const m of t.matchAll(SCI)) {
-    // "2·10^400" is Infinity, which `same` would match with every value: such readings are dropped.
-    const sci = readings(m[1] ?? '')
-      .map((r) => r * 10 ** Number(m[2]))
-      .filter(usable);
-    // "1.106" may be 1·10^6 or a plain decimal: digits and separators alone keep both readings.
-    const written = m[0].trim();
-    const all = /^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci;
-    tokens.push({ start: m.index, end: m.index + m[0].length, readings: all });
-  }
-  const outer = tokens.length;
-  for (const m of t.matchAll(PLAIN)) {
-    const end = m.index + m[0].length;
-    if (!keepInner && tokens.slice(0, outer).some((k) => m.index >= k.start && end <= k.end)) {
-      continue;
-    }
-    if (dropNames && /[\p{L}_]$/u.test(t.slice(0, m.index))) continue;
-    tokens.push({ start: m.index, end, readings: readings(m[0].replace(/\s/g, '')) });
-  }
-  return tokens.sort((a, b) => a.start - b.start);
-}
+/** Scientific notation: a [.×x*] 10 ^? b */
+const SCI = /(\d+(?:[.,]\d+)?)\s*(?:[.×x*·])\s*10\s*\^?\s*\(?\s*(-?\d+)\s*\)?/g;
+const PLAIN = /\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?|\d+/g;
 
 /**
  * Every number written in the text, one entry per written token, each with all its possible
@@ -113,17 +63,54 @@ function scan(t: string, keepInner = false, dropNames = false): Token[] {
  * are part of a scientific-notation token ("6,67.10^-11") are not counted again on their own.
  */
 export function numberTokens(text: string): number[][] {
-  return scan(normalizeText(text)).map((k) => k.readings);
+  const t = normalizeText(text);
+  const tokens: number[][] = [];
+  const spans: [number, number][] = [];
+  for (const m of t.matchAll(SCI)) {
+    const exp = Number(m[2]);
+    const sci = readings(m[1] ?? '').map((r) => r * 10 ** exp);
+    // "1.106" may be 1·10^6 or a plain decimal: digits and separators alone keep both readings.
+    const written = m[0].trim();
+    tokens.push(/^[\d.,]+$/.test(written) ? [...sci, ...readings(written)] : sci);
+    spans.push([m.index, m.index + m[0].length]);
+  }
+  for (const m of t.matchAll(PLAIN)) {
+    const start = m.index;
+    const end = start + m[0].length;
+    if (spans.some(([s, e]) => start >= s && end <= e)) continue;
+    tokens.push(readings(m[0].replace(/\s/g, '')));
+  }
+  return tokens;
 }
 
-/** All numbers mentioned in the text (absolute values; signs are interpretation). */
+/** A symbol of one or two letters at the start of a word ("q0", "q_0", "m1", "R1", "v_0"). */
+const SYMBOL_BEFORE = /(?<!\p{L})\p{L}{1,2}_?$/u;
+
+/**
+ * All numbers mentioned in the text (absolute values; signs are interpretation). Readings that are
+ * not finite ("2.10^400") are left out, and so is the digit of a symbol ("q0 = 2 nC" states no 0);
+ * "nhau10", "góc30" are words, so their numbers stay.
+ */
 export function numbersIn(text: string): number[] {
-  return scan(normalizeText(text), true, true).flatMap((k) => k.readings);
+  const t = normalizeText(text);
+  const found: number[] = [];
+  // Scientific notation first, then every plain token (a problem may write either reading).
+  for (const m of t.matchAll(SCI)) {
+    const exp = Number(m[2]);
+    for (const r of readings(m[1] ?? '')) found.push(r * 10 ** exp);
+  }
+  for (const m of t.matchAll(PLAIN)) {
+    if (SYMBOL_BEFORE.test(t.slice(0, m.index))) continue;
+    found.push(...readings(m[0].replace(/\s/g, '')));
+  }
+  return found.filter(Number.isFinite);
 }
 
-/** Equal up to floating-point noise: relative, so 5·10⁻¹⁰ and 7·10⁻¹⁰ differ (an absolute 1e-9 did not). */
+/**
+ * Equal up to floating-point noise, relatively: 5·10⁻¹⁰ and 7·10⁻¹⁰ differ (an absolute 1e-9 let
+ * every tiny charge pass). Only finite numbers: Infinity ≤ 1e-9·Infinity would match anything.
+ */
 const same = (a: number, b: number) =>
-  // Never Infinity: Infinity ≤ 1e-9·Infinity would make every value "in the problem".
   Number.isFinite(a) &&
   Number.isFinite(b) &&
   Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math.abs(b));
@@ -132,6 +119,32 @@ const same = (a: number, b: number) =>
 export function mentions(text: string, value: number): boolean {
   const target = Math.abs(value);
   return numbersIn(text).some((n) => same(n, target));
+}
+
+interface Span {
+  start: number;
+  end: number;
+  readings: number[];
+}
+
+/** The tokens of `numberTokens`, with where they stand in the normalized text (for `writtenSign`). */
+function spans(t: string): Span[] {
+  const out: Span[] = [];
+  for (const m of t.matchAll(SCI)) {
+    const exp = Number(m[2]);
+    out.push({
+      start: m.index,
+      end: m.index + m[0].length,
+      readings: readings(m[1] ?? '').map((r) => r * 10 ** exp),
+    });
+  }
+  const sci = out.length;
+  for (const m of t.matchAll(PLAIN)) {
+    const end = m.index + m[0].length;
+    if (out.slice(0, sci).some((k) => m.index >= k.start && end <= k.end)) continue;
+    out.push({ start: m.index, end, readings: readings(m[0].replace(/\s/g, '')) });
+  }
+  return out.sort((x, y) => x.start - y.start);
 }
 
 /**
@@ -161,7 +174,7 @@ const SENTENCE_END = /[.;!?](?=\s|$)/g;
 export function writtenSign(text: string, value: number, quote = ''): -1 | 0 | 1 {
   const t = normalizeText(text).toLowerCase();
   // Digits of names and unit powers ("q1", "m/s^2") are not numbers of the problem.
-  const tokens = scan(t).filter((k) => !/(?:[\p{L}_]|\^-?)$/u.test(t.slice(0, k.start)));
+  const tokens = spans(t).filter((k) => !/(?:[\p{L}_]|\^-?)$/u.test(t.slice(0, k.start)));
   const target = Math.abs(value);
   const ends = [...t.matchAll(SENTENCE_END)].map((m) => m.index);
   const signAt = (i: number): -1 | 0 | 1 => {

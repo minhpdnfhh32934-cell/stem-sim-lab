@@ -46,7 +46,8 @@ export function allowedNumbers(solution: Solution, problemText: string): number[
     nums.push(...numbersIn(s.text.vi), ...numbersIn(s.tex ?? ''));
   }
   nums.push(...numbersIn(problemText));
-  return nums;
+  // An overflowed number ("2.10^400") is no number the explanation may repeat.
+  return nums.filter(Number.isFinite);
 }
 
 /**
@@ -56,8 +57,10 @@ export function allowedNumbers(solution: Solution, problemText: string): number[
  */
 export function unknownNumbers(text: string, allowed: number[]): number[] {
   const small = (n: number) => Number.isInteger(n) && n <= 4; // "2 vật", "bước 1"…
+  // Relative only (#89): an absolute floor let any invented number below ~1e-11 match every tiny
+  // number of the problem ("F = 3,2.10⁻¹⁵ N" against e = 1,6.10⁻¹⁹ C). Infinity is never known.
   const known = (n: number) =>
-    small(n) || allowed.some((a) => Math.abs(a - n) <= 0.01 * Math.max(Math.abs(a), 1e-9));
+    small(n) || (Number.isFinite(n) && allowed.some((a) => Math.abs(a - n) <= 0.01 * Math.abs(a)));
   const unknown: number[] = [];
   for (const readings of numberTokens(text)) {
     const first = readings[0];

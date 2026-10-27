@@ -114,27 +114,28 @@ thấy hoạt nghiệm, và muốn đường cong mượt (≥ 10 điểm mỗi 
 và thước đo góc chia lại hệ số phóng to (`PhysicsScene.yStretch`), nên vẫn đo theo mét thật. Xem
 DATA_REVIEW SWV-1 … SWV-8.
 
-**Số rất nhỏ và dấu điện tích trong đề (0.8.0, #37 §8.2 bẫy 2 và 3):** bộ lọc "số phải có trong
-đề" (`src/ai/numbers.ts`) so **sai số tương đối** (trước đây là tuyệt đối 10⁻⁹, nên với điện tích cỡ
-10⁻⁹ C số bịa vẫn lọt: đề ghi 5.10⁻¹⁰ thì 7.10⁻¹⁰ vẫn qua), đọc được lũy thừa đứng một mình ("10⁻⁸
-C"), đọc đúng số mũ nhiều chữ số viết bằng chữ số nhỏ phía trên ("10⁻¹⁰" trước đây không đọc được) và
-số thập phân nhỏ ("0,000719" trước đây bị tách thành "0,000" và "719"). Bộ lọc so trị tuyệt đối,
-nên `src/ai/draft.ts` kiểm thêm **dấu của điện tích**: dấu AI đưa ra khác dấu trong đề (dấu "−" sát
-số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái dấu"), thì bảng "Tôi hiểu đề
-như sau" hiện cảnh báo ngay ở dòng điện tích đó; cảnh báo còn cho tới khi dấu người học đặt khớp với
-đề (đề để ngỏ dấu thì người học tự đặt lại là đủ). Bộ lọc không bao giờ lỏng hơn trước. **Quyết
-định #89 (sau năm lượt duyệt):** lũy thừa 10 không có hệ số ("q = 10⁻⁸ C") không được đọc, giống
-`main`: không luật nào phân biệt chắc chắn nó với một hệ số viết lạ, nên bảng "Tôi hiểu đề như sau"
-hỏi người học nhập giá trị; viết có hệ số ("1.10⁻⁸ C", "4.10⁻⁸ C") thì đọc được. Dấu nhân mới ("X",
-"•", "´", "\cdot"…) chỉ được đọc khi có dấu mũ hay chữ số mũ nhỏ. Số mũ phải là số nguyên ("10^-8,5"
-không được đọc); số quá lớn hay quá nhỏ so với máy tính (như 10⁴⁰⁰) bị bỏ; "10⁰" sau chữ số là "10
-độ". Chữ số dính vào tên ("q0", "q_0", "q1") không được coi là số có trong đề (chỉ ở phía kiểm đề;
-phần kiểm lời giải thích đọc như `main`). Không suy y_M = 0 từ lời ("M nằm trên đoạn AB"): đề không
-ghi số thì người học nhập. Test so sánh với bản trên `main` (`numbersMain.fixture.ts`): trên lưới hệ
-số × cách nối × dạng lũy thừa × số mũ × vị trí, câu nào `main` chặn thì bản mới cũng chặn (ngoại lệ
-duy nhất: hệ số với số mũ viết bằng chữ số nhỏ mà `main` không đọc được); mọi giá trị của bộ đề
-chuẩn mà `main` nhận thì bản mới cũng nhận; lời giải thích bị `main` đánh dấu thì bản mới cũng đánh dấu
-(`numbers.test.ts`).
+**Số rất nhỏ và dấu điện tích trong đề (0.8.0, #37 §8.2 bẫy 2 và 3; phạm vi cuối của #89):**
+`src/ai/numbers.ts` giữ nguyên bộ đọc của bản trước, chỉ thêm bốn điểm:
+
+1. Một dãy chữ số mũ nhỏ phía trên là một số mũ: "4.10⁻⁸", "1,6.10⁻¹⁹" được đọc như khi viết "4.10^-8"
+   (trước đây "10⁻¹⁹" thành "10^-^1^9", không đọc được). "⁰" ngay sau chữ số là độ ("10⁰" là 10 độ,
+   không phải 1).
+2. So **sai số tương đối**, chỉ với số hữu hạn: trước đây ngưỡng tuyệt đối 10⁻⁹ cho số bịa lọt với
+   điện tích cỡ 10⁻⁹ C (đề ghi 5.10⁻¹⁰ thì 7.10⁻¹⁰ vẫn qua). Phần kiểm lời giải thích (`explain.ts`)
+   cũng bỏ ngưỡng tuyệt đối (số bịa dưới ~10⁻¹¹ từng khớp mọi số nhỏ của đề). Số tràn ("2.10⁴⁰⁰")
+   không bao giờ được coi là "có trong đề", còn trong lời giải thích thì luôn bị đánh dấu.
+3. Chữ số dính vào ký hiệu một hai chữ cái đầu từ ("q0", "q_0", "m1", "R1", "v_0") không được coi
+   là số có trong đề; "nhau10", "góc30" là từ nên vẫn đọc như trước. Chỉ áp ở phía kiểm đề.
+4. **Dấu của điện tích:** bộ lọc so trị tuyệt đối, nên `src/ai/draft.ts` kiểm thêm: dấu AI đưa ra khác
+   dấu trong đề (dấu "−" sát số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái
+   dấu", "khác dấu"), thì bảng "Tôi hiểu đề như sau" hiện cảnh báo ở dòng điện tích đó (không chặn);
+   cảnh báo còn cho tới khi dấu người học đặt khớp với đề.
+
+Như trước, lũy thừa 10 không có hệ số ("q = 10⁻⁸ C") không được đọc, và y_M = 0 không được suy từ lời
+("M nằm trên đoạn AB"): bảng hỏi người học nhập. Test so sánh với bản trước (`numbersMain.fixture.ts`):
+câu nào bản trước chặn thì bản mới cũng chặn (ngoại lệ duy nhất: hệ số với số mũ viết bằng chữ số nhỏ
+mà bản trước không đọc được), mọi giá trị của bộ đề chuẩn mà bản trước nhận thì bản mới cũng nhận, lời
+giải thích bị bản trước đánh dấu thì bản mới cũng đánh dấu (`numbers.test.ts`).
 
 **Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
 số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn

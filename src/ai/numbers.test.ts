@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { unknownNumbers } from './explain';
 import { mentions, numbersIn, numberTokens, writtenSign } from './numbers';
 import golden from '../../tests/golden/physics.json' with { type: 'json' };
 import { mentions as mainMentions, numberTokens as mainNumberTokens } from './numbersMain.fixture';
@@ -8,67 +9,59 @@ const goldenItems = (
 ).items;
 
 describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
-  it('reads superscript exponents after a mantissa; a power alone is never read (as on main)', () => {
+  it('reads a superscript exponent after a mantissa as one power', () => {
     expect(mentions('Điện tích q = 4.10⁻⁸ C đặt tại A.', 4e-8)).toBe(true);
     expect(numberTokens('q = 4.10⁻⁸ C')).toEqual([[4e-8]]);
-    expect(mentions('n = 2.10¹⁰', 2e10)).toBe(true);
-    // #89 decision after five review rounds: "10⁻⁸" without a mantissa is not read; the learner
-    // enters the value in "Tôi hiểu đề như sau".
-    for (const text of ['q = 10⁻⁸ C', 'q = 10^-8 C', 'q = 10^(-8) C', 'Điện tích 10⁻⁸ C.']) {
-      expect(mentions(text, 1e-8), text).toBe(false);
-    }
+    expect(mentions('q = 5.10⁻¹⁰ C', 5e-10)).toBe(true);
+    expect(mentions('e = 1,6.10⁻¹⁹ C', 1.6e-19)).toBe(true);
+    // As on main, a power of ten without a mantissa is not read: the learner enters it (#89).
+    expect(mentions('q = 10⁻⁸ C', 1e-8)).toBe(false);
+    expect(mentions('q = 10^-8 C', 1e-8)).toBe(false);
+  });
+
+  it('reads a superscript zero after a digit as degrees, not as 10⁰ = 1', () => {
+    expect(mentions('Góc nghiêng 10⁰.', 1)).toBe(false);
+    expect(mentions('Góc nghiêng 10⁰.', 10)).toBe(true);
+    expect(numberTokens('nhiệt độ 30⁰C')).toEqual([[30]]);
   });
 
   it('compares relatively, so a tiny invented value is caught', () => {
     expect(mentions('q = 1.10⁻⁸ C', 2e-8)).toBe(false);
-    expect(mentions('q = 5.10⁻¹⁰ C', 5e-10)).toBe(true);
     expect(mentions('q = 5.10⁻¹⁰ C', 7e-10)).toBe(false);
     expect(mentions('e = 1,6.10-19 C', 1.6e-19)).toBe(true);
     expect(mentions('e = 1,6.10-19 C', 1.7e-19)).toBe(false);
-  });
-
-  it('keeps ordinary numbers as they were', () => {
-    expect(mentions('cách nhau 10 cm', 10)).toBe(true);
-    expect(numberTokens('cách nhau 10 cm')).toEqual([[10]]);
-    // Small decimals stay whole (the thousands group used to swallow ",000").
-    expect(numberTokens('F = 0,000719 N')).toEqual([[0.000719, 719]]);
-    expect(numberTokens('1.200.000 N, 1 200 N')).toEqual([[1200000], [1200]]);
-    expect(numberTokens('q = 5.10^-10 C')).toEqual([[5e-10]]);
-    expect(numbersIn('q = 5.10^-10 C')).not.toContain(1e-10);
-    expect(mentions('q = 5 × 10⁻¹⁰ C', 1e-10)).toBe(false);
-    expect(mentions('vật nằm yên', 0)).toBe(false);
     expect(mentions('v = 0 m/s', 0)).toBe(true);
+    expect(mentions('vật nằm yên', 0)).toBe(false);
   });
 
-  it('reads the new multiplication signs only with a caret or a superscript exponent', () => {
-    expect(mentions('q = 2´10⁻⁸ C', 2e-8)).toBe(true);
-    expect(mentions('q = 2 • 10⁻⁸ C', 2e-8)).toBe(true);
-    expect(mentions('q = 2⋅10^-8 C', 2e-8)).toBe(true);
-    expect(mentions('F = 2 X 10^3 N', 2000)).toBe(true);
-    expect(mentions('q = 2 \\cdot 10^{-8} C', 2e-8)).toBe(true);
-    // Without a caret "X 10" is no power of ten.
-    expect(mentions('F = 2 X 10 3 N', 2000)).toBe(false);
-  });
-
-  it('never reads an infinite number, a decimal exponent or 10⁰ as 1', () => {
-    for (const text of ['q = 2·10^400 C, AB = 6 cm', 'q = 10^309 C', 'E = 9·10⁹¹²³']) {
+  it('never reads an infinite number (every value would then be "in the problem")', () => {
+    for (const text of ['q = 2·10^400 C, AB = 6 cm', 'q = 2.10^309 C', 'E = 9.10⁹¹²³ V/m']) {
+      expect(numbersIn(text).every(Number.isFinite), text).toBe(true);
       for (const v of [7, 123.456, 42, 5]) expect(mentions(text, v), `${text} ${v}`).toBe(false);
     }
-    expect(mentions('q = 2.10^-8,5 C', 2e-8)).toBe(false);
-    for (const text of ['Góc nghiêng 10⁰.', 'góc 10^0', 'góc 10^(0)', 'góc 10^{0}', 't = 10^0C']) {
-      expect(mentions(text, 1), text).toBe(false);
-      expect(mentions(text, 10), text).toBe(true);
-    }
-    expect(numberTokens('nhiệt độ 30⁰C')).toEqual([[30]]);
   });
 
-  it('never reads the digit of a name such as q0, q_0 or q1 as a number of the problem', () => {
+  it('leaves out the digit of a one- or two-letter symbol, never of a word', () => {
     expect(mentions('Điện tích thử q0 = 2 nC đặt tại M.', 0)).toBe(false);
     expect(mentions('Điện tích thử q_0 = 2 nC.', 0)).toBe(false);
+    expect(mentions('v_0 = 5 m/s', 0)).toBe(false);
     expect(numbersIn('q1 = 2 µC')).not.toContain(1);
-    expect(mentions('q1 = 2 µC', 2)).toBe(true);
-    expect(mentions('S = 20 cm2', 20)).toBe(true);
+    expect(mentions('R1 = 10 Ω', 1)).toBe(false);
+    expect(mentions('R1 = 10 Ω', 10)).toBe(true);
+    // Round 6: words keep their numbers, as on main.
+    expect(mentions('Hai điện tích cách nhau10 cm.', 10)).toBe(true);
+    expect(mentions('Xe chạy với vận tốc72 km/h.', 72)).toBe(true);
+    expect(mentions('Mặt phẳng nghiêng góc30°.', 30)).toBe(true);
     expect(mentions('Điểm M(3; 0) trên trục Ox.', 0)).toBe(true);
+  });
+
+  it('reads decimals and lists as main does (round 6)', () => {
+    expect(mentions('x = 0,0025 m', 25)).toBe(false);
+    expect(mentions('x = 7,2000 m', 72000)).toBe(false);
+    const list = 'q₁ = 2.10^-8,3.10^-8 C';
+    expect(mentions(list, 2e-8)).toBe(true);
+    expect(mentions(list, 3e-8)).toBe(true);
+    expect(mentions(list, 8.3e-8)).toBe(false);
   });
 });
 
@@ -116,7 +109,7 @@ describe('never laxer than main (#89)', () => {
   // Readings main could not make at all: a superscript exponent of several characters.
   const superscript = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]{2,}/u;
 
-  it('accepts nothing main refuses (a bare 10ⁿ above all)', () => {
+  it('accepts nothing main refuses (every round of the review, in one grid)', () => {
     const laxer: string[] = [];
     for (const e of [-8, 3, 2]) {
       for (const pre of prefixes) {
@@ -125,7 +118,7 @@ describe('never laxer than main (#89)', () => {
             for (const pow of powers(e)) {
               for (const suf of suffixes) {
                 const text = `${pre}${m}${j}${pow}${suf}`;
-                for (const v of [10 ** e, 7, 1]) {
+                for (const v of [10 ** e, 7, 1, 0]) {
                   if (!mentions(text, v) || mainMentions(text, v)) continue;
                   laxer.push(`${text} | ${v}`);
                 }
@@ -135,7 +128,7 @@ describe('never laxer than main (#89)', () => {
         }
       }
     }
-    // Only a mantissa with a superscript exponent main could not read may be new (its own value).
+    // Only a superscript exponent main could not read may give a new (right) reading.
     expect(laxer.filter((x) => !superscript.test(x))).toEqual([]);
   });
 
@@ -151,10 +144,10 @@ describe('never laxer than main (#89)', () => {
     expect(missed).toEqual([]);
   });
 
-  it('flags in an explanation every number main flags (numberTokens as explain.ts uses it)', () => {
-    // Same rule as explain.ts `unknownNumbers`, run with each reader's tokens.
-    const flags = (tokens: number[][], allowed: number[]) =>
-      tokens.some(
+  it('flags in an explanation every number main flags (explain.ts unknownNumbers)', () => {
+    // explain.ts on main: tokens from main's reader, 1 % tolerance with an absolute floor.
+    const mainFlags = (text: string, allowed: number[]) =>
+      mainNumberTokens(text).some(
         (r) =>
           !r.some(
             (n) =>
@@ -173,19 +166,29 @@ describe('never laxer than main (#89)', () => {
       'E1 = 9 V/m',
       'v_0 = 9 m/s',
       'x = 2X10^3 m',
+      'E = 2.10^400 V/m',
+      'F = 3,2.10-15 N',
+      'x = 0,0025 m',
+      'x = 7,2000 m',
+      'q = 2.10^-8,3.10^-8 C',
+      'cách nhau10 cm',
     ];
-    const allowedSets = [[], [9], [7200], [1.6e-19], [7], [2000]];
+    const allowedSets = [[], [9], [7200], [1.6e-19], [7], [2000], [25], [72000], [8.3e-8]];
     const laxer: string[] = [];
     for (const text of texts) {
       for (const allowed of allowedSets) {
-        if (flags(mainNumberTokens(text), allowed) && !flags(numberTokens(text), allowed)) {
+        if (mainFlags(text, allowed) && unknownNumbers(text, allowed).length === 0) {
           laxer.push(`${text} | ${allowed.join(',')}`);
         }
       }
     }
-    // On purpose: a new multiplication sign with a caret is read ("2X10^3" = 2000, the engine's own
-    // number); main split it into 2, 10, 3.
-    expect(laxer).toEqual(['x = 2X10^3 m | 2000']);
+    expect(laxer).toEqual([]);
+  });
+
+  it('flags overflowed and invented tiny numbers in an explanation (round 6)', () => {
+    expect(unknownNumbers('E = 2.10^400 V/m', [2])).not.toEqual([]);
+    expect(unknownNumbers('F = 3,2.10⁻¹⁵ N', [1.6e-19])).not.toEqual([]);
+    expect(unknownNumbers('e = 1,6.10⁻¹⁹ C', [1.6e-19])).toEqual([]);
   });
 });
 

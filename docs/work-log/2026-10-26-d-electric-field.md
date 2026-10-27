@@ -254,3 +254,21 @@ src/core src/ai src/app tests/golden` → 903 passed; full `npx vitest run` → 
 - Results: `src/ai tests/golden src/app/ai src/physics/field` → 518 passed; eslint, tsc, Prettier
   clean; full `npx vitest run` → 4388 passed, 1 skipped; E2E physics + layout + ai-flow (lock) →
   39 passed.
+
+## 2026-10-27 — PR #89 round 6: `numbers.ts` = main + four changes (final scope)
+
+- Review: PR comment 6431868935 (five red points, all from the rewritten reader: overflow hidden
+  from the explanation check, explain.ts absolute floor ~1e-11, "0,0025" → 25, name digits dropped
+  too widely, integer-exponent lookahead breaking "2.10^-8,3.10^-8").
+- `git checkout origin/main -- src/ai/numbers.ts`, then only: (1) a superscript run is one caret,
+  "⁰" after a digit is "°"; (2) `same` and explain.ts `known` relative, finite only (no absolute
+  floor), `numbersIn`/`allowedNumbers` drop non-finite readings, `numberTokens` as main; (3) digits
+  of a 1–2-letter symbol at a word start dropped in `numbersIn`/`mentions` only; (4) `writtenSign`
+  kept (with a small positioned tokenizer of main's regexes for it).
+- Side effect handled in the scene: forces are shown in µN / mN / N by magnitude, so the default
+  answers ("0,000719 N", "0,3595 mN") never have the 4+ decimals main's reader splits.
+- Tests: the five round-6 cases and the earlier rounds' cases; comparisons with the frozen main
+  reader both ways (mentions, golden values, explanation flags). The new tests fail on the round-5
+  file (checked by swapping it in and back).
+- Results: `src/ai tests/golden src/app src/physics src/learn src/teacher/board` → 1501 passed;
+  tsc clean.

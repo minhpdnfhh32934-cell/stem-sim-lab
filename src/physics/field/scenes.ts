@@ -26,6 +26,12 @@ const SUB = ['₁', '₂', '₃'];
 /** k = 1/(4πε₀) written as SGK does, "8,988·10⁹ N·m²/C²" (not "8.988.000.000"). */
 const kText = (locale: Locale) =>
   `${formatNumber(locale, Number((C.kC / 1e9).toPrecision(4)))}·10⁹ N·m²/C²`;
+/**
+ * Unit of a force for display: µN below 1 mN, mN below 1 N, else N — the shown number is ≥ 1 in its
+ * unit, so it never has the 4+ decimals ("0,000719", "0,3595") the explanation check misreads.
+ */
+const forceUnit = (f: number) => (Math.abs(f) < 1e-3 ? 'uN' : Math.abs(f) < 1 ? 'mN' : 'N');
+
 const points = (p: Params) => (p.mode ?? MODE.points) === MODE.points;
 const plates = (p: Params) => !points(p);
 const count = (p: Params) => Math.min(3, Math.max(1, Math.round(p.n ?? 2)));
@@ -88,7 +94,7 @@ const probe: BodyDef = {
       label: L('Lực điện lên q₀', 'Electric force on q₀'),
       symbol: 'F',
       value: Math.abs(fieldSetup(p).q0) * (s[FE.e] ?? 0),
-      unit: 'N',
+      unit: forceUnit(Math.abs(fieldSetup(p).q0) * (s[FE.e] ?? 0)),
     },
   ],
 };
@@ -159,7 +165,12 @@ function solvePlates(p: Params, locale: Locale): Solution {
   return {
     answers: [
       { id: 'E', label: L('Cường độ điện trường E', 'Field strength E'), value: e, unit: 'V/m' },
-      { id: 'F', label: L('Lực điện lên q₀', 'Electric force on q₀'), value: f, unit: 'N' },
+      {
+        id: 'F',
+        label: L('Lực điện lên q₀', 'Electric force on q₀'),
+        value: f,
+        unit: forceUnit(f),
+      },
     ],
     steps,
   };
@@ -225,7 +236,7 @@ function solve(p: Params, locale: Locale): Solution {
       id: 'F',
       label: L('Lực điện lên q₀ tại M', 'Electric force on q₀ at M'),
       value: f,
-      unit: 'N',
+      unit: forceUnit(f),
     },
   ];
   const [a, b] = s.charges;
@@ -249,7 +260,7 @@ function solve(p: Params, locale: Locale): Solution {
       id: 'F12',
       label: L('Lực tương tác giữa q₁ và q₂', 'Force between q₁ and q₂'),
       value: f12,
-      unit: 'N',
+      unit: forceUnit(f12),
     });
   }
   return { answers, steps };
@@ -376,8 +387,8 @@ export const electricField: PhysicsScene = {
   title: L('Điện trường của điện tích điểm', 'Electric field of point charges'),
   // `when` keeps only the ones the chosen mode and number of charges use. q₁ sits at the origin
   // and q₂ on the x-axis (any two points can be placed so). One charge: M on the x-axis (x_M only).
-  // Two or three: M needs both coordinates; "trên đoạn AB" / "trung điểm của AB" state y_M = 0
-  // in words (`IMPLIED` in src/ai/draft.ts), otherwise the learner enters them.
+  // Two or three: M needs both coordinates, written as numbers in the problem; otherwise the
+  // confirmation table asks the learner (no y_M from words such as "M nằm trên đoạn AB", #89).
   required: ['U', 'd', 'q1', 'q2', 'x2', 'q3', 'x3', 'y3', 'xP', 'yP'],
   usesGravity: false,
   params: [
