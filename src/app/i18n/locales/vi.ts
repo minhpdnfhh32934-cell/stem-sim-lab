@@ -237,7 +237,7 @@ const vi = {
         'Chọn nhà cung cấp AI trực tuyến, nhập khóa API, đặt giới hạn và dự phòng khi hết lượt.',
       teacher: 'AI Teacher',
       teacherHint: 'Think (một AI thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
-      local: 'Gemma trên máy này',
+      local: 'Gemma cục bộ',
       localHint:
         'Tải, chọn hoặc xóa mô hình Gemma chạy ngay trên máy: trả lời không cần mạng, không cần khóa.',
       gpu: 'GPU cho Gemma',
@@ -611,7 +611,7 @@ const vi = {
         'Giới hạn này đặt trong Cài đặt → Kết nối AI ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       other: 'Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
       local:
-        'AI trên máy không tự chuyển sang API. Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
+        'AI trên máy không tự chuyển sang AI trực tuyến. Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
     },
     hintClaude: {
       missingKey:
@@ -915,7 +915,7 @@ const vi = {
     usePhoto: 'Lấy ảnh',
     reading: 'Đang đọc ảnh…',
     privacy:
-      'Ảnh được gửi cho AI đang dùng (Gemma trên máy, chương trình AI em chọn trên máy này, hoặc API cloud) chỉ để đọc đề, không dùng việc khác.',
+      'Ảnh được gửi cho AI đang dùng (Gemma trên máy, chương trình AI em chọn trên máy này, hoặc AI trực tuyến) chỉ để đọc đề, không dùng việc khác.',
     denied: 'Không mở được camera. Hãy cho phép trình duyệt/ứng dụng dùng camera rồi thử lại.',
     retry: 'Thử lại',
     blockedHint:
@@ -923,7 +923,7 @@ const vi = {
     unsupported: 'Thiết bị này không hỗ trợ camera.',
     needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → AI Teacher.',
     needVision:
-      'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
+      'Chưa đọc được ảnh: cần AI trực tuyến (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
     outputUnsafe:
       'Chữ đọc được từ ảnh có nội dung không phù hợp nên mình không đưa vào ô đề bài. Hãy chụp một đề bài khác.',
@@ -1548,8 +1548,8 @@ const vi = {
     send: 'Gửi câu hỏi',
     think: 'Think',
     thinkTitle: 'Dùng một AI thứ hai để rà soát câu trả lời',
-    twoApis: '· 2 API',
-    oneApiReview: '· 1 API rà soát',
+    twoApis: '· 2 AI',
+    oneApiReview: '· 1 AI rà soát',
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
@@ -1797,7 +1797,7 @@ const vi = {
     characters: 'ký tự',
     removeFile: 'Xóa',
     localLibraryPrivacy:
-      'Tệp được lưu trên máy này. Khi dùng API trực tuyến, các đoạn liên quan có thể được gửi kèm câu hỏi. Chỉ nạp tài liệu bạn có quyền sử dụng.',
+      'Tệp được lưu trên máy này. Khi dùng AI trực tuyến, các đoạn liên quan có thể được gửi kèm câu hỏi. Chỉ nạp tài liệu bạn có quyền sử dụng.',
     memory: {
       title: 'Trí nhớ hội thoại',
       intro:
@@ -1848,7 +1848,7 @@ const vi = {
         'Lúc {when}, card {card} ngừng phản hồi khi Gemma đang trả lời. Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động lại.',
       faultBlocked: 'Gemma đang tạm dừng tới khi em mở lại ứng dụng.',
       faultAdvice:
-        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng API trực tuyến.',
+        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng AI trực tuyến.',
       useDiscrete: 'Dùng card rời: {name}',
       allowAgain: 'Vẫn cho Gemma chạy lại',
       dismissFault: 'Ẩn thông báo',
@@ -1866,7 +1866,7 @@ const vi = {
     detectPrivacy:
       'Chỉ hỏi ba địa chỉ quen thuộc trên máy này ({addresses}) và các địa chỉ em tự thêm. Không đọc tệp nào, không quét ổ đĩa, không gửi gì ra khỏi máy.',
     fallback:
-      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang API). Nếu em bật “Tra thêm Wikipedia”, câu hỏi chỉ được gửi tới Wikipedia sau khi SimLab đã kết nối được tới chương trình AI trên máy.',
+      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang AI trực tuyến). Nếu em bật “Tra thêm Wikipedia”, câu hỏi chỉ được gửi tới Wikipedia sau khi SimLab đã kết nối được tới chương trình AI trên máy.',
     corsNote:
       'Đang chạy trên trình duyệt: chương trình AI phải cho phép trang này truy cập (CORS), nếu không SimLab sẽ báo “Không thấy”. Ứng dụng desktop không cần việc này.',
     detectFailed: 'Chưa tìm được. Em thử lại nhé.',
@@ -1973,9 +1973,10 @@ const vi = {
       'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. {now} Bấm “Dùng cho AI Teacher” để chuyển.',
     now: {
       cloud: 'Câu hỏi cho AI Teacher đang được gửi lên mạng tới {provider}.',
-      cloudOff: 'AI Teacher đang chọn API nhưng API đang tắt, nên chưa có câu hỏi nào được gửi đi.',
+      cloudOff:
+        'AI Teacher đang chọn AI trực tuyến nhưng AI trực tuyến đang tắt, nên chưa có câu hỏi nào được gửi đi.',
       cloudNoKey:
-        'AI Teacher đang chọn API {provider} nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
+        'AI Teacher đang chọn AI trực tuyến {provider} nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
       gemma: 'AI Teacher đang trả lời bằng Gemma cục bộ, ngay trên máy em.',
       gemmaMissing:
         'AI Teacher đang chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có câu hỏi nào được gửi đi.',
@@ -2377,7 +2378,7 @@ const vi = {
     title: 'Dạy học bằng AI',
     sketchBadge: 'Trợ lý học tập',
     sketchNote:
-      'Đặt câu hỏi, xin gợi ý và học theo nhịp độ của em. Có thể chọn API trực tuyến hoặc Gemma chạy trên máy.',
+      'Đặt câu hỏi, xin gợi ý và học theo nhịp độ của em. Có thể chọn AI trực tuyến hoặc Gemma chạy trên máy.',
     back: 'Về trang chủ',
     layoutLabel: 'Xem thử bố cục',
     layoutTalk: 'Trò chuyện',

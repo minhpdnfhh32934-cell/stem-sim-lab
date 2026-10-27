@@ -154,7 +154,7 @@ describe('Settings → AI trên máy khác', () => {
     expect(
       screen.getByText(/127\.0\.0\.1:11434, 127\.0\.0\.1:1234, 127\.0\.0\.1:8080/),
     ).toHaveTextContent(/không quét ổ đĩa, không gửi gì ra khỏi máy/);
-    expect(screen.getAllByText(/không tự chuyển sang API/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/không tự chuyển sang AI trực tuyến/).length).toBeGreaterThan(0);
     await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
     expect(client.detect).toHaveBeenCalledTimes(1);
     expect(await screen.findByText('Đang chạy · phiên bản 0.12.6')).toBeInTheDocument();
@@ -564,7 +564,7 @@ describe('Settings → AI trên máy khác', () => {
     await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
     const note = await screen.findByText(/^Đã bỏ chọn\./);
     expect(note).toHaveTextContent(
-      'Đã bỏ chọn. AI Teacher đang chọn API Gemini nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
+      'Đã bỏ chọn. AI Teacher đang chọn AI trực tuyến Gemini nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
     );
     expect(note).not.toHaveTextContent(/khuyên dùng|đang được gửi lên mạng/);
   });

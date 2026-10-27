@@ -234,7 +234,7 @@ const en: Messages = {
       aiHint: 'Choose the online AI provider, enter the API key, set limits and the fallback.',
       teacher: 'AI Teacher',
       teacherHint: 'Think (a second AI reviews the answer) and what data is sent.',
-      local: 'Local AI (Gemma)',
+      local: 'Local Gemma',
       localHint:
         'Download, choose or delete the Gemma models that run on this computer: no network, no key.',
       gpu: 'GPU for Gemma',
@@ -609,7 +609,7 @@ const en: Messages = {
         'This limit is set in Settings → Connect AI ("Maximum AI calls per day") to avoid wasting calls. Today you can still build scenes manually and use the sample library.',
       other: 'You can still build the scene manually or use the sample library.',
       local:
-        'The AI on this computer never switches to an API by itself. You can still build the scene manually or use the sample library.',
+        'The AI on this computer never switches to online AI by itself. You can still build the scene manually or use the sample library.',
     },
     hintClaude: {
       missingKey:
@@ -915,7 +915,7 @@ const en: Messages = {
     usePhoto: 'Use photo',
     reading: 'Reading the photo…',
     privacy:
-      'The photo goes to the AI in use (on-device Gemma, the AI program you chose on this computer, or a cloud API) only to read the problem.',
+      'The photo goes to the AI in use (on-device Gemma, the AI program you chose on this computer, or online AI) only to read the problem.',
     denied: 'Could not open the camera. Allow the browser/app to use the camera and try again.',
     retry: 'Try again',
     blockedHint:
@@ -923,7 +923,7 @@ const en: Messages = {
     unsupported: 'This device has no supported camera.',
     needGemma: 'No Gemma model yet. Download one in Settings → AI Teacher.',
     needVision:
-      'Could not read the photo: need a cloud API (Gemini/Groq with a key) or a ready Gemma model.',
+      'Could not read the photo: need online AI (Gemini/Groq with a key) or a ready Gemma model.',
     readFailed: 'Could not read the problem in the photo. Please retake it more clearly.',
     outputUnsafe:
       'The text read from the photo has unsuitable content, so it was not put in the problem box. Please photograph another problem.',
@@ -1564,8 +1564,8 @@ const en: Messages = {
     send: 'Send question',
     think: 'Think',
     thinkTitle: 'Use a second AI to review the answer',
-    twoApis: '· 2 APIs',
-    oneApiReview: '· 1 API reviews',
+    twoApis: '· 2 AIs',
+    oneApiReview: '· 1 AI reviews',
     enterHint: 'Enter to send · Shift+Enter for a new line',
     footer: 'AI answers may be inaccurate. Check the Science Card and ask a teacher when needed.',
     openSimulation: 'Open the simulation: {title}',
@@ -1811,7 +1811,7 @@ const en: Messages = {
     characters: 'characters',
     removeFile: 'Remove',
     localLibraryPrivacy:
-      'Files are stored on this computer. With online APIs, relevant excerpts may be sent with your question. Only add materials you have permission to use.',
+      'Files are stored on this computer. With online AI, relevant excerpts may be sent with your question. Only add materials you have permission to use.',
     memory: {
       title: 'Conversation memory',
       intro:
@@ -1861,8 +1861,7 @@ const en: Messages = {
       faultBody:
         'At {when}, the {card} card stopped responding while Gemma was answering. Windows had to reset it; if this repeats, the computer may restart.',
       faultBlocked: 'Gemma is paused until you reopen the app.',
-      faultAdvice:
-        'Pick the discrete card for Gemma, a smaller model, or ask through an online API.',
+      faultAdvice: 'Pick the discrete card for Gemma, a smaller model, or ask through online AI.',
       useDiscrete: 'Use the discrete card: {name}',
       allowAgain: 'Let Gemma run again anyway',
       dismissFault: 'Hide this notice',
@@ -1880,7 +1879,7 @@ const en: Messages = {
     detectPrivacy:
       'Only the three usual addresses on this computer ({addresses}) and the addresses you added are asked. No file is read, no disk is scanned, nothing leaves the computer.',
     fallback:
-      'Fallback: when the AI on this computer fails, SimLab tells you and sends nothing online (no automatic switch to an API). If the Wikipedia lookup is on, the question goes to Wikipedia only after SimLab has reached the AI program on this computer.',
+      'Fallback: when the AI on this computer fails, SimLab tells you and sends nothing online (no automatic switch to online AI). If the Wikipedia lookup is on, the question goes to Wikipedia only after SimLab has reached the AI program on this computer.',
     corsNote:
       'Running in a browser: the AI program must allow this page (CORS), otherwise SimLab shows “Not found”. The desktop app does not need this.',
     detectFailed: 'The search did not work. Please try again.',
@@ -1987,9 +1986,9 @@ const en: Messages = {
       'This model is chosen, but the AI Teacher does not use it. {now} Press “Use for the AI Teacher” to switch.',
     now: {
       cloud: 'Questions for the AI Teacher are sent online to {provider}.',
-      cloudOff: 'The AI Teacher is set to the API, but the API is off, so no question is sent.',
+      cloudOff: 'The AI Teacher is set to online AI, but online AI is off, so no question is sent.',
       cloudNoKey:
-        'The AI Teacher is set to the {provider} API, but no key is saved, so no question is sent until you add one.',
+        'The AI Teacher is set to online AI ({provider}), but no key is saved, so no question is sent until you add one.',
       gemma: 'The AI Teacher answers with local Gemma, right on your computer.',
       gemmaMissing:
         'The AI Teacher is set to local Gemma, but its model is not downloaded, so no question is sent.',
@@ -2390,7 +2389,7 @@ const en: Messages = {
     title: 'Learn with an AI teacher',
     sketchBadge: 'Study assistant',
     sketchNote:
-      'Ask questions, request hints and learn at your pace. Choose an online API or Gemma running on this computer.',
+      'Ask questions, request hints and learn at your pace. Choose online AI or Gemma running on this computer.',
     back: 'Back to home',
     layoutLabel: 'Preview layout',
     layoutTalk: 'Conversation',

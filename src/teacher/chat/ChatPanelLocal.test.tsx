@@ -128,15 +128,15 @@ describe('AI Teacher chat with the AI on this computer', () => {
     useChatStore.setState({ thinkEnabled: true });
     const { unmount } = render(<ChatPanel teacherPage showScreenContext={false} />);
     // Both the answer and the review go online with the API engine.
-    expect(screen.getByRole('button', { name: /Think/ })).toHaveTextContent('· 2 API');
+    expect(screen.getByRole('button', { name: /Think/ })).toHaveTextContent('· 2 AI');
     unmount();
 
     useLocalAiStore.setState({ selected: selection });
     useChatStore.setState({ engine: 'local' });
     render(<ChatPanel teacherPage showScreenContext={false} />);
     const think = screen.getByRole('button', { name: /Think/ });
-    expect(think).toHaveTextContent('· 1 API rà soát');
-    expect(think).not.toHaveTextContent('2 API');
+    expect(think).toHaveTextContent('· 1 AI rà soát');
+    expect(think).not.toHaveTextContent('2 AI');
   });
 
   it('with the Gemini voice on, the local line never says that nothing goes online', () => {

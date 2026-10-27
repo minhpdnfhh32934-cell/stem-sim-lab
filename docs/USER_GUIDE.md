@@ -112,7 +112,7 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   sang nhà cung cấp dự phòng, để người rà soát không tự chấm bài của chính mình. Trên trình duyệt,
   khóa chỉ nằm trong phiên (tải lại trang là mất) và Claude chỉ rà soát được ở bản desktop.
 - Chọn **Gemma cục bộ** để trò chuyện ngay trên máy, không cần Ollama, không cần mạng sau
-  khi đã tải model. Vào Cài đặt → Gemma trên máy này để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
+  khi đã tải model. Vào Cài đặt → Gemma cục bộ để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
   còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng, và
   "còn khoảng … phút" sau vài giây (ước tính theo tốc độ mạng mấy giây gần nhất, nên có thể thay
   đổi); có nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Với Gemma, câu trả lời hiện
@@ -673,7 +673,7 @@ tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
   hướng dẫn lấy khóa; mô hình; nút Kiểm tra key), ô "Thời gian chờ và giới hạn mỗi ngày" và ô "Dự
   phòng khi hết lượt" (mặc định Groq, xem phần Groq ở trên).
 - **AI Teacher:** Think (một AI thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
-- **Gemma trên máy này:** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
+- **Gemma cục bộ:** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
 - **GPU cho Gemma:** chọn card đồ họa chạy Gemma (bản desktop trên Windows, máy có hai card; đổi card
   cần mở lại app) và xem WebGPU thật đang chạy trên card nào; độ dài câu trả lời của Gemma (Ngắn / Vừa
   / Dài); giải phóng bộ nhớ GPU sau 5 hoặc 15 phút không dùng, hoặc ngay lập tức.
