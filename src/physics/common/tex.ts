@@ -4,8 +4,8 @@ import { fromSI, unitLabel } from '@/core/units';
 
 /**
  * Formats a number for KaTeX with `sig` significant digits, using a decimal comma in
- * Vietnamese (written `{,}` so KaTeX does not add list spacing) and ×10ⁿ for very
- * large/small magnitudes.
+ * Vietnamese (written `{,}` so KaTeX does not add list spacing), thousands grouped like
+ * `formatNumber` ("35{.}950" / "35{,}950") and ×10ⁿ for very large/small magnitudes.
  */
 export function texNum(locale: Locale, value: number, sig = 4): string {
   if (!Number.isFinite(value)) return '\\text{—}';
@@ -13,11 +13,14 @@ export function texNum(locale: Locale, value: number, sig = 4): string {
   const abs = Math.abs(value);
   const exp = Math.floor(Math.log10(abs));
   const sep = locale === 'vi' ? '{,}' : '.';
+  const group = locale === 'vi' ? '{.}' : '{,}';
   const plain = (v: number) => {
     const digits = Math.max(0, sig - 1 - Math.floor(Math.log10(Math.abs(v)) + 1e-12));
     let s = v.toFixed(Math.min(12, digits));
     if (s.includes('.')) s = s.replace(/0+$/, '').replace(/\.$/, '');
-    return s.replace('.', sep).replace('-', '-');
+    const [int = '', frac] = s.split('.');
+    const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, group);
+    return frac === undefined ? grouped : `${grouped}${sep}${frac}`;
   };
   if (exp >= 6 || exp <= -4) {
     const mant = value / 10 ** exp;

@@ -49,6 +49,18 @@ describe('numbers written in an explanation', () => {
     }
   });
 
+  it('reads step numbers as the screen shows them ("9{,}81" is 9,81; "35{.}950" is 35.950)', async () => {
+    const fall = await defaultSolution('freeFall');
+    expect(
+      unknownNumbers('Với g = 9,81 m/s², vật rơi nhanh dần.', allowedNumbers(fall, '')),
+    ).toEqual([]);
+    const field = await defaultSolution('electricField');
+    const allowed = allowedNumbers(field, '');
+    expect(unknownNumbers('Mỗi điện tích gây ra tại M điện trường 35.950 V/m.', allowed)).toEqual(
+      [],
+    );
+  });
+
   it('still flags a number the engine did not produce', async () => {
     const solution = await defaultSolution('freeFall');
     const allowed = allowedNumbers(solution, '');

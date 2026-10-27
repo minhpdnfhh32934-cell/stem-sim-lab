@@ -44,7 +44,8 @@ export function allowedNumbers(solution: Solution, problemText: string): number[
     nums.push(...numbersIn(a.label.vi), ...numbersIn(a.label.en));
   }
   for (const s of solution.steps) {
-    nums.push(...numbersIn(s.text.vi), ...numbersIn(s.tex ?? ''));
+    // TeX writes separators in braces ("9{,}81", "35{.}950"); read them as written on screen.
+    nums.push(...numbersIn(s.text.vi), ...numbersIn((s.tex ?? '').replace(/\{([.,])\}/g, '$1')));
   }
   nums.push(...numbersIn(problemText));
   // An overflowed number ("2.10^400") is no number the explanation may repeat.

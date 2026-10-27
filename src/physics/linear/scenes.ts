@@ -153,19 +153,19 @@ function graphs(): GraphDef[] {
   return [
     {
       id: 'position',
-      title: L('Đồ thị tọa độ – thời gian', 'Position – time'),
+      title: L('Tọa độ theo thời gian', 'Position vs time'),
       yLabel: L('x (m)', 'x (m)'),
       series: series(0, 'x'),
     },
     {
       id: 'velocity',
-      title: L('Đồ thị vận tốc – thời gian', 'Velocity – time'),
+      title: L('Vận tốc theo thời gian', 'Velocity vs time'),
       yLabel: L('v (m/s)', 'v (m/s)'),
       series: series(1, 'v'),
     },
     {
       id: 'acceleration',
-      title: L('Đồ thị gia tốc – thời gian', 'Acceleration – time'),
+      title: L('Gia tốc theo thời gian', 'Acceleration vs time'),
       yLabel: L('a (m/s²)', 'a (m/s²)'),
       series: series(2, 'a'),
     },
@@ -301,10 +301,15 @@ function card(accel: boolean) {
     title: accel
       ? L('Chuyển động thẳng biến đổi đều', 'Uniformly accelerated motion')
       : L('Chuyển động thẳng đều', 'Uniform linear motion'),
-    model: L(
-      'Chất điểm chuyển động trên đường thẳng với gia tốc không đổi.',
-      'Point mass on a straight line with constant acceleration.',
-    ),
+    model: accel
+      ? L(
+          'Chất điểm chuyển động trên đường thẳng với gia tốc không đổi.',
+          'Point mass on a straight line with constant acceleration.',
+        )
+      : L(
+          'Chất điểm chuyển động trên đường thẳng với vận tốc không đổi (gia tốc bằng 0).',
+          'Point mass on a straight line with constant velocity (zero acceleration).',
+        ),
     equations: accel
       ? [
           { tex: 'x = x_0 + v_0 t + \\tfrac{1}{2} a t^2' },
@@ -327,10 +332,15 @@ function card(accel: boolean) {
         : []),
     ],
     confidence: 'exact',
-    confidenceNote: L(
-      'Engine cập nhật chính xác cho gia tốc không đổi; tọa độ cuối được kiểm chứng bằng tích phân Dormand–Prince.',
-      'Exact constant-acceleration update; final positions cross-checked with Dormand–Prince integration.',
-    ),
+    confidenceNote: accel
+      ? L(
+          'Engine cập nhật chính xác cho gia tốc không đổi; tọa độ cuối được kiểm chứng bằng tích phân Dormand–Prince.',
+          'Exact constant-acceleration update; final positions cross-checked with Dormand–Prince integration.',
+        )
+      : L(
+          'Engine cập nhật chính xác cho vận tốc không đổi (a = 0); tọa độ cuối được kiểm chứng bằng tích phân Dormand–Prince.',
+          'Exact constant-velocity update (a = 0); final positions cross-checked with Dormand–Prince integration.',
+        ),
     method: L(
       'Cập nhật chính xác, Δt = 1/240 s; thời điểm dừng được xác định đúng trong bước.',
       'Exact update, Δt = 1/240 s; stop instant located exactly within the step.',
