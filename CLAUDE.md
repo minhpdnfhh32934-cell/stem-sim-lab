@@ -664,8 +664,11 @@ Progress log: `docs/PROGRESS.md`.
 - [x] 0.6.0 released 2026-10-19 (v0.6.0): audit G0–G8, Science Studio, AI Teacher board, mitosis 3D
 - [x] 0.7.0 released 2026-10-20 (v0.7.0): bug-fix sweep + dedicated 3D for seven biology lessons,
       shared 3D kit (release-notes entry updated by PR #34)
-- [~] 0.7.1 (`feat/0.7.1`, not released): Science Studio inside the lab (PR #35), 3D render
-  pipeline, the seven 3D lessons polished, the four population lessons as 3D habitats
+- [x] 0.7.1 released 2026-10-22 (v0.7.1): Science Studio inside the lab (PR #35), 3D render
+      pipeline, the seven 3D lessons polished, the four population lessons as 3D habitats
+- [~] 0.8.0 (plan #37, version PR open, not released): KNTT grade bar, uniform circular motion,
+  standing waves, electric field (PR #89), cell structure 2D, Studio guide, "Virtual Lab"; the native
+  part is 0.8.0 too, so 0.7.1 installs need the new installer
 - [ ] Phase 8+: extensions (MASTER_PROMPT §6.2, advanced 3D/biology) — only on request
 
 ## Release

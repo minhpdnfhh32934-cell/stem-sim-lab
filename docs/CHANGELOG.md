@@ -2,6 +2,41 @@
 
 Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản mới nhất ở trên. Định dạng theo [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), số phiên bản dạng `x.y.z`. Tệp này được tạo từ `release-notes/versions.json` bằng `npm run release-notes`. Đừng sửa tay. Lịch sử đầy đủ kèm bằng chứng: [VERSION\_HISTORY.md](VERSION_HISTORY.md).
 
+## [Unreleased] - 0.8.0 (Đang xét duyệt)
+
+_PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0. Bài (d) Điện trường của điện tích điểm (PR #89) còn đang duyệt lúc mở PR này: chỉ thêm vào ghi chú khi đã gộp._
+
+_Ghi chú này là bản nháp, chưa được duyệt để công bố._
+
+Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều và Sóng dừng trên dây (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.
+
+### Added
+
+- Vật lí: bài Chuyển động tròn đều (Vật lí 10, Bài 31–32). Em chọn đề cho biết tốc độ, tốc độ góc, chu kì hay tần số; app tính các đại lượng còn lại, gia tốc hướng tâm và lực hướng tâm.
+- Vật lí: bài Sóng dừng trên dây (Vật lí 11, Bài 13). Xem bụng, nút và số bó sóng; khi chưa có sóng dừng, nút "Dùng fₙ" đặt đúng tần số cộng hưởng gần nhất.
+- Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Bấm vào từng bộ phận để xem tên và chức năng.
+- Thư viện, trang chủ và bước làm quen có thanh Lớp 10 · 11 · 12 · Tất cả, xếp chủ đề theo mục lục sách Kết nối tri thức. Cách xếp này đang chờ giáo viên duyệt.
+- Science Studio có hướng dẫn "Cách học" ngay trong app.
+
+### Improved
+
+- Đồ thị các bài Vật lí đọc được trên màn hình 1366×768: vùng vẽ cao hơn, chú giải nằm ở cột bên phải.
+- Dấu "Đã học" hiện cho mọi chủ đề em đã mở, kèm số bước còn lại.
+- Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
+
+### Fixed
+
+- Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
+
+### Security
+
+- Cập nhật các thư viện có lỗ hổng đã biết và các phụ thuộc khác.
+
+### Changed
+
+- "Phòng thí nghiệm" nay tên là "Virtual Lab" ở cả tiếng Việt và tiếng Anh.
+- Máy đang chạy 0.7.1 cần cài bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app.
+
 ## [0.7.1] - 2026-10-22
 
 _Phát hành 22/10/2026 từ main @ 49c4d6a (lượt Release 39769849056). Phần web và phần lõi cùng số 0.7.1, nên ứng dụng 0.7.0 được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống)._
@@ -497,6 +532,7 @@ Bản đầu tiên của STEM Sim Lab (tên cũ của SimLab): mô phỏng Vật
 
 - Bản này không có bộ cài phát hành công khai; chỉ có bản dựng thử trên GitHub Actions.
 
+[Unreleased]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/pull/26
 [0.7.1]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.1
 [0.7.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.7.0
 [0.6.0]: https://github.com/minhpdnfhh32934-cell/stem-sim-lab/releases/tag/v0.6.0
