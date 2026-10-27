@@ -117,7 +117,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       (state[CE.ax] ?? 0) * ka,
       (state[CE.ay] ?? 0) * ka,
       col.acceleration,
-      opts.locale === 'vi' ? 'aht, Fht' : 'ac, Fc',
+      opts.locale === 'vi' ? 'a_ht, F_ht' : 'a_c, F_c',
     );
   }
 }
