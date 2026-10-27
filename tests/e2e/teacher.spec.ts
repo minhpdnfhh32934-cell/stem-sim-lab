@@ -60,7 +60,7 @@ test('chat bubble: screen toggle off by default, Think explains the missing seco
   await expect(
     panel
       .getByRole('status')
-      .filter({ hasText: /API|khóa/ })
+      .filter({ hasText: /AI trực tuyến|AI thứ hai|khóa/ })
       .first(),
   ).toBeVisible();
 
@@ -168,7 +168,7 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
 
   // Think without a Groq key: explained before anything is sent.
   await panel.getByRole('button', { name: /Think/ }).click();
-  await expect(panel.getByText(/Think cần một API thứ hai/)).toBeVisible();
+  await expect(panel.getByText(/Think cần một AI thứ hai/)).toBeVisible();
 
   // With a Groq key (as if saved in Settings) Think works end to end.
   await page.addInitScript(() => {
