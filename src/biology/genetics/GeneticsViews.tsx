@@ -242,6 +242,7 @@ function MonteCarlo() {
 
 export function MendelPanel() {
   const Lz = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   const st = useMendel();
   const options = genotypeOptions(lociOf(st));
   return (
@@ -331,7 +332,7 @@ export function MendelPanel() {
         >
           {[16, 100, 1000, 10000].map((n) => (
             <option key={n} value={n}>
-              {n}
+              {formatNumber(locale, n)}
             </option>
           ))}
         </select>
@@ -478,7 +479,8 @@ export function HardyWeinbergStage() {
           {st.sample && (
             <p className="small">
               {Lz(L('Thế hệ sau (mô phỏng, N = ', 'Next generation (simulated, N = '))}
-              {st.N}): AA {st.sample.AA} · Aa {st.sample.Aa} · aa {st.sample.aa} → χ² ={' '}
+              {formatNumber(locale, st.N)}): AA {formatNumber(locale, st.sample.AA)} · Aa{' '}
+              {formatNumber(locale, st.sample.Aa)} · aa {formatNumber(locale, st.sample.aa)} → χ² ={' '}
               {f(testHardyWeinberg(st.sample.AA, st.sample.Aa, st.sample.aa).test.chi2, 3)}
             </p>
           )}

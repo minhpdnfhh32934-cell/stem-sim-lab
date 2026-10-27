@@ -107,6 +107,14 @@ describe('slider labels of the population lessons (UI-50)', () => {
   });
 });
 
+describe('numbers in the Mendel panel', () => {
+  it('offspring counts use the Vietnamese thousands separator', () => {
+    render(<MendelPanel />);
+    expect(screen.getByRole('option', { name: '1.000' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '10.000' })).toBeInTheDocument();
+  });
+});
+
 describe('Basic mode in the biology panels', () => {
   afterEach(() => {
     useSettingsStore.setState({ uiMode: 'basic' });
