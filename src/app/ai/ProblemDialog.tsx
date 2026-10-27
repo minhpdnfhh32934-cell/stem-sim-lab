@@ -403,7 +403,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
 function WrittenNote({ written }: { written: { value: number; unit: string; quote: string } }) {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
-  const unit = written.unit === '1' ? '' : ` ${unitLabel(written.unit)}`;
+  const unit = written.unit === '1' ? '' : ` ${unitLabel(written.unit, locale)}`;
   return (
     <p className="problem-table__quote">
       <Quote size={12} strokeWidth={1.75} aria-hidden="true" />
@@ -436,6 +436,7 @@ function ReviewRow({
 }) {
   const t = useT();
   const L = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   const unit = def.unit ?? '1';
   const nameId = `qty-${def.key}`;
   return (
@@ -462,7 +463,7 @@ function ReviewRow({
                 onChange(toSI(v, unit));
               }}
             />
-            <span className="param__unit">{unit === '1' ? '' : unitLabel(unit)}</span>
+            <span className="param__unit">{unit === '1' ? '' : unitLabel(unit, locale)}</span>
           </>
         )}
         {def.kind === 'choice' && (
