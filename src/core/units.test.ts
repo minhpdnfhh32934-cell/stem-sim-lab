@@ -34,6 +34,16 @@ describe('units', () => {
     expect(unitLabel('degC')).toBe('°C');
   });
 
+  it('worded units follow the language; symbols (SI or not) never change', () => {
+    expect(unitLabel('rev/min', 'vi')).toBe('vòng/phút');
+    expect(unitLabel('rev/s', 'vi')).toBe('vòng/s');
+    expect(unitLabel('rev/min', 'en')).toBe('rev/min');
+    // No locale (AI prompts, KaTeX 	ext{}): the symbol.
+    expect(unitLabel('rev/min')).toBe('rev/min');
+    for (const u of ['m/s^2', 'Hz', 'rad/s', 'uN', 'deg', 'N*m^2/C^2'])
+      expect(unitLabel(u, 'vi')).toBe(unitLabel(u));
+  });
+
   it('linear density: 5 g/m = 0.005 kg/m, not a mass or a density', () => {
     expect(toSI(5, 'g/m')).toBeCloseTo(0.005, 15);
     expect(convert(0.005, 'kg/m', 'g/m')).toBeCloseTo(5, 12);

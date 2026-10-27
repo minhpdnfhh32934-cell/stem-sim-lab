@@ -253,8 +253,8 @@ export function buildDraft(
         key: q.key,
         blocking: true,
         message: L(
-          `${name.vi}: giá trị ${q.value} ${unitLabel(q.unit)} không có trong đề — đã bỏ qua (AI không được tự đưa số).`,
-          `${name.en}: ${q.value} ${unitLabel(q.unit)} is not in the problem — ignored (the AI may not invent numbers).`,
+          `${name.vi}: giá trị ${q.value} ${unitLabel(q.unit, 'vi')} không có trong đề — đã bỏ qua (AI không được tự đưa số).`,
+          `${name.en}: ${q.value} ${unitLabel(q.unit, 'en')} is not in the problem — ignored (the AI may not invent numbers).`,
         ),
       });
       continue;
