@@ -474,8 +474,7 @@ body[data-resizing] .splitter {
 .stage__toolbar {
   position: absolute;
   top: var(--space-3);
-  /* Right of the y-axis numbers the grid writes along the stage's left edge (UI-02). */
-  left: var(--axis-gutter);
+  left: var(--space-3);
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -618,8 +617,13 @@ body[data-resizing] .splitter {
 
 /* ───────────── Bottom panel & inspector ───────────── */
 .bottom-panel {
-  /* Never let the bottom panel squeeze the stage on short screens (e.g. 1366×768 at 125%). */
-  height: min(var(--bottom-h), 38vh);
+  /* Never let the bottom panel squeeze the stage on short screens (e.g. 1366×768 at 125%), nor
+     push it under its 12rem minimum (600 px window at 140 % font). */
+  height: min(
+    var(--bottom-h),
+    38vh,
+    calc(100vh - var(--topbar-h) - var(--statusbar-h) - var(--timeline-h) - var(--splitter) - 12rem)
+  );
   flex: none;
 }
 .inspector {

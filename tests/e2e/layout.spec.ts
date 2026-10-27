@@ -179,11 +179,14 @@ test('the AI Teacher button covers no Inspector line and no Studio button (UI-01
   expect(overlap(await box(next), await box(page.locator('.chat-bubble')))).toBe(false);
 });
 
-test('the tool palette leaves the y-axis numbers readable (UI-02)', async ({ page }) => {
-  await openPhysics(page, 'Rơi tự do');
+test('the tool palette keeps clear of the captions scenes write at x = 60 px (UI-02)', async ({
+  page,
+}) => {
+  // The y numbers move right of the palette instead (drawGrid labelLeft, unit-tested).
+  await openPhysics(page, 'Sóng dừng trên dây');
   const stage = await box(page.getByRole('region', { name: 'Khung mô phỏng' }));
   const tools = await box(page.locator('.stage__toolbar'));
-  expect(tools.x - stage.x).toBeGreaterThanOrEqual(48);
+  expect(tools.right - stage.x).toBeLessThanOrEqual(58);
 });
 
 test('Lời giải: answers on one line, formulas inside the panel, a cue while it scrolls (UI-07, UI-09)', async ({
@@ -240,9 +243,12 @@ test('a checkbox parameter is one row with its source chip (UI-53)', async ({ pa
   // The source chips show in Advanced mode.
   await page.getByRole('radio', { name: 'Nâng cao' }).click();
   const row = page.locator('.param__head:has(.param__toggle)').first();
-  const toggle = await box(row.locator('.param__toggle'));
+  const input = await box(row.locator('.param__toggle input[type="checkbox"]'));
+  const text = await box(row.locator('.param__toggle span'));
   const chip = await box(row.locator('.param__source'));
-  expect(Math.abs(toggle.y + toggle.height / 2 - (chip.y + chip.height / 2))).toBeLessThan(6);
+  // The box itself is centred on the chip's line and does not touch its text.
+  expect(Math.abs(input.y + input.height / 2 - (chip.y + chip.height / 2))).toBeLessThan(4);
+  expect(text.x - input.right).toBeGreaterThanOrEqual(4);
 });
 
 test('suggestion cards in one row have the same height (UI-30)', async ({ page }) => {
@@ -272,4 +278,40 @@ test('library: a selected title keeps its line; a checkbox sits by its label (UI
   const text = await box(label.locator('span').first());
   expect(text.x - input.right).toBeLessThan(16);
   expect((await box(label)).height).toBeGreaterThanOrEqual(40);
+});
+
+test('a short window with a large font keeps the stage at its minimum (UI-24)', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1366, height: 600 });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.settings',
+      JSON.stringify({ state: { fontScale: 1.4 }, version: 2 }),
+    );
+  });
+  await openPhysics(page, 'Con lắc lò xo');
+  const stage = await box(page.getByRole('region', { name: 'Khung mô phỏng' }));
+  const rootPx = await page.evaluate(() =>
+    parseFloat(getComputedStyle(document.documentElement).fontSize),
+  );
+  expect(stage.height).toBeGreaterThanOrEqual(12 * rootPx - 1);
+  expect(
+    await page.locator('.shell__center').evaluate((el) => el.scrollHeight - el.clientHeight),
+  ).toBeLessThanOrEqual(1);
+});
+
+test('a hidden switch input in Settings stays hidden (the checkbox rule is scoped, UI-43)', async ({
+  page,
+}) => {
+  await openLab(page);
+  await page.getByRole('button', { name: 'Cài đặt', exact: true }).first().click();
+  await page
+    .getByRole('button', { name: /Trí nhớ hội thoại/ })
+    .first()
+    .click();
+  const input = page.locator('.chat-toggle input').first();
+  await expect(input).toBeAttached();
+  const b = await input.boundingBox();
+  expect(b === null || (b.width <= 2 && b.height <= 2)).toBe(true);
 });

@@ -19,6 +19,9 @@ export interface Pt {
   y: number;
 }
 
+/** Scenes write their captions in the top rows (offset y ≤ 72 px from the top edge). */
+export const CAPTION_ROWS = 80;
+
 export function drawGrid(
   ctx: Ctx,
   cam: Camera,
@@ -26,6 +29,11 @@ export function drawGrid(
   locale: Locale,
   /** The scene's vertical stretch (`PhysicsScene.yStretch`): y labels show unstretched metres. */
   yStretch = 1,
+  /**
+   * Left edge of the y numbers in CSS px (StageCanvas: right of the tool palette, which would
+   * hide them at 4 px). Moved off the edge, they leave the top rows to scene captions.
+   */
+  labelLeft = 4,
 ): void {
   const v = cam.visible();
   const major = niceStep(cam.scale, 90);
@@ -74,7 +82,8 @@ export function drawGrid(
   for (let y = Math.ceil(v.yMin / major) * major; y <= v.yMax; y += major) {
     const { sy } = cam.toScreen(0, y);
     if (sy > cam.height - 18) continue;
-    ctx.fillText(fmtY(y / yStretch), 4, sy);
+    if (labelLeft > 4 && sy < CAPTION_ROWS) continue;
+    ctx.fillText(fmtY(y / yStretch), labelLeft, sy);
   }
   ctx.restore();
 }

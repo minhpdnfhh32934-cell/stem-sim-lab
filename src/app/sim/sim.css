@@ -168,6 +168,11 @@
 .param__head:has(> .param__toggle) {
   align-items: center;
 }
+.param__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
 .param__source {
   flex: none;
   padding: 0 7px;
@@ -204,6 +209,10 @@
   background: var(--bg-panel-2);
   font-size: var(--text-sm);
   text-align: right;
+}
+/* Typed beyond the slider range: the simulation runs the clamped value (NumberField). */
+.param__number[aria-invalid='true'] {
+  border-color: var(--danger);
 }
 .param__unit {
   min-width: 2.4rem;

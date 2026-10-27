@@ -44,8 +44,6 @@
   /* "Hỏi thầy" floating button: its size and its gap to the panel edges. */
   --chat-bubble: 52px;
   --chat-bubble-gap: 14px;
-  /* Width of the y-axis numbers along the stage's left edge (render/draw.ts drawGrid). */
-  --axis-gutter: 52px;
 
   /* Motion — subtle; disabled entirely under prefers-reduced-motion. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

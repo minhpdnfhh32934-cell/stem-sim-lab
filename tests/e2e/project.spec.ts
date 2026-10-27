@@ -166,7 +166,7 @@ test('first run: grade → subjects → age question → tour (once, can be skip
 test('undo works for physics parameters too', async ({ page }) => {
   await openLab(page);
   await page.getByRole('button', { name: 'Ném xiên', exact: true }).click();
-  const field = page.getByRole('spinbutton').first();
+  const field = page.locator('.param__number').first();
   await expect(field).toHaveValue('15');
   await field.fill('20');
   await field.press('Enter');
