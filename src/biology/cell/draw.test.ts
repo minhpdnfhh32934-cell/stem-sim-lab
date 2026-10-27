@@ -23,6 +23,25 @@ function fakeContext() {
   return { d, texts };
 }
 
+/** A 2D context that records the path calls with their (pixel) arguments. */
+function recordingContext(width: number, height: number) {
+  const calls: { name: string; args: number[] }[] = [];
+  const ctx = new Proxy(
+    {},
+    {
+      get: (_t, key) => {
+        if (key === 'measureText') return (s: string) => ({ width: s.length * 7 });
+        return (...args: unknown[]) => {
+          calls.push({ name: String(key), args: args.filter((a) => typeof a === 'number') });
+        };
+      },
+      set: () => true,
+    },
+  ) as CanvasRenderingContext2D;
+  const d: DrawContext = { ctx, width, height, time: 0, css: () => '#000' };
+  return { d, calls };
+}
+
 describe('Cell2D picture', () => {
   it('draws exactly the parts of each cell (labels name only real parts)', () => {
     for (const kind of CELL_KINDS)
@@ -39,6 +58,49 @@ describe('Cell2D picture', () => {
       drawCell(one.d, kind, names, 'ribosome', false);
       expect(one.texts).toEqual(['Ribosome']);
     }
+  });
+
+  it('no name pointer runs through another part’s round organelle (UI-46)', () => {
+    const crossings: string[] = [];
+    for (const [width, height] of [
+      [900, 600],
+      [640, 460],
+    ] as const)
+      for (const kind of CELL_KINDS) {
+        const names = Object.fromEntries(partsFor(kind).map((id) => [id, PARTS[id].name.vi]));
+        const { d, calls } = recordingContext(width, height);
+        drawCell(d, kind, names, null, true);
+        // A pointer is moveTo(anchor), lineTo(label), stroke, then its 2.5 px anchor dot.
+        const pointers: [number, number, number, number][] = [];
+        const circles: [number, number, number][] = [];
+        calls.forEach((c, i) => {
+          if (c.name !== 'arc') return;
+          const [x = 0, y = 0, r = 0, , end = 0] = c.args;
+          const from = calls[i - 4];
+          const to = calls[i - 3];
+          if (r === 2.5 && from?.name === 'moveTo' && to?.name === 'lineTo') {
+            const [ax = 0, ay = 0] = from.args;
+            const [bx = 0, by = 0] = to.args;
+            pointers.push([ax, ay, bx, by]);
+          }
+          // Round organelles: whole circles only (no ribosome dots, no ER arcs).
+          else if (r > 6 && end === 2 * Math.PI) circles.push([x, y, r]);
+        });
+        expect(pointers.length).toBe(partsFor(kind).length);
+        for (const [ax, ay, bx, by] of pointers)
+          for (const [cx, cy, r] of circles) {
+            if (Math.hypot(ax - cx, ay - cy) <= r) continue; // its own part
+            const along =
+              ((cx - ax) * (bx - ax) + (cy - ay) * (by - ay)) / ((bx - ax) ** 2 + (by - ay) ** 2);
+            const t = Math.max(0, Math.min(1, along));
+            // A pointer that grazes the circle reads as pointing at it too: keep 2 px clear.
+            if (Math.hypot(ax + t * (bx - ax) - cx, ay + t * (by - ay) - cy) < r + 2)
+              crossings.push(
+                `${kind} ${width}×${height}: (${ax.toFixed(0)}, ${ay.toFixed(0)}) → circle at (${cx.toFixed(0)}, ${cy.toFixed(0)})`,
+              );
+          }
+      }
+    expect(crossings).toEqual([]);
   });
 
   it('keeps labels at least one line apart inside the stage', () => {
