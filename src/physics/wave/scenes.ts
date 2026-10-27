@@ -55,11 +55,20 @@ export function suggestions(q: StandingInput) {
   return { m: r.m, below, above: r.above.n <= MAX_LOOPS ? r.above : null };
 }
 
+/** f's slider range: a "Dùng fₙ" button never sets f outside it (touching the slider would clamp it). */
+const F_MIN = 1;
+const F_MAX = 200;
+const onSlider = (r: Resonance | null): r is Resonance =>
+  r !== null && r.f >= F_MIN && r.f <= F_MAX;
+const offSlider = (r: Resonance | null): r is Resonance => r !== null && !onSlider(r);
+
 /** Learner-facing text when 2Lf/v is not whole (trap 5): never rounded, nearest resonances. */
 function noResonance(q: StandingInput, locale: Locale): string {
   const s = suggestions(q);
   const m = fmtRatio(locale, s.m);
   const fr = (r: Resonance) => `f${sub(r.n)} = ${fmtQty(locale, r.f, 'Hz')}`;
+  const button = onSlider(s.below) || onSlider(s.above);
+  const outside = [s.below, s.above].filter(offSlider).map(fr);
   if (locale === 'vi') {
     const near =
       s.below && s.above
@@ -67,7 +76,14 @@ function noResonance(q: StandingInput, locale: Locale): string {
         : s.above
           ? `Tần số này thấp hơn tần số cơ bản ${fr(s.above)}.`
           : `SimLab vẽ tối đa ${MAX_LOOPS} bó sóng; tần số cộng hưởng lớn nhất là ${s.below ? fr(s.below) : ''}.`;
-    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near} SimLab không tự đổi f và không vẽ dao động khi không có sóng dừng — bấm nút “Dùng fₙ” bên dưới để đặt đúng một tần số cộng hưởng, hoặc đổi chiều dài dây hay tốc độ truyền sóng.`;
+    const off =
+      outside.length > 0
+        ? ` ${outside.join(' và ')} nằm ngoài thanh trượt f (${F_MIN}–${F_MAX} Hz) nên không có nút để đặt.`
+        : '';
+    const act = button
+      ? 'bấm nút “Dùng fₙ” bên dưới để đặt đúng một tần số cộng hưởng, hoặc đổi chiều dài dây hay tốc độ truyền sóng.'
+      : 'hãy đổi chiều dài dây hay tốc độ truyền sóng.';
+    return `Không có sóng dừng: 2Lf/v = ${m} không phải số nguyên, nên chiều dài dây không bằng một số nguyên lần nửa bước sóng. ${near}${off} SimLab không tự đổi f và không vẽ dao động khi không có sóng dừng — ${act}`;
   }
   const near =
     s.below && s.above
@@ -75,7 +91,14 @@ function noResonance(q: StandingInput, locale: Locale): string {
       : s.above
         ? `This is below the fundamental ${fr(s.above)}.`
         : `SimLab draws at most ${MAX_LOOPS} loops; the highest resonance is ${s.below ? fr(s.below) : ''}.`;
-  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near} SimLab does not change f for you and draws no oscillation without a standing wave — press a “Use fₙ” button below to set a resonance exactly, or change the string length or the wave speed.`;
+  const off =
+    outside.length > 0
+      ? ` ${outside.join(' and ')} ${outside.length > 1 ? 'are' : 'is'} outside the f slider (${F_MIN}–${F_MAX} Hz), so there is no button for it.`
+      : '';
+  const act = button
+    ? 'press a “Use fₙ” button below to set a resonance exactly, or change the string length or the wave speed.'
+    : 'change the string length or the wave speed.';
+  return `No standing wave: 2Lf/v = ${m} is not a whole number, so the string is not a whole number of half wavelengths long. ${near}${off} SimLab does not change f for you and draws no oscillation without a standing wave — ${act}`;
 }
 
 const SUBS = '₀₁₂₃₄₅₆₇₈₉';
@@ -492,8 +515,8 @@ export const standingWave: PhysicsScene = {
       kind: 'number',
       dim: DIM.frequency,
       unit: 'Hz',
-      min: 1,
-      max: 200,
+      min: F_MIN,
+      max: F_MAX,
       step: 0.1,
       when: notMode(MODE.frequency),
     },
@@ -607,15 +630,13 @@ export const standingWave: PhysicsScene = {
     const q = standingInput(p);
     if (q.mode !== MODE.harmonic || q.n !== null || !(q.L > 0 && q.v > 0 && q.f > 0)) return [];
     const s = suggestions(q);
-    return [s.below, s.above]
-      .filter((r): r is Resonance => r !== null)
-      .map((r) => ({
-        label: L(
-          `Dùng f${sub(r.n)} = ${fmtQty('vi', r.f, 'Hz')}`,
-          `Use f${sub(r.n)} = ${fmtQty('en', r.f, 'Hz')}`,
-        ),
-        params: { f: r.f },
-      }));
+    return [s.below, s.above].filter(onSlider).map((r) => ({
+      label: L(
+        `Dùng f${sub(r.n)} = ${fmtQty('vi', r.f, 'Hz')}`,
+        `Use f${sub(r.n)} = ${fmtQty('en', r.f, 'Hz')}`,
+      ),
+      params: { f: r.f },
+    }));
   },
   // About 10 s of screen time for the 20 periods of a run (closest offered speed).
   suggestedSpeed: (p) => {

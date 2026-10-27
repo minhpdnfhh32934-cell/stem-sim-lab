@@ -35,10 +35,21 @@ export function texQty(locale: Locale, valueSI: number, unit: string, sig = 4): 
   return `${texNum(locale, v, sig)}\\,\\text{${u}}`;
 }
 
-/** Plain-text quantity for canvas labels and tables. */
+const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+
+/**
+ * Plain-text quantity for canvas labels and tables. Below 10⁻⁴ it is written as a power of ten
+ * like `texNum` ("8,01·10⁻¹⁶ N"), never as a run of zeros.
+ */
 export function fmtQty(locale: Locale, valueSI: number, unit: string, sig = 4): string {
-  const v = fromSI(valueSI, unit);
-  const s = formatNumber(locale, Number(v.toPrecision(sig)), { maximumSignificantDigits: sig });
-  const u = unitLabel(unit);
+  const v = Number(fromSI(valueSI, unit).toPrecision(sig));
+  const num = (x: number) =>
+    formatNumber(locale, Number(x.toPrecision(sig)), { maximumSignificantDigits: sig });
+  const exp = v !== 0 && Number.isFinite(v) ? Math.floor(Math.log10(Math.abs(v))) : 0;
+  const pow = String(exp)
+    .replace('-', '⁻')
+    .replace(/\d/g, (d) => SUP.charAt(Number(d)));
+  const s = exp <= -4 ? `${num(v / 10 ** exp)}·10${pow}` : num(v);
+  const u = unitLabel(unit, locale);
   return u ? (unit === 'deg' ? `${s}°` : `${s} ${u}`) : s;
 }

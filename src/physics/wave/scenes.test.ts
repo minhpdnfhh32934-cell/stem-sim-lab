@@ -213,6 +213,29 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(messages({ mode: MODE.harmonic, f: 26 })[0]).toContain('Dùng fₙ');
   });
 
+  it('"Dùng fₙ" never sets f outside its slider (1–200 Hz); the text says why', () => {
+    const range = sc.params.find((d) => d.key === 'f');
+    // L = 0,4 m, v = 100 m/s: fₙ = 125n Hz, so f = 150 Hz sits between f₁ = 125 and f₂ = 250.
+    const both = { ...sc.defaults, mode: MODE.harmonic, L: 0.4, v: 100, f: 150 };
+    const fixes = sc.fixes?.(both) ?? [];
+    expect(fixes.map((x) => x.params.f)).toEqual([125]);
+    for (const x of fixes) {
+      expect(x.params.f).toBeGreaterThanOrEqual(range?.min ?? NaN);
+      expect(x.params.f).toBeLessThanOrEqual(range?.max ?? NaN);
+    }
+    const text = (sc.validate?.(both) ?? [])[0];
+    expect(text?.vi).toContain('f₂ = 250 Hz nằm ngoài thanh trượt f (1–200 Hz)');
+    expect(text?.en).toContain('f₂ = 250 Hz is outside the f slider (1–200 Hz)');
+    expect(text?.vi).toContain('Dùng fₙ');
+    // L = 0,1 m, v = 100 m/s: f₁ = 500 Hz, no button at all, so the text does not offer one.
+    const none = { ...sc.defaults, mode: MODE.harmonic, L: 0.1, v: 100, f: 150 };
+    expect(sc.fixes?.(none)).toEqual([]);
+    const only = (sc.validate?.(none) ?? [])[0];
+    expect(only?.vi).toContain('f₁ = 500 Hz nằm ngoài thanh trượt');
+    expect(only?.vi).not.toContain('Dùng fₙ');
+    expect(only?.en).not.toContain('Use fₙ');
+  });
+
   it('other invalid inputs are reported', () => {
     expect(messages({})).toEqual([]);
     expect(messages({ n: 2.5 })[0]).toContain('số nguyên dương');
