@@ -25,3 +25,20 @@
   trong căn trông như dấu chấm. Không đổi mã.
 - KaTeX: lí do chọn `\text{}` thay vì đổi ký hiệu không dấu — giữ đúng ký hiệu SGK (W_đ); chữ
   trong `\text{}` vẽ bằng font giao diện (`Equation.tsx`), không cảnh báo. CLAUDE.md ghi rõ luật.
+
+### UI-13 (commit 4384b38)
+
+- `SeriesDef.when` (src/physics/types.ts); `visibleSeries` + `columnsFor(scene, label, params)` trong
+  `src/app/sim/data.ts`; `GraphPanel.tsx` lọc đường và tạo lại biểu đồ khi bộ đường đổi; 2 lời gọi
+  trong `DataPanel.tsx`. Điều phối đồng ý sửa mấy dòng này trong src/app. Test `data.test.ts`
+  (hỏng trên mã cũ: còn xB, vB, aB khi "1 vật").
+
+### Kiểm tra phần A
+
+- `npm run typecheck` PASS; `npm run lint` lần đầu FAIL (3 lỗi trong test mới: cộng chuỗi với số,
+  điều kiện luôn sai) → sửa → PASS; `npm run format:check` PASS sau khi chạy Prettier cho work-log.
+- `npm test`: 6 test hỏng khi chạy cả bộ (quá 15 s hoặc vượt ngân sách CPU: `numbers.test.ts`,
+  `enzyme3d/scene.test.ts`, `Mendel3DView`, `tests/app.test.tsx`, `dogma3d`/`mutation3d`
+  `scene.perf.test.ts`); chạy riêng 9 tệp, 85 test PASS → **chập chờn do máy tải**.
+- E2E (khoá chung; lúc đầu phiên `bio-ui49` giữ khoá, đợi tới khi trả): physics + layout + ai-flow,
+  project `chromium` → **39 passed (1,6 phút)**.
