@@ -3,9 +3,9 @@ import { fromSI, unitLabel } from '@/core/units';
 import { MODE as FIELD_MODE } from '@/physics/field/model';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Solution } from '@/physics/types';
-import { allowedNumbers, explainSolution, unknownNumbers } from './explain';
+import { allowedNumbers, explainSolution, explanationTokens, unknownNumbers } from './explain';
 import { formatNumber } from '@/app/i18n';
-import { texNum, texNumbers } from '@/physics/common/tex';
+import { texNum, texNumbers, texTokens } from '@/physics/common/tex';
 import { numberTokens, numbersIn } from './numbers';
 import type { LlmTransport } from './transport';
 
@@ -88,6 +88,25 @@ describe('numbers written in an explanation', () => {
     }
   });
 
+  it('an explanation that copies the TeX of every step verbatim verifies (vi and en)', async () => {
+    // "$g = 9{,}81\,\text{m/s}^{2}$" was split into 9 and 81 and hidden (#97 round 2).
+    for (const id of sceneIds()) {
+      const scene = await loadScene(id);
+      const p = scene.usesGravity ? { ...scene.defaults, g: 9.81 } : scene.defaults;
+      for (const locale of ['vi', 'en'] as const) {
+        const sol = scene.solve(p, locale);
+        const allowed = allowedNumbers(sol, '');
+        for (const s of sol.steps) {
+          const text = `Ta có $${s.tex ?? ''}$.`;
+          expect(unknownNumbers(text, allowed), `${id} ${locale}: ${text}`).toEqual([]);
+        }
+      }
+    }
+    // A long decimal has one reading: "0.003762" is not 0.003 and 762.
+    expect(explanationTokens('h = 0.003762 m')).toEqual([[0.003762]]);
+    expect(explanationTokens('h = 0,003762 m')).toEqual([[0.003762]]);
+  });
+
   it('accepts nothing main refuses, except numbers the steps really print (every scene)', async () => {
     const mods = [1, 10, 100, 1000, 0.1, 0.01, 0.001];
     for (const id of sceneIds()) {
@@ -104,11 +123,11 @@ describe('numbers written in an explanation', () => {
             ...numbersIn((s.tex ?? '').replace(/\{\.\}/g, '')),
           ]),
         ];
-        // Oracle from the writer, not the reader: texNum prints this value in some step.
+        // Oracle from the writer, not the reader: a whole token of a step is texNum's print of
+        // this value (never a substring: "9{,}81" does not print 81).
+        const tokens = new Set(sol.steps.flatMap((s) => texTokens(s.tex ?? '')));
         const printed = (a: number) =>
-          [2, 3, 4, 5, 6].some((sig) =>
-            sol.steps.some((s) => (s.tex ?? '').includes(texNum(locale, a, sig))),
-          );
+          [1, 2, 3, 4, 5, 6].some((sig) => tokens.has(texNum(locale, a, sig)));
         const values = sol.steps.flatMap((s) => texNumbers(s.tex ?? ''));
         for (const v of values) {
           for (const k of mods) {
@@ -117,7 +136,7 @@ describe('numbers written in an explanation', () => {
             if (unknownNumbers(text, main).length === 0) continue;
             if (unknownNumbers(text, now).length > 0) continue;
             // Any reading of the written token ("9.810" is also 9,81, main's reader rule).
-            const reads = numberTokens(text)[0] ?? [];
+            const reads = explanationTokens(text)[0] ?? [];
             const by = now.filter((a) => reads.some((r) => Math.abs(a - r) <= 0.01 * Math.abs(a)));
             expect(by.some(printed), `${id} ${locale}: "${text}"`).toBe(true);
           }

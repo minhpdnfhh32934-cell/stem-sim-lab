@@ -85,7 +85,9 @@ export function buildHwHabitat(kit: SceneKit, input: HwSceneInput): HwScene {
   );
   // One label in front of the plinth (in the picture in both framings): the gene pool's name,
   // then A and p over a and q.
-  const dial = kit.label('', [pool.x, jar.top, pool.z + pool.plinthR + 0.9]);
+  // At the plinth's foot, a little further out: level with its top, the card hid the ring's
+  // front where "Vòng p : q" points (UI-49).
+  const dial = kit.label('', [pool.x, jar.top - pool.plinthH, pool.z + pool.plinthR + 1.3]);
   dial.name = 'hw-dial-label';
   dial.element.classList.add('hw3d__dial-label');
   const poolName = document.createElement('strong');

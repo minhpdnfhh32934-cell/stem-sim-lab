@@ -64,11 +64,30 @@ export function unknownNumbers(text: string, allowed: number[]): number[] {
   const known = (n: number) =>
     small(n) || (Number.isFinite(n) && allowed.some((a) => Math.abs(a - n) <= 0.01 * Math.abs(a)));
   const unknown: number[] = [];
-  for (const readings of numberTokens(text)) {
+  for (const readings of explanationTokens(text)) {
     const first = readings[0];
     if (first !== undefined && !readings.some(known)) unknown.push(first);
   }
   return unknown;
+}
+
+/**
+ * Numbers an explanation can write only one way, read before the free-text reader splits them:
+ * TeX copied from a step ("9{,}81", "35{.}950", "8{,}011 \cdot 10^{-16}", "8.011 \cdot 10^{-16}",
+ * read as texNum wrote them) and a decimal with four or more digits after its mark ("0.003762":
+ * a thousands group has exactly three).
+ */
+const ONE_MEANING =
+  /\d+(?:\{[.,]\}\d+)+(?:\s*\\cdot\s*10\^\{-?\d+\})?|\d+(?:\.\d+)?\s*\\cdot\s*10\^\{-?\d+\}|\d+[.,]\d{4,}/g;
+
+/** Every number token of an explanation with its readings: one-meaning ones first, then free text. */
+export function explanationTokens(text: string): number[][] {
+  const single: number[][] = [];
+  const rest = text.replace(ONE_MEANING, (m) => {
+    single.push(/[{\\]/.test(m) ? texNumbers(m) : [Number(m.replace(',', '.'))]);
+    return ' ';
+  });
+  return [...single, ...numberTokens(rest)];
 }
 
 /**

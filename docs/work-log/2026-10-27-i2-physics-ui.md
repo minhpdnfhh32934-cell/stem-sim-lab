@@ -60,6 +60,12 @@
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4417 PASS (lần này không có test chập chờn);
   E2E physics + layout + ai-flow dưới khoá chung: 39 passed (1,5 phút).
 
+## Vòng 3 — bản duyệt #97 vòng 2 (commit c1782af, sau merge origin/main db2abbb)
+
+- 🟡1: `unknownNumbers` đọc trước TeX chép từ bước và số thập phân ≥ 4 chữ số sau dấu (`explanationTokens`); test dán nguyên TeX mọi bước mọi bài (vi/en) → [] (trên mã vòng 2 hỏng: "9{,}81" → [81]).
+- 🟡2: thử thách Điện trường "khi bạn bắt đầu thử thách". 🟡4: oracle lưới so khớp trọn token (`texTokens`). 🟡3 (data.test.ts add/add với #98) để lúc gộp.
+- Kiểm tra: typecheck, lint, format PASS; `npm test` 4432 PASS, 1 chập chờn (app.test Science Studio); E2E physics + ai-flow dưới khoá chung 38 passed.
+
 ## Phần B — hình trên sân khấu (nhánh `fix/70-physics-stage`, PR riêng, phụ thuộc #97)
 
 - UI-03 (viền nền, chỉ số dưới, tên mũi tên sau đầu mũi tên, v_A/v_B, a cạnh v), UI-04, UI-05 (M sau mũi tên E), UI-15, UI-23 (`SeriesDef.dash`, Eₓ và y₂ nét đứt). Test `render/draw.test.ts` (8) và `GraphPanel.test.tsx`: hỏng trên mã cũ.

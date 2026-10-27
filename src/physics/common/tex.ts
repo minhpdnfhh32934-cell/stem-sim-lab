@@ -45,6 +45,9 @@ export function texNumbers(tex: string): number[] {
   });
 }
 
+/** The written number tokens of a TeX string, as they stand ("35{.}950", "1{,}6 \cdot 10^{-19}"). */
+export const texTokens = (tex: string): string[] => [...tex.matchAll(TEX_NUM)].map((m) => m[0]);
+
 /** Value (SI) converted to `unit` and formatted for KaTeX with the unit appended. */
 export function texQty(locale: Locale, valueSI: number, unit: string, sig = 4): string {
   const v = fromSI(valueSI, unit);
