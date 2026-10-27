@@ -51,11 +51,27 @@ describe('NumberField (UI-17)', () => {
     await userEvent.click(box);
     fireEvent.keyDown(box, { key: 'ArrowUp' });
     expect(box).toHaveValue('20');
+    // An arrow at the maximum is not a wrong value.
+    expect(box).not.toHaveAttribute('aria-invalid');
     await userEvent.clear(box);
     await userEvent.type(box, '50');
     expect(box).toHaveAttribute('aria-invalid', 'true');
+    // Said in words too (not only by colour), tied to the box.
+    const hint = document.getElementById(box.getAttribute('aria-describedby') ?? '');
+    expect(hint).toHaveTextContent('Mô phỏng chạy với 20 (giới hạn 0,01–20)');
     await userEvent.tab();
     expect(box).toHaveValue('20');
+    expect(box).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('focusing a value with more digits than shown is not "wrong" (16,6667 for 60 km/h)', async () => {
+    useSettingsStore.setState({ locale: 'vi' });
+    render(
+      <NumberField label="v0" value={60 / 3.6} min={0} max={100} onChange={() => undefined} />,
+    );
+    const box = screen.getByRole('textbox', { name: 'v0' });
+    await userEvent.click(box);
+    expect(box).toHaveValue('16,6667');
     expect(box).not.toHaveAttribute('aria-invalid');
   });
 });
