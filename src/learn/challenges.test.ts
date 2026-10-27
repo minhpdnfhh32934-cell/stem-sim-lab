@@ -80,8 +80,10 @@ describe('challenges (answers checked by the engine)', () => {
       if (mode === undefined || mode === s.defaults.mode) continue;
       const label = s.params.find((d) => d.key === 'mode')?.choices?.find((x) => x.value === mode);
       expect(c.task.vi, c.id).toContain(label?.label.vi ?? '?');
-      expect(c.task.vi, c.id).toContain(`“${tFor('vi')('learn.start')}”`);
-      expect(c.task.en, c.id).toContain(`“${tFor('en')('learn.start')}”`);
+      // Not the button's name: after a try it reads “Làm lại thử thách”.
+      expect(c.task.vi, c.id).toContain('khi bạn bắt đầu thử thách');
+      expect(c.task.en, c.id).toContain('when you start the challenge');
+      expect(c.task.vi, c.id).not.toContain(tFor('vi')('learn.start'));
       // A target in the thousands is grouped like the rest of the screen ("8.000 V/m").
       if (c.goal.kind === 'target' && c.goal.value >= 1000) {
         expect(c.title.vi, c.id).toContain(formatNumber('vi', c.goal.value));
