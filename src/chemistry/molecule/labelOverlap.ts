@@ -9,9 +9,10 @@ export interface LabelBox {
 
 /**
  * Which labels to show so none covers another (UI-38, #70): nearer atoms keep their label, a
- * farther one that would touch an already shown label is hidden ("C" and "H" no longer read "CH").
+ * farther one closer than `gap` px to an already shown label is hidden. Labels 5 px apart still
+ * read as one word ("CH"), so the gap is about one letter wide.
  */
-export function visibleLabels(boxes: readonly (LabelBox | null)[], gap = 1): boolean[] {
+export function visibleLabels(boxes: readonly (LabelBox | null)[], gap = 8): boolean[] {
   const order = boxes
     .map((b, i) => [b, i] as const)
     .filter((e): e is readonly [LabelBox, number] => e[0] !== null)
