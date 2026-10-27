@@ -13,6 +13,12 @@ import { L } from '../common';
 import { CATEGORY_LABEL } from './layout';
 import { usePeriodicStore } from './store';
 
+/** The data source in the learner's language; the original citation is the tooltip. */
+const SOURCE = L(
+  'Nguồn: thư viện mendeleev 1.3.0 — khối lượng nguyên tử IUPAC/CIAAW, độ âm điện Pauling, bán kính cộng hóa trị (Cordero và cộng sự, 2008), cấu hình electron và năng lượng ion hóa NIST ASD, màu CPK/Jmol.',
+  'Source: mendeleev 1.3.0 library — IUPAC/CIAAW atomic weights, Pauling electronegativity, covalent radii (Cordero et al., 2008), NIST ASD electron configurations and ionisation energies, CPK/Jmol colours.',
+);
+
 /** Data sheet of the selected element (every value from data/elements.json). */
 export function ElementDetails() {
   const Lz = useLocalized();
@@ -76,7 +82,9 @@ export function ElementDetails() {
         <dt>{Lz(L('Năng lượng ion hóa thứ nhất', 'First ionization energy'))}</dt>
         <dd className="mono">{num(e.ionization_energy_ev, 'eV', 5)}</dd>
       </dl>
-      <p className="el-card__source">{ELEMENTS_SOURCE.citation}</p>
+      <p className="el-card__source" data-tip={ELEMENTS_SOURCE.citation}>
+        {Lz(SOURCE)}
+      </p>
     </div>
   );
 }

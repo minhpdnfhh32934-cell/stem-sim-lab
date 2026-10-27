@@ -159,6 +159,29 @@ export function formatFormula(input: string): string {
   return `${sub}${mag}${charge > 0 ? '⁺' : '⁻'}`;
 }
 
+/**
+ * An equation as typed ("MnO4^- + Fe^2+ -> Mn^2+") with typographic formulas ("MnO₄⁻ + Fe²⁺ →
+ * Mn²⁺"); a term the formula reader does not know is shown as typed.
+ */
+export function formatEquationText(input: string): string {
+  const side = (s: string) =>
+    s
+      .split(/\s+\+\s+/)
+      .map((term) => {
+        const m = /^(\d*)\s*(.+)$/.exec(term.trim());
+        try {
+          return `${m?.[1] ?? ''}${formatFormula(m?.[2] ?? term)}`;
+        } catch {
+          return term.trim();
+        }
+      })
+      .join(' + ');
+  return input
+    .split(/\s*(?:->|=|→|⇌)\s*/)
+    .map(side)
+    .join(' → ');
+}
+
 /** Molar mass (g/mol) from standard atomic weights. */
 export function molarMass(input: string): number {
   const { counts } = parseFormula(input);

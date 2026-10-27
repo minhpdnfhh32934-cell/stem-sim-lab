@@ -90,6 +90,9 @@ const DIRECTION: Record<'forward' | 'backward' | 'none', LocalizedText> = {
   none: L('Q = K → hệ đang cân bằng', 'Q = K → the system is at equilibrium'),
 };
 
+/** A true minus sign ("−20", not "-20"), as in the rest of the line. */
+const minus = (s: string) => s.replace(/^-/, '−');
+
 export function EquilibriumStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
@@ -262,8 +265,8 @@ export function EquilibriumStage() {
       <p className="small muted">
         {Lz(
           L(
-            `ΔH = Eₐ,t − Eₐ,n = ${f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3)} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'phản ứng thuận tỏa nhiệt → tăng nhiệt độ làm K giảm' : st.kinetics.eaf > st.kinetics.ear ? 'phản ứng thuận thu nhiệt → tăng nhiệt độ làm K tăng' : 'ΔH = 0 → K không đổi theo nhiệt độ'}.`,
-            `ΔH = Eₐ,f − Eₐ,r = ${f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3)} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'exothermic forward → heating lowers K' : st.kinetics.eaf > st.kinetics.ear ? 'endothermic forward → heating raises K' : 'ΔH = 0 → K does not depend on T'}.`,
+            `ΔH = Eₐ(thuận) − Eₐ(nghịch) = ${minus(f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3))} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'phản ứng thuận tỏa nhiệt → tăng nhiệt độ làm K giảm' : st.kinetics.eaf > st.kinetics.ear ? 'phản ứng thuận thu nhiệt → tăng nhiệt độ làm K tăng' : 'ΔH = 0 → K không đổi theo nhiệt độ'}.`,
+            `ΔH = Eₐ(forward) − Eₐ(reverse) = ${minus(f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3))} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'exothermic forward → heating lowers K' : st.kinetics.eaf > st.kinetics.ear ? 'endothermic forward → heating raises K' : 'ΔH = 0 → K does not depend on T'}.`,
           ),
         )}
       </p>
