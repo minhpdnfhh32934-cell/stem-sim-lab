@@ -41,4 +41,13 @@
 
 ## Tests run
 
-- (filled in after the runs)
+- `npm run check` (after merging `origin/main` f5f0a35): lint, typecheck, build PASS; Vitest
+  4405 passed, 1 failed — `tests/app.test.tsx` "Science Studio shows inside the lab" (lazy screen
+  not found within 5 s while the machine was busy); rerun alone: 15/15 PASS. Same flake as on
+  earlier runs; not related to chemistry.
+- `npx prettier --check .` PASS.
+- E2E `tests/e2e/chemistry.spec.ts` 6/6 PASS; full `npx playwright test` 133/133 PASS (11.3 min),
+  both under the shared E2E lock.
+- Screenshots (1366×768, Basic, light) `D:\Projects\ui-audit\2026-10-27-chem-after2`: Bohr "4"
+  clear of the chips, ψ(2p_z) chip and Eₙ readable, ethanol labels no longer read "CH", balancer
+  inspector shows the samples, bond table headers over their columns.
