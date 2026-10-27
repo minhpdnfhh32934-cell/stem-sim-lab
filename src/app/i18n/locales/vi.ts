@@ -461,6 +461,7 @@ const vi = {
     liveHint: 'Có thể chỉnh khi đang chạy (tính là can thiệp)',
     allDefault: 'Đang dùng giá trị mặc định (đề bài chưa cho). Kéo thanh trượt để thử.',
     resetHint: 'Đổi giá trị sẽ chạy lại từ đầu',
+    clampedHint: 'Mô phỏng chạy với {value} (giới hạn {min}–{max})',
   },
   solution: {
     explainUnsafe:

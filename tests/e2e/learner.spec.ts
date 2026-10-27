@@ -212,7 +212,7 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   const challenge = page.getByRole('region', { name: /Thử thách: Ném trúng đích 40 m/ });
   await challenge.getByRole('button', { name: 'Bắt đầu thử thách' }).click();
   await expect(challenge).toContainText('Hiện tại');
-  const v0 = page.getByRole('spinbutton', { name: /Vận tốc ban đầu/ });
+  const v0 = page.getByRole('textbox', { name: /Vận tốc ban đầu/ });
   await v0.fill((40 / Math.sqrt((2 * 45) / 9.81)).toFixed(2));
   await v0.press('Enter');
   await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');

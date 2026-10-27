@@ -24,3 +24,13 @@
 - `graphData.test.ts`: a minute at ×1 keeps ≥ 15 recorded points per period, each equal to the
   recorded state.
 - The 3 tests fail on the old `history.ts` / `data.ts` (checked by restoring them: 3 failed).
+
+## Results (real)
+
+| Check                                                                                | Result                                                                                                                                          |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prettier on every file that differs from `main`, `npm run lint`, `npm run typecheck` | PASS                                                                                                                                            |
+| `npx vitest run --maxWorkers=2` (on `main` db2abbb)                                  | PASS — 328 files, 4418 tests (1 skipped, existing)                                                                                              |
+| `npx playwright test` full, project `chromium`                                       | 95 passed, 2 failed: `chemistry.spec` "every chemistry topic opens…" and `lesson-flow` — FLAKY under load: both specs alone, 1 worker, 8/8 PASS |
+| `chromium-3d` + `chromium-3d-perf` (`--no-deps`, skipped by the failures above)      | PASS — 36/36 (1 worker)                                                                                                                         |
+| After merging `main` with #98: `src/app/sim` unit tests, typecheck                   | see the PR                                                                                                                                      |

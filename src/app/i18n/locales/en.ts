@@ -458,6 +458,7 @@ const en: Messages = {
     liveHint: 'Can be changed while running (counts as an intervention)',
     allDefault: 'Using default values (not given by a problem). Drag a slider to try.',
     resetHint: 'Changing it restarts the simulation',
+    clampedHint: 'The simulation runs {value} (range {min}–{max})',
   },
   solution: {
     explainUnsafe:
