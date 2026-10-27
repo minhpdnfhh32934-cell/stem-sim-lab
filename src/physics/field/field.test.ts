@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { C } from '@/core/constants';
 import { dopri5 } from '@/core/ode';
 import { traceFieldLines, type FieldLine, type Frame } from './fieldLines';
-import { fmtQty } from '../common/tex';
+import { fmtQty, texQty } from '../common/tex';
 import { linesFor } from './draw';
 import { FE, FieldEngine } from './engine';
 import {
@@ -296,6 +296,36 @@ describe('electricField scene', () => {
       ).toBe(true);
       expect(unknownNumbers(`Lực bằng ${shown}.`, allowed), shown).toEqual([]);
     }
+  });
+
+  it('a force below 1 µN (an electron, a proton) is written in N as a power of ten, steps alike', () => {
+    const e = C.e;
+    for (const p of [
+      sceneParams({ mode: MODE.plates, q0: -e }), // 8,01·10⁻¹⁶ N
+      sceneParams({ q0: e, q1: e, q2: -e }), // F on q₀ and the Coulomb force F₁₂, both tiny
+    ]) {
+      const sol = electricField.solve(p, 'vi');
+      const allowed = allowedNumbers(sol, '');
+      const forces = sol.answers.filter((a) => a.id === 'F' || a.id === 'F12');
+      expect(forces.length).toBeGreaterThan(0);
+      for (const a of forces) {
+        expect(a.unit).toBe('N');
+        const shown = fmtQty('vi', a.value, a.unit);
+        expect(shown).toMatch(/^\d+(,\d+)?·10⁻[¹²³⁴⁵⁶⁷⁸⁹][⁰¹²³⁴⁵⁶⁷⁸⁹]* N$/);
+        // The step writes the same value in the same unit ("8{,}011 \cdot 10^{-16}\,\text{N}").
+        const tex = texQty('vi', a.value, a.unit);
+        expect(sol.steps.some((s) => s.tex?.includes(tex))).toBe(true);
+        // An explanation copying the answer (or the step, "·10⁻¹⁶") verifies.
+        expect(unknownNumbers(`Lực bằng ${shown}.`, allowed), shown).toEqual([]);
+      }
+    }
+    expect(fmtQty('vi', 8.0109e-16, 'N')).toBe('8,011·10⁻¹⁶ N');
+    expect(fmtQty('en', 8.0109e-16, 'N')).toBe('8.011·10⁻¹⁶ N');
+    // From 10⁻³ up nothing changes ("0,005 m"), just below it is a power of ten; 1 µN is still µN.
+    expect(fmtQty('vi', 0.005, 'm')).toBe('0,005 m');
+    expect(fmtQty('vi', 0.001, 'm')).toBe('0,001 m');
+    expect(fmtQty('vi', 0.0005, 'm')).toBe('5·10⁻⁴ m');
+    expect(answer(sceneParams({ mode: MODE.plates, q0: 2e-10 }), 'F')?.unit).toBe('uN');
   });
 
   it('engine state equals the field of the model at M, and U/d between the plates', () => {

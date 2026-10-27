@@ -71,6 +71,7 @@ function ParamRow({
 }) {
   const t = useT();
   const L = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   const unit = def.unit ?? '1';
   const shown = def.kind === 'number' ? fromSI(valueSI, unit) : valueSI;
   const id = `param-${def.key}`;
@@ -127,7 +128,7 @@ function ParamRow({
               if (e.target.value !== '') set(Number(e.target.value));
             }}
           />
-          <span className="param__unit">{unitLabel(unit)}</span>
+          <span className="param__unit">{unitLabel(unit, locale)}</span>
         </div>
       )}
       {def.kind === 'choice' && (

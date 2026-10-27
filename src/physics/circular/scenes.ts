@@ -241,8 +241,8 @@ function card(p: Params): ScienceCardData {
       {
         tex: `\\varphi = \\varphi_0 ${sense} \\omega t,\\quad x = r\\cos\\varphi,\\quad y = r\\sin\\varphi`,
         label: L(
-          'Vị trí theo thời gian (dấu + khi quay ngược chiều kim đồng hồ, − khi cùng chiều)',
-          'Position over time (+ counterclockwise, − clockwise)',
+          'Vị trí theo thời gian (φ, φ₀ tính bằng rad; dấu + khi quay ngược chiều kim đồng hồ, − khi cùng chiều)',
+          'Position over time (φ, φ₀ in rad; + counterclockwise, − clockwise)',
         ),
       },
     ],
@@ -256,6 +256,10 @@ function card(p: Params): ScienceCardData {
         'The model gives the net force needed; it does not say which force provides it (tension, friction, gravity…).',
       ),
       L(
+        'Trên hình, mũi tên v và a_ht chỉ hướng; độ dài mũi tên không theo độ lớn.',
+        'In the picture the v and a_c (F_c) arrows show the direction only; their length does not follow the magnitude.',
+      ),
+      L(
         'Cơ học cổ điển: tốc độ rất nhỏ so với tốc độ ánh sáng.',
         'Classical mechanics: speeds far below the speed of light.',
       ),
@@ -266,8 +270,8 @@ function card(p: Params): ScienceCardData {
     ),
     confidence: 'exact',
     confidenceNote: L(
-      'Vị trí tính thẳng từ t (không cộng dồn). Kiểm chứng bằng tích phân Dormand–Prince định luật II Newton với lực hướng tâm: chu kì khớp 2πr/v tới 10⁻⁹.',
-      'Positions are computed straight from t (nothing accumulates). Checked by Dormand–Prince integration of Newton’s second law with the centripetal force: the period matches 2πr/v to 10⁻⁹.',
+      'Vị trí tính thẳng từ t (không cộng dồn). Kiểm chứng bằng tích phân Dormand–Prince định luật II Newton với lực hướng tâm: chu kì khớp 2πr/v với sai lệch tương đối dưới 10⁻⁹.',
+      'Positions are computed straight from t (nothing accumulates). Checked by Dormand–Prince integration of Newton’s second law with the centripetal force: the period matches 2πr/v within a relative error of 10⁻⁹.',
     ),
     method: L(
       'Nghiệm giải tích φ = φ₀ ± ωt; bước Δt = 1/240 s chỉ dùng để vẽ hình.',
@@ -387,12 +391,27 @@ export const uniformCircularMotion: PhysicsScene = {
   // The first of v, ω, T, f the problem states is the given quantity; buildDraft flags any other
   // stated one as not used. An edited value still counts as given, so correcting it never
   // switches to another stated quantity and hides the field being typed in.
-  autoDefaults: (_p, sources) => {
+  // The quantities that are not given and still at their default follow the motion, so
+  // choosing another "Đề bài cho biết" in the lab keeps the motion (never a default value).
+  autoDefaults: (p, sources) => {
     const stated = GIVEN.find((k) => sources[k] === 'problem' || sources[k] === 'user');
-    return stated ? { mode: GIVEN.indexOf(stated) } : {};
+    const out: Params = stated ? { mode: GIVEN.indexOf(stated) } : {};
+    const free = (k: string) => sources[k] === undefined || sources[k] === 'default';
+    const q = free('mode') ? { ...p, ...out } : p;
+    const c = circular(q);
+    const follow = { v: c.v, omega: c.omega, T: c.T, f: c.f };
+    if (!Object.values(follow).every((x) => Number.isFinite(x) && x > 0)) return out;
+    const key = GIVEN[q.mode ?? MODE.v] ?? 'v';
+    for (const k of GIVEN) if (k !== key) out[k] = follow[k];
+    return out;
   },
-  // About four seconds per turn for slow motions (e.g. a period given in hours).
-  suggestedSpeed: (p) => Math.max(1, circular(p).T / 4),
+  // About four seconds per turn for slow motions (e.g. a period given in hours); fast ones
+  // play slower, at least 0,4 s per turn on screen, so the ~60 frames per second (one picture
+  // and one graph sample each) never show a wrong frequency.
+  suggestedSpeed: (p) => {
+    const T = circular(p).T;
+    return Math.min(Math.max(1, T / 4), T / 0.4);
+  },
   validate,
   scienceCard: card,
   solve,
