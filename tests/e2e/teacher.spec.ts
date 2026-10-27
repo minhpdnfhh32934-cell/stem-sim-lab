@@ -18,7 +18,7 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   // The screen-context switch belongs to the bubble only.
   await expect(page.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).toHaveCount(0);
   // No API key and no local model: a clear notice, never a pretend answer.
-  await expect(page.getByText(/Chưa có API/)).toBeVisible();
+  await expect(page.getByText(/Chưa kết nối AI trực tuyến/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cài đặt' }).first()).toBeVisible();
   expect(await overflow(page)).toBeLessThanOrEqual(0);
   for (const name of ['Gửi câu hỏi', 'Về trang chủ']) {

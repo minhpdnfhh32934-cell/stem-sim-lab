@@ -97,7 +97,7 @@ chép qua USB và cài trước.
 
 Trong Virtual Lab, bấm nút tròn có mặt **AI Teacher** ở góc dưới (bên trái cột Thuộc tính) để
 hỏi nhanh; ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc trò chuyện toàn màn hình. Bấm chữ **SimLab**
-ở góc trên để về trang chủ. Chọn API trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
+ở góc trên để về trang chủ. Chọn AI trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
 ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
 Gemma chưa sẵn sàng, khung chat hiện thông báo và nút **Cài đặt** mở thẳng đúng mục cần chỉnh. Dòng
 nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi tới đâu (hoặc chỉ xử lý trên máy).
@@ -112,7 +112,7 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   sang nhà cung cấp dự phòng, để người rà soát không tự chấm bài của chính mình. Trên trình duyệt,
   khóa chỉ nằm trong phiên (tải lại trang là mất) và Claude chỉ rà soát được ở bản desktop.
 - Chọn **Gemma cục bộ** để trò chuyện ngay trên máy, không cần Ollama, không cần mạng sau
-  khi đã tải model. Vào Cài đặt → AI local (Gemma) để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
+  khi đã tải model. Vào Cài đặt → Gemma trên máy này để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
   còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng, và
   "còn khoảng … phút" sau vài giây (ước tính theo tốc độ mạng mấy giây gần nhất, nên có thể thay
   đổi); có nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Với Gemma, câu trả lời hiện
@@ -672,8 +672,8 @@ tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
 - **Kết nối AI:** ô "Nhà cung cấp và khóa API" (Gemini khuyên dùng, Claude, Groq miễn phí hoặc tắt;
   hướng dẫn lấy khóa; mô hình; nút Kiểm tra key), ô "Thời gian chờ và giới hạn mỗi ngày" và ô "Dự
   phòng khi hết lượt" (mặc định Groq, xem phần Groq ở trên).
-- **AI Teacher:** Think (API thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
-- **AI local (Gemma):** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
+- **AI Teacher:** Think (một AI thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
+- **Gemma trên máy này:** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
 - **GPU cho Gemma:** chọn card đồ họa chạy Gemma (bản desktop trên Windows, máy có hai card; đổi card
   cần mở lại app) và xem WebGPU thật đang chạy trên card nào; độ dài câu trả lời của Gemma (Ngắn / Vừa
   / Dài); giải phóng bộ nhớ GPU sau 5 hoặc 15 phút không dùng, hoặc ngay lập tức.

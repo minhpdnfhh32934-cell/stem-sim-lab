@@ -236,8 +236,8 @@ const vi = {
       aiHint:
         'Chọn nhà cung cấp AI trực tuyến, nhập khóa API, đặt giới hạn và dự phòng khi hết lượt.',
       teacher: 'AI Teacher',
-      teacherHint: 'Think (một API thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
-      local: 'AI local (Gemma)',
+      teacherHint: 'Think (một AI thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
+      local: 'Gemma trên máy này',
       localHint:
         'Tải, chọn hoặc xóa mô hình Gemma chạy ngay trên máy: trả lời không cần mạng, không cần khóa.',
       gpu: 'GPU cho Gemma',
@@ -989,7 +989,7 @@ const vi = {
     },
     notes: {
       private:
-        'Ghi chú của em lưu trên máy này. Chỉ khi em bật “Lấy thông tin từ màn hình” trong khung Thầy AI và tự gửi câu hỏi, ghi chú mới được gửi kèm.',
+        'Ghi chú của em lưu trên máy này. Chỉ khi em bật “Lấy thông tin từ màn hình” trong khung AI Teacher và tự gửi câu hỏi, ghi chú mới được gửi kèm.',
     },
     flow: {
       label: 'Các bước của bài học',
@@ -1104,7 +1104,7 @@ const vi = {
     },
     ask: {
       button: 'Hỏi thầy',
-      hint: 'Thầy AI chỉ thấy số đo và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
+      hint: 'AI Teacher chỉ thấy số đo và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
       questions: {
         predict:
           'Thầy ơi, em đang làm bài “{title}”, bước Dự đoán. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
@@ -1486,7 +1486,7 @@ const vi = {
     contextToggle: 'Lấy thông tin từ màn hình',
     contextHint: 'Chỉ chia sẻ dữ liệu SimLab đang mở',
     engineLabel: 'Chọn mô hình AI',
-    cloud: 'API',
+    cloud: 'AI trực tuyến',
     gemma: 'Gemma cục bộ',
     local: 'AI trên máy khác',
     localMissingNotice:
@@ -1495,15 +1495,16 @@ const vi = {
       'SimLab chỉ gửi câu hỏi tới {name} trên máy này ({address}), không tự gửi lên mạng.',
     localRuntimeHere: 'SimLab gửi câu hỏi tới {name} trên máy này ({address}).',
     voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
-    noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
+    noApi:
+      'Chưa kết nối AI trực tuyến. Kết nối trong Cài đặt → Kết nối AI, hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
-      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
+      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “AI trực tuyến”.',
     settings: 'Cài đặt',
     localOnly: 'Câu hỏi được xử lý cục bộ trên máy này.',
     noWebgpuNotice:
-      'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “API” và kết nối khóa trong Cài đặt.',
+      'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “AI trực tuyến” và kết nối khóa trong Cài đặt.',
     thinkNoVerifier:
-      'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
+      'Think cần một AI thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
     fallbackTarget: '{name} (dự phòng khi {provider} hết lượt)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
@@ -1546,7 +1547,7 @@ const vi = {
     placeholder: 'Nhập câu hỏi của em…',
     send: 'Gửi câu hỏi',
     think: 'Think',
-    thinkTitle: 'Dùng API thứ hai để rà soát câu trả lời',
+    thinkTitle: 'Dùng một AI thứ hai để rà soát câu trả lời',
     twoApis: '· 2 API',
     oneApiReview: '· 1 API rà soát',
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
@@ -1684,7 +1685,7 @@ const vi = {
       'Gemma là mô hình của Google DeepMind, dùng theo Điều khoản sử dụng Gemma. Hãy đọc trước khi tải.',
     thinkCard: 'Think · kiểm tra chéo',
     thinkHint:
-      'Khi bật Think trong khung chat, một API thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
+      'Khi bật Think trong khung chat, một AI thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
     builtInCard: 'Ghi chú có sẵn',
     webCard: 'Tra cứu trực tuyến',
     flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
@@ -1724,7 +1725,7 @@ const vi = {
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
     flowAnswer:
-      'Khi chọn “API”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
+      'Khi chọn “AI trực tuyến”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
     flowFallback:
       'Khi {name} hết lượt và Think đang tắt: những gì gửi cho {name} → {fallback} (dự phòng, chỉ khi đã có khóa).',
     flowThink:

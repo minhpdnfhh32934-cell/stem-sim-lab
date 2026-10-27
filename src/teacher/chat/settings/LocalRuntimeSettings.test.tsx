@@ -356,13 +356,15 @@ describe('Settings → AI trên máy khác', () => {
         'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini. Bấm “Dùng cho AI Teacher” để chuyển.',
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText('Đã chọn · AI Teacher đang dùng API · Gemini')).toBeInTheDocument();
+    expect(
+      screen.getByText('Đã chọn · AI Teacher đang dùng AI trực tuyến · Gemini'),
+    ).toBeInTheDocument();
     // The model's own row says the same after "Tìm trên máy này".
     await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
     const row = (await screen.findByRole('radio', { name: /qwen3:8b/ })).closest('article');
     expect(row).not.toBeNull();
     expect(
-      within(row as HTMLElement).getByText('Đã chọn · AI Teacher đang dùng API · Gemini'),
+      within(row as HTMLElement).getByText('Đã chọn · AI Teacher đang dùng AI trực tuyến · Gemini'),
     ).toBeInTheDocument();
     expect(within(row as HTMLElement).queryByText('Đang chọn cho AI Teacher')).toBeNull();
     // A downloaded Gemma answers: the badge names it.

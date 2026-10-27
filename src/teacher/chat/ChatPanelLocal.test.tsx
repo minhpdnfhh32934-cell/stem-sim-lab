@@ -83,7 +83,7 @@ describe('AI Teacher chat with the AI on this computer', () => {
       within(menu)
         .getAllByRole('option')
         .map((o) => o.textContent),
-    ).toEqual(['API', 'Gemma cục bộ', 'AI trên máy khác']);
+    ).toEqual(['AI trực tuyến', 'Gemma cục bộ', 'AI trên máy khác']);
     await user.selectOptions(menu, 'local');
     expect(useChatStore.getState()).toMatchObject({ engine: 'local', engineChosen: true });
     const notice = await screen.findByText(/chưa chọn chương trình và mô hình/);

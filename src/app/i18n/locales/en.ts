@@ -233,7 +233,7 @@ const en: Messages = {
       simulationHint: 'Display quality for this computer and the default gravity.',
       aiHint: 'Choose the online AI provider, enter the API key, set limits and the fallback.',
       teacher: 'AI Teacher',
-      teacherHint: 'Think (a second API reviews the answer) and what data is sent.',
+      teacherHint: 'Think (a second AI reviews the answer) and what data is sent.',
       local: 'Local AI (Gemma)',
       localHint:
         'Download, choose or delete the Gemma models that run on this computer: no network, no key.',
@@ -1500,7 +1500,7 @@ const en: Messages = {
     contextToggle: 'Use current screen information',
     contextHint: 'Only shares SimLab data currently open',
     engineLabel: 'Choose AI model',
-    cloud: 'API',
+    cloud: 'Online AI',
     gemma: 'Local Gemma',
     local: 'AI on this computer',
     localMissingNotice:
@@ -1511,15 +1511,15 @@ const en: Messages = {
     voiceOnline:
       'The Gemini voice is on: the text of each answer is sent to Google to be read aloud.',
     noApi:
-      'No API key is configured. Connect an API in Settings or choose a downloaded Gemma model.',
+      'No online AI is connected. Connect one in Settings → Connect AI, or choose a downloaded Gemma model.',
     gemmaMissingNotice:
-      'Gemma is not ready: this model is not downloaded. Download it in Settings → AI Teacher, or choose “API”.',
+      'Gemma is not ready: this model is not downloaded. Download it in Settings → AI Teacher, or choose “Online AI”.',
     settings: 'Settings',
     localOnly: 'Questions are processed locally on this computer.',
     noWebgpuNotice:
-      'This computer or browser does not support WebGPU, so Gemma cannot run here. Choose “API” and connect a key in Settings.',
+      'This computer or browser does not support WebGPU, so Gemma cannot run here. Choose “Online AI” and connect a key in Settings.',
     thinkNoVerifier:
-      'Think needs a second API to cross-check, but it has no key yet. Choose a provider and enter its key in Settings → AI Teacher.',
+      'Think needs a second AI to cross-check, but it has no key yet. Choose a provider and enter its key in Settings → AI Teacher.',
     reviewTarget: '{name} (review)',
     fallbackTarget: '{name} (fallback when {provider} runs out)',
     sentTo: 'Your question and related library excerpts will be sent to: {targets}.',
@@ -1563,7 +1563,7 @@ const en: Messages = {
     placeholder: 'Type your question…',
     send: 'Send question',
     think: 'Think',
-    thinkTitle: 'Use a second API to review the answer',
+    thinkTitle: 'Use a second AI to review the answer',
     twoApis: '· 2 APIs',
     oneApiReview: '· 1 API reviews',
     enterHint: 'Enter to send · Shift+Enter for a new line',
@@ -1695,7 +1695,7 @@ const en: Messages = {
       'Gemma is a Google DeepMind model, used under the Gemma Terms of Use. Please read them before downloading.',
     thinkCard: 'Think · cross-check',
     thinkHint:
-      'With Think on in the chat, a second API (not the one that answered) reads the draft and fixes mistakes before you see the answer.',
+      'With Think on in the chat, a second AI (not the one that answered) reads the draft and fixes mistakes before you see the answer.',
     builtInCard: 'Built-in notes',
     webCard: 'Online lookup',
     flowLocalChatSession:
@@ -1737,7 +1737,7 @@ const en: Messages = {
     flowLocalKeyBrowser: 'API keys: only in this browser session, gone on reload.',
     flowSentTitle: 'May be sent online (with the current settings)',
     flowAnswer:
-      'With “API”: question, the recent conversation, the summary of the older conversation (if any) and related library excerpts → {name}.',
+      'With “Online AI”: question, the recent conversation, the summary of the older conversation (if any) and related library excerpts → {name}.',
     flowFallback:
       'When {name} is out of quota and Think is off: what was sent to {name} → {fallback} (the fallback, only if its key is saved).',
     flowThink:
