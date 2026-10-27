@@ -38,7 +38,7 @@ export function texQty(locale: Locale, valueSI: number, unit: string, sig = 4): 
 const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
 
 /**
- * Plain-text quantity for canvas labels and tables. Below 10⁻⁴ it is written as a power of ten
+ * Plain-text quantity for canvas labels and tables. Below 10⁻³ (exponent −4 and lower) it is written as a power of ten
  * like `texNum` ("8,01·10⁻¹⁶ N"), never as a run of zeros.
  */
 export function fmtQty(locale: Locale, valueSI: number, unit: string, sig = 4): string {

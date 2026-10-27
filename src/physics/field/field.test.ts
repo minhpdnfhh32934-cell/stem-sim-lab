@@ -321,8 +321,10 @@ describe('electricField scene', () => {
     }
     expect(fmtQty('vi', 8.0109e-16, 'N')).toBe('8,011·10⁻¹⁶ N');
     expect(fmtQty('en', 8.0109e-16, 'N')).toBe('8.011·10⁻¹⁶ N');
-    // From 10⁻⁴ up nothing changes ("0,005 m"), and 1 µN is still µN.
+    // From 10⁻³ up nothing changes ("0,005 m"), just below it is a power of ten; 1 µN is still µN.
     expect(fmtQty('vi', 0.005, 'm')).toBe('0,005 m');
+    expect(fmtQty('vi', 0.001, 'm')).toBe('0,001 m');
+    expect(fmtQty('vi', 0.0005, 'm')).toBe('5·10⁻⁴ m');
     expect(answer(sceneParams({ mode: MODE.plates, q0: 2e-10 }), 'F')?.unit).toBe('uN');
   });
 

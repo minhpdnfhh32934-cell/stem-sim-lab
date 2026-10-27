@@ -58,8 +58,9 @@ export function suggestions(q: StandingInput) {
 /** f's slider range: a "Dùng fₙ" button never sets f outside it (touching the slider would clamp it). */
 const F_MIN = 1;
 const F_MAX = 200;
+// Same round-off margin as isWhole: f₁₀ = 10·22,8/(2·0,57) is 200.00000000000003 Hz, still on it.
 const onSlider = (r: Resonance | null): r is Resonance =>
-  r !== null && r.f >= F_MIN && r.f <= F_MAX;
+  r !== null && r.f >= F_MIN * (1 - 1e-9) && r.f <= F_MAX * (1 + 1e-9);
 const offSlider = (r: Resonance | null): r is Resonance => r !== null && !onSlider(r);
 
 /** Learner-facing text when 2Lf/v is not whole (trap 5): never rounded, nearest resonances. */
@@ -93,7 +94,7 @@ function noResonance(q: StandingInput, locale: Locale): string {
         : `SimLab draws at most ${MAX_LOOPS} loops; the highest resonance is ${s.below ? fr(s.below) : ''}.`;
   const off =
     outside.length > 0
-      ? ` ${outside.join(' and ')} ${outside.length > 1 ? 'are' : 'is'} outside the f slider (${F_MIN}–${F_MAX} Hz), so there is no button for it.`
+      ? ` ${outside.join(' and ')} ${outside.length > 1 ? 'are' : 'is'} outside the f slider (${F_MIN}–${F_MAX} Hz), so there is no button for ${outside.length > 1 ? 'them' : 'it'}.`
       : '';
   const act = button
     ? 'press a “Use fₙ” button below to set a resonance exactly, or change the string length or the wave speed.'
@@ -635,7 +636,7 @@ export const standingWave: PhysicsScene = {
         `Dùng f${sub(r.n)} = ${fmtQty('vi', r.f, 'Hz')}`,
         `Use f${sub(r.n)} = ${fmtQty('en', r.f, 'Hz')}`,
       ),
-      params: { f: r.f },
+      params: { f: Math.min(F_MAX, Math.max(F_MIN, r.f)) },
     }));
   },
   // About 10 s of screen time for the 20 periods of a run (closest offered speed).

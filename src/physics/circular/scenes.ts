@@ -257,7 +257,7 @@ function card(p: Params): ScienceCardData {
       ),
       L(
         'Trên hình, mũi tên v và a_ht chỉ hướng; độ dài mũi tên không theo độ lớn.',
-        'In the picture the v and a_ht arrows show the direction only; their length does not follow the magnitude.',
+        'In the picture the v and a_c (F_c) arrows show the direction only; their length does not follow the magnitude.',
       ),
       L(
         'Cơ học cổ điển: tốc độ rất nhỏ so với tốc độ ánh sáng.',

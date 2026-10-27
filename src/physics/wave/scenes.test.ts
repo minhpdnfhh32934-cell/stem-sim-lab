@@ -236,6 +236,28 @@ describe('standing wave scene: trap 5 (2Lf/v is never rounded)', () => {
     expect(only?.en).not.toContain('Use fₙ');
   });
 
+  it('a resonance at exactly 200 Hz (with round-off) keeps its button and is set on the slider', () => {
+    // f₁₀ = 10·22,8/(2·0,57) = 200.00000000000003 Hz in floating point.
+    const p = { ...sc.defaults, mode: MODE.harmonic, L: 0.57, v: 22.8, f: 190 };
+    expect(harmonicFrequency(10, 22.8, 0.57)).toBeGreaterThan(200);
+    const fixes = sc.fixes?.(p) ?? [];
+    expect(fixes.map((x) => x.label.vi.split(' =')[0])).toEqual(['Dùng f₉', 'Dùng f₁₀']);
+    expect(fixes[1]?.params.f).toBe(200);
+    const applied = { ...p, ...fixes[1]?.params };
+    expect(standingInput(applied).n).toBe(10);
+    expect(sc.validate?.(applied)).toEqual([]);
+    expect((sc.validate?.(p) ?? [])[0]?.vi).not.toContain('nằm ngoài thanh trượt');
+  });
+
+  it('two resonances outside the slider are named together ("for them")', () => {
+    // f = 300 Hz (a problem may give it): L = 0,1 m, v = 25 m/s → f₂ = 250 Hz, f₃ = 375 Hz.
+    const p = { ...sc.defaults, mode: MODE.harmonic, L: 0.1, v: 25, f: 300 };
+    expect(sc.fixes?.(p)).toEqual([]);
+    const en = (sc.validate?.(p) ?? [])[0]?.en;
+    expect(en).toContain('f₂ = 250 Hz and f₃ = 375 Hz are outside the f slider');
+    expect(en).toContain('no button for them');
+  });
+
   it('other invalid inputs are reported', () => {
     expect(messages({})).toEqual([]);
     expect(messages({ n: 2.5 })[0]).toContain('số nguyên dương');

@@ -34,7 +34,7 @@
 - `src/physics/circular/scenes.ts` (+ test): `autoDefaults` cho các đại lượng không phải đại lượng
   "đề cho" (còn mặc định) theo chuyển động; `suggestedSpeed`; câu chữ Thẻ.
 - `src/physics/field/scenes.ts` (+ test): `forceUnit` → N dưới 1 µN; `src/physics/common/tex.ts`
-  `fmtQty` viết |giá trị| < 10⁻⁴ dạng "a·10⁻ⁿ" như `texNum`.
+  `fmtQty` viết |giá trị| < 10⁻³ (số mũ ≤ −4) dạng "a·10⁻ⁿ" như `texNum`.
 - `docs/DATA_REVIEW.md` (UCM-6), `docs/PROGRESS.md` (một dòng).
 
 ## Key decisions
@@ -46,7 +46,7 @@
   trượt; không đổi runtime chung trước demo.
 - KaTeX: `texQty` vẫn viết kí hiệu (luật "không chữ Việt trong `\text{}`"); không bài nào viết
   rev/min trong bước lời giải.
-- `fmtQty` đổi cho mọi bài, nhưng chỉ với |giá trị| < 10⁻⁴ trong đơn vị hiển thị (ngưỡng của `texNum`).
+- `fmtQty` đổi cho mọi bài, nhưng chỉ với |giá trị| < 10⁻³ (số mũ ≤ −4) trong đơn vị hiển thị (ngưỡng của `texNum`).
 
 ## Commands run (real results, summary lines only)
 
@@ -89,3 +89,14 @@ vẫn qua trên mã cũ; đổi sang v = 3 m/s (ω = 1,5 rad/s) thì hỏng đú
   "vòng/giây", test DOPRI5 đo chu kì thật (#87 🟡 3), các gợi ý khác của #89 (cảnh báo dấu, đọc
   "7.10⁰").
 - Chưa kiểm bằng mắt trong app thật (chỉ unit test + E2E mở từng bài).
+
+## Vòng 2 — sửa theo bản duyệt #93 (2026-10-27 17:00 +0700)
+
+- 🔴 Sóng dừng: `onSlider` dùng biên sai số làm tròn 1e-9 (như `isWhole`); nút kẹp f về [1, 200].
+  Test L = 0,57 m, v = 22,8 m/s, f = 190 Hz: f₁₀ = 200,00000000000003 Hz giữ nút, đặt f = 200, n = 10.
+- 🟡 `explain.ts`: dòng kết quả gửi AI viết như màn hình (`fmtQty('vi', …)`), không còn "9.437e-7".
+  Test chép nguyên văn: trên mã cũ FAIL (`[9437]` là số lạ), mã mới PASS.
+- 🟡 Ngưỡng lũy thừa đúng là |x| < 10⁻³ (số mũ ≤ −4): sửa chú thích, test, work-log.
+- 🟡 Thẻ tiếng Anh: "the v and a_c (F_c) arrows" (khớp nhãn hình "ac, Fc"); câu "for them" khi hai cộng hưởng.
+- Kiểm tra: typecheck, lint, format PASS; `npm test` 4399 qua, 1 hỏng `tests/app.test.tsx` (Science
+  Studio, chập chờn do tải — chạy riêng PASS). E2E vòng 2: SKIPPED (hết lượt dùng; vòng 1 đã 39 passed).
