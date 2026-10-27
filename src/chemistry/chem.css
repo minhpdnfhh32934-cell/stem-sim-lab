@@ -956,3 +956,16 @@
 .chem-form .segmented__item {
   min-height: var(--target);
 }
+/* UI-41: in the Inspector the search box keeps its text next to the icon (`.chem-form label`
+   spreads its children apart). */
+.chem-form .pt__search {
+  justify-content: flex-start;
+}
+.chem-form .pt__search input {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+}
+.pt__search {
+  min-height: var(--target);
+}
