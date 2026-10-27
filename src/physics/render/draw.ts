@@ -35,7 +35,7 @@ export function labelRuns(value: string): { text: string; sub: boolean }[] {
  * so a line, arrow or body under it never cuts a glyph, and "_x" parts as smaller, lowered
  * subscripts.
  */
-function label(ctx: Ctx, value: string, x: number, y: number): void {
+function label(ctx: Ctx, value: string, x: number, y: number, withHalo = true): void {
   const font = ctx.font;
   const px = Number(/(\d+(?:\.\d+)?)px/.exec(font)?.[1] ?? 12);
   const subFont = font.replace(/\d+(?:\.\d+)?px/, `${String(Math.round(px * 7.5) / 10)}px`);
@@ -53,7 +53,7 @@ function label(ctx: Ctx, value: string, x: number, y: number): void {
     x0 += r.w;
     return at;
   });
-  for (const pass of halo ? ['halo', 'fill'] : ['fill']) {
+  for (const pass of halo && withHalo ? ['halo', 'fill'] : ['fill']) {
     for (const r of placed) {
       ctx.font = r.sub ? subFont : font;
       if (pass === 'fill') {
@@ -80,7 +80,7 @@ export function drawGrid(
   /** The scene's vertical stretch (`PhysicsScene.yStretch`): y labels show unstretched metres. */
   yStretch = 1,
 ): void {
-  halo = colors.panel;
+  halo = colors.stage;
   const v = cam.visible();
   const major = niceStep(cam.scale, 90);
   const minor = major / 5;
@@ -341,6 +341,8 @@ export function text(
   color: string,
   align: CanvasTextAlign = 'left',
   offset = { x: 6, y: -6 },
+  /** False for a mark drawn inside a filled shape (a charge's sign): no halo to thicken it. */
+  withHalo = true,
 ): void {
   const { sx, sy } = cam.toScreen(x, y);
   ctx.save();
@@ -348,7 +350,7 @@ export function text(
   ctx.font = `${fontPx(12)} system-ui, "Segoe UI", sans-serif`;
   ctx.textAlign = align;
   ctx.textBaseline = 'bottom';
-  label(ctx, value, sx + offset.x, sy + offset.y);
+  label(ctx, value, sx + offset.x, sy + offset.y, withHalo);
   ctx.restore();
 }
 

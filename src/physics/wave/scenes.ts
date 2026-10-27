@@ -2,7 +2,7 @@ import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
-import { DASH, L } from '../common/scene-helpers';
+import { DOT, L } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
@@ -405,7 +405,7 @@ function graphs(): GraphDef[] {
           id: 'y2',
           label: L('y₂ (sóng phản xạ)', 'y₂ (reflected)'),
           value: (s) => s[SW.y2] ?? 0,
-          dash: DASH,
+          dash: DOT,
         },
         { id: 'y', label: L('y = y₁ + y₂', 'y = y₁ + y₂'), value: (s) => s[SW.y] ?? 0 },
       ],

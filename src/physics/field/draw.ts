@@ -116,7 +116,7 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
     const r = radii[i] ?? 0;
     circle(ctx, cam, c.x, c.y, r, color, col.text, 9);
     const sign = c.q > 0 ? '+' : c.q < 0 ? '−' : '0';
-    text(ctx, cam, c.x, c.y, sign, col.panel, 'center', { x: 0, y: 7 });
+    text(ctx, cam, c.x, c.y, sign, col.panel, 'center', { x: 0, y: 7 }, false);
     const off = Math.max(9, r * cam.scale) + 3;
     text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: off, y: -off });
   });

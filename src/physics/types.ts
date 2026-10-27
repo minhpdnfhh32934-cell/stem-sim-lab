@@ -125,6 +125,8 @@ export interface ThemeColors {
   force: string;
   spring: string;
   panel: string;
+  /** The stage background (--bg-stage): label halos, so they melt into it. */
+  stage: string;
 }
 
 export interface DrawContext {

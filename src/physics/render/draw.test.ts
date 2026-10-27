@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { electricField } from '../field/scenes';
+import { standingWave } from '../wave/scenes';
 import { freeFall, horizontalProjectile } from '../projectile/scenes';
 import { uniformMotion } from '../linear/scenes';
 import { energyConservation } from '../track/scenes';
@@ -19,6 +20,7 @@ interface Call {
 /** A canvas context that records text and fills (font, alignment and colours as set). */
 function recorder() {
   const calls: Call[] = [];
+  const dashes: { stroke: string; dash: number[] }[] = [];
   const state: Record<string, string> = {
     font: '12px sans-serif',
     textAlign: 'left',
@@ -35,6 +37,8 @@ function recorder() {
         if (k === 'fillText') return at('fillText');
         if (k === 'strokeText') return at('strokeText');
         if (k === 'fill') return () => calls.push({ ...calls.at(-1), op: 'fill' } as Call);
+        if (k === 'setLineDash')
+          return (d: number[]) => dashes.push({ stroke: state.strokeStyle ?? '', dash: [...d] });
         if (k === 'measureText') return (s: string) => ({ width: 7 * s.length });
         if (k === 'save') return () => saved.push({ ...state });
         if (k === 'restore') return () => Object.assign(state, saved.pop());
@@ -47,10 +51,10 @@ function recorder() {
       },
     },
   ) as CanvasRenderingContext2D;
-  return { ctx, calls, fills: () => calls.filter((c) => c.op === 'fillText') };
+  return { ctx, calls, dashes, fills: () => calls.filter((c) => c.op === 'fillText') };
 }
 
-const colors = new Proxy({}, { get: (_t, k) => (k === 'panel' ? '#halo' : '#000') }) as ThemeColors;
+const colors = new Proxy({}, { get: (_t, k) => `#${String(k)}` }) as ThemeColors;
 const opts = (vectors = true): DrawOptions => ({
   vectors,
   intervened: false,
@@ -105,7 +109,8 @@ describe('stage labels (UI-03)', () => {
     r.calls.length = 0;
     text(r.ctx, cam, 0, 0, 'Fms', '#f00');
     expect(r.calls.map((c) => c.op)).toEqual(['strokeText', 'fillText']);
-    expect(r.calls[0]?.stroke).toBe('#halo');
+    // The stage background (--bg-stage), not the panel colour: no lighter rim in dark mode.
+    expect(r.calls[0]?.stroke).toBe('#stage');
   });
 
   it('an arrow writes its name past the tip, on the side it points to', () => {
@@ -132,6 +137,22 @@ describe('stage labels (UI-03)', () => {
 });
 
 describe('stage pictures (UI-03, UI-04, UI-05, UI-15)', () => {
+  it("a charge's sign inside its disc has no halo to thicken it", () => {
+    const f = frame(electricField);
+    const signs = f.calls.filter((c) => c.text === '+' || c.text === '−');
+    expect(signs.length).toBeGreaterThan(0);
+    expect(signs.every((c) => c.op === 'fillText')).toBe(true);
+  });
+
+  it('y₂ is dotted on the graph exactly as on the stage (y₁ dashed there)', () => {
+    const f = frame(standingWave);
+    const stageDash = (stroke: string) => f.dashes.find((d) => d.stroke === stroke)?.dash;
+    const series = standingWave.graphs.flatMap((g) => g.series);
+    const y2 = series.find((x) => x.id === 'y2');
+    expect(stageDash('#force')).toEqual(y2?.dash);
+    expect(stageDash('#velocity')).not.toEqual(y2?.dash);
+  });
+
   it('two cars: the arrows are v_A and v_B, one car: just v', () => {
     const state = new Float64Array(16);
     state[1] = 10;

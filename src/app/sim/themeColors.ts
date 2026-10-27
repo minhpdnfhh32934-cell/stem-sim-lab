@@ -19,5 +19,6 @@ export function readThemeColors(el: Element = document.documentElement): ThemeCo
     force: v('--chart-3', '#009e73'),
     spring: v('--text-muted', '#5a6477'),
     panel: v('--bg-panel-2', '#f6f8fb'),
+    stage: v('--bg-stage', '#fbfcfe'),
   };
 }
