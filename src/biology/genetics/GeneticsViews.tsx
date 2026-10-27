@@ -22,7 +22,7 @@ import {
 } from './population';
 import { rng } from './stats';
 import { LETTERS, lociOf, useDrift, useHw, useMendel, type DriftState } from './store';
-import { MoreInBasic } from '../ui';
+import { MoreInBasic, Range } from '../ui';
 import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
@@ -242,6 +242,7 @@ function MonteCarlo() {
 
 export function MendelPanel() {
   const Lz = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   const st = useMendel();
   const options = genotypeOptions(lociOf(st));
   return (
@@ -331,7 +332,7 @@ export function MendelPanel() {
         >
           {[16, 100, 1000, 10000].map((n) => (
             <option key={n} value={n}>
-              {n}
+              {formatNumber(locale, n)}
             </option>
           ))}
         </select>
@@ -433,7 +434,8 @@ export function HardyWeinbergStage() {
             <strong className="mono">{t.n > 0 ? f(t.q) : '—'}</strong>
           </p>
           <p>
-            χ² = <span className="mono">{t.n > 0 ? f(t.test.chi2) : '—'}</span> (df = 1) · p-value ={' '}
+            χ² = <span className="mono">{t.n > 0 ? f(t.test.chi2) : '—'}</span>{' '}
+            {Lz(L('(bậc tự do = 1) · giá trị p =', '(df = 1) · p-value ='))}{' '}
             <span className="mono">{t.n > 0 ? f(t.test.p, 3) : '—'}</span>
           </p>
           {t.n === 0 ? (
@@ -478,7 +480,8 @@ export function HardyWeinbergStage() {
           {st.sample && (
             <p className="small">
               {Lz(L('Thế hệ sau (mô phỏng, N = ', 'Next generation (simulated, N = '))}
-              {st.N}): AA {st.sample.AA} · Aa {st.sample.Aa} · aa {st.sample.aa} → χ² ={' '}
+              {formatNumber(locale, st.N)}): AA {formatNumber(locale, st.sample.AA)} · Aa{' '}
+              {formatNumber(locale, st.sample.Aa)} · aa {formatNumber(locale, st.sample.aa)} → χ² ={' '}
               {f(testHardyWeinberg(st.sample.AA, st.sample.Aa, st.sample.aa).test.chi2, 3)}
             </p>
           )}
@@ -613,8 +616,8 @@ function Drift2D() {
 
 export function DriftPanel() {
   const Lz = useLocalized();
-  const fmt = useFmt();
   const st = useDrift();
+  // The lessons' shared slider (value in bold after the label), not a bracketed value (UI-50).
   const range = (
     k: keyof DriftState,
     label: ReturnType<typeof L>,
@@ -622,21 +625,18 @@ export function DriftPanel() {
     max: number,
     step: number,
   ) => (
-    <label key={k}>
-      <span>
-        {Lz(label)} ({fmt(st[k], 4)})
-      </span>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={st[k]}
-        onChange={(e) => {
-          useDrift.setState({ [k]: Number(e.target.value) });
-        }}
-      />
-    </label>
+    <Range
+      key={k}
+      label={label}
+      value={st[k]}
+      min={min}
+      max={max}
+      step={step}
+      digits={4}
+      onChange={(v) => {
+        useDrift.setState({ [k]: v });
+      }}
+    />
   );
   return (
     <div className="chem-form">

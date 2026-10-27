@@ -88,15 +88,15 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
   doubleChromosome: {
     name: L('Nhiễm sắc thể kép', 'Double (replicated) chromosome'),
     role: L(
-      'NST đã nhân đôi ở pha S, gồm 2 cromatit chị em giống hệt nhau dính với nhau ở tâm động.',
+      'NST đã nhân đôi ở pha S, gồm 2 crômatit chị em giống hệt nhau dính với nhau ở tâm động.',
       'A chromosome replicated in S phase: two identical sister chromatids joined at the centromere.',
     ),
     cells: BOTH,
   },
   sisterChromatid: {
-    name: L('Cromatit chị em', 'Sister chromatid'),
+    name: L('Crômatit chị em', 'Sister chromatid'),
     role: L(
-      'Một trong hai nửa giống hệt nhau của NST kép (mỗi cromatit là một phân tử ADN); hai cromatit chị em tách nhau ở kì sau.',
+      'Một trong hai nửa giống hệt nhau của NST kép (mỗi crômatit là một phân tử ADN); hai crômatit chị em tách nhau ở kì sau.',
       'One of the two identical halves of a double chromosome (each is one DNA molecule); sisters separate in anaphase.',
     ),
     cells: BOTH,
@@ -104,7 +104,7 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
   singleChromosome: {
     name: L('Nhiễm sắc thể đơn', 'Single chromosome'),
     role: L(
-      'NST chỉ gồm 1 phân tử ADN: có ở pha G1 và sau khi hai cromatit chị em tách nhau ở kì sau.',
+      'NST chỉ gồm 1 phân tử ADN: có ở pha G1 và sau khi hai crômatit chị em tách nhau ở kì sau.',
       'A chromosome made of one DNA molecule: found in G1 and after the sister chromatids separate in anaphase.',
     ),
     cells: BOTH,
@@ -112,7 +112,7 @@ export const COMPONENTS: Record<ComponentId, ComponentInfo> = {
   centromere: {
     name: L('Tâm động', 'Centromere'),
     role: L(
-      'Vùng thắt trên NST. Ở NST kép, hai cromatit chị em dính nhau tại tâm động; từ kì sau, tâm động tách ra và mỗi NST đơn có tâm động riêng. Sợi thoi đính vào tâm động (tại thể động) để kéo NST về các cực.',
+      'Vùng thắt trên NST. Ở NST kép, hai crômatit chị em dính nhau tại tâm động; từ kì sau, tâm động tách ra và mỗi NST đơn có tâm động riêng. Sợi thoi đính vào tâm động (tại thể động) để kéo NST về các cực.',
       'The constriction of a chromosome. In a double chromosome the two sister chromatids are joined there; from anaphase on it has split and each single chromosome has its own. Spindle fibres attach there (at the kinetochores) to pull chromosomes to the poles.',
     ),
     cells: BOTH,
@@ -262,7 +262,7 @@ const NOTES: Record<CellType, Record<Stage3D, LocalizedText>> = {
       'Fully condensed double chromosomes line up in one row on the equatorial plate; each centromere is attached to fibres from both poles.',
     ),
     anaphase: L(
-      'Hai cromatit chị em tách nhau ở tâm động, thành 2 NST đơn đi về hai cực; tế bào dài ra.',
+      'Hai crômatit chị em tách nhau ở tâm động, thành 2 NST đơn đi về hai cực; tế bào dài ra.',
       'Sister chromatids separate at the centromere and, as single chromosomes, move to opposite poles; the cell elongates.',
     ),
     telophase: L(
@@ -289,7 +289,7 @@ const NOTES: Record<CellType, Record<Stage3D, LocalizedText>> = {
       'Fully condensed double chromosomes line up in one row on the equatorial plate; each centromere is attached to fibres from both poles.',
     ),
     anaphase: L(
-      'Hai cromatit chị em tách nhau ở tâm động, thành 2 NST đơn đi về hai cực; thành tế bào giữ nguyên hình dạng tế bào.',
+      'Hai crômatit chị em tách nhau ở tâm động, thành 2 NST đơn đi về hai cực; thành tế bào giữ nguyên hình dạng tế bào.',
       'Sister chromatids separate at the centromere and, as single chromosomes, move to opposite poles; the wall keeps the cell’s shape.',
     ),
     telophase: L(
@@ -319,7 +319,7 @@ export function card3d(cellType: CellType): ScienceCardData {
       `Mitosis in 3D — ${CELL_TYPE_NAME[cellType].en.toLowerCase()}`,
     ),
     model: L(
-      'Mô hình đếm NST (như bản 2D: nhân đôi ở pha S, tách cromatit chị em ở kì sau) cho số lượng chính xác; mô hình 3D chỉ đặt các NST, thoi phân bào, màng và nhân vào khung hình chính của từng kì rồi chuyển tiếp mượt giữa chúng.',
+      'Mô hình đếm NST (như bản 2D: nhân đôi ở pha S, tách crômatit chị em ở kì sau) cho số lượng chính xác; mô hình 3D chỉ đặt các NST, thoi phân bào, màng và nhân vào khung hình chính của từng kì rồi chuyển tiếp mượt giữa chúng.',
       'Chromosome bookkeeping (as in the 2D view: replication in S, sister chromatids separate in anaphase) gives exact counts; the 3D model only places chromosomes, spindle, membranes and nuclei in key poses for each stage and moves smoothly between them.',
     ),
     equations: [
@@ -334,7 +334,7 @@ export function card3d(cellType: CellType): ScienceCardData {
         'Sizes and positions are illustrative, not to scale (cell, nucleus, chromosomes, spindle); stage durations are illustrative too.',
       ),
       L(
-        'Số NST, cromatit, tâm động, phân tử ADN là chính xác (đếm từ mô hình). Kì cuối: 1 tế bào có 2 nhân; bước "Phân chia tế bào chất": số liệu tính cho mỗi tế bào con.',
+        'Số NST, crômatit, tâm động, phân tử ADN là chính xác (đếm từ mô hình). Kì cuối: 1 tế bào có 2 nhân; bước "Phân chia tế bào chất": số liệu tính cho mỗi tế bào con.',
         'Chromosome, chromatid, centromere and DNA counts are exact (counted from the model). Telophase: one cell with two nuclei; "Cytokinesis": counts per daughter cell.',
       ),
       L(
@@ -387,7 +387,7 @@ export function card3d(cellType: CellType): ScienceCardData {
     ],
     confidence: 'exact',
     confidenceNote: L(
-      'Số lượng: test tự động với 2n = 4, 8, 46, mọi số lấy từ mô hình đếm NST; từ G1 đến kì sau, và số liệu mỗi tế bào con ở bước phân chia tế bào chất, khớp bảng SGK. Cách ghi kì cuối (1 tế bào có 2 nhân, cả tế bào có 4n NST đơn) là quy ước riêng của bản 3D, đang chờ giáo viên duyệt. Hình 3D (chỉ có cho 2n = 2–8), test tự động: kì đầu: màng nhân tiêu biến trước khi sợi thoi đi vào vùng nhân; kì giữa: sợi thoi đính vào tâm động trước khi kéo NST, mọi tâm động nằm trên mặt phẳng xích đạo, NST nguồn gốc từ mẹ và từ bố xen kẽ nhau; kì sau: hai cromatit chị em về hai cực; sau phân chia: 2 tế bào, mỗi tế bào 2n NST đơn.',
+      'Số lượng: test tự động với 2n = 4, 8, 46, mọi số lấy từ mô hình đếm NST; từ G1 đến kì sau, và số liệu mỗi tế bào con ở bước phân chia tế bào chất, khớp bảng SGK. Cách ghi kì cuối (1 tế bào có 2 nhân, cả tế bào có 4n NST đơn) là quy ước riêng của bản 3D, đang chờ giáo viên duyệt. Hình 3D (chỉ có cho 2n = 2–8), test tự động: kì đầu: màng nhân tiêu biến trước khi sợi thoi đi vào vùng nhân; kì giữa: sợi thoi đính vào tâm động trước khi kéo NST, mọi tâm động nằm trên mặt phẳng xích đạo, NST nguồn gốc từ mẹ và từ bố xen kẽ nhau; kì sau: hai crômatit chị em về hai cực; sau phân chia: 2 tế bào, mỗi tế bào 2n NST đơn.',
       'Counts: automated tests with 2n = 4, 8, 46, every number comes from the bookkeeping model; G1 to anaphase, and the per-daughter-cell counts of the cytokinesis step, match the textbook table. The telophase convention (one cell with two nuclei, 4n single chromosomes in the whole cell) is specific to the 3D view and awaits teacher review. 3D picture (offered for 2n = 2–8 only), automated tests: prophase: the nuclear envelope breaks down before spindle fibres enter the nuclear region; metaphase: fibres attach to the centromeres before pulling the chromosomes, every centromere ends on the equatorial plane, maternal and paternal chromosomes alternate; anaphase: sisters go to opposite poles; after division: two cells with 2n single chromosomes each.',
     ),
     userIntervened: false,

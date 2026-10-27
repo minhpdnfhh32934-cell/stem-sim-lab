@@ -68,7 +68,7 @@ export function momentCaption(m: DogmaModel3D, mo: DogmaMoment, fmt: Fmt): Local
   if (!c) return L('', '');
   const steps = m.t.codons.length;
   const at = both(
-    `Ribôxôm ở bộ ba thứ ${fmt(mo.step + 1)}/${fmt(steps)}: `,
+    `Ribosome ở bộ ba thứ ${fmt(mo.step + 1)}/${fmt(steps)}: `,
     `Ribosome at codon ${fmt(mo.step + 1)}/${fmt(steps)}: `,
   );
   if (releasing(m, mo))

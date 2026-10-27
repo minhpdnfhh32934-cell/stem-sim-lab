@@ -48,7 +48,7 @@ describe('3D counts table (Mitosis3DBottom)', () => {
           'Số nhân / tế bào',
           'Số NST / tế bào',
           'Trạng thái',
-          'Cromatit',
+          'Crômatit',
           'Tâm động',
           'Phân tử ADN',
         ]);
