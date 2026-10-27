@@ -65,3 +65,9 @@
 - 🟡1: `unknownNumbers` đọc trước TeX chép từ bước và số thập phân ≥ 4 chữ số sau dấu (`explanationTokens`); test dán nguyên TeX mọi bước mọi bài (vi/en) → [] (trên mã vòng 2 hỏng: "9{,}81" → [81]).
 - 🟡2: thử thách Điện trường "khi bạn bắt đầu thử thách". 🟡4: oracle lưới so khớp trọn token (`texTokens`). 🟡3 (data.test.ts add/add với #98) để lúc gộp.
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4432 PASS, 1 chập chờn (app.test Science Studio); E2E physics + ai-flow dưới khoá chung 38 passed.
+
+## Vòng 4 — quyết định của điều phối sau duyệt vòng 3
+
+- Bộ đọc mới phía lời giải thích (`explanationTokens`, luật thập phân ≥ 4 chữ số) làm bộ lọc lỏng hơn main ("$t = 1{.}75$", "1,0000.10^3 m"…): đã bỏ hẳn, `explain.ts` về đúng vòng 2 (07eea77). Bỏ test "dán nguyên TeX mọi bước".
+- Giữ: "khi bạn bắt đầu thử thách", oracle so khớp trọn token (`texTokens`). Lưới "accepts nothing main refuses" thêm các đoạn tấn công dạng TeX (a{.}b với a ≤ 4, x{,}y{,}z, a{.}b·10ⁿ, a,bcde.10^n, a,bcde×10ⁿ, đuôi sau nhóm 3 chữ số); lưới qua trên mã đã bỏ, hỏng trên mã vòng 3 ("0,003762").
+- **Vấn đề đã biết (dời 0.8.1):** lời giải thích chép nguyên TeX của bước ("9{,}81") vẫn bị ẩn nhầm (chặt hơn main, không lỏng hơn).
