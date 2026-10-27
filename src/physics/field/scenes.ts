@@ -27,11 +27,13 @@ const SUB = ['₁', '₂', '₃'];
 const kText = (locale: Locale) =>
   `${formatNumber(locale, Number((C.kC / 1e9).toPrecision(4)))}·10⁹ N·m²/C²`;
 /**
- * Unit of a force for display and in the solution steps: µN below 1 mN, mN below 1 N, else N. From
- * 1 µN up the shown number is ≥ 1 in its unit, so it never has the 4+ decimals ("0,000719") the
- * explanation check misreads; a smaller force (an electron in a weak field) still shows decimals.
+ * Unit of a force for display and in the solution steps: N below 1 µN (an electron: written as a
+ * power of ten, "8,01·10⁻¹⁶ N"), µN below 1 mN, mN below 1 N, else N. From 1 µN up the shown
+ * number is ≥ 1 in its unit, so it never has the 4+ decimals ("0,000719") the explanation check
+ * misreads.
  */
-const forceUnit = (f: number) => (Math.abs(f) < 1e-3 ? 'uN' : Math.abs(f) < 1 ? 'mN' : 'N');
+const forceUnit = (f: number) =>
+  Math.abs(f) < 1e-6 ? 'N' : Math.abs(f) < 1e-3 ? 'uN' : Math.abs(f) < 1 ? 'mN' : 'N';
 
 const points = (p: Params) => (p.mode ?? MODE.points) === MODE.points;
 const plates = (p: Params) => !points(p);

@@ -246,8 +246,16 @@ export function unitsFor(dim: Dimension, group?: UnitGroup): string[] {
   return UNITS.filter((u) => sameDimension(u.dim, dim) && u.group === group).map((u) => u.symbol);
 }
 
-/** Pretty label for display: "m/s^2" → "m/s²", "degC" → "°C". */
-export function unitLabel(symbol: string): string {
+/** Units with a Vietnamese name for learners; the symbol itself (SI or not) never changes. */
+const VI_LABELS: Record<string, string> = { 'rev/s': 'vòng/s', 'rev/min': 'vòng/phút' };
+
+/**
+ * Pretty label for display: "m/s^2" → "m/s²", "degC" → "°C". With `locale` 'vi', the few
+ * worded units are written in Vietnamese ("rev/min" → "vòng/phút"); leave it out for AI
+ * prompts and KaTeX `	ext{}` (no Vietnamese words there).
+ */
+export function unitLabel(symbol: string, locale?: 'vi' | 'en'): string {
+  if (locale === 'vi' && symbol in VI_LABELS) return VI_LABELS[symbol] ?? symbol;
   const special: Record<string, string> = {
     deg: '°',
     degC: '°C',

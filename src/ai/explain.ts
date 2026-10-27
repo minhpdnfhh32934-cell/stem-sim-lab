@@ -1,4 +1,5 @@
-import { fromSI, unitLabel } from '@/core/units';
+import { fromSI } from '@/core/units';
+import { fmtQty } from '@/physics/common/tex';
 import type { Answer, Solution } from '@/physics/types';
 import { outputIsSafe } from '@/safety/moderation';
 import { numbersIn, numberTokens } from './numbers';
@@ -79,9 +80,8 @@ export async function explainSolution(
   solution: Solution,
   cfg: ExplainConfig,
 ): Promise<Explanation> {
-  const lines = solution.answers.map(
-    (a) => `- ${a.label.vi} = ${shownValue(a)} ${unitLabel(a.unit)}`,
-  );
+  // As the screen writes it ("8,011·10⁻¹⁶ N", never JS "8.011e-16"), so a copied value verifies.
+  const lines = solution.answers.map((a) => `- ${a.label.vi} = ${fmtQty('vi', a.value, a.unit)}`);
   const steps = solution.steps.map((s, i) => `${i + 1}. ${s.text.vi}${s.tex ? ` [${s.tex}]` : ''}`);
   const system = `Bạn là trợ giảng Vật lí. Chương trình mô phỏng ĐÃ TÍNH xong các kết quả dưới đây.
 Hãy DIỄN GIẢI bằng lời, ngắn gọn (tối đa 150 từ), dễ hiểu cho học sinh THPT: vì sao ra kết quả đó, ý nghĩa vật lí.
