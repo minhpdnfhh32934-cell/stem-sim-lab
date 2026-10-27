@@ -173,7 +173,7 @@
     {
       "version": "0.8.0",
       "status": "in-review",
-      "statusNote": "PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0. Bài (d) Điện trường của điện tích điểm (PR #89) còn đang duyệt lúc mở PR này: chỉ thêm vào ghi chú khi đã gộp.",
+      "statusNote": "PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0.",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-22T03:56:04Z",
@@ -197,6 +197,7 @@
         "(g2) thanh Lớp 10 · 11 · 12 · Tất cả trong thư viện, trang chủ và bước làm quen: PR #86, gộp c621f3f 2026-10-26T19:59:13Z (issue #71)",
         "(k) \"Phòng thí nghiệm\" thành \"Virtual Lab\" (chỉ chữ hiển thị, quyết định của chủ dự án 23/10/2026 ghi trong CLAUDE.md): PR #91, gộp f904250 2026-10-26T21:29:52Z (issue #73)",
         "(b) Sóng dừng trên dây (VL11 Bài 13), nút \"Dùng fₙ\": PR #90, gộp 006f519 2026-10-26T22:07:30Z (issue #75); DATA_REVIEW SWV-1 … SWV-8",
+        "(d) Điện trường của điện tích điểm (VL11 Bài 16–18), bộ lọc số AI đọc được số mũ chỉ số trên và so sánh tương đối, cảnh báo dấu điện tích: PR #89 (7 lượt duyệt; phạm vi cuối của bộ lọc ghi trong bình luận PR #89), đã duyệt, tự gộp đang bật lúc cập nhật mục này (issue #76)",
         "Bảng của AI Teacher (dòng nguồn, chữ phụ đề, cắt câu giữa chừng, thấy trong bản ghi hình 26/10/2026): PR #55, gộp d6f9fec 2026-10-26T00:17:07Z",
         "Phụ thuộc có lỗ hổng: PR #48 tokio 1.53.3 (RUSTSEC-2026-0386), gộp 4321eb9 2026-10-23T15:51:45Z; PR #51 undici 8.12.3 và zod 4.6.7 (npm audit), gộp f7eb477 2026-10-24T05:12:59Z; dependabot PR #45, #49, #27, #53, #28, #26 gộp 24/10/2026",
         "Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)"
@@ -214,15 +215,15 @@
         "releaseUrl": null,
         "prs": [
           26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 79, 81, 82, 83, 84,
-          85, 86, 87, 88, 90, 91
+          85, 86, 87, 88, 89, 90, 91
         ],
         "commits": ["39bfd01", "d57b284"],
         "branches": ["main", "chore/0.8.0-version"]
       },
       "publicNotes": {
         "summary": {
-          "vi": "Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều và Sóng dừng trên dây (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.",
-          "en": "Version 0.8.0 follows the Kết nối tri thức textbooks: new Uniform circular motion and Standing waves on a string lessons (Physics), a Prokaryotic and eukaryotic cells lesson (Biology), a Grade 10 · 11 · 12 bar in the library, and the lab is now called Virtual Lab."
+          "vi": "Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều, Sóng dừng trên dây và Điện trường của điện tích điểm (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.",
+          "en": "Version 0.8.0 follows the Kết nối tri thức textbooks: new Uniform circular motion, Standing waves on a string and Electric field of point charges lessons (Physics), a Prokaryotic and eukaryotic cells lesson (Biology), a Grade 10 · 11 · 12 bar in the library, and the lab is now called Virtual Lab."
         },
         "added": [
           {
@@ -233,6 +234,11 @@
           {
             "vi": "Vật lí: bài Sóng dừng trên dây (Vật lí 11, Bài 13). Xem bụng, nút và số bó sóng; khi chưa có sóng dừng, nút \"Dùng fₙ\" đặt đúng tần số cộng hưởng gần nhất.",
             "en": "Physics: Standing waves on a string (Physics 11, Lesson 13). See antinodes, nodes and the number of loops; when there is no standing wave, a \"Use fₙ\" button sets the nearest resonance exactly.",
+            "area": "ui"
+          },
+          {
+            "vi": "Vật lí: bài Điện trường của điện tích điểm (Vật lí 11, Bài 16–18). Đặt một đến ba điện tích hoặc hai bản tụ phẳng, xem đường sức, điểm có điện trường bằng 0 và lực lên điện tích thử.",
+            "en": "Physics: Electric field of point charges (Physics 11, Lessons 16–18). Place one to three charges or two parallel plates; see the field lines, the points where the field is zero and the force on a test charge.",
             "area": "ui"
           },
           {
@@ -265,6 +271,11 @@
           {
             "vi": "Bảng \"Tôi hiểu đề như sau\" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.",
             "en": "The \"Here is how I read the problem\" table tells you when the problem gives a quantity that the chosen setup does not use.",
+            "area": "api"
+          },
+          {
+            "vi": "Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.",
+            "en": "When the AI reads a problem: numbers written like 4.10⁻⁸ are read correctly, very small invented numbers are refused more reliably, and the table warns when a charge’s sign may not match the problem.",
             "area": "api"
           }
         ],
@@ -301,8 +312,8 @@
       "learnerHighlights": [
         {
           "area": "ui",
-          "vi": "Bài mới: Chuyển động tròn đều, Sóng dừng trên dây và Tế bào nhân sơ, nhân thực.",
-          "en": "New lessons: Uniform circular motion, Standing waves on a string, and Prokaryotic and eukaryotic cells."
+          "vi": "Bài mới: Chuyển động tròn đều, Sóng dừng trên dây, Điện trường của điện tích điểm và Tế bào nhân sơ, nhân thực.",
+          "en": "New lessons: Uniform circular motion, Standing waves on a string, Electric field of point charges, and Prokaryotic and eukaryotic cells."
         },
         {
           "area": "ui",

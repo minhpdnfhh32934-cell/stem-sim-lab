@@ -4,16 +4,17 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.8.0 (Đang xét duyệt)
 
-_PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0. Bài (d) Điện trường của điện tích điểm (PR #89) còn đang duyệt lúc mở PR này: chỉ thêm vào ghi chú khi đã gộp._
+_PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0._
 
 _Ghi chú này là bản nháp, chưa được duyệt để công bố._
 
-Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều và Sóng dừng trên dây (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.
+Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều, Sóng dừng trên dây và Điện trường của điện tích điểm (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.
 
 ### Added
 
 - Vật lí: bài Chuyển động tròn đều (Vật lí 10, Bài 31–32). Em chọn đề cho biết tốc độ, tốc độ góc, chu kì hay tần số; app tính các đại lượng còn lại, gia tốc hướng tâm và lực hướng tâm.
 - Vật lí: bài Sóng dừng trên dây (Vật lí 11, Bài 13). Xem bụng, nút và số bó sóng; khi chưa có sóng dừng, nút "Dùng fₙ" đặt đúng tần số cộng hưởng gần nhất.
+- Vật lí: bài Điện trường của điện tích điểm (Vật lí 11, Bài 16–18). Đặt một đến ba điện tích hoặc hai bản tụ phẳng, xem đường sức, điểm có điện trường bằng 0 và lực lên điện tích thử.
 - Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Bấm vào từng bộ phận để xem tên và chức năng.
 - Thư viện, trang chủ và bước làm quen có thanh Lớp 10 · 11 · 12 · Tất cả, xếp chủ đề theo mục lục sách Kết nối tri thức. Cách xếp này đang chờ giáo viên duyệt.
 - Science Studio có hướng dẫn "Cách học" ngay trong app.
@@ -23,6 +24,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - Đồ thị các bài Vật lí đọc được trên màn hình 1366×768: vùng vẽ cao hơn, chú giải nằm ở cột bên phải.
 - Dấu "Đã học" hiện cho mọi chủ đề em đã mở, kèm số bước còn lại.
 - Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
+- Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
 
 ### Fixed
 
