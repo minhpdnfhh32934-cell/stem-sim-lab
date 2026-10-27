@@ -474,7 +474,8 @@ body[data-resizing] .splitter {
 .stage__toolbar {
   position: absolute;
   top: var(--space-3);
-  left: var(--space-3);
+  /* Right of the y-axis numbers the grid writes along the stage's left edge (UI-02). */
+  left: var(--axis-gutter);
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -625,9 +626,14 @@ body[data-resizing] .splitter {
   width: var(--right-w);
   flex: none;
 }
-/* Room under the last line for the "Hỏi thầy" button in the Inspector's bottom-right corner
-   (chat.css): scrolled to the end, nothing is under it. */
-.shell[data-inspector] .inspector .panel__scroll {
+/* The "Hỏi thầy" button sits in the Inspector's bottom-right corner (chat.css): the Inspector's
+   scroll area stops above it, so no line is ever under it, scrolled or not (UI-01). */
+.shell[data-bubble][data-inspector] .inspector .panel__scroll {
+  margin-bottom: calc(var(--chat-bubble) + 2 * var(--chat-bubble-gap));
+}
+/* Without an Inspector (Science Studio, lab home) the button is over the centre: keep a strip
+   free at its bottom. */
+.shell[data-bubble]:not([data-inspector]) .shell__center {
   padding-bottom: calc(var(--chat-bubble) + 2 * var(--chat-bubble-gap));
 }
 .science-intro {
@@ -791,4 +797,17 @@ body[data-resizing] .splitter {
 .tree__steps {
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
+}
+
+/* A fade at the bottom edge while more content is below (useScrollCue): a panel that scrolls
+   says so (UI-09, UI-10). */
+.scroll-cue[data-more-below]::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  display: block;
+  height: 2rem;
+  margin-top: -2rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--bg-panel));
 }

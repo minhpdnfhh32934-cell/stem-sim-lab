@@ -1164,3 +1164,18 @@ kbd {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
+
+/* A label that wraps a checkbox is one control: box and text together, the whole row a target
+   (a form's "label { justify-content: space-between }" for sliders would split them, UI-43). */
+label:has(> input[type='checkbox']) {
+  justify-content: flex-start;
+  min-height: var(--target);
+  cursor: pointer;
+}
+label:has(> input[type='checkbox']) > input[type='checkbox'] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}

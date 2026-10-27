@@ -1,5 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-import { openLab } from './nav';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+import { openLab, openStudioFromLab } from './nav';
 
 /**
  * Bottom-panel charts at the smallest supported screen (1366 × 768, default panel sizes): every
@@ -145,4 +145,131 @@ test('every physics graph is readable at 1366 × 768, before and after running',
     await checkEveryGraph(page, topic, false);
     await page.getByRole('button', { name: 'Đặt lại (R)' }).click();
   }
+});
+
+// ───────────── Shared shell layout (#70 group S, 1366 × 768) ─────────────
+
+async function box(l: Locator) {
+  const b = await l.boundingBox();
+  if (!b) throw new Error('not on screen');
+  return { ...b, bottom: b.y + b.height, right: b.x + b.width };
+}
+const overlap = (a: { x: number; y: number; right: number; bottom: number }, b: typeof a) =>
+  a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom;
+
+async function openPhysics(page: Page, topic: string) {
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Vật lý' }).click();
+  await page.getByRole('button', { name: topic, exact: true }).click();
+  await expect(page.locator('.stage__hud-title')).toBeVisible({ timeout: 20_000 });
+}
+
+test('the AI Teacher button covers no Inspector line and no Studio button (UI-01)', async ({
+  page,
+}) => {
+  await openPhysics(page, 'Rơi tự do');
+  const bubble = await box(page.locator('.chat-bubble'));
+  const inspector = await box(page.locator('.inspector .panel__scroll'));
+  expect(inspector.bottom).toBeLessThanOrEqual(bubble.y + 1);
+  await openStudioFromLab(page);
+  const next = page.getByRole('button', { name: /^Tiếp/ }).last();
+  await expect(next).toBeVisible();
+  // The centre keeps a strip free above the button: scrolled into view, nothing is under it.
+  await next.scrollIntoViewIfNeeded();
+  expect(overlap(await box(next), await box(page.locator('.chat-bubble')))).toBe(false);
+});
+
+test('the tool palette leaves the y-axis numbers readable (UI-02)', async ({ page }) => {
+  await openPhysics(page, 'Rơi tự do');
+  const stage = await box(page.getByRole('region', { name: 'Khung mô phỏng' }));
+  const tools = await box(page.locator('.stage__toolbar'));
+  expect(tools.x - stage.x).toBeGreaterThanOrEqual(48);
+});
+
+test('Lời giải: answers on one line, formulas inside the panel, a cue while it scrolls (UI-07, UI-09)', async ({
+  page,
+}) => {
+  await openPhysics(page, 'Chuyển động thẳng biến đổi đều');
+  await page.getByRole('tab', { name: 'Lời giải' }).click();
+  const scroll = page.locator('.bottom-panel .panel__scroll');
+  await expect(page.locator('.solution__answers tr').first()).toBeVisible();
+  for (const chip of await page.locator('.solution__check span').all())
+    expect((await box(chip)).height).toBeLessThan(24);
+  for (const th of await page.locator('.solution__answers th').all())
+    expect((await box(th)).height).toBeLessThan(30);
+  // Nothing runs past the right edge; the panel says there is more below, until the end.
+  expect(await scroll.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
+  await expect(scroll).toHaveAttribute('data-more-below', '');
+  await scroll.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(scroll).not.toHaveAttribute('data-more-below');
+});
+
+test('Thử thách: a button below the panel edge comes with a scroll cue (UI-10)', async ({
+  page,
+}) => {
+  await openPhysics(page, 'Lò xo (định luật Hooke)');
+  await page.getByRole('tab', { name: 'Thử thách' }).click();
+  const scroll = page.locator('.bottom-panel .panel__scroll');
+  const run = page.getByRole('button', { name: 'Chạy để kiểm tra' });
+  await expect(run).toBeAttached();
+  const below = (await box(run)).bottom > (await box(scroll)).bottom;
+  if (below) await expect(scroll).toHaveAttribute('data-more-below', '');
+});
+
+test('smallest bottom panel: the whole chart fits, x axis included (UI-24)', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.layout',
+      JSON.stringify({ state: { bottomHeight: 0 }, version: 1 }),
+    );
+  });
+  await openPhysics(page, 'Con lắc lò xo');
+  await page.getByRole('tab', { name: 'Đồ thị' }).click();
+  const panel = await box(page.locator('.bottom-panel .panel__scroll'));
+  const chart = await box(page.locator('.bottom-panel .chart').first());
+  expect(chart.bottom).toBeLessThanOrEqual(panel.bottom + 1);
+  expect((await box(page.locator('.bottom-panel .u-over').first())).height).toBeGreaterThanOrEqual(
+    40,
+  );
+});
+
+test('a checkbox parameter is one row with its source chip (UI-53)', async ({ page }) => {
+  await openPhysics(page, 'Chuyển động thẳng biến đổi đều');
+  // The source chips show in Advanced mode.
+  await page.getByRole('radio', { name: 'Nâng cao' }).click();
+  const row = page.locator('.param__head:has(.param__toggle)').first();
+  const toggle = await box(row.locator('.param__toggle'));
+  const chip = await box(row.locator('.param__source'));
+  expect(Math.abs(toggle.y + toggle.height / 2 - (chip.y + chip.height / 2))).toBeLessThan(6);
+});
+
+test('suggestion cards in one row have the same height (UI-30)', async ({ page }) => {
+  await openLab(page);
+  const cards = await Promise.all((await page.locator('.home__topic').all()).map(box));
+  expect(cards.length).toBeGreaterThan(2);
+  for (const a of cards)
+    for (const b of cards)
+      if (Math.abs(a.y - b.y) < 2) expect(Math.abs(a.height - b.height)).toBeLessThan(1.5);
+});
+
+test('library: a selected title keeps its line; a checkbox sits by its label (UI-42, UI-43)', async ({
+  page,
+}) => {
+  await openLab(page);
+  await page.getByRole('radio', { name: 'Hóa học' }).click();
+  const item = page.getByRole('button', { name: 'Thư viện phản ứng đã kiểm chứng', exact: true });
+  const before = (await box(item)).height;
+  await page.getByRole('button', { name: 'Thuyết va chạm', exact: true }).click();
+  await item.click();
+  await expect(item).toHaveAttribute('aria-current', 'true', { timeout: 20_000 });
+  expect((await box(item)).height).toBeLessThanOrEqual(before + 1);
+  await page.getByRole('button', { name: 'Thuyết va chạm', exact: true }).click();
+  const label = page.locator('label', { hasText: 'Phản ứng thuận nghịch' });
+  await expect(label).toBeVisible({ timeout: 20_000 });
+  const input = await box(label.locator('input[type="checkbox"]'));
+  const text = await box(label.locator('span').first());
+  expect(text.x - input.right).toBeLessThan(16);
+  expect((await box(label)).height).toBeGreaterThanOrEqual(40);
 });
