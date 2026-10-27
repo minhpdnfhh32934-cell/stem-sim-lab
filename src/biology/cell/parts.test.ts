@@ -103,7 +103,7 @@ describe('cell Science Card', () => {
       expect(card.equations).toEqual([]);
       expect(card.reviewStatus).toBe('pending');
       expect(card.assumptions.map((a) => a.vi)).toContain(
-        'Minh hoạ — không theo tỉ lệ; số lượng bào quan chỉ để minh hoạ.',
+        'Minh họa — không theo tỉ lệ; số lượng bào quan chỉ để minh họa.',
       );
       // Texts only: the source names the curriculum year ("GDPT 2018").
       expect(JSON.stringify({ ...card, sources: [] })).not.toMatch(DIGIT);

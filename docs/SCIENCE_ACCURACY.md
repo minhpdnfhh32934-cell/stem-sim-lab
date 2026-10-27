@@ -265,8 +265,8 @@ có chữ (không có số), chờ giáo viên duyệt (`DATA_REVIEW.md`, mục 
   bằng không phụ thuộc Lp.
 - Π = iCRT chỉ đúng cho dung dịch loãng; i = 2 (NaCl), 3 (CaCl₂) là giả thiết phân li hoàn toàn.
 - Lotka–Volterra là mô hình định tính kinh điển (thẻ khoa học ghi "gần đúng" vì giải số).
-- Tế bào nhân sơ và nhân thực (bản 2D, 0.8.0): hình **định tính**, ghi “Minh hoạ — không theo tỉ
-  lệ; số lượng bào quan chỉ để minh hoạ”; vị trí, hình dạng, màu chỉ để phân biệt các bộ phận. Tên
+- Tế bào nhân sơ và nhân thực (bản 2D, 0.8.0): hình **định tính**, ghi “Minh họa — không theo tỉ
+  lệ; số lượng bào quan chỉ để minh họa”; vị trí, hình dạng, màu chỉ để phân biệt các bộ phận. Tên
   và chức năng diễn đạt lại theo SGK Sinh học 10 KNTT (Bài 7–8), chờ giáo viên duyệt.
 
 ## 8. Lưu tệp, lịch sử và quá tải (Giai đoạn 6)

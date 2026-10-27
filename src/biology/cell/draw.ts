@@ -404,11 +404,12 @@ const ANIMAL: Figure = {
       },
     },
     lysosome: {
-      at: [0.78, 0.04],
+      // Placed off the pointers of "Lưới nội chất" and "Khung xương tế bào" (test).
+      at: [0.8, -0.08],
       draw: (g) => {
         for (const [x, y] of [
-          [0.78, 0.04],
-          [-0.62, -0.52],
+          [0.8, -0.08],
+          [-0.6, -0.44],
         ] as const) {
           g.circle(x, y, 0.06);
           g.paint('--chart-7', '--text-muted', 0.01, 0.9);
