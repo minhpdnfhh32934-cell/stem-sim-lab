@@ -112,7 +112,7 @@ describe('"Dữ liệu của em đi đâu?" with an online provider', () => {
     render(<TeacherSettings />);
     const { sent } = flow();
     expect(sent[0]).toBe(
-      'Khi chọn “API”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → Gemini (khuyên dùng).',
+      'Khi chọn “AI trực tuyến”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → Gemini (khuyên dùng).',
     );
     expect(sent[1]).toBe(
       'Khi Gemini (khuyên dùng) hết lượt và Think đang tắt: những gì gửi cho Gemini (khuyên dùng) → Groq (miễn phí) (dự phòng, chỉ khi đã có khóa).',

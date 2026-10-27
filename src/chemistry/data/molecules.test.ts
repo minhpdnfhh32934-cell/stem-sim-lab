@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   MOLECULES,
+  textbookFormula,
   angle,
   bondPolarity,
   centralAtom,
@@ -229,5 +230,16 @@ describe('molecule library', () => {
     expect(findMolecules('CC(=O)O').map((m) => m.id)).toEqual(['ch3cooh']);
     expect(prettyFormula('CO3-2')).toBe('CO₃²⁻');
     expect(prettyFormula('H4N+')).toBe('H₄N⁺');
+  });
+});
+
+describe('textbookFormula (UI-39: heading and formula row agree)', () => {
+  it('keeps the textbook order without carbon and Hill order with carbon', () => {
+    expect(textbookFormula({ formula: 'H3N', display_formula: 'NH3' })).toBe('NH3');
+    expect(textbookFormula({ formula: 'ClH', display_formula: 'HCl' })).toBe('HCl');
+    expect(textbookFormula({ formula: 'C2H6O', display_formula: 'C2H5OH' })).toBe('C2H6O');
+    expect(textbookFormula({ formula: 'CO2', display_formula: 'CO2' })).toBe('CO2');
+    // "Cl" or "Ca" first is not carbon.
+    expect(textbookFormula({ formula: 'CaO', display_formula: 'CaO' })).toBe('CaO');
   });
 });

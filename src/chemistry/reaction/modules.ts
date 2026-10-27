@@ -1,6 +1,7 @@
 import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { L } from '../common';
+import { BalancePanel } from './BalancePanel';
 import { BalanceStage } from './BalanceStage';
 import { ReactionBottom } from './ReactionBottom';
 import { ReactionPanel } from './ReactionPanel';
@@ -23,5 +24,6 @@ export const reactionLibrary: ModuleView = {
 export const equationBalancing: ModuleView = {
   title: L('Cân bằng phương trình', 'Equation balancing'),
   Stage: BalanceStage,
+  Panel: BalancePanel,
   state: bindStore(useReactionStore, ['equation']),
 };
