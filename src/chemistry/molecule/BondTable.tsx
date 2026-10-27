@@ -41,7 +41,7 @@ export function BondTable() {
                   pickBond(k);
                 }}
               >
-                <td className="num">
+                <td>
                   {m.atoms[b.a]?.el}
                   {b.a + 1}–{m.atoms[b.b]?.el}
                   {b.b + 1}

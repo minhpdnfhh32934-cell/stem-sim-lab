@@ -160,7 +160,6 @@ export function ReactionStage() {
         <span className="chem-chip chem-chip--qual">{Lz(mech.type)}</span>
         <IconButton
           icon={Spline}
-          size="sm"
           label={Lz(L('Mũi tên dịch chuyển electron', 'Electron-pushing arrows'))}
           active={st.arrows}
           onClick={() => {
@@ -169,7 +168,6 @@ export function ReactionStage() {
         />
         <IconButton
           icon={Tag}
-          size="sm"
           label={Lz(L('Nhãn nguyên tử', 'Atom labels'))}
           active={st.labels}
           onClick={() => {
@@ -242,7 +240,6 @@ export function ReactionStage() {
         />
         <IconButton
           icon={ArrowRightLeft}
-          size="sm"
           label={Lz(L('Dừng ở mỗi bước khi phát', 'Pause on each step while playing'))}
           active={st.stepPause}
           onClick={() => {

@@ -286,7 +286,6 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
         </div>
         <IconButton
           icon={Tag}
-          size="sm"
           label={Lz(L('Hiện/ẩn nhãn nguyên tử', 'Show/hide atom labels'))}
           active={st.labels}
           onClick={() => {
@@ -295,7 +294,6 @@ export function MoleculeStage({ topic }: { topic: MoleculeTopic }) {
         />
         <IconButton
           icon={Eye}
-          size="sm"
           label={Lz(
             L('Hiện/ẩn cặp electron tự do (minh họa)', 'Show/hide lone pairs (illustrative)'),
           )}

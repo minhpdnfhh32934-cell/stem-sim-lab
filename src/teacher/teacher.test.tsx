@@ -102,7 +102,9 @@ describe('"Dạy học bằng AI" screen', () => {
     openTeacher();
     render(<TeacherScreen />);
     expect(
-      await screen.findByText('Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.'),
+      await screen.findByText(
+        'Chưa kết nối AI trực tuyến. Kết nối trong Cài đặt → Kết nối AI, hoặc chọn Gemma đã tải về.',
+      ),
     ).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cài đặt' }));
     expect(useWorkspaceStore.getState().settingsOpen).toBe(true);
