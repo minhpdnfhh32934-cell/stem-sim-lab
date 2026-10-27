@@ -39,3 +39,20 @@
 | Prettier on every file that differs from `main`, `npm run lint`, `npm run typecheck` | PASS                                               |
 | `npx vitest run --maxWorkers=2`                                                      | PASS — 328 files, 4415 tests (1 skipped, existing) |
 | `npx playwright test` (all three projects, under the shared lock)                    | PASS — 141/141 (8,9 min)                           |
+
+## Review round (#101, 2026-10-28)
+
+- 1, 2: moving the palette right of the y numbers covered the captions scenes write at x = 60 px
+  and, with the compare legend at x ≈ 60, the Pin button. The palette is back at its old place
+  (12 px); `drawGrid` (`src/physics/render/draw.ts`) takes `labelLeft`, measured by `StageCanvas`
+  from the palette's right edge, and then skips the top caption rows (`CAPTION_ROWS` 80 px).
+  Moving the palette to the right edge was rejected: at 1366×768 the stage (~343 px) is barely
+  taller than the palette (~314 px), so it would cover the HUD title.
+- 3: the bottom panel's height is also capped so the stage keeps its 12rem minimum (600 px window,
+  140 % font); a saved height under 210 px is raised on load (unit test).
+- 4: the checkbox rule now applies to `.param__toggle` and `.chem-form` labels only; hidden switch
+  inputs (`.chat-toggle`) stay 1 px (E2E, fails with the old rule).
+- 5: `.param__toggle` is inline-flex, centred, with a gap; the E2E measures the input itself.
+- Results: `npm run lint`, `npm run typecheck` PASS; vitest `src/app/layout src/app/sim src/ui
+src/physics/render` PASS — 163 tests; E2E layout, project, physics, learner PASS — 34 passed +
+  the Settings test after fixing its locator (`tab`) 1/1.

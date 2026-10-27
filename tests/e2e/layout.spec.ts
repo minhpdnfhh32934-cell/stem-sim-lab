@@ -307,7 +307,7 @@ test('a hidden switch input in Settings stays hidden (the checkbox rule is scope
   await openLab(page);
   await page.getByRole('button', { name: 'Cài đặt', exact: true }).first().click();
   await page
-    .getByRole('button', { name: /Trí nhớ hội thoại/ })
+    .getByRole('tab', { name: /Trí nhớ hội thoại/ })
     .first()
     .click();
   const input = page.locator('.chat-toggle input').first();
