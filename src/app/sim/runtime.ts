@@ -159,7 +159,9 @@ class SimRuntime {
     const out = this.renderState ?? new Float64Array(f.curr.length);
     lerpState(f.prev, f.curr, f.alpha, out);
     this.renderState = out;
-    this.history.setTimeScale(useWorkspaceStore.getState().speed);
+    // The speed this frame really ran at: 1 for a Step, the reached speed when throttled, 0 paused
+    // (ignored), never the speed chosen in the toolbar.
+    this.history.setTimeScale(f.stats.effectiveSpeed);
     this.history.push(f.t, f.curr, f.stats.finished);
 
     const store = useSimStore.getState();

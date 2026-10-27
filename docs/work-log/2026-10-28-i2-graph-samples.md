@@ -34,3 +34,11 @@
 | `npx playwright test` full, project `chromium`                                       | 95 passed, 2 failed: `chemistry.spec` "every chemistry topic opens…" and `lesson-flow` — FLAKY under load: both specs alone, 1 worker, 8/8 PASS |
 | `chromium-3d` + `chromium-3d-perf` (`--no-deps`, skipped by the failures above)      | PASS — 36/36 (1 worker)                                                                                                                         |
 | After merging `main` with #98: `src/app/sim` + `src/ui` unit tests, typecheck        | PASS — 149 tests                                                                                                                                |
+
+## Review fix (#102)
+
+- 🔴 The runtime set the history spacing from the speed chosen in the toolbar, not the speed the
+  frame ran at: a Step (always ×1) at ×4 kept 4 rows of 25 steps, at ×100 one; a frame capped by the
+  substep limit (×1000 chosen, ~×128 reached) kept one row in four. Now
+  `history.setTimeScale(f.stats.effectiveSpeed)` (1 for a Step, the reached speed when throttled,
+  0 while paused — ignored). Tests in `runtime.test.ts` (both fail on ecf52f3).
