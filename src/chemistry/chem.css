@@ -929,3 +929,30 @@
     transition: none;
   }
 }
+
+/* ───── UI audit #70 (i2), group C ───── */
+/* UI-35: formulas and atom labels ("C₂H₅OH", "C2–O3") use the UI font with tabular figures: the
+   monospace font draws subscript digits as dots and its O like a zero. */
+.chem-table td.num,
+.chem-form .mono,
+.el-card .mono,
+.mol-2d .mono,
+.mol-search__formula,
+.rx-steps__changes {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+/* UI-34: a header stands over its values; inspector values share one right edge. */
+.chem-table th.num {
+  text-align: right;
+}
+.chem-form .chem-table td {
+  text-align: right;
+}
+/* UI-29: chemistry chips, tabs and pickers reach the 40 px touch target. */
+.mol-chips button,
+.orbital-picker__item,
+.pt .segmented__item,
+.chem-form .segmented__item {
+  min-height: var(--target);
+}
