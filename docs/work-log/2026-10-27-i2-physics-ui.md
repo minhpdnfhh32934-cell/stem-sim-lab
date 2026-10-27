@@ -59,3 +59,9 @@
   GraphPanel (uPlot giả; trên GraphPanel của main: hỏng); chữ tiếng Anh UI-11, tên nút, "8.000 V/m".
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4417 PASS (lần này không có test chập chờn);
   E2E physics + layout + ai-flow dưới khoá chung: 39 passed (1,5 phút).
+
+## Vòng 3 — bản duyệt #97 vòng 2 (commit c1782af, sau merge origin/main db2abbb)
+
+- 🟡1: `unknownNumbers` đọc trước TeX chép từ bước và số thập phân ≥ 4 chữ số sau dấu (`explanationTokens`); test dán nguyên TeX mọi bước mọi bài (vi/en) → [] (trên mã vòng 2 hỏng: "9{,}81" → [81]).
+- 🟡2: thử thách Điện trường "khi bạn bắt đầu thử thách". 🟡4: oracle lưới so khớp trọn token (`texTokens`). 🟡3 (data.test.ts add/add với #98) để lúc gộp.
+- Kiểm tra: typecheck, lint, format PASS; `npm test` 4432 PASS, 1 chập chờn (app.test Science Studio); E2E physics + ai-flow dưới khoá chung 38 passed.
