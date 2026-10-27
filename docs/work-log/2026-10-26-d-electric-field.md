@@ -272,3 +272,5 @@ src/core src/ai src/app tests/golden` → 903 passed; full `npx vitest run` → 
   file (checked by swapping it in and back).
 - Results: `src/ai tests/golden src/app src/physics src/learn src/teacher/board` → 1501 passed;
   tsc clean.
+- Full checks: `npx eslint .` exit 0; Prettier clean; `npx vitest run` → 4389 passed, 1 skipped;
+  E2E physics + layout + ai-flow (lock) → 39 passed. **Status: PASS.**
