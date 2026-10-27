@@ -43,3 +43,19 @@
   `scene.perf.test.ts`); chạy riêng 9 tệp, 85 test PASS → **chập chờn do máy tải**.
 - E2E (khoá chung; lúc đầu phiên `bio-ui49` giữ khoá, đợi tới khi trả): physics + layout + ai-flow,
   project `chromium` → **39 passed (1,6 phút)**.
+
+## Vòng 2 — sửa theo bản duyệt #97 (commit 07f7629)
+
+- 🔴 `allowedNumbers` lỏng hơn main (đọc TeX như chữ tự do: "9{,}81" thành cả 981). Nay đọc bằng
+  `texNumbers` (nghịch đảo đúng của `texNum`, một nghĩa mỗi số); tiếng Anh không nhóm hàng nghìn
+  để "1{,}234" chỉ có một nghĩa. Test: 4000 giá trị đọc ngược đúng ở vi/en; các ca lọt của bản
+  duyệt bị đánh dấu ở vi và en (trên mã #97 cũ: hỏng, "g = 981" lọt); lưới mọi bài × vi/en ×
+  (×1, ×10, ×100, ×1000, ÷10, ÷100, ÷1000) — không số nào main từ chối mà mã mới nhận, trừ số bước
+  giải thật sự in ra (oracle là `texNum`). Trên `explain.ts` cũ lưới bắt "98,1" (newtonLaws).
+- KaTeX: test render thật mọi công thức (mọi bài, mọi lựa chọn, vi/en), hỏng khi có cảnh báo.
+  Tìm thêm `\text{m/s²}`, `\text{µN}` (có từ trước): `texQty` viết ² và µ ngoài `\text{}`.
+  `α_nhỏ` → `α_gđ`, `h_đỉnh 2` → `h₂` (UIP-3).
+- 🟡: câu "Chạy để kiểm tra" / "Bắt đầu thử thách" (UIP-2); dòng phương pháp Thẻ thẳng đều; test
+  GraphPanel (uPlot giả; trên GraphPanel của main: hỏng); chữ tiếng Anh UI-11, tên nút, "8.000 V/m".
+- Kiểm tra: typecheck, lint, format PASS; `npm test` 4417 PASS (lần này không có test chập chờn);
+  E2E physics + layout + ai-flow dưới khoá chung: 39 passed (1,5 phút).
