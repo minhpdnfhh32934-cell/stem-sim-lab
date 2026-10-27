@@ -22,7 +22,7 @@ import {
 } from './population';
 import { rng } from './stats';
 import { LETTERS, lociOf, useDrift, useHw, useMendel, type DriftState } from './store';
-import { MoreInBasic } from '../ui';
+import { MoreInBasic, Range } from '../ui';
 import { useNo3dNotice, useNo3dReason, useShow3d } from '../view3d/support';
 import { Bio3DFigure, Bio3DToolbar } from '../view3d/switch';
 import { DriftChips } from './driftChips';
@@ -613,8 +613,8 @@ function Drift2D() {
 
 export function DriftPanel() {
   const Lz = useLocalized();
-  const fmt = useFmt();
   const st = useDrift();
+  // The lessons' shared slider (value in bold after the label), not a bracketed value (UI-50).
   const range = (
     k: keyof DriftState,
     label: ReturnType<typeof L>,
@@ -622,21 +622,18 @@ export function DriftPanel() {
     max: number,
     step: number,
   ) => (
-    <label key={k}>
-      <span>
-        {Lz(label)} ({fmt(st[k], 4)})
-      </span>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={st[k]}
-        onChange={(e) => {
-          useDrift.setState({ [k]: Number(e.target.value) });
-        }}
-      />
-    </label>
+    <Range
+      key={k}
+      label={label}
+      value={st[k]}
+      min={min}
+      max={max}
+      step={step}
+      digits={4}
+      onChange={(v) => {
+        useDrift.setState({ [k]: v });
+      }}
+    />
   );
   return (
     <div className="chem-form">
