@@ -90,7 +90,7 @@ const body: BodyDef = {
       { label: L('Lực căng dây', 'String tension'), symbol: 'T', value: s[PE.T] ?? 0, unit: 'N' },
       {
         label: L('Góc theo mô hình góc nhỏ', 'Small-angle model angle'),
-        symbol: '\\alpha_{\\text{nhỏ}}',
+        symbol: '\\alpha_{\\text{gđ}}',
         value: s[PE.thS] ?? 0,
         unit: 'deg',
       },

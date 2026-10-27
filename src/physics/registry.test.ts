@@ -22,23 +22,43 @@ describe('physics registry', () => {
     }
   });
 
-  it('no Vietnamese letter inside KaTeX (symbols, card, steps): it renders in a fallback font', async () => {
-    // "α_{bđ}", "W_đ", "F_{đh}": KaTeX warns "Unicode text character in math mode" (UI-54).
-    const VI = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i;
+  it('KaTeX renders every formula without a warning (symbols, card, steps, every choice)', async () => {
+    // "α_{bđ}", "W_đ": "Unicode text character in math mode"; "ỏ", "ỉ" even in \text{}:
+    // "symbolNotInFont" (UI-54). Equation.tsx ignores only "unknownSymbol".
+    const katex = (await import('katex')).default;
     for (const id of sceneIds()) {
       const s = await loadScene(id);
-      const p = s.usesGravity ? { ...s.defaults, g: 9.81 } : s.defaults;
-      const texts = [
-        ...s.params.map((d) => [`symbol ${d.key}`, d.symbol] as const),
-        ...s.scienceCard(p).equations.map((e, i) => [`card ${i}`, e.tex] as const),
-        ...s.solve(p, 'vi').steps.map((st, i) => [`step ${i}`, st.tex ?? ''] as const),
-        ...s.bodies.flatMap((b) =>
-          (b.properties?.(new Float64Array(64), p) ?? []).map((pr) => ['prop', pr.symbol] as const),
-        ),
+      const base = s.usesGravity ? { ...s.defaults, g: 9.81 } : s.defaults;
+      const choices = s.params.filter((d) => d.kind === 'choice');
+      const variants = [
+        base,
+        ...choices.flatMap((d) => (d.choices ?? []).map((c) => ({ ...base, [d.key]: c.value }))),
       ];
-      // Inside \text{} the letters are drawn in the UI font (Equation.tsx), which is fine.
-      for (const [where, tex] of texts)
-        expect.soft(tex.replace(/\\text\{[^}]*\}/g, ''), `${id} ${where}`).not.toMatch(VI);
+      for (const p of variants) {
+        const texts = [
+          ...s.params.map((d) => [`symbol ${d.key}`, d.symbol] as const),
+          ...s.scienceCard(p).equations.map((e, i) => [`card ${i}`, e.tex] as const),
+          ...(['vi', 'en'] as const).flatMap((loc) =>
+            s.solve(p, loc).steps.map((st, i) => [`${loc} step ${i}`, st.tex ?? ''] as const),
+          ),
+          ...s.bodies.flatMap((b) =>
+            (b.properties?.(new Float64Array(64), p) ?? []).map(
+              (pr) => ['prop', pr.symbol] as const,
+            ),
+          ),
+        ];
+        for (const [where, tex] of texts) {
+          const warned: string[] = [];
+          katex.renderToString(tex, {
+            throwOnError: true,
+            strict: (code: string) => {
+              if (code !== 'unknownSymbol') warned.push(code);
+              return 'ignore';
+            },
+          });
+          expect.soft(warned, `${id} ${where}: ${tex}`).toEqual([]);
+        }
+      }
     }
   });
 

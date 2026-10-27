@@ -24,7 +24,8 @@
 - "2 · 9.81 · 45" trong ảnh 0095: `texNum('vi', 9.81)` ghi `9{,}81` (test); dấu phẩy ở cỡ chữ nhỏ
   trong căn trông như dấu chấm. Không đổi mã.
 - KaTeX: lí do chọn `\text{}` thay vì đổi ký hiệu không dấu — giữ đúng ký hiệu SGK (W_đ); chữ
-  trong `\text{}` vẽ bằng font giao diện (`Equation.tsx`), không cảnh báo. CLAUDE.md ghi rõ luật.
+  trong `\text{}` vẽ bằng font giao diện (`Equation.tsx`). Sửa ở vòng 2: "đ" không bị cảnh báo,
+  nhưng "ỏ", "ỉ", "µ", "²" thì có, kể cả trong `\text{}`. CLAUDE.md ghi rõ luật.
 
 ### UI-13 (commit 4384b38)
 

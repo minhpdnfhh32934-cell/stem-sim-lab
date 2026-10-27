@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { tFor } from '@/app/i18n';
 import { fromSI } from '@/core/units';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Params } from '@/physics/types';
@@ -32,8 +33,10 @@ describe('predict – observe – explain', () => {
     for (const poe of POES) {
       // "sớm hơn, muộn hơn hay…" / "lâu hơn, ngắn hơn hay…": words no button uses.
       expect(poe.question.vi, poe.id).not.toMatch(/hơn, .* hơn hay/);
-      if (poe.choices.some((c) => c.kind === 'direction'))
+      if (poe.choices.some((c) => c.kind === 'direction')) {
         expect(poe.question.vi, poe.id).toContain('tăng, giảm hay không đổi');
+        expect(poe.question.en, poe.id).toMatch(/go up, (go )?down or stay/);
+      }
     }
   });
 
@@ -46,6 +49,9 @@ describe('predict – observe – explain', () => {
       expect(label, poe.id).toBeDefined();
       expect(poe.question.vi, poe.id).toContain(label?.label.vi ?? '?');
       expect(poe.question.en.toLowerCase(), poe.id).toContain(label?.label.en.toLowerCase() ?? '?');
+      // The stage switches only when the learner presses this button.
+      expect(poe.question.vi, poe.id).toContain(`“${tFor('vi')('learn.observe')}”`);
+      expect(poe.question.en, poe.id).toContain(`“${tFor('en')('learn.observe')}”`);
     }
   });
 

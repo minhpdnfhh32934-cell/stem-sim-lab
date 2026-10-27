@@ -225,8 +225,8 @@ export const POES: readonly Poe[] = [
     factor: 2,
     answer: 'E',
     question: L(
-      'Tụ điện phẳng (SimLab chuyển sang khi bạn dự đoán): giữ nguyên hiệu điện thế U, nếu khoảng cách hai bản tụ gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
-      'Parallel-plate capacitor (SimLab switches to it when you predict): keeping the voltage U, if the plate separation doubles, how does the field between the plates change?',
+      'Tụ điện phẳng (SimLab chuyển sang khi bạn bấm “Chạy để kiểm tra”): giữ nguyên hiệu điện thế U, nếu khoảng cách hai bản tụ gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
+      'Parallel-plate capacitor (SimLab switches to it when you press “Run to check”): keeping the voltage U, if the plate separation doubles, how does the field between the plates change?',
     ),
     choices: ratios(0.5, 1, 2),
     // mode 1 = "Tụ điện phẳng": U stays fixed while d changes.

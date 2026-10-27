@@ -343,7 +343,7 @@ function solve(p: Params, locale: Locale): Solution {
               'Mức cơ năng không cao hơn đỉnh cao nhất phía trước (đỉnh đồi thứ hai) nên vật không vượt qua, sẽ trượt ngược lại.',
               'The energy level is not above the highest point ahead (the top of the second hill), so the bead rolls back.',
             ),
-        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_{\\text{đỉnh 2}} \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
+        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_2 \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
       });
       const vTop = speedAt(g, y0, v0, peak.y);
       if (passes && vTop !== null) {

@@ -264,8 +264,8 @@ export const CHALLENGES: readonly Challenge[] = [
     topic: 'electricField',
     title: L('Điện trường đều 8.000 V/m', 'A uniform field of 8,000 V/m'),
     task: L(
-      'Tụ điện phẳng (SimLab chuyển sang khi bạn bắt đầu): giữ khoảng cách hai bản 2\u00a0cm, chỉnh hiệu điện thế U để điện trường giữa hai bản đúng 8.000\u00a0V/m.',
-      'Parallel-plate capacitor (SimLab switches to it when you start): keeping the plates 2\u00a0cm apart, set the voltage U so that the field between them is exactly 8,000\u00a0V/m.',
+      'Tụ điện phẳng (SimLab chuyển sang khi bạn bấm “Bắt đầu thử thách”): giữ khoảng cách hai bản 2\u00a0cm, chỉnh hiệu điện thế U để điện trường giữa hai bản đúng 8.000\u00a0V/m.',
+      'Parallel-plate capacitor (SimLab switches to it when you press “Start the challenge”): keeping the plates 2\u00a0cm apart, set the voltage U so that the field between them is exactly 8,000\u00a0V/m.',
     ),
     controls: ['U'],
     // mode 1 = "Tụ điện phẳng".

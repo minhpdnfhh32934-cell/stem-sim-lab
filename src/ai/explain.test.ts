@@ -4,7 +4,9 @@ import { MODE as FIELD_MODE } from '@/physics/field/model';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Solution } from '@/physics/types';
 import { allowedNumbers, explainSolution, unknownNumbers } from './explain';
-import { numberTokens } from './numbers';
+import { formatNumber } from '@/app/i18n';
+import { texNum, texNumbers } from '@/physics/common/tex';
+import { numberTokens, numbersIn } from './numbers';
 import type { LlmTransport } from './transport';
 
 /** The answer lines exactly as the explain prompt writes them, in either decimal style. */
@@ -49,16 +51,79 @@ describe('numbers written in an explanation', () => {
     }
   });
 
+  const solved = async (id: string, locale: 'vi' | 'en') => {
+    const scene = await loadScene(id);
+    const params = scene.usesGravity ? { ...scene.defaults, g: 9.81 } : scene.defaults;
+    return allowedNumbers(scene.solve(params, locale), '');
+  };
+
   it('reads step numbers as the screen shows them ("9{,}81" is 9,81; "35{.}950" is 35.950)', async () => {
-    const fall = await defaultSolution('freeFall');
-    expect(
-      unknownNumbers('Với g = 9,81 m/s², vật rơi nhanh dần.', allowedNumbers(fall, '')),
-    ).toEqual([]);
-    const field = await defaultSolution('electricField');
-    const allowed = allowedNumbers(field, '');
-    expect(unknownNumbers('Mỗi điện tích gây ra tại M điện trường 35.950 V/m.', allowed)).toEqual(
-      [],
-    );
+    for (const locale of ['vi', 'en'] as const) {
+      const fall = await solved('freeFall', locale);
+      expect(unknownNumbers('Với g = 9,81 m/s², vật rơi nhanh dần.', fall), locale).toEqual([]);
+      const field = await solved('electricField', locale);
+      const text = 'Mỗi điện tích gây ra tại M điện trường 35.950 V/m.';
+      expect(unknownNumbers(text, field), locale).toEqual([]);
+    }
+  });
+
+  it('a step number is read with one meaning only: ×10, ×100, ÷1000 of it are flagged', async () => {
+    // The readings the #97 review found let through ("9,81" read as 981, "35.950" as 35,95…).
+    const cases: [string, string][] = [
+      ['freeFall', 'Với g = 981 m/s², vật rơi nhanh dần.'],
+      ['freeFall', 'Với g = 98,1 m/s², vật rơi nhanh dần.'],
+      ['freeFall', 'Với g = 0,00981 m/s², vật rơi nhanh dần.'],
+      ['freeFall', 'Vật chạm đất sau 3029 s.'],
+      ['electricField', 'Điện trường tại M là E = 72 V/m.'],
+      ['electricField', 'Mỗi điện tích gây ra E = 35,95 V/m.'],
+      ['simplePendulum', 'Chu kì T0 = 2006 s.'],
+    ];
+    for (const locale of ['vi', 'en'] as const) {
+      for (const [id, text] of cases) {
+        expect(
+          unknownNumbers(text, await solved(id, locale)),
+          `${locale} ${id}: ${text}`,
+        ).not.toEqual([]);
+      }
+    }
+  });
+
+  it('accepts nothing main refuses, except numbers the steps really print (every scene)', async () => {
+    const mods = [1, 10, 100, 1000, 0.1, 0.01, 0.001];
+    for (const id of sceneIds()) {
+      const scene = await loadScene(id);
+      const p = scene.usesGravity ? { ...scene.defaults, g: 9.81 } : scene.defaults;
+      for (const locale of ['vi', 'en'] as const) {
+        const sol = scene.solve(p, locale);
+        const now = allowedNumbers(sol, '');
+        // main: free-text readings of the TeX, which main's texNum never grouped.
+        const main = [
+          ...allowedNumbers({ answers: sol.answers, steps: [] }, ''),
+          ...sol.steps.flatMap((s) => [
+            ...numbersIn(s.text.vi),
+            ...numbersIn((s.tex ?? '').replace(/\{\.\}/g, '')),
+          ]),
+        ];
+        // Oracle from the writer, not the reader: texNum prints this value in some step.
+        const printed = (a: number) =>
+          [2, 3, 4, 5, 6].some((sig) =>
+            sol.steps.some((s) => (s.tex ?? '').includes(texNum(locale, a, sig))),
+          );
+        const values = sol.steps.flatMap((s) => texNumbers(s.tex ?? ''));
+        for (const v of values) {
+          for (const k of mods) {
+            const c = Number((v * k).toPrecision(6));
+            const text = `Số ${formatNumber('vi', c, { maximumSignificantDigits: 6 })}.`;
+            if (unknownNumbers(text, main).length === 0) continue;
+            if (unknownNumbers(text, now).length > 0) continue;
+            // Any reading of the written token ("9.810" is also 9,81, main's reader rule).
+            const reads = numberTokens(text)[0] ?? [];
+            const by = now.filter((a) => reads.some((r) => Math.abs(a - r) <= 0.01 * Math.abs(a)));
+            expect(by.some(printed), `${id} ${locale}: "${text}"`).toBe(true);
+          }
+        }
+      }
+    }
   });
 
   it('still flags a number the engine did not produce', async () => {

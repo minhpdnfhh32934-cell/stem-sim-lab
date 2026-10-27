@@ -342,10 +342,12 @@ function card(accel: boolean) {
           'Engine cập nhật chính xác cho vận tốc không đổi (a = 0); tọa độ cuối được kiểm chứng bằng tích phân Dormand–Prince.',
           'Exact constant-velocity update (a = 0); final positions cross-checked with Dormand–Prince integration.',
         ),
-    method: L(
-      'Cập nhật chính xác, Δt = 1/240 s; thời điểm dừng được xác định đúng trong bước.',
-      'Exact update, Δt = 1/240 s; stop instant located exactly within the step.',
-    ),
+    method: accel
+      ? L(
+          'Cập nhật chính xác, Δt = 1/240 s; thời điểm dừng được xác định đúng trong bước.',
+          'Exact update, Δt = 1/240 s; stop instant located exactly within the step.',
+        )
+      : L('Cập nhật chính xác, Δt = 1/240 s.', 'Exact update, Δt = 1/240 s.'),
     userIntervened: false,
     sources: [SRC.sgk10, SRC.halliday],
   });

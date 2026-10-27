@@ -1,5 +1,5 @@
 import { fromSI } from '@/core/units';
-import { fmtQty } from '@/physics/common/tex';
+import { fmtQty, texNumbers } from '@/physics/common/tex';
 import type { Answer, Solution } from '@/physics/types';
 import { outputIsSafe } from '@/safety/moderation';
 import { numbersIn, numberTokens } from './numbers';
@@ -44,8 +44,8 @@ export function allowedNumbers(solution: Solution, problemText: string): number[
     nums.push(...numbersIn(a.label.vi), ...numbersIn(a.label.en));
   }
   for (const s of solution.steps) {
-    // TeX writes separators in braces ("9{,}81", "35{.}950"); read them as written on screen.
-    nums.push(...numbersIn(s.text.vi), ...numbersIn((s.tex ?? '').replace(/\{([.,])\}/g, '$1')));
+    // The TeX comes from texNum: one meaning per number ("9{,}81" is 9,81 only, never 981).
+    nums.push(...numbersIn(s.text.vi), ...texNumbers(s.tex ?? ''));
   }
   nums.push(...numbersIn(problemText));
   // An overflowed number ("2.10^400") is no number the explanation may repeat.

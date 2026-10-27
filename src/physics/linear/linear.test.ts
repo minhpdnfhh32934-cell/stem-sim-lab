@@ -60,6 +60,8 @@ describe('linear scenes', () => {
     expect(u.model.vi).not.toContain('gia tốc không đổi');
     expect(u.model.en).toContain('constant velocity');
     expect(u.confidenceNote?.vi).not.toContain('gia tốc không đổi');
+    // Nothing stops in uniform motion: no "thời điểm dừng" in its method line.
+    expect(u.method?.vi).not.toContain('dừng');
     const a = uniformAcceleration.scienceCard(uniformAcceleration.defaults);
     expect(a.model.vi).toContain('gia tốc không đổi');
   });
