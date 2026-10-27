@@ -178,7 +178,7 @@
       "dates": {
         "devStart": "2026-10-22T03:56:04Z",
         "firstCommit": "2026-10-22T23:06:49+07:00",
-        "lastCommit": "2026-10-27T04:36:56+07:00",
+        "lastCommit": "2026-10-27T12:47:09+07:00",
         "merged": null,
         "built": null,
         "released": null,
@@ -186,8 +186,8 @@
       },
       "evidence": [
         "devStart: issue #37 (kế hoạch 0.8.0) tạo lúc 2026-10-22T03:56:04Z (gh issue view 37); người dùng gắn approved ngày 26/10/2026; 10 issue con #68–#77 gắn approved cùng ngày",
-        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 006f519; 99 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..006f519, 27/10/2026)",
-        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit lúc mở PR này: d57b284 2026-10-27T04:36:56+07:00 'docs(work-log): (b) PR #90 review 2'",
+        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 32a9378; 121 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..32a9378, 27/10/2026)",
+        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit: a05f4d6 2026-10-27T12:47:09+07:00 'fix(ai): Vietnamese words glued to a number keep it; force steps in the answers' unit (#76)', commit mã cuối trước khi gộp PR #89",
         "(f) dấu \"Đã học\" cho mọi chủ đề đã mở: PR #79, gộp 18b6a5c 2026-10-26T12:52:42Z (issue #68)",
         "(g1) dữ liệu xếp lớp theo mục lục SGK Kết nối tri thức, sinh bằng scripts/data/gen_curriculum_kntt.py: PR #82, gộp 70b5b7c 2026-10-26T12:12:20Z (issue #71); docs/DATA_REVIEW.md mục 12 và KNTT-1 … KNTT-11, đang chờ giáo viên duyệt",
         "(i1) đồ thị Vật lí đọc được ở 1366×768, test bố cục tests/e2e/layout.spec.ts: PR #81, gộp e9c5f3b 2026-10-26T17:33:59Z (issue #69)",
@@ -197,7 +197,7 @@
         "(g2) thanh Lớp 10 · 11 · 12 · Tất cả trong thư viện, trang chủ và bước làm quen: PR #86, gộp c621f3f 2026-10-26T19:59:13Z (issue #71)",
         "(k) \"Phòng thí nghiệm\" thành \"Virtual Lab\" (chỉ chữ hiển thị, quyết định của chủ dự án 23/10/2026 ghi trong CLAUDE.md): PR #91, gộp f904250 2026-10-26T21:29:52Z (issue #73)",
         "(b) Sóng dừng trên dây (VL11 Bài 13), nút \"Dùng fₙ\": PR #90, gộp 006f519 2026-10-26T22:07:30Z (issue #75); DATA_REVIEW SWV-1 … SWV-8",
-        "(d) Điện trường của điện tích điểm (VL11 Bài 16–18), bộ lọc số AI đọc được số mũ chỉ số trên và so sánh tương đối, cảnh báo dấu điện tích: PR #89 (7 lượt duyệt; phạm vi cuối của bộ lọc ghi trong bình luận PR #89), đã duyệt, tự gộp đang bật lúc cập nhật mục này (issue #76)",
+        "(d) Điện trường của điện tích điểm (VL11 Bài 16–18), bộ lọc số AI đọc được số mũ chỉ số trên và so sánh tương đối, cảnh báo dấu điện tích: PR #89 (7 lượt duyệt; phạm vi cuối của bộ lọc ghi trong bình luận PR #89), gộp 32a9378 2026-10-27T06:15:14Z (issue #76)",
         "Bảng của AI Teacher (dòng nguồn, chữ phụ đề, cắt câu giữa chừng, thấy trong bản ghi hình 26/10/2026): PR #55, gộp d6f9fec 2026-10-26T00:17:07Z",
         "Phụ thuộc có lỗ hổng: PR #48 tokio 1.53.3 (RUSTSEC-2026-0386), gộp 4321eb9 2026-10-23T15:51:45Z; PR #51 undici 8.12.3 và zod 4.6.7 (npm audit), gộp f7eb477 2026-10-24T05:12:59Z; dependabot PR #45, #49, #27, #53, #28, #26 gộp 24/10/2026",
         "Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)"
@@ -217,7 +217,7 @@
           26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 79, 81, 82, 83, 84,
           85, 86, 87, 88, 89, 90, 91
         ],
-        "commits": ["39bfd01", "d57b284"],
+        "commits": ["39bfd01", "a05f4d6"],
         "branches": ["main", "chore/0.8.0-version"]
       },
       "publicNotes": {
