@@ -3,6 +3,8 @@ import { buildDraft, notUsedIssues } from '@/ai/draft';
 import type { Extraction } from '@/ai/spec';
 import { basicSplit } from '@/app/sim/basicParams';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
+import { fmtQty } from '@/physics/common/tex';
+import type { ParamSource, Params } from '@/physics/types';
 import { dopri5 } from '@/core/ode/dopri5';
 import { observe, poeFor } from '@/learn/poe';
 import { CHECK_TOL, checkAtol, forceLaw, forceLawStart, numericPeriod } from './check';
@@ -272,6 +274,67 @@ describe('uniform circular motion — scene', () => {
         unused,
       ]);
     }
+  });
+
+  it('choosing another "Đề bài cho biết" in the lab keeps the motion (r, v changed first)', () => {
+    // What `sim.setParam` does: the edited key becomes 'user', then applyAutoDefaults.
+    let params = { ...scene.defaults };
+    let sources: Record<string, ParamSource> = Object.fromEntries(
+      Object.keys(params).map((k) => [k, 'default' as const]),
+    );
+    const set = (key: string, value: number) => {
+      sources = { ...sources, [key]: 'user' };
+      params = applyAutoDefaults(scene, { ...params, [key]: value }, sources);
+    };
+    set('r', 2);
+    set('v', 3);
+    const before = circular(params);
+    expect(before.omega).toBe(1.5);
+    for (const mode of [MODE.period, MODE.freq, MODE.omega, MODE.v]) {
+      set('mode', mode);
+      const c = circular(params);
+      expect(c.v, `mode ${mode}`).toBeCloseTo(3, 12);
+      expect(c.omega, `mode ${mode}`).toBeCloseTo(1.5, 12);
+      expect(answer(params, 'a_c')!.value, `mode ${mode}`).toBeCloseTo(4.5, 12);
+    }
+    // The learner's own value is kept; an invalid one leaves the others as they were.
+    expect(params.v).toBe(3);
+    set('mode', MODE.v);
+    set('v', 0);
+    expect(params.omega).toBeCloseTo(1.5, 12);
+  });
+
+  it('fast turns play slower so ~60 frames per second never show a wrong frequency', () => {
+    const speed = (p: Params) => scene.suggestedSpeed?.({ ...scene.defaults, ...p }) ?? NaN;
+    expect(speed({})).toBe(1);
+    // Slider edges: v = 20 m/s, r = 0,1 m → ω = 200 rad/s, T ≈ 0,031 s.
+    const fast = speed({ v: 20, r: 0.1 });
+    expect(fast).toBeLessThan(0.1);
+    // At least 0,4 s of screen time per turn (before rounding to an offered speed).
+    for (const p of [
+      { v: 20, r: 0.1 },
+      { mode: MODE.period, T: 0.1 },
+      { mode: MODE.freq, f: 10 },
+    ])
+      expect(circular({ ...scene.defaults, ...p }).T / speed(p)).toBeGreaterThanOrEqual(
+        0.4 - 1e-12,
+      );
+    // Slow motions still get about four seconds per turn.
+    expect(speed({ mode: MODE.period, T: 3600 })).toBe(900);
+  });
+
+  it('turns per second / minute are written in Vietnamese for Vietnamese learners', () => {
+    expect(fmtQty('vi', 2, 'rev/s')).toBe('2 vòng/s');
+    expect(fmtQty('vi', 2, 'rev/min')).toBe('120 vòng/phút');
+    expect(fmtQty('en', 2, 'rev/min')).toBe('120 rev/min');
+  });
+
+  it('the card says φ is in rad and that the arrows show direction only', () => {
+    const c = scene.scienceCard(scene.defaults);
+    expect(c.equations[2]!.label?.vi).toContain('φ, φ₀ tính bằng rad');
+    expect(c.equations[2]!.label?.en).toContain('φ, φ₀ in rad');
+    expect(c.assumptions.some((a) => a.vi.includes('độ dài mũi tên không theo độ lớn'))).toBe(true);
+    expect(c.confidenceNote?.vi).toContain('sai lệch tương đối dưới 10⁻⁹');
   });
 
   it('the card writes the sign of ωt for the chosen sense', () => {
