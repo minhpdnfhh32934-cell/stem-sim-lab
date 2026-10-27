@@ -72,3 +72,9 @@
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4425 PASS, 1 hỏng chập chờn (app.test Science Studio, chạy riêng PASS); E2E physics + layout + ai-flow (khoá chung) 39 passed; xem tận mắt trong app (dev server, chế độ tối): Newton, Bảo toàn cơ năng, Điện trường.
 - Chưa làm: số trục bị đường sức cắt (lưới vẽ trong src/app), dời vị trí riêng từng bài (va chạm, con lắc đơn, Newton, mặt nghiêng), biểu đồ Hoá học của UI-23.
 - Duyệt #100 (2 🟡): viền chữ dùng màu sân khấu `--bg-stage` (`ThemeColors.stage`), dấu +/− của điện tích không có viền, y₂ trên đồ thị chấm [3, 4] như sân khấu. 3 test mới hỏng trên mã cũ.
+
+## Vòng 4 — quyết định của điều phối sau duyệt vòng 3
+
+- Bộ đọc mới phía lời giải thích (`explanationTokens`, luật thập phân ≥ 4 chữ số) làm bộ lọc lỏng hơn main ("$t = 1{.}75$", "1,0000.10^3 m"…): đã bỏ hẳn, `explain.ts` về đúng vòng 2 (07eea77). Bỏ test "dán nguyên TeX mọi bước".
+- Giữ: "khi bạn bắt đầu thử thách", oracle so khớp trọn token (`texTokens`). Lưới "accepts nothing main refuses" thêm các đoạn tấn công dạng TeX (a{.}b với a ≤ 4, x{,}y{,}z, a{.}b·10ⁿ, a,bcde.10^n, a,bcde×10ⁿ, đuôi sau nhóm 3 chữ số); lưới qua trên mã đã bỏ, hỏng trên mã vòng 3 ("0,003762").
+- **Vấn đề đã biết (dời 0.8.1):** lời giải thích chép nguyên TeX của bước ("9{,}81") vẫn bị ẩn nhầm (chặt hơn main, không lỏng hơn).

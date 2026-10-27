@@ -3,7 +3,7 @@ import { fromSI, unitLabel } from '@/core/units';
 import { MODE as FIELD_MODE } from '@/physics/field/model';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Solution } from '@/physics/types';
-import { allowedNumbers, explainSolution, explanationTokens, unknownNumbers } from './explain';
+import { allowedNumbers, explainSolution, unknownNumbers } from './explain';
 import { formatNumber } from '@/app/i18n';
 import { texNum, texNumbers, texTokens } from '@/physics/common/tex';
 import { numberTokens, numbersIn } from './numbers';
@@ -88,27 +88,32 @@ describe('numbers written in an explanation', () => {
     }
   });
 
-  it('an explanation that copies the TeX of every step verbatim verifies (vi and en)', async () => {
-    // "$g = 9{,}81\,\text{m/s}^{2}$" was split into 9 and 81 and hidden (#97 round 2).
-    for (const id of sceneIds()) {
-      const scene = await loadScene(id);
-      const p = scene.usesGravity ? { ...scene.defaults, g: 9.81 } : scene.defaults;
-      for (const locale of ['vi', 'en'] as const) {
-        const sol = scene.solve(p, locale);
-        const allowed = allowedNumbers(sol, '');
-        for (const s of sol.steps) {
-          const text = `Ta có $${s.tex ?? ''}$.`;
-          expect(unknownNumbers(text, allowed), `${id} ${locale}: ${text}`).toEqual([]);
-        }
-      }
-    }
-    // A long decimal has one reading: "0.003762" is not 0.003 and 762.
-    expect(explanationTokens('h = 0.003762 m')).toEqual([[0.003762]]);
-    expect(explanationTokens('h = 0,003762 m')).toEqual([[0.003762]]);
-  });
-
   it('accepts nothing main refuses, except numbers the steps really print (every scene)', async () => {
     const mods = [1, 10, 100, 1000, 0.1, 0.01, 0.001];
+    const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+    // TeX-shaped attacks from the #97 round 3 review, built from each printed value's digits.
+    const attacks = (v: number): string[] => {
+      const d =
+        String(Math.round(Math.abs(v) * 1000))
+          .replace(/^0+/, '')
+          .slice(0, 4) || '1';
+      const d4 = d.padEnd(4, '0');
+      const n = 1 + (d.length % 3);
+      return [
+        `Thời gian $t = 1{.}${d}\\,\\text{s}$.`,
+        `$t = 4{.}${d}$`,
+        `$x = ${d}{,}${d}{,}${d}$`,
+        `$F = 4{.}${d} \\cdot 10^{-${n}}$`,
+        `${d4.charAt(0)},${d4}.10^${n} m`,
+        `${d4.charAt(0)},${d4}×10${SUP.charAt(n)} m`,
+        `$E = ${d}{.}${d4.slice(0, 3)}${d4.charAt(0)}$`,
+        'Thời gian $t = 1{.}75\\,\\text{s}$.',
+        '$F = 4{.}8 \\cdot 10^{-16}$',
+        '$E = 71{.}9004$',
+        '$3{,}0{,}75$',
+        '1,0000.10^3 m',
+      ];
+    };
     for (const id of sceneIds()) {
       const scene = await loadScene(id);
       const p = scene.usesGravity ? { ...scene.defaults, g: 9.81 } : scene.defaults;
@@ -128,18 +133,26 @@ describe('numbers written in an explanation', () => {
         const tokens = new Set(sol.steps.flatMap((s) => texTokens(s.tex ?? '')));
         const printed = (a: number) =>
           [1, 2, 3, 4, 5, 6].some((sig) => tokens.has(texNum(locale, a, sig)));
+        const close = (a: number, r: number) => Math.abs(a - r) <= 0.01 * Math.abs(a);
+        const knows = (allowed: number[], reads: number[]) =>
+          reads.some((r) => (Number.isInteger(r) && r <= 4) || allowed.some((a) => close(a, r)));
+        const check = (text: string) => {
+          if (unknownNumbers(text, main).length === 0) return;
+          if (unknownNumbers(text, now).length > 0) return;
+          // Every token main refuses is known here only through a value a step really prints.
+          for (const reads of numberTokens(text)) {
+            if (knows(main, reads)) continue;
+            const by = now.filter((a) => reads.some((r) => close(a, r)));
+            expect(by.some(printed), `${id} ${locale}: "${text}"`).toBe(true);
+          }
+        };
         const values = sol.steps.flatMap((s) => texNumbers(s.tex ?? ''));
         for (const v of values) {
           for (const k of mods) {
             const c = Number((v * k).toPrecision(6));
-            const text = `Số ${formatNumber('vi', c, { maximumSignificantDigits: 6 })}.`;
-            if (unknownNumbers(text, main).length === 0) continue;
-            if (unknownNumbers(text, now).length > 0) continue;
-            // Any reading of the written token ("9.810" is also 9,81, main's reader rule).
-            const reads = explanationTokens(text)[0] ?? [];
-            const by = now.filter((a) => reads.some((r) => Math.abs(a - r) <= 0.01 * Math.abs(a)));
-            expect(by.some(printed), `${id} ${locale}: "${text}"`).toBe(true);
+            check(`Số ${formatNumber('vi', c, { maximumSignificantDigits: 6 })}.`);
           }
+          for (const text of attacks(v)) check(text);
         }
       }
     }
