@@ -489,6 +489,7 @@ PLACEMENTS = [
     ("cellStructure", "SH10", [7, 8], "Tên Bài 7–8: tế bào nhân sơ và tế bào nhân thực."),
     ("uniformCircularMotion", "VL10", [31, 32], "Tên Bài 31–32: động học của chuyển động tròn đều; lực hướng tâm và gia tốc hướng tâm."),
     ("standingWave", "VL11", [13], "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định)."),
+    ("electricField", "VL11", [16, 17, 18], "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều."),
 ]
 
 # Not placed (title not clear, or no lesson): (topic, subject, candidates, reason).

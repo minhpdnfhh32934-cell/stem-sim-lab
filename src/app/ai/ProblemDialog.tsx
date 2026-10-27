@@ -17,6 +17,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
 import { notUsedIssues, type Draft } from '@/ai/draft';
+import { writtenSign } from '@/ai/numbers';
 import { MAX_PROBLEM_CHARS } from '@/ai/pipeline';
 import { fromSI, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
@@ -221,9 +222,27 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   };
 
   const blocking = draft.issues.filter((i) => i.blocking);
+  // The sign warning stays until the learner's value has the sign the problem writes (or, when
+  // the problem leaves it open, until the learner has set the value by hand).
+  const signToCheck = new Set(
+    draft.issues
+      .filter((i) => {
+        if (i.kind !== 'signMismatch' || !i.key) return false;
+        if (sources[i.key] !== 'user') return true;
+        const w = draft.written[i.key];
+        const sign = writtenSign(draft.problemText, w?.value ?? 0, w?.quote ?? '');
+        return sign !== 0 && Math.sign(params[i.key] ?? 0) !== sign;
+      })
+      .map((i) => i.key),
+  );
   // "Not used" follows the current choices ("Biết tần số f" hides T), not the frozen draft.
   const warnings = [
-    ...draft.issues.filter((i) => !i.blocking && i.kind !== 'notUsed'),
+    ...draft.issues.filter(
+      (i) =>
+        !i.blocking &&
+        i.kind !== 'notUsed' &&
+        (i.kind !== 'signMismatch' || signToCheck.has(i.key)),
+    ),
     ...notUsedIssues(scene, params, sources, draft.fromWords),
   ];
 
@@ -276,6 +295,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
               source={sources[def.key] ?? 'default'}
               written={draft.written[def.key]}
               missing={missing.includes(def.key)}
+              checkSign={signToCheck.has(def.key)}
               onChange={(v) => {
                 setValue(def.key, v);
               }}
@@ -435,6 +455,7 @@ function ReviewRow({
   source,
   written,
   missing,
+  checkSign,
   onChange,
   onKeep,
 }: {
@@ -443,6 +464,7 @@ function ReviewRow({
   source: ParamSource;
   written: { value: number; unit: string; quote: string } | undefined;
   missing: boolean;
+  checkSign: boolean;
   onChange: (si: number) => void;
   onKeep: () => void;
 }) {
@@ -452,7 +474,7 @@ function ReviewRow({
   const nameId = `qty-${def.key}`;
   return (
     <li
-      className={cx('qty-card', missing && 'is-missing')}
+      className={cx('qty-card', missing && 'is-missing', checkSign && 'is-check')}
       data-source={missing ? 'missing' : source}
       aria-labelledby={nameId}
     >
@@ -520,6 +542,12 @@ function ReviewRow({
           )}
         </span>
         {written && <WrittenNote written={written} />}
+        {checkSign && (
+          <p className="problem-table__missing">
+            <CircleHelp size={12} strokeWidth={1.75} aria-hidden="true" />
+            {t('analyze.signHint')}
+          </p>
+        )}
         {missing && (
           <p className="problem-table__missing">
             <CircleHelp size={12} strokeWidth={1.75} aria-hidden="true" />

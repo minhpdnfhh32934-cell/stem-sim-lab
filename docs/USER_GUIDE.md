@@ -367,9 +367,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-15 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+16 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây.
+xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây, điện trường.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -399,6 +399,17 @@ xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây.
   số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất (bấm nút **Dùng fₙ** để đặt đúng giá trị đó), không tự đổi
   f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; lưới, thước và thước đo góc vẫn đo theo mét thật; tần số cao có thể làm hình trông
   đứng yên (hoạt nghiệm) — chọn tốc độ phát chậm hơn.
+- **Điện trường của điện tích điểm** (chương Điện trường, Vật lí 11): ô đầu tiên chọn **điện tích
+  điểm** hay **tụ điện phẳng**. Với điện tích điểm: chọn 1–3 điện tích, nhập điện tích có dấu (µC; đề
+  ghi C hay nC thì app tự đổi), vị trí của chúng và điểm M bằng thanh trượt; app vẽ đường sức (mũi tên
+  theo chiều E; điểm E = 0 có đường sức đi tới thì được đánh dấu), vectơ E tại M, và tính E, lực lên điện tích thử q₀, lực giữa
+  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox. Một điện tích: M nằm trên Ox. Từ hai điện tích: đề không
+  ghi số cho tọa độ của M (ví dụ chỉ nói "M nằm trên đoạn AB") thì bảng "Tôi hiểu đề như sau" hỏi bạn
+  nhập y_M (thường là 0); AI không tự đặt hay tính tọa độ. Lũy thừa 10 đứng riêng ("q = 10⁻⁸ C") app
+  cũng không đọc thay bạn: bảng hỏi bạn nhập giá trị (viết "1.10⁻⁸ C" thì đọc được). Với tụ
+  phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
+  "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
+  bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.
 
 ## Đọc đề bằng AI
 

@@ -2382,6 +2382,20 @@
    ],
    "reason": "Tên Bài 13: sóng dừng (cảnh chỉ có dây hai đầu cố định).",
    "review_status": "pending"
+  },
+  {
+   "topic": "electricField",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương III. Điện trường",
+   "lessons": [
+    16,
+    17,
+    18
+   ],
+   "reason": "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều.",
+   "review_status": "pending"
   }
  ],
  "unplaced": [

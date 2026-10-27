@@ -40,6 +40,8 @@ export const TOPIC_HINTS: Record<string, string> = {
     'Chuyển động tròn đều: bán kính, tốc độ, tốc độ góc (rad/s), chu kì, tần số (Hz, vòng/s, vòng/phút), gia tốc hướng tâm, lực hướng tâm.',
   standingWave:
     'Sóng dừng trên sợi dây CHỈ có hai đầu cố định (dây có một đầu tự do: ghi vào unsupported_parts): chiều dài dây, số bó sóng n (= số bụng; số nút là n + 1 — đề cho số nút thì ghi vào clarifications, không tự trừ), tần số, tốc độ truyền sóng, bước sóng, lực căng dây, mật độ dài (kg/m, g/m), biên độ A của mỗi sóng thành phần (đề cho biên độ bụng 2A thì ghi vào clarifications, không tự chia).',
+  electricField:
+    'Điện trường, định luật Coulomb: 1–3 điện tích điểm (q có dấu, C/µC/nC), cường độ điện trường tại điểm M, lực điện lên điện tích thử q0, lực tương tác giữa hai điện tích; hoặc tụ phẳng: điện trường đều E = U/d. Tọa độ: q1 ở A = gốc O, q2 ở B trên trục Ox (x2 = khoảng cách AB). M trên đường thẳng AB: xP = khoảng cách AM, dương về phía B, âm khi M nằm ngoài đoạn AB về phía A. Chỉ ghi yP khi đề viết số (ví dụ M(3; 0)); không tự ghi yP = 0, học sinh sẽ xác nhận. M không nằm trên đường thẳng AB (ví dụ chỉ cho MA, MB): không ghi xP, yP và hỏi lại trong clarifications. Chỉ ghi tọa độ có sẵn trong đề, không tự tính. Chân không hoặc không khí; có hằng số điện môi ε thì ghi vào unsupported_parts.',
 };
 
 export function classificationSystem(topics: { id: string; title: string }[]): string {

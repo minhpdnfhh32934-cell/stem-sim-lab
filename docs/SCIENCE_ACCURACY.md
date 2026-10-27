@@ -80,6 +80,7 @@ thời gian thực với lời giải chính xác.
 | Va chạm 1D/2D                         | Chuyển động thẳng đều giữa hai va chạm. Thời điểm va chạm giải chính xác, xung lực tính theo hệ số phục hồi e      | Chính xác                                               | Hai vật cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc; va chạm xiên hai vật cùng khối lượng thì hai hướng vuông góc; kết quả khớp cách tính trong hệ khối tâm |
 | Chuyển động tròn đều                  | Pha chính xác φ = φ₀ ± ωt với t = n·Δt (không cộng dồn); không có gì kéo được                                      | Chính xác                                               | DOPRI5 tích phân r″ = −(F_ht/(m·r))·r⃗ (rtol 10⁻¹²): bán kính giữ nguyên, vị trí khớp engine ở bốn thời điểm, chu kì đo qua y = 0 (đi lên) khớp 2πr/v tới 10⁻⁹       |
 | Sóng dừng trên dây                    | Công thức chính xác y = 2A·sin(kx)·sin(ωt) tại t = i·Δt (Δt ≤ T/200); không có gì kéo được                         | Chính xác (độ dốc 2A·k ≤ 0,1); gần đúng khi biên độ lớn | DOPRI5 trên phương trình sóng của dây chia đoạn, hai đầu cố định: 240/480 đoạn sai số O(Δx²), hội tụ bậc 2; 200 đoạn tần số mode khớp n·v/(2L) tới 10⁻⁹              |
+| Điện trường, tụ phẳng                 | Công thức chính xác (Coulomb, chồng chất, E = U/d); đường sức RK4 chia đôi bước, sai số như nhau ở mọi mức máy     | Chính xác (các con số)                                  | E so với −∇V: lệch tương đối ≤ 10⁻⁶; đường sức nằm trong sai số app báo so với DOPRI5; Σqᵢcosθᵢ không đổi (hai điện tích cùng trục)                                  |
 
 **Kéo và ném bằng chuột:** app nối vật với con trỏ bằng một lò xo có giảm chấn tới hạn
 (ω = 28 rad/s), nên vật không bị dịch chuyển tức thời. Khi thả chuột, vật giữ nguyên vận tốc lúc
@@ -112,6 +113,37 @@ một mẫu mỗi khung hình: khi f × tốc độ phát vượt khoảng 30 Hz
 thấy hoạt nghiệm, và muốn đường cong mượt (≥ 10 điểm mỗi chu kì) thì chỉ nên vài Hz. Lưới, thước
 và thước đo góc chia lại hệ số phóng to (`PhysicsScene.yStretch`), nên vẫn đo theo mét thật. Xem
 DATA_REVIEW SWV-1 … SWV-8.
+
+**Số rất nhỏ và dấu điện tích trong đề (0.8.0, #37 §8.2 bẫy 2 và 3; phạm vi cuối của #89):**
+`src/ai/numbers.ts` giữ nguyên bộ đọc của bản trước, chỉ thêm bốn điểm:
+
+1. Một dãy chữ số mũ nhỏ phía trên là một số mũ: "4.10⁻⁸", "1,6.10⁻¹⁹" được đọc như khi viết "4.10^-8"
+   (trước đây "10⁻¹⁹" thành "10^-^1^9", không đọc được). "⁰" ngay sau chữ số là độ ("10⁰" là 10 độ,
+   không phải 1).
+2. So **sai số tương đối**, chỉ với số hữu hạn: trước đây ngưỡng tuyệt đối 10⁻⁹ cho số bịa lọt với
+   điện tích cỡ 10⁻⁹ C (đề ghi 5.10⁻¹⁰ thì 7.10⁻¹⁰ vẫn qua). Phần kiểm lời giải thích (`explain.ts`)
+   cũng bỏ ngưỡng tuyệt đối (số bịa dưới ~10⁻¹¹ từng khớp mọi số nhỏ của đề). Số tràn ("2.10⁴⁰⁰")
+   không bao giờ được coi là "có trong đề", còn trong lời giải thích thì luôn bị đánh dấu.
+3. Chữ số dính vào ký hiệu một hai chữ cái đầu từ ("q0", "q_0", "m1", "R1", "v_0") không được coi
+   là số có trong đề; "nhau10", "góc30" là từ nên vẫn đọc như trước. Chỉ áp ở phía kiểm đề.
+4. **Dấu của điện tích:** bộ lọc so trị tuyệt đối, nên `src/ai/draft.ts` kiểm thêm: dấu AI đưa ra khác
+   dấu trong đề (dấu "−" sát số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái
+   dấu", "khác dấu"), thì bảng "Tôi hiểu đề như sau" hiện cảnh báo ở dòng điện tích đó (không chặn);
+   cảnh báo còn cho tới khi dấu người học đặt khớp với đề.
+
+Như trước, lũy thừa 10 không có hệ số ("q = 10⁻⁸ C") không được đọc, và y_M = 0 không được suy từ lời
+("M nằm trên đoạn AB"): bảng hỏi người học nhập. Test so sánh với bản trước (`numbersMain.fixture.ts`):
+câu nào bản trước chặn thì bản mới cũng chặn (ngoại lệ duy nhất: hệ số với số mũ viết bằng chữ số nhỏ
+mà bản trước không đọc được), mọi giá trị của bộ đề chuẩn mà bản trước nhận thì bản mới cũng nhận, lời
+giải thích bị bản trước đánh dấu thì bản mới cũng đánh dấu (`numbers.test.ts`).
+
+**Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
+số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn
+theo số bước, không đo thời gian). Sai số ghi trên Thẻ Khoa học là một ước lượng trên do code tính:
+mỗi đường có một bản "thô" (một bước đủ thay cho hai nửa bước), và sai số là khoảng cách lớn nhất
+giữa hai bản; trong test, số này lớn hơn khoảng cách thật tới đường tính bằng DOPRI5 (rtol 10⁻¹²)
+khoảng 11 lần. Đường dừng ở điện tích, ra khỏi khung, quá dài, hoặc ở điểm E = 0 (được đánh dấu);
+đường bị cắt vì hết số bước vẽ nét đứt. Các con số (E, F) không phụ thuộc đường sức.
 
 ## 5. AI đọc đề (Giai đoạn 3)
 

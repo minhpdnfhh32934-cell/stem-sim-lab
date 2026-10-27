@@ -91,6 +91,7 @@ const vi = {
     cellStructure: 'Cấu trúc tế bào',
     circularMotion: 'Chuyển động tròn đều',
     waves: 'Sóng',
+    electricField: 'Điện trường',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -132,6 +133,7 @@ const vi = {
     cellStructure: 'Tế bào nhân sơ và nhân thực',
     uniformCircularMotion: 'Chuyển động tròn đều',
     standingWave: 'Sóng dừng trên dây',
+    electricField: 'Điện trường của điện tích điểm',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
@@ -619,6 +621,7 @@ const vi = {
     cached:
       'Đề này đã được đọc và xác nhận trước đây nên không cần gọi AI lại. Hãy kiểm tra bảng số liệu như thường lệ.',
     readAgain: 'Đọc lại bằng AI',
+    signHint: 'Kiểm tra dấu (+ hoặc −) của điện tích này so với đề.',
   },
   project: {
     privacy: 'Quyền riêng tư & dùng AI an toàn',
