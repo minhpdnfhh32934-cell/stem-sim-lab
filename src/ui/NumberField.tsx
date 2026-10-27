@@ -11,12 +11,15 @@ export function NumberField({
   value,
   onChange,
   id,
+  step,
   className = 'param__number mono',
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
   id?: string;
+  /** Arrow up / down add or remove it (as a number input did). */
+  step?: number | undefined;
   className?: string;
 }) {
   const locale = useSettingsStore((s) => s.locale);
@@ -38,8 +41,17 @@ export function NumberField({
       }}
       onChange={(e) => {
         setText(e.target.value);
-        const v = parseField(e.target.value);
+        const v = parseField(e.target.value, locale);
         if (Number.isFinite(v)) onChange(v);
+      }}
+      onKeyDown={(e) => {
+        if (!step || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+        e.preventDefault();
+        // Rounded to the step's decimals, so 0,1 + 0,2 shows 0,3.
+        const decimals = Math.max(0, -Math.floor(Math.log10(step)) + 1);
+        const next = Number((value + (e.key === 'ArrowUp' ? step : -step)).toFixed(decimals));
+        setText(fieldText(locale, next));
+        onChange(next);
       }}
     />
   );

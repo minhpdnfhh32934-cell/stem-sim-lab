@@ -117,7 +117,7 @@ function ParamRow({
               set(Number(e.target.value));
             }}
           />
-          <NumberField id={id} label={L(def.label)} value={shown} onChange={set} />
+          <NumberField id={id} label={L(def.label)} value={shown} step={def.step} onChange={set} />
           <span className="param__unit">{unitLabel(unit, locale)}</span>
         </div>
       )}

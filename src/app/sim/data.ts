@@ -1,3 +1,4 @@
+import { getUnit, isKnownUnit, sameDimension } from '@/core/units';
 import type { GraphDef, Params, PhysicsScene } from '@/physics/types';
 import { sim } from './runtime';
 
@@ -33,9 +34,17 @@ export function columnsFor(scene: PhysicsScene, label: (t: { vi: string; en: str
       seen.add(s.id);
       const unit = /\(([^)]+)\)/.exec(label(g.yLabel))?.[1] ?? '';
       const name = label(s.label);
-      // A series label may carry its own unit ("F_ms (N)"), and a list of units from the axis
-      // ("N; m/s²") belongs to no single column: append the axis unit only when it is one unit.
-      const header = name.includes('(') || unit.includes(';') || !unit ? name : `${name} (${unit})`;
+      // The last bracket of a series label is its own unit only when it reads as one ("F_ms (N)");
+      // "x (A)" or "α (chính xác)" still need the axis unit. A list of units from the axis
+      // ("N; m/s²") belongs to no single column.
+      const own = /\(([^()]*)\)\s*$/.exec(name)?.[1];
+      // "(A)" is also the ampere: a bracket counts only with the axis unit's dimension.
+      const axisDim = isKnownUnit(unit) ? getUnit(unit).dim : null;
+      const hasUnit =
+        own !== undefined &&
+        (own === unit ||
+          (isKnownUnit(own) && (axisDim === null || sameDimension(getUnit(own).dim, axisDim))));
+      const header = hasUnit || !unit || unit.includes(';') ? name : `${name} (${unit})`;
       cols.push({ id: s.id, header, value: s.value });
     }
   }
