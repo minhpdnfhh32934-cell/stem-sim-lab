@@ -17,14 +17,15 @@ export function useScrollCue() {
     const update = () => {
       el.toggleAttribute('data-more-below', moreBelow(el));
     };
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
+    // Test environments (jsdom) have no ResizeObserver; content changes still update the cue.
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
+    ro?.observe(el);
     const mo = new MutationObserver(update);
     mo.observe(el, { childList: true, subtree: true });
     el.addEventListener('scroll', update, { passive: true });
     update();
     cleanup.current = () => {
-      ro.disconnect();
+      ro?.disconnect();
       mo.disconnect();
       el.removeEventListener('scroll', update);
     };
