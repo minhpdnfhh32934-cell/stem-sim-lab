@@ -154,7 +154,7 @@ describe('Settings → AI trên máy khác', () => {
     expect(
       screen.getByText(/127\.0\.0\.1:11434, 127\.0\.0\.1:1234, 127\.0\.0\.1:8080/),
     ).toHaveTextContent(/không quét ổ đĩa, không gửi gì ra khỏi máy/);
-    expect(screen.getAllByText(/không tự chuyển sang API/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/không tự chuyển sang AI trực tuyến/).length).toBeGreaterThan(0);
     await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
     expect(client.detect).toHaveBeenCalledTimes(1);
     expect(await screen.findByText('Đang chạy · phiên bản 0.12.6')).toBeInTheDocument();
@@ -356,13 +356,15 @@ describe('Settings → AI trên máy khác', () => {
         'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. Câu hỏi cho AI Teacher đang được gửi lên mạng tới Gemini. Bấm “Dùng cho AI Teacher” để chuyển.',
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText('Đã chọn · AI Teacher đang dùng API · Gemini')).toBeInTheDocument();
+    expect(
+      screen.getByText('Đã chọn · AI Teacher đang dùng AI trực tuyến · Gemini'),
+    ).toBeInTheDocument();
     // The model's own row says the same after "Tìm trên máy này".
     await user.click(screen.getByRole('button', { name: 'Tìm trên máy này' }));
     const row = (await screen.findByRole('radio', { name: /qwen3:8b/ })).closest('article');
     expect(row).not.toBeNull();
     expect(
-      within(row as HTMLElement).getByText('Đã chọn · AI Teacher đang dùng API · Gemini'),
+      within(row as HTMLElement).getByText('Đã chọn · AI Teacher đang dùng AI trực tuyến · Gemini'),
     ).toBeInTheDocument();
     expect(within(row as HTMLElement).queryByText('Đang chọn cho AI Teacher')).toBeNull();
     // A downloaded Gemma answers: the badge names it.
@@ -562,7 +564,7 @@ describe('Settings → AI trên máy khác', () => {
     await user.click(screen.getByRole('button', { name: 'Bỏ chọn' }));
     const note = await screen.findByText(/^Đã bỏ chọn\./);
     expect(note).toHaveTextContent(
-      'Đã bỏ chọn. AI Teacher đang chọn API Gemini nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
+      'Đã bỏ chọn. AI Teacher đang chọn AI trực tuyến Gemini nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
     );
     expect(note).not.toHaveTextContent(/khuyên dùng|đang được gửi lên mạng/);
   });
