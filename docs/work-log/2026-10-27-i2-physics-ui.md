@@ -59,3 +59,9 @@
   GraphPanel (uPlot giả; trên GraphPanel của main: hỏng); chữ tiếng Anh UI-11, tên nút, "8.000 V/m".
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4417 PASS (lần này không có test chập chờn);
   E2E physics + layout + ai-flow dưới khoá chung: 39 passed (1,5 phút).
+
+## Phần B — hình trên sân khấu (nhánh `fix/70-physics-stage`, PR riêng, phụ thuộc #97)
+
+- UI-03 (viền nền, chỉ số dưới, tên mũi tên sau đầu mũi tên, v_A/v_B, a cạnh v), UI-04, UI-05 (M sau mũi tên E), UI-15, UI-23 (`SeriesDef.dash`, Eₓ và y₂ nét đứt). Test `render/draw.test.ts` (8) và `GraphPanel.test.tsx`: hỏng trên mã cũ.
+- Kiểm tra: typecheck, lint, format PASS; `npm test` 4425 PASS, 1 hỏng chập chờn (app.test Science Studio, chạy riêng PASS); E2E physics + layout + ai-flow (khoá chung) 39 passed; xem tận mắt trong app (dev server, chế độ tối): Newton, Bảo toàn cơ năng, Điện trường.
+- Chưa làm: số trục bị đường sức cắt (lưới vẽ trong src/app), dời vị trí riêng từng bài (va chạm, con lắc đơn, Newton, mặt nghiêng), biểu đồ Hoá học của UI-23.
