@@ -154,7 +154,7 @@ describe('Dogma3DView', () => {
       useDogma3D.setState({ t: keyTime(clock, 0) });
     });
     expect(caption()).toContain(
-      'Ribôxôm ở bộ ba thứ 1/7: AUG → Met (Methionine), tARN mang bộ ba đối mã UAC.',
+      'Ribosome ở bộ ba thứ 1/7: AUG → Met (Methionine), tARN mang bộ ba đối mã UAC.',
     );
     expect(screen.getByText('Chuỗi pôlipeptit: 1 axit amin')).toBeInTheDocument();
     expect(screen.getByText('Dịch mã', { selector: 'strong' })).toBeInTheDocument();
@@ -182,7 +182,7 @@ describe('Dogma3DView', () => {
     });
     // The clock writes the 2D page's step.
     expect(useDogmaStore.getState().step).toBe(3);
-    expect(caption()).toContain('Ribôxôm ở bộ ba thứ 4/7: AAA → Lys (Lysine)');
+    expect(caption()).toContain('Ribosome ở bộ ba thứ 4/7: AAA → Lys (Lysine)');
   });
 
   it('a picked base shows its name, partner, 1-based position, codon and amino acid', () => {
@@ -286,7 +286,7 @@ describe('the lesson: 3D by default, 2D keeps the codon, 2D when 3D cannot be dr
       expect(container.querySelector('.dogma3d canvas')).not.toBeNull();
     });
     expect(useDogma3D.getState().t).toBe(keyTime(clock, 4));
-    expect(caption()).toContain('Ribôxôm ở bộ ba thứ 5/7: GGC → Gly (Glycine)');
+    expect(caption()).toContain('Ribosome ở bộ ba thứ 5/7: GGC → Gly (Glycine)');
     // A place in transcription is kept when it still shows the same (first) codon.
     act(() => {
       useDogma3D.setState({ t: clock.txEnd / 3 });

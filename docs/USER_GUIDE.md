@@ -561,7 +561,7 @@ Khi dùng AI:
 - **Tế bào nhân sơ và nhân thực** (chương “Cấu trúc tế bào”): chọn **Vi khuẩn**, **Động vật** hoặc
   **Thực vật**; bấm tên một bộ phận ở khung bên phải để đọc chức năng của nó (diễn đạt theo SGK Sinh
   học 10). Nút **Hiện tên** ghi tên mọi bộ phận lên hình (chế độ Cơ bản bật sẵn). Hình 2D chỉ là
-  minh hoạ, không theo tỉ lệ; số bào quan vẽ ra chỉ để minh hoạ.
+  minh họa, không theo tỉ lệ; số bào quan vẽ ra chỉ để minh họa.
 
 ### Hình 3D trong Sinh học (bản 0.7, làm đẹp ở 0.7.1)
 
