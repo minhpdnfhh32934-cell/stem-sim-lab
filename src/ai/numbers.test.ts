@@ -53,6 +53,19 @@ describe('numbers the problem states (MASTER_PROMPT §2.1)', () => {
     expect(mentions('Xe chạy với vận tốc72 km/h.', 72)).toBe(true);
     expect(mentions('Mặt phẳng nghiêng góc30°.', 30)).toBe(true);
     expect(mentions('Điểm M(3; 0) trên trục Ox.', 0)).toBe(true);
+    // Final review: a short Vietnamese word glued to its number is a typo, not a symbol.
+    for (const [text, n] of [
+      ['Vận tốc đầu là10 m/s, gia tốc là0,5 m/s².', 10],
+      ['Vận tốc đầu là10 m/s, gia tốc là0,5 m/s².', 0.5],
+      ['Thả rơi một vật ở45 m so với mặt đất.', 45],
+      ['Vật rơi từ10 m.', 10],
+      ['Vật có5 kg.', 5],
+      ['Nhiệt độ20 °C.', 20],
+      ['Hai lực 2 N và3 N.', 3],
+      ['Tấm 2x10 cm.', 10],
+    ] as const)
+      expect(mentions(text, n), text).toBe(true);
+    expect(mentions('Hạt α2 bay vào.', 2)).toBe(false);
   });
 
   it('reads decimals and lists as main does (round 6)', () => {

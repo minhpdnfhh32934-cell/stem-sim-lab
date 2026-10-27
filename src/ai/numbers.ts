@@ -83,8 +83,11 @@ export function numberTokens(text: string): number[][] {
   return tokens;
 }
 
-/** A symbol of one or two letters at the start of a word ("q0", "q_0", "m1", "R1", "v_0"). */
-const SYMBOL_BEFORE = /(?<!\p{L})\p{L}{1,2}_?$/u;
+/**
+ * A symbol of one or two Latin or Greek letters at the start of a word ("q0", "q_0", "m1", "R1", "v_0").
+ * Vietnamese words glued to a number ("là10", "ở45", "từ10") are typos, not symbols: their numbers stay.
+ */
+const SYMBOL_BEFORE = /(?<![\p{L}\p{N}])[A-Za-z\u0391-\u03C9]{1,2}_?$/u;
 
 /**
  * All numbers mentioned in the text (absolute values; signs are interpretation). Readings that are

@@ -15,6 +15,7 @@ import {
   type PointCharge,
 } from './model';
 import { electricField } from './scenes';
+import { allowedNumbers, unknownNumbers } from '@/ai/explain';
 
 const k = C.kC;
 const frame: Frame = { xMin: -0.5, xMax: 0.5, yMin: -0.4, yMax: 0.4 };
@@ -279,6 +280,23 @@ describe('electricField scene', () => {
   });
   const answer = (p: Record<string, number>, id: string) =>
     electricField.solve(p, 'vi').answers.find((a) => a.id === id);
+
+  it("the solution steps write forces in the answers' unit, so an explanation copying a step verifies", () => {
+    const sol = electricField.solve(electricField.defaults, 'vi');
+    const allowed = allowedNumbers(sol, '');
+    for (const id of ['F', 'F12']) {
+      const a = sol.answers.find((x) => x.id === id);
+      expect(a, id).toBeDefined();
+      if (!a) continue;
+      const shown = fmtQty('vi', a.value, a.unit);
+      const label = shown.split(' ').at(-1)!;
+      expect(
+        sol.steps.some((s) => s.tex?.includes(`\\text{${label}}`)),
+        shown,
+      ).toBe(true);
+      expect(unknownNumbers(`Lực bằng ${shown}.`, allowed), shown).toEqual([]);
+    }
+  });
 
   it('engine state equals the field of the model at M, and U/d between the plates', () => {
     const engine = new FieldEngine();

@@ -27,8 +27,9 @@ const SUB = ['₁', '₂', '₃'];
 const kText = (locale: Locale) =>
   `${formatNumber(locale, Number((C.kC / 1e9).toPrecision(4)))}·10⁹ N·m²/C²`;
 /**
- * Unit of a force for display: µN below 1 mN, mN below 1 N, else N — the shown number is ≥ 1 in its
- * unit, so it never has the 4+ decimals ("0,000719", "0,3595") the explanation check misreads.
+ * Unit of a force for display and in the solution steps: µN below 1 mN, mN below 1 N, else N. From
+ * 1 µN up the shown number is ≥ 1 in its unit, so it never has the 4+ decimals ("0,000719") the
+ * explanation check misreads; a smaller force (an electron in a weak field) still shows decimals.
  */
 const forceUnit = (f: number) => (Math.abs(f) < 1e-3 ? 'uN' : Math.abs(f) < 1 ? 'mN' : 'N');
 
@@ -159,7 +160,7 @@ function solvePlates(p: Params, locale: Locale): Solution {
         `Lực điện lên điện tích thử q₀ (${forceDir(s.q0).vi}):`,
         `Electric force on the test charge q₀ (${forceDir(s.q0).en}):`,
       ),
-      tex: `F = |q_0|\\,E = ${Q(Math.abs(s.q0), 'C')} \\cdot ${Q(e, 'V/m')} = ${Q(f, 'N')}`,
+      tex: `F = |q_0|\\,E = ${Q(Math.abs(s.q0), 'C')} \\cdot ${Q(e, 'V/m')} = ${Q(f, forceUnit(f))}`,
     },
   ];
   return {
@@ -218,7 +219,7 @@ function solve(p: Params, locale: Locale): Solution {
         `Lực điện lên điện tích thử q₀ đặt tại M (${forceDir(s.q0).vi}):`,
         `Electric force on a test charge q₀ at M (${forceDir(s.q0).en}):`,
       ),
-      tex: `F = |q_0|\\,E = ${Q(Math.abs(s.q0), 'C')} \\cdot ${Q(e, 'V/m')} = ${Q(f, 'N')}`,
+      tex: `F = |q_0|\\,E = ${Q(Math.abs(s.q0), 'C')} \\cdot ${Q(e, 'V/m')} = ${Q(f, forceUnit(f))}`,
     },
   );
   const answers: Answer[] = [
@@ -254,7 +255,7 @@ function solve(p: Params, locale: Locale): Solution {
         `Lực tương tác giữa q₁ và q₂ (định luật Coulomb; ${kind.vi}):`,
         `Force between q₁ and q₂ (Coulomb's law; ${kind.en}):`,
       ),
-      tex: `F_{12} = k\\frac{|q_1 q_2|}{r_{12}^2} = \\frac{${N(s.k)} \\cdot ${N(Math.abs(a.q))} \\cdot ${N(Math.abs(b.q))}}{(${N(r)})^2} = ${Q(f12, 'N')}`,
+      tex: `F_{12} = k\\frac{|q_1 q_2|}{r_{12}^2} = \\frac{${N(s.k)} \\cdot ${N(Math.abs(a.q))} \\cdot ${N(Math.abs(b.q))}}{(${N(r)})^2} = ${Q(f12, forceUnit(f12))}`,
     });
     answers.push({
       id: 'F12',
