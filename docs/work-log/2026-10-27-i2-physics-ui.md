@@ -71,3 +71,4 @@
 - UI-03 (viền nền, chỉ số dưới, tên mũi tên sau đầu mũi tên, v_A/v_B, a cạnh v), UI-04, UI-05 (M sau mũi tên E), UI-15, UI-23 (`SeriesDef.dash`, Eₓ và y₂ nét đứt). Test `render/draw.test.ts` (8) và `GraphPanel.test.tsx`: hỏng trên mã cũ.
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4425 PASS, 1 hỏng chập chờn (app.test Science Studio, chạy riêng PASS); E2E physics + layout + ai-flow (khoá chung) 39 passed; xem tận mắt trong app (dev server, chế độ tối): Newton, Bảo toàn cơ năng, Điện trường.
 - Chưa làm: số trục bị đường sức cắt (lưới vẽ trong src/app), dời vị trí riêng từng bài (va chạm, con lắc đơn, Newton, mặt nghiêng), biểu đồ Hoá học của UI-23.
+- Duyệt #100 (2 🟡): viền chữ dùng màu sân khấu `--bg-stage` (`ThemeColors.stage`), dấu +/− của điện tích không có viền, y₂ trên đồ thị chấm [3, 4] như sân khấu. 3 test mới hỏng trên mã cũ.
