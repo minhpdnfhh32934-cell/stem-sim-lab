@@ -1,8 +1,12 @@
 import type { GraphDef, Params, PhysicsScene } from '@/physics/types';
 import { sim } from './runtime';
 
-/** Builds uPlot data arrays [t, s1, s2, …] from the recorded history. */
-export function graphData(graph: GraphDef, p: Params, maxPoints = 1500): number[][] {
+/**
+ * Builds uPlot data arrays [t, s1, s2, …] from the recorded history: recorded states only, at
+ * most `maxPoints` of them (every k-th). 4000 keeps ≥ 15 points per period of a 0,3 s
+ * oscillation over a minute at ×1 (UI-22); 1500 left 6, so peaks looked angular.
+ */
+export function graphData(graph: GraphDef, p: Params, maxPoints = 4000): number[][] {
   const h = sim.history;
   const n = h.length;
   const stride = Math.max(1, Math.ceil(n / maxPoints));

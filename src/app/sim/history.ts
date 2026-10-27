@@ -1,18 +1,31 @@
 /**
- * Recorded simulation states for graphs, the data table and scrubbing ("tua").
- * Samples are stored at a fixed minimum spacing of simulated time; when the buffer is
- * full, every other sample is dropped (so long runs keep their overall shape).
+ * Recorded simulation states for graphs, the data table and scrubbing ("tua"). Every sample is
+ * a state the engine computed (never interpolated). Samples are at least `baseSpacing` of
+ * screen time apart: that much simulated time × the playback speed, so slow motion (×0,1) keeps
+ * ten times more samples per second of simulation (UI-22: a 25 Hz wave got ~5 per period).
+ * When the buffer is full, every other sample is dropped (long runs keep their overall shape).
  */
 export class History {
   readonly times: number[] = [];
   readonly states: Float64Array[] = [];
-  private spacing: number;
+  /** Playback speed (×0,1 … ×1000) the spacing follows. */
+  private timeScale = 1;
+  /** 2ⁿ after n decimations. */
+  private level = 1;
 
   constructor(
     private readonly baseSpacing = 1 / 120,
     private readonly maxSamples = 12000,
-  ) {
-    this.spacing = baseSpacing;
+  ) {}
+
+  /** Minimum simulated time between two samples. */
+  private get spacing(): number {
+    return this.baseSpacing * this.timeScale * this.level;
+  }
+
+  /** Follows the playback speed from the next sample on (samples already kept stay). */
+  setTimeScale(speed: number): void {
+    if (Number.isFinite(speed) && speed > 0) this.timeScale = speed;
   }
 
   get length(): number {
@@ -26,7 +39,7 @@ export class History {
   clear(): void {
     this.times.length = 0;
     this.states.length = 0;
-    this.spacing = this.baseSpacing;
+    this.level = 1;
   }
 
   /** Adds a sample if enough simulated time has passed since the previous one. */
@@ -55,7 +68,7 @@ export class History {
     }
     this.times.splice(0, this.times.length, ...keepT);
     this.states.splice(0, this.states.length, ...keepS);
-    this.spacing *= 2;
+    this.level *= 2;
   }
 
   /** Removes samples after time t (used when resuming from a scrubbed point). */

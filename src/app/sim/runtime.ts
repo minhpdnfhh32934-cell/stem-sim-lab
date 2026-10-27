@@ -159,6 +159,7 @@ class SimRuntime {
     const out = this.renderState ?? new Float64Array(f.curr.length);
     lerpState(f.prev, f.curr, f.alpha, out);
     this.renderState = out;
+    this.history.setTimeScale(useWorkspaceStore.getState().speed);
     this.history.push(f.t, f.curr, f.stats.finished);
 
     const store = useSimStore.getState();
