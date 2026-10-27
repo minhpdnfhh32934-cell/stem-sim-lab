@@ -259,6 +259,23 @@ export const CHALLENGES: readonly Challenge[] = [
       'The frequency is proportional to the wave speed v = √(F/μ). To double v, how many times larger must the tension F be?',
     ),
   },
+  {
+    id: 'electricField.plates8000',
+    topic: 'electricField',
+    title: L('Điện trường đều 8000 V/m', 'A uniform field of 8000 V/m'),
+    task: L(
+      'Giữ khoảng cách hai bản 2 cm, chỉnh hiệu điện thế U để điện trường giữa hai bản đúng 8000 V/m.',
+      'Keeping the plates 2 cm apart, set the voltage U so that the field between them is exactly 8000 V/m.',
+    ),
+    controls: ['U'],
+    // mode 1 = "Tụ điện phẳng".
+    start: { mode: 1 },
+    goal: { answer: 'E', kind: 'target', value: 8000, tol: 25 },
+    hint: L(
+      'Hiệu điện thế tăng gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
+      'If the voltage doubles, how does the field between the plates change?',
+    ),
+  },
 ];
 
 export function challengesFor(topic: string): Challenge[] {

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { DIM } from '@/core/units';
 import { loadScene } from '@/physics/registry';
+import type { PhysicsScene } from '@/physics/types';
 import { buildDraft, impliedByWords } from './draft';
 import type { Extraction } from './spec';
 
@@ -154,5 +156,89 @@ describe('values stated in words (MASTER_PROMPT §2.1)', () => {
     const third = buildDraft(pulley, extraction('muK', 0, 'nhẵn'), smooth, 9.81);
     expect(third.sources.muK).toBe('problem');
     expect(third.issues.filter((i) => i.key === 'muK')).toEqual([]);
+  });
+});
+
+describe('the sign of a charge (trap 3 of #37 §8.2)', () => {
+  // A stand-in scene: the electric-field topic itself comes with #76 stage 2.
+  const scene = {
+    id: 'chargeStub',
+    params: [
+      {
+        key: 'q1',
+        label: { vi: 'q₁', en: 'q₁' },
+        symbol: 'q_1',
+        kind: 'number',
+        dim: DIM.charge,
+        unit: 'uC',
+        min: -10,
+        max: 10,
+      },
+    ],
+    defaults: { q1: 1e-6 },
+    required: [],
+  } as unknown as PhysicsScene;
+  const charge = (value: number, unit: string, quote: string): Extraction => ({
+    quantities: [{ key: 'q1', value, unit, quote }],
+    questions: [],
+    assumptions: [],
+    unsupported_parts: [],
+    clarifications: [],
+  });
+  const flagged = (text: string, value: number, unit: string, quote: string) =>
+    buildDraft(scene, charge(value, unit, quote), text, 9.81).issues.some(
+      (i) => i.kind === 'signMismatch' && i.key === 'q1' && !i.blocking,
+    );
+
+  it('flags a sign the AI changed, keeps the value for the learner to confirm', () => {
+    const text = 'Điện tích q₁ = −2 µC đặt tại A.';
+    expect(flagged(text, 2, 'uC', 'q₁ = −2 µC')).toBe(true);
+    expect(flagged(text, -2, 'uC', 'q₁ = −2 µC')).toBe(false);
+    expect(buildDraft(scene, charge(2, 'uC', 'q₁ = −2 µC'), text, 9.81).params.q1).toBeCloseTo(
+      2e-6,
+      15,
+    );
+    expect(flagged('Điện tích âm q₁ = 1.10⁻⁸ C.', 1e-8, 'C', 'q₁ = 1.10⁻⁸ C')).toBe(true);
+    expect(flagged('Điện tích q₁ = 1.10⁻⁸ C.', -1e-8, 'C', 'q₁ = 1.10⁻⁸ C')).toBe(true);
+    expect(flagged('Điện tích q₁ = 1.10⁻⁸ C.', 1e-8, 'C', 'q₁ = 1.10⁻⁸ C')).toBe(false);
+  });
+
+  it('asks for confirmation when the problem leaves the sign open', () => {
+    expect(flagged('Hai điện tích trái dấu có độ lớn 2 µC.', 2, 'uC', 'độ lớn 2 µC')).toBe(true);
+  });
+});
+
+describe('point M of the electric field (#89 decision: no y_M from words)', () => {
+  const extract = (value: number, quote: string): Extraction => ({
+    quantities: [{ key: 'yP', value, unit: 'cm', quote }],
+    questions: [],
+    assumptions: [],
+    unsupported_parts: [],
+    clarifications: [],
+  });
+  it('refuses y_M = 0 when the problem only says "M nằm trên đoạn AB"; reads a written 0', async () => {
+    const scene = await loadScene('electricField');
+    const onAB =
+      'Hai điện tích q1 = 2 µC, q2 = 8 µC tại A, B; AB = 30 cm. Điểm M nằm trên đoạn AB.';
+    const refused = buildDraft(scene, extract(0, 'M nằm trên đoạn AB'), onAB, 9.81);
+    expect(refused.issues.some((i) => i.kind === 'notInText' && i.key === 'yP')).toBe(true);
+    const zero =
+      'Hai điện tích q1 = 2 µC, q2 = 8 µC tại A(0; 0), B(30; 0) cm. Xét điểm M(3; 0) cm.';
+    const read = buildDraft(scene, extract(0, 'M(3; 0)'), zero, 9.81);
+    expect(read.issues.filter((i) => i.blocking)).toEqual([]);
+    expect(read.sources.yP).toBe('problem');
+  });
+
+  it('keeps every words rule of main, with a number or a name before the phrase', () => {
+    const cases: [string, number, string, string][] = [
+      ['v0', 0, 'đứng yên', 'Quả cầu 2 đứng yên trên mặt bàn.'],
+      ['v0', 0, 'đứng yên', 'Viên bi m2 đứng yên.'],
+      ['vB', 0, 'bắt đầu chuyển động', 'Xe 2 bắt đầu chuyển động từ B.'],
+      ['e', 0, 'dính vào nhau', 'Vật 1 và vật 2 dính vào nhau sau va chạm.'],
+      ['muK', 0, 'bỏ qua ma sát', 'Lấy g = 10 m/s² bỏ qua ma sát.'],
+    ];
+    for (const [key, value, quote, text] of cases) {
+      expect(impliedByWords(key, value, quote, text), text).toBe(true);
+    }
   });
 });

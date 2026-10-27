@@ -55,4 +55,21 @@ describe('units', () => {
     // Display of existing Hz answers (spring frequency, damping rate γ) is unchanged.
     expect(fromSI(2, 'Hz')).toBe(2);
   });
+
+  it('reads the electric-field units (#76): charge, field, voltage, small forces, Coulomb k', () => {
+    expect(toSI(40, 'nC')).toBeCloseTo(4e-8, 20);
+    expect(convert(1, 'uC', 'nC')).toBeCloseTo(1000, 9);
+    expect(convert(5, 'kV/m', 'V/m')).toBe(5000);
+    expect(getUnit('N/C').symbol).toBe('V/m');
+    expect(toSI(2, 'kV')).toBe(2000);
+    expect(convert(3, 'mN', 'uN')).toBeCloseTo(3000, 9);
+    expect(getUnit('µN').symbol).toBe('uN');
+    expect(getUnit('N·m²/C²').symbol).toBe('N*m^2/C^2');
+    expect(unitLabel('N*m^2/C^2')).toBe('N·m²/C²');
+    expect(unitLabel('uN')).toBe('µN');
+    expect(unitsFor(DIM.electricField)).toEqual(['V/m', 'kV/m']);
+    expect(unitsFor(DIM.charge)).toEqual(['C', 'uC', 'nC']);
+    // V/m and N/C are one unit: k·q/r² (N·m²/C² · C / m²) is N/C.
+    expect(() => convert(1, 'V/m', 'N')).toThrow(UnitError);
+  });
 });

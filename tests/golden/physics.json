@@ -1353,6 +1353,212 @@
       "expectUnsupportedParts": true
     },
     {
+      "id": "efd-01",
+      "text": "Một điện tích điểm q = 4.10⁻⁸ C đặt trong không khí. Lấy k = 9.10⁹ N.m²/C². Tính cường độ điện trường tại điểm M cách điện tích 3 cm.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "q1",
+          "value": 4e-08,
+          "unit": "C",
+          "quote": "q = 4.10⁻⁸ C"
+        },
+        {
+          "key": "k",
+          "value": 9000000000.0,
+          "unit": "N*m^2/C^2",
+          "quote": "k = 9.10⁹ N.m²/C²"
+        },
+        {
+          "key": "xP",
+          "value": 3,
+          "unit": "cm",
+          "quote": "cách điện tích 3 cm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "E": 400000.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-02",
+      "text": "Hai điện tích điểm q₁ = 2 µC và q₂ = −8 µC đặt tại hai điểm A và B trong không khí, cách nhau 30 cm. Tính lực tương tác giữa hai điện tích và cường độ điện trường tại điểm M nằm trên đoạn AB, cách A 10 cm.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "q1",
+          "value": 2,
+          "unit": "uC",
+          "quote": "q₁ = 2 µC"
+        },
+        {
+          "key": "q2",
+          "value": -8,
+          "unit": "uC",
+          "quote": "q₂ = −8 µC"
+        },
+        {
+          "key": "x2",
+          "value": 30,
+          "unit": "cm",
+          "quote": "cách nhau 30 cm"
+        },
+        {
+          "key": "xP",
+          "value": 10,
+          "unit": "cm",
+          "quote": "cách A 10 cm"
+        }
+      ],
+      "missing": [
+        "yP"
+      ],
+      "answers": {
+        "F12": 1.5977869842081418,
+        "E": 3595020.714468318
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-03",
+      "text": "Một điện tích điểm Q = 10⁻⁸ C đặt tại điểm O trong không khí. Đặt một điện tích thử q = −2 nC tại điểm M cách O 5 cm. Tính cường độ điện trường tại M và độ lớn lực điện tác dụng lên điện tích thử.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "n",
+          "value": 1,
+          "unit": "1",
+          "quote": "Một điện tích điểm"
+        },
+        {
+          "key": "q0",
+          "value": -2,
+          "unit": "nC",
+          "quote": "q = −2 nC"
+        },
+        {
+          "key": "xP",
+          "value": 5,
+          "unit": "cm",
+          "quote": "cách O 5 cm"
+        }
+      ],
+      "missing": [
+        "q1"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-04",
+      "text": "Hai bản kim loại phẳng song song đặt cách nhau 4 cm, hiệu điện thế giữa hai bản là 200 V. Một hạt bụi mang điện tích 3 nC nằm giữa hai bản. Tính cường độ điện trường giữa hai bản và độ lớn lực điện tác dụng lên hạt bụi.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 1,
+          "unit": "1",
+          "quote": "Hai bản kim loại phẳng song song"
+        },
+        {
+          "key": "d",
+          "value": 4,
+          "unit": "cm",
+          "quote": "cách nhau 4 cm"
+        },
+        {
+          "key": "U",
+          "value": 200,
+          "unit": "V",
+          "quote": "hiệu điện thế giữa hai bản là 200 V"
+        },
+        {
+          "key": "q0",
+          "value": 3,
+          "unit": "nC",
+          "quote": "điện tích 3 nC"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "E": 5000.0,
+        "F": 1.4999999999999999e-05
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-05",
+      "text": "Hai điện tích điểm q₁ = 4.10⁻⁸ C và q₂ = −4.10⁻⁸ C đặt tại A và B trong không khí, AB = 6 cm. Tính cường độ điện trường tại điểm M nằm trên đường thẳng AB, ngoài đoạn AB về phía A và cách A 3 cm.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "q1",
+          "value": 4e-08,
+          "unit": "C",
+          "quote": "q₁ = 4.10⁻⁸ C"
+        },
+        {
+          "key": "q2",
+          "value": -4e-08,
+          "unit": "C",
+          "quote": "q₂ = −4.10⁻⁸ C"
+        },
+        {
+          "key": "x2",
+          "value": 6,
+          "unit": "cm",
+          "quote": "AB = 6 cm"
+        },
+        {
+          "key": "xP",
+          "value": -3,
+          "unit": "cm",
+          "quote": "cách A 3 cm"
+        }
+      ],
+      "missing": [
+        "yP"
+      ],
+      "answers": {
+        "E": 355063.77426847594,
+        "Ex": -355063.77426847594
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "efd-06",
+      "text": "Hai điện tích điểm q₁ = q₂ = 2.10⁻⁸ C đặt tại A và B trong không khí, AB = 5 cm. Tính cường độ điện trường tại điểm M cách A 3 cm và cách B 4 cm.",
+      "topic": "electricField",
+      "quantities": [
+        {
+          "key": "q1",
+          "value": 2e-08,
+          "unit": "C",
+          "quote": "q₁ = q₂ = 2.10⁻⁸ C"
+        },
+        {
+          "key": "q2",
+          "value": 2e-08,
+          "unit": "C",
+          "quote": "q₁ = q₂ = 2.10⁻⁸ C"
+        },
+        {
+          "key": "x2",
+          "value": 5,
+          "unit": "cm",
+          "quote": "AB = 5 cm"
+        }
+      ],
+      "missing": [
+        "xP",
+        "yP"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ng-01",
       "text": "Một mạch điện gồm điện trở 10 Ω mắc vào hai cực của một nguồn điện có hiệu điện thế 12 V. Tính cường độ dòng điện chạy qua điện trở.",
       "topic": "unsupported",

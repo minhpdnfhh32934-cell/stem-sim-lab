@@ -314,6 +314,15 @@ Progress log: `docs/PROGRESS.md`.
   never rounds 2Lf/v beyond 1e-9·max(1, m), `ratioDigits`), `engine.ts` (mode = find f / v / n, v
   typed or √(F/μ); closed form at t = i·Δt; DOPRI5 `latticeAt` / `latticeFrequency` on the
   method-of-lines wave equation), `scenes.ts`, `draw.ts` (labelled vertical stretch). Units kg/m, g/m.
+- Electric field (`src/physics/field/`, 0.8.0, #76): `model.ts` (Coulomb, superposition, plates,
+  `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
+  step doubling; the card's error is an upper estimate from a coarse copy of each line, checked
+  against DOPRI5), `engine.ts` (static), `draw.ts` (lines traced once per parameter change),
+  `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` = main's reader
+  plus four changes only (#89 final scope): a superscript run is one exponent ("4.10⁻⁸"; "⁰" after a
+  digit is a degree), relative comparison of finite numbers (also `known` in `explain.ts`), digits
+  of a 1–2-letter symbol (q0, R1, v_0) dropped in `numbersIn`/`mentions` only, and `writtenSign` →
+  `draft.ts` `signMismatch`. A bare power ("10⁻⁸") is not read and y_M is never taken from words.
 
 ## AI layer (Phase 3)
 

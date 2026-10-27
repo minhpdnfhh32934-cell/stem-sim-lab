@@ -20,6 +20,7 @@ const SCENES: Record<string, () => Promise<PhysicsScene>> = {
   obliqueProjectile: () => import('./projectile/scenes').then((m) => m.obliqueProjectile),
   uniformCircularMotion: () => import('./circular/scenes').then((m) => m.uniformCircularMotion),
   standingWave: () => import('./wave/scenes').then((m) => m.standingWave),
+  electricField: () => import('./field/scenes').then((m) => m.electricField),
 };
 
 export function hasScene(topicId: string): boolean {

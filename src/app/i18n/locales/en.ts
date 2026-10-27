@@ -88,6 +88,7 @@ const en: Messages = {
     cellStructure: 'Cell structure',
     circularMotion: 'Uniform circular motion',
     waves: 'Waves',
+    electricField: 'Electric field',
   },
   topics: {
     uniformMotion: 'Uniform linear motion',
@@ -129,6 +130,7 @@ const en: Messages = {
     cellStructure: 'Prokaryotic and eukaryotic cells',
     uniformCircularMotion: 'Uniform circular motion',
     standingWave: 'Standing waves on a string',
+    electricField: 'Electric field of point charges',
   },
   stage: {
     regionLabel: 'Simulation stage',
@@ -617,6 +619,7 @@ const en: Messages = {
     cached:
       'This problem was read and confirmed before, so the AI is not called again. Check the table as usual.',
     readAgain: 'Read again with AI',
+    signHint: 'Check the sign (+ or −) of this charge against the problem.',
   },
   project: {
     privacy: 'Privacy & safe AI use',
