@@ -13,7 +13,7 @@ import {
   type ParsedEquation,
 } from '../balance';
 import { matchLibrary } from '../data/reactions';
-import { formatEquationText, formatFormula } from '../formula';
+import { formatFormula } from '../formula';
 import { selectReaction, useReactionStore } from './store';
 import '../chem.css';
 
@@ -48,15 +48,6 @@ const CARD: ScienceCardData = {
   ],
 };
 
-const EXAMPLES = [
-  'Fe + O2 -> Fe2O3',
-  'C3H8 + O2 -> CO2 + H2O',
-  'KMnO4 + HCl -> KCl + MnCl2 + Cl2 + H2O',
-  'Cu + HNO3 -> Cu(NO3)2 + NO + H2O',
-  'MnO4^- + Fe^2+ + H^+ -> Mn^2+ + Fe^3+ + H2O',
-  'FeS2 + O2 -> Fe2O3 + SO2',
-];
-
 type Outcome =
   | { kind: 'empty' }
   | { kind: 'error'; message: string }
@@ -66,9 +57,6 @@ export function BalanceStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
   const text = useReactionStore((s) => s.equation);
-  const setText = (equation: string) => {
-    useReactionStore.setState({ equation });
-  };
   const outcome = useMemo<Outcome>(() => {
     if (!text.trim()) return { kind: 'empty' };
     try {
@@ -88,32 +76,10 @@ export function BalanceStage() {
           value={text}
           spellCheck={false}
           onChange={(e) => {
-            setText(e.target.value);
+            useReactionStore.setState({ equation: e.target.value });
           }}
         />
       </label>
-      <p className="small muted">
-        {Lz(
-          L(
-            'Dùng “->” hoặc “=” giữa hai vế, “ + ” (có dấu cách) giữa các chất. Điện tích: Fe^3+, SO4^2-, NH4+, OH-; electron: e-. Ngoặc: Ca(OH)2, K4[Fe(CN)6]; ngậm nước: CuSO4·5H2O.',
-            'Use “->” or “=” between the sides and “ + ” (with spaces) between species. Charges: Fe^3+, SO4^2-, NH4+, OH-; electron: e-. Brackets: Ca(OH)2, K4[Fe(CN)6]; hydrates: CuSO4·5H2O.',
-          ),
-        )}
-      </p>
-      <div className="mol-chips" role="group" aria-label={Lz(L('Ví dụ', 'Examples'))}>
-        {EXAMPLES.map((ex) => (
-          <button
-            key={ex}
-            type="button"
-            aria-pressed={ex === text}
-            onClick={() => {
-              setText(ex);
-            }}
-          >
-            {formatEquationText(ex)}
-          </button>
-        ))}
-      </div>
       {outcome.kind === 'error' && (
         <p className="chem-note chem-note--warn" role="alert">
           <CircleAlert size={15} strokeWidth={1.75} aria-hidden="true" />

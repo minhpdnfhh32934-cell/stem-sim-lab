@@ -969,3 +969,11 @@
 .pt__search {
   min-height: var(--target);
 }
+/* UI-29: 118 tiles do not fit at 40 px on a mouse screen; on touch they grow like icon buttons. */
+@media (any-pointer: coarse) {
+  .pt__grid {
+    grid-template-rows:
+      auto repeat(7, minmax(var(--target), auto)) 8px
+      repeat(2, minmax(var(--target), auto));
+  }
+}
