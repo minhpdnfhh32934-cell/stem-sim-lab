@@ -13,14 +13,14 @@ import {
   type ParsedEquation,
 } from '../balance';
 import { matchLibrary } from '../data/reactions';
-import { formatFormula } from '../formula';
+import { formatEquationText, formatFormula } from '../formula';
 import { selectReaction, useReactionStore } from './store';
 import '../chem.css';
 
 const CARD: ScienceCardData = {
   title: L('Cân bằng phương trình hóa học', 'Balancing chemical equations'),
   model: L(
-    'Bảo toàn số nguyên tử của từng nguyên tố và bảo toàn điện tích tạo thành hệ phương trình tuyến tính thuần nhất; hệ số cân bằng là vectơ nguyên dương nhỏ nhất trong không gian nghiệm (null space). Tính bằng số hữu tỉ chính xác, không làm tròn.',
+    'Bảo toàn số nguyên tử của từng nguyên tố và bảo toàn điện tích tạo thành hệ phương trình tuyến tính thuần nhất; hệ số cân bằng là vectơ nguyên dương nhỏ nhất trong không gian nghiệm của hệ. Tính bằng số hữu tỉ chính xác, không làm tròn.',
     'Conservation of each element and of charge gives a homogeneous linear system; the coefficients are the smallest positive integer vector of its null space. Exact rational arithmetic, no rounding.',
   ),
   equations: [{ tex: 'A\\,\\vec{x} = \\vec{0},\\quad x_i \\in \\mathbb{Z}_{>0}' }],
@@ -35,7 +35,10 @@ const CARD: ScienceCardData = {
     ),
   ],
   confidence: 'exact',
-  confidenceNote: L('Đại số tuyến tính chính xác (BigInt).', 'Exact linear algebra (BigInt).'),
+  confidenceNote: L(
+    'Đại số tuyến tính chính xác với số nguyên lớn, không làm tròn.',
+    'Exact linear algebra with big integers, no rounding.',
+  ),
   userIntervened: false,
   sources: [
     {
@@ -107,7 +110,7 @@ export function BalanceStage() {
               setText(ex);
             }}
           >
-            {ex}
+            {formatEquationText(ex)}
           </button>
         ))}
       </div>

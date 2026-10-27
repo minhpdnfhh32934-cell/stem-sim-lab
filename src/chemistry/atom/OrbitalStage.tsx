@@ -13,8 +13,8 @@ import '../chem.css';
 const CARD: ScienceCardData = {
   title: L('Orbital của nguyên tử hydro', 'Hydrogen atom orbitals'),
   model: L(
-    'Nghiệm giải tích của phương trình Schrödinger cho nguyên tử hydro: ψ = R_nl(r)·Y_lm(θ, φ) (dạng orbital thực). Hình là lát cắt qua hạt nhân.',
-    'Analytic solution of the Schrödinger equation for hydrogen: ψ = R_nl(r)·Y_lm(θ, φ) (real orbitals). The picture is a slice through the nucleus.',
+    'Nghiệm giải tích của phương trình Schrödinger cho nguyên tử hydro: ψ = Rₙₗ(r)·Yₗₘ(θ, φ) (dạng orbital thực). Hình là lát cắt qua hạt nhân.',
+    'Analytic solution of the Schrödinger equation for hydrogen: ψ = Rₙₗ(r)·Yₗₘ(θ, φ) (real orbitals). The picture is a slice through the nucleus.',
   ),
   equations: [
     {

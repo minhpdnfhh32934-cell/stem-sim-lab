@@ -2,7 +2,7 @@ import { useLocalized } from '@/app/i18n/localized';
 import { cx } from '@/ui/cx';
 import { L } from '../common';
 import { bondChanges, reactionById, sideTotals } from '../data/reactions';
-import { FRAME_KIND } from './labels';
+import { kindNote } from './labels';
 import { useReactionStore } from './store';
 
 /** Mechanism steps with the bonds that break/form, or the conservation table. */
@@ -59,6 +59,7 @@ export function ReactionBottom() {
       <ol className="rx-steps">
         {mech.frames.map((f, i) => {
           const next = mech.frames[i + 1];
+          const note = kindNote(f.label, f.kind);
           const changes = next ? [...bondChanges(f, next)] : [];
           const list = (kind: string) =>
             changes
@@ -81,8 +82,8 @@ export function ReactionBottom() {
               >
                 <strong>
                   {i + 1}. {Lz(f.label)}
-                </strong>{' '}
-                <span className="muted">({Lz(FRAME_KIND[f.kind])})</span>
+                </strong>
+                {note && <span className="muted"> ({Lz(note)})</span>}
               </button>
               <p className="small">{Lz(f.description)}</p>
               {next && (broken || formed || changed) && (

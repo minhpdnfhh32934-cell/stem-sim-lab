@@ -29,8 +29,8 @@ function cardFor(mode: GasMode): ScienceCardData {
     return {
       title: L('Phân bố Maxwell–Boltzmann (khí 2D)', 'Maxwell–Boltzmann distribution (2D gas)'),
       model: L(
-        'Mô phỏng động lực học phân tử; phân bố tốc độ tự thiết lập qua va chạm và được so với lý thuyết cho khí HAI chiều.',
-        'Molecular dynamics; the speed distribution builds up through collisions and is compared with the theory for a TWO-dimensional gas.',
+        'Mô phỏng động lực học phân tử; phân bố tốc độ tự thiết lập qua va chạm và được so với lý thuyết cho khí hai chiều.',
+        'Molecular dynamics; the speed distribution builds up through collisions and is compared with the theory for a two-dimensional gas.',
       ),
       equations: [
         {
@@ -68,7 +68,7 @@ function cardFor(mode: GasMode): ScienceCardData {
   return {
     title: L('Thuyết va chạm', 'Collision theory'),
     model: L(
-      'Phản ứng A + B → C + D chỉ xảy ra khi va chạm có năng lượng theo phương nối tâm ≥ Eₐ (mô hình line-of-centres). Phản ứng giả định đẳng nhiệt (ΔH = 0) để khí giữ nguyên nhiệt độ.',
+      'Phản ứng A + B → C + D chỉ xảy ra khi va chạm có năng lượng theo phương nối tâm ≥ Eₐ (mô hình đường nối tâm). Phản ứng giả định đẳng nhiệt (ΔH = 0) để khí giữ nguyên nhiệt độ.',
       'A + B → C + D happens only when the collision energy along the line of centres is ≥ Eₐ (line-of-centres model). The reaction is taken as thermoneutral (ΔH = 0) so the gas keeps its temperature.',
     ),
     equations: [
