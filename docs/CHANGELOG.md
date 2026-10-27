@@ -39,6 +39,11 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - "Phòng thí nghiệm" nay tên là "Virtual Lab" ở cả tiếng Việt và tiếng Anh.
 - Máy đang chạy 0.7.1 cần cài bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app.
 
+### Known Issues
+
+- Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
+- Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
+
 ## [0.7.1] - 2026-10-22
 
 _Phát hành 22/10/2026 từ main @ 49c4d6a (lượt Release 39769849056). Phần web và phần lõi cùng số 0.7.1, nên ứng dụng 0.7.0 được báo cài bộ cài mới thay vì cập nhật trong app. Không bắt buộc cập nhật (minRequired để trống)._

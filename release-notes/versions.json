@@ -306,7 +306,16 @@
           }
         ],
         "deprecated": [],
-        "knownIssues": []
+        "knownIssues": [
+          {
+            "vi": "Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.",
+            "en": "Genetic drift in 3D: with many islands, three name leader lines on the left still cross one island."
+          },
+          {
+            "vi": "Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.",
+            "en": "Where each lesson sits in Grade 10 · 11 · 12 comes from the Kết nối tri thức tables of contents and is waiting for a teacher’s review."
+          }
+        ]
       },
       "notesReady": false,
       "learnerHighlights": [

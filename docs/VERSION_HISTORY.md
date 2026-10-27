@@ -124,6 +124,11 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - "Phòng thí nghiệm" nay tên là "Virtual Lab" ở cả tiếng Việt và tiếng Anh.
 - Máy đang chạy 0.7.1 cần cài bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app.
 
+**Vấn đề đã biết**
+
+- Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
+- Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
+
 **Điểm nổi bật trong app**
 
 - Bài mới: Chuyển động tròn đều, Sóng dừng trên dây, Điện trường của điện tích điểm và Tế bào nhân sơ, nhân thực.
@@ -1320,7 +1325,8 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 
 ### Vấn đề đã biết của bản mới nhất (0.8.0, Đang xét duyệt)
 
-Chưa có mục nào.
+- Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
+- Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 
