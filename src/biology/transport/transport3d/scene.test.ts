@@ -138,6 +138,19 @@ describe('3D diffusion scene', () => {
     sc2.dispose();
   });
 
+  it('"Hạt chất tan" never points at a particle inside a pore (UI-49)', () => {
+    const m = diffusionModel3d(inputs());
+    const sc = buildDiffusionScene(m, opts());
+    const xm = sc.plan.layout.xm;
+    // Early on, side 2 holds only particles that have just crossed (some still in a pore).
+    for (let k = 0; k <= 400; k++) {
+      sc.setFrame(diffusionFrameAt(m, (m.tEnd * k) / 1600), true);
+      const p = sc.labelAnchors().find((a) => a.id === 'particle')?.point;
+      if (p) expect(Math.abs(p[0] - xm)).toBeGreaterThan(BOX.mh);
+    }
+    sc.dispose();
+  });
+
   it('names its parts and puts each side’s count over it', () => {
     const m = diffusionModel3d(inputs());
     const sc = buildDiffusionScene(m, opts());
