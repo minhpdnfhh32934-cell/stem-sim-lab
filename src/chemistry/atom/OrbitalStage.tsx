@@ -17,8 +17,10 @@ const CARD: ScienceCardData = {
     'Analytic solution of the Schrödinger equation for hydrogen: ψ = Rₙₗ(r)·Yₗₘ(θ, φ) (real orbitals). The picture is a slice through the nucleus.',
   ),
   equations: [
+    // Split in two (UI-37, #70): written on one line the formula was shrunk to ~7 px to fit.
+    { tex: 'R_{nl}(r) = N_{nl}\\, e^{-\\rho/2} \\rho^l L_{n-l-1}^{2l+1}(\\rho)' },
     {
-      tex: 'R_{nl}(r) = \\sqrt{\\left(\\tfrac{2}{n a_0}\\right)^3 \\tfrac{(n-l-1)!}{2n (n+l)!}}\\, e^{-\\rho/2} \\rho^l L_{n-l-1}^{2l+1}(\\rho),\\quad \\rho = \\tfrac{2r}{n a_0}',
+      tex: 'N_{nl} = \\sqrt{\\left(\\tfrac{2}{n a_0}\\right)^3 \\tfrac{(n-l-1)!}{2n (n+l)!}},\\quad \\rho = \\tfrac{2r}{n a_0}',
     },
     { tex: 'P(r) = r^2 R_{nl}(r)^2' },
   ],
@@ -176,7 +178,8 @@ export function OrbitalStage() {
       />
       <div className="chem-overlay">
         <span className="chem-chip">
-          <Equation tex={`\\psi_{${n}${orbital.label}}`} display={false} />
+          {/* ψ(2p_z), not ψ_{2p_z}: a subscript inside a subscript was too small to read (UI-37). */}
+          <Equation tex={`\\psi(${n}${orbital.label})`} display={false} />
           {Lz(
             L(
               ` · mặt phẳng ${axes.join('')} · ${nodesRadial} nút xuyên tâm, ${orbital.l} mặt nút góc`,
