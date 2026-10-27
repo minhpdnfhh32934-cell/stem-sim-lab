@@ -118,7 +118,7 @@ export function LogisticPanel() {
         }}
       />
       <Range
-        label={L('Thời gian mô phỏng', 'Time span')}
+        label={L('Thời gian mô phỏng t', 'Time span t')}
         value={st.tEnd}
         min={5}
         max={100}
@@ -316,7 +316,7 @@ export function LotkaVolterraPanel() {
   return (
     <div className="chem-form">
       <Range
-        label={L('α — tốc độ sinh của con mồi', 'α — prey birth rate')}
+        label={L('Tốc độ sinh của con mồi (α)', 'Prey birth rate (α)')}
         value={st.alpha}
         min={0.1}
         max={3}
@@ -326,7 +326,7 @@ export function LotkaVolterraPanel() {
         }}
       />
       <Range
-        label={L('β — tốc độ bị ăn', 'β — predation rate')}
+        label={L('Tốc độ bị ăn (β)', 'Predation rate (β)')}
         value={st.beta}
         min={0.01}
         max={0.5}
@@ -336,7 +336,7 @@ export function LotkaVolterraPanel() {
         }}
       />
       <Range
-        label={L('δ — hiệu suất chuyển hóa mồi', 'δ — predator efficiency')}
+        label={L('Hiệu suất chuyển hóa mồi (δ)', 'Predator efficiency (δ)')}
         value={st.delta}
         min={0.005}
         max={0.3}
@@ -346,7 +346,7 @@ export function LotkaVolterraPanel() {
         }}
       />
       <Range
-        label={L('γ — tốc độ chết của vật ăn thịt', 'γ — predator death rate')}
+        label={L('Tốc độ chết của vật ăn thịt (γ)', 'Predator death rate (γ)')}
         value={st.gamma}
         min={0.1}
         max={3}
@@ -356,7 +356,7 @@ export function LotkaVolterraPanel() {
         }}
       />
       <Range
-        label={L('Thời gian mô phỏng', 'Time span')}
+        label={L('Thời gian mô phỏng t', 'Time span t')}
         value={st.tEnd}
         min={5}
         max={100}

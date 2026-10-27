@@ -176,7 +176,7 @@ describe('Meiosis3DView', () => {
       });
     });
     const card = screen.getByRole('complementary');
-    expect(card).toHaveTextContent('Cromatit chị em');
+    expect(card).toHaveTextContent('Crômatit chị em');
     expect(card).toHaveTextContent(
       `Các đoạn ADN của crômatit này: bố 0–${f(x)} · mẹ ${f(x)}–1 (đã trao đổi chéo).`,
     );

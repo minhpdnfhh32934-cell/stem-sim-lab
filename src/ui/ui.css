@@ -513,6 +513,10 @@ select:disabled {
   text-transform: uppercase;
   color: var(--text-muted);
 }
+/* A lesson name keeps its case: upper case would turn "mARN" into "MARN" (UI-47). */
+.section__title--keep-case {
+  text-transform: none;
+}
 .section__body {
   padding: 0 var(--space-3) var(--space-3);
 }

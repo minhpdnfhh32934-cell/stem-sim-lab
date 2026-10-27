@@ -7,7 +7,7 @@ import { L } from './common';
 import { LotkaVolterraPanel } from './ecology/EcologyViews';
 import { useLv } from './ecology/store';
 import { MichaelisMentenPanel } from './enzyme/EnzymeViews';
-import { MendelPanel } from './genetics/GeneticsViews';
+import { DriftPanel, MendelPanel } from './genetics/GeneticsViews';
 import { DiffusionOsmosisPanel } from './transport/TransportViews';
 import { Segmented } from './ui';
 
@@ -90,6 +90,28 @@ describe('Segmented (radio group)', () => {
     await user.click(screen.getByRole('radio', { name: 'Ba' }));
     expect(onChange).toHaveBeenCalledWith('c');
     expect(screen.getByRole('radio', { name: 'Ba' })).toHaveAttribute('aria-checked', 'true');
+  });
+});
+
+describe('slider labels of the population lessons (UI-50)', () => {
+  it('every slider reads "label: value"; the Greek symbol follows the name', () => {
+    const drift = render(<DriftPanel />);
+    const driftNames = screen.getAllByRole('slider').map((s) => s.closest('label')?.textContent);
+    expect(driftNames).toContain('Kích thước quần thể N: 50');
+    expect(driftNames).toContain('Tần số ban đầu p₀: 0,5');
+    drift.unmount();
+    render(<LotkaVolterraPanel />);
+    const lv = screen.getAllByRole('slider').map((s) => s.closest('label')?.textContent ?? '');
+    expect(lv.every((t) => /: \S/.test(t))).toBe(true);
+    expect(lv.some((t) => t.startsWith('Tốc độ chết của vật ăn thịt (γ): '))).toBe(true);
+  });
+});
+
+describe('numbers in the Mendel panel', () => {
+  it('offspring counts use the Vietnamese thousands separator', () => {
+    render(<MendelPanel />);
+    expect(screen.getByRole('option', { name: '1.000' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '10.000' })).toBeInTheDocument();
   });
 });
 

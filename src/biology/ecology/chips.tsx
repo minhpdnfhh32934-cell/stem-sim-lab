@@ -52,7 +52,8 @@ export function LvChips() {
         title={Lz(L('Kiểm tra độ chính xác', 'Accuracy check'))}
         role={drift > LV_DRIFT_WARN ? 'status' : undefined}
       >
-        {Lz(L('Sai lệch của V', 'Drift of V'))}: {fmt(drift, 2)}
+        {Lz(L('Sai lệch của đại lượng bảo toàn V', 'Drift of the conserved quantity V'))}:{' '}
+        {fmt(drift, 2)}
         {drift > LV_DRIFT_WARN &&
           Lz(
             L(

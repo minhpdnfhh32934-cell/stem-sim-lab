@@ -61,28 +61,28 @@ export const DOGMA_PARTS: Record<DogmaPart, { name: LocalizedText; role: Localiz
   mrna: {
     name: L('mARN', 'mRNA'),
     role: L(
-      'Bản sao của gen, mang thông tin di truyền dưới dạng các bộ ba (côđon), được ribôxôm đọc theo chiều 5′→3′ từ bộ ba mở đầu AUG.',
+      'Bản sao của gen, mang thông tin di truyền dưới dạng các bộ ba (côđon), được ribosome đọc theo chiều 5′→3′ từ bộ ba mở đầu AUG.',
       'The gene’s copy; it carries the information as codons, read by the ribosome 5′→3′ from the AUG start codon.',
     ),
   },
   ribosome: {
-    name: L('Ribôxôm', 'Ribosome'),
+    name: L('Ribosome', 'Ribosome'),
     role: L(
-      'Gồm tiểu phần bé và tiểu phần lớn. Ribôxôm trượt trên mARN theo chiều 5′→3′, mỗi lần một bộ ba, và nối các axit amin thành chuỗi pôlipeptit.',
+      'Gồm tiểu phần bé và tiểu phần lớn. Ribosome trượt trên mARN theo chiều 5′→3′, mỗi lần một bộ ba, và nối các axit amin thành chuỗi pôlipeptit.',
       'A small and a large subunit. The ribosome moves along the mRNA 5′→3′, one codon at a time, and joins amino acids into a polypeptide.',
     ),
   },
   trna: {
     name: L('tARN', 'tRNA'),
     role: L(
-      'Mang axit amin tới ribôxôm. Bộ ba đối mã (anticôđon) của tARN bắt cặp bổ sung với bộ ba (côđon) trên mARN.',
+      'Mang axit amin tới ribosome. Bộ ba đối mã (anticôđon) của tARN bắt cặp bổ sung với bộ ba (côđon) trên mARN.',
       'Brings an amino acid to the ribosome. Its anticodon pairs with the codon on the mRNA.',
     ),
   },
   polypeptide: {
     name: L('Chuỗi pôlipeptit', 'Polypeptide'),
     role: L(
-      'Các axit amin nối với nhau bằng liên kết peptit theo đúng thứ tự các bộ ba trên mARN. Khi ribôxôm gặp bộ ba kết thúc, chuỗi được giải phóng.',
+      'Các axit amin nối với nhau bằng liên kết peptit theo đúng thứ tự các bộ ba trên mARN. Khi ribosome gặp bộ ba kết thúc, chuỗi được giải phóng.',
       'Amino acids joined by peptide bonds in the order of the codons on the mRNA. At the stop codon the chain is released.',
     ),
   },
@@ -114,7 +114,7 @@ export function dogmaCard3d(): ScienceCardData {
     assumptions: [
       ...base.assumptions,
       L(
-        `${DOGMA_ILLUSTRATION.vi} Hình dạng và kích thước ARN pôlimeraza, ribôxôm, tARN; độ dài đoạn ADN tháo xoắn; tốc độ chuyển động là minh họa — hình chỉ cho thấy thứ tự các bước. Hình giữ ARN pôlimeraza đứng yên nên khi đoạn tháo xoắn dịch dần, phần ADN hai bên được vẽ quay quanh trục của nó. ARN pôlimeraza và tiểu phần lớn của ribôxôm được vẽ cắt mở phía trước để thấy bên trong; tARN vẽ hình chữ L (dạng không gian của phân tử). Các nuclêôtit tự do đi tới theo đúng thứ tự mạch khuôn đòi hỏi — đường đi của chúng là minh họa. Khi dịch mã, ADN được vẽ nhỏ lại và lùi về phía sau để ribôxôm ở giữa hình.`,
+        `${DOGMA_ILLUSTRATION.vi} Hình dạng và kích thước ARN pôlimeraza, ribosome, tARN; độ dài đoạn ADN tháo xoắn; tốc độ chuyển động là minh họa — hình chỉ cho thấy thứ tự các bước. Hình giữ ARN pôlimeraza đứng yên nên khi đoạn tháo xoắn dịch dần, phần ADN hai bên được vẽ quay quanh trục của nó. ARN pôlimeraza và tiểu phần lớn của ribosome được vẽ cắt mở phía trước để thấy bên trong; tARN vẽ hình chữ L (dạng không gian của phân tử). Các nuclêôtit tự do đi tới theo đúng thứ tự mạch khuôn đòi hỏi — đường đi của chúng là minh họa. Khi dịch mã, ADN được vẽ nhỏ lại và lùi về phía sau để ribosome ở giữa hình.`,
         `${DOGMA_ILLUSTRATION.en} The shapes and sizes of RNA polymerase, the ribosome and the tRNAs, the length of the unwound stretch and the speed of motion are illustrative — the picture only shows the order of the steps. The picture keeps RNA polymerase still, so as the unwound stretch moves along, the DNA on either side is drawn turning about its axis. RNA polymerase and the ribosome's large subunit are drawn cut open at the front to show the inside; tRNAs are drawn L-shaped (the molecule's 3D shape). Free nucleotides arrive in the order the template strand asks for — their path is illustrative. During translation the DNA is drawn smaller and further back so that the ribosome holds the middle of the picture.`,
       ),
       L(
@@ -126,7 +126,7 @@ export function dogmaCard3d(): ScienceCardData {
         'The double helix follows B-DNA: 10 base pairs and 3.4 nm per turn, 2 nm across. The major and minor grooves are not drawn (the strands are drawn symmetrically).',
       ),
       L(
-        'Không vẽ nhân tế bào: mô hình kiểu sinh vật nhân sơ (không có intron, dịch mã từ AUG đầu tiên). Phiên mã toàn bộ đoạn ADN đã nhập (không vẽ vùng khởi động, vùng kết thúc). Phiên mã và dịch mã chiếu lần lượt cho dễ theo dõi; ở sinh vật nhân sơ, ribôxôm có thể bắt đầu dịch mã khi phiên mã chưa xong.',
+        'Không vẽ nhân tế bào: mô hình kiểu sinh vật nhân sơ (không có intron, dịch mã từ AUG đầu tiên). Phiên mã toàn bộ đoạn ADN đã nhập (không vẽ vùng khởi động, vùng kết thúc). Phiên mã và dịch mã chiếu lần lượt cho dễ theo dõi; ở sinh vật nhân sơ, ribosome có thể bắt đầu dịch mã khi phiên mã chưa xong.',
         'No nucleus is drawn: a prokaryote-like model (no introns, translation from the first AUG). The whole DNA typed in is transcribed (no promoter or terminator is drawn). Transcription and translation are shown one after the other; in prokaryotes ribosomes can start before transcription ends.',
       ),
       L(

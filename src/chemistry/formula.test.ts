@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MOLECULES } from './data/molecules';
-import { formatFormula, molarMass, parseFormula } from './formula';
+import { formatEquationText, formatFormula, molarMass, parseFormula } from './formula';
 
 const counts = (f: string) => Object.fromEntries(parseFormula(f).counts);
 
@@ -66,5 +66,18 @@ describe('hydrate separator', () => {
     expect(() => parseFormula('.5O2')).toThrow();
     expect(() => parseFormula('CuSO4.')).toThrow();
     expect(parseFormula('CuSO4·5H2O').counts.get('H')).toBe(10);
+  });
+});
+
+describe('formatEquationText (UI-36: sample chips without raw ^ and ->)', () => {
+  it('writes charges as superscripts and the arrow as →', () => {
+    expect(formatEquationText('MnO4^- + Fe^2+ + H^+ -> Mn^2+ + Fe^3+ + H2O')).toBe(
+      'MnO₄⁻ + Fe²⁺ + H⁺ → Mn²⁺ + Fe³⁺ + H₂O',
+    );
+    expect(formatEquationText('Fe + O2 -> Fe2O3')).toBe('Fe + O₂ → Fe₂O₃');
+    expect(formatEquationText('2H2 + O2 = 2H2O')).toBe('2H₂ + O₂ → 2H₂O');
+    expect(formatEquationText('Cu + HNO3 -> Cu(NO3)2 + NO + H2O')).toBe(
+      'Cu + HNO₃ → Cu(NO₃)₂ + NO + H₂O',
+    );
   });
 });

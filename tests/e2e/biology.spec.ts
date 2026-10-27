@@ -175,7 +175,7 @@ test('cell structure: a part opens its card; targets >= 40 px, no horizontal scr
   page.on('pageerror', (e) => errors.push(String(e)));
   await openBiology(page);
   await page.getByRole('button', { name: 'Tế bào nhân sơ và nhân thực', exact: true }).click();
-  await expect(page.locator('.science-card')).toContainText('Minh hoạ — không theo tỉ lệ', {
+  await expect(page.locator('.science-card')).toContainText('Minh họa — không theo tỉ lệ', {
     timeout: 20_000,
   });
   await page.getByRole('radio', { name: 'Thực vật' }).click();

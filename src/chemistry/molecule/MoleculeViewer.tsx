@@ -14,6 +14,7 @@ import {
   type Molecule,
   type Vec3,
 } from '../data/molecules';
+import { visibleLabels } from './labelOverlap';
 
 /** Qualitative partial charge sign per atom from the electronegativity differences. */
 function partialSigns(m: Molecule): ('+' | '−' | '')[] {
@@ -319,12 +320,29 @@ export function MoleculeViewer(props: Props) {
     const placeLabels = () => {
       const w = host.clientWidth;
       const h = host.clientHeight;
-      atomMeshes.forEach((m, i) => {
+      const boxes = atomMeshes.map((m, i) => {
         const el = labelEls[i];
-        if (!el || el.hidden) return;
+        if (!el || el.hidden) return null;
         tmp.copy(m.position).project(camera);
-        el.style.transform = `translate(${((tmp.x + 1) / 2) * w}px, ${((1 - tmp.y) / 2) * h}px) translate(-50%, -50%)`;
-        el.style.opacity = tmp.z < 1 ? '1' : '0';
+        // Behind the camera: hidden, and it must not hide a visible label.
+        if (tmp.z >= 1) {
+          el.style.opacity = '0';
+          return null;
+        }
+        return {
+          x: ((tmp.x + 1) / 2) * w,
+          y: ((1 - tmp.y) / 2) * h,
+          w: el.offsetWidth,
+          h: el.offsetHeight,
+          z: tmp.z,
+        };
+      });
+      const show = visibleLabels(boxes);
+      boxes.forEach((b, i) => {
+        const el = labelEls[i];
+        if (!el || !b) return;
+        el.style.transform = `translate(${b.x}px, ${b.y}px) translate(-50%, -50%)`;
+        el.style.opacity = show[i] ? '1' : '0';
       });
     };
 

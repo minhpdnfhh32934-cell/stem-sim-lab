@@ -104,7 +104,9 @@ export function GasBottom() {
             <td className="num">{measured === null ? '—' : f(measured)}</td>
           </tr>
           <tr>
-            <th scope="row">e^(−Eₐ/RT)</th>
+            <th scope="row">
+              e<sup>−Eₐ/RT</sup>
+            </th>
             <td className="num">{f(Math.exp(-eaReduced(eaKJ, T)))}</td>
           </tr>
         </tbody>
