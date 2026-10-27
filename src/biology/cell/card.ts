@@ -8,7 +8,7 @@ import { CELL_KIND_NAME, SGK_SH10_KNTT, type CellKind } from './parts';
  * here nothing is measured or counted.
  */
 export const CELL_ILLUSTRATION = L(
-  'Minh hoạ — không theo tỉ lệ; số lượng bào quan chỉ để minh hoạ.',
+  'Minh họa — không theo tỉ lệ; số lượng bào quan chỉ để minh họa.',
   'Illustration — not to scale; the number of organelles drawn is only illustrative.',
 );
 

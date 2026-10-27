@@ -30,7 +30,7 @@ export const STAGE_NOTE: Record<StageId, LocalizedText> = {
     'Chromosomes are decondensed; each is one DNA molecule.',
   ),
   g2: L(
-    'Pha S đã nhân đôi ADN: mỗi NST gồm 2 cromatit chị em dính ở tâm động.',
+    'Pha S đã nhân đôi ADN: mỗi NST gồm 2 crômatit chị em dính ở tâm động.',
     'DNA replicated in S: each chromosome has two sister chromatids.',
   ),
   prophase: L(
@@ -42,7 +42,7 @@ export const STAGE_NOTE: Record<StageId, LocalizedText> = {
     'Fully condensed double chromosomes line up in one row at the equator.',
   ),
   anaphase: L(
-    'Hai cromatit chị em tách nhau ở tâm động, đi về hai cực.',
+    'Hai crômatit chị em tách nhau ở tâm động, đi về hai cực.',
     'Sister chromatids separate at the centromere and move to the poles.',
   ),
   telophase: L(
@@ -50,7 +50,7 @@ export const STAGE_NOTE: Record<StageId, LocalizedText> = {
     'Two daughter cells, each with the same 2n set as the parent.',
   ),
   prophase1: L(
-    'NST kép tương đồng tiếp hợp; có thể trao đổi chéo giữa 2 cromatit không chị em.',
+    'NST kép tương đồng tiếp hợp; có thể trao đổi chéo giữa 2 crômatit không chị em.',
     'Homologous double chromosomes pair; crossing over between non-sister chromatids.',
   ),
   metaphase1: L(
@@ -74,7 +74,7 @@ export const STAGE_NOTE: Record<StageId, LocalizedText> = {
     'Double chromosomes line up in one row in each cell.',
   ),
   anaphase2: L(
-    'Cromatit chị em tách nhau, đi về hai cực.',
+    'Crômatit chị em tách nhau, đi về hai cực.',
     'Sister chromatids separate to the poles.',
   ),
   telophase2: L(
@@ -178,7 +178,7 @@ export function cardFor(kind: Division): ScienceCardData {
     ],
     confidence: 'exact',
     confidenceNote: L(
-      'Test tự động: số NST, cromatit, tâm động ở mọi kì khớp bảng SGK với 2n = 4, 8, 46.',
+      'Test tự động: số NST, crômatit, tâm động ở mọi kì khớp bảng SGK với 2n = 4, 8, 46.',
       'Automated test: chromosome, chromatid and centromere counts match the textbook table for 2n = 4, 8, 46.',
     ),
     userIntervened: false,

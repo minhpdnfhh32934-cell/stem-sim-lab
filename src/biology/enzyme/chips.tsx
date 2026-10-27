@@ -29,14 +29,15 @@ export function EnzymeChips() {
       />
       <span className="chem-chip">
         <span>
-          V<sub>max</sub>
+          {/* Written as in the sliders, hints and chart legend (UI-51). */}
+          Vmax
           {inhibited ? Lz(L(' (biểu kiến)', ' (apparent)')) : ''} = {fmt(app.vmax)} mM/
           {Lz(L('phút', 'min'))}
         </span>
       </span>
       <span className="chem-chip">
         <span>
-          K<sub>m</sub>
+          Km
           {inhibited ? Lz(L(' (biểu kiến)', ' (apparent)')) : ''} = {fmt(app.km)} mM
         </span>
       </span>

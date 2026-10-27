@@ -29,7 +29,7 @@ describe('Settings: one small page per section', () => {
     for (const name of [
       'Giao diện',
       'Kết nối AI',
-      'AI local (Gemma)',
+      'Gemma cục bộ',
       'AI trên máy khác (Ollama, LM Studio, llama.cpp)',
       'GPU cho Gemma',
       'Trí nhớ hội thoại',
@@ -73,7 +73,7 @@ describe('Settings: one small page per section', () => {
     const names = within(screen.getByRole('tablist'))
       .getAllByRole('tab')
       .map((tab) => tab.textContent);
-    const gemma = names.findIndex((n) => n.includes('AI local (Gemma)'));
+    const gemma = names.findIndex((n) => n.includes('Gemma cục bộ'));
     expect(names[gemma + 1]).toContain('AI trên máy khác (Ollama, LM Studio, llama.cpp)');
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     act(() => {

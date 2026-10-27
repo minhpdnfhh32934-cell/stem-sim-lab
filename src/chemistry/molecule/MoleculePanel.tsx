@@ -16,6 +16,7 @@ import {
   neighbors,
   polarity,
   prettyFormula,
+  textbookFormula,
   vsepr,
   type Molecule,
 } from '../data/molecules';
@@ -50,7 +51,7 @@ export function MoleculePanel({ topic }: { topic: MoleculeTopic }) {
           </tr>
           <tr>
             <th scope="row">{Lz(L('Công thức phân tử', 'Molecular formula'))}</th>
-            <td className="num">{prettyFormula(m.formula)}</td>
+            <td className="num">{prettyFormula(textbookFormula(m))}</td>
           </tr>
           <tr>
             <th scope="row">SMILES</th>

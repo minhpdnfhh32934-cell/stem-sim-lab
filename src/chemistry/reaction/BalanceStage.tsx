@@ -20,7 +20,7 @@ import '../chem.css';
 const CARD: ScienceCardData = {
   title: L('Cân bằng phương trình hóa học', 'Balancing chemical equations'),
   model: L(
-    'Bảo toàn số nguyên tử của từng nguyên tố và bảo toàn điện tích tạo thành hệ phương trình tuyến tính thuần nhất; hệ số cân bằng là vectơ nguyên dương nhỏ nhất trong không gian nghiệm (null space). Tính bằng số hữu tỉ chính xác, không làm tròn.',
+    'Bảo toàn số nguyên tử của từng nguyên tố và bảo toàn điện tích tạo thành hệ phương trình tuyến tính thuần nhất; hệ số cân bằng là vectơ nguyên dương nhỏ nhất trong không gian nghiệm của hệ. Tính bằng số hữu tỉ chính xác, không làm tròn.',
     'Conservation of each element and of charge gives a homogeneous linear system; the coefficients are the smallest positive integer vector of its null space. Exact rational arithmetic, no rounding.',
   ),
   equations: [{ tex: 'A\\,\\vec{x} = \\vec{0},\\quad x_i \\in \\mathbb{Z}_{>0}' }],
@@ -35,7 +35,10 @@ const CARD: ScienceCardData = {
     ),
   ],
   confidence: 'exact',
-  confidenceNote: L('Đại số tuyến tính chính xác (BigInt).', 'Exact linear algebra (BigInt).'),
+  confidenceNote: L(
+    'Đại số tuyến tính chính xác với số nguyên lớn, không làm tròn.',
+    'Exact linear algebra with big integers, no rounding.',
+  ),
   userIntervened: false,
   sources: [
     {
@@ -44,15 +47,6 @@ const CARD: ScienceCardData = {
     },
   ],
 };
-
-const EXAMPLES = [
-  'Fe + O2 -> Fe2O3',
-  'C3H8 + O2 -> CO2 + H2O',
-  'KMnO4 + HCl -> KCl + MnCl2 + Cl2 + H2O',
-  'Cu + HNO3 -> Cu(NO3)2 + NO + H2O',
-  'MnO4^- + Fe^2+ + H^+ -> Mn^2+ + Fe^3+ + H2O',
-  'FeS2 + O2 -> Fe2O3 + SO2',
-];
 
 type Outcome =
   | { kind: 'empty' }
@@ -63,9 +57,6 @@ export function BalanceStage() {
   usePublishCard(CARD);
   const Lz = useLocalized();
   const text = useReactionStore((s) => s.equation);
-  const setText = (equation: string) => {
-    useReactionStore.setState({ equation });
-  };
   const outcome = useMemo<Outcome>(() => {
     if (!text.trim()) return { kind: 'empty' };
     try {
@@ -85,32 +76,10 @@ export function BalanceStage() {
           value={text}
           spellCheck={false}
           onChange={(e) => {
-            setText(e.target.value);
+            useReactionStore.setState({ equation: e.target.value });
           }}
         />
       </label>
-      <p className="small muted">
-        {Lz(
-          L(
-            'Dùng “->” hoặc “=” giữa hai vế, “ + ” (có dấu cách) giữa các chất. Điện tích: Fe^3+, SO4^2-, NH4+, OH-; electron: e-. Ngoặc: Ca(OH)2, K4[Fe(CN)6]; ngậm nước: CuSO4·5H2O.',
-            'Use “->” or “=” between the sides and “ + ” (with spaces) between species. Charges: Fe^3+, SO4^2-, NH4+, OH-; electron: e-. Brackets: Ca(OH)2, K4[Fe(CN)6]; hydrates: CuSO4·5H2O.',
-          ),
-        )}
-      </p>
-      <div className="mol-chips" role="group" aria-label={Lz(L('Ví dụ', 'Examples'))}>
-        {EXAMPLES.map((ex) => (
-          <button
-            key={ex}
-            type="button"
-            aria-pressed={ex === text}
-            onClick={() => {
-              setText(ex);
-            }}
-          >
-            {ex}
-          </button>
-        ))}
-      </div>
       {outcome.kind === 'error' && (
         <p className="chem-note chem-note--warn" role="alert">
           <CircleAlert size={15} strokeWidth={1.75} aria-hidden="true" />

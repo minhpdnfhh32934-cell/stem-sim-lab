@@ -20,6 +20,12 @@ export const FRAME_KIND: Record<MechanismFrame['kind'], LocalizedText> = {
   products: L('Sản phẩm', 'Products'),
 };
 
+/** The step kind shown after a step's name, or null when the name already says it ("Chất đầu"). */
+export function kindNote(label: LocalizedText, kind: MechanismFrame['kind']): LocalizedText | null {
+  const k = FRAME_KIND[kind];
+  return label.vi === k.vi && label.en === k.en ? null : k;
+}
+
 export const ILLUSTRATIVE = L(
   'Chuyển tiếp minh họa — không phải quỹ đạo nguyên tử thực',
   'Illustrative transition — not real atomic trajectories',

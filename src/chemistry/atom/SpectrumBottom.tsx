@@ -58,7 +58,7 @@ export function SpectrumBottom() {
             <th scope="col">{Lz(L('Dãy', 'Series'))}</th>
             {[1, 2, 3, 4, 5].map((k) => (
               <th key={k} scope="col" className="num">
-                {Lz(L(`vạch ${k}`, `line ${k}`))}
+                {Lz(L(`Vạch ${k} (nm)`, `Line ${k} (nm)`))}
               </th>
             ))}
           </tr>
@@ -69,7 +69,7 @@ export function SpectrumBottom() {
               <th scope="row">{Lz(s.name)}</th>
               {[1, 2, 3, 4, 5].map((k) => (
                 <td key={k} className="num">
-                  {f(transitionWavelength(s.nLower, s.nLower + k) * 1e9)} nm
+                  {f(transitionWavelength(s.nLower, s.nLower + k) * 1e9)}
                 </td>
               ))}
             </tr>
