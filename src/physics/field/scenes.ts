@@ -4,7 +4,7 @@ import { C } from '@/core/constants';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
-import { L } from '../common/scene-helpers';
+import { DASH, L } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
@@ -112,7 +112,7 @@ const graphs: GraphDef[] = [
     yLabel: L('E (V/m)', 'E (V/m)'),
     series: [
       { id: 'e', label: L('E', 'E'), value: (s) => s[FE.e] ?? 0 },
-      { id: 'ex', label: L('Eₓ', 'Eₓ'), value: (s) => s[FE.ex] ?? 0 },
+      { id: 'ex', label: L('Eₓ', 'Eₓ'), value: (s) => s[FE.ex] ?? 0, dash: DASH },
       { id: 'ey', label: L('E_y', 'E_y'), value: (s) => s[FE.ey] ?? 0 },
     ],
   },

@@ -43,6 +43,8 @@ export interface SeriesDef {
   value: (state: Float64Array, p: Params) => number;
   /** Shown only while true (e.g. body B's curves when "1 vật"); omitted: always shown. */
   when?: (p: Params) => boolean;
+  /** Dash pattern (px) for a curve that can lie exactly on another one; omitted: solid. */
+  dash?: number[];
 }
 
 export interface GraphDef {

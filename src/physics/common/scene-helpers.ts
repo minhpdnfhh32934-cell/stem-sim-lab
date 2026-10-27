@@ -4,6 +4,9 @@ import type { GraphDef, ParamDef } from '../types';
 
 export const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 
+/** Dash (px) for a curve that can lie exactly on another one (Eₓ on E, y₂ on y₁ at an antinode). */
+export const DASH = [7, 5];
+
 /**
  * Gravity parameter shared by every scene that uses g (default comes from Settings).
  * Changing it restarts the run: most engines cannot apply a new g mid-run.
