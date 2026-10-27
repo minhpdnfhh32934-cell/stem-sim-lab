@@ -338,7 +338,7 @@ export function DiffusionOsmosisPanel() {
           />
           <Range
             label={L('Độ thấm × diện tích, PA', 'Permeability × area, PA')}
-            unit="mL/min"
+            unit={Lz(L('mL/phút', 'mL/min'))}
             value={st.pa}
             min={0.02}
             max={1}

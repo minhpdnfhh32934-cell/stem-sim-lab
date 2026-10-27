@@ -434,7 +434,8 @@ export function HardyWeinbergStage() {
             <strong className="mono">{t.n > 0 ? f(t.q) : '—'}</strong>
           </p>
           <p>
-            χ² = <span className="mono">{t.n > 0 ? f(t.test.chi2) : '—'}</span> (df = 1) · p-value ={' '}
+            χ² = <span className="mono">{t.n > 0 ? f(t.test.chi2) : '—'}</span>{' '}
+            {Lz(L('(bậc tự do = 1) · giá trị p =', '(df = 1) · p-value ='))}{' '}
             <span className="mono">{t.n > 0 ? f(t.test.p, 3) : '—'}</span>
           </p>
           {t.n === 0 ? (
