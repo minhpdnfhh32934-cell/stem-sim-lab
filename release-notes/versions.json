@@ -173,12 +173,12 @@
     {
       "version": "0.8.0",
       "status": "in-review",
-      "statusNote": "PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0.",
+      "statusNote": "PR phiên bản (#92) mở 27/10/2026, bỏ nháp ngày 28/10/2026 khi mọi PR của 0.8.0 đã gộp vào main (người dùng cho tự làm, sớm hơn hạn 31/10/2026 của kế hoạch #37); chưa phát hành. Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0.",
       "channel": "github",
       "dates": {
         "devStart": "2026-10-22T03:56:04Z",
         "firstCommit": "2026-10-22T23:06:49+07:00",
-        "lastCommit": "2026-10-28T12:48:37+07:00",
+        "lastCommit": "2026-10-28T15:18:56+07:00",
         "merged": null,
         "built": null,
         "released": null,
@@ -186,8 +186,8 @@
       },
       "evidence": [
         "devStart: issue #37 (kế hoạch 0.8.0) tạo lúc 2026-10-22T03:56:04Z (gh issue view 37); người dùng gắn approved ngày 26/10/2026; 10 issue con #68–#77 gắn approved cùng ngày",
-        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 0daaa31; 182 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..0daaa31)",
-        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit: 3bf305b 2026-10-28T12:48:37+07:00 'fix(ui): #101 CI — the library keeps a slot for a topic's mark (UI-42)'",
+        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 69b446d; 185 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..69b446d)",
+        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit: a871bfd 2026-10-28T15:18:56+07:00 'fix(ai): \"bỏ qua ma sát\" no longer sets the collision's impact offset b to 0'",
         "(f) dấu \"Đã học\" cho mọi chủ đề đã mở: PR #79, gộp 18b6a5c 2026-10-26T12:52:42Z (issue #68)",
         "(g1) dữ liệu xếp lớp theo mục lục SGK Kết nối tri thức, sinh bằng scripts/data/gen_curriculum_kntt.py: PR #82, gộp 70b5b7c 2026-10-26T12:12:20Z (issue #71); docs/DATA_REVIEW.md mục 12 và KNTT-1 … KNTT-11, đang chờ giáo viên duyệt",
         "(i1) đồ thị Vật lí đọc được ở 1366×768, test bố cục tests/e2e/layout.spec.ts: PR #81, gộp e9c5f3b 2026-10-26T17:33:59Z (issue #69)",
@@ -199,6 +199,8 @@
         "(b) Sóng dừng trên dây (VL11 Bài 13), nút \"Dùng fₙ\": PR #90, gộp 006f519 2026-10-26T22:07:30Z (issue #75); DATA_REVIEW SWV-1 … SWV-8",
         "(d) Điện trường của điện tích điểm (VL11 Bài 16–18), bộ lọc số AI đọc được số mũ chỉ số trên và so sánh tương đối, cảnh báo dấu điện tích: PR #89 (7 lượt duyệt; phạm vi cuối của bộ lọc ghi trong bình luận PR #89), gộp 32a9378 2026-10-27T06:15:14Z (issue #76)",
         "(i2) rà soát toàn bộ giao diện trước demo, làm sớm từ 27/10/2026 theo lựa chọn của chủ dự án (213 ảnh chụp, 54 nhóm gợi ý UI-01…UI-54, issue #70); mỗi PR duyệt bằng nhiều agent, CI 8/8 trước khi gộp: PR #93 gộp f5f0a35 2026-10-27T13:14:41Z; #94 cc38c21 2026-10-27T13:37:11Z; #95 b05f0e4 2026-10-27T14:46:11Z; #96 2bec769 2026-10-27T15:34:46Z; #99 db2abbb 2026-10-27T16:00:35Z; #98 5a5a573 2026-10-27T22:56:12Z (3 lượt duyệt); #102 5f23c4e 2026-10-28T00:36:08Z; #97 80342ab 2026-10-28T00:54:14Z (4 lượt duyệt; bộ lọc số AI giữ bằng main cộng các số do engine in ra, bản đọc TeX mới bị bỏ vì lỏng hơn main); #101 45d2514 2026-10-28T06:10:42Z; #100 0daaa31 2026-10-28T06:33:48Z",
+        "Lỗi cũ \"bỏ qua ma sát\" đọc thành độ lệch tâm b = 0 ở bài va chạm (người dùng đồng ý sửa 28/10/2026): PR #103, gộp 69b446d 2026-10-28T08:53:05Z; quy tắc c|b chỉ áp cho tham số có thứ nguyên cản; đề mẫu vc-04 trong tests/golden/physics.json",
+        "Tài liệu Store: PR #56 (bản nộp 0.7.1 và 8 ảnh chụp đã gửi Partner Center ngày 26/10/2026), gộp 8ec9da5 2026-10-28T08:29:54Z; không đổi app",
         "Bảng của AI Teacher (dòng nguồn, chữ phụ đề, cắt câu giữa chừng, thấy trong bản ghi hình 26/10/2026): PR #55, gộp d6f9fec 2026-10-26T00:17:07Z",
         "Phụ thuộc có lỗ hổng: PR #48 tokio 1.53.3 (RUSTSEC-2026-0386), gộp 4321eb9 2026-10-23T15:51:45Z; PR #51 undici 8.12.3 và zod 4.6.7 (npm audit), gộp f7eb477 2026-10-24T05:12:59Z; dependabot PR #45, #49, #27, #53, #28, #26 gộp 24/10/2026",
         "Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)"
@@ -209,15 +211,16 @@
         "PR #88: unit 4269 đạt; E2E learner 6/6 và biology + project 17/17 đạt (phiên làm PR #88, 27/10/2026)",
         "PR #90 sau lượt duyệt 2: unit 4339 đạt; E2E physics + layout 17/17 đạt (docs/work-log/2026-10-26-b-standing-wave.md)",
         "PR #91: unit đạt (1 test chập chờn khi máy tải nặng, chạy riêng đạt); CI 8/8 gồm cả E2E 3D (docs/work-log/2026-10-27-k-virtual-lab.md)",
-        "PR #93–#102 (rà soát giao diện i2): CI 8/8 xanh trước khi gộp; unit và E2E liên quan do phiên làm PR chạy, ghi trong work-log docs/work-log/2026-10-27-i2-*.md và 2026-10-28-i2-graph-samples.md"
+        "PR #93–#102 (rà soát giao diện i2): CI 8/8 xanh trước khi gộp; unit và E2E liên quan do phiên làm PR chạy, ghi trong work-log docs/work-log/2026-10-27-i2-*.md và 2026-10-28-i2-graph-samples.md",
+        "PR #103: unit src/ai + src/physics + tests/golden 606 đạt, E2E ai-flow 21 đạt (phiên làm PR); duyệt bằng workflow hai agent không có phát hiện; CI 8/8 trước khi gộp"
       ],
       "refs": {
         "tag": null,
         "tagSha": null,
         "releaseUrl": null,
         "prs": [
-          26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 79, 81, 82, 83, 84,
-          85, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102
+          26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 56, 79, 81, 82, 83,
+          84, 85, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103
         ],
         "commits": ["39bfd01", "a05f4d6"],
         "branches": ["main", "chore/0.8.0-version"]
@@ -311,6 +314,11 @@
             "vi": "Thẻ Khoa học của bài Chuyển động thẳng đều ghi nhầm \"gia tốc không đổi\"; nay ghi đúng là vận tốc không đổi.",
             "en": "The Science Card of Uniform motion wrongly said \"constant acceleration\"; it now says constant velocity.",
             "area": "ui"
+          },
+          {
+            "vi": "Khi AI đọc một đề va chạm có câu \"bỏ qua ma sát\", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.",
+            "en": "When the AI reads a collision problem that says \"ignore friction\", it no longer sets the impact offset to zero by itself; the offset comes only from the problem or from what you enter.",
+            "area": "api"
           }
         ],
         "security": [

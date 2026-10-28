@@ -4,7 +4,7 @@ Mọi thay đổi đáng chú ý của SimLab (tên cũ: STEM Sim Lab), bản m�
 
 ## [Unreleased] - 0.8.0 (Đang xét duyệt)
 
-_PR phiên bản mở 27/10/2026, chưa gộp, chưa phát hành; dự kiến gộp 31/10/2026 (hạn ngừng thêm tính năng của kế hoạch #37). Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0._
+_PR phiên bản (#92) mở 27/10/2026, bỏ nháp ngày 28/10/2026 khi mọi PR của 0.8.0 đã gộp vào main (người dùng cho tự làm, sớm hơn hạn 31/10/2026 của kế hoạch #37); chưa phát hành. Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0._
 
 _Ghi chú này là bản nháp, chưa được duyệt để công bố._
 
@@ -34,6 +34,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 
 - Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
 - Thẻ Khoa học của bài Chuyển động thẳng đều ghi nhầm "gia tốc không đổi"; nay ghi đúng là vận tốc không đổi.
+- Khi AI đọc một đề va chạm có câu "bỏ qua ma sát", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.
 
 ### Security
 
