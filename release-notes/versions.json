@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-10-22",
+  "evidenceCheckedAt": "2026-10-28",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.",
@@ -206,13 +206,13 @@
         "Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)"
       ],
       "tests": [
-        "CI 8/8 (Frontend lint · typecheck · test · build, Rust ubuntu và windows, E2E, npm audit, cargo audit, gitleaks, dependency review) xanh trên mọi PR trước khi gộp (gh pr checks; nhánh main bắt buộc 8 bước)",
-        "PR #87 sau khi sửa theo duyệt: E2E đầy đủ trên máy 127/127 đạt (27/10/2026, work-log docs/work-log/2026-10-27-a-uniform-circular-motion.md)",
+        "CI 8/8 (Frontend lint · typecheck · test · build, Rust ubuntu và windows, E2E, npm audit, cargo audit, gitleaks, dependency review) xanh trước khi gộp trên mọi PR, trừ #43, #44, #46 (PR sửa E2E chập chờn, gộp 23/10/2026 khi E2E còn đỏ, trước khi main bắt buộc 8 bước) (gh pr checks)",
+        "PR #87: E2E đầy đủ trên máy 125/125 đạt (26/10/2026, trước lượt duyệt); sau khi sửa theo duyệt: E2E ai-flow + physics 35/35 đạt (bình luận trên PR #87)",
         "PR #88: unit 4269 đạt; E2E learner 6/6 và biology + project 17/17 đạt (phiên làm PR #88, 27/10/2026)",
         "PR #90 sau lượt duyệt 2: unit 4339 đạt; E2E physics + layout 17/17 đạt (docs/work-log/2026-10-26-b-standing-wave.md)",
         "PR #91: unit đạt (1 test chập chờn khi máy tải nặng, chạy riêng đạt); CI 8/8 gồm cả E2E 3D (docs/work-log/2026-10-27-k-virtual-lab.md)",
         "PR #93–#102 (rà soát giao diện i2): CI 8/8 xanh trước khi gộp; unit và E2E liên quan do phiên làm PR chạy, ghi trong work-log docs/work-log/2026-10-27-i2-*.md và 2026-10-28-i2-graph-samples.md",
-        "PR #103: unit src/ai + src/physics + tests/golden 606 đạt, E2E ai-flow 21 đạt (phiên làm PR); duyệt bằng workflow hai agent không có phát hiện; CI 8/8 trước khi gộp"
+        "PR #103: unit src/ai + src/physics + tests/golden 606 đạt, E2E ai-flow 21 đạt (mô tả PR #103); CI 8/8 trước khi gộp"
       ],
       "refs": {
         "tag": null,
@@ -222,7 +222,7 @@
           26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 56, 79, 81, 82, 83,
           84, 85, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103
         ],
-        "commits": ["39bfd01", "a05f4d6"],
+        "commits": ["39bfd01", "a871bfd"],
         "branches": ["main", "chore/0.8.0-version"]
       },
       "publicNotes": {
@@ -247,8 +247,8 @@
             "area": "ui"
           },
           {
-            "vi": "Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Bấm vào từng bộ phận để xem tên và chức năng.",
-            "en": "Biology: Prokaryotic and eukaryotic cells (Biology 10, Lessons 7–8), in 2D. Click a part to see its name and role.",
+            "vi": "Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Chọn từng bộ phận trong danh sách bên cạnh hình để xem tên và chức năng.",
+            "en": "Biology: Prokaryotic and eukaryotic cells (Biology 10, Lessons 7–8), in 2D. Pick a part from the list beside the picture to see its name and role.",
             "area": "ui"
           },
           {
@@ -284,8 +284,8 @@
             "area": "api"
           },
           {
-            "vi": "Rà soát toàn bộ giao diện trước buổi giới thiệu: chữ tiếng Việt thống nhất, không còn từ \"API\" khi nói về AI, nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.",
-            "en": "A full review of the interface: consistent Vietnamese wording, no more \"API\" when talking about AI, buttons large enough to press, and labels on the 3D biology pictures no longer cover each other.",
+            "vi": "Rà soát toàn bộ giao diện: chữ tiếng Việt thống nhất, lựa chọn \"API\" nay gọi là \"AI trực tuyến\", nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.",
+            "en": "A full review of the interface: consistent Vietnamese wording, the \"API\" choice is now called \"Online AI\", buttons large enough to press, and labels on the 3D biology pictures no longer cover each other.",
             "area": "ui"
           },
           {
@@ -336,8 +336,8 @@
             "area": "ui"
           },
           {
-            "vi": "Máy đang chạy 0.7.1 cần cài bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app.",
-            "en": "Computers running 0.7.1 need the new installer to move to 0.8.0; this version cannot be updated inside the app."
+            "vi": "Máy cài SimLab 0.7.1 từ trang GitHub cần tải bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app. Bản trên Microsoft Store được Store tự cập nhật.",
+            "en": "Computers that installed SimLab 0.7.1 from the GitHub page need the new installer to move to 0.8.0; this version cannot be updated inside the app. The Microsoft Store copy is updated by the Store."
           }
         ],
         "deprecated": [],

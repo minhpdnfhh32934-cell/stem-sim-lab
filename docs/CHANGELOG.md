@@ -15,7 +15,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - Vật lí: bài Chuyển động tròn đều (Vật lí 10, Bài 31–32). Em chọn đề cho biết tốc độ, tốc độ góc, chu kì hay tần số; app tính các đại lượng còn lại, gia tốc hướng tâm và lực hướng tâm.
 - Vật lí: bài Sóng dừng trên dây (Vật lí 11, Bài 13). Xem bụng, nút và số bó sóng; khi chưa có sóng dừng, nút "Dùng fₙ" đặt đúng tần số cộng hưởng gần nhất.
 - Vật lí: bài Điện trường của điện tích điểm (Vật lí 11, Bài 16–18). Đặt một đến ba điện tích hoặc hai bản tụ phẳng, xem đường sức, điểm có điện trường bằng 0 và lực lên điện tích thử.
-- Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Bấm vào từng bộ phận để xem tên và chức năng.
+- Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Chọn từng bộ phận trong danh sách bên cạnh hình để xem tên và chức năng.
 - Thư viện, trang chủ và bước làm quen có thanh Lớp 10 · 11 · 12 · Tất cả, xếp chủ đề theo mục lục sách Kết nối tri thức. Cách xếp này đang chờ giáo viên duyệt.
 - Science Studio có hướng dẫn "Cách học" ngay trong app.
 
@@ -25,7 +25,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - Dấu "Đã học" hiện cho mọi chủ đề em đã mở, kèm số bước còn lại.
 - Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
 - Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
-- Rà soát toàn bộ giao diện trước buổi giới thiệu: chữ tiếng Việt thống nhất, không còn từ "API" khi nói về AI, nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.
+- Rà soát toàn bộ giao diện: chữ tiếng Việt thống nhất, lựa chọn "API" nay gọi là "AI trực tuyến", nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.
 - Hình Vật lí: nhãn có chỉ số dưới thật, tên mũi tên đặt sau đầu mũi tên, hai đường có thể trùng nhau được vẽ nét đứt; số trên trục không còn bị thanh công cụ che.
 - Ô nhập số hiểu cả "9,81" lẫn "9.81"; khi số vượt giới hạn, dưới ô ghi rõ mô phỏng đang chạy với giá trị nào.
 - Đồ thị đủ điểm khi chạy chậm hoặc bấm "Bước" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.
@@ -43,7 +43,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 ### Changed
 
 - "Phòng thí nghiệm" nay tên là "Virtual Lab" ở cả tiếng Việt và tiếng Anh.
-- Máy đang chạy 0.7.1 cần cài bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app.
+- Máy cài SimLab 0.7.1 từ trang GitHub cần tải bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app. Bản trên Microsoft Store được Store tự cập nhật.
 
 ### Known Issues
 
