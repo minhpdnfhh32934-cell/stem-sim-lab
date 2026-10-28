@@ -10,6 +10,7 @@ import { useSettingsStore } from '@/app/settings/settingsStore';
 import { ChallengePanel } from '@/learn/ChallengePanel';
 import { EmptyState } from '@/ui/EmptyState';
 import { Tabs } from '@/ui/Tabs';
+import { useScrollCue } from '@/ui/useScrollCue';
 import { useLayoutStore, type BottomTab } from './layoutStore';
 
 /** Graphs (uPlot, Phase 1–2), step-by-step solution, and data table. */
@@ -22,6 +23,7 @@ export const BottomPanel = memo(function BottomPanel() {
   const setTab = useLayoutStore((s) => s.setBottomTab);
   const mod = useModuleStore((s) => s.active);
   const L = useLocalized();
+  const cue = useScrollCue();
 
   if (mod) {
     const Bottom = mod.view.Bottom;
@@ -30,7 +32,7 @@ export const BottomPanel = memo(function BottomPanel() {
         <header className="panel__header">
           <h2 className="panel__title">{L(mod.view.bottomTitle ?? mod.view.title)}</h2>
         </header>
-        <div className="panel__scroll">
+        <div ref={cue} className="panel__scroll scroll-cue">
           {Bottom ? (
             <Bottom />
           ) : (
@@ -56,7 +58,12 @@ export const BottomPanel = memo(function BottomPanel() {
           ...(advanced ? [{ id: 'data' as const, label: t('bottom.data'), icon: Table2 }] : []),
         ]}
       />
-      <div className="panel__scroll" role="tabpanel" aria-label={t(`bottom.${tab}`)}>
+      <div
+        ref={cue}
+        className="panel__scroll scroll-cue"
+        role="tabpanel"
+        aria-label={t(`bottom.${tab}`)}
+      >
         {tab === 'graphs' && <GraphPanel />}
         {tab === 'solution' && <SolutionPanel />}
         {tab === 'challenge' && <ChallengePanel />}
