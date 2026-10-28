@@ -119,7 +119,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     if (f.N > 0) arrow(ctx, cam, pos.x, pos.y, -st * f.N * k, ct * f.N * k, c.force, 'N');
     const fr = state[IS.friction] ?? 0;
     if (Math.abs(fr) > 1e-9)
-      arrow(ctx, cam, pos.x, pos.y - 0.3 * h, ct * fr * k, st * fr * k, c.acceleration, 'Fms');
+      arrow(ctx, cam, pos.x, pos.y - 0.3 * h, ct * fr * k, st * fr * k, c.acceleration, 'F_ms');
     if (q.F > 0) {
       const ang = q.theta + q.beta;
       arrow(

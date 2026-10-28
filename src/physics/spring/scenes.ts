@@ -106,7 +106,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     if (opts.vectors) {
       const k = vectorScale(Math.max(q.m * q.g, q.k * (staticExtension(q) + A)), len, 0.3);
       arrow(ctx, cam, bs * 0.25, x, 0, -q.m * q.g * k, c.force, 'P');
-      arrow(ctx, cam, -bs * 0.25, x, 0, (state[SP.F] ?? 0) * k, c.velocity, 'Fđh');
+      arrow(ctx, cam, -bs * 0.25, x, 0, (state[SP.F] ?? 0) * k, c.velocity, 'F_đh');
     }
   } else {
     const wall = -len - bs / 2;
@@ -136,7 +136,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       const kv = vectorScale(Math.max(w * A, 1e-6), len, 0.2);
       arrow(ctx, cam, x, bs * 1.15, (state[SP.v] ?? 0) * kv, 0, c.velocity, 'v');
       const kf = vectorScale(Math.max(q.k * A, 1e-6), len, 0.2);
-      arrow(ctx, cam, x, bs * 0.5, (state[SP.F] ?? 0) * kf, 0, c.force, 'Fđh');
+      arrow(ctx, cam, x, bs * 0.5, (state[SP.F] ?? 0) * kf, 0, c.force, 'F_đh');
     }
   }
   text(

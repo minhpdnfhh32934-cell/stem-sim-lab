@@ -35,6 +35,8 @@ function ModalCard({
   useEffect(() => {
     const d = ref.current;
     if (d && !d.open) d.showModal();
+    // showModal() focuses the first option, whose focus ring then looks like a second choice.
+    d?.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]')?.focus();
     return () => {
       if (d?.open) d.close();
     };

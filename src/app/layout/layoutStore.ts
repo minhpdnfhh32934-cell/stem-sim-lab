@@ -11,7 +11,8 @@ const BOTTOM_TABS: readonly BottomTab[] = ['graphs', 'solution', 'challenge', 'd
 export const LAYOUT_LIMITS = {
   left: { min: 200, max: 420, default: 256 },
   right: { min: 240, max: 480, default: 300 },
-  bottom: { min: 120, max: 520, default: 220 },
+  // The smallest bottom panel still holds a whole chart: tab bar, graph picker, 120 px plot (UI-24).
+  bottom: { min: 210, max: 520, default: 220 },
 } as const;
 
 type PanelSizeKey = keyof typeof LAYOUT_LIMITS;

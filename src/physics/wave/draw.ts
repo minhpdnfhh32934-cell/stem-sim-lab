@@ -1,5 +1,6 @@
 import type { Locale } from '@/app/i18n/types';
 import { formatNumber } from '@/app/i18n';
+import { DASH, DOT } from '../common/scene-helpers';
 import { fmtQty } from '../common/tex';
 import { block, circle, line, polyline, text } from '../render/draw';
 import type { DrawContext } from '../types';
@@ -92,7 +93,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       xs.map((x) => ({ x, y: S * incident(w, x, t) })),
       c.velocity,
       1.5,
-      [7, 5],
+      DASH,
     );
     polyline(
       ctx,
@@ -100,7 +101,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       xs.map((x) => ({ x, y: S * reflected(w, x, t) })),
       c.force,
       1.5,
-      [3, 4],
+      DOT,
     );
   }
   polyline(

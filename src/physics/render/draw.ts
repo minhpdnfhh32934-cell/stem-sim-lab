@@ -19,6 +19,62 @@ export interface Pt {
   y: number;
 }
 
+/** Stage colour drawn around label glyphs (set by drawGrid, which starts every frame). */
+let halo = '';
+
+/** "a_ht, F_ht" → runs [a][ht sub][, F][ht sub]: canvas text has no subscripts. */
+export function labelRuns(value: string): { text: string; sub: boolean }[] {
+  return value
+    .split(/(_[^\s,;)]+)/)
+    .filter((s) => s !== '')
+    .map((s) => (s.startsWith('_') ? { text: s.slice(1), sub: true } : { text: s, sub: false }));
+}
+
+/**
+ * Writes a label at the context's font, alignment and baseline, with a halo of the stage colour
+ * so a line, arrow or body under it never cuts a glyph, and "_x" parts as smaller, lowered
+ * subscripts.
+ */
+function label(ctx: Ctx, value: string, x: number, y: number, withHalo = true): void {
+  const font = ctx.font;
+  const px = Number(/(\d+(?:\.\d+)?)px/.exec(font)?.[1] ?? 12);
+  const subFont = font.replace(/\d+(?:\.\d+)?px/, `${String(Math.round(px * 7.5) / 10)}px`);
+  const runs = labelRuns(value).map((r) => {
+    ctx.font = r.sub ? subFont : font;
+    return { ...r, w: ctx.measureText(r.text).width };
+  });
+  const total = runs.reduce((s, r) => s + r.w, 0);
+  const align = ctx.textAlign;
+  let x0 =
+    align === 'center' ? x - total / 2 : align === 'right' || align === 'end' ? x - total : x;
+  ctx.textAlign = 'left';
+  const placed = runs.map((r) => {
+    const at = { ...r, x: x0, y: r.sub ? y + px * 0.3 : y };
+    x0 += r.w;
+    return at;
+  });
+  for (const pass of halo && withHalo ? ['halo', 'fill'] : ['fill']) {
+    for (const r of placed) {
+      ctx.font = r.sub ? subFont : font;
+      if (pass === 'fill') {
+        ctx.fillText(r.text, r.x, r.y);
+        continue;
+      }
+      ctx.save();
+      ctx.strokeStyle = halo;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(r.text, r.x, r.y);
+      ctx.restore();
+    }
+  }
+  ctx.font = font;
+  ctx.textAlign = align;
+}
+
+/** Scenes write their captions in the top rows (offset y ≤ 72 px from the top edge). */
+export const CAPTION_ROWS = 80;
+
 export function drawGrid(
   ctx: Ctx,
   cam: Camera,
@@ -26,7 +82,13 @@ export function drawGrid(
   locale: Locale,
   /** The scene's vertical stretch (`PhysicsScene.yStretch`): y labels show unstretched metres. */
   yStretch = 1,
+  /**
+   * Left edge of the y numbers in CSS px (StageCanvas: right of the tool palette, which would
+   * hide them at 4 px). Moved off the edge, they leave the top rows to scene captions.
+   */
+  labelLeft = 4,
 ): void {
+  halo = colors.stage;
   const v = cam.visible();
   const major = niceStep(cam.scale, 90);
   const minor = major / 5;
@@ -74,7 +136,8 @@ export function drawGrid(
   for (let y = Math.ceil(v.yMin / major) * major; y <= v.yMax; y += major) {
     const { sy } = cam.toScreen(0, y);
     if (sy > cam.height - 18) continue;
-    ctx.fillText(fmtY(y / yStretch), 4, sy);
+    if (labelLeft > 4 && sy < CAPTION_ROWS) continue;
+    ctx.fillText(fmtY(y / yStretch), labelLeft, sy);
   }
   ctx.restore();
 }
@@ -113,9 +176,12 @@ export function arrow(
   ctx.fill();
   if (text) {
     ctx.font = `italic 600 ${fontPx(13)} "Cambria Math", "Times New Roman", serif`;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(text, b.sx + 4, b.sy - 2);
+    // Past the tip, on the side the arrow points to: never on its own head or its body.
+    const cos = Math.cos(ang);
+    const sin = Math.sin(ang);
+    ctx.textAlign = cos > 0.35 ? 'left' : cos < -0.35 ? 'right' : 'center';
+    ctx.textBaseline = sin > 0.35 ? 'top' : sin < -0.35 ? 'bottom' : 'middle';
+    label(ctx, text, b.sx + cos * 6, b.sy + sin * 6);
   }
   ctx.restore();
 }
@@ -284,6 +350,8 @@ export function text(
   color: string,
   align: CanvasTextAlign = 'left',
   offset = { x: 6, y: -6 },
+  /** False for a mark drawn inside a filled shape (a charge's sign): no halo to thicken it. */
+  withHalo = true,
 ): void {
   const { sx, sy } = cam.toScreen(x, y);
   ctx.save();
@@ -291,7 +359,7 @@ export function text(
   ctx.font = `${fontPx(12)} system-ui, "Segoe UI", sans-serif`;
   ctx.textAlign = align;
   ctx.textBaseline = 'bottom';
-  ctx.fillText(value, sx + offset.x, sy + offset.y);
+  label(ctx, value, sx + offset.x, sy + offset.y, withHalo);
   ctx.restore();
 }
 

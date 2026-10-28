@@ -207,7 +207,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       arrow(ctx, cam, g.m1.x, g.m1.y, ct * T * k, st * T * k, c.velocity, 'T');
       const fr = state[PU.friction] ?? 0;
       if (Math.abs(fr) > 1e-9)
-        arrow(ctx, cam, g.m1.x, g.m1.y - B / 3, ct * fr * k, st * fr * k, c.acceleration, 'Fms');
+        arrow(ctx, cam, g.m1.x, g.m1.y - B / 3, ct * fr * k, st * fr * k, c.acceleration, 'F_ms');
     }
   }
 }

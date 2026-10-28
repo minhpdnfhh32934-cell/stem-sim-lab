@@ -2,7 +2,7 @@ import type { Locale } from '@/app/i18n/types';
 import type { LocalizedText } from '@/core/data/dataset';
 import { DIM } from '@/core/units';
 import type { ScienceCardData } from '@/science-card/types';
-import { L } from '../common/scene-helpers';
+import { DOT, L } from '../common/scene-helpers';
 import { SRC } from '../common/sources';
 import { fmtQty, texNum, texQty } from '../common/tex';
 import type {
@@ -401,7 +401,12 @@ function graphs(): GraphDef[] {
       yLabel: L('Li độ (m)', 'Displacement (m)'),
       series: [
         { id: 'y1', label: L('y₁ (sóng tới)', 'y₁ (incident)'), value: (s) => s[SW.y1] ?? 0 },
-        { id: 'y2', label: L('y₂ (sóng phản xạ)', 'y₂ (reflected)'), value: (s) => s[SW.y2] ?? 0 },
+        {
+          id: 'y2',
+          label: L('y₂ (sóng phản xạ)', 'y₂ (reflected)'),
+          value: (s) => s[SW.y2] ?? 0,
+          dash: DOT,
+        },
         { id: 'y', label: L('y = y₁ + y₂', 'y = y₁ + y₂'), value: (s) => s[SW.y] ?? 0 },
       ],
     },

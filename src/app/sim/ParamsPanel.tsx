@@ -86,9 +86,16 @@ function ParamRow({
     <div className="param" data-source={source}>
       <div className="param__head">
         {def.kind === 'toggle' ? (
-          <span className="param__label" id={id}>
-            &nbsp;
-          </span>
+          <label className="param__label param__toggle">
+            <input
+              type="checkbox"
+              checked={valueSI > 0.5}
+              onChange={(e) => {
+                set(e.target.checked ? 1 : 0);
+              }}
+            />
+            <span>{L(def.label)}</span>
+          </label>
         ) : (
           <label htmlFor={id} className="param__label" id={`${id}-label`}>
             {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
@@ -146,18 +153,6 @@ function ParamRow({
             </button>
           ))}
         </div>
-      )}
-      {def.kind === 'toggle' && (
-        <label className="param__toggle">
-          <input
-            type="checkbox"
-            checked={valueSI > 0.5}
-            onChange={(e) => {
-              set(e.target.checked ? 1 : 0);
-            }}
-          />
-          <span>{L(def.label)}</span>
-        </label>
       )}
       {def.live && <p className="param__hint">{t('params.liveHint')}</p>}
     </div>

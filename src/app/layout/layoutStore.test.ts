@@ -60,6 +60,16 @@ describe('useLayoutStore', () => {
     expect(localStorage.getItem('stemsim.layout')).not.toContain('Open');
   });
 
+  it('a bottom height saved under the new 210 px minimum (UI-24) is raised on load', async () => {
+    localStorage.setItem(
+      'stemsim.layout',
+      JSON.stringify({ state: { bottomHeight: 150 }, version: 1 }),
+    );
+    await useLayoutStore.persist.rehydrate();
+    expect(useLayoutStore.getState().bottomHeight).toBe(LAYOUT_LIMITS.bottom.min);
+    expect(LAYOUT_LIMITS.bottom.min).toBe(210);
+  });
+
   it('persists sizes but never the presentation flag', () => {
     useLayoutStore.getState().setSize('left', 333);
     useLayoutStore.getState().setPresentation(true);
