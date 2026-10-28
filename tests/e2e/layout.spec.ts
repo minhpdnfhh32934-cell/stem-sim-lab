@@ -315,3 +315,30 @@ test('a hidden switch input in Settings stays hidden (the checkbox rule is scope
   const b = await input.boundingBox();
   expect(b === null || (b.width <= 2 && b.height <= 2)).toBe(true);
 });
+
+test('the y-axis numbers start right of the tool palette (UI-02, drawGrid labelLeft)', async ({
+  page,
+}) => {
+  // Record every left-aligned canvas text and where it starts (CSS px, the canvas is scaled).
+  await page.addInitScript(() => {
+    const w = window as unknown as { __fills: { text: string; x: number }[] };
+    w.__fills = [];
+    const proto = CanvasRenderingContext2D.prototype;
+    const fill = Reflect.get<CanvasRenderingContext2D, 'fillText'>(proto, 'fillText');
+    proto.fillText = function (text: string, x: number, y: number) {
+      if (this.textAlign === 'left') w.__fills.push({ text, x });
+      Reflect.apply(fill, this, [text, x, y]);
+    };
+  });
+  await openPhysics(page, 'Rơi tự do');
+  const stage = await box(page.getByRole('region', { name: 'Khung mô phỏng' }));
+  const tools = await box(page.locator('.stage__toolbar'));
+  await page.waitForTimeout(300);
+  const numbers = await page.evaluate(() =>
+    (window as unknown as { __fills: { text: string; x: number }[] }).__fills.filter((f) =>
+      /^[-−]?[\d.,]+$/.test(f.text),
+    ),
+  );
+  expect(numbers.length).toBeGreaterThan(2);
+  for (const n of numbers) expect(n.x, n.text).toBeGreaterThanOrEqual(tools.right - stage.x);
+});
