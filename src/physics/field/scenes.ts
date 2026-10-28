@@ -358,7 +358,7 @@ function card(p: Params): ScienceCardData {
 
 const charge = (i: 1 | 2 | 3): ParamDef => ({
   key: `q${i}`,
-  label: L(`Điện tích q${SUB[i - 1]} (có dấu)`, `Charge q${SUB[i - 1]} (signed)`),
+  label: L(`Điện tích thứ ${i} (có dấu)`, `Charge ${i} (signed)`),
   symbol: `q_${i}`,
   kind: 'number',
   dim: DIM.charge,
@@ -455,7 +455,7 @@ export const electricField: PhysicsScene = {
     position('y3', L('Vị trí q₃: tung độ', 'q₃ position: y'), 'y_3', 3),
     {
       key: 'q0',
-      label: L('Điện tích thử q₀ (đặt tại M)', 'Test charge q₀ (placed at M)'),
+      label: L('Điện tích thử (đặt tại M)', 'Test charge (placed at M)'),
       symbol: 'q_0',
       kind: 'number',
       dim: DIM.charge,

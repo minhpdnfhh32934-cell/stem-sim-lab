@@ -645,7 +645,11 @@ Progress log: `docs/PROGRESS.md`.
   and undo work. E2E runs with `tests/e2e/storage-state.json` (tour already done).
 - Overload: render loops call `reportOverload()` from a `FrameMonitor`; memory watchdog in
   `src/perf/memory.ts` (`registerCacheRelease`).
-- KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead.
+- KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead. A textbook
+  symbol's Vietnamese subscript goes inside `\text{}` (`W_{\text{đ}}`, `\alpha_{\text{bđ}}`), never straight in
+  math mode (fallback font next to italic letters, KaTeX warning). KaTeX's fonts have "đ" but not "ỏ", "ỉ",
+  "µ" or "²", even inside `\text{}` (symbolNotInFont): `texQty` writes µ and ² outside it, and
+  `src/physics/registry.test.ts` renders every formula of every scene and choice and fails on any warning.
 
 ## Phase status
 

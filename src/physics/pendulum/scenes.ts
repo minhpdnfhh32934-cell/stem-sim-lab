@@ -90,7 +90,7 @@ const body: BodyDef = {
       { label: L('Lực căng dây', 'String tension'), symbol: 'T', value: s[PE.T] ?? 0, unit: 'N' },
       {
         label: L('Góc theo mô hình góc nhỏ', 'Small-angle model angle'),
-        symbol: '\\alpha_{nhỏ}',
+        symbol: '\\alpha_{\\text{gđ}}',
         value: s[PE.thS] ?? 0,
         unit: 'deg',
       },
@@ -261,7 +261,7 @@ function solve(p: Params, locale: Locale): Solution {
   const chk = numericPeriodPendulum(q);
   steps.push({
     text: L('Biên độ góc (từ bảo toàn cơ năng):', 'Angular amplitude (from energy conservation):'),
-    tex: `\\cos\\alpha_0 = \\cos\\alpha_{bđ} - \\frac{l\\,\\omega_{bđ}^2}{2g} \\Rightarrow \\alpha_0 = ${Q(tm, 'deg')}`,
+    tex: `\\cos\\alpha_0 = \\cos\\alpha_{\\text{bđ}} - \\frac{l\\,\\omega_{\\text{bđ}}^2}{2g} \\Rightarrow \\alpha_0 = ${Q(tm, 'deg')}`,
   });
   steps.push({
     text: L(
@@ -388,7 +388,7 @@ export const simplePendulum: PhysicsScene = {
     {
       key: 'theta0',
       label: L('Li độ góc ban đầu', 'Initial angle'),
-      symbol: '\\alpha_{bđ}',
+      symbol: '\\alpha_{\\text{bđ}}',
       kind: 'number',
       unit: 'deg',
       min: -179,
@@ -398,7 +398,7 @@ export const simplePendulum: PhysicsScene = {
     {
       key: 'omega0',
       label: L('Tốc độ góc ban đầu', 'Initial angular velocity'),
-      symbol: '\\omega_{bđ}',
+      symbol: '\\omega_{\\text{bđ}}',
       kind: 'number',
       dim: DIM.frequency,
       unit: 'rad/s',

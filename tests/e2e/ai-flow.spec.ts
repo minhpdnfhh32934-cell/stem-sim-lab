@@ -548,7 +548,7 @@ test('a charge whose sign the AI changed is marked on its row until the learner 
   await expect(dialog.locator('.qty-card.is-check')).toHaveCount(1);
   await expect(dialog.locator('.qty-card.is-check')).toContainText('q₂');
   // Typing the value again with the wrong sign does not count as a check.
-  const q2 = dialog.getByRole('textbox', { name: 'Điện tích q₂ (có dấu)' });
+  const q2 = dialog.getByRole('textbox', { name: 'Điện tích thứ 2 (có dấu)' });
   await q2.fill('9');
   await expect(hint).toHaveCount(1);
   await q2.fill('-8');
