@@ -6,9 +6,9 @@ import { buildDraft, impliedByWords } from './draft';
 import type { Extraction } from './spec';
 
 /** One quantity the AI says is stated in words, with its quote. */
-function extraction(key: string, value: number, quote: string): Extraction {
+function extraction(key: string, value: number, quote: string, unit = '1'): Extraction {
   return {
-    quantities: [{ key, value, unit: '1', quote }],
+    quantities: [{ key, value, unit, quote }],
     questions: [],
     assumptions: [],
     unsupported_parts: [],
@@ -136,6 +136,31 @@ describe('values stated in words (MASTER_PROMPT §2.1)', () => {
     const second = buildDraft(pulley, extraction('muK', 0, 'mặt bàn không nhẵn'), rough, 9.81);
     expect(second.sources.muK).not.toBe('problem');
     expect(second.issues.map((i) => [i.kind, i.key])).toContainEqual(['notInText', 'muK']);
+  });
+
+  it('"bỏ qua ma sát" is no head-on impact: the collision offset b is not taken from it', async () => {
+    const collisions = await loadScene('collisions');
+    const text =
+      'Quả cầu 2 kg chuyển động với vận tốc 3 m/s va chạm xiên với quả cầu 1 kg đứng yên, bỏ qua ma sát.';
+    const draft = buildDraft(collisions, extraction('b', 0, 'bỏ qua ma sát'), text, 9.81);
+    expect(draft.sources.b).not.toBe('problem');
+    expect(draft.params.b).toBe(collisions.defaults.b);
+    expect(draft.issues.map((i) => [i.kind, i.key])).toContainEqual(['notInText', 'b']);
+    expect(impliedByWords('b', 0, 'bỏ qua ma sát', text)).toBe(false);
+  });
+
+  it('"bỏ qua lực cản" still sets a damping coefficient to 0 (spring b, pendulum c)', async () => {
+    const spring = await loadScene('springPendulum');
+    const text =
+      'Vật 0,5 kg gắn vào lò xo độ cứng 50 N/m, kéo lệch 5 cm rồi thả nhẹ, bỏ qua lực cản.';
+    const s = buildDraft(spring, extraction('b', 0, 'bỏ qua lực cản', 'kg/s'), text, 9.81);
+    expect(s.sources.b).toBe('problem');
+    expect(s.issues.filter((i) => i.key === 'b')).toEqual([]);
+    const pendulum = await loadScene('simplePendulum');
+    const swing = 'Con lắc đơn dài 1 m, kéo lệch 10° rồi thả nhẹ, bỏ qua lực cản không khí.';
+    const p = buildDraft(pendulum, extraction('c', 0, 'bỏ qua lực cản', 'Hz'), swing, 9.81);
+    expect(p.sources.c).toBe('problem');
+    expect(p.issues.filter((i) => i.key === 'c')).toEqual([]);
   });
 
   it('drops a value whose bare-phrase quote comes from a negated sentence', async () => {

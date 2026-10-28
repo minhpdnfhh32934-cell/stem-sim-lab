@@ -1071,6 +1071,56 @@
       "expectUnsupportedParts": false
     },
     {
+      "id": "vc-04",
+      "text": "Quả cầu 1 khối lượng 2 kg chuyển động với vận tốc 3 m/s đến va chạm xiên, hoàn toàn đàn hồi với quả cầu 2 khối lượng 1 kg đang đứng yên. Bỏ qua ma sát. Tính động lượng và động năng của hệ sau va chạm.",
+      "topic": "collisions",
+      "quantities": [
+        {
+          "key": "mode",
+          "value": 1,
+          "unit": "1",
+          "quote": "va chạm xiên"
+        },
+        {
+          "key": "m1",
+          "value": 2,
+          "unit": "kg",
+          "quote": "khối lượng 2 kg"
+        },
+        {
+          "key": "v1",
+          "value": 3,
+          "unit": "m/s",
+          "quote": "vận tốc 3 m/s"
+        },
+        {
+          "key": "m2",
+          "value": 1,
+          "unit": "kg",
+          "quote": "khối lượng 1 kg"
+        },
+        {
+          "key": "v2",
+          "value": 0,
+          "unit": "m/s",
+          "quote": "đang đứng yên"
+        },
+        {
+          "key": "e",
+          "value": 1,
+          "unit": "1",
+          "quote": "hoàn toàn đàn hồi"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "momentum": 6,
+        "ke_before": 9.0,
+        "ke_after": 9.0
+      },
+      "expectUnsupportedParts": false
+    },
+    {
       "id": "ucm-01",
       "text": "Một vật nhỏ chuyển động tròn đều trên đường tròn bán kính 2 m với tốc độ 4 m/s. Tính tốc độ góc, chu kì và gia tốc hướng tâm của vật.",
       "topic": "uniformCircularMotion",

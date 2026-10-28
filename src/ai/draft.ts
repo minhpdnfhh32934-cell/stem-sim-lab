@@ -1,5 +1,13 @@
 import type { LocalizedText } from '@/core/data/dataset';
-import { DIM, getUnit, isKnownUnit, sameDimension, toSI, unitLabel } from '@/core/units';
+import {
+  DIM,
+  getUnit,
+  isKnownUnit,
+  sameDimension,
+  toSI,
+  unitLabel,
+  type Dimension,
+} from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
 import type { ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { WORD_END, WORD_START } from '@/safety/moderation';
@@ -54,7 +62,13 @@ const L = (vi: string, en: string): LocalizedText => ({ vi, en });
  * only when the problem text does not negate it ("không đàn hồi", "không nhẵn", "không đứng
  * yên"), even when the quote leaves the negation out.
  */
-const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
+const IMPLIED: {
+  keys: RegExp;
+  value: number;
+  phrases: string[];
+  /** Only for a parameter of one of these dimensions (a name alone can mean two things). */
+  dims?: Dimension[];
+}[] = [
   {
     // initial velocities
     keys: /^(v0|vA|vB|v1|v2|v0x|omega0)$/,
@@ -75,9 +89,17 @@ const IMPLIED: { keys: RegExp; value: number; phrases: string[] }[] = [
     ],
   },
   {
-    keys: /^(mu|muS|muK|c|b)$/,
+    keys: /^(mu|muS|muK)$/,
     value: 0,
     phrases: ['không ma sát', 'bỏ qua ma sát', 'nhẵn', 'bỏ qua lực cản', 'không lực cản'],
+  },
+  // "b" / "c" are a damping coefficient (kg/s, or a rate in 1/s) in the oscillators, but the
+  // collision's impact offset is also "b": no friction says nothing about a head-on impact.
+  {
+    keys: /^(c|b)$/,
+    value: 0,
+    phrases: ['không ma sát', 'bỏ qua ma sát', 'nhẵn', 'bỏ qua lực cản', 'không lực cản'],
+    dims: [DIM.damping, DIM.frequency],
   },
   {
     keys: /^(h0|xA|x0|s0)$/,
@@ -145,9 +167,20 @@ function statedPlainly(text: string, from: number, to: number, phrase: string): 
  * also stands in a negated sentence ("Vật A đứng yên, vật B không đứng yên." quoted as
  * "đứng yên") does not say which one is meant, so the value is not taken from it.
  */
-export function impliedByWords(key: string, value: number, quote: string, text: string): boolean {
+export function impliedByWords(
+  key: string,
+  value: number,
+  quote: string,
+  text: string,
+  /** The parameter's dimension: a rule with `dims` needs one of them. */
+  dim?: Dimension,
+): boolean {
   if (!quote || !quoteInText(text, quote)) return false;
-  const rules = IMPLIED.filter((rule) => rule.keys.test(key) && rule.value === value);
+  const fits = (dims?: Dimension[]) =>
+    dims === undefined || (dim !== undefined && dims.some((d) => sameDimension(d, dim)));
+  const rules = IMPLIED.filter(
+    (rule) => rule.keys.test(key) && rule.value === value && fits(rule.dims),
+  );
   if (rules.length === 0) return false;
   const t = flat(text);
   const spans = quoteSpans(t, flat(quote));
@@ -246,7 +279,7 @@ export function buildDraft(
     }
     // §2.1: the number must literally appear in the problem, or be stated in words
     // ("thả nhẹ" → v₀ = 0) with a verifiable quote.
-    const inWords = impliedByWords(q.key, q.value, q.quote, problemText);
+    const inWords = impliedByWords(q.key, q.value, q.quote, problemText, def.dim);
     if (!inWords && !mentions(problemText, q.value)) {
       issues.push({
         kind: 'notInText',
