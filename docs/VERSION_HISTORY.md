@@ -128,6 +128,7 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 
 - Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
 - Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
+- Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích có thể bị ẩn nhầm kèm lời báo có số chưa kiểm chứng. Số liệu do SimLab tính vẫn hiện đầy đủ; bản sau sẽ sửa.
 
 **Điểm nổi bật trong app**
 
@@ -1327,6 +1328,7 @@ Mô phỏng 3D Sinh học xuất hiện lần đầu ở phiên bản 0.6.0 (Đ�
 
 - Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.
 - Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.
+- Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích có thể bị ẩn nhầm kèm lời báo có số chưa kiểm chứng. Số liệu do SimLab tính vẫn hiện đầy đủ; bản sau sẽ sửa.
 
 ### Phiên bản chưa phát hành hoặc chưa xác minh
 

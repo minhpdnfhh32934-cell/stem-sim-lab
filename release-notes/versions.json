@@ -314,6 +314,10 @@
           {
             "vi": "Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.",
             "en": "Where each lesson sits in Grade 10 · 11 · 12 comes from the Kết nối tri thức tables of contents and is waiting for a teacher’s review."
+          },
+          {
+            "vi": "Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích có thể bị ẩn nhầm kèm lời báo có số chưa kiểm chứng. Số liệu do SimLab tính vẫn hiện đầy đủ; bản sau sẽ sửa.",
+            "en": "When the AI explains a solution and copies a step’s formula as written, the explanation may be hidden by mistake, with a note about unverified numbers. The numbers SimLab computed are still shown in full; a later version will fix this."
           }
         ]
       },
