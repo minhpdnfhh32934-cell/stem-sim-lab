@@ -21,6 +21,7 @@ vi.mock('@/ui/charts/uplot', () => ({
     Promise.resolve(
       class {
         over = document.createElement('div');
+        root = document.createElement('div');
         constructor(opts: { series: { label?: string }[] }) {
           created.push(opts.series.map((s) => s.label ?? ''));
         }
