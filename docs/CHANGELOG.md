@@ -25,10 +25,15 @@ Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động 
 - Dấu "Đã học" hiện cho mọi chủ đề em đã mở, kèm số bước còn lại.
 - Bảng "Tôi hiểu đề như sau" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.
 - Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.
+- Rà soát toàn bộ giao diện trước buổi giới thiệu: chữ tiếng Việt thống nhất, không còn từ "API" khi nói về AI, nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.
+- Hình Vật lí: nhãn có chỉ số dưới thật, tên mũi tên đặt sau đầu mũi tên, hai đường có thể trùng nhau được vẽ nét đứt; số trên trục không còn bị thanh công cụ che.
+- Ô nhập số hiểu cả "9,81" lẫn "9.81"; khi số vượt giới hạn, dưới ô ghi rõ mô phỏng đang chạy với giá trị nào.
+- Đồ thị đủ điểm khi chạy chậm hoặc bấm "Bước" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.
 
 ### Fixed
 
 - Bảng của AI Teacher: không còn viết dòng nguồn "Theo ghi chú từ…", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.
+- Thẻ Khoa học của bài Chuyển động thẳng đều ghi nhầm "gia tốc không đổi"; nay ghi đúng là vận tốc không đổi.
 
 ### Security
 

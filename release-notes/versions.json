@@ -178,7 +178,7 @@
       "dates": {
         "devStart": "2026-10-22T03:56:04Z",
         "firstCommit": "2026-10-22T23:06:49+07:00",
-        "lastCommit": "2026-10-27T12:47:09+07:00",
+        "lastCommit": "2026-10-28T12:48:37+07:00",
         "merged": null,
         "built": null,
         "released": null,
@@ -186,8 +186,8 @@
       },
       "evidence": [
         "devStart: issue #37 (kế hoạch 0.8.0) tạo lúc 2026-10-22T03:56:04Z (gh issue view 37); người dùng gắn approved ngày 26/10/2026; 10 issue con #68–#77 gắn approved cùng ngày",
-        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 32a9378; 121 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..32a9378, 27/10/2026)",
-        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit: a05f4d6 2026-10-27T12:47:09+07:00 'fix(ai): Vietnamese words glued to a number keep it; force steps in the answers' unit (#76)', commit mã cuối trước khi gộp PR #89",
+        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 0daaa31; 182 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..0daaa31)",
+        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit: 3bf305b 2026-10-28T12:48:37+07:00 'fix(ui): #101 CI — the library keeps a slot for a topic's mark (UI-42)'",
         "(f) dấu \"Đã học\" cho mọi chủ đề đã mở: PR #79, gộp 18b6a5c 2026-10-26T12:52:42Z (issue #68)",
         "(g1) dữ liệu xếp lớp theo mục lục SGK Kết nối tri thức, sinh bằng scripts/data/gen_curriculum_kntt.py: PR #82, gộp 70b5b7c 2026-10-26T12:12:20Z (issue #71); docs/DATA_REVIEW.md mục 12 và KNTT-1 … KNTT-11, đang chờ giáo viên duyệt",
         "(i1) đồ thị Vật lí đọc được ở 1366×768, test bố cục tests/e2e/layout.spec.ts: PR #81, gộp e9c5f3b 2026-10-26T17:33:59Z (issue #69)",
@@ -198,6 +198,7 @@
         "(k) \"Phòng thí nghiệm\" thành \"Virtual Lab\" (chỉ chữ hiển thị, quyết định của chủ dự án 23/10/2026 ghi trong CLAUDE.md): PR #91, gộp f904250 2026-10-26T21:29:52Z (issue #73)",
         "(b) Sóng dừng trên dây (VL11 Bài 13), nút \"Dùng fₙ\": PR #90, gộp 006f519 2026-10-26T22:07:30Z (issue #75); DATA_REVIEW SWV-1 … SWV-8",
         "(d) Điện trường của điện tích điểm (VL11 Bài 16–18), bộ lọc số AI đọc được số mũ chỉ số trên và so sánh tương đối, cảnh báo dấu điện tích: PR #89 (7 lượt duyệt; phạm vi cuối của bộ lọc ghi trong bình luận PR #89), gộp 32a9378 2026-10-27T06:15:14Z (issue #76)",
+        "(i2) rà soát toàn bộ giao diện trước demo, làm sớm từ 27/10/2026 theo lựa chọn của chủ dự án (213 ảnh chụp, 54 nhóm gợi ý UI-01…UI-54, issue #70); mỗi PR duyệt bằng nhiều agent, CI 8/8 trước khi gộp: PR #93 gộp f5f0a35 2026-10-27T13:14:41Z; #94 cc38c21 2026-10-27T13:37:11Z; #95 b05f0e4 2026-10-27T14:46:11Z; #96 2bec769 2026-10-27T15:34:46Z; #99 db2abbb 2026-10-27T16:00:35Z; #98 5a5a573 2026-10-27T22:56:12Z (3 lượt duyệt); #102 5f23c4e 2026-10-28T00:36:08Z; #97 80342ab 2026-10-28T00:54:14Z (4 lượt duyệt; bộ lọc số AI giữ bằng main cộng các số do engine in ra, bản đọc TeX mới bị bỏ vì lỏng hơn main); #101 45d2514 2026-10-28T06:10:42Z; #100 0daaa31 2026-10-28T06:33:48Z",
         "Bảng của AI Teacher (dòng nguồn, chữ phụ đề, cắt câu giữa chừng, thấy trong bản ghi hình 26/10/2026): PR #55, gộp d6f9fec 2026-10-26T00:17:07Z",
         "Phụ thuộc có lỗ hổng: PR #48 tokio 1.53.3 (RUSTSEC-2026-0386), gộp 4321eb9 2026-10-23T15:51:45Z; PR #51 undici 8.12.3 và zod 4.6.7 (npm audit), gộp f7eb477 2026-10-24T05:12:59Z; dependabot PR #45, #49, #27, #53, #28, #26 gộp 24/10/2026",
         "Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)"
@@ -207,7 +208,8 @@
         "PR #87 sau khi sửa theo duyệt: E2E đầy đủ trên máy 127/127 đạt (27/10/2026, work-log docs/work-log/2026-10-27-a-uniform-circular-motion.md)",
         "PR #88: unit 4269 đạt; E2E learner 6/6 và biology + project 17/17 đạt (phiên làm PR #88, 27/10/2026)",
         "PR #90 sau lượt duyệt 2: unit 4339 đạt; E2E physics + layout 17/17 đạt (docs/work-log/2026-10-26-b-standing-wave.md)",
-        "PR #91: unit đạt (1 test chập chờn khi máy tải nặng, chạy riêng đạt); CI 8/8 gồm cả E2E 3D (docs/work-log/2026-10-27-k-virtual-lab.md)"
+        "PR #91: unit đạt (1 test chập chờn khi máy tải nặng, chạy riêng đạt); CI 8/8 gồm cả E2E 3D (docs/work-log/2026-10-27-k-virtual-lab.md)",
+        "PR #93–#102 (rà soát giao diện i2): CI 8/8 xanh trước khi gộp; unit và E2E liên quan do phiên làm PR chạy, ghi trong work-log docs/work-log/2026-10-27-i2-*.md và 2026-10-28-i2-graph-samples.md"
       ],
       "refs": {
         "tag": null,
@@ -215,7 +217,7 @@
         "releaseUrl": null,
         "prs": [
           26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 79, 81, 82, 83, 84,
-          85, 86, 87, 88, 89, 90, 91
+          85, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102
         ],
         "commits": ["39bfd01", "a05f4d6"],
         "branches": ["main", "chore/0.8.0-version"]
@@ -277,6 +279,26 @@
             "vi": "Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.",
             "en": "When the AI reads a problem: numbers written like 4.10⁻⁸ are read correctly, very small invented numbers are refused more reliably, and the table warns when a charge’s sign may not match the problem.",
             "area": "api"
+          },
+          {
+            "vi": "Rà soát toàn bộ giao diện trước buổi giới thiệu: chữ tiếng Việt thống nhất, không còn từ \"API\" khi nói về AI, nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.",
+            "en": "A full review of the interface: consistent Vietnamese wording, no more \"API\" when talking about AI, buttons large enough to press, and labels on the 3D biology pictures no longer cover each other.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hình Vật lí: nhãn có chỉ số dưới thật, tên mũi tên đặt sau đầu mũi tên, hai đường có thể trùng nhau được vẽ nét đứt; số trên trục không còn bị thanh công cụ che.",
+            "en": "Physics pictures: labels with real subscripts, arrow names after the arrow head, dashed lines where two curves can overlap, and axis numbers no longer hidden by the tool bar.",
+            "area": "ui"
+          },
+          {
+            "vi": "Ô nhập số hiểu cả \"9,81\" lẫn \"9.81\"; khi số vượt giới hạn, dưới ô ghi rõ mô phỏng đang chạy với giá trị nào.",
+            "en": "Number boxes accept both \"9,81\" and \"9.81\"; when a value is out of range, a line under the box says which value the simulation runs.",
+            "area": "ui"
+          },
+          {
+            "vi": "Đồ thị đủ điểm khi chạy chậm hoặc bấm \"Bước\" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.",
+            "en": "Graphs have enough points when running slowly or pressing \"Step\"; the Data table and CSV file are still the values the model computed, never interpolated.",
+            "area": "ui"
           }
         ],
         "fixed": [
@@ -284,6 +306,11 @@
             "vi": "Bảng của AI Teacher: không còn viết dòng nguồn \"Theo ghi chú từ…\", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.",
             "en": "AI Teacher's board no longer writes the \"From the note…\" source line, the subtitle has no raw markup, and lines are no longer split mid-sentence.",
             "area": "teacher"
+          },
+          {
+            "vi": "Thẻ Khoa học của bài Chuyển động thẳng đều ghi nhầm \"gia tốc không đổi\"; nay ghi đúng là vận tốc không đổi.",
+            "en": "The Science Card of Uniform motion wrongly said \"constant acceleration\"; it now says constant velocity.",
+            "area": "ui"
           }
         ],
         "security": [
