@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "SimLab",
   "repository": "https://github.com/minhpdnfhh32934-cell/stem-sim-lab",
-  "evidenceCheckedAt": "2026-10-22",
+  "evidenceCheckedAt": "2026-10-28",
   "overview": [
     "SimLab (tên cũ: STEM Sim Lab) là ứng dụng desktop mô phỏng Vật lý, Hóa học và Sinh học cho người học, chạy ngay trên máy (Tauri 2 + React). Mọi con số do chương trình tính bằng mô hình ghi trong Thẻ Khoa học; AI chỉ đọc đề và giải thích bằng lời.",
     "Dự án bắt đầu ngày 28/09/2026: Phase 0–7 (khung app, lõi tính toán, Vật lý, AI đọc đề, Hóa học, Sinh học, dự án và bộ cài Windows) xong trong hai ngày đầu. Tiếp theo là giai đoạn 3b (học bằng khám phá, an toàn khi dùng AI, hai bộ cài), bản fork 'Thầy AI' (09–12/10/2026) mà nay là AI Teacher, rồi đổi tên thành SimLab ở 0.5.0 và đợt rà soát toàn diện G0–G5 cho 0.6.0. Bản 0.7.0 và 0.7.1 đưa cả 11 bài Sinh học lên hình 3D.",
@@ -170,6 +170,216 @@
     "Tổng số unit/E2E/Rust test của 0.1.0 và 0.3.0 không có trong tài liệu."
   ],
   "versions": [
+    {
+      "version": "0.8.0",
+      "status": "in-review",
+      "statusNote": "PR phiên bản (#92) mở 27/10/2026, bỏ nháp ngày 28/10/2026 khi mọi PR của 0.8.0 đã gộp vào main (người dùng cho tự làm, sớm hơn hạn 31/10/2026 của kế hoạch #37); chưa phát hành. Phần web và phần lõi cùng lên 0.8.0 theo lời giao việc 0.8.0 của chủ dự án, nên ứng dụng 0.7.1 sẽ được báo cài bộ cài mới thay vì cập nhật trong app; máy dùng cho buổi demo 07/11/2026 phải cài bộ cài 0.8.0.",
+      "channel": "github",
+      "dates": {
+        "devStart": "2026-10-22T03:56:04Z",
+        "firstCommit": "2026-10-22T23:06:49+07:00",
+        "lastCommit": "2026-10-28T15:18:56+07:00",
+        "merged": null,
+        "built": null,
+        "released": null,
+        "tagged": null
+      },
+      "evidence": [
+        "devStart: issue #37 (kế hoạch 0.8.0) tạo lúc 2026-10-22T03:56:04Z (gh issue view 37); người dùng gắn approved ngày 26/10/2026; 10 issue con #68–#77 gắn approved cùng ngày",
+        "Khoảng commit: sau ee8aaff (PR #39, ghi 0.7.1 đã phát hành) đến main 69b446d; 185 commit không phải commit gộp (git rev-list --no-merges --count ee8aaff..69b446d)",
+        "firstCommit: 39bfd01 2026-10-22T23:06:49+07:00 'test(e2e): hw3d runs with reduced motion so the overload ladder cannot swap it to 2D'; lastCommit: a871bfd 2026-10-28T15:18:56+07:00 'fix(ai): \"bỏ qua ma sát\" no longer sets the collision's impact offset b to 0'",
+        "(f) dấu \"Đã học\" cho mọi chủ đề đã mở: PR #79, gộp 18b6a5c 2026-10-26T12:52:42Z (issue #68)",
+        "(g1) dữ liệu xếp lớp theo mục lục SGK Kết nối tri thức, sinh bằng scripts/data/gen_curriculum_kntt.py: PR #82, gộp 70b5b7c 2026-10-26T12:12:20Z (issue #71); docs/DATA_REVIEW.md mục 12 và KNTT-1 … KNTT-11, đang chờ giáo viên duyệt",
+        "(i1) đồ thị Vật lí đọc được ở 1366×768, test bố cục tests/e2e/layout.spec.ts: PR #81, gộp e9c5f3b 2026-10-26T17:33:59Z (issue #69)",
+        "(j) hướng dẫn \"Cách học\" trong Science Studio: PR #83, gộp 41fbaee 2026-10-26T18:06:52Z (issue #72)",
+        "(a) Chuyển động tròn đều (VL10 Bài 31–32), nhãn nhóm đơn vị (rad/s khác Hz, vòng/s, vòng/phút), cảnh báo \"không dùng tới\" trong bảng đọc đề: PR #87, gộp 3c728d1 2026-10-26T18:53:00Z (issue #74); DATA_REVIEW UCM-1 … UCM-5",
+        "Sinh (a) Tế bào nhân sơ và nhân thực, bản 2D (SH10 Bài 7–8): PR #88, gộp aeb52dd 2026-10-26T19:14:39Z (issue #77); DATA_REVIEW CELL3D-1 … CELL3D-5",
+        "(g2) thanh Lớp 10 · 11 · 12 · Tất cả trong thư viện, trang chủ và bước làm quen: PR #86, gộp c621f3f 2026-10-26T19:59:13Z (issue #71)",
+        "(k) \"Phòng thí nghiệm\" thành \"Virtual Lab\" (chỉ chữ hiển thị, quyết định của chủ dự án 23/10/2026 ghi trong CLAUDE.md): PR #91, gộp f904250 2026-10-26T21:29:52Z (issue #73)",
+        "(b) Sóng dừng trên dây (VL11 Bài 13), nút \"Dùng fₙ\": PR #90, gộp 006f519 2026-10-26T22:07:30Z (issue #75); DATA_REVIEW SWV-1 … SWV-8",
+        "(d) Điện trường của điện tích điểm (VL11 Bài 16–18), bộ lọc số AI đọc được số mũ chỉ số trên và so sánh tương đối, cảnh báo dấu điện tích: PR #89 (7 lượt duyệt; phạm vi cuối của bộ lọc ghi trong bình luận PR #89), gộp 32a9378 2026-10-27T06:15:14Z (issue #76)",
+        "(i2) rà soát toàn bộ giao diện trước demo, làm sớm từ 27/10/2026 theo lựa chọn của chủ dự án (213 ảnh chụp, 54 nhóm gợi ý UI-01…UI-54, issue #70); mỗi PR duyệt bằng nhiều agent, CI 8/8 trước khi gộp: PR #93 gộp f5f0a35 2026-10-27T13:14:41Z; #94 cc38c21 2026-10-27T13:37:11Z; #95 b05f0e4 2026-10-27T14:46:11Z; #96 2bec769 2026-10-27T15:34:46Z; #99 db2abbb 2026-10-27T16:00:35Z; #98 5a5a573 2026-10-27T22:56:12Z (3 lượt duyệt); #102 5f23c4e 2026-10-28T00:36:08Z; #97 80342ab 2026-10-28T00:54:14Z (4 lượt duyệt; bộ lọc số AI giữ bằng main cộng các số do engine in ra, bản đọc TeX mới bị bỏ vì lỏng hơn main); #101 45d2514 2026-10-28T06:10:42Z; #100 0daaa31 2026-10-28T06:33:48Z",
+        "Lỗi cũ \"bỏ qua ma sát\" đọc thành độ lệch tâm b = 0 ở bài va chạm (người dùng đồng ý sửa 28/10/2026): PR #103, gộp 69b446d 2026-10-28T08:53:05Z; quy tắc c|b chỉ áp cho tham số có thứ nguyên cản; đề mẫu vc-04 trong tests/golden/physics.json",
+        "Tài liệu Store: PR #56 (bản nộp 0.7.1 và 8 ảnh chụp đã gửi Partner Center ngày 26/10/2026), gộp 8ec9da5 2026-10-28T08:29:54Z; không đổi app",
+        "Bảng của AI Teacher (dòng nguồn, chữ phụ đề, cắt câu giữa chừng, thấy trong bản ghi hình 26/10/2026): PR #55, gộp d6f9fec 2026-10-26T00:17:07Z",
+        "Phụ thuộc có lỗ hổng: PR #48 tokio 1.53.3 (RUSTSEC-2026-0386), gộp 4321eb9 2026-10-23T15:51:45Z; PR #51 undici 8.12.3 và zod 4.6.7 (npm audit), gộp f7eb477 2026-10-24T05:12:59Z; dependabot PR #45, #49, #27, #53, #28, #26 gộp 24/10/2026",
+        "Chỉ đổi CI và E2E, không đổi app: PR #40, #41, #42, #43, #44, #46, #47, #50, #84 (ci.yml), #85 (release.yml)"
+      ],
+      "tests": [
+        "CI 8/8 (Frontend lint · typecheck · test · build, Rust ubuntu và windows, E2E, npm audit, cargo audit, gitleaks, dependency review) xanh trước khi gộp trên mọi PR, trừ #43, #44, #46 (PR sửa E2E chập chờn, gộp 23/10/2026 khi E2E còn đỏ, trước khi main bắt buộc 8 bước) (gh pr checks)",
+        "PR #87: E2E đầy đủ trên máy 125/125 đạt (26/10/2026, trước lượt duyệt); sau khi sửa theo duyệt: E2E ai-flow + physics 35/35 đạt (bình luận trên PR #87)",
+        "PR #88: unit 4269 đạt; E2E learner 6/6 và biology + project 17/17 đạt (phiên làm PR #88, 27/10/2026)",
+        "PR #90 sau lượt duyệt 2: unit 4339 đạt; E2E physics + layout 17/17 đạt (docs/work-log/2026-10-26-b-standing-wave.md)",
+        "PR #91: unit đạt (1 test chập chờn khi máy tải nặng, chạy riêng đạt); CI 8/8 gồm cả E2E 3D (docs/work-log/2026-10-27-k-virtual-lab.md)",
+        "PR #93–#102 (rà soát giao diện i2): CI 8/8 xanh trước khi gộp; unit và E2E liên quan do phiên làm PR chạy, ghi trong work-log docs/work-log/2026-10-27-i2-*.md và 2026-10-28-i2-graph-samples.md",
+        "PR #103: unit src/ai + src/physics + tests/golden 606 đạt, E2E ai-flow 21 đạt (mô tả PR #103); CI 8/8 trước khi gộp"
+      ],
+      "refs": {
+        "tag": null,
+        "tagSha": null,
+        "releaseUrl": null,
+        "prs": [
+          26, 27, 28, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55, 56, 79, 81, 82, 83,
+          84, 85, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103
+        ],
+        "commits": ["39bfd01", "a871bfd"],
+        "branches": ["main", "chore/0.8.0-version"]
+      },
+      "publicNotes": {
+        "summary": {
+          "vi": "Bản 0.8.0 bám theo sách Kết nối tri thức: thêm bài Chuyển động tròn đều, Sóng dừng trên dây và Điện trường của điện tích điểm (Vật lí), bài Tế bào nhân sơ và nhân thực (Sinh học), thanh chọn Lớp 10 · 11 · 12 trong thư viện, và đổi tên Phòng thí nghiệm thành Virtual Lab.",
+          "en": "Version 0.8.0 follows the Kết nối tri thức textbooks: new Uniform circular motion, Standing waves on a string and Electric field of point charges lessons (Physics), a Prokaryotic and eukaryotic cells lesson (Biology), a Grade 10 · 11 · 12 bar in the library, and the lab is now called Virtual Lab."
+        },
+        "added": [
+          {
+            "vi": "Vật lí: bài Chuyển động tròn đều (Vật lí 10, Bài 31–32). Em chọn đề cho biết tốc độ, tốc độ góc, chu kì hay tần số; app tính các đại lượng còn lại, gia tốc hướng tâm và lực hướng tâm.",
+            "en": "Physics: Uniform circular motion (Physics 10, Lessons 31–32). Choose whether the problem gives the speed, angular speed, period or frequency; the app computes the rest, the centripetal acceleration and the centripetal force.",
+            "area": "ui"
+          },
+          {
+            "vi": "Vật lí: bài Sóng dừng trên dây (Vật lí 11, Bài 13). Xem bụng, nút và số bó sóng; khi chưa có sóng dừng, nút \"Dùng fₙ\" đặt đúng tần số cộng hưởng gần nhất.",
+            "en": "Physics: Standing waves on a string (Physics 11, Lesson 13). See antinodes, nodes and the number of loops; when there is no standing wave, a \"Use fₙ\" button sets the nearest resonance exactly.",
+            "area": "ui"
+          },
+          {
+            "vi": "Vật lí: bài Điện trường của điện tích điểm (Vật lí 11, Bài 16–18). Đặt một đến ba điện tích hoặc hai bản tụ phẳng, xem đường sức, điểm có điện trường bằng 0 và lực lên điện tích thử.",
+            "en": "Physics: Electric field of point charges (Physics 11, Lessons 16–18). Place one to three charges or two parallel plates; see the field lines, the points where the field is zero and the force on a test charge.",
+            "area": "ui"
+          },
+          {
+            "vi": "Sinh học: bài Tế bào nhân sơ và tế bào nhân thực (Sinh học 10, Bài 7–8), hình 2D. Chọn từng bộ phận trong danh sách bên cạnh hình để xem tên và chức năng.",
+            "en": "Biology: Prokaryotic and eukaryotic cells (Biology 10, Lessons 7–8), in 2D. Pick a part from the list beside the picture to see its name and role.",
+            "area": "ui"
+          },
+          {
+            "vi": "Thư viện, trang chủ và bước làm quen có thanh Lớp 10 · 11 · 12 · Tất cả, xếp chủ đề theo mục lục sách Kết nối tri thức. Cách xếp này đang chờ giáo viên duyệt.",
+            "en": "The library, the home page and the first-run steps have a Grade 10 · 11 · 12 · All bar that places topics by the Kết nối tri thức tables of contents. This placement is waiting for a teacher's review.",
+            "area": "ui"
+          },
+          {
+            "vi": "Science Studio có hướng dẫn \"Cách học\" ngay trong app.",
+            "en": "Science Studio has a \"How to learn\" guide inside the app.",
+            "area": "ui"
+          }
+        ],
+        "improved": [
+          {
+            "vi": "Đồ thị các bài Vật lí đọc được trên màn hình 1366×768: vùng vẽ cao hơn, chú giải nằm ở cột bên phải.",
+            "en": "Physics graphs are readable on a 1366×768 screen: a taller plot area and the legend in a column on the right.",
+            "area": "ui"
+          },
+          {
+            "vi": "Dấu \"Đã học\" hiện cho mọi chủ đề em đã mở, kèm số bước còn lại.",
+            "en": "The \"Learned\" mark shows for every topic you opened, with the steps left.",
+            "area": "ui"
+          },
+          {
+            "vi": "Bảng \"Tôi hiểu đề như sau\" báo khi đề cho một đại lượng mà cách bố trí đang chọn không dùng tới.",
+            "en": "The \"Here is how I read the problem\" table tells you when the problem gives a quantity that the chosen setup does not use.",
+            "area": "api"
+          },
+          {
+            "vi": "Khi AI đọc đề: số viết dạng 4.10⁻⁸ được đọc đúng, số bịa rất nhỏ bị chặn chắc hơn, và bảng báo khi dấu của điện tích có thể không khớp với đề.",
+            "en": "When the AI reads a problem: numbers written like 4.10⁻⁸ are read correctly, very small invented numbers are refused more reliably, and the table warns when a charge’s sign may not match the problem.",
+            "area": "api"
+          },
+          {
+            "vi": "Rà soát toàn bộ giao diện: chữ tiếng Việt thống nhất, lựa chọn \"API\" nay gọi là \"AI trực tuyến\", nút đủ lớn để bấm, nhãn trên hình 3D Sinh học không che nhau.",
+            "en": "A full review of the interface: consistent Vietnamese wording, the \"API\" choice is now called \"Online AI\", buttons large enough to press, and labels on the 3D biology pictures no longer cover each other.",
+            "area": "ui"
+          },
+          {
+            "vi": "Hình Vật lí: nhãn có chỉ số dưới thật, tên mũi tên đặt sau đầu mũi tên, hai đường có thể trùng nhau được vẽ nét đứt; số trên trục không còn bị thanh công cụ che.",
+            "en": "Physics pictures: labels with real subscripts, arrow names after the arrow head, dashed lines where two curves can overlap, and axis numbers no longer hidden by the tool bar.",
+            "area": "ui"
+          },
+          {
+            "vi": "Ô nhập số hiểu cả \"9,81\" lẫn \"9.81\"; khi số vượt giới hạn, dưới ô ghi rõ mô phỏng đang chạy với giá trị nào.",
+            "en": "Number boxes accept both \"9,81\" and \"9.81\"; when a value is out of range, a line under the box says which value the simulation runs.",
+            "area": "ui"
+          },
+          {
+            "vi": "Đồ thị đủ điểm khi chạy chậm hoặc bấm \"Bước\" từng bước; bảng Số liệu và tệp CSV vẫn là giá trị do mô hình tính, không nội suy.",
+            "en": "Graphs have enough points when running slowly or pressing \"Step\"; the Data table and CSV file are still the values the model computed, never interpolated.",
+            "area": "ui"
+          }
+        ],
+        "fixed": [
+          {
+            "vi": "Bảng của AI Teacher: không còn viết dòng nguồn \"Theo ghi chú từ…\", chữ phụ đề không còn kí hiệu thô, và không cắt câu giữa chừng.",
+            "en": "AI Teacher's board no longer writes the \"From the note…\" source line, the subtitle has no raw markup, and lines are no longer split mid-sentence.",
+            "area": "teacher"
+          },
+          {
+            "vi": "Thẻ Khoa học của bài Chuyển động thẳng đều ghi nhầm \"gia tốc không đổi\"; nay ghi đúng là vận tốc không đổi.",
+            "en": "The Science Card of Uniform motion wrongly said \"constant acceleration\"; it now says constant velocity.",
+            "area": "ui"
+          },
+          {
+            "vi": "Khi AI đọc một đề va chạm có câu \"bỏ qua ma sát\", nó không còn tự đặt độ lệch tâm bằng 0; độ lệch tâm chỉ lấy từ đề hoặc do em nhập.",
+            "en": "When the AI reads a collision problem that says \"ignore friction\", it no longer sets the impact offset to zero by itself; the offset comes only from the problem or from what you enter.",
+            "area": "api"
+          }
+        ],
+        "security": [
+          {
+            "vi": "Cập nhật các thư viện có lỗ hổng đã biết và các phụ thuộc khác.",
+            "en": "Updated libraries with known vulnerabilities and other dependencies.",
+            "area": "security"
+          }
+        ],
+        "performance": [],
+        "changed": [
+          {
+            "vi": "\"Phòng thí nghiệm\" nay tên là \"Virtual Lab\" ở cả tiếng Việt và tiếng Anh.",
+            "en": "The lab is now called \"Virtual Lab\" in both Vietnamese and English.",
+            "area": "ui"
+          },
+          {
+            "vi": "Máy cài SimLab 0.7.1 từ trang GitHub cần tải bộ cài mới để lên 0.8.0; bản này không cập nhật được trong app. Bản trên Microsoft Store được Store tự cập nhật.",
+            "en": "Computers that installed SimLab 0.7.1 from the GitHub page need the new installer to move to 0.8.0; this version cannot be updated inside the app. The Microsoft Store copy is updated by the Store."
+          }
+        ],
+        "deprecated": [],
+        "knownIssues": [
+          {
+            "vi": "Bài Phiêu bạt di truyền ở dạng 3D: ba đường chỉ tên bên trái vẫn cắt qua hình một hòn đảo khi có nhiều đảo.",
+            "en": "Genetic drift in 3D: with many islands, three name leader lines on the left still cross one island."
+          },
+          {
+            "vi": "Vị trí các bài trong từng lớp (Lớp 10 · 11 · 12) lấy từ mục lục sách Kết nối tri thức và đang chờ giáo viên duyệt.",
+            "en": "Where each lesson sits in Grade 10 · 11 · 12 comes from the Kết nối tri thức tables of contents and is waiting for a teacher’s review."
+          },
+          {
+            "vi": "Khi AI giải thích lời giải mà chép nguyên công thức của một bước, lời giải thích có thể bị ẩn nhầm kèm lời báo có số chưa kiểm chứng. Số liệu do SimLab tính vẫn hiện đầy đủ; bản sau sẽ sửa.",
+            "en": "When the AI explains a solution and copies a step’s formula as written, the explanation may be hidden by mistake, with a note about unverified numbers. The numbers SimLab computed are still shown in full; a later version will fix this."
+          }
+        ]
+      },
+      "notesReady": false,
+      "learnerHighlights": [
+        {
+          "area": "ui",
+          "vi": "Bài mới: Chuyển động tròn đều, Sóng dừng trên dây, Điện trường của điện tích điểm và Tế bào nhân sơ, nhân thực.",
+          "en": "New lessons: Uniform circular motion, Standing waves on a string, Electric field of point charges, and Prokaryotic and eukaryotic cells."
+        },
+        {
+          "area": "ui",
+          "vi": "Thư viện chọn được Lớp 10, 11, 12 theo sách Kết nối tri thức.",
+          "en": "The library can show Grade 10, 11 or 12 following the Kết nối tri thức textbooks."
+        },
+        {
+          "area": "ui",
+          "vi": "Phòng thí nghiệm nay tên là Virtual Lab.",
+          "en": "The lab is now called Virtual Lab."
+        },
+        {
+          "area": "ui",
+          "vi": "Science Studio có hướng dẫn Cách học.",
+          "en": "Science Studio has a How to learn guide."
+        }
+      ]
+    },
     {
       "version": "0.7.1",
       "status": "released",
