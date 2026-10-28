@@ -45,3 +45,46 @@ describe('changing g during a run', () => {
     expect(useSimStore.getState().intervened).toBe(true);
   });
 });
+
+describe('history spacing follows the speed a frame really ran at (UI-22)', () => {
+  /** Steps a paused run `n` times (one 1/240 s engine step each), whatever speed is chosen. */
+  async function stepRows(speed: number, n: number): Promise<number> {
+    await sim.open('springPendulum');
+    useWorkspaceStore.setState({ speed: speed as never, playing: false });
+    for (let i = 0; i < n; i++) {
+      sim.step();
+      sim.tick(1 / 60);
+    }
+    return sim.history.length;
+  }
+
+  it('Step records the same rows at ×4 and ×100 as at ×1', async () => {
+    const one = await stepRows(1, 25);
+    sim.shutdown();
+    const four = await stepRows(4, 25);
+    sim.shutdown();
+    const hundred = await stepRows(100, 25);
+    expect(one).toBeGreaterThanOrEqual(12);
+    expect(four).toBe(one);
+    expect(hundred).toBe(one);
+  });
+
+  it('a throttled frame records at the speed reached, not the one chosen', async () => {
+    // ×1000 is capped by the substep limit (about ×128 here), well before the 60 s run ends.
+    await sim.open('springPendulum');
+    useWorkspaceStore.setState({ speed: 1000 as never });
+    if (!useWorkspaceStore.getState().playing) sim.togglePlay();
+    let reached = 0;
+    for (let i = 0; i < 12; i++) {
+      sim.tick(1 / 60);
+      reached = Math.max(reached, sim.latest?.stats.effectiveSpeed ?? 0);
+    }
+    const t = sim.latest?.t ?? 0;
+    expect(reached).toBeGreaterThan(0);
+    expect(reached).toBeLessThan(1000);
+    // Each throttled frame advances ~2 s, more than the 1/120 s × reached spacing: every frame
+    // is a row (13 = start + 12). Spaced for the chosen ×1000 (8,3 s) only ~1 in 4 would be.
+    expect(sim.history.length).toBeGreaterThanOrEqual(12);
+    expect(sim.history.length).toBeGreaterThan(t / (1000 / 120) + 1);
+  });
+});
