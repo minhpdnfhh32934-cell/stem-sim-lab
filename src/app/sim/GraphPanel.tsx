@@ -14,6 +14,7 @@ import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
 import { graphData, visibleSeries } from './data';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
+import { subscriptElement } from '@/ui/subscripts';
 
 /** Time-series graphs of the running simulation (uPlot, crosshair + live legend). */
 export function GraphPanel() {
@@ -177,6 +178,7 @@ function Chart({ graph }: { graph: GraphDef }) {
       const data = graphData(graph, useSimStore.getState().params) as uPlotType.AlignedData;
       const plot = new UPlot(opts, data, host);
       plotRef.current = plot;
+      plot.root.querySelectorAll('.u-legend .u-label').forEach(subscriptElement);
       setPlotArea(plot.over);
       ro = new ResizeObserver(() => {
         plot.setSize({ width: host.clientWidth, height: Math.max(120, host.clientHeight) });

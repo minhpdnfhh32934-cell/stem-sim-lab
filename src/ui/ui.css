@@ -1168,3 +1168,23 @@ kbd {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
+
+/* Number box (NumberField): a clamped value is said in words under the box, not only by colour. */
+.number-field {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+.number-field__hint {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 0;
+  z-index: 2;
+  padding: 1px 6px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--danger);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
