@@ -126,6 +126,7 @@ export function AppShell() {
       className="shell"
       data-presentation={presentation || undefined}
       data-inspector={showRight || undefined}
+      data-bubble={(!presentation && !teacher && !landing) || undefined}
       data-bottom={showBottom || undefined}
       data-timeline={(!moduleActive && !home && !fullPage) || undefined}
       style={style}

@@ -21,7 +21,7 @@ function Publisher({ c }: { c: ScienceCardData }) {
 }
 
 describe('usePublishCard', () => {
-  it('takes its card away when the view unmounts (Studio → Phòng thí nghiệm)', () => {
+  it('takes its card away when the view unmounts (Studio → Virtual Lab)', () => {
     openStudio();
     const view = render(<Publisher c={card} />);
     expect(useWorkspaceStore.getState().scienceCard).toBe(card);

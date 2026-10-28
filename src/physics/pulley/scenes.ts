@@ -207,7 +207,7 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
       arrow(ctx, cam, g.m1.x, g.m1.y, ct * T * k, st * T * k, c.velocity, 'T');
       const fr = state[PU.friction] ?? 0;
       if (Math.abs(fr) > 1e-9)
-        arrow(ctx, cam, g.m1.x, g.m1.y - B / 3, ct * fr * k, st * fr * k, c.acceleration, 'Fms');
+        arrow(ctx, cam, g.m1.x, g.m1.y - B / 3, ct * fr * k, st * fr * k, c.acceleration, 'F_ms');
     }
   }
 }
@@ -221,7 +221,7 @@ const graphs: GraphDef[] = [
   },
   {
     id: 'velocity',
-    title: L('Vận tốc – thời gian', 'Velocity – time'),
+    title: L('Vận tốc theo thời gian', 'Velocity vs time'),
     yLabel: L('v (m/s)', 'v (m/s)'),
     series: [{ id: 'v', label: L('v', 'v'), value: (s) => s[PU.v] ?? 0 }],
   },
@@ -312,8 +312,8 @@ function solve(p: Params, locale: Locale): Solution {
       ),
       tex:
         q.config === 1
-          ? `N = m_1 g = ${Q(red.N, 'N')},\\qquad F_{kéo} = m_2 g = ${Q(red.D, 'N')}`
-          : `N = m_1 g\\cos\\theta = ${Q(red.N, 'N')},\\qquad F_{kéo} = m_2 g - m_1 g\\sin\\theta = ${Q(red.D, 'N')}`,
+          ? `N = m_1 g = ${Q(red.N, 'N')},\\qquad F_{\\text{kéo}} = m_2 g = ${Q(red.D, 'N')}`
+          : `N = m_1 g\\cos\\theta = ${Q(red.N, 'N')},\\qquad F_{\\text{kéo}} = m_2 g - m_1 g\\sin\\theta = ${Q(red.D, 'N')}`,
     });
     if (r0.regime === 'static') {
       steps.push({
@@ -342,7 +342,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Định luật II Newton cho cả hệ (ma sát trượt ngược chiều chuyển động):',
         "Newton's 2nd law for the whole system (kinetic friction opposes motion):",
       ),
-      tex: `a = \\frac{F_{kéo} ${r0.a > 0 ? '-' : '+'} \\mu_t N}{m_1 + m_2} = \\frac{${n(red.D)} ${r0.a > 0 ? '-' : '+'} ${n(red.Fk)}}{${n(red.M)}} = ${Q(r0.a, 'm/s^2')}`,
+      tex: `a = \\frac{F_{\\text{kéo}} ${r0.a > 0 ? '-' : '+'} \\mu_t N}{m_1 + m_2} = \\frac{${n(red.D)} ${r0.a > 0 ? '-' : '+'} ${n(red.Fk)}}{${n(red.M)}} = ${Q(r0.a, 'm/s^2')}`,
     });
   }
   const T = tension(q, r0.a);
@@ -403,7 +403,7 @@ function card(): ScienceCardData {
       'Hai vật nối bằng dây nhẹ, không dãn qua ròng rọc cố định nhẹ, không ma sát; ma sát Coulomb trên m₁.',
       'Two blocks joined by a light inextensible string over an ideal fixed pulley; Coulomb friction on m₁.',
     ),
-    equations: [{ tex: '(m_1 + m_2)\\,a = F_{kéo} - F_{ms}' }, { tex: 'T = m_2 (g - a)' }],
+    equations: [{ tex: '(m_1 + m_2)\\,a = F_{\\text{kéo}} - F_{ms}' }, { tex: 'T = m_2 (g - a)' }],
     assumptions: [
       L(
         'Khối lượng dây và ròng rọc không đáng kể; dây luôn căng.',
@@ -431,7 +431,10 @@ function card(): ScienceCardData {
 
 const mass = (key: 'm1' | 'm2', sym: string): ParamDef => ({
   key,
-  label: key === 'm1' ? L('Khối lượng m₁', 'Mass m₁') : L('Khối lượng m₂', 'Mass m₂'),
+  label:
+    key === 'm1'
+      ? L('Khối lượng vật 1', 'Mass of block 1')
+      : L('Khối lượng vật 2', 'Mass of block 2'),
   symbol: sym,
   kind: 'number',
   dim: DIM.mass,

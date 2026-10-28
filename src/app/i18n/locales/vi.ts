@@ -88,6 +88,10 @@ const vi = {
     genetics: 'Di truyền',
     ecology: 'Sinh thái',
     cellPhysiology: 'Sinh lý tế bào',
+    cellStructure: 'Cấu trúc tế bào',
+    circularMotion: 'Chuyển động tròn đều',
+    waves: 'Sóng',
+    electricField: 'Điện trường',
   },
   topics: {
     uniformMotion: 'Chuyển động thẳng đều',
@@ -126,6 +130,10 @@ const vi = {
     lotkaVolterra: 'Con mồi – vật ăn thịt (Lotka–Volterra)',
     michaelisMenten: 'Động học enzyme (Michaelis–Menten)',
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
+    cellStructure: 'Tế bào nhân sơ và nhân thực',
+    uniformCircularMotion: 'Chuyển động tròn đều',
+    standingWave: 'Sóng dừng trên dây',
+    electricField: 'Điện trường của điện tích điểm',
   },
   stage: {
     regionLabel: 'Khung mô phỏng',
@@ -228,8 +236,8 @@ const vi = {
       aiHint:
         'Chọn nhà cung cấp AI trực tuyến, nhập khóa API, đặt giới hạn và dự phòng khi hết lượt.',
       teacher: 'AI Teacher',
-      teacherHint: 'Think (một API thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
-      local: 'AI local (Gemma)',
+      teacherHint: 'Think (một AI thứ hai rà soát câu trả lời) và dữ liệu nào được gửi đi.',
+      local: 'Gemma cục bộ',
       localHint:
         'Tải, chọn hoặc xóa mô hình Gemma chạy ngay trên máy: trả lời không cần mạng, không cần khóa.',
       gpu: 'GPU cho Gemma',
@@ -369,7 +377,7 @@ const vi = {
       actions: 'Thao tác',
     },
     home: 'Trang chủ',
-    lab: 'Phòng thí nghiệm',
+    lab: 'Virtual Lab',
     studio: 'Science Studio — bài học có hướng dẫn',
     teacherTalk: 'AI Teacher — trò chuyện',
     teacherBoard: 'AI Teacher — giảng trên bảng',
@@ -453,6 +461,7 @@ const vi = {
     liveHint: 'Có thể chỉnh khi đang chạy (tính là can thiệp)',
     allDefault: 'Đang dùng giá trị mặc định (đề bài chưa cho). Kéo thanh trượt để thử.',
     resetHint: 'Đổi giá trị sẽ chạy lại từ đầu',
+    clampedHint: 'Mô phỏng chạy với {value} (giới hạn {min}–{max})',
   },
   solution: {
     explainUnsafe:
@@ -603,7 +612,7 @@ const vi = {
         'Giới hạn này đặt trong Cài đặt → Kết nối AI ("Số lượt AI tối đa mỗi ngày") để tránh tốn lượt. Hôm nay bạn vẫn dùng được Tự dựng cảnh và thư viện bài mẫu.',
       other: 'Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
       local:
-        'AI trên máy không tự chuyển sang API. Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
+        'AI trên máy không tự chuyển sang AI trực tuyến. Bạn vẫn có thể dùng Tự dựng cảnh hoặc thư viện bài mẫu.',
     },
     hintClaude: {
       missingKey:
@@ -613,6 +622,7 @@ const vi = {
     cached:
       'Đề này đã được đọc và xác nhận trước đây nên không cần gọi AI lại. Hãy kiểm tra bảng số liệu như thường lệ.',
     readAgain: 'Đọc lại bằng AI',
+    signHint: 'Kiểm tra dấu (+ hoặc −) của điện tích này so với đề.',
   },
   project: {
     privacy: 'Quyền riêng tư & dùng AI an toàn',
@@ -885,9 +895,8 @@ const vi = {
       biology: 'Phân bào, di truyền, sinh thái, enzyme',
     },
     topicCount: '{count} chủ đề',
-    suggestedTitle: 'Gợi ý cho trình độ {level}',
-    noSuggestions:
-      'Trình độ này đang được xây dựng. Chọn trình độ Nền tảng ở Thư viện để học ngay.',
+    suggestedTitle: 'Gợi ý cho bạn',
+    noSuggestions: 'Lớp này chưa có chủ đề. Chọn "Tất cả" ở Thư viện để xem mọi chủ đề.',
     teacherTitle: 'AI Teacher',
     teacherBody:
       'AI Teacher hỗ trợ hỏi bài, gợi ý từng bước và kiểm tra kiến thức. Số liệu mô phỏng do ứng dụng tính.',
@@ -907,7 +916,7 @@ const vi = {
     usePhoto: 'Lấy ảnh',
     reading: 'Đang đọc ảnh…',
     privacy:
-      'Ảnh được gửi cho AI đang dùng (Gemma trên máy, chương trình AI em chọn trên máy này, hoặc API cloud) chỉ để đọc đề, không dùng việc khác.',
+      'Ảnh được gửi cho AI đang dùng (Gemma trên máy, chương trình AI em chọn trên máy này, hoặc AI trực tuyến) chỉ để đọc đề, không dùng việc khác.',
     denied: 'Không mở được camera. Hãy cho phép trình duyệt/ứng dụng dùng camera rồi thử lại.',
     retry: 'Thử lại',
     blockedHint:
@@ -915,7 +924,7 @@ const vi = {
     unsupported: 'Thiết bị này không hỗ trợ camera.',
     needGemma: 'Chưa có model Gemma. Hãy tải model trong Cài đặt → AI Teacher.',
     needVision:
-      'Chưa đọc được ảnh: cần API cloud (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
+      'Chưa đọc được ảnh: cần AI trực tuyến (Gemini/Groq, đã nhập khóa) hoặc model Gemma đã sẵn sàng.',
     readFailed: 'Chưa đọc được đề trong ảnh. Hãy chụp lại rõ hơn.',
     outputUnsafe:
       'Chữ đọc được từ ảnh có nội dung không phù hợp nên mình không đưa vào ô đề bài. Hãy chụp một đề bài khác.',
@@ -931,7 +940,7 @@ const vi = {
     title: 'Chào mừng đến với SimLab',
     subtitle:
       'Chọn cách em muốn học hôm nay. Mô phỏng, dữ liệu và trợ lý học tập nằm trong cùng một không gian.',
-    labTitle: 'Phòng thí nghiệm',
+    labTitle: 'Virtual Lab',
     labBody: 'Khám phá mô phỏng Vật lý, Hóa học và Sinh học; điều chỉnh thông số và xem kết quả.',
     teacherTitle: 'AI Teacher',
     teacherBody: 'Hỏi bài, xin gợi ý và cùng kiểm tra kiến thức với trợ lý AI.',
@@ -949,7 +958,7 @@ const vi = {
       authoring: 'Soạn bài',
     },
     pick: 'Chọn bài học',
-    backToLab: 'Về Phòng thí nghiệm',
+    backToLab: 'Về Virtual Lab',
     lessons: {
       title: 'Science Studio',
       intro:
@@ -973,15 +982,15 @@ const vi = {
     preparing: {
       title: 'Đang chuẩn bị',
       chemistry:
-        'Studio Hóa học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Hóa học trong Phòng thí nghiệm.',
+        'Studio Hóa học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Hóa học trong Virtual Lab.',
       biology:
-        'Studio Sinh học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Sinh học trong Phòng thí nghiệm.',
+        'Studio Sinh học đang được chuẩn bị. Trong lúc chờ, em vẫn dùng được các bài Sinh học trong Virtual Lab.',
       physics: 'Chưa có bài Vật lý nào trong Studio.',
-      openLab: 'Mở Phòng thí nghiệm',
+      openLab: 'Mở Virtual Lab',
     },
     notes: {
       private:
-        'Ghi chú của em lưu trên máy này. Chỉ khi em bật “Lấy thông tin từ màn hình” trong khung Thầy AI và tự gửi câu hỏi, ghi chú mới được gửi kèm.',
+        'Ghi chú của em lưu trên máy này. Chỉ khi em bật “Lấy thông tin từ màn hình” trong khung AI Teacher và tự gửi câu hỏi, ghi chú mới được gửi kèm.',
     },
     flow: {
       label: 'Các bước của bài học',
@@ -1096,7 +1105,7 @@ const vi = {
     },
     ask: {
       button: 'Hỏi thầy',
-      hint: 'Thầy AI chỉ thấy số đo và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
+      hint: 'AI Teacher chỉ thấy số đo và ghi chú của bài khi em bật “{toggle}” trong khung chat.',
       questions: {
         predict:
           'Thầy ơi, em đang làm bài “{title}”, bước Dự đoán. Thầy gợi ý cách suy nghĩ giúp em, nhưng đừng nói trước đáp án nhé.',
@@ -1157,7 +1166,7 @@ const vi = {
       input: 'đầu vào',
       crossCheck: 'Kiểm tra chéo với lời giải giải tích: lệch lớn nhất {gap}.',
       timeAxis: 'Thời gian t',
-      openInLab: 'Chạy {id} trong Phòng thí nghiệm',
+      openInLab: 'Chạy {id} trong Virtual Lab',
       fact: '{q} (mô phỏng {model}): {value}',
       ratioOf: 'Tỉ số B/A — {q}',
     },
@@ -1437,6 +1446,34 @@ const vi = {
           'Không ghi được vào bộ nhớ của ứng dụng (có thể đã đầy hoặc bị chặn), nên thay đổi này chưa được lưu. Hãy xuất bài cũ ra tệp, xóa bớt rồi thử lại.',
       },
     },
+    guide: {
+      open: 'Cách học',
+      openHint: 'Xem lại cách học trong Science Studio',
+      welcomeTitle: 'Học trong Science Studio',
+      welcomeBody:
+        'Mỗi bài đi qua sáu bước: em dự đoán trước, làm thí nghiệm, rồi mới giải thích và kết luận. Mọi con số do mô phỏng tính. Bấm Tiếp để xem từng phần của màn hình.',
+      subjectTitle: 'Chọn môn và bài',
+      subjectBody:
+        'Chọn môn ở thanh này. Môn có nhiều bài thì chọn bài ở hàng nút ngay bên dưới. Thẻ Soạn bài ở cuối thanh dành cho thầy cô.',
+      lessonTitle: 'Mục tiêu và nhãn kiểm duyệt',
+      lessonBody:
+        'Đầu bài ghi mục tiêu. Nhãn "chưa được kiểm duyệt" nghĩa là lời văn của bài chưa được giáo viên duyệt; số liệu vẫn do mô phỏng tính.',
+      stepsTitle: 'Sáu bước',
+      stepsBody:
+        'Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo. Bước đang làm được tô đậm, bước đã xong hiện dấu ✓ thay cho số.',
+      nextTitle: 'Đi tiếp',
+      nextBody:
+        'Làm xong một bước thì bấm nút Tiếp ở đây. Khi chưa đi tiếp được, dòng chữ cạnh nút cho biết em còn thiếu gì.',
+      askTitle: 'Hỏi thầy',
+      askBody:
+        'Bí ở bước nào thì bấm Hỏi thầy: AI Teacher mở ra với câu hỏi về bước đó. AI Teacher chỉ giải thích, không thay số đo của mô phỏng.',
+      reportTitle: 'Lưu báo cáo',
+      reportBody:
+        'Ở bước cuối, báo cáo được tạo từ chính phiên học của em. Bấm "Lưu báo cáo (.md)" để lưu thành tệp, hoặc sao chép.',
+      authoringTitle: 'Soạn bài',
+      authoringBody:
+        'Thầy cô soạn bài mới ở thẻ Soạn bài: mọi lựa chọn lấy từ mô phỏng hoặc bảng dữ liệu. Bài soạn chỉ lưu trên máy này và luôn ghi "chưa được kiểm duyệt".',
+    },
   },
   chat: {
     label: 'Trò chuyện với AI Teacher',
@@ -1450,7 +1487,7 @@ const vi = {
     contextToggle: 'Lấy thông tin từ màn hình',
     contextHint: 'Chỉ chia sẻ dữ liệu SimLab đang mở',
     engineLabel: 'Chọn mô hình AI',
-    cloud: 'API',
+    cloud: 'AI trực tuyến',
     gemma: 'Gemma cục bộ',
     local: 'AI trên máy khác',
     localMissingNotice:
@@ -1459,15 +1496,16 @@ const vi = {
       'SimLab chỉ gửi câu hỏi tới {name} trên máy này ({address}), không tự gửi lên mạng.',
     localRuntimeHere: 'SimLab gửi câu hỏi tới {name} trên máy này ({address}).',
     voiceOnline: 'Giọng Gemini đang bật: chữ của câu trả lời được gửi tới Google để đọc to.',
-    noApi: 'Chưa có API. Kết nối API trong Cài đặt hoặc chọn Gemma đã tải về.',
+    noApi:
+      'Chưa kết nối AI trực tuyến. Kết nối trong Cài đặt → Kết nối AI, hoặc chọn Gemma đã tải về.',
     gemmaMissingNotice:
-      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “API”.',
+      'Gemma chưa sẵn sàng: chưa tải mô hình này. Tải trong Cài đặt → AI Teacher, hoặc chọn “AI trực tuyến”.',
     settings: 'Cài đặt',
     localOnly: 'Câu hỏi được xử lý cục bộ trên máy này.',
     noWebgpuNotice:
-      'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “API” và kết nối khóa trong Cài đặt.',
+      'Máy hoặc trình duyệt này không hỗ trợ WebGPU nên chưa chạy được Gemma. Hãy chọn “AI trực tuyến” và kết nối khóa trong Cài đặt.',
     thinkNoVerifier:
-      'Think cần một API thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
+      'Think cần một AI thứ hai để kiểm tra chéo nhưng chưa có khóa. Chọn nhà cung cấp và nhập khóa trong Cài đặt → AI Teacher.',
     reviewTarget: '{name} (rà soát)',
     fallbackTarget: '{name} (dự phòng khi {provider} hết lượt)',
     sentTo: 'Câu hỏi và trích đoạn tài liệu liên quan sẽ được gửi tới: {targets}.',
@@ -1510,9 +1548,9 @@ const vi = {
     placeholder: 'Nhập câu hỏi của em…',
     send: 'Gửi câu hỏi',
     think: 'Think',
-    thinkTitle: 'Dùng API thứ hai để rà soát câu trả lời',
-    twoApis: '· 2 API',
-    oneApiReview: '· 1 API rà soát',
+    thinkTitle: 'Dùng một AI thứ hai để rà soát câu trả lời',
+    twoApis: '· 2 AI',
+    oneApiReview: '· 1 AI rà soát',
     enterHint: 'Enter gửi · Shift+Enter xuống dòng',
     footer:
       'Câu trả lời AI có thể chưa chính xác. Hãy đối chiếu Thẻ Khoa học và hỏi giáo viên khi cần.',
@@ -1648,7 +1686,7 @@ const vi = {
       'Gemma là mô hình của Google DeepMind, dùng theo Điều khoản sử dụng Gemma. Hãy đọc trước khi tải.',
     thinkCard: 'Think · kiểm tra chéo',
     thinkHint:
-      'Khi bật Think trong khung chat, một API thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
+      'Khi bật Think trong khung chat, một AI thứ hai (khác nhà cung cấp trả lời) đọc lại bản nháp và sửa lỗi trước khi em thấy câu trả lời.',
     builtInCard: 'Ghi chú có sẵn',
     webCard: 'Tra cứu trực tuyến',
     flowLocalChatSession: 'Cuộc trò chuyện chỉ giữ đến khi đóng ứng dụng (đã tắt lưu lịch sử).',
@@ -1688,7 +1726,7 @@ const vi = {
     flowLocalKeyBrowser: 'Khóa API: chỉ trong phiên trình duyệt này, tải lại trang là mất.',
     flowSentTitle: 'Có thể gửi đi (theo cài đặt hiện tại)',
     flowAnswer:
-      'Khi chọn “API”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
+      'Khi chọn “AI trực tuyến”: câu hỏi, các lượt trò chuyện gần đây, tóm tắt phần trò chuyện cũ (nếu có) và trích đoạn tài liệu liên quan → {name}.',
     flowFallback:
       'Khi {name} hết lượt và Think đang tắt: những gì gửi cho {name} → {fallback} (dự phòng, chỉ khi đã có khóa).',
     flowThink:
@@ -1760,7 +1798,7 @@ const vi = {
     characters: 'ký tự',
     removeFile: 'Xóa',
     localLibraryPrivacy:
-      'Tệp được lưu trên máy này. Khi dùng API trực tuyến, các đoạn liên quan có thể được gửi kèm câu hỏi. Chỉ nạp tài liệu bạn có quyền sử dụng.',
+      'Tệp được lưu trên máy này. Khi dùng AI trực tuyến, các đoạn liên quan có thể được gửi kèm câu hỏi. Chỉ nạp tài liệu bạn có quyền sử dụng.',
     memory: {
       title: 'Trí nhớ hội thoại',
       intro:
@@ -1811,7 +1849,7 @@ const vi = {
         'Lúc {when}, card {card} ngừng phản hồi khi Gemma đang trả lời. Windows phải khởi động lại card; nếu lặp lại nhiều lần, máy có thể bị khởi động lại.',
       faultBlocked: 'Gemma đang tạm dừng tới khi em mở lại ứng dụng.',
       faultAdvice:
-        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng API trực tuyến.',
+        'Nên chọn card rời cho Gemma, hoặc dùng mô hình nhỏ hơn, hoặc hỏi bằng AI trực tuyến.',
       useDiscrete: 'Dùng card rời: {name}',
       allowAgain: 'Vẫn cho Gemma chạy lại',
       dismissFault: 'Ẩn thông báo',
@@ -1829,7 +1867,7 @@ const vi = {
     detectPrivacy:
       'Chỉ hỏi ba địa chỉ quen thuộc trên máy này ({addresses}) và các địa chỉ em tự thêm. Không đọc tệp nào, không quét ổ đĩa, không gửi gì ra khỏi máy.',
     fallback:
-      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang API). Nếu em bật “Tra thêm Wikipedia”, câu hỏi chỉ được gửi tới Wikipedia sau khi SimLab đã kết nối được tới chương trình AI trên máy.',
+      'Phương án dự phòng: khi AI trên máy gặp lỗi, SimLab báo cho em biết và không gửi câu hỏi lên mạng (không tự chuyển sang AI trực tuyến). Nếu em bật “Tra thêm Wikipedia”, câu hỏi chỉ được gửi tới Wikipedia sau khi SimLab đã kết nối được tới chương trình AI trên máy.',
     corsNote:
       'Đang chạy trên trình duyệt: chương trình AI phải cho phép trang này truy cập (CORS), nếu không SimLab sẽ báo “Không thấy”. Ứng dụng desktop không cần việc này.',
     detectFailed: 'Chưa tìm được. Em thử lại nhé.',
@@ -1936,9 +1974,10 @@ const vi = {
       'Đã chọn mô hình này nhưng AI Teacher chưa dùng nó. {now} Bấm “Dùng cho AI Teacher” để chuyển.',
     now: {
       cloud: 'Câu hỏi cho AI Teacher đang được gửi lên mạng tới {provider}.',
-      cloudOff: 'AI Teacher đang chọn API nhưng API đang tắt, nên chưa có câu hỏi nào được gửi đi.',
+      cloudOff:
+        'AI Teacher đang chọn AI trực tuyến nhưng AI trực tuyến đang tắt, nên chưa có câu hỏi nào được gửi đi.',
       cloudNoKey:
-        'AI Teacher đang chọn API {provider} nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
+        'AI Teacher đang chọn AI trực tuyến {provider} nhưng chưa có khóa, nên chưa có câu hỏi nào được gửi đi cho tới khi em thêm khóa.',
       gemma: 'AI Teacher đang trả lời bằng Gemma cục bộ, ngay trên máy em.',
       gemmaMissing:
         'AI Teacher đang chọn Gemma cục bộ nhưng chưa tải mô hình, nên chưa có câu hỏi nào được gửi đi.',
@@ -2225,21 +2264,30 @@ const vi = {
     },
   },
   levels: {
-    label: 'Trình độ',
+    label: 'Lớp',
     foundation: 'Nền tảng',
     general: 'Đại cương',
-    foundationDesc: 'Kiến thức gốc, tương đương chương trình THPT — ôn lại cho chắc.',
-    generalDesc: 'Vật lý, Hóa học, Sinh học đại cương năm nhất.',
-    soon: 'sắp có',
-    plannedHint: 'Trình độ Đại cương sẽ có ở giai đoạn sau.',
-    mappingPending:
-      'Việc xếp chủ đề theo bài trong chương trình/sách giáo khoa đang chờ giáo viên duyệt.',
+    grade: 'Lớp {grade}',
+    all: 'Tất cả',
+    gradeDesc: 'Chủ đề xếp theo chương sách giáo khoa lớp {grade}.',
+    allDesc: 'Mọi chủ đề, kể cả chủ đề chưa xếp lớp.',
+    source: 'Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt',
+    lessons: 'Bài {range}',
+    empty: 'Chưa có chủ đề {subject} nào được xếp vào lớp {grade}.',
+    showAll: 'Xem tất cả',
+    lessonOne: 'Bài {range}',
+    sourceNote:
+      'Cách xếp chủ đề theo lớp do SimLab đề xuất từ mục lục SGK Kết nối tri thức, đang chờ giáo viên duyệt.',
+    suggested: 'Gợi ý cho lớp {grade}',
+    topicCount: '{count} chủ đề lớp {grade}',
+    topicCountOne: '1 chủ đề lớp {grade}',
   },
   onboarding: {
     label: 'Làm quen với SimLab',
     step: 'Bước {i}/{n}',
-    levelTitle: 'Bạn muốn học ở trình độ nào?',
-    levelBody: 'Chọn một trình độ để app gợi ý chủ đề phù hợp. Bạn đổi được bất cứ lúc nào.',
+    levelTitle: 'Bạn đang học hoặc ôn lớp nào?',
+    levelBody:
+      'Thư viện sẽ xếp chủ đề theo chương sách giáo khoa của lớp đó. Bạn đổi được bất cứ lúc nào ở Thư viện.',
     subjectsTitle: 'Bạn quan tâm môn nào?',
     subjectsBody:
       'Chọn một hoặc nhiều môn — app sẽ gợi ý các môn này trước. Chưa chắc thì cứ bỏ qua.',
@@ -2301,7 +2349,6 @@ const vi = {
     successTarget: 'Chính xác! {quantity} = {value}, đúng mục tiêu {goal} (chỉ lệch {diff}).',
     successBest: 'Tuyệt! {quantity} = {value} — giá trị lớn nhất có thể là {best}.',
     showHint: 'Xem gợi ý',
-    progress: 'Tiến độ: {done}/{total}',
     topicDone: 'Đã hoàn thành chủ đề',
     badgesTitle: 'Huy hiệu của bạn',
     noBadges: 'Mở một chủ đề, thử dự đoán hoặc làm thử thách để nhận huy hiệu đầu tiên.',
@@ -2321,13 +2368,18 @@ const vi = {
     },
     breakReminder:
       'Bạn đã học khoảng 45 phút liên tục. Nghỉ mắt vài phút nhé: đứng dậy, nhìn ra xa — mô phỏng vẫn chờ bạn ở đây.',
+    topicLearned: 'Đã học',
+    topicLearnedLeft: 'Đã học — xong {done}/{total} bước, còn: {left}',
+    leftPredict: 'Dự đoán trước',
+    leftChallenges: '{count} thử thách',
+    chapterLearned: '{done}/{total} chủ đề đã học',
   },
   teacher: {
     regionLabel: 'Dạy học bằng AI',
     title: 'Dạy học bằng AI',
     sketchBadge: 'Trợ lý học tập',
     sketchNote:
-      'Đặt câu hỏi, xin gợi ý và học theo nhịp độ của em. Có thể chọn API trực tuyến hoặc Gemma chạy trên máy.',
+      'Đặt câu hỏi, xin gợi ý và học theo nhịp độ của em. Có thể chọn AI trực tuyến hoặc Gemma chạy trên máy.',
     back: 'Về trang chủ',
     layoutLabel: 'Xem thử bố cục',
     layoutTalk: 'Trò chuyện',

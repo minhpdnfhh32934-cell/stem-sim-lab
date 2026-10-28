@@ -779,7 +779,9 @@ export function buildMutationScene(model: MutationModel3D, o: MutationSceneOptio
     // Strand ends of both DNAs and both mRNAs.
     for (const helix of HELICES) {
       const y0 = LAYOUT.helixY[helix];
-      const ym = LAYOUT.mrnaY[helix];
+      // The mRNA's ends a little outside its line (away from its DNA): the name leaders leave
+      // along that line and covered the 3′ (UI-49).
+      const ym = LAYOUT.mrnaY[helix] + (helix === 'normal' ? 0.55 : -0.55);
       if (win.from === 0) {
         layer.add('5′', xOf(0) - 0.75, y0 + 1.15, 0, 'tick');
         layer.add('3′', xOf(0) - 0.75, y0 - 1.15, 0, 'tick');

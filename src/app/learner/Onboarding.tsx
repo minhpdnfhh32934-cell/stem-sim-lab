@@ -1,7 +1,7 @@
 import { Check, KeyRound } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useT } from '@/app/i18n';
-import { LEVELS } from '@/app/levels';
+import { GRADE_CHOICES } from '@/app/levels';
 import { SUBJECT_ICON } from '@/app/subjectIcons';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { cx } from '@/ui/cx';
@@ -9,9 +9,9 @@ import { useOnboardingPhase } from './onboardingPhase';
 import { useProfileStore } from './profileStore';
 import './learner.css';
 
-type Step = 'level' | 'subjects';
-/** Main: level, subjects, (gate), (connect), (tour) = 5 steps. Pilot: subject, (gate), (tour). */
-const STEPS: Step[] = ['level', 'subjects'];
+type Step = 'grade' | 'subjects';
+/** Grade, subjects, (gate), (connect), (tour) = 5 steps. */
+const STEPS: Step[] = ['grade', 'subjects'];
 const TOTAL = 5;
 
 /** First-run onboarding: profile steps, then (after the age gate) "Kết nối AI" in main. */
@@ -35,6 +35,8 @@ function ModalCard({
   useEffect(() => {
     const d = ref.current;
     if (d && !d.open) d.showModal();
+    // showModal() focuses the first option, whose focus ring then looks like a second choice.
+    d?.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]')?.focus();
     return () => {
       if (d?.open) d.close();
     };
@@ -72,40 +74,45 @@ function ProfileSteps() {
       <header className="dialog__header onboarding__header">
         <p className="onboarding__step">{t('onboarding.step', { i: index + 1, n: TOTAL })}</p>
         <h2 id="onboarding-title">
-          {t(step === 'level' ? 'onboarding.levelTitle' : 'onboarding.subjectsTitle')}
+          {t(step === 'grade' ? 'onboarding.levelTitle' : 'onboarding.subjectsTitle')}
         </h2>
       </header>
       <div className="dialog__body">
         <p className="onboarding__lead">
-          {t(step === 'level' ? 'onboarding.levelBody' : 'onboarding.subjectsBody')}
+          {t(step === 'grade' ? 'onboarding.levelBody' : 'onboarding.subjectsBody')}
         </p>
-        {step === 'level' ? (
-          <div className="onboarding__options" role="radiogroup" aria-labelledby="onboarding-title">
-            {LEVELS.map((l) => {
-              const planned = l.status === 'planned';
-              return (
+        {step === 'grade' ? (
+          <>
+            <div
+              className="onboarding__options"
+              role="radiogroup"
+              aria-labelledby="onboarding-title"
+              aria-describedby="onboarding-grade-note"
+            >
+              {GRADE_CHOICES.map((g) => (
                 <button
-                  key={l.id}
+                  key={g}
                   type="button"
                   role="radio"
-                  aria-checked={profile.level === l.id}
-                  disabled={planned}
+                  aria-checked={profile.grade === g}
                   className="onboarding__option"
                   onClick={() => {
-                    profile.setLevel(l.id);
+                    profile.setGrade(g);
                   }}
                 >
                   <span className="onboarding__option-name">
-                    {t(`levels.${l.id}`)}
-                    {planned && <span className="home__soon">{t('levels.soon')}</span>}
+                    {g === 'all' ? t('levels.all') : t('levels.grade', { grade: g })}
                   </span>
                   <span className="onboarding__option-desc">
-                    {t(l.id === 'foundation' ? 'levels.foundationDesc' : 'levels.generalDesc')}
+                    {g === 'all' ? t('levels.allDesc') : t('levels.gradeDesc', { grade: g })}
                   </span>
                 </button>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+            <p id="onboarding-grade-note" className="home__note">
+              {t('levels.sourceNote')}
+            </p>
+          </>
         ) : (
           <div className="onboarding__options onboarding__options--row">
             {SUBJECTS.map((s) => {

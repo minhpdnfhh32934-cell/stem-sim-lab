@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Params, PhysicsScene } from '@/physics/types';
 import { toSI } from '@/core/units';
+import { formatNumber, tFor } from '@/app/i18n';
 import {
   answerValue,
   CHALLENGES,
@@ -65,6 +66,30 @@ function reachable(s: PhysicsScene, c: Challenge, base: Params): boolean {
 describe('challenges (answers checked by the engine)', () => {
   it('every physics topic has at least one challenge', () => {
     for (const id of sceneIds()) expect(challengesFor(id).length, id).toBeGreaterThan(0);
+  });
+
+  it('texts never break inside an equation ("t = 5 s"), and a mode switch is named', async () => {
+    for (const c of CHALLENGES) {
+      for (const text of [c.title, c.task, c.hint]) {
+        // ASCII spaces around "=" let the line break inside it; use U+00A0.
+        expect(text.vi, c.id).not.toMatch(/ =|= /);
+        expect(text.en, c.id).not.toMatch(/ =|= /);
+      }
+      const s = await loadScene(c.topic);
+      const mode = c.start?.mode;
+      if (mode === undefined || mode === s.defaults.mode) continue;
+      const label = s.params.find((d) => d.key === 'mode')?.choices?.find((x) => x.value === mode);
+      expect(c.task.vi, c.id).toContain(label?.label.vi ?? '?');
+      // Not the button's name: after a try it reads “Làm lại thử thách”.
+      expect(c.task.vi, c.id).toContain('khi bạn bắt đầu thử thách');
+      expect(c.task.en, c.id).toContain('when you start the challenge');
+      expect(c.task.vi, c.id).not.toContain(tFor('vi')('learn.start'));
+      // A target in the thousands is grouped like the rest of the screen ("8.000 V/m").
+      if (c.goal.kind === 'target' && c.goal.value >= 1000) {
+        expect(c.title.vi, c.id).toContain(formatNumber('vi', c.goal.value));
+        expect(c.title.en, c.id).toContain(formatNumber('en', c.goal.value));
+      }
+    }
   });
 
   it('ids are unique and controls are real parameters', async () => {

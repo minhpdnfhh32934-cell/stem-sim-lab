@@ -120,17 +120,21 @@ test('in-app updates are explained as desktop-only in the browser build', async 
   await expect(page.getByText('Cập nhật trong app chỉ có ở bản cài trên máy.')).toBeVisible();
 });
 
-test('first run: level → subjects → age question → tour (once, can be skipped)', async ({
+test('first run: grade → subjects → age question → tour (once, can be skipped)', async ({
   browser,
 }) => {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   const page = await context.newPage();
   await page.goto('/');
   // Onboarding (A4.2) comes first; the safety question and the tour wait behind it.
-  const onboarding = page.getByRole('dialog', { name: 'Bạn muốn học ở trình độ nào?' });
+  const onboarding = page.getByRole('dialog', { name: 'Bạn đang học hoặc ôn lớp nào?' });
   await expect(onboarding).toBeVisible();
   await expect(onboarding).toContainText('Bước 1/5');
+  // Focus is on the chosen card ("Tất cả"), not on "Lớp 10" where a ring would look like a 2nd choice.
+  await expect(onboarding.getByRole('radio', { name: /Tất cả/ })).toBeFocused();
+  await expect(onboarding).toContainText('đang chờ giáo viên duyệt');
   await expect(page.getByRole('dialog', { name: 'Trước khi bắt đầu' })).toHaveCount(0);
+  await onboarding.getByRole('radio', { name: /Lớp 12/ }).click();
   await onboarding.getByRole('button', { name: 'Tiếp' }).click();
   const subjects = page.getByRole('dialog', { name: 'Bạn quan tâm môn nào?' });
   await subjects.getByRole('button', { name: /^Sinh học/ }).click();
@@ -145,6 +149,8 @@ test('first run: level → subjects → age question → tour (once, can be skip
   await expect(page.locator('.tour')).toHaveCount(0);
   await enterLab(page);
   await expect(page.getByRole('radio', { name: 'Sinh học' })).toBeChecked();
+  // The library opens on the grade chosen in the first step.
+  await expect(page.getByRole('radio', { name: 'Lớp 12' })).toBeChecked();
   const tour = page.getByRole('dialog', { name: 'Chào mừng đến SimLab' });
   await expect(tour).toBeVisible();
   await tour.getByRole('button', { name: 'Tiếp', exact: true }).click();
@@ -160,7 +166,7 @@ test('first run: level → subjects → age question → tour (once, can be skip
 test('undo works for physics parameters too', async ({ page }) => {
   await openLab(page);
   await page.getByRole('button', { name: 'Ném xiên', exact: true }).click();
-  const field = page.getByRole('spinbutton').first();
+  const field = page.locator('.param__number').first();
   await expect(field).toHaveValue('15');
   await field.fill('20');
   await field.press('Enter');
@@ -179,7 +185,7 @@ test('manual mode offers chemistry and biology topics too', async ({ page }) => 
   const select = dialog.getByRole('combobox', { name: 'Chủ đề' });
   await expect(select.locator('optgroup')).toHaveCount(3);
   await expect(select.locator('optgroup[label="Hóa học"] option')).toHaveCount(12);
-  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(11);
+  await expect(select.locator('optgroup[label="Sinh học"] option')).toHaveCount(12);
   await select.selectOption('logisticGrowth');
   await expect(dialog.locator('.problem-review__module input[type="range"]').first()).toBeVisible();
   await dialog

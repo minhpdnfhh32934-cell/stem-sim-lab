@@ -1127,3 +1127,46 @@
 .tr3d__row > * {
   pointer-events: auto;
 }
+
+/* Cell structure 2D (src/biology/cell): "Hiện tên" and the cell switch are full targets; the part card. */
+.cell2d .icon-btn--lg {
+  width: var(--target);
+  height: var(--target);
+}
+.cell-parts .segmented {
+  display: flex;
+  margin-bottom: var(--space-3);
+}
+.cell-parts .segmented__item {
+  flex: 1;
+  min-height: var(--target);
+}
+.cell-part-card {
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel-2);
+}
+.cell-part-card p {
+  margin: var(--space-2) 0 0;
+}
+.cell-part-card > p:first-of-type {
+  font-size: var(--text-content);
+}
+
+/* "Trình tự ADN" (UI-48): the panel's full width, a mono font so the bases line up, themed. */
+.chem-form .dogma-seq {
+  align-items: stretch;
+}
+.dogma-seq textarea {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  resize: vertical;
+  word-break: break-all;
+}

@@ -10,8 +10,8 @@ import { card3dAssumptions } from '../view3d/texts';
 export const LV_CARD: ScienceCardData = {
   title: L('Con mồi – vật ăn thịt (Lotka–Volterra)', 'Predator–prey (Lotka–Volterra)'),
   model: L(
-    'Mô hình Lotka–Volterra: con mồi x sinh sản theo hàm mũ và bị ăn tỉ lệ với số lần gặp xy; vật ăn thịt y tăng nhờ ăn mồi và chết với tốc độ không đổi. Hệ được giải số bằng DOPRI5 theo biến ln x, ln y (sai số tương đối 10⁻¹⁰, quần thể luôn dương); đại lượng bảo toàn V được theo dõi để kiểm tra độ chính xác.',
-    'Lotka–Volterra model: prey x grows exponentially and is eaten in proportion to encounters xy; predators y grow by eating prey and die at a constant rate. Integrated with DOPRI5 in the variables ln x, ln y (relative tolerance 10⁻¹⁰, populations stay positive); the conserved quantity V is monitored to check accuracy.',
+    'Mô hình Lotka–Volterra: con mồi x sinh sản theo hàm mũ và bị ăn tỉ lệ với số lần gặp xy; vật ăn thịt y tăng nhờ ăn mồi và chết với tốc độ không đổi. Hệ được giải số bằng phương pháp Runge–Kutta tự chỉnh bước (Dormand–Prince, DOPRI5) theo biến ln x, ln y (sai số tương đối 10⁻¹⁰, quần thể luôn dương); đại lượng bảo toàn V được theo dõi để kiểm tra độ chính xác.',
+    'Lotka–Volterra model: prey x grows exponentially and is eaten in proportion to encounters xy; predators y grow by eating prey and die at a constant rate. Integrated with an adaptive-step Runge–Kutta method (Dormand–Prince, DOPRI5) in the variables ln x, ln y (relative tolerance 10⁻¹⁰, populations stay positive); the conserved quantity V is monitored to check accuracy.',
   ),
   equations: [
     {

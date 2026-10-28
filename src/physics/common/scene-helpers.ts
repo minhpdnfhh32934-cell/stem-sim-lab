@@ -4,6 +4,11 @@ import type { GraphDef, ParamDef } from '../types';
 
 export const L = (vi: string, en: string): LocalizedText => ({ vi, en });
 
+/** Dash (px) for a curve that can lie exactly on another one (Eₓ on E); y₁ on the wave stage. */
+export const DASH = [7, 5];
+/** Dots (px): y₂ on the wave stage and graph alike, so the two patterns read the same in both. */
+export const DOT = [3, 4];
+
 /**
  * Gravity parameter shared by every scene that uses g (default comes from Settings).
  * Changing it restarts the run: most engines cannot apply a new g mid-run.

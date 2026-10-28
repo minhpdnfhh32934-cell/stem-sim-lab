@@ -76,6 +76,15 @@ test('DNA → mRNA → protein 3D: a picked base shows the model’s pair and co
   });
   await openDogma(page);
   await expect(page.locator('.science-card')).toContainText('ADN → mARN → Protein 3D');
+  // UI-47: the inspector's lesson title keeps "mARN"; UI-48: the sequence box fills its panel.
+  const title = page.locator('.section__title', { hasText: 'ADN → mARN → Protein' });
+  await expect(title).toHaveCSS('text-transform', 'none');
+  const seq = page.getByRole('textbox', { name: 'Trình tự ADN' });
+  const { box, panel } = await seq.evaluate((el) => ({
+    box: el.getBoundingClientRect().width,
+    panel: (el.closest('.chem-form') ?? el).getBoundingClientRect().width,
+  }));
+  expect(box).toBeGreaterThan(0.95 * panel);
   const caption = page.locator('.m3d__caption');
   await expect(caption).toContainText('ARN pôlimeraza tháo xoắn đoạn ADN đầu tiên');
 
@@ -85,7 +94,7 @@ test('DNA → mRNA → protein 3D: a picked base shows the model’s pair and co
   await next.click();
   await expect.poll(() => hook(page, 'phase')).toBe('translation');
   await expect(caption).toContainText(
-    'Ribôxôm ở bộ ba thứ 1/7: AUG → Met (Methionine), tARN mang bộ ba đối mã UAC.',
+    'Ribosome ở bộ ba thứ 1/7: AUG → Met (Methionine), tARN mang bộ ba đối mã UAC.',
   );
   await expect(page.getByText('Chuỗi pôlipeptit: 1 axit amin')).toBeVisible();
 
@@ -135,7 +144,7 @@ test('DNA → mRNA → protein 3D: a picked base shows the model’s pair and co
   // Three codons on: the chain is Met–Ala–Phe–Lys (the model's translation).
   await page.locator('.m3d__info').getByRole('button', { name: 'Bỏ chọn' }).click();
   for (let k = 0; k < 3; k++) await next.click();
-  await expect(caption).toContainText('Ribôxôm ở bộ ba thứ 4/7: AAA → Lys (Lysine)');
+  await expect(caption).toContainText('Ribosome ở bộ ba thứ 4/7: AAA → Lys (Lysine)');
   await expect.poll(() => hook(page, 'step')).toBe(3);
   await expect.poll(() => hook(page, 'moving')).toBe(false);
   const bead = (await hook(page, 'focus', { kind: 'residue', codon: 2 })) as {
@@ -154,6 +163,6 @@ test('DNA → mRNA → protein 3D: a picked base shows the model’s pair and co
   await expect(page.getByText('Ribosome ở bộ ba thứ 4/7')).toBeVisible();
   await page.getByRole('radio', { name: '3D' }).click();
   await expect(page.locator('.dogma3d canvas')).toBeVisible({ timeout: 15_000 });
-  await expect(caption).toContainText('Ribôxôm ở bộ ba thứ 4/7');
+  await expect(caption).toContainText('Ribosome ở bộ ba thứ 4/7');
   expect(errors).toEqual([]);
 });

@@ -444,3 +444,116 @@ test('Gemini out of free quota → the free Groq fallback answers, and the label
   await expect(dialog.getByRole('textbox', { name: 'Vận tốc ban đầu' })).toHaveValue('15');
   expect(groq.calls).toBe(2);
 });
+
+test('changing "Đề bài cho biết" in the table asks for the new given quantity', async ({
+  page,
+}) => {
+  const ucm = (golden as { items: Item[] }).items.find((i) => i.id === 'ucm-02')!;
+  await mockGemini(page, {
+    classification: {
+      topic: 'uniformCircularMotion',
+      reason: 'chuyển động tròn đều',
+      unsupported_parts: [],
+    },
+    extraction: {
+      // "120 vòng/phút" put into ω is refused (a cycle unit), so the AI's draft keeps "biết v".
+      quantities: [
+        { key: 'r', value: 15, unit: 'cm', quote: '15 cm' },
+        { key: 'omega', value: 120, unit: 'rev/min', quote: '120 vòng/phút' },
+      ],
+      questions: [],
+      assumptions: [],
+      unsupported_parts: [],
+      clarifications: [],
+    },
+  });
+  await typeProblem(page, ucm.text);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', { name: 'Mô phỏng' });
+  await expect(confirm).toBeDisabled();
+  // The learner corrects the mode: f must now be asked for, not taken from its default.
+  await dialog.getByRole('radio', { name: 'Biết tần số f' }).click();
+  await expect(confirm).toBeDisabled();
+  await dialog.getByRole('textbox', { name: 'Tần số (số vòng mỗi giây)' }).fill('2');
+  await expect(confirm).toBeEnabled();
+});
+
+test("a second stated quantity is flagged, and the flag follows the learner's choice", async ({
+  page,
+}) => {
+  await mockGemini(page, {
+    classification: {
+      topic: 'uniformCircularMotion',
+      reason: 'chuyển động tròn đều',
+      unsupported_parts: [],
+    },
+    extraction: {
+      quantities: [
+        { key: 'r', value: 40, unit: 'cm', quote: 'bán kính 40 cm' },
+        { key: 'T', value: 0.5, unit: 's', quote: 'chu kì 0,5 s' },
+        { key: 'f', value: 2, unit: 'Hz', quote: 'tần số 2 Hz' },
+      ],
+      questions: [],
+      assumptions: [],
+      unsupported_parts: [],
+      clarifications: [],
+    },
+  });
+  await typeProblem(
+    page,
+    'Vật quay đều trên đường tròn bán kính 40 cm với chu kì 0,5 s, tần số 2 Hz.',
+  );
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog');
+  const unused = (name: string) =>
+    dialog.getByText(`${name}: đề có cho giá trị này`, { exact: false });
+  await expect(unused('Tần số (số vòng mỗi giây)')).toBeVisible();
+  // Correcting T keeps "Biết chu kì T": the field stays, f is still the unused one.
+  const period = dialog.getByRole('textbox', { name: 'Chu kì' });
+  await period.fill('0,6');
+  await expect(period).toBeVisible();
+  await expect(unused('Tần số (số vòng mỗi giây)')).toBeVisible();
+  // Choosing f instead: f is used now (T was corrected by hand, so it is not flagged either).
+  await dialog.getByRole('radio', { name: 'Biết tần số f' }).click();
+  await expect(unused('Tần số (số vòng mỗi giây)')).toHaveCount(0);
+  await expect(dialog.getByRole('textbox', { name: 'Tần số (số vòng mỗi giây)' })).toHaveValue('2');
+});
+
+test('a charge whose sign the AI changed is marked on its row until the learner sets it', async ({
+  page,
+}) => {
+  const efd = (golden as { items: Item[] }).items.find((i) => i.id === 'efd-02')!;
+  await mockGemini(page, {
+    classification: { topic: 'electricField', reason: 'điện trường', unsupported_parts: [] },
+    extraction: {
+      // The problem writes q₂ = −8 µC; the AI drops the minus.
+      quantities: [
+        { key: 'q1', value: 2, unit: 'uC', quote: 'q₁ = 2 µC' },
+        { key: 'q2', value: 8, unit: 'uC', quote: 'q₂ = −8 µC' },
+        { key: 'x2', value: 30, unit: 'cm', quote: 'cách nhau 30 cm' },
+        { key: 'xP', value: 10, unit: 'cm', quote: 'cách A 10 cm' },
+      ],
+      questions: [],
+      assumptions: [],
+      unsupported_parts: [],
+      clarifications: [],
+    },
+  });
+  await typeProblem(page, efd.text);
+  await page.getByRole('button', { name: 'Phân tích đề' }).click();
+  const dialog = page.getByRole('dialog');
+  const hint = dialog.getByText('Kiểm tra dấu (+ hoặc −) của điện tích này so với đề.');
+  await expect(hint).toHaveCount(1);
+  await expect(dialog.locator('.qty-card.is-check')).toHaveCount(1);
+  await expect(dialog.locator('.qty-card.is-check')).toContainText('q₂');
+  // Typing the value again with the wrong sign does not count as a check.
+  const q2 = dialog.getByRole('textbox', { name: 'Điện tích thứ 2 (có dấu)' });
+  await q2.fill('9');
+  await expect(hint).toHaveCount(1);
+  await q2.fill('-8');
+  await expect(hint).toHaveCount(0);
+  await expect(dialog.getByText('dấu của điện tích chưa chắc khớp', { exact: false })).toHaveCount(
+    0,
+  );
+});

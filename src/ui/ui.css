@@ -513,6 +513,10 @@ select:disabled {
   text-transform: uppercase;
   color: var(--text-muted);
 }
+/* A lesson name keeps its case: upper case would turn "mARN" into "MARN" (UI-47). */
+.section__title--keep-case {
+  text-transform: none;
+}
 .section__body {
   padding: 0 var(--space-3) var(--space-3);
 }
@@ -1163,4 +1167,42 @@ kbd {
   font-size: max(12px, var(--text-xs));
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* Number box (NumberField): a clamped value is said in words under the box, not only by colour. */
+.number-field {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+.number-field__hint {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 0;
+  z-index: 2;
+  padding: 1px 6px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--danger);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+/* A label that wraps a checkbox is one control: box and text together, the whole row a target
+   (the forms' "label { justify-content: space-between }" for sliders split them, UI-43). Only
+   these forms: elsewhere a checkbox may be a hidden switch input (.chat-toggle). */
+.chem-form label:has(> input[type='checkbox']),
+.param__toggle {
+  justify-content: flex-start;
+  min-height: var(--target);
+  cursor: pointer;
+}
+.chem-form label:has(> input[type='checkbox']) > input[type='checkbox'],
+.param__toggle > input[type='checkbox'] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
 }

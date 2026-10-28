@@ -46,6 +46,9 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('dynamics', ['newtonLaws', 'inclinedPlane', 'pulley', 'hookeSpring']),
     chapter('energyMomentum', ['energyConservation', 'collisions']),
     chapter('oscillations', ['springPendulum', 'simplePendulum']),
+    chapter('circularMotion', ['uniformCircularMotion']),
+    chapter('waves', ['standingWave']),
+    chapter('electricField', ['electricField']),
   ],
   chemistry: [
     chapter('atoms', ['periodicTable', 'electronConfiguration', 'bohrModel', 'orbitals']),
@@ -59,6 +62,7 @@ export const CATALOG: Record<Subject, ChapterEntry[]> = {
     chapter('genetics', ['mendel', 'hardyWeinberg', 'geneticDrift']),
     chapter('ecology', ['logisticGrowth', 'lotkaVolterra']),
     chapter('cellPhysiology', ['michaelisMenten', 'diffusionOsmosis']),
+    chapter('cellStructure', ['cellStructure']),
   ],
 };
 

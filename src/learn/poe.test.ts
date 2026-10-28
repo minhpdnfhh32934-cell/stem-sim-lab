@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { tFor } from '@/app/i18n';
 import { fromSI } from '@/core/units';
 import { loadScene, sceneIds } from '@/physics/registry';
 import type { Params } from '@/physics/types';
@@ -28,6 +29,32 @@ describe('predict – observe – explain', () => {
     });
   }
 
+  it('the question asks what the buttons answer (UI-11)', () => {
+    for (const poe of POES) {
+      // "sớm hơn, muộn hơn hay…" / "lâu hơn, ngắn hơn hay…": words no button uses.
+      expect(poe.question.vi, poe.id).not.toMatch(/hơn, .* hơn hay/);
+      if (poe.choices.some((c) => c.kind === 'direction')) {
+        expect(poe.question.vi, poe.id).toContain('tăng, giảm hay không đổi');
+        expect(poe.question.en, poe.id).toMatch(/go up, (go )?down or stay/);
+      }
+    }
+  });
+
+  it('a question that switches the stage mode names that mode (UI-52)', async () => {
+    for (const poe of POES) {
+      const s = await loadScene(poe.topic);
+      const mode = poe.start?.mode;
+      if (mode === undefined || mode === s.defaults.mode) continue;
+      const label = s.params.find((d) => d.key === 'mode')?.choices?.find((c) => c.value === mode);
+      expect(label, poe.id).toBeDefined();
+      expect(poe.question.vi, poe.id).toContain(label?.label.vi ?? '?');
+      expect(poe.question.en.toLowerCase(), poe.id).toContain(label?.label.en.toLowerCase() ?? '?');
+      // The stage switches only when the learner presses this button.
+      expect(poe.question.vi, poe.id).toContain(`“${tFor('vi')('learn.observe')}”`);
+      expect(poe.question.en, poe.id).toContain(`“${tFor('en')('learn.observe')}”`);
+    }
+  });
+
   it('known closed forms: free fall √2, stopping distance ×4, period ×2', async () => {
     const pick = async (id: string) => {
       const poe = POES.find((p) => p.id === id);
@@ -51,6 +78,13 @@ describe('predict – observe – explain', () => {
     const wd = (mm: number) => Math.sqrt(k / mm - (b / (2 * mm)) ** 2);
     expect(hk.out.after / hk.out.before).toBeCloseTo(wd(m) / wd(4 * m), 9);
     expect(hk.out.after / hk.out.before).toBeCloseTo(2, 4);
+    // Standing wave, v from F and μ (the POE's start): F × 4 → v × 2 → f × 2.
+    const sw = POES.find((x) => x.id === 'standingWave.tension');
+    if (!sw) throw new Error('standingWave.tension');
+    const sws = await loadScene(sw.topic);
+    const swo = observe(sws, sw, { ...sws.defaults, ...sw.start });
+    expect(swo && swo.after / swo.before).toBeCloseTo(2, 9);
+    expect(swo && sw.choices[swo.correct]).toEqual({ kind: 'ratio', ratio: 2 });
     expect(hk.poe.choices[hk.out.correct]).toEqual({ kind: 'ratio', ratio: 2 });
     const ob = await pick('obliqueProjectile.m');
     expect(ob.poe.choices[ob.out.correct]).toEqual({ kind: 'ratio', ratio: 1 });

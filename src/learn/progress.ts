@@ -25,11 +25,39 @@ export function topicProgress(topic: string, p: Progress): TopicProgress {
   return { done, total, complete: done === total };
 }
 
-/** Topics of a chapter that are complete, out of the available ones. */
+export interface TopicStatus extends TopicProgress {
+  /**
+   * `opened` = learned ("Đã học"); `complete` only when a topic that has activities (prediction,
+   * challenges) has them all done — opening a topic without activities stays `opened`.
+   */
+  state: 'new' | 'opened' | 'complete';
+  /** What is left to do: the prediction, and how many challenges. */
+  predictLeft: boolean;
+  challengesLeft: number;
+}
+
+/** What the library shows for one topic. */
+export function topicStatus(topic: string, p: Progress): TopicStatus {
+  const progress = topicProgress(topic, p);
+  const poe = poeFor(topic);
+  const state = !p.visited[topic]
+    ? 'new'
+    : progress.total > 1 && progress.complete
+      ? 'complete'
+      : 'opened';
+  return {
+    ...progress,
+    state,
+    predictLeft: poe !== undefined && p.predictions[poe.id] === undefined,
+    challengesLeft: challengesFor(topic).filter((c) => p.challenges[c.id] === undefined).length,
+  };
+}
+
+/** Topics of a chapter that were opened ("đã học"), out of the available ones. */
 export function chapterProgress(topics: readonly { id: string; status: string }[], p: Progress) {
   const available = topics.filter((t) => t.status === 'available');
   return {
-    done: available.filter((t) => topicProgress(t.id, p).complete).length,
+    done: available.filter((t) => p.visited[t.id]).length,
     total: available.length,
   };
 }

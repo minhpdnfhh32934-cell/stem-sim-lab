@@ -47,7 +47,10 @@ a new phase. **When `PROMPT_PHAN_2.md` conflicts with `MASTER_PROMPT.md`, `PROMP
 
 The tutor was called "Thầy AI" until 2026-10-12; it is now **AI Teacher** and the app is **SimLab**
 (installer and window title). Internal identifiers stay: `vn.stemsimlab.desktop`, keychain service
-"STEM Sim Lab", `stemsim.*` storage keys. The user accepted:
+"STEM Sim Lab", `stemsim.*` storage keys. **User decision 2026-10-23 (plan #37 (k)):** the lab
+("Phòng thí nghiệm" / "Lab") is shown as **Virtual Lab** in both languages, untranslated like
+Science Studio and AI Teacher; display text only (`screen: 'lab'`, `openLab`, i18n keys `lab*` stay;
+release history and old work-logs keep the old name). The user accepted:
 
 - **Local AI:** Gemma runs inside the app (Transformers.js + ONNX Runtime Web on WebGPU, worker in
   `src/ai/webGemma*.ts`). Ollama is not used (the old `gemma.rs` was removed in 0.4.0). A local
@@ -299,6 +302,27 @@ Progress log: `docs/PROGRESS.md`.
   otherwise RK4 with substeps and energy monitoring. Every scene needs a test comparing the
   engine with the closed form and a DOPRI5 cross-check.
 - UI runtime: `src/app/sim/runtime.ts` (`sim` singleton), `StageCanvas`, panels in `src/app/sim`.
+- **Unit groups (0.8.0):** `UnitDef.group` `'angular'` (rad/s) / `'cycle'` (Hz, rev/s = vòng/s,
+  rev/min = vòng/phút): `convert()` throws across groups, `allowedUnits()` keeps a field's own group
+  (an ω field never takes Hz). New units of the same dimension that must not mix get a group.
+- Every scene's engine must be registered (`src/physics/registry.test.ts`). `tests/e2e/physics.spec.ts`
+  opens every physics topic (no page error, no horizontal scroll at 1366×768, right title): a new
+  topic appends its [library name, stage title] to `TOPICS`.
+- Uniform circular motion (`src/physics/circular/`, 0.8.0): `model.ts` (mode = given v / ω / T / f),
+  `engine.ts` (phase from t = n·Δt), `check.ts` (DOPRI5 on the force law), `scenes.ts`.
+- Standing wave on a string (`src/physics/wave/`, 0.8.0): `model.ts` (both ends fixed only; `isWhole`
+  never rounds 2Lf/v beyond 1e-9·max(1, m), `ratioDigits`), `engine.ts` (mode = find f / v / n, v
+  typed or √(F/μ); closed form at t = i·Δt; DOPRI5 `latticeAt` / `latticeFrequency` on the
+  method-of-lines wave equation), `scenes.ts`, `draw.ts` (labelled vertical stretch). Units kg/m, g/m.
+- Electric field (`src/physics/field/`, 0.8.0, #76): `model.ts` (Coulomb, superposition, plates,
+  `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
+  step doubling; the card's error is an upper estimate from a coarse copy of each line, checked
+  against DOPRI5), `engine.ts` (static), `draw.ts` (lines traced once per parameter change),
+  `scenes.ts`. Units nC, kV, V/m, kV/m, mN, µN, N·m²/C². `src/ai/numbers.ts` = main's reader
+  plus four changes only (#89 final scope): a superscript run is one exponent ("4.10⁻⁸"; "⁰" after a
+  digit is a degree), relative comparison of finite numbers (also `known` in `explain.ts`), digits
+  of a 1–2-letter symbol (q0, R1, v_0) dropped in `numbersIn`/`mentions` only, and `writtenSign` →
+  `draft.ts` `signMismatch`. A bare power ("10⁻⁸") is not read and y_M is never taken from words.
 
 ## AI layer (Phase 3)
 
@@ -355,13 +379,22 @@ Progress log: `docs/PROGRESS.md`.
   no stage/timeline/bottom/inspector then, and the top-bar problem box is hidden — the home box is
   the main action), `Onboarding` + `onboardingPhase.ts` (not `onboarding.ts`: Windows is case-insensitive, `Onboarding` would resolve to it) (`useOnboardingPhase`: profile → gate → connect
   (only when status is `noKey`) → tour; `AgeGate hold`, the Tour waits for its phase),
-  `profileStore` (`stemsim.profile`: level, interests, lastTopic; users with `stemsim.tourDone`
+  `profileStore` (`stemsim.profile` v2: level, grade, interests, lastTopic; v1 → grade `all`; users with `stemsim.tourDone`
   skip onboarding), `ModeSwitch`.
 - `uiMode` in `settingsStore` (v2; v1 users migrate to `advanced`, new installs `basic`). Basic:
   `basicSplit` (`src/app/sim/basicParams.ts`, first 5 params + any from the problem/user), no data
   tab/CSV, no Object section, toolbar without protractor/stopwatch/trail. New panels must respect it.
-- Levels: `src/app/levels.ts` (`foundation` available, `general` planned). Curriculum mapping is
-  empty + `review_status: "pending"` (DATA_REVIEW #12) — never fill it without a teacher.
+- Library views: `src/app/levels.ts` (`chaptersFor(grade, subject)`: switch "Lớp 10 · 11 · 12 · Tất
+  cả", a grade = textbook chapters + "Bài n", empty → "Xem tất cả"; onboarding asks the grade, home
+  suggests by it). The grade never reaches the AI: `Level` stays `foundation` for `LEVEL_HINT`
+  (`chatService.ts`) and Science Studio's level field. **Curriculum mapping
+  (user decision 2026-10-22, plan #37 §3.3, replaces "never fill it without a teacher"):** topics are
+  placed in grades/lessons only from the official KNTT tables of contents, by the script
+  `scripts/data/gen_curriculum_kntt.py` (→ `data/curriculum_kntt.json` + `docs/CURRICULUM_KNTT.md`,
+  never edited by hand; titles verbatim, no book content), only when a lesson title clearly names the
+  topic (else unplaced with a reason), always `review_status: "pending"` and labelled "chờ giáo viên
+  duyệt" in the UI (DATA_REVIEW #12, `KNTT-*`). Read it through `src/app/curriculum.ts`
+  (`gradeView`, `lessonRange`); a test fails when a catalog topic is neither placed nor unplaced.
 - Tokens: `--subject-*` colors, `--text-content` (≥ 15px learning text), `--target` (≥ 40px; `.btn`
   height; icon buttons grow under `any-pointer: coarse`). E2E checks 1366×768 without horizontal
   scroll (`tests/e2e/learner.spec.ts`). Confirmation table = `qty-cards` (`quantityIcon.ts`).
@@ -389,7 +422,9 @@ Progress log: `docs/PROGRESS.md`.
 - `poe.ts`: one "Dự đoán trước" per physics topic; the right choice is computed from `solve()`
   before/after (`observe`). The learner writes the explanation (never stored or sent).
 - `progressStore` (`stemsim.progress`, local only), `progress.ts` (topic/chapter progress, badges —
-  no streaks or ranks), `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
+  no streaks or ranks; `topicStatus`: the library marks every opened topic "Đã học", a physics topic
+  with steps left adds "1/3", all done → "Hoàn thành"; badges keep the "complete" rule),
+  `breakReminder.ts` + `useBreakReminder` (~45 min of continuous use).
 - SolutionPanel: a typed-in problem shows hints first (Gợi ý n → Lời giải đầy đủ, "Xem lời giải ngay").
 - New physics scene → add a challenge and a POE item, or the tests fail.
 
@@ -398,11 +433,11 @@ Progress log: `docs/PROGRESS.md`.
 - Guided lessons Predict → Experiment → Observe → Explain → Conclude → Report. Layers and file map:
   `docs/ARCHITECTURE.md` §3f.
 - **User decisions 2026-10-20:** (1) the guided-lesson mode keeps the name **Science Studio**;
-  (2) the launch page has only **Phòng thí nghiệm** + **AI Teacher**:
+  (2) the launch page has only **Virtual Lab** (called Phòng thí nghiệm until 0.8.0) + **AI Teacher**:
   **không thêm lại thẻ Science Studio ở trang mở đầu**. Science Studio lives inside the lab: the
   "Science Studio" button at the top of the topic library (and Ctrl+K) → `openStudio()` → screen `'studio'` (kept for older callers) →
-  `StudioScreen` beside the library (tabs Hóa học · Sinh học · Vật lí · Soạn bài; "Về Phòng thí
-  nghiệm"). An open topic lists its lessons in the inspector (`TopicLessons.tsx`); a lab POE that a
+  `StudioScreen` beside the library (tabs Hóa học · Sinh học · Vật lí · Soạn bài; "Về Virtual
+  Lab"). An open topic lists its lessons in the inspector (`TopicLessons.tsx`); a lab POE that a
   lesson runs (`binding.poe`) is a link to the lesson in "Thử thách", never a second prediction.
   Lookups only through `src/studio/lessons.ts`.
 - **The studio never computes a measurement.** A scenario (`scenario.ts`, Zod) binds only engine
@@ -412,6 +447,9 @@ Progress log: `docs/PROGRESS.md`.
 - One `SubjectPlugin` per subject (`flow/types.ts`); shared steps in `flow/`; evidence keeps its
   origin (engine / learner / AI, `session.ts`); the report is Markdown (`report.ts`); "Hỏi thầy"
   gets the screen context from `aiContext.ts`. State: `studioStore.ts` (`stemsim.studio`).
+- "Cách học" guide (`StudioGuide.tsx`, plan #37 §9c): the lab tour's `TourOverlay` (`Tour.tsx`)
+  with studio steps; opens by itself once (`guideSeen` in `stemsim.studio`, store version 2), then
+  only from the button. Unit tests start with it seen (`tests/setup.ts`), E2E via `storage-state.json`.
 - Built-in scenarios in `scenarios/` (validated at load; an invalid one is left out). Authoring
   ("Soạn bài", `authoring/`): every choice comes from an engine or data table, local only
   (`teacher.` ids), JSON import/export, always labelled unreviewed.
@@ -441,8 +479,8 @@ Progress log: `docs/PROGRESS.md`.
 - Code: `src/chemistry/{data,atom,periodic,molecule,reaction,particles}`, `formula.ts` (parser),
   `balance.ts` (exact null-space balancer). three.js viewers render on demand; RDKit.js is lazy.
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.
-- Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport}` — pure model files
-  (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 11 ModuleViews. Small shared controls in
+- Biology: `src/biology/{division,central,genetics,ecology,enzyme,transport,cell}` — pure model
+  files (`*.ts`, tested) + `*Views.tsx`; `modules.ts` lists the 12 ModuleViews. Small shared controls in
   `src/biology/ui.tsx` (`Range`, `Segmented`) and `fmt.ts` (`useFmt`, `niceStep`). Genetic code in
   `data/genetic_code.json` (`scripts/data/gen_genetic_code.py`).
 - Mitosis 3D (`src/biology/division/mitosis3d/`): `timeline.ts` (pure, counts from
@@ -591,6 +629,15 @@ Progress log: `docs/PROGRESS.md`.
   Tests: `src/biology/view3d/testing.ts` (`expectAllFreed`), E2E `tests/e2e/bio3d.spec.ts` (3D
   project, SwiftShader). Specs that open biology topics set SwiftShader too and run in the
   `chromium-3d` project (`HEAVY_3D` in `playwright.config.ts`, after the light specs).
+- Cell structure 2D (`src/biology/cell/`, 0.8.0, SGK Sinh học 10 KNTT Bài 7–8; topic and chapter
+  `cellStructure`, last in Biology): `parts.ts` (bacterium / animal / plant, 21 parts: vi/en name,
+  paraphrased function, `source` + printed `pages`, `membraneBound`, pending; names follow the
+  textbook pictures; no digits — test), `card.ts` (qualitative, no equations, the lesson's own
+  caption `CELL_ILLUSTRATION`, not the 3D kit's sentence), `draw.ts` (canvas, token colours,
+  draws exactly `partsFor(kind)` — test; name labels in a column on each side), `store.ts`
+  (`useCell`; only `kind` is saved, `restoreCell` ignores other values), `CellViews.tsx` (stage:
+  "Hiện tên", on in Basic; inspector: cell switch + parts list → name + function card). The 3D
+  version is planned for 0.8.1 (#54). Texts: DATA_REVIEW `CELL3D-*`.
 - Projects (Phase 6): `src/app/project/` — `snapshot.ts` (.stemsim schema; inputs only), `undo.ts`,
   `history.ts` (Rust SQLite `src-tauri/src/history.rs`), `actions.ts` (save/open/PNG/CSV via Rust
   dialogs in `files.rs`), `FileMenu`, `SourcesDialog` (lazy), `Tour` (first run, `stemsim.tourDone`).
@@ -598,7 +645,11 @@ Progress log: `docs/PROGRESS.md`.
   and undo work. E2E runs with `tests/e2e/storage-state.json` (tour already done).
 - Overload: render loops call `reportOverload()` from a `FrameMonitor`; memory watchdog in
   `src/perf/memory.ts` (`registerCacheRelease`).
-- KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead.
+- KaTeX: never put Vietnamese words inside `\text{}` — use the equation `label` instead. A textbook
+  symbol's Vietnamese subscript goes inside `\text{}` (`W_{\text{đ}}`, `\alpha_{\text{bđ}}`), never straight in
+  math mode (fallback font next to italic letters, KaTeX warning). KaTeX's fonts have "đ" but not "ỏ", "ỉ",
+  "µ" or "²", even inside `\text{}` (symbolNotInFont): `texQty` writes µ and ² outside it, and
+  `src/physics/registry.test.ts` renders every formula of every scene and choice and fails on any warning.
 
 ## Phase status
 

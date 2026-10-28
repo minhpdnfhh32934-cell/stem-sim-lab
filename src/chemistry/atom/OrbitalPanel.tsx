@@ -81,7 +81,7 @@ export function OrbitalPanel() {
             </td>
           </tr>
           <tr>
-            <th scope="row">{Lz(L('Năng lượng E_n', 'Energy E_n'))}</th>
+            <th scope="row">{Lz(L('Năng lượng Eₙ', 'Energy Eₙ'))}</th>
             <td className="num">{f(levelEnergyEv(n))} eV</td>
           </tr>
           <tr>

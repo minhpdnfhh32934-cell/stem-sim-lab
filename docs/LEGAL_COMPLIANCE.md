@@ -172,6 +172,25 @@ nào" cho các chương trình người dùng **tự cài**. Sự thật kỹ th
 - Mỗi **mô hình** (Llama, Qwen, Gemma, Mistral…) có giấy phép riêng, khác với giấy phép của chương
   trình chạy nó. SimLab không kiểm tra giấy phép mô hình người dùng tải.
 
+## 2g. Tên bài và chương của SGK "Kết nối tri thức với cuộc sống" (ghi 2026-10-26)
+
+**Xác nhận của người dùng ngày 2026-10-23** (kế hoạch #37, câu 3), ghi lại ở đây là xác nhận của
+người dùng, **không phải kết luận pháp lí** của Máy A:
+
+- `docs/CURRICULUM_KNTT.md` và `data/curriculum_kntt.json` (sinh bởi
+  `scripts/data/gen_curriculum_kntt.py`) chép **nguyên văn tên chương và tên bài** trong mục lục 9
+  cuốn SGK Vật lí, Hoá học, Sinh học 10–12 bộ "Kết nối tri thức với cuộc sống" (NXB Giáo dục Việt
+  Nam), đọc trên trang tập huấn `taphuan.nxbgd.vn` ngày 26/10/2026, có ghi nguồn. **Không chép nội
+  dung sách.**
+- Chức năng bào quan (bài Sinh (a), nếu làm) chỉ **diễn đạt lại ngắn**, có trích nguồn SGK Sinh học 10;
+  đề mẫu của các bài mới **tự viết**, không chép bài tập SGK.
+
+Người dùng / giáo viên cần xác nhận:
+
+- SimLab đối chiếu theo **bản in nào** (năm, lần tái bản); mục lục đọc từ ảnh trang tải lên tháng 4/2026.
+- Việc dùng tên bài/chương và đưa nhãn "Theo SGK Kết nối tri thức" vào app có cần NXB Giáo dục cho
+  phép hay không (Máy A không kết luận).
+
 ## 5. Ứng dụng xử lý dữ liệu thế nào (tóm tắt kỹ thuật)
 
 - Không tài khoản, không quảng cáo, không thống kê sử dụng. Mạng chỉ dùng khi: gọi AI (người dùng

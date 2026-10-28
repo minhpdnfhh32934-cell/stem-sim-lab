@@ -14,6 +14,7 @@ import json
 import math
 import pathlib
 
+from scipy.constants import epsilon_0
 from scipy.special import ellipk
 
 OUT = pathlib.Path(__file__).resolve().parents[2] / "tests" / "golden" / "physics.json"
@@ -400,6 +401,190 @@ add(
         q("e", 0, "1", "va chạm mềm"),
     ],
     {"v1x_after": 0.0, "v2x_after": 0.0, "momentum": 0.0},
+)
+
+# --- Chuyển động tròn đều -----------------------------------------------------------
+# mode: 0 = biết v, 1 = biết ω, 2 = biết T, 3 = biết f. ω = v/r = 2π/T = 2πf, a_ht = ω²r, F_ht = m·a_ht.
+add(
+    "ucm-01",
+    "Một vật nhỏ chuyển động tròn đều trên đường tròn bán kính 2 m với tốc độ 4 m/s. Tính tốc độ góc, chu kì và gia tốc hướng tâm của vật.",
+    "uniformCircularMotion",
+    [q("mode", 0, "1", "tốc độ 4 m/s"), q("r", 2, "m", "bán kính 2 m"), q("v", 4, "m/s", "tốc độ 4 m/s")],
+    {"omega": 4 / 2, "period": 2 * math.pi * 2 / 4, "a_c": 4**2 / 2},
+)
+add(
+    "ucm-02",
+    "Một đĩa tròn quay đều với tốc độ 120 vòng/phút. Một điểm trên đĩa cách trục quay 15 cm. Tính tốc độ góc, tốc độ dài và gia tốc hướng tâm của điểm đó.",
+    "uniformCircularMotion",
+    [q("mode", 3, "1", "120 vòng/phút"), q("f", 120, "rev/min", "120 vòng/phút"), q("r", 15, "cm", "15 cm")],
+    {
+        "omega": 2 * math.pi * 120 / 60,
+        "speed": 2 * math.pi * 120 / 60 * 0.15,
+        "a_c": (2 * math.pi * 120 / 60) ** 2 * 0.15,
+    },
+)
+add(
+    "ucm-03",
+    "Một chất điểm chuyển động tròn đều với chu kì 0,5 s trên quỹ đạo bán kính 40 cm. Tính tần số, tốc độ góc và gia tốc hướng tâm của chất điểm.",
+    "uniformCircularMotion",
+    [q("mode", 2, "1", "chu kì 0,5 s"), q("T", 0.5, "s", "chu kì 0,5 s"), q("r", 40, "cm", "bán kính 40 cm")],
+    {"frequency": 1 / 0.5, "omega": 2 * math.pi / 0.5, "a_c": (2 * math.pi / 0.5) ** 2 * 0.4},
+)
+add(
+    "ucm-04",
+    "Một vật khối lượng 200 g gắn ở đầu một sợi dây, quay đều trên mặt bàn nhẵn theo đường tròn bán kính 50 cm với tốc độ góc 6 rad/s. Tính gia tốc hướng tâm và lực hướng tâm tác dụng lên vật.",
+    "uniformCircularMotion",
+    [
+        q("mode", 1, "1", "tốc độ góc 6 rad/s"),
+        q("m", 200, "g", "khối lượng 200 g"),
+        q("r", 50, "cm", "bán kính 50 cm"),
+        q("omega", 6, "rad/s", "tốc độ góc 6 rad/s"),
+    ],
+    {"a_c": 6**2 * 0.5, "force": 0.2 * 6**2 * 0.5},
+)
+
+# --- Sóng dừng trên dây ------------------------------------------------------------
+# Hai đầu cố định: L = n·λ/2, f_n = n·v/(2L), λ = v/f, v = √(F/μ).
+# mode: 0 = tìm f (biết L, v, n), 1 = tìm v (biết L, f, n), 2 = tìm n (biết L, f, v); vFrom 1 = v từ F, μ.
+add(
+    "swv-01",
+    "Một sợi dây đàn hồi dài 1,5 m có hai đầu cố định. Sóng truyền trên dây với tốc độ 30 m/s. Khi trên dây có sóng dừng với 5 bụng sóng thì tần số dao động của dây là bao nhiêu? Tính bước sóng.",
+    "standingWave",
+    [
+        q("mode", 0, "1", "tần số dao động của dây là bao nhiêu"),
+        q("L", 1.5, "m", "dài 1,5 m"),
+        q("v", 30, "m/s", "tốc độ 30 m/s"),
+        q("n", 5, "1", "5 bụng sóng"),
+    ],
+    {"frequency": 5 * 30 / (2 * 1.5), "wavelength": 2 * 1.5 / 5, "nodes": 5 + 1},
+)
+add(
+    "swv-02",
+    "Một sợi dây dài 80 cm, hai đầu cố định, được rung với tần số 100 Hz thì trên dây có sóng dừng với 4 bó sóng. Tính bước sóng và tốc độ truyền sóng trên dây.",
+    "standingWave",
+    [
+        q("mode", 1, "1", "tốc độ truyền sóng trên dây"),
+        q("L", 80, "cm", "dài 80 cm"),
+        q("f", 100, "Hz", "tần số 100 Hz"),
+        q("n", 4, "1", "4 bó sóng"),
+    ],
+    {"wavelength": 2 * 0.8 / 4, "speed": 2 * 0.8 / 4 * 100},
+)
+add(
+    "swv-03",
+    "Một sợi dây dài 1 m, hai đầu cố định, có mật độ dài 2 g/m và được căng bởi lực 3,2 N. Cho dây dao động với tần số 60 Hz. Tính tốc độ truyền sóng trên dây và số bó sóng quan sát được.",
+    "standingWave",
+    [
+        q("mode", 2, "1", "số bó sóng"),
+        q("vFrom", 1, "1", "được căng bởi lực 3,2 N"),
+        q("L", 1, "m", "dài 1 m"),
+        q("muL", 2, "g/m", "mật độ dài 2 g/m"),
+        q("tension", 3.2, "N", "lực 3,2 N"),
+        q("f", 60, "Hz", "tần số 60 Hz"),
+    ],
+    {
+        "speed": math.sqrt(3.2 / 0.002),
+        "harmonic": 2 * 1 * 60 / math.sqrt(3.2 / 0.002),
+        "wavelength": math.sqrt(3.2 / 0.002) / 60,
+    },
+)
+
+# Một đầu tự do: ngoài phạm vi của cảnh (chỉ hai đầu cố định) → unsupported_parts; số bụng không có.
+add(
+    "swv-04",
+    "Một sợi dây đàn hồi dài 1,2 m treo thẳng đứng, đầu trên cố định, đầu dưới tự do. Sóng truyền trên dây với tốc độ 24 m/s. Tính tần số nhỏ nhất để trên dây có sóng dừng.",
+    "standingWave",
+    [q("L", 1.2, "m", "dài 1,2 m"), q("v", 24, "m/s", "tốc độ 24 m/s")],
+    missing=["n"],
+    unsupported=True,
+)
+
+# --- Điện trường của điện tích điểm --------------------------------------------------
+# q1 ở gốc O, q2 trên trục Ox, M = (xP, yP) với yP = 0 mặc định. k mặc định = 1/(4πε₀) (SciPy);
+# "lấy k = 9.10⁹" thì dùng số của đề. E = k|q|/r², F = |q0|·E, F12 = k|q1·q2|/r², tụ phẳng E = U/d.
+K_C = 1 / (4 * math.pi * epsilon_0)
+add(
+    "efd-01",
+    "Một điện tích điểm q = 4.10⁻⁸ C đặt trong không khí. Lấy k = 9.10⁹ N.m²/C². Tính cường độ điện trường tại điểm M cách điện tích 3 cm.",
+    "electricField",
+    [
+        q("q1", 4e-8, "C", "q = 4.10⁻⁸ C"),
+        q("k", 9e9, "N*m^2/C^2", "k = 9.10⁹ N.m²/C²"),
+        q("xP", 3, "cm", "cách điện tích 3 cm"),
+    ],
+    {"E": 9e9 * 4e-8 / 0.03**2},
+)
+add(
+    "efd-02",
+    "Hai điện tích điểm q₁ = 2 µC và q₂ = −8 µC đặt tại hai điểm A và B trong không khí, cách nhau 30 cm. Tính lực tương tác giữa hai điện tích và cường độ điện trường tại điểm M nằm trên đoạn AB, cách A 10 cm.",
+    "electricField",
+    [
+        q("q1", 2, "uC", "q₁ = 2 µC"),
+        q("q2", -8, "uC", "q₂ = −8 µC"),
+        q("x2", 30, "cm", "cách nhau 30 cm"),
+        q("xP", 10, "cm", "cách A 10 cm"),
+    ],
+    # M giữa A và B: E1 hướng ra xa q1 (về phía B), E2 hướng về q2 (về phía B) → cộng độ lớn.
+    # "M nằm trên đoạn AB" không ghi số: app hỏi y_M (quyết định #89), đáp án tính với y_M = 0.
+    {"F12": K_C * 2e-6 * 8e-6 / 0.3**2, "E": K_C * (2e-6 / 0.1**2 + 8e-6 / 0.2**2)},
+    missing=["yP"],
+)
+add(
+    "efd-03",
+    "Một điện tích điểm Q = 10⁻⁸ C đặt tại điểm O trong không khí. Đặt một điện tích thử q = −2 nC tại điểm M cách O 5 cm. Tính cường độ điện trường tại M và độ lớn lực điện tác dụng lên điện tích thử.",
+    "electricField",
+    [
+        q("n", 1, "1", "Một điện tích điểm"),
+        q("q0", -2, "nC", "q = −2 nC"),
+        q("xP", 5, "cm", "cách O 5 cm"),
+    ],
+    # "10⁻⁸" không có hệ số: app không đọc lũy thừa 10 đứng riêng (quyết định #89), nên hỏi q1.
+    missing=["q1"],
+)
+add(
+    "efd-04",
+    "Hai bản kim loại phẳng song song đặt cách nhau 4 cm, hiệu điện thế giữa hai bản là 200 V. Một hạt bụi mang điện tích 3 nC nằm giữa hai bản. Tính cường độ điện trường giữa hai bản và độ lớn lực điện tác dụng lên hạt bụi.",
+    "electricField",
+    [
+        q("mode", 1, "1", "Hai bản kim loại phẳng song song"),
+        q("d", 4, "cm", "cách nhau 4 cm"),
+        q("U", 200, "V", "hiệu điện thế giữa hai bản là 200 V"),
+        q("q0", 3, "nC", "điện tích 3 nC"),
+    ],
+    {"E": 200 / 0.04, "F": 3e-9 * 200 / 0.04},
+)
+
+add(
+    "efd-05",
+    "Hai điện tích điểm q₁ = 4.10⁻⁸ C và q₂ = −4.10⁻⁸ C đặt tại A và B trong không khí, AB = 6 cm. Tính cường độ điện trường tại điểm M nằm trên đường thẳng AB, ngoài đoạn AB về phía A và cách A 3 cm.",
+    "electricField",
+    [
+        q("q1", 4e-8, "C", "q₁ = 4.10⁻⁸ C"),
+        q("q2", -4e-8, "C", "q₂ = −4.10⁻⁸ C"),
+        q("x2", 6, "cm", "AB = 6 cm"),
+        # M phía A, ngoài đoạn AB: tọa độ âm (dấu là cách đặt trục, số 3 có trong đề).
+        q("xP", -3, "cm", "cách A 3 cm"),
+    ],
+    # "M nằm trên đường thẳng AB" không ghi số: app hỏi y_M; đáp án tính với y_M = 0.
+    # E1 (q1 > 0) hướng ra xa A, tức về phía −x; E2 (q2 < 0) hướng về B, tức +x; |E1| > |E2|.
+    {
+        "E": K_C * 4e-8 * (1 / 0.03**2 - 1 / 0.09**2),
+        "Ex": -K_C * 4e-8 * (1 / 0.03**2 - 1 / 0.09**2),
+    },
+    missing=["yP"],
+)
+add(
+    "efd-06",
+    "Hai điện tích điểm q₁ = q₂ = 2.10⁻⁸ C đặt tại A và B trong không khí, AB = 5 cm. Tính cường độ điện trường tại điểm M cách A 3 cm và cách B 4 cm.",
+    "electricField",
+    [
+        q("q1", 2e-8, "C", "q₁ = q₂ = 2.10⁻⁸ C"),
+        q("q2", 2e-8, "C", "q₁ = q₂ = 2.10⁻⁸ C"),
+        q("x2", 5, "cm", "AB = 5 cm"),
+    ],
+    # M không nằm trên đường thẳng AB: tọa độ của M phải tính (1,8 cm; 2,4 cm), AI không được tự
+    # tính nên app hỏi người học.
+    missing=["xP", "yP"],
 )
 
 # --- Ngoài phạm vi ------------------------------------------------------------------

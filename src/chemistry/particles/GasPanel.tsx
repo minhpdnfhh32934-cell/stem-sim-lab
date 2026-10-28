@@ -113,8 +113,8 @@ export function GasPanel() {
           </label>
           <p className="small muted">
             Eₐ/RT = {f(eaReduced(st.eaKJ, st.T))} ·{' '}
-            {Lz(L('tỉ lệ va chạm hiệu quả lý thuyết', 'theoretical energetic fraction'))} e^(−Eₐ/RT)
-            = {f(Math.exp(-eaReduced(st.eaKJ, st.T)))}
+            {Lz(L('tỉ lệ va chạm hiệu quả lý thuyết', 'theoretical energetic fraction'))} e
+            <sup>−Eₐ/RT</sup> = {f(Math.exp(-eaReduced(st.eaKJ, st.T)))}
           </p>
           <label>
             <input

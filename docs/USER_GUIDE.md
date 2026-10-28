@@ -76,28 +76,28 @@ chép qua USB và cài trước.
    Esc để đóng.
 
 2. **Trang chủ SimLab** có hai lối vào:
-   - **Phòng thí nghiệm** mở thư viện chủ đề, lịch sử, trang "Hôm nay học gì?" và **Science Studio**
+   - **Virtual Lab** mở thư viện chủ đề, lịch sử, trang "Hôm nay học gì?" và **Science Studio**
      (các bài học có hướng dẫn, mục "Science Studio" bên dưới);
    - **AI Teacher** mở trang trò chuyện với trợ lý học tập.
 
    Bấm logo **SimLab** ở góc trái để quay về trang chủ.
 
-3. Trong **Phòng thí nghiệm**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
+3. Trong **Virtual Lab**, trang "Hôm nay học gì?" hiện khi chưa mở chủ đề nào:
    - nút **Tiếp tục bài đang học** (mở lại chủ đề lần trước);
    - ô **Nhập đề bài hoặc câu hỏi…** (dán được đề nhiều dòng, Ctrl+Enter để phân tích) và nút
      **Tự dựng cảnh** (không cần AI);
    - 3 thẻ môn **Vật lý · Hóa học · Sinh học** (bấm để xem các chủ đề của môn trong Thư viện);
    - **chủ đề gợi ý** theo trình độ, môn bạn quan tâm được gợi ý trước;
    - **AI Teacher** để hỏi bài trong trang chat riêng.
-4. Chọn một chủ đề (trang chủ Phòng thí nghiệm hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
+4. Chọn một chủ đề (trang chủ Virtual Lab hoặc **Thư viện** bên trái), chỉnh thông số ở cột phải, bấm ▶ (hoặc
    Space) để chạy.
 5. Đọc **Thẻ Khoa học** ở cột phải để biết mô hình và mức độ tin cậy của kết quả.
 
 ### Trò chuyện với AI Teacher
 
-Trong Phòng thí nghiệm, bấm nút tròn có mặt **AI Teacher** ở góc dưới (bên trái cột Thuộc tính) để
+Trong Virtual Lab, bấm nút tròn có mặt **AI Teacher** ở góc dưới (bên trái cột Thuộc tính) để
 hỏi nhanh; ở trang chủ, bấm thẻ **AI Teacher** để mở cuộc trò chuyện toàn màn hình. Bấm chữ **SimLab**
-ở góc trên để về trang chủ. Chọn API trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
+ở góc trên để về trang chủ. Chọn AI trực tuyến hoặc Gemma cục bộ ở ô chọn trên đầu khung chat; nút
 ⓘ cạnh tiêu đề trang AI Teacher nhắc trang này làm gì và dữ liệu nào có thể được gửi đi. Nếu chưa kết nối API hoặc
 Gemma chưa sẵn sàng, khung chat hiện thông báo và nút **Cài đặt** mở thẳng đúng mục cần chỉnh. Dòng
 nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi tới đâu (hoặc chỉ xử lý trên máy).
@@ -112,7 +112,7 @@ nhỏ dưới thanh chọn cho biết câu hỏi tiếp theo sẽ được gửi
   sang nhà cung cấp dự phòng, để người rà soát không tự chấm bài của chính mình. Trên trình duyệt,
   khóa chỉ nằm trong phiên (tải lại trang là mất) và Claude chỉ rà soát được ở bản desktop.
 - Chọn **Gemma cục bộ** để trò chuyện ngay trên máy, không cần Ollama, không cần mạng sau
-  khi đã tải model. Vào Cài đặt → AI local (Gemma) để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
+  khi đã tải model. Vào Cài đặt → Gemma cục bộ để tải Gemma 270M (≈ 345 MB, nhẹ nhất nhưng trả lời
   còn yếu), 1B (≈ 880 MB, khuyên dùng) hoặc E2B (≈ 3,8 GB, đọc được ảnh, cần nhiều chỗ trống). Thanh tiến độ hiện phần trăm và dung lượng, và
   "còn khoảng … phút" sau vài giây (ước tính theo tốc độ mạng mấy giây gần nhất, nên có thể thay
   đổi); có nút **Hủy tải**; chỉ khi tải và nạp xong mới báo sẵn sàng. Với Gemma, câu trả lời hiện
@@ -231,12 +231,20 @@ bảng (app tự đọc, không nhờ AI đoán). Bấm **Hỏi thầy chỗ nà
   được ảnh chạy trên máy (Gemma E2B trên card rời, hoặc mô hình của AI trên máy khác đã thử đọc được
   ảnh), không bao giờ lên mạng. AI khác thì app nhờ em gõ câu hỏi.
 
-### Trình độ: Nền tảng và Đại cương
+### Trình độ: Lớp 10 · Lớp 11 · Lớp 12 · Tất cả
 
-Thư viện sắp xếp theo **Trình độ → Môn → Chủ đề**. **Nền tảng** là kiến thức gốc, tương đương
-chương trình THPT — mọi chủ đề hiện có nằm ở đây. **Đại cương** (các môn năm nhất đại học) sẽ có ở
-giai đoạn sau. Việc ghép chủ đề với bài cụ thể trong sách giáo khoa đang chờ giáo viên duyệt
-(`docs/DATA_REVIEW.md`, mục 12).
+Thư viện sắp xếp theo **Lớp → Môn → Chủ đề**. Lần đầu mở app, SimLab hỏi "Bạn đang học hoặc ôn
+lớp nào?"; bạn đổi lại bất cứ lúc nào bằng thanh **Lớp 10 · Lớp 11 · Lớp 12 · Tất cả** ở đầu Thư
+viện.
+
+- **Một lớp:** chủ đề nằm dưới tên chương của sách giáo khoa _Kết nối tri thức với cuộc sống_ lớp đó,
+  theo thứ tự trong sách, kèm số bài (ví dụ "Bài 4–5, 7"). Dòng **"Theo SGK Kết nối tri thức · Đang
+  chờ giáo viên duyệt"** nhắc rằng cách xếp này do SimLab đề xuất từ mục lục chính thức
+  (`docs/CURRICULUM_KNTT.md`) và chưa được giáo viên duyệt (`docs/DATA_REVIEW.md`, mục 12).
+- **Tất cả:** mọi chủ đề như trước, kể cả các chủ đề chưa xếp được vào lớp nào.
+- Môn nào chưa có chủ đề ở lớp đang chọn (ví dụ Sinh học lớp 11) hiện câu "Chưa có chủ đề …" và nút
+  **Xem tất cả**. Ô tìm kiếm chỉ tìm trong lớp đang xem; nút "Có … chủ đề ở môn khác" vẫn như cũ.
+- Trang chủ gợi ý chủ đề của lớp đang chọn. Lớp chỉ dùng để xếp danh sách, không gửi cho AI.
 
 ### Chế độ Cơ bản và Nâng cao
 
@@ -269,15 +277,17 @@ Với mỗi chủ đề Vật lý, mở thẻ **Thử thách** ở bảng dướ
   máy đặt "giảm chuyển động").
 - **Gợi ý từng bước**: khi bạn nhập đề bài, thẻ **Lời giải** ẩn đáp số để bạn tự giải trước: bấm
   **Gợi ý 1**, **Gợi ý 2**… đến **Lời giải đầy đủ**, hoặc **Xem lời giải ngay** để đối chiếu.
-- **Tiến độ và huy hiệu**: chủ đề hoàn thành (đã mở, đã dự đoán, đã làm thử thách) có dấu ✓ trong
-  Thư viện, mỗi chương có số "đã xong/tổng". Huy hiệu hiện ở trang chủ. Không có chuỗi ngày hay
-  bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
+- **Tiến độ và huy hiệu**: mở một chủ đề (môn nào cũng vậy) là có dấu ✓ **Đã học** trong Thư viện.
+  Chủ đề Vật lí còn việc thì có thêm số nhỏ như "1/3" (di chuột vào để xem còn Dự đoán trước hay
+  thử thách nào); làm xong hết (đã mở, đã dự đoán, đã làm mọi thử thách) thì dấu ✓ đổi thành biểu
+  tượng **Hoàn thành**. Mỗi chương có số "đã học/tổng". Huy hiệu hiện ở trang chủ. Không có chuỗi
+  ngày hay bảng xếp hạng. Tiến độ chỉ lưu trên máy này.
 - **Nhắc nghỉ mắt**: sau khoảng 45 phút dùng liên tục, app hiện một lời nhắc nhỏ (không chặn màn
   hình). Nghỉ từ 5 phút trở lên thì đếm lại từ đầu.
 
 ## Science Studio
 
-**Mở:** Science Studio nằm trong **Phòng thí nghiệm** (trang chủ SimLab không còn thẻ riêng). Có ba
+**Mở:** Science Studio nằm trong **Virtual Lab** (trang chủ SimLab không còn thẻ riêng). Có ba
 cách mở:
 
 - bấm nút **Science Studio** ở đầu thư viện chủ đề (bên trái) để xem mọi bài, kể cả bài giáo viên đã
@@ -285,11 +295,16 @@ cách mở:
 - khi đang mở một chủ đề có bài hướng dẫn (hiện có: Rơi tự do, Thư viện phản ứng đã kiểm chứng,
   Nguyên phân), bấm **Học theo bài: …** ở thẻ **Science Studio** trong bảng bên phải;
 - ở chủ đề Rơi tự do, phần **Dự đoán trước** (thẻ **Thử thách**) dẫn sang bài Science Studio của chủ
-  đề, nên em chỉ dự đoán một lần, trong bài đó. Các thử thách nhỏ vẫn ở trong Phòng thí nghiệm.
+  đề, nên em chỉ dự đoán một lần, trong bài đó. Các thử thách nhỏ vẫn ở trong Virtual Lab.
 
 Trong Studio, chọn môn ở các thẻ **Hóa học · Sinh học · Vật lí · Soạn bài** (thư viện bên trái đổi
-theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Phòng thí nghiệm** để quay lại; bài đang làm
+theo môn đó), rồi chọn bài ở **Chọn bài học**. Bấm **Về Virtual Lab** để quay lại; bài đang làm
 dở được giữ nguyên. Bấm logo **SimLab** để về trang chủ.
+
+**Cách học:** lần đầu vào Studio, một hướng dẫn ngắn tự hiện và chỉ vào từng phần của màn hình (chọn
+môn và bài, nhãn "chưa được kiểm duyệt", sáu bước, nút **Tiếp**, **Hỏi thầy**, lưu báo cáo, **Soạn
+bài**). Hướng dẫn chỉ tự hiện một lần; muốn xem lại, bấm nút **Cách học** ở đầu màn Studio. Phím Esc
+hoặc **Bỏ qua** để đóng.
 
 Mỗi bài đi qua 6 bước: **Dự đoán → Thí nghiệm → Quan sát → Giải thích → Kết luận → Báo cáo**. Phải
 chọn dự đoán, làm thí nghiệm, viết giải thích (đủ số ký tự app ghi dưới ô) và viết kết luận thì mới
@@ -301,7 +316,7 @@ chưa có giáo viên duyệt.
 - **Vật lí — Rơi tự do:** chỉnh độ cao rồi bấm **Chạy thí nghiệm**. App chạy hai lần: A (độ cao em
   chọn) và B (độ cao gấp đôi), rồi báo đã có số đo; bấm **Tiếp: Quan sát** để xem bảng số đo, đồ thị
   và phép kiểm tra chéo với công thức (như ở môn Hóa và Sinh, em tự quyết khi nào đi tiếp). Nút
-  **Chạy A trong Phòng thí nghiệm** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Phòng thí nghiệm.
+  **Chạy A trong Virtual Lab** (hoặc **Chạy B…**) mở đúng lần chạy đó trong Virtual Lab.
 - **Hóa học — Nhận biết ion Cl⁻:** lấy dung dịch từ **Giá hóa chất** cho vào ống nghiệm, bấm **Lắc để
   trộn**, xem hiện tượng; **Rửa ống nghiệm** trước khi thử cặp khác. Hiện tượng và phương trình chép
   từ thư viện phản ứng của app. Cặp dung dịch không có trong thư viện chỉ hiện "chưa có trong cơ sở dữ
@@ -352,9 +367,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-13 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+16 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn.
+xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây, điện trường.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -367,8 +382,34 @@ xo, con lắc đơn.
   tính thêm gì. Bấm lại nút ghim hoặc dấu × để bỏ; mở chủ đề khác thì tự bỏ.
 - **Thanh thời gian:** chạy/dừng, bước từng khung, đặt lại, kéo để tua lại, chọn tốc độ ×0,1 đến ×4
   (và tua nhanh cho bài toán tính bằng giờ).
-- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng), **Lời giải** (công thức và các bước, đáp số
-  đề hỏi được đánh dấu), **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Bảng dưới:** **Đồ thị** (x–t, v–t, a–t, năng lượng; chú giải ở cột bên phải, rê chuột lên đồ thị
+  để đọc giá trị tại thời điểm đó), **Lời giải** (công thức và các bước, đáp số đề hỏi được đánh dấu),
+  **Số liệu** (bảng giá trị, nút Xuất CSV).
+- **Chuyển động tròn đều** (chương cùng tên, như SGK): ô đầu tiên chọn đề cho biết **tốc độ v**,
+  **tốc độ góc ω**, **chu kì T** hay **tần số f**; nhập bán kính và đại lượng đó, app tính các đại
+  lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
+  tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
+  góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
+- **Sóng dừng trên dây** (chương **Sóng**): dây có hai đầu cố định. Ô đầu tiên chọn đề hỏi gì: **tìm
+  f** (biết L, v, n), **tìm v** (biết L, f, n) hay **tìm n** (biết L, f, v). Tốc độ truyền sóng nhập
+  thẳng, hoặc chọn "Lấy tốc độ sóng từ: lực căng và mật độ dài" để app tính v = √(F/μ) (μ nhận kg/m
+  hoặc g/m; ở chế độ Cơ bản, ô này nằm trong **Thêm thông số**). Hình vẽ dây với hai sóng thành phần nét đứt (tắt được), nút **N**, bụng **B** và điểm
+  dò **P**; đồ thị vẽ y₁, y₂ và y = y₁ + y₂ tại P. App vẽ tối đa 20 bó sóng. Vị trí P chỉnh bằng thanh trượt, không kéo được.
+  A là biên độ của **mỗi** sóng thành phần, nên bụng dao động với biên độ 2A. Nếu 2Lf/v không phải
+  số nguyên thì không có sóng dừng: app báo rõ và gợi ý tần số cộng hưởng gần nhất (bấm nút **Dùng fₙ** để đặt đúng giá trị đó), không tự đổi
+  f. Trục dọc của hình được phóng to (có ghi hệ số) để dễ nhìn; lưới, thước và thước đo góc vẫn đo theo mét thật; tần số cao có thể làm hình trông
+  đứng yên (hoạt nghiệm) — chọn tốc độ phát chậm hơn.
+- **Điện trường của điện tích điểm** (chương Điện trường, Vật lí 11): ô đầu tiên chọn **điện tích
+  điểm** hay **tụ điện phẳng**. Với điện tích điểm: chọn 1–3 điện tích, nhập điện tích có dấu (µC; đề
+  ghi C hay nC thì app tự đổi), vị trí của chúng và điểm M bằng thanh trượt; app vẽ đường sức (mũi tên
+  theo chiều E; điểm E = 0 có đường sức đi tới thì được đánh dấu), vectơ E tại M, và tính E, lực lên điện tích thử q₀, lực giữa
+  q₁ và q₂. Quy ước: q₁ ở gốc O, q₂ trên trục Ox. Một điện tích: M nằm trên Ox. Từ hai điện tích: đề không
+  ghi số cho tọa độ của M (ví dụ chỉ nói "M nằm trên đoạn AB") thì bảng "Tôi hiểu đề như sau" hỏi bạn
+  nhập y_M (thường là 0); AI không tự đặt hay tính tọa độ. Lũy thừa 10 đứng riêng ("q = 10⁻⁸ C") app
+  cũng không đọc thay bạn: bảng hỏi bạn nhập giá trị (viết "1.10⁻⁸ C" thì đọc được). Với tụ
+  phẳng: nhập U và d, app tính E = U/d. Hằng số k mặc định là 1/(4πε₀) ≈ 8,988·10⁹ N·m²/C²; đề ghi
+  "lấy k = 9.10⁹" thì app dùng số của đề. Nếu AI đọc sai dấu điện tích (hoặc đề chỉ cho "độ lớn"),
+  bảng "Tôi hiểu đề như sau" nhắc bạn kiểm tra dấu. Không kéo được gì trên hình.
 
 ## Đọc đề bằng AI
 
@@ -517,10 +558,15 @@ Khi dùng AI:
   Lineweaver–Burk.
 - **Khuếch tán & thẩm thấu:** chuyển giữa hai chế độ. Ống chữ U cho thấy mực nước dâng tới khi
   ρgΔh = iCRT.
+- **Tế bào nhân sơ và nhân thực** (chương “Cấu trúc tế bào”): chọn **Vi khuẩn**, **Động vật** hoặc
+  **Thực vật**; bấm tên một bộ phận ở khung bên phải để đọc chức năng của nó (diễn đạt theo SGK Sinh
+  học 10). Nút **Hiện tên** ghi tên mọi bộ phận lên hình (chế độ Cơ bản bật sẵn). Hình 2D chỉ là
+  minh họa, không theo tỉ lệ; số bào quan vẽ ra chỉ để minh họa.
 
 ### Hình 3D trong Sinh học (bản 0.7, làm đẹp ở 0.7.1)
 
-Cả 11 bài Sinh học mở bằng hình 3D. Cách dùng chung:
+11 trong 12 bài Sinh học mở bằng hình 3D (bài mới “Tế bào nhân sơ và nhân thực” hiện chỉ có
+hình 2D). Cách dùng chung:
 
 - Nút **3D / 2D** để đổi hình; app nhớ lựa chọn của từng bài. Kéo chuột để xoay, lăn chuột để
   phóng to, phím mũi tên cũng xoay được; **Góc nhìn** đổi giữa **Toàn cảnh** và cận cảnh.
@@ -626,8 +672,8 @@ tên lên/xuống để chuyển trang). Mỗi trang gồm vài ô nhỏ.
 - **Kết nối AI:** ô "Nhà cung cấp và khóa API" (Gemini khuyên dùng, Claude, Groq miễn phí hoặc tắt;
   hướng dẫn lấy khóa; mô hình; nút Kiểm tra key), ô "Thời gian chờ và giới hạn mỗi ngày" và ô "Dự
   phòng khi hết lượt" (mặc định Groq, xem phần Groq ở trên).
-- **AI Teacher:** Think (API thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
-- **AI local (Gemma):** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
+- **AI Teacher:** Think (một AI thứ hai rà soát câu trả lời) và ô **Dữ liệu của em đi đâu?**.
+- **Gemma cục bộ:** tải, chọn, xóa mô hình Gemma chạy trên máy; điều khoản Gemma.
 - **GPU cho Gemma:** chọn card đồ họa chạy Gemma (bản desktop trên Windows, máy có hai card; đổi card
   cần mở lại app) và xem WebGPU thật đang chạy trên card nào; độ dài câu trả lời của Gemma (Ngắn / Vừa
   / Dài); giải phóng bộ nhớ GPU sau 5 hoặc 15 phút không dùng, hoặc ngay lập tức.

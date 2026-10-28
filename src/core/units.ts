@@ -44,12 +44,23 @@ export const DIM = {
   resistance: D(2, 1, -3, -2),
   molarMass: D(0, 1, 0, 0, 0, -1),
   damping: D(0, 1, -1),
+  linearDensity: D(-1, 1),
+  electricField: D(1, 1, -3, -1),
+  coulombConstant: D(3, 1, -4, -2),
 } as const;
+
+/**
+ * Units that share a dimension but must never be mixed (#37 §8.2 trap 1): rad/s and Hz are
+ * both s⁻¹ with factor 1, yet f = 2 Hz is ω = 4π rad/s. A radian has no dimension, so only
+ * this label tells them apart; converting between groups throws.
+ */
+export type UnitGroup = 'angular' | 'cycle';
 
 export interface UnitDef {
   /** Canonical symbol used in data and SceneSpec. */
   symbol: string;
   dim: Dimension;
+  group?: UnitGroup;
   /** value_SI = value * factor + offset */
   factor: number;
   offset?: number;
@@ -104,8 +115,16 @@ const UNITS: readonly UnitDef[] = [
     aliases: ['m/s²', 'm.s^-2', 'm s^-2'],
   },
   { symbol: 'cm/s^2', dim: DIM.acceleration, factor: 1e-2, aliases: ['cm/s²'] },
-  { symbol: 'rad/s', dim: DIM.frequency, factor: 1 },
-  { symbol: 'Hz', dim: DIM.frequency, factor: 1 },
+  { symbol: 'rad/s', dim: DIM.frequency, factor: 1, group: 'angular' },
+  { symbol: 'Hz', dim: DIM.frequency, factor: 1, group: 'cycle' },
+  { symbol: 'rev/s', dim: DIM.frequency, factor: 1, group: 'cycle', aliases: ['vòng/s', 'rps'] },
+  {
+    symbol: 'rev/min',
+    dim: DIM.frequency,
+    factor: 1 / 60,
+    group: 'cycle',
+    aliases: ['vòng/phút', 'rpm'],
+  },
   // dynamics
   { symbol: 'N', dim: DIM.force, factor: 1 },
   { symbol: 'kN', dim: DIM.force, factor: 1e3 },
@@ -149,6 +168,22 @@ const UNITS: readonly UnitDef[] = [
   { symbol: 'uC', dim: DIM.charge, factor: 1e-6, aliases: ['µC', 'μC'] },
   { symbol: 'V', dim: DIM.voltage, factor: 1 },
   { symbol: 'ohm', dim: DIM.resistance, factor: 1, aliases: ['Ω'] },
+  // linear density of a string (standing waves)
+  { symbol: 'kg/m', dim: DIM.linearDensity, factor: 1 },
+  { symbol: 'g/m', dim: DIM.linearDensity, factor: 1e-3 },
+  // electric field (0.8.0, #76)
+  { symbol: 'nC', dim: DIM.charge, factor: 1e-9 },
+  { symbol: 'kV', dim: DIM.voltage, factor: 1e3 },
+  { symbol: 'V/m', dim: DIM.electricField, factor: 1, aliases: ['N/C'] },
+  { symbol: 'kV/m', dim: DIM.electricField, factor: 1e3 },
+  { symbol: 'mN', dim: DIM.force, factor: 1e-3 },
+  { symbol: 'uN', dim: DIM.force, factor: 1e-6, aliases: ['µN', 'μN'] },
+  {
+    symbol: 'N*m^2/C^2',
+    dim: DIM.coulombConstant,
+    factor: 1,
+    aliases: ['N·m²/C²', 'N.m^2/C^2', 'N.m²/C²', 'Nm^2/C^2', 'Nm²/C²'],
+  },
 ];
 
 const REGISTRY = new Map<string, UnitDef>();
@@ -188,12 +223,15 @@ export function fromSI(valueSI: number, unit: string): number {
   return (valueSI - (u.offset ?? 0)) / u.factor;
 }
 
-/** Converts between units of the same dimension; throws on a dimension mismatch. */
+/** Converts between units of the same dimension and group; throws on a mismatch. */
 export function convert(value: number, from: string, to: string): number {
   const a = getUnit(from);
   const b = getUnit(to);
   if (!sameDimension(a.dim, b.dim)) {
     throw new UnitError(`Cannot convert "${from}" to "${to}": different dimensions`);
+  }
+  if (a.group !== b.group) {
+    throw new UnitError(`Cannot convert "${from}" to "${to}": angular and cycle frequencies`);
   }
   return fromSI(toSI(value, from), to);
 }
@@ -203,18 +241,27 @@ export function siUnitFor(dim: Dimension): string | undefined {
   return UNITS.find((u) => u.factor === 1 && !u.offset && sameDimension(u.dim, dim))?.symbol;
 }
 
-/** Units that can display a quantity of the given dimension (for unit pickers). */
-export function unitsFor(dim: Dimension): string[] {
-  return UNITS.filter((u) => sameDimension(u.dim, dim)).map((u) => u.symbol);
+/** Units that can display a quantity of the given dimension and group (for unit pickers). */
+export function unitsFor(dim: Dimension, group?: UnitGroup): string[] {
+  return UNITS.filter((u) => sameDimension(u.dim, dim) && u.group === group).map((u) => u.symbol);
 }
 
-/** Pretty label for display: "m/s^2" → "m/s²", "degC" → "°C". */
-export function unitLabel(symbol: string): string {
+/** Units with a Vietnamese name for learners; the symbol itself (SI or not) never changes. */
+const VI_LABELS: Record<string, string> = { 'rev/s': 'vòng/s', 'rev/min': 'vòng/phút' };
+
+/**
+ * Pretty label for display: "m/s^2" → "m/s²", "degC" → "°C". With `locale` 'vi', the few
+ * worded units are written in Vietnamese ("rev/min" → "vòng/phút"); leave it out for AI
+ * prompts and KaTeX `	ext{}` (no Vietnamese words there).
+ */
+export function unitLabel(symbol: string, locale?: 'vi' | 'en'): string {
+  if (locale === 'vi' && symbol in VI_LABELS) return VI_LABELS[symbol] ?? symbol;
   const special: Record<string, string> = {
     deg: '°',
     degC: '°C',
     um: 'µm',
     uC: 'µC',
+    uN: 'µN',
     angstrom: 'Å',
     ohm: 'Ω',
     '1': '',

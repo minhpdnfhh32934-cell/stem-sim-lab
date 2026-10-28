@@ -88,7 +88,7 @@ export function Meiosis3DBottom() {
             </th>
             <th scope="col">{Lz(L('Trạng thái', 'State'))}</th>
             <th scope="col" className="num">
-              {Lz(L('Cromatit', 'Chromatids'))}
+              {Lz(L('Crômatit', 'Chromatids'))}
             </th>
             <th scope="col" className="num">
               {Lz(L('Tâm động', 'Centromeres'))}

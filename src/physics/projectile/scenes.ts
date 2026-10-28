@@ -177,10 +177,12 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
         },
       );
     }
-    text(ctx, cam, r.range, 0, `L = ${fmtQty(opts.locale, r.range, 'm', 4)}`, c.muted, 'center', {
-      x: 0,
-      y: 22,
-    });
+    // Free fall and vertical throws have no range: an unexplained "L = 0 m" only confuses.
+    if (r.vx0 !== 0)
+      text(ctx, cam, r.range, 0, `L = ${fmtQty(opts.locale, r.range, 'm', 4)}`, c.muted, 'center', {
+        x: 0,
+        y: 22,
+      });
   }
   const x = state[PS.x] ?? 0;
   const y = state[PS.y] ?? 0;
@@ -196,7 +198,9 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
     arrow(ctx, cam, x, y, 0, vy * k, c.velocity);
     arrow(ctx, cam, x, y, vx * k, vy * k, c.velocity, 'v');
     const ka = vectorScale(inp.g, s, 0.1);
-    arrow(ctx, cam, x, y, (state[PS.ax] ?? 0) * ka, (state[PS.ay] ?? 0) * ka, c.acceleration, 'a');
+    // Beside the ball: g points down like the vertical velocity, and on it the two would merge.
+    const ax = x - 0.035 * s;
+    arrow(ctx, cam, ax, y, (state[PS.ax] ?? 0) * ka, (state[PS.ay] ?? 0) * ka, c.acceleration, 'a');
   }
   circle(ctx, cam, x, y, 0.02 * s, opts.selected === 'ball' ? c.accent : c.body, c.text, 6);
 }

@@ -18,7 +18,7 @@ test('the AI teacher page: honest label, no screen toggle, fits 1366×768, Esc g
   // The screen-context switch belongs to the bubble only.
   await expect(page.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' })).toHaveCount(0);
   // No API key and no local model: a clear notice, never a pretend answer.
-  await expect(page.getByText(/Chưa có API/)).toBeVisible();
+  await expect(page.getByText(/Chưa kết nối AI trực tuyến/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cài đặt' }).first()).toBeVisible();
   expect(await overflow(page)).toBeLessThanOrEqual(0);
   for (const name of ['Gửi câu hỏi', 'Về trang chủ']) {
@@ -60,7 +60,7 @@ test('chat bubble: screen toggle off by default, Think explains the missing seco
   await expect(
     panel
       .getByRole('status')
-      .filter({ hasText: /API|khóa/ })
+      .filter({ hasText: /AI trực tuyến|AI thứ hai|khóa/ })
       .first(),
   ).toBeVisible();
 
@@ -168,14 +168,14 @@ test('Think: Gemini drafts, Groq reviews; the answer is labelled; nothing goes t
 
   // Think without a Groq key: explained before anything is sent.
   await panel.getByRole('button', { name: /Think/ }).click();
-  await expect(panel.getByText(/Think cần một API thứ hai/)).toBeVisible();
+  await expect(panel.getByText(/Think cần một AI thứ hai/)).toBeVisible();
 
   // With a Groq key (as if saved in Settings) Think works end to end.
   await page.addInitScript(() => {
     globalThis.__STEMSIM_TEST_GROQ_KEY__ = 'groq-test-key';
   });
   await page.reload();
-  await page.getByRole('button', { name: /Phòng thí nghiệm/ }).click();
+  await page.getByRole('button', { name: /Virtual Lab/ }).click();
   await page.getByRole('button', { name: 'AI Teacher', exact: true }).click();
   await panel.getByRole('button', { name: /Think/ }).click();
   await expect(panel.getByText(/Groq \(miễn phí\) \(rà soát\)/)).toBeVisible();

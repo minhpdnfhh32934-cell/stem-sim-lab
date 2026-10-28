@@ -71,6 +71,12 @@
 .stage__message p {
   margin: 0;
 }
+.stage__fixes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
 
 .spin {
   animation: spin 1s linear infinite;
@@ -136,10 +142,10 @@
   text-align: left;
   color: var(--text);
 }
+/* Colour, not weight: bold text would be wider and could wrap the title onto a new line (UI-42). */
 .tree__topic--button[aria-current='true'] {
   background: var(--accent-soft);
   color: var(--accent);
-  font-weight: 600;
 }
 
 /* Parameters */
@@ -157,6 +163,15 @@
 .param__label {
   font-size: var(--text-sm);
   font-weight: 500;
+}
+/* A checkbox parameter is one row: box, its label, then the source chip (UI-53). */
+.param__head:has(> .param__toggle) {
+  align-items: center;
+}
+.param__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 .param__source {
   flex: none;
@@ -194,6 +209,10 @@
   background: var(--bg-panel-2);
   font-size: var(--text-sm);
   text-align: right;
+}
+/* Typed beyond the slider range: the simulation runs the clamped value (NumberField). */
+.param__number[aria-invalid='true'] {
+  border-color: var(--danger);
 }
 .param__unit {
   min-width: 2.4rem;
@@ -238,8 +257,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--space-2) var(--space-3);
-  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  gap: var(--space-1);
 }
 .graph-panel__picker {
   align-self: flex-start;
@@ -254,12 +273,17 @@
   position: absolute;
   inset: 0;
 }
+/* Inside uPlot's plot area (`.u-over`), so it never covers the axes' numbers. */
 .chart__empty {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   margin: 0;
+  padding: 0 var(--space-2);
+  text-align: center;
+  /* uPlot's root sets its own font; the note is app text. */
+  font-family: var(--font-sans);
   z-index: 1;
   pointer-events: none;
 }
@@ -272,11 +296,43 @@
   font-weight: 600;
   font-family: var(--font-mono);
 }
+/* Physics graphs: the live legend is a column on the right, one series per line. */
+.chart--legend-side {
+  display: flex;
+  gap: var(--space-2);
+}
+.chart--legend-side .chart__plot {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+/* A fixed width: live values change length on hover (up to "-0,00001234"), and a column sized
+   by its content would resize the plot under the mouse. A long row wraps instead. */
+.chart__legend {
+  flex: 0 0 13rem;
+  max-width: 40%;
+  align-self: center;
+  max-height: 100%;
+  overflow-y: auto;
+}
+.chart__legend .u-legend {
+  margin: 0;
+  text-align: left;
+}
+.chart__legend .u-legend.u-inline tr {
+  display: block;
+  margin: 0;
+}
+.chart__legend .u-legend .u-value {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
 
 /* Solution */
 .solution {
   padding: var(--space-2) var(--space-3) var(--space-3);
   user-select: text;
+  container-type: inline-size;
 }
 .solution__note {
   display: flex;
@@ -295,9 +351,16 @@
   grid-template-columns: minmax(16rem, 1fr) 2fr;
   gap: var(--space-4);
 }
-@media (max-width: 1200px) {
+/* A long formula scrolls inside its own box instead of widening the column past the panel. */
+.solution__grid > * {
+  min-width: 0;
+}
+/* Side by side only when both columns have room (the panel, not the window, decides): answer
+   labels and the check chip then stay on one line (UI-07). */
+@container (max-width: 60rem) {
   .solution__grid {
     grid-template-columns: 1fr;
+    gap: var(--space-3);
   }
 }
 .solution__heading {
@@ -327,6 +390,7 @@
 }
 .solution__check span {
   display: inline-flex;
+  white-space: nowrap;
   align-items: center;
   gap: 4px;
   margin-left: var(--space-2);

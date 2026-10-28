@@ -24,6 +24,34 @@ describe('History', () => {
     expect(h.times.at(-2)).toBeCloseTo(0.3, 12);
   });
 
+  it('slow motion keeps every frame: the spacing follows the playback speed (UI-22)', () => {
+    // ×0,1 at 60 frames/s: one frame = 1/600 s of simulation; a 25 Hz wave (T = 0,04 s).
+    const h = new History();
+    h.setTimeScale(0.1);
+    for (let i = 0; i <= 60; i++) h.push(i / 600, s(Math.sin(2 * Math.PI * 25 * (i / 600))));
+    expect(h.length).toBe(61);
+    // At least 20 recorded states per period, all exactly as pushed (no interpolation).
+    expect(h.length / (0.1 / 0.04)).toBeGreaterThanOrEqual(20);
+    h.states.forEach((st, i) => {
+      expect(st[0]).toBe(Math.sin(2 * Math.PI * 25 * (i / 600)));
+    });
+  });
+
+  it('×1 keeps the former spacing (1/120 s), ×10 ten times wider', () => {
+    const one = new History();
+    for (let i = 0; i <= 600; i++) one.push(i / 600, s(i));
+    expect(one.length).toBe(121);
+    const ten = new History();
+    ten.setTimeScale(10);
+    for (let i = 0; i <= 600; i++) ten.push(i / 60, s(i));
+    expect(ten.length).toBe(121);
+    ten.setTimeScale(Number.NaN);
+    ten.setTimeScale(0);
+    ten.clear();
+    for (let i = 0; i <= 60; i++) ten.push(i / 60, s(i));
+    expect(ten.length).toBe(13);
+  });
+
   it('decimates instead of growing without bound', () => {
     const h = new History(0.01, 50);
     for (let i = 0; i < 500; i++) h.push(i * 0.01, s(i));

@@ -16,7 +16,8 @@ import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { useAiStore } from '@/ai/aiStore';
-import type { Draft } from '@/ai/draft';
+import { notUsedIssues, type Draft } from '@/ai/draft';
+import { writtenSign } from '@/ai/numbers';
 import { MAX_PROBLEM_CHARS } from '@/ai/pipeline';
 import { fromSI, toSI, unitLabel } from '@/core/units';
 import { applyAutoDefaults } from '@/physics/autoDefaults';
@@ -28,6 +29,7 @@ import { hasScene } from '@/physics/registry';
 import type { ParamDef, ParamSource, Params, PhysicsScene } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { IconButton } from '@/ui/IconButton';
+import { NumberField } from '@/ui/NumberField';
 import { AiContentBar } from '@/safety/AiContentBar';
 import { CrisisCard } from '@/safety/CrisisCard';
 import { openGate } from '@/safety/safetyStore';
@@ -199,7 +201,9 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   const [kept, setKept] = useState<Set<string>>(new Set());
 
   const visible = scene.params.filter((d) => !d.when || d.when(params));
-  const missing = draft.missing.filter((k) => {
+  // From the scene, not the frozen draft list: a choice changed here (e.g. "Biết tần số f")
+  // can reveal a required value the problem did not give. Manual mode has no problem text.
+  const missing = (mode === 'ai' ? scene.required : draft.missing).filter((k) => {
     const def = scene.params.find((d) => d.key === k);
     if (def?.when && !def.when(params)) return false;
     return sources[k] === 'default' && !kept.has(k);
@@ -219,7 +223,29 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
   };
 
   const blocking = draft.issues.filter((i) => i.blocking);
-  const warnings = draft.issues.filter((i) => !i.blocking);
+  // The sign warning stays until the learner's value has the sign the problem writes (or, when
+  // the problem leaves it open, until the learner has set the value by hand).
+  const signToCheck = new Set(
+    draft.issues
+      .filter((i) => {
+        if (i.kind !== 'signMismatch' || !i.key) return false;
+        if (sources[i.key] !== 'user') return true;
+        const w = draft.written[i.key];
+        const sign = writtenSign(draft.problemText, w?.value ?? 0, w?.quote ?? '');
+        return sign !== 0 && Math.sign(params[i.key] ?? 0) !== sign;
+      })
+      .map((i) => i.key),
+  );
+  // "Not used" follows the current choices ("Biết tần số f" hides T), not the frozen draft.
+  const warnings = [
+    ...draft.issues.filter(
+      (i) =>
+        !i.blocking &&
+        i.kind !== 'notUsed' &&
+        (i.kind !== 'signMismatch' || signToCheck.has(i.key)),
+    ),
+    ...notUsedIssues(scene, params, sources, draft.fromWords),
+  ];
 
   return (
     <>
@@ -270,6 +296,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
               source={sources[def.key] ?? 'default'}
               written={draft.written[def.key]}
               missing={missing.includes(def.key)}
+              checkSign={signToCheck.has(def.key)}
               onChange={(v) => {
                 setValue(def.key, v);
               }}
@@ -376,7 +403,7 @@ function DraftReview({ draft, scene }: { draft: Draft; scene: PhysicsScene }) {
 function WrittenNote({ written }: { written: { value: number; unit: string; quote: string } }) {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
-  const unit = written.unit === '1' ? '' : ` ${unitLabel(written.unit)}`;
+  const unit = written.unit === '1' ? '' : ` ${unitLabel(written.unit, locale)}`;
   return (
     <p className="problem-table__quote">
       <Quote size={12} strokeWidth={1.75} aria-hidden="true" />
@@ -388,47 +415,13 @@ function WrittenNote({ written }: { written: { value: number; unit: string; quot
   );
 }
 
-function NumberField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  onChange: (v: number) => void;
-}) {
-  // Local text so that intermediate input ("0,", "-") is not rejected while typing.
-  const [text, setText] = useState(() => String(Number(value.toPrecision(6))));
-  const [focused, setFocused] = useState(false);
-  const shown = focused ? text : String(Number(value.toPrecision(6)));
-  return (
-    <input
-      className="param__number mono"
-      inputMode="decimal"
-      aria-label={label}
-      value={shown}
-      onFocus={() => {
-        setText(String(Number(value.toPrecision(6))));
-        setFocused(true);
-      }}
-      onBlur={() => {
-        setFocused(false);
-      }}
-      onChange={(e) => {
-        setText(e.target.value);
-        const v = Number(e.target.value.replace(',', '.').trim());
-        if (e.target.value.trim() !== '' && Number.isFinite(v)) onChange(v);
-      }}
-    />
-  );
-}
-
 function ReviewRow({
   def,
   valueSI,
   source,
   written,
   missing,
+  checkSign,
   onChange,
   onKeep,
 }: {
@@ -437,16 +430,18 @@ function ReviewRow({
   source: ParamSource;
   written: { value: number; unit: string; quote: string } | undefined;
   missing: boolean;
+  checkSign: boolean;
   onChange: (si: number) => void;
   onKeep: () => void;
 }) {
   const t = useT();
   const L = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   const unit = def.unit ?? '1';
   const nameId = `qty-${def.key}`;
   return (
     <li
-      className={cx('qty-card', missing && 'is-missing')}
+      className={cx('qty-card', missing && 'is-missing', checkSign && 'is-check')}
       data-source={missing ? 'missing' : source}
       aria-labelledby={nameId}
     >
@@ -468,7 +463,7 @@ function ReviewRow({
                 onChange(toSI(v, unit));
               }}
             />
-            <span className="param__unit">{unit === '1' ? '' : unitLabel(unit)}</span>
+            <span className="param__unit">{unit === '1' ? '' : unitLabel(unit, locale)}</span>
           </>
         )}
         {def.kind === 'choice' && (
@@ -514,6 +509,12 @@ function ReviewRow({
           )}
         </span>
         {written && <WrittenNote written={written} />}
+        {checkSign && (
+          <p className="problem-table__missing">
+            <CircleHelp size={12} strokeWidth={1.75} aria-hidden="true" />
+            {t('analyze.signHint')}
+          </p>
+        )}
         {missing && (
           <p className="problem-table__missing">
             <CircleHelp size={12} strokeWidth={1.75} aria-hidden="true" />

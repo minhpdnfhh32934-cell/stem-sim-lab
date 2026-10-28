@@ -11,6 +11,7 @@ import type { ParamDef } from '@/physics/types';
 import { Equation } from '@/science-card/Equation';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
+import { NumberField } from '@/ui/NumberField';
 
 /** Parameter sliders + numeric inputs, with the origin of each value (§2.1). */
 export function ParamsPanel() {
@@ -71,6 +72,7 @@ function ParamRow({
 }) {
   const t = useT();
   const L = useLocalized();
+  const locale = useSettingsStore((s) => s.locale);
   const unit = def.unit ?? '1';
   const shown = def.kind === 'number' ? fromSI(valueSI, unit) : valueSI;
   const id = `param-${def.key}`;
@@ -84,9 +86,16 @@ function ParamRow({
     <div className="param" data-source={source}>
       <div className="param__head">
         {def.kind === 'toggle' ? (
-          <span className="param__label" id={id}>
-            &nbsp;
-          </span>
+          <label className="param__label param__toggle">
+            <input
+              type="checkbox"
+              checked={valueSI > 0.5}
+              onChange={(e) => {
+                set(e.target.checked ? 1 : 0);
+              }}
+            />
+            <span>{L(def.label)}</span>
+          </label>
         ) : (
           <label htmlFor={id} className="param__label" id={`${id}-label`}>
             {L(def.label)} {def.symbol && <Equation tex={def.symbol} display={false} />}
@@ -115,19 +124,16 @@ function ParamRow({
               set(Number(e.target.value));
             }}
           />
-          <input
+          <NumberField
             id={id}
-            className="param__number mono"
-            type="number"
+            label={L(def.label)}
+            value={shown}
+            step={def.step}
             min={def.min}
             max={def.max}
-            step={def.step ?? 'any'}
-            value={Number(shown.toPrecision(6))}
-            onChange={(e) => {
-              if (e.target.value !== '') set(Number(e.target.value));
-            }}
+            onChange={set}
           />
-          <span className="param__unit">{unitLabel(unit)}</span>
+          <span className="param__unit">{unitLabel(unit, locale)}</span>
         </div>
       )}
       {def.kind === 'choice' && (
@@ -147,18 +153,6 @@ function ParamRow({
             </button>
           ))}
         </div>
-      )}
-      {def.kind === 'toggle' && (
-        <label className="param__toggle">
-          <input
-            type="checkbox"
-            checked={valueSI > 0.5}
-            onChange={(e) => {
-              set(e.target.checked ? 1 : 0);
-            }}
-          />
-          <span>{L(def.label)}</span>
-        </label>
       )}
       {def.live && <p className="param__hint">{t('params.liveHint')}</p>}
     </div>

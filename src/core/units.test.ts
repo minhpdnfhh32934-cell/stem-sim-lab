@@ -33,4 +33,53 @@ describe('units', () => {
     expect(unitLabel('m/s^2')).toBe('m/s²');
     expect(unitLabel('degC')).toBe('°C');
   });
+
+  it('worded units follow the language; symbols (SI or not) never change', () => {
+    expect(unitLabel('rev/min', 'vi')).toBe('vòng/phút');
+    expect(unitLabel('rev/s', 'vi')).toBe('vòng/s');
+    expect(unitLabel('rev/min', 'en')).toBe('rev/min');
+    // No locale (AI prompts, KaTeX 	ext{}): the symbol.
+    expect(unitLabel('rev/min')).toBe('rev/min');
+    for (const u of ['m/s^2', 'Hz', 'rad/s', 'uN', 'deg', 'N*m^2/C^2'])
+      expect(unitLabel(u, 'vi')).toBe(unitLabel(u));
+  });
+
+  it('linear density: 5 g/m = 0.005 kg/m, not a mass or a density', () => {
+    expect(toSI(5, 'g/m')).toBeCloseTo(0.005, 15);
+    expect(convert(0.005, 'kg/m', 'g/m')).toBeCloseTo(5, 12);
+    expect(unitsFor(DIM.linearDensity)).toEqual(['kg/m', 'g/m']);
+    expect(() => convert(1, 'g/m', 'g')).toThrow(UnitError);
+    expect(() => convert(1, 'kg/m', 'kg/m^3')).toThrow(UnitError);
+  });
+
+  it('keeps angular (rad/s) and cycle (Hz, rev/s, rev/min) frequencies apart', () => {
+    // Same SI exponents and factor 1: only the unit group stops "2 Hz" becoming "2 rad/s".
+    expect(() => convert(1, 'Hz', 'rad/s')).toThrow(UnitError);
+    expect(() => convert(1, 'rad/s', 'rev/min')).toThrow(UnitError);
+    expect(convert(120, 'vòng/phút', 'Hz')).toBeCloseTo(2, 15);
+    expect(convert(3, 'rev/s', 'Hz')).toBe(3);
+    expect(getUnit('rpm').symbol).toBe('rev/min');
+    expect(unitsFor(DIM.frequency, 'angular')).toEqual(['rad/s']);
+    expect(unitsFor(DIM.frequency, 'cycle')).toEqual(['Hz', 'rev/s', 'rev/min']);
+    expect(unitsFor(DIM.frequency)).toEqual([]);
+    // Display of existing Hz answers (spring frequency, damping rate γ) is unchanged.
+    expect(fromSI(2, 'Hz')).toBe(2);
+  });
+
+  it('reads the electric-field units (#76): charge, field, voltage, small forces, Coulomb k', () => {
+    expect(toSI(40, 'nC')).toBeCloseTo(4e-8, 20);
+    expect(convert(1, 'uC', 'nC')).toBeCloseTo(1000, 9);
+    expect(convert(5, 'kV/m', 'V/m')).toBe(5000);
+    expect(getUnit('N/C').symbol).toBe('V/m');
+    expect(toSI(2, 'kV')).toBe(2000);
+    expect(convert(3, 'mN', 'uN')).toBeCloseTo(3000, 9);
+    expect(getUnit('µN').symbol).toBe('uN');
+    expect(getUnit('N·m²/C²').symbol).toBe('N*m^2/C^2');
+    expect(unitLabel('N*m^2/C^2')).toBe('N·m²/C²');
+    expect(unitLabel('uN')).toBe('µN');
+    expect(unitsFor(DIM.electricField)).toEqual(['V/m', 'kV/m']);
+    expect(unitsFor(DIM.charge)).toEqual(['C', 'uC', 'nC']);
+    // V/m and N/C are one unit: k·q/r² (N·m²/C² · C / m²) is N/C.
+    expect(() => convert(1, 'V/m', 'N')).toThrow(UnitError);
+  });
 });

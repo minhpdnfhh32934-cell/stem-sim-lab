@@ -49,19 +49,65 @@ test('home "Hôm nay học gì?": suggestions, back home, continue the last less
   });
 });
 
-test('subject cards and the level picker (Level → Subject → Topic)', async ({ page }) => {
+test('subject cards and the grade switch (Grade → Subject → Topic)', async ({ page }) => {
   await openLab(page);
   await page.getByRole('button', { name: /^Hóa học/ }).click();
   await expect(page.getByRole('radio', { name: 'Hóa học' })).toBeChecked();
   const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
   await expect(library.getByRole('button', { name: 'Bảng tuần hoàn', exact: true })).toBeVisible();
-  const levels = library.getByRole('radiogroup', { name: 'Trình độ' });
-  await expect(levels.getByRole('radio', { name: 'Nền tảng' })).toBeChecked();
-  await levels.getByRole('radio', { name: /Đại cương/ }).click();
-  await expect(library).toContainText('sẽ có ở giai đoạn sau');
-  await expect(library.getByRole('button', { name: 'Bảng tuần hoàn', exact: true })).toHaveCount(0);
-  await levels.getByRole('radio', { name: 'Nền tảng' }).click();
-  await expect(library.getByRole('button', { name: 'Bảng tuần hoàn', exact: true })).toBeVisible();
+  const grades = library.getByRole('radiogroup', { name: 'Lớp' });
+  await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
+  for (const radio of await grades.getByRole('radio').all()) {
+    const box = await radio.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+  }
+
+  // Grade 10: physics topics under the textbook chapters, with lessons and the pending label.
+  await page.getByRole('radio', { name: 'Vật lý' }).click();
+  await grades.getByRole('radio', { name: 'Lớp 10' }).click();
+  await expect(library).toContainText('Theo SGK Kết nối tri thức · Đang chờ giáo viên duyệt');
+  const kinematics = library.locator('.tree__chapter', { hasText: 'Chương II. Động học' });
+  await expect(
+    kinematics.getByRole('button', { name: 'Chuyển động thẳng đều Bài 4–5, 7' }),
+  ).toBeVisible();
+  await expectNoHorizontalScroll(page);
+
+  // Biology has no grade 11 topic yet: no dead end, "Xem tất cả" goes back to every topic.
+  await page.getByRole('radio', { name: 'Sinh học' }).click();
+  await grades.getByRole('radio', { name: 'Lớp 11' }).click();
+  await expect(library).toContainText('Chưa có chủ đề Sinh học nào được xếp vào lớp 11.');
+  await library.getByRole('button', { name: 'Xem tất cả' }).click();
+  await expect(grades.getByRole('radio', { name: 'Tất cả' })).toBeChecked();
+  await expect(library.getByRole('button', { name: 'Nguyên phân', exact: true })).toBeVisible();
+});
+
+test('the grade switch fits the narrowest library at the largest font, in English too', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'stemsim.layout',
+      JSON.stringify({ state: { leftWidth: 200 }, version: 1 }),
+    );
+    localStorage.setItem(
+      'stemsim.settings',
+      JSON.stringify({ state: { locale: 'en', fontScale: 1.4 }, version: 2 }),
+    );
+  });
+  await page.goto('/');
+  await page.getByRole('button', { name: /Virtual Lab/ }).click();
+  const grades = page.getByRole('radiogroup', { name: 'Grade' });
+  await expect(grades.getByRole('radio', { name: 'Grade 10' })).toBeVisible();
+  // Nothing spills out of the switch or out of an item (long names fold instead).
+  const overflow = await grades.evaluate((el) =>
+    [el, ...el.querySelectorAll('button')].map((n) => n.scrollWidth - n.clientWidth),
+  );
+  expect(Math.max(...overflow)).toBeLessThanOrEqual(0);
+  for (const radio of await grades.getByRole('radio').all()) {
+    const box = await radio.boundingBox();
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(40);
+  }
+  await expectNoHorizontalScroll(page);
 });
 
 test.describe('Basic / Advanced', () => {
@@ -138,7 +184,17 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
 }) => {
   await openLab(page);
   // Ném ngang: its prediction lives in the lab (Rơi tự do's is a Science Studio lesson).
-  await page.getByRole('button', { name: 'Ném ngang', exact: true }).click();
+  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
+  const topic = library.getByRole('button', { name: 'Ném ngang', exact: true });
+  await topic.click();
+  // Opened → "Đã học" at once, in every subject; physics adds the steps still to do.
+  await expect(topic).toHaveAccessibleDescription(
+    'Đã học — xong 1/3 bước, còn: Dự đoán trước, 1 thử thách',
+  );
+  await expect(library.getByLabel('1/5 chủ đề đã học')).toHaveText('1/5');
+  // The visible tick and step count, not only the hidden description.
+  await expect(library.locator('.tree__mark[data-state="opened"] svg')).toHaveCount(1);
+  await expect(topic.locator('.tree__steps')).toHaveText('1/3');
   await page.getByRole('tab', { name: 'Thử thách' }).click();
 
   // Predict – observe – explain: the right answer is computed by the engine. Doubling v₀ leaves
@@ -156,15 +212,15 @@ test('learn by exploring: predict → observe, a challenge solved, progress and 
   const challenge = page.getByRole('region', { name: /Thử thách: Ném trúng đích 40 m/ });
   await challenge.getByRole('button', { name: 'Bắt đầu thử thách' }).click();
   await expect(challenge).toContainText('Hiện tại');
-  const v0 = page.getByRole('spinbutton', { name: /Vận tốc ban đầu/ });
+  const v0 = page.getByRole('textbox', { name: /Vận tốc ban đầu/ });
   await v0.fill((40 / Math.sqrt((2 * 45) / 9.81)).toFixed(2));
   await v0.press('Enter');
   await expect(challenge.getByRole('status').last()).toContainText('Chính xác!');
   await expect(challenge).toContainText('Đã hoàn thành');
 
-  // Topic complete (opened + predicted + challenge) → check in the library; badges on home.
-  const library = page.getByRole('complementary', { name: 'Thư viện chủ đề' });
-  await expect(library.getByLabel('Đã hoàn thành chủ đề')).toHaveCount(1);
+  // Topic complete (opened + predicted + challenge) → "Hoàn thành" mark; badges on home.
+  await expect(topic).toHaveAccessibleDescription('Đã hoàn thành chủ đề');
+  await expect(library.locator('.tree__mark[data-state="complete"]')).toHaveCount(1);
   // The brand goes back to the launch page; the lab card leads to "Hôm nay học gì?" again.
   await page.getByRole('button', { name: 'Về trang chủ' }).click();
   await expect(page.getByRole('button', { name: /AI Teacher/ }).first()).toBeVisible();

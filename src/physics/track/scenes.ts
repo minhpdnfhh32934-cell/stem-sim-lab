@@ -130,15 +130,18 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   // Energy level line: the highest point reachable (v = 0).
   const Eh = y0 + (v0 * v0) / (2 * g);
   line(ctx, cam, tr.xMin, Eh, tr.xMax, Eh, c.faint, 1, [6, 5]);
+  // Ends left of the energy bars (drawn below in the right part of the stage), never under them.
+  const vis = cam.visible();
+  const baseX = vis.xMax - 0.16 * (vis.xMax - vis.xMin);
   text(
     ctx,
     cam,
-    tr.xMax,
+    Math.min(tr.xMax, baseX),
     Eh,
     opts.locale === 'vi' ? 'mức cơ năng' : 'energy level',
     c.muted,
     'right',
-    { x: -4, y: -4 },
+    { x: -8, y: -4 },
   );
   const x = state[TS.x] ?? 0;
   const y = state[TS.y] ?? 0;
@@ -171,15 +174,13 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const E = m * g * Eh;
   const K = 0.5 * m * (state[TS.v] ?? 0) ** 2;
   const U = m * g * y;
-  const vis = cam.visible();
   const barW = 0.03 * (vis.xMax - vis.xMin);
-  // Top-right corner, below the HUD, away from the floating tool bar.
-  const baseX = vis.xMax - 0.16 * (vis.xMax - vis.xMin);
+  // Top-right corner (baseX), below the HUD, away from the floating tool bar.
   const baseY = vis.yMax - 0.5 * (vis.yMax - vis.yMin);
   const H = 0.3 * (vis.yMax - vis.yMin);
   const bars: [string, number, string][] = [
-    [opts.locale === 'vi' ? 'Wđ' : 'K', K, c.velocity],
-    [opts.locale === 'vi' ? 'Wt' : 'U', U, c.acceleration],
+    [opts.locale === 'vi' ? 'W_đ' : 'K', K, c.velocity],
+    [opts.locale === 'vi' ? 'W_t' : 'U', U, c.acceleration],
     [opts.locale === 'vi' ? 'W' : 'E', K + U, c.force],
   ];
   bars.forEach(([name, val, col], i) => {
@@ -343,7 +344,7 @@ function solve(p: Params, locale: Locale): Solution {
               'Mức cơ năng không cao hơn đỉnh cao nhất phía trước (đỉnh đồi thứ hai) nên vật không vượt qua, sẽ trượt ngược lại.',
               'The energy level is not above the highest point ahead (the top of the second hill), so the bead rolls back.',
             ),
-        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_{đỉnh 2} \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
+        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_2 \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
       });
       const vTop = speedAt(g, y0, v0, peak.y);
       if (passes && vTop !== null) {
@@ -367,7 +368,7 @@ function card(): ScienceCardData {
       'Small bead sliding without friction along a fixed rail (never leaves it); only gravity does work.',
     ),
     equations: [
-      { tex: 'W = W_đ + W_t = \\tfrac{1}{2}mv^2 + mgh = \\text{const}' },
+      { tex: 'W = W_{\\text{đ}} + W_t = \\tfrac{1}{2}mv^2 + mgh = \\text{const}' },
       {
         tex: "\\ddot{x} = -\\frac{f'(x)\\,(g + f''(x)\\,\\dot{x}^2)}{1 + f'(x)^2}",
         label: L('Phương trình chuyển động trên ray y = f(x)', 'Equation of motion on y = f(x)'),
@@ -500,7 +501,7 @@ export const energyConservation: PhysicsScene = {
         { label: L('Tốc độ', 'Speed'), symbol: 'v', value: Math.abs(s[TS.v] ?? 0), unit: 'm/s' },
         {
           label: L('Động năng', 'Kinetic energy'),
-          symbol: 'W_đ',
+          symbol: 'W_{\\text{đ}}',
           value: 0.5 * (p.m ?? 1) * (s[TS.v] ?? 0) ** 2,
           unit: 'J',
         },

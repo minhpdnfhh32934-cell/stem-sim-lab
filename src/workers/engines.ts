@@ -48,3 +48,18 @@ registerEngine('phys.collision', async () => {
   const { CollisionEngine } = await import('@/physics/collision/engine');
   return () => new CollisionEngine();
 });
+
+registerEngine('phys.circular', async () => {
+  const { CircularEngine } = await import('@/physics/circular/engine');
+  return () => new CircularEngine();
+});
+
+registerEngine('phys.standingWave', async () => {
+  const { StandingWaveEngine } = await import('@/physics/wave/engine');
+  return () => new StandingWaveEngine();
+});
+
+registerEngine('phys.field', async () => {
+  const { FieldEngine } = await import('@/physics/field/engine');
+  return () => new FieldEngine();
+});

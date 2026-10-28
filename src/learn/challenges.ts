@@ -34,8 +34,8 @@ export const CHALLENGES: readonly Challenge[] = [
     topic: 'uniformMotion',
     title: L('Hẹn gặp lúc 5 giây', 'Meet at 5 seconds'),
     task: L(
-      'Chỉnh vận tốc của xe B để hai xe gặp nhau đúng lúc t = 5 s.',
-      'Set car B’s velocity so that the two cars meet at exactly t = 5 s.',
+      'Chỉnh vận tốc của xe B để hai xe gặp nhau đúng lúc t\u00a0=\u00a05\u00a0s.',
+      'Set car B’s velocity so that the two cars meet at exactly t\u00a0=\u00a05\u00a0s.',
     ),
     controls: ['vB'],
     goal: { answer: 'meet_time', kind: 'target', value: 5, tol: 0.1 },
@@ -223,6 +223,57 @@ export const CHALLENGES: readonly Challenge[] = [
     hint: L(
       'Thử m₂ lớn hơn và nhỏ hơn m₁: vật 1 bật lại hay đi tiếp?',
       'Try m₂ larger and smaller than m₁: does ball 1 bounce back or keep going?',
+    ),
+  },
+  {
+    id: 'uniformCircularMotion.a16',
+    topic: 'uniformCircularMotion',
+    title: L('Gia tốc hướng tâm 16 m/s²', 'Centripetal acceleration of 16 m/s²'),
+    task: L(
+      'Giữ bán kính 1 m, chỉnh tốc độ v để gia tốc hướng tâm đúng 16 m/s².',
+      'Keeping the 1 m radius, set the speed v so that the centripetal acceleration is exactly 16 m/s².',
+    ),
+    controls: ['v'],
+    // mode 0 = "Biết tốc độ v".
+    start: { mode: 0 },
+    goal: { answer: 'a_c', kind: 'target', value: 16, tol: 0.2 },
+    hint: L(
+      'Tốc độ tăng gấp đôi thì gia tốc hướng tâm tăng mấy lần?',
+      'If the speed doubles, how many times larger is the centripetal acceleration?',
+    ),
+  },
+  {
+    id: 'standingWave.f50',
+    topic: 'standingWave',
+    title: L('Tần số 50 Hz', 'A frequency of 50 Hz'),
+    task: L(
+      'Giữ dây dài 1,2 m với 3 bó sóng, chỉnh lực căng dây để tần số sóng dừng đúng 50 Hz.',
+      'Keeping the 1.2 m string with 3 loops, set the tension so that the standing wave is at exactly 50 Hz.',
+    ),
+    controls: ['tension'],
+    // mode 0 = "Tìm f (biết L, v, n)"; vFrom 1 = v from the tension and the linear density.
+    start: { mode: 0, vFrom: 1 },
+    goal: { answer: 'frequency', kind: 'target', value: 50, tol: 0.5 },
+    hint: L(
+      'Tần số tỉ lệ với tốc độ truyền sóng v\u00a0=\u00a0√(F/μ). Muốn v gấp đôi thì lực căng F phải gấp mấy lần?',
+      'The frequency is proportional to the wave speed v\u00a0=\u00a0√(F/μ). To double v, how many times larger must the tension F be?',
+    ),
+  },
+  {
+    id: 'electricField.plates8000',
+    topic: 'electricField',
+    title: L('Điện trường đều 8.000 V/m', 'A uniform field of 8,000 V/m'),
+    task: L(
+      'Tụ điện phẳng (SimLab chuyển sang khi bạn bắt đầu thử thách): giữ khoảng cách hai bản 2\u00a0cm, chỉnh hiệu điện thế U để điện trường giữa hai bản đúng 8.000\u00a0V/m.',
+      'Parallel-plate capacitor (SimLab switches to it when you start the challenge): keeping the plates 2\u00a0cm apart, set the voltage U so that the field between them is exactly 8,000\u00a0V/m.',
+    ),
+    controls: ['U'],
+    // mode 1 = "Tụ điện phẳng".
+    start: { mode: 1 },
+    goal: { answer: 'E', kind: 'target', value: 8000, tol: 25 },
+    hint: L(
+      'Hiệu điện thế tăng gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
+      'If the voltage doubles, how does the field between the plates change?',
     ),
   },
 ];

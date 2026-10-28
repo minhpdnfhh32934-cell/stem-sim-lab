@@ -78,6 +78,9 @@ thời gian thực với lời giải chính xác.
 | Con lắc đơn                           | RK4 với 8 bước con mỗi Δt (h ≈ 0,52 ms). Mô hình góc nhỏ chạy song song bằng nghiệm chính xác                      | Chính xác khi không có lực cản; gần đúng khi có lực cản | Chu kì đo trong mô phỏng khớp công thức T = 4√(l/g)K(sin(α₀/2)); ở 60° sai lệch so với công thức góc nhỏ là 7,32 %; cơ năng trôi < 10⁻¹⁰                             |
 | Bảo toàn cơ năng (vật trên đường ray) | RK4 với 8 bước con cho phương trình có ràng buộc                                                                   | Chính xác (tốc độ tính từ bảo toàn cơ năng)             | v(đáy) = √(2gH) so với DOPRI5; cơ năng trôi < 10⁻⁹ trong 20 s                                                                                                        |
 | Va chạm 1D/2D                         | Chuyển động thẳng đều giữa hai va chạm. Thời điểm va chạm giải chính xác, xung lực tính theo hệ số phục hồi e      | Chính xác                                               | Hai vật cùng khối lượng va chạm đàn hồi thì trao đổi vận tốc; va chạm xiên hai vật cùng khối lượng thì hai hướng vuông góc; kết quả khớp cách tính trong hệ khối tâm |
+| Chuyển động tròn đều                  | Pha chính xác φ = φ₀ ± ωt với t = n·Δt (không cộng dồn); không có gì kéo được                                      | Chính xác                                               | DOPRI5 tích phân r″ = −(F_ht/(m·r))·r⃗ (rtol 10⁻¹²): bán kính giữ nguyên, vị trí khớp engine ở bốn thời điểm, chu kì đo qua y = 0 (đi lên) khớp 2πr/v tới 10⁻⁹       |
+| Sóng dừng trên dây                    | Công thức chính xác y = 2A·sin(kx)·sin(ωt) tại t = i·Δt (Δt ≤ T/200); không có gì kéo được                         | Chính xác (độ dốc 2A·k ≤ 0,1); gần đúng khi biên độ lớn | DOPRI5 trên phương trình sóng của dây chia đoạn, hai đầu cố định: 240/480 đoạn sai số O(Δx²), hội tụ bậc 2; 200 đoạn tần số mode khớp n·v/(2L) tới 10⁻⁹              |
+| Điện trường, tụ phẳng                 | Công thức chính xác (Coulomb, chồng chất, E = U/d); đường sức RK4 chia đôi bước, sai số như nhau ở mọi mức máy     | Chính xác (các con số)                                  | E so với −∇V: lệch tương đối ≤ 10⁻⁶; đường sức nằm trong sai số app báo so với DOPRI5; Σqᵢcosθᵢ không đổi (hai điện tích cùng trục)                                  |
 
 **Kéo và ném bằng chuột:** app nối vật với con trỏ bằng một lò xo có giảm chấn tới hạn
 (ω = 28 rad/s), nên vật không bị dịch chuyển tức thời. Khi thả chuột, vật giữ nguyên vận tốc lúc
@@ -88,6 +91,59 @@ tích được ghi rõ là chỉ áp dụng cho điều kiện ban đầu.
 khi hai sự kiện (đỉnh quỹ đạo và chạm đất) rơi vào cùng một bước tích phân dài, bộ bắt sự kiện cũ
 có thể bỏ sót lần chạm đất. Nay mọi sự kiện trong một bước được xử lý theo thứ tự thời gian, và
 trường hợp xuất phát trên mặt sự kiện được xét từ ngay sau thời điểm đầu. Có test hồi quy.
+
+**Hz và rad/s không được trộn (0.8.0, #37 §8.2 bẫy 1):** hai đơn vị cùng số mũ SI (s⁻¹) và cùng
+hệ số 1, nên trước đây "f = 2 Hz" có thể lọt vào ô tốc độ góc thành ω = 2 rad/s (sai 2π lần).
+Radian không có chiều, nên `src/core/units.ts` gắn **nhãn nhóm đơn vị**: nhóm "góc" (rad/s) và
+nhóm "chu kì" (Hz, vòng/s, vòng/phút; 1 vòng/phút = 1/60 Hz). `convert()` báo lỗi khi đổi giữa hai
+nhóm; `allowedUnits()` (`src/ai/spec.ts`) cho ô ω chỉ rad/s, ô f chỉ Hz, vòng/s, vòng/phút, nên AI
+ghi "2 Hz" vào ô ω thì bị từ chối (test). Lưu ý: ô hệ số cản `c` của con lắc đơn và đáp án γ của
+lò xo là tốc độ tắt dần (s⁻¹) nhưng xưa nay ghi "Hz"; chúng vẫn chạy như cũ (nay thuộc nhóm "chu
+kì"), xem DATA_REVIEW UCM-3.
+
+**Sóng dừng không tự làm tròn (0.8.0, #37 §8.2 bẫy 5):** dây hai đầu cố định chỉ có sóng dừng
+khi m = 2Lf/v là số nguyên. App coi m là nguyên khi khoảng cách tới số nguyên gần nhất không quá
+10⁻⁹·max(1, m) — chỉ để bỏ qua sai số làm tròn của máy tính (ví dụ 2·1,1·50/11 tính ra
+10,000000000000002). Không nguyên thì app báo "Không có sóng dừng", gợi ý tần số cộng hưởng ngay
+dưới và ngay trên (m < 1: chỉ f₁; không quá 20 bó, vượt thì gợi ý f₂₀) kèm nút **Dùng fₙ** để học
+sinh tự bấm đặt đúng giá trị, **không** tự đổi f, và hiện m đủ chữ số để không trông như số
+nguyên (1.818,2 chứ không phải 1818). Biên độ A là biên độ của mỗi sóng thành phần (bụng 2A); độ
+dốc 2A·k > 0,1 thì Thẻ Khoa học chuyển "gần đúng". Hình vẽ phóng to trục dọc (có ghi hệ số) và lấy
+một mẫu mỗi khung hình: khi f × tốc độ phát vượt khoảng 30 Hz (nửa số khung hình mỗi giây) thì
+thấy hoạt nghiệm, và muốn đường cong mượt (≥ 10 điểm mỗi chu kì) thì chỉ nên vài Hz. Lưới, thước
+và thước đo góc chia lại hệ số phóng to (`PhysicsScene.yStretch`), nên vẫn đo theo mét thật. Xem
+DATA_REVIEW SWV-1 … SWV-8.
+
+**Số rất nhỏ và dấu điện tích trong đề (0.8.0, #37 §8.2 bẫy 2 và 3; phạm vi cuối của #89):**
+`src/ai/numbers.ts` giữ nguyên bộ đọc của bản trước, chỉ thêm bốn điểm:
+
+1. Một dãy chữ số mũ nhỏ phía trên là một số mũ: "4.10⁻⁸", "1,6.10⁻¹⁹" được đọc như khi viết "4.10^-8"
+   (trước đây "10⁻¹⁹" thành "10^-^1^9", không đọc được). "⁰" ngay sau chữ số là độ ("10⁰" là 10 độ,
+   không phải 1).
+2. So **sai số tương đối**, chỉ với số hữu hạn: trước đây ngưỡng tuyệt đối 10⁻⁹ cho số bịa lọt với
+   điện tích cỡ 10⁻⁹ C (đề ghi 5.10⁻¹⁰ thì 7.10⁻¹⁰ vẫn qua). Phần kiểm lời giải thích (`explain.ts`)
+   cũng bỏ ngưỡng tuyệt đối (số bịa dưới ~10⁻¹¹ từng khớp mọi số nhỏ của đề). Số tràn ("2.10⁴⁰⁰")
+   không bao giờ được coi là "có trong đề", còn trong lời giải thích thì luôn bị đánh dấu.
+3. Chữ số dính vào ký hiệu một hai chữ cái đầu từ ("q0", "q_0", "m1", "R1", "v_0") không được coi
+   là số có trong đề; "nhau10", "góc30" là từ nên vẫn đọc như trước. Chỉ áp ở phía kiểm đề.
+4. **Dấu của điện tích:** bộ lọc so trị tuyệt đối, nên `src/ai/draft.ts` kiểm thêm: dấu AI đưa ra khác
+   dấu trong đề (dấu "−" sát số, hoặc chữ "âm/dương" trong cùng câu), hay đề để ngỏ ("độ lớn", "trái
+   dấu", "khác dấu"), thì bảng "Tôi hiểu đề như sau" hiện cảnh báo ở dòng điện tích đó (không chặn);
+   cảnh báo còn cho tới khi dấu người học đặt khớp với đề.
+
+Như trước, lũy thừa 10 không có hệ số ("q = 10⁻⁸ C") không được đọc, và y_M = 0 không được suy từ lời
+("M nằm trên đoạn AB"): bảng hỏi người học nhập. Test so sánh với bản trước (`numbersMain.fixture.ts`):
+câu nào bản trước chặn thì bản mới cũng chặn (ngoại lệ duy nhất: hệ số với số mũ viết bằng chữ số nhỏ
+mà bản trước không đọc được), mọi giá trị của bộ đề chuẩn mà bản trước nhận thì bản mới cũng nhận, lời
+giải thích bị bản trước đánh dấu thì bản mới cũng đánh dấu (`numbers.test.ts`).
+
+**Đường sức điện (0.8.0, #76):** vẽ bằng tích phân số dr⃗/ds = ±E⃗/|E⃗| (RK4, chia đôi bước để kiểm sai
+số và tự chỉnh bước; dung sai là một phần cố định của khung hình, giống nhau ở mọi mức máy; giới hạn
+theo số bước, không đo thời gian). Sai số ghi trên Thẻ Khoa học là một ước lượng trên do code tính:
+mỗi đường có một bản "thô" (một bước đủ thay cho hai nửa bước), và sai số là khoảng cách lớn nhất
+giữa hai bản; trong test, số này lớn hơn khoảng cách thật tới đường tính bằng DOPRI5 (rtol 10⁻¹²)
+khoảng 11 lần. Đường dừng ở điện tích, ra khỏi khung, quá dài, hoặc ở điểm E = 0 (được đánh dấu);
+đường bị cắt vì hết số bước vẽ nét đứt. Các con số (E, F) không phụ thuộc đường sức.
 
 ## 5. AI đọc đề (Giai đoạn 3)
 
@@ -166,9 +222,11 @@ phương pháp cho từng phân tử trong app và trong Thẻ Khoa học).
 | ----------------------------------- | ------------------------------------------------------ | ---------------------------------- | ---------- |
 | Bảng mã di truyền chuẩn (64 bộ ba)  | NCBI Genetic Code, bảng số 1 (qua Biopython 1.88)      | `scripts/data/gen_genetic_code.py` | chờ duyệt  |
 | Bảng số lượng NST ở các kì phân bào | Không nhập tay: **đếm** từ mô hình NST (`division.ts`) | code + test so với bảng SGK        | chờ duyệt  |
+| Bộ phận tế bào (3 tế bào, 21 mục)   | SGK Sinh học 10 KNTT, Bài 7–8 (diễn đạt lại)           | `src/biology/cell/parts.ts` + test | chờ duyệt  |
 
 Mọi chủ đề sinh học khác dùng **công thức** (không có bảng số liệu nhập tay), nên độ tin cậy do
-test tự động bảo đảm.
+test tự động bảo đảm. Riêng bài “Tế bào nhân sơ và nhân thực” là **định tính**: bảng bộ phận chỉ
+có chữ (không có số), chờ giáo viên duyệt (`DATA_REVIEW.md`, mục `CELL3D-*`).
 
 ### Kiểm chứng tự động
 
@@ -187,6 +245,7 @@ test tự động bảo đảm.
 | Động học enzyme                     | v = Vmax/2 tại [S] = Km; Km, Vmax biểu kiến của 3 kiểu ức chế; [S](t) chính xác (hàm Lambert W) khớp DOPRI5 (app cũng hiển thị sai lệch)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | đạt     |
 | Khuếch tán (Fick hai ngăn)          | Bảo toàn lượng chất; cân bằng tại nồng độ trung bình theo thể tích; chuyển động Brown: ⟨r²⟩ = 4Dt (2D)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | đạt     |
 | Thẩm thấu (ống chữ U)               | Tại cân bằng ρgΔh = iCRT (van ’t Hoff, có tính pha loãng); nước luôn đi vào nhánh dung dịch                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | đạt     |
+| Tế bào nhân sơ và nhân thực         | Nhân sơ không có nhân và không có bào quan có màng bao bọc; tế bào động vật không có thành tế bào, lục lạp; tế bào thực vật có thành tế bào, lục lạp, không bào trung tâm; mọi bộ phận có tên vi/en, nguồn + số trang, `pending`; không có chữ số; không kích hoạt nhầm cảnh báo khủng hoảng; hình 2D vẽ đúng các bộ phận của bảng                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | đạt     |
 
 ### Nguyên tắc hiển thị
 
@@ -206,6 +265,9 @@ test tự động bảo đảm.
   bằng không phụ thuộc Lp.
 - Π = iCRT chỉ đúng cho dung dịch loãng; i = 2 (NaCl), 3 (CaCl₂) là giả thiết phân li hoàn toàn.
 - Lotka–Volterra là mô hình định tính kinh điển (thẻ khoa học ghi "gần đúng" vì giải số).
+- Tế bào nhân sơ và nhân thực (bản 2D, 0.8.0): hình **định tính**, ghi “Minh họa — không theo tỉ
+  lệ; số lượng bào quan chỉ để minh họa”; vị trí, hình dạng, màu chỉ để phân biệt các bộ phận. Tên
+  và chức năng diễn đạt lại theo SGK Sinh học 10 KNTT (Bài 7–8), chờ giáo viên duyệt.
 
 ## 8. Lưu tệp, lịch sử và quá tải (Giai đoạn 6)
 

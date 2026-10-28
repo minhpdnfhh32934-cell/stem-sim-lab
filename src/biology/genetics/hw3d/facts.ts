@@ -157,7 +157,7 @@ export function selectionCard(
           `In all 2N = ${fmt(2 * gen.n, 6)} gene copies. The ring on the plinth is split exactly p : q.`,
         ),
         L(
-          `So với p², 2pq, q²: χ² = ${fmt(gen.chi2, 3)} (df = 1), p-value = ${fmt(gen.pValue, 3)} → ${verdict.vi}`,
+          `So với p², 2pq, q²: χ² = ${fmt(gen.chi2, 3)} (bậc tự do = 1), giá trị p = ${fmt(gen.pValue, 3)} → ${verdict.vi}`,
           `Against p², 2pq, q²: χ² = ${fmt(gen.chi2, 3)} (df = 1), p-value = ${fmt(gen.pValue, 3)} → ${verdict.en}`,
         ),
         L(

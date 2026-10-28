@@ -1,33 +1,44 @@
-import { CATALOG, type ChapterEntry, type TopicEntry } from '@/app/catalog';
-import type { Level } from '@/app/learner/profileStore';
+import { CATALOG, type TopicEntry } from '@/app/catalog';
+import { GRADES, gradeView } from '@/app/curriculum';
+import type { MessageKey } from '@/app/i18n';
+import type { GradeChoice } from '@/app/learner/profileStore';
 import { SUBJECTS, type Subject } from '@/app/workspaceStore';
 
-export interface LevelInfo {
-  id: Level;
-  /** 'planned': shown as "sắp có", no topics yet. */
-  status: 'available' | 'planned';
+/** The library's switch "Lớp 10 · Lớp 11 · Lớp 12 · Tất cả". */
+export const GRADE_CHOICES: readonly GradeChoice[] = [...GRADES, 'all'];
+
+export interface LibraryTopic extends TopicEntry {
+  /** Textbook lessons in the chosen grade (pending a teacher); empty under "Tất cả". */
+  lessons: readonly number[];
 }
 
-/** Level → Subject → Topic (PROMPT_PHAN_2 A4.1). The MVP builds "Nền tảng" first. */
-export const LEVELS: readonly LevelInfo[] = [
-  { id: 'foundation', status: 'available' },
-  { id: 'general', status: 'planned' },
-];
+export interface LibraryChapter {
+  id: string;
+  /** A SimLab chapter (i18n key), or a textbook chapter's title verbatim (grade view). */
+  title: { key: MessageKey } | { text: string };
+  topics: LibraryTopic[];
+}
 
 /**
- * Curriculum mapping of the topics (grade / lesson in a specific programme or textbook).
- * Not filled in: it must come from a teacher, never be guessed (PROMPT_PHAN_2 A4.1,
- * MASTER_PROMPT §2.5). Listed in docs/DATA_REVIEW.md.
+ * Chapters of a subject in the chosen view: a grade lists its topics under the textbook's
+ * chapters in book order (`gradeView`); "Tất cả" is the whole catalog, unplaced topics included.
  */
-export const CURRICULUM_MAPPING = {
-  review_status: 'pending',
-  /** topic id → reference (e.g. "Vật lý 10, Bài …"), filled in after a teacher's review. */
-  entries: {} as Record<string, string>,
-} as const;
-
-/** Chapters of a subject at a level (every current topic is "Nền tảng"). */
-export function chaptersFor(level: Level, subject: Subject): ChapterEntry[] {
-  return level === 'foundation' ? CATALOG[subject] : [];
+export function chaptersFor(grade: GradeChoice, subject: Subject): LibraryChapter[] {
+  if (grade === 'all')
+    return CATALOG[subject].map((c) => ({
+      id: c.id,
+      title: { key: c.titleKey },
+      topics: c.topics.map((topic) => ({ ...topic, lessons: [] })),
+    }));
+  const entries = new Map(CATALOG[subject].flatMap((c) => c.topics).map((e) => [e.id, e]));
+  return gradeView(grade, subject).map((c) => ({
+    id: c.label,
+    title: { text: c.label },
+    topics: c.topics.flatMap(({ topic, lessons }) => {
+      const entry = entries.get(topic);
+      return entry ? [{ ...entry, lessons }] : [];
+    }),
+  }));
 }
 
 export interface Suggestion {
@@ -36,14 +47,14 @@ export interface Suggestion {
 }
 
 /**
- * Topics suggested on the home screen: the first available topics of each subject (catalog
- * order = the order a course usually follows), subjects the learner chose first.
+ * Topics suggested on the home screen: the first available topics of each subject in the chosen
+ * view (book order for a grade, catalog order otherwise), subjects the learner chose first.
  */
-export function suggestions(level: Level, interests: readonly Subject[], perSubject = 2) {
+export function suggestions(grade: GradeChoice, interests: readonly Subject[], perSubject = 2) {
   const order = [...interests, ...SUBJECTS.filter((s) => !interests.includes(s))];
   const out: Suggestion[] = [];
   for (const subject of order) {
-    const topics = chaptersFor(level, subject)
+    const topics = chaptersFor(grade, subject)
       .flatMap((c) => c.topics)
       .filter((t) => t.status === 'available')
       .slice(0, perSubject);
@@ -52,9 +63,9 @@ export function suggestions(level: Level, interests: readonly Subject[], perSubj
   return out;
 }
 
-/** Number of topics that can be opened now, per subject and level. */
-export function availableCount(level: Level, subject: Subject): number {
-  return chaptersFor(level, subject)
+/** Number of topics that can be opened now, per subject in the chosen view. */
+export function availableCount(grade: GradeChoice, subject: Subject): number {
+  return chaptersFor(grade, subject)
     .flatMap((c) => c.topics)
     .filter((t) => t.status === 'available').length;
 }

@@ -2,7 +2,9 @@ import { AlertTriangle, CheckCircle2, Eye, Info, Lightbulb, ListOrdered } from '
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { ExplainBox } from '@/app/ai/ExplainBox';
-import { formatNumber, useT } from '@/app/i18n';
+import { useT } from '@/app/i18n';
+import { Subscripted } from '@/ui/Subscripted';
+import { formatDeviation } from './numbers';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { fmtQty } from '@/physics/common/tex';
@@ -101,7 +103,7 @@ function SolutionBody({ scene, solution }: { scene: PhysicsScene; solution: Solu
                     return (
                       <tr key={a.id} className={asked ? 'is-asked' : undefined}>
                         <th scope="row">
-                          {L(a.label)}
+                          <Subscripted text={L(a.label)} />
                           {asked && <span className="asked-chip">{t('solution.asked')}</span>}
                         </th>
                         <td className="mono solution__value">
@@ -111,15 +113,7 @@ function SolutionBody({ scene, solution }: { scene: PhysicsScene; solution: Solu
                           {dev !== null && (
                             <span data-tip={t('solution.check')}>
                               <CheckCircle2 size={13} strokeWidth={2} aria-hidden="true" />
-                              {t('solution.agree', {
-                                value:
-                                  dev < 1e-15
-                                    ? '0'
-                                    : formatNumber(locale, dev, {
-                                        maximumSignificantDigits: 1,
-                                        notation: 'scientific',
-                                      }),
-                              })}
+                              {t('solution.agree', { value: formatDeviation(locale, dev) })}
                             </span>
                           )}
                         </td>

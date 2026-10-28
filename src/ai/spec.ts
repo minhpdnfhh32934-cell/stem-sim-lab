@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { unitsFor } from '@/core/units';
+import { getUnit, unitsFor } from '@/core/units';
 import type { PhysicsScene } from '@/physics/types';
 
 /**
@@ -60,14 +60,14 @@ export function classificationJsonSchema(topics: string[]) {
   };
 }
 
-/** Units the AI may use for one parameter (display units of its dimension). */
+/** Units the AI may use for one parameter (display units of its dimension and unit group). */
 export function allowedUnits(scene: PhysicsScene, key: string): string[] {
   const def = scene.params.find((d) => d.key === key);
   if (!def) return [];
   if (def.kind !== 'number') return ['1'];
   if (def.unit === 'deg') return ['deg', 'rad'];
   if (!def.dim) return ['1'];
-  return unitsFor(def.dim);
+  return unitsFor(def.dim, def.unit ? getUnit(def.unit).group : undefined);
 }
 
 export function extractionJsonSchema(scene: PhysicsScene, questionIds: string[]) {

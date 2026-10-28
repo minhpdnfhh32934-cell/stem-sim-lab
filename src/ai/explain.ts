@@ -1,4 +1,5 @@
-import { fromSI, unitLabel } from '@/core/units';
+import { fromSI } from '@/core/units';
+import { fmtQty, texNumbers } from '@/physics/common/tex';
 import type { Answer, Solution } from '@/physics/types';
 import { outputIsSafe } from '@/safety/moderation';
 import { numbersIn, numberTokens } from './numbers';
@@ -43,10 +44,12 @@ export function allowedNumbers(solution: Solution, problemText: string): number[
     nums.push(...numbersIn(a.label.vi), ...numbersIn(a.label.en));
   }
   for (const s of solution.steps) {
-    nums.push(...numbersIn(s.text.vi), ...numbersIn(s.tex ?? ''));
+    // The TeX comes from texNum: one meaning per number ("9{,}81" is 9,81 only, never 981).
+    nums.push(...numbersIn(s.text.vi), ...texNumbers(s.tex ?? ''));
   }
   nums.push(...numbersIn(problemText));
-  return nums;
+  // An overflowed number ("2.10^400") is no number the explanation may repeat.
+  return nums.filter(Number.isFinite);
 }
 
 /**
@@ -56,8 +59,10 @@ export function allowedNumbers(solution: Solution, problemText: string): number[
  */
 export function unknownNumbers(text: string, allowed: number[]): number[] {
   const small = (n: number) => Number.isInteger(n) && n <= 4; // "2 vật", "bước 1"…
+  // Relative only (#89): an absolute floor let any invented number below ~1e-11 match every tiny
+  // number of the problem ("F = 3,2.10⁻¹⁵ N" against e = 1,6.10⁻¹⁹ C). Infinity is never known.
   const known = (n: number) =>
-    small(n) || allowed.some((a) => Math.abs(a - n) <= 0.01 * Math.max(Math.abs(a), 1e-9));
+    small(n) || (Number.isFinite(n) && allowed.some((a) => Math.abs(a - n) <= 0.01 * Math.abs(a)));
   const unknown: number[] = [];
   for (const readings of numberTokens(text)) {
     const first = readings[0];
@@ -76,9 +81,8 @@ export async function explainSolution(
   solution: Solution,
   cfg: ExplainConfig,
 ): Promise<Explanation> {
-  const lines = solution.answers.map(
-    (a) => `- ${a.label.vi} = ${shownValue(a)} ${unitLabel(a.unit)}`,
-  );
+  // As the screen writes it ("8,011·10⁻¹⁶ N", never JS "8.011e-16"), so a copied value verifies.
+  const lines = solution.answers.map((a) => `- ${a.label.vi} = ${fmtQty('vi', a.value, a.unit)}`);
   const steps = solution.steps.map((s, i) => `${i + 1}. ${s.text.vi}${s.tex ? ` [${s.tex}]` : ''}`);
   const system = `Bạn là trợ giảng Vật lí. Chương trình mô phỏng ĐÃ TÍNH xong các kết quả dưới đây.
 Hãy DIỄN GIẢI bằng lời, ngắn gọn (tối đa 150 từ), dễ hiểu cho học sinh THPT: vì sao ra kết quả đó, ý nghĩa vật lí.
