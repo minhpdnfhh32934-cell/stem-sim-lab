@@ -403,6 +403,22 @@ add(
     {"v1x_after": 0.0, "v2x_after": 0.0, "momentum": 0.0},
 )
 
+# "Bỏ qua ma sát" says nothing about the impact offset b: b must not be read from it.
+add(
+    "vc-04",
+    "Quả cầu 1 khối lượng 2 kg chuyển động với vận tốc 3 m/s đến va chạm xiên, hoàn toàn đàn hồi với quả cầu 2 khối lượng 1 kg đang đứng yên. Bỏ qua ma sát. Tính động lượng và động năng của hệ sau va chạm.",
+    "collisions",
+    [
+        q("mode", 1, "1", "va chạm xiên"),
+        q("m1", 2, "kg", "khối lượng 2 kg"),
+        q("v1", 3, "m/s", "vận tốc 3 m/s"),
+        q("m2", 1, "kg", "khối lượng 1 kg"),
+        q("v2", 0, "m/s", "đang đứng yên"),
+        q("e", 1, "1", "hoàn toàn đàn hồi"),
+    ],
+    {"momentum": 2 * 3, "ke_before": 0.5 * 2 * 3**2, "ke_after": 0.5 * 2 * 3**2},
+)
+
 # --- Chuyển động tròn đều -----------------------------------------------------------
 # mode: 0 = biết v, 1 = biết ω, 2 = biết T, 3 = biết f. ω = v/r = 2π/T = 2πf, a_ht = ω²r, F_ht = m·a_ht.
 add(
