@@ -54,6 +54,18 @@ describe('linear engine', () => {
 });
 
 describe('linear scenes', () => {
+  it('the uniform-motion card describes constant velocity, not constant acceleration', () => {
+    const u = uniformMotion.scienceCard(uniformMotion.defaults);
+    expect(u.model.vi).toContain('vận tốc không đổi');
+    expect(u.model.vi).not.toContain('gia tốc không đổi');
+    expect(u.model.en).toContain('constant velocity');
+    expect(u.confidenceNote?.vi).not.toContain('gia tốc không đổi');
+    // Nothing stops in uniform motion: no "thời điểm dừng" in its method line.
+    expect(u.method?.vi).not.toContain('dừng');
+    const a = uniformAcceleration.scienceCard(uniformAcceleration.defaults);
+    expect(a.model.vi).toContain('gia tốc không đổi');
+  });
+
   it('uniform motion default reports the meeting time and position', () => {
     const sol = uniformMotion.solve(uniformMotion.defaults, 'vi');
     expect(sol.answers.find((a) => a.id === 'meet_time')!.value).toBeCloseTo(4, 10);

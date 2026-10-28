@@ -72,7 +72,12 @@ const body: BodyDef = {
       value: s[SP.ext] ?? 0,
       unit: 'cm',
     },
-    { label: L('Lực đàn hồi', 'Spring force'), symbol: 'F_{đh}', value: s[SP.F] ?? 0, unit: 'N' },
+    {
+      label: L('Lực đàn hồi', 'Spring force'),
+      symbol: 'F_{\\text{đh}}',
+      value: s[SP.F] ?? 0,
+      unit: 'N',
+    },
   ],
 };
 
@@ -150,7 +155,7 @@ function graphs(): GraphDef[] {
   return [
     {
       id: 'x',
-      title: L('Li độ – thời gian', 'Displacement – time'),
+      title: L('Li độ theo thời gian', 'Displacement vs time'),
       yLabel: L('x (m)', 'x (m)'),
       series: [{ id: 'x', label: L('x', 'x'), value: (s) => s[SP.x] ?? 0 }],
     },
@@ -393,7 +398,7 @@ function card(hooke: boolean) {
           : 'Ideal massless Hookean spring; no friction.',
       ),
       equations: [
-        { tex: 'F_{đh} = -k\\,\\Delta l' },
+        { tex: 'F_{\\text{đh}} = -k\\,\\Delta l' },
         {
           tex:
             q.b > 0

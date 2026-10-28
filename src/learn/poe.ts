@@ -41,8 +41,8 @@ export const POES: readonly Poe[] = [
     factor: 2,
     answer: 'meet_time',
     question: L(
-      'Nếu xe A chạy nhanh gấp đôi, hai xe gặp nhau sớm hơn, muộn hơn hay đúng lúc cũ?',
-      'If car A goes twice as fast, do the cars meet earlier, later or at the same time?',
+      'Nếu xe A chạy nhanh gấp đôi, thời điểm hai xe gặp nhau tăng, giảm hay không đổi?',
+      'If car A goes twice as fast, does the meeting time go up, go down or stay the same?',
     ),
     choices: DIRS,
   },
@@ -77,8 +77,8 @@ export const POES: readonly Poe[] = [
     factor: 2,
     answer: 'time_of_flight',
     question: L(
-      'Nếu ném ngang nhanh gấp đôi, vật bay trong không khí lâu hơn, ngắn hơn hay như cũ?',
-      'If thrown horizontally twice as fast, does it stay in the air longer, shorter or the same?',
+      'Nếu ném ngang nhanh gấp đôi, thời gian vật bay trong không khí thay đổi thế nào?',
+      'If thrown horizontally twice as fast, how does the time in the air change?',
     ),
     choices: ratios(0.5, 1, 2),
   },
@@ -185,8 +185,8 @@ export const POES: readonly Poe[] = [
     factor: 2,
     answer: 'v2x_after',
     question: L(
-      'Nếu vật 2 nặng gấp đôi, sau va chạm vật 2 chạy nhanh hơn, chậm hơn hay như cũ?',
-      'If ball 2 is twice as heavy, does it move faster, slower or the same after the collision?',
+      'Nếu vật 2 nặng gấp đôi, vận tốc của vật 2 sau va chạm tăng, giảm hay không đổi?',
+      'If ball 2 is twice as heavy, does its velocity after the collision go up, go down or stay the same?',
     ),
     choices: DIRS,
   },
@@ -225,8 +225,8 @@ export const POES: readonly Poe[] = [
     factor: 2,
     answer: 'E',
     question: L(
-      'Giữ nguyên hiệu điện thế U, nếu khoảng cách hai bản tụ gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
-      'Keeping the voltage U, if the plate separation doubles, how does the field between the plates change?',
+      'Tụ điện phẳng (SimLab chuyển sang khi bạn bấm “Chạy để kiểm tra”): giữ nguyên hiệu điện thế U, nếu khoảng cách hai bản tụ gấp đôi thì điện trường giữa hai bản thay đổi thế nào?',
+      'Parallel-plate capacitor (SimLab switches to it when you press “Run to check”): keeping the voltage U, if the plate separation doubles, how does the field between the plates change?',
     ),
     choices: ratios(0.5, 1, 2),
     // mode 1 = "Tụ điện phẳng": U stays fixed while d changes.
