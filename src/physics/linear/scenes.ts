@@ -132,11 +132,13 @@ function draw(accel: boolean) {
         name,
       );
       if (opts.vectors) {
+        // With two cars, "v_A" / "v_B" tell the arrows apart.
+        const of = ms.length > 1 ? `_${name}` : '';
         const kv = vectorScale(vmax, w, 0.15);
-        arrow(ctx, cam, x, y + 0.016 * w, v * kv, 0, c.velocity, 'v');
+        arrow(ctx, cam, x, y + 0.016 * w, v * kv, 0, c.velocity, `v${of}`);
         if (accel && acc !== 0) {
           const ka = vectorScale(Math.max(...ms.map((mm) => Math.abs(mm.a)), 0.1), w, 0.08);
-          arrow(ctx, cam, x, y - 0.016 * w, acc * ka, 0, c.acceleration, 'a');
+          arrow(ctx, cam, x, y - 0.016 * w, acc * ka, 0, c.acceleration, `a${of}`);
         }
       }
     });

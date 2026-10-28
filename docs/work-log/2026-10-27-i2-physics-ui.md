@@ -66,6 +66,13 @@
 - 🟡2: thử thách Điện trường "khi bạn bắt đầu thử thách". 🟡4: oracle lưới so khớp trọn token (`texTokens`). 🟡3 (data.test.ts add/add với #98) để lúc gộp.
 - Kiểm tra: typecheck, lint, format PASS; `npm test` 4432 PASS, 1 chập chờn (app.test Science Studio); E2E physics + ai-flow dưới khoá chung 38 passed.
 
+## Phần B — hình trên sân khấu (nhánh `fix/70-physics-stage`, PR riêng, phụ thuộc #97)
+
+- UI-03 (viền nền, chỉ số dưới, tên mũi tên sau đầu mũi tên, v_A/v_B, a cạnh v), UI-04, UI-05 (M sau mũi tên E), UI-15, UI-23 (`SeriesDef.dash`, Eₓ và y₂ nét đứt). Test `render/draw.test.ts` (8) và `GraphPanel.test.tsx`: hỏng trên mã cũ.
+- Kiểm tra: typecheck, lint, format PASS; `npm test` 4425 PASS, 1 hỏng chập chờn (app.test Science Studio, chạy riêng PASS); E2E physics + layout + ai-flow (khoá chung) 39 passed; xem tận mắt trong app (dev server, chế độ tối): Newton, Bảo toàn cơ năng, Điện trường.
+- Chưa làm: số trục bị đường sức cắt (lưới vẽ trong src/app), dời vị trí riêng từng bài (va chạm, con lắc đơn, Newton, mặt nghiêng), biểu đồ Hoá học của UI-23.
+- Duyệt #100 (2 🟡): viền chữ dùng màu sân khấu `--bg-stage` (`ThemeColors.stage`), dấu +/− của điện tích không có viền, y₂ trên đồ thị chấm [3, 4] như sân khấu. 3 test mới hỏng trên mã cũ.
+
 ## Vòng 4 — quyết định của điều phối sau duyệt vòng 3
 
 - Bộ đọc mới phía lời giải thích (`explanationTokens`, luật thập phân ≥ 4 chữ số) làm bộ lọc lỏng hơn main ("$t = 1{.}75$", "1,0000.10^3 m"…): đã bỏ hẳn, `explain.ts` về đúng vòng 2 (07eea77). Bỏ test "dán nguyên TeX mọi bước".

@@ -377,7 +377,11 @@ describe('standing wave scene: card, picture', () => {
             ? () => lineTo++
             : k === 'fillText'
               ? (s: string) => texts.push(s)
-              : () => undefined,
+              : k === 'font'
+                ? '12px sans-serif'
+                : k === 'measureText'
+                  ? (s: string) => ({ width: 7 * s.length })
+                  : () => undefined,
         set: () => true,
       },
     ) as CanvasRenderingContext2D;

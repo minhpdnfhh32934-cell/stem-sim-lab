@@ -151,6 +151,7 @@ function Chart({ graph }: { graph: GraphDef }) {
             label: L(s.label),
             stroke: css(SERIES_VARS[i % SERIES_VARS.length] ?? '--chart-1'),
             width: 2,
+            ...(s.dash ? { dash: s.dash } : {}),
             points: { show: false },
             value: (_u: uPlotType, v: number | null) => (v === null ? '—' : nf.format(v)),
           })),

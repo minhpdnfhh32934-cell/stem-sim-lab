@@ -130,15 +130,18 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   // Energy level line: the highest point reachable (v = 0).
   const Eh = y0 + (v0 * v0) / (2 * g);
   line(ctx, cam, tr.xMin, Eh, tr.xMax, Eh, c.faint, 1, [6, 5]);
+  // Ends left of the energy bars (drawn below in the right part of the stage), never under them.
+  const vis = cam.visible();
+  const baseX = vis.xMax - 0.16 * (vis.xMax - vis.xMin);
   text(
     ctx,
     cam,
-    tr.xMax,
+    Math.min(tr.xMax, baseX),
     Eh,
     opts.locale === 'vi' ? 'mức cơ năng' : 'energy level',
     c.muted,
     'right',
-    { x: -4, y: -4 },
+    { x: -8, y: -4 },
   );
   const x = state[TS.x] ?? 0;
   const y = state[TS.y] ?? 0;
@@ -171,15 +174,13 @@ function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const E = m * g * Eh;
   const K = 0.5 * m * (state[TS.v] ?? 0) ** 2;
   const U = m * g * y;
-  const vis = cam.visible();
   const barW = 0.03 * (vis.xMax - vis.xMin);
-  // Top-right corner, below the HUD, away from the floating tool bar.
-  const baseX = vis.xMax - 0.16 * (vis.xMax - vis.xMin);
+  // Top-right corner (baseX), below the HUD, away from the floating tool bar.
   const baseY = vis.yMax - 0.5 * (vis.yMax - vis.yMin);
   const H = 0.3 * (vis.yMax - vis.yMin);
   const bars: [string, number, string][] = [
-    [opts.locale === 'vi' ? 'Wđ' : 'K', K, c.velocity],
-    [opts.locale === 'vi' ? 'Wt' : 'U', U, c.acceleration],
+    [opts.locale === 'vi' ? 'W_đ' : 'K', K, c.velocity],
+    [opts.locale === 'vi' ? 'W_t' : 'U', U, c.acceleration],
     [opts.locale === 'vi' ? 'W' : 'E', K + U, c.force],
   ];
   bars.forEach(([name, val, col], i) => {

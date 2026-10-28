@@ -116,7 +116,7 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
     const r = radii[i] ?? 0;
     circle(ctx, cam, c.x, c.y, r, color, col.text, 9);
     const sign = c.q > 0 ? '+' : c.q < 0 ? '−' : '0';
-    text(ctx, cam, c.x, c.y, sign, col.panel, 'center', { x: 0, y: 7 });
+    text(ctx, cam, c.x, c.y, sign, col.panel, 'center', { x: 0, y: 7 }, false);
     const off = Math.max(9, r * cam.scale) + 3;
     text(ctx, cam, c.x, c.y, `q${SUB[i] ?? ''}`, col.text, 'left', { x: off, y: -off });
   });
@@ -127,13 +127,14 @@ function drawCharges({ ctx, cam, state, p, opts }: DrawContext, s: FieldSetup): 
   }
   const { x, y } = s.probe;
   circle(ctx, cam, x, y, 0, opts.selected === 'probe' ? col.accent : col.text, undefined, 4);
-  text(ctx, cam, x, y, 'M', col.text, 'left', { x: 6, y: 14 });
   const e = state[FE.e] ?? 0;
   if (opts.vectors && e > 0) {
     const v = fieldView(p);
     const k = vectorScale(e, v.yMax - v.yMin, 0.25);
     arrow(ctx, cam, x, y, (state[FE.ex] ?? 0) * k, (state[FE.ey] ?? 0) * k, col.force, 'E');
   }
+  // After the arrow, so its head never covers the name.
+  text(ctx, cam, x, y, 'M', col.text, 'left', { x: 6, y: 14 });
   const v = fieldView(p);
   text(ctx, cam, v.xMin, v.yMax, `E(M) = ${fmtQty(opts.locale, e, 'V/m')}`, col.muted, 'left', {
     x: 60,
