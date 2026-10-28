@@ -69,8 +69,12 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
     if (!ctx) return;
     const cam = camRef.current;
     let dpr = Math.min(window.devicePixelRatio || 1, tier.pixelRatioCap);
+    // The y numbers start right of the tool palette (UI-02), measured, so a larger font follows.
+    const tools = canvas.closest('.stage')?.querySelector('.stage__toolbar');
+    let labelLeft = 4;
     const resize = () => {
       const r = canvas.getBoundingClientRect();
+      labelLeft = tools ? tools.getBoundingClientRect().right - r.left + 4 : 4;
       dpr = Math.min(window.devicePixelRatio || 1, tier.pixelRatioCap);
       canvas.width = Math.max(1, Math.round(r.width * dpr));
       canvas.height = Math.max(1, Math.round(r.height * dpr));
@@ -81,6 +85,7 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
+    if (tools) ro.observe(tools);
 
     const monitor = new FrameMonitor(1 / 60);
     let last = performance.now();
@@ -115,7 +120,7 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       c.setTransform(ratio, 0, 0, ratio, 0, 0);
       c.clearRect(0, 0, cam.width, cam.height);
       c.imageSmoothingEnabled = tier.antialias;
-      drawGrid(c, cam, colors, locale, scene.yStretch?.(useSimStore.getState().params));
+      drawGrid(c, cam, colors, locale, scene.yStretch?.(useSimStore.getState().params), labelLeft);
       if (!state || sstate.validation.length > 0) return;
       const p = sstate.params;
       // Pinned run (before / after): a copy of its recorded trail, dashed and muted.

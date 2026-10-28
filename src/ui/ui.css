@@ -1188,3 +1188,21 @@ kbd {
   font-size: var(--text-xs);
   white-space: nowrap;
 }
+
+/* A label that wraps a checkbox is one control: box and text together, the whole row a target
+   (the forms' "label { justify-content: space-between }" for sliders split them, UI-43). Only
+   these forms: elsewhere a checkbox may be a hidden switch input (.chat-toggle). */
+.chem-form label:has(> input[type='checkbox']),
+.param__toggle {
+  justify-content: flex-start;
+  min-height: var(--target);
+  cursor: pointer;
+}
+.chem-form label:has(> input[type='checkbox']) > input[type='checkbox'],
+.param__toggle > input[type='checkbox'] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
