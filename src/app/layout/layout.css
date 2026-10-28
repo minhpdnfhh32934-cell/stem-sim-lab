@@ -795,6 +795,19 @@ body[data-resizing] .splitter {
   /* --text-muted: >= 4.5:1 also on the current row's --accent-soft background. */
   color: var(--text-muted);
 }
+/* Every topic keeps a slot for its mark (✓, "1/3 ✓", award): the mark never takes the title's
+   room, so a title keeps its lines when its topic is opened (UI-42; wider fonts made it wrap). */
+.tree__topic--button {
+  position: relative;
+  padding-right: calc(var(--space-2) + 2.8rem);
+}
+.tree__topic--button .tree__mark {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  margin-left: 0;
+  transform: translateY(-50%);
+}
 .tree__mark[data-state='complete'] {
   color: var(--conf-exact);
 }

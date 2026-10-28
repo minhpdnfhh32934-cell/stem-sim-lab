@@ -280,6 +280,34 @@ test('library: a selected title keeps its line; a checkbox sits by its label (UI
   expect((await box(label)).height).toBeGreaterThanOrEqual(40);
 });
 
+for (const fontScale of [1.25, 1.4])
+  test(`library at ${fontScale}× font: a title keeps its line when it gets its mark (UI-42)`, async ({
+    page,
+  }) => {
+    // Wider text (a larger font, or Linux fonts on CI) must not make the mark push a title down.
+    await page.addInitScript((scale) => {
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { fontScale: scale }, version: 2 }),
+      );
+    }, fontScale);
+    await openLab(page);
+    await page.getByRole('radio', { name: 'Hóa học' }).click();
+    for (const name of ['Thư viện phản ứng đã kiểm chứng', 'Cân bằng hóa học & Le Chatelier']) {
+      const item = page.getByRole('button', { name, exact: true });
+      const title = item.locator('.tree__topic-title');
+      const before = await box(item);
+      const titleBefore = await box(title);
+      await item.click();
+      await expect(item).toHaveAttribute('aria-current', 'true', { timeout: 20_000 });
+      await expect(item.locator('.tree__mark')).toBeVisible();
+      // The title keeps the same width (whatever the font, the mark never takes its room) …
+      expect((await box(title)).width, name).toBeGreaterThanOrEqual(titleBefore.width - 0.5);
+      // … so it keeps its lines.
+      expect((await box(item)).height, name).toBeLessThanOrEqual(before.height + 1);
+    }
+  });
+
 test('a short window with a large font keeps the stage at its minimum (UI-24)', async ({
   page,
 }) => {
