@@ -34,8 +34,8 @@ export const CHALLENGES: readonly Challenge[] = [
     topic: 'uniformMotion',
     title: L('Hẹn gặp lúc 5 giây', 'Meet at 5 seconds'),
     task: L(
-      'Chỉnh vận tốc của xe B để hai xe gặp nhau đúng lúc t = 5 s.',
-      'Set car B’s velocity so that the two cars meet at exactly t = 5 s.',
+      'Chỉnh vận tốc của xe B để hai xe gặp nhau đúng lúc t\u00a0=\u00a05\u00a0s.',
+      'Set car B’s velocity so that the two cars meet at exactly t\u00a0=\u00a05\u00a0s.',
     ),
     controls: ['vB'],
     goal: { answer: 'meet_time', kind: 'target', value: 5, tol: 0.1 },
@@ -255,17 +255,17 @@ export const CHALLENGES: readonly Challenge[] = [
     start: { mode: 0, vFrom: 1 },
     goal: { answer: 'frequency', kind: 'target', value: 50, tol: 0.5 },
     hint: L(
-      'Tần số tỉ lệ với tốc độ truyền sóng v = √(F/μ). Muốn v gấp đôi thì lực căng F phải gấp mấy lần?',
-      'The frequency is proportional to the wave speed v = √(F/μ). To double v, how many times larger must the tension F be?',
+      'Tần số tỉ lệ với tốc độ truyền sóng v\u00a0=\u00a0√(F/μ). Muốn v gấp đôi thì lực căng F phải gấp mấy lần?',
+      'The frequency is proportional to the wave speed v\u00a0=\u00a0√(F/μ). To double v, how many times larger must the tension F be?',
     ),
   },
   {
     id: 'electricField.plates8000',
     topic: 'electricField',
-    title: L('Điện trường đều 8000 V/m', 'A uniform field of 8000 V/m'),
+    title: L('Điện trường đều 8.000 V/m', 'A uniform field of 8,000 V/m'),
     task: L(
-      'Giữ khoảng cách hai bản 2 cm, chỉnh hiệu điện thế U để điện trường giữa hai bản đúng 8000 V/m.',
-      'Keeping the plates 2 cm apart, set the voltage U so that the field between them is exactly 8000 V/m.',
+      'Tụ điện phẳng (SimLab chuyển sang khi bạn bắt đầu thử thách): giữ khoảng cách hai bản 2\u00a0cm, chỉnh hiệu điện thế U để điện trường giữa hai bản đúng 8.000\u00a0V/m.',
+      'Parallel-plate capacitor (SimLab switches to it when you start the challenge): keeping the plates 2\u00a0cm apart, set the voltage U so that the field between them is exactly 8,000\u00a0V/m.',
     ),
     controls: ['U'],
     // mode 1 = "Tụ điện phẳng".

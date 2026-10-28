@@ -96,7 +96,7 @@ const ball = (k: 0 | 1): BodyDef => ({
       },
       {
         label: L('Động năng', 'Kinetic energy'),
-        symbol: 'W_đ',
+        symbol: 'W_{\\text{đ}}',
         value: 0.5 * m * (vx * vx + vy * vy),
         unit: 'J',
       },
@@ -255,7 +255,7 @@ function solve(p: Params, locale: Locale): Solution {
   }
   steps.push({
     text: L('Động năng trước và sau va chạm:', 'Kinetic energy before and after:'),
-    tex: `W_đ = ${Q(K0, 'J')} \\;\\to\\; W_đ' = ${Q(K1, 'J')}\\quad (\\Delta W_đ = ${Q(K1 - K0, 'J')})`,
+    tex: `W_{\\text{đ}} = ${Q(K0, 'J')} \\;\\to\\; W_{\\text{đ}}' = ${Q(K1, 'J')}\\quad (\\Delta W_{\\text{đ}} = ${Q(K1 - K0, 'J')})`,
   });
   if (q.e < 1 && q.e > 0)
     notes.push(

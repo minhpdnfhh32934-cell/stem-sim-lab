@@ -145,7 +145,7 @@ const graphs: GraphDef[] = [
   },
   {
     id: 'velocity',
-    title: L('Vận tốc – thời gian', 'Velocity – time'),
+    title: L('Vận tốc theo thời gian', 'Velocity vs time'),
     yLabel: L('v (m/s)', 'v (m/s)'),
     series: [{ id: 'v', label: L('v', 'v'), value: (st) => st[IS.v] ?? 0 }],
   },

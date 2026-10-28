@@ -11,9 +11,10 @@ import { EmptyState } from '@/ui/EmptyState';
 import { ChartSpline } from 'lucide-react';
 import { X_AXIS_SIZE, yTickSpace } from '@/ui/charts/axes';
 import { SERIES_VARS, loadUPlot } from '@/ui/charts/uplot';
-import { graphData } from './data';
+import { graphData, visibleSeries } from './data';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
+import { subscriptElement } from '@/ui/subscripts';
 
 /** Time-series graphs of the running simulation (uPlot, crosshair + live legend). */
 export function GraphPanel() {
@@ -21,9 +22,21 @@ export function GraphPanel() {
   const L = useLocalized();
   const scene = useSimStore((s) => s.scene);
   const [graphId, setGraphId] = useState<string | null>(null);
+  const params = useSimStore((s) => s.params);
+  const picked = scene?.graphs.find((g) => g.id === graphId) ?? scene?.graphs[0] ?? null;
+  // A new chart only when the shown series change (uPlot's series are fixed at creation).
+  const shownKey = picked
+    ? visibleSeries(picked, params)
+        .map((s) => s.id)
+        .join(' ')
+    : '';
   const graph = useMemo(
-    () => scene?.graphs.find((g) => g.id === graphId) ?? scene?.graphs[0] ?? null,
-    [scene, graphId],
+    () =>
+      picked && {
+        ...picked,
+        series: picked.series.filter((s) => shownKey.split(' ').includes(s.id)),
+      },
+    [picked, shownKey],
   );
   if (!scene || !graph) {
     return (
@@ -54,7 +67,7 @@ export function GraphPanel() {
           </button>
         ))}
       </div>
-      <Chart key={`${scene.id}-${graph.id}`} graph={graph} />
+      <Chart key={`${scene.id}-${graph.id}-${shownKey}`} graph={graph} />
     </div>
   );
 }
@@ -164,6 +177,7 @@ function Chart({ graph }: { graph: GraphDef }) {
       const data = graphData(graph, useSimStore.getState().params) as uPlotType.AlignedData;
       const plot = new UPlot(opts, data, host);
       plotRef.current = plot;
+      plot.root.querySelectorAll('.u-legend .u-label').forEach(subscriptElement);
       setPlotArea(plot.over);
       ro = new ResizeObserver(() => {
         plot.setSize({ width: host.clientWidth, height: Math.max(120, host.clientHeight) });

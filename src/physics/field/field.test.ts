@@ -289,9 +289,9 @@ describe('electricField scene', () => {
       expect(a, id).toBeDefined();
       if (!a) continue;
       const shown = fmtQty('vi', a.value, a.unit);
-      const label = shown.split(' ').at(-1)!;
+      // A step writes this value in this unit ("719\,\mathrm{\mu}\text{N}").
       expect(
-        sol.steps.some((s) => s.tex?.includes(`\\text{${label}}`)),
+        sol.steps.some((s) => s.tex?.includes(texQty('vi', a.value, a.unit))),
         shown,
       ).toBe(true);
       expect(unknownNumbers(`Lực bằng ${shown}.`, allowed), shown).toEqual([]);

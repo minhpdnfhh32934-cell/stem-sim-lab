@@ -1,12 +1,14 @@
 import { Download, Table2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { formatNumber, useT } from '@/app/i18n';
+import { useT } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { EmptyState } from '@/ui/EmptyState';
+import { Subscripted } from '@/ui/Subscripted';
 import { exportCsv } from '@/app/project/actions';
 import { columnsFor, toCsv } from './data';
+import { columnFormat } from './numbers';
 import { sim } from './runtime';
 import { useSimStore } from './simStore';
 
@@ -19,7 +21,7 @@ export function DataPanel() {
   );
   const table = useMemo(() => {
     if (!scene) return null;
-    const cols = columnsFor(scene, L);
+    const cols = columnsFor(scene, L, params);
     const h = sim.history;
     const total = h.length;
     const stride = Math.max(1, Math.ceil(total / 200));
@@ -44,14 +46,20 @@ export function DataPanel() {
   }
 
   const onExport = () => {
-    const cols = columnsFor(scene, L);
+    const cols = columnsFor(scene, L, params);
     const h = sim.history;
     const rows = h.states.map((s, i) => [h.times[i] ?? 0, ...cols.map((c) => c.value(s, params))]);
     const csv = toCsv(['t (s)', ...cols.map((c) => c.header)], rows);
     void exportCsv(scene.id, csv);
   };
 
-  const nf = (v: number) => formatNumber(locale, v, { maximumSignificantDigits: 5 });
+  // One formatter per column (t first): same decimals down a column, round-off noise as 0.
+  const fmt = (table.rows[0] ?? []).map((_, i) =>
+    columnFormat(
+      locale,
+      table.rows.map((r) => r[i] ?? Number.NaN),
+    ),
+  );
   return (
     <div className="data-panel">
       <div className="data-panel__bar">
@@ -70,7 +78,7 @@ export function DataPanel() {
               <th scope="col">t (s)</th>
               {table.cols.map((c) => (
                 <th key={c.id} scope="col">
-                  {c.header}
+                  <Subscripted text={c.header} />
                 </th>
               ))}
             </tr>
@@ -79,7 +87,7 @@ export function DataPanel() {
             {table.rows.map((r) => (
               <tr key={r[0]}>
                 {r.map((v, i) => (
-                  <td key={i}>{nf(v)}</td>
+                  <td key={i}>{fmt[i]?.(v)}</td>
                 ))}
               </tr>
             ))}

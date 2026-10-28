@@ -343,7 +343,7 @@ function solve(p: Params, locale: Locale): Solution {
               'Mức cơ năng không cao hơn đỉnh cao nhất phía trước (đỉnh đồi thứ hai) nên vật không vượt qua, sẽ trượt ngược lại.',
               'The energy level is not above the highest point ahead (the top of the second hill), so the bead rolls back.',
             ),
-        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_{đỉnh 2} \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
+        tex: `h_{max} = ${Q(hMax, 'm')}\\; ${passes ? '>' : '\\le'} \\; h_2 \\approx ${Q(peak.y, 'm')}\\quad (x \\approx ${Q(peak.x, 'm')})`,
       });
       const vTop = speedAt(g, y0, v0, peak.y);
       if (passes && vTop !== null) {
@@ -367,7 +367,7 @@ function card(): ScienceCardData {
       'Small bead sliding without friction along a fixed rail (never leaves it); only gravity does work.',
     ),
     equations: [
-      { tex: 'W = W_đ + W_t = \\tfrac{1}{2}mv^2 + mgh = \\text{const}' },
+      { tex: 'W = W_{\\text{đ}} + W_t = \\tfrac{1}{2}mv^2 + mgh = \\text{const}' },
       {
         tex: "\\ddot{x} = -\\frac{f'(x)\\,(g + f''(x)\\,\\dot{x}^2)}{1 + f'(x)^2}",
         label: L('Phương trình chuyển động trên ray y = f(x)', 'Equation of motion on y = f(x)'),
@@ -500,7 +500,7 @@ export const energyConservation: PhysicsScene = {
         { label: L('Tốc độ', 'Speed'), symbol: 'v', value: Math.abs(s[TS.v] ?? 0), unit: 'm/s' },
         {
           label: L('Động năng', 'Kinetic energy'),
-          symbol: 'W_đ',
+          symbol: 'W_{\\text{đ}}',
           value: 0.5 * (p.m ?? 1) * (s[TS.v] ?? 0) ** 2,
           unit: 'J',
         },
