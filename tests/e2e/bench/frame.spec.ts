@@ -155,10 +155,21 @@ test('the stage speaks only when its state changes; the time is the scrubber val
   await expect(live).toHaveText('Ném xiên: đang chạy.');
   await page.waitForTimeout(400);
   await expect(live).toHaveText('Ném xiên: đang chạy.');
-  await expect(page.getByRole('slider', { name: 'Tua mô phỏng' })).toHaveAttribute(
-    'aria-valuetext',
-    /^\d+,\d{3} s$/,
-  );
+  const scrubber = page.getByRole('slider', { name: 'Tua mô phỏng' });
+  await expect(scrubber).toHaveAttribute('aria-valuetext', /^\d+,\d{3} s$/);
+
+  // A pause (the worker may still send a frame) is one line, with the time the scrubber shows.
+  await live.evaluate((el) => {
+    new MutationObserver(() => {
+      el.dataset.heard = String(Number(el.dataset.heard ?? 0) + 1);
+    }).observe(el, { childList: true, characterData: true, subtree: true });
+  });
+  await page.getByRole('button', { name: 'Tạm dừng (Space)' }).click();
+  await expect(live).toHaveText(/^Ném xiên: tạm dừng ở t = \d+,\d{3} s\.$/);
+  await page.waitForTimeout(400);
+  await expect(live).toHaveAttribute('data-heard', '1');
+  const time = await scrubber.getAttribute('aria-valuetext');
+  await expect(live).toHaveText(`Ném xiên: tạm dừng ở t = ${time ?? ''}.`);
 });
 
 test('every control on the frame is at least 40 px; "Đề bài" opens the problem box', async ({
