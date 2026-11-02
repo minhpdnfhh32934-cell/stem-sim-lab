@@ -22,6 +22,8 @@ import type { ScienceCardData } from '@/science-card/types';
 import { XYChart } from '@/ui/charts/XYChart';
 import { IconButton } from '@/ui/IconButton';
 import { CSRC, L, usePublishCard } from '../common';
+import { EnergyDiagram } from './EnergyDiagram';
+import { energyLevels } from './energyLevels';
 import { SYSTEMS, equationOf, shiftDirection, speciesOf } from './equilibrium';
 import {
   EA_MAX_KJ,
@@ -63,6 +65,10 @@ const CARD: ScienceCardData = {
     L(
       'Nhiệt độ thay đổi tức thời; bỏ qua nhiệt của phản ứng làm đổi T.',
       'Temperature changes instantly; reaction heat does not change T.',
+    ),
+    L(
+      'Giản đồ năng lượng: ba mức chất đầu (0), trạng thái chuyển tiếp (Eₐ thuận) và sản phẩm (ΔH) tính từ Eₐ người học nhập và vẽ đúng tỉ lệ với nhau; hình dạng đường cong giữa chúng là minh họa định tính, không phải tọa độ phản ứng thật.',
+      'Energy diagram: the three levels reactants (0), transition state (forward Eₐ) and products (ΔH) are computed from the Eₐ the learner typed and drawn to scale with each other; the curve shape between them is a qualitative illustration, not a real reaction coordinate.',
     ),
   ],
   confidence: 'exact',
@@ -134,6 +140,7 @@ export function EquilibriumStage() {
     Number.isFinite(v) ? formatNumber(locale, v, { maximumSignificantDigits: d }) : '∞';
   const maxC = Math.max(1, ...species.map((sp) => st.c[sp] ?? 0));
   const DirIcon = dir === 'forward' ? ArrowRight : dir === 'backward' ? ArrowLeft : Equal;
+  const heat = energyLevels(st.kinetics.eaf, st.kinetics.ear);
 
   return (
     <div className="chem-view">
@@ -262,11 +269,12 @@ export function EquilibriumStage() {
           <Maximize2 size={14} aria-hidden="true" /> {Lz(L('Giãn (P÷2)', 'Expand (P÷2)'))}
         </button>
       </div>
+      <EnergyDiagram eaf={st.kinetics.eaf} ear={st.kinetics.ear} />
       <p className="small muted">
         {Lz(
           L(
-            `ΔH = Eₐ(thuận) − Eₐ(nghịch) = ${minus(f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3))} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'phản ứng thuận tỏa nhiệt → tăng nhiệt độ làm K giảm' : st.kinetics.eaf > st.kinetics.ear ? 'phản ứng thuận thu nhiệt → tăng nhiệt độ làm K tăng' : 'ΔH = 0 → K không đổi theo nhiệt độ'}.`,
-            `ΔH = Eₐ(forward) − Eₐ(reverse) = ${minus(f((st.kinetics.eaf - st.kinetics.ear) / 1000, 3))} kJ/mol: ${st.kinetics.eaf < st.kinetics.ear ? 'exothermic forward → heating lowers K' : st.kinetics.eaf > st.kinetics.ear ? 'endothermic forward → heating raises K' : 'ΔH = 0 → K does not depend on T'}.`,
+            `ΔH = Eₐ(thuận) − Eₐ(nghịch) = ${minus(f(heat.dH / 1000, 3))} kJ/mol: ${heat.kind === 'exothermic' ? 'phản ứng thuận tỏa nhiệt → tăng nhiệt độ làm K giảm' : heat.kind === 'endothermic' ? 'phản ứng thuận thu nhiệt → tăng nhiệt độ làm K tăng' : 'ΔH = 0 → K không đổi theo nhiệt độ'}.`,
+            `ΔH = Eₐ(forward) − Eₐ(reverse) = ${minus(f(heat.dH / 1000, 3))} kJ/mol: ${heat.kind === 'exothermic' ? 'exothermic forward → heating lowers K' : heat.kind === 'endothermic' ? 'endothermic forward → heating raises K' : 'ΔH = 0 → K does not depend on T'}.`,
           ),
         )}
       </p>

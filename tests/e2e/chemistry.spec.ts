@@ -91,3 +91,23 @@ test('unknown SMILES: RDKit checks it and shows 2D only, with a warning', async 
   });
   await expect(page.getByText(/C₅H₁₀O₂/)).toBeVisible();
 });
+
+test('equilibrium: the energy diagram follows Eₐ and is labelled qualitative, fits 1366×768', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await openChemistry(page);
+  await page.getByRole('button', { name: 'Cân bằng hóa học & Le Chatelier', exact: true }).click();
+  const diagram = page.getByRole('img', { name: /Giản đồ năng lượng/ });
+  await expect(diagram).toHaveAttribute('aria-label', /ΔH = −20 kJ\/mol \(tỏa nhiệt\)/, {
+    timeout: 20_000,
+  });
+  await expect(page.getByText('Hình dạng đường cong: minh họa định tính')).toBeVisible();
+  await page.getByLabel('Eₐ thuận (kJ/mol)').fill('80');
+  await expect(diagram).toHaveAttribute('aria-label', /ΔH = 10 kJ\/mol \(thu nhiệt\)/);
+  await expect(page.getByText(/ΔH = Eₐ\(thuận\) − Eₐ\(nghịch\) = 10 kJ\/mol/)).toBeVisible();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+});
