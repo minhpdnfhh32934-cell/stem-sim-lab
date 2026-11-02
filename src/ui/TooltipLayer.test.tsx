@@ -167,4 +167,39 @@ describe('TooltipLayer', () => {
     expect(dialogEsc).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole('tooltip', { hidden: true })).toBeNull();
   });
+
+  it('a control the old bubble covered gets its own tip once the pointer leaves the bubble', () => {
+    vi.useFakeTimers();
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return this.getAttribute('role') === 'tooltip'
+        ? DOMRect.fromRect({ x: 100, y: 50, width: 100, height: 20 })
+        : DOMRect.fromRect();
+    });
+    render(
+      <>
+        <TooltipLayer />
+        <button type="button" data-tip="Cài đặt" aria-label="Cài đặt" />
+        <button type="button" data-tip="Chọn" aria-label="Chọn" />
+      </>,
+    );
+    const wait = (ms: number) => {
+      act(() => {
+        vi.advanceTimersByTime(ms);
+      });
+    };
+    fireEvent.pointerOver(screen.getByRole('button', { name: 'Cài đặt' }));
+    wait(400);
+    // "Chọn" lies under the bubble: entering it there keeps the old bubble.
+    const pick = screen.getByRole('button', { name: 'Chọn' });
+    fireEvent.pointerOver(pick, { clientX: 150, clientY: 60 });
+    wait(400);
+    expect(screen.getByRole('tooltip', { hidden: true })).toHaveTextContent('Cài đặt');
+    // Still on "Chọn", the pointer moves out of the bubble: the old one goes, "Chọn" gets its own.
+    fireEvent.pointerMove(pick, { clientX: 150, clientY: 120 });
+    expect(screen.queryByRole('tooltip', { hidden: true })).toBeNull();
+    wait(400);
+    expect(screen.getByRole('tooltip', { hidden: true })).toHaveTextContent('Chọn');
+  });
 });

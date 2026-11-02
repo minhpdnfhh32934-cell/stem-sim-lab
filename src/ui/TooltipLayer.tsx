@@ -119,7 +119,12 @@ export function TooltipLayer() {
     const onMove = (e: PointerEvent) => {
       const s = shown.current;
       const onAnchor = e.target instanceof Node && s?.anchor.contains(e.target);
-      if (s?.hover && !onAnchor && !near(e)) hideBubble();
+      if (!s?.hover || onAnchor || near(e)) return;
+      hideBubble();
+      // The pointer left the bubble over another control (one the bubble covered, so it got no
+      // pointerover of its own): its tooltip opens as if just entered.
+      const el = findTarget(e.target);
+      if (el) show(el, false);
     };
     // A hover bubble takes the first Esc for itself (the drawer or dialog closes on the next one).
     // A focus bubble only goes: the Esc still closes the dialog whose first control has a tip.
