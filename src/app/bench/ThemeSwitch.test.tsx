@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { runInThisContext } from 'node:vm';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useSettingsStore } from '@/app/settings/settingsStore';
@@ -10,7 +11,7 @@ const BOOT = readFileSync(resolve(__dirname, '../../../public/theme-boot.js'), '
 /** The theme `theme-boot.js` would apply on the next start, from what the switch saved. */
 function bootTheme(): string | undefined {
   delete document.documentElement.dataset.theme;
-  new Function(BOOT)();
+  runInThisContext(BOOT);
   return document.documentElement.dataset.theme;
 }
 
