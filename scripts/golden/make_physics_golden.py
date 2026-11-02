@@ -515,6 +515,94 @@ add(
     unsupported=True,
 )
 
+# --- Giao thoa sóng hai nguồn (VL11 Bài 12) ------------------------------------------------------
+# Hai nguồn cùng pha: cực đại khi d2 − d1 = kλ, cực tiểu khi d2 − d1 = (k + ½)λ; trên đoạn AB không kể
+# A, B: −AB < d2 − d1 < AB. Đếm bằng phân số đúng (Fraction), không dùng số thực. Phách: f_b = |f1 − f2|.
+# mode: 0 = cùng tần số, 1 = khác tần số (phách); waveFrom 1 = đề cho bước sóng λ.
+from fractions import Fraction as Fr
+
+
+def maxima_between(d, lam):
+    r = Fr(d) / Fr(lam)
+    return sum(1 for k in range(-int(r) - 1, int(r) + 2) if abs(Fr(k)) < r)
+
+
+def minima_between(d, lam):
+    r = Fr(d) / Fr(lam)
+    return sum(1 for k in range(-int(r) - 2, int(r) + 2) if abs(Fr(k) + Fr(1, 2)) < r)
+
+
+add(
+    "int-01",
+    "Trên mặt nước có hai nguồn kết hợp A, B cách nhau 10 cm, dao động cùng pha với tần số 20 Hz. Tốc độ truyền sóng trên mặt nước là 30 cm/s. Tính bước sóng, số điểm dao động với biên độ cực đại và số điểm đứng yên trên đoạn AB (không kể A, B).",
+    "interference",
+    [
+        q("d", 10, "cm", "cách nhau 10 cm"),
+        q("f", 20, "Hz", "tần số 20 Hz"),
+        q("v", 30, "cm/s", "30 cm/s"),
+    ],
+    {
+        "wavelength": 0.30 / 20,
+        "maxima": maxima_between("10", Fr(30, 20)),
+        "minima": minima_between("10", Fr(30, 20)),
+    },
+)
+add(
+    "int-02",
+    "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂.",
+    "interference",
+    [
+        q("d", 12, "cm", "cách nhau 12 cm"),
+        q("lambda", 1.6, "cm", "bước sóng 1,6 cm"),
+    ],
+    {
+        "maxima": maxima_between("12", "1.6"),
+        "minima": minima_between("12", "1.6"),
+        "fringe_spacing": 0.016 / 2,
+    },
+    missing=["f"],
+)
+add(
+    "int-03",
+    "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 10 cm dao động cùng pha với tần số 10 Hz và cùng biên độ 2 mm. Tốc độ truyền sóng là 30 cm/s. Điểm M ở mặt nước cách A 9 cm và cách B 12 cm. Tính biên độ dao động của phần tử nước tại M.",
+    "interference",
+    [
+        q("d", 10, "cm", "cách nhau 10 cm"),
+        q("f", 10, "Hz", "tần số 10 Hz"),
+        q("a", 2, "mm", "biên độ 2 mm"),
+        q("v", 30, "cm/s", "30 cm/s"),
+        q("d1", 9, "cm", "cách A 9 cm"),
+        q("d2", 12, "cm", "cách B 12 cm"),
+    ],
+    # λ = 3 cm, d2 − d1 = 3 cm = λ: M trên vân cực đại bậc 1, A_M = 2a.
+    {"path_difference": 0.03, "order": 1, "amplitude_M": 2 * 0.002 * abs(math.cos(math.pi * 3 / 3))},
+)
+add(
+    "int-04",
+    "Hai nguồn sóng trên mặt nước dao động cùng biên độ với tần số 20 Hz và 22 Hz. Tốc độ truyền sóng là 40 cm/s. Tính tần số phách và chu kì phách của dao động tổng hợp tại một điểm trên mặt nước.",
+    "interference",
+    [
+        q("f", 20, "Hz", "tần số 20 Hz"),
+        q("f2", 22, "Hz", "22 Hz"),
+        q("v", 40, "cm/s", "40 cm/s"),
+    ],
+    {"beat_frequency": abs(20 - 22), "beat_period": 1 / abs(20 - 22)},
+    missing=["d"],
+)
+
+# Hai nguồn ngược pha: ngoài phạm vi của cảnh (chỉ hai nguồn cùng pha) → unsupported_parts.
+add(
+    "int-05",
+    "Hai nguồn kết hợp A, B cách nhau 8 cm trên mặt nước dao động ngược pha với tần số 25 Hz. Tốc độ truyền sóng là 50 cm/s. Tính số điểm dao động với biên độ cực đại trên đoạn AB.",
+    "interference",
+    [
+        q("d", 8, "cm", "cách nhau 8 cm"),
+        q("f", 25, "Hz", "tần số 25 Hz"),
+        q("v", 50, "cm/s", "50 cm/s"),
+    ],
+    unsupported=True,
+)
+
 # --- Điện trường của điện tích điểm --------------------------------------------------
 # q1 ở gốc O, q2 trên trục Ox, M = (xP, yP) với yP = 0 mặc định. k mặc định = 1/(4πε₀) (SciPy);
 # "lấy k = 9.10⁹" thì dùng số của đề. E = k|q|/r², F = |q0|·E, F12 = k|q1·q2|/r², tụ phẳng E = U/d.

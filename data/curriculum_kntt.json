@@ -2372,6 +2372,18 @@
    "review_status": "pending"
   },
   {
+   "topic": "interference",
+   "subject": "physics",
+   "grade": 11,
+   "book": "VL11",
+   "chapter": "Chương II. Sóng",
+   "lessons": [
+    12
+   ],
+   "reason": "Tên Bài 12: giao thoa sóng (cảnh có hai nguồn cùng pha trên mặt nước; phần phách là mở rộng).",
+   "review_status": "pending"
+  },
+  {
    "topic": "standingWave",
    "subject": "physics",
    "grade": 11,

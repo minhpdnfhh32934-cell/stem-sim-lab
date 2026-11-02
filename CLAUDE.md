@@ -314,6 +314,14 @@ Progress log: `docs/PROGRESS.md`.
   never rounds 2Lf/v beyond 1e-9·max(1, m), `ratioDigits`), `engine.ts` (mode = find f / v / n, v
   typed or √(F/μ); closed form at t = i·Δt; DOPRI5 `latticeAt` / `latticeFrequency` on the
   method-of-lines wave equation), `scenes.ts`, `draw.ts` (labelled vertical stretch). Units kg/m, g/m.
+- Two-source interference (`src/physics/interference/`, 0.8.1, #105, VL11 Bài 12): `model.ts`
+  (in-phase point sources, no damping/spreading/dispersion; counts on S₁S₂ without the sources via
+  `isWhole` of the wave module; beats |f₁ − f₂|), `engine.ts` (closed form at t = i·Δt; checks:
+  `scanSegment` phasor scan, `measureBeatPeriod`/`measuredBeatPeriod` on the engine's u at M,
+  `rayLattice` DOPRI5 wave equation along a ray), `draw.ts` (water as an image buffer, cell size
+  `CELL_PX` per tier: the overload ladder coarsens the picture only; no picture below 4 cells per λ),
+  `scenes.ts`. Sources and M are dragged through their parameters: `BodyDef.dragTo` →
+  `StageCanvas` → `sim.setParams(…, fit = false)` (a new run, not an intervention).
 - Electric field (`src/physics/field/`, 0.8.0, #76): `model.ts` (Coulomb, superposition, plates,
   `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
   step doubling; the card's error is an upper estimate from a coarse copy of each line, checked

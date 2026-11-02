@@ -367,9 +367,9 @@ thước mặc định. App tự nhớ bố cục cho lần mở sau.
 
 ## Vật lý
 
-16 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
+17 chủ đề: chuyển động thẳng đều, thẳng biến đổi đều, rơi tự do, ném ngang, ném xiên, định luật
 Newton, mặt phẳng nghiêng, ròng rọc – dây nối, lò xo (Hooke), bảo toàn cơ năng, va chạm, con lắc lò
-xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây, điện trường.
+xo, con lắc đơn, chuyển động tròn đều, giao thoa sóng hai nguồn, sóng dừng trên dây, điện trường.
 
 - **Thông số** (cột phải): kéo thanh trượt hoặc gõ số. Nhãn **đề bài / mặc định / đã chỉnh** cho biết
   giá trị đến từ đâu. Ví dụ g = 9,81 m/s² là mặc định khi đề không cho (đổi trong Cài đặt → Vật lý).
@@ -390,6 +390,15 @@ xo, con lắc đơn, chuyển động tròn đều, sóng dừng trên dây, đi
   lượng còn lại, gia tốc hướng tâm và lực hướng tâm (đề không cho khối lượng thì dùng m = 0,5 kg, có nhãn **mặc định**). Vectơ vận tốc luôn tiếp
   tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
   góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
+- **Giao thoa sóng hai nguồn** (chương **Sóng**, Vật lí 11 Bài 12): hai nguồn S₁, S₂ cùng pha trên
+  mặt nước. Ô đầu tiên chọn **cùng tần số** (giao thoa: vân cực đại, cực tiểu đứng yên) hay **khác
+  tần số** (phách). Nhập khoảng cách hai nguồn, tần số và tốc độ truyền sóng (hoặc chọn "Đề cho: bước
+  sóng λ"). Màu trên hình là li độ mặt nước: xanh là nhô lên, cam là lõm xuống; các đường không đổi
+  màu là nơi nước đứng yên (cực tiểu). Chấm nhỏ trên đoạn S₁S₂ là các cực đại. **Kéo một nguồn** để
+  đổi khoảng cách S₁S₂ (hai nguồn dời đối xứng), **kéo điểm M** để đổi d₁, d₂; mỗi lần kéo là chạy
+  lại từ đầu. Lời giải đếm số cực đại, cực tiểu trên S₁S₂ (không kể hai nguồn) và tính biên độ tại M;
+  ở chế độ phách, đồ thị vẽ li độ tại M và đường bao, tần số phách |f₁ − f₂|. Máy chậm thì hình mặt
+  nước thô hơn, các số không đổi; bước sóng quá nhỏ trên màn hình thì app nhắc phóng to.
 - **Sóng dừng trên dây** (chương **Sóng**): dây có hai đầu cố định. Ô đầu tiên chọn đề hỏi gì: **tìm
   f** (biết L, v, n), **tìm v** (biết L, f, n) hay **tìm n** (biết L, f, v). Tốc độ truyền sóng nhập
   thẳng, hoặc chọn "Lấy tốc độ sóng từ: lực căng và mật độ dài" để app tính v = √(F/μ) (μ nhận kg/m

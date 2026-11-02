@@ -260,6 +260,21 @@ export const CHALLENGES: readonly Challenge[] = [
     ),
   },
   {
+    id: 'interference.max9',
+    topic: 'interference',
+    title: L('Đúng 9 vân cực đại', 'Exactly 9 maxima'),
+    task: L(
+      'Giữ tần số và tốc độ truyền sóng (bước sóng 3\u00a0cm), chỉnh khoảng cách hai nguồn để giữa S₁ và S₂ có đúng 9 cực đại (không kể hai nguồn). Bạn có thể kéo một nguồn trên hình.',
+      'Keeping the frequency and the wave speed (wavelength 3\u00a0cm), set the source separation so that there are exactly 9 maxima between S₁ and S₂ (sources excluded). You can drag a source on the picture.',
+    ),
+    controls: ['d'],
+    goal: { answer: 'maxima', kind: 'target', value: 9, tol: 0.5 },
+    hint: L(
+      'Hai cực đại liên tiếp trên S₁S₂ cách nhau nửa bước sóng. Thêm hai cực đại (một mỗi bên) thì S₁S₂ phải dài thêm khoảng bao nhiêu?',
+      'Neighbouring maxima on S₁S₂ are half a wavelength apart. To add two maxima (one on each side), about how much longer must S₁S₂ be?',
+    ),
+  },
+  {
     id: 'electricField.plates8000',
     topic: 'electricField',
     title: L('Điện trường đều 8.000 V/m', 'A uniform field of 8,000 V/m'),
