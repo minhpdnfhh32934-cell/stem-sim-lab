@@ -343,6 +343,33 @@
   --glass-highlight: transparent;
   --glass-blur: none;
   --scrim-blur: none;
+  /* Type floor 12/16 (§5) and radii 8 for controls, 12 for cards and sheets (§6). */
+  --text-xs: 0.8572rem;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  /* Motion (§7), all 0 with reduced motion (below). --press-lift: how far the main action moves
+     when hovered or pressed. */
+  --dur-drawer: 160ms;
+  --dur-sheet: 240ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --press-lift: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-shell='bench'] {
+    --dur-drawer: 0ms;
+    --dur-sheet: 0ms;
+    --press-lift: 0px;
+  }
+}
+
+/* The in-app reduced-motion switch ("Hiển thị và trợ năng", §13) sets data-motion="reduce". */
+:root[data-shell='bench'][data-motion='reduce'] {
+  --dur-fast: 0ms;
+  --dur-med: 0ms;
+  --dur-drawer: 0ms;
+  --dur-sheet: 0ms;
+  --press-lift: 0px;
 }
 
 :root[data-shell='bench']:not([data-theme='dark']) {
@@ -352,9 +379,21 @@
   --frame-line: #7c888f;
   --on-frame: #eef2f3;
   --on-frame-muted: #aab5ba;
+  --frame-pressed: #333d43;
   --play: #3dbfb2;
+  --play-hover: #54c7bb;
+  --play-edge: #26766e;
   --on-play: #0a1f1d;
   --focus-frame: #f5c84c;
+  /* Theme switch (JkHuger/old-falcon-20): its day and night faces, the same in both themes. */
+  --sw-day-track: #fbe9a8;
+  --sw-day-knob: #a06c00;
+  --sw-night-track: #12304a;
+  --sw-night-knob: #2f7fc4;
+  --sw-icon: #ffffff;
+  /* Elevation (§6): L1 stage overlays, L2 overlay drawers, menus and popovers. */
+  --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-l2: 0 8px 24px rgba(11, 14, 16, 0.22);
 
   /* Paper: library, tray, notebook, sheets (bg, surface-1, surface-2, surface-3). */
   --bg-app: #f6f4ef;
@@ -435,9 +474,19 @@
   --frame-line: #6e7a81;
   --on-frame: #e9eef0;
   --on-frame-muted: #a2adb3;
+  --frame-pressed: #262d32;
   --play: #45c7ba;
+  --play-hover: #5bcec2;
+  --play-edge: #2b7b73;
   --on-play: #06201e;
   --focus-frame: #f5c84c;
+  --sw-day-track: #fbe9a8;
+  --sw-day-knob: #a06c00;
+  --sw-night-track: #12304a;
+  --sw-night-knob: #2f7fc4;
+  --sw-icon: #ffffff;
+  --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-l2: 0 8px 24px rgba(0, 0, 0, 0.45);
 
   --bg-app: #15191c;
   --bg-panel: #1e2327;

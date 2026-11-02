@@ -210,7 +210,7 @@ describe('theme tokens', () => {
  * never on a sunken or active surface, so those are the data colours' backgrounds.
  */
 const PAPER = ['--bg-app', '--bg-panel', '--bg-panel-2', '--bg-active'];
-const FRAME = ['--frame', '--frame-raised'];
+const FRAME = ['--frame', '--frame-raised', '--frame-pressed'];
 const ON_PAPER = ['--bg-app', '--bg-panel'];
 const BENCH_PAIRS: readonly (readonly [string, readonly string[], number])[] = [
   ['--text', [...PAPER, '--bg-stage', '--stage-grid'], 4.5],
@@ -223,7 +223,14 @@ const BENCH_PAIRS: readonly (readonly [string, readonly string[], number])[] = [
   ['--accent', ['--bg-app', '--bg-panel', '--bg-panel-2', '--bg-stage', '--accent-soft'], 4.5],
   ['--text-on-accent', ['--accent', '--accent-hover'], 4.5],
   ['--play', FRAME, 3],
-  ['--on-play', ['--play'], 4.5],
+  ['--play-hover', FRAME, 3],
+  ['--on-play', ['--play', '--play-hover'], 4.5],
+  // The main action's 2 px bottom edge reads as depth, not as its boundary (--play is that).
+  ['--play-edge', ['--play'], 2],
+  // Theme switch: the sun / moon on its knob, the knob on its track (the knob's side is the state).
+  ['--sw-icon', ['--sw-day-knob', '--sw-night-knob'], 3],
+  ['--sw-day-knob', ['--sw-day-track'], 3],
+  ['--sw-night-knob', ['--sw-night-track'], 3],
   ['--focus-ring', [...PAPER, '--bg-stage'], 3],
   ['--focus-frame', FRAME, 3],
   ['--danger', ON_PAPER, 4.5],
@@ -260,6 +267,28 @@ describe('bench tokens (#113)', () => {
       expect(failures).toEqual([]);
     });
   }
+
+  it('both themes set the shadows; reduced motion (the OS or the in-app switch) zeroes every duration', () => {
+    const block = (selector: string) => {
+      const start = CSS.indexOf(selector);
+      return CSS.slice(start, CSS.indexOf('\n}', start));
+    };
+    for (const sel of [
+      ":root[data-shell='bench']:not([data-theme='dark'])",
+      ":root[data-shell='bench'][data-theme='dark']",
+    ])
+      for (const name of ['--shadow-l1', '--shadow-l2']) expect(block(sel)).toContain(`${name}:`);
+    const motion = ['--dur-drawer', '--dur-sheet'];
+    for (const name of motion)
+      expect(block(":root[data-shell='bench'] {")).toMatch(new RegExp(`${name}: [1-9]`));
+    const media = block("@media (prefers-reduced-motion: reduce) {\n  :root[data-shell='bench']");
+    const inApp = block(":root[data-shell='bench'][data-motion='reduce']");
+    for (const name of [...motion, '--press-lift']) {
+      expect(media).toMatch(new RegExp(`${name}: 0`));
+      expect(inApp).toMatch(new RegExp(`${name}: 0`));
+    }
+    for (const name of ['--dur-fast', '--dur-med']) expect(inApp).toMatch(new RegExp(`${name}: 0`));
+  });
 
   it('dark has its own value for every colour light sets, except the light-only re-steps', () => {
     const names = (m: Map<string, string>) =>
