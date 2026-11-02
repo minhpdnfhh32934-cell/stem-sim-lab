@@ -109,4 +109,62 @@ describe('TooltipLayer', () => {
     fireEvent.keyDown(button, { key: 'Escape' });
     expect(drawerEsc).toHaveBeenCalledTimes(1);
   });
+
+  it("moving straight from one control to the next shows the next one's tip", () => {
+    vi.useFakeTimers();
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return this.getAttribute('role') === 'tooltip'
+        ? DOMRect.fromRect({ x: 100, y: 50, width: 100, height: 20 })
+        : DOMRect.fromRect();
+    });
+    render(
+      <>
+        <TooltipLayer />
+        <button type="button" data-tip="Hoàn tác" aria-label="Hoàn tác" />
+        <button type="button" data-tip="Làm lại" aria-label="Làm lại" />
+      </>,
+    );
+    fireEvent.pointerOver(screen.getByRole('button', { name: 'Hoàn tác' }));
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+    // A browser sends pointerover, then pointermove, on the new control (away from the bubble).
+    const redo = screen.getByRole('button', { name: 'Làm lại' });
+    fireEvent.pointerOver(redo, { clientX: 400, clientY: 300 });
+    fireEvent.pointerMove(redo, { clientX: 400, clientY: 300 });
+    expect(screen.queryByRole('tooltip', { hidden: true })).toBeNull();
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+    expect(screen.getByRole('tooltip', { hidden: true })).toHaveTextContent('Làm lại');
+  });
+
+  it('Esc with a bubble shown by focus hides it and still reaches the dialog', () => {
+    const dialogEsc = vi.fn();
+    render(
+      <>
+        <TooltipLayer />
+        <div
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') dialogEsc();
+          }}
+        >
+          <button type="button" data-tip="Đóng" aria-label="Đóng" />
+        </div>
+      </>,
+    );
+    const close = screen.getByRole('button', { name: 'Đóng' });
+    // A dialog opened from the keyboard focuses its X: :focus-visible (jsdom has none).
+    vi.spyOn(close, 'matches').mockReturnValue(true);
+    act(() => {
+      close.focus();
+    });
+    expect(screen.getByRole('tooltip', { hidden: true })).toBeInTheDocument();
+    const notPrevented = fireEvent.keyDown(close, { key: 'Escape' });
+    expect(notPrevented).toBe(true);
+    expect(dialogEsc).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('tooltip', { hidden: true })).toBeNull();
+  });
 });

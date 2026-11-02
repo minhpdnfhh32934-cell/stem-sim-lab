@@ -20,8 +20,8 @@ const EDGE = 6;
  * and shown on keyboard focus as well as hover. It is a manual popover, so it joins the top
  * layer above an open modal dialog (Settings, Update, the command palette…), whose icon-only
  * buttons have no other visible name; without popover support it stays a plain fixed layer.
- * WCAG 1.4.13: Esc hides it (and only it), and a bubble shown by hover stays while the pointer is
- * on it or crossing the gap to it. The bubble never takes the pointer (`pointer-events: none`), so
+ * WCAG 1.4.13: Esc hides it (a hover bubble takes that Esc for itself), and a bubble shown by
+ * hover stays while the pointer is on it or crossing the gap to it. The bubble never takes the pointer (`pointer-events: none`), so
  * that is judged from the pointer's position, and a click always reaches what lies under it.
  */
 export function TooltipLayer() {
@@ -83,10 +83,14 @@ export function TooltipLayer() {
       else timer.current = window.setTimeout(open, SHOW_DELAY_MS);
     };
 
-    const hide = () => {
-      window.clearTimeout(timer.current);
+    // Takes the bubble away; a bubble waiting to open for another control still opens.
+    const hideBubble = () => {
       shown.current = null;
       setTip(null);
+    };
+    const hide = () => {
+      window.clearTimeout(timer.current);
+      hideBubble();
     };
     // On the bubble or in the gap around it (the way from the control to the bubble).
     const near = (e: PointerEvent) => {
@@ -107,21 +111,25 @@ export function TooltipLayer() {
       }
       const el = findTarget(e.target);
       if (!el) hide();
-      else if (el !== shown.current?.anchor) show(el, false);
+      else if (el !== shown.current?.anchor) {
+        hideBubble();
+        show(el, false);
+      }
     };
     const onMove = (e: PointerEvent) => {
       const s = shown.current;
       const onAnchor = e.target instanceof Node && s?.anchor.contains(e.target);
-      if (s?.hover && !onAnchor && !near(e)) hide();
+      if (s?.hover && !onAnchor && !near(e)) hideBubble();
     };
-    // A shown bubble takes the first Esc for itself: the drawer or dialog closes on the next one.
+    // A hover bubble takes the first Esc for itself (the drawer or dialog closes on the next one).
+    // A focus bubble only goes: the Esc still closes the dialog whose first control has a tip.
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
-      window.clearTimeout(timer.current);
-      if (!shown.current) return;
+      const hover = shown.current?.hover;
+      hide();
+      if (!hover) return;
       e.preventDefault();
       e.stopPropagation();
-      hide();
     };
     const onFocus = (e: FocusEvent) => {
       const el = findTarget(e.target);
