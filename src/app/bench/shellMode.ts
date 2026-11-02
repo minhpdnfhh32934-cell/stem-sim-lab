@@ -1,3 +1,5 @@
+import { createContext } from 'react';
+
 /** localStorage key of the bench dev switch (0.8.1 B1, #115): value `bench` shows the new shell. */
 export const DEV_SHELL_KEY = 'stemsim.dev.shell';
 
@@ -18,3 +20,6 @@ export function benchShellOn(
     return false;
   }
 }
+
+/** True inside the bench shell's tree: the few shared parts that differ there read it. */
+export const BenchContext = createContext(false);

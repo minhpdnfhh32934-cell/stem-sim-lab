@@ -119,6 +119,7 @@ export function Notebook({ push }: { push: boolean }) {
     <section className="notebook" aria-label={t('bottom.regionLabel')}>
       <div
         className="notebook__rail"
+        data-surface="frame"
         role="tablist"
         aria-orientation="vertical"
         aria-label={t('bottom.regionLabel')}

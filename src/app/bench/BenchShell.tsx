@@ -15,6 +15,7 @@ import { IconButton } from '@/ui/IconButton';
 import { Skeleton } from '@/ui/Skeleton';
 import { BenchFrame } from './BenchFrame';
 import { BenchHeader } from './BenchHeader';
+import { BenchContext } from './shellMode';
 
 const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
 const StudioScreen = lazy(() => import('@/studio/StudioScreen'));
@@ -75,23 +76,25 @@ export default function BenchShell() {
   );
 
   return (
-    <div className="bench-shell" data-presentation={presentation || undefined}>
-      {!presentation && <BenchHeader />}
-      <ShellOverlays presentation={presentation} />
-      {room}
-      {presentation && (
-        <IconButton
-          className="shell__exit-presentation"
-          icon={Minimize2}
-          label={t('layout.exitPresentation')}
-          variant="solid"
-          size="lg"
-          tooltipSide="left"
-          onClick={() => {
-            useLayoutStore.getState().setPresentation(false);
-          }}
-        />
-      )}
-    </div>
+    <BenchContext.Provider value={true}>
+      <div className="bench-shell" data-presentation={presentation || undefined}>
+        {!presentation && <BenchHeader />}
+        <ShellOverlays presentation={presentation} />
+        {room}
+        {presentation && (
+          <IconButton
+            className="shell__exit-presentation"
+            icon={Minimize2}
+            label={t('layout.exitPresentation')}
+            variant="solid"
+            size="lg"
+            tooltipSide="left"
+            onClick={() => {
+              useLayoutStore.getState().setPresentation(false);
+            }}
+          />
+        )}
+      </div>
+    </BenchContext.Provider>
   );
 }

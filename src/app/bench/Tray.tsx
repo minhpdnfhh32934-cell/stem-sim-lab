@@ -47,6 +47,7 @@ export function Tray() {
         <button
           type="button"
           className="tray__spine"
+          data-surface="frame"
           aria-label={t('bench.openTray')}
           onClick={() => {
             fold(false);

@@ -17,6 +17,7 @@ import { useWorkspaceStore, type Subject } from '@/app/workspaceStore';
 import { closeModule, useModuleStore } from '@/modules/moduleStore';
 import { IconButton } from '@/ui/IconButton';
 import { Logo } from '@/ui/Logo';
+import { ThemeSwitch } from './ThemeSwitch';
 
 /** Back to the lab's library (Kệ bài), optionally showing one subject. */
 function toLibrary(subject?: Subject) {
@@ -29,7 +30,7 @@ function toLibrary(subject?: Subject) {
 /**
  * The bench's 48 px frame header (docs/BENCH_DESIGN.md §9.4): the SimLab mark (launch page), the
  * breadcrumb (every crumb a 40 px button, the open topic is the page's h1), "Đề bài", AI status,
- * search, Basic/Advanced, undo/redo, Tệp and Settings. Theme and presentation live in Settings / F5.
+ * search, Basic/Advanced, the light / dark switch, undo/redo, Tệp and Settings (presentation: F5).
  */
 export function BenchHeader() {
   const t = useT();
@@ -53,7 +54,7 @@ export function BenchHeader() {
   // The dialogs sit beside the header, not in it: the frame's colours must not reach them.
   return (
     <>
-      <header className="bench-header">
+      <header className="bench-header" data-surface="frame">
         <button
           type="button"
           className="bench-header__mark"
@@ -124,16 +125,18 @@ export function BenchHeader() {
         <button
           type="button"
           className="btn bench-header__search"
-          aria-label={t('command.openButton')}
+          aria-keyshortcuts="Control+K"
           onClick={() => {
             useCommandPalette.getState().setOpen(true);
           }}
         >
           <Search size={16} strokeWidth={1.75} aria-hidden="true" />
-          <span aria-hidden="true">{t('bench.search')}</span>
-          <kbd aria-hidden="true">Ctrl+K</kbd>
+          {/* The visible words are the name (WCAG 2.5.3). */}
+          <span>{t('bench.search')}</span>
+          <kbd>Ctrl+K</kbd>
         </button>
         {lab && <ModeSwitch compact />}
+        <ThemeSwitch />
         {!teacher && (
           <>
             <IconButton

@@ -230,6 +230,10 @@ const en: Messages = {
     play: 'Run',
     pause: 'Pause',
     openScience: 'Open the Science card',
+    darkTheme: 'Dark theme',
+    followSystem: 'Follow device',
+    decrease: 'Decrease {name}',
+    increase: 'Increase {name}',
   },
   layout: {
     resizeLeft: 'Drag to resize the Library',

@@ -1,4 +1,5 @@
-/* "Bàn thí nghiệm" shell (0.8.1, docs/BENCH_DESIGN.md §8). Only loaded behind the dev switch. */
+/* "Bàn thí nghiệm" shell (0.8.1, docs/BENCH_DESIGN.md §8). Only loaded behind the dev switch.
+   Controls follow the uiverse kit B the user chose (sources and MIT notices: docs/THIRD_PARTY.md). */
 
 .bench-shell {
   --bench-header: 48px;
@@ -11,13 +12,378 @@
   background: var(--bg-app);
 }
 
-/* Every control on the frame is a 40 px target. */
-.bench-header .icon-btn,
-.bench-edge .icon-btn,
-.tray .panel__header .icon-btn,
-.notebook .panel__header .icon-btn {
+/* ── Surfaces ───────────────────────────────────────────────────────────
+   One hook gives every control its look. Controls are drawn for paper with the paper tokens;
+   [data-surface='frame'] (header, notebook rail, bench edge, tray spine) maps those tokens to the
+   frame's, so the same rules draw the frame variant and the focus ring turns --focus-frame.
+   [data-surface='paper'] inside the frame (the file menu, the confidence chip) maps them back. */
+:root[data-shell='bench'] {
+  --paper-text: var(--text);
+  --paper-text-muted: var(--text-muted);
+  --paper-text-faint: var(--text-faint);
+  --paper-bg: var(--bg-panel);
+  --paper-bg-2: var(--bg-panel-2);
+  --paper-sunken: var(--bg-sunken);
+  --paper-hover: var(--bg-hover);
+  --paper-active: var(--bg-active);
+  --paper-border: var(--border);
+  --paper-line: var(--border-input);
+  --paper-accent: var(--accent);
+  --paper-accent-hover: var(--accent-hover);
+  --paper-accent-soft: var(--accent-soft);
+  --paper-on-accent: var(--text-on-accent);
+  --paper-focus: var(--focus-ring);
+}
+[data-surface='frame'] {
+  --text: var(--on-frame);
+  --text-muted: var(--on-frame-muted);
+  --text-faint: var(--on-frame-muted);
+  --bg-panel: var(--frame);
+  --bg-panel-2: var(--frame-raised);
+  --bg-sunken: var(--frame-raised);
+  --bg-hover: var(--frame-raised);
+  --bg-active: var(--frame-pressed);
+  --border: var(--frame-line);
+  --border-input: var(--frame-line);
+  --border-strong: var(--frame-line);
+  --accent: var(--play);
+  --accent-hover: var(--play-hover);
+  --accent-soft: var(--frame-raised);
+  --text-on-accent: var(--on-play);
+  --focus-ring: var(--focus-frame);
+  background: var(--frame);
+  color: var(--on-frame);
+}
+[data-surface='paper'] {
+  --text: var(--paper-text);
+  --text-muted: var(--paper-text-muted);
+  --text-faint: var(--paper-text-faint);
+  --bg-panel: var(--paper-bg);
+  --bg-panel-2: var(--paper-bg-2);
+  --bg-sunken: var(--paper-sunken);
+  --bg-hover: var(--paper-hover);
+  --bg-active: var(--paper-active);
+  --border: var(--paper-border);
+  --border-input: var(--paper-line);
+  --border-strong: var(--paper-line);
+  --accent: var(--paper-accent);
+  --accent-hover: var(--paper-accent-hover);
+  --accent-soft: var(--paper-accent-soft);
+  --text-on-accent: var(--paper-on-accent);
+  --focus-ring: var(--paper-focus);
+  color: var(--text);
+}
+
+/* ── Controls (kit B) ───────────────────────────────────────────────────
+   Buttons (e-coders/nervous-chipmunk-49) and icon buttons (Galahhad/kind-cheetah-52; the name
+   shows in TooltipLayer). Disabled: dimmed text and a dashed border, not told by colour alone. */
+.btn,
+.icon-btn {
+  transition:
+    background-color var(--dur-fast),
+    color var(--dur-fast);
+}
+.btn {
+  height: auto;
+  min-height: var(--target);
+}
+.btn:active:not(:disabled),
+.icon-btn:active:not(:disabled) {
+  background: var(--bg-active);
+  transform: none;
+}
+.btn--accent:active:not(:disabled) {
+  background: var(--accent-hover);
+}
+.btn:disabled,
+.icon-btn:disabled {
+  opacity: 1;
+  color: var(--text-faint);
+  border: 1px dashed var(--border-input);
+  cursor: not-allowed;
+}
+.icon-btn {
+  border-radius: var(--radius-md);
+  color: var(--text);
+}
+.icon-btn svg {
+  transition: transform var(--dur-fast);
+}
+kbd {
+  padding: 0 var(--space-1);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 16px;
+  box-shadow: none;
+}
+
+/* Two to four options (Pradeepsaranbishnoi/slimy-warthog-37): joined 40 px segments, the chosen one
+   tinted with a 2 px border and bold. */
+.segmented {
+  padding: 0;
+  background: none;
+}
+.segmented.has-indicator::before {
+  display: none;
+}
+.segmented__item {
+  min-height: var(--target);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-input);
+  border-radius: 0;
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  line-height: 1.3;
+  transition: background-color var(--dur-fast);
+}
+.segmented .segmented__item {
+  min-height: var(--target);
+}
+.segmented__item + .segmented__item {
+  margin-left: -1px;
+}
+.segmented__item:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.segmented__item:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.segmented__item:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+.segmented .segmented__item[aria-checked='true'] {
+  position: relative;
+  z-index: 1;
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+.segmented__item:focus-visible {
+  position: relative;
+  z-index: 2;
+}
+
+/* Graphs to choose (Admin12121/cold-bobcat-20): items in a sunken track; names wrap, never cut. */
+.segmented.graph-panel__picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  align-self: stretch;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--bg-sunken);
+}
+.graph-panel__picker .segmented__item,
+.graph-panel__picker .segmented__item:first-child,
+.graph-panel__picker .segmented__item:last-child {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  border-color: transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  text-align: center;
+}
+.graph-panel__picker.segmented .segmented__item[aria-checked='true'] {
+  border-color: var(--border-input);
+  background: var(--bg-panel);
+  box-shadow: none;
+}
+/* The live legend is one row under the plot (the notebook is narrow). */
+.chart--legend-side {
+  flex-direction: column;
+}
+.chart--legend-side .chart__plot {
+  min-height: 0;
+  overflow: hidden;
+}
+.chart--legend-side .chart__legend {
+  flex: none;
+  max-width: none;
+  align-self: stretch;
+}
+.chart__legend .u-legend.u-inline tr {
+  display: inline-block;
+  margin-right: var(--space-3);
+}
+
+/* Native checkboxes and radios, 20 px, in the accent colour (cbolson/calm-wasp-75). */
+.tray input[type='checkbox'],
+.notebook__drawer input[type='checkbox'],
+.tray input[type='radio'],
+.notebook__drawer input[type='radio'] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.param__toggle {
+  min-height: var(--target);
+}
+
+/* Search field (alexruix/slippery-frog-10). */
+.sidebar__search {
+  height: var(--target);
+  border-color: var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+}
+.sidebar__search:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.sidebar__search input::placeholder {
+  color: var(--text-faint);
+}
+
+/* Collapsible card (Admin12121/fluffy-vampirebat-68): sections of the tray, sentence case. */
+.section {
+  margin: 0 var(--space-3) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+}
+.panel__scroll > .section:first-child,
+.panel__scroll > :not(.section) + .section {
+  margin-top: var(--space-3);
+}
+.section__header {
+  padding-right: var(--space-1);
+}
+.section__toggle {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+}
+.section__toggle:hover {
+  background: var(--bg-hover);
+}
+.section__title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+}
+.section__chevron {
+  color: var(--text-muted);
+  transition: transform var(--dur-fast);
+}
+
+/* Chips 12/16 (kamehame-ha/swift-penguin-73, Madflows/great-chipmunk-4). */
+.badge,
+.param__source {
+  font-size: var(--text-xs);
+  line-height: 16px;
+}
+.param__source {
+  padding: 1px var(--space-2);
+  font-weight: 500;
+}
+.param__source--default {
+  border: 1px dashed var(--pending);
+}
+
+/* Parameter row (satisshTechie/sharp-hound-14, §9.4): label and source left, the number box
+   112×40 right; − slider + below. The whole box is the number's label (one click target). */
+.param:has(> .param__controls) {
+  display: grid;
+  grid-template-columns: var(--target) minmax(0, 1fr) 72px var(--target);
+  grid-template-areas:
+    'head head num num'
+    'minus range range plus';
+  align-items: center;
+  row-gap: var(--space-2);
+}
+.param:has(> .param__controls) > .param__head {
+  grid-area: head;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.param:has(> .param__controls) > .param__controls {
+  display: contents;
+}
+.param__step {
   width: var(--target);
   height: var(--target);
+}
+.param__step--minus {
+  grid-area: minus;
+}
+.param__step--plus {
+  grid-area: plus;
+}
+.param__controls input[type='range'] {
+  grid-area: range;
+  height: var(--target);
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.param__controls input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-input);
+}
+.param__controls input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border: 2px solid var(--bg-panel);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  transition: box-shadow var(--dur-fast);
+}
+.param__controls input[type='range']:hover::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 0 7px var(--accent-soft);
+}
+.param__num {
+  grid-area: num;
+  display: flex;
+  align-items: center;
+  height: var(--target);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+  cursor: text;
+}
+.param__num:focus-within {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.param__num:has([aria-invalid='true']) {
+  border-color: var(--danger);
+}
+.param__num .number-field {
+  flex: 1;
+  min-width: 0;
+}
+.param__num .param__number {
+  height: 100%;
+  padding: 0 var(--space-1) 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  font-size: var(--text-md);
+}
+.param__num .param__number:focus-visible {
+  outline: none;
+}
+.param__num .param__unit {
+  min-width: 0;
+  padding-right: var(--space-2);
+  white-space: nowrap;
 }
 
 /* ── Header ─────────────────────────────────────────────────────────── */
@@ -27,21 +393,14 @@
   gap: var(--space-2);
   height: var(--bench-header);
   padding: 0 var(--space-2);
-  background: var(--frame);
-  color: var(--on-frame);
   flex: none;
   min-width: 0;
 }
-.bench-header .icon-btn,
-.bench-header .btn {
-  color: var(--on-frame);
-}
-.bench-header .icon-btn:focus-visible,
-.bench-header .btn:focus-visible,
-.bench-crumb:focus-visible,
-.bench-header__mark:focus-visible {
-  outline: 2px solid var(--focus-frame);
-  outline-offset: 2px;
+[data-surface='frame'] .icon-btn,
+.tray .panel__header .icon-btn,
+.notebook .panel__header .icon-btn {
+  width: var(--target);
+  height: var(--target);
 }
 .bench-header__mark {
   display: grid;
@@ -61,30 +420,34 @@
   overflow: hidden;
 }
 .bench-crumbs__sep {
-  color: var(--on-frame-muted);
+  color: var(--text-muted);
 }
 .bench-crumb {
+  flex: none;
   min-height: var(--target);
   padding: 0 var(--space-2);
   border: 0;
   border-radius: var(--radius-md);
   background: transparent;
-  color: var(--on-frame-muted);
+  color: var(--text-muted);
   font: inherit;
   white-space: nowrap;
   cursor: pointer;
 }
 .bench-crumb:hover {
-  background: var(--frame-raised);
-  color: var(--on-frame);
+  background: var(--bg-hover);
+  color: var(--text);
 }
+/* The topic's name: a block, so a long name ends in "…" (the 40 px line keeps its accents). */
 .bench-crumb--current {
-  display: flex;
-  align-items: center;
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
   margin: 0;
-  color: var(--on-frame);
-  font-size: var(--text-md);
+  color: var(--text);
+  font-size: var(--text-lg);
   font-weight: 600;
+  line-height: var(--target);
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: default;
@@ -95,30 +458,188 @@
 .bench-header__spacer {
   flex: 1;
 }
-.bench-header__problem,
-.bench-header__search {
-  min-height: var(--target);
-  background: transparent;
-  border: 1px solid var(--frame-line);
-  white-space: nowrap;
+.bench-header__problem {
+  flex: none;
+  width: 112px;
+  justify-content: center;
 }
-.bench-header__search kbd,
-.bench-play kbd {
-  padding: 0 4px;
-  border: 1px solid currentColor;
-  border-radius: 4px;
-  background: transparent;
-  color: inherit;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  box-shadow: none;
+.bench-header__search {
+  flex: none;
+  width: 172px;
+}
+.bench-header__search kbd {
+  margin-left: auto;
 }
 .bench-header .segmented {
   flex: none;
 }
-.bench-header .ai-status,
-.bench-header .segmented__item {
+/* AI status on the frame: the word and the icon say the state, in the frame's own ink. */
+.bench-header .ai-status {
   min-height: var(--target);
+  border-color: var(--border-input);
+  color: var(--text);
+  font-size: var(--text-xs);
+}
+.file-menu__list {
+  box-shadow: var(--shadow-l2);
+}
+.file-menu__item {
+  min-height: var(--target);
+}
+.file-menu__item:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+/* Theme switch (JkHuger/old-falcon-20): a sun on a sliding knob that turns into a moon. The
+   original's full-screen blend wipe is left out (it would invert every chart). */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.theme-switch__toggle {
+  position: relative;
+  display: inline-flex;
+  padding: 5px;
+  font-size: var(--text-md);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-switch__toggle input {
+  appearance: none;
+  display: block;
+  width: 4.5em;
+  height: 2.25em;
+  margin: 0;
+  padding: 0.1875em;
+  border-radius: var(--radius-full);
+  background: var(--sw-day-track);
+  box-shadow: 0 0 0 1px var(--border-input);
+  font-size: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-drawer) var(--ease);
+}
+.theme-switch__toggle input::before {
+  content: '';
+  display: block;
+  width: 1.875em;
+  height: 1.875em;
+  border-radius: 50%;
+  background: var(--sw-day-knob);
+  transition:
+    translate var(--dur-drawer) var(--ease),
+    background-color var(--dur-drawer) var(--ease);
+}
+.theme-switch__toggle input:checked {
+  background: var(--sw-night-track);
+}
+.theme-switch__toggle input:checked::before {
+  translate: 2.25em 0;
+  background: var(--sw-night-knob);
+}
+.theme-switch__toggle input:focus-visible {
+  outline-offset: 3px;
+}
+/* The sun (a disc and eight rays) sits on the knob; checked, the disc becomes a crescent. */
+.theme-switch__icon {
+  position: absolute;
+  top: calc(5px + 0.375em);
+  left: calc(5px + 0.375em);
+  width: 1.5em;
+  height: 1.5em;
+  pointer-events: none;
+  transition: translate var(--dur-drawer) var(--ease);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon {
+  translate: 2.25em 0;
+}
+.theme-switch__icon i {
+  position: absolute;
+  top: calc(50% - 0.5em);
+  left: calc(50% - 0.5em);
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  box-shadow: 0.4em -0.4em 0 0.5em var(--sw-icon) inset;
+  transform: scale(0.5);
+  transition:
+    box-shadow var(--dur-drawer) var(--ease),
+    opacity var(--dur-drawer) var(--ease),
+    transform var(--dur-drawer) var(--ease);
+}
+.theme-switch__icon i ~ i {
+  top: 50%;
+  left: calc(50% - 0.05em);
+  width: 0.1em;
+  height: 0.2em;
+  border-radius: 0.05em;
+  box-shadow: none;
+  background: var(--sw-icon);
+  transform-origin: 50% 0;
+  transform: rotate(0deg) translateY(0.5em);
+}
+.theme-switch__icon i:nth-child(3) {
+  transform: rotate(45deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(4) {
+  transform: rotate(90deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(5) {
+  transform: rotate(135deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(6) {
+  transform: rotate(180deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(7) {
+  transform: rotate(225deg) translateY(0.45em);
+}
+.theme-switch__icon i:nth-child(8) {
+  transform: rotate(270deg) translateY(0.5em);
+}
+.theme-switch__icon i:nth-child(9) {
+  transform: rotate(315deg) translateY(0.5em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(1) {
+  box-shadow: 0.2em -0.2em 0 0.2em var(--sw-icon) inset;
+  transform: translate(var(--moon-dx), var(--moon-dy)) scale(1);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i ~ i {
+  opacity: 0;
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(2) {
+  transform: rotate(45deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(3) {
+  transform: rotate(90deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(4) {
+  transform: rotate(135deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(5) {
+  transform: rotate(180deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(6) {
+  transform: rotate(225deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(7) {
+  transform: rotate(270deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(8) {
+  transform: rotate(315deg) translateY(0.8em);
+}
+.theme-switch__toggle input:checked ~ .theme-switch__icon i:nth-child(9) {
+  transform: rotate(360deg) translateY(0.8em);
+}
+/* The crescent's lit part is off-centre in its box: this puts its pixel centroid on the knob's
+   centre (measured at 14 px: within 0,1 px). */
+.theme-switch__icon {
+  --moon-dx: 0.1em;
+  --moon-dy: -0.09em;
+}
+.theme-switch__system[aria-pressed='true'] {
+  box-shadow: inset 0 -2px 0 var(--accent);
+  font-weight: 600;
 }
 
 /* ── Rooms that are not the bench (launch, library, studio, teacher) ── */
@@ -180,7 +701,6 @@
 /* Notebook: the rail stays; the drawer opens beside or over the stage. */
 .notebook {
   grid-area: rail;
-  background: var(--frame);
   min-height: 0;
 }
 .notebook__rail {
@@ -197,30 +717,29 @@
   padding: var(--space-1);
   border: 0;
   background: transparent;
-  color: var(--on-frame-muted);
+  color: var(--text-muted);
   font: inherit;
   font-size: var(--text-xs);
   line-height: 1.3;
   text-align: center;
   cursor: pointer;
-}
-.notebook__tab[data-pinned] {
-  min-height: 72px;
+  transition: background-color var(--dur-fast);
 }
 .notebook__tab[data-pinned]:first-of-type,
 .notebook__tab:not([data-pinned]) + .notebook__tab[data-pinned] {
   margin-top: auto;
 }
 .notebook__tab:hover {
-  color: var(--on-frame);
+  background: var(--bg-hover);
+  color: var(--text);
 }
 .notebook__tab[aria-selected='true'] {
-  background: var(--frame-raised);
-  color: var(--on-frame);
+  background: var(--bg-hover);
+  color: var(--text);
   box-shadow: inset 3px 0 0 var(--play);
+  font-weight: 600;
 }
 .notebook__tab:focus-visible {
-  outline: 2px solid var(--focus-frame);
   outline-offset: -4px;
 }
 .notebook__drawer {
@@ -235,7 +754,7 @@
   border-right: 1px solid var(--border);
 }
 .notebook__drawer[data-mode='overlay'] {
-  box-shadow: 0 8px 24px rgba(11, 14, 16, 0.22);
+  box-shadow: var(--shadow-l2);
 }
 .notebook__panel {
   flex: 1;
@@ -251,6 +770,9 @@
   background: var(--bg-panel);
   border-left: 1px solid var(--border);
 }
+.tray[data-folded] {
+  border-left: 0;
+}
 .tray__panel {
   flex: 1;
   min-width: 0;
@@ -264,41 +786,61 @@
   min-height: 72px;
   padding: var(--space-3) var(--space-1);
   border: 0;
-  background: transparent;
-  color: var(--text);
   font: inherit;
   font-size: var(--text-xs);
+  line-height: 1.3;
   cursor: pointer;
+  transition: background-color var(--dur-fast);
 }
 .tray__spine:hover {
   background: var(--bg-hover);
 }
+.tray__spine:active {
+  background: var(--bg-active);
+}
+.tray__spine:focus-visible {
+  outline-offset: -4px;
+}
 
-/* ── Bench edge (driver grid) ───────────────────────────────────────── */
+/* ── Bench edge (driver grid, §8): fixed columns, the same on every screen ── */
 .bench-edge {
   grid-area: edge;
-  display: flex;
+  display: grid;
+  grid-template-columns:
+    [d0] 144px 8px [d1] 48px 4px [d2] 48px 4px [d3] 48px 20px [readout] 112px 12px
+    [scrub] minmax(0, 1fr) 12px [speed] 168px 8px [chip] 226px;
   align-items: center;
-  gap: var(--space-2);
-  padding: 0 var(--space-4);
-  background: var(--frame);
-  color: var(--on-frame);
+  padding: 0 var(--space-2) 0 var(--space-4);
   min-width: 0;
 }
 .bench-edge .icon-btn {
-  color: var(--on-frame);
-}
-.bench-edge .icon-btn:focus-visible,
-.bench-play:focus-visible,
-.bench-chip:focus-visible,
-.bench-edge__scrubber:focus-visible,
-.bench-edge__speed select:focus-visible {
-  outline: 2px solid var(--focus-frame);
-  outline-offset: 2px;
+  width: 48px;
+  height: 48px;
 }
 .bench-edge__main {
-  flex: none;
+  grid-column: d0;
 }
+.bench-edge__d1 {
+  grid-column: d1;
+}
+.bench-edge__d2 {
+  grid-column: d2;
+}
+.bench-edge__d3 {
+  grid-column: d3;
+}
+.bench-edge__readout {
+  grid-column: readout;
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  line-height: 22px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Main action (SelfMadeSystem/tough-fireant-47): a key cap with a 2 px edge; 144 px whatever its
+   word ("Chạy", "Tạm dừng", "Chạy để kiểm tra" on two lines), so D1 never moves. The kit's "Space"
+   key chip left no room for those words: the shortcut is in the tooltip and the accessible name. */
 .bench-play {
   display: inline-flex;
   align-items: center;
@@ -306,59 +848,162 @@
   gap: var(--space-2);
   width: 144px;
   height: 48px;
+  padding: 0 var(--space-2);
   border: 0;
+  border-bottom: calc(2px - var(--press-lift)) solid var(--play-edge);
   border-radius: var(--radius-md);
   background: var(--play);
   color: var(--on-play);
   font: inherit;
   font-weight: 600;
+  line-height: 18px;
   cursor: pointer;
+  transition:
+    background-color var(--dur-fast),
+    translate var(--dur-fast);
+}
+.bench-play > svg {
+  flex: none;
+}
+.bench-play__label {
+  min-width: 0;
+  text-align: start;
+}
+.bench-play:hover:not(:disabled) {
+  background: var(--play-hover);
+  translate: 0 calc(-1 * var(--press-lift));
+}
+.bench-play:active:not(:disabled) {
+  translate: 0 var(--press-lift);
 }
 .bench-play:disabled {
-  opacity: 0.5;
+  border: 1px dashed var(--border-input);
+  background: transparent;
+  color: var(--text-faint);
   cursor: not-allowed;
 }
-.bench-edge__free {
-  width: var(--target);
-  flex: none;
-}
-.bench-edge__readout {
-  flex: none;
-  min-width: 112px;
-  font-size: var(--text-md);
-  font-variant-numeric: tabular-nums;
-}
+
+/* Time scrubber (Galahhad/happy-dodo-17): 40 px to grab, a 6 px track, the played part filled. */
 .bench-edge__scrubber {
-  flex: 1;
-  min-width: 80px;
+  grid-column: scrub;
+  width: 100%;
+  min-width: 0;
   height: var(--target);
-  accent-color: var(--play);
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.bench-edge__scrubber::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    var(--play) var(--pct, 0%),
+    var(--border-input) var(--pct, 0%)
+  );
+}
+.bench-edge__scrubber::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow:
+    0 0 0 2px var(--frame),
+    0 0 0 4px var(--play);
+}
+.bench-edge__scrubber:disabled {
+  cursor: not-allowed;
+}
+.bench-edge__scrubber:disabled::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px var(--frame);
+}
+
+/* Speed: Basic 0,5× · 1× · 2× (Yaya12085/rude-mouse-79), each 40 px tall in the 168×40 slot; the
+   track is drawn by its background and inner line. Advanced: a select (mi-series/good-walrus-42). */
+.bench-speed {
+  grid-column: speed;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 168px;
+  height: var(--target);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 0 0 1px var(--border-input);
+}
+.bench-speed label {
+  position: relative;
+  display: grid;
+}
+.bench-speed input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.bench-speed span {
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--dur-fast);
+}
+.bench-speed span:hover {
+  color: var(--text);
+}
+.bench-speed input:checked + span {
+  border-color: var(--border-input);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-weight: 600;
+}
+.bench-speed input:focus-visible + span {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.bench-edge__speed {
+  grid-column: speed;
 }
 .bench-edge__speed select {
+  width: 168px;
   height: var(--target);
   padding: 0 var(--space-2);
-  border: 1px solid var(--frame-line);
-  border-radius: var(--radius-md);
-  background: var(--frame);
-  color: var(--on-frame);
-  font: inherit;
-}
-.bench-chip {
-  display: grid;
-  justify-items: start;
-  gap: 2px;
-  min-height: 48px;
-  margin-left: auto;
-  padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--frame-line);
+  border: 1px solid var(--border-input);
   border-radius: var(--radius-md);
   background: var(--bg-panel);
   color: var(--text);
+  font-family: var(--font-mono);
+}
+
+/* Confidence chip, 226×48 in two lines; it is paper, its focus ring is drawn on the frame. */
+.bench-chip {
+  grid-column: chip;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 2px;
+  width: 226px;
+  height: 48px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--frame-line);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
   font: inherit;
+  text-align: start;
   cursor: pointer;
+  --focus-ring: var(--focus-frame);
 }
 .bench-chip--empty {
-  margin-left: auto;
   border: 0;
   background: transparent;
   cursor: default;
@@ -366,6 +1011,7 @@
 .bench-chip__note {
   color: var(--conf-approx);
   font-size: var(--text-xs);
+  line-height: 16px;
 }
 
 /* One filled button per screen (D0 on the bench edge): the notebook's own actions are tonal. */
@@ -386,9 +1032,77 @@
   border-color: var(--accent);
 }
 
+/* ── Overlays ───────────────────────────────────────────────────────── */
+/* Tooltip (kyle1dev/quiet-cougar-91), drawn by TooltipLayer in the top layer. */
+.tooltip {
+  max-width: 32ch;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--frame);
+  color: var(--on-frame);
+  font-size: var(--text-xs);
+  line-height: 16px;
+  box-shadow: var(--shadow-l2);
+}
+
+/* Skeleton (Yaya12085/curvy-otter-58): a gentle pulse, opacity only. */
+.skeleton__block {
+  background: var(--bg-sunken);
+  animation: bench-pulse 1.6s ease-in-out infinite;
+}
+@keyframes bench-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .bench-play,
-  .notebook__tab {
-    transition: none;
+  .skeleton__block {
+    animation: none;
+  }
+}
+:root[data-motion='reduce'] .skeleton__block {
+  animation: none;
+}
+
+/* Toast (andrew-demchenk0/nervous-bear-89): a 4 px rule in the meaning colour, icon and word. */
+.toast {
+  align-items: center;
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  border-left: 4px solid var(--tone, var(--border-input));
+  color: var(--text);
+  box-shadow: var(--shadow-l2);
+}
+.toast > svg {
+  margin-top: 0;
+  color: var(--tone);
+}
+.toast--success {
+  --tone: var(--conf-exact);
+}
+.toast--warn {
+  --tone: var(--conf-approx);
+}
+.toast--error {
+  --tone: var(--danger);
+}
+.toast--info {
+  --tone: var(--accent);
+}
+.toast__close {
+  display: grid;
+  place-items: center;
+  width: var(--target);
+  height: var(--target);
+  padding: 0;
+  border-radius: var(--radius-md);
+}
+
+/* Touch screens and pens: icon buttons grow to 48 px (§6). */
+@media (any-pointer: coarse) {
+  [data-surface='frame'] .icon-btn,
+  .tray .panel__header .icon-btn,
+  .notebook .panel__header .icon-btn {
+    width: 48px;
+    height: 48px;
   }
 }

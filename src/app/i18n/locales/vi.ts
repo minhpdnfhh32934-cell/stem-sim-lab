@@ -232,6 +232,10 @@ const vi = {
     play: 'Chạy',
     pause: 'Tạm dừng',
     openScience: 'Mở Thẻ khoa học',
+    darkTheme: 'Giao diện tối',
+    followSystem: 'Theo máy',
+    decrease: 'Giảm {name}',
+    increase: 'Tăng {name}',
   },
   layout: {
     resizeLeft: 'Kéo để đổi độ rộng Thư viện',
