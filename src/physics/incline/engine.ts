@@ -44,9 +44,10 @@ export class InclineEngine implements SimulationEngine<Params> {
   /**
    * Whether the current motion stops on an edge (stopsOnEdge), decided once when it starts —
    * as the exact solution decides it per segment — and kept: re-deciding with the current speed
-   * would narrow the band as v → 0. null: decide at the next step.
+   * would narrow the band as v → 0. `dir` is that motion's direction: a step that starts with
+   * another sign of v belongs to a new motion. null: decide at the next step.
    */
-  private tie: boolean | null = null;
+  private tie: { dir: number; onEdge: boolean } | null = null;
 
   reset(params: Params): void {
     this.p = inclineInput(params);
@@ -89,15 +90,24 @@ export class InclineEngine implements SimulationEngine<Params> {
       this.restTime = 0;
       let tau = h;
       const startV = this.v;
+      // The motion stops in this sub-interval (also exactly at its end: ts = h).
+      let stops = false;
       if (startV !== 0 && Math.sign(r.a) !== Math.sign(startV) && r.a !== 0) {
         const ts = -startV / r.a;
-        if (ts < tau) tau = ts;
+        if (ts <= tau) {
+          tau = ts;
+          stops = true;
+        }
       }
       // Leaving the surface (s = 0 or s = L) inside this sub-interval — or right now, when
       // the block sits on an edge and moves outward: stop exactly there. A stop on an edge is a
       // stop, as in the exact solution (stopsOnEdge).
-      this.tie ??= stopsOnEdge(this.s, startV, r.a, this.p.length);
-      const tie = this.tie;
+      if (this.tie && this.tie.dir !== Math.sign(startV)) this.tie = null;
+      this.tie ??= {
+        dir: Math.sign(startV),
+        onEdge: stopsOnEdge(this.s, startV, r.a, this.p.length),
+      };
+      const tie = this.tie.onEdge;
       const tb = tie ? Infinity : limitHit(this.s, this.v, r.a, 0, this.p.length, tau);
       if (tb <= tau) {
         this.s = this.s + this.v * tb + 0.5 * r.a * tb * tb;
@@ -107,12 +117,23 @@ export class InclineEngine implements SimulationEngine<Params> {
         return;
       }
       this.s += this.v * tau + 0.5 * r.a * tau * tau;
-      if (tau < h) {
+      // An edge reached exactly at the sub-interval's end (within rounding, moving outward):
+      // limitHit drops roots this close to the next start (τ < 1e-12), so leave here, not one
+      // step later with a step's extra speed.
+      const vEnd = stops ? 0 : this.v + r.a * tau;
+      const near = 1e-12 * (this.p.length + 1);
+      if (!tie && ((this.s <= near && vEnd < 0) || (this.s >= this.p.length - near && vEnd > 0))) {
+        this.s = Math.min(this.p.length, Math.max(0, this.s));
+        this.v = vEnd;
+        this.off = true;
+        return;
+      }
+      if (stops) {
         // Stopped: a stop on an edge sits on it, and the next motion decides afresh.
         if (tie) this.s = Math.min(this.p.length, Math.max(0, this.s));
         this.tie = null;
       }
-      this.v = tau < h ? 0 : this.v + r.a * tau;
+      this.v = stops ? 0 : this.v + r.a * tau;
       h -= tau;
     }
   }

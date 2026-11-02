@@ -91,3 +91,14 @@
   giữ nguyên tới khi vật dừng; trước đây tính lại mỗi bước nên dải hẹp dần khi v → 0. Đặt lại khi reset,
   kéo bằng chuột, khôi phục trạng thái, đứng yên.
 - Test: vượt đỉnh 2,5e-10·L (trong dải lúc bắt đầu, ngoài dải khi v → 0): engine cũ hỏng, engine mới đạt.
+
+## Duyệt PR #118 vòng 5 (1 🟡)
+
+- Engine: điểm dừng đúng ranh giới bước (ts = h) nay cũng là "dừng" (ts ≤ τ): xoá cờ chạm mép, đặt vị trí đúng
+  bằng mép; cờ ghi kèm hướng chuyển động, bước bắt đầu với hướng khác là chuyển động mới. Test đúng bộ số của
+  người duyệt (engine cũ cho vật xuyên chân dốc).
+- Cùng loại "ranh giới bước": mép tới đúng cuối nhịp (vật cách mép ≤ 1e-12·(L + 1), đang đi ra) thì rời ngay,
+  không bước thêm một nhịp với tốc độ lệch a·h (có từ trước). Test riêng; engine cũ hỏng.
+- Thử thêm ngoài bộ test: 300 ca hoà có điểm dừng đúng ranh giới bước: 0 sai.
+- `npm test`: 337 tệp đạt; 1 test hỏng vì quá 5 s khi chạy cả bộ (`tests/app.test.tsx`, Science Studio, 5,3 s),
+  chạy riêng tệp đó 15/15 đạt; không liên quan phần sửa. lint, typecheck đạt.

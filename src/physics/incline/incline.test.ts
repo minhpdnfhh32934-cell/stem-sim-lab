@@ -154,6 +154,66 @@ describe('incline engine', () => {
     expect(st[IS.s]).toBeCloseTo(stateAt(segs, e.time()).s, 6);
   });
 
+  it('a tie whose stop falls exactly on a step boundary: back down to the foot, not through it', () => {
+    // Review of PR #118, round 5: the stop came at ts = h, the tie flag outlived its motion and
+    // the slide back skipped the foot.
+    const params = {
+      theta: deg(30),
+      m: 1,
+      muS: 0,
+      muK: 0,
+      F: 0,
+      beta: 0,
+      s0: 1,
+      v0: 0.020437499999999997,
+      length: 1.000042578125,
+      g: 9.81,
+      tEnd: 5,
+    };
+    const segs = segments(inclineInput(params));
+    expect(segs.map((sg) => sg.end)).toEqual(['rest', 'bottom']);
+    const e = new InclineEngine();
+    e.reset(params);
+    const r = new EngineRunner(e, 1000);
+    for (let i = 0; i < 120 && !e.finished(); i++) r.frame(1 / 60, 1);
+    const st = new Float64Array(6);
+    e.readState(st);
+    // Left at the foot (s = 0), with the exact solution's speed there.
+    expect(st[IS.off]).toBe(1);
+    expect(st[IS.s]).toBeCloseTo(0, 9);
+    expect(st[IS.v]).toBeCloseTo(stateAt(segs, segs[1]?.t1 ?? 0).v, 6);
+  });
+
+  it('an edge reached exactly at a step boundary: leaves there with the exact speed', () => {
+    // a = −5 m/s², v0 = 26·h·5: the stop and the foot both fall on step boundaries (t = 0,75 s).
+    const v0 = (26 / 240) * 5;
+    const params = {
+      theta: deg(30),
+      m: 1,
+      muS: 0,
+      muK: 0,
+      F: 0,
+      beta: 0,
+      s0: 1,
+      v0,
+      length: 1 + (v0 * v0) / 10,
+      g: 10,
+      tEnd: 5,
+    };
+    const segs = segments(inclineInput(params));
+    const foot = segs.at(-1);
+    expect(foot?.end).toBe('bottom');
+    const e = new InclineEngine();
+    e.reset(params);
+    const r = new EngineRunner(e, 1000);
+    for (let i = 0; i < 60 && !e.finished(); i++) r.frame(1 / 60, 1);
+    const st = new Float64Array(6);
+    e.readState(st);
+    expect(st[IS.off]).toBe(1);
+    expect(st[IS.s]).toBeCloseTo(0, 9);
+    expect(st[IS.v]).toBeCloseTo(stateAt(segs, foot?.t1 ?? 0).v, 9);
+  });
+
   it('matches the exact piecewise solution', () => {
     const params = {
       m: 1,
