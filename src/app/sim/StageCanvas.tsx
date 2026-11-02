@@ -225,7 +225,10 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const cam = camRef.current;
-    let mode: 'none' | 'pan' | 'drag' | 'measure' = 'none';
+    let mode: 'none' | 'pan' | 'drag' | 'param' | 'measure' = 'none';
+    // A body dragged through its parameters (`dragTo`) and whether the run was playing.
+    let paramBody: PhysicsScene['bodies'][number] | null = null;
+    let wasPlaying = false;
     let lastX = 0;
     let lastY = 0;
 
@@ -261,6 +264,12 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       if (hit) {
         useSimStore.setState({ selected: hit.id });
         const body = scene.bodies[hit.index];
+        if (body?.dragTo) {
+          mode = 'param';
+          paramBody = body;
+          wasPlaying = useWorkspaceStore.getState().playing;
+          return;
+        }
         if (body?.draggable) {
           mode = 'drag';
           sim.input({ kind: 'dragStart', body: hit.index, x: w.x, y: w.y });
@@ -281,6 +290,10 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
         cam.panPixels(sx - lastX, sy - lastY);
       } else if (mode === 'drag') {
         sim.input({ kind: 'dragMove', x: w.x, y: w.y });
+      } else if (mode === 'param' && paramBody?.dragTo) {
+        const p = useSimStore.getState().params;
+        const next = paramBody.dragTo(w.x, w.y, p);
+        if (Object.entries(next).some(([k, v]) => p[k] !== v)) sim.setParams(next, 'user', false);
       } else if (mode === 'measure' && measureRef.current) {
         measureRef.current = { ...measureRef.current, b: w };
       } else {
@@ -300,6 +313,9 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
 
     const up = (e: PointerEvent) => {
       if (mode === 'drag') sim.input({ kind: 'dragEnd' });
+      // Each move restarted the run (paused): a run that was playing plays on.
+      if (mode === 'param' && wasPlaying && !useWorkspaceStore.getState().playing) sim.togglePlay();
+      paramBody = null;
       mode = 'none';
       if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
     };

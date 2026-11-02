@@ -57,6 +57,11 @@ export const SRC = {
     citation:
       'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 16 (sóng trên dây, sóng dừng)',
   },
+  hallidayInterference: {
+    id: 'halliday-interference',
+    citation:
+      'D. Halliday, R. Resnick, J. Walker — Fundamentals of Physics, Wiley — ch. 17 (giao thoa theo hiệu đường đi, phách)',
+  },
   sgk11kntt: {
     id: 'sgk-vl11-kntt',
     citation:

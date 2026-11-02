@@ -129,6 +129,7 @@ const en: Messages = {
     diffusionOsmosis: 'Diffusion & osmosis',
     cellStructure: 'Prokaryotic and eukaryotic cells',
     uniformCircularMotion: 'Uniform circular motion',
+    interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
   },

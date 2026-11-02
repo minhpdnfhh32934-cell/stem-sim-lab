@@ -38,6 +38,8 @@ export const TOPIC_HINTS: Record<string, string> = {
   simplePendulum: 'Con lắc đơn: chu kì, biên độ góc, vận tốc, lực căng dây.',
   uniformCircularMotion:
     'Chuyển động tròn đều: bán kính, tốc độ, tốc độ góc (rad/s), chu kì, tần số (Hz, vòng/s, vòng/phút), gia tốc hướng tâm, lực hướng tâm.',
+  interference:
+    'Giao thoa sóng trên mặt nước, hai nguồn kết hợp CÙNG PHA A, B (S₁, S₂): khoảng cách hai nguồn d (= AB), tần số f, tốc độ truyền sóng v hoặc bước sóng λ (đề cho λ thì ghi lambda và waveFrom = 1), biên độ a của mỗi nguồn, điểm M cách A khoảng d1 và cách B khoảng d2; số điểm cực đại, cực tiểu trên đoạn AB, biên độ tại M. Hai nguồn khác tần số f, f2: phách (mode = 1). Hai nguồn ngược pha hoặc lệch pha, biên độ hai nguồn khác nhau, điểm trên đường tròn/hình vuông, sóng ánh sáng (Young): ghi vào unsupported_parts. Chỉ ghi số có trong đề, không tự tính λ hay d1, d2.',
   standingWave:
     'Sóng dừng trên sợi dây CHỈ có hai đầu cố định (dây có một đầu tự do: ghi vào unsupported_parts): chiều dài dây, số bó sóng n (= số bụng; số nút là n + 1 — đề cho số nút thì ghi vào clarifications, không tự trừ), tần số, tốc độ truyền sóng, bước sóng, lực căng dây, mật độ dài (kg/m, g/m), biên độ A của mỗi sóng thành phần (đề cho biên độ bụng 2A thì ghi vào clarifications, không tự chia).',
   electricField:

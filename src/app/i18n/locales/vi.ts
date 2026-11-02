@@ -132,6 +132,7 @@ const vi = {
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
     cellStructure: 'Tế bào nhân sơ và nhân thực',
     uniformCircularMotion: 'Chuyển động tròn đều',
+    interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
   },

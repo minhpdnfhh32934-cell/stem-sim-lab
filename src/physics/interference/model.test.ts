@@ -54,7 +54,10 @@ describe('interference model', () => {
     for (let i = 0; i < 50; i++) {
       const r1 = 0.01 + 0.007 * i;
       const r2 = 0.2 - 0.003 * i;
-      expect(amplitudeAt(0.002, r2 - r1, lambda)).toBeCloseTo(phasorAmplitude(0.002, k, r1, r2), 14);
+      expect(amplitudeAt(0.002, r2 - r1, lambda)).toBeCloseTo(
+        phasorAmplitude(0.002, k, r1, r2),
+        14,
+      );
     }
     // On a maximum (Δr = kλ) 2a, on a minimum (Δr = (k + ½)λ) 0.
     expect(amplitudeAt(1, 2 * lambda, lambda)).toBeCloseTo(2, 14);

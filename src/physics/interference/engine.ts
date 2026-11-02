@@ -40,8 +40,7 @@ export interface InterferenceInput {
 /** Point at distance d₁ from S₁ = (−d/2, 0) and d₂ from S₂ = (d/2, 0), y ≥ 0; null if none. */
 export function pointM(d: number, d1: number, d2: number): { x: number; y: number } | null {
   const tol = 1e-9 * Math.max(d, d1, d2);
-  if (!(d > 0 && d1 > 0 && d2 > 0) || Math.abs(d1 - d2) > d + tol || d > d1 + d2 + tol)
-    return null;
+  if (!(d > 0 && d1 > 0 && d2 > 0) || Math.abs(d1 - d2) > d + tol || d > d1 + d2 + tol) return null;
   const x = (d1 * d1 - d2 * d2) / (2 * d);
   return { x, y: Math.sqrt(Math.max(0, d1 * d1 - (x + d / 2) ** 2)) };
 }
@@ -233,9 +232,10 @@ export function measuredBeatPeriod(p: Params): number {
   if (n > MAX_SAMPLES) return Number.NaN;
   const u = new Float64Array(n);
   const s = new Float64Array(e.stateSize);
-  for (let i = 0; i < n; i++, e.step()) {
+  for (let i = 0; i < n; i++) {
     e.readState(s);
     u[i] = s[IF.u] ?? 0;
+    e.step();
   }
   return measureBeatPeriod(u, e.dt);
 }
@@ -274,7 +274,7 @@ export function rayLattice(
     }
   };
   const out: Float64Array[] = [];
-  let y = new Float64Array(2 * M);
+  let y: Float64Array = new Float64Array(2 * M);
   let t = 0;
   for (const ti of times) {
     if (ti > t) {

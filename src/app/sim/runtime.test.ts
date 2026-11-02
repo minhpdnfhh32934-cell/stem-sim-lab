@@ -88,3 +88,21 @@ describe('history spacing follows the speed a frame really ran at (UI-22)', () =
     expect(sim.history.length).toBeGreaterThan(t / (1000 / 120) + 1);
   });
 });
+
+describe('parameters set by dragging (BodyDef.dragTo)', () => {
+  it('sets several values at once, restarts the run and keeps the view', async () => {
+    await sim.open('interference');
+    play(0.5);
+    const fit = useSimStore.getState().fitRequest;
+    sim.setParams({ d1: 0.1, d2: 0.13 }, 'user', false);
+    const s = useSimStore.getState();
+    expect([s.params.d1, s.params.d2]).toEqual([0.1, 0.13]);
+    expect([s.sources.d1, s.sources.d2]).toEqual(['user', 'user']);
+    expect(s.fitRequest).toBe(fit);
+    expect(s.intervened).toBe(false);
+    expect(sim.latest?.t).toBe(0);
+    // A slider change still frames the new view.
+    sim.setParam('d', 0.2);
+    expect(useSimStore.getState().fitRequest).toBe(fit + 1);
+  });
+});

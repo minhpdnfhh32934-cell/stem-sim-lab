@@ -39,7 +39,10 @@ describe('interference engine', () => {
       expect(s[IF.u1]).toBeCloseTo(2e-4 * Math.cos(w * t - (2 * Math.PI * 0.09) / lambda), 15);
       expect(s[IF.u2]).toBeCloseTo(2e-4 * Math.cos(w * t - (2 * Math.PI * 0.12) / lambda), 15);
       const product =
-        2 * 2e-4 * Math.cos((Math.PI * 0.03) / lambda) * Math.cos(w * t - (Math.PI * 0.21) / lambda);
+        2 *
+        2e-4 *
+        Math.cos((Math.PI * 0.03) / lambda) *
+        Math.cos(w * t - (Math.PI * 0.21) / lambda);
       expect(s[IF.u]).toBeCloseTo(product, 15);
       expect(s[IF.env]).toBeCloseTo(amplitudeAt(2e-4, 0.03, lambda), 15);
     }
@@ -76,7 +79,9 @@ describe('interference engine', () => {
     expect(Math.hypot(m.x + 0.05, m.y)).toBeCloseTo(0.09, 14);
     expect(Math.hypot(m.x - 0.05, m.y)).toBeCloseTo(0.12, 14);
     expect(m.y).toBeGreaterThan(0);
-    expect(pointM(0.1, 0.03, 0.07)).toEqual({ x: expect.closeTo(-0.02, 14), y: 0 });
+    const onAxis = pointM(0.1, 0.03, 0.07);
+    expect(onAxis?.x).toBeCloseTo(-0.02, 14);
+    expect(onAxis?.y).toBe(0);
     expect(pointM(0.1, 0.02, 0.07)).toBeNull();
     expect(pointM(0.1, 0.01, 0.12)).toBeNull();
     expect(pointM(0.1, 0, 0.1)).toBeNull();
@@ -117,11 +122,11 @@ describe('DOPRI5 check: each wave from the wave equation along a ray', () => {
   const maxErr = (per: number) => {
     const rows = rayLattice(src, per, rs, times);
     let e = 0;
-    rows.forEach((row, i) =>
+    rows.forEach((row, i) => {
       rs.forEach((r, j) => {
         e = Math.max(e, Math.abs((row[j] ?? NaN) - exact(r, times[i] ?? NaN)));
-      }),
-    );
+      });
+    });
     return e;
   };
 
