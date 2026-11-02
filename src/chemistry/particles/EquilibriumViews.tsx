@@ -51,6 +51,10 @@ const CARD: ScienceCardData = {
     },
     {
       tex: '\\ln\\dfrac{K_2}{K_1} = -\\dfrac{\\Delta H}{R}\\left(\\dfrac{1}{T_2}-\\dfrac{1}{T_1}\\right),\\ \\Delta H = E_{a,t}-E_{a,n}',
+      label: L(
+        'Eₐ,t, Eₐ,n: năng lượng hoạt hóa của phản ứng thuận, nghịch',
+        'Eₐ,t, Eₐ,n: activation energies of the forward and reverse reactions',
+      ),
     },
   ],
   assumptions: [
@@ -70,6 +74,10 @@ const CARD: ScienceCardData = {
       'Giản đồ năng lượng: ba mức chất đầu (0), trạng thái chuyển tiếp (Eₐ thuận) và sản phẩm (ΔH) tính từ Eₐ người học nhập và vẽ đúng tỉ lệ với nhau; hình dạng đường cong giữa chúng là minh họa định tính, không phải tọa độ phản ứng thật.',
       'Energy diagram: the three levels reactants (0), transition state (forward Eₐ) and products (ΔH) are computed from the Eₐ the learner typed and drawn to scale with each other; the curve shape between them is a qualitative illustration, not a real reaction coordinate.',
     ),
+    L(
+      'ΔH ở đây là Eₐ(thuận) − Eₐ(nghịch), coi như không đổi theo nhiệt độ. Với K theo nồng độ của khí lí tưởng, hiệu này đúng ra là ΔU; khi số mol khí thay đổi (A + B ⇌ C, 2A ⇌ B), ΔH = ΔU + Δn·RT. Với chất tan, ΔH ≈ ΔU.',
+      'ΔH here is Eₐ(forward) − Eₐ(reverse), taken as independent of temperature. For a concentration-based K of ideal gases this difference is strictly ΔU; when the number of moles of gas changes (A + B ⇌ C, 2A ⇌ B), ΔH = ΔU + Δn·RT. For solutes, ΔH ≈ ΔU.',
+    ),
   ],
   confidence: 'exact',
   confidenceNote: L(
@@ -82,6 +90,8 @@ const CARD: ScienceCardData = {
     'Exact analytic solution in the reaction extent ξ (Riccati equation); cross-checked with Dormand–Prince 5(4), rtol 10⁻⁹',
   ),
   sources: [CSRC.sgk11, CSRC.atkins],
+  // Pending wording: CHEMUI-5, EDG-1, EDG-2 (docs/DATA_REVIEW.md).
+  reviewStatus: 'pending',
 };
 
 const DIRECTION: Record<'forward' | 'backward' | 'none', LocalizedText> = {

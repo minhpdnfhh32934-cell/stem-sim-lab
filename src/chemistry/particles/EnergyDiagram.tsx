@@ -7,7 +7,7 @@ import { diagramGeometry, energyLevels } from './energyLevels';
 const KIND = {
   exothermic: L('tỏa nhiệt', 'exothermic'),
   endothermic: L('thu nhiệt', 'endothermic'),
-  none: L('ΔH = 0', 'ΔH = 0'),
+  none: L('không tỏa, không thu nhiệt', 'neither exothermic nor endothermic'),
 };
 
 /**
