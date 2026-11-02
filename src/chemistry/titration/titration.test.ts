@@ -44,7 +44,10 @@ describe('strong acid – strong base titration', () => {
       const veq = equivalenceVolume(t);
       const points = [0, veq / 2, veq * (1 - 1e-6), veq, veq * (1 + 1e-6), 1.5 * veq, 2 * veq];
       for (const vb of points) {
-        expect(Math.abs(pH(t, vb) - pHByBisection(t, vb)), `${JSON.stringify(t)} vb=${String(vb)}`).toBeLessThan(1e-9);
+        expect(
+          Math.abs(pH(t, vb) - pHByBisection(t, vb)),
+          `${JSON.stringify(t)} vb=${String(vb)}`,
+        ).toBeLessThan(1e-9);
       }
     }
   });

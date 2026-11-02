@@ -13,6 +13,7 @@ const MODULES: Record<string, () => Promise<ModuleView>> = {
   bondPolarity: () => import('@/chemistry/molecule/modules').then((m) => m.bondPolarity),
   reactionLibrary: () => import('@/chemistry/reaction/modules').then((m) => m.reactionLibrary),
   equationBalancing: () => import('@/chemistry/reaction/modules').then((m) => m.equationBalancing),
+  acidBaseTitration: () => import('@/chemistry/titration/modules').then((m) => m.acidBaseTitration),
   maxwellBoltzmann: () => import('@/chemistry/particles/modules').then((m) => m.maxwellBoltzmann),
   collisionTheory: () => import('@/chemistry/particles/modules').then((m) => m.collisionTheory),
   chemicalEquilibrium: () =>

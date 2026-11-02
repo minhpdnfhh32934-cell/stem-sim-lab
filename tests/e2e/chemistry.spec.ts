@@ -14,6 +14,7 @@ const TOPICS = [
   'Thuyết va chạm',
   'Phân bố Maxwell–Boltzmann',
   'Cân bằng hóa học & Le Chatelier',
+  'Chuẩn độ acid – base',
 ];
 
 async function openChemistry(page: Page) {
@@ -90,4 +91,23 @@ test('unknown SMILES: RDKit checks it and shows 2D only, with a warning', async 
     timeout: 30_000,
   });
   await expect(page.getByText(/C₅H₁₀O₂/)).toBeVisible();
+});
+
+test('titration: dragging the NaOH volume changes the pH and the indicator, fits 1366×768', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await openChemistry(page);
+  await page.getByRole('button', { name: 'Chuẩn độ acid – base', exact: true }).click();
+  const readout = page.locator('.tit-readout');
+  await expect(readout.getByText('1,00', { exact: true })).toBeVisible({ timeout: 20_000 });
+  await expect(readout.getByText(/không màu/)).toBeVisible();
+  await page.getByRole('slider', { name: /Thể tích NaOH/ }).fill('15');
+  await expect(readout.getByText(/hồng tím/)).toBeVisible();
+  await expect(readout.getByText(/NaOH dư/)).toBeVisible();
+  await expect(page.getByText('Màu minh hoạ')).toBeVisible();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
 });

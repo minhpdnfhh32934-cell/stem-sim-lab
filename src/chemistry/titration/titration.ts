@@ -46,7 +46,9 @@ export const PKW_UNCERTAINTY = water.uncertainty_pK;
 export const TITRATION_SOURCES: Source[] = [
   water.source,
   water.density_source,
-  ...new Map(INDICATORS.flatMap((i) => [i.source, i.display_source]).map((s) => [s.id, s])).values(),
+  ...new Map(
+    INDICATORS.flatMap((i) => [i.source, i.display_source]).map((s) => [s.id, s]),
+  ).values(),
 ];
 
 export function indicatorOf(id: string): Indicator {
