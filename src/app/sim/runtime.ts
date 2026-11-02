@@ -142,6 +142,13 @@ class SimRuntime {
     this.openSeq++;
     useSimStore.setState({ loading: false, error: null });
     this.close();
+    // The lesson's own speed leaves with it (library, a module, Studio); a speed the learner
+    // chose stays. Not in close(): open() calls it before comparing with the old lesson's speed.
+    const ws = useWorkspaceStore.getState();
+    useWorkspaceStore.setState({
+      suggestedSpeed: null,
+      speed: ws.speed === ws.suggestedSpeed ? 1 : ws.speed,
+    });
   }
 
   close(): void {

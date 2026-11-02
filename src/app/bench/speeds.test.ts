@@ -71,4 +71,33 @@ describe('Basic speed steps', () => {
     expect(basicSteps(wave)).not.toContain(100);
     expect(useWorkspaceStore.getState().speed).toBe(2);
   });
+
+  it('a closed lesson’s own speed is gone: wave, ×0,25, home, Basic → 0,5×, then free fall 0,5×', async () => {
+    stop = keepBasicSpeedOnSteps();
+    act(() => {
+      useSettingsStore.getState().setUiMode('advanced');
+    });
+    await sim.open('standingWave');
+    act(() => {
+      useWorkspaceStore.getState().setSpeed(0.25);
+    });
+    // Back to the library (a module or Studio does the same).
+    sim.shutdown();
+    expect(useWorkspaceStore.getState().suggestedSpeed).toBeNull();
+    act(() => {
+      useSettingsStore.getState().setUiMode('basic');
+    });
+    // Nearest of 0,5× · 1× · 2×, not the closed wave's ×0,1.
+    expect(useWorkspaceStore.getState().speed).toBe(0.5);
+    await sim.open('freeFall');
+    expect(useWorkspaceStore.getState().speed).toBe(0.5);
+  });
+
+  it('wave, home, free fall: 1×', async () => {
+    await sim.open('standingWave');
+    sim.shutdown();
+    expect(useWorkspaceStore.getState()).toMatchObject({ suggestedSpeed: null, speed: 1 });
+    await sim.open('freeFall');
+    expect(useWorkspaceStore.getState().speed).toBe(1);
+  });
 });
