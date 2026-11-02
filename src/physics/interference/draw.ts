@@ -14,8 +14,18 @@ import { beatFrequency } from './model';
  */
 export const CELL_PX: Record<QualityTier, number> = { high: 2, medium: 3, low: 4 };
 
-/** Below this many cells per wavelength the picture would alias (fake fringes): not drawn. */
+/** Below this many cells per wavelength the picture would alias (fake fringes). */
 export const MIN_CELLS_PER_WAVELENGTH = 4;
+
+/**
+ * Cell size for a tier and a wavelength of `lambdaPx` screen px: the tier's cell, made finer when
+ * it would alias (a slow computer then loses frame rate, never the picture); null when even 1 px
+ * cells would alias.
+ */
+export function cellSize(tier: QualityTier, lambdaPx: number): number | null {
+  const finest = Math.floor(lambdaPx / MIN_CELLS_PER_WAVELENGTH);
+  return finest >= 1 ? Math.min(CELL_PX[tier], finest) : null;
+}
 
 /** Region shown: both sources, M and its mirror image, so the whole symmetric pattern shows. */
 export function interferenceView(p: Params): WorldBounds {
@@ -43,7 +53,7 @@ let cache: { key: string; canvas: HTMLCanvasElement; img: ImageData } | undefine
  * Water surface as an image: each cell is coloured by u/(2a) at its centre, crest colour above
  * zero and trough colour below, alpha ∝ |u|, so calm lines show the stage. Drawn again only when
  * the time, the parameters, the view or the theme change. Returns false when the wavelength is
- * too small on screen for the cells (nothing drawn).
+ * under 4 px on screen (nothing drawn).
  */
 export function drawWater(
   ctx: CanvasRenderingContext2D,
@@ -53,8 +63,9 @@ export function drawWater(
   crest: string,
   trough: string,
 ): boolean {
-  const cell = CELL_PX[effectiveTier(usePerfStore.getState())];
-  if (Math.min(q.lambda1, q.lambda2) * cam.scale < MIN_CELLS_PER_WAVELENGTH * cell) return false;
+  const lambdaPx = Math.min(q.lambda1, q.lambda2) * cam.scale;
+  const cell = cellSize(effectiveTier(usePerfStore.getState()), lambdaPx);
+  if (cell === null) return false;
   const nx = Math.ceil(cam.width / cell);
   const ny = Math.ceil(cam.height / cell);
   const o = cam.toWorld(0, 0);
@@ -160,8 +171,8 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   if (!drawn)
     rows.push(
       vi
-        ? 'Bước sóng nhỏ hơn độ mịn của hình: phóng to (con lăn chuột) để thấy mặt nước'
-        : 'The wavelength is smaller than the picture’s cells: zoom in (mouse wheel) to see the water',
+        ? 'Bước sóng dưới 4 điểm ảnh trên màn hình: phóng to khung nhìn để thấy mặt nước (các số không đổi)'
+        : 'The wavelength is under 4 pixels on screen: zoom the view in to see the water (the numbers do not change)',
     );
   rows.forEach((r, i) => {
     text(ctx, cam, b.xMin, b.yMax, r, c.muted, 'left', { x: 60, y: 18 * (i + 1) });

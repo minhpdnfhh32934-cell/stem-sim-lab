@@ -471,6 +471,7 @@ const vi = {
     steps: 'Lời giải từng bước',
     check: 'Kiểm chứng số',
     agree: 'khớp, sai lệch {value}',
+    disagree: 'chưa khớp, sai lệch {value}',
     engineNote:
       'Mọi con số ở đây do chương trình tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
     intervenedNote:

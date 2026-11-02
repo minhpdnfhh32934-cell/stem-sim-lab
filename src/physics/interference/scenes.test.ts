@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildDraft } from '@/ai/draft';
 import { basicSplit } from '@/app/sim/basicParams';
+import { CHALLENGES, evaluate, startParams } from '@/learn/challenges';
 import { usePerfStore } from '@/perf/perfStore';
 import { applyAutoDefaults } from '../autoDefaults';
 import type { ParamSource } from '../types';
 import { Camera } from '../render/camera';
-import { CELL_PX, MIN_CELLS_PER_WAVELENGTH, drawWater, fillWater } from './draw';
-import { MAX_RATIO, MODE, interferenceInput, pointM } from './engine';
+import { CELL_PX, cellSize, drawWater, fillWater } from './draw';
+import { MAX_RATIO, MODE, beatsMeasurable, interferenceInput, pointM } from './engine';
 import { dragProbe, dragSource, interference as sc } from './scenes';
 
 const answers = (p: Record<string, number>) =>
@@ -67,6 +68,40 @@ describe('interference scene: solution', () => {
     expect(a.wavelength2?.value).toBeCloseTo(0.3 / 11, 14);
     expect(a.max_amplitude?.value).toBeCloseTo(4e-4, 14);
     expect(a.maxima).toBeUndefined();
+  });
+
+  it('beats: every check shown agrees over the f₂ slider; far-apart frequencies get a note instead', () => {
+    for (const f of [10, 1.5, 63]) {
+      let checked = 0;
+      for (let i = 10; i <= 1000; i++) {
+        const f2 = i / 10;
+        const p = { ...sc.defaults, mode: MODE.beats, f, f2 };
+        if ((sc.validate?.(p) ?? []).length > 0) continue;
+        const sol = sc.solve(p, 'en');
+        const close = beatsMeasurable(f, f2);
+        for (const a of sol.answers) {
+          if (a.check === undefined) continue;
+          checked++;
+          expect(close, `${String(f)} / ${String(f2)} Hz ${a.id}`).toBe(true);
+          expect(Math.abs(a.check / a.value - 1), `${String(f)} / ${String(f2)} Hz`).toBeLessThan(
+            3e-3,
+          );
+        }
+        expect(sol.notes?.some((n) => n.vi.includes('không đo lại chu kì phách')) ?? false).toBe(
+          !close,
+        );
+      }
+      expect(checked).toBeGreaterThan(0);
+    }
+  });
+
+  it('one maximum on S₁S₂: no spacing of neighbouring maxima', () => {
+    const a = answers({ d: 0.02, d1: 0.018, d2: 0.024 });
+    expect(a.maxima?.value).toBe(1);
+    expect(a.fringe_spacing).toBeUndefined();
+    const steps = sc.solve({ ...sc.defaults, d: 0.02, d1: 0.018, d2: 0.024 }, 'vi').steps;
+    expect(steps.some((st) => st.text.vi.includes('chỉ có cực đại trung tâm'))).toBe(true);
+    expect(answers({}).fringe_spacing?.value).toBeCloseTo(0.015, 14);
   });
 
   it('λ given: v = λf', () => {
@@ -168,15 +203,20 @@ describe('interference scene: reading a problem', () => {
 });
 
 describe('interference scene: dragging', () => {
-  it('a dragged source sets S₁S₂ = 2|x| (both move), kept so that M still exists', () => {
+  it('a dragged source sets S₁S₂ = 2|x| (both move): free while M follows, kept so a stated M exists', () => {
     const p = { ...sc.defaults, d1: 0.09, d2: 0.12 };
-    expect(dragSource(0.06, p)).toEqual({ d: 0.12 });
-    expect(dragSource(-0.06, p)).toEqual({ d: 0.12 });
-    // |d₁ − d₂| = 3 cm ≤ S₁S₂ ≤ d₁ + d₂ = 21 cm.
-    expect(dragSource(0.001, p)).toEqual({ d: 0.03 });
-    expect(dragSource(0.4, p)).toEqual({ d: 0.21 });
+    const auto: Record<string, ParamSource> = {};
+    const stated: Record<string, ParamSource> = { d1: 'problem', d2: 'problem' };
+    expect(dragSource(0.06, p, auto)).toEqual({ d: 0.12 });
+    expect(dragSource(-0.06, p, auto)).toEqual({ d: 0.12 });
+    // A fast drag reaches the pointer when M is not stated (M then follows S₁S₂).
+    expect(dragSource(0.13, p, auto)).toEqual({ d: 0.26 });
+    // Stated M: |d₁ − d₂| = 3 cm ≤ S₁S₂ ≤ d₁ + d₂ = 21 cm.
+    expect(dragSource(0.001, p, stated)).toEqual({ d: 0.03 });
+    expect(dragSource(0.4, p, stated)).toEqual({ d: 0.21 });
     // The slider's range: 1 cm … 50 cm.
-    expect(dragSource(0, { ...p, d1: 0.5, d2: 0.5 })).toEqual({ d: 0.01 });
+    expect(dragSource(0, p, auto)).toEqual({ d: 0.01 });
+    expect(dragSource(0.4, p, auto)).toEqual({ d: 0.5 });
   });
 
   it('a dragged M takes its distances to the sources (drawn on the side y ≥ 0)', () => {
@@ -185,8 +225,23 @@ describe('interference scene: dragging', () => {
     const m = interferenceInput({ ...p, ...next }).m;
     expect(m?.x).toBeCloseTo(0.01, 3);
     expect(m?.y).toBeCloseTo(0.04, 3);
-    expect(dragProbe(0.01, -0.04, p)).toEqual(next);
+    // Below S₁S₂ the pointer keeps M on the line, never on the mirror point.
+    const below = interferenceInput({ ...p, ...dragProbe(0.01, -0.04, p) }).m;
+    expect(below?.x).toBeCloseTo(0.01, 3);
+    expect(below?.y).toBeCloseTo(0, 3);
     for (const b of sc.bodies) expect(b.dragTo, b.id).toBeDefined();
+  });
+
+  it('the challenge “9 maxima” is not spoilt by dragging M', () => {
+    const c = CHALLENGES.find((x) => x.id === 'interference.max9');
+    if (!c) throw new Error('interference.max9');
+    const sources: Record<string, ParamSource> = Object.fromEntries(
+      sc.params.map((d) => [d.key, 'default']),
+    );
+    const start = startParams(sc, c);
+    const moved = { ...start, ...dragProbe(0.02, 0.1, start), d: 0.13 };
+    const after = { ...sources, d: 'user' as const, d1: 'user' as const, d2: 'user' as const };
+    expect(evaluate(sc, c, moved, after).state).toBe('done');
   });
 });
 
@@ -210,19 +265,25 @@ describe('interference scene: water picture', () => {
     }
   });
 
-  it('the overload ladder only coarsens the picture: cells grow one tier down', () => {
+  it('the overload ladder only coarsens the picture, never removes it', () => {
     expect(CELL_PX.low).toBeGreaterThan(CELL_PX.medium);
     expect(CELL_PX.medium).toBeGreaterThan(CELL_PX.high);
+    // A wide wavelength: each tier's own cell.
+    expect(cellSize('high', 100)).toBe(CELL_PX.high);
+    expect(cellSize('low', 100)).toBe(CELL_PX.low);
+    // λ = 10 px: a lower tier would alias with its 3–4 px cells, so it keeps 2 px (λ/4 at most).
+    expect(cellSize('medium', 10)).toBe(2);
+    expect(cellSize('low', 10)).toBe(2);
+    expect(cellSize('low', 5)).toBe(1);
+    // Only under 4 px per λ is there no picture, on every tier.
+    expect(cellSize('high', 3.9)).toBeNull();
     const q = interferenceInput(sc.defaults);
     const cam = new Camera();
     cam.resize(800, 600);
-    // λ on screen = 10 px: drawn with 2 px cells (5 per λ), not with 3 px cells (3,3 per λ).
-    cam.fit({ xMin: 0, xMax: (80 * q.lambda1) / 1, yMin: -1, yMax: 1 }, 0);
-    const pxPerLambda = q.lambda1 * cam.scale;
-    expect(pxPerLambda / CELL_PX.high).toBeGreaterThanOrEqual(MIN_CELLS_PER_WAVELENGTH);
-    expect(pxPerLambda / CELL_PX.medium).toBeLessThan(MIN_CELLS_PER_WAVELENGTH);
+    cam.fit({ xMin: 0, xMax: 300 * q.lambda1, yMin: -1, yMax: 1 }, 0);
+    expect(q.lambda1 * cam.scale).toBeLessThan(4);
     const ctx = { drawImage: () => undefined } as unknown as CanvasRenderingContext2D;
-    usePerfStore.setState({ preference: 'high', degraded: true });
+    usePerfStore.setState({ preference: 'high', degraded: false });
     expect(drawWater(ctx, cam, q, 0, '#000', '#fff')).toBe(false);
     // The numbers do not depend on the tier.
     const before = sc.solve(sc.defaults, 'vi').answers;

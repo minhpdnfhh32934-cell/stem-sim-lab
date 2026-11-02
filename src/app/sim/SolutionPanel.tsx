@@ -14,6 +14,9 @@ import { EmptyState } from '@/ui/EmptyState';
 import { useSimStore } from './simStore';
 import '@/learn/learn.css';
 
+/** A cross-check further off than this (relative) is shown as a disagreement, never "khớp". */
+const CHECK_TOLERANCE = 1e-2;
+
 /**
  * Engine-computed answers with their numerical cross-checks, and the step-by-step
  * derivation with the actual numbers substituted (MASTER_PROMPT §6.1 "Lời giải").
@@ -110,10 +113,16 @@ function SolutionBody({ scene, solution }: { scene: PhysicsScene; solution: Solu
                           {fmtQty(locale, a.value, a.unit, 4)}
                         </td>
                         <td className="solution__check">
-                          {dev !== null && (
+                          {dev !== null && dev <= CHECK_TOLERANCE && (
                             <span data-tip={t('solution.check')}>
                               <CheckCircle2 size={13} strokeWidth={2} aria-hidden="true" />
                               {t('solution.agree', { value: formatDeviation(locale, dev) })}
+                            </span>
+                          )}
+                          {dev !== null && dev > CHECK_TOLERANCE && (
+                            <span data-tip={t('solution.check')} className="is-off">
+                              <AlertTriangle size={13} strokeWidth={2} aria-hidden="true" />
+                              {t('solution.disagree', { value: formatDeviation(locale, dev) })}
                             </span>
                           )}
                         </td>

@@ -108,9 +108,11 @@ tưởng (không tắt dần, biên độ không giảm theo khoảng cách, kh�
 do sai số làm tròn (≤ 10⁻⁹), không làm tròn thêm. Kiểm chéo bằng cách quét biên độ của tổng hai
 phasor dọc S₁S₂ và đếm đỉnh, đáy (giới hạn đã biết: đỉnh cách nguồn dưới khoảng 10⁻⁷λ không quét
 thấy). Khác tần số thì có phách f_b = |f₁ − f₂|; chu kì phách đo lại trên li độ tại M của engine
-(đỉnh đường bao). Hình mặt nước là ảnh điểm: máy chậm thì ô ảnh to hơn (cấp chất lượng thấp hơn),
-còn mọi số không đổi; bước sóng nhỏ hơn 4 ô ảnh thì không vẽ mặt nước (tránh vân giả) và nhắc phóng
-to. Kéo một nguồn đổi S₁S₂ (hai nguồn dời đối xứng), kéo M đổi d₁, d₂; đó là đổi thông số, không phải
+(đỉnh đường bao), chỉ khi hai tần số đủ gần (2|f₁ − f₂|/(f₁ + f₂) ≤ 0,5; sai số đo ≤ 0,22 %); xa hơn thì
+Lời giải không gắn phép đo và ghi chú vì sao. Hình mặt nước là ảnh điểm: máy chậm thì ô ảnh to hơn (cấp chất lượng thấp hơn)
+nhưng không to quá λ/4 trên màn hình, nên hình không bao giờ biến mất vì máy chậm; mọi số không đổi.
+Chỉ khi bước sóng dưới 4 điểm ảnh trên màn hình thì không vẽ mặt nước (tránh vân giả) và nhắc phóng
+to. Bảng Lời giải hiện phép kiểm chéo lệch quá 1 % là "chưa khớp". Kéo một nguồn đổi S₁S₂ (hai nguồn dời đối xứng), kéo M đổi d₁, d₂; đó là đổi thông số, không phải
 can thiệp giữa chừng, nên kéo không làm Thẻ Khoa học chuyển sang "gần đúng".
 
 **Sóng dừng không tự làm tròn (0.8.0, #37 §8.2 bẫy 5):** dây hai đầu cố định chỉ có sóng dừng

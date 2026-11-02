@@ -221,11 +221,21 @@ export function measureBeatPeriod(u: ArrayLike<number>, dt: number): number {
 /** Most samples `measuredBeatPeriod` takes (beyond it the solution shows no check). */
 const MAX_SAMPLES = 200_000;
 
-/** Beat period measured on the engine's own displacement at M over 3.5 beat periods. */
+/**
+ * The carrier peaks trace the envelope only when the frequencies are close:
+ * 2|f₁ − f₂|/(f₁ + f₂) ≤ 0,5 (error ≤ 0,22 % over the sliders, test); further apart they miss it.
+ */
+export const beatsMeasurable = (f1: number, f2: number) =>
+  (2 * Math.abs(f1 - f2)) / (f1 + f2) <= 0.5;
+
+/**
+ * Beat period measured on the engine's own displacement at M over 3.5 beat periods; NaN when
+ * the beats cannot be measured that way (`beatsMeasurable`).
+ */
 export function measuredBeatPeriod(p: Params): number {
   const q = interferenceInput(p);
   const fb = beatFrequency(q.f1, q.f2);
-  if (!(fb > 0) || !hasFrequency(q)) return Number.NaN;
+  if (!(fb > 0) || !hasFrequency(q) || !beatsMeasurable(q.f1, q.f2)) return Number.NaN;
   const e = new InterferenceEngine();
   e.reset({ ...p, tEnd: 3.5 / fb });
   const n = Math.ceil(3.5 / fb / e.dt);

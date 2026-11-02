@@ -10,6 +10,7 @@ import type {
   BodyDef,
   GraphDef,
   ParamDef,
+  ParamSource,
   Params,
   PhysicsScene,
   Solution,
@@ -22,6 +23,7 @@ import {
   MAX_RATIO,
   MODE,
   interferenceInput,
+  beatsMeasurable,
   measuredBeatPeriod,
   modeOf,
   phasorAmplitude,
@@ -47,22 +49,29 @@ const tidy = (x: number) => Math.round(x * 1e4) / 1e4;
 
 /**
  * A dragged source sets S₁S₂ = 2|x| (both sources move symmetrically about the midpoint), kept
- * on the slider and within |d₁ − d₂| ≤ S₁S₂ ≤ d₁ + d₂ so point M still exists.
+ * on the slider. When d₁, d₂ were stated it also stays within |d₁ − d₂| ≤ S₁S₂ ≤ d₁ + d₂, so
+ * point M still exists; otherwise M follows S₁S₂ (`autoDefaults`) and the drag is free.
  */
-export function dragSource(x: number, p: Params): Params {
+export function dragSource(x: number, p: Params, sources: Record<string, ParamSource>): Params {
   const q = interferenceInput(p);
-  const lo = Math.max(D_MIN, Math.abs(q.d1 - q.d2));
-  const hi = Math.min(D_MAX, q.d1 + q.d2);
+  const stated = (k: string) => (sources[k] ?? 'default') !== 'default';
+  const fixedM = stated('d1') || stated('d2');
+  const lo = fixedM ? Math.max(D_MIN, Math.abs(q.d1 - q.d2)) : D_MIN;
+  const hi = fixedM ? Math.min(D_MAX, q.d1 + q.d2) : D_MAX;
   if (!(lo <= hi)) return {};
   const d = clamp(2 * Math.abs(x), lo, hi);
   return { d: clamp(tidy(d), lo, hi) };
 }
 
-/** Dragged M sets its distances to the sources (M is always drawn on the side y ≥ 0). */
+/**
+ * Dragged M sets its distances to the sources. M is drawn on the side y ≥ 0, so a pointer below
+ * S₁S₂ keeps M on the line instead of flipping it to the mirror point.
+ */
 export function dragProbe(x: number, y: number, p: Params): Params {
   const q = interferenceInput(p);
-  const d1 = clamp(Math.hypot(x + q.d / 2, y), R_MIN, R_MAX);
-  const d2 = clamp(Math.hypot(x - q.d / 2, y), R_MIN, R_MAX);
+  const yy = Math.max(0, y);
+  const d1 = clamp(Math.hypot(x + q.d / 2, yy), R_MIN, R_MAX);
+  const d2 = clamp(Math.hypot(x - q.d / 2, yy), R_MIN, R_MAX);
   // Rounding must not move M off the triangle (|d₁ − d₂| ≤ S₁S₂ ≤ d₁ + d₂).
   return pointM(q.d, tidy(d1), tidy(d2)) ? { d1: tidy(d1), d2: tidy(d2) } : { d1, d2 };
 }
@@ -214,6 +223,13 @@ function solve(p: Params, locale: Locale): Solution {
     // Measured on the engine's displacement at M (the graph), not taken from the formula.
     const Tm = measuredBeatPeriod(p);
     const ok = Number.isFinite(Tm) && Tm > 0;
+    if (!beatsMeasurable(q.f1, q.f2))
+      notes.push(
+        L(
+          'Hai tần số khác nhau nhiều (|f₁ − f₂| lớn hơn một nửa tần số trung bình): đường bao vẫn lặp lại sau 1/|f₁ − f₂| theo công thức, nhưng khó nhận ra phách trên đồ thị, nên SimLab không đo lại chu kì phách. Phách rõ khi hai tần số gần nhau.',
+          'The frequencies are far apart (|f₁ − f₂| above half the average frequency): the envelope still repeats every 1/|f₁ − f₂| by the formula, but the beats are hard to see on the graph, so SimLab does not measure the beat period again. Beats are clear when the frequencies are close.',
+        ),
+      );
     return done([
       {
         id: 'beat_frequency',
@@ -271,13 +287,21 @@ function solve(p: Params, locale: Locale): Solution {
     ),
     tex: `-\\frac{S_1S_2}{\\lambda} - \\frac{1}{2} < k < \\frac{S_1S_2}{\\lambda} - \\frac{1}{2} \\;\\Rightarrow\\; N_{\\min} = ${String(nMin)}`,
   });
-  steps.push({
-    text: L(
-      'Hai cực đại (hoặc hai cực tiểu) liên tiếp trên S₁S₂ cách nhau nửa bước sóng:',
-      'Two neighbouring maxima (or minima) on S₁S₂ are half a wavelength apart:',
-    ),
-    tex: `\\frac{\\lambda}{2} = ${Q(lam / 2, 'cm')}`,
-  });
+  if (nMax >= 2)
+    steps.push({
+      text: L(
+        'Hai cực đại (hoặc hai cực tiểu) liên tiếp trên S₁S₂ cách nhau nửa bước sóng:',
+        'Two neighbouring maxima (or minima) on S₁S₂ are half a wavelength apart:',
+      ),
+      tex: `\\frac{\\lambda}{2} = ${Q(lam / 2, 'cm')}`,
+    });
+  else
+    steps.push({
+      text: L(
+        'Trên S₁S₂ chỉ có cực đại trung tâm (k = 0), nên không có hai cực đại liên tiếp để đo khoảng cách.',
+        'S₁S₂ holds only the central maximum (k = 0), so there are no two neighbouring maxima to measure.',
+      ),
+    });
   const dr = q.d2 - q.d1;
   const order = orderAt(dr, lam);
   const AM = amplitudeAt(q.a, dr, lam);
@@ -305,15 +329,19 @@ function solve(p: Params, locale: Locale): Solution {
       check: scan.minima,
     },
     { id: 'wavelength', label: L('Bước sóng', 'Wavelength'), value: lam, unit: 'cm' },
-    {
-      id: 'fringe_spacing',
-      label: L(
-        'Khoảng cách hai cực đại liên tiếp trên S₁S₂',
-        'Spacing of neighbouring maxima on S₁S₂',
-      ),
-      value: lam / 2,
-      unit: 'cm',
-    },
+    ...(nMax >= 2
+      ? [
+          {
+            id: 'fringe_spacing',
+            label: L(
+              'Khoảng cách hai cực đại liên tiếp trên S₁S₂',
+              'Spacing of neighbouring maxima on S₁S₂',
+            ),
+            value: lam / 2,
+            unit: 'cm',
+          },
+        ]
+      : []),
     {
       id: 'path_difference',
       label: L('Hiệu đường đi d₂ − d₁ tại M', 'Path difference d₂ − d₁ at M'),
@@ -431,8 +459,8 @@ function card(p: Params): ScienceCardData {
           'The largest surface slope 4πa/λ is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. The model is exact only for an amplitude a much smaller than the wavelength.',
         )
       : L(
-          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M; thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
-          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M; each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
+          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M (khi hai tần số đủ gần nhau); thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
+          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M (when the frequencies are close enough); each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
         ),
     method: L(
       `Công thức giải tích tại t = i·Δt, Δt = ${fmtQty('vi', stepOf(q), 's', 3)} (≤ T/200).`,
@@ -474,7 +502,7 @@ const sourceBody = (i: 1 | 2): BodyDef => ({
   position: (_s, p) => ({ x: ((i === 1 ? -1 : 1) * interferenceInput(p).d) / 2, y: 0 }),
   radius: pickRadius,
   draggable: true,
-  dragTo: (x, _y, p) => dragSource(x, p),
+  dragTo: (x, _y, p, sources) => dragSource(x, p, sources),
   properties: (_s, p) => {
     const q = interferenceInput(p);
     return [

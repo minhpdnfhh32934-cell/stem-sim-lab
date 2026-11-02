@@ -291,8 +291,8 @@ export function StageCanvas({ scene }: { scene: PhysicsScene }) {
       } else if (mode === 'drag') {
         sim.input({ kind: 'dragMove', x: w.x, y: w.y });
       } else if (mode === 'param' && paramBody?.dragTo) {
-        const p = useSimStore.getState().params;
-        const next = paramBody.dragTo(w.x, w.y, p);
+        const { params: p, sources } = useSimStore.getState();
+        const next = paramBody.dragTo(w.x, w.y, p, sources);
         if (Object.entries(next).some(([k, v]) => p[k] !== v)) sim.setParams(next, 'user', false);
       } else if (mode === 'measure' && measureRef.current) {
         measureRef.current = { ...measureRef.current, b: w };

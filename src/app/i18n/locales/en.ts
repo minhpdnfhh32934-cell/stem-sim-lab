@@ -468,6 +468,7 @@ const en: Messages = {
     steps: 'Step-by-step solution',
     check: 'Numerical check',
     agree: 'agrees, deviation {value}',
+    disagree: 'does not agree, deviation {value}',
     engineNote:
       'Every number here is computed by the program from formulas and cross-checked by numerical integration. AI produces no numbers.',
     intervenedNote:
