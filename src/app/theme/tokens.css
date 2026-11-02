@@ -49,6 +49,8 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 120ms;
   --dur-med: 220ms;
+  /* Blur behind an open dialog (`.dialog::backdrop`). */
+  --scrim-blur: blur(2px);
 
   /*
    * Chart palette: Okabe & Ito (2008) color-universal-design palette,
@@ -315,4 +317,154 @@
     --dur-fast: 0ms;
     --dur-med: 0ms;
   }
+}
+
+/*
+ * "Bàn thí nghiệm" (bench) shell, 0.8.1 (#113; design `.agent-logs/bench-spec.md` §4). Applies
+ * only while <html> carries data-shell="bench" (the dev switch, B1); the classic shell never sets
+ * it, so nothing below changes it. Names that mean the same thing are overridden, so every module
+ * picks the bench look up unchanged; new names only where nothing matches today. The bench fonts
+ * (Be Vietnam Pro, JetBrains Mono) are loaded by `benchFonts.ts`. Contrast table: tokens.test.ts.
+ */
+:root[data-shell='bench'] {
+  --font-sans:
+    'Be Vietnam Pro', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, 'Noto Sans',
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    'JetBrains Mono', 'Cascadia Mono', 'Cascadia Code', Consolas, ui-monospace, 'SF Mono', monospace;
+  /* No blur anywhere (integrated GPUs): glass becomes the solid panel. */
+  --glass-bg: var(--bg-panel);
+  --glass-border: var(--border);
+  --glass-highlight: transparent;
+  --glass-blur: none;
+  --scrim-blur: none;
+}
+
+:root[data-shell='bench']:not([data-theme='dark']) {
+  /* Frame: the chrome around the bench, dark in both themes. */
+  --frame: #1c2226;
+  --frame-raised: #2a3237;
+  --frame-line: #7c888f;
+  --on-frame: #eef2f3;
+  --on-frame-muted: #aab5ba;
+  --play: #3dbfb2;
+  --on-play: #0a1f1d;
+  --focus-frame: #f5c84c;
+
+  /* Paper: library, tray, notebook, sheets (bg, surface-1, surface-2, surface-3). */
+  --bg-app: #f6f4ef;
+  --bg-panel: #ffffff;
+  --bg-panel-2: #eeebe4;
+  --bg-sunken: #eeebe4;
+  --bg-hover: #eeebe4;
+  --bg-active: #e4e0d7;
+  --border: #dad5cb;
+  --border-input: #7a746a;
+  --border-strong: var(--border-input);
+
+  --text: #1d2124;
+  --text-muted: #555b61;
+  --text-faint: #5c6268;
+  --text-on-accent: #ffffff;
+
+  --accent: #0a6b66;
+  --accent-hover: #085752;
+  --accent-soft: #dcefec;
+  --focus-ring: #0a6b66;
+
+  --danger: #b3261e;
+  --on-danger: #ffffff;
+  --warning: #6e4a00;
+  --warning-soft: #fff1cc;
+
+  /* Status and provenance: ink on its soft chip. */
+  --conf-exact: #11592b;
+  --conf-exact-soft: #dcf1e2;
+  --conf-approx: #694700;
+  --conf-approx-soft: #fbedc4;
+  --conf-qual: #1b4c9c;
+  --conf-qual-soft: #dce8fa;
+  --pending: #4a4f6a;
+  --pending-soft: #ecedf3;
+  --ink-ai: #5e3596;
+  --ink-ai-soft: #efe7f9;
+  --ink-learner: #2a4c9c;
+  --ink-learner-soft: #e6ecf8;
+
+  /* Subjects: chrome only (library dots and rules, breadcrumb dot). */
+  --subject-physics: #4044c2;
+  --subject-chemistry: #ae3a16;
+  --subject-biology: #2b7530;
+
+  /* Stage, kept apart from the chrome (--stage-accent and --stage-grid-major unchanged). */
+  --bg-stage: #fcfcfa;
+  --stage-grid: #e6e6e0;
+  --stage-tool: #3a4247;
+
+  /* Okabe–Ito data colours re-stepped in OKLCH (same hue and chroma, lower L) to ≥ 3 : 1 on the
+     stage and the paper; chart-1 and chart-4 already were. Dark keeps its steps. */
+  --chart-2: #b67d05;
+  --chart-3: #0a9a71;
+  --chart-5: #c06e9c;
+  --chart-6: #2c90c3;
+  --chart-7: #938a05;
+  /* 3D soil one step darker, so it stays ΔE_OK ≥ 0.15 from the re-stepped chart colours. */
+  --bio3d-soil: #726154;
+}
+
+:root[data-shell='bench'][data-theme='dark'] {
+  --frame: #0b0e10;
+  --frame-raised: #1b2125;
+  --frame-line: #6e7a81;
+  --on-frame: #e9eef0;
+  --on-frame-muted: #a2adb3;
+  --play: #45c7ba;
+  --on-play: #06201e;
+  --focus-frame: #f5c84c;
+
+  --bg-app: #15191c;
+  --bg-panel: #1e2327;
+  --bg-panel-2: #252b30;
+  --bg-sunken: #252b30;
+  --bg-hover: #252b30;
+  --bg-active: #2d3439;
+  --border: #2f363b;
+  --border-input: #7a858b;
+  --border-strong: var(--border-input);
+
+  --text: #e6eaec;
+  --text-muted: #a5aeb4;
+  --text-faint: #949da3;
+  --text-on-accent: #06201e;
+
+  --accent: #45c7ba;
+  --accent-hover: #6ad6cb;
+  --accent-soft: #123532;
+  --focus-ring: #f5c84c;
+
+  --danger: #ff8a80;
+  --on-danger: #2a0a07;
+  --warning: #f2cf6b;
+  --warning-soft: #3a2c07;
+
+  --conf-exact: #8fe0a8;
+  --conf-exact-soft: #12301d;
+  --conf-approx: #f2cf6b;
+  --conf-approx-soft: #3a2c07;
+  --conf-qual: #a3c4ff;
+  --conf-qual-soft: #142a4d;
+  --pending: #b3b7d3;
+  --pending-soft: #22243a;
+  --ink-ai: #cfb6f6;
+  --ink-ai-soft: #2a1f3d;
+  --ink-learner: #93b1ff;
+  --ink-learner-soft: #1c2846;
+
+  --subject-physics: #a3a6ff;
+  --subject-chemistry: #ff9e7d;
+  --subject-biology: #84d488;
+
+  --bg-stage: #20262b;
+  --stage-grid: #2c3338;
+  --stage-tool: #c9d1d5;
 }
