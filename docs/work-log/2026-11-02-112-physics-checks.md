@@ -50,7 +50,7 @@
 ## Duyệt PR #118 vòng 1 (2 🔴, 4 🟡)
 
 - 🔴1 chạm 1 ulp tính là cắt: lần cắt tìm thấy bên trong bước chỉ được nhận khi |g| > rtol·max(|a|,|b|)
-  + atol. Test newtonLaws g 10 μ 0,2 F 0 v0 4 length 4 và inclinedPlane θ = 0 cùng số (bỏ ngưỡng thì 2/2 hỏng).
+  - atol. Test newtonLaws g 10 μ 0,2 F 0 v0 4 length 4 và inclinedPlane θ = 0 cùng số (bỏ ngưỡng thì 2/2 hỏng).
 - 🔴2 + 🟡3 phép kiểm lò xo: thay cách theo dõi x (cần atol cực nhỏ, 30–1000 ms) bằng tích phân số dạng biên độ–pha
   (đổi biến chính xác x = r cos θ, x′ = −ω₀ r sin θ ⇒ θ′ = ω₀ − γ sin 2θ; x = 0 khi cos θ = 0). Không dùng ω_d,
   không tắt dần, ≤ 4 ms, không còn ca "không kiểm được": bỏ nhánh thẻ và PHC-1. Ca k 15 m 5 b 17,32 (T ≈ 474 s)
