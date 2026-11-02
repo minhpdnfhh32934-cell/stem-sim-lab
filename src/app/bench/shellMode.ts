@@ -1,0 +1,19 @@
+/** localStorage key of the bench dev switch (0.8.1 B1, #115): value `bench` shows the new shell. */
+export const DEV_SHELL_KEY = 'stemsim.dev.shell';
+
+/**
+ * Whether the "Bàn thí nghiệm" shell replaces the classic one. Only a development build reads the
+ * switch (`import.meta.env.DEV` is `false` in production, where this is always false); one build,
+ * no `VITE_*` flag. The classic shell stays the default until the flip (B8).
+ */
+export function benchShellOn(
+  dev: boolean = import.meta.env.DEV,
+  storage: Pick<Storage, 'getItem'> | undefined = globalThis.localStorage,
+): boolean {
+  if (!dev) return false;
+  try {
+    return storage?.getItem(DEV_SHELL_KEY) === 'bench';
+  } catch {
+    return false;
+  }
+}
