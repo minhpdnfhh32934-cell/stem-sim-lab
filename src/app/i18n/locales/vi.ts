@@ -163,6 +163,12 @@ const vi = {
     },
     compareLegend: 'Nét đứt: lần chạy đã ghim',
     compareBefore: 'Lúc ghim: {values}',
+    announce: {
+      playing: '{title}: đang chạy.',
+      paused: '{title}: tạm dừng ở t = {t} s.',
+      finished: '{title}: đã chạy xong, t = {t} s.',
+      replay: '{title}: đang xem lại ở t = {t} s.',
+    },
   },
   inspector: {
     regionLabel: 'Bảng thuộc tính',

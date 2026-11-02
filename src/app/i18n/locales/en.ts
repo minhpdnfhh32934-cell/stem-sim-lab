@@ -160,6 +160,12 @@ const en: Messages = {
     },
     compareLegend: 'Dashed: the pinned run',
     compareBefore: 'When pinned: {values}',
+    announce: {
+      playing: '{title}: running.',
+      paused: '{title}: paused at t = {t} s.',
+      finished: '{title}: finished, t = {t} s.',
+      replay: '{title}: replaying at t = {t} s.',
+    },
   },
   inspector: {
     regionLabel: 'Inspector',

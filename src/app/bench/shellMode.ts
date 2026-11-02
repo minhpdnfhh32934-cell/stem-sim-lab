@@ -8,11 +8,11 @@ export const DEV_SHELL_KEY = 'stemsim.dev.shell';
  */
 export function benchShellOn(
   dev: boolean = import.meta.env.DEV,
-  storage: Pick<Storage, 'getItem'> | undefined = globalThis.localStorage,
+  storage: Pick<Storage, 'getItem'> = globalThis.localStorage,
 ): boolean {
   if (!dev) return false;
   try {
-    return storage?.getItem(DEV_SHELL_KEY) === 'bench';
+    return storage.getItem(DEV_SHELL_KEY) === 'bench';
   } catch {
     return false;
   }
