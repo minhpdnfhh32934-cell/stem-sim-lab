@@ -194,6 +194,12 @@ kbd {
   background: var(--bg-panel);
   box-shadow: none;
 }
+/* A chart's CSV button: a full target (it shows on hover, or always on touch). */
+.chart__csv {
+  width: var(--target);
+  height: var(--target);
+  border-radius: var(--radius-md);
+}
 /* The live legend is one row under the plot (the notebook is narrow). */
 .chart--legend-side {
   flex-direction: column;
@@ -293,8 +299,11 @@ kbd {
 /* Parameter row (satisshTechie/sharp-hound-14, §9.4): label and source left, the number box
    112×40 right; − slider + below. The whole box is the number's label (one click target). */
 .param:has(> .param__controls) {
+  --param-step: var(--target);
   display: grid;
-  grid-template-columns: var(--target) minmax(0, 1fr) 72px var(--target);
+  grid-template-columns:
+    var(--param-step) minmax(0, 1fr) calc(112px - var(--param-step))
+    var(--param-step);
   grid-template-areas:
     'head head num num'
     'minus range range plus';
@@ -311,8 +320,8 @@ kbd {
   display: contents;
 }
 .param__step {
-  width: var(--target);
-  height: var(--target);
+  width: var(--param-step);
+  height: var(--param-step);
 }
 .param__step--minus {
   grid-area: minus;
@@ -1097,12 +1106,16 @@ kbd {
   border-radius: var(--radius-md);
 }
 
-/* Touch screens and pens: icon buttons grow to 48 px (§6). */
+/* Touch screens and pens: every icon button on the frame and on the bench grows to 48 px (§6). */
 @media (any-pointer: coarse) {
   [data-surface='frame'] .icon-btn,
-  .tray .panel__header .icon-btn,
-  .notebook .panel__header .icon-btn {
+  .bench .icon-btn,
+  .bench .panel__header .icon-btn,
+  .bench .chart__csv {
     width: 48px;
     height: 48px;
+  }
+  .param:has(> .param__controls) {
+    --param-step: 48px;
   }
 }

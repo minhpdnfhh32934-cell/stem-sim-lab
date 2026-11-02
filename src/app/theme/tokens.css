@@ -51,6 +51,8 @@
   --dur-med: 220ms;
   /* Blur behind an open dialog (`.dialog::backdrop`). */
   --scrim-blur: blur(2px);
+  /* The knob of a small on/off switch (AI Teacher's chat toggles). */
+  --switch-knob: #ffffff;
 
   /*
    * Chart palette: Okabe & Ito (2008) color-universal-design palette,
@@ -391,6 +393,7 @@
   --sw-night-track: #12304a;
   --sw-night-knob: #2f7fc4;
   --sw-icon: #ffffff;
+  --switch-knob: #ffffff;
   /* Elevation (§6): L1 stage overlays, L2 overlay drawers, menus and popovers. */
   --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.12);
   --shadow-l2: 0 8px 24px rgba(11, 14, 16, 0.22);
@@ -485,6 +488,7 @@
   --sw-night-track: #12304a;
   --sw-night-knob: #2f7fc4;
   --sw-icon: #ffffff;
+  --switch-knob: #1e2327;
   --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-l2: 0 8px 24px rgba(0, 0, 0, 0.45);
 

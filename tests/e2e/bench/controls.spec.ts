@@ -112,15 +112,29 @@ test('targets: icon buttons grow to 48 px on a touch screen', async ({ browser }
     hasTouch: true,
   });
   const page = await ctx.newPage();
+  const icons = page.locator(
+    '[data-surface="frame"] .icon-btn, .bench .icon-btn, .bench .chart__csv',
+  );
+  const all48 = async (min: number) => {
+    expect(await icons.count()).toBeGreaterThanOrEqual(min);
+    for (const icon of await icons.all()) {
+      if (!(await icon.isVisible())) continue;
+      const t = await target(icon);
+      expect(Math.min(t.w, t.h), t.what).toBeGreaterThanOrEqual(48);
+    }
+  };
   await openProjectile(page);
   expect(await page.evaluate(() => matchMedia('(any-pointer: coarse)').matches)).toBe(true);
-  const icons = page.locator('[data-surface="frame"] .icon-btn, .tray .panel__header .icon-btn');
-  expect(await icons.count()).toBeGreaterThan(4);
-  for (const icon of await icons.all()) {
-    if (!(await icon.isVisible())) continue;
-    const t = await target(icon);
-    expect(Math.min(t.w, t.h), t.what).toBeGreaterThanOrEqual(48);
-  }
+  // Frame, tray (− / + of every parameter) and the stage's tools.
+  await all48(15);
+  // A chart's CSV button in the notebook (Advanced): the hydrogen orbitals' P(r).
+  await page.getByRole('radio', { name: 'Nâng cao' }).first().click();
+  await openTopic(page, 'Hóa học', 'Hình dạng orbital');
+  await page.getByRole('tab', { name: /Mật độ xác suất/ }).click();
+  await expect(page.getByRole('button', { name: 'Xuất CSV' }).first()).toBeVisible({
+    timeout: 20_000,
+  });
+  await all48(5);
   await ctx.close();
 });
 
@@ -191,6 +205,38 @@ test('keyboard: speed steps, the light / dark switch, − / +, Esc hides a toolt
   await page.keyboard.press('Escape');
   await expect(page.getByRole('tooltip')).toHaveCount(0);
   await expect(step).toBeFocused();
+
+  // In the open notebook the first Esc only hides the tooltip; the second closes the drawer.
+  await page.getByRole('tab', { name: 'Đồ thị' }).click();
+  const close = page.getByRole('button', { name: 'Đóng sổ' });
+  await page.keyboard.press('Shift');
+  await close.focus();
+  await expect(page.getByRole('tooltip')).toHaveText('Đóng sổ');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('tooltip')).toHaveCount(0);
+  await expect(page.getByRole('tabpanel', { name: 'Đồ thị' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('tabpanel')).toHaveCount(0);
+
+  // A bubble shown by hover never takes a click meant for what lies under it.
+  const settings = page.getByRole('button', { name: 'Cài đặt', exact: true });
+  await settings.hover();
+  const bubble = page.getByRole('tooltip');
+  await expect(bubble).toHaveText('Cài đặt');
+  expect(await bubble.evaluate((el) => getComputedStyle(el).pointerEvents)).toBe('none');
+  const b = await bubble.boundingBox();
+  if (!b) throw new Error('no bubble');
+  const under = await page.evaluate(
+    ({ x, y }) => document.elementFromPoint(x, y)?.getAttribute('role'),
+    { x: b.x + b.width / 2, y: b.y + b.height / 2 },
+  );
+  expect(under).not.toBe('tooltip');
+
+  // Basic offers 0,5× · 1× · 2×: a speed set in Advanced lands on the nearest one.
+  await page.getByRole('radio', { name: 'Nâng cao' }).first().click();
+  await page.getByRole('combobox', { name: 'Tốc độ phát' }).selectOption('10');
+  await page.getByRole('radio', { name: 'Cơ bản' }).first().click();
+  await expect(speed.getByRole('radio', { name: '2×' })).toBeChecked();
 });
 
 test('reduced motion: nothing on the bench has a transition or an animation left', async ({
@@ -198,20 +244,26 @@ test('reduced motion: nothing on the bench has a transition or an animation left
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await openProjectile(page);
-  await page.getByRole('tab', { name: 'Đồ thị' }).click();
-  await expect(page.getByRole('tabpanel', { name: 'Đồ thị' })).toBeVisible();
-  const moving = await page.evaluate(() => {
-    const out: string[] = [];
-    const busy = (s: CSSStyleDeclaration) =>
-      s.transitionDuration.split(',').some((d) => parseFloat(d) > 0) ||
-      (s.animationName !== 'none' && s.animationDuration.split(',').some((d) => parseFloat(d) > 0));
-    for (const el of document.querySelectorAll('*'))
-      for (const pseudo of [null, '::before', '::after'])
-        if (busy(getComputedStyle(el, pseudo)))
-          out.push(`${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}${pseudo ?? ''}`);
-    return out;
-  });
-  expect(moving).toEqual([]);
+  const moving = () =>
+    page.evaluate(() => {
+      const out: string[] = [];
+      const busy = (s: CSSStyleDeclaration) =>
+        s.transitionDuration.split(',').some((d) => parseFloat(d) > 0) ||
+        (s.animationName !== 'none' &&
+          s.animationDuration.split(',').some((d) => parseFloat(d) > 0));
+      for (const el of document.querySelectorAll('*'))
+        for (const pseudo of [null, '::before', '::after'])
+          if (busy(getComputedStyle(el, pseudo)))
+            out.push(
+              `${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}${pseudo ?? ''}`,
+            );
+      return out;
+    });
+  for (const tab of ['Đồ thị', 'Hỏi AI']) {
+    await page.getByRole('tab', { name: tab }).click();
+    await expect(page.getByRole('tabpanel', { name: tab })).toBeVisible();
+    expect(await moving(), tab).toEqual([]);
+  }
 });
 
 test('axe finds nothing serious on the bench screens', async ({ page }) => {

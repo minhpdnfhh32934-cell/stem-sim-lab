@@ -193,9 +193,11 @@ B0–B8 in its §14, merged from 08/11):
   text + dashed border.
   `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
   (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
-  columns fixed (§8), Basic speed 0,5×·1×·2×. Light / dark switch `ThemeSwitch.tsx` (header +
-  Settings → Giao diện with "Theo máy"; test against `theme-boot.js`). `TooltipLayer`: Esc hides,
-  a hover bubble can be hovered (WCAG 1.4.13). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px
+  columns fixed (§8), Basic speed 0,5×·1×·2× (switching to Basic lands on the nearest). Light /
+  dark switch `ThemeSwitch.tsx` (header + Settings → Giao diện with "Theo máy"; test against
+  `theme-boot.js`). `TooltipLayer` (WCAG 1.4.13): a shown bubble takes the first Esc for itself; a
+  hover bubble stays while the pointer is on it, judged by position — the bubble keeps
+  `pointer-events: none`, never block a click. E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px
   targets, focus rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion,
   axe (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"

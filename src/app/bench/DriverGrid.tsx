@@ -1,5 +1,5 @@
 import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, type CSSProperties, type ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
@@ -10,9 +10,7 @@ import { PLAYBACK_SPEEDS, useWorkspaceStore, type PlaybackSpeed } from '@/app/wo
 import { useModuleStore } from '@/modules/moduleStore';
 import { ConfidenceBadge } from '@/ui/Badges';
 import { IconButton } from '@/ui/IconButton';
-
-/** Basic mode's speed choices (user decision 2026-11-02; Advanced keeps the full list). */
-const BASIC_SPEEDS = [0.5, 1, 2] as const satisfies readonly PlaybackSpeed[];
+import { BASIC_SPEEDS, nearestBasicSpeed } from './speeds';
 
 /**
  * The bench edge (docs/BENCH_DESIGN.md §8): the same slots on every screen. D0 is the screen's main
@@ -61,6 +59,11 @@ function TimeDriver() {
     maximumFractionDigits: 3,
   });
   const canRun = hasSimulation && !invalid;
+  // Basic has three steps: a speed set in Advanced lands on the nearest one, so one is chosen.
+  useEffect(() => {
+    if (basic && !(BASIC_SPEEDS as readonly number[]).includes(speed))
+      setSpeed(nearestBasicSpeed(speed));
+  }, [basic, speed, setSpeed]);
   const end = Math.max(duration, 1e-6);
   const played = { '--pct': `${(100 * Math.min(shown, end)) / end}%` } as CSSProperties;
 
