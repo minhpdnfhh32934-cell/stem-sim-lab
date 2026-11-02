@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { EngineRunner } from '@/core/sim/runner';
 import { IS, InclineEngine, inclineInput } from './engine';
 import { accelFor, forces, segments, stateAt } from './model';
+import { checkMisses, sliderSweep } from '../testing';
 import { inclinedPlane, newtonLaws, numericEnd } from './scenes';
 
 const deg = (d: number) => (d * Math.PI) / 180;
@@ -110,6 +111,29 @@ describe('incline engine', () => {
     const exact = stateAt(segments(inclineInput(params)), e.time());
     expect(st[IS.s]).toBeCloseTo(exact.s, 9);
     expect(st[IS.v]).toBeCloseTo(exact.v, 9);
+  });
+});
+
+describe('incline cross-checks (#112)', () => {
+  // Inputs where the DOPRI5 check missed the end of the track (the body passes it, then would
+  // stop): it reported the stop (1,644 s; 0,136 s) instead of the end (1,158 s; 0,0777 s).
+  it.each([
+    ['newtonLaws: passes the end before stopping', newtonLaws, { mu: 1.4, v0: 16, length: 12 }],
+    ['inclinedPlane: just passes the top', inclinedPlane, { v0: 0.9, s0: 4.95 }],
+  ] as const)('%s', (_name, scene, p) => {
+    const params = { ...scene.defaults, ...p };
+    expect(scene.solve(params, 'vi').answers.some((a) => a.check !== undefined)).toBe(true);
+    expect(checkMisses(scene, params)).toEqual([]);
+  });
+
+  it.each([
+    ['newtonLaws', newtonLaws],
+    ['inclinedPlane', inclinedPlane],
+  ] as const)('%s: every check agrees over a slider sweep', (_name, scene) => {
+    const misses = sliderSweep(scene, 600, 112)
+      .map((p) => ({ p, miss: checkMisses(scene, p) }))
+      .filter((r) => r.miss.length > 0);
+    expect(misses).toEqual([]);
   });
 });
 

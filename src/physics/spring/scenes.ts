@@ -207,10 +207,21 @@ function graphs(): GraphDef[] {
  * Period measured independently with DOPRI5: twice the time between the first two zero
  * crossings (they are exactly half a period apart, with or without damping). Null when
  * there is no oscillation (critically or overdamped) or no motion.
+ *
+ * Both crossings lie within one period, so the run stops at 1,25 T. Damping shrinks x by
+ * e^(−γt): near critical damping the second crossing is ~e⁻³⁵ smaller than the start (#112),
+ * so the absolute tolerance follows the smallest envelope reached, C·e^(−γ·1,25T) with
+ * C = √(x₀² + ((v₀ + γx₀)/ω_d)²). Null too when that envelope is beyond double precision
+ * (b a hair from critical): no numerical run could locate the crossing.
  */
 export function numericPeriod(q: SpringInput): number | null {
   const T = oscillationPeriod(q);
   if (T === null || (q.x0 === 0 && q.v0 === 0)) return null;
+  const g = gammaOf(q);
+  const wd = (2 * Math.PI) / T;
+  const end = 1.25 * T;
+  const envelope = Math.hypot(q.x0, (q.v0 + g * q.x0) / wd) * Math.exp(-g * end);
+  if (!(envelope > 1e-280)) return null;
   const r = dopri5(
     (_t, y, d) => {
       d[0] = y[1] ?? 0;
@@ -218,8 +229,12 @@ export function numericPeriod(q: SpringInput): number | null {
     },
     [q.x0, q.v0],
     0,
-    2 * T,
-    { rtol: 1e-12, atol: 1e-14, events: [{ id: 'zero', g: (_t, y) => y[0] ?? 0 }] },
+    end,
+    {
+      rtol: 1e-12,
+      atol: Math.min(1e-14, 1e-12 * envelope),
+      events: [{ id: 'zero', g: (_t, y) => y[0] ?? 0 }],
+    },
   );
   const [a, b] = r.events;
   return a && b ? 2 * (b.t - a.t) : null;

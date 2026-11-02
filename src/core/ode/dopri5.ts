@@ -67,6 +67,15 @@ export interface Dopri5Result {
   stats: IntegrationStats;
 }
 
+/**
+ * Squared error ratios are capped here: with a tiny absolute tolerance (a solution that decays
+ * by many orders of magnitude) a ratio can exceed 1e154 and its square overflow to Infinity,
+ * which made the first step 0 and stalled the run at t0 (#112). Any capped ratio still means
+ * "far too large", so step control is unchanged.
+ */
+const SQ_CAP = 1e300;
+const sq = (x: number) => Math.min(x * x, SQ_CAP);
+
 /** Single-step workspace; exposed for event localisation. */
 class Stepper {
   readonly k1: Float64Array;
@@ -141,7 +150,7 @@ class Stepper {
           E6 * g(k6, i) +
           E7 * g(k7, i));
       const sc = atol + rtol * Math.max(Math.abs(g(y, i)), Math.abs(g(out, i)));
-      sum += (err / sc) ** 2;
+      sum += sq(err / sc);
     }
     return Math.sqrt(sum / n);
   }
@@ -150,8 +159,15 @@ class Stepper {
 /**
  * Integrates y' = f(t, y) from t0 to t1 (t1 > t0) with error control and optional
  * event detection. Events are located to ~1e-12 relative precision by re-stepping
- * from the start of the step (no interpolation error).
+ * from the start of the step (no interpolation error). A step whose two ends give an event
+ * function the same sign is also searched inside (EVENT_SAMPLES points of the step's cubic
+ * Hermite interpolant, a hit confirmed by re-stepping shortens the step): an error estimate
+ * of zero (a polynomial solution) lets one step span a crossing and the crossing back.
  */
+
+/** Interior points per accepted step at which an event function's sign is sampled. */
+const EVENT_SAMPLES = 8;
+
 export function dopri5(
   f: OdeFn,
   y0: ArrayLike<number>,
@@ -172,6 +188,7 @@ export function dopri5(
   let y = Float64Array.from(y0);
   let yNew = new Float64Array(n);
   const hits: EventHit[] = [];
+  const yi = new Float64Array(n);
   const stats: IntegrationStats = { steps: 0, rejected: 0, fEvals: 0 };
 
   st.fEvals++;
@@ -207,6 +224,8 @@ export function dopri5(
     let stopped: string | undefined;
     const gNew = events.map((e) => e.g(tNew, yNew));
     const crossings: { index: number; tc: number }[] = [];
+    /** A hidden crossing found inside the step: redo the step up to here. */
+    let shorten = h;
     for (let i = 0; i < events.length; i++) {
       const ev = events[i];
       const b = gNew[i] ?? 0;
@@ -227,6 +246,34 @@ export function dopri5(
         lo = h * 1e-9;
         a = gAt(lo);
       }
+      // Same sign at both ends: an even number of crossings may hide inside the step. Sample
+      // the step's interpolant; a crossing confirmed by re-stepping shortens the step to just
+      // past it (the step is redone), so each crossing then shows as a sign change at a step end.
+      if (a !== 0 && Math.sign(a) === Math.sign(b)) {
+        for (let j = 1; j <= EVENT_SAMPLES; j++) {
+          const s = lo + ((h - lo) * j) / (EVENT_SAMPLES + 1);
+          if (s >= shorten) break;
+          const u = s / h;
+          const h00 = 2 * u ** 3 - 3 * u * u + 1;
+          const h10 = u ** 3 - 2 * u * u + u;
+          const h01 = 3 * u * u - 2 * u ** 3;
+          const h11 = u ** 3 - u * u;
+          for (let c = 0; c < n; c++)
+            yi[c] =
+              h00 * (y[c] ?? 0) +
+              h10 * h * (k1Saved[c] ?? 0) +
+              h01 * (yNew[c] ?? 0) +
+              h11 * h * (k7Accepted[c] ?? 0);
+          if (Math.sign(ev.g(t + s, yi)) === Math.sign(a)) continue;
+          const gs = gAt(s);
+          if (gs !== 0 && Math.sign(gs) !== Math.sign(a)) {
+            shorten = s;
+            break;
+          }
+        }
+        st.k1.set(k1Saved);
+        continue;
+      }
       if (a === 0 || Math.sign(a) === Math.sign(b)) {
         st.k1.set(k1Saved);
         continue;
@@ -240,6 +287,12 @@ export function dopri5(
       const tc = findRoot((s) => (s === lo ? aLo : gAt(s)), lo, h, 1e-14);
       st.k1.set(k1Saved);
       crossings.push({ index: i, tc });
+    }
+
+    if (shorten < h) {
+      // Not a rejection: the step was accurate, only too long to see the event.
+      h = shorten;
+      continue;
     }
 
     // Several events may fall inside one step: record them in time order and stop at the
@@ -294,8 +347,8 @@ function initialStep(
   let d1 = 0;
   for (let i = 0; i < n; i++) {
     const sc = atol + rtol * Math.abs(y[i] ?? 0);
-    d0 += ((y[i] ?? 0) / sc) ** 2;
-    d1 += ((st.k1[i] ?? 0) / sc) ** 2;
+    d0 += sq((y[i] ?? 0) / sc);
+    d1 += sq((st.k1[i] ?? 0) / sc);
   }
   d0 = Math.sqrt(d0 / n);
   d1 = Math.sqrt(d1 / n);
@@ -309,7 +362,7 @@ function initialStep(
   let d2 = 0;
   for (let i = 0; i < n; i++) {
     const sc = atol + rtol * Math.abs(y[i] ?? 0);
-    d2 += (((f1[i] ?? 0) - (st.k1[i] ?? 0)) / sc) ** 2;
+    d2 += sq(((f1[i] ?? 0) - (st.k1[i] ?? 0)) / sc);
   }
   d2 = Math.sqrt(d2 / n) / h0;
   const h1 =
