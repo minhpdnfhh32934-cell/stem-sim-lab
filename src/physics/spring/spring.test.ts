@@ -4,7 +4,7 @@ import { EngineRunner } from '@/core/sim/runner';
 import { SP, SpringEngine, springInput, staticExtension } from './engine';
 import { amplitudePhase, period, propagate, regime, type Oscillator } from './model';
 import { checkMisses, sliderSweep } from '../testing';
-import { hookeSpring, numericPeriod, springPendulum } from './scenes';
+import { hookeSpring, numericPeriod, periodUncheckable, springPendulum } from './scenes';
 
 function reference(o: Oscillator, x0: number, v0: number, t: number): number {
   const r = dopri5(
@@ -65,6 +65,23 @@ describe('spring cross-checks (#112)', () => {
       expect(checkMisses(springPendulum, params)).toEqual([]);
     },
   );
+
+  it('within 1e-7 of critical damping (typed, off the slider grid): no check, and the card says why', () => {
+    // m 0,25, k 100: critical b = 10. 1 − γ/ω₀ = 5e-8 below the margin, 2e-7 above it.
+    const near = { ...springPendulum.defaults, b: 10 * (1 - 5e-8) };
+    expect(periodUncheckable(springInput(near))).toBe(true);
+    expect(numericPeriod(springInput(near))).toBeNull();
+    const period = springPendulum.solve(near, 'vi').answers.find((a) => a.id === 'period');
+    expect(period).toBeDefined();
+    expect(period?.check).toBeUndefined();
+    expect(springPendulum.scienceCard(near).confidenceNote?.vi).toContain('không kiểm chứng');
+    const above = { ...springPendulum.defaults, b: 10 * (1 - 2e-7) };
+    expect(periodUncheckable(springInput(above))).toBe(false);
+    expect(checkMisses(springPendulum, above)).toEqual([]);
+    expect(springPendulum.scienceCard(above).confidenceNote?.vi).toContain(
+      'chu kì kiểm chứng bằng Dormand–Prince',
+    );
+  });
 
   it('the check stays quick on the UI thread near critical damping (under 50 ms)', () => {
     for (const b of [9.99, 9.999, 9.9999]) {

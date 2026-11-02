@@ -71,6 +71,13 @@ export interface Segment {
 }
 
 /**
+ * How close (relative to the edge, plus the same in metres) a stop must be to an edge to count
+ * as a stop on it: far below any length on a slider, the scale of the cross-check's own
+ * tolerance (dopri5's rtol and atol, 1e-12).
+ */
+export const EDGE_TIE = 1e-12;
+
+/**
  * Exact piecewise motion: constant acceleration between events (stop at v = 0,
  * leaving the surface at s = 0 or s = length). At each stop the static condition
  * is re-checked, so stick–slip is resolved exactly.
@@ -105,14 +112,19 @@ export function segments(p: InclineInput, tMax = 1e4): Segment[] {
       const roots = [(-B - r) / (2 * A), (-B + r) / (2 * A)].filter((x) => x > 1e-12);
       return roots.length ? Math.min(...roots) : Infinity;
     };
+    // A block that stops on an edge (to within EDGE_TIE·(|edge| + 1)) stops there; it does not
+    // leave. The edge equation then has a double root, which rounding can turn into two close
+    // roots just before the stop (#112: "reaches the end" at 1,99999997 s instead of a stop at 2 s).
+    const stop = end === 'rest' ? s + v * tEnd + 0.5 * a * tEnd * tEnd : NaN;
+    const touches = (edge: number) => Math.abs(stop - edge) <= EDGE_TIE * (Math.abs(edge) + 1);
     // On an edge and moving outward: the block leaves the surface at once (τ = 0).
     const dir = heading(v, a);
-    const tb = dir < 0 && s <= 0 ? 0 : hit(0);
+    const tb = dir < 0 && s <= 0 ? 0 : touches(0) ? Infinity : hit(0);
     if (tb < tEnd) {
       tEnd = tb;
       end = 'bottom';
     }
-    const tt = dir > 0 && s >= p.length ? 0 : hit(p.length);
+    const tt = dir > 0 && s >= p.length ? 0 : touches(p.length) ? Infinity : hit(p.length);
     if (tt < tEnd) {
       tEnd = tt;
       end = 'top';

@@ -59,3 +59,14 @@
   sự kiện sóng dừng, thẩm thấu giữ như main. Bộ đệm cấp một lần. Sóng: 17,7 / 3,4 / 3,3 ms (main 39,5 / 16,4 / 7,6).
 - 🟡4 `solution.engineNote` vi + en. 🟡5 issue tiếp nối #119.
 - `npm test`: 4490 đạt, 1 bỏ qua; lint, typecheck đạt; format đạt trừ tệp lạ chưa theo dõi AGENTS.md (không đụng).
+
+## Duyệt PR #118 vòng 2 (🔴1 nửa sau, 2 🟡)
+
+- 🔴1 phía công thức đóng: dừng trên mép (cách mép ≤ 1e-12·(|mép| + 1)) là dừng, không phải rời mép;
+  biệt thức bị làm tròn lớn hơn 0 không còn tạo nghiệm giả lúc 1,99999997 s (`EDGE_TIE`, `incline/model.ts`).
+  Test 7 ca của người duyệt + quét 300+ ca hoà đúng trên đường nằm ngang; trên mã cũ cả 8 test hỏng.
+- 🟡2: `reads` chỉ còn ở 3 sự kiện của bài mặt phẳng nghiêng (có test chứng minh); bỏ ở chuyển động tròn,
+  ném, ròng rọc, đường ray, con lắc đơn, lò xo. Lò xo thay bằng giới hạn bước θ ≤ π/2 (hMax), vì khi không
+  cản θ′ không đổi, một bước dài vượt nhiều lần cos θ = 0 (test "numeric period agrees" hỏng nếu không có).
+- 🟡3: 1 − γ/ω₀ < 10⁻⁷ thì không kiểm chu kì, Thẻ ghi lí do (PHC-1); quét toàn lưới thanh trượt: 0 ca.
+- `npm test`: 4499 đạt, 1 bỏ qua; lint, typecheck đạt.

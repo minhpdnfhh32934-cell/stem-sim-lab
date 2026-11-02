@@ -252,7 +252,7 @@ export function numericTravel(q: PulleyInput): { t: number; v: number } | null {
     {
       rtol: 1e-12,
       atol: 1e-13,
-      events: [{ id: 'end', g: (_t, y) => (y[0] ?? 0) - target, terminal: true, reads: [0] }],
+      events: [{ id: 'end', g: (_t, y) => (y[0] ?? 0) - target, terminal: true }],
     },
   );
   return { t: res.t, v: res.y[1] ?? 0 };

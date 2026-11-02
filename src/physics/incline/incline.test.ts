@@ -145,6 +145,48 @@ describe('incline cross-checks (#112)', () => {
     expect(checkMisses(scene, params)).toEqual([]);
   });
 
+  // Stops exactly at an edge where rounding leaves the edge equation's discriminant a little
+  // above 0 (review of PR #118, round 2): the closed form said "reaches the end" at
+  // 1,99999997 s, the check "stops" at 2 s.
+  it.each([
+    ['newtonLaws m 0,2', newtonLaws, { m: 0.2, mu: 0.3, F: 0, v0: 6, length: 6, g: 10 }],
+    ['newtonLaws m 0,1', newtonLaws, { m: 0.1, mu: 0.3, F: 0, v0: 6, length: 6, g: 10 }],
+    ['newtonLaws m 0,4', newtonLaws, { m: 0.4, mu: 0.3, F: 0, v0: 6, length: 6, g: 10 }],
+    ['newtonLaws m 0,8', newtonLaws, { m: 0.8, mu: 0.3, F: 0, v0: 6, length: 6, g: 10 }],
+    ['newtonLaws v0 12, L 24', newtonLaws, { m: 0.2, mu: 0.3, F: 0, v0: 12, length: 24, g: 10 }],
+    ['newtonLaws v0 18, L 54', newtonLaws, { m: 0.2, mu: 0.3, F: 0, v0: 18, length: 54, g: 10 }],
+    [
+      'inclinedPlane θ = 0, stops at the foot',
+      inclinedPlane,
+      { theta: 0, m: 71.61, muS: 0.85, muK: 0.72, F: 0, length: 36.6, s0: 36, v0: -14.4, g: 4 },
+    ],
+  ] as const)('%s: a stop exactly at the edge is a stop', (_name, scene, p) => {
+    const params = { ...scene.defaults, ...p };
+    const time = scene.solve(params, 'vi').answers.find((a) => a.id === 'time_end');
+    expect(time?.label.vi).toContain('dừng lại');
+    expect(checkMisses(scene, params)).toEqual([]);
+  });
+
+  it('every exact tie on a level track (stop distance = track length) is a stop that checks', () => {
+    // Random sweeps never land on a tie: build them. F = 0 on a level track: d = v0² / (2 μ g).
+    const misses: unknown[] = [];
+    let ties = 0;
+    for (const g of [9.8, 9.81, 10])
+      for (const mu of [0.1, 0.2, 0.3, 0.45, 0.6, 0.85, 1.4])
+        for (const v0 of [1, 2, 3.5, 4, 6, 9.9, 12, 18])
+          for (const m of [0.1, 0.2, 0.4, 0.8, 5]) {
+            const length = (v0 * v0) / (2 * mu * g);
+            if (length < 0.5 || length > 200) continue;
+            ties++;
+            const p = { ...newtonLaws.defaults, g, mu, v0, m, F: 0, length };
+            const miss = checkMisses(newtonLaws, p);
+            const time = newtonLaws.solve(p, 'vi').answers.find((a) => a.id === 'time_end');
+            if (miss.length > 0 || !time?.label.vi.includes('dừng lại')) misses.push({ p, miss });
+          }
+    expect(ties).toBeGreaterThan(300);
+    expect(misses).toEqual([]);
+  });
+
   it.each([
     ['newtonLaws', newtonLaws],
     ['inclinedPlane', inclinedPlane],

@@ -222,7 +222,7 @@ export function numericPeriodPendulum(q: PendulumInput): number | null {
     [q.theta0, q.omega0],
     0,
     6 * T0,
-    { rtol: 1e-12, atol: 1e-14, events: [{ id: 'zero', g: (_t, y) => y[0] ?? 0, reads: [0] }] },
+    { rtol: 1e-12, atol: 1e-14, events: [{ id: 'zero', g: (_t, y) => y[0] ?? 0 }] },
   );
   const [a, b] = r.events;
   return a && b ? 2 * (b.t - a.t) : null;
