@@ -4,7 +4,7 @@
 > decisions and what changed since are in `CLAUDE.md` → "Giao diện Bàn thí nghiệm (0.8.1)". Token
 > values here follow `src/app/theme/tokens.css`; where they differ, the stylesheet and its tests
 > (`tokens.test.ts`) win. Changed after the B0 review (PR #114): the light data colours (§4), the
-> light 3D terrain and the dark water line; the stored tray flag is `trayFolded`.
+> light 3D terrain, the codon marks and the dark water line; the stored tray flag is `trayFolded`.
 
 ## 1. Pitch
 
@@ -52,7 +52,7 @@ The Bench keeps its own identity: the frame, the fixed bench edge, the Play butt
 - Ctrl+K palette.
 - "Đề bài" problem sheet (with "Tôi hiểu đề như sau").
 - Tệp menu, history sheet, Settings sheet.
-- Optional Ctrl+/ shortcut sheet (needs an owner yes).
+- Ctrl+/ shortcut sheet (decided 02/11; after the frame).
 
 **Science Studio** keeps its name. It becomes:
 
@@ -102,7 +102,7 @@ The `'studio'` screen id and `openStudio()` stay for older callers and open the 
 - `--border-strong` → `--border-input`
 - `--glass-*` become solid surface-1
 
-**Contrast.** All ratios are WCAG 2.x, computed by the script listed at the end of this document (0 failures). Floors: text ≥ 4.5, UI ≥ 3. Where several surfaces are listed, the lowest value is the worst case.
+**Contrast.** All ratios are WCAG 2.x; `src/app/theme/tokens.test.ts` checks them (bench contrast table). Floors: text ≥ 4.5, UI ≥ 3. Where several surfaces are listed, the lowest value is the worst case.
 
 ### Chrome: the frame (dark in both themes)
 
@@ -162,13 +162,13 @@ Confidence chips are filled soft chips. Origin chips are outline-only in the ink
 
 ### Stage (kept separate from the chrome)
 
-| Token                                                                                     | Light                            | Dark                        | Contrast, light / dark      |
-| ----------------------------------------------------------------------------------------- | -------------------------------- | --------------------------- | --------------------------- |
-| `--bg-stage`                                                                              | #FCFCFA                          | #20262B                     | —                           |
-| `--stage-grid` (decorative)                                                               | #E6E6E0                          | #2C3338                     | text on grid 12.94 / 10.59  |
-| `--stage-accent` (selection ring, cursor, scrubber marker on the stage; never `--accent`) | ring #1D2124 + 2 px halo #FFFFFF | ring #FFFFFF + halo #0B0E10 | ring on stage 15.78 / 15.29 |
-| `--stage-tool` (ruler, protractor, stopwatch ink)                                         | #3A4247                          | #C9D1D5                     | 9.97 / 9.88                 |
-| 3D structure neutral (deliberately quiet; never carries data alone)                       | #9AA3A8                          | #5E686E                     | 2.50 / 2.68                 |
+| Token                                                                                     | Light                            | Dark                        | Contrast, light / dark                                                                                                                |
+| ----------------------------------------------------------------------------------------- | -------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `--bg-stage`                                                                              | #FCFCFA                          | #20262B                     | —                                                                                                                                     |
+| `--stage-grid` (decorative)                                                               | #E6E6E0                          | #2C3338                     | text on grid 12.94 / 10.59                                                                                                            |
+| `--stage-accent` (selection ring, cursor, scrubber marker on the stage; never `--accent`) | ring #1D2124 + 2 px halo #FFFFFF | ring #FFFFFF + halo #0B0E10 | ring on stage 15.78 / 15.29. **Not in B0:** the token keeps today's value (#2F62D8 / #7AA2FF); the ring + halo needs drawing code, B2 |
+| `--stage-tool` (ruler, protractor, stopwatch ink)                                         | #3A4247                          | #C9D1D5                     | 9.97 / 9.88                                                                                                                           |
+| 3D structure neutral (deliberately quiet; never carries data alone)                       | #9AA3A8                          | #5E686E                     | 2.50 / 2.68                                                                                                                           |
 
 **Data colours.** Keep the Okabe–Ito `--chart-1…7` names, hues and order (52 source files and the 3D ΔE tests depend on them). In the light bench every colour must be ≥ 3 : 1 on stage and paper, which leaves only L ≤ 0.65. The first re-step (same hue and chroma, all lowered to L ≈ 0.62) put the colours too close: closest pair ΔE_OK 0.065 normal, 0.006 deutan, 0.017 protan. The B0 review asked for the lightness to be spread out instead. Values found by a search over L (hue kept, chroma kept where sRGB allows, L ≥ 0.40, ΔE_OK ≥ 0.15 from the text colour, chart-1 and chart-4 ≥ 2.5 : 1 from the 3D pick glow):
 
@@ -191,10 +191,11 @@ Closest pair of data colours, ΔE_OK (Machado et al. 2009, severity 1.0, on line
 | Dark today (= bench dark) | 0.089  | 0.037  | 0.079  |
 
 - `tokens.test.ts` keeps bench light at ≥ 0.15 / 0.08 / 0.09 and bench dark at ≥ 0.085 / 0.036 / 0.075.
-- The light 3D terrain had to move: island grass, foliage, soil and bark sat in the same lightness band as the new data colours. They are lighter in the light bench (same hue and chroma): `--bio3d-island-grass` #99C099, `-2` #A3BE94, `--bio3d-soil` #BDAA9C, `--bio3d-foliage` #A9B5A1, `-2` #A5B3A1, `--bio3d-bark` #B9A99D (all ΔE_OK ≥ 0.15 from every data colour). Review the habitat look in B5.
+- The light 3D terrain had to leave the data colours' lightness band (L 0.40–0.64) while staying muted (C ≤ 0.07): clover, island grass and canopies are deep greens, soil and bark light: `--bio3d-island-grass` #062F19, `-2` #162B25, `--bio3d-foliage` #102D23, `-2` #032F1B, `--bio3d-soil` #B1A9A1, `--bio3d-bark` #B9A99D (all ΔE_OK ≥ 0.15 from every data colour). The logistic meadow's data pair (a clover patch vs a grazed one: bare soil and its grass rim) is ≥ 0.47 for normal and deutan vision; `tokens.test.ts` keeps ≥ 0.085 in every theme (classic dark deutan 0.086). Review the habitat look in B5.
+- Start / stop codon marks of the 3D point-mutation lesson have their own tokens, `--dna3d-start` / `--dna3d-stop` (classic: the confidence inks, unchanged). Bench light #34A409 / #8E0049, dark #7BE3B3 / #FCCD68: ≥ 3 : 1 on the stage and ≥ 0.15 from the five base colours and `--stage-accent`. The confidence inks themselves stay text colours; in the light bench they cannot also stay ≥ 0.15 from every data colour without turning near-black.
 - Dark bench: `--m3d-water-line` 0.15 (0.12 in classic dark) keeps the 3D water line ΔE_OK ≥ 0.25 from the lighter dark stage.
 - The existing dark chart steps already pass on the new dark stage #20262B: worst are chart-4 at 3.95 and chart-5 at 3.99.
-- Rule: plots render only on stage, bg or surface-1, never on surface-2 or surface-3 (chart-2 drops to 2.98 there). `tokens.test` asserts it.
+- Rule: plots render only on stage, bg or surface-1, never on surface-2 or surface-3 (with the B0 values chart-5, chart-6 and chart-7 drop to 2.5–2.9 there). `tokens.test` asserts the ≥ 3 : 1 pairs on stage, bg and surface-1.
 
 **High-contrast mode** (`[data-contrast="high"]`, used by projector mode too):
 
@@ -352,7 +353,7 @@ Left column x96–656:
   - Door 1 "Virtual Lab": filled, the only filled element. Name kept for `nav.ts`.
   - Door 2 "AI Teacher": outlined, same size, class `.launch-card--teacher` kept. Body "AI Teacher là một AI nên có thể sai."
   - Inside each door: icon 28, title 22/30 600, body 14/20.
-- Resume text button, 40 tall, at y536 (returning users only; needs an owner yes): "Tiếp tục: Ném xiên (Vật lí)".
+- Resume text button, 40 tall, at y536 (returning users only; decided 02/11): "Tiếp tục: Ném xiên (Vật lí)".
 - Privacy line at y696: ShieldCheck + 13 px.
 
 Right column x720–1310: "bench still" 590×440 at y120.
@@ -540,7 +541,7 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 - "Số liệu từ mô hình" card: 2n, NST, crômatit in mono, right-aligned, engine chip.
 - Parts list (group "Bộ phận tế bào", 40 rows). A pick on the stage selects the same row.
 - Picked-part card under the list.
-- "Làm mờ phần còn lại" (Advanced; new, needs a yes).
+- "Làm mờ phần còn lại" (Advanced; new, decided 02/11).
 
 **Notebook:** the module's `Bottom` ("Các kì" chart) in Đồ thị. Modules with no Bottom get no Đồ thị tab, so `bottomPanel.test` keeps "no empty box".
 
@@ -754,7 +755,7 @@ New shell, same organs: rewriting domain logic would add risk without adding any
   - Nothing reaches zero width. No shortcut hides anything, and there is no X on the tray.
   - "Đặt lại bố cục" sits in the palette and in Settings. Presentation mode is unchanged.
   - **Fallback if refused:** the tray is resize-only (min 256), and the closed notebook counts as "resized to its rail". The stage stays 998×656 and the overlay rule covers narrow cases.
-- **(b) Two launch cards; Studio inside the lab: kept.** Only the returning-user text link "Tiếp tục: …" (not a card) needs a yes.
+- **(b) Two launch cards; Studio inside the lab: kept.** The returning-user text link "Tiếp tục: …" (not a card) was decided on 02/11.
 - **Other changes that move pinned behaviour:**
   - the chat bubble is removed (the Hỏi AI tab replaces it, which ends UI-01);
   - the top-bar problem box becomes the Đề bài sheet;
@@ -767,9 +768,9 @@ New shell, same organs: rewriting domain logic would add risk without adding any
   - the face-ring column is removed;
   - "Think" becomes "Suy nghĩ kĩ (Think)";
   - Segoe UI → bundled Be Vietnam Pro + JetBrains Mono (new dependencies: one Vietnamese-safe face on every Windows build, and tabular readouts);
-  - light `--chart-2/3/5/6/7` are re-stepped to ≥ 3:1;
+  - all seven light `--chart-*` colours change in the bench (hues kept, lightness spread out, ≥ 3:1; §4);
   - `--glass-*` blur becomes solid.
-- **New features, each behind its own yes and not needed for the rebuild:** run log "Sổ ghi", "Ví dụ" presets, parameter sweep, Ctrl+/ sheet, the "Hiển thị và trợ năng" page, "Làm mờ phần còn lại", "Theo dõi một hạt", the resume link.
+- **New features, all decided on 02/11, built after the frame (not needed for the rebuild):** run log "Sổ ghi", "Ví dụ" presets, parameter sweep, Ctrl+/ sheet, the "Hiển thị và trợ năng" page, "Làm mờ phần còn lại", "Theo dõi một hạt", the resume link.
 
 ## 14. Build plan for 0.8.1
 
@@ -826,13 +827,13 @@ New shell, same organs: rewriting domain logic would add risk without adding any
 
 Total: about 14–15 builder-weeks, including the duplicated specs.
 
-**Owner decisions needed before B1:**
+**Owner decisions (all decided on 02/11):**
 
-- rule (a);
-- the resume link;
-- the two font dependencies;
-- "Think" → "Suy nghĩ kĩ (Think)";
-- which new features (§13) are in scope.
+- rule (a): yes, the tray folds to a spine;
+- the resume link: yes;
+- the two font dependencies: yes;
+- "Think" → "Suy nghĩ kĩ (Think)": yes;
+- the new features of §13: all of them, after the frame.
 
 Before Codex agents touch B0–B8: refresh the stale untracked `AGENTS.md` (the bundle notes it still describes the pilot edition and "no local AI").
 
