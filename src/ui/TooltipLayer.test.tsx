@@ -5,6 +5,7 @@ import { TooltipLayer } from './TooltipLayer';
 describe('TooltipLayer', () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
     Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
   });
 
@@ -37,12 +38,21 @@ describe('TooltipLayer', () => {
     expect(shown).toEqual([tip]);
   });
 
-  it('WCAG 1.4.13: the pointer can move onto the bubble, Esc hides it, leaving it hides it', () => {
+  it('WCAG 1.4.13: the pointer may rest on the bubble or cross the gap; leaving it hides it', () => {
     vi.useFakeTimers();
+    // jsdom lays nothing out: the bubble sits at x 100–200, y 50–70.
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return this.getAttribute('role') === 'tooltip'
+        ? DOMRect.fromRect({ x: 100, y: 50, width: 100, height: 20 })
+        : DOMRect.fromRect();
+    });
     render(
       <>
         <TooltipLayer />
         <button type="button" data-tip="Đặt lại (R)" aria-label="Đặt lại" />
+        <button type="button" data-tip="Bước" aria-label="Bước" />
         <p>Chỗ khác</p>
       </>,
     );
@@ -52,44 +62,51 @@ describe('TooltipLayer', () => {
         vi.advanceTimersByTime(ms);
       });
     };
+    const elsewhere = screen.getByText('Chỗ khác');
     fireEvent.pointerOver(screen.getByRole('button', { name: 'Đặt lại' }));
     wait(400);
-    const tip = tipOpen();
-    // Shown by hover: the bubble takes the pointer (ui.css), so it can be hovered.
-    expect(tip).toHaveAttribute('data-hover');
-    // Crossing the gap, then resting on the bubble: it stays.
-    fireEvent.pointerOver(screen.getByText('Chỗ khác'));
-    wait(50);
-    fireEvent.pointerOver(tip as HTMLElement);
+    expect(tipOpen()).toHaveTextContent('Đặt lại (R)');
+    // Crossing the 8 px gap, then resting on the bubble (the page under it gets the events).
+    fireEvent.pointerOver(elsewhere, { clientX: 150, clientY: 76 });
+    fireEvent.pointerMove(elsewhere, { clientX: 150, clientY: 60 });
+    // Another control under the bubble does not take over while the pointer is on the bubble.
+    fireEvent.pointerOver(screen.getByRole('button', { name: 'Bước' }), {
+      clientX: 160,
+      clientY: 60,
+    });
     wait(1000);
-    expect(tipOpen()).not.toBeNull();
-    // Esc dismisses it without moving the pointer or the focus.
-    fireEvent.keyDown(document.body, { key: 'Escape' });
-    expect(tipOpen()).toBeNull();
-    // Shown again, then the pointer leaves for good: gone after the short grace.
-    fireEvent.pointerOver(screen.getByRole('button', { name: 'Đặt lại' }));
-    wait(400);
-    fireEvent.pointerOver(screen.getByText('Chỗ khác'));
-    wait(100);
-    expect(tipOpen()).not.toBeNull();
-    wait(100);
+    expect(tipOpen()).toHaveTextContent('Đặt lại (R)');
+    // Leaving the bubble hides it.
+    fireEvent.pointerMove(elsewhere, { clientX: 400, clientY: 300 });
     expect(tipOpen()).toBeNull();
   });
 
-  it('a bubble shown by keyboard focus never takes the pointer', () => {
+  it('Esc hides a shown bubble and stops there; the next Esc reaches the drawer or dialog', () => {
+    vi.useFakeTimers();
+    const drawerEsc = vi.fn();
     render(
       <>
         <TooltipLayer />
-        <button type="button" data-tip="Bước tiếp theo (.)" aria-label="Bước" />
+        <div
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') drawerEsc();
+          }}
+        >
+          <button type="button" data-tip="Đóng sổ" aria-label="Đóng sổ" />
+        </div>
       </>,
     );
-    const button = screen.getByRole('button', { name: 'Bước' });
-    // jsdom has no :focus-visible; a keyboard focus matches it in a browser.
-    const matches = vi.spyOn(button, 'matches').mockReturnValue(true);
+    const button = screen.getByRole('button', { name: 'Đóng sổ' });
+    fireEvent.pointerOver(button);
     act(() => {
-      button.focus();
+      vi.advanceTimersByTime(400);
     });
-    expect(screen.getByRole('tooltip', { hidden: true })).not.toHaveAttribute('data-hover');
-    matches.mockRestore();
+    expect(screen.getByRole('tooltip', { hidden: true })).toBeInTheDocument();
+    const first = fireEvent.keyDown(button, { key: 'Escape' });
+    expect(first).toBe(false); // default prevented: a dialog does not close either
+    expect(screen.queryByRole('tooltip', { hidden: true })).toBeNull();
+    expect(drawerEsc).not.toHaveBeenCalled();
+    fireEvent.keyDown(button, { key: 'Escape' });
+    expect(drawerEsc).toHaveBeenCalledTimes(1);
   });
 });
