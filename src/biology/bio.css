@@ -1174,10 +1174,22 @@
 /* "Từ tế bào đến DNA" (src/biology/cell/zoom): zoom buttons over the picture's bottom edge, the
    six levels and the printed sizes in the inspector. */
 .zoom__buttons {
+  position: relative;
   display: flex;
   justify-content: center;
   gap: var(--space-2);
   pointer-events: auto;
+}
+/* "Không theo tỉ lệ" while the camera glides: out of the layout, on one line. */
+.zoom__moving {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  max-width: 100%;
+  overflow: hidden;
+  transform: translateX(-50%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .zoom__buttons .btn {
   min-height: var(--target);

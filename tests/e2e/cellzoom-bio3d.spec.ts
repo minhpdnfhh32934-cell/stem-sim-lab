@@ -25,6 +25,7 @@ interface ZoomState {
 }
 interface Hook {
   frames(): number;
+  moving(): boolean;
   state(): ZoomState | null;
 }
 const hook = (page: Page) =>
@@ -33,17 +34,22 @@ const hook = (page: Page) =>
     return h ? { frames: h.frames(), state: h.state() } : null;
   });
 
-async function openZoom(page: Page, errors: string[]): Promise<void> {
+async function openZoom(page: Page, errors: string[], fontScale = 1): Promise<void> {
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text());
   });
-  await page.addInitScript(() => {
+  await page.addInitScript((scale) => {
     localStorage.setItem(
       'stemsim.perf',
       JSON.stringify({ state: { preference: 'medium', benchmark: null }, version: 1 }),
     );
-  });
+    if (scale !== 1)
+      localStorage.setItem(
+        'stemsim.settings',
+        JSON.stringify({ state: { fontScale: scale }, version: 2 }),
+      );
+  }, fontScale);
   await openLab(page);
   await page.getByRole('radio', { name: 'Sinh học' }).click();
   await page.getByRole('button', { name: 'Từ tế bào đến DNA', exact: true }).click();
@@ -134,3 +140,40 @@ test('cell → DNA: reduced motion steps at once; the 2D picture has the same le
   await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
   expect(errors).toEqual([]);
 });
+
+for (const fontScale of [1, 1.4])
+  test(`cell → DNA 3D: the glide is never cut short by a resize (font ${String(fontScale * 100)} %)`, async ({
+    page,
+  }) => {
+    // Review of PR #111: a "not to scale" chip that wrapped the top bar resized a HUD inset
+    // mid-glide, and the camera jumped to the spot instead of gliding.
+    test.setTimeout(120_000);
+    const errors: string[] = [];
+    await openZoom(page, errors, fontScale);
+    const view = page.locator('.bio3d[data-lesson="cellToDna"]');
+    await expect(view.locator('canvas')).toBeVisible({ timeout: 30_000 });
+    const panel = page.getByRole('group', { name: 'Sáu cấp phóng to' });
+    for (const n of [3, 4]) {
+      await panel.getByRole('button', { name: new RegExp(`^${String(n)}\\. `) }).click();
+      await expect(view.getByText(new RegExp(`^Cấp ${String(n)}/6`))).toBeVisible();
+      await expect
+        .poll(async () => (await hook(page))?.state?.level)
+        .toBe(n === 3 ? 'chromosome' : 'fibre');
+      const top = view.locator('.bio3d__top');
+      const before = (await top.boundingBox())?.height ?? 0;
+      await view.getByRole('button', { name: 'Phóng to' }).click();
+      // The camera is gliding (a resize would have ended the glide at once).
+      expect(
+        await page.evaluate(
+          () => (window as unknown as { __simlabBio3d?: Hook }).__simlabBio3d?.moving() ?? false,
+        ),
+      ).toBe(true);
+      await expect(view.getByText('Chuyển cảnh giữa hai cấp — không theo tỉ lệ')).toBeVisible();
+      expect((await top.boundingBox())?.height ?? 0).toBeCloseTo(before, 0);
+      await expect(view.getByText(new RegExp(`^Cấp ${String(n + 1)}/6`))).toBeVisible();
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      1366,
+    );
+    expect(errors).toEqual([]);
+  });

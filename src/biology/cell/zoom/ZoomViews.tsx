@@ -58,11 +58,10 @@ function NamesButton() {
   );
 }
 
-/** Level chip, the main size of the level, and "not to scale" while moving between levels. */
+/** Level chip and the main size of the level (the stage's top bar). */
 export function ZoomChips() {
   const Lz = useLocalized();
   const level = useCellZoom((s) => s.level);
-  const moving = useCellZoom((s) => s.moving);
   const value = useFactValue();
   const id = levelInfo(level).id;
   const main = LEVEL_FACTS[id][0];
@@ -76,7 +75,6 @@ export function ZoomChips() {
           {Lz(main.label)} {value(main)}
         </span>
       )}
-      {moving && <span className="chem-chip chem-chip--qual">{Lz(TRANSITION)}</span>}
     </>
   );
 }
@@ -89,6 +87,9 @@ export function ZoomButtons({ glide }: { glide: boolean }) {
   const next = LEVEL_NAME[levelInfo(level + 1).id];
   return (
     <div className="zoom__buttons">
+      {/* Floats above the buttons: showing it never resizes a bar the 3D camera keeps clear of
+          (a resize mid-glide would turn the glide into a jump). */}
+      {moving && <span className="chem-chip chem-chip--qual zoom__moving">{Lz(TRANSITION)}</span>}
       <button type="button" className="btn" disabled={moving || level === 0} onClick={zoomOut}>
         <ZoomOut size={18} aria-hidden="true" />
         {Lz(L('Thu nhỏ', 'Zoom out'))}

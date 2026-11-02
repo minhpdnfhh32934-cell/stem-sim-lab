@@ -53,30 +53,96 @@ function extent(level: ZoomLevel): V {
   }
 }
 
-/** Where each named part is (nm), for its label. */
-const ANCHOR: Record<ZoomLevel, Partial<Record<ZoomPart, V>>> = {
+/**
+ * Illustrative parts of the pictures, computed once (seeded: the same picture every time). The
+ * drawing and the name labels read the same lists, so a name always points at its part.
+ */
+/** Mitochondria of the cell: centre (nm) and the angle of the long axis; semi-axes MITO_AXES. */
+export const MITO_2D: readonly { x: number; y: number; a: number }[] = (() => {
+  const rand = seeded(3);
+  return Array.from({ length: 9 }, (_, i) => {
+    const a = (i / 9) * 2 * Math.PI;
+    const d = SIZE.nucleusNm / 2 + 2200 + rand() * 3500;
+    return { x: Math.cos(a) * d, y: Math.sin(a) * d, a };
+  });
+})();
+export const MITO_AXES: V = [900, 380];
+/** Outer membrane radius of the nucleus and the gap to the inner one (illustration). */
+const ENVELOPE_GAP = 90;
+/** Nuclear pores: centres in the envelope, each PORE_R nm in radius. */
+export const PORE_R = 70;
+export const PORES_2D: readonly V[] = Array.from({ length: 18 }, (_, i) => {
+  const a = (i / 18) * 2 * Math.PI;
+  const r = SIZE.nucleusNm / 2 - ENVELOPE_GAP / 2;
+  return [Math.cos(a) * r, Math.sin(a) * r];
+});
+/** Nucleolus of the nucleus picture: centre and radius (nm). */
+export const NUCLEOLUS_2D = { x: -800, y: 550, r: 575 } as const;
+/** Chromatin threads of the nucleus picture (polylines, nm). */
+export const CHROMATIN_2D: readonly (readonly V[])[] = (() => {
+  const R = SIZE.nucleusNm / 2;
+  const rand = seeded(5);
+  return Array.from({ length: 7 }, () => {
+    let x = (rand() - 0.5) * 2600;
+    let y = (rand() - 0.5) * 2600;
+    const pts: V[] = [[x, y]];
+    for (let i = 0; i < 12; i++) {
+      x += (rand() - 0.5) * 900;
+      y += (rand() - 0.5) * 900;
+      const d = Math.hypot(x, y);
+      if (d > R * 0.8) {
+        x *= (R * 0.78) / d;
+        y *= (R * 0.78) / d;
+      }
+      pts.push([x, y]);
+    }
+    return pts;
+  });
+})();
+/** Steps along each loop of the fibre picture. */
+export const LOOP_STEPS = 16;
+/** A point of loop row `k` (0 … loopsPerRing − 1) on side ±1, at t ∈ [0, 1] along the loop. */
+export function loopPoint(k: number, side: -1 | 1, t: number): V {
+  const R = SIZE.chromatidNm / 2;
+  const y0 = ((k + 0.5) / DRAWN.loopsPerRing - 0.5) * 2 * R * 0.9;
+  const reach = (R - SIZE.fibreNm) * Math.sin(Math.PI * t);
+  return [side * reach, y0 + 14 * Math.sin(2 * Math.PI * t)];
+}
+/** x of base pair i of the drawn helix (nm). */
+export const helixX = (i: number): number => -HELIX_LENGTH_NM / 2 + i * RISE;
+
+/** Where each named part is (nm), for its label: on the drawn part itself. */
+export const ANCHOR_2D: Record<ZoomLevel, Partial<Record<ZoomPart, V>>> = {
   cell: {
     membrane: [0, DRAWN.cellNm / 2],
     nucleus: [0, SIZE.nucleusNm / 2],
-    mitochondrion: [DRAWN.cellNm * 0.3, DRAWN.cellNm * 0.12],
+    mitochondrion: [MITO_2D[0]?.x ?? 0, MITO_2D[0]?.y ?? 0],
   },
   nucleus: {
-    envelope: [SIZE.nucleusNm * 0.35, SIZE.nucleusNm * 0.35],
-    pore: [0, SIZE.nucleusNm / 2],
-    nucleolus: [-800, 1125],
-    chromatin: [600, -400],
+    envelope: [
+      (SIZE.nucleusNm / 2 - ENVELOPE_GAP / 2) * Math.SQRT1_2,
+      (SIZE.nucleusNm / 2 - ENVELOPE_GAP / 2) * Math.SQRT1_2,
+    ],
+    // Pore 4 (80°), near the top.
+    pore: PORES_2D[4] ?? [0, 0],
+    nucleolus: [NUCLEOLUS_2D.x, NUCLEOLUS_2D.y + NUCLEOLUS_2D.r],
+    chromatin: CHROMATIN_2D[0]?.[6] ?? [0, 0],
   },
   chromosome: {
     chromatid: [0, DRAWN.armNm[1] * 0.8],
     centromere: [SIZE.chromatidNm * 0.3, 0],
   },
-  fibre: { fibre: [-SIZE.chromatidNm * 0.35, SIZE.chromatidNm * 0.25], scaffold: [0, 300] },
+  fibre: { fibre: loopPoint(6, -1, 0.25), scaffold: [0, 300] },
   nucleosome: {
     histones: [0, 0],
-    wrappedDna: [-WRAP_RADIUS_NM, WRAP_RADIUS_NM],
+    wrappedDna: [-WRAP_RADIUS_NM * Math.SQRT1_2, WRAP_RADIUS_NM * Math.SQRT1_2],
     linker: [(SIZE.fibreNm + DRAWN.linkerNm) / 2, 0],
   },
-  dna: { backbone: [-HELIX_LENGTH_NM * 0.3, RADIUS], basePair: [HELIX_LENGTH_NM * 0.2, 0] },
+  dna: {
+    // Pair 10: cos(10 · TWIST) = 1, the coding strand at its top; pair 13: the middle of a rung half.
+    backbone: [helixX(10), RADIUS * Math.cos(10 * TWIST)],
+    basePair: [helixX(13), 0.5 * RADIUS * Math.cos(13 * TWIST)],
+  },
 };
 
 /** nm → canvas pixels around the picture's centre (y up). */
@@ -126,21 +192,10 @@ function cell(p: Pen, css: Css) {
   ctx.strokeStyle = css('--subject-biology');
   ctx.lineWidth = 2;
   ctx.stroke();
-  const rand = seeded(3);
   ctx.fillStyle = css('--chart-3');
-  for (let i = 0; i < 9; i++) {
-    const a = (i / 9) * 2 * Math.PI;
-    const d = SIZE.nucleusNm / 2 + 2200 + rand() * 3500;
+  for (const m of MITO_2D) {
     ctx.beginPath();
-    ctx.ellipse(
-      p.X(Math.cos(a) * d),
-      p.Y(Math.sin(a) * d),
-      900 * p.s,
-      380 * p.s,
-      a,
-      0,
-      2 * Math.PI,
-    );
+    ctx.ellipse(p.X(m.x), p.Y(m.y), MITO_AXES[0] * p.s, MITO_AXES[1] * p.s, -m.a, 0, 2 * Math.PI);
     ctx.fill();
   }
   p.circle(0, 0, SIZE.nucleusNm / 2);
@@ -156,36 +211,21 @@ function nucleus(p: Pen, css: Css) {
   ctx.fill();
   ctx.strokeStyle = css('--chart-6');
   ctx.lineWidth = 2;
-  for (const r of [R, R - 90]) {
+  for (const r of [R, R - ENVELOPE_GAP]) {
     p.circle(0, 0, r);
     ctx.stroke();
   }
   ctx.fillStyle = css('--bg-stage');
-  for (let i = 0; i < 18; i++) {
-    const a = (i / 18) * 2 * Math.PI;
-    p.circle(Math.cos(a) * (R - 45), Math.sin(a) * (R - 45), 70);
+  for (const [x, y] of PORES_2D) {
+    p.circle(x, y, PORE_R);
     ctx.fill();
   }
-  p.circle(-800, 550, 575);
+  p.circle(NUCLEOLUS_2D.x, NUCLEOLUS_2D.y, NUCLEOLUS_2D.r);
   ctx.fillStyle = css('--chart-4');
   ctx.fill();
-  const rand = seeded(5);
   ctx.strokeStyle = css('--chart-6');
   ctx.lineWidth = 1.5;
-  for (let k = 0; k < 7; k++) {
-    let x = (rand() - 0.5) * 2600;
-    let y = (rand() - 0.5) * 2600;
-    const pts: V[] = [[x, y]];
-    for (let i = 0; i < 12; i++) {
-      x += (rand() - 0.5) * 900;
-      y += (rand() - 0.5) * 900;
-      const d = Math.hypot(x, y);
-      if (d > R * 0.8) {
-        x *= (R * 0.78) / d;
-        y *= (R * 0.78) / d;
-      }
-      pts.push([x, y]);
-    }
+  for (const pts of CHROMATIN_2D) {
     p.line(pts);
     ctx.stroke();
   }
@@ -223,20 +263,11 @@ function fibre(p: Pen, css: Css) {
   ctx.setLineDash([]);
   ctx.strokeStyle = css('--chart-6');
   ctx.lineWidth = Math.max(1, SIZE.fibreNm * p.s);
-  const n = DRAWN.loopsPerRing;
-  for (let k = 0; k < n; k++) {
-    const y0 = ((k + 0.5) / n - 0.5) * 2 * R * 0.9;
-    for (const side of [-1, 1]) {
-      const pts: V[] = [];
-      for (let i = 0; i <= 16; i++) {
-        const t = i / 16;
-        const reach = (R - SIZE.fibreNm) * Math.sin(Math.PI * t);
-        pts.push([side * reach, y0 + 14 * Math.sin(2 * Math.PI * t)]);
-      }
-      p.line(pts);
+  for (let k = 0; k < DRAWN.loopsPerRing; k++)
+    for (const side of [-1, 1] as const) {
+      p.line(Array.from({ length: LOOP_STEPS + 1 }, (_, i) => loopPoint(k, side, i / LOOP_STEPS)));
       ctx.stroke();
     }
-  }
   ctx.fillStyle = css('--bio3d-protein');
   ctx.fillRect(p.X(-12), p.Y(R), 24 * p.s, 2 * R * p.s);
 }
@@ -352,7 +383,7 @@ export function drawZoom(
   ctx.textBaseline = 'middle';
   if (names)
     for (const part of LEVEL_PARTS[info.id]) {
-      const at = ANCHOR[info.id][part];
+      const at = ANCHOR_2D[info.id][part];
       const text = names[part];
       if (!at || !text) continue;
       const x = p.X(at[0]);

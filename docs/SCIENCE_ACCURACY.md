@@ -274,7 +274,7 @@ DNA” chỉ dùng **số in trong sách** (kích thước, số histone, số c
   lệ; số lượng bào quan chỉ để minh họa”; vị trí, hình dạng, màu chỉ để phân biệt các bộ phận. Tên
   và chức năng diễn đạt lại theo SGK Sinh học 10 KNTT (Bài 7–8), chờ giáo viên duyệt.
 - Từ tế bào đến DNA (0.8.1, #107): mỗi cấp có **một kích thước vẽ đúng số in trong sách** (nhân
-  5 µm, chromatid 700 nm, sợi nhiễm sắc 10 nm, B-DNA 2 nm) và một thước tỉ lệ dài đúng; tế bào vẽ
+  5 µm, crômatit 700 nm, sợi nhiễm sắc 10 nm, B-DNA 2 nm) và một thước tỉ lệ dài đúng; tế bào vẽ
   đường kính 20 µm, một giá trị chọn trong khoảng 10–100 µm của SGK (chú thích ghi rõ). Mọi phần
   khác (bào quan, lỗ màng nhân, hạch nhân, chiều dài cánh NST, số vòng của sợi, số vòng DNA quấn
   quanh histone, trình tự base) là minh họa. Lúc chuyển giữa hai cấp, hình ghi “không theo tỉ lệ”.
