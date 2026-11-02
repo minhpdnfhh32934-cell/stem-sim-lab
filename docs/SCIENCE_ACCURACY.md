@@ -111,7 +111,7 @@ thấy). Khác tần số thì có phách f_b = |f₁ − f₂|; chu kì phách 
 (đỉnh đường bao). Hình mặt nước là ảnh điểm: máy chậm thì ô ảnh to hơn (cấp chất lượng thấp hơn),
 còn mọi số không đổi; bước sóng nhỏ hơn 4 ô ảnh thì không vẽ mặt nước (tránh vân giả) và nhắc phóng
 to. Kéo một nguồn đổi S₁S₂ (hai nguồn dời đối xứng), kéo M đổi d₁, d₂; đó là đổi thông số, không phải
-can thiệp giữa chừng, nên Thẻ Khoa học vẫn "chính xác".
+can thiệp giữa chừng, nên kéo không làm Thẻ Khoa học chuyển sang "gần đúng".
 
 **Sóng dừng không tự làm tròn (0.8.0, #37 §8.2 bẫy 5):** dây hai đầu cố định chỉ có sóng dừng
 khi m = 2Lf/v là số nguyên. App coi m là nguyên khi khoảng cách tới số nguyên gần nhất không quá

@@ -391,10 +391,11 @@ xo, con lắc đơn, chuyển động tròn đều, giao thoa sóng hai nguồn,
   tuyến, vectơ gia tốc hướng vào tâm. Vật không kéo được. Tần số nhận Hz, vòng/s, vòng/phút; tốc độ
   góc chỉ nhận rad/s ("2 Hz" không bao giờ bị đọc thành 2 rad/s: f = 2 Hz ứng với ω = 4π rad/s). Đề cho hai đại lượng (ví dụ cả T và f) thì app dùng đại lượng đầu tiên theo thứ tự v, ω, T, f và báo đại lượng kia "không dùng tới" để bạn kiểm tra.
 - **Giao thoa sóng hai nguồn** (chương **Sóng**, Vật lí 11 Bài 12): hai nguồn S₁, S₂ cùng pha trên
-  mặt nước. Ô đầu tiên chọn **cùng tần số** (giao thoa: vân cực đại, cực tiểu đứng yên) hay **khác
-  tần số** (phách). Nhập khoảng cách hai nguồn, tần số và tốc độ truyền sóng (hoặc chọn "Đề cho: bước
+  mặt nước. Ô đầu tiên chọn **cùng tần số** (giao thoa: hệ vân ổn định, vị trí vân cực đại, cực tiểu không đổi) hay **khác
+  tần số** (phách, phần mở rộng ngoài SGK). Nhập khoảng cách hai nguồn, tần số và tốc độ truyền sóng (hoặc chọn "Đề cho: bước
   sóng λ"). Màu trên hình là li độ mặt nước: xanh là nhô lên, cam là lõm xuống; các đường không đổi
-  màu là nơi nước đứng yên (cực tiểu). Chấm nhỏ trên đoạn S₁S₂ là các cực đại. **Kéo một nguồn** để
+  màu là nơi nước không dao động (cực tiểu). Chấm nhỏ trên đoạn S₁S₂ là các cực đại (khi cùng tần số
+  và đủ chỗ; phóng to nếu không thấy). **Kéo một nguồn** để
   đổi khoảng cách S₁S₂ (hai nguồn dời đối xứng), **kéo điểm M** để đổi d₁, d₂; mỗi lần kéo là chạy
   lại từ đầu. Lời giải đếm số cực đại, cực tiểu trên S₁S₂ (không kể hai nguồn) và tính biên độ tại M;
   ở chế độ phách, đồ thị vẽ li độ tại M và đường bao, tần số phách |f₁ − f₂|. Máy chậm thì hình mặt

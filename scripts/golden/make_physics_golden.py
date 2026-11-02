@@ -549,7 +549,7 @@ add(
 )
 add(
     "int-02",
-    "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂.",
+    "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂ (không kể S₁, S₂).",
     "interference",
     [
         q("d", 12, "cm", "cách nhau 12 cm"),
@@ -588,6 +588,19 @@ add(
     ],
     {"beat_frequency": abs(20 - 22), "beat_period": 1 / abs(20 - 22)},
     missing=["d"],
+)
+
+# Đề cho khoảng cách hai cực đại liên tiếp (= λ/2): AI không tự nhân đôi thành λ (ghi vào clarifications),
+# nên app hỏi tốc độ truyền sóng; không có đáp số.
+add(
+    "int-06",
+    "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 9 cm dao động cùng pha với tần số 25 Hz. Khoảng cách giữa hai cực đại giao thoa liên tiếp trên đoạn AB là 1,5 cm. Tính tốc độ truyền sóng trên mặt nước.",
+    "interference",
+    [
+        q("d", 9, "cm", "cách nhau 9 cm"),
+        q("f", 25, "Hz", "tần số 25 Hz"),
+    ],
+    missing=["v"],
 )
 
 # Hai nguồn ngược pha: ngoài phạm vi của cảnh (chỉ hai nguồn cùng pha) → unsupported_parts.

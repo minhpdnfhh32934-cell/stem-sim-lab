@@ -32,7 +32,7 @@ import {
 } from './engine';
 import { amplitudeAt, beatFrequency, maximaBetween, minimaBetween, orderAt } from './model';
 
-/** Largest surface slope 2a·k; above 0.1 the small-amplitude (linear) model is only approximate. */
+/** Largest surface slope 2a·k = 4πa/λ; above 0.1 the small-amplitude (linear) model is only approximate. */
 const steep = (q: InterferenceInput) => (4 * Math.PI * q.a) / Math.min(q.lambda1, q.lambda2) > 0.1;
 
 /** Slider ranges (SI) a drag stays within. */
@@ -86,8 +86,8 @@ function whereM(order: number): LocalizedText {
   if (isWhole(Math.abs(order) - 0.5)) {
     const j = String(Math.floor(order));
     return L(
-      `M nằm trên một vân cực tiểu (d₂ − d₁ = (k + ½)λ với k = ${j}): M đứng yên.`,
-      `M lies on a minimum (d₂ − d₁ = (k + ½)λ with k = ${j}): it stays still.`,
+      `M nằm trên một vân cực tiểu (d₂ − d₁ = (k + ½)λ với k = ${j}): phần tử nước tại M không dao động.`,
+      `M lies on a minimum (d₂ − d₁ = (k + ½)λ with k = ${j}): the water at M does not oscillate.`,
     );
   }
   return L(
@@ -169,8 +169,8 @@ function solve(p: Params, locale: Locale): Solution {
   if (steep(q))
     notes.push(
       L(
-        'Biên độ không còn nhỏ so với bước sóng (độ dốc 2a·k lớn hơn 0,1): mô hình cộng sóng tuyến tính chỉ còn gần đúng.',
-        'The amplitude is no longer small compared with the wavelength (slope 2a·k above 0.1): the linear superposition model is only approximate.',
+        'Biên độ không còn nhỏ so với bước sóng (độ dốc 4πa/λ lớn hơn 0,1): mô hình cộng sóng tuyến tính chỉ còn gần đúng.',
+        'The amplitude is no longer small compared with the wavelength (slope 4πa/λ above 0.1): the linear superposition model is only approximate.',
       ),
     );
   const done = (answers: Answer[]): Solution => ({
@@ -195,7 +195,7 @@ function solve(p: Params, locale: Locale): Solution {
         'Tại M, cộng hai dao động khác tần số rồi biến đổi tổng thành tích: dao động nhanh (tần số trung bình) có biên độ thay đổi chậm theo thời gian.',
         'At M, add the two oscillations of different frequencies and turn the sum into a product: a fast oscillation (average frequency) whose amplitude changes slowly in time.',
       ),
-      tex: 'u = 2a\\cos\\frac{(\\omega_1-\\omega_2)t - (k_1d_1 - k_2d_2)}{2}\\,\\cos\\frac{(\\omega_1+\\omega_2)t - (k_1d_1 + k_2d_2)}{2}',
+      tex: 'u = 2a\\cos\\left[\\pi(f_1 - f_2)t - \\pi\\left(\\tfrac{d_1}{\\lambda_1} - \\tfrac{d_2}{\\lambda_2}\\right)\\right]\\cos\\left[\\pi(f_1 + f_2)t - \\pi\\left(\\tfrac{d_1}{\\lambda_1} + \\tfrac{d_2}{\\lambda_2}\\right)\\right]',
     });
     const fb = beatFrequency(q.f1, q.f2);
     steps.push({
@@ -207,8 +207,8 @@ function solve(p: Params, locale: Locale): Solution {
     });
     steps.push({
       text: L(
-        'Hai nguồn khác tần số không phải hai nguồn kết hợp: trên mặt nước không có vân cực đại, cực tiểu đứng yên — các vân trôi dần.',
-        'Sources of different frequencies are not coherent: the water shows no standing maxima or minima — the fringes drift.',
+        'Hai nguồn khác tần số không phải hai nguồn kết hợp: trên mặt nước không có hệ vân ổn định (vị trí vân cực đại, cực tiểu không cố định) — các vân trôi dần.',
+        'Sources of different frequencies are not coherent: the water shows no steady fringe pattern (maxima and minima do not keep their places) — the fringes drift.',
       ),
     });
     // Measured on the engine's displacement at M (the graph), not taken from the formula.
@@ -249,8 +249,8 @@ function solve(p: Params, locale: Locale): Solution {
     });
   steps.push({
     text: L(
-      'Hai nguồn cùng pha: điểm có hiệu đường đi bằng một số nguyên lần bước sóng dao động mạnh nhất (cực đại); bằng một số nguyên lần bước sóng cộng nửa bước sóng thì đứng yên (cực tiểu).',
-      'In-phase sources: points whose path difference is a whole number of wavelengths oscillate the most (maxima); a whole number of wavelengths plus a half stay still (minima).',
+      'Hai nguồn cùng pha: điểm có hiệu đường đi bằng một số nguyên lần bước sóng dao động với biên độ cực đại; bằng một số nguyên lần bước sóng, cộng thêm nửa bước sóng, thì không dao động (cực tiểu).',
+      'In-phase sources: points whose path difference is a whole number of wavelengths oscillate with the largest amplitude (maxima); a whole number of wavelengths, plus half a wavelength, do not oscillate (minima).',
     ),
     tex: 'd_2 - d_1 = k\\lambda\\ (\\max),\\qquad d_2 - d_1 = \\left(k+\\tfrac{1}{2}\\right)\\lambda\\ (\\min),\\qquad k = 0, \\pm 1, \\pm 2, \\ldots',
   });
@@ -282,7 +282,10 @@ function solve(p: Params, locale: Locale): Solution {
   const order = orderAt(dr, lam);
   const AM = amplitudeAt(q.a, dr, lam);
   steps.push({
-    text: whereM(order),
+    text: L(
+      `${whereM(order).vi} (M lấy theo d₁, d₂ trong ô thông số; đề không cho M thì SimLab tự đặt M để minh hoạ.)`,
+      `${whereM(order).en} (M is taken from d₁, d₂ in the parameters; when the problem gives no M, SimLab places one for illustration.)`,
+    ),
     tex: `d_2 - d_1 = ${Q(q.d2, 'cm')} - ${Q(q.d1, 'cm')} = ${Q(dr, 'cm')},\\quad \\frac{d_2 - d_1}{\\lambda} = ${R(order)},\\quad A_M = 2a\\left|\\cos\\frac{\\pi(d_2-d_1)}{\\lambda}\\right| = ${Q(AM, 'mm')}`,
   });
   const scan = scanSegment(q.d, lam);
@@ -341,15 +344,15 @@ function card(p: Params): ScienceCardData {
   return {
     title: L('Giao thoa sóng hai nguồn', 'Two-source interference'),
     model: L(
-      'Hai nguồn điểm S₁, S₂ trên mặt nước dao động điều hoà cùng pha, cùng biên độ a. Sóng từ mỗi nguồn lan ra mọi phía với tốc độ v; li độ tại mỗi điểm là tổng li độ của hai sóng (nguyên lí chồng chất). Cùng tần số (hai nguồn kết hợp): vân cực đại và cực tiểu đứng yên. Khác tần số: biên độ tại mỗi điểm lên xuống theo thời gian (phách).',
-      'Two point sources S₁, S₂ on water oscillate in phase with the same amplitude a. Each wave spreads in every direction at speed v; the displacement at each point is the sum of the two waves (superposition). Same frequency (coherent sources): maxima and minima stand still. Different frequencies: the amplitude at each point rises and falls in time (beats).',
+      'Hai nguồn điểm S₁, S₂ trên mặt nước dao động điều hoà cùng biên độ a và cùng pha lúc t = 0. Sóng từ mỗi nguồn lan ra mọi phía với tốc độ v; li độ tại mỗi điểm là tổng li độ của hai sóng (nguyên lí chồng chất). Cùng tần số (hai nguồn kết hợp, luôn cùng pha): hệ vân ổn định, vị trí các vân cực đại, cực tiểu không đổi. Khác tần số: biên độ tại mỗi điểm lên xuống theo thời gian (phách — phần mở rộng, ngoài SGK).',
+      'Two point sources S₁, S₂ on water oscillate with the same amplitude a, in phase at t = 0. Each wave spreads in every direction at speed v; the displacement at each point is the sum of the two waves (superposition). Same frequency (coherent sources, always in phase): a steady pattern, the maxima and minima keep their places. Different frequencies: the amplitude at each point rises and falls in time (beats — an extension beyond the textbook).',
     ),
     equations: [
       {
-        tex: 'u_1 = a\\cos(\\omega_1 t - k_1 d_1),\\quad u_2 = a\\cos(\\omega_2 t - k_2 d_2),\\quad u = u_1 + u_2',
+        tex: 'u_1 = a\\cos\\left(\\omega_1 t - \\frac{2\\pi d_1}{\\lambda_1}\\right),\\quad u_2 = a\\cos\\left(\\omega_2 t - \\frac{2\\pi d_2}{\\lambda_2}\\right),\\quad u = u_1 + u_2',
         label: L(
-          'Sóng từ mỗi nguồn tới M (d₁, d₂: khoảng cách từ M tới S₁, S₂); k = 2π/λ, ω = 2πf, λ = v/f',
-          'The wave from each source at M (d₁, d₂: distances from M to S₁, S₂); k = 2π/λ, ω = 2πf, λ = v/f',
+          'Sóng từ mỗi nguồn tới M (d₁, d₂: khoảng cách từ M tới S₁, S₂); ω = 2πf, λ = v/f',
+          'The wave from each source at M (d₁, d₂: distances from M to S₁, S₂); ω = 2πf, λ = v/f',
         ),
       },
       {
@@ -373,8 +376,8 @@ function card(p: Params): ScienceCardData {
       {
         tex: 'f_b = |f_1 - f_2|,\\qquad T_b = \\frac{1}{|f_1 - f_2|}',
         label: L(
-          'Phách khi f₁ ≠ f₂ (f_b: tần số phách)',
-          'Beats when f₁ ≠ f₂ (f_b: beat frequency)',
+          'Phách khi f₁ ≠ f₂ (f_b: tần số phách; mở rộng, ngoài SGK — Halliday ch. 17)',
+          'Beats when f₁ ≠ f₂ (f_b: beat frequency; an extension beyond the textbook — Halliday ch. 17)',
         ),
       },
     ],
@@ -384,8 +387,8 @@ function card(p: Params): ScienceCardData {
         'Ideal water surface: no damping, and the amplitude does not decrease with the distance from the source (each wave reaches every point with the same amplitude a).',
       ),
       L(
-        'Hai nguồn điểm dao động cùng pha, cùng biên độ a; hai nguồn lệch pha chưa được hỗ trợ.',
-        'Two point sources oscillating in phase with the same amplitude a; sources with a phase difference are not supported.',
+        'Hai nguồn điểm cùng biên độ a, cùng pha lúc t = 0 (cùng tần số thì luôn cùng pha); hai nguồn lệch pha chưa được hỗ trợ. Tần số phách không phụ thuộc pha ban đầu.',
+        'Two point sources with the same amplitude a, in phase at t = 0 (always in phase at equal frequencies); sources with a phase difference are not supported. The beat frequency does not depend on the starting phase.',
       ),
       L(
         'Tốc độ truyền sóng v như nhau với mọi tần số (bỏ qua tán sắc của sóng mặt nước).',
@@ -404,8 +407,8 @@ function card(p: Params): ScienceCardData {
         'Maxima and minima are counted on S₁S₂ without the sources. The ratio S₁S₂/λ counts as whole (or whole plus ½) only within computer round-off (≤ 10⁻⁹); SimLab never rounds further.',
       ),
       L(
-        'Phách: biên độ tại mỗi điểm lên xuống với tần số |f₁ − f₂|, dễ thấy khi |f₁ − f₂| nhỏ hơn nhiều so với f₁, f₂. Hai nguồn khác tần số không phải nguồn kết hợp nên không có vân đứng yên.',
-        'Beats: the amplitude at each point rises and falls at |f₁ − f₂|, easy to see when |f₁ − f₂| is much smaller than f₁, f₂. Sources of different frequencies are not coherent, so no fringe stands still.',
+        'Phách: biên độ tại mỗi điểm lên xuống với tần số |f₁ − f₂|, dễ thấy khi |f₁ − f₂| nhỏ hơn nhiều so với f₁, f₂. Hai nguồn khác tần số không phải nguồn kết hợp nên không có hệ vân ổn định.',
+        'Beats: the amplitude at each point rises and falls at |f₁ − f₂|, easy to see when |f₁ − f₂| is much smaller than f₁, f₂. Sources of different frequencies are not coherent, so there is no steady fringe pattern.',
       ),
       L(
         'Hình mặt nước: màu theo li độ tại tâm mỗi ô ảnh; khoảng cách trên hình theo tỉ lệ thật, độ cao của sóng chỉ thể hiện bằng màu. Máy chậm thì ô ảnh to hơn (hình thô hơn), các số không đổi.',
@@ -417,19 +420,19 @@ function card(p: Params): ScienceCardData {
       ),
     ],
     validity: L(
-      'Sóng nhỏ (2a·k ≪ 1), không tắt dần, không tán sắc; hai nguồn điểm cùng pha.',
-      'Small waves (2a·k ≪ 1), no damping, no dispersion; two in-phase point sources.',
+      'Sóng nhỏ (độ dốc 4πa/λ ≪ 1), không tắt dần, không tán sắc; hai nguồn điểm cùng pha lúc t = 0.',
+      'Small waves (slope 4πa/λ ≪ 1), no damping, no dispersion; two point sources in phase at t = 0.',
     ),
     // Outside the small-amplitude range the linear model itself is only approximate.
     confidence: steep(q) ? 'approx' : 'exact',
     confidenceNote: steep(q)
       ? L(
-          'Độ dốc lớn nhất của mặt nước 2a·k lớn hơn 0,1: biên độ không còn nhỏ so với bước sóng, mô hình cộng tuyến tính chỉ còn gần đúng. Hãy giảm biên độ a.',
-          'The largest surface slope 2a·k is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. Reduce the amplitude a.',
+          'Độ dốc lớn nhất của mặt nước 4πa/λ lớn hơn 0,1: biên độ không còn nhỏ so với bước sóng, mô hình cộng tuyến tính chỉ còn gần đúng. Mô hình chỉ chính xác khi biên độ a nhỏ hơn nhiều so với bước sóng.',
+          'The largest surface slope 4πa/λ is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. The model is exact only for an amplitude a much smaller than the wavelength.',
         )
       : L(
-          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M; mỗi sóng được giải lại từ phương trình sóng bằng phương pháp Dormand–Prince (test).',
-          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M; each wave solved again from the wave equation with Dormand–Prince (tested).',
+          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M; thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
+          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M; each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
         ),
     method: L(
       `Công thức giải tích tại t = i·Δt, Δt = ${fmtQty('vi', stepOf(q), 's', 3)} (≤ T/200).`,
@@ -631,7 +634,7 @@ export const interference: PhysicsScene = {
     ),
   ],
   // S₁S₂ = 10 cm, f = 10 Hz, v = 30 cm/s → λ = 3 cm: 7 maxima, 6 minima between the sources;
-  // M (9 cm, 12 cm) on the first-order maximum. a = 0,2 mm keeps 2a·k ≈ 0,08 (small waves).
+  // M (9 cm, 12 cm) on the first-order maximum. a = 0,2 mm keeps 4πa/λ ≈ 0,08 (small waves).
   defaults: {
     mode: MODE.same,
     d: 0.1,

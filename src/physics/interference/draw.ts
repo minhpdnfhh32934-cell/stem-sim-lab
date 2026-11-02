@@ -149,7 +149,7 @@ export function draw({ ctx, cam, state, p, opts }: DrawContext): void {
   const Q = (v: number, u: string) => fmtQty(opts.locale, v, u);
   const header =
     q.mode === MODE.beats
-      ? `f₁ = ${Q(q.f1, 'Hz')},  f₂ = ${Q(q.f2, 'Hz')},  f${vi ? '_phách' : '_beat'} = ${Q(beatFrequency(q.f1, q.f2), 'Hz')},  S₁S₂ = ${Q(q.d, 'cm')}`
+      ? `f₁ = ${Q(q.f1, 'Hz')},  f₂ = ${Q(q.f2, 'Hz')},  f_b = ${Q(beatFrequency(q.f1, q.f2), 'Hz')},  S₁S₂ = ${Q(q.d, 'cm')}`
       : `f = ${Q(q.f1, 'Hz')},  v = ${Q(q.v, 'cm/s')},  λ = ${Q(q.lambda1, 'cm')},  S₁S₂ = ${Q(q.d, 'cm')}`;
   const rows = [
     header,

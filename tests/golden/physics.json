@@ -1436,7 +1436,7 @@
     },
     {
       "id": "int-02",
-      "text": "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂.",
+      "text": "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂ (không kể S₁, S₂).",
       "topic": "interference",
       "quantities": [
         {
@@ -1543,6 +1543,30 @@
         "beat_frequency": 2,
         "beat_period": 0.5
       },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-06",
+      "text": "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 9 cm dao động cùng pha với tần số 25 Hz. Khoảng cách giữa hai cực đại giao thoa liên tiếp trên đoạn AB là 1,5 cm. Tính tốc độ truyền sóng trên mặt nước.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 9,
+          "unit": "cm",
+          "quote": "cách nhau 9 cm"
+        },
+        {
+          "key": "f",
+          "value": 25,
+          "unit": "Hz",
+          "quote": "tần số 25 Hz"
+        }
+      ],
+      "missing": [
+        "v"
+      ],
+      "answers": {},
       "expectUnsupportedParts": false
     },
     {
