@@ -64,3 +64,17 @@
 - Not supported: sources out of phase or with different amplitudes (golden int-05 → unsupported).
 - Scan limit: a peak closer than ~10⁻⁷λ to a source is not seen by the check (`shortcut:` comment).
 - Plan item 3 (phase space) touches the graph files too: do it after this PR, not in parallel.
+
+## Rework after the PR #110 review
+
+- **Date/time:** see the commit `fix(physics): interference review fixes for PR #110`.
+- **Status:** PASS (local checks below).
+- Fixed: beat period measured only when 2|f₁ − f₂|/(f₁ + f₂) ≤ 0,5 (before: up to 56 % off with a
+  green "khớp"); SolutionPanel shows a check off by more than 1 % as "chưa khớp" (probe: every other
+  scene ≤ 10⁻¹⁰ at defaults and choices); λ/2 only with ≥ 2 maxima; a slower tier never removes the
+  water picture (cells ≤ λ/4 on screen, `cellSize`); d₁, d₂ are controls of the 9-maxima challenge;
+  a fast source drag reaches the pointer when M follows S₁S₂ (`dragTo` gets the sources); a pointer
+  below S₁S₂ keeps M on the line.
+- Tests: PASS `npx vitest run src/physics src/learn tests/golden src/app/sim src/app/i18n`
+  (36 files, 371 tests; includes a sweep of f₂ over the slider for f₁ = 10; 1,5; 63 Hz). PASS lint,
+  typecheck, format:check. PASS E2E physics + learner (chromium): 25 passed, under `e2e.lock`.
