@@ -67,7 +67,7 @@ export const ROLES: Record<BioRole, { token: string; shape: Shape }> = {
   water: { token: '--chart-6', shape: 'sphere' },
   solute: { token: '--chart-2', shape: 'cube' },
   membrane: { token: '--subject-biology', shape: 'slab' },
-  highlight: { token: '--accent', shape: 'star' },
+  highlight: { token: '--stage-accent', shape: 'star' },
 };
 
 /** Phenotype classes in Okabe–Ito order (shape cues follow the same order). */

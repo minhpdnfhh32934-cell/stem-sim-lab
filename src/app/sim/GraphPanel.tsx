@@ -164,7 +164,7 @@ function Chart({ graph }: { graph: GraphDef }) {
               const x = u.valToPos(tt, 'x', true);
               const ctx = u.ctx;
               ctx.save();
-              ctx.strokeStyle = css('--accent');
+              ctx.strokeStyle = css('--stage-accent');
               ctx.lineWidth = 1.5 * devicePixelRatio;
               ctx.beginPath();
               ctx.moveTo(x, u.bbox.top);

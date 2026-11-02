@@ -87,6 +87,9 @@
   --accent: #2f62d8;
   --accent-hover: #2653bd;
   --accent-soft: #e3ebfd;
+  /* Selection, cursors and halos drawn on the stage, charts and 3D views (read at run time);
+     kept apart from the frame accent above so the frame can change on its own. */
+  --stage-accent: #2f62d8;
   --focus-ring: rgba(47, 98, 216, 0.45);
 
   --danger: #c93a3a;
@@ -218,6 +221,7 @@
   --accent: #7aa2ff;
   --accent-hover: #93b4ff;
   --accent-soft: #1d2a47;
+  --stage-accent: #7aa2ff;
   --focus-ring: rgba(122, 162, 255, 0.5);
 
   --danger: #ff7b7b;

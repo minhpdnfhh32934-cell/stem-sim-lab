@@ -59,6 +59,16 @@ describe('theme tokens', () => {
   }
 
   for (const [theme, tokens] of Object.entries(THEMES)) {
+    it(`${theme}: the stage accent (selection, cursors, halos) stays ΔE_OK ≥ 0.2 from the text`, () => {
+      const accent = tokens.get('--stage-accent');
+      const text = tokens.get('--text');
+      expect(accent, '--stage-accent').toBeTruthy();
+      expect(text, '--text').toBeTruthy();
+      expect(deltaEOK(accent ?? '', text ?? '')).toBeGreaterThanOrEqual(0.2);
+    });
+  }
+
+  for (const [theme, tokens] of Object.entries(THEMES)) {
     it(`${theme}: a picked 3D part glows in a colour unlike both chromosome colours`, () => {
       const hi = tokens.get('--m3d-highlight') ?? '';
       const chromosomes = [tokens.get('--chart-1'), tokens.get('--chart-4')];
