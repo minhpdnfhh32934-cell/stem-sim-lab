@@ -107,10 +107,9 @@ test('the tray folds to its 64 px spine and stays folded; the notebook pushes th
   await expect(solution).toBeFocused();
   await page.keyboard.press('Enter');
   await page.getByRole('button', { name: 'Đóng sổ' }).focus();
-  // The first Esc hides the button's tooltip (WCAG 1.4.13), the second closes the drawer.
+  // One Esc: the focus tooltip goes and the drawer closes.
   await page.keyboard.press('Escape');
   await expect(page.getByRole('tooltip')).toHaveCount(0);
-  await page.keyboard.press('Escape');
   await expect(page.getByRole('tabpanel')).toHaveCount(0);
   await expect(solution).toBeFocused();
 });

@@ -1,5 +1,5 @@
 import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
-import { useEffect, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { formatNumber, useT } from '@/app/i18n';
 import { useLayoutStore } from '@/app/layout/layoutStore';
@@ -37,10 +37,11 @@ function TimeDriver() {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const basic = useSettingsStore((s) => s.uiMode === 'basic');
-  const { playing, speed, setSpeed, simTime, hasSimulation } = useWorkspaceStore(
+  const { playing, speed, suggested, setSpeed, simTime, hasSimulation } = useWorkspaceStore(
     useShallow((s) => ({
       playing: s.playing,
       speed: s.speed,
+      suggested: s.speedSuggested,
       setSpeed: s.setSpeed,
       simTime: s.simTime,
       hasSimulation: s.hasSimulation,
@@ -59,11 +60,16 @@ function TimeDriver() {
     maximumFractionDigits: 3,
   });
   const canRun = hasSimulation && !invalid;
-  // Basic has three steps: a speed set in Advanced lands on the nearest one, so one is chosen.
+  const isStep = (BASIC_SPEEDS as readonly number[]).includes(speed);
+  // Going from Advanced to Basic, a speed the learner chose lands on the nearest Basic step. A
+  // lesson's own speed stays (×1000 for an hour-long trip, ×0,1 for a 100 Hz wave) as a 4th step.
+  const wasBasic = useRef(basic);
   useEffect(() => {
-    if (basic && !(BASIC_SPEEDS as readonly number[]).includes(speed))
-      setSpeed(nearestBasicSpeed(speed));
-  }, [basic, speed, setSpeed]);
+    const switched = basic && !wasBasic.current;
+    wasBasic.current = basic;
+    if (switched && !isStep && !suggested) setSpeed(nearestBasicSpeed(speed));
+  }, [basic, isStep, suggested, speed, setSpeed]);
+  const steps = isStep ? BASIC_SPEEDS : [...BASIC_SPEEDS, speed].sort((a, b) => a - b);
   const end = Math.max(duration, 1e-6);
   const played = { '--pct': `${(100 * Math.min(shown, end)) / end}%` } as CSSProperties;
 
@@ -142,7 +148,7 @@ function TimeDriver() {
       {basic ? (
         <fieldset className="bench-speed">
           <legend className="sr-only">{t('timeline.speed')}</legend>
-          {BASIC_SPEEDS.map((s) => (
+          {steps.map((s) => (
             <label key={s}>
               <input
                 type="radio"

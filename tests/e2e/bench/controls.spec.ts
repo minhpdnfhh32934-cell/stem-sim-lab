@@ -206,15 +206,16 @@ test('keyboard: speed steps, the light / dark switch, − / +, Esc hides a toolt
   await expect(page.getByRole('tooltip')).toHaveCount(0);
   await expect(step).toBeFocused();
 
-  // In the open notebook the first Esc only hides the tooltip; the second closes the drawer.
+  // In the open notebook, a bubble shown by hover takes the first Esc for itself; the next closes
+  // the drawer (the focus is on a graph choice inside it).
   await page.getByRole('tab', { name: 'Đồ thị' }).click();
-  const close = page.getByRole('button', { name: 'Đóng sổ' });
-  await page.keyboard.press('Shift');
-  await close.focus();
+  const panel = page.getByRole('tabpanel', { name: 'Đồ thị' });
+  await panel.getByRole('radio').first().focus();
+  await page.getByRole('button', { name: 'Đóng sổ' }).hover();
   await expect(page.getByRole('tooltip')).toHaveText('Đóng sổ');
   await page.keyboard.press('Escape');
   await expect(page.getByRole('tooltip')).toHaveCount(0);
-  await expect(page.getByRole('tabpanel', { name: 'Đồ thị' })).toBeVisible();
+  await expect(panel).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('tabpanel')).toHaveCount(0);
 

@@ -41,4 +41,34 @@ describe('bench edge speed', () => {
     });
     expect(screen.getByRole('radio', { name: '0,5×' })).toBeChecked();
   });
+
+  it("a lesson's own speed stays, as a fourth step: ×1000 for an hour-long trip, ×0,1 for a wave", () => {
+    for (const [lesson, name] of [
+      [1000, '1.000×'],
+      [0.1, '0,1×'],
+    ] as const) {
+      act(() => {
+        useSettingsStore.getState().setUiMode('advanced');
+        // What sim.load does with the scene's suggestedSpeed.
+        useWorkspaceStore.setState({ speed: lesson, speedSuggested: true });
+      });
+      const { unmount } = render(<DriverGrid />);
+      act(() => {
+        useSettingsStore.getState().setUiMode('basic');
+      });
+      expect(useWorkspaceStore.getState().speed).toBe(lesson);
+      expect(screen.getAllByRole('radio')).toHaveLength(4);
+      expect(screen.getByRole('radio', { name })).toBeChecked();
+      unmount();
+    }
+  });
+
+  it('only the switch to Basic moves the speed, never Basic itself', () => {
+    act(() => {
+      useWorkspaceStore.getState().setSpeed(4);
+    });
+    render(<DriverGrid />);
+    expect(useWorkspaceStore.getState().speed).toBe(4);
+    expect(screen.getByRole('radio', { name: '4×' })).toBeChecked();
+  });
 });

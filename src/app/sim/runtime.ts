@@ -78,7 +78,8 @@ class SimRuntime {
       }
       Object.assign(params, applyAutoDefaults(scene, params, sources));
       const speed = scene.suggestedSpeed?.(params);
-      if (speed !== undefined) useWorkspaceStore.setState({ speed: closestSpeed(speed) });
+      if (speed !== undefined)
+        useWorkspaceStore.setState({ speed: closestSpeed(speed), speedSuggested: true });
       useSimStore.setState({
         scene,
         params,
