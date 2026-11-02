@@ -654,7 +654,7 @@ export function drawCell(
   const base = new Pen(ctx, cx, cy, u, css, null);
   for (const shape of Object.values(fig.parts)) shape.draw(base);
   const chosen = selected ? fig.parts[selected] : undefined;
-  if (chosen) chosen.draw(new Pen(ctx, cx, cy, u, css, css('--accent')));
+  if (chosen) chosen.draw(new Pen(ctx, cx, cy, u, css, css('--stage-accent')));
 
   // Name labels with leader lines, in a column on each side of the cell.
   for (const left of [true, false]) {
@@ -668,7 +668,7 @@ export function drawCell(
     list.forEach((l, i) => {
       const y = ys[i] ?? 0;
       const on = l.id === selected;
-      const color = on ? css('--accent') : css('--text');
+      const color = on ? css('--stage-accent') : css('--text');
       ctx.beginPath();
       ctx.moveTo(base.X(l.at[0]), base.Y(l.at[1]));
       ctx.lineTo(colX, y);

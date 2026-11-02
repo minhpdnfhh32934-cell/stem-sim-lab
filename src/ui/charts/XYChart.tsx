@@ -149,7 +149,7 @@ export function XYChart(props: XYChartProps) {
               const px = u.valToPos(m, 'x', true);
               const ctx = u.ctx;
               ctx.save();
-              ctx.strokeStyle = css('--accent');
+              ctx.strokeStyle = css('--stage-accent');
               ctx.lineWidth = 1.5 * devicePixelRatio;
               ctx.setLineDash([4 * devicePixelRatio, 3 * devicePixelRatio]);
               ctx.beginPath();

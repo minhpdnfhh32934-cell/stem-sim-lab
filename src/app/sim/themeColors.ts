@@ -13,7 +13,7 @@ export function readThemeColors(el: Element = document.documentElement): ThemeCo
     ground: v('--text-muted', '#5a6477'),
     body: v('--chart-2', '#e69f00'),
     bodyAlt: v('--chart-5', '#cc79a7'),
-    accent: v('--accent', '#2f62d8'),
+    accent: v('--stage-accent', '#2f62d8'),
     velocity: v('--chart-1', '#0072b2'),
     acceleration: v('--chart-4', '#d55e00'),
     force: v('--chart-3', '#009e73'),

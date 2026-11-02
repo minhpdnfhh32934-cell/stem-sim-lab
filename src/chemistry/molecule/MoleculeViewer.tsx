@@ -143,7 +143,7 @@ export function MoleculeViewer(props: Props) {
     });
 
     // Selection halos
-    const halo = mat(token('--accent') || '#2f62d8', {
+    const halo = mat(token('--stage-accent') || '#2f62d8', {
       transparent: true,
       opacity: 0.35,
       depthWrite: false,
@@ -195,7 +195,7 @@ export function MoleculeViewer(props: Props) {
       if (off.lengthSq() < 1e-6) off = new THREE.Vector3(0, 1, 0).cross(dir);
       off.normalize();
       const selected = selectedBond === k;
-      const color = selected ? token('--accent') || '#2f62d8' : bondColor;
+      const color = selected ? token('--stage-accent') || '#2f62d8' : bondColor;
       const material = mat(color);
       // Half bonds in the atom colours read better; keep grey when selected.
       const half = (shift: THREE.Vector3, m1: THREE.Material, m2: THREE.Material) => {
