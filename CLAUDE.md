@@ -117,7 +117,8 @@ release history and old work-logs keep the old name). The user accepted:
   Measurements and design: `docs/AI_TUTOR.md` → "Choosing the graphics card".
 - **0.4.3 (user decisions 2026-10-12):** the lab panels can no longer be hidden (no top-bar
   buttons, no Ctrl+B/I/J, no in-panel X; only resizing; presentation mode still hides them) — do not
-  add show/hide back. AI Teacher context is a token budget with an AI-written summary of older turns
+  add show/hide back (the bench shell folds its tray instead: "Giao diện Bàn thí nghiệm" below).
+  AI Teacher context is a token budget with an AI-written summary of older turns
   (`src/teacher/chat/memory.ts`, Settings "Trí nhớ hội thoại"); never go back to "last N messages".
   "Giảng trên bảng" is the whiteboard below (one implementation; the earlier compact lesson board
   was merged into it). Details: `docs/AI_TUTOR.md`.
@@ -138,6 +139,35 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
   true only when its notes are reviewed for a real release; never describe an unreleased version
   as released or invent a date. In-app box and Settings → "Lịch sử phiên bản": `src/app/whatsnew/`
   (`stemsim.whatsnew`). Procedure: `release-notes/README.md`.
+
+## Giao diện Bàn thí nghiệm (0.8.1)
+
+User decisions 2026-11-02 (plan #54, issues #113 onward; design `.agent-logs/bench-spec.md` on
+Máy A, phases B0–B8 in its §14, merged from 08/11):
+
+- **Direction:** a new interface built from scratch, "Bàn thí nghiệm" (the bench), not a restyle of
+  the old one. Of the dropped restyle only `--stage-accent` (#109) stays: run-time readers on
+  stages, charts and 3D read `--stage-accent`, never the frame's `--accent`.
+- **Dev switch until B8:** the bench shell shows only in a dev build with the storage key
+  `stemsim.dev.shell` = `bench` (B1; no `VITE_*` flag, one build); production keeps the classic
+  shell until the flip in B8. Bench tokens and fonts apply only under
+  `:root[data-shell='bench']` (`tokens.css`), so the classic shell does not change a pixel.
+- **Panels (bench only; replaces the 0.4.3 rule there):** the tray folds to a labelled 64 px spine
+  and the notebook closes to its always-visible rail. Nothing reaches zero width, no shortcut hides
+  anything, no X on the tray; "Đặt lại bố cục" in the palette and Settings; presentation mode
+  unchanged. The classic shell keeps the 0.4.3 rule.
+- **Launch page:** two cards as today (Virtual Lab, AI Teacher; Studio stays inside the lab) plus a
+  returning-user text link "Tiếp tục: …" (a link, not a card).
+- **Fonts:** Be Vietnam Pro (400/500/600, interface) and JetBrains Mono (400/500, readouts),
+  `@fontsource` 5.3.0, OFL-1.1, loaded only by the bench (`src/app/theme/benchFonts.ts`, ≤ 400 KB
+  woff2, 223 KB today; `docs/THIRD_PARTY.md`). Sub/superscript digits (except ¹²³), arrows,
+  ≈ ≤ ≥ √ and, for Be Vietnam Pro, Greek letters fall back to the next font
+  (`benchFonts.test.ts`).
+- **"Think"** becomes **"Suy nghĩ kĩ (Think)"**.
+- **Tokens (B0):** bench-spec §4. `tokens.test.ts` runs every theme check on bench light/dark too,
+  plus the §4 contrast table (text ≥ 4.5, components ≥ 3) and "no `backdrop-filter`" under the
+  bench. Light charts 2/3/5/6/7 are re-stepped to ≥ 3 : 1 under the bench only (its light
+  `--bio3d-soil` is one step darker to keep ΔE_OK ≥ 0.15); never lower a floor.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
