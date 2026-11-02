@@ -67,7 +67,7 @@
 
 ## Rework after the PR #110 review
 
-- **Date/time:** see the commit `fix(physics): interference review fixes for PR #110`.
+- **Date/time:** 2026-11-02 12:23 +0700 (commit 338580e).
 - **Status:** PASS (local checks below).
 - Fixed: beat period measured only when 2|f₁ − f₂|/(f₁ + f₂) ≤ 0,5 (before: up to 56 % off with a
   green "khớp"); SolutionPanel shows a check off by more than 1 % as "chưa khớp" (probe: every other
