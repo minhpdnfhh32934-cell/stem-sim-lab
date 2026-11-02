@@ -87,9 +87,20 @@
   limits S₁S₂), so the 9-maxima challenge is reachable after M was dragged anywhere; beats sampled
   every T/40, so every close pair on the sliders is measured (too long → note); tests for the
   topics whose old checks disagree on reachable inputs and now read "chưa khớp" (newtonLaws,
-  inclinedPlane, springPendulum, hookeSpring — not fixed here, separate issue needed); a drawWater
+  inclinedPlane, springPendulum, hookeSpring — not fixed here: issue #112); a drawWater
   test on a degraded tier (checked: it fails with the round-1 rule put back).
 - Correction: the round-1 claim "every other scene stays below 10⁻¹⁰" holds at defaults and choices
   only; a random slider sweep and the reviewer's cases found the four topics above.
 - Tests: PASS `npx vitest run src/physics src/learn src/app tests/golden` (67 files, 619 tests);
   PASS lint, typecheck, format:check; PASS E2E physics + learner (chromium) 25 passed, `e2e.lock`.
+
+## Rework after the PR #110 review, round 3
+
+- **Date/time:** 2026-11-02 13:38 +0700 (commit 7575ac2).
+- **Status:** PASS (local checks below).
+- Fixed: SolutionPanel treats a difference ≤ 10⁻¹² SI as agreeing (an exact 0 with a round-off
+  check read "chưa khớp"); a source drag rebuilds a learner-placed M from exact distances, so M near
+  or on S₁S₂ no longer drifts (it used to move 2,6–4,2 mm over a drag out and back). Both new tests
+  fail with the old code put back. The four topics with real check disagreements are issue #112.
+- Tests: PASS `npx vitest run src/physics src/app/sim tests/golden src/learn` (36 files, 373
+  tests); PASS lint, typecheck, format:check; PASS E2E physics (chromium) 18 passed, `e2e.lock`.

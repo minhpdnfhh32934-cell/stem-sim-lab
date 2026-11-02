@@ -43,7 +43,7 @@ describe('SolutionPanel cross-checks', () => {
   });
 
   // Checks that disagree on these reachable inputs were shown as "khớp" before #110; the panel now
-  // says "chưa khớp". The checks themselves are not fixed here (separate issue).
+  // says "chưa khớp". The checks themselves are fixed in issue #112, not here.
   it.each([
     [
       'newtonLaws: the body passes the end before stopping',
