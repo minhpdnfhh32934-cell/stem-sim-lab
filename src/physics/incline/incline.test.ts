@@ -121,6 +121,39 @@ describe('incline engine', () => {
     expect(st[IS.v]).toBeCloseTo(exact.v, 6);
   });
 
+  it('the engine decides a tie once per motion, with the band the exact solution uses', () => {
+    // Stop 2,5e-10·L beyond the top: inside the band at the start, 1e-10·(|s0| + v0²/|a| + L)
+    // ≈ 2,7e-10·L, but outside the band re-computed near the stop (v → 0: ≈ 2e-10·L).
+    const a = -9.81 * Math.sin(deg(30));
+    const v0 = 9.9;
+    const stop = 5 + (v0 * v0) / (2 * -a);
+    const params = {
+      theta: deg(30),
+      m: 1,
+      muS: 0,
+      muK: 0,
+      F: 0,
+      beta: 0,
+      s0: 5,
+      v0,
+      length: stop / (1 + 2.5e-10),
+      g: 9.81,
+      tEnd: 5,
+    };
+    const segs = segments(inclineInput(params));
+    expect(segs[0]?.end).toBe('rest');
+    const e = new InclineEngine();
+    e.reset(params);
+    const r = new EngineRunner(e, 1000);
+    for (let i = 0; i < 150 && !e.finished(); i++) r.frame(1 / 60, 1);
+    const st = new Float64Array(6);
+    e.readState(st);
+    expect(e.time()).toBeGreaterThan((segs[0]?.t1 ?? 0) + 0.3);
+    expect(st[IS.off]).toBe(0);
+    expect(st[IS.v]).toBeLessThan(0);
+    expect(st[IS.s]).toBeCloseTo(stateAt(segs, e.time()).s, 6);
+  });
+
   it('matches the exact piecewise solution', () => {
     const params = {
       m: 1,

@@ -84,3 +84,10 @@
   lên đỉnh và xuống chân), engine dừng đúng đỉnh rồi trượt ngược. Trên mã trước: 5 test hỏng.
 - Thử thêm ngoài bộ test: 26 638 ca hoà ngẫu nhiên: 0 lệch, 0 nhãn sai; engine 284 ca hoà: 0 sai.
 - `npm test`: 4505 đạt, 1 bỏ qua; lint, typecheck đạt.
+
+## Duyệt PR #118 vòng 4 (1 🟡)
+
+- `InclineEngine` quyết định "dừng trên mép" một lần cho mỗi đoạn chuyển động (lúc bắt đầu, như `segments()`),
+  giữ nguyên tới khi vật dừng; trước đây tính lại mỗi bước nên dải hẹp dần khi v → 0. Đặt lại khi reset,
+  kéo bằng chuột, khôi phục trạng thái, đứng yên.
+- Test: vượt đỉnh 2,5e-10·L (trong dải lúc bắt đầu, ngoài dải khi v → 0): engine cũ hỏng, engine mới đạt.
