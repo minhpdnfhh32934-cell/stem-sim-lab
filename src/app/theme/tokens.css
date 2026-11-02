@@ -320,7 +320,7 @@
 }
 
 /*
- * "Bàn thí nghiệm" (bench) shell, 0.8.1 (#113; design `.agent-logs/bench-spec.md` §4). Applies
+ * "Bàn thí nghiệm" (bench) shell, 0.8.1 (#113; design `docs/BENCH_DESIGN.md` §4). Applies
  * only while <html> carries data-shell="bench" (the dev switch, B1); the classic shell never sets
  * it, so nothing below changes it. Names that mean the same thing are overridden, so every module
  * picks the bench look up unchanged; new names only where nothing matches today. The bench fonts
@@ -401,15 +401,23 @@
   --stage-grid: #e6e6e0;
   --stage-tool: #3a4247;
 
-  /* Okabe–Ito data colours re-stepped in OKLCH (same hue and chroma, lower L) to ≥ 3 : 1 on the
-     stage and the paper; chart-1 and chart-4 already were. Dark keeps its steps. */
-  --chart-2: #b67d05;
-  --chart-3: #0a9a71;
-  --chart-5: #c06e9c;
-  --chart-6: #2c90c3;
-  --chart-7: #938a05;
-  /* 3D soil one step darker, so it stays ΔE_OK ≥ 0.15 from the re-stepped chart colours. */
-  --bio3d-soil: #726154;
+  /* Okabe–Ito data colours, same hues, lightness spread out (docs/BENCH_DESIGN.md §4): each
+     ≥ 3 : 1 on the stage and the paper, and the closest pair stays apart for normal, deutan and
+     protan vision (tokens.test.ts). Dark keeps its steps. */
+  --chart-1: #054c78;
+  --chart-2: #614102;
+  --chart-3: #0c7a59;
+  --chart-4: #af4c03;
+  --chart-5: #bb6997;
+  --chart-6: #3495c9;
+  --chart-7: #968d0f;
+  /* 3D terrain made lighter (same hue and chroma) to stay ΔE_OK ≥ 0.15 from those data colours. */
+  --bio3d-island-grass: #99c099;
+  --bio3d-island-grass-2: #a3be94;
+  --bio3d-soil: #bdaa9c;
+  --bio3d-foliage: #a9b5a1;
+  --bio3d-foliage-2: #a5b3a1;
+  --bio3d-bark: #b9a99d;
 }
 
 :root[data-shell='bench'][data-theme='dark'] {
@@ -467,4 +475,6 @@
   --bg-stage: #20262b;
   --stage-grid: #2c3338;
   --stage-tool: #c9d1d5;
+  /* The 3D water line stays ΔE_OK ≥ 0.25 from the lighter dark stage. */
+  --m3d-water-line: 0.15;
 }

@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { deltaEOK, oklch } from '@/ui/three/color';
+import { deltaEOK, hexOfLinear, linearOf, oklch, type Rgb } from '@/ui/three/color';
 
 /** The theme stylesheet, read as text (no browser needed). */
 const CSS = readFileSync(resolve(__dirname, 'tokens.css'), 'utf8');
@@ -38,6 +38,28 @@ function luminance(hex: string): number {
 function contrast(a: string, b: string): number {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return ((hi ?? 0) + 0.05) / ((lo ?? 0) + 0.05);
+}
+
+/** Machado et al. (2009) dichromacy matrices, severity 1.0, applied to linear RGB. */
+const MACHADO: Record<'deutan' | 'protan', readonly Rgb[]> = {
+  deutan: [
+    [0.367322, 0.860646, -0.227968],
+    [0.280085, 0.672501, 0.047413],
+    [-0.01182, 0.04294, 0.968881],
+  ],
+  protan: [
+    [0.152286, 1.052583, -0.204868],
+    [0.114503, 0.786281, 0.099216],
+    [-0.003882, -0.048116, 1.051998],
+  ],
+};
+/** A colour as seen with normal vision or a red–green deficiency. */
+function cvd(hex: string, view: 'normal' | 'deutan' | 'protan'): string {
+  const lin = linearOf(hex);
+  if (!lin || view === 'normal') return hex;
+  const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  const [r, g, b] = lin;
+  return hexOfLinear(MACHADO[view].map((m) => clamp(m[0] * r + m[1] * g + m[2] * b)) as Rgb);
 }
 
 /** Tokens shared by both themes (the first `:root` block), then each theme's own. */
@@ -183,7 +205,7 @@ describe('theme tokens', () => {
 });
 
 /**
- * The bench shell's contrast table (design `.agent-logs/bench-spec.md` §4): text ≥ 4.5 : 1,
+ * The bench shell's contrast table (design `docs/BENCH_DESIGN.md` §4): text ≥ 4.5 : 1,
  * borders, rings and data colours ≥ 3 : 1. Plots draw only on the stage, the paper or a panel,
  * never on a sunken or active surface, so those are the data colours' backgrounds.
  */
@@ -241,7 +263,7 @@ describe('bench tokens (#113)', () => {
 
   it('dark has its own value for every colour light sets, except the light-only re-steps', () => {
     const names = (m: Map<string, string>) =>
-      [...m.keys()].filter((n) => !n.startsWith('--chart-') && n !== '--bio3d-soil').sort();
+      [...m.keys()].filter((n) => !n.startsWith('--chart-') && !n.startsWith('--bio3d-')).sort();
     expect(names(BENCH_DARK)).toEqual(names(BENCH_LIGHT));
   });
 
@@ -255,6 +277,35 @@ describe('bench tokens (#113)', () => {
     }
     expect(THEMES.light.get('--chart-2')).toBe('#e69f00');
   });
+
+  /**
+   * The closest pair of data colours, for normal vision and the two red–green deficiencies
+   * (Machado, Oliveira & Fernandes 2009, severity 1.0, on linear RGB). Floors: bench light at or
+   * near today's light palette (0.156 / 0.076 / 0.096); bench dark keeps today's dark steps.
+   */
+  const CVD_FLOOR = {
+    'bench light': { normal: 0.15, deutan: 0.08, protan: 0.09 },
+    'bench dark': { normal: 0.085, deutan: 0.036, protan: 0.075 },
+  } as const;
+  for (const [name, floor] of Object.entries(CVD_FLOOR)) {
+    it(`${name}: the closest two chart colours stay apart for normal, deutan and protan vision`, () => {
+      const tokens = THEMES[name as keyof typeof CVD_FLOOR];
+      const charts = CHARTS.map((c) => tokens.get(c) ?? '');
+      const failures: string[] = [];
+      for (const [view, floorOf] of Object.entries(floor)) {
+        const seen = charts.map((c) => cvd(c, view as keyof typeof floor));
+        for (const [i, a] of seen.entries())
+          for (const [j, b] of seen.entries()) {
+            const d = j > i ? deltaEOK(a, b) : Infinity;
+            if (d < floorOf)
+              failures.push(
+                `${view}: chart-${i + 1} vs chart-${j + 1} ${d.toFixed(3)} < ${floorOf}`,
+              );
+          }
+      }
+      expect(failures).toEqual([]);
+    });
+  }
 
   it('nothing is blurred under data-shell="bench": every backdrop-filter is a token set to none', () => {
     const src = resolve(__dirname, '../..');

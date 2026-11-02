@@ -142,8 +142,8 @@ release-notes` generates `docs/VERSION_HISTORY.md`, `docs/CHANGELOG.md` and
 
 ## Giao diện Bàn thí nghiệm (0.8.1)
 
-User decisions 2026-11-02 (plan #54, issues #113 onward; design `.agent-logs/bench-spec.md` on
-Máy A, phases B0–B8 in its §14, merged from 08/11):
+User decisions 2026-11-02 (plan #54, issues #113 onward; design `docs/BENCH_DESIGN.md`, phases
+B0–B8 in its §14, merged from 08/11):
 
 - **Direction:** a new interface built from scratch, "Bàn thí nghiệm" (the bench), not a restyle of
   the old one. Of the dropped restyle only `--stage-accent` (#109) stays: run-time readers on
@@ -164,10 +164,14 @@ Máy A, phases B0–B8 in its §14, merged from 08/11):
   ≈ ≤ ≥ √ and, for Be Vietnam Pro, Greek letters fall back to the next font
   (`benchFonts.test.ts`).
 - **"Think"** becomes **"Suy nghĩ kĩ (Think)"**.
-- **Tokens (B0):** bench-spec §4. `tokens.test.ts` runs every theme check on bench light/dark too,
-  plus the §4 contrast table (text ≥ 4.5, components ≥ 3) and "no `backdrop-filter`" under the
-  bench. Light charts 2/3/5/6/7 are re-stepped to ≥ 3 : 1 under the bench only (its light
-  `--bio3d-soil` is one step darker to keep ΔE_OK ≥ 0.15); never lower a floor.
+- **Tokens (B0):** `docs/BENCH_DESIGN.md` §4. `tokens.test.ts` runs every theme check on bench
+  light/dark too, plus the §4 contrast table (text ≥ 4.5, components ≥ 3), the closest pair of data
+  colours for normal, deutan and protan vision (Machado 2009) and "no `backdrop-filter`" under the
+  bench; `recipes.test.ts` and `division3d/looks.test.ts` run on bench light/dark too. Light
+  `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
+  lighter and the dark `--m3d-water-line` 0.15 to keep their ΔE floors. Never lower a floor.
+- **New features (§13: "Sổ ghi" run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet,
+  the "Hiển thị và trợ năng" page):** agreed on 2026-11-02, built after the bench frame is done.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
