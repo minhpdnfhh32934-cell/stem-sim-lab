@@ -7,9 +7,13 @@ interface TipState {
   x: number;
   y: number;
   side: Side;
+  /** Shown by hover: the pointer may then move onto the bubble (WCAG 1.4.13). */
+  hover: boolean;
 }
 
 const SHOW_DELAY_MS = 350;
+/** Time to cross the gap from a control to its bubble before the bubble goes. */
+const HIDE_GRACE_MS = 150;
 const GAP = 8;
 /** Minimum distance between the tooltip and the window edge. */
 const EDGE = 6;
@@ -20,6 +24,7 @@ const EDGE = 6;
  * and shown on keyboard focus as well as hover. It is a manual popover, so it joins the top
  * layer above an open modal dialog (Settings, Update, the command palette…), whose icon-only
  * buttons have no other visible name; without popover support it stays a plain fixed layer.
+ * WCAG 1.4.13: Esc hides it, and a bubble shown by hover stays while the pointer is on it.
  */
 export function TooltipLayer() {
   const [tip, setTip] = useState<TipState | null>(null);
@@ -71,7 +76,7 @@ export function TooltipLayer() {
           left: { x: r.left - GAP, y: r.top + r.height / 2 },
           right: { x: r.right + GAP, y: r.top + r.height / 2 },
         };
-        setTip({ text, side, ...pos[side] });
+        setTip({ text, side, hover: !immediate, ...pos[side] });
       };
       if (immediate) open();
       else timer.current = window.setTimeout(open, SHOW_DELAY_MS);
@@ -81,11 +86,22 @@ export function TooltipLayer() {
       window.clearTimeout(timer.current);
       setTip(null);
     };
+    const hideSoon = () => {
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(hide, HIDE_GRACE_MS);
+    };
 
     const onOver = (e: PointerEvent) => {
+      if (e.target instanceof Node && bubble.current?.contains(e.target)) {
+        window.clearTimeout(timer.current);
+        return;
+      }
       const el = findTarget(e.target);
       if (el) show(el, false);
-      else hide();
+      else hideSoon();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') hide();
     };
     const onFocus = (e: FocusEvent) => {
       const el = findTarget(e.target);
@@ -96,6 +112,7 @@ export function TooltipLayer() {
     document.addEventListener('focusin', onFocus);
     document.addEventListener('focusout', hide);
     document.addEventListener('pointerdown', hide);
+    document.addEventListener('keydown', onKey, true);
     window.addEventListener('blur', hide);
     return () => {
       window.clearTimeout(timer.current);
@@ -103,6 +120,7 @@ export function TooltipLayer() {
       document.removeEventListener('focusin', onFocus);
       document.removeEventListener('focusout', hide);
       document.removeEventListener('pointerdown', hide);
+      document.removeEventListener('keydown', onKey, true);
       window.removeEventListener('blur', hide);
     };
   }, []);
@@ -114,6 +132,7 @@ export function TooltipLayer() {
       className={`tooltip tooltip--${tip.side}`}
       popover="manual"
       role="tooltip"
+      data-hover={tip.hover || undefined}
       style={{ left: tip.x, top: tip.y }}
     >
       {tip.text}

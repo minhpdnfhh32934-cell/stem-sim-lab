@@ -544,6 +544,11 @@ select:disabled {
   box-shadow: var(--shadow-md);
   animation: tooltip-in var(--dur-fast) var(--ease-out);
 }
+/* Shown by hover, the bubble can be hovered too (WCAG 1.4.13); one shown by focus never takes a
+   click meant for what lies under it. */
+.tooltip[data-hover] {
+  pointer-events: auto;
+}
 .tooltip--bottom {
   transform: translate(-50%, 0);
 }
