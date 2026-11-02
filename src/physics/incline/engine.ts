@@ -27,6 +27,19 @@ export function inclineInput(p: Params): InclineInput {
  * the update is exact; the instant v reaches 0 is located inside the step and the
  * static-friction condition is re-evaluated there (exact stick–slip).
  */
+/**
+ * How long the motion runs in a sub-interval of length h, and whether it stops in it: v reaches
+ * 0 at ts = −v/a ≤ h (also exactly at its end), or — with ts a hair above h by rounding —
+ * v + a·h comes out 0 or of the other sign.
+ */
+export function subInterval(v: number, a: number, h: number): { tau: number; stops: boolean } {
+  if (v === 0 || a === 0 || Math.sign(a) === Math.sign(v)) return { tau: h, stops: false };
+  const ts = -v / a;
+  if (ts <= h) return { tau: ts, stops: true };
+  const vEnd = v + a * h;
+  return { tau: h, stops: vEnd === 0 || Math.sign(vEnd) !== Math.sign(v) };
+}
+
 export class InclineEngine implements SimulationEngine<Params> {
   readonly id = 'phys.incline';
   readonly stateSize = 6;
@@ -88,17 +101,8 @@ export class InclineEngine implements SimulationEngine<Params> {
         break;
       }
       this.restTime = 0;
-      let tau = h;
       const startV = this.v;
-      // The motion stops in this sub-interval (also exactly at its end: ts = h).
-      let stops = false;
-      if (startV !== 0 && Math.sign(r.a) !== Math.sign(startV) && r.a !== 0) {
-        const ts = -startV / r.a;
-        if (ts <= tau) {
-          tau = ts;
-          stops = true;
-        }
-      }
+      const { tau, stops } = subInterval(startV, r.a, h);
       // Leaving the surface (s = 0 or s = L) inside this sub-interval — or right now, when
       // the block sits on an edge and moves outward: stop exactly there. A stop on an edge is a
       // stop, as in the exact solution (stopsOnEdge).

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EngineRunner } from '@/core/sim/runner';
-import { IS, InclineEngine, inclineInput } from './engine';
+import { IS, InclineEngine, inclineInput, subInterval } from './engine';
 import { accelFor, forces, segments, stateAt } from './model';
 import { checkMisses, sliderSweep } from '../testing';
 import { inclinedPlane, newtonLaws, numericEnd } from './scenes';
@@ -212,6 +212,19 @@ describe('incline engine', () => {
     expect(st[IS.off]).toBe(1);
     expect(st[IS.s]).toBeCloseTo(0, 9);
     expect(st[IS.v]).toBeCloseTo(stateAt(segs, foot?.t1 ?? 0).v, 9);
+  });
+
+  it('a sub-interval stops when v reaches 0, also when rounding puts ts a hair past h', () => {
+    expect(subInterval(2, -5, 1)).toEqual({ tau: 0.4, stops: true });
+    expect(subInterval(5, -5, 1)).toEqual({ tau: 1, stops: true });
+    expect(subInterval(6, -5, 1)).toEqual({ tau: 1, stops: false });
+    expect(subInterval(2, 5, 1)).toEqual({ tau: 1, stops: false });
+    // Found by search: ts = −v/a rounds above h while v + a·h is exactly 0 (μ 0,5, g 9,81).
+    const h = 0.003322822706347021;
+    const v = 0.01629844537463214;
+    expect(-v / -4.905).toBeGreaterThan(h);
+    expect(v + -4.905 * h).toBe(0);
+    expect(subInterval(v, -4.905, h)).toEqual({ tau: h, stops: true });
   });
 
   it('matches the exact piecewise solution', () => {

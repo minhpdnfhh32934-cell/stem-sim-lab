@@ -102,3 +102,9 @@
 - Thử thêm ngoài bộ test: 300 ca hoà có điểm dừng đúng ranh giới bước: 0 sai.
 - `npm test`: 337 tệp đạt; 1 test hỏng vì quá 5 s khi chạy cả bộ (`tests/app.test.tsx`, Science Studio, 5,3 s),
   chạy riêng tệp đó 15/15 đạt; không liên quan phần sửa. lint, typecheck đạt.
+
+## Duyệt PR #118 vòng 6
+
+- Engine coi là dừng cả khi ts làm tròn hơi lớn hơn h nhưng v + a·h ra 0 hoặc đổi dấu (hàm thuần `subInterval`).
+  Test: các ca thường và bộ số tìm được (h 0,003322822706347021; v 0,01629844537463214; a −4,905).
+- `vitest src/physics`: 244 đạt; lint, typecheck đạt.
