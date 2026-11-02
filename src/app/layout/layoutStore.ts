@@ -18,12 +18,12 @@ export const LAYOUT_LIMITS = {
   right: { min: 240, max: 480, default: 300 },
   // The smallest bottom panel still holds a whole chart: tab bar, graph picker, 120 px plot (UI-24).
   bottom: { min: 210, max: 520, default: 220 },
-  // Bench shell (0.8.1, bench-spec §8): the tray on the right, the notebook drawer on the left.
+  // Bench shell (0.8.1, docs/BENCH_DESIGN.md §8): the tray on the right, the notebook drawer on the left.
   tray: { min: 256, max: 420, default: 304 },
   notebook: { min: 320, max: 520, default: 352 },
 } as const;
 
-/** Bench notebook rail and folded-tray spine width (bench-spec §8). */
+/** Bench notebook rail and folded-tray spine width (docs/BENCH_DESIGN.md §8). */
 export const BENCH_RAIL = 64;
 /** Narrowest stage a drawer may leave before it overlays the stage instead of pushing it. */
 export const MIN_STAGE_WIDTH = 560;
