@@ -709,7 +709,8 @@ Khi viết code mà gặp giá trị, phản ứng hay cơ chế không chắc c
   không thấy (giới hạn đã ghi); (b) chu kì phách đo trên li độ tại M của engine (đỉnh đường bao nội
   suy parabol) khớp 1/|f₁ − f₂| tới 0,22 % khi 2|f₁ − f₂|/(f₁ + f₂) ≤ 0,5 (quét f₂ trên cả thanh
   trượt); xa hơn các đỉnh sóng mang không còn vẽ được đường bao (lệch tới 56 %), nên Lời giải không
-  gắn phép đo và ghi chú vì sao; (c) mỗi sóng giải lại từ phương trình u_tt = v²·u_rr dọc
+  gắn phép đo và ghi chú vì sao; mẫu lấy mỗi T/40 của nguồn nhanh hơn, cần quá 200 000 mẫu (chu kì
+  phách quá dài, ngoài thanh trượt) thì cũng không đo và ghi chú; (c) mỗi sóng giải lại từ phương trình u_tt = v²·u_rr dọc
   một tia, chia 40–160 ô mỗi bước sóng, nguồn bật êm trong hai chu kì, tích phân DOPRI5: sai số so
   với a·sin(ω(t − r/v)) giảm khoảng 4 lần khi ô nhỏ đi một nửa (bậc 2), tổng hai sóng tại M khớp
   li độ của engine (lệch T/4 do nguồn dùng sin) dưới 1 % của 2a. Phép (c) chỉ kiểm thời gian truyền và

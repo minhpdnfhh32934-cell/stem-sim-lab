@@ -264,8 +264,8 @@ export const CHALLENGES: readonly Challenge[] = [
     topic: 'interference',
     title: L('Đúng 9 vân cực đại', 'Exactly 9 maxima'),
     task: L(
-      'Giữ tần số và tốc độ truyền sóng (bước sóng 3\u00a0cm), chỉnh khoảng cách hai nguồn để giữa S₁ và S₂ có đúng 9 cực đại (không kể hai nguồn). Bạn có thể kéo một nguồn trên hình.',
-      'Keeping the frequency and the wave speed (wavelength 3\u00a0cm), set the source separation so that there are exactly 9 maxima between S₁ and S₂ (sources excluded). You can drag a source on the picture.',
+      'Giữ tần số và tốc độ truyền sóng (bước sóng 3\u00a0cm), chỉnh khoảng cách hai nguồn để giữa S₁ và S₂ có đúng 9 cực đại (không kể hai nguồn). Bạn có thể kéo một nguồn trên hình; kéo điểm M không làm đổi số cực đại.',
+      'Keeping the frequency and the wave speed (wavelength 3\u00a0cm), set the source separation so that there are exactly 9 maxima between S₁ and S₂ (sources excluded). You can drag a source on the picture; dragging point M does not change the number of maxima.',
     ),
     // M (d₁, d₂) may be dragged too: the number of maxima does not depend on it.
     controls: ['d', 'd1', 'd2'],

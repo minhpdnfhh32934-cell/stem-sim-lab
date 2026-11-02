@@ -228,9 +228,13 @@ const MAX_SAMPLES = 200_000;
 export const beatsMeasurable = (f1: number, f2: number) =>
   (2 * Math.abs(f1 - f2)) / (f1 + f2) <= 0.5;
 
+/** Engine steps per sample: Δt ≤ T/200, so a sample every T/40 of the faster source or finer. */
+const STRIDE = 5;
+
 /**
  * Beat period measured on the engine's own displacement at M over 3.5 beat periods; NaN when
- * the beats cannot be measured that way (`beatsMeasurable`).
+ * the beats cannot be measured that way (`beatsMeasurable`) or would need more than
+ * `MAX_SAMPLES` samples (a beat period too long next to the carrier period).
  */
 export function measuredBeatPeriod(p: Params): number {
   const q = interferenceInput(p);
@@ -238,16 +242,16 @@ export function measuredBeatPeriod(p: Params): number {
   if (!(fb > 0) || !hasFrequency(q) || !beatsMeasurable(q.f1, q.f2)) return Number.NaN;
   const e = new InterferenceEngine();
   e.reset({ ...p, tEnd: 3.5 / fb });
-  const n = Math.ceil(3.5 / fb / e.dt);
+  const n = Math.ceil(3.5 / fb / (STRIDE * e.dt));
   if (n > MAX_SAMPLES) return Number.NaN;
   const u = new Float64Array(n);
   const s = new Float64Array(e.stateSize);
   for (let i = 0; i < n; i++) {
     e.readState(s);
     u[i] = s[IF.u] ?? 0;
-    e.step();
+    for (let k = 0; k < STRIDE; k++) e.step();
   }
-  return measureBeatPeriod(u, e.dt);
+  return measureBeatPeriod(u, STRIDE * e.dt);
 }
 
 /** ½(1 − cos πs) on 0 ≤ s ≤ 1: a switch-on with zero slope at both ends. */

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildDraft } from '@/ai/draft';
 import { basicSplit } from '@/app/sim/basicParams';
 import { CHALLENGES, evaluate, startParams } from '@/learn/challenges';
@@ -70,8 +70,8 @@ describe('interference scene: solution', () => {
     expect(a.maxima).toBeUndefined();
   });
 
-  it('beats: every check shown agrees over the f₂ slider; far-apart frequencies get a note instead', () => {
-    for (const f of [10, 1.5, 63]) {
+  it('beats: every close pair on the f₂ slider is checked and agrees; far-apart ones get a note instead', () => {
+    for (const f of [10, 1.5, 63, 100]) {
       let checked = 0;
       for (let i = 10; i <= 1000; i++) {
         const f2 = i / 10;
@@ -90,8 +90,24 @@ describe('interference scene: solution', () => {
         expect(sol.notes?.some((n) => n.vi.includes('không đo lại chu kì phách')) ?? false).toBe(
           !close,
         );
+        expect(sol.answers.some((a) => a.check !== undefined)).toBe(close);
       }
       expect(checked).toBeGreaterThan(0);
+    }
+  });
+
+  it('beats: a beat period too long to sample is not measured, and the solution says so', () => {
+    // f_b = 0,01 Hz at 100 Hz (typed, below the slider step): 3,5 beat periods need 1,4·10⁶ samples.
+    const sol = sc.solve({ ...sc.defaults, mode: MODE.beats, f: 100, f2: 100.01 }, 'vi');
+    expect(sol.answers.every((a) => a.check === undefined)).toBe(true);
+    expect(sol.notes?.some((n) => n.vi.includes('Chu kì phách rất dài')) ?? false).toBe(true);
+    // Close pairs that used to exceed the limit (30 / 30,1 Hz, 100 / 99,7 Hz) are measured now.
+    for (const [f, f2] of [
+      [30, 30.1],
+      [100, 99.7],
+    ] as const) {
+      const a = answers({ mode: MODE.beats, f, f2 });
+      expect(a.beat_period?.check, `${String(f)} / ${String(f2)}`).toBeDefined();
     }
   });
 
@@ -217,6 +233,14 @@ describe('interference scene: dragging', () => {
     // The slider's range: 1 cm … 50 cm.
     expect(dragSource(0, p, auto)).toEqual({ d: 0.01 });
     expect(dragSource(0.4, p, auto)).toEqual({ d: 0.5 });
+    // M placed by the learner keeps its place on the water: d₁, d₂ follow the sources.
+    const placed: Record<string, ParamSource> = { d1: 'user', d2: 'user' };
+    const m0 = interferenceInput(p).m;
+    const next = dragSource(0.15, p, placed);
+    expect(next.d).toBe(0.3);
+    const m1 = interferenceInput({ ...p, ...next }).m;
+    expect(m1?.x).toBeCloseTo(m0?.x ?? NaN, 3);
+    expect(m1?.y).toBeCloseTo(m0?.y ?? NaN, 3);
   });
 
   it('a dragged M takes its distances to the sources (drawn on the side y ≥ 0)', () => {
@@ -239,9 +263,21 @@ describe('interference scene: dragging', () => {
       sc.params.map((d) => [d.key, 'default']),
     );
     const start = startParams(sc, c);
-    const moved = { ...start, ...dragProbe(0.02, 0.1, start), d: 0.13 };
     const after = { ...sources, d: 'user' as const, d1: 'user' as const, d2: 'user' as const };
-    expect(evaluate(sc, c, moved, after).state).toBe('done');
+    // M dragged anywhere (above, near the middle, below S₁S₂), then a source dragged to 13 cm.
+    for (const [mx, my] of [
+      [0.02, 0.1],
+      [0, 0.01],
+      [0.02, -0.03],
+    ] as const) {
+      const withM = { ...start, ...dragProbe(mx, my, start) };
+      const moved = { ...withM, ...dragSource(0.065, withM, after) };
+      expect(moved.d, `M at (${String(mx)}, ${String(my)})`).toBeCloseTo(0.13, 12);
+      expect(sc.validate?.(moved)).toEqual([]);
+      expect(evaluate(sc, c, moved, after).state, `M at (${String(mx)}, ${String(my)})`).toBe(
+        'done',
+      );
+    }
   });
 });
 
@@ -285,6 +321,34 @@ describe('interference scene: water picture', () => {
     const ctx = { drawImage: () => undefined } as unknown as CanvasRenderingContext2D;
     usePerfStore.setState({ preference: 'high', degraded: false });
     expect(drawWater(ctx, cam, q, 0, '#000', '#fff')).toBe(false);
+  });
+
+  it('one overload step at λ = 10 px still draws the water, with 2 px cells', () => {
+    // jsdom has no 2D canvas: a stand-in that keeps the image data.
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      createImageData: (w: number, h: number) => ({
+        width: w,
+        height: h,
+        data: new Uint8ClampedArray(4 * w * h),
+      }),
+      putImageData: () => undefined,
+    } as unknown as CanvasRenderingContext2D);
+    const q = interferenceInput(sc.defaults);
+    const cam = new Camera();
+    cam.resize(800, 600);
+    cam.fit({ xMin: 0, xMax: 80 * q.lambda1, yMin: -0.1, yMax: 0.1 }, 0);
+    expect(q.lambda1 * cam.scale).toBeCloseTo(10, 9);
+    const drawImage = vi.fn();
+    const ctx = { drawImage } as unknown as CanvasRenderingContext2D;
+    // High, one step down: Medium (3 px cells would alias at 10 px per λ).
+    usePerfStore.setState({ preference: 'high', degraded: true });
+    expect(drawWater(ctx, cam, q, 0, '#000', '#fff')).toBe(true);
+    expect(drawImage).toHaveBeenCalledTimes(1);
+    expect(drawImage.mock.calls[0]?.[3]).toBe(Math.ceil(800 / 2) * 2);
+    vi.restoreAllMocks();
+  });
+
+  it('the numbers do not depend on the tier', () => {
     // The numbers do not depend on the tier.
     const before = sc.solve(sc.defaults, 'vi').answers;
     usePerfStore.setState({ preference: 'low', degraded: true });

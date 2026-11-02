@@ -47,20 +47,29 @@ const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x
 /** Dragged lengths are kept to 0,1 mm, so the Inspector shows short numbers. */
 const tidy = (x: number) => Math.round(x * 1e4) / 1e4;
 
+/** Distances from (x, y) to S₁ = (−d/2, 0) and S₂ = (d/2, 0), tidied unless M would leave the triangle. */
+function distances(x: number, y: number, d: number): Params {
+  const d1 = clamp(Math.hypot(x + d / 2, y), R_MIN, R_MAX);
+  const d2 = clamp(Math.hypot(x - d / 2, y), R_MIN, R_MAX);
+  return pointM(d, tidy(d1), tidy(d2)) ? { d1: tidy(d1), d2: tidy(d2) } : { d1, d2 };
+}
+
 /**
  * A dragged source sets S₁S₂ = 2|x| (both sources move symmetrically about the midpoint), kept
- * on the slider. When d₁, d₂ were stated it also stays within |d₁ − d₂| ≤ S₁S₂ ≤ d₁ + d₂, so
- * point M still exists; otherwise M follows S₁S₂ (`autoDefaults`) and the drag is free.
+ * on the slider. M given by the problem keeps its distances, so S₁S₂ stays within
+ * |d₁ − d₂| ≤ S₁S₂ ≤ d₁ + d₂; M placed by the learner keeps its place on the water (d₁, d₂
+ * follow); M not given follows S₁S₂ (`autoDefaults`).
  */
 export function dragSource(x: number, p: Params, sources: Record<string, ParamSource>): Params {
   const q = interferenceInput(p);
-  const stated = (k: string) => (sources[k] ?? 'default') !== 'default';
-  const fixedM = stated('d1') || stated('d2');
-  const lo = fixedM ? Math.max(D_MIN, Math.abs(q.d1 - q.d2)) : D_MIN;
-  const hi = fixedM ? Math.min(D_MAX, q.d1 + q.d2) : D_MAX;
+  const from = (k: string) => sources[k] ?? 'default';
+  const problemM = from('d1') === 'problem' || from('d2') === 'problem';
+  const lo = problemM ? Math.max(D_MIN, Math.abs(q.d1 - q.d2)) : D_MIN;
+  const hi = problemM ? Math.min(D_MAX, q.d1 + q.d2) : D_MAX;
   if (!(lo <= hi)) return {};
-  const d = clamp(2 * Math.abs(x), lo, hi);
-  return { d: clamp(tidy(d), lo, hi) };
+  const d = clamp(tidy(clamp(2 * Math.abs(x), lo, hi)), lo, hi);
+  const learnerM = !problemM && (from('d1') === 'user' || from('d2') === 'user');
+  return learnerM && q.m ? { d, ...distances(q.m.x, q.m.y, d) } : { d };
 }
 
 /**
@@ -68,12 +77,7 @@ export function dragSource(x: number, p: Params, sources: Record<string, ParamSo
  * S₁S₂ keeps M on the line instead of flipping it to the mirror point.
  */
 export function dragProbe(x: number, y: number, p: Params): Params {
-  const q = interferenceInput(p);
-  const yy = Math.max(0, y);
-  const d1 = clamp(Math.hypot(x + q.d / 2, yy), R_MIN, R_MAX);
-  const d2 = clamp(Math.hypot(x - q.d / 2, yy), R_MIN, R_MAX);
-  // Rounding must not move M off the triangle (|d₁ − d₂| ≤ S₁S₂ ≤ d₁ + d₂).
-  return pointM(q.d, tidy(d1), tidy(d2)) ? { d1: tidy(d1), d2: tidy(d2) } : { d1, d2 };
+  return distances(x, Math.max(0, y), interferenceInput(p).d);
 }
 
 const SUBS = '₀₁₂₃₄₅₆₇₈₉';
@@ -228,6 +232,13 @@ function solve(p: Params, locale: Locale): Solution {
         L(
           'Hai tần số khác nhau nhiều (|f₁ − f₂| lớn hơn một nửa tần số trung bình): đường bao vẫn lặp lại sau 1/|f₁ − f₂| theo công thức, nhưng khó nhận ra phách trên đồ thị, nên SimLab không đo lại chu kì phách. Phách rõ khi hai tần số gần nhau.',
           'The frequencies are far apart (|f₁ − f₂| above half the average frequency): the envelope still repeats every 1/|f₁ − f₂| by the formula, but the beats are hard to see on the graph, so SimLab does not measure the beat period again. Beats are clear when the frequencies are close.',
+        ),
+      );
+    else if (!ok)
+      notes.push(
+        L(
+          'Chu kì phách rất dài so với chu kì dao động (cần quá nhiều điểm để đo lại trên đồ thị), nên SimLab không đo lại chu kì phách. Các số ở trên vẫn tính theo công thức.',
+          'The beat period is very long next to the oscillation period (measuring it again on the graph would take too many points), so SimLab does not measure it again. The numbers above still come from the formula.',
         ),
       );
     return done([
@@ -459,8 +470,8 @@ function card(p: Params): ScienceCardData {
           'The largest surface slope 4πa/λ is above 0.1: the amplitude is no longer small compared with the wavelength, so the linear model is only approximate. The model is exact only for an amplitude a much smaller than the wavelength.',
         )
       : L(
-          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M (khi hai tần số đủ gần nhau); thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
-          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M (when the frequencies are close enough); each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
+          'Li độ tính bằng công thức chính xác ở từng thời điểm (không cộng dồn sai số). Đối chiếu: số cực đại, cực tiểu đếm lại bằng cách quét biên độ dọc S₁S₂; chu kì phách đo lại trên li độ tại M (khi hai tần số đủ gần nhau và chu kì phách không quá dài; nếu không, Lời giải ghi chú vì sao); thời gian truyền của mỗi sóng được kiểm lại bằng phương trình sóng một chiều dọc một tia, giải bằng phương pháp Dormand–Prince (test; phép này không kiểm giả thiết biên độ không giảm theo khoảng cách).',
+          'The displacement is the exact formula at each instant (no accumulated error). Cross-checks: maxima and minima counted again by scanning the amplitude along S₁S₂; the beat period measured again on the displacement at M (when the frequencies are close enough and the beat period is not too long; otherwise the solution says why); each wave’s travel time checked again with the one-dimensional wave equation along a ray, solved with Dormand–Prince (tested; this does not check the assumption that the amplitude does not decrease with distance).',
         ),
     method: L(
       `Công thức giải tích tại t = i·Δt, Δt = ${fmtQty('vi', stepOf(q), 's', 3)} (≤ T/200).`,
