@@ -3,6 +3,7 @@ import { buildDraft } from '@/ai/draft';
 import { basicSplit } from '@/app/sim/basicParams';
 import { usePerfStore } from '@/perf/perfStore';
 import { applyAutoDefaults } from '../autoDefaults';
+import type { ParamSource } from '../types';
 import { Camera } from '../render/camera';
 import { CELL_PX, MIN_CELLS_PER_WAVELENGTH, drawWater, fillWater } from './draw';
 import { MAX_RATIO, MODE, interferenceInput, pointM } from './engine';
@@ -103,7 +104,7 @@ describe('interference scene: validation', () => {
 
 describe('interference scene: reading a problem', () => {
   it('f₂ stated → beats; λ stated without v → λ; M not stated follows S₁S₂', () => {
-    const src = (keys: string[]) =>
+    const src = (keys: string[]): Record<string, ParamSource> =>
       Object.fromEntries(
         sc.params.map((d) => [d.key, keys.includes(d.key) ? 'problem' : 'default']),
       );
