@@ -131,6 +131,7 @@ const vi = {
     michaelisMenten: 'Động học enzyme (Michaelis–Menten)',
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
     cellStructure: 'Tế bào nhân sơ và nhân thực',
+    cellToDna: 'Từ tế bào đến DNA',
     uniformCircularMotion: 'Chuyển động tròn đều',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
