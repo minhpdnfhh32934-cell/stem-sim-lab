@@ -156,17 +156,29 @@ class Stepper {
   }
 }
 
+/** Interior points per accepted step at which an event function's sign is sampled. */
+const EVENT_SAMPLES = 8;
+
+/**
+ * Roots in (0, 1) of A u² + B u + C (the turning points of a cubic Hermite interpolant).
+ */
+function unitRoots(A: number, B: number, C: number): number[] {
+  if (A === 0) return B === 0 ? [] : [-C / B].filter((u) => u > 0 && u < 1);
+  const disc = B * B - 4 * A * C;
+  if (disc < 0) return [];
+  const q = -0.5 * (B + Math.sign(B || 1) * Math.sqrt(disc));
+  return [q / A, q === 0 ? NaN : C / q].filter((u) => u > 0 && u < 1);
+}
+
 /**
  * Integrates y' = f(t, y) from t0 to t1 (t1 > t0) with error control and optional
  * event detection. Events are located to ~1e-12 relative precision by re-stepping
  * from the start of the step (no interpolation error). A step whose two ends give an event
- * function the same sign is also searched inside (EVENT_SAMPLES points of the step's cubic
- * Hermite interpolant, a hit confirmed by re-stepping shortens the step): an error estimate
- * of zero (a polynomial solution) lets one step span a crossing and the crossing back.
+ * function the same sign is also searched inside — EVENT_SAMPLES points of the step's cubic
+ * Hermite interpolant plus each component's turning points (where a narrow excursion peaks;
+ * exact for constant acceleration); a hit confirmed by re-stepping shortens the step. An error
+ * estimate of zero (a polynomial solution) lets one step span a crossing and the crossing back.
  */
-
-/** Interior points per accepted step at which an event function's sign is sampled. */
-const EVENT_SAMPLES = 8;
 
 export function dopri5(
   f: OdeFn,
@@ -250,8 +262,23 @@ export function dopri5(
       // the step's interpolant; a crossing confirmed by re-stepping shortens the step to just
       // past it (the step is redone), so each crossing then shows as a sign change at a step end.
       if (a !== 0 && Math.sign(a) === Math.sign(b)) {
-        for (let j = 1; j <= EVENT_SAMPLES; j++) {
-          const s = lo + ((h - lo) * j) / (EVENT_SAMPLES + 1);
+        const samples: number[] = [];
+        for (let j = 1; j <= EVENT_SAMPLES; j++)
+          samples.push(lo + ((h - lo) * j) / (EVENT_SAMPLES + 1));
+        for (let c = 0; c < n; c++) {
+          const y0c = y[c] ?? 0;
+          const y1c = yNew[c] ?? 0;
+          const f0 = h * (k1Saved[c] ?? 0);
+          const f1 = h * (k7Accepted[c] ?? 0);
+          for (const u of unitRoots(
+            6 * y0c + 3 * f0 - 6 * y1c + 3 * f1,
+            -6 * y0c - 4 * f0 + 6 * y1c - 2 * f1,
+            f0,
+          ))
+            if (u * h > lo) samples.push(u * h);
+        }
+        samples.sort((p, q) => p - q);
+        for (const s of samples) {
           if (s >= shorten) break;
           const u = s / h;
           const h00 = 2 * u ** 3 - 3 * u * u + 1;

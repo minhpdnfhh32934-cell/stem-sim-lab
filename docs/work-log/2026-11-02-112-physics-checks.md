@@ -36,3 +36,13 @@
 - `npx vitest run src/core src/physics src/learn src/app/sim tests/golden src/workers`: 377 đạt.
 - E2E `tests/e2e/physics.spec.ts` (khoá chung): 17/17 đạt.
 - Thời gian phép kiểm lò xo sát cản tới hạn: ≤ 42 ms (b = 6,32; 6,3238; 9,999).
+
+## Sau duyệt khoa học (agent science-reviewer)
+
+- Hai chẩn đoán được xác nhận đúng. Đã sửa: dò thêm tại điểm đổi chiều của nội suy Hermite (lần vượt
+  rất hẹp, ví dụ chạm đỉnh 10 µm, nằm giữa hai mẫu đều); Thẻ Khoa học lò xo nói rõ khi chu kì không
+  kiểm chứng được (PHC-1); test cho b 9,9986 (cần chặn tràn số), x0 = 0, k 97 / m 1,03 / b 19,99
+  (không kiểm được), và lượt quét phải có hơn ¼ bộ số mang kiểm chứng.
+- Kiểm: bỏ phần dò điểm đổi chiều thì 2 test mới hỏng; bỏ phần chặn tràn số thì test b 9,9986 hỏng.
+- `npm test`: 4485 đạt, 1 bỏ qua; lint, typecheck, format đạt.
+- Chưa làm (ngoài phạm vi): nhãn "khớp" của SolutionPanel và câu "mọi con số … được kiểm chứng" (do #110).
