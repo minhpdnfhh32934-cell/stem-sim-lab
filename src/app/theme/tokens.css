@@ -189,6 +189,9 @@
   --dna3d-ribosome: #8b97b8;
   --dna3d-trna: #2a9fae;
   --dna3d-peptide: #9a5f2e;
+  /* Start / stop codon marks of the 3D point-mutation lesson (the bench gives them its own). */
+  --dna3d-start: var(--conf-exact);
+  --dna3d-stop: var(--conf-approx);
 
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
   --shadow-md: 0 6px 20px rgba(20, 30, 50, 0.1), 0 2px 6px rgba(20, 30, 50, 0.06);
@@ -293,6 +296,8 @@
   --dna3d-ribosome: #a9b4d4;
   --dna3d-trna: #4cc3cf;
   --dna3d-peptide: #d39a62;
+  --dna3d-start: var(--conf-exact);
+  --dna3d-stop: var(--conf-approx);
 
   /* Dark-mode chart steps: same hue order, re-stepped into the OKLCH L 0.48–0.67 band
      (validated with the dataviz palette validator against --bg-panel #151b24). */
@@ -411,13 +416,17 @@
   --chart-5: #bb6997;
   --chart-6: #3495c9;
   --chart-7: #968d0f;
-  /* 3D terrain made lighter (same hue and chroma) to stay ΔE_OK ≥ 0.15 from those data colours. */
-  --bio3d-island-grass: #99c099;
-  --bio3d-island-grass-2: #a3be94;
-  --bio3d-soil: #bdaa9c;
-  --bio3d-foliage: #a9b5a1;
-  --bio3d-foliage-2: #a5b3a1;
+  /* 3D terrain outside the data colours' lightness band, still muted: deep greens for clover,
+     island grass and canopies, light soil and bark (the grazed-patch count stays readable). */
+  --bio3d-island-grass: #062f19;
+  --bio3d-island-grass-2: #162b25;
+  --bio3d-soil: #b1a9a1;
+  --bio3d-foliage: #102d23;
+  --bio3d-foliage-2: #032f1b;
   --bio3d-bark: #b9a99d;
+  /* Start / stop codon marks: apart from the five base colours and the stage accent. */
+  --dna3d-start: #34a409;
+  --dna3d-stop: #8e0049;
 }
 
 :root[data-shell='bench'][data-theme='dark'] {
@@ -477,4 +486,6 @@
   --stage-tool: #c9d1d5;
   /* The 3D water line stays ΔE_OK ≥ 0.25 from the lighter dark stage. */
   --m3d-water-line: 0.15;
+  --dna3d-start: #7be3b3;
+  --dna3d-stop: #fccd68;
 }

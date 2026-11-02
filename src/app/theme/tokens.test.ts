@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { deltaEOK, hexOfLinear, linearOf, oklch, type Rgb } from '@/ui/three/color';
+import { deltaEOK, hexOfLinear, linearOf, mixLinear, oklch, type Rgb } from '@/ui/three/color';
 
 /** The theme stylesheet, read as text (no browser needed). */
 const CSS = readFileSync(resolve(__dirname, 'tokens.css'), 'utf8');
@@ -304,6 +304,55 @@ describe('bench tokens (#113)', () => {
           }
       }
       expect(failures).toEqual([]);
+    });
+  }
+
+  /**
+   * The 3D point-mutation lesson marks start and stop codons beside the five base colours
+   * (`--chart-1…5`, ROLES baseA…baseU) and the changed bases (`--stage-accent`), all with the same
+   * shape: in the bench they must differ by colour. The classic shell keeps the confidence inks
+   * it always used (start 0.093 from base A in light today: a known weakness, gone with B8).
+   */
+  for (const name of ['bench light', 'bench dark'] as const) {
+    it(`${name}: start and stop codon marks stand apart from the bases and the changed bases`, () => {
+      const tokens = THEMES[name];
+      const near: string[] = [];
+      for (const mark of ['--dna3d-start', '--dna3d-stop']) {
+        const c = tokens.get(mark) ?? '';
+        expect(contrast(c, tokens.get('--bg-stage') ?? ''), mark).toBeGreaterThanOrEqual(3);
+        for (const other of [...CHARTS.slice(0, 5), '--stage-accent']) {
+          const d = deltaEOK(c, tokens.get(other) ?? '');
+          if (d < 0.15) near.push(`${mark} vs ${other}: ${d.toFixed(3)}`);
+        }
+      }
+      const marks = deltaEOK(tokens.get('--dna3d-start') ?? '', tokens.get('--dna3d-stop') ?? '');
+      expect(marks).toBeGreaterThanOrEqual(0.15);
+      expect(near).toEqual([]);
+    });
+  }
+  it('classic: the codon marks are the confidence inks, unchanged', () => {
+    for (const theme of [THEMES.light, THEMES.dark]) {
+      expect(theme.get('--dna3d-start')).toBe(theme.get('--conf-exact'));
+      expect(theme.get('--dna3d-stop')).toBe(theme.get('--conf-approx'));
+    }
+  });
+
+  /**
+   * Data on the 3D meadow (logistic growth): the number of grazed patches is round(patches · N/K),
+   * so a clover patch must not look like a grazed one (bare soil, and its grass rim) for normal or
+   * deutan vision. Floor near today's level (classic dark deutan 0.086).
+   */
+  for (const [name, tokens] of Object.entries(THEMES)) {
+    it(`${name}: a clover patch and a grazed patch stay apart (normal and deutan)`, () => {
+      const clover = tokens.get('--bio3d-island-grass') ?? '';
+      const soil = tokens.get('--bio3d-soil') ?? '';
+      const rim = mixLinear(tokens.get('--bio3d-grass') ?? '', soil, 0.35);
+      for (const grazed of [soil, rim])
+        for (const view of ['normal', 'deutan'] as const)
+          expect(
+            deltaEOK(cvd(clover, view), cvd(grazed, view)),
+            `${view} ${grazed}`,
+          ).toBeGreaterThanOrEqual(0.085);
     });
   }
 

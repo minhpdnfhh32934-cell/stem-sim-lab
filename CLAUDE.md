@@ -166,10 +166,12 @@ B0–B8 in its §14, merged from 08/11):
 - **"Think"** becomes **"Suy nghĩ kĩ (Think)"**.
 - **Tokens (B0):** `docs/BENCH_DESIGN.md` §4. `tokens.test.ts` runs every theme check on bench
   light/dark too, plus the §4 contrast table (text ≥ 4.5, components ≥ 3), the closest pair of data
-  colours for normal, deutan and protan vision (Machado 2009) and "no `backdrop-filter`" under the
-  bench; `recipes.test.ts` and `division3d/looks.test.ts` run on bench light/dark too. Light
+  colours for normal, deutan and protan vision (Machado 2009), the codon marks vs the base colours,
+  the clover vs grazed meadow patches, and "no `backdrop-filter`" under the bench;
+  `recipes.test.ts` and `division3d/looks.test.ts` run on bench light/dark too. Light
   `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
-  lighter and the dark `--m3d-water-line` 0.15 to keep their ΔE floors. Never lower a floor.
+  deep green with light soil, the dark `--m3d-water-line` 0.15, and the mutation lesson's start/stop
+  marks read `--dna3d-start` / `--dna3d-stop`. Never lower a floor.
 - **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (dev switch), `BenchShell` (sets
   `data-shell`, loads the bench fonts; launch / library / studio / teacher rooms reuse their
   screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
@@ -181,8 +183,9 @@ B0–B8 in its §14, merged from 08/11):
   storage state with the switch); a copy of a classic spec keeps every title
   (`scripts/e2e/title-parity.mjs`, run in CI); `nav.ts` `openTopic` / `openProblem` work in both
   shells.
-- **New features (§13: "Sổ ghi" run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet,
-  the "Hiển thị và trợ năng" page):** agreed on 2026-11-02, built after the bench frame is done.
+- **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
+  run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
+  page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.
 
 ## ⚠️ Supreme rule: scientific integrity (MASTER_PROMPT §2) — never violate
 
