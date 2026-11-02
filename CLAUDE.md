@@ -172,6 +172,38 @@ B0–B8 in its §14, merged from 08/11):
   `--chart-1…7` keep their hues with the lightness spread out (≥ 3 : 1); the light 3D terrain is
   deep green with light soil, the dark `--m3d-water-line` 0.15, and the mutation lesson's start/stop
   marks read `--dna3d-start` / `--dna3d-stop`. Never lower a floor.
+- **Shell (B1, #115):** `src/app/bench/` — `shellMode.ts` (dev switch), `BenchShell` (sets
+  `data-shell`, loads the bench fonts; launch / library / studio / teacher rooms reuse their
+  screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
+  `Notebook` (left rail, tabs keep the classic names, drawer pushes or overlays by
+  `notebookPushes`), `Tray` (`InspectorBody`, 64 px spine), `DriverGrid` (bench edge, D0 =
+  `MainActionSlot`). `stemsim.layout` stays version 1: the bench fields `trayFolded`,
+  `trayWidth`, `notebookWidth`, `notebookTabBySubject` are extra version-1 fields that `merge`
+  fills in; never bump the version (an older copy of the app would drop every saved size). The
+  stage HUD is not a live region: `StageAnnouncer` speaks state changes only (`togglePlay` writes
+  the engine's time with the pause). E2E: bench specs in `tests/e2e/bench/` (projects
+  `chromium-bench`, `chromium-3d-bench`, `chromium-3d-bench-perf` for `@perf`, after the classic
+  suite; storage state with the switch); a copy of a classic spec keeps every title and switches
+  nothing off that the classic spec does not (`scripts/e2e/title-parity.mjs`, run in CI);
+  `nav.ts` `openTopic` / `openProblem` work in both shells.
+- **Controls (uiverse kit B, user choice 2026-11-02; `docs/BENCH_DESIGN.md` §12):** `bench.css`
+  only, tokens only. Controls are drawn for paper; `[data-surface="frame"]` (header, rail, edge,
+  tray spine) maps the paper tokens to the frame's (focus ring `--focus-frame`) and
+  `[data-surface="paper"]` maps them back; never add per-ancestor frame rules. Disabled = dimmed
+  text + dashed border.
+  `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
+  (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
+  columns fixed (§8). Basic speed steps = 0,5×·1×·2× ∪ the open lesson's own speed
+  (`workspaceStore.suggestedSpeed`, set by every `sim.open`, null when none; it never follows into
+  the next lesson); `keepBasicSpeedOnSteps` (`speeds.ts`, subscribed by the bench shell) lands any
+  other speed on the nearest step at every mode switch or open, whatever is on screen. Light /
+  dark switch `ThemeSwitch.tsx` (header + Settings → Giao diện with "Theo máy"; test against
+  `theme-boot.js`). `TooltipLayer` (WCAG 1.4.13): a hover bubble takes the first Esc for itself (a
+  focus bubble lets it reach the dialog); a hover bubble stays while the pointer is on it, judged
+  by position — the bubble keeps `pointer-events: none`, never block a click (classic E2E
+  `tests/e2e/tooltip.spec.ts`). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px targets, focus
+  rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion, axe
+  (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
   run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
   page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.

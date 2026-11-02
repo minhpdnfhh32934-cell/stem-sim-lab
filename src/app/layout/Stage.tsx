@@ -31,6 +31,7 @@ import { fmtQty } from '@/physics/common/tex';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
 import { IconButton } from '@/ui/IconButton';
+import { StageAnnouncer } from './StageAnnouncer';
 
 /** `basic`: shown in Basic mode too (drag, measure, vectors, camera — PROMPT_PHAN_2 A4.2). */
 const MODES: { id: StageTool; icon: LucideIcon; basic: boolean }[] = [
@@ -185,8 +186,10 @@ export const Stage = memo(function Stage() {
         )}
       </div>
 
+      {sim.scene && <StageAnnouncer title={Lz(sim.scene.title)} />}
+      {/* No aria-live here: the time changes every frame (StageAnnouncer speaks state changes). */}
       {sim.scene && (
-        <div className="stage__hud" aria-live="polite">
+        <div className="stage__hud">
           <span className="stage__hud-title">{Lz(sim.scene.title)}</span>
           <span className="mono">
             t ={' '}

@@ -20,14 +20,6 @@ import { TopicLessons } from '@/studio/TopicLessons';
 /** Right-hand panel: selected object, parameters, and the Science Card. */
 export const Inspector = memo(function Inspector() {
   const t = useT();
-  const card = useWorkspaceStore((s) => s.scienceCard);
-  const hasScene = useSimStore((s) => s.scene !== null);
-  const mod = useModuleStore((s) => s.active);
-  const L = useLocalized();
-  const ModulePanel = mod?.view.Panel;
-  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
-  const topicId = useActiveTopic();
-
   return (
     <aside
       className="panel inspector"
@@ -40,67 +32,85 @@ export const Inspector = memo(function Inspector() {
       </header>
 
       <div className="panel__scroll">
-        <TopicLessons topicId={topicId} />
-        {mod ? (
-          <Section title={L(mod.view.title)} keepCase>
-            {ModulePanel ? (
-              <ModulePanel />
+        <InspectorBody />
+      </div>
+    </aside>
+  );
+});
+
+/** The inspector's sections (lessons, object, parameters, Science Card); the bench tray shows them too. */
+export function InspectorBody() {
+  const t = useT();
+  const card = useWorkspaceStore((s) => s.scienceCard);
+  const hasScene = useSimStore((s) => s.scene !== null);
+  const mod = useModuleStore((s) => s.active);
+  const L = useLocalized();
+  const ModulePanel = mod?.view.Panel;
+  const advanced = useSettingsStore((s) => s.uiMode === 'advanced');
+  const topicId = useActiveTopic();
+
+  return (
+    <>
+      <TopicLessons topicId={topicId} />
+      {mod ? (
+        <Section title={L(mod.view.title)} keepCase>
+          {ModulePanel ? (
+            <ModulePanel />
+          ) : (
+            <EmptyState icon={SlidersHorizontal} compact>
+              {t('inspector.noParams')}
+            </EmptyState>
+          )}
+        </Section>
+      ) : (
+        <>
+          {advanced && (
+            <Section title={t('inspector.objectSection')}>
+              {hasScene ? (
+                <ObjectPanel />
+              ) : (
+                <EmptyState icon={MousePointerClick} compact>
+                  {t('inspector.noSelection')}
+                </EmptyState>
+              )}
+            </Section>
+          )}
+
+          <Section title={t('inspector.paramsSection')}>
+            {hasScene ? (
+              <ParamsPanel />
             ) : (
               <EmptyState icon={SlidersHorizontal} compact>
                 {t('inspector.noParams')}
               </EmptyState>
             )}
           </Section>
+        </>
+      )}
+
+      <Section
+        title={t('inspector.scienceCard')}
+        trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
+      >
+        {card ? (
+          <ScienceCard card={card} collapsible={!advanced} />
         ) : (
           <>
-            {advanced && (
-              <Section title={t('inspector.objectSection')}>
-                {hasScene ? (
-                  <ObjectPanel />
-                ) : (
-                  <EmptyState icon={MousePointerClick} compact>
-                    {t('inspector.noSelection')}
-                  </EmptyState>
-                )}
-              </Section>
-            )}
-
-            <Section title={t('inspector.paramsSection')}>
-              {hasScene ? (
-                <ParamsPanel />
-              ) : (
-                <EmptyState icon={SlidersHorizontal} compact>
-                  {t('inspector.noParams')}
-                </EmptyState>
-              )}
-            </Section>
+            <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
+            <ul className="confidence-legend">
+              {CONFIDENCE_LEVELS.map((level) => (
+                <li key={level}>
+                  <ConfidenceBadge level={level} />
+                  <span>{t(`confidence.${level}Desc`)}</span>
+                </li>
+              ))}
+              <li>
+                <ReviewBadge status="pending" />
+              </li>
+            </ul>
           </>
         )}
-
-        <Section
-          title={t('inspector.scienceCard')}
-          trailing={<BadgeInfo size={15} strokeWidth={1.75} className="muted" aria-hidden="true" />}
-        >
-          {card ? (
-            <ScienceCard card={card} collapsible={!advanced} />
-          ) : (
-            <>
-              <p className="science-intro">{t('inspector.scienceCardIntro')}</p>
-              <ul className="confidence-legend">
-                {CONFIDENCE_LEVELS.map((level) => (
-                  <li key={level}>
-                    <ConfidenceBadge level={level} />
-                    <span>{t(`confidence.${level}Desc`)}</span>
-                  </li>
-                ))}
-                <li>
-                  <ReviewBadge status="pending" />
-                </li>
-              </ul>
-            </>
-          )}
-        </Section>
-      </div>
-    </aside>
+      </Section>
+    </>
   );
-});
+}

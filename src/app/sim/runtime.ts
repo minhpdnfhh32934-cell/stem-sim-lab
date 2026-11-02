@@ -77,8 +77,15 @@ class SimRuntime {
         if (known.has(k)) sources[k] = v;
       }
       Object.assign(params, applyAutoDefaults(scene, params, sources));
-      const speed = scene.suggestedSpeed?.(params);
-      if (speed !== undefined) useWorkspaceStore.setState({ speed: closestSpeed(speed) });
+      // The lesson's own speed, or none: the previous lesson's own speed does not follow the
+      // learner into this one (a speed the learner chose does).
+      const lesson = scene.suggestedSpeed?.(params);
+      const suggestedSpeed = lesson === undefined ? null : closestSpeed(lesson);
+      const ws = useWorkspaceStore.getState();
+      useWorkspaceStore.setState({
+        suggestedSpeed,
+        speed: suggestedSpeed ?? (ws.speed === ws.suggestedSpeed ? 1 : ws.speed),
+      });
       useSimStore.setState({
         scene,
         params,
@@ -135,6 +142,13 @@ class SimRuntime {
     this.openSeq++;
     useSimStore.setState({ loading: false, error: null });
     this.close();
+    // The lesson's own speed leaves with it (library, a module, Studio); a speed the learner
+    // chose stays. Not in close(): open() calls it before comparing with the old lesson's speed.
+    const ws = useWorkspaceStore.getState();
+    useWorkspaceStore.setState({
+      suggestedSpeed: null,
+      speed: ws.speed === ws.suggestedSpeed ? 1 : ws.speed,
+    });
   }
 
   close(): void {
@@ -219,7 +233,9 @@ class SimRuntime {
     const ws = useWorkspaceStore.getState();
     if (!ws.hasSimulation) return;
     if (ws.playing) {
-      useWorkspaceStore.setState({ playing: false });
+      // The shown time lags the engine by up to one UI update (100 ms): settle it now, so the
+      // pause is announced once, with the time it really stopped at.
+      useWorkspaceStore.setState({ playing: false, simTime: this.latest?.t ?? ws.simTime });
       return;
     }
     const sim = useSimStore.getState();

@@ -88,3 +88,15 @@ describe('history spacing follows the speed a frame really ran at (UI-22)', () =
     expect(sim.history.length).toBeGreaterThan(t / (1000 / 120) + 1);
   });
 });
+
+describe('pausing', () => {
+  it('shows the time the engine stopped at at once, not the last throttled UI update', async () => {
+    await sim.open('obliqueProjectile');
+    play(0.5);
+    sim.togglePlay();
+    const t = sim.latest?.t ?? 0;
+    expect(t).toBeGreaterThan(0.4);
+    expect(useWorkspaceStore.getState().playing).toBe(false);
+    expect(useWorkspaceStore.getState().simTime).toBe(t);
+  });
+});
