@@ -54,11 +54,14 @@ export interface LayoutState {
   bottomHeight: number;
   leftTab: LeftTab;
   bottomTab: BottomTab;
-  /** Bench (v2): the tray folded to its 64 px spine (user decision 2026-11-02), and its width. */
+  /**
+   * Bench (extra version-1 fields): the tray folded to its 64 px spine (user decision
+   * 2026-11-02), and its width.
+   */
   trayFolded: boolean;
   trayWidth: number;
   notebookWidth: number;
-  /** Bench (v2): the notebook tab last chosen in each subject. */
+  /** Bench (extra version-1 field): the notebook tab last chosen in each subject. */
   notebookTabBySubject: Partial<Record<Subject, NotebookTab>>;
   /** Bench: the notebook drawer is open. Never persisted (it opens closed). */
   notebookOpen: boolean;

@@ -31,27 +31,47 @@ export function missingTitles(classic, bench) {
   return testTitles(classic, { runs: true }).filter((t) => !have.has(t));
 }
 
-/** Every bench spec with a classic twin under `e2eDir`, and the titles it lacks. */
+/** Lines that switch tests off: `test.skip(…)`, `test.fixme(…)`, `test.describe.skip/fixme(…)`. */
+function switchOffs(source) {
+  return code(source)
+    .split('\n')
+    .filter((l) => /\btest(?:\.describe)?\.(?:skip|fixme)\(/.test(l))
+    .map((l) => l.trim());
+}
+
+/**
+ * Lines of the bench twin that switch tests off (in a test's body too) and that the classic spec
+ * does not have word for word: a twin may copy a classic conditional skip, nothing more.
+ */
+export function extraSwitchOffs(classic, bench) {
+  const allowed = new Set(switchOffs(classic));
+  return switchOffs(bench).filter((l) => !allowed.has(l));
+}
+
+/** Every bench spec with a classic twin under `e2eDir`: titles it lacks, tests it switches off. */
 export function parityReport(e2eDir) {
   const benchDir = resolve(e2eDir, 'bench');
   if (!existsSync(benchDir)) return [];
   return readdirSync(benchDir)
     .filter((f) => f.endsWith('.spec.ts') && existsSync(resolve(e2eDir, f)))
-    .map((f) => ({
-      spec: f,
-      missing: missingTitles(
-        readFileSync(resolve(e2eDir, f), 'utf8'),
-        readFileSync(resolve(benchDir, f), 'utf8'),
-      ),
-    }));
+    .map((f) => {
+      const classic = readFileSync(resolve(e2eDir, f), 'utf8');
+      const bench = readFileSync(resolve(benchDir, f), 'utf8');
+      return {
+        spec: f,
+        missing: missingTitles(classic, bench),
+        switchedOff: extraSwitchOffs(classic, bench),
+      };
+    });
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const report = parityReport(resolve(fileURLToPath(import.meta.url), '../../../tests/e2e'));
-  const bad = report.filter((r) => r.missing.length > 0);
+  const bad = report.filter((r) => r.missing.length > 0 || r.switchedOff.length > 0);
   for (const r of bad) {
-    console.error(`tests/e2e/bench/${r.spec} lacks ${r.missing.length} classic title(s):`);
-    for (const t of r.missing) console.error(`  - ${t}`);
+    console.error(`tests/e2e/bench/${r.spec}:`);
+    for (const t of r.missing) console.error(`  - lacks the classic title: ${t}`);
+    for (const l of r.switchedOff) console.error(`  - switches a test off: ${l}`);
   }
   console.log(`title parity: ${report.length} bench twin(s) checked, ${bad.length} incomplete`);
   process.exit(bad.length > 0 ? 1 : 0);

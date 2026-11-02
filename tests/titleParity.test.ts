@@ -3,7 +3,12 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { missingTitles, parityReport, testTitles } from '../scripts/e2e/title-parity.mjs';
+import {
+  extraSwitchOffs,
+  missingTitles,
+  parityReport,
+  testTitles,
+} from '../scripts/e2e/title-parity.mjs';
 
 const CLASSIC = `
 test('opens without errors', async () => {});
@@ -50,6 +55,33 @@ describe('bench title parity', () => {
     ]);
   });
 
+  it('a twin switched off inside its body or by a describe is reported; a copied classic skip is not', () => {
+    const classic = [
+      "test('a', async () => {",
+      "  test.skip(!coarse, 'no touch pointer');",
+      '});',
+      "test('b', x);",
+    ].join('\n');
+    const bench = [
+      "test('a', async () => {",
+      "  test.skip(!coarse, 'no touch pointer');",
+      '  test.skip();',
+      "  test.fixme(true, 'later');",
+      '});',
+      "test.describe.skip('group', () => {",
+      "  test('b', x);",
+      '});',
+      "test.describe.fixme('other', () => {});",
+    ].join('\n');
+    expect(extraSwitchOffs(classic, bench)).toEqual([
+      'test.skip();',
+      "test.fixme(true, 'later');",
+      "test.describe.skip('group', () => {",
+      "test.describe.fixme('other', () => {});",
+    ]);
+    expect(extraSwitchOffs(classic, classic)).toEqual([]);
+  });
+
   const dir = mkdtempSync(resolve(tmpdir(), 'parity-'));
   afterAll(() => {
     rmSync(dir, { recursive: true, force: true });
@@ -60,11 +92,13 @@ describe('bench title parity', () => {
     writeFileSync(resolve(dir, 'physics.spec.ts'), "test('a', x);\ntest('b', x);");
     writeFileSync(resolve(dir, 'bench', 'physics.spec.ts'), "test('a', x);");
     writeFileSync(resolve(dir, 'bench', 'frame.spec.ts'), "test('bench only', x);");
-    expect(parityReport(dir)).toEqual([{ spec: 'physics.spec.ts', missing: ['b'] }]);
+    expect(parityReport(dir)).toEqual([
+      { spec: 'physics.spec.ts', missing: ['b'], switchedOff: [] },
+    ]);
   });
 
   it('the repository passes today', () => {
     const report = parityReport(resolve(import.meta.dirname, 'e2e'));
-    expect(report.filter((r) => r.missing.length > 0)).toEqual([]);
+    expect(report.filter((r) => r.missing.length > 0 || r.switchedOff.length > 0)).toEqual([]);
   });
 });

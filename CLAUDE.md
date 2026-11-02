@@ -177,12 +177,15 @@ B0–B8 in its §14, merged from 08/11):
   screens until B3–B7), `BenchHeader` (breadcrumb, "Đề bài" sheet with `ProblemInput`),
   `Notebook` (left rail, tabs keep the classic names, drawer pushes or overlays by
   `notebookPushes`), `Tray` (`InspectorBody`, 64 px spine), `DriverGrid` (bench edge, D0 =
-  `MainActionSlot`). `stemsim.layout` v2: `trayFolded`, `trayWidth`, `notebookWidth`,
-  `notebookTabBySubject`. The stage HUD is not a live region: `StageAnnouncer` speaks state changes
-  only. E2E: bench specs in `tests/e2e/bench/` (projects `chromium-bench`, `chromium-3d-bench`,
-  storage state with the switch); a copy of a classic spec keeps every title
-  (`scripts/e2e/title-parity.mjs`, run in CI); `nav.ts` `openTopic` / `openProblem` work in both
-  shells.
+  `MainActionSlot`). `stemsim.layout` stays version 1: the bench fields `trayFolded`,
+  `trayWidth`, `notebookWidth`, `notebookTabBySubject` are extra version-1 fields that `merge`
+  fills in; never bump the version (an older copy of the app would drop every saved size). The
+  stage HUD is not a live region: `StageAnnouncer` speaks state changes only (`togglePlay` writes
+  the engine's time with the pause). E2E: bench specs in `tests/e2e/bench/` (projects
+  `chromium-bench`, `chromium-3d-bench`, `chromium-3d-bench-perf` for `@perf`, after the classic
+  suite; storage state with the switch); a copy of a classic spec keeps every title and switches
+  nothing off that the classic spec does not (`scripts/e2e/title-parity.mjs`, run in CI);
+  `nav.ts` `openTopic` / `openProblem` work in both shells.
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
   run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
   page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.

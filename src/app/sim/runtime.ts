@@ -219,7 +219,9 @@ class SimRuntime {
     const ws = useWorkspaceStore.getState();
     if (!ws.hasSimulation) return;
     if (ws.playing) {
-      useWorkspaceStore.setState({ playing: false });
+      // The shown time lags the engine by up to one UI update (100 ms): settle it now, so the
+      // pause is announced once, with the time it really stopped at.
+      useWorkspaceStore.setState({ playing: false, simTime: this.latest?.t ?? ws.simTime });
       return;
     }
     const sim = useSimStore.getState();

@@ -16,7 +16,7 @@ describe('StageAnnouncer', () => {
     useSimStore.setState({ finished: false, scrubTime: null, intervened: false });
   });
 
-  it('speaks a state change once, never the running clock; a step or the settled pause time is spoken', () => {
+  it('speaks a state change once, never the running clock; a pause and each step are spoken', () => {
     set(false, 0);
     render(<StageAnnouncer title="Ném xiên" />);
     const live = screen.getByText((_, el) => el?.getAttribute('aria-live') === 'polite');
@@ -28,9 +28,7 @@ describe('StageAnnouncer', () => {
     set(true, 0.9);
     expect(live).toHaveTextContent('Ném xiên: đang chạy.');
 
-    // Paused: the HUD time may still settle once after the pause; the line follows it.
-    set(false, 1.2);
-    expect(live).toHaveTextContent('Ném xiên: tạm dừng ở t = 1,200 s.');
+    // Paused: togglePlay writes the engine's time with the pause, so one line, with that time.
     set(false, 1.234);
     expect(live).toHaveTextContent('Ném xiên: tạm dừng ở t = 1,234 s.');
 
