@@ -36,7 +36,7 @@ export function numericPeriod(c: Circular): number | null {
   const r = dopri5(forceLaw(c), forceLawStart(c), 0, 2.5 * c.T, {
     ...CHECK_TOL,
     atol: checkAtol(c),
-    events: [{ id: 'up', g: (_t, y) => y[1] ?? 0, direction: 1 }],
+    events: [{ id: 'up', g: (_t, y) => y[1] ?? 0, direction: 1, reads: [1] }],
   });
   const [a, b] = r.events;
   return a && b ? b.t - a.t : null;

@@ -260,7 +260,7 @@ export function numericLowSpeed(p: Params): number | null {
     {
       rtol: 1e-12,
       atol: 1e-13,
-      events: [{ id: 'low', g: (_t, y) => (y[0] ?? 0) - low.x, terminal: true }],
+      events: [{ id: 'low', g: (_t, y) => (y[0] ?? 0) - low.x, terminal: true, reads: [0] }],
     },
   );
   if (r.stoppedBy !== 'low') return null;

@@ -160,14 +160,22 @@ class Stepper {
 const EVENT_SAMPLES = 8;
 
 /**
- * Roots in (0, 1) of A u² + B u + C (the turning points of a cubic Hermite interpolant).
+ * Pushes h·u for each root u in (0, 1) of A u² + B u + C (the turning points of a cubic Hermite
+ * interpolant) with h·u > lo.
  */
-function unitRoots(A: number, B: number, C: number): number[] {
-  if (A === 0) return B === 0 ? [] : [-C / B].filter((u) => u > 0 && u < 1);
+function pushTurns(A: number, B: number, C: number, h: number, lo: number, out: number[]): void {
+  const keep = (u: number) => {
+    if (u > 0 && u < 1 && u * h > lo) out.push(u * h);
+  };
+  if (A === 0) {
+    if (B !== 0) keep(-C / B);
+    return;
+  }
   const disc = B * B - 4 * A * C;
-  if (disc < 0) return [];
+  if (disc < 0) return;
   const q = -0.5 * (B + Math.sign(B || 1) * Math.sqrt(disc));
-  return [q / A, q === 0 ? NaN : C / q].filter((u) => u > 0 && u < 1);
+  keep(q / A);
+  if (q !== 0) keep(C / q);
 }
 
 /**
@@ -175,9 +183,11 @@ function unitRoots(A: number, B: number, C: number): number[] {
  * event detection. Events are located to ~1e-12 relative precision by re-stepping
  * from the start of the step (no interpolation error). A step whose two ends give an event
  * function the same sign is also searched inside — EVENT_SAMPLES points of the step's cubic
- * Hermite interpolant plus each component's turning points (where a narrow excursion peaks;
- * exact for constant acceleration); a hit confirmed by re-stepping shortens the step. An error
- * estimate of zero (a polynomial solution) lets one step span a crossing and the crossing back.
+ * Hermite interpolant plus the turning points of the components the event `reads` (where a
+ * narrow excursion peaks; exact for constant acceleration); a crossing larger than round-off,
+ * confirmed by re-stepping, shortens the step. An error estimate of zero (a polynomial
+ * solution) lets one step span a crossing and the crossing back. Only events that declare
+ * `reads` are searched inside (see OdeEvent).
  */
 
 export function dopri5(
@@ -200,7 +210,11 @@ export function dopri5(
   let y = Float64Array.from(y0);
   let yNew = new Float64Array(n);
   const hits: EventHit[] = [];
+  // Scratch for the event search, made once (no allocation per step).
   const yi = new Float64Array(n);
+  const probe = new Float64Array(n);
+  const k1Saved = new Float64Array(n);
+  const samples: number[] = [];
   const stats: IntegrationStats = { steps: 0, rejected: 0, fEvals: 0 };
 
   st.fEvals++;
@@ -242,8 +256,7 @@ export function dopri5(
       const ev = events[i];
       const b = gNew[i] ?? 0;
       if (!ev || (b === 0 && (gPrev[i] ?? 0) === 0)) continue;
-      const probe = new Float64Array(n);
-      const k1Saved = Float64Array.from(st.k1);
+      k1Saved.set(st.k1);
       const gAt = (s: number) => {
         st.k1.set(k1Saved);
         st.step(t, y, s, probe, rtol, atol);
@@ -261,23 +274,29 @@ export function dopri5(
       // Same sign at both ends: an even number of crossings may hide inside the step. Sample
       // the step's interpolant; a crossing confirmed by re-stepping shortens the step to just
       // past it (the step is redone), so each crossing then shows as a sign change at a step end.
-      if (a !== 0 && Math.sign(a) === Math.sign(b)) {
-        const samples: number[] = [];
+      const comps = ev.reads;
+      if (comps && a !== 0 && Math.sign(a) === Math.sign(b)) {
+        samples.length = 0;
         for (let j = 1; j <= EVENT_SAMPLES; j++)
           samples.push(lo + ((h - lo) * j) / (EVENT_SAMPLES + 1));
-        for (let c = 0; c < n; c++) {
+        for (const c of comps) {
           const y0c = y[c] ?? 0;
           const y1c = yNew[c] ?? 0;
           const f0 = h * (k1Saved[c] ?? 0);
           const f1 = h * (k7Accepted[c] ?? 0);
-          for (const u of unitRoots(
+          pushTurns(
             6 * y0c + 3 * f0 - 6 * y1c + 3 * f1,
             -6 * y0c - 4 * f0 + 6 * y1c - 2 * f1,
             f0,
-          ))
-            if (u * h > lo) samples.push(u * h);
+            h,
+            lo,
+            samples,
+          );
         }
         samples.sort((p, q) => p - q);
+        // A real crossing, not a graze of round-off size (a body stopping exactly at the end
+        // of the track peaks at the end ± 1 ulp): the same scale as the error control.
+        const floor = rtol * Math.max(Math.abs(a), Math.abs(b)) + atol;
         for (const s of samples) {
           if (s >= shorten) break;
           const u = s / h;
@@ -285,7 +304,7 @@ export function dopri5(
           const h10 = u ** 3 - 2 * u * u + u;
           const h01 = 3 * u * u - 2 * u ** 3;
           const h11 = u ** 3 - u * u;
-          for (let c = 0; c < n; c++)
+          for (const c of comps)
             yi[c] =
               h00 * (y[c] ?? 0) +
               h10 * h * (k1Saved[c] ?? 0) +
@@ -293,7 +312,7 @@ export function dopri5(
               h11 * h * (k7Accepted[c] ?? 0);
           if (Math.sign(ev.g(t + s, yi)) === Math.sign(a)) continue;
           const gs = gAt(s);
-          if (gs !== 0 && Math.sign(gs) !== Math.sign(a)) {
+          if (Math.sign(gs) !== Math.sign(a) && Math.abs(gs) > floor) {
             shorten = s;
             break;
           }
@@ -329,7 +348,7 @@ export function dopri5(
       const ev = events[c.index];
       if (!ev) continue;
       const yc = new Float64Array(n);
-      const k1Saved = Float64Array.from(st.k1);
+      k1Saved.set(st.k1);
       st.step(t, y, c.tc, yc, rtol, atol);
       st.k1.set(k1Saved);
       hits.push({ id: ev.id, t: t + c.tc, y: yc });

@@ -122,6 +122,18 @@ describe('incline cross-checks (#112)', () => {
     ['inclinedPlane: just passes the top', inclinedPlane, { v0: 0.9, s0: 4.95 }],
     // Grazing the end: above it only for ~3 ms (10 µm), between two of the step's samples.
     ['inclinedPlane: grazes the top by 10 µm', inclinedPlane, { v0: 0.9, s0: 4.9386849 }],
+    // Stops exactly at the end (t = 2 s, s = 4 m): the peak sits at the end ± 1 ulp, a graze of
+    // round-off size that must not count as reaching the end (review of PR #118).
+    [
+      'newtonLaws: stops exactly at the end',
+      newtonLaws,
+      { g: 10, mu: 0.2, F: 0, v0: 4, length: 4 },
+    ],
+    [
+      'inclinedPlane (θ = 0): stops exactly at the end',
+      inclinedPlane,
+      { theta: 0, g: 10, muS: 0.2, muK: 0.2, F: 0, v0: 4, s0: 0, length: 4 },
+    ],
     [
       'newtonLaws: the end 0,1 mm before the stop',
       newtonLaws,

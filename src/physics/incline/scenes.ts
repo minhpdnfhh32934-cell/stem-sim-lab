@@ -177,9 +177,9 @@ export function numericEnd(q: InclineInput): { t: number; v: number } | null {
       rtol: 1e-12,
       atol: 1e-12,
       events: [
-        { id: 'bottom', g: (_t, y) => y[0] ?? 0, terminal: true },
-        { id: 'top', g: (_t, y) => (y[0] ?? 0) - q.length, terminal: true },
-        { id: 'rest', g: (_t, y) => y[1] ?? 0, terminal: true },
+        { id: 'bottom', g: (_t, y) => y[0] ?? 0, terminal: true, reads: [0] },
+        { id: 'top', g: (_t, y) => (y[0] ?? 0) - q.length, terminal: true, reads: [0] },
+        { id: 'rest', g: (_t, y) => y[1] ?? 0, terminal: true, reads: [1] },
       ],
     },
   );

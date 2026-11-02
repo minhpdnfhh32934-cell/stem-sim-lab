@@ -63,8 +63,8 @@ export function numericCheck(inp: ProjectileInput) {
       rtol: 1e-11,
       atol: 1e-12,
       events: [
-        { id: 'ground', g: (_t, s) => s[1] ?? 0, direction: -1, terminal: true },
-        { id: 'apex', g: (_t, s) => s[3] ?? 0, direction: -1 },
+        { id: 'ground', g: (_t, s) => s[1] ?? 0, direction: -1, terminal: true, reads: [1] },
+        { id: 'apex', g: (_t, s) => s[3] ?? 0, direction: -1, reads: [3] },
       ],
     },
   );

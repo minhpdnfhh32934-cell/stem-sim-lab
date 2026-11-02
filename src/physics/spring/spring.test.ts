@@ -4,7 +4,7 @@ import { EngineRunner } from '@/core/sim/runner';
 import { SP, SpringEngine, springInput, staticExtension } from './engine';
 import { amplitudePhase, period, propagate, regime, type Oscillator } from './model';
 import { checkMisses, sliderSweep } from '../testing';
-import { hookeSpring, numericPeriod, periodUncheckable, springPendulum } from './scenes';
+import { hookeSpring, numericPeriod, springPendulum } from './scenes';
 
 function reference(o: Oscillator, x0: number, v0: number, t: number): number {
   const r = dopri5(
@@ -26,7 +26,6 @@ describe('spring cross-checks (#112)', () => {
   it.each([
     ['springPendulum: near critical damping', springPendulum, { b: 9.9 }],
     ['hookeSpring: near critical damping', hookeSpring, { vertical: 0, x0: -0.26, b: 6.3 }],
-    // Envelope ~5e-204: the tolerance's error ratios overflow without the cap in dopri5.
     ['springPendulum: b 9,9986', springPendulum, { b: 9.9986 }],
     // Starts at equilibrium: the start is not a crossing; the crossings are T/2 and T.
     ['springPendulum: starts at equilibrium', springPendulum, { x0: 0, v0: 1, b: 9.9 }],
@@ -52,19 +51,27 @@ describe('spring cross-checks (#112)', () => {
     expect(checked).toBeGreaterThan(sets.length / 4);
   });
 
-  it('a hair from critical damping (on the slider grid): no check, and the card says why', () => {
-    // γ = 9,7039 s⁻¹, ω₀ = 9,7044 rad/s, T_d ≈ 64,8 s: the envelope is ~1e-341 by 1,25 T.
-    const p = { ...springPendulum.defaults, k: 97, m: 1.03, b: 19.99 };
-    const q = springInput(p);
-    expect(periodUncheckable(q)).toBe(true);
-    expect(numericPeriod(q)).toBeNull();
-    const period = springPendulum.solve(p, 'vi').answers.find((a) => a.id === 'period');
-    expect(period).toBeDefined();
-    expect(period?.check).toBeUndefined();
-    expect(springPendulum.scienceCard(p).confidenceNote?.vi).toContain('không kiểm chứng được');
-    // An ordinary damped case keeps the usual note.
-    const usual = springPendulum.scienceCard({ ...p, b: 9.9 }).confidenceNote?.vi ?? '';
-    expect(usual).toContain('chu kì kiểm chứng bằng Dormand–Prince');
+  it.each([
+    // γ = 9,7039 s⁻¹, ω₀ = 9,7044 rad/s: T_d ≈ 64,8 s, x shrinks by ~1e-273 over one period.
+    ['k 97, m 1,03, b 19,99', { k: 97, m: 1.03, b: 19.99 }],
+    // γ = 1,732 s⁻¹, ω₀ = 1,73205 rad/s: T_d ≈ 474 s, x shrinks by ~1e-356 (below double precision).
+    ['k 15, m 5, b 17,32', { k: 15, m: 5, b: 17.32 }],
+  ] as const)(
+    'a hair from critical damping on the slider grid (%s): checked, and it agrees',
+    (_n, p) => {
+      const params = { ...springPendulum.defaults, ...p };
+      const period = springPendulum.solve(params, 'vi').answers.find((a) => a.id === 'period');
+      expect(period?.check).toBeDefined();
+      expect(checkMisses(springPendulum, params)).toEqual([]);
+    },
+  );
+
+  it('the check stays quick on the UI thread near critical damping (under 50 ms)', () => {
+    for (const b of [9.99, 9.999, 9.9999]) {
+      const t0 = performance.now();
+      springPendulum.solve({ ...springPendulum.defaults, b }, 'vi');
+      expect(performance.now() - t0, `b ${String(b)}`).toBeLessThan(50);
+    }
   });
 });
 

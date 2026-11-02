@@ -112,6 +112,14 @@ describe('Dormand–Prince 5(4)', () => {
     expect(r.y[0]).toBeCloseTo(Math.cos(40), 8);
   });
 
+  it('runs with a tiny absolute tolerance (squared error ratios do not overflow, #112)', () => {
+    // v starts at 0, so its scale is atol alone: ratios ~1e200, squares overflowed to Infinity,
+    // the first step became 0 and the run stalled at t = 0.
+    const r = dopri5(sho, [1, 0], 0, 1, { rtol: 1e-10, atol: 1e-200, maxSteps: 20_000 });
+    expect(r.t).toBe(1);
+    expect(r.y[0]).toBeCloseTo(Math.cos(omega), 8);
+  });
+
   it('finds an event crossed twice inside one long step (#112)', () => {
     // s'' = a < 0 from s = 0, v = 16: a polynomial, so one step can span the whole flight and end
     // back below s = 12 — the same sign at both ends of the step although s crossed 12 twice.
@@ -126,8 +134,8 @@ describe('Dormand–Prince 5(4)', () => {
       rtol: 1e-12,
       atol: 1e-12,
       events: [
-        { id: 'end', g: (_t, y) => y[0]! - 12, terminal: true },
-        { id: 'rest', g: (_t, y) => y[1]!, terminal: true },
+        { id: 'end', g: (_t, y) => y[0]! - 12, terminal: true, reads: [0] },
+        { id: 'rest', g: (_t, y) => y[1]!, terminal: true, reads: [1] },
       ],
     });
     expect(stop.stoppedBy).toBe('end');
@@ -135,7 +143,7 @@ describe('Dormand–Prince 5(4)', () => {
     const both = dopri5(fall, [0, 16], 0, 3, {
       rtol: 1e-12,
       atol: 1e-12,
-      events: [{ id: 'end', g: (_t, y) => y[0]! - 12 }],
+      events: [{ id: 'end', g: (_t, y) => y[0]! - 12, reads: [0] }],
     });
     expect(both.events.map((e) => e.t)).toEqual([expect.closeTo(up, 12), expect.closeTo(down, 12)]);
   });
