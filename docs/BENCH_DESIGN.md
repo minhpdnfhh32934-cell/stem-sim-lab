@@ -274,11 +274,11 @@ Budget: ≤ 400 KB of woff2, measured in B0.
 | `--dur-drawer` | 160 ms   | drawers, `transform` only        |
 | `--dur-sheet`  | 240 ms   | sheets, opacity + 0.98 → 1 scale |
 
-Easing: `cubic-bezier(.2,.8,.2,1)`.
+Easing: `cubic-bezier(.2,.8,.2,1)` (`--ease`). `--press-lift` (1 px) is how far the main action moves when hovered or pressed.
 
 - A drawer slides as an overlay. On `transitionend` the stage column snaps once, the canvas resizes **once**, and 3D re-frames through `data-inset` (`src/ui/three/insets.ts`).
 - Nothing loops. At most one one-time hint (≤ 600 ms). Simulations open paused.
-- Reduced motion (the OS setting, or the optional in-app switch): every duration is 0, cuts instead of crossfades, instant 3D camera tweens, no auto-rotate.
+- Reduced motion (the OS setting, or the optional in-app switch, which sets `data-motion="reduce"` on `<html>`): every duration token and `--press-lift` are 0, cuts instead of crossfades, instant 3D camera tweens, no auto-rotate. Each component reads the tokens (no page-wide `*` rule); the skeleton's pulse has its own rule. E2E: no element of the bench keeps a transition or an animation.
 
 ## 8. The frame at 1366×768
 
@@ -472,13 +472,13 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 **Bench edge**
 
-- D0 "Chạy (Space)" / "Tạm dừng (Space)".
+- D0 "Chạy (Space)" / "Tạm dừng (Space)": 144 px whatever its word ("Chạy để kiểm tra" on two lines). The kit's "Space" key chip left no room for those words, so the shortcut is in the tooltip, the accessible name and `aria-keyshortcuts`.
 - D1 "Bước tiếp (.)".
 - D2 "Ghim lần chạy này để so sánh".
 - D3 "Đặt lại (R)".
 - Readout "t = 1,24 s".
 - Scrubber (aria-valuetext carries t, which removes the per-frame aria-live).
-- Speed "Chậm | Thường" (Basic) or a select 0,1×–2× (Advanced).
+- Speed: three 40 px steps 0,5× · 1× · 2× in the 168×40 slot (Basic; user decision 2026-11-02, replacing "Chậm | Thường") or a select of every speed (Advanced).
 - Confidence chip. "Chạy chậm hơn tốc độ chọn" appears as an amber text chip above the speed control.
 
 **Main action:** D0. It is the largest labelled control, never in a menu, and never moves.
@@ -741,6 +741,15 @@ Fold order at large font or in English: Tìm → icon 40; AI status → icon + d
 
 New shell, same organs: rewriting domain logic would add risk without adding anything visible.
 
+**Controls: uiverse kit B** (user choice 2026-11-02, checked before it went in: 15 fixes; sources and the MIT notice in `docs/THIRD_PARTY.md`). All in `src/app/bench/bench.css`, tokens only:
+
+- **One surface hook.** Controls are drawn for paper. `[data-surface="frame"]` (header, notebook rail, bench edge, tray spine) maps the paper tokens (`--text*`, `--bg-panel`, `--bg-hover`, `--bg-active`, `--border*`, `--accent*`, `--focus-ring`) to the frame's, so the same rules draw the frame variant and the focus ring turns `--focus-frame`; `[data-surface="paper"]` (the file menu, the confidence chip) maps them back. E2E: every focus ring ≥ 3 : 1 against the surface it is drawn on, frame and paper, light and dark.
+- **Disabled:** dimmed text and a dashed border (never colour alone), `not-allowed`; hover only `:not(:disabled)`. On the frame, `:active` is `--frame-pressed`.
+- **Targets:** 40 px; icon buttons 48 px under `any-pointer: coarse`; bench-edge icons 48.
+- **Parameter row (§9.4):** the 112×40 number box is one `<label>` (its focus ring by `:focus-within`), the number is described by its unit, the slider's `aria-valuetext` is the number with its unit, − / + in the bench (`BenchContext`).
+- **Tooltip:** `TooltipLayer` in the top layer, nudged inside the window; Esc hides it and a bubble shown by hover can be hovered (WCAG 1.4.13).
+- **Sections** become cards with sentence-case titles; chips and key caps 12/16; the skeleton pulses gently.
+
 **ModuleView** gains two optional fields:
 
 - `Driver?: ComponentType`: the module's bench-edge group, replacing each module's own player.
@@ -764,7 +773,7 @@ New shell, same organs: rewriting domain logic would add risk without adding any
   - inspector → tray, bottom panel → notebook;
   - stage tool buttons become tray switches;
   - Studio tabs become Library filters;
-  - theme and presentation buttons move to Settings / Tệp / F5;
+  - presentation moves to Tệp / F5; the light / dark switch (uiverse JkHuger/old-falcon-20, user choice 2026-11-02) sits in the header and in Settings → Giao diện, where "Theo máy" toggles following the device;
   - the face-ring column is removed;
   - "Think" becomes "Suy nghĩ kĩ (Think)";
   - Segoe UI → bundled Be Vietnam Pro + JetBrains Mono (new dependencies: one Vietnamese-safe face on every Windows build, and tabular readouts);

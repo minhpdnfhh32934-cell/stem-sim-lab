@@ -186,6 +186,18 @@ B0–B8 in its §14, merged from 08/11):
   suite; storage state with the switch); a copy of a classic spec keeps every title and switches
   nothing off that the classic spec does not (`scripts/e2e/title-parity.mjs`, run in CI);
   `nav.ts` `openTopic` / `openProblem` work in both shells.
+- **Controls (uiverse kit B, user choice 2026-11-02; `docs/BENCH_DESIGN.md` §12):** `bench.css`
+  only, tokens only. Controls are drawn for paper; `[data-surface="frame"]` (header, rail, edge,
+  tray spine) maps the paper tokens to the frame's (focus ring `--focus-frame`) and
+  `[data-surface="paper"]` maps them back; never add per-ancestor frame rules. Disabled = dimmed
+  text + dashed border.
+  `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
+  (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
+  columns fixed (§8), Basic speed 0,5×·1×·2×. Light / dark switch `ThemeSwitch.tsx` (header +
+  Settings → Giao diện with "Theo máy"; test against `theme-boot.js`). `TooltipLayer`: Esc hides,
+  a hover bubble can be hovered (WCAG 1.4.13). E2E `tests/e2e/bench/controls.spec.ts`: 40/48 px
+  targets, focus rings ≥ 3 : 1 on frame and paper, keyboard, no motion under reduced motion,
+  axe (`@axe-core/playwright`, serious/critical). MIT notices: `docs/THIRD_PARTY.md`.
 - **New features (§13), all agreed on 2026-11-02, built after the bench frame is done:** "Sổ ghi"
   run log, "Ví dụ" presets, parameter sweep, Ctrl+/ shortcut sheet, the "Hiển thị và trợ năng"
   page, "Làm mờ phần còn lại", "Theo dõi một hạt" and the "Tiếp tục" resume link.
