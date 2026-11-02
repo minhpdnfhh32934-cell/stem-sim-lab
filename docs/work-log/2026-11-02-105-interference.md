@@ -78,3 +78,18 @@
 - Tests: PASS `npx vitest run src/physics src/learn tests/golden src/app/sim src/app/i18n`
   (36 files, 371 tests; includes a sweep of f₂ over the slider for f₁ = 10; 1,5; 63 Hz). PASS lint,
   typecheck, format:check. PASS E2E physics + learner (chromium): 25 passed, under `e2e.lock`.
+
+## Rework after the PR #110 review, round 2
+
+- **Date/time:** 2026-11-02 12:52 +0700 (commit f82c92e).
+- **Status:** PASS (local checks below).
+- Fixed: a source drag keeps a learner-placed M where it is (d₁, d₂ follow; only a problem's M
+  limits S₁S₂), so the 9-maxima challenge is reachable after M was dragged anywhere; beats sampled
+  every T/40, so every close pair on the sliders is measured (too long → note); tests for the
+  topics whose old checks disagree on reachable inputs and now read "chưa khớp" (newtonLaws,
+  inclinedPlane, springPendulum, hookeSpring — not fixed here, separate issue needed); a drawWater
+  test on a degraded tier (checked: it fails with the round-1 rule put back).
+- Correction: the round-1 claim "every other scene stays below 10⁻¹⁰" holds at defaults and choices
+  only; a random slider sweep and the reviewer's cases found the four topics above.
+- Tests: PASS `npx vitest run src/physics src/learn src/app tests/golden` (67 files, 619 tests);
+  PASS lint, typecheck, format:check; PASS E2E physics + learner (chromium) 25 passed, `e2e.lock`.
