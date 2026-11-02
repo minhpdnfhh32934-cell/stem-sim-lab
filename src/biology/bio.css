@@ -1170,3 +1170,59 @@
   resize: vertical;
   word-break: break-all;
 }
+
+/* "Từ tế bào đến DNA" (src/biology/cell/zoom): zoom buttons over the picture's bottom edge, the
+   six levels and the printed sizes in the inspector. */
+.zoom__buttons {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  pointer-events: auto;
+}
+/* "Không theo tỉ lệ" while the camera glides: out of the layout, on one line. */
+.zoom__moving {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  max-width: 100%;
+  overflow: hidden;
+  transform: translateX(-50%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.zoom__buttons .btn {
+  min-height: var(--target);
+  gap: 6px;
+}
+.zoom2d .icon-btn--lg {
+  width: var(--target);
+  height: var(--target);
+}
+.zoom__bottom {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-3);
+  left: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.zoom__bottom .bio-caption {
+  position: static;
+}
+.zoom-panel .m3d-parts__item {
+  min-height: var(--target);
+  text-align: left;
+}
+.zoom-facts {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-4);
+}
+.zoom-facts li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-content);
+}

@@ -128,6 +128,7 @@ const en: Messages = {
     michaelisMenten: 'Enzyme kinetics (Michaelis–Menten)',
     diffusionOsmosis: 'Diffusion & osmosis',
     cellStructure: 'Prokaryotic and eukaryotic cells',
+    cellToDna: 'From cell to DNA',
     uniformCircularMotion: 'Uniform circular motion',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',

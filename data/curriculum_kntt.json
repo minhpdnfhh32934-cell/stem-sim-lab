@@ -2396,6 +2396,30 @@
    ],
    "reason": "Tên Bài 16–18: lực tương tác giữa các điện tích, khái niệm điện trường, điện trường đều.",
    "review_status": "pending"
+  },
+  {
+   "topic": "cellToDna",
+   "subject": "biology",
+   "grade": 10,
+   "book": "SH10",
+   "chapter": "Chương 2. Cấu trúc tế bào",
+   "lessons": [
+    8
+   ],
+   "reason": "Tên Bài 8: tế bào nhân thực (cấp tế bào và nhân của bài phóng to). Không xếp Bài 7 (tế bào nhân sơ): bài chỉ có tế bào nhân thực, dù thang kích thước H 7.1 của Bài 7 là một nguồn số liệu.",
+   "review_status": "pending"
+  },
+  {
+   "topic": "cellToDna",
+   "subject": "biology",
+   "grade": 12,
+   "book": "SH12",
+   "chapter": "Chương 2. Di truyền nhiễm sắc thể",
+   "lessons": [
+    7
+   ],
+   "reason": "Tên Bài 7: cấu trúc và chức năng của nhiễm sắc thể (cấp NST kép, sợi nhiễm sắc, nucleosome, DNA).",
+   "review_status": "pending"
   }
  ],
  "unplaced": [
