@@ -40,6 +40,7 @@ const dataset = loadDataset('titration', IndicatorSchema, raw);
 const water = WaterSchema.parse((raw as { water: unknown }).water);
 
 export const INDICATORS: readonly Indicator[] = dataset.items;
+/** pKw on the mol/L scale (the generator converts the IAPWS mol/kg value). */
 export const PKW = water.pKw;
 export const KW = 10 ** -water.pKw;
 export const PKW_UNCERTAINTY = water.uncertainty_pK;

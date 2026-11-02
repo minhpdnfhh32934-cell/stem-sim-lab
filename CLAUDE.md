@@ -482,8 +482,8 @@ Progress log: `docs/PROGRESS.md`.
   base from the burette, 25 °C): `titration.ts` (pH = positive root of the charge balance with Kw,
   written without cancellation; `curve` crowds points around V_eq; `indicatorAt`), data
   `data/titration.json` from `scripts/data/gen_titration.py` (Kw from the IAPWS R11-24 formula,
-  checked against its test table; indicator ranges and colour names cited; the screen colour is the
-  CSS named colour, an illustration), `store.ts` (`setTitration` validates, keeps V_b ≤ 2·V_eq; also
+  checked against its test table, moved from mol/kg to mol/L; indicator ranges and colour names
+  cited; the screen colour is a CSS named colour chosen by name, an illustration), `store.ts` (`setTitration` validates, keeps V_b ≤ 2·V_eq; also
   the `bindStore` restore), `card.ts`, `TitrationViews.tsx` (Basic: concentrations and volumes
   only). Weak acids/buffers: not yet. Unplaced in the KNTT bar (DATA_REVIEW TIT-5).
 - Shared UI: `src/ui/charts/XYChart.tsx` (uPlot), `src/ui/canvas/useCanvas.ts`.

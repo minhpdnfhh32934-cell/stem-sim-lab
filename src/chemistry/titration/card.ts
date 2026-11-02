@@ -6,11 +6,13 @@ import { PKW, PKW_UNCERTAINTY, TITRATION_SOURCES } from './titration';
 export function titrationCard(locale: 'vi' | 'en'): ScienceCardData {
   const pkw = formatNumber(locale, PKW, { maximumFractionDigits: 2 });
   const err = formatNumber(locale, PKW_UNCERTAINTY);
+  // The textbook writes Kw = 1,0·10⁻¹⁴, i.e. pKw = 14 (DATA_REVIEW TIT-4).
+  const gap = formatNumber(locale, Math.abs(14 - PKW), { maximumSignificantDigits: 1 });
   return {
     title: L('Chuẩn độ acid mạnh bằng base mạnh', 'Strong acid – strong base titration'),
     model: L(
-      'Dung dịch HCl (Cₐ, Vₐ) trong bình được chuẩn độ bằng dung dịch NaOH (C_b) từ buret. Acid và base phân li hoàn toàn; [H⁺] là nghiệm dương của phương trình cân bằng điện tích kết hợp với tích số ion của nước K_w.',
-      'HCl solution (Cₐ, Vₐ) in the flask is titrated with NaOH solution (C_b) from the burette. Acid and base dissociate completely; [H⁺] is the positive root of the charge balance combined with the ion product of water K_w.',
+      'Dung dịch HCl trong cốc được chuẩn độ bằng dung dịch NaOH từ buret. Acid và base phân li hoàn toàn; [H⁺] là nghiệm dương của phương trình cân bằng điện tích kết hợp với tích số ion của nước Kw.',
+      'HCl solution in the beaker is titrated with NaOH solution from the burette. Acid and base dissociate completely; [H⁺] is the positive root of the charge balance combined with the ion product of water Kw.',
     ),
     equations: [
       {
@@ -32,30 +34,34 @@ export function titrationCard(locale: 'vi' | 'en'): ScienceCardData {
     ],
     assumptions: [
       L(
-        `25 °C: pK_w = ${pkw} (sai số ±${err}, IAPWS). SGK làm tròn K_w = 1,0·10⁻¹⁴ nên pH có thể khác SGK ở chữ số thứ hai sau dấu phẩy.`,
-        `25 °C: pK_w = ${pkw} (uncertainty ±${err}, IAPWS). Textbooks round K_w to 1.0·10⁻¹⁴, so pH may differ from the textbook in the second decimal.`,
+        `25 °C: pKw = ${pkw} (IAPWS, sai số ±${err}; giá trị IAPWS theo mol/kg được đổi sang mol/L bằng khối lượng riêng của nước). SGK làm tròn Kw = 1,0·10⁻¹⁴, nên pH ở đây có thể lệch SGK khoảng ${gap}.`,
+        `25 °C: pKw = ${pkw} (IAPWS, uncertainty ±${err}; the IAPWS value in mol/kg is converted to mol/L with the density of water). Textbooks round Kw to 1.0·10⁻¹⁴, so pH here may differ from the textbook by about ${gap}.`,
       ),
       L(
-        'Dung dịch loãng lí tưởng: hoạt độ bằng nồng độ. Ở nồng độ lớn, pH đo bằng máy lệch khỏi giá trị tính.',
-        'Ideal dilute solution: activity equals concentration. At higher concentrations a pH meter reads differently from the computed value.',
+        'Nhiệt độ giữ ở 25 °C: bỏ qua nhiệt tỏa ra khi trung hòa. Bỏ qua tính acid – base của chính chất chỉ thị.',
+        'Temperature held at 25 °C: the heat of neutralisation is ignored. The indicator’s own acid–base effect is ignored.',
       ),
       L(
-        'Thể tích cộng được (V = Vₐ + V_b); bỏ qua CO₂ của không khí hoà vào dung dịch.',
-        'Volumes are additive (V = Vₐ + V_b); CO₂ dissolving from the air is ignored.',
+        'Hoạt độ coi bằng nồng độ (dung dịch lí tưởng): pH là −lg[H⁺] theo nồng độ, như SGK. pH đo bằng máy có thể lệch, càng lệch khi nồng độ càng lớn.',
+        'Activity taken equal to concentration (ideal solution): pH is −lg[H⁺] from concentration, as in textbooks. A pH meter can read differently, more so at higher concentrations.',
       ),
       L(
-        'Màu chất chỉ thị là minh hoạ: khoảng đổi màu và tên màu theo bảng nguồn, màu trên màn hình là màu CSS cùng tên; trong khoảng đổi màu, màu được trộn đều theo pH.',
-        'Indicator colours are an illustration: the range and colour names follow the source table, the screen colour is the CSS colour of the same name; inside the range the colours are blended evenly with pH.',
+        'Thể tích cộng được (thể tích dung dịch = thể tích HCl + thể tích NaOH); bỏ qua CO₂ của không khí hòa vào dung dịch.',
+        'Volumes are additive (solution volume = HCl volume + NaOH volume); CO₂ dissolving from the air is ignored.',
+      ),
+      L(
+        'Màu chất chỉ thị là minh họa: khoảng đổi màu và tên màu theo bảng nguồn; màu trên màn hình là một màu CSS chọn theo tên màu (orchid cho hồng tím, trong suốt cho không màu); trong khoảng đổi màu, hai màu được trộn đều theo pH.',
+        'Indicator colours are an illustration: the range and colour names follow the source table; the screen colour is a CSS colour chosen by the colour name (orchid for purple-pink, transparent for colourless); inside the range the two colours are blended evenly with pH.',
       ),
     ],
     validity: L(
-      'Acid mạnh một nấc và base mạnh một nấc, Cₐ, C_b từ 0,001 đến 1 mol/L, 25 °C. Acid/base yếu và dung dịch đệm chưa có.',
-      'Monoprotic strong acid and strong base, Cₐ, C_b from 0.001 to 1 mol/L, 25 °C. Weak acids/bases and buffers are not included.',
+      'Acid mạnh một nấc và base mạnh một nấc, nồng độ HCl và NaOH từ 0,001 đến 1 mol/L, 25 °C. pH tính theo nồng độ, không phải pH đo bằng máy. Acid/base yếu và dung dịch đệm chưa có.',
+      'Monoprotic strong acid and strong base, HCl and NaOH concentrations from 0.001 to 1 mol/L, 25 °C. pH from concentration, not a pH-meter reading. Weak acids/bases and buffers are not included.',
     ),
     confidence: 'exact',
     confidenceNote: L(
-      'Test tự động: pH khớp lời giải chia đôi khoảng độc lập của phương trình cân bằng điện tích, sai số < 10⁻⁹ đơn vị pH ở mọi điểm thử, kể cả điểm tương đương (pH = pK_w/2).',
-      'Automated tests: pH matches an independent bisection solution of the charge balance within 10⁻⁹ pH units at every test point, including the equivalence point (pH = pK_w/2).',
+      'Test tự động: pH khớp lời giải chia đôi khoảng độc lập của phương trình cân bằng điện tích, sai số < 10⁻⁹ đơn vị pH ở mọi điểm thử, kể cả điểm tương đương (pH = pKw/2).',
+      'Automated tests: pH matches an independent bisection solution of the charge balance within 10⁻⁹ pH units at every test point, including the equivalence point (pH = pKw/2).',
     ),
     method: L(
       'Nghiệm đóng của phương trình bậc hai, viết dạng không bị triệt tiêu số học',

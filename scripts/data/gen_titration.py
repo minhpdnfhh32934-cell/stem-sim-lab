@@ -3,12 +3,15 @@
 Kw: IAPWS R11-24 (2024), Revised Release on the Ionization Constant of H2O, Eqs. (2)–(4) with the
 Table 1 parameters. The code is checked against every Table 2 test value, and the 25 °C result
 against the Table 3 value (13.99 at 0.1 MPa). Water density at 25 °C and 0.1 MPa from the IAPWS-95
-formulation (Wagner & Pruss 2002), as Table 3 uses.
+formulation (Wagner & Pruss 2002), as Table 3 uses. IAPWS Kw is on the molality scale (mol/kg);
+the app writes [H+][OH-] in mol/L, so pKw is moved to that scale with c = m·rho (dilute solution):
+pKw(mol/L) = pKw(mol/kg) − 2·lg(rho / (kg/L)).
 
 Indicators: transition range and the colour names on each side, from the table "Common laboratory
 indicators" of the English Wikipedia article "pH indicator" (revision 1354116288). Sources differ by
-0.1–0.3 pH at the ends (docs/DATA_REVIEW.md TIT-2). The screen colour of each named colour is the
-CSS named colour of the same name (W3C CSS Color 4), an illustration, not a measured colour.
+0.1–0.3 pH at the ends (docs/DATA_REVIEW.md TIT-2). The screen colour of each named colour is a CSS
+named colour (W3C CSS Color 4) chosen by that name (orchid for purple-pink, transparent for
+colourless), an illustration, not a measured colour.
 
 review_status "pending" until a teacher checks it.
 
@@ -90,12 +93,13 @@ def main() -> None:
         assert abs(got - expected) < 5e-6, (t, rho, got, expected)
     value = pkw(T_25C, RHO_25C)
     assert round(value, 2) == TABLE_3_25C, value
-    rounded = round(value, 4)
+    molar = round(value - 2 * math.log10(RHO_25C), 4)
     water = {
         "T_K": T_25C,
         "p_MPa": 0.1,
         "density_g_cm3": RHO_25C,
-        "pKw": rounded,
+        "pKw_molal": round(value, 4),
+        "pKw": molar,
         "uncertainty_pK": UNCERTAINTY_PK,
         "source": IAPWS,
         "density_source": IAPWS95,
@@ -125,7 +129,7 @@ def main() -> None:
         "items": items,
     }
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"wrote pKw(25 C) = {rounded} (unrounded {value:.6f}); {len(items)} indicators")
+    print(f"wrote pKw(25 C) = {molar} mol/L scale ({value:.6f} mol/kg); {len(items)} indicators")
 
 
 if __name__ == "__main__":

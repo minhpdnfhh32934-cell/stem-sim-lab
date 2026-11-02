@@ -13,7 +13,8 @@
   "T_K": 298.15,
   "p_MPa": 0.1,
   "density_g_cm3": 0.99704702,
-  "pKw": 13.9944,
+  "pKw_molal": 13.9944,
+  "pKw": 13.9969,
   "uncertainty_pK": 0.05,
   "source": {
    "id": "iapws-r11-24",

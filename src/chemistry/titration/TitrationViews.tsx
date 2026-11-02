@@ -65,7 +65,7 @@ function Flask({ colour, level, burette }: { colour: string; level: number; bure
       className="tit-figure"
       viewBox="0 0 200 270"
       role="img"
-      aria-label={Lz(L('Buret và cốc dung dịch (minh hoạ)', 'Burette and beaker (illustration)'))}
+      aria-label={Lz(L('Buret và cốc dung dịch (minh họa)', 'Burette and beaker (illustration)'))}
     >
       <rect className="tit-glass" x="92" y="10" width="16" height="150" rx="3" />
       <rect
@@ -135,7 +135,7 @@ export function TitrationStage() {
           V<sub>tđ</sub> = {fixed(veq)} mL
         </span>
         <span className="chem-chip chem-chip--qual">
-          {Lz(L('Màu minh hoạ', 'Illustrative colours'))}
+          {Lz(L('Màu minh họa', 'Illustrative colours'))}
         </span>
       </div>
       <div className="tit-stage">
@@ -217,9 +217,9 @@ export function TitrationPanel() {
   };
   return (
     <div className="chem-form tit-form">
-      {field(L('Nồng độ HCl Cₐ', 'HCl concentration Cₐ'), 'mol/L', st.ca, 'ca')}
-      {field(L('Thể tích HCl Vₐ', 'HCl volume Vₐ'), 'mL', st.va, 'va')}
-      {field(L('Nồng độ NaOH C_b', 'NaOH concentration C_b'), 'mol/L', st.cb, 'cb')}
+      {field(L('Nồng độ HCl', 'HCl concentration'), 'mol/L', st.ca, 'ca')}
+      {field(L('Thể tích HCl', 'HCl volume'), 'mL', st.va, 'va')}
+      {field(L('Nồng độ NaOH', 'NaOH concentration'), 'mol/L', st.cb, 'cb')}
       {/* Basic mode shows only concentrations and volumes (plan #54 item 4); a changed choice stays visible. */}
       {(advanced || st.indicator !== DEFAULT_INDICATOR) && (
         <label>
@@ -283,7 +283,7 @@ export function TitrationBottom() {
       <XYChart
         x={data.x}
         series={data.series}
-        xLabel={Lz(L('Thể tích NaOH V_b (mL)', 'NaOH volume V_b (mL)'))}
+        xLabel={Lz(L('Thể tích NaOH đã thêm (mL)', 'NaOH added (mL)'))}
         yLabel="pH"
         yMin={0}
         yMax={14}

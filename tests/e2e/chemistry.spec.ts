@@ -105,7 +105,7 @@ test('titration: dragging the NaOH volume changes the pH and the indicator, fits
   await page.getByRole('slider', { name: /Thể tích NaOH/ }).fill('15');
   await expect(readout.getByText(/hồng tím/)).toBeVisible();
   await expect(readout.getByText(/NaOH dư/)).toBeVisible();
-  await expect(page.getByText('Màu minh hoạ')).toBeVisible();
+  await expect(page.getByText('Màu minh họa')).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

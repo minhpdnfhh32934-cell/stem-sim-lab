@@ -28,7 +28,7 @@ describe('TitrationStage', () => {
   it('keeps the added volume inside the burette range when the inputs change', () => {
     useTitrationStore.setState({ vb: 20 });
     render(<TitrationPanel />);
-    fireEvent.change(screen.getByLabelText('Nồng độ NaOH C_b (mol/L)'), {
+    fireEvent.change(screen.getByLabelText('Nồng độ NaOH (mol/L)'), {
       target: { value: '0,2' },
     });
     expect(useTitrationStore.getState()).toMatchObject({ cb: 0.2, vb: 10 });
