@@ -22,6 +22,7 @@ import { LAYOUT_LIMITS, useLayoutStore } from './layoutStore';
 import { LeftSidebar } from './LeftSidebar';
 import { Splitter } from './Splitter';
 import { useShellServices } from './useShellServices';
+import { benchShellOn } from '@/app/bench/shellMode';
 import { Stage } from './Stage';
 import { StatusBar } from './StatusBar';
 import { Timeline } from './Timeline';
@@ -47,6 +48,24 @@ const StudioScreen = lazy(() => import('@/studio/StudioScreen'));
 const CommandPalette = lazy(() =>
   import('@/app/command/CommandPalette').then((m) => ({ default: m.CommandPalette })),
 );
+
+// Dev switch (0.8.1 B1, #115): a production build replaces import.meta.env.DEV with false, so the
+// bench shell is never even loaded there. Unit tests (MODE 'test') leave it out too: with it, the
+// test runner also prepared the bench's large chunk and slowed other lazy screens (2026-11-02).
+const BenchShell =
+  import.meta.env.DEV && import.meta.env.MODE !== 'test'
+    ? lazy(() => import('@/app/bench/BenchShell'))
+    : null;
+
+export function AppShell() {
+  return BenchShell && benchShellOn() ? (
+    <Suspense fallback={null}>
+      <BenchShell />
+    </Suspense>
+  ) : (
+    <ClassicShell />
+  );
+}
 
 /** Dialogs and overlays shared by both shells (problem review, first run, updates, palette…). */
 export function ShellOverlays({ presentation }: { presentation: boolean }) {
@@ -75,8 +94,7 @@ export function ShellOverlays({ presentation }: { presentation: boolean }) {
   );
 }
 
-// The bench shell (0.8.1 B1, #115) plugs in here behind benchShellOn() once BenchShell exists.
-export function AppShell() {
+function ClassicShell() {
   useShellServices();
   const t = useT();
   const layout = useLayoutStore(
