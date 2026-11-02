@@ -24,9 +24,10 @@
 #   tauri-plugin-opener 2.7.0 -> zbus 5.19.0 (and zbus_macros 5.19.0)
 #     -> zvariant 5.15.0 -> zvariant_derive 5.15.0; zbus_names 4.3.4 -> zvariant
 #
-# The crates were merged into zbus 6.0.0 (its `wire` module), but no stable tauri-plugin-opener
-# uses zbus 6 yet (2.7.0 is the latest stable, 3.0.0 is an alpha). Remove the three entries when
-# the opener plugin moves to zbus >= 6 (`cargo audit` then no longer lists them).
+# The crates were merged into zbus 6.0.0 (its `wire` module), but no tauri-plugin-opener uses
+# zbus 6 yet (2.7.2 is the latest stable; 3.0.0-alpha.3 still requires zbus ^5.9). Remove the
+# three entries when the opener plugin moves to zbus >= 6 (`cargo audit` then no longer lists
+# them).
 [advisories]
 ignore = [
   # glib 0.18.5: unsound `VariantStrIter` iterator impls. Linux-only (see above).
