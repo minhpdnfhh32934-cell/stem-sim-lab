@@ -1403,6 +1403,201 @@
       "expectUnsupportedParts": true
     },
     {
+      "id": "int-01",
+      "text": "Trên mặt nước có hai nguồn kết hợp A, B cách nhau 10 cm, dao động cùng pha với tần số 20 Hz. Tốc độ truyền sóng trên mặt nước là 30 cm/s. Tính bước sóng, số điểm dao động với biên độ cực đại và số điểm đứng yên trên đoạn AB (không kể A, B).",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 10,
+          "unit": "cm",
+          "quote": "cách nhau 10 cm"
+        },
+        {
+          "key": "f",
+          "value": 20,
+          "unit": "Hz",
+          "quote": "tần số 20 Hz"
+        },
+        {
+          "key": "v",
+          "value": 30,
+          "unit": "cm/s",
+          "quote": "30 cm/s"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "wavelength": 0.015,
+        "maxima": 13,
+        "minima": 14
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-02",
+      "text": "Ở mặt nước, hai nguồn kết hợp S₁, S₂ cách nhau 12 cm dao động cùng pha. Sóng trên mặt nước có bước sóng 1,6 cm. Tìm số vân cực đại và số vân cực tiểu giao thoa cắt đoạn S₁S₂ (không kể S₁, S₂).",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 12,
+          "unit": "cm",
+          "quote": "cách nhau 12 cm"
+        },
+        {
+          "key": "lambda",
+          "value": 1.6,
+          "unit": "cm",
+          "quote": "bước sóng 1,6 cm"
+        }
+      ],
+      "missing": [
+        "f"
+      ],
+      "answers": {
+        "maxima": 15,
+        "minima": 14,
+        "fringe_spacing": 0.008
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-03",
+      "text": "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 10 cm dao động cùng pha với tần số 10 Hz và cùng biên độ 2 mm. Tốc độ truyền sóng là 30 cm/s. Điểm M ở mặt nước cách A 9 cm và cách B 12 cm. Tính biên độ dao động của phần tử nước tại M.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 10,
+          "unit": "cm",
+          "quote": "cách nhau 10 cm"
+        },
+        {
+          "key": "f",
+          "value": 10,
+          "unit": "Hz",
+          "quote": "tần số 10 Hz"
+        },
+        {
+          "key": "a",
+          "value": 2,
+          "unit": "mm",
+          "quote": "biên độ 2 mm"
+        },
+        {
+          "key": "v",
+          "value": 30,
+          "unit": "cm/s",
+          "quote": "30 cm/s"
+        },
+        {
+          "key": "d1",
+          "value": 9,
+          "unit": "cm",
+          "quote": "cách A 9 cm"
+        },
+        {
+          "key": "d2",
+          "value": 12,
+          "unit": "cm",
+          "quote": "cách B 12 cm"
+        }
+      ],
+      "missing": [],
+      "answers": {
+        "path_difference": 0.03,
+        "order": 1,
+        "amplitude_M": 0.004
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-04",
+      "text": "Hai nguồn sóng trên mặt nước dao động cùng biên độ với tần số 20 Hz và 22 Hz. Tốc độ truyền sóng là 40 cm/s. Tính tần số phách và chu kì phách của dao động tổng hợp tại một điểm trên mặt nước.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "f",
+          "value": 20,
+          "unit": "Hz",
+          "quote": "tần số 20 Hz"
+        },
+        {
+          "key": "f2",
+          "value": 22,
+          "unit": "Hz",
+          "quote": "22 Hz"
+        },
+        {
+          "key": "v",
+          "value": 40,
+          "unit": "cm/s",
+          "quote": "40 cm/s"
+        }
+      ],
+      "missing": [
+        "d"
+      ],
+      "answers": {
+        "beat_frequency": 2,
+        "beat_period": 0.5
+      },
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-06",
+      "text": "Ở mặt nước, hai nguồn kết hợp A, B cách nhau 9 cm dao động cùng pha với tần số 25 Hz. Khoảng cách giữa hai cực đại giao thoa liên tiếp trên đoạn AB là 1,5 cm. Tính tốc độ truyền sóng trên mặt nước.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 9,
+          "unit": "cm",
+          "quote": "cách nhau 9 cm"
+        },
+        {
+          "key": "f",
+          "value": 25,
+          "unit": "Hz",
+          "quote": "tần số 25 Hz"
+        }
+      ],
+      "missing": [
+        "v"
+      ],
+      "answers": {},
+      "expectUnsupportedParts": false
+    },
+    {
+      "id": "int-05",
+      "text": "Hai nguồn kết hợp A, B cách nhau 8 cm trên mặt nước dao động ngược pha với tần số 25 Hz. Tốc độ truyền sóng là 50 cm/s. Tính số điểm dao động với biên độ cực đại trên đoạn AB.",
+      "topic": "interference",
+      "quantities": [
+        {
+          "key": "d",
+          "value": 8,
+          "unit": "cm",
+          "quote": "cách nhau 8 cm"
+        },
+        {
+          "key": "f",
+          "value": 25,
+          "unit": "Hz",
+          "quote": "tần số 25 Hz"
+        },
+        {
+          "key": "v",
+          "value": 50,
+          "unit": "cm/s",
+          "quote": "50 cm/s"
+        }
+      ],
+      "missing": [],
+      "answers": {},
+      "expectUnsupportedParts": true
+    },
+    {
       "id": "efd-01",
       "text": "Một điện tích điểm q = 4.10⁻⁸ C đặt trong không khí. Lấy k = 9.10⁹ N.m²/C². Tính cường độ điện trường tại điểm M cách điện tích 3 cm.",
       "topic": "electricField",

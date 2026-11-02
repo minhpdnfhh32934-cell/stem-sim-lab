@@ -219,6 +219,18 @@ export const POES: readonly Poe[] = [
     start: { mode: 0, vFrom: 1 },
   },
   {
+    id: 'interference.d',
+    topic: 'interference',
+    param: 'd',
+    factor: 2,
+    answer: 'fringe_spacing',
+    question: L(
+      'Giữ nguyên tần số và tốc độ truyền sóng, nếu khoảng cách hai nguồn S₁S₂ gấp đôi thì khoảng cách giữa hai cực đại liên tiếp trên S₁S₂ thay đổi thế nào?',
+      'Keeping the frequency and the wave speed, if the source separation S₁S₂ doubles, how does the spacing of neighbouring maxima on S₁S₂ change?',
+    ),
+    choices: ratios(0.5, 1, 2),
+  },
+  {
     id: 'electricField.d',
     topic: 'electricField',
     param: 'd',

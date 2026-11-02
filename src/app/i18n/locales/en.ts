@@ -129,6 +129,7 @@ const en: Messages = {
     diffusionOsmosis: 'Diffusion & osmosis',
     cellStructure: 'Prokaryotic and eukaryotic cells',
     uniformCircularMotion: 'Uniform circular motion',
+    interference: 'Two-source interference',
     standingWave: 'Standing waves on a string',
     electricField: 'Electric field of point charges',
   },
@@ -467,6 +468,7 @@ const en: Messages = {
     steps: 'Step-by-step solution',
     check: 'Numerical check',
     agree: 'agrees, deviation {value}',
+    disagree: 'does not agree, deviation {value}',
     engineNote:
       'Every number here is computed by the program from formulas and cross-checked by numerical integration. AI produces no numbers.',
     intervenedNote:

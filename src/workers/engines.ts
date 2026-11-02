@@ -59,6 +59,11 @@ registerEngine('phys.standingWave', async () => {
   return () => new StandingWaveEngine();
 });
 
+registerEngine('phys.interference', async () => {
+  const { InterferenceEngine } = await import('@/physics/interference/engine');
+  return () => new InterferenceEngine();
+});
+
 registerEngine('phys.field', async () => {
   const { FieldEngine } = await import('@/physics/field/engine');
   return () => new FieldEngine();

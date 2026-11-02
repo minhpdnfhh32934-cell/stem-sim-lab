@@ -88,6 +88,12 @@ export interface BodyDef {
   radius: (p: Params) => number;
   draggable: boolean;
   /**
+   * Dragging sets these parameters (SI) instead of pulling the body in the engine: for a body
+   * whose position is an input, not a state (a source on water). Each move restarts the run with
+   * the new values, keeping the view; not an intervention.
+   */
+  dragTo?: (x: number, y: number, p: Params, sources: Record<string, ParamSource>) => Params;
+  /**
    * Whether the body is part of the scene for these params (default: always). An inactive
    * body is neither drawn by the scene nor pickable or shown in the Inspector.
    */

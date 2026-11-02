@@ -132,6 +132,7 @@ const vi = {
     diffusionOsmosis: 'Khuếch tán & thẩm thấu',
     cellStructure: 'Tế bào nhân sơ và nhân thực',
     uniformCircularMotion: 'Chuyển động tròn đều',
+    interference: 'Giao thoa sóng hai nguồn',
     standingWave: 'Sóng dừng trên dây',
     electricField: 'Điện trường của điện tích điểm',
   },
@@ -470,6 +471,7 @@ const vi = {
     steps: 'Lời giải từng bước',
     check: 'Kiểm chứng số',
     agree: 'khớp, sai lệch {value}',
+    disagree: 'chưa khớp, sai lệch {value}',
     engineNote:
       'Mọi con số ở đây do chương trình tính bằng công thức và được kiểm chứng bằng tích phân số. AI không tạo ra con số nào.',
     intervenedNote:
