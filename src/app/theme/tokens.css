@@ -424,9 +424,9 @@
   --bio3d-foliage: #102d23;
   --bio3d-foliage-2: #032f1b;
   --bio3d-bark: #b9a99d;
-  /* Start / stop codon marks: apart from the five base colours and the stage accent. */
+  /* Start / stop codon marks: apart from the base colours, the stage accent and muted text. */
   --dna3d-start: #34a409;
-  --dna3d-stop: #8e0049;
+  --dna3d-stop: #53033f;
 }
 
 :root[data-shell='bench'][data-theme='dark'] {
@@ -486,6 +486,6 @@
   --stage-tool: #c9d1d5;
   /* The 3D water line stays ΔE_OK ≥ 0.25 from the lighter dark stage. */
   --m3d-water-line: 0.15;
-  --dna3d-start: #7be3b3;
+  --dna3d-start: #74e4b0;
   --dna3d-stop: #fccd68;
 }
