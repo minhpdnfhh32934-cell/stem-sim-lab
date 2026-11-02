@@ -27,6 +27,21 @@ describe('bench dev switch', () => {
     expect(benchShellOn(true, broken)).toBe(false);
   });
 
+  it('a localStorage getter that throws keeps the classic shell', () => {
+    const real = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
+    Object.defineProperty(globalThis, 'localStorage', {
+      configurable: true,
+      get() {
+        throw new Error('SecurityError');
+      },
+    });
+    try {
+      expect(benchShellOn(true)).toBe(false);
+    } finally {
+      if (real) Object.defineProperty(globalThis, 'localStorage', real);
+    }
+  });
+
   it('the default reads import.meta.env.DEV, which Vite sets to false in a production build', () => {
     const src = readFileSync(resolve(__dirname, 'shellMode.ts'), 'utf8');
     expect(src).toContain('dev: boolean = import.meta.env.DEV');

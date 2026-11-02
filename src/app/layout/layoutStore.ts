@@ -158,9 +158,9 @@ export const useLayoutStore = create<LayoutState>()(
     }),
     {
       name: 'stemsim.layout',
-      // v2 (0.8.1): the bench fields. A v1 state needs no change: `merge` fills in what is missing.
-      version: 2,
-      migrate: (persisted) => persisted as PersistedLayout,
+      // Still version 1: the bench fields (0.8.1) are new optional fields that `merge` fills in, and a
+      // version bump would drop every saved size whenever an older copy of the app reads them.
+      version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (s): PersistedLayout => ({
         leftWidth: s.leftWidth,

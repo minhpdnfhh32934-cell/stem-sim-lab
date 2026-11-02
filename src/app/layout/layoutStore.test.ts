@@ -87,12 +87,12 @@ describe('useLayoutStore', () => {
   });
 });
 
-describe('bench layout (v2)', () => {
+describe('bench layout fields (0.8.1)', () => {
   beforeEach(() => {
     useLayoutStore.getState().resetLayout();
   });
 
-  it('a v1 state keeps its sizes and gets the bench defaults', async () => {
+  it('a state saved before the bench keeps its sizes and gets the bench defaults', async () => {
     localStorage.setItem(
       'stemsim.layout',
       JSON.stringify({ state: { leftWidth: 300, rightWidth: 333 }, version: 1 }),
@@ -117,7 +117,7 @@ describe('bench layout (v2)', () => {
           notebookWidth: 'wide',
           notebookTabBySubject: { physics: 'graphs', chemistry: 'nope', alchemy: 'graphs' },
         },
-        version: 2,
+        version: 1,
       }),
     );
     await useLayoutStore.persist.rehydrate();
@@ -140,7 +140,7 @@ describe('bench layout (v2)', () => {
       state: Record<string, unknown>;
       version: number;
     };
-    expect(saved.version).toBe(2);
+    expect(saved.version).toBe(1);
     expect(saved.state).toMatchObject({
       trayFolded: true,
       trayWidth: 400,

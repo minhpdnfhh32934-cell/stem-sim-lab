@@ -26,10 +26,28 @@ describe('bench title parity', () => {
     ]);
   });
 
-  it('lists the classic titles a bench copy lacks', () => {
+  it('lists the classic titles that run but not in the bench copy', () => {
     const bench = "test('opens without errors', a);\ntest('nested', b);\ntest('bench only', c);";
-    expect(missingTitles(CLASSIC, bench)).toEqual(['a skipped one', '${name}: fits 1366×768']);
+    // The classic skipped test is not owed; its runnable template title is.
+    expect(missingTitles(CLASSIC, bench)).toEqual(['${name}: fits 1366×768']);
     expect(missingTitles(CLASSIC, CLASSIC)).toEqual([]);
+  });
+
+  it('a twin that is skipped, fixme or commented out does not count', () => {
+    const classic = "test('a', x);\ntest('b', x);\ntest('c', x);\ntest('d', x);";
+    const bench = [
+      "test.skip('a', x);",
+      "test.fixme('b', x);",
+      "// test('c', x);",
+      '/*',
+      "test('d', x);",
+      '*/',
+    ].join('\n');
+    expect(missingTitles(classic, bench)).toEqual(['a', 'b', 'c', 'd']);
+    // A URL inside a string is not a comment.
+    expect(testTitles("test('opens https://example.org // ok', x);")).toEqual([
+      'opens https://example.org // ok',
+    ]);
   });
 
   const dir = mkdtempSync(resolve(tmpdir(), 'parity-'));

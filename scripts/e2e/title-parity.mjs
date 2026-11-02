@@ -7,20 +7,28 @@ import { resolve } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
-/** The literal titles of `test(...)` calls (template titles keep their `${…}` text). */
-export function testTitles(source) {
+/** The source without comment lines and block comments that start a line (commented-out tests). */
+function code(source) {
+  return source.replace(/^\s*\/\*[\s\S]*?\*\//gm, '').replace(/^\s*\/\/.*$/gm, '');
+}
+
+/**
+ * The literal titles of `test(...)` calls (template titles keep their `${…}` text). `runs` keeps
+ * only tests that run: no `test.skip(...)` or `test.fixme(...)`.
+ */
+export function testTitles(source, { runs = false } = {}) {
   const out = [];
-  for (const m of source.matchAll(
-    /\btest(?:\.(?:only|skip|fixme|fail))?\(\s*(['"`])((?:\\.|(?!\1)[^\\])*)\1/g,
+  for (const m of code(source).matchAll(
+    /\btest(?:\.(only|skip|fixme|fail))?\(\s*(['"`])((?:\\.|(?!\2)[^\\])*)\2/g,
   ))
-    out.push(m[2]);
+    if (!runs || (m[1] !== 'skip' && m[1] !== 'fixme')) out.push(m[3]);
   return out;
 }
 
-/** Classic titles the bench twin lacks. */
+/** Titles that run in the classic spec but do not run in its bench twin. */
 export function missingTitles(classic, bench) {
-  const have = new Set(testTitles(bench));
-  return testTitles(classic).filter((t) => !have.has(t));
+  const have = new Set(testTitles(bench, { runs: true }));
+  return testTitles(classic, { runs: true }).filter((t) => !have.has(t));
 }
 
 /** Every bench spec with a classic twin under `e2eDir`, and the titles it lacks. */

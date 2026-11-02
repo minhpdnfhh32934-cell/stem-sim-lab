@@ -75,12 +75,15 @@ test('the tray folds to its 64 px spine and stays folded; the notebook pushes th
   await tray.getByRole('button', { name: 'Thu gọn khay' }).click();
   await expect.poll(async () => (await box(tray)).w).toBe(64);
   expect((await box(stage(page))).w).toBeGreaterThanOrEqual(1238);
+  // The keyboard focus moves to the button that replaced the one pressed.
+  await expect(tray.getByRole('button', { name: 'Mở khay Điều chỉnh' })).toBeFocused();
 
   await page.reload();
   await openProjectile(page);
   await expect.poll(async () => (await box(tray)).w).toBe(64);
   await tray.getByRole('button', { name: 'Mở khay Điều chỉnh' }).click();
   await expect.poll(async () => (await box(tray)).w).toBe(304);
+  await expect(tray.getByRole('button', { name: 'Thu gọn khay' })).toBeFocused();
 
   // Notebook: a rail tab opens the drawer beside the stage (1366 − 64 − 352 − 304 = 646).
   const graphs = page.getByRole('tab', { name: 'Đồ thị' });
@@ -91,13 +94,33 @@ test('the tray folds to its 64 px spine and stays folded; the notebook pushes th
   await graphs.click();
   await expect(page.getByRole('tabpanel')).toHaveCount(0);
   await expect.poll(async () => (await box(stage(page))).w).toBe(998);
+
+  // Rail keys: arrows move the focus, Enter opens; Esc and "Đóng sổ" give the focus back.
+  await graphs.focus();
+  await page.keyboard.press('ArrowDown');
+  const solution = page.getByRole('tab', { name: 'Lời giải' });
+  await expect(solution).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('tabpanel', { name: 'Lời giải' })).toBeVisible();
+  await page.getByRole('button', { name: 'Đóng sổ' }).click();
+  await expect(page.getByRole('tabpanel')).toHaveCount(0);
+  await expect(solution).toBeFocused();
+  await page.keyboard.press('Enter');
+  await page.getByRole('button', { name: 'Đóng sổ' }).focus();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('tabpanel')).toHaveCount(0);
+  await expect(solution).toBeFocused();
 });
 
 test('one filled button on the bench, none at the 18+ question', async ({ page, browser }) => {
   await openProjectile(page);
   await expectFilled(page.locator('body'), 1);
-  await page.getByRole('tab', { name: 'Đồ thị' }).click();
-  await expectFilled(page.locator('body'), 1);
+  // Every notebook tab, the challenge first (a physics topic's first visit lands there).
+  for (const name of ['Thử thách', 'Đồ thị', 'Lời giải', 'Thẻ khoa học', 'Hỏi AI']) {
+    await page.getByRole('tab', { name }).click();
+    await expect(page.getByRole('tabpanel')).toBeVisible();
+    await expectFilled(page.locator('body'), 1);
+  }
 
   // A first run that has not answered the 18+ question yet.
   const state = JSON.parse(readFileSync('tests/e2e/bench/storage-state.json', 'utf8')) as {
@@ -162,4 +185,5 @@ test('every control on the frame is at least 40 px; "Đề bài" opens the probl
   await field.fill('Ném một vật với vận tốc 10 m/s.');
   await page.getByRole('button', { name: 'Đóng đề bài' }).click();
   await expect(field).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Đề bài', exact: true })).toBeFocused();
 });

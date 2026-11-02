@@ -48,116 +48,122 @@ export function BenchHeader() {
   const moduleTitle = useModuleStore((s) => s.active?.view.title);
   const topic = sceneTitle ?? moduleTitle;
   const [problemOpen, setProblemOpen] = useState(false);
+  const problemButton = useRef<HTMLButtonElement>(null);
 
+  // The dialogs sit beside the header, not in it: the frame's colours must not reach them.
   return (
-    <header className="bench-header">
-      <button
-        type="button"
-        className="bench-header__mark"
-        aria-label={t('home.goHome')}
-        data-tip={t('home.goHome')}
-        data-tip-side="bottom"
-        onClick={goHome}
-      >
-        <Logo size={24} />
-      </button>
-      <nav className="bench-crumbs" aria-label={t('bench.breadcrumb')}>
-        {lab && (
-          <button
-            type="button"
-            className="bench-crumb"
-            aria-current={!topic && !studio ? 'page' : undefined}
-            onClick={() => {
-              toLibrary();
-            }}
-          >
-            {t('landing.labTitle')}
-          </button>
-        )}
-        {lab && topic && (
-          <>
-            <span className="bench-crumbs__sep" aria-hidden="true">
-              ›
-            </span>
+    <>
+      <header className="bench-header">
+        <button
+          type="button"
+          className="bench-header__mark"
+          aria-label={t('home.goHome')}
+          data-tip={t('home.goHome')}
+          data-tip-side="bottom"
+          onClick={goHome}
+        >
+          <Logo size={24} />
+        </button>
+        <nav className="bench-crumbs" aria-label={t('bench.breadcrumb')}>
+          {lab && (
             <button
               type="button"
               className="bench-crumb"
+              aria-current={!topic && !studio ? 'page' : undefined}
               onClick={() => {
-                toLibrary(subject);
+                toLibrary();
               }}
             >
-              {t(`subjects.${subject}`)}
+              {t('landing.labTitle')}
             </button>
-            <span className="bench-crumbs__sep" aria-hidden="true">
-              ›
-            </span>
-            <h1 className="bench-crumb bench-crumb--current">{L(topic)}</h1>
-          </>
-        )}
-        {teacher && <h1 className="bench-crumb bench-crumb--current">{t('chat.title')}</h1>}
-      </nav>
+          )}
+          {lab && topic && (
+            <>
+              <span className="bench-crumbs__sep" aria-hidden="true">
+                ›
+              </span>
+              <button
+                type="button"
+                className="bench-crumb"
+                onClick={() => {
+                  toLibrary(subject);
+                }}
+              >
+                {t(`subjects.${subject}`)}
+              </button>
+              <span className="bench-crumbs__sep" aria-hidden="true">
+                ›
+              </span>
+              <h1 className="bench-crumb bench-crumb--current">{L(topic)}</h1>
+            </>
+          )}
+          {/* The teacher page has its own h1. */}
+          {teacher && <span className="bench-crumb bench-crumb--current">{t('chat.title')}</span>}
+        </nav>
 
-      {lab && !studio && (
+        {lab && !studio && (
+          <button
+            ref={problemButton}
+            type="button"
+            className="btn bench-header__problem"
+            onClick={() => {
+              setProblemOpen(true);
+            }}
+          >
+            <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
+            <span>{t('bench.problem')}</span>
+          </button>
+        )}
+        <div className="bench-header__spacer" />
+        <AiStatusPill
+          onClick={(section) => {
+            if (section) openSettingsAt(section);
+            else setSettingsOpen(true);
+          }}
+        />
         <button
           type="button"
-          className="btn bench-header__problem"
+          className="btn bench-header__search"
+          aria-label={t('command.openButton')}
           onClick={() => {
-            setProblemOpen(true);
+            useCommandPalette.getState().setOpen(true);
           }}
         >
-          <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
-          <span>{t('bench.problem')}</span>
+          <Search size={16} strokeWidth={1.75} aria-hidden="true" />
+          <span aria-hidden="true">{t('bench.search')}</span>
+          <kbd aria-hidden="true">Ctrl+K</kbd>
         </button>
-      )}
-      <div className="bench-header__spacer" />
-      <AiStatusPill
-        onClick={(section) => {
-          if (section) openSettingsAt(section);
-          else setSettingsOpen(true);
-        }}
-      />
-      <button
-        type="button"
-        className="btn bench-header__search"
-        aria-label={t('command.openButton')}
-        onClick={() => {
-          useCommandPalette.getState().setOpen(true);
-        }}
-      >
-        <Search size={16} strokeWidth={1.75} aria-hidden="true" />
-        <span aria-hidden="true">{t('bench.search')}</span>
-        <kbd aria-hidden="true">Ctrl+K</kbd>
-      </button>
-      {lab && <ModeSwitch compact />}
-      {!teacher && (
-        <>
-          <IconButton
-            icon={Undo2}
-            label={t('topbar.undo')}
-            disabled={!canUndo}
-            onClick={() => {
-              undo();
-            }}
-          />
-          <IconButton
-            icon={Redo2}
-            label={t('topbar.redo')}
-            disabled={!canRedo}
-            onClick={() => {
-              redo();
-            }}
-          />
-        </>
-      )}
-      <FileMenu />
-      <IconButton
-        icon={Settings}
-        label={t('topbar.settings')}
-        animation="spin"
-        onClick={() => {
-          setSettingsOpen(true);
-        }}
-      />
+        {lab && <ModeSwitch compact />}
+        {!teacher && (
+          <>
+            <IconButton
+              icon={Undo2}
+              label={t('topbar.undo')}
+              disabled={!canUndo}
+              onClick={() => {
+                undo();
+              }}
+            />
+            <IconButton
+              icon={Redo2}
+              label={t('topbar.redo')}
+              disabled={!canRedo}
+              onClick={() => {
+                redo();
+              }}
+            />
+          </>
+        )}
+        <FileMenu />
+        <IconButton
+          icon={Settings}
+          label={t('topbar.settings')}
+          animation="spin"
+          onClick={() => {
+            setSettingsOpen(true);
+          }}
+        />
+      </header>
       <SettingsDialog
         open={settingsOpen}
         onClose={() => {
@@ -168,10 +174,12 @@ export function BenchHeader() {
         <ProblemSheet
           onClose={() => {
             setProblemOpen(false);
+            // The sheet leaves the page: give the keyboard focus back to its button.
+            problemButton.current?.focus();
           }}
         />
       )}
-    </header>
+    </>
   );
 }
 
@@ -183,9 +191,10 @@ function ProblemSheet({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     ref.current?.showModal();
   }, []);
+  // Close the dialog itself (not just unmount it): only then may the focus leave it.
   useEffect(() => {
-    if (running) onClose();
-  }, [running, onClose]);
+    if (running) ref.current?.close();
+  }, [running]);
   return (
     <dialog
       ref={ref}
@@ -195,7 +204,13 @@ function ProblemSheet({ onClose }: { onClose: () => void }) {
     >
       <header className="dialog__header">
         <h2 id="bench-problem-title">{t('bench.problem')}</h2>
-        <IconButton icon={X} label={t('bench.closeProblem')} onClick={onClose} />
+        <IconButton
+          icon={X}
+          label={t('bench.closeProblem')}
+          onClick={() => {
+            ref.current?.close();
+          }}
+        />
       </header>
       <div className="dialog__body">
         <ProblemInput />

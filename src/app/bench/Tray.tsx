@@ -1,4 +1,5 @@
 import { PanelRightClose, SlidersHorizontal } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useT } from '@/app/i18n';
 import { InspectorBody } from '@/app/layout/Inspector';
@@ -20,8 +21,23 @@ export function Tray() {
       setSize: s.setSize,
     })),
   );
+  // Folding swaps the button under the keyboard focus: hand the focus to the one that appears.
+  const aside = useRef<HTMLElement>(null);
+  const moved = useRef(false);
+  useEffect(() => {
+    if (!moved.current) return;
+    moved.current = false;
+    const selector = folded ? '.tray__spine' : '.panel__header button';
+    aside.current?.querySelector<HTMLButtonElement>(selector)?.focus();
+  }, [folded]);
+  const fold = (on: boolean) => {
+    moved.current = true;
+    setFolded(on);
+  };
+
   return (
     <aside
+      ref={aside}
       className="tray"
       aria-label={t('bench.trayRegion')}
       data-tour="inspector"
@@ -33,7 +49,7 @@ export function Tray() {
           className="tray__spine"
           aria-label={t('bench.openTray')}
           onClick={() => {
-            setFolded(false);
+            fold(false);
           }}
         >
           <SlidersHorizontal size={20} strokeWidth={1.75} aria-hidden="true" />
@@ -62,7 +78,7 @@ export function Tray() {
                 icon={PanelRightClose}
                 label={t('bench.foldTray')}
                 onClick={() => {
-                  setFolded(true);
+                  fold(true);
                 }}
               />
             </header>

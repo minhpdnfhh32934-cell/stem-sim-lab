@@ -35,7 +35,7 @@ const HEAVY_3D =
  * switch on (their own storage state). A copy of a classic spec keeps its test titles
  * (scripts/e2e/title-parity.mjs); the classic projects never run them.
  */
-const BENCH = /[\\/]bench[\\/]/;
+const BENCH = /[\\/]bench[\\/][^\\/]+\.spec\.ts$/;
 const BENCH_3D = new RegExp(String.raw`[\\/]bench[\\/]` + HEAVY_3D.source);
 const BENCH_STATE = 'tests/e2e/bench/storage-state.json';
 /** The 3D performance budget test (tag @perf): its own project, after the other 3D tests. */
@@ -97,7 +97,8 @@ export default defineConfig({
       name: 'chromium-bench',
       use: { ...chromium, storageState: BENCH_STATE },
       testMatch: BENCH,
-      testIgnore: HEAVY_3D,
+      // Exactly the complement of chromium-3d-bench, so every bench spec has one project.
+      testIgnore: BENCH_3D,
       dependencies: ['chromium-3d-perf'],
     },
     {
@@ -108,6 +109,17 @@ export default defineConfig({
       dependencies: ['chromium-bench'],
       workers: process.env.CI ? 1 : 4,
       expect: { timeout: 15_000 },
+    },
+    {
+      name: 'chromium-3d-bench-perf',
+      use: {
+        ...chromium,
+        storageState: BENCH_STATE,
+        launchOptions: { ...(executablePath ? { executablePath } : {}), args: SWIFTSHADER },
+      },
+      testMatch: BENCH_3D,
+      grep: PERF,
+      dependencies: ['chromium-3d-bench'],
     },
   ],
   webServer: {

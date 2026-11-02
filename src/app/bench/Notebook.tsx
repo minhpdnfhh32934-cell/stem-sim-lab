@@ -8,7 +8,7 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useT, type MessageKey } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
@@ -82,8 +82,28 @@ export function Notebook({ push }: { push: boolean }) {
     setTab(subject, id);
     setOpen(true);
   };
+  const rail = useRef<(HTMLButtonElement | null)[]>([]);
   const close = () => {
     setOpen(false);
+    // The drawer leaves the page: the keyboard focus goes back to its tab on the rail.
+    rail.current[tabs.indexOf(tab)]?.focus();
+  };
+  // A vertical tab list: arrows, Home and End move the focus; Enter or Space opens the tab.
+  const onRailKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
+    const n = tabs.length;
+    const next =
+      e.key === 'ArrowDown'
+        ? (i + 1) % n
+        : e.key === 'ArrowUp'
+          ? (i - 1 + n) % n
+          : e.key === 'Home'
+            ? 0
+            : e.key === 'End'
+              ? n - 1
+              : -1;
+    if (next < 0) return;
+    e.preventDefault();
+    rail.current[next]?.focus();
   };
 
   // A question written on another screen (askInBubble) opens "Hỏi AI", as it opened the bubble.
@@ -103,12 +123,19 @@ export function Notebook({ push }: { push: boolean }) {
         aria-orientation="vertical"
         aria-label={t('bottom.regionLabel')}
       >
-        {tabs.map((id) => {
+        {tabs.map((id, i) => {
           const Icon = ICON[id];
           return (
             <button
               key={id}
+              ref={(el) => {
+                rail.current[i] = el;
+              }}
               id={`notebook-tab-${id}`}
+              tabIndex={id === tab ? 0 : -1}
+              onKeyDown={(e) => {
+                onRailKey(e, i);
+              }}
               type="button"
               role="tab"
               className="notebook__tab"

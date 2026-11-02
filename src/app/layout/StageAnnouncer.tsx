@@ -6,11 +6,16 @@ import { useSimStore } from '@/app/sim/simStore';
 import { useWorkspaceStore } from '@/app/workspaceStore';
 import { stageAnnouncement } from './stageAnnouncement';
 
-/** Screen-reader-only live line of the stage; changes only with play / pause / end / replay. */
+/**
+ * Screen-reader-only live line of the stage; changes only with play / pause / step / end / replay.
+ * While running, the time is not part of the state, so this line never follows the clock.
+ */
 export function StageAnnouncer({ title }: { title: string }) {
   const t = useT();
   const locale = useSettingsStore((s) => s.locale);
   const playing = useWorkspaceStore((s) => s.playing);
+  // Stopped, the time is state: a step changes it, and the pause settles on its final value.
+  const stoppedTime = useWorkspaceStore((s) => (s.playing ? null : s.simTime));
   const { finished, replay, intervened } = useSimStore(
     useShallow((s) => ({
       finished: s.finished,
@@ -18,11 +23,20 @@ export function StageAnnouncer({ title }: { title: string }) {
       intervened: s.intervened,
     })),
   );
-  // The time is read once, when the state changes; this line never follows the clock.
-  const key = [title, playing, finished, replay, intervened, locale].join('|');
+  const key = [
+    title,
+    playing,
+    finished,
+    replay,
+    intervened,
+    locale,
+    replay ? '' : stoppedTime,
+  ].join('|');
   const [said, setSaid] = useState({ key: '', message: '' });
   if (said.key !== key) {
-    const time = useSimStore.getState().scrubTime ?? useWorkspaceStore.getState().simTime;
+    const time = replay
+      ? (useSimStore.getState().scrubTime ?? 0)
+      : (stoppedTime ?? useWorkspaceStore.getState().simTime);
     const status = { title, playing, finished, replay, intervened, time };
     setSaid({ key, message: stageAnnouncement(status, t, locale) });
   }

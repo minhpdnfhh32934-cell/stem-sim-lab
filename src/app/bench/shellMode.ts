@@ -8,11 +8,12 @@ export const DEV_SHELL_KEY = 'stemsim.dev.shell';
  */
 export function benchShellOn(
   dev: boolean = import.meta.env.DEV,
-  storage: Pick<Storage, 'getItem'> = globalThis.localStorage,
+  storage?: Pick<Storage, 'getItem'>,
 ): boolean {
   if (!dev) return false;
   try {
-    return storage.getItem(DEV_SHELL_KEY) === 'bench';
+    // Reading `localStorage` itself can throw (blocked site data), so it is read in here too.
+    return (storage ?? globalThis.localStorage).getItem(DEV_SHELL_KEY) === 'bench';
   } catch {
     return false;
   }

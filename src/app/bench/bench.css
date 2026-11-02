@@ -368,6 +368,17 @@
   font-size: var(--text-xs);
 }
 
+/* One filled button per screen (D0 on the bench edge): the notebook's own actions are tonal. */
+.notebook .btn--accent,
+.notebook .btn--accent:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.notebook .btn--accent:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
 /* The 18+ question has two equal answers: no filled button there. */
 :root[data-shell='bench'] .age-gate .btn--accent {
   background: transparent;
