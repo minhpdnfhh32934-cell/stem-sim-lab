@@ -12,15 +12,6 @@ export interface OdeEvent {
   direction?: -1 | 0 | 1;
   /** Stop the integration at this event. */
   terminal?: boolean;
-  /**
-   * State components `g` reads. Declaring them turns on the search inside each accepted step
-   * (dopri5): the step's interpolant of these components is sampled, at even points and at
-   * their turning points (where a narrow excursion peaks; exact for constant acceleration), so
-   * a crossing and the crossing back within one step are found. Leave it out for an event over
-   * a large state whose steps stay short against its oscillation (a vibrating string): only the
-   * step ends are compared then.
-   */
-  reads?: readonly number[];
 }
 
 export interface EventHit {

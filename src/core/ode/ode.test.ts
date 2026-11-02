@@ -119,34 +119,6 @@ describe('Dormand–Prince 5(4)', () => {
     expect(r.t).toBe(1);
     expect(r.y[0]).toBeCloseTo(Math.cos(omega), 8);
   });
-
-  it('finds an event crossed twice inside one long step (#112)', () => {
-    // s'' = a < 0 from s = 0, v = 16: a polynomial, so one step can span the whole flight and end
-    // back below s = 12 — the same sign at both ends of the step although s crossed 12 twice.
-    const a = -9.734;
-    const fall: OdeFn = (_t, y, d) => {
-      d[0] = y[1]!;
-      d[1] = a;
-    };
-    const up = (-16 + Math.sqrt(16 * 16 + 2 * a * 12)) / a;
-    const down = (-16 - Math.sqrt(16 * 16 + 2 * a * 12)) / a;
-    const stop = dopri5(fall, [0, 16], 0, 3, {
-      rtol: 1e-12,
-      atol: 1e-12,
-      events: [
-        { id: 'end', g: (_t, y) => y[0]! - 12, terminal: true, reads: [0] },
-        { id: 'rest', g: (_t, y) => y[1]!, terminal: true, reads: [1] },
-      ],
-    });
-    expect(stop.stoppedBy).toBe('end');
-    expect(stop.t).toBeCloseTo(up, 12);
-    const both = dopri5(fall, [0, 16], 0, 3, {
-      rtol: 1e-12,
-      atol: 1e-12,
-      events: [{ id: 'end', g: (_t, y) => y[0]! - 12, reads: [0] }],
-    });
-    expect(both.events.map((e) => e.t)).toEqual([expect.closeTo(up, 12), expect.closeTo(down, 12)]);
-  });
 });
 
 describe('velocity Verlet', () => {

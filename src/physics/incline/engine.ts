@@ -2,7 +2,7 @@ import type { EngineInput, SimulationEngine } from '@/core/sim/engine';
 import { limitHit } from '../common/coulomb1d';
 import { dragAccel } from '../common/drag';
 import type { Params } from '../types';
-import { accelFor, forces, type InclineInput } from './model';
+import { accelFor, forces, stopsOnEdge, type InclineInput } from './model';
 
 /** State: [s, v, a, friction, N, off (1 = left the surface)]. */
 export const IS = { s: 0, v: 1, a: 2, friction: 3, N: 4, off: 5 } as const;
@@ -85,8 +85,10 @@ export class InclineEngine implements SimulationEngine<Params> {
         if (ts < tau) tau = ts;
       }
       // Leaving the surface (s = 0 or s = L) inside this sub-interval — or right now, when
-      // the block sits on an edge and moves outward: stop exactly there.
-      const tb = limitHit(this.s, this.v, r.a, 0, this.p.length, tau);
+      // the block sits on an edge and moves outward: stop exactly there. A stop on an edge is a
+      // stop, as in the exact solution (stopsOnEdge).
+      const tie = stopsOnEdge(this.s, startV, r.a, this.p.length);
+      const tb = tie ? Infinity : limitHit(this.s, this.v, r.a, 0, this.p.length, tau);
       if (tb <= tau) {
         this.s = this.s + this.v * tb + 0.5 * r.a * tb * tb;
         this.s = Math.min(this.p.length, Math.max(0, this.s));
@@ -95,6 +97,7 @@ export class InclineEngine implements SimulationEngine<Params> {
         return;
       }
       this.s += this.v * tau + 0.5 * r.a * tau * tau;
+      if (tie && tau < h) this.s = Math.min(this.p.length, Math.max(0, this.s));
       this.v = tau < h ? 0 : this.v + r.a * tau;
       h -= tau;
     }

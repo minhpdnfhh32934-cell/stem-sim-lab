@@ -90,6 +90,37 @@ describe('incline model', () => {
 });
 
 describe('incline engine', () => {
+  it('a block that stops exactly at the top slides back, as the solution says (#112)', () => {
+    // a = −g·sin 30° = −9,68 m/s²: the stop is 8,8² / 19,36 = 4 m up, exactly at the top.
+    const params = {
+      theta: deg(30),
+      m: 36.76,
+      muS: 0.27,
+      muK: 0,
+      F: 0,
+      beta: 0,
+      s0: 44.9,
+      v0: 8.8,
+      length: 48.9,
+      g: 19.36,
+      tEnd: 3,
+    };
+    const segs = segments(inclineInput(params));
+    expect(segs[0]?.end).toBe('rest');
+    const e = new InclineEngine();
+    e.reset(params);
+    const r = new EngineRunner(e, 1000);
+    for (let i = 0; i < 150 && !e.finished(); i++) r.frame(1 / 60, 1);
+    const st = new Float64Array(6);
+    e.readState(st);
+    // Not off the surface: back down the slope, where the exact solution is.
+    expect(st[IS.off]).toBe(0);
+    expect(st[IS.v]).toBeLessThan(0);
+    const exact = stateAt(segs, e.time());
+    expect(st[IS.s]).toBeCloseTo(exact.s, 6);
+    expect(st[IS.v]).toBeCloseTo(exact.v, 6);
+  });
+
   it('matches the exact piecewise solution', () => {
     const params = {
       m: 1,
@@ -165,6 +196,73 @@ describe('incline cross-checks (#112)', () => {
     const time = scene.solve(params, 'vi').answers.find((a) => a.id === 'time_end');
     expect(time?.label.vi).toContain('dừng lại');
     expect(checkMisses(scene, params)).toEqual([]);
+  });
+
+  // Ties with a small |a| (forces almost cancel): one second-scale gap between "stops" and
+  // "leaves" if the formula, the engine and the check read the tie differently (review of PR
+  // #118, round 3). On the slider grid.
+  it.each([
+    ['newtonLaws a', newtonLaws, { m: 7.6, F: 180.5, mu: 1.09, v0: 3.3, length: 45, g: 21.9 }],
+    ['newtonLaws b', newtonLaws, { m: 34.2, F: 197.5, mu: 0.33, v0: 0.1, length: 34.2, g: 17.5 }],
+    ['newtonLaws c', newtonLaws, { m: 20.06, F: 68, mu: 1.5, v0: 0.1, length: 29.5, g: 2.26 }],
+    [
+      'inclinedPlane θ 30°, μK 0',
+      inclinedPlane,
+      { theta: deg(30), m: 12, muK: 0, F: 147, v0: 1, s0: 48.8, length: 98.8, g: 24.52 },
+    ],
+    [
+      'inclinedPlane θ 30°',
+      inclinedPlane,
+      { theta: deg(30), m: 53.75, F: 125.5, v0: 0.1, s0: 11.3, length: 54.3, g: 4.67 },
+    ],
+  ] as const)('%s: a tie with a small |a| is a stop that checks', (_name, scene, p) => {
+    const params = { ...scene.defaults, ...p };
+    const time = scene.solve(params, 'vi').answers.find((a) => a.id === 'time_end');
+    expect(time?.label.vi).toContain('dừng lại');
+    expect(checkMisses(scene, params)).toEqual([]);
+  });
+
+  /** Exact ties built so the forces almost cancel: stop distance = distance to the edge. */
+  function smallAccelTies() {
+    const sets: { scene: typeof newtonLaws; p: Record<string, number> }[] = [];
+    for (const g of [2.26, 9.81, 21.9])
+      for (const m of [0.2, 7.6, 34.2])
+        for (const aS of [1e-3, 1e-2, 0.1])
+          for (const v0 of [0.1, 1, 3.3]) {
+            const d = (v0 * v0) / (2 * aS);
+            if (d < 0.5 || d > 300) continue;
+            for (const mu of [0.33, 1.09])
+              // Level track, moving forward: F = μmg − m·aS gives a = −aS.
+              sets.push({
+                scene: newtonLaws,
+                p: { g, m, mu, v0, F: mu * m * g - m * aS, length: d },
+              });
+            const up = { theta: deg(30), muS: 0, muK: 0, g, m };
+            // Up a 30° slope without friction: F = mg/2 − m·aS, stopping exactly at the top...
+            sets.push({
+              scene: inclinedPlane,
+              p: { ...up, F: (m * g) / 2 - m * aS, v0, s0: 5, length: 5 + d },
+            });
+            // ...or sliding down with F = mg/2 + m·aS, stopping exactly at the foot.
+            sets.push({
+              scene: inclinedPlane,
+              p: { ...up, F: (m * g) / 2 + m * aS, v0: -v0, s0: d, length: d + 5 },
+            });
+          }
+    return sets;
+  }
+
+  it('every exact tie with a small |a| (forces almost cancel) is a stop that checks', () => {
+    const sets = smallAccelTies();
+    const misses = sets
+      .map(({ scene, p }) => {
+        const params = { ...scene.defaults, ...p };
+        const time = scene.solve(params, 'vi').answers.find((a) => a.id === 'time_end');
+        return { p, miss: checkMisses(scene, params), stop: time?.label.vi.includes('dừng lại') };
+      })
+      .filter((r) => r.miss.length > 0 || !r.stop);
+    expect(sets.length).toBeGreaterThan(150);
+    expect(misses).toEqual([]);
   });
 
   it('every exact tie on a level track (stop distance = track length) is a stop that checks', () => {

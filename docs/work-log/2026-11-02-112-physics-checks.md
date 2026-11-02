@@ -70,3 +70,17 @@
   cản θ′ không đổi, một bước dài vượt nhiều lần cos θ = 0 (test "numeric period agrees" hỏng nếu không có).
 - 🟡3: 1 − γ/ω₀ < 10⁻⁷ thì không kiểm chu kì, Thẻ ghi lí do (PHC-1); quét toàn lưới thanh trượt: 0 ca.
 - `npm test`: 4499 đạt, 1 bỏ qua; lint, typecheck đạt.
+
+## Duyệt PR #118 vòng 3 (🔴1 + 4 🟡)
+
+- Một quy tắc chạm mép chung `stopsOnEdge` (`incline/model.ts`): dải 1e-10·(|s| + v²/|a| + L), tỉ lệ với cỡ các số
+  hạng cộng ra vị trí dừng. Dùng ở công thức (`segments`, vị trí dừng trên mép đặt đúng bằng mép), engine
+  (`InclineEngine`, không coi là rời mép) và phép kiểm.
+- `numericEnd` hai chặng: DOPRI5 tìm điểm dừng (v tuyến tính, cắt 0 một lần); dừng trong mặt hoặc trên mép là
+  đáp số; dừng ngoài mép thì chặng 2 tìm mép nhưng chỉ tới lúc dừng (chuyển động đơn điệu, không có cắt kép).
+  Gốc lỗi ban đầu: phép kiểm tích phân quá lúc dừng với gia tốc không đổi. Vì thế bỏ phần dò bên trong bước
+  của dopri5 và `reads` (không còn ai dùng; 🟡4, 🟡5); giữ phần chặn tràn số (có test).
+- Test: 5 bộ số của người duyệt (nhãn "dừng lại" + khớp), quét 150+ ca hoà |a| nhỏ (F ≈ μmg; θ 30° μK 0,
+  lên đỉnh và xuống chân), engine dừng đúng đỉnh rồi trượt ngược. Trên mã trước: 5 test hỏng.
+- Thử thêm ngoài bộ test: 26 638 ca hoà ngẫu nhiên: 0 lệch, 0 nhãn sai; engine 284 ca hoà: 0 sai.
+- `npm test`: 4505 đạt, 1 bỏ qua; lint, typecheck đạt.
