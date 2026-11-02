@@ -71,6 +71,33 @@ export interface Segment {
 }
 
 /**
+ * Width of the band, relative to the size of the terms summed to get a stop position
+ * (|s| + v²/|a| + L), within which a stop counts as a stop on an edge (#112). A tie (the stop
+ * exactly on an edge) is decided by rounding otherwise — each side (formula, engine, check)
+ * rounding its own way — and with a small |a| the two readings ("stops", "leaves") differ by
+ * whole seconds. 1e-10 is far above that rounding (the engine's thousands of steps included) and
+ * far below anything on a slider.
+ */
+export const EDGE_TIE = 1e-10;
+
+/**
+ * The block, at s with speed v and constant acceleration a against v, stops on an edge of the
+ * surface [0, length] to within EDGE_TIE: it stops there; it does not leave. One rule for the
+ * exact solution, the engine and the cross-check. `stop` defaults to s − v²/(2a).
+ */
+export function stopsOnEdge(
+  s: number,
+  v: number,
+  a: number,
+  length: number,
+  stop = s - (v * v) / (2 * a),
+): boolean {
+  if (v === 0 || a === 0 || Math.sign(a) === Math.sign(v)) return false;
+  const band = EDGE_TIE * (Math.abs(s) + (v * v) / Math.abs(a) + length);
+  return Math.abs(stop) <= band || Math.abs(stop - length) <= band;
+}
+
+/**
  * Exact piecewise motion: constant acceleration between events (stop at v = 0,
  * leaving the surface at s = 0 or s = length). At each stop the static condition
  * is re-checked, so stick–slip is resolved exactly.
@@ -105,14 +132,17 @@ export function segments(p: InclineInput, tMax = 1e4): Segment[] {
       const roots = [(-B - r) / (2 * A), (-B + r) / (2 * A)].filter((x) => x > 1e-12);
       return roots.length ? Math.min(...roots) : Infinity;
     };
+    // A stop on an edge is a stop (stopsOnEdge): the edge equation's double root is then
+    // ignored, which rounding can split into two close roots just before the stop.
+    const tie = stopsOnEdge(s, v, a, p.length);
     // On an edge and moving outward: the block leaves the surface at once (τ = 0).
     const dir = heading(v, a);
-    const tb = dir < 0 && s <= 0 ? 0 : hit(0);
+    const tb = tie ? Infinity : dir < 0 && s <= 0 ? 0 : hit(0);
     if (tb < tEnd) {
       tEnd = tb;
       end = 'bottom';
     }
-    const tt = dir > 0 && s >= p.length ? 0 : hit(p.length);
+    const tt = tie ? Infinity : dir > 0 && s >= p.length ? 0 : hit(p.length);
     if (tt < tEnd) {
       tEnd = tt;
       end = 'top';
@@ -120,6 +150,8 @@ export function segments(p: InclineInput, tMax = 1e4): Segment[] {
     out.push({ t0: t, s0: s, v0: v, a, regime, friction, t1: t + tEnd, end });
     if (end !== 'rest') break;
     s = s + v * tEnd + 0.5 * a * tEnd * tEnd;
+    // A stop on an edge sits on it: rounded a hair beyond, the next segment would "cross" it.
+    if (tie) s = Math.min(p.length, Math.max(0, s));
     t += tEnd;
     v = 0;
   }

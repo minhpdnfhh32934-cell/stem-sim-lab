@@ -3,7 +3,8 @@ import { dopri5 } from '@/core/ode/dopri5';
 import { EngineRunner } from '@/core/sim/runner';
 import { SP, SpringEngine, springInput, staticExtension } from './engine';
 import { amplitudePhase, period, propagate, regime, type Oscillator } from './model';
-import { hookeSpring, numericPeriod, springPendulum } from './scenes';
+import { checkMisses, sliderSweep } from '../testing';
+import { hookeSpring, numericPeriod, periodUncheckable, springPendulum } from './scenes';
 
 function reference(o: Oscillator, x0: number, v0: number, t: number): number {
   const r = dopri5(
@@ -18,6 +19,78 @@ function reference(o: Oscillator, x0: number, v0: number, t: number): number {
   );
   return r.y[0] ?? 0;
 }
+
+describe('spring cross-checks (#112)', () => {
+  // Near critical damping the second zero crossing is ~e⁻³⁵ smaller than the first: below the
+  // check's old absolute tolerance, so DOPRI5 reported 1,841 s / 2,892 s for 2,227 s / 4,514 s.
+  it.each([
+    ['springPendulum: near critical damping', springPendulum, { b: 9.9 }],
+    ['hookeSpring: near critical damping', hookeSpring, { vertical: 0, x0: -0.26, b: 6.3 }],
+    ['springPendulum: b 9,9986', springPendulum, { b: 9.9986 }],
+    // Starts at equilibrium: the start is not a crossing; the crossings are T/2 and T.
+    ['springPendulum: starts at equilibrium', springPendulum, { x0: 0, v0: 1, b: 9.9 }],
+  ] as const)('%s', (_name, scene, p) => {
+    const params = { ...scene.defaults, ...p };
+    expect(scene.solve(params, 'vi').answers.some((a) => a.check !== undefined)).toBe(true);
+    expect(checkMisses(scene, params)).toEqual([]);
+  });
+
+  it.each([
+    ['springPendulum', springPendulum],
+    ['hookeSpring', hookeSpring],
+  ] as const)('%s: every check agrees over a slider sweep', (_name, scene) => {
+    const sets = sliderSweep(scene, 400, 112);
+    const misses = sets
+      .map((p) => ({ p, miss: checkMisses(scene, p) }))
+      .filter((r) => r.miss.length > 0);
+    expect(misses).toEqual([]);
+    // The sweep really checks: most sets carry a check (a check that went missing would pass).
+    const checked = sets.filter((p) =>
+      scene.solve(p, 'vi').answers.some((a) => a.check !== undefined),
+    ).length;
+    expect(checked).toBeGreaterThan(sets.length / 4);
+  });
+
+  it.each([
+    // γ = 9,7039 s⁻¹, ω₀ = 9,7044 rad/s: T_d ≈ 64,8 s, x shrinks by ~1e-273 over one period.
+    ['k 97, m 1,03, b 19,99', { k: 97, m: 1.03, b: 19.99 }],
+    // γ = 1,732 s⁻¹, ω₀ = 1,73205 rad/s: T_d ≈ 474 s, x shrinks by ~1e-356 (below double precision).
+    ['k 15, m 5, b 17,32', { k: 15, m: 5, b: 17.32 }],
+  ] as const)(
+    'a hair from critical damping on the slider grid (%s): checked, and it agrees',
+    (_n, p) => {
+      const params = { ...springPendulum.defaults, ...p };
+      const period = springPendulum.solve(params, 'vi').answers.find((a) => a.id === 'period');
+      expect(period?.check).toBeDefined();
+      expect(checkMisses(springPendulum, params)).toEqual([]);
+    },
+  );
+
+  it('within 1e-7 of critical damping (typed, off the slider grid): no check, and the card says why', () => {
+    // m 0,25, k 100: critical b = 10. 1 − γ/ω₀ = 5e-8 below the margin, 2e-7 above it.
+    const near = { ...springPendulum.defaults, b: 10 * (1 - 5e-8) };
+    expect(periodUncheckable(springInput(near))).toBe(true);
+    expect(numericPeriod(springInput(near))).toBeNull();
+    const period = springPendulum.solve(near, 'vi').answers.find((a) => a.id === 'period');
+    expect(period).toBeDefined();
+    expect(period?.check).toBeUndefined();
+    expect(springPendulum.scienceCard(near).confidenceNote?.vi).toContain('không kiểm chứng');
+    const above = { ...springPendulum.defaults, b: 10 * (1 - 2e-7) };
+    expect(periodUncheckable(springInput(above))).toBe(false);
+    expect(checkMisses(springPendulum, above)).toEqual([]);
+    expect(springPendulum.scienceCard(above).confidenceNote?.vi).toContain(
+      'chu kì kiểm chứng bằng Dormand–Prince',
+    );
+  });
+
+  it('the check stays quick on the UI thread near critical damping (under 50 ms)', () => {
+    for (const b of [9.99, 9.999, 9.9999]) {
+      const t0 = performance.now();
+      springPendulum.solve({ ...springPendulum.defaults, b }, 'vi');
+      expect(performance.now() - t0, `b ${String(b)}`).toBeLessThan(50);
+    }
+  });
+});
 
 describe('oscillator exact propagator', () => {
   it.each([

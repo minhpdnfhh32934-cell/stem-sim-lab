@@ -67,6 +67,15 @@ export interface Dopri5Result {
   stats: IntegrationStats;
 }
 
+/**
+ * Squared error ratios are capped here: with a tiny absolute tolerance (a solution that decays
+ * by many orders of magnitude) a ratio can exceed 1e154 and its square overflow to Infinity,
+ * which made the first step 0 and stalled the run at t0 (#112). Any capped ratio still means
+ * "far too large", so step control is unchanged.
+ */
+const SQ_CAP = 1e300;
+const sq = (x: number) => Math.min(x * x, SQ_CAP);
+
 /** Single-step workspace; exposed for event localisation. */
 class Stepper {
   readonly k1: Float64Array;
@@ -141,7 +150,7 @@ class Stepper {
           E6 * g(k6, i) +
           E7 * g(k7, i));
       const sc = atol + rtol * Math.max(Math.abs(g(y, i)), Math.abs(g(out, i)));
-      sum += (err / sc) ** 2;
+      sum += sq(err / sc);
     }
     return Math.sqrt(sum / n);
   }
@@ -294,8 +303,8 @@ function initialStep(
   let d1 = 0;
   for (let i = 0; i < n; i++) {
     const sc = atol + rtol * Math.abs(y[i] ?? 0);
-    d0 += ((y[i] ?? 0) / sc) ** 2;
-    d1 += ((st.k1[i] ?? 0) / sc) ** 2;
+    d0 += sq((y[i] ?? 0) / sc);
+    d1 += sq((st.k1[i] ?? 0) / sc);
   }
   d0 = Math.sqrt(d0 / n);
   d1 = Math.sqrt(d1 / n);
@@ -309,7 +318,7 @@ function initialStep(
   let d2 = 0;
   for (let i = 0; i < n; i++) {
     const sc = atol + rtol * Math.abs(y[i] ?? 0);
-    d2 += (((f1[i] ?? 0) - (st.k1[i] ?? 0)) / sc) ** 2;
+    d2 += sq(((f1[i] ?? 0) - (st.k1[i] ?? 0)) / sc);
   }
   d2 = Math.sqrt(d2 / n) / h0;
   const h1 =

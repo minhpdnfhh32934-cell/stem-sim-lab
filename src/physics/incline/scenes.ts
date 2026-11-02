@@ -20,7 +20,7 @@ import type {
   WorldBounds,
 } from '../types';
 import { IS, inclineInput } from './engine';
-import { accelFor, forces, segments, type InclineInput } from './model';
+import { accelFor, forces, segments, stopsOnEdge, type InclineInput } from './model';
 
 const size = (p: InclineInput) => ({ w: 0.08 * p.length, h: 0.05 * p.length });
 
@@ -160,30 +160,45 @@ const graphs: GraphDef[] = [
   },
 ];
 
-/** Dormand–Prince cross-check of the first moving segment's end (time and speed). */
+/**
+ * Dormand–Prince cross-check of the first moving segment's end (time and speed), in two runs.
+ * First where the block would stop (v is linear in t: one crossing of v = 0). A stop inside the
+ * surface, or on an edge (stopsOnEdge, the rule the exact solution uses), is the answer. A stop
+ * beyond an edge means the edge comes first: the second run looks for it only up to the stop,
+ * where the motion is monotonic, so each edge is crossed at most once and a step's two ends
+ * show it. (Running on past the stop — where this constant acceleration would turn the block
+ * back — let one long step cross the edge and come back unseen: #112.)
+ */
 export function numericEnd(q: InclineInput): { t: number; v: number } | null {
   const segs = segments(q);
   const first = segs.find((sg) => sg.regime !== 'static');
   if (!first || !Number.isFinite(first.t1)) return null;
-  const r = dopri5(
-    (_t, y, d) => {
-      d[0] = y[1] ?? 0;
-      d[1] = first.a;
-    },
-    [first.s0, first.v0],
-    first.t0,
-    first.t1 + 1,
-    {
-      rtol: 1e-12,
-      atol: 1e-12,
-      events: [
-        { id: 'bottom', g: (_t, y) => y[0] ?? 0, terminal: true },
-        { id: 'top', g: (_t, y) => (y[0] ?? 0) - q.length, terminal: true },
-        { id: 'rest', g: (_t, y) => y[1] ?? 0, terminal: true },
-      ],
-    },
-  );
-  return { t: r.t, v: r.y[1] ?? 0 };
+  const f = (_t: number, y: Float64Array, d: Float64Array) => {
+    d[0] = y[1] ?? 0;
+    d[1] = first.a;
+  };
+  const y0 = [first.s0, first.v0];
+  const opts = { rtol: 1e-12, atol: 1e-12 };
+  let end = first.t1 + 1;
+  const r1 = dopri5(f, y0, first.t0, end, {
+    ...opts,
+    events: [{ id: 'rest', g: (_t, y) => y[1] ?? 0, terminal: true }],
+  });
+  if (r1.stoppedBy === 'rest') {
+    const stop = r1.y[0] ?? 0;
+    const inside = stop >= 0 && stop <= q.length;
+    if (inside || stopsOnEdge(first.s0, first.v0, first.a, q.length, stop))
+      return { t: r1.t, v: 0 };
+    end = r1.t;
+  }
+  const r2 = dopri5(f, y0, first.t0, end, {
+    ...opts,
+    events: [
+      { id: 'bottom', g: (_t, y) => y[0] ?? 0, terminal: true },
+      { id: 'top', g: (_t, y) => (y[0] ?? 0) - q.length, terminal: true },
+    ],
+  });
+  return r2.stoppedBy ? { t: r2.t, v: r2.y[1] ?? 0 } : null;
 }
 
 function validate(p: Params): LocalizedText[] {

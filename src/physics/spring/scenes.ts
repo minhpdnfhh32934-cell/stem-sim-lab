@@ -204,22 +204,47 @@ function graphs(): GraphDef[] {
 }
 
 /**
+ * Damping closer to critical than this (1 − γ/ω₀): the period depends on √(ω₀² − γ²), where
+ * the two terms cancel so far that double precision keeps fewer digits than the check needs
+ * (each side loses ~1e-16 / (1 − γ/ω₀)); the period is then not cross-checked.
+ */
+export const CRITICAL_MARGIN = 1e-7;
+
+/** The period cannot be cross-checked: damping within CRITICAL_MARGIN of critical. */
+export function periodUncheckable(q: SpringInput): boolean {
+  return oscillationPeriod(q) !== null && 1 - gammaOf(q) / omega0(q) < CRITICAL_MARGIN;
+}
+
+/**
  * Period measured independently with DOPRI5: twice the time between the first two zero
- * crossings (they are exactly half a period apart, with or without damping). Null when
- * there is no oscillation (critically or overdamped) or no motion.
+ * crossings of x (exactly half a period apart, with or without damping). The integration runs
+ * on the amplitude–phase form of m x″ + b x′ + k x = 0 — the exact change of variables
+ * x = r·cos θ, x′ = −ω₀·r·sin θ gives θ′ = ω₀ − γ·sin 2θ, free of r — and x = 0 where
+ * cos θ = 0. Near critical damping x itself shrinks by e⁻³⁵ between two crossings (#112),
+ * beyond what a tolerance on x can follow; the phase does not shrink. Nothing here uses the
+ * closed form's ω_d; T only bounds the run (both crossings come within one period). Steps are
+ * capped so θ moves at most π/2 (θ′ ≤ ω₀ + γ): two zeros of cos θ are π apart, so none hides
+ * inside a step (without damping θ′ is constant, the error estimate 0 and one step would span
+ * several zeros). Null when there is no oscillation, no motion, or `periodUncheckable`.
  */
 export function numericPeriod(q: SpringInput): number | null {
   const T = oscillationPeriod(q);
-  if (T === null || (q.x0 === 0 && q.v0 === 0)) return null;
+  if (T === null || (q.x0 === 0 && q.v0 === 0) || periodUncheckable(q)) return null;
+  const w0 = omega0(q);
+  const g = gammaOf(q);
   const r = dopri5(
     (_t, y, d) => {
-      d[0] = y[1] ?? 0;
-      d[1] = -(q.k / q.m) * (y[0] ?? 0) - (q.b / q.m) * (y[1] ?? 0);
+      d[0] = w0 - g * Math.sin(2 * (y[0] ?? 0));
     },
-    [q.x0, q.v0],
+    [Math.atan2(-q.v0 / w0, q.x0)],
     0,
-    2 * T,
-    { rtol: 1e-12, atol: 1e-14, events: [{ id: 'zero', g: (_t, y) => y[0] ?? 0 }] },
+    1.05 * T,
+    {
+      rtol: 1e-12,
+      atol: 1e-14,
+      hMax: Math.PI / 2 / (w0 + g),
+      events: [{ id: 'zero', g: (_t, y) => Math.cos(y[0] ?? 0) }],
+    },
   );
   const [a, b] = r.events;
   return a && b ? 2 * (b.t - a.t) : null;
@@ -438,10 +463,15 @@ function card(hooke: boolean) {
         'Small deformations; the spring is never fully compressed.',
       ),
       confidence: 'exact',
-      confidenceNote: L(
-        'Engine dùng nghiệm giải tích chính xác của phương trình dao động để cập nhật từng bước (không có sai số cắt cụt); chu kì kiểm chứng bằng Dormand–Prince.',
-        'The engine steps with the exact analytic solution (no truncation error); the period is cross-checked with Dormand–Prince.',
-      ),
+      confidenceNote: periodUncheckable(q)
+        ? L(
+            'Engine dùng nghiệm giải tích chính xác của phương trình dao động để cập nhật từng bước (không có sai số cắt cụt). Lực cản cách mức tắt dần tới hạn chưa tới một phần mười triệu (1 − γ/ω₀ < 10⁻⁷): chu kì nhạy tới mức số thực của máy tính không đủ chữ số để kiểm chứng độc lập, nên chu kì không kiểm chứng bằng Dormand–Prince.',
+            'The engine steps with the exact analytic solution (no truncation error). The damping is within one part in ten million of critical (1 − γ/ω₀ < 10⁻⁷): the period is so sensitive that the computer’s numbers keep too few digits for an independent check, so the period is not cross-checked with Dormand–Prince.',
+          )
+        : L(
+            'Engine dùng nghiệm giải tích chính xác của phương trình dao động để cập nhật từng bước (không có sai số cắt cụt); chu kì kiểm chứng bằng Dormand–Prince.',
+            'The engine steps with the exact analytic solution (no truncation error); the period is cross-checked with Dormand–Prince.',
+          ),
       method: L(
         'Ánh xạ chuyển trạng thái chính xác, Δt = 1/240 s.',
         'Exact state-transition map, Δt = 1/240 s.',
