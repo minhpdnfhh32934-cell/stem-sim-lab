@@ -15,16 +15,22 @@ import {
 
 const ColourSchema = z.object({ name: LocalizedTextSchema, css: z.string().min(1) });
 
-const IndicatorSchema = z.object({
-  id: z.string().min(1),
-  name: LocalizedTextSchema,
-  range: z.tuple([z.number(), z.number()]).refine(([lo, hi]) => lo < hi),
-  acid: ColourSchema,
-  base: ColourSchema,
-  source: SourceSchema,
-  display_source: SourceSchema,
-  review_status: ReviewStatusSchema,
-});
+const IndicatorSchema = z
+  .object({
+    id: z.string().min(1),
+    name: LocalizedTextSchema,
+    /** colours[i] turns into colours[i + 1] over ranges[i] (ascending, not overlapping). */
+    colours: z.array(ColourSchema).min(2),
+    ranges: z.array(z.tuple([z.number(), z.number()])).min(1),
+    source: SourceSchema,
+    display_source: SourceSchema,
+    review_status: ReviewStatusSchema,
+  })
+  .refine(
+    (i) =>
+      i.colours.length === i.ranges.length + 1 &&
+      i.ranges.flat().every((x, k, all) => k === 0 || x > (all[k - 1] ?? x)),
+  );
 export type Indicator = z.infer<typeof IndicatorSchema>;
 
 const WaterSchema = z.object({
@@ -102,15 +108,20 @@ export function curve(t: Titration, vMax: number, n = 400): { v: number[]; pH: n
   return { v, pH: v.map((x) => pH(t, x)) };
 }
 
-export type IndicatorPhase = 'acid' | 'transition' | 'base';
-
 /**
- * Where a pH lies against an indicator's range, and the share of the base colour for the
- * illustrative mix (0 below the range, 1 above, linear inside it).
+ * The indicator's colour at a pH: `from` and `to` index its colours. Outside every range they are
+ * equal; inside range i, from = i, to = i + 1 and `mix` is the share of `to` for the illustrative
+ * blend (linear in pH across the range).
  */
-export function indicatorAt(ind: Indicator, value: number): { phase: IndicatorPhase; mix: number } {
-  const [lo, hi] = ind.range;
-  if (value < lo) return { phase: 'acid', mix: 0 };
-  if (value > hi) return { phase: 'base', mix: 1 };
-  return { phase: 'transition', mix: (value - lo) / (hi - lo) };
+export function indicatorAt(
+  ind: Indicator,
+  value: number,
+): { from: number; to: number; mix: number } {
+  let k = 0;
+  for (const [lo, hi] of ind.ranges) {
+    if (value < lo) break;
+    if (value <= hi) return { from: k, to: k + 1, mix: (value - lo) / (hi - lo) };
+    k++;
+  }
+  return { from: k, to: k, mix: 0 };
 }

@@ -4,7 +4,8 @@ import { CSRC, L } from '../common';
 import { PKW, PKW_UNCERTAINTY, TITRATION_SOURCES } from './titration';
 
 export function titrationCard(locale: 'vi' | 'en'): ScienceCardData {
-  const pkw = formatNumber(locale, PKW, { maximumFractionDigits: 2 });
+  // Four decimals: rounded to two it would read "14", the textbook value it differs from.
+  const pkw = formatNumber(locale, PKW, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
   const err = formatNumber(locale, PKW_UNCERTAINTY);
   // The textbook writes Kw = 1,0·10⁻¹⁴, i.e. pKw = 14 (DATA_REVIEW TIT-4).
   const gap = formatNumber(locale, Math.abs(14 - PKW), { maximumSignificantDigits: 1 });

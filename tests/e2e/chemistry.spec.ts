@@ -102,10 +102,10 @@ test('titration: dragging the NaOH volume changes the pH and the indicator, fits
   const readout = page.locator('.tit-readout');
   await expect(readout.getByText('1,00', { exact: true })).toBeVisible({ timeout: 20_000 });
   await expect(readout.getByText(/không màu/)).toBeVisible();
-  await page.getByRole('slider', { name: /Thể tích NaOH/ }).fill('15');
+  await page.getByRole('slider', { name: /Thể tích NaOH/ }).fill('12');
   await expect(readout.getByText(/hồng tím/)).toBeVisible();
   await expect(readout.getByText(/NaOH dư/)).toBeVisible();
-  await expect(page.getByText('Màu minh họa')).toBeVisible();
+  await expect(page.getByText('Hình và màu minh họa, không theo tỉ lệ')).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

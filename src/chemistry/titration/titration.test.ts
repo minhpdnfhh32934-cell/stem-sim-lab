@@ -85,26 +85,36 @@ describe('water and indicator data', () => {
     expect(KW).toBeCloseTo(10 ** -PKW, 25);
   });
 
-  it('every indicator is pending, cited, and changes colour exactly at its tabulated range', () => {
+  it('every indicator is pending, cited, and changes colour exactly at its tabulated ranges', () => {
     expect(INDICATORS.length).toBeGreaterThanOrEqual(2);
     for (const ind of INDICATORS) {
       expect(ind.review_status).toBe('pending');
       expect(ind.source.citation.length).toBeGreaterThan(0);
-      const [lo, hi] = ind.range;
-      expect(indicatorAt(ind, lo - 1e-9)).toEqual({ phase: 'acid', mix: 0 });
-      expect(indicatorAt(ind, lo).phase).toBe('transition');
-      const mid = indicatorAt(ind, (lo + hi) / 2);
-      expect(mid.phase).toBe('transition');
-      expect(mid.mix).toBeCloseTo(0.5, 12);
-      expect(indicatorAt(ind, hi).phase).toBe('transition');
-      expect(indicatorAt(ind, hi + 1e-9)).toEqual({ phase: 'base', mix: 1 });
+      expect(ind.colours.length).toBe(ind.ranges.length + 1);
+      ind.ranges.forEach(([lo, hi], i) => {
+        expect(indicatorAt(ind, lo - 1e-9)).toEqual({ from: i, to: i, mix: 0 });
+        expect(indicatorAt(ind, lo)).toEqual({ from: i, to: i + 1, mix: 0 });
+        const mid = indicatorAt(ind, (lo + hi) / 2);
+        expect([mid.from, mid.to]).toEqual([i, i + 1]);
+        expect(mid.mix).toBeCloseTo(0.5, 12);
+        expect(indicatorAt(ind, hi)).toEqual({ from: i, to: i + 1, mix: 1 });
+        expect(indicatorAt(ind, hi + 1e-9)).toEqual({ from: i + 1, to: i + 1, mix: 0 });
+      });
     }
   });
 
-  it('phenolphthalein stays colourless at the equivalence pH and turns colour in excess base', () => {
+  it('phenolphthalein: colourless at equivalence, purple-pink in excess base, fading again above pH 12', () => {
     const ind = indicatorOf('phenolphthalein');
+    const name = (i: number) => ind.colours[i]?.name.en;
     const t = { ca: 0.1, va: 10, cb: 0.1 };
-    expect(indicatorAt(ind, pH(t, 10)).phase).toBe('acid');
-    expect(indicatorAt(ind, pH(t, 11)).phase).toBe('base');
+    expect(name(indicatorAt(ind, pH(t, 10)).to)).toBe('colourless');
+    expect(name(indicatorAt(ind, pH(t, 11)).to)).toBe('purple-pink');
+    // pH 12,52: inside the second transition (source table: 12,0–13,0, purple-pink → colourless).
+    const fading = indicatorAt(ind, pH(t, 20));
+    expect([name(fading.from), name(fading.to)]).toEqual(['purple-pink', 'colourless']);
+    // 1 mol/L at twice V_eq: pH 13,52, colourless again.
+    const strong = { ca: 1, va: 10, cb: 1 };
+    const end = indicatorAt(ind, pH(strong, 20));
+    expect([name(end.from), name(end.to)]).toEqual(['colourless', 'colourless']);
   });
 });

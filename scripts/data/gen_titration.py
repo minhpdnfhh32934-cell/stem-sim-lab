@@ -7,7 +7,7 @@ formulation (Wagner & Pruss 2002), as Table 3 uses. IAPWS Kw is on the molality 
 the app writes [H+][OH-] in mol/L, so pKw is moved to that scale with c = m·rho (dilute solution):
 pKw(mol/L) = pKw(mol/kg) − 2·lg(rho / (kg/L)).
 
-Indicators: transition range and the colour names on each side, from the table "Common laboratory
+Indicators: transition ranges and the colour names on each side, from the table "Common laboratory
 indicators" of the English Wikipedia article "pH indicator" (revision 1354116288). Sources differ by
 0.1–0.3 pH at the ends (docs/DATA_REVIEW.md TIT-2). The screen colour of each named colour is a CSS
 named colour (W3C CSS Color 4) chosen by that name (orchid for purple-pink, transparent for
@@ -63,12 +63,18 @@ RHO_25C = 0.99704702  # g/cm^3, IAPWS-95 at 298.15 K, 0.1 MPa
 TABLE_3_25C = 13.99  # Table 3, 25 °C, 0.1 MPa (two decimals)
 UNCERTAINTY_PK = 0.05  # IAPWS R11-24 §5: liquid below 200 °C and 200 MPa
 
-# (id, vi name, en name, low, high, acid colour (vi, en, css), base colour (vi, en, css)).
+RED = ("đỏ", "red", "red")
+YELLOW = ("vàng", "yellow", "yellow")
+BLUE = ("xanh lam", "blue", "blue")
+COLOURLESS = ("không màu", "colourless", "transparent")
+PURPLE_PINK = ("hồng tím", "purple-pink", "orchid")
+# (id, vi name, en name, colours, ranges): colours[i] turns into colours[i + 1] over ranges[i].
+# Phenolphthalein has the table's two rows (first and second transition).
 INDICATORS = [
-    ("methylOrange", "Methyl da cam", "Methyl orange", 3.1, 4.4, ("đỏ", "red", "red"), ("vàng", "yellow", "yellow")),
-    ("methylRed", "Methyl đỏ", "Methyl red", 4.4, 6.2, ("đỏ", "red", "red"), ("vàng", "yellow", "yellow")),
-    ("bromothymolBlue", "Bromothymol xanh", "Bromothymol blue", 6.0, 7.6, ("vàng", "yellow", "yellow"), ("xanh lam", "blue", "blue")),
-    ("phenolphthalein", "Phenolphthalein", "Phenolphthalein", 8.3, 10.0, ("không màu", "colourless", "transparent"), ("hồng tím", "purple-pink", "orchid")),
+    ("methylOrange", "Methyl da cam", "Methyl orange", [RED, YELLOW], [(3.1, 4.4)]),
+    ("methylRed", "Methyl đỏ", "Methyl red", [RED, YELLOW], [(4.4, 6.2)]),
+    ("bromothymolBlue", "Bromothymol xanh", "Bromothymol blue", [YELLOW, BLUE], [(6.0, 7.6)]),
+    ("phenolphthalein", "Phenolphthalein", "Phenolphthalein", [COLOURLESS, PURPLE_PINK, COLOURLESS], [(8.3, 10.0), (12.0, 13.0)]),
 ]
 
 
@@ -106,14 +112,14 @@ def main() -> None:
         "review_status": "pending",
     }
     items = []
-    for ident, vi, en, low, high, acid, base in INDICATORS:
-        assert low < high
+    for ident, vi, en, colours, ranges in INDICATORS:
+        ends = [x for r in ranges for x in r]
+        assert len(colours) == len(ranges) + 1 and ends == sorted(set(ends)), ident
         items.append({
             "id": ident,
             "name": {"vi": vi, "en": en},
-            "range": [low, high],
-            "acid": colour(*acid),
-            "base": colour(*base),
+            "colours": [colour(*c) for c in colours],
+            "ranges": [list(r) for r in ranges],
             "source": INDICATOR_SOURCE,
             "display_source": CSS_COLOURS,
             "review_status": "pending",

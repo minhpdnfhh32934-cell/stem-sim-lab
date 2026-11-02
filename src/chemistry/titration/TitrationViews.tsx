@@ -8,7 +8,7 @@ import { XYChart } from '@/ui/charts/XYChart';
 import { NumberField } from '@/ui/NumberField';
 import { L, usePublishCard } from '../common';
 import { titrationCard } from './card';
-import { LIMITS, maxVolume, setTitration, useTitrationStore } from './store';
+import { LIMITS, addedVolume, maxVolume, setTitration, useTitrationStore } from './store';
 import {
   INDICATORS,
   curve,
@@ -22,38 +22,52 @@ import '../chem.css';
 
 const DEFAULT_INDICATOR = 'phenolphthalein';
 
-/** Screen colour of the solution: the indicator's two named colours blended by `mix`. */
-function solutionColour(ind: Indicator, mix: number): string {
-  return `color-mix(in oklab, ${ind.base.css} ${String(Math.round(mix * 100))}%, ${ind.acid.css})`;
+type Colour = Indicator['colours'][number];
+const colourAt = (ind: Indicator, i: number) => ind.colours[i] as Colour;
+const rangeAt = (ind: Indicator, i: number) => ind.ranges[i] as [number, number];
+
+/** Screen colour of the solution: two of the indicator's named colours blended by `mix`. */
+function solutionColour(ind: Indicator, value: number): string {
+  const { from, to, mix } = indicatorAt(ind, value);
+  const pct = String(Math.round(mix * 100));
+  return `color-mix(in oklab, ${colourAt(ind, to).css} ${pct}%, ${colourAt(ind, from).css})`;
 }
 
 function useFormat() {
   const locale = useSettingsStore((s) => s.locale);
   return {
     locale,
+    // 'negative': a pH of −4·10⁻¹⁵ (1 mol/L HCl) prints "0,00", not "-0,00".
     fixed: (v: number, d = 2) =>
-      formatNumber(locale, v, { minimumFractionDigits: d, maximumFractionDigits: d }),
+      formatNumber(locale, v, {
+        minimumFractionDigits: d,
+        maximumFractionDigits: d,
+        signDisplay: 'negative',
+      }),
     sig: (v: number) => formatNumber(locale, v, { maximumSignificantDigits: 4 }),
   };
 }
 
-function phaseText(ind: Indicator, value: number, fixed: (v: number, d?: number) => string) {
-  const [lo, hi] = ind.range;
-  const { phase } = indicatorAt(ind, value);
-  if (phase === 'acid')
+function phaseText(ind: Indicator, value: number, one: (v: number) => string): LocalizedText {
+  const { from, to } = indicatorAt(ind, value);
+  if (from !== to) {
+    const [lo, hi] = rangeAt(ind, from);
+    const a = colourAt(ind, from).name;
+    const b = colourAt(ind, to).name;
     return L(
-      `${ind.acid.name.vi} (pH < ${fixed(lo, 1)})`,
-      `${ind.acid.name.en} (pH < ${fixed(lo, 1)})`,
+      `đang chuyển từ ${a.vi} sang ${b.vi} (pH ${one(lo)}–${one(hi)})`,
+      `changing from ${a.en} to ${b.en} (pH ${one(lo)}–${one(hi)})`,
     );
-  if (phase === 'base')
-    return L(
-      `${ind.base.name.vi} (pH > ${fixed(hi, 1)})`,
-      `${ind.base.name.en} (pH > ${fixed(hi, 1)})`,
-    );
-  return L(
-    `đang chuyển từ ${ind.acid.name.vi} sang ${ind.base.name.vi} (pH ${fixed(lo, 1)}–${fixed(hi, 1)})`,
-    `changing from ${ind.acid.name.en} to ${ind.base.name.en} (pH ${fixed(lo, 1)}–${fixed(hi, 1)})`,
-  );
+  }
+  const n = ind.ranges.length;
+  const span =
+    from === 0
+      ? `pH < ${one(rangeAt(ind, 0)[0])}`
+      : from === n
+        ? `pH > ${one(rangeAt(ind, n - 1)[1])}`
+        : `pH ${one(rangeAt(ind, from - 1)[1])}–${one(rangeAt(ind, from)[0])}`;
+  const c = colourAt(ind, from).name;
+  return L(`${c.vi} (${span})`, `${c.en} (${span})`);
 }
 
 function Flask({ colour, level, burette }: { colour: string; level: number; burette: number }) {
@@ -108,17 +122,20 @@ export function TitrationStage() {
   const ind = indicatorOf(st.indicator);
   const veq = equivalenceVolume(st);
   const vMax = maxVolume(st);
-  const value = pH(st, st.vb);
-  const { mix } = indicatorAt(ind, value);
+  const vb = addedVolume(st);
+  const value = pH(st, vb);
   const step = vMax / 2000;
   const nudge = vMax / 200;
+  // Volumes to the slider's resolution (6 decimals at V_eq = 0,001 mL, none at 10⁵ mL).
+  const vol = (v: number) => fixed(v, Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)));
+  // Equivalence from the chemistry (floating-point tolerance only): V_eq is always on the grid.
   const where =
-    Math.abs(st.vb - veq) <= step / 2
+    Math.abs(vb - veq) <= 1e-9 * veq
       ? L(
           'Tại điểm tương đương: acid và base vừa đủ phản ứng.',
           'At the equivalence point: acid and base have just reacted completely.',
         )
-      : st.vb < veq
+      : vb < veq
         ? L(
             'Trước điểm tương đương: HCl còn dư.',
             'Before the equivalence point: HCl is in excess.',
@@ -132,33 +149,38 @@ export function TitrationStage() {
           HCl {sig(st.ca)} M · {sig(st.va)} mL · NaOH {sig(st.cb)} M
         </span>
         <span className="chem-chip">
-          V<sub>tđ</sub> = {fixed(veq)} mL
+          V<sub>tđ</sub> = {vol(veq)} mL
         </span>
         <span className="chem-chip chem-chip--qual">
-          {Lz(L('Màu minh họa', 'Illustrative colours'))}
+          {Lz(
+            L(
+              'Hình và màu minh họa, không theo tỉ lệ',
+              'Illustration, not to scale; colours illustrative',
+            ),
+          )}
         </span>
       </div>
       <div className="tit-stage">
-        <Flask colour={solutionColour(ind, mix)} level={st.vb / vMax} burette={1 - st.vb / vMax} />
+        <Flask colour={solutionColour(ind, value)} level={vb / vMax} burette={1 - vb / vMax} />
         <div className="tit-readout">
           <p className="tit-ph" aria-live="polite">
             pH = <strong className="mono">{fixed(value)}</strong>
           </p>
           <p>
-            <strong>{Lz(ind.name)}</strong>: {Lz(phaseText(ind, value, fixed))}
+            <strong>{Lz(ind.name)}</strong>: {Lz(phaseText(ind, value, (v) => fixed(v, 1)))}
           </p>
           <p className="small muted">{Lz(where)}</p>
           <label className="tit-volume">
             <span>
               {Lz(L('Thể tích NaOH đã thêm', 'NaOH added'))} V<sub>b</sub>:{' '}
-              <strong className="mono">{fixed(st.vb)} mL</strong>
+              <strong className="mono">{vol(vb)} mL</strong>
             </span>
             <input
               type="range"
               min={0}
               max={vMax}
               step={step}
-              value={st.vb}
+              value={vb}
               onChange={(e) => {
                 setTitration({ vb: Number(e.target.value) });
               }}
@@ -168,9 +190,10 @@ export function TitrationStage() {
             <button
               type="button"
               className="btn"
-              disabled={st.vb <= 0}
+              disabled={vb <= 0}
+              aria-label={Lz(L(`Bớt ${sig(nudge)} mL NaOH`, `Remove ${sig(nudge)} mL of NaOH`))}
               onClick={() => {
-                setTitration({ vb: st.vb - nudge });
+                setTitration({ vb: vb - nudge });
               }}
             >
               <Minus size={14} aria-hidden="true" /> {sig(nudge)} mL
@@ -178,9 +201,10 @@ export function TitrationStage() {
             <button
               type="button"
               className="btn"
-              disabled={st.vb >= vMax}
+              disabled={vb >= vMax}
+              aria-label={Lz(L(`Thêm ${sig(nudge)} mL NaOH`, `Add ${sig(nudge)} mL of NaOH`))}
               onClick={() => {
-                setTitration({ vb: st.vb + nudge });
+                setTitration({ vb: vb + nudge });
               }}
             >
               <Plus size={14} aria-hidden="true" /> {sig(nudge)} mL
@@ -253,7 +277,8 @@ export function TitrationPanel() {
 export function TitrationBottom() {
   const Lz = useLocalized();
   const locale = useSettingsStore((s) => s.locale);
-  const { ca, va, cb, vb, indicator } = useTitrationStore();
+  const st = useTitrationStore();
+  const { ca, va, cb, indicator } = st;
   const data = useMemo(() => {
     const t = { ca, va, cb };
     const ind = indicatorOf(indicator);
@@ -273,8 +298,7 @@ export function TitrationBottom() {
           y: c.v.map((v, i) => (v === veq ? (c.pH[i] ?? null) : null)),
           points: true,
         },
-        band(ind.range[0]),
-        band(ind.range[1]),
+        ...ind.ranges.flat().map(band),
       ],
     };
   }, [ca, va, cb, indicator, Lz, locale]);
@@ -287,7 +311,7 @@ export function TitrationBottom() {
         yLabel="pH"
         yMin={0}
         yMax={14}
-        marker={vb}
+        marker={addedVolume(st)}
         csvName={Lz(L('chuan-do', 'titration'))}
       />
     </div>

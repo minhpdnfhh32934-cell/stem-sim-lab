@@ -34,24 +34,28 @@
     "vi": "Methyl da cam",
     "en": "Methyl orange"
    },
-   "range": [
-    3.1,
-    4.4
+   "colours": [
+    {
+     "name": {
+      "vi": "đỏ",
+      "en": "red"
+     },
+     "css": "red"
+    },
+    {
+     "name": {
+      "vi": "vàng",
+      "en": "yellow"
+     },
+     "css": "yellow"
+    }
    ],
-   "acid": {
-    "name": {
-     "vi": "đỏ",
-     "en": "red"
-    },
-    "css": "red"
-   },
-   "base": {
-    "name": {
-     "vi": "vàng",
-     "en": "yellow"
-    },
-    "css": "yellow"
-   },
+   "ranges": [
+    [
+     3.1,
+     4.4
+    ]
+   ],
    "source": {
     "id": "wikipedia-ph-indicator",
     "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
@@ -70,24 +74,28 @@
     "vi": "Methyl đỏ",
     "en": "Methyl red"
    },
-   "range": [
-    4.4,
-    6.2
+   "colours": [
+    {
+     "name": {
+      "vi": "đỏ",
+      "en": "red"
+     },
+     "css": "red"
+    },
+    {
+     "name": {
+      "vi": "vàng",
+      "en": "yellow"
+     },
+     "css": "yellow"
+    }
    ],
-   "acid": {
-    "name": {
-     "vi": "đỏ",
-     "en": "red"
-    },
-    "css": "red"
-   },
-   "base": {
-    "name": {
-     "vi": "vàng",
-     "en": "yellow"
-    },
-    "css": "yellow"
-   },
+   "ranges": [
+    [
+     4.4,
+     6.2
+    ]
+   ],
    "source": {
     "id": "wikipedia-ph-indicator",
     "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
@@ -106,24 +114,28 @@
     "vi": "Bromothymol xanh",
     "en": "Bromothymol blue"
    },
-   "range": [
-    6.0,
-    7.6
+   "colours": [
+    {
+     "name": {
+      "vi": "vàng",
+      "en": "yellow"
+     },
+     "css": "yellow"
+    },
+    {
+     "name": {
+      "vi": "xanh lam",
+      "en": "blue"
+     },
+     "css": "blue"
+    }
    ],
-   "acid": {
-    "name": {
-     "vi": "vàng",
-     "en": "yellow"
-    },
-    "css": "yellow"
-   },
-   "base": {
-    "name": {
-     "vi": "xanh lam",
-     "en": "blue"
-    },
-    "css": "blue"
-   },
+   "ranges": [
+    [
+     6.0,
+     7.6
+    ]
+   ],
    "source": {
     "id": "wikipedia-ph-indicator",
     "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
@@ -142,24 +154,39 @@
     "vi": "Phenolphthalein",
     "en": "Phenolphthalein"
    },
-   "range": [
-    8.3,
-    10.0
+   "colours": [
+    {
+     "name": {
+      "vi": "không màu",
+      "en": "colourless"
+     },
+     "css": "transparent"
+    },
+    {
+     "name": {
+      "vi": "hồng tím",
+      "en": "purple-pink"
+     },
+     "css": "orchid"
+    },
+    {
+     "name": {
+      "vi": "không màu",
+      "en": "colourless"
+     },
+     "css": "transparent"
+    }
    ],
-   "acid": {
-    "name": {
-     "vi": "không màu",
-     "en": "colourless"
-    },
-    "css": "transparent"
-   },
-   "base": {
-    "name": {
-     "vi": "hồng tím",
-     "en": "purple-pink"
-    },
-    "css": "orchid"
-   },
+   "ranges": [
+    [
+     8.3,
+     10.0
+    ],
+    [
+     12.0,
+     13.0
+    ]
+   ],
    "source": {
     "id": "wikipedia-ph-indicator",
     "citation": "Wikipedia, \"pH indicator\", table \"Common laboratory indicators\" (revision 1354116288 of 14 May 2026, read 2026-11-02); the article cites D. C. Harris, Exploring Chemical Analysis, 3rd ed., W. H. Freeman (2005)",
