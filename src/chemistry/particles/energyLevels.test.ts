@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { diagramGeometry, energyLevels } from './energyLevels';
+import { diagramGeometry, diagramLabels, energyLevels, levelLines } from './energyLevels';
 
 describe('reaction energy diagram', () => {
   it('ΔH = Eₐ,t − Eₐ,n, negative for an exothermic and positive for an endothermic reaction', () => {
@@ -40,5 +40,74 @@ describe('reaction energy diagram', () => {
   it('stays finite when both activation energies are zero', () => {
     const g = diagramGeometry(energyLevels(0, 0), 20, 150);
     expect([g.yr, g.yp, g.yq]).toEqual([150, 150, 150]);
+  });
+});
+
+describe('energy diagram labels', () => {
+  const TEXTS = {
+    vi: {
+      reactants: 'Chất đầu',
+      products: 'Sản phẩm',
+      dH: 'ΔH',
+      eaf: 'Eₐ(thuận)',
+      ear: 'Eₐ(nghịch)',
+    },
+    en: {
+      reactants: 'Reactants',
+      products: 'Products',
+      dH: 'ΔH',
+      eaf: 'Eₐ(forward)',
+      ear: 'Eₐ(reverse)',
+    },
+  };
+  // kJ/mol pairs (forward, reverse), including those where labels used to sit on a level line.
+  const PAIRS = [
+    [50, 50],
+    [5, 70],
+    [70, 5],
+    [0, 70],
+    [0, 300],
+    [70, 0],
+    [300, 0],
+    [50, 52],
+    [52, 50],
+    [50, 70],
+    [80, 30],
+    [0, 0],
+    [300, 300],
+    [1, 300],
+    [300, 1],
+    [150, 150],
+  ] as const;
+
+  it('never puts a label on a level line, on another label or outside the drawing', () => {
+    for (const [eaf, ear] of PAIRS) {
+      const g = diagramGeometry(energyLevels(eaf * 1e3, ear * 1e3), 22, 146);
+      for (const [locale, text] of Object.entries(TEXTS)) {
+        const boxes = Object.values(diagramLabels(g, text)).map((l) => l.box);
+        const where = `${String(eaf)}/${String(ear)} ${locale}`;
+        for (const b of boxes) {
+          expect(b.y0, where).toBeGreaterThanOrEqual(0);
+          expect(b.y1, where).toBeLessThanOrEqual(158);
+          for (const [y, x0, x1] of levelLines(g)) {
+            const crosses = x1 >= b.x0 && x0 <= b.x1 && y >= b.y0 - 1 && y <= b.y1 + 1;
+            expect(crosses, `${where}: line y=${String(y)}`).toBe(false);
+          }
+        }
+        boxes.forEach((a, i) => {
+          boxes.slice(i + 1).forEach((b) => {
+            const overlap = a.x1 >= b.x0 && b.x1 >= a.x0 && a.y1 >= b.y0 && b.y1 >= a.y0;
+            expect(overlap, `${where}: labels overlap`).toBe(false);
+          });
+        });
+      }
+    }
+  });
+
+  it('keeps a span label inside its span when there is room (default 50/70)', () => {
+    const g = diagramGeometry(energyLevels(50e3, 70e3), 22, 146);
+    const l = diagramLabels(g, TEXTS.vi);
+    expect(l.eaf.y).toBe((g.yr + g.yp) / 2 + 4);
+    expect(l.ear.y).toBe((g.yq + g.yp) / 2 + 4);
   });
 });

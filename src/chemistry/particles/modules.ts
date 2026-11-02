@@ -2,7 +2,8 @@ import { bindStore } from '@/modules/binding';
 import type { ModuleView } from '@/modules/types';
 import { L } from '../common';
 import { EquilibriumBottom, EquilibriumPanel, EquilibriumStage } from './EquilibriumViews';
-import { EA_MAX_KJ, resetEq, useEqStore } from './eqStore';
+import { EA_MAX_KJ, K_MAX, resetEq, useEqStore } from './eqStore';
+import type { Kinetics } from './equilibrium';
 import { GasBottom } from './GasBottom';
 import { resetGas, useGasStore } from './gasStore';
 import { GasPanel } from './GasPanel';
@@ -36,9 +37,20 @@ export const chemicalEquilibrium: ModuleView = {
   Bottom: EquilibriumBottom,
   bottomTitle: L('Nồng độ theo thời gian', 'Concentrations over time'),
   state: bindStore(useEqStore, ['systemId', 'kinetics', 'T', 'initial'], (p) => {
-    // A hand-edited file keeps Eₐ in the panel's range (the energy diagram needs Eₐ ≥ 0).
-    const ea = (v: number) => (Number.isFinite(v) ? Math.min(EA_MAX_KJ * 1000, Math.max(0, v)) : 0);
-    const k = p.kinetics;
-    resetEq(k ? { ...p, kinetics: { ...k, eaf: ea(k.eaf), ear: ea(k.ear) } } : p);
+    // A hand-edited file (null or partial objects) is merged onto the current values field by
+    // field, inside the panel's ranges (the energy diagram needs Eₐ ≥ 0).
+    const cur = useEqStore.getState().kinetics;
+    const k: Partial<Record<keyof Kinetics, unknown>> = p.kinetics ?? {};
+    const num = (v: unknown, keep: number, lo: number, hi: number) =>
+      typeof v === 'number' && Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : keep;
+    const kinetics: Kinetics = {
+      kf0: num(k.kf0, cur.kf0, 0, K_MAX),
+      kr0: num(k.kr0, cur.kr0, 1e-6, K_MAX),
+      eaf: num(k.eaf, cur.eaf, 0, EA_MAX_KJ * 1000),
+      ear: num(k.ear, cur.ear, 0, EA_MAX_KJ * 1000),
+      T0: cur.T0,
+    };
+    const { initial, ...rest } = p;
+    resetEq({ ...rest, kinetics, ...(initial ? { initial } : {}) });
   }),
 };

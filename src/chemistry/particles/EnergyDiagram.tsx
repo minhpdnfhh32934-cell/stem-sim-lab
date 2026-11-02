@@ -2,7 +2,7 @@ import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
 import { useSettingsStore } from '@/app/settings/settingsStore';
 import { L } from '../common';
-import { diagramGeometry, energyLevels } from './energyLevels';
+import { diagramGeometry, diagramLabels, energyLevels, type PlacedLabel } from './energyLevels';
 
 const KIND = {
   exothermic: L('tỏa nhiệt', 'exothermic'),
@@ -21,9 +21,19 @@ export function EnergyDiagram({ eaf, ear }: { eaf: number; ear: number }) {
   const g = diagramGeometry(l, 22, 146);
   const kj = (j: number) =>
     `${formatNumber(locale, j / 1000, { maximumSignificantDigits: 3 }).replace(/^-/, '−')} kJ/mol`;
-  const mid = (a: number, b: number) => (a + b) / 2 + 4;
-  // Level names under their line when there is room above the axis, else over it.
-  const under = (y: number) => (y + 13 <= 156 ? y + 13 : y - 5);
+  const text = {
+    reactants: Lz(L('Chất đầu', 'Reactants')),
+    products: Lz(L('Sản phẩm', 'Products')),
+    dH: 'ΔH',
+    eaf: Lz(L('Eₐ(thuận)', 'Eₐ(forward)')),
+    ear: Lz(L('Eₐ(nghịch)', 'Eₐ(reverse)')),
+  };
+  const at = diagramLabels(g, text);
+  const label = (id: keyof typeof text, p: PlacedLabel) => (
+    <text className="eq-energy__text" x={p.x} y={p.y} textAnchor={p.anchor}>
+      {text[id]}
+    </text>
+  );
   const summary = Lz(
     L(
       `Giản đồ năng lượng: Eₐ(thuận) = ${kj(eaf)}, Eₐ(nghịch) = ${kj(ear)}, ΔH = ${kj(l.dH)} (${KIND[l.kind].vi})`,
@@ -51,23 +61,13 @@ export function EnergyDiagram({ eaf, ear }: { eaf: number; ear: number }) {
         <path className="eq-energy__ref" d={`M90 ${String(g.yr)} L306 ${String(g.yr)}`} />
         <path className="eq-energy__curve" d={g.d} />
         <path className="eq-energy__span" d={`M110 ${String(g.yr)} L110 ${String(g.yp)}`} />
-        <text className="eq-energy__text" x="105" y={mid(g.yr, g.yp)} textAnchor="end">
-          {Lz(L('Eₐ(thuận)', 'Eₐ(forward)'))}
-        </text>
+        {label('eaf', at.eaf)}
         <path className="eq-energy__span" d={`M215 ${String(g.yq)} L215 ${String(g.yp)}`} />
-        <text className="eq-energy__text" x="220" y={mid(g.yq, g.yp)}>
-          {Lz(L('Eₐ(nghịch)', 'Eₐ(reverse)'))}
-        </text>
+        {label('ear', at.ear)}
         <path className="eq-energy__span" d={`M302 ${String(g.yr)} L302 ${String(g.yq)}`} />
-        <text className="eq-energy__text" x="297" y={mid(g.yr, g.yq)} textAnchor="end">
-          ΔH
-        </text>
-        <text className="eq-energy__text" x="22" y={under(g.yr)}>
-          {Lz(L('Chất đầu', 'Reactants'))}
-        </text>
-        <text className="eq-energy__text" x="232" y={under(g.yq)}>
-          {Lz(L('Sản phẩm', 'Products'))}
-        </text>
+        {label('dH', at.dH)}
+        {label('reactants', at.reactants)}
+        {label('products', at.products)}
       </svg>
     </figure>
   );
