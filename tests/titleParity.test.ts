@@ -74,12 +74,36 @@ describe('bench title parity', () => {
       "test.describe.fixme('other', () => {});",
     ].join('\n');
     expect(extraSwitchOffs(classic, bench)).toEqual([
-      'test.skip();',
-      "test.fixme(true, 'later');",
-      "test.describe.skip('group', () => {",
-      "test.describe.fixme('other', () => {});",
+      'test.skip()',
+      "test.fixme(true, 'later')",
+      "test.describe.skip('group', () => { test('b', x); })",
+      "test.describe.fixme('other', () => {})",
     ]);
     expect(extraSwitchOffs(classic, classic)).toEqual([]);
+  });
+
+  it('compares whole calls, however Prettier broke them, and counts them', () => {
+    const classic = "test('a', async () => {\n  test.skip(!coarse, 'no touch pointer');\n});";
+    const twin = (...skips: string[]) => `test('a', async () => {\n${skips.join('\n')}\n});`;
+    const broken = (condition: string) =>
+      `  test.skip(\n    ${condition},\n    'no touch pointer',\n  );`;
+    // The same call over several lines is the classic one.
+    expect(extraSwitchOffs(classic, twin(broken('!coarse')))).toEqual([]);
+    // A different condition on a line of its own is reported, whole.
+    expect(extraSwitchOffs(classic, twin(broken('!coarse || slow')))).toEqual([
+      "test.skip(!coarse || slow, 'no touch pointer')",
+    ]);
+    // Copied twice where the classic spec has it once: one too many.
+    expect(
+      extraSwitchOffs(
+        classic,
+        twin("  test.skip(!coarse, 'no touch pointer');", broken('!coarse')),
+      ),
+    ).toEqual(["test.skip(!coarse, 'no touch pointer')"]);
+    // A ")" inside the reason does not end the call.
+    expect(
+      extraSwitchOffs(classic, twin("  test.skip(slow, 'later (see #1)');  test('c', x);")),
+    ).toEqual(["test.skip(slow, 'later (see #1)')"]);
   });
 
   const dir = mkdtempSync(resolve(tmpdir(), 'parity-'));
