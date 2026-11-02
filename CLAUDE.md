@@ -193,8 +193,10 @@ B0–B8 in its §14, merged from 08/11):
   text + dashed border.
   `BenchContext` (`shellMode.ts`) marks the bench tree for the few shared parts that differ
   (`ParamsPanel` − / +, Settings' theme switch); classic pixels never change. D0 is 144 px, edge
-  columns fixed (§8), Basic speed 0,5×·1×·2× (a learner's speed lands on the nearest when going to
-  Basic; a lesson's `suggestedSpeed`, flagged `speedSuggested`, stays as a 4th step). Light /
+  columns fixed (§8). Basic speed steps = 0,5×·1×·2× ∪ the open lesson's own speed
+  (`workspaceStore.suggestedSpeed`, set by every `sim.open`, null when none; it never follows into
+  the next lesson); `keepBasicSpeedOnSteps` (`speeds.ts`, subscribed by the bench shell) lands any
+  other speed on the nearest step at every mode switch or open, whatever is on screen. Light /
   dark switch `ThemeSwitch.tsx` (header + Settings → Giao diện with "Theo máy"; test against
   `theme-boot.js`). `TooltipLayer` (WCAG 1.4.13): a hover bubble takes the first Esc for itself (a
   focus bubble lets it reach the dialog); a hover bubble stays while the pointer is on it, judged

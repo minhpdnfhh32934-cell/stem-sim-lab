@@ -77,9 +77,15 @@ class SimRuntime {
         if (known.has(k)) sources[k] = v;
       }
       Object.assign(params, applyAutoDefaults(scene, params, sources));
-      const speed = scene.suggestedSpeed?.(params);
-      if (speed !== undefined)
-        useWorkspaceStore.setState({ speed: closestSpeed(speed), speedSuggested: true });
+      // The lesson's own speed, or none: the previous lesson's own speed does not follow the
+      // learner into this one (a speed the learner chose does).
+      const lesson = scene.suggestedSpeed?.(params);
+      const suggestedSpeed = lesson === undefined ? null : closestSpeed(lesson);
+      const ws = useWorkspaceStore.getState();
+      useWorkspaceStore.setState({
+        suggestedSpeed,
+        speed: suggestedSpeed ?? (ws.speed === ws.suggestedSpeed ? 1 : ws.speed),
+      });
       useSimStore.setState({
         scene,
         params,

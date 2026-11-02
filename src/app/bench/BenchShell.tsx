@@ -16,6 +16,7 @@ import { Skeleton } from '@/ui/Skeleton';
 import { BenchFrame } from './BenchFrame';
 import { BenchHeader } from './BenchHeader';
 import { BenchContext } from './shellMode';
+import { keepBasicSpeedOnSteps } from './speeds';
 
 const TeacherScreen = lazy(() => import('@/teacher/screen/TeacherScreen'));
 const StudioScreen = lazy(() => import('@/studio/StudioScreen'));
@@ -36,6 +37,7 @@ export default function BenchShell() {
   const landing = useIsLanding();
   const library = useIsHome() && !teacher;
 
+  useEffect(keepBasicSpeedOnSteps, []);
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.shell = 'bench';

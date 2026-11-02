@@ -45,8 +45,8 @@ export interface WorkspaceState {
   hasSimulation: boolean;
   playing: boolean;
   speed: PlaybackSpeed;
-  /** The speed is the open lesson's suggestion (`suggestedSpeed`), not one the learner chose. */
-  speedSuggested: boolean;
+  /** The open lesson's own speed (its scene's `suggestedSpeed`), or null; set by every open. */
+  suggestedSpeed: PlaybackSpeed | null;
   /** Simulation time in seconds (SI). */
   simTime: number;
   aiStatus: AiStatus;
@@ -75,7 +75,7 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
   hasSimulation: false,
   playing: false,
   speed: 1,
-  speedSuggested: false,
+  suggestedSpeed: null,
   simTime: 0,
   aiStatus: 'offline',
   scienceCard: null,
@@ -105,7 +105,7 @@ export const useWorkspaceStore = create<WorkspaceState>()((set) => ({
     set((s) => (s.hasSimulation ? { playing: !s.playing } : {}));
   },
   setSpeed: (speed) => {
-    set({ speed, speedSuggested: false });
+    set({ speed });
   },
   resetSimulation: () => {
     set({ playing: false, simTime: 0 });
