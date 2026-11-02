@@ -67,7 +67,7 @@ const ANCHOR: Record<ZoomLevel, Partial<Record<ZoomPart, V>>> = {
     chromatin: [600, -400],
   },
   chromosome: {
-    chromatid: [-SIZE.chromatidNm, DRAWN.armNm[1] * 0.7],
+    chromatid: [0, DRAWN.armNm[1] * 0.8],
     centromere: [SIZE.chromatidNm * 0.3, 0],
   },
   fibre: { fibre: [-SIZE.chromatidNm * 0.35, SIZE.chromatidNm * 0.25], scaffold: [0, 300] },

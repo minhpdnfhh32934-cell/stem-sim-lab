@@ -279,7 +279,8 @@ function buildChromosome(kit: SceneKit, u: number): Built {
     center: [0, (armB - armA) / 2, 0],
     radius: (armA + armB) / 2 + radius,
     bottom: -armA,
-    anchors: { chromatid: [-radius * 1.9, armB * 0.7, 0], centromere: [radius * 0.6, 0, 0] },
+    // The pair's name points between the two sisters (they part towards the tips).
+    anchors: { chromatid: [0, armB * 0.8, 0], centromere: [radius * 0.6, 0, 0] },
   };
 }
 

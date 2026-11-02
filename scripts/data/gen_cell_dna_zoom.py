@@ -7,7 +7,8 @@ page N - 1):
   - SGK Sinh học 10, bộ Kết nối tri thức với cuộc sống: Bài 7 (tr. 44: text and H 7.1 "Kích thước
     của một số loại tế bào và cấp độ dưới tế bào"), Bài 8 (tr. 49: the nucleus).
   - SGK Sinh học 12, bộ Kết nối tri thức với cuộc sống: Bài 7 "Cấu trúc và chức năng của nhiễm sắc
-    thể" (tr. 36 text, tr. 37 text and H 7.1 "Cấu trúc siêu hiển vi của NST ở sinh vật nhân thực").
+    thể" (tr. 36 text, tr. 37 text and H 7.1 "Cấu trúc siêu hiển vi của NST ở sinh vật nhân thực",
+    tr. 38 H 7.2: two sister chromatids joined at the centromere — wording only, no number).
   - Ou et al. 2017, Science 357: eaag0025 (ChromEMT), introduction: 147 bp around the histone
     octamer, an 11-nm core particle, and evidence against the 30-nm fibre in cells.
 
@@ -74,8 +75,8 @@ SIZES = {
     # H 7.1 marks the double helix "2 nm".
     "dnaWidthNm": size(2, "nm", "sgk-sh12-kntt", [37], "H 7.1"),
     # Ou et al. 2017, introduction (a newer structure than the textbook's figure).
-    "nucleosomeBpOu": size(147, "count", "ou-2017", [], "Introduction"),
-    "coreParticleNmOu": size(11, "nm", "ou-2017", [], "Introduction"),
+    "nucleosomeBpOu": size(147, "count", "ou-2017", [], "Introduction (online article, no printed page)"),
+    "coreParticleNmOu": size(11, "nm", "ou-2017", [], "Introduction (online article, no printed page)"),
 }
 
 

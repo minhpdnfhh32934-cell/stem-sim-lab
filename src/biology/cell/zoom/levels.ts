@@ -79,9 +79,9 @@ export const SIZE = {
 } as const;
 
 /**
- * Drawing choices shared by the 3D and 2D pictures. Illustration, not data: the captions say so
- * and none of these is shown as a number, except the drawn cell's diameter, which the caption
- * gives as a value chosen inside the textbook's 10–100 µm.
+ * Drawing choices shared by the 3D and 2D pictures. Illustration, not data: the captions say so.
+ * Only two are written as numbers: the drawn cell's diameter (a value chosen inside the textbook's
+ * 10–100 µm, as the caption says) and how many base pairs the helix shows.
  */
 export const DRAWN = {
   /** Diameter of the drawn cell (a value inside SIZE.cellMinNm … cellMaxNm). */
@@ -207,16 +207,22 @@ export interface LevelFact {
 export const LEVEL_FACTS: Record<ZoomLevel, readonly LevelFact[]> = {
   cell: [
     { label: L('Đường kính nhân', 'Nucleus diameter'), key: 'nucleusUm' },
-    { label: L('Tế bào nhân thực, nhỏ nhất', 'Eukaryotic cell, smallest'), key: 'eukCellMinUm' },
-    { label: L('Tế bào nhân thực, lớn nhất', 'Eukaryotic cell, largest'), key: 'eukCellMaxUm' },
+    {
+      label: L('Tế bào động vật, thực vật: từ', 'Animal and plant cells: from'),
+      key: 'eukCellMinUm',
+    },
+    {
+      label: L('Tế bào động vật, thực vật: đến', 'Animal and plant cells: to'),
+      key: 'eukCellMaxUm',
+    },
   ],
   nucleus: [{ label: L('Đường kính nhân', 'Nucleus diameter'), key: 'nucleusUm' }],
   chromosome: [
-    { label: L('Đường kính một chromatid', 'Width of one chromatid'), key: 'chromatidNm' },
+    { label: L('Đường kính một crômatit', 'Width of one chromatid'), key: 'chromatidNm' },
   ],
   fibre: [
     { label: L('Sợi nhiễm sắc', 'Chromatin fibre'), key: 'fibreNm' },
-    { label: L('Đường kính một chromatid', 'Width of one chromatid'), key: 'chromatidNm' },
+    { label: L('Đường kính một crômatit', 'Width of one chromatid'), key: 'chromatidNm' },
   ],
   nucleosome: [
     { label: L('Chuỗi nucleosome', 'Nucleosome chain'), key: 'fibreNm' },

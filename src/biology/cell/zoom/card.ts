@@ -74,15 +74,15 @@ const CAPTION: Record<ZoomLevel, LocalizedText> = {
     en: `The cell is drawn ${cell.en} across (a value within the textbook’s ${cellMin.en} – ${cellMax.en}), the ${nucleus.en} nucleus to scale; the other organelles are illustration.`,
   },
   nucleus: L(
-    'Màng nhân, lỗ màng nhân, hạch nhân và chất nhiễm sắc: hình dạng và số lượng là minh họa.',
+    'Màng nhân, lỗ màng nhân, hạch nhân (nhân con) và chất nhiễm sắc: hình dạng và số lượng là minh họa.',
     'Envelope, pores, nucleolus and chromatin: shapes and numbers are illustration.',
   ),
   chromosome: L(
-    'Chỉ bề rộng chromatid theo số đo; chiều dài hai cánh là minh họa.',
+    'Chỉ bề rộng crômatit theo số đo; chiều dài hai cánh là minh họa.',
     'Only the chromatid’s width follows the measured size; the arm lengths are illustration.',
   ),
   fibre: {
-    vi: `Sợi ${fibre.vi} và bề rộng chromatid theo số đo; số vòng, độ dài vòng và khung NST là minh họa.`,
+    vi: `Sợi ${fibre.vi} và bề rộng crômatit theo số đo; số vòng, độ dài vòng và khung NST là minh họa.`,
     en: `The ${fibre.en} fibre and the chromatid’s width follow the measured sizes; the number and length of the loops and the scaffold are illustration.`,
   },
   nucleosome: {
@@ -90,30 +90,30 @@ const CAPTION: Record<ZoomLevel, LocalizedText> = {
     en: `The ${fibre.en} width follows the measured size; the turns, the linker DNA and where each histone sits are illustration.`,
   },
   dna: {
-    vi: `Đường kính và bước xoắn theo số đo; trình tự ${helixBp.vi} cặp base là minh họa.`,
+    vi: `Đường kính và bước xoắn theo số đo; trình tự ${helixBp.vi} cặp nucleotide là minh họa.`,
     en: `Width and pitch follow the measured sizes; the ${helixBp.en}-base-pair sequence is illustration.`,
   },
 };
 
 const MODEL: Record<ZoomLevel, LocalizedText> = {
   cell: {
-    vi: `Tế bào nhân thực có kích thước khoảng ${cellMin.vi} – ${cellMax.vi} (SGK Sinh học 10, H 7.1, tr. 44). Nhân là cấu trúc lớn nhất có màng bao bọc, phần lớn hình cầu, đường kính khoảng ${nucleus.vi} (tr. 49).`,
-    en: `Eukaryotic cells are about ${cellMin.en} – ${cellMax.en} across (Sinh học 10 textbook, Fig. 7.1, p. 44). The nucleus is the largest membrane-bound structure, mostly spherical, about ${nucleus.en} across (p. 49).`,
+    vi: `Tế bào động vật và thực vật có kích thước khoảng ${cellMin.vi} – ${cellMax.vi} (SGK Sinh học 10, H 7.1, tr. 44). Nhân là cấu trúc lớn nhất có màng bao bọc, phần lớn hình cầu, đường kính khoảng ${nucleus.vi} (tr. 49).`,
+    en: `Animal and plant cells are about ${cellMin.en} – ${cellMax.en} across (Sinh học 10 textbook, Fig. 7.1, p. 44). The nucleus is the largest membrane-bound structure, mostly spherical, about ${nucleus.en} across (p. 49).`,
   },
   nucleus: {
-    vi: `Nhân đường kính khoảng ${nucleus.vi}, bọc bởi màng kép có nhiều lỗ nhỏ; trong nhân có chất nhiễm sắc chứa DNA và hạch nhân (SGK Sinh học 10, tr. 49).`,
+    vi: `Nhân đường kính khoảng ${nucleus.vi}, bọc bởi màng kép có nhiều lỗ nhỏ; trong nhân có chất nhiễm sắc chứa DNA và hạch nhân (nhân con) (SGK Sinh học 10, tr. 49).`,
     en: `The nucleus, about ${nucleus.en} across, is wrapped in a double membrane with many small pores; inside are the DNA-carrying chromatin and the nucleolus (Sinh học 10 textbook, p. 49).`,
   },
   chromosome: {
-    vi: `NST quan sát rõ nhất ở kì giữa (SGK Sinh học 12, tr. 36). NST kép gồm hai chromatid chị em dính ở tâm động (H 7.2, tr. 38); mỗi chromatid đường kính khoảng ${chromatid.vi} (tr. 37).`,
+    vi: `NST quan sát rõ nhất ở kì giữa (SGK Sinh học 12, tr. 36). NST kép gồm hai crômatit chị em dính ở tâm động (H 7.2, tr. 38); mỗi crômatit đường kính khoảng ${chromatid.vi} (tr. 37).`,
     en: `Chromosomes are seen most clearly at metaphase (Sinh học 12 textbook, p. 36). A replicated chromosome is two sister chromatids joined at the centromere (Fig. 7.2, p. 38); each chromatid is about ${chromatid.en} across (p. 37).`,
   },
   fibre: {
-    vi: `Ở kì đầu, sợi nhiễm sắc ${fibre.vi} luồn vào các vòng protein condensin, tạo các vòng nhô ra ngoài khung NST; khung co xoắn tiếp đến kì giữa, khi mỗi chromatid rộng khoảng ${chromatid.vi} (SGK Sinh học 12, tr. 37, H 7.1).`,
+    vi: `Ở kì đầu, sợi nhiễm sắc ${fibre.vi} luồn vào các vòng protein condensin, tạo các vòng nhô ra ngoài khung NST; khung co xoắn tiếp đến kì giữa, khi mỗi crômatit rộng khoảng ${chromatid.vi} (SGK Sinh học 12, tr. 37, H 7.1).`,
     en: `In prophase the ${fibre.en} fibre threads through condensin protein rings into loops standing out from the chromosome scaffold; the scaffold keeps coiling until metaphase, when each chromatid is about ${chromatid.en} wide (Sinh học 12 textbook, p. 37, Fig. 7.1).`,
   },
   nucleosome: {
-    vi: `Mỗi nucleosome gồm ${histones.vi} phân tử histone thuộc ${kinds.vi} loại, quấn bên ngoài là một đoạn DNA ${bp.vi} cặp nucleotide; chuỗi nucleosome nối nhau bằng DNA nối, đường kính khoảng ${fibre.vi} (SGK Sinh học 12, tr. 36, H 7.1).`,
+    vi: `Mỗi nucleosome gồm ${histones.vi} phân tử histone thuộc ${kinds.vi} loại, quấn bên ngoài là một đoạn DNA ${bp.vi} cặp nucleotide; các nucleosome nối nhau bằng DNA nối thành chuỗi có đường kính khoảng ${fibre.vi} (SGK Sinh học 12, tr. 36, H 7.1).`,
     en: `Each nucleosome is ${histones.en} histone molecules of ${kinds.en} kinds with a ${bp.en}-base-pair stretch of DNA wrapped around them; nucleosomes are joined by linker DNA into a chain about ${fibre.en} across (Sinh học 12 textbook, p. 36, Fig. 7.1).`,
   },
   dna: {
@@ -129,8 +129,8 @@ const TRANSITION_NOTE = L(
 
 /** The 30 nm fibre: drawn by many books, not by this textbook, and debated (#54 §7). */
 const NO_30NM = L(
-  'Nhiều tài liệu cũ vẽ thêm cấp “sợi 30 nm” giữa chuỗi nucleosome và các vòng. SGK Sinh học 12 (H 7.1) không có cấp này, và nghiên cứu hiển vi điện tử của Ou và cộng sự (2017) không thấy sợi 30 nm trong nhân tế bào người — cấp này còn được tranh luận nên hình không vẽ.',
-  'Many older books draw an extra “30 nm fibre” level between the nucleosome chain and the loops. The Sinh học 12 textbook (Fig. 7.1) has no such level, and the electron-microscopy study of Ou et al. (2017) found no 30 nm fibres in human cell nuclei — the level is debated, so it is not drawn.',
+  'Nhiều tài liệu vẽ thêm cấp “sợi 30 nm” giữa chuỗi nucleosome và các vòng. SGK Sinh học 12 (H 7.1) không có cấp này, và nghiên cứu hiển vi điện tử của Ou và cộng sự (2017) không thấy sợi 30 nm trong các tế bào người mà nhóm quan sát — cấp này còn được tranh luận nên hình không vẽ.',
+  'Many books draw an extra “30 nm fibre” level between the nucleosome chain and the loops. The Sinh học 12 textbook (Fig. 7.1) has no such level, and the electron-microscopy study of Ou et al. (2017) found no 30 nm fibres in the human cells they imaged — the level is debated, so it is not drawn.',
 );
 
 const EXTRA: Record<ZoomLevel, readonly LocalizedText[]> = {
@@ -152,7 +152,7 @@ const EXTRA: Record<ZoomLevel, readonly LocalizedText[]> = {
   ],
   dna: [
     L(
-      'Các cặp base theo nguyên tắc bổ sung A – T, G – C.',
+      'Các cặp nucleotide ghép theo nguyên tắc bổ sung A – T, G – C.',
       'Base pairs follow complementary pairing A – T, G – C.',
     ),
   ],
@@ -180,8 +180,8 @@ const VALIDITY: Record<ZoomLevel, LocalizedText> = {
     en: `As in the textbook. Ou et al. (2017) give ${bpOu.en} base pairs wrapped around the histone octamer into an ${coreOu.en} particle; the app keeps the textbook’s numbers.`,
   },
   dna: L(
-    'Dạng B của DNA trong dung dịch nước; DNA còn có các dạng khác (A, Z) với kích thước khác.',
-    'The B form of DNA in water; DNA has other forms (A, Z) with other sizes.',
+    'Số tròn của mô hình B-DNA (Watson–Crick); DNA còn có các dạng khác (A, Z) với kích thước khác.',
+    'The round numbers of the B-DNA (Watson–Crick) model; DNA has other forms (A, Z) with other sizes.',
   ),
 };
 
@@ -225,9 +225,9 @@ export const PART_NAME: Record<ZoomPart, LocalizedText> = {
   mitochondrion: PARTS.mitochondrion.name,
   envelope: L('Màng nhân', 'Nuclear envelope'),
   pore: L('Lỗ màng nhân', 'Nuclear pore'),
-  nucleolus: L('Hạch nhân', 'Nucleolus'),
+  nucleolus: L('Hạch nhân (nhân con)', 'Nucleolus'),
   chromatin: L('Chất nhiễm sắc', 'Chromatin'),
-  chromatid: L('Hai chromatid chị em', 'Two sister chromatids'),
+  chromatid: L('Hai crômatit chị em', 'Two sister chromatids'),
   centromere: L('Tâm động', 'Centromere'),
   fibre: { vi: `Sợi nhiễm sắc ${fibre.vi}`, en: `${fibre.en} chromatin fibre` },
   scaffold: L('Khung NST', 'Chromosome scaffold'),
@@ -235,5 +235,5 @@ export const PART_NAME: Record<ZoomPart, LocalizedText> = {
   wrappedDna: L('DNA quấn quanh', 'Wrapped DNA'),
   linker: L('DNA nối', 'Linker DNA'),
   backbone: L('Mạch DNA', 'DNA strand'),
-  basePair: L('Cặp base', 'Base pair'),
+  basePair: L('Cặp nucleotide', 'Base pair'),
 };
