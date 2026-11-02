@@ -309,24 +309,28 @@ describe('bench tokens (#113)', () => {
 
   /**
    * The 3D point-mutation lesson marks start and stop codons beside the five base colours
-   * (`--chart-1…5`, ROLES baseA…baseU) and the changed bases (`--stage-accent`), all with the same
-   * shape: in the bench they must differ by colour. The classic shell keeps the confidence inks
-   * it always used (start 0.093 from base A in light today: a known weakness, gone with B8).
+   * (`--chart-1…5`, ROLES baseA…baseU), the changed bases (`--stage-accent`) and muted text, all
+   * with the same shape: in the bench they must differ by colour, also for red–green readers
+   * (≥ 0.15 normal, ≥ 0.08 deutan and protan). The classic shell keeps the confidence inks it
+   * always used (start 0.093 from base A in light today: a known weakness, gone with B8).
    */
+  const MARK_FLOOR = { normal: 0.15, deutan: 0.08, protan: 0.08 } as const;
   for (const name of ['bench light', 'bench dark'] as const) {
     it(`${name}: start and stop codon marks stand apart from the bases and the changed bases`, () => {
       const tokens = THEMES[name];
       const near: string[] = [];
-      for (const mark of ['--dna3d-start', '--dna3d-stop']) {
+      const marks = ['--dna3d-start', '--dna3d-stop'];
+      for (const mark of marks) {
         const c = tokens.get(mark) ?? '';
         expect(contrast(c, tokens.get('--bg-stage') ?? ''), mark).toBeGreaterThanOrEqual(3);
-        for (const other of [...CHARTS.slice(0, 5), '--stage-accent']) {
-          const d = deltaEOK(c, tokens.get(other) ?? '');
-          if (d < 0.15) near.push(`${mark} vs ${other}: ${d.toFixed(3)}`);
-        }
+        const others = [...CHARTS.slice(0, 5), '--stage-accent', '--text-muted'];
+        for (const other of [...others, ...marks.filter((m) => m !== mark)])
+          for (const [view, floor] of Object.entries(MARK_FLOOR)) {
+            const v = view as keyof typeof MARK_FLOOR;
+            const d = deltaEOK(cvd(c, v), cvd(tokens.get(other) ?? '', v));
+            if (d < floor) near.push(`${view}: ${mark} vs ${other}: ${d.toFixed(3)}`);
+          }
       }
-      const marks = deltaEOK(tokens.get('--dna3d-start') ?? '', tokens.get('--dna3d-stop') ?? '');
-      expect(marks).toBeGreaterThanOrEqual(0.15);
       expect(near).toEqual([]);
     });
   }
