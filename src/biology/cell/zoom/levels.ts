@@ -88,6 +88,8 @@ export const DRAWN = {
   cellNm: 20_000,
   /** Arm lengths of the drawn metaphase chromatid (real chromosomes differ in length). */
   armNm: [1200, 1800] as const,
+  /** Sister chromatids part by this share of the distance from the centromere (the X shape). */
+  splay: 0.16,
   /** Loops of the 10 nm fibre around the scaffold, per ring and rings drawn. */
   loopsPerRing: 10,
   loopRings: 3,
@@ -242,7 +244,15 @@ export function zoomSpot(level: ZoomLevel): ZoomSpot | null {
     case 'nucleus':
       return { center: [SIZE.nucleusNm * 0.12, -SIZE.nucleusNm * 0.08, 0], radiusNm: 600 };
     case 'chromosome':
-      return { center: [SIZE.chromatidNm * 0.5, DRAWN.armNm[1] * 0.55, 0], radiusNm: 350 };
+      // On the right sister's long arm (its centre line parts by `splay`).
+      return {
+        center: [
+          SIZE.chromatidNm * 0.5 + DRAWN.armNm[1] * 0.55 * DRAWN.splay,
+          DRAWN.armNm[1] * 0.55,
+          0,
+        ],
+        radiusNm: 350,
+      };
     case 'fibre':
       return { center: [SIZE.chromatidNm * 0.3, 0, 0], radiusNm: 40 };
     case 'nucleosome':

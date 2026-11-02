@@ -249,6 +249,8 @@ function buildNucleus(kit: SceneKit, u: number): Built {
 
 // ── Level 3: the metaphase chromosome ─────────────────────────────────────────────────────────
 
+const SPLAY = DRAWN.splay;
+
 function buildChromosome(kit: SceneKit, u: number): Built {
   const tok = token(kit);
   const armA = DRAWN.armNm[0] / u;
@@ -265,7 +267,7 @@ function buildChromosome(kit: SceneKit, u: number): Built {
     for (let i = 0; i < rings; i++) {
       const s = tube.stations[i] ?? 0;
       // Sisters touch at the centromere and part slightly towards the tips (H 7.2's X).
-      centre[i * 3] = side * (radius * 0.92 + Math.abs(s) * 0.05);
+      centre[i * 3] = side * (radius * 0.92 + Math.abs(s) * SPLAY);
       centre[i * 3 + 1] = s;
       centre[i * 3 + 2] = 0;
       radii[i] = rodRadius(s, armA, armB, radius);

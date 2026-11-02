@@ -24,9 +24,12 @@ import {
 
 type V = readonly [number, number];
 
-/** Room above the picture (the stage's chips) and below it (scale bar, caption). */
-const TOP = 64;
-const BOTTOM = 96;
+/**
+ * Room above the picture (the stage's chips and notice) and below it: the scale bar with its
+ * text, then the zoom buttons and the two-line caption that sit over the canvas's bottom edge.
+ */
+const TOP = 72;
+const BOTTOM = 168;
 const PAD = 24;
 
 /** The drawn extent of each level (nm): width and height of the picture. */
@@ -37,7 +40,10 @@ function extent(level: ZoomLevel): V {
     case 'nucleus':
       return [SIZE.nucleusNm, SIZE.nucleusNm];
     case 'chromosome':
-      return [2.6 * SIZE.chromatidNm, DRAWN.armNm[0] + DRAWN.armNm[1]];
+      return [
+        2 * SIZE.chromatidNm * 1.1 + 2 * DRAWN.splay * DRAWN.armNm[1],
+        DRAWN.armNm[0] + DRAWN.armNm[1],
+      ];
     case 'fibre':
       return [SIZE.chromatidNm, SIZE.chromatidNm];
     case 'nucleosome':
@@ -185,6 +191,8 @@ function nucleus(p: Pen, css: Css) {
   }
 }
 
+const SPLAY = DRAWN.splay;
+
 function chromosome(p: Pen, css: Css) {
   const { ctx } = p;
   const w = SIZE.chromatidNm;
@@ -196,9 +204,9 @@ function chromosome(p: Pen, css: Css) {
     // Each chromatid: a round-ended rod as wide as the measured chromatid (its centre line).
     const x = side * w * 0.5;
     p.line([
-      [x + side * a * 0.05, -a + w / 2],
+      [x + side * a * SPLAY, -a + w / 2],
       [x, 0],
-      [x + side * b * 0.05, b - w / 2],
+      [x + side * b * SPLAY, b - w / 2],
     ]);
     ctx.stroke();
   }
@@ -324,7 +332,9 @@ export function drawZoom(
   const info = levelInfo(index);
   const [w, h] = extent(info.id);
   const s = Math.max(1e-9, Math.min((width - 2 * PAD) / w, (height - TOP - BOTTOM) / h));
-  const p = new Pen(ctx, width / 2, TOP + (height - TOP - BOTTOM) / 2, s);
+  // The chromosome's arms differ in length: its middle is above the centromere (y = 0).
+  const mid = info.id === 'chromosome' ? (DRAWN.armNm[1] - DRAWN.armNm[0]) / 2 : 0;
+  const p = new Pen(ctx, width / 2, TOP + (height - TOP - BOTTOM) / 2 + mid * s, s);
   DRAW[info.id](p, css);
 
   const spot = zoomSpot(info.id);
@@ -357,7 +367,7 @@ export function drawZoom(
 
   // Scale bar: exactly barNm at this picture's scale, under the picture.
   const barPx = info.barNm * s;
-  const y = height - BOTTOM + 28;
+  const y = height - BOTTOM + 24;
   const x0 = width / 2 - barPx / 2;
   ctx.strokeStyle = css('--text');
   ctx.lineWidth = 2;
