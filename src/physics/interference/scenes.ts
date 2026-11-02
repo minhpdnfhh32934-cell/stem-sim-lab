@@ -47,10 +47,17 @@ const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x
 /** Dragged lengths are kept to 0,1 mm, so the Inspector shows short numbers. */
 const tidy = (x: number) => Math.round(x * 1e4) / 1e4;
 
-/** Distances from (x, y) to S₁ = (−d/2, 0) and S₂ = (d/2, 0), tidied unless M would leave the triangle. */
-function distances(x: number, y: number, d: number): Params {
-  const d1 = clamp(Math.hypot(x + d / 2, y), R_MIN, R_MAX);
-  const d2 = clamp(Math.hypot(x - d / 2, y), R_MIN, R_MAX);
+/**
+ * Distances from (x, y) to S₁ = (−d/2, 0) and S₂ = (d/2, 0). `place` (M put under the pointer):
+ * kept on the slider and tidied unless M would leave the triangle. Otherwise (M keeping its place
+ * while a source moves) exact, only never 0, so M rebuilt from them stays where it was.
+ */
+function distances(x: number, y: number, d: number, place: boolean): Params {
+  const r1 = Math.hypot(x + d / 2, y);
+  const r2 = Math.hypot(x - d / 2, y);
+  if (!place) return { d1: Math.max(r1, 1e-9), d2: Math.max(r2, 1e-9) };
+  const d1 = clamp(r1, R_MIN, R_MAX);
+  const d2 = clamp(r2, R_MIN, R_MAX);
   return pointM(d, tidy(d1), tidy(d2)) ? { d1: tidy(d1), d2: tidy(d2) } : { d1, d2 };
 }
 
@@ -69,7 +76,8 @@ export function dragSource(x: number, p: Params, sources: Record<string, ParamSo
   if (!(lo <= hi)) return {};
   const d = clamp(tidy(clamp(2 * Math.abs(x), lo, hi)), lo, hi);
   const learnerM = !problemM && (from('d1') === 'user' || from('d2') === 'user');
-  return learnerM && q.m ? { d, ...distances(q.m.x, q.m.y, d) } : { d };
+  // Exact: M is rebuilt from d₁, d₂ at every move; rounding or clamping would let it drift.
+  return learnerM && q.m ? { d, ...distances(q.m.x, q.m.y, d, false) } : { d };
 }
 
 /**
@@ -77,7 +85,7 @@ export function dragSource(x: number, p: Params, sources: Record<string, ParamSo
  * S₁S₂ keeps M on the line instead of flipping it to the mirror point.
  */
 export function dragProbe(x: number, y: number, p: Params): Params {
-  return distances(x, Math.max(0, y), interferenceInput(p).d);
+  return distances(x, Math.max(0, y), interferenceInput(p).d, true);
 }
 
 const SUBS = '₀₁₂₃₄₅₆₇₈₉';

@@ -324,7 +324,8 @@ Progress log: `docs/PROGRESS.md`.
   screen, so it never removes it; no picture only below 4 px per λ),
   `scenes.ts`. Sources and M are dragged through their parameters: `BodyDef.dragTo` →
   `StageCanvas` → `sim.setParams(…, fit = false)` (a new run, not an intervention). `SolutionPanel`
-  shows a cross-check off by more than 1 % as "chưa khớp", never "khớp".
+  shows a cross-check off by more than 1 % as "chưa khớp", never "khớp" (a difference ≤ 10⁻¹² SI
+  always agrees: round-off around an exact 0).
 - Electric field (`src/physics/field/`, 0.8.0, #76): `model.ts` (Coulomb, superposition, plates,
   `fieldSetup`: q₁ at the origin, q₂ on the x-axis, y_M = 0 by default), `fieldLines.ts` (RK4 with
   step doubling; the card's error is an upper estimate from a coarse copy of each line, checked

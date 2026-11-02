@@ -26,6 +26,22 @@ describe('SolutionPanel cross-checks', () => {
     expect(screen.queryAllByText(/chưa khớp/)).toHaveLength(0);
   });
 
+  it('an exact 0 with a round-off check (~1e-14) reads "khớp"', () => {
+    // The body stops exactly at the top: speed 0 m/s, the DOPRI5 check ~1e-14 m/s.
+    show(inclinedPlane, {
+      theta: (55 * Math.PI) / 180,
+      muS: 1.16,
+      muK: 1.16,
+      length: 49.6,
+      s0: 49.6,
+      v0: -18.8,
+      F: 176,
+      m: 2,
+    });
+    expect(screen.getAllByText(/^khớp/).length).toBeGreaterThan(0);
+    expect(screen.queryAllByText(/chưa khớp/)).toHaveLength(0);
+  });
+
   // Checks that disagree on these reachable inputs were shown as "khớp" before #110; the panel now
   // says "chưa khớp". The checks themselves are not fixed here (separate issue).
   it.each([

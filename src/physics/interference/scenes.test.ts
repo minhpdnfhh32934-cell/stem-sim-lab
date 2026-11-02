@@ -243,6 +243,31 @@ describe('interference scene: dragging', () => {
     expect(m1?.y).toBeCloseTo(m0?.y ?? NaN, 3);
   });
 
+  it('many source drags leave a learner-placed M where it was, even on or near S₁S₂', () => {
+    const placed: Record<string, ParamSource> = { d1: 'user', d2: 'user' };
+    for (const [mx, my] of [
+      [0.02, -0.03],
+      [0.03, 0.002],
+      [0.01, 0.003],
+      [0.07, 0.001],
+    ] as const) {
+      let p: Record<string, number> = { ...sc.defaults, ...dragProbe(mx, my, sc.defaults) };
+      const m0 = interferenceInput(p).m;
+      // Out to S₁S₂ = 40 cm and back to 10 cm in small pointer moves.
+      for (let i = 1; i <= 60; i++) p = { ...p, ...dragSource(0.05 + 0.0025 * i, p, placed) };
+      for (let i = 59; i >= 0; i--) p = { ...p, ...dragSource(0.05 + 0.0025 * i, p, placed) };
+      const m1 = interferenceInput(p).m;
+      expect(
+        Math.abs((m1?.x ?? NaN) - (m0?.x ?? NaN)),
+        `M at (${String(mx)}, ${String(my)})`,
+      ).toBeLessThan(1e-6);
+      expect(
+        Math.abs((m1?.y ?? NaN) - (m0?.y ?? NaN)),
+        `M at (${String(mx)}, ${String(my)})`,
+      ).toBeLessThan(1e-6);
+    }
+  });
+
   it('a dragged M takes its distances to the sources (drawn on the side y ≥ 0)', () => {
     const p = { ...sc.defaults };
     const next = dragProbe(0.01, 0.04, p);

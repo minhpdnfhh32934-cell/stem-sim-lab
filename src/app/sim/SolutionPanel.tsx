@@ -16,6 +16,8 @@ import '@/learn/learn.css';
 
 /** A cross-check further off than this (relative) is shown as a disagreement, never "khớp". */
 const CHECK_TOLERANCE = 1e-2;
+/** A difference this small (SI) agrees whatever the value: round-off around an exact 0. */
+const CHECK_ABS = 1e-12;
 
 /**
  * Engine-computed answers with their numerical cross-checks, and the step-by-step
@@ -98,10 +100,13 @@ function SolutionBody({ scene, solution }: { scene: PhysicsScene; solution: Solu
               <table className="solution__answers">
                 <tbody>
                   {solution.answers.map((a) => {
+                    const off = a.check === undefined ? null : Math.abs(a.value - a.check);
                     const dev =
-                      a.check === undefined
+                      off === null
                         ? null
-                        : Math.abs(a.value - a.check) / Math.max(Math.abs(a.value), 1e-12);
+                        : off <= CHECK_ABS
+                          ? 0
+                          : off / Math.max(Math.abs(a.value), 1e-12);
                     const asked = problem?.questions.includes(a.id) ?? false;
                     return (
                       <tr key={a.id} className={asked ? 'is-asked' : undefined}>
