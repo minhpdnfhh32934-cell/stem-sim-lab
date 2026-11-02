@@ -12,6 +12,7 @@ import {
   CORE_RADIUS_NM,
   DRAWN,
   HELIX_LENGTH_NM,
+  HELIX_NAMED,
   LEVEL_PARTS,
   SIZE,
   WRAP_RADIUS_NM,
@@ -139,9 +140,9 @@ export const ANCHOR_2D: Record<ZoomLevel, Partial<Record<ZoomPart, V>>> = {
     linker: [(SIZE.fibreNm + DRAWN.linkerNm) / 2, 0],
   },
   dna: {
-    // Pair 10: cos(10 · TWIST) = 1, the coding strand at its top; pair 13: the middle of a rung half.
-    backbone: [helixX(10), RADIUS * Math.cos(10 * TWIST)],
-    basePair: [helixX(13), 0.5 * RADIUS * Math.cos(13 * TWIST)],
+    backbone: [helixX(HELIX_NAMED.backbone), RADIUS * Math.cos(HELIX_NAMED.backbone * TWIST)],
+    // The middle of the pair, where its two halves meet between the strands.
+    basePair: [helixX(HELIX_NAMED.basePair), 0],
   },
 };
 

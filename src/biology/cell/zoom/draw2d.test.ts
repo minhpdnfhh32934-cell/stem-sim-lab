@@ -108,9 +108,22 @@ describe('cell → DNA zoom, 2D pictures', () => {
     const [bx, by] = at('dna', 'backbone');
     const t = (bx - helixX(0)) / (helixX(1) - helixX(0));
     expect(by).toBeCloseTo(RADIUS * Math.cos(t * TWIST), 9);
+    // Base pair: on a rung (x of a pair, between its two ends), and off both strand strokes
+    // (0,24 nm wide, drawn over the rungs) — review of PR #111, round 2.
     const [rx, ry] = at('dna', 'basePair');
     const i = Math.round((rx - helixX(0)) / (helixX(1) - helixX(0)));
     expect(rx).toBeCloseTo(helixX(i), 9);
-    expect(Math.abs(ry)).toBeLessThanOrEqual(Math.abs(RADIUS * Math.cos(i * TWIST)));
+    expect(Math.abs(ry)).toBeLessThan(Math.abs(RADIUS * Math.cos(i * TWIST)));
+    const strandGap = (sign: 1 | -1) => {
+      let best = Infinity;
+      for (let k = 0; k <= (DRAWN.helixBp - 1) * 400; k++) {
+        const tt = k / 400;
+        const sx = helixX(0) + tt * (helixX(1) - helixX(0));
+        best = Math.min(best, Math.hypot(sx - rx, sign * RADIUS * Math.cos(tt * TWIST) - ry));
+      }
+      return best;
+    };
+    expect(strandGap(1)).toBeGreaterThan(0.12);
+    expect(strandGap(-1)).toBeGreaterThan(0.12);
   });
 });

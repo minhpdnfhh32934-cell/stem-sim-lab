@@ -122,6 +122,12 @@ export const WRAP_RADIUS_NM = (SIZE.fibreNm - SIZE.dnaNm) / 2;
 export const CORE_RADIUS_NM = WRAP_RADIUS_NM - SIZE.dnaNm / 2;
 /** Rise of the wrapped DNA per turn (one DNA width plus the drawn gap). */
 export const WRAP_PITCH_NM = SIZE.dnaNm * (1 + DRAWN.wrapGap);
+/**
+ * Where the helix's names point (pair indices): the coding strand at its top (cos(10 · TWIST) = 1)
+ * and the middle of pair 15, whose rung is full length (cos(15 · TWIST) = −1), far from both
+ * strands.
+ */
+export const HELIX_NAMED = { backbone: 10, basePair: 15 } as const;
 /** Length of the drawn double helix (nm). */
 export const HELIX_LENGTH_NM = (DRAWN.helixBp - 1) * RISE;
 

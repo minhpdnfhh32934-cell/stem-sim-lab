@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { drawStats } from '@/ui/three/drawStats';
 import { expectAllFreed, testKit } from '../../view3d/testing';
-import { LEVELS, LEVEL_PARTS, levelInfo } from './levels';
+import { RADIUS, RISE, TWIST } from '../../central/dogma3d/bdna';
+import { HELIX_LENGTH_NM, LEVELS, LEVEL_PARTS, levelInfo } from './levels';
 import { buildZoomScene, zoomFrame } from './scene';
 
 afterEach(() => {
@@ -41,6 +42,27 @@ describe('cell → DNA zoom scenes', () => {
       expectAllFreed(kit, track, start);
     },
   );
+
+  it('the helix names point at a strand and at the middle of a base pair (3D)', () => {
+    const { kit, track, start } = testKit('medium');
+    const i = LEVELS.indexOf('dna');
+    const sc = buildZoomScene(kit, { level: i, barText: 'bar', names: NAMES });
+    const { unitNm: u } = levelInfo(i);
+    const anchors = (sc.state?.() as { anchors: Record<string, [number, number, number]> }).anchors;
+    const x = (k: number) => (-HELIX_LENGTH_NM / 2 + k * RISE) / u;
+    const [bx, by, bz] = anchors.backbone ?? [0, 0, 0];
+    const k = Math.round((bx * u + HELIX_LENGTH_NM / 2) / RISE);
+    // The coding strand's nucleotide k sits at angle k · TWIST around the axis.
+    expect(bx).toBeCloseTo(x(k), 9);
+    expect(by).toBeCloseTo((RADIUS * Math.cos(k * TWIST)) / u, 9);
+    expect(bz).toBeCloseTo((RADIUS * Math.sin(k * TWIST)) / u, 9);
+    // The base pair's name: on the axis, where the pair's two halves meet.
+    const [rx, ry, rz] = anchors.basePair ?? [0, 0, 0];
+    const j = Math.round((rx * u + HELIX_LENGTH_NM / 2) / RISE);
+    expect(rx).toBeCloseTo(x(j), 9);
+    expect([ry, rz]).toEqual([0, 0]);
+    expectAllFreed(kit, track, start);
+  });
 
   it('no names: no labels but the scale bar’s', () => {
     const { kit, track, start } = testKit('medium');

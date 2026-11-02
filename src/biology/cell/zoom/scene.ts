@@ -34,6 +34,7 @@ import {
   CORE_RADIUS_NM,
   DRAWN,
   HELIX_LENGTH_NM,
+  HELIX_NAMED,
   LEVEL_PARTS,
   SIZE,
   WRAP_PITCH_NM,
@@ -462,7 +463,11 @@ function buildHelix(kit: SceneKit, u: number): Built {
     center: [0, 0, 0],
     radius: hx + 0.6,
     bottom: -RADIUS / u,
-    anchors: { backbone: [-hx * 0.6, RADIUS / u, 0], basePair: [hx * 0.35, 0, RADIUS / u] },
+    // Pair k's coding nucleotide sits at angle k · TWIST around x; the rung's middle is on the axis.
+    anchors: {
+      backbone: [(x0 + HELIX_NAMED.backbone * RISE) / u, RADIUS / u, 0],
+      basePair: [(x0 + HELIX_NAMED.basePair * RISE) / u, 0, 0],
+    },
   };
 }
 
@@ -511,6 +516,13 @@ export function buildZoomScene(kit: SceneKit, o: ZoomSceneOptions): Bio3DScene {
       radius: Math.max(b.radius, (top - bottom) / 2),
     },
     frames,
-    state: () => ({ level: info.id, barNm: info.barNm, unitNm: u, named, spot: spot !== null }),
+    state: () => ({
+      level: info.id,
+      barNm: info.barNm,
+      unitNm: u,
+      named,
+      spot: spot !== null,
+      anchors: b.anchors,
+    }),
   };
 }
