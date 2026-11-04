@@ -768,7 +768,7 @@ export function pickHits(
 
 /**
  * Board text cannot close its block or open another one (nor a knowledge excerpt's): repeated
- * until nothing changes, as `chatService.fenced`.
+ * until nothing changes, as `references.fenced`.
  */
 export function fenceBoardText(text: string): string {
   let out = text;
