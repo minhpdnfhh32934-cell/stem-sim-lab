@@ -49,6 +49,9 @@ const VARIANTS = [
 ].filter(([name]) => wanted.includes(name));
 if (!VARIANTS.length) throw new Error('--variants: expected base, trained or both');
 const TEMPERATURE = 0;
+// A server started without --lora refuses the `lora` field, and has no "trained" variant to run.
+const hasAdapter = (await (await fetch(`${url}/lora-adapters`)).json()).length > 0;
+if (!hasAdapter && wanted.includes('trained')) throw new Error('This server holds no adapter.');
 
 async function ask(system, messages, scale) {
   const t0 = Date.now();
@@ -62,7 +65,7 @@ async function ask(system, messages, scale) {
       seed: 1,
       cache_prompt: false,
       chat_template_kwargs: { enable_thinking: false },
-      lora: [{ id: 0, scale }],
+      ...(hasAdapter ? { lora: [{ id: 0, scale }] } : {}),
     }),
   });
   const ms = Date.now() - t0;
