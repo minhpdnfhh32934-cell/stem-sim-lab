@@ -996,6 +996,55 @@ describe("known errors: restated premises and the item's own checks", () => {
   });
 });
 
+describe('key facts read LaTeX like plain text', () => {
+  const answerKey = (keyFacts: string[][]) => ({
+    id: 'X',
+    subject: 'physics',
+    type: 'problem',
+    question: 'q',
+    keyFacts,
+  });
+  const hits = (keyFacts: string[][], answer: string) =>
+    scoreAnswer(answerKey(keyFacts) as never, answer).facts;
+
+  it('units with text marks and thin spaces, and fractions', () => {
+    expect(
+      hits(
+        [[String.raw`\b5 ?m/s`], ['a ?= ?f ?/ ?m']],
+        String.raw`$a = \frac{F}{m} = 5\,\text{m/s}^2$`,
+      ),
+    ).toEqual([true, true]);
+  });
+
+  it('square roots, also around a fraction', () => {
+    expect(
+      hits(
+        [[String.raw`\b2 ?(s\b|giay)`], ['sqrt']],
+        String.raw`$t = \sqrt{\frac{2h}{g}} = 2\,\text{s}$`,
+      ),
+    ).toEqual([true, true]);
+  });
+
+  it('subscripts and arrows in a chemical equation', () => {
+    expect(
+      hits(
+        [[String.raw`2 ?h2 ?\+ ?o2 ?(→|->) ?2 ?h2o`]],
+        String.raw`$2H_2 + O_2 \rightarrow 2H_{2}O$`,
+      ),
+    ).toEqual([true]);
+  });
+
+  it('decimal commas in braces', () => {
+    expect(hits([[String.raw`\b0,1 ?m\b`]], String.raw`$\Delta l = 0{,}1\,\text{m}$`)).toEqual([
+      true,
+    ]);
+  });
+
+  it('a wrong value stays wrong', () => {
+    expect(hits([[String.raw`\b5 ?m/s`]], String.raw`$a = 6\,\text{m/s}^2$`)).toEqual([false]);
+  });
+});
+
 describe('number and unit checks: LaTeX and fractions', () => {
   it('allows derived numbers and constants a correct answer writes', () => {
     expect(
