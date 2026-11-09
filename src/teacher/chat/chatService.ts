@@ -19,7 +19,7 @@ import { pictureReaderNow } from './pictureReader';
 import { screenContext } from './context';
 import { bestSentences, fetchWebKnowledge, searchKnowledge, unambiguousNote } from './knowledge';
 import { missingNumericData, type MissingData } from './missingData';
-import { contextNumbers, sameNumber, unverifiedNumbers } from './provenance';
+import { givenNumbers, unverifiedNumbers } from './provenance';
 import { toolBlock, toolFacts } from './tools';
 import { cleanAnswer } from './answerClean';
 import {
@@ -32,6 +32,7 @@ import { questionBefore } from './topicLink';
 import { referenceBlocks } from './references';
 import { cloudChat, localGemma, localRuntimeChat, reachRuntime, toBase64 } from './engines';
 import { SUMMARY_TOKENS, localSummaryFatal, updateSummary } from './summary';
+import { checkBoardText, checkSharedScreen, questionBlock } from './inputGuards';
 import { TeacherError, stopIfAsked } from './teacherErrors';
 import { turnKind, type TurnKind } from './turnKind';
 import { useChatStore, type ChatMessageRecord, type ReviewSkipped } from './chatStore';
@@ -122,6 +123,7 @@ export { AnswerStopped, TeacherError } from './teacherErrors';
 export { turnKind, type TurnKind, type TurnOrigin } from './turnKind';
 export { excerptKind, referenceBlocks, type ExcerptKind } from './references';
 export { gemmaErrorKey } from './engines';
+export { questionBlock } from './inputGuards';
 
 export interface ReplyMetadata {
   /** The AI label's model: for a fallback answer, the provider that really answered too. */
@@ -143,26 +145,6 @@ export interface ReplyMetadata {
   missingData: boolean;
   /** Values in the answer that nobody gave the AI (provenance.ts), as written: "50 km". */
   unverifiedNumbers: string[];
-}
-
-/**
- * The question itself did not pass the input check (crisis, personal data, unsuitable): it is
- * logged as kind + time only and never sent. The chat does not keep a blocked question, so it is
- * never sent later as history either. Returns the learner's message, or null when it may be sent.
- */
-export function questionBlock(question: string, locale: Locale): TeacherError | null {
-  const moderation = checkInput(question);
-  if (moderation.ok) return null;
-  if (moderation.reason === 'crisis') {
-    logIncident('inputCrisis');
-    return new TeacherError(translate(locale, 'chat.errors.crisis'), null, false);
-  }
-  if (moderation.reason === 'personalData') {
-    logIncident('inputPersonalData');
-    return new TeacherError(translate(locale, 'chat.errors.personal'), null, false);
-  }
-  logIncident('inputUnsafe');
-  return new TeacherError(translate(locale, 'chat.errors.unsafe'), null, false);
 }
 
 export interface ReplyResult {
@@ -476,46 +458,11 @@ export async function askTeacher(
   // Second layer: a blocked question saved by an older version never travels as history.
   const sendable = withoutBlockedQuestions(records);
   const circled = options.boardSelection?.selection ?? null;
-  if (circled) {
-    // The board's text is the AI's, but it is sent again: it is checked like anything sent.
-    const boardCheck = checkInput(selectionContext(circled, locale, 'full'));
-    if (!boardCheck.ok) {
-      logIncident(
-        boardCheck.reason === 'crisis'
-          ? 'inputCrisis'
-          : boardCheck.reason === 'personalData'
-            ? 'inputPersonalData'
-            : 'inputUnsafe',
-      );
-      throw new Error(
-        translate(
-          locale,
-          boardCheck.reason === 'personalData'
-            ? 'chat.errors.boardPersonal'
-            : 'chat.errors.boardUnsafe',
-        ),
-      );
-    }
-  }
+  if (circled) checkBoardText(circled, locale);
   const chat = useChatStore.getState();
   const ai = useAiStore.getState();
   const provider = ai.provider;
-  if (options.includeScreen) {
-    const visibleContext = screenContext(locale);
-    const screenCheck = checkInput(visibleContext);
-    if (!screenCheck.ok) {
-      if (screenCheck.reason === 'crisis') {
-        logIncident('inputCrisis');
-        throw new Error(translate(locale, 'chat.errors.crisis'));
-      }
-      if (screenCheck.reason === 'personalData') {
-        logIncident('inputPersonalData');
-        throw new Error(translate(locale, 'chat.errors.screenPersonal'));
-      }
-      logIncident('inputUnsafe');
-      throw new Error(translate(locale, 'chat.errors.screenUnsafe'));
-    }
-  }
+  if (options.includeScreen) checkSharedScreen(locale);
   // Gemma answers when its model is ready or when the learner picked it (a missing model is
   // then explained); the pre-selected default never blocks a learner who connected an API. A
   // runtime on this computer answers only when the learner chose it, and without a chosen
@@ -832,33 +779,4 @@ export async function askTeacher(
     },
     truncated,
   };
-}
-
-/**
- * Numbers the AI was given: the question and the learner's turns (number words too), the app's
- * results, the texts sent with this question (excerpt, screen) and earlier answers' numbers that
- * were checked and not flagged there. An answer saved before the check existed (no
- * `unverifiedNumbers` field) is checked now, against the learner's turns, the app's results, the
- * texts sent now and the answers before it: its numbers are never taken as given unchecked.
- */
-function givenNumbers(
-  question: string,
-  records: readonly ChatMessageRecord[],
-  sources: readonly string[],
-): number[] {
-  const given = [
-    ...contextNumbers(
-      [question, ...records.flatMap((r) => (r.role === 'user' ? [r.content, r.prompt ?? ''] : []))],
-      { words: true },
-    ),
-    ...contextNumbers([...sources, ...records.flatMap((r) => r.facts ?? [])]),
-  ];
-  for (const r of records) {
-    if (r.role !== 'assistant') continue;
-    const flagged = contextNumbers(r.unverifiedNumbers ?? unverifiedNumbers(r.content, given));
-    given.push(
-      ...contextNumbers([r.content]).filter((v) => !flagged.some((f) => sameNumber(f, v))),
-    );
-  }
-  return given;
 }

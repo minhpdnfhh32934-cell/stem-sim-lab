@@ -17,7 +17,7 @@ describe('numbers the AI wrote that nobody gave it (real Gemma 1B answers)', () 
   const saved = (id: string, variant: string) => {
     const item = fixtures.items.find((f) => f.id === id && f.variant === variant);
     if (!item) throw new Error(`${id} ${variant} missing`);
-    // As in the app (chatService.givenNumbers): number words count in the learner's texts only.
+    // As in the app (provenance.givenNumbers): number words count in the learner's texts only.
     const learner = item.history.filter((m) => m.role === 'user').map((m) => m.content);
     const other = item.history.filter((m) => m.role !== 'user').map((m) => m.content);
     return unverifiedNumbers(item.answer, [
