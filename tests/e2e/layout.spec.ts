@@ -179,6 +179,23 @@ test('the AI Teacher button covers no Inspector line and no Studio button (UI-01
   expect(overlap(await box(next), await box(page.locator('.chat-bubble')))).toBe(false);
 });
 
+test('the open AI Teacher chat covers neither the lesson nor the Inspector', async ({ page }) => {
+  await openPhysics(page, 'Rơi tự do');
+  await page.locator('.chat-bubble').click();
+  const panel = await box(page.locator('.chat-panel--compact'));
+  const stage = await box(page.getByRole('region', { name: 'Khung mô phỏng' }));
+  const inspector = await box(page.locator('.inspector'));
+  expect(overlap(panel, stage)).toBe(false);
+  expect(overlap(panel, inspector)).toBe(false);
+  expect(stage.right - stage.x).toBeGreaterThan(500);
+  await page.getByRole('button', { name: 'Đóng' }).first().click();
+  await openStudioFromLab(page);
+  await page.locator('.chat-bubble').click();
+  const inStudio = await box(page.locator('.chat-panel--compact'));
+  const studio = await box(page.locator('.shell__center'));
+  expect(overlap(inStudio, studio)).toBe(false);
+});
+
 test('the tool palette keeps clear of the captions scenes write at x = 60 px (UI-02)', async ({
   page,
 }) => {

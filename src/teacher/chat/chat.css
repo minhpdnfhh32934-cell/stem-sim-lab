@@ -18,9 +18,23 @@
 .shell[data-inspector] .chat-bubble-root {
   right: var(--chat-bubble-gap);
 }
-/* The open chat stays over the stage, left of the Inspector (the Science Card stays readable). */
-.shell[data-inspector] .chat-bubble-root > .chat-panel {
-  right: calc(var(--right-w) + var(--splitter) + 16px);
+/* The open chat never covers the lesson. In a lab topic it lies over the topic list, which is not
+   needed while asking, and the stage gives up only what that column cannot hold; the Inspector
+   stays readable. Elsewhere (Science Studio, lab home) the centre makes room on its right. */
+@media (min-width: 900px) {
+  .chat-bubble-root > .chat-panel {
+    width: var(--chat-dock-w);
+  }
+  .shell[data-inspector] .chat-bubble-root > .chat-panel {
+    left: 8px;
+    right: auto;
+  }
+  .shell[data-inspector]:has(.chat-bubble-root > .chat-panel) .shell__center {
+    margin-left: max(0px, calc(var(--chat-dock-w) + 16px - var(--left-w) - var(--splitter)));
+  }
+  .shell:not([data-inspector]):has(.chat-bubble-root > .chat-panel) .shell__center {
+    margin-right: calc(var(--chat-dock-w) + 28px);
+  }
 }
 /* The open chat uses the full height between the top bar and the status bar; the round button
    hides meanwhile (the panel has its own close button). */
