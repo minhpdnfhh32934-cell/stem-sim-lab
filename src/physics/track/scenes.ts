@@ -280,8 +280,8 @@ function solve(p: Params, locale: Locale): Solution {
   const low = lowestPoint(tr);
   const E = m * g * y0 + 0.5 * m * v0 * v0;
   const vLow = speedAt(g, y0, v0, low.y) ?? 0;
-  // A valley at ground level comes out of the search as ~1e-15, which a learner must not read.
-  const hMin = Number(low.y.toFixed(9));
+  // A valley at ground level comes out of the curve as a few micrometres at most: not for a learner.
+  const hMin = Number(low.y.toFixed(3));
   const steps: SolutionStep[] = [
     {
       text: L(

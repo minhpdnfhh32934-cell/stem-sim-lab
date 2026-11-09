@@ -122,4 +122,19 @@ describe('the worked solution shows no rounding noise', () => {
     expect(tex).toContain('{,}282 - 0)');
     expect(tex).not.toMatch(/10\^\{-1\d\}/);
   });
+
+  it('nor as a few micrometres, wherever the bead starts', () => {
+    for (const H of [2, 3, 5, 7]) {
+      for (const a of [4, 5, 7, 10]) {
+        for (const x0 of [-3, -4, -5]) {
+          const p = { ...energyConservation.defaults, shape: 1, H, H2: 3.5, a, x0, v0: 0.9 };
+          const tex = energyConservation
+            .solve(p, 'vi')
+            .steps.map((s) => s.tex)
+            .join(' ');
+          expect(tex).not.toMatch(/- \d(\{,\}\d+)? \\cdot 10\^\{-/);
+        }
+      }
+    }
+  });
 });
