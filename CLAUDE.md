@@ -57,6 +57,13 @@ release history and old work-logs keep the old name). The user accepted:
   Vietnamese voice model (e.g. Piper) is allowed after its licence is checked and recorded in
   `docs/THIRD_PARTY.md`. No other model may be bundled or run inside the app without asking
   (runtimes the user installs: the 2026-10-14 decision above).
+- **Trained model (user decisions 2026-11-09, #128 phase 3):** a model trained for AI Teacher runs
+  **inside the app**, on Gemma 4 E2B. Data: `scripts/data/teacher_training/` (engine numbers, wording
+  by a local Qwen, `review_status: "pending"`; never `tests/teaching/*`, textbooks, learner data, nor
+  Gemini/Claude as writers). A teacher reviews a sample. Train on Colab, then write the merged weights
+  into the published ONNX graph with `scripts/training/swap_weights.py` (no re-export; proof:
+  `q4_identity.py`). Adopt it only if it clearly wins on the held-out set. Legal list:
+  `docs/LEGAL_COMPLIANCE.md` §2h.
 - **Production CSP** may list exactly the HuggingFace model hosts and `vi`/`en.wikipedia.org`
   (`tests/tauri-config.test.ts` pins the list). Nothing else.
 - Everything else in this file still applies (scientific integrity, safety gates, i18n, tests).
