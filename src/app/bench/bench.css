@@ -769,6 +769,35 @@ kbd {
   flex: 1;
   min-width: 0;
 }
+/* "Hỏi AI" fills the drawer. The chat's own floating-card size would run over the stage. */
+.notebook__panel > .chat-panel {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* The drawer's rail tab already names the chat: its width goes to the buttons, so "Đóng" fits. */
+.notebook__panel > .chat-panel .chat-panel__identity strong {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.notebook__panel > .chat-panel .chat-panel__header {
+  padding: 0 6px 0 10px;
+}
+.notebook__panel > .chat-panel .chat-panel__header-actions {
+  flex: none;
+}
+.notebook__panel > .chat-panel .chat-engine select {
+  max-width: 110px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
 /* Tray */
 .tray {
