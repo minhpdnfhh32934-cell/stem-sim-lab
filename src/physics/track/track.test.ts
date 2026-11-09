@@ -101,3 +101,25 @@ describe('two hills: the verdict uses the highest point the bead must actually c
     expect(run(p, 3).xMax).toBeLessThanOrEqual(p.x0 ?? 0);
   });
 });
+
+describe('the worked solution shows no rounding noise', () => {
+  it('a valley at ground level is written as 0, not 1,39·10⁻¹⁵', () => {
+    const p = {
+      ...energyConservation.defaults,
+      shape: 1,
+      H: 2,
+      H2: 4.5,
+      a: 9,
+      x0: -8,
+      v0: 1.2,
+      m: 1.8,
+      g: 9.81,
+    };
+    const tex = energyConservation
+      .solve(p, 'vi')
+      .steps.map((s) => s.tex)
+      .join(' ');
+    expect(tex).toContain('{,}282 - 0)');
+    expect(tex).not.toMatch(/10\^\{-1\d\}/);
+  });
+});
