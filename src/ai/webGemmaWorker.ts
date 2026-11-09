@@ -462,7 +462,11 @@ async function chatVision(
     top_k: 40,
     ...repetitionOptions(decoding, promptTokens),
   })) as Tensor;
-  const decoded = eng.processor.batch_decode(output, { skip_special_tokens: true });
+  // `generate` returns the prompt too: decoding all of it showed the whole prompt in the chat.
+  const decoded = eng.processor.batch_decode(
+    output.slice(null, [promptTokens, null] as unknown as number[]),
+    { skip_special_tokens: true },
+  );
   return {
     text: (decoded[0] ?? '').trim(),
     truncated: lastDim(output) - promptTokens >= maxTokens,
