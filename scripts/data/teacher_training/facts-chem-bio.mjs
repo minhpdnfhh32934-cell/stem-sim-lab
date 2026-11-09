@@ -501,7 +501,7 @@ const result = await page.evaluate(
         ],
         [answer('v', 'Tốc độ phản ứng ban đầu', v, 'µM/s')],
         [
-          `v = \\frac{V_{max}[S]}{K_m + [S]} = \\frac{${tex(vmax)}\\cdot ${tex(s)}}{${tex(km)} + ${tex(s)}} = ${tex(v)}`,
+          `v = \\frac{V_{max}[S]}{K_m + [S]} = \\frac{${tex(vmax)}\\cdot ${tex(s)}}{${tex(km)} + ${tex(s)}} = \\frac{${tex(vmax * s)}}{${tex(km + s)}} = ${tex(v)}`,
         ],
       );
     });
@@ -512,6 +512,12 @@ const result = await page.evaluate(
       const K = pick([500, 1000, 2000, 5000]);
       const t = pick([2, 5, 8, 10, 15, 20]);
       const N = logistic(N0, r, K, t);
+      // Every intermediate is given: the writer may not compute one itself.
+      const ratio0 = (K - N0) / N0;
+      const decay = Math.exp(-r * t);
+      const denominator = 1 + ratio0 * decay;
+      if (Math.abs(K / denominator - N) > 1e-9 * N)
+        throw new Error('logistic steps differ from the model');
       add(
         'biology',
         'logisticGrowth',
@@ -523,7 +529,13 @@ const result = await page.evaluate(
           number('t', 'Thời gian', 't', t, 'năm', ['N']),
         ],
         [answer('N', `Số cá thể sau ${t} năm`, N, 'cá thể')],
-        [`N(t) = \\frac{K}{1 + \\frac{K - N_0}{N_0} e^{-rt}}`],
+        [
+          `N(t) = \\frac{K}{1 + \\frac{K - N_0}{N_0} e^{-rt}}`,
+          `\\frac{K - N_0}{N_0} = \\frac{${tex(K)} - ${tex(N0)}}{${tex(N0)}} = \\frac{${tex(K - N0)}}{${tex(N0)}} = ${tex(ratio0)}`,
+          `e^{-rt} = e^{-${tex(r)}\\cdot ${tex(t)}} = e^{-${tex(r * t)}} = ${tex(decay)}`,
+          `1 + ${tex(ratio0)}\\cdot ${tex(decay)} = 1 + ${tex(ratio0 * decay)} = ${tex(denominator)}`,
+          `N = \\frac{${tex(K)}}{${tex(denominator)}} = ${tex(N)}`,
+        ],
       );
     });
 

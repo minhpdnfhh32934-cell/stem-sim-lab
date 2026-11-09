@@ -53,20 +53,83 @@ export function overlap(text, reference) {
 }
 
 const NOTHING_SAID =
-  /^thầy (đã |vừa |rất vui |sẽ |cũng )*(nhận được|nghe|đọc|xem|thấy em|hiểu (ý|bài|câu|rồi))/iu;
+  /^thầy (rất vui|sẵn sàng|(đã |vừa |sẽ |cũng )*(nhận được|nghe|đọc|xem|thấy em(?! (đã |vừa )?(quên|thiếu|chưa|không))|hiểu (ý|bài|câu|rồi)|hướng dẫn em|giúp em|giải (giúp|chi tiết|bài|cho)|bắt đầu))/iu;
 
 /**
  * Without the opening courtesy: the app asks for the answer in the first sentence, and a model
  * taught "Chào em, thầy đã nhận được câu hỏi của em." spends its few tokens on it every time.
- * Only a sentence with no number and no formula is removed.
+ * Only a sentence with no number and no formula is removed, and never the whole answer.
  */
 export function withoutGreeting(text) {
-  const rest = text.replace(/^(Chào em|Em thân mến|Em à)[,!.]?\s*/u, '');
-  if (rest === text) return text;
+  const rest = text.replace(/^(Chào em|Thầy chào em|Em thân mến|Em nghe đây|Em à)[,!.]?\s*/u, '');
   const first = rest.split(/(?<=[.!?])\s/u)[0] ?? '';
-  const body =
-    NOTHING_SAID.test(first) && !/[\d$]/.test(first) ? rest.slice(first.length).trimStart() : rest;
+  const empty = NOTHING_SAID.test(first) && !/[\d$]/.test(first);
+  // "Tuy nhiên" opposed the courtesy just removed.
+  const after = rest
+    .slice(first.length)
+    .trimStart()
+    .replace(/^(Tuy nhiên|Tuy vậy|Nhưng)[,\s]+/u, '');
+  const body = (empty && after) || rest;
   return body.charAt(0).toUpperCase() + body.slice(1);
+}
+
+/** The writer sometimes ends the tutor's own question as a student would: "... chưa thầy?". */
+export const asTeacher = (text) =>
+  text.replace(/(?<!\p{L})(chưa|không|nhé|nha) thầy\s*([?!.])/giu, '$1$2');
+
+/** What only a writer handed the results and the rules would say to a student. */
+const WRITER_TRACE = /tự tính thêm|kết quả đã cho|và kết quả đã có/iu;
+
+const GREEK = {
+  alpha: 'α',
+  beta: 'β',
+  gamma: 'γ',
+  delta: 'δ',
+  Delta: 'Δ',
+  epsilon: 'ε',
+  varepsilon: 'ε',
+  eta: 'η',
+  theta: 'θ',
+  lambda: 'λ',
+  mu: 'μ',
+  pi: 'π',
+  rho: 'ρ',
+  sigma: 'σ',
+  tau: 'τ',
+  phi: 'φ',
+  varphi: 'φ',
+  omega: 'ω',
+  Omega: 'Ω',
+  max: 'max',
+  min: 'min',
+  sin: 'sin',
+  cos: 'cos',
+  tan: 'tan',
+};
+const POWER = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+
+/**
+ * A question as a learner types it: "H2 + O2 → H2O", not "$H_2 + O_2 \rightarrow H_2O$". The model
+ * must learn from the input it will really get, and the app's own balancer reads the typed form.
+ * What cannot be typed this way (a fraction) stays as written.
+ */
+export function asTyped(question) {
+  const typed = question
+    .replace(/\$/g, '')
+    .replace(/\\(?:text|mathrm)\{([^{}]*)\}/g, '$1')
+    .replace(/\\[,;:!]/g, ' ')
+    .replace(/\\(?:longrightarrow|rightarrow|to)(?![a-zA-Z])/g, '→')
+    .replace(/\^\{?\\circ\}?/g, '°')
+    .replace(/\\cdot(?![a-zA-Z])/g, '·')
+    .replace(/\\times(?![a-zA-Z])/g, '×')
+    .replace(/\\([a-zA-Z]+)/g, (all, name) => GREEK[name] ?? all)
+    .replace(/_\{([^{}]*)\}/g, '$1')
+    .replace(/_([A-Za-z0-9])/g, '$1')
+    .replace(/\^\{?(-?\d+)\}?/g, (_, e) =>
+      e.replace('-', '⁻').replace(/\d/g, (d) => POWER[Number(d)]),
+    )
+    .replace(/ {2,}/g, ' ');
+  return /[\\{}]/.test(typed) ? question : typed;
 }
 
 if (process.argv.includes('--check')) {
@@ -98,6 +161,52 @@ if (process.argv.includes('--check')) {
   assert(
     withoutGreeting('Để tính a, ta dùng F = ma.') === 'Để tính a, ta dùng F = ma.',
     'no greeting',
+  );
+  assert(
+    withoutGreeting('Thầy sẽ hướng dẫn em giải bài này nhé. Ta dùng F = ma.') === 'Ta dùng F = ma.',
+    'a courtesy without a greeting goes too',
+  );
+  assert(
+    withoutGreeting('Chào em, thầy rất vui khi em hỏi. Ta dùng F = ma.') === 'Ta dùng F = ma.',
+    'being glad says nothing',
+  );
+  assert(
+    withoutGreeting('Thầy thấy em quên ghi m. Em cho thầy m nhé?') ===
+      'Thầy thấy em quên ghi m. Em cho thầy m nhé?',
+    'saying what is missing stays',
+  );
+  assert(
+    withoutGreeting('Thầy sẽ hướng dẫn em nhé.') === 'Thầy sẽ hướng dẫn em nhé.',
+    'never the whole answer',
+  );
+  assert(
+    asTeacher('Em hiểu chưa thầy?') === 'Em hiểu chưa?',
+    'the tutor does not call itself thầy',
+  );
+  assert(asTeacher('Em làm được không thầy !') === 'Em làm được không!', 'spaced mark');
+  assert(
+    asTeacher('Em hiểu chưa, thầy giảng lại nhé.') === 'Em hiểu chưa, thầy giảng lại nhé.',
+    'thầy as the subject stays',
+  );
+  assert(asTyped('$H_2 + O_2 \\rightarrow H_2O$') === 'H2 + O2 → H2O', 'an equation');
+  assert(
+    asTyped('$r = 1,6\\,\\text{m}$ và $g = 9,81 \\text{ m/s}^2$') === 'r = 1,6 m và g = 9,81 m/s²',
+    'a unit',
+  );
+  assert(asTyped('$V_{max}$, $\\theta = 50^\\circ$') === 'Vmax, θ = 50°', 'an index and an angle');
+  assert(asTyped('$C_6H_{12}O_6$') === 'C6H12O6', 'a long index');
+  assert(asTyped('$t_{\\max} = 12$ s') === 'tmax = 12 s', 'a named index');
+  assert(
+    withoutGreeting('Thầy đã nhận được đề. Tuy nhiên, em còn thiếu m.') === 'Em còn thiếu m.',
+    'no "however" left against nothing',
+  );
+  assert(asTyped('$q = 5 \\cdot 10^{-8}$') === 'q = 5 · 10⁻⁸', 'a power of ten');
+  assert(asTyped('$\\frac{a}{b}$') === '$\\frac{a}{b}$', 'what cannot be typed stays');
+  assert(asTyped("Mạch 5'→3'") === "Mạch 5'→3'", 'plain text stays');
+  assert(WRITER_TRACE.test('mà không cần tự tính thêm số liệu'), 'a trace of the rules is found');
+  assert(
+    !WRITER_TRACE.test('dựa trên kết quả đã có, quãng đường là'),
+    'an earlier step is no trace',
   );
   console.log('export.mjs checks passed');
   process.exit(0);
@@ -137,10 +246,16 @@ const rows = [
   ).values(),
 ];
 
-const benchmark = ['teaching-eval.json', 'teaching-heldout.json'].flatMap((name) => {
+const textsOf = (name) => {
   const data = JSON.parse(readFileSync(resolve(root, 'tests/teaching', name), 'utf8'));
   return (data.items ?? data).flatMap((item) => [item.question, item.expected].filter(Boolean));
-});
+};
+// A short item of the tuning set ("Tính nồng độ mol của dung dịch") is one phrase, found in every
+// problem on its topic. The held-out set stays strict: it decides whether the model ships.
+const benchmark = [
+  ...textsOf('teaching-heldout.json'),
+  ...textsOf('teaching-eval.json').filter((t) => words(t).length >= 12),
+];
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage();
@@ -178,7 +293,8 @@ for (const row of rows) {
     drop('fact not found');
     continue;
   }
-  if (benchmark.some((b) => overlap(row.question, b) >= 0.5 || overlap(row.answer, b) >= 0.5)) {
+  const question = asTyped(row.question);
+  if (benchmark.some((b) => overlap(question, b) >= 0.5 || overlap(row.answer, b) >= 0.5)) {
     drop('too close to the benchmark');
     continue;
   }
@@ -186,12 +302,16 @@ for (const row of rows) {
     drop('broken LaTeX');
     continue;
   }
+  if (WRITER_TRACE.test(row.answer)) {
+    drop('tells what the writer was handed');
+    continue;
+  }
   const solved = row.kind === 'problem';
   const carriesResults = solved && !fact.tool && share(`${fact.id}:tool`) < 0.5;
   const results = carriesResults
     ? fact.answers.map((a) => `${a.name} = ${a.value}${a.unit ? ` ${a.unit}` : ''}`)
     : [];
-  const made = await instruction(row.question, results);
+  const made = await instruction(question, results);
   // A balancing answer stands on the app's own balancer: without it the coefficients are unbacked.
   if (fact.tool && !made.appTool) {
     drop('the app did not read the equation');
@@ -212,8 +332,8 @@ for (const row of rows) {
     review_status: 'pending',
     messages: [
       { role: 'system', content: made.system },
-      { role: 'user', content: row.question },
-      { role: 'assistant', content: withoutGreeting(row.answer) },
+      { role: 'user', content: question },
+      { role: 'assistant', content: withoutGreeting(asTeacher(row.answer)) },
     ],
   });
 }

@@ -161,12 +161,31 @@ const result = await page.evaluate(
           const d = scene.params.find((x) => x.key === g.key);
           if (d?.kind === 'number') g.changes = answersDependingOn(scene, p, d, solution);
         }
+        // The app's curve is not in a problem's text: the answers need how high the bead starts.
+        let stated = given;
+        if (id === 'energyConservation') {
+          const reached = solution.answers.find((a) => a.id === 'h_max').value;
+          const h0 = reached - p.v0 ** 2 / (2 * p.g);
+          if (h0 < 0.01) continue; // a release in the valley: "h₀ = 7,9·10⁻⁷ m" is no problem
+          stated = [
+            ...given.filter((g) => !['H', 'a', 'x0'].includes(g.key)),
+            {
+              key: 'h0',
+              name: 'Độ cao vị trí thả (so với mặt đất)',
+              symbol: 'h_0',
+              value: shown(h0),
+              unit: 'm',
+              required: true,
+              changes: ['energy', 'v_low', 'h_max'],
+            },
+          ];
+        }
         facts.push({
           id: `physics.${id}.${String(made).padStart(3, '0')}`,
           subject: 'physics',
           topic: id,
           title: scene.title.vi,
-          given,
+          given: stated,
           answers: solution.answers.map((a) => ({
             id: a.id,
             name: a.label.vi,

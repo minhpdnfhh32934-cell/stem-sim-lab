@@ -198,7 +198,8 @@ const check = ({ text, ...args }) =>
   );
 
 async function reasonsAgainst(fact, kind, steps, row) {
-  const shown = fact.given.filter((g) => g.key !== steps.drop?.key).map((g) => g.value);
+  const stated = fact.given.filter((g) => g.key !== steps.drop?.key);
+  const shown = stated.map((g) => g.value);
   const banned = steps.drop ? [steps.drop.value] : [];
   // A number the result depends on must be in the question; g and Coulomb's k may go unsaid.
   const needed = fact.given
@@ -210,7 +211,14 @@ async function reasonsAgainst(fact, kind, steps, row) {
         !(fact.topic === 'electricField' && g.key === 'k'),
     )
     .map((g) => g.value);
-  const ofQuestion = await check({ text: row.question, known: shown, tex: [], banned, needed });
+  // The 5 of "Mạch mã hóa (5'→3')" belongs to the quantity's name.
+  const ofQuestion = await check({
+    text: row.question,
+    known: [...shown, ...stated.map((g) => g.name)],
+    tex: [],
+    banned,
+    needed,
+  });
   const ofAnswer = await check({
     text: row.answer,
     known:
