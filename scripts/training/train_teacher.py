@@ -1,33 +1,43 @@
-"""Trains a LoRA adapter for Gemma 4 E2B on AI Teacher's conversations (run on a GPU, e.g. Colab).
+"""Trains a LoRA adapter for Qwen 3.5 9B on AI Teacher's conversations (run on a GPU, e.g. Colab).
 
 usage: train_teacher.py --data <folder with train.jsonl, valid.jsonl> --out <folder>
        train_teacher.py --check      (a tiny random model on the CPU: no download, no GPU)
 
-Only the adapter comes out: merge_lora.py adds it to the untouched bfloat16 weights afterwards, so
-nothing but the trained layers changes and swap_weights.py can write them into the app's ONNX file.
-The revision is pinned to the checkpoint q4_identity.py proved identical to the app's decoder.
+Only the adapter comes out; the published weights stay as they are. The model is loaded in 4-bit:
+its 18 GB of 16-bit weights do not fit a T4's 15 GB.
 """
 import argparse
 import json
 import math
+import os
 import random
 from pathlib import Path
 
-import torch
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")  # a nearly full T4
+
+import torch  # noqa: E402
 from peft import LoraConfig, get_peft_model
 
-MODEL = "google/gemma-4-e2b-it"
-REVISION = "4adf15748de9e1a0097b6274cee9c15836c41c37"
-END_OF_TURN = "<turn|>"
+MODEL = "Qwen/Qwen3.5-9B"
+REVISION = "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+END_OF_TURN = "<|im_end|>"
+# The checkpoint is the vision model's: its text layers are model.language_model.*, the text-only
+# class calls them model.*. Without this every layer would stay randomly initialised.
+KEY_MAPPING = {r"^model\.language_model\.": "model."}
 IGNORE = -100
-# The layers the app's ONNX file stores as 4-bit weights (scripts/training/q4_weights.py), in the
-# text model only: q4_weights.py has no vision or audio weights to write.
-TARGETS = r"^(?!.*(vision|audio)).*layers\.\d+\.(self_attn\.(q|k|v|o)_proj|mlp\.(gate|up|down)_proj)$"
+# The linear layers of the 32 text blocks (24 linear-attention, 8 full-attention), without
+# linear_attn.out_proj: llama.cpp's LoRA converter cannot reorder that layer's columns.
+TARGETS = (
+    r"^model\.layers\.\d+\.(self_attn\.(q|k|v|o)_proj"
+    r"|linear_attn\.in_proj_(qkv|a|b|z)|mlp\.(gate|up|down)_proj)$"
+)
 
 
 def encode(tokenizer, messages, max_length):
-    """(input ids, labels): the prompt exactly as the app sends it; only the answer is learned."""
-    prompt = tokenizer.apply_chat_template(messages[:-1], add_generation_prompt=True, tokenize=False)
+    """(input ids, labels): the prompt as sent with reasoning off; only the answer is learned."""
+    prompt = tokenizer.apply_chat_template(
+        messages[:-1], add_generation_prompt=True, tokenize=False, enable_thinking=False
+    )
     answer = messages[-1]["content"] + END_OF_TURN
     head = tokenizer(prompt, add_special_tokens=False)["input_ids"]
     tail = tokenizer(answer, add_special_tokens=False)["input_ids"]
@@ -53,6 +63,24 @@ def batches(rows, size, pad_id, device, shuffle):
         }
 
 
+def answer_loss(model, batch):
+    """Cross-entropy on the answer tokens only: the output layer makes 248 k logits per token, and
+    logits for a whole long prompt do not fit the GPU."""
+    labels = batch["labels"][:, 1:]
+    positions = (labels != IGNORE).any(0).nonzero().squeeze(-1)
+    logits = model(
+        input_ids=batch["input_ids"],
+        attention_mask=batch["attention_mask"],
+        use_cache=False,
+        logits_to_keep=positions,
+    ).logits
+    return torch.nn.functional.cross_entropy(
+        logits.float().reshape(-1, logits.size(-1)),
+        labels[:, positions].reshape(-1),
+        ignore_index=IGNORE,
+    )
+
+
 def adapted(model, rank):
     config = LoraConfig(r=rank, lora_alpha=rank, target_modules=TARGETS, bias="none")
     return get_peft_model(model, config)
@@ -65,7 +93,7 @@ def loss_on(model, rows, size, pad_id, device, autocast):
     count = 0
     for batch in batches(rows, size, pad_id, device, False):
         with autocast():
-            loss = model(**batch, use_cache=False).loss
+            loss = answer_loss(model, batch)
         total += float(loss) * batch["input_ids"].size(0)
         count += batch["input_ids"].size(0)
     return total / max(count, 1)
@@ -84,7 +112,7 @@ def train(model, data, valid, args, pad_id, device, autocast, out):
         running = 0.0
         for n, batch in enumerate(batches(data, args.batch, pad_id, device, True)):
             with autocast():
-                loss = model(**batch, use_cache=False).loss / args.accumulate
+                loss = answer_loss(model, batch) / args.accumulate
             if not torch.isfinite(loss):
                 raise RuntimeError("the loss is not a number: lower --lr and start again")
             loss.backward()
@@ -120,8 +148,9 @@ def options(argv=None):
     p.add_argument("--data")
     p.add_argument("--out")
     p.add_argument("--epochs", type=int, default=3)
-    p.add_argument("--batch", type=int, default=2)
-    p.add_argument("--accumulate", type=int, default=4)
+    # One row at a time: the output layer makes 248 k logits per token, gigabytes on a long row.
+    p.add_argument("--batch", type=int, default=1)
+    p.add_argument("--accumulate", type=int, default=8)
     p.add_argument("--lr", type=float, default=2e-4)
     p.add_argument("--rank", type=int, default=32)
     p.add_argument("--max-length", type=int, default=1536)
@@ -132,7 +161,7 @@ def options(argv=None):
 
 def main():
     from torch.amp import autocast as amp
-    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
     args = options()
     if args.check:
@@ -150,10 +179,25 @@ def main():
     valid_rows = read_rows(Path(args.data) / "valid.jsonl", tokenizer, args.max_length)
     print(f"{len(train_rows)} training and {len(valid_rows)} validation conversations", flush=True)
 
-    # float16 on the GPU only: the merge starts again from the original bfloat16 weights.
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL, revision=REVISION, dtype=torch.float16, device_map={"": 0}
+    four_bit = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.float16,
+        bnb_4bit_use_double_quant=True,
     )
+    model, info = AutoModelForCausalLM.from_pretrained(
+        MODEL,
+        revision=REVISION,
+        dtype=torch.float16,
+        quantization_config=four_bit,
+        device_map={"": 0},
+        key_mapping=KEY_MAPPING,
+        output_loading_info=True,
+    )
+    if info["missing_keys"]:
+        raise SystemExit(f"weights not found in the checkpoint: {sorted(info['missing_keys'])[:5]}")
+    # Not peft's prepare_model_for_kbit_training: it would cast the untrained 2 GB embedding and
+    # output tables to 32-bit, which does not fit a T4.
     model.gradient_checkpointing_enable()
     model.enable_input_require_grads()
     model = adapted(model, args.rank)
@@ -171,20 +215,20 @@ def main():
 
 
 def check():
-    """A random two-layer Gemma 4 text model: the labels, the LoRA names and one training step."""
+    """A random two-layer Qwen 3.5 text model: the labels, the LoRA names and one training step."""
     import contextlib
     import tempfile
 
     from safetensors.torch import load_file, save_file
-    from transformers import Gemma4ForCausalLM, Gemma4TextConfig
+    from transformers import Qwen3_5ForCausalLM, Qwen3_5TextConfig
 
     from merge_lora import merge
 
     class Tokens:
         pad_token_id = 0
 
-        def apply_chat_template(self, messages, add_generation_prompt, tokenize):
-            assert add_generation_prompt and not tokenize
+        def apply_chat_template(self, messages, add_generation_prompt, tokenize, enable_thinking):
+            assert add_generation_prompt and not tokenize and enable_thinking is False
             return "".join(m["content"] for m in messages)
 
         def __call__(self, text, add_special_tokens):
@@ -205,18 +249,26 @@ def check():
     assert len(cut_ids) == len(cut_labels) == 6, "too long a row is cut, not dropped"
 
     torch.manual_seed(1)
-    config = Gemma4TextConfig(
+    config = Qwen3_5TextConfig(
         vocab_size=64,
         hidden_size=32,
         intermediate_size=48,
         num_hidden_layers=2,
+        layer_types=["linear_attention", "full_attention"],
         num_attention_heads=2,
         num_key_value_heads=2,
-        head_dim=16,
+        linear_num_key_heads=2,
+        linear_num_value_heads=2,
+        linear_key_head_dim=16,
+        linear_value_head_dim=16,
     )
-    model = adapted(Gemma4ForCausalLM(config).float(), 4)
+    model = adapted(Qwen3_5ForCausalLM(config).float(), 4)
     names = [n for n, p in model.named_parameters() if p.requires_grad]
     assert names and all("lora_" in n for n in names), "only the adapter is trained"
+    trained = {n.split(".lora_")[0] for n in names}
+    for part in ("linear_attn.in_proj_qkv", "self_attn.q_proj", "mlp.up_proj"):
+        assert any(part in n for n in trained), f"{part} is not trained"
+    assert not any("out_proj" in n for n in trained), "llama.cpp cannot convert out_proj"
     args = options(["--epochs", "1", "--batch", "1", "--accumulate", "1", "--lr", "0.01"])
     data = [encode(Tokens(), messages, 100)] * 3
     with tempfile.TemporaryDirectory() as folder, contextlib.redirect_stdout(None):
