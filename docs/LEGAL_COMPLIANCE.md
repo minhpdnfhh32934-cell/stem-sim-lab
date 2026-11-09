@@ -196,9 +196,11 @@ Người dùng / giáo viên cần xác nhận:
 Quyết định của người dùng ngày 2026-11-09 (#128). Mục này chỉ liệt kê việc cần xác nhận, **không
 phải kết luận pháp lí**.
 
-Cách làm: script lấy số liệu, công thức và tên đại lượng từ bộ máy của app; Qwen3.5 9B chạy trên máy
-viết lời; giáo viên duyệt một mẫu; huấn luyện trên Google Colab; model chạy trong app. Không dùng
-sách giáo khoa và dữ liệu học sinh. Gemini và Claude không viết dữ liệu huấn luyện.
+Cách làm: script lấy số liệu, công thức, tên đại lượng và phạm vi áp dụng của công thức từ bộ máy
+của app; Qwen3.5 9B chạy trên máy viết lời; giáo viên duyệt một mẫu; huấn luyện trên Google Colab;
+model chạy trong app. Không dùng sách giáo khoa và dữ liệu học sinh. Gemini và Claude không viết dữ
+liệu huấn luyện. Phần câu lệnh của mỗi dòng dữ liệu (lời dặn, ghi chú thư viện) là chữ có sẵn trong
+app, đúng như khi app gửi cho model.
 
 Người dùng cần tự đọc và xác nhận trước khi phát hành model:
 

@@ -53,7 +53,16 @@ const result = await page.evaluate(
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
     const pick = (list) => list[Math.floor(random() * list.length)];
-    const shown = (value) => formatNumber('vi', value, { maximumSignificantDigits: 4 });
+    const shown = (value) => {
+      const digits = { maximumSignificantDigits: 4 };
+      const power = value ? Math.floor(Math.log10(Math.abs(value))) : 0;
+      if (power < 6 && power > -4) return formatNumber('vi', value, digits);
+      // "8,988·10⁹", as a book writes it: never "8.988.000.000" or a run of zeros.
+      const exponent = String(power)
+        .replace('-', '⁻')
+        .replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(c)]);
+      return `${formatNumber('vi', value / 10 ** power, digits)}·10${exponent}`;
+    };
     // Near the lesson's own default (a slider's far end gives "t = 34 000 s"), on about 12 round
     // stops 1, 2 or 5 × 10ⁿ apart: a problem says 25 kg, not 25,85 kg.
     const nearDefault = (d, current) => {
@@ -114,7 +123,8 @@ const result = await page.evaluate(
         for (const d of scene.params) {
           if (d.when && !d.when(p)) continue;
           if (d.kind === 'number' && d.min !== undefined && d.max !== undefined) {
-            if (d.key !== 'g') {
+            // A constant of nature is not a slider of the problem: k = 9,1·10⁹ is simply false.
+            if (d.key !== 'g' && !(id === 'electricField' && d.key === 'k')) {
               const current = d.unit ? fromSI(start[d.key], d.unit) : start[d.key];
               const value = nearDefault(d, current);
               p[d.key] = d.unit ? toSI(value, d.unit) : value;
@@ -149,7 +159,7 @@ const result = await page.evaluate(
         made += 1;
         for (const g of given) {
           const d = scene.params.find((x) => x.key === g.key);
-          if (g.required && d) g.changes = answersDependingOn(scene, p, d, solution);
+          if (d?.kind === 'number') g.changes = answersDependingOn(scene, p, d, solution);
         }
         facts.push({
           id: `physics.${id}.${String(made).padStart(3, '0')}`,
