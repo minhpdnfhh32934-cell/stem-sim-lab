@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { fulfillGemini } from '../fakeAi';
-import { openTopic } from '../nav';
+import { enterStudio, openTopic } from '../nav';
 
 /** "Hỏi AI" in the bench's notebook: the chat stays in its drawer, off the lesson. */
 
@@ -36,6 +36,59 @@ test('the chat fills its drawer: nothing of the lesson is under it, every header
     const button = await box(chat.getByRole('button', { name }));
     expect(button.right, name).toBeLessThanOrEqual(panel.right);
   }
+  expect(await chat.evaluate((el) => el.scrollWidth - el.clientWidth)).toBe(0);
+});
+
+test('screen context goes off however the chat is left; turning it on sweeps the screen', async ({
+  page,
+}) => {
+  const chat = await openAsk(page);
+  const tab = page.getByRole('tab', { name: 'Hỏi AI' });
+  const toggle = chat.getByRole('checkbox', { name: 'Lấy thông tin từ màn hình' });
+  const ways = [
+    () => tab.click(),
+    () => page.keyboard.press('Escape'),
+    () => page.getByRole('tab', { name: 'Thẻ khoa học' }).click(),
+    () => chat.getByRole('button', { name: 'Đóng chat' }).click(),
+  ];
+  for (const leave of ways) {
+    await toggle.check({ force: true });
+    await expect(page.locator('.screen-scan__band')).toBeAttached();
+    await leave();
+    await expect(chat).toHaveCount(0);
+    await tab.click();
+    await expect(toggle).not.toBeChecked();
+  }
+});
+
+test('"Hỏi thầy" in a guided lesson opens AI Teacher with the question written in, nothing sent', async ({
+  page,
+}) => {
+  const sent: string[] = [];
+  await page.addInitScript(() => {
+    (globalThis as { __STEMSIM_TEST_GEMINI_KEY__?: string }).__STEMSIM_TEST_GEMINI_KEY__ = 'test';
+  });
+  await page.route('https://generativelanguage.googleapis.com/v1beta/**', (route) => {
+    sent.push(route.request().postData() ?? '');
+    return fulfillGemini(route, 'Trả lời.');
+  });
+  await page.goto('/');
+  await enterStudio(page);
+  await expect(page.getByRole('heading', { level: 1, name: 'Science Studio' })).toBeVisible({
+    timeout: 20_000,
+  });
+  await page.getByRole('tab', { name: 'Vật lý' }).click();
+  const next = page.getByRole('button', { name: /^Tiếp:/ });
+  await page.getByRole('radio', { name: /√2/ }).click();
+  await next.click();
+  await page.getByRole('button', { name: 'Chạy thí nghiệm' }).click();
+  await next.click();
+  await page.getByRole('button', { name: 'Hỏi thầy' }).click();
+  await expect(page.getByRole('textbox', { name: 'Nhập câu hỏi' })).toHaveValue(
+    /Rơi tự do: thả từ độ cao gấp đôi.*bước Quan sát/,
+    { timeout: 20_000 },
+  );
+  expect(sent).toEqual([]);
 });
 
 test('an answer shows in the drawer and survives closing it and opening the full page', async ({

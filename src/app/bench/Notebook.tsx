@@ -115,6 +115,16 @@ export function Notebook({ push }: { push: boolean }) {
     }
   }, [asked]);
 
+  // Screen context is opt-in every time the chat opens (as in the bubble), however it was left:
+  // its X, the rail tab, Esc, another tab or another room.
+  const chatShown = open && tab === 'ai';
+  useEffect(() => {
+    if (!chatShown) return;
+    return () => {
+      useChatStore.getState().setIncludeScreen(false);
+    };
+  }, [chatShown]);
+
   return (
     <section className="notebook" aria-label={t('bottom.regionLabel')}>
       <div
@@ -174,13 +184,8 @@ export function Notebook({ push }: { push: boolean }) {
             {tab === 'ai' ? (
               <ChatPanel
                 compact
-                onClose={() => {
-                  // Screen context is opt-in every time the chat opens (as in the bubble).
-                  useChatStore.getState().setIncludeScreen(false);
-                  close();
-                }}
+                onClose={close}
                 onExpand={() => {
-                  useChatStore.getState().setIncludeScreen(false);
                   close();
                   openTeacher();
                 }}

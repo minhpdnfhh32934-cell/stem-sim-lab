@@ -11,6 +11,7 @@ import { useShellServices } from '@/app/layout/useShellServices';
 import { HomeScreen } from '@/app/learner/HomeScreen';
 import { LandingScreen } from '@/app/learner/LandingScreen';
 import { useIsHome, useIsLanding, useIsStudio, useIsTeacher } from '@/app/topics';
+import { ScreenScan } from '@/teacher/chat/ScreenScan';
 import { IconButton } from '@/ui/IconButton';
 import { Skeleton } from '@/ui/Skeleton';
 import { BenchFrame } from './BenchFrame';
@@ -82,6 +83,7 @@ export default function BenchShell() {
       <div className="bench-shell" data-presentation={presentation || undefined}>
         {!presentation && <BenchHeader />}
         <ShellOverlays presentation={presentation} />
+        <ScreenScan />
         {room}
         {presentation && (
           <IconButton

@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useAiStore } from '@/ai/aiStore';
+import { BenchContext } from '@/app/bench/shellMode';
 import { setTransportForTests, type LlmTransport } from '@/ai/transport';
 import type { ChatRequest } from '@/ai/types';
 import { fmtQty } from '@/physics/common/tex';
@@ -127,6 +128,23 @@ describe('"Hỏi thầy" in Science Studio', () => {
     // Leaving the studio stops it describing itself.
     view.unmount();
     expect(screenContext('vi')).not.toContain('[Science Studio');
+  });
+
+  it('in the bench it opens the AI Teacher page with the question written in, nothing sent', async () => {
+    const user = userEvent.setup();
+    render(
+      <BenchContext.Provider value={true}>
+        <Lesson scenario={sc} />
+      </BenchContext.Provider>,
+    );
+    expect(screen.queryByText(/Lấy thông tin từ màn hình/)).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Hỏi thầy' }));
+    const teacher = useTeacherStore.getState();
+    expect(teacher.open).toBe(true);
+    expect(teacher.draft).toContain('bước Quan sát');
+    // Left unread, a bubble question would pop up in the next topic's drawer.
+    expect(teacher.bubbleDraft).toBeNull();
+    expect(calls).toHaveLength(0);
   });
 
   it('closing the bubble turns screen context off again', async () => {
