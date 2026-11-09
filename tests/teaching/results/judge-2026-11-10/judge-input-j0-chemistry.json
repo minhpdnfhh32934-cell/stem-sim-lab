@@ -1,0 +1,301 @@
+[
+ {
+  "id": "C1",
+  "question": "Cân bằng phương trình: H2 + O2 → H2O",
+  "reference": "Phương trình đã cân bằng: 2H₂ + O₂ → 2H₂O. Kiểm tra: vế trái có 4 nguyên tử H và 2 nguyên tử O, vế phải 2H₂O cũng có 4 H và 2 O. Hệ số đúng là 2 : 1 : 2, không có hệ số 3 cho O₂.",
+  "keyPoints": [
+   "Hệ số 2 : 1 : 2 (2H₂ + O₂ → 2H₂O)",
+   "Đếm nguyên tử từng nguyên tố ở hai vế: H 4 = 4, O 2 = 2",
+   "Hệ số nhân với cả công thức, không sửa chỉ số trong công thức",
+   "Sai nếu ghi 3O₂ hoặc đổi công thức H₂O"
+  ],
+  "derivation": "Đặt aH₂ + bO₂ → cH₂O. O: 2b = c; H: 2a = 2c ⇒ a = c. Chọn b = 1 ⇒ c = 2, a = 2. Kiểm tra: H vế trái 2·2 = 4, vế phải 2·2 = 4; O vế trái 1·2 = 2, vế phải 2·1 = 2.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để cân bằng phương trình $H_2 + O_2 \\rightarrow H_2O$, ta bắt đầu bằng việc đếm số nguyên tử của mỗi nguyên tố ở hai vế. Ở vế trái, có 2 nguyên tử hydro và 2 nguyên tử oxy; ở vế phải, chỉ có 2 nguyên tử hydro nhưng mới chỉ có 1 nguyên tử oxy. Để số nguyên tử oxy ở hai vế bằng nhau, ta đặt hệ số 2 trước $H_2O$, khi đó phương trình trở thành $H_2 + O_2 \\rightarrow 2H_2O$. Lúc này, số nguyên tử oxy đã cân bằng, nhưng số nguyên tử hydro ở vế phải tăng lên thành 4 trong khi vế trái vẫn là 2. Để cân bằng hydro, ta đặt hệ số 2 trước $H_2$ ở vế trái, dẫn đến phương trình cuối cùng là $2H_2 + O_2 \\rightarrow 2H_2O$. Kết quả cân bằng có hệ số theo thứ tự là 2, 1, 2. Bạn đã hiểu rõ cách xác định hệ số để bảo toàn số nguyên tử chưa?"
+   },
+   {
+    "code": "B",
+    "text": "2H2 + O2 → 2H2O\n\nVì đề bài yêu cầu cân bằng phương trình phản ứng giữa hydro và oxy tạo thành nước, nên ta cần điều chỉnh hệ số để số nguyên tử mỗi nguyên tố ở hai vế bằng nhau. Đầu tiên, ta thấy bên trái có 2 nguyên tử oxy nhưng bên phải chỉ có 1, nên phải đặt hệ số 2 cho H2O. Khi đó, bên phải có 4 nguyên tử hydro, nên bên trái phải đặt hệ số 2 cho H2 để cân bằng số lượng hydro. Cuối cùng, việc kiểm tra lại cho thấy số nguyên tử hydro và oxy ở hai vế đều bằng nhau, đảm bảo phương trình đã cân bằng chính xác."
+   }
+  ]
+ },
+ {
+  "id": "C2",
+  "question": "Cân bằng phương trình Fe + O2 → Fe2O3",
+  "reference": "Phương trình đã cân bằng: 4Fe + 3O₂ → 2Fe₂O₃ (thường ghi điều kiện t°). Cách làm: O ở hai vế là 2 và 3, bội chung nhỏ nhất là 6 nên đặt 3O₂ và 2Fe₂O₃, rồi cân bằng Fe được 4Fe. Kiểm tra: Fe 4 = 4, O 6 = 6.",
+  "keyPoints": [
+   "Hệ số 4 : 3 : 2 (4Fe + 3O₂ → 2Fe₂O₃)",
+   "Dùng bội chung nhỏ nhất của số nguyên tử O (2 và 3 → 6)",
+   "Kiểm tra lại: Fe 4 = 4, O 6 = 6"
+  ],
+  "derivation": "aFe + bO₂ → cFe₂O₃. O: 2b = 3c ⇒ BCNN(2,3) = 6 ⇒ b = 3, c = 2. Fe: a = 2c = 4. Kiểm tra: Fe 4 = 2·2 = 4; O 3·2 = 6 = 2·3 = 6.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "4Fe + 3O2 → 2Fe2O3\n\nPhương trình đã được cân bằng với hệ số lần lượt là 4, 3 và 2 để bảo toàn số nguyên tử sắt và oxy ở hai vế.\nSố nguyên tử sắt ở vế trái là 4 (4 × 1) và ở vế phải cũng là 4 (2 × 2), đảm bảo cân bằng.\nSố nguyên tử oxy ở vế trái là 6 (3 × 2) và ở vế phải cũng là 6 (2 × 3), đảm bảo cân bằng.\nKết quả này tuân thủ nguyên tắc bảo toàn khối lượng và số nguyên tử trong phản ứng hóa học."
+   },
+   {
+    "code": "B",
+    "text": "Để cân bằng phương trình $Fe + O_2 \\rightarrow Fe_2O_3$, ta bắt đầu bằng việc so sánh số nguyên tử của mỗi nguyên tố ở hai vế. Đầu tiên, xét nguyên tố oxy: bên trái có $2$ nguyên tử, còn bên phải có $3$ nguyên tử. Để cân bằng số nguyên tử oxy, ta nhân hệ số của $O_2$ với $3$ và hệ số của $Fe_2O_3$ với $2$, được phương trình trung gian là $Fe + 3O_2 \\rightarrow 2Fe_2O_3$. Tiếp theo, xét nguyên tố sắt: bên trái có $1$ nguyên tử, bên phải có $4$ nguyên tử ($2 \\times 2$). Để cân bằng số nguyên tử sắt, ta nhân hệ số của $Fe$ với $4$, thu được phương trình cuối cùng là $4Fe + 3O_2 \\rightarrow 2Fe_2O_3$.\n\nVậy hệ số theo thứ tự của các chất $Fe$, $O_2$, $Fe_2O_3$ lần lượt là $4$, $3$, $2$. Phương trình đã cân bằng chính xác là $4Fe + 3O_2 \\rightarrow 2Fe_2O_3$."
+   }
+  ]
+ },
+ {
+  "id": "C3",
+  "question": "Liên kết ion khác liên kết cộng hóa trị như thế nào?",
+  "reference": "Liên kết ion hình thành do nguyên tử này nhường electron, nguyên tử kia nhận electron, tạo ion dương và ion âm hút nhau bằng lực hút tĩnh điện (thường giữa kim loại điển hình và phi kim điển hình, ví dụ NaCl). Liên kết cộng hóa trị hình thành do hai nguyên tử góp chung (dùng chung) một hay nhiều cặp electron (thường giữa các phi kim, ví dụ H₂, HCl, H₂O). Có thể nêu thêm: hợp chất ion thường là chất rắn kết tinh, nhiệt độ nóng chảy cao, dẫn điện khi nóng chảy hoặc tan trong nước; liên kết cộng hóa trị có thể phân cực hoặc không phân cực.",
+  "keyPoints": [
+   "Ion: nhường/nhận electron → ion dương và ion âm",
+   "Ion: lực hút tĩnh điện giữa các ion trái dấu",
+   "Cộng hóa trị: dùng chung (góp chung) cặp electron",
+   "Ví dụ đúng: NaCl (ion); H₂, Cl₂, HCl, H₂O (cộng hóa trị)",
+   "Tùy chọn: dựa vào hiệu độ âm điện; cộng hóa trị phân cực / không phân cực"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Liên kết ion hình thành do lực hút tĩnh điện giữa các ion trái dấu, trong khi liên kết cộng hóa trị hình thành khi các nguyên tử dùng chung cặp electron.\n\nSự khác biệt này xuất phát từ cơ chế hình thành: liên kết ion xảy ra khi một nguyên tử nhường hoặc nhận electron để tạo thành ion, còn liên kết cộng hóa trị xảy ra khi các nguyên tử chia sẻ electron.\nMức độ chuyển dịch electron trong liên kết ion thường lớn hơn so với việc chia sẻ electron trong liên kết cộng hóa trị.\nTính chất vật lý của hai loại liên kết này cũng khác nhau do bản chất lực hút tĩnh điện và sự chia sẻ electron.\n\nBạn có muốn tôi giải thích thêm về cách xác định loại liên kết trong một phân tử cụ thể không?"
+   },
+   {
+    "code": "B",
+    "text": "Liên kết ion hình thành do lực hút tĩnh điện giữa các ion trái dấu, thường xảy ra khi một nguyên tử nhường electron cho nguyên tử kia. Trong khi đó, liên kết cộng hóa trị lại dựa trên việc các nguyên tử dùng chung cặp electron để đạt cấu hình bền. Sự khác biệt cơ bản nằm ở bản chất của lực liên kết và cách thức hình thành liên kết giữa các nguyên tử. Em có muốn tìm hiểu thêm về ví dụ cụ thể của từng loại liên kết này không?"
+   }
+  ]
+ },
+ {
+  "id": "C4",
+  "question": "Dung dịch có pH = 3 thì có môi trường gì?",
+  "reference": "Dung dịch có pH = 3 có môi trường axit, vì pH < 7 (ở 25 °C: pH = 7 trung tính, pH > 7 bazơ). Có thể nêu thêm [H⁺] = 10⁻³ M = 0,001 mol/L và quỳ tím chuyển sang màu đỏ. Không được nói là môi trường bazơ/kiềm.",
+  "keyPoints": [
+   "Môi trường axit",
+   "Lý do: pH = 3 < 7",
+   "Mốc so sánh: pH = 7 trung tính, pH > 7 bazơ (ở 25 °C)",
+   "Tùy chọn: [H⁺] = 10⁻³ mol/L; quỳ tím hóa đỏ"
+  ],
+  "derivation": "pH = −lg[H⁺] ⇒ [H⁺] = 10⁻³ = 0,001 mol/L. Ở 25 °C, [OH⁻] = 10⁻¹⁴ / 10⁻³ = 10⁻¹¹ mol/L < [H⁺] ⇒ môi trường axit.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Dung dịch có pH = 3 là môi trường axit.\n\nLý do là vì thang đo pH từ 0 đến 14, trong đó giá trị nhỏ hơn 7 biểu thị tính axit.\nSố 3 nằm ở khoảng giá trị thấp, cho thấy nồng độ ion hydro (H⁺) trong dung dịch khá cao.\nCàng có nhiều ion H⁺ thì dung dịch càng thể hiện rõ các tính chất đặc trưng của axit như làm quỳ tím hóa đỏ.\nNgược lại, môi trường trung tính có pH bằng 7 và môi trường bazơ có pH lớn hơn 7."
+   },
+   {
+    "code": "B",
+    "text": "Dung dịch có pH = 3 thì có môi trường axit.\n\nLý do là vì thang đo pH được chia làm ba vùng: pH từ 0 đến 7 là môi trường axit, pH bằng 7 là trung tính và pH từ 7 đến 14 là bazơ. Số 3 nằm trong khoảng từ 0 đến 7 nên dung dịch này thuộc nhóm axit.\n\nEm có muốn tìm hiểu thêm về cách tính nồng độ ion $H^+$ từ giá trị pH không?"
+   }
+  ]
+ },
+ {
+  "id": "C5",
+  "question": "Tính số mol có trong 4 gam NaOH (Na = 23, O = 16, H = 1).",
+  "reference": "M(NaOH) = 23 + 16 + 1 = 40 g/mol; n = m/M = 4/40 = 0,1 mol. Đáp số: 0,1 mol NaOH (không phải 0,25 mol).",
+  "keyPoints": [
+   "Công thức n = m/M",
+   "Khối lượng mol M(NaOH) = 40 g/mol",
+   "Kết quả n = 0,1 mol",
+   "Ghi đơn vị mol"
+  ],
+  "derivation": "M(NaOH) = 23 + 16 + 1 = 40 g/mol. n = 4 g / 40 g/mol = 0,1 mol.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính số mol của NaOH, ta cần xác định khối lượng mol ($M$) của chất này trước. Khối lượng mol được tính bằng tổng khối lượng nguyên tử của các nguyên tố cấu tạo nên phân tử: $M_{\\text{NaOH}} = M_{\\text{Na}} + M_{\\text{O}} + M_{\\text{H}} = 23 + 16 + 1 = 40\\,\\text{g/mol}$.\n\nSau đó, áp dụng công thức tính số mol $n = \\frac{m}{M}$ với khối lượng $m = 4\\,\\text{g}$ và khối lượng mol vừa tìm được $M = 40\\,\\text{g/mol}$, ta có:\n$$n = \\frac{4}{40} = 0,1\\,\\text{mol}$$\n\nVậy số mol có trong 4 gam NaOH là $0,1\\,\\text{mol}$."
+   },
+   {
+    "code": "B",
+    "text": "Số mol của 4 gam NaOH là 0,1 mol.\n\nTa tính khối lượng mol của NaOH bằng cách cộng khối lượng nguyên tử của các nguyên tố: 23 + 16 + 1 = 40 gam/mol.\nÁp dụng công thức số mol n = m/M, ta có n = 4 / 40 = 0,1 mol.\nKết quả này phù hợp với nguyên tắc tính toán hóa học cơ bản dựa trên khối lượng và khối lượng mol."
+   }
+  ]
+ },
+ {
+  "id": "C6",
+  "question": "Tính nồng độ mol của dung dịch.",
+  "reference": "Đề thiếu dữ kiện nên không tính ra được một con số. Cần hỏi lại: chất tan là chất gì, lượng chất tan (số mol, hoặc khối lượng để tính n = m/M) và thể tích dung dịch. Khi đủ dữ kiện thì tính C_M = n/V, với V tính bằng lít. Cách hỏi tương đương cũng đúng, ví dụ hỏi nồng độ phần trăm và khối lượng riêng của dung dịch cùng tên chất tan. Không được tự giả định số liệu, kể cả trong một 'ví dụ', rồi đưa ra một nồng độ bằng số.",
+  "keyPoints": [
+   "Nhận ra đề thiếu dữ kiện và hỏi lại, không tính ra số",
+   "Hỏi lượng chất tan: số mol, hoặc khối lượng kèm tên chất tan",
+   "Hỏi thể tích dung dịch",
+   "Chấp nhận cách hỏi tương đương (ví dụ nồng độ phần trăm + khối lượng riêng + tên chất tan)",
+   "Có thể nêu C_M = n/V (V tính bằng lít)",
+   "Sai nếu tự chọn số liệu và đưa ra nồng độ bằng số"
+  ],
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Đề bài chưa cung cấp bất kỳ con số cụ thể nào để tính nồng độ mol.\n\nĐể tính được nồng độ, bạn cần cung cấp số mol chất tan (n) và thể tích dung dịch (V) với đơn vị là lít.\n\nNếu bạn có thêm các dữ kiện như khối lượng chất tan, khối lượng riêng hoặc thể tích tính bằng mililit, hãy ghi rõ để tôi hỗ trợ chuyển đổi.\n\nBạn vui lòng bổ sung các giá trị số còn thiếu vào đề bài nhé."
+   },
+   {
+    "code": "B",
+    "text": "Để tính được nồng độ mol của dung dịch, chúng ta cần biết số mol chất tan ($n$) và thể tích dung dịch ($V$) theo công thức $C_M = \\frac{n}{V}$. Hiện tại đề bài chưa cung cấp bất kỳ con số cụ thể nào về khối lượng, thể tích hay số mol. Em hãy cho mình biết giá trị của các đại lượng này kèm theo đơn vị nhé."
+   }
+  ]
+ },
+ {
+  "id": "C7",
+  "question": "Chất xúc tác có làm tăng lượng sản phẩm tạo thành không?",
+  "reference": "Không. Chất xúc tác chỉ làm tăng tốc độ phản ứng (giảm năng lượng hoạt hóa) và còn nguyên sau phản ứng; nó không làm tăng lượng sản phẩm cuối cùng. Với phản ứng thuận nghịch, xúc tác làm tăng tốc độ cả chiều thuận lẫn chiều nghịch như nhau nên không làm chuyển dịch cân bằng, chỉ giúp đạt cân bằng nhanh hơn; hiệu suất cân bằng không đổi.",
+  "keyPoints": [
+   "Trả lời rõ: không làm tăng lượng sản phẩm",
+   "Xúc tác chỉ làm tăng tốc độ phản ứng (giảm năng lượng hoạt hóa)",
+   "Không làm chuyển dịch cân bằng; tăng tốc cả hai chiều như nhau",
+   "Đạt cân bằng nhanh hơn; xúc tác không bị tiêu hao",
+   "Sai nếu nói xúc tác làm tăng lượng sản phẩm/hiệu suất cân bằng"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Chất xúc tác không làm tăng lượng sản phẩm tạo thành. Nó chỉ giúp phản ứng xảy ra nhanh hơn bằng cách giảm năng lượng hoạt hóa, nhưng không thay đổi vị trí cân bằng hay hằng số cân bằng của phản ứng. Do đó, lượng sản phẩm cuối cùng thu được vẫn phụ thuộc vào điều kiện ban đầu và bản chất phản ứng, không bị ảnh hưởng bởi sự có mặt của chất xúc tác. Bạn có muốn tìm hiểu thêm về cách chất xúc tác ảnh hưởng đến tốc độ phản ứng không?"
+   },
+   {
+    "code": "B",
+    "text": "Không, chất xúc tác không làm tăng lượng sản phẩm tạo thành.\n\nChất xúc tác chỉ giúp phản ứng xảy ra nhanh hơn bằng cách giảm năng lượng hoạt hóa, nhưng không thay đổi vị trí cân bằng của phản ứng. Do đó, tỉ lệ giữa sản phẩm và chất phản ứng tại trạng thái cân bằng vẫn giữ nguyên như khi không có chất xúc tác. Lượng sản phẩm tối đa thu được chỉ phụ thuộc vào điều kiện ban đầu và hằng số cân bằng, không bị ảnh hưởng bởi sự có mặt của chất xúc tác."
+   }
+  ]
+ },
+ {
+  "id": "C8",
+  "question": "Vì sao muối ăn (NaCl) tan được trong nước?",
+  "reference": "NaCl là hợp chất ion, gồm các ion Na⁺ và Cl⁻ sắp xếp trong mạng tinh thể. Phân tử nước là phân tử phân cực: đầu O mang một phần điện tích âm hút ion Na⁺, các đầu H mang một phần điện tích dương hút ion Cl⁻. Các phân tử nước bao quanh từng ion (sự hiđrat hóa) và kéo chúng tách khỏi mạng tinh thể vào dung dịch: NaCl → Na⁺ + Cl⁻ (chất tan phân cực/ion dễ tan trong dung môi phân cực).",
+  "keyPoints": [
+   "NaCl là hợp chất ion (Na⁺, Cl⁻ trong mạng tinh thể)",
+   "Nước là phân tử phân cực (O mang phần điện tích âm, H mang phần điện tích dương)",
+   "Đầu O hút Na⁺, đầu H hút Cl⁻; tương tác tĩnh điện ion – lưỡng cực",
+   "Phân tử nước bao quanh ion (hiđrat hóa), tách ion khỏi tinh thể",
+   "Phân li: NaCl → Na⁺ + Cl⁻"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Muối ăn (NaCl) tan được trong nước vì các phân tử nước có cực, với đầu âm hút ion Na⁺ và đầu dương hút ion Cl⁻, làm tách chúng ra khỏi mạng tinh thể. Lực hút giữa nước và các ion này mạnh hơn lực hút giữa các ion với nhau trong tinh thể muối. Khi tan, các ion Na⁺ và Cl⁻ được bao quanh bởi các phân tử nước, tạo thành các phức chất hydrat hóa ổn định. Quá trình này giải phóng đủ năng lượng để bù đắp cho năng lượng cần thiết để phá vỡ cấu trúc tinh thể.\n\nBạn có muốn mình giải thích thêm về cách tính nồng độ dung dịch muối sau khi pha loãng không?"
+   },
+   {
+    "code": "B",
+    "text": "Muối ăn (NaCl) tan được trong nước vì nước là dung môi phân cực, có khả năng tương tác mạnh với các ion trong muối. Khi NaCl tiếp xúc với nước, các phân tử nước sẽ bao quanh và tách rời các ion Na⁺ và Cl⁻ khỏi mạng tinh thể nhờ lực hút tĩnh điện giữa cực âm của nước với ion Na⁺ và cực dương của nước với ion Cl⁻. Quá trình này gọi là sự hydrat hóa, giúp các ion phân tán đều trong dung dịch mà không làm thay đổi bản chất hóa học của chúng.\n\nEm có muốn thử tính xem cần bao nhiêu gam muối để pha được một dung dịch NaCl có nồng độ mol xác định không?"
+   }
+  ]
+ },
+ {
+  "id": "C9",
+  "question": "Cân bằng phương trình H2 → O2",
+  "reference": "Phương trình H₂ → O₂ không thể cân bằng và không phải một phương trình hóa học hợp lý: vế trái chỉ có nguyên tố H, vế phải chỉ có nguyên tố O. Trong phản ứng hóa học, nguyên tố được bảo toàn (nguyên tử không tự sinh ra, mất đi hay biến thành nguyên tố khác), nên không có hệ số nào làm hai vế bằng nhau. Nên hỏi lại học sinh có chép thiếu chất không (ví dụ 2H₂ + O₂ → 2H₂O hoặc 2H₂O → 2H₂ + O₂).",
+  "keyPoints": [
+   "Nói rõ: không cân bằng được / phương trình sai",
+   "Lý do: hai vế khác nguyên tố (H ↔ O), vi phạm bảo toàn nguyên tố/khối lượng",
+   "Không được đưa ra hệ số kiểu 2H₂ → O₂",
+   "Gợi ý kiểm tra lại đề, có thể nêu phương trình đúng liên quan"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "SimLab không cân bằng được phương trình \"H2 → O2\" vì không có bộ hệ số dương nào có thể bảo toàn số nguyên tử Hidro và Oxi đồng thời trong một phản ứng phân hủy đơn thuần như vậy.\n\nLý do đầu tiên là phương trình này vi phạm định luật bảo toàn khối lượng vì số nguyên tử Hidro ở vế trái (2) khác hoàn toàn với số nguyên tử Oxi ở vế phải (2).\nLý do thứ hai là trong hóa học, Hidro và Oxi thường không chuyển hóa trực tiếp cho nhau mà cần có phản ứng với chất khác hoặc điều kiện đặc biệt để tạo thành nước (H2O).\nLý do thứ ba là nếu đây là đề bài, có thể công thức hóa học đã bị viết sai hoặc thiếu chất tham gia/phản ứng khác.\n\nBạn có thể kiểm tra lại đề bài xem có thiếu chất nào (như H2O, H2O2) hay viết sai công thức không, và cung cấp lại thông tin chính xác để SimLab hỗ trợ."
+   },
+   {
+    "code": "B",
+    "text": "Phương trình $H_2 \\rightarrow O_2$ mà bạn đưa ra hiện chưa cân bằng vì số nguyên tử hydro ở vế trái là 2 nhưng ở vế phải là 0, đồng thời số nguyên tử oxy ở vế trái là 0 nhưng ở vế phải là 2. Để cân bằng, ta cần thêm hệ số phù hợp sao cho số nguyên tử mỗi nguyên tố ở hai vế bằng nhau. Tuy nhiên, với phản ứng phân hủy đơn thuần từ $H_2$ thành $O_2$ như vậy thì không thể cân bằng được vì thiếu nguyên tố oxy ở vế trái và không có nguồn cung cấp oxy ban đầu. Bạn có muốn kiểm tra lại công thức phản ứng hoặc cung cấp thêm thông tin về chất tham gia khác không?"
+   }
+  ]
+ },
+ {
+  "id": "C10",
+  "question": "Vế trái 2, vế phải 1 ạ.",
+  "conversationBefore": [
+   {
+    "role": "user",
+    "content": "Giải thích phương trình 2H2 + O2 → 2H2O."
+   },
+   {
+    "role": "assistant",
+    "content": "Hai phân tử hiđro phản ứng với một phân tử oxi tạo hai phân tử nước. Câu hỏi kiểm tra: có bao nhiêu nguyên tử oxi ở mỗi vế?"
+   }
+  ],
+  "reference": "Học sinh mới đúng một nửa nên phải nói \"chưa đúng hoàn toàn\", không mở đầu bằng \"Đúng\": vế trái O₂ có 2 nguyên tử O là đúng, nhưng vế phải cũng có 2 nguyên tử O. Hệ số 2 trong 2H₂O nhân với cả công thức: 2 phân tử H₂O, mỗi phân tử có 1 nguyên tử O, nên có 2 × 1 = 2 nguyên tử O. Mỗi vế đều có 2 nguyên tử O, nên phương trình đã cân bằng về oxi (H cũng 4 = 4).",
+  "keyPoints": [
+   "Nhận xét rõ: chưa đúng hoàn toàn, không khen \"đúng\"",
+   "Ghi nhận vế trái 2 nguyên tử O là đúng",
+   "Vế phải 2H₂O có 2 nguyên tử O (hệ số nhân cả công thức)",
+   "Kết luận mỗi vế đều có 2 nguyên tử O, phương trình cân bằng",
+   "Tùy chọn: hỏi tiếp đếm nguyên tử H (4 = 4)"
+  ],
+  "derivation": "Vế trái: 1 phân tử O₂ × 2 = 2 nguyên tử O. Vế phải: 2 phân tử H₂O × 1 = 2 nguyên tử O. H: vế trái 2 × 2 = 4, vế phải 2 × 2 = 4.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Chưa đúng.\n\nHãy cùng kiểm tra lại số lượng nguyên tử oxi (O) ở mỗi vế của phương trình $2H_2 + O_2 \\rightarrow 2H_2O$:\n\n*   **Vế trái (trước mũi tên):** Có $O_2$, tức là có **2** nguyên tử oxi.\n*   **Vế phải (sau mũi tên):** Có $2H_2O$. Trong mỗi phân tử nước ($H_2O$) có 1 nguyên tử oxi, nên với 2 phân tử nước sẽ có $1 \\times 2 = 2$ nguyên tử oxi.\n\nNhư vậy, số nguyên tử oxi ở vế trái và vế phải đều là **2**, nên phương trình này đã được cân bằng.\n\n**Đáp án đúng:** Vế trái có 2 nguyên tử oxi, vế phải cũng có 2 nguyên tử oxi."
+   },
+   {
+    "code": "B",
+    "text": "Chưa đúng.\n\nHãy cùng kiểm tra lại số nguyên tử oxi ($O$) ở mỗi vế nhé:\n- Ở vế trái, ta có phân tử $O_2$, nên số nguyên tử oxi là $2$.\n- Ở vế phải, trong hai phân tử nước ($2H_2O$), mỗi phân tử chứa $1$ nguyên tử oxi, tổng cộng là $2 \\times 1 = 2$.\n\nNhư vậy, số nguyên tử oxi ở cả hai vế đều bằng $2$. Phương trình này đã cân bằng về nguyên tố oxi rồi.\n\nEm hãy thử kiểm tra xem số nguyên tử hiđro ($H$) ở mỗi vế có bằng nhau không nhé?"
+   }
+  ]
+ },
+ {
+  "id": "C11",
+  "question": "Hòa tan NaOH vào nước, thu được 250 ml dung dịch. Tính nồng độ mol của dung dịch thu được.",
+  "reference": "Hỏi khối lượng (hoặc số mol) NaOH đã hòa tan; có thể nêu C_M = n/V với V = 0,25 L và M(NaOH) = 40 g/mol. Không tự chọn khối lượng, không đưa ra nồng độ bằng số. Khác C6: thể tích đã cho, chỉ thiếu lượng chất tan.",
+  "keyPoints": null,
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính được nồng độ mol của dung dịch NaOH thu được, ta cần biết số mol chất tan ($n$) và thể tích dung dịch ($V$). Trong đề bài, bạn đã cung cấp thể tích là $250\\text{ ml}$, nhưng chưa cho biết khối lượng NaOH hòa tan hay số mol của nó. Vì nồng độ mol được tính theo công thức $C_M = \\frac{n}{V}$, nên đại lượng còn thiếu chính là số mol ($n$) hoặc khối lượng ($m$) của NaOH. Bạn hãy cho mình biết khối lượng NaOH đã dùng để hòa tan nhé!"
+   },
+   {
+    "code": "B",
+    "text": "Không thể tính được nồng độ mol vì đề bài chưa cho biết khối lượng NaOH đã hòa tan hay số mol của nó.\n\nĐể tính nồng độ theo công thức $C = n/V$, ta cần biết số mol chất tan ($n$) và thể tích dung dịch ($V$).\nTrong đề bài chỉ có thể tích là 250 ml (tương đương 0,25 lít), nhưng thiếu dữ kiện về lượng NaOH.\nBạn vui lòng cung cấp thêm khối lượng NaOH hoặc số mol NaOH đã dùng để tính toán."
+   }
+  ]
+ },
+ {
+  "id": "C12",
+  "question": "Tính thể tích của 0,2 mol khí CO₂.",
+  "reference": "Hỏi khí ở điều kiện nào (nhiệt độ, áp suất) vì thể tích khí phụ thuộc vào chúng; có thể nêu thể tích mol ở điều kiện chuẩn (24,79 L/mol ở 25 °C, 1 bar) để học sinh đối chiếu, nhưng không tự chọn điều kiện rồi đưa ra một thể tích bằng số (4,958 L hay 4,48 L). Giáo viên cần xác nhận: có chấp nhận \"ngầm hiểu đkc\" hay không.",
+  "keyPoints": null,
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Chưa thể tính được thể tích cụ thể vì đề bài thiếu điều kiện về nhiệt độ và áp suất (thường là điều kiện tiêu chuẩn 0°C, 1 atm hoặc điều kiện thường).\n\nSố mol khí (0,2 mol) chỉ cho biết lượng chất, còn thể tích phụ thuộc vào môi trường chứa khí đó.\n\nNếu bạn cung cấp thêm nhiệt độ và áp suất, hoặc giả định là điều kiện tiêu chuẩn, tôi sẽ tính ngay cho bạn.\n\nBạn có muốn tính thể tích ở điều kiện tiêu chuẩn (0°C, 1 atm) không?"
+   },
+   {
+    "code": "B",
+    "text": "Để tính được thể tích của 0,2 mol khí CO₂, chúng ta cần biết điều kiện nhiệt độ và áp suất cụ thể của khí đó. Thể tích khí phụ thuộc trực tiếp vào hai đại lượng này theo phương trình trạng thái khí lý tưởng $PV = nRT$. Hiện tại, dữ kiện còn thiếu chính là nhiệt độ ($T$) và áp suất ($P$). Bạn hãy cung cấp thêm giá trị của nhiệt độ và áp suất để mình cùng tính nhé."
+   }
+  ]
+ },
+ {
+  "id": "C13",
+  "question": "Giải giúp em từng bước: Cho 6,5 gam kẽm tác dụng hết với dung dịch axit clohiđric (HCl) dư. Tính khối lượng muối kẽm clorua (ZnCl₂) tạo thành. (Zn = 65; Cl = 35,5)",
+  "reference": "PTHH → n(Zn) = 0,1 mol → tỉ lệ 1 : 1 theo phương trình → M(ZnCl₂) = 136 g/mol → m = 13,6 g; kết thúc bằng một câu hỏi kiểm tra.",
+  "keyPoints": null,
+  "derivation": "Zn + 2HCl → ZnCl₂ + H₂. n(Zn) = 6,5/65 = 0,1 mol. Theo phương trình, 1 mol Zn tạo 1 mol ZnCl₂ ⇒ n(ZnCl₂) = 0,1 mol. M(ZnCl₂) = 65 + 2·35,5 = 136 g/mol. m(ZnCl₂) = 0,1·136 = 13,6 g. mustNot: 10,05 g (M = 65 + 35,5 = 100,5, quên chỉ số 2), 27,2 g (n(ZnCl₂) = 2·n(Zn) = 0,2 mol, lấy nhầm hệ số của HCl), 6,8 g (n(ZnCl₂) = n(Zn)/2 = 0,05 mol).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Khối lượng muối kẽm clorua tạo thành là 13,6 gam.\n\nVì đề bài cho khối lượng kẽm là 6,5 gam và khối lượng nguyên tử Zn là 65, ta tính được số mol kẽm ban đầu bằng cách chia khối lượng cho khối lượng mol (6,5 : 65 = 0,1 mol). Theo phương trình phản ứng hóa học, tỉ lệ mol giữa kẽm và muối kẽm clorua là 1:1, nên số mol muối tạo thành cũng chính là 0,1 mol. Khối lượng mol của muối ZnCl₂ được tính bằng tổng khối lượng các nguyên tử (Zn + 2Cl = 65 + 2×35,5 = 136), từ đó nhân với số mol để ra kết quả cuối cùng."
+   },
+   {
+    "code": "B",
+    "text": "Em hãy cùng xem qua từng bước nhé. Đầu tiên, ta xác định phương trình phản ứng giữa kẽm và axit clohiđric:\n$$Zn + 2HCl \\rightarrow ZnCl_2 + H_2$$\nTheo phương trình này, số mol của kẽm ($n_{Zn}$) sẽ bằng số mol của muối kẽm clorua ($n_{ZnCl_2}$) tạo thành vì tỉ lệ hệ số là $1:1$.\n\nEm tính số mol của kẽm theo công thức:\n$$n_{Zn} = \\frac{m_{Zn}}{M_{Zn}} = \\frac{6,5}{65} = 0,1\\,\\text{mol}$$\nDo đó, số mol muối tạo thành cũng là $0,1\\,\\text{mol}$.\n\nTiếp theo, ta tính khối lượng mol của muối kẽm clorua ($ZnCl_2$):\n$$M_{ZnCl_2} = 65 + 2\\cdot 35,5 = 136\\,\\text{g/mol}$$\nCuối cùng, tính khối lượng muối tạo thành:\n$$m_{ZnCl_2} = n_{ZnCl_2} \\cdot M_{ZnCl_2} = 0,1 \\cdot 136 = 13,6\\,\\text{g}$$\n\nVậy khối lượng muối kẽm clorua tạo thành là $13,6\\,\\text{g}$. Em đã hiểu rõ các bước tính toán chưa?"
+   }
+  ]
+ },
+ {
+  "id": "C14",
+  "question": "Trộn 100 ml dung dịch NaCl 1 M với 100 ml dung dịch NaCl 1 M. Dung dịch thu được có nồng độ 2 M, đúng không ạ?",
+  "reference": "Nói rõ \"không/chưa đúng\"; nồng độ vẫn 1 M; giải thích số mol và thể tích cùng gấp đôi (0,2 mol trong 0,2 L); không mở đầu bằng \"Đúng\".",
+  "keyPoints": null,
+  "derivation": "n(NaCl) = 0,1 L × 1 mol/L + 0,1 L × 1 mol/L = 0,2 mol; V = 100 ml + 100 ml = 200 ml = 0,2 L (hai phần của cùng một dung dịch nên thể tích cộng được); C_M = 0,2 mol / 0,2 L = 1 M.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Không, kết quả thu được không phải là 2 M. Khi trộn hai dung dịch cùng nồng độ với nhau, nồng độ của dung dịch mới sẽ bằng chính nồng độ ban đầu của chúng, tức là vẫn là 1 M.\n\nĐiều này xảy ra vì số mol chất tan tăng gấp đôi (1 mol + 1 mol = 2 mol) nhưng thể tích dung dịch cũng tăng gấp đôi (0,1 lít + 0,1 lít = 0,2 lít). Theo công thức tính nồng độ mol (C = n/V), khi cả tử số và mẫu số đều tăng cùng một tỷ lệ, giá trị nồng độ sẽ không thay đổi."
+   },
+   {
+    "code": "B",
+    "text": "Không, kết quả thu được không phải là 2 M. Khi trộn hai dung dịch cùng một chất tan và cùng nồng độ, thể tích tổng cộng sẽ tăng gấp đôi trong khi số mol chất tan cũng tăng gấp đôi, nên nồng độ mol của dung dịch mới vẫn giữ nguyên ở mức 1 M. Công thức tính nồng độ mol là $C = \\frac{n}{V}$, với $n$ là số mol và $V$ là thể tích dung dịch. Vì bạn đã cung cấp đủ dữ kiện về thể tích và nồng độ ban đầu, nên chúng ta có thể xác định chính xác nồng độ cuối cùng mà không cần giả định thêm bất kỳ giá trị nào. Bạn có muốn thử tính toán lại với một cặp dung dịch khác có nồng độ khác nhau để xem kết quả sẽ thay đổi như thế nào không?"
+   }
+  ]
+ }
+]

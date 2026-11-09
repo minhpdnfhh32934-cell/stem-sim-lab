@@ -186,3 +186,53 @@ Giới hạn của đợt này:
   viết bằng công thức bị tính là thiếu ý. Đáp án không đổi, mọi nhóm được chấm lại như nhau.
 - Dữ liệu huấn luyện do chính Qwen 3.5 9B viết và chưa được giáo viên duyệt.
 - E2B và Qwen chạy trên hai đường khác nhau, nên thời gian trả lời chỉ để tham khảo.
+
+## Đợt 10/11/2026: huấn luyện lại trên RTX 4080 và chấm mù
+
+Cùng bộ câu và cách đo với đợt 09/11, trên máy bàn (RTX 4080, `llama-server` CUDA backend 2.71.0 của
+LM Studio, bản Q4_K_M, temperature 0). export-1 là 628 hội thoại cũ. export-2 thêm 400 hội thoại do
+Qwen 3.5 9B viết bằng đúng quy trình cũ (960 huấn luyện, 160 kiểm tra), vẫn `review_status: "pending"`.
+Kết quả đã lưu: `tests/teaching/results/2026-11-10-*.json` và `tests/teaching/results/judge-2026-11-10/`.
+
+| 42 câu của bộ chính         | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| --------------------------- | ------------- | ------------- | ----------------- |
+| Qwen 3.5 9B gốc             | 78,6 %        | 91,8 %        | 97,6 %            |
+| lora-e1 cũ (Colab, 09/11)   | 88,1 %        | 96,8 %        | 97,6 %            |
+| export1-e1 (huấn luyện lại) | 90,5 %        | 96,2 %        | 100 %             |
+| export1-e2                  | 83,3 %        | 93,3 %        | 97,6 %            |
+| export2-e1 (thêm dữ liệu)   | 85,7 %        | 93,5 %        | 97,6 %            |
+| export2-e2                  | 78,6 %        | 89,3 %        | 97,6 %            |
+
+Không bản nào hơn Qwen gốc có ý nghĩa thống kê (McNemar p: 0,344; 0,180; 0,774; 0,508; 1,000). Máy bàn
+lệch laptop 1 câu ở cả hai mốc đối chứng (gốc 33 so với 34 câu, lora-e1 37 so với 38 câu), và chỉ 10/42
+câu trả lời của bản gốc giống hệt laptop; nguyên nhân chưa xác định.
+
+Theo quy tắc chọn định trước (nhiều câu đúng nhất), export1-e1 được chọn và chạy đúng một lần trên bộ
+kiểm chứng: **13/15** (86,7 %), tỉ lệ ý chính 94,4 %, không lỗi đã biết 100 %. Số đã lưu từ đợt 09/11 trên
+laptop: Qwen gốc 13/15, lora-e1 cũ 15/15. Quy tắc được ghi sau khi đã có 6 lần đo bộ chính, do một phiên
+chưa thấy các số đó viết.
+
+Hai điều rút ra:
+
+- Huấn luyện lại cùng dữ liệu và cùng cách cho 13/15 thay vì 15/15, nên kết quả 15/15 của đợt trước
+  không ổn định.
+- Thêm dữ liệu do chính Qwen viết không làm tăng điểm: export2-e1 36 câu so với export1-e1 38 câu,
+  export2-e2 33 câu so với export1-e2 35 câu.
+
+Giám khảo AI chấm mù Qwen gốc và export1-e1 (42 câu, 2 giám khảo, nhãn ẩn, thứ tự xáo riêng cho từng
+giám khảo). Thước là `judge-rubric.md` cộng thêm tiêu chí "Cách dạy", lưu ở thư mục kết quả (SHA-256
+`6c9441fd3befc152840026fe4037ae831cd1b9cce0705335033e900c0421b77a`); thước gốc không đổi.
+
+| Tiêu chí              | Qwen gốc | export1-e1 |
+| --------------------- | -------- | ---------- |
+| Độ đúng (0–2)         | 1,81     | 1,93       |
+| Đúng hoàn toàn        | 86 %     | 95 %       |
+| Độ rõ (1–5)           | 4,45     | 4,82       |
+| Độ đủ ý (1–5)         | 4,12     | 4,13       |
+| Cách dạy (1–5)        | 3,60     | 3,86       |
+| Có số tự đưa ra       | 14 %     | 10 %       |
+| Đồng tình với lỗi sai | 0 %      | 2 %        |
+
+Về Cách dạy, export1-e1 hơn ở 18 câu, kém ở 9 câu, bằng ở 15 câu (kiểm định dấu p = 0,12). Hai giám khảo
+đồng ý 100 % về độ đúng (kappa 1,00) và 88 % về Cách dạy. Đây là AI chấm, không thay giáo viên; hai giám
+khảo cùng một loại model nên mức đồng ý cao không có nghĩa là chấm đúng. Chưa kết luận dùng model nào.

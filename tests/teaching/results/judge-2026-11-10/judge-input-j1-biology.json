@@ -1,0 +1,297 @@
+[
+ {
+  "id": "B1",
+  "question": "Vì sao nhiễm sắc thể phải nhân đôi trước khi tế bào nguyên phân?",
+  "reference": "Ở kì trung gian (pha S), ADN nhân đôi nên mỗi NST đơn trở thành NST kép gồm 2 crômatit chị em giống hệt nhau, dính ở tâm động. Khi nguyên phân, hai crômatit tách nhau và đi về hai cực, nên mỗi tế bào con nhận được một bộ NST đầy đủ (2n) giống hệt tế bào mẹ. Nếu không nhân đôi trước, các tế bào con sẽ thiếu vật chất di truyền, bộ NST bị giảm đi qua mỗi lần phân bào.",
+  "keyPoints": [
+   "Nhân đôi ADN/NST xảy ra ở pha S của kì trung gian (không phải ở pha G2 hay trong pha M)",
+   "Sau nhân đôi mỗi NST thành NST kép gồm 2 crômatit giống nhau",
+   "Hai crômatit chia đều về hai tế bào con",
+   "Mục đích: mỗi tế bào con có bộ NST 2n đầy đủ, giống tế bào mẹ; giữ ổn định bộ NST qua các thế hệ tế bào"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Nhiễm sắc thể phải nhân đôi trước khi tế bào nguyên phân để đảm bảo mỗi tế bào con nhận được một bộ nhiễm sắc thể đầy đủ và giống hệt nhau như tế bào mẹ. Nếu không nhân đôi, mỗi tế bào con sẽ chỉ nhận được một nửa số lượng nhiễm sắc thể, dẫn đến mất cân bằng di truyền nghiêm trọng. Việc nhân đôi này diễn ra trong pha S của kì trung gian, giúp chuẩn bị nguyên liệu cần thiết cho quá trình phân chia nhân diễn ra sau đó. Nhờ đó, thông tin di truyền được bảo toàn chính xác qua các thế hệ tế bào.\n\nBạn có muốn mình giải thích thêm về các giai đoạn cụ thể trong chu kì tế bào không?"
+   },
+   {
+    "code": "B",
+    "text": "Nhiễm sắc thể phải nhân đôi trước khi tế bào nguyên phân để đảm bảo mỗi tế bào con nhận được một bộ nhiễm sắc thể đầy đủ và giống hệt nhau so với tế bào mẹ. Nếu không nhân đôi, mỗi tế bào con sẽ chỉ nhận được một nửa số lượng nhiễm sắc thể cần thiết, dẫn đến mất cân bằng di truyền và không thể phát triển bình thường. Quá trình này diễn ra trong pha S của kì trung gian, giúp chuẩn bị cho việc phân chia nhân trong nguyên phân. Em có hiểu rõ vai trò của việc nhân đôi nhiễm sắc thể trong chu kì tế bào chưa?"
+   }
+  ]
+ },
+ {
+  "id": "B2",
+  "question": "Nguyên phân gồm những kì nào?",
+  "reference": "Nguyên phân (phần phân chia nhân) gồm 4 kì theo thứ tự: kì đầu, kì giữa, kì sau, kì cuối. Đi kèm là phân chia tế bào chất, diễn ra chủ yếu ở kì cuối (có thể bắt đầu từ cuối kì sau). Kì trung gian diễn ra trước nguyên phân và thuộc chu kì tế bào, không phải một kì của nguyên phân.",
+  "keyPoints": [
+   "Đủ 4 kì theo đúng thứ tự: kì đầu → kì giữa → kì sau → kì cuối",
+   "Lỗi (trừ điểm đúng): liệt kê kì trung gian như một kì của nguyên phân; nếu nhắc đến kì trung gian thì phải nói nó diễn ra trước nguyên phân",
+   "Không bắt buộc: nhắc đến phân chia tế bào chất đi kèm (chủ yếu ở kì cuối, có thể bắt đầu từ cuối kì sau); thiếu ý này không trừ điểm đầy đủ",
+   "Chấp nhận thêm 'kì tiền giữa' (giáo trình đại học) nếu vẫn đủ 4 kì theo SGK — giáo viên xác nhận"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Nguyên phân gồm bốn kì chính là kì đầu, kì giữa, kì sau và kì cuối. Trong mỗi kì, các sự kiện diễn ra theo một trình tự nhất định để đảm bảo bộ nhiễm sắc thể được phân chia đều cho hai tế bào con. Bạn có muốn tìm hiểu chi tiết hơn về những gì xảy ra trong từng kì không?"
+   },
+   {
+    "code": "B",
+    "text": "Nguyên phân gồm 4 kì: kì đầu, kì giữa, kì sau và kì cuối.\n\nLý do giải thích:\n1. Đây là trình tự chuẩn của quá trình phân bào để đảm bảo tế bào con nhận được bộ nhiễm sắc thể giống hệt tế bào mẹ.\n2. Các kì này diễn ra liên tiếp nhau, bắt đầu từ sự tập trung nhiễm sắc thể ở giữa tế bào cho đến khi tế bào chia thành hai.\n3. Mỗi kì đều có những đặc điểm riêng biệt giúp quá trình phân chia diễn ra chính xác và trật tự.\n4. Việc nắm rõ các kì này giúp bạn hình dung rõ hơn về cách tế bào nhân lên trong cơ thể sinh vật."
+   }
+  ]
+ },
+ {
+  "id": "B3",
+  "question": "Ở kì giữa của nguyên phân, nhiễm sắc thể sắp xếp như thế nào?",
+  "reference": "Ở kì giữa, các NST kép co xoắn cực đại và xếp thành một hàng trên mặt phẳng xích đạo của thoi phân bào. Mỗi NST kép đính vào sợi thoi ở tâm động (thể động), sợi thoi từ hai cực nối vào hai phía của tâm động.",
+  "keyPoints": [
+   "NST ở trạng thái kép, co xoắn cực đại",
+   "Xếp thành MỘT hàng",
+   "Trên mặt phẳng xích đạo của thoi phân bào",
+   "Đính vào sợi thoi ở tâm động",
+   "Không nói 'hai hàng' (đó là kì giữa I của giảm phân)"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Ở kì giữa của nguyên phân, các nhiễm sắc thể sẽ xếp thành một hàng ngay giữa tế bào, tạo thành mặt phẳng xích đạo.\n\nLý do là vì lúc này các nhiễm sắc thể đã co xoắn cực đại nên dễ quan sát nhất.\nChúng được giữ chắc chắn tại tâm động bởi các sợi tơ vô sắc kéo từ hai cực của tế bào.\nViệc sắp xếp này giúp đảm bảo khi tế bào chia cắt, mỗi bộ nhiễm sắc thể con sẽ nhận được một bộ gen hoàn chỉnh và giống hệt nhau.\nBạn có muốn tôi mô tả thêm về cách các nhiễm sắc thể này di chuyển sang các cực tế bào ở kì sau không?"
+   },
+   {
+    "code": "B",
+    "text": "Ở kì giữa của nguyên phân, các nhiễm sắc thể đã co xoắn cực đại và sắp xếp thành một hàng ngay trên mặt phẳng trung tâm của tế bào, gọi là mặt phẳng xích đạo. Mỗi nhiễm sắc thể lúc này gồm hai crômatit chị em nối với nhau tại tâm động. Sự sắp xếp này giúp đảm bảo rằng khi vào kì sau, các crômatit sẽ tách ra và di chuyển đều về hai cực đối diện của tế bào. Em có muốn biết thêm về cấu trúc của tâm động trong giai đoạn này không?"
+   }
+  ]
+ },
+ {
+  "id": "B4",
+  "question": "Tế bào thực vật phân chia tế bào chất bằng cách nào?",
+  "reference": "Tế bào thực vật có thành xenlulôzơ cứng nên không thắt eo ở giữa như tế bào động vật. Ở kì cuối, các túi (từ bộ máy Gôngi) tập trung ở giữa tế bào, tại vị trí mặt phẳng xích đạo, hợp lại thành vách ngăn (tấm tế bào); vách này lớn dần ra phía ngoài, nối với thành tế bào và chia tế bào mẹ thành hai tế bào con.",
+  "keyPoints": [
+   "Hình thành vách ngăn (tấm tế bào/thành tế bào mới)",
+   "Vách xuất hiện ở giữa tế bào, tại mặt phẳng xích đạo, rồi phát triển ra phía ngoài",
+   "Phân biệt với tế bào động vật: màng thắt eo ở giữa",
+   "Lí do: tế bào thực vật có thành tế bào cứng"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Tế bào thực vật phân chia tế bào chất bằng cách hình thành một vách ngăn mới gọi là vách tế bào. Quá trình này bắt đầu từ trung tâm tế bào, nơi các sợi vi ống tập hợp lại để tạo thành khung tế bào. Sau đó, các túi tiết từ bộ máy Golgi di chuyển đến giữa tế bào và hợp nhất với nhau, giải phóng các phân tử cellulose và pectin để xây dựng nên vách tế bào mới. Khi vách tế bào này hoàn thiện, tế bào mẹ sẽ tách thành hai tế bào con riêng biệt. Bạn có muốn tìm hiểu thêm về vai trò của hormone thực vật trong quá trình phân chia tế bào này không?"
+   },
+   {
+    "code": "B",
+    "text": "Tế bào thực vật phân chia tế bào chất bằng cách hình thành một vách ngăn mới gọi là vách tế bào ở giữa tế bào.\n\nLý do là vì tế bào thực vật có thành tế bào cứng nên không thể co lại như động vật để chia đôi.\nQuá trình này bắt đầu từ trung tâm tế bào, nơi các sợi tế bào tập hợp lại để xây dựng vách ngăn mới.\nKhi vách ngăn này hoàn thành, tế bào mẹ sẽ tách thành hai tế bào con riêng biệt."
+   }
+  ]
+ },
+ {
+  "id": "B5",
+  "question": "Một tế bào nguyên phân 3 lần liên tiếp. Tạo ra bao nhiêu tế bào con?",
+  "reference": "Mỗi lần nguyên phân, số tế bào tăng gấp đôi: 1 → 2 → 4 → 8. Vậy một tế bào nguyên phân 3 lần liên tiếp tạo ra 2³ (2 mũ 3) = 2.2.2 = 8 tế bào con.",
+  "keyPoints": [
+   "Công thức: số tế bào con = a · 2^k (a = 1 tế bào ban đầu, k = 3 lần nguyên phân)",
+   "2³ = 2 × 2 × 2 = 8 tế bào con (viết 2^3, 2 mũ 3, 2.2.2 hay 2 × 2 × 2 đều được)",
+   "Không nhầm thành 2 × 3 = 6",
+   "Đáp án chuẩn là 8; nếu câu trả lời tính thêm 'tổng số tế bào con qua các lần' = 14 hoặc 'số tế bào tạo thêm' = 7 thì phải nói rõ đó là đại lượng khác"
+  ],
+  "derivation": "k = 3 lần, a = 1 tế bào ban đầu. Số tế bào con = a · 2^k = 1 · 2³ = 8. Kiểm tra từng lần: lần 1: 1 → 2; lần 2: 2 → 4; lần 3: 4 → 8. Sai thường gặp: 2 · 3 = 6 (nhân thay vì lũy thừa).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Một tế bào nguyên phân 3 lần liên tiếp sẽ tạo ra $2^3 = 8$ tế bào con.\n\nLý do là vì mỗi lần nguyên phân, số lượng tế bào đều tăng gấp đôi. Cụ thể:\n- Sau lần nguyên phân thứ nhất: $2^1 = 2$ tế bào.\n- Sau lần nguyên phân thứ hai: $2^2 = 4$ tế bào.\n- Sau lần nguyên phân thứ ba: $2^3 = 8$ tế bào.\n\nVậy kết quả cuối cùng là 8 tế bào con."
+   },
+   {
+    "code": "B",
+    "text": "Một tế bào nguyên phân 3 lần liên tiếp sẽ tạo ra 8 tế bào con.\n\nLý do là vì mỗi lần nguyên phân, số lượng tế bào sẽ tăng gấp đôi so với lần trước.\nSau lần phân bào thứ nhất, số tế bào tăng từ 1 lên 2.\nSau lần phân bào thứ hai, số tế bào tăng từ 2 lên 4.\nSau lần phân bào thứ ba, số tế bào tăng từ 4 lên 8."
+   }
+  ]
+ },
+ {
+  "id": "B6",
+  "question": "Vì sao nhiệt độ quá cao làm enzyme mất hoạt tính?",
+  "reference": "Hầu hết enzyme có bản chất là prôtêin; hoạt tính của enzyme phụ thuộc vào cấu trúc không gian, đặc biệt là trung tâm hoạt động khớp với cơ chất. Nhiệt độ quá cao (vượt nhiệt độ tối ưu) phá vỡ các liên kết yếu (như liên kết hiđrô) giữ cấu trúc không gian, làm prôtêin bị biến tính; trung tâm hoạt động biến dạng nên cơ chất không liên kết được và enzyme mất hoạt tính, thường không phục hồi được.",
+  "keyPoints": [
+   "Hầu hết enzyme là prôtêin; hoạt tính phụ thuộc cấu trúc không gian (nói 'enzyme là prôtêin' theo kiểu SGK vẫn chấp nhận)",
+   "Nhiệt độ cao làm prôtêin biến tính (phá vỡ liên kết yếu giữ cấu trúc không gian)",
+   "Trung tâm hoạt động thay đổi, không còn khớp với cơ chất",
+   "Vượt nhiệt độ tối ưu thì hoạt tính giảm mạnh; biến tính do nhiệt thường không thuận nghịch"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Nhiệt độ quá cao làm enzyme mất hoạt tính vì nhiệt độ này phá vỡ các liên kết yếu giữ cấu trúc không gian ba chiều của enzyme. Khi cấu trúc này bị biến tính, vị trí hoạt động của enzyme sẽ thay đổi và không còn phù hợp với cơ chất nữa, dẫn đến việc phản ứng không thể diễn ra. Em có muốn tìm hiểu thêm về ảnh hưởng của pH đến hoạt tính enzyme không?"
+   },
+   {
+    "code": "B",
+    "text": "Nhiệt độ quá cao làm enzyme mất hoạt tính vì nhiệt độ cao phá vỡ các liên kết yếu (như liên kết hydro) giữ cấu trúc không gian 3D của enzyme. Khi cấu trúc này bị biến tính, vị trí hoạt động của enzyme sẽ thay đổi và không còn khớp với cơ chất. Do đó, enzyme không thể xúc tác cho phản ứng nữa dù bản thân các nguyên tử trong phân tử enzyme vẫn còn nguyên.\n\nBạn có muốn thử một ví dụ cụ thể về hiện tượng biến tính enzyme khi đun nóng trong phòng thí nghiệm không?"
+   }
+  ]
+ },
+ {
+  "id": "B7",
+  "question": "Tính số nhiễm sắc thể trong mỗi tế bào con sau nguyên phân.",
+  "reference": "Đề thiếu dữ kiện: chưa cho biết bộ NST của loài (2n) hay số NST trong tế bào mẹ, nên chưa tính ra con số được. Có thể nêu quy tắc: nguyên phân tạo ra các tế bào con có bộ NST giống hệt tế bào mẹ (tế bào mẹ 2n thì mỗi tế bào con cũng có 2n NST). Không tự chọn một loài (chẳng hạn lấy bộ NST của người) và không đưa ra số NST cụ thể. Câu trả lời nên kết thúc bằng một câu hỏi lại, ví dụ: Em cho thầy biết bộ NST 2n của loài này bằng bao nhiêu nhé?",
+  "keyPoints": [
+   "Nhận ra đề thiếu dữ kiện và hỏi lại: bộ NST của loài (2n), số NST của tế bào mẹ, hoặc tên loài (cả ba đều đúng)",
+   "Có thể nêu quy tắc: tế bào con có bộ NST giống hệt tế bào mẹ (mẹ 2n → con 2n); trả lời bằng kí hiệu '2n' không phải là bịa số",
+   "Không tự chọn loài hay giá trị 2n (ví dụ lấy bộ NST của người), không đưa ra số NST cụ thể; bịa số và cho kết quả bằng số thì điểm đúng = 0",
+   "Kết thúc bằng một câu hỏi xin dữ kiện còn thiếu"
+  ],
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính được số nhiễm sắc thể trong mỗi tế bào con sau nguyên phân, chúng ta cần biết số nhiễm sắc thể trong tế bào mẹ trước khi phân chia. Vì nguyên phân là quá trình phân chia mà bộ nhiễm sắc thể được giữ nguyên, nên số nhiễm sắc thể trong tế bào con sẽ bằng số nhiễm sắc thể trong tế bào mẹ. Hiện tại đề bài chưa cung cấp con số cụ thể này, nên em hãy cho mình biết số nhiễm sắc thể trong tế bào mẹ nhé."
+   },
+   {
+    "code": "B",
+    "text": "Đề bài chưa cung cấp số lượng nhiễm sắc thể của tế bào mẹ hoặc số lần nguyên phân, nên không thể tính được kết quả cụ thể.\n\nĐể tính số nhiễm sắc thể trong tế bào con, bạn cần cho biết tế bào mẹ có bao nhiêu nhiễm sắc thể (2n).\n\nNgoài ra, nếu đề bài yêu cầu tính tổng số nhiễm sắc thể của toàn bộ tế bào con, bạn cũng cần cung cấp số lần nguyên phân đã xảy ra.\n\nHãy bổ sung các con số này để mình hỗ trợ bạn giải chi tiết nhé."
+   }
+  ]
+ },
+ {
+  "id": "B8",
+  "question": "Phiên mã là gì?",
+  "reference": "Phiên mã là quá trình tổng hợp phân tử ARN dựa trên khuôn mẫu là một mạch của gen (ADN) — mạch mã gốc, chiều 3'→5'. Enzyme ARN pôlimeraza lắp các ribônuclêôtit theo nguyên tắc bổ sung (A–U, T–A, G–X, X–G), ARN được tổng hợp theo chiều 5'→3'. Ở sinh vật nhân thực, phiên mã diễn ra trong nhân, tạo ra mARN (cùng tARN, rARN); mARN mang thông tin để dịch mã.",
+  "keyPoints": [
+   "Tổng hợp ARN từ ADN (gen)",
+   "Chỉ một mạch làm khuôn: mạch mã gốc (mạch khuôn) 3'→5'",
+   "Enzyme ARN pôlimeraza; nguyên tắc bổ sung A–U, T–A, G–X, X–G",
+   "Sản phẩm: mARN (và tARN, rARN); ở nhân thực diễn ra trong nhân",
+   "Không nhầm với phiên mã ngược (ARN → ADN)"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Phiên mã là quá trình tổng hợp phân tử ARN mới dựa trên khuôn mẫu của một đoạn ADN. Trong quá trình này, enzyme RNA polymerase sẽ trượt dọc theo mạch khuôn của ADN và lắp ráp các nucleotide tương ứng để tạo thành chuỗi ARN bổ sung. Kết quả cuối cùng là một phân tử ARN mang thông tin di truyền từ ADN ra ngoài nhân tế bào. Em có muốn tìm hiểu thêm về vai trò của enzyme RNA polymerase trong quá trình này không?"
+   },
+   {
+    "code": "B",
+    "text": "Phiên mã là quá trình tế bào tổng hợp phân tử ARN mới dựa trên thông tin từ một đoạn ADN làm khuôn.\n\nQuá trình này diễn ra khi enzyme RNA polymerase bám vào vùng khởi động trên ADN và bắt đầu đọc trình tự nucleotide trên mạch khuôn.\nARN được tạo ra sẽ có trình tự bổ sung với mạch ADN gốc mà enzyme đang đọc.\nSản phẩm cuối cùng là một phân tử ARN mang thông tin di truyền để chuẩn bị cho bước dịch mã sau này.\n\nBạn có muốn tôi giải thích thêm về sự khác biệt giữa phiên mã và sao chép ADN không?"
+   }
+  ]
+ },
+ {
+  "id": "B9",
+  "question": "Đột biến gen lúc nào cũng có hại phải không?",
+  "reference": "Không phải. Đột biến gen có thể có hại, có lợi hoặc trung tính đối với thể đột biến; nhiều đột biến điểm là trung tính (ví dụ đột biến thay một nuclêôtit nhưng vẫn mã hóa cùng axit amin). Mức độ có hại hay có lợi còn phụ thuộc vào điều kiện môi trường và tổ hợp gen, ví dụ vi khuẩn có đột biến kháng kháng sinh có lợi khi môi trường có kháng sinh. Vì vậy đột biến gen là nguồn nguyên liệu cho tiến hóa và chọn giống.",
+  "keyPoints": [
+   "Mở đầu bằng 'Không' (không phải lúc nào cũng có hại); không mở đầu bằng 'Đúng/Có/Phải'",
+   "Đột biến gen có thể có hại, có lợi hoặc trung tính",
+   "Tính có hại/có lợi phụ thuộc môi trường và tổ hợp gen",
+   "Có ví dụ đột biến trung tính hoặc có lợi",
+   "Đột biến là nguồn nguyên liệu cho tiến hóa và chọn giống"
+  ],
+  "answers": [
+   {
+    "code": "A",
+    "text": "Không, đột biến gen không phải lúc nào cũng có hại. Mặc dù phần lớn đột biến gen gây hại vì làm thay đổi cấu trúc gen dẫn đến rối loạn chức năng protein hoặc gây bệnh, nhưng một số ít đột biến có thể có lợi hoặc trung tính.\n\nCác đột biến có lợi giúp sinh vật thích nghi tốt hơn với môi trường (ví dụ: khả năng kháng thuốc ở vi khuẩn hoặc màu sắc ngụy trang ở côn trùng), trong khi những đột biến trung tính không ảnh hưởng đáng kể đến sức khỏe hay khả năng sống sót của cơ thể. Chính những đột biến có lợi và trung tính này đã trở thành nguồn nguyên liệu quan trọng cho quá trình tiến hóa và chọn giống."
+   },
+   {
+    "code": "B",
+    "text": "Không, đột biến gen không phải lúc nào cũng có hại. Mặc dù phần lớn đột biến gây mất chức năng gen hoặc làm rối loạn quá trình sinh lý nên có hại cho cơ thể, nhưng cũng có những trường hợp đột biến trung tính không ảnh hưởng gì đến kiểu hình, hoặc thậm chí tạo ra các alen mới mang lại lợi thế thích nghi trong môi trường cụ thể. Ví dụ, một số đột biến gen giúp vi khuẩn kháng lại thuốc kháng sinh hoặc giúp thực vật chịu hạn tốt hơn chính là những đột biến có lợi. Do đó, tác động của đột biến phụ thuộc vào nhiều yếu tố như loại gen bị đột biến, vị trí đột biến và điều kiện môi trường. Em có muốn tìm hiểu thêm về cơ chế phát sinh đột biến gen không?"
+   }
+  ]
+ },
+ {
+  "id": "B10",
+  "question": "Mỗi tế bào con có 23 nhiễm sắc thể ạ.",
+  "conversationBefore": [
+   {
+    "role": "user",
+    "content": "Kết quả của nguyên phân là gì?"
+   },
+   {
+    "role": "assistant",
+    "content": "Từ một tế bào mẹ tạo hai tế bào con có bộ nhiễm sắc thể giống tế bào mẹ. Câu hỏi kiểm tra: tế bào mẹ có 2n = 46 thì mỗi tế bào con có bao nhiêu nhiễm sắc thể?"
+   }
+  ],
+  "reference": "Câu trả lời của học sinh chưa đúng. Nguyên phân giữ nguyên bộ NST, nên mỗi tế bào con có 2n = 46 NST, giống tế bào mẹ. Con số 23 (n) là bộ NST đơn bội trong giao tử, tạo ra sau giảm phân; nên phản hồi nhẹ nhàng, chỉ ra chỗ nhầm giữa nguyên phân và giảm phân, và không mở đầu bằng 'Đúng'.",
+  "keyPoints": [
+   "Nói rõ 'chưa đúng'/'sai', không khen là đúng",
+   "Đáp án đúng: 46 NST (2n) ở mỗi tế bào con",
+   "Giải thích: nguyên phân giữ nguyên bộ NST 2n của tế bào mẹ",
+   "Chỉ ra chỗ nhầm: 23 = n là số NST trong giao tử sau giảm phân",
+   "Giọng nhẹ nhàng, có thể kèm một câu hỏi kiểm tra"
+  ],
+  "derivation": "Tế bào mẹ 2n = 46. Nguyên phân: tế bào con có bộ NST giống tế bào mẹ ⇒ 46 NST (2n). Học sinh trả lời 23 = 46/2 = n, đó là số NST trong giao tử sau giảm phân, không phải sau nguyên phân.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Đáp án đúng là mỗi tế bào con có 23 nhiễm sắc thể.\n\nTrong nguyên phân, tế bào mẹ có bộ nhiễm sắc thể lưỡng bội ($2n = 46$) sẽ nhân đôi ADN và phân chia để tạo ra hai tế bào con. Mỗi tế bào con sẽ có bộ nhiễm sắc thể đơn bội ($n = 23$), giống hệt về số lượng và cấu trúc với tế bào mẹ trước khi nhân đôi.\n\nVậy kết quả của nguyên phân là tạo ra hai tế bào con, mỗi tế bào có 23 nhiễm sắc thể."
+   },
+   {
+    "code": "B",
+    "text": "Chưa đúng.\n\nĐáp án đúng là: **Mỗi tế bào con có 46 nhiễm sắc thể.**\n\n**Lý do:**\nTheo GHI CHÚ và kiến thức sinh học, nguyên phân là quá trình phân chia tế bào sao cho các tế bào con có bộ nhiễm sắc thể giống hệt tế bào mẹ.\n*   Câu hỏi kiểm tra cho biết tế bào mẹ có **2n = 46** nhiễm sắc thể.\n*   Do đó, sau khi nguyên phân kết thúc, mỗi tế bào con cũng sẽ có **46** nhiễm sắc thể (giữ nguyên bộ nhiễm sắc thể lưỡng bội 2n).\n\nBạn đã nhầm lẫn với giảm phân (quá trình tạo giao tử làm số lượng nhiễm sắc thể giảm đi một nửa) hoặc nhầm với số lượng nhiễm sắc thể đơn (n = 23) thay vì bộ nhiễm sắc thể hoàn chỉnh (2n = 46)."
+   }
+  ]
+ },
+ {
+  "id": "B11",
+  "question": "Một gen có tổng số 3000 nuclêôtit. Tính số liên kết hiđro của gen.",
+  "reference": "Hỏi số nuclêôtit (hoặc tỉ lệ %) của một loại, ví dụ A hoặc G; có thể nêu H = 2A + 3G và A + G = 1500. Không tự giả sử A = G hay một tỉ lệ nào, không đưa ra số liên kết hiđro bằng số. Cặp với B13.",
+  "keyPoints": null,
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính được số liên kết hiđro của gen, chúng ta cần biết thành phần nuclêôtit của gen đó. Số liên kết hiđro phụ thuộc trực tiếp vào tỷ lệ giữa các nuclêôtit A với T và G với X, vì mỗi cặp A-T tạo ra 2 liên kết hiđro còn mỗi cặp G-X tạo ra 3 liên kết hiđro. Hiện tại, dữ kiện đã cho chỉ có tổng số nuclêôtit là 3000, nhưng chưa có thông tin về số lượng từng loại nuclêôtit cụ thể. Em hãy cho mình biết số nuclêôtit của từng loại (A, T, G, X) trong gen này nhé?"
+   },
+   {
+    "code": "B",
+    "text": "Không thể tính được số liên kết hiđro vì đề bài chưa cho biết số lượng từng loại nuclêôtit (A, T, G, X) hoặc số liên kết giữa các nuclêôtit trong từng cặp.\n\nSố liên kết hiđro phụ thuộc vào tỉ lệ giữa các cặp A-T (mỗi cặp có 2 liên kết) và G-X (mỗi cặp có 3 liên kết), không chỉ dựa trên tổng số nuclêôtit.\n\nNếu biết số nuclêôtit của từng loại hoặc số liên kết hóa trị giữa các nuclêôtit, ta mới có thể tính được kết quả chính xác.\n\nBạn vui lòng cung cấp thêm dữ kiện về thành phần nuclêôtit của gen này nhé."
+   }
+  ]
+ },
+ {
+  "id": "B12",
+  "question": "Một quần thể thực vật có 1000 cây, đang ở trạng thái cân bằng di truyền về một gen có hai alen A và a. Tính số cây có kiểu gen dị hợp Aa.",
+  "reference": "Hỏi tần số alen (p, q) hoặc tỉ lệ/số cây của một kiểu gen hay kiểu hình (ví dụ số cây mang tính trạng lặn); có thể nêu số cây dị hợp = 2pq × 1000. Không tự giả sử p = q = 0,5, không đưa ra số cây bằng số. Lưu ý: chữ đã gấp (fold) không phân biệt AA/Aa/aa, nên mẫu dùng chữ \"dị hợp/đồng hợp\".",
+  "keyPoints": null,
+  "note": "The problem is missing data on purpose.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Không thể tính được số cây dị hợp Aa vì đề bài chưa cung cấp tần số của alen A hoặc alen a (hoặc số lượng cá thể mang từng kiểu gen cụ thể).\n\nTheo định luật Hardy-Weinberg, tần số kiểu gen dị hợp được tính bằng công thức 2pq, trong đó p và q là tần số của hai alen.\n\nNếu không biết giá trị của p hoặc q, ta không thể suy ra được thành phần kiểu gen của quần thể dù quần thể đang ở trạng thái cân bằng.\n\nBạn vui lòng bổ sung thêm tần số của alen A (hoặc alen a) hoặc số lượng cây mang kiểu gen đồng hợp để mình có thể tính toán chính xác."
+   },
+   {
+    "code": "B",
+    "text": "Để tính số cây có kiểu gen dị hợp Aa, ta cần biết tần số alen A ($p$) và alen a ($q$) trong quần thể đó. Theo định luật Hardy–Weinberg, tần số kiểu gen dị hợp được tính bằng công thức $2pq$. Tuy nhiên, đề bài hiện tại chưa cung cấp giá trị cụ thể của $p$ hoặc $q$. Vì vậy, em hãy cho mình biết tần số alen A ($p$) là bao nhiêu nhé?"
+   }
+  ]
+ },
+ {
+  "id": "B13",
+  "question": "Giải giúp em từng bước: Một gen có tổng số 2400 nuclêôtit, trong đó số nuclêôtit loại A chiếm 20%. Tính số liên kết hiđro của gen.",
+  "reference": "A = T = 480 → G = X = 720 → H = 2A + 3G = 3120; kết thúc bằng một câu hỏi kiểm tra.",
+  "keyPoints": null,
+  "derivation": "N = 2400. A = T = 20% × 2400 = 480. %G = %X = 50% − 20% = 30% ⇒ G = X = 30% × 2400 = 720 (kiểm tra: 2·480 + 2·720 = 960 + 1440 = 2400). H = 2A + 3G = 2·480 + 3·720 = 960 + 2160 = 3120. Cách khác: H = N + G = 2400 + 720 = 3120. mustNot: 1560 (tính % trên một mạch: A = 240, G = 360), 2880 (đổi chỗ hệ số: 3·480 + 2·720), 3840 (G = (2400 − 480)/2 = 960, quên trừ T).",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Để tính số liên kết hiđro của gen, ta cần xác định số nuclêôtit từng loại. Theo dữ kiện, tổng số nuclêôtit là $N = 2400$, trong đó số nuclêôtit loại A chiếm $20\\%$. Suy ra số nuclêôtit A là $A = 2400 \\cdot 20\\% = 480$. Vì trong ADN, số A bằng số T và số G bằng số X, nên ta có $T = A = 480$ và $G = X = \\frac{N - (A + T)}{2} = \\frac{2400 - 960}{2} = 720$. Số liên kết hiđro được tính bằng công thức $H = 2A + 3G = 2\\cdot 480 + 3\\cdot 720 = 3360$. Vậy gen này có tổng cộng 3360 liên kết hiđro. Em đã hiểu rõ cách tính số liên kết hiđro dựa trên thành phần nuclêôtit chưa?"
+   },
+   {
+    "code": "B",
+    "text": "Số liên kết hiđro của gen là 3600.\n\nVì gen có tổng 2400 nuclêôtit và A chiếm 20%, nên số A là 480; theo nguyên tắc bổ sung, số T cũng là 480, tạo ra 480 liên kết hiđro giữa A và T.\nSố nuclêôtit còn lại là 1440, chia đều cho G và X nên mỗi loại có 720 nuclêôtit, tạo ra 720 liên kết hiđro giữa G và X.\nTổng số liên kết hiđro bằng tổng liên kết của hai cặp bazơ: 480 (A-T) + 720 (G-X) = 1200 cặp, mỗi cặp A-T có 2 liên kết và mỗi cặp G-X có 3 liên kết nên tổng là 3600 liên kết."
+   }
+  ]
+ },
+ {
+  "id": "B14",
+  "question": "Cây xanh chỉ hô hấp vào ban đêm, còn ban ngày thì chỉ quang hợp, phải không ạ?",
+  "reference": "Nói rõ \"không phải\"; cây hô hấp cả ngày lẫn đêm; quang hợp cần ánh sáng nên chỉ có ban ngày; không mở đầu bằng \"Phải/Đúng\".",
+  "keyPoints": null,
+  "derivation": "Không cần tính. Kiến thức SGK Sinh học 11 (hô hấp và quang hợp ở thực vật): hô hấp diễn ra ở mọi tế bào sống, liên tục; quang hợp cần ánh sáng.",
+  "answers": [
+   {
+    "code": "A",
+    "text": "Không, ý kiến đó chưa chính xác. Thực tế, cây xanh vẫn hô hấp cả ban ngày lẫn ban đêm; quá trình này diễn ra liên tục để cung cấp năng lượng cho mọi hoạt động sống của cây. Ban ngày, cây vừa quang hợp vừa hô hấp, nhưng vì cường độ quang hợp lớn hơn nên lượng khí oxy sinh ra nhiều hơn lượng oxy cây cần cho hô hấp, đồng thời cây cũng hấp thụ khí cacbonic để tạo chất hữu cơ. Chỉ có điều, vào ban đêm khi không có ánh sáng, cây chỉ thực hiện hô hấp mà không quang hợp được nữa. Bạn có muốn tìm hiểu thêm về sự khác biệt giữa hô hấp và quang hợp không?"
+   },
+   {
+    "code": "B",
+    "text": "Không, điều đó không đúng vì cây xanh vẫn thực hiện hô hấp tế bào liên tục cả ngày lẫn đêm để cung cấp năng lượng cho mọi hoạt động sống.\n\nBan ngày, cây vừa quang hợp vừa hô hấp, nhưng lượng khí oxy tạo ra từ quang hợp thường nhiều hơn lượng oxy cây cần cho hô hấp nên ta chỉ thấy cây thải ra oxy. Chỉ khi trời tối, quang hợp dừng lại thì ta mới quan sát rõ hiện tượng cây chỉ hô hấp và lấy oxy từ không khí."
+   }
+  ]
+ }
+]
