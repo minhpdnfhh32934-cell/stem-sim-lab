@@ -149,3 +149,40 @@ Mô hình 1B vẫn yếu nhất ở bài tính số, các bước giải và câ
   câu trả lời (commit b18ceb7). Trong bộ đánh giá, 6 câu có lịch sử hội thoại vẫn được nhận là câu
   trả lời và các câu khác không có tin nhắn trước của thầy, nên số đo ở trên không đổi. Bản đo đã ghi
   mã băm `chatService.ts` của lúc đo, không phải của bản hiện tại.
+
+## Đợt 09/11/2026: Qwen 3.5 9B và bản huấn luyện riêng
+
+Cùng 42 + 15 câu, cùng prompt của app, temperature 0, một lượt. Qwen và Gemma 3 12B chạy trên
+`llama-server` (bản Q4_K_M, `scripts/teaching/eval-local.mjs`); Gemma 4 E2B chạy trong app bằng WebGPU
+(đo sáng cùng ngày). Bản huấn luyện: LoRA trên Qwen 3.5 9B, 628 hội thoại, ba vòng trên Colab (T4).
+Sai số trên 98 hội thoại kiểm tra: gốc 0,7328; vòng 1 0,4390; vòng 2 0,4151; vòng 3 0,4344 (không lưu).
+Kết quả đã lưu: `tests/teaching/results/2026-11-09-*.json`.
+
+| 42 câu của bộ chính | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| ------------------- | ------------- | ------------- | ----------------- |
+| Gemma 4 E2B         | 66,7 %        | 76,9 %        | 100 %             |
+| Gemma 3 12B gốc     | 66,7 %        | 83,7 %        | 97,6 %            |
+| Qwen 3.5 9B gốc     | 81,0 %        | 92,0 %        | 95,2 %            |
+| Qwen, vòng 1        | 90,5 %        | 97,4 %        | 97,6 %            |
+| Qwen, vòng 2        | 78,6 %        | 91,8 %        | 95,2 %            |
+
+| 15 câu kiểm chứng | Câu đúng đủ ý | Tỉ lệ ý chính | Không lỗi đã biết |
+| ----------------- | ------------- | ------------- | ----------------- |
+| Gemma 4 E2B       | 60,0 %        | 82,2 %        | 93,3 %            |
+| Gemma 3 12B gốc   | 60,0 %        | 84,4 %        | 100 %             |
+| Qwen 3.5 9B gốc   | 86,7 %        | 96,7 %        | 93,3 %            |
+| Qwen, vòng 1      | 100 %         | 100 %         | 100 %             |
+
+Trên bộ chính, vòng 1 hỏi lại khi đề thiếu dữ kiện 66,7 % (gốc 11,1 %), nêu các bước đúng thứ tự
+100 % (gốc 44,4 %), nhưng nêu đúng dữ kiện còn thiếu 88,9 % (gốc 100 %). Vòng 1 được chọn bằng bộ
+chính; chỉ riêng nó chạy một lần trên bộ kiểm chứng.
+
+Giới hạn của đợt này:
+
+- Vòng 1 hơn Qwen gốc 2 câu và không kém câu nào trên bộ kiểm chứng (McNemar p = 0,5), 6 câu hơn và
+  2 câu kém trên bộ chính. Mẫu nhỏ: chưa đủ để nói thắng rõ.
+- Chấm theo từ khóa, chưa có giáo viên hay giám khảo AI chấm mù.
+- Trong đợt này bộ chấm được sửa để đọc LaTeX (commit 08ebd0b), sau khi đã xem kết quả, vì câu đúng
+  viết bằng công thức bị tính là thiếu ý. Đáp án không đổi, mọi nhóm được chấm lại như nhau.
+- Dữ liệu huấn luyện do chính Qwen 3.5 9B viết và chưa được giáo viên duyệt.
+- E2B và Qwen chạy trên hai đường khác nhau, nên thời gian trả lời chỉ để tham khảo.

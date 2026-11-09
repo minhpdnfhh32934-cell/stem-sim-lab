@@ -197,8 +197,9 @@ Quyết định của người dùng ngày 2026-11-09 (#128). Mục này chỉ l
 phải kết luận pháp lí**.
 
 Cách làm: script lấy số liệu, công thức, tên đại lượng và phạm vi áp dụng của công thức từ bộ máy
-của app; Qwen3.5 9B chạy trên máy viết lời; giáo viên duyệt một mẫu; huấn luyện trên Google Colab;
-model chạy trong app. Không dùng sách giáo khoa và dữ liệu học sinh. Gemini và Claude không viết dữ
+của app; Qwen3.5 9B chạy trên máy viết lời; giáo viên duyệt một mẫu; huấn luyện trên Google Colab
+hoặc máy của người dùng. Model nền từ tối 2026-11-09 là Qwen3.5 9B (thay cho Gemma 4 E2B); cách đưa
+model vào app chưa quyết định. Không dùng sách giáo khoa và dữ liệu học sinh. Gemini và Claude không viết dữ
 liệu huấn luyện. Phần câu lệnh của mỗi dòng dữ liệu (lời dặn, ghi chú thư viện) là chữ có sẵn trong
 app, đúng như khi app gửi cho model.
 
@@ -211,7 +212,8 @@ Người dùng cần tự đọc và xác nhận trước khi phát hành model:
 2. Giấy phép của model nền: trang
    [Gemma 4 E2B](https://huggingface.co/google/gemma-4-e2b-it) và
    [Qwen3.5 9B](https://huggingface.co/Qwen/Qwen3.5-9B) ghi Apache-2.0 khi tra ngày 2026-11-09. Cần
-   đối chiếu lại lúc phát hành và ghi vào `docs/THIRD_PARTY.md`.
+   đối chiếu lại lúc phát hành và ghi vào `docs/THIRD_PARTY.md`. Gemma 3 12B (đã đo so sánh, chưa
+   huấn luyện) dùng điều khoản riêng của Gemma, không phải Apache-2.0.
 3. Đăng model đã huấn luyện lên HuggingFace: tài khoản của người dùng, điều khoản của HuggingFace,
    và trách nhiệm với model do mình phát hành cho người học.
 4. Điều khoản của Google Colab khi dùng GPU miễn phí để huấn luyện.
