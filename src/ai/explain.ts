@@ -72,6 +72,19 @@ export function unknownNumbers(text: string, allowed: number[]): number[] {
 }
 
 /**
+ * The explanation without the steps' formulas it copied whole between dollars. Such a copy prints
+ * only what the step prints, but the free-text reader splits "9{,}81" into 9 and 81 and hid it.
+ * Anything else, even one digit different, stays and is still read number by number.
+ */
+export function withoutCopiedSteps(text: string, solution: Solution): string {
+  let rest = text;
+  for (const { tex } of solution.steps) {
+    if (tex) rest = rest.split(`$${tex}$`).join(' ');
+  }
+  return rest;
+}
+
+/**
  * Asks the LLM to explain, in words, results the engine already computed (§2.1 b).
  * The reply is checked: any number not produced by the engine makes it "unverified".
  */
@@ -105,7 +118,10 @@ ${steps.join('\n')}`;
     },
     cfg.signal,
   );
-  const unknown = unknownNumbers(resp.content, allowedNumbers(solution, problemText));
+  const unknown = unknownNumbers(
+    withoutCopiedSteps(resp.content, solution),
+    allowedNumbers(solution, problemText),
+  );
   const text = resp.content.trim();
   return {
     text,
