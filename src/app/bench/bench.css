@@ -1423,7 +1423,8 @@ kbd {
   align-items: flex-start;
   gap: var(--space-2);
   min-height: 112px;
-  padding: var(--space-3);
+  /* A line kept at the bottom for the mark, opened or not: getting it never moves a line (UI-42). */
+  padding: var(--space-3) var(--space-3) calc(var(--space-3) + 20px);
   border: 1px solid var(--border);
   border-top: 3px solid var(--subject-physics);
   border-radius: var(--radius-md, 10px);
@@ -1488,6 +1489,9 @@ kbd {
   border-radius: var(--radius-sm);
 }
 .shelf-card__mark {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -1802,4 +1806,42 @@ button.bench-door--lab:hover {
   font-size: 12px;
   line-height: 16px;
   white-space: nowrap;
+}
+
+/* Compare legend (§9.4 TR): the pinned run's dash, and "đã cũ" once the inputs changed. */
+:root[data-shell='bench'] .stage__compare {
+  top: var(--space-3);
+  right: var(--space-3);
+  bottom: auto;
+  left: auto;
+  max-width: min(40%, 360px);
+}
+.stage__compare-stale {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px dashed var(--pending);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+/* Lời giải in the 312 px notebook (§9.4): each answer on two lines, its name and then its value
+   with the check, so a long name never wraps beside its number (UI-07). */
+.notebook .solution__answers tr {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-2);
+  padding: 4px 0;
+}
+.notebook .solution__answers th {
+  grid-column: 1 / -1;
+  padding: 0;
+}
+.notebook .solution__answers td {
+  padding: 0;
+}
+.notebook .solution__check span {
+  margin-left: 0;
 }

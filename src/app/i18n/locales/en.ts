@@ -162,6 +162,9 @@ const en: Messages = {
     },
     compareLegend: 'Dashed: the pinned run',
     compareBefore: 'When pinned: {values}',
+    compareStale: 'out of date',
+    compareStaleHint: 'The parameters changed after pinning',
+    pinnedRun: 'pinned',
     announce: {
       playing: '{title}: running.',
       paused: '{title}: paused at t = {t} s.',

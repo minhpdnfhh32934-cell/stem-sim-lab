@@ -165,6 +165,9 @@ const vi = {
     },
     compareLegend: 'Nét đứt: lần chạy đã ghim',
     compareBefore: 'Lúc ghim: {values}',
+    compareStale: 'đã cũ',
+    compareStaleHint: 'Thông số đã đổi sau khi ghim',
+    pinnedRun: 'đã ghim',
     announce: {
       playing: '{title}: đang chạy.',
       paused: '{title}: tạm dừng ở t = {t} s.',
