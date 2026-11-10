@@ -824,7 +824,14 @@ test('mitosis 3D performance: 2n = 8 at High quality within the draw and frame b
   await page.addInitScript(() => {
     localStorage.removeItem('stemsim.e2e.noOverload');
   });
+  // The budgets were set on the classic shell's 808 × 471 canvas (1366 × 768); at that window the
+  // bench's canvas is 998 × 656, 1.7× the pixels. This window gives the bench the same canvas.
+  await page.setViewportSize({ width: 1176, height: 583 });
   const renderer = await openMitosis(page, 'high');
+  expect(
+    await page.locator('.m3d canvas').evaluate((c) => [c.clientWidth, c.clientHeight]),
+    'the canvas the budgets were measured on',
+  ).toEqual([808, 471]);
   await page.getByLabel('Bộ NST lưỡng bội 2n').selectOption('4');
   await expect(page.getByText('1 tế bào · 8 NST đơn')).toBeVisible();
   // Software WebGL (SwiftShader): High draws without the post-processing chain (discrete GPUs
