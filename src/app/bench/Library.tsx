@@ -1,8 +1,21 @@
-import { Award, Check, Clock, FileText, Search, SearchX } from 'lucide-react';
+import {
+  Award,
+  BookOpen,
+  Check,
+  Clock,
+  FileText,
+  PencilRuler,
+  Search,
+  SearchX,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { useAiStore } from '@/ai/aiStore';
+import { openManual } from '@/app/ai/analyze';
+import { useAnalysisEngine } from '@/app/ai/engineChoice';
 import { useT } from '@/app/i18n';
 import { chapterTitle, searchChapters } from '@/app/layout/libraryChapters';
+import { Badges } from '@/app/learner/HomeScreen';
 import { useProfileStore } from '@/app/learner/profileStore';
 import { chaptersFor, GRADE_CHOICES, type LibraryTopic } from '@/app/levels';
 import { lessonRange } from '@/app/curriculum';
@@ -10,6 +23,7 @@ import { openStudio, openTopic } from '@/app/topics';
 import { SUBJECTS, useWorkspaceStore } from '@/app/workspaceStore';
 import { chapterProgress, topicStatus } from '@/learn/progress';
 import { useProgressStore } from '@/learn/progressStore';
+import { useSafetyStore } from '@/safety/safetyStore';
 import { useLessonsForTopic } from '@/studio/lessons';
 import { cx } from '@/ui/cx';
 import { openProblemSheet } from './problemSheet';
@@ -148,16 +162,25 @@ export function BenchLibrary() {
               </button>
             </section>
           )}
-          <section className="shelf-start">
-            <h2>{t('bench.haveProblem')}</h2>
-            <button type="button" className="btn btn--accent" onClick={openProblemSheet}>
-              <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
-              {t('home.analyze')}
-            </button>
-          </section>
+          <ProblemCard />
         </div>
 
-        {chapters.length === 0 ? (
+        {shelf.length === 0 && grade !== 'all' ? (
+          // Never a dead end: a grade without topics in this subject leads back to every topic.
+          <div className="shelf-empty" role="status">
+            <BookOpen size={20} strokeWidth={1.75} aria-hidden="true" />
+            <p>{t('levels.empty', { subject: t(`subjects.${subject}`), grade })}</p>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                setGrade('all');
+              }}
+            >
+              {t('levels.showAll')}
+            </button>
+          </div>
+        ) : chapters.length === 0 ? (
           <div className="shelf-empty" role="status">
             <SearchX size={20} strokeWidth={1.75} aria-hidden="true" />
             <p>{t('sidebar.noResults')}</p>
@@ -193,6 +216,9 @@ export function BenchLibrary() {
             );
           })
         )}
+        <section className="shelf shelf-badges">
+          <Badges />
+        </section>
       </main>
     </div>
   );
@@ -249,5 +275,51 @@ function ShelfCard({
         )}
       </span>
     </div>
+  );
+}
+
+/**
+ * "Có đề bài?" (§9.3): "Phân tích đề" opens the Đề bài sheet (the screen's main action), or says
+ * "Kết nối AI để phân tích đề" without a key (the same rule as the classic home); "Tự dựng cảnh"
+ * beside it, filled instead for a learner who said they are under 18.
+ */
+function ProblemCard() {
+  const t = useT();
+  const ai = useAiStore(useShallow((s) => ({ provider: s.provider, status: s.status })));
+  // Read on this computer (Gemma or a chosen local runtime): no API key needed.
+  const onDevice = useAnalysisEngine() !== 'cloud';
+  const needsKey = ai.provider !== 'off' && ai.status === 'noKey' && !onDevice;
+  const minor = useSafetyStore((s) => s.status?.minor === true);
+  const openSettingsAt = useWorkspaceStore((s) => s.openSettingsAt);
+  return (
+    <section className="shelf-start">
+      <h2>{t('bench.haveProblem')}</h2>
+      <div className="shelf-start__actions">
+        {!minor && (
+          <button
+            type="button"
+            className="btn btn--accent"
+            onClick={() => {
+              if (needsKey) openSettingsAt('ai');
+              else openProblemSheet();
+            }}
+          >
+            <FileText size={16} strokeWidth={1.75} aria-hidden="true" />
+            {needsKey ? t('home.connectFirst') : t('home.analyze')}
+          </button>
+        )}
+        <button
+          type="button"
+          className={minor ? 'btn btn--accent' : 'btn btn--ghost'}
+          aria-label={t('topbar.manual')}
+          onClick={() => {
+            void openManual();
+          }}
+        >
+          <PencilRuler size={16} strokeWidth={1.75} aria-hidden="true" />
+          {t('home.manual')}
+        </button>
+      </div>
+    </section>
   );
 }
