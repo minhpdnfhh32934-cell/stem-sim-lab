@@ -30,5 +30,7 @@ export interface ModuleView {
    * view then leaves them off its stage there. The classic shell never shows it.
    */
   Driver?: ComponentType;
+  /** The bench opens this view with its tray folded (the balancer, §9.10); never saved. */
+  trayStartsFolded?: boolean;
   state?: ModuleStateBinding;
 }

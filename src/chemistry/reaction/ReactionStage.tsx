@@ -79,7 +79,7 @@ export function ReactionStage() {
       if (hold.current > 0) {
         hold.current -= dt;
       } else {
-        let next = s.t + dt * 0.45;
+        let next = s.t + dt * 0.45 * s.speed;
         if (Math.floor(next) > Math.floor(s.t) && s.stepPause) {
           next = Math.floor(next);
           hold.current = 1.2;
@@ -189,7 +189,7 @@ export function ReactionStage() {
               ` ‡${frame.total_charge ? (frame.total_charge > 0 ? '+' : '−') : ''}`}
           </span>
         )}
-        {!atKey && (
+        {!atKey && !bench && (
           <span className="chem-chip chem-chip--approx">
             <TriangleAlert size={13} strokeWidth={1.75} aria-hidden="true" /> {Lz(ILLUSTRATIVE)}
           </span>
@@ -201,6 +201,12 @@ export function ReactionStage() {
           {Lz(L('liên kết một phần', 'partial bond'))}
         </span>
       </div>
+      {bench && !atKey && (
+        <p className="bench-stamp bench-stamp--bl">
+          <TriangleAlert size={14} strokeWidth={1.75} aria-hidden="true" />
+          {Lz(ILLUSTRATIVE)}
+        </p>
+      )}
       {!bench && (
         <div
           className="rx-player"

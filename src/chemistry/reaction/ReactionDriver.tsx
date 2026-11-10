@@ -2,11 +2,15 @@ import { ArrowRightLeft, RotateCcw, SkipBack, SkipForward } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { EdgePlay, ModuleEdge } from '@/app/bench/DriverGrid';
+import { formatNumber } from '@/app/i18n';
 import { useLocalized } from '@/app/i18n/localized';
+import { useSettingsStore } from '@/app/settings/settingsStore';
 import { IconButton } from '@/ui/IconButton';
 import { L } from '../common';
 import { reactionById } from '../data/reactions';
 import { useReactionStore } from './store';
+
+const SPEEDS = [0.5, 1, 2] as const;
 
 /**
  * The mechanism player on the bench edge (docs/BENCH_DESIGN.md §9.5): D0 Chạy, D1 Bước trước,
@@ -19,6 +23,8 @@ export function ReactionDriver() {
     useShallow((s) => ({ id: s.id, t: s.t, playing: s.playing, stepPause: s.stepPause })),
   );
   const mech = reactionById(st.id)?.mechanism ?? null;
+  const speed = useReactionStore((s) => s.speed);
+  const locale = useSettingsStore((s) => s.locale);
   const last = mech ? mech.frames.length - 1 : 0;
   const none = !mech;
   const step = Math.min(last, Math.floor(st.t)) + 1;
@@ -92,6 +98,22 @@ export function ReactionDriver() {
           useReactionStore.setState((s) => ({ stepPause: !s.stepPause }));
         }}
       />
+      <fieldset className="bench-speed bench-speed--narrow" disabled={none}>
+        <legend className="sr-only">{Lz(L('Tốc độ phát', 'Playback speed'))}</legend>
+        {SPEEDS.map((v) => (
+          <label key={v}>
+            <input
+              type="radio"
+              name="mechanism-speed"
+              checked={speed === v}
+              onChange={() => {
+                useReactionStore.setState({ speed: v });
+              }}
+            />
+            <span>{`${formatNumber(locale, v)}×`}</span>
+          </label>
+        ))}
+      </fieldset>
     </ModuleEdge>
   );
 }

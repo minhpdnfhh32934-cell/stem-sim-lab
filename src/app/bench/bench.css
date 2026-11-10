@@ -1937,3 +1937,105 @@ button.bench-door--lab:hover {
   display: flex;
   gap: var(--space-2);
 }
+
+/* The mechanism's speeds share the speed slot with "Dừng ở mỗi bước" (§9.5): 3 × 40 at its end. */
+/* One row: these share or follow the speed slot, never wrap below the edge. */
+.bench-edge > .bench-edge__toggle,
+.bench-edge > .bench-chip,
+.bench-speed--narrow {
+  grid-row: 1;
+}
+.bench-speed--narrow {
+  justify-self: end;
+  width: 116px;
+}
+.bench-speed:disabled span {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Provenance stamp (§11): dashed border, fixed text, no close; BL = the stage's bottom left. */
+.bench-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 4px var(--space-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 16px;
+}
+.bench-stamp--bl {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  max-width: calc(100% - 24px);
+}
+/* The reaction's equation band (§9.5 TC): centred, solid, the equation at 22 px. */
+.bench__stage .chem-overlay {
+  left: 50%;
+  right: auto;
+  justify-content: center;
+  width: min(720px, calc(100% - 24px));
+  min-height: 56px;
+  translate: -50% 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-panel);
+}
+.bench__stage .chem-overlay .rx-eq--chip {
+  font-size: 22px;
+  line-height: 30px;
+}
+.bench__stage .rx-status {
+  top: 80px;
+  left: 50%;
+  translate: -50% 0;
+  justify-content: center;
+}
+/* Tray rows (§9.5): the name and "Có cơ chế" on one line, the equation under them. */
+.tray .rx-list button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--space-2);
+  min-height: 48px;
+  text-align: left;
+}
+.tray .rx-list__tag {
+  grid-column: 2;
+  grid-row: 1;
+}
+.rx-list__eq {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rx-other {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-2);
+}
+.rx-other label {
+  display: grid;
+  gap: var(--space-1);
+}
+.rx-other input {
+  min-height: var(--target);
+  font-family: var(--font-mono);
+}
+/* The balancer is one stage card 760 wide (§9.10). */
+.bench__stage .chem-view:has(> .rx-input) {
+  width: min(760px, 100%);
+  margin-inline: auto;
+}
